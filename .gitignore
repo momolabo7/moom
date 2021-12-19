@@ -1,0 +1,7 @@
+.clangd/
+.vs/
+build/
+*.exe
+*.obj
+*.pdb
+inno/output/

@@ -1,0 +1,10 @@
+Gfx
+- colors for each vertice
+	- try to animate them!
+
+Arch
+- combine renderer.dll build with platform build
+- file io
+- game.dll
+- sound
+- mutithread support
