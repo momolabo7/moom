@@ -308,7 +308,10 @@ WinMain(HINSTANCE instance,
       }
       
       
-      RGBAF32 colors = RGBAF32_Create(tmp_delta, 0.f, 0.f, 1.f);
+      RGBAF32 colors = RGBAF32_Create(0.f, 0.f, 0.f, 1.f);
+      HSLF32 hsl = HSLF32_Create(tmp_delta, 1.f, 0.5f);
+      colors.rgb = HSLF32_ToRGBF32(hsl);
+      
       M44F32 scale = M44F32_Scale(600.f, 600.f, 10.f);
       M44F32 rot = M44F32_RotationZ(tmp_rot += (F32)game_dt);
       M44F32 trans = M44F32_Translation(800.f, 450.f, 300.f);

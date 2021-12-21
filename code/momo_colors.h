@@ -3,6 +3,8 @@
 #ifndef MOMO_COLORS_H
 #define MOMO_COLORS_H
 
+
+// NOTE(Momo): Each component of RGBA are in the range [0 - 1].
 typedef struct RGBF32 {
   F32 r, g, b; 
 } RGBF32;
@@ -13,32 +15,21 @@ typedef union RGBAF32 {
   
 } RGBAF32;
 
-static RGBAF32 RGBAF32_Create(F32 r, F32 g, F32 b, F32 a);
 
 
-typedef struct HSLF32 {
+// NOTE(Momo): Each component are in the range of [0 - 1].
+// For hue, normally it is a number between [0 - 360], but
+// it will be mapped linearly to [0 - 1] in this case.
+// i.e. hue 0 is 0, hue 1 is 360.
+typedef union HSLF32 {
+  struct { F32 h, s, l; };
 } HSLF32;
-// struct HSV {} ???
 
 
-#if 0
-static HSLF32 
-RGBF32_ToHSLF32(RGBF32 c) {
-  HSLF32 ret;
-  F32 max = Max(Max(c.r, c.g), c.b);
-  F32 min = Min(Min(c.r, c.g), c.b);
-  
-  F32 delta = max - min;
-  
-  
-  //TODO
-}
+static RGBAF32 RGBAF32_Create(F32 r, F32 g, F32 b, F32 a);
+static HSLF32 HSLF32_Create(F32 h, F32 s, F32 l);
+static RGBF32 HSLF32_ToRGBF32(HSLF32 c);
 
-static HSLF32 
-HSLF32_ToRGBF32(RGBF32 c) {
-  
-}
-#endif
 
 #endif //MOMO_COLORS_H
 
