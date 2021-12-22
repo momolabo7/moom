@@ -118,7 +118,7 @@ Opengl__AlignViewport(Opengl* ogl,
 
 void 
 Opengl__AddPredefinedTextures(Opengl* ogl) {
-  struct Pixel { U8 e[4]; };
+  typedef struct Pixel { U8 e[4]; } Pixel;
   
   
   // NOTE(Momo): Dummy texture setup

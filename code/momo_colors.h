@@ -20,7 +20,7 @@ typedef union RGBAF32 {
 // NOTE(Momo): Each component are in the range of [0 - 1].
 // For hue, normally it is a number between [0 - 360], but
 // it will be mapped linearly to [0 - 1] in this case.
-// i.e. hue 0 is 0, hue 1 is 360.
+// i.e. hue 0 is 0 degrees, hue 1 is 360 degrees.
 typedef union HSLF32 {
   struct { F32 h, s, l; };
 } HSLF32;

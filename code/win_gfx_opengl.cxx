@@ -53,7 +53,7 @@ static WGL_wglGetExtensionsStringEXT* wglGetExtensionsStringEXT;
 
 
 
-static inline void* 
+static void* 
 WGL_TryGetFunction(const char* name, HMODULE fallback_module)
 {
   void* p = (void*)wglGetProcAddress(name);
@@ -69,7 +69,7 @@ WGL_TryGetFunction(const char* name, HMODULE fallback_module)
   
 }
 
-static inline void
+static void
 WGL_SetPixelFormat(HDC dc) {
   S32 suggested_pixel_format_index = 0;
   U32 extended_pick = 0;
@@ -193,6 +193,13 @@ extern "C" Gfx*
 Gfx_Init(HWND window, UMI render_commands_size, UMI max_textures, UMI max_entities) {
   // NOTE(Momo): Calcluate the EXACT amount of memory needed.
   // TODO(Momo): Is there a better way to do this? 
+  
+  
+  HDC dc = GetDC(window); 
+  if (!dc) {
+    goto failed1;
+  }
+  
   Opengl* opengl = (Opengl*)Win_Gfx_AllocateMemory(sizeof(Opengl));
   opengl->textures = (GLuint*)Win_Gfx_AllocateMemory(max_textures*sizeof(GLuint));
   opengl->texture_cap = max_textures;
@@ -200,22 +207,15 @@ Gfx_Init(HWND window, UMI render_commands_size, UMI max_textures, UMI max_entiti
     Mailbox_Create(Win_Gfx_AllocateMemory(render_commands_size),
                    render_commands_size);
   
-  HDC dc = GetDC(window); 
-  
-  if (!dc) {
-    goto failed;
-  }
-  
   if (!opengl || !opengl->textures || !opengl->gfx.commands.memory) {
-    goto failed;
+    goto failed2;
   }
   
   if (!WGL_LoadExtensions()) {
-    goto failed;
+    goto failed2;
   }
   
   WGL_SetPixelFormat(dc);
-  
   
   S32 opengl_attribs[] {
     WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
@@ -232,7 +232,7 @@ Gfx_Init(HWND window, UMI render_commands_size, UMI max_textures, UMI max_entiti
                                                 opengl_attribs); 
   
   if (!opengl_ctx) {
-    goto failed;
+    goto failed2;
   }
   
   
@@ -241,7 +241,7 @@ Gfx_Init(HWND window, UMI render_commands_size, UMI max_textures, UMI max_entiti
     // TODO: Log functions that are not loaded
 #define WGL_SetOpenglFunction(name) \
 opengl->name = (GL_##name*)WGL_TryGetFunction(#name, module); \
-if (!opengl->name) { goto failed; } 
+if (!opengl->name) { goto failed2; } 
     
     WGL_SetOpenglFunction(glEnable);
     WGL_SetOpenglFunction(glDisable); 
@@ -285,7 +285,7 @@ if (!opengl->name) { goto failed; }
 #undef WGL_SetOpenglFunction
   
   if (!Opengl_Init(opengl, max_entities)) {
-    goto failed;
+    goto failed2;
   }
   
   // TODO(Momo): Figure out how to get callback?
@@ -301,14 +301,17 @@ if (!opengl->name) { goto failed; }
   
   
   
-  
-  failed: {
+  failed2: {
     Win_Gfx_FreeMemory(opengl->textures);
     Win_Gfx_FreeMemory(opengl->gfx.commands.memory);
     Win_Gfx_FreeMemory(opengl);
-    ReleaseDC(window, dc);
-    return nullptr;
   }
+  
+  failed1: {
+    ReleaseDC(window, dc);
+  }
+  
+  return nullptr;
 }
 
 extern "C" Gfx_Cmds*
