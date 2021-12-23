@@ -18,8 +18,8 @@ typedef void 	Win_Gfx_Free(Gfx* r);
 
 // TODO(Momo): Do we really need render_wh and render_rengion?
 // Do we even need Begin/End?
-typedef Gfx_Cmds*   Win_Gfx_BeginFrame(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region);
-typedef void        Win_Gfx_EndFrame(Gfx* renderer, Mailbox* render_commands);
+typedef void        Win_Gfx_BeginFrame(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region);
+typedef void        Win_Gfx_EndFrame(Gfx* renderer);
 typedef Gfx_Texture Win_Gfx_AddTexture(Gfx* renderer,UMI width, UMI height, void* pixels);
 typedef void        Win_Gfx_ClearTextures(Gfx* renderer);
 

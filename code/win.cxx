@@ -183,19 +183,25 @@ WinMain(HINSTANCE instance,
   
   
   //- NOTE(Momo): Init gfx
-  Gfx* gfx = gfx_fns.init(window, MB(10), 8, 4096);
+  Gfx* gfx = gfx_fns.init(window, MB(256), 8, 4096);
   if (!gfx) {
     return 1;
   }
   
+  // TODO(Momo): Testing texture. Remove after use.
+  U8 test_texture[4][4] {
+    { 125, 125, 125, 255 },
+    { 255, 255, 255, 255 },
+    { 255, 255, 255, 255 },
+    { 125, 125, 125, 255 },
+  };
+  
+  Gfx_Texture texture = gfx_fns.add_texture(gfx, 2, 2, (void*)&test_texture);
   
   
+  //- NOTE(Momo): Begin game loop
   g_is_running = true;
   B32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
-  
-  
-  
-  
   LARGE_INTEGER performance_frequency;
   QueryPerformanceFrequency(&performance_frequency);
   
@@ -264,6 +270,7 @@ WinMain(HINSTANCE instance,
       // NOTE(Momo): At this point, we basically missed a frame :(
     }
     
+    // TODO(Momo): Test gfx
     V2U32 render_wh;
     render_wh.w = 1600;
     render_wh.h = 900;
@@ -273,12 +280,12 @@ WinMain(HINSTANCE instance,
     render_region.max.x = 1600;
     render_region.max.y = 900;
     
-    Gfx_Cmds* cmds = gfx_fns.begin_frame(gfx, render_wh, render_region);
+    gfx_fns.begin_frame(gfx, render_wh, render_region);
     
     {
       RGBAF32 colors;
       colors.r = colors.g = colors.b  = colors.a = 0.3f;
-      Gfx_Clear(cmds, colors);
+      Gfx_Clear(gfx, colors);
     }
     
     {
@@ -288,7 +295,7 @@ WinMain(HINSTANCE instance,
       frustum.max.x = 1600;
       frustum.max.y = 900;
       frustum.max.z = 500;
-      Gfx_SetOrthoCamera(cmds, position, frustum);
+      Gfx_SetOrthoCamera(gfx, position, frustum);
     }
     
     {
@@ -307,7 +314,6 @@ WinMain(HINSTANCE instance,
         tmp_increase = true;
       }
       
-      
       RGBAF32 colors = RGBAF32_Create(0.f, 0.f, 0.f, 1.f);
       HSLF32 hsl = HSLF32_Create(tmp_delta, 1.f, 0.5f);
       colors.rgb = HSLF32_ToRGBF32(hsl);
@@ -316,10 +322,11 @@ WinMain(HINSTANCE instance,
       M44F32 rot = M44F32_RotationZ(tmp_rot += (F32)game_dt);
       M44F32 trans = M44F32_Translation(800.f, 450.f, 300.f);
       M44F32 t = M44F32_Concat(trans, M44F32_Concat(scale, rot));
-      Gfx_DrawRect(cmds, colors, t);
+      //Gfx_DrawRect(gfx, colors, t);
+      Gfx_DrawSprite(gfx, colors, t, texture);
     }
     
-    gfx_fns.end_frame(gfx, cmds);
+    gfx_fns.end_frame(gfx);
     
     last_count = Win_QueryPerformanceCounter();
     
@@ -338,7 +345,7 @@ WinMain(HINSTANCE instance,
   
   
   
-  
+  gfx_fns.free(gfx);
   
   return 0;  
   

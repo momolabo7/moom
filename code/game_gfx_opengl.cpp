@@ -123,7 +123,7 @@ Opengl__AddPredefinedTextures(Opengl* ogl) {
   
   // NOTE(Momo): Dummy texture setup
   {
-    Pixel pixels[4] = {
+    U8 pixels[4][4] {
       { 125, 125, 125, 255 },
       { 255, 255, 255, 255 },
       { 255, 255, 255, 255 },
@@ -146,7 +146,7 @@ Opengl__AddPredefinedTextures(Opengl* ogl) {
   
   // NOTE(Momo): Blank texture setup
   {
-    Pixel pixels = { 255, 255, 255, 255 };
+    U8 pixels[4] = { 255, 255, 255, 255 };
     GLuint blank_texture;
     ogl->glCreateTextures(GL_TEXTURE_2D, 1, &blank_texture);
     ogl->glTextureStorage2D(blank_texture, 1, GL_RGBA8, 1, 1);
@@ -471,22 +471,21 @@ Opengl_ClearTextures(Opengl* ogl) {
   Opengl__AddPredefinedTextures(ogl);
 }
 
-static Gfx_Cmds*
+static void
 Opengl_BeginFrame(Opengl* ogl, V2U32 render_wh, Rect2U32 region) {
   Opengl__AlignViewport(ogl, render_wh, region);
   Mailbox_Clear(&ogl->gfx.commands);
-  return &ogl->gfx.commands;
 }
 
 static void
-Opengl_EndFrame(Opengl* ogl, Mailbox* commands) 
+Opengl_EndFrame(Opengl* ogl) 
 {
   GLuint current_texture = 0;
   GLsizei instances_to_draw = 0;
   GLsizei last_drawn_instance_index = 0;
   GLuint current_instance_index = 0;
   
-  
+  Gfx_Cmds* commands = &ogl->gfx.commands;
   for (U32 i = 0; i < commands->entry_count; ++i) {
     Mailbox_Entry* entry = Mailbox_Get(commands, i);
     switch(entry->id) {
@@ -559,8 +558,8 @@ Opengl_EndFrame(Opengl* ogl, Mailbox* commands)
         ++instances_to_draw;
         ++current_instance_index;
       } break;
-      case Gfx_CmdType_DrawTexRect: {
-        Gfx_Cmd_DrawTexRect* data = (Gfx_Cmd_DrawTexRect*)entry->data;
+      case Gfx_CmdType_DrawSubSprite: {
+        Gfx_Cmd_DrawSubSprite* data = (Gfx_Cmd_DrawSubSprite*)entry->data;
         
         GLuint texture = ogl->textures[data->texture.id]; 
         

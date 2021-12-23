@@ -241,6 +241,6 @@ typedef struct Opengl {
 static B32           Opengl_Init(Opengl* ogl, UMI max_entities);
 static Gfx_Texture	 Opengl_AddTexture(Opengl* ogl, S32 width, S32 height, void* pixels);
 static void          Opengl_ClearTextures(Opengl* ogl);
-static Gfx_Cmds*     Opengl_BeginFrame(Opengl* ogl, V2U32 render_wh, Rect2U32 region);
-static void          Opengl_EndFrame(Opengl* ogl, Mailbox* commands);
+static void          Opengl_BeginFrame(Opengl* ogl, V2U32 render_wh, Rect2U32 region);
+static void          Opengl_EndFrame(Opengl* ogl);
 #endif //GAME_GFX_OPENGL_H

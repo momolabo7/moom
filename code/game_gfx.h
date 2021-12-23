@@ -36,7 +36,7 @@ typedef struct Gfx_Texture {
 typedef enum Gfx_CmdType {
   Gfx_CmdType_Clear,
   Gfx_CmdType_SetBasis,
-  Gfx_CmdType_DrawTexRect,
+  Gfx_CmdType_DrawSubSprite, 
   Gfx_CmdType_DrawRect,
 } Gfx_CmdType;
 
@@ -49,12 +49,12 @@ typedef struct Gfx_Cmd_SetBasis {
   M44F32 basis;
 } Gfx_Cmd_SetBasis;
 
-typedef struct Gfx_Cmd_DrawTexRect {
+typedef struct Gfx_Cmd_DrawSubSprite {
   Gfx_Texture texture;
   RGBAF32 colors;
   M44F32 transform;
   Rect2F32 texture_uv; 
-} Gfx_Cmd_DrawTexRect;
+} Gfx_Cmd_DrawSubSprite;
 
 typedef struct Gfx_Cmd_DrawRect {
   RGBAF32 colors;
@@ -62,28 +62,34 @@ typedef struct Gfx_Cmd_DrawRect {
 } Gfx_Cmd_DrawRect;
 
 // NOTE(Momo): Function declaraions
-static void Gfx_SetBasis(Gfx_Cmds* g, M44F32 basis);
-static void Gfx_SetOrthoCamera(Gfx_Cmds* g, V3F32 pos, Rect3F32 frustum);
-static void Gfx_DrawTextRect(Mailbox* cmds, 
-                             RGBAF32 colors, 
-                             M44F32 transform, 
-                             Gfx_Texture texture,
-                             Rect2F32 texture_uv);
-static void Gfx_DrawRect(Gfx_Cmds* cmds, RGBAF32 colors, M44F32 transform);
-static void Gfx_Clear(Gfx_Cmds* g, RGBAF32 colors);
-static void Gfx_DrawLine(Gfx_Cmds* cmds, 
+static void Gfx_SetBasis(Gfx* g, M44F32 basis);
+static void Gfx_SetOrthoCamera(Gfx* g, V3F32 pos, Rect3F32 frustum);
+static void Gfx_DrawSprite(Gfx* gfx, 
+                           RGBAF32 colors, 
+                           M44F32 transform, 
+                           Gfx_Texture texture,
+                           Rect2F32 texture_uv);
+static void Gfx_DrawSubSprite(Gfx* gfx, 
+                              RGBAF32 colors, 
+                              M44F32 transform, 
+                              Gfx_Texture texture,
+                              Rect2F32 texture_uv);
+
+static void Gfx_DrawRect(Gfx* gfx, RGBAF32 colors, M44F32 transform);
+static void Gfx_Clear(Gfx* gfx, RGBAF32 colors);
+static void Gfx_DrawLine(Gfx* gfx, 
                          Line2F32 line,
                          F32 thickness,
                          RGBAF32 colors,
                          F32 pos_z);
-static void Gfx_DrawCircle(Gfx_Cmds* cmds,
+static void Gfx_DrawCircle(Gfx* gfx,
                            Circ2F32 circle,
                            F32 thickness, 
                            U32 line_count,
                            RGBAF32 color,
                            F32 pos_z);
 
-static void Gfx_DrawAABB(Gfx_Cmds* cmds,
+static void Gfx_DrawAABB(Gfx* gfx,
                          Rect2F32 rect,
                          F32 thickness,
                          RGBAF32 colors,

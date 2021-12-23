@@ -1,6 +1,9 @@
 Gfx
+- Change Gfx_BeginFrame/EndFrame to just Gfx_Render
+- Consider having a pointer to Gfx_Command, so that we can pass Gfx around by value?
 - colors for each vertice
 	- try to animate them!
+
 
 Arch
 - combine renderer.dll build with platform build

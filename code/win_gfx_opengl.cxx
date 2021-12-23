@@ -1,4 +1,4 @@
-// NOTE(Momo): Renderer code for Win w/ Opengl
+// NOTE(Momo): Renderer code for Win w/ Openg
 
 
 #include "win_gfx.h"
@@ -314,17 +314,16 @@ if (!opengl->name) { goto failed2; }
   return nullptr;
 }
 
-extern "C" Gfx_Cmds*
-Gfx_BeginFrame(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region)
+extern "C" void
+Gfx_BeginFrame(Gfx* gfx, V2U32 render_wh, Rect2U32 render_region)
 {
-  return Opengl_BeginFrame((Opengl*)renderer, render_wh, render_region);
+  Opengl_BeginFrame((Opengl*)gfx, render_wh, render_region);
 }
 
 
 extern "C" void
-Gfx_EndFrame(Gfx* renderer, 
-             Mailbox* render_commands) {
-  Opengl_EndFrame((Opengl*)renderer, render_commands);
+Gfx_EndFrame(Gfx* gfx) {
+  Opengl_EndFrame((Opengl*)gfx);
 }
 
 
@@ -342,10 +341,10 @@ Gfx_ClearTextures(Gfx* r) {
 }
 
 extern "C" Gfx_Texture
-Gfx_AddTexture(Gfx* renderer,
+Gfx_AddTexture(Gfx* gfx,
                S32 width, 
                S32 height,
                void* pixels) 
 {
-  return Opengl_AddTexture((Opengl*)renderer, width, height, pixels);
+  return Opengl_AddTexture((Opengl*)gfx, width, height, pixels);
 }
