@@ -15,6 +15,7 @@ Gfx_SetOrthoCamera(Gfx* gfx,
   Gfx_Cmd_SetBasis* data = Mailbox_Push(&gfx->commands, 
                                         Gfx_Cmd_SetBasis, 
                                         Gfx_CmdType_SetBasis);
+  
   M44F32 p  = M44F32_Orthographic(frustum.min.x,  
                                   frustum.max.x, 
                                   frustum.min.y, 
@@ -32,6 +33,7 @@ Gfx_Clear(Gfx* gfx, RGBAF32 colors) {
   Gfx_Cmd_Clear* data = Mailbox_Push(&gfx->commands, 
                                      Gfx_Cmd_Clear, 
                                      Gfx_CmdType_Clear);
+  
   data->colors = colors;
 }
 
@@ -74,6 +76,7 @@ Gfx_DrawRect(Gfx* gfx,
   Gfx_Cmd_DrawRect* data = Mailbox_Push(&gfx->commands, 
                                         Gfx_Cmd_DrawRect, 
                                         Gfx_CmdType_DrawRect);
+  
   data->colors = colors;
   data->transform = transform;
 }
@@ -193,3 +196,28 @@ Gfx_DrawAABB(Gfx* gfx,
                pos_z);
 }
 
+static void 
+Gfx_AddTexture(Gfx* gfx,
+               UMI index,
+               UMI width,
+               UMI height,
+               U8* pixels) 
+{
+  
+  // TODO: we should probably align this to 16 bytes
+  // so that the renderer can optimize the copying...?
+  UMI texture_size = width * height * 4;
+  
+  Gfx_Cmd_AddTexture* data = Mailbox_Push(&gfx->commands, 
+                                          Gfx_Cmd_AddTexture,
+                                          Gfx_CmdType_AddTexture);
+  
+  
+  
+  data->width = width;
+  data->height = height;
+  data->index = index;
+  
+  data->pixels = (U8*)Mailbox_PushData(&gfx->commands, texture_size);
+  Memory_Copy(data->pixels, pixels, texture_size);
+}

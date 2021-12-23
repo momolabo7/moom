@@ -33,7 +33,7 @@ Mailbox_Get(Mailbox* m, UMI index) {
 
 
 
-static inline void*
+static void*
 Mailbox_PushBlock(Mailbox* m, UMI size, U32 id) 
 {
 	UMI imem = PtrToInt(m->memory);
@@ -54,4 +54,18 @@ Mailbox_PushBlock(Mailbox* m, UMI size, U32 id)
 	++m->entry_count;
 	
 	return entry->data;
+}
+
+static void* 
+Mailbox_PushData(Mailbox* m, UMI size)
+{
+  UMI imem = PtrToInt(m->memory);
+  UMI adjusted_data_pos = AlignUpPow2(imem + m->data_pos, 16) - imem;
+  
+  Assert(adjusted_data_pos + size < m->entry_pos);
+  
+  m->data_pos = adjusted_data_pos + size;
+  
+  return IntToPtr(imem + adjusted_data_pos);
+  
 }

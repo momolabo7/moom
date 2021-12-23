@@ -26,6 +26,7 @@ static Mailbox          Mailbox_Create(void* memory, UMI size);
 static void             Mailbox_Clear(Mailbox* m);
 static Mailbox_Entry*   Mailbox_Get(Mailbox *m, UMI index);
 static void*            Mailbox_PushBlock(Mailbox* m, UMI size, U32 id);
+static void*						Mailbox_PushData(Mailbox* m, UMI size);
 
 #define Mailbox_Push(m, type, id) (type*)Mailbox_PushBlock(m, sizeof(type), id)
 

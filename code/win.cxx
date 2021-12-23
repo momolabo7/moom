@@ -271,6 +271,8 @@ WinMain(HINSTANCE instance,
     }
     
     // TODO(Momo): Test gfx
+    Gfx_AddTexture(gfx, 0, 2, 2, (U8*)&test_texture);
+    
     V2U32 render_wh;
     render_wh.w = 1600;
     render_wh.h = 900;

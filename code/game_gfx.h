@@ -38,6 +38,7 @@ typedef enum Gfx_CmdType {
   Gfx_CmdType_SetBasis,
   Gfx_CmdType_DrawSubSprite, 
   Gfx_CmdType_DrawRect,
+  Gfx_CmdType_AddTexture,
 } Gfx_CmdType;
 
 
@@ -60,6 +61,14 @@ typedef struct Gfx_Cmd_DrawRect {
   RGBAF32 colors;
   M44F32 transform;
 } Gfx_Cmd_DrawRect;
+
+
+typedef struct Gfx_Cmd_AddTexture {
+  UMI index;
+  UMI width;
+  UMI height;
+  U8* pixels;
+} Gfx_Cmd_AddTexture;
 
 // NOTE(Momo): Function declaraions
 static void Gfx_SetBasis(Gfx* g, M44F32 basis);
@@ -95,6 +104,11 @@ static void Gfx_DrawAABB(Gfx* gfx,
                          RGBAF32 colors,
                          F32 pos_z);
 
+static void Gfx_AddTexture(Gfx* gfx,
+                           UMI index,
+                           UMI width,
+                           UMI height,
+                           U8* pixels);
 
 
 #endif //GAME_RENDERER_H

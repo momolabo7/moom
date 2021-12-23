@@ -9,10 +9,10 @@ SET Opt=%1%
 pushd %BuildDir%
 
 
-if exist win32.rdbg (
-	call remedybg win32.rdbg
+if exist win.rdbg (
+	call remedybg win.rdbg
 ) else (
-	call remedybg win32.exe
+	call remedybg win.exe
 )
 
 popd

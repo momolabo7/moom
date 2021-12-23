@@ -22,13 +22,14 @@ static void* Arena_BootBlock(UMI struct_size, UMI offset_to_arena, void* memory,
 #define Arena_Push(arena, type) (type*)Arena_PushBlock(arena, sizeof(type));
 #define Arena_PushArray(arena, type, num) (type*)Arena_PushBlock(arena, sizeof(type) * (num));
 
+
 // NOTE(Momo): Temporary memory API
 struct Arena_Marker {
 	Arena* arena;
 	UMI old_pos;
 };
 static Arena_Marker Arena_Mark(Arena* arena);
-static void		 Arena_Revert(Arena_Marker mark);
+static void		     Arena_Revert(Arena_Marker mark);
 
 
 

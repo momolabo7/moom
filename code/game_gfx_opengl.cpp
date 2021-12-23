@@ -604,6 +604,11 @@ Opengl_EndFrame(Opengl* ogl)
         ++current_instance_index;
         
       } break;
+      case Gfx_CmdType_AddTexture: {
+        Gfx_Cmd_AddTexture* data = (Gfx_Cmd_AddTexture*)entry->data;
+        
+        
+      } break;
     }
   }
   
