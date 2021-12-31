@@ -168,12 +168,10 @@ typedef void    GL_glDeleteTextures(GLsizei n,
 typedef void    GL_glDebugMessageCallbackARB(GLDEBUGPROC *callback, 
                                              const void* userParams);
 
-
-
 typedef struct Opengl {
   Gfx gfx;
   
-  // NOTE(Momo): Start of things that needs to be provided by platform
+  
   GL_glEnable* glEnable;
   GL_glDisable* glDisable;
   GL_glViewport* glViewport;
@@ -213,7 +211,11 @@ typedef struct Opengl {
   GL_glNamedBufferSubData* glNamedBufferSubData;
   GL_glUseProgram* glUseProgram;
   
+  // NOTE(Momo): 
+  GLuint* textures;
+  UMI texture_count;
   
+  UMI max_entities;
   
   // NOTE(Momo): End of things that needs to be provided by platform
   GLuint buffers[5]; // Opengl__VBO_Count
@@ -222,16 +224,6 @@ typedef struct Opengl {
   GLuint dummy_texture;
   GLuint blank_texture;
   
-  // NOTE(Momo): A table mapping  between
-  // 'game texture handler' <-> 'opengl texture handler'  
-  // Index 0 will always be an invalid 'dummy texture
-  // Index 1 will always be a blank texture for items with no texture (but has colors)
-  // TODO(Momo): Change back to old system
-  GLuint* textures;
-  UMI texture_count;
-  UMI texture_cap;
-  
-  
   Rect2U32 render_region;
 } Opengl;
 
@@ -239,8 +231,7 @@ typedef struct Opengl {
 
 //~ NOTE(Momo): Functions
 static B32           Opengl_Init(Opengl* ogl, UMI max_entities);
-static Gfx_Texture	 Opengl_AddTexture(Opengl* ogl, S32 width, S32 height, void* pixels);
-static void          Opengl_ClearTextures(Opengl* ogl);
 static void          Opengl_BeginFrame(Opengl* ogl, V2U32 render_wh, Rect2U32 region);
 static void          Opengl_EndFrame(Opengl* ogl);
+
 #endif //GAME_GFX_OPENGL_H

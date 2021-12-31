@@ -55,7 +55,8 @@ Memory_IsEqual(const void* lhs, const void* rhs, UMI size) {
 }
 #endif
 
-static void Memory_Swap(void* lhs, void* rhs, UMI size) {
+static void 
+Memory_Swap(void* lhs, void* rhs, UMI size) {
   U8* l = (U8*)lhs;
   U8* r = (U8*)rhs;
   

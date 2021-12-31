@@ -4,6 +4,8 @@ Stream_Create(U8* memory, UMI memory_size) {
 	ret.data = memory;
 	ret.size = memory_size;
   ret.pos = 0;
+  ret.bit_buffer = 0;
+  ret.bit_count = 0;
   return ret;
 }
 
@@ -49,6 +51,7 @@ Stream_ConsumeBits(Stream* s, U32 amount){
     s->bit_buffer |= (byte << s->bit_count);
     s->bit_count += 8;
   }
+  
   
   U32 result = s->bit_buffer & ((1 << amount) - 1); 
   

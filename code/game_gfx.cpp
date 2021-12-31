@@ -41,7 +41,7 @@ static void
 Gfx_DrawSubSprite(Gfx* gfx, 
                   RGBAF32 colors, 
                   M44F32 transform, 
-                  Gfx_Texture texture,
+                  UMI texture_index,
                   Rect2F32 texture_uv)  
 
 {
@@ -51,7 +51,7 @@ Gfx_DrawSubSprite(Gfx* gfx,
   
   data->colors = colors;
   data->transform = transform;
-  data->texture = texture;
+  data->texture_index = texture_index;
   data->texture_uv = texture_uv;
 }
 
@@ -59,13 +59,13 @@ static void
 Gfx_DrawSprite(Gfx* gfx, 
                RGBAF32 colors, 
                M44F32 transform, 
-               Gfx_Texture texture)  
+               UMI texture_index)  
 
 {
   Rect2F32 uv = {0};
   uv.max.x = 1.f;
   uv.max.y = 1.f;
-  Gfx_DrawSubSprite(gfx, colors, transform, texture, uv);
+  Gfx_DrawSubSprite(gfx, colors, transform, texture_index, uv);
 }
 
 static void
@@ -149,55 +149,69 @@ Gfx_DrawAABB(Gfx* gfx,
              F32 pos_z) 
 {
   //Bottom
-  Gfx_DrawLine(gfx, 
-               Line2F32{
-                 rect.min.x, 
-                 rect.min.y,  
-                 rect.max.x, 
-                 rect.min.y
-               },
-               thickness, 
-               colors,
-               pos_z);
+  {
+    Line2F32 line;
+    line.min.x = rect.min.x;
+    line.min.y = rect.min.y;
+    line.max.x = rect.max.x;
+    line.min.y = rect.min.y; 
+    
+    Gfx_DrawLine(gfx, 
+                 line,
+                 thickness, 
+                 colors,
+                 pos_z);
+  }
+  
   // Left
-  Gfx_DrawLine(gfx, 
-               Line2F32{
-                 rect.min.x,
-                 rect.min.y,
-                 rect.min.x,
-                 rect.max.y
-               },  
-               thickness, 
-               colors,
-               pos_z);
+  {
+    Line2F32 line;
+    line.min.x = rect.min.x;
+    line.min.y = rect.min.y;
+    line.max.x = rect.min.x;
+    line.min.y = rect.max.y; 
+    
+    Gfx_DrawLine(gfx, 
+                 line,
+                 thickness, 
+                 colors,
+                 pos_z);
+  }
   
   //Top
-  Gfx_DrawLine(gfx, 
-               Line2F32{
-                 rect.min.x,
-                 rect.max.y,
-                 rect.max.x,
-                 rect.max.y
-               }, 
-               thickness, 
-               colors,
-               pos_z);
+  {
+    Line2F32 line;
+    line.min.x = rect.min.x;
+    line.min.y = rect.max.y;
+    line.max.x = rect.max.x;
+    line.min.y = rect.max.y; 
+    
+    Gfx_DrawLine(gfx, 
+                 line,
+                 thickness, 
+                 colors,
+                 pos_z);
+    
+  }
   
   //Right 
-  Gfx_DrawLine(gfx, 
-               Line2F32{
-                 rect.max.x,
-                 rect.min.y,
-                 rect.max.x,
-                 rect.max.y
-               },  
-               thickness, 
-               colors,
-               pos_z);
+  {
+    Line2F32 line;
+    line.min.x = rect.max.x;
+    line.min.y = rect.min.y;
+    line.max.x = rect.max.x;
+    line.min.y = rect.max.y; 
+    
+    Gfx_DrawLine(gfx, 
+                 line,
+                 thickness, 
+                 colors,
+                 pos_z);
+  }
 }
 
 static void 
-Gfx_AddTexture(Gfx* gfx,
+Gfx_SetTexture(Gfx* gfx,
                UMI index,
                UMI width,
                UMI height,
@@ -208,9 +222,9 @@ Gfx_AddTexture(Gfx* gfx,
   // so that the renderer can optimize the copying...?
   UMI texture_size = width * height * 4;
   
-  Gfx_Cmd_AddTexture* data = Mailbox_Push(&gfx->commands, 
-                                          Gfx_Cmd_AddTexture,
-                                          Gfx_CmdType_AddTexture);
+  Gfx_Cmd_SetTexture* data = Mailbox_Push(&gfx->commands, 
+                                          Gfx_Cmd_SetTexture,
+                                          Gfx_CmdType_SetTexture);
   
   
   
@@ -218,6 +232,11 @@ Gfx_AddTexture(Gfx* gfx,
   data->height = height;
   data->index = index;
   
-  data->pixels = (U8*)Mailbox_PushData(&gfx->commands, texture_size);
+  data->pixels = (U8*)Mailbox_PushExtraData(&gfx->commands, texture_size, 16);
   Memory_Copy(data->pixels, pixels, texture_size);
+}
+
+static void 
+Gfx_ClearTextures(Gfx* gfx) {
+  Mailbox_Push(&gfx->commands, Gfx_Cmd_ClearTextures, Gfx_CmdType_ClearTextures);
 }

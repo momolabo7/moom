@@ -20,11 +20,11 @@ Arena_Remain(Arena* arena) {
 }
 
 static void* 
-Arena_PushBlock(Arena* arena, UMI size) {
+Arena_PushBlock(Arena* arena, UMI size, UMI align) {
   Assert(size);
 	
 	UMI imem = PtrToInt(arena->memory);
-	UMI adjusted_pos = AlignUpPow2(imem + arena->pos, 16) - imem;
+	UMI adjusted_pos = AlignUpPow2(imem + arena->pos, align) - imem;
 	
 	Assert(adjusted_pos + size < imem + arena->cap);
 	
@@ -37,7 +37,7 @@ Arena_PushBlock(Arena* arena, UMI size) {
 
 static Arena
 Arena_Partition(Arena* from_arena, UMI size) {	
-	void* memory = Arena_PushBlock(from_arena, size);
+	void* memory = Arena_PushBlock(from_arena, size, 16);
   return Arena_Create(memory, size);
 }
 

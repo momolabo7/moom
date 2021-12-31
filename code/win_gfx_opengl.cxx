@@ -202,7 +202,7 @@ Gfx_Init(HWND window, UMI render_commands_size, UMI max_textures, UMI max_entiti
   
   Opengl* opengl = (Opengl*)Win_Gfx_AllocateMemory(sizeof(Opengl));
   opengl->textures = (GLuint*)Win_Gfx_AllocateMemory(max_textures*sizeof(GLuint));
-  opengl->texture_cap = max_textures;
+  opengl->texture_count = max_textures;
   opengl->gfx.commands =
     Mailbox_Create(Win_Gfx_AllocateMemory(render_commands_size),
                    render_commands_size);
@@ -299,8 +299,6 @@ if (!opengl->name) { goto failed2; }
   ReleaseDC(window, dc);
   return (Gfx*)opengl;
   
-  
-  
   failed2: {
     Win_Gfx_FreeMemory(opengl->textures);
     Win_Gfx_FreeMemory(opengl->gfx.commands.memory);
@@ -335,16 +333,3 @@ Gfx_Free(Gfx* r) {
   Win_Gfx_FreeMemory(opengl);
 }
 
-extern "C" void
-Gfx_ClearTextures(Gfx* r) {
-  Opengl_ClearTextures((Opengl*)r);
-}
-
-extern "C" Gfx_Texture
-Gfx_AddTexture(Gfx* gfx,
-               S32 width, 
-               S32 height,
-               void* pixels) 
-{
-  return Opengl_AddTexture((Opengl*)gfx, width, height, pixels);
-}

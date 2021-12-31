@@ -13,14 +13,12 @@
 // intinsics: it will be provided but under a flag. These are
 // typically 'add-ons'.
 //
-// TODO(Momo): 
-// [] Shape
 
 #include "momo_base.h"
 #include "momo_colors.h"
 #include "momo_vector.h"
+#include "momo_interval.h"
 #include "momo_matrix.h"
-//#include "momo_interval.h"
 #include "momo_shapes.h"
 #include "momo_allocator.h"
 #include "momo_random.h"
@@ -32,15 +30,16 @@
 #include "momo_sort.h"
 #include "momo_rect_packer.h"
 #include "momo_wav.h"
-
+#include "momo_image.h"
+#include "momo_png.h"
 
 
 
 #include "momo_base.cpp"
 #include "momo_colors.cpp"
 #include "momo_vector.cpp"
+#include "momo_interval.cpp"
 #include "momo_matrix.cpp"
-//#include "momo_interval.cpp" 
 #include "momo_shapes.cpp"
 #include "momo_allocator.cpp"
 #include "momo_random.cpp"
@@ -52,5 +51,7 @@
 #include "momo_sort.cpp"
 #include "momo_rect_packer.cpp"
 #include "momo_wav.cpp"
+#include "momo_image.cpp"
+#include "momo_png.cpp"
 
 #endif //MOMO_H

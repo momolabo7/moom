@@ -216,10 +216,11 @@ V3F32_AngleBetween(V3F32 lhs, V3F32 rhs) {
 
 static V3F32
 V3F32_Cross(V3F32 lhs, V3F32 rhs) {
-  return {
-    (lhs.y * rhs.z) - (lhs.z * rhs.y),
-    (lhs.z * rhs.x) - (lhs.x * rhs.z),
-    (lhs.x * rhs.y) - (lhs.y * rhs.x)
-  };
+  V3F32 ret;
+  ret.x = (lhs.y * rhs.z) - (lhs.z * rhs.y);
+  ret.y = (lhs.z * rhs.x) - (lhs.x * rhs.z);
+  ret.z = (lhs.x * rhs.y) - (lhs.y * rhs.x);
+  
+  return ret;
 }
 

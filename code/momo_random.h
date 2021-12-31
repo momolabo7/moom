@@ -3,11 +3,10 @@
 #ifndef MOMO_RANDOM_H
 #define MOMO_RANDOM_H
 
-// Very pseudo, much wow.
-struct Rng
+typedef struct 
 {
-    U32 index;
-};
+  U32 index;
+} Rng;
 
 static Rng Rng_Create(U32 seed);
 static U32 Rng_Next(Rng* r);

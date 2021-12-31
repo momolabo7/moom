@@ -116,6 +116,85 @@ Opengl__AlignViewport(Opengl* ogl,
 }
 
 
+static void 
+Opengl__DrawInstances(Opengl* ogl,
+                      GLuint texture, 
+                      GLsizei instances_to_draw, 
+                      GLuint index_to_draw_from) 
+{
+  Assert(instances_to_draw + index_to_draw_from < ogl->max_entities);
+  
+  if (instances_to_draw > 0) {
+    ogl->glBindTexture(GL_TEXTURE_2D, texture);
+    ogl->glTexParameteri(GL_TEXTURE_2D, 
+                         GL_TEXTURE_MIN_FILTER, 
+                         GL_NEAREST);
+    ogl->glTexParameteri(GL_TEXTURE_2D, 
+                         GL_TEXTURE_MAG_FILTER, 
+                         GL_NEAREST);
+    ogl->glEnable(GL_BLEND);
+    ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    ogl->glBindVertexArray(ogl->model);
+    ogl->glUseProgram(ogl->shader);
+    
+    ogl->glDrawElementsInstancedBaseInstance(GL_TRIANGLES, 
+                                             6, 
+                                             GL_UNSIGNED_BYTE, 
+                                             nullptr, 
+                                             instances_to_draw,
+                                             index_to_draw_from);
+  }
+}
+
+
+
+static void
+Opengl__SetTexture(Opengl* ogl,
+                   UMI index,
+                   S32 width,
+                   S32 height,
+                   U8* pixels) 
+{
+  Gfx_Texture ret = {};
+  
+  Assert(index < ogl->texture_count);
+  
+  GLuint entry;
+  
+  ogl->glCreateTextures(GL_TEXTURE_2D, 
+                        1, 
+                        &entry);
+  
+  ogl->glTextureStorage2D(entry, 
+                          1, 
+                          GL_RGBA8, 
+                          width, 
+                          height);
+  
+  ogl->glTextureSubImage2D(entry, 
+                           0, 
+                           0, 
+                           0, 
+                           width, 
+                           height, 
+                           GL_RGBA, 
+                           GL_UNSIGNED_BYTE, 
+                           (void*)pixels);
+  
+  ret.id = ogl->texture_count;
+  
+  ogl->textures[index] = entry;
+}
+
+static void
+Opengl__ClearTextures(Opengl* ogl) {
+  ogl->glDeleteTextures((GLsizei)ogl->texture_count, 
+                        ogl->textures);
+  for (UMI i = 0; i < ogl->texture_count; ++i ){
+    ogl->textures[i] = 0;
+  }
+}
+
 void 
 Opengl__AddPredefinedTextures(Opengl* ogl) {
   typedef struct Pixel { U8 e[4]; } Pixel;
@@ -167,7 +246,7 @@ static B32
 Opengl_Init(Opengl* ogl, 
             UMI max_entities)
 {	
-  ogl->texture_count = 0;
+  ogl->max_entities = max_entities;
   
   ogl->glEnable(GL_DEPTH_TEST);
   ogl->glEnable(GL_SCISSOR_TEST);
@@ -386,90 +465,12 @@ Opengl_Init(Opengl* ogl,
     return false;
   }
   Opengl__AddPredefinedTextures(ogl);
+  Opengl__ClearTextures(ogl);
   
   return true;
   
 }
 
-
-static void 
-Opengl__DrawInstances(Opengl* ogl,
-                      GLuint texture, 
-                      GLsizei instances_to_draw, 
-                      GLuint index_to_draw_from) 
-{
-  //Assert(instances_to_draw + index_to_draw_from < OPENGL_MAX_ENTITIES);
-  if (instances_to_draw > 0) {
-    ogl->glBindTexture(GL_TEXTURE_2D, texture);
-    ogl->glTexParameteri(GL_TEXTURE_2D, 
-                         GL_TEXTURE_MIN_FILTER, 
-                         GL_NEAREST);
-    ogl->glTexParameteri(GL_TEXTURE_2D, 
-                         GL_TEXTURE_MAG_FILTER, 
-                         GL_NEAREST);
-    ogl->glEnable(GL_BLEND);
-    ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ogl->glBindVertexArray(ogl->model);
-    ogl->glUseProgram(ogl->shader);
-    
-    ogl->glDrawElementsInstancedBaseInstance(GL_TRIANGLES, 
-                                             6, 
-                                             GL_UNSIGNED_BYTE, 
-                                             nullptr, 
-                                             instances_to_draw,
-                                             index_to_draw_from);
-  }
-}
-
-
-static Gfx_Texture
-Opengl_AddTexture(Opengl* ogl,
-                  S32 width,
-                  S32 height,
-                  void* pixels) 
-{
-  Gfx_Texture ret = {};
-  
-  // TODO(Momo): Should we just assert here and
-  // assume that it's always okay...?
-  Assert(ogl->texture_cap - ogl->texture_count);
-  
-  GLuint entry;
-  
-  ogl->glCreateTextures(GL_TEXTURE_2D, 
-                        1, 
-                        &entry);
-  
-  ogl->glTextureStorage2D(entry, 
-                          1, 
-                          GL_RGBA8, 
-                          width, 
-                          height);
-  
-  ogl->glTextureSubImage2D(entry, 
-                           0, 
-                           0, 
-                           0, 
-                           width, 
-                           height, 
-                           GL_RGBA, 
-                           GL_UNSIGNED_BYTE, 
-                           pixels);
-  
-  ret.id = ogl->texture_count;
-  
-  Assert(ogl->texture_count < ogl->texture_cap);
-  ogl->textures[ogl->texture_count++] = entry;
-  return ret;
-}
-
-static void
-Opengl_ClearTextures(Opengl* ogl) {
-  ogl->glDeleteTextures((GLsizei)ogl->texture_count, 
-                        ogl->textures);
-  ogl->texture_count = 0;
-  Opengl__AddPredefinedTextures(ogl);
-}
 
 static void
 Opengl_BeginFrame(Opengl* ogl, V2U32 render_wh, Rect2U32 region) {
@@ -561,7 +562,10 @@ Opengl_EndFrame(Opengl* ogl)
       case Gfx_CmdType_DrawSubSprite: {
         Gfx_Cmd_DrawSubSprite* data = (Gfx_Cmd_DrawSubSprite*)entry->data;
         
-        GLuint texture = ogl->textures[data->texture.id]; 
+        GLuint texture = ogl->textures[data->texture_index]; 
+        if (texture == 0) {
+          texture = ogl->dummy_texture;
+        }
         
         // NOTE(Momo): If the currently set texture is not same as the currently
         // processed texture, batch draw all instances before the current instance.
@@ -604,10 +608,17 @@ Opengl_EndFrame(Opengl* ogl)
         ++current_instance_index;
         
       } break;
-      case Gfx_CmdType_AddTexture: {
-        Gfx_Cmd_AddTexture* data = (Gfx_Cmd_AddTexture*)entry->data;
+      case Gfx_CmdType_SetTexture: {
+        Gfx_Cmd_SetTexture* data = (Gfx_Cmd_SetTexture*)entry->data;
+        Assert(data->width < S32_max);
+        Assert(data->height < S32_max);
+        Assert(data->width > 0);
+        Assert(data->height > 0);
         
-        
+        Opengl__SetTexture(ogl, data->index, (S32)data->width, (S32)data->height, data->pixels);
+      } break;
+      case Gfx_CmdType_ClearTextures: {
+        Opengl__ClearTextures(ogl);
       } break;
     }
   }

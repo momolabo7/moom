@@ -5,14 +5,16 @@
 
 
 // NOTE(Momo): Each component of RGBA are in the range [0 - 1].
-typedef struct RGBF32 {
+typedef struct {
   F32 r, g, b; 
 } RGBF32;
 
-typedef union RGBAF32 {
-	struct { F32 r, g, b, a; };  
-  struct { RGBF32 rgb; F32 a; };
-  
+typedef struct {
+  union {
+    struct { F32 r, g, b; };  
+    RGBF32 rgb;
+  };
+  F32 a;
 } RGBAF32;
 
 
@@ -21,7 +23,7 @@ typedef union RGBAF32 {
 // For hue, normally it is a number between [0 - 360], but
 // it will be mapped linearly to [0 - 1] in this case.
 // i.e. hue 0 is 0 degrees, hue 1 is 360 degrees.
-typedef union HSLF32 {
+typedef union {
   struct { F32 h, s, l; };
 } HSLF32;
 

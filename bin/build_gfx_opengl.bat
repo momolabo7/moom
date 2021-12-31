@@ -12,7 +12,8 @@ if not exist %BuildDir% mkdir %BuildDir%
 SET CommonCompilerFlags=-MT -WX -W4 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa  -std:c++17
 SET CommonCompilerFlags=-DSLOW -DINTERNAL  %CommonCompilerFlags%
 
-SET CommonLinkerFlags=-incremental:no -opt:ref -EXPORT:Gfx_Init -EXPORT:Gfx_BeginFrame -EXPORT:Gfx_EndFrame -EXPORT:Gfx_Free -EXPORT:Gfx_AddTexture -EXPORT:Gfx_ClearTextures
+SET CommonLinkerFlags=-incremental:no -opt:ref -EXPORT:Gfx_Init -EXPORT:Gfx_BeginFrame -EXPORT:Gfx_EndFrame -EXPORT:Gfx_Free
+
 SET CommonLinkerFlags=user32.lib opengl32.lib gdi32.lib  %CommonLinkerFlags%
 
 pushd %BuildDir%

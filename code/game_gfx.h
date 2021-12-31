@@ -38,7 +38,8 @@ typedef enum Gfx_CmdType {
   Gfx_CmdType_SetBasis,
   Gfx_CmdType_DrawSubSprite, 
   Gfx_CmdType_DrawRect,
-  Gfx_CmdType_AddTexture,
+  Gfx_CmdType_SetTexture,
+  Gfx_CmdType_ClearTextures,
 } Gfx_CmdType;
 
 
@@ -51,7 +52,7 @@ typedef struct Gfx_Cmd_SetBasis {
 } Gfx_Cmd_SetBasis;
 
 typedef struct Gfx_Cmd_DrawSubSprite {
-  Gfx_Texture texture;
+  UMI texture_index;
   RGBAF32 colors;
   M44F32 transform;
   Rect2F32 texture_uv; 
@@ -63,12 +64,15 @@ typedef struct Gfx_Cmd_DrawRect {
 } Gfx_Cmd_DrawRect;
 
 
-typedef struct Gfx_Cmd_AddTexture {
+typedef struct Gfx_Cmd_SetTexture {
   UMI index;
   UMI width;
   UMI height;
   U8* pixels;
-} Gfx_Cmd_AddTexture;
+} Gfx_Cmd_SetTexture;
+
+typedef struct Gfx_Cmd_ClearTextures {
+} Gfx_Cmd_ClearTextures;
 
 // NOTE(Momo): Function declaraions
 static void Gfx_SetBasis(Gfx* g, M44F32 basis);
@@ -104,11 +108,13 @@ static void Gfx_DrawAABB(Gfx* gfx,
                          RGBAF32 colors,
                          F32 pos_z);
 
-static void Gfx_AddTexture(Gfx* gfx,
+static void Gfx_SetTexture(Gfx* gfx,
                            UMI index,
                            UMI width,
                            UMI height,
                            U8* pixels);
+
+static void Gfx_ClearTextures(Gfx* gfx);
 
 
 #endif //GAME_RENDERER_H

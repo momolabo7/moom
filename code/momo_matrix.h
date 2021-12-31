@@ -3,9 +3,9 @@
 
 
 // NOTE(Momo): All matrices here are row-major
-struct M44F32 {
+typedef struct {
 	F32 e[4][4];
-};
+} M44F32;
 
 static M44F32 M44F32_Concat(M44F32 lhs, M44F32 rhs);
 static M44F32 M44F32_Transpose(M44F32 m);

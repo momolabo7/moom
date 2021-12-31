@@ -3,23 +3,23 @@
 #ifndef MOMO_INTERVAL_H
 #define MOMO_INTERVAL_H
 
-typedef struct I1U32 {
+typedef struct {
   U32 min, max;
 } I1U32;
 
-typedef struct I1F32 {
+typedef struct {
   F32 min, max;
 } I1F32;
 
-typedef struct I1S32 {
+typedef struct {
   S32 min, max;
 } I1S32;
 
-typedef struct I2U32 {
+typedef struct {
   V2U32 min, max;
 } I2U32;
 
-typedef struct I2F32 {
+typedef struct {
   V2F32 min, max;
 } I2F32;
 

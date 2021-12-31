@@ -27,19 +27,19 @@ static Mailbox_Entry*
 Mailbox_Get(Mailbox* m, UMI index) {
   Assert(index < m->entry_count);
 	
-	UMI stride = AlignUpPow2(sizeof(Mailbox_Entry), 16);
+	UMI stride = AlignUpPow2(sizeof(Mailbox_Entry), 4);
 	return (Mailbox_Entry*)(m->memory + m->entry_start - ((index+1) * stride));
 }
 
 
 
 static void*
-Mailbox_PushBlock(Mailbox* m, UMI size, U32 id) 
+Mailbox_PushBlock(Mailbox* m, UMI size, UMI align, U32 id) 
 {
 	UMI imem = PtrToInt(m->memory);
 	
-	UMI adjusted_data_pos = AlignUpPow2(imem + m->data_pos, 16) - imem;
-	UMI adjusted_entry_pos = AlignDownPow2(imem + m->entry_pos, 16) - imem; 
+	UMI adjusted_data_pos = AlignUpPow2(imem + m->data_pos, 4) - imem;
+	UMI adjusted_entry_pos = AlignDownPow2(imem + m->entry_pos, 4) - imem; 
 	
 	Assert(adjusted_data_pos + size + sizeof(Mailbox_Entry) < adjusted_entry_pos);
 	
@@ -56,11 +56,12 @@ Mailbox_PushBlock(Mailbox* m, UMI size, U32 id)
 	return entry->data;
 }
 
+
 static void* 
-Mailbox_PushData(Mailbox* m, UMI size)
+Mailbox_PushExtraData(Mailbox* m, UMI size, UMI align)
 {
   UMI imem = PtrToInt(m->memory);
-  UMI adjusted_data_pos = AlignUpPow2(imem + m->data_pos, 16) - imem;
+  UMI adjusted_data_pos = AlignUpPow2(imem + m->data_pos, align) - imem;
   
   Assert(adjusted_data_pos + size < m->entry_pos);
   

@@ -41,7 +41,7 @@ static F32   V2F32_Length(V2F32 v);
 static V2F32 V2F32_Normalize(V2F32 v);
 static V2F32 V2F32_Negate(V2F32 v);
 static B8    V2F32_IsEqual(V2F32 lhs, V2F32 rhs);
-static V2F32 V2F32_Midpoint(V2F32 v);
+static V2F32 V2F32_Midpoint(V2F32 lhs, V2F32 rhs);
 static V2F32 V2F32_Project(V2F32 v, V2F32 onto);
 static V2F32 V2F32_Rotate(V2F32 v, F32 rad);
 
@@ -58,7 +58,7 @@ static F32   V3F32_Length(V3F32 v);
 static V3F32 V3F32_Normalize(V3F32 v);
 static V3F32 V3F32_Negate(V3F32 v);
 static B8    V3F32_IsEqual(V3F32 lhs, V3F32 rhs);
-static V3F32 V3F32_Midpoint(V3F32 v);
+static V3F32 V3F32_Midpoint(V3F32 lhs, V3F32 rhs);
 static V3F32 V3F32_Project(V3F32 v, V3F32 onto);
 static V3F32 V3F32_Cross(V3F32 lhs, V3F32 rhs);
 

@@ -164,12 +164,6 @@ WinMain(HINSTANCE instance,
       gfx_fns.free = (Win_Gfx_Free*)GetProcAddress(gfx_dll, "Gfx_Free");
       if(!gfx_fns.free) return 1;
       
-      gfx_fns.add_texture = (Win_Gfx_AddTexture*)GetProcAddress(gfx_dll, "Gfx_AddTexture");
-      if(!gfx_fns.add_texture) return 1;
-      
-      gfx_fns.clear_textures = (Win_Gfx_ClearTextures*)GetProcAddress(gfx_dll, "Gfx_ClearTextures");
-      if(!gfx_fns.clear_textures) return 1;
-      
       gfx_fns.begin_frame = (Win_Gfx_BeginFrame*)GetProcAddress(gfx_dll, "Gfx_BeginFrame");
       if(!gfx_fns.begin_frame) return 1;
       
@@ -190,13 +184,13 @@ WinMain(HINSTANCE instance,
   
   // TODO(Momo): Testing texture. Remove after use.
   U8 test_texture[4][4] {
-    { 125, 125, 125, 255 },
+    { 0, 0, 0, 255 },
     { 255, 255, 255, 255 },
     { 255, 255, 255, 255 },
-    { 125, 125, 125, 255 },
+    { 0, 0, 0, 255 },
   };
   
-  Gfx_Texture texture = gfx_fns.add_texture(gfx, 2, 2, (void*)&test_texture);
+  // Gfx_Texture texture = gfx_fns.add_texture(gfx, 2, 2, (void*)&test_texture);
   
   
   //- NOTE(Momo): Begin game loop
@@ -271,7 +265,6 @@ WinMain(HINSTANCE instance,
     }
     
     // TODO(Momo): Test gfx
-    Gfx_AddTexture(gfx, 0, 2, 2, (U8*)&test_texture);
     
     V2U32 render_wh;
     render_wh.w = 1600;
@@ -283,6 +276,8 @@ WinMain(HINSTANCE instance,
     render_region.max.y = 900;
     
     gfx_fns.begin_frame(gfx, render_wh, render_region);
+    Gfx_SetTexture(gfx, 0, 2, 2, (U8*)&test_texture);
+    Gfx_ClearTextures(gfx);
     
     {
       RGBAF32 colors;
@@ -324,8 +319,7 @@ WinMain(HINSTANCE instance,
       M44F32 rot = M44F32_RotationZ(tmp_rot += (F32)game_dt);
       M44F32 trans = M44F32_Translation(800.f, 450.f, 300.f);
       M44F32 t = M44F32_Concat(trans, M44F32_Concat(scale, rot));
-      //Gfx_DrawRect(gfx, colors, t);
-      Gfx_DrawSprite(gfx, colors, t, texture);
+      Gfx_DrawSprite(gfx, colors, t, 0);
     }
     
     gfx_fns.end_frame(gfx);
@@ -348,6 +342,8 @@ WinMain(HINSTANCE instance,
   
   
   gfx_fns.free(gfx);
+  
+  
   
   return 0;  
   

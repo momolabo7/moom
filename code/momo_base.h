@@ -167,11 +167,11 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 #define ASCIIToDigit(a) ((a) - '0')
 #define AlignDownPow2(p,a) ((p) & ~((a)-1))
 #define AlignUpPow2(p,a) (((p)+((a)-1)) & ~((a)-1))
-#define AlignOf(type) ((UMI)&((struct { char c; type d; } *)0)->d)
 #define OffsetOf(type, member) (UMI)&(((type*)0)->member)
-
-
 #define IsPow2(v) (((v) & ((v) - 1)) == 0)
+
+// This isn't very useful
+//#define AlignOf(type) ((UMI)&((struct { char c; type d; } *)0)->d)
 
 // auto might be useful here. C++ version to note:
 // #define Swap(A,B) do{ auto tmp = (A); (A) = (B); (B) = tmp; } while(0);
@@ -235,18 +235,12 @@ static const F64 F64_gold = 1.61803398875;
 # define nullptr ((void*)0)
 #endif
 
-//~ NOTE(Momo): Ranges
-typedef union R2F32 {
-	F32 min, max;
-} R2F32;
-
-typedef union R2UMI {
-	UMI min, max;
-} R2UMI;
-
-
-
 //~ NOTE(Momo): Memory-related helpers
+typedef struct  {
+  void* data;
+  UMI size;
+} Memory_Block;
+
 static void Memory_Copy(void* dest, const void* src, UMI size);
 static void Memory_Zero(void* dest, UMI size);
 static void Memory_Swap(void* lhs, void* rhs, UMI size);
