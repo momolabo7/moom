@@ -12,7 +12,7 @@ typedef struct Str8 {
 
 static Str8 Str8_Create(U8* str, UMI size);
 static Str8 Str8_Substr(Str8 str, UMI start, UMI ope);
-static B32  Str8_IsEqual(Str8 lhs, Str8 rhs);
+static B32  Str8_Match(Str8 lhs, Str8 rhs);
 
 #define Str8_Lit(s) Str8_Create((U8*)(s), sizeof(s)-1)
 

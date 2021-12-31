@@ -178,9 +178,9 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 // #define Swap(type,a,b) Stmt(type tmp = (a); (a) = (b); (b) = tmp;)
 #define Swap(type,a,b) \
 Stmt(char tmp[sizeof(type)]; \
-Memory_Copy(tmp, &(a), sizeof(type)); \
-Memory_Copy(&(a), &(b), sizeof(type)); \
-Memory_Copy(&(b), tmp, sizeof(type));\
+Bin_Copy(tmp, &(a), sizeof(type)); \
+Bin_Copy(&(a), &(b), sizeof(type)); \
+Bin_Copy(&(b), tmp, sizeof(type));\
 );
 
 
@@ -241,18 +241,18 @@ typedef struct  {
   UMI size;
 } Memory_Block;
 
-static void Memory_Copy(void* dest, const void* src, UMI size);
-static void Memory_Zero(void* dest, UMI size);
-static void Memory_Swap(void* lhs, void* rhs, UMI size);
-static B32  Memory_IsEqual(const void* lhs, const void* rhs, UMI size);
+static void Bin_Copy(void* dest, const void* src, UMI size);
+static void Bin_Zero(void* dest, UMI size);
+static void Bin_Swap(void* lhs, void* rhs, UMI size);
+static B32  Bin_Match(const void* lhs, const void* rhs, UMI size);
 
-#define Memory_ZeroStruct(p)    Memory_Zero((p), sizeof(*(p)))
-#define Memory_ZeroArray(p)     Memory_Zero((p), sizeof(p))
-#define Memory_ZeroRange(p,s)   Memory_Zero((p), sizeof(*(p)) * (s))
+#define Bin_ZeroStruct(p)    Bin_Zero((p), sizeof(*(p)))
+#define Bin_ZeroArray(p)     Bin_Zero((p), sizeof(p))
+#define Bin_ZeroRange(p,s)   Bin_Zero((p), sizeof(*(p)) * (s))
 
-#define Memory_CopyStruct(p)    Memory_Copy((p), sizeof(*(p)))
-#define Memory_CopyArray(p)     Memory_Copy((p), sizeof(p))
-#define Memory_CopyRange(p,s)   Memory_Copy((p), sizeof(*(p)) * (s))
+#define Bin_CopyStruct(p)    Bin_Copy((p), sizeof(*(p)))
+#define Bin_CopyArray(p)     Bin_Copy((p), sizeof(p))
+#define Bin_CopyRange(p,s)   Bin_Copy((p), sizeof(*(p)) * (s))
 
 //~ NOTE(Momo): C-string
 static UMI  Sistr_Length(const char* str);
@@ -268,12 +268,12 @@ static void Sistr_Itoa(char* dest, S32 num);
 static F32 F32_Abs(F32 x); // Better and more accurate than using usual abs() algo
 static F32 F32_Inf();
 static F32 F32_NegInf();
-static B32 F32_IsEqual(F32 lhs, F32 rhs);
+static B32 F32_Match(F32 lhs, F32 rhs);
 
 static F64 F64_Abs(F64 x);
 static F64 F64_Inf();
 static F64 F64_NegInf();
-static B32 F64_IsEqual(F64 lhs, F64 rhs);
+static B32 F64_Match(F64 lhs, F64 rhs);
 
 //~ NOTE(Momo): Useful calculations
 static F32 F32_DegToRad(F32 degrees) ;

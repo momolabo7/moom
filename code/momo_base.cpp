@@ -9,23 +9,23 @@
 #if 1
 #include <string.h>
 static void 
-Memory_Copy(void* dest, const void* src, UMI size) {
+Bin_Copy(void* dest, const void* src, UMI size) {
 	memmove(dest, src, size);
 }
 
 static void 
-Memory_Zero(void* dest, UMI size) {
+Bin_Zero(void* dest, UMI size) {
 	memset(dest, 0, size);
 }
 static B32
-Memory_IsEqual(const void* lhs, const void* rhs, UMI size) {
+Bin_Match(const void* lhs, const void* rhs, UMI size) {
 	return memcmp(lhs, rhs, size) == 0; 
 }
 
 #else
 
 static void
-Memory_Copy(void* dest, const void* src, UMI size) {
+Bin_Copy(void* dest, const void* src, UMI size) {
 	U8 *p = (U8*)dest;
 	const U8 *q = (const U8*)src;
 	while(size--) {
@@ -34,7 +34,7 @@ Memory_Copy(void* dest, const void* src, UMI size) {
 }
 
 static void 
-Memory_Zero(void* dest, UMI size) {
+Bin_Zero(void* dest, UMI size) {
 	U8 *p = (U8*)dest;
 	while(size--){
     *p++ = 0;
@@ -42,7 +42,7 @@ Memory_Zero(void* dest, UMI size) {
 }
 
 static B32
-Memory_IsEqual(const void* lhs, const void* rhs, UMI size) {
+Bin_Match(const void* lhs, const void* rhs, UMI size) {
 	const U8 *p = (const U8*)lhs;
 	const U8 *q = (const U8*)rhs;
 	while(size--) {
@@ -56,7 +56,7 @@ Memory_IsEqual(const void* lhs, const void* rhs, UMI size) {
 #endif
 
 static void 
-Memory_Swap(void* lhs, void* rhs, UMI size) {
+Bin_Swap(void* lhs, void* rhs, UMI size) {
   U8* l = (U8*)lhs;
   U8* r = (U8*)rhs;
   
@@ -226,12 +226,12 @@ F64_NegInf() {
 }
 
 static B32 
-F32_IsEqual(F32 lhs, F32 rhs) {
+F32_Match(F32 lhs, F32 rhs) {
   return Abs(lhs - rhs) <= F32_epsilon;
 }
 
 static B32 
-F64_IsEqual(F64 lhs, F64 rhs) {
+F64_Match(F64 lhs, F64 rhs) {
   return Abs(lhs - rhs) <= F64_epsilon;
 }
 

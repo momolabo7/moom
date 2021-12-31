@@ -20,7 +20,7 @@ Str8_Substr(Str8 str, UMI start, UMI count) {
 }
 
 static B32
-Str8_IsEqual(Str8 lhs, Str8 rhs) {
+Str8_Match(Str8 lhs, Str8 rhs) {
     if(lhs.count != rhs.count) {
         return false;
     }
@@ -34,11 +34,11 @@ Str8_IsEqual(Str8 lhs, Str8 rhs) {
 
 #if IS_CPP
 static B32 operator==(Str8 lhs, Str8 rhs) {
-	return Str8_IsEqual(lhs, rhs);
+	return Str8_Match(lhs, rhs);
 }
 
 static B32 operator!=(Str8 lhs, Str8 rhs) {
-	return !Str8_IsEqual(lhs, rhs);
+	return !Str8_Match(lhs, rhs);
 }
 #endif //IS_CPP
 

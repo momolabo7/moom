@@ -169,7 +169,7 @@ PNG__Huffman_Compute(PNG__Huffman* h,
   // NOTE(Momo): Each code corresponds to a symbol
   h->symbol_count = codes_size;
   h->symbols = Arena_PushArray(arena, U16, codes_size);
-  Memory_Zero(h->symbols, h->symbol_count * sizeof(U16));
+  Bin_Zero(h->symbols, h->symbol_count * sizeof(U16));
   
   
   // NOTE(Momo): We add +1 because lengths[0] is not possible
@@ -177,7 +177,7 @@ PNG__Huffman_Compute(PNG__Huffman* h,
   // length[0] as length 1.
   h->length_count = max_lengths;
   h->lengths = Arena_PushArray(arena, U16, max_lengths + 1);
-  Memory_Zero(h->lengths, h->length_count * sizeof(U16));
+  Bin_Zero(h->lengths, h->length_count * sizeof(U16));
   
   // 1. Count the number of codes for each code length
   for (U32 sym = 0; sym < codes_size; ++sym)  {
@@ -188,7 +188,7 @@ PNG__Huffman_Compute(PNG__Huffman* h,
   // 2. Numerical value of smallest code for each code length
   Arena_Marker temp_mark = Arena_Mark(arena);
   U16* len_offset_table = Arena_PushArray(arena, U16, max_lengths);
-  Memory_Zero(len_offset_table, max_lengths * sizeof(U16));
+  Bin_Zero(len_offset_table, max_lengths * sizeof(U16));
   
   for (U32 len = 1; len < max_lengths-1; ++len) {
     len_offset_table[len+1] = len_offset_table[len] + h->lengths[len]; 

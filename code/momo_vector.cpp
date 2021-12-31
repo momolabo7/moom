@@ -21,7 +21,7 @@ V2F32_Scale(V2F32 lhs, F32 rhs) {
 
 static V2F32 
 V2F32_InvScale(V2F32 lhs, F32 rhs) {
-	Assert(F32_IsEqual(rhs, 0.f));
+	Assert(F32_Match(rhs, 0.f));
 	lhs.x /= rhs;
 	lhs.y /= rhs;
 	return lhs;
@@ -65,9 +65,9 @@ V2F32_Normalize(V2F32 v) {
 }
 
 static B8
-V2F32_IsEqual(V2F32 lhs, V2F32 rhs) {
-	return (F32_IsEqual(lhs.x, rhs.x) &&
-          F32_IsEqual(lhs.y, rhs.y)); 
+V2F32_Match(V2F32 lhs, V2F32 rhs) {
+	return (F32_Match(lhs.x, rhs.x) &&
+          F32_Match(lhs.y, rhs.y)); 
 }
 
 static V2F32 
@@ -79,7 +79,7 @@ static V2F32
 V2F32_Project(V2F32 v, V2F32 onto) {
 	// (to . from)/LenSq(to) * to
   F32 onto_len_sq = V2F32_LengthSq(onto);
-	Assert(!F32_IsEqual(onto_len_sq, 0.f));
+	Assert(!F32_Match(onto_len_sq, 0.f));
 	F32 dot = V2F32_Dot(v, onto);
 	F32 scalar = dot / onto_len_sq;
 	V2F32 ret = V2F32_Scale(onto, scalar);
@@ -137,7 +137,7 @@ V3F32_Scale(V3F32 lhs, F32 rhs) {
 
 static V3F32 
 V3F32_InvScale(V3F32 lhs, F32 rhs) {
-	Assert(F32_IsEqual(rhs, 0.f));
+	Assert(F32_Match(rhs, 0.f));
 	lhs.x /= rhs;
 	lhs.y /= rhs;
 	lhs.z /= rhs;
@@ -183,9 +183,9 @@ V3F32_Normalize(V3F32 v) {
 }
 
 static B8
-V3F32_IsEqual(V3F32 lhs, V3F32 rhs) {
-	return (F32_IsEqual(lhs.x, rhs.x) &&
-          F32_IsEqual(lhs.y, rhs.y)); 
+V3F32_Match(V3F32 lhs, V3F32 rhs) {
+	return (F32_Match(lhs.x, rhs.x) &&
+          F32_Match(lhs.y, rhs.y)); 
 }
 
 static V3F32 
@@ -197,7 +197,7 @@ static V3F32
 V3F32_Project(V3F32 v, V3F32 onto) {
 	// (to . from)/LenSq(to) * to
   F32 onto_len_sq = V3F32_LengthSq(onto);
-	Assert(!F32_IsEqual(onto_len_sq, 0.f));
+	Assert(!F32_Match(onto_len_sq, 0.f));
 	F32 dot = V3F32_Dot(v, onto);
 	F32 scalar = dot / onto_len_sq;
 	V3F32 ret = V3F32_Scale(onto, scalar);

@@ -15,13 +15,13 @@ QuickSort__Partition(U8* a,
     U8* pivot_ptr = a + (stride * pivot_idx);
     if (cmp(i_ptr, pivot_ptr)) {
       U8* eventual_pivot_ptr = a + (stride * eventual_pivot_idx);
-      Memory_Swap(i_ptr, eventual_pivot_ptr, stride);
+      Bin_Swap(i_ptr, eventual_pivot_ptr, stride);
       ++eventual_pivot_idx;
     }
     
   }
   
-  Memory_Swap(a + (stride * eventual_pivot_idx),
+  Bin_Swap(a + (stride * eventual_pivot_idx),
               a + (stride * pivot_idx),
               stride);
   

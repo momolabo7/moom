@@ -35,7 +35,7 @@ RGBF32_ToHSLF32(RGBF32 c) {
   F32 delta = max - min; // aka chroma
   
   
-  if (F32_IsEqual(max, c.r)) {
+  if (F32_Match(max, c.r)) {
     F32 segment = (c.g - c.b)/delta;
     F32 shift = 0 / 60;
     if (segment < 0) {
@@ -47,13 +47,13 @@ RGBF32_ToHSLF32(RGBF32 c) {
     ret.h = (segment + shift) * 60.f;
   }
   
-  else if (F32_IsEqual(max, c.g)) {
+  else if (F32_Match(max, c.g)) {
     F32 segment = (c.b - c.r)/delta;
     F32 shift = 120.f / 60.f;
     ret.h = (segment + shift) * 60.f;
   }
   
-  else if (F32_IsEqual(max, c.b)) {
+  else if (F32_Match(max, c.b)) {
     F32 segment = (c.r - c.g)/delta;
     F32 shift = 240.f / 60.f;
     ret.h = ((segment + shift) * 60.f);
@@ -66,7 +66,7 @@ RGBF32_ToHSLF32(RGBF32 c) {
   
   ret.l = (max + min) * 0.5f;
   
-  if (F32_IsEqual(delta, 0.f)) {
+  if (F32_Match(delta, 0.f)) {
     ret.s = 0.f;
   }
   else {
@@ -105,7 +105,7 @@ HSLF32_ToRGBF32(HSLF32 c) {
          c.l >= 0.f &&
          c.l <= 1.f);
   RGBF32 ret;
-  if(F32_IsEqual(c.s, 0.f)) {
+  if(F32_Match(c.s, 0.f)) {
     ret.r = ret.g = ret.b = c.l; // achromatic
   }
   else {

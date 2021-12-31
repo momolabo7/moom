@@ -31,7 +31,7 @@ Stream_ConsumeBlock(Stream* s, UMI amount) {
 static void
 Stream_WriteBlock(Stream* s, void* src, UMI src_size) {
 	Assert(s->pos + src_size <= s->size);
-  Memory_Copy(s->data + s->pos, src, src_size);
+  Bin_Copy(s->data + s->pos, src, src_size);
   s->pos += src_size; 
 }
 

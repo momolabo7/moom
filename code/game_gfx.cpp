@@ -233,7 +233,7 @@ Gfx_SetTexture(Gfx* gfx,
   data->index = index;
   
   data->pixels = (U8*)Mailbox_PushExtraData(&gfx->commands, texture_size, 16);
-  Memory_Copy(data->pixels, pixels, texture_size);
+  Bin_Copy(data->pixels, pixels, texture_size);
 }
 
 static void 
