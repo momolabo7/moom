@@ -22,18 +22,19 @@
 // */
 
 typedef Mailbox Gfx_Cmds;
-typedef struct Gfx {	
+
+typedef struct {	
 	Gfx_Cmds commands;
 } Gfx;
 
-typedef struct Gfx_Texture {
+typedef struct {
   UMI id;
 } Gfx_Texture;
 
 
 
 //~ NOTE(Momo): Cmd types
-typedef enum Gfx_CmdType {
+typedef enum {
   Gfx_CmdType_Clear,
   Gfx_CmdType_SetBasis,
   Gfx_CmdType_DrawSubSprite, 
@@ -43,35 +44,35 @@ typedef enum Gfx_CmdType {
 } Gfx_CmdType;
 
 
-typedef struct Gfx_Cmd_Clear {
+typedef struct {
   RGBAF32 colors;
-} Gfx_Cmd_ClearColor;
+} Gfx_Cmd_Clear;
 
-typedef struct Gfx_Cmd_SetBasis {
+typedef struct {
   M44F32 basis;
 } Gfx_Cmd_SetBasis;
 
-typedef struct Gfx_Cmd_DrawSubSprite {
+typedef struct {
   UMI texture_index;
   RGBAF32 colors;
   M44F32 transform;
   Rect2F32 texture_uv; 
 } Gfx_Cmd_DrawSubSprite;
 
-typedef struct Gfx_Cmd_DrawRect {
+typedef struct {
   RGBAF32 colors;
   M44F32 transform;
 } Gfx_Cmd_DrawRect;
 
 
-typedef struct Gfx_Cmd_SetTexture {
+typedef struct {
   UMI index;
   UMI width;
   UMI height;
   U8* pixels;
 } Gfx_Cmd_SetTexture;
 
-typedef struct Gfx_Cmd_ClearTextures {
+typedef struct {
 } Gfx_Cmd_ClearTextures;
 
 // NOTE(Momo): Function declaraions

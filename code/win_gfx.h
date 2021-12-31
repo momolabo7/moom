@@ -17,22 +17,14 @@ typedef void 	Win_Gfx_Free(Gfx* r);
 
 
 // TODO(Momo): Do we really need render_wh and render_rengion?
-// Do we even need Begin/End?
-typedef void        Win_Gfx_BeginFrame(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region);
-typedef void        Win_Gfx_EndFrame(Gfx* renderer);
-typedef Gfx_Texture Win_Gfx_AddTexture(Gfx* renderer,UMI width, UMI height, void* pixels);
-typedef void        Win_Gfx_ClearTextures(Gfx* renderer);
+typedef void        Win_Gfx_Render(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region);
 
 
 //~ NOTE(Momo): Function table
-typedef struct Win_Gfx_Functions {
+typedef struct {
   Win_Gfx_Init* init;
   Win_Gfx_Free* free;
-  Win_Gfx_AddTexture* add_texture;
-  Win_Gfx_BeginFrame* begin_frame;
-  Win_Gfx_EndFrame* end_frame;
-  Win_Gfx_ClearTextures* clear_textures;
-  
+  Win_Gfx_Render* render;
 } Win_Gfx_Functions;
 
 

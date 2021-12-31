@@ -164,11 +164,9 @@ WinMain(HINSTANCE instance,
       gfx_fns.free = (Win_Gfx_Free*)GetProcAddress(gfx_dll, "Gfx_Free");
       if(!gfx_fns.free) return 1;
       
-      gfx_fns.begin_frame = (Win_Gfx_BeginFrame*)GetProcAddress(gfx_dll, "Gfx_BeginFrame");
-      if(!gfx_fns.begin_frame) return 1;
+      gfx_fns.render = (Win_Gfx_Render*)GetProcAddress(gfx_dll, "Gfx_Render");
+      if(!gfx_fns.render) return 1;
       
-      gfx_fns.end_frame = (Win_Gfx_EndFrame*)GetProcAddress(gfx_dll, "Gfx_EndFrame");
-      if(!gfx_fns.end_frame) return 1;
     }
     else {
       return 1;
@@ -262,6 +260,7 @@ WinMain(HINSTANCE instance,
     }
     else {
       // NOTE(Momo): At this point, we basically missed a frame :(
+      // TODO(Momo): Do we need to do anything about missing a frame?
     }
     
     // TODO(Momo): Test gfx
@@ -275,10 +274,8 @@ WinMain(HINSTANCE instance,
     render_region.max.x = 1600;
     render_region.max.y = 900;
     
-    gfx_fns.begin_frame(gfx, render_wh, render_region);
     Gfx_SetTexture(gfx, 0, 2, 2, (U8*)&test_texture);
     Gfx_ClearTextures(gfx);
-    
     {
       RGBAF32 colors;
       colors.r = colors.g = colors.b  = colors.a = 0.3f;
@@ -322,7 +319,7 @@ WinMain(HINSTANCE instance,
       Gfx_DrawSprite(gfx, colors, t, 0);
     }
     
-    gfx_fns.end_frame(gfx);
+    gfx_fns.render(gfx, render_wh, render_region);
     
     last_count = Win_QueryPerformanceCounter();
     
@@ -336,10 +333,6 @@ WinMain(HINSTANCE instance,
     
     
   }
-  
-  
-  
-  
   
   gfx_fns.free(gfx);
   

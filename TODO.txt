@@ -1,7 +1,5 @@
 Gfx
-- Change Gfx_BeginFrame/EndFrame to just Gfx_Render
-- Remove ClearTexture as a pointer and add to command queue.
-- Consider having a pointer to Gfx_Command, so that we can pass Gfx around by value?
+- Calculate proper region for rendering in windows
 - colors for each vertice
 	- try to animate them!
 

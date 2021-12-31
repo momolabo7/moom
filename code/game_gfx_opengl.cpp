@@ -473,14 +473,10 @@ Opengl_Init(Opengl* ogl,
 
 
 static void
-Opengl_BeginFrame(Opengl* ogl, V2U32 render_wh, Rect2U32 region) {
-  Opengl__AlignViewport(ogl, render_wh, region);
-  Mailbox_Clear(&ogl->gfx.commands);
-}
-
-static void
-Opengl_EndFrame(Opengl* ogl) 
+Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region) 
 {
+  Opengl__AlignViewport(ogl, render_wh, region);
+  
   GLuint current_texture = 0;
   GLsizei instances_to_draw = 0;
   GLsizei last_drawn_instance_index = 0;
@@ -624,5 +620,5 @@ Opengl_EndFrame(Opengl* ogl)
   }
   
   Opengl__DrawInstances(ogl, current_texture, instances_to_draw, last_drawn_instance_index);
-  
+  Mailbox_Clear(&ogl->gfx.commands);  
 }

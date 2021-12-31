@@ -168,7 +168,7 @@ typedef void    GL_glDeleteTextures(GLsizei n,
 typedef void    GL_glDebugMessageCallbackARB(GLDEBUGPROC *callback, 
                                              const void* userParams);
 
-typedef struct Opengl {
+typedef struct {
   Gfx gfx;
   
   

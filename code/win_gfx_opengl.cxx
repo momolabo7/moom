@@ -312,16 +312,10 @@ if (!opengl->name) { goto failed2; }
   return nullptr;
 }
 
-extern "C" void
-Gfx_BeginFrame(Gfx* gfx, V2U32 render_wh, Rect2U32 render_region)
-{
-  Opengl_BeginFrame((Opengl*)gfx, render_wh, render_region);
-}
-
 
 extern "C" void
-Gfx_EndFrame(Gfx* gfx) {
-  Opengl_EndFrame((Opengl*)gfx);
+Gfx_Render(Gfx* gfx,  V2U32 render_wh, Rect2U32 region) {
+  Opengl_Render((Opengl*)gfx, render_wh, region);
 }
 
 
