@@ -1,7 +1,7 @@
 /* date = November 24th 2021 0:52 pm */
 
-#ifndef MOMO_RECT_PACK_H
-#define MOMO_RECT_PACK_H
+#ifndef MOMO_BASE_RECT_PACK_H
+#define MOMO_BASE_RECT_PACK_H
 
 typedef enum RP_SortType {
   RP_SortType_Width,
@@ -59,4 +59,6 @@ static void RP_Pack(RP_Rect* rects,
                     RP_SortType sort_type);
 
 
-#endif //MOMO_RECT_PACKER_H
+#include "momo_base_rect_pack.cpp"
+
+#endif //MOMO_BASE_RECT_PACK_H

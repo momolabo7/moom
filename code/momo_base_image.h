@@ -1,7 +1,7 @@
 /* date = December 31st 2021 2:16 pm */
 
-#ifndef MOMO_IMAGE_H
-#define MOMO_IMAGE_H
+#ifndef MOMO_BASE_IMAGE_H
+#define MOMO_BASE_IMAGE_H
 
 typedef struct{
   U32 width, height;
@@ -9,4 +9,7 @@ typedef struct{
   void* data;
 } Image;
 
-#endif //MOMO_IMAGE_H
+
+#include "momo_base_image.h"
+
+#endif //MOMO_BASE_IMAGE_H

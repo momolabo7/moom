@@ -1,7 +1,6 @@
-/* date = November 19th 2021 3:24 pm */
 
-#ifndef MOMO_COLORS_H
-#define MOMO_COLORS_H
+#ifndef MOMO_BASE_COLORS_H
+#define MOMO_BASE_COLORS_H
 
 
 // NOTE(Momo): Each component of RGBA are in the range [0 - 1].
@@ -33,5 +32,7 @@ static HSLF32 HSLF32_Create(F32 h, F32 s, F32 l);
 static RGBF32 HSLF32_ToRGBF32(HSLF32 c);
 
 
-#endif //MOMO_COLORS_H
+#include "momo_base_colors.cpp"
+
+#endif //MOMO_BASE_COLORS_H
 

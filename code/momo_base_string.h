@@ -1,35 +1,35 @@
-/* date = November 20th 2021 11:58 am */
+/* date = november 20th 2021 11:58 am */
 
-#ifndef MOMO_STRING_H
-#define MOMO_STRING_H
+#ifndef momo_base_string_h
+#define momo_base_string_h
 
 
-//~ NOTE(Momo): Immutable strings
-typedef struct Str8 {
+//~ note(momo): immutable Strings
+typedef struct {
 	U8* e;
 	UMI count;
 } Str8;
 
-static Str8 Str8_Create(U8* str, UMI size);
-static Str8 Str8_Substr(Str8 str, UMI start, UMI ope);
+static Str8 Str8_Create(U8* Str, UMI size);
+static Str8 Str8_Substr(Str8 Str, UMI start, UMI ope);
 static B32  Str8_Match(Str8 lhs, Str8 rhs);
 
-#define Str8_Lit(s) Str8_Create((U8*)(s), sizeof(s)-1)
+#define Str8_lit(s) Str8_Create((U8*)(s), sizeof(s)-1)
 
 #if IS_CPP
 static B32 operator==(Str8 lhs, Str8 rhs);
 static B32 operator!=(Str8 lhs, Str8 rhs);
-#endif //IS_CPP
+#endif // IS_CPP
 
 
-// TODO(Momo): String split
-// TODO(Momo): string nodes?
+// todo(momo): String split
+// todo(momo): String nodes?
 
 
-//~ NOTE(Momo): String builders
-typedef struct Str8Bld {
+//~ note(momo): String builders
+typedef struct {
 	union {
-		Str8 str;
+		Str8 Str;
 		struct {
 			U8* e;
 			UMI count;
@@ -49,6 +49,9 @@ static void     Str8Bld_PushS32(Str8Bld* sb, S32 num);
 static void     Str8Bld_PushFmt(Str8Bld* sb, Str8 fmt, ...);
 static void     Str8Bld_PushStr8(Str8Bld* sb, Str8 num);
 
-#define Str8Bld_Temp(name, cap) U8 temp##__LINE__[cap]; Str8Bld name = Str8Bld_Create(temp##__LINE__, cap);
+#define Str8Bld_temp(name, cap) U8 temp##__line__[cap]; Str8Bld name = Str8Bld_Create(temp##__line__, cap);
 
-#endif //MOMO_STRING_H
+
+#include "momo_base_String.cpp"
+
+#endif //MOMO_BASE_STRING_H

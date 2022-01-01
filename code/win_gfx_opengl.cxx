@@ -189,7 +189,7 @@ Win_Gfx_FreeMemory(void* memory) {
 
 
 //~ NOTE(Momo): API implementation
-extern "C" Gfx*
+exported Gfx*
 Gfx_Init(HWND window, UMI render_commands_size, UMI max_textures, UMI max_entities) {
   // NOTE(Momo): Calcluate the EXACT amount of memory needed.
   // TODO(Momo): Is there a better way to do this? 
@@ -313,13 +313,13 @@ if (!opengl->name) { goto failed2; }
 }
 
 
-extern "C" void
+exported void
 Gfx_Render(Gfx* gfx,  V2U32 render_wh, Rect2U32 region) {
   Opengl_Render((Opengl*)gfx, render_wh, region);
 }
 
 
-extern "C" void
+exported void
 Gfx_Free(Gfx* r) {
   Opengl* opengl = (Opengl*)r;
   Win_Gfx_FreeMemory(opengl->textures);

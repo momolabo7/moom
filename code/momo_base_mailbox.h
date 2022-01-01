@@ -2,8 +2,8 @@
 // that stores any type of objects in order.
 // The mailbox 
 
-#ifndef MOMO_MAILBOX_H
-#define MOMO_MAILBOX_H
+#ifndef MOMO_BASE_MAILBOX_H
+#define MOMO_BASE_MAILBOX_H
 
 
 // TODO(Momo): Can/should we remove id (that stores 'type' info)
@@ -32,4 +32,6 @@ static void*						Mailbox_PushExtraData(Mailbox* m, UMI size, UMI align);
 
 #define Mailbox_Push(m, type, id) (type*)Mailbox_PushBlock(m, sizeof(type), 4, id)
 
-#endif //MOMO_MAILBOX_H
+#include "momo_base_mailbox.cpp"
+
+#endif //MOMO_BASE_MAILBOX_H

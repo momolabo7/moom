@@ -1,7 +1,7 @@
-/* date = November 19th 2021 3:20 pm */
+/* date = november 19th 2021 3:20 pm */
 
-#ifndef MOMO_CRC_H
-#define MOMO_CRC_H
+#ifndef MOMO_BASE_CRC_H
+#define MOMO_BASE_CRC_H
 
 typedef struct CRC32_Table {
 	U32 remainders[256];
@@ -23,8 +23,10 @@ static CRC32_Table CRC32_GenerateTable(U32 polynomial);
 static CRC16_Table CRC16_GenerateTable(U16 polynomial);
 static CRC8_Table CRC8_GenerateTable(U8 polynomial); 
 
-static U32 CRC32(U8* data, U32 data_size, U16 start_register, CRC32_Table table);
-static U32 CRC16(U8* data, U32 data_size, U16 start_register, CRC16_Table table);
-static U32 CRC8(U8* data, U32 data_size, U8 start_register, CRC8_Table table);
+static U32 CRC32(U8* data, U32 data_size, U16 start_register, CRC32_Table Table);
+static U32 CRC16(U8* data, U32 data_size, U16 start_register, CRC16_Table Table);
+static U32 CRC8(U8* data, U32 data_size, U8 start_register, CRC8_Table Table);
 
-#endif //MOMO_CRC_H
+#include "momo_base_CRC.cpp"
+
+#endif //MOMO_BASE_CRC_H

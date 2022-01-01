@@ -1,5 +1,5 @@
-#ifndef MOMO_ALLOCATOR_H
-#define MOMO_ALLOCATOR_H
+#ifndef MOMO_BASE_ALLOCATOR_H
+#define MOMO_BASE_ALLOCATOR_H
 
 // NOTE(Momo): Standard simple arena that will ALWAYS
 // push memory that is aligned to 16 bytes because of
@@ -46,5 +46,6 @@ static Arena_Marker Arena_Mark(Arena* arena);
 static void		     Arena_Revert(Arena_Marker* mark);
 
 
+#include "momo_base_allocator.cpp"
 
-#endif //MOMO_ALLOCATOR_H
+#endif //MOMO_BASE_ALLOCATOR_H

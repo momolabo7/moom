@@ -1,5 +1,5 @@
-#ifndef MOMO_MATRIX_H
-#define MOMO_MATRIX_H
+#ifndef MOMO_BASE_MATRIX_H
+#define MOMO_BASE_MATRIX_H
 
 
 // NOTE(Momo): All matrices here are row-major
@@ -25,5 +25,6 @@ static M44F32 operator*(M44F32 lhs, M44F32 rhs);
 #endif // IS_CPP
 
 
+#include "momo_base_matrix.cpp"
 
-#endif //MOMO_MATRIX_H
+#endif //MOMO_BASE_MATRIX_H

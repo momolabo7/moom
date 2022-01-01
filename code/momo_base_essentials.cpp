@@ -1,7 +1,4 @@
-
 //~ NOTE(Momo): Memory functions
-
-
 // NOTE(Momo): These functions can use memset/memcopy/memcmp
 // but they might not be avaliable. 
 // TODO(Momo): Figure out a nice flag to indicate if libraries

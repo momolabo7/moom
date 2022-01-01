@@ -3,11 +3,11 @@
 #undef near
 #undef far
 
-#include "momo.h"
+#include "momo_base.h"
 #include "game_gfx.h"
 #include "win_gfx.h"
 
-#include "game_gfx.cpp"
+#include "game_platform.h"
 
 //- NOTE(Momo): Global variables
 
@@ -154,17 +154,17 @@ WinMain(HINSTANCE instance,
   }
   
   //- NOTE(Momo): Load Gfx functions
-  Win_Gfx_Functions gfx_fns = {0};
+  Win_Gfx_Fns gfx_fns = {0};
   {
     HMODULE gfx_dll = LoadLibraryA("gfx.dll");
     if (gfx_dll) {
-      gfx_fns.init = (Win_Gfx_Init*)GetProcAddress(gfx_dll, "Gfx_Init");
+      gfx_fns.init = (Win_Gfx_InitFn*)GetProcAddress(gfx_dll, "Gfx_Init");
       if(!gfx_fns.init) return 1;
       
-      gfx_fns.free = (Win_Gfx_Free*)GetProcAddress(gfx_dll, "Gfx_Free");
+      gfx_fns.free = (Win_Gfx_FreeFn*)GetProcAddress(gfx_dll, "Gfx_Free");
       if(!gfx_fns.free) return 1;
       
-      gfx_fns.render = (Win_Gfx_Render*)GetProcAddress(gfx_dll, "Gfx_Render");
+      gfx_fns.render = (Win_Gfx_RenderFn*)GetProcAddress(gfx_dll, "Gfx_Render");
       if(!gfx_fns.render) return 1;
       
     }

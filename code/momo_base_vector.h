@@ -1,7 +1,6 @@
-/* date = November 15th 2021 4:41 pm */
 
-#ifndef MOMO_VECTOR_H
-#define MOMO_VECTOR_H
+#ifndef MOMO_BASE_VECTOR_H
+#define MOMO_BASE_VECTOR_H
 
 typedef union V2U32 {
 	struct { U32 x, y; };
@@ -17,18 +16,17 @@ typedef union V2F32 {
 } V2F32;
 
 typedef union V3F32 {
-	F32 e[3];
 	struct { F32 x, y, z; };
 	struct { F32 w, h, d; };
+  F32 e[3];
 } V3F32;
 
 typedef union V4F32 {
-	F32 e[4];
 	struct { F32 x, y, z, w; };
+  F32 e[4];
 } V4F32;
 
 
-// NOTE(Momo): Do I need to support scale?
 static V2F32 V2F32_Add(V2F32 lhs, V2F32 rhs);
 static V2F32 V2F32_Sub(V2F32 lhs, V2F32 rhs);
 static V2F32 V2F32_Scale(V2F32 lhs, F32 rhs);
@@ -45,7 +43,6 @@ static V2F32 V2F32_Midpoint(V2F32 lhs, V2F32 rhs);
 static V2F32 V2F32_Project(V2F32 v, V2F32 onto);
 static V2F32 V2F32_Rotate(V2F32 v, F32 rad);
 
-// NOTE(Momo): Do I need to support scale?
 static V3F32 V3F32_Add(V3F32 lhs, V3F32 rhs);
 static V3F32 V3F32_Sub(V3F32 lhs, V3F32 rhs);
 static V3F32 V3F32_Scale(V3F32 lhs, F32 rhs);
@@ -80,4 +77,7 @@ static V2F32& operator-=(V2F32& lhs, V2F32 rhs);
 
 #endif //IS_CPP
 
-#endif //MOMO_VECTOR_H
+
+#include "momo_base_vector.cpp"
+
+#endif //MOMO_BASE_VECTOR_H
