@@ -228,7 +228,7 @@ WinMain(HINSTANCE instance,
     }
   }
   
-  // NOTE(Momo): Load game functions
+  //- NOTE(Momo): Load game functions
   Game_Fns game_fns; 
   {
     HMODULE game_dll = LoadLibraryA("game.dll");
