@@ -245,19 +245,6 @@ WinMain(HINSTANCE instance,
     }
   }
   
-  // NOTE(Momo): Load game functions
-  Game_Fns game_fns; 
-  {
-    HMODULE game_dll = LoadLibraryA("game.dll");
-    if (game_dll) {
-      game_fns.update =
-    }
-    else {
-      return 1;
-    }
-  }
-  
-  
   //- NOTE(Momo): Init gfx
   Gfx* gfx = gfx_fns.init(window, MB(256), 8, 4096);
   if (!gfx) {

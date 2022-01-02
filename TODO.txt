@@ -3,7 +3,8 @@ Gfx
 
 
 Arch
-- game.dll
+- setup game.dll
+- setup hot-reloading
 - file io
 - sound
 - mutithread support
