@@ -1,7 +1,7 @@
 /* date = november 20th 2021 11:58 am */
 
-#ifndef momo_base_string_h
-#define momo_base_string_h
+#ifndef momo_string_h
+#define momo_string_h
 
 
 //~ note(momo): immutable Strings
@@ -52,6 +52,6 @@ static void     Str8Bld_PushStr8(Str8Bld* sb, Str8 num);
 #define Str8Bld_temp(name, cap) U8 temp##__line__[cap]; Str8Bld name = Str8Bld_Create(temp##__line__, cap);
 
 
-#include "momo_base_String.cpp"
+#include "momo_strings.cpp"
 
-#endif //MOMO_BASE_STRING_H
+#endif //MOMO_STRING_H

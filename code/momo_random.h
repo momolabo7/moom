@@ -1,7 +1,7 @@
 /* date = November 20th 2021 11:58 am */
 
-#ifndef MOMO_BASE_RANDOM_H
-#define MOMO_BASE_RANDOM_H
+#ifndef MOMO_RANDOM_H
+#define MOMO_RANDOM_H
 
 typedef struct 
 {
@@ -18,6 +18,6 @@ static S32 Rng_BetweenS32(Rng* r, S32 min, S32 max);
 static U32 Rng_BetweenU32(Rng* r, U32 min, U32 max);
 
 
-#include "momo_base_random.cpp"
+#include "momo_random.cpp"
 
-#endif //MOMO_BASE_RANDOM_H
+#endif //MOMO_RANDOM_H

@@ -3,26 +3,85 @@
 #undef near
 #undef far
 
-#include "momo_base.h"
+#include "momo.h"
 #include "game_gfx.h"
 #include "win_gfx.h"
 
 #include "game_platform.h"
 
 //- NOTE(Momo): Global variables
-
 static B32 g_is_running;
 
+static inline LONG RECT_Width(RECT r) { return r.right - r.left; }
+static inline LONG RECT_Height(RECT r) { return r.bottom - r.top; }
 
-static LONG
-RECT_Width(RECT r) {
-  return r.right - r.left;
+
+static inline V2U32
+Win_GetWindowDims(HWND window) {
+	RECT rect;
+	GetWindowRect(window, &rect);
+  
+  V2U32 ret;
+  ret.w = U32(rect.right - rect.left);
+  ret.h = U32(rect.bottom - rect.top);
+  
+  return ret;
+	
 }
 
-static LONG
-RECT_Height(RECT r) {
-  return r.bottom - r.top;
+static V2U32
+Win_GetClientDims(HWND window) {
+	RECT rect;
+	GetClientRect(window, &rect);
+  
+  V2U32 ret;
+  ret.w = U32(rect.right - rect.left);
+  ret.h = U32(rect.bottom - rect.top);
+  
+  return ret;
+	
 }
+
+static Rect2U32 
+Win_GetRenderRegion(U32 window_w, 
+                    U32 window_h, 
+                    U32 render_w, 
+                    U32 render_h) 
+{
+	Assert(render_w > 0 && render_h > 0 && window_w > 0 && window_h > 0);
+  
+	Rect2U32 ret;
+	
+	F32 optimal_window_w = (F32)window_h * ((F32)render_w / (F32)render_h);
+	F32 optimal_window_h = (F32)window_w * ((F32)render_h / (F32)render_w);
+	
+	if (optimal_window_w > (F32)window_w) {
+		// NOTE(Momo): width has priority - top and bottom bars
+		ret.min.x = 0;
+		ret.max.x = window_w;
+		
+		F32 empty_height = (F32)window_h - optimal_window_h;
+		
+		ret.min.y = (U32)(empty_height * 0.5f);
+		ret.max.y = ret.min.y + (U32)optimal_window_h;
+	}
+	else {
+		// NOTE(Momo): height has priority - left and right bars
+		ret.min.y = 0;
+		ret.max.y = window_h;
+		
+		
+		F32 empty_width = (F32)window_w - optimal_window_w;
+		
+		ret.min.x = (U32)(empty_width * 0.5f);
+		ret.max.x = ret.min.x + (U32)optimal_window_w;
+	}
+	
+	return ret;
+}
+
+
+
 
 static LARGE_INTEGER
 Win_QueryPerformanceCounter(void) {
@@ -69,10 +128,6 @@ WinMain(HINSTANCE instance,
   
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
-  
-  
-  
-  
   
   //- NOTE(Momo): Create window in the middle of the screen
   HWND window;
@@ -154,7 +209,7 @@ WinMain(HINSTANCE instance,
   }
   
   //- NOTE(Momo): Load Gfx functions
-  Win_Gfx_Fns gfx_fns = {0};
+  Win_Gfx_Fns gfx_fns;
   {
     HMODULE gfx_dll = LoadLibraryA("gfx.dll");
     if (gfx_dll) {
@@ -167,6 +222,35 @@ WinMain(HINSTANCE instance,
       gfx_fns.render = (Win_Gfx_RenderFn*)GetProcAddress(gfx_dll, "Gfx_Render");
       if(!gfx_fns.render) return 1;
       
+    }
+    else {
+      return 1;
+    }
+  }
+  
+  // NOTE(Momo): Load game functions
+  Game_Fns game_fns; 
+  {
+    HMODULE game_dll = LoadLibraryA("game.dll");
+    if (game_dll) {
+      game_fns.update = (Game_UpdateFn*)GetProcAddress(game_dll, "Game_Update");
+      if(!game_fns.update) return 1;
+      
+      game_fns.get_info = (Game_GetInfoFn*)GetProcAddress(game_dll, "Game_GetInfo");
+      if(!game_fns.get_info) return 1;
+      
+    }
+    else {
+      return 1;
+    }
+  }
+  
+  // NOTE(Momo): Load game functions
+  Game_Fns game_fns; 
+  {
+    HMODULE game_dll = LoadLibraryA("game.dll");
+    if (game_dll) {
+      game_fns.update =
     }
     else {
       return 1;
@@ -265,14 +349,23 @@ WinMain(HINSTANCE instance,
     
     // TODO(Momo): Test gfx
     
-    V2U32 render_wh;
-    render_wh.w = 1600;
-    render_wh.h = 900;
     
-    Rect2U32 render_region;
-    render_region.min.x = render_region.min.y = 0;
-    render_region.max.x = 1600;
-    render_region.max.y = 900;
+    
+    // NOTE(Momo): Resize if needed. 
+    // TODO(Momo): Maybe we only do this once and then 
+    // only when window size changes after?
+    V2U32 render_wh = Win_GetClientDims(window);
+    
+    
+    // TODO(Momo): Should probably make a "GameInfo" struct that 
+    // contains information like these
+    const U32 game_design_width = 800;
+    const U32 game_design_height = 800;
+    Rect2U32 render_region = Win_GetRenderRegion(render_wh.w,
+                                                 render_wh.h,
+                                                 game_design_width,
+                                                 game_design_height);
+    
     
     Gfx_SetTexture(gfx, 0, 2, 2, (U8*)&test_texture);
     Gfx_ClearTextures(gfx);

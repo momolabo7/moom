@@ -197,7 +197,6 @@ Opengl__ClearTextures(Opengl* ogl) {
 
 void 
 Opengl__AddPredefinedTextures(Opengl* ogl) {
-  typedef struct Pixel { U8 e[4]; } Pixel;
   
   
   // NOTE(Momo): Dummy texture setup

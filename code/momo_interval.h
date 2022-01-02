@@ -1,5 +1,5 @@
-#ifndef MOMO_BASE_INTERVAL_H
-#define MOMO_BASE_INTERVAL_H
+#ifndef MOMO_INTERVAL_H
+#define MOMO_INTERVAL_H
 
 typedef struct {
   U32 min, max;
@@ -26,6 +26,6 @@ typedef struct {
   V3F32 min, max;
 } I3F32;
 
-#include "momo_base_interval.cpp"
+#include "momo_interval.cpp"
 
-#endif //MOMO_BASE_INTERVAL_H
+#endif //MOMO_INTERVAL_H

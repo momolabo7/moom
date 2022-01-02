@@ -1,7 +1,7 @@
 /* date = November 26th 2021 6:57 pm */
 
-#ifndef MOMO_BASE_STREAM_H
-#define MOMO_BASE_STREAM_H
+#ifndef MOMO_STREAM_H
+#define MOMO_STREAM_H
 
 
 typedef struct {
@@ -28,6 +28,6 @@ static void     Stream_FlushBits(Stream* s);
 
 
 
-#include "momo_base_stream.cpp"
+#include "momo_streams.cpp"
 
 #endif //MOMO_STREAM_H

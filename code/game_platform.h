@@ -67,7 +67,19 @@ PF_Button_IsHeld(PF_Button b) {
 
 //~ NOTE(Momo): game.dll API
 // Returns true if game is done
+typedef struct {
+  U32 game_design_width;
+  U32 game_design_height;
+} Game_Info;
+
+typedef Game_Info Game_GetInfoFn();
 typedef B32 Game_UpdateFn(Gfx* gfx,
                           F32 dt);
+
+typedef struct {
+  Game_GetInfoFn* get_info;
+  Game_UpdateFn* update;
+  
+} Game_Fns;
 
 #endif //GAME_PLATFORM_H

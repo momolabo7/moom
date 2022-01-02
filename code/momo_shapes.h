@@ -1,5 +1,5 @@
-#ifndef MOMO_BASE_SHAPES_H
-#define MOMO_BASE_SHAPES_H
+#ifndef MOMO_SHAPES_H
+#define MOMO_SHAPES_H
 
 //~ NOTE(Momo): Rects
 typedef struct {
@@ -33,6 +33,6 @@ typedef struct {
 } Line2F32;
 
 
-#include "momo_base_shapes.cpp"
+#include "momo_shapes.cpp"
 
-#endif //MOMO_BASE_SHAPES_H
+#endif //MOMO_SHAPES_H

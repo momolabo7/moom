@@ -1,7 +1,7 @@
 /* date = November 30th 2021 10:22 pm */
 
-#ifndef MOMO_BASE_WAV_H
-#define MOMO_BASE_WAV_H
+#ifndef MOMO_WAV_H
+#define MOMO_WAV_H
 
 typedef struct WAV_Riff_Chunk {
   U32 id; // big endian
@@ -38,5 +38,5 @@ static WAV WAV_LoadFromMemory(void* memory, U32 size);
 
 
 
-#include "momo_base_wav.cpp"
-#endif //MOMO_BASE_WAV_H
+#include "momo_wav.cpp"
+#endif //MOMO_WAV_H

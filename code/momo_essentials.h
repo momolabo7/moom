@@ -1,6 +1,6 @@
 
-#ifndef MOMO_BASE_ESSENTIALS_H
-#define MOMO_BASE_ESSENTIALS_H
+#ifndef MOMO_ESSENTIALS_H
+#define MOMO_ESSENTIALS_H
 
 #include <stdarg.h>
 
@@ -410,6 +410,6 @@ template<class F> zawarudo_ScopeGuard<F> operator+(zawarudo_defer_dummy, F f) {
 #endif // IS_CPP
 
 
-#include "momo_base_essentials.cpp"
+#include "momo_essentials.cpp"
 
-#endif //MOMO_BASE_ESSENTIALS_H
+#endif //MOMO_ESSENTIALS_H

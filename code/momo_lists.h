@@ -1,8 +1,8 @@
 /* date = November 29th 2021 9:58 pm */
-// TODO(Momo): Should rename to 'momo_base_list.h'
+// TODO(Momo): Should rename to 'momo_list.h'
 
-#ifndef MOMO_BASE_ARRAY_H
-#define MOMO_BASE_ARRAY_H
+#ifndef MOMO_ARRAY_H
+#define MOMO_ARRAY_H
 
 
 //~ NOTE(Momo): 'Dynamic' list API
@@ -56,6 +56,6 @@
 #define SList_Remove(l,i)   ((i < (l)->count) ? (Bin_Copy((l)->e+i, (l)->e+i+1, sizeof((l)->e[0])*((l)->count--)-i)), 1 : 0)
 #define SList_Remain(l)     (SList_Cap(l) - (l)->count)
 
-#include "momo_base_array.cpp"
+#include "momo_lists.cpp"
 
-#endif //MOMO_BASE_ARRAY_H
+#endif //MOMO_ARRAY_H

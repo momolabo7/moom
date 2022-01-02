@@ -7,7 +7,7 @@
 #undef near
 #undef far
 
-#include "momo_base.h"
+#include "momo.h"
 #include "game_gfx.h"
 
 
@@ -17,7 +17,7 @@ typedef void 	Win_Gfx_FreeFn(Gfx* r);
 
 
 // TODO(Momo): Do we really need render_wh and render_rengion?
-typedef void        Win_Gfx_RenderFn(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region);
+typedef void   Win_Gfx_RenderFn(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region);
 
 
 //~ NOTE(Momo): Function table

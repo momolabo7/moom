@@ -1,7 +1,7 @@
 /* date = november 19th 2021 3:20 pm */
 
-#ifndef MOMO_BASE_CRC_H
-#define MOMO_BASE_CRC_H
+#ifndef MOMO_CRC_H
+#define MOMO_CRC_H
 
 typedef struct CRC32_Table {
 	U32 remainders[256];
@@ -27,6 +27,6 @@ static U32 CRC32(U8* data, U32 data_size, U16 start_register, CRC32_Table Table)
 static U32 CRC16(U8* data, U32 data_size, U16 start_register, CRC16_Table Table);
 static U32 CRC8(U8* data, U32 data_size, U8 start_register, CRC8_Table Table);
 
-#include "momo_base_CRC.cpp"
+#include "momo_CRC.cpp"
 
-#endif //MOMO_BASE_CRC_H
+#endif //MOMO_CRC_H

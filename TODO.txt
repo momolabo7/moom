@@ -1,12 +1,9 @@
 Gfx
 - Calculate proper region for rendering in windows
-- colors for each vertice
-	- try to animate them!
 
 
 Arch
-- combine renderer.dll build with platform build
-- file io
 - game.dll
+- file io
 - sound
 - mutithread support

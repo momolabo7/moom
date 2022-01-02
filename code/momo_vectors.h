@@ -1,6 +1,6 @@
 
-#ifndef MOMO_BASE_VECTOR_H
-#define MOMO_BASE_VECTOR_H
+#ifndef MOMO_VECTOR_H
+#define MOMO_VECTOR_H
 
 typedef union V2U32 {
 	struct { U32 x, y; };
@@ -78,6 +78,6 @@ static V2F32& operator-=(V2F32& lhs, V2F32 rhs);
 #endif //IS_CPP
 
 
-#include "momo_base_vector.cpp"
+#include "momo_vectors.cpp"
 
-#endif //MOMO_BASE_VECTOR_H
+#endif //MOMO_VECTOR_H

@@ -1,7 +1,16 @@
-#include "momo_base.h"
+#include "momo.h"
 
 #include "game_gfx.h"
 #include "game_platform.h"
+
+exported Game_Info
+Game_GetInfo() {
+  Game_Info ret;
+  ret.game_design_width = 1600;
+  ret.game_design_height = 900;
+  return ret;
+}
+
 
 
 exported B32
