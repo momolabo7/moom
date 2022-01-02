@@ -4,10 +4,10 @@
 #undef far
 
 #include "momo.h"
-#include "game_gfx.h"
 #include "win_gfx.h"
 
-#include "game_platform.h"
+#include "game_os.h"
+
 
 //- NOTE(Momo): Global variables
 static B32 g_is_running;
