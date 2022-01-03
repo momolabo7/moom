@@ -74,6 +74,7 @@ typedef struct {
 
 typedef Game_Info Game_GetInfoFn();
 typedef B32 Game_UpdateFn(Gfx* gfx,
+                          
                           F32 dt);
 
 typedef struct {

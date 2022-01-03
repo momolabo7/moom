@@ -1,7 +1,7 @@
 #include "momo.h"
 
 #include "game_gfx.h"
-#include "game_os.h"
+#include "game_pf.h"
 
 exported Game_Info
 Game_GetInfo() {
