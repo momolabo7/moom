@@ -1,13 +1,19 @@
-#ifndef GAME_GFX_H
-#define GAME_GFX_H
-
-// NOTE(Momo): 
-// This file is a representation of how the game views 'rendering'.
+// This file and game_pf.h contain structs that need to be 
+// initialized by the OS and passed to the main Game_Update() 
+// function.
 //
-// Ground rules about this renderer.
+// All the code here is a representation of how the 
+// game views 'rendering'. The game simply adds commands
+// to a command queue, which will be dispatched to the 
+// appropriate graphics API, which details will be implemented
+// on top of the Gfx class (through inheritance or composition). 
+//
+// Most importantly, other than the commands, the game
+// expects the following rules in its rendering logic:
 // - This is a 2D renderer in 3D space. 
 // - Right-handed coordinate system: +Y is up, +Z is towards you
-// - Only one model is supported: A quad that can be textured and colored 
+// - The game only have one type of object: A quad that can be 
+//   textured and colored 
 // - UV origin is from top left. Points given for UV to map to the quad 
 //   is given in this order:
 // >> 0. Top left
@@ -21,6 +27,10 @@
 // * ---
 // */
 
+#ifndef GAME_GFX_H
+#define GAME_GFX_H
+
+//~ NOTE(Momo): Gfx API
 typedef Mailbox Gfx_Cmds;
 
 typedef struct {	

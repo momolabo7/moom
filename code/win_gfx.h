@@ -25,7 +25,7 @@ typedef struct {
   Win_Gfx_InitFn* init;
   Win_Gfx_FreeFn* free;
   Win_Gfx_RenderFn* render;
-} Win_Gfx_Fns;
+} Win_Gfx_API;
 
 
 

@@ -168,9 +168,13 @@ typedef void    GL_glDeleteTextures(GLsizei n,
 typedef void    GL_glDebugMessageCallbackARB(GLDEBUGPROC *callback, 
                                              const void* userParams);
 
+
+typedef void* Opengl_PF_AllocFn(UMI size);
+typedef void Opengl_PF_FreeFn(void* ptr);
+
 typedef struct {
-  Gfx gfx;
-  
+  Opengl_PF_AllocFn* alloc;
+  Opengl_PF_FreeFn* free;
   
   GL_glEnable* glEnable;
   GL_glDisable* glDisable;
@@ -210,12 +214,15 @@ typedef struct {
   GL_glDebugMessageCallbackARB* glDebugMessageCallbackARB;
   GL_glNamedBufferSubData* glNamedBufferSubData;
   GL_glUseProgram* glUseProgram;
+} Opengl_PF_API;
+
+typedef struct {
+  Gfx gfx;
+  
+  Opengl_PF_API pf;
   
   // NOTE(Momo): 
-  GLuint* textures;
-  UMI texture_count;
-  
-  UMI max_entities;
+  GLuint textures[10];
   
   // NOTE(Momo): End of things that needs to be provided by platform
   GLuint buffers[5]; // Opengl__VBO_Count
@@ -230,8 +237,8 @@ typedef struct {
 
 
 //~ NOTE(Momo): Functions
-static B32           Opengl_Init(Opengl* ogl, UMI max_entities);
-static void          Opengl_BeginFrame(Opengl* ogl, V2U32 render_wh, Rect2U32 region);
-static void          Opengl_EndFrame(Opengl* ogl);
+static B32  Opengl_Init(Opengl* ogl, Opengl_PF_API pf);
+static void Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region);
+static void Opengl_Free(Opengl* ogl);
 
 #endif //GAME_GFX_OPENGL_H

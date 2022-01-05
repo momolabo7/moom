@@ -1,10 +1,8 @@
-Gfx
-- Calculate proper region for rendering in windows
-
-
 Arch
-- setup game.dll
 - setup hot-reloading
+- figure out how game should tell GFX about its design resolution
+- Figure out if we care about void*. 
+- Figure out if we care about const char* (C-String). Maybe typedef it at least in our codebase.
 - file io
 - sound
 - mutithread support

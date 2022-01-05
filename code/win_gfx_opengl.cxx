@@ -200,14 +200,16 @@ Gfx_Init(HWND window, UMI render_commands_size, UMI max_textures, UMI max_entiti
     goto failed1;
   }
   
-  Opengl* opengl = (Opengl*)Win_Gfx_AllocateMemory(sizeof(Opengl));
-  opengl->textures = (GLuint*)Win_Gfx_AllocateMemory(max_textures*sizeof(GLuint));
-  opengl->texture_count = max_textures;
-  opengl->gfx.commands =
-    Mailbox_Create(Win_Gfx_AllocateMemory(render_commands_size),
-                   render_commands_size);
+  Opengl_PF_API pf; 
   
-  if (!opengl || !opengl->textures || !opengl->gfx.commands.memory) {
+  pf.alloc = Win_Gfx_AllocateMemory;
+  pf.free = Win_Gfx_FreeMemory;
+  
+  // TODO: IF YOU ARE READING IN HOTEL
+  // CONTINUE FIXING THIS
+  Opengl* opengl = (Opengl*)Win_Gfx_AllocateMemory(sizeof(Opengl));
+  
+  if (!opengl ) {
     goto failed2;
   }
   
@@ -240,8 +242,8 @@ Gfx_Init(HWND window, UMI render_commands_size, UMI max_textures, UMI max_entiti
     HMODULE module = LoadLibraryA("opengl32.dll");
     // TODO: Log functions that are not loaded
 #define WGL_SetOpenglFunction(name) \
-opengl->name = (GL_##name*)WGL_TryGetFunction(#name, module); \
-if (!opengl->name) { goto failed2; } 
+pf.name = (GL_##name*)WGL_TryGetFunction(#name, module); \
+if (!pf.name) { goto failed2; } 
     
     WGL_SetOpenglFunction(glEnable);
     WGL_SetOpenglFunction(glDisable); 
@@ -284,7 +286,7 @@ if (!opengl->name) { goto failed2; }
   }
 #undef WGL_SetOpenglFunction
   
-  if (!Opengl_Init(opengl, max_entities)) {
+  if (!Opengl_Init(opengl, pf)) {
     goto failed2;
   }
   
@@ -299,13 +301,14 @@ if (!opengl->name) { goto failed2; }
   ReleaseDC(window, dc);
   return (Gfx*)opengl;
   
-  failed2: {
-    Win_Gfx_FreeMemory(opengl->textures);
-    Win_Gfx_FreeMemory(opengl->gfx.commands.memory);
+  failed2: 
+  {
+    Opengl_Free(opengl);
     Win_Gfx_FreeMemory(opengl);
   }
   
-  failed1: {
+  failed1: 
+  {
     ReleaseDC(window, dc);
   }
   
@@ -322,8 +325,7 @@ Gfx_Render(Gfx* gfx,  V2U32 render_wh, Rect2U32 region) {
 exported void
 Gfx_Free(Gfx* r) {
   Opengl* opengl = (Opengl*)r;
-  Win_Gfx_FreeMemory(opengl->textures);
-  Win_Gfx_FreeMemory(opengl->gfx.commands.memory);
+  Opengl_Free(opengl);
   Win_Gfx_FreeMemory(opengl);
 }
 

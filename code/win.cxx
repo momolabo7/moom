@@ -9,8 +9,16 @@
 #include "game_pf.h"
 
 
-//- NOTE(Momo): Global variables
-static B32 g_is_running;
+//-NOTE(Momo): Global variables
+typedef struct {
+  B32 is_running;
+  
+  //-NOTE(Momo): For game hot-reloading
+  HMODULE game_dll;
+  Game_API game_api;
+  
+} Win;
+static Win Win_win;
 
 static inline LONG RECT_Width(RECT r) { return r.right - r.left; }
 static inline LONG RECT_Height(RECT r) { return r.bottom - r.top; }
@@ -110,13 +118,53 @@ Win_WindowCallback(HWND window,
     case WM_CLOSE:  
     case WM_QUIT:
     case WM_DESTROY: {
-      g_is_running = false;
+      Win_win.is_running = false;
     } break;
     default: {
       result = DefWindowProcA(window, message, w_param, l_param);
     };   
   }
   return result;
+}
+
+//-NOTE(Momo): For Platform API
+void 
+Win_HotReload() {
+  Win_win.game_api; 
+  {
+    HMODULE game_dll = LoadLibraryA("game.dll");
+    if (game_dll) {
+      game_api.update = (Game_UpdateFn*)GetProcAddress(game_dll, "Game_Update");
+      if(!game_api.update) return 1;
+      
+      game_api.get_info = (Game_GetInfoFn*)GetProcAddress(game_dll, "Game_GetInfo");
+      if(!game_api.get_info) return 1;
+      
+    }
+    else {
+      return 1;
+    }
+  }
+  
+}
+
+
+static void*
+Win_AllocateMemory(UMI memory_size) {
+  return VirtualAllocEx(GetCurrentProcess(),
+                        0, 
+                        memory_size,
+                        MEM_RESERVE | MEM_COMMIT, 
+                        PAGE_READWRITE);
+  
+}
+
+static void
+Win_FreeMemory(void* memory) {
+  VirtualFreeEx(GetCurrentProcess(), 
+                memory,    
+                0, 
+                MEM_RELEASE); 
 }
 
 int CALLBACK
@@ -129,7 +177,7 @@ WinMain(HINSTANCE instance,
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
   
-  //- NOTE(Momo): Create window in the middle of the screen
+  //-NOTE(Momo): Create window in the middle of the screen
   HWND window;
   {
     // TODO(Momo): Maybe this can be defined elsewhere...?
@@ -208,36 +256,27 @@ WinMain(HINSTANCE instance,
     
   }
   
-  //- NOTE(Momo): Load Gfx functions
-  Win_Gfx_Fns gfx_fns;
+  //-NOTE(Momo): Load Platform API for game
+  PF pf_api;
+  {
+    pf_api.hot_reload = Win_HotReload;
+    pf_api.alloc = Win_AllocateMemory;
+    pf_api.free = Win_FreeMemory;
+  }
+  
+  //-NOTE(Momo): Load Gfx functions
+  Win_Gfx_API gfx_api;
   {
     HMODULE gfx_dll = LoadLibraryA("gfx.dll");
     if (gfx_dll) {
-      gfx_fns.init = (Win_Gfx_InitFn*)GetProcAddress(gfx_dll, "Gfx_Init");
-      if(!gfx_fns.init) return 1;
+      gfx_api.init = (Win_Gfx_InitFn*)GetProcAddress(gfx_dll, "Gfx_Init");
+      if(!gfx_api.init) return 1;
       
-      gfx_fns.free = (Win_Gfx_FreeFn*)GetProcAddress(gfx_dll, "Gfx_Free");
-      if(!gfx_fns.free) return 1;
+      gfx_api.free = (Win_Gfx_FreeFn*)GetProcAddress(gfx_dll, "Gfx_Free");
+      if(!gfx_api.free) return 1;
       
-      gfx_fns.render = (Win_Gfx_RenderFn*)GetProcAddress(gfx_dll, "Gfx_Render");
-      if(!gfx_fns.render) return 1;
-      
-    }
-    else {
-      return 1;
-    }
-  }
-  
-  //- NOTE(Momo): Load game functions
-  Game_Fns game_fns; 
-  {
-    HMODULE game_dll = LoadLibraryA("game.dll");
-    if (game_dll) {
-      game_fns.update = (Game_UpdateFn*)GetProcAddress(game_dll, "Game_Update");
-      if(!game_fns.update) return 1;
-      
-      game_fns.get_info = (Game_GetInfoFn*)GetProcAddress(game_dll, "Game_GetInfo");
-      if(!game_fns.get_info) return 1;
+      gfx_api.render = (Win_Gfx_RenderFn*)GetProcAddress(gfx_dll, "Gfx_Render");
+      if(!gfx_api.render) return 1;
       
     }
     else {
@@ -245,11 +284,18 @@ WinMain(HINSTANCE instance,
     }
   }
   
-  //- NOTE(Momo): Init gfx
-  Gfx* gfx = gfx_fns.init(window, MB(256), 8, 4096);
+  //-NOTE(Momo): Load game functions
+  Win_HotReload();
+  
+  //-NOTE(Momo): Init gfx
+  Gfx* gfx = gfx_api.init(window, MB(256), 8, 4096);
   if (!gfx) {
     return 1;
   }
+  
+  //- NOTE(Momo): Init input
+  Input input;
+  
   
   // TODO(Momo): Testing texture. Remove after use.
   U8 test_texture[4][4] {
@@ -259,24 +305,21 @@ WinMain(HINSTANCE instance,
     { 0, 0, 0, 255 },
   };
   
-  // Gfx_Texture texture = gfx_fns.add_texture(gfx, 2, 2, (void*)&test_texture);
+  // Gfx_Texture texture = gfx_api.add_texture(gfx, 2, 2, (void*)&test_texture);
   
   
-  //- NOTE(Momo): Begin game loop
-  g_is_running = true;
+  //-NOTE(Momo): Begin game loop
+  Win_win.is_running = true;
   B32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   LARGE_INTEGER performance_frequency;
   QueryPerformanceFrequency(&performance_frequency);
   
   LARGE_INTEGER last_count = Win_QueryPerformanceCounter();
   
-  F32 tmp_delta = 0.f;
-  B32 tmp_increase = true;
-  F32 tmp_rot = 0.f;
-  
-  while (g_is_running) {
+  while (Win_win.is_running) {
     
-    //- NOTE(Momo): Process messages
+    Input_Update(&input);
+    //-NOTE(Momo): Process messages and input
     {
       MSG msg = {};
       while(PeekMessage(&msg, window, 0, 0, PM_REMOVE)) {
@@ -284,7 +327,22 @@ WinMain(HINSTANCE instance,
           case WM_QUIT:
           case WM_DESTROY:
           case WM_CLOSE: {
-            g_is_running = false;
+            Win_win.is_running = false;
+          } break;
+          case WM_KEYUP:
+          case WM_KEYDOWN:
+          case WM_SYSKEYDOWN:
+          case WM_SYSKEYUP:
+          {
+            U32 code = (U32)msg.wParam;
+            B32 is_down = msg.message = WM_KEYDOWN;
+            switch(code) {
+              case 0x57: /* W  */ 
+              {
+                input.button_up.now = true;
+              } break;
+            }
+            
           } break;
           
           default: {
@@ -296,7 +354,30 @@ WinMain(HINSTANCE instance,
       }
     }
     
-    //- NOTE(Momo): We control the frame rate here
+    //-NOTE(Momo) Game logic here 
+    // TODO(Momo): figure out target secs per frame
+    const F64 game_dt = 1/60.0;
+    
+    // NOTE(Momo): Resize if needed. 
+    // TODO(Momo): Maybe we only do this once and then 
+    // only when window size changes after?
+    V2U32 render_wh = Win_GetClientDims(window);
+    
+    
+    // TODO(Momo): Should probably make a "GameInfo" struct that 
+    // contains information like these
+    const U32 game_design_width = 800;
+    const U32 game_design_height = 800;
+    Rect2U32 render_region = Win_GetRenderRegion(render_wh.w,
+                                                 render_wh.h,
+                                                 game_design_width,
+                                                 game_design_height);
+    
+    game_api.update(&pf_api, &input, gfx, (F32)(game_dt));
+    
+    
+    gfx_api.render(gfx, render_wh, render_region);
+    //-NOTE(Momo): Frame-rate control
     // 1. Calculate how much time has passed since the last frame
     // 2. If the time elapsed is greater than the target time elapsed,
     //    sleep/spin-lock until then.    
@@ -306,8 +387,6 @@ WinMain(HINSTANCE instance,
                          performance_frequency);
     
     
-    // TODO(Momo): figure out target secs per frame
-    const F64 game_dt = 1/60.0;
     
     if(game_dt > secs_elapsed) {
       if (is_sleep_granular) {
@@ -334,77 +413,11 @@ WinMain(HINSTANCE instance,
       // TODO(Momo): Do we need to do anything about missing a frame?
     }
     
-    // TODO(Momo): Test gfx
-    
-    
-    
-    // NOTE(Momo): Resize if needed. 
-    // TODO(Momo): Maybe we only do this once and then 
-    // only when window size changes after?
-    V2U32 render_wh = Win_GetClientDims(window);
-    
-    
-    // TODO(Momo): Should probably make a "GameInfo" struct that 
-    // contains information like these
-    const U32 game_design_width = 800;
-    const U32 game_design_height = 800;
-    Rect2U32 render_region = Win_GetRenderRegion(render_wh.w,
-                                                 render_wh.h,
-                                                 game_design_width,
-                                                 game_design_height);
-    
-    
-    Gfx_SetTexture(gfx, 0, 2, 2, (U8*)&test_texture);
-    Gfx_ClearTextures(gfx);
-    {
-      RGBAF32 colors;
-      colors.r = colors.g = colors.b  = colors.a = 0.3f;
-      Gfx_Clear(gfx, colors);
-    }
-    
-    {
-      V3F32 position = {0};
-      Rect3F32 frustum;
-      frustum.min.x = frustum.min.y = frustum.min.z = 0;
-      frustum.max.x = 1600;
-      frustum.max.y = 900;
-      frustum.max.z = 500;
-      Gfx_SetOrthoCamera(gfx, position, frustum);
-    }
-    
-    {
-      if (tmp_increase)
-        tmp_delta += (F32)game_dt; 
-      else
-        tmp_delta -= (F32)game_dt;
-      
-      if (tmp_delta >= 1.f ){
-        tmp_delta = 1.f;
-        tmp_increase = false;
-      }
-      
-      if (tmp_delta <= 0.f) {
-        tmp_delta = 0.f;
-        tmp_increase = true;
-      }
-      
-      RGBAF32 colors = RGBAF32_Create(0.f, 0.f, 0.f, 1.f);
-      HSLF32 hsl = HSLF32_Create(tmp_delta, 1.f, 0.5f);
-      colors.rgb = HSLF32_ToRGBF32(hsl);
-      
-      M44F32 scale = M44F32_Scale(600.f, 600.f, 10.f);
-      M44F32 rot = M44F32_RotationZ(tmp_rot += (F32)game_dt);
-      M44F32 trans = M44F32_Translation(800.f, 450.f, 300.f);
-      M44F32 t = M44F32_Concat(trans, M44F32_Concat(scale, rot));
-      Gfx_DrawSprite(gfx, colors, t, 0);
-    }
-    
-    gfx_fns.render(gfx, render_wh, render_region);
     
     last_count = Win_QueryPerformanceCounter();
     
     
-    //- NOTE(Momo): Swap buffers
+    //-NOTE(Momo): Swap buffers
     {
       HDC dc = GetDC(window);
       SwapBuffers(dc);
@@ -414,7 +427,7 @@ WinMain(HINSTANCE instance,
     
   }
   
-  gfx_fns.free(gfx);
+  gfx_api.free(gfx);
   
   
   
