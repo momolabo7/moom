@@ -13,7 +13,6 @@ typedef struct {
   void* data;
 } Mailbox_Entry;
 
-// NOTE(Momo): Use UMI because it is easier to debug when offset from 0
 typedef struct {
 	U8* memory;
 	UMI data_pos;
@@ -27,7 +26,7 @@ static Mailbox          Mailbox_Create(void* memory, UMI size);
 static void             Mailbox_Clear(Mailbox* m);
 static Mailbox_Entry*   Mailbox_Get(Mailbox *m, UMI index);
 static void*            Mailbox_PushBlock(Mailbox* m, UMI size, UMI align, U32 id);
-static void*						Mailbox_PushExtraData(Mailbox* m, UMI size, UMI align);
+static void*			Mailbox_PushExtraData(Mailbox* m, UMI size, UMI align);
 
 
 #define Mailbox_Push(m, type, id) (type*)Mailbox_PushBlock(m, sizeof(type), 4, id)

@@ -21,15 +21,15 @@ Str8_Substr(Str8 str, UMI start, UMI count) {
 
 static B32
 Str8_Match(Str8 lhs, Str8 rhs) {
-    if(lhs.count != rhs.count) {
-        return false;
+  if(lhs.count != rhs.count) {
+    return false;
+  }
+  for (UMI i = 0; i < lhs.count; ++i) {
+    if (lhs.e[i] != rhs.e[i]) {
+      return false;
     }
-    for (UMI i = 0; i < lhs.count; ++i) {
-        if (lhs.e[i] != rhs.e[i]) {
-            return false;
-        }
-    }
-    return true;
+  }
+  return true;
 }
 
 #if IS_CPP
@@ -77,52 +77,51 @@ Str8Bld_PushC8(Str8Bld* s, C8 num) {
 static void     
 Str8Bld_PushU32(Str8Bld* s, U32 num) {
 	if (num == 0) {
-        Str8Bld_PushC8(s, '0');
+    Str8Bld_PushC8(s, '0');
 		return;
-    }
-    UMI start_pt = s->count; 
-    
-    for(; num != 0; num /= 10) {
-        U8 digit_to_convert = (U8)(num % 10);
+  }
+  UMI start_pt = s->count; 
+  
+  for(; num != 0; num /= 10) {
+    U8 digit_to_convert = (U8)(num % 10);
 		Str8Bld_PushC8(s, DigitToASCII(digit_to_convert));
-    }
-    
-    // Reverse starting from start point to count
-    UMI sub_str_len_half = (s->count - start_pt)/2;
-    for(UMI i = 0; i < sub_str_len_half; ++i) {
-        Swap(U8, s->e[start_pt + i], s->e[s->count - 1 - i]);
-    }
+  }
+  
+  // Reverse starting from start point to count
+  UMI sub_str_len_half = (s->count - start_pt)/2;
+  for(UMI i = 0; i < sub_str_len_half; ++i) {
+    Swap(s->e[start_pt + i], s->e[s->count - 1 - i]);
+  }
 }
 static void     
 Str8Bld_PushS32(Str8Bld* s, S32 num) {
 	if (num == 0) {
-        Str8Bld_PushC8(s, '0');
+    Str8Bld_PushC8(s, '0');
 		return;
-    }
-    
-    UMI start_pt = s->count; 
-    
-    B32 neg = num < 0;
-    num = Abs(num);
-    
-    for(; num != 0; num /= 10) {
-        U8 digit_to_convert = (U8)(num % 10);
+  }
+  
+  UMI start_pt = s->count; 
+  
+  B32 neg = num < 0;
+  num = Abs(num);
+  
+  for(; num != 0; num /= 10) {
+    U8 digit_to_convert = (U8)(num % 10);
 		Str8Bld_PushC8(s, DigitToASCII(digit_to_convert));
-    }
+  }
+  
+  if (neg) {
+    Str8Bld_PushC8(s, '-');
+  }
+  
+  // Reverse starting from start point to count
+  UMI sub_str_len_half = (s->count - start_pt)/2;
+  for(UMI i = 0; i < sub_str_len_half; ++i) {
+    Swap(s->e[start_pt + i], 
+         s->e[s->count-1-i]);
     
-    if (neg) {
-        Str8Bld_PushC8(s, '-');
-    }
-    
-    // Reverse starting from start point to count
-    UMI sub_str_len_half = (s->count - start_pt)/2;
-    for(UMI i = 0; i < sub_str_len_half; ++i) {
-        Swap(U8,
-			 s->e[start_pt + i], 
-             s->e[s->count-1-i]);
-        
-    }
-    
+  }
+  
 }
 
 static void     
@@ -151,16 +150,16 @@ Str8Bld_PushF32(Str8Bld* s, F32 value, U32 precision) {
 static void
 Str8Bld__PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
 	UMI at = 0;
-    while(at < format.count) {
+  while(at < format.count) {
 		
-        if (format.e[at] == '%') {
-            ++at;
+    if (format.e[at] == '%') {
+      ++at;
 			
-            // TODO(Momo): Parse flags
+      // TODO(Momo): Parse flags
 			// TODO(Momo): Parse width
 			// TODO(Momo): Parse precision
 			// TODO(Momo): Parse length
-            
+      
 			switch(format.e[at]) {
 				//- NOTE(Momo): Standard Types
 				case 'd': 
@@ -195,13 +194,13 @@ Str8Bld__PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
 			}
 			++at;
 			
-            
-        }
-        else {
-            Str8Bld_PushC8(dest, format.e[at++]);
-        }
-		
+      
     }
+    else {
+      Str8Bld_PushC8(dest, format.e[at++]);
+    }
+		
+  }
 	
 	
 }
@@ -210,9 +209,9 @@ Str8Bld__PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
 static void     
 Str8Bld_PushFmt(Str8Bld* s, Str8 fmt, ...) {
 	va_list args;
-    va_start(args, fmt);
-    Str8Bld__PushFmtList(s, fmt, args);
-    va_end(args);
+  va_start(args, fmt);
+  Str8Bld__PushFmtList(s, fmt, args);
+  va_end(args);
 }
 
 static void     

@@ -63,8 +63,118 @@ Bin_Swap(void* lhs, void* rhs, UMI size) {
     *r++ = tmp;
   }
 }
+//~ Helper functions
+static constexpr UMI 
+PtrToInt(void* p) { 
+  return (UMI)((char*)p - (char*)0); 
+}
 
-//~ NOTE(Momo): C-strings, aka null-terminated strings
+static constexpr U8* 
+IntToPtr(UMI u) { 
+  return (U8*)((char*)0 + u);
+}
+
+template<class T> static constexpr T 
+Min(T l, T r) { 
+  return l < r ? l : r; 
+}
+
+template<class T> static constexpr T 
+Max(T l, T r) { 
+  return l > r ? l : r; 
+}
+
+template<class T> static constexpr T 
+Clamp(T x, T b, T t) { 
+  return Max(Min(x,t),b); 
+}
+
+template<class T> static constexpr T
+Abs(T x) { 
+  return x < 0 ? -x : x; 
+}
+
+static constexpr F32 
+Abs(F32 x) {
+  union { F32 f; U32 u; } val = {0};
+  val.f = x;
+  val.u &= 0x7fffffff;  
+  return val.f;
+}
+
+static constexpr F64
+Abs(F64 x) {
+  union { F64 f; U64 u; } val = {0};
+  val.f = x;
+  val.u &= 0x7fffffffffffffff;
+  
+  return val.f;
+}
+
+
+static constexpr S8   
+Abs(S8 x) {
+  S8 y = x >> 7;
+  return (x ^ y)-y;
+}
+static constexpr S16  
+Abs(S16 x) {
+  S16 y = x >> 15;
+  return (x ^ y)-y;
+}
+static constexpr S32  
+Abs(S32 x) {
+  S32 y = x >> 31;
+  return (x ^ y)-y;
+}
+static constexpr S64  
+Abs(S64 x) {
+  S64 y = x >> 63;
+  return (x ^ y)-y;
+}
+
+
+template<class T> static constexpr T
+Lerp(T s, T e, F32 f) { 
+  return (T)(s + (e-s) * f); 
+}
+
+template<class T> static constexpr T 
+Lerp(T s, T e, F64 f) { 
+  return (T)(s + (e-s) * f); 
+}
+
+static constexpr F32 
+Ratio(F32 v, F32 min, F32 max) { 
+  return (v - min)/(max - min); 
+}
+
+static constexpr F64 
+Ratio(F64 v, F64 min, F64 max) { 
+  return (v - min)/(max - min); 
+}
+
+template<class T, class U> static constexpr T
+AlignDownPow2(T value, U align) { 
+  return value & ~(align-1); 
+}
+
+template<class T, class U> T
+AlignUpPow2(T value, U align) { 
+  return (value + (align-1)) & ~(align-1); 
+}
+
+template<class T> static constexpr B32 
+IsPow2(T value) { 
+  return (value & (value - 1)) == 0; 
+}
+template<class T> static constexpr void 
+Swap(T& lhs, T& rhs) { 
+  T tmp = lhs; lhs = rhs; rhs = tmp; 
+} 
+
+
+//~C-strings, aka null-terminated strings
 static UMI
 Sistr_Length(const char* str) {
   UMI count = 0;
@@ -120,7 +230,7 @@ Sistr_Reverse(char* dest) {
   char* back_ptr = dest;
   for (; *(back_ptr+1) != 0; ++back_ptr);
   for (;dest < back_ptr; ++dest, --back_ptr) {
-    Swap(char, *dest, *back_ptr);
+    Swap((*dest), (*back_ptr));
   }
 }
 
@@ -158,14 +268,6 @@ Sistr_Itoa(char* dest, S32 num) {
 
 
 //~ NOTE(Momo): IEEE floating point function defs
-static F32 
-F32_Abs(F32 x) {
-  union { F32 f; U32 u; } val;
-  val.f = x;
-  val.u &= 0x7fffffff;
-  
-  return val.f;
-}
 
 static F32 
 F32_Inf() {
@@ -191,14 +293,6 @@ F32_NegInf() {
 
 
 
-static F64
-F64_Abs(F64 x) {
-  union { F64 f; U64 u; } val;
-  val.f = x;
-  val.u &= 0x7fffffffffffffff;
-  
-  return val.f;
-}
 
 static F64 
 F64_Inf() {
@@ -232,27 +326,6 @@ F64_Match(F64 lhs, F64 rhs) {
   return Abs(lhs - rhs) <= F64_epsilon;
 }
 
-//~ NOTE(Momo): Useful calculations
-static S8   
-S8_Abs(S8 x) {
-  S8 y = x >> 7;
-  return (x ^ y)-y;
-}
-static S16  
-S16_Abs(S16 x) {
-  S16 y = x >> 15;
-  return (x ^ y)-y;
-}
-static S32  
-S32_Abs(S32 x) {
-  S32 y = x >> 31;
-  return (x ^ y)-y;
-}
-static S64  
-S64_Abs(S64 x) {
-  S64 y = x >> 63;
-  return (x ^ y)-y;
-}
 
 static F32
 F32_BPMToSPB(F32 bpm) {

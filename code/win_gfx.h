@@ -12,7 +12,7 @@
 
 
 //~ NOTE(Momo): API
-typedef Gfx*   Win_Gfx_InitFn(HWND window, UMI render_commands_size, UMI max_textures, UMI max_entities);
+typedef Gfx*   Win_Gfx_InitFn(HWND window);
 typedef void 	Win_Gfx_FreeFn(Gfx* r);
 
 

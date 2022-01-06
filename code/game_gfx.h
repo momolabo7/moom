@@ -47,7 +47,7 @@ typedef struct {
 typedef enum {
   Gfx_CmdType_Clear,
   Gfx_CmdType_SetBasis,
-  Gfx_CmdType_DrawSubSprite, 
+  Gfx_CmdType_DrawSubSprite,
   Gfx_CmdType_DrawRect,
   Gfx_CmdType_SetTexture,
   Gfx_CmdType_ClearTextures,

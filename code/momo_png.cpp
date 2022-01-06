@@ -786,7 +786,7 @@ PNG__Process_IEND(PNG__Context* c) {
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
 static Image
-PNG_Read(Memory_Block png_memory,
+PNG_Read(Memory png_memory,
          Arena* arena) 
 {
   PNG__Context ctx = {0};
@@ -854,7 +854,7 @@ PNG_Read(Memory_Block png_memory,
 // TODO(Momo): Maybe we shift this to another file? momo_png_write.h?
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
-static Memory_Block
+static Memory
 PNG_Write(Image image, Arena* arena) {
   Assert(image.width > 0 && image.height > 0 && image.channels == 4 && image.data != 0);
   
@@ -1017,7 +1017,7 @@ PNG_Write(Image image, Arena* arena) {
     Stream_Write(&stream, PNG__Chunk_Footer, footer);
   }
   
-  Memory_Block ret;
+  Memory ret;
   ret.data = (U8*)stream.data;
   ret.size = stream.pos;
   

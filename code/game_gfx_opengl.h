@@ -172,7 +172,7 @@ typedef void    GL_glDebugMessageCallbackARB(GLDEBUGPROC *callback,
 typedef void* Opengl_PF_AllocFn(UMI size);
 typedef void Opengl_PF_FreeFn(void* ptr);
 
-typedef struct {
+struct Opengl_PF_API{
   Opengl_PF_AllocFn* alloc;
   Opengl_PF_FreeFn* free;
   
@@ -214,9 +214,9 @@ typedef struct {
   GL_glDebugMessageCallbackARB* glDebugMessageCallbackARB;
   GL_glNamedBufferSubData* glNamedBufferSubData;
   GL_glUseProgram* glUseProgram;
-} Opengl_PF_API;
+};
 
-typedef struct {
+struct Opengl {
   Gfx gfx;
   
   Opengl_PF_API pf;
@@ -232,7 +232,7 @@ typedef struct {
   GLuint blank_texture;
   
   Rect2U32 render_region;
-} Opengl;
+};
 
 
 

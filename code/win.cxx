@@ -12,13 +12,9 @@
 //-NOTE(Momo): Global variables
 typedef struct {
   B32 is_running;
-  
-  //-NOTE(Momo): For game hot-reloading
-  HMODULE game_dll;
-  Game_API game_api;
-  
-} Win;
-static Win Win_win;
+  B32 is_hot_reloading;
+} Win_State;
+static Win_State Win_global_state;
 
 static inline LONG RECT_Width(RECT r) { return r.right - r.left; }
 static inline LONG RECT_Height(RECT r) { return r.bottom - r.top; }
@@ -118,7 +114,7 @@ Win_WindowCallback(HWND window,
     case WM_CLOSE:  
     case WM_QUIT:
     case WM_DESTROY: {
-      Win_win.is_running = false;
+      Win_global_state.is_running = false;
     } break;
     default: {
       result = DefWindowProcA(window, message, w_param, l_param);
@@ -130,22 +126,7 @@ Win_WindowCallback(HWND window,
 //-NOTE(Momo): For Platform API
 void 
 Win_HotReload() {
-  Win_win.game_api; 
-  {
-    HMODULE game_dll = LoadLibraryA("game.dll");
-    if (game_dll) {
-      game_api.update = (Game_UpdateFn*)GetProcAddress(game_dll, "Game_Update");
-      if(!game_api.update) return 1;
-      
-      game_api.get_info = (Game_GetInfoFn*)GetProcAddress(game_dll, "Game_GetInfo");
-      if(!game_api.get_info) return 1;
-      
-    }
-    else {
-      return 1;
-    }
-  }
-  
+  Win_global_state.is_hot_reloading = true;
 }
 
 
@@ -266,8 +247,9 @@ WinMain(HINSTANCE instance,
   
   //-NOTE(Momo): Load Gfx functions
   Win_Gfx_API gfx_api;
+  HMODULE gfx_dll;
   {
-    HMODULE gfx_dll = LoadLibraryA("gfx.dll");
+    gfx_dll =  LoadLibraryA("gfx.dll");
     if (gfx_dll) {
       gfx_api.init = (Win_Gfx_InitFn*)GetProcAddress(gfx_dll, "Gfx_Init");
       if(!gfx_api.init) return 1;
@@ -284,11 +266,9 @@ WinMain(HINSTANCE instance,
     }
   }
   
-  //-NOTE(Momo): Load game functions
-  Win_HotReload();
   
   //-NOTE(Momo): Init gfx
-  Gfx* gfx = gfx_api.init(window, MB(256), 8, 4096);
+  Gfx* gfx = gfx_api.init(window);
   if (!gfx) {
     return 1;
   }
@@ -309,14 +289,39 @@ WinMain(HINSTANCE instance,
   
   
   //-NOTE(Momo): Begin game loop
-  Win_win.is_running = true;
+  Win_global_state.is_running = true;
+  Win_global_state.is_hot_reloading = true;
+  
   B32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   LARGE_INTEGER performance_frequency;
   QueryPerformanceFrequency(&performance_frequency);
   
   LARGE_INTEGER last_count = Win_QueryPerformanceCounter();
   
-  while (Win_win.is_running) {
+  Game_API game_api = {0}; 
+  HMODULE game_dll = LoadLibraryA("game.dll");
+  
+  while (Win_global_state.is_running) {
+    //-NOTE(Momo): Load game functions
+    if (Win_global_state.is_hot_reloading){
+      if (!game_api.update) {
+        
+      }
+      
+      
+      if (game_dll) {
+        game_api.update = (Game_UpdateFn*)GetProcAddress(game_dll, "Game_Update");
+        if(!game_api.update) return 1;
+        
+        game_api.get_info = (Game_GetInfoFn*)GetProcAddress(game_dll, "Game_GetInfo");
+        if(!game_api.get_info) return 1;
+        
+      }
+      else {
+        return 1;
+      }
+      
+    }
     
     Input_Update(&input);
     //-NOTE(Momo): Process messages and input
@@ -327,7 +332,7 @@ WinMain(HINSTANCE instance,
           case WM_QUIT:
           case WM_DESTROY:
           case WM_CLOSE: {
-            Win_win.is_running = false;
+            Win_global_state.is_running = false;
           } break;
           case WM_KEYUP:
           case WM_KEYDOWN:

@@ -6,9 +6,9 @@
 
 
 
-static inline Memory_Block
+static inline Memory
 ReadFileToMemory(Arena* arena, const char* filename) {
-	Memory_Block result = {0};
+	Memory result = {0};
   FILE* file = fopen(filename, "rb");
   if (!file) { 
     printf("Cannot find file\n");
@@ -32,7 +32,7 @@ ReadFileToMemory(Arena* arena, const char* filename) {
 
 
 static inline B32
-WriteMemoryToFile(Memory_Block block, const char* filename) {
+WriteMemoryToFile(Memory block, const char* filename) {
 	FILE* file = fopen(filename, "wb");
 	if (!file) {
 		printf("Cannot open file for writing\n");
@@ -70,7 +70,7 @@ int main() {
   {
     printf("=== Test Case: %d ===\n", i);
     Arena app_arena = Arena_Create(memory, memory_size);
-    Memory_Block png_file = ReadFileToMemory(&app_arena, g_test_cases[i].in);
+    Memory png_file = ReadFileToMemory(&app_arena, g_test_cases[i].in);
     
     if (!png_file.data){
       printf("Cannot read file: %d\n", i);
@@ -84,7 +84,7 @@ int main() {
     }
     printf("Read success: %d\n", i);
     
-    Memory_Block png_output = PNG_Write(bitmap,
+    Memory png_output = PNG_Write(bitmap,
                                         &app_arena); 
     if (!png_output.data) {
       printf("Write to memory failed: %d\n", i);

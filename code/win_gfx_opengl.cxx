@@ -190,15 +190,16 @@ Win_Gfx_FreeMemory(void* memory) {
 
 //~ NOTE(Momo): API implementation
 exported Gfx*
-Gfx_Init(HWND window, UMI render_commands_size, UMI max_textures, UMI max_entities) {
+Gfx_Init(HWND window) {
   // NOTE(Momo): Calcluate the EXACT amount of memory needed.
   // TODO(Momo): Is there a better way to do this? 
   
   
   HDC dc = GetDC(window); 
   if (!dc) {
-    goto failed1;
+    return nullptr;
   }
+  defer { ReleaseDC(window, dc); };
   
   Opengl_PF_API pf; 
   
@@ -210,11 +211,11 @@ Gfx_Init(HWND window, UMI render_commands_size, UMI max_textures, UMI max_entiti
   Opengl* opengl = (Opengl*)Win_Gfx_AllocateMemory(sizeof(Opengl));
   
   if (!opengl ) {
-    goto failed2;
+    goto failed;
   }
   
   if (!WGL_LoadExtensions()) {
-    goto failed2;
+    goto failed;
   }
   
   WGL_SetPixelFormat(dc);
@@ -234,7 +235,7 @@ Gfx_Init(HWND window, UMI render_commands_size, UMI max_textures, UMI max_entiti
                                                 opengl_attribs); 
   
   if (!opengl_ctx) {
-    goto failed2;
+    goto failed;
   }
   
   
@@ -243,7 +244,7 @@ Gfx_Init(HWND window, UMI render_commands_size, UMI max_textures, UMI max_entiti
     // TODO: Log functions that are not loaded
 #define WGL_SetOpenglFunction(name) \
 pf.name = (GL_##name*)WGL_TryGetFunction(#name, module); \
-if (!pf.name) { goto failed2; } 
+if (!pf.name) { goto failed; } 
     
     WGL_SetOpenglFunction(glEnable);
     WGL_SetOpenglFunction(glDisable); 
@@ -287,7 +288,7 @@ if (!pf.name) { goto failed2; }
 #undef WGL_SetOpenglFunction
   
   if (!Opengl_Init(opengl, pf)) {
-    goto failed2;
+    goto failed;
   }
   
   // TODO(Momo): Figure out how to get callback?
@@ -298,21 +299,16 @@ if (!pf.name) { goto failed2; }
 #endif
   
   
-  ReleaseDC(window, dc);
   return (Gfx*)opengl;
   
-  failed2: 
+  failed: 
   {
     Opengl_Free(opengl);
     Win_Gfx_FreeMemory(opengl);
+    return nullptr;
   }
   
-  failed1: 
-  {
-    ReleaseDC(window, dc);
-  }
   
-  return nullptr;
 }
 
 

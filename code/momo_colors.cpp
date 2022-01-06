@@ -1,3 +1,7 @@
+
+
+
+
 static RGBAF32 
 RGBAF32_Create(F32 r, F32 g, F32 b, F32 a){
 	RGBAF32 ret;
@@ -69,7 +73,7 @@ RGBF32_ToHSLF32(RGBF32 c) {
     ret.s = 0.f;
   }
   else {
-    ret.s = delta/(1.f - F32_Abs(2.f * ret.l - 1.f));
+    ret.s = delta/(1.f - Abs(2.f * ret.l - 1.f));
   }
   
   return ret;

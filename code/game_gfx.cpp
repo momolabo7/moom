@@ -90,7 +90,7 @@ Gfx_DrawLine(Gfx* gfx,
 {
   // NOTE(Momo): Min.Y needs to be lower than Max.y
   if (line.min.y > line.max.y) {
-    Swap(Line2F32, line.min.x, line.max.x);
+    Swap(line.min.x, line.max.x);
   }
   
   V2F32 line_vector = V2F32_Sub(line.max, line.min);

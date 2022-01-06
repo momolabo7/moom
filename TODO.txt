@@ -1,8 +1,17 @@
-Arch
-- setup hot-reloading
-- figure out how game should tell GFX about its design resolution
-- Figure out if we care about void*. 
-- Figure out if we care about const char* (C-String). Maybe typedef it at least in our codebase.
+Code quality
+  momo_essentials.h
+    Clean up memory-related helpers?
+    Clean up IEEE floating point functions
+  win_gfx_opengl.cxx
+    Use defer.
+  Things to think about
+		Figure out if we care about void*. Maybe everything uses Memory
+    Figure out if we care about const char* (SiStr). Maybe typedef it?
+
+Engine
+  setup hot-reloading
+  figure out how game should tell GFX about its design resolution
+  
 - file io
 - sound
 - mutithread support
