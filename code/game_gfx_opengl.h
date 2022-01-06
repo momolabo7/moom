@@ -172,7 +172,7 @@ typedef void    GL_glDebugMessageCallbackARB(GLDEBUGPROC *callback,
 typedef void* Opengl_PF_AllocFn(UMI size);
 typedef void Opengl_PF_FreeFn(void* ptr);
 
-struct Opengl_PF_API{
+struct Opengl_PF_API {
   Opengl_PF_AllocFn* alloc;
   Opengl_PF_FreeFn* free;
   

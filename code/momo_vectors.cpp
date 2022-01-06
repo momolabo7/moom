@@ -21,7 +21,7 @@ V2F32_Scale(V2F32 lhs, F32 rhs) {
 
 static V2F32 
 V2F32_InvScale(V2F32 lhs, F32 rhs) {
-	Assert(F32_Match(rhs, 0.f));
+	Assert(Match(rhs, 0.f));
 	lhs.x /= rhs;
 	lhs.y /= rhs;
 	return lhs;
@@ -45,7 +45,7 @@ V2F32_DistanceSq(V2F32 lhs, V2F32 rhs) {
 }
 static F32  
 V2F32_Distance(V2F32 lhs, V2F32 rhs) {
-	return F32_Sqrt(V2F32_DistanceSq(lhs, rhs));
+	return Sqrt(V2F32_DistanceSq(lhs, rhs));
 }
 
 static F32  
@@ -55,7 +55,7 @@ V2F32_LengthSq(V2F32 v) {
 
 static F32   
 V2F32_Length(V2F32 v) {
-	return F32_Sqrt(V2F32_LengthSq(v));
+	return Sqrt(V2F32_LengthSq(v));
 }
 
 static V2F32 
@@ -65,9 +65,9 @@ V2F32_Normalize(V2F32 v) {
 }
 
 static B8
-V2F32_Match(V2F32 lhs, V2F32 rhs) {
-	return (F32_Match(lhs.x, rhs.x) &&
-          F32_Match(lhs.y, rhs.y)); 
+V2Match(V2F32 lhs, V2F32 rhs) {
+	return (Match(lhs.x, rhs.x) &&
+          Match(lhs.y, rhs.y)); 
 }
 
 static V2F32 
@@ -79,7 +79,7 @@ static V2F32
 V2F32_Project(V2F32 v, V2F32 onto) {
 	// (to . from)/LenSq(to) * to
   F32 onto_len_sq = V2F32_LengthSq(onto);
-	Assert(!F32_Match(onto_len_sq, 0.f));
+	Assert(!Match(onto_len_sq, 0.f));
 	F32 dot = V2F32_Dot(v, onto);
 	F32 scalar = dot / onto_len_sq;
 	V2F32 ret = V2F32_Scale(onto, scalar);
@@ -92,7 +92,7 @@ V2F32_AngleBetween(V2F32 lhs, V2F32 rhs) {
   F32 l_len = V2F32_Length(lhs);
   F32 r_len = V2F32_Length(rhs);
   F32 lr_dot = V2F32_Dot(lhs, rhs);
-  F32 ret = F32_Acos(lr_dot/(l_len * r_len));
+  F32 ret = Acos(lr_dot/(l_len * r_len));
   return ret;
 }
 
@@ -101,8 +101,8 @@ V2F32_Rotate(V2F32 v, F32 rad) {
   // Technically, we can use matrices but
   // meh, it's easy to code this out without it.
   // Removes dependencies too
-  F32 c = F32_Cos(rad);
-  F32 s = F32_Sin(rad);
+  F32 c = Cos(rad);
+  F32 s = Sin(rad);
   
   V2F32 ret = {};
   ret.x = (c * v.x) - (s * v.y);
@@ -137,7 +137,7 @@ V3F32_Scale(V3F32 lhs, F32 rhs) {
 
 static V3F32 
 V3F32_InvScale(V3F32 lhs, F32 rhs) {
-	Assert(F32_Match(rhs, 0.f));
+	Assert(Match(rhs, 0.f));
 	lhs.x /= rhs;
 	lhs.y /= rhs;
 	lhs.z /= rhs;
@@ -163,7 +163,7 @@ V3F32_DistanceSq(V3F32 lhs, V3F32 rhs) {
 }
 static F32  
 V3F32_Distance(V3F32 lhs, V3F32 rhs) {
-	return F32_Sqrt(V3F32_DistanceSq(lhs, rhs));
+	return Sqrt(V3F32_DistanceSq(lhs, rhs));
 }
 
 static F32  
@@ -173,7 +173,7 @@ V3F32_LengthSq(V3F32 v) {
 
 static F32   
 V3F32_Length(V3F32 v) {
-	return F32_Sqrt(V3F32_LengthSq(v));
+	return Sqrt(V3F32_LengthSq(v));
 }
 
 static V3F32 
@@ -183,9 +183,9 @@ V3F32_Normalize(V3F32 v) {
 }
 
 static B8
-V3F32_Match(V3F32 lhs, V3F32 rhs) {
-	return (F32_Match(lhs.x, rhs.x) &&
-          F32_Match(lhs.y, rhs.y)); 
+V3Match(V3F32 lhs, V3F32 rhs) {
+	return (Match(lhs.x, rhs.x) &&
+          Match(lhs.y, rhs.y)); 
 }
 
 static V3F32 
@@ -197,7 +197,7 @@ static V3F32
 V3F32_Project(V3F32 v, V3F32 onto) {
 	// (to . from)/LenSq(to) * to
   F32 onto_len_sq = V3F32_LengthSq(onto);
-	Assert(!F32_Match(onto_len_sq, 0.f));
+	Assert(!Match(onto_len_sq, 0.f));
 	F32 dot = V3F32_Dot(v, onto);
 	F32 scalar = dot / onto_len_sq;
 	V3F32 ret = V3F32_Scale(onto, scalar);
@@ -210,7 +210,7 @@ V3F32_AngleBetween(V3F32 lhs, V3F32 rhs) {
   F32 l_len = V3F32_Length(lhs);
   F32 r_len = V3F32_Length(rhs);
   F32 lr_dot = V3F32_Dot(lhs, rhs);
-  F32 ret = F32_Acos(lr_dot/(l_len * r_len));
+  F32 ret = Acos(lr_dot/(l_len * r_len));
   return ret;
 }
 

@@ -121,7 +121,7 @@ Gfx_DrawCircle(Gfx* gfx,
   // NOTE(Momo): Essentially a bunch of lines
   // We can't really have a surface with less than 3 lines
   Assert(line_count >= 3);
-  F32 angle_increment = F32_tau / line_count;
+  F32 angle_increment = tau_F32 / line_count;
   V2F32 pt1 = { 0.f, circle.radius }; 
   V2F32 pt2 = V2F32_Rotate(pt1, angle_increment);
   

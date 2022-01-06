@@ -15,17 +15,16 @@
 typedef Gfx*   Win_Gfx_InitFn(HWND window);
 typedef void 	Win_Gfx_FreeFn(Gfx* r);
 
-
 // TODO(Momo): Do we really need render_wh and render_rengion?
 typedef void   Win_Gfx_RenderFn(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region);
 
 
 //~ NOTE(Momo): Function table
-typedef struct {
+struct Win_Gfx_API {
   Win_Gfx_InitFn* init;
   Win_Gfx_FreeFn* free;
   Win_Gfx_RenderFn* render;
-} Win_Gfx_API;
+};
 
 
 

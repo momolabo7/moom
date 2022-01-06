@@ -20,8 +20,8 @@ WAV_LoadFromMemory(void* memory,
   if (!riff_chunk) {
     return ret;
   }
-  riff_chunk->id = U32_EndianSwap(riff_chunk->id);
-  riff_chunk->format = U32_EndianSwap(riff_chunk->format);
+  riff_chunk->id = EndianSwap32(riff_chunk->id);
+  riff_chunk->format = EndianSwap32(riff_chunk->format);
   if (riff_chunk->id != riff_id_signature) {
     return ret;
   }
@@ -34,7 +34,7 @@ WAV_LoadFromMemory(void* memory,
   if (!fmt_chunk) {
     return ret;
   }
-  fmt_chunk->id = U32_EndianSwap(fmt_chunk->id);
+  fmt_chunk->id = EndianSwap32(fmt_chunk->id);
   if (fmt_chunk->id != fmt_id_signature) {
     return ret;
   }
@@ -59,7 +59,7 @@ WAV_LoadFromMemory(void* memory,
   if (!data_chunk) {
     return ret;
   }
-  data_chunk->id = U32_EndianSwap(data_chunk->id);
+  data_chunk->id = EndianSwap32(data_chunk->id);
   if (data_chunk->id != data_id_signature) {
     return ret;
   }

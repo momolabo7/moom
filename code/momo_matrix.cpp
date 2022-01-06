@@ -53,8 +53,8 @@ static M44F32 M44F32_RotationX(F32 rad) {
 	// 0  c -s  0
 	// 0  s  c  0
 	// 0  0  0  1
-	F32 c = F32_Cos(rad);
-	F32 s = F32_Sin(rad);
+	F32 c = Cos(rad);
+	F32 s = Sin(rad);
 	M44F32 ret = {};
 	ret.e[0][0] = 1.f;
 	ret.e[3][3] = 1.f;
@@ -72,8 +72,8 @@ static M44F32 M44F32_RotationY(F32 rad) {
 	//  0  1  0  0
 	// -s  0  c  0
 	//  0  0  0  1
-	F32 c = F32_Cos(rad);
-	F32 s = F32_Sin(rad);
+	F32 c = Cos(rad);
+	F32 s = Sin(rad);
 	M44F32 ret = {};
 	ret.e[0][0] = c;
 	ret.e[0][2] = s;
@@ -92,8 +92,8 @@ static M44F32 M44F32_RotationZ(F32 rad) {
 	//  0  0  1  0
 	//  0  0  0  1
 	
-	F32 c = F32_Cos(rad);
-	F32 s = F32_Sin(rad);
+	F32 c = Cos(rad);
+	F32 s = Sin(rad);
 	M44F32 ret = {};
 	ret.e[0][0] = c;
 	ret.e[0][1] = -s;
@@ -131,7 +131,7 @@ static M44F32 M44F32_Frustum(F32 left, F32 right, F32 bottom, F32 top, F32 near,
 	return ret;
 }
 static M44F32 M44F32_Perspective(F32 fov, F32 aspect, F32 near, F32 far){
-	F32 top = near * F32_Tan(fov*0.5f);
+	F32 top = near * Tan(fov*0.5f);
 	F32 right = top * aspect;
 	return M44F32_Frustum(-right, right,
                         -top, top,

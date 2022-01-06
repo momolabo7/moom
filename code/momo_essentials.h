@@ -256,15 +256,12 @@ static constexpr U32 U32_max = 0xFFFFFFFF;
 static constexpr U64 U64_max = 0xFFFFFFFFFFFFFFFFllu;
 
 static constexpr F32 F32_epsilon = 1.1920929E-7f;
-static constexpr F32 F32_pi = 3.14159265359f;
-static constexpr F32 F32_tau = 6.28318530718f;
-static constexpr F32 F32_gold = 1.61803398875f;
-
 static constexpr F64 F64_epsilon = 2.220446E-16;
-static constexpr F64 F64_pi = 3.14159265359;
-static constexpr F64 F64_tau = 6.28318530718;
-static constexpr F64 F64_gold = 1.61803398875;
 
+static constexpr F32 F32_Inf();
+static constexpr F32 F32_NegInf();
+static constexpr F64 F64_Inf();
+static constexpr F64 F64_NegInf();
 //~ NOTE(Momo): Memory-related helpers
 
 // This is a really useful construct I find myself using 
@@ -299,114 +296,115 @@ static void Sistr_Reverse(char* dest);
 static void Sistr_Itoa(char* dest, S32 num);
 
 //~ NOTE(Momo): IEEE floating point functions 
-static F32 F32_Inf();
-static F32 F32_NegInf();
-static B32 F32_Match(F32 lhs, F32 rhs);
-
-
-static F64 F64_Inf();
-static F64 F64_NegInf();
-static B32 F64_Match(F64 lhs, F64 rhs);
+static constexpr B32 Match(F32 lhs, F32 rhs);
+static constexpr B32 Match(F64 lhs, F64 rhs);
+// Ah...cannot overload operator==...
 
 //~ NOTE(Momo): Useful calculations
-static F32 F32_DegToRad(F32 degrees) ;
-static F32 F32_RadToDeg(F32 radians);
-static F32 F32_BPMToSPB(F32 bpm); 
+static constexpr F32 DegToRad(F32 degrees) ;
+static constexpr F64 DegToRad(F64 degrees) ;
+static constexpr F32 RadToDeg(F32 radians);
+static constexpr F64 RadToDeg(F64 radians);
 
-static F64 F64_DegToRad(F64 degrees) ;
-static F64 F64_RadToDeg(F64 radians);
-static F64 F64_BPMToSPB(F64 bpm); 
+// Beats per min to Secs per beat
+static constexpr F32 BPMToSPB(F32 bpm); 
+static constexpr F64 BPMToSPB(F64 bpm); 
 
-static U16 U16_EndianSwap(U16 value);
-static U32 U32_EndianSwap(U32 value);
+static constexpr U16 EndianSwap16(U16 value);
+static constexpr U32 EndianSwap32(U32 value);
 
 
 //~ NOTE(Momo): Math functions that are not trivial
-static F32 F32_Sin(F32 x);
-static F32 F32_Cos(F32 x);
-static F32 F32_Tan(F32 x);
-static F32 F32_Sqrt(F32 x);
-static F32 F32_Asin(F32 x);
-static F32 F32_Acos(F32 x);
-static F32 F32_Atan(F32 x);
-static F32 F32_Pow(F32 v, F32 e);
+static constexpr F32 pi_F32 = 3.14159265359f;
+static constexpr F64 pi_F64 = 3.14159265359;
+static constexpr F32 tau_F32 = 6.28318530718f;
+static constexpr F64 tau_F64 = 6.28318530718;
+static constexpr F32 gold_F32 = 1.61803398875f;
+static constexpr F64 gold_F64 = 1.61803398875;
 
-static F64 F64_Sin(F64 x);
-static F64 F64_Cos(F64 x);
-static F64 F64_Tan(F64 x);
-static F64 F64_Sqrt(F64 x);
-static F64 F64_Asin(F64 x);
-static F64 F64_Acos(F64 x);
-static F64 F64_Atan(F64 x);
-static F64 F64_Pow(F64 , F64 e);
+static F32 Sin(F32 x);
+static F32 Cos(F32 x);
+static F32 Tan(F32 x);
+static F32 Sqrt(F32 x);
+static F32 Asin(F32 x);
+static F32 Acos(F32 x);
+static F32 Atan(F32 x);
+static F32 Pow(F32 v, F32 e);
+
+static F64 Sin(F64 x);
+static F64 Cos(F64 x);
+static F64 Tan(F64 x);
+static F64 Sqrt(F64 x);
+static F64 Asin(F64 x);
+static F64 Acos(F64 x);
+static F64 Atan(F64 x);
+static F64 Pow(F64 , F64 e);
 
 //~ NOTE(Momo): Easing functions
-static F32 F32_EaseInSine(F32 t);
-static F32 F32_EaseOutSine(F32 t);
-static F32 F32_EaseInOutSine(F32 t);
-static F32 F32_EaseInQuad(F32 t);
-static F32 F32_EaseOutQuad(F32 t);
-static F32 F32_EaseInOutQuad(F32 t);
-static F32 F32_EaseInCubic(F32 t);
-static F32 F32_EaseOutCubic(F32 t);
-static F32 F32_EaseInOutCubic(F32 t);
-static F32 F32_EaseInQuart(F32 t);
-static F32 F32_EaseOutQuart(F32 t);
-static F32 F32_EaseInOutQuart(F32 t);
-static F32 F32_EaseInQuint(F32 t);
-static F32 F32_EaseOutQuint(F32 t);;
-static F32 F32_EaseInOutQuint(F32 t);
-static F32 F32_EaseInCirc(F32 t);
-static F32 F32_EaseOutCirc(F32 t);
-static F32 F32_EaseInOutCirc(F32 t);
-static F32 F32_EaseInBack(F32 t);
-static F32 F32_EaseOutBack(F32 t);
-static F32 F32_EaseInOutBack(F32 t);
-static F32 F32_EaseInElastic(F32 t);
-static F32 F32_EaseOutElastic(F32 t);
-static F32 F32_EaseInOutElastic(F32 t);
-static F32 F32_EaseInBounce(F32 t);
-static F32 F32_EaseOutBounce(F32 t);
-static F32 F32_EaseInOutBounce(F32 t);
-static F32 F32_EaseInExpo(F32 t);
-static F32 F32_EaseOutExpo(F32 t);
-static F32 F32_EaseInOutExpo(F32 t);
+static F32 EaseInSine(F32 t);
+static F32 EaseOutSine(F32 t);
+static F32 EaseInOutSine(F32 t);
+static F32 EaseInQuad(F32 t);
+static F32 EaseOutQuad(F32 t);
+static F32 EaseInOutQuad(F32 t);
+static F32 EaseInCubic(F32 t);
+static F32 EaseOutCubic(F32 t);
+static F32 EaseInOutCubic(F32 t);
+static F32 EaseInQuart(F32 t);
+static F32 EaseOutQuart(F32 t);
+static F32 EaseInOutQuart(F32 t);
+static F32 EaseInQuint(F32 t);
+static F32 EaseOutQuint(F32 t);;
+static F32 EaseInOutQuint(F32 t);
+static F32 EaseInCirc(F32 t);
+static F32 EaseOutCirc(F32 t);
+static F32 EaseInOutCirc(F32 t);
+static F32 EaseInBack(F32 t);
+static F32 EaseOutBack(F32 t);
+static F32 EaseInOutBack(F32 t);
+static F32 EaseInElastic(F32 t);
+static F32 EaseOutElastic(F32 t);
+static F32 EaseInOutElastic(F32 t);
+static F32 EaseInBounce(F32 t);
+static F32 EaseOutBounce(F32 t);
+static F32 EaseInOutBounce(F32 t);
+static F32 EaseInExpo(F32 t);
+static F32 EaseOutExpo(F32 t);
+static F32 EaseInOutExpo(F32 t);
 
-static F64 F64_EaseInSine(F64 t);
-static F64 F64_EaseOutSine(F64 t);
-static F64 F64_EaseInOutSine(F64 t);
-static F64 F64_EaseInQuad(F64 t);
-static F64 F64_EaseOutQuad(F64 t);
-static F64 F64_EaseInOutQuad(F64 t);
-static F64 F64_EaseInCubic(F64 t);
-static F64 F64_EaseOutCubic(F64 t);
-static F64 F64_EaseInOutCubic(F64 t);
-static F64 F64_EaseInQuart(F64 t);
-static F64 F64_EaseOutQuart(F64 t);
-static F64 F64_EaseInOutQuart(F64 t);
-static F64 F64_EaseInQuint(F64 t);
-static F64 F64_EaseOutQuint(F64 t);;
-static F64 F64_EaseInOutQuint(F64 t);
-static F64 F64_EaseInCirc(F64 t);
-static F64 F64_EaseOutCirc(F64 t);
-static F64 F64_EaseInOutCirc(F64 t);
-static F64 F64_EaseInBack(F64 t);
-static F64 F64_EaseOutBack(F64 t);
-static F64 F64_EaseInOutBack(F64 t);
-static F64 F64_EaseInElastic(F64 t);
-static F64 F64_EaseOutElastic(F64 t);
-static F64 F64_EaseInOutElastic(F64 t);
-static F64 F64_EaseInBounce(F64 t);
-static F64 F64_EaseOutBounce(F64 t);
-static F64 F64_EaseInOutBounce(F64 t);
-static F64 F64_EaseInExpo(F64 t);
-static F64 F64_EaseOutExpo(F64 t);
-static F64 F64_EaseInOutExpo(F64 t);
+static F64 EaseInSine(F64 t);
+static F64 EaseOutSine(F64 t);
+static F64 EaseInOutSine(F64 t);
+static F64 EaseInQuad(F64 t);
+static F64 EaseOutQuad(F64 t);
+static F64 EaseInOutQuad(F64 t);
+static F64 EaseInCubic(F64 t);
+static F64 EaseOutCubic(F64 t);
+static F64 EaseInOutCubic(F64 t);
+static F64 EaseInQuart(F64 t);
+static F64 EaseOutQuart(F64 t);
+static F64 EaseInOutQuart(F64 t);
+static F64 EaseInQuint(F64 t);
+static F64 EaseOutQuint(F64 t);;
+static F64 EaseInOutQuint(F64 t);
+static F64 EaseInCirc(F64 t);
+static F64 EaseOutCirc(F64 t);
+static F64 EaseInOutCirc(F64 t);
+static F64 EaseInBack(F64 t);
+static F64 EaseOutBack(F64 t);
+static F64 EaseInOutBack(F64 t);
+static F64 EaseInElastic(F64 t);
+static F64 EaseOutElastic(F64 t);
+static F64 EaseInOutElastic(F64 t);
+static F64 EaseInBounce(F64 t);
+static F64 EaseOutBounce(F64 t);
+static F64 EaseInOutBounce(F64 t);
+static F64 EaseInExpo(F64 t);
+static F64 EaseOutExpo(F64 t);
+static F64 EaseInOutExpo(F64 t);
 
 
-//~ NOTE(Momo): CPP helpers. Additional cool stuff we can do in C++.
-#if IS_CPP 
-// NOTE(Momo): Defer construct
+//~ NOTE(Momo): Defer construct
 template<class F> 
 struct zawarudo_ScopeGuard {
   F f;
@@ -416,12 +414,10 @@ struct zawarudo_defer_dummy {};
 template<class F> zawarudo_ScopeGuard<F> operator+(zawarudo_defer_dummy, F f) {
   return { f };
 }
+#define zawarudo_AnonVarSub(x) zawarudo_defer##x
+#define zawarudo_AnonVar(x) zawarudo_AnonVarSub(x)
+#define defer auto zawarudo_AnonVar(__LINE__) = zawarudo_defer_dummy{} + [&]()
 
-# define zawarudo_AnonVarSub(x) zawarudo_defer##x
-# define zawarudo_AnonVar(x) zawarudo_AnonVarSub(x)
-# define defer auto zawarudo_AnonVar(__LINE__) = zawarudo_defer_dummy{} + [&]()
-
-#endif // IS_CPP
 
 
 #include "momo_essentials.cpp"

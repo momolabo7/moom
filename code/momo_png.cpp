@@ -711,8 +711,8 @@ PNG__Process_IHDR(PNG__Context* c) {
   
   // NOTE(Momo): Width and height is in Big Endian
   // We assume that we are currently in a Little Endian system
-  IHDR->width = U32_EndianSwap(IHDR->width);
-  IHDR->height = U32_EndianSwap(IHDR->height);
+  IHDR->width = EndianSwap32(IHDR->width);
+  IHDR->height = EndianSwap32(IHDR->height);
   
   PNG__Log("IHDR: \nwidth: %d\nheight: %d\nbit_depth: %d\ncolour_type: %d\ncompression_method: %d\nfilter_method: %d\ninterlace_method: %d\n\n",
            IHDR->width, IHDR->height, IHDR->bit_depth, IHDR->colour_type, IHDR->compression_method, IHDR->filter_method, IHDR->interlace_method);
@@ -802,8 +802,8 @@ PNG_Read(Memory png_memory,
   
   while(!Stream_IsEos(&ctx.stream)) {
     PNG__Chunk_Header* chunk_header = Stream_Consume(&ctx.stream, PNG__Chunk_Header);
-    chunk_header->length = U32_EndianSwap(chunk_header->length);
-    chunk_header->type_U32 = U32_EndianSwap(chunk_header->type_U32);
+    chunk_header->length = EndianSwap32(chunk_header->length);
+    chunk_header->type_U32 = EndianSwap32(chunk_header->type_U32);
     
     switch(chunk_header->type_U32) {
       case 'IHDR': {
@@ -891,15 +891,15 @@ PNG_Write(Image image, Arena* arena) {
     U8* crc_start = nullptr;
     
     PNG__Chunk_Header header = {0};
-    header.type_U32 = U32_EndianSwap('IHDR');
+    header.type_U32 = EndianSwap32('IHDR');
     header.length = sizeof(PNG__IHDR);
-    header.length = U32_EndianSwap(header.length);
+    header.length = EndianSwap32(header.length);
     Stream_Write(&stream, PNG__Chunk_Header, header);
     crc_start = stream.data + stream.pos - sizeof(header.type_U32);
     
     PNG__IHDR IHDR = {0};
-    IHDR.width = U32_EndianSwap(image.width);
-    IHDR.height = U32_EndianSwap(image.height);
+    IHDR.width = EndianSwap32(image.width);
+    IHDR.height = EndianSwap32(image.height);
     IHDR.bit_depth = 8; // ??
     IHDR.colour_type = 6;
     IHDR.compression_method = 0;
@@ -910,7 +910,7 @@ PNG_Write(Image image, Arena* arena) {
     PNG__Chunk_Footer footer = {0};
     U32 crc_size = (U32)(stream.data + stream.pos - crc_start);
     footer.crc = PNG__CalculateCRC32(crc_start, crc_size); 
-    footer.crc = U32_EndianSwap(footer.crc);
+    footer.crc = EndianSwap32(footer.crc);
     Stream_Write(&stream, PNG__Chunk_Footer, footer);
     
   }
@@ -933,9 +933,9 @@ PNG_Write(Image image, Arena* arena) {
     U8* crc_start = nullptr;
     
     PNG__Chunk_Header header = {0};
-    header.type_U32 = U32_EndianSwap('IDAT');
+    header.type_U32 = EndianSwap32('IDAT');
     header.length = sizeof(PNG__IDAT_Header) + (chunk_overhead*chunk_count) + data_size; 
-    header.length = U32_EndianSwap(header.length);    
+    header.length = EndianSwap32(header.length);    
     Stream_Write(&stream, PNG__Chunk_Header, header);
     crc_start = stream.data + stream.pos - sizeof(header.type_U32);
     
@@ -995,7 +995,7 @@ PNG_Write(Image image, Arena* arena) {
     PNG__Chunk_Footer footer = {0};
     U32 crc_size = (U32)(stream.data + stream.pos - crc_start);
     footer.crc = PNG__CalculateCRC32(crc_start, crc_size); 
-    footer.crc = U32_EndianSwap(footer.crc);
+    footer.crc = EndianSwap32(footer.crc);
     Stream_Write(&stream, PNG__Chunk_Footer, footer);
   }
   
@@ -1004,7 +1004,7 @@ PNG_Write(Image image, Arena* arena) {
     U8* crc_start = nullptr;
     
     PNG__Chunk_Header header = {0};
-    header.type_U32 = U32_EndianSwap('IEND');
+    header.type_U32 = EndianSwap32('IEND');
     header.length = 0;
     Stream_Write(&stream, PNG__Chunk_Header, header);
     crc_start = stream.data + stream.pos - sizeof(header.type_U32);
@@ -1013,7 +1013,7 @@ PNG_Write(Image image, Arena* arena) {
     PNG__Chunk_Footer footer = {0};
     U32 crc_size = (U32)(stream.data + stream.pos - crc_start);
     footer.crc = PNG__CalculateCRC32(crc_start, crc_size); 
-    footer.crc = U32_EndianSwap(footer.crc);
+    footer.crc = EndianSwap32(footer.crc);
     Stream_Write(&stream, PNG__Chunk_Footer, footer);
   }
   

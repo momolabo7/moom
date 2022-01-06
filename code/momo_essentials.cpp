@@ -267,25 +267,24 @@ Sistr_Itoa(char* dest, S32 num) {
 }
 
 
-//~ NOTE(Momo): IEEE floating point function defs
-
-static F32 
+//~ NOTE(Momo): Constants
+static constexpr F32 
 F32_Inf() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-8 are on
-  union { F32 f; U32 u; } ret;
+  union { F32 f; U32 u; } ret = {0};
   ret.u = 0x7f800000;
   
   return ret.f;
   
 }
 
-static F32 
+static constexpr F32 
 F32_NegInf() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-8 are on
   // Negative is when bit 0 is on
-  union { F32 f; U32 u; } ret;
+  union { F32 f; U32 u; } ret = {0};
   ret.u = 0xff800000;
   
   return ret.f;	
@@ -294,79 +293,84 @@ F32_NegInf() {
 
 
 
-static F64 
+static constexpr F64 
 F64_Inf() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-11 are on
-  union { F64 f; U64 u; } ret;
+  union { F64 f; U64 u; } ret = {0};
   ret.u = 0x7FF0000000000000;
   
   return ret.f;
   
 }
 
-static F64 
+static constexpr F64 
 F64_NegInf() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-11 are on
   // Negative is when bit 0 is on
-  union { F64 f; U64 u; } ret;
+  union { F64 f; U64 u; } ret = {0};
   ret.u = 0xFFF0000000000000;
   
   return ret.f;	
 }
 
-static B32 
-F32_Match(F32 lhs, F32 rhs) {
+
+//~ NOTE(Momo): IEEE floating point functions 
+static constexpr B32 
+Match(F32 lhs, F32 rhs) {
   return Abs(lhs - rhs) <= F32_epsilon;
 }
 
-static B32 
-F64_Match(F64 lhs, F64 rhs) {
+static constexpr B32 
+Match(F64 lhs, F64 rhs) {
   return Abs(lhs - rhs) <= F64_epsilon;
 }
 
 
-static F32
-F32_BPMToSPB(F32 bpm) {
+static constexpr F32
+BPMToSPB(F32 bpm) {
   Assert(bpm >= 0.f);
   return 60.f/bpm;
 }
 
-static F64
-F64_BPMToSPB(F64 bpm) {
+static constexpr F64
+BPMToSPB(F64 bpm) {
   Assert(bpm >= 0.f);
   return 60.0/bpm;
 }
 
 
-static F32 
-F32_DegToRad(F32 degrees) {
-  return degrees * F32_pi / 180.f;
+static constexpr F32 
+DegToRad(F32 degrees) {
+  return degrees * pi_F32 / 180.f;
 }
-static F32 
-F32_RadToDeg(F32 radians) {
-  return radians * 180.f / F32_pi;	
-}
-
-static F64
-F64_DegToRad(F64 degrees) {
-  return degrees * F64_pi / 180.0;
-  
-}
-static F64 
-F64_RadToDeg(F64 radians) {
-  return radians * 180.0 / F64_pi;
-  
+static constexpr F32 
+RadToDeg(F32 radians) {
+  return radians * 180.f / pi_F32;	
 }
 
-static U16
-U16_EndianSwap(U16 value) {
+static constexpr F64
+DegToRad(F64 degrees) {
+  return degrees * pi_F32 / 180.0;
+  
+}
+static constexpr F64 
+RadToDeg(F64 radians) {
+  return radians * 180.0 / pi_F64;
+  
+}
+
+
+
+
+static constexpr U16
+EndianSwap16(U16 value) {
   return (value << 8) | (value >> 8);
 }
 
-static U32
-U32_EndianSwap(U32 value) {
+static constexpr U32
+EndianSwap32(U32 value) {
   return  ((value << 24) |
            ((value & 0xFF00) << 8) |
            ((value >> 8) & 0xFF00) |
@@ -380,143 +384,143 @@ U32_EndianSwap(U32 value) {
 // TODO(Momo): Write our own trig function
 #include <math.h>
 static F32 
-F32_Sin(F32 x) {
+Sin(F32 x) {
   return sinf(x);
 }
 
 static F32 
-F32_Cos(F32 x) {
+Cos(F32 x) {
   return cosf(x);
 }
 
 static F32
-F32_Tan(F32 x) {
+Tan(F32 x) {
   return tanf(x);
 }
 static F32 
-F32_Sqrt(F32 x) {
+Sqrt(F32 x) {
   return sqrtf(x);
   
 }
 static F32 
-F32_Asin(F32 x) {
+Asin(F32 x) {
   return asinf(x);
 }
 static F32 
-F32_Acos(F32 x) {
+Acos(F32 x) {
   return acosf(x);
 }
 
 static F32
-F32_Atan(F32 x){
+Atan(F32 x){
   return atanf(x);
 }
 static F32 
-F32_Pow(F32 b, F32 e){
+Pow(F32 b, F32 e){
   return powf(b,e);
 }
 
 
 static F64 
-F64_Sin(F64 x) {
+Sin(F64 x) {
   return sin(x);
 }
 
 static F64 
-F64_Cos(F64 x) {
+Cos(F64 x) {
   return cos(x);
 }
 
 static F64
-F64_Tan(F64 x) {
+Tan(F64 x) {
   return tan(x);
 }
 static F64 
-F64_Sqrt(F64 x) {
+Sqrt(F64 x) {
   return sqrt(x);
   
 }
 static F64 
-F64_Asin(F64 x) {
+Asin(F64 x) {
   return asin(x);
 }
 static F64 
-F64_Acos(F64 x) {
+Acos(F64 x) {
   return acos(x);
 }
 
 static F64
-F64_Atan(F64 x){
+Atan(F64 x){
   return atan(x);
 }
 static F64 
-F64_Pow(F64 b, F64 e){
+Pow(F64 b, F64 e){
   return pow(b,e);
 }
 
 //~ NOTE(Momo): Easing functions
 
 static F32 
-F32_EaseInSine(F32 t)  {
-  return F32_Sin(F32_pi * 0.5f * t);
+EaseInSine(F32 t)  {
+  return Sin(pi_F32 * 0.5f * t);
 }
 
 
 static F32 
-F32_EaseOutSine(F32 t) {
-  return 1.0f + F32_Sin(F32_pi * 0.5f * (--t));
+EaseOutSine(F32 t) {
+  return 1.0f + Sin(pi_F32 * 0.5f * (--t));
 }
 
 static F32 
-F32_EaseInOutSine(F32 t)  {
-  return 0.5f * (1.f + F32_Sin(F32_pi * (t - 0.5f)));
+EaseInOutSine(F32 t)  {
+  return 0.5f * (1.f + Sin(pi_F32 * (t - 0.5f)));
 }
 
 static F32 
-F32_EaseInQuad(F32 t)  {
+EaseInQuad(F32 t)  {
   return t * t;
 }
 
 static F32 
-F32_EaseOutQuad(F32 t)  {
+EaseOutQuad(F32 t)  {
   return t * (2.f -t);
 }
 
 static F32 
-F32_EaseInOutQuad(F32 t)  {
+EaseInOutQuad(F32 t)  {
   return t < 0.5f ? 2.f * t * t : t * (4.f -2.f * t) - 1.f;
 }
 
 static F32 
-F32_EaseInCubic(F32 t)  {
+EaseInCubic(F32 t)  {
   return t * t * t;
 }
 
 static F32 
-F32_EaseOutCubic(F32 t)  {
+EaseOutCubic(F32 t)  {
   return 1.f + (t-1) * (t-1) * (t-1);
 }
 
 static F32 
-F32_EaseInOutCubic(F32 t)  {
+EaseInOutCubic(F32 t)  {
   return t < 0.5f ? 4.f * t * t * t : 1.f + (t-1) * (2.f * (t-2)) * (2.f * (t-2));
 }
 
 static F32 
-F32_EaseInQuart(F32 t)  {
+EaseInQuart(F32 t)  {
   t *= t;
   return t * t;
 }
 
 static F32 
-F32_EaseOutQuart(F32 t) {
+EaseOutQuart(F32 t) {
   --t;
   t = t * t;
   return 1.f - t * t;
 }
 
 static F32 
-F32_EaseInOutQuart(F32 t)  {
+EaseInOutQuart(F32 t)  {
   if (t < 0.5f) {
     t *= t;
     return 8.f * t * t;
@@ -529,20 +533,20 @@ F32_EaseInOutQuart(F32 t)  {
 }
 
 static F32
-F32_EaseInQuint(F32 t)  {
+EaseInQuint(F32 t)  {
   F32 t2 = t * t;
   return t * t2 * t2;
 }
 
 static F32
-F32_EaseOutQuint(F32 t)  {
+EaseOutQuint(F32 t)  {
   --t;
   F32 t2 = t * t;
   return 1.f +t * t2 * t2;
 }
 
 static F32
-F32_EaseInOutQuint(F32 t)  {
+EaseInOutQuint(F32 t)  {
   F32 t2;
   if (t < 0.5f) {
     t2 = t * t;
@@ -558,38 +562,38 @@ F32_EaseInOutQuint(F32 t)  {
 
 
 static F32 
-F32_EaseInCirc(F32 t)  {
-  return 1.f -F32_Sqrt(1.f -t);
+EaseInCirc(F32 t)  {
+  return 1.f -Sqrt(1.f -t);
 }
 
 static F32 
-F32_EaseOutCirc(F32 t)  {
-  return F32_Sqrt(t);
+EaseOutCirc(F32 t)  {
+  return Sqrt(t);
 }
 
 static F32 
-F32_EaseInOutCirc(F32 t)  {
+EaseInOutCirc(F32 t)  {
   if (t < 0.5f) {
-    return (1.f -F32_Sqrt(1.f -2.f * t)) * 0.5f;
+    return (1.f -Sqrt(1.f -2.f * t)) * 0.5f;
   }
   else {
-    return (1.f +F32_Sqrt(2.f * t - 1.f)) * 0.5f;
+    return (1.f +Sqrt(2.f * t - 1.f)) * 0.5f;
   }
 }
 
 static F32 
-F32_EaseInBack(F32 t)  {
+EaseInBack(F32 t)  {
   return t * t * (2.7f * t - 1.7f);
 }
 
 static F32 
-F32_EaseOutBack(F32 t)  {
+EaseOutBack(F32 t)  {
   --t;
   return 1.f + t * t * (2.7f * t + 1.7f);
 }
 
 static F32 
-F32_EaseInOutBack(F32 t)  {
+EaseInOutBack(F32 t)  {
   if (t < 0.5f) {
     return t * t * (7.f * t - 2.5f) * 2.f;
   }
@@ -600,138 +604,138 @@ F32_EaseInOutBack(F32 t)  {
 }
 
 static F32 
-F32_EaseInElastic(F32 t)  {
+EaseInElastic(F32 t)  {
   F32 t2 = t * t;
-  return t2 * t2 * F32_Sin(t * F32_pi * 4.5f);
+  return t2 * t2 * Sin(t * pi_F32 * 4.5f);
 }
 
 static F32 
-F32_EaseOutElastic(F32 t)  {
+EaseOutElastic(F32 t)  {
   F32 t2 = (t - 1.f) * (t - 1.f);
-  return 1.f -t2 * t2 * F32_Cos(t * F32_pi * 4.5f);
+  return 1.f -t2 * t2 * Cos(t * pi_F32 * 4.5f);
 }
 
 static F32 
-F32_EaseInOutElastic(F32 t)  {
+EaseInOutElastic(F32 t)  {
   F32 t2;
   if (t < 0.45f) {
     t2 = t * t;
-    return 8.f * t2 * t2 * F32_Sin(t * F32_pi * 9.f);
+    return 8.f * t2 * t2 * Sin(t * pi_F32 * 9.f);
   }
   else if (t < 0.55f) {
-    return 0.5f +0.75f * F32_Sin(t * F32_pi * 4.f);
+    return 0.5f +0.75f * Sin(t * pi_F32 * 4.f);
   }
   else {
     t2 = (t - 1.f) * (t - 1.f);
-    return 1.f -8.f * t2 * t2 * F32_Sin(t * F32_pi * 9.f);
+    return 1.f -8.f * t2 * t2 * Sin(t * pi_F32 * 9.f);
   }
 }
 
 static F32 
-F32_EaseInBounce(F32 t)  {
-  return F32_Pow(2.f, 6.f * (t - 1.f)) * Abs(F32_Sin(t * F32_pi * 3.5f));
+EaseInBounce(F32 t)  {
+  return Pow(2.f, 6.f * (t - 1.f)) * Abs(Sin(t * pi_F32 * 3.5f));
 }
 
 
 static F32 
-F32_EaseOutBounce(F32 t) {
-  return 1.f -F32_Pow(2.f, -6.f * t) * Abs(F32_Cos(t * F32_pi * 3.5f));
+EaseOutBounce(F32 t) {
+  return 1.f -Pow(2.f, -6.f * t) * Abs(Cos(t * pi_F32 * 3.5f));
 }
 
 static F32 
-F32_EaseInOutBounce(F32 t) {
+EaseInOutBounce(F32 t) {
   if (t < 0.5f) {
-    return 8.f * F32_Pow(2.f, 8.f * (t - 1.f)) * Abs(F32_Sin(t * F32_pi * 7.f));
+    return 8.f * Pow(2.f, 8.f * (t - 1.f)) * Abs(Sin(t * pi_F32 * 7.f));
   }
   else {
-    return 1.f -8.f * F32_Pow(2.f, -8.f * t) * Abs(F32_Sin(t * F32_pi * 7.f));
+    return 1.f -8.f * Pow(2.f, -8.f * t) * Abs(Sin(t * pi_F32 * 7.f));
   }
 }
 
 static F32
-F32_EaseInExpo(F32 t)  {
-  return (F32_Pow(2.f, 8.f * t) - 1.f) / 255.f;
+EaseInExpo(F32 t)  {
+  return (Pow(2.f, 8.f * t) - 1.f) / 255.f;
 }
 
 
 static F32 
-F32_EaseOutExpo(F32 t)  {
-  return t == 1.f ? 1.f : 1.f -F32_Pow(2.f, -10.f * t);
+EaseOutExpo(F32 t)  {
+  return t == 1.f ? 1.f : 1.f -Pow(2.f, -10.f * t);
 }
 
 static F32 
-F32_EaseInOutExpo(F32 t)  {
+EaseInOutExpo(F32 t)  {
   if (t < 0.5f) {
-    return (F32_Pow(2.f, 16.f * t) - 1.f) / 510.f;
+    return (Pow(2.f, 16.f * t) - 1.f) / 510.f;
   }
   else {
-    return 1.f -0.5f * F32_Pow(2.f, -16.f * (t - 0.5f));
+    return 1.f -0.5f * Pow(2.f, -16.f * (t - 0.5f));
   }
 }
 
 
 
 static F64 
-F64_EaseInSine(F64 t)  {
-  return F64_Sin(F64_pi * 0.5 * t);
+EaseInSine(F64 t)  {
+  return Sin(pi_F64 * 0.5 * t);
 }
 
 
 static F64 
-F64_EaseOutSine(F64 t) {
-  return 1.0f + F64_Sin(F64_pi * 0.5 * (--t));
+EaseOutSine(F64 t) {
+  return 1.0f + Sin(pi_F64 * 0.5 * (--t));
 }
 
 static F64 
-F64_EaseInOutSine(F64 t)  {
-  return 0.5 * (1.0 + F64_Sin(F64_pi * (t - 0.5)));
+EaseInOutSine(F64 t)  {
+  return 0.5 * (1.0 + Sin(pi_F64 * (t - 0.5)));
 }
 
 static F64 
-F64_EaseInQuad(F64 t)  {
+EaseInQuad(F64 t)  {
   return t * t;
 }
 
 static F64 
-F64_EaseOutQuad(F64 t)  {
+EaseOutQuad(F64 t)  {
   return t * (2.0 -t);
 }
 
 static F64 
-F64_EaseInOutQuad(F64 t)  {
+EaseInOutQuad(F64 t)  {
   return t < 0.5 ? 2.0 * t * t : t * (4.0 -2.0 * t) - 1.0;
 }
 
 static F64 
-F64_EaseInCubic(F64 t)  {
+EaseInCubic(F64 t)  {
   return t * t * t;
 }
 
 static F64 
-F64_EaseOutCubic(F64 t)  {
+EaseOutCubic(F64 t)  {
   return 1.0 + (t-1) * (t-1) * (t-1);
 }
 
 static F64 
-F64_EaseInOutCubic(F64 t)  {
+EaseInOutCubic(F64 t)  {
   return t < 0.5 ? 4.0 * t * t * t : 1.0 + (t-1) * (2.0 * (t-2)) * (2.0 * (t-2));
 }
 
 static F64 
-F64_EaseInQuart(F64 t)  {
+EaseInQuart(F64 t)  {
   t *= t;
   return t * t;
 }
 
 static F64 
-F64_EaseOutQuart(F64 t) {
+EaseOutQuart(F64 t) {
   --t;
   t = t * t;
   return 1.0 - t * t;
 }
 
 static F64 
-F64_EaseInOutQuart(F64 t)  {
+EaseInOutQuart(F64 t)  {
   if (t < 0.5) {
     t *= t;
     return 8.0 * t * t;
@@ -744,20 +748,20 @@ F64_EaseInOutQuart(F64 t)  {
 }
 
 static F64
-F64_EaseInQuint(F64 t)  {
+EaseInQuint(F64 t)  {
   F64 t2 = t * t;
   return t * t2 * t2;
 }
 
 static F64
-F64_EaseOutQuint(F64 t)  {
+EaseOutQuint(F64 t)  {
   --t;
   F64 t2 = t * t;
   return 1.0 +t * t2 * t2;
 }
 
 static F64
-F64_EaseInOutQuint(F64 t)  {
+EaseInOutQuint(F64 t)  {
   F64 t2;
   if (t < 0.5) {
     t2 = t * t;
@@ -773,38 +777,38 @@ F64_EaseInOutQuint(F64 t)  {
 
 
 static F64 
-F64_EaseInCirc(F64 t)  {
-  return 1.0 -F64_Sqrt(1.0 -t);
+EaseInCirc(F64 t)  {
+  return 1.0 -Sqrt(1.0 -t);
 }
 
 static F64 
-F64_EaseOutCirc(F64 t)  {
-  return F64_Sqrt(t);
+EaseOutCirc(F64 t)  {
+  return Sqrt(t);
 }
 
 static F64 
-F64_EaseInOutCirc(F64 t)  {
+EaseInOutCirc(F64 t)  {
   if (t < 0.5) {
-    return (1.0 -F64_Sqrt(1.0 -2.0 * t)) * 0.5;
+    return (1.0 -Sqrt(1.0 -2.0 * t)) * 0.5;
   }
   else {
-    return (1.0 +F64_Sqrt(2.0 * t - 1.0)) * 0.5;
+    return (1.0 +Sqrt(2.0 * t - 1.0)) * 0.5;
   }
 }
 
 static F64 
-F64_EaseInBack(F64 t)  {
+EaseInBack(F64 t)  {
   return t * t * (2.7 * t - 1.7);
 }
 
 static F64 
-F64_EaseOutBack(F64 t)  {
+EaseOutBack(F64 t)  {
   --t;
   return 1.0 + t * t * (2.7 * t + 1.7);
 }
 
 static F64 
-F64_EaseInOutBack(F64 t)  {
+EaseInOutBack(F64 t)  {
   if (t < 0.5) {
     return t * t * (7.0 * t - 2.5) * 2.0;
   }
@@ -815,30 +819,30 @@ F64_EaseInOutBack(F64 t)  {
 }
 
 static F64 
-F64_EaseInElastic(F64 t)  {
+EaseInElastic(F64 t)  {
   F64 t2 = t * t;
-  return t2 * t2 * F64_Sin(t * F64_pi * 4.5);
+  return t2 * t2 * Sin(t * pi_F64 * 4.5);
 }
 
 static F64 
-F64_EaseOutElastic(F64 t)  {
+EaseOutElastic(F64 t)  {
   F64 t2 = (t - 1.0) * (t - 1.0);
-  return 1.0 -t2 * t2 * F64_Cos(t * F64_pi * 4.5);
+  return 1.0 -t2 * t2 * Cos(t * pi_F64 * 4.5);
 }
 
 static F64 
-F64_EaseInOutElastic(F64 t)  {
+EaseInOutElastic(F64 t)  {
   F64 t2;
   if (t < 0.45) {
     t2 = t * t;
-    return 8.0 * t2 * t2 * F64_Sin(t * F64_pi * 9.0);
+    return 8.0 * t2 * t2 * Sin(t * pi_F64 * 9.0);
   }
   else if (t < 0.55) {
-    return 0.5 +0.75 * F64_Sin(t * F64_pi * 4.0);
+    return 0.5 +0.75 * Sin(t * pi_F64 * 4.0);
   }
   else {
     t2 = (t - 1.0) * (t - 1.0);
-    return 1.0 -8.0 * t2 * t2 * F64_Sin(t * F64_pi * 9.0);
+    return 1.0 -8.0 * t2 * t2 * Sin(t * pi_F64 * 9.0);
   }
 }
 
@@ -846,43 +850,43 @@ F64_EaseInOutElastic(F64 t)  {
 
 // NOTE(Momo): These require power function. 
 static F64 
-F64_EaseInBounce(F64 t)  {
-  return F64_Pow(2.0, 6.0 * (t - 1.0)) * Abs(F64_Sin(t * F64_pi * 3.5));
+EaseInBounce(F64 t)  {
+  return Pow(2.0, 6.0 * (t - 1.0)) * Abs(Sin(t * pi_F64 * 3.5));
 }
 
 
 static F64 
-F64_EaseOutBounce(F64 t) {
-  return 1.0 -F64_Pow(2.0, -6.0 * t) * Abs(F64_Cos(t * F64_pi * 3.5));
+EaseOutBounce(F64 t) {
+  return 1.0 -Pow(2.0, -6.0 * t) * Abs(Cos(t * pi_F64 * 3.5));
 }
 
 static F64 
-F64_EaseInOutBounce(F64 t) {
+EaseInOutBounce(F64 t) {
   if (t < 0.5) {
-    return 8.0 * F64_Pow(2.0, 8.0 * (t - 1.0)) * Abs(F64_Sin(t * F64_pi * 7.0));
+    return 8.0 * Pow(2.0, 8.0 * (t - 1.0)) * Abs(Sin(t * pi_F64 * 7.0));
   }
   else {
-    return 1.0 -8.0 * F64_Pow(2.0, -8.0 * t) * Abs(F64_Sin(t * F64_pi * 7.0));
+    return 1.0 -8.0 * Pow(2.0, -8.0 * t) * Abs(Sin(t * pi_F64 * 7.0));
   }
 }
 
 static F64
-F64_EaseInExpo(F64 t)  {
-  return (F64_Pow(2.0, 8.0 * t) - 1.0) / 255.0;
+EaseInExpo(F64 t)  {
+  return (Pow(2.0, 8.0 * t) - 1.0) / 255.0;
 }
 
 
 static F64 
-F64_EaseOutExpo(F64 t)  {
-  return t == 1.0 ? 1.0 : 1.0 -F64_Pow(2.0, -10.0 * t);
+EaseOutExpo(F64 t)  {
+  return t == 1.0 ? 1.0 : 1.0 -Pow(2.0, -10.0 * t);
 }
 
 static F64 
-F64_EaseInOutExpo(F64 t)  {
+EaseInOutExpo(F64 t)  {
   if (t < 0.5) {
-    return (F64_Pow(2.0, 16.0 * t) - 1.0) / 510.0;
+    return (Pow(2.0, 16.0 * t) - 1.0) / 510.0;
   }
   else {
-    return 1.0 -0.5 * F64_Pow(2.0, -16.0 * (t - 0.5));
+    return 1.0 -0.5 * Pow(2.0, -16.0 * (t - 0.5));
   }
 }
