@@ -27,55 +27,64 @@ typedef union {
 } V4F32;
 
 
-static V2F32 V2F32_Add(V2F32 lhs, V2F32 rhs);
-static V2F32 V2F32_Sub(V2F32 lhs, V2F32 rhs);
-static V2F32 V2F32_Scale(V2F32 lhs, F32 rhs);
-static V2F32 V2F32_InvScale(V2F32 lhs, F32 rhs);
-static F32   V2F32_Dot(V2F32 lhs, V2F32 rhs);
-static F32   V2F32_DistanceSq(V2F32 lhs, V2F32 rhs);
-static F32   V2F32_Distance(V2F32 lhs, V2F32 rhs);
-static F32   V2F32_LengthSq(V2F32 v);
-static F32   V2F32_Length(V2F32 v);
-static V2F32 V2F32_Normalize(V2F32 v);
-static V2F32 V2F32_Negate(V2F32 v);
-static B8    V2Match_F32(V2F32 lhs, V2F32 rhs);
-static V2F32 V2F32_Midpoint(V2F32 lhs, V2F32 rhs);
-static V2F32 V2F32_Project(V2F32 v, V2F32 onto);
-static V2F32 V2F32_Rotate(V2F32 v, F32 rad);
+static constexpr V2F32 Add(V2F32 lhs, V2F32 rhs);
+static constexpr V2F32 Sub(V2F32 lhs, V2F32 rhs);
+static constexpr V2F32 Scale(V2F32 lhs, F32 rhs);
+static constexpr V2F32 InvScale(V2F32 lhs, F32 rhs);
+static constexpr F32   Dot(V2F32 lhs, V2F32 rhs);
+static constexpr F32   DistanceSq(V2F32 lhs, V2F32 rhs);
+static constexpr F32   LengthSq(V2F32 v);
+static constexpr V2F32 Negate(V2F32 v);
+static constexpr B32   Match(V2F32 lhs, V2F32 rhs);
+static constexpr V2F32 Midpoint(V2F32 lhs, V2F32 rhs);
+static F32   Distance(V2F32 lhs, V2F32 rhs);
+static F32   Length(V2F32 v);
+static V2F32 Normalize(V2F32 v);
+static V2F32 Project(V2F32 v, V2F32 onto);
+static V2F32 Rotate(V2F32 v, F32 rad);
 
-static V3F32 V3F32_Add(V3F32 lhs, V3F32 rhs);
-static V3F32 V3F32_Sub(V3F32 lhs, V3F32 rhs);
-static V3F32 V3F32_Scale(V3F32 lhs, F32 rhs);
-static V3F32 V3F32_InvScale(V3F32 lhs, F32 rhs);
-static F32   V3F32_Dot(V3F32 lhs, V3F32 rhs);
-static F32   V3F32_DistanceSq(V3F32 lhs, V3F32 rhs);
-static F32   V3F32_Distance(V3F32 lhs, V3F32 rhs);
-static F32   V3F32_LengthSq(V3F32 v);
-static F32   V3F32_Length(V3F32 v);
-static V3F32 V3F32_Normalize(V3F32 v);
-static V3F32 V3F32_Negate(V3F32 v);
-static B8    V3Match_F32(V3F32 lhs, V3F32 rhs);
-static V3F32 V3F32_Midpoint(V3F32 lhs, V3F32 rhs);
-static V3F32 V3F32_Project(V3F32 v, V3F32 onto);
-static V3F32 V3F32_Cross(V3F32 lhs, V3F32 rhs);
+static constexpr V3F32 Add(V3F32 lhs, V3F32 rhs);
+static constexpr V3F32 Sub(V3F32 lhs, V3F32 rhs);
+static constexpr V3F32 Scale(V3F32 lhs, F32 rhs);
+static constexpr V3F32 InvScale(V3F32 lhs, F32 rhs);
+static constexpr F32   Dot(V3F32 lhs, V3F32 rhs);
+static constexpr F32   DistanceSq(V3F32 lhs, V3F32 rhs);
+static constexpr F32   LengthSq(V3F32 v);
+static constexpr B32   Match(V3F32 lhs, V3F32 rhs);
+static constexpr V3F32 Negate(V3F32 v);
+static constexpr V3F32 Midpoint(V3F32 lhs, V3F32 rhs);
+static constexpr V3F32 Cross(V3F32 lhs, V3F32 rhs);
+static F32   Distance(V3F32 lhs, V3F32 rhs);
+static F32   Length(V3F32 v);
+static V3F32 Normalize(V3F32 v);
+static V3F32 Project(V3F32 v, V3F32 onto);
 
 
-#if IS_CPP
 // TODO(Momo): I'm not sure if we should actually
 // do operator* because there's so many damn ways
 // to multiply a vector. Maybe we'll use the most 
 // commonly used operation?
-static V2F32& operator+(V2F32 lhs, V2F32 rhs);
-static V2F32& operator-(V2F32 lhs, V2F32 rhs);
-static V2F32& operator*(V2F32 lhs, V2F32 rhs); // scale
-static V2F32& operator==(V2F32 lhs, V2F32 rhs);
-static V2F32& operator!=(V2F32 lhs, V2F32 rhs);
-static V2F32& operator-(V2F32 v);
-static V2F32& operator+=(V2F32& lhs, V2F32 rhs);
-static V2F32& operator-=(V2F32& lhs, V2F32 rhs);
-static V2F32& operator-=(V2F32& lhs, V2F32 rhs);
+static constexpr V2F32 operator+(V2F32 lhs, V2F32 rhs);
+static constexpr V2F32 operator-(V2F32 lhs, V2F32 rhs);
+static constexpr V2F32 operator*(V2F32 lhs, F32 rhs); // scale
+static constexpr V2F32 operator*(F32 lhs, V2F32 rhs); // scale
+static constexpr B32   operator==(V2F32 lhs, V2F32 rhs);
+static constexpr B32   operator!=(V2F32 lhs, V2F32 rhs);
+static constexpr V2F32 operator-(V2F32 v);
+static constexpr V2F32& operator+=(V2F32& lhs, V2F32 rhs);
+static constexpr V2F32& operator-=(V2F32& lhs, V2F32 rhs);
+static constexpr V2F32& operator*=(V2F32& lhs, V2F32 rhs);
 
-#endif //IS_CPP
+static constexpr V3F32 operator+(V3F32 lhs, V3F32 rhs);
+static constexpr V3F32 operator-(V3F32 lhs, V3F32 rhs);
+static constexpr V3F32 operator*(V3F32 lhs, F32 rhs); // scale
+static constexpr V3F32 operator*(F32 lhs, V3F32 rhs); // scale
+static constexpr B32   operator==(V3F32 lhs, V3F32 rhs);
+static constexpr B32   operator!=(V3F32 lhs, V3F32 rhs);
+static constexpr V3F32 operator-(V3F32 v);
+static constexpr V3F32& operator+=(V3F32& lhs, V3F32 rhs);
+static constexpr V3F32& operator-=(V3F32& lhs, V3F32 rhs);
+static constexpr V3F32& operator*=(V3F32& lhs, V3F32 rhs);
 
 
 #include "momo_vectors.cpp"

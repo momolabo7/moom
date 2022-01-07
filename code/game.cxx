@@ -34,7 +34,7 @@ Game_Update(PF* pf, Input* input, Gfx* gfx, F32 dt) {
   
   
   
-  if (Input_IsDown(input->button_up)) {
+  if (Input_IsPoked(input->button_up)) {
     pf->hot_reload();
   }
   
@@ -75,10 +75,9 @@ Game_Update(PF* pf, Input* input, Gfx* gfx, F32 dt) {
     colors.rgb = HSLF32_ToRGBF32(hsl);
     
     M44F32 scale = M44F32_Scale(600.f, 600.f, 10.f);
-    M44F32 rot = M44F32_RotationZ(tmp_rot += dt);
+    M44F32 rot = M44F32_RotationZ(tmp_rot += (dt));
     M44F32 trans = M44F32_Translation(800.f, 450.f, 300.f);
-    M44F32 t = M44F32_Concat(trans, M44F32_Concat(scale, rot));
-    Gfx_DrawSprite(gfx, colors, t, 0);
+    Gfx_DrawSprite(gfx, colors, trans*scale*rot, 0);
   }
   
   return false;

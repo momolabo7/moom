@@ -1,15 +1,20 @@
 Code quality
   momo_essentials.h
     Clean up memory-related helpers?
+	momo_vector.h and momo_matrix.h cleanup
   Things to think about
 		Figure out if we care about void*. Maybe everything uses Memory
     Figure out if we care about const char* (SiStr). Maybe typedef it?
-	momo_vector.h and momo_matrix.h cleanup
 
 Engine
-  setup hot-reloading
-  figure out how game should tell GFX about its design resolution
+  Setup hot-reloading
+  Figure out how game should tell GFX about its design resolution
+  File io
+	Sound
+	Mutithread support
+
+Test suite setup. 
+	Compare against text files
+	Easy to setup and add more unit tests.
   
-- file io
-- sound
-- mutithread support
+	

@@ -1,4 +1,4 @@
-static M44F32 M44F32_Concat(M44F32 lhs, M44F32 rhs) {
+static M44F32 Concat(M44F32 lhs, M44F32 rhs) {
 	M44F32 ret = {0};
   for (U8 r = 0; r < 4; r++) { 
     for (U8 c = 0; c < 4; c++) { 
@@ -10,7 +10,7 @@ static M44F32 M44F32_Concat(M44F32 lhs, M44F32 rhs) {
 	return ret;
 }
 
-static M44F32 M44F32_Transpose(M44F32 m) {
+static M44F32 Transpose(M44F32 m) {
 	M44F32 ret = {0};
 	for (U32 i = 0; i < 4; ++i ) {
 		for (U32 j = 0; j < 4; ++j) {
@@ -136,4 +136,8 @@ static M44F32 M44F32_Perspective(F32 fov, F32 aspect, F32 near, F32 far){
 	return M44F32_Frustum(-right, right,
                         -top, top,
                         near, far);
+}
+
+static M44F32 operator*(M44F32 lhs, M44F32 rhs) {
+  return Concat(lhs, rhs);
 }

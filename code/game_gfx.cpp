@@ -24,7 +24,7 @@ Gfx_SetOrthoCamera(Gfx* gfx,
                                   frustum.max.z);
   
   M44F32 v = M44F32_Translation(-position.x, -position.y, -position.z);
-  data->basis = M44F32_Concat(p, v);
+  data->basis = p*v;
   
 }
 
@@ -93,12 +93,12 @@ Gfx_DrawLine(Gfx* gfx,
     Swap(line.min.x, line.max.x);
   }
   
-  V2F32 line_vector = V2F32_Sub(line.max, line.min);
-  F32 line_length = V2F32_Length(line_vector);
-  V2F32 line_mid = V2F32_Midpoint(line.max, line.min);
+  V2F32 line_vector = line.max - line.min;
+  F32 line_length = Length(line_vector);
+  V2F32 line_mid = Midpoint(line.max, line.min);
   
   V2F32 x_axis = { 1.f, 0.f };
-  F32 angle = V2F32_AngleBetween(line_vector, x_axis);
+  F32 angle = AngleBetween(line_vector, x_axis);
   
   // TODO(Momo): Should really precompute this
   M44F32 T = M44F32_Translation(line_mid.x, line_mid.y, pos_z);
@@ -107,7 +107,7 @@ Gfx_DrawLine(Gfx* gfx,
   
   Gfx_DrawRect(gfx, 
                colors, 
-               M44F32_Concat(T, M44F32_Concat(R,S)));
+               T*R*S);
 }
 
 static void
@@ -123,11 +123,11 @@ Gfx_DrawCircle(Gfx* gfx,
   Assert(line_count >= 3);
   F32 angle_increment = tau_F32 / line_count;
   V2F32 pt1 = { 0.f, circle.radius }; 
-  V2F32 pt2 = V2F32_Rotate(pt1, angle_increment);
+  V2F32 pt2 = Rotate(pt1, angle_increment);
   
   for (U32 i = 0; i < line_count; ++i) {
-    V2F32 line_pt_1 = V2F32_Add(pt1, circle.center);
-    V2F32 line_pt_2 = V2F32_Add(pt2, circle.center);
+    V2F32 line_pt_1 = Add(pt1, circle.center);
+    V2F32 line_pt_2 = Add(pt2, circle.center);
     Line2F32 line = { line_pt_1, line_pt_2 };
     Gfx_DrawLine(gfx, 
                  line,
@@ -136,7 +136,7 @@ Gfx_DrawCircle(Gfx* gfx,
                  pos_z);
     
     pt1 = pt2;
-    pt2 = V2F32_Rotate(pt1, angle_increment);
+    pt2 = Rotate(pt1, angle_increment);
     
   }
 }

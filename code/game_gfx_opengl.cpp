@@ -509,7 +509,7 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
         last_drawn_instance_index += instances_to_draw;
         instances_to_draw = 0;
         
-        M44F32 result = M44F32_Transpose(data->basis);
+        M44F32 result = Transpose(data->basis);
         GLint uProjectionLoc = ogl->pf.glGetUniformLocation(ogl->shader,
                                                             "uProjection");
         
@@ -559,7 +559,7 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
                                      &Opengl__quad_uv);
         
         // NOTE(Momo): Transpose; game is row-major
-        M44F32 transform = M44F32_Transpose(data->transform);
+        M44F32 transform = Transpose(data->transform);
         ogl->pf.glNamedBufferSubData(ogl->buffers[Opengl__VBO_Transform], 
                                      current_instance_index* sizeof(M44F32), 
                                      sizeof(M44F32), 
@@ -607,7 +607,7 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
                                      &texture_uv_in_vertices);
         
         // NOTE(Momo): Transpose; game is row-major
-        M44F32 transform = M44F32_Transpose(data->transform);
+        M44F32 transform = Transpose(data->transform);
         ogl->pf.glNamedBufferSubData(ogl->buffers[Opengl__VBO_Transform], 
                                      current_instance_index* sizeof(M44F32), 
                                      sizeof(M44F32), 

@@ -25,12 +25,12 @@ typedef struct {
 // But that will probably require some insane enum
 // Or maybe we can put all these into Platform API?
 
-typedef struct {
-  B8 before;
-  B8 now;
-} Input_Button;
+struct Input_Button{
+  B32 before;
+  B32 now;
+};
 
-typedef struct {
+struct Input{
   Input_Button buttons[4];
   struct {
     Input_Button button_up;
@@ -43,7 +43,7 @@ typedef struct {
   V2U32 screen_mouse_pos;
   V2U32 render_mouse_pos;
   
-} Input;
+};
 
 static void 
 Input_Update(Input* in) {

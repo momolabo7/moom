@@ -130,7 +130,7 @@ Win_HotReload() {
 }
 
 
-static void*
+void*
 Win_AllocateMemory(UMI memory_size) {
   return VirtualAllocEx(GetCurrentProcess(),
                         0, 
@@ -140,7 +140,7 @@ Win_AllocateMemory(UMI memory_size) {
   
 }
 
-static void
+void
 Win_FreeMemory(void* memory) {
   VirtualFreeEx(GetCurrentProcess(), 
                 memory,    
@@ -265,6 +265,7 @@ WinMain(HINSTANCE instance,
       return 1;
     }
   }
+  defer { FreeLibrary(gfx_dll); };
   
   
   //-NOTE(Momo): Init gfx
@@ -272,9 +273,11 @@ WinMain(HINSTANCE instance,
   if (!gfx) {
     return 1;
   }
+  defer { gfx_api.free(gfx); };
+  
   
   //- NOTE(Momo): Init input
-  Input input;
+  Input input = {0};
   
   
   // TODO(Momo): Testing texture. Remove after use.
@@ -284,9 +287,6 @@ WinMain(HINSTANCE instance,
     { 255, 255, 255, 255 },
     { 0, 0, 0, 255 },
   };
-  
-  // Gfx_Texture texture = gfx_api.add_texture(gfx, 2, 2, (void*)&test_texture);
-  
   
   //-NOTE(Momo): Begin game loop
   Win_global_state.is_running = true;
@@ -299,28 +299,38 @@ WinMain(HINSTANCE instance,
   LARGE_INTEGER last_count = Win_QueryPerformanceCounter();
   
   Game_API game_api = {0}; 
-  HMODULE game_dll = LoadLibraryA("game.dll");
+  HMODULE game_dll = NULL; 
   
   while (Win_global_state.is_running) {
-    //-NOTE(Momo): Load game functions
+    //-NOTE(Momo): Hot reload game.dll functions
     if (Win_global_state.is_hot_reloading){
-      if (!game_api.update) {
-        
+      static constexpr char* running_game_dll = "running_game.dll";
+      static constexpr char* compiled_game_dll = "game.dll";
+      
+      // Release the current game dll
+      if (game_dll) {
+        FreeLibrary(game_dll);
+        game_dll = NULL;
       }
       
+      // Copy the compiled game dll
+      if(!CopyFile(compiled_game_dll, running_game_dll, false)) {
+        return 1;
+      }
       
+      game_dll = LoadLibraryA(running_game_dll);
       if (game_dll) {
         game_api.update = (Game_UpdateFn*)GetProcAddress(game_dll, "Game_Update");
-        if(!game_api.update) return 1;
-        
         game_api.get_info = (Game_GetInfoFn*)GetProcAddress(game_dll, "Game_GetInfo");
-        if(!game_api.get_info) return 1;
-        
+        if(!game_api.update || !game_api.get_info) {
+          FreeLibrary(game_dll);
+          return 1;
+        }          
       }
       else {
         return 1;
       }
-      
+      Win_global_state.is_hot_reloading = false;
     }
     
     Input_Update(&input);
@@ -340,11 +350,11 @@ WinMain(HINSTANCE instance,
           case WM_SYSKEYUP:
           {
             U32 code = (U32)msg.wParam;
-            B32 is_down = msg.message = WM_KEYDOWN;
+            B32 is_down = msg.message == WM_KEYDOWN;
             switch(code) {
               case 0x57: /* W  */ 
               {
-                input.button_up.now = true;
+                input.button_up.now = is_down;
               } break;
             }
             
@@ -432,7 +442,6 @@ WinMain(HINSTANCE instance,
     
   }
   
-  gfx_api.free(gfx);
   
   
   

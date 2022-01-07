@@ -216,10 +216,8 @@ static constexpr F64 Ratio(F64 v, F64 min, F64 max);
 
 template<class T, class U> static constexpr T AlignDownPow2(T value, U align);
 template<class T, class U> T AlignUpPow2(T value, U align);
-
 template<class T> static constexpr B32 IsPow2(T value);
 template<class T> static constexpr void Swap(T& lhs, T& rhs); 
-
 
 //~NOTE(Momo): Assert
 // NOTE(Momo): Others can provide their own 'AssertCallback' 
@@ -310,6 +308,16 @@ static constexpr F64 RadToDeg(F64 radians);
 static constexpr F32 BPMToSPB(F32 bpm); 
 static constexpr F64 BPMToSPB(F64 bpm); 
 
+
+// NOTE(Momo): I'm not entirely sure if this prototype makes sense.
+// It sounds more reasonable to endian swap ANY type. 
+// We COULD use a template approach like so:
+//   template<class T> EndianSwap16(T value);
+//   template<class T> EndianSwap32(T value); 
+// Or we COULD just ignore the concept of type:
+//   void _EndianSwap16(U8* ptr)
+//   #define EndianSwap16(value) _EndianSwap16((U8*)&value)
+// TODO(Momo): Let's figure EndianSwap one day
 static constexpr U16 EndianSwap16(U16 value);
 static constexpr U32 EndianSwap32(U32 value);
 
@@ -402,7 +410,6 @@ static F64 EaseInOutBounce(F64 t);
 static F64 EaseInExpo(F64 t);
 static F64 EaseOutExpo(F64 t);
 static F64 EaseInOutExpo(F64 t);
-
 
 //~ NOTE(Momo): Defer construct
 template<class F> 

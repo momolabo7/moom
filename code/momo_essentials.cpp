@@ -383,143 +383,143 @@ EndianSwap32(U32 value) {
 // We have to use math.h here as default
 // TODO(Momo): Write our own trig function
 #include <math.h>
-static constexpr F32 
+static F32 
 Sin(F32 x) {
   return sinf(x);
 }
 
-static constexpr F32 
+static F32 
 Cos(F32 x) {
   return cosf(x);
 }
 
-static constexpr F32
+static F32
 Tan(F32 x) {
   return tanf(x);
 }
-static constexpr F32 
+static F32 
 Sqrt(F32 x) {
   return sqrtf(x);
   
 }
-static constexpr F32 
+static F32 
 Asin(F32 x) {
   return asinf(x);
 }
-static constexpr F32 
+static F32 
 Acos(F32 x) {
   return acosf(x);
 }
 
-static constexpr F32
+static F32
 Atan(F32 x){
   return atanf(x);
 }
-static constexpr F32 
+static F32 
 Pow(F32 b, F32 e){
   return powf(b,e);
 }
 
 
-static constexpr F64 
+static F64 
 Sin(F64 x) {
   return sin(x);
 }
 
-static constexpr F64 
+static F64 
 Cos(F64 x) {
   return cos(x);
 }
 
-static constexpr F64
+static F64
 Tan(F64 x) {
   return tan(x);
 }
-static constexpr F64 
+static F64 
 Sqrt(F64 x) {
   return sqrt(x);
   
 }
-static constexpr F64 
+static F64 
 Asin(F64 x) {
   return asin(x);
 }
-static constexpr F64 
+static F64 
 Acos(F64 x) {
   return acos(x);
 }
 
-static constexpr F64
+static F64
 Atan(F64 x){
   return atan(x);
 }
-static constexpr F64 
+static F64 
 Pow(F64 b, F64 e){
   return pow(b,e);
 }
 
 //~ NOTE(Momo): Easing functions
 
-static constexpr F32 
+static F32 
 EaseInSine(F32 t)  {
   return Sin(pi_F32 * 0.5f * t);
 }
 
 
-static constexpr F32 
+static F32 
 EaseOutSine(F32 t) {
   return 1.0f + Sin(pi_F32 * 0.5f * (--t));
 }
 
-static constexpr F32 
+static F32 
 EaseInOutSine(F32 t)  {
   return 0.5f * (1.f + Sin(pi_F32 * (t - 0.5f)));
 }
 
-static constexpr F32 
+static F32 
 EaseInQuad(F32 t)  {
   return t * t;
 }
 
-static constexpr F32 
+static F32 
 EaseOutQuad(F32 t)  {
   return t * (2.f -t);
 }
 
-static constexpr F32 
+static F32 
 EaseInOutQuad(F32 t)  {
   return t < 0.5f ? 2.f * t * t : t * (4.f -2.f * t) - 1.f;
 }
 
-static constexpr F32 
+static F32 
 EaseInCubic(F32 t)  {
   return t * t * t;
 }
 
-static constexpr F32 
+static F32 
 EaseOutCubic(F32 t)  {
   return 1.f + (t-1) * (t-1) * (t-1);
 }
 
-static constexpr F32 
+static F32 
 EaseInOutCubic(F32 t)  {
   return t < 0.5f ? 4.f * t * t * t : 1.f + (t-1) * (2.f * (t-2)) * (2.f * (t-2));
 }
 
-static constexpr F32 
+static F32 
 EaseInQuart(F32 t)  {
   t *= t;
   return t * t;
 }
 
-static constexpr F32 
+static F32 
 EaseOutQuart(F32 t) {
   --t;
   t = t * t;
   return 1.f - t * t;
 }
 
-static constexpr F32 
+static F32 
 EaseInOutQuart(F32 t)  {
   if (t < 0.5f) {
     t *= t;
@@ -532,20 +532,20 @@ EaseInOutQuart(F32 t)  {
   }
 }
 
-static constexpr F32
+static F32
 EaseInQuint(F32 t)  {
   F32 t2 = t * t;
   return t * t2 * t2;
 }
 
-static constexpr F32
+static F32
 EaseOutQuint(F32 t)  {
   --t;
   F32 t2 = t * t;
   return 1.f +t * t2 * t2;
 }
 
-static constexpr F32
+static F32
 EaseInOutQuint(F32 t)  {
   F32 t2;
   if (t < 0.5f) {
@@ -561,17 +561,17 @@ EaseInOutQuint(F32 t)  {
 
 
 
-static constexpr F32 
+static F32 
 EaseInCirc(F32 t)  {
   return 1.f -Sqrt(1.f -t);
 }
 
-static constexpr F32 
+static F32 
 EaseOutCirc(F32 t)  {
   return Sqrt(t);
 }
 
-static constexpr F32 
+static F32 
 EaseInOutCirc(F32 t)  {
   if (t < 0.5f) {
     return (1.f -Sqrt(1.f -2.f * t)) * 0.5f;
@@ -581,18 +581,18 @@ EaseInOutCirc(F32 t)  {
   }
 }
 
-static constexpr F32 
+static F32 
 EaseInBack(F32 t)  {
   return t * t * (2.7f * t - 1.7f);
 }
 
-static constexpr F32 
+static F32 
 EaseOutBack(F32 t)  {
   --t;
   return 1.f + t * t * (2.7f * t + 1.7f);
 }
 
-static constexpr F32 
+static F32 
 EaseInOutBack(F32 t)  {
   if (t < 0.5f) {
     return t * t * (7.f * t - 2.5f) * 2.f;
@@ -603,19 +603,19 @@ EaseInOutBack(F32 t)  {
   }
 }
 
-static constexpr F32 
+static F32 
 EaseInElastic(F32 t)  {
   F32 t2 = t * t;
   return t2 * t2 * Sin(t * pi_F32 * 4.5f);
 }
 
-static constexpr F32 
+static F32 
 EaseOutElastic(F32 t)  {
   F32 t2 = (t - 1.f) * (t - 1.f);
   return 1.f -t2 * t2 * Cos(t * pi_F32 * 4.5f);
 }
 
-static constexpr F32 
+static F32 
 EaseInOutElastic(F32 t)  {
   F32 t2;
   if (t < 0.45f) {
@@ -631,18 +631,18 @@ EaseInOutElastic(F32 t)  {
   }
 }
 
-static constexpr F32 
+static F32 
 EaseInBounce(F32 t)  {
   return Pow(2.f, 6.f * (t - 1.f)) * Abs(Sin(t * pi_F32 * 3.5f));
 }
 
 
-static constexpr F32 
+static F32 
 EaseOutBounce(F32 t) {
   return 1.f -Pow(2.f, -6.f * t) * Abs(Cos(t * pi_F32 * 3.5f));
 }
 
-static constexpr F32 
+static F32 
 EaseInOutBounce(F32 t) {
   if (t < 0.5f) {
     return 8.f * Pow(2.f, 8.f * (t - 1.f)) * Abs(Sin(t * pi_F32 * 7.f));
@@ -652,18 +652,18 @@ EaseInOutBounce(F32 t) {
   }
 }
 
-static constexpr F32
+static F32
 EaseInExpo(F32 t)  {
   return (Pow(2.f, 8.f * t) - 1.f) / 255.f;
 }
 
 
-static constexpr F32 
+static F32 
 EaseOutExpo(F32 t)  {
   return t == 1.f ? 1.f : 1.f -Pow(2.f, -10.f * t);
 }
 
-static constexpr F32 
+static F32 
 EaseInOutExpo(F32 t)  {
   if (t < 0.5f) {
     return (Pow(2.f, 16.f * t) - 1.f) / 510.f;
@@ -675,66 +675,66 @@ EaseInOutExpo(F32 t)  {
 
 
 
-static constexpr F64 
+static F64 
 EaseInSine(F64 t)  {
   return Sin(pi_F64 * 0.5 * t);
 }
 
 
-static constexpr F64 
+static F64 
 EaseOutSine(F64 t) {
   return 1.0f + Sin(pi_F64 * 0.5 * (--t));
 }
 
-static constexpr F64 
+static F64 
 EaseInOutSine(F64 t)  {
   return 0.5 * (1.0 + Sin(pi_F64 * (t - 0.5)));
 }
 
-static constexpr F64 
+static F64 
 EaseInQuad(F64 t)  {
   return t * t;
 }
 
-static constexpr F64 
+static F64 
 EaseOutQuad(F64 t)  {
   return t * (2.0 -t);
 }
 
-static constexpr F64 
+static F64 
 EaseInOutQuad(F64 t)  {
   return t < 0.5 ? 2.0 * t * t : t * (4.0 -2.0 * t) - 1.0;
 }
 
-static constexpr F64 
+static F64 
 EaseInCubic(F64 t)  {
   return t * t * t;
 }
 
-static constexpr F64 
+static F64 
 EaseOutCubic(F64 t)  {
   return 1.0 + (t-1) * (t-1) * (t-1);
 }
 
-static constexpr F64 
+static F64 
 EaseInOutCubic(F64 t)  {
   return t < 0.5 ? 4.0 * t * t * t : 1.0 + (t-1) * (2.0 * (t-2)) * (2.0 * (t-2));
 }
 
-static constexpr F64 
+static F64 
 EaseInQuart(F64 t)  {
   t *= t;
   return t * t;
 }
 
-static constexpr F64 
+static F64 
 EaseOutQuart(F64 t) {
   --t;
   t = t * t;
   return 1.0 - t * t;
 }
 
-static constexpr F64 
+static F64 
 EaseInOutQuart(F64 t)  {
   if (t < 0.5) {
     t *= t;
@@ -747,20 +747,20 @@ EaseInOutQuart(F64 t)  {
   }
 }
 
-static constexpr F64
+static F64
 EaseInQuint(F64 t)  {
   F64 t2 = t * t;
   return t * t2 * t2;
 }
 
-static constexpr F64
+static F64
 EaseOutQuint(F64 t)  {
   --t;
   F64 t2 = t * t;
   return 1.0 +t * t2 * t2;
 }
 
-static constexpr F64
+static F64
 EaseInOutQuint(F64 t)  {
   F64 t2;
   if (t < 0.5) {
@@ -776,17 +776,17 @@ EaseInOutQuint(F64 t)  {
 
 
 
-static constexpr F64 
+static F64 
 EaseInCirc(F64 t)  {
   return 1.0 -Sqrt(1.0 -t);
 }
 
-static constexpr F64 
+static F64 
 EaseOutCirc(F64 t)  {
   return Sqrt(t);
 }
 
-static constexpr F64 
+static F64 
 EaseInOutCirc(F64 t)  {
   if (t < 0.5) {
     return (1.0 -Sqrt(1.0 -2.0 * t)) * 0.5;
@@ -796,18 +796,18 @@ EaseInOutCirc(F64 t)  {
   }
 }
 
-static constexpr F64 
+static F64 
 EaseInBack(F64 t)  {
   return t * t * (2.7 * t - 1.7);
 }
 
-static constexpr F64 
+static F64 
 EaseOutBack(F64 t)  {
   --t;
   return 1.0 + t * t * (2.7 * t + 1.7);
 }
 
-static constexpr F64 
+static F64 
 EaseInOutBack(F64 t)  {
   if (t < 0.5) {
     return t * t * (7.0 * t - 2.5) * 2.0;
@@ -818,19 +818,19 @@ EaseInOutBack(F64 t)  {
   }
 }
 
-static constexpr F64 
+static F64 
 EaseInElastic(F64 t)  {
   F64 t2 = t * t;
   return t2 * t2 * Sin(t * pi_F64 * 4.5);
 }
 
-static constexpr F64 
+static F64 
 EaseOutElastic(F64 t)  {
   F64 t2 = (t - 1.0) * (t - 1.0);
   return 1.0 -t2 * t2 * Cos(t * pi_F64 * 4.5);
 }
 
-static constexpr F64 
+static F64 
 EaseInOutElastic(F64 t)  {
   F64 t2;
   if (t < 0.45) {
@@ -849,18 +849,18 @@ EaseInOutElastic(F64 t)  {
 
 
 // NOTE(Momo): These require power function. 
-static constexpr F64 
+static F64 
 EaseInBounce(F64 t)  {
   return Pow(2.0, 6.0 * (t - 1.0)) * Abs(Sin(t * pi_F64 * 3.5));
 }
 
 
-static constexpr F64 
+static F64 
 EaseOutBounce(F64 t) {
   return 1.0 -Pow(2.0, -6.0 * t) * Abs(Cos(t * pi_F64 * 3.5));
 }
 
-static constexpr F64 
+static F64 
 EaseInOutBounce(F64 t) {
   if (t < 0.5) {
     return 8.0 * Pow(2.0, 8.0 * (t - 1.0)) * Abs(Sin(t * pi_F64 * 7.0));
@@ -870,18 +870,18 @@ EaseInOutBounce(F64 t) {
   }
 }
 
-static constexpr F64
+static F64
 EaseInExpo(F64 t)  {
   return (Pow(2.0, 8.0 * t) - 1.0) / 255.0;
 }
 
 
-static constexpr F64 
+static F64 
 EaseOutExpo(F64 t)  {
   return t == 1.0 ? 1.0 : 1.0 -Pow(2.0, -10.0 * t);
 }
 
-static constexpr F64 
+static F64 
 EaseInOutExpo(F64 t)  {
   if (t < 0.5) {
     return (Pow(2.0, 16.0 * t) - 1.0) / 510.0;
