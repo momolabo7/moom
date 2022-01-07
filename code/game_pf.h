@@ -1,8 +1,6 @@
 // This file and game_gfx.h contain structs that need to be 
 // initialized by the OS and passed to the main Game_Update() 
 // function. 
-
-
 #ifndef GAME_PLATFORM_H
 #define GAME_PLATFORM_H
 
@@ -28,6 +26,12 @@ typedef struct {
 struct Input_Button{
   B32 before;
   B32 now;
+  
+  B32 is_poked();
+  B32 is_released();
+  B32 is_down();
+  B32 is_held();
+  
 };
 
 struct Input{
@@ -43,48 +47,49 @@ struct Input{
   V2U32 screen_mouse_pos;
   V2U32 render_mouse_pos;
   
+  void update();
 };
 
-static void 
-Input_Update(Input* in) {
-  for (U32 i = 0; i < ArrayCount(in->buttons); ++i) {
-    in->buttons[i].before = in->buttons[i].now;
+void 
+Input::update() {
+  for (U32 i = 0; i < ArrayCount(buttons); ++i) {
+    buttons[i].before = buttons[i].now;
   }
 }
 
 
 
 // before: 0, now: 1
-static inline B32 
-Input_IsPoked(Input_Button b) {
-  return !b.before && b.now;
+B32 
+Input_Button::is_poked() {
+  return !before && now;
 }
 
 // before: 1, now: 0
-static inline B32
-Input_IsReleased(Input_Button b) {
-  return b.before && !b.now;
+B32
+Input_Button::is_released() {
+  return before && !now;
 }
 
 
 // before: X, now: 1
-static inline B32
-Input_IsDown(Input_Button b) {
-  return b.now;
+B32
+Input_Button::is_down(){
+  return now;
 }
 
 // before: 1, now: 1
-static inline B32
-Input_IsHeld(Input_Button b) {
-  return b.before && b.now;
+B32
+Input_Button::is_held() {
+  return before && now;
 }
 
 //~ NOTE(Momo): Game API
 // Returns true if game is done
-typedef struct {
+struct Game_Info{
   U32 game_design_width;
   U32 game_design_height;
-} Game_Info;
+};
 
 typedef Game_Info Game_GetInfoFn();
 
@@ -93,10 +98,13 @@ typedef B32 Game_UpdateFn(PF* pf,
                           Gfx* gfx,
                           F32 dt);
 
-typedef struct {
+struct Game_API {
   Game_GetInfoFn* get_info;
   Game_UpdateFn* update;
   
-} Game_API;
+};
+
+
+
 
 #endif //GAME_PLATFORM_H

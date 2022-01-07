@@ -23,7 +23,7 @@ HSLF32_Create(F32 h, F32 s, F32 l) {
   return ret;     
 }
 
-static HSLF32 
+HSLF32 
 RGBF32_ToHSLF32(RGBF32 c) {
   Assert(c.r >= 0.f &&
          c.r <= 1.f &&

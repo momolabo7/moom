@@ -34,7 +34,7 @@ Game_Update(PF* pf, Input* input, Gfx* gfx, F32 dt) {
   
   
   
-  if (Input_IsPoked(input->button_up)) {
+  if (input->button_up.is_poked()) {
     pf->hot_reload();
   }
   

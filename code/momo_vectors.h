@@ -2,29 +2,30 @@
 #ifndef MOMO_VECTOR_H
 #define MOMO_VECTOR_H
 
-typedef union {
+
+union V2U32 {
 	struct { U32 x, y; };
 	struct { U32 w, h; };
 	U32 e[2];
-} V2U32;
+};
 
-typedef union {
+union V2F32 {
 	struct { F32 x, y; };
 	struct { F32 w, h; };
 	struct { F32 u, v; };
 	F32 e[2];
-} V2F32;
+};
 
-typedef union {
+union V3F32{
 	struct { F32 x, y, z; };
 	struct { F32 w, h, d; };
   F32 e[3];
-} V3F32;
+};
 
-typedef union {
+union V4F32 {
 	struct { F32 x, y, z, w; };
   F32 e[4];
-} V4F32;
+};
 
 
 static constexpr V2F32 Add(V2F32 lhs, V2F32 rhs);

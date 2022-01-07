@@ -7,7 +7,6 @@ Code quality
     Figure out if we care about const char* (SiStr). Maybe typedef it?
 
 Engine
-  Setup hot-reloading
   Figure out how game should tell GFX about its design resolution
   File io
 	Sound

@@ -333,7 +333,7 @@ WinMain(HINSTANCE instance,
       Win_global_state.is_hot_reloading = false;
     }
     
-    Input_Update(&input);
+    input.Update();
     //-NOTE(Momo): Process messages and input
     {
       MSG msg = {};
