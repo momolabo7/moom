@@ -321,8 +321,7 @@ WinMain(HINSTANCE instance,
       game_dll = LoadLibraryA(running_game_dll);
       if (game_dll) {
         game_api.update = (Game_UpdateFn*)GetProcAddress(game_dll, "Game_Update");
-        game_api.get_info = (Game_GetInfoFn*)GetProcAddress(game_dll, "Game_GetInfo");
-        if(!game_api.update || !game_api.get_info) {
+        if(!game_api.update) {
           FreeLibrary(game_dll);
           return 1;
         }          
@@ -333,7 +332,8 @@ WinMain(HINSTANCE instance,
       Win_global_state.is_hot_reloading = false;
     }
     
-    input.Update();
+    Update(&input);
+    
     //-NOTE(Momo): Process messages and input
     {
       MSG msg = {};

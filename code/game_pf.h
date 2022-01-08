@@ -23,83 +23,76 @@ typedef struct {
 // But that will probably require some insane enum
 // Or maybe we can put all these into Platform API?
 
-struct Input_Button{
+struct InputButton{
   B32 before;
   B32 now;
-  
-  B32 IsPoked();
-  B32 IsReleased();
-  B32 IsDown();
-  B32 IsHeld();
-  
 };
 
+static B32 IsPoked(InputButton) ;
+static B32 IsReleased(InputButton);
+static B32 IsDown(InputButton);
+static B32 IsHeld(InputButton);
+
 struct Input{
-  Input_Button buttons[4];
+  InputButton buttons[4];
   struct {
-    Input_Button button_up;
-    Input_Button button_down;
-    Input_Button button_left;
-    Input_Button button_right;
+    InputButton button_up;
+    InputButton button_down;
+    InputButton button_left;
+    InputButton button_right;
   };  
   
   V2F32 design_mouse_pos;
   V2U32 screen_mouse_pos;
   V2U32 render_mouse_pos;
   
-  void Update();
 };
 
-void 
-Input::Update() {
-  for (U32 i = 0; i < ArrayCount(buttons); ++i) {
-    buttons[i].before = buttons[i].now;
+static void Update(Input* input);
+
+
+//- Implementation
+static void Update(Input* input) {
+  for (U32 i = 0; i < ArrayCount(input->buttons); ++i) {
+    input->buttons[i].before = input->buttons[i].now;
   }
 }
 
 
 
 // before: 0, now: 1
-B32 
-Input_Button::IsPoked() {
-  return !before && now;
+static B32 
+IsPoked(InputButton b) {
+  return !b.before && b.now;
 }
 
 // before: 1, now: 0
-B32
-Input_Button::IsReleased() {
-  return before && !now;
+static B32
+IsReleased(InputButton b) {
+  return b.before && !b.now;
 }
 
 
 // before: X, now: 1
-B32
-Input_Button::IsDown(){
-  return now;
+static B32
+IsDown(InputButton b){
+  return b.now;
 }
 
 // before: 1, now: 1
-B32
-Input_Button::IsHeld() {
-  return before && now;
+static B32
+IsHeld(InputButton b) {
+  return b.before && b.now;
 }
 
 //~ NOTE(Momo): Game API
 // Returns true if game is done
-struct Game_Info{
-  U32 game_design_width;
-  U32 game_design_height;
-};
-
-typedef Game_Info Game_GetInfoFn();
-
 typedef B32 Game_UpdateFn(PF* pf,
                           Input* input,
                           Gfx* gfx,
                           F32 dt);
 
 struct Game_API {
-  Game_GetInfoFn* get_info;
   Game_UpdateFn* update;
   
 };

@@ -1,9 +1,8 @@
 
 static void
 Gfx_SetBasis(Gfx* gfx, M44 basis) {
-  Gfx_Cmd_SetBasis* data = Mailbox_Push(&gfx->commands, 
-                                        Gfx_Cmd_SetBasis, 
-                                        Gfx_CmdType_SetBasis);
+  auto* data = Push<Gfx_Cmd_SetBasis>(&gfx->commands, 
+                                      Gfx_CmdType_SetBasis);
   data->basis = basis;
 }
 
@@ -12,9 +11,8 @@ Gfx_SetOrthoCamera(Gfx* gfx,
                    V3F32 position,
                    Rect3F32 frustum)   
 {
-  Gfx_Cmd_SetBasis* data = Mailbox_Push(&gfx->commands, 
-                                        Gfx_Cmd_SetBasis, 
-                                        Gfx_CmdType_SetBasis);
+  auto* data = Push<Gfx_Cmd_SetBasis>(&gfx->commands, 
+                                      Gfx_CmdType_SetBasis);
   
   M44 p  = M44_Orthographic(frustum.min.x,  
                             frustum.max.x, 
@@ -30,9 +28,8 @@ Gfx_SetOrthoCamera(Gfx* gfx,
 
 static void
 Gfx_Clear(Gfx* gfx, RGBA colors) {
-  Gfx_Cmd_Clear* data = Mailbox_Push(&gfx->commands, 
-                                     Gfx_Cmd_Clear, 
-                                     Gfx_CmdType_Clear);
+  auto* data = Push<Gfx_Cmd_Clear>(&gfx->commands, 
+                                   Gfx_CmdType_Clear);
   
   data->colors = colors;
 }
@@ -45,9 +42,8 @@ Gfx_DrawSubSprite(Gfx* gfx,
                   Rect2F32 texture_uv)  
 
 {
-  Gfx_Cmd_DrawSubSprite* data = Mailbox_Push(&gfx->commands, 
-                                             Gfx_Cmd_DrawSubSprite, 
-                                             Gfx_CmdType_DrawSubSprite);
+  auto* data = Push<Gfx_Cmd_DrawSubSprite>(&gfx->commands, 
+                                           Gfx_CmdType_DrawSubSprite);
   
   data->colors = colors;
   data->transform = transform;
@@ -73,9 +69,8 @@ Gfx_DrawRect(Gfx* gfx,
              RGBA colors, 
              M44 transform) 
 {
-  Gfx_Cmd_DrawRect* data = Mailbox_Push(&gfx->commands, 
-                                        Gfx_Cmd_DrawRect, 
-                                        Gfx_CmdType_DrawRect);
+  auto* data = Push<Gfx_Cmd_DrawRect>(&gfx->commands, 
+                                      Gfx_CmdType_DrawRect);
   
   data->colors = colors;
   data->transform = transform;
@@ -222,9 +217,8 @@ Gfx_SetTexture(Gfx* gfx,
   // so that the renderer can optimize the copying...?
   UMI texture_size = width * height * 4;
   
-  Gfx_Cmd_SetTexture* data = Mailbox_Push(&gfx->commands, 
-                                          Gfx_Cmd_SetTexture,
-                                          Gfx_CmdType_SetTexture);
+  auto* data = Push<Gfx_Cmd_SetTexture>(&gfx->commands, 
+                                        Gfx_CmdType_SetTexture);
   
   
   
@@ -232,11 +226,11 @@ Gfx_SetTexture(Gfx* gfx,
   data->height = height;
   data->index = index;
   
-  data->pixels = PushData(&gfx->commands, texture_size, 16);
+  data->pixels = PushExtraData(&gfx->commands, texture_size, 16);
   Bin_Copy(data->pixels, pixels, texture_size);
 }
 
 static void 
 Gfx_ClearTextures(Gfx* gfx) {
-  Mailbox_Push(&gfx->commands, Gfx_Cmd_ClearTextures, Gfx_CmdType_ClearTextures);
+  Push<Gfx_Cmd_ClearTextures>(&gfx->commands, Gfx_CmdType_ClearTextures);
 }

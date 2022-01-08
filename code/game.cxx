@@ -8,17 +8,10 @@ static F32 tmp_delta = 0.f;
 static B32 tmp_increase = true;
 static F32 tmp_rot = 0.f;
 static B32 first_time = false;
+
+
 static void* game_memory = nullptr;
 
-// TODO(Momo): this should be a function callback to 
-// Platform API
-exported Game_Info
-Game_GetInfo() {
-  Game_Info ret;
-  ret.game_design_width = 1600;
-  ret.game_design_height = 900;
-  return ret;
-}
 
 
 // TODO(Momo): Game should probably return a status.
@@ -34,7 +27,7 @@ Game_Update(PF* pf, Input* input, Gfx* gfx, F32 dt) {
   
   
   
-  if (input->button_up.IsPoked()) {
+  if (IsPoked(input->button_up)) {
     pf->hot_reload();
   }
   

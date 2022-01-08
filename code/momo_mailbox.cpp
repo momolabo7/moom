@@ -16,7 +16,7 @@ Clear(Mailbox* m) {
 	m->entry_count = 0;
 	
 	UMI imem = PtrToInt(m->memory);
-	UMI adjusted_entry_start = AlignDownPow2(imem + m->memory_size, 16) - imem;
+	UMI adjusted_entry_start = AlignDownPow2(imem + m->memory_size, 4) - imem;
 	
 	m->entry_start = m->entry_pos = adjusted_entry_start;
 	
@@ -35,11 +35,11 @@ GetEntry(Mailbox* m, UMI index) {
 
 
 static U8*
-PushEntryAndData(Mailbox* m, UMI size, U32 id, UMI align) 
+PushBlock(Mailbox* m, UMI size, U32 id, UMI align) 
 {
 	UMI imem = PtrToInt(m->memory);
 	
-	UMI adjusted_data_pos = AlignUpPow2(imem + m->data_pos, 4) - imem;
+	UMI adjusted_data_pos = AlignUpPow2(imem + m->data_pos, align) - imem;
 	UMI adjusted_entry_pos = AlignDownPow2(imem + m->entry_pos, 4) - imem; 
 	
 	Assert(adjusted_data_pos + size + sizeof(MailboxEntry) < adjusted_entry_pos);
@@ -59,7 +59,7 @@ PushEntryAndData(Mailbox* m, UMI size, U32 id, UMI align)
 
 
 static U8* 
-PushData(Mailbox* m, UMI size, UMI align)
+PushExtraData(Mailbox* m, UMI size, UMI align)
 {
   UMI imem = PtrToInt(m->memory);
   UMI adjusted_data_pos = AlignUpPow2(imem + m->data_pos, align) - imem;
@@ -73,6 +73,6 @@ PushData(Mailbox* m, UMI size, UMI align)
 }
 
 template<class T> static T*	  
-PushEntryAndStruct(Mailbox* m, U32 id, UMI align) {
-  return PushEntryAndData(m, sizeof(T), id, align);
+Push(Mailbox* m, U32 id, UMI align) {
+  return (T*)PushBlock(m, sizeof(T), id, align);
 }  
