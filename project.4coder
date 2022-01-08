@@ -14,11 +14,10 @@ patterns = {
 "*.txt",
 };
 blacklist_patterns = {
-"stb*",
-"puff.c"
+	".*",
 };
 load_paths_custom = {
- {"."},
+ {"code"},
 };
 load_paths = {
  { load_paths_custom, .os = "win"  },

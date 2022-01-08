@@ -5,8 +5,6 @@
 #define EvalD(s) printf(#s " = %d\n", s);
 #define EvalF(s) printf(#s " = %f\n", s);
 
-
-
 int main() {
   
   

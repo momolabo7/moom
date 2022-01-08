@@ -159,7 +159,7 @@ AlignDownPow2(T value, U align) {
   return value & ~(align-1); 
 }
 
-template<class T, class U> T
+template<class T, class U> static T
 AlignUpPow2(T value, U align) { 
   return (value + (align-1)) & ~(align-1); 
 }

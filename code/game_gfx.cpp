@@ -1,6 +1,6 @@
 
 static void
-Gfx_SetBasis(Gfx* gfx, M44F32 basis) {
+Gfx_SetBasis(Gfx* gfx, M44 basis) {
   Gfx_Cmd_SetBasis* data = Mailbox_Push(&gfx->commands, 
                                         Gfx_Cmd_SetBasis, 
                                         Gfx_CmdType_SetBasis);
@@ -16,20 +16,20 @@ Gfx_SetOrthoCamera(Gfx* gfx,
                                         Gfx_Cmd_SetBasis, 
                                         Gfx_CmdType_SetBasis);
   
-  M44F32 p  = M44F32_Orthographic(frustum.min.x,  
-                                  frustum.max.x, 
-                                  frustum.min.y, 
-                                  frustum.max.y,
-                                  frustum.min.z, 
-                                  frustum.max.z);
+  M44 p  = M44_Orthographic(frustum.min.x,  
+                            frustum.max.x, 
+                            frustum.min.y, 
+                            frustum.max.y,
+                            frustum.min.z, 
+                            frustum.max.z);
   
-  M44F32 v = M44F32_Translation(-position.x, -position.y, -position.z);
+  M44 v = M44_Translation(-position.x, -position.y, -position.z);
   data->basis = p*v;
   
 }
 
 static void
-Gfx_Clear(Gfx* gfx, RGBAF32 colors) {
+Gfx_Clear(Gfx* gfx, RGBA colors) {
   Gfx_Cmd_Clear* data = Mailbox_Push(&gfx->commands, 
                                      Gfx_Cmd_Clear, 
                                      Gfx_CmdType_Clear);
@@ -39,8 +39,8 @@ Gfx_Clear(Gfx* gfx, RGBAF32 colors) {
 
 static void
 Gfx_DrawSubSprite(Gfx* gfx, 
-                  RGBAF32 colors, 
-                  M44F32 transform, 
+                  RGBA colors, 
+                  M44 transform, 
                   UMI texture_index,
                   Rect2F32 texture_uv)  
 
@@ -57,8 +57,8 @@ Gfx_DrawSubSprite(Gfx* gfx,
 
 static void
 Gfx_DrawSprite(Gfx* gfx, 
-               RGBAF32 colors, 
-               M44F32 transform, 
+               RGBA colors, 
+               M44 transform, 
                UMI texture_index)  
 
 {
@@ -70,8 +70,8 @@ Gfx_DrawSprite(Gfx* gfx,
 
 static void
 Gfx_DrawRect(Gfx* gfx, 
-             RGBAF32 colors, 
-             M44F32 transform) 
+             RGBA colors, 
+             M44 transform) 
 {
   Gfx_Cmd_DrawRect* data = Mailbox_Push(&gfx->commands, 
                                         Gfx_Cmd_DrawRect, 
@@ -83,9 +83,9 @@ Gfx_DrawRect(Gfx* gfx,
 
 static void 
 Gfx_DrawLine(Gfx* gfx, 
-             Line2F32 line,
+             Line2 line,
              F32 thickness,
-             RGBAF32 colors,
+             RGBA colors,
              F32 pos_z) 
 {
   // NOTE(Momo): Min.Y needs to be lower than Max.y
@@ -101,9 +101,9 @@ Gfx_DrawLine(Gfx* gfx,
   F32 angle = AngleBetween(line_vector, x_axis);
   
   // TODO(Momo): Should really precompute this
-  M44F32 T = M44F32_Translation(line_mid.x, line_mid.y, pos_z);
-  M44F32 R = M44F32_RotationZ(angle);
-  M44F32 S = M44F32_Scale(line_length, thickness, 1.f) ;
+  M44 T = M44_Translation(line_mid.x, line_mid.y, pos_z);
+  M44 R = M44_RotationZ(angle);
+  M44 S = M44_Scale(line_length, thickness, 1.f) ;
   
   Gfx_DrawRect(gfx, 
                colors, 
@@ -112,10 +112,10 @@ Gfx_DrawLine(Gfx* gfx,
 
 static void
 Gfx_DrawCircle(Gfx* gfx,
-               Circ2F32 circle,
+               Circ2 circle,
                F32 thickness, 
                U32 line_count,
-               RGBAF32 color,
+               RGBA color,
                F32 pos_z) 
 {
   // NOTE(Momo): Essentially a bunch of lines
@@ -128,7 +128,7 @@ Gfx_DrawCircle(Gfx* gfx,
   for (U32 i = 0; i < line_count; ++i) {
     V2F32 line_pt_1 = Add(pt1, circle.center);
     V2F32 line_pt_2 = Add(pt2, circle.center);
-    Line2F32 line = { line_pt_1, line_pt_2 };
+    Line2 line = { line_pt_1, line_pt_2 };
     Gfx_DrawLine(gfx, 
                  line,
                  thickness,
@@ -145,12 +145,12 @@ static void
 Gfx_DrawAABB(Gfx* gfx,
              Rect2F32 rect,
              F32 thickness,
-             RGBAF32 colors,
+             RGBA colors,
              F32 pos_z) 
 {
   //Bottom
   {
-    Line2F32 line;
+    Line2 line;
     line.min.x = rect.min.x;
     line.min.y = rect.min.y;
     line.max.x = rect.max.x;
@@ -165,7 +165,7 @@ Gfx_DrawAABB(Gfx* gfx,
   
   // Left
   {
-    Line2F32 line;
+    Line2 line;
     line.min.x = rect.min.x;
     line.min.y = rect.min.y;
     line.max.x = rect.min.x;
@@ -180,7 +180,7 @@ Gfx_DrawAABB(Gfx* gfx,
   
   //Top
   {
-    Line2F32 line;
+    Line2 line;
     line.min.x = rect.min.x;
     line.min.y = rect.max.y;
     line.max.x = rect.max.x;
@@ -196,7 +196,7 @@ Gfx_DrawAABB(Gfx* gfx,
   
   //Right 
   {
-    Line2F32 line;
+    Line2 line;
     line.min.x = rect.max.x;
     line.min.y = rect.min.y;
     line.max.x = rect.max.x;

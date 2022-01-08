@@ -1,0 +1,6 @@
+[
+  { "directory": "./code",
+    "command": "clang++ win.cxx",
+    "file": "win.cxx" '
+  }
+

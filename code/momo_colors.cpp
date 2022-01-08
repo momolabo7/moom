@@ -1,10 +1,6 @@
-
-
-
-
-static RGBAF32 
-RGBAF32_Create(F32 r, F32 g, F32 b, F32 a){
-	RGBAF32 ret;
+static RGBA 
+CreateRGBA(F32 r, F32 g, F32 b, F32 a){
+	RGBA ret;
 	ret.r = r;
 	ret.g = g;
 	ret.b = b;
@@ -13,9 +9,9 @@ RGBAF32_Create(F32 r, F32 g, F32 b, F32 a){
 	return ret;
 }
 
-static HSLF32
-HSLF32_Create(F32 h, F32 s, F32 l) {
-  HSLF32 ret;
+static HSL
+CreateHSL(F32 h, F32 s, F32 l) {
+  HSL ret;
   ret.h = h;
   ret.s = s;
   ret.l = l;
@@ -23,15 +19,15 @@ HSLF32_Create(F32 h, F32 s, F32 l) {
   return ret;     
 }
 
-HSLF32 
-RGBF32_ToHSLF32(RGBF32 c) {
+HSL 
+ToHSL(RGB c) {
   Assert(c.r >= 0.f &&
          c.r <= 1.f &&
          c.g >= 0.f &&
          c.g <= 1.f &&
          c.b >= 0.f &&
          c.b <= 1.f);
-  HSLF32 ret;
+  HSL ret;
   F32 max = Max(Max(c.r, c.g), c.b);
   F32 min = Min(Min(c.r, c.g), c.b);
   
@@ -80,7 +76,7 @@ RGBF32_ToHSLF32(RGBF32 c) {
 }
 
 static F32 
-HSLF32__HueToColor(F32 p, F32 q, F32 t) {
+_HueToColor(F32 p, F32 q, F32 t) {
   
   if (t < 0) 
     t += 1.f;
@@ -99,24 +95,24 @@ HSLF32__HueToColor(F32 p, F32 q, F32 t) {
 
 
 
-static RGBF32 
-HSLF32_ToRGBF32(HSLF32 c) {
+static RGB 
+ToRGB(HSL c) {
   Assert(c.h >= 0.f &&
          c.h <= 360.f &&
          c.s >= 0.f &&
          c.s <= 1.f &&
          c.l >= 0.f &&
          c.l <= 1.f);
-  RGBF32 ret;
+  RGB ret;
   if(Match(c.s, 0.f)) {
     ret.r = ret.g = ret.b = c.l; // achromatic
   }
   else {
     F32 q = c.l < 0.5f ? c.l * (1 + c.s) : c.l + c.s - c.l * c.s;
     F32 p = 2.f * c.l - q;
-    ret.r = HSLF32__HueToColor(p, q, c.h + 1.f/3.f);
-    ret.g = HSLF32__HueToColor(p, q, c.h);
-    ret.b = HSLF32__HueToColor(p, q, c.h - 1.f/3.f);
+    ret.r = _HueToColor(p, q, c.h + 1.f/3.f);
+    ret.g = _HueToColor(p, q, c.h);
+    ret.b = _HueToColor(p, q, c.h - 1.f/3.f);
   }
   
   

@@ -168,7 +168,7 @@ PNG__Huffman_Compute(PNG__Huffman* h,
   
   // NOTE(Momo): Each code corresponds to a symbol
   h->symbol_count = codes_size;
-  h->symbols = Arena_PushArray(arena, U16, codes_size);
+  h->symbols = PushArray<U16>(arena, codes_size);
   Bin_Zero(h->symbols, h->symbol_count * sizeof(U16));
   
   
@@ -176,7 +176,7 @@ PNG__Huffman_Compute(PNG__Huffman* h,
   // TODO(Momo): We can optimize this a bit by always treating
   // length[0] as length 1.
   h->length_count = max_lengths;
-  h->lengths = Arena_PushArray(arena, U16, max_lengths + 1);
+  h->lengths = PushArray<U16>(arena, max_lengths + 1);
   Bin_Zero(h->lengths, h->length_count * sizeof(U16));
   
   // 1. Count the number of codes for each code length
@@ -186,8 +186,10 @@ PNG__Huffman_Compute(PNG__Huffman* h,
   }
   
   // 2. Numerical value of smallest code for each code length
-  Arena_Marker temp_mark = Arena_Mark(arena);
-  U16* len_offset_table = Arena_PushArray(arena, U16, max_lengths);
+  Arena_Marker temp_mark = Mark(arena);
+  defer { Revert(temp_mark); };
+  
+  U16* len_offset_table = PushArray<U16>(arena, max_lengths);
   Bin_Zero(len_offset_table, max_lengths * sizeof(U16));
   
   for (U32 len = 1; len < max_lengths-1; ++len) {
@@ -204,7 +206,6 @@ PNG__Huffman_Compute(PNG__Huffman* h,
     }
   }
   
-  Arena_Revert(&temp_mark);
   
 }
 
@@ -231,7 +232,8 @@ PNG__Deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
   
   U8 BFINAL = 0;
   while(BFINAL == 0){
-    Arena_Marker scratch = Arena_Mark(arena);
+    Arena_Marker scratch = Mark(arena);
+    defer{ Revert(scratch); };
     
     BFINAL = (U8)Stream_ConsumeBits(src_stream, 1);
     U16 BTYPE = (U8)Stream_ConsumeBits(src_stream, 2);
@@ -330,7 +332,7 @@ PNG__Deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
                                7);
           
           
-          U16* lit_dist_codes = Arena_PushArray(scratch.arena, U16, HDIST + HLIT);
+          U16* lit_dist_codes = PushArray<U16>(scratch.arena, HDIST + HLIT);
           
           // NOTE(Momo): Decode
           // Loop until end of block code recognize
@@ -429,7 +431,6 @@ PNG__Deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
         return false;
       }
     }
-    Arena_Revert(&scratch);
   }
   return true;
 }
@@ -727,14 +728,14 @@ PNG__Process_IHDR(PNG__Context* c) {
   c->bit_depth = IHDR->bit_depth;
   
   // NOTE(Momo): For reserving memory for image
-  U8* image_stream_memory = Arena_PushArray(c->arena, U8, PNG__GetImageSize(c));
+  U8* image_stream_memory = PushArray<U8>(c->arena, PNG__GetImageSize(c));
   c->image_stream = Stream_Create(image_stream_memory, PNG__GetImageSize(c));
   
   // NOTE(Momo): Allow space for unfiltered image. 
   // One extra byte per row for filter 'type'
   
   UMI unfiltered_size = c->image_width * c->image_height *  c->image_channels + c->image_height;
-  U8* unfiltered_image_stream_memory = Arena_PushArray(c->arena, U8, unfiltered_size);
+  U8* unfiltered_image_stream_memory = PushArray<U8>(c->arena, unfiltered_size);
   c->unfiltered_image_stream = 
     Stream_Create(unfiltered_image_stream_memory, unfiltered_size);
   return true;
@@ -869,13 +870,12 @@ PNG_Write(Image image, Arena* arena) {
                                         sizeof(PNG__IHDR) + 
                                         idat_size * 1);
   
-  // TODO(Momo): 
-  
+  // TODO(Momo): figure this out?
 #if 0  
   U8* stream_memory = (U8*)Arena_PushBlock(arena, expected_memory_required);
   Stream stream = Stream_Create(stream_memory, expected_memory_required);
 #else
-  U8* stream_memory = Arena_PushArray(arena, U8, MB(2));
+  U8* stream_memory = PushArray<U8>(arena, MB(2));
   Stream stream = Stream_Create(stream_memory, MB(2));
 #endif
   

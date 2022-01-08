@@ -215,7 +215,7 @@ static constexpr F32 Ratio(F32 v, F32 min, F32 max);
 static constexpr F64 Ratio(F64 v, F64 min, F64 max);
 
 template<class T, class U> static constexpr T AlignDownPow2(T value, U align);
-template<class T, class U> T AlignUpPow2(T value, U align);
+template<class T, class U> static T AlignUpPow2(T value, U align);
 template<class T> static constexpr B32 IsPow2(T value);
 template<class T> static constexpr void Swap(T& lhs, T& rhs); 
 
@@ -241,7 +241,7 @@ template<class T> static constexpr void Swap(T& lhs, T& rhs);
 static constexpr S8  S8_min  = -0x80;
 static constexpr S16 S16_min = -0x8000; 
 static constexpr S32 S32_min = -0x80000000ll;
-static constexpr S64 S64_min = -0x8000000000000000ll;
+static constexpr S64 S64_min = -0x8000000000000001ll - 1;
 
 static constexpr S8  S8_max  = 0x7F;
 static constexpr S16 S16_max = 0x7FFF; 

@@ -1,5 +1,5 @@
 static Arena 
-Arena_Create(void* mem, UMI cap) {
+CreateArena(void* mem, UMI cap) {
 	Arena ret;
   ret.memory = (U8*)mem;
   ret.pos = 0; 
@@ -9,18 +9,18 @@ Arena_Create(void* mem, UMI cap) {
 
 
 static void
-Arena_Clear(Arena* arena) {
+Clear(Arena* arena) {
   arena->pos = 0;
 }
 
 
 static UMI
-Arena_Remain(Arena* arena) {
+Remaining(Arena* arena) {
   return arena->cap - arena->pos;
 }
 
-static void* 
-Arena_PushBlock(Arena* arena, UMI size, UMI align) {
+static U8* 
+PushBlock(Arena* arena, UMI size, UMI align) {
   Assert(size);
 	
 	UMI imem = PtrToInt(arena->memory);
@@ -28,7 +28,7 @@ Arena_PushBlock(Arena* arena, UMI size, UMI align) {
 	
 	Assert(adjusted_pos + size < imem + arena->cap);
 	
-	void* ret = IntToPtr(imem + adjusted_pos);
+	U8* ret = IntToPtr(imem + adjusted_pos);
 	arena->pos = adjusted_pos + size;
 	
 	return ret;
@@ -36,13 +36,22 @@ Arena_PushBlock(Arena* arena, UMI size, UMI align) {
 }
 
 static Arena
-Arena_Partition(Arena* from_arena, UMI size) {	
-	void* memory = Arena_PushBlock(from_arena, size, 16);
-  return Arena_Create(memory, size);
+Partition(Arena* from_arena, UMI size) {	
+	void* memory = PushBlock(from_arena, size, 16);
+  return CreateArena(memory, size);
 }
 
+template<class T> static T*
+PushStruct(Arena* arena, UMI align) {
+  return (T*)PushBlock(arena, sizeof(T), align);
+}
 
+template<class T> static T*
+PushArray(Arena* arena, UMI num, UMI align) {
+  return (T*)PushBlock(arena, sizeof(T)*num, align);
+}
 
+/*
 static inline void* 
 Arena_BootBlock(UMI struct_size,
                 UMI offset_to_arena,
@@ -60,10 +69,11 @@ Arena_BootBlock(UMI struct_size,
 	
 	return IntToPtr(imem);
 }
+//*/
 
 static Arena_Marker
-Arena_Mark(Arena* arena) {
-  Arena_Marker ret = {0};
+Mark(Arena* arena) {
+  Arena_Marker ret;
   ret.arena = arena;
   ret.old_pos = arena->pos;
   
@@ -71,7 +81,7 @@ Arena_Mark(Arena* arena) {
 }
 
 static void
-Arena_Revert(Arena_Marker* mark) {
-  mark->arena->pos = mark->old_pos;
+Revert(Arena_Marker mark) {
+  mark.arena->pos = mark.old_pos;
 }
 

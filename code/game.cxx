@@ -34,12 +34,12 @@ Game_Update(PF* pf, Input* input, Gfx* gfx, F32 dt) {
   
   
   
-  if (input->button_up.is_poked()) {
+  if (input->button_up.IsPoked()) {
     pf->hot_reload();
   }
   
   {
-    RGBAF32 colors;
+    RGBA colors;
     colors.r = colors.g = colors.b  = colors.a = 0.3f;
     Gfx_Clear(gfx, colors);
   }
@@ -70,13 +70,13 @@ Game_Update(PF* pf, Input* input, Gfx* gfx, F32 dt) {
       tmp_increase = true;
     }
     
-    RGBAF32 colors = RGBAF32_Create(0.f, 0.f, 0.f, 1.f);
-    HSLF32 hsl = HSLF32_Create(tmp_delta, 1.f, 0.5f);
-    colors.rgb = HSLF32_ToRGBF32(hsl);
+    RGBA colors = CreateRGBA(0.f, 0.f, 0.f, 1.f);
+    HSL hsl = CreateHSL(tmp_delta, 1.f, 0.5f);
+    colors.rgb = ToRGB(hsl);
     
-    M44F32 scale = M44F32_Scale(600.f, 600.f, 10.f);
-    M44F32 rot = M44F32_RotationZ(tmp_rot += (dt));
-    M44F32 trans = M44F32_Translation(800.f, 450.f, 300.f);
+    M44 scale = M44_Scale(600.f, 600.f, 10.f);
+    M44 rot = M44_RotationZ(tmp_rot += (dt));
+    M44 trans = M44_Translation(800.f, 450.f, 300.f);
     Gfx_DrawSprite(gfx, colors, trans*scale*rot, 0);
   }
   

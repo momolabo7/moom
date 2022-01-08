@@ -55,23 +55,23 @@ typedef enum {
 
 
 typedef struct {
-  RGBAF32 colors;
+  RGBA colors;
 } Gfx_Cmd_Clear;
 
 typedef struct {
-  M44F32 basis;
+  M44 basis;
 } Gfx_Cmd_SetBasis;
 
 typedef struct {
   UMI texture_index;
-  RGBAF32 colors;
-  M44F32 transform;
+  RGBA colors;
+  M44 transform;
   Rect2F32 texture_uv; 
 } Gfx_Cmd_DrawSubSprite;
 
 typedef struct {
-  RGBAF32 colors;
-  M44F32 transform;
+  RGBA colors;
+  M44 transform;
 } Gfx_Cmd_DrawRect;
 
 
@@ -86,37 +86,37 @@ typedef struct {
 } Gfx_Cmd_ClearTextures;
 
 // NOTE(Momo): Function declaraions
-static void Gfx_SetBasis(Gfx* g, M44F32 basis);
+static void Gfx_SetBasis(Gfx* g, M44 basis);
 static void Gfx_SetOrthoCamera(Gfx* g, V3F32 pos, Rect3F32 frustum);
 static void Gfx_DrawSprite(Gfx* gfx, 
-                           RGBAF32 colors, 
-                           M44F32 transform, 
+                           RGBA colors, 
+                           M44 transform, 
                            Gfx_Texture texture,
                            Rect2F32 texture_uv);
 static void Gfx_DrawSubSprite(Gfx* gfx, 
-                              RGBAF32 colors, 
-                              M44F32 transform, 
+                              RGBA colors, 
+                              M44 transform, 
                               Gfx_Texture texture,
                               Rect2F32 texture_uv);
 
-static void Gfx_DrawRect(Gfx* gfx, RGBAF32 colors, M44F32 transform);
-static void Gfx_Clear(Gfx* gfx, RGBAF32 colors);
+static void Gfx_DrawRect(Gfx* gfx, RGBA colors, M44 transform);
+static void Gfx_Clear(Gfx* gfx, RGBA colors);
 static void Gfx_DrawLine(Gfx* gfx, 
-                         Line2F32 line,
+                         Line2 line,
                          F32 thickness,
-                         RGBAF32 colors,
+                         RGBA colors,
                          F32 pos_z);
 static void Gfx_DrawCircle(Gfx* gfx,
-                           Circ2F32 circle,
+                           Circ2 circle,
                            F32 thickness, 
                            U32 line_count,
-                           RGBAF32 color,
+                           RGBA color,
                            F32 pos_z);
 
 static void Gfx_DrawAABB(Gfx* gfx,
                          Rect2F32 rect,
                          F32 thickness,
-                         RGBAF32 colors,
+                         RGBA colors,
                          F32 pos_z);
 
 static void Gfx_SetTexture(Gfx* gfx,

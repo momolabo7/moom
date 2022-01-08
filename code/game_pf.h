@@ -27,10 +27,10 @@ struct Input_Button{
   B32 before;
   B32 now;
   
-  B32 is_poked();
-  B32 is_released();
-  B32 is_down();
-  B32 is_held();
+  B32 IsPoked();
+  B32 IsReleased();
+  B32 IsDown();
+  B32 IsHeld();
   
 };
 
@@ -47,11 +47,11 @@ struct Input{
   V2U32 screen_mouse_pos;
   V2U32 render_mouse_pos;
   
-  void update();
+  void Update();
 };
 
 void 
-Input::update() {
+Input::Update() {
   for (U32 i = 0; i < ArrayCount(buttons); ++i) {
     buttons[i].before = buttons[i].now;
   }
@@ -61,26 +61,26 @@ Input::update() {
 
 // before: 0, now: 1
 B32 
-Input_Button::is_poked() {
+Input_Button::IsPoked() {
   return !before && now;
 }
 
 // before: 1, now: 0
 B32
-Input_Button::is_released() {
+Input_Button::IsReleased() {
   return before && !now;
 }
 
 
 // before: X, now: 1
 B32
-Input_Button::is_down(){
+Input_Button::IsDown(){
   return now;
 }
 
 // before: 1, now: 1
 B32
-Input_Button::is_held() {
+Input_Button::IsHeld() {
   return before && now;
 }
 

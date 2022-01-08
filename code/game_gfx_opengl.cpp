@@ -104,8 +104,8 @@ Opengl__AlignViewport(Opengl* ogl,
   U32 x, y, w, h;
   x = region.min.x;
   y = region.min.y;
-  w = Rect_Width(region);
-  h = Rect_Height(region);
+  w = Width(region);
+  h = Height(region);
   
   ogl->pf.glScissor(0, 0, render_wh.w, render_wh.h);
   ogl->pf.glViewport(0, 0, render_wh.w, render_wh.h);
@@ -281,7 +281,7 @@ Opengl_Init(Opengl* ogl,
                                GL_DYNAMIC_STORAGE_BIT);
   
   ogl->pf.glNamedBufferStorage(ogl->buffers[Opengl__VBO_Transform], 
-                               sizeof(M44F32) * Opengl__max_entities, 
+                               sizeof(M44) * Opengl__max_entities, 
                                nullptr, 
                                GL_DYNAMIC_STORAGE_BIT);
   
@@ -310,7 +310,7 @@ Opengl_Init(Opengl* ogl,
                                     Opengl__VAO_Binding_Transform, 
                                     ogl->buffers[Opengl__VBO_Transform], 
                                     0, 
-                                    sizeof(M44F32));
+                                    sizeof(M44));
   
   // NOTE(Momo): Setup Attributes
   // aModelVtx
@@ -509,7 +509,7 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
         last_drawn_instance_index += instances_to_draw;
         instances_to_draw = 0;
         
-        M44F32 result = Transpose(data->basis);
+        M44 result = Transpose(data->basis);
         GLint uProjectionLoc = ogl->pf.glGetUniformLocation(ogl->shader,
                                                             "uProjection");
         
@@ -559,10 +559,10 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
                                      &Opengl__quad_uv);
         
         // NOTE(Momo): Transpose; game is row-major
-        M44F32 transform = Transpose(data->transform);
+        M44 transform = Transpose(data->transform);
         ogl->pf.glNamedBufferSubData(ogl->buffers[Opengl__VBO_Transform], 
-                                     current_instance_index* sizeof(M44F32), 
-                                     sizeof(M44F32), 
+                                     current_instance_index* sizeof(M44), 
+                                     sizeof(M44), 
                                      &transform);
         
         // NOTE(Momo): Update Bookkeeping
@@ -607,10 +607,10 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
                                      &texture_uv_in_vertices);
         
         // NOTE(Momo): Transpose; game is row-major
-        M44F32 transform = Transpose(data->transform);
+        M44 transform = Transpose(data->transform);
         ogl->pf.glNamedBufferSubData(ogl->buffers[Opengl__VBO_Transform], 
-                                     current_instance_index* sizeof(M44F32), 
-                                     sizeof(M44F32), 
+                                     current_instance_index* sizeof(M44), 
+                                     sizeof(M44), 
                                      &transform);
         
         // NOTE(Momo): Update Bookkeeping
