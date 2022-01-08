@@ -10,8 +10,8 @@
 // and assume that users can actually store type info in their data?
 typedef struct {
   U32 id; // type id from user
-  void* data;
-} Mailbox_Entry;
+  U8* data;
+} MailboxEntry;
 
 typedef struct {
 	U8* memory;
@@ -22,14 +22,14 @@ typedef struct {
 	UMI entry_count;
 } Mailbox;
 
-static Mailbox          Mailbox_Create(void* memory, UMI size);
-static void             Mailbox_Clear(Mailbox* m);
-static Mailbox_Entry*   Mailbox_Get(Mailbox *m, UMI index);
-static void*            Mailbox_PushBlock(Mailbox* m, UMI size, UMI align, U32 id);
-static void*			Mailbox_PushExtraData(Mailbox* m, UMI size, UMI align);
+static Mailbox               CreateMailbox(U8* memory, UMI size);
+static void                  Clear(Mailbox* m);
+static MailboxEntry*         GetEntry(Mailbox *m, UMI index);
+static U8*                   PushEntryAndData(Mailbox* m, UMI size, U32 id, UMI align = 4);
+static U8*  				         PushData(Mailbox* m, UMI size, UMI align = 4);
+template<class T> static T*	PushEntryAndStruct(Mailbox* m, U32 id, UMI align = 4);
 
-
-#define Mailbox_Push(m, type, id) (type*)Mailbox_PushBlock(m, sizeof(type), 4, id)
+#define Mailbox_Push(m, type, id) (type*)PushEntryAndData(m, sizeof(type), 4, id)
 
 #include "momo_mailbox.cpp"
 

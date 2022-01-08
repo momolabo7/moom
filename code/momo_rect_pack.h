@@ -49,14 +49,16 @@ typedef struct RP_Node {
 // 
 // TODO(Momo): Yeah, we probably need to figure out a way
 // to make the API look nicer? Maybe remove sort_entries first?
+// Maybe provide a context to use?
+// Wait till I do asset system
 
-static void RP_Pack(RP_Rect* rects, 
-                    RP_Node* nodes,
-                    UMI rect_count, 
-                    UMI padding,
-                    UMI total_width,
-                    UMI total_height,
-                    RP_SortType sort_type);
+static void PackRects(RP_Rect* rects, 
+                      RP_Node* nodes,
+                      UMI rect_count, 
+                      UMI padding,
+                      UMI total_width,
+                      UMI total_height,
+                      RP_SortType sort_type);
 
 
 #include "momo_rect_pack.cpp"

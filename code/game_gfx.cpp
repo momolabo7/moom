@@ -90,7 +90,7 @@ Gfx_DrawLine(Gfx* gfx,
 {
   // NOTE(Momo): Min.Y needs to be lower than Max.y
   if (line.min.y > line.max.y) {
-    Swap(line.min.x, line.max.x);
+    Swap(&line.min.x, &line.max.x);
   }
   
   V2F32 line_vector = line.max - line.min;
@@ -232,7 +232,7 @@ Gfx_SetTexture(Gfx* gfx,
   data->height = height;
   data->index = index;
   
-  data->pixels = (U8*)Mailbox_PushExtraData(&gfx->commands, texture_size, 16);
+  data->pixels = PushData(&gfx->commands, texture_size, 16);
   Bin_Copy(data->pixels, pixels, texture_size);
 }
 

@@ -13,10 +13,10 @@ WAV_LoadFromMemory(void* memory,
   
   WAV ret = {0};
   
-  Stream stream = Stream_Create((U8*)memory, memory_size);
+  Stream stream = CreateStream((U8*)memory, memory_size);
   
   // NOTE(Momo): Load Riff Chunk
-  WAV_Riff_Chunk* riff_chunk = Stream_Consume(&stream, WAV_Riff_Chunk);
+  WAV_Riff_Chunk* riff_chunk = Consume<WAV_Riff_Chunk>(&stream);
   if (!riff_chunk) {
     return ret;
   }
@@ -30,7 +30,7 @@ WAV_LoadFromMemory(void* memory,
   }
   
   // NOTE(Momo): Load fmt Chunk
-  WAV_Fmt_Chunk* fmt_chunk = Stream_Consume(&stream, WAV_Fmt_Chunk);
+  WAV_Fmt_Chunk* fmt_chunk = Consume<WAV_Fmt_Chunk>(&stream);
   if (!fmt_chunk) {
     return ret;
   }
@@ -55,7 +55,7 @@ WAV_LoadFromMemory(void* memory,
   }
   
   // NOTE(Momo): Load data Chunk
-  WAV_Data_Chunk* data_chunk = Stream_Consume(&stream, WAV_Data_Chunk);
+  WAV_Data_Chunk* data_chunk = Consume<WAV_Data_Chunk>(&stream);
   if (!data_chunk) {
     return ret;
   }
@@ -64,7 +64,7 @@ WAV_LoadFromMemory(void* memory,
     return ret;
   }
   
-  void* data = Stream_ConsumeBlock(&stream, data_chunk->size);
+  void* data = ConsumeBlock(&stream, data_chunk->size);
   if (data == nullptr) {
     return ret;
   }

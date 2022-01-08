@@ -474,12 +474,11 @@ Opengl_Init(Opengl* ogl,
   
   
   // NOTE(Momo): Allocate render buffer
-  void* render_cmds_mem = pf.alloc(Opengl__command_size);
+  U8* render_cmds_mem = (U8*)pf.alloc(Opengl__command_size);
   if (!render_cmds_mem) {
     return false;
   }
-  ogl->gfx.commands = 
-    Mailbox_Create(render_cmds_mem, Opengl__command_size);
+  ogl->gfx.commands = CreateMailbox(render_cmds_mem, Opengl__command_size);
   
   return true;
   
@@ -498,7 +497,7 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
   
   Gfx_Cmds* commands = &ogl->gfx.commands;
   for (U32 i = 0; i < commands->entry_count; ++i) {
-    Mailbox_Entry* entry = Mailbox_Get(commands, i);
+    MailboxEntry* entry = GetEntry(commands, i);
     switch(entry->id) {
       case Gfx_CmdType_SetBasis: {
         Gfx_Cmd_SetBasis* data = (Gfx_Cmd_SetBasis*)entry->data;
@@ -634,6 +633,6 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
   }
   
   Opengl__DrawInstances(ogl, current_texture, instances_to_draw, last_drawn_instance_index);
-  Mailbox_Clear(&ogl->gfx.commands);  
+  Clear(&ogl->gfx.commands);  
 }
 

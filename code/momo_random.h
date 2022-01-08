@@ -1,21 +1,21 @@
-/* date = November 20th 2021 11:58 am */
+// NOTE(Momo): We might be able to constexpr most of these
 
 #ifndef MOMO_RANDOM_H
 #define MOMO_RANDOM_H
 
-typedef struct 
+struct RNG
 {
   U32 index;
-} Rng;
+};
 
-static Rng Rng_Create(U32 seed);
-static U32 Rng_Next(Rng* r);
-static U32 Rng_Choice(Rng* r, U32 choice_count);
-static F32 Rng_Unilateral(Rng* r);
-static F32 Rng_Bilateral(Rng* r);
-static F32 Rng_BetweenF32(Rng* r, F32 min, F32 max);
-static S32 Rng_BetweenS32(Rng* r, S32 min, S32 max);
-static U32 Rng_BetweenU32(Rng* r, U32 min, U32 max);
+static RNG CreateRNG(U32 seed);
+static U32 Next(RNG* r);
+static U32 RandomChoice(RNG* r, U32 choice_count);
+static F32 RandomUnilateral(RNG* r);
+static F32 RandomBilateral(RNG* r);
+static F32 RandomRangeF32(RNG* r, F32 min, F32 max);
+static S32 RandomRangeS32(RNG* r, S32 min, S32 max);
+static U32 RandomRangeU32(RNG* r, U32 min, U32 max);
 
 
 #include "momo_random.cpp"

@@ -140,7 +140,7 @@ PNG__Huffman_Decode(Stream* src_stream, PNG__Huffman huffman) {
   S32 index = 0;
   
   for (U32 len = 1; len <= huffman.length_count - 1; ++len) {
-    code |= Stream_ConsumeBits(src_stream, 1);
+    code |= ConsumeBits(src_stream, 1);
     S32 count = huffman.lengths[len];
     if(code - count < first) {
       return huffman.symbols[index + (code - first)];
@@ -186,7 +186,7 @@ PNG__Huffman_Compute(PNG__Huffman* h,
   }
   
   // 2. Numerical value of smallest code for each code length
-  Arena_Marker temp_mark = Mark(arena);
+  ArenaMarker temp_mark = Mark(arena);
   defer { Revert(temp_mark); };
   
   U16* len_offset_table = PushArray<U16>(arena, max_lengths);
@@ -232,21 +232,21 @@ PNG__Deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
   
   U8 BFINAL = 0;
   while(BFINAL == 0){
-    Arena_Marker scratch = Mark(arena);
+    ArenaMarker scratch = Mark(arena);
     defer{ Revert(scratch); };
     
-    BFINAL = (U8)Stream_ConsumeBits(src_stream, 1);
-    U16 BTYPE = (U8)Stream_ConsumeBits(src_stream, 2);
+    BFINAL = (U8)ConsumeBits(src_stream, 1);
+    U16 BTYPE = (U8)ConsumeBits(src_stream, 2);
     PNG__Log(">>> BFINAL: %d\n", BFINAL);
     PNG__Log(">>> BTYPE: %d\n", BTYPE);
     switch(BTYPE) {
       case 0b00: {
-        Stream_FlushBits(src_stream);
+        FlushBits(src_stream);
         
         PNG__Log(">>>> No compression\n");
-        Stream_ConsumeBits(src_stream, 5);
-        U16 LEN = (U16)Stream_ConsumeBits(src_stream, 16);
-        U16 NLEN = (U16)Stream_ConsumeBits(src_stream, 16);
+        ConsumeBits(src_stream, 5);
+        U16 LEN = (U16)ConsumeBits(src_stream, 16);
+        U16 NLEN = (U16)ConsumeBits(src_stream, 16);
         PNG__Log(">>>>> LEN: %d\n", LEN);
         PNG__Log(">>>>> NLEN: %d\n", NLEN);
         if ((U16)LEN != ~((U16)(NLEN))) {
@@ -306,9 +306,9 @@ PNG__Deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
         {
           // TODO: Dynamic huffman
           PNG__Log(">>>> Dynamic huffman\n");
-          U32 HLIT = Stream_ConsumeBits(src_stream, 5) + 257;
-          U32 HDIST = Stream_ConsumeBits(src_stream, 5) + 1;
-          U32 HCLEN = Stream_ConsumeBits(src_stream, 4) + 4;
+          U32 HLIT = ConsumeBits(src_stream, 5) + 257;
+          U32 HDIST = ConsumeBits(src_stream, 5) + 1;
+          U32 HCLEN = ConsumeBits(src_stream, 4) + 4;
           PNG__Log(">>>>> HLIT: %d\n", HLIT);
           PNG__Log(">>>>> HDIST: %d\n", HDIST);
           PNG__Log(">>>>> HCLEN: %d\n", HCLEN);
@@ -321,7 +321,7 @@ PNG__Deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
           U16 code_codes[19] = {0};
           
           for(U32 i = 0; i < HCLEN; ++i) {
-            code_codes[order[i]] = (U16)Stream_ConsumeBits(src_stream, 3);
+            code_codes[order[i]] = (U16)ConsumeBits(src_stream, 3);
           }
           
           PNG__Huffman code_huffman = {0};
@@ -352,18 +352,18 @@ PNG__Deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
                 // Copy the previous code length 3-6 times
                 if (i == 0) return false;
                 
-                times_to_repeat = 3 + Stream_ConsumeBits(src_stream, 2);
+                times_to_repeat = 3 + ConsumeBits(src_stream, 2);
                 code_to_repeat = lit_dist_codes[i-1];
                 
               }
               
               else if (sym == 17) {
                 // Repeat a code length of 0 for 3-10 times
-                times_to_repeat = 3 + Stream_ConsumeBits(src_stream, 3);
+                times_to_repeat = 3 + ConsumeBits(src_stream, 3);
               }
               else if (sym == 18) {
                 // Repeat a code length of 0 for 11-138 times
-                times_to_repeat = 11 + Stream_ConsumeBits(src_stream, 7);
+                times_to_repeat = 11 + ConsumeBits(src_stream, 7);
               }
               else {
                 // Invalid symbol
@@ -399,7 +399,7 @@ PNG__Deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
           // NOTE(Momo): Normal case
           if (sym <= 255) { 
             U8 byte_to_write = (U8)(sym & 0xFF); 
-            Stream_Write(dest_stream, U8, byte_to_write);
+            Write(dest_stream, byte_to_write);
           }
           // NOTE(Momo): Extra code case
           else if (sym >= 257) {
@@ -407,16 +407,16 @@ PNG__Deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
             if (sym >= 29) {
               return false;
             }
-            U32 len = lens[sym] + Stream_ConsumeBits(src_stream, len_ex_bits[sym]);
+            U32 len = lens[sym] + ConsumeBits(src_stream, len_ex_bits[sym]);
             sym = PNG__Huffman_Decode(src_stream, dist_huffman);
             if (sym < 0) {
               return false;
             }
-            U32 dist = dists[sym] + Stream_ConsumeBits(src_stream, dist_ex_bits[sym]);
+            U32 dist = dists[sym] + ConsumeBits(src_stream, dist_ex_bits[sym]);
             while(len--) {
               UMI target_index = dest_stream->pos - dist;
               U8 byte_to_write = dest_stream->data[target_index];
-              Stream_Write(dest_stream, U8, byte_to_write);
+              Write(dest_stream, byte_to_write);
             }
           }
           else { 
@@ -509,12 +509,12 @@ PNG__IsSignatureValid(U8* comparee) {
 static B32
 PNG__Filter_None(PNG__Context* c) {
   for (U32 i = 0; i < c->image_width * c->image_channels; ++i ){
-    U8* pixel_byte = Stream_Consume(&c->unfiltered_image_stream, U8);
+    U8* pixel_byte = Consume<U8>(&c->unfiltered_image_stream);
     if (pixel_byte == nullptr) {
       return false;
     }
     PNG__Log("%02X ", (U32)(*pixel_byte));
-    Stream_Write(&c->image_stream, U8, *pixel_byte);
+    Write<U8>(&c->image_stream, *pixel_byte);
   }
   PNG__Log("\n");
   return true;
@@ -525,14 +525,14 @@ PNG__Filter_Sub(PNG__Context* c) {
   U32 bpp = (c->image_channels * c->bit_depth)/8; // bytes per pixel
   for (U32 i = 0; i < c->image_width * c->image_channels; ++i ){
     
-    U8* pixel_byte_p = Stream_Consume(&c->unfiltered_image_stream, U8);
+    U8* pixel_byte_p = Consume<U8>(&c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) {
       return false;
     }
     U8 pixel_byte = (*pixel_byte_p); // Sub(x)
     if (i < bpp) {
       PNG__Log("%02X ", (U32)pixel_byte);
-      Stream_Write(&c->image_stream, U8, pixel_byte);
+      Write(&c->image_stream, pixel_byte);
     }
     else {
       UMI current_index = c->image_stream.pos;
@@ -540,7 +540,7 @@ PNG__Filter_Sub(PNG__Context* c) {
       U8 pixel_byte_to_write = (pixel_byte + left_reference) % 256;  
       
       PNG__Log("%02X ", (U32)pixel_byte_to_write);
-      Stream_Write(&c->image_stream, U8, pixel_byte_to_write);
+      Write(&c->image_stream, pixel_byte_to_write);
     }
     
   }    
@@ -556,14 +556,14 @@ PNG__Filter_Average(PNG__Context* c) {
   
   for (U32 i = 0; i < c->image_width * c->image_channels; ++i ){
     
-    U8* pixel_byte_p = Stream_Consume(&c->unfiltered_image_stream, U8);
+    U8* pixel_byte_p = Consume<U8>(&c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) {
       return false;
     }
     U8 pixel_byte = (*pixel_byte_p); // Sub(x)
     if (i < bpp || c->image_stream.pos < bpl ) {
       PNG__Log("%02X ", (U32)pixel_byte);
-      Stream_Write(&c->image_stream, U8, pixel_byte);
+      Write(&c->image_stream, pixel_byte);
     }
     else {
       UMI current_index = c->image_stream.pos;
@@ -575,7 +575,7 @@ PNG__Filter_Average(PNG__Context* c) {
       U8 pixel_byte_to_write = (pixel_byte + (left + top)/2) % 256;  
       
       PNG__Log("%02X ", (U32)pixel_byte_to_write);
-      Stream_Write(&c->image_stream, U8, pixel_byte_to_write);
+      Write(&c->image_stream, pixel_byte_to_write);
     }
     
   }
@@ -590,7 +590,7 @@ PNG__Filter_Paeth(PNG__Context* cx) {
   U32 bpl = cx->image_width * cx->image_channels * (cx->bit_depth/8); // bytes per line
   
   for (U32 i = 0; i < cx->image_width * cx->image_channels; ++i ){
-    U8* pixel_byte_p = Stream_Consume(&cx->unfiltered_image_stream, U8);
+    U8* pixel_byte_p = Consume<U8>(&cx->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) {
       return false;
     }
@@ -629,7 +629,7 @@ PNG__Filter_Paeth(PNG__Context* cx) {
     U8 pixel_byte_to_write = pixel_byte + paeth_predictor;  
     
     PNG__Log("%02X ", (U32)pixel_byte_to_write);
-    Stream_Write(&cx->image_stream, U8, pixel_byte_to_write);
+    Write(&cx->image_stream, pixel_byte_to_write);
   }
   PNG__Log("\n");
   return true;
@@ -639,7 +639,7 @@ static B32
 PNG__Filter_Up(PNG__Context* c) {
   U32 bpl = c->image_width * c->image_channels * (c->bit_depth/8); // bytes per line
   for (U32 i = 0; i < c->image_width * c->image_channels; ++i ){
-    U8* pixel_byte_p = Stream_Consume(&c->unfiltered_image_stream, U8);
+    U8* pixel_byte_p = Consume<U8>(&c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) {
       return false;
     }
@@ -648,7 +648,7 @@ PNG__Filter_Up(PNG__Context* c) {
     // NOTE(Momo): Ignore first scanline
     if (c->image_stream.pos < bpl) {
       PNG__Log("%02X ", (U32)pixel_byte);
-      Stream_Write(&c->image_stream, U8, pixel_byte);
+      Write(&c->image_stream, pixel_byte);
     }
     else {
       UMI current_index = c->image_stream.pos;
@@ -656,7 +656,7 @@ PNG__Filter_Up(PNG__Context* c) {
       U8 pixel_byte_to_write = (pixel_byte + top) % 256;  
       
       PNG__Log("%02X ", (U32)pixel_byte_to_write);
-      Stream_Write(&c->image_stream, U8, pixel_byte_to_write);
+      Write(&c->image_stream, pixel_byte_to_write);
     }
   }
   PNG__Log("\n");
@@ -668,13 +668,13 @@ PNG__Filter_Up(PNG__Context* c) {
 static B32
 PNG__Filter(PNG__Context* c) {
   
-  Stream_Reset(&c->unfiltered_image_stream);
+  Reset(&c->unfiltered_image_stream);
   
   // NOTE(Momo): Filter
   // data always starts with 1 byte indicating the type of filter
   // followed by the rest of the chunk.
-  while(!Stream_IsEos(&c->unfiltered_image_stream)) {
-    U8* filter_type_p = Stream_Consume(&c->unfiltered_image_stream, U8);
+  while(!IsEos(&c->unfiltered_image_stream)) {
+    U8* filter_type_p = Consume<U8>(&c->unfiltered_image_stream);
     U8 filter_type = (*filter_type_p);
     
     // NOTE(Momo): https://www.w3.org/TR/PNG-Filters.html
@@ -708,7 +708,7 @@ PNG__Filter(PNG__Context* c) {
 static B32
 PNG__Process_IHDR(PNG__Context* c) {
   Stream stream = c->stream; 
-  PNG__IHDR* IHDR = Stream_Consume(&stream, PNG__IHDR);
+  PNG__IHDR* IHDR = Consume<PNG__IHDR>(&stream);
   
   // NOTE(Momo): Width and height is in Big Endian
   // We assume that we are currently in a Little Endian system
@@ -729,7 +729,7 @@ PNG__Process_IHDR(PNG__Context* c) {
   
   // NOTE(Momo): For reserving memory for image
   U8* image_stream_memory = PushArray<U8>(c->arena, PNG__GetImageSize(c));
-  c->image_stream = Stream_Create(image_stream_memory, PNG__GetImageSize(c));
+  c->image_stream = CreateStream(image_stream_memory, PNG__GetImageSize(c));
   
   // NOTE(Momo): Allow space for unfiltered image. 
   // One extra byte per row for filter 'type'
@@ -737,7 +737,7 @@ PNG__Process_IHDR(PNG__Context* c) {
   UMI unfiltered_size = c->image_width * c->image_height *  c->image_channels + c->image_height;
   U8* unfiltered_image_stream_memory = PushArray<U8>(c->arena, unfiltered_size);
   c->unfiltered_image_stream = 
-    Stream_Create(unfiltered_image_stream_memory, unfiltered_size);
+    CreateStream(unfiltered_image_stream_memory, unfiltered_size);
   return true;
 }
 
@@ -745,7 +745,7 @@ static B32
 PNG__Process_IDAT(PNG__Context* c) {
   Stream idat_stream = c->stream; 
   
-  PNG__IDAT_Header* IDAT = Stream_Consume(&idat_stream, PNG__IDAT_Header);
+  PNG__IDAT_Header* IDAT = Consume<PNG__IDAT_Header>(&idat_stream);
   
   PNG__Log("flags: %d %d\n", IDAT->compression_flags, IDAT->additional_flags);
   U32 CM = IDAT->compression_flags & 0x0F;
@@ -792,17 +792,17 @@ PNG_Read(Memory png_memory,
 {
   PNG__Context ctx = {0};
   ctx.arena = arena;
-  ctx.stream = Stream_Create((U8*)png_memory.data, png_memory.size);
+  ctx.stream = CreateStream((U8*)png_memory.data, png_memory.size);
   
-  PNG__Header* png_header = Stream_Consume(&ctx.stream, PNG__Header);  
+  PNG__Header* png_header = Consume<PNG__Header>(&ctx.stream);  
   if (!PNG__IsSignatureValid(png_header->signature)) {
     Image ret = {0};
     return ret;
     
   }
   
-  while(!Stream_IsEos(&ctx.stream)) {
-    PNG__Chunk_Header* chunk_header = Stream_Consume(&ctx.stream, PNG__Chunk_Header);
+  while(!IsEos(&ctx.stream)) {
+    PNG__Chunk_Header* chunk_header = Consume<PNG__Chunk_Header>(&ctx.stream);
     chunk_header->length = EndianSwap32(chunk_header->length);
     chunk_header->type_U32 = EndianSwap32(chunk_header->type_U32);
     
@@ -842,8 +842,8 @@ PNG_Read(Memory png_memory,
                  chunk_header->type[3]); 
       };
     }
-    Stream_ConsumeBlock(&ctx.stream, chunk_header->length);
-    Stream_Consume(&ctx.stream, PNG__Chunk_Footer);
+    ConsumeBlock(&ctx.stream, chunk_header->length);
+    Consume<PNG__Chunk_Footer>(&ctx.stream);
   }
   Image ret = {0};
   return ret;
@@ -873,17 +873,17 @@ PNG_Write(Image image, Arena* arena) {
   // TODO(Momo): figure this out?
 #if 0  
   U8* stream_memory = (U8*)Arena_PushBlock(arena, expected_memory_required);
-  Stream stream = Stream_Create(stream_memory, expected_memory_required);
+  Stream stream = CreateStream(stream_memory, expected_memory_required);
 #else
   U8* stream_memory = PushArray<U8>(arena, MB(2));
-  Stream stream = Stream_Create(stream_memory, MB(2));
+  Stream stream = CreateStream(stream_memory, MB(2));
 #endif
   
   // NOTE(Momo): Header
   static const U8 signature[] = { 
     137, 80, 78, 71, 13, 10, 26, 10 
   };
-  Stream_WriteBlock(&stream, (void*)signature, sizeof(signature));
+  WriteBlock(&stream, (void*)signature, sizeof(signature));
   
   
   // NOTE(Momo): Write IHDR
@@ -894,7 +894,7 @@ PNG_Write(Image image, Arena* arena) {
     header.type_U32 = EndianSwap32('IHDR');
     header.length = sizeof(PNG__IHDR);
     header.length = EndianSwap32(header.length);
-    Stream_Write(&stream, PNG__Chunk_Header, header);
+    Write(&stream, header);
     crc_start = stream.data + stream.pos - sizeof(header.type_U32);
     
     PNG__IHDR IHDR = {0};
@@ -905,13 +905,13 @@ PNG_Write(Image image, Arena* arena) {
     IHDR.compression_method = 0;
     IHDR.filter_method = 0;
     IHDR.interlace_method = 0;
-    Stream_Write(&stream, PNG__IHDR, IHDR);
+    Write(&stream, IHDR);
     
     PNG__Chunk_Footer footer = {0};
     U32 crc_size = (U32)(stream.data + stream.pos - crc_start);
     footer.crc = PNG__CalculateCRC32(crc_start, crc_size); 
     footer.crc = EndianSwap32(footer.crc);
-    Stream_Write(&stream, PNG__Chunk_Footer, footer);
+    Write(&stream, footer);
     
   }
   
@@ -936,7 +936,7 @@ PNG_Write(Image image, Arena* arena) {
     header.type_U32 = EndianSwap32('IDAT');
     header.length = sizeof(PNG__IDAT_Header) + (chunk_overhead*chunk_count) + data_size; 
     header.length = EndianSwap32(header.length);    
-    Stream_Write(&stream, PNG__Chunk_Header, header);
+    Write(&stream, header);
     crc_start = stream.data + stream.pos - sizeof(header.type_U32);
     
     // NOTE(Momo): Hardcoded IDAT chunk header header that fits our use-case
@@ -950,7 +950,7 @@ PNG_Write(Image image, Arena* arena) {
     
     IDAT.compression_flags = 8;
     IDAT.additional_flags = 29;
-    Stream_Write(&stream, PNG__IDAT_Header, IDAT);
+    Write(&stream, IDAT);
     
     
     // NOTE(Momo): Deflate chunk header
@@ -966,23 +966,23 @@ PNG_Write(Image image, Arena* arena) {
       lines_remaining -= lines_to_write;
       
       U8 BFINAL = ((chunk_index + 1) == chunk_count) ? 1 : 0;
-      Stream_Write(&stream, U8, BFINAL);
+      Write(&stream, BFINAL);
       
       U16 LEN = (U16)(lines_to_write * data_bpl); // number of data bytes in the block
       U16 NLEN = ~LEN; // one's complement of LEN
-      Stream_Write(&stream, U16, LEN);
-      Stream_Write(&stream, U16, NLEN);
+      Write(&stream, LEN);
+      Write(&stream, NLEN);
       
       // NOTE(Momo): Output data here
       // We have to do it row by row to add the filter byte at the front
       for (U32 line_index = 0; line_index < lines_to_write; ++line_index) 
       {
         U8 no_filter = 0;
-        Stream_Write(&stream, U8, no_filter); // Filter type: None
+        Write(&stream, no_filter); // Filter type: None
         
-        Stream_WriteBlock(&stream, 
-                          (U8*)image.data + (current_line * image_bpl),
-                          image_bpl);
+        WriteBlock(&stream, 
+                   (U8*)image.data + (current_line * image_bpl),
+                   image_bpl);
         
         ++current_line;
         
@@ -996,7 +996,7 @@ PNG_Write(Image image, Arena* arena) {
     U32 crc_size = (U32)(stream.data + stream.pos - crc_start);
     footer.crc = PNG__CalculateCRC32(crc_start, crc_size); 
     footer.crc = EndianSwap32(footer.crc);
-    Stream_Write(&stream, PNG__Chunk_Footer, footer);
+    Write<PNG__Chunk_Footer>(&stream, footer);
   }
   
   // NOTE(Momo): Write IEND
@@ -1006,7 +1006,7 @@ PNG_Write(Image image, Arena* arena) {
     PNG__Chunk_Header header = {0};
     header.type_U32 = EndianSwap32('IEND');
     header.length = 0;
-    Stream_Write(&stream, PNG__Chunk_Header, header);
+    Write(&stream, header);
     crc_start = stream.data + stream.pos - sizeof(header.type_U32);
     
     
@@ -1014,7 +1014,7 @@ PNG_Write(Image image, Arena* arena) {
     U32 crc_size = (U32)(stream.data + stream.pos - crc_start);
     footer.crc = PNG__CalculateCRC32(crc_start, crc_size); 
     footer.crc = EndianSwap32(footer.crc);
-    Stream_Write(&stream, PNG__Chunk_Footer, footer);
+    Write(&stream, footer);
   }
   
   Memory ret;

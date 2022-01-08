@@ -169,8 +169,10 @@ IsPow2(T value) {
   return (value & (value - 1)) == 0; 
 }
 template<class T> static constexpr void 
-Swap(T& lhs, T& rhs) { 
-  T tmp = lhs; lhs = rhs; rhs = tmp; 
+Swap(T* lhs, T* rhs) { 
+  T tmp = *lhs; 
+  *lhs = *rhs; 
+  *rhs = tmp; 
 } 
 
 
@@ -230,7 +232,7 @@ Sistr_Reverse(char* dest) {
   char* back_ptr = dest;
   for (; *(back_ptr+1) != 0; ++back_ptr);
   for (;dest < back_ptr; ++dest, --back_ptr) {
-    Swap((*dest), (*back_ptr));
+    Swap(dest, back_ptr);
   }
 }
 

@@ -217,7 +217,7 @@ static constexpr F64 Ratio(F64 v, F64 min, F64 max);
 template<class T, class U> static constexpr T AlignDownPow2(T value, U align);
 template<class T, class U> static T AlignUpPow2(T value, U align);
 template<class T> static constexpr B32 IsPow2(T value);
-template<class T> static constexpr void Swap(T& lhs, T& rhs); 
+template<class T> static constexpr void Swap(T* lhs, T* rhs); 
 
 //~NOTE(Momo): Assert
 // NOTE(Momo): Others can provide their own 'AssertCallback' 

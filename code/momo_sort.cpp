@@ -1,9 +1,8 @@
-static UMI
-QuickSort__Partition(U8* a,
+template<class T, class BinaryCompare> static UMI
+QuickSort__Partition(T* a,
                      UMI start, 
                      UMI ope,
-                     UMI stride,
-                     B32 (*cmp)(void*, void*)) 
+                     BinaryCompare cmp) 
 {
   // Save the rightmost index as pivot
   // This frees up the right most index as a slot
@@ -11,19 +10,18 @@ QuickSort__Partition(U8* a,
   UMI eventual_pivot_idx = start;
   
   for (UMI i = start; i < ope-1; ++i) {
-    U8* i_ptr = a + (stride * i);
-    U8* pivot_ptr = a + (stride * pivot_idx);
+    T* i_ptr = a + i;
+    T* pivot_ptr = a + pivot_idx;
     if (cmp(i_ptr, pivot_ptr)) {
-      U8* eventual_pivot_ptr = a + (stride * eventual_pivot_idx);
-      Bin_Swap(i_ptr, eventual_pivot_ptr, stride);
+      T* eventual_pivot_ptr = a + eventual_pivot_idx;
+      Swap(i_ptr, eventual_pivot_ptr);
       ++eventual_pivot_idx;
     }
     
   }
   
-  Bin_Swap(a + (stride * eventual_pivot_idx),
-              a + (stride * pivot_idx),
-              stride);
+  Swap(a + eventual_pivot_idx,
+       a + pivot_idx);
   
   return eventual_pivot_idx;
   
@@ -31,32 +29,25 @@ QuickSort__Partition(U8* a,
 }
 
 // NOTE(Momo): This is done inplace
-static void 
-QuickSort__Range(U8* a, 
+template<typename T, class BinaryCompare> static void 
+QuickSort__Range(T* a, 
                  UMI start, 
                  UMI ope,
-                 UMI stride,
-                 B32 (*cmp)(void*, void*)) 
+                 BinaryCompare cmp) 
 {
   if (ope - start <= 1) {
     return;
   }
-  UMI pivot = QuickSort__Partition(a, 
-                                   start, 
-                                   ope,
-                                   stride,
-                                   cmp);
-  
-  QuickSort__Range(a, start, pivot, stride, cmp);
-  QuickSort__Range(a, pivot+1, ope, stride, cmp);
+  UMI pivot = QuickSort__Partition(a, start, ope, cmp);
+  QuickSort__Range(a, start, pivot, cmp);
+  QuickSort__Range(a, pivot+1, ope, cmp);
   
 }
 
-static void
-QuickSortBlock(void* a, 
-               UMI count, 
-               UMI stride, 
-               B32(*cmp)(void*, void*)) 
-{
-  QuickSort__Range((U8*)a, 0, count, stride, cmp);
+
+template<class T, class BinaryCompare> static void
+QuickSort(T* arr, UMI count, BinaryCompare cmp) {
+  QuickSort__Range(arr, 0, count, cmp);
+  
+  //QuickSortBlock(arr, count, sizeof(T), pred);
 }

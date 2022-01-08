@@ -1,7 +1,7 @@
 static Arena 
-CreateArena(void* mem, UMI cap) {
+CreateArena(U8* mem, UMI cap) {
 	Arena ret;
-  ret.memory = (U8*)mem;
+  ret.memory = mem;
   ret.pos = 0; 
   ret.cap = cap;
 	return ret;
@@ -37,12 +37,12 @@ PushBlock(Arena* arena, UMI size, UMI align) {
 
 static Arena
 Partition(Arena* from_arena, UMI size) {	
-	void* memory = PushBlock(from_arena, size, 16);
+	U8* memory = PushBlock(from_arena, size, 16);
   return CreateArena(memory, size);
 }
 
 template<class T> static T*
-PushStruct(Arena* arena, UMI align) {
+Push(Arena* arena, UMI align) {
   return (T*)PushBlock(arena, sizeof(T), align);
 }
 
@@ -71,9 +71,9 @@ Arena_BootBlock(UMI struct_size,
 }
 //*/
 
-static Arena_Marker
+static ArenaMarker
 Mark(Arena* arena) {
-  Arena_Marker ret;
+  ArenaMarker ret;
   ret.arena = arena;
   ret.old_pos = arena->pos;
   
@@ -81,7 +81,7 @@ Mark(Arena* arena) {
 }
 
 static void
-Revert(Arena_Marker mark) {
+Revert(ArenaMarker mark) {
   mark.arena->pos = mark.old_pos;
 }
 

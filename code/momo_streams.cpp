@@ -1,5 +1,5 @@
 static Stream
-Stream_Create(U8* memory, UMI memory_size) {
+CreateStream(U8* memory, UMI memory_size) {
 	Stream ret;
 	ret.data = memory;
 	ret.size = memory_size;
@@ -10,44 +10,44 @@ Stream_Create(U8* memory, UMI memory_size) {
 }
 
 static void
-Stream_Reset(Stream* s) {
+Reset(Stream* s) {
   s->pos = 0;
 }
 
 static B32
-Stream_IsEos(Stream* s) {
+IsEos(Stream* s) {
   return s->pos >= s->size;
 }
 
-static void*
-Stream_ConsumeBlock(Stream* s, UMI amount) {
+static U8*
+ConsumeBlock(Stream* s, UMI amount) {
 	Assert(s->pos + amount <= s->size);
 	
-	void* ret = s->data + s->pos;
+	U8* ret = s->data + s->pos;
   s->pos += amount;
   return ret;
 }
 
 static void
-Stream_WriteBlock(Stream* s, void* src, UMI src_size) {
+WriteBlock(Stream* s, void* src, UMI src_size) {
 	Assert(s->pos + src_size <= s->size);
   Bin_Copy(s->data + s->pos, src, src_size);
   s->pos += src_size; 
 }
 
 static void
-Stream_FlushBits(Stream* s){
+FlushBits(Stream* s){
 	s->bit_buffer = 0;
 	s->bit_count = 0;
 }
 
 // Bits are consumed from LSB to MSB
 static U32
-Stream_ConsumeBits(Stream* s, U32 amount){
+ConsumeBits(Stream* s, U32 amount){
   Assert(amount <= 32);
   
   while(s->bit_count < amount) {
-    U32 byte = *Stream_Consume(s, U8);
+    U32 byte = *Consume<U8>(s);
     s->bit_buffer |= (byte << s->bit_count);
     s->bit_count += 8;
   }
@@ -60,3 +60,13 @@ Stream_ConsumeBits(Stream* s, U32 amount){
   
   return result;
 }
+template<class T> static T* 
+Consume(Stream* s) 
+{
+  return (T*)ConsumeBlock(s, sizeof(T));
+}
+template<class T> void 
+Write(Stream* s, T item) {
+  WriteBlock(s, &item, sizeof(T));
+}
+

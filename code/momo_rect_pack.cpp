@@ -2,38 +2,28 @@
 
 // NOTE(Momo): Predicates
 static B32
-RP__SortByHeight(void* l, void* r) {
-  RP_Rect* lhs = (RP_Rect*)l;
-  RP_Rect* rhs = (RP_Rect*)r;
-  return lhs->h > rhs->h;
+RP__SortByHeight(RP_Rect* l, RP_Rect* r) {
+  return l->h > r->h;
 }
 
 static B32 
-RP__SortByWidth(void* l, void* r) {
-  RP_Rect* lhs = (RP_Rect*)l;
-  RP_Rect* rhs = (RP_Rect*)r;
-  return lhs->w > rhs->w;
+RP__SortByWidth(RP_Rect* l, RP_Rect* r) {
+  return l->w > r->w;
 }
 
 static B32 
-RP__SortByArea(void* l, void* r) {
-  RP_Rect* lhs = (RP_Rect*)l;
-  RP_Rect* rhs = (RP_Rect*)r;
-  return (lhs->w * lhs->h) > (rhs->w * rhs->h);
+RP__SortByArea(RP_Rect* l, RP_Rect* r) {
+  return (l->w * l->h) > (r->w * r->h);
 }
 
 static B32 
-RP__SortByPerimeter(void* l, void* r) {
-  RP_Rect* lhs = (RP_Rect*)l;
-  RP_Rect* rhs = (RP_Rect*)r;
-  return (lhs->w + lhs->h) > (rhs->w + rhs->h);
+RP__SortByPerimeter(RP_Rect* l, RP_Rect* r) {
+  return (l->w + l->h) > (r->w + r->h);
 }
 
 static B32 
-RP__SortByBiggerSide(void* l, void* r) {
-  RP_Rect* lhs = (RP_Rect*)l;
-  RP_Rect* rhs = (RP_Rect*)r;
-  return (Max(lhs->w, lhs->h)) > (Max(rhs->w, rhs->h));
+RP__SortByBiggerSide(RP_Rect* l, RP_Rect* r) {
+  return (Max(l->w, l->h)) > (Max(r->w, r->h));
 }
 
 
@@ -44,30 +34,30 @@ RP__SortRects(RP_Rect* rects,
 {
   switch(sort_type) {
     case RP_SortType_Height: {
-      QuickSort(rects, RP_Rect, rect_count, RP__SortByHeight);
+      QuickSort(rects, rect_count, RP__SortByHeight);
     } break;
     case RP_SortType_Width: {
-      QuickSort(rects, RP_Rect, rect_count, RP__SortByWidth);
+      QuickSort(rects, rect_count, RP__SortByWidth);
     } break;
     case RP_SortType_Area: {
-      QuickSort(rects, RP_Rect, rect_count, RP__SortByArea);
+      QuickSort(rects, rect_count, RP__SortByArea);
     } break;
     case RP_SortType_Perimeter: {
-      QuickSort(rects, RP_Rect, rect_count, RP__SortByPerimeter);
+      QuickSort(rects, rect_count, RP__SortByPerimeter);
     } break;
     case RP_SortType_BiggerSide: {
-      QuickSort(rects, RP_Rect, rect_count, RP__SortByBiggerSide);
+      QuickSort(rects, rect_count, RP__SortByBiggerSide);
     } break;
   }
 }
 static void
-RP_Pack(RP_Rect* rects, 
-        RP_Node* nodes,
-        UMI rect_count, 
-        UMI padding,
-        UMI total_width,
-        UMI total_height,
-        RP_SortType sort_type) 
+PackRects(RP_Rect* rects, 
+          RP_Node* nodes,
+          UMI rect_count, 
+          UMI padding,
+          UMI total_width,
+          UMI total_height,
+          RP_SortType sort_type) 
 {
   RP__SortRects(rects, rect_count, sort_type);
   

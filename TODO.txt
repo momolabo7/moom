@@ -9,8 +9,11 @@ Code quality
 Engine
   Figure out how game should tell GFX about its design resolution
   File io
+	Asset system
+		Localization support?
 	Sound
 	Mutithread support
+
 
 Test suite setup. 
 	Compare against text files
