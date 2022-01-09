@@ -289,6 +289,7 @@ WinMain(HINSTANCE instance,
   };
   
   //-NOTE(Momo): Begin game loop
+  Game game = {0};
   Win_global_state.is_running = true;
   Win_global_state.is_hot_reloading = true;
   
@@ -388,7 +389,7 @@ WinMain(HINSTANCE instance,
                                                  game_design_width,
                                                  game_design_height);
     
-    game_api.update(&pf_api, &input, gfx, (F32)(game_dt));
+    game_api.update(&game, &pf_api, &input, gfx, (F32)(game_dt));
     
     
     gfx_api.render(gfx, render_wh, render_region);

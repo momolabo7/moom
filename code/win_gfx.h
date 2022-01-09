@@ -1,4 +1,4 @@
-// NOTE(Momo): This contains the API for renderer running on windows
+// This file contains the API for renderer running on windows
 
 #ifndef WIN_RENDERER_H
 #define WIN_RENDERER_H
@@ -11,7 +11,7 @@
 #include "game_gfx.h"
 
 
-//~ NOTE(Momo): API
+//~API
 typedef Gfx*   Win_Gfx_InitFn(HWND window);
 typedef void 	Win_Gfx_FreeFn(Gfx* r);
 
@@ -19,7 +19,8 @@ typedef void 	Win_Gfx_FreeFn(Gfx* r);
 typedef void   Win_Gfx_RenderFn(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region);
 
 
-//~ NOTE(Momo): Function table
+//~Function table
+// To be used and called by platform
 struct Win_Gfx_API {
   Win_Gfx_InitFn* init;
   Win_Gfx_FreeFn* free;
