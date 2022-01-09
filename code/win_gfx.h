@@ -11,20 +11,20 @@
 #include "game_gfx.h"
 
 
-//~API
-typedef Gfx*   Win_Gfx_InitFn(HWND window);
-typedef void 	Win_Gfx_FreeFn(Gfx* r);
+//~API for Win platform to use
+typedef Gfx*   WinGfx_InitFn(HWND window);
+typedef void 	WinGfx_FreeFn(Gfx* r);
 
 // TODO(Momo): Do we really need render_wh and render_rengion?
-typedef void   Win_Gfx_RenderFn(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region);
+typedef void   WinGfx_RenderFn(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region);
 
 
 //~Function table
 // To be used and called by platform
-struct Win_Gfx_API {
-  Win_Gfx_InitFn* init;
-  Win_Gfx_FreeFn* free;
-  Win_Gfx_RenderFn* render;
+struct WinGfx_API {
+  WinGfx_InitFn* init;
+  WinGfx_FreeFn* free;
+  WinGfx_RenderFn* render;
 };
 
 

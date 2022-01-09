@@ -123,24 +123,29 @@ Win_WindowCallback(HWND window,
   return result;
 }
 
-//-NOTE(Momo): For Platform API
-void 
+//~ For Platform API
+static void 
 Win_HotReload() {
   Win_global_state.is_hot_reloading = true;
 }
 
+static void 
+Win_Shutdown() {
+  Win_global_state.is_running = false;
+}
 
-void*
+
+static void*
 Win_AllocateMemory(UMI memory_size) {
   return VirtualAllocEx(GetCurrentProcess(),
                         0, 
                         memory_size,
                         MEM_RESERVE | MEM_COMMIT, 
                         PAGE_READWRITE);
-  
 }
 
-void
+
+static void
 Win_FreeMemory(void* memory) {
   VirtualFreeEx(GetCurrentProcess(), 
                 memory,    
@@ -148,6 +153,19 @@ Win_FreeMemory(void* memory) {
                 MEM_RELEASE); 
 }
 
+static PF
+Win_CreatePF()
+{
+  PF pf_api;
+  pf_api.hot_reload = Win_HotReload;
+  pf_api.alloc = Win_AllocateMemory;
+  pf_api.free = Win_FreeMemory;
+  pf_api.shutdown = Win_Shutdown;
+  return pf_api;
+}
+
+
+//~ Main functions
 int CALLBACK
 WinMain(HINSTANCE instance, 
         HINSTANCE prev_instance, 
@@ -238,26 +256,21 @@ WinMain(HINSTANCE instance,
   }
   
   //-NOTE(Momo): Load Platform API for game
-  PF pf_api;
-  {
-    pf_api.hot_reload = Win_HotReload;
-    pf_api.alloc = Win_AllocateMemory;
-    pf_api.free = Win_FreeMemory;
-  }
+  PF pf_api = Win_CreatePF();
   
   //-NOTE(Momo): Load Gfx functions
-  Win_Gfx_API gfx_api;
+  WinGfx_API gfx_api;
   HMODULE gfx_dll;
   {
     gfx_dll =  LoadLibraryA("gfx.dll");
     if (gfx_dll) {
-      gfx_api.init = (Win_Gfx_InitFn*)GetProcAddress(gfx_dll, "Gfx_Init");
+      gfx_api.init = (WinGfx_InitFn*)GetProcAddress(gfx_dll, "WinGfx_Init");
       if(!gfx_api.init) return 1;
       
-      gfx_api.free = (Win_Gfx_FreeFn*)GetProcAddress(gfx_dll, "Gfx_Free");
+      gfx_api.free = (WinGfx_FreeFn*)GetProcAddress(gfx_dll, "WinGfx_Free");
       if(!gfx_api.free) return 1;
       
-      gfx_api.render = (Win_Gfx_RenderFn*)GetProcAddress(gfx_dll, "Gfx_Render");
+      gfx_api.render = (WinGfx_RenderFn*)GetProcAddress(gfx_dll, "WinGfx_Render");
       if(!gfx_api.render) return 1;
       
     }

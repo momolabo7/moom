@@ -3,12 +3,12 @@
 #include "game_gfx.h"
 #include "game_pf.h"
 
-
-
 struct PermanentMemory {
   F32 tmp_delta;
   B32 tmp_increase;
   F32 tmp_rot;
+  
+  
 };
 
 struct GameMemory {
@@ -16,7 +16,7 @@ struct GameMemory {
 };
 
 // TODO(Momo): Game should probably return a status.
-exported B32
+exported B32 
 Game_Update(Game* game, PF* pf, Input* input, Gfx* gfx, F32 dt) { 
   // Initialization
   if (!game->memory) {

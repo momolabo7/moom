@@ -7,11 +7,13 @@
 
 //~NOTE(Momo): Platform API
 typedef void PF_HotReloadFn(); // trigger hot reloading of game code
+typedef void PF_ShutdownFn(); // trigger shutdown of application
 typedef void* PF_AllocFn(UMI size); // allocate memory
 typedef void PF_FreeFn(void* ptr);     // frees memory
 
 struct PF {
   PF_HotReloadFn* hot_reload;
+  PF_ShutdownFn* shutdown;
   PF_AllocFn* alloc;
   PF_FreeFn* free;
 };
@@ -91,18 +93,16 @@ struct Game {
   void* memory;
 };
 
-typedef B32 Game_UpdateFn(Game* game_memory,
-                          PF* pf,
-                          Input* input,
-                          Gfx* gfx,
-                          F32 dt);
+typedef void Game_UpdateFn(Game* game_memory,
+                           PF* pf,
+                           Input* input,
+                           Gfx* gfx,
+                           F32 dt);
 
 // To be called by platform
 struct Game_API {
   Game_UpdateFn* update;
 };
-
-
 
 
 

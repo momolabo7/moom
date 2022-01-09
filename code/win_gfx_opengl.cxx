@@ -190,7 +190,7 @@ Win_Gfx_FreeMemory(void* memory) {
 
 //~ NOTE(Momo): API implementation
 exported Gfx*
-Gfx_Init(HWND window) {
+WinGfx_Init(HWND window) {
   // NOTE(Momo): Calcluate the EXACT amount of memory needed.
   // TODO(Momo): Is there a better way to do this? 
   
@@ -313,13 +313,13 @@ if (!pf.name) { goto failed; }
 
 
 exported void
-Gfx_Render(Gfx* gfx,  V2U32 render_wh, Rect2U32 region) {
+WinGfx_Render(Gfx* gfx,  V2U32 render_wh, Rect2U32 region) {
   Opengl_Render((Opengl*)gfx, render_wh, region);
 }
 
 
 exported void
-Gfx_Free(Gfx* r) {
+WinGfx_Free(Gfx* r) {
   Opengl* opengl = (Opengl*)r;
   Opengl_Free(opengl);
   Win_Gfx_FreeMemory(opengl);
