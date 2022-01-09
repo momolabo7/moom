@@ -1,5 +1,5 @@
 template<class T, class BinaryCompare> static UMI
-QuickSort__Partition(T* a,
+_QuickSortPartition(T* a,
                      UMI start, 
                      UMI ope,
                      BinaryCompare cmp) 
@@ -30,7 +30,7 @@ QuickSort__Partition(T* a,
 
 // NOTE(Momo): This is done inplace
 template<typename T, class BinaryCompare> static void 
-QuickSort__Range(T* a, 
+_QuickSortRange(T* a, 
                  UMI start, 
                  UMI ope,
                  BinaryCompare cmp) 
@@ -38,16 +38,16 @@ QuickSort__Range(T* a,
   if (ope - start <= 1) {
     return;
   }
-  UMI pivot = QuickSort__Partition(a, start, ope, cmp);
-  QuickSort__Range(a, start, pivot, cmp);
-  QuickSort__Range(a, pivot+1, ope, cmp);
+  UMI pivot = _QuickSortPartition(a, start, ope, cmp);
+  _QuickSortRange(a, start, pivot, cmp);
+  _QuickSortRange(a, pivot+1, ope, cmp);
   
 }
 
 
 template<class T, class BinaryCompare> static void
 QuickSort(T* arr, UMI count, BinaryCompare cmp) {
-  QuickSort__Range(arr, 0, count, cmp);
+  _QuickSortRange(arr, 0, count, cmp);
   
   //QuickSortBlock(arr, count, sizeof(T), pred);
 }

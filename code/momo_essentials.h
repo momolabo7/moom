@@ -163,7 +163,7 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 // Returning a strict type almost always end up requiring an explicit
 // conversion on the user side.
 // 
-// TODO(Momo): I mean...we can also create different versions of KB/MB/GB too...
+// I mean...we can also create different versions of KB/MB/GB too...
 //
 #define KB(n) ((1<<10) * n)
 #define MB(n) ((1<<20) * n)
