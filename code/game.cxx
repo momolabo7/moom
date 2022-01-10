@@ -17,7 +17,7 @@ struct GameMemory {
 
 // TODO(Momo): Game should probably return a status.
 exported B32 
-Game_Update(Game* game, PF* pf, Input* input, Gfx* gfx, F32 dt) { 
+Game_Update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) { 
   // Initialization
   if (!game->memory) {
     // TODO(Momo): free allocated memory
@@ -34,6 +34,9 @@ Game_Update(Game* game, PF* pf, Input* input, Gfx* gfx, F32 dt) {
     perm->tmp_delta = 0.f;
     perm->tmp_increase = true;
     perm->tmp_rot = 0.f;
+    
+    // Set aspect ratio of the game
+    pf->set_aspect_ratio(16, 9);
   }
   
   GameMemory* game_memory = (GameMemory*)game->memory;

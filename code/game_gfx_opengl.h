@@ -169,12 +169,12 @@ typedef void    GL_glDebugMessageCallbackARB(GLDEBUGPROC *callback,
                                              const void* userParams);
 
 
-typedef void* Opengl_PF_AllocFn(UMI size);
-typedef void Opengl_PF_FreeFn(void* ptr);
+typedef void* Opengl_Platform_AllocFn(UMI size);
+typedef void Opengl_Platform_FreeFn(void* ptr);
 
-struct Opengl_PF_API {
-  Opengl_PF_AllocFn* alloc;
-  Opengl_PF_FreeFn* free;
+struct Opengl_Platform {
+  Opengl_Platform_AllocFn* alloc;
+  Opengl_Platform_FreeFn* free;
   
   GL_glEnable* glEnable;
   GL_glDisable* glDisable;
@@ -218,7 +218,7 @@ struct Opengl_PF_API {
 
 struct Opengl {
   Gfx gfx;
-  Opengl_PF_API pf;
+  Opengl_Platform pf;
   
   // NOTE(Momo): 
   GLuint textures[10];
@@ -236,7 +236,7 @@ struct Opengl {
 
 
 //~ NOTE(Momo): Functions
-static B32  Init(Opengl* ogl, Opengl_PF_API pf);
+static B32  Init(Opengl* ogl, Opengl_Platform pf);
 static void Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region);
 static void Free(Opengl* ogl);
 

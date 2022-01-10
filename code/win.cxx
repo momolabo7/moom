@@ -13,6 +13,10 @@
 typedef struct {
   B32 is_running;
   B32 is_hot_reloading;
+  
+  U32 aspect_ratio_width;
+  U32 aspect_ratio_height;
+  
 } Win_State;
 static Win_State Win_global_state;
 
@@ -133,6 +137,11 @@ static void
 Win_Shutdown() {
   Win_global_state.is_running = false;
 }
+static void 
+Win_SetAspectRatio(U32 width, U32 height) {
+  Win_global_state.aspect_ratio_width = width;
+  Win_global_state.aspect_ratio_height = height;
+}
 
 
 static void*
@@ -153,14 +162,16 @@ Win_FreeMemory(void* memory) {
                 MEM_RELEASE); 
 }
 
-static PF
-Win_CreatePF()
+
+static Platform
+Win_CreatePlatformForGame()
 {
-  PF pf_api;
+  Platform pf_api;
   pf_api.hot_reload = Win_HotReload;
   pf_api.alloc = Win_AllocateMemory;
   pf_api.free = Win_FreeMemory;
   pf_api.shutdown = Win_Shutdown;
+  pf_api.set_aspect_ratio = Win_SetAspectRatio;
   return pf_api;
 }
 
@@ -176,7 +187,16 @@ WinMain(HINSTANCE instance,
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
   
-  //-NOTE(Momo): Create window in the middle of the screen
+  
+  //- Initialize window state
+  {
+    Win_global_state.is_running = true;
+    Win_global_state.is_hot_reloading = true;
+    Win_global_state.aspect_ratio_width = 1;
+    Win_global_state.aspect_ratio_height = 1;
+  }
+  
+  //- Create window in the middle of the screen
   HWND window;
   {
     // TODO(Momo): Maybe this can be defined elsewhere...?
@@ -256,7 +276,7 @@ WinMain(HINSTANCE instance,
   }
   
   //-NOTE(Momo): Load Platform API for game
-  PF pf_api = Win_CreatePF();
+  Platform pf_api = Win_CreatePlatformForGame();
   
   //-NOTE(Momo): Load Gfx functions
   WinGfx_API gfx_api;
@@ -301,10 +321,9 @@ WinMain(HINSTANCE instance,
     { 0, 0, 0, 255 },
   };
   
-  //-NOTE(Momo): Begin game loop
+  
+  //- Begin game loop
   Game game = {0};
-  Win_global_state.is_running = true;
-  Win_global_state.is_hot_reloading = true;
   
   B32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   LARGE_INTEGER performance_frequency;
@@ -383,10 +402,12 @@ WinMain(HINSTANCE instance,
       }
     }
     
-    //-NOTE(Momo) Game logic here 
+    //-Game logic here 
     // TODO(Momo): figure out target secs per frame
     const F64 game_dt = 1/60.0;
+    game_api.update(&game, &pf_api, &input, gfx, (F32)(game_dt));
     
+    //-Game render here
     // NOTE(Momo): Resize if needed. 
     // TODO(Momo): Maybe we only do this once and then 
     // only when window size changes after?
@@ -395,18 +416,16 @@ WinMain(HINSTANCE instance,
     
     // TODO(Momo): Should probably make a "GameInfo" struct that 
     // contains information like these
-    const U32 game_design_width = 800;
-    const U32 game_design_height = 800;
     Rect2U32 render_region = Win_GetRenderRegion(render_wh.w,
                                                  render_wh.h,
-                                                 game_design_width,
-                                                 game_design_height);
+                                                 Win_global_state.aspect_ratio_width,
+                                                 Win_global_state.aspect_ratio_height);
     
-    game_api.update(&game, &pf_api, &input, gfx, (F32)(game_dt));
     
     
     gfx_api.render(gfx, render_wh, render_region);
-    //-NOTE(Momo): Frame-rate control
+    
+    //-Frame-rate control
     // 1. Calculate how much time has passed since the last frame
     // 2. If the time elapsed is greater than the target time elapsed,
     //    sleep/spin-lock until then.    

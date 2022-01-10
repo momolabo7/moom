@@ -247,8 +247,7 @@ Free(Opengl* ogl) {
 }
 
 static B32
-Init(Opengl* ogl, 
-     Opengl_PF_API pf)
+Init(Opengl* ogl, Opengl_Platform pf)
 {	
   ogl->pf = pf;
   

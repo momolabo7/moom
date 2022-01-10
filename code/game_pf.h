@@ -6,16 +6,18 @@
 
 
 //~NOTE(Momo): Platform API
-typedef void  PF_HotReloadFn(); // trigger hot reloading of game code
-typedef void  PF_ShutdownFn(); // trigger shutdown of application
-typedef void* PF_AllocFn(UMI size); // allocate memory
-typedef void  PF_FreeFn(void* ptr);     // frees memory
+typedef void  Platform_HotReloadFn(); // trigger hot reloading of game code
+typedef void  Platform_ShutdownFn(); // trigger shutdown of application
+typedef void* Platform_AllocFn(UMI size); // allocate memory
+typedef void  Platform_FreeFn(void* ptr);     // frees memory
+typedef void  Platform_SetAspectRatioFn(U32 width, U32 height); // sets aspect ratio of game
 
-struct PF {
-  PF_HotReloadFn* hot_reload;
-  PF_ShutdownFn* shutdown;
-  PF_AllocFn* alloc;
-  PF_FreeFn* free;
+struct Platform {
+  Platform_HotReloadFn* hot_reload;
+  Platform_ShutdownFn* shutdown;
+  Platform_AllocFn* alloc;
+  Platform_FreeFn* free;
+  Platform_SetAspectRatioFn* set_aspect_ratio;
 };
 
 
@@ -25,23 +27,23 @@ struct PF {
 // But that will probably require some insane enum
 // Or maybe we can put all these into Platform API?
 
-struct InputButton{
+struct Input_Button{
   B32 before;
   B32 now;
 };
 
-static B32 IsPoked(InputButton) ;
-static B32 IsReleased(InputButton);
-static B32 IsDown(InputButton);
-static B32 IsHeld(InputButton);
+static B32 IsPoked(Input_Button) ;
+static B32 IsReleased(Input_Button);
+static B32 IsDown(Input_Button);
+static B32 IsHeld(Input_Button);
 
 struct Input{
-  InputButton buttons[4];
+  Input_Button buttons[4];
   struct {
-    InputButton button_up;
-    InputButton button_down;
-    InputButton button_left;
-    InputButton button_right;
+    Input_Button button_up;
+    Input_Button button_down;
+    Input_Button button_left;
+    Input_Button button_right;
   };  
   
   V2F32 design_mouse_pos;
@@ -53,39 +55,6 @@ struct Input{
 static void Update(Input* input);
 
 
-//- Implementation
-static void Update(Input* input) {
-  for (U32 i = 0; i < ArrayCount(input->buttons); ++i) {
-    input->buttons[i].before = input->buttons[i].now;
-  }
-}
-
-
-
-// before: 0, now: 1
-static B32 
-IsPoked(InputButton b) {
-  return !b.before && b.now;
-}
-
-// before: 1, now: 0
-static B32
-IsReleased(InputButton b) {
-  return b.before && !b.now;
-}
-
-
-// before: X, now: 1
-static B32
-IsDown(InputButton b){
-  return b.now;
-}
-
-// before: 1, now: 1
-static B32
-IsHeld(InputButton b) {
-  return b.before && b.now;
-}
 
 //~ NOTE(Momo): Game API
 // Returns true if game is donew
@@ -94,7 +63,7 @@ struct Game {
 };
 
 typedef void Game_UpdateFn(Game* game_memory,
-                           PF* pf,
+                           Platform* pf,
                            Input* input,
                            Gfx* gfx,
                            F32 dt);
@@ -105,5 +74,6 @@ struct Game_API {
 };
 
 
+#include "game_pf.cpp"
 
 #endif //GAME_PLATFORM_H

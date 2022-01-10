@@ -119,7 +119,6 @@ static void SetTexture(Gfx* gfx,
 
 static void ClearTextures(Gfx* gfx);
 
-
 #include "game_gfx.cpp"
 
 #endif //GAME_RENDERER_H

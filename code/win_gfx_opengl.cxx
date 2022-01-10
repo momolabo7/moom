@@ -201,7 +201,7 @@ WinGfx_Init(HWND window) {
   }
   defer { ReleaseDC(window, dc); };
   
-  Opengl_PF_API pf; 
+  Opengl_Platform pf; 
   
   pf.alloc = WinGfx_AllocateMemory;
   pf.free = WinGfx_FreeMemory;
