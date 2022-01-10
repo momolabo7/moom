@@ -6,7 +6,6 @@
 
 
 //~NOTE(Momo): Platform API
-
 typedef void PF_HotReloadFn(); // trigger hot reloading of game code
 typedef void PF_ShutdownFn(); // trigger shutdown of application
 typedef void* PF_AllocFn(UMI size); // allocate memory
@@ -16,7 +15,7 @@ struct PF {
   PF_HotReloadFn* hot_reload;
   PF_ShutdownFn* shutdown;
   PF_AllocFn* alloc;
-  PF_FreeFn* free;  
+  PF_FreeFn* free;
 };
 
 
@@ -26,7 +25,7 @@ struct PF {
 // But that will probably require some insane enum
 // Or maybe we can put all these into Platform API?
 
-struct InputButton {
+struct InputButton{
   B32 before;
   B32 now;
 };

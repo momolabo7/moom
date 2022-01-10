@@ -31,52 +31,101 @@
 #define GAME_GFX_H
 
 //~ NOTE(Momo): Gfx API
-// TODO: Remove mailbox and copy it's functionality into here?
-struct Gfx {	
-	Mailbox commands;
-};
+typedef Mailbox Gfx_Cmds;
+
+typedef struct {	
+	Gfx_Cmds commands;
+} Gfx;
+
+typedef struct {
+  UMI id;
+} Gfx_Texture;
+
+
+
+//~ NOTE(Momo): Cmd types
+typedef enum {
+  Gfx_CmdType_Clear,
+  Gfx_CmdType_SetBasis,
+  Gfx_CmdType_DrawSubSprite,
+  Gfx_CmdType_DrawRect,
+  Gfx_CmdType_SetTexture,
+  Gfx_CmdType_ClearTextures,
+} Gfx_CmdType;
+
+
+typedef struct {
+  RGBA colors;
+} Gfx_Cmd_Clear;
+
+typedef struct {
+  M44 basis;
+} Gfx_Cmd_SetBasis;
+
+typedef struct {
+  UMI texture_index;
+  RGBA colors;
+  M44 transform;
+  Rect2F32 texture_uv; 
+} Gfx_Cmd_DrawSubSprite;
+
+typedef struct {
+  RGBA colors;
+  M44 transform;
+} Gfx_Cmd_DrawRect;
+
+
+typedef struct {
+  UMI index;
+  UMI width;
+  UMI height;
+  U8* pixels;
+} Gfx_Cmd_SetTexture;
+
+typedef struct {
+} Gfx_Cmd_ClearTextures;
 
 // NOTE(Momo): Function declaraions
-static void SetBasis(Gfx* g, M44 basis);
-static void SetOrthoCamera(Gfx* g, V3F32 pos, Rect3F32 frustum);
-static void DrawSprite(Gfx* gfx, 
+static void Gfx_SetBasis(Gfx* g, M44 basis);
+static void Gfx_SetOrthoCamera(Gfx* g, V3F32 pos, Rect3F32 frustum);
+static void Gfx_DrawSprite(Gfx* gfx, 
                            RGBA colors, 
                            M44 transform, 
-                           UMI texture,
+                           Gfx_Texture texture,
                            Rect2F32 texture_uv);
-static void DrawSubSprite(Gfx* gfx, 
+static void Gfx_DrawSubSprite(Gfx* gfx, 
                               RGBA colors, 
                               M44 transform, 
-                              UMI texture_index,
+                              Gfx_Texture texture,
                               Rect2F32 texture_uv);
 
-static void DrawRect(Gfx* gfx, RGBA colors, M44 transform);
-static void Clear(Gfx* gfx, RGBA colors);
-static void DrawLine(Gfx* gfx, 
+static void Gfx_DrawRect(Gfx* gfx, RGBA colors, M44 transform);
+static void Gfx_Clear(Gfx* gfx, RGBA colors);
+static void Gfx_DrawLine(Gfx* gfx, 
                          Line2 line,
                          F32 thickness,
                          RGBA colors,
                          F32 pos_z);
-static void DrawCircle(Gfx* gfx,
+static void Gfx_DrawCircle(Gfx* gfx,
                            Circ2 circle,
                            F32 thickness, 
                            U32 line_count,
                            RGBA color,
                            F32 pos_z);
 
-static void DrawAABB(Gfx* gfx,
+static void Gfx_DrawAABB(Gfx* gfx,
                          Rect2F32 rect,
                          F32 thickness,
                          RGBA colors,
                          F32 pos_z);
 
-static void SetTexture(Gfx* gfx,
+static void Gfx_SetTexture(Gfx* gfx,
                            UMI index,
                            UMI width,
                            UMI height,
                            U8* pixels);
 
-static void ClearTextures(Gfx* gfx);
+static void Gfx_ClearTextures(Gfx* gfx);
 
 
 #include "game_gfx.cpp"

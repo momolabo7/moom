@@ -201,11 +201,10 @@ WinGfx_Init(HWND window) {
   }
   defer { ReleaseDC(window, dc); };
   
-  Opengl_PF pf; 
-  {
-    pf.alloc = Win_Gfx_AllocateMemory;
-    pf.free = Win_Gfx_FreeMemory;
-  } 
+  Opengl_PF_API pf; 
+  
+  pf.alloc = Win_Gfx_AllocateMemory;
+  pf.free = Win_Gfx_FreeMemory;
   
   // TODO: IF YOU ARE READING IN HOTEL
   // CONTINUE FIXING THIS

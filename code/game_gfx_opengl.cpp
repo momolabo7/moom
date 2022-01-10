@@ -94,6 +94,7 @@ Opengl__AttachShader(Opengl* ogl,
   ogl->pf.glDeleteShader(shader_handle);
 }
 
+// TODO: Maybe this should be a command?
 static void 
 Opengl__AlignViewport(Opengl* ogl, 
                       V2U32 render_wh, 
@@ -157,6 +158,7 @@ Opengl__SetTexture(Opengl* ogl,
                    S32 height,
                    U8* pixels) 
 {
+  Gfx_Texture ret = {};
   
   Assert(index < ArrayCount(ogl->textures));
   
@@ -182,6 +184,8 @@ Opengl__SetTexture(Opengl* ogl,
                               GL_UNSIGNED_BYTE, 
                               (void*)pixels);
   
+  ret.id = ArrayCount(ogl->textures);
+  
   ogl->textures[index] = entry;
 }
 
@@ -196,6 +200,8 @@ Opengl__ClearTextures(Opengl* ogl) {
 
 void 
 Opengl__AddPredefinedTextures(Opengl* ogl) {
+  
+  
   // NOTE(Momo): Dummy texture setup
   {
     U8 pixels[4][4] {
@@ -243,7 +249,7 @@ Opengl_Free(Opengl* ogl) {
 
 static B32
 Opengl_Init(Opengl* ogl, 
-            Opengl_PF pf)
+            Opengl_PF_API pf)
 {	
   ogl->pf = pf;
   
@@ -493,7 +499,7 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
   for (U32 i = 0; i < commands->entry_count; ++i) {
     MailboxEntry* entry = GetEntry(commands, i);
     switch(entry->id) {
-      case GfxCmdType_SetBasis: {
+      case Gfx_CmdType_SetBasis: {
         Gfx_Cmd_SetBasis* data = (Gfx_Cmd_SetBasis*)entry->data;
         Opengl__DrawInstances(ogl,
                               current_texture, 
@@ -512,7 +518,7 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
                                           GL_FALSE, 
                                           (const GLfloat*)&result);
       } break;
-      case GfxCmdType_Clear: {
+      case Gfx_CmdType_Clear: {
         Gfx_Cmd_Clear* data = (Gfx_Cmd_Clear*)entry->data;
         
         ogl->pf.glClearColor(data->colors.r, 
@@ -522,7 +528,7 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
         ogl->pf.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
       } break;
-      case GfxCmdType_DrawRect: {
+      case Gfx_CmdType_DrawRect: {
         Gfx_Cmd_DrawRect* data = (Gfx_Cmd_DrawRect*)entry->data;
         
         GLuint ogl_texture_handle = ogl->blank_texture;
@@ -562,7 +568,7 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
         ++instances_to_draw;
         ++current_instance_index;
       } break;
-      case GfxCmdType_DrawSubSprite: {
+      case Gfx_CmdType_DrawSubSprite: {
         Gfx_Cmd_DrawSubSprite* data = (Gfx_Cmd_DrawSubSprite*)entry->data;
         
         GLuint texture = ogl->textures[data->texture_index]; 
@@ -611,7 +617,7 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
         ++current_instance_index;
         
       } break;
-      case GfxCmdType_SetTexture: {
+      case Gfx_CmdType_SetTexture: {
         Gfx_Cmd_SetTexture* data = (Gfx_Cmd_SetTexture*)entry->data;
         Assert(data->width < S32_max);
         Assert(data->height < S32_max);
@@ -620,7 +626,7 @@ Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
         
         Opengl__SetTexture(ogl, data->index, (S32)data->width, (S32)data->height, data->pixels);
       } break;
-      case GfxCmdType_ClearTextures: {
+      case Gfx_CmdType_ClearTextures: {
         Opengl__ClearTextures(ogl);
       } break;
     }

@@ -253,7 +253,7 @@ PNG__Deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
           PNG__Log("LEN vs NLEN mismatch!");
           return false; 
         }
-        // TODO(Momo): complete this
+        // TODO: complete this
         PNG__Log("BTYPE 0 not supported!");
         return false;
       } break;
@@ -269,7 +269,8 @@ PNG__Deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
           U16 lit_codes[288] = {0};
           U16 dist_codes[32] = {0};
           
-          // TODO(Momo): This is kinda fixed, so we can probably cache it?
+          // TODO(Momo): This is kinda fixed, so we
+          // can probably cache it?
           U32 lit = 0;
           for (; lit < 144; ++lit) {
             lit_codes[lit] = 8;
@@ -303,6 +304,7 @@ PNG__Deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
         }
         else // BTYPE == 0b10
         {
+          // TODO: Dynamic huffman
           PNG__Log(">>>> Dynamic huffman\n");
           U32 HLIT = ConsumeBits(src_stream, 5) + 257;
           U32 HDIST = ConsumeBits(src_stream, 5) + 1;

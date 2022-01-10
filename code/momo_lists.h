@@ -1,7 +1,8 @@
 /* date = November 29th 2021 9:58 pm */
+// TODO(Momo): Should rename to 'momo_list.h'
 
-#ifndef MOMO_LIST_H
-#define MOMO_LIST_H
+#ifndef MOMO_ARRAY_H
+#define MOMO_ARRAY_H
 
 
 //~ NOTE(Momo): 'Dynamic' list API
@@ -57,4 +58,4 @@
 
 #include "momo_lists.cpp"
 
-#endif //MOMO_LIST_H
+#endif //MOMO_ARRAY_H
