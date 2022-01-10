@@ -24,12 +24,12 @@ Clear(Mailbox* m) {
 
 
 // NOTE(Momo): Accessors and Iterators
-static MailboxEntry*
+static Mailbox_Entry*
 GetEntry(Mailbox* m, UMI index) {
   Assert(index < m->entry_count);
 	
-	UMI stride = AlignUpPow2(sizeof(MailboxEntry), 4);
-	return (MailboxEntry*)(m->memory + m->entry_start - ((index+1) * stride));
+	UMI stride = AlignUpPow2(sizeof(Mailbox_Entry), 4);
+	return (Mailbox_Entry*)(m->memory + m->entry_start - ((index+1) * stride));
 }
 
 
@@ -42,12 +42,12 @@ PushBlock(Mailbox* m, UMI size, U32 id, UMI align)
 	UMI adjusted_data_pos = AlignUpPow2(imem + m->data_pos, align) - imem;
 	UMI adjusted_entry_pos = AlignDownPow2(imem + m->entry_pos, 4) - imem; 
 	
-	Assert(adjusted_data_pos + size + sizeof(MailboxEntry) < adjusted_entry_pos);
+	Assert(adjusted_data_pos + size + sizeof(Mailbox_Entry) < adjusted_entry_pos);
 	
 	m->data_pos = adjusted_data_pos + size;
-	m->entry_pos = adjusted_entry_pos - sizeof(MailboxEntry);
+	m->entry_pos = adjusted_entry_pos - sizeof(Mailbox_Entry);
 	
-	MailboxEntry* entry = (MailboxEntry*)IntToPtr(imem + m->entry_pos);
+	Mailbox_Entry* entry = (Mailbox_Entry*)IntToPtr(imem + m->entry_pos);
 	entry->id = id;
 	entry->data = IntToPtr(imem + adjusted_data_pos);
 	

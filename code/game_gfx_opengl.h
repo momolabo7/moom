@@ -2,7 +2,7 @@
 #define GAME_GFX_OPENGL_H
 
 
-// NOTE(Momo): Opengl typedefs
+//- Opengl typedefs
 #define GL_TRUE                 1
 #define GL_FALSE                0
 
@@ -48,8 +48,7 @@
 #define GL_DEBUG_TYPE_MARKER 0x8268
 
 
-
-// NOTE(Momo): Types
+//- Opengl Types
 typedef S32  GLenum;
 typedef S32  GLint; 
 typedef S32  GLsizei;
@@ -69,6 +68,7 @@ typedef void (GLDEBUGPROC)(GLenum source,
                            GLchar *msg,
                            const void *userParam);
 
+//- OpenGL Functions
 typedef void    GL_glEnable(GLenum cap);
 typedef void    GL_glDisable(GLenum cap);
 typedef void    GL_glViewport(GLint x, 
@@ -218,7 +218,6 @@ struct Opengl_PF_API {
 
 struct Opengl {
   Gfx gfx;
-  
   Opengl_PF_API pf;
   
   // NOTE(Momo): 

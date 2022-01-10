@@ -496,7 +496,7 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
   
   Mailbox* commands = &ogl->gfx.commands;
   for (U32 i = 0; i < commands->entry_count; ++i) {
-    MailboxEntry* entry = GetEntry(commands, i);
+    Mailbox_Entry* entry = GetEntry(commands, i);
     switch(entry->id) {
       case Gfx_CmdType_SetBasis: {
         Gfx_Cmd_SetBasis* data = (Gfx_Cmd_SetBasis*)entry->data;

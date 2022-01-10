@@ -186,7 +186,7 @@ PNG__Huffman_Compute(PNG__Huffman* h,
   }
   
   // 2. Numerical value of smallest code for each code length
-  ArenaMarker temp_mark = Mark(arena);
+  Arena_Marker temp_mark = Mark(arena);
   defer { Revert(temp_mark); };
   
   U16* len_offset_table = PushArray<U16>(arena, max_lengths);
@@ -232,7 +232,7 @@ PNG__Deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
   
   U8 BFINAL = 0;
   while(BFINAL == 0){
-    ArenaMarker scratch = Mark(arena);
+    Arena_Marker scratch = Mark(arena);
     defer{ Revert(scratch); };
     
     BFINAL = (U8)ConsumeBits(src_stream, 1);

@@ -26,13 +26,13 @@ template<typename T> static T* PushArray(Arena* arena, UMI num, UMI align = 4);
 
 
 // Temporary memory API used to revert an arena to an original state;
-struct ArenaMarker {
+struct Arena_Marker {
   Arena* arena;
   UMI old_pos;
 };
 
-static ArenaMarker  Mark(Arena* arena);
-static void		     Revert(ArenaMarker mark);
+static Arena_Marker Mark(Arena* arena);
+static void		     Revert(Arena_Marker mark);
 
 
 #include "momo_arena.cpp"

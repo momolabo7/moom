@@ -71,9 +71,9 @@ Arena_BootBlock(UMI struct_size,
 }
 //*/
 
-static ArenaMarker
+static Arena_Marker
 Mark(Arena* arena) {
-  ArenaMarker ret;
+  Arena_Marker ret;
   ret.arena = arena;
   ret.old_pos = arena->pos;
   
@@ -81,7 +81,7 @@ Mark(Arena* arena) {
 }
 
 static void
-Revert(ArenaMarker mark) {
+Revert(Arena_Marker mark) {
   mark.arena->pos = mark.old_pos;
 }
 
