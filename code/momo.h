@@ -15,8 +15,6 @@
 #include "momo_strings.h"
 #include "momo_sort.h"
 #include "momo_streams.h"
-
-//-refactor progress line  
 #include "momo_lists.h"
 #include "momo_rect_pack.h"
 #include "momo_wav.h"

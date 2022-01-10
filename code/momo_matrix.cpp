@@ -19,7 +19,7 @@ static M44 Transpose(M44 m) {
 	}
 	return ret;
 }
-static M44 M44_Scale(F32 x, F32 y, F32 z) {
+static M44 CreateScaleM44(F32 x, F32 y, F32 z) {
 	M44 ret = {0};
 	ret.e[0][0] = x;
 	ret.e[1][1] = y;
@@ -28,7 +28,7 @@ static M44 M44_Scale(F32 x, F32 y, F32 z) {
 	
 	return ret;
 }
-static M44 M44_Identity() {
+static M44 CreateIdentityM44() {
 	M44 ret = {0};
 	ret.e[0][0] = 1.f;
 	ret.e[1][1] = 1.f;
@@ -37,8 +37,8 @@ static M44 M44_Identity() {
 	
 	return ret;
 }
-static M44 M44_Translation(F32 x, F32 y, F32 z) {
-	M44 ret = M44_Identity();
+static M44 CreateTranslationM44(F32 x, F32 y, F32 z) {
+	M44 ret = CreateIdentityM44();
 	ret.e[0][3] = x;
 	ret.e[1][3] = y;
 	ret.e[2][3] = z;
@@ -46,7 +46,7 @@ static M44 M44_Translation(F32 x, F32 y, F32 z) {
 	
 	return ret;
 }
-static M44 M44_RotationX(F32 rad) {
+static M44 CreateRotationXM44(F32 rad) {
 	
 	// NOTE(Momo): 
 	// 1  0  0  0
@@ -65,7 +65,7 @@ static M44 M44_RotationX(F32 rad) {
 	
 	return ret;
 }
-static M44 M44_RotationY(F32 rad) {
+static M44 CreateRotationYM44(F32 rad) {
 	
 	// NOTE(Momo): 
 	//  c  0  s  0
@@ -84,7 +84,7 @@ static M44 M44_RotationY(F32 rad) {
 	
 	return ret;
 }
-static M44 M44_RotationZ(F32 rad) {
+static M44 CreateRotationZM44(F32 rad) {
 	
 	// NOTE(Momo): 
 	//  c -s  0  0
@@ -104,7 +104,7 @@ static M44 M44_RotationZ(F32 rad) {
 	
 	return ret;
 }
-static M44 M44_Orthographic(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 far) {
+static M44 CreateOrthographicM44(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 far) {
 	
 	M44 ret = {0};
 	ret.e[0][0] = 2.f/(right-left);
@@ -117,7 +117,7 @@ static M44 M44_Orthographic(F32 left, F32 right, F32 bottom, F32 top, F32 near, 
 	
 	return ret;
 }
-static M44 M44_Frustum(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 far) {
+static M44 CreateFrustumM44(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 far) {
 	M44 ret = {0};
 	ret.e[0][0] = (2.f*near)/(right-left);
 	ret.e[1][1] = (2.f*near)/(top-bottom);
@@ -130,10 +130,10 @@ static M44 M44_Frustum(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 f
 	
 	return ret;
 }
-static M44 M44_Perspective(F32 fov, F32 aspect, F32 near, F32 far){
+static M44 CreatePerspectiveM44(F32 fov, F32 aspect, F32 near, F32 far){
 	F32 top = near * Tan(fov*0.5f);
 	F32 right = top * aspect;
-	return M44_Frustum(-right, right,
+	return CreateFrustumM44(-right, right,
                         -top, top,
                         near, far);
 }

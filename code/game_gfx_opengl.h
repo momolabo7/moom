@@ -237,8 +237,8 @@ struct Opengl {
 
 
 //~ NOTE(Momo): Functions
-static B32  Opengl_Init(Opengl* ogl, Opengl_PF_API pf);
-static void Opengl_Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region);
-static void Opengl_Free(Opengl* ogl);
+static B32  Init(Opengl* ogl, Opengl_PF_API pf);
+static void Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region);
+static void Free(Opengl* ogl);
 
 #endif //GAME_GFX_OPENGL_H

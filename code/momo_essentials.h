@@ -267,8 +267,8 @@ static constexpr F64 F64_NegInf();
 struct Memory  {
   void* data;
   UMI size;  
-  operator B32(){ return data && size; };
 };
+static B32 IsValid(Memory);
 
 static void Bin_Copy(void* dest, const void* src, UMI size);
 static void Bin_Zero(void* dest, UMI size);

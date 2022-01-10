@@ -170,7 +170,7 @@ WGL_LoadExtensions() {
   }
 }
 static void*
-Win_Gfx_AllocateMemory(UMI memory_size) {
+WinGfx_AllocateMemory(UMI memory_size) {
   return VirtualAllocEx(GetCurrentProcess(),
                         0, 
                         memory_size,
@@ -180,7 +180,7 @@ Win_Gfx_AllocateMemory(UMI memory_size) {
 }
 
 static void
-Win_Gfx_FreeMemory(void* memory) {
+WinGfx_FreeMemory(void* memory) {
   VirtualFreeEx(GetCurrentProcess(), 
                 memory,    
                 0, 
@@ -203,12 +203,12 @@ WinGfx_Init(HWND window) {
   
   Opengl_PF_API pf; 
   
-  pf.alloc = Win_Gfx_AllocateMemory;
-  pf.free = Win_Gfx_FreeMemory;
+  pf.alloc = WinGfx_AllocateMemory;
+  pf.free = WinGfx_FreeMemory;
   
   // TODO: IF YOU ARE READING IN HOTEL
   // CONTINUE FIXING THIS
-  Opengl* opengl = (Opengl*)Win_Gfx_AllocateMemory(sizeof(Opengl));
+  Opengl* opengl = (Opengl*)WinGfx_AllocateMemory(sizeof(Opengl));
   
   if (!opengl ) {
     goto failed;
@@ -287,7 +287,7 @@ if (!pf.name) { goto failed; }
   }
 #undef WGL_SetOpenglFunction
   
-  if (!Opengl_Init(opengl, pf)) {
+  if (!Init(opengl, pf)) {
     goto failed;
   }
   
@@ -303,8 +303,8 @@ if (!pf.name) { goto failed; }
   
   failed: 
   {
-    Opengl_Free(opengl);
-    Win_Gfx_FreeMemory(opengl);
+    Free(opengl);
+    WinGfx_FreeMemory(opengl);
     return nullptr;
   }
   
@@ -314,14 +314,14 @@ if (!pf.name) { goto failed; }
 
 exported void
 WinGfx_Render(Gfx* gfx,  V2U32 render_wh, Rect2U32 region) {
-  Opengl_Render((Opengl*)gfx, render_wh, region);
+  Render((Opengl*)gfx, render_wh, region);
 }
 
 
 exported void
 WinGfx_Free(Gfx* r) {
   Opengl* opengl = (Opengl*)r;
-  Opengl_Free(opengl);
-  Win_Gfx_FreeMemory(opengl);
+  Free(opengl);
+  WinGfx_FreeMemory(opengl);
 }
 

@@ -3,52 +3,58 @@
 // but they might not be avaliable. 
 // TODO(Momo): Figure out a nice flag to indicate if libraries
 // are avaliable for use or not. Maybe IS_CRT?
+
+static B32
+IsValid(Memory mem) {
+  return mem.data && mem.size;
+}
+
 #if 1
 #include <string.h>
 static void 
 Bin_Copy(void* dest, const void* src, UMI size) {
-	memmove(dest, src, size);
+  memmove(dest, src, size);
 }
 
 static void 
 Bin_Zero(void* dest, UMI size) {
-	memset(dest, 0, size);
+  memset(dest, 0, size);
 }
 static B32
 Bin_Match(const void* lhs, const void* rhs, UMI size) {
-	return memcmp(lhs, rhs, size) == 0; 
+  return memcmp(lhs, rhs, size) == 0; 
 }
 
 #else
 
 static void
 Bin_Copy(void* dest, const void* src, UMI size) {
-	U8 *p = (U8*)dest;
-	const U8 *q = (const U8*)src;
-	while(size--) {
+  U8 *p = (U8*)dest;
+  const U8 *q = (const U8*)src;
+  while(size--) {
     *p++ = *q++;
   }
 }
 
 static void 
 Bin_Zero(void* dest, UMI size) {
-	U8 *p = (U8*)dest;
-	while(size--){
+  U8 *p = (U8*)dest;
+  while(size--){
     *p++ = 0;
   }
 }
 
 static B32
 Bin_Match(const void* lhs, const void* rhs, UMI size) {
-	const U8 *p = (const U8*)lhs;
-	const U8 *q = (const U8*)rhs;
-	while(size--) {
-		if (*p != *q) {
-			return false;
-		}
-	}
-	return true;
-	
+  const U8 *p = (const U8*)lhs;
+  const U8 *q = (const U8*)rhs;
+  while(size--) {
+    if (*p != *q) {
+      return false;
+    }
+  }
+  return true;
+  
 }
 #endif
 

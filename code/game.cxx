@@ -79,9 +79,9 @@ Game_Update(Game* game, PF* pf, Input* input, Gfx* gfx, F32 dt) {
     HSL hsl = CreateHSL(perm->tmp_delta, 1.f, 0.5f);
     colors.rgb = ToRGB(hsl);
     
-    M44 scale = M44_Scale(600.f, 600.f, 10.f);
-    M44 rot = M44_RotationZ(perm->tmp_rot += (dt));
-    M44 trans = M44_Translation(800.f, 450.f, 300.f);
+    M44 scale = CreateScaleM44(600.f, 600.f, 10.f);
+    M44 rot = CreateRotationZM44(perm->tmp_rot += (dt));
+    M44 trans = CreateTranslationM44(800.f, 450.f, 300.f);
     Gfx_DrawSprite(gfx, colors, trans*scale*rot, 0);
   }
   

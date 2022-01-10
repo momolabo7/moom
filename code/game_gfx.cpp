@@ -14,14 +14,14 @@ Gfx_SetOrthoCamera(Gfx* gfx,
   auto* data = Push<Gfx_Cmd_SetBasis>(&gfx->commands, 
                                       Gfx_CmdType_SetBasis);
   
-  M44 p  = M44_Orthographic(frustum.min.x,  
+  M44 p  = CreateOrthographicM44(frustum.min.x,  
                             frustum.max.x, 
                             frustum.min.y, 
                             frustum.max.y,
                             frustum.min.z, 
                             frustum.max.z);
   
-  M44 v = M44_Translation(-position.x, -position.y, -position.z);
+  M44 v = CreateTranslationM44(-position.x, -position.y, -position.z);
   data->basis = p*v;
   
 }
@@ -96,9 +96,9 @@ Gfx_DrawLine(Gfx* gfx,
   F32 angle = AngleBetween(line_vector, x_axis);
   
   // TODO(Momo): Should really precompute this
-  M44 T = M44_Translation(line_mid.x, line_mid.y, pos_z);
-  M44 R = M44_RotationZ(angle);
-  M44 S = M44_Scale(line_length, thickness, 1.f) ;
+  M44 T = CreateTranslationM44(line_mid.x, line_mid.y, pos_z);
+  M44 R = CreateRotationZM44(angle);
+  M44 S = CreateScaleM44(line_length, thickness, 1.f) ;
   
   Gfx_DrawRect(gfx, 
                colors, 

@@ -31,13 +31,9 @@
 #define GAME_GFX_H
 
 //~ NOTE(Momo): Gfx API
-typedef struct {	
+struct Gfx{	
 	Mailbox commands;
-} Gfx;
-
-typedef struct {
-  UMI id;
-} Gfx_Texture;
+};
 
 
 
@@ -89,12 +85,12 @@ static void Gfx_SetOrthoCamera(Gfx* g, V3F32 pos, Rect3F32 frustum);
 static void Gfx_DrawSprite(Gfx* gfx, 
                            RGBA colors, 
                            M44 transform, 
-                           Gfx_Texture texture,
+                           UMI texture_index,
                            Rect2F32 texture_uv);
 static void Gfx_DrawSubSprite(Gfx* gfx, 
                               RGBA colors, 
                               M44 transform, 
-                              Gfx_Texture texture,
+                              UMI texture_index,
                               Rect2F32 texture_uv);
 
 static void Gfx_DrawRect(Gfx* gfx, RGBA colors, M44 transform);
