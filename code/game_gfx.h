@@ -31,10 +31,8 @@
 #define GAME_GFX_H
 
 //~ NOTE(Momo): Gfx API
-typedef Mailbox Gfx_Cmds;
-
 typedef struct {	
-	Gfx_Cmds commands;
+	Mailbox commands;
 } Gfx;
 
 typedef struct {
