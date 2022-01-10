@@ -41,12 +41,12 @@ Partition(Arena* from_arena, UMI size) {
   return CreateArena(memory, size);
 }
 
-template<class T> static T*
+template<typename T> static T*
 Push(Arena* arena, UMI align) {
   return (T*)PushBlock(arena, sizeof(T), align);
 }
 
-template<class T> static T*
+template<typename T> static T*
 PushArray(Arena* arena, UMI num, UMI align) {
   return (T*)PushBlock(arena, sizeof(T)*num, align);
 }

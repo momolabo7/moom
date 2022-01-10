@@ -60,12 +60,12 @@ ConsumeBits(Stream* s, U32 amount){
   
   return result;
 }
-template<class T> static T* 
+template<typename T> static T* 
 Consume(Stream* s) 
 {
   return (T*)ConsumeBlock(s, sizeof(T));
 }
-template<class T> void 
+template<typename T> void 
 Write(Stream* s, T item) {
   WriteBlock(s, &item, sizeof(T));
 }

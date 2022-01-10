@@ -22,8 +22,8 @@ static U8*      ConsumeBlock(Stream* s, UMI amount);
 static void     WriteBlock(Stream* s, void* src, UMI size);
 static void     FlushBits(Stream* s);
 
-template<class T> static T* Consume(Stream* s);
-template<class T> void Write(Stream* s, T item);
+template<typename T> static T* Consume(Stream* s);
+template<typename T> void Write(Stream* s, T item);
 
 
 

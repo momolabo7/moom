@@ -184,11 +184,11 @@ static constexpr U8* IntToPtr(UMI u);
 // we do not need to reevaluate the arguments every time.
 // TODO(Momo): We might want t 'comparison' function version for min and max
 //
-template<class T> static constexpr T Min(T l, T r);
-template<class T> static constexpr T Max(T l, T r);
-template<class T> static constexpr T Clamp(T x, T b, T t);
+template<typename T> static constexpr T Min(T l, T r);
+template<typename T> static constexpr T Max(T l, T r);
+template<typename T> static constexpr T Clamp(T x, T b, T t);
 
-template<class T> static constexpr T Abs(T x);
+template<typename T> static constexpr T Abs(T x);
 static constexpr F32 Abs(F32 value);
 static constexpr F64 Abs(F64 value);
 static constexpr S8  Abs(S8 value);
@@ -200,8 +200,8 @@ static constexpr S64 Abs(S64 value);
 // and must be of a floating point type. I'm not sure if I want to go into
 // the hellhole of checking if 'f' is a floating point via TMP. Seems overkill
 // since there are only 2 floating point types I generally care about.
-template<class T> static constexpr T Lerp(T s, T e, F32 f); 
-template<class T> static constexpr T Lerp(T s, T e, F64 f); 
+template<typename T> static constexpr T Lerp(T s, T e, F32 f); 
+template<typename T> static constexpr T Lerp(T s, T e, F64 f); 
 
 // NOTE(Momo): Ratio is an interesting function. 
 // All 1D Ratios will end up with a 1D FXX type.
@@ -214,10 +214,10 @@ template<class T> static constexpr T Lerp(T s, T e, F64 f);
 static constexpr F32 Ratio(F32 v, F32 min, F32 max);
 static constexpr F64 Ratio(F64 v, F64 min, F64 max);
 
-template<class T, class U> static constexpr T AlignDownPow2(T value, U align);
-template<class T, class U> static T AlignUpPow2(T value, U align);
-template<class T> static constexpr B32 IsPow2(T value);
-template<class T> static constexpr void Swap(T* lhs, T* rhs); 
+template<typename T, typename U> static constexpr T AlignDownPow2(T value, U align);
+template<typename T, typename U> static T AlignUpPow2(T value, U align);
+template<typename T> static constexpr B32 IsPow2(T value);
+template<typename T> static constexpr void Swap(T* lhs, T* rhs); 
 
 //~NOTE(Momo): Assert
 // NOTE(Momo): Others can provide their own 'AssertCallback' 
@@ -312,8 +312,8 @@ static constexpr F64 BPMToSPB(F64 bpm);
 // NOTE(Momo): I'm not entirely sure if this prototype makes sense.
 // It sounds more reasonable to endian swap ANY type. 
 // We COULD use a template approach like so:
-//   template<class T> EndianSwap16(T value);
-//   template<class T> EndianSwap32(T value); 
+//   template<typename T> EndianSwap16(T value);
+//   template<typename T> EndianSwap32(T value); 
 // Or we COULD just ignore the concept of type:
 //   void _EndianSwap16(U8* ptr)
 //   #define EndianSwap16(value) _EndianSwap16((U8*)&value)
@@ -412,13 +412,13 @@ static F64 EaseOutExpo(F64 t);
 static F64 EaseInOutExpo(F64 t);
 
 //~ NOTE(Momo): Defer construct
-template<class F> 
+template<typename F> 
 struct zawarudo_ScopeGuard {
   F f;
   ~zawarudo_ScopeGuard() { f(); }
 };
 struct zawarudo_defer_dummy {};
-template<class F> zawarudo_ScopeGuard<F> operator+(zawarudo_defer_dummy, F f) {
+template<typename F> zawarudo_ScopeGuard<F> operator+(zawarudo_defer_dummy, F f) {
   return { f };
 }
 #define zawarudo_AnonVarSub(x) zawarudo_defer##x

@@ -26,7 +26,7 @@ static void                  Clear(Mailbox* m);
 static MailboxEntry*         GetEntry(Mailbox *m, UMI index);
 static U8*                   PushBlock(Mailbox* m, UMI size, U32 id, UMI align = 4);
 static U8*  				         PushExtraData(Mailbox* m, UMI size, UMI align = 4);
-template<class T> static T*	Push(Mailbox* m, U32 id, UMI align = 4);
+template<typename T> static T*	Push(Mailbox* m, U32 id, UMI align = 4);
 
 
 #include "momo_mailbox.cpp"

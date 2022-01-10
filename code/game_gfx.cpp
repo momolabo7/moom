@@ -1,25 +1,25 @@
 
+
 static void
-Gfx_SetBasis(Gfx* gfx, M44 basis) {
+SetBasis(Gfx* gfx, M44 basis) {
   auto* data = Push<Gfx_Cmd_SetBasis>(&gfx->commands, 
                                       Gfx_CmdType_SetBasis);
   data->basis = basis;
 }
 
 static void
-Gfx_SetOrthoCamera(Gfx* gfx, 
-                   V3F32 position,
-                   Rect3F32 frustum)   
+SetOrthoCamera(Gfx* gfx, 
+               V3F32 position,
+               Rect3F32 frustum)   
 {
   auto* data = Push<Gfx_Cmd_SetBasis>(&gfx->commands, 
                                       Gfx_CmdType_SetBasis);
-  
   M44 p  = CreateOrthographicM44(frustum.min.x,  
-                            frustum.max.x, 
-                            frustum.min.y, 
-                            frustum.max.y,
-                            frustum.min.z, 
-                            frustum.max.z);
+                                 frustum.max.x, 
+                                 frustum.min.y, 
+                                 frustum.max.y,
+                                 frustum.min.z, 
+                                 frustum.max.z);
   
   M44 v = CreateTranslationM44(-position.x, -position.y, -position.z);
   data->basis = p*v;
@@ -27,7 +27,7 @@ Gfx_SetOrthoCamera(Gfx* gfx,
 }
 
 static void
-Gfx_Clear(Gfx* gfx, RGBA colors) {
+Clear(Gfx* gfx, RGBA colors) {
   auto* data = Push<Gfx_Cmd_Clear>(&gfx->commands, 
                                    Gfx_CmdType_Clear);
   
@@ -35,11 +35,11 @@ Gfx_Clear(Gfx* gfx, RGBA colors) {
 }
 
 static void
-Gfx_DrawSubSprite(Gfx* gfx, 
-                  RGBA colors, 
-                  M44 transform, 
-                  UMI texture_index,
-                  Rect2F32 texture_uv)  
+DrawSubSprite(Gfx* gfx, 
+              RGBA colors, 
+              M44 transform, 
+              UMI texture_index,
+              Rect2F32 texture_uv)  
 
 {
   auto* data = Push<Gfx_Cmd_DrawSubSprite>(&gfx->commands, 
@@ -52,22 +52,22 @@ Gfx_DrawSubSprite(Gfx* gfx,
 }
 
 static void
-Gfx_DrawSprite(Gfx* gfx, 
-               RGBA colors, 
-               M44 transform, 
-               UMI texture_index)  
+DrawSprite(Gfx* gfx, 
+           RGBA colors, 
+           M44 transform, 
+           UMI texture_index)  
 
 {
   Rect2F32 uv = {0};
   uv.max.x = 1.f;
   uv.max.y = 1.f;
-  Gfx_DrawSubSprite(gfx, colors, transform, texture_index, uv);
+  DrawSubSprite(gfx, colors, transform, texture_index, uv);
 }
 
 static void
-Gfx_DrawRect(Gfx* gfx, 
-             RGBA colors, 
-             M44 transform) 
+DrawRect(Gfx* gfx, 
+         RGBA colors, 
+         M44 transform) 
 {
   auto* data = Push<Gfx_Cmd_DrawRect>(&gfx->commands, 
                                       Gfx_CmdType_DrawRect);
@@ -77,11 +77,11 @@ Gfx_DrawRect(Gfx* gfx,
 }
 
 static void 
-Gfx_DrawLine(Gfx* gfx, 
-             Line2 line,
-             F32 thickness,
-             RGBA colors,
-             F32 pos_z) 
+DrawLine(Gfx* gfx, 
+         Line2 line,
+         F32 thickness,
+         RGBA colors,
+         F32 pos_z) 
 {
   // NOTE(Momo): Min.Y needs to be lower than Max.y
   if (line.min.y > line.max.y) {
@@ -96,22 +96,23 @@ Gfx_DrawLine(Gfx* gfx,
   F32 angle = AngleBetween(line_vector, x_axis);
   
   // TODO(Momo): Should really precompute this
+  // IF ONLY WE CAN DO THIS IN COMPILE TIME. COUGH.
   M44 T = CreateTranslationM44(line_mid.x, line_mid.y, pos_z);
   M44 R = CreateRotationZM44(angle);
   M44 S = CreateScaleM44(line_length, thickness, 1.f) ;
   
-  Gfx_DrawRect(gfx, 
-               colors, 
-               T*R*S);
+  DrawRect(gfx, 
+           colors, 
+           T*R*S);
 }
 
 static void
-Gfx_DrawCircle(Gfx* gfx,
-               Circ2 circle,
-               F32 thickness, 
-               U32 line_count,
-               RGBA color,
-               F32 pos_z) 
+DrawCircle(Gfx* gfx,
+           Circ2 circle,
+           F32 thickness, 
+           U32 line_count,
+           RGBA color,
+           F32 pos_z) 
 {
   // NOTE(Momo): Essentially a bunch of lines
   // We can't really have a surface with less than 3 lines
@@ -124,11 +125,11 @@ Gfx_DrawCircle(Gfx* gfx,
     V2F32 line_pt_1 = Add(pt1, circle.center);
     V2F32 line_pt_2 = Add(pt2, circle.center);
     Line2 line = { line_pt_1, line_pt_2 };
-    Gfx_DrawLine(gfx, 
-                 line,
-                 thickness,
-                 color,
-                 pos_z);
+    DrawLine(gfx, 
+             line,
+             thickness,
+             color,
+             pos_z);
     
     pt1 = pt2;
     pt2 = Rotate(pt1, angle_increment);
@@ -137,11 +138,11 @@ Gfx_DrawCircle(Gfx* gfx,
 }
 
 static void 
-Gfx_DrawAABB(Gfx* gfx,
-             Rect2F32 rect,
-             F32 thickness,
-             RGBA colors,
-             F32 pos_z) 
+DrawAABB(Gfx* gfx,
+         Rect2F32 rect,
+         F32 thickness,
+         RGBA colors,
+         F32 pos_z) 
 {
   //Bottom
   {
@@ -151,11 +152,11 @@ Gfx_DrawAABB(Gfx* gfx,
     line.max.x = rect.max.x;
     line.min.y = rect.min.y; 
     
-    Gfx_DrawLine(gfx, 
-                 line,
-                 thickness, 
-                 colors,
-                 pos_z);
+    DrawLine(gfx, 
+             line,
+             thickness, 
+             colors,
+             pos_z);
   }
   
   // Left
@@ -166,11 +167,11 @@ Gfx_DrawAABB(Gfx* gfx,
     line.max.x = rect.min.x;
     line.min.y = rect.max.y; 
     
-    Gfx_DrawLine(gfx, 
-                 line,
-                 thickness, 
-                 colors,
-                 pos_z);
+    DrawLine(gfx, 
+             line,
+             thickness, 
+             colors,
+             pos_z);
   }
   
   //Top
@@ -181,11 +182,11 @@ Gfx_DrawAABB(Gfx* gfx,
     line.max.x = rect.max.x;
     line.min.y = rect.max.y; 
     
-    Gfx_DrawLine(gfx, 
-                 line,
-                 thickness, 
-                 colors,
-                 pos_z);
+    DrawLine(gfx, 
+             line,
+             thickness, 
+             colors,
+             pos_z);
     
   }
   
@@ -197,20 +198,20 @@ Gfx_DrawAABB(Gfx* gfx,
     line.max.x = rect.max.x;
     line.min.y = rect.max.y; 
     
-    Gfx_DrawLine(gfx, 
-                 line,
-                 thickness, 
-                 colors,
-                 pos_z);
+    DrawLine(gfx, 
+             line,
+             thickness, 
+             colors,
+             pos_z);
   }
 }
 
 static void 
-Gfx_SetTexture(Gfx* gfx,
-               UMI index,
-               UMI width,
-               UMI height,
-               U8* pixels) 
+SetTexture(Gfx* gfx,
+           UMI index,
+           UMI width,
+           UMI height,
+           U8* pixels) 
 {
   
   // TODO: we should probably align this to 16 bytes
@@ -231,6 +232,6 @@ Gfx_SetTexture(Gfx* gfx,
 }
 
 static void 
-Gfx_ClearTextures(Gfx* gfx) {
+ClearTextures(Gfx* gfx) {
   Push<Gfx_Cmd_ClearTextures>(&gfx->commands, Gfx_CmdType_ClearTextures);
 }

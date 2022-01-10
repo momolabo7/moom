@@ -1,4 +1,4 @@
-template<class T, class BinaryCompare> static UMI
+template<typename T, typename BinaryCompare> static UMI
 _QuickSortPartition(T* a,
                     UMI start, 
                     UMI ope,
@@ -29,7 +29,7 @@ _QuickSortPartition(T* a,
 }
 
 // NOTE(Momo): This is done inplace
-template<typename T, class BinaryCompare> static void 
+template<typename T, typename BinaryCompare> static void 
 _QuickSortRange(T* a, 
                 UMI start, 
                 UMI ope,
@@ -45,7 +45,7 @@ _QuickSortRange(T* a,
 }
 
 
-template<class T, class BinaryCompare> static void
+template<typename T, typename BinaryCompare> static void
 QuickSort(T* arr, UMI count, BinaryCompare cmp) {
   _QuickSortRange(arr, 0, count, cmp);
   

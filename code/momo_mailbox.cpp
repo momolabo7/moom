@@ -72,7 +72,7 @@ PushExtraData(Mailbox* m, UMI size, UMI align)
   
 }
 
-template<class T> static T*	  
+template<typename T> static T*	  
 Push(Mailbox* m, U32 id, UMI align) {
   return (T*)PushBlock(m, sizeof(T), id, align);
 }  

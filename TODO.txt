@@ -1,7 +1,4 @@
 Code quality
-  momo_essentials.h
-    Clean up memory-related helpers?
-	momo_vector.h and momo_matrix.h cleanup
   Things to think about
 		Figure out if we care about void*. Maybe everything uses Memory
     Figure out if we care about const char* (SiStr). Maybe typedef it?

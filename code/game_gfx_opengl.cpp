@@ -82,10 +82,10 @@ static inline F32 _Opengl_quad_uv[] = {
 
 
 static void 
-_Opengl_AttachShader(Opengl* ogl,
-                     U32 program, 
-                     U32 type, 
-                     char* Code) 
+_AttachShader(Opengl* ogl,
+              U32 program, 
+              U32 type, 
+              char* Code) 
 {
   GLuint shader_handle = ogl->pf.glCreateShader(type);
   ogl->pf.glShaderSource(shader_handle, 1, &Code, NULL);
@@ -96,9 +96,9 @@ _Opengl_AttachShader(Opengl* ogl,
 
 // TODO: Maybe this should be a command?
 static void 
-_Opengl_AlignViewport(Opengl* ogl, 
-                      V2U32 render_wh, 
-                      Rect2U32 region) 
+_AlignViewport(Opengl* ogl, 
+               V2U32 render_wh, 
+               Rect2U32 region) 
 {
   
   U32 x, y, w, h;
@@ -120,10 +120,10 @@ _Opengl_AlignViewport(Opengl* ogl,
 
 
 static void 
-_Opengl_DrawInstances(Opengl* ogl,
-                      GLuint texture, 
-                      GLsizei instances_to_draw, 
-                      GLuint index_to_draw_from) 
+_DrawInstances(Opengl* ogl,
+               GLuint texture, 
+               GLsizei instances_to_draw, 
+               GLuint index_to_draw_from) 
 {
   Assert(instances_to_draw + index_to_draw_from < _Opengl_max_entities);
   
@@ -152,11 +152,11 @@ _Opengl_DrawInstances(Opengl* ogl,
 
 
 static void
-_Opengl_SetTexture(Opengl* ogl,
-                   UMI index,
-                   S32 width,
-                   S32 height,
-                   U8* pixels) 
+_SetTexture(Opengl* ogl,
+            UMI index,
+            S32 width,
+            S32 height,
+            U8* pixels) 
 {
   
   Assert(index < ArrayCount(ogl->textures));
@@ -188,7 +188,7 @@ _Opengl_SetTexture(Opengl* ogl,
 }
 
 static void
-_Opengl_ClearTextures(Opengl* ogl) {
+_ClearTextures(Opengl* ogl) {
   ogl->pf.glDeleteTextures((GLsizei)ArrayCount(ogl->textures), 
                            ogl->textures);
   for (UMI i = 0; i < ArrayCount(ogl->textures); ++i ){
@@ -197,7 +197,7 @@ _Opengl_ClearTextures(Opengl* ogl) {
 }
 
 void 
-_Opengl_AddPredefinedTextures(Opengl* ogl) {
+_AddPredefinedTextures(Opengl* ogl) {
   
   
   // NOTE(Momo): Dummy texture setup
@@ -243,11 +243,12 @@ _Opengl_AddPredefinedTextures(Opengl* ogl) {
 
 static void
 Free(Opengl* ogl) {
+  ogl->pf.free(ogl->gfx.commands.memory);
 }
 
 static B32
 Init(Opengl* ogl, 
-            Opengl_PF_API pf)
+     Opengl_PF_API pf)
 {	
   ogl->pf = pf;
   
@@ -449,14 +450,14 @@ Init(Opengl* ogl,
   
   // NOTE(Momo): Setup shader Program
   ogl->shader = ogl->pf.glCreateProgram();
-  _Opengl_AttachShader(ogl,
-                       ogl->shader, 
-                       GL_VERTEX_SHADER, 
-                       (char*)_Opengl_vertex_shader);
-  _Opengl_AttachShader(ogl,
-                       ogl->shader, 
-                       GL_FRAGMENT_SHADER, 
-                       (char*)_Opengl_fragment_shader);
+  _AttachShader(ogl,
+                ogl->shader, 
+                GL_VERTEX_SHADER, 
+                (char*)_Opengl_vertex_shader);
+  _AttachShader(ogl,
+                ogl->shader, 
+                GL_FRAGMENT_SHADER, 
+                (char*)_Opengl_fragment_shader);
   
   ogl->pf.glLinkProgram(ogl->shader);
   
@@ -467,8 +468,8 @@ Init(Opengl* ogl,
     ogl->pf.glGetProgramInfoLog(ogl->shader, KB(1), nullptr, msg);
     return false;
   }
-  _Opengl_AddPredefinedTextures(ogl);
-  _Opengl_ClearTextures(ogl);
+  _AddPredefinedTextures(ogl);
+  _ClearTextures(ogl);
   
   
   // NOTE(Momo): Allocate render buffer
@@ -486,7 +487,7 @@ Init(Opengl* ogl,
 static void
 Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region) 
 {
-  _Opengl_AlignViewport(ogl, render_wh, region);
+  _AlignViewport(ogl, render_wh, region);
   
   GLuint current_texture = 0;
   GLsizei instances_to_draw = 0;
@@ -499,10 +500,10 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
     switch(entry->id) {
       case Gfx_CmdType_SetBasis: {
         Gfx_Cmd_SetBasis* data = (Gfx_Cmd_SetBasis*)entry->data;
-        _Opengl_DrawInstances(ogl,
-                              current_texture, 
-                              instances_to_draw, 
-                              last_drawn_instance_index);
+        _DrawInstances(ogl,
+                       current_texture, 
+                       instances_to_draw, 
+                       last_drawn_instance_index);
         last_drawn_instance_index += instances_to_draw;
         instances_to_draw = 0;
         
@@ -535,10 +536,10 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
         // currently processed texture, batch draw all instances before 
         // the current instance.
         if (current_texture != ogl->blank_texture) {
-          _Opengl_DrawInstances(ogl,
-                                current_texture, 
-                                instances_to_draw, 
-                                last_drawn_instance_index);
+          _DrawInstances(ogl,
+                         current_texture, 
+                         instances_to_draw, 
+                         last_drawn_instance_index);
           last_drawn_instance_index += instances_to_draw;
           instances_to_draw = 0;
           current_texture = ogl_texture_handle;
@@ -577,10 +578,10 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
         // NOTE(Momo): If the currently set texture is not same as the currently
         // processed texture, batch draw all instances before the current instance.
         if (current_texture != texture) {
-          _Opengl_DrawInstances(ogl,
-                                current_texture, 
-                                instances_to_draw, 
-                                last_drawn_instance_index);
+          _DrawInstances(ogl,
+                         current_texture, 
+                         instances_to_draw, 
+                         last_drawn_instance_index);
           last_drawn_instance_index += instances_to_draw;
           instances_to_draw = 0;
           current_texture = texture;
@@ -622,15 +623,15 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
         Assert(data->width > 0);
         Assert(data->height > 0);
         
-        _Opengl_SetTexture(ogl, data->index, (S32)data->width, (S32)data->height, data->pixels);
+        _SetTexture(ogl, data->index, (S32)data->width, (S32)data->height, data->pixels);
       } break;
       case Gfx_CmdType_ClearTextures: {
-        _Opengl_ClearTextures(ogl);
+        _ClearTextures(ogl);
       } break;
     }
   }
   
-  _Opengl_DrawInstances(ogl, current_texture, instances_to_draw, last_drawn_instance_index);
+  _DrawInstances(ogl, current_texture, instances_to_draw, last_drawn_instance_index);
   Clear(&ogl->gfx.commands);  
 }
 

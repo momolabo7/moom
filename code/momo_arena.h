@@ -21,8 +21,8 @@ static Arena Partition(Arena* arena, UMI size);
 //#define Arena_Boot(type, member, memory, memory_size) \
 //(type*)Arena_BootBlock(sizeof(type), OffsetOf(type, member), (memory), (memory_size)) 
 
-template<class T> static T* Push(Arena* arena, UMI align = 4); 
-template<class T> static T* PushArray(Arena* arena, UMI num, UMI align = 4);
+template<typename T> static T* Push(Arena* arena, UMI align = 4); 
+template<typename T> static T* PushArray(Arena* arena, UMI num, UMI align = 4);
 
 
 // Temporary memory API used to revert an arena to an original state;

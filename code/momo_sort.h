@@ -1,7 +1,7 @@
 #ifndef MOMO_SORT_H
 #define MOMO_SORT_H
 
-template<class T, class Pred> static void QuickSort(T* arr, UMI count, Pred pred);
+template<typename T, typename Pred> static void QuickSort(T* arr, UMI count, Pred pred);
 
 #include "momo_sort.cpp"
 

@@ -80,22 +80,22 @@ IntToPtr(UMI u) {
   return (U8*)((char*)0 + u);
 }
 
-template<class T> static constexpr T 
+template<typename T> static constexpr T 
 Min(T l, T r) { 
   return l < r ? l : r; 
 }
 
-template<class T> static constexpr T 
+template<typename T> static constexpr T 
 Max(T l, T r) { 
   return l > r ? l : r; 
 }
 
-template<class T> static constexpr T 
+template<typename T> static constexpr T 
 Clamp(T x, T b, T t) { 
   return Max(Min(x,t),b); 
 }
 
-template<class T> static constexpr T
+template<typename T> static constexpr T
 Abs(T x) { 
   return x < 0 ? -x : x; 
 }
@@ -140,12 +140,12 @@ Abs(S64 x) {
 }
 
 
-template<class T> static constexpr T
+template<typename T> static constexpr T
 Lerp(T s, T e, F32 f) { 
   return (T)(s + (e-s) * f); 
 }
 
-template<class T> static constexpr T 
+template<typename T> static constexpr T 
 Lerp(T s, T e, F64 f) { 
   return (T)(s + (e-s) * f); 
 }
@@ -160,21 +160,21 @@ Ratio(F64 v, F64 min, F64 max) {
   return (v - min)/(max - min); 
 }
 
-template<class T, class U> static constexpr T
+template<typename T, typename U> static constexpr T
 AlignDownPow2(T value, U align) { 
   return value & ~(align-1); 
 }
 
-template<class T, class U> static T
+template<typename T, typename U> static T
 AlignUpPow2(T value, U align) { 
   return (value + (align-1)) & ~(align-1); 
 }
 
-template<class T> static constexpr B32 
+template<typename T> static constexpr B32 
 IsPow2(T value) { 
   return (value & (value - 1)) == 0; 
 }
-template<class T> static constexpr void 
+template<typename T> static constexpr void 
 Swap(T* lhs, T* rhs) { 
   T tmp = *lhs; 
   *lhs = *rhs; 
