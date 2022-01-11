@@ -1,7 +1,9 @@
-Code quality
+Momo
   Things to think about
 		Figure out if we care about void*. Maybe everything uses Memory
     Figure out if we care about const char* (SiStr). Maybe typedef it?
+	"Embed" mechanic. Make a macro for shit like below:
+		  (*(Opengl_Platform*)(ogl)) = pf; // LOL
 
 Engine
   File io

@@ -216,9 +216,8 @@ struct Opengl_Platform {
   GL_glUseProgram* glUseProgram;
 };
 
-struct Opengl {
+struct Opengl : Opengl_Platform {
   Gfx gfx;
-  Opengl_Platform pf;
   
   // NOTE(Momo): 
   GLuint textures[10];
