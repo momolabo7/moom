@@ -243,7 +243,7 @@ _AddPredefinedTextures(Opengl* ogl) {
 
 static void
 Free(Opengl* ogl) {
-  ogl->free(ogl->gfx.commands.memory);
+  ogl->free(ogl->commands.memory);
 }
 
 static B32
@@ -476,7 +476,7 @@ Init(Opengl* ogl, Opengl_Platform pf)
   if (!render_cmds_mem) {
     return false;
   }
-  ogl->gfx.commands = CreateMailbox(render_cmds_mem, _Opengl_command_size);
+  ogl->commands = CreateMailbox(render_cmds_mem, _Opengl_command_size);
   
   return true;
   
@@ -493,7 +493,7 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
   GLsizei last_drawn_instance_index = 0;
   GLuint current_instance_index = 0;
   
-  Mailbox* commands = &ogl->gfx.commands;
+  Mailbox* commands = &ogl->commands;
   for (U32 i = 0; i < commands->entry_count; ++i) {
     Mailbox_Entry* entry = GetEntry(commands, i);
     switch(entry->id) {
@@ -631,6 +631,6 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
   }
   
   _DrawInstances(ogl, current_texture, instances_to_draw, last_drawn_instance_index);
-  Clear(&ogl->gfx.commands);  
+  Clear(&ogl->commands);  
 }
 

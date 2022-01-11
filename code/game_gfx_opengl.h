@@ -216,13 +216,8 @@ struct Opengl_Platform {
   GL_glUseProgram* glUseProgram;
 };
 
-struct Opengl : Opengl_Platform {
-  Gfx gfx;
-  
-  // NOTE(Momo): 
+struct Opengl : Gfx, Opengl_Platform {
   GLuint textures[10];
-  
-  // NOTE(Momo): End of things that needs to be provided by platform
   GLuint buffers[5]; // Opengl__VBO_Count
   GLuint shader;
   GLuint model; 
