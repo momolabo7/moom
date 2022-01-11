@@ -230,7 +230,6 @@ struct Opengl {
   GLuint dummy_texture;
   GLuint blank_texture;
   
-  Rect2U32 render_region;
 };
 
 
