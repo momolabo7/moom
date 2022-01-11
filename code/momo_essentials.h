@@ -94,6 +94,9 @@
 #define c_link_end }
 #define c_link extern "C"
 
+#define ns_begin(name) namespace name {
+#define ns_end(name) }
+
 #if COMPILER_MSVC
 # define exported c_link __declspec(dllexport)
 #else

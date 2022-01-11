@@ -4,16 +4,20 @@ Code quality
     Figure out if we care about const char* (SiStr). Maybe typedef it?
 
 Engine
-  Figure out how game should tell GFX about its design resolution
   File io
 	Asset system
 		Localization support?
 	Sound
 	Mutithread support
 
-
 Test suite setup. 
 	Compare against text files
 	Easy to setup and add more unit tests.
   
-	
+4coder
+  Support member function in indexing
+    outside of class
+    inside of class?
+	Indentation
+		for goto labels: and public/private/protected: labels
+			Be careful not to affect switch/case statements

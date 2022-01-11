@@ -15,6 +15,7 @@ struct GameMemory {
   PermanentMemory* perm;  
 };
 
+
 // TODO(Momo): Game should probably return a status.
 exported B32 
 Game_Update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) { 
