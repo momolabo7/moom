@@ -35,8 +35,8 @@ typedef Platform_File  Platform_OpenFileFn(const char* filename,
                                            Platform_FileAccess file_access,
                                            Platform_FilePath file_path);
 
-typedef void				   Platform_CloseFileFn(Platform_File file);
-typedef B32 					 Platform_ReadFileFn(Platform_File file, UMI size, UMI offset, U8* dest);
+typedef void				   Platform_CloseFileFn(Platform_File* file);
+typedef B32 					 Platform_ReadFileFn(Platform_File* file, UMI size, UMI offset, U8* dest);
 
 
 struct Platform {

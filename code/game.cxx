@@ -44,7 +44,7 @@ Game_Update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     Platform_File file = pf->open_file("test.txt", 
                                        Platform_FileAccess_Read, 
                                        Platform_FilePath_Executable);
-    pf->read_file(file, 5, 0, test);
+    pf->read_file(&file, 5, 0, test);
   }
   
   GameMemory* game_memory = (GameMemory*)game->game_data;

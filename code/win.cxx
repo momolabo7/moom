@@ -217,17 +217,17 @@ Win_OpenFile(const char* filename,
 }
 
 static void
-Win_CloseFile(Platform_File file) {
-  auto* win_file = (Win_File*)file.platform_data;
+Win_CloseFile(Platform_File* file) {
+  auto* win_file = (Win_File*)file->platform_data;
   CloseHandle(win_file->handle);
-  Win_FreeMemory(file.platform_data);
-  file.platform_data = nullptr;
+  Win_FreeMemory(file->platform_data);
+  file->platform_data = nullptr;
 }
 
 static B32
-Win_ReadFile(Platform_File file, UMI size, UMI offset, U8* dest) 
+Win_ReadFile(Platform_File* file, UMI size, UMI offset, U8* dest) 
 { 
-  auto* win_file = (Win_File*)file.platform_data;
+  auto* win_file = (Win_File*)file->platform_data;
   
   // Reading the file
   OVERLAPPED overlapped = {};
