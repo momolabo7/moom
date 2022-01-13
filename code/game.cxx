@@ -41,7 +41,9 @@ Game_Update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     // Set aspect ratio of the game
     pf->set_aspect_ratio(16, 9);
     
-    Platform_File file = pf->open_file("test.txt");
+    Platform_File file = pf->open_file("test.txt", 
+                                       Platform_FileAccess_Read, 
+                                       Platform_FilePath_Executable);
     pf->read_file(file, 5, 0, test);
   }
   

@@ -18,7 +18,23 @@ struct Platform_File {
 };
 static B32 IsValid(Platform_File);
 
-typedef Platform_File  Platform_OpenFileFn(const char* filepath);
+enum Platform_FilePath {
+  Platform_FilePath_Executable,
+  Platform_FilePath_UserData,
+  Platform_FilePath_Cache
+};
+enum Platform_FileAccess {
+  Platform_FileAccess_Read,
+  Platform_FileAccess_Write,
+  Platform_FileAccess_ReadWrite,
+};
+// TODO(Momo): Get file path function?
+
+
+typedef Platform_File  Platform_OpenFileFn(const char* filename,
+                                           Platform_FileAccess file_access,
+                                           Platform_FilePath file_path);
+
 typedef void				   Platform_CloseFileFn(Platform_File file);
 typedef B32 					 Platform_ReadFileFn(Platform_File file, UMI size, UMI offset, U8* dest);
 

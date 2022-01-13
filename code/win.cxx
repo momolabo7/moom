@@ -171,14 +171,36 @@ Win_FreeMemory(void* memory) {
 }
 
 static Platform_File
-Win_OpenFile(const char* filepath) {
+Win_OpenFile(const char* filename, 
+             Platform_FileAccess access,
+             Platform_FilePath path) 
+{
   // Opening the file
   Platform_File ret;
-  HANDLE handle = CreateFileA(filepath,
-                              GENERIC_READ,
+  
+  DWORD access_flag = {0};
+  DWORD creation_disposition = {0};
+  switch (access) {
+    case Platform_FileAccess_Read: {
+      access_flag = GENERIC_READ;
+      creation_disposition = OPEN_EXISTING;
+    } break;
+    case Platform_FileAccess_Write: {
+      access_flag = GENERIC_WRITE;
+      creation_disposition = OPEN_ALWAYS;
+    } break;
+    case Platform_FileAccess_ReadWrite: {
+      access_flag = GENERIC_READ | GENERIC_WRITE;
+      creation_disposition = OPEN_ALWAYS;
+    } break;
+    
+  }
+  
+  HANDLE handle = CreateFileA(filename,
+                              access_flag,
                               FILE_SHARE_READ,
                               0,
-                              OPEN_EXISTING,
+                              creation_disposition,
                               0,
                               0) ;
   if (handle == INVALID_HANDLE_VALUE) {
