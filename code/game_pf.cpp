@@ -1,4 +1,9 @@
 //- Implementation
+
+static B32 IsValid(Platform_File file) {
+  return file.platform_data != nullptr;
+}
+
 static void Update(Input* input) {
   for (U32 i = 0; i < ArrayCount(input->buttons); ++i) {
     input->buttons[i].before = input->buttons[i].now;

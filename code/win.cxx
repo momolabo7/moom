@@ -9,16 +9,24 @@
 #include "game_pf.h"
 
 
-//-NOTE(Momo): Global variables
-typedef struct {
+//-Global variables
+struct Win_State{
   B32 is_running;
   B32 is_hot_reloading;
   
   U32 aspect_ratio_width;
   U32 aspect_ratio_height;
   
-} Win_State;
+  U32 open_file_count; // for checking if there are closed files?
+};
 static Win_State Win_global_state;
+
+
+struct Win_File {
+  HANDLE handle;
+};
+
+
 
 static inline LONG RECT_Width(RECT r) { return r.right - r.left; }
 static inline LONG RECT_Height(RECT r) { return r.bottom - r.top; }
@@ -144,13 +152,13 @@ Win_SetAspectRatio(U32 width, U32 height) {
 }
 
 
-static void*
+static U8*
 Win_AllocateMemory(UMI memory_size) {
-  return VirtualAllocEx(GetCurrentProcess(),
-                        0, 
-                        memory_size,
-                        MEM_RESERVE | MEM_COMMIT, 
-                        PAGE_READWRITE);
+  return (U8*)VirtualAllocEx(GetCurrentProcess(),
+                             0, 
+                             memory_size,
+                             MEM_RESERVE | MEM_COMMIT, 
+                             PAGE_READWRITE);
 }
 
 
@@ -162,6 +170,59 @@ Win_FreeMemory(void* memory) {
                 MEM_RELEASE); 
 }
 
+static Platform_File
+Win_OpenFile(const char* filepath) {
+  // Opening the file
+  Platform_File ret;
+  HANDLE handle = CreateFileA(filepath,
+                              GENERIC_READ,
+                              FILE_SHARE_READ,
+                              0,
+                              OPEN_EXISTING,
+                              0,
+                              0) ;
+  if (handle == INVALID_HANDLE_VALUE) {
+    ret.platform_data = nullptr;
+    return ret;
+  }
+  else {
+    Win_File* win_file = (Win_File*)Win_AllocateMemory(sizeof(Win_File));
+    win_file->handle = handle;
+    
+    ret.platform_data = win_file;
+    return ret;
+  }
+}
+
+static void
+Win_CloseFile(Platform_File file) {
+  auto* win_file = (Win_File*)file.platform_data;
+  CloseHandle(win_file->handle);
+  Win_FreeMemory(file.platform_data);
+  file.platform_data = nullptr;
+}
+
+static B32
+Win_ReadFile(Platform_File file, UMI size, UMI offset, U8* dest) 
+{ 
+  auto* win_file = (Win_File*)file.platform_data;
+  
+  // Reading the file
+  OVERLAPPED overlapped = {};
+  overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
+  overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
+  
+  DWORD bytes_read;
+  if(ReadFile(win_file->handle, dest, (DWORD)size, &bytes_read, &overlapped) &&
+     (DWORD)size == bytes_read) 
+  {
+    // success;
+    return true;
+    
+  }
+  return false; 
+}
+
 
 static Platform
 Win_CreatePlatformForGame()
@@ -171,6 +232,8 @@ Win_CreatePlatformForGame()
   pf_api.alloc = Win_AllocateMemory;
   pf_api.free = Win_FreeMemory;
   pf_api.shutdown = Win_Shutdown;
+  pf_api.open_file = Win_OpenFile;
+  pf_api.read_file = Win_ReadFile;
   pf_api.set_aspect_ratio = Win_SetAspectRatio;
   return pf_api;
 }
@@ -194,6 +257,7 @@ WinMain(HINSTANCE instance,
     Win_global_state.is_hot_reloading = true;
     Win_global_state.aspect_ratio_width = 1;
     Win_global_state.aspect_ratio_height = 1;
+    Win_global_state.open_file_count = 0;
   }
   
   //- Create window in the middle of the screen

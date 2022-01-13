@@ -5,12 +5,23 @@
 #define GAME_PLATFORM_H
 
 
-//~NOTE(Momo): Platform API
+//~Platform API
 typedef void  Platform_HotReloadFn(); // trigger hot reloading of game code
 typedef void  Platform_ShutdownFn(); // trigger shutdown of application
-typedef void* Platform_AllocFn(UMI size); // allocate memory
+typedef U8*   Platform_AllocFn(UMI size); // allocate memory
 typedef void  Platform_FreeFn(void* ptr);     // frees memory
 typedef void  Platform_SetAspectRatioFn(U32 width, U32 height); // sets aspect ratio of game
+
+//-Platform File API
+struct Platform_File {
+  void* platform_data; // pointer for platform's usage
+};
+static B32 IsValid(Platform_File);
+
+typedef Platform_File  Platform_OpenFileFn(const char* filepath);
+typedef void				   Platform_CloseFileFn(Platform_File file);
+typedef B32 					 Platform_ReadFileFn(Platform_File file, UMI size, UMI offset, U8* dest);
+
 
 struct Platform {
   Platform_HotReloadFn* hot_reload;
@@ -18,6 +29,10 @@ struct Platform {
   Platform_AllocFn* alloc;
   Platform_FreeFn* free;
   Platform_SetAspectRatioFn* set_aspect_ratio;
+  
+  Platform_OpenFileFn* open_file;
+  Platform_ReadFileFn* read_file;
+  Platform_CloseFileFn* close_file;
 };
 
 
@@ -59,7 +74,7 @@ static void Update(Input* input);
 //~ NOTE(Momo): Game API
 // Returns true if game is donew
 struct Game {
-  void* memory;
+  void* game_data; // pointer for game usage
 };
 
 typedef void Game_UpdateFn(Game* game_memory,

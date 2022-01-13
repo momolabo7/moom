@@ -16,19 +16,18 @@ struct GameMemory {
 };
 
 
-
-
-
 // TODO(Momo): Game should probably return a status.
 exported B32 
 Game_Update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) { 
   // Initialization
-  if (!game->memory) {
+  U8 test[10];
+  
+  if (!game->game_data) {
     // TODO(Momo): free allocated memory
-    game->memory = pf->alloc(sizeof(GameMemory));
-    if (!game->memory) return false;
+    game->game_data = pf->alloc(sizeof(GameMemory));
+    if (!game->game_data) return false;
     
-    auto* game_memory = (GameMemory*)game->memory;
+    auto* game_memory = (GameMemory*)game->game_data;
     game_memory->perm = (PermanentMemory*)pf->alloc(sizeof(PermanentMemory));
     if (!game_memory->perm) return false;
     
@@ -41,9 +40,12 @@ Game_Update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     
     // Set aspect ratio of the game
     pf->set_aspect_ratio(16, 9);
+    
+    Platform_File file = pf->open_file("test.txt");
+    pf->read_file(file, 5, 0, test);
   }
   
-  GameMemory* game_memory = (GameMemory*)game->memory;
+  GameMemory* game_memory = (GameMemory*)game->game_data;
   PermanentMemory* perm = game_memory->perm;
   
   if (IsPoked(input->button_up)) {
@@ -87,7 +89,7 @@ Game_Update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     colors.rgb = ToRGB(hsl);
     
     M44 scale = CreateScaleM44(600.f, 600.f, 10.f);
-    M44 rot = CreateRotationZM44(perm->tmp_rot += (dt));
+    M44 rot = CreateRotationZM44(perm->tmp_rot += (0.5f*dt));
     M44 trans = CreateTranslationM44(800.f, 450.f, 300.f);
     DrawSprite(gfx, colors, trans*scale*rot, 0);
   }
