@@ -170,13 +170,15 @@ Win_FreeMemory(void* memory) {
                 MEM_RELEASE); 
 }
 
+
+
 static Platform_File
 Win_OpenFile(const char* filename, 
              Platform_FileAccess access,
              Platform_FilePath path) 
 {
   // Opening the file
-  Platform_File ret;
+  Platform_File ret = {0};
   
   DWORD access_flag = {0};
   DWORD creation_disposition = {0};
@@ -185,11 +187,11 @@ Win_OpenFile(const char* filename,
       access_flag = GENERIC_READ;
       creation_disposition = OPEN_EXISTING;
     } break;
-    case Platform_FileAccess_Write: {
+    case Platform_FileAccess_Overwrite: {
       access_flag = GENERIC_WRITE;
-      creation_disposition = OPEN_ALWAYS;
+      creation_disposition = CREATE_ALWAYS;
     } break;
-    case Platform_FileAccess_ReadWrite: {
+    case Platform_FileAccess_Modify: {
       access_flag = GENERIC_READ | GENERIC_WRITE;
       creation_disposition = OPEN_ALWAYS;
     } break;
@@ -205,13 +207,15 @@ Win_OpenFile(const char* filename,
                               0) ;
   if (handle == INVALID_HANDLE_VALUE) {
     ret.platform_data = nullptr;
+    ret.error = false;
     return ret;
   }
   else {
-    Win_File* win_file = (Win_File*)Win_AllocateMemory(sizeof(Win_File));
+    auto* win_file = (Win_File*)Win_AllocateMemory(sizeof(Win_File));
     win_file->handle = handle;
     
     ret.platform_data = win_file;
+    ret.error = false;
     return ret;
   }
 }
@@ -232,11 +236,14 @@ Win_ReadFile(Platform_File* file, UMI size, UMI offset, void* dest)
   auto* win_file = (Win_File*)file->platform_data;
   
   // Reading the file
-  OVERLAPPED overlapped;
+  OVERLAPPED overlapped = {0};
   overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
   overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
   
   DWORD bytes_read;
+  
+  
+  
   if(ReadFile(win_file->handle, dest, (DWORD)size, &bytes_read, &overlapped) &&
      (DWORD)size == bytes_read) 
   {
@@ -254,20 +261,19 @@ Win_WriteFile(Platform_File* file, UMI size, UMI offset, void* src)
   
   auto* win_file = (Win_File*)file->platform_data;
   
-	OVERLAPPED overlapped;
-	overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
-	overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
-	
-	U32 file_size = (U32)size;
-	DWORD bytes_wrote;
-	if(WriteFile(win_file->handle, src, file_size, &bytes_wrote, &overlapped) &&
-	   file_size == bytes_wrote) 
-	{
-		// success
-	}
-	else {
-		file->error = true;
-	}
+  OVERLAPPED overlapped = {0};
+  overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
+  overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
+  
+  DWORD bytes_wrote;
+  if(WriteFile(win_file->handle, src, (DWORD)size, &bytes_wrote, &overlapped) &&
+     (DWORD)size == bytes_wrote) 
+  {
+    // success
+  }
+  else {
+    file->error = true;
+  }
 }
 
 
@@ -281,6 +287,8 @@ Win_CreatePlatformForGame()
   pf_api.shutdown = Win_Shutdown;
   pf_api.open_file = Win_OpenFile;
   pf_api.read_file = Win_ReadFile;
+  pf_api.write_file = Win_WriteFile;
+  pf_api.close_file = Win_CloseFile;
   pf_api.set_aspect_ratio = Win_SetAspectRatio;
   return pf_api;
 }

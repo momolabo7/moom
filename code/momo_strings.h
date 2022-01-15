@@ -40,8 +40,8 @@ struct Str8Bld{
 
 static Str8Bld  CreateStr8Bld(U8* data, UMI cap);
 
-static UMI      Remaining(Str8Bld* sb);
-static void     Clear(Str8Bld* sb);
+static UMI      remaining(Str8Bld* sb);
+static void     clear(Str8Bld* sb);
 static void     Pop(Str8Bld* sb);
 static void     PushC8(Str8Bld* sb, C8 num);
 static void     PushU32(Str8Bld* sb, U32 num);

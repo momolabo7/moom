@@ -92,7 +92,7 @@ static void DrawSubSprite(Gfx* gfx,
                           Rect2F32 texture_uv);
 
 static void DrawRect(Gfx* gfx, RGBA colors, M44 transform);
-static void Clear(Gfx* gfx, RGBA colors);
+static void clear(Gfx* gfx, RGBA colors);
 static void DrawLine(Gfx* gfx, 
                      Line2 line,
                      F32 thickness,

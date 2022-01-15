@@ -22,9 +22,9 @@ struct Mailbox{
 };
 
 static Mailbox               CreateMailbox(void* memory, UMI size);
-static void                  Clear(Mailbox* m);
+static void                  clear(Mailbox* m);
 static Mailbox_Entry*        GetEntry(Mailbox *m, UMI index);
-static void*                 PushBlock(Mailbox* m, UMI size, U32 id, UMI align = 4);
+static void*                 make_block(Mailbox* m, UMI size, U32 id, UMI align = 4);
 static void*				         PushExtraData(Mailbox* m, UMI size, UMI align = 4);
 
 template<typename T> static T*	Push(Mailbox* m, U32 id, UMI align = alignof(T));

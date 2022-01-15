@@ -52,12 +52,12 @@ CreateStr8Bld(U8* data, UMI cap) {
 	return ret;
 }
 static UMI
-Remaining(Str8Bld* s) {
+remaining(Str8Bld* s) {
 	return s->cap - s->count; 
 }
 
 static void     
-Clear(Str8Bld* s) {
+clear(Str8Bld* s) {
 	s->count = 0;
 }
 

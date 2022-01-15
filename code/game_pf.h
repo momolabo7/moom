@@ -23,20 +23,22 @@ enum Platform_FilePath {
   Platform_FilePath_UserData,
   Platform_FilePath_Cache
 };
+
+// Maybe for 'overwrite' or creating a new file, we 
+// use a compl
 enum Platform_FileAccess {
   Platform_FileAccess_Read,
-  Platform_FileAccess_Write,
-  Platform_FileAccess_ReadWrite,
+  Platform_FileAccess_Overwrite, 
+  Platform_FileAccess_Modify,
 };
 
 
 typedef Platform_File  Platform_OpenFileFn(const char* filename,
                                            Platform_FileAccess file_access,
                                            Platform_FilePath file_path);
-
-typedef void Platform_CloseFileFn(Platform_File* file);
-typedef void Platform_ReadFileFn(Platform_File* file, UMI size, UMI offset, void* dest);
-typedef void Platform_WriteFileFn(Platform_File* file, UMI size, UMI offset, void* src);
+typedef void 					Platform_CloseFileFn(Platform_File* file);
+typedef void 					Platform_ReadFileFn(Platform_File* file, UMI size, UMI offset, void* dest);
+typedef void 					Platform_WriteFileFn(Platform_File* file, UMI size, UMI offset, void* src);
 
 struct Platform {
   Platform_HotReloadFn* hot_reload;
@@ -47,6 +49,7 @@ struct Platform {
   
   Platform_OpenFileFn* open_file;
   Platform_ReadFileFn* read_file;
+  Platform_WriteFileFn* write_file;
   Platform_CloseFileFn* close_file;
 };
 

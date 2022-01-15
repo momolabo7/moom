@@ -1,5 +1,5 @@
 static Arena 
-CreateArena(void* mem, UMI cap) {
+create_arena(void* mem, UMI cap) {
 	Arena ret;
   ret.memory = (U8*)mem;
   ret.pos = 0; 
@@ -9,18 +9,18 @@ CreateArena(void* mem, UMI cap) {
 
 
 static void
-Clear(Arena* arena) {
+clear(Arena* arena) {
   arena->pos = 0;
 }
 
 
 static UMI
-Remaining(Arena* arena) {
+remaining(Arena* arena) {
   return arena->cap - arena->pos;
 }
 
 static void* 
-PushBlock(Arena* arena, UMI size, UMI align) {
+make_block(Arena* arena, UMI size, UMI align) {
   Assert(size);
 	
 	UMI imem = PtrToInt(arena->memory);
@@ -37,18 +37,18 @@ PushBlock(Arena* arena, UMI size, UMI align) {
 
 static Arena
 Partition(Arena* from_arena, UMI size) {	
-	void* memory = PushBlock(from_arena, size, 16);
-  return CreateArena(memory, size);
+	void* memory = make_block(from_arena, size, 16);
+  return create_arena(memory, size);
 }
 
 template<typename T> static T*
 Push(Arena* arena, UMI align) {
-  return (T*)PushBlock(arena, sizeof(T), align);
+  return (T*)make_block(arena, sizeof(T), align);
 }
 
 template<typename T> static T*
 PushArray(Arena* arena, UMI num, UMI align) {
-  return (T*)PushBlock(arena, sizeof(T)*num, align);
+  return (T*)make_block(arena, sizeof(T)*num, align);
 }
 
 /*

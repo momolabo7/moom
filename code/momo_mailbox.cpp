@@ -5,13 +5,13 @@ CreateMailbox(void* memory, UMI memory_size) {
   ret.memory = (U8*)memory;
   ret.memory_size = memory_size;
   
-  Clear(&ret);
+  clear(&ret);
   
 	return ret;
 }
 
 static void
-Clear(Mailbox* m) {
+clear(Mailbox* m) {
   m->data_pos = 0;	
 	m->entry_count = 0;
 	
@@ -35,7 +35,7 @@ GetEntry(Mailbox* m, UMI index) {
 
 
 static void*
-PushBlock(Mailbox* m, UMI size, U32 id, UMI align) 
+make_block(Mailbox* m, UMI size, U32 id, UMI align) 
 {
 	UMI imem = PtrToInt(m->memory);
 	
@@ -74,5 +74,5 @@ PushExtraData(Mailbox* m, UMI size, UMI align)
 
 template<typename T> static T*	  
 Push(Mailbox* m, U32 id, UMI align) {
-  return (T*)PushBlock(m, sizeof(T), id, align);
+  return (T*)make_block(m, sizeof(T), id, align);
 }  

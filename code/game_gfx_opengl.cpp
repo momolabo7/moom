@@ -631,6 +631,6 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
   }
   
   _DrawInstances(ogl, current_texture, instances_to_draw, last_drawn_instance_index);
-  Clear(&ogl->commands);  
+  clear(&ogl->commands);  
 }
 

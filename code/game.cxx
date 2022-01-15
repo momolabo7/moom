@@ -41,10 +41,27 @@ Game_Update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     // Set aspect ratio of the game
     pf->set_aspect_ratio(16, 9);
     
-    Platform_File file = pf->open_file("test.txt", 
-                                       Platform_FileAccess_Read, 
-                                       Platform_FilePath_Executable);
-    pf->read_file(&file, 5, 0, test);
+    // NOTE(Momo): Test read
+    {
+      Platform_File read_test_file = pf->open_file("test.txt", 
+                                                   Platform_FileAccess_Read, 
+                                                   Platform_FilePath_Executable);
+      
+      pf->read_file(&read_test_file, 5, 0, test);
+      pf->close_file(&read_test_file);
+    } 
+    
+    
+    // NOTE(Momo): Test write
+    {
+      Platform_File write_test_file = pf->open_file("test_out.txt", 
+                                                    Platform_FileAccess_Write, 
+                                                    Platform_FilePath_Executable);
+      
+      pf->write_file(&write_test_file, sizeof("Hello"), 0, "Hello");
+      pf->close_file(&write_test_file);
+    }
+    
   }
   
   GameMemory* game_memory = (GameMemory*)game->game_data;
@@ -57,7 +74,7 @@ Game_Update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
   {
     RGBA colors;
     colors.r = colors.g = colors.b  = colors.a = 0.3f;
-    Clear(gfx, colors);
+    clear(gfx, colors);
   }
   
   {

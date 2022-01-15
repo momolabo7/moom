@@ -27,7 +27,7 @@ SetOrthoCamera(Gfx* gfx,
 }
 
 static void
-Clear(Gfx* gfx, RGBA colors) {
+clear(Gfx* gfx, RGBA colors) {
   auto* data = Push<Gfx_Cmd_Clear>(&gfx->commands, 
                                    Gfx_CmdType_Clear);
   
