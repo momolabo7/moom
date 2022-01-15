@@ -5,7 +5,7 @@
 // are avaliable for use or not. Maybe IS_CRT?
 
 static B32
-IsValid(Memory mem) {
+IsOk(Memory mem) {
   return mem.data && mem.size;
 }
 

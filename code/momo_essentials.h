@@ -271,7 +271,7 @@ struct Memory  {
   void* data;
   UMI size;  
 };
-static B32 IsValid(Memory);
+static B32 IsOk(Memory);
 
 static void Bin_Copy(void* dest, const void* src, UMI size);
 static void Bin_Zero(void* dest, UMI size);

@@ -10,9 +10,9 @@ struct Arena{
 	UMI cap;
 };
 
-static Arena CreateArena(U8* mem, UMI cap);
+static Arena CreateArena(void* mem, UMI cap);
 static void  Clear(Arena* arena);
-static U8*   PushBlock(Arena* arena, UMI size, UMI align = 4);
+static void* PushBlock(Arena* arena, UMI size, UMI align = 4);
 static UMI   Remaining(Arena* arena);
 static Arena Partition(Arena* arena, UMI size);
 //static void* BootBlock(UMI struct_size, UMI offset_to_arena, void* memory, UMI memory_size);

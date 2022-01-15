@@ -1,8 +1,8 @@
 
 static Mailbox
-CreateMailbox(U8* memory, UMI memory_size) {
+CreateMailbox(void* memory, UMI memory_size) {
   Mailbox ret;
-  ret.memory = memory;
+  ret.memory = (U8*)memory;
   ret.memory_size = memory_size;
   
   Clear(&ret);
@@ -34,7 +34,7 @@ GetEntry(Mailbox* m, UMI index) {
 
 
 
-static U8*
+static void*
 PushBlock(Mailbox* m, UMI size, U32 id, UMI align) 
 {
 	UMI imem = PtrToInt(m->memory);
@@ -58,7 +58,7 @@ PushBlock(Mailbox* m, UMI size, U32 id, UMI align)
 }
 
 
-static U8* 
+static void* 
 PushExtraData(Mailbox* m, UMI size, UMI align)
 {
   UMI imem = PtrToInt(m->memory);

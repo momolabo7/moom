@@ -8,15 +8,15 @@
 //~Platform API
 typedef void  Platform_HotReloadFn(); // trigger hot reloading of game code
 typedef void  Platform_ShutdownFn(); // trigger shutdown of application
-typedef U8*   Platform_AllocFn(UMI size); // allocate memory
+typedef void* Platform_AllocFn(UMI size); // allocate memory
 typedef void  Platform_FreeFn(void* ptr);     // frees memory
 typedef void  Platform_SetAspectRatioFn(U32 width, U32 height); // sets aspect ratio of game
 
 //-Platform File API
 struct Platform_File {
+  B32 error;
   void* platform_data; // pointer for platform's usage
 };
-static B32 IsValid(Platform_File);
 
 enum Platform_FilePath {
   Platform_FilePath_Executable,
@@ -28,16 +28,15 @@ enum Platform_FileAccess {
   Platform_FileAccess_Write,
   Platform_FileAccess_ReadWrite,
 };
-// TODO(Momo): Get file path function?
 
 
 typedef Platform_File  Platform_OpenFileFn(const char* filename,
                                            Platform_FileAccess file_access,
                                            Platform_FilePath file_path);
 
-typedef void				   Platform_CloseFileFn(Platform_File* file);
-typedef B32 					 Platform_ReadFileFn(Platform_File* file, UMI size, UMI offset, U8* dest);
-
+typedef void Platform_CloseFileFn(Platform_File* file);
+typedef void Platform_ReadFileFn(Platform_File* file, UMI size, UMI offset, void* dest);
+typedef void Platform_WriteFileFn(Platform_File* file, UMI size, UMI offset, void* src);
 
 struct Platform {
   Platform_HotReloadFn* hot_reload;

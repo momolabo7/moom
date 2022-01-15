@@ -23,7 +23,7 @@ static void     WriteBlock(Stream* s, void* src, UMI size);
 static void     FlushBits(Stream* s);
 
 template<typename T> static T* Consume(Stream* s);
-template<typename T> void Write(Stream* s, T item);
+template<typename T> static void Write(Stream* s, T item);
 
 
 

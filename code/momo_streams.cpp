@@ -65,7 +65,7 @@ Consume(Stream* s)
 {
   return (T*)ConsumeBlock(s, sizeof(T));
 }
-template<typename T> void 
+template<typename T> static void 
 Write(Stream* s, T item) {
   WriteBlock(s, &item, sizeof(T));
 }

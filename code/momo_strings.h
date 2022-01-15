@@ -16,7 +16,7 @@ static B32  Match(Str8 lhs, Str8 rhs);
 
 // No one should be using this
 // TODO: Maybe make a macro to enable/disable this?
-//#define StrLitToStr8(s) CreateStr8((U8*)(s), sizeof(s)-1)
+#define Str8FromLit(s) CreateStr8((U8*)(s), sizeof(s)-1)
 
 static B32 operator==(Str8 lhs, Str8 rhs);
 static B32 operator!=(Str8 lhs, Str8 rhs);

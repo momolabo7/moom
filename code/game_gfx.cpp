@@ -227,7 +227,7 @@ SetTexture(Gfx* gfx,
   data->height = height;
   data->index = index;
   
-  data->pixels = PushExtraData(&gfx->commands, texture_size, 16);
+  data->pixels = (U8*)PushExtraData(&gfx->commands, texture_size, 16);
   Bin_Copy(data->pixels, pixels, texture_size);
 }
 

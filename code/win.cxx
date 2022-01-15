@@ -152,7 +152,7 @@ Win_SetAspectRatio(U32 width, U32 height) {
 }
 
 
-static U8*
+static void*
 Win_AllocateMemory(UMI memory_size) {
   return (U8*)VirtualAllocEx(GetCurrentProcess(),
                              0, 
@@ -224,13 +224,15 @@ Win_CloseFile(Platform_File* file) {
   file->platform_data = nullptr;
 }
 
-static B32
-Win_ReadFile(Platform_File* file, UMI size, UMI offset, U8* dest) 
+static void
+Win_ReadFile(Platform_File* file, UMI size, UMI offset, void* dest) 
 { 
+  if (!IsOk(file)) return;
+  
   auto* win_file = (Win_File*)file->platform_data;
   
   // Reading the file
-  OVERLAPPED overlapped = {};
+  OVERLAPPED overlapped;
   overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
   overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
   
@@ -239,10 +241,33 @@ Win_ReadFile(Platform_File* file, UMI size, UMI offset, U8* dest)
      (DWORD)size == bytes_read) 
   {
     // success;
-    return true;
-    
   }
-  return false; 
+  else {
+    file->error = true;
+  }
+}
+
+static void 
+Win_WriteFile(Platform_File* file, UMI size, UMI offset, void* src)
+{
+  if (!IsOk(file)) return;
+  
+  auto* win_file = (Win_File*)file->platform_data;
+  
+	OVERLAPPED overlapped;
+	overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
+	overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
+	
+	U32 file_size = (U32)size;
+	DWORD bytes_wrote;
+	if(WriteFile(win_file->handle, src, file_size, &bytes_wrote, &overlapped) &&
+	   file_size == bytes_wrote) 
+	{
+		// success
+	}
+	else {
+		file->error = true;
+	}
 }
 
 

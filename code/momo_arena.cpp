@@ -1,7 +1,7 @@
 static Arena 
-CreateArena(U8* mem, UMI cap) {
+CreateArena(void* mem, UMI cap) {
 	Arena ret;
-  ret.memory = mem;
+  ret.memory = (U8*)mem;
   ret.pos = 0; 
   ret.cap = cap;
 	return ret;
@@ -19,7 +19,7 @@ Remaining(Arena* arena) {
   return arena->cap - arena->pos;
 }
 
-static U8* 
+static void* 
 PushBlock(Arena* arena, UMI size, UMI align) {
   Assert(size);
 	
@@ -37,7 +37,7 @@ PushBlock(Arena* arena, UMI size, UMI align) {
 
 static Arena
 Partition(Arena* from_arena, UMI size) {	
-	U8* memory = PushBlock(from_arena, size, 16);
+	void* memory = PushBlock(from_arena, size, 16);
   return CreateArena(memory, size);
 }
 

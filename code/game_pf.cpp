@@ -1,7 +1,7 @@
 //- Implementation
 
-static B32 IsValid(Platform_File file) {
-  return file.platform_data != nullptr;
+static B32 IsOk(Platform_File* file) {
+  return file->platform_data && !file->error;
 }
 
 static void Update(Input* input) {
