@@ -191,10 +191,12 @@ Win_OpenFile(const char* filename,
       access_flag = GENERIC_WRITE;
       creation_disposition = CREATE_ALWAYS;
     } break;
+    /*
     case Platform_FileAccess_Modify: {
       access_flag = GENERIC_READ | GENERIC_WRITE;
       creation_disposition = OPEN_ALWAYS;
     } break;
+		*/
     
   }
   

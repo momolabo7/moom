@@ -29,7 +29,6 @@ enum Platform_FilePath {
 enum Platform_FileAccess {
   Platform_FileAccess_Read,
   Platform_FileAccess_Overwrite, 
-  Platform_FileAccess_Modify,
 };
 
 
