@@ -104,8 +104,8 @@ _AlignViewport(Opengl* ogl,
   U32 x, y, w, h;
   x = region.min.x;
   y = region.min.y;
-  w = Width(region);
-  h = Height(region);
+  w = width(region);
+  h = height(region);
   
   ogl->glScissor(0, 0, render_wh.w, render_wh.h);
   ogl->glViewport(0, 0, render_wh.w, render_wh.h);
@@ -125,7 +125,7 @@ _DrawInstances(Opengl* ogl,
                GLsizei instances_to_draw, 
                GLuint index_to_draw_from) 
 {
-  Assert(instances_to_draw + index_to_draw_from < _Opengl_max_entities);
+  assert(instances_to_draw + index_to_draw_from < _Opengl_max_entities);
   
   if (instances_to_draw > 0) {
     ogl->glBindTexture(GL_TEXTURE_2D, texture);
@@ -159,7 +159,7 @@ _SetTexture(Opengl* ogl,
             U8* pixels) 
 {
   
-  Assert(index < ArrayCount(ogl->textures));
+  assert(index < ArrayCount(ogl->textures));
   
   GLuint entry;
   
@@ -242,12 +242,12 @@ _AddPredefinedTextures(Opengl* ogl) {
 }
 
 static void
-Free(Opengl* ogl) {
+free_opengl(Opengl* ogl) {
   ogl->free(ogl->commands.memory);
 }
 
 static B32
-Init(Opengl* ogl, Opengl_Platform pf)
+init_opengl(Opengl* ogl, Opengl_Platform pf)
 {	
   (*(Opengl_Platform*)(ogl)) = pf;
   
@@ -476,7 +476,7 @@ Init(Opengl* ogl, Opengl_Platform pf)
   if (!render_cmds_mem) {
     return false;
   }
-  ogl->commands = CreateMailbox(render_cmds_mem, _Opengl_command_size);
+  ogl->commands = create_mailbox(render_cmds_mem, _Opengl_command_size);
   
   return true;
   
@@ -484,7 +484,7 @@ Init(Opengl* ogl, Opengl_Platform pf)
 
 
 static void
-Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region) 
+render_opengl(Opengl* ogl, V2U32 render_wh, Rect2U32 region) 
 {
   _AlignViewport(ogl, render_wh, region);
   
@@ -495,7 +495,7 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
   
   Mailbox* commands = &ogl->commands;
   for (U32 i = 0; i < commands->entry_count; ++i) {
-    Mailbox_Entry* entry = GetEntry(commands, i);
+    Mailbox_Entry* entry = commands->get_entry(i);
     switch(entry->id) {
       case Gfx_CmdType_SetBasis: {
         Gfx_Cmd_SetBasis* data = (Gfx_Cmd_SetBasis*)entry->data;
@@ -506,7 +506,7 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
         last_drawn_instance_index += instances_to_draw;
         instances_to_draw = 0;
         
-        M44 result = Transpose(data->basis);
+        M44 result = transpose(data->basis);
         GLint uProjectionLoc = ogl->glGetUniformLocation(ogl->shader,
                                                          "uProjection");
         
@@ -555,8 +555,8 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
                                   sizeof(_Opengl_quad_uv),
                                   &_Opengl_quad_uv);
         
-        // NOTE(Momo): Transpose; game is row-major
-        M44 transform = Transpose(data->transform);
+        // NOTE(Momo): transpose; game is row-major
+        M44 transform = transpose(data->transform);
         ogl->glNamedBufferSubData(ogl->buffers[_Opengl_VBO_Transform], 
                                   current_instance_index* sizeof(M44), 
                                   sizeof(M44), 
@@ -603,8 +603,8 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
                                   sizeof(_Opengl_quad_uv),
                                   &texture_uv_in_vertices);
         
-        // NOTE(Momo): Transpose; game is row-major
-        M44 transform = Transpose(data->transform);
+        // NOTE(Momo): transpose; game is row-major
+        M44 transform = transpose(data->transform);
         ogl->glNamedBufferSubData(ogl->buffers[_Opengl_VBO_Transform], 
                                   current_instance_index* sizeof(M44), 
                                   sizeof(M44), 
@@ -617,12 +617,16 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
       } break;
       case Gfx_CmdType_SetTexture: {
         Gfx_Cmd_SetTexture* data = (Gfx_Cmd_SetTexture*)entry->data;
-        Assert(data->width < S32_max);
-        Assert(data->height < S32_max);
-        Assert(data->width > 0);
-        Assert(data->height > 0);
+        assert(data->texture_width < S32_MAX);
+        assert(data->texture_height < S32_MAX);
+        assert(data->texture_width > 0);
+        assert(data->texture_height > 0);
         
-        _SetTexture(ogl, data->index, (S32)data->width, (S32)data->height, data->pixels);
+        _SetTexture(ogl, 
+                    data->texture_index, 
+                    (S32)data->texture_width, 
+                    (S32)data->texture_height, 
+                    data->texture_pixels);
       } break;
       case Gfx_CmdType_ClearTextures: {
         _ClearTextures(ogl);
@@ -631,6 +635,6 @@ Render(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
   }
   
   _DrawInstances(ogl, current_texture, instances_to_draw, last_drawn_instance_index);
-  clear(&ogl->commands);  
+  ogl->commands.clear();  
 }
 

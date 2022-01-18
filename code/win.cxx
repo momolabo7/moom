@@ -1,4 +1,5 @@
 
+#define NOMINMAX
 #include <windows.h>
 #undef near
 #undef far
@@ -28,12 +29,12 @@ struct Win_File {
 
 
 
-static inline LONG RECT_Width(RECT r) { return r.right - r.left; }
-static inline LONG RECT_Height(RECT r) { return r.bottom - r.top; }
+static inline LONG width_of(RECT r) { return r.right - r.left; }
+static inline LONG height_of(RECT r) { return r.bottom - r.top; }
 
 
 static inline V2U32
-Win_GetWindowDims(HWND window) {
+win_get_window_dims(HWND window) {
 	RECT rect;
 	GetWindowRect(window, &rect);
   
@@ -46,7 +47,7 @@ Win_GetWindowDims(HWND window) {
 }
 
 static V2U32
-Win_GetClientDims(HWND window) {
+win_get_client_dims(HWND window) {
 	RECT rect;
 	GetClientRect(window, &rect);
   
@@ -59,12 +60,12 @@ Win_GetClientDims(HWND window) {
 }
 
 static Rect2U32 
-Win_GetRenderRegion(U32 window_w, 
-                    U32 window_h, 
-                    U32 render_w, 
-                    U32 render_h) 
+win_calc_render_region(U32 window_w, 
+                       U32 window_h, 
+                       U32 render_w, 
+                       U32 render_h) 
 {
-	Assert(render_w > 0 && render_h > 0 && window_w > 0 && window_h > 0);
+	assert(render_w > 0 && render_h > 0 && window_w > 0 && window_h > 0);
   
 	Rect2U32 ret;
 	
@@ -100,26 +101,26 @@ Win_GetRenderRegion(U32 window_w,
 
 
 static LARGE_INTEGER
-Win_QueryPerformanceCounter(void) {
+win_get_performance_counter(void) {
   LARGE_INTEGER result;
   QueryPerformanceCounter(&result);
   return result;
 }
 
 static F64
-Win_GetSecsElapsed(LARGE_INTEGER start,
-                   LARGE_INTEGER end,
-                   LARGE_INTEGER performance_frequency) 
+win_get_secs_elapsed(LARGE_INTEGER start,
+                     LARGE_INTEGER end,
+                     LARGE_INTEGER performance_frequency) 
 {
   
   return (F64(end.QuadPart - start.QuadPart)) / performance_frequency.QuadPart;
 }
 
 LRESULT CALLBACK
-Win_WindowCallback(HWND window, 
-                   UINT message, 
-                   WPARAM w_param,
-                   LPARAM l_param) 
+win_window_callback(HWND window, 
+                    UINT message, 
+                    WPARAM w_param,
+                    LPARAM l_param) 
 {
   LRESULT result = 0;
   switch(message) {
@@ -137,23 +138,23 @@ Win_WindowCallback(HWND window,
 
 //~ For Platform API
 static void 
-Win_HotReload() {
+win_hot_reload() {
   Win_global_state.is_hot_reloading = true;
 }
 
 static void 
-Win_Shutdown() {
+win_shutdown() {
   Win_global_state.is_running = false;
 }
 static void 
-Win_SetAspectRatio(U32 width, U32 height) {
+win_set_aspect_ratio(U32 width, U32 height) {
   Win_global_state.aspect_ratio_width = width;
   Win_global_state.aspect_ratio_height = height;
 }
 
 
 static void*
-Win_AllocateMemory(UMI memory_size) {
+win_allocate_memory(UMI memory_size) {
   return (U8*)VirtualAllocEx(GetCurrentProcess(),
                              0, 
                              memory_size,
@@ -163,7 +164,7 @@ Win_AllocateMemory(UMI memory_size) {
 
 
 static void
-Win_FreeMemory(void* memory) {
+win_free_memory(void* memory) {
   VirtualFreeEx(GetCurrentProcess(), 
                 memory,    
                 0, 
@@ -173,15 +174,15 @@ Win_FreeMemory(void* memory) {
 
 
 static Platform_File
-Win_OpenFile(const char* filename, 
-             Platform_FileAccess access,
-             Platform_FilePath path) 
+win_open_file(const char* filename, 
+              Platform_FileAccess access,
+              Platform_FilePath path) 
 {
   // Opening the file
-  Platform_File ret = {0};
+  Platform_File ret = {};
   
-  DWORD access_flag = {0};
-  DWORD creation_disposition = {0};
+  DWORD access_flag = {};
+  DWORD creation_disposition = {};
   switch (access) {
     case Platform_FileAccess_Read: {
       access_flag = GENERIC_READ;
@@ -213,7 +214,7 @@ Win_OpenFile(const char* filename,
     return ret;
   }
   else {
-    auto* win_file = (Win_File*)Win_AllocateMemory(sizeof(Win_File));
+    auto* win_file = (Win_File*)win_allocate_memory(sizeof(Win_File));
     win_file->handle = handle;
     
     ret.platform_data = win_file;
@@ -223,22 +224,22 @@ Win_OpenFile(const char* filename,
 }
 
 static void
-Win_CloseFile(Platform_File* file) {
+win_close_file(Platform_File* file) {
   auto* win_file = (Win_File*)file->platform_data;
   CloseHandle(win_file->handle);
-  Win_FreeMemory(file->platform_data);
+  win_free_memory(file->platform_data);
   file->platform_data = nullptr;
 }
 
 static void
-Win_ReadFile(Platform_File* file, UMI size, UMI offset, void* dest) 
+win_read_file(Platform_File* file, UMI size, UMI offset, void* dest) 
 { 
-  if (!IsOk(file)) return;
+  if (!is_ok(file)) return;
   
   auto* win_file = (Win_File*)file->platform_data;
   
   // Reading the file
-  OVERLAPPED overlapped = {0};
+  OVERLAPPED overlapped = {};
   overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
   overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
   
@@ -257,13 +258,13 @@ Win_ReadFile(Platform_File* file, UMI size, UMI offset, void* dest)
 }
 
 static void 
-Win_WriteFile(Platform_File* file, UMI size, UMI offset, void* src)
+win_write_file(Platform_File* file, UMI size, UMI offset, void* src)
 {
-  if (!IsOk(file)) return;
+  if (!is_ok(file)) return;
   
   auto* win_file = (Win_File*)file->platform_data;
   
-  OVERLAPPED overlapped = {0};
+  OVERLAPPED overlapped = {};
   overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
   overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
   
@@ -280,18 +281,18 @@ Win_WriteFile(Platform_File* file, UMI size, UMI offset, void* src)
 
 
 static Platform
-Win_CreatePlatformForGame()
+win_create_platform_api()
 {
   Platform pf_api;
-  pf_api.hot_reload = Win_HotReload;
-  pf_api.alloc = Win_AllocateMemory;
-  pf_api.free = Win_FreeMemory;
-  pf_api.shutdown = Win_Shutdown;
-  pf_api.open_file = Win_OpenFile;
-  pf_api.read_file = Win_ReadFile;
-  pf_api.write_file = Win_WriteFile;
-  pf_api.close_file = Win_CloseFile;
-  pf_api.set_aspect_ratio = Win_SetAspectRatio;
+  pf_api.hot_reload = win_hot_reload;
+  pf_api.alloc = win_allocate_memory;
+  pf_api.free = win_free_memory;
+  pf_api.shutdown = win_shutdown;
+  pf_api.open_file = win_open_file;
+  pf_api.read_file = win_read_file;
+  pf_api.write_file = win_write_file;
+  pf_api.close_file = win_close_file;
+  pf_api.set_aspect_ratio = win_set_aspect_ratio;
   return pf_api;
 }
 
@@ -334,7 +335,7 @@ WinMain(HINSTANCE instance,
     
     WNDCLASSA win_class = {};
     win_class.style = CS_HREDRAW | CS_VREDRAW;
-    win_class.lpfnWndProc = Win_WindowCallback;
+    win_class.lpfnWndProc = win_window_callback;
     win_class.hInstance = instance;
     win_class.hCursor = LoadCursor(0, IDC_ARROW);
     win_class.lpszClassName = "MainWindowClass";
@@ -350,7 +351,7 @@ WinMain(HINSTANCE instance,
       return 1;
     }
     
-    RECT win_rect = {0};
+    RECT win_rect = {};
     {
       // NOTE(Momo): Monitor dimensions
       HMONITOR monitor = MonitorFromWindow(0, MONITOR_DEFAULTTONEAREST);
@@ -358,8 +359,8 @@ WinMain(HINSTANCE instance,
       monitor_info.cbSize = sizeof(monitor_info);
       GetMonitorInfo(monitor, &monitor_info); 
       
-      LONG monitor_w = RECT_Width(monitor_info.rcMonitor);
-      LONG monitor_h = RECT_Height(monitor_info.rcMonitor);
+      LONG monitor_w = width_of(monitor_info.rcMonitor);
+      LONG monitor_h = height_of(monitor_info.rcMonitor);
       
       win_rect.left = monitor_w/2 - win_w/2;
       win_rect.right = monitor_w/2 + win_w/2;
@@ -380,8 +381,8 @@ WinMain(HINSTANCE instance,
                              style,
                              win_rect.left,
                              win_rect.top,
-                             RECT_Width(win_rect),
-                             RECT_Height(win_rect),
+                             width_of(win_rect),
+                             height_of(win_rect),
                              0,
                              0,
                              instance,
@@ -397,7 +398,7 @@ WinMain(HINSTANCE instance,
   }
   
   //-NOTE(Momo): Load Platform API for game
-  Platform pf_api = Win_CreatePlatformForGame();
+  Platform pf_api = win_create_platform_api();
   
   //-NOTE(Momo): Load Gfx functions
   WinGfx_API gfx_api;
@@ -405,13 +406,13 @@ WinMain(HINSTANCE instance,
   {
     gfx_dll =  LoadLibraryA("gfx.dll");
     if (gfx_dll) {
-      gfx_api.init = (WinGfx_InitFn*)GetProcAddress(gfx_dll, "WinGfx_Init");
+      gfx_api.init = (wingfx_InitFn*)GetProcAddress(gfx_dll, "wingfx_init");
       if(!gfx_api.init) return 1;
       
-      gfx_api.free = (WinGfx_FreeFn*)GetProcAddress(gfx_dll, "WinGfx_Free");
+      gfx_api.free = (wingfx_FreeFn*)GetProcAddress(gfx_dll, "wingfx_free");
       if(!gfx_api.free) return 1;
       
-      gfx_api.render = (WinGfx_RenderFn*)GetProcAddress(gfx_dll, "WinGfx_Render");
+      gfx_api.render = (wingfx_RenderFn*)GetProcAddress(gfx_dll, "wingfx_render");
       if(!gfx_api.render) return 1;
       
     }
@@ -431,7 +432,7 @@ WinMain(HINSTANCE instance,
   
   
   //- NOTE(Momo): Init input
-  Input input = {0};
+  Input input = {};
   
   
   // TODO(Momo): Testing texture. Remove after use.
@@ -444,15 +445,15 @@ WinMain(HINSTANCE instance,
   
   
   //- Begin game loop
-  Game game = {0};
+  Game game = {};
   
   B32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   LARGE_INTEGER performance_frequency;
   QueryPerformanceFrequency(&performance_frequency);
   
-  LARGE_INTEGER last_count = Win_QueryPerformanceCounter();
+  LARGE_INTEGER last_count = win_get_performance_counter();
   
-  Game_API game_api = {0}; 
+  Game_API game_api = {}; 
   HMODULE game_dll = NULL; 
   
   while (Win_global_state.is_running) {
@@ -474,7 +475,7 @@ WinMain(HINSTANCE instance,
       
       game_dll = LoadLibraryA(running_game_dll);
       if (game_dll) {
-        game_api.update = (Game_UpdateFn*)GetProcAddress(game_dll, "Game_Update");
+        game_api.update = (Game_UpdateFn*)GetProcAddress(game_dll, "game_update");
         if(!game_api.update) {
           FreeLibrary(game_dll);
           return 1;
@@ -486,7 +487,7 @@ WinMain(HINSTANCE instance,
       Win_global_state.is_hot_reloading = false;
     }
     
-    Update(&input);
+    input.update();
     
     //-NOTE(Momo): Process messages and input
     {
@@ -504,11 +505,11 @@ WinMain(HINSTANCE instance,
           case WM_SYSKEYUP:
           {
             U32 code = (U32)msg.wParam;
-            B32 is_down = msg.message == WM_KEYDOWN;
+            B32 is_key_down = msg.message == WM_KEYDOWN;
             switch(code) {
               case 0x57: /* W  */ 
               {
-                input.button_up.now = is_down;
+                input.button_up.now = is_key_down;
               } break;
             }
             
@@ -532,15 +533,15 @@ WinMain(HINSTANCE instance,
     // NOTE(Momo): Resize if needed. 
     // TODO(Momo): Maybe we only do this once and then 
     // only when window size changes after?
-    V2U32 render_wh = Win_GetClientDims(window);
+    V2U32 render_wh = win_get_client_dims(window);
     
     
     // TODO(Momo): Should probably make a "GameInfo" struct that 
     // contains information like these
-    Rect2U32 render_region = Win_GetRenderRegion(render_wh.w,
-                                                 render_wh.h,
-                                                 Win_global_state.aspect_ratio_width,
-                                                 Win_global_state.aspect_ratio_height);
+    Rect2U32 render_region = win_calc_render_region(render_wh.w,
+                                                    render_wh.h,
+                                                    Win_global_state.aspect_ratio_width,
+                                                    Win_global_state.aspect_ratio_height);
     
     
     
@@ -551,9 +552,9 @@ WinMain(HINSTANCE instance,
     // 2. If the time elapsed is greater than the target time elapsed,
     //    sleep/spin-lock until then.    
     F64 secs_elapsed = 
-      Win_GetSecsElapsed(last_count,
-                         Win_QueryPerformanceCounter(),
-                         performance_frequency);
+      win_get_secs_elapsed(last_count,
+                           win_get_performance_counter(),
+                           performance_frequency);
     
     
     
@@ -570,9 +571,9 @@ WinMain(HINSTANCE instance,
         // NOTE(Momo): Spin lock
         while(game_dt > secs_elapsed) {
           secs_elapsed = 
-            Win_GetSecsElapsed(last_count,
-                               Win_QueryPerformanceCounter(),
-                               performance_frequency);
+            win_get_secs_elapsed(last_count,
+                                 win_get_performance_counter(),
+                                 performance_frequency);
         }
         
       }
@@ -583,10 +584,10 @@ WinMain(HINSTANCE instance,
     }
     
     
-    last_count = Win_QueryPerformanceCounter();
+    last_count = win_get_performance_counter();
     
     
-    //-NOTE(Momo): Swap buffers
+    //-NOTE(Momo): swap buffers
     {
       HDC dc = GetDC(window);
       SwapBuffers(dc);

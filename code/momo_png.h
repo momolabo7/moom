@@ -8,8 +8,8 @@
 //
 // TODO(Momo): Make these work in big endian OS
 //
-static Image PNG_Read(Memory png_memory, Arena* arena);
-static Memory PNG_Write(Image image, Arena* arena);
+static Image read_png(Memory png_memory, Arena* arena);
+static Memory write_png(Image image, Arena* arena);
 
 
 #include "momo_png.cpp"

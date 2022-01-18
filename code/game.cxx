@@ -7,8 +7,6 @@ struct PermanentMemory {
   F32 tmp_delta;
   B32 tmp_increase;
   F32 tmp_rot;
-  
-  
 };
 
 struct GameMemory {
@@ -16,12 +14,9 @@ struct GameMemory {
 };
 
 
-// TODO(Momo): Game should probably return a status.
 exported B32 
-Game_Update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) { 
+game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) { 
   // Initialization
-  U8 test[10];
-  
   if (!game->game_data) {
     // TODO(Momo): free allocated memory
     game->game_data = pf->alloc(sizeof(GameMemory));
@@ -39,52 +34,37 @@ Game_Update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     perm->tmp_rot = 0.f;
     
     // Set aspect ratio of the game
-    pf->set_aspect_ratio(16, 9);
-    
-    // NOTE(Momo): Test read
-    {
-      Platform_File read_test_file = pf->open_file("test.txt", 
-                                                   Platform_FileAccess_Read, 
-                                                   Platform_FilePath_Executable);
-      
-      pf->read_file(&read_test_file, 5, 0, test);
-      pf->close_file(&read_test_file);
-    } 
+    pf->set_aspect_ratio(16, 9);    
     
     
-    // NOTE(Momo): Test write
-    {
-      Platform_File write_test_file = pf->open_file("test_out.txt", 
-                                                    Platform_FileAccess_Write, 
-                                                    Platform_FilePath_Executable);
-      
-      pf->write_file(&write_test_file, sizeof("Hello"), 0, "Hello");
-      pf->close_file(&write_test_file);
-    }
+    //TODO: Load assets
+    // assets->load(ASSET_NAME)
+    // assets->unload(ASSET_NAME);
+    
     
   }
   
   GameMemory* game_memory = (GameMemory*)game->game_data;
   PermanentMemory* perm = game_memory->perm;
   
-  if (IsPoked(input->button_up)) {
+  if (input->button_up.is_poked()) {
     pf->hot_reload();
   }
   
   {
     RGBA colors;
     colors.r = colors.g = colors.b  = colors.a = 0.3f;
-    clear(gfx, colors);
+    gfx->clear(colors);
   }
   
   {
-    V3F32 position = {0};
+    V3F32 position = {};
     Rect3F32 frustum;
     frustum.min.x = frustum.min.y = frustum.min.z = 0;
     frustum.max.x = 1600;
     frustum.max.y = 900;
     frustum.max.z = 500;
-    SetOrthoCamera(gfx, position, frustum);
+    gfx->set_orthographic_camera(position, frustum);
   }
   
   {
@@ -103,14 +83,14 @@ Game_Update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
       perm->tmp_increase = true;
     }
     
-    RGBA colors = CreateRGBA(0.f, 0.f, 0.f, 1.f);
-    HSL hsl = CreateHSL(perm->tmp_delta, 1.f, 0.5f);
-    colors.rgb = ToRGB(hsl);
+    RGBA colors = create_rgba(0.f, 0.f, 0.f, 1.f);
+    HSL hsl = create_hsl(perm->tmp_delta, 1.f, 0.5f);
+    colors.rgb = hsl_to_rgb(hsl);
     
-    M44 scale = CreateScaleM44(600.f, 600.f, 10.f);
-    M44 rot = CreateRotationZM44(perm->tmp_rot += (0.5f*dt));
-    M44 trans = CreateTranslationM44(800.f, 450.f, 300.f);
-    DrawSprite(gfx, colors, trans*scale*rot, 0);
+    M44 s = create_m44_scale(600.f, 600.f, 10.f);
+    M44 r = create_m44_rotation_z(perm->tmp_rot += dt);
+    M44 t = create_m44_translation(800.f, 450.f, 300.f);
+    gfx->draw_sprite(colors, t*r*s, 0);
   }
   
   return false;

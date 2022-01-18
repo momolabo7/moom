@@ -28,38 +28,40 @@ union V4F32 {
 };
 
 
-static constexpr V2F32 Add(V2F32 lhs, V2F32 rhs);
-static constexpr V2F32 Sub(V2F32 lhs, V2F32 rhs);
-static constexpr V2F32 Scale(V2F32 lhs, F32 rhs);
-static constexpr V2F32 InvScale(V2F32 lhs, F32 rhs);
-static constexpr F32   Dot(V2F32 lhs, V2F32 rhs);
-static constexpr F32   DistanceSq(V2F32 lhs, V2F32 rhs);
-static constexpr F32   LengthSq(V2F32 v);
-static constexpr V2F32 Negate(V2F32 v);
-static constexpr B32   Match(V2F32 lhs, V2F32 rhs);
-static constexpr V2F32 Midpoint(V2F32 lhs, V2F32 rhs);
-static F32   Distance(V2F32 lhs, V2F32 rhs);
-static F32   Length(V2F32 v);
-static V2F32 Normalize(V2F32 v);
-static V2F32 Project(V2F32 v, V2F32 onto);
-static V2F32 Rotate(V2F32 v, F32 rad);
+static constexpr V2F32 add(V2F32 lhs, V2F32 rhs);
+static constexpr V2F32 sub(V2F32 lhs, V2F32 rhs);
+static constexpr V2F32 scale(V2F32 lhs, F32 rhs);
+static constexpr V2F32 div(V2F32 lhs, F32 rhs);
+static constexpr F32   dot(V2F32 lhs, V2F32 rhs);
+static constexpr F32   distance_sq(V2F32 lhs, V2F32 rhs);
+static constexpr F32   length_sq(V2F32 v);
+static constexpr V2F32 negate(V2F32 v);
+static constexpr B32   match(V2F32 lhs, V2F32 rhs);
+static constexpr V2F32 midpoint(V2F32 lhs, V2F32 rhs);
+static F32   distance(V2F32 lhs, V2F32 rhs);
+static F32   length(V2F32 v);
+static V2F32 normalize(V2F32 v);
+static V2F32 project(V2F32 v, V2F32 onto);
+static V2F32 rotate(V2F32 v, F32 rad);
+static F32   angle_between(V2F32 lhs, V2F32 rhs);
 
-static constexpr V3F32 Add(V3F32 lhs, V3F32 rhs);
-static constexpr V3F32 Sub(V3F32 lhs, V3F32 rhs);
-static constexpr V3F32 Scale(V3F32 lhs, F32 rhs);
-static constexpr V3F32 InvScale(V3F32 lhs, F32 rhs);
-static constexpr F32   Dot(V3F32 lhs, V3F32 rhs);
-static constexpr F32   DistanceSq(V3F32 lhs, V3F32 rhs);
-static constexpr F32   LengthSq(V3F32 v);
-static constexpr B32   Match(V3F32 lhs, V3F32 rhs);
-static constexpr V3F32 Negate(V3F32 v);
-static constexpr V3F32 Midpoint(V3F32 lhs, V3F32 rhs);
+
+static constexpr V3F32 add(V3F32 lhs, V3F32 rhs);
+static constexpr V3F32 sub(V3F32 lhs, V3F32 rhs);
+static constexpr V3F32 scale(V3F32 lhs, F32 rhs);
+static constexpr V3F32 div(V3F32 lhs, F32 rhs);
+static constexpr F32   dot(V3F32 lhs, V3F32 rhs);
+static constexpr F32   distance_sq(V3F32 lhs, V3F32 rhs);
+static constexpr F32   length_sq(V3F32 v);
+static constexpr B32   match(V3F32 lhs, V3F32 rhs);
+static constexpr V3F32 negate(V3F32 v);
+static constexpr V3F32 midpoint(V3F32 lhs, V3F32 rhs);
 static constexpr V3F32 Cross(V3F32 lhs, V3F32 rhs);
-static F32   Distance(V3F32 lhs, V3F32 rhs);
-static F32   Length(V3F32 v);
-static V3F32 Normalize(V3F32 v);
-static V3F32 Project(V3F32 v, V3F32 onto);
-
+static F32   distance(V3F32 lhs, V3F32 rhs);
+static F32   length(V3F32 v);
+static V3F32 normalize(V3F32 v);
+static V3F32 project(V3F32 v, V3F32 onto);
+static F32 	 angle_between(V3F32 lhs, V3F32 rhs);
 
 // TODO(Momo): I'm not sure if we should actually
 // do operator* because there's so many damn ways

@@ -3,11 +3,11 @@
 #ifndef MOMO_IMAGE_H
 #define MOMO_IMAGE_H
 
-typedef struct{
+struct Image{
   U32 width, height;
   U32 channels;
   void* data;
-} Image;
+};
 
 
 #include "momo_image.h"

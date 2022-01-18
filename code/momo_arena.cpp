@@ -8,47 +8,47 @@ create_arena(void* mem, UMI cap) {
 }
 
 
-static void
-clear(Arena* arena) {
-  arena->pos = 0;
+void
+Arena::clear() {
+  pos = 0;
 }
 
 
-static UMI
-remaining(Arena* arena) {
-  return arena->cap - arena->pos;
+UMI 
+Arena::remaining() {
+  return cap - pos;
 }
 
-static void* 
-make_block(Arena* arena, UMI size, UMI align) {
-  Assert(size);
+void* 
+Arena::push_block(UMI size, UMI align) {
+  assert(size);
 	
-	UMI imem = PtrToInt(arena->memory);
-	UMI adjusted_pos = AlignUpPow2(imem + arena->pos, align) - imem;
+	UMI imem = ptr_to_int(this->memory);
+	UMI adjusted_pos = align_up_pow2(imem + this->pos, align) - imem;
 	
-	Assert(adjusted_pos + size < imem + arena->cap);
+	assert(adjusted_pos + size < imem + this->cap);
 	
-	U8* ret = IntToPtr(imem + adjusted_pos);
-	arena->pos = adjusted_pos + size;
+	U8* ret = int_to_ptr(imem + adjusted_pos);
+	this->pos = adjusted_pos + size;
 	
 	return ret;
 	
 }
 
-static Arena
-Partition(Arena* from_arena, UMI size) {	
-	void* memory = make_block(from_arena, size, 16);
-  return create_arena(memory, size);
+Arena
+Arena::partition(UMI size) {	
+	void* mem = push_block(size, 16);
+  return create_arena(mem, size);
 }
 
-template<typename T> static T*
-Push(Arena* arena, UMI align) {
-  return (T*)make_block(arena, sizeof(T), align);
+template<typename T> T*
+Arena::push(UMI align) {
+  return (T*)push_block(sizeof(T), align);
 }
 
-template<typename T> static T*
-PushArray(Arena* arena, UMI num, UMI align) {
-  return (T*)make_block(arena, sizeof(T)*num, align);
+template<typename T> T*
+Arena::push_array(UMI num, UMI align) {
+  return (T*)push_block(sizeof(T)*num, align);
 }
 
 /*
@@ -58,30 +58,31 @@ Arena_BootBlock(UMI struct_size,
                 void* memory,
                 UMI memory_size)
 {
-  Assert(struct_size < memory_size);
-	UMI imem = PtrToInt(memory);
-	imem = AlignUpPow2(imem, 16);
+  assert(struct_size < memory_size);
+	UMI imem = ptr_to_int(memory);
+	imem = align_up_pow2(imem, 16);
 	
 	void* arena_memory = (U8*)memory + struct_size; 
 	UMI arena_memory_size = memory_size - struct_size;
 	Arena* arena_ptr = (Arena*)((U8*)memory + offset_to_arena);
 	(*arena_ptr) = Arena_Create(arena_memory, arena_memory_size);
 	
-	return IntToPtr(imem);
+	return int_to_ptr(imem);
 }
 //*/
 
-static Arena_Marker
-Mark(Arena* arena) {
+Arena_Marker
+Arena::mark() {
   Arena_Marker ret;
-  ret.arena = arena;
-  ret.old_pos = arena->pos;
+  ret.arena = this;
+  ret.old_pos = this->pos;
   
   return ret;
 }
 
-static void
-Revert(Arena_Marker mark) {
-  mark.arena->pos = mark.old_pos;
+void
+Arena::revert(Arena_Marker marker) {
+  assert(marker.arena == this);
+  marker.arena->pos = marker.old_pos;
 }
 

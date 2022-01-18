@@ -1,7 +1,7 @@
 //~ NOTE(Momo): Str8
 
 static Str8
-CreateStr8(U8* str, UMI size) {
+create_str8(U8* str, UMI size) {
 	Str8 ret;
 	ret.e = str;
 	ret.count = size;
@@ -11,7 +11,7 @@ CreateStr8(U8* str, UMI size) {
 
 
 static Str8 
-Substr(Str8 str, UMI start, UMI count) {
+substr(Str8 str, UMI start, UMI count) {
 	Str8 ret;
 	ret.e = str.e + start;
 	ret.count = count;
@@ -20,7 +20,7 @@ Substr(Str8 str, UMI start, UMI count) {
 }
 
 static B32
-Match(Str8 lhs, Str8 rhs) {
+match(Str8 lhs, Str8 rhs) {
   if(lhs.count != rhs.count) {
     return false;
   }
@@ -33,17 +33,17 @@ Match(Str8 lhs, Str8 rhs) {
 }
 
 static B32 operator==(Str8 lhs, Str8 rhs) {
-	return Match(lhs, rhs);
+	return match(lhs, rhs);
 }
 
 static B32 operator!=(Str8 lhs, Str8 rhs) {
-	return !Match(lhs, rhs);
+	return !match(lhs, rhs);
 }
 
 
 //~ NOTE(Momo): Str8Bld
 static Str8Bld  
-CreateStr8Bld(U8* data, UMI cap) {
+create_str8bld(U8* data, UMI cap) {
 	Str8Bld ret;
 	ret.e = data;
 	ret.count = 0;
@@ -51,87 +51,88 @@ CreateStr8Bld(U8* data, UMI cap) {
 	
 	return ret;
 }
-static UMI
-remaining(Str8Bld* s) {
-	return s->cap - s->count; 
+
+UMI
+Str8Bld::remaining() {
+	return this->cap - this->count; 
 }
 
-static void     
-clear(Str8Bld* s) {
-	s->count = 0;
+void     
+Str8Bld::clear() {
+	this->count = 0;
 }
 
-static void     
-Pop(Str8Bld* s) {
-	Assert(s->count > 0);
-	--s->count;
+void     
+Str8Bld::pop() {
+	assert(this->count > 0);
+	--this->count;
 }
 
-static void     
-PushC8(Str8Bld* s, C8 num) {
-	Assert(s->count < s->cap);
-	s->e[s->count++] = num;
+void     
+Str8Bld::push_C8(C8 num) {
+	assert(this->count < this->cap);
+	this->e[this->count++] = num;
 }
-static void     
-PushU32(Str8Bld* s, U32 num) {
+void     
+Str8Bld::push_U32(U32 num) {
 	if (num == 0) {
-    PushC8(s, '0');
+    push_C8('0');
 		return;
   }
-  UMI start_pt = s->count; 
+  UMI start_pt = this->count; 
   
   for(; num != 0; num /= 10) {
     U8 digit_to_convert = (U8)(num % 10);
-		PushC8(s, DigitToASCII(digit_to_convert));
+		push_C8(digit_to_ascii(digit_to_convert));
   }
   
   // Reverse starting from start point to count
-  UMI sub_str_len_half = (s->count - start_pt)/2;
+  UMI sub_str_len_half = (this->count - start_pt)/2;
   for(UMI i = 0; i < sub_str_len_half; ++i) {
-    Swap(s->e + start_pt + i, s->e + s->count - 1 - i);
+    swap(this->e + start_pt + i, this->e + this->count - 1 - i);
   }
 }
-static void     
-PushS32(Str8Bld* s, S32 num) {
-	if (num == 0) {
-    PushC8(s, '0');
-		return;
+void     
+Str8Bld::push_S32(S32 num) {
+  if (num == 0) {
+    push_C8('0');
+	return;
   }
   
-  UMI start_pt = s->count; 
+  UMI start_pt = this->count; 
   
-  B32 neg = num < 0;
-  num = Abs(num);
+  B32 negate = num < 0;
+  num = abs_of(num);
   
   for(; num != 0; num /= 10) {
     U8 digit_to_convert = (U8)(num % 10);
-		PushC8(s, DigitToASCII(digit_to_convert));
+		push_C8(digit_to_ascii(digit_to_convert));
   }
   
-  if (neg) {
-    PushC8(s, '-');
+  if (negate) {
+    push_C8('-');
   }
   
   // Reverse starting from start point to count
-  UMI sub_str_len_half = (s->count - start_pt)/2;
+  UMI sub_str_len_half = (this->count - start_pt)/2;
   for(UMI i = 0; i < sub_str_len_half; ++i) {
-    Swap(s->e + start_pt + i, 
-         s->e + s->count-1-i);
+    swap(this->e + start_pt + i, 
+         this->e + this->count-1-i);
     
   }
   
 }
 
-static void     
-PushF32(Str8Bld* s, F32 value, U32 precision) {
+void     
+Str8Bld::push_F32(F32 value, U32 precision) {
 	if (value < 0.f) {
-		PushC8(s, '-');	
+		push_C8('-');	
 		value = -value;
 	}
 	// NOTE(Momo): won't work for values that U32 can't contain
 	U32 integer_part = (U32)value;
-	PushU32(s, integer_part);
-	PushC8(s, '.');
+	push_U32(integer_part);
+	push_C8('.');
 	
 	value -= (F32)integer_part;
 	
@@ -140,12 +141,12 @@ PushF32(Str8Bld* s, F32 value, U32 precision) {
 	}
 	
 	U32 decimal_part = (U32)value;
-	PushU32(s, decimal_part);
+	push_U32(decimal_part);
 }
 
 // Minimal implementation of sprintf
 // %[flags][width][.precision][length]specifier
-static void
+void
 _PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
 	UMI at = 0;
   while(at < format.count) {
@@ -163,17 +164,17 @@ _PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
 				case 'd': 
 				case 'i':{
 					S32 value = va_arg(args, S32);
-					PushS32(dest, value);
+					dest->push_S32(value);
 				} break;
 				case 'f': {
 					F64 value = va_arg(args, F64);
-					PushF32(dest, (F32)value, 5);
+					dest->push_F32((F32)value, 5);
 				} break;
 				case 's': {
 					// c-string
 					const char* cstr = va_arg(args, const char*);
 					while(cstr[0] != 0) {
-						PushC8(dest, (U8)cstr[0]);
+						dest->push_C8((U8)cstr[0]);
 						++cstr;
 					}
 				} break;
@@ -182,12 +183,12 @@ _PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
 				case 'S': {
 					// Str8
 					Str8 str = va_arg(args, Str8);
-					PushStr8(dest, str);
+					dest->push_Str8(str);
 				} break;
 				
 				default: {
 					// death
-					Assert(false);
+					assert(false);
 				} break;
 			}
 			++at;
@@ -195,7 +196,7 @@ _PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
       
     }
     else {
-      PushC8(dest, format.e[at++]);
+      dest->push_C8(format.e[at++]);
     }
 		
   }
@@ -204,19 +205,19 @@ _PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
 }
 
 
-static void     
-PushFmt(Str8Bld* s, Str8 fmt, ...) {
-	va_list args;
+void     
+Str8Bld::push_format(Str8 fmt, ...) {
+  va_list args;
   va_start(args, fmt);
-  _PushFmtList(s, fmt, args);
+  _PushFmtList(this, fmt, args);
   va_end(args);
 }
 
-static void     
-PushStr8(Str8Bld* s, Str8 src) {
-	Assert(s->count + src.count <= s->cap);
+void     
+Str8Bld::push_Str8(Str8 src) {
+	assert(this->count + src.count <= this->cap);
 	for (UMI i = 0; i < src.count; ++i ) {
-		s->e[s->count++] = src.e[i];
+		this->e[this->count++] = src.e[i];
 	}
 }
 

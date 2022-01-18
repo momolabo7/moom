@@ -5,30 +5,30 @@
 // are avaliable for use or not. Maybe IS_CRT?
 
 static B32
-IsOk(Memory mem) {
+is_ok(Memory mem) {
   return mem.data && mem.size;
 }
 
 #if 1
 #include <string.h>
 static void 
-Bin_Copy(void* dest, const void* src, UMI size) {
+copy_memory(void* dest, const void* src, UMI size) {
   memmove(dest, src, size);
 }
 
 static void 
-Bin_Zero(void* dest, UMI size) {
+zero_memory(void* dest, UMI size) {
   memset(dest, 0, size);
 }
 static B32
-Bin_Match(const void* lhs, const void* rhs, UMI size) {
+match_memory(const void* lhs, const void* rhs, UMI size) {
   return memcmp(lhs, rhs, size) == 0; 
 }
 
 #else
 
 static void
-Bin_Copy(void* dest, const void* src, UMI size) {
+copy_memory(void* dest, const void* src, UMI size) {
   U8 *p = (U8*)dest;
   const U8 *q = (const U8*)src;
   while(size--) {
@@ -37,7 +37,7 @@ Bin_Copy(void* dest, const void* src, UMI size) {
 }
 
 static void 
-Bin_Zero(void* dest, UMI size) {
+zero_memory(void* dest, UMI size) {
   U8 *p = (U8*)dest;
   while(size--){
     *p++ = 0;
@@ -45,7 +45,7 @@ Bin_Zero(void* dest, UMI size) {
 }
 
 static B32
-Bin_Match(const void* lhs, const void* rhs, UMI size) {
+match_memory(const void* lhs, const void* rhs, UMI size) {
   const U8 *p = (const U8*)lhs;
   const U8 *q = (const U8*)rhs;
   while(size--) {
@@ -59,7 +59,7 @@ Bin_Match(const void* lhs, const void* rhs, UMI size) {
 #endif
 
 static void 
-Bin_Swap(void* lhs, void* rhs, UMI size) {
+swap_memory(void* lhs, void* rhs, UMI size) {
   U8* l = (U8*)lhs;
   U8* r = (U8*)rhs;
   
@@ -71,46 +71,46 @@ Bin_Swap(void* lhs, void* rhs, UMI size) {
 }
 //~ Helper functions
 static constexpr UMI 
-PtrToInt(void* p) { 
+ptr_to_int(void* p) { 
   return (UMI)((char*)p - (char*)0); 
 }
 
 static constexpr U8* 
-IntToPtr(UMI u) { 
+int_to_ptr(UMI u) { 
   return (U8*)((char*)0 + u);
 }
 
 template<typename T> static constexpr T 
-Min(T l, T r) { 
+min_of(T l, T r) { 
   return l < r ? l : r; 
 }
 
 template<typename T> static constexpr T 
-Max(T l, T r) { 
+max_of(T l, T r) { 
   return l > r ? l : r; 
 }
 
 template<typename T> static constexpr T 
-Clamp(T x, T b, T t) { 
-  return Max(Min(x,t),b); 
+clamp(T x, T b, T t) { 
+  return max_of(min_of(x,t),b); 
 }
 
 template<typename T> static constexpr T
-Abs(T x) { 
+abs_of(T x) { 
   return x < 0 ? -x : x; 
 }
 
 static constexpr F32 
-Abs(F32 x) {
-  union { F32 f; U32 u; } val = {0};
+abs_of(F32 x) {
+  union { F32 f; U32 u; } val = {};
   val.f = x;
   val.u &= 0x7fffffff;  
   return val.f;
 }
 
 static constexpr F64
-Abs(F64 x) {
-  union { F64 f; U64 u; } val = {0};
+abs_of(F64 x) {
+  union { F64 f; U64 u; } val = {};
   val.f = x;
   val.u &= 0x7fffffffffffffff;
   
@@ -119,63 +119,63 @@ Abs(F64 x) {
 
 
 static constexpr S8   
-Abs(S8 x) {
+abs_of(S8 x) {
   S8 y = x >> 7;
   return (x ^ y)-y;
 }
 static constexpr S16  
-Abs(S16 x) {
+abs_of(S16 x) {
   S16 y = x >> 15;
   return (x ^ y)-y;
 }
 static constexpr S32  
-Abs(S32 x) {
+abs_of(S32 x) {
   S32 y = x >> 31;
   return (x ^ y)-y;
 }
 static constexpr S64  
-Abs(S64 x) {
+abs_of(S64 x) {
   S64 y = x >> 63;
   return (x ^ y)-y;
 }
 
 
 template<typename T> static constexpr T
-Lerp(T s, T e, F32 f) { 
+lerp(T s, T e, F32 f) { 
   return (T)(s + (e-s) * f); 
 }
 
 template<typename T> static constexpr T 
-Lerp(T s, T e, F64 f) { 
+lerp(T s, T e, F64 f) { 
   return (T)(s + (e-s) * f); 
 }
 
 static constexpr F32 
-Ratio(F32 v, F32 min, F32 max) { 
+ratio(F32 v, F32 min, F32 max) { 
   return (v - min)/(max - min); 
 }
 
 static constexpr F64 
-Ratio(F64 v, F64 min, F64 max) { 
+ratio(F64 v, F64 min, F64 max) { 
   return (v - min)/(max - min); 
 }
 
 template<typename T, typename U> static constexpr T
-AlignDownPow2(T value, U align) { 
+align_down_pow2(T value, U align) { 
   return value & ~(align-1); 
 }
 
 template<typename T, typename U> static T
-AlignUpPow2(T value, U align) { 
+align_up_pow2(T value, U align) { 
   return (value + (align-1)) & ~(align-1); 
 }
 
 template<typename T> static constexpr B32 
-IsPow2(T value) { 
+is_pow2(T value) { 
   return (value & (value - 1)) == 0; 
 }
 template<typename T> static constexpr void 
-Swap(T* lhs, T* rhs) { 
+swap(T* lhs, T* rhs) { 
   T tmp = *lhs; 
   *lhs = *rhs; 
   *rhs = tmp; 
@@ -184,14 +184,14 @@ Swap(T* lhs, T* rhs) {
 
 //~C-strings, aka null-terminated strings
 static UMI
-Sistr_Length(const char* str) {
+cstr_len(const char* str) {
   UMI count = 0;
   for(; (*str) != 0 ; ++count, ++str);
   return count;
 }
 
 static void
-Sistr_Copy(char * dest, const char* src) {
+cstr_copy(char * dest, const char* src) {
   for(; (*src) != 0 ; ++src, ++dest) {
     (*dest) = (*src);
   }
@@ -199,7 +199,7 @@ Sistr_Copy(char * dest, const char* src) {
 }
 
 static B32
-Sistr_Compare(const char* lhs, const char* rhs) {
+cstr_compare(const char* lhs, const char* rhs) {
   for(; (*rhs) != 0 ; ++rhs, ++lhs) {
     if ((*lhs) != (*rhs)) {
       return false;
@@ -209,7 +209,7 @@ Sistr_Compare(const char* lhs, const char* rhs) {
 }
 
 static B32
-Sistr_CompareN(const char* lhs, const char* rhs, UMI n) {
+cstr_compare_n(const char* lhs, const char* rhs, UMI n) {
   while(n--) {
     if ((*lhs++) != (*rhs++)) {
       return false;
@@ -218,7 +218,7 @@ Sistr_CompareN(const char* lhs, const char* rhs, UMI n) {
   return true;
 }
 static void
-Sistr_Concat(char* dest, const char* Src) {
+cstr_concat(char* dest, const char* Src) {
   // Go to the end of dest
   for (; (*dest) != 0; ++dest);
   for (; (*Src) != 0; ++Src, ++dest) {
@@ -229,23 +229,23 @@ Sistr_Concat(char* dest, const char* Src) {
 
 
 static void 
-Sistr_Clear(char* dest) {
+cstr_clear(char* dest) {
   (*dest) = 0;
 }
 
 static void
-Sistr_Reverse(char* dest) {
+cstr_reverse(char* dest) {
   char* back_ptr = dest;
   for (; *(back_ptr+1) != 0; ++back_ptr);
   for (;dest < back_ptr; ++dest, --back_ptr) {
-    Swap(dest, back_ptr);
+    swap(dest, back_ptr);
   }
 }
 
 
 
 static void 
-Sistr_Itoa(char* dest, S32 num) {
+cstr_itoa(char* dest, S32 num) {
   // Naive method. 
   // Extract each number starting from the back and fill the buffer. 
   // Then reverse it.
@@ -258,7 +258,7 @@ Sistr_Itoa(char* dest, S32 num) {
   }
   
   B32 negative = num < 0;
-  num = Abs(num);
+  num = abs_of(num);
   
   char* it = dest;
   for(; num != 0; num /= 10) {
@@ -271,16 +271,16 @@ Sistr_Itoa(char* dest, S32 num) {
   }
   (*it) = 0;
   
-  Sistr_Reverse(dest);
+  cstr_reverse(dest);
 }
 
 
 //~ NOTE(Momo): Constants
 static constexpr F32 
-F32_Inf() {
+F32_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-8 are on
-  union { F32 f; U32 u; } ret = {0};
+  union { F32 f; U32 u; } ret = {};
   ret.u = 0x7f800000;
   
   return ret.f;
@@ -288,11 +288,11 @@ F32_Inf() {
 }
 
 static constexpr F32 
-F32_NegInf() {
+F32_NEG_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-8 are on
   // Negative is when bit 0 is on
-  union { F32 f; U32 u; } ret = {0};
+  union { F32 f; U32 u; } ret = {};
   ret.u = 0xff800000;
   
   return ret.f;	
@@ -302,10 +302,10 @@ F32_NegInf() {
 
 
 static constexpr F64 
-F64_Inf() {
+F64_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-11 are on
-  union { F64 f; U64 u; } ret = {0};
+  union { F64 f; U64 u; } ret = {};
   ret.u = 0x7FF0000000000000;
   
   return ret.f;
@@ -313,11 +313,11 @@ F64_Inf() {
 }
 
 static constexpr F64 
-F64_NegInf() {
+F64_NEG_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-11 are on
   // Negative is when bit 0 is on
-  union { F64 f; U64 u; } ret = {0};
+  union { F64 f; U64 u; } ret = {};
   ret.u = 0xFFF0000000000000;
   
   return ret.f;	
@@ -326,46 +326,46 @@ F64_NegInf() {
 
 //~ NOTE(Momo): IEEE floating point functions 
 static constexpr B32 
-Match(F32 lhs, F32 rhs) {
-  return Abs(lhs - rhs) <= F32_epsilon;
+match(F32 lhs, F32 rhs) {
+  return abs_of(lhs - rhs) <= F32_EPSILON;
 }
 
 static constexpr B32 
-Match(F64 lhs, F64 rhs) {
-  return Abs(lhs - rhs) <= F64_epsilon;
+match(F64 lhs, F64 rhs) {
+  return abs_of(lhs - rhs) <= F64_EPSILON;
 }
 
 
 static constexpr F32
-BPMToSPB(F32 bpm) {
-  Assert(bpm >= 0.f);
+bpm_to_spb(F32 bpm) {
+  assert(bpm >= 0.f);
   return 60.f/bpm;
 }
 
 static constexpr F64
-BPMToSPB(F64 bpm) {
-  Assert(bpm >= 0.f);
+bpm_to_spb(F64 bpm) {
+  assert(bpm >= 0.f);
   return 60.0/bpm;
 }
 
 
 static constexpr F32 
-DegToRad(F32 degrees) {
-  return degrees * pi_F32 / 180.f;
+deg_to_rad(F32 degrees) {
+  return degrees * PI_32 / 180.f;
 }
 static constexpr F32 
-RadToDeg(F32 radians) {
-  return radians * 180.f / pi_F32;	
+rad_to_deg(F32 radians) {
+  return radians * 180.f / PI_32;	
 }
 
 static constexpr F64
-DegToRad(F64 degrees) {
-  return degrees * pi_F32 / 180.0;
+deg_to_rad(F64 degrees) {
+  return degrees * PI_32 / 180.0;
   
 }
 static constexpr F64 
-RadToDeg(F64 radians) {
-  return radians * 180.0 / pi_F64;
+rad_to_deg(F64 radians) {
+  return radians * 180.0 / PI_64;
   
 }
 
@@ -373,12 +373,12 @@ RadToDeg(F64 radians) {
 
 
 static constexpr U16
-EndianSwap16(U16 value) {
+endian_swap_16(U16 value) {
   return (value << 8) | (value >> 8);
 }
 
 static constexpr U32
-EndianSwap32(U32 value) {
+endian_swap_32(U32 value) {
   return  ((value << 24) |
            ((value & 0xFF00) << 8) |
            ((value >> 8) & 0xFF00) |
@@ -389,146 +389,149 @@ EndianSwap32(U32 value) {
 ///////////////////////////////////
 //~ NOTE(Momo): Non-trivial math functions
 // We have to use math.h here as default
-// TODO(Momo): Write our own trig function
+// TODO(Momo): write our own trig function
+ns_begin(std)
 #include <math.h>
+ns_end(std)
+
 static F32 
-Sin(F32 x) {
-  return sinf(x);
+sin(F32 x) {
+  return std::sinf(x);
 }
 
 static F32 
-Cos(F32 x) {
-  return cosf(x);
+cos(F32 x) {
+  return std::cosf(x);
 }
 
 static F32
-Tan(F32 x) {
-  return tanf(x);
+tan(F32 x) {
+  return std::tanf(x);
 }
 static F32 
-Sqrt(F32 x) {
-  return sqrtf(x);
+sqrt(F32 x) {
+  return std::sqrtf(x);
   
 }
 static F32 
-Asin(F32 x) {
-  return asinf(x);
+asin(F32 x) {
+  return std::asinf(x);
 }
 static F32 
-Acos(F32 x) {
-  return acosf(x);
+acos(F32 x) {
+  return std::acosf(x);
 }
 
 static F32
-Atan(F32 x){
-  return atanf(x);
+atan(F32 x){
+  return std::atanf(x);
 }
 static F32 
-Pow(F32 b, F32 e){
-  return powf(b,e);
+pow(F32 b, F32 e){
+  return std::powf(b,e);
 }
 
 
 static F64 
-Sin(F64 x) {
-  return sin(x);
+sin(F64 x) {
+  return std::sin(x);
 }
 
 static F64 
-Cos(F64 x) {
-  return cos(x);
+cos(F64 x) {
+  return std::cos(x);
 }
 
 static F64
-Tan(F64 x) {
-  return tan(x);
+tan(F64 x) {
+  return std::tan(x);
 }
 static F64 
-Sqrt(F64 x) {
-  return sqrt(x);
+sqrt(F64 x) {
+  return std::sqrt(x);
   
 }
 static F64 
-Asin(F64 x) {
-  return asin(x);
+asin(F64 x) {
+  return std::asin(x);
 }
 static F64 
-Acos(F64 x) {
-  return acos(x);
+acos(F64 x) {
+  return std::acos(x);
 }
 
 static F64
-Atan(F64 x){
-  return atan(x);
+atan(F64 x){
+  return std::atan(x);
 }
 static F64 
-Pow(F64 b, F64 e){
-  return pow(b,e);
+pow(F64 b, F64 e){
+  return std::pow(b,e);
 }
 
 //~ NOTE(Momo): Easing functions
 
 static F32 
-EaseInSine(F32 t)  {
-  return Sin(pi_F32 * 0.5f * t);
+ease_in_sine(F32 t)  {
+  return sin(PI_32 * 0.5f * t);
 }
 
 
 static F32 
-EaseOutSine(F32 t) {
-  return 1.0f + Sin(pi_F32 * 0.5f * (--t));
+ease_out_sine(F32 t) {
+  return 1.0f + sin(PI_32 * 0.5f * (--t));
 }
 
 static F32 
-EaseInOutSine(F32 t)  {
-  return 0.5f * (1.f + Sin(pi_F32 * (t - 0.5f)));
+ease_inout_sine(F32 t)  {
+  return 0.5f * (1.f + sin(PI_32 * (t - 0.5f)));
 }
 
 static F32 
-EaseInQuad(F32 t)  {
+ease_in_quad(F32 t)  {
   return t * t;
 }
 
 static F32 
-EaseOutQuad(F32 t)  {
+ease_out_quad(F32 t)  {
   return t * (2.f -t);
 }
 
 static F32 
-EaseInOutQuad(F32 t)  {
+ease_inout_quad(F32 t)  {
   return t < 0.5f ? 2.f * t * t : t * (4.f -2.f * t) - 1.f;
 }
 
 static F32 
-EaseInCubic(F32 t)  {
+ease_in_cubic(F32 t)  {
   return t * t * t;
 }
 
 static F32 
-EaseOutCubic(F32 t)  {
+ease_out_cubic(F32 t)  {
   return 1.f + (t-1) * (t-1) * (t-1);
 }
 
 static F32 
-EaseInOutCubic(F32 t)  {
+ease_inout_cubic(F32 t)  {
   return t < 0.5f ? 4.f * t * t * t : 1.f + (t-1) * (2.f * (t-2)) * (2.f * (t-2));
 }
 
 static F32 
-EaseInQuart(F32 t)  {
+ease_in_quart(F32 t)  {
   t *= t;
   return t * t;
 }
 
 static F32 
-EaseOutQuart(F32 t) {
+ease_out_quart(F32 t) {
   --t;
   t = t * t;
   return 1.f - t * t;
 }
 
 static F32 
-EaseInOutQuart(F32 t)  {
+ease_inout_quart(F32 t)  {
   if (t < 0.5f) {
     t *= t;
     return 8.f * t * t;
@@ -541,20 +544,20 @@ EaseInOutQuart(F32 t)  {
 }
 
 static F32
-EaseInQuint(F32 t)  {
+ease_in_quint(F32 t)  {
   F32 t2 = t * t;
   return t * t2 * t2;
 }
 
 static F32
-EaseOutQuint(F32 t)  {
+ease_out_quint(F32 t)  {
   --t;
   F32 t2 = t * t;
   return 1.f +t * t2 * t2;
 }
 
 static F32
-EaseInOutQuint(F32 t)  {
+ease_inout_quint(F32 t)  {
   F32 t2;
   if (t < 0.5f) {
     t2 = t * t;
@@ -570,38 +573,38 @@ EaseInOutQuint(F32 t)  {
 
 
 static F32 
-EaseInCirc(F32 t)  {
-  return 1.f -Sqrt(1.f -t);
+ease_in_circ(F32 t)  {
+  return 1.f -sqrt(1.f -t);
 }
 
 static F32 
-EaseOutCirc(F32 t)  {
-  return Sqrt(t);
+ease_out_circ(F32 t)  {
+  return sqrt(t);
 }
 
 static F32 
-EaseInOutCirc(F32 t)  {
+ease_inout_circ(F32 t)  {
   if (t < 0.5f) {
-    return (1.f -Sqrt(1.f -2.f * t)) * 0.5f;
+    return (1.f -sqrt(1.f -2.f * t)) * 0.5f;
   }
   else {
-    return (1.f +Sqrt(2.f * t - 1.f)) * 0.5f;
+    return (1.f +sqrt(2.f * t - 1.f)) * 0.5f;
   }
 }
 
 static F32 
-EaseInBack(F32 t)  {
+ease_in_back(F32 t)  {
   return t * t * (2.7f * t - 1.7f);
 }
 
 static F32 
-EaseOutBack(F32 t)  {
+ease_out_back(F32 t)  {
   --t;
   return 1.f + t * t * (2.7f * t + 1.7f);
 }
 
 static F32 
-EaseInOutBack(F32 t)  {
+ease_inout_back(F32 t)  {
   if (t < 0.5f) {
     return t * t * (7.f * t - 2.5f) * 2.f;
   }
@@ -612,138 +615,138 @@ EaseInOutBack(F32 t)  {
 }
 
 static F32 
-EaseInElastic(F32 t)  {
+ease_in_elastic(F32 t)  {
   F32 t2 = t * t;
-  return t2 * t2 * Sin(t * pi_F32 * 4.5f);
+  return t2 * t2 * sin(t * PI_32 * 4.5f);
 }
 
 static F32 
-EaseOutElastic(F32 t)  {
+ease_out_elastic(F32 t)  {
   F32 t2 = (t - 1.f) * (t - 1.f);
-  return 1.f -t2 * t2 * Cos(t * pi_F32 * 4.5f);
+  return 1.f -t2 * t2 * cos(t * PI_32 * 4.5f);
 }
 
 static F32 
-EaseInOutElastic(F32 t)  {
+ease_inout_elastic(F32 t)  {
   F32 t2;
   if (t < 0.45f) {
     t2 = t * t;
-    return 8.f * t2 * t2 * Sin(t * pi_F32 * 9.f);
+    return 8.f * t2 * t2 * sin(t * PI_32 * 9.f);
   }
   else if (t < 0.55f) {
-    return 0.5f +0.75f * Sin(t * pi_F32 * 4.f);
+    return 0.5f +0.75f * sin(t * PI_32 * 4.f);
   }
   else {
     t2 = (t - 1.f) * (t - 1.f);
-    return 1.f -8.f * t2 * t2 * Sin(t * pi_F32 * 9.f);
+    return 1.f -8.f * t2 * t2 * sin(t * PI_32 * 9.f);
   }
 }
 
 static F32 
-EaseInBounce(F32 t)  {
-  return Pow(2.f, 6.f * (t - 1.f)) * Abs(Sin(t * pi_F32 * 3.5f));
+ease_in_bounce(F32 t)  {
+  return pow(2.f, 6.f * (t - 1.f)) * abs_of(sin(t * PI_32 * 3.5f));
 }
 
 
 static F32 
-EaseOutBounce(F32 t) {
-  return 1.f -Pow(2.f, -6.f * t) * Abs(Cos(t * pi_F32 * 3.5f));
+ease_out_bounce(F32 t) {
+  return 1.f -pow(2.f, -6.f * t) * abs_of(cos(t * PI_32 * 3.5f));
 }
 
 static F32 
-EaseInOutBounce(F32 t) {
+ease_inout_bounce(F32 t) {
   if (t < 0.5f) {
-    return 8.f * Pow(2.f, 8.f * (t - 1.f)) * Abs(Sin(t * pi_F32 * 7.f));
+    return 8.f * pow(2.f, 8.f * (t - 1.f)) * abs_of(sin(t * PI_32 * 7.f));
   }
   else {
-    return 1.f -8.f * Pow(2.f, -8.f * t) * Abs(Sin(t * pi_F32 * 7.f));
+    return 1.f -8.f * pow(2.f, -8.f * t) * abs_of(sin(t * PI_32 * 7.f));
   }
 }
 
 static F32
-EaseInExpo(F32 t)  {
-  return (Pow(2.f, 8.f * t) - 1.f) / 255.f;
+ease_in_expo(F32 t)  {
+  return (pow(2.f, 8.f * t) - 1.f) / 255.f;
 }
 
 
 static F32 
-EaseOutExpo(F32 t)  {
-  return t == 1.f ? 1.f : 1.f -Pow(2.f, -10.f * t);
+ease_out_expo(F32 t)  {
+  return t == 1.f ? 1.f : 1.f -pow(2.f, -10.f * t);
 }
 
 static F32 
-EaseInOutExpo(F32 t)  {
+ease_inout_expo(F32 t)  {
   if (t < 0.5f) {
-    return (Pow(2.f, 16.f * t) - 1.f) / 510.f;
+    return (pow(2.f, 16.f * t) - 1.f) / 510.f;
   }
   else {
-    return 1.f -0.5f * Pow(2.f, -16.f * (t - 0.5f));
+    return 1.f -0.5f * pow(2.f, -16.f * (t - 0.5f));
   }
 }
 
 
 
 static F64 
-EaseInSine(F64 t)  {
-  return Sin(pi_F64 * 0.5 * t);
+ease_in_sine(F64 t)  {
+  return sin(PI_64 * 0.5 * t);
 }
 
 
 static F64 
-EaseOutSine(F64 t) {
-  return 1.0f + Sin(pi_F64 * 0.5 * (--t));
+ease_out_sine(F64 t) {
+  return 1.0f + sin(PI_64 * 0.5 * (--t));
 }
 
 static F64 
-EaseInOutSine(F64 t)  {
-  return 0.5 * (1.0 + Sin(pi_F64 * (t - 0.5)));
+ease_inout_sine(F64 t)  {
+  return 0.5 * (1.0 + sin(PI_64 * (t - 0.5)));
 }
 
 static F64 
-EaseInQuad(F64 t)  {
+ease_in_quad(F64 t)  {
   return t * t;
 }
 
 static F64 
-EaseOutQuad(F64 t)  {
+ease_out_quad(F64 t)  {
   return t * (2.0 -t);
 }
 
 static F64 
-EaseInOutQuad(F64 t)  {
+ease_inout_quad(F64 t)  {
   return t < 0.5 ? 2.0 * t * t : t * (4.0 -2.0 * t) - 1.0;
 }
 
 static F64 
-EaseInCubic(F64 t)  {
+ease_in_cubic(F64 t)  {
   return t * t * t;
 }
 
 static F64 
-EaseOutCubic(F64 t)  {
+ease_out_cubic(F64 t)  {
   return 1.0 + (t-1) * (t-1) * (t-1);
 }
 
 static F64 
-EaseInOutCubic(F64 t)  {
+ease_inout_cubic(F64 t)  {
   return t < 0.5 ? 4.0 * t * t * t : 1.0 + (t-1) * (2.0 * (t-2)) * (2.0 * (t-2));
 }
 
 static F64 
-EaseInQuart(F64 t)  {
+ease_in_quart(F64 t)  {
   t *= t;
   return t * t;
 }
 
 static F64 
-EaseOutQuart(F64 t) {
+ease_out_quart(F64 t) {
   --t;
   t = t * t;
   return 1.0 - t * t;
 }
 
 static F64 
-EaseInOutQuart(F64 t)  {
+ease_inout_quart(F64 t)  {
   if (t < 0.5) {
     t *= t;
     return 8.0 * t * t;
@@ -756,20 +759,20 @@ EaseInOutQuart(F64 t)  {
 }
 
 static F64
-EaseInQuint(F64 t)  {
+ease_in_quint(F64 t)  {
   F64 t2 = t * t;
   return t * t2 * t2;
 }
 
 static F64
-EaseOutQuint(F64 t)  {
+ease_out_quint(F64 t)  {
   --t;
   F64 t2 = t * t;
   return 1.0 +t * t2 * t2;
 }
 
 static F64
-EaseInOutQuint(F64 t)  {
+ease_inout_quint(F64 t)  {
   F64 t2;
   if (t < 0.5) {
     t2 = t * t;
@@ -785,38 +788,38 @@ EaseInOutQuint(F64 t)  {
 
 
 static F64 
-EaseInCirc(F64 t)  {
-  return 1.0 -Sqrt(1.0 -t);
+ease_in_circ(F64 t)  {
+  return 1.0 -sqrt(1.0 -t);
 }
 
 static F64 
-EaseOutCirc(F64 t)  {
-  return Sqrt(t);
+ease_out_circ(F64 t)  {
+  return sqrt(t);
 }
 
 static F64 
-EaseInOutCirc(F64 t)  {
+ease_inout_circ(F64 t)  {
   if (t < 0.5) {
-    return (1.0 -Sqrt(1.0 -2.0 * t)) * 0.5;
+    return (1.0 -sqrt(1.0 -2.0 * t)) * 0.5;
   }
   else {
-    return (1.0 +Sqrt(2.0 * t - 1.0)) * 0.5;
+    return (1.0 +sqrt(2.0 * t - 1.0)) * 0.5;
   }
 }
 
 static F64 
-EaseInBack(F64 t)  {
+ease_in_back(F64 t)  {
   return t * t * (2.7 * t - 1.7);
 }
 
 static F64 
-EaseOutBack(F64 t)  {
+ease_out_back(F64 t)  {
   --t;
   return 1.0 + t * t * (2.7 * t + 1.7);
 }
 
 static F64 
-EaseInOutBack(F64 t)  {
+ease_inout_back(F64 t)  {
   if (t < 0.5) {
     return t * t * (7.0 * t - 2.5) * 2.0;
   }
@@ -827,30 +830,30 @@ EaseInOutBack(F64 t)  {
 }
 
 static F64 
-EaseInElastic(F64 t)  {
+ease_in_elastic(F64 t)  {
   F64 t2 = t * t;
-  return t2 * t2 * Sin(t * pi_F64 * 4.5);
+  return t2 * t2 * sin(t * PI_64 * 4.5);
 }
 
 static F64 
-EaseOutElastic(F64 t)  {
+ease_out_elastic(F64 t)  {
   F64 t2 = (t - 1.0) * (t - 1.0);
-  return 1.0 -t2 * t2 * Cos(t * pi_F64 * 4.5);
+  return 1.0 -t2 * t2 * cos(t * PI_64 * 4.5);
 }
 
 static F64 
-EaseInOutElastic(F64 t)  {
+ease_inout_elastic(F64 t)  {
   F64 t2;
   if (t < 0.45) {
     t2 = t * t;
-    return 8.0 * t2 * t2 * Sin(t * pi_F64 * 9.0);
+    return 8.0 * t2 * t2 * sin(t * PI_64 * 9.0);
   }
   else if (t < 0.55) {
-    return 0.5 +0.75 * Sin(t * pi_F64 * 4.0);
+    return 0.5 +0.75 * sin(t * PI_64 * 4.0);
   }
   else {
     t2 = (t - 1.0) * (t - 1.0);
-    return 1.0 -8.0 * t2 * t2 * Sin(t * pi_F64 * 9.0);
+    return 1.0 -8.0 * t2 * t2 * sin(t * PI_64 * 9.0);
   }
 }
 
@@ -858,43 +861,43 @@ EaseInOutElastic(F64 t)  {
 
 // NOTE(Momo): These require power function. 
 static F64 
-EaseInBounce(F64 t)  {
-  return Pow(2.0, 6.0 * (t - 1.0)) * Abs(Sin(t * pi_F64 * 3.5));
+ease_in_bounce(F64 t)  {
+  return pow(2.0, 6.0 * (t - 1.0)) * abs_of(sin(t * PI_64 * 3.5));
 }
 
 
 static F64 
-EaseOutBounce(F64 t) {
-  return 1.0 -Pow(2.0, -6.0 * t) * Abs(Cos(t * pi_F64 * 3.5));
+ease_out_bounce(F64 t) {
+  return 1.0 -pow(2.0, -6.0 * t) * abs_of(cos(t * PI_64 * 3.5));
 }
 
 static F64 
-EaseInOutBounce(F64 t) {
+ease_inout_bounce(F64 t) {
   if (t < 0.5) {
-    return 8.0 * Pow(2.0, 8.0 * (t - 1.0)) * Abs(Sin(t * pi_F64 * 7.0));
+    return 8.0 * pow(2.0, 8.0 * (t - 1.0)) * abs_of(sin(t * PI_64 * 7.0));
   }
   else {
-    return 1.0 -8.0 * Pow(2.0, -8.0 * t) * Abs(Sin(t * pi_F64 * 7.0));
+    return 1.0 -8.0 * pow(2.0, -8.0 * t) * abs_of(sin(t * PI_64 * 7.0));
   }
 }
 
 static F64
-EaseInExpo(F64 t)  {
-  return (Pow(2.0, 8.0 * t) - 1.0) / 255.0;
+ease_in_expo(F64 t)  {
+  return (pow(2.0, 8.0 * t) - 1.0) / 255.0;
 }
 
 
 static F64 
-EaseOutExpo(F64 t)  {
-  return t == 1.0 ? 1.0 : 1.0 -Pow(2.0, -10.0 * t);
+ease_out_expo(F64 t)  {
+  return t == 1.0 ? 1.0 : 1.0 -pow(2.0, -10.0 * t);
 }
 
 static F64 
-EaseInOutExpo(F64 t)  {
+ease_inout_expo(F64 t)  {
   if (t < 0.5) {
-    return (Pow(2.0, 16.0 * t) - 1.0) / 510.0;
+    return (pow(2.0, 16.0 * t) - 1.0) / 510.0;
   }
   else {
-    return 1.0 -0.5 * Pow(2.0, -16.0 * (t - 0.5));
+    return 1.0 -0.5 * pow(2.0, -16.0 * (t - 0.5));
   }
 }

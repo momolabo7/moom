@@ -12,19 +12,19 @@
 
 
 //~API for Win platform to use
-typedef Gfx*   WinGfx_InitFn(HWND window);
-typedef void 	WinGfx_FreeFn(Gfx* r);
+typedef Gfx*   wingfx_InitFn(HWND window);
+typedef void 	wingfx_FreeFn(Gfx* r);
 
 // TODO(Momo): Do we really need render_wh and render_rengion?
-typedef void   WinGfx_RenderFn(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region);
+typedef void   wingfx_RenderFn(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region);
 
 
 //~Function table
 // To be used and called by platform
 struct WinGfx_API {
-  WinGfx_InitFn* init;
-  WinGfx_FreeFn* free;
-  WinGfx_RenderFn* render;
+  wingfx_InitFn* init;
+  wingfx_FreeFn* free;
+  wingfx_RenderFn* render;
 };
 
 

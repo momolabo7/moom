@@ -4,7 +4,6 @@
 #ifndef MOMO_MAILBOX_H
 #define MOMO_MAILBOX_H
 
-
 // TODO(Momo): Can/should we remove id (that stores 'type' info)
 // and assume that users can actually store type info in their data?
 struct Mailbox_Entry{
@@ -19,16 +18,20 @@ struct Mailbox{
 	UMI entry_start;
 	UMI memory_size;
 	UMI entry_count;
+  
+  
+  void           clear();
+  Mailbox_Entry* get_entry(UMI index);
+  void*          push_block(UMI size, U32 id, UMI align = 4);
+  void*				  push_extra_data(UMI size, UMI align = 4);
+  
+  template<typename T> T*	push(U32 id, UMI align = alignof(T));
+  
 };
 
-static Mailbox               CreateMailbox(void* memory, UMI size);
-static void                  clear(Mailbox* m);
-static Mailbox_Entry*        GetEntry(Mailbox *m, UMI index);
-static void*                 make_block(Mailbox* m, UMI size, U32 id, UMI align = 4);
-static void*				         PushExtraData(Mailbox* m, UMI size, UMI align = 4);
 
-template<typename T> static T*	Push(Mailbox* m, U32 id, UMI align = alignof(T));
 
+static Mailbox        create_mailbox(void* memory, UMI size);
 
 #include "momo_mailbox.cpp"
 

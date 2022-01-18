@@ -62,12 +62,12 @@ struct Platform {
 struct Input_Button{
   B32 before;
   B32 now;
+  
+  B32 is_poked() ;
+  B32 is_released();
+  B32 is_down();
+  B32 is_held();
 };
-
-static B32 IsPoked(Input_Button) ;
-static B32 IsReleased(Input_Button);
-static B32 IsDown(Input_Button);
-static B32 IsHeld(Input_Button);
 
 struct Input{
   Input_Button buttons[4];
@@ -82,9 +82,9 @@ struct Input{
   V2U32 screen_mouse_pos;
   V2U32 render_mouse_pos;
   
+  void update();
 };
 
-static void Update(Input* input);
 
 
 

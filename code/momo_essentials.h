@@ -3,6 +3,7 @@
 #define MOMO_ESSENTIALS_H
 
 #include <stdarg.h>
+#undef min
 
 //~Contexts
 // Language specs
@@ -112,6 +113,7 @@
 //////////////////////////////////////////
 //~Basic types
 // TODO(Momo): Cater for cases where stdint.h does not exist?
+
 #include <stdint.h>
 typedef uint8_t U8;
 typedef uint16_t U16;
@@ -146,7 +148,7 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 // macro to cater for if/else statements
 // that looks like this:
 // >> if (...) 
-// >>     Swap(...); 
+// >>     swap(...); 
 // >> else 
 // >>     ...
 // because it will expand to:
@@ -171,14 +173,14 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 #define KB(n) ((1<<10) * n)
 #define MB(n) ((1<<20) * n)
 #define GB(n) ((1<<30) * n)
-#define DigitToASCII(d) ((d) + '0')
-#define ASCIIToDigit(a) ((a) - '0')
+#define digit_to_ascii(d) ((d) + '0')
+#define ascii_to_digit(a) ((a) - '0')
 
 
 
 //~Helper functions
-static constexpr UMI PtrToInt(void* p);
-static constexpr U8* IntToPtr(UMI u);
+static constexpr UMI ptr_to_int(void* p);
+static constexpr U8* int_to_ptr(UMI u);
 
 // NOTE(Momo): It's ridiculous how much goes into the implementation of 
 // a generic Min/Max function in modern C++. 
@@ -187,24 +189,24 @@ static constexpr U8* IntToPtr(UMI u);
 // we do not need to reevaluate the arguments every time.
 // TODO(Momo): We might want t 'comparison' function version for min and max
 //
-template<typename T> static constexpr T Min(T l, T r);
-template<typename T> static constexpr T Max(T l, T r);
-template<typename T> static constexpr T Clamp(T x, T b, T t);
+template<typename T> static constexpr T min_of(T l, T r);
+template<typename T> static constexpr T max_of(T l, T r);
+template<typename T> static constexpr T clamp(T x, T b, T t);
 
-template<typename T> static constexpr T Abs(T x);
-static constexpr F32 Abs(F32 value);
-static constexpr F64 Abs(F64 value);
-static constexpr S8  Abs(S8 value);
-static constexpr S16 Abs(S16 value);
-static constexpr S32 Abs(S32 value);
-static constexpr S64 Abs(S64 value);
+template<typename T> static constexpr T abs_of(T x);
+static constexpr F32 abs_of(F32 value);
+static constexpr F64 abs_of(F64 value);
+static constexpr S8  abs_of(S8 value);
+static constexpr S16 abs_of(S16 value);
+static constexpr S32 abs_of(S32 value);
+static constexpr S64 abs_of(S64 value);
 
 // NOTE(Momo): Lerp is tricky because the 'f' variable the 'percentage'.
 // and must be of a floating point type. I'm not sure if I want to go into
 // the hellhole of checking if 'f' is a floating point via TMP. Seems overkill
 // since there are only 2 floating point types I generally care about.
-template<typename T> static constexpr T Lerp(T s, T e, F32 f); 
-template<typename T> static constexpr T Lerp(T s, T e, F64 f); 
+template<typename T> static constexpr T lerp(T s, T e, F32 f); 
+template<typename T> static constexpr T lerp(T s, T e, F64 f); 
 
 // NOTE(Momo): Ratio is an interesting function. 
 // All 1D Ratios will end up with a 1D FXX type.
@@ -214,24 +216,24 @@ template<typename T> static constexpr T Lerp(T s, T e, F64 f);
 // Maybe we will to resort to a RatioF32 and a RatioF64?
 // 
 // For now, we will just overload the Ratio function, until it bugs us.
-static constexpr F32 Ratio(F32 v, F32 min, F32 max);
-static constexpr F64 Ratio(F64 v, F64 min, F64 max);
+static constexpr F32 ratio(F32 v, F32 min, F32 max);
+static constexpr F64 ratio(F64 v, F64 min, F64 max);
 
-template<typename T, typename U> static constexpr T AlignDownPow2(T value, U align);
-template<typename T, typename U> static T AlignUpPow2(T value, U align);
-template<typename T> static constexpr B32 IsPow2(T value);
-template<typename T> static constexpr void Swap(T* lhs, T* rhs); 
+template<typename T, typename U> static constexpr T align_down_pow2(T value, U align);
+template<typename T, typename U> static T align_up_pow2(T value, U align);
+template<typename T> static constexpr B32 is_pow2(T value);
+template<typename T> static constexpr void swap(T* lhs, T* rhs); 
 
-//~NOTE(Momo): Assert
-// NOTE(Momo): Others can provide their own 'AssertCallback' 
-#if !defined(AssertCallback)
-#define AssertCallback(s) (*(volatile int*)0 = 0)
+//~NOTE(Momo): assert
+// NOTE(Momo): Others can provide their own 'assert_callback' 
+#if !defined(assert_callback)
+#define assert_callback(s) (*(volatile int*)0 = 0)
 #endif // AssertBreak
 
 #if ENABLE_ASSERT
-#define Assert(s) Stmt(if(!(s)) { AssertCallback(s); })
+#define assert(s) Stmt(if(!(s)) { assert_callback(s); })
 #else // !ENABLE_ASSERT
-#define Assert(s)
+#define assert(s)
 #endif // ENABLE_ASSERT
 
 //////////////////////////////////////////
@@ -241,28 +243,28 @@ template<typename T> static constexpr void Swap(T* lhs, T* rhs);
 // Memory-wise they *should* the produces the same results, 
 // but constexpr provides stronger typing. 
 // This should be my attitude for all constants.
-static constexpr S8  S8_min  = -0x80;
-static constexpr S16 S16_min = -0x8000; 
-static constexpr S32 S32_min = -0x80000000ll;
-static constexpr S64 S64_min = -0x8000000000000001ll - 1;
+static constexpr S8  S8_MIN  = -0x80;
+static constexpr S16 S16_MIN = -0x8000; 
+static constexpr S32 S32_MIN = -0x80000000ll;
+static constexpr S64 S64_MIN = -0x8000000000000001ll - 1;
 
-static constexpr S8  S8_max  = 0x7F;
-static constexpr S16 S16_max = 0x7FFF; 
-static constexpr S32 S32_max = 0x7FFFFFFFl;
-static constexpr S64 S64_max = 0x7FFFFFFFFFFFFFFFll;
+static constexpr S8  S8_MAX  = 0x7F;
+static constexpr S16 S16_MAX = 0x7FFF; 
+static constexpr S32 S32_MAX = 0x7FFFFFFFl;
+static constexpr S64 S64_MAX = 0x7FFFFFFFFFFFFFFFll;
 
-static constexpr U8  U8_max  = 0xFF;
-static constexpr U16 U16_max = 0xFFFF; 
-static constexpr U32 U32_max = 0xFFFFFFFF;
-static constexpr U64 U64_max = 0xFFFFFFFFFFFFFFFFllu;
+static constexpr U8  U8_MAX  = 0xFF;
+static constexpr U16 U16_MAX = 0xFFFF; 
+static constexpr U32 U32_MAX = 0xFFFFFFFF;
+static constexpr U64 U64_MAX = 0xFFFFFFFFFFFFFFFFllu;
 
-static constexpr F32 F32_epsilon = 1.1920929E-7f;
-static constexpr F64 F64_epsilon = 2.220446E-16;
+static constexpr F32 F32_EPSILON = 1.1920929E-7f;
+static constexpr F64 F64_EPSILON = 2.220446E-16;
 
-static constexpr F32 F32_Inf();
-static constexpr F32 F32_NegInf();
-static constexpr F64 F64_Inf();
-static constexpr F64 F64_NegInf();
+static constexpr F32 F32_INFINITY();
+static constexpr F32 F32_NEG_INFINITY();
+static constexpr F64 F64_INFINITY();
+static constexpr F64 F64_NEG_INFINITY();
 //~ NOTE(Momo): Memory-related helpers
 
 // This is a really useful construct I find myself using 
@@ -271,148 +273,148 @@ struct Memory  {
   void* data;
   UMI size;  
 };
-static B32 IsOk(Memory);
+static B32 is_ok(Memory);
 
-static void Bin_Copy(void* dest, const void* src, UMI size);
-static void Bin_Zero(void* dest, UMI size);
-static void Bin_Swap(void* lhs, void* rhs, UMI size);
-static B32  Bin_Match(const void* lhs, const void* rhs, UMI size);
+static void copy_memory(void* dest, const void* src, UMI size);
+static void zero_memory(void* dest, UMI size);
+static void swap_memory(void* lhs, void* rhs, UMI size);
+static B32  match_memory(const void* lhs, const void* rhs, UMI size);
 
-#define Bin_ZeroStruct(p)    Bin_Zero((p), sizeof(*(p)))
-#define Bin_ZeroArray(p)     Bin_Zero((p), sizeof(p))
-#define Bin_ZeroRange(p,s)   Bin_Zero((p), sizeof(*(p)) * (s))
+#define zero_struct(p)    zero_memory((p), sizeof(*(p)))
+#define zero_array(p)     zero_memory((p), sizeof(p))
+#define zero_range(p,s)   zero_memory((p), sizeof(*(p)) * (s))
 
-#define Bin_CopyStruct(p)    Bin_Copy((p), sizeof(*(p)))
-#define Bin_CopyArray(p)     Bin_Copy((p), sizeof(p))
-#define Bin_CopyRange(p,s)   Bin_Copy((p), sizeof(*(p)) * (s))
+#define copy_struct(p)    copy_memory((p), sizeof(*(p)))
+#define copy_array(p)     copy_memory((p), sizeof(p))
+#define copy_range(p,s)   copy_memory((p), sizeof(*(p)) * (s))
 
 //~ NOTE(Momo): C-string
-static UMI  Sistr_Length(const char* str);
-static void Sistr_Copy(char * dest, const char* Src);
-static B32  Sistr_Compare(const char* lhs, const char* rhs);
-static B32  Sistr_CompareN(const char* lhs, const char* rhs, UMI n);
-static void Sistr_Concat(char* dest, const char* Src);
-static void Sistr_Clear(char* dest);
-static void Sistr_Reverse(char* dest);
-static void Sistr_Itoa(char* dest, S32 num);
+static UMI  cstr_len(const char* str);
+static void cstr_copy(char * dest, const char* Src);
+static B32  cstr_compare(const char* lhs, const char* rhs);
+static B32  cstr_compare_n(const char* lhs, const char* rhs, UMI n);
+static void cstr_concat(char* dest, const char* Src);
+static void cstr_clear(char* dest);
+static void cstr_reverse(char* dest);
+static void cstr_itoa(char* dest, S32 num);
 
 //~ NOTE(Momo): IEEE floating point functions 
-static constexpr B32 Match(F32 lhs, F32 rhs);
-static constexpr B32 Match(F64 lhs, F64 rhs);
+static constexpr B32 match(F32 lhs, F32 rhs);
+static constexpr B32 match(F64 lhs, F64 rhs);
 // Ah...cannot overload operator==...
 
 //~ NOTE(Momo): Useful calculations
-static constexpr F32 DegToRad(F32 degrees) ;
-static constexpr F64 DegToRad(F64 degrees) ;
-static constexpr F32 RadToDeg(F32 radians);
-static constexpr F64 RadToDeg(F64 radians);
+static constexpr F32 deg_to_rad(F32 degrees) ;
+static constexpr F64 deg_to_rad(F64 degrees) ;
+static constexpr F32 rad_to_deg(F32 radians);
+static constexpr F64 rad_to_deg(F64 radians);
 
 // Beats per min to Secs per beat
-static constexpr F32 BPMToSPB(F32 bpm); 
-static constexpr F64 BPMToSPB(F64 bpm); 
+static constexpr F32 bpm_to_spb(F32 bpm); 
+static constexpr F64 bpm_to_spb(F64 bpm); 
 
 
 // NOTE(Momo): I'm not entirely sure if this prototype makes sense.
 // It sounds more reasonable to endian swap ANY type. 
 // We COULD use a template approach like so:
-//   template<typename T> EndianSwap16(T value);
-//   template<typename T> EndianSwap32(T value); 
+//   template<typename T> endian_swap_16(T value);
+//   template<typename T> endian_swap_32(T value); 
 // Or we COULD just ignore the concept of type:
 //   void _EndianSwap16(U8* ptr)
-//   #define EndianSwap16(value) _EndianSwap16((U8*)&value)
+//   #define endian_swap_16(value) _EndianSwap16((U8*)&value)
 // TODO(Momo): Let's figure EndianSwap one day
-static constexpr U16 EndianSwap16(U16 value);
-static constexpr U32 EndianSwap32(U32 value);
+static constexpr U16 endian_swap_16(U16 value);
+static constexpr U32 endian_swap_32(U32 value);
 
 
 //~ NOTE(Momo): Math functions that are not trivial
-static constexpr F32 pi_F32 = 3.14159265359f;
-static constexpr F64 pi_F64 = 3.14159265359;
-static constexpr F32 tau_F32 = 6.28318530718f;
-static constexpr F64 tau_F64 = 6.28318530718;
-static constexpr F32 gold_F32 = 1.61803398875f;
-static constexpr F64 gold_F64 = 1.61803398875;
+static constexpr F32 PI_32 = 3.14159265359f;
+static constexpr F64 PI_64 = 3.14159265359;
+static constexpr F32 TAU_32 = 6.28318530718f;
+static constexpr F64 TAU_64 = 6.28318530718;
+static constexpr F32 GOLD_32 = 1.61803398875f;
+static constexpr F64 GOLD_64 = 1.61803398875;
 
-static F32 Sin(F32 x);
-static F32 Cos(F32 x);
-static F32 Tan(F32 x);
-static F32 Sqrt(F32 x);
-static F32 Asin(F32 x);
-static F32 Acos(F32 x);
-static F32 Atan(F32 x);
-static F32 Pow(F32 v, F32 e);
+static F32 sin(F32 x);
+static F32 cos(F32 x);
+static F32 tan(F32 x);
+static F32 sqrt(F32 x);
+static F32 asin(F32 x);
+static F32 acos(F32 x);
+static F32 atan(F32 x);
+static F32 pow(F32 v, F32 e);
 
-static F64 Sin(F64 x);
-static F64 Cos(F64 x);
-static F64 Tan(F64 x);
-static F64 Sqrt(F64 x);
-static F64 Asin(F64 x);
-static F64 Acos(F64 x);
-static F64 Atan(F64 x);
-static F64 Pow(F64 , F64 e);
+static F64 sin(F64 x);
+static F64 cos(F64 x);
+static F64 tan(F64 x);
+static F64 sqrt(F64 x);
+static F64 asin(F64 x);
+static F64 acos(F64 x);
+static F64 atan(F64 x);
+static F64 pow(F64 , F64 e);
 
 //~ NOTE(Momo): Easing functions
-static F32 EaseInSine(F32 t);
-static F32 EaseOutSine(F32 t);
-static F32 EaseInOutSine(F32 t);
-static F32 EaseInQuad(F32 t);
-static F32 EaseOutQuad(F32 t);
-static F32 EaseInOutQuad(F32 t);
-static F32 EaseInCubic(F32 t);
-static F32 EaseOutCubic(F32 t);
-static F32 EaseInOutCubic(F32 t);
-static F32 EaseInQuart(F32 t);
-static F32 EaseOutQuart(F32 t);
-static F32 EaseInOutQuart(F32 t);
-static F32 EaseInQuint(F32 t);
-static F32 EaseOutQuint(F32 t);;
-static F32 EaseInOutQuint(F32 t);
-static F32 EaseInCirc(F32 t);
-static F32 EaseOutCirc(F32 t);
-static F32 EaseInOutCirc(F32 t);
-static F32 EaseInBack(F32 t);
-static F32 EaseOutBack(F32 t);
-static F32 EaseInOutBack(F32 t);
-static F32 EaseInElastic(F32 t);
-static F32 EaseOutElastic(F32 t);
-static F32 EaseInOutElastic(F32 t);
-static F32 EaseInBounce(F32 t);
-static F32 EaseOutBounce(F32 t);
-static F32 EaseInOutBounce(F32 t);
-static F32 EaseInExpo(F32 t);
-static F32 EaseOutExpo(F32 t);
-static F32 EaseInOutExpo(F32 t);
+static F32 ease_in_sine(F32 t);
+static F32 ease_out_sine(F32 t);
+static F32 ease_inout_sine(F32 t);
+static F32 ease_in_quad(F32 t);
+static F32 ease_out_quad(F32 t);
+static F32 ease_inout_quad(F32 t);
+static F32 ease_in_cubic(F32 t);
+static F32 ease_out_cubic(F32 t);
+static F32 ease_inout_cubic(F32 t);
+static F32 ease_in_quart(F32 t);
+static F32 ease_out_quart(F32 t);
+static F32 ease_inout_quart(F32 t);
+static F32 ease_in_quint(F32 t);
+static F32 ease_out_quint(F32 t);;
+static F32 ease_inout_quint(F32 t);
+static F32 ease_in_circ(F32 t);
+static F32 ease_out_circ(F32 t);
+static F32 ease_inout_circ(F32 t);
+static F32 ease_in_back(F32 t);
+static F32 ease_out_back(F32 t);
+static F32 ease_inout_back(F32 t);
+static F32 ease_in_elastic(F32 t);
+static F32 ease_out_elastic(F32 t);
+static F32 ease_inout_elastic(F32 t);
+static F32 ease_in_bounce(F32 t);
+static F32 ease_out_bounce(F32 t);
+static F32 ease_inout_bounce(F32 t);
+static F32 ease_in_expo(F32 t);
+static F32 ease_out_expo(F32 t);
+static F32 ease_inout_expo(F32 t);
 
-static F64 EaseInSine(F64 t);
-static F64 EaseOutSine(F64 t);
-static F64 EaseInOutSine(F64 t);
-static F64 EaseInQuad(F64 t);
-static F64 EaseOutQuad(F64 t);
-static F64 EaseInOutQuad(F64 t);
-static F64 EaseInCubic(F64 t);
-static F64 EaseOutCubic(F64 t);
-static F64 EaseInOutCubic(F64 t);
-static F64 EaseInQuart(F64 t);
-static F64 EaseOutQuart(F64 t);
-static F64 EaseInOutQuart(F64 t);
-static F64 EaseInQuint(F64 t);
-static F64 EaseOutQuint(F64 t);;
-static F64 EaseInOutQuint(F64 t);
-static F64 EaseInCirc(F64 t);
-static F64 EaseOutCirc(F64 t);
-static F64 EaseInOutCirc(F64 t);
-static F64 EaseInBack(F64 t);
-static F64 EaseOutBack(F64 t);
-static F64 EaseInOutBack(F64 t);
-static F64 EaseInElastic(F64 t);
-static F64 EaseOutElastic(F64 t);
-static F64 EaseInOutElastic(F64 t);
-static F64 EaseInBounce(F64 t);
-static F64 EaseOutBounce(F64 t);
-static F64 EaseInOutBounce(F64 t);
-static F64 EaseInExpo(F64 t);
-static F64 EaseOutExpo(F64 t);
-static F64 EaseInOutExpo(F64 t);
+static F64 ease_in_sine(F64 t);
+static F64 ease_out_sine(F64 t);
+static F64 ease_inout_sine(F64 t);
+static F64 ease_in_quad(F64 t);
+static F64 ease_out_quad(F64 t);
+static F64 ease_inout_quad(F64 t);
+static F64 ease_in_cubic(F64 t);
+static F64 ease_out_cubic(F64 t);
+static F64 ease_inout_cubic(F64 t);
+static F64 ease_in_quart(F64 t);
+static F64 ease_out_quart(F64 t);
+static F64 ease_inout_quart(F64 t);
+static F64 ease_in_quint(F64 t);
+static F64 ease_out_quint(F64 t);;
+static F64 ease_inout_quint(F64 t);
+static F64 ease_in_circ(F64 t);
+static F64 ease_out_circ(F64 t);
+static F64 ease_inout_circ(F64 t);
+static F64 ease_in_back(F64 t);
+static F64 ease_out_back(F64 t);
+static F64 ease_inout_back(F64 t);
+static F64 ease_in_elastic(F64 t);
+static F64 ease_out_elastic(F64 t);
+static F64 ease_inout_elastic(F64 t);
+static F64 ease_in_bounce(F64 t);
+static F64 ease_out_bounce(F64 t);
+static F64 ease_inout_bounce(F64 t);
+static F64 ease_in_expo(F64 t);
+static F64 ease_out_expo(F64 t);
+static F64 ease_inout_expo(F64 t);
 
 //~ NOTE(Momo): Defer construct
 template<typename F> 

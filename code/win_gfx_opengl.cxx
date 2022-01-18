@@ -4,10 +4,9 @@
 #include "win_gfx.h"
 
 #include "game_gfx_opengl.h"
-#include "game_gfx_opengl.cpp"
 
 
-//~ NOTE(Momo): WGL stuff
+//~ NOTE(Momo): wgl stuff
 #define WGL_CONTEXT_MAJOR_VERSION_ARB           0x2091
 #define WGL_CONTEXT_MINOR_VERSION_ARB           0x2092
 #define WGL_CONTEXT_LAYER_PLANE_ARB             0x2093
@@ -28,33 +27,33 @@
 #define WGL_CONTEXT_CORE_PROFILE_BIT_ARB        0x00000001
 
 typedef BOOL WINAPI 
-WGL_wglChoosePixelFormatARB(HDC hdc,
-                            const int* piAttribIList,
-                            const FLOAT* pfAttribFList,
-                            UINT nMaxFormats,
-                            int* piFormats,
-                            UINT* nNumFormats);
+wglChoosePixelFormatARBFn(HDC hdc,
+                          const int* piAttribIList,
+                          const FLOAT* pfAttribFList,
+                          UINT nMaxFormats,
+                          int* piFormats,
+                          UINT* nNumFormats);
 
 typedef BOOL WINAPI 
-WGL_wglSwapIntervalEXT(int interval);
+wglSwapIntervalEXTFn(int interval);
 
 typedef HGLRC WINAPI 
-WGL_wglCreateContextAttribsARB(HDC hdc, 
-                               HGLRC hShareContext,
-                               const int* attribList);
+wglCreateContextAttribsARBFn(HDC hdc, 
+                             HGLRC hShareContext,
+                             const int* attribList);
 
 typedef const char* WINAPI 
-WGL_wglGetExtensionsStringEXT(void);
+wglGetExtensionsStringEXTFn(void);
 
-static WGL_wglChoosePixelFormatARB* wglChoosePixelFormatARB;
-static WGL_wglSwapIntervalEXT* wglSwapIntervalEXT;
-static WGL_wglCreateContextAttribsARB* wglCreateContextAttribsARB;
-static WGL_wglGetExtensionsStringEXT* wglGetExtensionsStringEXT;
+static wglChoosePixelFormatARBFn* wglChoosePixelFormatARB;
+static wglSwapIntervalEXTFn* wglSwapIntervalEXT;
+static wglCreateContextAttribsARBFn* wglCreateContextAttribsARB;
+static wglGetExtensionsStringEXTFn* wglGetExtensionsStringEXT;
 
 
 
 static void* 
-WGL_TryGetFunction(const char* name, HMODULE fallback_module)
+wingfx_try_get_wgl_function(const char* name, HMODULE fallback_module)
 {
   void* p = (void*)wglGetProcAddress(name);
   if ((p == 0) || 
@@ -70,7 +69,7 @@ WGL_TryGetFunction(const char* name, HMODULE fallback_module)
 }
 
 static void
-WGL_SetPixelFormat(HDC dc) {
+wingfx_set_wgl_pixel_format(HDC dc) {
   S32 suggested_pixel_format_index = 0;
   U32 extended_pick = 0;
   
@@ -116,7 +115,7 @@ WGL_SetPixelFormat(HDC dc) {
                  &suggested_pixel_format);
 }
 static B32
-WGL_LoadExtensions() {
+wingfx_load_wgl_extentions() {
   WNDCLASSA window_class = {};
   // Er yeah...we have to create a 'fake' Opengl context 
   // to load the extensions lol.
@@ -128,7 +127,7 @@ WGL_LoadExtensions() {
     HWND window = CreateWindowExA( 
                                   0,
                                   window_class.lpszClassName,
-                                  "WGL Loader2",
+                                  "wgl Loader2",
                                   0,
                                   CW_USEDEFAULT,
                                   CW_USEDEFAULT,
@@ -140,14 +139,14 @@ WGL_LoadExtensions() {
                                   0);
     
     HDC dc = GetDC(window);
-    WGL_SetPixelFormat(dc);
+    wingfx_set_wgl_pixel_format(dc);
     HGLRC opengl_context = wglCreateContext(dc);
     
     B32 success = true;
     if (wglMakeCurrent(dc, opengl_context)) {
-      wglChoosePixelFormatARB = (WGL_wglChoosePixelFormatARB*)wglGetProcAddress("wglChoosePixelFormatARB");
-      wglCreateContextAttribsARB = (WGL_wglCreateContextAttribsARB*)wglGetProcAddress("wglCreateContextAttribsARB");
-      wglSwapIntervalEXT = (WGL_wglSwapIntervalEXT*)wglGetProcAddress("wglSwapIntervalEXT");
+      wglChoosePixelFormatARB = (wglChoosePixelFormatARBFn*)wglGetProcAddress("wglChoosePixelFormatARB");
+      wglCreateContextAttribsARB = (wglCreateContextAttribsARBFn*)wglGetProcAddress("wglCreateContextAttribsARB");
+      wglSwapIntervalEXT = (wglSwapIntervalEXTFn*)wglGetProcAddress("wglSwapIntervalEXT");
       
       if (!wglSwapIntervalEXT || !wglChoosePixelFormatARB || !wglCreateContextAttribsARB) {
         success = false;
@@ -170,7 +169,7 @@ WGL_LoadExtensions() {
   }
 }
 static void*
-WinGfx_AllocateMemory(UMI memory_size) {
+wingfx_allocate_memory(UMI memory_size) {
   return VirtualAllocEx(GetCurrentProcess(),
                         0, 
                         memory_size,
@@ -180,7 +179,7 @@ WinGfx_AllocateMemory(UMI memory_size) {
 }
 
 static void
-WinGfx_FreeMemory(void* memory) {
+wingfx_free_memory(void* memory) {
   VirtualFreeEx(GetCurrentProcess(), 
                 memory,    
                 0, 
@@ -190,7 +189,7 @@ WinGfx_FreeMemory(void* memory) {
 
 //~ NOTE(Momo): API implementation
 exported Gfx*
-WinGfx_Init(HWND window) {
+wingfx_init(HWND window) {
   // NOTE(Momo): Calcluate the EXACT amount of memory needed.
   // TODO(Momo): Is there a better way to do this? 
   
@@ -203,22 +202,22 @@ WinGfx_Init(HWND window) {
   
   Opengl_Platform pf; 
   
-  pf.alloc = WinGfx_AllocateMemory;
-  pf.free = WinGfx_FreeMemory;
+  pf.alloc = wingfx_allocate_memory;
+  pf.free = wingfx_free_memory;
   
   // TODO: IF YOU ARE READING IN HOTEL
   // CONTINUE FIXING THIS
-  Opengl* opengl = (Opengl*)WinGfx_AllocateMemory(sizeof(Opengl));
+  Opengl* opengl = (Opengl*)wingfx_allocate_memory(sizeof(Opengl));
   
   if (!opengl ) {
     goto failed;
   }
   
-  if (!WGL_LoadExtensions()) {
+  if (!wingfx_load_wgl_extentions()) {
     goto failed;
   }
   
-  WGL_SetPixelFormat(dc);
+  wingfx_set_wgl_pixel_format(dc);
   
   S32 opengl_attribs[] {
     WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
@@ -243,7 +242,7 @@ WinGfx_Init(HWND window) {
     HMODULE module = LoadLibraryA("opengl32.dll");
     // TODO: Log functions that are not loaded
 #define WGL_SetOpenglFunction(name) \
-pf.name = (GL_##name*)WGL_TryGetFunction(#name, module); \
+pf.name = (GL_##name*)wingfx_try_get_wgl_function(#name, module); \
 if (!pf.name) { goto failed; } 
     
     WGL_SetOpenglFunction(glEnable);
@@ -287,7 +286,7 @@ if (!pf.name) { goto failed; }
   }
 #undef WGL_SetOpenglFunction
   
-  if (!Init(opengl, pf)) {
+  if (!init_opengl(opengl, pf)) {
     goto failed;
   }
   
@@ -303,8 +302,8 @@ if (!pf.name) { goto failed; }
   
   failed: 
   {
-    Free(opengl);
-    WinGfx_FreeMemory(opengl);
+    free_opengl(opengl);
+    wingfx_free_memory(opengl);
     return nullptr;
   }
   
@@ -313,15 +312,15 @@ if (!pf.name) { goto failed; }
 
 
 exported void
-WinGfx_Render(Gfx* gfx,  V2U32 render_wh, Rect2U32 region) {
-  Render((Opengl*)gfx, render_wh, region);
+wingfx_render(Gfx* gfx,  V2U32 render_wh, Rect2U32 region) {
+  render_opengl((Opengl*)gfx, render_wh, region);
 }
 
 
 exported void
-WinGfx_Free(Gfx* r) {
+wingfx_free(Gfx* r) {
   Opengl* opengl = (Opengl*)r;
-  Free(opengl);
-  WinGfx_FreeMemory(opengl);
+  free_opengl(opengl);
+  wingfx_free_memory(opengl);
 }
 

@@ -8,7 +8,7 @@
 
 static inline Memory
 ReadFileToMemory(Arena* arena, const char* filename) {
-	Memory result = {0};
+	Memory result = {};
   FILE* file = fopen(filename, "rb");
   if (!file) { 
     printf("Cannot find file\n");
@@ -87,7 +87,7 @@ int main() {
     Memory png_output = PNG_Write(bitmap,
                                         &app_arena); 
     if (!png_output.data) {
-      printf("Write to memory failed: %d\n", i);
+      printf("write to memory failed: %d\n", i);
       continue;
     }
     

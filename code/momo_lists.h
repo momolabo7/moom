@@ -29,7 +29,7 @@
 #define List_Pop(l)        (((l)->count > 0) ? (--(l)->count), 1 : 0)
 #define List_Get(l,i)      ((i < (l)->count) ? ((l)->e + i) : 0)
 #define List_Slear(l,i)    ((i < (l)->count) ? ((l)->e[i] = (l)->e[(l)->count-1]), List_Pop(l), 1 : 0)
-#define List_Remove(l,i)   ((i < (l)->count) ? (Bin_Copy((l)->e+i, (l)->e+i+1, sizeof((l)->e[0])*((l)->count--)-i)), 1 : 0)
+#define List_Remove(l,i)   ((i < (l)->count) ? (copy_memory((l)->e+i, (l)->e+i+1, sizeof((l)->e[0])*((l)->count--)-i)), 1 : 0)
 #define List_Remain(l)     ((l)->cap - (l)->count)
 
 //~ NOTE(Momo): 'Static' list API
@@ -53,7 +53,7 @@
 #define SList_Pop(l)        (((l)->count > 0) ? (--(l)->count), 1 : 0)
 #define SList_Get(l,i)      ((i < (l)->count) ? ((l)->e + i) : 0)
 #define SList_Slear(l,i)    ((i < (l)->count) ? ((l)->e[i] = (l)->e[(l)->count-1]), SList_Pop(l), 1 : 0)
-#define SList_Remove(l,i)   ((i < (l)->count) ? (Bin_Copy((l)->e+i, (l)->e+i+1, sizeof((l)->e[0])*((l)->count--)-i)), 1 : 0)
+#define SList_Remove(l,i)   ((i < (l)->count) ? (copy_memory((l)->e+i, (l)->e+i+1, sizeof((l)->e[0])*((l)->count--)-i)), 1 : 0)
 #define SList_Remain(l)     (SList_Cap(l) - (l)->count)
 
 #include "momo_lists.cpp"

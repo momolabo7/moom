@@ -2,64 +2,64 @@
 
 // NOTE(Momo): Predicates
 static B32
-RP__SortByHeight(RP_Rect* l, RP_Rect* r) {
+_rp_sort_by_height(RP_Rect* l, RP_Rect* r) {
   return l->h > r->h;
 }
 
 static B32 
-RP__SortByWidth(RP_Rect* l, RP_Rect* r) {
+_rp_sort_by_width(RP_Rect* l, RP_Rect* r) {
   return l->w > r->w;
 }
 
 static B32 
-RP__SortByArea(RP_Rect* l, RP_Rect* r) {
+_rp_sort_by_area(RP_Rect* l, RP_Rect* r) {
   return (l->w * l->h) > (r->w * r->h);
 }
 
 static B32 
-RP__SortByPerimeter(RP_Rect* l, RP_Rect* r) {
+_rp_sort_by_perimeter(RP_Rect* l, RP_Rect* r) {
   return (l->w + l->h) > (r->w + r->h);
 }
 
 static B32 
-RP__SortByBiggerSide(RP_Rect* l, RP_Rect* r) {
-  return (Max(l->w, l->h)) > (Max(r->w, r->h));
+_rp_sort_by_bigger_side(RP_Rect* l, RP_Rect* r) {
+  return (max_of(l->w, l->h)) > (max_of(r->w, r->h));
 }
 
 
 static void 
-RP__SortRects(RP_Rect* rects,
+_rp_sort_rects(RP_Rect* rects,
               UMI rect_count,
               RP_SortType sort_type) 
 {
   switch(sort_type) {
     case RP_SortType_Height: {
-      QuickSort(rects, rect_count, RP__SortByHeight);
+      quicksort(rects, rect_count, _rp_sort_by_height);
     } break;
     case RP_SortType_Width: {
-      QuickSort(rects, rect_count, RP__SortByWidth);
+      quicksort(rects, rect_count, _rp_sort_by_width);
     } break;
     case RP_SortType_Area: {
-      QuickSort(rects, rect_count, RP__SortByArea);
+      quicksort(rects, rect_count, _rp_sort_by_area);
     } break;
     case RP_SortType_Perimeter: {
-      QuickSort(rects, rect_count, RP__SortByPerimeter);
+      quicksort(rects, rect_count, _rp_sort_by_perimeter);
     } break;
     case RP_SortType_BiggerSide: {
-      QuickSort(rects, rect_count, RP__SortByBiggerSide);
+      quicksort(rects, rect_count, _rp_sort_by_bigger_side);
     } break;
   }
 }
 static void
-PackRects(RP_Rect* rects, 
-          RP_Node* nodes,
-          UMI rect_count, 
-          UMI padding,
-          UMI total_width,
-          UMI total_height,
-          RP_SortType sort_type) 
+pack_rects(RP_Rect* rects, 
+           RP_Node* nodes,
+           UMI rect_count, 
+           UMI padding,
+           UMI total_width,
+           UMI total_height,
+           RP_SortType sort_type) 
 {
-  RP__SortRects(rects, rect_count, sort_type);
+  _rp_sort_rects(rects, rect_count, sort_type);
   
   UMI current_node_count = 1;
   nodes[0].x = 0;
@@ -90,9 +90,9 @@ PackRects(RP_Rect* rects,
     
     // NOTE(Momo): If an empty space that can fit is found, 
     // we remove that space and split.
-    Assert(chosen_space_index != current_node_count);
+    assert(chosen_space_index != current_node_count);
     
-    // NOTE(Momo): Swap and pop the chosen space
+    // NOTE(Momo): swap and pop the chosen space
     RP_Node chosen_space = nodes[chosen_space_index];
     
     if (current_node_count > 0) {

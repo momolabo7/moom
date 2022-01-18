@@ -3,22 +3,22 @@
 #ifndef MOMO_RECT_PACK_H
 #define MOMO_RECT_PACK_H
 
-typedef enum RP_SortType {
+enum RP_SortType {
   RP_SortType_Width,
   RP_SortType_Height,
   RP_SortType_Area,
   RP_SortType_Perimeter,
   RP_SortType_BiggerSide,
-} RP_SortType;
+};
 
-typedef struct RP_Rect {
+struct RP_Rect {
 	UMI x, y, w, h;
   void* user_data;
-} RP_Rect;
+};
 
-typedef struct RP_Node {
+struct RP_Node {
 	UMI x, y, w, h;
-} RP_Node;
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // NOTE(Momo): How to use
@@ -52,13 +52,13 @@ typedef struct RP_Node {
 // Maybe provide a context to use?
 // Wait till I do asset system
 
-static void PackRects(RP_Rect* rects, 
-                      RP_Node* nodes,
-                      UMI rect_count, 
-                      UMI padding,
-                      UMI total_width,
-                      UMI total_height,
-                      RP_SortType sort_type);
+static void pack_rects(RP_Rect* rects, 
+                       RP_Node* nodes,
+                       UMI rect_count, 
+                       UMI padding,
+                       UMI total_width,
+                       UMI total_height,
+                       RP_SortType sort_type);
 
 
 #include "momo_rect_pack.cpp"

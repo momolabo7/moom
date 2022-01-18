@@ -15,15 +15,15 @@ struct Rect3F32{
 };
 
 
-static constexpr F32 Width(Rect2F32);
-static constexpr U32 Width(Rect2U32);
-static constexpr F32 Width(Rect3F32);
+static constexpr F32 width(Rect2F32);
+static constexpr U32 width(Rect2U32);
+static constexpr F32 width(Rect3F32);
 
-static constexpr F32 Height(Rect2F32);
-static constexpr U32 Height(Rect2U32);
-static constexpr F32 Height(Rect3F32);
+static constexpr F32 height(Rect2F32);
+static constexpr U32 height(Rect2U32);
+static constexpr F32 height(Rect3F32);
 
-static constexpr F32 Depth(Rect3F32);
+static constexpr F32 depth(Rect3F32);
 
 
 //~ Circles

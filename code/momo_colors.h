@@ -29,10 +29,10 @@ struct RGBA {
   F32 a;
 };
 
-static RGBA CreateRGBA(F32 r, F32 g, F32 b, F32 a);
-static HSL  CreateHSL(F32 h, F32 s, F32 l);
-static HSL  ToHSL(RGB c);
-static RGB  ToRGB(HSL c);
+static RGBA create_rgba(F32 r, F32 g, F32 b, F32 a);
+static HSL  create_hsl(F32 h, F32 s, F32 l);
+static HSL  rbg_to_hsl(RGB c);
+static RGB  hsl_to_rgb(HSL c);
 
 #include "momo_colors.cpp"
 

@@ -3,31 +3,31 @@
 #ifndef MOMO_CRC_H
 #define MOMO_CRC_H
 
-struct CRC32Table {
+struct CRC32_Table {
 	U32 remainders[256];
 };
 
-struct CRC16Table {
+struct CRC16_Table {
 	U16 remainders[256];
 };
 
-struct CRC8Table {
+struct CRC8_Table {
 	U8 remainders[256];
 };
 
 // We should be able to constexpr these
-static CRC32Table GenerateCRC32Table(U32 polynomial);
-static CRC16Table GenerateCRC32Table(U16 polynomial);
-static CRC8Table  GenerateCRC8Table(U8 polynomial); 
+static CRC32_Table gen_crc32_table(U32 polynomial);
+static CRC16_Table gen_crc16_table(U16 polynomial);
+static CRC8_Table  gen_crc8_table(U8 polynomial); 
 
 // These require the CRCTables
-static U32 CRC32(U8* data, U32 data_size, U16 start_register, CRC32Table table);
-static U32 CRC16(U8* data, U32 data_size, U16 start_register, CRC16Table table);
-static U32 CRC8(U8* data, U32 data_size, U8 start_register, CRC8Table table);
+static U32 calc_crc32(U8* data, U32 data_size, U16 start_register, CRC32_Table table);
+static U32 calc_crc16(U8* data, U32 data_size, U16 start_register, CRC16_Table table);
+static U32 calc_crc8(U8* data, U32 data_size, U8 start_register, CRC8_Table table);
 
-static U32 SlowCRC32(U8* data, U32 data_size, U32 start_register, U32 polynomial);
-static U32 SlowCRC16(U8* data, U32 data_size, U16 start_register, U16 polynomial);
-static U32 SlowCRC8(U8* data, U32 data_size, U16 start_register, U16 polynomial);
+static U32 calc_crc32_slow(U8* data, U32 data_size, U32 start_register, U32 polynomial);
+static U32 calc_crc16_slow(U8* data, U32 data_size, U16 start_register, U16 polynomial);
+static U32 calc_crc8_slow(U8* data, U32 data_size, U16 start_register, U16 polynomial);
 
 #include "momo_crc.cpp"
 

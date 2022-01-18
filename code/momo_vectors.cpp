@@ -1,109 +1,109 @@
 //~ NOTE(Momo): V2F32
 static constexpr V2F32 
-Add(V2F32 lhs, V2F32 rhs) {
+add(V2F32 lhs, V2F32 rhs) {
 	lhs.x += rhs.x;
 	lhs.y += rhs.y;
 	return lhs;
 }
 
 static constexpr V2F32 
-Sub(V2F32 lhs, V2F32 rhs) {
+sub(V2F32 lhs, V2F32 rhs) {
   lhs.x -= rhs.x;
   lhs.y -= rhs.y;
   return lhs;
 }
 
 static constexpr V2F32 
-Scale(V2F32 lhs, F32 rhs) {
+scale(V2F32 lhs, F32 rhs) {
   lhs.x *= rhs;
   lhs.y *= rhs;
   return lhs;
 }
 
 static constexpr V2F32 
-InvScale(V2F32 lhs, F32 rhs) {
-  Assert(Match(rhs, 0.f));
+div(V2F32 lhs, F32 rhs) {
+  assert(match(rhs, 0.f));
   lhs.x /= rhs;
   lhs.y /= rhs;
   return lhs;
 }
 
 static constexpr V2F32 
-Negate(V2F32 v) {
+negate(V2F32 v) {
   v.x = -v.x;
   v.y = -v.y;
   return v;
 }
 
 static constexpr F32 
-Dot(V2F32 lhs, V2F32 rhs) {
+dot(V2F32 lhs, V2F32 rhs) {
   return (lhs.x * rhs.x) + (lhs.y * rhs.y);
 }
 
 static constexpr F32  
-DistanceSq(V2F32 lhs, V2F32 rhs) {
-  return LengthSq(Sub(lhs, rhs));
+distance_sq(V2F32 lhs, V2F32 rhs) {
+  return length_sq(sub(lhs, rhs));
 }
 static F32  
-Distance(V2F32 lhs, V2F32 rhs) {
-  return Sqrt(DistanceSq(lhs, rhs));
+distance(V2F32 lhs, V2F32 rhs) {
+  return sqrt(distance_sq(lhs, rhs));
 }
 
 static constexpr F32  
-LengthSq(V2F32 v) {
-  return Dot(v, v);
+length_sq(V2F32 v) {
+  return dot(v, v);
 }
 
 static F32   
-Length(V2F32 v) {
-  return Sqrt(LengthSq(v));
+length(V2F32 v) {
+  return sqrt(length_sq(v));
 }
 
 static V2F32 
-Normalize(V2F32 v) {
-  F32 len = Length(v);
-  return InvScale(v, len);
+normalize(V2F32 v) {
+  F32 leng = length(v);
+  return div(v, leng);
 }
 
 static constexpr B32
-Match(V2F32 lhs, V2F32 rhs) {
-  return (Match(lhs.x, rhs.x) &&
-          Match(lhs.y, rhs.y)); 
+match(V2F32 lhs, V2F32 rhs) {
+  return (match(lhs.x, rhs.x) &&
+          match(lhs.y, rhs.y)); 
 }
 
 static constexpr V2F32 
-Midpoint(V2F32 lhs, V2F32 rhs) {
-  return Scale(Add(lhs, rhs), 0.5f); 
+midpoint(V2F32 lhs, V2F32 rhs) {
+  return scale(add(lhs, rhs), 0.5f); 
   
 }
 static V2F32 
-Project(V2F32 v, V2F32 onto) {
+project(V2F32 v, V2F32 onto) {
   // (to . from)/LenSq(to) * to
-  F32 onto_len_sq = LengthSq(onto);
-  Assert(!Match(onto_len_sq, 0.f));
-  F32 dot = Dot(v, onto);
-  F32 scalar = dot / onto_len_sq;
-  V2F32 ret = Scale(onto, scalar);
+  F32 onto_len_sq = length_sq(onto);
+  assert(!match(onto_len_sq, 0.f));
+  F32 v_dot_onto = dot(v, onto);
+  F32 scalar = v_dot_onto / onto_len_sq;
+  V2F32 ret = scale(onto, scalar);
   
   return ret;
 }
 
 static F32
-AngleBetween(V2F32 lhs, V2F32 rhs) {
-  F32 l_len = Length(lhs);
-  F32 r_len = Length(rhs);
-  F32 lr_dot = Dot(lhs, rhs);
-  F32 ret = Acos(lr_dot/(l_len * r_len));
+angle_between(V2F32 lhs, V2F32 rhs) {
+  F32 l_len = length(lhs);
+  F32 r_len = length(rhs);
+  F32 lr_dot = dot(lhs, rhs);
+  F32 ret = acos(lr_dot/(l_len * r_len));
   return ret;
 }
 
 static V2F32 
-Rotate(V2F32 v, F32 rad) {
+rotate(V2F32 v, F32 rad) {
   // Technically, we can use matrices but
   // meh, it's easy to code this out without it.
   // Removes dependencies too
-  F32 c = Cos(rad);
-  F32 s = Sin(rad);
+  F32 c = cos(rad);
+  F32 s = sin(rad);
   
   V2F32 ret = {};
   ret.x = (c * v.x) - (s * v.y);
@@ -114,14 +114,14 @@ Rotate(V2F32 v, F32 rad) {
 
 //~ NOTE(Momo): V3F32
 static constexpr V3F32 
-Add(V3F32 lhs, V3F32 rhs) {
+add(V3F32 lhs, V3F32 rhs) {
   lhs.x += rhs.x;
   lhs.y += rhs.y;
   lhs.z += rhs.z;
   return lhs;
 }
 static constexpr V3F32 
-Sub(V3F32 lhs, V3F32 rhs) {
+sub(V3F32 lhs, V3F32 rhs) {
   lhs.x -= rhs.x;
   lhs.y -= rhs.y;
   lhs.z -= rhs.z;
@@ -129,7 +129,7 @@ Sub(V3F32 lhs, V3F32 rhs) {
 }
 
 static constexpr V3F32 
-Scale(V3F32 lhs, F32 rhs) {
+scale(V3F32 lhs, F32 rhs) {
   lhs.x *= rhs;
   lhs.y *= rhs;
   lhs.z *= rhs;
@@ -137,8 +137,8 @@ Scale(V3F32 lhs, F32 rhs) {
 }
 
 static constexpr V3F32 
-InvScale(V3F32 lhs, F32 rhs) {
-  Assert(Match(rhs, 0.f));
+div(V3F32 lhs, F32 rhs) {
+  assert(match(rhs, 0.f));
   lhs.x /= rhs;
   lhs.y /= rhs;
   lhs.z /= rhs;
@@ -146,7 +146,7 @@ InvScale(V3F32 lhs, F32 rhs) {
 }
 
 static constexpr V3F32 
-Negate(V3F32 v) {
+negate(V3F32 v) {
   v.x = -v.x;
   v.y = -v.y;
   v.z = -v.z;
@@ -154,71 +154,71 @@ Negate(V3F32 v) {
 }
 
 static constexpr F32 
-Dot(V3F32 lhs, V3F32 rhs) {
+dot(V3F32 lhs, V3F32 rhs) {
   return (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z);
 }
 
 static constexpr F32  
-DistanceSq(V3F32 lhs, V3F32 rhs) {
-  return LengthSq(Sub(lhs, rhs));
+distance_sq(V3F32 lhs, V3F32 rhs) {
+  return length_sq(sub(lhs, rhs));
 }
 
 static F32  
-Distance(V3F32 lhs, V3F32 rhs) {
-  return Sqrt(DistanceSq(lhs, rhs));
+distance(V3F32 lhs, V3F32 rhs) {
+  return sqrt(distance_sq(lhs, rhs));
 }
 
 static constexpr F32  
-LengthSq(V3F32 v) {
-  return Dot(v, v);
+length_sq(V3F32 v) {
+  return dot(v, v);
 }
 
 static F32   
-Length(V3F32 v) {
-  return Sqrt(LengthSq(v));
+length(V3F32 v) {
+  return sqrt(length_sq(v));
 }
 
 static V3F32 
-Normalize(V3F32 v) {
-  F32 len = Length(v);
-  return InvScale(v, len);
+normalize(V3F32 v) {
+  F32 len = length(v);
+  return div(v, len);
 }
 
 static constexpr B32
-Match(V3F32 lhs, V3F32 rhs) {
-  return (Match(lhs.x, rhs.x) &&
-          Match(lhs.y, rhs.y)); 
+match(V3F32 lhs, V3F32 rhs) {
+  return (match(lhs.x, rhs.x) &&
+          match(lhs.y, rhs.y)); 
 }
 
 static constexpr V3F32 
-Midpoint(V3F32 lhs, V3F32 rhs) {
-  return Scale(Add(lhs, rhs), 0.5f); 
+midpoint(V3F32 lhs, V3F32 rhs) {
+  return scale(add(lhs, rhs), 0.5f); 
   
 }
 static V3F32 
-Project(V3F32 v, V3F32 onto) {
+project(V3F32 v, V3F32 onto) {
   // (to . from)/LenSq(to) * to
-  F32 onto_len_sq = LengthSq(onto);
-  Assert(!Match(onto_len_sq, 0.f));
-  F32 dot = Dot(v, onto);
-  F32 scalar = dot / onto_len_sq;
-  V3F32 ret = Scale(onto, scalar);
+  F32 onto_len_sq = length_sq(onto);
+  assert(!match(onto_len_sq, 0.f));
+  F32 v_dot_onto = dot(v, onto);
+  F32 scalar = v_dot_onto / onto_len_sq;
+  V3F32 ret = scale(onto, scalar);
   
   return ret;
 }
 
 static F32
-AngleBetween(V3F32 lhs, V3F32 rhs) {
-  F32 l_len = Length(lhs);
-  F32 r_len = Length(rhs);
-  F32 lr_dot = Dot(lhs, rhs);
-  F32 ret = Acos(lr_dot/(l_len * r_len));
+angle_between(V3F32 lhs, V3F32 rhs) {
+  F32 l_len = length(lhs);
+  F32 r_len = length(rhs);
+  F32 lr_dot = dot(lhs, rhs);
+  F32 ret = acos(lr_dot/(l_len * r_len));
   return ret;
 }
 
 static constexpr V3F32
 Cross(V3F32 lhs, V3F32 rhs) {
-  V3F32 ret = {0};
+  V3F32 ret = {};
   ret.x = (lhs.y * rhs.z) - (lhs.z * rhs.y);
   ret.y = (lhs.z * rhs.x) - (lhs.x * rhs.z);
   ret.z = (lhs.x * rhs.y) - (lhs.y * rhs.x);
@@ -228,25 +228,25 @@ Cross(V3F32 lhs, V3F32 rhs) {
 
 
 //~Operator Overloading
-static constexpr V2F32 operator+(V2F32 lhs, V2F32 rhs) { return Add(lhs, rhs); }
-static constexpr V2F32 operator-(V2F32 lhs, V2F32 rhs) { return Sub(lhs, rhs); }
-static constexpr V2F32 operator*(V2F32 lhs, F32 rhs) { return Scale(lhs, rhs); }
-static constexpr V2F32 operator*(F32 lhs, V2F32 rhs) { return Scale(rhs, lhs); }
-static constexpr B32   operator==(V2F32 lhs, V2F32 rhs) { return Match(lhs, rhs); }
-static constexpr B32   operator!=(V2F32 lhs, V2F32 rhs) { return !Match(lhs, rhs); }
-static constexpr V2F32 operator-(V2F32 v) { return Negate(v); }
-static constexpr V2F32& operator+=(V2F32& lhs, V2F32 rhs) { return lhs = Add(lhs, rhs); } 
-static constexpr V2F32& operator-=(V2F32& lhs, V2F32 rhs) { return lhs = Sub(lhs, rhs); } 
-static constexpr V2F32& operator*=(V2F32& lhs, F32 rhs) { return lhs = Scale(lhs, rhs); }
+static constexpr V2F32 operator+(V2F32 lhs, V2F32 rhs) { return add(lhs, rhs); }
+static constexpr V2F32 operator-(V2F32 lhs, V2F32 rhs) { return sub(lhs, rhs); }
+static constexpr V2F32 operator*(V2F32 lhs, F32 rhs) { return scale(lhs, rhs); }
+static constexpr V2F32 operator*(F32 lhs, V2F32 rhs) { return scale(rhs, lhs); }
+static constexpr B32   operator==(V2F32 lhs, V2F32 rhs) { return match(lhs, rhs); }
+static constexpr B32   operator!=(V2F32 lhs, V2F32 rhs) { return !match(lhs, rhs); }
+static constexpr V2F32 operator-(V2F32 v) { return negate(v); }
+static constexpr V2F32& operator+=(V2F32& lhs, V2F32 rhs) { return lhs = add(lhs, rhs); } 
+static constexpr V2F32& operator-=(V2F32& lhs, V2F32 rhs) { return lhs = sub(lhs, rhs); } 
+static constexpr V2F32& operator*=(V2F32& lhs, F32 rhs) { return lhs = scale(lhs, rhs); }
 
-static constexpr V3F32 operator+(V3F32 lhs, V3F32 rhs) { return Add(lhs, rhs); }
-static constexpr V3F32 operator-(V3F32 lhs, V3F32 rhs) { return Sub(lhs, rhs); }
-static constexpr V3F32 operator*(V3F32 lhs, F32 rhs) { return Scale(lhs, rhs); }
-static constexpr V3F32 operator*(F32 lhs, V3F32 rhs) { return Scale(rhs, lhs); }
-static constexpr B32   operator==(V3F32 lhs, V3F32 rhs) { return Match(lhs, rhs); }
-static constexpr B32   operator!=(V3F32 lhs, V3F32 rhs) { return !Match(lhs, rhs); }
-static constexpr V3F32 operator-(V3F32 v) { return Negate(v); }
-static constexpr V3F32& operator+=(V3F32& lhs, V3F32 rhs) { return lhs = Add(lhs, rhs); } 
-static constexpr V3F32& operator-=(V3F32& lhs, V3F32 rhs) { return lhs = Sub(lhs, rhs); } 
-static constexpr V3F32& operator*=(V3F32& lhs, F32 rhs) { return lhs = Scale(lhs, rhs); }
+static constexpr V3F32 operator+(V3F32 lhs, V3F32 rhs) { return add(lhs, rhs); }
+static constexpr V3F32 operator-(V3F32 lhs, V3F32 rhs) { return sub(lhs, rhs); }
+static constexpr V3F32 operator*(V3F32 lhs, F32 rhs) { return scale(lhs, rhs); }
+static constexpr V3F32 operator*(F32 lhs, V3F32 rhs) { return scale(rhs, lhs); }
+static constexpr B32   operator==(V3F32 lhs, V3F32 rhs) { return match(lhs, rhs); }
+static constexpr B32   operator!=(V3F32 lhs, V3F32 rhs) { return !match(lhs, rhs); }
+static constexpr V3F32 operator-(V3F32 v) { return negate(v); }
+static constexpr V3F32& operator+=(V3F32& lhs, V3F32 rhs) { return lhs = add(lhs, rhs); } 
+static constexpr V3F32& operator-=(V3F32& lhs, V3F32 rhs) { return lhs = sub(lhs, rhs); } 
+static constexpr V3F32& operator*=(V3F32& lhs, F32 rhs) { return lhs = scale(lhs, rhs); }
 

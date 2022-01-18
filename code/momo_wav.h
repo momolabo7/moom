@@ -34,7 +34,7 @@ typedef struct WAV {
   void* data;
 } WAV;
 
-static WAV WAV_LoadFromMemory(void* memory, U32 size);
+static WAV read_wav(void* memory, U32 size);
 
 
 
