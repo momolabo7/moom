@@ -4,6 +4,8 @@
 //~ Rects
 struct Rect2F32 {
   V2F32 min, max;
+  
+  
 };
 
 struct Rect2U32 {
@@ -15,15 +17,15 @@ struct Rect3F32{
 };
 
 
-static constexpr F32 width(Rect2F32);
-static constexpr U32 width(Rect2U32);
-static constexpr F32 width(Rect3F32);
+static constexpr F32 width_of(Rect2F32);
+static constexpr U32 width_of(Rect2U32);
+static constexpr F32 width_of(Rect3F32);
 
-static constexpr F32 height(Rect2F32);
-static constexpr U32 height(Rect2U32);
-static constexpr F32 height(Rect3F32);
+static constexpr F32 height_of(Rect2F32);
+static constexpr U32 height_of(Rect2U32);
+static constexpr F32 height_of(Rect3F32);
 
-static constexpr F32 depth(Rect3F32);
+static constexpr F32 depth_of(Rect3F32);
 
 
 //~ Circles

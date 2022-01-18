@@ -18,7 +18,6 @@ struct Win_State{
   U32 aspect_ratio_width;
   U32 aspect_ratio_height;
   
-  U32 open_file_count; // for checking if there are closed files?
 };
 static Win_State Win_global_state;
 
@@ -296,6 +295,12 @@ win_create_platform_api()
   return pf_api;
 }
 
+static DWORD
+win_test_thread_function(void* ctx) {
+  int* i = (int*)ctx;
+  (*i) += 100;
+  return 0;
+}
 
 //~ Main functions
 int CALLBACK
@@ -309,14 +314,29 @@ WinMain(HINSTANCE instance,
   ImmDisableIME((DWORD)-1);
   
   
+  
+#if 1
+  DWORD thread_id;
+  int result = 0;
+  HANDLE threads[10];
+  for (int i = 0; i < ArrayCount(threads); ++i) {
+    threads[i] = CreateThread(NULL, 0, 
+                              win_test_thread_function, 
+                              &result, 0, &thread_id);
+  }
+  
+  WaitForMultipleObjects(ArrayCount(threads), threads, TRUE, INFINITE);
+#endif
+  
   //- Initialize window state
   {
     Win_global_state.is_running = true;
     Win_global_state.is_hot_reloading = true;
     Win_global_state.aspect_ratio_width = 1;
     Win_global_state.aspect_ratio_height = 1;
-    Win_global_state.open_file_count = 0;
   }
+  
+  
   
   //- Create window in the middle of the screen
   HWND window;
