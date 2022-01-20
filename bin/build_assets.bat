@@ -16,12 +16,10 @@ SET CommonCompilerFlags=-DSLOW -DINTERNAL  %CommonCompilerFlags%
 
 pushd %BuildDir%
 
-cl %CommonCompilerFlags% %CodeDir%\tool_build_assets.cxx
+cl %CommonCompilerFlags% %CodeDir%\ass.cxx
 
 if NOT %ERRORLEVEL% == 0 goto exit
-del /Q %cd%\assets
-if not exist "%cd%\assets" mkdir %cd%\assets
-copy %RootDir%\assets\* %cd%\assets
-call tool_build_assets.exe
+
+call ass.exe
 
 popd

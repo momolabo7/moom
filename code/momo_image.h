@@ -9,7 +9,14 @@ struct Image{
   void* data;
 };
 
+struct Image_Info {
+  U32 width, height, channels;
+};
+
+
+
 
 #include "momo_image.h"
+
 
 #endif //MOMO_IMAGE_H

@@ -779,6 +779,53 @@ _png_process_IEND(_PNG_Context* c) {
 }
 
 
+static Image_Info
+read_png_info(Memory png_memory) {
+  Stream stream = create_stream((U8*)png_memory.data, png_memory.size);
+  
+  // Read Signature
+  auto* png_header = stream.consume<_PNG_Header>();  
+  if (!_png_is_signature_valid(png_header->signature)) {
+    Image_Info ret = {};
+    return ret;
+  }    
+  
+  
+  // Read Chunk Header
+  auto* chunk_header = stream.consume<_PNG_Chunk_Header>();
+  chunk_header->length = endian_swap_32(chunk_header->length);
+  chunk_header->type_U32 = endian_swap_32(chunk_header->type_U32);
+  
+  if( chunk_header->type_U32 != 'IHDR') {
+    Image_Info ret = {};
+    return ret;
+  }
+  
+  _PNG_IHDR* IHDR = stream.consume<_PNG_IHDR>();
+  
+  // NOTE(Momo): Width and height is in Big Endian
+  // We assume that we are currently in a Little Endian system
+  IHDR->width = endian_swap_32(IHDR->width);
+  IHDR->height = endian_swap_32(IHDR->height);
+  
+  _png_log("IHDR: \nwidth: %d\nheight: %d\nbit_depth: %d\ncolour_type: %d\ncompression_method: %d\nfilter_method: %d\ninterlace_method: %d\n\n",
+           IHDR->width, IHDR->height, IHDR->bit_depth, IHDR->colour_type, IHDR->compression_method, IHDR->filter_method, IHDR->interlace_method);
+  
+  if (!_png_is_format_supported(IHDR)) {
+    Image_Info ret = {};
+    return ret;
+  }
+  
+  Image_Info ret;
+  ret.width = IHDR->width;
+  ret.height = IHDR->height;
+  ret.channels = _png_get_channels_from_colour_type(IHDR->colour_type);
+  
+  
+  return ret;
+}
+
+
 // NOTE(Momo): For the code here, we are going to assume that 
 // the PNG file we are reading is correct. i.e. we don't emphasize on 
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)

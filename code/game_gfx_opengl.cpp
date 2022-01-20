@@ -104,8 +104,8 @@ _AlignViewport(Opengl* ogl,
   U32 x, y, w, h;
   x = region.min.x;
   y = region.min.y;
-  w = width(region);
-  h = height(region);
+  w = width_of(region);
+  h = height_of(region);
   
   ogl->glScissor(0, 0, render_wh.w, render_wh.h);
   ogl->glViewport(0, 0, render_wh.w, render_wh.h);
