@@ -37,7 +37,7 @@ static Arena create_arena(void* mem, UMI cap);
 //#define Arena_Boot(type, member, memory, memory_size) \
 //(type*)Arena_BootBlock(sizeof(type), OffsetOf(type, member), (memory), (memory_size)) 
 
-
+#define create_scratch()
 
 #include "momo_arena.cpp"
 

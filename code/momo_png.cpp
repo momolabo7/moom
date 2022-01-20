@@ -919,8 +919,8 @@ write_png(Image image, Arena* arena) {
   U8* stream_memory = (U8*)Arena_PushBlock(arena, expected_memory_required);
   Stream stream = create_stream(stream_memory, expected_memory_required);
 #else
-  U8* stream_memory = arena->push_array<U8>(MB(2));
-  Stream stream = create_stream(stream_memory, MB(2));
+  U8* stream_memory = arena->push_array<U8>(MB(10));
+  Stream stream = create_stream(stream_memory, MB(10));
 #endif
   
   // NOTE(Momo): Header

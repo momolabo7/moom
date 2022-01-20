@@ -22,7 +22,7 @@ void ass_free(Memory* mem) {
   mem->size = 0;
 }
 
-Memory ass_read_file(const char* filename) {
+Memory ass_read_file(const char* filename, Arena* arena) {
   FILE* file = fopen(filename, "rb");
   
   if (!file) {
@@ -33,7 +33,8 @@ Memory ass_read_file(const char* filename) {
   UMI file_size = ftell(file);
   fseek(file, 0, SEEK_SET);
   
-  void* file_memory = malloc(file_size); 
+  void* file_memory = arena->push_block(file_size); 
+  assert(file_memory);
   UMI read_amount = fread(file_memory, 1, file_size, file);
   assert(read_amount == file_size);
   
@@ -45,7 +46,14 @@ Memory ass_read_file(const char* filename) {
   
 }
 
-
+void ass_write_file(const char* filename, Memory memory) {
+  FILE *file  = fopen(filename, "wb");
+  if (!file) return;
+  defer { fclose(file); };
+  
+  fwrite(memory.data, 1, memory.size, file);
+  
+}
 
 #include "ass_atlas_builder.h"
 

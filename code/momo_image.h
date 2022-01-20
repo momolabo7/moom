@@ -14,9 +14,14 @@ struct Image_Info {
 };
 
 
+struct Image32 {
+  U32 width, height;
+  U32* pixels;
+};
 
 
-#include "momo_image.h"
+
+#include "momo_image.cpp"
 
 
 #endif //MOMO_IMAGE_H

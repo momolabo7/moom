@@ -26,7 +26,7 @@ Arena::push_block(UMI size, UMI align) {
 	UMI imem = ptr_to_int(this->memory);
 	UMI adjusted_pos = align_up_pow2(imem + this->pos, align) - imem;
 	
-	assert(adjusted_pos + size < imem + this->cap);
+	assert(imem + adjusted_pos + size < imem + this->cap);
 	
 	U8* ret = int_to_ptr(imem + adjusted_pos);
 	this->pos = adjusted_pos + size;

@@ -4,6 +4,8 @@
 // - wants to specifiy exactly what assets to
 
 
+#define assert_callback(s) printf("[ass][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
+
 #include "ass.h"
 
 #define asset_dir(filename) "../assets/" ##filename
@@ -15,7 +17,7 @@
 
 
 int main() {
-  Memory ab_memory = ass_malloc(MB(1));
+  Memory ab_memory = ass_malloc(MB(100));
   defer { ass_free(&ab_memory); };
   
   Atlas_Builder ab;
