@@ -8,11 +8,13 @@ struct Atlas_Builder {
   
   
   void begin(Memory memory,
-             UMI max_entries);
+             UMI max_entries,
+             U32 atlas_width,
+             U32 atlas_height);
   
   void push_image(const char* filename);
   void push_font(const char* filename);
-  void end(U32 atlas_width, U32 atlas_height);
+  void end();
   
   
   

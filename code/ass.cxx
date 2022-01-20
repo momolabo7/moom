@@ -22,14 +22,14 @@ int main() {
   
   Atlas_Builder ab;
   
-  ab.begin(ab_memory, 32); 
+  ab.begin(ab_memory, 32, 1024, 1024); 
   {
     ab.push_image(asset_dir("bullet_circle.png"));
     ab.push_image(asset_dir("bullet_dot.png"));
     ab.push_image(asset_dir("player_black.png"));
     ab.push_image(asset_dir("player_white.png"));
   }
-  ab.end(1024, 1024);
+  ab.end();
   
   
   

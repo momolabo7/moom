@@ -19,19 +19,32 @@ struct _AB_Entry {
     _AB_Entry_Font font;
     _AB_Entry_Image image;
   };
+  
 };
 
 
 
 void 
 Atlas_Builder::begin(Memory memory, 
-                     UMI max_entries) 
+                     UMI max_entries,
+                     U32 atlas_width,
+                     U32 atlas_height) 
 {
+  assert(atlas_width);
+  assert(atlas_height);
+  
   arena = create_arena(memory.data, memory.size);
   
   entries = arena.push_array<_AB_Entry>(max_entries);
   entry_cap = max_entries;
   entry_count = 0;
+  
+  
+  atlas_image.pixels = arena.push_array<U32>(atlas_width * atlas_height);
+  assert(atlas_image.pixels);
+  
+  atlas_image.width = atlas_width;
+  atlas_image.height = atlas_height;
 }
 
 void 
@@ -52,10 +65,7 @@ Atlas_Builder::push_font(const char* filename) {
 
 
 void 
-Atlas_Builder::end(U32 atlas_width, U32 atlas_height) {
-  //TODO: Maybe this should be shifted to begin
-  U32* atlas_data = (U32*)arena.push_block(atlas_width * atlas_height * 4);
-  assert(atlas_data);
+Atlas_Builder::end() {
   
   UMI rect_count = 0;
   for(UMI i = 0; i < entry_count; ++i) {
@@ -124,7 +134,9 @@ Atlas_Builder::end(U32 atlas_width, U32 atlas_height) {
   }
 #endif
   
-  pack_rects(rects, nodes, rect_count, 1, atlas_width, atlas_height, RP_SortType_Height);
+  pack_rects(rects, nodes, rect_count, 1, 
+             atlas_image.width, atlas_image.height, 
+             RP_SortType_Height);
   
 #if 1
   ass_log("=== After packing: ===\n");
@@ -148,19 +160,12 @@ Atlas_Builder::end(U32 atlas_width, U32 atlas_height) {
         Memory file_memory = ass_read_file(entry->image.filename, marker.arena);
         assert(is_ok(file_memory));
         
-        Image img = read_png(file_memory, marker.arena);
-        assert(img.channels == 4);
-        Image32 img32;
-        {
-          img32.width = img.width;
-          img32.height = img.height;
-          img32.pixels = (U32*)img.data;
-        }
+        Image32 img32 = read_png(file_memory, marker.arena).to_image32();
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
-            UMI index = (x + y * atlas_width);
-            atlas_data[index] = img32.pixels[j++];
+            UMI index = (x + y * atlas_image.width);
+            atlas_image.pixels[index] = img32.pixels[j++];
           }
         }
         
@@ -174,14 +179,9 @@ Atlas_Builder::end(U32 atlas_width, U32 atlas_height) {
     
   }
   
-#if 1
+#if 0
   
-  Image png_to_write;
-  png_to_write.width = atlas_width;
-  png_to_write.height = atlas_height;
-  png_to_write.channels = 4;
-  png_to_write.data = (void*)atlas_data;
-  Memory png_to_write_memory = write_png(png_to_write, &arena);
+  Memory png_to_write_memory = write_png(atlas_image.to_image(), &arena);
   assert(is_ok(png_to_write_memory));
   ass_write_file("test.png", png_to_write_memory);
 #endif
