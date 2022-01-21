@@ -12,6 +12,7 @@ static Image read_png(Memory png_memory, Arena* arena);
 static Memory write_png(Image image, Arena* arena);
 static Image_Info read_png_info(Memory png_memory);
 
+
 #include "momo_png.cpp"
 
 #endif //MOMO_PNG_H

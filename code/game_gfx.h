@@ -73,45 +73,45 @@ struct Gfx{
 
 
 //~ NOTE(Momo): Cmd types that needs to be handled.
-enum Gfx_CmdType {
-  Gfx_CmdType_Clear,
-  Gfx_CmdType_SetBasis,
-  Gfx_CmdType_DrawSubSprite,
-  Gfx_CmdType_DrawRect,
-  Gfx_CmdType_SetTexture,
-  Gfx_CmdType_ClearTextures,
+enum struct Gfx_Cmd_Type{
+  CLEAR,
+  SET_BASIS,
+  DRAW_SUBSPRITE,
+  DRAW_SPRITE,
+  SET_TEXTURE,
+  CLEAR_TEXTURES,
 };
 
 
-struct Gfx_Cmd_Clear {
+struct Gfx_Clear_Cmd {
   RGBA colors;
 };
 
-struct Gfx_Cmd_SetBasis{
+struct Gfx_Set_Basis_Cmd {
   M44 basis;
 };
 
-struct Gfx_Cmd_DrawSubSprite{
+struct Gfx_Draw_Subsprite_Cmd{
   UMI texture_index;
   RGBA colors;
   M44 transform;
   Rect2F32 texture_uv; 
 } ;
 
-struct Gfx_Cmd_DrawRect{
+struct Gfx_Draw_Rect_Cmd{
   RGBA colors;
   M44 transform;
 };
 
 
-struct Gfx_Cmd_SetTexture{
+struct Gfx_Set_Texture_Cmd{
   UMI texture_index;
   UMI texture_width;
   UMI texture_height;
   U8* texture_pixels;
 };
 
-struct Gfx_Cmd_ClearTextures {};
+struct Gfx_Clear_Textures_Cmd {};
 
 
 

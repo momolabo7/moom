@@ -3,12 +3,12 @@
 #ifndef MOMO_RECT_PACK_H
 #define MOMO_RECT_PACK_H
 
-enum RP_SortType {
-  RP_SortType_Width,
-  RP_SortType_Height,
-  RP_SortType_Area,
-  RP_SortType_Perimeter,
-  RP_SortType_BiggerSide,
+enum struct RP_Sort_Type {
+  WIDTH,
+  HEIGHT,
+  AREA,
+  PERIMETER,
+  BIGGER_SIDE,
 };
 
 struct RP_Rect {
@@ -16,12 +16,9 @@ struct RP_Rect {
   void* user_data;
 };
 
-struct RP_Node {
-	UMI x, y, w, h;
-};
-
 /////////////////////////////////////////////////////////////////////////////
-// NOTE(Momo): How to use
+// TODO (change to new API)
+// How to use
 // rects: 
 //   Both the input and ouput. You will need to
 //   fill up the w and h. After RP_Pack() is called
@@ -53,12 +50,13 @@ struct RP_Node {
 // Wait till I do asset system
 
 static void pack_rects(RP_Rect* rects, 
-                       RP_Node* nodes,
                        UMI rect_count, 
                        UMI padding,
                        UMI total_width,
                        UMI total_height,
-                       RP_SortType sort_type);
+                       RP_Sort_Type sort_type,
+                       Arena* arena);
+
 
 
 #include "momo_rect_pack.cpp"

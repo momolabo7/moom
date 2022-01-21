@@ -14,8 +14,6 @@
 
 
 
-
-
 int main() {
   Memory ab_memory = ass_malloc(MB(100));
   defer { ass_free(&ab_memory); };

@@ -779,60 +779,12 @@ _png_process_IEND(_PNG_Context* c) {
 }
 
 
-static Image_Info
-read_png_info(Memory png_memory) {
-  Stream stream = create_stream((U8*)png_memory.data, png_memory.size);
-  
-  // Read Signature
-  auto* png_header = stream.consume<_PNG_Header>();  
-  if (!_png_is_signature_valid(png_header->signature)) {
-    Image_Info ret = {};
-    return ret;
-  }    
-  
-  
-  // Read Chunk Header
-  auto* chunk_header = stream.consume<_PNG_Chunk_Header>();
-  chunk_header->length = endian_swap_32(chunk_header->length);
-  chunk_header->type_U32 = endian_swap_32(chunk_header->type_U32);
-  
-  if( chunk_header->type_U32 != 'IHDR') {
-    Image_Info ret = {};
-    return ret;
-  }
-  
-  _PNG_IHDR* IHDR = stream.consume<_PNG_IHDR>();
-  
-  // NOTE(Momo): Width and height is in Big Endian
-  // We assume that we are currently in a Little Endian system
-  IHDR->width = endian_swap_32(IHDR->width);
-  IHDR->height = endian_swap_32(IHDR->height);
-  
-  _png_log("IHDR: \nwidth: %d\nheight: %d\nbit_depth: %d\ncolour_type: %d\ncompression_method: %d\nfilter_method: %d\ninterlace_method: %d\n\n",
-           IHDR->width, IHDR->height, IHDR->bit_depth, IHDR->colour_type, IHDR->compression_method, IHDR->filter_method, IHDR->interlace_method);
-  
-  if (!_png_is_format_supported(IHDR)) {
-    Image_Info ret = {};
-    return ret;
-  }
-  
-  Image_Info ret;
-  ret.width = IHDR->width;
-  ret.height = IHDR->height;
-  ret.channels = _png_get_channels_from_colour_type(IHDR->colour_type);
-  
-  
-  return ret;
-}
-
-
 // NOTE(Momo): For the code here, we are going to assume that 
 // the PNG file we are reading is correct. i.e. we don't emphasize on 
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
 static Image
-read_png(Memory png_memory,
-         Arena* arena) 
+read_png(Memory png_memory, Arena* arena) 
 {
   _PNG_Context ctx = {};
   ctx.arena = arena;
@@ -903,30 +855,40 @@ static Memory
 write_png(Image image, Arena* arena) {
   assert(image.width > 0 && image.height > 0 && image.channels == 4 && image.data != 0);
   
-  const U32 image_size = image.width * image.height * image.channels;
-  const U32 idat_size = (sizeof(_PNG_Chunk_Header) +
-                         sizeof(_PNG_Chunk_Footer) +
-                         sizeof(U8)*3 + sizeof(U16) + image_size);
-  
-  
-  const U32 expected_memory_required = (sizeof(_PNG_Chunk_Header) * 2 + // IHDR + IEND headers
-                                        sizeof(_PNG_Chunk_Footer) * 2 + // IHDR + IEND footers
-                                        sizeof(_PNG_IHDR) + 
-                                        idat_size * 1);
-  
-  // TODO(Momo): figure this out?
-#if 0  
-  U8* stream_memory = (U8*)Arena_PushBlock(arena, expected_memory_required);
-  Stream stream = create_stream(stream_memory, expected_memory_required);
-#else
-  U8* stream_memory = arena->push_array<U8>(MB(10));
-  Stream stream = create_stream(stream_memory, MB(10));
-#endif
-  
-  // NOTE(Momo): Header
   static const U8 signature[] = { 
     137, 80, 78, 71, 13, 10, 26, 10 
   };
+  U32 image_bpl = (image.width * image.channels);
+  U32 data_bpl = image_bpl + 1; // bytes per line
+  U32 data_size = data_bpl * image.height;
+  U32 max_chunk_size = 65535;
+  U32 signature_size = sizeof(signature);
+  U32 chunk_size = sizeof(_PNG_Chunk_Header) + sizeof(_PNG_Chunk_Footer);
+  U32 IHDR_size = chunk_size + sizeof(_PNG_IHDR);
+  U32 IEND_size = chunk_size;
+  U32 IDAT_size = chunk_size + sizeof(_PNG_IDAT_Header);
+  U32 lines_per_chunk = max_chunk_size / data_bpl;
+  U32 chunk_count = image.height / lines_per_chunk;
+  if (image.height % lines_per_chunk) {
+    chunk_count += 1;
+  }
+  U32 IDAT_chunk_size = 5 * chunk_count;
+  
+  U32 expected_memory_required = (signature_size + 
+                                  IHDR_size + 
+                                  IEND_size + 
+                                  IDAT_size + 
+                                  data_size + 
+                                  IDAT_chunk_size);
+  
+#if 1  
+  U8* stream_memory = (U8*)arena->push_block(expected_memory_required);
+  Stream stream = create_stream(stream_memory, expected_memory_required);
+#else
+  U8* stream_memory = arena->push_array<U8>(MB(2));
+  Stream stream = create_stream(stream_memory, MB(2));
+#endif
+  
   stream.write_block((void*)signature, sizeof(signature));
   
   
@@ -962,15 +924,7 @@ write_png(Image image, Arena* arena) {
   // NOTE(Momo): write IDAT
   // TODO(Momo): Adler32
   {
-    U32 max_chunk_size = 65535;
-    U32 image_bpl = (image.width * image.channels);
-    U32 data_bpl = image_bpl + 1; // bytes per line
-    U32 data_size = data_bpl * image.height;
-    U32 lines_per_chunk = max_chunk_size / data_bpl;
-    U32 chunk_count = image.height / lines_per_chunk;
-    if (image.height % lines_per_chunk) {
-      chunk_count += 1;
-    }
+    
     U32 chunk_overhead = sizeof(U16)*2 + sizeof(U8)*1;
     
     
@@ -991,7 +945,6 @@ write_png(Image image, Arena* arena) {
     // FDIC = 0;
     // FLEVEL = 1? Documentation says it doesn't matter;
     _PNG_IDAT_Header IDAT;
-    
     IDAT.compression_flags = 8;
     IDAT.additional_flags = 29;
     stream.write(IDAT);
@@ -1039,7 +992,7 @@ write_png(Image image, Arena* arena) {
     U32 crc_size = (U32)(stream.data + stream.pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
     footer.crc = endian_swap_32(footer.crc);
-    stream.write<_PNG_Chunk_Footer>(footer);
+    stream.write(footer);
   }
   
   // NOTE(Momo): write IEND
@@ -1067,3 +1020,48 @@ write_png(Image image, Arena* arena) {
   return ret;
 }
 
+static Image_Info
+read_png_info(Memory png_memory) {
+  Stream stream = create_stream((U8*)png_memory.data, png_memory.size);
+  
+  // Read Signature
+  auto* png_header = stream.consume<_PNG_Header>();  
+  if (!_png_is_signature_valid(png_header->signature)) {
+    Image_Info ret = {};
+    return ret;
+  }    
+  
+  
+  // Read Chunk Header
+  auto* chunk_header = stream.consume<_PNG_Chunk_Header>();
+  chunk_header->length = endian_swap_32(chunk_header->length);
+  chunk_header->type_U32 = endian_swap_32(chunk_header->type_U32);
+  
+  if( chunk_header->type_U32 != 'IHDR') {
+    Image_Info ret = {};
+    return ret;
+  }
+  
+  _PNG_IHDR* IHDR = stream.consume<_PNG_IHDR>();
+  
+  // NOTE(Momo): Width and height is in Big Endian
+  // We assume that we are currently in a Little Endian system
+  IHDR->width = endian_swap_32(IHDR->width);
+  IHDR->height = endian_swap_32(IHDR->height);
+  
+  _png_log("IHDR: \nwidth: %d\nheight: %d\nbit_depth: %d\ncolour_type: %d\ncompression_method: %d\nfilter_method: %d\ninterlace_method: %d\n\n",
+           IHDR->width, IHDR->height, IHDR->bit_depth, IHDR->colour_type, IHDR->compression_method, IHDR->filter_method, IHDR->interlace_method);
+  
+  if (!_png_is_format_supported(IHDR)) {
+    Image_Info ret = {};
+    return ret;
+  }
+  
+  Image_Info ret;
+  ret.width = IHDR->width;
+  ret.height = IHDR->height;
+  ret.channels = _png_get_channels_from_colour_type(IHDR->colour_type);
+  
+  
+  return ret;
+}

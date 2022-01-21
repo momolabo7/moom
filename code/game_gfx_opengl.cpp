@@ -497,8 +497,8 @@ render_opengl(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
   for (U32 i = 0; i < commands->entry_count; ++i) {
     Mailbox_Entry* entry = commands->get_entry(i);
     switch(entry->id) {
-      case Gfx_CmdType_SetBasis: {
-        Gfx_Cmd_SetBasis* data = (Gfx_Cmd_SetBasis*)entry->data;
+      case Gfx_Cmd_Type::SET_BASIS: {
+        auto* data = (Gfx_Set_Basis_Cmd*)entry->data;
         _DrawInstances(ogl,
                        current_texture, 
                        instances_to_draw, 
@@ -516,8 +516,8 @@ render_opengl(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
                                        GL_FALSE, 
                                        (const GLfloat*)&result);
       } break;
-      case Gfx_CmdType_Clear: {
-        Gfx_Cmd_Clear* data = (Gfx_Cmd_Clear*)entry->data;
+      case Gfx_Cmd_Type::CLEAR: {
+        auto* data = (Gfx_Clear_Cmd*)entry->data;
         
         ogl->glClearColor(data->colors.r, 
                           data->colors.g, 
@@ -526,8 +526,8 @@ render_opengl(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
         ogl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
       } break;
-      case Gfx_CmdType_DrawRect: {
-        Gfx_Cmd_DrawRect* data = (Gfx_Cmd_DrawRect*)entry->data;
+      case Gfx_Cmd_Type::DRAW_SPRITE: {
+        auto* data = (Gfx_Draw_Rect_Cmd*)entry->data;
         
         GLuint ogl_texture_handle = ogl->blank_texture;
         
@@ -566,8 +566,8 @@ render_opengl(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
         ++instances_to_draw;
         ++current_instance_index;
       } break;
-      case Gfx_CmdType_DrawSubSprite: {
-        Gfx_Cmd_DrawSubSprite* data = (Gfx_Cmd_DrawSubSprite*)entry->data;
+      case Gfx_Cmd_Type::DRAW_SUBSPRITE: {
+        auto* data = (Gfx_Draw_Subsprite_Cmd*)entry->data;
         
         GLuint texture = ogl->textures[data->texture_index]; 
         if (texture == 0) {
@@ -615,8 +615,8 @@ render_opengl(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
         ++current_instance_index;
         
       } break;
-      case Gfx_CmdType_SetTexture: {
-        Gfx_Cmd_SetTexture* data = (Gfx_Cmd_SetTexture*)entry->data;
+      case Gfx_Cmd_Type::SET_TEXTURE: {
+        auto* data = (Gfx_Set_Texture_Cmd*)entry->data;
         assert(data->texture_width < S32_MAX);
         assert(data->texture_height < S32_MAX);
         assert(data->texture_width > 0);
@@ -628,7 +628,7 @@ render_opengl(Opengl* ogl, V2U32 render_wh, Rect2U32 region)
                     (S32)data->texture_height, 
                     data->texture_pixels);
       } break;
-      case Gfx_CmdType_ClearTextures: {
+      case Gfx_Cmd_Type::CLEAR_TEXTURES: {
         _ClearTextures(ogl);
       } break;
     }

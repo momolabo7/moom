@@ -1,5 +1,9 @@
 #include <stdlib.h>
 
+struct _RP_Node {
+	UMI x, y, w, h;
+};
+
 // NOTE(Momo): Predicates
 static B32
 _rp_sort_by_height(RP_Rect* l, RP_Rect* r) {
@@ -29,37 +33,38 @@ _rp_sort_by_bigger_side(RP_Rect* l, RP_Rect* r) {
 
 static void 
 _rp_sort_rects(RP_Rect* rects,
-              UMI rect_count,
-              RP_SortType sort_type) 
+               UMI rect_count,
+               RP_Sort_Type sort_type) 
 {
   switch(sort_type) {
-    case RP_SortType_Height: {
+    case RP_Sort_Type::HEIGHT: {
       quicksort(rects, rect_count, _rp_sort_by_height);
     } break;
-    case RP_SortType_Width: {
+    case RP_Sort_Type::WIDTH: {
       quicksort(rects, rect_count, _rp_sort_by_width);
     } break;
-    case RP_SortType_Area: {
+    case RP_Sort_Type::AREA: {
       quicksort(rects, rect_count, _rp_sort_by_area);
     } break;
-    case RP_SortType_Perimeter: {
+    case RP_Sort_Type::PERIMETER: {
       quicksort(rects, rect_count, _rp_sort_by_perimeter);
     } break;
-    case RP_SortType_BiggerSide: {
+    case RP_Sort_Type::BIGGER_SIDE: {
       quicksort(rects, rect_count, _rp_sort_by_bigger_side);
     } break;
   }
 }
 static void
 pack_rects(RP_Rect* rects, 
-           RP_Node* nodes,
            UMI rect_count, 
            UMI padding,
            UMI total_width,
            UMI total_height,
-           RP_SortType sort_type) 
+           RP_Sort_Type sort_type,
+           Arena* arena) 
 {
   _rp_sort_rects(rects, rect_count, sort_type);
+  _RP_Node* nodes = arena->push_array<_RP_Node>(rect_count+1);
   
   UMI current_node_count = 1;
   nodes[0].x = 0;
@@ -78,7 +83,7 @@ pack_rects(RP_Rect* rects,
     UMI chosen_space_index = current_node_count;
     for (UMI  j = 0; j < chosen_space_index ; ++j ) {
       UMI index = chosen_space_index - j - 1;
-      RP_Node space = nodes[index];
+      _RP_Node space = nodes[index];
       
       // NOTE(Momo): Check if the image fits
       if (rect_width <= space.w && rect_height <= space.h) {
@@ -93,7 +98,7 @@ pack_rects(RP_Rect* rects,
     assert(chosen_space_index != current_node_count);
     
     // NOTE(Momo): swap and pop the chosen space
-    RP_Node chosen_space = nodes[chosen_space_index];
+    _RP_Node chosen_space = nodes[chosen_space_index];
     
     if (current_node_count > 0) {
       nodes[chosen_space_index] = nodes[current_node_count-1];
@@ -103,7 +108,7 @@ pack_rects(RP_Rect* rects,
     // NOTE(Momo): Split if not perfect fit
     if (chosen_space.w != rect_width && chosen_space.h == rect_height) {
       // Split right
-      RP_Node split_space_right;
+      _RP_Node split_space_right;
       split_space_right.x = chosen_space.x + rect_width;
       split_space_right.y = chosen_space.y;
       split_space_right.w = chosen_space.w - rect_width;
@@ -113,7 +118,7 @@ pack_rects(RP_Rect* rects,
     }
     else if (chosen_space.w == rect_width && chosen_space.h != rect_height) {
       // Split down
-      RP_Node split_space_down;
+      _RP_Node split_space_down;
       split_space_down.x = chosen_space.x;
       split_space_down.y = chosen_space.y + rect_height;
       split_space_down.w = chosen_space.w;
@@ -122,14 +127,14 @@ pack_rects(RP_Rect* rects,
     }
     else if (chosen_space.w != rect_width && chosen_space.h != rect_height) {
       // Split right
-      RP_Node split_space_right;
+      _RP_Node split_space_right;
       split_space_right.x = chosen_space.x + rect_width;
       split_space_right.y = chosen_space.y;
       split_space_right.w = chosen_space.w - rect_width;
       split_space_right.h = rect_height;
       
       // Split down
-      RP_Node split_space_down;
+      _RP_Node split_space_down;
       split_space_down.x = chosen_space.x;
       split_space_down.y = chosen_space.y + rect_height;
       split_space_down.w = chosen_space.w;

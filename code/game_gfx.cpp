@@ -2,7 +2,7 @@
 
 void
 Gfx::set_basis(M44 basis) {
-  auto* data = commands.push<Gfx_Cmd_SetBasis>(Gfx_CmdType_SetBasis);
+  auto* data = commands.push<Gfx_Set_Basis_Cmd>((U32)Gfx_Cmd_Type::SET_BASIS);
   data->basis = basis;
 }
 
@@ -11,7 +11,7 @@ Gfx::set_orthographic_camera(
                              V3F32 position,
                              Rect3F32 frustum)   
 {
-  auto* data = commands.push<Gfx_Cmd_SetBasis>(Gfx_CmdType_SetBasis);
+  auto* data = commands.push<Gfx_Set_Basis_Cmd>((U32)Gfx_Cmd_Type::SET_BASIS);
   M44 p  = create_m44_orthographic(frustum.min.x,  
                                    frustum.max.x, 
                                    frustum.min.y, 
@@ -26,7 +26,7 @@ Gfx::set_orthographic_camera(
 
 void
 Gfx::clear(RGBA colors) {
-  auto* data = commands.push<Gfx_Cmd_Clear>(Gfx_CmdType_Clear);
+  auto* data = commands.push<Gfx_Clear_Cmd>((U32)Gfx_Cmd_Type::CLEAR);
   
   data->colors = colors;
 }
@@ -38,7 +38,7 @@ Gfx::draw_subsprite(RGBA colors,
                     Rect2F32 texture_uv)  
 
 {
-  auto* data = commands.push<Gfx_Cmd_DrawSubSprite>(Gfx_CmdType_DrawSubSprite);
+  auto* data = commands.push<Gfx_Draw_Subsprite_Cmd>((U32)Gfx_Cmd_Type::DRAW_SUBSPRITE);
   
   data->colors = colors;
   data->transform = transform;
@@ -63,7 +63,7 @@ Gfx::draw_rect(
                RGBA colors, 
                M44 transform) 
 {
-  auto* data = commands.push<Gfx_Cmd_DrawRect>(Gfx_CmdType_DrawRect);
+  auto* data = commands.push<Gfx_Draw_Rect_Cmd>((U32)Gfx_Cmd_Type::DRAW_SPRITE);
   
   data->colors = colors;
   data->transform = transform;
@@ -201,7 +201,7 @@ Gfx::set_texture(UMI texture_index,
   // so that the renderer can optimize the copying...?
   UMI texture_size = texture_width * texture_height * 4;
   
-  auto* data = commands.push<Gfx_Cmd_SetTexture>(Gfx_CmdType_SetTexture);
+  auto* data = commands.push<Gfx_Set_Texture_Cmd>((U32)Gfx_Cmd_Type::SET_TEXTURE);
   
   
   
@@ -215,5 +215,5 @@ Gfx::set_texture(UMI texture_index,
 
 void 
 Gfx::clear_textures() {
-  commands.push<Gfx_Cmd_ClearTextures>(Gfx_CmdType_ClearTextures);
+  commands.push<Gfx_Clear_Textures_Cmd>((U32)Gfx_Cmd_Type::CLEAR_TEXTURES);
 }

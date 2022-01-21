@@ -1,23 +1,23 @@
 
 
-enum _AB_EntryType {
-  _AB_ENTRY_TYPE_IMAGE,
-  _AB_ENTRY_TYPE_FONT,
+enum struct _AB_Entry_Type {
+  IMAGE,
+  FONT,
 };
 
-struct _AB_Entry_Font {
+struct _AB_Font_Entry {
   const char* filename;
 };
 
-struct _AB_Entry_Image{
+struct _AB_Image_Entry{
   const char* filename;
 };
 
 struct _AB_Entry {
-  _AB_EntryType type;
+  _AB_Entry_Type type;
   union {
-    _AB_Entry_Font font;
-    _AB_Entry_Image image;
+    _AB_Font_Entry font;
+    _AB_Image_Entry image;
   };
   
 };
@@ -50,7 +50,7 @@ Atlas_Builder::begin(Memory memory,
 void 
 Atlas_Builder::push_image(const char* filename) {
   _AB_Entry* entry = entries + entry_count;
-  entry->type = _AB_ENTRY_TYPE_IMAGE;  
+  entry->type = _AB_Entry_Type::IMAGE;  
   
   entry->image.filename = filename; 
   
@@ -71,10 +71,10 @@ Atlas_Builder::end() {
   for(UMI i = 0; i < entry_count; ++i) {
     _AB_Entry* entry = entries + i;
     switch(entry->type) {
-      case _AB_ENTRY_TYPE_IMAGE:{ 
+      case _AB_Entry_Type::IMAGE:{ 
         ++rect_count;
       }break;
-      case _AB_ENTRY_TYPE_FONT:{ 
+      case _AB_Entry_Type::FONT:{ 
         //TODO
         assert(false);
       }break;
@@ -87,7 +87,6 @@ Atlas_Builder::end() {
   
   // Allocate required memory required 
   RP_Rect* rects = arena.push_array<RP_Rect>(rect_count);
-  RP_Node* nodes = arena.push_array<RP_Node>(rect_count + 1);
   
   // Prepare the rects with the correct info
   for(UMI entry_index = 0, rect_index = 0; 
@@ -96,7 +95,7 @@ Atlas_Builder::end() {
   {
     _AB_Entry* entry = entries + entry_index;
     switch(entry->type) {
-      case _AB_ENTRY_TYPE_IMAGE:{ 
+      case _AB_Entry_Type::IMAGE:{ 
         auto marker = arena.mark();
         defer { arena.revert(marker); };
         
@@ -120,7 +119,7 @@ Atlas_Builder::end() {
         
         
       }break;
-      case _AB_ENTRY_TYPE_FONT:{ 
+      case _AB_Entry_Type::FONT:{ 
         //TODO
         assert(false);
       }break;
@@ -134,9 +133,10 @@ Atlas_Builder::end() {
   }
 #endif
   
-  pack_rects(rects, nodes, rect_count, 1, 
+  pack_rects(rects, rect_count, 1, 
              atlas_image.width, atlas_image.height, 
-             RP_SortType_Height);
+             RP_SortType_Height,
+             &arena);
   
 #if 1
   ass_log("=== After packing: ===\n");
@@ -153,7 +153,7 @@ Atlas_Builder::end() {
     RP_Rect* rect = rects + rect_index;
     _AB_Entry* entry = (_AB_Entry*)(rect->user_data);
     switch(entry->type) {
-      case _AB_ENTRY_TYPE_IMAGE: {
+      case _AB_Entry_Type::IMAGE: {
         auto marker = arena.mark();
         defer { arena.revert(marker); };
         
@@ -171,7 +171,7 @@ Atlas_Builder::end() {
         
         
       } break;
-      case _AB_ENTRY_TYPE_FONT: {
+      case _AB_Entry_Type::FONT: {
         // TODO
         assert(false);
       } break;
@@ -179,7 +179,7 @@ Atlas_Builder::end() {
     
   }
   
-#if 0
+#if 1
   
   Memory png_to_write_memory = write_png(atlas_image.to_image(), &arena);
   assert(is_ok(png_to_write_memory));
