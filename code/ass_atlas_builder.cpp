@@ -135,7 +135,7 @@ Atlas_Builder::end() {
   
   pack_rects(rects, rect_count, 1, 
              atlas_image.width, atlas_image.height, 
-             RP_SortType_Height,
+             RP_Sort_Type::HEIGHT,
              &arena);
   
 #if 1
