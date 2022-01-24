@@ -18,3 +18,13 @@ Image32::to_image() {
   ret.data = pixels;
   return ret;
 }
+
+static B32
+is_ok(Image img) {
+  return img.width && img.height && img.channels && img.data;
+}
+
+static B32
+is_ok(Image32 img) {
+  return img.width && img.height && img.pixels;
+}

@@ -33,43 +33,48 @@
 //~ NOTE(Momo): Gfx API
 struct Gfx{	
 	Mailbox commands;
-  
-  void set_basis(M44 basis);
-  void set_orthographic_camera(V3F32 pos, Rect3F32 frustum);
-  void draw_sprite(RGBA colors, 
-                   M44 transform, 
-                   UMI texture_index);
-  
-  void draw_subsprite(RGBA colors, 
-                      M44 transform, 
-                      UMI texture_index,
-                      Rect2F32 texture_uv);
-  
-  void draw_rect(RGBA colors, M44 transform);
-  void clear(RGBA colors);
-  void draw_line(Line2 line,
-                 F32 thickness,
-                 RGBA colors,
-                 F32 pos_z);
-  void draw_circle(Circ2 circle,
-                   F32 thickness, 
-                   U32 line_count,
-                   RGBA color,
-                   F32 pos_z);
-  
-  void draw_aabb(Rect2F32 rect,
-                 F32 thickness,
-                 RGBA colors,
-                 F32 pos_z);
-  
-  void set_texture(UMI texture_index,
-                   UMI texture_width,
-                   UMI texture_height,
-                   U8* texture_pixels);
-  
-  void clear_textures();
-  
 };
+
+static void set_basis(Gfx* g, M44 basis);
+static void set_orthographic_camera(Gfx* g, V3F32 pos, Rect3F32 frustum);
+static void draw_sprite(Gfx* g, 
+                        RGBA colors, 
+                        M44 transform, 
+                        UMI texture_index);
+
+static void draw_subsprite(Gfx* g, 
+                           RGBA colors, 
+                           M44 transform, 
+                           UMI texture_index,
+                           Rect2F32 texture_uv);
+
+static void draw_rect(Gfx* g, RGBA colors, M44 transform);
+static void clear(Gfx* g, RGBA colors);
+static void draw_line(Gfx* g, 
+                      Line2 line,
+                      F32 thickness,
+                      RGBA colors,
+                      F32 pos_z);
+static void draw_circle(Gfx* g, 
+                        Circ2 circle,
+                        F32 thickness, 
+                        U32 line_count,
+                        RGBA color,
+                        F32 pos_z);
+
+static void draw_aabb(Gfx* g, 
+                      Rect2F32 rect,
+                      F32 thickness,
+                      RGBA colors,
+                      F32 pos_z);
+
+static void set_texture(Gfx* g, 
+                        UMI texture_index,
+                        UMI texture_width,
+                        UMI texture_height,
+                        U8* texture_pixels);
+
+static void clear_textures(Gfx* g);
 
 
 //~ NOTE(Momo): Cmd types that needs to be handled.

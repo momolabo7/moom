@@ -64,7 +64,7 @@ pack_rects(RP_Rect* rects,
            Arena* arena) 
 {
   _rp_sort_rects(rects, rect_count, sort_type);
-  _RP_Node* nodes = arena->push_array<_RP_Node>(rect_count+1);
+  _RP_Node* nodes = push_array<_RP_Node>(arena, rect_count+1);
   
   UMI current_node_count = 1;
   nodes[0].x = 0;

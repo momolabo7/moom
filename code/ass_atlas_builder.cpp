@@ -1,47 +1,20 @@
 
 
-enum struct _AB_Entry_Type {
-  IMAGE,
-  FONT,
-};
-
-struct _AB_Font_Entry {
-  const char* filename;
-};
-
-struct _AB_Image_Entry{
-  const char* filename;
-};
-
-struct _AB_Entry {
-  _AB_Entry_Type type;
-  union {
-    _AB_Font_Entry font;
-    _AB_Image_Entry image;
-  };
-  
-};
-
-
 
 void 
-Atlas_Builder::begin(Memory memory, 
-                     UMI max_entries,
-                     U32 atlas_width,
-                     U32 atlas_height) 
+Atlas_Builder::begin(U32 atlas_width,
+                     U32 atlas_height,
+                     Arena* arena_to_use) 
 {
   assert(atlas_width);
   assert(atlas_height);
   
-  arena = create_arena(memory.data, memory.size);
+  arena = arena_to_use;
   
-  entries = arena.push_array<_AB_Entry>(max_entries);
-  entry_cap = max_entries;
-  entry_count = 0;
-  
-  
-  atlas_image.pixels = arena.push_array<U32>(atlas_width * atlas_height);
+  atlas_image.pixels = push_array<U32>(arena, atlas_width * atlas_height);
   assert(atlas_image.pixels);
+  
+  entry_count = 0;
   
   atlas_image.width = atlas_width;
   atlas_image.height = atlas_height;
@@ -64,9 +37,8 @@ Atlas_Builder::push_font(const char* filename) {
 }
 
 
-void 
+Image32 
 Atlas_Builder::end() {
-  
   UMI rect_count = 0;
   for(UMI i = 0; i < entry_count; ++i) {
     _AB_Entry* entry = entries + i;
@@ -82,11 +54,13 @@ Atlas_Builder::end() {
   }
   
   if (rect_count == 0) {
-    return; // do nothing
+    return {}; // do nothing
   }
   
   // Allocate required memory required 
-  RP_Rect* rects = arena.push_array<RP_Rect>(rect_count);
+  create_scratch(scratch, arena);
+  
+  RP_Rect* rects = push_array<RP_Rect>(scratch, rect_count);
   
   // Prepare the rects with the correct info
   for(UMI entry_index = 0, rect_index = 0; 
@@ -96,10 +70,9 @@ Atlas_Builder::end() {
     _AB_Entry* entry = entries + entry_index;
     switch(entry->type) {
       case _AB_Entry_Type::IMAGE:{ 
-        auto marker = arena.mark();
-        defer { arena.revert(marker); };
+        create_scratch(marker, scratch);
         
-        Memory file_memory = ass_read_file(entry->image.filename, marker.arena);
+        Memory file_memory = ass_read_file(entry->image.filename, marker);
         assert(is_ok(file_memory));
         
         Image_Info info = read_png_info(file_memory);
@@ -136,7 +109,7 @@ Atlas_Builder::end() {
   pack_rects(rects, rect_count, 1, 
              atlas_image.width, atlas_image.height, 
              RP_Sort_Type::HEIGHT,
-             &arena);
+             arena);
   
 #if 1
   ass_log("=== After packing: ===\n");
@@ -154,10 +127,9 @@ Atlas_Builder::end() {
     _AB_Entry* entry = (_AB_Entry*)(rect->user_data);
     switch(entry->type) {
       case _AB_Entry_Type::IMAGE: {
-        auto marker = arena.mark();
-        defer { arena.revert(marker); };
+        create_scratch(marker, scratch);
         
-        Memory file_memory = ass_read_file(entry->image.filename, marker.arena);
+        Memory file_memory = ass_read_file(entry->image.filename, marker);
         assert(is_ok(file_memory));
         
         Image32 img32 = read_png(file_memory, marker.arena).to_image32();
@@ -179,12 +151,7 @@ Atlas_Builder::end() {
     
   }
   
-#if 1
-  
-  Memory png_to_write_memory = write_png(atlas_image.to_image(), &arena);
-  assert(is_ok(png_to_write_memory));
-  ass_write_file("test.png", png_to_write_memory);
-#endif
+  return atlas_image;
   
   
 }

@@ -216,9 +216,18 @@ struct Opengl_Platform {
   GL_glUseProgram* glUseProgram;
 };
 
+enum _Opengl_VBO {
+  _Opengl_VBO_Model,
+  _Opengl_VBO_Indices,
+  _Opengl_VBO_Colors,
+  _Opengl_VBO_Texture,
+  _Opengl_VBO_Transform,
+  _Opengl_VBO_Count // 5
+};
+
 struct Opengl : Gfx, Opengl_Platform {
   GLuint textures[10];
-  GLuint buffers[5]; // Opengl__VBO_Count
+  GLuint buffers[_Opengl_VBO_Count]; // Opengl__VBO_Count
   GLuint shader;
   GLuint model; 
   GLuint dummy_texture;

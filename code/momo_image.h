@@ -26,6 +26,9 @@ struct Image32 {
   Image to_image();
 };
 
+static B32 is_ok(Image);
+static B32 is_ok(Image32);
+
 
 #include "momo_image.cpp"
 

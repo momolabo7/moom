@@ -7,6 +7,8 @@ struct Arena;
 struct Arena_Marker {
   Arena* arena;
   UMI old_pos;
+  
+  operator Arena*();
 };
 
 // Standard simple arena that will ALWAYS
@@ -16,28 +18,24 @@ struct Arena{
 	U8* memory;
 	UMI pos;
 	UMI cap;
-  
-  void  clear();
-  UMI   remaining();
-  void* push_block(UMI size, UMI align = 4);
-  Arena partition(UMI size);
-  
-  template<typename T> T* push(UMI align = 4); 
-  template<typename T> T* push_array(UMI num, UMI align = 4);
-  
-  Arena_Marker mark();
-  void		     revert(Arena_Marker marker);
-  
-  
 };
+
 static Arena create_arena(void* mem, UMI cap);
-//static void* BootBlock(UMI struct_size, UMI offset_to_arena, void* memory, UMI memory_size);
+static void  clear(Arena* a);
+static void* push_block(Arena* a, UMI size, UMI align = 4);
+static Arena partition(Arena* a, UMI size);
+static UMI remaining_of(Arena* a);
+template<typename T> static T* push(Arena* a, UMI align = 4); 
+template<typename T> static T* push_array(Arena* a, UMI num, UMI align = 4);
+static Arena_Marker mark();
+static void		     revert(Arena_Marker marker);
 
 // TODO(Momo): I don't actually feel like it's reasonable to use this anymore?
+//static void* BootBlock(UMI struct_size, UMI offset_to_arena, void* memory, UMI memory_size);
 //#define Arena_Boot(type, member, memory, memory_size) \
 //(type*)Arena_BootBlock(sizeof(type), OffsetOf(type, member), (memory), (memory_size)) 
 
-#define create_scratch()
+#define create_scratch(name, arena) auto name = mark(arena); defer{revert(name);};
 
 #include "momo_arena.cpp"
 

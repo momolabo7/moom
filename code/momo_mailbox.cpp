@@ -5,73 +5,73 @@ create_mailbox(void* memory, UMI memory_size) {
   ret.memory = (U8*)memory;
   ret.memory_size = memory_size;
   
-  ret.clear();
+  clear(&ret);
   
 	return ret;
 }
 
-void
-Mailbox::clear() {
-  this->data_pos = 0;	
-	this->entry_count = 0;
+static void
+clear(Mailbox* m) {
+  m->data_pos = 0;	
+	m->entry_count = 0;
 	
-	UMI imem = ptr_to_int(this->memory);
-	UMI adjusted_entry_start = align_down_pow2(imem + this->memory_size, 4) - imem;
+	UMI imem = ptr_to_int(m->memory);
+	UMI adjusted_entry_start = align_down_pow2(imem + m->memory_size, 4) - imem;
 	
-	this->entry_start = this->entry_pos = adjusted_entry_start;
+	m->entry_start = m->entry_pos = adjusted_entry_start;
 	
 }
 
 
-Mailbox_Entry*
-Mailbox::get_entry(UMI index) {
-  assert(index < this->entry_count);
+static Mailbox_Entry*
+get_entry(Mailbox* m, UMI index) {
+  assert(index < m->entry_count);
 	
 	UMI stride = align_up_pow2(sizeof(Mailbox_Entry), 4);
-	return (Mailbox_Entry*)(this->memory + this->entry_start - ((index+1) * stride));
+	return (Mailbox_Entry*)(m->memory + m->entry_start - ((index+1) * stride));
 }
 
 
 
-void*
-Mailbox::push_block(UMI size, U32 id, UMI align) 
+static void*
+push_block(Mailbox* m, UMI size, U32 id, UMI align) 
 {
-	UMI imem = ptr_to_int(this->memory);
+	UMI imem = ptr_to_int(m->memory);
 	
-	UMI adjusted_data_pos = align_up_pow2(imem + this->data_pos, align) - imem;
-	UMI adjusted_entry_pos = align_down_pow2(imem + this->entry_pos, 4) - imem; 
+	UMI adjusted_data_pos = align_up_pow2(imem + m->data_pos, align) - imem;
+	UMI adjusted_entry_pos = align_down_pow2(imem + m->entry_pos, 4) - imem; 
 	
 	assert(adjusted_data_pos + size + sizeof(Mailbox_Entry) < adjusted_entry_pos);
 	
-	this->data_pos = adjusted_data_pos + size;
-	this->entry_pos = adjusted_entry_pos - sizeof(Mailbox_Entry);
+	m->data_pos = adjusted_data_pos + size;
+	m->entry_pos = adjusted_entry_pos - sizeof(Mailbox_Entry);
 	
-	Mailbox_Entry* entry = (Mailbox_Entry*)int_to_ptr(imem + this->entry_pos);
+	Mailbox_Entry* entry = (Mailbox_Entry*)int_to_ptr(imem + m->entry_pos);
 	entry->id = id;
 	entry->data = int_to_ptr(imem + adjusted_data_pos);
 	
 	
-	++this->entry_count;
+	++m->entry_count;
 	
 	return entry->data;
 }
 
 
-void* 
-Mailbox::push_extra_data(UMI size, UMI align)
+static void* 
+push_extra_data(Mailbox* m, UMI size, UMI align)
 {
-  UMI imem = ptr_to_int(this->memory);
-  UMI adjusted_data_pos = align_up_pow2(imem + this->data_pos, align) - imem;
+  UMI imem = ptr_to_int(m->memory);
+  UMI adjusted_data_pos = align_up_pow2(imem + m->data_pos, align) - imem;
   
-  assert(adjusted_data_pos + size < this->entry_pos);
+  assert(adjusted_data_pos + size < m->entry_pos);
   
-  this->data_pos = adjusted_data_pos + size;
+  m->data_pos = adjusted_data_pos + size;
   
   return int_to_ptr(imem + adjusted_data_pos);
   
 }
 
-template<typename T> T*	  
-Mailbox::push(U32 id, UMI align) {
-  return (T*)push_block(sizeof(T), id, align);
+template<typename T> static T*	  
+push(Mailbox* m, U32 id, UMI align) {
+  return (T*)push_block(m, sizeof(T), id, align);
 }  

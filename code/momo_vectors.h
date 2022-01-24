@@ -61,7 +61,7 @@ static F32   distance(V3F32 lhs, V3F32 rhs);
 static F32   length(V3F32 v);
 static V3F32 normalize(V3F32 v);
 static V3F32 project(V3F32 v, V3F32 onto);
-static F32 	 angle_between(V3F32 lhs, V3F32 rhs);
+static F32 	angle_between(V3F32 lhs, V3F32 rhs);
 
 // TODO(Momo): I'm not sure if we should actually
 // do operator* because there's so many damn ways

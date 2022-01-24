@@ -1,17 +1,19 @@
 
 
-void
-Gfx::set_basis(M44 basis) {
-  auto* data = commands.push<Gfx_Set_Basis_Cmd>((U32)Gfx_Cmd_Type::SET_BASIS);
+static void
+set_basis(Gfx* g, M44 basis) {
+  auto* data = push<Gfx_Set_Basis_Cmd>(&g->commands,
+                                       (U32)Gfx_Cmd_Type::SET_BASIS);
   data->basis = basis;
 }
 
-void
-Gfx::set_orthographic_camera(
-                             V3F32 position,
-                             Rect3F32 frustum)   
+static void
+set_orthographic_camera(Gfx* g, 
+                        V3F32 position,
+                        Rect3F32 frustum)   
 {
-  auto* data = commands.push<Gfx_Set_Basis_Cmd>((U32)Gfx_Cmd_Type::SET_BASIS);
+  auto* data = push<Gfx_Set_Basis_Cmd>(&g->commands, 
+                                       (U32)Gfx_Cmd_Type::SET_BASIS);
   M44 p  = create_m44_orthographic(frustum.min.x,  
                                    frustum.max.x, 
                                    frustum.min.y, 
@@ -24,21 +26,24 @@ Gfx::set_orthographic_camera(
   
 }
 
-void
-Gfx::clear(RGBA colors) {
-  auto* data = commands.push<Gfx_Clear_Cmd>((U32)Gfx_Cmd_Type::CLEAR);
+static void
+clear(Gfx* g, RGBA colors) {
+  auto* data = push<Gfx_Clear_Cmd>(&g->commands,
+                                   (U32)Gfx_Cmd_Type::CLEAR);
   
   data->colors = colors;
 }
 
-void
-Gfx::draw_subsprite(RGBA colors, 
-                    M44 transform, 
-                    UMI texture_index,
-                    Rect2F32 texture_uv)  
+static void
+draw_subsprite(Gfx* g, 
+               RGBA colors, 
+               M44 transform, 
+               UMI texture_index,
+               Rect2F32 texture_uv)  
 
 {
-  auto* data = commands.push<Gfx_Draw_Subsprite_Cmd>((U32)Gfx_Cmd_Type::DRAW_SUBSPRITE);
+  auto* data = push<Gfx_Draw_Subsprite_Cmd>(&g->commands,
+                                            (U32)Gfx_Cmd_Type::DRAW_SUBSPRITE);
   
   data->colors = colors;
   data->transform = transform;
@@ -46,34 +51,37 @@ Gfx::draw_subsprite(RGBA colors,
   data->texture_uv = texture_uv;
 }
 
-void
-Gfx::draw_sprite(RGBA colors, 
-                 M44 transform, 
-                 UMI texture_index)  
+static void
+draw_sprite(Gfx* g,
+            RGBA colors, 
+            M44 transform, 
+            UMI texture_index)  
 
 {
   Rect2F32 uv = {};
   uv.max.x = 1.f;
   uv.max.y = 1.f;
-  draw_subsprite(colors, transform, texture_index, uv);
+  draw_subsprite(g, colors, transform, texture_index, uv);
 }
 
-void
-Gfx::draw_rect(
-               RGBA colors, 
-               M44 transform) 
+static void
+draw_rect(Gfx* g, 
+          RGBA colors, 
+          M44 transform) 
 {
-  auto* data = commands.push<Gfx_Draw_Rect_Cmd>((U32)Gfx_Cmd_Type::DRAW_SPRITE);
+  auto* data = push<Gfx_Draw_Rect_Cmd>(&g->commands,
+                                       (U32)Gfx_Cmd_Type::DRAW_SPRITE);
   
   data->colors = colors;
   data->transform = transform;
 }
 
-void 
-Gfx::draw_line(Line2 line,
-               F32 thickness,
-               RGBA colors,
-               F32 pos_z) 
+static void 
+draw_line(Gfx* g, 
+          Line2 line,
+          F32 thickness,
+          RGBA colors,
+          F32 pos_z) 
 {
   // NOTE(Momo): Min.Y needs to be lower than Max.y
   if (line.min.y > line.max.y) {
@@ -93,16 +101,17 @@ Gfx::draw_line(Line2 line,
   M44 R = create_m44_rotation_z(angle);
   M44 S = create_m44_scale(line_length, thickness, 1.f) ;
   
-  draw_rect(colors, 
+  draw_rect(g, colors, 
             T*R*S);
 }
 
-void
-Gfx::draw_circle(Circ2 circle,
-                 F32 thickness, 
-                 U32 line_count,
-                 RGBA color,
-                 F32 pos_z) 
+static  void
+draw_circle(Gfx* g, 
+            Circ2 circle,
+            F32 thickness, 
+            U32 line_count,
+            RGBA color,
+            F32 pos_z) 
 {
   // NOTE(Momo): Essentially a bunch of lines
   // We can't really have a surface with less than 3 lines
@@ -115,7 +124,8 @@ Gfx::draw_circle(Circ2 circle,
     V2F32 line_pt_1 = add(pt1, circle.center);
     V2F32 line_pt_2 = add(pt2, circle.center);
     Line2 line = { line_pt_1, line_pt_2 };
-    draw_line(line,
+    draw_line(g, 
+              line,
               thickness,
               color,
               pos_z);
@@ -126,11 +136,12 @@ Gfx::draw_circle(Circ2 circle,
   }
 }
 
-void 
-Gfx::draw_aabb(Rect2F32 rect,
-               F32 thickness,
-               RGBA colors,
-               F32 pos_z) 
+static void 
+draw_aabb(Gfx* g, 
+          Rect2F32 rect,
+          F32 thickness,
+          RGBA colors,
+          F32 pos_z) 
 {
   //Bottom
   {
@@ -140,7 +151,8 @@ Gfx::draw_aabb(Rect2F32 rect,
     line.max.x = rect.max.x;
     line.min.y = rect.min.y; 
     
-    draw_line(line,
+    draw_line(g,
+              line,
               thickness, 
               colors,
               pos_z);
@@ -154,7 +166,8 @@ Gfx::draw_aabb(Rect2F32 rect,
     line.max.x = rect.min.x;
     line.min.y = rect.max.y; 
     
-    draw_line(line,
+    draw_line(g,
+              line,
               thickness, 
               colors,
               pos_z);
@@ -168,7 +181,8 @@ Gfx::draw_aabb(Rect2F32 rect,
     line.max.x = rect.max.x;
     line.min.y = rect.max.y; 
     
-    draw_line(line,
+    draw_line(g,
+              line,
               thickness, 
               colors,
               pos_z);
@@ -183,25 +197,27 @@ Gfx::draw_aabb(Rect2F32 rect,
     line.max.x = rect.max.x;
     line.min.y = rect.max.y; 
     
-    draw_line(line,
+    draw_line(g,
+              line,
               thickness, 
               colors,
               pos_z);
   }
 }
 
-void 
-Gfx::set_texture(UMI texture_index,
-                 UMI texture_width,
-                 UMI texture_height,
-                 U8* texture_pixels) 
+static void 
+set_texture(Gfx* g, 
+            UMI texture_index,
+            UMI texture_width,
+            UMI texture_height,
+            U8* texture_pixels) 
 {
   
   // TODO: we should probably align this to 16 bytes
   // so that the renderer can optimize the copying...?
   UMI texture_size = texture_width * texture_height * 4;
   
-  auto* data = commands.push<Gfx_Set_Texture_Cmd>((U32)Gfx_Cmd_Type::SET_TEXTURE);
+  auto* data = push<Gfx_Set_Texture_Cmd>(&g->commands, (U32)Gfx_Cmd_Type::SET_TEXTURE);
   
   
   
@@ -209,11 +225,12 @@ Gfx::set_texture(UMI texture_index,
   data->texture_height = texture_height;
   data->texture_index = texture_index;
   
-  data->texture_pixels = (U8*)commands.push_extra_data(texture_size, 16);
+  data->texture_pixels = (U8*)push_extra_data(&g->commands, texture_size, 16);
   copy_memory(data->texture_pixels, texture_pixels, texture_size);
 }
 
-void 
-Gfx::clear_textures() {
-  commands.push<Gfx_Clear_Textures_Cmd>((U32)Gfx_Cmd_Type::CLEAR_TEXTURES);
+static void 
+clear_textures(Gfx* g) {
+  push<Gfx_Clear_Textures_Cmd>(&g->commands, 
+                               (U32)Gfx_Cmd_Type::CLEAR_TEXTURES);
 }

@@ -1,4 +1,4 @@
-Stream
+static Stream
 create_stream(U8* memory, UMI memory_size) {
 	Stream ret;
 	ret.data = memory;
@@ -9,64 +9,63 @@ create_stream(U8* memory, UMI memory_size) {
   return ret;
 }
 
-void
-Stream::reset() {
-  pos = 0;
+static void
+reset(Stream* s) {
+  s->pos = 0;
 }
 
-B32
-Stream::is_eos() {
-  return pos >= size;
+static B32
+is_eos(Stream* s) {
+  return s->pos >= s->size;
 }
 
-U8*
-Stream::consume_block(UMI amount) {
-	assert(pos + amount <= size);
+static U8*
+consume_block(Stream* s, UMI amount) {
+	assert(s->pos + amount <= s->size);
 	
-	U8* ret = data + pos;
-  pos += amount;
+	U8* ret = s->data + s->pos;
+  s->pos += amount;
   return ret;
 }
 
-void
-Stream::write_block(void* src, UMI src_size) {
-	assert(pos + src_size <= size);
-  copy_memory(data + pos, src, src_size);
-  pos += src_size; 
+static void
+write_block(Stream* s, void* src, UMI src_size) {
+	assert(s->pos + src_size <= s->size);
+  copy_memory(s->data + s->pos, src, src_size);
+  s->pos += src_size; 
 }
 
-void
-Stream::flush_bits(){
-	bit_buffer = 0;
-	bit_count = 0;
+static void
+flush_bits(Stream* s){
+	s->bit_buffer = 0;
+	s->bit_count = 0;
 }
 
 // Bits are consumed from LSB to MSB
-U32
-Stream::consume_bits(U32 amount){
+static U32
+consume_bits(Stream* s, U32 amount){
   assert(amount <= 32);
   
-  while(bit_count < amount) {
-    U32 byte = *consume<U8>();
-    bit_buffer |= (byte << bit_count);
-    bit_count += 8;
+  while(s->bit_count < amount) {
+    U32 byte = *consume<U8>(s);
+    s->bit_buffer |= (byte << s->bit_count);
+    s->bit_count += 8;
   }
   
+  U32 result = s->bit_buffer & ((1 << amount) - 1); 
   
-  U32 result = bit_buffer & ((1 << amount) - 1); 
-  
-  bit_count -= amount;
-  bit_buffer >>= amount;
+  s->bit_count -= amount;
+  s->bit_buffer >>= amount;
   
   return result;
 }
-template<typename T> T* 
-Stream::consume() 
+template<typename T> static T* 
+consume(Stream* s) 
 {
-  return (T*)consume_block(sizeof(T));
+  return (T*)consume_block(s, sizeof(T));
 }
-template<typename T> void 
-Stream::write(T item) {
-  write_block(&item, sizeof(T));
+template<typename T> static void 
+write(Stream* s, T item) {
+  write_block(s, &item, sizeof(T));
 }
 

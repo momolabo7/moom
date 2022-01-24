@@ -33,7 +33,7 @@ Memory ass_read_file(const char* filename, Arena* arena) {
   UMI file_size = ftell(file);
   fseek(file, 0, SEEK_SET);
   
-  void* file_memory = arena->push_block(file_size); 
+  void* file_memory = push_block(arena, file_size); 
   assert(file_memory);
   UMI read_amount = fread(file_memory, 1, file_size, file);
   assert(read_amount == file_size);

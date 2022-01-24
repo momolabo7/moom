@@ -54,7 +54,7 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
   {
     RGBA colors;
     colors.r = colors.g = colors.b  = colors.a = 0.3f;
-    gfx->clear(colors);
+    clear(gfx, colors);
   }
   
   {
@@ -64,7 +64,7 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     frustum.max.x = 1600;
     frustum.max.y = 900;
     frustum.max.z = 500;
-    gfx->set_orthographic_camera(position, frustum);
+    set_orthographic_camera(gfx, position, frustum);
   }
   
   {
@@ -90,7 +90,7 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     M44 s = create_m44_scale(600.f, 600.f, 10.f);
     M44 r = create_m44_rotation_z(perm->tmp_rot += dt);
     M44 t = create_m44_translation(800.f, 450.f, 300.f);
-    gfx->draw_sprite(colors, t*r*s, 0);
+    draw_sprite(gfx, colors, t*r*s, 0);
   }
   
   return false;
