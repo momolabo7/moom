@@ -46,10 +46,10 @@ end_atlas_builder(Atlas_Builder* ab) {
   for(UMI i = 0; i < ab->entry_count; ++i) {
     _AB_Entry* entry = ab->entries + i;
     switch(entry->type) {
-      case _AB_Entry_Type::IMAGE:{ 
+      case _AB_ENTRY_TYPE_IMAGE:{ 
         ++rect_count;
       }break;
-      case _AB_Entry_Type::FONT:{ 
+      case _AB_ENTRY_TYPE_FONT:{ 
         //TODO
         assert(false);
       }break;
@@ -72,7 +72,7 @@ end_atlas_builder(Atlas_Builder* ab) {
   {
     _AB_Entry* entry = ab->entries + entry_index;
     switch(entry->type) {
-      case _AB_Entry_Type::IMAGE:{ 
+      case _AB_ENTRY_TYPE_IMAGE:{ 
         create_scratch(marker, scratch);
         
         Memory file_memory = ass_read_file(entry->image.filename, marker);
@@ -95,7 +95,7 @@ end_atlas_builder(Atlas_Builder* ab) {
         
         
       }break;
-      case _AB_Entry_Type::FONT:{ 
+      case _AB_ENTRY_TYPE_FONT:{ 
         //TODO
         assert(false);
       }break;

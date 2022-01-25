@@ -5,9 +5,9 @@
 
 #define ASSET_BUILDER_ENTRIES 32
 
-enum struct _AB_Entry_Type {
-  IMAGE,
-  FONT,
+enum _AB_Entry_Type {
+  _AB_ENTRY_TYPE_IMAGE,
+  _AB_ENTRY_TYPE_FONT,
 };
 
 struct _AB_Font_Entry {

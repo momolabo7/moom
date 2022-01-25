@@ -78,13 +78,13 @@ static void clear_textures(Gfx* g);
 
 
 //~ NOTE(Momo): Cmd types that needs to be handled.
-enum struct Gfx_Cmd_Type{
-  CLEAR,
-  SET_BASIS,
-  DRAW_SUBSPRITE,
-  DRAW_SPRITE,
-  SET_TEXTURE,
-  CLEAR_TEXTURES,
+enum Gfx_Cmd_Type{
+  GFX_CMD_TYPE_CLEAR,
+  GFX_CMD_TYPE_SET_BASIS,
+  GFX_CMD_TYPE_DRAW_RECT,
+  GFX_CMD_TYPE_DRAW_SUBSPRITE,
+  GFX_CMD_TYPE_SET_TEXTURE,
+  GFX_CMD_TYPE_CLEAR_TEXTURES,
 };
 
 

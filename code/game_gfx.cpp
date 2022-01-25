@@ -3,7 +3,7 @@
 static void
 set_basis(Gfx* g, M44 basis) {
   auto* data = push<Gfx_Set_Basis_Cmd>(&g->commands,
-                                       (U32)Gfx_Cmd_Type::SET_BASIS);
+                                       GFX_CMD_TYPE_SET_BASIS);
   data->basis = basis;
 }
 
@@ -13,7 +13,7 @@ set_orthographic_camera(Gfx* g,
                         Rect3F32 frustum)   
 {
   auto* data = push<Gfx_Set_Basis_Cmd>(&g->commands, 
-                                       (U32)Gfx_Cmd_Type::SET_BASIS);
+                                       GFX_CMD_TYPE_SET_BASIS);
   M44 p  = create_m44_orthographic(frustum.min.x,  
                                    frustum.max.x, 
                                    frustum.min.y, 
@@ -29,7 +29,7 @@ set_orthographic_camera(Gfx* g,
 static void
 clear(Gfx* g, RGBA colors) {
   auto* data = push<Gfx_Clear_Cmd>(&g->commands,
-                                   (U32)Gfx_Cmd_Type::CLEAR);
+                                   GFX_CMD_TYPE_CLEAR);
   
   data->colors = colors;
 }
@@ -43,7 +43,7 @@ draw_subsprite(Gfx* g,
 
 {
   auto* data = push<Gfx_Draw_Subsprite_Cmd>(&g->commands,
-                                            (U32)Gfx_Cmd_Type::DRAW_SUBSPRITE);
+                                            GFX_CMD_TYPE_DRAW_SUBSPRITE);
   
   data->colors = colors;
   data->transform = transform;
@@ -69,9 +69,7 @@ draw_rect(Gfx* g,
           RGBA colors, 
           M44 transform) 
 {
-  auto* data = push<Gfx_Draw_Rect_Cmd>(&g->commands,
-                                       (U32)Gfx_Cmd_Type::DRAW_SPRITE);
-  
+  auto* data = push<Gfx_Draw_Rect_Cmd>(&g->commands, GFX_CMD_TYPE_DRAW_RECT);
   data->colors = colors;
   data->transform = transform;
 }
@@ -217,7 +215,7 @@ set_texture(Gfx* g,
   // so that the renderer can optimize the copying...?
   UMI texture_size = texture_width * texture_height * 4;
   
-  auto* data = push<Gfx_Set_Texture_Cmd>(&g->commands, (U32)Gfx_Cmd_Type::SET_TEXTURE);
+  auto* data = push<Gfx_Set_Texture_Cmd>(&g->commands, GFX_CMD_TYPE_SET_TEXTURE);
   
   
   
@@ -232,5 +230,5 @@ set_texture(Gfx* g,
 static void 
 clear_textures(Gfx* g) {
   push<Gfx_Clear_Textures_Cmd>(&g->commands, 
-                               (U32)Gfx_Cmd_Type::CLEAR_TEXTURES);
+                               GFX_CMD_TYPE_CLEAR_TEXTURES);
 }

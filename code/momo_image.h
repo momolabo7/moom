@@ -3,19 +3,24 @@
 #ifndef MOMO_IMAGE_H
 #define MOMO_IMAGE_H
 
-//TODO(Momo): Maybe everything should be Image32?
+enum Image_Pixel_Type {
+  IMAGE_PIXEL_TYPE_ARGB,
+  IMAGE_PIXEL_TYPE_RGB,
+  // More?
+};
+
+struct Image_Info {
+  U32 width, height, channels;
+};
 
 struct Image32;
 struct Image{
   U32 width, height;
   U32 channels;
-  void* data;
-  
+  union {
+    void* data;
+  };
   Image32 to_image32();
-};
-
-struct Image_Info {
-  U32 width, height, channels;
 };
 
 
