@@ -26,7 +26,7 @@ begin_atlas_builder(U32 atlas_width,
 static void 
 push_image(Atlas_Builder* ab, const char* filename) {
   _AB_Entry* entry = ab->entries + ab->entry_count;
-  entry->type = _AB_Entry_Type::IMAGE;  
+  entry->type = _AB_ENTRY_TYPE_IMAGE;  
   
   entry->image.filename = filename; 
   
@@ -40,7 +40,7 @@ push_font(Atlas_Builder* ab, const char* filename) {
 }
 
 
-static Image32 
+static Image
 end_atlas_builder(Atlas_Builder* ab) {
   UMI rect_count = 0;
   for(UMI i = 0; i < ab->entry_count; ++i) {
@@ -129,24 +129,25 @@ end_atlas_builder(Atlas_Builder* ab) {
     RP_Rect* rect = rects + rect_index;
     _AB_Entry* entry = (_AB_Entry*)(rect->user_data);
     switch(entry->type) {
-      case _AB_Entry_Type::IMAGE: {
+      case _AB_ENTRY_TYPE_IMAGE: {
         create_scratch(marker, scratch);
         
         Memory file_memory = ass_read_file(entry->image.filename, marker);
         assert(is_ok(file_memory));
         
-        Image32 img32 = read_png(file_memory, marker.arena).to_image32();
+        Image img = read_png(file_memory, marker.arena);
+        assert(is_ok(img));
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
             UMI index = (x + y * ab->atlas_image.width);
-            ab->atlas_image.pixels[index] = img32.pixels[j++];
+            ((U32*)(ab->atlas_image.pixels))[index] = ((U32*)(img.pixels))[j++];
           }
         }
         
         
       } break;
-      case _AB_Entry_Type::FONT: {
+      case _AB_ENTRY_TYPE_FONT: {
         // TODO
         assert(false);
       } break;

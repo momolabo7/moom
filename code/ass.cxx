@@ -39,12 +39,12 @@ int main() {
     push_image(&ab, asset_dir("player_white.png"));
     push_font(&ab, asset_dir("nokiafc22.ttf"));
   }
-  Image32 atlas_image = end_atlas_builder(&ab);
+  Image atlas_image = end_atlas_builder(&ab);
   assert(is_ok(atlas_image));
   
 #if 1
   ass_log("Writing test png file...\n");
-  Memory png_to_write_memory = write_png(atlas_image.to_image(), &main_arena);
+  Memory png_to_write_memory = write_png(atlas_image, &main_arena);
   assert(is_ok(png_to_write_memory));
   ass_write_file("test.png", png_to_write_memory);
 #endif

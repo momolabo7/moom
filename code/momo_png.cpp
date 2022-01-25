@@ -1,5 +1,7 @@
-#define PNG_DEBUG 0
+// We are only interested in 4-channel images in RGBA format
+#define PNG_CHANNELS 4 
 
+#define PNG_DEBUG 0
 #if PNG_DEBUG
 #include <stdio.h>
 #define _png_log(...) printf(__VA_ARGS__)
@@ -7,39 +9,38 @@
 #define _png_log
 #endif
 
-typedef struct {
+struct _PNG_Context {
   Stream stream;
   Arena* arena; 
   
   Stream image_stream;
   U32 image_width;
   U32 image_height;
-  U32 image_channels;
   
   Stream unfiltered_image_stream; // for filtering and deflating
   
   // other useful info
   U32 bit_depth;
-} _PNG_Context;
+};
 
 
-typedef struct {
+struct _PNG_Header {
   U8 signature[8];
-} _PNG_Header; 
+}; 
 
 // 5.3 Chunk layout
 // | length | type | data | CRC
-typedef struct {
+struct _PNG_Chunk_Header{
   U32 length;
   union {
     U32 type_U32;
     U8 type[4];
   };
-} _PNG_Chunk_Header;
+};
 
 
 #pragma pack(push, 1)
-typedef struct {
+struct _PNG_IHDR {
   U32 width;
   U32 height;
   U8 bit_depth;
@@ -47,12 +48,12 @@ typedef struct {
   U8 compression_method;
   U8 filter_method;
   U8 interlace_method;
-}_PNG_IHDR;
+};
 #pragma pack(pop)
 
-typedef struct {
+struct _PNG_Chunk_Footer {
   U32 crc; 
-} _PNG_Chunk_Footer;
+};
 
 // ZLIB header notes:
 // Bytes[0]:
@@ -62,13 +63,13 @@ typedef struct {
 // - additional flags bit 0-4: FCHECK 
 // - additional flags bit 5: Preset dictionary (FDICT)
 // - additional flags bit 6-7: Compression level (FLEVEL)
-typedef struct {
+struct _PNG_IDAT_Header{
   U8 compression_flags;
   U8 additional_flags;
-}_PNG_IDAT_Header;
+};
 
 
-typedef struct {
+struct _PNG_Huffman {
   // Canonical ordered symbols
   U16* symbols; 
   U32 symbol_count;
@@ -77,7 +78,7 @@ typedef struct {
   // i.e. code_lengths[1] is the number of symbols with length 1.
   U16* lengths;
   U32 length_count;
-}_PNG_Huffman;
+};
 
 // Modified from Annex D of PNG specification:
 // https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix
@@ -436,7 +437,7 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
 
 static U32 
 _png_get_image_size(_PNG_Context* ctx) {
-  return ctx->image_width * ctx->image_height * ctx->image_channels;
+  return ctx->image_width * ctx->image_height * PNG_CHANNELS;
 }
 
 static U32 
@@ -503,7 +504,7 @@ _png_is_signature_valid(U8* comparee) {
 //~ NOTE(Momo): Filtering
 static B32
 _png_filter_none(_PNG_Context* c) {
-  for (U32 i = 0; i < c->image_width * c->image_channels; ++i ){
+  for (U32 i = 0; i < c->image_width * PNG_CHANNELS; ++i ){
     U8* pixel_byte = consume<U8>(&c->unfiltered_image_stream);
     if (pixel_byte == nullptr) {
       return false;
@@ -517,8 +518,8 @@ _png_filter_none(_PNG_Context* c) {
 
 static B32
 _png_filter_sub(_PNG_Context* c) {
-  U32 bpp = (c->image_channels * c->bit_depth)/8; // bytes per pixel
-  for (U32 i = 0; i < c->image_width * c->image_channels; ++i ){
+  U32 bpp = (PNG_CHANNELS * c->bit_depth)/8; // bytes per pixel
+  for (U32 i = 0; i < c->image_width * PNG_CHANNELS; ++i ){
     
     U8* pixel_byte_p = consume<U8>(&c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) {
@@ -546,10 +547,10 @@ _png_filter_sub(_PNG_Context* c) {
 
 static B32
 _png_filter_average(_PNG_Context* c) {
-  U32 bpp = (c->image_channels * c->bit_depth)/8; // bytes per pixel
-  U32 bpl = c->image_width * c->image_channels * (c->bit_depth/8); // bytes per line
+  U32 bpp = (PNG_CHANNELS * c->bit_depth)/8; // bytes per pixel
+  U32 bpl = c->image_width * PNG_CHANNELS * (c->bit_depth/8); // bytes per line
   
-  for (U32 i = 0; i < c->image_width * c->image_channels; ++i ){
+  for (U32 i = 0; i < c->image_width * PNG_CHANNELS; ++i ){
     
     U8* pixel_byte_p = consume<U8>(&c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) {
@@ -581,10 +582,10 @@ _png_filter_average(_PNG_Context* c) {
 
 static B32
 _png_filter_paeth(_PNG_Context* cx) {
-  U32 bpp = (cx->image_channels * cx->bit_depth)/8; // bytes per pixel
-  U32 bpl = cx->image_width * cx->image_channels * (cx->bit_depth/8); // bytes per line
+  U32 bpp = (PNG_CHANNELS * cx->bit_depth)/8; // bytes per pixel
+  U32 bpl = cx->image_width * PNG_CHANNELS * (cx->bit_depth/8); // bytes per line
   
-  for (U32 i = 0; i < cx->image_width * cx->image_channels; ++i ){
+  for (U32 i = 0; i < cx->image_width * PNG_CHANNELS; ++i ){
     U8* pixel_byte_p = consume<U8>(&cx->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) {
       return false;
@@ -632,8 +633,8 @@ _png_filter_paeth(_PNG_Context* cx) {
 
 static B32
 _png_filter_up(_PNG_Context* c) {
-  U32 bpl = c->image_width * c->image_channels * (c->bit_depth/8); // bytes per line
-  for (U32 i = 0; i < c->image_width * c->image_channels; ++i ){
+  U32 bpl = c->image_width * PNG_CHANNELS * (c->bit_depth/8); // bytes per line
+  for (U32 i = 0; i < c->image_width * PNG_CHANNELS; ++i ){
     U8* pixel_byte_p = consume<U8>(&c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) {
       return false;
@@ -719,7 +720,6 @@ _png_process_IHDR(_PNG_Context* c) {
   
   c->image_width = IHDR->width;
   c->image_height = IHDR->height;
-  c->image_channels = _png_get_channels_from_colour_type(IHDR->colour_type);
   c->bit_depth = IHDR->bit_depth;
   
   // NOTE(Momo): For reserving memory for image
@@ -729,7 +729,7 @@ _png_process_IHDR(_PNG_Context* c) {
   // NOTE(Momo): Allow space for unfiltered image. 
   // One extra byte per row for filter 'type'
   
-  UMI unfiltered_size = c->image_width * c->image_height *  c->image_channels + c->image_height;
+  UMI unfiltered_size = c->image_width * c->image_height * PNG_CHANNELS + c->image_height;
   U8* unfiltered_image_stream_memory = push_array<U8>(c->arena, unfiltered_size);
   c->unfiltered_image_stream = 
     create_stream(unfiltered_image_stream_memory, unfiltered_size);
@@ -822,8 +822,7 @@ read_png(Memory png_memory, Arena* arena)
           Image ret = {};
           ret.width = ctx.image_width;
           ret.height = ctx.image_height;
-          ret.channels = ctx.image_channels;
-          ret.data = ctx.image_stream.data;
+          ret.pixels = (U32*)ctx.image_stream.data;
           return ret;
         }
       } break;
@@ -839,6 +838,7 @@ read_png(Memory png_memory, Arena* arena)
     consume_block(&ctx.stream, chunk_header->length);
     consume<_PNG_Chunk_Footer>(&ctx.stream);
   }
+  
   Image ret = {};
   return ret;
   
@@ -851,12 +851,14 @@ read_png(Memory png_memory, Arena* arena)
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
 static Memory
 write_png(Image image, Arena* arena) {
-  assert(image.width > 0 && image.height > 0 && image.channels == 4 && image.data != 0);
+  assert(image.width > 0);
+  assert(image.height > 0);
+  assert(image.pixels != 0);
   
   static const U8 signature[] = { 
     137, 80, 78, 71, 13, 10, 26, 10 
   };
-  U32 image_bpl = (image.width * image.channels);
+  U32 image_bpl = (image.width * 4);
   U32 data_bpl = image_bpl + 1; // bytes per line
   U32 data_size = data_bpl * image.height;
   U32 max_chunk_size = 65535;
@@ -971,7 +973,7 @@ write_png(Image image, Arena* arena) {
         write(&stream, no_filter); // Filter type: None
         
         write_block(&stream,
-                    (U8*)image.data + (current_line * image_bpl),
+                    (U8*)image.pixels + (current_line * image_bpl),
                     image_bpl);
         
         ++current_line;

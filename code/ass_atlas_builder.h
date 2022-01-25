@@ -31,7 +31,7 @@ struct Atlas_Builder {
   Arena* arena;
   _AB_Entry entries[ASSET_BUILDER_ENTRIES];
   UMI entry_count; 
-  Image32 atlas_image;
+  Image atlas_image;
 };
 
 static Atlas_Builder begin_atlas_builder(U32 atlas_width,
@@ -40,7 +40,7 @@ static Atlas_Builder begin_atlas_builder(U32 atlas_width,
 
 static void push_image(Atlas_Builder* ab, const char* filename);
 static void push_font(Atlas_Builder* ab, const char* filename);
-static Image32 end_atlas_builder(Atlas_Builder* ab);
+static Image end_atlas_builder(Atlas_Builder* ab);
 
 
 
