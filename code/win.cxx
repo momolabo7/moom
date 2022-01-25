@@ -32,12 +32,12 @@ static inline LONG width_of(RECT r) { return r.right - r.left; }
 static inline LONG height_of(RECT r) { return r.bottom - r.top; }
 
 
-static inline V2U32
+static inline V2U
 win_get_window_dims(HWND window) {
 	RECT rect;
 	GetWindowRect(window, &rect);
   
-  V2U32 ret;
+  V2U ret;
   ret.w = U32(rect.right - rect.left);
   ret.h = U32(rect.bottom - rect.top);
   
@@ -45,12 +45,12 @@ win_get_window_dims(HWND window) {
 	
 }
 
-static V2U32
+static V2U
 win_get_client_dims(HWND window) {
 	RECT rect;
 	GetClientRect(window, &rect);
   
-  V2U32 ret;
+  V2U ret;
   ret.w = U32(rect.right - rect.left);
   ret.h = U32(rect.bottom - rect.top);
   
@@ -553,7 +553,7 @@ WinMain(HINSTANCE instance,
     // NOTE(Momo): Resize if needed. 
     // TODO(Momo): Maybe we only do this once and then 
     // only when window size changes after?
-    V2U32 render_wh = win_get_client_dims(window);
+    V2U render_wh = win_get_client_dims(window);
     
     
     // TODO(Momo): Should probably make a "GameInfo" struct that 

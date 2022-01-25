@@ -239,7 +239,7 @@ struct Opengl : Gfx, Opengl_Platform {
 
 //~ NOTE(Momo): Functions
 static B32  init_opengl(Opengl* ogl, Opengl_Platform pf);
-static void render_opengl(Opengl* ogl, V2U32 render_wh, Rect2U region);
+static void render_opengl(Opengl* ogl, V2U render_wh, Rect2U region);
 static void free_opengl(Opengl* ogl);
 
 #include "game_gfx_opengl.cpp"

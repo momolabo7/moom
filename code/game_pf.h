@@ -79,8 +79,8 @@ struct Input{
   };  
   
   V2 design_mouse_pos;
-  V2U32 screen_mouse_pos;
-  V2U32 render_mouse_pos;
+  V2U screen_mouse_pos;
+  V2U render_mouse_pos;
   
   void update();
 };

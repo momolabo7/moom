@@ -89,7 +89,7 @@ _attach_shader(Opengl* ogl,
 // TODO: Maybe this should be a command?
 static void 
 _align_viewport(Opengl* ogl, 
-                V2U32 render_wh, 
+                V2U render_wh, 
                 Rect2U region) 
 {
   
@@ -476,7 +476,7 @@ init_opengl(Opengl* ogl, Opengl_Platform pf)
 
 
 static void
-render_opengl(Opengl* ogl, V2U32 render_wh, Rect2U region) 
+render_opengl(Opengl* ogl, V2U render_wh, Rect2U region) 
 {
   _align_viewport(ogl, render_wh, region);
   

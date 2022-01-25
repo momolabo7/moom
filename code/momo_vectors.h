@@ -3,7 +3,7 @@
 #define MOMO_VECTOR_H
 
 
-union V2U32 {
+union V2U {
 	struct { U32 x, y; };
 	struct { U32 w, h; };
 	U32 e[2];

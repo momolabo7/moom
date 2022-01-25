@@ -14,7 +14,7 @@ typedef struct {
 } I1S32;
 
 typedef struct {
-  V2U32 min, max;
+  V2U min, max;
 } I2U32;
 
 typedef struct {

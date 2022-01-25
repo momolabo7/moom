@@ -9,7 +9,7 @@ struct Rect2 {
 };
 
 struct Rect2U {
-  V2U32 min, max;
+  V2U min, max;
 };
 
 struct Rect3 {
