@@ -4,11 +4,9 @@
 // - wants to specifiy exactly what assets to
 
 
-#define assert_callback(s) printf("[ass][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
 
 #include "ass.h"
 
-#define asset_dir(filename) "../assets/" ##filename
 
 #define ASSET_PACKER_ENTRIES 32
 enum struct Asset_Type {
@@ -39,6 +37,7 @@ int main() {
     push_image(&ab, asset_dir("bullet_dot.png"));
     push_image(&ab, asset_dir("player_black.png"));
     push_image(&ab, asset_dir("player_white.png"));
+    push_font(&ab, asset_dir("nokiafc22.ttf"));
   }
   Image32 atlas_image = end_atlas_builder(&ab);
   assert(is_ok(atlas_image));

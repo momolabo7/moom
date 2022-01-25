@@ -5,8 +5,12 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+
+#define assert_callback(s) printf("[ass][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
+
 #include "momo.h"
 
+#define asset_dir(filename) "../assets/" ##filename
 #define ass_log(...) printf(__VA_ARGS__)
 
 // Utility files for ass
