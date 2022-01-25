@@ -16,7 +16,7 @@ typedef Gfx*   wingfx_InitFn(HWND window);
 typedef void 	wingfx_FreeFn(Gfx* r);
 
 // TODO(Momo): Do we really need render_wh and render_rengion?
-typedef void   wingfx_RenderFn(Gfx* renderer, V2U32 render_wh, Rect2U32 render_region);
+typedef void   wingfx_RenderFn(Gfx* renderer, V2U32 render_wh, Rect2U render_region);
 
 
 //~Function table

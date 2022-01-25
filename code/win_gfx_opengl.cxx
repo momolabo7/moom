@@ -312,7 +312,7 @@ if (!pf.name) { goto failed; }
 
 
 exported void
-wingfx_render(Gfx* gfx,  V2U32 render_wh, Rect2U32 region) {
+wingfx_render(Gfx* gfx,  V2U32 render_wh, Rect2U region) {
   render_opengl((Opengl*)gfx, render_wh, region);
 }
 

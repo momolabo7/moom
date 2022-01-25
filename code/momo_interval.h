@@ -18,12 +18,12 @@ typedef struct {
 } I2U32;
 
 typedef struct {
-  V2F32 min, max;
+  V2 min, max;
 } I2F32;
 
 
 typedef struct {
-  V3F32 min, max;
+  V3 min, max;
 } I3F32;
 
 #include "momo_interval.cpp"

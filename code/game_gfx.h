@@ -36,7 +36,7 @@ struct Gfx{
 };
 
 static void set_basis(Gfx* g, M44 basis);
-static void set_orthographic_camera(Gfx* g, V3F32 pos, Rect3F32 frustum);
+static void set_orthographic_camera(Gfx* g, V3 pos, Rect3 frustum);
 static void draw_sprite(Gfx* g, 
                         RGBA colors, 
                         M44 transform, 
@@ -46,7 +46,7 @@ static void draw_subsprite(Gfx* g,
                            RGBA colors, 
                            M44 transform, 
                            UMI texture_index,
-                           Rect2F32 texture_uv);
+                           Rect2 texture_uv);
 
 static void draw_rect(Gfx* g, RGBA colors, M44 transform);
 static void clear(Gfx* g, RGBA colors);
@@ -63,7 +63,7 @@ static void draw_circle(Gfx* g,
                         F32 pos_z);
 
 static void draw_aabb(Gfx* g, 
-                      Rect2F32 rect,
+                      Rect2 rect,
                       F32 thickness,
                       RGBA colors,
                       F32 pos_z);
@@ -100,7 +100,7 @@ struct Gfx_Draw_Subsprite_Cmd{
   UMI texture_index;
   RGBA colors;
   M44 transform;
-  Rect2F32 texture_uv; 
+  Rect2 texture_uv; 
 } ;
 
 struct Gfx_Draw_Rect_Cmd{

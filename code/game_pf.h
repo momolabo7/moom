@@ -78,7 +78,7 @@ struct Input{
     Input_Button button_right;
   };  
   
-  V2F32 design_mouse_pos;
+  V2 design_mouse_pos;
   V2U32 screen_mouse_pos;
   V2U32 render_mouse_pos;
   

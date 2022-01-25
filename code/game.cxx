@@ -58,8 +58,8 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
   }
   
   {
-    V3F32 position = {};
-    Rect3F32 frustum;
+    V3 position = {};
+    Rect3 frustum;
     frustum.min.x = frustum.min.y = frustum.min.z = 0;
     frustum.max.x = 1600;
     frustum.max.y = 900;

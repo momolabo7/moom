@@ -58,7 +58,7 @@ win_get_client_dims(HWND window) {
 	
 }
 
-static Rect2U32 
+static Rect2U 
 win_calc_render_region(U32 window_w, 
                        U32 window_h, 
                        U32 render_w, 
@@ -66,7 +66,7 @@ win_calc_render_region(U32 window_w,
 {
 	assert(render_w > 0 && render_h > 0 && window_w > 0 && window_h > 0);
   
-	Rect2U32 ret;
+	Rect2U ret;
 	
 	F32 optimal_window_w = (F32)window_h * ((F32)render_w / (F32)render_h);
 	F32 optimal_window_h = (F32)window_w * ((F32)render_h / (F32)render_w);
@@ -558,7 +558,7 @@ WinMain(HINSTANCE instance,
     
     // TODO(Momo): Should probably make a "GameInfo" struct that 
     // contains information like these
-    Rect2U32 render_region = win_calc_render_region(render_wh.w,
+    Rect2U render_region = win_calc_render_region(render_wh.w,
                                                     render_wh.h,
                                                     Win_global_state.aspect_ratio_width,
                                                     Win_global_state.aspect_ratio_height);

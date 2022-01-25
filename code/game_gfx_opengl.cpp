@@ -90,7 +90,7 @@ _attach_shader(Opengl* ogl,
 static void 
 _align_viewport(Opengl* ogl, 
                 V2U32 render_wh, 
-                Rect2U32 region) 
+                Rect2U region) 
 {
   
   U32 x, y, w, h;
@@ -261,7 +261,7 @@ init_opengl(Opengl* ogl, Opengl_Platform pf)
                             0);
   
   ogl->glNamedBufferStorage(ogl->buffers[_Opengl_VBO_Texture], 
-                            sizeof(V2F32) * 4 * _Opengl_max_entities, 
+                            sizeof(V2) * 4 * _Opengl_max_entities, 
                             nullptr, 
                             GL_DYNAMIC_STORAGE_BIT);
   
@@ -335,7 +335,7 @@ init_opengl(Opengl* ogl, Opengl_Platform pf)
                                  2, 
                                  GL_FLOAT, 
                                  GL_FALSE,
-                                 sizeof(V2F32) * 0);
+                                 sizeof(V2) * 0);
   
   ogl->glEnableVertexArrayAttrib(ogl->model, _Opengl_ATB_Texture_2); 
   ogl->glVertexArrayAttribFormat(ogl->model, 
@@ -343,7 +343,7 @@ init_opengl(Opengl* ogl, Opengl_Platform pf)
                                  2, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(V2F32) * 1);
+                                 sizeof(V2) * 1);
   
   ogl->glEnableVertexArrayAttrib(ogl->model, _Opengl_ATB_Texture_3); 
   ogl->glVertexArrayAttribFormat(ogl->model, 
@@ -351,7 +351,7 @@ init_opengl(Opengl* ogl, Opengl_Platform pf)
                                  2, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(V2F32) * 2);
+                                 sizeof(V2) * 2);
   
   ogl->glEnableVertexArrayAttrib(ogl->model, _Opengl_ATB_Texture_4); 
   ogl->glVertexArrayAttribFormat(ogl->model, 
@@ -359,7 +359,7 @@ init_opengl(Opengl* ogl, Opengl_Platform pf)
                                  2, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(V2F32) * 3);
+                                 sizeof(V2) * 3);
   
   ogl->glVertexArrayAttribBinding(ogl->model, 
                                   _Opengl_ATB_Texture_1, 
@@ -476,7 +476,7 @@ init_opengl(Opengl* ogl, Opengl_Platform pf)
 
 
 static void
-render_opengl(Opengl* ogl, V2U32 render_wh, Rect2U32 region) 
+render_opengl(Opengl* ogl, V2U32 render_wh, Rect2U region) 
 {
   _align_viewport(ogl, render_wh, region);
   

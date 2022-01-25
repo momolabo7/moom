@@ -9,8 +9,8 @@ set_basis(Gfx* g, M44 basis) {
 
 static void
 set_orthographic_camera(Gfx* g, 
-                        V3F32 position,
-                        Rect3F32 frustum)   
+                        V3 position,
+                        Rect3 frustum)   
 {
   auto* data = push<Gfx_Set_Basis_Cmd>(&g->commands, 
                                        GFX_CMD_TYPE_SET_BASIS);
@@ -39,7 +39,7 @@ draw_subsprite(Gfx* g,
                RGBA colors, 
                M44 transform, 
                UMI texture_index,
-               Rect2F32 texture_uv)  
+               Rect2 texture_uv)  
 
 {
   auto* data = push<Gfx_Draw_Subsprite_Cmd>(&g->commands,
@@ -58,7 +58,7 @@ draw_sprite(Gfx* g,
             UMI texture_index)  
 
 {
-  Rect2F32 uv = {};
+  Rect2 uv = {};
   uv.max.x = 1.f;
   uv.max.y = 1.f;
   draw_subsprite(g, colors, transform, texture_index, uv);
@@ -86,11 +86,11 @@ draw_line(Gfx* g,
     swap(&line.min.x, &line.max.x);
   }
   
-  V2F32 line_vector = line.max - line.min;
+  V2 line_vector = line.max - line.min;
   F32 line_length = length(line_vector);
-  V2F32 line_mid = midpoint(line.max, line.min);
+  V2 line_mid = midpoint(line.max, line.min);
   
-  V2F32 x_axis = { 1.f, 0.f };
+  V2 x_axis = { 1.f, 0.f };
   F32 angle = angle_between(line_vector, x_axis);
   
   // TODO(Momo): Should really precompute this
@@ -115,12 +115,12 @@ draw_circle(Gfx* g,
   // We can't really have a surface with less than 3 lines
   assert(line_count >= 3);
   F32 angle_increment = TAU_32 / line_count;
-  V2F32 pt1 = { 0.f, circle.radius }; 
-  V2F32 pt2 = rotate(pt1, angle_increment);
+  V2 pt1 = { 0.f, circle.radius }; 
+  V2 pt2 = rotate(pt1, angle_increment);
   
   for (U32 i = 0; i < line_count; ++i) {
-    V2F32 line_pt_1 = add(pt1, circle.center);
-    V2F32 line_pt_2 = add(pt2, circle.center);
+    V2 line_pt_1 = add(pt1, circle.center);
+    V2 line_pt_2 = add(pt2, circle.center);
     Line2 line = { line_pt_1, line_pt_2 };
     draw_line(g, 
               line,
@@ -136,7 +136,7 @@ draw_circle(Gfx* g,
 
 static void 
 draw_aabb(Gfx* g, 
-          Rect2F32 rect,
+          Rect2 rect,
           F32 thickness,
           RGBA colors,
           F32 pos_z) 
