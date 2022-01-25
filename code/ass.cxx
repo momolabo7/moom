@@ -16,14 +16,14 @@ enum struct Asset_Type {
 };
 struct _AP_Entry {};
 struct Asset_Packer {
-  void begin();
-  void push_image();
-  
   _AP_Entry entries[ASSET_PACKER_ENTRIES];
   UMI entry_count;
 };
-void Asset_Packer::begin() {
-  entry_count = 0;
+static Asset_Packer begin_asset_packer() {
+  Asset_Packer ret;
+  
+  ret.entry_count = 0;
+  return ret;
 }
 
 
@@ -33,15 +33,14 @@ int main() {
   defer { ass_free(&memory); };
   
   Arena main_arena = create_arena(memory.data, memory.size);
-  Atlas_Builder ab;
-  ab.begin(1024, 1024, &main_arena); 
+  Atlas_Builder ab = begin_atlas_builder(1024, 1024, &main_arena); 
   {
-    ab.push_image(asset_dir("bullet_circle.png"));
-    ab.push_image(asset_dir("bullet_dot.png"));
-    ab.push_image(asset_dir("player_black.png"));
-    ab.push_image(asset_dir("player_white.png"));
+    push_image(&ab, asset_dir("bullet_circle.png"));
+    push_image(&ab, asset_dir("bullet_dot.png"));
+    push_image(&ab, asset_dir("player_black.png"));
+    push_image(&ab, asset_dir("player_white.png"));
   }
-  Image32 atlas_image = ab.end();
+  Image32 atlas_image = end_atlas_builder(&ab);
   assert(is_ok(atlas_image));
   
 #if 1

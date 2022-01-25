@@ -1,47 +1,50 @@
 
 
 
-void 
-Atlas_Builder::begin(U32 atlas_width,
-                     U32 atlas_height,
-                     Arena* arena_to_use) 
+static Atlas_Builder
+begin_atlas_builder(U32 atlas_width,
+                    U32 atlas_height,
+                    Arena* arena_to_use) 
 {
+  Atlas_Builder ret;
   assert(atlas_width);
   assert(atlas_height);
   
-  arena = arena_to_use;
+  ret.arena = arena_to_use;
   
-  atlas_image.pixels = push_array<U32>(arena, atlas_width * atlas_height);
-  assert(atlas_image.pixels);
+  ret.atlas_image.pixels = push_array<U32>(ret.arena, atlas_width * atlas_height);
+  assert(ret.atlas_image.pixels);
   
-  entry_count = 0;
+  ret.entry_count = 0;
   
-  atlas_image.width = atlas_width;
-  atlas_image.height = atlas_height;
+  ret.atlas_image.width = atlas_width;
+  ret.atlas_image.height = atlas_height;
+  
+  return ret;
 }
 
-void 
-Atlas_Builder::push_image(const char* filename) {
-  _AB_Entry* entry = entries + entry_count;
+static void 
+push_image(Atlas_Builder* ab, const char* filename) {
+  _AB_Entry* entry = ab->entries + ab->entry_count;
   entry->type = _AB_Entry_Type::IMAGE;  
   
   entry->image.filename = filename; 
   
-  ++entry_count;
+  ++ab->entry_count;
   
 }
 
-void 
-Atlas_Builder::push_font(const char* filename) {
+static void 
+push_font(Atlas_Builder* ab, const char* filename) {
   
 }
 
 
-Image32 
-Atlas_Builder::end() {
+static Image32 
+end_atlas_builder(Atlas_Builder* ab) {
   UMI rect_count = 0;
-  for(UMI i = 0; i < entry_count; ++i) {
-    _AB_Entry* entry = entries + i;
+  for(UMI i = 0; i < ab->entry_count; ++i) {
+    _AB_Entry* entry = ab->entries + i;
     switch(entry->type) {
       case _AB_Entry_Type::IMAGE:{ 
         ++rect_count;
@@ -58,16 +61,16 @@ Atlas_Builder::end() {
   }
   
   // Allocate required memory required 
-  create_scratch(scratch, arena);
+  create_scratch(scratch, ab->arena);
   
   RP_Rect* rects = push_array<RP_Rect>(scratch, rect_count);
   
   // Prepare the rects with the correct info
   for(UMI entry_index = 0, rect_index = 0; 
-      entry_index < entry_count; 
+      entry_index < ab->entry_count; 
       ++entry_index) 
   {
-    _AB_Entry* entry = entries + entry_index;
+    _AB_Entry* entry = ab->entries + entry_index;
     switch(entry->type) {
       case _AB_Entry_Type::IMAGE:{ 
         create_scratch(marker, scratch);
@@ -107,9 +110,9 @@ Atlas_Builder::end() {
 #endif
   
   pack_rects(rects, rect_count, 1, 
-             atlas_image.width, atlas_image.height, 
+             ab->atlas_image.width, ab->atlas_image.height, 
              RP_Sort_Type::HEIGHT,
-             arena);
+             ab->arena);
   
 #if 1
   ass_log("=== After packing: ===\n");
@@ -136,8 +139,8 @@ Atlas_Builder::end() {
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
-            UMI index = (x + y * atlas_image.width);
-            atlas_image.pixels[index] = img32.pixels[j++];
+            UMI index = (x + y * ab->atlas_image.width);
+            ab->atlas_image.pixels[index] = img32.pixels[j++];
           }
         }
         
@@ -151,7 +154,7 @@ Atlas_Builder::end() {
     
   }
   
-  return atlas_image;
+  return ab->atlas_image;
   
   
 }
