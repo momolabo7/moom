@@ -6,6 +6,8 @@
 #define test_log(...) printf(__VA_ARGS__);
 #define test_eval_d(s) printf(#s " = %d\n", s);
 #define test_eval_f(s) printf(#s " = %f\n", s);
+#define test_eval_member_d(var, member) test_log(#member ": %d\n", (var)->member); 
+
 #define test_unit(unit_name) test_log("=== "#unit_name " start ===\n"); unit_name; test_log("=== " #unit_name " end ===\n\n"); 
 
 
@@ -48,6 +50,50 @@ test_write_memory_to_file(Memory block, const char* filename) {
 	return true;
 	
 }
+
+struct TTF_Offset_Table {
+  U32 scaler_type;
+  U16 num_tables;
+  U16 search_range;
+  U16 entry_selector;
+  U16 range_shift;
+};
+
+struct TTF_Table_Directory {
+  U32 tag;
+  U32 checksum;
+  U32 offset;
+  U32 len;
+};
+
+
+void test_ttf() {
+  U32 memory_size = MB(10);
+  void * memory = malloc(memory_size);
+  if (!memory) { return 1; }
+  defer { free(memory); };
+  
+  Arena main_arena = create_arena(memory, memory_size);
+  Memory ttf_memory = read_file_to_memory(&main_arena, "nokiafc22.ttf");
+  {
+    auto* offsets = (TTF_Offset_Table*)ttf_memory.data;
+    offsets->scaler_type = endian_swap_32(offsets->scaler_type);
+    offsets->num_tables = endian_swap_16(offsets->num_tables);
+    offsets->search_range = endian_swap_16(offsets->search_range);
+    offsets->entry_selector = endian_swap_16(offsets->entry_selector);
+    offsets->range_shift = endian_swap_16(offsets->range_shift);
+    
+    test_log("=== OFFSET TABLE ===\n");
+    test_eval_member_d(offsets, scaler_type);
+    test_eval_member_d(offsets, num_tables);
+    test_eval_member_d(offsets, search_range);
+    test_eval_member_d(offsets, entry_selector);
+    test_eval_member_d(offsets, range_shift);
+    
+  }
+}
+
+
 
 
 void test_png() {
