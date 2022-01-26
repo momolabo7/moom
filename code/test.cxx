@@ -49,14 +49,13 @@ test_write_memory_to_file(Memory block, const char* filename) {
 	
 }
 
-typedef struct {
-  const char* in;
-  const char* out;
-} TestCase;
 
 void test_png() {
-  
-  TestCase test_cases[] = {
+  struct {
+    const char* in;
+    const char* out;
+  } test_cases[] = 
+  {
     test_assets_dir("test_in0.png"), "out0.png",
     test_assets_dir("test_in1.png"), "out1.png",
     test_assets_dir("test_in2.png"), "out2.png",
