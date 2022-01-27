@@ -224,6 +224,7 @@ template<typename T, typename U> static T align_up_pow2(T value, U align);
 template<typename T> static constexpr B32 is_pow2(T value);
 template<typename T> static constexpr void swap(T* lhs, T* rhs); 
 
+
 //~NOTE(Momo): assert
 // NOTE(Momo): Others can provide their own 'assert_callback' 
 #if !defined(assert_callback)
@@ -270,8 +271,12 @@ static constexpr F64 F64_NEG_INFINITY();
 // This is a really useful construct I find myself using 
 // more and more. 
 struct Memory  {
-  void* data;
+  union {
+    void* data;
+    U8* data_u8;
+  };
   UMI size;  
+  
 };
 static B32 is_ok(Memory);
 

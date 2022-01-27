@@ -1,251 +1,299 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "momo.h"
-
-#define test_assets_dir(filename) "../assets/test/" ##filename
-#define test_log(...) printf(__VA_ARGS__);
-#define test_eval_d(s) printf(#s " = %d\n", s);
-#define test_eval_f(s) printf(#s " = %f\n", s);
-#define test_eval_member_d(var, member) test_log(#member ": %d\n", (var)->member); 
-
-#define test_unit(unit_name) test_log("=== "#unit_name " start ===\n"); unit_name; test_log("=== " #unit_name " end ===\n\n"); 
 
 
-static inline Memory
-test_read_file_to_memory(Arena* arena, const char* filename) {
-	Memory result = {0};
-  FILE* file = fopen(filename, "rb");
-  if (!file) { 
-    test_log("Cannot find file\n");
-    return result;
+
+#include "test.h"
+
+
+static U16
+_ttf_read_u16(U8* location) {
+  return endian_swap_16(*(U16*)location);
+};
+static U32
+_ttf_read_u32(U8* location) {
+  return endian_swap_32(*(U32*)location);
+};
+
+
+struct _TTF_cmap_Mappings {
+  U16 format;
+};
+
+struct _TTF_maxp {
+  U32 version;
+  U16 num_glyphs;
+  U16 max_points;
+  U16 max_contours;
+  U16 max_component_points;
+  U16 max_component_contours;
+  U16 max_zones;
+  U16 max_twilight_points;
+  U16 max_storage;
+  U16 max_function_defs;
+  U16 max_instruction_defs;
+  U16 max_stack_elements;
+  U16 max_size_of_instructions;
+  U16 max_component_elements;
+  U16 max_component_depth;
+};
+
+enum _TTF_loca_Format {
+  _TTF_LOCA_FORMAT_SHORT = 0,
+  _TTF_LOCA_FORMAT_LONG = 1,
+};
+
+enum {
+  _TTF_CMAP_PLATFORM_ID_UNICODE = 0,
+  _TTF_CMAP_PLATFORM_ID_MACINTOSH = 1,
+  _TTF_CMAP_PLATFORM_ID_RESERVED = 2,
+  _TTF_CMAP_PLATFORM_ID_MICROSOFT = 3,
+  
+};
+
+enum {
+  _TTF_CMAP_MS_ID_SYMBOL = 0,
+  _TTF_CMAP_MS_ID_UNICODE_BMP = 1,
+  _TTF_CMAP_MS_ID_SHIFT_JIS = 2,
+  _TTF_CMAP_MS_ID_PRC = 3,
+  _TTF_CMAP_MS_ID_BIG_FIVE = 4,
+  _TTF_CMAP_MS_ID_JOHAB = 5,
+  _TTF_CMAP_MS_ID_UNICODE_FULL = 10,
+  
+};
+
+struct TTF_Info {
+  U8* data;
+  U32 glyph_count;
+  
+  // these are positions from data
+  U32 loca, head, glyf, maxp, cmap;
+  U32 cmap_mappings;
+};
+
+static TTF_Info
+read_ttf(Memory ttf_memory) {
+  TTF_Info ret = {};
+  ret.data = ttf_memory.data_u8;
+  
+  U32 num_tables = _ttf_read_u16(ret.data + 4);
+  
+  for (U32 i= 0 ; i < num_tables; ++i ) {
+    U32 directory = 12 + (16 * i);
+    U32 tag = _ttf_read_u32(ret.data + directory + 0);
+    
+    test_create_log_section_until_scope;
+    
+    switch(tag) {
+      case 'loca': {
+        ret.loca = _ttf_read_u32(ret.data + directory + 8);
+      }; break;
+      case 'head': {
+        ret.head = _ttf_read_u32(ret.data + directory + 8);
+      }; break;
+      case 'glyf': {
+        ret.glyf = _ttf_read_u32(ret.data + directory + 8);
+      }; break;
+      case 'maxp': {
+        ret.maxp = _ttf_read_u32(ret.data + directory + 8);
+      } break;
+      case 'cmap': {
+        ret.cmap = _ttf_read_u32(ret.data + directory + 8);
+      } break;
+      
+    }
+    
   }
   
-  fseek(file, 0, SEEK_END);
-  S32 file_size = ftell(file);
-  fseek(file, 0, SEEK_SET);
   
-  void* file_memory = push_block(arena, file_size, 4);
-  fread(file_memory, 1, file_size, file); 
+  assert(ret.loca);
+  assert(ret.maxp);
+  assert(ret.head);
+  assert(ret.glyf);
+  assert(ret.cmap);
   
-  result.data = file_memory;
-  result.size = file_size;
-	
-  fclose(file);
+  // Get glyph count
+  {
+    
+    ret.glyph_count = _ttf_read_u16(ret.data + ret.maxp + 4);
+    test_log("Glyph count: %d\n", ret.glyph_count);
+  }
   
-  return result;
+  // Get index map
+  {
+    U32 subtable_count = _ttf_read_u16(ret.data + ret.cmap + 2);
+    
+    B32 found_index_table = false;
+    
+    for( U32 i = 0; i < subtable_count; ++i) {
+      U32 subtable = ret.cmap + 4 + (8 * i);
+      
+      
+      // We only support unicode encoding...
+      // NOTE(Momo): They say mac is discouraged, so we won't care about it.
+      U32 platform_id = _ttf_read_u16(ret.data + subtable + 0);
+      switch(platform_id) {
+        case _TTF_CMAP_PLATFORM_ID_MICROSOFT: {
+          U32 platform_specific_id = _ttf_read_u16(ret.data + subtable + 2);
+          switch(platform_specific_id) {
+            case _TTF_CMAP_MS_ID_UNICODE_BMP:
+            case _TTF_CMAP_MS_ID_UNICODE_FULL: {
+              ret.cmap_mappings = ret.cmap + _ttf_read_u32(ret.data + subtable + 4);
+              found_index_table =  true;
+            }break;
+            
+          }
+        }
+        case _TTF_CMAP_PLATFORM_ID_UNICODE: {
+          ret.cmap_mappings = ret.cmap + _ttf_read_u32(ret.data + subtable + 4);
+          found_index_table = true;
+        } break;
+        
+      }
+      
+      if (found_index_table) break;
+    }
+    
+    assert(found_index_table && "unsupported cmap");
+  }
+  
+  // TODO: remove
+  // sample code for searching glyph index from unicode codepoint
+  U32 codepoint = 48;
+  test_create_log_section_until_scope;
+  {
+    
+    U16 format = _ttf_read_u16(ret.data + ret.cmap_mappings + 0);
+    
+    test_log("format: %d\n", format);
+    
+    switch(format) {
+      case 4: { // 
+        U16 seg_count = _ttf_read_u16(ret.data + ret.cmap_mappings + 6) >> 1;
+        U16 search_range = _ttf_read_u16(ret.data + ret.cmap_mappings + 8) >> 1;
+        U16 entry_selector = _ttf_read_u16(ret.data + ret.cmap_mappings + 10);
+        U16 range_shift = _ttf_read_u16(ret.data + ret.cmap_mappings + 12) >> 1;
+        
+        
+        test_eval_d(seg_count);
+        test_eval_d(search_range);
+        test_eval_d(entry_selector);
+        test_eval_d(range_shift);
+        
+        
+        U32 end_codes = ret.cmap_mappings + 14;
+        U32 start_codes = end_codes + 2 + (2*seg_count);
+        U32 id_deltas = start_codes + (2*seg_count);
+        U32 id_range_offsets = id_deltas + (2*seg_count);
+        U32 glyph_index_array = id_range_offsets + (2*seg_count);
+        
+        assert(codepoint <= 0xffff);
+        
+        // find the first end code that is greater than or equal to the codepoint
+        // TODO: binary search?
+        U16 seg_id = 0;
+        U16 end_code = 0;
+        for(U16 i = 0; i < seg_count; ++i) {
+          end_code = _ttf_read_u16(ret.data + end_codes + (2 * i));
+          if( end_code >= codepoint ){
+            seg_id = i;
+            break;
+          }
+        }
+        test_eval_d(codepoint);
+        test_eval_d(seg_id);
+        
+        U16 start_code = _ttf_read_u16(ret.data + start_codes + 2*seg_id);
+        test_eval_d(start_code);
+        test_eval_d(end_code);
+        assert(start_code <= codepoint);
+        
+        U16 offset = _ttf_read_u16(ret.data + id_range_offsets + 2*seg_id);
+        U16 delta = _ttf_read_u16(ret.data + id_deltas + 2*seg_id);
+        
+        test_eval_d(offset);
+        test_eval_d(delta);
+        U32 glyph_index;
+        if (offset == 0 ){
+          glyph_index = codepoint + delta;
+        }
+        else {
+          glyph_index = _ttf_read_u16(ret.data +
+                                      id_range_offsets + 2*seg_id + // &id_range_offset[i]
+                                      offset + (codepoint - start_code)*2);
+          
+        }
+        
+        // should be 157 for codepoint 48
+        test_eval_d(glyph_index);
+        
+      } break;
+      
+      default: {
+        assert(false);
+      }
+    }
+  }
+  
+  
+#if 0  
+  // Test 'loca' info
+  test_log("Testing loca info\n");
+  {
+    test_create_log_section_until_scope;
+    _TTF_head* head = _ttf_get_head_table(&ret);
+    U32 loca_format = endian_swap_16(head->index_to_loc_format);
+    
+    _TTF_maxp* maxp = _ttf_get_maxp_table(&ret);
+    U32 glyph_count = endian_swap_16(maxp->num_glyphs);
+    
+    test_log("offset mod is %d\n", offset_mod);
+    
+    test_create_log_section_until_scope;
+    switch(loca_format) {
+      case _TTF_LOCA_FORMAT_SHORT: { // short version
+        U16* loca = _ttf_get_loca_table_short_version(&ret);
+        for( U32 i = 0; i < glyph_count; ++i) {
+          test_log("[%d] %d\n", i, endian_swap_16(loca[i])); 
+        }
+      } break;
+      case _TTF_LOCA_FORMAT_LONG: { // long version
+        U32* loca = _ttf_get_loca_table_long_version(&ret);
+        for( U32 i = 0; i < glyph_count; ++i) {
+          test_log("[%d] %d\n", i, endian_swap_32(loca[i])); 
+        }
+      } break;
+    }
+  }
+#endif
+  
+  
+  return ret;
 }
-
-
-static inline B32
-test_write_memory_to_file(Memory block, const char* filename) {
-	FILE* file = fopen(filename, "wb");
-	if (!file) {
-		test_log("Cannot open file for writing\n");
-		return false;
-	}
-	fwrite(block.data, sizeof(char), block.size, file);
-  
-  fclose(file);
-	
-	return true;
-	
-}
-
-struct TTF_Offset_Table {
-  U32 scaler_type;
-  U16 num_tables;
-  U16 search_range;
-  U16 entry_selector;
-  U16 range_shift;
-};
-
-struct TTF_Table_Directory {
-  U32 tag;
-  U32 checksum;
-  U32 offset;
-  U32 len;
-};
 
 
 void test_ttf() {
-  U32 memory_size = MB(10);
+  U32 memory_size = MB(1);
   void * memory = malloc(memory_size);
-  if (!memory) { return 1; }
-  defer { free(memory); };
-  
-  Arena main_arena = create_arena(memory, memory_size);
-  Memory ttf_memory = read_file_to_memory(&main_arena, "nokiafc22.ttf");
-  {
-    auto* offsets = (TTF_Offset_Table*)ttf_memory.data;
-    offsets->scaler_type = endian_swap_32(offsets->scaler_type);
-    offsets->num_tables = endian_swap_16(offsets->num_tables);
-    offsets->search_range = endian_swap_16(offsets->search_range);
-    offsets->entry_selector = endian_swap_16(offsets->entry_selector);
-    offsets->range_shift = endian_swap_16(offsets->range_shift);
-    
-    test_log("=== OFFSET TABLE ===\n");
-    test_eval_member_d(offsets, scaler_type);
-    test_eval_member_d(offsets, num_tables);
-    test_eval_member_d(offsets, search_range);
-    test_eval_member_d(offsets, entry_selector);
-    test_eval_member_d(offsets, range_shift);
-    
-  }
-}
-
-
-
-
-void test_png() {
-  struct {
-    const char* in;
-    const char* out;
-  } test_cases[] = 
-  {
-    test_assets_dir("test_in0.png"), "out0.png",
-    test_assets_dir("test_in1.png"), "out1.png",
-    test_assets_dir("test_in2.png"), "out2.png",
-    test_assets_dir("test_in3.png"), "out3.png",
-    test_assets_dir("test_in4.png"), "out4.png",
-    test_assets_dir("test_in5.png"), "out5.png",
-  }; 
-  
-  U32 memory_size = MB(10);
-  U8* memory = (U8*)malloc(memory_size);
   if (!memory) { 
-    test_log("Cannot allocate memory\n");
+    test_log("Cannot allocate memory");
     return;
   }
-  
-  for (int i = 0; i < ArrayCount(test_cases); ++i)
-  {
-    test_log("Test Case: %d ===\n", i);
-    Arena app_arena = create_arena(memory, memory_size);
-    Memory png_file = test_read_file_to_memory(&app_arena, test_cases[i].in);
-    
-    if (!is_ok(png_file)){
-      test_log("Cannot read file: %d\n", i);
-      continue;
-    }
-    
-    Image bitmap = read_png(png_file, &app_arena);
-    if (!is_ok(bitmap)) {
-      test_log("Read PNG failed: %d\n", i);
-      continue;
-    }
-    test_log("Read success: %d\n", i);
-    
-    Memory png_output = write_png(bitmap,
-                                  &app_arena); 
-    if (!is_ok(png_output)) {
-      test_log("Write to memory failed: %d\n", i);
-      continue;
-    }
-    
-    if(!test_write_memory_to_file(png_output, test_cases[i].out)) {
-      test_log("Cannot write to file: %d\n", i);
-      continue;
-    }
-    test_log("Wrote to file\n");
-  }
-  
-  free(memory);
-  
-}
-
-void test_sort() {
-  int arr[] = { 1,4,6,8,9,20,13,-1, -20 };
-  quicksort(arr, ArrayCount(arr), 
-            [](int* lhs, int* rhs) { return (*lhs) < (*rhs); } );
-  
-  for( auto&& itr : arr) {
-    printf("%d ", itr);
-  }
-  printf("\n");
-}
-void test_essentials() { 
-  test_eval_d(min_of(5, 10));
-  test_eval_d(max_of(5, 10));
-  test_eval_d(clamp(11, 0, 10));
-  test_eval_d(clamp(-1, 0, 10));
-  test_eval_d(abs_of(-1));    // invokes S32 version
-  test_eval_f(abs_of(-12.f)); // invokes F32 version
-  test_eval_f(abs_of(-12.0)); // involes F64 version
-  test_eval_d(lerp(10, 20, 0.5f));
-  test_eval_d(align_down_pow2(15, 4));
-  test_eval_d(align_up_pow2(15, 4));
-  test_eval_d(is_pow2(10));
-  test_eval_d(is_pow2(16));
-  test_eval_f(ratio(2.f, 1.f, 10.f));
-  test_eval_f(ratio(2.0, 0.0, 100));
-  test_eval_f(deg_to_rad(180.f));
-  test_eval_f(deg_to_rad(180.0));
-  test_eval_f(rad_to_deg(PI_32));
-  test_eval_f(rad_to_deg(PI_64));
+  defer { free(memory); };
   
   
-  // Test swap
-  {
-    int i = 5;
-    int j = 10;
-    test_log("Before swap: i = %d, j = %d\n", i, j);
-    swap(&i, &j);
-    test_log("After swap: i = %d, j = %d\n", i, j);
-  }
+  Arena main_arena = create_arena(memory, memory_size);
+  Memory ttf_memory = test_read_file_to_memory(&main_arena, 
+                                               test_assets_dir("nokiafc22.ttf"));
   
-  // Test ptr_to_int() and int_to_ptr()
-  {
-    int i = 5;
-    test_log("ptr_to_int(%p) = %llX\n", &i, ptr_to_int(&i));
-    test_log("int_to_ptr(%X) = %p\n", 0x1234, int_to_ptr(0x1234));
-  } 
+  TTF_Info ttf_info = read_ttf(ttf_memory);
   
-  // Test endian swap 16
-  {
-    union {
-      U16 u;
-      char c[2];
-    } val;
-    
-    val.u = 12345;
-    test_log("Before endian_swap_16: ");
-    for(int i = 0; i < ArrayCount(val.c); ++i) 
-      test_log("%02X ", val.c[i]);
-    test_log("\n");
-    val.u = endian_swap_16(val.u);
-    
-    test_log("After endian_swap_16: ");
-    for(int i = 0; i < ArrayCount(val.c); ++i) 
-      test_log("%02X ", val.c[i]);
-    test_log("\n");
-    
-  }
-  
-  // Test endian swap 32
-  {
-    union {
-      U32 u;
-      char c[4];
-    } val;
-    
-    val.u = 12345;
-    test_log("Before endian_swap_32: ");
-    for(int i = 0; i < ArrayCount(val.c); ++i) 
-      test_log("%02X ", val.c[i]);
-    test_log("\n");
-    val.u = endian_swap_32(val.u);
-    
-    test_log("After endian_swap_32: ");
-    for(int i = 0; i < ArrayCount(val.c); ++i) 
-      test_log("%02X ", val.c[i]);
-    test_log("\n");
-    
-  }
   
 }
 
 int main() {
+#if 0
   test_unit(test_essentials());
   test_unit(test_sort());
   test_unit(test_png());
+#endif
+  test_unit(test_ttf());
 }
