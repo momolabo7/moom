@@ -43,11 +43,6 @@ read_png(Memory png_memory) {
       case 'IHDR': {
         ret.IHDR = itr;
       } break;
-      case 'IDAT': {
-        if (ret.first_IDAT == 0) {
-          ret.first_IDAT = itr;
-        }
-      } break;
       case 'IEND': {
         ret.IEND = itr;
       }

@@ -7,7 +7,6 @@ struct PNG {
   U8* data;
   
   U32 IHDR;
-  U32 first_IDAT;
   U32 IEND;
 };
 
