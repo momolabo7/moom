@@ -289,39 +289,14 @@ void test_ttf() {
   
 }
 
-#include "momo_png_v2.h"
-#include "momo_png_v2.cpp"
-void test_png_v2() {
-  
-  U32 memory_size = MB(1);
-  U8* memory = (U8*)malloc(memory_size);
-  defer { free(memory); };
-  
-  
-  Arena app_arena = create_arena(memory, memory_size);
-  Memory png_file = test_read_file_to_memory(&app_arena, test_assets_dir("test_in0.png"));
-  test_eval_lld(png_file.size);
-  PNG png = create_png(png_file);
-  test_eval_d(png.width);
-  test_eval_d(png.height);
-  test_eval_d(png.bit_depth);
-  test_eval_d(png.colour_type);
-  test_eval_d(png.compression_method);
-  test_eval_d(png.filter_method);
-  test_eval_d(png.interlace_method);
-  
-  create_image(png, &app_arena);
-  
-}
 
 
 int main() {
 #if 0
   test_unit(test_essentials());
   test_unit(test_sort());
-  test_unit(test_png());
 #endif
   
+  test_unit(test_png());
   test_unit(test_ttf());
-  test_unit(test_png_v2());
 }

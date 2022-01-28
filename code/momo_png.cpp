@@ -434,12 +434,6 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
 
 
 
-
-static U32 
-_png_get_image_size(_PNG_Context* ctx) {
-  return ctx->image_width * ctx->image_height * PNG_CHANNELS;
-}
-
 static U32 
 _png_get_channels_from_colour_type(U32 colour_type) {
   // NOTE(Momo): Determine the channels
@@ -700,7 +694,9 @@ _png_filter(_PNG_Context* c) {
   
 }
 
-//~ NOTE(Momo): Chunk processing
+//~Chunk processing
+
+#if 0
 static B32
 _png_process_IHDR(_PNG_Context* c) {
   Stream stream = c->stream; 
@@ -708,8 +704,8 @@ _png_process_IHDR(_PNG_Context* c) {
   
   // NOTE(Momo): Width and height is in Big Endian
   // We assume that we are currently in a Little Endian system
-  IHDR->width = endian_swap_32(IHDR->width);
-  IHDR->height = endian_swap_32(IHDR->height);
+  U32 width = endian_swap_32(IHDR->width);
+  U32 height = endian_swap_32(IHDR->height);
   
   _png_log("IHDR: \nwidth: %d\nheight: %d\nbit_depth: %d\ncolour_type: %d\ncompression_method: %d\nfilter_method: %d\ninterlace_method: %d\n\n",
            IHDR->width, IHDR->height, IHDR->bit_depth, IHDR->colour_type, IHDR->compression_method, IHDR->filter_method, IHDR->interlace_method);
@@ -718,8 +714,8 @@ _png_process_IHDR(_PNG_Context* c) {
     return false;
   }
   
-  c->image_width = IHDR->width;
-  c->image_height = IHDR->height;
+  c->image_width = width;
+  c->image_height = height;
   c->bit_depth = IHDR->bit_depth;
   
   // NOTE(Momo): For reserving memory for image
@@ -735,6 +731,7 @@ _png_process_IHDR(_PNG_Context* c) {
     create_stream(unfiltered_image_stream_memory, unfiltered_size);
   return true;
 }
+#endif
 
 static B32
 _png_process_IDAT(_PNG_Context* c) {
@@ -782,31 +779,44 @@ _png_process_IEND(_PNG_Context* c) {
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
 static Image
-read_png(Memory png_memory, Arena* arena) 
+create_image(PNG png, Arena* arena) 
 {
+  if (!is_ok(png)) return {};
+  
+  // TODO(Momo): We should really clean up _PNG_Context
   _PNG_Context ctx = {};
   ctx.arena = arena;
-  ctx.stream = create_stream((U8*)png_memory.data, png_memory.size);
+  ctx.stream = create_stream(png.data, png.data_size);
+  ctx.image_width = png.width;
+  ctx.image_height = png.height;
+  ctx.bit_depth = png.bit_depth;
   
-  auto* png_header = consume<_PNG_Header>(&ctx.stream);  
-  if (!_png_is_signature_valid(png_header->signature)) {
-    Image ret = {};
-    return ret;
-    
-  }
+  U32 image_size = png.width * png.height * PNG_CHANNELS;
+  U8* image_stream_memory = push_array<U8>(arena, image_size);
+  ctx.image_stream = create_stream(image_stream_memory, image_size);
+  
+  create_scratch(scratch, arena);
+  
+  U32 unfiltered_size = png.width * png.height * PNG_CHANNELS + png.height;
+  U8* unfiltered_image_stream_memory = push_array<U8>(arena, unfiltered_size);
+  ctx.unfiltered_image_stream = create_stream(unfiltered_image_stream_memory, unfiltered_size);
+  
+  consume<_PNG_Header>(&ctx.stream);
   
   while(!is_eos(&ctx.stream)) {
     auto* chunk_header = consume<_PNG_Chunk_Header>(&ctx.stream);
-    chunk_header->length = endian_swap_32(chunk_header->length);
-    chunk_header->type_U32 = endian_swap_32(chunk_header->type_U32);
+    U32 chunk_length = endian_swap_32(chunk_header->length);
+    U32 chunk_type = endian_swap_32(chunk_header->type_U32);
     
-    switch(chunk_header->type_U32) {
+    switch(chunk_type) {
+#if 0
       case 'IHDR': {
         if(!_png_process_IHDR(&ctx)) {
           Image ret = {};
           return ret;
         }
       } break;
+#endif
       case 'IDAT': {
         if(!_png_process_IDAT(&ctx)) {
           Image ret = {};
@@ -827,15 +837,17 @@ read_png(Memory png_memory, Arena* arena)
         }
       } break;
       default: {
+#if 0
         // NOTE(Momo): For now, we don't care about the rest of the chunks
         _png_log("Ignoring chunk: %c%c%c%c\n", 
                  chunk_header->type[0], 
                  chunk_header->type[1], 
                  chunk_header->type[2], 
                  chunk_header->type[3]); 
+#endif
       };
     }
-    consume_block(&ctx.stream, chunk_header->length);
+    consume_block(&ctx.stream, chunk_length);
     consume<_PNG_Chunk_Footer>(&ctx.stream);
   }
   
@@ -850,7 +862,7 @@ read_png(Memory png_memory, Arena* arena)
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
 static Memory
-write_png(Image image, Arena* arena) {
+write_image_as_png(Image image, Arena* arena) {
   assert(image.width > 0);
   assert(image.height > 0);
   assert(image.pixels != 0);
@@ -1016,48 +1028,47 @@ write_png(Image image, Arena* arena) {
   return ret;
 }
 
-static Image_Info
-read_png_info(Memory png_memory) {
+static PNG
+create_png(Memory png_memory) {
+  
   Stream stream = create_stream((U8*)png_memory.data, png_memory.size);
   
   // Read Signature
   auto* png_header = consume<_PNG_Header>(&stream);  
-  if (!_png_is_signature_valid(png_header->signature)) {
-    Image_Info ret = {};
-    return ret;
-  }    
-  
+  if (!_png_is_signature_valid(png_header->signature)) return {}; 
   
   // Read Chunk Header
   auto* chunk_header = consume<_PNG_Chunk_Header>(&stream);
-  chunk_header->length = endian_swap_32(chunk_header->length);
-  chunk_header->type_U32 = endian_swap_32(chunk_header->type_U32);
+  U32 chunk_length = endian_swap_32(chunk_header->length);
+  U32 chunk_type = endian_swap_32(chunk_header->type_U32);
   
-  if( chunk_header->type_U32 != 'IHDR') {
-    Image_Info ret = {};
-    return ret;
-  }
+  
+  if(chunk_type != 'IHDR') { return {}; }
   
   _PNG_IHDR* IHDR = consume<_PNG_IHDR>(&stream);
   
   // NOTE(Momo): Width and height is in Big Endian
   // We assume that we are currently in a Little Endian system
-  IHDR->width = endian_swap_32(IHDR->width);
-  IHDR->height = endian_swap_32(IHDR->height);
+  U32 width = endian_swap_32(IHDR->width);
+  U32 height = endian_swap_32(IHDR->height);
   
-  _png_log("IHDR: \nwidth: %d\nheight: %d\nbit_depth: %d\ncolour_type: %d\ncompression_method: %d\nfilter_method: %d\ninterlace_method: %d\n\n",
-           IHDR->width, IHDR->height, IHDR->bit_depth, IHDR->colour_type, IHDR->compression_method, IHDR->filter_method, IHDR->interlace_method);
+  if (!_png_is_format_supported(IHDR)) { return {}; }
   
-  if (!_png_is_format_supported(IHDR)) {
-    Image_Info ret = {};
-    return ret;
-  }
-  
-  Image_Info ret;
-  ret.width = IHDR->width;
-  ret.height = IHDR->height;
-  ret.channels = _png_get_channels_from_colour_type(IHDR->colour_type);
-  
+  PNG ret;
+  ret.data = (U8*)png_memory.data;
+  ret.data_size = (U32)png_memory.size;
+  ret.width = width;
+  ret.height = height;
+  ret.bit_depth = IHDR->bit_depth;
+  ret.colour_type = IHDR->colour_type;
+  ret.compression_method = IHDR->compression_method;
+  ret.filter_method = IHDR->filter_method;
+  ret.interlace_method = IHDR->interlace_method;
   
   return ret;
+}
+
+static B32 
+is_ok(PNG png) {
+  return png.data != nullptr;
 }

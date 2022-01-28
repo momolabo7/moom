@@ -78,8 +78,10 @@ end_atlas_builder(Atlas_Builder* ab) {
         Memory file_memory = ass_read_file(entry->image.filename, marker);
         assert(is_ok(file_memory));
         
-        Image_Info info = read_png_info(file_memory);
-        assert(info.width != 0 && info.height != 0 && info.channels == 4);
+        PNG png = create_png(file_memory);
+        assert(is_ok(png));
+        
+        assert(png.width != 0 && png.height != 0);
 #if 0        
         ass_log("%s: w = %d, h = %d, c = %d\n", 
                 entry->image.filename, 
@@ -89,8 +91,8 @@ end_atlas_builder(Atlas_Builder* ab) {
 #endif
         
         RP_Rect* rect = rects + rect_index++;
-        rect->w = info.width;
-        rect->h = info.height;
+        rect->w = png.width;
+        rect->h = png.height;
         rect->user_data = entry;
         
         
@@ -135,7 +137,10 @@ end_atlas_builder(Atlas_Builder* ab) {
         Memory file_memory = ass_read_file(entry->image.filename, marker);
         assert(is_ok(file_memory));
         
-        Image img = read_png(file_memory, marker.arena);
+        PNG png = create_png(file_memory);
+        assert(is_ok(png));
+        
+        Image img = create_image(png, marker);
         assert(is_ok(img));
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {

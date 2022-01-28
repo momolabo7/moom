@@ -44,7 +44,7 @@ int main() {
   
 #if 1
   ass_log("Writing test png file...\n");
-  Memory png_to_write_memory = write_png(atlas_image, &main_arena);
+  Memory png_to_write_memory = write_image_as_png(atlas_image, &main_arena);
   assert(is_ok(png_to_write_memory));
   ass_write_file("test.png", png_to_write_memory);
 #endif

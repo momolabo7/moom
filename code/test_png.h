@@ -39,15 +39,23 @@ void test_png() {
       continue;
     }
     
-    Image bitmap = read_png(png_file, &app_arena);
+    PNG png = create_png(png_file);
+    if (!is_ok(png)) {
+      test_log("Create PNG failed: %d\n", i);
+      continue;
+    }
+    else {
+      test_eval_d(png.width);
+      test_eval_d(png.height);
+    }
+    Image bitmap = create_image(png, &app_arena);
     if (!is_ok(bitmap)) {
       test_log("Read PNG failed: %d\n", i);
       continue;
     }
     test_log("Read success: %d\n", i);
     
-    Memory png_output = write_png(bitmap,
-                                  &app_arena); 
+    Memory png_output = write_image_as_png(bitmap, &app_arena); 
     if (!is_ok(png_output)) {
       test_log("Write to memory failed: %d\n", i);
       continue;
