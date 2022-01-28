@@ -53,7 +53,25 @@ create_png(Memory png_memory) {
 
 static B32
 _png_deflate(U8* location, Arena* arena) {
+  static const U16 lens[29] = { /* Size base for length codes 257..285 */
+    3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31,
+    35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258};
+  static const U16 len_ex_bits[29] = { /* Extra bits for length codes 257..285 */
+    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2,
+    3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0};
+  static const U16 dists[30] = { /* Offset base for distance codes 0..29 */
+    1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193,
+    257, 385, 513, 769, 1025, 1537, 2049, 3073, 4097, 6145,
+    8193, 12289, 16385, 24577};
+  static const U16 dist_ex_bits[30] = { /* Extra bits for distance codes 0..29 */
+    0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6,
+    7, 7, 8, 8, 9, 9, 10, 10, 11, 11,
+    12, 12, 13, 13 };
   
+  U8 BFINAL = 0;
+  while(BFINAL == 0){
+    
+  }
 }
 
 static B32 
@@ -91,8 +109,11 @@ create_image(PNG png, Arena* arena) {
   if (png.filter_method != 0) goto failed;
   if (png.interlace_method != 0) goto failed;
   
-  U8* image_data = push_block(arena, width * height * 4);
+  U8* image_data = (U8*)push_block(arena, png.width * png.height * 4);
   if (!image_data) goto failed;
+  
+  create_scratch(scratch);
+  U8* unfiltered_data = (U8*)push_block(scratch, (png.width+1) * height * 4);
   
   UMI current_chunk = 8;
   
@@ -105,7 +126,9 @@ create_image(PNG png, Arena* arena) {
     switch(chunk_type.u) {
       case 'IDAT': {
         test_log("IDAT found\n");
-        _png_process_IDAT(png.data + current_chunk + 8, arena);
+        _png_process_IDAT(png.data + current_chunk + 8,
+                          unfiltered_data,
+                          arena);
       } break;
       case 'IEND': {
         test_log("IEND found\n");
