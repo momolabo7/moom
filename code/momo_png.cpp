@@ -474,10 +474,10 @@ _png_get_channels_from_colour_type(U32 colour_type) {
 
 static B32
 _png_is_format_supported(_PNG_IHDR* IHDR){
-  if (IHDR->colour_type != 6 &&
-      IHDR->bit_depth != 8 &&
-      IHDR->compression_method == 0 &&
-      IHDR->filter_method != 0 &&
+  if (IHDR->colour_type != 6 ||
+      IHDR->bit_depth != 8 ||
+      IHDR->compression_method != 0 ||
+      IHDR->filter_method != 0 ||
       IHDR->interlace_method != 0) 
   {
     

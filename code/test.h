@@ -14,6 +14,7 @@
 static U32 test_log_spaces = 0;
 #define test_assets_dir(filename) "../assets/test/" ##filename
 #define test_eval_d(s) test_log(#s " = %d\n", s);
+#define test_eval_lld(s) test_log(#s " = %lld\n", s);
 #define test_eval_f(s) test_log(#s " = %f\n", s);
 #define test_create_log_section_until_scope test_log_spaces += 2; defer {test_log_spaces -= 2;}
 
