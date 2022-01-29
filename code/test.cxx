@@ -69,6 +69,65 @@ struct TTF_Info {
   U32 cmap_mappings;
 };
 
+// 0 is invalid
+static U32 
+get_glyph_index_from_codepoint(TTF_Info ttf, U32 codepoint) {
+  
+  U16 format = _ttf_read_u16(ttf.data + ttf.cmap_mappings + 0);
+  
+  
+  switch(format) {
+    case 4: { // 
+      U16 seg_count = _ttf_read_u16(ttf.data + ttf.cmap_mappings + 6) >> 1;
+      U16 search_range = _ttf_read_u16(ttf.data + ttf.cmap_mappings + 8) >> 1;
+      U16 entry_selector = _ttf_read_u16(ttf.data + ttf.cmap_mappings + 10);
+      U16 range_shift = _ttf_read_u16(ttf.data + ttf.cmap_mappings + 12) >> 1;
+      
+      U32 end_codes = ttf.cmap_mappings + 14;
+      U32 start_codes = end_codes + 2 + (2*seg_count);
+      U32 id_deltas = start_codes + (2*seg_count);
+      U32 id_range_offsets = id_deltas + (2*seg_count);
+      U32 glyph_index_array = id_range_offsets + (2*seg_count);
+      
+      if (codepoint == 0xffff) return 0;
+      
+      // find the first end code that is greater than or equal to the codepoint
+      // TODO: binary search?
+      U16 seg_id = 0;
+      U16 end_code = 0;
+      for(U16 i = 0; i < seg_count; ++i) {
+        end_code = _ttf_read_u16(ttf.data + end_codes + (2 * i));
+        if( end_code >= codepoint ){
+          seg_id = i;
+          break;
+        }
+      }
+      
+      U16 start_code = _ttf_read_u16(ttf.data + start_codes + 2*seg_id);
+      
+      if (start_code > codepoint) return 0;
+      
+      U16 offset = _ttf_read_u16(ttf.data + id_range_offsets + 2*seg_id);
+      U16 delta = _ttf_read_u16(ttf.data + id_deltas + 2*seg_id);
+      
+      if (offset == 0 ){
+        return codepoint + delta;
+      }
+      else {
+        return _ttf_read_u16(ttf.data +
+                             id_range_offsets + 2*seg_id + // &id_range_offset[i]
+                             offset + (codepoint - start_code)*2);
+        
+      }
+      
+    } break;
+    
+    default: {
+      return 0; // invalid codepoint
+    }
+  }
+}
+
 static TTF_Info
 read_ttf(Memory ttf_memory) {
   TTF_Info ret = {};
@@ -157,81 +216,7 @@ read_ttf(Memory ttf_memory) {
   
   // TODO: remove
   // sample code for searching glyph index from unicode codepoint
-  U32 codepoint = 48;
-  test_create_log_section_until_scope;
-  {
-    
-    U16 format = _ttf_read_u16(ret.data + ret.cmap_mappings + 0);
-    
-    test_log("format: %d\n", format);
-    
-    switch(format) {
-      case 4: { // 
-        U16 seg_count = _ttf_read_u16(ret.data + ret.cmap_mappings + 6) >> 1;
-        U16 search_range = _ttf_read_u16(ret.data + ret.cmap_mappings + 8) >> 1;
-        U16 entry_selector = _ttf_read_u16(ret.data + ret.cmap_mappings + 10);
-        U16 range_shift = _ttf_read_u16(ret.data + ret.cmap_mappings + 12) >> 1;
-        
-        
-        test_eval_d(seg_count);
-        test_eval_d(search_range);
-        test_eval_d(entry_selector);
-        test_eval_d(range_shift);
-        
-        
-        U32 end_codes = ret.cmap_mappings + 14;
-        U32 start_codes = end_codes + 2 + (2*seg_count);
-        U32 id_deltas = start_codes + (2*seg_count);
-        U32 id_range_offsets = id_deltas + (2*seg_count);
-        U32 glyph_index_array = id_range_offsets + (2*seg_count);
-        
-        assert(codepoint <= 0xffff);
-        
-        // find the first end code that is greater than or equal to the codepoint
-        // TODO: binary search?
-        U16 seg_id = 0;
-        U16 end_code = 0;
-        for(U16 i = 0; i < seg_count; ++i) {
-          end_code = _ttf_read_u16(ret.data + end_codes + (2 * i));
-          if( end_code >= codepoint ){
-            seg_id = i;
-            break;
-          }
-        }
-        test_eval_d(codepoint);
-        test_eval_d(seg_id);
-        
-        U16 start_code = _ttf_read_u16(ret.data + start_codes + 2*seg_id);
-        test_eval_d(start_code);
-        test_eval_d(end_code);
-        assert(start_code <= codepoint);
-        
-        U16 offset = _ttf_read_u16(ret.data + id_range_offsets + 2*seg_id);
-        U16 delta = _ttf_read_u16(ret.data + id_deltas + 2*seg_id);
-        
-        test_eval_d(offset);
-        test_eval_d(delta);
-        U32 glyph_index;
-        if (offset == 0 ){
-          glyph_index = codepoint + delta;
-        }
-        else {
-          glyph_index = _ttf_read_u16(ret.data +
-                                      id_range_offsets + 2*seg_id + // &id_range_offset[i]
-                                      offset + (codepoint - start_code)*2);
-          
-        }
-        
-        // should be 157 for codepoint 48
-        test_eval_d(glyph_index);
-        
-      } break;
-      
-      default: {
-        assert(false);
-      }
-    }
-  }
+  
   
   
 #if 0  
@@ -271,6 +256,8 @@ read_ttf(Memory ttf_memory) {
 
 
 void test_ttf() {
+  test_create_log_section_until_scope;
+  
   U32 memory_size = MB(1);
   void * memory = malloc(memory_size);
   if (!memory) { 
@@ -285,7 +272,7 @@ void test_ttf() {
                                                test_assets_dir("nokiafc22.ttf"));
   
   TTF_Info ttf_info = read_ttf(ttf_memory);
-  
+  test_eval_d(get_glyph_index_from_codepoint(ttf_info, 48));
   
 }
 
@@ -295,8 +282,8 @@ int main() {
 #if 0
   test_unit(test_essentials());
   test_unit(test_sort());
+  test_unit(test_png());
 #endif
   
-  test_unit(test_png());
   test_unit(test_ttf());
 }

@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 
-#define assert_callback(s) printf("[test][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
+#define assert_callback(s) printf("[test][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout); (*(volatile int*)0 = 0);
 #include "momo.h"
 
 
