@@ -9,6 +9,12 @@ union V2U {
 	U32 e[2];
 };
 
+union V2S {
+	struct { S32 x, y; };
+	struct { S32 w, h; };
+	S32 e[2];
+};
+
 union V2 {
 	struct { F32 x, y; };
 	struct { F32 w, h; };

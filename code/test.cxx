@@ -41,11 +41,6 @@ struct _TTF_maxp {
   U16 max_component_depth;
 };
 
-enum _TTF_loca_Format {
-  _TTF_LOCA_FORMAT_SHORT = 0,
-  _TTF_LOCA_FORMAT_LONG = 1,
-};
-
 enum {
   _TTF_CMAP_PLATFORM_ID_UNICODE = 0,
   _TTF_CMAP_PLATFORM_ID_MACINTOSH = 1,
@@ -72,15 +67,20 @@ struct TTF {
   // these are positions from data
   U32 loca, head, glyf, maxp, cmap, hhea;
   U32 cmap_mappings;
+  
+  U16 loca_format;
 };
+
+
 
 // This returns the scale you need to multiply to a font
 // to get it's height in a certain pixel.
 static F32
-get_scale_for_pixel_height(TTF ttf, float pixel_height) {
+get_scale_for_pixel_height(TTF ttf, F32 pixel_height) {
   S32 font_height = _ttf_read_s16(ttf.data + ttf.hhea + 4) - _ttf_read_s16(ttf.data + ttf.hhea + 6);
   return (F32)pixel_height/font_height;
 }
+
 
 // 0 is invalid
 static U32 
@@ -141,6 +141,40 @@ get_glyph_index_from_codepoint(TTF ttf, U32 codepoint) {
   }
 }
 
+static U32
+_ttf_get_offset_to_glyph(TTF ttf, U32 glyph_index) {
+  assert(glyph_index < ttf.glyph_count);
+  
+  U32 g1 = 0, g2 = 0;
+  switch(ttf.loca_format) {
+    case 0: { // short format
+      g1 = ttf.glyf + _ttf_read_u16(ttf.data + ttf.loca + glyph_index * 2) * 2;
+      g2 = ttf.glyf + _ttf_read_u16(ttf.data + ttf.loca + glyph_index * 2 + 2) * 2;
+    } break;
+    case 1: { // long format
+      g1 = ttf.glyf + _ttf_read_u16(ttf.data + ttf.loca + glyph_index * 4);
+      g2 = ttf.glyf + _ttf_read_u16(ttf.data + ttf.loca + glyph_index * 4 + 4);
+    } break;
+    default: {
+      return 0;
+    }
+  }
+  
+  return g1 == g2 ? 0 : g1;
+  
+}
+
+static V2S
+get_codepoint_bitmap_box(TTF ttf, U32 codepoint, F32 pixel_scale_x, F32 pixel_scale_y) {
+  V2S ret = {};
+  
+  // Get offset to glyph info
+  U32 glyph_index = get_glyph_index_from_codepoint(ttf, codepoint); 
+  test_eval_d(_ttf_get_offset_to_glyph(ttf, glyph_index));
+  
+  return ret;
+}
+
 static TTF
 read_ttf(Memory ttf_memory) {
   TTF ret = {};
@@ -186,9 +220,11 @@ read_ttf(Memory ttf_memory) {
   assert(ret.cmap);
   assert(ret.hhea);
   
+  ret.loca_format = _ttf_read_u16(ret.data + ret.head + 50);
+  assert(ret.loca_format < 2);
+  
   // Get glyph count
   {
-    
     ret.glyph_count = _ttf_read_u16(ret.data + ret.maxp + 4);
     test_log("Glyph count: %d\n", ret.glyph_count);
   }
@@ -231,12 +267,8 @@ read_ttf(Memory ttf_memory) {
     assert(found_index_table && "unsupported cmap");
   }
   
-  // TODO: remove
-  // sample code for searching glyph index from unicode codepoint
   
-  
-  
-#if 0  
+#if 0
   // Test 'loca' info
   test_log("Testing loca info\n");
   {
@@ -294,6 +326,7 @@ void test_ttf() {
   U32 glyph_index = get_glyph_index_from_codepoint(ttf, 48);
   {
     
+    get_codepoint_bitmap_box(ttf, 48, 1.f, 1.f);
   }
   
   
