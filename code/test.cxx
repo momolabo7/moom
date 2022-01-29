@@ -8,6 +8,11 @@ static U16
 _ttf_read_u16(U8* location) {
   return endian_swap_16(*(U16*)location);
 };
+
+static S16
+_ttf_read_s16(U8* location) {
+  return endian_swap_16(*(U16*)location);
+};
 static U32
 _ttf_read_u32(U8* location) {
   return endian_swap_32(*(U32*)location);
@@ -60,18 +65,26 @@ enum {
   
 };
 
-struct TTF_Info {
+struct TTF {
   U8* data;
   U32 glyph_count;
   
   // these are positions from data
-  U32 loca, head, glyf, maxp, cmap;
+  U32 loca, head, glyf, maxp, cmap, hhea;
   U32 cmap_mappings;
 };
 
+// This returns the scale you need to multiply to a font
+// to get it's height in a certain pixel.
+static F32
+get_scale_for_pixel_height(TTF ttf, float pixel_height) {
+  S32 font_height = _ttf_read_s16(ttf.data + ttf.hhea + 4) - _ttf_read_s16(ttf.data + ttf.hhea + 6);
+  return (F32)pixel_height/font_height;
+}
+
 // 0 is invalid
 static U32 
-get_glyph_index_from_codepoint(TTF_Info ttf, U32 codepoint) {
+get_glyph_index_from_codepoint(TTF ttf, U32 codepoint) {
   
   U16 format = _ttf_read_u16(ttf.data + ttf.cmap_mappings + 0);
   
@@ -128,9 +141,9 @@ get_glyph_index_from_codepoint(TTF_Info ttf, U32 codepoint) {
   }
 }
 
-static TTF_Info
+static TTF
 read_ttf(Memory ttf_memory) {
-  TTF_Info ret = {};
+  TTF ret = {};
   ret.data = ttf_memory.data_u8;
   
   U32 num_tables = _ttf_read_u16(ret.data + 4);
@@ -157,6 +170,9 @@ read_ttf(Memory ttf_memory) {
       case 'cmap': {
         ret.cmap = _ttf_read_u32(ret.data + directory + 8);
       } break;
+      case 'hhea': {
+        ret.hhea = _ttf_read_u32(ret.data + directory + 8);
+      } break;
       
     }
     
@@ -168,6 +184,7 @@ read_ttf(Memory ttf_memory) {
   assert(ret.head);
   assert(ret.glyf);
   assert(ret.cmap);
+  assert(ret.hhea);
   
   // Get glyph count
   {
@@ -271,8 +288,14 @@ void test_ttf() {
   Memory ttf_memory = test_read_file_to_memory(&main_arena, 
                                                test_assets_dir("nokiafc22.ttf"));
   
-  TTF_Info ttf_info = read_ttf(ttf_memory);
-  test_eval_d(get_glyph_index_from_codepoint(ttf_info, 48));
+  TTF ttf = read_ttf(ttf_memory);
+  test_eval_d(get_glyph_index_from_codepoint(ttf, 48));
+  test_eval_f(get_scale_for_pixel_height(ttf, 72.f));
+  U32 glyph_index = get_glyph_index_from_codepoint(ttf, 48);
+  {
+    
+  }
+  
   
 }
 

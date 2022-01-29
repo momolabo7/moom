@@ -377,6 +377,11 @@ endian_swap_16(U16 value) {
   return (value << 8) | (value >> 8);
 }
 
+static S16
+endian_swap_16(S16 value) {
+  return (value << 8) | (value >> 8);
+}
+
 static constexpr U32
 endian_swap_32(U32 value) {
   return  ((value << 24) |
