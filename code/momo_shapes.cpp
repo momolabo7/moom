@@ -6,9 +6,15 @@ width_of(Rect2 r) {
 
 static constexpr U32 
 width_of(Rect2U r) {
-  return r.max.x - r.min.x;
-  
+  return r.max.x - r.min.x;  
 }
+
+static constexpr S32 
+width_of(Rect2S r) {
+  return r.max.x - r.min.x;  
+}
+
+
 static constexpr F32 
 width_of(Rect3 r) {
   return r.max.x - r.min.x;
@@ -22,6 +28,11 @@ static constexpr U32
 height_of(Rect2U r) {
   return r.max.y - r.min.y;
 }
+static constexpr S32 
+height_of(Rect2S r) {
+  return r.max.y - r.min.y;
+}
+
 static constexpr F32 
 height_of(Rect3 r) {
   return r.max.y - r.min.y;

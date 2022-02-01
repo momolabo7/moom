@@ -139,7 +139,6 @@ abs_of(S64 x) {
   return (x ^ y)-y;
 }
 
-
 template<typename T> static constexpr T
 lerp(T s, T e, F32 f) { 
   return (T)(s + (e-s) * f); 
@@ -394,7 +393,7 @@ endian_swap_32(U32 value) {
 ///////////////////////////////////
 //~ NOTE(Momo): Non-trivial math functions
 // We have to use math.h here as default
-// TODO(Momo): write our own trig function
+// TODO(Momo): write our own versions
 ns_begin(std)
 #include <math.h>
 ns_end(std)
@@ -474,7 +473,26 @@ pow(F64 b, F64 e){
   return std::pow(b,e);
 }
 
-//~ NOTE(Momo): Easing functions
+
+// TODO(Momo): IEEE version of these?
+static F32 floor(F32 value) {
+  return std::floorf(value);
+  
+}
+static F64 floor(F64 value){
+  return std::floor(value);
+}
+
+
+static F32 ceil(F32 value) {
+  return std::ceilf(value);
+}
+
+static F64 ceil(F64 value) {
+  return std::ceil(value);
+}
+
+//~Easing functions
 
 static F32 
 ease_in_sine(F32 t)  {

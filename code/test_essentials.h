@@ -22,6 +22,18 @@ void test_essentials() {
   test_eval_f(deg_to_rad(180.0));
   test_eval_f(rad_to_deg(PI_32));
   test_eval_f(rad_to_deg(PI_64));
+  //test_eval_f(ceil_of(12.3f));
+  //test_eval_f(ceil_of(12.3));
+  test_eval_f(floor(12.3f));
+  test_eval_f(floor(12.3));
+  test_eval_f(floor(123.0f));
+  test_eval_f(floor(123.0));
+  
+  test_eval_f(ceil(12.3f));
+  test_eval_f(ceil(12.3));
+  test_eval_f(ceil(123.0f));
+  test_eval_f(ceil(123.0));
+  
   
   
   // Test swap

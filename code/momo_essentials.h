@@ -201,6 +201,7 @@ static constexpr S16 abs_of(S16 value);
 static constexpr S32 abs_of(S32 value);
 static constexpr S64 abs_of(S64 value);
 
+
 // NOTE(Momo): Lerp is tricky because the 'f' variable the 'percentage'.
 // and must be of a floating point type. I'm not sure if I want to go into
 // the hellhole of checking if 'f' is a floating point via TMP. Seems overkill
@@ -357,6 +358,11 @@ static F64 asin(F64 x);
 static F64 acos(F64 x);
 static F64 atan(F64 x);
 static F64 pow(F64 , F64 e);
+
+static F32 ceil(F32 value);
+static F32 floor(F32 value);
+static F64 ceil(F64 value);
+static F64 floor(F64 value);
 
 //~ NOTE(Momo): Easing functions
 static F32 ease_in_sine(F32 t);

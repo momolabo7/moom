@@ -164,7 +164,7 @@ _ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
 }
 
 static Rect2S
-get_glyph_box(TTF* ttf, U32 glyph_index) {
+_ttf_get_glyph_box(TTF* ttf, U32 glyph_index) {
   Rect2S ret = {};
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   
@@ -176,13 +176,23 @@ get_glyph_box(TTF* ttf, U32 glyph_index) {
   return ret;
 }
 
+
+// should return a box that covers the glyph that is ideal for rasterizing the font as bitmap
 static Rect2S
 get_glyph_bitmap_box(TTF* ttf, U32 glyph_index, F32 pixel_scale_x, F32 pixel_scale_y) {
   
   // Get offset to glyph info
-  Rect2S ret = get_glyph_box(ttf, glyph_index);
+  Rect2S box = _ttf_get_glyph_box(ttf, glyph_index);
   
-  // TODO: scale pixel
+  // convert to bitmap-style coordinates
+  // i.e. min is top left and max is bottom right
+  // as opposed to min is bottom left and max is top right
+  Rect2S ret;
+  ret.min.x = (S32)floor((F32)box.min.x * pixel_scale_x);
+  ret.max.x = (S32)ceil((F32)box.max.x * pixel_scale_x);
+  ret.min.y = (S32)floor((F32)box.max.y * pixel_scale_y);
+  ret.max.y = (S32)ceil((F32)box.min.y * pixel_scale_y);
+  
   
   return ret;
 }
@@ -334,15 +344,16 @@ void test_ttf() {
   Memory ttf_memory = test_read_file_to_memory(&main_arena, 
                                                test_assets_dir("nokiafc22.ttf"));
   
-  TTF* ttf = read_ttf(ttf_memory);
+  TTF ttf = read_ttf(ttf_memory);
+  
 #if 0
-  test_eval_d(get_glyph_index_from_codepoint(ttf, 48));
-  test_eval_f(get_scale_for_pixel_height(ttf, 72.f));
+  test_eval_d(get_glyph_index_from_codepoint(&ttf, 48));
+  test_eval_f(get_scale_for_pixel_height(&ttf, 72.f));
 #endif
-  U32 glyph_index = get_glyph_index_from_codepoint(ttf, 48);
+  U32 glyph_index = get_glyph_index_from_codepoint(&ttf, 48);
   {
     
-    Rect2S box = get_codepoint_bitmap_box(ttf, 48, 1.f, 1.f);
+    Rect2S box = get_codepoint_bitmap_box(&ttf, 48, 1.f, 1.f);
     test_eval_d(box.min.x);
     test_eval_d(box.min.y);
     test_eval_d(box.max.x);
