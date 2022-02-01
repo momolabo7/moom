@@ -350,15 +350,18 @@ void test_ttf() {
   test_eval_d(get_glyph_index_from_codepoint(&ttf, 48));
   test_eval_f(get_scale_for_pixel_height(&ttf, 72.f));
 #endif
-  U32 glyph_index = get_glyph_index_from_codepoint(&ttf, 48);
-  {
+  
+  for (int i = 48; i <= 58; ++i) {
     
-    Rect2S box = get_codepoint_bitmap_box(&ttf, 48, 1.f, 1.f);
+    Rect2S box = get_codepoint_bitmap_box(&ttf, i, 1.f, 1.f);
+    test_log("box for codepoint %d\n", i);
+    test_create_log_section_until_scope;
     test_eval_d(box.min.x);
     test_eval_d(box.min.y);
     test_eval_d(box.max.x);
     test_eval_d(box.max.y);
   }
+  
   
   
 }
