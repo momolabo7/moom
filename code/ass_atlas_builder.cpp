@@ -79,7 +79,7 @@ end_atlas_builder(Atlas_Builder* ab) {
         assert(is_ok(file_memory));
         
         PNG png = create_png(file_memory);
-        assert(is_ok(png));
+        assert(is_ok(&png));
         
         assert(png.width != 0 && png.height != 0);
 #if 0        
@@ -138,9 +138,9 @@ end_atlas_builder(Atlas_Builder* ab) {
         assert(is_ok(file_memory));
         
         PNG png = create_png(file_memory);
-        assert(is_ok(png));
+        assert(is_ok(&png));
         
-        Image img = create_image(png, marker);
+        Image img = create_image(&png, marker);
         assert(is_ok(img));
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {

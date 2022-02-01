@@ -40,7 +40,7 @@ void test_png() {
     }
     
     PNG png = create_png(png_file);
-    if (!is_ok(png)) {
+    if (!is_ok(&png)) {
       test_log("Create PNG failed: %d\n", i);
       continue;
     }
@@ -48,7 +48,7 @@ void test_png() {
       test_eval_d(png.width);
       test_eval_d(png.height);
     }
-    Image bitmap = create_image(png, &app_arena);
+    Image bitmap = create_image(&png, &app_arena);
     if (!is_ok(bitmap)) {
       test_log("Read PNG failed: %d\n", i);
       continue;

@@ -779,25 +779,25 @@ _png_process_IEND(_PNG_Context* c) {
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
 static Image
-create_image(PNG png, Arena* arena) 
+create_image(PNG* png, Arena* arena) 
 {
   if (!is_ok(png)) return {};
   
   // TODO(Momo): We should really clean up _PNG_Context
   _PNG_Context ctx = {};
   ctx.arena = arena;
-  ctx.stream = create_stream(png.data, png.data_size);
-  ctx.image_width = png.width;
-  ctx.image_height = png.height;
-  ctx.bit_depth = png.bit_depth;
+  ctx.stream = create_stream(png->data, png->data_size);
+  ctx.image_width = png->width;
+  ctx.image_height = png->height;
+  ctx.bit_depth = png->bit_depth;
   
-  U32 image_size = png.width * png.height * PNG_CHANNELS;
+  U32 image_size = png->width * png->height * PNG_CHANNELS;
   U8* image_stream_memory = push_array<U8>(arena, image_size);
   ctx.image_stream = create_stream(image_stream_memory, image_size);
   
   create_scratch(scratch, arena);
   
-  U32 unfiltered_size = png.width * png.height * PNG_CHANNELS + png.height;
+  U32 unfiltered_size = png->width * png->height * PNG_CHANNELS + png->height;
   U8* unfiltered_image_stream_memory = push_array<U8>(arena, unfiltered_size);
   ctx.unfiltered_image_stream = create_stream(unfiltered_image_stream_memory, unfiltered_size);
   
@@ -1069,6 +1069,6 @@ create_png(Memory png_memory) {
 }
 
 static B32 
-is_ok(PNG png) {
-  return png.data != nullptr;
+is_ok(PNG* png) {
+  return png->data != nullptr;
 }

@@ -75,27 +75,27 @@ struct TTF {
 // This returns the scale you need to multiply to a font
 // to get it's height in a certain pixel.
 static F32
-get_scale_for_pixel_height(TTF ttf, F32 pixel_height) {
-  S32 font_height = _ttf_read_s16(ttf.data + ttf.hhea + 4) - _ttf_read_s16(ttf.data + ttf.hhea + 6);
+get_scale_for_pixel_height(TTF* ttf, F32 pixel_height) {
+  S32 font_height = _ttf_read_s16(ttf->data + ttf->hhea + 4) - _ttf_read_s16(ttf->data + ttf->hhea + 6);
   return (F32)pixel_height/font_height;
 }
 
 
 // 0 is invalid
 static U32 
-get_glyph_index_from_codepoint(TTF ttf, U32 codepoint) {
+get_glyph_index_from_codepoint(TTF* ttf, U32 codepoint) {
   
-  U16 format = _ttf_read_u16(ttf.data + ttf.cmap_mappings + 0);
+  U16 format = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 0);
   
   
   switch(format) {
     case 4: { // 
-      U16 seg_count = _ttf_read_u16(ttf.data + ttf.cmap_mappings + 6) >> 1;
-      U16 search_range = _ttf_read_u16(ttf.data + ttf.cmap_mappings + 8) >> 1;
-      U16 entry_selector = _ttf_read_u16(ttf.data + ttf.cmap_mappings + 10);
-      U16 range_shift = _ttf_read_u16(ttf.data + ttf.cmap_mappings + 12) >> 1;
+      U16 seg_count = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 6) >> 1;
+      U16 search_range = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 8) >> 1;
+      U16 entry_selector = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 10);
+      U16 range_shift = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 12) >> 1;
       
-      U32 end_codes = ttf.cmap_mappings + 14;
+      U32 end_codes = ttf->cmap_mappings + 14;
       U32 start_codes = end_codes + 2 + (2*seg_count);
       U32 id_deltas = start_codes + (2*seg_count);
       U32 id_range_offsets = id_deltas + (2*seg_count);
@@ -108,25 +108,25 @@ get_glyph_index_from_codepoint(TTF ttf, U32 codepoint) {
       U16 seg_id = 0;
       U16 end_code = 0;
       for(U16 i = 0; i < seg_count; ++i) {
-        end_code = _ttf_read_u16(ttf.data + end_codes + (2 * i));
+        end_code = _ttf_read_u16(ttf->data + end_codes + (2 * i));
         if( end_code >= codepoint ){
           seg_id = i;
           break;
         }
       }
       
-      U16 start_code = _ttf_read_u16(ttf.data + start_codes + 2*seg_id);
+      U16 start_code = _ttf_read_u16(ttf->data + start_codes + 2*seg_id);
       
       if (start_code > codepoint) return 0;
       
-      U16 offset = _ttf_read_u16(ttf.data + id_range_offsets + 2*seg_id);
-      U16 delta = _ttf_read_u16(ttf.data + id_deltas + 2*seg_id);
+      U16 offset = _ttf_read_u16(ttf->data + id_range_offsets + 2*seg_id);
+      U16 delta = _ttf_read_u16(ttf->data + id_deltas + 2*seg_id);
       
       if (offset == 0 ){
         return codepoint + delta;
       }
       else {
-        return _ttf_read_u16(ttf.data +
+        return _ttf_read_u16(ttf->data +
                              id_range_offsets + 2*seg_id + // &id_range_offset[i]
                              offset + (codepoint - start_code)*2);
         
@@ -141,18 +141,18 @@ get_glyph_index_from_codepoint(TTF ttf, U32 codepoint) {
 }
 
 static U32
-_ttf_get_offset_to_glyph(TTF ttf, U32 glyph_index) {
-  assert(glyph_index < ttf.glyph_count);
+_ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
+  assert(glyph_index < ttf->glyph_count);
   
   U32 g1 = 0, g2 = 0;
-  switch(ttf.loca_format) {
+  switch(ttf->loca_format) {
     case 0: { // short format
-      g1 = ttf.glyf + _ttf_read_u16(ttf.data + ttf.loca + glyph_index * 2) * 2;
-      g2 = ttf.glyf + _ttf_read_u16(ttf.data + ttf.loca + glyph_index * 2 + 2) * 2;
+      g1 = ttf->glyf + _ttf_read_u16(ttf->data + ttf->loca + glyph_index * 2) * 2;
+      g2 = ttf->glyf + _ttf_read_u16(ttf->data + ttf->loca + glyph_index * 2 + 2) * 2;
     } break;
     case 1: { // long format
-      g1 = ttf.glyf + _ttf_read_u16(ttf.data + ttf.loca + glyph_index * 4);
-      g2 = ttf.glyf + _ttf_read_u16(ttf.data + ttf.loca + glyph_index * 4 + 4);
+      g1 = ttf->glyf + _ttf_read_u16(ttf->data + ttf->loca + glyph_index * 4);
+      g2 = ttf->glyf + _ttf_read_u16(ttf->data + ttf->loca + glyph_index * 4 + 4);
     } break;
     default: {
       return 0;
@@ -164,20 +164,20 @@ _ttf_get_offset_to_glyph(TTF ttf, U32 glyph_index) {
 }
 
 static Rect2S
-get_glyph_box(TTF ttf, U32 glyph_index) {
+get_glyph_box(TTF* ttf, U32 glyph_index) {
   Rect2S ret = {};
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   
-  ret.min.x = _ttf_read_s16(ttf.data + g + 2);
-  ret.min.y = _ttf_read_s16(ttf.data + g + 4);
-  ret.max.x = _ttf_read_s16(ttf.data + g + 6);
-  ret.min.y = _ttf_read_s16(ttf.data + g + 8);
+  ret.min.x = _ttf_read_s16(ttf->data + g + 2);
+  ret.min.y = _ttf_read_s16(ttf->data + g + 4);
+  ret.max.x = _ttf_read_s16(ttf->data + g + 6);
+  ret.min.y = _ttf_read_s16(ttf->data + g + 8);
   
   return ret;
 }
 
 static Rect2S
-get_glyph_bitmap_box(TTF ttf, U32 glyph_index, F32 pixel_scale_x, F32 pixel_scale_y) {
+get_glyph_bitmap_box(TTF* ttf, U32 glyph_index, F32 pixel_scale_x, F32 pixel_scale_y) {
   
   // Get offset to glyph info
   Rect2S ret = get_glyph_box(ttf, glyph_index);
@@ -188,7 +188,7 @@ get_glyph_bitmap_box(TTF ttf, U32 glyph_index, F32 pixel_scale_x, F32 pixel_scal
 }
 
 static Rect2S
-get_codepoint_bitmap_box(TTF ttf, U32 codepoint, F32 pixel_scale_x, F32 pixel_scale_y) {
+get_codepoint_bitmap_box(TTF* ttf, U32 codepoint, F32 pixel_scale_x, F32 pixel_scale_y) {
   U32 glyph_index = get_glyph_index_from_codepoint(ttf, codepoint); 
   return get_glyph_bitmap_box(ttf, glyph_index, pixel_scale_x, pixel_scale_y);
 }
@@ -297,13 +297,13 @@ read_ttf(Memory ttf_memory) {
     
     test_create_log_section_until_scope;
     switch(loca_format) {
-      case _TTF_LOCA_FORMAT_SHORT: { // short version
+      case 0: { // short version
         U16* loca = _ttf_get_loca_table_short_version(&ret);
         for( U32 i = 0; i < glyph_count; ++i) {
           test_log("[%d] %d\n", i, endian_swap_16(loca[i])); 
         }
       } break;
-      case _TTF_LOCA_FORMAT_LONG: { // long version
+      case 1: { // long version
         U32* loca = _ttf_get_loca_table_long_version(&ret);
         for( U32 i = 0; i < glyph_count; ++i) {
           test_log("[%d] %d\n", i, endian_swap_32(loca[i])); 
@@ -334,7 +334,7 @@ void test_ttf() {
   Memory ttf_memory = test_read_file_to_memory(&main_arena, 
                                                test_assets_dir("nokiafc22.ttf"));
   
-  TTF ttf = read_ttf(ttf_memory);
+  TTF* ttf = read_ttf(ttf_memory);
 #if 0
   test_eval_d(get_glyph_index_from_codepoint(ttf, 48));
   test_eval_f(get_scale_for_pixel_height(ttf, 72.f));
