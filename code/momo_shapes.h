@@ -4,8 +4,10 @@
 //~ Rects
 struct Rect2 {
   V2 min, max;
-  
-  
+};
+
+struct Rect2S{
+  V2S min, max;
 };
 
 struct Rect2U {
