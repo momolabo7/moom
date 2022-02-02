@@ -142,7 +142,6 @@ get_glyph_index_from_codepoint(TTF* ttf, U32 codepoint) {
 
 static U32
 _ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
-  test_log("%d\n", glyph_index);
   assert(glyph_index < ttf->glyph_count);
   
   U32 g1 = 0, g2 = 0;
@@ -229,15 +228,32 @@ get_glyph_shape(TTF* ttf, U32 glyph_index, Arena* arena) {
     // We do one pass to figure out how many vertices there are
     U32 point_count = 0; // actual point count
     {
+      B32 next_value_is_repeat = false;
       for (U16 i = 0; i < point_entry_count; ++i) {
-        U8 current_flag = *(ttf->data + flags + i);
-        test_eval_d(current_flag);
-        if (current_flag & 8) {
-          test_log("Got repeat!");
+        U8 current_value = *(ttf->data + flags + i);        
+        if (!next_value_is_repeat) { 
+          if (current_value & 8) {
+            next_value_is_repeat = true;
+            test_log("Repeat found\n");
+            
+          }
+          ++point_count;
+        }
+        else {
+          
+          point_count += current_value;
+          next_value_is_repeat = false;
         }
       }
-      
     }
+    test_eval_d(point_count);
+    
+    
+    // TODO: check if point_count corresponds to x and y coordinates...?
+    {
+    }
+    
+    
   }
   
   else if (number_of_contours < 0) { // compound glyph case
@@ -409,9 +425,8 @@ void test_ttf() {
   
   TTF ttf = read_ttf(ttf_memory);
   
-  test_eval_d(get_glyph_index_from_codepoint(&ttf, 0x47));
   
-  for (int i = 0x47; i <= 0x47; ++i) {
+  for (int i = 107; i <= 107 + 100; ++i) {
     create_scratch(scratch, &main_arena);
     Rect2S box = get_codepoint_bitmap_box(&ttf, i, 1.f, 1.f);
     test_log("box for codepoint %d\n", i);
