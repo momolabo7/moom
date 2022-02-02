@@ -82,7 +82,7 @@ get_scale_for_pixel_height(TTF* ttf, F32 pixel_height) {
 
 
 // 0 is invalid
-static U32 
+static U32
 get_glyph_index_from_codepoint(TTF* ttf, U32 codepoint) {
   
   U16 format = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 0);
@@ -120,7 +120,7 @@ get_glyph_index_from_codepoint(TTF* ttf, U32 codepoint) {
       if (start_code > codepoint) return 0;
       
       U16 offset = _ttf_read_u16(ttf->data + id_range_offsets + 2*seg_id);
-      U16 delta = _ttf_read_u16(ttf->data + id_deltas + 2*seg_id);
+      S16 delta = _ttf_read_s16(ttf->data + id_deltas + 2*seg_id);
       
       if (offset == 0 ){
         return codepoint + delta;
@@ -142,6 +142,7 @@ get_glyph_index_from_codepoint(TTF* ttf, U32 codepoint) {
 
 static U32
 _ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
+  test_log("%d\n", glyph_index);
   assert(glyph_index < ttf->glyph_count);
   
   U32 g1 = 0, g2 = 0;
@@ -163,8 +164,9 @@ _ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
   
 }
 
+// gets the glyph box from ttf without any modifications
 static Rect2S
-_ttf_get_glyph_box(TTF* ttf, U32 glyph_index) {
+get_glyph_box(TTF* ttf, U32 glyph_index) {
   Rect2S ret = {};
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   
@@ -176,17 +178,15 @@ _ttf_get_glyph_box(TTF* ttf, U32 glyph_index) {
   return ret;
 }
 
-
-// should return a box that covers the glyph that is ideal for rasterizing the font as bitmap
 static Rect2S
 get_glyph_bitmap_box(TTF* ttf, U32 glyph_index, F32 pixel_scale_x, F32 pixel_scale_y) {
   
   // Get offset to glyph info
-  Rect2S box = _ttf_get_glyph_box(ttf, glyph_index);
+  Rect2S box = get_glyph_box(ttf, glyph_index);
   
-  // convert to bitmap-style coordinates
-  // i.e. min is top left and max is bottom right
-  // as opposed to min is bottom left and max is top right
+  // convert to coordinates that makes sense
+  // i.e. min is really the minimum values of the box and 
+  // max is really the maximum values of the box
   Rect2S ret;
   ret.min.x = (S32)floor((F32)box.min.x * pixel_scale_x);
   ret.max.x = (S32)ceil((F32)box.max.x * pixel_scale_x);
@@ -197,11 +197,74 @@ get_glyph_bitmap_box(TTF* ttf, U32 glyph_index, F32 pixel_scale_x, F32 pixel_sca
   return ret;
 }
 
+struct TTF_Vertex {
+  S16 x, y, cx, cy, cx1, cy1; 
+  U8 type;
+  U8 padding;
+};
+
+struct TTF_Glyph_Shape {
+  TTF_Vertex* vertices;
+  U32 vertex_count;
+};
+
+static TTF_Glyph_Shape
+get_glyph_shape(TTF* ttf, U32 glyph_index, Arena* arena) {
+  U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
+  S16 number_of_contours = _ttf_read_s16(ttf->data + g + 0);
+  
+  
+  
+  if (number_of_contours > 0) { // single glyph case
+    U16 point_entry_count = _ttf_read_u16(ttf->data + g + 10 + number_of_contours*2-2);
+    U16 instruction_length = _ttf_read_u16(ttf->data + g + 10 + number_of_contours*2);
+    
+    U32 flags = g + 10 + number_of_contours*2 + 2 + instruction_length*2;
+    U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length*2;
+    
+    // output end pts of contours
+    test_eval_d(number_of_contours);
+    test_eval_d(point_entry_count);
+    
+    // We do one pass to figure out how many vertices there are
+    U32 point_count = 0; // actual point count
+    {
+      for (U16 i = 0; i < point_entry_count; ++i) {
+        U8 current_flag = *(ttf->data + flags + i);
+        test_eval_d(current_flag);
+        if (current_flag & 8) {
+          test_log("Got repeat!");
+        }
+      }
+      
+    }
+  }
+  
+  else if (number_of_contours < 0) { // compound glyph case
+    test_log("compound glyph! %d\n", glyph_index);
+    assert(false);
+  }
+  else { //contour_count == 0
+    // do nothing
+  } 
+  
+  return {};
+}
+
+static TTF_Glyph_Shape
+get_codepoint_shape(TTF* ttf, U32 codepoint, Arena* arena) {
+  U32 glyph_index = get_glyph_index_from_codepoint(ttf, codepoint); 
+  return get_glyph_shape(ttf, glyph_index, arena);
+}
+
+
 static Rect2S
 get_codepoint_bitmap_box(TTF* ttf, U32 codepoint, F32 pixel_scale_x, F32 pixel_scale_y) {
   U32 glyph_index = get_glyph_index_from_codepoint(ttf, codepoint); 
   return get_glyph_bitmap_box(ttf, glyph_index, pixel_scale_x, pixel_scale_y);
 }
+
+
 
 static TTF
 read_ttf(Memory ttf_memory) {
@@ -346,20 +409,21 @@ void test_ttf() {
   
   TTF ttf = read_ttf(ttf_memory);
   
-#if 0
-  test_eval_d(get_glyph_index_from_codepoint(&ttf, 48));
-  test_eval_f(get_scale_for_pixel_height(&ttf, 72.f));
-#endif
+  test_eval_d(get_glyph_index_from_codepoint(&ttf, 0x47));
   
-  for (int i = 48; i <= 58; ++i) {
-    
+  for (int i = 0x47; i <= 0x47; ++i) {
+    create_scratch(scratch, &main_arena);
     Rect2S box = get_codepoint_bitmap_box(&ttf, i, 1.f, 1.f);
     test_log("box for codepoint %d\n", i);
     test_create_log_section_until_scope;
+#if 0
     test_eval_d(box.min.x);
     test_eval_d(box.min.y);
     test_eval_d(box.max.x);
     test_eval_d(box.max.y);
+#endif
+    
+    get_codepoint_shape(&ttf, i, scratch);
   }
   
   
