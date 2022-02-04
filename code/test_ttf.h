@@ -607,7 +607,7 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
           U32 start_x = (U32)active_edges.e[active_edge_index]->x_intersect;
           U32 end_x = (U32)active_edges.e[active_edge_index + 1]->x_intersect;
           for(U32 x = start_x; x <= end_x; ++x) {
-            pixels[x + y * image_width] = 0xFF0000FF;
+            pixels[x + y * image_width] = 0xFF000000;
           }
         }
       }
