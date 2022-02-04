@@ -21,12 +21,14 @@ remaining_of(Arena* a) {
 
 static void* 
 push_block(Arena* a, UMI size, UMI align) {
-  assert(size);
+  //assert(size);
+  if (size == 0) return nullptr;
 	
 	UMI imem = ptr_to_int(a->memory);
 	UMI adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
 	
-	assert(imem + adjusted_pos + size < imem + a->cap);
+  if (imem + adjusted_pos + size >= imem + a->cap) return nullptr;
+  //assert(imem + adjusted_pos + size < imem + a->cap);
 	
 	U8* ret = int_to_ptr(imem + adjusted_pos);
 	a->pos = adjusted_pos + size;

@@ -56,6 +56,29 @@
 #define SList_Remove(l,i)   ((i < (l)->count) ? (copy_memory((l)->e+i, (l)->e+i+1, sizeof((l)->e[0])*((l)->count--)-i)), 1 : 0)
 #define SList_Remain(l)     (SList_Cap(l) - (l)->count)
 
+
+//~ Static array
+template<typename T>
+struct Array {
+  T* e;
+  UMI count;
+};
+
+template<typename T> static Array<T> create_array(T* data, UMI count);
+
+//~Static list
+template<typename T>
+struct List {
+  T* e;
+  UMI count;
+  UMI cap;
+};
+template<typename T> static List<T> create_list(T* data, UMI cap);
+template<typename T> static void push_back(List<T>* list, T item);
+template<typename T> static void clear(List<T>* list);
+
 #include "momo_lists.cpp"
+
+
 
 #endif //MOMO_ARRAY_H

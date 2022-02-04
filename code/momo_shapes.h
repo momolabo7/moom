@@ -19,19 +19,6 @@ struct Rect3 {
 };
 
 
-static constexpr F32 width_of(Rect2);
-static constexpr U32 width_of(Rect2U);
-static constexpr S32 width_of(Rect2S);
-static constexpr F32 width_of(Rect3);
-
-static constexpr F32 height_of(Rect2);
-static constexpr U32 height_of(Rect2U);
-static constexpr S32 height_of(Rect2S);
-static constexpr F32 height_of(Rect3);
-
-static constexpr F32 depth_of(Rect3);
-
-
 //~ Circles
 struct Circ2
 {

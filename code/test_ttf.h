@@ -18,27 +18,6 @@ _ttf_read_u32(U8* location) {
 };
 
 
-struct _TTF_cmap_Mappings {
-  U16 format;
-};
-
-struct _TTF_maxp {
-  U32 version;
-  U16 num_glyphs;
-  U16 max_points;
-  U16 max_contours;
-  U16 max_component_points;
-  U16 max_component_contours;
-  U16 max_zones;
-  U16 max_twilight_points;
-  U16 max_storage;
-  U16 max_function_defs;
-  U16 max_instruction_defs;
-  U16 max_stack_elements;
-  U16 max_size_of_instructions;
-  U16 max_component_elements;
-  U16 max_component_depth;
-};
 
 enum {
   _TTF_CMAP_PLATFORM_ID_UNICODE = 0,
@@ -163,7 +142,22 @@ _ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
   
 }
 
-// gets the glyph box from ttf without any modifications
+// Get the glyph box as-is from the TTF.
+//
+// The glyph's box's coordinate system's origin is at the top right
+// x moves towards the right, y moves towards the bottom
+//
+// ----x
+// |
+// |
+// y
+//
+// The box contains values where:
+//   min = bottom left of the glyph
+//   max = top right of the glyph
+// with respect to the coordinate system stated above.
+// 
+// TODO private?
 static Rect2S
 get_glyph_box(TTF* ttf, U32 glyph_index) {
   Rect2S ret = {};
@@ -177,110 +171,142 @@ get_glyph_box(TTF* ttf, U32 glyph_index) {
   return ret;
 }
 
-static Rect2S
-get_glyph_bitmap_box(TTF* ttf, U32 glyph_index, F32 pixel_scale_x, F32 pixel_scale_y) {
-  
-  // Get offset to glyph info
-  Rect2S box = get_glyph_box(ttf, glyph_index);
-  
-  // convert to coordinates that makes sense
-  // i.e. min is really the minimum values of the box and 
-  // max is really the maximum values of the box
-  Rect2S ret;
-  ret.min.x = (S32)floor((F32)box.min.x * pixel_scale_x);
-  ret.max.x = (S32)ceil((F32)box.max.x * pixel_scale_x);
-  ret.min.y = (S32)floor((F32)box.max.y * pixel_scale_y);
-  ret.max.y = (S32)ceil((F32)box.min.y * pixel_scale_y);
-  
-  
-  return ret;
-}
 
-struct TTF_Vertex {
-  S16 x, y, cx, cy, cx1, cy1; 
-  U8 type;
-  U8 padding;
+
+struct TTF_Glyph_Point {
+  S16 x, y; 
+  U8 flags;
+  B32 is_end_point;
 };
 
-struct TTF_Glyph_Shape {
-  TTF_Vertex* vertices;
-  U32 vertex_count;
-};
 
-static TTF_Glyph_Shape
-get_glyph_shape(TTF* ttf, U32 glyph_index, Arena* arena) {
+// A glyph point's coordinate system's origin is at the bottom left.
+// x moves towards the right, y moves towards the top
+//
+// y
+// |
+// | 
+// ----x
+//
+static Array<TTF_Glyph_Point>
+get_glyph_points(TTF* ttf, U32 glyph_index, Arena* arena) {
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   S16 number_of_contours = _ttf_read_s16(ttf->data + g + 0);
   
   
-  
   if (number_of_contours > 0) { // single glyph case
-    U16 point_entry_count = _ttf_read_u16(ttf->data + g + 10 + number_of_contours*2-2);
+    U16 point_count = _ttf_read_u16(ttf->data + g + 10 + number_of_contours*2-2) + 1;
     U16 instruction_length = _ttf_read_u16(ttf->data + g + 10 + number_of_contours*2);
     
     U32 flags = g + 10 + number_of_contours*2 + 2 + instruction_length*2;
-    U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length*2;
     
     // output end pts of contours
-    test_eval_d(number_of_contours);
-    test_eval_d(point_entry_count);
+    //test_eval_d(number_of_contours);
+    //test_eval_d(point_count);
     
-    // We do one pass to figure out how many vertices there are
-    U32 point_count = 0; // actual point count
+    auto* points = push_array<TTF_Glyph_Point>(arena, point_count);
+    zero_range(points, point_count); 
+    U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length*2;
+    
+    // Load the flags
+    // flag info: https://docs.microsoft.com/en-us/typography/opentype/spec/glyf    
     {
-      B32 next_value_is_repeat = false;
-      for (U16 i = 0; i < point_entry_count; ++i) {
-        U8 current_value = *(ttf->data + flags + i);        
-        if (!next_value_is_repeat) { 
-          if (current_value & 8) {
-            next_value_is_repeat = true;
-            test_log("Repeat found\n");
-            
+      U8 current_flags = 0;
+      U8 flag_count = 0;
+      for (U32 i = 0; i < point_count; ++i) {
+        if (flag_count == 0) {
+          current_flags = *point_itr++;
+          if (current_flags & 0x8) {
+            flag_count = *point_itr++;
           }
-          ++point_count;
         }
         else {
-          
-          point_count += current_value;
-          next_value_is_repeat = false;
+          --flag_count;
         }
+        points[i].flags = current_flags;
       }
     }
-    test_eval_d(point_count);
     
     
-    // TODO: check if point_count corresponds to x and y coordinates...?
+    // Load the x coordinates
     {
+      S16 x = 0;
+      for (U32 i = 0; i < point_count; ++i ){
+        flags = points[i].flags;
+        if (flags & 0x2) {
+          // if this is set, corresponding x-coordinate is 1 byte long
+          // and the sign is determined by 0x10
+          S16 dx = (S16)*point_itr++;
+          x += (flags & 0x10) ? dx : -dx;            
+        }
+        else {
+          // if this is not set, then...
+          if (flags & 0x10) {
+            // if this is set, then this x-coord is same as prev x-coord
+            // i.e. we do nothing
+          }
+          else {
+            // otherwise, this is 2 bytes long and intepreted as S16
+            x += _ttf_read_s16(point_itr);
+            point_itr += 2;
+          }
+          
+        }
+        points[i].x = x;
+      }
+    }
+    
+    // Load the y coordinates
+    {
+      S16 y = 0;
+      for (U32 i = 0; i < point_count; ++i ){
+        flags = points[i].flags;
+        if (flags & 0x4) {
+          // if this is set, corresponding y-coordinate is 1 byte long
+          // and the sign is determined by 0x10
+          S16 dy = (S16)*point_itr++;
+          y += (flags & 0x20) ? dy : -dy;            
+        }
+        else {
+          // if this is not set, then...
+          if (flags & 0x20) {
+            // if this is set, then this y-coord is same as prev y-coord
+            // i.e. we do nothing
+          }
+          else {
+            // otherwise, this is 2 bytes long and intepreted as S16
+            y += _ttf_read_s16(point_itr);
+            point_itr += 2;
+          }
+          
+        }
+        points[i].y = y;
+      }
+    }
+    
+    // mark the points that are contour endpoints
+    {
+      U32 contour_end_points = g + 10; 
+      for (S16 i = 0; i < number_of_contours; ++i) {
+        U16 contour_end_point_index = _ttf_read_u16(ttf->data + contour_end_points + i*2);
+        points[contour_end_point_index].is_end_point = true;
+      }
     }
     
     
+    return create_array(points, point_count);
   }
   
   else if (number_of_contours < 0) { // compound glyph case
     test_log("compound glyph! %d\n", glyph_index);
     assert(false);
+    return {};
   }
   else { //contour_count == 0
     // do nothing
+    return {};
   } 
-  
-  return {};
 }
-
-static TTF_Glyph_Shape
-get_codepoint_shape(TTF* ttf, U32 codepoint, Arena* arena) {
-  U32 glyph_index = get_glyph_index_from_codepoint(ttf, codepoint); 
-  return get_glyph_shape(ttf, glyph_index, arena);
-}
-
-
-static Rect2S
-get_codepoint_bitmap_box(TTF* ttf, U32 codepoint, F32 pixel_scale_x, F32 pixel_scale_y) {
-  U32 glyph_index = get_glyph_index_from_codepoint(ttf, codepoint); 
-  return get_glyph_bitmap_box(ttf, glyph_index, pixel_scale_x, pixel_scale_y);
-}
-
-
 
 static TTF
 read_ttf(Memory ttf_memory) {
@@ -371,41 +397,228 @@ read_ttf(Memory ttf_memory) {
   }
   
   
-#if 0
-  // Test 'loca' info
-  test_log("Testing loca info\n");
-  {
-    test_create_log_section_until_scope;
-    _TTF_head* head = _ttf_get_head_table(&ret);
-    U32 loca_format = endian_swap_16(head->index_to_loc_format);
-    
-    _TTF_maxp* maxp = _ttf_get_maxp_table(&ret);
-    U32 glyph_count = endian_swap_16(maxp->num_glyphs);
-    
-    test_log("offset mod is %d\n", offset_mod);
-    
-    test_create_log_section_until_scope;
-    switch(loca_format) {
-      case 0: { // short version
-        U16* loca = _ttf_get_loca_table_short_version(&ret);
-        for( U32 i = 0; i < glyph_count; ++i) {
-          test_log("[%d] %d\n", i, endian_swap_16(loca[i])); 
-        }
-      } break;
-      case 1: { // long version
-        U32* loca = _ttf_get_loca_table_long_version(&ret);
-        for( U32 i = 0; i < glyph_count; ++i) {
-          test_log("[%d] %d\n", i, endian_swap_32(loca[i])); 
-        }
-      } break;
-    }
-  }
-#endif
-  
   
   return ret;
 }
 
+struct TTF_Edge {
+  V2 p0, p1;
+  B32 is_inverted;
+  F32 x_intersect;
+};
+
+
+static Image 
+rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
+  // TODO: scale param
+  U32 glyph_index = get_glyph_index_from_codepoint(ttf, codepoint);
+  F32 glyph_scale = get_scale_for_pixel_height(ttf, 128.f);
+  
+  // Scale the box and get the width and height of the box
+  
+  U32 image_width = 0;
+  U32 image_height = 0;
+  
+  F32 width = 0;
+  F32 height = 0;   
+  {
+    
+    Rect2S raw_box = get_glyph_box(ttf, glyph_index);
+    Rect2 box;
+#if 0
+    box.min.x = (S32)floor((F32)raw_box.min.x * glyph_scale);
+    box.max.x = (S32)ceil((F32)raw_box.max.x * glyph_scale);
+    box.min.y = (S32)floor((F32)raw_box.min.y * glyph_scale);
+    box.max.y = (S32)ceil((F32)raw_box.max.y * glyph_scale);
+#endif
+    box.min.x = (F32)raw_box.min.x * glyph_scale;
+    box.min.y = (F32)raw_box.max.y * glyph_scale;
+    box.max.x = (F32)raw_box.max.x * glyph_scale;
+    box.max.y = (F32)raw_box.min.y * glyph_scale;
+    
+    test_log("box for %d\n", glyph_index);
+    {
+      test_create_log_section_until_scope;
+      test_eval_f(box.min.x);
+      test_eval_f(box.max.x);
+      test_eval_f(box.min.y);
+      test_eval_f(box.max.y);
+    }
+    
+    width = box.max.x - box.min.x;
+    height = box.max.y - box.min.y;
+    
+    image_width = (U32)(box.max.x - box.min.x) + 1;
+    image_height = (U32)(box.max.y - box.min.y) + 1;
+    
+  } 
+  
+  U32* pixels = push_array<U32>(arena, image_width * image_height);
+  assert(pixels);
+  
+  // Set to white background
+  // TODO(Momo): remove
+  for (U32 i = 0; i < image_width*image_height; ++i) {
+    pixels[i] = 0xFFFFFFFF;
+  }
+  
+  create_scratch(scratch, arena);
+  
+  
+  auto points = get_glyph_points(ttf, glyph_index, scratch);
+  
+  // generate scaled edges based on points
+  Array<TTF_Edge> edges = {};
+  {
+    UMI edge_count = points.count;
+    auto* e = push_array<TTF_Edge>(scratch, edge_count);
+    assert(e);
+    zero_range(e, edge_count);
+    
+    // NOTE(Momo): We have to scale the points and flip the y...
+    UMI start_index = 0;
+    B32 is_start = false;
+    for (UMI i = 0; i < points.count; ++i) {
+      if (is_start) {
+        start_index = i;
+        is_start = false;
+      }
+      
+      
+      e[i].p0.x = (F32)points.e[i].x * glyph_scale;
+      e[i].p0.y = (F32)(height) - (F32)(points.e[i].y ) * glyph_scale;
+      
+      if (points.e[i].is_end_point) {
+        is_start = true;
+        e[i].p1.x = (F32)points.e[start_index].x * glyph_scale;
+        e[i].p1.y = (F32)(height) - (F32)points.e[start_index].y * glyph_scale;
+      }
+      else {
+        e[i].p1.x = (F32)points.e[i+1].x * glyph_scale;
+        e[i].p1.y = (F32)(height) - (F32)points.e[i+1].y * glyph_scale;
+      }
+      
+      // It's easier for the rasterization algorithm to have the edges'
+      // p0 be on top of p1. If we flip, we will indicate it within the edge
+      if (e[i].p0.y > e[i].p1.y) {
+        swap(&e[i].p0, &e[i].p1);
+        e[i].is_inverted = true;
+      }
+    }
+    
+    
+    edges = create_array(e, points.count);
+  }   
+  
+  
+#if 1
+  // NOTE(Momo): Debug
+  for (UMI i = 0; i < edges.count; ++i) {
+    auto* edge = edges.e + i;
+    
+    S32 sx = (S32)edge->p0.x;
+    S32 sy = (S32)edge->p0.y;
+    
+    S32 ex = (S32)edge->p1.x;
+    S32 ey = (S32)edge->p1.y;
+    
+    S32 dx = edge->p0.x < edge->p1.x ? 1 : -1;
+    S32 dy = edge->p0.y < edge->p1.y ? 1 : -1;
+    
+    for(S32 x = sx; x != ex; x += dx)
+      pixels[x + sy * image_width] = 0x000000FF;
+    
+    for(S32 y = sy; y != ey; y += dy)
+      pixels[sx + y * image_width] = 0x000000FF;
+    
+  }
+  
+#endif
+  
+  
+  // Rasterazation algo
+  // Sort edges by top most edge
+  quicksort(edges.e, edges.count, [](TTF_Edge* lhs, TTF_Edge* rhs) {
+              F32 lhs_y = max_of(lhs->p0.y, lhs->p1.y);
+              F32 rhs_y = max_of(rhs->p0.y, rhs->p1.y);
+              return lhs_y < rhs_y;
+            });
+  
+  // create an 'active edges list'
+  auto active_edges = create_list(push_array<TTF_Edge*>(scratch, edges.count), edges.count);
+  
+  for (UMI i = 0; i < edges.count; ++i){
+    auto* edge = edges.e + i;
+    test_log("{%f %f} -> {%f %f}: %s\n",
+             edge->p0.x,
+             edge->p0.y,
+             edge->p1.x,
+             edge->p1.y,
+             edge->is_inverted ? "inverted": "normal");
+  }
+  
+  // NOTE(Momo): Currently, I'm lazy, so I'll just keep clearing and refilling the active_edges list per scan line
+  //for(U32 line = 0; line < image_height; ++line) {
+  for(U32 line = 0; line <= 0; ++line) {
+    F32 linef = (F32)line + 0.5f; // 'center' of pixel
+    clear(&active_edges);
+    // Add to 'active edge list' any edges which have an uppermost vertex (p0) 
+    // before this line and lowermost vertex after this line.
+    for (UMI edge_index = 0; edge_index < edges.count; ++edge_index){
+      auto* edge = edges.e + edge_index;
+      if (edge->p0.y <= linef && edge->p1.y >= linef) {
+        // calculate the x intersection
+        F32 dx = edge->p1.x - edge->p0.x;
+        F32 dy = edge->p1.y - edge->p0.y;
+        if (dy != 0.f) {
+          F32 t = (linef - edge->p0.y) / dy;
+          edge->x_intersect = edge->p0.x + (t * dx);
+          push_back(&active_edges, edge);
+        }
+      }
+    }
+    
+    //sort the active edge list by their x_intersect
+    quicksort(active_edges.e, active_edges.count, [](TTF_Edge**lhs, TTF_Edge** rhs) {
+                return (*lhs)->x_intersect < (*rhs)->x_intersect;
+              });
+    
+    
+    
+    test_log("checking current active edges\n");
+    for (UMI i = 0; i < active_edges.count; ++i){
+      auto* edge = active_edges.e[i];
+      test_log("{%f %f} -> {%f %f} x %f: %s\n",
+               edge->p0.x,
+               edge->p0.y,
+               edge->p1.x,
+               edge->p1.y,
+               edge->x_intersect,
+               edge->is_inverted ? "inverted": "normal");
+    }
+    
+    //TODO: time to draw!
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  Image ret;
+  ret.width = image_width;
+  ret.height = image_height;
+  ret.pixels = pixels;
+  
+  return ret;
+  
+}
 
 void test_ttf() {
   test_create_log_section_until_scope;
@@ -425,22 +638,15 @@ void test_ttf() {
   
   TTF ttf = read_ttf(ttf_memory);
   
+  U32 codepoint = 65;
+  create_scratch(scratch, &main_arena);
   
-  for (int i = 107; i <= 107 + 100; ++i) {
-    create_scratch(scratch, &main_arena);
-    Rect2S box = get_codepoint_bitmap_box(&ttf, i, 1.f, 1.f);
-    test_log("box for codepoint %d\n", i);
-    test_create_log_section_until_scope;
-#if 0
-    test_eval_d(box.min.x);
-    test_eval_d(box.min.y);
-    test_eval_d(box.max.x);
-    test_eval_d(box.max.y);
-#endif
-    
-    get_codepoint_shape(&ttf, i, scratch);
+  Image codepoint_image = rasterize_codepoint(&ttf, codepoint, scratch);
+  {
+    create_scratch(image_scratch, scratch);
+    Memory image_mem = write_image_as_png(codepoint_image, image_scratch);
+    test_write_memory_to_file(image_mem, "codepoint.png");
   }
-  
   
   
 }

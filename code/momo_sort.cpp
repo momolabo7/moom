@@ -48,6 +48,5 @@ _quicksort_range(T* a,
 template<typename T, typename BinaryCompare> static void
 quicksort(T* arr, UMI count, BinaryCompare cmp) {
   _quicksort_range(arr, 0, count, cmp);
-  
   //QuickSortBlock(arr, count, sizeof(T), pred);
 }
