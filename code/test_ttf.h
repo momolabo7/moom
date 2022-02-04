@@ -511,7 +511,7 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   }   
   
   
-#if 1
+#if 0
   // NOTE(Momo): Debug
   for (UMI i = 0; i < edges.count; ++i) {
     auto* edge = edges.e + i;
@@ -547,31 +547,22 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   // create an 'active edges list'
   auto active_edges = create_list(push_array<TTF_Edge*>(scratch, edges.count), edges.count);
   
-  for (UMI i = 0; i < edges.count; ++i){
-    auto* edge = edges.e + i;
-    test_log("{%f %f} -> {%f %f}: %s\n",
-             edge->p0.x,
-             edge->p0.y,
-             edge->p1.x,
-             edge->p1.y,
-             edge->is_inverted ? "inverted": "normal");
-  }
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep clearing and refilling the active_edges list per scan line
   //for(U32 line = 0; line < image_height; ++line) {
-  for(U32 line = 0; line <= 0; ++line) {
-    F32 linef = (F32)line + 0.5f; // 'center' of pixel
+  for(U32 y = 0; y <= image_height; ++y) {
+    F32 yf = (F32)y; // 'center' of pixel
     clear(&active_edges);
     // Add to 'active edge list' any edges which have an uppermost vertex (p0) 
-    // before this line and lowermost vertex after this line.
+    // before this y and lowermost vertex after this y.
     for (UMI edge_index = 0; edge_index < edges.count; ++edge_index){
       auto* edge = edges.e + edge_index;
-      if (edge->p0.y <= linef && edge->p1.y >= linef) {
+      if (edge->p0.y <= yf && edge->p1.y >= yf) {
         // calculate the x intersection
         F32 dx = edge->p1.x - edge->p0.x;
         F32 dy = edge->p1.y - edge->p0.y;
         if (dy != 0.f) {
-          F32 t = (linef - edge->p0.y) / dy;
+          F32 t = (yf - edge->p0.y) / dy;
           edge->x_intersect = edge->p0.x + (t * dx);
           push_back(&active_edges, edge);
         }
@@ -585,6 +576,7 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
     
     
     
+#if 0
     test_log("checking current active edges\n");
     for (UMI i = 0; i < active_edges.count; ++i){
       auto* edge = active_edges.e[i];
@@ -596,18 +588,31 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
                edge->x_intersect,
                edge->is_inverted ? "inverted": "normal");
     }
+#endif
     
-    //TODO: time to draw!
+    
+    
+    if (active_edges.count >= 2) {
+      U32 crossings = 0;
+      for (UMI active_edge_index = 0; 
+           active_edge_index < active_edges.count;
+           ++active_edge_index) 
+      {
+        auto* start_edge = active_edges.e[active_edge_index];
+        auto* end_edge = active_edges.e[active_edge_index+1];
+        
+        start_edge->is_inverted ? ++crossings : --crossings;
+        
+        if (crossings > 0) {
+          U32 start_x = (U32)active_edges.e[active_edge_index]->x_intersect;
+          U32 end_x = (U32)active_edges.e[active_edge_index + 1]->x_intersect;
+          for(U32 x = start_x; x <= end_x; ++x) {
+            pixels[x + y * image_width] = 0xFF0000FF;
+          }
+        }
+      }
+    }
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   
   
@@ -638,7 +643,7 @@ void test_ttf() {
   
   TTF ttf = read_ttf(ttf_memory);
   
-  U32 codepoint = 65;
+  U32 codepoint = 66;
   create_scratch(scratch, &main_arena);
   
   Image codepoint_image = rasterize_codepoint(&ttf, codepoint, scratch);
