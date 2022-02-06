@@ -43,12 +43,43 @@ struct TTF {
   U32 glyph_count;
   
   // these are positions from data
-  U32 loca, head, glyf, maxp, cmap, hhea;
+  U32 loca, head, glyf, maxp, cmap, hhea, hmtx;
   U32 cmap_mappings;
   
   U16 loca_format;
 };
 
+
+struct TTF_Glyph_Horizontal_Metrics
+{
+  S16 advance_width;
+  S16 left_side_bearing;
+};
+
+static TTF_Glyph_Horizontal_Metrics 
+get_glyph_horizontal_metrics(TTF* ttf, U32 glyph_index)
+{
+  U16 num_of_long_horizontal_metrices = _ttf_read_u16(ttf->data + ttf->hhea + 34);
+  TTF_Glyph_Horizontal_Metrics ret = {};
+  if (glyph_index < num_of_long_horizontal_metrices) {
+    ret.advance_width = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index);
+    ret.left_side_bearing = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index + 2);
+  }
+  else {
+    ret.advance_width = 
+      _ttf_read_s16(ttf->data + 
+                    ttf->hmtx + 
+                    4*(num_of_long_horizontal_metrices-1));
+    ret.left_side_bearing = 
+      _ttf_read_s16(ttf->data + 
+                    ttf->hmtx + 
+                    4*num_of_long_horizontal_metrices + 
+                    2*(glyph_index - num_of_long_horizontal_metrices));
+  }
+  
+  return ret;
+  
+}
 
 
 // This returns the scale you need to multiply to a font
@@ -206,7 +237,7 @@ get_glyph_points(TTF* ttf, U32 glyph_index, Arena* arena) {
     
     auto* points = push_array<TTF_Glyph_Point>(arena, point_count);
     zero_range(points, point_count); 
-    U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length*2;
+    U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
     
     // Load the flags
     // flag info: https://docs.microsoft.com/en-us/typography/opentype/spec/glyf    
@@ -340,7 +371,9 @@ read_ttf(Memory ttf_memory) {
       case 'hhea': {
         ret.hhea = _ttf_read_u32(ret.data + directory + 8);
       } break;
-      
+      case 'hmtx': {
+        ret.hmtx = _ttf_read_u32(ret.data + directory + 8);
+      } break;
     }
     
   }
@@ -352,6 +385,7 @@ read_ttf(Memory ttf_memory) {
   assert(ret.glyf);
   assert(ret.cmap);
   assert(ret.hhea);
+  assert(ret.hmtx);
   
   ret.loca_format = _ttf_read_u16(ret.data + ret.head + 50);
   assert(ret.loca_format < 2);
@@ -511,31 +545,6 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   }   
   
   
-#if 0
-  // NOTE(Momo): Debug
-  for (UMI i = 0; i < edges.count; ++i) {
-    auto* edge = edges.e + i;
-    
-    S32 sx = (S32)edge->p0.x;
-    S32 sy = (S32)edge->p0.y;
-    
-    S32 ex = (S32)edge->p1.x;
-    S32 ey = (S32)edge->p1.y;
-    
-    S32 dx = edge->p0.x < edge->p1.x ? 1 : -1;
-    S32 dy = edge->p0.y < edge->p1.y ? 1 : -1;
-    
-    for(S32 x = sx; x != ex; x += dx)
-      pixels[x + sy * image_width] = 0x000000FF;
-    
-    for(S32 y = sy; y != ey; y += dy)
-      pixels[sx + y * image_width] = 0x000000FF;
-    
-  }
-  
-#endif
-  
-  
   // Rasterazation algo
   // Sort edges by top most edge
   quicksort(edges.e, edges.count, [](TTF_Edge* lhs, TTF_Edge* rhs) {
@@ -548,6 +557,31 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   auto active_edges = create_list(push_array<TTF_Edge*>(scratch, edges.count), edges.count);
   
   
+#if 1
+  // NOTE(Momo): Debug
+  for (UMI i = 0; i < edges.count; ++i) {
+    auto* edge = edges.e + i;
+    
+    S32 sx = (S32)edge->p0.x;
+    S32 sy = (S32)edge->p0.y;
+    
+    S32 ex = (S32)edge->p1.x;
+    S32 ey = (S32)edge->p1.y;
+    
+    pixels[sx + sy * image_width] = 0x000000FF;
+    pixels[ex + ey * image_width] = 0x000000FF;
+    //S32 dx = edge->p0.x < edge->p1.x ? 1 : -1;
+    //S32 dy = edge->p0.y < edge->p1.y ? 1 : -1;
+    
+    //for(S32 x = sx; x != ex; x += dx)
+    //pixels[x + sy * image_width] = 0x000000FF;
+    
+    //for(S32 y = sy; y != ey; y += dy)
+    //pixels[sx + y * image_width] = 0x000000FF;
+    
+  }
+  
+#else  
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep clearing and refilling the active_edges list per scan line
   //for(U32 line = 0; line < image_height; ++line) {
   for(U32 y = 0; y <= image_height; ++y) {
@@ -588,10 +622,7 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
                edge->x_intersect,
                edge->is_inverted ? "inverted": "normal");
     }
-#endif
-    
-    
-    
+#endif    
     if (active_edges.count >= 2) {
       U32 crossings = 0;
       for (UMI active_edge_index = 0; 
@@ -612,8 +643,9 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
         }
       }
     }
+    
   }
-  
+#endif  
   
   
   Image ret;
@@ -639,7 +671,12 @@ void test_ttf() {
   
   Arena main_arena = create_arena(memory, memory_size);
   Memory ttf_memory = test_read_file_to_memory(&main_arena, 
-                                               test_assets_dir("nokiafc22.ttf"));
+#if 1
+                                               test_assets_dir("nokiafc22.ttf")
+#else
+                                           		test_assets_dir("DroidSansMono.ttf")
+#endif
+                                               );
   
   TTF ttf = read_ttf(ttf_memory);
   
