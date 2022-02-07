@@ -204,10 +204,14 @@ get_glyph_box(TTF* ttf, U32 glyph_index) {
 
 
 
-struct TTF_Glyph_Point {
+struct _TTF_Glyph_Point {
   S16 x, y; 
   U8 flags;
-  B32 is_end_point;
+};
+
+struct _TTF_Glyph_Shape {
+  Array<_TTF_Glyph_Point> pts;
+  Array<U16> end_pt_indices;
 };
 
 
@@ -219,8 +223,8 @@ struct TTF_Glyph_Point {
 // | 
 // ----x
 //
-static Array<TTF_Glyph_Point>
-get_glyph_points(TTF* ttf, U32 glyph_index, Arena* arena) {
+static _TTF_Glyph_Shape
+_ttf_get_glyph_shape(TTF* ttf, U32 glyph_index, Arena* arena) {
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   S16 number_of_contours = _ttf_read_s16(ttf->data + g + 0);
   
@@ -235,7 +239,7 @@ get_glyph_points(TTF* ttf, U32 glyph_index, Arena* arena) {
     //test_eval_d(number_of_contours);
     //test_eval_d(point_count);
     
-    auto* points = push_array<TTF_Glyph_Point>(arena, point_count);
+    auto* points = push_array<_TTF_Glyph_Point>(arena, point_count);
     zero_range(points, point_count); 
     U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
     
@@ -316,16 +320,21 @@ get_glyph_points(TTF* ttf, U32 glyph_index, Arena* arena) {
     }
     
     // mark the points that are contour endpoints
+    U16 *end_pt_indices = push_array<U16>(arena, number_of_contours);
+    assert(end_pt_indices);
     {
-      U32 contour_end_points = g + 10; 
+      U32 contour_end_pts = g + 10; 
       for (S16 i = 0; i < number_of_contours; ++i) {
-        U16 contour_end_point_index = _ttf_read_u16(ttf->data + contour_end_points + i*2);
-        points[contour_end_point_index].is_end_point = true;
+        end_pt_indices[i] =_ttf_read_u16(ttf->data + contour_end_pts + i*2) ;
       }
     }
     
+    _TTF_Glyph_Shape ret;
+    ret.pts = create_array(points, point_count);
+    ret.end_pt_indices = 
+      create_array(end_pt_indices, number_of_contours);
     
-    return create_array(points, point_count);
+    return ret;
   }
   
   else if (number_of_contours < 0) { // compound glyph case
@@ -338,6 +347,30 @@ get_glyph_points(TTF* ttf, U32 glyph_index, Arena* arena) {
     return {};
   } 
 }
+
+
+#if 0
+static void
+_ttf_get_glyph_points_for_rasterization(TTF* ttf, 
+                                        U32 glyph_index,
+                                        Arena* arena) 
+{
+  U32 points_to_generate = 0;
+  U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
+  S16 number_of_contours = _ttf_read_s16(ttf->data + g + 0);
+  
+  
+  U32 j = 0;
+  for (S16 i = 0; i < number_of_contours; ++i) {
+    U32 contour_start_index = j;
+    while(1) {
+      U8 flags = points.e[j].flags;
+      
+    }
+  }
+  
+}
+#endif
 
 static TTF
 read_ttf(Memory ttf_memory) {
@@ -444,7 +477,6 @@ struct TTF_Edge {
 
 static Image 
 rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
-  // TODO: scale param
   U32 glyph_index = get_glyph_index_from_codepoint(ttf, codepoint);
   F32 glyph_scale = get_scale_for_pixel_height(ttf, 128.f);
   
@@ -491,7 +523,7 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   assert(pixels);
   
   // Set to white background
-  // TODO(Momo): remove
+  // TODO(Momo): change to alpha
   for (U32 i = 0; i < image_width*image_height; ++i) {
     pixels[i] = 0xFFFFFFFF;
   }
@@ -499,12 +531,13 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   create_scratch(scratch, arena);
   
   
-  auto points = get_glyph_points(ttf, glyph_index, scratch);
+  auto shape = _ttf_get_glyph_shape(ttf, glyph_index, scratch);
+  
   
   // generate scaled edges based on points
   Array<TTF_Edge> edges = {};
   {
-    UMI edge_count = points.count;
+    UMI edge_count = shape.pts.count;
     auto* e = push_array<TTF_Edge>(scratch, edge_count);
     assert(e);
     zero_range(e, edge_count);
@@ -512,24 +545,27 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
     // NOTE(Momo): We have to scale the points and flip the y...
     UMI start_index = 0;
     B32 is_start = false;
-    for (UMI i = 0; i < points.count; ++i) {
+    
+    U16 end_point_index = 0;
+    for (UMI i = 0; i < edge_count; ++i) {
       if (is_start) {
         start_index = i;
         is_start = false;
       }
       
       
-      e[i].p0.x = (F32)points.e[i].x * glyph_scale;
-      e[i].p0.y = (F32)(height) - (F32)(points.e[i].y ) * glyph_scale;
+      e[i].p0.x = (F32)shape.pts.e[i].x * glyph_scale;
+      e[i].p0.y = (F32)(height) - (F32)(shape.pts.e[i].y ) * glyph_scale;
       
-      if (points.e[i].is_end_point) {
+      if (shape.end_pt_indices.e[end_point_index] == i) {
         is_start = true;
-        e[i].p1.x = (F32)points.e[start_index].x * glyph_scale;
-        e[i].p1.y = (F32)(height) - (F32)points.e[start_index].y * glyph_scale;
+        e[i].p1.x = (F32)shape.pts.e[start_index].x * glyph_scale;
+        e[i].p1.y = (F32)(height) - (F32)shape.pts.e[start_index].y * glyph_scale;
+        ++end_point_index;
       }
       else {
-        e[i].p1.x = (F32)points.e[i+1].x * glyph_scale;
-        e[i].p1.y = (F32)(height) - (F32)points.e[i+1].y * glyph_scale;
+        e[i].p1.x = (F32)shape.pts.e[i+1].x * glyph_scale;
+        e[i].p1.y = (F32)(height) - (F32)shape.pts.e[i+1].y * glyph_scale;
       }
       
       // It's easier for the rasterization algorithm to have the edges'
@@ -541,8 +577,9 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
     }
     
     
-    edges = create_array(e, points.count);
+    edges = create_array(e, edge_count);
   }   
+  
   
   
   // Rasterazation algo
@@ -557,7 +594,7 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   auto active_edges = create_list(push_array<TTF_Edge*>(scratch, edges.count), edges.count);
   
   
-#if 1
+#if 0
   // NOTE(Momo): Debug
   for (UMI i = 0; i < edges.count; ++i) {
     auto* edge = edges.e + i;
@@ -674,7 +711,7 @@ void test_ttf() {
 #if 1
                                                test_assets_dir("nokiafc22.ttf")
 #else
-                                           		test_assets_dir("DroidSansMono.ttf")
+                                               test_assets_dir("DroidSansMono.ttf")
 #endif
                                                );
   
