@@ -240,7 +240,6 @@ _ttf_get_glyph_shape(TTF* ttf, U32 glyph_index, Arena* arena) {
     //test_eval_d(point_count);
     
     auto* points = push_array<_TTF_Glyph_Point>(arena, point_count);
-    zero_range(points, point_count); 
     U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
     
     // Load the flags
@@ -348,8 +347,10 @@ _ttf_get_glyph_shape(TTF* ttf, U32 glyph_index, Arena* arena) {
   } 
 }
 
+struct _TTF_Generated_Point {
+  S16 x, y;
+};
 
-#if 0
 static void
 _ttf_get_glyph_points_for_rasterization(TTF* ttf, 
                                         U32 glyph_index,
@@ -359,18 +360,39 @@ _ttf_get_glyph_points_for_rasterization(TTF* ttf,
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   S16 number_of_contours = _ttf_read_s16(ttf->data + g + 0);
   
+  _TTF_Glyph_Shape shape = _ttf_get_glyph_shape(ttf, glyph_index, arena);
   
-  U32 j = 0;
-  for (S16 i = 0; i < number_of_contours; ++i) {
-    U32 contour_start_index = j;
-    while(1) {
-      U8 flags = points.e[j].flags;
-      
+  // Count the amount of points generated
+  U32 points_to_generate = 0;
+  {
+    S16 x, y;
+    UMI j = 0;
+    for (UMI i = 0; i < shape.end_pt_indices.count; ++i) {
+      U32 contour_start_index = j;
+      for(; j < shape.end_pt_indices.e[i]; ++j) {
+        U8 flags = points.e[j].flags;
+        
+        if (flag & 0x1) { // on curve 
+          x = points.e[j].x;
+          y = points.e[j].y;
+          ++points_to_generate;
+        }
+        else{ // not on curve
+          // Check if next point is on curve
+          _TTF_Generated_Point p0, p1, p2;
+          
+          U8 next_flags = points.e[j+1].flags;
+          if (!(next_flags & 0x1)) {
+            // not on curve, thus it's a cubic curve, so we have to generate midpoint
+            
+            
+          }
+        }
+      }
     }
+    
   }
-  
 }
-#endif
 
 static TTF
 read_ttf(Memory ttf_memory) {
