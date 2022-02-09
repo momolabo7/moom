@@ -62,6 +62,7 @@ template<typename T>
 struct Array {
   T* e;
   UMI count;
+  inline T& operator[](UMI index) { return e[index]; }
 };
 
 template<typename T> static Array<T> create_array(T* data, UMI count);
@@ -69,9 +70,12 @@ template<typename T> static Array<T> create_array(T* data, UMI count);
 //~Static list
 template<typename T>
 struct List {
-  T* e;
-  UMI count;
+  union {
+    struct{ T* e; UMI count; };
+    Array<T> arr;
+  };
   UMI cap;
+  inline T& operator[](UMI index) { return e[index]; }
 };
 template<typename T> static List<T> create_list(T* data, UMI cap);
 template<typename T> static void push_back(List<T>* list, T item);

@@ -31,7 +31,6 @@ clear(List<T>* l) {
 }
 
 
-#if 0
 // for ranged based loop in Array<T>
 template<typename T> struct _Array_Itr {
   T* p;
@@ -53,4 +52,25 @@ template<typename T> static _Array_Itr<T>
 end(Array<T>& arr) {
   return { arr.e + arr.count };
 }
-#endif
+
+// for ranged based loop in List<T>
+template<typename T> struct _List_Itr {
+  T* p;
+  
+  T& operator*() { return *p; };
+  B32 operator!=(const _List_Itr<T>& rhs) {
+    return p != rhs.p;
+  }
+  void operator++() { ++p; };
+};
+
+
+template<typename T> static _List_Itr<T>
+begin(List<T>& arr) {
+  return { arr.e };
+}
+
+template<typename T> static _List_Itr<T>
+end(List<T>& arr) {
+  return { arr.e + arr.count };
+}

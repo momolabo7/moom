@@ -351,47 +351,84 @@ struct _TTF_Generated_Point {
   S16 x, y;
 };
 
-static void
+static U32
+_ttf_tessellate_bezier(List<_TTF_Generated_Point>* points,
+                       _TTF_Generated_Point p0, 
+                       _TTF_Generated_Point p1,
+                       _TTF_Generated_Point p2)
+
+{
+  U32 steps = 3;
+  F32 step_per_itr = 1.f/steps;
+  
+  if (points) {
+    //B(t) = (1-t)^2*P0 + 2(1-t)*t*P1 + t^2*P2
+    for (U32 i = 1; i < steps; ++i ){
+      F32 t = i * step_per_itr;
+      F32 t1 = (1.f - t);
+      F32 t2 = t * t;
+      
+      S16 x = (S16)(t1*t1*p0.x + 2*t1*t*p1.x + t2*p2.x);
+      S16 y = (S16)(t1*t1*p0.y + 2*t1*t*p1.y + t2*p2.y);
+      
+      push_back(points, {x, y});
+    }
+  }
+  return steps;
+}
+
+static Array<_TTF_Generated_Point>
 _ttf_get_glyph_points_for_rasterization(TTF* ttf, 
                                         U32 glyph_index,
                                         Arena* arena) 
 {
-  U32 points_to_generate = 0;
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   S16 number_of_contours = _ttf_read_s16(ttf->data + g + 0);
   
   _TTF_Glyph_Shape shape = _ttf_get_glyph_shape(ttf, glyph_index, arena);
+  auto points = shape.pts;
   
   // Count the amount of points generated
+  
+  auto* a = push_array<_TTF_Generated_Point>(arena, 1024);
+  List<_TTF_Generated_Point> ret = create_list(a, 1024);
+  
   U32 points_to_generate = 0;
   {
-    S16 x, y;
+    _TTF_Generated_Point anchor_pt = {};
     UMI j = 0;
     for (UMI i = 0; i < shape.end_pt_indices.count; ++i) {
-      U32 contour_start_index = j;
-      for(; j < shape.end_pt_indices.e[i]; ++j) {
+      UMI contour_start_index = j;
+      for(; j <= shape.end_pt_indices.e[i]; ++j) {
         U8 flags = points.e[j].flags;
         
-        if (flag & 0x1) { // on curve 
-          x = points.e[j].x;
-          y = points.e[j].y;
+        if (flags & 0x1) { // on curve 
+          anchor_pt.x = points.e[j].x;
+          anchor_pt.y = points.e[j].y;
           ++points_to_generate;
+          push_back(&ret, anchor_pt);
         }
         else{ // not on curve
           // Check if next point is on curve
-          _TTF_Generated_Point p0, p1, p2;
+          _TTF_Generated_Point p0 = anchor_pt;
+          _TTF_Generated_Point p1 = { points.e[j].x, points.e[j].y };
+          _TTF_Generated_Point p2 = { points.e[j+1].x, points.e[j+1].y };
           
           U8 next_flags = points.e[j+1].flags;
           if (!(next_flags & 0x1)) {
             // not on curve, thus it's a cubic curve, so we have to generate midpoint
-            
-            
+            p2.x = (S16)(p1.x + (p2.x - p1.x)/2.f);
+            p2.y = (S16)(p1.y + (p2.y - p1.y)/2.f);
           }
+          points_to_generate += _ttf_tessellate_bezier(&ret, p0, p1, p2);
         }
       }
     }
     
   }
+  
+  return ret.arr;
+  
 }
 
 static TTF
@@ -551,7 +588,6 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   }
   
   create_scratch(scratch, arena);
-  
   
   auto shape = _ttf_get_glyph_shape(ttf, glyph_index, scratch);
   
@@ -716,6 +752,7 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   
 }
 
+
 void test_ttf() {
   test_create_log_section_until_scope;
   
@@ -729,8 +766,9 @@ void test_ttf() {
   
   
   Arena main_arena = create_arena(memory, memory_size);
-  Memory ttf_memory = test_read_file_to_memory(&main_arena, 
 #if 1
+  Memory ttf_memory = test_read_file_to_memory(&main_arena, 
+#if 0
                                                test_assets_dir("nokiafc22.ttf")
 #else
                                                test_assets_dir("DroidSansMono.ttf")
@@ -748,6 +786,40 @@ void test_ttf() {
     Memory image_mem = write_image_as_png(codepoint_image, image_scratch);
     test_write_memory_to_file(image_mem, "codepoint.png");
   }
+#endif
+  
+#if 1
+  { 
+    test_log("Testing\n");
+    test_create_log_section_until_scope;
+    create_scratch(test_scratch, &main_arena);
+    
+    U32 glyph_index = get_glyph_index_from_codepoint(&ttf, 65);
+    F32 glyph_scale = get_scale_for_pixel_height(&ttf, 256.f);
+    
+    auto pts = _ttf_get_glyph_points_for_rasterization(&ttf, glyph_index, scratch);
+    
+    Image test;
+    test.width = 256;
+    test.height = 256;
+    test.pixels = push_array<U32>(test_scratch, test.width * test.height);
+    
+    for(U32 i = 0; i < test.width*test.height; ++i){
+      test.pixels[i] = 0xFFFFFFFF;
+    }
+    
+    for(U32 i = 0; i < pts.count; ++i ){
+      S16 x = (S16)(pts[i].x * glyph_scale);
+      S16 y = (S16)(pts[i].y * glyph_scale);
+      test_log("%d %d\n",pts[i].x, pts[i].y);
+      
+      test.pixels[x + y * test.width] = 0xFF000000;
+    }
+    
+    Memory image_mem = write_image_as_png(test, test_scratch);
+    test_write_memory_to_file(image_mem, "ttt.png");
+  }
+#endif
   
   
 }

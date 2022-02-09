@@ -10,6 +10,7 @@ struct Image_Info {
 
 // For now, we only care about images that are in RGBA format,
 // with U8 representing each channel. 
+// Maybe have different image types like Image_RGBA?
 struct Image {
   U32 width, height;
   U32* pixels;
