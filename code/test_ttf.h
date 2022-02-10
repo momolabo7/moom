@@ -97,7 +97,6 @@ get_glyph_index_from_codepoint(TTF* ttf, U32 codepoint) {
   
   U16 format = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 0);
   
-  
   switch(format) {
     case 4: { // 
       U16 seg_count = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 6) >> 1;
@@ -201,6 +200,8 @@ get_glyph_box(TTF* ttf, U32 glyph_index) {
   
   return ret;
 }
+
+
 
 
 
@@ -347,18 +348,18 @@ _ttf_get_glyph_shape(TTF* ttf, U32 glyph_index, Arena* arena) {
   } 
 }
 
-struct _TTF_Generated_Point {
+struct _TTF_Point {
   S16 x, y;
 };
 
 static U32
-_ttf_tessellate_bezier(List<_TTF_Generated_Point>* points,
-                       _TTF_Generated_Point p0, 
-                       _TTF_Generated_Point p1,
-                       _TTF_Generated_Point p2)
+_ttf_tessellate_bezier(List<_TTF_Point>* points,
+                       _TTF_Point p0, 
+                       _TTF_Point p1,
+                       _TTF_Point p2)
 
 {
-  U32 steps = 3;
+  U32 steps = 20;
   F32 step_per_itr = 1.f/steps;
   
   if (points) {
@@ -377,7 +378,7 @@ _ttf_tessellate_bezier(List<_TTF_Generated_Point>* points,
   return steps;
 }
 
-static Array<_TTF_Generated_Point>
+static Array<_TTF_Point>
 _ttf_get_glyph_points_for_rasterization(TTF* ttf, 
                                         U32 glyph_index,
                                         Arena* arena) 
@@ -390,12 +391,14 @@ _ttf_get_glyph_points_for_rasterization(TTF* ttf,
   
   // Count the amount of points generated
   
-  auto* a = push_array<_TTF_Generated_Point>(arena, 1024);
-  List<_TTF_Generated_Point> ret = create_list(a, 1024);
-  
+  auto* a = push_array<_TTF_Point>(arena, 1024);
+  List<_TTF_Point> ret = create_list(a, 1024);
+  int t = 0;
   U32 points_to_generate = 0;
   {
-    _TTF_Generated_Point anchor_pt = {};
+    // NOTE(Momo): For now, we assume that the first point is 
+    // always on curve, which is not always the case.
+    _TTF_Point anchor_pt = {};
     UMI j = 0;
     for (UMI i = 0; i < shape.end_pt_indices.count; ++i) {
       UMI contour_start_index = j;
@@ -410,17 +413,18 @@ _ttf_get_glyph_points_for_rasterization(TTF* ttf,
         }
         else{ // not on curve
           // Check if next point is on curve
-          _TTF_Generated_Point p0 = anchor_pt;
-          _TTF_Generated_Point p1 = { points.e[j].x, points.e[j].y };
-          _TTF_Generated_Point p2 = { points.e[j+1].x, points.e[j+1].y };
+          _TTF_Point p0 = anchor_pt;
+          _TTF_Point p1 = { points.e[j].x, points.e[j].y };
+          _TTF_Point p2 = { points.e[j+1].x, points.e[j+1].y };
           
           U8 next_flags = points.e[j+1].flags;
           if (!(next_flags & 0x1)) {
             // not on curve, thus it's a cubic curve, so we have to generate midpoint
-            p2.x = (S16)(p1.x + (p2.x - p1.x)/2.f);
-            p2.y = (S16)(p1.y + (p2.y - p1.y)/2.f);
+            p2.x = (S16)(p1.x + ((p2.x - p1.x) >> 1));
+            p2.y = (S16)(p1.y + ((p2.y - p1.y) >> 1));
           }
           points_to_generate += _ttf_tessellate_bezier(&ret, p0, p1, p2);
+          anchor_pt = p2;
         }
       }
     }
@@ -794,7 +798,8 @@ void test_ttf() {
     test_create_log_section_until_scope;
     create_scratch(test_scratch, &main_arena);
     
-    U32 glyph_index = get_glyph_index_from_codepoint(&ttf, 65);
+    
+    U32 glyph_index = get_glyph_index_from_codepoint(&ttf, 0x32);
     F32 glyph_scale = get_scale_for_pixel_height(&ttf, 256.f);
     
     auto pts = _ttf_get_glyph_points_for_rasterization(&ttf, glyph_index, scratch);
