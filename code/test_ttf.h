@@ -379,28 +379,35 @@ _ttf_tessellate_bezier(List<_TTF_Point>* points,
 }
 
 static Array<_TTF_Point>
-_ttf_get_glyph_points_for_rasterization(TTF* ttf, 
-                                        U32 glyph_index,
-                                        Arena* arena) 
+_ttf_generate_points_from_glyph_shape(_TTF_Glyph_Shape shape,
+                                      Arena* arena) 
 {
-  U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
-  S16 number_of_contours = _ttf_read_s16(ttf->data + g + 0);
-  
-  _TTF_Glyph_Shape shape = _ttf_get_glyph_shape(ttf, glyph_index, arena);
   auto points = shape.pts;
+  UMI number_of_contours = shape.end_pt_indices.count;
   
   // Count the amount of points generated
   
-  auto* a = push_array<_TTF_Point>(arena, 1024);
-  List<_TTF_Point> ret = create_list(a, 1024);
-  int t = 0;
+  List<_TTF_Point> ret = {};
+  List<_TTF_Point>* point_list = nullptr;
+  
   U32 points_to_generate = 0;
+  // On the first pass, we count the number of points we will generate.
+  // On the second pass, we will allocate the list and actually fill 
+  // the list with generated points.
+  for (U32 pass = 0; pass < 2; ++pass)
   {
+    
+    if (pass == 1) {
+      auto* e = push_array<_TTF_Point>(arena, points_to_generate);
+      ret = create_list(e, points_to_generate);
+      point_list = &ret;
+    }
+    
     // NOTE(Momo): For now, we assume that the first point is 
     // always on curve, which is not always the case.
     _TTF_Point anchor_pt = {};
     UMI j = 0;
-    for (UMI i = 0; i < shape.end_pt_indices.count; ++i) {
+    for (UMI i = 0; i < number_of_contours; ++i) {
       UMI contour_start_index = j;
       for(; j <= shape.end_pt_indices.e[i]; ++j) {
         U8 flags = points.e[j].flags;
@@ -409,7 +416,7 @@ _ttf_get_glyph_points_for_rasterization(TTF* ttf,
           anchor_pt.x = points.e[j].x;
           anchor_pt.y = points.e[j].y;
           ++points_to_generate;
-          push_back(&ret, anchor_pt);
+          if (point_list) push_back(point_list, anchor_pt);
         }
         else{ // not on curve
           // Check if next point is on curve
@@ -423,7 +430,7 @@ _ttf_get_glyph_points_for_rasterization(TTF* ttf,
             p2.x = (S16)(p1.x + ((p2.x - p1.x) >> 1));
             p2.y = (S16)(p1.y + ((p2.y - p1.y) >> 1));
           }
-          points_to_generate += _ttf_tessellate_bezier(&ret, p0, p1, p2);
+          points_to_generate += _ttf_tessellate_bezier(point_list, p0, p1, p2);
           anchor_pt = p2;
         }
       }
@@ -594,7 +601,6 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   create_scratch(scratch, arena);
   
   auto shape = _ttf_get_glyph_shape(ttf, glyph_index, scratch);
-  
   
   // generate scaled edges based on points
   Array<TTF_Edge> edges = {};
@@ -779,6 +785,8 @@ void test_ttf() {
 #endif
                                                );
   
+  
+  
   TTF ttf = read_ttf(ttf_memory);
   
   U32 codepoint = 66;
@@ -792,6 +800,9 @@ void test_ttf() {
   }
 #endif
   
+  
+  
+  
 #if 1
   { 
     test_log("Testing\n");
@@ -802,7 +813,8 @@ void test_ttf() {
     U32 glyph_index = get_glyph_index_from_codepoint(&ttf, 0x32);
     F32 glyph_scale = get_scale_for_pixel_height(&ttf, 256.f);
     
-    auto pts = _ttf_get_glyph_points_for_rasterization(&ttf, glyph_index, scratch);
+    auto shape = _ttf_get_glyph_shape(&ttf, glyph_index, test_scratch);
+    auto pts = _ttf_generate_points_from_glyph_shape(shape, test_scratch);
     
     Image test;
     test.width = 256;
@@ -816,7 +828,6 @@ void test_ttf() {
     for(U32 i = 0; i < pts.count; ++i ){
       S16 x = (S16)(pts[i].x * glyph_scale);
       S16 y = (S16)(pts[i].y * glyph_scale);
-      test_log("%d %d\n",pts[i].x, pts[i].y);
       
       test.pixels[x + y * test.width] = 0xFF000000;
     }
