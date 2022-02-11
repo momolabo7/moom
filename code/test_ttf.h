@@ -204,13 +204,13 @@ get_glyph_box(TTF* ttf, U32 glyph_index) {
 
 
 
-
+//~Glyph outline retrieval
 struct _TTF_Glyph_Point {
   S16 x, y; 
   U8 flags;
 };
 
-struct _TTF_Glyph_Shape {
+struct _TTF_Glyph_Outline {
   Array<_TTF_Glyph_Point> pts;
   Array<U16> end_pt_indices;
 };
@@ -224,8 +224,8 @@ struct _TTF_Glyph_Shape {
 // | 
 // ----x
 //
-static _TTF_Glyph_Shape
-_ttf_get_glyph_shape(TTF* ttf, U32 glyph_index, Arena* arena) {
+static _TTF_Glyph_Outline
+_ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Arena* arena) {
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   S16 number_of_contours = _ttf_read_s16(ttf->data + g + 0);
   
@@ -329,7 +329,7 @@ _ttf_get_glyph_shape(TTF* ttf, U32 glyph_index, Arena* arena) {
       }
     }
     
-    _TTF_Glyph_Shape ret;
+    _TTF_Glyph_Outline ret;
     ret.pts = create_array(points, point_count);
     ret.end_pt_indices = 
       create_array(end_pt_indices, number_of_contours);
@@ -348,12 +348,13 @@ _ttf_get_glyph_shape(TTF* ttf, U32 glyph_index, Arena* arena) {
   } 
 }
 
-
+//~Glyph path generation
 struct _TTF_Point {
   S16 x, y;
 };
 
-struct _TTF_Paths {
+
+struct _TTF_Glyph_Paths {
   Array<_TTF_Point> points;
   Array<U32> path_lengths;
 };
@@ -385,11 +386,11 @@ _ttf_tessellate_bezier(List<_TTF_Point>* points,
 }
 
 static Array<_TTF_Point>
-_ttf_get_path_from_glyph_shape(_TTF_Glyph_Shape shape,
-                               Arena* arena) 
+_ttf_get_path_from_glyph_outline(_TTF_Glyph_Outline outline,
+                                 Arena* arena) 
 {
-  auto points = shape.pts;
-  UMI number_of_contours = shape.end_pt_indices.count;
+  auto points = outline.pts;
+  UMI number_of_contours = outline.end_pt_indices.count;
   
   // Count the amount of points generated
   
@@ -415,7 +416,7 @@ _ttf_get_path_from_glyph_shape(_TTF_Glyph_Shape shape,
     UMI j = 0;
     for (UMI i = 0; i < number_of_contours; ++i) {
       UMI contour_start_index = j;
-      for(; j <= shape.end_pt_indices.e[i]; ++j) {
+      for(; j <= outline.end_pt_indices.e[i]; ++j) {
         U8 flags = points.e[j].flags;
         
         if (flags & 0x1) { // on curve 
@@ -606,12 +607,12 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   
   create_scratch(scratch, arena);
   
-  auto shape = _ttf_get_glyph_shape(ttf, glyph_index, scratch);
+  auto outline = _ttf_get_glyph_outline(ttf, glyph_index, scratch);
   
   // generate scaled edges based on points
   Array<TTF_Edge> edges = {};
   {
-    UMI edge_count = shape.pts.count;
+    UMI edge_count = outline.pts.count;
     auto* e = push_array<TTF_Edge>(scratch, edge_count);
     assert(e);
     zero_range(e, edge_count);
@@ -628,18 +629,18 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
       }
       
       
-      e[i].p0.x = (F32)shape.pts.e[i].x * glyph_scale;
-      e[i].p0.y = (F32)(height) - (F32)(shape.pts.e[i].y ) * glyph_scale;
+      e[i].p0.x = (F32)outline.pts.e[i].x * glyph_scale;
+      e[i].p0.y = (F32)(height) - (F32)(outline.pts.e[i].y ) * glyph_scale;
       
-      if (shape.end_pt_indices.e[end_point_index] == i) {
+      if (outline.end_pt_indices.e[end_point_index] == i) {
         is_start = true;
-        e[i].p1.x = (F32)shape.pts.e[start_index].x * glyph_scale;
-        e[i].p1.y = (F32)(height) - (F32)shape.pts.e[start_index].y * glyph_scale;
+        e[i].p1.x = (F32)outline.pts.e[start_index].x * glyph_scale;
+        e[i].p1.y = (F32)(height) - (F32)outline.pts.e[start_index].y * glyph_scale;
         ++end_point_index;
       }
       else {
-        e[i].p1.x = (F32)shape.pts.e[i+1].x * glyph_scale;
-        e[i].p1.y = (F32)(height) - (F32)shape.pts.e[i+1].y * glyph_scale;
+        e[i].p1.x = (F32)outline.pts.e[i+1].x * glyph_scale;
+        e[i].p1.y = (F32)(height) - (F32)outline.pts.e[i+1].y * glyph_scale;
       }
       
       // It's easier for the rasterization algorithm to have the edges'
@@ -819,8 +820,8 @@ void test_ttf() {
     U32 glyph_index = get_glyph_index_from_codepoint(&ttf, 0x32);
     F32 glyph_scale = get_scale_for_pixel_height(&ttf, 256.f);
     
-    auto shape = _ttf_get_glyph_shape(&ttf, glyph_index, test_scratch);
-    auto pts = _ttf_get_path_from_glyph_shape(shape, test_scratch);
+    auto outline = _ttf_get_glyph_outline(&ttf, glyph_index, test_scratch);
+    auto pts = _ttf_get_path_from_glyph_outline(outline, test_scratch);
     
     Image test;
     test.width = 256;
