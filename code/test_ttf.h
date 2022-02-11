@@ -348,8 +348,14 @@ _ttf_get_glyph_shape(TTF* ttf, U32 glyph_index, Arena* arena) {
   } 
 }
 
+
 struct _TTF_Point {
   S16 x, y;
+};
+
+struct _TTF_Paths {
+  Array<_TTF_Point> points;
+  Array<U32> path_lengths;
 };
 
 static U32
@@ -379,8 +385,8 @@ _ttf_tessellate_bezier(List<_TTF_Point>* points,
 }
 
 static Array<_TTF_Point>
-_ttf_generate_points_from_glyph_shape(_TTF_Glyph_Shape shape,
-                                      Arena* arena) 
+_ttf_get_path_from_glyph_shape(_TTF_Glyph_Shape shape,
+                               Arena* arena) 
 {
   auto points = shape.pts;
   UMI number_of_contours = shape.end_pt_indices.count;
@@ -814,7 +820,7 @@ void test_ttf() {
     F32 glyph_scale = get_scale_for_pixel_height(&ttf, 256.f);
     
     auto shape = _ttf_get_glyph_shape(&ttf, glyph_index, test_scratch);
-    auto pts = _ttf_generate_points_from_glyph_shape(shape, test_scratch);
+    auto pts = _ttf_get_path_from_glyph_shape(shape, test_scratch);
     
     Image test;
     test.width = 256;
