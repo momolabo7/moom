@@ -385,7 +385,7 @@ _ttf_tessellate_bezier(List<_TTF_Point>* points,
   return steps;
 }
 
-static Array<_TTF_Point>
+static _TTF_Glyph_Paths
 _ttf_get_path_from_glyph_outline(_TTF_Glyph_Outline outline,
                                  Arena* arena) 
 {
@@ -394,7 +394,7 @@ _ttf_get_path_from_glyph_outline(_TTF_Glyph_Outline outline,
   
   // Count the amount of points generated
   
-  List<_TTF_Point> ret = {};
+  List<_TTF_Point> _point_list = {};
   List<_TTF_Point>* point_list = nullptr;
   
   U32 points_to_generate = 0;
@@ -406,8 +406,8 @@ _ttf_get_path_from_glyph_outline(_TTF_Glyph_Outline outline,
     
     if (pass == 1) {
       auto* e = push_array<_TTF_Point>(arena, points_to_generate);
-      ret = create_list(e, points_to_generate);
-      point_list = &ret;
+      _point_list = create_list(e, points_to_generate);
+      point_list = &_point_list;
     }
     
     // NOTE(Momo): For now, we assume that the first point is 
@@ -445,7 +445,10 @@ _ttf_get_path_from_glyph_outline(_TTF_Glyph_Outline outline,
     
   }
   
-  return ret.arr;
+  _TTF_Glyph_Paths ret = {};
+  ret.points = _point_list.arr;
+  
+  return ret;
   
 }
 
@@ -460,7 +463,6 @@ read_ttf(Memory ttf_memory) {
     U32 directory = 12 + (16 * i);
     U32 tag = _ttf_read_u32(ret.data + directory + 0);
     
-    test_create_log_section_until_scope;
     
     switch(tag) {
       case 'loca': {
@@ -821,7 +823,7 @@ void test_ttf() {
     F32 glyph_scale = get_scale_for_pixel_height(&ttf, 256.f);
     
     auto outline = _ttf_get_glyph_outline(&ttf, glyph_index, test_scratch);
-    auto pts = _ttf_get_path_from_glyph_outline(outline, test_scratch);
+    auto paths = _ttf_get_path_from_glyph_outline(outline, test_scratch);
     
     Image test;
     test.width = 256;
@@ -832,9 +834,9 @@ void test_ttf() {
       test.pixels[i] = 0xFFFFFFFF;
     }
     
-    for(U32 i = 0; i < pts.count; ++i ){
-      S16 x = (S16)(pts[i].x * glyph_scale);
-      S16 y = (S16)(pts[i].y * glyph_scale);
+    for(U32 i = 0; i < paths.points.count; ++i ){
+      S16 x = (S16)(paths.points[i].x * glyph_scale);
+      S16 y = (S16)(paths.points[i].y * glyph_scale);
       
       test.pixels[x + y * test.width] = 0xFF000000;
     }
