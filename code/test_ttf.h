@@ -211,8 +211,11 @@ struct _TTF_Glyph_Point {
 };
 
 struct _TTF_Glyph_Outline {
-  Array<_TTF_Glyph_Point> pts;
-  Array<U16> end_pt_indices;
+  _TTF_Glyph_Point* points;
+  U32 point_count;
+  
+  U16* end_point_indices; // as many as contour_counts
+  U32 contour_count;
 };
 
 
@@ -330,9 +333,10 @@ _ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Arena* arena) {
     }
     
     _TTF_Glyph_Outline ret;
-    ret.pts = create_array(points, point_count);
-    ret.end_pt_indices = 
-      create_array(end_pt_indices, number_of_contours);
+    ret.points = points; 
+    ret.point_count = point_count;
+    ret.end_point_indices = end_pt_indices;
+    ret.contour_count = number_of_contours;
     
     return ret;
   }
@@ -349,53 +353,50 @@ _ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Arena* arena) {
 }
 
 //~Glyph path generation
-struct _TTF_Point {
-  S16 x, y;
-};
 
 
 struct _TTF_Glyph_Paths {
-  Array<_TTF_Point> points;
-  Array<U32> path_lengths;
+  V2* vertices;
+  U32 vertex_count;
+  
+  U32* path_lengths;
+  U32 path_count;
 };
 
 static U32
-_ttf_tessellate_bezier(List<_TTF_Point>* points,
-                       _TTF_Point p0, 
-                       _TTF_Point p1,
-                       _TTF_Point p2)
+_ttf_tessellate_bezier(V2* vertices,
+                       U32* vertex_count,
+                       V2 p0, 
+                       V2 p1,
+                       V2 p2)
 
 {
   U32 steps = 20;
   F32 step_per_itr = 1.f/steps;
   
-  if (points) {
+  if (vertices) {
     //B(t) = (1-t)^2*P0 + 2(1-t)*t*P1 + t^2*P2
     for (U32 i = 1; i < steps; ++i ){
       F32 t = i * step_per_itr;
       F32 t1 = (1.f - t);
       F32 t2 = t * t;
       
-      S16 x = (S16)(t1*t1*p0.x + 2*t1*t*p1.x + t2*p2.x);
-      S16 y = (S16)(t1*t1*p0.y + 2*t1*t*p1.y + t2*p2.y);
+      F32 x = (t1*t1*p0.x + 2*t1*t*p1.x + t2*p2.x);
+      F32 y = (t1*t1*p0.y + 2*t1*t*p1.y + t2*p2.y);
       
-      push_back(points, {x, y});
+      vertices[(*vertex_count)++] = { x, y };
     }
   }
   return steps;
 }
 
 static _TTF_Glyph_Paths
-_ttf_get_path_from_glyph_outline(_TTF_Glyph_Outline outline,
-                                 Arena* arena) 
+_ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
+                                  Arena* arena) 
 {
-  auto points = outline.pts;
-  UMI number_of_contours = outline.end_pt_indices.count;
-  
   // Count the amount of points generated
-  
-  List<_TTF_Point> _point_list = {};
-  List<_TTF_Point>* point_list = nullptr;
+  V2* vertices = nullptr;
+  U32 vertex_count = 0;
   
   U32 points_to_generate = 0;
   // On the first pass, we count the number of points we will generate.
@@ -405,39 +406,39 @@ _ttf_get_path_from_glyph_outline(_TTF_Glyph_Outline outline,
   {
     
     if (pass == 1) {
-      auto* e = push_array<_TTF_Point>(arena, points_to_generate);
-      _point_list = create_list(e, points_to_generate);
-      point_list = &_point_list;
+      vertices = push_array<V2>(arena, points_to_generate);
     }
     
     // NOTE(Momo): For now, we assume that the first point is 
     // always on curve, which is not always the case.
-    _TTF_Point anchor_pt = {};
+    V2 anchor_pt = {};
     UMI j = 0;
-    for (UMI i = 0; i < number_of_contours; ++i) {
+    for (UMI i = 0; i < outline.contour_count; ++i) {
       UMI contour_start_index = j;
-      for(; j <= outline.end_pt_indices.e[i]; ++j) {
-        U8 flags = points.e[j].flags;
+      for(; j <= outline.end_point_indices[i]; ++j) {
+        U8 flags = outline.points[j].flags;
         
         if (flags & 0x1) { // on curve 
-          anchor_pt.x = points.e[j].x;
-          anchor_pt.y = points.e[j].y;
+          anchor_pt.x = (F32)outline.points[j].x;
+          anchor_pt.y = (F32)outline.points[j].y;
           ++points_to_generate;
-          if (point_list) push_back(point_list, anchor_pt);
+          if (vertices) vertices[vertex_count++] = anchor_pt;
         }
         else{ // not on curve
           // Check if next point is on curve
-          _TTF_Point p0 = anchor_pt;
-          _TTF_Point p1 = { points.e[j].x, points.e[j].y };
-          _TTF_Point p2 = { points.e[j+1].x, points.e[j+1].y };
+          V2 p0 = anchor_pt;
+          V2 p1 = { (F32)outline.points[j].x, (F32)outline.points[j].y };
+          V2 p2 = { (F32)outline.points[j+1].x, (F32)outline.points[j+1].y };
           
-          U8 next_flags = points.e[j+1].flags;
+          U8 next_flags = outline.points[j+1].flags;
           if (!(next_flags & 0x1)) {
             // not on curve, thus it's a cubic curve, so we have to generate midpoint
-            p2.x = (S16)(p1.x + ((p2.x - p1.x) >> 1));
-            p2.y = (S16)(p1.y + ((p2.y - p1.y) >> 1));
+            p2.x = p1.x + (p2.x - p1.x)*0.5f;
+            p2.y = p1.y + (p2.y - p1.y)*0.5f;
           }
-          points_to_generate += _ttf_tessellate_bezier(point_list, p0, p1, p2);
+          points_to_generate += _ttf_tessellate_bezier(vertices, 
+                                                       &vertex_count,
+                                                       p0, p1, p2);
           anchor_pt = p2;
         }
       }
@@ -446,7 +447,9 @@ _ttf_get_path_from_glyph_outline(_TTF_Glyph_Outline outline,
   }
   
   _TTF_Glyph_Paths ret = {};
-  ret.points = _point_list.arr;
+  ret.vertices = vertices;
+  ret.vertex_count = vertex_count;
+  
   
   return ret;
   
@@ -614,7 +617,7 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   // generate scaled edges based on points
   Array<TTF_Edge> edges = {};
   {
-    UMI edge_count = outline.pts.count;
+    UMI edge_count = outline.point_count;
     auto* e = push_array<TTF_Edge>(scratch, edge_count);
     assert(e);
     zero_range(e, edge_count);
@@ -631,18 +634,18 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
       }
       
       
-      e[i].p0.x = (F32)outline.pts.e[i].x * glyph_scale;
-      e[i].p0.y = (F32)(height) - (F32)(outline.pts.e[i].y ) * glyph_scale;
+      e[i].p0.x = (F32)outline.points[i].x * glyph_scale;
+      e[i].p0.y = (F32)(height) - (F32)(outline.points[i].y ) * glyph_scale;
       
-      if (outline.end_pt_indices.e[end_point_index] == i) {
+      if (outline.end_point_indices[end_point_index] == i) {
         is_start = true;
-        e[i].p1.x = (F32)outline.pts.e[start_index].x * glyph_scale;
-        e[i].p1.y = (F32)(height) - (F32)outline.pts.e[start_index].y * glyph_scale;
+        e[i].p1.x = (F32)outline.points[start_index].x * glyph_scale;
+        e[i].p1.y = (F32)(height) - (F32)outline.points[start_index].y * glyph_scale;
         ++end_point_index;
       }
       else {
-        e[i].p1.x = (F32)outline.pts.e[i+1].x * glyph_scale;
-        e[i].p1.y = (F32)(height) - (F32)outline.pts.e[i+1].y * glyph_scale;
+        e[i].p1.x = (F32)outline.points[i+1].x * glyph_scale;
+        e[i].p1.y = (F32)(height) - (F32)outline.points[i+1].y * glyph_scale;
       }
       
       // It's easier for the rasterization algorithm to have the edges'
@@ -823,7 +826,7 @@ void test_ttf() {
     F32 glyph_scale = get_scale_for_pixel_height(&ttf, 256.f);
     
     auto outline = _ttf_get_glyph_outline(&ttf, glyph_index, test_scratch);
-    auto paths = _ttf_get_path_from_glyph_outline(outline, test_scratch);
+    auto paths = _ttf_get_paths_from_glyph_outline(outline, test_scratch);
     
     Image test;
     test.width = 256;
@@ -834,9 +837,9 @@ void test_ttf() {
       test.pixels[i] = 0xFFFFFFFF;
     }
     
-    for(U32 i = 0; i < paths.points.count; ++i ){
-      S16 x = (S16)(paths.points[i].x * glyph_scale);
-      S16 y = (S16)(paths.points[i].y * glyph_scale);
+    for(U32 i = 0; i < paths.vertex_count; ++i ){
+      S16 x = (S16)(paths.vertices[i].x * glyph_scale);
+      S16 y = (S16)(paths.vertices[i].y * glyph_scale);
       
       test.pixels[x + y * test.width] = 0xFF000000;
     }
