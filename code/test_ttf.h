@@ -363,7 +363,54 @@ struct _TTF_Glyph_Paths {
   U32 path_count;
 };
 
-static U32
+
+static void
+_ttf_add_vertex(V2* vertices, U32 n, F32 x, F32 y) {
+  if (!vertices) return;
+  vertices[n].x = x;
+  vertices[n].y = y;
+}
+
+static void
+_ttf_add_vertex(V2* vertices, U32 n, V2 v) {
+  if (!vertices) return;
+  vertices[n] = v;
+}
+
+static void
+_ttf_tessellate_bezier_2(V2* vertices,
+                         U32* vertex_count,
+                         V2 p0, 
+                         V2 p1,
+                         V2 p2,
+                         F32 flatness_squared,
+                         U32 n) 
+{
+  V2 mid = (p0 + p1*2.f + p2) * 0.25f;
+  V2 d = midpoint(p0, p2) - mid;
+  
+  // if n == 16, that's 65535 segments which should be
+  // more than enough. Increase this number if we are 
+  // looking at abnormally large images...?
+  if (n > 16) { return; }
+  
+  if (d.x*d.x + d.y*d.y*0.5 > flatness_squared) {
+    _ttf_tessellate_bezier_2(vertices, vertex_count, p0,
+                             midpoint(p0, p1), 
+                             mid, flatness_squared, n+1 );
+    _ttf_tessellate_bezier_2(vertices, vertex_count, mid,
+                             midpoint(p1, p2), 
+                             p2, flatness_squared, n+1 );
+  }
+  else {
+    _ttf_add_vertex(vertices, (*vertex_count)++, p2);      
+  }
+  
+  
+  
+}
+
+static void
 _ttf_tessellate_bezier(V2* vertices,
                        U32* vertex_count,
                        V2 p0, 
@@ -374,20 +421,17 @@ _ttf_tessellate_bezier(V2* vertices,
   U32 steps = 20;
   F32 step_per_itr = 1.f/steps;
   
-  if (vertices) {
-    //B(t) = (1-t)^2*P0 + 2(1-t)*t*P1 + t^2*P2
-    for (U32 i = 1; i < steps; ++i ){
-      F32 t = i * step_per_itr;
-      F32 t1 = (1.f - t);
-      F32 t2 = t * t;
-      
-      F32 x = (t1*t1*p0.x + 2*t1*t*p1.x + t2*p2.x);
-      F32 y = (t1*t1*p0.y + 2*t1*t*p1.y + t2*p2.y);
-      
-      vertices[(*vertex_count)++] = { x, y };
-    }
+  //B(t) = (1-t)^2*P0 + 2(1-t)*t*P1 + t^2*P2
+  for (U32 i = 1; i < steps; ++i ){
+    F32 t = i * step_per_itr;
+    F32 t1 = (1.f - t);
+    F32 t2 = t * t;
+    
+    F32 x = (t1*t1*p0.x + 2*t1*t*p1.x + t2*p2.x);
+    F32 y = (t1*t1*p0.y + 2*t1*t*p1.y + t2*p2.y);
+    
+    _ttf_add_vertex(vertices, (*vertex_count)++, x, y); 
   }
-  return steps;
 }
 
 static _TTF_Glyph_Paths
@@ -397,8 +441,11 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
   // Count the amount of points generated
   V2* vertices = nullptr;
   U32 vertex_count = 0;
+  F32 flatness_squared = 0.35f * 0.35f;
   
-  U32 points_to_generate = 0;
+  U32* path_lengths = push_array<U32>(arena, outline.contour_count);
+  U32 path_count = 0;
+  
   // On the first pass, we count the number of points we will generate.
   // On the second pass, we will allocate the list and actually fill 
   // the list with generated points.
@@ -406,7 +453,8 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
   {
     
     if (pass == 1) {
-      vertices = push_array<V2>(arena, points_to_generate);
+      vertices = push_array<V2>(arena, vertex_count);
+      vertex_count = 0;
     }
     
     // NOTE(Momo): For now, we assume that the first point is 
@@ -421,8 +469,9 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
         if (flags & 0x1) { // on curve 
           anchor_pt.x = (F32)outline.points[j].x;
           anchor_pt.y = (F32)outline.points[j].y;
-          ++points_to_generate;
-          if (vertices) vertices[vertex_count++] = anchor_pt;
+          
+          _ttf_add_vertex(vertices, vertex_count, anchor_pt);
+          ++vertex_count;
         }
         else{ // not on curve
           // Check if next point is on curve
@@ -436,20 +485,23 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
             p2.x = p1.x + (p2.x - p1.x)*0.5f;
             p2.y = p1.y + (p2.y - p1.y)*0.5f;
           }
-          points_to_generate += _ttf_tessellate_bezier(vertices, 
-                                                       &vertex_count,
-                                                       p0, p1, p2);
+          _ttf_tessellate_bezier_2(vertices, &vertex_count,
+                                   p0, p1, p2, flatness_squared, 0);
           anchor_pt = p2;
         }
       }
+      
+      
     }
-    
+    path_lengths[path_count] = (path_count > 0) ? vertex_count - path_lengths[path_count-1] : vertex_count;
+    ++path_count;
   }
   
   _TTF_Glyph_Paths ret = {};
   ret.vertices = vertices;
   ret.vertex_count = vertex_count;
-  
+  ret.path_lengths = path_lengths;
+  ret.path_count = path_count;
   
   return ret;
   
@@ -613,101 +665,63 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   create_scratch(scratch, arena);
   
   auto outline = _ttf_get_glyph_outline(ttf, glyph_index, scratch);
+  auto paths = _ttf_get_paths_from_glyph_outline(outline, scratch);
   
   // generate scaled edges based on points
-  Array<TTF_Edge> edges = {};
+  auto* edges = push_array<TTF_Edge>(scratch, paths.vertex_count);
+  assert(edges);
+  U32 edge_count = 0;
   {
-    UMI edge_count = outline.point_count;
-    auto* e = push_array<TTF_Edge>(scratch, edge_count);
-    assert(e);
-    zero_range(e, edge_count);
+    zero_range(edges, edge_count);
     
-    // NOTE(Momo): We have to scale the points and flip the y...
-    UMI start_index = 0;
-    B32 is_start = false;
-    
-    U16 end_point_index = 0;
-    for (UMI i = 0; i < edge_count; ++i) {
-      if (is_start) {
-        start_index = i;
-        is_start = false;
+    U32 vertex_index = 0;
+    for (UMI path_index = 0; path_index < paths.path_count; ++path_index) {
+      U32 path_length = paths.path_lengths[path_index];
+      for (UMI i = 0; i < path_length; ++i) {
+        TTF_Edge edge = {};
+        V2 start_vertex = paths.vertices[vertex_index];
+        V2 end_vertex = (i == path_length-1) ? paths.vertices[vertex_index-i] : paths.vertices[vertex_index+1];
+        
+        edge.p0.x = start_vertex.x * glyph_scale;
+        edge.p0.y = (F32)(height) - start_vertex.y * glyph_scale;
+        
+        edge.p1.x = end_vertex.x * glyph_scale;
+        edge.p1.y = (F32)(height) - end_vertex.y * glyph_scale;
+        
+        // It's easier for the rasterization algorithm to have the edges'
+        // p0 be on top of p1. If we flip, we will indicate it within the edge
+        if (edge.p0.y > edge.p1.y) {
+          swap(&edge.p0, &edge.p1);
+          edge.is_inverted = true;
+        }
+        ++vertex_index;
+        edges[edge_count++] = edge;
       }
-      
-      
-      e[i].p0.x = (F32)outline.points[i].x * glyph_scale;
-      e[i].p0.y = (F32)(height) - (F32)(outline.points[i].y ) * glyph_scale;
-      
-      if (outline.end_point_indices[end_point_index] == i) {
-        is_start = true;
-        e[i].p1.x = (F32)outline.points[start_index].x * glyph_scale;
-        e[i].p1.y = (F32)(height) - (F32)outline.points[start_index].y * glyph_scale;
-        ++end_point_index;
-      }
-      else {
-        e[i].p1.x = (F32)outline.points[i+1].x * glyph_scale;
-        e[i].p1.y = (F32)(height) - (F32)outline.points[i+1].y * glyph_scale;
-      }
-      
-      // It's easier for the rasterization algorithm to have the edges'
-      // p0 be on top of p1. If we flip, we will indicate it within the edge
-      if (e[i].p0.y > e[i].p1.y) {
-        swap(&e[i].p0, &e[i].p1);
-        e[i].is_inverted = true;
-      }
-    }
-    
-    
-    edges = create_array(e, edge_count);
-  }   
-  
+    }  
+  }
   
   
   // Rasterazation algo
   // Sort edges by top most edge
-  quicksort(edges.e, edges.count, [](TTF_Edge* lhs, TTF_Edge* rhs) {
+  quicksort(edges, edge_count, [](TTF_Edge* lhs, TTF_Edge* rhs) {
               F32 lhs_y = max_of(lhs->p0.y, lhs->p1.y);
               F32 rhs_y = max_of(rhs->p0.y, rhs->p1.y);
               return lhs_y < rhs_y;
             });
   
   // create an 'active edges list'
-  auto active_edges = create_list(push_array<TTF_Edge*>(scratch, edges.count), edges.count);
+  auto active_edges = create_list(push_array<TTF_Edge*>(scratch, edge_count), edge_count);
   
   
-#if 0
-  // NOTE(Momo): Debug
-  for (UMI i = 0; i < edges.count; ++i) {
-    auto* edge = edges.e + i;
-    
-    S32 sx = (S32)edge->p0.x;
-    S32 sy = (S32)edge->p0.y;
-    
-    S32 ex = (S32)edge->p1.x;
-    S32 ey = (S32)edge->p1.y;
-    
-    pixels[sx + sy * image_width] = 0x000000FF;
-    pixels[ex + ey * image_width] = 0x000000FF;
-    //S32 dx = edge->p0.x < edge->p1.x ? 1 : -1;
-    //S32 dy = edge->p0.y < edge->p1.y ? 1 : -1;
-    
-    //for(S32 x = sx; x != ex; x += dx)
-    //pixels[x + sy * image_width] = 0x000000FF;
-    
-    //for(S32 y = sy; y != ey; y += dy)
-    //pixels[sx + y * image_width] = 0x000000FF;
-    
-  }
-  
-#else  
-  // NOTE(Momo): Currently, I'm lazy, so I'll just keep clearing and refilling the active_edges list per scan line
-  //for(U32 line = 0; line < image_height; ++line) {
+  // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
+  // clearing and refilling the active_edges list per scan line
   for(U32 y = 0; y <= image_height; ++y) {
     F32 yf = (F32)y; // 'center' of pixel
     clear(&active_edges);
     // Add to 'active edge list' any edges which have an uppermost vertex (p0) 
     // before this y and lowermost vertex after this y.
-    for (UMI edge_index = 0; edge_index < edges.count; ++edge_index){
-      auto* edge = edges.e + edge_index;
+    for (U32 edge_index = 0; edge_index < edge_count; ++edge_index){
+      auto* edge = edges + edge_index;
       if (edge->p0.y <= yf && edge->p1.y >= yf) {
         // calculate the x intersection
         F32 dx = edge->p1.x - edge->p0.x;
@@ -727,10 +741,11 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
     
     
     
-#if 0
-    test_log("checking current active edges\n");
+#if 1
+    test_log("checking current active edges for y = %d\n", y);
     for (UMI i = 0; i < active_edges.count; ++i){
       auto* edge = active_edges.e[i];
+      test_create_log_section_until_scope;
       test_log("{%f %f} -> {%f %f} x %f: %s\n",
                edge->p0.x,
                edge->p0.y,
@@ -743,7 +758,7 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
     if (active_edges.count >= 2) {
       U32 crossings = 0;
       for (UMI active_edge_index = 0; 
-           active_edge_index < active_edges.count;
+           active_edge_index < active_edges.count-1;
            ++active_edge_index) 
       {
         auto* start_edge = active_edges.e[active_edge_index];
@@ -762,7 +777,6 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
     }
     
   }
-#endif  
   
   
   Image ret;
@@ -788,7 +802,6 @@ void test_ttf() {
   
   
   Arena main_arena = create_arena(memory, memory_size);
-#if 1
   Memory ttf_memory = test_read_file_to_memory(&main_arena, 
 #if 0
                                                test_assets_dir("nokiafc22.ttf")
@@ -810,7 +823,6 @@ void test_ttf() {
     Memory image_mem = write_image_as_png(codepoint_image, image_scratch);
     test_write_memory_to_file(image_mem, "codepoint.png");
   }
-#endif
   
   
   

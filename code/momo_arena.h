@@ -27,7 +27,7 @@ static Arena partition(Arena* a, UMI size);
 static UMI remaining_of(Arena* a);
 template<typename T> static T* push(Arena* a, UMI align = 4); 
 template<typename T> static T* push_array(Arena* a, UMI num, UMI align = 4);
-static Arena_Marker mark();
+static Arena_Marker mark(Arena* arena);
 static void		     revert(Arena_Marker marker);
 
 // TODO(Momo): I don't actually feel like it's reasonable to use this anymore?
