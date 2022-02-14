@@ -140,10 +140,10 @@ typedef uintptr_t UMI; // aka 'unsigned memory index'
 typedef ptrdiff_t SMI; // aka 'signed memory index'
 
 //~Helper Macros
-#define Stringify_(s) #s
-#define Stringify(s) Stringify(s)
-#define Glue_(a,b) a##b
-#define Glue(a,b) Glue_(a,b)
+#define stringify_(s) #s
+#define stringify(s) stringify_(s)
+#define glue_(a,b) a##b
+#define glue(a,b) glue_(a,b)
 // NOTE(Momo): We need this do/while  
 // macro to cater for if/else statements
 // that looks like this:

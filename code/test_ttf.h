@@ -196,7 +196,7 @@ get_glyph_box(TTF* ttf, U32 glyph_index) {
   ret.min.x = _ttf_read_s16(ttf->data + g + 2);
   ret.min.y = _ttf_read_s16(ttf->data + g + 4);
   ret.max.x = _ttf_read_s16(ttf->data + g + 6);
-  ret.min.y = _ttf_read_s16(ttf->data + g + 8);
+  ret.max.y = _ttf_read_s16(ttf->data + g + 8);
   
   return ret;
 }
@@ -378,13 +378,13 @@ _ttf_add_vertex(V2* vertices, U32 n, V2 v) {
 }
 
 static void
-_ttf_tessellate_bezier_2(V2* vertices,
-                         U32* vertex_count,
-                         V2 p0, 
-                         V2 p1,
-                         V2 p2,
-                         F32 flatness_squared,
-                         U32 n) 
+_ttf_tessellate_bezier(V2* vertices,
+                       U32* vertex_count,
+                       V2 p0, 
+                       V2 p1,
+                       V2 p2,
+                       F32 flatness_squared,
+                       U32 n) 
 {
   V2 mid = (p0 + p1*2.f + p2) * 0.25f;
   V2 d = midpoint(p0, p2) - mid;
@@ -394,13 +394,13 @@ _ttf_tessellate_bezier_2(V2* vertices,
   // looking at abnormally large images...?
   if (n > 16) { return; }
   
-  if (d.x*d.x + d.y*d.y*0.5 > flatness_squared) {
-    _ttf_tessellate_bezier_2(vertices, vertex_count, p0,
-                             midpoint(p0, p1), 
-                             mid, flatness_squared, n+1 );
-    _ttf_tessellate_bezier_2(vertices, vertex_count, mid,
-                             midpoint(p1, p2), 
-                             p2, flatness_squared, n+1 );
+  if (d.x*d.x + d.y*d.y > flatness_squared) {
+    _ttf_tessellate_bezier(vertices, vertex_count, p0,
+                           midpoint(p0, p1), 
+                           mid, flatness_squared, n+1 );
+    _ttf_tessellate_bezier(vertices, vertex_count, mid,
+                           midpoint(p1, p2), 
+                           p2, flatness_squared, n+1 );
   }
   else {
     _ttf_add_vertex(vertices, (*vertex_count)++, p2);      
@@ -408,30 +408,6 @@ _ttf_tessellate_bezier_2(V2* vertices,
   
   
   
-}
-
-static void
-_ttf_tessellate_bezier(V2* vertices,
-                       U32* vertex_count,
-                       V2 p0, 
-                       V2 p1,
-                       V2 p2)
-
-{
-  U32 steps = 20;
-  F32 step_per_itr = 1.f/steps;
-  
-  //B(t) = (1-t)^2*P0 + 2(1-t)*t*P1 + t^2*P2
-  for (U32 i = 1; i < steps; ++i ){
-    F32 t = i * step_per_itr;
-    F32 t1 = (1.f - t);
-    F32 t2 = t * t;
-    
-    F32 x = (t1*t1*p0.x + 2*t1*t*p1.x + t2*p2.x);
-    F32 y = (t1*t1*p0.y + 2*t1*t*p1.y + t2*p2.y);
-    
-    _ttf_add_vertex(vertices, (*vertex_count)++, x, y); 
-  }
 }
 
 static _TTF_Glyph_Paths
@@ -451,18 +427,20 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
   // the list with generated points.
   for (U32 pass = 0; pass < 2; ++pass)
   {
-    
     if (pass == 1) {
       vertices = push_array<V2>(arena, vertex_count);
       vertex_count = 0;
+      path_count = 0;
     }
     
     // NOTE(Momo): For now, we assume that the first point is 
     // always on curve, which is not always the case.
     V2 anchor_pt = {};
-    UMI j = 0;
-    for (UMI i = 0; i < outline.contour_count; ++i) {
-      UMI contour_start_index = j;
+    U32 j = 0;
+    for (U32 i = 0; i < outline.contour_count; ++i) {
+      U32 contour_start_index = j;
+      U32 start_vertex_count = vertex_count;
+      
       for(; j <= outline.end_point_indices[i]; ++j) {
         U8 flags = outline.points[j].flags;
         
@@ -470,14 +448,22 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
           anchor_pt.x = (F32)outline.points[j].x;
           anchor_pt.y = (F32)outline.points[j].y;
           
-          _ttf_add_vertex(vertices, vertex_count, anchor_pt);
-          ++vertex_count;
+          _ttf_add_vertex(vertices, vertex_count++, anchor_pt);
         }
         else{ // not on curve
           // Check if next point is on curve
           V2 p0 = anchor_pt;
           V2 p1 = { (F32)outline.points[j].x, (F32)outline.points[j].y };
-          V2 p2 = { (F32)outline.points[j+1].x, (F32)outline.points[j+1].y };
+          V2 p2 = {};
+          
+          if(j != outline.end_point_indices[i]) { 
+            p2.x = (F32)outline.points[j+1].x;
+            p2.y = (F32)outline.points[j+1].y;
+          }
+          else { 
+            p2.x = (F32)outline.points[contour_start_index].x;
+            p2.y = (F32)outline.points[contour_start_index].y;
+          }
           
           U8 next_flags = outline.points[j+1].flags;
           if (!(next_flags & 0x1)) {
@@ -485,16 +471,20 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
             p2.x = p1.x + (p2.x - p1.x)*0.5f;
             p2.y = p1.y + (p2.y - p1.y)*0.5f;
           }
-          _ttf_tessellate_bezier_2(vertices, &vertex_count,
-                                   p0, p1, p2, flatness_squared, 0);
+#if 0
+          // prevent duplicates?
+          else {
+            ++j;
+          }
+#endif
+          _ttf_tessellate_bezier(vertices, &vertex_count,
+                                 p0, p1, p2, flatness_squared, 0);
           anchor_pt = p2;
         }
       }
-      
-      
+      path_lengths[path_count++] = vertex_count - start_vertex_count;
     }
-    path_lengths[path_count] = (path_count > 0) ? vertex_count - path_lengths[path_count-1] : vertex_count;
-    ++path_count;
+    
   }
   
   _TTF_Glyph_Paths ret = {};
@@ -612,46 +602,37 @@ struct TTF_Edge {
 static Image 
 rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   U32 glyph_index = get_glyph_index_from_codepoint(ttf, codepoint);
-  F32 glyph_scale = get_scale_for_pixel_height(ttf, 128.f);
+  F32 glyph_scale = get_scale_for_pixel_height(ttf, 512.f);
   
   // Scale the box and get the width and height of the box
   
   U32 image_width = 0;
   U32 image_height = 0;
-  
-  F32 width = 0;
-  F32 height = 0;   
+  Rect2 box;
   {
     
     Rect2S raw_box = get_glyph_box(ttf, glyph_index);
-    Rect2 box;
-#if 0
-    box.min.x = (S32)floor((F32)raw_box.min.x * glyph_scale);
-    box.max.x = (S32)ceil((F32)raw_box.max.x * glyph_scale);
-    box.min.y = (S32)floor((F32)raw_box.min.y * glyph_scale);
-    box.max.y = (S32)ceil((F32)raw_box.max.y * glyph_scale);
-#endif
     box.min.x = (F32)raw_box.min.x * glyph_scale;
-    box.min.y = (F32)raw_box.max.y * glyph_scale;
+    box.min.y = (F32)raw_box.min.y * glyph_scale;
     box.max.x = (F32)raw_box.max.x * glyph_scale;
-    box.max.y = (F32)raw_box.min.y * glyph_scale;
+    box.max.y = (F32)raw_box.max.y * glyph_scale;
     
     test_log("box for %d\n", glyph_index);
     {
       test_create_log_section_until_scope;
       test_eval_f(box.min.x);
-      test_eval_f(box.max.x);
       test_eval_f(box.min.y);
+      test_eval_f(box.max.x);
       test_eval_f(box.max.y);
     }
-    
-    width = box.max.x - box.min.x;
-    height = box.max.y - box.min.y;
     
     image_width = (U32)(box.max.x - box.min.x) + 1;
     image_height = (U32)(box.max.y - box.min.y) + 1;
     
   } 
+  
+  F32 width = box.max.x - box.min.x;
+  F32 height = box.max.y - box.min.y;   
   
   U32* pixels = push_array<U32>(arena, image_width * image_height);
   assert(pixels);
@@ -672,7 +653,6 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   assert(edges);
   U32 edge_count = 0;
   {
-    zero_range(edges, edge_count);
     
     U32 vertex_index = 0;
     for (UMI path_index = 0; path_index < paths.path_count; ++path_index) {
@@ -682,11 +662,11 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
         V2 start_vertex = paths.vertices[vertex_index];
         V2 end_vertex = (i == path_length-1) ? paths.vertices[vertex_index-i] : paths.vertices[vertex_index+1];
         
-        edge.p0.x = start_vertex.x * glyph_scale;
-        edge.p0.y = (F32)(height) - start_vertex.y * glyph_scale;
+        edge.p0.x = (start_vertex.x * glyph_scale) - box.min.x;
+        edge.p0.y = (F32)(height) - (start_vertex.y * glyph_scale - box.min.y);
         
-        edge.p1.x = end_vertex.x * glyph_scale;
-        edge.p1.y = (F32)(height) - end_vertex.y * glyph_scale;
+        edge.p1.x = (end_vertex.x * glyph_scale) - box.min.x;
+        edge.p1.y = (F32)(height) - (end_vertex.y * glyph_scale - box.min.y);
         
         // It's easier for the rasterization algorithm to have the edges'
         // p0 be on top of p1. If we flip, we will indicate it within the edge
@@ -716,6 +696,8 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
   // clearing and refilling the active_edges list per scan line
   for(U32 y = 0; y <= image_height; ++y) {
+    
+    // for(U32 y = 0; y <= image_height; ++y) {
     F32 yf = (F32)y; // 'center' of pixel
     clear(&active_edges);
     // Add to 'active edge list' any edges which have an uppermost vertex (p0) 
@@ -741,7 +723,7 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
     
     
     
-#if 1
+#if 0
     test_log("checking current active edges for y = %d\n", y);
     for (UMI i = 0; i < active_edges.count; ++i){
       auto* edge = active_edges.e[i];
@@ -779,6 +761,22 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   }
   
   
+  // Draw vertices in red
+#if 1
+  for (U32 i =0 ; i < edge_count; ++i) 
+  {
+    auto* edge = edges + i;
+    U32 x0 = (U32)edge->p0.x;
+    U32 y0 = (U32)edge->p0.y;
+    pixels[x0 + y0 * image_width] = 0xFF0000FF;
+    
+    
+    U32 x1 = (U32)edge->p1.x;
+    U32 y1 = (U32)edge->p1.y;
+    pixels[x1 + y1 * image_width] = 0xFF0000FF;
+    
+  }
+#endif
   Image ret;
   ret.width = image_width;
   ret.height = image_height;
@@ -814,20 +812,25 @@ void test_ttf() {
   
   TTF ttf = read_ttf(ttf_memory);
   
-  U32 codepoint = 66;
-  create_scratch(scratch, &main_arena);
-  
-  Image codepoint_image = rasterize_codepoint(&ttf, codepoint, scratch);
-  {
-    create_scratch(image_scratch, scratch);
-    Memory image_mem = write_image_as_png(codepoint_image, image_scratch);
-    test_write_memory_to_file(image_mem, "codepoint.png");
+  for (U32 codepoint = 0x30; codepoint <= 0x39; ++codepoint) {
+    test_log("codepoint %X\n", codepoint);
+    create_scratch(scratch, &main_arena);
+    Image codepoint_image = rasterize_codepoint(&ttf, codepoint, scratch);
+    {
+      U8 buffer[256];
+      Str8Bld strbld= create_str8bld(buffer, 256); 
+      strbld.push_format(str8_from_lit("%d.png"), codepoint);
+      strbld.push_C8(0);
+      
+      Memory image_mem = write_image_as_png(codepoint_image, scratch);
+      test_write_memory_to_file(image_mem, (const char*)strbld.e);
+    }
   }
   
   
   
   
-#if 1
+#if 0
   { 
     test_log("Testing\n");
     test_create_log_section_until_scope;
