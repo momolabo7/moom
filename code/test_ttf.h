@@ -425,7 +425,7 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
   
   U32* path_lengths = push_array<U32>(arena, outline.contour_count);
   assert(path_lengths);
-  //zero_range(path_lengths, outline.contour_count);
+  zero_range(path_lengths, outline.contour_count);
   U32 path_count = 0;
   
   // On the first pass, we count the number of points we will generate.
@@ -459,12 +459,11 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
           _ttf_add_vertex(vertices, vertex_count++, anchor_pt);
         }
         else{ // not on curve
+          U32 next_index = (j == outline.end_point_indices[i]) ? contour_start_index : j+1;
+          
           // Check if next point is on curve
           V2 p0 = anchor_pt;
           V2 p1 = { (F32)outline.points[j].x, (F32)outline.points[j].y };
-          
-          U32 next_index = (j == outline.end_point_indices[i]) ? contour_start_index : j+1;
-          
           V2 p2 = { (F32)outline.points[next_index].x, (F32)outline.points[next_index].y } ;
           
           U8 next_flags = outline.points[next_index].flags;
