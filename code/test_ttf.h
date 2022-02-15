@@ -244,6 +244,8 @@ _ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Arena* arena) {
     //test_eval_d(point_count);
     
     auto* points = push_array<_TTF_Glyph_Point>(arena, point_count);
+    assert(points);
+    zero_range(points, point_count);
     U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
     
     // Load the flags
@@ -325,6 +327,7 @@ _ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Arena* arena) {
     // mark the points that are contour endpoints
     U16 *end_pt_indices = push_array<U16>(arena, number_of_contours);
     assert(end_pt_indices);
+    zero_range(end_pt_indices, number_of_contours); 
     {
       U32 contour_end_pts = g + 10; 
       for (S16 i = 0; i < number_of_contours; ++i) {
@@ -417,9 +420,12 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
   // Count the amount of points generated
   V2* vertices = nullptr;
   U32 vertex_count = 0;
-  F32 flatness_squared = 0.35f * 0.35f;
+  F32 flatness = 0.35f;
+  F32 flatness_squared = flatness*flatness;
   
   U32* path_lengths = push_array<U32>(arena, outline.contour_count);
+  assert(path_lengths);
+  //zero_range(path_lengths, outline.contour_count);
   U32 path_count = 0;
   
   // On the first pass, we count the number of points we will generate.
@@ -429,6 +435,8 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
   {
     if (pass == 1) {
       vertices = push_array<V2>(arena, vertex_count);
+      assert(vertices);
+      zero_range(vertices, vertex_count);
       vertex_count = 0;
       path_count = 0;
     }
@@ -454,18 +462,12 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
           // Check if next point is on curve
           V2 p0 = anchor_pt;
           V2 p1 = { (F32)outline.points[j].x, (F32)outline.points[j].y };
-          V2 p2 = {};
           
-          if(j != outline.end_point_indices[i]) { 
-            p2.x = (F32)outline.points[j+1].x;
-            p2.y = (F32)outline.points[j+1].y;
-          }
-          else { 
-            p2.x = (F32)outline.points[contour_start_index].x;
-            p2.y = (F32)outline.points[contour_start_index].y;
-          }
+          U32 next_index = (j == outline.end_point_indices[i]) ? contour_start_index : j+1;
           
-          U8 next_flags = outline.points[j+1].flags;
+          V2 p2 = { (F32)outline.points[next_index].x, (F32)outline.points[next_index].y } ;
+          
+          U8 next_flags = outline.points[next_index].flags;
           if (!(next_flags & 0x1)) {
             // not on curve, thus it's a cubic curve, so we have to generate midpoint
             p2.x = p1.x + (p2.x - p1.x)*0.5f;
@@ -651,6 +653,8 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
   // generate scaled edges based on points
   auto* edges = push_array<TTF_Edge>(scratch, paths.vertex_count);
   assert(edges);
+  zero_range(edges, paths.vertex_count);
+  
   U32 edge_count = 0;
   {
     
@@ -812,7 +816,7 @@ void test_ttf() {
   
   TTF ttf = read_ttf(ttf_memory);
   
-  for (U32 codepoint = 0x30; codepoint <= 0x39; ++codepoint) {
+  for (U32 codepoint = 0x62; codepoint <= 0x63; ++codepoint) {
     test_log("codepoint %X\n", codepoint);
     create_scratch(scratch, &main_arena);
     Image codepoint_image = rasterize_codepoint(&ttf, codepoint, scratch);
@@ -828,41 +832,6 @@ void test_ttf() {
   }
   
   
-  
-  
-#if 0
-  { 
-    test_log("Testing\n");
-    test_create_log_section_until_scope;
-    create_scratch(test_scratch, &main_arena);
-    
-    
-    U32 glyph_index = get_glyph_index_from_codepoint(&ttf, 0x32);
-    F32 glyph_scale = get_scale_for_pixel_height(&ttf, 256.f);
-    
-    auto outline = _ttf_get_glyph_outline(&ttf, glyph_index, test_scratch);
-    auto paths = _ttf_get_paths_from_glyph_outline(outline, test_scratch);
-    
-    Image test;
-    test.width = 256;
-    test.height = 256;
-    test.pixels = push_array<U32>(test_scratch, test.width * test.height);
-    
-    for(U32 i = 0; i < test.width*test.height; ++i){
-      test.pixels[i] = 0xFFFFFFFF;
-    }
-    
-    for(U32 i = 0; i < paths.vertex_count; ++i ){
-      S16 x = (S16)(paths.vertices[i].x * glyph_scale);
-      S16 y = (S16)(paths.vertices[i].y * glyph_scale);
-      
-      test.pixels[x + y * test.width] = 0xFF000000;
-    }
-    
-    Memory image_mem = write_image_as_png(test, test_scratch);
-    test_write_memory_to_file(image_mem, "ttt.png");
-  }
-#endif
   
   
 }
