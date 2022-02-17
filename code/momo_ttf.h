@@ -21,7 +21,7 @@ struct TTF {
   U32 glyph_count;
   
   // these are positions from data
-  U32 loca, head, glyf, maxp, cmap, hhea, hmtx;
+  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;
   U32 cmap_mappings;
   
   U16 loca_format;

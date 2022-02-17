@@ -113,6 +113,11 @@ _ttf_get_glyph_box(TTF* ttf, U32 glyph_index) {
 }
 
 
+static S32
+_ttf_get_glyph_kerning(TTF* ttf, S32 g1, S32 g2) {
+  U8* data = ttf->data + ttf->kern;
+  
+}
 
 //~Glyph outline retrieval
 
@@ -513,6 +518,12 @@ read_ttf(Memory ttf_memory) {
       case 'hmtx': {
         ret.hmtx = _ttf_read_u32(ret.data + directory + 8);
       } break;
+      case 'kern': {
+        ret.kern = _ttf_read_u32(ret.data + directory + 8);
+      } break;
+      case 'gpos': {
+        ret.gpos = _ttf_read_u32(ret.data + directory + 8);
+      } break;
     }
     
   }
@@ -572,6 +583,17 @@ read_ttf(Memory ttf_memory) {
   
   
   return ret;
+}
+
+static S32 get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
+  if (ttf->gpos) {
+    assert(false);
+    //return _ttf_get_gpos_advance(ttf, glyph_index_1, glyph_index_2);
+  }
+  else if (ttf->kern) {
+    return _ttf_get_kern_advance(ttf, glyph_index_1, glyph_index_2);
+  }
+  return 0;
 }
 
 static Image 
