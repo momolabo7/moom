@@ -661,10 +661,17 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
     for (UMI path_index = 0; path_index < paths.path_count; ++path_index) {
       U32 path_length = paths.path_lengths[path_index];
       for (UMI i = 0; i < path_length; ++i) {
-        // TODO(Momo): ski
+        
+        
         TTF_Edge edge = {};
         V2 start_vertex = paths.vertices[vertex_index];
         V2 end_vertex = (i == path_length-1) ? paths.vertices[vertex_index-i] : paths.vertices[vertex_index+1];
+        ++vertex_index;
+        
+        // Skip if edge is going to be completely horizontal
+        if (start_vertex.y == end_vertex.y) {
+          continue;
+        }
         
         edge.p0.x = (start_vertex.x * glyph_scale) - box.min.x;
         edge.p0.y = (F32)(height) - (start_vertex.y * glyph_scale - box.min.y);
@@ -672,16 +679,13 @@ rasterize_codepoint(TTF* ttf, U32 codepoint, Arena* arena) {
         edge.p1.x = (end_vertex.x * glyph_scale) - box.min.x;
         edge.p1.y = (F32)(height) - (end_vertex.y * glyph_scale - box.min.y);
         
-        // TODO(Momo): skip edge if horizontal
-        
-        
-        // It's easier for the rasterization algorithm to have the edges'
-        // p0 be on top of p1. If we flip, we will indicate it within the edge
+        // Check if edge's points need to be flipped.
+        // NOTE(Momo): It's easier for the rasterization algorithm to have the edges'
+        // p0 be on top of p1. If we flip, we will indicate it within the edge.
         if (edge.p0.y > edge.p1.y) {
           swap(&edge.p0, &edge.p1);
           edge.is_inverted = true;
         }
-        ++vertex_index;
         edges[edge_count++] = edge;
       }
     }  
@@ -819,7 +823,7 @@ void test_ttf() {
   
   TTF ttf = read_ttf(ttf_memory);
   
-  for (U32 codepoint = 0x62; codepoint <= 0x63; ++codepoint) {
+  for (U32 codepoint = 85; codepoint <= 85; ++codepoint) {
     test_log("codepoint %X\n", codepoint);
     create_scratch(scratch, &main_arena);
     Image codepoint_image = rasterize_codepoint(&ttf, codepoint, scratch);

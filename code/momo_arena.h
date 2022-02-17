@@ -1,3 +1,15 @@
+// Authors: Gerald Wong, momodevelop
+// 
+// This file contains implementation of a simple linear memory arena.
+//
+// Notes:
+// -
+//
+// Todo:
+// - 
+// 
+
+
 #ifndef MOMO_ARENA_H
 #define MOMO_ARENA_H
 

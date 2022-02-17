@@ -1,4 +1,14 @@
-/* date = november 19th 2021 3:20 pm */
+// Authors: Gerald Wong, momodevelop
+// 
+// This file contains CRC calculation functions.
+//
+// Notes:
+// - calc_crcXX() functions require you to generate CRC tables
+//   first with gen_crc_table() series of functions.
+// 
+// Todo:
+// - 
+// 
 
 #ifndef MOMO_CRC_H
 #define MOMO_CRC_H

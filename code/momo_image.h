@@ -1,12 +1,16 @@
-/* date = December 31st 2021 2:16 pm */
+// Authors: Gerald Wong, momodevelop
+// 
+// This file contains generic Image types..
+//
+// Notes:
+// - Right now, we only support 32-bit images in RGBA format
+//
+// Todo:
+// - Come up with a better way that can represent different image types.
+// 
 
 #ifndef MOMO_IMAGE_H
 #define MOMO_IMAGE_H
-
-
-struct Image_Info {
-  U32 width, height, channels;
-};
 
 // For now, we only care about images that are in RGBA format,
 // with U8 representing each channel. 

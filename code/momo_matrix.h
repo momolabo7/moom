@@ -1,10 +1,19 @@
-// NOTE(Momo): All matrices are in F32. I don't see
-// any reason why they shouldn't be, at least for my use cases.
+// Authors: Gerald Wong, momodevelop
+// 
+// This file contains implementation of a simple linear memory arena.
+//
+// Notes:
+// - All matrices are in F32. I don't see any reason why they shouldn't be, 
+//   at least for my use cases.
+// - All matrix operations assume row-major
+//
+// Todo:
+// - column major?
+// 
 
 #ifndef MOMO_MATRIX_H
 #define MOMO_MATRIX_H
 
-// All matrices here are row-major
 struct M44 {
 	F32 e[4][4];
 };

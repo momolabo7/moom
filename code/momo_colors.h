@@ -1,8 +1,17 @@
-// NOTE(Momo): While there could be several representation of colors,
-// I would prefer to use floating point values between [0-1] 
-// to cover all general cases. If the user needs to convert it to a more
-// usable and concrete value, say, [0 - 255], they would just need to 
-// multiply the values by 255 and go from there.
+// Authors: Gerald Wong, momodevelop
+// 
+// This file contains implementation of a simple linear memory arena.
+//
+// Notes:
+// - While there could be several representation of colors,
+//   I would prefer to use floating point values between [0-1] 
+//   to cover all general cases. If the user needs to convert it to a more
+//   usable and concrete value, say, [0 - 255], they would just need to 
+//   multiply the values by 255 and go from there.
+//
+// Todo:
+// - 
+// 
 
 #ifndef MOMO_COLORS_H
 #define MOMO_COLORS_H

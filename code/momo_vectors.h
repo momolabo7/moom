@@ -1,3 +1,16 @@
+// Authors: Gerald Wong, momodevelop
+// 
+// This file contains implementation vectors.
+//
+// Notes:
+// - As far as naming is concerned, 32-bit is the default size of each component,
+//   and float is the default type of each component. If it's non-default, 
+//   it will be explicitly named in the struct name itself. 
+// - Thus V2's components are F32. V2S components are S32, V2F64 components are F64.
+//  
+// Todo:
+// - 
+// 
 
 #ifndef MOMO_VECTOR_H
 #define MOMO_VECTOR_H
@@ -28,22 +41,22 @@ union V3{
   F32 e[3];
 };
 
-union V4F32 {
+union V4 {
 	struct { F32 x, y, z, w; };
   F32 e[4];
 };
 
 
-static constexpr V2 add(V2 lhs, V2 rhs);
-static constexpr V2 sub(V2 lhs, V2 rhs);
-static constexpr V2 scale(V2 lhs, F32 rhs);
-static constexpr V2 div(V2 lhs, F32 rhs);
+static constexpr V2    add(V2 lhs, V2 rhs);
+static constexpr V2    sub(V2 lhs, V2 rhs);
+static constexpr V2    scale(V2 lhs, F32 rhs);
+static constexpr V2    div(V2 lhs, F32 rhs);
 static constexpr F32   dot(V2 lhs, V2 rhs);
 static constexpr F32   distance_sq(V2 lhs, V2 rhs);
 static constexpr F32   length_sq(V2 v);
-static constexpr V2 negate(V2 v);
+static constexpr V2    negate(V2 v);
 static constexpr B32   match(V2 lhs, V2 rhs);
-static constexpr V2 midpoint(V2 lhs, V2 rhs);
+static constexpr V2    midpoint(V2 lhs, V2 rhs);
 static F32   distance(V2 lhs, V2 rhs);
 static F32   length(V2 v);
 static V2 normalize(V2 v);

@@ -1,7 +1,19 @@
+// Authors: Gerald Wong, momodevelop
+// 
+// This file processes PNG files:
+// - Reads and writes to PNG
+//
+// Notes:
+// - Only works in little-endian OS
+// - Only reads and writes into 32-bit RGBA format
+// 
+// Todo:
+// - Support other formats for reading/writeing
+// 
+
 #ifndef MOMO_PNG
 #define MOMO_PNG
 
-// TODO(Momo): Error handling in PNG?
 struct PNG {
   U8* data;
   U32 data_size;
@@ -20,7 +32,6 @@ struct PNG {
 //
 // TODO(Momo): 
 // - Make these work in big endian OS
-// - Follow TTF's way to doing it (return a context, then only return an image when the user wants to rasterize)
 // - probably need a 'get channels' function?
 //   TODO: static U32 get_channels(PNG);
 
@@ -32,4 +43,4 @@ static Memory write_image_as_png(Image image, Arena* arena);
 
 #include "momo_png.cpp"
 
-#endif //MOMO_PNG_H
+#endif //MOMO_PNG
