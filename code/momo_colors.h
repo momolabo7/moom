@@ -10,7 +10,7 @@
 //   multiply the values by 255 and go from there.
 //
 // Todo:
-// - 
+// - HSV support?
 // 
 
 #ifndef MOMO_COLORS_H
