@@ -112,11 +112,24 @@ _ttf_get_glyph_box(TTF* ttf, U32 glyph_index) {
   return ret;
 }
 
-
 static S32
 _ttf_get_glyph_kerning(TTF* ttf, S32 g1, S32 g2) {
+  // NOTE(Momo): We only care about format 0.
+  
+  if (!ttf->kern) return 0;
+  
   U8* data = ttf->data + ttf->kern;
   
+  // number of tables must be 1 or more
+  if (_ttf_read_u16(data+2) < 1) return 0;
+  
+  // horizontal flag must be set
+  if (_ttf_read_u16(data+8) != 1) return 0;
+  
+  S32 l = 0;
+  S32 r = _ttf_read_u16(data+10) -1;
+  S32 m = 0;
+  U32 needle = g1 << 16 | g2; // the value we are looking for
 }
 
 //~Glyph outline retrieval
