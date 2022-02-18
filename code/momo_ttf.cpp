@@ -126,10 +126,16 @@ _ttf_get_glyph_kerning(TTF* ttf, S32 g1, S32 g2) {
   // horizontal flag must be set
   if (_ttf_read_u16(data+8) != 1) return 0;
   
+  // We will be performing binary search
   S32 l = 0;
   S32 r = _ttf_read_u16(data+10) -1;
   S32 m = 0;
+  
+  
   U32 needle = g1 << 16 | g2; // the value we are looking for
+  
+  
+  
 }
 
 //~Glyph outline retrieval
