@@ -16,7 +16,7 @@
 // - Kerning:
 //   - gpos support
 //   - other format support for kern (other than 0)
-//
+// - Different rasterization color modes
 
 #ifndef MOMO_TTF_H
 #define MOMO_TTF_H
