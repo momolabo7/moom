@@ -1,7 +1,8 @@
 // Authors: Gerald Wong, momodevelop
 // 
 // This file processes TTF files:
-// - 
+// - Extracts font and glyph information
+// - Performs rasterization
 //
 // Notes:
 // - Only works in little-endian OS
@@ -10,6 +11,7 @@
 // 
 // Todo:
 // - Cater for glyphs which start from an off-curve point.
+// - Anti-aliasing
 // - Complex glyphs.
 // - Kerning:
 //   - gpos support
@@ -53,7 +55,7 @@ static F32 get_scale_for_pixel_height(TTF* ttf, F32 pixel_height);
 static Image rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena);
 // Returns an RGBA image where the glyph is white and the background is transparent
 
-static S32 get_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);
+static S32 get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);
 
 #include "momo_ttf.cpp"
 

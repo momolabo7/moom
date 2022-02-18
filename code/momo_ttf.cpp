@@ -26,8 +26,6 @@ struct _TTF_Edge {
 };
 
 
-
-
 enum {
   _TTF_CMAP_PLATFORM_ID_UNICODE = 0,
   _TTF_CMAP_PLATFORM_ID_MACINTOSH = 1,
@@ -128,18 +126,30 @@ _ttf_get_kern_advance(TTF* ttf, S32 g1, S32 g2) {
   // horizontal flag must be set
   if (_ttf_read_u16(data+8) != 1) return 0;
   
-  
   // format must be 0
-  if (_ttf_read_u16(data+11) != 0) return 0;
+  //if ((_ttf_read_u16(data+8) & 0x0F) != 0) return 0;
   
-  
-  // We will be performing binary search
+  // We will be performing some kind of binary search
   S32 l = 0;
   S32 r = _ttf_read_u16(data+10) -1;
-  S32 m = 0;
   
-  
-  U32 needle = g1 << 16 | g2; // the value we are looking for
+  // the value we are looking for
+  U32 needle = g1 << 16 | g2;   
+  while(l <= r) {
+    S32 m = (l + r) >> 1; // half
+    
+    // 18 is where the kerning table is
+    U32 straw = _ttf_read_u32(data+18+(m*6));
+    if (needle < straw) {
+      r = m - 1;
+    }
+    else if (needle > straw) {
+      l = m + 1;
+    }
+    else {
+      return _ttf_read_u16(data+22+(m*6));
+    }
+  }
   
   return 0;
 }
@@ -272,7 +282,6 @@ _ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Arena* arena) {
   }
   
   else if (number_of_contours < 0) { // compound glyph case
-    test_log("compound glyph! %d\n", glyph_index);
     assert(false);
     return {};
   }
@@ -616,7 +625,7 @@ read_ttf(Memory ttf_memory) {
   return ret;
 }
 
-static S32 get_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
+static S32 get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
   
   if (ttf->gpos) {
     assert(false);

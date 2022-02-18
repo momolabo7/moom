@@ -59,15 +59,17 @@ void test_ttf() {
   test_log("Testing kerning\n");
   {
     test_create_log_section_until_scope;
-    //U32 codepoint1 = 65;
-    //for (U32 codepoint2 = codepoint1; codepoint2 <= 65+26; ++codepoint2) {
+    U32 s = 65;
+    U32 e = 65+26;
+    for (U32 cp1 = s; cp1 <= e; ++cp1) {
+      for (U32 cp2 = s; cp2 <= e; ++cp2) {
+        test_log("(%d, %d) = %d\n", cp1, cp2, get_glyph_kerning(&ttf, cp1, cp2));
+      }
+    }
     
-    //}
-    get_kerning(&ttf, 65, 65);
+    
   }
   
   
 }
-
-
 #endif //TEST_TTF_H
