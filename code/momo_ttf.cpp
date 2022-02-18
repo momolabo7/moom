@@ -717,15 +717,17 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
   // clearing and refilling the active_edges list per scan line
-  //for(U32 y = 0; y <= image_height; ++y) {
-  for(U32 y = 58; y <= 58; ++y) {
+  for(U32 y = 0; y <= image_height; ++y) {
+    //for(U32 y = 58; y <= 58; ++y) {
     F32 yf = (F32)y; // 'center' of pixel
     clear(&active_edges);
-    // Add to 'active edge list' any edges which have an uppermost vertex (p0) 
-    // before this y and lowermost vertex after this y.
+    // In general, add to 'active edge list' any edges which have an 
+    // uppermost vertex (p0) before y and lowermost vertex (p1) after this y.
+    // Also, ignore p1 that ends EXACTLY on this y.
     for (U32 edge_index = 0; edge_index < edge_count; ++edge_index){
       auto* edge = edges + edge_index;
-      if (edge->p0.y <= yf && edge->p1.y >= yf) {
+      
+      if (edge->p0.y <= yf && edge->p1.y > yf) {
         // calculate the x intersection
         F32 dx = edge->p1.x - edge->p0.x;
         F32 dy = edge->p1.y - edge->p0.y;
@@ -752,6 +754,7 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
         auto* start_edge = active_edges.e[active_edge_index];
         auto* end_edge = active_edges.e[active_edge_index+1];
         
+        
         start_edge->is_inverted ? ++crossings : --crossings;
         
         if (crossings > 0) {
@@ -764,11 +767,37 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
       }
     }
     
+#if 0
+    // Draw edges in green
+    for (U32 i =0 ; i < active_edges.count; ++i) 
+    {
+      _TTF_Edge** edge = active_edges.e + i;
+      F32 x0 = (*edge)->p0.x;
+      F32 y0 = (*edge)->p0.y;
+      
+      F32 x1 = (*edge)->p1.x;
+      F32 y1 = (*edge)->p1.y;
+      
+      F32 dx = (x1 - x0)/100;
+      F32 dy = (y1 - y0)/100;
+      
+      F32 xx = x0;
+      F32 yy = y0;
+      for (U32 z = 0; z < 100; ++z) {
+        xx += dx;
+        yy += dy;
+        pixels[(U32)xx + (U32)yy * image_width] = 0xFF00FF00;      
+      }
+    }
+#endif
+    
+    
   }
   
   
-  // Draw vertices in red
 #if 1
+  // Draw vertices in red
+  
   for (U32 i =0 ; i < edge_count; ++i) 
   {
     auto* edge = edges + i;
@@ -783,6 +812,8 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
     
   }
 #endif
+  
+  
   
   Image ret;
   ret.width = image_width;

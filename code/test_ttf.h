@@ -7,7 +7,6 @@
 
 
 
-
 void test_ttf() {
   test_create_log_section_until_scope;
   
@@ -38,8 +37,8 @@ void test_ttf() {
   {
     test_create_log_section_until_scope;
     F32 scale_factor = get_scale_for_pixel_height(&ttf, 512.f);
-    //for (U32 codepoint = 65; codepoint <= 65+26; ++codepoint) {
-    for (U32 codepoint = 87; codepoint <= 87; ++codepoint) {
+    for (U32 codepoint = 65; codepoint <= 65+26; ++codepoint) {
+      //for (U32 codepoint = 87; codepoint <= 87; ++codepoint) {
       test_log("rasterizing codepoint %X\n", codepoint);
       create_scratch(scratch, &main_arena);
       
