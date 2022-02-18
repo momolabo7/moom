@@ -72,8 +72,8 @@ _ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
       g2 = ttf->glyf + _ttf_read_u16(ttf->data + ttf->loca + glyph_index * 2 + 2) * 2;
     } break;
     case 1: { // long format
-      g1 = ttf->glyf + _ttf_read_u16(ttf->data + ttf->loca + glyph_index * 4);
-      g2 = ttf->glyf + _ttf_read_u16(ttf->data + ttf->loca + glyph_index * 4 + 4);
+      g1 = ttf->glyf + _ttf_read_u32(ttf->data + ttf->loca + glyph_index * 4);
+      g2 = ttf->glyf + _ttf_read_u32(ttf->data + ttf->loca + glyph_index * 4 + 4);
     } break;
     default: {
       return 0;
@@ -113,9 +113,11 @@ _ttf_get_glyph_box(TTF* ttf, U32 glyph_index) {
 }
 
 static S32
-_ttf_get_glyph_kerning(TTF* ttf, S32 g1, S32 g2) {
-  // NOTE(Momo): We only care about format 0.
-  
+_ttf_get_kern_advance(TTF* ttf, S32 g1, S32 g2) {
+  // NOTE(Momo): We only care about format 0, which Windows cares
+  // For now, OSX has too many things to handle for this table 
+  // and I am not going to care because I mostly develop in Windows.
+  //
   if (!ttf->kern) return 0;
   
   U8* data = ttf->data + ttf->kern;
@@ -126,6 +128,11 @@ _ttf_get_glyph_kerning(TTF* ttf, S32 g1, S32 g2) {
   // horizontal flag must be set
   if (_ttf_read_u16(data+8) != 1) return 0;
   
+  
+  // format must be 0
+  if (_ttf_read_u16(data+11) != 0) return 0;
+  
+  
   // We will be performing binary search
   S32 l = 0;
   S32 r = _ttf_read_u16(data+10) -1;
@@ -134,8 +141,7 @@ _ttf_get_glyph_kerning(TTF* ttf, S32 g1, S32 g2) {
   
   U32 needle = g1 << 16 | g2; // the value we are looking for
   
-  
-  
+  return 0;
 }
 
 //~Glyph outline retrieval
@@ -540,9 +546,15 @@ read_ttf(Memory ttf_memory) {
       case 'kern': {
         ret.kern = _ttf_read_u32(ret.data + directory + 8);
       } break;
-      case 'gpos': {
+      case 'GPOS': {
         ret.gpos = _ttf_read_u32(ret.data + directory + 8);
       } break;
+      default: {
+#if 0
+        char* tags = (char*)&tag;
+        test_log("found: %c%c%c%c\n", tags[3], tags[2], tags[1], tags[0]);
+#endif
+      };
     }
     
   }
@@ -604,7 +616,8 @@ read_ttf(Memory ttf_memory) {
   return ret;
 }
 
-static S32 get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
+static S32 get_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
+  
   if (ttf->gpos) {
     assert(false);
     //return _ttf_get_gpos_advance(ttf, glyph_index_1, glyph_index_2);
@@ -628,12 +641,10 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
     box.max.x = (F32)raw_box.max.x * scale_factor;
     box.max.y = (F32)raw_box.max.y * scale_factor;
     
-    image_width = (U32)(box.max.x - box.min.x) + 1;
-    image_height = (U32)(box.max.y - box.min.y) + 1;
+    image_width = (U32)abs_of(box.max.x - box.min.x) + 1;
+    image_height = (U32)abs_of(box.max.y - box.min.y) + 1;
   } 
-  
-  F32 width = box.max.x - box.min.x;
-  F32 height = box.max.y - box.min.y;   
+  F32 height = abs_of(box.max.y - box.min.y);   
   
   U32* pixels = push_array<U32>(arena, image_width * image_height);
   assert(pixels);
@@ -706,9 +717,8 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
   // clearing and refilling the active_edges list per scan line
-  for(U32 y = 0; y <= image_height; ++y) {
-    
-    // for(U32 y = 0; y <= image_height; ++y) {
+  //for(U32 y = 0; y <= image_height; ++y) {
+  for(U32 y = 58; y <= 58; ++y) {
     F32 yf = (F32)y; // 'center' of pixel
     clear(&active_edges);
     // Add to 'active edge list' any edges which have an uppermost vertex (p0) 
@@ -758,7 +768,7 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   
   
   // Draw vertices in red
-#if 0
+#if 1
   for (U32 i =0 ; i < edge_count; ++i) 
   {
     auto* edge = edges + i;

@@ -11,7 +11,7 @@
 void test_ttf() {
   test_create_log_section_until_scope;
   
-  U32 memory_size = MB(1);
+  U32 memory_size = MB(2);
   void * memory = malloc(memory_size);
   if (!memory) { 
     test_log("Cannot allocate memory");
@@ -21,37 +21,52 @@ void test_ttf() {
   
   
   Arena main_arena = create_arena(memory, memory_size);
-  Memory ttf_memory = test_read_file_to_memory(&main_arena, 
-#if 0
-                                               test_assets_dir("nokiafc22.ttf")
-#else
-                                               test_assets_dir("DroidSansMono.ttf")
+  Memory ttf_memory = 
+    test_read_file_to_memory(&main_arena, 
+#if 0 
+                             test_assets_dir("nokiafc22.ttf")                                          
+#else                                               
+                             test_assets_dir("arial.ttf")
 #endif
-                                               );
+                             );
   
   
-  
+  assert(is_ok(ttf_memory));
   TTF ttf = read_ttf(ttf_memory);
-  F32 scale_factor = get_scale_for_pixel_height(&ttf, 256.f);
   
-  for (U32 codepoint = 85; codepoint <= 85; ++codepoint) {
-    test_log("codepoint %X\n", codepoint);
-    create_scratch(scratch, &main_arena);
-    
-    U32 glyph_index = get_glyph_index_from_codepoint(&ttf, codepoint);
-    Image codepoint_image = rasterize_glyph(&ttf, glyph_index, scale_factor, scratch);
-    {
-      U8 buffer[256];
-      Str8Bld strbld= create_str8bld(buffer, 256); 
-      strbld.push_format(str8_from_lit("%d.png"), codepoint);
-      strbld.push_C8(0);
+  test_log("Testing rasterization\n");
+  {
+    test_create_log_section_until_scope;
+    F32 scale_factor = get_scale_for_pixel_height(&ttf, 512.f);
+    //for (U32 codepoint = 65; codepoint <= 65+26; ++codepoint) {
+    for (U32 codepoint = 87; codepoint <= 87; ++codepoint) {
+      test_log("rasterizing codepoint %X\n", codepoint);
+      create_scratch(scratch, &main_arena);
       
-      Memory image_mem = write_image_as_png(codepoint_image, scratch);
-      test_write_memory_to_file(image_mem, (const char*)strbld.e);
+      U32 glyph_index = get_glyph_index_from_codepoint(&ttf, codepoint);
+      Image codepoint_image = rasterize_glyph(&ttf, glyph_index, scale_factor, scratch);
+      {
+        U8 buffer[256];
+        Str8Bld strbld= create_str8bld(buffer, 256); 
+        strbld.push_format(str8_from_lit("%d.png"), codepoint);
+        strbld.push_C8(0);
+        
+        Memory image_mem = write_image_as_png(codepoint_image, scratch);
+        test_write_memory_to_file(image_mem, (const char*)strbld.e);
+      }
     }
   }
   
   
+  test_log("Testing kerning\n");
+  {
+    test_create_log_section_until_scope;
+    //U32 codepoint1 = 65;
+    //for (U32 codepoint2 = codepoint1; codepoint2 <= 65+26; ++codepoint2) {
+    
+    //}
+    get_kerning(&ttf, 65, 65);
+  }
   
   
 }
