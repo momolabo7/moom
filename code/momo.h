@@ -20,6 +20,7 @@
 #include "momo_wav.h"
 #include "momo_image.h"
 #include "momo_png.h"
+#include "momo_ttf.h"
 
 
 #endif //MOMO_H
