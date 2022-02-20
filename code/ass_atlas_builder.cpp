@@ -55,7 +55,7 @@ push_font(Atlas_Builder* ab,
 }
 
 
-static Image
+static void
 end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
   // Count the amount of rects
   U32 rect_count = 0;
@@ -75,7 +75,7 @@ end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
     }
     
     if (rect_count == 0) {
-      return {}; // do nothing
+      return; // do nothing
     }
     
   }
@@ -231,7 +231,6 @@ end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
     
   }
   
-  return ab->atlas_image;
   
   
 }
