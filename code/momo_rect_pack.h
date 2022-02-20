@@ -12,7 +12,7 @@ enum struct RP_Sort_Type {
 };
 
 struct RP_Rect {
-	UMI x, y, w, h;
+	U32 x, y, w, h;
   void* user_data;
 };
 
@@ -50,10 +50,10 @@ struct RP_Rect {
 // Wait till I do asset system
 
 static void pack_rects(RP_Rect* rects, 
-                       UMI rect_count, 
-                       UMI padding,
-                       UMI total_width,
-                       UMI total_height,
+                       U32 rect_count, 
+                       U32 padding,
+                       U32 total_width,
+                       U32 total_height,
                        RP_Sort_Type sort_type,
                        Arena* arena);
 

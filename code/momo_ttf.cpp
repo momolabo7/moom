@@ -1,3 +1,7 @@
+struct _TTF_Glyph_Box : Rect2S {
+  B32 exists;
+};
+
 struct _TTF_Glyph_Point {
   S16 x, y; 
   U8 flags;
@@ -59,6 +63,7 @@ _ttf_read_u32(U8* location) {
   return endian_swap_32(*(U32*)location);
 };
 
+// returns 0 is failure
 static U32
 _ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
   assert(glyph_index < ttf->glyph_count);
@@ -84,28 +89,23 @@ _ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
 
 // Get the glyph box as-is from the TTF.
 //
-// The glyph's box's coordinate system's origin is at the top right
-// x moves towards the right, y moves towards the bottom
-//
-// ----x
-// |
-// |
-// y
-//
 // The box contains values where:
 //   min = bottom left of the glyph
 //   max = top right of the glyph
 // with respect to the coordinate system stated above.
 // 
-static Rect2S
+static _TTF_Glyph_Box
 _ttf_get_glyph_box(TTF* ttf, U32 glyph_index) {
-  Rect2S ret = {};
+  _TTF_Glyph_Box ret = {};
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
-  
-  ret.min.x = _ttf_read_s16(ttf->data + g + 2);
-  ret.min.y = _ttf_read_s16(ttf->data + g + 4);
-  ret.max.x = _ttf_read_s16(ttf->data + g + 6);
-  ret.max.y = _ttf_read_s16(ttf->data + g + 8);
+	if(g != 0)
+  {  
+    ret.min.x = _ttf_read_s16(ttf->data + g + 2);
+    ret.min.y = _ttf_read_s16(ttf->data + g + 4);
+    ret.max.x = _ttf_read_s16(ttf->data + g + 6);
+    ret.max.y = _ttf_read_s16(ttf->data + g + 8);
+    ret.exists = true;
+  }
   
   return ret;
 }
@@ -625,7 +625,8 @@ read_ttf(Memory ttf_memory) {
   return ret;
 }
 
-static S32 get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
+static S32 
+get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
   
   if (ttf->gpos) {
     assert(false);
@@ -637,30 +638,48 @@ static S32 get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
   return 0;
 }
 
+static Rect2 
+get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor) {
+  Rect2 ret = {};
+  
+  Rect2S raw_box = _ttf_get_glyph_box(ttf, glyph_index);
+  ret.min.x = (F32)raw_box.min.x * scale_factor;
+  ret.min.y = (F32)raw_box.min.y * scale_factor;
+  ret.max.x = (F32)raw_box.max.x * scale_factor;
+  ret.max.y = (F32)raw_box.max.y * scale_factor;
+  
+  return ret;
+}
+
+static V2U 
+get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
+  V2U ret = {};
+  
+  F32 width = abs_of(glyph_box.max.x - glyph_box.min.x);
+  F32 height = abs_of(glyph_box.max.y - glyph_box.min.y);
+  if (width > 0.f && height > 0) {
+    ret.w = (U32)width + 1;
+    ret.h = (U32)height + 1;
+  }
+  
+  return ret;
+}
+
+
 static Image 
 rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
+  Rect2 box = get_glyph_box(ttf, glyph_index, scale_factor);
+  V2U bitmap_dims = get_bitmap_dims_from_glyph_box(box);
   
-  U32 image_width = 0;
-  U32 image_height = 0;
-  Rect2 box;
-  {
-    Rect2S raw_box = _ttf_get_glyph_box(ttf, glyph_index);
-    box.min.x = (F32)raw_box.min.x * scale_factor;
-    box.min.y = (F32)raw_box.min.y * scale_factor;
-    box.max.x = (F32)raw_box.max.x * scale_factor;
-    box.max.y = (F32)raw_box.max.y * scale_factor;
-    
-    image_width = (U32)abs_of(box.max.x - box.min.x) + 1;
-    image_height = (U32)abs_of(box.max.y - box.min.y) + 1;
-  } 
+  if (bitmap_dims.w == 0 || bitmap_dims.h == 0) return {};
+  
   F32 height = abs_of(box.max.y - box.min.y);   
-  
-  U32* pixels = push_array<U32>(arena, image_width * image_height);
-  assert(pixels);
+  U32* pixels = push_array<U32>(arena, bitmap_dims.w * bitmap_dims.h);
+  if (!pixels) return {};
   
   // Set to white background
   // TODO(Momo): change to alpha
-  for (U32 i = 0; i < image_width*image_height; ++i) {
+  for (U32 i = 0; i < bitmap_dims.w*bitmap_dims.h; ++i) {
     pixels[i] = 0x00000000;
   }
   
@@ -726,7 +745,7 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
   // clearing and refilling the active_edges list per scan line
-  for(U32 y = 0; y <= image_height; ++y) {
+  for(U32 y = 0; y <= bitmap_dims.h; ++y) {
     //for(U32 y = 58; y <= 58; ++y) {
     F32 yf = (F32)y; // 'center' of pixel
     clear(&active_edges);
@@ -770,7 +789,7 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
           U32 start_x = (U32)active_edges.e[active_edge_index]->x_intersect;
           U32 end_x = (U32)active_edges.e[active_edge_index + 1]->x_intersect;
           for(U32 x = start_x; x <= end_x; ++x) {
-            pixels[x + y * image_width] = 0xFFFFFFFF;
+            pixels[x + y * bitmap_dims.w] = 0xFFFFFFFF;
           }
         }
       }
@@ -795,7 +814,7 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
       for (U32 z = 0; z < 100; ++z) {
         xx += dx;
         yy += dy;
-        pixels[(U32)xx + (U32)yy * image_width] = 0xFF00FF00;      
+        pixels[(U32)xx + (U32)yy * bitmap_dims.w] = 0xFF00FF00;      
       }
     }
 #endif
@@ -804,7 +823,7 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   }
   
   
-#if 1
+#if 0
   // Draw vertices in red
   
   for (U32 i =0 ; i < edge_count; ++i) 
@@ -812,12 +831,12 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
     auto* edge = edges + i;
     U32 x0 = (U32)edge->p0.x;
     U32 y0 = (U32)edge->p0.y;
-    pixels[x0 + y0 * image_width] = 0xFF0000FF;
+    pixels[x0 + y0 * bitmap_dims.w] = 0xFF0000FF;
     
     
     U32 x1 = (U32)edge->p1.x;
     U32 y1 = (U32)edge->p1.y;
-    pixels[x1 + y1 * image_width] = 0xFF0000FF;
+    pixels[x1 + y1 * bitmap_dims.w] = 0xFF0000FF;
     
   }
 #endif
@@ -825,8 +844,8 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   
   
   Image ret;
-  ret.width = image_width;
-  ret.height = image_height;
+  ret.width = bitmap_dims.w;
+  ret.height = bitmap_dims.h;
   ret.pixels = pixels;
   
   return ret;

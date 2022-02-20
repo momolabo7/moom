@@ -8,10 +8,11 @@
 
 
 #define assert_callback(s) printf("[test][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout); (*(volatile int*)0 = 0);
-#include "momo.h"
 
 
-static U32 test_log_spaces = 0;
+
+
+static unsigned test_log_spaces = 0;
 #define test_assets_dir(filename) "../assets/test/" ##filename
 #define test_eval_d(s) test_log(#s " = %d\n", s);
 #define test_eval_lld(s) test_log(#s " = %lld\n", s);
@@ -23,8 +24,9 @@ test_log(">> "#unit_name " start\n"); \
 { test_create_log_section_until_scope; unit_name; } \
 test_log(">> " #unit_name " end\n\n"); \
 
-#define test_log(...) { for(U32 test_log_spaces_index = 0; test_log_spaces_index < test_log_spaces; ++test_log_spaces_index) { printf(" "); } printf(__VA_ARGS__); };
+#define test_log(...) { for(unsigned test_log_spaces_index = 0; test_log_spaces_index < test_log_spaces; ++test_log_spaces_index) { printf(" "); } printf(__VA_ARGS__); };
 
+#include "momo.h"
 
 static inline Memory
 test_read_file_to_memory(Arena* arena, const char* filename) {

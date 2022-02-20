@@ -66,8 +66,6 @@ void test_ttf() {
         test_log("(%d, %d) = %d\n", cp1, cp2, get_glyph_kerning(&ttf, cp1, cp2));
       }
     }
-    
-    
   }
   
   

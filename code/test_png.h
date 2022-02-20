@@ -40,7 +40,7 @@ void test_png() {
     }
     
     PNG png = create_png(png_file);
-    if (!is_ok(&png)) {
+    if (!is_ok(png)) {
       test_log("Create PNG failed: %d\n", i);
       continue;
     }

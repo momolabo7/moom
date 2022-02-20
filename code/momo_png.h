@@ -36,6 +36,7 @@ struct PNG {
 //   TODO: static U32 get_channels(PNG);
 
 static PNG create_png(Memory png_memory);
+static B32 is_ok(PNG png);
 static B32 is_ok(PNG* png);
 
 static Image create_image(PNG* png, Arena* arena);

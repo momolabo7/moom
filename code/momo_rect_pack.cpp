@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 struct _RP_Node {
-	UMI x, y, w, h;
+	U32 x, y, w, h;
 };
 
 // NOTE(Momo): Predicates
@@ -33,7 +33,7 @@ _rp_sort_by_bigger_side(RP_Rect* l, RP_Rect* r) {
 
 static void 
 _rp_sort_rects(RP_Rect* rects,
-               UMI rect_count,
+               U32 rect_count,
                RP_Sort_Type sort_type) 
 {
   switch(sort_type) {
@@ -56,33 +56,36 @@ _rp_sort_rects(RP_Rect* rects,
 }
 static void
 pack_rects(RP_Rect* rects, 
-           UMI rect_count, 
-           UMI padding,
-           UMI total_width,
-           UMI total_height,
+           U32 rect_count, 
+           U32 padding,
+           U32 total_width,
+           U32 total_height,
            RP_Sort_Type sort_type,
            Arena* arena) 
 {
   _rp_sort_rects(rects, rect_count, sort_type);
   _RP_Node* nodes = push_array<_RP_Node>(arena, rect_count+1);
   
-  UMI current_node_count = 1;
+  U32 current_node_count = 1;
   nodes[0].x = 0;
   nodes[0].y = 0;
   nodes[0].w = total_width;
   nodes[0].h = total_height;
   
-  for (UMI i = 0; i < rect_count; ++i) {
+  for (U32 i = 0; i < rect_count; ++i) {
     RP_Rect* rect = rects + i;
     
-    // NOTE(Momo): padding*2 because there are 2 sides
-    UMI rect_width = rect->w + padding*2;
-    UMI rect_height = rect->h + padding*2;
+    // ignore rects with 0 width or height
+    if(rect->w == 0 || rect->h == 0) continue;
+    
+    // padding*2 because there are 2 sides
+    U32 rect_width = rect->w + padding*2;
+    U32 rect_height = rect->h + padding*2;
     
     // NOTE(Momo): Iterate the empty spaces backwards to find the best fit index
-    UMI chosen_space_index = current_node_count;
-    for (UMI  j = 0; j < chosen_space_index ; ++j ) {
-      UMI index = chosen_space_index - j - 1;
+    U32 chosen_space_index = current_node_count;
+    for (U32  j = 0; j < chosen_space_index ; ++j ) {
+      U32 index = chosen_space_index - j - 1;
       _RP_Node space = nodes[index];
       
       // NOTE(Momo): Check if the image fits
@@ -141,8 +144,8 @@ pack_rects(RP_Rect* rects,
       split_space_down.h = chosen_space.h - rect_height;
       
       // Choose to insert the bigger one first before the smaller one
-      UMI right_area = split_space_right.w * split_space_right.h;
-      UMI down_area = split_space_down.w * split_space_down.h;
+      U32 right_area = split_space_right.w * split_space_right.h;
+      U32 down_area = split_space_down.w * split_space_down.h;
       
       if (right_area > down_area) {
         nodes[current_node_count++] = split_space_right;

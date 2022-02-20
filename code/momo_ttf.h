@@ -56,6 +56,7 @@ static Image rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena*
 // Returns an RGBA image where the glyph is white and the background is transparent
 
 static S32 get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);
+static Rect2 get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor);
 
 #include "momo_ttf.cpp"
 

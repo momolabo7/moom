@@ -31,15 +31,24 @@ int main() {
   defer { ass_free(&memory); };
   
   Arena main_arena = create_arena(memory.data, memory.size);
-  Atlas_Builder ab = begin_atlas_builder(1024, 1024, &main_arena); 
+  Atlas_Builder ab = begin_atlas_builder(1024, 1024, 32, &main_arena); 
   {
     push_image(&ab, asset_dir("bullet_circle.png"));
     push_image(&ab, asset_dir("bullet_dot.png"));
     push_image(&ab, asset_dir("player_black.png"));
     push_image(&ab, asset_dir("player_white.png"));
-    push_font(&ab, asset_dir("nokiafc22.ttf"));
+    
+    
+    {
+      U32 interested_cps[] = {
+        32, 65,66,67,68,69,70
+      };
+      push_font(&ab, asset_dir("nokiafc22.ttf"), 
+                interested_cps, ArrayCount(interested_cps),
+                128);
+    }
   }
-  Image atlas_image = end_atlas_builder(&ab);
+  Image atlas_image = end_atlas_builder(&ab, &main_arena);
   assert(is_ok(atlas_image));
   
 #if 1

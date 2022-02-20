@@ -1069,6 +1069,11 @@ create_png(Memory png_memory) {
 }
 
 static B32 
+is_ok(PNG png) {
+  return png.data != nullptr;
+}
+
+static B32 
 is_ok(PNG* png) {
   return png->data != nullptr;
 }
