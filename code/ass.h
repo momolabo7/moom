@@ -59,6 +59,7 @@ void ass_write_file(const char* filename, Memory memory) {
   
 }
 
+#include "game_asset_file.h"
 #include "ass_atlas_builder.h"
 
 #endif //ASS_H

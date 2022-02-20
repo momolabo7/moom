@@ -18,6 +18,9 @@ struct Rect3 {
   V3 min, max;
 };
 
+// Gets the normalized values of Rect lhs based on another Rect rhs
+static Rect2 ratio(Rect2 lhs, Rect2 rhs);
+
 
 //~ Circles
 struct Circ2

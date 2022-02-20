@@ -48,7 +48,7 @@ int main() {
                 128);
     }
   }
-  end_atlas_builder(&ab, &main_arena);
+  end_atlas_builder(&ab, "test.al", &main_arena);
 #if 1
   ass_log("Writing test png file...\n");
   Memory png_to_write_memory = write_image_as_png(ab.atlas_image, &main_arena);

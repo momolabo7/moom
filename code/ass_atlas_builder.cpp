@@ -56,7 +56,7 @@ push_font(Atlas_Builder* ab,
 
 
 static void
-end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
+end_atlas_builder(Atlas_Builder* ab, const char* output_file, Arena* arena) {
   // Count the amount of rects
   U32 rect_count = 0;
   U32 font_count = 0;
@@ -232,5 +232,22 @@ end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
   }
   
   
+  // Write to file.
+  {
+    FILE* file = fopen(output_file, "wb");
+    defer { fclose(file); };
+    Atlas_File_Header header = {};
+    header.rect_count = rect_count;
+    header.atlas_width = ab->atlas_image.width;
+    header.atlas_height = ab->atlas_image.height;
+    
+    fwrite(&header, sizeof(Atlas_File_Header), 1, file);
+    for(U32 rect_index = 0 ; rect_index < rect_count; ++rect_index) {
+      RP_Rect* rect = rects + rect_index;
+      
+    }
+    
+    // write all
+  }
   
 }
