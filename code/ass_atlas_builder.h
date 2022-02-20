@@ -79,7 +79,9 @@ static Atlas_Builder begin_atlas_builder(U32 atlas_width,
 
 static void push_image(Atlas_Builder* ab, const char* filename);
 static void push_font(Atlas_Builder* ab, const char* filename, U32* codepoints, U32 codepoint_count, F32 glyph_pixel_height);
-static Image end_atlas_builder(Atlas_Builder* ab, Arena* arena);
+static void end_atlas_builder(Atlas_Builder* ab, Arena* arena);
+
+
 
 
 
