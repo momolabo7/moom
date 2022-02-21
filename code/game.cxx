@@ -26,9 +26,8 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     game_memory->perm = (PermanentMemory*)pf->alloc(sizeof(PermanentMemory));
     if (!game_memory->perm) return false;
     
-    PermanentMemory* perm = game_memory->perm;
-    
     // Initialize perm memory
+    PermanentMemory* perm = game_memory->perm;
     perm->tmp_delta = 0.f;
     perm->tmp_increase = true;
     perm->tmp_rot = 0.f;
@@ -51,12 +50,15 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     pf->hot_reload();
   }
   
+  
+  // Clear colors
   {
     RGBA colors;
     colors.r = colors.g = colors.b  = colors.a = 0.3f;
     clear(gfx, colors);
   }
   
+  // Set camera
   {
     V3 position = {};
     Rect3 frustum;
@@ -90,7 +92,12 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     M44 s = create_m44_scale(600.f, 600.f, 10.f);
     M44 r = create_m44_rotation_z(perm->tmp_rot += dt);
     M44 t = create_m44_translation(800.f, 450.f, 300.f);
-    draw_sprite(gfx, colors, t*r*s, 0);
+    
+    //draw_sprite(gfx, colors, t*r*s, 0);
+    {
+      Game_Image img = get_image(&assets, GAME_IMAGE_CIRCLE);
+      draw_subsprite(gfx, colors, t*r*s, img.texture_id, img.uv);
+    }
   }
   
   return false;

@@ -77,7 +77,7 @@ int main() {
       continue;
     }
     
-    Image bitmap = PNG_Read(png_file, &app_arena);
+    Bitmap bitmap = PNG_Read(png_file, &app_arena);
     if (!bitmap.data) {
       printf("Read PNG failed: %d\n", i);
       continue;

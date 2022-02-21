@@ -1,6 +1,6 @@
 // Authors: Gerald Wong, momodevelop
 // 
-// This file contains generic Image types..
+// This file contains generic Bitmap types..
 //
 // Notes:
 // - Right now, we only support 32-bit images in RGBA format
@@ -15,13 +15,13 @@
 // For now, we only care about images that are in RGBA format,
 // with U8 representing each channel. 
 // Maybe have different image types like Image_RGBA?
-struct Image {
+struct Bitmap {
   U32 width, height;
   U32* pixels;
 };
 
 
-static B32 is_ok(Image);
+static B32 is_ok(Bitmap);
 
 
 #include "momo_image.cpp"

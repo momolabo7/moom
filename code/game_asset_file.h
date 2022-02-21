@@ -3,21 +3,63 @@
 #ifndef GAME_ASSET_FILE_H
 #define GAME_ASSET_FILE_H
 
-constexpr char* atlas_file_signature = "atlas";
+enum Game_Image_ID {
+  GAME_IMAGE_BULLET_CIRCLE,
+  GAME_IMAGE_BULLET_DOT,
+  GAME_IMAGE_PLAYER_WHITE,
+  GAME_IMAGE_PLAYER_BLACK
+};
+
+enum Game_Font_ID {
+  GAME_FONT_DEFAULT,
+};
+
+enum Game_Bitmap_ID {
+  GAME_BITMAP_DEFAULT,
+};
+
+enum Game_Asset_Type {
+  ASSET_TYPE_BITMAP,
+  ASSET_TYPE_IMAGE,
+  ASSET_TYPE_FONT,
+};
 
 #pragma pack(push,1)
-// Atlas data will be in RGBA format.
-// All these are stored in little endian format
-// (which makes this struct useful!)
-struct Atlas_File_Header {
-  U32 rect_count;
-  U32 atlas_width;
-  U32 atlas_height;
+struct Ass_Header {
+  U32 asset_count;
   
-  // followed by:
-  // Rect2 rects[rect_count] 
-  // U32 pixels[atlas_width*atlas_height]
 };
+
+
+
+struct Ass_Font_Glyph {
+  Game_Asset_Type type;
+  
+  U32 codepoint;
+  Rect2 uv;
+  Game_Bitmap_ID bitmap_id;
+};
+
+struct Ass_Image {
+  Game_Asset_Type type;
+  
+  Game_Image_ID id;
+  Rect2 uv;
+  Game_Bitmap_ID bitmap_id;
+  
+};
+
+struct Ass_Bitmap {
+  Game_Asset_Type type;
+  
+  Game_Bitmap_ID id;
+  U32 width, height;
+  // Data is:
+  //
+  // U8 pixels[width*height*4]
+  //
+};
+
 #pragma pack(pop)
 
 

@@ -718,11 +718,11 @@ _png_process_IHDR(_PNG_Context* c) {
   c->image_height = height;
   c->bit_depth = IHDR->bit_depth;
   
-  // NOTE(Momo): For reserving memory for image
+  // NOTE(Momo): For reserving memory for bm
   U8* image_stream_memory = push_array<U8>(c->arena, _png_get_image_size(c));
   c->image_stream = create_stream(image_stream_memory, _png_get_image_size(c));
   
-  // NOTE(Momo): Allow space for unfiltered image. 
+  // NOTE(Momo): Allow space for unfiltered bm. 
   // One extra byte per row for filter 'type'
   
   UMI unfiltered_size = c->image_width * c->image_height * PNG_CHANNELS + c->image_height;
@@ -778,8 +778,8 @@ _png_process_IEND(_PNG_Context* c) {
 // the PNG file we are reading is correct. i.e. we don't emphasize on 
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
-static Image
-create_image(PNG* png, Arena* arena) 
+static Bitmap
+create_bitmap(PNG* png, Arena* arena) 
 {
   if (!is_ok(png)) return {};
   
@@ -812,24 +812,24 @@ create_image(PNG* png, Arena* arena)
 #if 0
       case 'IHDR': {
         if(!_png_process_IHDR(&ctx)) {
-          Image ret = {};
+          Bitmap ret = {};
           return ret;
         }
       } break;
 #endif
       case 'IDAT': {
         if(!_png_process_IDAT(&ctx)) {
-          Image ret = {};
+          Bitmap ret = {};
           return ret;
         }
       } break;
       case 'IEND': {            
         if(!_png_process_IEND(&ctx)) {					
-          Image ret = {};
+          Bitmap ret = {};
           return ret;
         }
         else {	
-          Image ret = {};
+          Bitmap ret = {};
           ret.width = ctx.image_width;
           ret.height = ctx.image_height;
           ret.pixels = (U32*)ctx.image_stream.data;
@@ -851,7 +851,7 @@ create_image(PNG* png, Arena* arena)
     consume<_PNG_Chunk_Footer>(&ctx.stream);
   }
   
-  Image ret = {};
+  Bitmap ret = {};
   return ret;
   
 }
@@ -862,17 +862,17 @@ create_image(PNG* png, Arena* arena)
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
 static Memory
-write_image_as_png(Image image, Arena* arena) {
-  assert(image.width > 0);
-  assert(image.height > 0);
-  assert(image.pixels != 0);
+write_bitmap_as_png(Bitmap bm, Arena* arena) {
+  assert(bm.width > 0);
+  assert(bm.height > 0);
+  assert(bm.pixels != 0);
   
   static const U8 signature[] = { 
     137, 80, 78, 71, 13, 10, 26, 10 
   };
-  U32 image_bpl = (image.width * 4);
+  U32 image_bpl = (bm.width * 4);
   U32 data_bpl = image_bpl + 1; // bytes per line
-  U32 data_size = data_bpl * image.height;
+  U32 data_size = data_bpl * bm.height;
   U32 max_chunk_size = 65535;
   U32 signature_size = sizeof(signature);
   U32 chunk_size = sizeof(_PNG_Chunk_Header) + sizeof(_PNG_Chunk_Footer);
@@ -880,8 +880,8 @@ write_image_as_png(Image image, Arena* arena) {
   U32 IEND_size = chunk_size;
   U32 IDAT_size = chunk_size + sizeof(_PNG_IDAT_Header);
   U32 lines_per_chunk = max_chunk_size / data_bpl;
-  U32 chunk_count = image.height / lines_per_chunk;
-  if (image.height % lines_per_chunk) {
+  U32 chunk_count = bm.height / lines_per_chunk;
+  if (bm.height % lines_per_chunk) {
     chunk_count += 1;
   }
   U32 IDAT_chunk_size = 5 * chunk_count;
@@ -911,8 +911,8 @@ write_image_as_png(Image image, Arena* arena) {
     crc_start = stream.data + stream.pos - sizeof(header.type_U32);
     
     _PNG_IHDR IHDR = {};
-    IHDR.width = endian_swap_32(image.width);
-    IHDR.height = endian_swap_32(image.height);
+    IHDR.width = endian_swap_32(bm.width);
+    IHDR.height = endian_swap_32(bm.height);
     IHDR.bit_depth = 8; // ??
     IHDR.colour_type = 6;
     IHDR.compression_method = 0;
@@ -962,7 +962,7 @@ write_image_as_png(Image image, Arena* arena) {
     // BFINAL = 1 (1 bit); // indicates if it's the final block
     // BTYPE = 0 (2 bits); // indicates no compression
     // 
-    U32 lines_remaining = image.height;
+    U32 lines_remaining = bm.height;
     U32 current_line = 0;
     
     for (U32 chunk_index = 0; chunk_index < chunk_count; ++chunk_index){
@@ -985,7 +985,7 @@ write_image_as_png(Image image, Arena* arena) {
         write(&stream, no_filter); // Filter type: None
         
         write_block(&stream,
-                    (U8*)image.pixels + (current_line * image_bpl),
+                    (U8*)bm.pixels + (current_line * image_bpl),
                     image_bpl);
         
         ++current_line;

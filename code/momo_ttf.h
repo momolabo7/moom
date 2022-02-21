@@ -52,7 +52,7 @@ static F32 get_scale_for_pixel_height(TTF* ttf, F32 pixel_height);
 // (box, glyphs, etc) to scale it to a font height equals to pixel_height
 
 
-static Image rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena);
+static Bitmap rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena);
 // Returns an RGBA image where the glyph is white and the background is transparent
 
 static S32 get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);

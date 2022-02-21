@@ -59,7 +59,17 @@ void ass_write_file(const char* filename, Memory memory) {
   
 }
 
+static TTF 
+ass_load_font(const char* filename, Arena* arena) {
+  Memory mem = ass_read_file(filename, arena);
+  assert(is_ok(mem));
+  
+  TTF ret = read_ttf(mem);
+  return ret;
+}
+
 #include "game_asset_file.h"
 #include "ass_atlas_builder.h"
+#include "ass_asset_packer.h"
 
 #endif //ASS_H

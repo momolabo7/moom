@@ -1,6 +1,6 @@
 
 static B32
-is_ok(Image img) {
-  return img.width && img.height && img.pixels;
+is_ok(Bitmap bm) {
+  return bm.width && bm.height && bm.pixels;
 }
 

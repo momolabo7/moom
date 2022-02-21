@@ -666,7 +666,7 @@ get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
 }
 
 
-static Image 
+static Bitmap 
 rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   Rect2 box = get_glyph_box(ttf, glyph_index, scale_factor);
   V2U bitmap_dims = get_bitmap_dims_from_glyph_box(box);
@@ -843,7 +843,7 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   
   
   
-  Image ret;
+  Bitmap ret;
   ret.width = bitmap_dims.w;
   ret.height = bitmap_dims.h;
   ret.pixels = pixels;

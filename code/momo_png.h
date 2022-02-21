@@ -39,8 +39,8 @@ static PNG create_png(Memory png_memory);
 static B32 is_ok(PNG png);
 static B32 is_ok(PNG* png);
 
-static Image create_image(PNG* png, Arena* arena);
-static Memory write_image_as_png(Image image, Arena* arena);
+static Bitmap create_bitmap(PNG* png, Arena* arena);
+static Memory write_bitmap_as_png(Bitmap bm, Arena* arena);
 
 #include "momo_png.cpp"
 

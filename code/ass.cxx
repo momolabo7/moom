@@ -1,61 +1,40 @@
 // This is the asset builder tool
 //
-// Things I know the game wants:
-// - wants to specifiy exactly what assets to
 
 
 
 #include "ass.h"
 
-
-#define ASSET_PACKER_ENTRIES 32
-enum struct Asset_Type {
-  IMAGE,
-};
-struct _AP_Entry {};
-struct Asset_Packer {
-  _AP_Entry entries[ASSET_PACKER_ENTRIES];
-  UMI entry_count;
-};
-static Asset_Packer begin_asset_packer() {
-  Asset_Packer ret;
-  
-  ret.entry_count = 0;
-  return ret;
-}
-
-
-
 int main() {
   Memory memory = ass_malloc(MB(10));
   defer { ass_free(&memory); };
   
-  Arena main_arena = create_arena(memory.data, memory.size);
-  Atlas_Builder ab = begin_atlas_builder(1024, 1024, 32, &main_arena); 
+  Arena arena = create_arena(memory.data, memory.size);
+  Asset_Packer ap = begin_asset_pack(1024, &arena);
+  TTF font = ass_load_font(asset_dir("nokiafc22.ttf"), &arena);
+  Atlas_Builder ab = begin_atlas_builder(1024, 1024, 32, &arena); 
   {
-    push_image(&ab, asset_dir("bullet_circle.png"));
-    push_image(&ab, asset_dir("bullet_dot.png"));
-    push_image(&ab, asset_dir("player_black.png"));
-    push_image(&ab, asset_dir("player_white.png"));
-    
+    push_image(&ab, asset_dir("bullet_circle.png"), GAME_IMAGE_BULLET_CIRCLE);
+    push_image(&ab, asset_dir("bullet_dot.png"), GAME_IMAGE_BULLET_DOT);
+    push_image(&ab, asset_dir("player_black.png"), GAME_IMAGE_PLAYER_BLACK);
+    push_image(&ab, asset_dir("player_white.png"), GAME_IMAGE_PLAYER_WHITE);
     
     {
-      U32 interested_cps[] = {
-        32, 65,66,67,68,69,70
-      };
-      push_font(&ab, asset_dir("nokiafc22.ttf"), 
+      U32 interested_cps[] = { 32,65,66,67,68,69,70 };
+      push_font(&ab, &font, GAME_FONT_DEFAULT,
                 interested_cps, ArrayCount(interested_cps),
                 128);
     }
+    end_atlas_builder(&ab, &arena);
   }
-  end_atlas_builder(&ab, "test.al", &main_arena);
 #if 1
   ass_log("Writing test png file...\n");
-  Memory png_to_write_memory = write_image_as_png(ab.atlas_image, &main_arena);
+  Memory png_to_write_memory = write_bitmap_as_png(ab.atlas_bitmap, &arena);
   assert(is_ok(png_to_write_memory));
   ass_write_file("test.png", png_to_write_memory);
 #endif
   
-  
+  push_atlas(&ap, &ab, GAME_BITMAP_DEFAULT);
+  end_asset_pack(&ap, "test.ass");
   
 }
