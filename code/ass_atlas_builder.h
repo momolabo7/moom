@@ -18,15 +18,16 @@ enum AB_Rect_Context_Type {
 };
 
 struct AB_Font_Glyph_Rect_Context {
+  struct AB_Font_Entry* entry;
   U32 codepoint;
 };
 
-struct AB_Image_Rect_Context {};
+struct AB_Image_Rect_Context {
+  struct AB_Image_Entry* entry;
+};
 
 struct AB_Rect_Context {
   AB_Rect_Context_Type type;
-  
-  struct AB_Entry* entry;
   union {
     AB_Font_Glyph_Rect_Context font_glyph;
     AB_Image_Rect_Context image;
@@ -56,24 +57,20 @@ struct AB_Font_Entry {
 struct AB_Image_Entry{
   Game_Image_ID game_image_id;
   const char* filename;
-};
-
-struct AB_Entry {
-  AB_Entry_Type type;
-  union {
-    AB_Font_Entry font;
-    AB_Image_Entry image;
-  };
   
+  // will be generated
+  RP_Rect* rect;
 };
 
 // Builder
 struct Atlas_Builder {  
   Bitmap atlas_bitmap;
   
-  AB_Entry* entries;
-  U32 entry_count;  
-  U32 entry_cap;
+  AB_Font_Entry font_entries[128];
+  U32 font_entry_count;
+  
+  AB_Image_Entry image_entries[128];
+  U32 image_entry_count;
   
   RP_Rect* rects;
   U32 rect_count;
@@ -85,36 +82,33 @@ struct Atlas_Builder {
 
 static Atlas_Builder
 begin_atlas_builder(U32 atlas_width,
-                    U32 atlas_height,
-                    U32 entry_count,
-                    Arena* arena) 
+                    U32 atlas_height) 
 {
   Atlas_Builder ret;
   assert(atlas_width);
   assert(atlas_height);
   
-  ret.atlas_bitmap.pixels = push_array<U32>(arena, atlas_width * atlas_height);
-  assert(ret.atlas_bitmap.pixels);
-  
-  ret.entries = push_array<AB_Entry>(arena, entry_count); 
-  ret.entry_count = 0;
-  ret.entry_cap = entry_count;
-  
   ret.atlas_bitmap.width = atlas_width;
   ret.atlas_bitmap.height = atlas_height;
+  
+  ret.font_entry_count = 0;
+  ret.image_entry_count = 0;
+  
+  ret.rects = nullptr;
+  ret.rect_count = 0;
+  
   
   return ret;
 }
 
 static void 
 push_image(Atlas_Builder* ab, const char* filename, Game_Image_ID game_image_id) {
-  AB_Entry* entry = ab->entries + ab->entry_count;
-  entry->type = AB_ENTRY_IMAGE;  
+  assert(ab->image_entry_count < ArrayCount(ab->image_entries));
+  AB_Image_Entry* entry = ab->image_entries + ab->image_entry_count++;
   
-  entry->image.filename = filename; 
-  entry->image.game_image_id = game_image_id;
+  entry->filename = filename; 
+  entry->game_image_id = game_image_id;
   
-  ++ab->entry_count;
   
 }
 
@@ -126,115 +120,103 @@ push_font(Atlas_Builder* ab,
           U32 codepoint_count,
           F32 raster_font_height) 
 {
-  AB_Entry* entry = ab->entries + ab->entry_count;
-  entry->type = AB_ENTRY_FONT;  
-  entry->font.game_font_id = font_id;
-  entry->font.loaded_ttf = loaded_ttf; 
-  entry->font.codepoints = codepoints; 
-  entry->font.codepoint_count = codepoint_count; 
-  entry->font.raster_font_height = raster_font_height;
-  ++ab->entry_count;
+  assert(ab->font_entry_count < ArrayCount(ab->font_entries));
+  
+  AB_Font_Entry* entry = ab->font_entries + ab->font_entry_count++;
+  entry->game_font_id = font_id;
+  entry->loaded_ttf = loaded_ttf; 
+  entry->codepoints = codepoints; 
+  entry->codepoint_count = codepoint_count; 
+  entry->raster_font_height = raster_font_height;
   
 }
 
 
 static void
 end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
+  ab->atlas_bitmap.pixels = push_array<U32>(arena, ab->atlas_bitmap.width * ab->atlas_bitmap.height);
+  assert(ab->atlas_bitmap.pixels);
+  
   // Count the amount of rects
   U32 rect_count = 0;
-  {
-    for(UMI i = 0; i < ab->entry_count; ++i) {
-      AB_Entry* entry = ab->entries + i;
-      switch(entry->type) {
-        case AB_ENTRY_IMAGE:{ 
-          ++rect_count;
-        }break;
-        case AB_ENTRY_FONT:{ 
-          rect_count += entry->font.codepoint_count;
-        }break;
-      }
-    }
-    
-    if (rect_count == 0) {
-      return; // do nothing
-    }
-    
+  for(U32 i = 0; i < ab->font_entry_count; ++i) {
+    AB_Font_Entry* entry = ab->font_entries + i;
+    rect_count += entry->codepoint_count;
   }
+  rect_count += ab->image_entry_count;
+  
+  if (rect_count == 0) return; 
   
   // Allocate required memory required 
   auto* rects = push_array<RP_Rect>(arena, rect_count);
   auto* contexts = push_array<AB_Rect_Context>(arena, rect_count);
   
-  
   // Prepare the rects with the correct info
-  {
-    U32 rect_index = 0;
-    U32 context_index = 0;
-    for(U32 entry_index = 0; 
-        entry_index < ab->entry_count; 
-        ++entry_index) 
-    {
-      AB_Entry* entry = ab->entries + entry_index;
-      switch(entry->type) {
-        case AB_ENTRY_IMAGE:{ 
-          create_scratch(scratch, arena);
-          Memory file_memory = ass_read_file(entry->image.filename, scratch);
-          assert(is_ok(file_memory));
-          
-          PNG png = create_png(file_memory);
-          assert(is_ok(&png));
-          assert(png.width != 0 && png.height != 0);
+  U32 rect_index = 0;
+  U32 context_index = 0;
+  
+  // process image entries
+  for (U32 i = 0; i < ab->image_entry_count; ++i) {
+    create_scratch(scratch, arena);
+    
+    AB_Image_Entry* entry = ab->image_entries + i;
+    
+    Memory file_memory = ass_read_file(entry->filename, scratch);
+    assert(is_ok(file_memory));
+    
+    PNG png = create_png(file_memory);
+    assert(is_ok(&png));
+    assert(png.width != 0 && png.height != 0);
 #if 0        
-          ass_log("%s: w = %d, h = %d, c = %d\n", 
-                  entry->image.filename, 
-                  info.width,
-                  info.height,
-                  info.channels);
+    ass_log("%s: w = %d, h = %d, c = %d\n", 
+            entry->filename, 
+            info.width,
+            info.height,
+            info.channels);
 #endif
-          auto* context = contexts + context_index++;
-          context->entry = entry;
-          context->type = AB_RECT_CONTEXT_IMAGE;
-          
-          RP_Rect* rect = rects + rect_index++;
-          rect->w = png.width;
-          rect->h = png.height;
-          rect->user_data = context;
-          
-          
-        }break;
-        case AB_ENTRY_FONT:{ 
-          create_scratch(scratch, arena);
-          
-          TTF* ttf = entry->font.loaded_ttf;
-          F32 s = get_scale_for_pixel_height(ttf, entry->font.raster_font_height);
-          
-          // grab the slice of RP_Rects that belongs to this font
-          entry->font.rects = rects;
-          entry->font.rect_count = 0;
-          
-          for (U32 cpi = 0; cpi < entry->font.codepoint_count; ++cpi) {
-            U32 cp = entry->font.codepoints[cpi];
-            U32 glyph_index = get_glyph_index_from_codepoint(ttf, cp);
-            Rect2 box = get_glyph_box(ttf, glyph_index, s);
-            V2U dims = get_bitmap_dims_from_glyph_box(box);
-            
-            auto* context = contexts + context_index++;
-            context->font_glyph.codepoint = cp;
-            context->entry = entry;
-            context->type = AB_RECT_CONTEXT_FONT_GLYPH;
-            
-            RP_Rect* rect = rects + rect_index++;
-            rect->w = dims.w;
-            rect->h = dims.h;
-            rect->user_data = context;
-            
-            ++entry->font.rect_count;
-            
-          }
-          
-          
-        }break;
-      }
+    auto* context = contexts + context_index++;
+    context->type = AB_RECT_CONTEXT_IMAGE;
+    context->image.entry = entry;
+    
+    RP_Rect* rect = rects + rect_index++;
+    rect->w = png.width;
+    rect->h = png.height;
+    rect->user_data = context;
+    
+  }
+  
+  // process font entries
+  for (U32 i = 0; i < ab->font_entry_count; ++i) {
+    create_scratch(scratch, arena);
+    
+    AB_Font_Entry* entry = ab->font_entries + i;
+    
+    TTF* ttf = entry->loaded_ttf;
+    F32 s = get_scale_for_pixel_height(ttf, entry->raster_font_height);
+    
+    // grab the slice of RP_Rects that belongs to this font
+    entry->rects = rects;
+    entry->rect_count = 0;
+    
+    for (U32 cpi = 0; cpi < entry->codepoint_count; ++cpi) {
+      U32 cp = entry->codepoints[cpi];
+      U32 glyph_index = get_glyph_index_from_codepoint(ttf, cp);
+      Rect2 box = get_glyph_box(ttf, glyph_index, s);
+      V2U dims = get_bitmap_dims_from_glyph_box(box);
+      
+      auto* context = contexts + context_index++;
+      context->font_glyph.codepoint = cp;
+      context->font_glyph.entry = entry;
+      context->type = AB_RECT_CONTEXT_FONT_GLYPH;
+      
+      RP_Rect* rect = rects + rect_index++;
+      rect->w = dims.w;
+      rect->h = dims.h;
+      rect->user_data = context;
+      
+      ++entry->rect_count;
+      
+      
     }
   }
   
@@ -258,16 +240,14 @@ end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
   }
 #endif
   
-  for(U32 rect_index = 0; 
-      rect_index < rect_count;
-      ++rect_index) 
+  for(U32 i = 0; i < rect_count; ++i) 
   {
-    RP_Rect* rect = rects + rect_index;
+    RP_Rect* rect = rects + i;
     auto* context = (AB_Rect_Context*)(rect->user_data);
     switch(context->type) {
       case AB_ENTRY_IMAGE: {
         create_scratch(scratch, arena);
-        AB_Image_Entry* related_entry = &context->entry->image;
+        AB_Image_Entry* related_entry = context->image.entry;
         
         Memory file_memory = ass_read_file(related_entry->filename, scratch);
         assert(is_ok(file_memory));
@@ -289,7 +269,7 @@ end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
       } break;
       case AB_ENTRY_FONT: {
         create_scratch(scratch, arena);
-        AB_Font_Entry* related_entry = &context->entry->font;
+        AB_Font_Entry* related_entry = context->font_glyph.entry;
         AB_Font_Glyph_Rect_Context* related_context = &context->font_glyph;
         
         TTF* ttf = related_entry->loaded_ttf;

@@ -183,16 +183,17 @@ push_atlas(Asset_Packer* ap, Atlas_Builder* ab, Game_Bitmap_ID atlas_bitmap_id) 
     auto* context = (AB_Rect_Context*)rect->user_data;
     switch(context->type) {
       case AB_RECT_CONTEXT_IMAGE: {    
-        push_image(ap, atlas_bitmap_id, uv, context->entry->image.game_image_id);
+        push_image(ap, atlas_bitmap_id, uv, context->image.entry->game_image_id);
       } break;
       case AB_RECT_CONTEXT_FONT_GLYPH: {
         push_font_glyph(ap, atlas_bitmap_id,
                         uv, context->font_glyph.codepoint, 
-                        context->entry->font.game_font_id);
+                        context->font_glyph.entry->game_font_id);
       } break;
     }
   }
-  
+
+#if 0  
   // then look for font entries and push fonts
   for(U32 i = 0; i < ab->entry_count; ++i) {
     AB_Entry* entry = ab->entries + i;
@@ -201,6 +202,7 @@ push_atlas(Asset_Packer* ap, Atlas_Builder* ab, Game_Bitmap_ID atlas_bitmap_id) 
                 entry->font.game_font_id);
     }
   }
+#endif
 }
 
 #endif //ASS_ASSET_PACKER_H

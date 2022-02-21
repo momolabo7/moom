@@ -12,7 +12,7 @@ int main() {
   Arena arena = create_arena(memory.data, memory.size);
   Asset_Packer ap = begin_asset_pack(1024, &arena);
   TTF font = ass_load_font(asset_dir("nokiafc22.ttf"), &arena);
-  Atlas_Builder ab = begin_atlas_builder(1024, 1024, 32, &arena); 
+  Atlas_Builder ab = begin_atlas_builder(1024, 1024); 
   {
     push_image(&ab, asset_dir("bullet_circle.png"), GAME_IMAGE_BULLET_CIRCLE);
     push_image(&ab, asset_dir("bullet_dot.png"), GAME_IMAGE_BULLET_DOT);
