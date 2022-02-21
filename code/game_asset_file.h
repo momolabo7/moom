@@ -19,9 +19,9 @@ enum Game_Bitmap_ID {
 };
 
 enum Game_Asset_Type {
-  ASSET_TYPE_BITMAP,
-  ASSET_TYPE_IMAGE,
-  ASSET_TYPE_FONT,
+  ASSET_BITMAP,
+  ASSET_IMAGE,
+  ASSET_FONT,
 };
 
 #pragma pack(push,1)

@@ -10,66 +10,68 @@
 #ifndef ASS_ATLAS_BUILDER_H
 #define ASS_ATLAS_BUILDER_H
 
+////////////////////////////////////////////////////
+// Contexts for each and every rect
+enum AB_Rect_Context_Type {
+  AB_RECT_CONTEXT_IMAGE,
+  AB_RECT_CONTEXT_FONT_GLYPH,
+};
+
+struct AB_Font_Glyph_Rect_Context {
+  U32 codepoint;
+};
+
+struct AB_Image_Rect_Context {};
+
+struct AB_Rect_Context {
+  AB_Rect_Context_Type type;
+  
+  struct AB_Entry* entry;
+  union {
+    AB_Font_Glyph_Rect_Context font_glyph;
+    AB_Image_Rect_Context image;
+  };
+};
+
 ///////////////////////////////////////////////////
 // Entry types
-enum _AB_Entry_Type {
-  _AB_ENTRY_TYPE_IMAGE,
-  _AB_ENTRY_TYPE_FONT,
+enum AB_Entry_Type {
+  AB_ENTRY_IMAGE,
+  AB_ENTRY_FONT,
 };
 
 
-struct _AB_Font_Entry {
+struct AB_Font_Entry {
   Game_Font_ID game_font_id;
   TTF* loaded_ttf;
   U32* codepoints;
   U32 codepoint_count;
-  
   F32 raster_font_height;
+  
+  // will be generated
+  RP_Rect* rects;
+  U32 rect_count;
 };
 
-struct _AB_Image_Entry{
+struct AB_Image_Entry{
   Game_Image_ID game_image_id;
   const char* filename;
 };
 
-struct _AB_Entry {
-  _AB_Entry_Type type;
+struct AB_Entry {
+  AB_Entry_Type type;
   union {
-    _AB_Font_Entry font;
-    _AB_Image_Entry image;
+    AB_Font_Entry font;
+    AB_Image_Entry image;
   };
   
-};
-
-////////////////////////////////////////////////////
-// Contexts for each and every rect
-enum _AB_Rect_Context_Type {
-  _AB_RECT_CONTEXT_TYPE_IMAGE,
-  _AB_RECT_CONTEXT_TYPE_FONT_GLYPH,
-};
-
-struct _AB_Font_Glyph_Rect_Context {
-  U32 codepoint;
-};
-
-struct _AB_Image_Rect_Context {
-};
-
-struct _AB_Rect_Context {
-  _AB_Rect_Context_Type type;
-  
-  _AB_Entry* entry;
-  union {
-    _AB_Font_Glyph_Rect_Context font_glyph;
-    _AB_Image_Rect_Context image;
-  };
 };
 
 // Builder
 struct Atlas_Builder {  
   Bitmap atlas_bitmap;
   
-  _AB_Entry* entries;
+  AB_Entry* entries;
   U32 entry_count;  
   U32 entry_cap;
   
@@ -94,7 +96,7 @@ begin_atlas_builder(U32 atlas_width,
   ret.atlas_bitmap.pixels = push_array<U32>(arena, atlas_width * atlas_height);
   assert(ret.atlas_bitmap.pixels);
   
-  ret.entries = push_array<_AB_Entry>(arena, entry_count); 
+  ret.entries = push_array<AB_Entry>(arena, entry_count); 
   ret.entry_count = 0;
   ret.entry_cap = entry_count;
   
@@ -106,8 +108,8 @@ begin_atlas_builder(U32 atlas_width,
 
 static void 
 push_image(Atlas_Builder* ab, const char* filename, Game_Image_ID game_image_id) {
-  _AB_Entry* entry = ab->entries + ab->entry_count;
-  entry->type = _AB_ENTRY_TYPE_IMAGE;  
+  AB_Entry* entry = ab->entries + ab->entry_count;
+  entry->type = AB_ENTRY_IMAGE;  
   
   entry->image.filename = filename; 
   entry->image.game_image_id = game_image_id;
@@ -124,8 +126,8 @@ push_font(Atlas_Builder* ab,
           U32 codepoint_count,
           F32 raster_font_height) 
 {
-  _AB_Entry* entry = ab->entries + ab->entry_count;
-  entry->type = _AB_ENTRY_TYPE_FONT;  
+  AB_Entry* entry = ab->entries + ab->entry_count;
+  entry->type = AB_ENTRY_FONT;  
   entry->font.game_font_id = font_id;
   entry->font.loaded_ttf = loaded_ttf; 
   entry->font.codepoints = codepoints; 
@@ -140,17 +142,15 @@ static void
 end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
   // Count the amount of rects
   U32 rect_count = 0;
-  U32 font_count = 0;
   {
     for(UMI i = 0; i < ab->entry_count; ++i) {
-      _AB_Entry* entry = ab->entries + i;
+      AB_Entry* entry = ab->entries + i;
       switch(entry->type) {
-        case _AB_ENTRY_TYPE_IMAGE:{ 
+        case AB_ENTRY_IMAGE:{ 
           ++rect_count;
         }break;
-        case _AB_ENTRY_TYPE_FONT:{ 
+        case AB_ENTRY_FONT:{ 
           rect_count += entry->font.codepoint_count;
-          ++font_count;
         }break;
       }
     }
@@ -163,7 +163,7 @@ end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
   
   // Allocate required memory required 
   auto* rects = push_array<RP_Rect>(arena, rect_count);
-  auto* contexts = push_array<_AB_Rect_Context>(arena, rect_count);
+  auto* contexts = push_array<AB_Rect_Context>(arena, rect_count);
   
   
   // Prepare the rects with the correct info
@@ -174,9 +174,9 @@ end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
         entry_index < ab->entry_count; 
         ++entry_index) 
     {
-      _AB_Entry* entry = ab->entries + entry_index;
+      AB_Entry* entry = ab->entries + entry_index;
       switch(entry->type) {
-        case _AB_ENTRY_TYPE_IMAGE:{ 
+        case AB_ENTRY_IMAGE:{ 
           create_scratch(scratch, arena);
           Memory file_memory = ass_read_file(entry->image.filename, scratch);
           assert(is_ok(file_memory));
@@ -193,7 +193,7 @@ end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
 #endif
           auto* context = contexts + context_index++;
           context->entry = entry;
-          context->type = _AB_RECT_CONTEXT_TYPE_IMAGE;
+          context->type = AB_RECT_CONTEXT_IMAGE;
           
           RP_Rect* rect = rects + rect_index++;
           rect->w = png.width;
@@ -202,11 +202,15 @@ end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
           
           
         }break;
-        case _AB_ENTRY_TYPE_FONT:{ 
+        case AB_ENTRY_FONT:{ 
           create_scratch(scratch, arena);
           
           TTF* ttf = entry->font.loaded_ttf;
           F32 s = get_scale_for_pixel_height(ttf, entry->font.raster_font_height);
+          
+          // grab the slice of RP_Rects that belongs to this font
+          entry->font.rects = rects;
+          entry->font.rect_count = 0;
           
           for (U32 cpi = 0; cpi < entry->font.codepoint_count; ++cpi) {
             U32 cp = entry->font.codepoints[cpi];
@@ -217,15 +221,16 @@ end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
             auto* context = contexts + context_index++;
             context->font_glyph.codepoint = cp;
             context->entry = entry;
-            context->type = _AB_RECT_CONTEXT_TYPE_FONT_GLYPH;
-            
+            context->type = AB_RECT_CONTEXT_FONT_GLYPH;
             
             RP_Rect* rect = rects + rect_index++;
             rect->w = dims.w;
             rect->h = dims.h;
             rect->user_data = context;
+            
+            ++entry->font.rect_count;
+            
           }
-          
           
           
         }break;
@@ -258,11 +263,11 @@ end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
       ++rect_index) 
   {
     RP_Rect* rect = rects + rect_index;
-    auto* context = (_AB_Rect_Context*)(rect->user_data);
+    auto* context = (AB_Rect_Context*)(rect->user_data);
     switch(context->type) {
-      case _AB_ENTRY_TYPE_IMAGE: {
+      case AB_ENTRY_IMAGE: {
         create_scratch(scratch, arena);
-        _AB_Image_Entry* related_entry = &context->entry->image;
+        AB_Image_Entry* related_entry = &context->entry->image;
         
         Memory file_memory = ass_read_file(related_entry->filename, scratch);
         assert(is_ok(file_memory));
@@ -282,10 +287,10 @@ end_atlas_builder(Atlas_Builder* ab, Arena* arena) {
         
         
       } break;
-      case _AB_ENTRY_TYPE_FONT: {
+      case AB_ENTRY_FONT: {
         create_scratch(scratch, arena);
-        _AB_Font_Entry* related_entry = &context->entry->font;
-        _AB_Font_Glyph_Rect_Context* related_context = &context->font_glyph;
+        AB_Font_Entry* related_entry = &context->entry->font;
+        AB_Font_Glyph_Rect_Context* related_context = &context->font_glyph;
         
         TTF* ttf = related_entry->loaded_ttf;
         F32 s = get_scale_for_pixel_height(ttf, related_entry->raster_font_height);
