@@ -22,14 +22,16 @@ int main() {
               ArrayCount(interested_cps),
               128.f);
   }
-  Atlaser_Result atlaser_result = end_atlas_builder(&atlaser, &arena);
+  end_atlas_builder(&atlaser, &arena);
   
 #if 1
   ass_log("Writing test png file...\n");
-  Memory png_to_write_memory = write_bitmap_as_png(atlaser_result.bitmap, &arena);
+  Memory png_to_write_memory = write_bitmap_as_png(atlaser.bitmap, &arena);
   assert(is_ok(png_to_write_memory));
   ass_write_file("test.png", png_to_write_memory);
 #endif
+  
+  
   
 #if 0
   Asset_Packer ap = create_asset_packer();

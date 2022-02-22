@@ -11,6 +11,8 @@
 #define ASS_ATLAS_BUILDER_H
 
 
+struct Atlaser_Font;
+struct Atlaser_Image;
 
 ////////////////////////////////////////////////////
 // Contexts for each and every rect
@@ -20,12 +22,12 @@ enum Atlaser_Rect_Context_Type {
 };
 
 struct Atlaser_Font_Glyph_Rect_Context {
-  struct Atlaser_Font_Entry* entry;
+  Atlaser_Font* entry;
   U32 codepoint;
 };
 
 struct Atlaser_Image_Rect_Context {
-  struct Atlaser_Image_Entry* entry;
+  Atlaser_Image* entry;
 };
 
 struct Atlaser_Rect_Context {
@@ -38,54 +40,39 @@ struct Atlaser_Rect_Context {
 
 ///////////////////////////////////////////////////
 // Entry types
-enum Atlaser_Entry_Type {
-  ATLASER_ENTRY_IMAGE,
-  ATLASER_ENTRY_FONT,
-};
 
-
-struct Atlaser_Font_Entry {
+struct Atlaser_Font {
   TTF* loaded_ttf;
   U32* codepoints;
   U32 codepoint_count;
   F32 raster_font_height;
   
-  // will be generated
-  RP_Rect* rects;
+  // will be generated when end
+  RP_Rect* glyph_rects;
+  Atlaser_Font_Glyph_Rect_Context* glyph_rect_contexts;
   U32 rect_count;
+  
 };
 
-struct Atlaser_Image_Entry{
+struct Atlaser_Image{
   const char* filename;
   
-  // will be generated
+  // will be generated when end
   RP_Rect* rect;
+  Atlaser_Image_Rect_Context* rect_context;
 };
 
-///////////////////////////////////////////////
+//////////////////////////////////////////////
 // Builder
 struct Atlaser {  
-  U32 atlas_width, atlas_height;
-  
-  Atlaser_Font_Entry font_entries[16];
-  U32 font_entry_count;
-  
-  Atlaser_Image_Entry image_entries[1024];
-  U32 image_entry_count;
-  
-  RP_Rect* rects;
-  U32 rect_count;
-};
-
-
-struct Atlaser_Result {
-  B32 ok;
   Bitmap bitmap;
   
-  RP_Rect* rects;
-  U32 rect_count;
+  Atlaser_Font fonts[128];
+  U32 font_count;
+  
+  Atlaser_Image images[128];
+  U32 image_count;
 };
-
 
 static Atlaser
 begin_atlas_builder(U32 atlas_width,
@@ -95,16 +82,16 @@ begin_atlas_builder(U32 atlas_width,
   assert(atlas_width);
   assert(atlas_height);
   
-  ret.atlas_width = atlas_width;
-  ret.atlas_height = atlas_height;
+  ret.bitmap.width = atlas_width;
+  ret.bitmap.height = atlas_height;
   
   return ret;
 }
 
 static void 
 push_image(Atlaser* ab, const char* filename) {
-  assert(ab->image_entry_count < ArrayCount(ab->image_entries));
-  Atlaser_Image_Entry* entry = ab->image_entries + ab->image_entry_count++;
+  assert(ab->image_count < ArrayCount(ab->images));
+  Atlaser_Image* entry = ab->images + ab->image_count++;
   
   entry->filename = filename; 
   
@@ -118,9 +105,9 @@ push_font(Atlaser* ab,
           U32 codepoint_count,
           F32 raster_font_height) 
 {
-  assert(ab->font_entry_count < ArrayCount(ab->font_entries));
+  assert(ab->font_count < ArrayCount(ab->fonts));
   
-  Atlaser_Font_Entry* entry = ab->font_entries + ab->font_entry_count++;
+  Atlaser_Font* entry = ab->fonts + ab->font_count++;
   entry->loaded_ttf = loaded_ttf; 
   entry->codepoints = codepoints; 
   entry->codepoint_count = codepoint_count; 
@@ -129,22 +116,20 @@ push_font(Atlaser* ab,
 }
 
 
-static Atlaser_Result
+static void
 end_atlas_builder(Atlaser* ab, Arena* arena) {
-  Atlaser_Result ret = {}; 
-  
-  auto* pixels = push_array<U32>(arena, ab->atlas_width * ab->atlas_height);
-  if (!pixels) return ret;
+  ab->bitmap.pixels = push_array<U32>(arena, ab->bitmap.width * ab->bitmap.height);
+  assert(ab->bitmap.pixels);
   
   // Count the amount of rects
   U32 rect_count = 0;
-  for(U32 i = 0; i < ab->font_entry_count; ++i) {
-    Atlaser_Font_Entry* entry = ab->font_entries + i;
+  for(U32 i = 0; i < ab->font_count; ++i) {
+    Atlaser_Font* entry = ab->fonts + i;
     rect_count += entry->codepoint_count;
   }
-  rect_count += ab->image_entry_count;
+  rect_count += ab->image_count;
   
-  if (rect_count == 0) return ret; 
+  if (rect_count == 0) return; 
   
   // Allocate required memory required 
   auto* rects = push_array<RP_Rect>(arena, rect_count);
@@ -155,16 +140,17 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
   U32 context_index = 0;
   
   // process image entries
-  for (U32 i = 0; i < ab->image_entry_count; ++i) {
+  for (U32 i = 0; i < ab->image_count; ++i) {
     create_scratch(scratch, arena);
     
-    Atlaser_Image_Entry* entry = ab->image_entries + i;
+    Atlaser_Image* entry = ab->images + i;
     
     Memory file_memory = ass_read_file(entry->filename, scratch);
-    if (!is_ok(file_memory)) return ret;
+    assert(is_ok(file_memory));
     
     PNG png = create_png(file_memory);
-    if (!is_ok(png)) return ret;
+    assert(is_ok(&png));
+    assert(png.width != 0 && png.height != 0);
     
     auto* context = contexts + context_index++;
     context->type = ATLASER_RECT_CONTEXT_IMAGE;
@@ -175,19 +161,22 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
     rect->h = png.height;
     rect->user_data = context;
     
+    entry->rect = rect;
+    entry->rect_context = &context->image;
   }
   
   // process font entries
-  for (U32 i = 0; i < ab->font_entry_count; ++i) {
+  for (U32 i = 0; i < ab->font_count; ++i) {
     create_scratch(scratch, arena);
     
-    Atlaser_Font_Entry* entry = ab->font_entries + i;
+    Atlaser_Font* entry = ab->fonts + i;
     
     TTF* ttf = entry->loaded_ttf;
     F32 s = get_scale_for_pixel_height(ttf, entry->raster_font_height);
     
     // grab the slice of RP_Rects that belongs to this font
-    entry->rects = rects;
+    entry->glyph_rects = rects + rect_index;
+    entry->glyph_rect_contexts = &(contexts + context_index)->font_glyph;
     entry->rect_count = 0;
     
     for (U32 cpi = 0; cpi < entry->codepoint_count; ++cpi) {
@@ -212,7 +201,7 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
     }
   }
   
-#if 1
+#if 0
   ass_log("=== Before packing: ===\n");
   for (U32 i = 0; i < rect_count; ++i) {
     ass_log("%d: w = %d, h = %d\n", i, rects[i].w, rects[i].h);
@@ -220,11 +209,11 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
 #endif
   
   pack_rects(rects, rect_count, 1, 
-             ab->atlas_width, ab->atlas_height, 
+             ab->bitmap.width, ab->bitmap.height, 
              RP_SORT_HEIGHT,
              arena);
   
-#if 1
+#if 0
   ass_log("=== After packing: ===\n");
   for (U32 i = 0; i < rect_count; ++i) {
     ass_log("%d: x = %d, y = %d, w = %d, h = %d\n", 
@@ -237,9 +226,9 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
     RP_Rect* rect = rects + i;
     auto* context = (Atlaser_Rect_Context*)(rect->user_data);
     switch(context->type) {
-      case ATLASER_ENTRY_IMAGE: {
+      case ATLASER_RECT_CONTEXT_IMAGE: {
         create_scratch(scratch, arena);
-        Atlaser_Image_Entry* related_entry = context->image.entry;
+        Atlaser_Image* related_entry = context->image.entry;
         
         Memory file_memory = ass_read_file(related_entry->filename, scratch);
         assert(is_ok(file_memory));
@@ -252,16 +241,16 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
-            UMI index = (x + y * ab->atlas_width);
-            ((U32*)(pixels))[index] = ((U32*)(bm.pixels))[j++];
+            UMI index = (x + y * ab->bitmap.width);
+            ((U32*)(ab->bitmap.pixels))[index] = ((U32*)(bm.pixels))[j++];
           }
         }
         
         
       } break;
-      case ATLASER_ENTRY_FONT: {
+      case ATLASER_RECT_CONTEXT_FONT_GLYPH: {
         create_scratch(scratch, arena);
-        Atlaser_Font_Entry* related_entry = context->font_glyph.entry;
+        Atlaser_Font* related_entry = context->font_glyph.entry;
         Atlaser_Font_Glyph_Rect_Context* related_context = &context->font_glyph;
         
         TTF* ttf = related_entry->loaded_ttf;
@@ -273,8 +262,8 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
-            UMI index = (x + y * ab->atlas_width);
-            ((U32*)(pixels))[index] = ((U32*)(bm.pixels))[j++];
+            UMI index = (x + y * ab->bitmap.width);
+            ((U32*)(ab->bitmap.pixels))[index] = ((U32*)(bm.pixels))[j++];
           }
         }
         
@@ -283,13 +272,6 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
     
   }
   
-  ret.bitmap.pixels = pixels;
-  ret.bitmap.width = ab->atlas_width;
-  ret.bitmap.height = ab->atlas_height;
-  ret.rects = rects;
-  ret.rect_count = rect_count;
-  
-  return ret;
 }
 
 #endif //ASS_ATLAS_BUILDER_H
