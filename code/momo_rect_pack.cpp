@@ -1,56 +1,61 @@
 #include <stdlib.h>
 
+struct _RP_Sort_Entry {
+  RP_Rect* rect;
+};
+
+
 struct _RP_Node {
 	U32 x, y, w, h;
 };
 
 // NOTE(Momo): Predicates
 static B32
-_rp_sort_by_height(RP_Rect* l, RP_Rect* r) {
-  return l->h > r->h;
+_rp_sort_by_height(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {
+  return l->rect->h > r->rect->h;
 }
 
 static B32 
-_rp_sort_by_width(RP_Rect* l, RP_Rect* r) {
-  return l->w > r->w;
+_rp_sort_by_width(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {
+  return l->rect->w > r->rect->w;
 }
 
 static B32 
-_rp_sort_by_area(RP_Rect* l, RP_Rect* r) {
-  return (l->w * l->h) > (r->w * r->h);
+_rp_sort_by_area(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {
+  return (l->rect->w * l->rect->h) > (r->rect->w * r->rect->h);
 }
 
 static B32 
-_rp_sort_by_perimeter(RP_Rect* l, RP_Rect* r) {
-  return (l->w + l->h) > (r->w + r->h);
+_rp_sort_by_perimeter(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {
+  return (l->rect->w + l->rect->h) > (r->rect->w + r->rect->h);
 }
 
 static B32 
-_rp_sort_by_bigger_side(RP_Rect* l, RP_Rect* r) {
-  return (max_of(l->w, l->h)) > (max_of(r->w, r->h));
+_rp_sort_by_bigger_side(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {
+  return (max_of(l->rect->w, l->rect->h)) > (max_of(r->rect->w, r->rect->h));
 }
 
 
 static void 
-_rp_sort_rects(RP_Rect* rects,
-               U32 rect_count,
-               RP_Sort_Type sort_type) 
+_rp_sort(_RP_Sort_Entry* sort_entries,
+         U32 count,
+         RP_Sort_Type sort_type) 
 {
   switch(sort_type) {
-    case RP_Sort_Type::HEIGHT: {
-      quicksort(rects, rect_count, _rp_sort_by_height);
+    case RP_SORT_HEIGHT: {
+      quicksort(sort_entries, count, _rp_sort_by_height);
     } break;
-    case RP_Sort_Type::WIDTH: {
-      quicksort(rects, rect_count, _rp_sort_by_width);
+    case RP_SORT_WIDTH: {
+      quicksort(sort_entries, count, _rp_sort_by_width);
     } break;
-    case RP_Sort_Type::AREA: {
-      quicksort(rects, rect_count, _rp_sort_by_area);
+    case RP_SORT_AREA: {
+      quicksort(sort_entries, count, _rp_sort_by_area);
     } break;
-    case RP_Sort_Type::PERIMETER: {
-      quicksort(rects, rect_count, _rp_sort_by_perimeter);
+    case RP_SORT_PERIMETER: {
+      quicksort(sort_entries, count, _rp_sort_by_perimeter);
     } break;
-    case RP_Sort_Type::BIGGER_SIDE: {
-      quicksort(rects, rect_count, _rp_sort_by_bigger_side);
+    case RP_SORT_BIGGER_SIDE: {
+      quicksort(sort_entries, count, _rp_sort_by_bigger_side);
     } break;
   }
 }
@@ -63,8 +68,14 @@ pack_rects(RP_Rect* rects,
            RP_Sort_Type sort_type,
            Arena* arena) 
 {
-  _rp_sort_rects(rects, rect_count, sort_type);
-  _RP_Node* nodes = push_array<_RP_Node>(arena, rect_count+1);
+  
+  auto* sort_entries = push_array<_RP_Sort_Entry>(arena, rect_count);
+  for (U32 i = 0; i < rect_count; ++i) {
+    sort_entries[i].rect = rects + i;
+  }
+  _rp_sort(sort_entries, rect_count, sort_type);
+  
+  auto* nodes = push_array<_RP_Node>(arena, rect_count+1);
   
   U32 current_node_count = 1;
   nodes[0].x = 0;
@@ -73,7 +84,7 @@ pack_rects(RP_Rect* rects,
   nodes[0].h = total_height;
   
   for (U32 i = 0; i < rect_count; ++i) {
-    RP_Rect* rect = rects + i;
+    RP_Rect* rect = (sort_entries + i)->rect;
     
     // ignore rects with 0 width or height
     if(rect->w == 0 || rect->h == 0) continue;

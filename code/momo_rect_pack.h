@@ -3,12 +3,12 @@
 #ifndef MOMO_RECT_PACK_H
 #define MOMO_RECT_PACK_H
 
-enum struct RP_Sort_Type {
-  WIDTH,
-  HEIGHT,
-  AREA,
-  PERIMETER,
-  BIGGER_SIDE,
+enum RP_Sort_Type {
+  RP_SORT_WIDTH,
+  RP_SORT_HEIGHT,
+  RP_SORT_AREA,
+  RP_SORT_PERIMETER,
+  RP_SORT_BIGGER_SIDE,
 };
 
 struct RP_Rect {
@@ -17,8 +17,9 @@ struct RP_Rect {
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// TODO (change to new API)
-// How to use
+// This is the procedure that will pack the rects. 
+// Note that the rects WILL NOT be sorted after packing.
+//
 // rects: 
 //   Both the input and ouput. You will need to
 //   fill up the w and h. After RP_Pack() is called
@@ -36,18 +37,6 @@ struct RP_Rect {
 //   The method to sort, as per RP_SortType. 
 //   Usually, you want to just call RP_SortType_Height
 //   
-// Example Usage:
-//   RP_Rect rects[2];
-//   RP_Rect nodes[3];
-//   rects[0].w = rect[0].h = 5;
-//   rects[1].w = 10; 
-//   rects[1].h = 3;
-//   RP_Pack(rects, nodes, 2, 1, 10, 10, RP_SortType_Height);
-// 
-// TODO(Momo): Yeah, we probably need to figure out a way
-// to make the API look nicer? Maybe remove sort_entries first?
-// Maybe provide a context to use?
-// Wait till I do asset system
 
 static void pack_rects(RP_Rect* rects, 
                        U32 rect_count, 

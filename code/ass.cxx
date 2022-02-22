@@ -1,8 +1,5 @@
 // This is the asset builder tool
 //
-
-
-
 #include "ass.h"
 
 int main() {
@@ -10,31 +7,40 @@ int main() {
   defer { ass_free(&memory); };
   
   Arena arena = create_arena(memory.data, memory.size);
-  Asset_Packer ap = begin_asset_pack(1024, &arena);
   TTF font = ass_load_font(asset_dir("nokiafc22.ttf"), &arena);
-  Atlas_Builder ab = begin_atlas_builder(1024, 1024); 
+  
+  Atlaser atlaser = begin_atlas_builder(1024, 1024);
+  push_image(&atlaser, asset_dir("bullet_circle.png"));
+  push_image(&atlaser, asset_dir("bullet_dot.png"));
+  push_image(&atlaser, asset_dir("player_black.png"));
+  push_image(&atlaser, asset_dir("player_white.png"));
+  
   {
-    push_image(&ab, asset_dir("bullet_circle.png"), GAME_IMAGE_BULLET_CIRCLE);
-    push_image(&ab, asset_dir("bullet_dot.png"), GAME_IMAGE_BULLET_DOT);
-    push_image(&ab, asset_dir("player_black.png"), GAME_IMAGE_PLAYER_BLACK);
-    push_image(&ab, asset_dir("player_white.png"), GAME_IMAGE_PLAYER_WHITE);
-    
-    {
-      U32 interested_cps[] = { 32,65,66,67,68,69,70 };
-      push_font(&ab, &font, GAME_FONT_DEFAULT,
-                interested_cps, ArrayCount(interested_cps),
-                128);
-    }
-    end_atlas_builder(&ab, &arena);
+    U32 interested_cps[] = { 32,65,66,67,68,69,70 };
+    push_font(&atlaser, &font, 
+              interested_cps, 
+              ArrayCount(interested_cps),
+              128.f);
   }
+  Atlaser_Result atlaser_result = end_atlas_builder(&atlaser, &arena);
+  
 #if 1
   ass_log("Writing test png file...\n");
-  Memory png_to_write_memory = write_bitmap_as_png(ab.atlas_bitmap, &arena);
+  Memory png_to_write_memory = write_bitmap_as_png(atlaser_result.bitmap, &arena);
   assert(is_ok(png_to_write_memory));
   ass_write_file("test.png", png_to_write_memory);
 #endif
   
-  push_atlas(&ap, &ab, GAME_BITMAP_DEFAULT);
-  end_asset_pack(&ap, "test.ass");
+#if 0
+  Asset_Packer ap = create_asset_packer();
+  begin_asset_type(&ap, ASSET_DEFAULT);
+  {
+    add_bitmap_asset(&ap);
+    add_font_asset(&ap);
+    add_image_asset(&ap);
+  }
+  end_asset_type(&ap);
+#endif
+  
   
 }

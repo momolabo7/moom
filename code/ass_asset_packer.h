@@ -3,206 +3,65 @@
 #ifndef ASS_ASSET_PACKER_H
 #define ASS_ASSET_PACKER_H
 
-enum AP_Entry_Type{
-  AP_ENTRY_BITMAP,
-  AP_ENTRY_IMAGE,
-  AP_ENTRY_FONT,
-  AP_ENTRY_FONT_GLYPH,
+
+
+enum SUI_Packer_Source_Type {
+  SUI_PACKER_BITMAP_SOURCE,
 };
 
-struct AP_Bitmap_Entry {
-  Game_Bitmap_ID id;
-  Bitmap bitmap;
+struct SUI_Packer_Bitmap_Source {
+  
 };
 
-struct AP_Image_Entry {
-  Game_Image_ID id;
-  Game_Bitmap_ID bitmap_id;
-  Rect2 uv;
-};
-
-struct AP_Font_Entry {
-  Game_Font_ID id;
-  TTF* ttf;
-};
-
-struct AP_Font_Glyph_Entry {
-  U32 codepoint;
-  Game_Font_ID font_id;
-  Game_Bitmap_ID bitmap_id;
-  Rect2 uv;
-};
-
-struct AP_Entry {
-  AP_Entry_Type type;
+struct SUI_Packer_Source {
+  SUI_Packer_Source_Type type;
   union {
-    AP_Bitmap_Entry bitmap;
-    AP_Image_Entry image;
-    AP_Font_Entry font;
-    AP_Font_Glyph_Entry font_glyph;
+    SUI_Packer_Bitmap_Source bitmap;
   };
 };
 
-struct Asset_Packer {
-  AP_Entry* entries;
-  U32 entry_count;
-  U32 entry_cap;
+
+struct SUI_Packer {
+  U32 tag_count;
+  SUI_Tag tags[1024];
+  
+  U32 source_count;    
+  SUI_Packer_Source sources[1024];
+  
+  U32 asset_count;
+  SUI_Asset assets[1024];
+  
+  U32 asset_type_count;
+  Asset_Type asset_types[ASSET_COUNT];
+  
 };
 
-static Asset_Packer 
-begin_asset_pack(U32 entry_count, Arena* arena) {
-  Asset_Packer ret;
-  ret.entry_count = 0;
-  ret.entry_cap = entry_count;
-  ret.entries = push_array<AP_Entry>(arena, entry_count);
-  
-  return ret;
-}
-
-static void
-end_asset_pack(Asset_Packer* ap, const char* filename) {
-  FILE* file = fopen(filename, "wb");
-  assert(file);
-  
-  defer { fclose(file); };
-  
-  Ass_Header header = {};
-  ass_log("writing %d assets...\n", ap->entry_count);
-  header.asset_count = ap->entry_count;
-  fwrite(&header, sizeof(Ass_Header), 1, file);
-  
-  for (U32 i = 0; i < ap->entry_count; ++i) {
-    AP_Entry* entry = ap->entries + i;
-    switch(entry->type) {
-      case AP_ENTRY_BITMAP: {
-        ass_log("bitmap found\n");
-        
-        AP_Bitmap_Entry* bm = &entry->bitmap;
-        Ass_Bitmap ass_bitmap = {};
-        ass_bitmap.type = ASSET_BITMAP;
-        ass_bitmap.id = bm->id;
-        ass_bitmap.width = bm->bitmap.width;
-        ass_bitmap.height = bm->bitmap.height;
-        fwrite(&ass_bitmap, sizeof(Ass_Bitmap), 1, file);
-        
-        U32 bitmap_size = bm->bitmap.width * bm->bitmap.height * 4;
-        fwrite(bm->bitmap.pixels, bitmap_size, 1, file);
-        
-      } break;
-      case AP_ENTRY_IMAGE: {
-        ass_log("image found\n");
-        
-        AP_Image_Entry* img = &entry->image;
-        Ass_Image ass_image = {};
-        ass_image.type = ASSET_IMAGE;
-        ass_image.uv = img->uv;
-        ass_image.bitmap_id = img->bitmap_id;
-        ass_image.id = img->id;
-        
-      } break;
-      
-      case AP_ENTRY_FONT_GLYPH: {
-        ass_log("font glyph found\n");
-      } break;
-      
-      case AP_ENTRY_FONT: {
-        ass_log("font found\n");
-      } break;
-      
-    }
-  }
-}
-
-
-static void
-push_bitmap(Asset_Packer* ap, Bitmap bitmap, Game_Bitmap_ID bitmap_id) {
-  assert(ap->entry_count != ap->entry_cap);
-  
-  AP_Entry* entry = ap->entries + ap->entry_count++;
-  entry->type = AP_ENTRY_BITMAP;
-  
-  entry->bitmap.bitmap = bitmap;
-  entry->bitmap.id = bitmap_id;
-}
-
-static void
-push_image(Asset_Packer* ap, Game_Bitmap_ID bitmap_id, Rect2 uv, Game_Image_ID image_id) {
-  assert(ap->entry_count != ap->entry_cap);
-  
-  AP_Entry* entry = ap->entries + ap->entry_count++;
-  entry->type = AP_ENTRY_IMAGE;
-  
-  entry->image.uv = uv;
-  entry->image.id = image_id;
-  entry->image.bitmap_id = bitmap_id;
+static SUI_Packer
+create_asset_packer() {
 }
 
 static void 
-push_font(Asset_Packer* ap, TTF* ttf, Game_Font_ID font_id) {
+begin_asset_type(SUI_Packer* ap, Asset_Type type) {
   
-  AP_Entry* entry = ap->entries + ap->entry_count++;
-  entry->type = AP_ENTRY_FONT;
-  
-  entry->font.id = font_id;
-  entry->font.ttf = ttf;
 }
 
 static void
-push_font_glyph(Asset_Packer* ap, 
-                Game_Bitmap_ID bitmap_id, 
-                Rect2 uv, 
-                U32 codepoint,
-                Game_Font_ID font_id) 
-{
-  assert(ap->entry_count != ap->entry_cap);
-  
-  AP_Entry* entry = ap->entries + ap->entry_count++;
-  entry->type = AP_ENTRY_FONT_GLYPH;
-  
-  entry->font_glyph.font_id = font_id;
-  entry->font_glyph.codepoint = codepoint;
-  entry->font_glyph.uv = uv;
-  entry->image.bitmap_id = bitmap_id;
+add_font_asset(SUI_Packer* ap) {
 }
 
 static void
-push_atlas(Asset_Packer* ap, Atlas_Builder* ab, Game_Bitmap_ID atlas_bitmap_id) {
-  
-  push_bitmap(ap, ab->atlas_bitmap, atlas_bitmap_id);
-  
-  
-  // push rects
-  for (U32 i = 0; i < ab->rect_count; ++i) {
-    RP_Rect* rect = ab->rects + i;
-    Rect2 uv = {};
-    uv.min.x = (F32)rect->x / ab->atlas_bitmap.width;
-    uv.min.y = (F32)rect->y / ab->atlas_bitmap.height;
-    uv.max.x = (F32)(rect->x + rect->w) / ab->atlas_bitmap.width;
-    uv.max.y = (F32)(rect->x + rect->h) / ab->atlas_bitmap.width;
-    
-    auto* context = (AB_Rect_Context*)rect->user_data;
-    switch(context->type) {
-      case AB_RECT_CONTEXT_IMAGE: {    
-        push_image(ap, atlas_bitmap_id, uv, context->image.entry->game_image_id);
-      } break;
-      case AB_RECT_CONTEXT_FONT_GLYPH: {
-        push_font_glyph(ap, atlas_bitmap_id,
-                        uv, context->font_glyph.codepoint, 
-                        context->font_glyph.entry->game_font_id);
-      } break;
-    }
-  }
-
-#if 0  
-  // then look for font entries and push fonts
-  for(U32 i = 0; i < ab->entry_count; ++i) {
-    AB_Entry* entry = ab->entries + i;
-    if (entry->type == AB_ENTRY_FONT) {
-      push_font(ap, entry->font.loaded_ttf, 
-                entry->font.game_font_id);
-    }
-  }
-#endif
+add_bitmap_asset(SUI_Packer* ap, Bitmap* bitmap) {
 }
+
+static void
+add_image_asset(SUI_Packer* ap) {
+  
+}
+
+static void 
+end_asset_type() {
+  
+}
+
 
 #endif //ASS_ASSET_PACKER_H

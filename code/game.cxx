@@ -95,7 +95,7 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     
     //draw_sprite(gfx, colors, t*r*s, 0);
     {
-      Game_Image img = get_image(&assets, GAME_IMAGE_CIRCLE);
+      
       draw_subsprite(gfx, colors, t*r*s, img.texture_id, img.uv);
     }
   }
