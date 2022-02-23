@@ -11,8 +11,8 @@ get_uv(Atlaser_Image img, Bitmap bitmap) {
   Rect2 ret = {};
   ret.min.x = (F32)img.rect->x / bitmap.width;
   ret.min.y = (F32)img.rect->y / bitmap.height;
-  ret.min.x = (F32)(img.rect->x+img.rect->w) / bitmap.width;
-  ret.min.y = (F32)(img.rect->y+img.rect->h) / bitmap.height;
+  ret.max.x = (F32)(img.rect->x+img.rect->w) / bitmap.width;
+  ret.max.y = (F32)(img.rect->y+img.rect->h) / bitmap.height;
   return ret;
 }
 

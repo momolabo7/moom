@@ -99,9 +99,15 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     M44 r = create_m44_rotation_z(perm->tmp_rot += dt);
     M44 t = create_m44_translation(800.f, 450.f, 300.f);
     
-    draw_sprite(gfx, colors, t*r*s, 0);
+    //draw_sprite(gfx, colors, t*r*s, 0);
     {
-      //        draw_subsprite(gfx, colors, t*r*s, img.texture_id, img.uv);
+      Asset* image_asset = get_asset(&perm->game_assets, ASSET_BULLET_DOT);
+      Asset_Bitmap* bitmap_asset = get_bitmap(&perm->game_assets, 
+                                              image_asset->image->bitmap_id);
+      
+      draw_subsprite(gfx, colors, t*r*s, 
+                     bitmap_asset->gfx_bitmap_id, 
+                     image_asset->image->uv);
     }
   }
   

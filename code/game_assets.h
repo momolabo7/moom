@@ -5,6 +5,8 @@
 #include "game_asset_file.h"
 
 struct Asset_Bitmap {
+  U32 gfx_bitmap_id; // TODO: tie in with renderer? 
+  
   U32 width;
   U32 height;
   U32* pixels;
@@ -91,12 +93,14 @@ create_assets(Platform* pf, Gfx* gfx) {
         pf->read_file(&file, bitmap_size, 
                       ass_header.offset_to_data + sizeof(SUI_Bitmap),
                       asset->bitmap->pixels);
-#if 1
-        set_texture(gfx, ret.bitmap_counter++, 
+        
+        // send to renderer to manage
+        asset->bitmap->gfx_bitmap_id = ret.bitmap_counter++;
+        set_texture(gfx, 
+                    asset->bitmap->gfx_bitmap_id, 
                     asset->bitmap->width, 
                     asset->bitmap->height, 
                     asset->bitmap->pixels);
-#endif
         
       } break;
       case ASSET_TYPE_IMAGE: {
@@ -131,5 +135,14 @@ get_bitmap(Game_Assets* ga, Asset_Bitmap_ID bitmap_id) {
   return asset->bitmap;
 }
 
+#if 0
+static Asset_Image*
+get_image(Game_Assets* ga, Asset_ID image_id) {
+  Asset* asset = get_asset(ga, image_id);
+  assert(asset->type == ASSET_TYPE_IMAGE);
+  return asset->image;
+}
+
+#endif
 
 #endif //GAME_ASSETS_H
