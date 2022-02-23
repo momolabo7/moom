@@ -17,8 +17,8 @@ struct Atlaser_Image;
 ////////////////////////////////////////////////////
 // Contexts for each and every rect
 enum Atlaser_Rect_Context_Type {
-  ATLASER_RECT_CONTEXT_IMAGE,
-  ATLASER_RECT_CONTEXT_FONT_GLYPH,
+  ATLASER_RECT_CONTEXT_TYPE_IMAGE,
+  ATLASER_RECT_CONTEXT_TYPE_FONT_GLYPH,
 };
 
 struct Atlaser_Font_Glyph_Rect_Context {
@@ -38,9 +38,9 @@ struct Atlaser_Rect_Context {
   };
 };
 
+
 ///////////////////////////////////////////////////
 // Entry types
-
 struct Atlaser_Font {
   TTF* loaded_ttf;
   U32* codepoints;
@@ -70,9 +70,16 @@ struct Atlaser {
   Atlaser_Font fonts[128];
   U32 font_count;
   
-  Atlaser_Image images[128];
+  Atlaser_Image* images[128];
   U32 image_count;
 };
+
+
+static void
+push_image(Atlaser* ab, Atlaser_Image* image) {
+  assert(ab->image_count < ArrayCount(ab->images));
+  ab->images[ab->image_count++] = image;
+}
 
 static Atlaser
 begin_atlas_builder(U32 atlas_width,
@@ -88,15 +95,6 @@ begin_atlas_builder(U32 atlas_width,
   return ret;
 }
 
-static void 
-push_image(Atlaser* ab, const char* filename) {
-  assert(ab->image_count < ArrayCount(ab->images));
-  Atlaser_Image* entry = ab->images + ab->image_count++;
-  
-  entry->filename = filename; 
-  
-  
-}
 
 static void 
 push_font(Atlaser* ab, 
@@ -143,7 +141,7 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
   for (U32 i = 0; i < ab->image_count; ++i) {
     create_scratch(scratch, arena);
     
-    Atlaser_Image* entry = ab->images + i;
+    Atlaser_Image* entry = ab->images[i];
     
     Memory file_memory = ass_read_file(entry->filename, scratch);
     assert(is_ok(file_memory));
@@ -153,7 +151,7 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
     assert(png.width != 0 && png.height != 0);
     
     auto* context = contexts + context_index++;
-    context->type = ATLASER_RECT_CONTEXT_IMAGE;
+    context->type = ATLASER_RECT_CONTEXT_TYPE_IMAGE;
     context->image.entry = entry;
     
     RP_Rect* rect = rects + rect_index++;
@@ -188,7 +186,7 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
       auto* context = contexts + context_index++;
       context->font_glyph.codepoint = cp;
       context->font_glyph.entry = entry;
-      context->type = ATLASER_RECT_CONTEXT_FONT_GLYPH;
+      context->type = ATLASER_RECT_CONTEXT_TYPE_FONT_GLYPH;
       
       RP_Rect* rect = rects + rect_index++;
       rect->w = dims.w;
@@ -210,7 +208,7 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
   
   pack_rects(rects, rect_count, 1, 
              ab->bitmap.width, ab->bitmap.height, 
-             RP_SORT_HEIGHT,
+             RP_SORT_TYPE_HEIGHT,
              arena);
   
 #if 0
@@ -226,7 +224,7 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
     RP_Rect* rect = rects + i;
     auto* context = (Atlaser_Rect_Context*)(rect->user_data);
     switch(context->type) {
-      case ATLASER_RECT_CONTEXT_IMAGE: {
+      case ATLASER_RECT_CONTEXT_TYPE_IMAGE: {
         create_scratch(scratch, arena);
         Atlaser_Image* related_entry = context->image.entry;
         
@@ -248,7 +246,7 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
         
         
       } break;
-      case ATLASER_RECT_CONTEXT_FONT_GLYPH: {
+      case ATLASER_RECT_CONTEXT_TYPE_FONT_GLYPH: {
         create_scratch(scratch, arena);
         Atlaser_Font* related_entry = context->font_glyph.entry;
         Atlaser_Font_Glyph_Rect_Context* related_context = &context->font_glyph;

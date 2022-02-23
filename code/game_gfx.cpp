@@ -208,7 +208,7 @@ set_texture(Gfx* g,
             UMI texture_index,
             UMI texture_width,
             UMI texture_height,
-            U8* texture_pixels) 
+            U32* texture_pixels) 
 {
   
   // TODO: we should probably align this to 16 bytes
@@ -216,8 +216,6 @@ set_texture(Gfx* g,
   UMI texture_size = texture_width * texture_height * 4;
   
   auto* data = push<Gfx_Set_Texture_Cmd>(&g->commands, GFX_CMD_TYPE_SET_TEXTURE);
-  
-  
   
   data->texture_width = texture_width;
   data->texture_height = texture_height;

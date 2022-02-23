@@ -68,6 +68,17 @@ ass_load_font(const char* filename, Arena* arena) {
   return ret;
 }
 
+static Rect2
+ass_convert_rect_to_uv(RP_Rect rect, U32 width, U32 height) {
+  Rect2 ret = {};
+  ret.min.x = (F32)rect.x / width;
+  ret.min.y = (F32)rect.y / height;
+  ret.min.x = (F32)(rect.x+rect.w) / width;
+  ret.min.y = (F32)(rect.y+rect.h) / height;
+  return ret;
+  
+}
+
 #include "game_asset_file.h"
 #include "ass_atlas_builder.h"
 #include "ass_asset_packer.h"

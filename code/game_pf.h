@@ -19,16 +19,17 @@ struct Platform_File {
 };
 
 enum Platform_FilePath {
-  Platform_FilePath_Executable,
-  Platform_FilePath_UserData,
-  Platform_FilePath_Cache
+  PF_FILE_PATH_EXE,
+  PF_FILE_PATH_USER,
+  PF_FILE_PATH_CACHE,
+  
 };
 
 // Maybe for 'overwrite' or creating a new file, we 
 // use a compl
 enum Platform_FileAccess {
-  Platform_FileAccess_Read,
-  Platform_FileAccess_Overwrite, 
+  PF_FILE_ACCESS_READ,
+  PF_FILE_ACCESS_OVERWRITE,
 };
 
 

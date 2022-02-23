@@ -266,7 +266,7 @@ init_opengl(Opengl* ogl, Opengl_Platform pf)
                             GL_DYNAMIC_STORAGE_BIT);
   
   ogl->glNamedBufferStorage(ogl->buffers[_Opengl_VBO_Colors], 
-                            sizeof(V4F32) * _Opengl_max_entities, 
+                            sizeof(V4) * _Opengl_max_entities, 
                             nullptr, 
                             GL_DYNAMIC_STORAGE_BIT);
   
@@ -294,7 +294,7 @@ init_opengl(Opengl* ogl, Opengl_Platform pf)
                                  _Opengl_VAO_Binding_Colors, 
                                  ogl->buffers[_Opengl_VBO_Colors],  
                                  0, 
-                                 sizeof(V4F32));
+                                 sizeof(V4));
   
   ogl->glVertexArrayVertexBuffer(ogl->model, 
                                  _Opengl_VAO_Binding_Transform, 
@@ -538,8 +538,8 @@ render_opengl(Opengl* ogl, V2U render_wh, Rect2U region)
         
         // NOTE(Momo): Update the current instance values
         ogl->glNamedBufferSubData(ogl->buffers[_Opengl_VBO_Colors], 
-                                  current_instance_index * sizeof(V4F32),
-                                  sizeof(V4F32), 
+                                  current_instance_index * sizeof(V4),
+                                  sizeof(V4), 
                                   &data->colors);
         
         ogl->glNamedBufferSubData(ogl->buffers[_Opengl_VBO_Texture],
@@ -580,8 +580,8 @@ render_opengl(Opengl* ogl, V2U render_wh, Rect2U region)
         
         // NOTE(Momo): Update the current instance values
         ogl->glNamedBufferSubData(ogl->buffers[_Opengl_VBO_Colors], 
-                                  current_instance_index * sizeof(V4F32),
-                                  sizeof(V4F32), 
+                                  current_instance_index * sizeof(V4),
+                                  sizeof(V4), 
                                   &data->colors);
         
         F32 texture_uv_in_vertices[] = {

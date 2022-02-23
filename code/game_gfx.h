@@ -72,7 +72,7 @@ static void set_texture(Gfx* g,
                         UMI texture_index,
                         UMI texture_width,
                         UMI texture_height,
-                        U8* texture_pixels);
+                        U32* texture_pixels);
 
 static void clear_textures(Gfx* g);
 

@@ -2,6 +2,21 @@
 //
 #include "ass.h"
 
+
+// TODO(Momo): We should really let Atlaser generate the
+// UV coodinates of each item for us instead of
+// manually converting outside
+static Rect2 
+get_uv(Atlaser_Image img, Bitmap bitmap) {
+  Rect2 ret = {};
+  ret.min.x = (F32)img.rect->x / bitmap.width;
+  ret.min.y = (F32)img.rect->y / bitmap.height;
+  ret.min.x = (F32)(img.rect->x+img.rect->w) / bitmap.width;
+  ret.min.y = (F32)(img.rect->y+img.rect->h) / bitmap.height;
+  return ret;
+}
+
+
 int main() {
   Memory memory = ass_malloc(MB(10));
   defer { ass_free(&memory); };
@@ -9,11 +24,17 @@ int main() {
   Arena arena = create_arena(memory.data, memory.size);
   TTF font = ass_load_font(asset_dir("nokiafc22.ttf"), &arena);
   
-  Atlaser atlaser = begin_atlas_builder(1024, 1024);
-  push_image(&atlaser, asset_dir("bullet_circle.png"));
-  push_image(&atlaser, asset_dir("bullet_dot.png"));
-  push_image(&atlaser, asset_dir("player_black.png"));
-  push_image(&atlaser, asset_dir("player_white.png"));
+  Atlaser atlaser = begin_atlas_builder(512, 512);
+  Atlaser_Image ai_bullet_circle = { asset_dir("bullet_circle.png") }; 
+  Atlaser_Image ai_bullet_dot =    { asset_dir("bullet_dot.png") }; 
+  Atlaser_Image ai_player_black =  { asset_dir("player_black.png") }; 
+  Atlaser_Image ai_player_white =  { asset_dir("player_white.png") }; 
+  
+  push_image(&atlaser, &ai_bullet_circle);
+  push_image(&atlaser, &ai_bullet_dot);
+  push_image(&atlaser, &ai_player_black);
+  push_image(&atlaser, &ai_player_white);
+  
   
   {
     U32 interested_cps[] = { 32,65,66,67,68,69,70 };
@@ -24,25 +45,26 @@ int main() {
   }
   end_atlas_builder(&atlaser, &arena);
   
-#if 1
+#if 0
   ass_log("Writing test png file...\n");
   Memory png_to_write_memory = write_bitmap_as_png(atlaser.bitmap, &arena);
   assert(is_ok(png_to_write_memory));
   ass_write_file("test.png", png_to_write_memory);
 #endif
   
-  
-  
-#if 0
-  Asset_Packer ap = create_asset_packer();
-  begin_asset_type(&ap, ASSET_DEFAULT);
+  SUI_Packer sp = begin_sui_packer();
   {
-    add_bitmap_asset(&ap);
-    add_font_asset(&ap);
-    add_image_asset(&ap);
+    Asset_Bitmap_ID bitmap_id = add_bitmap_asset(&sp, ASSET_ATLAS, atlaser.bitmap);
+    
+    //begin_asset_group(&sp);
+    add_image_asset(&sp, ASSET_BULLET_CIRCLE, bitmap_id, 
+                    get_uv(ai_bullet_circle, atlaser.bitmap));
+    add_image_asset(&sp, ASSET_BULLET_DOT, bitmap_id, 
+                    get_uv(ai_bullet_circle, atlaser.bitmap));
+    
+    //end_asset_group(&sp)
   }
-  end_asset_type(&ap);
-#endif
+  end_sui_packer(&sp, "test.sui");
   
   
 }

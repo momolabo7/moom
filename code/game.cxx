@@ -2,11 +2,14 @@
 
 #include "game_gfx.h"
 #include "game_pf.h"
+#include "game_assets.h"
 
 struct PermanentMemory {
   F32 tmp_delta;
   B32 tmp_increase;
   F32 tmp_rot;
+  
+  Game_Assets game_assets;
 };
 
 struct GameMemory {
@@ -18,6 +21,8 @@ exported B32
 game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) { 
   // Initialization
   if (!game->game_data) {
+    pf->set_aspect_ratio(16, 9);
+    
     // TODO(Momo): free allocated memory
     game->game_data = pf->alloc(sizeof(GameMemory));
     if (!game->game_data) return false;
@@ -28,12 +33,13 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     
     // Initialize perm memory
     PermanentMemory* perm = game_memory->perm;
+    
+    // TODO(Momo): for now...
+    perm->game_assets = create_assets(pf, gfx);
     perm->tmp_delta = 0.f;
     perm->tmp_increase = true;
     perm->tmp_rot = 0.f;
     
-    // Set aspect ratio of the game
-    pf->set_aspect_ratio(16, 9);    
     
     
     //TODO: Load assets
@@ -93,14 +99,13 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     M44 r = create_m44_rotation_z(perm->tmp_rot += dt);
     M44 t = create_m44_translation(800.f, 450.f, 300.f);
     
-    //draw_sprite(gfx, colors, t*r*s, 0);
+    draw_sprite(gfx, colors, t*r*s, 0);
     {
-      
-      draw_subsprite(gfx, colors, t*r*s, img.texture_id, img.uv);
+      //        draw_subsprite(gfx, colors, t*r*s, img.texture_id, img.uv);
     }
   }
   
-  return false;
+  return true;
   
   
 }

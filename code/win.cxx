@@ -19,7 +19,7 @@ struct Win_State{
   U32 aspect_ratio_height;
   
 };
-static Win_State Win_global_state;
+static Win_State win_global_state;
 
 
 struct Win_File {
@@ -126,7 +126,7 @@ win_window_callback(HWND window,
     case WM_CLOSE:  
     case WM_QUIT:
     case WM_DESTROY: {
-      Win_global_state.is_running = false;
+      win_global_state.is_running = false;
     } break;
     default: {
       result = DefWindowProcA(window, message, w_param, l_param);
@@ -138,17 +138,17 @@ win_window_callback(HWND window,
 //~ For Platform API
 static void 
 win_hot_reload() {
-  Win_global_state.is_hot_reloading = true;
+  win_global_state.is_hot_reloading = true;
 }
 
 static void 
 win_shutdown() {
-  Win_global_state.is_running = false;
+  win_global_state.is_running = false;
 }
 static void 
 win_set_aspect_ratio(U32 width, U32 height) {
-  Win_global_state.aspect_ratio_width = width;
-  Win_global_state.aspect_ratio_height = height;
+  win_global_state.aspect_ratio_width = width;
+  win_global_state.aspect_ratio_height = height;
 }
 
 
@@ -183,11 +183,11 @@ win_open_file(const char* filename,
   DWORD access_flag = {};
   DWORD creation_disposition = {};
   switch (access) {
-    case Platform_FileAccess_Read: {
+    case PF_FILE_ACCESS_READ: {
       access_flag = GENERIC_READ;
       creation_disposition = OPEN_EXISTING;
     } break;
-    case Platform_FileAccess_Overwrite: {
+    case PF_FILE_ACCESS_OVERWRITE: {
       access_flag = GENERIC_WRITE;
       creation_disposition = CREATE_ALWAYS;
     } break;
@@ -243,8 +243,6 @@ win_read_file(Platform_File* file, UMI size, UMI offset, void* dest)
   overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
   
   DWORD bytes_read;
-  
-  
   
   if(ReadFile(win_file->handle, dest, (DWORD)size, &bytes_read, &overlapped) &&
      (DWORD)size == bytes_read) 
@@ -330,10 +328,10 @@ WinMain(HINSTANCE instance,
   
   //- Initialize window state
   {
-    Win_global_state.is_running = true;
-    Win_global_state.is_hot_reloading = true;
-    Win_global_state.aspect_ratio_width = 1;
-    Win_global_state.aspect_ratio_height = 1;
+    win_global_state.is_running = true;
+    win_global_state.is_hot_reloading = true;
+    win_global_state.aspect_ratio_width = 1;
+    win_global_state.aspect_ratio_height = 1;
   }
   
   
@@ -476,9 +474,9 @@ WinMain(HINSTANCE instance,
   Game_API game_api = {}; 
   HMODULE game_dll = NULL; 
   
-  while (Win_global_state.is_running) {
+  while (win_global_state.is_running) {
     //-NOTE(Momo): Hot reload game.dll functions
-    if (Win_global_state.is_hot_reloading){
+    if (win_global_state.is_hot_reloading){
       static constexpr char* running_game_dll = "running_game.dll";
       static constexpr char* compiled_game_dll = "game.dll";
       
@@ -504,7 +502,7 @@ WinMain(HINSTANCE instance,
       else {
         return 1;
       }
-      Win_global_state.is_hot_reloading = false;
+      win_global_state.is_hot_reloading = false;
     }
     
     input.update();
@@ -517,7 +515,7 @@ WinMain(HINSTANCE instance,
           case WM_QUIT:
           case WM_DESTROY:
           case WM_CLOSE: {
-            Win_global_state.is_running = false;
+            win_global_state.is_running = false;
           } break;
           case WM_KEYUP:
           case WM_KEYDOWN:
@@ -559,9 +557,9 @@ WinMain(HINSTANCE instance,
     // TODO(Momo): Should probably make a "GameInfo" struct that 
     // contains information like these
     Rect2U render_region = win_calc_render_region(render_wh.w,
-                                                    render_wh.h,
-                                                    Win_global_state.aspect_ratio_width,
-                                                    Win_global_state.aspect_ratio_height);
+                                                  render_wh.h,
+                                                  win_global_state.aspect_ratio_width,
+                                                  win_global_state.aspect_ratio_height);
     
     
     

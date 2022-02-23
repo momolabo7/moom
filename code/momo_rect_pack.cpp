@@ -42,19 +42,19 @@ _rp_sort(_RP_Sort_Entry* sort_entries,
          RP_Sort_Type sort_type) 
 {
   switch(sort_type) {
-    case RP_SORT_HEIGHT: {
+    case RP_SORT_TYPE_HEIGHT: {
       quicksort(sort_entries, count, _rp_sort_by_height);
     } break;
-    case RP_SORT_WIDTH: {
+    case RP_SORT_TYPE_WIDTH: {
       quicksort(sort_entries, count, _rp_sort_by_width);
     } break;
-    case RP_SORT_AREA: {
+    case RP_SORT_TYPE_AREA: {
       quicksort(sort_entries, count, _rp_sort_by_area);
     } break;
-    case RP_SORT_PERIMETER: {
+    case RP_SORT_TYPE_PERIMETER: {
       quicksort(sort_entries, count, _rp_sort_by_perimeter);
     } break;
-    case RP_SORT_BIGGER_SIDE: {
+    case RP_SORT_TYPE_BIGGER_SIDE: {
       quicksort(sort_entries, count, _rp_sort_by_bigger_side);
     } break;
   }
