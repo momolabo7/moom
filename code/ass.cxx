@@ -54,14 +54,32 @@ int main() {
   
   SUI_Packer sp = begin_sui_packer();
   {
-    Asset_Bitmap_ID bitmap_id = add_bitmap_asset(&sp, ASSET_ATLAS, atlaser.bitmap);
     
     //begin_asset_group(&sp);
+#if 0
+    Asset_Bitmap_ID bitmap_id = add_bitmap_asset(&sp, ASSET_ATLAS, atlaser.bitmap);
     add_image_asset(&sp, ASSET_BULLET_CIRCLE, bitmap_id, 
                     get_uv(ai_bullet_circle, atlaser.bitmap));
     add_image_asset(&sp, ASSET_BULLET_DOT, bitmap_id, 
                     get_uv(ai_bullet_circle, atlaser.bitmap));
+#else 
     
+    begin_asset_group(&sp, ASSET_GROUP_ATLASES);
+    add_bitmap_asset(&sp, atlaser.bitmap);
+    end_asset_group(&sp);
+    
+#if 0
+    add_image_asset(&sp, bitmap_id, 
+                    get_uv(ai_bullet_circle, atlaser.bitmap));
+    //add_tag(&sp, TAG_CIRCLE_BULLET, 0.f);
+    add_image_asset(&sp, ASSET_BULLET_DOT, bitmap_id, 
+                    get_uv(ai_bullet_circle, atlaser.bitmap));
+    // add_tag(&sp, TAG_DOT_BULLET, 0.f);
+    
+    end_asset_group(&sp);
+#endif
+    
+#endif
     //end_asset_group(&sp)
   }
   end_sui_packer(&sp, "test.sui");

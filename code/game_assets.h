@@ -26,10 +26,18 @@ struct Asset {
   };
 };
 
+struct Asset_Group {
+  U32 first_asset_id;// TODO: change to Asset_ID
+  U32 one_past_last_asset_id;// TODO: change to Asset_ID
+};
+
 struct Game_Assets {
   Arena arena;
   
-  Asset assets[ASSET_COUNT];
+  U32 asset_count;
+  Asset* assets;
+  
+  Asset_Group asset_groups[ASSET_GROUP_COUNT];
   
   
   // TODO(Momo): We should remove this
@@ -58,63 +66,86 @@ create_assets(Platform* pf, Gfx* gfx) {
   
   // TODO: check magic number
   
+  // Allocate all possible slots for assets
+  ret.assets = push<Asset>(&ret.arena, sui_header.asset_count);
   
-  for(U32 asset_index = 0; 
-      asset_index < ASSET_COUNT;
-      ++asset_index) 
+  
+  for(U32 asset_group_index = 0; 
+      asset_group_index < sui_header.asset_group_count;
+      ++asset_group_index) 
   {
-    Asset* asset = ret.assets + asset_index;
+    Asset_Group* asset_group = ret.asset_groups + asset_group_index;
     
-    SUI_Asset_Header ass_header;
-    UMI offset_to_current_header = sui_header.offset_to_asset_headers + 
-      sizeof(SUI_Asset_Header)*asset_index;
+    // Look for corresponding SUI_Asset_Group in file
+    SUI_Asset_Group sui_asset_group;
+    UMI offset_to_sui_asset_group = 
+      sui_header.offset_to_asset_groups + sizeof(SUI_Asset_Group)*asset_group_index;
+    pf->read_file(&file, sizeof(SUI_Asset_Group), 
+                  offset_to_sui_asset_group, 
+                  &sui_asset_group);
     
-    pf->read_file(&file, sizeof(SUI_Asset_Header), 
-                  offset_to_current_header, 
-                  &ass_header);
-    
-    
-    asset->type = ass_header.type;
-    switch(asset->type) {
-      case ASSET_TYPE_BITMAP: {
-        
-        SUI_Bitmap sui_bitmap;
-        pf->read_file(&file, sizeof(SUI_Bitmap), 
-                      ass_header.offset_to_data, 
-                      &sui_bitmap);
-        
-        U32 bitmap_size = sui_bitmap.width * sui_bitmap.height * 4;
-        asset->bitmap = push<Asset_Bitmap>(&ret.arena);
-        asset->bitmap->width = sui_bitmap.width;
-        asset->bitmap->height = sui_bitmap.height;
-        asset->bitmap->pixels = (U32*)push_block(&ret.arena, bitmap_size);
-        
-        
-        pf->read_file(&file, bitmap_size, 
-                      ass_header.offset_to_data + sizeof(SUI_Bitmap),
+    // Go through each asset in the group
+    for (U32 asset_index = sui_asset_group.first_asset_id;
+         asset_index < sui_asset_group.one_past_last_asset_id;
+         ++asset_index) 
+    {
+      Asset* asset = ret.assets + asset_index;
+      
+      // Look for corresponding SUI_Asset in file
+      SUI_Asset sui_asset;
+      UMI offset_to_sui_asset = 
+        sui_header.offset_to_assets + sizeof(SUI_Asset)*asset_index;
+      
+      pf->read_file(&file, sizeof(SUI_Asset), 
+                    offset_to_sui_asset, 
+                    &sui_asset);
+      
+      // Process the assets
+      // NOTE(Momo): For now, we are prefetching EVERYTHING.
+      // Might want to not do that in the future?
+      asset->type = sui_asset.type;
+      switch(asset->type) {
+        case ASSET_TYPE_BITMAP: {
+          
+          SUI_Bitmap sui_bitmap;
+          pf->read_file(&file, sizeof(SUI_Bitmap), 
+                        sui_asset.offset_to_data, 
+                        &sui_bitmap);
+          
+          U32 bitmap_size = sui_bitmap.width * sui_bitmap.height * 4;
+          asset->bitmap = push<Asset_Bitmap>(&ret.arena);
+          asset->bitmap->width = sui_bitmap.width;
+          asset->bitmap->height = sui_bitmap.height;
+          asset->bitmap->pixels = (U32*)push_block(&ret.arena, bitmap_size);
+          
+          
+          pf->read_file(&file, bitmap_size, 
+                        sui_asset.offset_to_data + sizeof(SUI_Bitmap),
+                        asset->bitmap->pixels);
+          
+          // send to renderer to manage
+          asset->bitmap->gfx_bitmap_id = ret.bitmap_counter++;
+          set_texture(gfx, 
+                      asset->bitmap->gfx_bitmap_id, 
+                      asset->bitmap->width, 
+                      asset->bitmap->height, 
                       asset->bitmap->pixels);
-        
-        // send to renderer to manage
-        asset->bitmap->gfx_bitmap_id = ret.bitmap_counter++;
-        set_texture(gfx, 
-                    asset->bitmap->gfx_bitmap_id, 
-                    asset->bitmap->width, 
-                    asset->bitmap->height, 
-                    asset->bitmap->pixels);
-        
-      } break;
-      case ASSET_TYPE_IMAGE: {
-        SUI_Image sui_image;
-        pf->read_file(&file, sizeof(SUI_Image), 
-                      ass_header.offset_to_data, 
-                      &sui_image);
-        
-        asset->image = push<Asset_Image>(&ret.arena);
-        asset->image->bitmap_id = sui_image.bitmap_id;
-        asset->image->uv = sui_image.uv;
-      } break;
+          
+        } break;
+        case ASSET_TYPE_IMAGE: {
+          SUI_Image sui_image;
+          pf->read_file(&file, sizeof(SUI_Image), 
+                        sui_asset.offset_to_data, 
+                        &sui_image);
+          
+          asset->image = push<Asset_Image>(&ret.arena);
+          asset->image->bitmap_id = sui_image.bitmap_id;
+          asset->image->uv = sui_image.uv;
+        } break;
+      }
+      
+      
     }
-    
     
     
   }
@@ -134,6 +165,23 @@ get_bitmap(Game_Assets* ga, Asset_Bitmap_ID bitmap_id) {
   assert(asset->type == ASSET_TYPE_BITMAP);
   return asset->bitmap;
 }
+
+static U32
+get_first_asset(Game_Assets* ga, Asset_Group_ID group_id) {
+  Asset_Group* group = ga->asset_groups + group_id;
+  if (group->first_asset_id != group->one_past_last_asset_id) {
+    return group->first_asset_id;
+  }
+  return 0;
+}
+
+static Asset_Bitmap_ID
+get_first_bitmap(Game_Assets* ga, Asset_Group_ID group_id) {
+  // TODO: assert?
+  return {get_first_asset(ga, group_id)};
+}
+
+
 
 #if 0
 static Asset_Image*

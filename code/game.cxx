@@ -101,13 +101,17 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     
     //draw_sprite(gfx, colors, t*r*s, 0);
     {
-      Asset* image_asset = get_asset(&perm->game_assets, ASSET_BULLET_DOT);
-      Asset_Bitmap* bitmap_asset = get_bitmap(&perm->game_assets, 
-                                              image_asset->image->bitmap_id);
+      Asset_Bitmap_ID bitmap_id = get_first_bitmap(&perm->game_assets, ASSET_GROUP_ATLASES);
       
+      Asset_Bitmap* bitmap_asset = get_bitmap(&perm->game_assets, bitmap_id);
+      
+      draw_sprite(gfx, colors, t*r*s,
+                  bitmap_asset->gfx_bitmap_id);
+#if 0
       draw_subsprite(gfx, colors, t*r*s, 
                      bitmap_asset->gfx_bitmap_id, 
                      image_asset->image->uv);
+#endif
     }
   }
   

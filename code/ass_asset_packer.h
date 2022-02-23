@@ -35,10 +35,13 @@ struct SUI_Asset_Source {
 
 
 struct SUI_Packer {
-  //wU32 asset_count;
-  SUI_Asset_Source sources[ASSET_COUNT];
-  SUI_Asset_Header asset_headers[ASSET_COUNT];
+  U32 asset_count;
+  SUI_Asset_Source sources[1024];
+  SUI_Asset assets[1024];
   
+	
+  SUI_Asset_Group groups[ASSET_GROUP_COUNT];
+  SUI_Asset_Group* active_group;
 };
 
 static SUI_Packer
@@ -46,45 +49,67 @@ begin_sui_packer() {
   
   SUI_Packer ret = {};
   //ret.asset_count = 0;
-  
+  ret.active_group = nullptr;
   return ret;
 }
 
+
+static void
+begin_asset_group(SUI_Packer* sp, Asset_Group_ID asset_group_id) 
+{
+  sp->active_group = sp->groups + asset_group_id;
+  sp->active_group->first_asset_id = sp->asset_count;
+  sp->active_group->one_past_last_asset_id = sp->active_group->first_asset_id;
+}
+
+static void
+end_asset_group(SUI_Packer* sp) 
+{
+  sp->active_group = nullptr;
+}
+
+
 static Asset_Bitmap_ID
-add_bitmap_asset(SUI_Packer* sp, Asset_ID id, Bitmap bitmap) {
-  SUI_Asset_Source* source = sp->sources + id;
+add_bitmap_asset(SUI_Packer* sp, Bitmap bitmap) {
+  assert(sp->active_group);
+  
+  ++sp->active_group->one_past_last_asset_id;
+  
+  U32 index = sp->asset_count++;
+  
+  SUI_Asset_Source* source = sp->sources + index;
   source->bitmap.width = bitmap.width;
   source->bitmap.height = bitmap.height;
   source->bitmap.pixels = bitmap.pixels;
   
-  SUI_Asset_Header* header = sp->asset_headers + id;
-  header->type = ASSET_TYPE_BITMAP;
+  SUI_Asset* asset = sp->assets + index;
+  asset->type = ASSET_TYPE_BITMAP;
   
   Asset_Bitmap_ID ret;
-  ret.value = id;
+  ret.value = index;
   return ret;
 }
 
-static void
+static Asset_Image_ID
 add_image_asset(SUI_Packer* sp, 
-                Asset_ID id,
                 Asset_Bitmap_ID bitmap_id,
                 Rect2 uv)
 {
-  SUI_Asset_Source* source = sp->sources + id;
+  U32 index = sp->asset_count++;
+  
+  SUI_Asset_Source* source = sp->sources + index;
   source->image.bitmap_id = bitmap_id;
   source->image.uv = uv;
   
-  SUI_Asset_Header* header = sp->asset_headers + id;
-  header->type = ASSET_TYPE_IMAGE;
+  SUI_Asset* asset = sp->assets + index;
+  asset->type = ASSET_TYPE_IMAGE;
+  
+  Asset_Image_ID ret;
+  ret.value = index;
+  return ret;
   
 }
 
-
-static void 
-end_asset_group(SUI_Packer* sp) {
-  
-}
 
 
 static void
@@ -92,22 +117,26 @@ end_sui_packer(SUI_Packer* sp, const char* filename) {
   FILE* file = fopen(filename, "wb");
   defer { fclose(file); };
   
+  U32 asset_array_size = sizeof(SUI_Asset)*sp->asset_count;
+  U32 asset_group_array_size = sizeof(SUI_Asset_Group)*ASSET_GROUP_COUNT;
+  
   SUI_Header header = {};
   header.magic_value = SUI_MAGIC_VALUE;
-  header.asset_count = ASSET_COUNT; //sp->asset_count;
-  header.offset_to_asset_headers = sizeof(SUI_Header);
+  header.asset_group_count = ASSET_GROUP_COUNT;
+  header.asset_count = sp->asset_count;
+  header.offset_to_assets = sizeof(SUI_Header);
+  header.offset_to_asset_groups = header.offset_to_assets + asset_array_size;
   
   fwrite(&header, sizeof(header), 1, file);
   
-  U32 asset_header_size = sizeof(SUI_Asset_Header)*header.asset_count;
-  fseek(file, asset_header_size, SEEK_CUR);
+  fseek(file, asset_array_size + asset_group_array_size, SEEK_CUR);
   
   for(U32 i = 0; i < header.asset_count; ++i) {
-    SUI_Asset_Header* asset_header = sp->asset_headers + i;
+    SUI_Asset* sui_asset = sp->assets + i;
     SUI_Asset_Source* source = sp->sources + i;
     
-    asset_header->offset_to_data = ftell(file);
-    switch(asset_header->type) {
+    sui_asset->offset_to_data = ftell(file);
+    switch(sui_asset->type) {
       case ASSET_TYPE_BITMAP: {
         ass_log("writing bitmap\n");
         
@@ -132,9 +161,11 @@ end_sui_packer(SUI_Packer* sp, const char* filename) {
     
   }
   
-  fseek(file, header.offset_to_asset_headers, SEEK_SET);
+  fseek(file, header.offset_to_assets, SEEK_SET);
+  fwrite(sp->assets, asset_array_size, 1, file); 
   
-  fwrite(&sp->asset_headers, asset_header_size, 1, file); 
+  fseek(file, header.offset_to_asset_groups, SEEK_SET);
+  fwrite(sp->groups, asset_group_array_size, 1, file); 
   
 }
 
