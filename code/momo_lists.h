@@ -47,7 +47,7 @@
 //  };
 //
 
-#define SList_Cap(l) 	     (ArrayCount((l)->e))
+#define SList_Cap(l) 	     (array_count((l)->e))
 #define SList_Clear(l)      ((l)->count = 0)
 #define SList_Push(l)       (((l)->count < (SList_Cap(l))) ? ((l)->e + (l)->count++) : 0)
 #define SList_Pop(l)        (((l)->count > 0) ? (--(l)->count), 1 : 0)

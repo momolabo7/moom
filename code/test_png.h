@@ -26,7 +26,7 @@ void test_png() {
     return;
   }
   
-  for (int i = 0; i < ArrayCount(test_cases); ++i)
+  for (int i = 0; i < array_count(test_cases); ++i)
   {
     test_log("Test Case: %d\n", i);
     test_create_log_section_until_scope;

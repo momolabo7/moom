@@ -4,7 +4,7 @@
 #define TEST_SORT_H
 void test_sort() {
   int arr[] = { 1,4,6,8,9,20,13,-1, -20 };
-  quicksort(arr, ArrayCount(arr), 
+  quicksort(arr, array_count(arr), 
             [](int* lhs, int* rhs) { return (*lhs) < (*rhs); } );
   
   for( auto&& itr : arr) {

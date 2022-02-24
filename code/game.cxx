@@ -52,7 +52,7 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
   GameMemory* game_memory = (GameMemory*)game->game_data;
   PermanentMemory* perm = game_memory->perm;
   
-  if (input->button_up.is_poked()) {
+  if (is_poked(input->button_up)) {
     pf->hot_reload();
   }
   
@@ -99,7 +99,7 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     M44 r = create_m44_rotation_z(perm->tmp_rot += dt);
     M44 t = create_m44_translation(800.f, 450.f, 300.f);
     
-    //draw_sprite(gfx, colors, t*r*s, 0);
+#if 1
     {
       Game_Assets* game_assets = &perm->game_assets;
       
@@ -112,6 +112,15 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
                      bitmap->gfx_bitmap_id, 
                      image->uv);
     }
+#else 
+    {
+      Game_Assets* game_assets = &perm->game_assets;
+      Asset_Bitmap_ID bitmap_id = get_first_bitmap(game_assets, ASSET_GROUP_ATLASES);
+      Asset_Bitmap* bitmap = get_bitmap(game_assets, bitmap_id);
+      draw_sprite(gfx, colors, t*r*s, bitmap->gfx_bitmap_id);
+      
+    }
+#endif
   }
   
   return true;

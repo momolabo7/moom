@@ -1,41 +1,41 @@
 //- Implementation
 
-static 
-B32 is_ok(Platform_File* file) {
+static B32
+is_ok(Platform_File* file) {
   return file->platform_data && !file->error;
 }
 
 
-void 
-Input::update() {
-  for (U32 i = 0; i < ArrayCount(buttons); ++i) {
-    buttons[i].before = buttons[i].now;
+static void 
+update(Input* input) {
+  for (U32 i = 0; i < array_count(input->buttons); ++i) {
+    input->buttons[i].before = input->buttons[i].now;
   }
 }
 
 
 
 // before: 0, now: 1
-B32 
-Input_Button::is_poked() {
-  return !before && now;
+static B32 
+is_poked(Input_Button btn) {
+  return !btn.before && btn.now;
 }
 
 // before: 1, now: 0
-B32
-Input_Button::is_released() {
-  return before && !now;
+static B32
+is_released(Input_Button btn) {
+  return btn.before && !btn.now;
 }
 
 
 // before: X, now: 1
-B32
-Input_Button::is_down(){
-  return now;
+static B32
+is_down(Input_Button btn){
+  return btn.now;
 }
 
 // before: 1, now: 1
-B32
-Input_Button::is_held() {
-  return before && now;
+static B32
+is_held(Input_Button btn) {
+  return btn.before && btn.now;
 }

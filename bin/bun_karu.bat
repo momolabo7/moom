@@ -16,7 +16,7 @@ SET CommonCompilerFlags=-DSLOW -DINTERNAL  %CommonCompilerFlags%
 
 pushd %BuildDir%
 
-cl %CommonCompilerFlags% %CodeDir%\ass.cxx
+cl %CommonCompilerFlags% %CodeDir%\karu.cxx
 
 if NOT %ERRORLEVEL% == 0 goto exit
 

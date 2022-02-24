@@ -277,10 +277,10 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
           for (; lit < 280; ++lit) {
             lit_codes[lit] = 7;
           }
-          for (; lit < ArrayCount(lit_codes); ++lit) {
+          for (; lit < array_count(lit_codes); ++lit) {
             lit_codes[lit] = 8;
           }
-          for (lit = 0; lit < ArrayCount(dist_codes); ++lit) {
+          for (lit = 0; lit < array_count(dist_codes); ++lit) {
             dist_codes[lit] = 5;
           }
           
@@ -289,12 +289,12 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
           _png_huffman_compute(&lit_huffman,
                                arena, 
                                lit_codes, 
-                               ArrayCount(lit_codes),
+                               array_count(lit_codes),
                                15);
           _png_huffman_compute(&dist_huffman,
                                arena,
                                dist_codes,
-                               ArrayCount(dist_codes),
+                               array_count(dist_codes),
                                15);
           
         }
@@ -324,7 +324,7 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
           _png_huffman_compute(&code_huffman,
                                arena,
                                code_codes,
-                               ArrayCount(code_codes),
+                               array_count(code_codes),
                                7);
           
           
@@ -486,7 +486,7 @@ _png_is_signature_valid(U8* comparee) {
     137, 80, 78, 71, 13, 10, 26, 10 
   };
   
-  for (U32 i = 0; i < ArrayCount(signature); ++i) {
+  for (U32 i = 0; i < array_count(signature); ++i) {
     if (signature[i] != comparee[i]) {
       return false;
     }

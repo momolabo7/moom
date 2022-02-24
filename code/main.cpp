@@ -66,7 +66,7 @@ int main() {
   void * memory = malloc(memory_size);
   if (!memory) { return 1; }
   
-  for (int i = 0; i < ArrayCount(g_test_cases); ++i)
+  for (int i = 0; i < array_count(g_test_cases); ++i)
   {
     printf("=== Test Case: %d ===\n", i);
     Arena app_arena = Arena_Create(memory, memory_size);

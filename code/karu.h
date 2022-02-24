@@ -1,32 +1,32 @@
 /* date = January 20th 2022 10:14 am */
 
-#ifndef ASS_H
-#define ASS_H
+#ifndef Sui_EXPORT_H
+#define Sui_EXPORT_H
 
 #include <stdlib.h>
 #include <stdio.h>
 
-#define assert_callback(s) printf("[ass][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
+#define assert_callback(s) printf("[sw][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
 
 #include "momo.h"
 
 #define asset_dir(filename) "../assets/" ##filename
-#define ass_log(...) printf(__VA_ARGS__)
+#define karu_log(...) printf(__VA_ARGS__)
 
 // Utility files for ass
-Memory ass_malloc(UMI size) {
+Memory karu_malloc(UMI size) {
   void* mem = malloc(size);
   assert(mem);
   return { mem, size };
 }
 
-void ass_free(Memory* mem) {
+void karu_free(Memory* mem) {
   free(mem->data);
   mem->data = nullptr;
   mem->size = 0;
 }
 
-Memory ass_read_file(const char* filename, Arena* arena) {
+Memory karu_read_file(const char* filename, Arena* arena) {
   FILE* file = fopen(filename, "rb");
   
   if (!file) {
@@ -50,7 +50,7 @@ Memory ass_read_file(const char* filename, Arena* arena) {
   
 }
 
-void ass_write_file(const char* filename, Memory memory) {
+void karu_write_file(const char* filename, Memory memory) {
   FILE *file  = fopen(filename, "wb");
   if (!file) return;
   defer { fclose(file); };
@@ -60,8 +60,8 @@ void ass_write_file(const char* filename, Memory memory) {
 }
 
 static TTF 
-ass_load_font(const char* filename, Arena* arena) {
-  Memory mem = ass_read_file(filename, arena);
+karu_load_font(const char* filename, Arena* arena) {
+  Memory mem = karu_read_file(filename, arena);
   assert(is_ok(mem));
   
   TTF ret = read_ttf(mem);
@@ -69,7 +69,7 @@ ass_load_font(const char* filename, Arena* arena) {
 }
 
 #include "game_asset_file.h"
-#include "ass_atlas_builder.h"
-#include "ass_asset_packer.h"
+#include "karu_atlas.h"
+#include "karu_pack.h"
 
-#endif //ASS_H
+#endif //Sui_EXPORT_H

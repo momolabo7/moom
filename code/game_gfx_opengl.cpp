@@ -151,7 +151,7 @@ _set_texture(Opengl* ogl,
              U8* pixels) 
 {
   
-  assert(index < ArrayCount(ogl->textures));
+  assert(index < array_count(ogl->textures));
   
   GLuint entry;
   
@@ -181,9 +181,9 @@ _set_texture(Opengl* ogl,
 
 static void
 _clear_textures(Opengl* ogl) {
-  ogl->glDeleteTextures((GLsizei)ArrayCount(ogl->textures), 
+  ogl->glDeleteTextures((GLsizei)array_count(ogl->textures), 
                         ogl->textures);
-  for (UMI i = 0; i < ArrayCount(ogl->textures); ++i ){
+  for (UMI i = 0; i < array_count(ogl->textures); ++i ){
     ogl->textures[i] = 0;
   }
 }

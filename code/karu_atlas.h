@@ -7,41 +7,41 @@
 //   TTF file for each glyph.
 
 
-#ifndef ASS_ATLAS_BUILDER_H
-#define ASS_ATLAS_BUILDER_H
+#ifndef KARU_ATLAS_H
+#define KARU_ATLAS_H
 
 
-struct Atlaser_Font;
-struct Atlaser_Image;
+struct Karu_Atlas_Font;
+struct Karu_Atlas_Image;
 
 ////////////////////////////////////////////////////
 // Contexts for each and every rect
-enum Atlaser_Rect_Context_Type {
+enum Karu_Atlas_Rect_Context_Type {
   ATLASER_RECT_CONTEXT_TYPE_IMAGE,
   ATLASER_RECT_CONTEXT_TYPE_FONT_GLYPH,
 };
 
-struct Atlaser_Font_Glyph_Rect_Context {
-  Atlaser_Font* entry;
+struct Karu_Atlas_Font_Glyph_Rect_Context {
+  Karu_Atlas_Font* entry;
   U32 codepoint;
 };
 
-struct Atlaser_Image_Rect_Context {
-  Atlaser_Image* entry;
+struct Karu_Atlas_Image_Rect_Context {
+  Karu_Atlas_Image* entry;
 };
 
-struct Atlaser_Rect_Context {
-  Atlaser_Rect_Context_Type type;
+struct Karu_Atlas_Rect_Context {
+  Karu_Atlas_Rect_Context_Type type;
   union {
-    Atlaser_Font_Glyph_Rect_Context font_glyph;
-    Atlaser_Image_Rect_Context image;
+    Karu_Atlas_Font_Glyph_Rect_Context font_glyph;
+    Karu_Atlas_Image_Rect_Context image;
   };
 };
 
 
 ///////////////////////////////////////////////////
 // Entry types
-struct Atlaser_Font {
+struct Karu_Atlas_Font {
   TTF* loaded_ttf;
   U32* codepoints;
   U32 codepoint_count;
@@ -49,43 +49,43 @@ struct Atlaser_Font {
   
   // will be generated when end
   RP_Rect* glyph_rects;
-  Atlaser_Font_Glyph_Rect_Context* glyph_rect_contexts;
+  Karu_Atlas_Font_Glyph_Rect_Context* glyph_rect_contexts;
   U32 rect_count;
   
 };
 
-struct Atlaser_Image{
+struct Karu_Atlas_Image{
   const char* filename;
   
   // will be generated when end
   RP_Rect* rect;
-  Atlaser_Image_Rect_Context* rect_context;
+  Karu_Atlas_Image_Rect_Context* rect_context;
 };
 
 //////////////////////////////////////////////
 // Builder
-struct Atlaser {  
+struct Karu_Atlas {  
   Bitmap bitmap;
   
-  Atlaser_Font fonts[128];
+  Karu_Atlas_Font fonts[128];
   U32 font_count;
   
-  Atlaser_Image* images[128];
+  Karu_Atlas_Image* images[128];
   U32 image_count;
 };
 
 
 static void
-push_image(Atlaser* ab, Atlaser_Image* image) {
-  assert(ab->image_count < ArrayCount(ab->images));
+push_image(Karu_Atlas* ab, Karu_Atlas_Image* image) {
+  assert(ab->image_count < array_count(ab->images));
   ab->images[ab->image_count++] = image;
 }
 
-static Atlaser
+static Karu_Atlas
 begin_atlas_builder(U32 atlas_width,
                     U32 atlas_height) 
 {
-  Atlaser ret = {};
+  Karu_Atlas ret = {};
   assert(atlas_width);
   assert(atlas_height);
   
@@ -97,15 +97,15 @@ begin_atlas_builder(U32 atlas_width,
 
 
 static void 
-push_font(Atlaser* ab, 
+push_font(Karu_Atlas* ab, 
           TTF* loaded_ttf, 
           U32* codepoints, 
           U32 codepoint_count,
           F32 raster_font_height) 
 {
-  assert(ab->font_count < ArrayCount(ab->fonts));
+  assert(ab->font_count < array_count(ab->fonts));
   
-  Atlaser_Font* entry = ab->fonts + ab->font_count++;
+  Karu_Atlas_Font* entry = ab->fonts + ab->font_count++;
   entry->loaded_ttf = loaded_ttf; 
   entry->codepoints = codepoints; 
   entry->codepoint_count = codepoint_count; 
@@ -115,14 +115,14 @@ push_font(Atlaser* ab,
 
 
 static void
-end_atlas_builder(Atlaser* ab, Arena* arena) {
+end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
   ab->bitmap.pixels = push_array<U32>(arena, ab->bitmap.width * ab->bitmap.height);
   assert(ab->bitmap.pixels);
   
   // Count the amount of rects
   U32 rect_count = 0;
   for(U32 i = 0; i < ab->font_count; ++i) {
-    Atlaser_Font* entry = ab->fonts + i;
+    Karu_Atlas_Font* entry = ab->fonts + i;
     rect_count += entry->codepoint_count;
   }
   rect_count += ab->image_count;
@@ -131,7 +131,7 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
   
   // Allocate required memory required 
   auto* rects = push_array<RP_Rect>(arena, rect_count);
-  auto* contexts = push_array<Atlaser_Rect_Context>(arena, rect_count);
+  auto* contexts = push_array<Karu_Atlas_Rect_Context>(arena, rect_count);
   
   // Prepare the rects with the correct info
   U32 rect_index = 0;
@@ -141,9 +141,9 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
   for (U32 i = 0; i < ab->image_count; ++i) {
     create_scratch(scratch, arena);
     
-    Atlaser_Image* entry = ab->images[i];
+    Karu_Atlas_Image* entry = ab->images[i];
     
-    Memory file_memory = ass_read_file(entry->filename, scratch);
+    Memory file_memory = karu_read_file(entry->filename, scratch);
     assert(is_ok(file_memory));
     
     PNG png = create_png(file_memory);
@@ -167,7 +167,7 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
   for (U32 i = 0; i < ab->font_count; ++i) {
     create_scratch(scratch, arena);
     
-    Atlaser_Font* entry = ab->fonts + i;
+    Karu_Atlas_Font* entry = ab->fonts + i;
     
     TTF* ttf = entry->loaded_ttf;
     F32 s = get_scale_for_pixel_height(ttf, entry->raster_font_height);
@@ -200,9 +200,9 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
   }
   
 #if 0
-  ass_log("=== Before packing: ===\n");
+  karu_log("=== Before packing: ===\n");
   for (U32 i = 0; i < rect_count; ++i) {
-    ass_log("%d: w = %d, h = %d\n", i, rects[i].w, rects[i].h);
+    karu_log("%d: w = %d, h = %d\n", i, rects[i].w, rects[i].h);
   }
 #endif
   
@@ -212,9 +212,9 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
              arena);
   
 #if 0
-  ass_log("=== After packing: ===\n");
+  karu_log("=== After packing: ===\n");
   for (U32 i = 0; i < rect_count; ++i) {
-    ass_log("%d: x = %d, y = %d, w = %d, h = %d\n", 
+    karu_log("%d: x = %d, y = %d, w = %d, h = %d\n", 
             i, rects[i].x, rects[i].y, rects[i].w, rects[i].h);
   }
 #endif
@@ -222,13 +222,13 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
   for(U32 i = 0; i < rect_count; ++i) 
   {
     RP_Rect* rect = rects + i;
-    auto* context = (Atlaser_Rect_Context*)(rect->user_data);
+    auto* context = (Karu_Atlas_Rect_Context*)(rect->user_data);
     switch(context->type) {
       case ATLASER_RECT_CONTEXT_TYPE_IMAGE: {
         create_scratch(scratch, arena);
-        Atlaser_Image* related_entry = context->image.entry;
+        Karu_Atlas_Image* related_entry = context->image.entry;
         
-        Memory file_memory = ass_read_file(related_entry->filename, scratch);
+        Memory file_memory = karu_read_file(related_entry->filename, scratch);
         assert(is_ok(file_memory));
         
         PNG png = create_png(file_memory);
@@ -248,8 +248,8 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
       } break;
       case ATLASER_RECT_CONTEXT_TYPE_FONT_GLYPH: {
         create_scratch(scratch, arena);
-        Atlaser_Font* related_entry = context->font_glyph.entry;
-        Atlaser_Font_Glyph_Rect_Context* related_context = &context->font_glyph;
+        Karu_Atlas_Font* related_entry = context->font_glyph.entry;
+        Karu_Atlas_Font_Glyph_Rect_Context* related_context = &context->font_glyph;
         
         TTF* ttf = related_entry->loaded_ttf;
         F32 s = get_scale_for_pixel_height(ttf, related_entry->raster_font_height);
@@ -272,4 +272,4 @@ end_atlas_builder(Atlaser* ab, Arena* arena) {
   
 }
 
-#endif //ASS_ATLAS_BUILDER_H
+#endif // KARU_ATLAS_H

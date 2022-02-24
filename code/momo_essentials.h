@@ -160,7 +160,7 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 // TODO: Blog this?
 //
 #define Stmt(s) do { s } while(0)
-#define ArrayCount(A) (sizeof(A)/sizeof(*A))
+#define array_count(A) (sizeof(A)/sizeof(*A))
 #define OffsetOf(type, member) (UMI)&(((type*)0)->member)
 
 // These need to be macros instead of constexpr function

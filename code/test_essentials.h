@@ -61,13 +61,13 @@ void test_essentials() {
     
     val.u = 12345;
     test_log("Before endian_swap_16: ");
-    for(int i = 0; i < ArrayCount(val.c); ++i) 
+    for(int i = 0; i < array_count(val.c); ++i) 
       test_log("%02X ", val.c[i]);
     test_log("\n");
     val.u = endian_swap_16(val.u);
     
     test_log("After endian_swap_16: ");
-    for(int i = 0; i < ArrayCount(val.c); ++i) 
+    for(int i = 0; i < array_count(val.c); ++i) 
       test_log("%02X ", val.c[i]);
     test_log("\n");
     
@@ -82,13 +82,13 @@ void test_essentials() {
     
     val.u = 12345;
     test_log("Before endian_swap_32: ");
-    for(int i = 0; i < ArrayCount(val.c); ++i) 
+    for(int i = 0; i < array_count(val.c); ++i) 
       test_log("%02X ", val.c[i]);
     test_log("\n");
     val.u = endian_swap_32(val.u);
     
     test_log("After endian_swap_32: ");
-    for(int i = 0; i < ArrayCount(val.c); ++i) 
+    for(int i = 0; i < array_count(val.c); ++i) 
       test_log("%02X ", val.c[i]);
     test_log("\n");
     

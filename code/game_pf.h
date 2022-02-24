@@ -60,15 +60,15 @@ struct Platform {
 // But that will probably require some insane enum
 // Or maybe we can put all these into Platform API?
 
-struct Input_Button{
+struct Input_Button {
   B32 before;
-  B32 now;
-  
-  B32 is_poked() ;
-  B32 is_released();
-  B32 is_down();
-  B32 is_held();
+  B32 now; 
 };
+
+static B32 is_poked(Input_Button) ;
+static B32 is_released(Input_Button);
+static B32 is_down(Input_Button);
+static B32 is_held(Input_Button);
 
 struct Input{
   Input_Button buttons[4];
@@ -85,6 +85,7 @@ struct Input{
   
   void update();
 };
+
 
 
 

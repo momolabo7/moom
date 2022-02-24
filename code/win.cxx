@@ -317,13 +317,13 @@ WinMain(HINSTANCE instance,
   DWORD thread_id;
   int result = 0;
   HANDLE threads[10];
-  for (int i = 0; i < ArrayCount(threads); ++i) {
+  for (int i = 0; i < array_count(threads); ++i) {
     threads[i] = CreateThread(NULL, 0, 
                               win_test_thread_function, 
                               &result, 0, &thread_id);
   }
   
-  WaitForMultipleObjects(ArrayCount(threads), threads, TRUE, INFINITE);
+  WaitForMultipleObjects(array_count(threads), threads, TRUE, INFINITE);
 #endif
   
   //- Initialize window state
@@ -505,7 +505,7 @@ WinMain(HINSTANCE instance,
       win_global_state.is_hot_reloading = false;
     }
     
-    input.update();
+    update(&input);
     
     //-NOTE(Momo): Process messages and input
     {
