@@ -4,6 +4,10 @@
 
 #include "game_asset_file.h"
 
+struct Asset_Bitmap_ID { U32 value; };
+struct Asset_Font_ID { U32 value; }; 
+struct Asset_Image_ID { U32 value; };
+
 struct Asset_Bitmap {
   U32 gfx_bitmap_id; // TODO: tie in with renderer? 
   
@@ -26,8 +30,8 @@ struct Asset {
 };
 
 struct Asset_Group {
-  Asset_ID first_asset_id;
-  Asset_ID one_past_last_asset_id;
+  U32 first_asset_id;
+  U32 one_past_last_asset_id;
 };
 
 struct Asset_Tag {
@@ -117,8 +121,8 @@ create_assets(Platform* pf, Gfx* gfx) {
     }
     
     // Go through each asset in the group
-    for (U32 asset_index = group->first_asset_id.value;
-         asset_index < group->one_past_last_asset_id.value;
+    for (U32 asset_index = group->first_asset_id;
+         asset_index < group->one_past_last_asset_id;
          ++asset_index) 
     {
       Asset* asset = ret.assets + asset_index;
@@ -171,7 +175,7 @@ create_assets(Platform* pf, Gfx* gfx) {
                         &sui_image);
           
           asset->image = push<Asset_Image>(&ret.arena);
-          asset->image->bitmap_id = sui_image.bitmap_id;
+          asset->image->bitmap_id.value = sui_image.bitmap_asset_id;
           asset->image->uv = sui_image.uv;
         } break;
       }
@@ -187,44 +191,44 @@ create_assets(Platform* pf, Gfx* gfx) {
 
 
 static Asset*
-get_asset(Game_Assets* ga, Asset_ID asset_index){
-  return ga->assets + asset_index.value;
+_get_asset(Game_Assets* ga, U32 asset_index){
+  return ga->assets + asset_index;
+}
+
+static U32
+_get_first_asset(Game_Assets* ga, Asset_Group_ID group_id) {
+  Asset_Group* group = ga->groups + group_id;
+  if (group->first_asset_id != group->one_past_last_asset_id) {
+    return group->first_asset_id;
+  }
+  return {0};
 }
 
 static Asset_Bitmap*
 get_bitmap(Game_Assets* ga, Asset_Bitmap_ID bitmap_id) {
-  Asset* asset = get_asset(ga, {bitmap_id.value});
+  Asset* asset = _get_asset(ga, bitmap_id.value);
   assert(asset->type == ASSET_TYPE_BITMAP);
   return asset->bitmap;
 }
 
 static Asset_Image*
 get_image(Game_Assets* ga, Asset_Image_ID image_id) {
-  Asset* asset = get_asset(ga, {image_id.value});
+  Asset* asset = _get_asset(ga, {image_id.value});
   assert(asset->type == ASSET_TYPE_IMAGE);
   return asset->image;
-}
-
-static Asset_ID
-get_first_asset(Game_Assets* ga, Asset_Group_ID group_id) {
-  Asset_Group* group = ga->groups + group_id;
-  if (group->first_asset_id.value != group->one_past_last_asset_id.value) {
-    return group->first_asset_id;
-  }
-  return {0};
 }
 
 static Asset_Bitmap_ID
 get_first_bitmap(Game_Assets* ga, Asset_Group_ID group_id) {
   // TODO: assert? Probably should loop through until we find the first correct asset type
-  return {get_first_asset(ga, group_id).value};
+  return {_get_first_asset(ga, group_id)};
 }
 
 
 static Asset_Image_ID
 get_first_image(Game_Assets* ga, Asset_Group_ID group_id) {
   // TODO: assert? Probably should loop through until we find the first correct asset type
-  return {get_first_asset(ga, group_id).value};
+  return {_get_first_asset(ga, group_id)};
 }
 
 

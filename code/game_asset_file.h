@@ -22,11 +22,6 @@ enum Asset_Type {
   ASSET_TYPE_FONT,
 };
 
-struct Asset_ID { U32 value; };
-struct Asset_Bitmap_ID { U32 value; };
-struct Asset_Font_ID { U32 value; }; 
-struct Asset_Image_ID { U32 value; };
-struct Asset_Tag_ID { U32 value; };
 
 /////////////////////////////////////////////////////////////
 // Sui file related
