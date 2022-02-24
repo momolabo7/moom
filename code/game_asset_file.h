@@ -32,12 +32,12 @@ struct Asset_Tag_ID { U32 value; };
 // Sui file related
 #pragma pack(push,1)
 
-#define Sui_CODE(a, b, c, d) (((U32)(a) << 0) | ((U32)(b) << 8) | ((U32)(c) << 16) | ((U32)(d) << 24))
-#define Sui_MAGIC_VALUE Sui_CODE('k', 'a', 'r', 'u');
+#define SUI_CODE(a, b, c, d) (((U32)(a) << 0) | ((U32)(b) << 8) | ((U32)(c) << 16) | ((U32)(d) << 24))
+#define SUI_MAGIC_VALUE SUI_CODE('k', 'a', 'r', 'u');
 
 struct Sui_Asset_Group {
-  Asset_ID first_asset_id;
-  Asset_ID one_past_last_asset_id;
+  U32 first_asset_id;
+  U32 one_past_last_asset_id;
 };
 
 struct Sui_Header {
@@ -70,12 +70,12 @@ struct Sui_Tag {
 
 struct Sui_Image {
   Rect2 uv;
-  Asset_Bitmap_ID bitmap_id;
+  U32 bitmap_id;
 };
 
 struct Sui_Font_Glyph {
   Rect2 uv;
-  Asset_Bitmap_ID bitmap_id;
+  U32 bitmap_id;
   U32 codepoint;
 };
 
