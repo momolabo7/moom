@@ -36,20 +36,20 @@ struct Asset_Tag_ID { U32 value; };
 #define SUI_MAGIC_VALUE SUI_CODE('k', 'a', 'r', 'u');
 
 struct Sui_Asset_Group {
-  Asset_ID first_asset_id;
-  Asset_ID one_past_last_asset_id;
+  U32 first_asset_id;
+  U32 one_past_last_asset_id;
 };
 
 struct Sui_Header {
   U32 magic_value;
   
   U32 asset_count;
-  U32 asset_group_count;
+  U32 group_count;
   U32 tag_count;
   
   U32 offset_to_tags;
   U32 offset_to_assets;
-  U32 offset_to_asset_groups;
+  U32 offset_to_groups;
 };
 
 struct Sui_Asset {
@@ -70,12 +70,12 @@ struct Sui_Tag {
 
 struct Sui_Image {
   Rect2 uv;
-  Asset_Bitmap_ID bitmap_id;
+  U32 bitmap_asset_id;
 };
 
 struct Sui_Font_Glyph {
   Rect2 uv;
-  Asset_Bitmap_ID bitmap_id;
+  U32 bitmap_asset_id;
   U32 codepoint;
 };
 

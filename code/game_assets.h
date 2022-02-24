@@ -44,7 +44,7 @@ struct Game_Assets {
   U32 tag_count;
   Asset_Tag* tags;
   
-  Asset_Group asset_groups[ASSET_GROUP_COUNT];
+  Asset_Group groups[ASSET_GROUP_COUNT];
   
   
   // TODO(Momo): We should remove this
@@ -97,28 +97,28 @@ create_assets(Platform* pf, Gfx* gfx) {
   }
   
   // Fill data for asset groups and individual assets
-  for(U32 asset_group_index = 0; 
-      asset_group_index < sui_header.asset_group_count;
-      ++asset_group_index) 
+  for(U32 group_index = 0; 
+      group_index < sui_header.group_count;
+      ++group_index) 
   {
-    Asset_Group* asset_group = ret.asset_groups + asset_group_index;
+    Asset_Group* group = ret.groups + group_index;
     {
       // Look for corresponding Sui_Asset_Group in file
-      Sui_Asset_Group sui_asset_group;
-      UMI offset_to_sui_asset_group = 
-        sui_header.offset_to_asset_groups + sizeof(Sui_Asset_Group)*asset_group_index;
+      Sui_Asset_Group sui_group;
+      UMI offset_to_sui_group = 
+        sui_header.offset_to_groups + sizeof(Sui_Asset_Group)*group_index;
       
       pf->read_file(&file, sizeof(Sui_Asset_Group), 
-                    offset_to_sui_asset_group, 
-                    &sui_asset_group);
+                    offset_to_sui_group, 
+                    &sui_group);
       
-      asset_group->first_asset_id = sui_asset_group.first_asset_id;
-      asset_group->one_past_last_asset_id = sui_asset_group.one_past_last_asset_id;
+      group->first_asset_id = sui_group.first_asset_id;
+      group->one_past_last_asset_id = sui_group.one_past_last_asset_id;
     }
     
     // Go through each asset in the group
-    for (U32 asset_index = asset_group->first_asset_id.value;
-         asset_index < asset_group->one_past_last_asset_id.value;
+    for (U32 asset_index = group->first_asset_id.value;
+         asset_index < group->one_past_last_asset_id.value;
          ++asset_index) 
     {
       Asset* asset = ret.assets + asset_index;
@@ -207,7 +207,7 @@ get_image(Game_Assets* ga, Asset_Image_ID image_id) {
 
 static Asset_ID
 get_first_asset(Game_Assets* ga, Asset_Group_ID group_id) {
-  Asset_Group* group = ga->asset_groups + group_id;
+  Asset_Group* group = ga->groups + group_id;
   if (group->first_asset_id.value != group->one_past_last_asset_id.value) {
     return group->first_asset_id;
   }

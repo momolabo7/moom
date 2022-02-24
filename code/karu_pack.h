@@ -11,13 +11,13 @@ struct Karu_Packer_Bitmap_Source {
 };
 
 struct Karu_Packer_Image_Source {
-  Asset_Bitmap_ID bitmap_id;
+  U32 bitmap_asset_id;
   Rect2 uv;
 };
 
 struct Karu_Packer_Font_Source {
   Karu_Atlas_Font* ptr;
-  Asset_Bitmap_ID bitmap_id;
+  U32 bitmap_asset_id;
 };
 
 union Karu_Packer_Source {
@@ -61,90 +61,91 @@ add_tag(Karu_Packer* sp, Asset_Tag_Type tag_type, F32 value) {
 }
 
 static void
-begin_asset_group(Karu_Packer* sp, Asset_Group_ID asset_group_id) 
+begin_group(Karu_Packer* sp, Asset_Group_ID group_id) 
 {
-  sp->active_group = sp->groups + asset_group_id;
-  sp->active_group->first_asset_id = Asset_ID{ sp->asset_count };
+  sp->active_group = sp->groups + group_id;
+  sp->active_group->first_asset_id = sp->asset_count;
   sp->active_group->one_past_last_asset_id = sp->active_group->first_asset_id;
 }
 
 static void
-end_asset_group(Karu_Packer* sp) 
+end_group(Karu_Packer* sp) 
 {
   sp->active_group = nullptr;
 }
 
+struct Karu_Packer_Added_Asset {
+  U32 asset_index;
+  Karu_Packer_Source* source;
+};
 
-static Asset_Bitmap_ID
-add_bitmap_asset(Karu_Packer* sp, Bitmap bitmap) {
+static Karu_Packer_Added_Asset
+add_asset(Karu_Packer* sp, Asset_Type type) {
   assert(sp->active_group);
-  ++sp->active_group->one_past_last_asset_id.value;
-  sp->active_asset_index = sp->asset_count++;
+  U32 asset_index = sp->asset_count++;
+  ++sp->active_group->one_past_last_asset_id;
+  sp->active_asset_index = asset_index;
   
-  Karu_Packer_Source* source = sp->sources + sp->active_asset_index;
-  source->bitmap.width = bitmap.width;
-  source->bitmap.height = bitmap.height;
-  source->bitmap.pixels = bitmap.pixels;
-  
-  Sui_Asset* asset = sp->assets + sp->active_asset_index;
-  asset->type = ASSET_TYPE_BITMAP;
+  Sui_Asset* asset = sp->assets + asset_index;
+  asset->type = type;
   asset->first_tag_index = sp->tag_count;
   asset->one_past_last_tag_index = asset->one_past_last_tag_index;
   
+  Karu_Packer_Source* source = sp->sources + asset_index;
   
-  Asset_Bitmap_ID ret;
-  ret.value = sp->active_asset_index;
+  Karu_Packer_Added_Asset ret;
+  ret.source = source;
+  ret.asset_index = asset_index;
+  
   return ret;
 }
 
 
-static Asset_Image_ID
-add_image_asset(Karu_Packer* sp, 
-                Asset_Bitmap_ID bitmap_id,
-                Rect2 uv)
+static U32
+add_bitmap(Karu_Packer* sp, Bitmap bitmap) {
+  auto added_asset = add_asset(sp, ASSET_TYPE_BITMAP);
+  added_asset.source->bitmap.width = bitmap.width;
+  added_asset.source->bitmap.height = bitmap.height;
+  
+  return added_asset.asset_index;
+}
+
+
+static U32
+add_image(Karu_Packer* sp, 
+          U32 bitmap_asset_id,
+          Rect2 uv)
 {
-  assert(sp->active_group);
-  ++sp->active_group->one_past_last_asset_id.value;
-  sp->active_asset_index = sp->asset_count++;
+  auto added_asset = add_asset(sp, ASSET_TYPE_IMAGE);
+  added_asset.source->image.bitmap_asset_id = bitmap_asset_id;
+  added_asset.source->image.uv = uv;
   
-  Karu_Packer_Source* source = sp->sources + sp->active_asset_index;
-  source->image.bitmap_id = bitmap_id;
-  source->image.uv = uv;
-  
-  Sui_Asset* asset = sp->assets + sp->active_asset_index;
-  asset->type = ASSET_TYPE_IMAGE;
-  asset->first_tag_index = sp->tag_count;
-  asset->one_past_last_tag_index = asset->one_past_last_tag_index;
-  
-  
-  Asset_Image_ID ret;
-  ret.value = sp->active_asset_index;
-  return ret;
+  return added_asset.asset_index;
   
 }
 
 
 
 static void
-end_sui_packer(Karu_Packer* sp, const char* filename) {
+write_sui(Karu_Packer* sp, const char* filename) {
   FILE* file = fopen(filename, "wb");
   defer { fclose(file); };
   
   U32 asset_tag_array_size = sizeof(Sui_Tag)*sp->tag_count;
   U32 asset_array_size = sizeof(Sui_Asset)*sp->asset_count;
-  U32 asset_group_array_size = sizeof(Sui_Asset_Group)*ASSET_GROUP_COUNT;
+  U32 group_array_size = sizeof(Sui_Asset_Group)*ASSET_GROUP_COUNT;
   
   Sui_Header header = {};
   header.magic_value = SUI_MAGIC_VALUE;
-  header.asset_group_count = ASSET_GROUP_COUNT;
+  header.group_count = ASSET_GROUP_COUNT;
   header.asset_count = sp->asset_count;
   header.tag_count = sp->tag_count;
   header.offset_to_assets = sizeof(Sui_Header);
   header.offset_to_tags = header.offset_to_assets + asset_array_size;
-  header.offset_to_asset_groups = header.offset_to_tags + asset_tag_array_size;
+  header.offset_to_groups = header.offset_to_tags + asset_tag_array_size;
   
   fwrite(&header, sizeof(header), 1, file);
-  U32 offset_to_asset_data = asset_tag_array_size + asset_array_size + asset_group_array_size;
+  U32 offset_to_asset_data = asset_tag_array_size + asset_array_size + group_array_size;
   
   fseek(file, offset_to_asset_data, SEEK_CUR);
   
@@ -170,7 +171,7 @@ end_sui_packer(Karu_Packer* sp, const char* filename) {
         karu_log("writing image\n");
         Sui_Image sui_image = {};
         sui_image.uv = source->image.uv;
-        sui_image.bitmap_id = source->image.bitmap_id;
+        sui_image.bitmap_asset_id = source->image.bitmap_asset_id;
         fwrite(&sui_image, sizeof(sui_image), 1, file);
       }
     }
@@ -180,8 +181,8 @@ end_sui_packer(Karu_Packer* sp, const char* filename) {
   fseek(file, header.offset_to_assets, SEEK_SET);
   fwrite(sp->assets, asset_array_size, 1, file); 
   
-  fseek(file, header.offset_to_asset_groups, SEEK_SET);
-  fwrite(sp->groups, asset_group_array_size, 1, file); 
+  fseek(file, header.offset_to_groups, SEEK_SET);
+  fwrite(sp->groups, group_array_size, 1, file); 
   
   fseek(file, header.offset_to_tags, SEEK_SET);
   fwrite(sp->tags, asset_tag_array_size, 1, file); 

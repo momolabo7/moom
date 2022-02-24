@@ -56,19 +56,19 @@ int main() {
   Karu_Packer* sp = &sp_;
   {
     
-    begin_asset_group(sp, ASSET_GROUP_ATLASES);
-    Asset_Bitmap_ID bitmap_id = add_bitmap_asset(sp, atlaser.bitmap);
-    end_asset_group(sp);
+    begin_group(sp, ASSET_GROUP_ATLASES);
+    U32 bitmap_asset_id = add_bitmap(sp, atlaser.bitmap);
+    end_group(sp);
     
-    begin_asset_group(sp, ASSET_GROUP_BULLET);
-    add_image_asset(sp, bitmap_id, karu_get_uv(ai_bullet_circle, atlaser.bitmap));
+    begin_group(sp, ASSET_GROUP_BULLET);
+    add_image(sp, bitmap_asset_id, karu_get_uv(ai_bullet_circle, atlaser.bitmap));
     add_tag(sp, ASSET_TAG_MOOD, 0.f); 
-    add_image_asset(sp, bitmap_id, karu_get_uv(ai_bullet_dot, atlaser.bitmap));
+    add_image(sp, bitmap_asset_id, karu_get_uv(ai_bullet_dot, atlaser.bitmap));
     add_tag(sp, ASSET_TAG_MOOD, 1.f); 
-    end_asset_group(sp);
+    end_group(sp);
     
     //end_asset_group(&sp)
   }
-  end_sui_packer(sp, "test.sui");
+  write_sui(sp, "test.sui");
   
 }
