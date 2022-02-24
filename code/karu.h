@@ -68,7 +68,8 @@ karu_load_font(const char* filename, Arena* arena) {
   return ret;
 }
 
-#include "game_asset_file.h"
+#include "game_asset_types.h"
+#include "sui.h"
 #include "karu_atlas.h"
 #include "karu_pack.h"
 

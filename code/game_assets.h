@@ -1,8 +1,8 @@
 #ifndef GAME_ASSETS_H
 #define GAME_ASSETS_H
 
-
-#include "game_asset_file.h"
+#include "game_asset_types.h"
+#include "sui.h"
 
 struct Asset_Bitmap_ID { U32 value; };
 struct Asset_Font_ID { U32 value; }; 
@@ -96,7 +96,7 @@ create_assets(Platform* pf, Gfx* gfx) {
     UMI offset_to_sui_tag = sui_header.offset_to_tags + sizeof(Sui_Tag)*tag_index;
     pf->read_file(&file, sizeof(Sui_Tag), offset_to_sui_tag, &sui_tag);
     
-    tag->type = sui_tag.type;
+    tag->type = (Asset_Tag_Type)sui_tag.type;
     tag->value = sui_tag.value;
   }
   
@@ -139,7 +139,7 @@ create_assets(Platform* pf, Gfx* gfx) {
       // Process the assets
       // NOTE(Momo): For now, we are prefetching EVERYTHING.
       // Might want to not do that in the future?
-      asset->type = sui_asset.type;
+      asset->type = (Asset_Type)sui_asset.type;
       switch(asset->type) {
         case ASSET_TYPE_BITMAP: {
           

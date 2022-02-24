@@ -1,26 +1,8 @@
 /* date = February 20th 2022 10:10 pm */
 
-#ifndef GAME_ASSET_FILE_H
-#define GAME_ASSET_FILE_H
+#ifndef SUI_H
+#define SUI_H
 
-enum Asset_Tag_Type {
-  ASSET_TAG_MOOD,
-};
-
-enum Asset_Group_ID {
-  ASSET_GROUP_ATLASES,
-  
-  ASSET_GROUP_BULLET,
-  ASSET_GROUP_PLAYER,
-  
-  ASSET_GROUP_COUNT,
-};
-
-enum Asset_Type {
-  ASSET_TYPE_BITMAP,
-  ASSET_TYPE_IMAGE,
-  ASSET_TYPE_FONT,
-};
 
 
 /////////////////////////////////////////////////////////////
@@ -48,7 +30,7 @@ struct Sui_Header {
 };
 
 struct Sui_Asset {
-  Asset_Type type;
+  U32 type; // e.g. Asset_Tag_Type
   
   U32 offset_to_data;
   
@@ -59,7 +41,7 @@ struct Sui_Asset {
 };
 
 struct Sui_Tag {
-  Asset_Tag_Type type;
+  U32 type; // e.g. Asset_Tag_Type
   F32 value;
 };
 
@@ -92,4 +74,4 @@ struct Sui_Bitmap {
 #pragma pack(pop)
 
 
-#endif //GAME_ASSET_FILE_H
+#endif // SUI_H
