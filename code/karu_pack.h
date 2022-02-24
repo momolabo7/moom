@@ -11,13 +11,13 @@ struct Karu_Packer_Bitmap_Source {
 };
 
 struct Karu_Packer_Image_Source {
-  U32 bitmap_id;
+  Asset_Bitmap_ID bitmap_id;
   Rect2 uv;
 };
 
 struct Karu_Packer_Font_Source {
   Karu_Atlas_Font* ptr;
-  U32 bitmap_id;
+  Asset_Bitmap_ID bitmap_id;
 };
 
 union Karu_Packer_Source {
@@ -64,7 +64,7 @@ static void
 begin_asset_group(Karu_Packer* sp, Asset_Group_ID asset_group_id) 
 {
   sp->active_group = sp->groups + asset_group_id;
-  sp->active_group->first_asset_id = sp->asset_count;
+  sp->active_group->first_asset_id = Asset_ID{ sp->asset_count };
   sp->active_group->one_past_last_asset_id = sp->active_group->first_asset_id;
 }
 
@@ -75,10 +75,10 @@ end_asset_group(Karu_Packer* sp)
 }
 
 
-static U32
+static Asset_Bitmap_ID
 add_bitmap_asset(Karu_Packer* sp, Bitmap bitmap) {
   assert(sp->active_group);
-  ++sp->active_group->one_past_last_asset_id;
+  ++sp->active_group->one_past_last_asset_id.value;
   sp->active_asset_index = sp->asset_count++;
   
   Karu_Packer_Source* source = sp->sources + sp->active_asset_index;
@@ -92,17 +92,19 @@ add_bitmap_asset(Karu_Packer* sp, Bitmap bitmap) {
   asset->one_past_last_tag_index = asset->one_past_last_tag_index;
   
   
-  return sp->active_asset_index;
+  Asset_Bitmap_ID ret;
+  ret.value = sp->active_asset_index;
+  return ret;
 }
 
 
-static U32
+static Asset_Image_ID
 add_image_asset(Karu_Packer* sp, 
-                U32 bitmap_id,
+                Asset_Bitmap_ID bitmap_id,
                 Rect2 uv)
 {
   assert(sp->active_group);
-  ++sp->active_group->one_past_last_asset_id;
+  ++sp->active_group->one_past_last_asset_id.value;
   sp->active_asset_index = sp->asset_count++;
   
   Karu_Packer_Source* source = sp->sources + sp->active_asset_index;
@@ -115,7 +117,9 @@ add_image_asset(Karu_Packer* sp,
   asset->one_past_last_tag_index = asset->one_past_last_tag_index;
   
   
-  return sp->active_asset_index;
+  Asset_Image_ID ret;
+  ret.value = sp->active_asset_index;
+  return ret;
   
 }
 
@@ -131,7 +135,7 @@ end_sui_packer(Karu_Packer* sp, const char* filename) {
   U32 asset_group_array_size = sizeof(Sui_Asset_Group)*ASSET_GROUP_COUNT;
   
   Sui_Header header = {};
-  header.magic_value = SUI_MAGIC_VALUE;
+  header.magic_value = Sui_MAGIC_VALUE;
   header.asset_group_count = ASSET_GROUP_COUNT;
   header.asset_count = sp->asset_count;
   header.tag_count = sp->tag_count;

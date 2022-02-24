@@ -57,7 +57,7 @@ int main() {
   {
     
     begin_asset_group(sp, ASSET_GROUP_ATLASES);
-    U32 bitmap_id = add_bitmap_asset(sp, atlaser.bitmap);
+    Asset_Bitmap_ID bitmap_id = add_bitmap_asset(sp, atlaser.bitmap);
     end_asset_group(sp);
     
     begin_asset_group(sp, ASSET_GROUP_BULLET);
