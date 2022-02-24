@@ -19,11 +19,11 @@ struct Asset_Image {
 
 struct Asset {
   Asset_Type type;
-  union {
-  	Asset_Bitmap* bitmap;
-    Asset_Image * image;
-    // etc...
-  };
+  //union {
+  Asset_Bitmap* bitmap;
+  Asset_Image * image;
+  // etc...
+  //};
 };
 
 struct Asset_Group {
@@ -67,7 +67,8 @@ create_assets(Platform* pf, Gfx* gfx) {
   // TODO: check magic number
   
   // Allocate all possible slots for assets
-  ret.assets = push<Asset>(&ret.arena, sui_header.asset_count);
+  ret.assets = push_array<Asset>(&ret.arena, sui_header.asset_count);
+  ret.asset_count = sui_header.asset_count;
   
   
   for(U32 asset_group_index = 0; 
@@ -75,18 +76,31 @@ create_assets(Platform* pf, Gfx* gfx) {
       ++asset_group_index) 
   {
     Asset_Group* asset_group = ret.asset_groups + asset_group_index;
+    {
+      // Look for corresponding SUI_Asset_Group in file
+      SUI_Asset_Group sui_asset_group;
+      UMI offset_to_sui_asset_group = 
+        sui_header.offset_to_asset_groups + sizeof(SUI_Asset_Group)*asset_group_index;
+      
+      pf->read_file(&file, sizeof(SUI_Asset_Group), 
+                    offset_to_sui_asset_group, 
+                    &sui_asset_group);
+      
+      asset_group->first_asset_id = sui_asset_group.first_asset_id;
+      asset_group->one_past_last_asset_id = sui_asset_group.one_past_last_asset_id;
+    }
     
-    // Look for corresponding SUI_Asset_Group in file
-    SUI_Asset_Group sui_asset_group;
-    UMI offset_to_sui_asset_group = 
-      sui_header.offset_to_asset_groups + sizeof(SUI_Asset_Group)*asset_group_index;
-    pf->read_file(&file, sizeof(SUI_Asset_Group), 
-                  offset_to_sui_asset_group, 
-                  &sui_asset_group);
+#if 0
+    Asset* test1 = ret.assets + 0;
+    test1->bitmap = push<Asset_Bitmap>(&ret.arena);
+    
+    Asset* test2 = ret.assets + 1;
+    test2->image = push<Asset_Image>(&ret.arena);
+#endif
     
     // Go through each asset in the group
-    for (U32 asset_index = sui_asset_group.first_asset_id;
-         asset_index < sui_asset_group.one_past_last_asset_id;
+    for (U32 asset_index = asset_group->first_asset_id;
+         asset_index < asset_group->one_past_last_asset_id;
          ++asset_index) 
     {
       Asset* asset = ret.assets + asset_index;
@@ -166,6 +180,13 @@ get_bitmap(Game_Assets* ga, Asset_Bitmap_ID bitmap_id) {
   return asset->bitmap;
 }
 
+static Asset_Image*
+get_image(Game_Assets* ga, Asset_Image_ID image_id) {
+  Asset* asset = get_asset(ga, image_id.value);
+  assert(asset->type == ASSET_TYPE_IMAGE);
+  return asset->image;
+}
+
 static U32
 get_first_asset(Game_Assets* ga, Asset_Group_ID group_id) {
   Asset_Group* group = ga->asset_groups + group_id;
@@ -177,20 +198,17 @@ get_first_asset(Game_Assets* ga, Asset_Group_ID group_id) {
 
 static Asset_Bitmap_ID
 get_first_bitmap(Game_Assets* ga, Asset_Group_ID group_id) {
-  // TODO: assert?
+  // TODO: assert? Probably should loop through until we find the first correct asset type
   return {get_first_asset(ga, group_id)};
 }
 
 
-
-#if 0
-static Asset_Image*
-get_image(Game_Assets* ga, Asset_ID image_id) {
-  Asset* asset = get_asset(ga, image_id);
-  assert(asset->type == ASSET_TYPE_IMAGE);
-  return asset->image;
+static Asset_Image_ID
+get_first_image(Game_Assets* ga, Asset_Group_ID group_id) {
+  // TODO: assert? Probably should loop through until we find the first correct asset type
+  return {get_first_asset(ga, group_id)};
 }
 
-#endif
+
 
 #endif //GAME_ASSETS_H

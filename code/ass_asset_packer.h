@@ -72,7 +72,6 @@ end_asset_group(SUI_Packer* sp)
 static Asset_Bitmap_ID
 add_bitmap_asset(SUI_Packer* sp, Bitmap bitmap) {
   assert(sp->active_group);
-  
   ++sp->active_group->one_past_last_asset_id;
   
   U32 index = sp->asset_count++;
@@ -95,6 +94,9 @@ add_image_asset(SUI_Packer* sp,
                 Asset_Bitmap_ID bitmap_id,
                 Rect2 uv)
 {
+  assert(sp->active_group);
+  ++sp->active_group->one_past_last_asset_id;
+  
   U32 index = sp->asset_count++;
   
   SUI_Asset_Source* source = sp->sources + index;
@@ -128,12 +130,14 @@ end_sui_packer(SUI_Packer* sp, const char* filename) {
   header.offset_to_asset_groups = header.offset_to_assets + asset_array_size;
   
   fwrite(&header, sizeof(header), 1, file);
-  
   fseek(file, asset_array_size + asset_group_array_size, SEEK_CUR);
   
   for(U32 i = 0; i < header.asset_count; ++i) {
     SUI_Asset* sui_asset = sp->assets + i;
     SUI_Asset_Source* source = sp->sources + i;
+    
+    
+    
     
     sui_asset->offset_to_data = ftell(file);
     switch(sui_asset->type) {

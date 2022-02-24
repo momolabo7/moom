@@ -52,21 +52,27 @@ int main() {
   ass_write_file("test.png", png_to_write_memory);
 #endif
   
-  SUI_Packer sp = begin_sui_packer();
+  SUI_Packer sp_ = begin_sui_packer();
+  SUI_Packer* sp = &sp_;
   {
     
     //begin_asset_group(&sp);
 #if 0
-    Asset_Bitmap_ID bitmap_id = add_bitmap_asset(&sp, ASSET_ATLAS, atlaser.bitmap);
-    add_image_asset(&sp, ASSET_BULLET_CIRCLE, bitmap_id, 
+    Asset_Bitmap_ID bitmap_id = add_bitmap_asset(sp, ASSET_ATLAS, atlaser.bitmap);
+    add_image_asset(sp, ASSET_BULLET_CIRCLE, bitmap_id, 
                     get_uv(ai_bullet_circle, atlaser.bitmap));
-    add_image_asset(&sp, ASSET_BULLET_DOT, bitmap_id, 
+    add_image_asset(sp, ASSET_BULLET_DOT, bitmap_id, 
                     get_uv(ai_bullet_circle, atlaser.bitmap));
 #else 
     
-    begin_asset_group(&sp, ASSET_GROUP_ATLASES);
-    add_bitmap_asset(&sp, atlaser.bitmap);
-    end_asset_group(&sp);
+    begin_asset_group(sp, ASSET_GROUP_ATLASES);
+    Asset_Bitmap_ID bitmap_id = add_bitmap_asset(sp, atlaser.bitmap);
+    end_asset_group(sp);
+    
+    begin_asset_group(sp, ASSET_GROUP_BULLET);
+    add_image_asset(sp, bitmap_id, get_uv(ai_bullet_circle, atlaser.bitmap));
+    add_image_asset(sp, bitmap_id, get_uv(ai_bullet_dot, atlaser.bitmap));
+    end_asset_group(sp);
     
 #if 0
     add_image_asset(&sp, bitmap_id, 
@@ -82,7 +88,7 @@ int main() {
 #endif
     //end_asset_group(&sp)
   }
-  end_sui_packer(&sp, "test.sui");
+  end_sui_packer(sp, "test.sui");
   
   
 }
