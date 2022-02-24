@@ -33,7 +33,7 @@ struct Asset_Tag_ID { U32 value; };
 #pragma pack(push,1)
 
 #define SUI_CODE(a, b, c, d) (((U32)(a) << 0) | ((U32)(b) << 8) | ((U32)(c) << 16) | ((U32)(d) << 24))
-#define SUI_MAGIC_VALUE SUII_CODE('k', 'a', 'r', 'u');
+#define SUI_MAGIC_VALUE SUI_CODE('k', 'a', 'r', 'u');
 
 struct Sui_Asset_Group {
   Asset_ID first_asset_id;

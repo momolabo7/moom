@@ -135,7 +135,7 @@ end_sui_packer(Karu_Packer* sp, const char* filename) {
   U32 asset_group_array_size = sizeof(Sui_Asset_Group)*ASSET_GROUP_COUNT;
   
   Sui_Header header = {};
-  header.magic_value = Sui_MAGIC_VALUE;
+  header.magic_value = SUI_MAGIC_VALUE;
   header.asset_group_count = ASSET_GROUP_COUNT;
   header.asset_count = sp->asset_count;
   header.tag_count = sp->tag_count;
