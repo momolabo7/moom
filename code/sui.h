@@ -13,8 +13,8 @@
 #define SUI_MAGIC_VALUE SUI_CODE('k', 'a', 'r', 'u');
 
 struct Sui_Asset_Group {
-  U32 first_asset_id;
-  U32 one_past_last_asset_id;
+  U32 first_asset_index;
+  U32 one_past_last_asset_index;
 };
 
 struct Sui_Header {

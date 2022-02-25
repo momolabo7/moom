@@ -44,6 +44,11 @@ struct Karu_Packer {
 static Karu_Packer
 begin_sui_packer() {
   Karu_Packer ret = {};
+  
+  
+  ret.asset_count = 1; // reserve for null asset
+  ret.tag_count = 1; // reserve to null tag
+  
   return ret;
 }
 
@@ -64,8 +69,8 @@ static void
 begin_group(Karu_Packer* sp, Asset_Group_ID group_id) 
 {
   sp->active_group = sp->groups + group_id;
-  sp->active_group->first_asset_id = sp->asset_count;
-  sp->active_group->one_past_last_asset_id = sp->active_group->first_asset_id;
+  sp->active_group->first_asset_index = sp->asset_count;
+  sp->active_group->one_past_last_asset_index = sp->active_group->first_asset_index;
 }
 
 static void
@@ -83,7 +88,7 @@ static Karu_Packer_Added_Asset
 add_asset(Karu_Packer* sp, Asset_Type type) {
   assert(sp->active_group);
   U32 asset_index = sp->asset_count++;
-  ++sp->active_group->one_past_last_asset_id;
+  ++sp->active_group->one_past_last_asset_index;
   sp->active_asset_index = asset_index;
   
   Sui_Asset* asset = sp->assets + asset_index;

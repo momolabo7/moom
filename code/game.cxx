@@ -91,9 +91,11 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
       perm->tmp_increase = true;
     }
     
-    RGBA colors = create_rgba(0.f, 0.f, 0.f, 1.f);
+    RGBA colors = create_rgba(1.f, 1.f, 1.f, 1.f);
+#if 0
     HSL hsl = create_hsl(perm->tmp_delta, 1.f, 0.5f);
     colors.rgb = hsl_to_rgb(hsl);
+#endif
     
     M44 s = create_m44_scale(600.f, 600.f, 10.f);
     M44 r = create_m44_rotation_z(perm->tmp_rot += dt);
@@ -103,7 +105,12 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     {
       Game_Assets* game_assets = &perm->game_assets;
       
-      Asset_Image_ID image_id = get_first_image(game_assets, ASSET_GROUP_BULLET);
+      Asset_Vector m = {};
+      Asset_Vector w = {};
+      m.e[ASSET_TAG_TYPE_MOOD] = 0.6f;
+      w.e[ASSET_TAG_TYPE_MOOD] = 1.f;
+      
+      Asset_Image_ID image_id = get_best_image(game_assets, ASSET_GROUP_BULLET, &m, &w);
       Asset_Image* image = get_image(game_assets, image_id);
       Asset_Bitmap* bitmap = get_bitmap(game_assets, image->bitmap_id);
       

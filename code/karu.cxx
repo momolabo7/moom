@@ -62,9 +62,9 @@ int main() {
     
     begin_group(sp, ASSET_GROUP_BULLET);
     add_image(sp, bitmap_asset_id, karu_get_uv(ai_bullet_circle, atlaser.bitmap));
-    add_tag(sp, ASSET_TAG_MOOD, 0.f); 
+    add_tag(sp, ASSET_TAG_TYPE_MOOD, 0.f); 
     add_image(sp, bitmap_asset_id, karu_get_uv(ai_bullet_dot, atlaser.bitmap));
-    add_tag(sp, ASSET_TAG_MOOD, 1.f); 
+    add_tag(sp, ASSET_TAG_TYPE_MOOD, 1.f); 
     end_group(sp);
     
     //end_asset_group(&sp)

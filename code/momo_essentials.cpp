@@ -139,6 +139,34 @@ abs_of(S64 x) {
   return (x ^ y)-y;
 }
 
+static constexpr F32 
+sign_of(F32 x) {
+  return x >= 0 ? 1.f : -1.f;
+}
+
+static constexpr F64
+sign_of(F64 x) {
+  return x >= 0 ? 1.0 : -1.0;
+}
+
+
+static constexpr S8   
+sign_of(S8 x) {
+  return x >= 0 ? 1 : -1;
+}
+static constexpr S16  
+sign_of(S16 x) {
+  return x >= 0 ? 1 : -1;
+}
+static constexpr S32  
+sign_of(S32 x) {
+  return x >= 0 ? 1 : -1;
+}
+static constexpr S64  
+sign_of(S64 x) {
+  return x >= 0 ? 1 : -1;
+}
+
 template<typename T> static constexpr T
 lerp(T s, T e, F32 f) { 
   return (T)(s + (e-s) * f); 

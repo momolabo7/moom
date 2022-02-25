@@ -4,7 +4,9 @@
 #define GAME_ASSET_TYPES_H
 
 enum Asset_Tag_Type {
-  ASSET_TAG_MOOD,
+  ASSET_TAG_TYPE_MOOD,
+  
+  ASSET_TAG_TYPE_COUNT,
 };
 
 enum Asset_Group_ID {

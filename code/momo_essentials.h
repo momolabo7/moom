@@ -201,6 +201,13 @@ static constexpr S16 abs_of(S16 value);
 static constexpr S32 abs_of(S32 value);
 static constexpr S64 abs_of(S64 value);
 
+static constexpr F32 sign_of(F32 value);
+static constexpr F64 sign_of(F64 value);
+static constexpr S8  sign_of(S8 value);
+static constexpr S16 sign_of(S16 value);
+static constexpr S32 sign_of(S32 value);
+static constexpr S64 sign_of(S64 value);
+
 
 // NOTE(Momo): Lerp is tricky because the 'f' variable the 'percentage'.
 // and must be of a floating point type. I'm not sure if I want to go into
@@ -277,7 +284,6 @@ struct Memory  {
     U8* data_u8;
   };
   UMI size;  
-  
 };
 static B32 is_ok(Memory);
 

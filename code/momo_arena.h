@@ -31,8 +31,14 @@ static void  clear(Arena* a);
 static void* push_block(Arena* a, UMI size, UMI align = 4);
 static Arena partition(Arena* a, UMI size);
 static UMI remaining_of(Arena* a);
+
+// NOTE(Momo): Why do these return the same type? :(
+// Is there a way to avoid pointers?
 template<typename T> static T* push(Arena* a, UMI align = 4); 
 template<typename T> static T* push_array(Arena* a, UMI num, UMI align = 4);
+
+
+// Temporary memory API
 static Arena_Marker mark(Arena* arena);
 static void		     revert(Arena_Marker marker);
 
