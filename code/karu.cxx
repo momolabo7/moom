@@ -22,7 +22,7 @@ int main() {
   defer { karu_free(&memory); };
   
   Arena arena = create_arena(memory.data, memory.size);
-  TTF font = karu_load_font(asset_dir("nokiafc22.ttf"), &arena);
+  TTF loaded_ttf = karu_load_font(asset_dir("nokiafc22.ttf"), &arena);
   
   Karu_Atlas atlaser = begin_atlas_builder(512, 512);
   Karu_Atlas_Image ai_bullet_circle = { asset_dir("bullet_circle.png") }; 
@@ -35,17 +35,25 @@ int main() {
   push_image(&atlaser, &ai_player_black);
   push_image(&atlaser, &ai_player_white);
   
-  
-  {
-    U32 interested_cps[] = { 32,65,66,67,68,69,70 };
-    push_font(&atlaser, &font, 
-              interested_cps, 
-              array_count(interested_cps),
-              128.f);
-  }
-  end_atlas_builder(&atlaser, &arena);
+  U32 interested_cps[] = { 32,65,66,67,68,69,70 };
   
 #if 0
+  Karu_Atlas_Font ai_font = {};
+  ai_font.loaded_ttf = &loaded_ttf;
+  ai_font.codepoints = interested_cps;
+  ai_font.codepoint_count = array_count(interested_cps);
+  ai_font.raster_font_height = 128.f;
+#endif
+  
+#if 0
+  push_font(&atlaser, &loaded_ttf, 
+            interested_cps, 
+            array_count(interested_cps),
+            128.f);
+#endif
+  end_atlas_builder(&atlaser, &arena);
+  
+#if 1
   karu_log("Writing test png file...\n");
   Memory png_to_write_memory = write_bitmap_as_png(atlaser.bitmap, &arena);
   assert(is_ok(png_to_write_memory));

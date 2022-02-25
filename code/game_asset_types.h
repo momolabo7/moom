@@ -6,6 +6,7 @@
 enum Asset_Tag_Type {
   ASSET_TAG_TYPE_MOOD,
   
+  
   ASSET_TAG_TYPE_COUNT,
 };
 
@@ -14,6 +15,7 @@ enum Asset_Group_ID {
   
   ASSET_GROUP_BULLET,
   ASSET_GROUP_PLAYER,
+  ASSET_GROUP_FONTS,
   
   ASSET_GROUP_COUNT,
 };

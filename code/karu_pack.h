@@ -111,7 +111,7 @@ add_bitmap(Karu_Packer* sp, Bitmap bitmap) {
   auto added_asset = add_asset(sp, ASSET_TYPE_BITMAP);
   added_asset.source->bitmap.width = bitmap.width;
   added_asset.source->bitmap.height = bitmap.height;
-  
+  added_asset.source->bitmap.pixels = bitmap.pixels;
   return added_asset.asset_index;
 }
 
@@ -154,7 +154,8 @@ write_sui(Karu_Packer* sp, const char* filename) {
   
   fseek(file, offset_to_asset_data, SEEK_CUR);
   
-  for(U32 i = 0; i < header.asset_count; ++i) {
+  // Skip 0 for null asset
+  for(U32 i = 1; i < header.asset_count; ++i) {
     Sui_Asset* sui_asset = sp->assets + i;
     Karu_Packer_Source* source = sp->sources + i;
     

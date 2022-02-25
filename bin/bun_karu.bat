@@ -20,6 +20,6 @@ cl %CommonCompilerFlags% %CodeDir%\karu.cxx
 
 if NOT %ERRORLEVEL% == 0 goto exit
 
-call ass.exe
+call karu.exe
 
 popd
