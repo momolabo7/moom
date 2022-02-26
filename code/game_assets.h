@@ -8,7 +8,7 @@ struct Asset_Bitmap_ID { U32 value; };
 struct Asset_Font_ID { U32 value; }; 
 struct Asset_Image_ID { U32 value; };
 
-struct Asset_Bitmap {
+struct Bitmap_Asset {
   U32 gfx_bitmap_id; // TODO: tie in with renderer? 
   
   U32 width;
@@ -16,9 +16,19 @@ struct Asset_Bitmap {
   U32* pixels;
 };
 
-struct Asset_Image {
+struct Image_Asset {
   Rect2 uv;
   Asset_Bitmap_ID bitmap_id;
+};
+
+struct Font_Asset {
+  // TODO(Momo): Complete this next
+  
+  U32 one_past_highest_codepoint;
+  U16* unicode_map;
+  
+  
+  
 };
 
 struct Asset {
@@ -27,8 +37,8 @@ struct Asset {
   
   Asset_Type type;
   union {
-    Asset_Bitmap* bitmap;
-    Asset_Image*  image;
+    Bitmap_Asset* bitmap;
+    Image_Asset*  image;
   };
 };
 
@@ -159,7 +169,7 @@ create_assets(Platform* pf, Gfx* gfx) {
                         &sui_bitmap);
           
           U32 bitmap_size = sui_bitmap.width * sui_bitmap.height * 4;
-          asset->bitmap = push<Asset_Bitmap>(&ret.arena);
+          asset->bitmap = push<Bitmap_Asset>(&ret.arena);
           asset->bitmap->width = sui_bitmap.width;
           asset->bitmap->height = sui_bitmap.height;
           asset->bitmap->pixels = (U32*)push_block(&ret.arena, bitmap_size);
@@ -184,9 +194,16 @@ create_assets(Platform* pf, Gfx* gfx) {
                         sui_asset.offset_to_data, 
                         &sui_image);
           
-          asset->image = push<Asset_Image>(&ret.arena);
+          asset->image = push<Image_Asset>(&ret.arena);
           asset->image->bitmap_id.value = sui_image.bitmap_asset_id;
           asset->image->uv = sui_image.uv;
+        } break;
+        case ASSET_TYPE_FONT: {
+          Sui_Font sui_font;
+          pf->read_file(&file, sizeof(Sui_Font), 
+                        sui_asset.offset_to_data, 
+                        &sui_font);
+          
         } break;
       }
       
@@ -276,7 +293,7 @@ _get_best_asset_of_type(Game_Assets* ga,
   return ret;
 }
 
-static Asset_Bitmap*
+static Bitmap_Asset*
 get_bitmap(Game_Assets* ga, Asset_Bitmap_ID bitmap_id) {
   Asset* asset = _get_asset(ga, bitmap_id.value);
   if(asset->type != ASSET_TYPE_BITMAP) 
@@ -284,7 +301,7 @@ get_bitmap(Game_Assets* ga, Asset_Bitmap_ID bitmap_id) {
   return asset->bitmap;
 }
 
-static Asset_Image*
+static Image_Asset*
 get_image(Game_Assets* ga, Asset_Image_ID image_id) {
   Asset* asset = _get_asset(ga, {image_id.value});
   if(asset->type != ASSET_TYPE_IMAGE)

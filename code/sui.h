@@ -57,7 +57,15 @@ struct Sui_Font_Glyph {
 };
 
 struct Sui_Font {
-  U32 stuff;
+  // TODO: Maybe add 'lowest codepoint'?
+  U32 one_past_highest_codepoint;
+  U32 glyph_count;
+  
+  // Data is: 
+  // 
+  // Sui_Font_Glyph glyphs[glyph_count]
+  // F32 horizontal_advance[glyph_count][glyph_count]
+  //
 };
 
 struct Sui_Bitmap {

@@ -111,8 +111,8 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
       w.e[ASSET_TAG_TYPE_MOOD] = 1.f;
       
       Asset_Image_ID image_id = get_best_image(game_assets, ASSET_GROUP_BULLET, &m, &w);
-      Asset_Image* image = get_image(game_assets, image_id);
-      Asset_Bitmap* bitmap = get_bitmap(game_assets, image->bitmap_id);
+      auto* image = get_image(game_assets, image_id);
+      auto* bitmap = get_bitmap(game_assets, image->bitmap_id);
       
       //      draw_sprite(gfx, colors, t*r*s, bitmap_asset->gfx_bitmap_id);
       draw_subsprite(gfx, colors, t*r*s, 

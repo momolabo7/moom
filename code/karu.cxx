@@ -24,38 +24,23 @@ int main() {
   Arena arena = create_arena(memory.data, memory.size);
   TTF loaded_ttf = karu_load_font(asset_dir("nokiafc22.ttf"), &arena);
   
-  Karu_Atlas atlaser = begin_atlas_builder(512, 512);
-  Karu_Atlas_Image ai_bullet_circle = { asset_dir("bullet_circle.png") }; 
-  Karu_Atlas_Image ai_bullet_dot =    { asset_dir("bullet_dot.png") }; 
-  Karu_Atlas_Image ai_player_black =  { asset_dir("player_black.png") }; 
-  Karu_Atlas_Image ai_player_white =  { asset_dir("player_white.png") }; 
-  
-  push_image(&atlaser, &ai_bullet_circle);
-  push_image(&atlaser, &ai_bullet_dot);
-  push_image(&atlaser, &ai_player_black);
-  push_image(&atlaser, &ai_player_white);
+  Karu_Atlas atlas = begin_atlas_builder(512, 512);
+  U32 at_bullet_circle = push_image(&atlas, asset_dir("bullet_circle.png"));
+  U32 at_bullet_dot = push_image(&atlas, asset_dir("bullet_dot.png"));
+  U32 at_player_black = push_image(&atlas, asset_dir("player_black.png"));
+  U32 at_player_white = push_image(&atlas, asset_dir("player_white.png"));
   
   U32 interested_cps[] = { 32,65,66,67,68,69,70 };
   
-#if 0
-  Karu_Atlas_Font ai_font = {};
-  ai_font.loaded_ttf = &loaded_ttf;
-  ai_font.codepoints = interested_cps;
-  ai_font.codepoint_count = array_count(interested_cps);
-  ai_font.raster_font_height = 128.f;
-#endif
+  U32 at_font_id = push_font(&atlas, &loaded_ttf, 
+                             interested_cps, array_count(interested_cps), 
+                             128.f);
   
-#if 0
-  push_font(&atlaser, &loaded_ttf, 
-            interested_cps, 
-            array_count(interested_cps),
-            128.f);
-#endif
-  end_atlas_builder(&atlaser, &arena);
+  end_atlas_builder(&atlas, &arena);
   
 #if 1
   karu_log("Writing test png file...\n");
-  Memory png_to_write_memory = write_bitmap_as_png(atlaser.bitmap, &arena);
+  Memory png_to_write_memory = write_bitmap_as_png(atlas.bitmap, &arena);
   assert(is_ok(png_to_write_memory));
   karu_write_file("test.png", png_to_write_memory);
 #endif
@@ -65,17 +50,20 @@ int main() {
   {
     
     begin_group(sp, ASSET_GROUP_ATLASES);
-    U32 bitmap_asset_id = add_bitmap(sp, atlaser.bitmap);
+    U32 bitmap_asset_id = add_bitmap(sp, atlas.bitmap);
     end_group(sp);
     
     begin_group(sp, ASSET_GROUP_BULLET);
-    add_image(sp, bitmap_asset_id, karu_get_uv(ai_bullet_circle, atlaser.bitmap));
+    add_image(sp, bitmap_asset_id, &atlas, at_bullet_circle); 
     add_tag(sp, ASSET_TAG_TYPE_MOOD, 0.f); 
-    add_image(sp, bitmap_asset_id, karu_get_uv(ai_bullet_dot, atlaser.bitmap));
+    add_image(sp, bitmap_asset_id, &atlas, at_bullet_dot); 
     add_tag(sp, ASSET_TAG_TYPE_MOOD, 1.f); 
     end_group(sp);
     
-    //end_asset_group(&sp)
+    begin_group(sp, ASSET_GROUP_FONTS);
+    add_font(sp, bitmap_asset_id, &atlas, at_font_id);
+    end_group(sp);
+    
   }
   write_sui(sp, "test.sui");
   
