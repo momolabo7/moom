@@ -21,8 +21,10 @@ int main() {
   Memory memory = karu_malloc(MB(10));
   defer { karu_free(&memory); };
   
-  Arena arena = create_arena(memory.data, memory.size);
-  TTF loaded_ttf = karu_load_font(asset_dir("nokiafc22.ttf"), &arena);
+  Arena _arena = create_arena(memory.data, memory.size);
+  Arena* arena = &_arena;
+  
+  TTF loaded_ttf = karu_load_font(asset_dir("nokiafc22.ttf"), arena);
   
   Karu_Atlas atlas = begin_atlas_builder(512, 512);
   U32 at_bullet_circle = push_image(&atlas, asset_dir("bullet_circle.png"));
@@ -36,11 +38,11 @@ int main() {
                              interested_cps, array_count(interested_cps), 
                              128.f);
   
-  end_atlas_builder(&atlas, &arena);
+  end_atlas_builder(&atlas, arena);
   
 #if 1
   karu_log("Writing test png file...\n");
-  Memory png_to_write_memory = write_bitmap_as_png(atlas.bitmap, &arena);
+  Memory png_to_write_memory = write_bitmap_as_png(atlas.bitmap, arena);
   assert(is_ok(png_to_write_memory));
   karu_write_file("test.png", png_to_write_memory);
 #endif
@@ -65,6 +67,6 @@ int main() {
     end_group(sp);
     
   }
-  write_sui(sp, "test.sui");
+  write_sui(sp, "test.sui", arena);
   
 }
