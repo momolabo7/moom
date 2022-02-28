@@ -50,7 +50,7 @@ _add_asset(Karu_Packer* sp, Karu_Source_Type type) {
   
   Sui_Asset* asset = sp->assets + asset_index;
   asset->first_tag_index = sp->tag_count;
-  asset->one_past_last_tag_index = asset->one_past_last_tag_index;
+  asset->one_past_last_tag_index = asset->first_tag_index;
   
   Karu_Source* source = sp->sources + asset_index;
   source->type = type;
@@ -279,6 +279,6 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
   
   fseek(file, header.offset_to_tags, SEEK_SET);
   fwrite(sp->tags, asset_tag_array_size, 1, file); 
-  
+  o
 }
 

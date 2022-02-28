@@ -8,6 +8,7 @@ Momo
 Engine
 	Asset system
 		Fonts
+      Filter out invalid fonts from asset file (1)
 	Sound
 	Mutithread support
   

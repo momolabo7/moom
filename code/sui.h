@@ -64,7 +64,7 @@ struct Sui_Font {
   // Data is: 
   // 
   // Sui_Font_Glyph glyphs[glyph_count]
-  // F32 horizontal_advance[glyph_count][glyph_count]
+  // F32 horizontal_advances[glyph_count][glyph_count]
   //
 };
 
