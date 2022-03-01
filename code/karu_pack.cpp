@@ -193,7 +193,20 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
           continue;
         Sui_Font sui_font = {};
         sui_font.one_past_highest_codepoint = highest_codepoint + 1;
-        sui_font.glyph_count = atlas_font->codepoint_count;
+        
+        // Do a dumb first pass on all rects to filter out invalid rects
+        U32 glyph_count = 0;
+        for (U32 rect_index = 0;
+             rect_index < atlas_font->rect_count;
+             ++rect_index) 
+        {
+          auto* glyph_rect = atlas_font->glyph_rects + rect_index;
+          if (glyph_rect->w == 0 || glyph_rect->h == 0) {
+            continue;
+          }
+          ++glyph_count;
+        }
+        sui_font.glyph_count = glyph_count;
         fwrite(&sui_font, sizeof(sui_font), 1, file);
         
         // push glyphs
@@ -202,6 +215,10 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
              ++rect_index) 
         {
           auto* glyph_rect = atlas_font->glyph_rects + rect_index;
+          if (glyph_rect->w == 0 || glyph_rect->h == 0) {
+            continue;
+          }
+          
           auto* glyph_rect_context = atlas_font->glyph_rect_contexts + rect_index;
           
           Sui_Font_Glyph sui_glyph = {};
@@ -222,7 +239,6 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
         // push horizontal advances
         // they are scaled to 1 pixel scale.
         F32 pixel_scale = get_scale_for_pixel_height(loaded_ttf, 1.f);
-        
         for (U32 cpi1 = 0; cpi1 < atlas_font->codepoint_count; ++cpi1) {
           for (U32 cpi2 = 0; cpi2 < atlas_font->codepoint_count; ++cpi2) {
             U32 cp1 = atlas_font->codepoints[cpi1];
@@ -279,6 +295,5 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
   
   fseek(file, header.offset_to_tags, SEEK_SET);
   fwrite(sp->tags, asset_tag_array_size, 1, file); 
-  o
 }
 

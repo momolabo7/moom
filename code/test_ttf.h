@@ -18,9 +18,10 @@ void test_ttf() {
   defer { free(memory); };
   
   
-  Arena main_arena = create_arena(memory, memory_size);
+  Arena _arena = create_arena(memory, memory_size);
+  Arena* arena = &_arena;
   Memory ttf_memory = 
-    test_read_file_to_memory(&main_arena, 
+    test_read_file_to_memory(arena, 
 #if 0 
                              test_assets_dir("nokiafc22.ttf")                                          
 #else                                               
@@ -39,17 +40,17 @@ void test_ttf() {
     for (U32 codepoint = 65; codepoint <= 65+26; ++codepoint) {
       //for (U32 codepoint = 87; codepoint <= 87; ++codepoint) {
       test_log("rasterizing codepoint %X\n", codepoint);
-      create_scratch(scratch, &main_arena);
+      set_arena_reset_point(arena);
       
       U32 glyph_index = get_glyph_index_from_codepoint(&ttf, codepoint);
-      Bitmap codepoint_image = rasterize_glyph(&ttf, glyph_index, scale_factor, scratch);
+      Bitmap codepoint_image = rasterize_glyph(&ttf, glyph_index, scale_factor, arena);
       {
         U8 buffer[256];
         Str8Bld strbld= create_str8bld(buffer, 256); 
         strbld.push_format(str8_from_lit("%d.png"), codepoint);
         strbld.push_C8(0);
         
-        Memory image_mem = write_bitmap_as_png(codepoint_image, scratch);
+        Memory image_mem = write_bitmap_as_png(codepoint_image, arena);
         test_write_memory_to_file(image_mem, (const char*)strbld.e);
       }
     }
