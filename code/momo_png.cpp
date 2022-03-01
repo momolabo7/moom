@@ -184,9 +184,9 @@ _png_huffman_compute(_PNG_Huffman* h,
   }
   
   // 2. Numerical value of smallest code for each code length
-  set_arena_reset_point(arena);
+  create_scratch(scratch, arena);
   
-  U16* len_offset_table = push_array<U16>(arena, max_lengths);
+  U16* len_offset_table = push_array<U16>(scratch, max_lengths);
   zero_memory(len_offset_table, max_lengths * sizeof(U16));
   
   for (U32 len = 1; len < max_lengths-1; ++len) {
@@ -229,7 +229,7 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
   
   U8 BFINAL = 0;
   while(BFINAL == 0){
-    set_arena_reset_point(arena);
+    create_scratch(scratch, arena);
     
     BFINAL = (U8)consume_bits(src_stream, 1);
     U16 BTYPE = (U8)consume_bits(src_stream, 2);
@@ -328,7 +328,7 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
                                7);
           
           
-          U16* lit_dist_codes = push_array<U16>(arena, HDIST + HLIT);
+          U16* lit_dist_codes = push_array<U16>(scratch, HDIST + HLIT);
           
           // NOTE(Momo): Decode
           // Loop until end of block code recognize
@@ -795,7 +795,7 @@ create_bitmap(PNG* png, Arena* arena)
   U8* image_stream_memory = push_array<U8>(arena, image_size);
   ctx.image_stream = create_stream(image_stream_memory, image_size);
   
-  set_arena_reset_point(arena);
+  create_scratch(scratch, arena);
   
   U32 unfiltered_size = png->width * png->height * PNG_CHANNELS + png->height;
   U8* unfiltered_image_stream_memory = push_array<U8>(arena, unfiltered_size);

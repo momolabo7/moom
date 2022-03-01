@@ -683,13 +683,13 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
     pixels[i] = 0x00000000;
   }
   
-  set_arena_reset_point(arena);
+  create_scratch(scratch, arena);
   
-  auto outline = _ttf_get_glyph_outline(ttf, glyph_index, arena);
-  auto paths = _ttf_get_paths_from_glyph_outline(outline, arena);
+  auto outline = _ttf_get_glyph_outline(ttf, glyph_index, scratch);
+  auto paths = _ttf_get_paths_from_glyph_outline(outline, scratch);
   
   // generate scaled edges based on points
-  auto* edges = push_array<_TTF_Edge>(arena, paths.vertex_count);
+  auto* edges = push_array<_TTF_Edge>(scratch, paths.vertex_count);
   assert(edges);
   zero_range(edges, paths.vertex_count);
   
@@ -740,7 +740,7 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
             });
   
   // create an 'active edges list'
-  auto active_edges = create_list(push_array<_TTF_Edge*>(arena, edge_count), edge_count);
+  auto active_edges = create_list(push_array<_TTF_Edge*>(scratch, edge_count), edge_count);
   
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 

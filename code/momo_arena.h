@@ -17,7 +17,9 @@ struct Arena_Marker {
   operator Arena*();
 };
 
-// Standard Linear arena
+// Standard simple arena that will ALWAYS
+// push memory that is aligned to 16 bytes because of
+// SIMD purposes (we assume that you ALWAYS care)
 struct Arena{
 	U8* memory;
 	UMI pos;
@@ -45,7 +47,7 @@ static void		     revert(Arena_Marker marker);
 //#define Arena_Boot(type, member, memory, memory_size) \
 //(type*)Arena_BootBlock(sizeof(type), OffsetOf(type, member), (memory), (memory_size)) 
 
-#define set_arena_reset_point(arena) auto ttt = mark(arena); defer{revert(ttt);};
+#define create_scratch(name, arena) auto name = mark(arena); defer{revert(name);};
 
 #include "momo_arena.cpp"
 
