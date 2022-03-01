@@ -3,20 +3,6 @@
 #include "karu.h"
 
 
-// TODO(Momo): We should really let Atlaser generate the
-// UV coodinates of each item for us instead of
-// manually converting outside
-static Rect2 
-karu_get_uv(Karu_Atlas_Image img, Bitmap bitmap) {
-  Rect2 ret = {};
-  ret.min.x = (F32)img.rect->x / bitmap.width;
-  ret.min.y = (F32)img.rect->y / bitmap.height;
-  ret.max.x = (F32)(img.rect->x+img.rect->w) / bitmap.width;
-  ret.max.y = (F32)(img.rect->y+img.rect->h) / bitmap.height;
-  return ret;
-}
-
-
 int main() {
   Memory memory = karu_malloc(MB(10));
   defer { karu_free(&memory); };

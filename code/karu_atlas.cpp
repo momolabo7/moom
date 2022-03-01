@@ -1,11 +1,14 @@
 
+
+
 static U32
 push_image(Karu_Atlas* ab, const char* filename) {
-  assert(ab->image_count < array_count(ab->images));
-  U32 index = ab->image_count++;
+  assert(ab->entry_count < array_count(ab->entries));
+  U32 index = ab->entry_count++;
   
-  Karu_Atlas_Image* image = ab->images + index;
-  image->filename = filename;
+  Karu_Atlas_Entry* entry = ab->entries + index;
+  entry->type = KARU_ATLAS_ENTRY_TYPE_IMAGE;
+  entry->image.filename = filename;
   
   return index;
 }
@@ -18,14 +21,16 @@ push_font(Karu_Atlas* ab,
           U32 codepoint_count,
           F32 raster_font_height) 
 {
-  assert(ab->font_count < array_count(ab->fonts));
-  U32 index = ab->font_count++;
+  assert(ab->entry_count < array_count(ab->entries));
+  U32 index = ab->entry_count++;
   
-  Karu_Atlas_Font* font = ab->fonts + index;
-  font->loaded_ttf = loaded_ttf;
-  font->codepoints = codepoints;
-  font->codepoint_count = codepoint_count;
-  font->raster_font_height = raster_font_height;
+  Karu_Atlas_Entry* entry = ab->entries + index;
+  entry->type = KARU_ATLAS_ENTRY_TYPE_FONT;
+  
+  entry->font.loaded_ttf = loaded_ttf;
+  entry->font.codepoints = codepoints;
+  entry->font.codepoint_count = codepoint_count;
+  entry->font.raster_font_height = raster_font_height;
   
   return index;
 }
@@ -52,11 +57,21 @@ end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
   
   // Count the amount of rects
   U32 rect_count = 0;
-  for(U32 i = 0; i < ab->font_count; ++i) {
-    Karu_Atlas_Font* entry = ab->fonts + i;
-    rect_count += entry->codepoint_count;
+  for (U32 entry_index = 0; 
+       entry_index < ab->entry_count; 
+       ++entry_index) 
+  {
+    auto* entry = ab->entries + entry_index;
+    switch(entry->type) {
+      case KARU_ATLAS_ENTRY_TYPE_IMAGE: {
+        ++rect_count;
+      } break;
+      case KARU_ATLAS_ENTRY_TYPE_FONT: {
+        rect_count += entry->font.codepoint_count;
+      } break;
+    }
   }
-  rect_count += ab->image_count;
+  
   
   if (rect_count == 0) return; 
   
@@ -68,65 +83,74 @@ end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
   U32 rect_index = 0;
   U32 context_index = 0;
   
-  // process image entries
-  for (U32 i = 0; i < ab->image_count; ++i) {
-    set_arena_reset_point(arena);
-    
-    Karu_Atlas_Image* entry = ab->images + i;
-    
-    Memory file_memory = karu_read_file(entry->filename, arena);
-    assert(is_ok(file_memory));
-    
-    PNG png = create_png(file_memory);
-    assert(is_ok(&png));
-    assert(png.width != 0 && png.height != 0);
-    
-    auto* context = contexts + context_index++;
-    context->type = ATLASER_RECT_CONTEXT_TYPE_IMAGE;
-    context->image.entry = entry;
-    
-    RP_Rect* rect = rects + rect_index++;
-    rect->w = png.width;
-    rect->h = png.height;
-    rect->user_data = context;
-    
-    entry->rect = rect;
-    entry->rect_context = &context->image;
-  }
   
-  // process font entries
-  for (U32 i = 0; i < ab->font_count; ++i) {
-    set_arena_reset_point(arena);
-    
-    Karu_Atlas_Font* entry = ab->fonts + i;
-    
-    TTF* ttf = entry->loaded_ttf;
-    F32 s = get_scale_for_pixel_height(ttf, entry->raster_font_height);
-    
-    // grab the slice of RP_Rects that belongs to this font
-    entry->glyph_rects = rects + rect_index;
-    entry->glyph_rect_contexts = &(contexts + context_index)->font_glyph;
-    entry->rect_count = 0;
-    
-    for (U32 cpi = 0; cpi < entry->codepoint_count; ++cpi) {
-      U32 cp = entry->codepoints[cpi];
-      U32 glyph_index = get_glyph_index_from_codepoint(ttf, cp);
-      Rect2 box = get_glyph_box(ttf, glyph_index, s);
-      V2U dims = get_bitmap_dims_from_glyph_box(box);
+  for (U32 entry_index = 0; 
+       entry_index < ab->entry_count; 
+       ++entry_index) 
+  {
+    auto* entry = ab->entries + entry_index;
+    switch(entry->type) {
+      case KARU_ATLAS_ENTRY_TYPE_IMAGE: {
+        set_arena_reset_point(arena);
+        
+        Karu_Atlas_Image_Entry* image = &entry->image;
+        
+        Memory file_memory = karu_read_file(image->filename, arena);
+        assert(is_ok(file_memory));
+        
+        PNG png = create_png(file_memory);
+        assert(is_ok(&png));
+        assert(png.width != 0 && png.height != 0);
+        
+        auto* context = contexts + context_index++;
+        context->type = ATLASER_RECT_CONTEXT_TYPE_IMAGE;
+        context->image.entry = entry;
+        
+        RP_Rect* rect = rects + rect_index++;
+        rect->w = png.width;
+        rect->h = png.height;
+        rect->user_data = context;
+        
+        entry->image.rect = rect;
+        entry->image.rect_context = context;
+      } break;
       
-      auto* context = contexts + context_index++;
-      context->font_glyph.codepoint = cp;
-      context->font_glyph.entry = entry;
-      context->type = ATLASER_RECT_CONTEXT_TYPE_FONT_GLYPH;
-      
-      RP_Rect* rect = rects + rect_index++;
-      rect->w = dims.w;
-      rect->h = dims.h;
-      rect->user_data = context;
-      
-      ++entry->rect_count;
-      
-      
+      case KARU_ATLAS_ENTRY_TYPE_FONT: {
+        set_arena_reset_point(arena);
+        
+        Karu_Atlas_Font_Entry* font = &entry->font;
+        
+        TTF* ttf = font->loaded_ttf;
+        F32 s = get_scale_for_pixel_height(ttf, font->raster_font_height);
+        
+        // grab the slice of RP_Rects that belongs to this font
+        font->glyph_rects = rects + rect_index;
+        
+        // TODO: GERALD THIS IS WRONG
+        font->glyph_rect_contexts = contexts + context_index;
+        font->rect_count = 0;
+        
+        for (U32 cpi = 0; cpi < font->codepoint_count; ++cpi) {
+          U32 cp = font->codepoints[cpi];
+          U32 glyph_index = get_glyph_index_from_codepoint(ttf, cp);
+          Rect2 box = get_glyph_box(ttf, glyph_index, s);
+          V2U dims = get_bitmap_dims_from_glyph_box(box);
+          
+          auto* context = contexts + context_index++;
+          context->font_glyph.codepoint = cp;
+          context->font_glyph.entry = entry;
+          context->type = ATLASER_RECT_CONTEXT_TYPE_FONT_GLYPH;
+          
+          RP_Rect* rect = rects + rect_index++;
+          rect->w = dims.w;
+          rect->h = dims.h;
+          rect->user_data = context;
+          
+          ++font->rect_count;
+        } 
+        
+        
+      } break;
     }
   }
   
@@ -155,9 +179,9 @@ end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
     RP_Rect* rect = rects + i;
     auto* context = (Karu_Atlas_Rect_Context*)(rect->user_data);
     switch(context->type) {
-      case ATLASER_RECT_CONTEXT_TYPE_IMAGE: {
+      case KARU_ATLAS_RECT_CONTEXT_TYPE_IMAGE: {
         set_arena_reset_point(arena);
-        Karu_Atlas_Image* related_entry = context->image.entry;
+        Karu_Atlas_Image_Entry* related_entry = &context->image.entry->image;
         
         Memory file_memory = karu_read_file(related_entry->filename, arena);
         assert(is_ok(file_memory));
@@ -177,9 +201,9 @@ end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
         
         
       } break;
-      case ATLASER_RECT_CONTEXT_TYPE_FONT_GLYPH: {
+      case KARU_ATLAS_RECT_CONTEXT_TYPE_FONT_GLYPH: {
         set_arena_reset_point(arena);
-        Karu_Atlas_Font* related_entry = context->font_glyph.entry;
+        Karu_Atlas_Font_Entry* related_entry = &context->font_glyph.entry->font;
         Karu_Atlas_Font_Glyph_Rect_Context* related_context = &context->font_glyph;
         
         TTF* ttf = related_entry->loaded_ttf;
@@ -200,5 +224,6 @@ end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
     }
     
   }
+  
   
 }

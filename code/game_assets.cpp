@@ -140,7 +140,7 @@ create_assets(Platform* pf, Gfx* gfx) {
             push_array<U16>(&ret.arena, asset->font.one_past_highest_codepoint);
           
           auto* glyphs = push_array<Font_Glyph_Asset>(&ret.arena, asset->font.glyph_count);
-          for(U32 glyph_index = 0; 
+          for(U16 glyph_index = 0; 
               glyph_index < sui_font.glyph_count;
               ++glyph_index)
           {
@@ -154,11 +154,13 @@ create_assets(Platform* pf, Gfx* gfx) {
             pf->read_file(&file, 
                           sizeof(Sui_Font_Glyph), 
                           glyph_data_offset,
-                          &sui_font); 
+                          &sui_glyph); 
             
             auto* glyph = glyphs + glyph_index;
             glyph->uv = sui_glyph.uv;
             glyph->bitmap_id = {sui_glyph.bitmap_asset_id};
+            
+            //unicode_map[sui_glyph.codepoint] = glyph_index;
             
           }
           

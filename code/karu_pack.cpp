@@ -176,7 +176,8 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
         // Figure out the highest codepoint
         Karu_Atlas_Font_Source* src = &source->atlas_font;
         Karu_Atlas* atlas = src->atlas;
-        Karu_Atlas_Font* atlas_font = atlas->fonts + src->atlas_font_id;
+        Karu_Atlas_Entry* entry = atlas->entries + src->atlas_font_id;
+        Karu_Atlas_Font_Entry* atlas_font = &entry->font;
         TTF* loaded_ttf = atlas_font->loaded_ttf;
         
         U32 highest_codepoint = 0;
@@ -193,20 +194,7 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
           continue;
         Sui_Font sui_font = {};
         sui_font.one_past_highest_codepoint = highest_codepoint + 1;
-        
-        // Do a dumb first pass on all rects to filter out invalid rects
-        U32 glyph_count = 0;
-        for (U32 rect_index = 0;
-             rect_index < atlas_font->rect_count;
-             ++rect_index) 
-        {
-          auto* glyph_rect = atlas_font->glyph_rects + rect_index;
-          if (glyph_rect->w == 0 || glyph_rect->h == 0) {
-            continue;
-          }
-          ++glyph_count;
-        }
-        sui_font.glyph_count = glyph_count;
+        sui_font.glyph_count = atlas_font->codepoint_count;
         fwrite(&sui_font, sizeof(sui_font), 1, file);
         
         // push glyphs
@@ -215,15 +203,11 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
              ++rect_index) 
         {
           auto* glyph_rect = atlas_font->glyph_rects + rect_index;
-          if (glyph_rect->w == 0 || glyph_rect->h == 0) {
-            continue;
-          }
-          
           auto* glyph_rect_context = atlas_font->glyph_rect_contexts + rect_index;
           
           Sui_Font_Glyph sui_glyph = {};
           sui_glyph.bitmap_asset_id = src->bitmap_asset_id;
-          sui_glyph.codepoint = glyph_rect_context->codepoint;
+          sui_glyph.codepoint = glyph_rect_context->font_glyph.codepoint;
           
           Rect2 uv = {};
           uv.min.x = (F32)glyph_rect->x / atlas->bitmap.width;
@@ -239,6 +223,7 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
         // push horizontal advances
         // they are scaled to 1 pixel scale.
         F32 pixel_scale = get_scale_for_pixel_height(loaded_ttf, 1.f);
+        
         for (U32 cpi1 = 0; cpi1 < atlas_font->codepoint_count; ++cpi1) {
           for (U32 cpi2 = 0; cpi2 < atlas_font->codepoint_count; ++cpi2) {
             U32 cp1 = atlas_font->codepoints[cpi1];
@@ -254,8 +239,8 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
             F32 kerning = (F32)raw_kern * pixel_scale;
             
             F32 advance = advance_width + kerning;
-            fwrite(&advance, sizeof(advance), 1, file);
-            karu_log("[%d,%d] %f\n", cp1, cp2, advance);
+            //fwrite(&advance, sizeof(advance), 1, file);
+            //karu_log("[%d,%d] %f\n", cp1, cp2, advance);
           }
         }
         
@@ -266,7 +251,8 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
         
         Karu_Atlas_Image_Source* src = &source->atlas_image;
         Karu_Atlas* atlas = source->atlas_font.atlas;
-        Karu_Atlas_Image* img = atlas->images + src->atlas_image_id;
+        Karu_Atlas_Entry* entry = atlas->entries + src->atlas_image_id;
+        Karu_Atlas_Image_Entry* img = &entry->image;
         
         Rect2 uv = {};
         uv.min.x = (F32)img->rect->x / atlas->bitmap.width;
@@ -278,7 +264,6 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
         sui_image.uv = uv;
         sui_image.bitmap_asset_id = src->bitmap_asset_id;
         fwrite(&sui_image, sizeof(sui_image), 1, file);
-        
         
         
       } break;
