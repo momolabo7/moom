@@ -70,11 +70,11 @@ end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
   
   // process image entries
   for (U32 i = 0; i < ab->image_count; ++i) {
-    create_scratch(scratch, arena);
+    set_arena_reset_point(arena);
     
     Karu_Atlas_Image* entry = ab->images + i;
     
-    Memory file_memory = karu_read_file(entry->filename, scratch);
+    Memory file_memory = karu_read_file(entry->filename, arena);
     assert(is_ok(file_memory));
     
     PNG png = create_png(file_memory);
@@ -96,7 +96,7 @@ end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
   
   // process font entries
   for (U32 i = 0; i < ab->font_count; ++i) {
-    create_scratch(scratch, arena);
+    set_arena_reset_point(arena);
     
     Karu_Atlas_Font* entry = ab->fonts + i;
     
@@ -156,16 +156,16 @@ end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
     auto* context = (Karu_Atlas_Rect_Context*)(rect->user_data);
     switch(context->type) {
       case ATLASER_RECT_CONTEXT_TYPE_IMAGE: {
-        create_scratch(scratch, arena);
+        set_arena_reset_point(arena);
         Karu_Atlas_Image* related_entry = context->image.entry;
         
-        Memory file_memory = karu_read_file(related_entry->filename, scratch);
+        Memory file_memory = karu_read_file(related_entry->filename, arena);
         assert(is_ok(file_memory));
         
         PNG png = create_png(file_memory);
         assert(is_ok(&png));
         
-        Bitmap bm = create_bitmap(&png, scratch);
+        Bitmap bm = create_bitmap(&png, arena);
         if (!is_ok(bm)) continue;
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
@@ -178,7 +178,7 @@ end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
         
       } break;
       case ATLASER_RECT_CONTEXT_TYPE_FONT_GLYPH: {
-        create_scratch(scratch, arena);
+        set_arena_reset_point(arena);
         Karu_Atlas_Font* related_entry = context->font_glyph.entry;
         Karu_Atlas_Font_Glyph_Rect_Context* related_context = &context->font_glyph;
         
@@ -186,7 +186,7 @@ end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
         F32 s = get_scale_for_pixel_height(ttf, related_entry->raster_font_height);
         U32 glyph_index = get_glyph_index_from_codepoint(ttf, related_context->codepoint);
         
-        Bitmap bm = rasterize_glyph(ttf, glyph_index, s, scratch);
+        Bitmap bm = rasterize_glyph(ttf, glyph_index, s, arena);
         if (!is_ok(bm)) continue;
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
