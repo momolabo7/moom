@@ -279,6 +279,5 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
   
   fseek(file, header.offset_to_tags, SEEK_SET);
   fwrite(sp->tags, asset_tag_array_size, 1, file); 
-  o
 }
 

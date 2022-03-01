@@ -124,8 +124,6 @@ create_assets(Platform* pf, Gfx* gfx) {
           asset->image.uv = sui_image.uv;
         } break;
         case ASSET_TYPE_FONT: {
-          U32 current_data_offset = sui_asset.offset_to_data;
-          
           Sui_Font sui_font;
           pf->read_file(&file, sizeof(Sui_Font), 
                         sui_asset.offset_to_data, 
@@ -134,13 +132,14 @@ create_assets(Platform* pf, Gfx* gfx) {
           asset->font.one_past_highest_codepoint = sui_font.one_past_highest_codepoint;
           asset->font.glyph_count = sui_font.glyph_count;
           
-          current_data_offset += sizeof(Sui_Font);
-          
-          auto* unicode_map = 
+          U16* codepoint_map = 
             push_array<U16>(&ret.arena, asset->font.one_past_highest_codepoint);
           
           auto* glyphs = push_array<Font_Glyph_Asset>(&ret.arena, asset->font.glyph_count);
-          for(U32 glyph_index = 0; 
+          
+          F32* advances = push_array<F32>(&ret.arena, asset->font.glyph_count * asset->font.glyph_count);
+          
+          for(U16 glyph_index = 0; 
               glyph_index < sui_font.glyph_count;
               ++glyph_index)
           {
@@ -154,14 +153,37 @@ create_assets(Platform* pf, Gfx* gfx) {
             pf->read_file(&file, 
                           sizeof(Sui_Font_Glyph), 
                           glyph_data_offset,
-                          &sui_font); 
+                          &sui_glyph); 
             
             auto* glyph = glyphs + glyph_index;
             glyph->uv = sui_glyph.uv;
             glyph->bitmap_id = {sui_glyph.bitmap_asset_id};
             
+            // set glyph's index into codepoint map
+            codepoint_map[sui_glyph.codepoint] = glyph_index;
           }
           
+          
+          for (U32 gi1 = 0; gi1 < sui_font.glyph_count; ++gi1) {
+            for (U32 gi2 = 0; gi2 < sui_font.glyph_count; ++gi2) {
+              U32 index = gi2+gi1*sui_font.glyph_count;
+              U32 data_offset = 
+                sui_asset.offset_to_data + 
+                sizeof(Sui_Font) + 
+                sizeof(Sui_Font_Glyph)*sui_font.glyph_count+
+                sizeof(F32)*index;
+              
+              pf->read_file(&file, 
+                            sizeof(Sui_Font_Glyph), 
+                            data_offset,
+                            advances + index); 
+              
+              
+            }
+          }
+          asset->font.glyphs = glyphs;
+          asset->font.horizontal_advances = advances;
+          asset->font.codepoint_map = codepoint_map;
           
         } break;
       }
