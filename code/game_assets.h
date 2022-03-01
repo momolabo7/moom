@@ -28,7 +28,7 @@ struct Font_Glyph_Asset{
 
 struct Font_Asset {
   U32 one_past_highest_codepoint;
-  U16* codepoint_map;
+  U16* unicode_map;
   
   U32 glyph_count;
   Font_Glyph_Asset* glyphs;
