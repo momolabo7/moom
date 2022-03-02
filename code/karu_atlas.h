@@ -16,8 +16,8 @@ struct Karu_Atlas_Entry;
 ////////////////////////////////////////////////////
 // Contexts for each and every rect
 enum Karu_Atlas_Rect_Context_Type {
-  ATLASER_RECT_CONTEXT_TYPE_IMAGE,
-  ATLASER_RECT_CONTEXT_TYPE_FONT_GLYPH,
+  KARU_ATLAS_RECT_CONTEXT_TYPE_IMAGE,
+  KARU_ATLAS_RECT_CONTEXT_TYPE_FONT_GLYPH,
 };
 
 struct Karu_Atlas_Font_Glyph_Rect_Context {

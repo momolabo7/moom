@@ -103,7 +103,7 @@ end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
         assert(png.width != 0 && png.height != 0);
         
         auto* context = contexts + context_index++;
-        context->type = ATLASER_RECT_CONTEXT_TYPE_IMAGE;
+        context->type = KARU_ATLAS_RECT_CONTEXT_TYPE_IMAGE;
         context->image.entry = entry;
         
         RP_Rect* rect = rects + rect_index++;
@@ -126,7 +126,6 @@ end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
         // grab the slice of RP_Rects that belongs to this font
         font->glyph_rects = rects + rect_index;
         
-        // TODO: GERALD THIS IS WRONG
         font->glyph_rect_contexts = contexts + context_index;
         font->rect_count = 0;
         
@@ -139,7 +138,7 @@ end_atlas_builder(Karu_Atlas* ab, Arena* arena) {
           auto* context = contexts + context_index++;
           context->font_glyph.codepoint = cp;
           context->font_glyph.entry = entry;
-          context->type = ATLASER_RECT_CONTEXT_TYPE_FONT_GLYPH;
+          context->type = KARU_ATLAS_RECT_CONTEXT_TYPE_FONT_GLYPH;
           
           RP_Rect* rect = rects + rect_index++;
           rect->w = dims.w;

@@ -24,9 +24,11 @@ create_assets(Platform* pf, Gfx* gfx) {
   
   // Allocation
   ret.assets = push_array<Asset>(&ret.arena, sui_header.asset_count);
+  assert(ret.assets);
   ret.asset_count = sui_header.asset_count;
   
   ret.tags = push_array<Asset_Tag>(&ret.arena, sui_header.tag_count);
+  assert(ret.tags);
   ret.tag_count = sui_header.tag_count;
   
   // Fill data for tag
@@ -100,7 +102,6 @@ create_assets(Platform* pf, Gfx* gfx) {
           asset->bitmap.height = sui_bitmap.height;
           asset->bitmap.pixels = (U32*)push_block(&ret.arena, bitmap_size);
           
-          
           pf->read_file(&file, bitmap_size, 
                         sui_asset.offset_to_data + sizeof(Sui_Bitmap),
                         asset->bitmap.pixels);
@@ -136,8 +137,9 @@ create_assets(Platform* pf, Gfx* gfx) {
           
           current_data_offset += sizeof(Sui_Font);
           
-          auto* unicode_map = 
+          auto* codepoint_map = 
             push_array<U16>(&ret.arena, asset->font.one_past_highest_codepoint);
+          assert(codepoint_map);
           
           auto* glyphs = push_array<Font_Glyph_Asset>(&ret.arena, asset->font.glyph_count);
           for(U16 glyph_index = 0; 
@@ -160,13 +162,18 @@ create_assets(Platform* pf, Gfx* gfx) {
             glyph->uv = sui_glyph.uv;
             glyph->bitmap_id = {sui_glyph.bitmap_asset_id};
             
-            //unicode_map[sui_glyph.codepoint] = glyph_index;
+            codepoint_map[sui_glyph.codepoint] = glyph_index;
             
           }
+          
+          asset->font.glyphs = glyphs;
+          asset->font.codepoint_map = codepoint_map;
           
           
         } break;
       }
+      
+      
       
       
     }
