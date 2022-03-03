@@ -1,4 +1,4 @@
-
+// TODO(Momo): change to init and return bool
 static Game_Assets
 create_assets(Platform* pf, Gfx* gfx) {
   Game_Assets ret = {};
@@ -169,6 +169,7 @@ create_assets(Platform* pf, Gfx* gfx) {
           asset->font.glyphs = glyphs;
           asset->font.codepoint_map = codepoint_map;
           
+          // TODO(Momo): Horizontal advances
           
         } break;
       }
@@ -262,7 +263,7 @@ _get_best_asset_of_type(Game_Assets* ga,
 }
 
 static Bitmap_Asset*
-get_bitmap(Game_Assets* ga, Asset_Bitmap_ID bitmap_id) {
+get_bitmap(Game_Assets* ga, Bitmap_Asset_ID bitmap_id) {
   Asset* asset = _get_asset(ga, bitmap_id.value);
   if(asset->type != ASSET_TYPE_BITMAP) 
     return nullptr;
@@ -270,25 +271,38 @@ get_bitmap(Game_Assets* ga, Asset_Bitmap_ID bitmap_id) {
 }
 
 static Image_Asset*
-get_image(Game_Assets* ga, Asset_Image_ID image_id) {
+get_image(Game_Assets* ga, Image_Asset_ID image_id) {
   Asset* asset = _get_asset(ga, {image_id.value});
   if(asset->type != ASSET_TYPE_IMAGE)
     return nullptr;
   return &asset->image;
 }
 
-static Asset_Bitmap_ID
+static Font_Asset*
+get_font(Game_Assets* ga, Font_Asset_ID image_id) {
+  Asset* asset = _get_asset(ga, {image_id.value});
+  if(asset->type != ASSET_TYPE_FONT)
+    return nullptr;
+  return &asset->font;
+}
+
+static Bitmap_Asset_ID
 get_first_bitmap(Game_Assets* ga, Asset_Group_ID group_id) {
   return {_get_first_asset_of_type(ga, group_id, ASSET_TYPE_BITMAP)};
 }
 
+static Font_Asset_ID
+get_first_font(Game_Assets* ga, Asset_Group_ID group_id) {
+  return {_get_first_asset_of_type(ga, group_id, ASSET_TYPE_FONT)};
+}
 
-static Asset_Image_ID
+
+static Image_Asset_ID
 get_first_image(Game_Assets* ga, Asset_Group_ID group_id) {
   return {_get_first_asset_of_type(ga, group_id, ASSET_TYPE_IMAGE)};
 }
 
-static Asset_Image_ID
+static Image_Asset_ID
 get_best_image(Game_Assets* ga, 
                Asset_Group_ID group_id, 
                Asset_Vector* match_vector, 

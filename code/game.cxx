@@ -101,7 +101,7 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     M44 r = create_m44_rotation_z(perm->tmp_rot += dt);
     M44 t = create_m44_translation(800.f, 450.f, 300.f);
     
-#if 1
+#if 0
     {
       Game_Assets* game_assets = &perm->game_assets;
       
@@ -119,7 +119,8 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
                      bitmap->gfx_bitmap_id, 
                      image->uv);
     }
-#else 
+#endif
+#if 0
     {
       Game_Assets* game_assets = &perm->game_assets;
       Asset_Bitmap_ID bitmap_id = get_first_bitmap(game_assets, ASSET_GROUP_ATLASES);
@@ -128,6 +129,20 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
       
     }
 #endif
+    {
+      Game_Assets* game_assets = &perm->game_assets;
+      Font_Asset_ID font_id = get_first_font(game_assets, ASSET_GROUP_FONTS);
+      Font_Asset* font = get_font(game_assets, font_id);
+      
+      U16 glyph_id = font->codepoint_map[68];
+      auto* glyph = font->glyphs + glyph_id;
+      Bitmap_Asset_ID bitmap_id = glyph->bitmap_id;
+      
+      Bitmap_Asset* bitmap = get_bitmap(game_assets, bitmap_id);
+      draw_subsprite(gfx, colors, t*r*s, 
+                     bitmap->gfx_bitmap_id,
+                     glyph->uv);
+    }
   }
   
   return true;

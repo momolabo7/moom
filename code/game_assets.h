@@ -4,9 +4,9 @@
 #include "game_asset_types.h"
 #include "sui.h"
 
-struct Asset_Bitmap_ID { U32 value; };
-struct Asset_Font_ID { U32 value; }; 
-struct Asset_Image_ID { U32 value; };
+struct Bitmap_Asset_ID { U32 value; };
+struct Font_Asset_ID { U32 value; }; 
+struct Image_Asset_ID { U32 value; };
 
 struct Bitmap_Asset {
   U32 gfx_bitmap_id; // TODO: tie in with renderer? 
@@ -18,12 +18,12 @@ struct Bitmap_Asset {
 
 struct Image_Asset {
   Rect2 uv;
-  Asset_Bitmap_ID bitmap_id;
+  Bitmap_Asset_ID bitmap_id;
 };
 
 struct Font_Glyph_Asset{
   Rect2 uv;
-  Asset_Bitmap_ID bitmap_id;
+  Bitmap_Asset_ID bitmap_id;
 };
 
 struct Font_Asset {
