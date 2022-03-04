@@ -294,56 +294,121 @@ win_create_platform_api()
 }
 
 /// Multithreading test code
-HANDLE threads[10];
 DWORD thread_ids[10];
 
 struct Work {
   void* data;
-  void (*func)(void* data);
+  void (*callback)(void* data);
 };
 
 struct Work_Queue {
-  Work queue[100];
+  Work entries[256];
+  U32 volatile next_entry_to_read;
+  U32 volatile next_entry_to_write;
   
   HANDLE semaphore; 
+  
   // next entry to read (atomic?)
   // next entry to write (atomic?)
-  
-  
   U32 current_work_index;
   U32 work_count;
 };
-Work_Queue work_queue;
+
+static B32
+win_do_next_work_entry(Work_Queue* wq) {
+  B32 should_sleep = false;
+  
+  // NOTE(Momo): Generally, we want to do: 
+  // 1. Get index of next work to do
+  // 2. Update index of next work to do
+  // 3. Do work
+  // 
+  // HOWEVER, the thread that is running this
+  // function might go into coma at ANY TIME 
+  // between these steps, that's why we need to do 
+  // the way we are doing below. 
+  //
+  // ONLY when this thread successfully updated the work 
+  // queue's next-work index to the value that this thread
+  // THINKS it should be updated to, THEN we do the work.
+  
+  U32 original_current_work_index = wq->current_work_index;
+  U32 new_current_work_index = original_current_work_index + 1;
+  
+  if (original_current_work_index < wq->work_count) {
+    DWORD initial_value = 
+      InterlockedCompareExchange((LONG volatile*)&wq->current_work_index,
+                                 new_current_work_index,
+                                 original_current_work_index);
+    if (initial_value == original_current_work_index) {
+      Work work = wq->entries[original_current_work_index];
+      work.callback(work.data);
+      //
+    }
+    
+  }
+  else {
+    should_sleep = true;
+  }
+  return should_sleep;
+}
 
 static DWORD WINAPI 
 win_worker_func(LPVOID ctx) {
   Work_Queue* wq = (Work_Queue*)ctx;
   
-  
   while(true) {
-    U32 original_current_work_index = wq->current_work_index;
-    U32 new_current_work_index = original_current_work_index + 1;
-    if (original_current_work_index < wq->work_count) {
-      DWORD initial_value = 
-        InterlockedCompareExchange((LONG volatile*)&wq->current_work_index,
-                                   new_current_work_index,
-                                   original_current_work_index);
-      if (initial_value == original_current_work_index) {
-        Work work = wq->queue[original_current_work_index];
-        work.func(work.data);
-        //
-      }
+    if (win_do_next_work_entry(wq)){
+      WaitForSingleObjectEx(wq->semaphore, INFINITE, FALSE);
     }
-    WaitForSingleObjectEx(wq->semaphore, INFINITE, FALSE);
     
   }
 }
 
+static B32
+win_init_work_queue(Work_Queue* wq, U32 thread_count) {
+  wq->semaphore = CreateSemaphoreEx(0,
+                                    0,                                
+                                    thread_count,
+                                    0, 0, SEMAPHORE_ALL_ACCESS);
+  
+  if (wq->semaphore == NULL) return false;
+  
+  for (U32 i = 0; i < thread_count; ++i) {
+    DWORD thread_id;
+    HANDLE thread = CreateThread(NULL, 0, 
+                                 win_worker_func, 
+                                 wq, 
+                                 0, //CREATE_SUSPENDED, 
+                                 &thread_id);
+    if (thread == NULL) {
+      return false;
+    }
+    CloseHandle(thread);
+  }
+  
+  return true;
+}
+
+static void
+win_add_work_entry(Work_Queue* wq, void (*callback)(void* ctx), void *data) {
+  U32 original_work_count = wq->work_count;
+  U32 new_work_count = original_work_count + 1;
+  //TODO assert
+  auto* entry = wq->entries + original_work_count;
+  entry->callback = callback;
+  entry->data = data;
+  wq->work_count = new_work_count;  
+  ReleaseSemaphore(wq->semaphore, 1, 0);
+}
+
+
 static void 
 test_work(void* context) {
+  
+  
   int* i = (int*)context;
   (*i) += 100;
-  Sleep(10000);
 }
 
 //~ Main functions
@@ -359,30 +424,18 @@ WinMain(HINSTANCE instance,
   ImmDisableIME((DWORD)-1);
   
 #if 1
-  // Create work queue
-  work_queue.semaphore = CreateSemaphoreEx(0,
-                                           0,                                
-                                           array_count(threads),
-                                           0, 0, SEMAPHORE_ALL_ACCESS);
-  
-  for (int i = 0; i < array_count(threads); ++i) {
-    threads[i] = CreateThread(NULL, 0, 
-                              win_worker_func, 
-                              &work_queue, 
-                              0, //CREATE_SUSPENDED, 
-                              &thread_ids[i]);
-    CloseHandle(threads[i]);
+  Work_Queue _work_queue = {};
+  Work_Queue* work_queue = &_work_queue;
+  if (!win_init_work_queue(work_queue, 8)) {
+    return 1;
   }
+  // Create work queue
+  int test[10] = {};
   
   // Test adding work
-  int test = 0;
-  Work work = {};
-  work.data = &test;
-  work.func = test_work;
-  
-  work_queue.queue[work_queue.work_count++] = work;
-  
-  
+  for(int i = 0;  i < array_count(test); ++i)
+    win_add_work_entry(work_queue, test_work, test+i);
+  Sleep(10000);
   //WaitForMultipleObjects(array_count(threads), threads, TRUE, INFINITE);
 #endif
   
