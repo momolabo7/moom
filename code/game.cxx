@@ -42,11 +42,6 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
     
     
     
-    //TODO: Load assets
-    // assets->load(ASSET_NAME)
-    // assets->unload(ASSET_NAME);
-    
-    
   }
   
   GameMemory* game_memory = (GameMemory*)game->game_data;
@@ -134,7 +129,7 @@ game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) {
       Font_Asset_ID font_id = get_first_font(game_assets, ASSET_GROUP_FONTS);
       Font_Asset* font = get_font(game_assets, font_id);
       
-      U16 glyph_id = font->codepoint_map[68];
+      U16 glyph_id = font->codepoint_map[70];
       auto* glyph = font->glyphs + glyph_id;
       Bitmap_Asset_ID bitmap_id = glyph->bitmap_id;
       

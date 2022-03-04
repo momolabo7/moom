@@ -6,11 +6,8 @@ Momo
 		  (*(Opengl_Platform*)(ogl)) = pf; // LOL
 
 Engine
-	Asset system
-		Fonts
-      Filter out invalid fonts from asset file (1)
-	Sound
 	Mutithread support
+	Sound
   
 4coder
   Support strongly typed enums

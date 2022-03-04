@@ -293,11 +293,57 @@ win_create_platform_api()
   return pf_api;
 }
 
-static DWORD
-win_test_thread_function(void* ctx) {
-  int* i = (int*)ctx;
+/// Multithreading test code
+HANDLE threads[10];
+DWORD thread_ids[10];
+
+struct Work {
+  void* data;
+  void (*func)(void* data);
+};
+
+struct Work_Queue {
+  Work queue[100];
+  
+  HANDLE semaphore; 
+  // next entry to read (atomic?)
+  // next entry to write (atomic?)
+  
+  
+  U32 current_work_index;
+  U32 work_count;
+};
+Work_Queue work_queue;
+
+static DWORD WINAPI 
+win_worker_func(LPVOID ctx) {
+  Work_Queue* wq = (Work_Queue*)ctx;
+  
+  
+  while(true) {
+    U32 original_current_work_index = wq->current_work_index;
+    U32 new_current_work_index = original_current_work_index + 1;
+    if (original_current_work_index < wq->work_count) {
+      DWORD initial_value = 
+        InterlockedCompareExchange((LONG volatile*)&wq->current_work_index,
+                                   new_current_work_index,
+                                   original_current_work_index);
+      if (initial_value == original_current_work_index) {
+        Work work = wq->queue[original_current_work_index];
+        work.func(work.data);
+        //
+      }
+    }
+    WaitForSingleObjectEx(wq->semaphore, INFINITE, FALSE);
+    
+  }
+}
+
+static void 
+test_work(void* context) {
+  int* i = (int*)context;
   (*i) += 100;
-  return 0;
+  Sleep(10000);
 }
 
 //~ Main functions
@@ -308,22 +354,36 @@ WinMain(HINSTANCE instance,
         int show_code) 
 {
   
+  
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
   
-  
-  
 #if 1
-  DWORD thread_id;
-  int result = 0;
-  HANDLE threads[10];
+  // Create work queue
+  work_queue.semaphore = CreateSemaphoreEx(0,
+                                           0,                                
+                                           array_count(threads),
+                                           0, 0, SEMAPHORE_ALL_ACCESS);
+  
   for (int i = 0; i < array_count(threads); ++i) {
     threads[i] = CreateThread(NULL, 0, 
-                              win_test_thread_function, 
-                              &result, 0, &thread_id);
+                              win_worker_func, 
+                              &work_queue, 
+                              0, //CREATE_SUSPENDED, 
+                              &thread_ids[i]);
+    CloseHandle(threads[i]);
   }
   
-  WaitForMultipleObjects(array_count(threads), threads, TRUE, INFINITE);
+  // Test adding work
+  int test = 0;
+  Work work = {};
+  work.data = &test;
+  work.func = test_work;
+  
+  work_queue.queue[work_queue.work_count++] = work;
+  
+  
+  //WaitForMultipleObjects(array_count(threads), threads, TRUE, INFINITE);
 #endif
   
   //- Initialize window state
