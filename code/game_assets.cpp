@@ -1,6 +1,6 @@
 // TODO(Momo): change to init and return bool
 static Game_Assets
-create_assets(Platform* pf, Gfx* gfx) {
+create_assets(PF_Callbacks* pf, Gfx* gfx) {
   Game_Assets ret = {};
   
   UMI memory_size = MB(20);

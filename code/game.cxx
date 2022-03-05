@@ -18,7 +18,7 @@ struct GameMemory {
 
 
 exported B32 
-game_update(Game* game, Platform* pf, Input* input, Gfx* gfx, F32 dt) { 
+game_update(PF_Game_Memory* game, PF_Callbacks* pf, PF_Input* input, Gfx* gfx, F32 dt) { 
   // Initialization
   if (!game->game_data) {
     pf->set_aspect_ratio(16, 9);
