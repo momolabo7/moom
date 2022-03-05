@@ -1,13 +1,15 @@
 
-#define NOMINMAX
-#include <windows.h>
-#undef near
-#undef far
 
 #include "momo.h"
 #include "win_gfx.h"
 
 #include "game_pf.h"
+
+
+#define NOMINMAX
+#include <windows.h>
+#undef near
+#undef far
 
 
 //-Global variables
@@ -172,13 +174,13 @@ win_free_memory(void* memory) {
 
 
 
-static Platform_File
+static PF_File
 win_open_file(const char* filename, 
-              Platform_FileAccess access,
-              Platform_FilePath path) 
+              PF_File_Access access,
+              PF_File_Path path) 
 {
   // Opening the file
-  Platform_File ret = {};
+  PF_File ret = {};
   
   DWORD access_flag = {};
   DWORD creation_disposition = {};
@@ -192,7 +194,7 @@ win_open_file(const char* filename,
       creation_disposition = CREATE_ALWAYS;
     } break;
     /*
-    case Platform_FileAccess_Modify: {
+    case PF_File_Access_Modify: {
       access_flag = GENERIC_READ | GENERIC_WRITE;
       creation_disposition = OPEN_ALWAYS;
     } break;
@@ -223,7 +225,7 @@ win_open_file(const char* filename,
 }
 
 static void
-win_close_file(Platform_File* file) {
+win_close_file(PF_File* file) {
   auto* win_file = (Win_File*)file->platform_data;
   CloseHandle(win_file->handle);
   win_free_memory(file->platform_data);
@@ -231,7 +233,7 @@ win_close_file(Platform_File* file) {
 }
 
 static void
-win_read_file(Platform_File* file, UMI size, UMI offset, void* dest) 
+win_read_file(PF_File* file, UMI size, UMI offset, void* dest) 
 { 
   if (!is_ok(file)) return;
   
@@ -255,7 +257,7 @@ win_read_file(Platform_File* file, UMI size, UMI offset, void* dest)
 }
 
 static void 
-win_write_file(Platform_File* file, UMI size, UMI offset, void* src)
+win_write_file(PF_File* file, UMI size, UMI offset, void* src)
 {
   if (!is_ok(file)) return;
   
@@ -293,9 +295,6 @@ win_create_platform_api()
   return pf_api;
 }
 
-/// Multithreading test code
-DWORD thread_ids[10];
-
 struct Work {
   void* data;
   void (*callback)(void* data);
@@ -306,14 +305,13 @@ struct Work_Queue {
   U32 volatile next_entry_to_read;
   U32 volatile next_entry_to_write;
   
+  U32 volatile completion_count;
+  U32 volatile completion_goal;
   HANDLE semaphore; 
   
-  // next entry to read (atomic?)
-  // next entry to write (atomic?)
-  U32 current_work_index;
-  U32 work_count;
 };
 
+// NOTE(Momo): This function is accessed by multiple threads!
 static B32
 win_do_next_work_entry(Work_Queue* wq) {
   B32 should_sleep = false;
@@ -332,18 +330,18 @@ win_do_next_work_entry(Work_Queue* wq) {
   // queue's next-work index to the value that this thread
   // THINKS it should be updated to, THEN we do the work.
   
-  U32 original_current_work_index = wq->current_work_index;
-  U32 new_current_work_index = original_current_work_index + 1;
+  U32 old_next_entry_to_read = wq->next_entry_to_read;
+  U32 new_next_entry_to_read = (old_next_entry_to_read + 1) % array_count(wq->entries);
   
-  if (original_current_work_index < wq->work_count) {
+  if (old_next_entry_to_read != wq->next_entry_to_write) {
     DWORD initial_value = 
-      InterlockedCompareExchange((LONG volatile*)&wq->current_work_index,
-                                 new_current_work_index,
-                                 original_current_work_index);
-    if (initial_value == original_current_work_index) {
-      Work work = wq->entries[original_current_work_index];
+      InterlockedCompareExchange((LONG volatile*)&wq->next_entry_to_read,
+                                 new_next_entry_to_read,
+                                 old_next_entry_to_read);
+    if (initial_value == old_next_entry_to_read) {
+      Work work = wq->entries[old_next_entry_to_read];
       work.callback(work.data);
-      //
+      InterlockedIncrement((LONG volatile*)&wq->completion_count);
     }
     
   }
@@ -352,6 +350,24 @@ win_do_next_work_entry(Work_Queue* wq) {
   }
   return should_sleep;
 }
+
+// NOTE(Momo): This makes the main thread
+// participate in the work queue.
+//
+// In some sense, calling this will simulate 'async' 
+// feature in modern languages, where we 'wait' until all
+// work in the work queue is done!
+//
+static void
+win_complete_all_work(Work_Queue* wq) {
+  while(wq->completion_goal != wq->completion_count) {
+    win_do_next_work_entry(wq);
+  }
+  wq->completion_goal = 0;
+  wq->completion_count = 0;
+}
+
+
 
 static DWORD WINAPI 
 win_worker_func(LPVOID ctx) {
@@ -390,15 +406,22 @@ win_init_work_queue(Work_Queue* wq, U32 thread_count) {
   return true;
 }
 
+// NOTE(Momo): This is not very thread safe. Other threads shouldn't call this.
+// TODO(Momo): Make it so that other threads can call this?
 static void
 win_add_work_entry(Work_Queue* wq, void (*callback)(void* ctx), void *data) {
-  U32 original_work_count = wq->work_count;
-  U32 new_work_count = original_work_count + 1;
-  //TODO assert
-  auto* entry = wq->entries + original_work_count;
+  U32 old_next_entry_to_write = wq->next_entry_to_write;
+  U32 new_next_entry_to_write = (old_next_entry_to_write + 1) % array_count(wq->entries);
+  assert(wq->next_entry_to_read != new_next_entry_to_write);  
+  
+  auto* entry = wq->entries + old_next_entry_to_write;
   entry->callback = callback;
   entry->data = data;
-  wq->work_count = new_work_count;  
+  ++wq->completion_goal;
+  
+  //_ReadWriteBarrier();
+  
+  wq->next_entry_to_write = new_next_entry_to_write; // this MUST not be reordered
   ReleaseSemaphore(wq->semaphore, 1, 0);
 }
 
@@ -435,7 +458,7 @@ WinMain(HINSTANCE instance,
   // Test adding work
   for(int i = 0;  i < array_count(test); ++i)
     win_add_work_entry(work_queue, test_work, test+i);
-  Sleep(10000);
+  win_complete_all_work(work_queue);
   //WaitForMultipleObjects(array_count(threads), threads, TRUE, INFINITE);
 #endif
   

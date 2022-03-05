@@ -1,7 +1,7 @@
 //- Implementation
 
 static B32
-is_ok(Platform_File* file) {
+is_ok(PF_File* file) {
   return file->platform_data && !file->error;
 }
 

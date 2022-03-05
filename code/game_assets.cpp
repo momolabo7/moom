@@ -10,9 +10,9 @@ create_assets(Platform* pf, Gfx* gfx) {
   
   
   // Read in file
-  Platform_File file = pf->open_file("test.sui",
-                                     PF_FILE_ACCESS_READ, 
-                                     PF_FILE_PATH_EXE);
+  PF_File file = pf->open_file("test.sui",
+                               PF_FILE_ACCESS_READ, 
+                               PF_FILE_PATH_EXE);
   assert(!file.error);
   
   // Read header

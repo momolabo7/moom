@@ -33,8 +33,8 @@ int main() {
   karu_write_file("test.png", png_to_write_memory);
 #endif
   
-  Karu_Packer sp_ = begin_sui_packer();
-  Karu_Packer* sp = &sp_;
+  Karu_Packer _sp = begin_sui_packer();
+  Karu_Packer* sp = &_sp;
   {
     
     begin_group(sp, ASSET_GROUP_ATLASES);

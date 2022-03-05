@@ -4,21 +4,12 @@
 #ifndef GAME_PLATFORM_H
 #define GAME_PLATFORM_H
 
-
-//~Platform API
-typedef void  Platform_HotReloadFn(); // trigger hot reloading of game code
-typedef void  Platform_ShutdownFn(); // trigger shutdown of application
-typedef void* Platform_AllocFn(UMI size); // allocate memory
-typedef void  Platform_FreeFn(void* ptr);     // frees memory
-typedef void  Platform_SetAspectRatioFn(U32 width, U32 height); // sets aspect ratio of game
-
-//-Platform File API
-struct Platform_File {
+struct PF_File {
   B32 error;
   void* platform_data; // pointer for platform's usage
 };
 
-enum Platform_FilePath {
+enum PF_File_Path {
   PF_FILE_PATH_EXE,
   PF_FILE_PATH_USER,
   PF_FILE_PATH_CACHE,
@@ -27,30 +18,40 @@ enum Platform_FilePath {
 
 // Maybe for 'overwrite' or creating a new file, we 
 // use a compl
-enum Platform_FileAccess {
+enum PF_File_Access {
   PF_FILE_ACCESS_READ,
   PF_FILE_ACCESS_OVERWRITE,
 };
 
 
-typedef Platform_File  Platform_OpenFileFn(const char* filename,
-                                           Platform_FileAccess file_access,
-                                           Platform_FilePath file_path);
-typedef void 					Platform_CloseFileFn(Platform_File* file);
-typedef void 					Platform_ReadFileFn(Platform_File* file, UMI size, UMI offset, void* dest);
-typedef void 					Platform_WriteFileFn(Platform_File* file, UMI size, UMI offset, void* src);
+//~Platform API
+typedef void  PF_Hot_Reload_Fn(); // trigger hot reloading of game code
+typedef void  PF_Shutdown_Fn(); // trigger shutdown of application
+typedef void* PF_Alloc_Fn(UMI size); // allocate memory
+typedef void  PF_Free_Fn(void* ptr);     // frees memory
+typedef void  PF_Set_Aspect_Ratio_Fn(U32 width, U32 height); // sets aspect ratio of game
+
+typedef PF_File  PF_Open_File_Fn(const char* filename,
+                                 PF_File_Access file_access,
+                                 PF_File_Path file_path);
+
+typedef void PF_Close_File_Fn(PF_File* file);
+typedef void PF_Read_File_Fn(PF_File* file, UMI size, UMI offset, void* dest);
+typedef void PF_Write_File_Fn(PF_File* file, UMI size, UMI offset, void* src);
+
+
 
 struct Platform {
-  Platform_HotReloadFn* hot_reload;
-  Platform_ShutdownFn* shutdown;
-  Platform_AllocFn* alloc;
-  Platform_FreeFn* free;
-  Platform_SetAspectRatioFn* set_aspect_ratio;
+  PF_Hot_Reload_Fn* hot_reload;
+  PF_Shutdown_Fn* shutdown;
+  PF_Alloc_Fn* alloc;
+  PF_Free_Fn* free;
+  PF_Set_Aspect_Ratio_Fn* set_aspect_ratio;
   
-  Platform_OpenFileFn* open_file;
-  Platform_ReadFileFn* read_file;
-  Platform_WriteFileFn* write_file;
-  Platform_CloseFileFn* close_file;
+  PF_Open_File_Fn* open_file;
+  PF_Read_File_Fn* read_file;
+  PF_Write_File_Fn* write_file;
+  PF_Close_File_Fn* close_file;
 };
 
 
