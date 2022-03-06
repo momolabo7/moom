@@ -582,8 +582,8 @@ WinMain(HINSTANCE instance,
   
   
   //- NOTE(Momo): Init input
-  Game_Input input = {};
   
+  Game_Input input = {};
   
   //- Begin game loop
   
@@ -627,9 +627,12 @@ WinMain(HINSTANCE instance,
       win_global_state.is_hot_reloading = false;
     }
     
+    //-Process messages and input
+    // TODO(Momo): figure out target secs per frame
+    const F64 target_dt = 1/60.0;
+    input.seconds_since_last_frame = (F32)target_dt;
     update(&input);
     
-    //-NOTE(Momo): Process messages and input
     {
       MSG msg = {};
       while(PeekMessage(&msg, window, 0, 0, PM_REMOVE)) {
@@ -665,9 +668,7 @@ WinMain(HINSTANCE instance,
     }
     
     //-Game logic here 
-    // TODO(Momo): figure out target secs per frame
-    const F64 game_dt = 1/60.0;
-    game.delta_time = (F32)game_dt;
+    
     game_api.update(&game, &input, gfx);
     
     //-Game render here
@@ -699,10 +700,10 @@ WinMain(HINSTANCE instance,
     
     
     
-    if(game_dt > secs_elapsed) {
+    if(target_dt > secs_elapsed) {
       if (is_sleep_granular) {
         DWORD ms_to_sleep 
-          = (DWORD)(1000 * (game_dt - secs_elapsed));
+          = (DWORD)(1000 * (target_dt - secs_elapsed));
         
         // NOTE(Momo): Return control to OS
         if (ms_to_sleep > 1) {
@@ -710,7 +711,7 @@ WinMain(HINSTANCE instance,
         }
         
         // NOTE(Momo): Spin lock
-        while(game_dt > secs_elapsed) {
+        while(target_dt > secs_elapsed) {
           secs_elapsed = 
             win_get_secs_elapsed(last_count,
                                  win_get_performance_counter(),

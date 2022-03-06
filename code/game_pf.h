@@ -63,10 +63,11 @@ struct Platform_API {
 
 
 
-//~ NOTE(Momo): Input API
-// TODO(Momo): Perhaps we want something a lot more robust?
-// But that will probably require some insane enum
-// Or maybe we can put all these into Platform API?
+//~Input API
+// NOTE(Momo): Game_Input is not just 'controllers'.
+// It is filled with 'things the game need to respond to' 
+// so hence it's name and also why delta time is in there
+
 
 struct Game_Input_Button {
   B32 before;
@@ -77,6 +78,8 @@ static B32 is_poked(Game_Input_Button) ;
 static B32 is_released(Game_Input_Button);
 static B32 is_down(Game_Input_Button);
 static B32 is_held(Game_Input_Button);
+
+
 
 struct Game_Input {
   Game_Input_Button buttons[4];
@@ -91,6 +94,7 @@ struct Game_Input {
   V2U screen_mouse_pos;
   V2U render_mouse_pos;
   
+  F32 seconds_since_last_frame; //aka dt
 };
 
 void update(Game_Input_Button button);
@@ -100,9 +104,8 @@ void update(Game_Input_Button button);
 
 //~ NOTE(Momo): Game API
 struct Game_Memory {
-  void* game_data; // pointer for game memory usage
+  struct Game_State* state; // pointer for game memory usage
   
-  F32 delta_time;
   Platform_API platform_api;
 };
 

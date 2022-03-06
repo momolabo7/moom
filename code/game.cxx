@@ -4,16 +4,19 @@
 #include "game_pf.h"
 #include "game_assets.h"
 
-struct PermanentMemory {
+struct Sandbox_Mode {
   F32 tmp_delta;
   B32 tmp_increase;
   F32 tmp_rot;
   
-  Game_Assets game_assets;
 };
 
-struct GameMemory {
-  PermanentMemory* perm;  
+struct Game_State {
+  union {
+    Sandbox_Mode sandbox_mode;  
+  };
+  
+  Game_Assets game_assets;
 };
 
 static int arr[100] = {};
@@ -30,9 +33,9 @@ game_update(Game_Memory* game,
             Game_Input* input, 
             Game_Gfx* gfx) { 
   Platform_API pf = game->platform_api;
-  F32 dt = game->delta_time;
+  F32 dt = input->seconds_since_last_frame;
   
-#if 1
+#if 0
   // test threading
   for (int i = 0; i < array_count(arr); ++i) {
     pf.add_work(test_work, arr+i);
@@ -40,32 +43,28 @@ game_update(Game_Memory* game,
   pf.complete_all_work();
 #endif
   // Initialization
-  if (!game->game_data) {
+  if (!game->state) {
     pf.set_aspect_ratio(16, 9);
     
     // TODO(Momo): free allocated memory
-    game->game_data = pf.alloc(sizeof(GameMemory));
-    if (!game->game_data) return false;
+    game->state = (Game_State*)pf.alloc(sizeof(Game_State));
+    if (!game->state) return false;
     
-    auto* game_memory = (GameMemory*)game->game_data;
-    game_memory->perm = (PermanentMemory*)pf.alloc(sizeof(PermanentMemory));
-    if (!game_memory->perm) return false;
+    game->state->game_assets = create_assets(pf, gfx);
+    
     
     // Initialize perm memory
-    PermanentMemory* perm = game_memory->perm;
+    Sandbox_Mode* sandbox = &game->state->sandbox_mode;
     
     // TODO(Momo): for now...
-    perm->game_assets = create_assets(pf, gfx);
-    perm->tmp_delta = 0.f;
-    perm->tmp_increase = true;
-    perm->tmp_rot = 0.f;
+    sandbox->tmp_delta = 0.f;
+    sandbox->tmp_increase = true;
+    sandbox->tmp_rot = 0.f;
     
     
     
   }
-  
-  GameMemory* game_memory = (GameMemory*)game->game_data;
-  PermanentMemory* perm = game_memory->perm;
+  Sandbox_Mode* sandbox = &game->state->sandbox_mode;
   
   if (is_poked(input->button_up)) {
     pf.hot_reload();
@@ -91,34 +90,34 @@ game_update(Game_Memory* game,
   }
   
   {
-    if (perm->tmp_increase)
-      perm->tmp_delta += dt; 
+    if (sandbox->tmp_increase)
+      sandbox->tmp_delta += dt; 
     else
-      perm->tmp_delta -= dt;
+      sandbox->tmp_delta -= dt;
     
-    if (perm->tmp_delta >= 1.f ){
-      perm->tmp_delta = 1.f;
-      perm->tmp_increase = false;
+    if (sandbox->tmp_delta >= 1.f ){
+      sandbox->tmp_delta = 1.f;
+      sandbox->tmp_increase = false;
     }
     
-    if (perm->tmp_delta <= 0.f) {
-      perm->tmp_delta = 0.f;
-      perm->tmp_increase = true;
+    if (sandbox->tmp_delta <= 0.f) {
+      sandbox->tmp_delta = 0.f;
+      sandbox->tmp_increase = true;
     }
     
     RGBA colors = create_rgba(1.f, 1.f, 1.f, 1.f);
 #if 0
-    HSL hsl = create_hsl(perm->tmp_delta, 1.f, 0.5f);
+    HSL hsl = create_hsl(sandbox->tmp_delta, 1.f, 0.5f);
     colors.rgb = hsl_to_rgb(hsl);
 #endif
     
     M44 s = create_m44_scale(600.f, 600.f, 10.f);
-    M44 r = create_m44_rotation_z(perm->tmp_rot += dt);
+    M44 r = create_m44_rotation_z(sandbox->tmp_rot += dt);
     M44 t = create_m44_translation(800.f, 450.f, 300.f);
     
 #if 0
     {
-      Game_Assets* game_assets = &perm->game_assets;
+      Game_Assets* game_assets = &sandbox->game_assets;
       
       Asset_Vector m = {};
       Asset_Vector w = {};
@@ -137,7 +136,7 @@ game_update(Game_Memory* game,
 #endif
 #if 0
     {
-      Game_Assets* game_assets = &perm->game_assets;
+      Game_Assets* game_assets = &sandbox->game_assets;
       Asset_Bitmap_ID bitmap_id = get_first_bitmap(game_assets, ASSET_GROUP_ATLASES);
       Asset_Bitmap* bitmap = get_bitmap(game_assets, bitmap_id);
       draw_sprite(gfx, colors, t*r*s, bitmap->gfx_bitmap_id);
@@ -145,7 +144,7 @@ game_update(Game_Memory* game,
     }
 #endif
     {
-      Game_Assets* game_assets = &perm->game_assets;
+      Game_Assets* game_assets = &game->state->game_assets;
       Font_Asset_ID font_id = get_first_font(game_assets, ASSET_GROUP_FONTS);
       Font_Asset* font = get_font(game_assets, font_id);
       
