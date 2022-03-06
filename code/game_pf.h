@@ -51,7 +51,7 @@ typedef void  PF_Set_Aspect_Ratio_Fn(U32 width, U32 height); // sets aspect rati
 
 
 
-struct PF_Callbacks {
+struct Platform_API {
   PF_Hot_Reload_Fn* hot_reload;
   PF_Shutdown_Fn* shutdown;
   PF_Alloc_Fn* alloc;
@@ -71,23 +71,23 @@ struct PF_Callbacks {
 // But that will probably require some insane enum
 // Or maybe we can put all these into Platform API?
 
-struct PF_Input_Button {
+struct Input_Button {
   B32 before;
   B32 now; 
 };
 
-static B32 is_poked(PF_Input_Button) ;
-static B32 is_released(PF_Input_Button);
-static B32 is_down(PF_Input_Button);
-static B32 is_held(PF_Input_Button);
+static B32 is_poked(Input_Button) ;
+static B32 is_released(Input_Button);
+static B32 is_down(Input_Button);
+static B32 is_held(Input_Button);
 
-struct PF_Input{
-  PF_Input_Button buttons[4];
+struct Input {
+  Input_Button buttons[4];
   struct {
-    PF_Input_Button button_up;
-    PF_Input_Button button_down;
-    PF_Input_Button button_left;
-    PF_Input_Button button_right;
+    Input_Button button_up;
+    Input_Button button_down;
+    Input_Button button_left;
+    Input_Button button_right;
   };  
   
   V2 design_mouse_pos;
@@ -96,20 +96,20 @@ struct PF_Input{
   
 };
 
-void update(PF_Input_Button button);
+void update(Input_Button button);
 
 
 
 
 //~ NOTE(Momo): Game API
 // Returns true if game is done
-struct PF_Game_Memory {
+struct Game {
   void* game_data; // pointer for game usage
 };
 
-typedef void Game_UpdateFn(PF_Game_Memory* game_memory,
-                           PF_Callbacks* pf,
-                           PF_Input* input,
+typedef void Game_UpdateFn(Game* game_memory,
+                           Platform_API* pf,
+                           Input* input,
                            Gfx* gfx,
                            F32 dt);
 

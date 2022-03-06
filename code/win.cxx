@@ -279,10 +279,10 @@ win_write_file(PF_File* file, UMI size, UMI offset, void* src)
 }
 
 
-static PF_Callbacks
-win_create_platform_callbacks()
+static Platform_API
+win_create_platform_api()
 {
-  PF_Callbacks pf_api;
+  Platform_API pf_api;
   pf_api.hot_reload = win_hot_reload;
   pf_api.alloc = win_allocate_memory;
   pf_api.free = win_free_memory;
@@ -552,7 +552,7 @@ WinMain(HINSTANCE instance,
   }
   
   //-NOTE(Momo): Load Platform API for game
-  PF_Callbacks pf_api = win_create_platform_callbacks();
+  Platform_API pf_api = win_create_platform_api();
   
   //-NOTE(Momo): Load Gfx functions
   WinGfx_API gfx_api;
@@ -586,11 +586,11 @@ WinMain(HINSTANCE instance,
   
   
   //- NOTE(Momo): Init input
-  PF_Input input = {};
+  Input input = {};
   
   
   //- Begin game loop
-  PF_Game_Memory game = {};
+  Game game = {};
   
   B32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   LARGE_INTEGER performance_frequency;
