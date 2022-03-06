@@ -33,13 +33,8 @@ typedef void PF_Write_File_Fn(PF_File* file, UMI size, UMI offset, void* src);
 
 //~Platform multithreaded work API
 typedef void PF_Work_Callback_Fn(void* data);
-struct PF_Work {
-  PF_Work_Callback_Fn callback;
-  void* data;
-};
-struct PF_Work_Queue {};
-typedef void PF_Add_Work_Fn(PF_Work_Queue* wq, PF_Work_Callback_Fn callback, void* data);
-typedef void PF_Complete_All_Work(PF_Work_Queue* wq);
+typedef void PF_Add_Work_Fn(PF_Work_Callback_Fn callback, void* data);
+typedef void PF_Complete_All_Work_Fn();
 
 
 //~Other platform API
@@ -48,7 +43,6 @@ typedef void  PF_Shutdown_Fn(); // trigger shutdown of application
 typedef void* PF_Alloc_Fn(UMI size); // allocate memory
 typedef void  PF_Free_Fn(void* ptr);     // frees memory
 typedef void  PF_Set_Aspect_Ratio_Fn(U32 width, U32 height); // sets aspect ratio of game
-
 
 
 struct Platform_API {
@@ -62,6 +56,9 @@ struct Platform_API {
   PF_Read_File_Fn* read_file;
   PF_Write_File_Fn* write_file;
   PF_Close_File_Fn* close_file;
+  
+  PF_Add_Work_Fn* add_work;
+  PF_Complete_All_Work_Fn* complete_all_work;
 };
 
 

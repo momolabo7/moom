@@ -11,25 +11,7 @@
 #undef near
 #undef far
 
-
-//-Global variables
-struct Win_State{
-  B32 is_running;
-  B32 is_hot_reloading;
-  
-  U32 aspect_ratio_width;
-  U32 aspect_ratio_height;
-  
-};
-static Win_State win_global_state;
-
-
-struct Win_File {
-  HANDLE handle;
-};
-
-
-
+//~Helper Window functions
 static inline LONG width_of(RECT r) { return r.right - r.left; }
 static inline LONG height_of(RECT r) { return r.bottom - r.top; }
 
@@ -117,25 +99,156 @@ win_get_secs_elapsed(LARGE_INTEGER start,
   return (F64(end.QuadPart - start.QuadPart)) / performance_frequency.QuadPart;
 }
 
-LRESULT CALLBACK
-win_window_callback(HWND window, 
-                    UINT message, 
-                    WPARAM w_param,
-                    LPARAM l_param) 
-{
-  LRESULT result = 0;
-  switch(message) {
-    case WM_CLOSE:  
-    case WM_QUIT:
-    case WM_DESTROY: {
-      win_global_state.is_running = false;
-    } break;
-    default: {
-      result = DefWindowProcA(window, message, w_param, l_param);
-    };   
+
+//~Win_Work queue functionality
+struct Win_Work {
+  void* data;
+  PF_Work_Callback_Fn* callback;
+};
+
+struct Win_Work_Queue {
+  Win_Work entries[256];
+  U32 volatile next_entry_to_read;
+  U32 volatile next_entry_to_write;
+  
+  U32 volatile completion_count;
+  U32 volatile completion_goal;
+  HANDLE semaphore; 
+  
+};
+
+// NOTE(Momo): This function is accessed by multiple threads!
+static B32
+win_do_next_work_entry(Win_Work_Queue* wq) {
+  B32 should_sleep = false;
+  
+  // NOTE(Momo): Generally, we want to do: 
+  // 1. Get index of next work to do
+  // 2. Update index of next work to do
+  // 3. Do work
+  // 
+  // HOWEVER, the thread that is running this
+  // function might go into coma at ANY TIME 
+  // between these steps, that's why we need to do 
+  // the way we are doing below. 
+  //
+  // ONLY when this thread successfully updated the work 
+  // queue's next-work index to the value that this thread
+  // THINKS it should be updated to, THEN we do the work.
+  
+  U32 old_next_entry_to_read = wq->next_entry_to_read;
+  U32 new_next_entry_to_read = (old_next_entry_to_read + 1) % array_count(wq->entries);
+  
+  if (old_next_entry_to_read != wq->next_entry_to_write) {
+    DWORD initial_value = 
+      InterlockedCompareExchange((LONG volatile*)&wq->next_entry_to_read,
+                                 new_next_entry_to_read,
+                                 old_next_entry_to_read);
+    if (initial_value == old_next_entry_to_read) {
+      Win_Work work = wq->entries[old_next_entry_to_read];
+      work.callback(work.data);
+      InterlockedIncrement((LONG volatile*)&wq->completion_count);
+    }
+    
   }
-  return result;
+  else {
+    should_sleep = true;
+  }
+  return should_sleep;
 }
+
+// NOTE(Momo): This makes the main thread
+// participate in the work queue.
+//
+// In some sense, calling this will simulate 'async' 
+// feature in modern languages, where we 'wait' until all
+// work in the work queue is done!
+//
+static void
+win_complete_all_work_entries(Win_Work_Queue* wq) {
+  while(wq->completion_goal != wq->completion_count) {
+    win_do_next_work_entry(wq);
+  }
+  wq->completion_goal = 0;
+  wq->completion_count = 0;
+}
+
+
+
+static DWORD WINAPI 
+win_worker_func(LPVOID ctx) {
+  auto* wq = (Win_Work_Queue*)ctx;
+  
+  while(true) {
+    if (win_do_next_work_entry(wq)){
+      WaitForSingleObjectEx(wq->semaphore, INFINITE, FALSE);
+    }
+    
+  }
+}
+
+static B32
+win_init_work_queue(Win_Work_Queue* wq, U32 thread_count) {
+  wq->semaphore = CreateSemaphoreEx(0,
+                                    0,                                
+                                    thread_count,
+                                    0, 0, SEMAPHORE_ALL_ACCESS);
+  
+  if (wq->semaphore == NULL) return false;
+  
+  for (U32 i = 0; i < thread_count; ++i) {
+    DWORD thread_id;
+    HANDLE thread = CreateThread(NULL, 0, 
+                                 win_worker_func, 
+                                 wq, 
+                                 0, //CREATE_SUSPENDED, 
+                                 &thread_id);
+    if (thread == NULL) {
+      return false;
+    }
+    CloseHandle(thread);
+  }
+  
+  return true;
+}
+
+// NOTE(Momo): This is not very thread safe. Other threads shouldn't call this.
+// TODO(Momo): Make it so that other threads can call this?
+static void
+win_add_work_entry(Win_Work_Queue* wq, void (*callback)(void* ctx), void *data) {
+  U32 old_next_entry_to_write = wq->next_entry_to_write;
+  U32 new_next_entry_to_write = (old_next_entry_to_write + 1) % array_count(wq->entries);
+  assert(wq->next_entry_to_read != new_next_entry_to_write);  
+  
+  auto* entry = wq->entries + old_next_entry_to_write;
+  entry->callback = callback;
+  entry->data = data;
+  ++wq->completion_goal;
+  
+  //_ReadWriteBarrier();
+  
+  wq->next_entry_to_write = new_next_entry_to_write; // this MUST not be reordered
+  ReleaseSemaphore(wq->semaphore, 1, 0);
+}
+
+
+
+//~Global variables
+struct Win_State{
+  B32 is_running;
+  B32 is_hot_reloading;
+  
+  U32 aspect_ratio_width;
+  U32 aspect_ratio_height;
+  
+  Win_Work_Queue work_queue;
+};
+static Win_State win_global_state;
+
+
+struct Win_File {
+  HANDLE handle;
+};
 
 //~ For Platform API
 static void 
@@ -278,6 +391,16 @@ win_write_file(PF_File* file, UMI size, UMI offset, void* src)
   }
 }
 
+static void
+win_add_work(PF_Work_Callback_Fn callback, void* data) {
+  win_add_work_entry(&win_global_state.work_queue, callback, data);
+}
+
+static void
+win_complete_all_work() {
+  win_complete_all_work_entries(&win_global_state.work_queue);
+}
+
 
 static Platform_API
 win_create_platform_api()
@@ -292,149 +415,34 @@ win_create_platform_api()
   pf_api.write_file = win_write_file;
   pf_api.close_file = win_close_file;
   pf_api.set_aspect_ratio = win_set_aspect_ratio;
+  pf_api.add_work = win_add_work;
+  pf_api.complete_all_work = win_complete_all_work;
   return pf_api;
 }
 
-struct Work {
-  void* data;
-  void (*callback)(void* data);
-};
-
-struct Work_Queue {
-  Work entries[256];
-  U32 volatile next_entry_to_read;
-  U32 volatile next_entry_to_write;
-  
-  U32 volatile completion_count;
-  U32 volatile completion_goal;
-  HANDLE semaphore; 
-  
-};
-
-// NOTE(Momo): This function is accessed by multiple threads!
-static B32
-win_do_next_work_entry(Work_Queue* wq) {
-  B32 should_sleep = false;
-  
-  // NOTE(Momo): Generally, we want to do: 
-  // 1. Get index of next work to do
-  // 2. Update index of next work to do
-  // 3. Do work
-  // 
-  // HOWEVER, the thread that is running this
-  // function might go into coma at ANY TIME 
-  // between these steps, that's why we need to do 
-  // the way we are doing below. 
-  //
-  // ONLY when this thread successfully updated the work 
-  // queue's next-work index to the value that this thread
-  // THINKS it should be updated to, THEN we do the work.
-  
-  U32 old_next_entry_to_read = wq->next_entry_to_read;
-  U32 new_next_entry_to_read = (old_next_entry_to_read + 1) % array_count(wq->entries);
-  
-  if (old_next_entry_to_read != wq->next_entry_to_write) {
-    DWORD initial_value = 
-      InterlockedCompareExchange((LONG volatile*)&wq->next_entry_to_read,
-                                 new_next_entry_to_read,
-                                 old_next_entry_to_read);
-    if (initial_value == old_next_entry_to_read) {
-      Work work = wq->entries[old_next_entry_to_read];
-      work.callback(work.data);
-      InterlockedIncrement((LONG volatile*)&wq->completion_count);
-    }
-    
-  }
-  else {
-    should_sleep = true;
-  }
-  return should_sleep;
-}
-
-// NOTE(Momo): This makes the main thread
-// participate in the work queue.
-//
-// In some sense, calling this will simulate 'async' 
-// feature in modern languages, where we 'wait' until all
-// work in the work queue is done!
-//
-static void
-win_complete_all_work(Work_Queue* wq) {
-  while(wq->completion_goal != wq->completion_count) {
-    win_do_next_work_entry(wq);
-  }
-  wq->completion_goal = 0;
-  wq->completion_count = 0;
-}
-
-
-
-static DWORD WINAPI 
-win_worker_func(LPVOID ctx) {
-  Work_Queue* wq = (Work_Queue*)ctx;
-  
-  while(true) {
-    if (win_do_next_work_entry(wq)){
-      WaitForSingleObjectEx(wq->semaphore, INFINITE, FALSE);
-    }
-    
-  }
-}
-
-static B32
-win_init_work_queue(Work_Queue* wq, U32 thread_count) {
-  wq->semaphore = CreateSemaphoreEx(0,
-                                    0,                                
-                                    thread_count,
-                                    0, 0, SEMAPHORE_ALL_ACCESS);
-  
-  if (wq->semaphore == NULL) return false;
-  
-  for (U32 i = 0; i < thread_count; ++i) {
-    DWORD thread_id;
-    HANDLE thread = CreateThread(NULL, 0, 
-                                 win_worker_func, 
-                                 wq, 
-                                 0, //CREATE_SUSPENDED, 
-                                 &thread_id);
-    if (thread == NULL) {
-      return false;
-    }
-    CloseHandle(thread);
-  }
-  
-  return true;
-}
-
-// NOTE(Momo): This is not very thread safe. Other threads shouldn't call this.
-// TODO(Momo): Make it so that other threads can call this?
-static void
-win_add_work_entry(Work_Queue* wq, void (*callback)(void* ctx), void *data) {
-  U32 old_next_entry_to_write = wq->next_entry_to_write;
-  U32 new_next_entry_to_write = (old_next_entry_to_write + 1) % array_count(wq->entries);
-  assert(wq->next_entry_to_read != new_next_entry_to_write);  
-  
-  auto* entry = wq->entries + old_next_entry_to_write;
-  entry->callback = callback;
-  entry->data = data;
-  ++wq->completion_goal;
-  
-  //_ReadWriteBarrier();
-  
-  wq->next_entry_to_write = new_next_entry_to_write; // this MUST not be reordered
-  ReleaseSemaphore(wq->semaphore, 1, 0);
-}
-
-
-static void 
-test_work(void* context) {
-  
-  
-  int* i = (int*)context;
-  (*i) += 100;
-}
-
 //~ Main functions
+LRESULT CALLBACK
+win_window_callback(HWND window, 
+                    UINT message, 
+                    WPARAM w_param,
+                    LPARAM l_param) 
+{
+  LRESULT result = 0;
+  switch(message) {
+    case WM_CLOSE:  
+    case WM_QUIT:
+    case WM_DESTROY: {
+      win_global_state.is_running = false;
+    } break;
+    default: {
+      result = DefWindowProcA(window, message, w_param, l_param);
+    };   
+  }
+  return result;
+}
+
+
+
 int CALLBACK
 WinMain(HINSTANCE instance, 
         HINSTANCE prev_instance, 
@@ -446,28 +454,15 @@ WinMain(HINSTANCE instance,
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
   
-#if 1
-  Work_Queue _work_queue = {};
-  Work_Queue* work_queue = &_work_queue;
-  if (!win_init_work_queue(work_queue, 8)) {
-    return 1;
-  }
-  // Create work queue
-  int test[10] = {};
-  
-  // Test adding work
-  for(int i = 0;  i < array_count(test); ++i)
-    win_add_work_entry(work_queue, test_work, test+i);
-  win_complete_all_work(work_queue);
-  //WaitForMultipleObjects(array_count(threads), threads, TRUE, INFINITE);
-#endif
-  
   //- Initialize window state
   {
     win_global_state.is_running = true;
     win_global_state.is_hot_reloading = true;
     win_global_state.aspect_ratio_width = 1;
     win_global_state.aspect_ratio_height = 1;
+    if (!win_init_work_queue(&win_global_state.work_queue, 8)) {
+      return 1;
+    }
   }
   
   

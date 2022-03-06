@@ -16,9 +16,24 @@ struct GameMemory {
   PermanentMemory* perm;  
 };
 
+static int arr[100] = {};
+
+static void 
+test_work(void* context) {
+  int* i = (int*)context;
+  (*i) += 100;
+}
+
 
 exported B32 
 game_update(Game* game, Platform_API* pf, Input* input, Gfx* gfx, F32 dt) { 
+#if 1
+  // test threading
+  for (int i = 0; i < array_count(arr); ++i) {
+    pf->add_work(test_work, arr+i);
+  }  
+  pf->complete_all_work();
+#endif
   // Initialization
   if (!game->game_data) {
     pf->set_aspect_ratio(16, 9);
