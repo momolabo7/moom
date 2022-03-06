@@ -489,8 +489,8 @@ render_opengl(Opengl* ogl, V2U render_wh, Rect2U region)
   for (U32 i = 0; i < commands->entry_count; ++i) {
     Mailbox_Entry* entry = get_entry(commands, i);
     switch(entry->id) {
-      case GFX_CMD_TYPE_SET_BASIS: {
-        auto* data = (Gfx_Set_Basis_Cmd*)entry->data;
+      case GAME_GFX_CMD_TYPE_SET_BASIS: {
+        auto* data = (Game_Gfx_Set_Basis_Cmd*)entry->data;
         _draw_instances(ogl,
                         current_texture, 
                         instances_to_draw, 
@@ -508,8 +508,8 @@ render_opengl(Opengl* ogl, V2U render_wh, Rect2U region)
                                        GL_FALSE, 
                                        (const GLfloat*)&result);
       } break;
-      case GFX_CMD_TYPE_CLEAR: {
-        auto* data = (Gfx_Clear_Cmd*)entry->data;
+      case GAME_GFX_CMD_TYPE_CLEAR: {
+        auto* data = (Game_Gfx_Clear_Cmd*)entry->data;
         
         ogl->glClearColor(data->colors.r, 
                           data->colors.g, 
@@ -518,8 +518,8 @@ render_opengl(Opengl* ogl, V2U render_wh, Rect2U region)
         ogl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
       } break;
-      case GFX_CMD_TYPE_DRAW_RECT: {
-        auto* data = (Gfx_Draw_Rect_Cmd*)entry->data;
+      case GAME_GFX_CMD_TYPE_DRAW_RECT: {
+        auto* data = (Game_Gfx_Draw_Rect_Cmd*)entry->data;
         
         GLuint ogl_texture_handle = ogl->blank_texture;
         
@@ -558,8 +558,8 @@ render_opengl(Opengl* ogl, V2U render_wh, Rect2U region)
         ++instances_to_draw;
         ++current_instance_index;
       } break;
-      case GFX_CMD_TYPE_DRAW_SUBSPRITE: {
-        auto* data = (Gfx_Draw_Subsprite_Cmd*)entry->data;
+      case GAME_GFX_CMD_TYPE_DRAW_SUBSPRITE: {
+        auto* data = (Game_Gfx_Draw_Subsprite_Cmd*)entry->data;
         
         GLuint texture = ogl->textures[data->texture_index]; 
         if (texture == 0) {
@@ -607,8 +607,8 @@ render_opengl(Opengl* ogl, V2U render_wh, Rect2U region)
         ++current_instance_index;
         
       } break;
-      case GFX_CMD_TYPE_SET_TEXTURE: {
-        auto* data = (Gfx_Set_Texture_Cmd*)entry->data;
+      case GAME_GFX_CMD_TYPE_SET_TEXTURE: {
+        auto* data = (Game_Gfx_Set_Texture_Cmd*)entry->data;
         assert(data->texture_width < S32_MAX);
         assert(data->texture_height < S32_MAX);
         assert(data->texture_width > 0);
@@ -620,7 +620,7 @@ render_opengl(Opengl* ogl, V2U render_wh, Rect2U region)
                      (S32)data->texture_height, 
                      data->texture_pixels);
       } break;
-      case GFX_CMD_TYPE_CLEAR_TEXTURES: {
+      case GAME_GFX_CMD_TYPE_CLEAR_TEXTURES: {
         _clear_textures(ogl);
       } break;
     }

@@ -26,24 +26,29 @@ test_work(void* context) {
 
 
 exported B32 
-game_update(Game* game, Platform_API* pf, Input* input, Gfx* gfx, F32 dt) { 
+game_update(Game_Memory* game,
+            Game_Input* input, 
+            Game_Gfx* gfx) { 
+  Platform_API pf = game->platform_api;
+  F32 dt = game->delta_time;
+  
 #if 1
   // test threading
   for (int i = 0; i < array_count(arr); ++i) {
-    pf->add_work(test_work, arr+i);
+    pf.add_work(test_work, arr+i);
   }  
-  pf->complete_all_work();
+  pf.complete_all_work();
 #endif
   // Initialization
   if (!game->game_data) {
-    pf->set_aspect_ratio(16, 9);
+    pf.set_aspect_ratio(16, 9);
     
     // TODO(Momo): free allocated memory
-    game->game_data = pf->alloc(sizeof(GameMemory));
+    game->game_data = pf.alloc(sizeof(GameMemory));
     if (!game->game_data) return false;
     
     auto* game_memory = (GameMemory*)game->game_data;
-    game_memory->perm = (PermanentMemory*)pf->alloc(sizeof(PermanentMemory));
+    game_memory->perm = (PermanentMemory*)pf.alloc(sizeof(PermanentMemory));
     if (!game_memory->perm) return false;
     
     // Initialize perm memory
@@ -63,7 +68,7 @@ game_update(Game* game, Platform_API* pf, Input* input, Gfx* gfx, F32 dt) {
   PermanentMemory* perm = game_memory->perm;
   
   if (is_poked(input->button_up)) {
-    pf->hot_reload();
+    pf.hot_reload();
   }
   
   

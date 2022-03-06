@@ -68,23 +68,23 @@ struct Platform_API {
 // But that will probably require some insane enum
 // Or maybe we can put all these into Platform API?
 
-struct Input_Button {
+struct Game_Input_Button {
   B32 before;
   B32 now; 
 };
 
-static B32 is_poked(Input_Button) ;
-static B32 is_released(Input_Button);
-static B32 is_down(Input_Button);
-static B32 is_held(Input_Button);
+static B32 is_poked(Game_Input_Button) ;
+static B32 is_released(Game_Input_Button);
+static B32 is_down(Game_Input_Button);
+static B32 is_held(Game_Input_Button);
 
-struct Input {
-  Input_Button buttons[4];
+struct Game_Input {
+  Game_Input_Button buttons[4];
   struct {
-    Input_Button button_up;
-    Input_Button button_down;
-    Input_Button button_left;
-    Input_Button button_right;
+    Game_Input_Button button_up;
+    Game_Input_Button button_down;
+    Game_Input_Button button_left;
+    Game_Input_Button button_right;
   };  
   
   V2 design_mouse_pos;
@@ -93,26 +93,27 @@ struct Input {
   
 };
 
-void update(Input_Button button);
+void update(Game_Input_Button button);
 
 
 
 
 //~ NOTE(Momo): Game API
-// Returns true if game is done
-struct Game {
-  void* game_data; // pointer for game usage
+struct Game_Memory {
+  void* game_data; // pointer for game memory usage
+  
+  F32 delta_time;
+  Platform_API platform_api;
 };
 
-typedef void Game_UpdateFn(Game* game_memory,
-                           Platform_API* pf,
-                           Input* input,
-                           Gfx* gfx,
-                           F32 dt);
+struct Game_Gfx;
+typedef void Game_Update_Fn(Game_Memory* game_memory,
+                            Game_Input* input,
+                            Game_Gfx* gfx);
 
 // To be called by platform
 struct Game_API {
-  Game_UpdateFn* update;
+  Game_Update_Fn* update;
 };
 
 

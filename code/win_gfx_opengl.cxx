@@ -188,7 +188,7 @@ wingfx_free_memory(void* memory) {
 
 
 //~ NOTE(Momo): API implementation
-exported Gfx*
+exported Game_Gfx*
 wingfx_init(HWND window) {
   // NOTE(Momo): Calcluate the EXACT amount of memory needed.
   // TODO(Momo): Is there a better way to do this? 
@@ -298,7 +298,7 @@ if (!pf.name) { goto failed; }
 #endif
   
   
-  return (Gfx*)opengl;
+  return (Game_Gfx*)opengl;
   
   failed: 
   {
@@ -312,13 +312,13 @@ if (!pf.name) { goto failed; }
 
 
 exported void
-wingfx_render(Gfx* gfx,  V2U render_wh, Rect2U region) {
+wingfx_render(Game_Gfx* gfx,  V2U render_wh, Rect2U region) {
   render_opengl((Opengl*)gfx, render_wh, region);
 }
 
 
 exported void
-wingfx_free(Gfx* r) {
+wingfx_free(Game_Gfx* r) {
   Opengl* opengl = (Opengl*)r;
   free_opengl(opengl);
   wingfx_free_memory(opengl);

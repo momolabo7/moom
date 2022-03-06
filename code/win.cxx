@@ -546,8 +546,9 @@ WinMain(HINSTANCE instance,
     
   }
   
-  //-NOTE(Momo): Load Platform API for game
-  Platform_API pf_api = win_create_platform_api();
+  //-NOTE(Momo): Game Memory setup
+  Game_Memory game = {};
+  game.platform_api = win_create_platform_api();
   
   //-NOTE(Momo): Load Gfx functions
   WinGfx_API gfx_api;
@@ -555,13 +556,13 @@ WinMain(HINSTANCE instance,
   {
     gfx_dll =  LoadLibraryA("gfx.dll");
     if (gfx_dll) {
-      gfx_api.init = (wingfx_InitFn*)GetProcAddress(gfx_dll, "wingfx_init");
+      gfx_api.init = (Win_Gfx_Init_Fn*)GetProcAddress(gfx_dll, "wingfx_init");
       if(!gfx_api.init) return 1;
       
-      gfx_api.free = (wingfx_FreeFn*)GetProcAddress(gfx_dll, "wingfx_free");
+      gfx_api.free = (Win_Gfx_Free_Fn*)GetProcAddress(gfx_dll, "wingfx_free");
       if(!gfx_api.free) return 1;
       
-      gfx_api.render = (wingfx_RenderFn*)GetProcAddress(gfx_dll, "wingfx_render");
+      gfx_api.render = (Win_Gfx_Render_Fn*)GetProcAddress(gfx_dll, "wingfx_render");
       if(!gfx_api.render) return 1;
       
     }
@@ -573,7 +574,7 @@ WinMain(HINSTANCE instance,
   
   
   //-NOTE(Momo): Init gfx
-  Gfx* gfx = gfx_api.init(window);
+  Game_Gfx* gfx = gfx_api.init(window);
   if (!gfx) {
     return 1;
   }
@@ -581,11 +582,10 @@ WinMain(HINSTANCE instance,
   
   
   //- NOTE(Momo): Init input
-  Input input = {};
+  Game_Input input = {};
   
   
   //- Begin game loop
-  Game game = {};
   
   B32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   LARGE_INTEGER performance_frequency;
@@ -615,7 +615,7 @@ WinMain(HINSTANCE instance,
       
       game_dll = LoadLibraryA(running_game_dll);
       if (game_dll) {
-        game_api.update = (Game_UpdateFn*)GetProcAddress(game_dll, "game_update");
+        game_api.update = (Game_Update_Fn*)GetProcAddress(game_dll, "game_update");
         if(!game_api.update) {
           FreeLibrary(game_dll);
           return 1;
@@ -667,7 +667,8 @@ WinMain(HINSTANCE instance,
     //-Game logic here 
     // TODO(Momo): figure out target secs per frame
     const F64 game_dt = 1/60.0;
-    game_api.update(&game, &pf_api, &input, gfx, (F32)(game_dt));
+    game.delta_time = (F32)game_dt;
+    game_api.update(&game, &input, gfx);
     
     //-Game render here
     // NOTE(Momo): Resize if needed. 

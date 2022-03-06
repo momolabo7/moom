@@ -1,23 +1,23 @@
 // TODO(Momo): change to init and return bool
 static Game_Assets
-create_assets(Platform_API* pf, Gfx* gfx) {
+create_assets(Platform_API pf, Game_Gfx* gfx) {
   Game_Assets ret = {};
   
   UMI memory_size = MB(20);
-  void* mem = pf->alloc(memory_size);
+  void* mem = pf.alloc(memory_size);
   ret.arena = create_arena(mem, memory_size);
   
   
   
   // Read in file
-  PF_File file = pf->open_file("test.sui",
+  PF_File file = pf.open_file("test.sui",
                                PF_FILE_ACCESS_READ, 
                                PF_FILE_PATH_EXE);
   assert(!file.error);
   
   // Read header
   Sui_Header sui_header;
-  pf->read_file(&file, sizeof(Sui_Header), 0, &sui_header);
+  pf.read_file(&file, sizeof(Sui_Header), 0, &sui_header);
   
   // TODO: check magic number
   
@@ -40,7 +40,7 @@ create_assets(Platform_API* pf, Gfx* gfx) {
     
     Sui_Tag sui_tag;
     UMI offset_to_sui_tag = sui_header.offset_to_tags + sizeof(Sui_Tag)*tag_index;
-    pf->read_file(&file, sizeof(Sui_Tag), offset_to_sui_tag, &sui_tag);
+    pf.read_file(&file, sizeof(Sui_Tag), offset_to_sui_tag, &sui_tag);
     
     tag->type = (Asset_Tag_Type)sui_tag.type;
     tag->value = sui_tag.value;
@@ -58,7 +58,7 @@ create_assets(Platform_API* pf, Gfx* gfx) {
       UMI offset_to_sui_group = 
         sui_header.offset_to_groups + sizeof(Sui_Asset_Group)*group_index;
       
-      pf->read_file(&file, sizeof(Sui_Asset_Group), 
+      pf.read_file(&file, sizeof(Sui_Asset_Group), 
                     offset_to_sui_group, 
                     &sui_group);
       
@@ -78,7 +78,7 @@ create_assets(Platform_API* pf, Gfx* gfx) {
       UMI offset_to_sui_asset = 
         sui_header.offset_to_assets + sizeof(Sui_Asset)*asset_index;
       
-      pf->read_file(&file, sizeof(Sui_Asset), 
+      pf.read_file(&file, sizeof(Sui_Asset), 
                     offset_to_sui_asset, 
                     &sui_asset);
       
@@ -93,7 +93,7 @@ create_assets(Platform_API* pf, Gfx* gfx) {
         case ASSET_TYPE_BITMAP: {
           
           Sui_Bitmap sui_bitmap;
-          pf->read_file(&file, sizeof(Sui_Bitmap), 
+          pf.read_file(&file, sizeof(Sui_Bitmap), 
                         sui_asset.offset_to_data, 
                         &sui_bitmap);
           
@@ -102,7 +102,7 @@ create_assets(Platform_API* pf, Gfx* gfx) {
           asset->bitmap.height = sui_bitmap.height;
           asset->bitmap.pixels = (U32*)push_block(&ret.arena, bitmap_size);
           
-          pf->read_file(&file, bitmap_size, 
+          pf.read_file(&file, bitmap_size, 
                         sui_asset.offset_to_data + sizeof(Sui_Bitmap),
                         asset->bitmap.pixels);
           
@@ -117,7 +117,7 @@ create_assets(Platform_API* pf, Gfx* gfx) {
         } break;
         case ASSET_TYPE_IMAGE: {
           Sui_Image sui_image;
-          pf->read_file(&file, sizeof(Sui_Image), 
+          pf.read_file(&file, sizeof(Sui_Image), 
                         sui_asset.offset_to_data, 
                         &sui_image);
           
@@ -128,7 +128,7 @@ create_assets(Platform_API* pf, Gfx* gfx) {
           U32 current_data_offset = sui_asset.offset_to_data;
           
           Sui_Font sui_font;
-          pf->read_file(&file, sizeof(Sui_Font), 
+          pf.read_file(&file, sizeof(Sui_Font), 
                         sui_asset.offset_to_data, 
                         &sui_font);
           
@@ -153,7 +153,7 @@ create_assets(Platform_API* pf, Gfx* gfx) {
             
             Sui_Font_Glyph sui_glyph = {};
             
-            pf->read_file(&file, 
+            pf.read_file(&file, 
                           sizeof(Sui_Font_Glyph), 
                           glyph_data_offset,
                           &sui_glyph); 
