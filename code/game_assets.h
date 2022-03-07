@@ -35,7 +35,15 @@ struct Font_Asset {
   F32* horizontal_advances;
 };
 
+enum Asset_State {
+  ASSET_STATE_UNLOADED,
+  ASSET_STATE_LOADING,
+  ASSET_STATE_LOADED,
+};
+
 struct Asset {
+  Asset_State state;
+  
   U32 first_tag_index;
   U32 one_past_last_tag_index;
   

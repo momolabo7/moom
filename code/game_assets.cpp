@@ -11,8 +11,8 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
   
   // Read in file
   PF_File file = pf.open_file("test.sui",
-                               PF_FILE_ACCESS_READ, 
-                               PF_FILE_PATH_EXE);
+                              PF_FILE_ACCESS_READ, 
+                              PF_FILE_PATH_EXE);
   assert(!file.error);
   
   // Read header
@@ -59,8 +59,8 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
         sui_header.offset_to_groups + sizeof(Sui_Asset_Group)*group_index;
       
       pf.read_file(&file, sizeof(Sui_Asset_Group), 
-                    offset_to_sui_group, 
-                    &sui_group);
+                   offset_to_sui_group, 
+                   &sui_group);
       
       group->first_asset_index = sui_group.first_asset_index;
       group->one_past_last_asset_index = sui_group.one_past_last_asset_index;
@@ -79,8 +79,8 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
         sui_header.offset_to_assets + sizeof(Sui_Asset)*asset_index;
       
       pf.read_file(&file, sizeof(Sui_Asset), 
-                    offset_to_sui_asset, 
-                    &sui_asset);
+                   offset_to_sui_asset, 
+                   &sui_asset);
       
       // Process the assets
       // NOTE(Momo): For now, we are prefetching EVERYTHING.
@@ -94,8 +94,8 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
           
           Sui_Bitmap sui_bitmap;
           pf.read_file(&file, sizeof(Sui_Bitmap), 
-                        sui_asset.offset_to_data, 
-                        &sui_bitmap);
+                       sui_asset.offset_to_data, 
+                       &sui_bitmap);
           
           U32 bitmap_size = sui_bitmap.width * sui_bitmap.height * 4;
           asset->bitmap.width = sui_bitmap.width;
@@ -103,8 +103,8 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
           asset->bitmap.pixels = (U32*)push_block(&ret.arena, bitmap_size);
           
           pf.read_file(&file, bitmap_size, 
-                        sui_asset.offset_to_data + sizeof(Sui_Bitmap),
-                        asset->bitmap.pixels);
+                       sui_asset.offset_to_data + sizeof(Sui_Bitmap),
+                       asset->bitmap.pixels);
           
           // send to renderer to manage
           asset->bitmap.gfx_bitmap_id = ret.bitmap_counter++;
@@ -118,8 +118,8 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
         case ASSET_TYPE_IMAGE: {
           Sui_Image sui_image;
           pf.read_file(&file, sizeof(Sui_Image), 
-                        sui_asset.offset_to_data, 
-                        &sui_image);
+                       sui_asset.offset_to_data, 
+                       &sui_image);
           
           asset->image.bitmap_id.value = sui_image.bitmap_asset_id;
           asset->image.uv = sui_image.uv;
@@ -129,8 +129,8 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
           
           Sui_Font sui_font;
           pf.read_file(&file, sizeof(Sui_Font), 
-                        sui_asset.offset_to_data, 
-                        &sui_font);
+                       sui_asset.offset_to_data, 
+                       &sui_font);
           
           asset->font.one_past_highest_codepoint = sui_font.one_past_highest_codepoint;
           asset->font.glyph_count = sui_font.glyph_count;
@@ -154,9 +154,9 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
             Sui_Font_Glyph sui_glyph = {};
             
             pf.read_file(&file, 
-                          sizeof(Sui_Font_Glyph), 
-                          glyph_data_offset,
-                          &sui_glyph); 
+                         sizeof(Sui_Font_Glyph), 
+                         glyph_data_offset,
+                         &sui_glyph); 
             
             auto* glyph = glyphs + glyph_index;
             glyph->uv = sui_glyph.uv;
@@ -182,6 +182,7 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
     
   }
   
+  pf.complete_all_work();
   return ret;
 }
 

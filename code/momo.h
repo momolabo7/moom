@@ -3,6 +3,7 @@
 #define MOMO_H
 
 #include "momo_essentials.h"
+#include "momo_atomic.h"
 #include "momo_colors.h"
 #include "momo_vectors.h"
 #include "momo_interval.h"
