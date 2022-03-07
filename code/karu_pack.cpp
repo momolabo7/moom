@@ -239,8 +239,8 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
             F32 kerning = (F32)raw_kern * pixel_scale;
             
             F32 advance = advance_width + kerning;
-            //fwrite(&advance, sizeof(advance), 1, file);
-            //karu_log("[%d,%d] %f\n", cp1, cp2, advance);
+            fwrite(&advance, sizeof(advance), 1, file);
+            karu_log("[%d,%d] %f\n", cp1, cp2, advance);
           }
         }
         

@@ -328,6 +328,7 @@ win_open_file(const char* filename,
     return ret;
   }
   else {
+    // TODO(Momo): We should definitely use an arena for this
     auto* win_file = (Win_File*)win_allocate_memory(sizeof(Win_File));
     win_file->handle = handle;
     
@@ -341,6 +342,8 @@ static void
 win_close_file(PF_File* file) {
   auto* win_file = (Win_File*)file->platform_data;
   CloseHandle(win_file->handle);
+  
+  // TODO(Momo): We should definitely use an arena for this
   win_free_memory(file->platform_data);
   file->platform_data = nullptr;
 }
@@ -355,7 +358,7 @@ win_read_file(PF_File* file, UMI size, UMI offset, void* dest)
   // Reading the file
   OVERLAPPED overlapped = {};
   overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
-  overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
+#include <intrin.h> overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
   
   DWORD bytes_read;
   
