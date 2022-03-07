@@ -1,3 +1,17 @@
+static B32
+is_ok(Bitmap_Asset_ID id)  { 
+  return id.value != 0;
+}
+static B32
+is_ok(Font_Asset_ID id)  { 
+  return id.value != 0;
+}
+static B32
+is_ok(Image_Asset_ID id)  { 
+  return id.value != 0;
+}
+
+
 // TODO(Momo): change to init and return bool
 static Game_Assets
 create_assets(Platform_API pf, Game_Gfx* gfx) {
