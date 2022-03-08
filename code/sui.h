@@ -28,23 +28,6 @@ struct Sui_Header {
   U32 offset_to_assets;
   U32 offset_to_groups;
 };
-
-struct Sui_Asset {
-  U32 type; // e.g. Asset_Tag_Type
-  
-  U32 offset_to_data;
-  
-  // Tag info
-  U32 first_tag_index;
-  U32 one_past_last_tag_index;
-  
-};
-
-struct Sui_Tag {
-  U32 type; // e.g. Asset_Tag_Type
-  F32 value;
-};
-
 struct Sui_Image {
   Rect2 uv;
   U32 bitmap_asset_id;
@@ -76,6 +59,28 @@ struct Sui_Bitmap {
   // U32 pixels[width*height]
   //
 };
+
+struct Sui_Asset {
+  U32 type; // e.g. Asset_Tag_Type
+  
+  U32 offset_to_data;
+  
+  // Tag info
+  U32 first_tag_index;
+  U32 one_past_last_tag_index;
+  
+  union {
+    Sui_Bitmap bitmap;
+    Sui_Font font;
+    Sui_Image image;
+  };
+};
+
+struct Sui_Tag {
+  U32 type; // e.g. Asset_Tag_Type
+  F32 value;
+};
+
 
 
 

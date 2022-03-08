@@ -7,6 +7,8 @@ Momo
 
 Engine
 	Mutithread support
+    Refactor Sui_Assets to have a union of all its assets
+      This probably needs to refactor create_assets() if I want it to run.
 	Sound
   
 4coder

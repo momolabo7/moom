@@ -150,12 +150,11 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
         karu_log("Writing bitmap from bitmap source\n");
         sui_asset->type = ASSET_TYPE_BITMAP;
         
-        Sui_Bitmap sui_bitmap = {};
-        sui_bitmap.width = source->bitmap.width;
-        sui_bitmap.height = source->bitmap.height;
-        fwrite(&sui_bitmap, sizeof(sui_bitmap), 1, file);
+        Sui_Bitmap* sui_bitmap = &sui_asset->bitmap;
+        sui_bitmap->width = source->bitmap.width;
+        sui_bitmap->height = source->bitmap.height;
         
-        U32 image_size = sui_bitmap.width * sui_bitmap.height * 4;
+        U32 image_size = sui_bitmap->width * sui_bitmap->height * 4;
         fwrite(source->bitmap.pixels, image_size, 1, file);
         
       } break;
@@ -163,11 +162,9 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
         karu_log("Writing image from image source\n");
         sui_asset->type = ASSET_TYPE_IMAGE;
         
-        Sui_Image sui_image = {};
-        sui_image.uv = source->image.uv;
-        sui_image.bitmap_asset_id = source->image.bitmap_asset_id;
-        
-        fwrite(&sui_image, sizeof(sui_image), 1, file);
+        Sui_Image* sui_image = &sui_asset->image;
+        sui_image->uv = source->image.uv;
+        sui_image->bitmap_asset_id = source->image.bitmap_asset_id;
       } break;
       case KARU_SOURCE_TYPE_ATLAS_FONT: {
         karu_log("Writing font from atlas font\n");
@@ -192,10 +189,9 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
         }
         if (highest_codepoint == 0) 
           continue;
-        Sui_Font sui_font = {};
-        sui_font.one_past_highest_codepoint = highest_codepoint + 1;
-        sui_font.glyph_count = atlas_font->codepoint_count;
-        fwrite(&sui_font, sizeof(sui_font), 1, file);
+        Sui_Font* sui_font = &sui_asset->font;
+        sui_font->one_past_highest_codepoint = highest_codepoint + 1;
+        sui_font->glyph_count = atlas_font->codepoint_count;
         
         // push glyphs
         for (U32 rect_index = 0;

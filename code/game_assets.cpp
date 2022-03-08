@@ -105,15 +105,16 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
       
       switch(asset->type) {
         case ASSET_TYPE_BITMAP: {
-          
+          asset->bitmap.width = sui_asset.bitmap.width;
+          asset->bitmap.height = sui_asset.bitmap.height;
+#if 0
           Sui_Bitmap sui_bitmap;
           pf.read_file(&file, sizeof(Sui_Bitmap), 
                        sui_asset.offset_to_data, 
                        &sui_bitmap);
+#endif
           
-          U32 bitmap_size = sui_bitmap.width * sui_bitmap.height * 4;
-          asset->bitmap.width = sui_bitmap.width;
-          asset->bitmap.height = sui_bitmap.height;
+          U32 bitmap_size = asset->bitmap.width * asset->bitmap.height * 4;
           asset->bitmap.pixels = (U32*)push_block(&ret.arena, bitmap_size);
           
           pf.read_file(&file, bitmap_size, 
@@ -130,26 +131,27 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
           
         } break;
         case ASSET_TYPE_IMAGE: {
+#if 0
           Sui_Image sui_image;
           pf.read_file(&file, sizeof(Sui_Image), 
                        sui_asset.offset_to_data, 
                        &sui_image);
+#endif
           
-          asset->image.bitmap_id.value = sui_image.bitmap_asset_id;
-          asset->image.uv = sui_image.uv;
+          asset->image.bitmap_id.value = sui_asset.image.bitmap_asset_id;
+          asset->image.uv = sui_asset.image.uv;
         } break;
         case ASSET_TYPE_FONT: {
-          U32 current_data_offset = sui_asset.offset_to_data;
-          
+#if 0          
           Sui_Font sui_font;
           pf.read_file(&file, sizeof(Sui_Font), 
                        sui_asset.offset_to_data, 
                        &sui_font);
+#endif
           
-          U32 glyph_count = sui_font.glyph_count;
-          U32 one_past_highest_codepoint = sui_font.one_past_highest_codepoint;
+          U32 glyph_count = sui_asset.font.glyph_count;
+          U32 one_past_highest_codepoint = sui_asset.font.one_past_highest_codepoint;
           
-          current_data_offset += sizeof(Sui_Font);
           
           auto* codepoint_map = push_array<U16>(&ret.arena, one_past_highest_codepoint);
           assert(codepoint_map);
@@ -159,13 +161,13 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
           auto* advances = push_array<F32>(&ret.arena, glyph_count*glyph_count);
           assert(advances);
           
+          U32 current_data_offset = sui_asset.offset_to_data;
           for(U16 glyph_index = 0; 
-              glyph_index < sui_font.glyph_count;
+              glyph_index < glyph_count;
               ++glyph_index)
           {
             U32 glyph_data_offset = 
               sui_asset.offset_to_data + 
-              sizeof(Sui_Font) + 
               sizeof(Sui_Font_Glyph)*glyph_index;
             
             Sui_Font_Glyph sui_glyph = {};
@@ -189,7 +191,6 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
             for (U32 gi2 = 0; gi2 < glyph_count; ++gi2) {
               U32 advance_data_offset = 
                 sui_asset.offset_to_data + 
-                sizeof(Sui_Font) + 
                 sizeof(Sui_Font_Glyph)*glyph_count+
                 sizeof(F32)*advance_index;
               pf.read_file(&file,
