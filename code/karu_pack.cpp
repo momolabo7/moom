@@ -126,7 +126,7 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
   U32 group_array_size = sizeof(Sui_Asset_Group)*ASSET_GROUP_COUNT;
   
   Sui_Header header = {};
-  header.magic_value = SUI_MAGIC_VALUE;
+  header.signature = SUI_SIGNATURE;
   header.group_count = ASSET_GROUP_COUNT;
   header.asset_count = sp->asset_count;
   header.tag_count = sp->tag_count;
@@ -236,7 +236,6 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
             
             F32 advance = advance_width + kerning;
             fwrite(&advance, sizeof(advance), 1, file);
-            karu_log("[%d,%d] %f\n", cp1, cp2, advance);
           }
         }
         

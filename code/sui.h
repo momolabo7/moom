@@ -9,8 +9,8 @@
 // Sui file related
 #pragma pack(push,1)
 
-#define SUI_CODE(a, b, c, d) (((U32)(a) << 0) | ((U32)(b) << 8) | ((U32)(c) << 16) | ((U32)(d) << 24))
-#define SUI_MAGIC_VALUE SUI_CODE('k', 'a', 'r', 'u');
+#define _SUI_CODE(a, b, c, d) (((U32)(a) << 0) | ((U32)(b) << 8) | ((U32)(c) << 16) | ((U32)(d) << 24))
+#define SUI_SIGNATURE _SUI_CODE('k', 'a', 'r', 'u')
 
 struct Sui_Asset_Group {
   U32 first_asset_index;
@@ -18,7 +18,7 @@ struct Sui_Asset_Group {
 };
 
 struct Sui_Header {
-  U32 magic_value;
+  U32 signature;
   
   U32 asset_count;
   U32 group_count;
@@ -82,9 +82,6 @@ struct Sui_Tag {
 };
 
 
-
-
 #pragma pack(pop)
-
 
 #endif // SUI_H

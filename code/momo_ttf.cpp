@@ -674,13 +674,10 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   if (bitmap_dims.w == 0 || bitmap_dims.h == 0) return {};
   
   F32 height = abs_of(box.max.y - box.min.y);   
-  U32* pixels = push_array<U32>(arena, bitmap_dims.w * bitmap_dims.h);
+  U32 bitmap_size = bitmap_dims.w*bitmap_dims.h*4;
+  U32* pixels = (U32*)push_block(arena, bitmap_size);
   if (!pixels) return {};
-  
-  // Set to white background
-  for (U32 i = 0; i < bitmap_dims.w*bitmap_dims.h; ++i) {
-    pixels[i] = 0x00000000;
-  }
+  zero_memory(pixels, bitmap_size);
   
   set_arena_reset_point(arena);
   

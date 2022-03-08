@@ -99,7 +99,6 @@ win_get_secs_elapsed(LARGE_INTEGER start,
   return (F64(end.QuadPart - start.QuadPart)) / performance_frequency.QuadPart;
 }
 
-
 //~Win_Work queue functionality
 struct Win_Work {
   void* data;
@@ -626,7 +625,7 @@ WinMain(HINSTANCE instance,
     }
     
     //-Process messages and input
-    // TODO(Momo): figure out target secs per frame
+    // TODO: Calculate ideal dt basaed on refresh rate
     const F64 target_dt = 1/60.0;
     input.seconds_since_last_frame = (F32)target_dt;
     update(&input);
@@ -714,7 +713,7 @@ WinMain(HINSTANCE instance,
     }
     else {
       // NOTE(Momo): At this point, we basically missed a frame :(
-      // TODO(Momo): Do we need to do anything about missing a frame?
+      // TODO(Momo): Lower target frame rate
     }
     
     

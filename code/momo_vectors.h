@@ -82,10 +82,6 @@ static V3 normalize(V3 v);
 static V3 project(V3 v, V3 onto);
 static F32 	angle_between(V3 lhs, V3 rhs);
 
-// TODO(Momo): I'm not sure if we should actually
-// do operator* because there's so many damn ways
-// to multiply a vector. Maybe we'll use the most 
-// commonly used operation?
 static constexpr V2 operator+(V2 lhs, V2 rhs);
 static constexpr V2 operator-(V2 lhs, V2 rhs);
 static constexpr V2 operator*(V2 lhs, F32 rhs); // scale

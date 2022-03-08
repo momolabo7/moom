@@ -11,6 +11,8 @@ is_ok(Image_Asset_ID id)  {
   return id.value != 0;
 }
 
+
+
 static B32
 init_game_assets(Game_Assets* ga, Platform_API pf, Game_Gfx* gfx) {
   
@@ -30,9 +32,11 @@ init_game_assets(Game_Assets* ga, Platform_API pf, Game_Gfx* gfx) {
   Sui_Header sui_header;
   pf.read_file(&file, sizeof(Sui_Header), 0, &sui_header);
   
-  // TODO: check magic number
-  
-  
+
+  if (sui_header.signature != SUI_SIGNATURE) {
+    return false;
+  }
+
   // Allocation
   ga->assets = push_array<Asset>(&ga->arena, sui_header.asset_count);
   assert(ga->assets);
