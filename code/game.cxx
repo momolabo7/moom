@@ -46,17 +46,16 @@ game_update(Game_Memory* game,
   if (!game->state) {
     pf.set_aspect_ratio(16, 9);
     
-    // TODO(Momo): free allocated memory
     game->state = (Game_State*)pf.alloc(sizeof(Game_State));
     if (!game->state) return false;
     
-    game->state->game_assets = create_assets(pf, gfx);
+    B32 success = init_game_assets(&game->state->game_assets, pf, gfx);
+    if(!success) return false;
     
     
     // Initialize perm memory
     Sandbox_Mode* sandbox = &game->state->sandbox_mode;
     
-    // TODO(Momo): for now...
     sandbox->tmp_delta = 0.f;
     sandbox->tmp_increase = true;
     sandbox->tmp_rot = 0.f;

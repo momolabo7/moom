@@ -1,8 +1,6 @@
-//~ NOTE(Momo): Memory functions
+//~Memory functions
 // NOTE(Momo): These functions can use memset/memcopy/memcmp
 // but they might not be avaliable. 
-// TODO(Momo): Figure out a nice flag to indicate if libraries
-// are avaliable for use or not. Maybe IS_CRT?
 
 static B32
 is_ok(Memory mem) {
@@ -421,7 +419,6 @@ endian_swap_32(U32 value) {
 ///////////////////////////////////
 //~ NOTE(Momo): Non-trivial math functions
 // We have to use math.h here as default
-// TODO(Momo): write our own versions
 ns_begin(std)
 #include <math.h>
 ns_end(std)

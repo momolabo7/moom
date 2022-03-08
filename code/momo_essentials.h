@@ -56,7 +56,7 @@
 #endif 
 
 // CPU architecture contexts
-// TODO(Momo): For ARM, there are probably different versions
+// NOTE(Momo): For ARM, there are probably different versions
 #if COMPILER_MSVC
 # if defined(_M_X86)
 #  define ARCH_X86 1
@@ -112,8 +112,6 @@
 
 //////////////////////////////////////////
 //~Basic types
-// TODO(Momo): Cater for cases where stdint.h does not exist?
-
 #include <stdint.h>
 typedef uint8_t U8;
 typedef uint16_t U16;
@@ -157,7 +155,6 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 // >> else 
 // >>    ...
 // which causes an invalid ';' error
-// TODO: Blog this?
 //
 #define Stmt(s) do { s } while(0)
 #define array_count(A) (sizeof(A)/sizeof(*A))
@@ -168,8 +165,6 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 // Returning a strict type almost always end up requiring an explicit
 // conversion on the user side.
 // 
-// TODO(Momo): I mean...we can also create different versions of KB/MB/GB too...
-//
 #define KB(n) ((1<<10) * n)
 #define MB(n) ((1<<20) * n)
 #define GB(n) ((1<<30) * n)
@@ -187,7 +182,6 @@ static constexpr U8* int_to_ptr(UMI u);
 // https://www.drdobbs.com/generic-min-and-max-redivivus/184403774
 // For now we keep these simple and use template functions, so that
 // we do not need to reevaluate the arguments every time.
-// TODO(Momo): We might want t 'comparison' function version for min and max
 //
 template<typename T> static constexpr T min_of(T l, T r);
 template<typename T> static constexpr T max_of(T l, T r);
@@ -334,7 +328,6 @@ static constexpr F64 bpm_to_spb(F64 bpm);
 // Or we COULD just ignore the concept of type:
 //   void _EndianSwap16(U8* ptr)
 //   #define endian_swap_16(value) _EndianSwap16((U8*)&value)
-// TODO(Momo): Let's figure EndianSwap one day
 static constexpr U16 endian_swap_16(U16 value);
 static constexpr U32 endian_swap_32(U32 value);
 

@@ -40,7 +40,6 @@ template<typename T> static T* push_array(Arena* a, UMI num, UMI align = 4);
 static Arena_Marker mark(Arena* arena);
 static void		     revert(Arena_Marker marker);
 
-// TODO(Momo): I don't actually feel like it's reasonable to use this anymore?
 //static void* BootBlock(UMI struct_size, UMI offset_to_arena, void* memory, UMI memory_size);
 //#define Arena_Boot(type, member, memory, memory_size) \
 //(type*)Arena_BootBlock(sizeof(type), OffsetOf(type, member), (memory), (memory_size)) 

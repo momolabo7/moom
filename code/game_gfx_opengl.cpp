@@ -86,7 +86,6 @@ _attach_shader(Opengl* ogl,
   ogl->glDeleteShader(shader_handle);
 }
 
-// TODO: Maybe this should be a command?
 static void 
 _align_viewport(Opengl* ogl, 
                 V2U render_wh, 

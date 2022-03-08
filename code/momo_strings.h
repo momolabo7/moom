@@ -14,16 +14,13 @@ static Str8 create_str8(U8* Str, UMI size);
 static Str8 substr(Str8 Str, UMI start, UMI ope);
 static B32  match(Str8 lhs, Str8 rhs);
 
-// No one should be using this
-// TODO: Maybe make a macro to enable/disable this?
+// NOTE(Momo): No one should be using this
+// Maybe make a macro to enable/disable this?
 #define str8_from_lit(s) create_str8((U8*)(s), sizeof(s)-1)
 
 static B32 operator==(Str8 lhs, Str8 rhs);
 static B32 operator!=(Str8 lhs, Str8 rhs);
 
-
-// TODO: String split
-// TODO: String nodes?
 
 
 //~ note(momo): String builders
@@ -36,7 +33,7 @@ struct Str8Bld{
 		};
 	};
 	UMI cap;
-
+  
 	UMI      remaining();
 	void     clear();
 	void     pop();
@@ -46,11 +43,10 @@ struct Str8Bld{
 	void     push_S32(S32 num);
 	void     push_Str8(Str8 num);
 	void     push_format(Str8 fmt, ...);
-
+  
 };
 
 static Str8Bld  create_str8bld(U8* data, UMI cap);
-// TODO: We should remove this and figure out a better way to do format strings.
 //#define Str8Bld_temp(name, cap) U8 temp##__line__[cap]; Str8Bld name = Str8Bld_Create(temp##__line__, cap);
 
 

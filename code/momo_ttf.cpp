@@ -678,7 +678,6 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   if (!pixels) return {};
   
   // Set to white background
-  // TODO(Momo): change to alpha
   for (U32 i = 0; i < bitmap_dims.w*bitmap_dims.h; ++i) {
     pixels[i] = 0x00000000;
   }

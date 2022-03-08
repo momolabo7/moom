@@ -3,7 +3,7 @@
 static void
 set_basis(Game_Gfx* g, M44 basis) {
   auto* data = push<Game_Gfx_Set_Basis_Cmd>(&g->commands,
-                                       GAME_GFX_CMD_TYPE_SET_BASIS);
+                                            GAME_GFX_CMD_TYPE_SET_BASIS);
   data->basis = basis;
 }
 
@@ -13,7 +13,7 @@ set_orthographic_camera(Game_Gfx* g,
                         Rect3 frustum)   
 {
   auto* data = push<Game_Gfx_Set_Basis_Cmd>(&g->commands, 
-                                       GAME_GFX_CMD_TYPE_SET_BASIS);
+                                            GAME_GFX_CMD_TYPE_SET_BASIS);
   M44 p  = create_m44_orthographic(frustum.min.x,  
                                    frustum.max.x, 
                                    frustum.min.y, 
@@ -29,7 +29,7 @@ set_orthographic_camera(Game_Gfx* g,
 static void
 clear(Game_Gfx* g, RGBA colors) {
   auto* data = push<Game_Gfx_Clear_Cmd>(&g->commands,
-                                   GAME_GFX_CMD_TYPE_CLEAR);
+                                        GAME_GFX_CMD_TYPE_CLEAR);
   
   data->colors = colors;
 }
@@ -43,7 +43,7 @@ draw_subsprite(Game_Gfx* g,
 
 {
   auto* data = push<Game_Gfx_Draw_Subsprite_Cmd>(&g->commands,
-                                            GAME_GFX_CMD_TYPE_DRAW_SUBSPRITE);
+                                                 GAME_GFX_CMD_TYPE_DRAW_SUBSPRITE);
   
   data->colors = colors;
   data->transform = transform;
@@ -93,8 +93,6 @@ draw_line(Game_Gfx* g,
   V2 x_axis = { 1.f, 0.f };
   F32 angle = angle_between(line_vector, x_axis);
   
-  // TODO(Momo): Should really precompute this
-  // IF ONLY WE CAN DO THIS IN COMPILE TIME. COUGH.
   M44 T = create_m44_translation(line_mid.x, line_mid.y, pos_z);
   M44 R = create_m44_rotation_z(angle);
   M44 S = create_m44_scale(line_length, thickness, 1.f) ;
@@ -211,7 +209,7 @@ set_texture(Game_Gfx* g,
             U32* texture_pixels) 
 {
   
-  // TODO: we should probably align this to 16 bytes
+  // NOTE: we should probably align this to 16 bytes
   // so that the renderer can optimize the copying...?
   UMI texture_size = texture_width * texture_height * 4;
   
@@ -228,5 +226,5 @@ set_texture(Game_Gfx* g,
 static void 
 clear_textures(Game_Gfx* g) {
   push<Game_Gfx_Clear_Textures_Cmd>(&g->commands, 
-                               GAME_GFX_CMD_TYPE_CLEAR_TEXTURES);
+                                    GAME_GFX_CMD_TYPE_CLEAR_TEXTURES);
 }

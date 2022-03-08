@@ -1,6 +1,3 @@
-/* date = November 29th 2021 9:58 pm */
-// TODO(Momo): Should rename to 'momo_list.h'
-
 #ifndef MOMO_ARRAY_H
 #define MOMO_ARRAY_H
 

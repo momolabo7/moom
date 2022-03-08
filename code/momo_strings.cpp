@@ -96,7 +96,7 @@ void
 Str8Bld::push_S32(S32 num) {
   if (num == 0) {
     push_C8('0');
-	return;
+    return;
   }
   
   UMI start_pt = this->count; 
@@ -146,6 +146,7 @@ Str8Bld::push_F32(F32 value, U32 precision) {
 
 // Minimal implementation of sprintf
 // %[flags][width][.precision][length]specifier
+// NOTE(Momo): flags, width, precision and length not done
 void
 _PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
 	UMI at = 0;
@@ -154,11 +155,6 @@ _PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
     if (format.e[at] == '%') {
       ++at;
 			
-      // TODO(Momo): Parse flags
-			// TODO(Momo): Parse width
-			// TODO(Momo): Parse precision
-			// TODO(Momo): Parse length
-      
 			switch(format.e[at]) {
 				//- NOTE(Momo): Standard Types
 				case 'd': 

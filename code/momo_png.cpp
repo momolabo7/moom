@@ -171,8 +171,6 @@ _png_huffman_compute(_PNG_Huffman* h,
   
   
   // NOTE(Momo): We add +1 because lengths[0] is not possible
-  // TODO(Momo): We can optimize this a bit by always treating
-  // length[0] as length 1.
   h->length_count = max_lengths;
   h->lengths = push_array<U16>(arena, max_lengths + 1);
   zero_memory(h->lengths, h->length_count * sizeof(U16));
@@ -249,7 +247,6 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
           _png_log("LEN vs NLEN mismatch!");
           return false; 
         }
-        // TODO: complete this
         _png_log("BTYPE 0 not supported!");
         return false;
       } break;
@@ -265,8 +262,6 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
           U16 lit_codes[288] = {};
           U16 dist_codes[32] = {};
           
-          // TODO(Momo): This is kinda fixed, so we
-          // can probably cache it?
           U32 lit = 0;
           for (; lit < 144; ++lit) {
             lit_codes[lit] = 8;
@@ -284,8 +279,7 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
             dist_codes[lit] = 5;
           }
           
-          // TODO(Momo): max symbols is same as codes_size??
-          // Can we do something about it?
+          
           _png_huffman_compute(&lit_huffman,
                                arena, 
                                lit_codes, 
@@ -300,7 +294,6 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
         }
         else // BTYPE == 0b10
         {
-          // TODO: Dynamic huffman
           _png_log(">>>> Dynamic huffman\n");
           U32 HLIT = consume_bits(src_stream, 5) + 257;
           U32 HDIST = consume_bits(src_stream, 5) + 1;
@@ -447,10 +440,8 @@ _png_get_channels_from_colour_type(U32 colour_type) {
     case 2: {
       return 3; // RGB
     } break;
-    case 3: {
-      // TODO: we do something special here?
-      // Maybe return 0 and then outside check if 0
-      // then try to determine from palette?
+    case 3: { // Palette
+      assert(false);
       return 0;
     } break;
     case 4: {
@@ -783,7 +774,6 @@ create_bitmap(PNG* png, Arena* arena)
 {
   if (!is_ok(png)) return {};
   
-  // TODO(Momo): We should really clean up _PNG_Context
   _PNG_Context ctx = {};
   ctx.arena = arena;
   ctx.stream = create_stream(png->data, png->data_size);
@@ -857,8 +847,6 @@ create_bitmap(PNG* png, Arena* arena)
 }
 
 
-// TODO(Momo): bits per pixel?
-// TODO(Momo): Maybe we shift this to another file? momo_png_write.h?
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
 static Memory

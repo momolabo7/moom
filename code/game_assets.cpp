@@ -11,15 +11,12 @@ is_ok(Image_Asset_ID id)  {
   return id.value != 0;
 }
 
-
-// TODO(Momo): change to init and return bool
-static Game_Assets
-create_assets(Platform_API pf, Game_Gfx* gfx) {
-  Game_Assets ret = {};
+static B32
+init_game_assets(Game_Assets* ga, Platform_API pf, Game_Gfx* gfx) {
   
   UMI memory_size = MB(20);
   void* mem = pf.alloc(memory_size);
-  ret.arena = create_arena(mem, memory_size);
+  ga->arena = create_arena(mem, memory_size);
   
   
   
@@ -37,20 +34,20 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
   
   
   // Allocation
-  ret.assets = push_array<Asset>(&ret.arena, sui_header.asset_count);
-  assert(ret.assets);
-  ret.asset_count = sui_header.asset_count;
+  ga->assets = push_array<Asset>(&ga->arena, sui_header.asset_count);
+  assert(ga->assets);
+  ga->asset_count = sui_header.asset_count;
   
-  ret.tags = push_array<Asset_Tag>(&ret.arena, sui_header.tag_count);
-  assert(ret.tags);
-  ret.tag_count = sui_header.tag_count;
+  ga->tags = push_array<Asset_Tag>(&ga->arena, sui_header.tag_count);
+  assert(ga->tags);
+  ga->tag_count = sui_header.tag_count;
   
   // Fill data for tag
   for (U32 tag_index = 0;
-       tag_index < ret.tag_count; 
+       tag_index < ga->tag_count; 
        ++tag_index) 
   {
-    Asset_Tag* tag = ret.tags + tag_index;
+    Asset_Tag* tag = ga->tags + tag_index;
     
     Sui_Tag sui_tag;
     UMI offset_to_sui_tag = sui_header.offset_to_tags + sizeof(Sui_Tag)*tag_index;
@@ -65,7 +62,7 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
       group_index < sui_header.group_count;
       ++group_index) 
   {
-    Asset_Group* group = ret.groups + group_index;
+    Asset_Group* group = ga->groups + group_index;
     {
       // Look for corresponding Sui_Asset_Group in file
       Sui_Asset_Group sui_group;
@@ -85,7 +82,7 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
          asset_index < group->one_past_last_asset_index;
          ++asset_index) 
     {
-      Asset* asset = ret.assets + asset_index;
+      Asset* asset = ga->assets + asset_index;
       
       // Look for corresponding Sui_Asset in file
       Sui_Asset sui_asset;
@@ -115,14 +112,14 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
 #endif
           
           U32 bitmap_size = asset->bitmap.width * asset->bitmap.height * 4;
-          asset->bitmap.pixels = (U32*)push_block(&ret.arena, bitmap_size);
+          asset->bitmap.pixels = (U32*)push_block(&ga->arena, bitmap_size);
           
           pf.read_file(&file, bitmap_size, 
                        sui_asset.offset_to_data + sizeof(Sui_Bitmap),
                        asset->bitmap.pixels);
           
           // send to renderer to manage
-          asset->bitmap.gfx_bitmap_id = ret.bitmap_counter++;
+          asset->bitmap.gfx_bitmap_id = ga->bitmap_counter++;
           set_texture(gfx, 
                       asset->bitmap.gfx_bitmap_id, 
                       asset->bitmap.width, 
@@ -153,12 +150,12 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
           U32 one_past_highest_codepoint = sui_asset.font.one_past_highest_codepoint;
           
           
-          auto* codepoint_map = push_array<U16>(&ret.arena, one_past_highest_codepoint);
+          auto* codepoint_map = push_array<U16>(&ga->arena, one_past_highest_codepoint);
           assert(codepoint_map);
           
-          auto* glyphs = push_array<Font_Glyph_Asset>(&ret.arena, glyph_count);
+          auto* glyphs = push_array<Font_Glyph_Asset>(&ga->arena, glyph_count);
           assert(glyphs);
-          auto* advances = push_array<F32>(&ret.arena, glyph_count*glyph_count);
+          auto* advances = push_array<F32>(&ga->arena, glyph_count*glyph_count);
           assert(advances);
           
           U32 current_data_offset = sui_asset.offset_to_data;
@@ -218,7 +215,7 @@ create_assets(Platform_API pf, Game_Gfx* gfx) {
     
   }
   
-  return ret;
+  return true;
 }
 
 
@@ -281,7 +278,7 @@ _get_best_asset_of_type(Game_Assets* ga,
       F32 a = match_vector->e[tag->type];
       F32 b = tag->value;
       F32 diff0 = abs_of(a-b);
-      F32 diff1 = abs_of(a - 10000000.f*sign_of(a) - b);// TODO(Momo): ranges
+      F32 diff1 = abs_of(a - 10000000.f*sign_of(a) - b);
       F32 diff = min_of(diff0, diff1);
       
       F32 weight = weight_vector->e[tag->type]*diff;

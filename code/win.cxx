@@ -343,7 +343,6 @@ win_close_file(PF_File* file) {
   auto* win_file = (Win_File*)file->platform_data;
   CloseHandle(win_file->handle);
   
-  // TODO(Momo): We should definitely use an arena for this
   win_free_memory(file->platform_data);
   file->platform_data = nullptr;
 }
@@ -358,7 +357,7 @@ win_read_file(PF_File* file, UMI size, UMI offset, void* dest)
   // Reading the file
   OVERLAPPED overlapped = {};
   overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
-#include <intrin.h> overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
+  overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
   
   DWORD bytes_read;
   
@@ -473,10 +472,6 @@ WinMain(HINSTANCE instance,
   //- Create window in the middle of the screen
   HWND window;
   {
-    // TODO(Momo): Maybe this can be defined elsewhere...?
-    // Who decides this anyway?
-    // Perhaps we let the game decide and just let these be
-    // default value?
     const int win_w = 1600;
     const int win_h = 900;
     const char* title = "Momodevelop: TXT";
@@ -554,18 +549,18 @@ WinMain(HINSTANCE instance,
   game.platform_api = win_create_platform_api();
   
   //-NOTE(Momo): Load Gfx functions
-  WinGfx_API gfx_api;
+  Win_Gfx_API gfx_api;
   HMODULE gfx_dll;
   {
     gfx_dll =  LoadLibraryA("gfx.dll");
     if (gfx_dll) {
-      gfx_api.init = (Win_Gfx_Init_Fn*)GetProcAddress(gfx_dll, "wingfx_init");
+      gfx_api.init = (Win_Gfx_Init_Fn*)GetProcAddress(gfx_dll, "win_gfx_init");
       if(!gfx_api.init) return 1;
       
-      gfx_api.free = (Win_Gfx_Free_Fn*)GetProcAddress(gfx_dll, "wingfx_free");
+      gfx_api.free = (Win_Gfx_Free_Fn*)GetProcAddress(gfx_dll, "win_gfx_free");
       if(!gfx_api.free) return 1;
       
-      gfx_api.render = (Win_Gfx_Render_Fn*)GetProcAddress(gfx_dll, "wingfx_render");
+      gfx_api.render = (Win_Gfx_Render_Fn*)GetProcAddress(gfx_dll, "win_gfx_render");
       if(!gfx_api.render) return 1;
       
     }
@@ -676,13 +671,7 @@ WinMain(HINSTANCE instance,
     
     //-Game render here
     // NOTE(Momo): Resize if needed. 
-    // TODO(Momo): Maybe we only do this once and then 
-    // only when window size changes after?
     V2U render_wh = win_get_client_dims(window);
-    
-    
-    // TODO(Momo): Should probably make a "GameInfo" struct that 
-    // contains information like these
     Rect2U render_region = win_calc_render_region(render_wh.w,
                                                   render_wh.h,
                                                   win_global_state.aspect_ratio_width,

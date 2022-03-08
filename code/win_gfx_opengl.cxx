@@ -2,11 +2,11 @@
 
 
 #include "win_gfx.h"
-
 #include "game_gfx_opengl.h"
 
 
-//~ NOTE(Momo): wgl stuff
+//~WGL stuff
+
 #define WGL_CONTEXT_MAJOR_VERSION_ARB           0x2091
 #define WGL_CONTEXT_MINOR_VERSION_ARB           0x2092
 #define WGL_CONTEXT_LAYER_PLANE_ARB             0x2093
@@ -187,12 +187,10 @@ wingfx_free_memory(void* memory) {
 }
 
 
-//~ NOTE(Momo): API implementation
+//~API implementation
 exported Game_Gfx*
-wingfx_init(HWND window) {
+win_gfx_init(HWND window) {
   // NOTE(Momo): Calcluate the EXACT amount of memory needed.
-  // TODO(Momo): Is there a better way to do this? 
-  
   
   HDC dc = GetDC(window); 
   if (!dc) {
@@ -205,8 +203,7 @@ wingfx_init(HWND window) {
   pf.alloc = wingfx_allocate_memory;
   pf.free = wingfx_free_memory;
   
-  // TODO: IF YOU ARE READING IN HOTEL
-  // CONTINUE FIXING THIS
+  
   Opengl* opengl = (Opengl*)wingfx_allocate_memory(sizeof(Opengl));
   
   if (!opengl ) {
@@ -240,7 +237,6 @@ wingfx_init(HWND window) {
   
   if(wglMakeCurrent(dc, opengl_ctx)) {
     HMODULE module = LoadLibraryA("opengl32.dll");
-    // TODO: Log functions that are not loaded
 #define WGL_SetOpenglFunction(name) \
 pf.name = (GL_##name*)wingfx_try_get_wgl_function(#name, module); \
 if (!pf.name) { goto failed; } 
@@ -312,13 +308,13 @@ if (!pf.name) { goto failed; }
 
 
 exported void
-wingfx_render(Game_Gfx* gfx,  V2U render_wh, Rect2U region) {
+win_gfx_render(Game_Gfx* gfx,  V2U render_wh, Rect2U region) {
   render_opengl((Opengl*)gfx, render_wh, region);
 }
 
 
 exported void
-wingfx_free(Game_Gfx* r) {
+win_gfx_free(Game_Gfx* r) {
   Opengl* opengl = (Opengl*)r;
   free_opengl(opengl);
   wingfx_free_memory(opengl);

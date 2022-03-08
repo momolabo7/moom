@@ -30,10 +30,9 @@ struct PNG {
 // Only reads and writes in RGBA format.
 // Only works in little-endian OS
 //
-// TODO(Momo): 
 // - Make these work in big endian OS
 // - probably need a 'get channels' function?
-//   TODO: static U32 get_channels(PNG);
+//      static U32 get_channels(PNG);
 
 static PNG create_png(Memory png_memory);
 static B32 is_ok(PNG png);

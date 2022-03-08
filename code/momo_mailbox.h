@@ -4,8 +4,6 @@
 #ifndef MOMO_MAILBOX_H
 #define MOMO_MAILBOX_H
 
-// TODO(Momo): Can/should we remove id (that stores 'type' info)
-// and assume that users can actually store type info in their data?
 struct Mailbox_Entry{
   U32 id; // type id from user
   void* data;
