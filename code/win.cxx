@@ -596,8 +596,8 @@ WinMain(HINSTANCE instance,
   while (win_global_state.is_running) {
     //-NOTE(Momo): Hot reload game.dll functions
     if (win_global_state.is_hot_reloading){
-      static constexpr char* running_game_dll = "running_game.dll";
-      static constexpr char* compiled_game_dll = "game.dll";
+      static char* running_game_dll = "running_game.dll";
+      static char* compiled_game_dll = "game.dll";
       
       // Release the current game dll
       if (game_dll) {

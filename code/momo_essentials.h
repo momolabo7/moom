@@ -160,7 +160,7 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 #define array_count(A) (sizeof(A)/sizeof(*A))
 #define OffsetOf(type, member) (UMI)&(((type*)0)->member)
 
-// These need to be macros instead of constexpr function
+// These need to be macros instead of function
 // because I don't want these to return or take in to a specific strict type.
 // Returning a strict type almost always end up requiring an explicit
 // conversion on the user side.
@@ -174,8 +174,8 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 
 
 //~Helper functions
-static constexpr UMI ptr_to_int(void* p);
-static constexpr U8* int_to_ptr(UMI u);
+static UMI ptr_to_int(void* p);
+static U8* int_to_ptr(UMI u);
 
 // NOTE(Momo): It's ridiculous how much goes into the implementation of 
 // a generic Min/Max function in modern C++. 
@@ -183,32 +183,32 @@ static constexpr U8* int_to_ptr(UMI u);
 // For now we keep these simple and use template functions, so that
 // we do not need to reevaluate the arguments every time.
 //
-template<typename T> static constexpr T min_of(T l, T r);
-template<typename T> static constexpr T max_of(T l, T r);
-template<typename T> static constexpr T clamp(T x, T b, T t);
+template<typename T> static T min_of(T l, T r);
+template<typename T> static T max_of(T l, T r);
+template<typename T> static T clamp(T x, T b, T t);
 
-template<typename T> static constexpr T abs_of(T x);
-static constexpr F32 abs_of(F32 value);
-static constexpr F64 abs_of(F64 value);
-static constexpr S8  abs_of(S8 value);
-static constexpr S16 abs_of(S16 value);
-static constexpr S32 abs_of(S32 value);
-static constexpr S64 abs_of(S64 value);
+template<typename T> static T abs_of(T x);
+static F32 abs_of(F32 value);
+static F64 abs_of(F64 value);
+static S8  abs_of(S8 value);
+static S16 abs_of(S16 value);
+static S32 abs_of(S32 value);
+static S64 abs_of(S64 value);
 
-static constexpr F32 sign_of(F32 value);
-static constexpr F64 sign_of(F64 value);
-static constexpr S8  sign_of(S8 value);
-static constexpr S16 sign_of(S16 value);
-static constexpr S32 sign_of(S32 value);
-static constexpr S64 sign_of(S64 value);
+static F32 sign_of(F32 value);
+static F64 sign_of(F64 value);
+static S8  sign_of(S8 value);
+static S16 sign_of(S16 value);
+static S32 sign_of(S32 value);
+static S64 sign_of(S64 value);
 
 
 // NOTE(Momo): Lerp is tricky because the 'f' variable the 'percentage'.
 // and must be of a floating point type. I'm not sure if I want to go into
 // the hellhole of checking if 'f' is a floating point via TMP. Seems overkill
 // since there are only 2 floating point types I generally care about.
-template<typename T> static constexpr T lerp(T s, T e, F32 f); 
-template<typename T> static constexpr T lerp(T s, T e, F64 f); 
+template<typename T> static T lerp(T s, T e, F32 f); 
+template<typename T> static T lerp(T s, T e, F64 f); 
 
 // NOTE(Momo): Ratio is an interesting function. 
 // All 1D Ratios will end up with a 1D FXX type.
@@ -218,13 +218,13 @@ template<typename T> static constexpr T lerp(T s, T e, F64 f);
 // Maybe we will to resort to a RatioF32 and a RatioF64?
 // 
 // For now, we will just overload the Ratio function, until it bugs us.
-static constexpr F32 ratio(F32 v, F32 min, F32 max);
-static constexpr F64 ratio(F64 v, F64 min, F64 max);
+static F32 ratio(F32 v, F32 min, F32 max);
+static F64 ratio(F64 v, F64 min, F64 max);
 
-template<typename T, typename U> static constexpr T align_down_pow2(T value, U align);
+template<typename T, typename U> static T align_down_pow2(T value, U align);
 template<typename T, typename U> static T align_up_pow2(T value, U align);
-template<typename T> static constexpr B32 is_pow2(T value);
-template<typename T> static constexpr void swap(T* lhs, T* rhs); 
+template<typename T> static B32 is_pow2(T value);
+template<typename T> static void swap(T* lhs, T* rhs); 
 
 
 //~NOTE(Momo): assert
@@ -244,30 +244,30 @@ template<typename T> static constexpr void swap(T* lhs, T* rhs);
 // I'm fairly convinced that if we compile with C++, 
 // static variables should be better than #define literals.
 // Memory-wise they *should* the produces the same results, 
-// but constexpr provides stronger typing. 
+// but provides stronger typing. 
 // This should be my attitude for all constants.
-static constexpr S8  S8_MIN  = -0x80;
-static constexpr S16 S16_MIN = -0x8000; 
-static constexpr S32 S32_MIN = -0x80000000ll;
-static constexpr S64 S64_MIN = -0x8000000000000001ll - 1;
+static S8  S8_MIN  = -0x80;
+static S16 S16_MIN = -0x8000; 
+static S32 S32_MIN = -0x80000000ll;
+static S64 S64_MIN = -0x8000000000000001ll - 1;
 
-static constexpr S8  S8_MAX  = 0x7F;
-static constexpr S16 S16_MAX = 0x7FFF; 
-static constexpr S32 S32_MAX = 0x7FFFFFFFl;
-static constexpr S64 S64_MAX = 0x7FFFFFFFFFFFFFFFll;
+static S8  S8_MAX  = 0x7F;
+static S16 S16_MAX = 0x7FFF; 
+static S32 S32_MAX = 0x7FFFFFFFl;
+static S64 S64_MAX = 0x7FFFFFFFFFFFFFFFll;
 
-static constexpr U8  U8_MAX  = 0xFF;
-static constexpr U16 U16_MAX = 0xFFFF; 
-static constexpr U32 U32_MAX = 0xFFFFFFFF;
-static constexpr U64 U64_MAX = 0xFFFFFFFFFFFFFFFFllu;
+static U8  U8_MAX  = 0xFF;
+static U16 U16_MAX = 0xFFFF; 
+static U32 U32_MAX = 0xFFFFFFFF;
+static U64 U64_MAX = 0xFFFFFFFFFFFFFFFFllu;
 
-static constexpr F32 F32_EPSILON = 1.1920929E-7f;
-static constexpr F64 F64_EPSILON = 2.220446E-16;
+static F32 F32_EPSILON = 1.1920929E-7f;
+static F64 F64_EPSILON = 2.220446E-16;
 
-static constexpr F32 F32_INFINITY();
-static constexpr F32 F32_NEG_INFINITY();
-static constexpr F64 F64_INFINITY();
-static constexpr F64 F64_NEG_INFINITY();
+static F32 F32_INFINITY();
+static F32 F32_NEG_INFINITY();
+static F64 F64_INFINITY();
+static F64 F64_NEG_INFINITY();
 //~ NOTE(Momo): Memory-related helpers
 
 // This is a really useful construct I find myself using 
@@ -284,7 +284,7 @@ static B32 is_ok(Memory);
 static void copy_memory(void* dest, const void* src, UMI size);
 static void zero_memory(void* dest, UMI size);
 static void swap_memory(void* lhs, void* rhs, UMI size);
-static B32  match_memory(const void* lhs, const void* rhs, UMI size);
+static B32  is_memory_same(const void* lhs, const void* rhs, UMI size);
 
 #define zero_struct(p)    zero_memory((p), sizeof(*(p)))
 #define zero_array(p)     zero_memory((p), sizeof(p))
@@ -295,6 +295,7 @@ static B32  match_memory(const void* lhs, const void* rhs, UMI size);
 #define copy_range(p,s)   copy_memory((p), sizeof(*(p)) * (s))
 
 //~ NOTE(Momo): C-string
+// TODO(Momo): rename these to e.g: len_of_cstr, copy_cstr, etc
 static UMI  cstr_len(const char* str);
 static void cstr_copy(char * dest, const char* Src);
 static B32  cstr_compare(const char* lhs, const char* rhs);
@@ -305,19 +306,19 @@ static void cstr_reverse(char* dest);
 static void cstr_itoa(char* dest, S32 num);
 
 //~ NOTE(Momo): IEEE floating point functions 
-static constexpr B32 match(F32 lhs, F32 rhs);
-static constexpr B32 match(F64 lhs, F64 rhs);
+static B32 is_close(F32 lhs, F32 rhs);
+static B32 is_close(F64 lhs, F64 rhs);
 // Ah...cannot overload operator==...
 
 //~ NOTE(Momo): Useful calculations
-static constexpr F32 deg_to_rad(F32 degrees) ;
-static constexpr F64 deg_to_rad(F64 degrees) ;
-static constexpr F32 rad_to_deg(F32 radians);
-static constexpr F64 rad_to_deg(F64 radians);
+static F32 deg_to_rad(F32 degrees) ;
+static F64 deg_to_rad(F64 degrees) ;
+static F32 rad_to_deg(F32 radians);
+static F64 rad_to_deg(F64 radians);
 
 // Beats per min to Secs per beat
-static constexpr F32 bpm_to_spb(F32 bpm); 
-static constexpr F64 bpm_to_spb(F64 bpm); 
+static F32 bpm_to_spb(F32 bpm); 
+static F64 bpm_to_spb(F64 bpm); 
 
 
 // NOTE(Momo): I'm not entirely sure if this prototype makes sense.
@@ -328,17 +329,17 @@ static constexpr F64 bpm_to_spb(F64 bpm);
 // Or we COULD just ignore the concept of type:
 //   void _EndianSwap16(U8* ptr)
 //   #define endian_swap_16(value) _EndianSwap16((U8*)&value)
-static constexpr U16 endian_swap_16(U16 value);
-static constexpr U32 endian_swap_32(U32 value);
+static U16 endian_swap_16(U16 value);
+static U32 endian_swap_32(U32 value);
 
 
 //~ NOTE(Momo): Math functions that are not trivial
-static constexpr F32 PI_32 = 3.14159265359f;
-static constexpr F64 PI_64 = 3.14159265359;
-static constexpr F32 TAU_32 = 6.28318530718f;
-static constexpr F64 TAU_64 = 6.28318530718;
-static constexpr F32 GOLD_32 = 1.61803398875f;
-static constexpr F64 GOLD_64 = 1.61803398875;
+static F32 PI_32 = 3.14159265359f;
+static F64 PI_64 = 3.14159265359;
+static F32 TAU_32 = 6.28318530718f;
+static F64 TAU_64 = 6.28318530718;
+static F32 GOLD_32 = 1.61803398875f;
+static F64 GOLD_64 = 1.61803398875;
 
 static F32 sin(F32 x);
 static F32 cos(F32 x);

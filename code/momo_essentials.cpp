@@ -19,7 +19,7 @@ zero_memory(void* dest, UMI size) {
   memset(dest, 0, size);
 }
 static B32
-match_memory(const void* lhs, const void* rhs, UMI size) {
+is_memory_same(const void* lhs, const void* rhs, UMI size) {
   return memcmp(lhs, rhs, size) == 0; 
 }
 
@@ -43,7 +43,7 @@ zero_memory(void* dest, UMI size) {
 }
 
 static B32
-match_memory(const void* lhs, const void* rhs, UMI size) {
+is_memory_same(const void* lhs, const void* rhs, UMI size) {
   const U8 *p = (const U8*)lhs;
   const U8 *q = (const U8*)rhs;
   while(size--) {
@@ -68,37 +68,37 @@ swap_memory(void* lhs, void* rhs, UMI size) {
   }
 }
 //~ Helper functions
-static constexpr UMI 
+static UMI 
 ptr_to_int(void* p) { 
   return (UMI)((char*)p - (char*)0); 
 }
 
-static constexpr U8* 
+static U8* 
 int_to_ptr(UMI u) { 
   return (U8*)((char*)0 + u);
 }
 
-template<typename T> static constexpr T 
+template<typename T> static T 
 min_of(T l, T r) { 
   return l < r ? l : r; 
 }
 
-template<typename T> static constexpr T 
+template<typename T> static T 
 max_of(T l, T r) { 
   return l > r ? l : r; 
 }
 
-template<typename T> static constexpr T 
+template<typename T> static T 
 clamp(T x, T b, T t) { 
   return max_of(min_of(x,t),b); 
 }
 
-template<typename T> static constexpr T
+template<typename T> static T
 abs_of(T x) { 
   return x < 0 ? -x : x; 
 }
 
-static constexpr F32 
+static F32 
 abs_of(F32 x) {
   union { F32 f; U32 u; } val = {};
   val.f = x;
@@ -106,7 +106,7 @@ abs_of(F32 x) {
   return val.f;
 }
 
-static constexpr F64
+static F64
 abs_of(F64 x) {
   union { F64 f; U64 u; } val = {};
   val.f = x;
@@ -116,76 +116,76 @@ abs_of(F64 x) {
 }
 
 
-static constexpr S8   
+static S8   
 abs_of(S8 x) {
   S8 y = x >> 7;
   return (x ^ y)-y;
 }
-static constexpr S16  
+static S16  
 abs_of(S16 x) {
   S16 y = x >> 15;
   return (x ^ y)-y;
 }
-static constexpr S32  
+static S32  
 abs_of(S32 x) {
   S32 y = x >> 31;
   return (x ^ y)-y;
 }
-static constexpr S64  
+static S64  
 abs_of(S64 x) {
   S64 y = x >> 63;
   return (x ^ y)-y;
 }
 
-static constexpr F32 
+static F32 
 sign_of(F32 x) {
   return x >= 0 ? 1.f : -1.f;
 }
 
-static constexpr F64
+static F64
 sign_of(F64 x) {
   return x >= 0 ? 1.0 : -1.0;
 }
 
 
-static constexpr S8   
+static S8   
 sign_of(S8 x) {
   return x >= 0 ? 1 : -1;
 }
-static constexpr S16  
+static S16  
 sign_of(S16 x) {
   return x >= 0 ? 1 : -1;
 }
-static constexpr S32  
+static S32  
 sign_of(S32 x) {
   return x >= 0 ? 1 : -1;
 }
-static constexpr S64  
+static S64  
 sign_of(S64 x) {
   return x >= 0 ? 1 : -1;
 }
 
-template<typename T> static constexpr T
+template<typename T> static T
 lerp(T s, T e, F32 f) { 
   return (T)(s + (e-s) * f); 
 }
 
-template<typename T> static constexpr T 
+template<typename T> static T 
 lerp(T s, T e, F64 f) { 
   return (T)(s + (e-s) * f); 
 }
 
-static constexpr F32 
+static F32 
 ratio(F32 v, F32 min, F32 max) { 
   return (v - min)/(max - min); 
 }
 
-static constexpr F64 
+static F64 
 ratio(F64 v, F64 min, F64 max) { 
   return (v - min)/(max - min); 
 }
 
-template<typename T, typename U> static constexpr T
+template<typename T, typename U> static T
 align_down_pow2(T value, U align) { 
   return value & ~(align-1); 
 }
@@ -195,11 +195,11 @@ align_up_pow2(T value, U align) {
   return (value + (align-1)) & ~(align-1); 
 }
 
-template<typename T> static constexpr B32 
+template<typename T> static B32 
 is_pow2(T value) { 
   return (value & (value - 1)) == 0; 
 }
-template<typename T> static constexpr void 
+template<typename T> static void 
 swap(T* lhs, T* rhs) { 
   T tmp = *lhs; 
   *lhs = *rhs; 
@@ -301,7 +301,7 @@ cstr_itoa(char* dest, S32 num) {
 
 
 //~ NOTE(Momo): Constants
-static constexpr F32 
+static F32 
 F32_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-8 are on
@@ -312,7 +312,7 @@ F32_INFINITY() {
   
 }
 
-static constexpr F32 
+static F32 
 F32_NEG_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-8 are on
@@ -326,7 +326,7 @@ F32_NEG_INFINITY() {
 
 
 
-static constexpr F64 
+static F64 
 F64_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-11 are on
@@ -337,7 +337,7 @@ F64_INFINITY() {
   
 }
 
-static constexpr F64 
+static F64 
 F64_NEG_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-11 are on
@@ -350,45 +350,45 @@ F64_NEG_INFINITY() {
 
 
 //~ NOTE(Momo): IEEE floating point functions 
-static constexpr B32 
-match(F32 lhs, F32 rhs) {
+static B32 
+is_close(F32 lhs, F32 rhs) {
   return abs_of(lhs - rhs) <= F32_EPSILON;
 }
 
-static constexpr B32 
-match(F64 lhs, F64 rhs) {
+static B32 
+is_close(F64 lhs, F64 rhs) {
   return abs_of(lhs - rhs) <= F64_EPSILON;
 }
 
 
-static constexpr F32
+static F32
 bpm_to_spb(F32 bpm) {
   assert(bpm >= 0.f);
   return 60.f/bpm;
 }
 
-static constexpr F64
+static F64
 bpm_to_spb(F64 bpm) {
   assert(bpm >= 0.f);
   return 60.0/bpm;
 }
 
 
-static constexpr F32 
+static F32 
 deg_to_rad(F32 degrees) {
   return degrees * PI_32 / 180.f;
 }
-static constexpr F32 
+static F32 
 rad_to_deg(F32 radians) {
   return radians * 180.f / PI_32;	
 }
 
-static constexpr F64
+static F64
 deg_to_rad(F64 degrees) {
   return degrees * PI_32 / 180.0;
   
 }
-static constexpr F64 
+static F64 
 rad_to_deg(F64 radians) {
   return radians * 180.0 / PI_64;
   
@@ -397,7 +397,7 @@ rad_to_deg(F64 radians) {
 
 
 
-static constexpr U16
+static U16
 endian_swap_16(U16 value) {
   return (value << 8) | (value >> 8);
 }
@@ -407,7 +407,7 @@ endian_swap_16(S16 value) {
   return (value << 8) | (value >> 8);
 }
 
-static constexpr U32
+static U32
 endian_swap_32(U32 value) {
   return  ((value << 24) |
            ((value & 0xFF00) << 8) |

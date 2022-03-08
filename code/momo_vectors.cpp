@@ -1,46 +1,46 @@
 //~ NOTE(Momo): V2
-static constexpr V2 
+static V2 
 add(V2 lhs, V2 rhs) {
 	lhs.x += rhs.x;
 	lhs.y += rhs.y;
 	return lhs;
 }
 
-static constexpr V2 
+static V2 
 sub(V2 lhs, V2 rhs) {
   lhs.x -= rhs.x;
   lhs.y -= rhs.y;
   return lhs;
 }
 
-static constexpr V2 
+static V2 
 scale(V2 lhs, F32 rhs) {
   lhs.x *= rhs;
   lhs.y *= rhs;
   return lhs;
 }
 
-static constexpr V2 
+static V2 
 div(V2 lhs, F32 rhs) {
-  assert(match(rhs, 0.f));
+  assert(is_close(rhs, 0.f));
   lhs.x /= rhs;
   lhs.y /= rhs;
   return lhs;
 }
 
-static constexpr V2 
+static V2 
 negate(V2 v) {
   v.x = -v.x;
   v.y = -v.y;
   return v;
 }
 
-static constexpr F32 
+static F32 
 dot(V2 lhs, V2 rhs) {
   return (lhs.x * rhs.x) + (lhs.y * rhs.y);
 }
 
-static constexpr F32  
+static F32  
 distance_sq(V2 lhs, V2 rhs) {
   return length_sq(sub(lhs, rhs));
 }
@@ -49,7 +49,7 @@ distance(V2 lhs, V2 rhs) {
   return sqrt(distance_sq(lhs, rhs));
 }
 
-static constexpr F32  
+static F32  
 length_sq(V2 v) {
   return dot(v, v);
 }
@@ -65,13 +65,13 @@ normalize(V2 v) {
   return div(v, leng);
 }
 
-static constexpr B32
-match(V2 lhs, V2 rhs) {
-  return (match(lhs.x, rhs.x) &&
-          match(lhs.y, rhs.y)); 
+static B32
+is_close(V2 lhs, V2 rhs) {
+  return (is_close(lhs.x, rhs.x) &&
+          is_close(lhs.y, rhs.y)); 
 }
 
-static constexpr V2 
+static V2 
 midpoint(V2 lhs, V2 rhs) {
   return scale(add(lhs, rhs), 0.5f); 
   
@@ -80,7 +80,7 @@ static V2
 project(V2 v, V2 onto) {
   // (to . from)/LenSq(to) * to
   F32 onto_len_sq = length_sq(onto);
-  assert(!match(onto_len_sq, 0.f));
+  assert(!is_close(onto_len_sq, 0.f));
   F32 v_dot_onto = dot(v, onto);
   F32 scalar = v_dot_onto / onto_len_sq;
   V2 ret = scale(onto, scalar);
@@ -113,14 +113,14 @@ rotate(V2 v, F32 rad) {
 
 
 //~ NOTE(Momo): V3
-static constexpr V3 
+static V3 
 add(V3 lhs, V3 rhs) {
   lhs.x += rhs.x;
   lhs.y += rhs.y;
   lhs.z += rhs.z;
   return lhs;
 }
-static constexpr V3 
+static V3 
 sub(V3 lhs, V3 rhs) {
   lhs.x -= rhs.x;
   lhs.y -= rhs.y;
@@ -128,7 +128,7 @@ sub(V3 lhs, V3 rhs) {
   return lhs;
 }
 
-static constexpr V3 
+static V3 
 scale(V3 lhs, F32 rhs) {
   lhs.x *= rhs;
   lhs.y *= rhs;
@@ -136,16 +136,16 @@ scale(V3 lhs, F32 rhs) {
   return lhs;
 }
 
-static constexpr V3 
+static V3 
 div(V3 lhs, F32 rhs) {
-  assert(match(rhs, 0.f));
+  assert(is_close(rhs, 0.f));
   lhs.x /= rhs;
   lhs.y /= rhs;
   lhs.z /= rhs;
   return lhs;
 }
 
-static constexpr V3 
+static V3 
 negate(V3 v) {
   v.x = -v.x;
   v.y = -v.y;
@@ -153,12 +153,12 @@ negate(V3 v) {
   return v;
 }
 
-static constexpr F32 
+static F32 
 dot(V3 lhs, V3 rhs) {
   return (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z);
 }
 
-static constexpr F32  
+static F32  
 distance_sq(V3 lhs, V3 rhs) {
   return length_sq(sub(lhs, rhs));
 }
@@ -168,7 +168,7 @@ distance(V3 lhs, V3 rhs) {
   return sqrt(distance_sq(lhs, rhs));
 }
 
-static constexpr F32  
+static F32  
 length_sq(V3 v) {
   return dot(v, v);
 }
@@ -184,13 +184,13 @@ normalize(V3 v) {
   return div(v, len);
 }
 
-static constexpr B32
-match(V3 lhs, V3 rhs) {
-  return (match(lhs.x, rhs.x) &&
-          match(lhs.y, rhs.y)); 
+static B32
+is_close(V3 lhs, V3 rhs) {
+  return (is_close(lhs.x, rhs.x) &&
+          is_close(lhs.y, rhs.y)); 
 }
 
-static constexpr V3 
+static V3 
 midpoint(V3 lhs, V3 rhs) {
   return scale(add(lhs, rhs), 0.5f); 
   
@@ -199,7 +199,7 @@ static V3
 project(V3 v, V3 onto) {
   // (to . from)/LenSq(to) * to
   F32 onto_len_sq = length_sq(onto);
-  assert(!match(onto_len_sq, 0.f));
+  assert(!is_close(onto_len_sq, 0.f));
   F32 v_dot_onto = dot(v, onto);
   F32 scalar = v_dot_onto / onto_len_sq;
   V3 ret = scale(onto, scalar);
@@ -216,7 +216,7 @@ angle_between(V3 lhs, V3 rhs) {
   return ret;
 }
 
-static constexpr V3
+static V3
 Cross(V3 lhs, V3 rhs) {
   V3 ret = {};
   ret.x = (lhs.y * rhs.z) - (lhs.z * rhs.y);
@@ -228,25 +228,25 @@ Cross(V3 lhs, V3 rhs) {
 
 
 //~Operator Overloading
-static constexpr V2 operator+(V2 lhs, V2 rhs) { return add(lhs, rhs); }
-static constexpr V2 operator-(V2 lhs, V2 rhs) { return sub(lhs, rhs); }
-static constexpr V2 operator*(V2 lhs, F32 rhs) { return scale(lhs, rhs); }
-static constexpr V2 operator*(F32 lhs, V2 rhs) { return scale(rhs, lhs); }
-static constexpr B32   operator==(V2 lhs, V2 rhs) { return match(lhs, rhs); }
-static constexpr B32   operator!=(V2 lhs, V2 rhs) { return !match(lhs, rhs); }
-static constexpr V2 operator-(V2 v) { return negate(v); }
-static constexpr V2& operator+=(V2& lhs, V2 rhs) { return lhs = add(lhs, rhs); } 
-static constexpr V2& operator-=(V2& lhs, V2 rhs) { return lhs = sub(lhs, rhs); } 
-static constexpr V2& operator*=(V2& lhs, F32 rhs) { return lhs = scale(lhs, rhs); }
+static V2 operator+(V2 lhs, V2 rhs) { return add(lhs, rhs); }
+static V2 operator-(V2 lhs, V2 rhs) { return sub(lhs, rhs); }
+static V2 operator*(V2 lhs, F32 rhs) { return scale(lhs, rhs); }
+static V2 operator*(F32 lhs, V2 rhs) { return scale(rhs, lhs); }
+static B32   operator==(V2 lhs, V2 rhs) { return is_close(lhs, rhs); }
+static B32   operator!=(V2 lhs, V2 rhs) { return !is_close(lhs, rhs); }
+static V2 operator-(V2 v) { return negate(v); }
+static V2& operator+=(V2& lhs, V2 rhs) { return lhs = add(lhs, rhs); } 
+static V2& operator-=(V2& lhs, V2 rhs) { return lhs = sub(lhs, rhs); } 
+static V2& operator*=(V2& lhs, F32 rhs) { return lhs = scale(lhs, rhs); }
 
-static constexpr V3 operator+(V3 lhs, V3 rhs) { return add(lhs, rhs); }
-static constexpr V3 operator-(V3 lhs, V3 rhs) { return sub(lhs, rhs); }
-static constexpr V3 operator*(V3 lhs, F32 rhs) { return scale(lhs, rhs); }
-static constexpr V3 operator*(F32 lhs, V3 rhs) { return scale(rhs, lhs); }
-static constexpr B32   operator==(V3 lhs, V3 rhs) { return match(lhs, rhs); }
-static constexpr B32   operator!=(V3 lhs, V3 rhs) { return !match(lhs, rhs); }
-static constexpr V3 operator-(V3 v) { return negate(v); }
-static constexpr V3& operator+=(V3& lhs, V3 rhs) { return lhs = add(lhs, rhs); } 
-static constexpr V3& operator-=(V3& lhs, V3 rhs) { return lhs = sub(lhs, rhs); } 
-static constexpr V3& operator*=(V3& lhs, F32 rhs) { return lhs = scale(lhs, rhs); }
+static V3 operator+(V3 lhs, V3 rhs) { return add(lhs, rhs); }
+static V3 operator-(V3 lhs, V3 rhs) { return sub(lhs, rhs); }
+static V3 operator*(V3 lhs, F32 rhs) { return scale(lhs, rhs); }
+static V3 operator*(F32 lhs, V3 rhs) { return scale(rhs, lhs); }
+static B32   operator==(V3 lhs, V3 rhs) { return is_close(lhs, rhs); }
+static B32   operator!=(V3 lhs, V3 rhs) { return !is_close(lhs, rhs); }
+static V3 operator-(V3 v) { return negate(v); }
+static V3& operator+=(V3& lhs, V3 rhs) { return lhs = add(lhs, rhs); } 
+static V3& operator-=(V3& lhs, V3 rhs) { return lhs = sub(lhs, rhs); } 
+static V3& operator*=(V3& lhs, F32 rhs) { return lhs = scale(lhs, rhs); }
 

@@ -34,7 +34,7 @@ rbg_to_hsl(RGB c) {
   F32 delta = max - min; // aka chroma
   
   
-  if (match(max, c.r)) {
+  if (is_close(max, c.r)) {
     F32 segment = (c.g - c.b)/delta;
     F32 shift = 0 / 60;
     if (segment < 0) {
@@ -46,13 +46,13 @@ rbg_to_hsl(RGB c) {
     ret.h = (segment + shift) * 60.f;
   }
   
-  else if (match(max, c.g)) {
+  else if (is_close(max, c.g)) {
     F32 segment = (c.b - c.r)/delta;
     F32 shift = 120.f / 60.f;
     ret.h = (segment + shift) * 60.f;
   }
   
-  else if (match(max, c.b)) {
+  else if (is_close(max, c.b)) {
     F32 segment = (c.r - c.g)/delta;
     F32 shift = 240.f / 60.f;
     ret.h = ((segment + shift) * 60.f);
@@ -65,7 +65,7 @@ rbg_to_hsl(RGB c) {
   
   ret.l = (max + min) * 0.5f;
   
-  if (match(delta, 0.f)) {
+  if (is_close(delta, 0.f)) {
     ret.s = 0.f;
   }
   else {
@@ -104,7 +104,7 @@ hsl_to_rgb(HSL c) {
          c.l >= 0.f &&
          c.l <= 1.f);
   RGB ret;
-  if(match(c.s, 0.f)) {
+  if(is_close(c.s, 0.f)) {
     ret.r = ret.g = ret.b = c.l; // achromatic
   }
   else {

@@ -47,16 +47,16 @@ union V4 {
 };
 
 
-static constexpr V2    add(V2 lhs, V2 rhs);
-static constexpr V2    sub(V2 lhs, V2 rhs);
-static constexpr V2    scale(V2 lhs, F32 rhs);
-static constexpr V2    div(V2 lhs, F32 rhs);
-static constexpr F32   dot(V2 lhs, V2 rhs);
-static constexpr F32   distance_sq(V2 lhs, V2 rhs);
-static constexpr F32   length_sq(V2 v);
-static constexpr V2    negate(V2 v);
-static constexpr B32   match(V2 lhs, V2 rhs);
-static constexpr V2    midpoint(V2 lhs, V2 rhs);
+static V2    add(V2 lhs, V2 rhs);
+static V2    sub(V2 lhs, V2 rhs);
+static V2    scale(V2 lhs, F32 rhs);
+static V2    div(V2 lhs, F32 rhs);
+static F32   dot(V2 lhs, V2 rhs);
+static F32   distance_sq(V2 lhs, V2 rhs);
+static F32   length_sq(V2 v);
+static V2    negate(V2 v);
+static B32   is_close(V2 lhs, V2 rhs);
+static V2    midpoint(V2 lhs, V2 rhs);
 static F32   distance(V2 lhs, V2 rhs);
 static F32   length(V2 v);
 static V2 normalize(V2 v);
@@ -65,44 +65,44 @@ static V2 rotate(V2 v, F32 rad);
 static F32   angle_between(V2 lhs, V2 rhs);
 
 
-static constexpr V3 add(V3 lhs, V3 rhs);
-static constexpr V3 sub(V3 lhs, V3 rhs);
-static constexpr V3 scale(V3 lhs, F32 rhs);
-static constexpr V3 div(V3 lhs, F32 rhs);
-static constexpr F32   dot(V3 lhs, V3 rhs);
-static constexpr F32   distance_sq(V3 lhs, V3 rhs);
-static constexpr F32   length_sq(V3 v);
-static constexpr B32   match(V3 lhs, V3 rhs);
-static constexpr V3 negate(V3 v);
-static constexpr V3 midpoint(V3 lhs, V3 rhs);
-static constexpr V3 Cross(V3 lhs, V3 rhs);
+static V3 add(V3 lhs, V3 rhs);
+static V3 sub(V3 lhs, V3 rhs);
+static V3 scale(V3 lhs, F32 rhs);
+static V3 div(V3 lhs, F32 rhs);
+static F32   dot(V3 lhs, V3 rhs);
+static F32   distance_sq(V3 lhs, V3 rhs);
+static F32   length_sq(V3 v);
+static B32   is_close(V3 lhs, V3 rhs);
+static V3 negate(V3 v);
+static V3 midpoint(V3 lhs, V3 rhs);
+static V3 Cross(V3 lhs, V3 rhs);
 static F32   distance(V3 lhs, V3 rhs);
 static F32   length(V3 v);
 static V3 normalize(V3 v);
 static V3 project(V3 v, V3 onto);
 static F32 	angle_between(V3 lhs, V3 rhs);
 
-static constexpr V2 operator+(V2 lhs, V2 rhs);
-static constexpr V2 operator-(V2 lhs, V2 rhs);
-static constexpr V2 operator*(V2 lhs, F32 rhs); // scale
-static constexpr V2 operator*(F32 lhs, V2 rhs); // scale
-static constexpr B32   operator==(V2 lhs, V2 rhs);
-static constexpr B32   operator!=(V2 lhs, V2 rhs);
-static constexpr V2 operator-(V2 v);
-static constexpr V2& operator+=(V2& lhs, V2 rhs);
-static constexpr V2& operator-=(V2& lhs, V2 rhs);
-static constexpr V2& operator*=(V2& lhs, V2 rhs);
+static V2 operator+(V2 lhs, V2 rhs);
+static V2 operator-(V2 lhs, V2 rhs);
+static V2 operator*(V2 lhs, F32 rhs); // scale
+static V2 operator*(F32 lhs, V2 rhs); // scale
+static B32   operator==(V2 lhs, V2 rhs);
+static B32   operator!=(V2 lhs, V2 rhs);
+static V2 operator-(V2 v);
+static V2& operator+=(V2& lhs, V2 rhs);
+static V2& operator-=(V2& lhs, V2 rhs);
+static V2& operator*=(V2& lhs, V2 rhs);
 
-static constexpr V3 operator+(V3 lhs, V3 rhs);
-static constexpr V3 operator-(V3 lhs, V3 rhs);
-static constexpr V3 operator*(V3 lhs, F32 rhs); // scale
-static constexpr V3 operator*(F32 lhs, V3 rhs); // scale
-static constexpr B32   operator==(V3 lhs, V3 rhs);
-static constexpr B32   operator!=(V3 lhs, V3 rhs);
-static constexpr V3 operator-(V3 v);
-static constexpr V3& operator+=(V3& lhs, V3 rhs);
-static constexpr V3& operator-=(V3& lhs, V3 rhs);
-static constexpr V3& operator*=(V3& lhs, V3 rhs);
+static V3 operator+(V3 lhs, V3 rhs);
+static V3 operator-(V3 lhs, V3 rhs);
+static V3 operator*(V3 lhs, F32 rhs); // scale
+static V3 operator*(F32 lhs, V3 rhs); // scale
+static B32   operator==(V3 lhs, V3 rhs);
+static B32   operator!=(V3 lhs, V3 rhs);
+static V3 operator-(V3 v);
+static V3& operator+=(V3& lhs, V3 rhs);
+static V3& operator-=(V3& lhs, V3 rhs);
+static V3& operator*=(V3& lhs, V3 rhs);
 
 
 #include "momo_vectors.cpp"
