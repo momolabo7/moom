@@ -7,7 +7,6 @@
 struct Mailbox_Entry{
   U32 id; // type id from user
   void* data;
-  
 };
 
 struct Mailbox{

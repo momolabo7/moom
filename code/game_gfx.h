@@ -27,96 +27,124 @@
 // * ---
 // */
 
-#ifndef GAME_GFX_H
-#define GAME_GFX_H
+#ifndef GFX_H
+#define GFX_H
 
 //~ NOTE(Momo): Gfx API
-struct Game_Gfx{	
-	Mailbox commands;
+enum Gfx_Texture_Transfer_Entry_State {
+  GFX_TEXTURE_TRANSFER_ENTRY_STATE_NONE,
+  GFX_TEXTURE_TRANSFER_ENTRY_STATE_LOADING,
+  GFX_TEXTURE_TRANSFER_ENTRY_STATE_READY,
 };
 
-static void set_basis(Game_Gfx* g, M44 basis);
-static void set_orthographic_camera(Game_Gfx* g, V3 pos, Rect3 frustum);
-static void draw_sprite(Game_Gfx* g, 
+struct Gfx_Texture_Transfer_Entry {
+  volatile Gfx_Texture_Transfer_Entry_State state;
+  
+  U32 index;
+  U32 texture_width;  // can be U16?
+  U32 texture_height; // can be U16?
+  void* texture_data;
+};
+
+struct Gfx_Texture_Transfer_Queue {
+  U8* memory;
+  U32 memory_size;
+  
+  Gfx_Texture_Transfer_Entry entries[256];
+  U32 entry_count;
+  
+};
+
+typedef Mailbox Gfx_Command_Queue;
+struct Gfx {	
+  Gfx_Command_Queue command_queue;
+  Gfx_Texture_Transfer_Queue texture_transfer_queue;
+};
+
+
+
+static void set_basis(Gfx* g, M44 basis);
+static void set_orthographic_camera(Gfx* g, V3 pos, Rect3 frustum);
+static void draw_sprite(Gfx* g, 
                         RGBA colors, 
                         M44 transform, 
                         UMI texture_index);
 
-static void draw_subsprite(Game_Gfx* g, 
+static void draw_subsprite(Gfx* g, 
                            RGBA colors, 
                            M44 transform, 
                            UMI texture_index,
                            Rect2 texture_uv);
 
-static void draw_rect(Game_Gfx* g, RGBA colors, M44 transform);
-static void clear(Game_Gfx* g, RGBA colors);
-static void draw_line(Game_Gfx* g, 
+static void draw_rect(Gfx* g, RGBA colors, M44 transform);
+static void clear(Gfx* g, RGBA colors);
+static void draw_line(Gfx* g, 
                       Line2 line,
                       F32 thickness,
                       RGBA colors,
                       F32 pos_z);
-static void draw_circle(Game_Gfx* g, 
+static void draw_circle(Gfx* g, 
                         Circ2 circle,
                         F32 thickness, 
                         U32 line_count,
                         RGBA color,
                         F32 pos_z);
 
-static void draw_aabb(Game_Gfx* g, 
+static void draw_aabb(Gfx* g, 
                       Rect2 rect,
                       F32 thickness,
                       RGBA colors,
                       F32 pos_z);
 
-static void set_texture(Game_Gfx* g, 
+static void set_texture(Gfx* g, 
                         UMI texture_index,
                         UMI texture_width,
                         UMI texture_height,
                         U32* texture_pixels);
 
-static void clear_textures(Game_Gfx* g);
+static void clear_textures(Gfx* g);
 
 
 //~ NOTE(Momo): Cmd types that needs to be handled.
-enum Game_Gfx_Cmd_Type{
-  GAME_GFX_CMD_TYPE_CLEAR,
-  GAME_GFX_CMD_TYPE_SET_BASIS,
-  GAME_GFX_CMD_TYPE_DRAW_RECT,
-  GAME_GFX_CMD_TYPE_DRAW_SUBSPRITE,
-  GAME_GFX_CMD_TYPE_SET_TEXTURE,
-  GAME_GFX_CMD_TYPE_CLEAR_TEXTURES,
+enum Gfx_Cmd_Type{
+  GFX_CMD_TYPE_CLEAR,
+  GFX_CMD_TYPE_SET_BASIS,
+  GFX_CMD_TYPE_DRAW_RECT,
+  GFX_CMD_TYPE_DRAW_SUBSPRITE,
+  GFX_CMD_TYPE_SET_TEXTURE,
+  GFX_CMD_TYPE_CLEAR_TEXTURES,
 };
 
 
-struct Game_Gfx_Clear_Cmd {
+struct Gfx_Clear_Cmd {
   RGBA colors;
 };
 
-struct Game_Gfx_Set_Basis_Cmd {
+struct Gfx_Set_Basis_Cmd {
   M44 basis;
 };
 
-struct Game_Gfx_Draw_Subsprite_Cmd{
+struct Gfx_Draw_Subsprite_Cmd{
   UMI texture_index;
   RGBA colors;
   M44 transform;
   Rect2 texture_uv; 
 } ;
 
-struct Game_Gfx_Draw_Rect_Cmd{
+struct Gfx_Draw_Rect_Cmd{
   RGBA colors;
   M44 transform;
 };
 
 
-struct Game_Gfx_Set_Texture_Cmd{
+struct Gfx_Set_Texture_Cmd{
   UMI texture_index;
   UMI texture_width;
   UMI texture_height;
   U8* texture_pixels;
 };
 
-struct Game_Gfx_Clear_Textures_Cmd {};
+struct Gfx_Clear_Textures_Cmd {};
 
 
 

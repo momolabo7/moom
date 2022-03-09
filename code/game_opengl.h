@@ -1,5 +1,5 @@
-#ifndef GAME_GFX_OPENGL_H
-#define GAME_GFX_OPENGL_H
+#ifndef GFX_OPENGL_H
+#define GFX_OPENGL_H
 
 
 //- Opengl typedefs
@@ -172,9 +172,22 @@ typedef void    GL_glDebugMessageCallbackARB(GLDEBUGPROC *callback,
 typedef void* Opengl_Platform_AllocFn(UMI size);
 typedef void Opengl_Platform_FreeFn(void* ptr);
 
-struct Opengl_Platform {
-  Opengl_Platform_AllocFn* alloc;
-  Opengl_Platform_FreeFn* free;
+enum _Opengl_VBO {
+  _Opengl_VBO_Model,
+  _Opengl_VBO_Indices,
+  _Opengl_VBO_Colors,
+  _Opengl_VBO_Texture,
+  _Opengl_VBO_Transform,
+  _Opengl_VBO_Count // 5
+};
+
+struct Opengl : Gfx {
+  GLuint textures[10];
+  GLuint buffers[_Opengl_VBO_Count]; // Opengl__VBO_Count
+  GLuint shader;
+  GLuint model; 
+  GLuint dummy_texture;
+  GLuint blank_texture;
   
   GL_glEnable* glEnable;
   GL_glDisable* glDisable;
@@ -213,34 +226,14 @@ struct Opengl_Platform {
   GL_glDeleteTextures* glDeleteTextures;
   GL_glDebugMessageCallbackARB* glDebugMessageCallbackARB;
   GL_glNamedBufferSubData* glNamedBufferSubData;
-  GL_glUseProgram* glUseProgram;
-};
-
-enum _Opengl_VBO {
-  _Opengl_VBO_Model,
-  _Opengl_VBO_Indices,
-  _Opengl_VBO_Colors,
-  _Opengl_VBO_Texture,
-  _Opengl_VBO_Transform,
-  _Opengl_VBO_Count // 5
-};
-
-struct Opengl : Game_Gfx, Opengl_Platform {
-  GLuint textures[10];
-  GLuint buffers[_Opengl_VBO_Count]; // Opengl__VBO_Count
-  GLuint shader;
-  GLuint model; 
-  GLuint dummy_texture;
-  GLuint blank_texture;
-  
+  GL_glUseProgram* glUseProgram;  
 };
 
 
 
 //~ NOTE(Momo): Functions
-static B32  init_opengl(Opengl* ogl, Opengl_Platform pf);
+static B32  init_opengl(Opengl* ogl);
 static void render_opengl(Opengl* ogl, V2U render_wh, Rect2U region);
-static void free_opengl(Opengl* ogl);
 
-#include "game_gfx_opengl.cpp"
-#endif //GAME_GFX_OPENGL_H
+#include "game_opengl.cpp"
+#endif //GFX_OPENGL_H

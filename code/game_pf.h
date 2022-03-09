@@ -1,4 +1,4 @@
-// This file and game_gfx.h contain structs that need to be 
+// This file and GFX.h contain structs that need to be 
 // initialized by the OS and passed to the main Game_Update() 
 // function. 
 #ifndef GAME_PLATFORM_H
@@ -109,10 +109,10 @@ struct Game_Memory {
   Platform_API platform_api;
 };
 
-struct Game_Gfx;
+struct Gfx;
 typedef void Game_Update_Fn(Game_Memory* game_memory,
                             Game_Input* input,
-                            Game_Gfx* gfx);
+                            Gfx* gfx);
 
 // To be called by platform
 struct Game_API {

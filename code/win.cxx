@@ -571,7 +571,7 @@ WinMain(HINSTANCE instance,
   
   
   //-NOTE(Momo): Init gfx
-  Game_Gfx* gfx = gfx_api.init(window);
+  Gfx* gfx = gfx_api.init(window, MB(128), MB(128));
   if (!gfx) {
     return 1;
   }

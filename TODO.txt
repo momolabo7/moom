@@ -6,6 +6,9 @@ Momo
 		  (*(Opengl_Platform*)(ogl)) = pf; // LOL
 
 Engine
+  Renderer
+    We might want to remove "push_extra_data" from Mailbox, used in set_texture. Don't do extra work!
+    Texture loading queue...
 	Mutithread support
     Load bitmap
     Load font
@@ -13,7 +16,7 @@ Engine
 		Cut atlas into fixed-sized chunks and load sections of them in renderer
   Fixed sized allocator for assets
 	Sound
-  We might want to remove "push_extra_data" from Mailbox, used in set_texture. Don't do extra work!
+	
 
 4coder
   Support strongly typed enums

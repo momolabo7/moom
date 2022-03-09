@@ -12,9 +12,11 @@
 
 
 //~API for Win platform to use
-typedef Game_Gfx*   Win_Gfx_Init_Fn(HWND window);
-typedef void 	Win_Gfx_Free_Fn(Game_Gfx* r);
-typedef void   Win_Gfx_Render_Fn(Game_Gfx* renderer, V2U render_wh, Rect2U render_region);
+typedef Gfx*   Win_Gfx_Init_Fn(HWND window, 
+                               UMI command_queue_memory_size, 
+                               UMI texture_queue_memory_size);
+typedef void 	Win_Gfx_Free_Fn(Gfx* r);
+typedef void   Win_Gfx_Render_Fn(Gfx* renderer, V2U render_wh, Rect2U render_region);
 
 
 //~Function table

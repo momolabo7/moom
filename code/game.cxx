@@ -31,7 +31,7 @@ test_work(void* context) {
 exported B32 
 game_update(Game_Memory* game,
             Game_Input* input, 
-            Game_Gfx* gfx) { 
+            Gfx* gfx) { 
   Platform_API pf = game->platform_api;
   F32 dt = input->seconds_since_last_frame;
   

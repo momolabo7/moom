@@ -1,19 +1,19 @@
 
 
 static void
-set_basis(Game_Gfx* g, M44 basis) {
-  auto* data = push<Game_Gfx_Set_Basis_Cmd>(&g->commands,
-                                            GAME_GFX_CMD_TYPE_SET_BASIS);
+set_basis(Gfx* g, M44 basis) {
+  auto* data = push<Gfx_Set_Basis_Cmd>(&g->command_queue,
+                                       GFX_CMD_TYPE_SET_BASIS);
   data->basis = basis;
 }
 
 static void
-set_orthographic_camera(Game_Gfx* g, 
+set_orthographic_camera(Gfx* g, 
                         V3 position,
                         Rect3 frustum)   
 {
-  auto* data = push<Game_Gfx_Set_Basis_Cmd>(&g->commands, 
-                                            GAME_GFX_CMD_TYPE_SET_BASIS);
+  auto* data = push<Gfx_Set_Basis_Cmd>(&g->command_queue, 
+                                       GFX_CMD_TYPE_SET_BASIS);
   M44 p  = create_m44_orthographic(frustum.min.x,  
                                    frustum.max.x, 
                                    frustum.min.y, 
@@ -27,23 +27,23 @@ set_orthographic_camera(Game_Gfx* g,
 }
 
 static void
-clear(Game_Gfx* g, RGBA colors) {
-  auto* data = push<Game_Gfx_Clear_Cmd>(&g->commands,
-                                        GAME_GFX_CMD_TYPE_CLEAR);
+clear(Gfx* g, RGBA colors) {
+  auto* data = push<Gfx_Clear_Cmd>(&g->command_queue,
+                                   GFX_CMD_TYPE_CLEAR);
   
   data->colors = colors;
 }
 
 static void
-draw_subsprite(Game_Gfx* g, 
+draw_subsprite(Gfx* g, 
                RGBA colors, 
                M44 transform, 
                UMI texture_index,
                Rect2 texture_uv)  
 
 {
-  auto* data = push<Game_Gfx_Draw_Subsprite_Cmd>(&g->commands,
-                                                 GAME_GFX_CMD_TYPE_DRAW_SUBSPRITE);
+  auto* data = push<Gfx_Draw_Subsprite_Cmd>(&g->command_queue,
+                                            GFX_CMD_TYPE_DRAW_SUBSPRITE);
   
   data->colors = colors;
   data->transform = transform;
@@ -52,7 +52,7 @@ draw_subsprite(Game_Gfx* g,
 }
 
 static void
-draw_sprite(Game_Gfx* g,
+draw_sprite(Gfx* g,
             RGBA colors, 
             M44 transform, 
             UMI texture_index)  
@@ -65,17 +65,17 @@ draw_sprite(Game_Gfx* g,
 }
 
 static void
-draw_rect(Game_Gfx* g, 
+draw_rect(Gfx* g, 
           RGBA colors, 
           M44 transform) 
 {
-  auto* data = push<Game_Gfx_Draw_Rect_Cmd>(&g->commands, GAME_GFX_CMD_TYPE_DRAW_RECT);
+  auto* data = push<Gfx_Draw_Rect_Cmd>(&g->command_queue, GFX_CMD_TYPE_DRAW_RECT);
   data->colors = colors;
   data->transform = transform;
 }
 
 static void 
-draw_line(Game_Gfx* g, 
+draw_line(Gfx* g, 
           Line2 line,
           F32 thickness,
           RGBA colors,
@@ -102,7 +102,7 @@ draw_line(Game_Gfx* g,
 }
 
 static  void
-draw_circle(Game_Gfx* g, 
+draw_circle(Gfx* g, 
             Circ2 circle,
             F32 thickness, 
             U32 line_count,
@@ -133,7 +133,7 @@ draw_circle(Game_Gfx* g,
 }
 
 static void 
-draw_aabb(Game_Gfx* g, 
+draw_aabb(Gfx* g, 
           Rect2 rect,
           F32 thickness,
           RGBA colors,
@@ -202,7 +202,7 @@ draw_aabb(Game_Gfx* g,
 }
 
 static void 
-set_texture(Game_Gfx* g, 
+set_texture(Gfx* g, 
             UMI texture_index,
             UMI texture_width,
             UMI texture_height,
@@ -213,18 +213,18 @@ set_texture(Game_Gfx* g,
   // so that the renderer can optimize the copying...?
   UMI texture_size = texture_width * texture_height * 4;
   
-  auto* data = push<Game_Gfx_Set_Texture_Cmd>(&g->commands, GAME_GFX_CMD_TYPE_SET_TEXTURE);
+  auto* data = push<Gfx_Set_Texture_Cmd>(&g->command_queue, GFX_CMD_TYPE_SET_TEXTURE);
   
   data->texture_width = texture_width;
   data->texture_height = texture_height;
   data->texture_index = texture_index;
   
-  data->texture_pixels = (U8*)push_extra_data(&g->commands, texture_size, 16);
+  data->texture_pixels = (U8*)push_extra_data(&g->command_queue, texture_size, 16);
   copy_memory(data->texture_pixels, texture_pixels, texture_size);
 }
 
 static void 
-clear_textures(Game_Gfx* g) {
-  push<Game_Gfx_Clear_Textures_Cmd>(&g->commands, 
-                                    GAME_GFX_CMD_TYPE_CLEAR_TEXTURES);
+clear_textures(Gfx* g) {
+  push<Gfx_Clear_Textures_Cmd>(&g->command_queue, 
+                               GFX_CMD_TYPE_CLEAR_TEXTURES);
 }

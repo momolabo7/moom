@@ -1,3 +1,7 @@
+struct Task
+{
+}; 
+
 static B32
 is_ok(Bitmap_Asset_ID id)  { 
   return id.value != 0;
@@ -12,9 +16,8 @@ is_ok(Image_Asset_ID id)  {
 }
 
 
-
 static B32
-init_game_assets(Game_Assets* ga, Platform_API pf, Game_Gfx* gfx) {
+init_game_assets(Game_Assets* ga, Platform_API pf, Gfx* gfx) {
   
   UMI memory_size = MB(20);
   void* mem = pf.alloc(memory_size);
@@ -32,11 +35,11 @@ init_game_assets(Game_Assets* ga, Platform_API pf, Game_Gfx* gfx) {
   Sui_Header sui_header;
   pf.read_file(&file, sizeof(Sui_Header), 0, &sui_header);
   
-
+  
   if (sui_header.signature != SUI_SIGNATURE) {
     return false;
   }
-
+  
   // Allocation
   ga->assets = push_array<Asset>(&ga->arena, sui_header.asset_count);
   assert(ga->assets);
