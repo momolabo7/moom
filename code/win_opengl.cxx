@@ -193,7 +193,7 @@ exported void
 win_gfx_free(Gfx* r) {
   Opengl* opengl = (Opengl*)r;
   win_gfx_free_memory(opengl->command_queue.memory);
-  win_gfx_free_memory(opengl->texture_transfer_queue.memory);
+  win_gfx_free_memory(opengl->texture_queue.transfer_memory);
   win_gfx_free_memory(opengl);
 }
 
@@ -218,8 +218,8 @@ win_gfx_init(HWND window,
                                          command_queue_memory_size);
   // Allocate memory for texture transfer queue
   U8* texture_transfer_memory = (U8*)win_gfx_allocate_memory(texture_transfer_queue_memory_size);
-  opengl->texture_transfer_queue.memory = texture_transfer_memory;
-  opengl->texture_transfer_queue.memory_size = texture_transfer_queue_memory_size;
+  opengl->texture_queue.transfer_memory = texture_transfer_memory;
+  opengl->texture_queue.transfer_memory_size = texture_transfer_queue_memory_size;
   
   
   if (!opengl) {
@@ -315,7 +315,7 @@ if (!opengl->name) { goto failed; }
   failed: 
   {
     win_gfx_free_memory(opengl->command_queue.memory);
-    win_gfx_free_memory(opengl->texture_transfer_queue.memory);
+    win_gfx_free_memory(opengl->texture_queue.transfer_memory);
     win_gfx_free_memory(opengl);
     return nullptr;
   }

@@ -127,6 +127,7 @@ init_game_assets(Game_Assets* ga, Platform_API pf, Gfx* gfx) {
           
           // send to renderer to manage
           asset->bitmap.gfx_bitmap_id = ga->bitmap_counter++;
+          
           set_texture(gfx, 
                       asset->bitmap.gfx_bitmap_id, 
                       asset->bitmap.width, 

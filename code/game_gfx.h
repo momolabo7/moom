@@ -31,14 +31,14 @@
 #define GFX_H
 
 //~ NOTE(Momo): Gfx API
-enum Gfx_Texture_Transfer_Entry_State {
-  GFX_TEXTURE_TRANSFER_ENTRY_STATE_NONE,
-  GFX_TEXTURE_TRANSFER_ENTRY_STATE_LOADING,
-  GFX_TEXTURE_TRANSFER_ENTRY_STATE_READY,
+enum Gfx_Texture_Queue_Entry_State {
+  GFX_TEXTURE_QUEUE_ENTRY_STATE_NONE,
+  GFX_TEXTURE_QUEUE_ENTRY_STATE_LOADING,
+  GFX_TEXTURE_QUEUE_ENTRY_STATE_READY,
 };
 
-struct Gfx_Texture_Transfer_Entry {
-  volatile Gfx_Texture_Transfer_Entry_State state;
+struct Gfx_Texture_Queue_Entry {
+  volatile Gfx_Texture_Queue_Entry_State state;
   
   U32 index;
   U32 texture_width;  // can be U16?
@@ -46,11 +46,14 @@ struct Gfx_Texture_Transfer_Entry {
   void* texture_data;
 };
 
-struct Gfx_Texture_Transfer_Queue {
-  U8* memory;
-  U32 memory_size;
+struct Gfx_Texture_Queue {
+  U8* transfer_memory;
+  U32 transfer_memory_size;
+  U32 transfer_memory_first_used;
+  U32 transfer_memory_last_used;
   
-  Gfx_Texture_Transfer_Entry entries[256];
+  Gfx_Texture_Queue_Entry entries[256];
+  U32 first_entry_index;
   U32 entry_count;
   
 };
@@ -58,8 +61,9 @@ struct Gfx_Texture_Transfer_Queue {
 typedef Mailbox Gfx_Command_Queue;
 struct Gfx {	
   Gfx_Command_Queue command_queue;
-  Gfx_Texture_Transfer_Queue texture_transfer_queue;
+  Gfx_Texture_Queue texture_queue;
 };
+
 
 
 
