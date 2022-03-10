@@ -17,6 +17,6 @@ SET CommonLinkerFlags=-incremental:no -opt:ref
 SET CommonLinkerFlags=user32.lib opengl32.lib gdi32.lib  %CommonLinkerFlags%
 
 pushd %BuildDir%
-cl %CommonCompilerFlags% %CodeDir%\win_opengl.cxx -LD -link %CommonLinkerFlags% /OUT:gfx.dll
+cl %CommonCompilerFlags% %CodeDir%\win_gfx_opengl.cxx -LD -link %CommonLinkerFlags% /OUT:gfx.dll
 
 popd

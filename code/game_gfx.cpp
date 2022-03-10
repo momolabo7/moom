@@ -1,3 +1,69 @@
+
+static void
+clear_commands(Gfx_Command_Queue* q) {
+  q->data_pos = 0;	
+	q->entry_count = 0;
+	
+	UMI imem = ptr_to_int(q->memory);
+	UMI adjusted_entry_start = align_down_pow2(imem + q->memory_size, 4) - imem;
+	
+	q->entry_start = q->entry_pos = (U32)adjusted_entry_start;
+}
+
+static void 
+init_commands(Gfx_Command_Queue* q, void* memory, U32 memory_size) {
+  q->memory = (U8*)memory;
+  q->memory_size = memory_size;
+  clear_commands(q);
+}
+
+static Gfx_Command*
+get_command(Gfx_Command_Queue* q, U32 index) {
+  assert(index < q->entry_count);
+  
+	UMI stride = align_up_pow2(sizeof(Gfx_Command), 4);
+	return (Gfx_Command*)(q->memory + q->entry_start - ((index+1) * stride));
+}
+
+static void*
+_push_command_block(Gfx_Command_Queue* q, U32 size, U32 id, U32 align = 4) {
+	UMI imem = ptr_to_int(q->memory);
+	
+	UMI adjusted_data_pos = align_up_pow2(imem + q->data_pos, (UMI)align) - imem;
+	UMI adjusted_entry_pos = align_down_pow2(imem + q->entry_pos, 4) - imem; 
+	
+	assert(adjusted_data_pos + size + sizeof(Gfx_Command) < adjusted_entry_pos);
+	
+	q->data_pos = (U32)adjusted_data_pos + size;
+	q->entry_pos = (U32)adjusted_entry_pos - sizeof(Gfx_Command);
+	
+	auto* entry = (Gfx_Command*)int_to_ptr(imem + q->entry_pos);
+	entry->id = id;
+	entry->data = int_to_ptr(imem + adjusted_data_pos);
+	
+	
+	++q->entry_count;
+	
+	return entry->data;
+}
+
+static void 
+init_texture_queue(Gfx_Texture_Queue* q, void* memory, U32 memory_size) {
+  q->transfer_memory = (U8*)memory;
+  q->transfer_memory_size = memory_size;
+  q->transfer_memory_start = 0;
+  q->transfer_memory_end = 0;
+  q->first_payload_index = 0;
+  q->payload_count = 0;
+}
+
+template<typename T> static T*
+push_command(Gfx_Command_Queue* q, U32 id, U32 align = 4) {
+  return (T*)_push_command_block(q, sizeof(T), id, align);
+}
+
+
+
 static Gfx_Texture_Payload*
 begin_texture_transfer(Gfx_Texture_Queue* q, U32 required_space) {
   Gfx_Texture_Payload* ret = 0;
@@ -63,19 +129,18 @@ cancel_texture_transfer(Gfx_Texture_Payload* entry) {
 
 
 static void
-set_basis(Gfx_Command_Queue* c, M44 basis) {
-  auto* data = push<Gfx_Set_Basis_Cmd>(c,
-                                       GFX_CMD_TYPE_SET_BASIS);
+push_basis(Gfx_Command_Queue* c, M44 basis) {
+  
+  auto* data = push_command<Gfx_Set_Basis_Cmd>(c, GFX_CMD_TYPE_SET_BASIS);
   data->basis = basis;
 }
 
 static void
-set_orthographic_camera(Gfx_Command_Queue* c, 
-                        V3 position,
-                        Rect3 frustum)   
+push_orthographic_camera(Gfx_Command_Queue* c, 
+                         V3 position,
+                         Rect3 frustum)   
 {
-  auto* data = push<Gfx_Set_Basis_Cmd>(c, 
-                                       GFX_CMD_TYPE_SET_BASIS);
+  auto* data = push_command<Gfx_Set_Basis_Cmd>(c, GFX_CMD_TYPE_SET_BASIS);
   M44 p  = create_m44_orthographic(frustum.min.x,  
                                    frustum.max.x, 
                                    frustum.min.y, 
@@ -89,23 +154,22 @@ set_orthographic_camera(Gfx_Command_Queue* c,
 }
 
 static void
-clear_colors(Gfx_Command_Queue* c, RGBA colors) {
-  auto* data = push<Gfx_Clear_Cmd>(c,
-                                   GFX_CMD_TYPE_CLEAR);
+push_colors(Gfx_Command_Queue* c, RGBA colors) {
+  auto* data = push_command<Gfx_Clear_Cmd>(c, GFX_CMD_TYPE_CLEAR);
   
   data->colors = colors;
 }
 
 static void
-draw_subsprite(Gfx_Command_Queue* c, 
+push_subsprite(Gfx_Command_Queue* c, 
                RGBA colors, 
                M44 transform, 
                UMI texture_index,
                Rect2 texture_uv)  
 
 {
-  auto* data = push<Gfx_Draw_Subsprite_Cmd>(c,
-                                            GFX_CMD_TYPE_DRAW_SUBSPRITE);
+  auto* data = push_command<Gfx_Draw_Subsprite_Cmd>(c,
+                                                    GFX_CMD_TYPE_DRAW_SUBSPRITE);
   
   data->colors = colors;
   data->transform = transform;
@@ -114,7 +178,7 @@ draw_subsprite(Gfx_Command_Queue* c,
 }
 
 static void
-draw_sprite(Gfx_Command_Queue* c,
+push_sprite(Gfx_Command_Queue* c,
             RGBA colors, 
             M44 transform, 
             UMI texture_index)  
@@ -123,21 +187,21 @@ draw_sprite(Gfx_Command_Queue* c,
   Rect2 uv = {};
   uv.max.x = 1.f;
   uv.max.y = 1.f;
-  draw_subsprite(c, colors, transform, texture_index, uv);
+  push_subsprite(c, colors, transform, texture_index, uv);
 }
 
 static void
-draw_rect(Gfx_Command_Queue* c, 
+push_rect(Gfx_Command_Queue* c, 
           RGBA colors, 
           M44 transform) 
 {
-  auto* data = push<Gfx_Draw_Rect_Cmd>(c, GFX_CMD_TYPE_DRAW_RECT);
+  auto* data = push_command<Gfx_Draw_Rect_Cmd>(c, GFX_CMD_TYPE_DRAW_RECT);
   data->colors = colors;
   data->transform = transform;
 }
 
 static void 
-draw_line(Gfx_Command_Queue* c, 
+push_line(Gfx_Command_Queue* c, 
           Line2 line,
           F32 thickness,
           RGBA colors,
@@ -159,12 +223,12 @@ draw_line(Gfx_Command_Queue* c,
   M44 R = create_m44_rotation_z(angle);
   M44 S = create_m44_scale(line_length, thickness, 1.f) ;
   
-  draw_rect(c, colors, 
+  push_rect(c, colors, 
             T*R*S);
 }
 
 static  void
-draw_circle(Gfx_Command_Queue* c, 
+push_circle(Gfx_Command_Queue* c, 
             Circ2 circle,
             F32 thickness, 
             U32 line_count,
@@ -182,7 +246,7 @@ draw_circle(Gfx_Command_Queue* c,
     V2 line_pt_1 = add(pt1, circle.center);
     V2 line_pt_2 = add(pt2, circle.center);
     Line2 line = { line_pt_1, line_pt_2 };
-    draw_line(c, 
+    push_line(c, 
               line,
               thickness,
               color,
@@ -195,7 +259,7 @@ draw_circle(Gfx_Command_Queue* c,
 }
 
 static void 
-draw_aabb(Gfx_Command_Queue* c, 
+push_aabb(Gfx_Command_Queue* c, 
           Rect2 rect,
           F32 thickness,
           RGBA colors,
@@ -209,7 +273,7 @@ draw_aabb(Gfx_Command_Queue* c,
     line.max.x = rect.max.x;
     line.min.y = rect.min.y; 
     
-    draw_line(c,
+    push_line(c,
               line,
               thickness, 
               colors,
@@ -224,7 +288,7 @@ draw_aabb(Gfx_Command_Queue* c,
     line.max.x = rect.min.x;
     line.min.y = rect.max.y; 
     
-    draw_line(c,
+    push_line(c,
               line,
               thickness, 
               colors,
@@ -239,7 +303,7 @@ draw_aabb(Gfx_Command_Queue* c,
     line.max.x = rect.max.x;
     line.min.y = rect.max.y; 
     
-    draw_line(c,
+    push_line(c,
               line,
               thickness, 
               colors,
@@ -255,7 +319,7 @@ draw_aabb(Gfx_Command_Queue* c,
     line.max.x = rect.max.x;
     line.min.y = rect.max.y; 
     
-    draw_line(c,
+    push_line(c,
               line,
               thickness, 
               colors,
@@ -264,7 +328,7 @@ draw_aabb(Gfx_Command_Queue* c,
 }
 
 static void 
-clear_textures(Gfx_Command_Queue* c) {
-  push<Gfx_Clear_Textures_Cmd>(c, 
-                               GFX_CMD_TYPE_CLEAR_TEXTURES);
+push_clear_textures(Gfx_Command_Queue* c) {
+  push_command<Gfx_Clear_Textures_Cmd>(c, 
+                                       GFX_CMD_TYPE_CLEAR_TEXTURES);
 }

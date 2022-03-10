@@ -81,7 +81,7 @@ game_update(Game_Memory* game,
   {
     RGBA colors;
     colors.r = colors.g = colors.b  = colors.a = 0.3f;
-    clear_colors(&gfx->command_queue, colors);
+    push_colors(&gfx->command_queue, colors);
   }
   
   // Set camera
@@ -92,7 +92,7 @@ game_update(Game_Memory* game,
     frustum.max.x = 1600;
     frustum.max.y = 900;
     frustum.max.z = 500;
-    set_orthographic_camera(&gfx->command_queue, position, frustum);
+    push_orthographic_camera(&gfx->command_queue, position, frustum);
   }
   
   {
@@ -126,7 +126,7 @@ game_update(Game_Memory* game,
       Bitmap_Asset_ID bitmap_id = glyph->bitmap_id;
       
       Bitmap_Asset* bitmap = get_bitmap(game_assets, bitmap_id);
-      draw_subsprite(&gfx->command_queue, 
+      push_subsprite(&gfx->command_queue, 
                      colors, t*r*s, 
                      bitmap->gfx_bitmap_id,
                      glyph->uv);
@@ -134,6 +134,5 @@ game_update(Game_Memory* game,
   }
   
   return true;
-  
   
 }

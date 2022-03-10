@@ -30,7 +30,7 @@
 #ifndef GFX_H
 #define GFX_H
 
-//~ NOTE(Momo): Gfx API
+//-Texture Queue API
 enum Gfx_Texture_Payload_State {
   GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
   GFX_TEXTURE_PAYLOAD_STATE_LOADING,
@@ -61,59 +61,30 @@ struct Gfx_Texture_Queue {
   
 };
 
-typedef Mailbox Gfx_Command_Queue;
+//-Command Queue API
+struct Gfx_Command{
+  U32 id; // type id from user
+  void* data;
+};
+
+struct Gfx_Command_Queue {
+	U8* memory;
+  U32 memory_size;
+  
+	U32 data_pos;
+  
+	U32 entry_pos;
+	U32 entry_start;
+	U32 entry_count;
+};
+
+
+
+//- Gfx API
 struct Gfx {	
   Gfx_Command_Queue command_queue;
   Gfx_Texture_Queue texture_queue;
 };
-
-
-static void set_basis(Gfx_Command_Queue* command_queue, 
-                      M44 basis);
-
-static void set_orthographic_camera(Gfx_Command_Queue* command_queue, 
-                                    V3 pos, 
-                                    Rect3 frustum);
-
-static void draw_sprite(Gfx_Command_Queue* command_queue, 
-                        RGBA colors, 
-                        M44 transform, 
-                        UMI texture_index);
-
-static void draw_subsprite(Gfx_Command_Queue* command_queue, 
-                           RGBA colors, 
-                           M44 transform, 
-                           UMI texture_index,
-                           Rect2 texture_uv);
-
-static void draw_rect(Gfx_Command_Queue* command_queue,
-                      RGBA colors, 
-                      M44 transform);
-
-static void clear_colors(Gfx_Command_Queue* command_queue,
-                         RGBA colors);
-
-static void draw_line(Gfx_Command_Queue* command_queue, 
-                      Line2 line,
-                      F32 thickness,
-                      RGBA colors,
-                      F32 pos_z);
-
-static void draw_circle(Gfx_Command_Queue* command_queue, 
-                        Circ2 circle,
-                        F32 thickness, 
-                        U32 line_count,
-                        RGBA color,
-                        F32 pos_z);
-
-static void draw_aabb(Gfx_Command_Queue* command_queue, 
-                      Rect2 rect,
-                      F32 thickness,
-                      RGBA colors,
-                      F32 pos_z);
-
-static void clear_textures(Gfx_Command_Queue* command_queue);
-
 
 //~ NOTE(Momo): Cmd types that needs to be handled.
 enum Gfx_Cmd_Type{

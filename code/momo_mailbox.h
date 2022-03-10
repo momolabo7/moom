@@ -1,3 +1,4 @@
+#if 0
 // The mailbox is a linear data structure
 // that stores any type of objects in order.
 
@@ -27,3 +28,4 @@ template<typename T> static T*	push(Mailbox* m, U32 id, UMI align = alignof(T));
 #include "momo_mailbox.cpp"
 
 #endif //MOMO_MAILBOX_H
+#endif

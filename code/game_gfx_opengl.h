@@ -230,10 +230,6 @@ struct Opengl : Gfx {
 };
 
 
+#include "game_gfx_opengl.cpp"
 
-//~ NOTE(Momo): Functions
-static B32  init_opengl(Opengl* ogl);
-static void render_opengl(Opengl* ogl, V2U render_wh, Rect2U region);
-
-#include "game_opengl.cpp"
 #endif //GFX_OPENGL_H

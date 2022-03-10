@@ -2,7 +2,6 @@
 
 #include "momo.h"
 #include "win_gfx.h"
-
 #include "game_pf.h"
 
 
@@ -539,8 +538,19 @@ WinMain(HINSTANCE instance,
     }
     
     
-    
-    
+  }
+  
+  //-NOTE(Momo): Calculate target refresh rate
+  F32 target_seconds_per_frame = 0.f;
+  {
+    int monitor_refresh_rate = 60;
+    HDC dc = GetDC(window);
+    int win_refresh_rate = GetDeviceCaps(dc, VREFRESH);
+    ReleaseDC(window, dc);
+    if (win_refresh_rate > 1) {
+      monitor_refresh_rate = win_refresh_rate;
+    }
+    target_seconds_per_frame = 1.f/(F32)monitor_refresh_rate;
   }
   
   //-NOTE(Momo): Game Memory setup
@@ -626,8 +636,7 @@ WinMain(HINSTANCE instance,
     
     //-Process messages and input
     // TODO: Calculate ideal dt basaed on refresh rate
-    const F64 target_dt = 1/60.0;
-    input.seconds_since_last_frame = (F32)target_dt;
+    input.seconds_since_last_frame = (F32)target_seconds_per_frame;
     update(&input);
     
     {
@@ -691,10 +700,10 @@ WinMain(HINSTANCE instance,
     
     
     
-    if(target_dt > secs_elapsed) {
+    if(target_seconds_per_frame > secs_elapsed) {
       if (is_sleep_granular) {
         DWORD ms_to_sleep 
-          = (DWORD)(1000 * (target_dt - secs_elapsed));
+          = (DWORD)(1000 * (target_seconds_per_frame - secs_elapsed));
         
         // NOTE(Momo): Return control to OS
         if (ms_to_sleep > 1) {
@@ -702,7 +711,7 @@ WinMain(HINSTANCE instance,
         }
         
         // NOTE(Momo): Spin lock
-        while(target_dt > secs_elapsed) {
+        while(target_seconds_per_frame > secs_elapsed) {
           secs_elapsed = 
             win_get_secs_elapsed(last_count,
                                  win_get_performance_counter(),

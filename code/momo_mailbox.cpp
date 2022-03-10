@@ -1,4 +1,5 @@
 
+#if 0
 static Mailbox
 create_mailbox(void* memory, UMI memory_size) {
   Mailbox ret;
@@ -60,3 +61,4 @@ template<typename T> static T*
 push(Mailbox* m, U32 id, UMI align) {
   return (T*)push_block(m, sizeof(T), id, align);
 }  
+#endif

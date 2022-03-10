@@ -518,7 +518,7 @@ _process_command_queue(Opengl* ogl) {
   GLuint current_instance_index = 0;
   Gfx_Command_Queue* commands = &ogl->command_queue;
   for (U32 i = 0; i < commands->entry_count; ++i) {
-    Mailbox_Entry* entry = get_entry(commands, i);
+    Gfx_Command* entry = get_command(commands, i);
     switch(entry->id) {
       case GFX_CMD_TYPE_SET_BASIS: {
         auto* data = (Gfx_Set_Basis_Cmd*)entry->data;
@@ -645,7 +645,7 @@ _process_command_queue(Opengl* ogl) {
   }
   
   _draw_instances(ogl, current_texture, instances_to_draw, last_drawn_instance_index);
-  clear(&ogl->command_queue);  
+  clear_commands(commands);  
 }
 
 // TODO(Momo): Not really 'rendering' anymore. Might want to change name

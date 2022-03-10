@@ -1,9 +1,11 @@
 Engine
+  Renderer
+		change render to begin/end_frame. Begin will take in render_wh and region. End will do whatever
+		Megatexture support!!
 	Mutithread support
     Load bitmap
     Load font
-  Renderer
-		Megatexture support!!
+  
 	Unloading assets
 	  Fixed sized allocator for assets
 

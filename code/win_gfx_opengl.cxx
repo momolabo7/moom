@@ -2,7 +2,7 @@
 
 
 #include "win_gfx.h"
-#include "game_opengl.h"
+#include "game_gfx_opengl.h"
 
 
 //~WGL stuff
@@ -200,7 +200,7 @@ win_gfx_free(Gfx* r) {
 exported Gfx*
 win_gfx_init(HWND window, 
              U32 command_queue_memory_size,
-             U32 texture_queue_memory_size) 
+             U32 texture_transfer_memory_size) 
 {
   
   
@@ -213,13 +213,12 @@ win_gfx_init(HWND window,
   Opengl* opengl = (Opengl*)win_gfx_allocate_memory(sizeof(Opengl));
   
   // Allocate memory for render commands
-  void* command_queue_memory = (void*)win_gfx_allocate_memory(command_queue_memory_size);
-  opengl->command_queue = create_mailbox(command_queue_memory,
-                                         command_queue_memory_size);
+  void* command_queue_memory = win_gfx_allocate_memory(command_queue_memory_size);
+  init_commands(&opengl->command_queue, command_queue_memory, command_queue_memory_size);
+  
   // Allocate memory for texture transfer queue
-  U8* texture_transfer_memory = (U8*)win_gfx_allocate_memory(texture_queue_memory_size);
-  opengl->texture_queue.transfer_memory = texture_transfer_memory;
-  opengl->texture_queue.transfer_memory_size = texture_queue_memory_size;
+  void* texture_transfer_memory = win_gfx_allocate_memory(texture_transfer_memory_size);
+  init_texture_queue(&opengl->texture_queue, texture_transfer_memory, texture_transfer_memory_size);
   
   
   if (!opengl) {
