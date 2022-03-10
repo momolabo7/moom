@@ -460,15 +460,62 @@ init_opengl(Opengl* ogl)
 
 
 static void
-render_opengl(Opengl* ogl, V2U render_wh, Rect2U region) 
-{
-  _align_viewport(ogl, render_wh, region);
+_process_texture_queue(Opengl* ogl) {
+  // NOTE(Momo): In this algorithm of processing the texture queue,
+  // it is entirely possible that if the first payload in the queue
+  // is loading forever, the rest of the payloads will never be processed.
+  // This is fine and intentional. A payload should never be loading forever.
+  // 
+  Gfx_Texture_Queue* textures = &ogl->texture_queue;
+  while(textures->payload_count) {
+    Gfx_Texture_Payload* payload = textures->payloads + textures->first_payload_index;
+    
+    B32 stop_loop = false;
+    switch(payload->state) {
+      case GFX_TEXTURE_PAYLOAD_STATE_LOADING: {
+        stop_loop = true;
+      } break;
+      case GFX_TEXTURE_PAYLOAD_STATE_READY: {
+        assert(payload->texture_width < (U32)S32_MAX);
+        assert(payload->texture_height < (U32)S32_MAX);
+        assert(payload->texture_width > 0);
+        assert(payload->texture_height > 0);
+        
+        _set_texture(ogl, 
+                     payload->texture_index, 
+                     (S32)payload->texture_width, 
+                     (S32)payload->texture_height, 
+                     (U8*)payload->texture_data);
+        
+      } break;
+      case GFX_TEXTURE_PAYLOAD_STATE_EMPTY: {
+        // Possibly 'cancelled'. i.e. Do nothing either way?
+      } break;
+      default: {
+        assert(false);
+      } break;
+    }
+    
+    if (stop_loop) break; 
+    
+    
+    textures->transfer_memory_start = payload->transfer_memory_end;
+    
+    ++textures->first_payload_index;
+    if (textures->first_payload_index > array_count(textures->payloads)) {
+      textures->first_payload_index = 0;
+    }
+    --textures->payload_count;
+  }
   
+}
+
+static void
+_process_command_queue(Opengl* ogl) {
   GLuint current_texture = 0;
   GLsizei instances_to_draw = 0;
   GLsizei last_drawn_instance_index = 0;
   GLuint current_instance_index = 0;
-  
   Gfx_Command_Queue* commands = &ogl->command_queue;
   for (U32 i = 0; i < commands->entry_count; ++i) {
     Mailbox_Entry* entry = get_entry(commands, i);
@@ -591,19 +638,6 @@ render_opengl(Opengl* ogl, V2U render_wh, Rect2U region)
         ++current_instance_index;
         
       } break;
-      case GFX_CMD_TYPE_SET_TEXTURE: {
-        auto* data = (Gfx_Set_Texture_Cmd*)entry->data;
-        assert(data->texture_width < S32_MAX);
-        assert(data->texture_height < S32_MAX);
-        assert(data->texture_width > 0);
-        assert(data->texture_height > 0);
-        
-        _set_texture(ogl, 
-                     data->texture_index, 
-                     (S32)data->texture_width, 
-                     (S32)data->texture_height, 
-                     data->texture_pixels);
-      } break;
       case GFX_CMD_TYPE_CLEAR_TEXTURES: {
         _clear_textures(ogl);
       } break;
@@ -612,5 +646,15 @@ render_opengl(Opengl* ogl, V2U render_wh, Rect2U region)
   
   _draw_instances(ogl, current_texture, instances_to_draw, last_drawn_instance_index);
   clear(&ogl->command_queue);  
+}
+
+// TODO(Momo): Not really 'rendering' anymore. Might want to change name
+static void
+render_opengl(Opengl* ogl, V2U render_wh, Rect2U region) 
+{
+  _align_viewport(ogl, render_wh, region);
+  _process_texture_queue(ogl);
+  _process_command_queue(ogl);
+  
 }
 

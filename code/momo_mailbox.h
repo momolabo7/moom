@@ -22,7 +22,6 @@ static Mailbox        create_mailbox(void* memory, UMI size);
 static void           clear(Mailbox* m);
 static Mailbox_Entry* get_entry(Mailbox* m, UMI index);
 static void*          push_block(Mailbox* m, UMI size, U32 id, UMI align = 4);
-static void*				  push_extra_data(Mailbox* m, UMI size, UMI align = 4);
 template<typename T> static T*	push(Mailbox* m, U32 id, UMI align = alignof(T));
 
 #include "momo_mailbox.cpp"

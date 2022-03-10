@@ -109,51 +109,44 @@ init_game_assets(Game_Assets* ga, Platform_API pf, Gfx* gfx) {
       
       switch(asset->type) {
         case ASSET_TYPE_BITMAP: {
+          asset->bitmap.gfx_bitmap_id = ga->bitmap_counter++;
           asset->bitmap.width = sui_asset.bitmap.width;
           asset->bitmap.height = sui_asset.bitmap.height;
-#if 0
-          Sui_Bitmap sui_bitmap;
-          pf.read_file(&file, sizeof(Sui_Bitmap), 
-                       sui_asset.offset_to_data, 
-                       &sui_bitmap);
-#endif
-          
           U32 bitmap_size = asset->bitmap.width * asset->bitmap.height * 4;
-          asset->bitmap.pixels = (U32*)push_block(&ga->arena, bitmap_size);
           
+          Gfx_Texture_Payload* entry = begin_texture_transfer(gfx, bitmap_size);
+          entry->texture_index = 0;
+          entry->texture_width = asset->bitmap.width;
+          entry->texture_height = asset->bitmap.height;
+          pf.read_file(&file, bitmap_size, 
+                       sui_asset.offset_to_data + sizeof(Sui_Bitmap),
+                       entry->texture_data);
+          
+          complete_texture_transfer(gfx, entry);
+          
+#if 0
+          asset->bitmap.pixels = (U32*)push_block(&ga->arena, bitmap_size);
           pf.read_file(&file, bitmap_size, 
                        sui_asset.offset_to_data + sizeof(Sui_Bitmap),
                        asset->bitmap.pixels);
+#endif
           
           // send to renderer to manage
-          asset->bitmap.gfx_bitmap_id = ga->bitmap_counter++;
           
+#if 0
           set_texture(gfx, 
                       asset->bitmap.gfx_bitmap_id, 
                       asset->bitmap.width, 
                       asset->bitmap.height, 
                       asset->bitmap.pixels);
+#endif
           
         } break;
         case ASSET_TYPE_IMAGE: {
-#if 0
-          Sui_Image sui_image;
-          pf.read_file(&file, sizeof(Sui_Image), 
-                       sui_asset.offset_to_data, 
-                       &sui_image);
-#endif
-          
           asset->image.bitmap_id.value = sui_asset.image.bitmap_asset_id;
           asset->image.uv = sui_asset.image.uv;
         } break;
         case ASSET_TYPE_FONT: {
-#if 0          
-          Sui_Font sui_font;
-          pf.read_file(&file, sizeof(Sui_Font), 
-                       sui_asset.offset_to_data, 
-                       &sui_font);
-#endif
-          
           U32 glyph_count = sui_asset.font.glyph_count;
           U32 one_past_highest_codepoint = sui_asset.font.one_past_highest_codepoint;
           

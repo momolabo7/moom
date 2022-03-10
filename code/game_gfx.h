@@ -31,30 +31,33 @@
 #define GFX_H
 
 //~ NOTE(Momo): Gfx API
-enum Gfx_Texture_Queue_Entry_State {
-  GFX_TEXTURE_QUEUE_ENTRY_STATE_NONE,
-  GFX_TEXTURE_QUEUE_ENTRY_STATE_LOADING,
-  GFX_TEXTURE_QUEUE_ENTRY_STATE_READY,
+enum Gfx_Texture_Payload_State {
+  GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
+  GFX_TEXTURE_PAYLOAD_STATE_LOADING,
+  GFX_TEXTURE_PAYLOAD_STATE_READY,
 };
 
-struct Gfx_Texture_Queue_Entry {
-  volatile Gfx_Texture_Queue_Entry_State state;
+struct Gfx_Texture_Payload {
+  volatile Gfx_Texture_Payload_State state;
+  U32 transfer_memory_start;
+  U32 transfer_memory_end;
   
-  U32 index;
-  U32 texture_width;  // can be U16?
-  U32 texture_height; // can be U16?
+  // For game to input
+  U32 texture_index;
+  U32 texture_width;
+  U32 texture_height;
   void* texture_data;
 };
 
 struct Gfx_Texture_Queue {
   U8* transfer_memory;
   U32 transfer_memory_size;
-  U32 transfer_memory_first_used;
-  U32 transfer_memory_last_used;
+  U32 transfer_memory_start;
+  U32 transfer_memory_end;
   
-  Gfx_Texture_Queue_Entry entries[256];
-  U32 first_entry_index;
-  U32 entry_count;
+  Gfx_Texture_Payload payloads[256];
+  U32 first_payload_index;
+  U32 payload_count;
   
 };
 
@@ -100,12 +103,6 @@ static void draw_aabb(Gfx* g,
                       RGBA colors,
                       F32 pos_z);
 
-static void set_texture(Gfx* g, 
-                        UMI texture_index,
-                        UMI texture_width,
-                        UMI texture_height,
-                        U32* texture_pixels);
-
 static void clear_textures(Gfx* g);
 
 
@@ -115,7 +112,6 @@ enum Gfx_Cmd_Type{
   GFX_CMD_TYPE_SET_BASIS,
   GFX_CMD_TYPE_DRAW_RECT,
   GFX_CMD_TYPE_DRAW_SUBSPRITE,
-  GFX_CMD_TYPE_SET_TEXTURE,
   GFX_CMD_TYPE_CLEAR_TEXTURES,
 };
 
@@ -141,12 +137,6 @@ struct Gfx_Draw_Rect_Cmd{
 };
 
 
-struct Gfx_Set_Texture_Cmd{
-  UMI texture_index;
-  UMI texture_width;
-  UMI texture_height;
-  U8* texture_pixels;
-};
 
 struct Gfx_Clear_Textures_Cmd {};
 

@@ -1,3 +1,66 @@
+static Gfx_Texture_Payload*
+begin_texture_transfer(Gfx* g, U32 required_space) {
+  Gfx_Texture_Queue* q = &g->texture_queue;
+  Gfx_Texture_Payload* ret = 0;
+  
+  if (q->payload_count < array_count(q->payloads)) {
+    U32 avaliable_space = 0;
+    U32 memory_at = q->transfer_memory_end;
+    // Memory is being used like a ring buffer
+    if (q->transfer_memory_start == q->transfer_memory_end) {
+      // This is either ALL the space or NONE of the space. 
+      // Check payload count. 
+      if (q->payload_count == 0) {
+        // Definitely ALL of the space 
+        avaliable_space = q->transfer_memory_size;
+        memory_at = 0;
+      }
+    }
+    else if (q->transfer_memory_end < q->transfer_memory_start) {
+      // Used space is wrapped around.
+      avaliable_space = q->transfer_memory_start - q->transfer_memory_end;
+    }
+    else {
+      // Used space does not wrap around. 
+      // That means we might have space on either side.
+      // Remember that we still want memory to be contiguous!
+      avaliable_space = q->transfer_memory_size - q->transfer_memory_end;
+      if (avaliable_space < required_space) {
+        // Try other side
+        avaliable_space = q->transfer_memory_start;
+        memory_at = 0;
+      }
+      
+    }
+    
+    
+    if(avaliable_space >= required_space) {
+      // We found enough space
+      U32 payload_index = q->first_payload_index + q->payload_count++;
+      ret = q->payloads + (payload_index % array_count(q->payloads));
+      ret->texture_data = q->transfer_memory + memory_at;
+      ret->transfer_memory_start = memory_at;
+      ret->transfer_memory_end = memory_at + required_space;
+      ret->state = GFX_TEXTURE_PAYLOAD_STATE_LOADING;
+      
+      q->transfer_memory_end = ret->transfer_memory_end;
+    }
+  }
+  
+  return ret;
+}
+
+
+
+static void
+complete_texture_transfer(Gfx* g, Gfx_Texture_Payload* entry) {
+  entry->state = GFX_TEXTURE_PAYLOAD_STATE_READY;
+}
+
+static void
+cancel_texture_transfer(Gfx* g, Gfx_Texture_Payload* entry) {
+  entry->state = GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
+}
 
 
 static void
@@ -199,28 +262,6 @@ draw_aabb(Gfx* g,
               colors,
               pos_z);
   }
-}
-
-static void 
-set_texture(Gfx* g, 
-            UMI texture_index,
-            UMI texture_width,
-            UMI texture_height,
-            U32* texture_pixels) 
-{
-  
-  // NOTE: we should probably align this to 16 bytes
-  // so that the renderer can optimize the copying...?
-  UMI texture_size = texture_width * texture_height * 4;
-  
-  auto* data = push<Gfx_Set_Texture_Cmd>(&g->command_queue, GFX_CMD_TYPE_SET_TEXTURE);
-  
-  data->texture_width = texture_width;
-  data->texture_height = texture_height;
-  data->texture_index = texture_index;
-  
-  data->texture_pixels = (U8*)push_extra_data(&g->command_queue, texture_size, 16);
-  copy_memory(data->texture_pixels, texture_pixels, texture_size);
 }
 
 static void 

@@ -56,21 +56,6 @@ push_block(Mailbox* m, UMI size, U32 id, UMI align)
 	return entry->data;
 }
 
-
-static void* 
-push_extra_data(Mailbox* m, UMI size, UMI align)
-{
-  UMI imem = ptr_to_int(m->memory);
-  UMI adjusted_data_pos = align_up_pow2(imem + m->data_pos, align) - imem;
-  
-  assert(adjusted_data_pos + size < m->entry_pos);
-  
-  m->data_pos = adjusted_data_pos + size;
-  
-  return int_to_ptr(imem + adjusted_data_pos);
-  
-}
-
 template<typename T> static T*	  
 push(Mailbox* m, U32 id, UMI align) {
   return (T*)push_block(m, sizeof(T), id, align);
