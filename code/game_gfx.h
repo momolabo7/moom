@@ -69,7 +69,6 @@ struct Gfx {
 
 
 
-
 static void set_basis(Gfx* g, M44 basis);
 static void set_orthographic_camera(Gfx* g, V3 pos, Rect3 frustum);
 static void draw_sprite(Gfx* g, 

@@ -15,7 +15,6 @@ struct Game_State {
   union {
     Sandbox_Mode sandbox_mode;  
   };
-  
   Game_Assets game_assets;
 };
 
@@ -60,7 +59,15 @@ game_update(Game_Memory* game,
     sandbox->tmp_increase = true;
     sandbox->tmp_rot = 0.f;
     
-    
+    // Test pre-fetching bitmap
+    Game_Assets* game_assets = &game->state->game_assets;
+    Font_Asset_ID font_id = get_first_font(game_assets, ASSET_GROUP_FONTS);
+    Font_Asset* font = get_font(game_assets, font_id);
+    U16 glyph_id = font->codepoint_map[65];
+    auto* glyph = font->glyphs + glyph_id;
+    Bitmap_Asset_ID bitmap_id = glyph->bitmap_id;
+    load_bitmap(game_assets, gfx, pf, bitmap_id);
+    pf.complete_all_work();
     
   }
   Sandbox_Mode* sandbox = &game->state->sandbox_mode;

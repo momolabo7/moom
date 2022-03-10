@@ -1,20 +1,12 @@
-Momo
-  Things to think about
-		Figure out if we care about void*. Maybe everything uses Memory
-    Figure out if we care about const char* (SiStr). Maybe typedef it?
-	"Embed" mechanic. Make a macro for shit like below:
-		  (*(Opengl_Platform*)(ogl)) = pf; // LOL
-
 Engine
-  Renderer
-    We might want to remove "push_extra_data" from Mailbox, used in set_texture. Don't do extra work!
-    Texture loading queue...
 	Mutithread support
     Load bitmap
     Load font
-  Megatexture support
-		Cut atlas into fixed-sized chunks and load sections of them in renderer
-  Fixed sized allocator for assets
+  Renderer
+		Megatexture support!!
+	Unloading assets
+	  Fixed sized allocator for assets
+
 	Sound
 	
 

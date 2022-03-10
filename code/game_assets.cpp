@@ -1,6 +1,3 @@
-struct Task
-{
-}; 
 
 static B32
 is_ok(Bitmap_Asset_ID id)  { 
@@ -15,6 +12,67 @@ is_ok(Image_Asset_ID id)  {
   return id.value != 0;
 }
 
+
+// DELETE OR REFACTOR ME ONCE DONE
+struct Load_Bitmap_Work_Data {
+  Platform_API pf; // pretty terrible T_T
+  Gfx* gfx;
+  Gfx_Texture_Payload* entry;
+  Asset* asset;
+};
+Load_Bitmap_Work_Data works[128];
+U32 work_count = 0;
+
+static void
+load_bitmap_work_callback(void* context) {
+  auto* data = (Load_Bitmap_Work_Data*)context;
+  
+  U32 bitmap_size = data->asset->bitmap.width * data->asset->bitmap.height * 4;
+  
+  // Read in file
+  PF_File file = data->pf.open_file("test.sui",
+                                    PF_FILE_ACCESS_READ, 
+                                    PF_FILE_PATH_EXE);
+  if (file.error) { 
+    cancel_texture_transfer(data->gfx, data->entry);
+  }
+  else {
+    // Open the file
+    // This goes into a thread
+    data->pf.read_file(&file, bitmap_size, 
+                       data->asset->offset_to_data,
+                       data->entry->texture_data);
+    
+    complete_texture_transfer(data->gfx, data->entry);
+  }
+}
+
+
+static void 
+load_bitmap(Game_Assets* ga, 
+            Gfx* gfx, 
+            Platform_API pf, 
+            Bitmap_Asset_ID bitmap_id) 
+{
+  Asset* asset = ga->assets + bitmap_id.value;
+  assert(asset->type == ASSET_TYPE_BITMAP);
+  
+  U32 bitmap_size = asset->bitmap.width * asset->bitmap.height * 4;
+  
+  Gfx_Texture_Payload* entry = begin_texture_transfer(gfx, bitmap_size);
+  entry->texture_index = 0;
+  entry->texture_width = asset->bitmap.width;
+  entry->texture_height = asset->bitmap.height;
+  
+  Load_Bitmap_Work_Data* work = works + work_count++;  
+  work->pf = pf;
+  work->gfx = gfx;
+  work->entry = entry;
+  work->asset = asset;
+  
+  pf.add_work(load_bitmap_work_callback, work); 
+  
+}
 
 static B32
 init_game_assets(Game_Assets* ga, Platform_API pf, Gfx* gfx) {
@@ -100,47 +158,22 @@ init_game_assets(Game_Assets* ga, Platform_API pf, Gfx* gfx) {
                    offset_to_sui_asset, 
                    &sui_asset);
       
+      
+      
+      
       // Process the assets
       // NOTE(Momo): For now, we are prefetching EVERYTHING.
       // Might want to not do that in the future?
       asset->type = (Asset_Type)sui_asset.type;
       asset->first_tag_index = sui_asset.first_tag_index;
       asset->one_past_last_tag_index = sui_asset.one_past_last_tag_index;
+      asset->offset_to_data = sui_asset.offset_to_data;
       
       switch(asset->type) {
         case ASSET_TYPE_BITMAP: {
           asset->bitmap.gfx_bitmap_id = ga->bitmap_counter++;
           asset->bitmap.width = sui_asset.bitmap.width;
           asset->bitmap.height = sui_asset.bitmap.height;
-          U32 bitmap_size = asset->bitmap.width * asset->bitmap.height * 4;
-          
-          Gfx_Texture_Payload* entry = begin_texture_transfer(gfx, bitmap_size);
-          entry->texture_index = 0;
-          entry->texture_width = asset->bitmap.width;
-          entry->texture_height = asset->bitmap.height;
-          pf.read_file(&file, bitmap_size, 
-                       sui_asset.offset_to_data + sizeof(Sui_Bitmap),
-                       entry->texture_data);
-          
-          complete_texture_transfer(gfx, entry);
-          
-#if 0
-          asset->bitmap.pixels = (U32*)push_block(&ga->arena, bitmap_size);
-          pf.read_file(&file, bitmap_size, 
-                       sui_asset.offset_to_data + sizeof(Sui_Bitmap),
-                       asset->bitmap.pixels);
-#endif
-          
-          // send to renderer to manage
-          
-#if 0
-          set_texture(gfx, 
-                      asset->bitmap.gfx_bitmap_id, 
-                      asset->bitmap.width, 
-                      asset->bitmap.height, 
-                      asset->bitmap.pixels);
-#endif
-          
         } break;
         case ASSET_TYPE_IMAGE: {
           asset->image.bitmap_id.value = sui_asset.image.bitmap_asset_id;

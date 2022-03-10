@@ -49,6 +49,9 @@ struct Asset {
   U32 first_tag_index;
   U32 one_past_last_tag_index;
   
+  //add file index?
+  U32 offset_to_data;
+  
   Asset_Type type;
   union {
     Bitmap_Asset bitmap;

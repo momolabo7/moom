@@ -133,8 +133,8 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
   header.offset_to_assets = sizeof(Sui_Header);
   header.offset_to_tags = header.offset_to_assets + asset_array_size;
   header.offset_to_groups = header.offset_to_tags + asset_tag_array_size;
-  
   fwrite(&header, sizeof(header), 1, file);
+  
   U32 offset_to_asset_data = asset_tag_array_size + asset_array_size + group_array_size;
   
   fseek(file, offset_to_asset_data, SEEK_CUR);
