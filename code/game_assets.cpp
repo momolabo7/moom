@@ -17,7 +17,7 @@ is_ok(Image_Asset_ID id)  {
 struct Load_Bitmap_Work_Data {
   Platform_API pf; // pretty terrible T_T
   Gfx* gfx;
-  Gfx_Texture_Payload* entry;
+  Gfx_Texture_Payload* payload;
   Asset* asset;
 };
 Load_Bitmap_Work_Data works[128];
@@ -34,16 +34,16 @@ load_bitmap_work_callback(void* context) {
                                     PF_FILE_ACCESS_READ, 
                                     PF_FILE_PATH_EXE);
   if (file.error) { 
-    cancel_texture_transfer(data->gfx, data->entry);
+    cancel_texture_transfer(data->payload);
   }
   else {
     // Open the file
     // This goes into a thread
     data->pf.read_file(&file, bitmap_size, 
                        data->asset->offset_to_data,
-                       data->entry->texture_data);
+                       data->payload->texture_data);
     
-    complete_texture_transfer(data->gfx, data->entry);
+    complete_texture_transfer(data->payload);
   }
 }
 
@@ -59,15 +59,15 @@ load_bitmap(Game_Assets* ga,
   
   U32 bitmap_size = asset->bitmap.width * asset->bitmap.height * 4;
   
-  Gfx_Texture_Payload* entry = begin_texture_transfer(gfx, bitmap_size);
-  entry->texture_index = 0;
-  entry->texture_width = asset->bitmap.width;
-  entry->texture_height = asset->bitmap.height;
+  Gfx_Texture_Payload* payload = begin_texture_transfer(&gfx->texture_queue, bitmap_size);
+  payload->texture_index = 0;
+  payload->texture_width = asset->bitmap.width;
+  payload->texture_height = asset->bitmap.height;
   
   Load_Bitmap_Work_Data* work = works + work_count++;  
   work->pf = pf;
   work->gfx = gfx;
-  work->entry = entry;
+  work->payload = payload;
   work->asset = asset;
   
   pf.add_work(load_bitmap_work_callback, work); 

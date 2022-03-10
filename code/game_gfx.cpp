@@ -1,6 +1,5 @@
 static Gfx_Texture_Payload*
-begin_texture_transfer(Gfx* g, U32 required_space) {
-  Gfx_Texture_Queue* q = &g->texture_queue;
+begin_texture_transfer(Gfx_Texture_Queue* q, U32 required_space) {
   Gfx_Texture_Payload* ret = 0;
   
   if (q->payload_count < array_count(q->payloads)) {
@@ -53,12 +52,12 @@ begin_texture_transfer(Gfx* g, U32 required_space) {
 
 
 static void
-complete_texture_transfer(Gfx* g, Gfx_Texture_Payload* entry) {
+complete_texture_transfer(Gfx_Texture_Payload* entry) {
   entry->state = GFX_TEXTURE_PAYLOAD_STATE_READY;
 }
 
 static void
-cancel_texture_transfer(Gfx* g, Gfx_Texture_Payload* entry) {
+cancel_texture_transfer(Gfx_Texture_Payload* entry) {
   entry->state = GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
 }
 
