@@ -81,7 +81,7 @@ game_update(Game_Memory* game,
   {
     RGBA colors;
     colors.r = colors.g = colors.b  = colors.a = 0.3f;
-    clear(gfx, colors);
+    clear_colors(&gfx->command_queue, colors);
   }
   
   // Set camera
@@ -92,7 +92,7 @@ game_update(Game_Memory* game,
     frustum.max.x = 1600;
     frustum.max.y = 900;
     frustum.max.z = 500;
-    set_orthographic_camera(gfx, position, frustum);
+    set_orthographic_camera(&gfx->command_queue, position, frustum);
   }
   
   {
@@ -112,43 +112,10 @@ game_update(Game_Memory* game,
     }
     
     RGBA colors = create_rgba(1.f, 1.f, 1.f, 1.f);
-#if 0
-    HSL hsl = create_hsl(sandbox->tmp_delta, 1.f, 0.5f);
-    colors.rgb = hsl_to_rgb(hsl);
-#endif
-    
     M44 s = create_m44_scale(600.f, 600.f, 10.f);
     M44 r = create_m44_rotation_z(sandbox->tmp_rot += dt);
     M44 t = create_m44_translation(800.f, 450.f, 300.f);
     
-#if 0
-    {
-      Game_Assets* game_assets = &sandbox->game_assets;
-      
-      Asset_Vector m = {};
-      Asset_Vector w = {};
-      m.e[ASSET_TAG_TYPE_MOOD] = 0.6f;
-      w.e[ASSET_TAG_TYPE_MOOD] = 1.f;
-      
-      Asset_Image_ID image_id = get_best_image(game_assets, ASSET_GROUP_BULLET, &m, &w);
-      auto* image = get_image(game_assets, image_id);
-      auto* bitmap = get_bitmap(game_assets, image->bitmap_id);
-      
-      //      draw_sprite(gfx, colors, t*r*s, bitmap_asset->gfx_bitmap_id);
-      draw_subsprite(gfx, colors, t*r*s, 
-                     bitmap->gfx_bitmap_id, 
-                     image->uv);
-    }
-#endif
-#if 0
-    {
-      Game_Assets* game_assets = &sandbox->game_assets;
-      Asset_Bitmap_ID bitmap_id = get_first_bitmap(game_assets, ASSET_GROUP_ATLASES);
-      Asset_Bitmap* bitmap = get_bitmap(game_assets, bitmap_id);
-      draw_sprite(gfx, colors, t*r*s, bitmap->gfx_bitmap_id);
-      
-    }
-#endif
     {
       Game_Assets* game_assets = &game->state->game_assets;
       Font_Asset_ID font_id = get_first_font(game_assets, ASSET_GROUP_FONTS);
@@ -159,7 +126,8 @@ game_update(Game_Memory* game,
       Bitmap_Asset_ID bitmap_id = glyph->bitmap_id;
       
       Bitmap_Asset* bitmap = get_bitmap(game_assets, bitmap_id);
-      draw_subsprite(gfx, colors, t*r*s, 
+      draw_subsprite(&gfx->command_queue, 
+                     colors, t*r*s, 
                      bitmap->gfx_bitmap_id,
                      glyph->uv);
     }

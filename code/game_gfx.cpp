@@ -64,18 +64,18 @@ cancel_texture_transfer(Gfx* g, Gfx_Texture_Payload* entry) {
 
 
 static void
-set_basis(Gfx* g, M44 basis) {
-  auto* data = push<Gfx_Set_Basis_Cmd>(&g->command_queue,
+set_basis(Gfx_Command_Queue* c, M44 basis) {
+  auto* data = push<Gfx_Set_Basis_Cmd>(c,
                                        GFX_CMD_TYPE_SET_BASIS);
   data->basis = basis;
 }
 
 static void
-set_orthographic_camera(Gfx* g, 
+set_orthographic_camera(Gfx_Command_Queue* c, 
                         V3 position,
                         Rect3 frustum)   
 {
-  auto* data = push<Gfx_Set_Basis_Cmd>(&g->command_queue, 
+  auto* data = push<Gfx_Set_Basis_Cmd>(c, 
                                        GFX_CMD_TYPE_SET_BASIS);
   M44 p  = create_m44_orthographic(frustum.min.x,  
                                    frustum.max.x, 
@@ -90,22 +90,22 @@ set_orthographic_camera(Gfx* g,
 }
 
 static void
-clear(Gfx* g, RGBA colors) {
-  auto* data = push<Gfx_Clear_Cmd>(&g->command_queue,
+clear_colors(Gfx_Command_Queue* c, RGBA colors) {
+  auto* data = push<Gfx_Clear_Cmd>(c,
                                    GFX_CMD_TYPE_CLEAR);
   
   data->colors = colors;
 }
 
 static void
-draw_subsprite(Gfx* g, 
+draw_subsprite(Gfx_Command_Queue* c, 
                RGBA colors, 
                M44 transform, 
                UMI texture_index,
                Rect2 texture_uv)  
 
 {
-  auto* data = push<Gfx_Draw_Subsprite_Cmd>(&g->command_queue,
+  auto* data = push<Gfx_Draw_Subsprite_Cmd>(c,
                                             GFX_CMD_TYPE_DRAW_SUBSPRITE);
   
   data->colors = colors;
@@ -115,7 +115,7 @@ draw_subsprite(Gfx* g,
 }
 
 static void
-draw_sprite(Gfx* g,
+draw_sprite(Gfx_Command_Queue* c,
             RGBA colors, 
             M44 transform, 
             UMI texture_index)  
@@ -124,21 +124,21 @@ draw_sprite(Gfx* g,
   Rect2 uv = {};
   uv.max.x = 1.f;
   uv.max.y = 1.f;
-  draw_subsprite(g, colors, transform, texture_index, uv);
+  draw_subsprite(c, colors, transform, texture_index, uv);
 }
 
 static void
-draw_rect(Gfx* g, 
+draw_rect(Gfx_Command_Queue* c, 
           RGBA colors, 
           M44 transform) 
 {
-  auto* data = push<Gfx_Draw_Rect_Cmd>(&g->command_queue, GFX_CMD_TYPE_DRAW_RECT);
+  auto* data = push<Gfx_Draw_Rect_Cmd>(c, GFX_CMD_TYPE_DRAW_RECT);
   data->colors = colors;
   data->transform = transform;
 }
 
 static void 
-draw_line(Gfx* g, 
+draw_line(Gfx_Command_Queue* c, 
           Line2 line,
           F32 thickness,
           RGBA colors,
@@ -160,12 +160,12 @@ draw_line(Gfx* g,
   M44 R = create_m44_rotation_z(angle);
   M44 S = create_m44_scale(line_length, thickness, 1.f) ;
   
-  draw_rect(g, colors, 
+  draw_rect(c, colors, 
             T*R*S);
 }
 
 static  void
-draw_circle(Gfx* g, 
+draw_circle(Gfx_Command_Queue* c, 
             Circ2 circle,
             F32 thickness, 
             U32 line_count,
@@ -183,7 +183,7 @@ draw_circle(Gfx* g,
     V2 line_pt_1 = add(pt1, circle.center);
     V2 line_pt_2 = add(pt2, circle.center);
     Line2 line = { line_pt_1, line_pt_2 };
-    draw_line(g, 
+    draw_line(c, 
               line,
               thickness,
               color,
@@ -196,7 +196,7 @@ draw_circle(Gfx* g,
 }
 
 static void 
-draw_aabb(Gfx* g, 
+draw_aabb(Gfx_Command_Queue* c, 
           Rect2 rect,
           F32 thickness,
           RGBA colors,
@@ -210,7 +210,7 @@ draw_aabb(Gfx* g,
     line.max.x = rect.max.x;
     line.min.y = rect.min.y; 
     
-    draw_line(g,
+    draw_line(c,
               line,
               thickness, 
               colors,
@@ -225,7 +225,7 @@ draw_aabb(Gfx* g,
     line.max.x = rect.min.x;
     line.min.y = rect.max.y; 
     
-    draw_line(g,
+    draw_line(c,
               line,
               thickness, 
               colors,
@@ -240,7 +240,7 @@ draw_aabb(Gfx* g,
     line.max.x = rect.max.x;
     line.min.y = rect.max.y; 
     
-    draw_line(g,
+    draw_line(c,
               line,
               thickness, 
               colors,
@@ -256,7 +256,7 @@ draw_aabb(Gfx* g,
     line.max.x = rect.max.x;
     line.min.y = rect.max.y; 
     
-    draw_line(g,
+    draw_line(c,
               line,
               thickness, 
               colors,
@@ -265,7 +265,7 @@ draw_aabb(Gfx* g,
 }
 
 static void 
-clear_textures(Gfx* g) {
-  push<Gfx_Clear_Textures_Cmd>(&g->command_queue, 
+clear_textures(Gfx_Command_Queue* c) {
+  push<Gfx_Clear_Textures_Cmd>(c, 
                                GFX_CMD_TYPE_CLEAR_TEXTURES);
 }

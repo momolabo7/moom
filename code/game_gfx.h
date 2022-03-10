@@ -68,41 +68,51 @@ struct Gfx {
 };
 
 
+static void set_basis(Gfx_Command_Queue* command_queue, 
+                      M44 basis);
 
-static void set_basis(Gfx* g, M44 basis);
-static void set_orthographic_camera(Gfx* g, V3 pos, Rect3 frustum);
-static void draw_sprite(Gfx* g, 
+static void set_orthographic_camera(Gfx_Command_Queue* command_queue, 
+                                    V3 pos, 
+                                    Rect3 frustum);
+
+static void draw_sprite(Gfx_Command_Queue* command_queue, 
                         RGBA colors, 
                         M44 transform, 
                         UMI texture_index);
 
-static void draw_subsprite(Gfx* g, 
+static void draw_subsprite(Gfx_Command_Queue* command_queue, 
                            RGBA colors, 
                            M44 transform, 
                            UMI texture_index,
                            Rect2 texture_uv);
 
-static void draw_rect(Gfx* g, RGBA colors, M44 transform);
-static void clear(Gfx* g, RGBA colors);
-static void draw_line(Gfx* g, 
+static void draw_rect(Gfx_Command_Queue* command_queue,
+                      RGBA colors, 
+                      M44 transform);
+
+static void clear_colors(Gfx_Command_Queue* command_queue,
+                         RGBA colors);
+
+static void draw_line(Gfx_Command_Queue* command_queue, 
                       Line2 line,
                       F32 thickness,
                       RGBA colors,
                       F32 pos_z);
-static void draw_circle(Gfx* g, 
+
+static void draw_circle(Gfx_Command_Queue* command_queue, 
                         Circ2 circle,
                         F32 thickness, 
                         U32 line_count,
                         RGBA color,
                         F32 pos_z);
 
-static void draw_aabb(Gfx* g, 
+static void draw_aabb(Gfx_Command_Queue* command_queue, 
                       Rect2 rect,
                       F32 thickness,
                       RGBA colors,
                       F32 pos_z);
 
-static void clear_textures(Gfx* g);
+static void clear_textures(Gfx_Command_Queue* command_queue);
 
 
 //~ NOTE(Momo): Cmd types that needs to be handled.
