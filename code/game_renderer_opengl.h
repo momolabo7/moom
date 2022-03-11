@@ -230,6 +230,6 @@ struct Opengl : Renderer {
 };
 
 
-#include "game_gfx_opengl.cpp"
+#include "game_renderer_opengl.cpp"
 
 #endif //GFX_OPENGL_H

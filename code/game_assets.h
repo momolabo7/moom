@@ -11,7 +11,7 @@ struct Image_Asset_ID { U32 value; };
 
 
 struct Bitmap_Asset {
-  U32 gfx_bitmap_id; // TODO: tie in with renderer? 
+  U32 renderer_bitmap_id; // TODO: tie in with renderer? 
   
   U32 width;
   U32 height;
@@ -76,7 +76,7 @@ struct Asset_Tag {
 
 struct Game_Assets {
   Arena arena;
-  Gfx_Texture_Queue* texture_queue;
+  Renderer_Texture_Queue* texture_queue;
   
   U32 asset_count;
   Asset* assets;

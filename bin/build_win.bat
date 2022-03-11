@@ -1,6 +1,6 @@
 @echo off
 
-call build_gfx_opengl.bat
+call build_renderer_opengl.bat
 
 
 SET me=%~dp0

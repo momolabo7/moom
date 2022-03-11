@@ -101,7 +101,7 @@ game_update(Game_Memory* memory,
       Bitmap_Asset* bitmap = get_bitmap(game_assets, bitmap_id);
       push_subsprite(render_commands, 
                      colors, t*r*s, 
-                     bitmap->gfx_bitmap_id,
+                     bitmap->renderer_bitmap_id,
                      glyph->uv);
     }
   }

@@ -22,7 +22,7 @@ struct Load_Asset_Task {
   void* destination;
   
   // only for bitmaps
-  Gfx_Texture_Payload* texture_payload;
+  Texture_Payload* texture_payload;
 };
 Load_Asset_Task tasks[128];
 U32 task_count = 0;
@@ -66,7 +66,7 @@ load_bitmap(Game_Assets* ga,
   assert(asset->type == ASSET_TYPE_BITMAP);
   
   U32 bitmap_size = asset->bitmap.width * asset->bitmap.height * 4;
-  Gfx_Texture_Payload* payload = begin_texture_transfer(ga->texture_queue, bitmap_size);
+  Texture_Payload* payload = begin_texture_transfer(ga->texture_queue, bitmap_size);
   if (!payload) return;
   
   payload->texture_index = 0;
@@ -88,7 +88,7 @@ load_bitmap(Game_Assets* ga,
 #if 0
 static void 
 load_font(Game_Assets* ga, 
-          Gfx* gfx, 
+          Gfx* renderer, 
           Bitmap_Asset_ID bitmap_id) 
 {
   Asset* asset = ga->assets + bitmap_id.value;
@@ -166,7 +166,7 @@ load_font(Game_Assets* ga,
 #endif
 
 static B32
-init_game_assets(Game_Assets* ga, Gfx_Texture_Queue* texture_queue) {
+init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
   
   UMI memory_size = MB(20);
   void* mem = g_platform.alloc(memory_size);
@@ -262,7 +262,7 @@ init_game_assets(Game_Assets* ga, Gfx_Texture_Queue* texture_queue) {
       
       switch(asset->type) {
         case ASSET_TYPE_BITMAP: {
-          asset->bitmap.gfx_bitmap_id = ga->bitmap_counter++;
+          asset->bitmap.renderer_bitmap_id = ga->bitmap_counter++;
           asset->bitmap.width = sui_asset.bitmap.width;
           asset->bitmap.height = sui_asset.bitmap.height;
         } break;

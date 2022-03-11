@@ -1,7 +1,7 @@
 
 
 #include "momo.h"
-#include "win_gfx.h"
+#include "win_renderer.h"
 #include "game_pf.h"
 
 
@@ -558,7 +558,7 @@ WinMain(HINSTANCE instance,
   Renderer_Function_Table renderer_table;
   HMODULE renderer_dll;
   {
-    renderer_dll =  LoadLibraryA("gfx.dll");
+    renderer_dll =  LoadLibraryA("renderer.dll");
     if (renderer_dll) {
       renderer_table.load_renderer = (Load_Renderer*)GetProcAddress(renderer_dll, "load_renderer");
       if(!renderer_table.load_renderer) return 1;
@@ -580,7 +580,7 @@ WinMain(HINSTANCE instance,
   defer { FreeLibrary(renderer_dll); };
   
   
-  //-NOTE(Momo): Init gfx
+  //-NOTE(Momo): Init renderer
   Renderer* renderer = renderer_table.load_renderer(window, MB(128), MB(128));
   if (!renderer) {
     return 1;

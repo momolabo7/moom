@@ -123,6 +123,6 @@ struct Render_Command_Clear_Textures {};
 
 
 
-#include "game_gfx.cpp"
+#include "game_renderer.cpp"
 
 #endif //GAME_RENDERER_H

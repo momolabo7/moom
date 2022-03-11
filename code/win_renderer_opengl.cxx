@@ -1,8 +1,8 @@
 // NOTE(Momo): Renderer code for Win w/ Openg
 
 
-#include "win_gfx.h"
-#include "game_gfx_opengl.h"
+#include "win_renderer.h"
+#include "game_renderer_opengl.h"
 
 
 //~WGL stuff

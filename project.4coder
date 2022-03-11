@@ -26,7 +26,7 @@ load_paths = {
 };
 
 bun_karu = "bun_karu";
-build_gfx = "build_gfx_opengl";
+build_renderer = "build_renderer_opengl";
 build_game = "build_game";
 build_win = "build_win";
 build_test = "test";
@@ -46,9 +46,9 @@ command_list = {
    .out = "*compilation*", .footer_panel = true, .save_dirty_files = true,
    .cmd = { { build_win, .os="win" }, }, },
  
- { .name = "build gfx",
+ { .name = "build renderer",
    .out = "*compilation*", .footer_panel = true, .save_dirty_files = true,
-   .cmd = { { build_gfx, .os="win" }, }, },
+   .cmd = { { build_renderer, .os="win" }, }, },
 
  { .name = "build test",
    .out = "*compilation*", .footer_panel = true, .save_dirty_files = true,

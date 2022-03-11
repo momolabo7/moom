@@ -4,7 +4,7 @@
 #define GAME_H
 
 #include "game_pf.h"
-#include "game_gfx.h"
+#include "game_renderer.h"
 #include "game_assets.h"
 
 struct Sandbox_Mode {

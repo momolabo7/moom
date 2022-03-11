@@ -8,7 +8,7 @@
 #undef far
 
 #include "momo.h"
-#include "game_gfx.h"
+#include "game_renderer.h"
 
 
 //~API for Win platform to use
@@ -18,7 +18,7 @@ Load_Renderer(HWND window,
               UMI texture_queue_memory_size);
 
 typedef void 
-Unload_Renderer(Renderer* gfx);
+Unload_Renderer(Renderer* renderer);
 
 typedef Game_Render_Commands* 
 Begin_Frame(Renderer* renderer, 
