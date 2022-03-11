@@ -1,6 +1,6 @@
 
 static void
-clear_commands(Gfx_Command_Queue* q) {
+clear_commands(Game_Render_Commands* q) {
   q->data_pos = 0;	
 	q->entry_count = 0;
 	
@@ -11,33 +11,33 @@ clear_commands(Gfx_Command_Queue* q) {
 }
 
 static void 
-init_commands(Gfx_Command_Queue* q, void* memory, U32 memory_size) {
+init_commands(Game_Render_Commands* q, void* memory, U32 memory_size) {
   q->memory = (U8*)memory;
   q->memory_size = memory_size;
   clear_commands(q);
 }
 
-static Gfx_Command*
-get_command(Gfx_Command_Queue* q, U32 index) {
+static Render_Command*
+get_command(Game_Render_Commands* q, U32 index) {
   assert(index < q->entry_count);
   
-	UMI stride = align_up_pow2(sizeof(Gfx_Command), 4);
-	return (Gfx_Command*)(q->memory + q->entry_start - ((index+1) * stride));
+	UMI stride = align_up_pow2(sizeof(Render_Command), 4);
+	return (Render_Command*)(q->memory + q->entry_start - ((index+1) * stride));
 }
 
 static void*
-_push_command_block(Gfx_Command_Queue* q, U32 size, U32 id, U32 align = 4) {
+_push_command_block(Game_Render_Commands* q, U32 size, U32 id, U32 align = 4) {
 	UMI imem = ptr_to_int(q->memory);
 	
 	UMI adjusted_data_pos = align_up_pow2(imem + q->data_pos, (UMI)align) - imem;
 	UMI adjusted_entry_pos = align_down_pow2(imem + q->entry_pos, 4) - imem; 
 	
-	assert(adjusted_data_pos + size + sizeof(Gfx_Command) < adjusted_entry_pos);
+	assert(adjusted_data_pos + size + sizeof(Render_Command) < adjusted_entry_pos);
 	
 	q->data_pos = (U32)adjusted_data_pos + size;
-	q->entry_pos = (U32)adjusted_entry_pos - sizeof(Gfx_Command);
+	q->entry_pos = (U32)adjusted_entry_pos - sizeof(Render_Command);
 	
-	auto* entry = (Gfx_Command*)int_to_ptr(imem + q->entry_pos);
+	auto* entry = (Render_Command*)int_to_ptr(imem + q->entry_pos);
 	entry->id = id;
 	entry->data = int_to_ptr(imem + adjusted_data_pos);
 	
@@ -58,7 +58,7 @@ init_texture_queue(Gfx_Texture_Queue* q, void* memory, U32 memory_size) {
 }
 
 template<typename T> static T*
-push_command(Gfx_Command_Queue* q, U32 id, U32 align = 4) {
+push_command(Game_Render_Commands* q, U32 id, U32 align = 4) {
   return (T*)_push_command_block(q, sizeof(T), id, align);
 }
 
@@ -129,18 +129,18 @@ cancel_texture_transfer(Gfx_Texture_Payload* entry) {
 
 
 static void
-push_basis(Gfx_Command_Queue* c, M44 basis) {
+push_basis(Game_Render_Commands* c, M44 basis) {
   
-  auto* data = push_command<Gfx_Set_Basis_Cmd>(c, GFX_CMD_TYPE_SET_BASIS);
+  auto* data = push_command<Render_Command_Basis>(c, RENDER_COMMAND_TYPE_BASIS);
   data->basis = basis;
 }
 
 static void
-push_orthographic_camera(Gfx_Command_Queue* c, 
+push_orthographic_camera(Game_Render_Commands* c, 
                          V3 position,
                          Rect3 frustum)   
 {
-  auto* data = push_command<Gfx_Set_Basis_Cmd>(c, GFX_CMD_TYPE_SET_BASIS);
+  auto* data = push_command<Render_Command_Basis>(c, RENDER_COMMAND_TYPE_BASIS);
   M44 p  = create_m44_orthographic(frustum.min.x,  
                                    frustum.max.x, 
                                    frustum.min.y, 
@@ -154,22 +154,21 @@ push_orthographic_camera(Gfx_Command_Queue* c,
 }
 
 static void
-push_colors(Gfx_Command_Queue* c, RGBA colors) {
-  auto* data = push_command<Gfx_Clear_Cmd>(c, GFX_CMD_TYPE_CLEAR);
+push_colors(Game_Render_Commands* c, RGBA colors) {
+  auto* data = push_command<Render_Command_Clear>(c, RENDER_COMMAND_TYPE_CLEAR);
   
   data->colors = colors;
 }
 
 static void
-push_subsprite(Gfx_Command_Queue* c, 
+push_subsprite(Game_Render_Commands* c, 
                RGBA colors, 
                M44 transform, 
                UMI texture_index,
                Rect2 texture_uv)  
 
 {
-  auto* data = push_command<Gfx_Draw_Subsprite_Cmd>(c,
-                                                    GFX_CMD_TYPE_DRAW_SUBSPRITE);
+  auto* data = push_command<Render_Command_Subsprite>(c, RENDER_COMMAND_TYPE_SUBSPRITE);
   
   data->colors = colors;
   data->transform = transform;
@@ -178,7 +177,7 @@ push_subsprite(Gfx_Command_Queue* c,
 }
 
 static void
-push_sprite(Gfx_Command_Queue* c,
+push_sprite(Game_Render_Commands* c,
             RGBA colors, 
             M44 transform, 
             UMI texture_index)  
@@ -191,17 +190,17 @@ push_sprite(Gfx_Command_Queue* c,
 }
 
 static void
-push_rect(Gfx_Command_Queue* c, 
+push_rect(Game_Render_Commands* c, 
           RGBA colors, 
           M44 transform) 
 {
-  auto* data = push_command<Gfx_Draw_Rect_Cmd>(c, GFX_CMD_TYPE_DRAW_RECT);
+  auto* data = push_command<Render_Command_Rect>(c, RENDER_COMMAND_TYPE_RECT);
   data->colors = colors;
   data->transform = transform;
 }
 
 static void 
-push_line(Gfx_Command_Queue* c, 
+push_line(Game_Render_Commands* c, 
           Line2 line,
           F32 thickness,
           RGBA colors,
@@ -228,7 +227,7 @@ push_line(Gfx_Command_Queue* c,
 }
 
 static  void
-push_circle(Gfx_Command_Queue* c, 
+push_circle(Game_Render_Commands* c, 
             Circ2 circle,
             F32 thickness, 
             U32 line_count,
@@ -259,7 +258,7 @@ push_circle(Gfx_Command_Queue* c,
 }
 
 static void 
-push_aabb(Gfx_Command_Queue* c, 
+push_aabb(Game_Render_Commands* c, 
           Rect2 rect,
           F32 thickness,
           RGBA colors,
@@ -328,7 +327,6 @@ push_aabb(Gfx_Command_Queue* c,
 }
 
 static void 
-push_clear_textures(Gfx_Command_Queue* c) {
-  push_command<Gfx_Clear_Textures_Cmd>(c, 
-                                       GFX_CMD_TYPE_CLEAR_TEXTURES);
+push_clear_textures(Game_Render_Commands* c) {
+  push_command<Render_Command_Clear_Textures>(c, RENDER_COMMAND_TYPE_CLEAR_TEXTURES);
 }

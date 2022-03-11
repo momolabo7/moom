@@ -1,79 +1,52 @@
 #include "momo.h"
 
-#include "game_gfx.h"
-#include "game_pf.h"
-#include "game_assets.h"
+#include "game.h"
 
-struct Sandbox_Mode {
-  F32 tmp_delta;
-  B32 tmp_increase;
-  F32 tmp_rot;
-  
-};
 
-struct Game_State {
-  union {
-    Sandbox_Mode sandbox_mode;  
-  };
-  Game_Assets game_assets;
-};
 
-static int arr[100] = {};
 
-static void 
-test_work(void* context) {
-  int* i = (int*)context;
-  (*i) += 100;
-}
-
+Platform_API g_platform;
 
 exported B32 
-game_update(Game_Memory* game,
+game_update(Game_Memory* memory,
             Game_Input* input, 
-            Gfx* gfx) { 
-  Platform_API pf = game->platform_api;
+            Game_Render_Commands* render_commands) { 
+  g_platform = memory->platform_api;
   F32 dt = input->seconds_since_last_frame;
   
-#if 0
-  // test threading
-  for (int i = 0; i < array_count(arr); ++i) {
-    pf.add_work(test_work, arr+i);
-  }  
-  pf.complete_all_work();
-#endif
   // Initialization
-  if (!game->state) {
-    pf.set_aspect_ratio(16, 9);
+  if (!memory->state) {
+    g_platform.set_aspect_ratio(16, 9);
     
-    game->state = (Game_State*)pf.alloc(sizeof(Game_State));
-    if (!game->state) return false;
+    memory->state = (Game_State*)g_platform.alloc(sizeof(Game_State));
+    if (!memory->state) return false;
     
-    B32 success = init_game_assets(&game->state->game_assets, pf, gfx);
+    B32 success = init_game_assets(&memory->state->game_assets, memory->texture_queue);
     if(!success) return false;
     
     
     // Initialize perm memory
-    Sandbox_Mode* sandbox = &game->state->sandbox_mode;
+    Sandbox_Mode* sandbox = &memory->state->sandbox_mode;
     
     sandbox->tmp_delta = 0.f;
     sandbox->tmp_increase = true;
     sandbox->tmp_rot = 0.f;
     
     // Test pre-fetching bitmap
-    Game_Assets* game_assets = &game->state->game_assets;
+    Game_Assets* game_assets = &memory->state->game_assets;
     Font_Asset_ID font_id = get_first_font(game_assets, ASSET_GROUP_FONTS);
     Font_Asset* font = get_font(game_assets, font_id);
     U16 glyph_id = font->codepoint_map[65];
     auto* glyph = font->glyphs + glyph_id;
     Bitmap_Asset_ID bitmap_id = glyph->bitmap_id;
-    load_bitmap(game_assets, gfx, pf, bitmap_id);
-    pf.complete_all_work();
+    load_bitmap(game_assets, bitmap_id);
+    g_platform.complete_all_work();
     
   }
-  Sandbox_Mode* sandbox = &game->state->sandbox_mode;
+  Sandbox_Mode* sandbox = &memory->state->sandbox_mode;
   
   if (is_poked(input->button_up)) {
-    pf.hot_reload();
+    g_platform.hot_reload();
   }
   
   
@@ -81,7 +54,7 @@ game_update(Game_Memory* game,
   {
     RGBA colors;
     colors.r = colors.g = colors.b  = colors.a = 0.3f;
-    push_colors(&gfx->command_queue, colors);
+    push_colors(render_commands, colors);
   }
   
   // Set camera
@@ -92,7 +65,7 @@ game_update(Game_Memory* game,
     frustum.max.x = 1600;
     frustum.max.y = 900;
     frustum.max.z = 500;
-    push_orthographic_camera(&gfx->command_queue, position, frustum);
+    push_orthographic_camera(render_commands, position, frustum);
   }
   
   {
@@ -117,7 +90,7 @@ game_update(Game_Memory* game,
     M44 t = create_m44_translation(800.f, 450.f, 300.f);
     
     {
-      Game_Assets* game_assets = &game->state->game_assets;
+      Game_Assets* game_assets = &memory->state->game_assets;
       Font_Asset_ID font_id = get_first_font(game_assets, ASSET_GROUP_FONTS);
       Font_Asset* font = get_font(game_assets, font_id);
       
@@ -126,7 +99,7 @@ game_update(Game_Memory* game,
       Bitmap_Asset_ID bitmap_id = glyph->bitmap_id;
       
       Bitmap_Asset* bitmap = get_bitmap(game_assets, bitmap_id);
-      push_subsprite(&gfx->command_queue, 
+      push_subsprite(render_commands, 
                      colors, t*r*s, 
                      bitmap->gfx_bitmap_id,
                      glyph->uv);

@@ -510,18 +510,29 @@ _process_texture_queue(Opengl* ogl) {
   
 }
 
+// TODO(Momo): Not really 'rendering' anymore. Might want to change name
+static Game_Render_Commands*
+begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) 
+{
+  _align_viewport(ogl, render_wh, region);
+  clear_commands(&ogl->render_commands);  
+  return &ogl->render_commands;
+}
+
 static void
-_process_command_queue(Opengl* ogl) {
+end_frame(Opengl* ogl, Game_Render_Commands* commands) {
+  _process_texture_queue(ogl);
+  
   GLuint current_texture = 0;
   GLsizei instances_to_draw = 0;
   GLsizei last_drawn_instance_index = 0;
   GLuint current_instance_index = 0;
-  Gfx_Command_Queue* commands = &ogl->command_queue;
+  
   for (U32 i = 0; i < commands->entry_count; ++i) {
-    Gfx_Command* entry = get_command(commands, i);
+    Render_Command* entry = get_command(commands, i);
     switch(entry->id) {
-      case GFX_CMD_TYPE_SET_BASIS: {
-        auto* data = (Gfx_Set_Basis_Cmd*)entry->data;
+      case RENDER_COMMAND_TYPE_BASIS: {
+        auto* data = (Render_Command_Basis*)entry->data;
         _draw_instances(ogl,
                         current_texture, 
                         instances_to_draw, 
@@ -539,8 +550,8 @@ _process_command_queue(Opengl* ogl) {
                                        GL_FALSE, 
                                        (const GLfloat*)&result);
       } break;
-      case GFX_CMD_TYPE_CLEAR: {
-        auto* data = (Gfx_Clear_Cmd*)entry->data;
+      case RENDER_COMMAND_TYPE_CLEAR: {
+        auto* data = (Render_Command_Clear*)entry->data;
         
         ogl->glClearColor(data->colors.r, 
                           data->colors.g, 
@@ -549,8 +560,8 @@ _process_command_queue(Opengl* ogl) {
         ogl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
       } break;
-      case GFX_CMD_TYPE_DRAW_RECT: {
-        auto* data = (Gfx_Draw_Rect_Cmd*)entry->data;
+      case RENDER_COMMAND_TYPE_RECT: {
+        auto* data = (Render_Command_Rect*)entry->data;
         
         GLuint ogl_texture_handle = ogl->blank_texture;
         
@@ -589,8 +600,8 @@ _process_command_queue(Opengl* ogl) {
         ++instances_to_draw;
         ++current_instance_index;
       } break;
-      case GFX_CMD_TYPE_DRAW_SUBSPRITE: {
-        auto* data = (Gfx_Draw_Subsprite_Cmd*)entry->data;
+      case RENDER_COMMAND_TYPE_SUBSPRITE: {
+        auto* data = (Render_Command_Subsprite*)entry->data;
         
         GLuint texture = ogl->textures[data->texture_index]; 
         if (texture == 0) {
@@ -638,23 +649,13 @@ _process_command_queue(Opengl* ogl) {
         ++current_instance_index;
         
       } break;
-      case GFX_CMD_TYPE_CLEAR_TEXTURES: {
+      case RENDER_COMMAND_TYPE_CLEAR_TEXTURES: {
         _clear_textures(ogl);
       } break;
     }
   }
   
   _draw_instances(ogl, current_texture, instances_to_draw, last_drawn_instance_index);
-  clear_commands(commands);  
 }
 
-// TODO(Momo): Not really 'rendering' anymore. Might want to change name
-static void
-render_opengl(Opengl* ogl, V2U render_wh, Rect2U region) 
-{
-  _align_viewport(ogl, render_wh, region);
-  _process_texture_queue(ogl);
-  _process_command_queue(ogl);
-  
-}
 

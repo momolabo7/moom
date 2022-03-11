@@ -60,6 +60,7 @@ struct Platform_API {
   PF_Add_Work_Fn* add_work;
   PF_Complete_All_Work_Fn* complete_all_work;
 };
+extern Platform_API g_platform;
 
 
 
@@ -103,16 +104,20 @@ void update(Game_Input_Button button);
 
 
 //~ NOTE(Momo): Game API
+// For things that don't change from the platform after setting it once
+struct Gfx_Texture_Queue;
 struct Game_Memory {
   struct Game_State* state; // pointer for game memory usage
   
   Platform_API platform_api;
+  Gfx_Texture_Queue* texture_queue;
 };
 
-struct Gfx;
-typedef void Game_Update_Fn(Game_Memory* game_memory,
+struct Game_Render_Commands;
+typedef void Game_Update_Fn(Game_Memory* memory,
                             Game_Input* input,
-                            Gfx* gfx);
+                            Game_Render_Commands* render_commands);
+#define DECLARE_GAME_UPDATE_FN(name) 
 
 // To be called by platform
 struct Game_API {

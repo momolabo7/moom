@@ -53,7 +53,7 @@ static wglGetExtensionsStringEXTFn* wglGetExtensionsStringEXT;
 
 
 static void* 
-win_gfx_try_get_wgl_function(const char* name, HMODULE fallback_module)
+win_try_get_wgl_function(const char* name, HMODULE fallback_module)
 {
   void* p = (void*)wglGetProcAddress(name);
   if ((p == 0) || 
@@ -69,7 +69,7 @@ win_gfx_try_get_wgl_function(const char* name, HMODULE fallback_module)
 }
 
 static void
-win_gfx_set_wgl_pixel_format(HDC dc) {
+win_set_wgl_pixel_format(HDC dc) {
   S32 suggested_pixel_format_index = 0;
   U32 extended_pick = 0;
   
@@ -115,7 +115,7 @@ win_gfx_set_wgl_pixel_format(HDC dc) {
                  &suggested_pixel_format);
 }
 static B32
-win_gfx_load_wgl_extentions() {
+win_load_wgl_extentions() {
   WNDCLASSA window_class = {};
   // Er yeah...we have to create a 'fake' Opengl context 
   // to load the extensions lol.
@@ -139,7 +139,7 @@ win_gfx_load_wgl_extentions() {
                                   0);
     
     HDC dc = GetDC(window);
-    win_gfx_set_wgl_pixel_format(dc);
+    win_set_wgl_pixel_format(dc);
     HGLRC opengl_context = wglCreateContext(dc);
     
     B32 success = true;
@@ -169,7 +169,7 @@ win_gfx_load_wgl_extentions() {
   }
 }
 static void*
-win_gfx_allocate_memory(UMI memory_size) {
+win_allocate_memory(UMI memory_size) {
   return VirtualAllocEx(GetCurrentProcess(),
                         0, 
                         memory_size,
@@ -179,7 +179,7 @@ win_gfx_allocate_memory(UMI memory_size) {
 }
 
 static void
-win_gfx_free_memory(void* memory) {
+win_free_memory(void* memory) {
   VirtualFreeEx(GetCurrentProcess(), 
                 memory,    
                 0, 
@@ -188,19 +188,18 @@ win_gfx_free_memory(void* memory) {
 
 
 //~API implementation
-
 exported void
-win_gfx_free(Gfx* r) {
+unload_gfx(Gfx* r) {
   Opengl* opengl = (Opengl*)r;
-  win_gfx_free_memory(opengl->command_queue.memory);
-  win_gfx_free_memory(opengl->texture_queue.transfer_memory);
-  win_gfx_free_memory(opengl);
+  win_free_memory(opengl->render_commands.memory);
+  win_free_memory(opengl->texture_queue.transfer_memory);
+  win_free_memory(opengl);
 }
 
 exported Gfx*
-win_gfx_init(HWND window, 
-             U32 command_queue_memory_size,
-             U32 texture_transfer_memory_size) 
+load_gfx(HWND window, 
+         U32 render_commands_memory_size,
+         U32 texture_transfer_memory_size) 
 {
   
   
@@ -208,16 +207,16 @@ win_gfx_init(HWND window,
   if (!dc) {
     return nullptr;
   }
-  defer { ReleaseDC(window, dc); };
+  //defer { ReleaseDC(window, dc); };
   
-  Opengl* opengl = (Opengl*)win_gfx_allocate_memory(sizeof(Opengl));
+  Opengl* opengl = (Opengl*)win_allocate_memory(sizeof(Opengl));
   
   // Allocate memory for render commands
-  void* command_queue_memory = win_gfx_allocate_memory(command_queue_memory_size);
-  init_commands(&opengl->command_queue, command_queue_memory, command_queue_memory_size);
+  void* render_commands_memory = win_allocate_memory(render_commands_memory_size);
+  init_commands(&opengl->render_commands, render_commands_memory, render_commands_memory_size);
   
   // Allocate memory for texture transfer queue
-  void* texture_transfer_memory = win_gfx_allocate_memory(texture_transfer_memory_size);
+  void* texture_transfer_memory = win_allocate_memory(texture_transfer_memory_size);
   init_texture_queue(&opengl->texture_queue, texture_transfer_memory, texture_transfer_memory_size);
   
   
@@ -225,11 +224,11 @@ win_gfx_init(HWND window,
     goto failed;
   }
   
-  if (!win_gfx_load_wgl_extentions()) {
+  if (!win_load_wgl_extentions()) {
     goto failed;
   }
   
-  win_gfx_set_wgl_pixel_format(dc);
+  win_set_wgl_pixel_format(dc);
   
   S32 opengl_attribs[] {
     WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
@@ -253,7 +252,7 @@ win_gfx_init(HWND window,
   if(wglMakeCurrent(dc, opengl_ctx)) {
     HMODULE module = LoadLibraryA("opengl32.dll");
 #define WGL_SetOpenglFunction(name) \
-opengl->name = (GL_##name*)win_gfx_try_get_wgl_function(#name, module); \
+opengl->name = (GL_##name*)win_try_get_wgl_function(#name, module); \
 if (!opengl->name) { goto failed; } 
     
     WGL_SetOpenglFunction(glEnable);
@@ -313,9 +312,9 @@ if (!opengl->name) { goto failed; }
   
   failed: 
   {
-    win_gfx_free_memory(opengl->command_queue.memory);
-    win_gfx_free_memory(opengl->texture_queue.transfer_memory);
-    win_gfx_free_memory(opengl);
+    win_free_memory(opengl->render_commands.memory);
+    win_free_memory(opengl->texture_queue.transfer_memory);
+    win_free_memory(opengl);
     return nullptr;
   }
   
@@ -323,9 +322,15 @@ if (!opengl->name) { goto failed; }
 }
 
 
+exported Game_Render_Commands*
+begin_frame(Gfx* gfx,  V2U render_wh, Rect2U region) {
+  return begin_frame((Opengl*)gfx, render_wh, region);
+}
+
 exported void
-win_gfx_render(Gfx* gfx,  V2U render_wh, Rect2U region) {
-  render_opengl((Opengl*)gfx, render_wh, region);
+end_frame(Gfx* gfx, Game_Render_Commands* commands) {
+  end_frame((Opengl*)gfx, commands);
+  SwapBuffers(wglGetCurrentDC());
 }
 
 

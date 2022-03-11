@@ -76,6 +76,7 @@ struct Asset_Tag {
 
 struct Game_Assets {
   Arena arena;
+  Gfx_Texture_Queue* texture_queue;
   
   U32 asset_count;
   Asset* assets;
@@ -84,6 +85,7 @@ struct Game_Assets {
   Asset_Tag* tags;
   
   Asset_Group groups[ASSET_GROUP_COUNT];
+  
   
   
   // TODO(Momo): We should remove this

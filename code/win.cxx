@@ -458,8 +458,9 @@ WinMain(HINSTANCE instance,
   {
     win_global_state.is_running = true;
     win_global_state.is_hot_reloading = true;
-    win_global_state.aspect_ratio_width = 1;
-    win_global_state.aspect_ratio_height = 1;
+    win_global_state.aspect_ratio_width = 16;
+    win_global_state.aspect_ratio_height = 9;
+    
     if (!win_init_work_queue(&win_global_state.work_queue, 8)) {
       return 1;
     }
@@ -553,24 +554,23 @@ WinMain(HINSTANCE instance,
     target_seconds_per_frame = 1.f/(F32)monitor_refresh_rate;
   }
   
-  //-NOTE(Momo): Game Memory setup
-  Game_Memory game = {};
-  game.platform_api = win_create_platform_api();
-  
-  //-NOTE(Momo): Load Gfx functions
-  Win_Gfx_API gfx_api;
+  //-Load Gfx functions
+  Gfx_API gfx_api;
   HMODULE gfx_dll;
   {
     gfx_dll =  LoadLibraryA("gfx.dll");
     if (gfx_dll) {
-      gfx_api.init = (Win_Gfx_Init_Fn*)GetProcAddress(gfx_dll, "win_gfx_init");
-      if(!gfx_api.init) return 1;
+      gfx_api.load_gfx = (Load_Gfx*)GetProcAddress(gfx_dll, "load_gfx");
+      if(!gfx_api.load_gfx) return 1;
       
-      gfx_api.free = (Win_Gfx_Free_Fn*)GetProcAddress(gfx_dll, "win_gfx_free");
-      if(!gfx_api.free) return 1;
+      gfx_api.unload_gfx = (Unload_Gfx*)GetProcAddress(gfx_dll, "unload_gfx");
+      if(!gfx_api.unload_gfx) return 1;
       
-      gfx_api.render = (Win_Gfx_Render_Fn*)GetProcAddress(gfx_dll, "win_gfx_render");
-      if(!gfx_api.render) return 1;
+      gfx_api.begin_frame = (Begin_Frame*)GetProcAddress(gfx_dll, "begin_frame");
+      if(!gfx_api.begin_frame) return 1;
+      
+      gfx_api.end_frame = (End_Frame*)GetProcAddress(gfx_dll, "end_frame");
+      if(!gfx_api.end_frame) return 1;
       
     }
     else {
@@ -581,14 +581,19 @@ WinMain(HINSTANCE instance,
   
   
   //-NOTE(Momo): Init gfx
-  Gfx* gfx = gfx_api.init(window, MB(128), MB(128));
+  Gfx* gfx = gfx_api.load_gfx(window, MB(128), MB(128));
   if (!gfx) {
     return 1;
   }
-  defer { gfx_api.free(gfx); };
+  defer { gfx_api.unload_gfx(gfx); };
   
   
-  //- NOTE(Momo): Init input
+  //-Game Memory setup
+  Game_Memory game = {};
+  game.platform_api = win_create_platform_api();
+  game.texture_queue = &gfx->texture_queue;
+  
+  //-Init input
   
   Game_Input input = {};
   
@@ -604,6 +609,16 @@ WinMain(HINSTANCE instance,
   HMODULE game_dll = NULL; 
   
   while (win_global_state.is_running) {
+    //- Begin render frame
+    V2U render_wh = win_get_client_dims(window);
+    Rect2U render_region = win_calc_render_region(render_wh.w,
+                                                  render_wh.h,
+                                                  win_global_state.aspect_ratio_width,
+                                                  win_global_state.aspect_ratio_height);
+    Game_Render_Commands* render_commands = 
+      gfx_api.begin_frame(gfx, render_wh, render_region);
+    
+    
     //-NOTE(Momo): Hot reload game.dll functions
     if (win_global_state.is_hot_reloading){
       static char* running_game_dll = "running_game.dll";
@@ -673,21 +688,10 @@ WinMain(HINSTANCE instance,
       }
     }
     
+    
+    
     //-Game logic here 
-    
-    game_api.update(&game, &input, gfx);
-    
-    //-Game render here
-    // NOTE(Momo): Resize if needed. 
-    V2U render_wh = win_get_client_dims(window);
-    Rect2U render_region = win_calc_render_region(render_wh.w,
-                                                  render_wh.h,
-                                                  win_global_state.aspect_ratio_width,
-                                                  win_global_state.aspect_ratio_height);
-    
-    
-    
-    gfx_api.render(gfx, render_wh, render_region);
+    game_api.update(&game, &input, render_commands);
     
     //-Frame-rate control
     // 1. Calculate how much time has passed since the last frame
@@ -728,13 +732,8 @@ WinMain(HINSTANCE instance,
     
     last_count = win_get_performance_counter();
     
-    
-    //-NOTE(Momo): swap buffers
-    {
-      HDC dc = GetDC(window);
-      SwapBuffers(dc);
-      ReleaseDC(window, dc);
-    }
+    //- End render frame
+    gfx_api.end_frame(gfx, render_commands);
     
     
   }

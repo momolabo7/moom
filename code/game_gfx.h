@@ -30,6 +30,8 @@
 #ifndef GFX_H
 #define GFX_H
 
+
+
 //-Texture Queue API
 enum Gfx_Texture_Payload_State {
   GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
@@ -61,13 +63,13 @@ struct Gfx_Texture_Queue {
   
 };
 
-//-Command Queue API
-struct Gfx_Command{
+//-Command API
+struct Render_Command {
   U32 id; // type id from user
   void* data;
 };
 
-struct Gfx_Command_Queue {
+struct Game_Render_Commands {
 	U8* memory;
   U32 memory_size;
   
@@ -78,47 +80,46 @@ struct Gfx_Command_Queue {
 	U32 entry_count;
 };
 
-
-
-//- Gfx API
-struct Gfx {	
-  Gfx_Command_Queue command_queue;
-  Gfx_Texture_Queue texture_queue;
-};
-
-//~ NOTE(Momo): Cmd types that needs to be handled.
-enum Gfx_Cmd_Type{
-  GFX_CMD_TYPE_CLEAR,
-  GFX_CMD_TYPE_SET_BASIS,
-  GFX_CMD_TYPE_DRAW_RECT,
-  GFX_CMD_TYPE_DRAW_SUBSPRITE,
-  GFX_CMD_TYPE_CLEAR_TEXTURES,
+enum Render_Command_Type {
+  RENDER_COMMAND_TYPE_CLEAR,
+  RENDER_COMMAND_TYPE_BASIS,
+  RENDER_COMMAND_TYPE_RECT,
+  RENDER_COMMAND_TYPE_SUBSPRITE,
+  RENDER_COMMAND_TYPE_CLEAR_TEXTURES,
 };
 
 
-struct Gfx_Clear_Cmd {
+struct Render_Command_Clear {
   RGBA colors;
 };
 
-struct Gfx_Set_Basis_Cmd {
+struct Render_Command_Basis {
   M44 basis;
 };
 
-struct Gfx_Draw_Subsprite_Cmd{
+struct Render_Command_Subsprite {
   UMI texture_index;
   RGBA colors;
   M44 transform;
   Rect2 texture_uv; 
 } ;
 
-struct Gfx_Draw_Rect_Cmd{
+struct Render_Command_Rect {
   RGBA colors;
   M44 transform;
 };
 
 
+//- Gfx API
+struct Gfx {	
+  Game_Render_Commands render_commands;
+  Gfx_Texture_Queue texture_queue;
+};
 
-struct Gfx_Clear_Textures_Cmd {};
+
+
+
+struct Render_Command_Clear_Textures {};
 
 
 
