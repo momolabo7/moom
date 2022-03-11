@@ -181,7 +181,7 @@ enum _Opengl_VBO {
   _Opengl_VBO_Count // 5
 };
 
-struct Opengl : Gfx {
+struct Opengl : Renderer {
   GLuint textures[10];
   GLuint buffers[_Opengl_VBO_Count]; // Opengl__VBO_Count
   GLuint shader;

@@ -462,16 +462,16 @@ _process_texture_queue(Opengl* ogl) {
   // is loading forever, the rest of the payloads will never be processed.
   // This is fine and intentional. A payload should never be loading forever.
   // 
-  Gfx_Texture_Queue* textures = &ogl->texture_queue;
+  Renderer_Texture_Queue* textures = &ogl->texture_queue;
   while(textures->payload_count) {
-    Gfx_Texture_Payload* payload = textures->payloads + textures->first_payload_index;
+    Texture_Payload* payload = textures->payloads + textures->first_payload_index;
     
     B32 stop_loop = false;
     switch(payload->state) {
-      case GFX_TEXTURE_PAYLOAD_STATE_LOADING: {
+      case TEXTURE_PAYLOAD_STATE_LOADING: {
         stop_loop = true;
       } break;
-      case GFX_TEXTURE_PAYLOAD_STATE_READY: {
+      case TEXTURE_PAYLOAD_STATE_READY: {
         assert(payload->texture_width < (U32)S32_MAX);
         assert(payload->texture_height < (U32)S32_MAX);
         assert(payload->texture_width > 0);
@@ -484,7 +484,7 @@ _process_texture_queue(Opengl* ogl) {
                      (U8*)payload->texture_data);
         
       } break;
-      case GFX_TEXTURE_PAYLOAD_STATE_EMPTY: {
+      case TEXTURE_PAYLOAD_STATE_EMPTY: {
         // Possibly 'cancelled'. i.e. Do nothing either way?
       } break;
       default: {

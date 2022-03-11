@@ -102,16 +102,14 @@ struct Game_Input {
 void update(Game_Input_Button button);
 
 
-
-
 //~ NOTE(Momo): Game API
 // For things that don't change from the platform after setting it once
-struct Gfx_Texture_Queue;
+struct Renderer_Texture_Queue;
 struct Game_Memory {
   struct Game_State* state; // pointer for game memory usage
   
   Platform_API platform_api;
-  Gfx_Texture_Queue* texture_queue;
+  Renderer_Texture_Queue* texture_queue;
 };
 
 struct Game_Render_Commands;

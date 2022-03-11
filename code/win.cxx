@@ -555,43 +555,43 @@ WinMain(HINSTANCE instance,
   }
   
   //-Load Gfx functions
-  Gfx_API gfx_api;
-  HMODULE gfx_dll;
+  Renderer_Function_Table renderer_table;
+  HMODULE renderer_dll;
   {
-    gfx_dll =  LoadLibraryA("gfx.dll");
-    if (gfx_dll) {
-      gfx_api.load_gfx = (Load_Gfx*)GetProcAddress(gfx_dll, "load_gfx");
-      if(!gfx_api.load_gfx) return 1;
+    renderer_dll =  LoadLibraryA("gfx.dll");
+    if (renderer_dll) {
+      renderer_table.load_renderer = (Load_Renderer*)GetProcAddress(renderer_dll, "load_renderer");
+      if(!renderer_table.load_renderer) return 1;
       
-      gfx_api.unload_gfx = (Unload_Gfx*)GetProcAddress(gfx_dll, "unload_gfx");
-      if(!gfx_api.unload_gfx) return 1;
+      renderer_table.unload_renderer = (Unload_Renderer*)GetProcAddress(renderer_dll, "unload_renderer");
+      if(!renderer_table.unload_renderer) return 1;
       
-      gfx_api.begin_frame = (Begin_Frame*)GetProcAddress(gfx_dll, "begin_frame");
-      if(!gfx_api.begin_frame) return 1;
+      renderer_table.begin_frame = (Begin_Frame*)GetProcAddress(renderer_dll, "begin_frame");
+      if(!renderer_table.begin_frame) return 1;
       
-      gfx_api.end_frame = (End_Frame*)GetProcAddress(gfx_dll, "end_frame");
-      if(!gfx_api.end_frame) return 1;
+      renderer_table.end_frame = (End_Frame*)GetProcAddress(renderer_dll, "end_frame");
+      if(!renderer_table.end_frame) return 1;
       
     }
     else {
       return 1;
     }
   }
-  defer { FreeLibrary(gfx_dll); };
+  defer { FreeLibrary(renderer_dll); };
   
   
   //-NOTE(Momo): Init gfx
-  Gfx* gfx = gfx_api.load_gfx(window, MB(128), MB(128));
-  if (!gfx) {
+  Renderer* renderer = renderer_table.load_renderer(window, MB(128), MB(128));
+  if (!renderer) {
     return 1;
   }
-  defer { gfx_api.unload_gfx(gfx); };
+  defer { renderer_table.unload_renderer(renderer); };
   
   
   //-Game Memory setup
   Game_Memory game = {};
   game.platform_api = win_create_platform_api();
-  game.texture_queue = &gfx->texture_queue;
+  game.texture_queue = &renderer->texture_queue;
   
   //-Init input
   
@@ -616,7 +616,7 @@ WinMain(HINSTANCE instance,
                                                   win_global_state.aspect_ratio_width,
                                                   win_global_state.aspect_ratio_height);
     Game_Render_Commands* render_commands = 
-      gfx_api.begin_frame(gfx, render_wh, render_region);
+      renderer_table.begin_frame(renderer, render_wh, render_region);
     
     
     //-NOTE(Momo): Hot reload game.dll functions
@@ -733,7 +733,7 @@ WinMain(HINSTANCE instance,
     last_count = win_get_performance_counter();
     
     //- End render frame
-    gfx_api.end_frame(gfx, render_commands);
+    renderer_table.end_frame(renderer, render_commands);
     
     
   }

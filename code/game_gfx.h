@@ -33,14 +33,14 @@
 
 
 //-Texture Queue API
-enum Gfx_Texture_Payload_State {
-  GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
-  GFX_TEXTURE_PAYLOAD_STATE_LOADING,
-  GFX_TEXTURE_PAYLOAD_STATE_READY,
+enum Texture_Payload_State {
+  TEXTURE_PAYLOAD_STATE_EMPTY,
+  TEXTURE_PAYLOAD_STATE_LOADING,
+  TEXTURE_PAYLOAD_STATE_READY,
 };
 
-struct Gfx_Texture_Payload {
-  volatile Gfx_Texture_Payload_State state;
+struct Texture_Payload {
+  volatile Texture_Payload_State state;
   U32 transfer_memory_start;
   U32 transfer_memory_end;
   
@@ -51,13 +51,13 @@ struct Gfx_Texture_Payload {
   void* texture_data;
 };
 
-struct Gfx_Texture_Queue {
+struct Renderer_Texture_Queue {
   U8* transfer_memory;
   U32 transfer_memory_size;
   U32 transfer_memory_start;
   U32 transfer_memory_end;
   
-  Gfx_Texture_Payload payloads[256];
+  Texture_Payload payloads[256];
   U32 first_payload_index;
   U32 payload_count;
   
@@ -113,12 +113,10 @@ struct Render_Command_Rect {
 
 
 //- Gfx API
-struct Gfx {	
+struct Renderer {	
   Game_Render_Commands render_commands;
-  Gfx_Texture_Queue texture_queue;
+  Renderer_Texture_Queue texture_queue;
 };
-
-
 
 
 struct Render_Command_Clear_Textures {};

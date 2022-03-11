@@ -48,7 +48,7 @@ _push_command_block(Game_Render_Commands* q, U32 size, U32 id, U32 align = 4) {
 }
 
 static void 
-init_texture_queue(Gfx_Texture_Queue* q, void* memory, U32 memory_size) {
+init_texture_queue(Renderer_Texture_Queue* q, void* memory, U32 memory_size) {
   q->transfer_memory = (U8*)memory;
   q->transfer_memory_size = memory_size;
   q->transfer_memory_start = 0;
@@ -64,9 +64,9 @@ push_command(Game_Render_Commands* q, U32 id, U32 align = 4) {
 
 
 
-static Gfx_Texture_Payload*
-begin_texture_transfer(Gfx_Texture_Queue* q, U32 required_space) {
-  Gfx_Texture_Payload* ret = 0;
+static Texture_Payload*
+begin_texture_transfer(Renderer_Texture_Queue* q, U32 required_space) {
+  Texture_Payload* ret = 0;
   
   if (q->payload_count < array_count(q->payloads)) {
     U32 avaliable_space = 0;
@@ -106,7 +106,7 @@ begin_texture_transfer(Gfx_Texture_Queue* q, U32 required_space) {
       ret->texture_data = q->transfer_memory + memory_at;
       ret->transfer_memory_start = memory_at;
       ret->transfer_memory_end = memory_at + required_space;
-      ret->state = GFX_TEXTURE_PAYLOAD_STATE_LOADING;
+      ret->state = TEXTURE_PAYLOAD_STATE_LOADING;
       
       q->transfer_memory_end = ret->transfer_memory_end;
     }
@@ -118,13 +118,13 @@ begin_texture_transfer(Gfx_Texture_Queue* q, U32 required_space) {
 
 
 static void
-complete_texture_transfer(Gfx_Texture_Payload* entry) {
-  entry->state = GFX_TEXTURE_PAYLOAD_STATE_READY;
+complete_texture_transfer(Texture_Payload* entry) {
+  entry->state = TEXTURE_PAYLOAD_STATE_READY;
 }
 
 static void
-cancel_texture_transfer(Gfx_Texture_Payload* entry) {
-  entry->state = GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
+cancel_texture_transfer(Texture_Payload* entry) {
+  entry->state = TEXTURE_PAYLOAD_STATE_EMPTY;
 }
 
 
