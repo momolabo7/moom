@@ -101,7 +101,7 @@ win_get_secs_elapsed(LARGE_INTEGER start,
 //~Win_Work queue functionality
 struct Win_Work {
   void* data;
-  PF_Work_Callback_Fn* callback;
+  Platform_Work_Callback* callback;
 };
 
 struct Win_Work_Queue {
@@ -285,27 +285,27 @@ win_free_memory(void* memory) {
 
 
 
-static PF_File
+static Platform_File
 win_open_file(const char* filename, 
-              PF_File_Access access,
-              PF_File_Path path) 
+              Platform_File_Access access,
+              Platform_File_Path path) 
 {
   // Opening the file
-  PF_File ret = {};
+  Platform_File ret = {};
   
   DWORD access_flag = {};
   DWORD creation_disposition = {};
   switch (access) {
-    case PF_FILE_ACCESS_READ: {
+    case PLATFORM_FILE_ACCESS_READ: {
       access_flag = GENERIC_READ;
       creation_disposition = OPEN_EXISTING;
     } break;
-    case PF_FILE_ACCESS_OVERWRITE: {
+    case PLATFORM_FILE_ACCESS_OVERWRITE: {
       access_flag = GENERIC_WRITE;
       creation_disposition = CREATE_ALWAYS;
     } break;
     /*
-    case PF_File_Access_Modify: {
+    case Platform_File_Access_Modify: {
       access_flag = GENERIC_READ | GENERIC_WRITE;
       creation_disposition = OPEN_ALWAYS;
     } break;
@@ -337,7 +337,7 @@ win_open_file(const char* filename,
 }
 
 static void
-win_close_file(PF_File* file) {
+win_close_file(Platform_File* file) {
   auto* win_file = (Win_File*)file->platform_data;
   CloseHandle(win_file->handle);
   
@@ -346,7 +346,7 @@ win_close_file(PF_File* file) {
 }
 
 static void
-win_read_file(PF_File* file, UMI size, UMI offset, void* dest) 
+win_read_file(Platform_File* file, UMI size, UMI offset, void* dest) 
 { 
   if (!is_ok(file)) return;
   
@@ -370,7 +370,7 @@ win_read_file(PF_File* file, UMI size, UMI offset, void* dest)
 }
 
 static void 
-win_write_file(PF_File* file, UMI size, UMI offset, void* src)
+win_write_file(Platform_File* file, UMI size, UMI offset, void* src)
 {
   if (!is_ok(file)) return;
   
@@ -392,7 +392,7 @@ win_write_file(PF_File* file, UMI size, UMI offset, void* src)
 }
 
 static void
-win_add_work(PF_Work_Callback_Fn callback, void* data) {
+win_add_work(Platform_Work_Callback callback, void* data) {
   win_add_work_entry(&win_global_state.work_queue, callback, data);
 }
 

@@ -5,60 +5,61 @@
 #define GAME_PLATFORM_H
 
 //~Platform File API
-enum PF_File_Path {
-  PF_FILE_PATH_EXE,
-  PF_FILE_PATH_USER,
-  PF_FILE_PATH_CACHE,
+enum Platform_File_Path {
+  PLATFORM_FILE_PATH_EXE,
+  PLATFORM_FILE_PATH_USER,
+  PLATFORM_FILE_PATH_CACHE,
   
 };
 
 // Maybe for 'overwrite' or creating a new file, we 
 // use a compl
-enum PF_File_Access {
-  PF_FILE_ACCESS_READ,
-  PF_FILE_ACCESS_OVERWRITE,
+enum Platform_File_Access {
+  PLATFORM_FILE_ACCESS_READ,
+  PLATFORM_FILE_ACCESS_OVERWRITE,
 };
 
-struct PF_File {
+struct Platform_File {
   B32 error;
   void* platform_data; // pointer for platform's usage
 };
-typedef PF_File  PF_Open_File_Fn(const char* filename,
-                                 PF_File_Access file_access,
-                                 PF_File_Path file_path);
+typedef Platform_File  
+Platform_Open_File(const char* filename,
+                   Platform_File_Access file_access,
+                   Platform_File_Path file_path);
 
-typedef void PF_Close_File_Fn(PF_File* file);
-typedef void PF_Read_File_Fn(PF_File* file, UMI size, UMI offset, void* dest);
-typedef void PF_Write_File_Fn(PF_File* file, UMI size, UMI offset, void* src);
+typedef void Platform_Close_File(Platform_File* file);
+typedef void Platform_Read_File(Platform_File* file, UMI size, UMI offset, void* dest);
+typedef void Platform_Write_File(Platform_File* file, UMI size, UMI offset, void* src);
 
 //~Platform multithreaded work API
-typedef void PF_Work_Callback_Fn(void* data);
-typedef void PF_Add_Work_Fn(PF_Work_Callback_Fn callback, void* data);
-typedef void PF_Complete_All_Work_Fn();
+typedef void Platform_Work_Callback(void* data);
+typedef void Platform_Add_Work(Platform_Work_Callback callback, void* data);
+typedef void Platform_Complete_All_Work();
 
 
 //~Other platform API
-typedef void  PF_Hot_Reload_Fn(); // trigger hot reloading of game code
-typedef void  PF_Shutdown_Fn(); // trigger shutdown of application
-typedef void* PF_Alloc_Fn(UMI size); // allocate memory
-typedef void  PF_Free_Fn(void* ptr);     // frees memory
-typedef void  PF_Set_Aspect_Ratio_Fn(U32 width, U32 height); // sets aspect ratio of game
+typedef void  Platform_Hot_Reload(); // trigger hot reloading of game code
+typedef void  Platform_Shutdown(); // trigger shutdown of application
+typedef void* Platform_Alloc(UMI size); // allocate memory
+typedef void  Platform_Free(void* ptr);     // frees memory
+typedef void  Platform_Set_Aspect_Ratio(U32 width, U32 height); // sets aspect ratio of game
 
 
 struct Platform_API {
-  PF_Hot_Reload_Fn* hot_reload;
-  PF_Shutdown_Fn* shutdown;
-  PF_Alloc_Fn* alloc;
-  PF_Free_Fn* free;
-  PF_Set_Aspect_Ratio_Fn* set_aspect_ratio;
+  Platform_Hot_Reload* hot_reload;
+  Platform_Shutdown* shutdown;
+  Platform_Alloc* alloc;
+  Platform_Free* free;
+  Platform_Set_Aspect_Ratio* set_aspect_ratio;
   
-  PF_Open_File_Fn* open_file;
-  PF_Read_File_Fn* read_file;
-  PF_Write_File_Fn* write_file;
-  PF_Close_File_Fn* close_file;
+  Platform_Open_File* open_file;
+  Platform_Read_File* read_file;
+  Platform_Write_File* write_file;
+  Platform_Close_File* close_file;
   
-  PF_Add_Work_Fn* add_work;
-  PF_Complete_All_Work_Fn* complete_all_work;
+  Platform_Add_Work* add_work;
+  Platform_Complete_All_Work* complete_all_work;
 };
 extern Platform_API g_platform;
 

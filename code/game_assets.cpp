@@ -32,9 +32,10 @@ load_asset_task(void* context) {
   Load_Asset_Task* task = (Load_Asset_Task*)context;
   
   // Read in file
-  PF_File file = g_platform.open_file("test.sui",
-                                      PF_FILE_ACCESS_READ, 
-                                      PF_FILE_PATH_EXE);
+  Platform_File file = 
+    g_platform.open_file("test.sui",
+                         PLATFORM_FILE_ACCESS_READ, 
+                         PLATFORM_FILE_PATH_EXE);
   if (file.error) { 
     if (task->texture_payload) {
       cancel_texture_transfer(task->texture_payload);
@@ -173,9 +174,10 @@ init_game_assets(Game_Assets* ga, Gfx_Texture_Queue* texture_queue) {
   ga->texture_queue = texture_queue;  
   
   // Read in file
-  PF_File file = g_platform.open_file("test.sui",
-                                      PF_FILE_ACCESS_READ, 
-                                      PF_FILE_PATH_EXE);
+  Platform_File file = 
+    g_platform.open_file("test.sui",
+                         PLATFORM_FILE_ACCESS_READ, 
+                         PLATFORM_FILE_PATH_EXE);
   assert(!file.error);
   
   // Read header

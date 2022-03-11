@@ -71,7 +71,7 @@ struct Render_Command {
 
 struct Game_Render_Commands {
   V2U platform_render_wh;
-  Rect2U platform_ender_region;
+  Rect2U platform_render_region;
   
   // Push buffer
 	U8* memory;
