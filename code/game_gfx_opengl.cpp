@@ -99,11 +99,8 @@ _align_viewport(Opengl* ogl,
   
   ogl->glScissor(0, 0, render_wh.w, render_wh.h);
   ogl->glViewport(0, 0, render_wh.w, render_wh.h);
-  
   ogl->glClearColor(0.f, 0.f, 0.f, 0.f);
   ogl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  
-  
   ogl->glScissor(x, y, w, h);
   ogl->glViewport(x, y, w, h);
 }
@@ -458,7 +455,6 @@ init_opengl(Opengl* ogl)
   
 }
 
-
 static void
 _process_texture_queue(Opengl* ogl) {
   // NOTE(Momo): In this algorithm of processing the texture queue,
@@ -498,7 +494,6 @@ _process_texture_queue(Opengl* ogl) {
     
     if (stop_loop) break; 
     
-    
     textures->transfer_memory_start = payload->transfer_memory_end;
     
     ++textures->first_payload_index;
@@ -510,17 +505,22 @@ _process_texture_queue(Opengl* ogl) {
   
 }
 
-// TODO(Momo): Not really 'rendering' anymore. Might want to change name
 static Game_Render_Commands*
 begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) 
 {
-  _align_viewport(ogl, render_wh, region);
-  clear_commands(&ogl->render_commands);  
-  return &ogl->render_commands;
+  Game_Render_Commands* ret = &ogl->render_commands;
+  clear_commands(ret);  
+  
+  ret->platform_render_wh = render_wh;
+  ret->platform_render_region = region;
+  
+  return ret;
 }
 
+// Only call opengl functions when we end frame
 static void
 end_frame(Opengl* ogl, Game_Render_Commands* commands) {
+  _align_viewport(ogl, commands->platform_render_wh, commands->platform_render_region);
   _process_texture_queue(ogl);
   
   GLuint current_texture = 0;

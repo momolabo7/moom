@@ -70,11 +70,13 @@ struct Render_Command {
 };
 
 struct Game_Render_Commands {
+  V2U platform_render_wh;
+  Rect2U platform_ender_region;
+  
+  // Push buffer
 	U8* memory;
   U32 memory_size;
-  
 	U32 data_pos;
-  
 	U32 entry_pos;
 	U32 entry_start;
 	U32 entry_count;
@@ -102,7 +104,7 @@ struct Render_Command_Subsprite {
   RGBA colors;
   M44 transform;
   Rect2 texture_uv; 
-} ;
+};
 
 struct Render_Command_Rect {
   RGBA colors;
