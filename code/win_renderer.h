@@ -29,12 +29,18 @@ Win_End_Renderer_Frame(Renderer* renderer,
                        Game_Render_Commands* commands);
 
 //~Function table
-// To be used and called by platform
-struct Win_Renderer_Function_Table {
-  Win_Load_Renderer* load_renderer;
-  Win_Unload_Renderer* unload_renderer;
-  Win_Begin_Renderer_Frame* begin_renderer_frame;
-  Win_End_Renderer_Frame* end_renderer_frame;
+struct Win_Renderer_Functions {
+  Win_Load_Renderer* load;
+  Win_Unload_Renderer* unload;
+  Win_Begin_Renderer_Frame* begin_frame;
+  Win_End_Renderer_Frame* end_frame;
+};
+
+static const char* win_renderer_function_names[] = {
+  "win_load_renderer",
+  "win_unload_renderer",
+  "win_begin_renderer_frame",
+  "win_end_renderer_frame"
 };
 
 

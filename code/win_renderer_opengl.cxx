@@ -296,7 +296,7 @@ if (!opengl->name) { goto failed; }
   }
 #undef WGL_SetOpenglFunction
   
-  if (!init_opengl(opengl)) {
+  if (!opengl_init(opengl)) {
     goto failed;
   }
   
@@ -324,12 +324,12 @@ if (!opengl->name) { goto failed; }
 
 exported Game_Render_Commands*
 win_begin_renderer_frame(Renderer* renderer,  V2U render_wh, Rect2U region) {
-  return begin_frame((Opengl*)renderer, render_wh, region);
+  return opengl_begin_frame((Opengl*)renderer, render_wh, region);
 }
 
 exported void
 win_end_renderer_frame(Renderer* renderer, Game_Render_Commands* commands) {
-  end_frame((Opengl*)renderer, commands);
+  opengl_end_frame((Opengl*)renderer, commands);
   SwapBuffers(wglGetCurrentDC());
 }
 

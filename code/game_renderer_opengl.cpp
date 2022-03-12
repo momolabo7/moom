@@ -229,7 +229,7 @@ _add_predefined_textures(Opengl* ogl) {
 }
 
 static B32
-init_opengl(Opengl* ogl)
+opengl_init(Opengl* ogl)
 {	
   ogl->glEnable(GL_DEPTH_TEST);
   ogl->glEnable(GL_SCISSOR_TEST);
@@ -506,7 +506,7 @@ _process_texture_queue(Opengl* ogl) {
 }
 
 static Game_Render_Commands*
-begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) 
+opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) 
 {
   Game_Render_Commands* ret = &ogl->render_commands;
   clear_commands(ret);  
@@ -519,7 +519,7 @@ begin_frame(Opengl* ogl, V2U render_wh, Rect2U region)
 
 // Only call opengl functions when we end frame
 static void
-end_frame(Opengl* ogl, Game_Render_Commands* commands) {
+opengl_end_frame(Opengl* ogl, Game_Render_Commands* commands) {
   _align_viewport(ogl, commands->platform_render_wh, commands->platform_render_region);
   _process_texture_queue(ogl);
   

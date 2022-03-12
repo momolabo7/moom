@@ -98,7 +98,72 @@ win_get_secs_elapsed(LARGE_INTEGER start,
   return (F64(end.QuadPart - start.QuadPart)) / performance_frequency.QuadPart;
 }
 
-//~Win_Work queue functionality
+
+//~DLL loading
+struct Win_Loaded_Code {
+  // Need to fill these up
+  U32 function_count;
+  const char** function_names;
+  const char* lock_path;
+  const char* module_path;
+  void** functions;
+  
+  
+  B32 is_valid;
+  HMODULE dll; 
+};
+
+static void
+win_load_code(Win_Loaded_Code* code) {
+  code->is_valid = false;
+  code->dll = LoadLibraryA(code->module_path);
+  
+  if (code->dll) {
+    code->is_valid = true;
+    for (U32 function_index = 0; 
+         function_index < code->function_count; 
+         ++function_index) 
+    {
+      void* function = GetProcAddress(code->dll, code->function_names[function_index]);
+      if (!function) {
+        code->is_valid = true;
+        break;
+      }
+      code->functions[function_index] = function;
+    }
+    
+  }
+  
+  if(!code->is_valid) {
+    win_unload_code(code);
+  }
+}
+
+static void
+win_unload_code(Win_Loaded_Code* code) {
+  if(code->dll) {
+    FreeLibrary(code->dll);
+    code->dll = 0;
+  }
+  code->is_valid = false;
+  zero_range(code->functions, code->function_count);
+}
+
+static void
+win_reload_code(Win_Loaded_Code* code) {
+  win_unload_code(code); 
+  for (U32 i = 0; i < 100; ++i ){
+    win_load_code(code);
+    if (code->is_valid) {
+      break;
+    }
+    Sleep(100);
+  }
+}
+
+
+
+//~Worker/Producer  functionality
 struct Win_Work {
   void* data;
   Platform_Work_Callback* callback;
@@ -554,38 +619,27 @@ WinMain(HINSTANCE instance,
     target_seconds_per_frame = 1.f/(F32)monitor_refresh_rate;
   }
   
-  //-Load Gfx functions
-  Win_Renderer_Function_Table renderer_table;
-  HMODULE renderer_dll;
-  {
-    renderer_dll =  LoadLibraryA("renderer.dll");
-    if (renderer_dll) {
-      renderer_table.load_renderer = (Win_Load_Renderer*)GetProcAddress(renderer_dll, "win_load_renderer");
-      if(!renderer_table.load_renderer) return 1;
-      
-      renderer_table.unload_renderer = (Win_Unload_Renderer*)GetProcAddress(renderer_dll, "win_unload_renderer");
-      if(!renderer_table.unload_renderer) return 1;
-      
-      renderer_table.begin_renderer_frame = (Win_Begin_Renderer_Frame*)GetProcAddress(renderer_dll, "win_begin_renderer_frame");
-      if(!renderer_table.begin_renderer_frame) return 1;
-      
-      renderer_table.end_renderer_frame = (Win_End_Renderer_Frame*)GetProcAddress(renderer_dll, "win_end_renderer_frame");
-      if(!renderer_table.end_renderer_frame) return 1;
-      
-    }
-    else {
-      return 1;
-    }
-  }
-  defer { FreeLibrary(renderer_dll); };
+  //-Load Renderer functions
+  Win_Renderer_Functions renderer_functions;
+  Win_Loaded_Code renderer_code = {};
+  renderer_code.function_count = array_count(win_renderer_function_names);
+  renderer_code.function_names = win_renderer_function_names;
+  renderer_code.lock_path = "renderer_lock";
+  renderer_code.module_path = "renderer.dll";
+  renderer_code.functions = (void**)&renderer_functions;
+  win_load_code(&renderer_code);
+  if (!renderer_code.is_valid) return 1;
+  defer { win_unload_code(&renderer_code); };
+  
+  //-Load Game Functions
   
   
   //-NOTE(Momo): Init renderer
-  Renderer* renderer = renderer_table.load_renderer(window, MB(128), MB(128));
+  Renderer* renderer = renderer_functions.load(window, MB(128), MB(128));
   if (!renderer) {
     return 1;
   }
-  defer { renderer_table.unload_renderer(renderer); };
+  defer { renderer_functions.unload(renderer); };
   
   
   //-Game Memory setup
@@ -616,7 +670,7 @@ WinMain(HINSTANCE instance,
                                                   win_global_state.aspect_ratio_width,
                                                   win_global_state.aspect_ratio_height);
     Game_Render_Commands* render_commands = 
-      renderer_table.begin_renderer_frame(renderer, render_wh, render_region);
+      renderer_functions.begin_frame(renderer, render_wh, render_region);
     
     
     //-NOTE(Momo): Hot reload game.dll functions
@@ -733,7 +787,7 @@ WinMain(HINSTANCE instance,
     last_count = win_get_performance_counter();
     
     //- End render frame
-    renderer_table.end_renderer_frame(renderer, render_commands);
+    renderer_functions.end_frame(renderer, render_commands);
     
     
   }
