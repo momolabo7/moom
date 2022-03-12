@@ -94,7 +94,7 @@ game_update(Game_Memory* memory,
       Font_Asset_ID font_id = get_first_font(game_assets, ASSET_GROUP_FONTS);
       Font_Asset* font = get_font(game_assets, font_id);
       
-      U16 glyph_id = font->codepoint_map[65];
+      U16 glyph_id = font->codepoint_map[68];
       auto* glyph = font->glyphs + glyph_id;
       Bitmap_Asset_ID bitmap_id = glyph->bitmap_id;
       

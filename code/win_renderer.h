@@ -28,6 +28,7 @@ typedef void
 Win_End_Renderer_Frame(Renderer* renderer, 
                        Game_Render_Commands* commands);
 
+
 //~Function table
 struct Win_Renderer_Functions {
   Win_Load_Renderer* load;
@@ -35,6 +36,7 @@ struct Win_Renderer_Functions {
   Win_Begin_Renderer_Frame* begin_frame;
   Win_End_Renderer_Frame* end_frame;
 };
+
 
 static const char* win_renderer_function_names[] = {
   "win_load_renderer",

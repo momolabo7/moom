@@ -168,22 +168,38 @@ typedef void    GL_glDeleteTextures(GLsizei n,
 typedef void    GL_glDebugMessageCallbackARB(GLDEBUGPROC *callback, 
                                              const void* userParams);
 
+enum Vertex_Attribute_Type { 
+  VERTEX_ATTRIBUTE_TYPE_MODEL,    // 0 
+  VERTEX_ATTRIBUTE_TYPE_COLORS,   // 1
+  VERTEX_ATTRIBUTE_TYPE_TEXTURE_1, // 2
+  VERTEX_ATTRIBUTE_TYPE_TEXTURE_2, // 3
+  VERTEX_ATTRIBUTE_TYPE_TEXTURE_3, // 4
+  VERTEX_ATTRIBUTE_TYPE_TEXTURE_4, // 5
+  VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 6
+  VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 7
+  VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 8
+  VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 9
+} ;
 
-typedef void* Opengl_Platform_AllocFn(UMI size);
-typedef void Opengl_Platform_FreeFn(void* ptr);
+enum VERTEX_ARRAY_BINDING {
+  VERTEX_ARRAY_BINDING_MODEL,
+  VERTEX_ARRAY_BINDING_COLORS,
+  VERTEX_ARRAY_BINDING_TEXTURE,
+  VERTEX_ARRAY_BINDING_TRANSFORM
+};
 
-enum _Opengl_VBO {
-  _Opengl_VBO_Model,
-  _Opengl_VBO_Indices,
-  _Opengl_VBO_Colors,
-  _Opengl_VBO_Texture,
-  _Opengl_VBO_Transform,
-  _Opengl_VBO_Count // 5
+enum Vertex_Buffer_Type {
+  VERTEX_BUFFER_TYPE_MODEL,
+  VERTEX_BUFFER_TYPE_INDICES,
+  VERTEX_BUFFER_TYPE_COLORS,
+  VERTEX_BUFFER_TYPE_TEXTURE,
+  VERTEX_BUFFER_TYPE_TRANSFORM,
+  VERTEX_BUFFER_TYPE_COUNT // 5
 };
 
 struct Opengl : Renderer {
   GLuint textures[10];
-  GLuint buffers[_Opengl_VBO_Count]; // Opengl__VBO_Count
+  GLuint buffers[VERTEX_BUFFER_TYPE_COUNT]; // Opengl__VBO_Count
   GLuint shader;
   GLuint model; 
   GLuint dummy_texture;
@@ -228,6 +244,10 @@ struct Opengl : Renderer {
   GL_glNamedBufferSubData* glNamedBufferSubData;
   GL_glUseProgram* glUseProgram;  
 };
+
+static B32 opengl_init(Opengl* ogl);
+static Game_Render_Commands* opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region);
+static void opengl_end_frame(Opengl* ogl, Game_Render_Commands* commands)
 
 
 #include "game_renderer_opengl.cpp"

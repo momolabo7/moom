@@ -113,14 +113,17 @@ struct Game_Memory {
 };
 
 struct Game_Render_Commands;
-typedef void Game_Update_Fn(Game_Memory* memory,
-                            Game_Input* input,
-                            Game_Render_Commands* render_commands);
-#define DECLARE_GAME_UPDATE_FN(name) 
+typedef void Game_Update(Game_Memory* memory,
+                         Game_Input* input,
+                         Game_Render_Commands* render_commands);
 
 // To be called by platform
-struct Game_API {
-  Game_Update_Fn* update;
+struct Game_Functions {
+  Game_Update* update;
+};
+
+static const char* game_function_names[] {
+  "game_update",
 };
 
 

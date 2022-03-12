@@ -327,6 +327,6 @@ push_aabb(Game_Render_Commands* c,
 }
 
 static void 
-push_clear_textures(Game_Render_Commands* c) {
+pushclear_textures(Game_Render_Commands* c) {
   push_command<Render_Command_Clear_Textures>(c, RENDER_COMMAND_TYPE_CLEAR_TEXTURES);
 }

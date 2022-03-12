@@ -104,19 +104,45 @@ struct Win_Loaded_Code {
   // Need to fill these up
   U32 function_count;
   const char** function_names;
-  const char* lock_path;
   const char* module_path;
   void** functions;
-  
+#if INTERNAL
+  const char* tmp_path;
+#endif  
   
   B32 is_valid;
   HMODULE dll; 
 };
 
 static void
+win_unload_code(Win_Loaded_Code* code) {
+  if(code->dll) {
+    FreeLibrary(code->dll);
+    code->dll = 0;
+  }
+  code->is_valid = false;
+  zero_range(code->functions, code->function_count);
+}
+
+static void
 win_load_code(Win_Loaded_Code* code) {
   code->is_valid = false;
+  
+#if INTERNAL
+  B32 copy_success = false;
+  for (U32 attempt = 0; attempt < 100; ++attempt) {
+    if(CopyFile(code->module_path, code->tmp_path, false)) {
+      copy_success = true;
+      break;
+    }
+    Sleep(100);
+  }
+  code->dll = LoadLibraryA(code->tmp_path);
+#else //INTERNAL
   code->dll = LoadLibraryA(code->module_path);
+#endif //INTERNAL
+  
+  
   
   if (code->dll) {
     code->is_valid = true;
@@ -137,16 +163,6 @@ win_load_code(Win_Loaded_Code* code) {
   if(!code->is_valid) {
     win_unload_code(code);
   }
-}
-
-static void
-win_unload_code(Win_Loaded_Code* code) {
-  if(code->dll) {
-    FreeLibrary(code->dll);
-    code->dll = 0;
-  }
-  code->is_valid = false;
-  zero_range(code->functions, code->function_count);
 }
 
 static void
@@ -620,25 +636,37 @@ WinMain(HINSTANCE instance,
   }
   
   //-Load Renderer functions
-  Win_Renderer_Functions renderer_functions;
+  Win_Renderer_Functions renderer_functions = {};
   Win_Loaded_Code renderer_code = {};
   renderer_code.function_count = array_count(win_renderer_function_names);
   renderer_code.function_names = win_renderer_function_names;
-  renderer_code.lock_path = "renderer_lock";
   renderer_code.module_path = "renderer.dll";
   renderer_code.functions = (void**)&renderer_functions;
+#if INTERNAL
+  renderer_code.tmp_path = "tmp_renderer.dll";
+#endif // INTERNAL
   win_load_code(&renderer_code);
   if (!renderer_code.is_valid) return 1;
   defer { win_unload_code(&renderer_code); };
   
   //-Load Game Functions
+  Game_Functions game_functions = {};
+  Win_Loaded_Code game_code = {};
+  game_code.function_count = array_count(game_function_names);
+  game_code.function_names = game_function_names;
+  game_code.module_path = "game.dll";
+  game_code.functions = (void**)&game_functions;
+#if INTERNAL
+  game_code.tmp_path = "tmp_game.dll";
+#endif // INTERNAL
+  win_load_code(&game_code);
+  if (!game_code.is_valid) return 1;
+  defer { win_unload_code(&game_code); };
   
   
   //-NOTE(Momo): Init renderer
   Renderer* renderer = renderer_functions.load(window, MB(128), MB(128));
-  if (!renderer) {
-    return 1;
-  }
+  if (!renderer) { return 1; }
   defer { renderer_functions.unload(renderer); };
   
   
@@ -656,11 +684,7 @@ WinMain(HINSTANCE instance,
   B32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   LARGE_INTEGER performance_frequency;
   QueryPerformanceFrequency(&performance_frequency);
-  
   LARGE_INTEGER last_count = win_get_performance_counter();
-  
-  Game_API game_api = {}; 
-  HMODULE game_dll = NULL; 
   
   while (win_global_state.is_running) {
     //- Begin render frame
@@ -669,37 +693,17 @@ WinMain(HINSTANCE instance,
                                                   render_wh.h,
                                                   win_global_state.aspect_ratio_width,
                                                   win_global_state.aspect_ratio_height);
-    Game_Render_Commands* render_commands = 
-      renderer_functions.begin_frame(renderer, render_wh, render_region);
+    Game_Render_Commands* render_commands = nullptr;
+    if (renderer_code.is_valid) {
+      render_commands = renderer_functions.begin_frame(renderer, 
+                                                       render_wh, 
+                                                       render_region);
+    }
     
     
     //-NOTE(Momo): Hot reload game.dll functions
     if (win_global_state.is_hot_reloading){
-      static char* running_game_dll = "running_game.dll";
-      static char* compiled_game_dll = "game.dll";
-      
-      // Release the current game dll
-      if (game_dll) {
-        FreeLibrary(game_dll);
-        game_dll = NULL;
-      }
-      
-      // Copy the compiled game dll
-      if(!CopyFile(compiled_game_dll, running_game_dll, false)) {
-        return 1;
-      }
-      
-      game_dll = LoadLibraryA(running_game_dll);
-      if (game_dll) {
-        game_api.update = (Game_Update_Fn*)GetProcAddress(game_dll, "game_update");
-        if(!game_api.update) {
-          FreeLibrary(game_dll);
-          return 1;
-        }          
-      }
-      else {
-        return 1;
-      }
+      win_reload_code(&game_code);
       win_global_state.is_hot_reloading = false;
     }
     
@@ -707,7 +711,6 @@ WinMain(HINSTANCE instance,
     // TODO: Calculate ideal dt basaed on refresh rate
     input.seconds_since_last_frame = (F32)target_seconds_per_frame;
     update(&input);
-    
     {
       MSG msg = {};
       while(PeekMessage(&msg, window, 0, 0, PM_REMOVE)) {
@@ -744,8 +747,11 @@ WinMain(HINSTANCE instance,
     
     
     
-    //-Game logic here 
-    game_api.update(&game, &input, render_commands);
+    //-Game logic
+    
+    if(game_code.is_valid && render_commands) { 
+      game_functions.update(&game, &input, render_commands);
+    }
     
     //-Frame-rate control
     // 1. Calculate how much time has passed since the last frame
@@ -787,7 +793,9 @@ WinMain(HINSTANCE instance,
     last_count = win_get_performance_counter();
     
     //- End render frame
-    renderer_functions.end_frame(renderer, render_commands);
+    if (renderer_code.is_valid) {
+      renderer_functions.end_frame(renderer, render_commands);
+    }
     
     
   }
