@@ -189,7 +189,7 @@ win_free_memory(void* memory) {
 
 //~API implementation
 exported void
-unload_renderer(Renderer* r) {
+win_unload_renderer(Renderer* r) {
   Opengl* opengl = (Opengl*)r;
   win_free_memory(opengl->render_commands.memory);
   win_free_memory(opengl->texture_queue.transfer_memory);
@@ -197,9 +197,9 @@ unload_renderer(Renderer* r) {
 }
 
 exported Renderer*
-load_renderer(HWND window, 
-              U32 render_commands_memory_size,
-              U32 texture_transfer_memory_size) 
+win_load_renderer(HWND window, 
+                  U32 render_commands_memory_size,
+                  U32 texture_transfer_memory_size) 
 {
   
   
@@ -323,12 +323,12 @@ if (!opengl->name) { goto failed; }
 
 
 exported Game_Render_Commands*
-begin_frame(Renderer* renderer,  V2U render_wh, Rect2U region) {
+win_begin_renderer_frame(Renderer* renderer,  V2U render_wh, Rect2U region) {
   return begin_frame((Opengl*)renderer, render_wh, region);
 }
 
 exported void
-end_frame(Renderer* renderer, Game_Render_Commands* commands) {
+win_end_renderer_frame(Renderer* renderer, Game_Render_Commands* commands) {
   end_frame((Opengl*)renderer, commands);
   SwapBuffers(wglGetCurrentDC());
 }

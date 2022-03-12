@@ -555,22 +555,22 @@ WinMain(HINSTANCE instance,
   }
   
   //-Load Gfx functions
-  Renderer_Function_Table renderer_table;
+  Win_Renderer_Function_Table renderer_table;
   HMODULE renderer_dll;
   {
     renderer_dll =  LoadLibraryA("renderer.dll");
     if (renderer_dll) {
-      renderer_table.load_renderer = (Load_Renderer*)GetProcAddress(renderer_dll, "load_renderer");
+      renderer_table.load_renderer = (Win_Load_Renderer*)GetProcAddress(renderer_dll, "win_load_renderer");
       if(!renderer_table.load_renderer) return 1;
       
-      renderer_table.unload_renderer = (Unload_Renderer*)GetProcAddress(renderer_dll, "unload_renderer");
+      renderer_table.unload_renderer = (Win_Unload_Renderer*)GetProcAddress(renderer_dll, "win_unload_renderer");
       if(!renderer_table.unload_renderer) return 1;
       
-      renderer_table.begin_frame = (Begin_Frame*)GetProcAddress(renderer_dll, "begin_frame");
-      if(!renderer_table.begin_frame) return 1;
+      renderer_table.begin_renderer_frame = (Win_Begin_Renderer_Frame*)GetProcAddress(renderer_dll, "win_begin_renderer_frame");
+      if(!renderer_table.begin_renderer_frame) return 1;
       
-      renderer_table.end_frame = (End_Frame*)GetProcAddress(renderer_dll, "end_frame");
-      if(!renderer_table.end_frame) return 1;
+      renderer_table.end_renderer_frame = (Win_End_Renderer_Frame*)GetProcAddress(renderer_dll, "win_end_renderer_frame");
+      if(!renderer_table.end_renderer_frame) return 1;
       
     }
     else {
@@ -616,7 +616,7 @@ WinMain(HINSTANCE instance,
                                                   win_global_state.aspect_ratio_width,
                                                   win_global_state.aspect_ratio_height);
     Game_Render_Commands* render_commands = 
-      renderer_table.begin_frame(renderer, render_wh, render_region);
+      renderer_table.begin_renderer_frame(renderer, render_wh, render_region);
     
     
     //-NOTE(Momo): Hot reload game.dll functions
@@ -733,7 +733,7 @@ WinMain(HINSTANCE instance,
     last_count = win_get_performance_counter();
     
     //- End render frame
-    renderer_table.end_frame(renderer, render_commands);
+    renderer_table.end_renderer_frame(renderer, render_commands);
     
     
   }
