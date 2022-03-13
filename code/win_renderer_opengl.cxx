@@ -307,7 +307,7 @@ if (!opengl->name) { goto failed; }
 #endif
   
   
-#if 1
+#if 0
   // VSync. 
   if (!wglSwapIntervalEXT) {
     wglSwapIntervalEXT = (wglSwapIntervalEXTFn*)wglGetProcAddress("wglSwapIntervalEXT");

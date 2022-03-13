@@ -641,6 +641,8 @@ WinMain(HINSTANCE instance,
   }
   
   //-Determine refresh rate
+  // NOTE(Momo): For now we will adjust according to user's monitor...?
+  // We might want to fuck care and just stick to 60 though.
   U32 monitor_refresh_rate = 60;
   {
     HDC dc = GetDC(window);
@@ -651,7 +653,6 @@ WinMain(HINSTANCE instance,
     }
   }
   F32 target_secs_per_frame = 1.f/(F32)monitor_refresh_rate;
-  
   win_log("Monitor Refresh Rate: %d\n", monitor_refresh_rate);
   
   
@@ -731,8 +732,7 @@ WinMain(HINSTANCE instance,
     }
     
     //-Process messages and input
-    // TODO: Calculate ideal dt basaed on refresh rate
-    input.seconds_since_last_frame = (F32)target_secs_per_frame;
+    input.seconds_since_last_frame = target_secs_per_frame;
     update(&input);
     {
       MSG msg = {};
@@ -776,6 +776,7 @@ WinMain(HINSTANCE instance,
       game_functions.update(&game, &input, render_commands);
     }
     
+    
     //-Frame-rate control
     // 1. Calculate how much time has passed since the last frame
     // 2. If the time elapsed is greater than the target time elapsed,
@@ -793,8 +794,8 @@ WinMain(HINSTANCE instance,
           = (DWORD)(1000 * (target_secs_per_frame - secs_elapsed_after_update));
         
         // Return control to OS
-        if (ms_to_sleep > 0) {
-          Sleep(ms_to_sleep);
+        if (ms_to_sleep > 1) {
+          Sleep(ms_to_sleep - 1);
         }
       }
       
@@ -805,6 +806,8 @@ WinMain(HINSTANCE instance,
                              performance_frequency);
       if (secs_elapsed_after_sleep > target_secs_per_frame) {
         // log oversleep?
+        win_log("[Win] Overslept! %f vs %f\n", secs_elapsed_after_sleep,
+                target_secs_per_frame);
       }
       
       // Spin lock to simulate sleeping more
@@ -828,7 +831,7 @@ WinMain(HINSTANCE instance,
     F32 secs_this_frame =  win_get_secs_elapsed(last_frame_count,
                                                 end_frame_count,
                                                 performance_frequency);
-#if 1
+#if 0
     win_log("target: %f vs %f \n", 
             target_secs_per_frame,
             secs_this_frame);
