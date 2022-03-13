@@ -69,7 +69,7 @@ win_try_get_wgl_function(const char* name, HMODULE fallback_module)
 }
 
 static void
-win_set_wgl_pixel_format(HDC dc) {
+win_set_pixel_format(HDC dc) {
   S32 suggested_pixel_format_index = 0;
   U32 extended_pick = 0;
   
@@ -139,10 +139,11 @@ win_load_wgl_extentions() {
                                   0);
     
     HDC dc = GetDC(window);
-    win_set_wgl_pixel_format(dc);
+    win_set_pixel_format(dc);
     HGLRC opengl_context = wglCreateContext(dc);
     
     B32 success = true;
+    
     if (wglMakeCurrent(dc, opengl_context)) {
       wglChoosePixelFormatARB = (wglChoosePixelFormatARBFn*)wglGetProcAddress("wglChoosePixelFormatARB");
       wglCreateContextAttribsARB = (wglCreateContextAttribsARBFn*)wglGetProcAddress("wglCreateContextAttribsARB");
@@ -227,16 +228,14 @@ win_load_renderer(HWND window,
     goto failed;
   }
   
-  win_set_wgl_pixel_format(dc);
+  win_set_pixel_format(dc);
   
   S32 opengl_attribs[] {
     WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
     WGL_CONTEXT_MINOR_VERSION_ARB, 5,
     WGL_CONTEXT_FLAG_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
-#if INTERNAL
-    | WGL_CONTEXT_DEBUG_BIT_ARB
-#endif
-    ,
+      //    | WGL_CONTEXT_DEBUG_BIT_ARB
+      ,
     WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
     0,
   };
@@ -313,9 +312,10 @@ if (!opengl->name) { goto failed; }
     wglSwapIntervalEXT = (wglSwapIntervalEXTFn*)wglGetProcAddress("wglSwapIntervalEXT");
   }
   if (wglSwapIntervalEXT) {
-    wglSwapIntervalEXT(0);
+    wglSwapIntervalEXT(1);
   }
 #endif
+  
   return (Renderer*)opengl;
   
   failed: 

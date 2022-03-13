@@ -14,7 +14,7 @@
 static inline LONG width_of(RECT r) { return r.right - r.left; }
 static inline LONG height_of(RECT r) { return r.bottom - r.top; }
 
-#define WIN_LOG_ENABLED
+//#define WIN_LOG_ENABLED
 
 #ifdef WIN_LOG_ENABLED
 #include <stdio.h>
@@ -31,6 +31,41 @@ win_log_proc(const char* fmt, ...) {
 #else
 #define win_log(...)
 #endif // INTERNAL
+
+#if 0
+static void
+win_toggle_fullscreen(HWND Window)
+{
+  // NOTE(casey): This follows Raymond Chen's prescription
+  // for fullscreen toggling, see:
+  // http://blogs.msdn.com/b/oldnewthing/archive/2010/04/12/9994016.aspx
+  static WINDOWPLACEMENT GlobalWindowPosition = {sizeof(GlobalWindowPosition)};
+  
+  DWORD Style = GetWindowLong(Window, GWL_STYLE);
+  if(Style & WS_OVERLAPPEDWINDOW)
+  {
+    MONITORINFO MonitorInfo = {sizeof(MonitorInfo)};
+    if(GetWindowPlacement(Window, &GlobalWindowPosition) &&
+       GetMonitorInfo(MonitorFromWindow(Window, MONITOR_DEFAULTTOPRIMARY), &MonitorInfo))
+    {
+      SetWindowLong(Window, GWL_STYLE, Style & ~WS_OVERLAPPEDWINDOW);
+      SetWindowPos(Window, HWND_TOP,
+                   MonitorInfo.rcMonitor.left, MonitorInfo.rcMonitor.top,
+                   MonitorInfo.rcMonitor.right - MonitorInfo.rcMonitor.left,
+                   MonitorInfo.rcMonitor.bottom - MonitorInfo.rcMonitor.top,
+                   SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+    }
+  }
+  else
+  {
+    SetWindowLong(Window, GWL_STYLE, Style | WS_OVERLAPPEDWINDOW);
+    SetWindowPlacement(Window, &GlobalWindowPosition);
+    SetWindowPos(Window, 0, 0, 0, 0, 0,
+                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER |
+                 SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
+  }
+}
+#endif
 
 
 static inline V2U
@@ -639,6 +674,7 @@ WinMain(HINSTANCE instance,
     
     
   }
+  //  win_toggle_fullscreen(window);
   
   //-Determine refresh rate
   // NOTE(Momo): For now we will adjust according to user's monitor...?
@@ -777,6 +813,7 @@ WinMain(HINSTANCE instance,
     }
     
     
+#if 1   
     //-Frame-rate control
     // 1. Calculate how much time has passed since the last frame
     // 2. If the time elapsed is greater than the target time elapsed,
@@ -820,6 +857,7 @@ WinMain(HINSTANCE instance,
       }
       
     }
+#endif
     
     
     //- End render frame
@@ -831,6 +869,9 @@ WinMain(HINSTANCE instance,
     F32 secs_this_frame =  win_get_secs_elapsed(last_frame_count,
                                                 end_frame_count,
                                                 performance_frequency);
+    
+    // only do this when VSYNC is enabled
+    //target_secs_per_frame = secs_this_frame;
 #if 0
     win_log("target: %f vs %f \n", 
             target_secs_per_frame,
