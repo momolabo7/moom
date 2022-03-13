@@ -361,8 +361,12 @@ static F64 pow(F64 , F64 e);
 
 static F32 ceil(F32 value);
 static F32 floor(F32 value);
+static F32 round(F32 value);
+
 static F64 ceil(F64 value);
 static F64 floor(F64 value);
+static F64 round(F64 value);
+
 
 //~ NOTE(Momo): Easing functions
 static F32 ease_in_sine(F32 t);

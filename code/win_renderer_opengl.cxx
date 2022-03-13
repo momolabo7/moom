@@ -146,9 +146,8 @@ win_load_wgl_extentions() {
     if (wglMakeCurrent(dc, opengl_context)) {
       wglChoosePixelFormatARB = (wglChoosePixelFormatARBFn*)wglGetProcAddress("wglChoosePixelFormatARB");
       wglCreateContextAttribsARB = (wglCreateContextAttribsARBFn*)wglGetProcAddress("wglCreateContextAttribsARB");
-      wglSwapIntervalEXT = (wglSwapIntervalEXTFn*)wglGetProcAddress("wglSwapIntervalEXT");
       
-      if (!wglSwapIntervalEXT || !wglChoosePixelFormatARB || !wglCreateContextAttribsARB) {
+      if (!wglChoosePixelFormatARB || !wglCreateContextAttribsARB) {
         success = false;
       }
       
@@ -308,6 +307,15 @@ if (!opengl->name) { goto failed; }
 #endif
   
   
+#if 1
+  // VSync. 
+  if (!wglSwapIntervalEXT) {
+    wglSwapIntervalEXT = (wglSwapIntervalEXTFn*)wglGetProcAddress("wglSwapIntervalEXT");
+  }
+  if (wglSwapIntervalEXT) {
+    wglSwapIntervalEXT(1);
+  }
+#endif
   return (Renderer*)opengl;
   
   failed: 

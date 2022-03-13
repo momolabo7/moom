@@ -508,7 +508,6 @@ static F64 floor(F64 value){
   return std::floor(value);
 }
 
-
 static F32 ceil(F32 value) {
   return std::ceilf(value);
 }
@@ -516,6 +515,15 @@ static F32 ceil(F32 value) {
 static F64 ceil(F64 value) {
   return std::ceil(value);
 }
+
+static F32 round(F32 value) {
+  return std::roundf(value);
+}
+
+static F64 round(F64 value) {
+  return std::round(value);
+}
+
 
 //~Easing functions
 

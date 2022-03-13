@@ -1,5 +1,3 @@
-
-
 #define OPENGL_MAX_ENTITIES 4096
 
 static void 

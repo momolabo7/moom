@@ -14,6 +14,24 @@
 static inline LONG width_of(RECT r) { return r.right - r.left; }
 static inline LONG height_of(RECT r) { return r.bottom - r.top; }
 
+#define WIN_LOG_ENABLED
+
+#ifdef WIN_LOG_ENABLED
+#include <stdio.h>
+static void
+win_log_proc(const char* fmt, ...) {
+  char buffer[256] = {0};
+  va_list args;
+  va_start(args, fmt);
+  vsprintf(buffer, fmt, args);
+  va_end(args);
+  OutputDebugStringA(buffer);
+}
+#define win_log(...) win_log_proc(__VA_ARGS__)
+#else
+#define win_log(...)
+#endif // INTERNAL
+
 
 static inline V2U
 win_get_window_dims(HWND window) {
@@ -89,13 +107,13 @@ win_get_performance_counter(void) {
   return result;
 }
 
-static F64
+static F32
 win_get_secs_elapsed(LARGE_INTEGER start,
                      LARGE_INTEGER end,
                      LARGE_INTEGER performance_frequency) 
 {
   
-  return (F64(end.QuadPart - start.QuadPart)) / performance_frequency.QuadPart;
+  return (F32(end.QuadPart - start.QuadPart)) / performance_frequency.QuadPart;
 }
 
 
@@ -304,7 +322,7 @@ win_add_work_entry(Win_Work_Queue* wq, void (*callback)(void* ctx), void *data) 
   entry->data = data;
   ++wq->completion_goal;
   
-  //_ReadWriteBarrier();
+  _ReadWriteBarrier();
   
   wq->next_entry_to_write = new_next_entry_to_write; // this MUST not be reordered
   ReleaseSemaphore(wq->semaphore, 1, 0);
@@ -622,18 +640,44 @@ WinMain(HINSTANCE instance,
     
   }
   
-  //-NOTE(Momo): Calculate target refresh rate
-  F32 target_seconds_per_frame = 0.f;
+  //-Determine refresh rate
+  // NOTE(Momo): For now, we just enforce 60Hz no matter what
+  // because seriously, I have no idea what to do otherwise...
+  F32 target_secs_per_frame = 1.f/60.f;
+  
+#if 0
+  const U32 ideal_refresh_rate = 60;
+  U32 game_refresh_rate = ideal_refresh_rate;
+  U32 monitor_refresh_rate = game_refresh_rate;
   {
-    int monitor_refresh_rate = 60;
     HDC dc = GetDC(window);
     int win_refresh_rate = GetDeviceCaps(dc, VREFRESH);
     ReleaseDC(window, dc);
     if (win_refresh_rate > 1) {
-      monitor_refresh_rate = win_refresh_rate;
+      monitor_refresh_rate = (U32)win_refresh_rate;
     }
-    target_seconds_per_frame = 1.f/(F32)monitor_refresh_rate;
   }
+  
+  
+  if (monitor_refresh_rate < game_refresh_rate) {
+    game_refresh_rate = monitor_refresh_rate; 
+  }
+  else if (monitor_refresh_rate > game_refresh_rate) {
+    // find a number that's smaller than ideal
+    U32 divisor = 1; 
+    for(;;) {
+      U32 compromise = monitor_refresh_rate/divisor;
+      if(compromise < ideal_refresh_rate) {
+        game_refresh_rate = compromise;
+      }
+    }
+  }
+  win_log("Monitor Refresh Rate: %d\n", monitor_refresh_rate);
+  win_log("Game Refresh Rate: %d\n", monitor_refresh_rate);
+  
+  F32 target_secs_per_frame = 1.f/(F32)game_refresh_rate;
+#endif
+  
   
   //-Load Renderer functions
   Win_Renderer_Functions renderer_functions = {};
@@ -680,13 +724,16 @@ WinMain(HINSTANCE instance,
   Game_Input input = {};
   
   //- Begin game loop
-  
   B32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
+  
+  // TODO(Momo): send this to global state
   LARGE_INTEGER performance_frequency;
   QueryPerformanceFrequency(&performance_frequency);
-  LARGE_INTEGER last_count = win_get_performance_counter();
+  
+  LARGE_INTEGER last_frame_count = win_get_performance_counter();
   
   while (win_global_state.is_running) {
+    
     //- Begin render frame
     V2U render_wh = win_get_client_dims(window);
     Rect2U render_region = win_calc_render_region(render_wh.w,
@@ -709,7 +756,7 @@ WinMain(HINSTANCE instance,
     
     //-Process messages and input
     // TODO: Calculate ideal dt basaed on refresh rate
-    input.seconds_since_last_frame = (F32)target_seconds_per_frame;
+    input.seconds_since_last_frame = (F32)target_secs_per_frame;
     update(&input);
     {
       MSG msg = {};
@@ -753,49 +800,65 @@ WinMain(HINSTANCE instance,
       game_functions.update(&game, &input, render_commands);
     }
     
+#if 1    
     //-Frame-rate control
     // 1. Calculate how much time has passed since the last frame
     // 2. If the time elapsed is greater than the target time elapsed,
     //    sleep/spin-lock until then.    
-    F64 secs_elapsed = 
-      win_get_secs_elapsed(last_count,
+    // NOTE(Momo): We might want to think about VSYNC or getting VBLANK
+    // value so that we can figure out how long we *should* sleep
+    F32 secs_elapsed_after_update = 
+      win_get_secs_elapsed(last_frame_count,
                            win_get_performance_counter(),
                            performance_frequency);
     
-    
-    
-    if(target_seconds_per_frame > secs_elapsed) {
+    if(target_secs_per_frame > secs_elapsed_after_update) {
       if (is_sleep_granular) {
         DWORD ms_to_sleep 
-          = (DWORD)(1000 * (target_seconds_per_frame - secs_elapsed));
+          = (DWORD)(1000 * (target_secs_per_frame - secs_elapsed_after_update));
         
-        // NOTE(Momo): Return control to OS
-        if (ms_to_sleep > 1) {
-          Sleep(ms_to_sleep - 1);
+        // Return control to OS
+        if (ms_to_sleep > 0) {
+          Sleep(ms_to_sleep);
         }
-        
-        // NOTE(Momo): Spin lock
-        while(target_seconds_per_frame > secs_elapsed) {
-          secs_elapsed = 
-            win_get_secs_elapsed(last_count,
-                                 win_get_performance_counter(),
-                                 performance_frequency);
-        }
+      }
+      
+      F32 secs_elapsed_after_sleep = 
+        win_get_secs_elapsed(last_frame_count,
+                             win_get_performance_counter(),
+                             performance_frequency);
+      if (secs_elapsed_after_sleep > target_secs_per_frame) {
+        // log oversleep?
+      }
+      
+      // Spin lock to simulate sleeping more
+      while(target_secs_per_frame > secs_elapsed_after_sleep) {
+        secs_elapsed_after_sleep = 
+          win_get_secs_elapsed(last_frame_count,
+                               win_get_performance_counter(),
+                               performance_frequency);
         
       }
+      
     }
-    else {
-      // NOTE(Momo): At this point, we basically missed a frame :(
-      // TODO(Momo): Lower target frame rate
-    }
+#endif
     
-    
-    last_count = win_get_performance_counter();
     
     //- End render frame
     if (renderer_code.is_valid) {
       renderer_functions.end_frame(renderer, render_commands);
     }
+    
+    LARGE_INTEGER end_frame_count = win_get_performance_counter();
+    F32 secs_this_frame =  win_get_secs_elapsed(last_frame_count,
+                                                end_frame_count,
+                                                performance_frequency);
+#if 1
+    win_log("target: %f vs %f \n", 
+            target_secs_per_frame,
+            secs_this_frame);
+#endif
+    last_frame_count = end_frame_count;
     
     
   }

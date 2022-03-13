@@ -33,7 +33,6 @@ struct Str8Bld{
 		};
 	};
 	UMI cap;
-  
 	UMI      remaining();
 	void     clear();
 	void     pop();
