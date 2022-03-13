@@ -641,14 +641,7 @@ WinMain(HINSTANCE instance,
   }
   
   //-Determine refresh rate
-  // NOTE(Momo): For now, we just enforce 60Hz no matter what
-  // because seriously, I have no idea what to do otherwise...
-  F32 target_secs_per_frame = 1.f/60.f;
-  
-#if 0
-  const U32 ideal_refresh_rate = 60;
-  U32 game_refresh_rate = ideal_refresh_rate;
-  U32 monitor_refresh_rate = game_refresh_rate;
+  U32 monitor_refresh_rate = 60;
   {
     HDC dc = GetDC(window);
     int win_refresh_rate = GetDeviceCaps(dc, VREFRESH);
@@ -657,26 +650,9 @@ WinMain(HINSTANCE instance,
       monitor_refresh_rate = (U32)win_refresh_rate;
     }
   }
+  F32 target_secs_per_frame = 1.f/(F32)monitor_refresh_rate;
   
-  
-  if (monitor_refresh_rate < game_refresh_rate) {
-    game_refresh_rate = monitor_refresh_rate; 
-  }
-  else if (monitor_refresh_rate > game_refresh_rate) {
-    // find a number that's smaller than ideal
-    U32 divisor = 1; 
-    for(;;) {
-      U32 compromise = monitor_refresh_rate/divisor;
-      if(compromise < ideal_refresh_rate) {
-        game_refresh_rate = compromise;
-      }
-    }
-  }
   win_log("Monitor Refresh Rate: %d\n", monitor_refresh_rate);
-  win_log("Game Refresh Rate: %d\n", monitor_refresh_rate);
-  
-  F32 target_secs_per_frame = 1.f/(F32)game_refresh_rate;
-#endif
   
   
   //-Load Renderer functions
@@ -800,7 +776,6 @@ WinMain(HINSTANCE instance,
       game_functions.update(&game, &input, render_commands);
     }
     
-#if 1    
     //-Frame-rate control
     // 1. Calculate how much time has passed since the last frame
     // 2. If the time elapsed is greater than the target time elapsed,
@@ -823,6 +798,7 @@ WinMain(HINSTANCE instance,
         }
       }
       
+      // Spin lock
       F32 secs_elapsed_after_sleep = 
         win_get_secs_elapsed(last_frame_count,
                              win_get_performance_counter(),
@@ -841,7 +817,6 @@ WinMain(HINSTANCE instance,
       }
       
     }
-#endif
     
     
     //- End render frame

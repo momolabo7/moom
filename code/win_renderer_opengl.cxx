@@ -313,7 +313,7 @@ if (!opengl->name) { goto failed; }
     wglSwapIntervalEXT = (wglSwapIntervalEXTFn*)wglGetProcAddress("wglSwapIntervalEXT");
   }
   if (wglSwapIntervalEXT) {
-    wglSwapIntervalEXT(1);
+    wglSwapIntervalEXT(0);
   }
 #endif
   return (Renderer*)opengl;
