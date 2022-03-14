@@ -19,7 +19,6 @@ add_tag(Sui_Packer* p, Asset_Tag_Type tag_type, F32 value) {
   Karu_Tag* tag = p->tags + tag_index;
   tag->type = tag_type;
   tag->value = value;
-  
 }
 
 
@@ -175,6 +174,21 @@ end_packer(Sui_Packer* p, const char* filename, Arena* arena) {
         fwrite(atlas->bitmap.pixels, image_size, 1, file);
         
         // Write sprites
+        for (U32 sprite_index = 0;
+             sprite_index < atlas->sprite_count;
+             ++sprite_index) 
+        {
+          Sui_Atlas_Sprite* sas = atlas->sprites + sprite_index;
+          
+          Rect2 uv = {};
+          uv.min.x = (F32)sas->rect->x / atlas->bitmap.width;
+          uv.min.y = (F32)sas->rect->y / atlas->bitmap.height;
+          uv.max.x = (F32)(sas->rect->x+sas->rect->w) / atlas->bitmap.width;
+          uv.max.y = (F32)(sas->rect->y+sas->rect->h) / atlas->bitmap.height;
+          
+          Karu_Atlas_Sprite kas = {};
+          kas.uv = uv;
+        }
         
       } break;
       case SUI_SOURCE_TYPE_BITMAP: {

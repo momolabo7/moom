@@ -25,7 +25,7 @@ struct Karu_Atlas_Font {
   //
 };
 
-struct Karu_Atlas_Image {
+struct Karu_Atlas_Sprite {
   Rect2 uv;
 };
 
