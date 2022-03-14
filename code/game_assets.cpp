@@ -13,7 +13,11 @@ is_ok(Image_Asset_ID id)  {
 }
 
 
+
 // DELETE OR REFACTOR ME ONCE DONE
+
+
+
 struct Load_Asset_Task {
   Asset* asset;
   
@@ -21,8 +25,12 @@ struct Load_Asset_Task {
   U32 data_size;
   void* destination;
   
-  // only for bitmaps
+  // For bitmaps/atlas
   Texture_Payload* texture_payload;
+  
+  // For atlas
+  
+  
 };
 Load_Asset_Task tasks[128];
 U32 task_count = 0;
@@ -93,32 +101,6 @@ load_bitmap(Game_Assets* ga,
   platform.add_task(load_asset_task, task); 
 }
 
-
-static void 
-load_atlas(Game_Assets* ga, 
-           Atlas_Asset_ID atlas_id) 
-{
-  Asset* asset = ga->assets + atlas_id.value;
-  assert(asset->type == ASSET_TYPE_ATLAS);
-  
-  U32 bitmap_size = asset->bitmap.width * asset->atlas.height * 4;
-  Texture_Payload* payload = begin_texture_transfer(ga->texture_queue, bitmap_size);
-  if (!payload) return;
-  
-  payload->texture_index = 0; // TODO(Momo): fix this!
-  payload->texture_width = asset->bitmap.width;
-  payload->texture_height = asset->bitmap.height;
-  
-  Load_Asset_Task* task = tasks + task_count++;  
-  task->texture_payload = payload;
-  task->asset = asset;
-  task->data_offset = asset->offset_to_data;
-  task->data_size = bitmap_size;
-  task->destination = payload->texture_data;
-  
-  
-  platform.add_task(load_asset_task, task); 
-}
 
 #if 0
 static void 
@@ -472,6 +454,14 @@ get_bitmap(Game_Assets* ga, Bitmap_Asset_ID bitmap_id) {
   return &asset->bitmap;
 }
 
+static Atlas_Asset*
+get_atlas(Game_Assets* ga, Atlas_Asset_ID atlas_id) {
+  Asset* asset = get_asset(ga, atlas_id.value);
+  if(asset->type != ASSET_TYPE_ATLAS) 
+    return nullptr;
+  return &asset->atlas;
+}
+
 static Image_Asset*
 get_image(Game_Assets* ga, Image_Asset_ID image_id) {
   Asset* asset = get_asset(ga, {image_id.value});
@@ -490,6 +480,11 @@ get_font(Game_Assets* ga, Font_Asset_ID image_id) {
 
 static Bitmap_Asset_ID
 get_first_bitmap(Game_Assets* ga, Asset_Group_ID group_id) {
+  return {get_first_asset_of_type(ga, group_id, ASSET_TYPE_BITMAP)};
+}
+
+static Atlas_Asset_ID
+get_first_atlas(Game_Assets* ga, Asset_Group_ID group_id) {
   return {get_first_asset_of_type(ga, group_id, ASSET_TYPE_BITMAP)};
 }
 

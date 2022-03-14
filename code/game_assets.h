@@ -33,12 +33,6 @@ struct Atlas_Asset {
 };
 
 
-
-
-
-
-
-
 struct Bitmap_Asset_ID { U32 value; };
 struct Bitmap_Asset {
   U32 renderer_bitmap_id;
