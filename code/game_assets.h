@@ -9,11 +9,9 @@ struct Font_Asset_ID { U32 value; };
 struct Image_Asset_ID { U32 value; };
 
 struct Bitmap_Asset {
-  U32 renderer_bitmap_id; // TODO: tie in with renderer? 
-  
+  U32 renderer_bitmap_id;
   U32 width;
   U32 height;
-  U32* pixels;
 };
 
 struct Image_Asset {

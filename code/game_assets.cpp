@@ -34,8 +34,8 @@ load_asset_task(void* context) {
   // Read in file
   Platform_File file = 
     platform.open_file("test.sui",
-                         PLATFORM_FILE_ACCESS_READ, 
-                         PLATFORM_FILE_PATH_EXE);
+                       PLATFORM_FILE_ACCESS_READ, 
+                       PLATFORM_FILE_PATH_EXE);
   if (file.error) { 
     if (task->texture_payload) {
       cancel_texture_transfer(task->texture_payload);
@@ -46,9 +46,9 @@ load_asset_task(void* context) {
     // Open the file
     // This goes into a thread
     platform.read_file(&file, 
-                         task->data_size, 
-                         task->data_offset,
-                         task->destination);
+                       task->data_size, 
+                       task->data_offset,
+                       task->destination);
     
     if (task->texture_payload) {
       complete_texture_transfer(task->texture_payload);
@@ -57,6 +57,15 @@ load_asset_task(void* context) {
 }
 
 
+static void 
+unload_bitmap(Game_Assets* ga, 
+              Bitmap_Asset_ID bitmap_id, 
+              Game_Render_Commands* commands) 
+{
+  Asset* asset = ga->assets + bitmap_id.value;
+  assert(asset->type == ASSET_TYPE_BITMAP);
+  push_delete_texture(commands, asset->bitmap.renderer_bitmap_id);
+}
 
 static void 
 load_bitmap(Game_Assets* ga, 
@@ -128,9 +137,9 @@ load_font(Game_Assets* ga,
     Sui_Font_Glyph sui_glyph = {};
     
     platform.read_file(&file, 
-                         sizeof(Sui_Font_Glyph), 
-                         glyph_data_offset,
-                         &sui_glyph); 
+                       sizeof(Sui_Font_Glyph), 
+                       glyph_data_offset,
+                       &sui_glyph); 
     
     auto* glyph = glyphs + glyph_index;
     glyph->uv = sui_glyph.uv;
@@ -149,9 +158,9 @@ load_font(Game_Assets* ga,
         sizeof(Sui_Font_Glyph)*glyph_count+
         sizeof(F32)*advance_index;
       platform.read_file(&file,
-                           sizeof(F32),
-                           advance_data_offset,
-                           advances + gi1*glyph_count + gi2);
+                         sizeof(F32),
+                         advance_data_offset,
+                         advances + gi1*glyph_count + gi2);
       ++advance_index;
     }
   }
@@ -176,8 +185,8 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
   // Read in file
   Platform_File file = 
     platform.open_file("test.sui",
-                         PLATFORM_FILE_ACCESS_READ, 
-                         PLATFORM_FILE_PATH_EXE);
+                       PLATFORM_FILE_ACCESS_READ, 
+                       PLATFORM_FILE_PATH_EXE);
   assert(!file.error);
   
   // Read header
@@ -226,8 +235,8 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
         sui_header.offset_to_groups + sizeof(Sui_Asset_Group)*group_index;
       
       platform.read_file(&file, sizeof(Sui_Asset_Group), 
-                           offset_to_sui_group, 
-                           &sui_group);
+                         offset_to_sui_group, 
+                         &sui_group);
       
       group->first_asset_index = sui_group.first_asset_index;
       group->one_past_last_asset_index = sui_group.one_past_last_asset_index;
@@ -246,8 +255,8 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
         sui_header.offset_to_assets + sizeof(Sui_Asset)*asset_index;
       
       platform.read_file(&file, sizeof(Sui_Asset), 
-                           offset_to_sui_asset, 
-                           &sui_asset);
+                         offset_to_sui_asset, 
+                         &sui_asset);
       
       
       
@@ -297,9 +306,9 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
             Sui_Font_Glyph sui_glyph = {};
             
             platform.read_file(&file, 
-                                 sizeof(Sui_Font_Glyph), 
-                                 glyph_data_offset,
-                                 &sui_glyph); 
+                               sizeof(Sui_Font_Glyph), 
+                               glyph_data_offset,
+                               &sui_glyph); 
             
             auto* glyph = glyphs + glyph_index;
             glyph->uv = sui_glyph.uv;
@@ -318,9 +327,9 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
                 sizeof(Sui_Font_Glyph)*glyph_count+
                 sizeof(F32)*advance_index;
               platform.read_file(&file,
-                                   sizeof(F32),
-                                   advance_data_offset,
-                                   advances + gi1*glyph_count + gi2);
+                                 sizeof(F32),
+                                 advance_data_offset,
+                                 advances + gi1*glyph_count + gi2);
               ++advance_index;
             }
           }
@@ -348,12 +357,12 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
 
 
 static Asset*
-_get_asset(Game_Assets* ga, U32 asset_index){
+get_asset(Game_Assets* ga, U32 asset_index){
   return ga->assets + asset_index;
 }
 
 static U32
-_get_first_asset_of_type(Game_Assets* ga, Asset_Group_ID group_id, Asset_Type type) {
+get_first_asset_of_type(Game_Assets* ga, Asset_Group_ID group_id, Asset_Type type) {
   Asset_Group* group = ga->groups + group_id;
   for (U32 asset_index = group->first_asset_index;
        asset_index != group->one_past_last_asset_index;
@@ -371,11 +380,11 @@ _get_first_asset_of_type(Game_Assets* ga, Asset_Group_ID group_id, Asset_Type ty
 }
 
 static U32 
-_get_best_asset_of_type(Game_Assets* ga, 
-                        Asset_Group_ID group_id, 
-                        Asset_Type asset_type,
-                        Asset_Vector* match_vector, 
-                        Asset_Vector* weight_vector)
+get_best_asset_of_type(Game_Assets* ga, 
+                       Asset_Group_ID group_id, 
+                       Asset_Type asset_type,
+                       Asset_Vector* match_vector, 
+                       Asset_Vector* weight_vector)
 {
   U32 ret = 0;
   F32 best_diff = F32_INFINITY();
@@ -425,7 +434,7 @@ _get_best_asset_of_type(Game_Assets* ga,
 
 static Bitmap_Asset*
 get_bitmap(Game_Assets* ga, Bitmap_Asset_ID bitmap_id) {
-  Asset* asset = _get_asset(ga, bitmap_id.value);
+  Asset* asset = get_asset(ga, bitmap_id.value);
   if(asset->type != ASSET_TYPE_BITMAP) 
     return nullptr;
   return &asset->bitmap;
@@ -433,7 +442,7 @@ get_bitmap(Game_Assets* ga, Bitmap_Asset_ID bitmap_id) {
 
 static Image_Asset*
 get_image(Game_Assets* ga, Image_Asset_ID image_id) {
-  Asset* asset = _get_asset(ga, {image_id.value});
+  Asset* asset = get_asset(ga, {image_id.value});
   if(asset->type != ASSET_TYPE_IMAGE)
     return nullptr;
   return &asset->image;
@@ -441,7 +450,7 @@ get_image(Game_Assets* ga, Image_Asset_ID image_id) {
 
 static Font_Asset*
 get_font(Game_Assets* ga, Font_Asset_ID image_id) {
-  Asset* asset = _get_asset(ga, {image_id.value});
+  Asset* asset = get_asset(ga, {image_id.value});
   if(asset->type != ASSET_TYPE_FONT)
     return nullptr;
   return &asset->font;
@@ -449,18 +458,18 @@ get_font(Game_Assets* ga, Font_Asset_ID image_id) {
 
 static Bitmap_Asset_ID
 get_first_bitmap(Game_Assets* ga, Asset_Group_ID group_id) {
-  return {_get_first_asset_of_type(ga, group_id, ASSET_TYPE_BITMAP)};
+  return {get_first_asset_of_type(ga, group_id, ASSET_TYPE_BITMAP)};
 }
 
 static Font_Asset_ID
 get_first_font(Game_Assets* ga, Asset_Group_ID group_id) {
-  return {_get_first_asset_of_type(ga, group_id, ASSET_TYPE_FONT)};
+  return {get_first_asset_of_type(ga, group_id, ASSET_TYPE_FONT)};
 }
 
 
 static Image_Asset_ID
 get_first_image(Game_Assets* ga, Asset_Group_ID group_id) {
-  return {_get_first_asset_of_type(ga, group_id, ASSET_TYPE_IMAGE)};
+  return {get_first_asset_of_type(ga, group_id, ASSET_TYPE_IMAGE)};
 }
 
 static Image_Asset_ID
@@ -469,7 +478,7 @@ get_best_image(Game_Assets* ga,
                Asset_Vector* match_vector, 
                Asset_Vector* weight_vector)
 {
-  return {_get_best_asset_of_type(ga, group_id, ASSET_TYPE_IMAGE, match_vector, weight_vector)};
+  return {get_best_asset_of_type(ga, group_id, ASSET_TYPE_IMAGE, match_vector, weight_vector)};
   
 }
 

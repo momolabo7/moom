@@ -21,7 +21,8 @@ game_update(Game_Memory* memory,
     memory->state = (Game_State*)platform.alloc(sizeof(Game_State));
     if (!memory->state) return false;
     
-    B32 success = init_game_assets(&memory->state->game_assets, memory->texture_queue);
+    B32 success = init_game_assets(&memory->state->game_assets, 
+                                   memory->texture_queue);
     if(!success) return false;
     
     
