@@ -2,9 +2,9 @@
 
 static void 
 attach_shader(Opengl* ogl,
-               U32 program, 
-               U32 type, 
-               char* Code) 
+              U32 program, 
+              U32 type, 
+              char* Code) 
 {
   GLuint shader_handle = ogl->glCreateShader(type);
   ogl->glShaderSource(shader_handle, 1, &Code, NULL);
@@ -15,8 +15,8 @@ attach_shader(Opengl* ogl,
 
 static void 
 align_viewport(Opengl* ogl, 
-                V2U render_wh, 
-                Rect2U region) 
+               V2U render_wh, 
+               Rect2U region) 
 {
   
   U32 x, y, w, h;
@@ -36,9 +36,9 @@ align_viewport(Opengl* ogl,
 
 static void 
 draw_instances(Opengl* ogl,
-                GLuint texture, 
-                GLsizei instances_to_draw, 
-                GLuint index_to_draw_from) 
+               GLuint texture, 
+               GLsizei instances_to_draw, 
+               GLuint index_to_draw_from) 
 {
   assert(instances_to_draw + index_to_draw_from < OPENGL_MAX_ENTITIES);
   
@@ -68,10 +68,10 @@ draw_instances(Opengl* ogl,
 
 static void
 set_texture(Opengl* ogl,
-             UMI index,
-             S32 width,
-             S32 height,
-             U8* pixels) 
+            UMI index,
+            S32 width,
+            S32 height,
+            U8* pixels) 
 {
   
   assert(index < array_count(ogl->textures));
@@ -97,13 +97,18 @@ set_texture(Opengl* ogl,
                            GL_RGBA, 
                            GL_UNSIGNED_BYTE, 
                            (void*)pixels);
-  
-  
   ogl->textures[index] = entry;
 }
 
+static void 
+delete_texture(Opengl* ogl, U32 texture_index) {
+  assert(texture_index < array_count(ogl->textures));
+  ogl->glDeleteTextures(1, ogl->textures + texture_index);
+  ogl->textures[texture_index] = 0;
+}
+
 static void
-clear_textures(Opengl* ogl) {
+delete_all_textures(Opengl* ogl) {
   ogl->glDeleteTextures((GLsizei)array_count(ogl->textures), 
                         ogl->textures);
   for (UMI i = 0; i < array_count(ogl->textures); ++i ){
@@ -157,7 +162,7 @@ add_predefined_textures(Opengl* ogl) {
 static B32
 opengl_init(Opengl* ogl)
 {	
-
+  
   const char* vertex_shader = R"###(
 #version 450 core
 layout(location=0) in vec3 aModelVtx; 
@@ -174,7 +179,7 @@ void main(void) {
    mTexCoord = aTexCoord[gl_VertexID];
    //mTexCoord.y = 1.0 - mTexCoord.y;
 })###";
-
+  
   const char* fragment_shader = R"###(
 #version 450 core
 out vec4 fragColor;
@@ -185,8 +190,8 @@ uniform sampler2D uTexture;
 void main(void) {
    fragColor = texture(uTexture, mTexCoord) * mColor; 
 })###";
-
-
+  
+  
   // Stuff to work with game
   F32 quad_model[] = {
     -0.5f, -0.5f, 0.0f,  // bottom left
@@ -194,15 +199,15 @@ void main(void) {
     0.5f,  0.5f, 0.0f,  // top right
     -0.5f,  0.5f, 0.0f,   // top left 
   };
-
+  
   U8 quad_indices[] = {
     0, 1, 2,
     0, 2, 3,
   };
-
-
-
-
+  
+  
+  
+  
   ogl->glEnable(GL_DEPTH_TEST);
   ogl->glEnable(GL_SCISSOR_TEST);
   
@@ -402,13 +407,13 @@ void main(void) {
   // NOTE(Momo): Setup shader Program
   ogl->shader = ogl->glCreateProgram();
   attach_shader(ogl,
-                 ogl->shader, 
-                 GL_VERTEX_SHADER, 
-                 (char*)vertex_shader);
+                ogl->shader, 
+                GL_VERTEX_SHADER, 
+                (char*)vertex_shader);
   attach_shader(ogl,
-                 ogl->shader, 
-                 GL_FRAGMENT_SHADER, 
-                 (char*)fragment_shader);
+                ogl->shader, 
+                GL_FRAGMENT_SHADER, 
+                (char*)fragment_shader);
   
   ogl->glLinkProgram(ogl->shader);
   
@@ -420,7 +425,7 @@ void main(void) {
     return false;
   }
   add_predefined_textures(ogl);
-  clear_textures(ogl);
+  delete_all_textures(ogl);
   
   
   return true;
@@ -450,10 +455,10 @@ process_texture_queue(Opengl* ogl) {
         assert(payload->texture_height > 0);
         
         set_texture(ogl, 
-                     payload->texture_index, 
-                     (S32)payload->texture_width, 
-                     (S32)payload->texture_height, 
-                     (U8*)payload->texture_data);
+                    payload->texture_index, 
+                    (S32)payload->texture_width, 
+                    (S32)payload->texture_height, 
+                    (U8*)payload->texture_data);
         
       } break;
       case TEXTURE_PAYLOAD_STATE_EMPTY: {
@@ -501,9 +506,9 @@ opengl_end_frame(Opengl* ogl, Game_Render_Commands* commands) {
     1.0f, 0.f, // bottom right
     0.f, 0.f, // bottom left
   };
-
-
-
+  
+  
+  
   GLuint current_texture = 0;
   GLsizei instances_to_draw = 0;
   GLsizei last_drawn_instance_index = 0;
@@ -515,9 +520,9 @@ opengl_end_frame(Opengl* ogl, Game_Render_Commands* commands) {
       case RENDER_COMMAND_TYPE_BASIS: {
         auto* data = (Render_Command_Basis*)entry->data;
         draw_instances(ogl,
-                        current_texture, 
-                        instances_to_draw, 
-                        last_drawn_instance_index);
+                       current_texture, 
+                       instances_to_draw, 
+                       last_drawn_instance_index);
         last_drawn_instance_index += instances_to_draw;
         instances_to_draw = 0;
         
@@ -551,9 +556,9 @@ opengl_end_frame(Opengl* ogl, Game_Render_Commands* commands) {
         // the current instance.
         if (current_texture != ogl->blank_texture) {
           draw_instances(ogl,
-                          current_texture, 
-                          instances_to_draw, 
-                          last_drawn_instance_index);
+                         current_texture, 
+                         instances_to_draw, 
+                         last_drawn_instance_index);
           last_drawn_instance_index += instances_to_draw;
           instances_to_draw = 0;
           current_texture = ogl_texture_handle;
@@ -593,9 +598,9 @@ opengl_end_frame(Opengl* ogl, Game_Render_Commands* commands) {
         // processed texture, batch draw all instances before the current instance.
         if (current_texture != texture) {
           draw_instances(ogl,
-                          current_texture, 
-                          instances_to_draw, 
-                          last_drawn_instance_index);
+                         current_texture, 
+                         instances_to_draw, 
+                         last_drawn_instance_index);
           last_drawn_instance_index += instances_to_draw;
           instances_to_draw = 0;
           current_texture = texture;
@@ -630,8 +635,12 @@ opengl_end_frame(Opengl* ogl, Game_Render_Commands* commands) {
         ++current_instance_index;
         
       } break;
-      case RENDER_COMMAND_TYPE_CLEAR_TEXTURES: {
-        clear_textures(ogl);
+      case RENDER_COMMAND_TYPE_DELETE_TEXTURE: {
+        auto* data = (Render_Command_Delete_Texture*)entry->data;
+        delete_texture(ogl, data->texture_index);
+      } break;
+      case RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
+        delete_all_textures(ogl);
       } break;
     }
   }

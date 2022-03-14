@@ -164,7 +164,7 @@ static void
 push_subsprite(Game_Render_Commands* c, 
                RGBA colors, 
                M44 transform, 
-               UMI texture_index,
+               U32 texture_index,
                Rect2 texture_uv)  
 
 {
@@ -180,7 +180,7 @@ static void
 push_sprite(Game_Render_Commands* c,
             RGBA colors, 
             M44 transform, 
-            UMI texture_index)  
+            U32 texture_index)  
 
 {
   Rect2 uv = {};
@@ -327,6 +327,13 @@ push_aabb(Game_Render_Commands* c,
 }
 
 static void 
-pushclear_textures(Game_Render_Commands* c) {
-  push_command<Render_Command_Clear_Textures>(c, RENDER_COMMAND_TYPE_CLEAR_TEXTURES);
+push_delete_all_textures(Game_Render_Commands* c) {
+  push_command<Render_Command_Delete_All_Textures>(c, RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES);
+}
+
+static void 
+push_delete_texture(Game_Render_Commands* c, U32 texture_index) {
+  auto* data= push_command<Render_Command_Delete_Texture>(c, RENDER_COMMAND_TYPE_DELETE_TEXTURE);
+  data->texture_index = texture_index;
+  
 }

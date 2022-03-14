@@ -33,9 +33,9 @@ typedef void Platform_Read_File(Platform_File* file, UMI size, UMI offset, void*
 typedef void Platform_Write_File(Platform_File* file, UMI size, UMI offset, void* src);
 
 //~Platform multithreaded work API
-typedef void Platform_Work_Callback(void* data);
-typedef void Platform_Add_Work(Platform_Work_Callback callback, void* data);
-typedef void Platform_Complete_All_Work();
+typedef void Platform_Task_Callback(void* data);
+typedef void Platform_Add_Task(Platform_Task_Callback callback, void* data);
+typedef void Platform_Complete_All_Tasks();
 
 
 //~Other platform API
@@ -58,10 +58,10 @@ struct Platform_API {
   Platform_Write_File* write_file;
   Platform_Close_File* close_file;
   
-  Platform_Add_Work* add_work;
-  Platform_Complete_All_Work* complete_all_work;
+  Platform_Add_Task* add_task;
+  Platform_Complete_All_Tasks* complete_all_tasks;
 };
-extern Platform_API g_platform;
+extern Platform_API platform;
 
 
 
@@ -127,6 +127,6 @@ static const char* game_function_names[] {
 };
 
 
-#include "game_pf.cpp"
+#include "game_platform.cpp"
 
 #endif //GAME_PLATFORM_H

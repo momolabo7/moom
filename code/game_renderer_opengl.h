@@ -2,6 +2,7 @@
 #define GFX_OPENGL_H
 
 
+
 //- Opengl typedefs
 #define GL_TRUE                 1
 #define GL_FALSE                0
@@ -198,7 +199,7 @@ enum Vertex_Buffer_Type {
 };
 
 struct Opengl : Renderer {
-  GLuint textures[10];
+  GLuint textures[256];
   GLuint buffers[VERTEX_BUFFER_TYPE_COUNT]; // Opengl__VBO_Count
   GLuint shader;
   GLuint model; 

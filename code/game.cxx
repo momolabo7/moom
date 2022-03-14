@@ -5,20 +5,20 @@
 
 
 
-Platform_API g_platform;
+Platform_API platform;
 
 exported B32 
 game_update(Game_Memory* memory,
             Game_Input* input, 
             Game_Render_Commands* render_commands) { 
-  g_platform = memory->platform_api;
+  platform = memory->platform_api;
   F32 dt = input->seconds_since_last_frame;
   
   // Initialization
   if (!memory->state) {
-    g_platform.set_aspect_ratio(16, 9);
+    platform.set_aspect_ratio(16, 9);
     
-    memory->state = (Game_State*)g_platform.alloc(sizeof(Game_State));
+    memory->state = (Game_State*)platform.alloc(sizeof(Game_State));
     if (!memory->state) return false;
     
     B32 success = init_game_assets(&memory->state->game_assets, memory->texture_queue);
@@ -40,13 +40,13 @@ game_update(Game_Memory* memory,
     auto* glyph = font->glyphs + glyph_id;
     Bitmap_Asset_ID bitmap_id = glyph->bitmap_id;
     load_bitmap(game_assets, bitmap_id);
-    g_platform.complete_all_work();
+    platform.complete_all_tasks();
     
   }
   Sandbox_Mode* sandbox = &memory->state->sandbox_mode;
   
   if (is_poked(input->button_up)) {
-    g_platform.hot_reload();
+    platform.hot_reload();
   }
   
   

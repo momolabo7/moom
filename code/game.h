@@ -3,7 +3,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "game_pf.h"
+#include "game_platform.h"
 #include "game_renderer.h"
 #include "game_assets.h"
 

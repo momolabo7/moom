@@ -12,13 +12,21 @@ int main() {
   
   TTF loaded_ttf = karu_load_font(asset_dir("nokiafc22.ttf"), arena);
   
-  Karu_Atlas atlas = begin_atlas_builder(512, 512);
+  Karu_Atlas atlas = begin_atlas_builder(1024, 1024);
   U32 at_bullet_circle = push_image(&atlas, asset_dir("bullet_circle.png"));
   U32 at_bullet_dot = push_image(&atlas, asset_dir("bullet_dot.png"));
   U32 at_player_black = push_image(&atlas, asset_dir("player_black.png"));
   U32 at_player_white = push_image(&atlas, asset_dir("player_white.png"));
   
-  U32 interested_cps[] = { 32,65,66,67,68,69,70 };
+  U32 interested_cps[] = { 
+    32,65,66,67,68,69,
+    70,71,72,73,74,75,76,77,78,79,
+    80,81,82,83,84,85,86,87,88,89,
+    80,81,82,83,84,85,86,87,88,89,
+    90,91,92,93,94,95,96,97,98,99,
+    100,101,102,103,104,105,106,107,108,109,
+    110,111,112,113,114,115,116,117,118,119,
+  };
   
   U32 at_font_id = push_font(&atlas, &loaded_ttf, 
                              interested_cps, array_count(interested_cps), 

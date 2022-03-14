@@ -4,11 +4,9 @@
 #include "game_asset_types.h"
 #include "sui.h"
 
-
 struct Bitmap_Asset_ID { U32 value; };
 struct Font_Asset_ID { U32 value; }; 
 struct Image_Asset_ID { U32 value; };
-
 
 struct Bitmap_Asset {
   U32 renderer_bitmap_id; // TODO: tie in with renderer? 
@@ -86,9 +84,7 @@ struct Game_Assets {
   
   Asset_Group groups[ASSET_GROUP_COUNT];
   
-  
-  
-  // TODO(Momo): We should remove this
+  // TODO(Momo): We should remove this?
   U32 bitmap_counter;
 };
 

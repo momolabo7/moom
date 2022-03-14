@@ -2,7 +2,7 @@
 
 #include "momo.h"
 #include "win_renderer.h"
-#include "game_pf.h"
+#include "game_platform.h"
 
 
 #define NOMINMAX
@@ -235,7 +235,7 @@ win_reload_code(Win_Loaded_Code* code) {
 //~Worker/Producer  functionality
 struct Win_Work {
   void* data;
-  Platform_Work_Callback* callback;
+  Platform_Task_Callback* callback;
 };
 
 struct Win_Work_Queue {
@@ -297,7 +297,7 @@ win_do_next_work_entry(Win_Work_Queue* wq) {
 // work in the work queue is done!
 //
 static void
-win_complete_all_work_entries(Win_Work_Queue* wq) {
+win_complete_all_tasks_entries(Win_Work_Queue* wq) {
   while(wq->completion_goal != wq->completion_count) {
     win_do_next_work_entry(wq);
   }
@@ -347,7 +347,7 @@ win_init_work_queue(Win_Work_Queue* wq, U32 thread_count) {
 // NOTE(Momo): This is not very thread safe. Other threads shouldn't call this.
 // TODO(Momo): Make it so that other threads can call this?
 static void
-win_add_work_entry(Win_Work_Queue* wq, void (*callback)(void* ctx), void *data) {
+win_add_task_entry(Win_Work_Queue* wq, void (*callback)(void* ctx), void *data) {
   U32 old_next_entry_to_write = wq->next_entry_to_write;
   U32 new_next_entry_to_write = (old_next_entry_to_write + 1) % array_count(wq->entries);
   assert(wq->next_entry_to_read != new_next_entry_to_write);  
@@ -526,13 +526,13 @@ win_write_file(Platform_File* file, UMI size, UMI offset, void* src)
 }
 
 static void
-win_add_work(Platform_Work_Callback callback, void* data) {
-  win_add_work_entry(&win_global_state.work_queue, callback, data);
+win_add_task(Platform_Task_Callback callback, void* data) {
+  win_add_task_entry(&win_global_state.work_queue, callback, data);
 }
 
 static void
-win_complete_all_work() {
-  win_complete_all_work_entries(&win_global_state.work_queue);
+win_complete_all_tasks() {
+  win_complete_all_tasks_entries(&win_global_state.work_queue);
 }
 
 
@@ -549,8 +549,8 @@ win_create_platform_api()
   pf_api.write_file = win_write_file;
   pf_api.close_file = win_close_file;
   pf_api.set_aspect_ratio = win_set_aspect_ratio;
-  pf_api.add_work = win_add_work;
-  pf_api.complete_all_work = win_complete_all_work;
+  pf_api.add_task = win_add_task;
+  pf_api.complete_all_tasks = win_complete_all_tasks;
   return pf_api;
 }
 

@@ -33,7 +33,7 @@ load_asset_task(void* context) {
   
   // Read in file
   Platform_File file = 
-    g_platform.open_file("test.sui",
+    platform.open_file("test.sui",
                          PLATFORM_FILE_ACCESS_READ, 
                          PLATFORM_FILE_PATH_EXE);
   if (file.error) { 
@@ -45,7 +45,7 @@ load_asset_task(void* context) {
   else {
     // Open the file
     // This goes into a thread
-    g_platform.read_file(&file, 
+    platform.read_file(&file, 
                          task->data_size, 
                          task->data_offset,
                          task->destination);
@@ -81,7 +81,7 @@ load_bitmap(Game_Assets* ga,
   task->destination = payload->texture_data;
   
   
-  g_platform.add_work(load_asset_task, task); 
+  platform.add_task(load_asset_task, task); 
 }
 
 
@@ -101,7 +101,7 @@ load_font(Game_Assets* ga,
   
   
   
-  g_platform.add_work(load_bitmap_work_callback, work); 
+  platform.add_task(load_bitmap_work_callback, work); 
   
   
   U32 glyph_count = sui_asset.font.glyph_count;
@@ -127,7 +127,7 @@ load_font(Game_Assets* ga,
     
     Sui_Font_Glyph sui_glyph = {};
     
-    g_platform.read_file(&file, 
+    platform.read_file(&file, 
                          sizeof(Sui_Font_Glyph), 
                          glyph_data_offset,
                          &sui_glyph); 
@@ -148,7 +148,7 @@ load_font(Game_Assets* ga,
         sui_asset.offset_to_data + 
         sizeof(Sui_Font_Glyph)*glyph_count+
         sizeof(F32)*advance_index;
-      g_platform.read_file(&file,
+      platform.read_file(&file,
                            sizeof(F32),
                            advance_data_offset,
                            advances + gi1*glyph_count + gi2);
@@ -169,20 +169,20 @@ static B32
 init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
   
   UMI memory_size = MB(20);
-  void* mem = g_platform.alloc(memory_size);
+  void* mem = platform.alloc(memory_size);
   ga->arena = create_arena(mem, memory_size);
   ga->texture_queue = texture_queue;  
   
   // Read in file
   Platform_File file = 
-    g_platform.open_file("test.sui",
+    platform.open_file("test.sui",
                          PLATFORM_FILE_ACCESS_READ, 
                          PLATFORM_FILE_PATH_EXE);
   assert(!file.error);
   
   // Read header
   Sui_Header sui_header;
-  g_platform.read_file(&file, sizeof(Sui_Header), 0, &sui_header);
+  platform.read_file(&file, sizeof(Sui_Header), 0, &sui_header);
   
   
   if (sui_header.signature != SUI_SIGNATURE) {
@@ -207,7 +207,7 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
     
     Sui_Tag sui_tag;
     UMI offset_to_sui_tag = sui_header.offset_to_tags + sizeof(Sui_Tag)*tag_index;
-    g_platform.read_file(&file, sizeof(Sui_Tag), offset_to_sui_tag, &sui_tag);
+    platform.read_file(&file, sizeof(Sui_Tag), offset_to_sui_tag, &sui_tag);
     
     tag->type = (Asset_Tag_Type)sui_tag.type;
     tag->value = sui_tag.value;
@@ -225,7 +225,7 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
       UMI offset_to_sui_group = 
         sui_header.offset_to_groups + sizeof(Sui_Asset_Group)*group_index;
       
-      g_platform.read_file(&file, sizeof(Sui_Asset_Group), 
+      platform.read_file(&file, sizeof(Sui_Asset_Group), 
                            offset_to_sui_group, 
                            &sui_group);
       
@@ -245,7 +245,7 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
       UMI offset_to_sui_asset = 
         sui_header.offset_to_assets + sizeof(Sui_Asset)*asset_index;
       
-      g_platform.read_file(&file, sizeof(Sui_Asset), 
+      platform.read_file(&file, sizeof(Sui_Asset), 
                            offset_to_sui_asset, 
                            &sui_asset);
       
@@ -296,7 +296,7 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
             
             Sui_Font_Glyph sui_glyph = {};
             
-            g_platform.read_file(&file, 
+            platform.read_file(&file, 
                                  sizeof(Sui_Font_Glyph), 
                                  glyph_data_offset,
                                  &sui_glyph); 
@@ -317,7 +317,7 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
                 sui_asset.offset_to_data + 
                 sizeof(Sui_Font_Glyph)*glyph_count+
                 sizeof(F32)*advance_index;
-              g_platform.read_file(&file,
+              platform.read_file(&file,
                                    sizeof(F32),
                                    advance_data_offset,
                                    advances + gi1*glyph_count + gi2);

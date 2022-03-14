@@ -1,4 +1,4 @@
-// This file and game_pf.h contain structs that need to be 
+// This file and game_platform.h contain structs that need to be 
 // initialized by the OS and passed to the main Game_Update() 
 // function.
 //
@@ -45,7 +45,7 @@ struct Texture_Payload {
   U32 transfer_memory_end;
   
   // For game to input
-  U32 texture_index;
+  U8 texture_index;
   U32 texture_width;
   U32 texture_height;
   void* texture_data;
@@ -87,7 +87,9 @@ enum Render_Command_Type {
   RENDER_COMMAND_TYPE_BASIS,
   RENDER_COMMAND_TYPE_RECT,
   RENDER_COMMAND_TYPE_SUBSPRITE,
-  RENDER_COMMAND_TYPE_CLEAR_TEXTURES,
+  RENDER_COMMAND_TYPE_DELETE_TEXTURE,
+  RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES,
+  
 };
 
 
@@ -100,10 +102,17 @@ struct Render_Command_Basis {
 };
 
 struct Render_Command_Subsprite {
-  UMI texture_index;
+  U32 texture_index;
   RGBA colors;
   M44 transform;
   Rect2 texture_uv; 
+};
+
+struct Render_Command_Delete_Texture {
+  U32 texture_index;
+};
+
+struct Render_Command_Delete_All_Textures {
 };
 
 struct Render_Command_Rect {
@@ -119,7 +128,6 @@ struct Renderer {
 };
 
 
-struct Render_Command_Clear_Textures {};
 
 
 
