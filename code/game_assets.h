@@ -2,7 +2,7 @@
 #define GAME_ASSETS_H
 
 #include "game_asset_types.h"
-#include "sui.h"
+#include "karu.h"
 
 // TODO(Momo): Atlas asset
 struct Atlas_Asset_ID { U32 value; };
@@ -14,28 +14,23 @@ struct Atlas_Font {
   U16* codepoint_map;
   
   U32 glyph_count;
-  Font_Glyph_Asset* glyphs;
+  Atlas_Font_Glyph* glyphs;
   F32* horizontal_advances;
 };
-struct Atlas_Image{
+struct Atlas_Sprite {
   Rect2 uv;
 }; 
-struct Atlas_Bitmap {
+struct Atlas_Asset {
   U32 renderer_bitmap_id;
   U32 width;
   U32 height;
-};
-struct Atlas_Asset {
-  Atlas_Bitmap bitmap;
   
-  U32 images_count;
-  Atlas_Image* images;
+  U32 sprite_count;
+  Atlas_Sprite* sprites;
   
   U32 font_count;
   Atlas_Font* fonts;
 };
-static void load_atlas(Game_Assets* ga, Atlas_Asset_ID atlas_id);
-static void unload_atlas();
 
 
 
@@ -90,6 +85,7 @@ struct Asset {
   
   Asset_Type type;
   union {
+    Atlas_Asset atlas;
     Bitmap_Asset bitmap;
     Image_Asset image;
     Font_Asset font;
@@ -122,8 +118,8 @@ struct Game_Assets {
   
   Asset_Group groups[ASSET_GROUP_COUNT];
   
-  // TODO(Momo): We should remove this?
-  U32 bitmap_counter;
+  // TODO(Momo): free list
+  U32 renderer_bitmap_counter;
 };
 
 #include "game_assets.cpp"

@@ -1,76 +1,128 @@
-/* date = January 20th 2022 10:14 am */
+#ifndef KARU_H
+#define KARU_H
 
-#ifndef Sui_EXPORT_H
-#define Sui_EXPORT_H
+/////////////////////////////////////////////////////////////
+// Sui file related
+#pragma pack(push,1)
 
-#include <stdlib.h>
-#include <stdio.h>
+#define _KARU_CODE(a, b, c, d) (((U32)(a) << 0) | ((U32)(b) << 8) | ((U32)(c) << 16) | ((U32)(d) << 24))
+#define KARU_SIGNATURE _KARU_CODE('k', 'a', 'r', 'u')
 
-#define assert_callback(s) printf("[sw][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
+struct Karu_Atlas_Font_Glyph {
+  U32 codepoint;
+  Rect2 uv;
+};
 
-#include "momo.h"
-
-#define asset_dir(filename) "../assets/" ##filename
-#define karu_log(...) printf(__VA_ARGS__)
-
-// Utility files for ass
-Memory karu_malloc(UMI size) {
-  void* mem = malloc(size);
-  assert(mem);
-  return { mem, size };
-}
-
-void karu_free(Memory* mem) {
-  free(mem->data);
-  mem->data = nullptr;
-  mem->size = 0;
-}
-
-Memory karu_read_file(const char* filename, Arena* arena) {
-  FILE* file = fopen(filename, "rb");
+struct Karu_Atlas_Font {
+  // TODO: Maybe add 'lowest codepoint'?
+  U32 one_past_highest_codepoint;
+  U32 glyph_count;
   
-  if (!file) {
-    return {};
-  }
-  defer { fclose(file); };
-  fseek(file, 0, SEEK_END);
-  UMI file_size = ftell(file);
-  fseek(file, 0, SEEK_SET);
-  
-  void* file_memory = push_block(arena, file_size); 
-  assert(file_memory);
-  UMI read_amount = fread(file_memory, 1, file_size, file);
-  assert(read_amount == file_size);
-  
-  Memory ret;
-  ret.data = file_memory;
-  ret.size = file_size; 
-  
-  return ret;
-  
-}
+  // Data is: 
+  // 
+  // Karu_Atlas_Font_Glyph glyphs[glyph_count]
+  // F32 horizontal_advances[glyph_count][glyph_count]
+  //
+};
 
-void karu_write_file(const char* filename, Memory memory) {
-  FILE *file  = fopen(filename, "wb");
-  if (!file) return;
-  defer { fclose(file); };
-  
-  fwrite(memory.data, 1, memory.size, file);
-  
-}
+struct Karu_Atlas_Image {
+  Rect2 uv;
+};
 
-static TTF 
-karu_load_font(const char* filename, Arena* arena) {
-  Memory mem = karu_read_file(filename, arena);
-  assert(is_ok(mem));
+struct Karu_Atlas { 
+  // bitmap info
+  U32 width, height;
   
-  TTF ret = read_ttf(mem);
-  return ret;
-}
+  // font_info
+  U32 font_count;
+  
+  // sprite info
+  U32 sprite_count;
+  
+  // TODO(Momo): tags?
+  
+  // Data is:
+  //
+  // U32 pixels[width*height]
+  //
+  // Karu_Atlas_Image sprites[sprite_count]
+  // Karu_Atlas_Font fonts[font_count]
+  //
+};
 
-#include "game_asset_types.h"
-#include "sui.h"
-#include "karu_atlas.h"
-#include "karu_pack.h"
+struct Karu_Asset_Group {
+  U32 first_asset_index;
+  U32 one_past_last_asset_index;
+};
 
-#endif //Sui_EXPORT_H
+struct Karu_Header {
+  U32 signature;
+  
+  U32 asset_count;
+  U32 group_count;
+  U32 tag_count;
+  
+  U32 offset_to_tags;
+  U32 offset_to_assets;
+  U32 offset_to_groups;
+};
+
+struct Karu_Image {
+  Rect2 uv;
+  U32 bitmap_asset_id;
+};
+
+struct Karu_Font_Glyph {
+  Rect2 uv;
+  U32 bitmap_asset_id;
+  U32 codepoint;
+};
+
+struct Karu_Font {
+  // TODO: Maybe add 'lowest codepoint'?
+  U32 one_past_highest_codepoint;
+  U32 glyph_count;
+  
+  // Data is: 
+  // 
+  // Karu_Font_Glyph glyphs[glyph_count]
+  // F32 horizontal_advances[glyph_count][glyph_count]
+  //
+};
+
+struct Karu_Bitmap {
+  U32 width, height;
+  
+  // Data is:
+  //
+  // U32 pixels[width*height]
+  //
+};
+
+struct Karu_Asset {
+  U32 type; // e.g. Asset_Tag_Type
+  
+  U32 offset_to_data;
+  
+  // Tag info
+  U32 first_tag_index;
+  U32 one_past_last_tag_index;
+  
+  union {
+    Karu_Atlas atlas;
+    Karu_Bitmap bitmap;
+    Karu_Font font;
+    Karu_Image image;
+  };
+};
+
+struct Karu_Tag {
+  U32 type; // e.g. Asset_Tag_Type
+  F32 value;
+};
+
+
+
+#pragma pack(pop)
+
+#endif // KARU_H

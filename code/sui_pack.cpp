@@ -1,7 +1,7 @@
 
-static Karu_Packer
-begin_sui_packer() {
-  Karu_Packer ret = {};
+static Sui_Packer
+begin_packer() {
+  Sui_Packer ret = {};
   
   ret.asset_count = 1; // reserve for null asset
   ret.tag_count = 1; // reserve to null tag
@@ -10,13 +10,13 @@ begin_sui_packer() {
 }
 
 static void
-add_tag(Karu_Packer* p, Asset_Tag_Type tag_type, F32 value) {
+add_tag(Sui_Packer* p, Asset_Tag_Type tag_type, F32 value) {
   U32 tag_index = p->tag_count++;
   
-  Sui_Asset* asset = p->assets + p->active_asset_index;
+  Karu_Asset* asset = p->assets + p->active_asset_index;
   asset->one_past_last_tag_index = p->tag_count;
   
-  Sui_Tag* tag = p->tags + tag_index;
+  Karu_Tag* tag = p->tags + tag_index;
   tag->type = tag_type;
   tag->value = value;
   
@@ -24,10 +24,8 @@ add_tag(Karu_Packer* p, Asset_Tag_Type tag_type, F32 value) {
 
 
 
-
-
 static void
-begin_group(Karu_Packer* p, Asset_Group_ID group_id) 
+begin_group(Sui_Packer* p, Asset_Group_ID group_id) 
 {
   p->active_group = p->groups + group_id;
   p->active_group->first_asset_index = p->asset_count;
@@ -35,31 +33,31 @@ begin_group(Karu_Packer* p, Asset_Group_ID group_id)
 }
 
 static void
-end_group(Karu_Packer* p) 
+end_group(Sui_Packer* p) 
 {
   p->active_group = nullptr;
 }
 
-struct _Karu_Packer_Added_Entry {
+struct _Sui_Packer_Added_Entry {
   U32 asset_index;
-  Karu_Source* source;
+  Sui_Source* source;
 };
 
-static _Karu_Packer_Added_Entry
-_add_asset(Karu_Packer* p, Karu_Source_Type type) {
+static _Sui_Packer_Added_Entry
+add_asset(Sui_Packer* p, Sui_Source_Type type) {
   assert(p->active_group);
   U32 asset_index = p->asset_count++;
   ++p->active_group->one_past_last_asset_index;
   p->active_asset_index = asset_index;
   
-  Sui_Asset* asset = p->assets + asset_index;
+  Karu_Asset* asset = p->assets + asset_index;
   asset->first_tag_index = p->tag_count;
   asset->one_past_last_tag_index = asset->first_tag_index;
   
-  Karu_Source* source = p->sources + asset_index;
+  Sui_Source* source = p->sources + asset_index;
   source->type = type;
   
-  _Karu_Packer_Added_Entry ret;
+  _Sui_Packer_Added_Entry ret;
   ret.source = source;
   ret.asset_index = asset_index;
   
@@ -67,12 +65,12 @@ _add_asset(Karu_Packer* p, Karu_Source_Type type) {
 }
 
 static U32
-add_font(Karu_Packer* p, 
+add_font(Sui_Packer* p, 
          U32 bitmap_asset_id, 
-         Karu_Atlas* atlas,
+         Sui_Atlas* atlas,
          U32 atlas_font_id) 
 {
-  auto aa = _add_asset(p, KARU_SOURCE_TYPE_ATLAS_FONT); 
+  auto aa = add_asset(p, SUI_SOURCE_TYPE_ATLAS_FONT); 
   aa.source->atlas_font.atlas = atlas;
   aa.source->atlas_font.atlas_font_id = atlas_font_id;
   aa.source->atlas_font.bitmap_asset_id = bitmap_asset_id;  
@@ -81,8 +79,8 @@ add_font(Karu_Packer* p,
 }
 
 static U32
-add_bitmap(Karu_Packer* p, Bitmap bitmap) {
-  auto aa = _add_asset(p, KARU_SOURCE_TYPE_BITMAP);
+add_bitmap(Sui_Packer* p, Bitmap bitmap) {
+  auto aa = add_asset(p, SUI_SOURCE_TYPE_BITMAP);
   aa.source->bitmap.width = bitmap.width;
   aa.source->bitmap.height = bitmap.height;
   aa.source->bitmap.pixels = bitmap.pixels;
@@ -92,11 +90,11 @@ add_bitmap(Karu_Packer* p, Bitmap bitmap) {
 
 
 static U32
-add_image(Karu_Packer* p, 
+add_image(Sui_Packer* p, 
           U32 bitmap_asset_id,
           Rect2 uv)
 {
-  auto aa = _add_asset(p, KARU_SOURCE_TYPE_IMAGE);
+  auto aa = add_asset(p, SUI_SOURCE_TYPE_IMAGE);
   aa.source->image.bitmap_asset_id = bitmap_asset_id;
   aa.source->image.uv = uv;
   
@@ -105,12 +103,12 @@ add_image(Karu_Packer* p,
 
 
 static U32
-add_image(Karu_Packer* p, 
+add_image(Sui_Packer* p, 
           U32 bitmap_asset_id,
-          Karu_Atlas* atlas,
+          Sui_Atlas* atlas,
           U32 atlas_image_id)
 { 
-  auto aa = _add_asset(p, KARU_SOURCE_TYPE_ATLAS_IMAGE);
+  auto aa = add_asset(p, SUI_SOURCE_TYPE_ATLAS_IMAGE);
   aa.source->atlas_image.bitmap_asset_id = bitmap_asset_id;
   aa.source->atlas_image.atlas_image_id = atlas_image_id;
   aa.source->atlas_image.atlas = atlas;
@@ -119,29 +117,28 @@ add_image(Karu_Packer* p,
   
 }
 static U32
-add_atlas(Karu_Packer* p, Karu_Atlas* atlas) {
-  auto aa = _add_asset(p, KARU_SOURCE_TYPE_ATLAS);
+add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
+  auto aa = add_asset(p, SUI_SOURCE_TYPE_ATLAS);
   aa.source->atlas.atlas = atlas;
   return aa.asset_index;
-  
 }
 
 
 static void
-write_sui(Karu_Packer* p, const char* filename, Arena* arena) {
+end_packer(Sui_Packer* p, const char* filename, Arena* arena) {
   FILE* file = fopen(filename, "wb");
   defer { fclose(file); };
   
-  U32 asset_tag_array_size = sizeof(Sui_Tag)*p->tag_count;
-  U32 asset_array_size = sizeof(Sui_Asset)*p->asset_count;
-  U32 group_array_size = sizeof(Sui_Asset_Group)*ASSET_GROUP_COUNT;
+  U32 asset_tag_array_size = sizeof(Karu_Tag)*p->tag_count;
+  U32 asset_array_size = sizeof(Karu_Asset)*p->asset_count;
+  U32 group_array_size = sizeof(Karu_Asset_Group)*ASSET_GROUP_COUNT;
   
-  Sui_Header header = {};
-  header.signature = SUI_SIGNATURE;
+  Karu_Header header = {};
+  header.signature = KARU_SIGNATURE;
   header.group_count = ASSET_GROUP_COUNT;
   header.asset_count = p->asset_count;
   header.tag_count = p->tag_count;
-  header.offset_to_assets = sizeof(Sui_Header);
+  header.offset_to_assets = sizeof(Karu_Header);
   header.offset_to_tags = header.offset_to_assets + asset_array_size;
   header.offset_to_groups = header.offset_to_tags + asset_tag_array_size;
   fwrite(&header, sizeof(header), 1, file);
@@ -152,43 +149,62 @@ write_sui(Karu_Packer* p, const char* filename, Arena* arena) {
   
   // Skip 0 for null asset
   for(U32 i = 1; i < header.asset_count; ++i) {
-    Sui_Asset* sui_asset = p->assets + i;
-    Karu_Source* source = p->sources + i;
+    Karu_Asset* karu_asset = p->assets + i;
+    Sui_Source* source = p->sources + i;
     
-    sui_asset->offset_to_data = ftell(file);
+    karu_asset->offset_to_data = ftell(file);
     switch(source->type) {
-      case KARU_SOURCE_TYPE_ATLAS: {
+      case SUI_SOURCE_TYPE_ATLAS: {
+        sui_log("Writing atlas! O_o\n");
+        karu_asset->type = ASSET_TYPE_ATLAS;
+        
+        Sui_Atlas* atlas = source->atlas.atlas;
+        Karu_Atlas* karu_atlas = &karu_asset->atlas;
+        
+        karu_atlas->width = atlas->bitmap.width;
+        karu_atlas->height = atlas->bitmap.height;
+        sui_log("\tAtlas Width: %d\n", karu_atlas->width);
+        sui_log("\tAtlas Heght: %d\n", karu_atlas->height);
+        
+        karu_atlas->sprite_count = atlas->sprite_count;
+        karu_atlas->font_count = atlas->font_count;
+        sui_log("\tSprites: %d\n", karu_atlas->sprite_count);
+        sui_log("\tFonts: %d\n", karu_atlas->font_count);
+        
+        U32 image_size = karu_atlas->width * karu_atlas->height * 4;
+        fwrite(atlas->bitmap.pixels, image_size, 1, file);
+        
+        // Write sprites
         
       } break;
-      case KARU_SOURCE_TYPE_BITMAP: {
-        karu_log("Writing bitmap from bitmap source\n");
-        sui_asset->type = ASSET_TYPE_BITMAP;
+      case SUI_SOURCE_TYPE_BITMAP: {
+        sui_log("Writing bitmap from bitmap source\n");
+        karu_asset->type = ASSET_TYPE_BITMAP;
         
-        Sui_Bitmap* sui_bitmap = &sui_asset->bitmap;
-        sui_bitmap->width = source->bitmap.width;
-        sui_bitmap->height = source->bitmap.height;
+        Karu_Bitmap* karu_bitmap = &karu_asset->bitmap;
+        karu_bitmap->width = source->bitmap.width;
+        karu_bitmap->height = source->bitmap.height;
         
-        U32 image_size = sui_bitmap->width * sui_bitmap->height * 4;
+        U32 image_size = karu_bitmap->width * karu_bitmap->height * 4;
         fwrite(source->bitmap.pixels, image_size, 1, file);
         
       } break;
-      case KARU_SOURCE_TYPE_IMAGE: {
-        karu_log("Writing image from image source\n");
-        sui_asset->type = ASSET_TYPE_IMAGE;
+      case SUI_SOURCE_TYPE_IMAGE: {
+        sui_log("Writing image from image source\n");
+        karu_asset->type = ASSET_TYPE_IMAGE;
         
-        Sui_Image* sui_image = &sui_asset->image;
-        sui_image->uv = source->image.uv;
-        sui_image->bitmap_asset_id = source->image.bitmap_asset_id;
+        Karu_Image* karu_image = &karu_asset->image;
+        karu_image->uv = source->image.uv;
+        karu_image->bitmap_asset_id = source->image.bitmap_asset_id;
       } break;
-      case KARU_SOURCE_TYPE_ATLAS_FONT: {
-        karu_log("Writing font from atlas font\n");
-        sui_asset->type = ASSET_TYPE_FONT;
+      case SUI_SOURCE_TYPE_ATLAS_FONT: {
+        sui_log("Writing font from atlas font\n");
+        karu_asset->type = ASSET_TYPE_FONT;
         
         // Figure out the highest codepoint
-        Karu_Atlas_Font_Source* src = &source->atlas_font;
-        Karu_Atlas* atlas = src->atlas;
-        Karu_Atlas_Entry* entry = atlas->entries + src->atlas_font_id;
-        Karu_Atlas_Font_Entry* atlas_font = &entry->font;
+        Sui_Atlas_Font_Source* src = &source->atlas_font;
+        Sui_Atlas* atlas = src->atlas;
+        Sui_Atlas_Font* atlas_font = atlas->fonts + src->atlas_font_id;
         TTF* loaded_ttf = atlas_font->loaded_ttf;
         
         U32 highest_codepoint = 0;
@@ -203,9 +219,9 @@ write_sui(Karu_Packer* p, const char* filename, Arena* arena) {
         }
         if (highest_codepoint == 0) 
           continue;
-        Sui_Font* sui_font = &sui_asset->font;
-        sui_font->one_past_highest_codepoint = highest_codepoint + 1;
-        sui_font->glyph_count = atlas_font->codepoint_count;
+        Karu_Font* karu_font = &karu_asset->font;
+        karu_font->one_past_highest_codepoint = highest_codepoint + 1;
+        karu_font->glyph_count = atlas_font->codepoint_count;
         
         // push glyphs
         for (U32 rect_index = 0;
@@ -215,9 +231,9 @@ write_sui(Karu_Packer* p, const char* filename, Arena* arena) {
           auto* glyph_rect = atlas_font->glyph_rects + rect_index;
           auto* glyph_rect_context = atlas_font->glyph_rect_contexts + rect_index;
           
-          Sui_Font_Glyph sui_glyph = {};
-          sui_glyph.bitmap_asset_id = src->bitmap_asset_id;
-          sui_glyph.codepoint = glyph_rect_context->font_glyph.codepoint;
+          Karu_Font_Glyph karu_glyph = {};
+          karu_glyph.bitmap_asset_id = src->bitmap_asset_id;
+          karu_glyph.codepoint = glyph_rect_context->font_glyph.codepoint;
           
           Rect2 uv = {};
           uv.min.x = (F32)glyph_rect->x / atlas->bitmap.width;
@@ -225,8 +241,8 @@ write_sui(Karu_Packer* p, const char* filename, Arena* arena) {
           uv.max.x = (F32)(glyph_rect->x+glyph_rect->w) / atlas->bitmap.width;
           uv.max.y = (F32)(glyph_rect->y+glyph_rect->h) / atlas->bitmap.height;
           
-          sui_glyph.uv = uv;
-          fwrite(&sui_glyph, sizeof(sui_glyph), 1, file);
+          karu_glyph.uv = uv;
+          fwrite(&karu_glyph, sizeof(karu_glyph), 1, file);
           
         }
         
@@ -254,14 +270,13 @@ write_sui(Karu_Packer* p, const char* filename, Arena* arena) {
         }
         
       } break;
-      case KARU_SOURCE_TYPE_ATLAS_IMAGE: {
-        karu_log("Writing source from atlas image\n");
-        sui_asset->type = ASSET_TYPE_IMAGE;
+      case SUI_SOURCE_TYPE_ATLAS_IMAGE: {
+        sui_log("Writing source from atlas image\n");
+        karu_asset->type = ASSET_TYPE_IMAGE;
         
-        Karu_Atlas_Image_Source* src = &source->atlas_image;
-        Karu_Atlas* atlas = source->atlas_font.atlas;
-        Karu_Atlas_Entry* entry = atlas->entries + src->atlas_image_id;
-        Karu_Atlas_Image_Entry* img = &entry->image;
+        Sui_Atlas_Image_Source* src = &source->atlas_image;
+        Sui_Atlas* atlas = source->atlas_font.atlas;
+        Sui_Atlas_Sprite* img = atlas->sprites + src->atlas_image_id;
         
         Rect2 uv = {};
         uv.min.x = (F32)img->rect->x / atlas->bitmap.width;
@@ -269,10 +284,10 @@ write_sui(Karu_Packer* p, const char* filename, Arena* arena) {
         uv.max.x = (F32)(img->rect->x+img->rect->w) / atlas->bitmap.width;
         uv.max.y = (F32)(img->rect->y+img->rect->h) / atlas->bitmap.height;
         
-        Sui_Image sui_image = {};
-        sui_image.uv = uv;
-        sui_image.bitmap_asset_id = src->bitmap_asset_id;
-        fwrite(&sui_image, sizeof(sui_image), 1, file);
+        Karu_Image karu_image = {};
+        karu_image.uv = uv;
+        karu_image.bitmap_asset_id = src->bitmap_asset_id;
+        fwrite(&karu_image, sizeof(karu_image), 1, file);
         
         
       } break;

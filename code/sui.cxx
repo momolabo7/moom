@@ -1,22 +1,26 @@
 // This is the asset builder tool
 //
-#include "karu.h"
+#include "sui.h"
 
 
 int main() {
-  Memory memory = karu_malloc(MB(10));
-  defer { karu_free(&memory); };
+  Memory memory = sui_malloc(MB(10));
+  defer { sui_free(&memory); };
   
   Arena _arena = create_arena(memory.data, memory.size);
   Arena* arena = &_arena;
   
-  TTF loaded_ttf = karu_load_font(asset_dir("nokiafc22.ttf"), arena);
+  TTF loaded_ttf = sui_load_font(asset_dir("nokiafc22.ttf"), arena);
   
-  Karu_Atlas atlas = begin_atlas_builder(1024, 1024);
-  U32 at_bullet_circle = push_image(&atlas, asset_dir("bullet_circle.png"));
-  U32 at_bullet_dot = push_image(&atlas, asset_dir("bullet_dot.png"));
-  U32 at_player_black = push_image(&atlas, asset_dir("player_black.png"));
-  U32 at_player_white = push_image(&atlas, asset_dir("player_white.png"));
+  sui_log("Building atlas...\n");
+  
+  Sui_Atlas atlas = begin_atlas_builder(1024, 1024);
+  
+  U32 at_bullet_circle = push_sprite(&atlas, asset_dir("bullet_circle.png"));
+  U32 at_bullet_dot = push_sprite(&atlas, asset_dir("bullet_dot.png"));
+  U32 at_player_black = push_sprite(&atlas, asset_dir("player_black.png"));
+  U32 at_player_white = push_sprite(&atlas, asset_dir("player_white.png"));
+  
   
   U32 interested_cps[] = { 
     32,65,66,67,68,69,
@@ -33,16 +37,20 @@ int main() {
                              128.f);
   
   end_atlas_builder(&atlas, arena);
+  sui_log("Finished atlas...\n");
+  
   
 #if 1
-  karu_log("Writing test png file...\n");
+  sui_log("Writing test png file...\n");
   Memory png_to_write_memory = write_bitmap_as_png(atlas.bitmap, arena);
   assert(is_ok(png_to_write_memory));
-  karu_write_file("test.png", png_to_write_memory);
+  sui_write_file("test.png", png_to_write_memory);
 #endif
   
-  Karu_Packer _sp = begin_sui_packer();
-  Karu_Packer* sp = &_sp;
+  Sui_Packer _sp = begin_packer();
+  
+  Sui_Packer* sp = &_sp;
+  
   
   
   
@@ -67,6 +75,5 @@ int main() {
     end_group(sp);
     
   }
-  write_sui(sp, "test.sui", arena);
-  
+  end_packer(sp, "test.sui", arena);
 }

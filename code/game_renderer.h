@@ -45,7 +45,7 @@ struct Texture_Payload {
   U32 transfer_memory_end;
   
   // For game to input
-  U8 texture_index;
+  U32 texture_index;
   U32 texture_width;
   U32 texture_height;
   void* texture_data;

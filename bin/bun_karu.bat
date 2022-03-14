@@ -16,10 +16,10 @@ SET CommonCompilerFlags=-DSLOW -DINTERNAL  %CommonCompilerFlags%
 
 pushd %BuildDir%
 
-cl %CommonCompilerFlags% %CodeDir%\karu.cxx
+cl %CommonCompilerFlags% %CodeDir%\sui.cxx
 
 if NOT %ERRORLEVEL% == 0 goto exit
 
-call karu.exe
+call sui.exe
 
 popd

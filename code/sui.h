@@ -1,111 +1,76 @@
-/* date = February 20th 2022 10:10 pm */
+/* date = January 20th 2022 10:14 am */
 
 #ifndef SUI_H
 #define SUI_H
 
-/////////////////////////////////////////////////////////////
-// Sui file related
-#pragma pack(push,1)
+#include <stdlib.h>
+#include <stdio.h>
 
-#define _SUI_CODE(a, b, c, d) (((U32)(a) << 0) | ((U32)(b) << 8) | ((U32)(c) << 16) | ((U32)(d) << 24))
-#define SUI_SIGNATURE _SUI_CODE('k', 'a', 'r', 'u')
+#define assert_callback(s) printf("[ass][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
 
-// Atlas
-struct Sui_Atlas { 
-  // bitmap info
-  U32 width, height;
+#include "momo.h"
+
+#define asset_dir(filename) "../assets/" ##filename
+#define sui_log(...) printf(__VA_ARGS__)
+
+// Utility files for ass
+Memory sui_malloc(UMI size) {
+  void* mem = malloc(size);
+  assert(mem);
+  return { mem, size };
+}
+
+void sui_free(Memory* mem) {
+  free(mem->data);
+  mem->data = nullptr;
+  mem->size = 0;
+}
+
+Memory sui_read_file(const char* filename, Arena* arena) {
+  FILE* file = fopen(filename, "rb");
   
-  // font_info
-  U32 one_past_highest_codepoint;
-  U32 glyph_count;
+  if (!file) {
+    return {};
+  }
+  defer { fclose(file); };
+  fseek(file, 0, SEEK_END);
+  UMI file_size = ftell(file);
+  fseek(file, 0, SEEK_SET);
   
-  // sprite info
-  U32 sprite_count;
+  void* file_memory = push_block(arena, file_size); 
+  assert(file_memory);
+  UMI read_amount = fread(file_memory, 1, file_size, file);
+  assert(read_amount == file_size);
   
-  // TODO(Momo): tags?
+  Memory ret;
+  ret.data = file_memory;
+  ret.size = file_size; 
   
-  // Data is:
-  //
-  // U32 pixels[width*height]
-  // U32 sprite_uvs[sprite_count]
-  // U32 codepoints[glyph_count]
-  // U32 horizontal_advances[glyph_count*glyph_count]
-  // U32 glyph_uvs[glyph_count]
-  //
-};
-
-struct Sui_Asset_Group {
-  U32 first_asset_index;
-  U32 one_past_last_asset_index;
-};
-
-struct Sui_Header {
-  U32 signature;
+  return ret;
   
-  U32 asset_count;
-  U32 group_count;
-  U32 tag_count;
+}
+
+void sui_write_file(const char* filename, Memory memory) {
+  FILE *file  = fopen(filename, "wb");
+  if (!file) return;
+  defer { fclose(file); };
   
-  U32 offset_to_tags;
-  U32 offset_to_assets;
-  U32 offset_to_groups;
-};
-
-struct Sui_Image {
-  Rect2 uv;
-  U32 bitmap_asset_id;
-};
-
-struct Sui_Font_Glyph {
-  Rect2 uv;
-  U32 bitmap_asset_id;
-  U32 codepoint;
-};
-
-struct Sui_Font {
-  // TODO: Maybe add 'lowest codepoint'?
-  U32 one_past_highest_codepoint;
-  U32 glyph_count;
+  fwrite(memory.data, 1, memory.size, file);
   
-  // Data is: 
-  // 
-  // Sui_Font_Glyph glyphs[glyph_count]
-  // F32 horizontal_advances[glyph_count][glyph_count]
-  //
-};
+}
 
-struct Sui_Bitmap {
-  U32 width, height;
+static TTF 
+sui_load_font(const char* filename, Arena* arena) {
+  Memory mem = sui_read_file(filename, arena);
+  assert(is_ok(mem));
   
-  // Data is:
-  //
-  // U32 pixels[width*height]
-  //
-};
+  TTF ret = read_ttf(mem);
+  return ret;
+}
 
-struct Sui_Asset {
-  U32 type; // e.g. Asset_Tag_Type
-  
-  U32 offset_to_data;
-  
-  // Tag info
-  U32 first_tag_index;
-  U32 one_past_last_tag_index;
-  
-  union {
-    Sui_Bitmap bitmap;
-    Sui_Font font;
-    Sui_Image image;
-  };
-};
+#include "game_asset_types.h"
+#include "karu.h"
+#include "sui_atlas.h"
+#include "sui_pack.h"
 
-struct Sui_Tag {
-  U32 type; // e.g. Asset_Tag_Type
-  F32 value;
-};
-
-
-
-#pragma pack(pop)
-
-#endif // SUI_H
+#endif //Karu_EXPORT_H

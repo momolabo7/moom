@@ -94,6 +94,32 @@ load_bitmap(Game_Assets* ga,
 }
 
 
+static void 
+load_atlas(Game_Assets* ga, 
+           Atlas_Asset_ID atlas_id) 
+{
+  Asset* asset = ga->assets + atlas_id.value;
+  assert(asset->type == ASSET_TYPE_ATLAS);
+  
+  U32 bitmap_size = asset->bitmap.width * asset->atlas.height * 4;
+  Texture_Payload* payload = begin_texture_transfer(ga->texture_queue, bitmap_size);
+  if (!payload) return;
+  
+  payload->texture_index = 0; // TODO(Momo): fix this!
+  payload->texture_width = asset->bitmap.width;
+  payload->texture_height = asset->bitmap.height;
+  
+  Load_Asset_Task* task = tasks + task_count++;  
+  task->texture_payload = payload;
+  task->asset = asset;
+  task->data_offset = asset->offset_to_data;
+  task->data_size = bitmap_size;
+  task->destination = payload->texture_data;
+  
+  
+  platform.add_task(load_asset_task, task); 
+}
+
 #if 0
 static void 
 load_font(Game_Assets* ga, 
@@ -113,7 +139,7 @@ load_font(Game_Assets* ga,
   platform.add_task(load_bitmap_work_callback, work); 
   
   
-  U32 glyph_count = sui_asset.font.glyph_count;
+  U32 glyph_count = karu_asset.font.glyph_count;
   U32 one_past_highest_codepoint = ;
   
   
@@ -125,27 +151,27 @@ load_font(Game_Assets* ga,
   auto* advances = push_array<F32>(&ga->arena, glyph_count*glyph_count);
   assert(advances);
   
-  U32 current_data_offset = sui_asset.offset_to_data;
+  U32 current_data_offset = karu_asset.offset_to_data;
   for(U16 glyph_index = 0; 
       glyph_index < glyph_count;
       ++glyph_index)
   {
     U32 glyph_data_offset = 
-      sui_asset.offset_to_data + 
-      sizeof(Sui_Font_Glyph)*glyph_index;
+      karu_asset.offset_to_data + 
+      sizeof(Karu_Font_Glyph)*glyph_index;
     
-    Sui_Font_Glyph sui_glyph = {};
+    Karu_Font_Glyph karu_glyph = {};
     
     platform.read_file(&file, 
-                       sizeof(Sui_Font_Glyph), 
+                       sizeof(Karu_Font_Glyph), 
                        glyph_data_offset,
-                       &sui_glyph); 
+                       &karu_glyph); 
     
     auto* glyph = glyphs + glyph_index;
-    glyph->uv = sui_glyph.uv;
-    glyph->bitmap_id = {sui_glyph.bitmap_asset_id};
+    glyph->uv = karu_glyph.uv;
+    glyph->bitmap_id = {karu_glyph.bitmap_asset_id};
     
-    codepoint_map[sui_glyph.codepoint] = glyph_index;
+    codepoint_map[karu_glyph.codepoint] = glyph_index;
     
   }
   
@@ -154,8 +180,8 @@ load_font(Game_Assets* ga,
   for(U32 gi1 = 0; gi1 < glyph_count; ++gi1) {
     for (U32 gi2 = 0; gi2 < glyph_count; ++gi2) {
       U32 advance_data_offset = 
-        sui_asset.offset_to_data + 
-        sizeof(Sui_Font_Glyph)*glyph_count+
+        karu_asset.offset_to_data + 
+        sizeof(Karu_Font_Glyph)*glyph_count+
         sizeof(F32)*advance_index;
       platform.read_file(&file,
                          sizeof(F32),
@@ -190,22 +216,22 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
   assert(!file.error);
   
   // Read header
-  Sui_Header sui_header;
-  platform.read_file(&file, sizeof(Sui_Header), 0, &sui_header);
+  Karu_Header karu_header;
+  platform.read_file(&file, sizeof(Karu_Header), 0, &karu_header);
   
   
-  if (sui_header.signature != SUI_SIGNATURE) {
+  if (karu_header.signature != KARU_SIGNATURE) {
     return false;
   }
   
   // Allocation
-  ga->assets = push_array<Asset>(&ga->arena, sui_header.asset_count);
+  ga->assets = push_array<Asset>(&ga->arena, karu_header.asset_count);
   assert(ga->assets);
-  ga->asset_count = sui_header.asset_count;
+  ga->asset_count = karu_header.asset_count;
   
-  ga->tags = push_array<Asset_Tag>(&ga->arena, sui_header.tag_count);
+  ga->tags = push_array<Asset_Tag>(&ga->arena, karu_header.tag_count);
   assert(ga->tags);
-  ga->tag_count = sui_header.tag_count;
+  ga->tag_count = karu_header.tag_count;
   
   // Fill data for tag
   for (U32 tag_index = 0;
@@ -214,32 +240,32 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
   {
     Asset_Tag* tag = ga->tags + tag_index;
     
-    Sui_Tag sui_tag;
-    UMI offset_to_sui_tag = sui_header.offset_to_tags + sizeof(Sui_Tag)*tag_index;
-    platform.read_file(&file, sizeof(Sui_Tag), offset_to_sui_tag, &sui_tag);
+    Karu_Tag karu_tag;
+    UMI offset_to_karu_tag = karu_header.offset_to_tags + sizeof(Karu_Tag)*tag_index;
+    platform.read_file(&file, sizeof(Karu_Tag), offset_to_karu_tag, &karu_tag);
     
-    tag->type = (Asset_Tag_Type)sui_tag.type;
-    tag->value = sui_tag.value;
+    tag->type = (Asset_Tag_Type)karu_tag.type;
+    tag->value = karu_tag.value;
   }
   
   // Fill data for asset groups and individual assets
   for(U32 group_index = 0; 
-      group_index < sui_header.group_count;
+      group_index < karu_header.group_count;
       ++group_index) 
   {
     Asset_Group* group = ga->groups + group_index;
     {
-      // Look for corresponding Sui_Asset_Group in file
-      Sui_Asset_Group sui_group;
-      UMI offset_to_sui_group = 
-        sui_header.offset_to_groups + sizeof(Sui_Asset_Group)*group_index;
+      // Look for corresponding Karu_Asset_Group in file
+      Karu_Asset_Group karu_group;
+      UMI offset_to_karu_group = 
+        karu_header.offset_to_groups + sizeof(Karu_Asset_Group)*group_index;
       
-      platform.read_file(&file, sizeof(Sui_Asset_Group), 
-                         offset_to_sui_group, 
-                         &sui_group);
+      platform.read_file(&file, sizeof(Karu_Asset_Group), 
+                         offset_to_karu_group, 
+                         &karu_group);
       
-      group->first_asset_index = sui_group.first_asset_index;
-      group->one_past_last_asset_index = sui_group.one_past_last_asset_index;
+      group->first_asset_index = karu_group.first_asset_index;
+      group->one_past_last_asset_index = karu_group.one_past_last_asset_index;
     }
     
     // Go through each asset in the group
@@ -249,14 +275,14 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
     {
       Asset* asset = ga->assets + asset_index;
       
-      // Look for corresponding Sui_Asset in file
-      Sui_Asset sui_asset;
-      UMI offset_to_sui_asset = 
-        sui_header.offset_to_assets + sizeof(Sui_Asset)*asset_index;
+      // Look for corresponding Karu_Asset in file
+      Karu_Asset karu_asset;
+      UMI offset_to_karu_asset = 
+        karu_header.offset_to_assets + sizeof(Karu_Asset)*asset_index;
       
-      platform.read_file(&file, sizeof(Sui_Asset), 
-                         offset_to_sui_asset, 
-                         &sui_asset);
+      platform.read_file(&file, sizeof(Karu_Asset), 
+                         offset_to_karu_asset, 
+                         &karu_asset);
       
       
       
@@ -264,26 +290,32 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
       // Process the assets
       // NOTE(Momo): For now, we are prefetching EVERYTHING.
       // Might want to not do that in the future?
-      asset->type = (Asset_Type)sui_asset.type;
-      asset->first_tag_index = sui_asset.first_tag_index;
-      asset->one_past_last_tag_index = sui_asset.one_past_last_tag_index;
-      asset->offset_to_data = sui_asset.offset_to_data;
+      asset->type = (Asset_Type)karu_asset.type;
+      asset->first_tag_index = karu_asset.first_tag_index;
+      asset->one_past_last_tag_index = karu_asset.one_past_last_tag_index;
+      asset->offset_to_data = karu_asset.offset_to_data;
       
       switch(asset->type) {
         case ASSET_TYPE_BITMAP: {
-          asset->bitmap.renderer_bitmap_id = ga->bitmap_counter++;
-          asset->bitmap.width = sui_asset.bitmap.width;
-          asset->bitmap.height = sui_asset.bitmap.height;
+          asset->bitmap.width = karu_asset.bitmap.width;
+          asset->bitmap.height = karu_asset.bitmap.height;
+        } break;
+        case ASSET_TYPE_ATLAS: {
+          asset->atlas.width = karu_asset.atlas.width;
+          asset->atlas.height = karu_asset.atlas.height;
+          asset->atlas.font_count = karu_asset.atlas.font_count;
+          asset->atlas.sprite_count = karu_asset.atlas.sprite_count;
+          
         } break;
         case ASSET_TYPE_IMAGE: {
-          asset->image.bitmap_id.value = sui_asset.image.bitmap_asset_id;
-          asset->image.uv = sui_asset.image.uv;
+          asset->image.bitmap_id.value = karu_asset.image.bitmap_asset_id;
+          asset->image.uv = karu_asset.image.uv;
         } break;
         case ASSET_TYPE_FONT: {
-          //asset->one_past_highest_codepoint = sui_asset.font.one_past_highest_codepoint;
+          //asset->one_past_highest_codepoint = karu_asset.font.one_past_highest_codepoint;
           //asset->glyph_count = sui.asset.font.glyph_count;
-          U32 glyph_count = sui_asset.font.glyph_count;
-          U32 one_past_highest_codepoint = sui_asset.font.one_past_highest_codepoint;
+          U32 glyph_count = karu_asset.font.glyph_count;
+          U32 one_past_highest_codepoint = karu_asset.font.one_past_highest_codepoint;
           
           
           auto* codepoint_map = push_array<U16>(&ga->arena, one_past_highest_codepoint);
@@ -294,27 +326,27 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
           auto* advances = push_array<F32>(&ga->arena, glyph_count*glyph_count);
           assert(advances);
           
-          U32 current_data_offset = sui_asset.offset_to_data;
+          U32 current_data_offset = karu_asset.offset_to_data;
           for(U16 glyph_index = 0; 
               glyph_index < glyph_count;
               ++glyph_index)
           {
             U32 glyph_data_offset = 
-              sui_asset.offset_to_data + 
-              sizeof(Sui_Font_Glyph)*glyph_index;
+              karu_asset.offset_to_data + 
+              sizeof(Karu_Font_Glyph)*glyph_index;
             
-            Sui_Font_Glyph sui_glyph = {};
+            Karu_Font_Glyph karu_glyph = {};
             
             platform.read_file(&file, 
-                               sizeof(Sui_Font_Glyph), 
+                               sizeof(Karu_Font_Glyph), 
                                glyph_data_offset,
-                               &sui_glyph); 
+                               &karu_glyph); 
             
             auto* glyph = glyphs + glyph_index;
-            glyph->uv = sui_glyph.uv;
-            glyph->bitmap_id = {sui_glyph.bitmap_asset_id};
+            glyph->uv = karu_glyph.uv;
+            glyph->bitmap_id = {karu_glyph.bitmap_asset_id};
             
-            codepoint_map[sui_glyph.codepoint] = glyph_index;
+            codepoint_map[karu_glyph.codepoint] = glyph_index;
             
           }
           
@@ -323,8 +355,8 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
           for(U32 gi1 = 0; gi1 < glyph_count; ++gi1) {
             for (U32 gi2 = 0; gi2 < glyph_count; ++gi2) {
               U32 advance_data_offset = 
-                sui_asset.offset_to_data + 
-                sizeof(Sui_Font_Glyph)*glyph_count+
+                karu_asset.offset_to_data + 
+                sizeof(Karu_Font_Glyph)*glyph_count+
                 sizeof(F32)*advance_index;
               platform.read_file(&file,
                                  sizeof(F32),
