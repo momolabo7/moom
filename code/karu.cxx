@@ -43,7 +43,13 @@ int main() {
   
   Karu_Packer _sp = begin_sui_packer();
   Karu_Packer* sp = &_sp;
+  
+  
+  
   {
+    begin_group(sp, ASSET_GROUP_TEST);
+    add_atlas(sp, &atlas);
+    end_group(sp);
     
     begin_group(sp, ASSET_GROUP_ATLASES);
     U32 bitmap_asset_id = add_bitmap(sp, atlas.bitmap);

@@ -3,14 +3,36 @@
 #ifndef SUI_H
 #define SUI_H
 
-
-
 /////////////////////////////////////////////////////////////
 // Sui file related
 #pragma pack(push,1)
 
 #define _SUI_CODE(a, b, c, d) (((U32)(a) << 0) | ((U32)(b) << 8) | ((U32)(c) << 16) | ((U32)(d) << 24))
 #define SUI_SIGNATURE _SUI_CODE('k', 'a', 'r', 'u')
+
+// Atlas
+struct Sui_Atlas { 
+  // bitmap info
+  U32 width, height;
+  
+  // font_info
+  U32 one_past_highest_codepoint;
+  U32 glyph_count;
+  
+  // sprite info
+  U32 sprite_count;
+  
+  // TODO(Momo): tags?
+  
+  // Data is:
+  //
+  // U32 pixels[width*height]
+  // U32 sprite_uvs[sprite_count]
+  // U32 codepoints[glyph_count]
+  // U32 horizontal_advances[glyph_count*glyph_count]
+  // U32 glyph_uvs[glyph_count]
+  //
+};
 
 struct Sui_Asset_Group {
   U32 first_asset_index;
@@ -28,6 +50,7 @@ struct Sui_Header {
   U32 offset_to_assets;
   U32 offset_to_groups;
 };
+
 struct Sui_Image {
   Rect2 uv;
   U32 bitmap_asset_id;
@@ -80,6 +103,7 @@ struct Sui_Tag {
   U32 type; // e.g. Asset_Tag_Type
   F32 value;
 };
+
 
 
 #pragma pack(pop)

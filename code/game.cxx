@@ -40,7 +40,10 @@ game_update(Game_Memory* memory,
     U16 glyph_id = font->codepoint_map[65];
     auto* glyph = font->glyphs + glyph_id;
     Bitmap_Asset_ID bitmap_id = glyph->bitmap_id;
+    
     load_bitmap(game_assets, bitmap_id);
+    
+    
     platform.complete_all_tasks();
     
   }

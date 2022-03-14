@@ -10,30 +10,34 @@ begin_sui_packer() {
 }
 
 static void
-add_tag(Karu_Packer* sp, Asset_Tag_Type tag_type, F32 value) {
-  U32 tag_index = sp->tag_count++;
+add_tag(Karu_Packer* p, Asset_Tag_Type tag_type, F32 value) {
+  U32 tag_index = p->tag_count++;
   
-  Sui_Asset* asset = sp->assets + sp->active_asset_index;
-  asset->one_past_last_tag_index = sp->tag_count;
+  Sui_Asset* asset = p->assets + p->active_asset_index;
+  asset->one_past_last_tag_index = p->tag_count;
   
-  Sui_Tag* tag = sp->tags + tag_index;
+  Sui_Tag* tag = p->tags + tag_index;
   tag->type = tag_type;
   tag->value = value;
   
 }
 
+
+
+
+
 static void
-begin_group(Karu_Packer* sp, Asset_Group_ID group_id) 
+begin_group(Karu_Packer* p, Asset_Group_ID group_id) 
 {
-  sp->active_group = sp->groups + group_id;
-  sp->active_group->first_asset_index = sp->asset_count;
-  sp->active_group->one_past_last_asset_index = sp->active_group->first_asset_index;
+  p->active_group = p->groups + group_id;
+  p->active_group->first_asset_index = p->asset_count;
+  p->active_group->one_past_last_asset_index = p->active_group->first_asset_index;
 }
 
 static void
-end_group(Karu_Packer* sp) 
+end_group(Karu_Packer* p) 
 {
-  sp->active_group = nullptr;
+  p->active_group = nullptr;
 }
 
 struct _Karu_Packer_Added_Entry {
@@ -42,17 +46,17 @@ struct _Karu_Packer_Added_Entry {
 };
 
 static _Karu_Packer_Added_Entry
-_add_asset(Karu_Packer* sp, Karu_Source_Type type) {
-  assert(sp->active_group);
-  U32 asset_index = sp->asset_count++;
-  ++sp->active_group->one_past_last_asset_index;
-  sp->active_asset_index = asset_index;
+_add_asset(Karu_Packer* p, Karu_Source_Type type) {
+  assert(p->active_group);
+  U32 asset_index = p->asset_count++;
+  ++p->active_group->one_past_last_asset_index;
+  p->active_asset_index = asset_index;
   
-  Sui_Asset* asset = sp->assets + asset_index;
-  asset->first_tag_index = sp->tag_count;
+  Sui_Asset* asset = p->assets + asset_index;
+  asset->first_tag_index = p->tag_count;
   asset->one_past_last_tag_index = asset->first_tag_index;
   
-  Karu_Source* source = sp->sources + asset_index;
+  Karu_Source* source = p->sources + asset_index;
   source->type = type;
   
   _Karu_Packer_Added_Entry ret;
@@ -63,12 +67,12 @@ _add_asset(Karu_Packer* sp, Karu_Source_Type type) {
 }
 
 static U32
-add_font(Karu_Packer* sp, 
+add_font(Karu_Packer* p, 
          U32 bitmap_asset_id, 
          Karu_Atlas* atlas,
          U32 atlas_font_id) 
 {
-  auto aa = _add_asset(sp, KARU_SOURCE_TYPE_ATLAS_FONT); 
+  auto aa = _add_asset(p, KARU_SOURCE_TYPE_ATLAS_FONT); 
   aa.source->atlas_font.atlas = atlas;
   aa.source->atlas_font.atlas_font_id = atlas_font_id;
   aa.source->atlas_font.bitmap_asset_id = bitmap_asset_id;  
@@ -77,8 +81,8 @@ add_font(Karu_Packer* sp,
 }
 
 static U32
-add_bitmap(Karu_Packer* sp, Bitmap bitmap) {
-  auto aa = _add_asset(sp, KARU_SOURCE_TYPE_BITMAP);
+add_bitmap(Karu_Packer* p, Bitmap bitmap) {
+  auto aa = _add_asset(p, KARU_SOURCE_TYPE_BITMAP);
   aa.source->bitmap.width = bitmap.width;
   aa.source->bitmap.height = bitmap.height;
   aa.source->bitmap.pixels = bitmap.pixels;
@@ -88,11 +92,11 @@ add_bitmap(Karu_Packer* sp, Bitmap bitmap) {
 
 
 static U32
-add_image(Karu_Packer* sp, 
+add_image(Karu_Packer* p, 
           U32 bitmap_asset_id,
           Rect2 uv)
 {
-  auto aa = _add_asset(sp, KARU_SOURCE_TYPE_IMAGE);
+  auto aa = _add_asset(p, KARU_SOURCE_TYPE_IMAGE);
   aa.source->image.bitmap_asset_id = bitmap_asset_id;
   aa.source->image.uv = uv;
   
@@ -101,12 +105,12 @@ add_image(Karu_Packer* sp,
 
 
 static U32
-add_image(Karu_Packer* sp, 
+add_image(Karu_Packer* p, 
           U32 bitmap_asset_id,
           Karu_Atlas* atlas,
           U32 atlas_image_id)
 { 
-  auto aa = _add_asset(sp, KARU_SOURCE_TYPE_ATLAS_IMAGE);
+  auto aa = _add_asset(p, KARU_SOURCE_TYPE_ATLAS_IMAGE);
   aa.source->atlas_image.bitmap_asset_id = bitmap_asset_id;
   aa.source->atlas_image.atlas_image_id = atlas_image_id;
   aa.source->atlas_image.atlas = atlas;
@@ -114,22 +118,29 @@ add_image(Karu_Packer* sp,
   return aa.asset_index;
   
 }
+static U32
+add_atlas(Karu_Packer* p, Karu_Atlas* atlas) {
+  auto aa = _add_asset(p, KARU_SOURCE_TYPE_ATLAS);
+  aa.source->atlas.atlas = atlas;
+  return aa.asset_index;
+  
+}
 
 
 static void
-write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
+write_sui(Karu_Packer* p, const char* filename, Arena* arena) {
   FILE* file = fopen(filename, "wb");
   defer { fclose(file); };
   
-  U32 asset_tag_array_size = sizeof(Sui_Tag)*sp->tag_count;
-  U32 asset_array_size = sizeof(Sui_Asset)*sp->asset_count;
+  U32 asset_tag_array_size = sizeof(Sui_Tag)*p->tag_count;
+  U32 asset_array_size = sizeof(Sui_Asset)*p->asset_count;
   U32 group_array_size = sizeof(Sui_Asset_Group)*ASSET_GROUP_COUNT;
   
   Sui_Header header = {};
   header.signature = SUI_SIGNATURE;
   header.group_count = ASSET_GROUP_COUNT;
-  header.asset_count = sp->asset_count;
-  header.tag_count = sp->tag_count;
+  header.asset_count = p->asset_count;
+  header.tag_count = p->tag_count;
   header.offset_to_assets = sizeof(Sui_Header);
   header.offset_to_tags = header.offset_to_assets + asset_array_size;
   header.offset_to_groups = header.offset_to_tags + asset_tag_array_size;
@@ -141,11 +152,14 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
   
   // Skip 0 for null asset
   for(U32 i = 1; i < header.asset_count; ++i) {
-    Sui_Asset* sui_asset = sp->assets + i;
-    Karu_Source* source = sp->sources + i;
+    Sui_Asset* sui_asset = p->assets + i;
+    Karu_Source* source = p->sources + i;
     
     sui_asset->offset_to_data = ftell(file);
     switch(source->type) {
+      case KARU_SOURCE_TYPE_ATLAS: {
+        
+      } break;
       case KARU_SOURCE_TYPE_BITMAP: {
         karu_log("Writing bitmap from bitmap source\n");
         sui_asset->type = ASSET_TYPE_BITMAP;
@@ -268,12 +282,12 @@ write_sui(Karu_Packer* sp, const char* filename, Arena* arena) {
   
   // Write metadata
   fseek(file, header.offset_to_assets, SEEK_SET);
-  fwrite(sp->assets, asset_array_size, 1, file); 
+  fwrite(p->assets, asset_array_size, 1, file); 
   
   fseek(file, header.offset_to_groups, SEEK_SET);
-  fwrite(sp->groups, group_array_size, 1, file); 
+  fwrite(p->groups, group_array_size, 1, file); 
   
   fseek(file, header.offset_to_tags, SEEK_SET);
-  fwrite(sp->tags, asset_tag_array_size, 1, file); 
+  fwrite(p->tags, asset_tag_array_size, 1, file); 
 }
 

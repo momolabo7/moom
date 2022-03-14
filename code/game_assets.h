@@ -4,25 +4,65 @@
 #include "game_asset_types.h"
 #include "sui.h"
 
-struct Bitmap_Asset_ID { U32 value; };
-struct Font_Asset_ID { U32 value; }; 
-struct Image_Asset_ID { U32 value; };
+// TODO(Momo): Atlas asset
+struct Atlas_Asset_ID { U32 value; };
+struct Atlas_Font_Glyph {
+  Rect2 uv;
+};
+struct Atlas_Font {
+  U32 one_past_highest_codepoint;
+  U16* codepoint_map;
+  
+  U32 glyph_count;
+  Font_Glyph_Asset* glyphs;
+  F32* horizontal_advances;
+};
+struct Atlas_Image{
+  Rect2 uv;
+}; 
+struct Atlas_Bitmap {
+  U32 renderer_bitmap_id;
+  U32 width;
+  U32 height;
+};
+struct Atlas_Asset {
+  Atlas_Bitmap bitmap;
+  
+  U32 images_count;
+  Atlas_Image* images;
+  
+  U32 font_count;
+  Atlas_Font* fonts;
+};
+static void load_atlas(Game_Assets* ga, Atlas_Asset_ID atlas_id);
+static void unload_atlas();
 
+
+
+
+
+
+
+
+struct Bitmap_Asset_ID { U32 value; };
 struct Bitmap_Asset {
   U32 renderer_bitmap_id;
   U32 width;
   U32 height;
 };
 
+struct Font_Asset_ID { U32 value; }; 
+struct Font_Glyph_Asset{
+  Rect2 uv;
+  Bitmap_Asset_ID bitmap_id;
+};
+
+struct Image_Asset_ID { U32 value; };
 struct Image_Asset {
   Rect2 uv;
   Bitmap_Asset_ID bitmap_id;
 };
 
-struct Font_Glyph_Asset{
-  Rect2 uv;
-  Bitmap_Asset_ID bitmap_id;
-};
 
 struct Font_Asset {
   U32 one_past_highest_codepoint;

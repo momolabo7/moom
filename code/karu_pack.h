@@ -8,6 +8,7 @@ enum Karu_Source_Type{
   KARU_SOURCE_TYPE_IMAGE,
   KARU_SOURCE_TYPE_ATLAS_IMAGE,
   KARU_SOURCE_TYPE_ATLAS_FONT,
+  KARU_SOURCE_TYPE_ATLAS,
 };
 
 struct Karu_Bitmap_Source {
@@ -33,9 +34,14 @@ struct Karu_Atlas_Font_Source {
   U32 bitmap_asset_id;
 };
 
+struct Karu_Atlas_Source {
+  Karu_Atlas* atlas;
+};
+
 struct Karu_Source {
   Karu_Source_Type type;
   union {
+    Karu_Atlas_Source atlas;
     Karu_Bitmap_Source bitmap;
     Karu_Image_Source image;
     Karu_Atlas_Font_Source atlas_font;

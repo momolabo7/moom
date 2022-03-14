@@ -11,6 +11,7 @@ enum Asset_Tag_Type {
 };
 
 enum Asset_Group_ID {
+  ASSET_GROUP_TEST,
   ASSET_GROUP_ATLASES,
   
   ASSET_GROUP_BULLET,
@@ -21,6 +22,7 @@ enum Asset_Group_ID {
 };
 
 enum Asset_Type {
+  ASSET_TYPE_ATLAS,
   ASSET_TYPE_BITMAP,
   ASSET_TYPE_IMAGE,
   ASSET_TYPE_FONT,

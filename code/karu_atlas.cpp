@@ -1,6 +1,3 @@
-
-
-
 static U32
 push_image(Karu_Atlas* ab, const char* filename) {
   assert(ab->entry_count < array_count(ab->entries));
