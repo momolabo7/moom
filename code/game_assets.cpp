@@ -214,6 +214,7 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
                          sizeof(Karu_Bitmap), 
                          karu_bitmap.offset_to_data, 
                          payload->texture_data);
+      complete_texture_transfer(payload);
       
       
       
