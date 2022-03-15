@@ -5,7 +5,6 @@ push_sprite(Sui_Atlas* ab, const char* filename) {
   
   Sui_Atlas_Sprite* sprite = ab->sprites + index;
   sprite->filename = filename;
-  
   return index;
 }
 

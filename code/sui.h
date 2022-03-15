@@ -11,7 +11,10 @@
 #include "momo.h"
 
 #define asset_dir(filename) "../assets/" ##filename
-#define sui_log(...) printf(__VA_ARGS__)
+
+static unsigned sui_log_spaces = 0;
+#define sui_log(...) { for(unsigned sui_log_spaces_index = 0; sui_log_spaces_index < sui_log_spaces; ++sui_log_spaces_index) { printf(" "); } printf(__VA_ARGS__); };
+#define sui_create_log_section_until_scope sui_log_spaces += 2; defer {sui_log_spaces -= 2;}
 
 // Utility files for ass
 Memory sui_malloc(UMI size) {
@@ -56,7 +59,6 @@ void sui_write_file(const char* filename, Memory memory) {
   defer { fclose(file); };
   
   fwrite(memory.data, 1, memory.size, file);
-  
 }
 
 static TTF 

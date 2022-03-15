@@ -26,17 +26,16 @@ add_sprite(Sui_Packer* p, U32 bitmap_id, Rect2 uv) {
 
 static void
 add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
-  // Generate the bitmap and link the sprites
+  
   U32 bitmap_id = add_bitmap(p, 
                              atlas->bitmap.width,
                              atlas->bitmap.height,
                              atlas->bitmap.pixels);
   
   for (U32 sprite_index = 0; 
-       sprite_index < p->sprite_count;
+       sprite_index < atlas->sprite_count;
        ++sprite_index) 
   {
-    
     Sui_Atlas_Sprite* sas = atlas->sprites + sprite_index;
     
     Rect2 uv = {};
@@ -64,6 +63,8 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
   FILE* file = fopen(filename, "wb");
   defer { fclose(file); };
   
+  sui_log("Writing to %s\n", filename);
+  
   // Packed in this order:
   // - Bitmap, Sprite, Font, Sound, Msgs
   
@@ -72,36 +73,43 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
   //header.font_count = p->font_count;
   header.sprite_count = p->sprite_count;
   header.bitmap_count = p->bitmap_count;
-  fwrite(&header, sizeof(header), 1, file);
   
+  fseek(file, sizeof(Karu_Header), SEEK_CUR);
   
-  //fseek(file, offset_to_asset_data, SEEK_CUR);
-  
-  
+  header.offset_to_bitmaps = ftell(file);
   for (U32 bitmap_index = 0;
        bitmap_index < p->bitmap_count;
        ++bitmap_index) 
   {
-    Packer_Bitmap* pbmp = p->bitmaps + bitmap_index;
+    sui_create_log_section_until_scope;
+    sui_log("Writing bitmap %d\n", bitmap_index);
+    Packer_Bitmap* pb = p->bitmaps + bitmap_index;
+    Karu_Bitmap kb = {};
+    kb.width = pb->width;
+    kb.height = pb->height;
+    fwrite(&kb, sizeof(Karu_Bitmap), 1, file);
     
-    sui_log("Writing bitmap...\n");
-    Karu_Bitmap kbmp = {};
-    kbmp.width = pbmp->width;
-    kbmp.height = pbmp->height;
-    fwrite(&kbmp, sizeof(Karu_Bitmap), 1, file);
-    
-    U32 image_size = kbmp.width * kbmp.height * 4;
-    fwrite(pbmp->pixels, image_size, 1, file);
-    
+    U32 image_size = kb.width * kb.height * 4;
+    fwrite(pb->pixels, image_size, 1, file);
   }
   
-  
+  header.offset_to_sprites = ftell(file);
   for (U32 sprite_index = 0;
        sprite_index < p->sprite_count;
        ++sprite_index) 
   {
+    sui_create_log_section_until_scope;
+    sui_log("Writing sprite %d\n", sprite_index);
+    Packer_Sprite* ps = p->sprites + sprite_index;
+    Karu_Sprite ks = {};
+    ks.bitmap_id = ps->bitmap_id;
+    ks.uv = ps->uv;
+    fwrite(&ks, sizeof(Karu_Sprite), 1, file);
   }
   
+  // Write the header
+  fseek(file, 0, SEEK_SET);
+  fwrite(&header, sizeof(header), 1, file);
   
   
   

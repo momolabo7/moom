@@ -26,15 +26,14 @@ struct Karu_Header {
   U32 offset_to_fonts;
 };
 
-struct Karu_Image {
-  
+struct Karu_Sprite {
   Rect2 uv;
-  U32 bitmap_asset_id;
+  U32 bitmap_id;
 };
 
 struct Karu_Font_Glyph {
   Rect2 uv;
-  U32 bitmap_asset_id;
+  U32 bitmap_id;
   U32 codepoint;
 };
 

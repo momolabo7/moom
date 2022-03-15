@@ -32,21 +32,6 @@ game_update(Game_Memory* memory,
     sandbox->tmp_increase = true;
     sandbox->tmp_rot = 0.f;
     
-#if 0
-    // Test pre-fetching bitmap
-    Font_Asset_ID font_id = get_first_font(game_assets, ASSET_GROUP_FONTS);
-    Font_Asset* font = get_font(game_assets, font_id);
-    U16 glyph_id = font->codepoint_map[65];
-    auto* glyph = font->glyphs + glyph_id;
-    Bitmap_Asset_ID bitmap_id = glyph->bitmap_id;
-    load_bitmap(game_assets, bitmap_id);
-#endif
-    Game_Assets* game_assets = &memory->state->game_assets;
-    Atlas_Asset_ID atlas_id = get_first_atlas(game_assets, ASSET_GROUP_TEST);
-    
-    load_atlas(game_assets, atlas_id);
-    platform.complete_all_tasks();
-    
   }
   Sandbox_Mode* sandbox = &memory->state->sandbox_mode;
   
@@ -93,44 +78,6 @@ game_update(Game_Memory* memory,
     M44 s = create_m44_scale(600.f, 600.f, 10.f);
     M44 r = create_m44_rotation_z(sandbox->tmp_rot += dt);
     M44 t = create_m44_translation(800.f, 450.f, 300.f);
-    
-#if 0    
-    {
-      Game_Assets* game_assets = &memory->state->game_assets;
-      Font_Asset_ID font_id = get_first_font(game_assets, ASSET_GROUP_FONTS);
-      Font_Asset* font = get_font(game_assets, font_id);
-      
-      U16 glyph_id = font->codepoint_map[68];
-      auto* glyph = font->glyphs + glyph_id;
-      Bitmap_Asset_ID bitmap_id = glyph->bitmap_id;
-      
-      Bitmap_Asset* bitmap = get_bitmap(game_assets, bitmap_id);
-      push_subsprite(render_commands, 
-                     colors, t*r*s, 
-                     bitmap->renderer_bitmap_id,
-                     glyph->uv);
-    }
-    
-#else
-    {
-      Game_Assets* game_assets = &memory->state->game_assets;
-      Atlas_Asset_ID atlas_id = get_first_atlas(game_assets, ASSET_GROUP_TEST);
-      Atlas_Asset* atlas = get_atlas(game_assets, atlas_id);
-      
-      // lousy way to get a sprite
-      Atlas_Sprite* sprite = atlas->sprites;
-      
-      
-      push_subsprite(render_commands,
-                     colors, t*r*s,
-                     atlas->renderer_bitmap_id,
-                     sprite->uv);
-      
-      
-      
-      
-    }
-#endif
   }
   
   return true;
