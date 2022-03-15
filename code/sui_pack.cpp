@@ -12,6 +12,8 @@ add_bitmap(Sui_Packer* p, U32 w, U32 h, U32* pixels) {
   bitmap->width = w;
   bitmap->height = h;
   bitmap->pixels = pixels;
+  
+  return p->bitmap_count++;
 }
 
 static U32 
@@ -19,15 +21,40 @@ add_sprite(Sui_Packer* p, U32 bitmap_id, Rect2 uv) {
   Packer_Sprite* sprite = p->sprites + p->sprite_count;
   sprite->bitmap_id = bitmap_id;
   sprite->uv = uv;
+  return p->sprite_count++;
 }
 
 static void
 add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
   // Generate the bitmap and link the sprites
   U32 bitmap_id = add_bitmap(p, 
-                             atlas->bitmap.width;
-                             atlas->bitmap.height;
+                             atlas->bitmap.width,
+                             atlas->bitmap.height,
                              atlas->bitmap.pixels);
+  
+  for (U32 sprite_index = 0; 
+       sprite_index < p->sprite_count;
+       ++sprite_index) 
+  {
+    
+    Sui_Atlas_Sprite* sas = atlas->sprites + sprite_index;
+    
+    Rect2 uv = {};
+    uv.min.x = (F32)sas->rect->x / atlas->bitmap.width;
+    uv.min.y = (F32)sas->rect->y / atlas->bitmap.height;
+    uv.max.x = (F32)(sas->rect->x+sas->rect->w) / atlas->bitmap.width;
+    uv.max.y = (F32)(sas->rect->y+sas->rect->h) / atlas->bitmap.height;
+    
+    add_sprite(p, bitmap_id, uv);
+  }
+  
+  for (U32 font_index = 0; 
+       font_index < atlas->font_count;
+       ++font_index) 
+  {
+    
+  }
+  
 }
 
 
@@ -37,27 +64,49 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
   FILE* file = fopen(filename, "wb");
   defer { fclose(file); };
   
-#if 0  
-  U32 asset_tag_array_size = sizeof(Karu_Tag)*p->tag_count;
-  U32 asset_array_size = sizeof(Karu_Asset)*p->asset_count;
-  U32 group_array_size = sizeof(Karu_Asset_Group)*ASSET_GROUP_COUNT;
-#endif
+  // Packed in this order:
+  // - Bitmap, Sprite, Font, Sound, Msgs
   
   Karu_Header header = {};
   header.signature = KARU_SIGNATURE;
-  header.group_count = ASSET_GROUP_COUNT;
-  header.asset_count = p->asset_count;
-  header.tag_count = p->tag_count;
-  header.offset_to_assets = sizeof(Karu_Header);
-  header.offset_to_tags = header.offset_to_assets + asset_array_size;
-  header.offset_to_groups = header.offset_to_tags + asset_tag_array_size;
+  //header.font_count = p->font_count;
+  header.sprite_count = p->sprite_count;
+  header.bitmap_count = p->bitmap_count;
   fwrite(&header, sizeof(header), 1, file);
   
-  U32 offset_to_asset_data = asset_tag_array_size + asset_array_size + group_array_size;
   
-  fseek(file, offset_to_asset_data, SEEK_CUR);
+  //fseek(file, offset_to_asset_data, SEEK_CUR);
   
-  // Skip 0 for null asset
+  
+  for (U32 bitmap_index = 0;
+       bitmap_index < p->bitmap_count;
+       ++bitmap_index) 
+  {
+    Packer_Bitmap* pbmp = p->bitmaps + bitmap_index;
+    
+    sui_log("Writing bitmap...\n");
+    Karu_Bitmap kbmp = {};
+    kbmp.width = pbmp->width;
+    kbmp.height = pbmp->height;
+    fwrite(&kbmp, sizeof(Karu_Bitmap), 1, file);
+    
+    U32 image_size = kbmp.width * kbmp.height * 4;
+    fwrite(pbmp->pixels, image_size, 1, file);
+    
+  }
+  
+  
+  for (U32 sprite_index = 0;
+       sprite_index < p->sprite_count;
+       ++sprite_index) 
+  {
+  }
+  
+  
+  
+  
+#if 0  
+  
   for(U32 i = 1; i < header.asset_count; ++i) {
     Karu_Asset* karu_asset = p->assets + i;
     Sui_Source* source = p->sources + i;
@@ -229,5 +278,6 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
   
   fseek(file, header.offset_to_tags, SEEK_SET);
   fwrite(p->tags, asset_tag_array_size, 1, file); 
+#endif
 }
 
