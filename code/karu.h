@@ -58,13 +58,13 @@ struct Karu_Asset_Group {
 struct Karu_Header {
   U32 signature;
   
-  U32 asset_count;
-  U32 group_count;
-  U32 tag_count;
+  U32 sprite_count;
+  U32 bitmap_count;
+  U32 font_count;
   
-  U32 offset_to_tags;
-  U32 offset_to_assets;
-  U32 offset_to_groups;
+  U32 offset_to_sprites;
+  U32 offset_to_bitmaps;
+  U32 offset_to_fonts;
 };
 
 struct Karu_Image {

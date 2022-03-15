@@ -1,136 +1,47 @@
 
+
 static Sui_Packer
-begin_packer() {
+sui_begin_packing() {
   Sui_Packer ret = {};
-  
-  ret.asset_count = 1; // reserve for null asset
-  ret.tag_count = 1; // reserve to null tag
-  
-  return ret;
-}
-
-static void
-add_tag(Sui_Packer* p, Asset_Tag_Type tag_type, F32 value) {
-  U32 tag_index = p->tag_count++;
-  
-  Karu_Asset* asset = p->assets + p->active_asset_index;
-  asset->one_past_last_tag_index = p->tag_count;
-  
-  Karu_Tag* tag = p->tags + tag_index;
-  tag->type = tag_type;
-  tag->value = value;
-}
-
-
-
-static void
-begin_group(Sui_Packer* p, Asset_Group_ID group_id) 
-{
-  p->active_group = p->groups + group_id;
-  p->active_group->first_asset_index = p->asset_count;
-  p->active_group->one_past_last_asset_index = p->active_group->first_asset_index;
-}
-
-static void
-end_group(Sui_Packer* p) 
-{
-  p->active_group = nullptr;
-}
-
-struct _Sui_Packer_Added_Entry {
-  U32 asset_index;
-  Sui_Source* source;
-};
-
-static _Sui_Packer_Added_Entry
-add_asset(Sui_Packer* p, Sui_Source_Type type) {
-  assert(p->active_group);
-  U32 asset_index = p->asset_count++;
-  ++p->active_group->one_past_last_asset_index;
-  p->active_asset_index = asset_index;
-  
-  Karu_Asset* asset = p->assets + asset_index;
-  asset->first_tag_index = p->tag_count;
-  asset->one_past_last_tag_index = asset->first_tag_index;
-  
-  Sui_Source* source = p->sources + asset_index;
-  source->type = type;
-  
-  _Sui_Packer_Added_Entry ret;
-  ret.source = source;
-  ret.asset_index = asset_index;
-  
   return ret;
 }
 
 static U32
-add_font(Sui_Packer* p, 
-         U32 bitmap_asset_id, 
-         Sui_Atlas* atlas,
-         U32 atlas_font_id) 
-{
-  auto aa = add_asset(p, SUI_SOURCE_TYPE_ATLAS_FONT); 
-  aa.source->atlas_font.atlas = atlas;
-  aa.source->atlas_font.atlas_font_id = atlas_font_id;
-  aa.source->atlas_font.bitmap_asset_id = bitmap_asset_id;  
-  
-  return aa.asset_index;
+add_bitmap(Sui_Packer* p, U32 w, U32 h, U32* pixels) {
+  Packer_Bitmap* bitmap = p->bitmaps + p->bitmap_count;
+  bitmap->width = w;
+  bitmap->height = h;
+  bitmap->pixels = pixels;
 }
 
-static U32
-add_bitmap(Sui_Packer* p, Bitmap bitmap) {
-  auto aa = add_asset(p, SUI_SOURCE_TYPE_BITMAP);
-  aa.source->bitmap.width = bitmap.width;
-  aa.source->bitmap.height = bitmap.height;
-  aa.source->bitmap.pixels = bitmap.pixels;
-  
-  return aa.asset_index;
+static U32 
+add_sprite(Sui_Packer* p, U32 bitmap_id, Rect2 uv) {
+  Packer_Sprite* sprite = p->sprites + p->sprite_count;
+  sprite->bitmap_id = bitmap_id;
+  sprite->uv = uv;
 }
 
-
-static U32
-add_image(Sui_Packer* p, 
-          U32 bitmap_asset_id,
-          Rect2 uv)
-{
-  auto aa = add_asset(p, SUI_SOURCE_TYPE_IMAGE);
-  aa.source->image.bitmap_asset_id = bitmap_asset_id;
-  aa.source->image.uv = uv;
-  
-  return aa.asset_index;
-}
-
-
-static U32
-add_image(Sui_Packer* p, 
-          U32 bitmap_asset_id,
-          Sui_Atlas* atlas,
-          U32 atlas_image_id)
-{ 
-  auto aa = add_asset(p, SUI_SOURCE_TYPE_ATLAS_IMAGE);
-  aa.source->atlas_image.bitmap_asset_id = bitmap_asset_id;
-  aa.source->atlas_image.atlas_image_id = atlas_image_id;
-  aa.source->atlas_image.atlas = atlas;
-  
-  return aa.asset_index;
-  
-}
-static U32
+static void
 add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
-  auto aa = add_asset(p, SUI_SOURCE_TYPE_ATLAS);
-  aa.source->atlas.atlas = atlas;
-  return aa.asset_index;
+  // Generate the bitmap and link the sprites
+  U32 bitmap_id = add_bitmap(p, 
+                             atlas->bitmap.width;
+                             atlas->bitmap.height;
+                             atlas->bitmap.pixels);
 }
 
 
+
 static void
-end_packer(Sui_Packer* p, const char* filename, Arena* arena) {
+sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
   FILE* file = fopen(filename, "wb");
   defer { fclose(file); };
   
+#if 0  
   U32 asset_tag_array_size = sizeof(Karu_Tag)*p->tag_count;
   U32 asset_array_size = sizeof(Karu_Asset)*p->asset_count;
   U32 group_array_size = sizeof(Karu_Asset_Group)*ASSET_GROUP_COUNT;
+#endif
   
   Karu_Header header = {};
   header.signature = KARU_SIGNATURE;
