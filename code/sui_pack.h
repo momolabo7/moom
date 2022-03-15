@@ -4,7 +4,8 @@
 #define SUI_PACK_H
 
 
-
+struct Packer_Font {
+};
 
 struct Packer_Bitmap {
   U32 width;
@@ -20,14 +21,15 @@ struct Packer_Sprite {
 
 
 struct Sui_Packer {
-  Packer_Bitmap bitmaps[1024];
   U32 bitmap_count;
+  Packer_Bitmap bitmaps[128];
   
-  Packer_Sprite sprites[1024];
   U32 sprite_count;
+  Packer_Sprite sprites[256];
   
+  U32 font_count;
+  Packer_Sprite fonts[256];
   
-  //  U32 font_count;
   
 };
 

@@ -52,6 +52,7 @@ struct Karu_Font {
 };
 
 struct Karu_Bitmap {
+  U32 offset_to_data;
   U32 width, height;
   
   // Data is:

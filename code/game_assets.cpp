@@ -173,15 +173,16 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
   Arena* arena = &ga->arena;
   
   // Read in file
-  Platform_File file = 
+  Platform_File file_ = 
     platform.open_file("test.sui",
                        PLATFORM_FILE_ACCESS_READ, 
                        PLATFORM_FILE_PATH_EXE);
-  assert(!file.error);
+  Platform_File* file = &file_;
+  assert(!file->error);
   
   // Read header
   Karu_Header karu_header;
-  platform.read_file(&file, sizeof(Karu_Header), 0, &karu_header);
+  platform.read_file(file, sizeof(Karu_Header), 0, &karu_header);
   
   if (karu_header.signature != KARU_SIGNATURE) {
     return false;
@@ -199,9 +200,23 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
         bitmap_index < ga->bitmap_count; 
         ++bitmap_index) 
     {
+      Karu_Bitmap karu_bitmap = {};
+      U32 offset = karu_header.offset_to_bitmaps + sizeof(Karu_Bitmap)*bitmap_index;
+      platform.read_file(file, sizeof(Karu_Bitmap), offset, &karu_bitmap);
       
-      Bitmap_Asset* bm = ga->bitmaps + bitmap_index;
-      bm->width = 
+      U32 bitmap_size = karu_bitmap.width*karu_bitmap.height*4;
+      Texture_Payload* payload = begin_texture_transfer(texture_queue, bitmap_size);
+      if (!payload) return false;
+      payload->texture_index = 0; // TODO(Momo): 
+      payload->texture_width = karu_bitmap.width;
+      payload->texture_height = karu_bitmap.height;
+      platform.read_file(file, 
+                         sizeof(Karu_Bitmap), 
+                         karu_bitmap.offset_to_data, 
+                         payload->texture_data);
+      
+      
+      
     }
   }   
   

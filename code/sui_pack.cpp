@@ -68,13 +68,18 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
   // Packed in this order:
   // - Bitmap, Sprite, Font, Sound, Msgs
   
+  
   Karu_Header header = {};
   header.signature = KARU_SIGNATURE;
-  //header.font_count = p->font_count;
+  header.font_count = p->font_count;
   header.sprite_count = p->sprite_count;
   header.bitmap_count = p->bitmap_count;
+  header.offset_to_bitmaps = sizeof(Karu_Header);
+  header.offset_to_sprites = header.offset_to_bitmaps + sizeof(Karu_Bitmap)*p->bitmap_count;
+  header.offset_to_fonts = header.offset_to_sprites + sizeof(Karu_Sprite)*p->sprite_count;
+  fwrite(&header, sizeof(header), 1, file);
   
-  fseek(file, sizeof(Karu_Header), SEEK_CUR);
+  U32 offset_to_data = header.offset_to_fonts + sizeof(Karu_Font)*p->font_count;
   
   header.offset_to_bitmaps = ftell(file);
   for (U32 bitmap_index = 0;
@@ -87,10 +92,17 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
     Karu_Bitmap kb = {};
     kb.width = pb->width;
     kb.height = pb->height;
+    kb.offset_to_data = offset_to_data;
     fwrite(&kb, sizeof(Karu_Bitmap), 1, file);
     
+    
+    U32 current_pos = ftell(file);
     U32 image_size = kb.width * kb.height * 4;
+    fseek(file, kb.offset_to_data, SEEK_SET);
     fwrite(pb->pixels, image_size, 1, file);
+    fseek(file, current_pos, SEEK_SET);
+    
+    offset_to_data += image_size;
   }
   
   header.offset_to_sprites = ftell(file);
