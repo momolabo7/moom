@@ -15,9 +15,6 @@ is_ok(Image_Asset_ID id)  {
 
 
 // DELETE OR REFACTOR ME ONCE DONE
-
-
-
 struct Load_Asset_Task {
   Asset* asset;
   
@@ -25,12 +22,8 @@ struct Load_Asset_Task {
   U32 data_size;
   void* destination;
   
-  // For bitmaps/atlas
+  // For bitmaps
   Texture_Payload* texture_payload;
-  
-  // For atlas
-  
-  
 };
 Load_Asset_Task tasks[128];
 U32 task_count = 0;
