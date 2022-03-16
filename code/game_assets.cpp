@@ -200,21 +200,26 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
         bitmap_index < ga->bitmap_count; 
         ++bitmap_index) 
     {
-      Karu_Bitmap karu_bitmap = {};
+      Karu_Bitmap kb = {};
       U32 offset = karu_header.offset_to_bitmaps + sizeof(Karu_Bitmap)*bitmap_index;
-      platform.read_file(file, sizeof(Karu_Bitmap), offset, &karu_bitmap);
+      platform.read_file(file, sizeof(Karu_Bitmap), offset, &kb);
       
-      U32 bitmap_size = karu_bitmap.width*karu_bitmap.height*4;
+      U32 bitmap_size = kb.width*kb.height*4;
       Texture_Payload* payload = begin_texture_transfer(texture_queue, bitmap_size);
       if (!payload) return false;
       payload->texture_index = 0; // TODO(Momo): 
-      payload->texture_width = karu_bitmap.width;
-      payload->texture_height = karu_bitmap.height;
+      payload->texture_width = kb.width;
+      payload->texture_height = kb.height;
       platform.read_file(file, 
-                         sizeof(Karu_Bitmap), 
-                         karu_bitmap.offset_to_data, 
+                       	bitmap_size, 
+                         kb.offset_to_data, 
                          payload->texture_data);
       complete_texture_transfer(payload);
+      
+      Bitmap_Asset* ba = ga->bitmaps + bitmap_index;
+      ba->renderer_bitmap_id = 0; // TODO(Momo): 
+      ba->width = kb.width;
+      ba->height = kb.height;
       
       
       
@@ -229,6 +234,14 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
         sprite_index < ga->sprite_count; 
         ++sprite_index) 
     {
+      Karu_Sprite ks = {};
+      U32 offset = karu_header.offset_to_sprites + sizeof(Karu_Sprite)*sprite_index;
+      platform.read_file(file, sizeof(Karu_Sprite), offset, &ks);
+      
+      Sprite_Asset* sa = ga->sprites + sprite_index;
+      sa->bitmap_id = {ks.bitmap_id};
+      sa->uv = ks.uv;
+      
     }
   }   
   
@@ -240,7 +253,12 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
         font_index < ga->font_count; 
         ++font_index) 
     {
+      Karu_Font karu_font = {};
+      U32 offset = karu_header.offset_to_fonts + sizeof(Karu_Font)*font_index;
+      platform.read_file(file, sizeof(Karu_Font), offset, &karu_font);
+      // TODO(Momo): Fonts
     }
+    
   }   
   
   

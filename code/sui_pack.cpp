@@ -81,7 +81,6 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
   
   U32 offset_to_data = header.offset_to_fonts + sizeof(Karu_Font)*p->font_count;
   
-  header.offset_to_bitmaps = ftell(file);
   for (U32 bitmap_index = 0;
        bitmap_index < p->bitmap_count;
        ++bitmap_index) 
@@ -105,7 +104,6 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
     offset_to_data += image_size;
   }
   
-  header.offset_to_sprites = ftell(file);
   for (U32 sprite_index = 0;
        sprite_index < p->sprite_count;
        ++sprite_index) 
