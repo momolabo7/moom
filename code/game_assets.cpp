@@ -253,10 +253,11 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
         font_index < ga->font_count; 
         ++font_index) 
     {
-      Karu_Font karu_font = {};
+      Karu_Font kf = {};
       U32 offset = karu_header.offset_to_fonts + sizeof(Karu_Font)*font_index;
-      platform.read_file(file, sizeof(Karu_Font), offset, &karu_font);
-      // TODO(Momo): Fonts
+      platform.read_file(file, sizeof(Karu_Font), offset, &kf);
+      
+      Font_Asset font_asset = {};
     }
     
   }   

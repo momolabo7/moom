@@ -41,6 +41,7 @@ struct Karu_Font {
   U32 offset_to_data;
   
   // TODO: Maybe add 'lowest codepoint'?
+  U32 bitmap_id;
   U32 one_past_highest_codepoint;
   U32 glyph_count;
   

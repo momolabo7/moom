@@ -24,6 +24,15 @@ add_sprite(Sui_Packer* p, U32 bitmap_id, Rect2 uv) {
   return p->sprite_count++;
 }
 
+static U32 
+add_font(Sui_Packer* p, 
+         U32 one_past_highest_code_point) { 
+  
+  Packer_Font* font = p->fonts + p->font_count;
+  
+}
+
+
 static void
 add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
   
@@ -51,7 +60,10 @@ add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
        font_index < atlas->font_count;
        ++font_index) 
   {
+    Sui_Atlas_Font* saf = atlas->fonts + font_index;
     
+    
+    //      add_font(p, bitmap_id, 
   }
   
 }
@@ -115,6 +127,19 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
     ks.bitmap_id = ps->bitmap_id;
     ks.uv = ps->uv;
     fwrite(&ks, sizeof(Karu_Sprite), 1, file);
+  }
+  
+  for (U32 font_index = 0;
+       font_index < p->font_count;
+       ++font_index) 
+  {
+    sui_create_log_section_until_scope;
+    sui_log("Writing font %d\n", font_index);
+    Packer_Font* pf = p->fonts + font_index;
+    Karu_Font kf = {};
+    
+    kf.bitmap_id = pf->bitmap_id;
+    fwrite(&kf, sizeof(Karu_Font), 1, file);
   }
   
   // Write the header

@@ -3,8 +3,16 @@
 #ifndef SUI_PACK_H
 #define SUI_PACK_H
 
+struct Packer_Font_Glyph {
+  Rect2 uv;
+  
+};
 
 struct Packer_Font {
+  U32 bitmap_id;
+  U32 one_past_last_codepoint;
+  U32 glyph_start_index;
+  U32 one_past_glyph_end_index;
 };
 
 struct Packer_Bitmap {
@@ -28,8 +36,9 @@ struct Sui_Packer {
   Packer_Sprite sprites[256];
   
   U32 font_count;
-  Packer_Sprite fonts[256];
-  
+  Packer_Font fonts[256];
+  U32 font_glyph_count;
+  Packer_Font_Glyph font_glyphs[512];
   
 };
 
