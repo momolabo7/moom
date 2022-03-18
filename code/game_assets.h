@@ -14,7 +14,6 @@ struct Bitmap_Asset {
 struct Font_ID { U32 value; }; 
 struct Font_Glyph_Asset{
   Rect2 uv;
-  Bitmap_ID bitmap_id;
 };
 
 struct Sprite_ID { U32 value; };
@@ -25,8 +24,10 @@ struct Sprite_Asset {
 
 
 struct Font_Asset {
+  Bitmap_ID bitmap_id;
+  
   U32 one_past_highest_codepoint;
-  U16* codepoint_map;
+  U32* codepoint_map;
   
   U32 glyph_count;
   Font_Glyph_Asset* glyphs;

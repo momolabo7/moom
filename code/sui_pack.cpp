@@ -43,7 +43,7 @@ begin_font(Sui_Packer* p)
 }
 
 static void
-push_glyph(Sui_Packer* p, Rect2 uv, U32 codepoint) {
+push_glyph(Sui_Packer* p, Rect2 uv, U16 codepoint) {
   Packer_Font* font = p->current_font;
   assert(font);
   assert(p->font_glyph_count < array_count(p->font_glyphs));

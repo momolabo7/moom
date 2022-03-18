@@ -5,7 +5,7 @@
 
 struct Packer_Font_Glyph {
   Rect2 uv;
-  U32 codepoint;
+  U16 codepoint;
 };
 
 struct Packer_Font {

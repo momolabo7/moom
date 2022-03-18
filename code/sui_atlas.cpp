@@ -12,7 +12,7 @@ push_sprite(Sui_Atlas* ab, const char* filename) {
 static U32
 push_font(Sui_Atlas* ab, 
           TTF* loaded_ttf,
-          U32* codepoints,
+          U16* codepoints,
           U32 codepoint_count,
           F32 raster_font_height) 
 {
@@ -86,7 +86,7 @@ end_atlas_builder(Sui_Atlas* ab, Arena* arena) {
     font->rect_count = 0;
     
     for (U32 cpi = 0; cpi < font->codepoint_count; ++cpi) {
-      U32 cp = font->codepoints[cpi];
+      U16 cp = font->codepoints[cpi];
       U32 glyph_index = get_glyph_index_from_codepoint(ttf, cp);
       Rect2 box = get_glyph_box(ttf, glyph_index, s);
       V2U dims = get_bitmap_dims_from_glyph_box(box);

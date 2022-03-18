@@ -19,7 +19,7 @@ int main() {
     U32 at_bullet_dot = push_sprite(&atlas, asset_dir("bullet_dot.png"));
     U32 at_player_black = push_sprite(&atlas, asset_dir("player_black.png"));
     U32 at_player_white = push_sprite(&atlas, asset_dir("player_white.png"));
-    U32 interested_cps[] = { 
+    U16 interested_cps[] = { 
       32,65,66,67,68,69,
       70,71,72,73,74,75,76,77,78,79,
       80,81,82,83,84,85,86,87,88,89,
