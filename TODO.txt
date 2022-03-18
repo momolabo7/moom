@@ -1,16 +1,8 @@
 Engine
   Renderer
-		change render to begin/end_frame. Begin will take in render_wh and region. End will do whatever
-		Megatexture support!!
-	Mutithread support
-    Load bitmap
-    Load font
-  
+		Support for unique_renderer_ids to be returned by renderer to game
 	Unloading assets
-	  Fixed sized allocator for assets
-
 	Sound
-	
 
 4coder
   Support strongly typed enums
