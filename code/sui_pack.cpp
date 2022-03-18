@@ -218,6 +218,7 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
       
       kfg.uv = pfg->uv;
       kfg.codepoint = pfg->codepoint;
+      
       fwrite(&kfg, sizeof(kfg), 1, file);
       offset_to_data += sizeof(kfg);
     }

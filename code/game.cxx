@@ -81,12 +81,25 @@ game_update(Game_Memory* memory,
     
     {
       Game_Assets* ga = &memory->state->game_assets;
+#if 0
       Sprite_Asset* sprite=  ga->sprites + 0;
       push_subsprite(render_commands, 
                      colors,
                      t*r*s,
                      0, 
                      sprite->uv);
+#else
+      Font_Asset* font = ga->fonts + 0;
+      // TODO(Momo): Test for invalid maps
+      U32 glyph_index = font->codepoint_map[65];
+      Font_Glyph_Asset *glyph = font->glyphs + glyph_index;
+      
+      push_subsprite(render_commands, 
+                     colors,
+                     t*r*s,
+                     0, 
+                     glyph->uv);
+#endif
     }
     
   }

@@ -282,7 +282,7 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
           ++glyph_index) 
       {
         Karu_Font_Glyph kfg = {};
-        U32 kfg_offset = sizeof(Karu_Font_Glyph)*glyph_index+kf_offset;
+        U32 kfg_offset = sizeof(Karu_Font_Glyph)*glyph_index+kf.offset_to_data;
         platform.read_file(file, sizeof(Karu_Font_Glyph), kfg_offset, &kfg);
         
         Font_Glyph_Asset* glyph = font->glyphs + glyph_index;
