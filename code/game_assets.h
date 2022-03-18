@@ -26,7 +26,7 @@ struct Sprite_Asset {
 struct Font_Asset {
   Bitmap_ID bitmap_id;
   
-  U32 one_past_highest_codepoint;
+  U32 highest_codepoint;
   U32* codepoint_map;
   
   U32 glyph_count;

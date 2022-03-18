@@ -5,16 +5,16 @@
 
 struct Packer_Font_Glyph {
   Rect2 uv;
-  U16 codepoint;
+  U32 codepoint;
 };
 
 struct Packer_Font {
   U32 bitmap_id;
-  U32 one_past_highest_codepoint;
+  U32 highest_codepoint;
   TTF* ttf;
   
-  U32 glyph_start;
-  U32 one_past_glyph_end;
+  U32 glyph_start_index;
+  U32 one_past_glyph_end_index;
   
 };
 

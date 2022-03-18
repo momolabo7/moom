@@ -258,14 +258,14 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
       platform.read_file(file, sizeof(Karu_Font), kf_offset, &kf);
       
       Font_Asset* font = ga->fonts + font_index;
-      font->one_past_highest_codepoint = kf.one_past_highest_codepoint;
+      font->highest_codepoint = kf.highest_codepoint + 1;
       font->glyph_count = kf.glyph_count;
       font->bitmap_id = { kf.bitmap_id };
       
       // TODO(Momo): we probably need an invalid glyph index
       // Maybe use index 0 of glyphs array as invalid
       
-      U32 codepoint_map_size = sizeof(U32)*font->one_past_highest_codepoint;
+      U32 codepoint_map_size = sizeof(U32)*(font->highest_codepoint+1);
       U32 glyphs_size = sizeof(Font_Glyph_Asset)*font->glyph_count;
       U32 advances_size = sizeof(F32)*font->glyph_count*font->glyph_count;
       U32 memory_required = codepoint_map_size + glyphs_size + advances_size;

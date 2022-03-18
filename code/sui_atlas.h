@@ -22,7 +22,7 @@ enum Sui_Atlas_Context_Type {
 
 struct Sui_Atlas_Font_Glyph_Context {
   Sui_Atlas_Font* font;
-  U16 codepoint;
+  U32 codepoint;
 };
 
 struct Sui_Atlas_Sprite_Context {
@@ -43,7 +43,7 @@ struct Sui_Atlas_Context {
 
 struct Sui_Atlas_Font {
   TTF* loaded_ttf;
-  U16* codepoints;
+  U32* codepoints;
   U32 codepoint_count;
   F32 raster_font_height;
   

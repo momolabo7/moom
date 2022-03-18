@@ -35,15 +35,15 @@ begin_font(Sui_Packer* p)
   
   assert(p->current_font == nullptr);
   Packer_Font* font = p->fonts + p->font_count;
-  font->glyph_start = p->font_glyph_count;
-  font->one_past_glyph_end = font->glyph_start;
+  font->glyph_start_index = p->font_glyph_count;
+  font->one_past_glyph_end_index = font->glyph_start_index;
   
   p->current_font = font;
   return p->font_count++;
 }
 
 static void
-push_glyph(Sui_Packer* p, Rect2 uv, U16 codepoint) {
+push_glyph(Sui_Packer* p, Rect2 uv, U32 codepoint) {
   Packer_Font* font = p->current_font;
   assert(font);
   assert(p->font_glyph_count < array_count(p->font_glyphs));
@@ -52,12 +52,12 @@ push_glyph(Sui_Packer* p, Rect2 uv, U16 codepoint) {
   glyph->uv = uv;
   glyph->codepoint = codepoint;
   
-  if (codepoint > font->one_past_highest_codepoint) {
-    font->one_past_highest_codepoint = codepoint;
+  if (codepoint > font->highest_codepoint) {
+    font->highest_codepoint = codepoint;
   }
   
   // if there's no glyphs yet
-  ++font->one_past_glyph_end;
+  ++font->one_past_glyph_end_index;
   
   
 }
@@ -67,9 +67,6 @@ end_font(Sui_Packer* p, TTF* ttf, U32 bitmap_id) {
   Packer_Font* font = p->current_font;
   assert(font);
   
-  if (font->glyph_start != font->one_past_glyph_end) {
-    font->one_past_highest_codepoint += 1;
-  }
   font->bitmap_id = bitmap_id;
   font->ttf = ttf;
   
@@ -204,16 +201,16 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
     Packer_Font* pf = p->fonts + font_index;
     Karu_Font kf = {};
     kf.bitmap_id = pf->bitmap_id;
-    kf.one_past_highest_codepoint = pf->one_past_highest_codepoint;
-    kf.glyph_count = pf->one_past_glyph_end - pf->glyph_start;
+    kf.highest_codepoint = pf->highest_codepoint;
+    kf.glyph_count = pf->one_past_glyph_end_index - pf->glyph_start_index;
     kf.offset_to_data = offset_to_data;
     fwrite(&kf, sizeof(Karu_Font), 1, file);
     
     U32 current_pos = ftell(file);
     fseek(file, kf.offset_to_data, SEEK_SET);
     
-    for (U32 glyph_index = pf->glyph_start;
-         glyph_index < pf->one_past_glyph_end;
+    for (U32 glyph_index = pf->glyph_start_index;
+         glyph_index < pf->one_past_glyph_end_index;
          ++glyph_index) 
     {
       Packer_Font_Glyph* pfg = p->font_glyphs + glyph_index;
@@ -225,15 +222,15 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
       offset_to_data += sizeof(kfg);
     }
     
-    for (U32 pgi1 = pf->glyph_start;
-         pgi1 < pf->one_past_glyph_end;
+    for (U32 pgi1 = pf->glyph_start_index;
+         pgi1 < pf->one_past_glyph_end_index;
          ++pgi1) 
     {
       F32 pixel_scale = get_scale_for_pixel_height(pf->ttf, 1.f);
       
       Packer_Font_Glyph* pfg1 = p->font_glyphs + pgi1;
-      for (U32 pgi2 = pf->glyph_start;
-           pgi2 < pf->one_past_glyph_end;
+      for (U32 pgi2 = pf->glyph_start_index;
+           pgi2 < pf->one_past_glyph_end_index;
            ++pgi2) 
       {
         Packer_Font_Glyph* pfg2 = p->font_glyphs + pgi2;

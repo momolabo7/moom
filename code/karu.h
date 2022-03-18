@@ -33,7 +33,7 @@ struct Karu_Sprite {
 
 struct Karu_Font_Glyph {
   Rect2 uv;
-  U16 codepoint;
+  U32 codepoint;
 };
 
 struct Karu_Font {
@@ -41,7 +41,7 @@ struct Karu_Font {
   
   // TODO: Maybe add 'lowest codepoint'?
   U32 bitmap_id;
-  U32 one_past_highest_codepoint;
+  U32 highest_codepoint;
   U32 glyph_count;
   
   // Data is: 
