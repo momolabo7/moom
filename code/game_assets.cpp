@@ -277,6 +277,7 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
       
       zero_memory(font->codepoint_map, codepoint_map_size);
       
+      // glyphs
       for(U32 glyph_index = 0; 
           glyph_index < font->glyph_count; 
           ++glyph_index) 
@@ -291,12 +292,18 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
         font->codepoint_map[kfg.codepoint] = glyph_index;
       }
       
-      
-      
-      
+      // horizontal advances
+      {
+        U32 advance_offset = sizeof(Karu_Font_Glyph)*font->glyph_count+kf.offset_to_data;
+        U32 block_size = font->glyph_count * font->glyph_count * sizeof(F32);
+        platform.read_file(file, block_size, advance_offset, font->horizontal_advances);
+        
+      }
     }
     
-  }   
+    
+  }
+  
   
   
   return true;
