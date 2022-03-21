@@ -34,13 +34,16 @@ struct Font_Asset {
   F32* horizontal_advances;
 };
 
-
-
 struct Game_Assets {
   Arena arena;
   
-  // TODO(Momo): free list
-  U32 renderer_bitmap_counter;
+  // TODO(Momo): Figure out a better system and how to 'reset' this value
+  // Maybe do something like this:
+  //
+  // U32 start_texture_handle;
+  // U32 end_texture_handle;
+  //
+  U32 next_renderer_texture_handle;
   
   U32 sprite_count;
   Sprite_Asset* sprites;

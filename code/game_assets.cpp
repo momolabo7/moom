@@ -164,6 +164,11 @@ load_font(Game_Assets* ga,
 }
 #endif
 
+static U32
+aquire_renderer_texture_handle(Game_Assets* ga) {
+  return ga->next_renderer_texture_handle++;
+}
+
 static B32
 init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
   
@@ -205,19 +210,21 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
       platform.read_file(file, sizeof(Karu_Bitmap), offset, &kb);
       
       U32 bitmap_size = kb.width*kb.height*4;
+      U32 texture_handle = aquire_renderer_texture_handle(ga);  
+      
       Texture_Payload* payload = begin_texture_transfer(texture_queue, bitmap_size);
       if (!payload) return false;
-      payload->texture_index = 0; // TODO(Momo): 
+      payload->texture_index =  texture_handle;
       payload->texture_width = kb.width;
       payload->texture_height = kb.height;
       platform.read_file(file, 
-                       	bitmap_size, 
+                         bitmap_size, 
                          kb.offset_to_data, 
                          payload->texture_data);
       complete_texture_transfer(payload);
       
       Bitmap_Asset* ba = ga->bitmaps + bitmap_index;
-      ba->renderer_bitmap_id = 0; // TODO(Momo): 
+      ba->renderer_bitmap_id = texture_handle; 
       ba->width = kb.width;
       ba->height = kb.height;
       
@@ -239,7 +246,7 @@ init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
       platform.read_file(file, sizeof(Karu_Sprite), offset, &ks);
       
       Sprite_Asset* sa = ga->sprites + sprite_index;
-      sa->bitmap_id = {ks.bitmap_id};
+      sa->bitmap_id = { ks.bitmap_id };
       sa->uv = ks.uv;
       
     }
