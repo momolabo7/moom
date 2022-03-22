@@ -35,8 +35,6 @@ struct Font_Asset {
 };
 
 struct Game_Assets {
-  Arena arena;
-  
   // TODO(Momo): Figure out a better system and how to 'reset' this value
   // Maybe do something like this:
   //

@@ -21,8 +21,15 @@ game_update(Game_Memory* memory,
     memory->state = (Game_State*)platform.alloc(sizeof(Game_State));
     if (!memory->state) return false;
     
-    B32 success = init_game_assets(&memory->state->game_assets, 
-                                   memory->texture_queue);
+    // TODO(Momo): Figure out what we want to do with 
+    // game asset memories?
+    UMI memory_size = MB(20);
+    void* mem = platform.alloc(memory_size);
+    Arena arena  = create_arena(mem, memory_size);
+    B32 success = load_game_assets("test.sui",
+                                   &memory->state->game_assets, 
+                                   memory->texture_queue,
+                                   &arena);
     if(!success) return false;
     
     
