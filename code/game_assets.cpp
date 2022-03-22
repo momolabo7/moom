@@ -170,8 +170,10 @@ aquire_renderer_texture_handle(Game_Assets* ga) {
 }
 
 static B32
-unload_game_assets(Game_Assets* ga) {
-  
+unload_game_assets(Game_Assets* ga, 
+                   Game_Render_Commands* render_commands) 
+{
+  // TODO(Momo): Free textures for renderer
 }
 
 static B32
