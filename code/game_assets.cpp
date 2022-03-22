@@ -177,9 +177,9 @@ unload_game_assets(Game_Assets* ga,
 }
 
 static B32
-load_game_assets(const char* filename,
-                 Game_Assets* ga, 
+load_game_assets(Game_Assets* ga, 
                  Renderer_Texture_Queue* texture_queue,
+                 const char* filename,
                  Arena* arena) 
 {
   
