@@ -170,16 +170,22 @@ aquire_renderer_texture_handle(Game_Assets* ga) {
 }
 
 static B32
-init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {
-  
-  UMI memory_size = MB(20);
-  void* mem = platform.alloc(memory_size);
-  ga->arena = create_arena(mem, memory_size);
-  Arena* arena = &ga->arena;
+unload_game_assets(Game_Assets* ga, 
+                   Game_Render_Commands* render_commands) 
+{
+  // TODO(Momo): Free textures for renderer
+}
+
+static B32
+load_game_assets(Game_Assets* ga, 
+                 Renderer_Texture_Queue* texture_queue,
+                 const char* filename,
+                 Arena* arena) 
+{
   
   // Read in file
   Platform_File file_ = 
-    platform.open_file("test.sui",
+    platform.open_file(filename,
                        PLATFORM_FILE_ACCESS_READ, 
                        PLATFORM_FILE_PATH_EXE);
   Platform_File* file = &file_;
