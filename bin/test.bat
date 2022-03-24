@@ -13,7 +13,7 @@ SET CommonCompilerFlags=-MT -WX -W4 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4
 SET CommonCompilerFlags=-DENABLE_ASSERTS  %CommonCompilerFlags%
 
 pushd %BuildDir%
-cl %CommonCompilerFlags% %CodeDir%\test.cxx 
+cl %CommonCompilerFlags% %CodeDir%\test.cpp
 
 test.exe
 

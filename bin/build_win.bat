@@ -21,7 +21,7 @@ SET CommonLinkerFlags=user32.lib opengl32.lib gdi32.lib winmm.lib ole32.lib imm3
 
 pushd %BuildDir%
 
-cl %CommonCompilerFlags% %CodeDir%\win.cxx -link %CommonLinkerFlags%
+cl %CommonCompilerFlags% %CodeDir%\win.cpp -link %CommonLinkerFlags%
 
 rem Copy icon for window ----------------------
 xcopy %RootDir%\icons\window.ico  %BuildDir% /Q /Y

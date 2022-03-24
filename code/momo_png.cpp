@@ -137,8 +137,12 @@ _png_huffman_decode(Stream* src_stream, _PNG_Huffman huffman) {
   S32 first = 0;
   S32 index = 0;
   
-  for (U32 len = 1; len <= huffman.length_count - 1; ++len) {
-    code |= consume_bits(src_stream, 1);
+  for (U32 len = 1; 
+       len <= huffman.length_count - 1; 
+       ++len) 
+  {
+    U32 bits = consume_bits(src_stream, 1);
+    code |= bits;
     S32 count = huffman.lengths[len];
     if(code - count < first) {
       return huffman.symbols[index + (code - first)];
@@ -164,13 +168,13 @@ _png_huffman_compute(_PNG_Huffman* h,
 {
   _PNG_Huffman ret = {};
   
-  // NOTE(Momo): Each code corresponds to a symbol
+  // Each code corresponds to a symbol
   h->symbol_count = codes_size;
   h->symbols = push_array<U16>(arena, codes_size);
   zero_memory(h->symbols, h->symbol_count * sizeof(U16));
   
   
-  // NOTE(Momo): We add +1 because lengths[0] is not possible
+  // We add +1 because lengths[0] is not possible
   h->length_count = max_lengths;
   h->lengths = push_array<U16>(arena, max_lengths + 1);
   zero_memory(h->lengths, h->length_count * sizeof(U16));
@@ -184,10 +188,10 @@ _png_huffman_compute(_PNG_Huffman* h,
   // 2. Numerical value of smallest code for each code length
   set_arena_reset_point(arena);
   
-  U16* len_offset_table = push_array<U16>(arena, max_lengths);
-  zero_memory(len_offset_table, max_lengths * sizeof(U16));
+  U16* len_offset_table = push_array<U16>(arena, max_lengths+1);
+  zero_memory(len_offset_table, (max_lengths+1) * sizeof(U16));
   
-  for (U32 len = 1; len < max_lengths-1; ++len) {
+  for (U32 len = 1; len < max_lengths; ++len) {
     len_offset_table[len+1] = len_offset_table[len] + h->lengths[len]; 
   }
   
@@ -318,7 +322,7 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
                                arena,
                                code_codes,
                                array_count(code_codes),
-                               7);
+                               15); 
           
           
           U16* lit_dist_codes = push_array<U16>(arena, HDIST + HLIT);
@@ -383,7 +387,7 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
         for (;;) 
         {
           S32 sym = _png_huffman_decode(src_stream, lit_huffman);
-          _png_log("sym: %d\n", sym);
+          //_png_log("sym: %d\n", sym);
           
           // NOTE(Momo): Normal case
           if (sym <= 255) { 
@@ -489,7 +493,8 @@ _png_is_signature_valid(U8* comparee) {
 //~ NOTE(Momo): Filtering
 static B32
 _png_filter_none(_PNG_Context* c) {
-  for (U32 i = 0; i < c->image_width * PNG_CHANNELS; ++i ){
+  U32 bpl = c->image_width * PNG_CHANNELS; // bytes per line
+  for (U32 i = 0; i < bpl; ++i ){
     U8* pixel_byte = consume<U8>(&c->unfiltered_image_stream);
     if (pixel_byte == nullptr) {
       return false;
@@ -503,8 +508,9 @@ _png_filter_none(_PNG_Context* c) {
 
 static B32
 _png_filter_sub(_PNG_Context* c) {
-  U32 bpp = (PNG_CHANNELS * c->bit_depth)/8; // bytes per pixel
-  for (U32 i = 0; i < c->image_width * PNG_CHANNELS; ++i ){
+  U32 bpp = PNG_CHANNELS; // bytes per pixel
+  U32 bpl = c->image_width * PNG_CHANNELS; // bytes per line
+  for (U32 i = 0; i < bpl; ++i ){
     
     U8* pixel_byte_p = consume<U8>(&c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) {
@@ -532,10 +538,10 @@ _png_filter_sub(_PNG_Context* c) {
 
 static B32
 _png_filter_average(_PNG_Context* c) {
-  U32 bpp = (PNG_CHANNELS * c->bit_depth)/8; // bytes per pixel
-  U32 bpl = c->image_width * PNG_CHANNELS * (c->bit_depth/8); // bytes per line
+  U32 bpp = PNG_CHANNELS; // bytes per pixel
+  U32 bpl = c->image_width * PNG_CHANNELS; // bytes per line
   
-  for (U32 i = 0; i < c->image_width * PNG_CHANNELS; ++i ){
+  for (U32 i = 0; i < bpl; ++i ){
     
     U8* pixel_byte_p = consume<U8>(&c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) {
@@ -567,10 +573,10 @@ _png_filter_average(_PNG_Context* c) {
 
 static B32
 _png_filter_paeth(_PNG_Context* cx) {
-  U32 bpp = (PNG_CHANNELS * cx->bit_depth)/8; // bytes per pixel
-  U32 bpl = cx->image_width * PNG_CHANNELS * (cx->bit_depth/8); // bytes per line
+  U32 bpp = PNG_CHANNELS; // bytes per pixel
+  U32 bpl = cx->image_width * PNG_CHANNELS; // bytes per line
   
-  for (U32 i = 0; i < cx->image_width * PNG_CHANNELS; ++i ){
+  for (U32 i = 0; i < bpl; ++i ){
     U8* pixel_byte_p = consume<U8>(&cx->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) {
       return false;
@@ -586,9 +592,9 @@ _png_filter_paeth(_PNG_Context* cx) {
       // respectively: left, top, top left
       S32 a, b, c;
       
-      a = (S32)(cx->image_stream.data[current_index - bpp]); // Raw(x-bpp)
+      a = (i < bpp) ? 0 : (S32)(cx->image_stream.data[current_index - bpp]); // Raw(x-bpp)
       b = (current_index < bpl) ? 0 : (S32)(cx->image_stream.data[current_index - bpl]); // Prior(x)
-      c = (i < bpp) ? 0 : (S32)(cx->image_stream.data[current_index - bpl - bpp]); // Prior(x)
+      c = (i < bpp || current_index < bpl) ? 0 : (S32)(cx->image_stream.data[current_index - bpl - bpp]); // Prior(x)
       
       S32 p = a + b - c; //initial estimate
       S32 pa = abs_of(p - a);
@@ -607,7 +613,7 @@ _png_filter_paeth(_PNG_Context* cx) {
       }
     }
     
-    U8 pixel_byte_to_write = pixel_byte + paeth_predictor;  
+    U8 pixel_byte_to_write = (pixel_byte + paeth_predictor)%256;  
     
     _png_log("%02X ", (U32)pixel_byte_to_write);
     write(&cx->image_stream, pixel_byte_to_write);
@@ -618,8 +624,8 @@ _png_filter_paeth(_PNG_Context* cx) {
 
 static B32
 _png_filter_up(_PNG_Context* c) {
-  U32 bpl = c->image_width * PNG_CHANNELS * (c->bit_depth/8); // bytes per line
-  for (U32 i = 0; i < c->image_width * PNG_CHANNELS; ++i ){
+  U32 bpl = c->image_width * PNG_CHANNELS; // bytes per line
+  for (U32 i = 0; i < bpl; ++i ){
     U8* pixel_byte_p = consume<U8>(&c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) {
       return false;
@@ -654,12 +660,13 @@ _png_filter(_PNG_Context* c) {
   // NOTE(Momo): Filter
   // data always starts with 1 byte indicating the type of filter
   // followed by the rest of the chunk.
+  U32 counter = 0;
+  
   while(!is_eos(&c->unfiltered_image_stream)) {
     U8* filter_type_p = consume<U8>(&c->unfiltered_image_stream);
     U8 filter_type = (*filter_type_p);
-    
     // NOTE(Momo): https://www.w3.org/TR/PNG-Filters.html
-    _png_log("Filter Type %d: ", (U32)(filter_type));
+    _png_log("%d: filter(%d): ", counter++, (U32)(filter_type));
     switch(filter_type) {
       case 0: { // None
         if (!_png_filter_none(c)) return false;

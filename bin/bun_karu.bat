@@ -16,7 +16,7 @@ SET CommonCompilerFlags=-DSLOW -DINTERNAL  %CommonCompilerFlags%
 
 pushd %BuildDir%
 
-cl %CommonCompilerFlags% %CodeDir%\sui.cxx
+cl %CommonCompilerFlags% %CodeDir%\sui.cpp
 
 if NOT %ERRORLEVEL% == 0 goto exit
 

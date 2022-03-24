@@ -4,20 +4,29 @@
 #define TEST_PNG_H
 
 
-
 void test_png() {
   struct {
     const char* in;
     const char* out;
   } test_cases[] = 
   {
+#if 1
     test_assets_dir("test_in0.png"), "out0.png",
     test_assets_dir("test_in1.png"), "out1.png",
     test_assets_dir("test_in2.png"), "out2.png",
     test_assets_dir("test_in3.png"), "out3.png",
     test_assets_dir("test_in4.png"), "out4.png",
     test_assets_dir("test_in5.png"), "out5.png",
+    test_assets_dir("test_in6.png"), "out6.png",
+#endif
+    
+    test_assets_dir("libresprite.png"), "libresprite_out.png",
+#if 1
+    test_assets_dir("clip.png"), "clip_out.png",
+    test_assets_dir("paint.png"), "paint_out.png",
+#endif
   }; 
+  
   
   U32 memory_size = MB(10);
   U8* memory = (U8*)malloc(memory_size);
