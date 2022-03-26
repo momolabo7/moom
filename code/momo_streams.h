@@ -12,8 +12,6 @@ struct Stream {
   // For bit reading
   U32 bit_buffer;
   U32 bit_count;
-  
-  
 };
 
 

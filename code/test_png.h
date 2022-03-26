@@ -3,14 +3,17 @@
 #ifndef TEST_PNG_H
 #define TEST_PNG_H
 
+using namespace std;
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 
 void test_png() {
   struct {
     const char* in;
     const char* out;
   } test_cases[] = 
-  {
-#if 1
+  { 
     test_assets_dir("test_in0.png"), "out0.png",
     test_assets_dir("test_in1.png"), "out1.png",
     test_assets_dir("test_in2.png"), "out2.png",
@@ -18,17 +21,18 @@ void test_png() {
     test_assets_dir("test_in4.png"), "out4.png",
     test_assets_dir("test_in5.png"), "out5.png",
     test_assets_dir("test_in6.png"), "out6.png",
-#endif
+    test_assets_dir("test_in7.png"), "out7.png",
+    test_assets_dir("test_in8.png"), "out8.png",
     
     test_assets_dir("libresprite.png"), "libresprite_out.png",
-#if 1
     test_assets_dir("clip.png"), "clip_out.png",
     test_assets_dir("paint.png"), "paint_out.png",
-#endif
   }; 
   
+  int x, y, c;
+  stbi_load(test_assets_dir("test.png"), &x, &y, &c, 4);
   
-  U32 memory_size = MB(10);
+  U32 memory_size = MB(100);
   U8* memory = (U8*)malloc(memory_size);
   if (!memory) { 
     test_log("Cannot allocate memory\n");

@@ -9,6 +9,7 @@
 #define _png_log
 #endif
 
+
 struct _PNG_Context {
   Stream stream;
   Arena* arena; 
@@ -17,10 +18,13 @@ struct _PNG_Context {
   U32 image_width;
   U32 image_height;
   
+  
   Stream unfiltered_image_stream; // for filtering and deflating
   
   // other useful info
   U32 bit_depth;
+  
+  Stream compressed_image_stream;
 };
 
 
@@ -175,7 +179,7 @@ _png_huffman_compute(_PNG_Huffman* h,
   
   
   // We add +1 because lengths[0] is not possible
-  h->length_count = max_lengths;
+  h->length_count = max_lengths + 1;
   h->lengths = push_array<U16>(arena, max_lengths + 1);
   zero_memory(h->lengths, h->length_count * sizeof(U16));
   
@@ -383,10 +387,19 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
                                15);					
         }
         
+        static int pass =0;
+        ++pass;
+        int wtf = 0;
+        
         // NOTE(Momo): Actual decoding
         for (;;) 
         {
+          ++wtf;
+          
           S32 sym = _png_huffman_decode(src_stream, lit_huffman);
+          if (pass == 2) {
+            //test_log("%d\n", sym);
+          }
           //_png_log("sym: %d\n", sym);
           
           // NOTE(Momo): Normal case
@@ -396,16 +409,22 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
           }
           // NOTE(Momo): Extra code case
           else if (sym >= 257) {
+            
             sym -= 257;
             if (sym >= 29) {
               return false;
             }
-            U32 len = lens[sym] + consume_bits(src_stream, len_ex_bits[sym]);
+            U32 len = lens[sym];
+            if (len_ex_bits[sym]) len += consume_bits(src_stream, len_ex_bits[sym]);
+            
             sym = _png_huffman_decode(src_stream, dist_huffman);
-            if (sym < 0) {
-              return false;
-            }
-            U32 dist = dists[sym] + consume_bits(src_stream, dist_ex_bits[sym]);
+            if (sym < 0) return false;
+            
+            U32 dist = dists[sym];
+            if (dist_ex_bits[sym]) dist += consume_bits(src_stream, dist_ex_bits[sym]);
+            
+            
+            // test_log("%d\n", len);
             while(len--) {
               UMI target_index = dest_stream->pos - dist;
               U8 byte_to_write = dest_stream->data[target_index];
@@ -513,9 +532,8 @@ _png_filter_sub(_PNG_Context* c) {
   for (U32 i = 0; i < bpl; ++i ){
     
     U8* pixel_byte_p = consume<U8>(&c->unfiltered_image_stream);
-    if (pixel_byte_p == nullptr) {
-      return false;
-    }
+    if (pixel_byte_p == nullptr)return false;
+    
     U8 pixel_byte = (*pixel_byte_p); // sub(x)
     if (i < bpp) {
       _png_log("%02X ", (U32)pixel_byte);
@@ -544,28 +562,22 @@ _png_filter_average(_PNG_Context* c) {
   for (U32 i = 0; i < bpl; ++i ){
     
     U8* pixel_byte_p = consume<U8>(&c->unfiltered_image_stream);
-    if (pixel_byte_p == nullptr) {
-      return false;
-    }
-    U8 pixel_byte = (*pixel_byte_p); // sub(x)
-    if (i < bpp || c->image_stream.pos < bpl ) {
-      _png_log("%02X ", (U32)pixel_byte);
-      write(&c->image_stream, pixel_byte);
-    }
-    else {
-      UMI current_index = c->image_stream.pos;
-      U8 left = c->image_stream.data[current_index - bpp]; // Raw(x-bpp)
-      U8 top = c->image_stream.data[current_index - bpl]; // Prior(x)
-      
-      // NOTE(Momo): Formula uses floor((left+top)/2). 
-      // Integer Truncation should do the job!
-      U8 pixel_byte_to_write = (pixel_byte + (left + top)/2) % 256;  
-      
-      _png_log("%02X ", (U32)pixel_byte_to_write);
-      write(&c->image_stream, pixel_byte_to_write);
-    }
+    if (pixel_byte_p == nullptr) return false;
     
+    U8 pixel_byte = (*pixel_byte_p); // sub(x)
+    
+    UMI current_index = c->image_stream.pos;
+    U8 left = (i < bpp) ? 0 :  c->image_stream.data[current_index - bpp]; // Raw(x-bpp)
+    U8 top = (current_index < bpl) ? 0 : c->image_stream.data[current_index - bpl]; // Prior(x)
+    
+    // NOTE(Momo): Formula uses floor((left+top)/2). 
+    // Integer Truncation should do the job!
+    U8 pixel_byte_to_write = (pixel_byte + (left + top)/2) % 256;  
+    
+    _png_log("%02X ", (U32)pixel_byte_to_write);
+    write(&c->image_stream, pixel_byte_to_write);
   }
+  
   _png_log("\n");
   
   return true;
@@ -578,9 +590,7 @@ _png_filter_paeth(_PNG_Context* cx) {
   
   for (U32 i = 0; i < bpl; ++i ){
     U8* pixel_byte_p = consume<U8>(&cx->unfiltered_image_stream);
-    if (pixel_byte_p == nullptr) {
-      return false;
-    }
+    if (pixel_byte_p == nullptr) return false;
     U8 pixel_byte = (*pixel_byte_p); // Paeth(x)
     
     // NOTE(Momo): PaethPredictor
@@ -722,7 +732,6 @@ _png_process_IHDR(_PNG_Context* c) {
   
   // NOTE(Momo): Allow space for unfiltered bm. 
   // One extra byte per row for filter 'type'
-  
   UMI unfiltered_size = c->image_width * c->image_height * PNG_CHANNELS + c->image_height;
   U8* unfiltered_image_stream_memory = push_array<U8>(c->arena, unfiltered_size);
   c->unfiltered_image_stream = 
@@ -731,11 +740,10 @@ _png_process_IHDR(_PNG_Context* c) {
 }
 #endif
 
+
 static B32
-_png_process_IDAT(_PNG_Context* c) {
-  Stream idat_stream = c->stream; 
-  
-  auto* IDAT = consume<_PNG_IDAT_Header>(&idat_stream);
+_png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
+  auto* IDAT = consume<_PNG_IDAT_Header>(zlib_stream);
   
   _png_log("flags: %d %d\n", IDAT->compression_flags, IDAT->additional_flags);
   U32 CM = IDAT->compression_flags & 0x0F;
@@ -755,7 +763,7 @@ _png_process_IDAT(_PNG_Context* c) {
     return false;
   }
   
-  return _png_deflate(&idat_stream, &c->unfiltered_image_stream, c->arena);
+  return _png_deflate(zlib_stream, &c->unfiltered_image_stream, c->arena);
 }
 
 static B32
@@ -790,66 +798,73 @@ create_bitmap(PNG* png, Arena* arena)
   
   U32 image_size = png->width * png->height * PNG_CHANNELS;
   U8* image_stream_memory = push_array<U8>(arena, image_size);
+  assert(image_stream_memory);
   ctx.image_stream = create_stream(image_stream_memory, image_size);
   
   set_arena_reset_point(arena);
   
   U32 unfiltered_size = png->width * png->height * PNG_CHANNELS + png->height;
   U8* unfiltered_image_stream_memory = push_array<U8>(arena, unfiltered_size);
+  assert(unfiltered_image_stream_memory);
   ctx.unfiltered_image_stream = create_stream(unfiltered_image_stream_memory, unfiltered_size);
   
   consume<_PNG_Header>(&ctx.stream);
   
+  
+  // NOTE(Momo): This is really lousy method.
+  // We will go through all the IDATs and allocate a giant contiguous 
+  // chunk of memory to DEFLATE.
+  UMI zlib_size = 0;
+  {
+    Stream stream = ctx.stream;
+    while(!is_eos(&stream)) {
+      auto* chunk_header = consume<_PNG_Chunk_Header>(&stream);
+      U32 chunk_length = endian_swap_32(chunk_header->length);
+      U32 chunk_type = endian_swap_32(chunk_header->type_U32);
+      if (chunk_type == 'IDAT') {
+        zlib_size += chunk_length;
+      }
+      consume_block(&stream, chunk_length);
+      consume<_PNG_Chunk_Footer>(&stream);
+    }
+  }
+  
+  U8* zlib_data = push_array<U8>(arena, zlib_size);
+  Stream zlib_stream = create_stream(zlib_data,
+                                     zlib_size);
+  // Second pass to allocate memory
   while(!is_eos(&ctx.stream)) {
     auto* chunk_header = consume<_PNG_Chunk_Header>(&ctx.stream);
     U32 chunk_length = endian_swap_32(chunk_header->length);
     U32 chunk_type = endian_swap_32(chunk_header->type_U32);
-    
-    switch(chunk_type) {
-#if 0
-      case 'IHDR': {
-        if(!_png_process_IHDR(&ctx)) {
-          Bitmap ret = {};
-          return ret;
-        }
-      } break;
-#endif
-      case 'IDAT': {
-        if(!_png_process_IDAT(&ctx)) {
-          Bitmap ret = {};
-          return ret;
-        }
-      } break;
-      case 'IEND': {            
-        if(!_png_process_IEND(&ctx)) {					
-          Bitmap ret = {};
-          return ret;
-        }
-        else {	
-          Bitmap ret = {};
-          ret.width = ctx.image_width;
-          ret.height = ctx.image_height;
-          ret.pixels = (U32*)ctx.image_stream.data;
-          return ret;
-        }
-      } break;
-      default: {
-#if 0
-        // NOTE(Momo): For now, we don't care about the rest of the chunks
-        _png_log("Ignoring chunk: %c%c%c%c\n", 
-                 chunk_header->type[0], 
-                 chunk_header->type[1], 
-                 chunk_header->type[2], 
-                 chunk_header->type[3]); 
-#endif
-      };
+    if (chunk_type == 'IDAT') {
+      write_block(&zlib_stream, 
+                  ctx.stream.data + ctx.stream.pos,
+                  chunk_length);
     }
     consume_block(&ctx.stream, chunk_length);
     consume<_PNG_Chunk_Footer>(&ctx.stream);
   }
+  reset(&zlib_stream);
   
-  Bitmap ret = {};
-  return ret;
+  if (!_png_decompress_zlib(&ctx, &zlib_stream)) {
+    Bitmap ret = {};
+    return ret;
+  }
+  
+  // TODO(Momo): Rename to 'filter'
+  if(!_png_process_IEND(&ctx)) {					
+    Bitmap ret = {};
+    return ret;
+  }
+  else {	
+    Bitmap ret = {};
+    ret.width = ctx.image_width;
+    ret.height = ctx.image_height;
+    ret.pixels = (U32*)ctx.image_stream.data;
+    return ret;
+  }
+  
   
 }
 
