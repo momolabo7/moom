@@ -1,14 +1,6 @@
 // We are only interested in 4-channel images in RGBA format
 #define PNG_CHANNELS 4 
 
-#define PNG_DEBUG 0
-#if PNG_DEBUG
-#include <stdio.h>
-#define _png_log(...) printf(__VA_ARGS__)
-#else
-#define _png_log
-#endif
-
 
 struct _PNG_Context {
   Stream stream;
@@ -239,23 +231,17 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
     
     BFINAL = (U8)consume_bits(src_stream, 1);
     U16 BTYPE = (U8)consume_bits(src_stream, 2);
-    _png_log(">>> BFINAL: %d\n", BFINAL);
-    _png_log(">>> BTYPE: %d\n", BTYPE);
     switch(BTYPE) {
       case 0b00: {
         flush_bits(src_stream);
         
-        _png_log(">>>> No compression\n");
         consume_bits(src_stream, 5);
         U16 LEN = (U16)consume_bits(src_stream, 16);
         U16 NLEN = (U16)consume_bits(src_stream, 16);
-        _png_log(">>>>> LEN: %d\n", LEN);
-        _png_log(">>>>> NLEN: %d\n", NLEN);
         if ((U16)LEN != ~((U16)(NLEN))) {
-          _png_log("LEN vs NLEN mismatch!");
           return false; 
         }
-        _png_log("BTYPE 0 not supported!");
+        // TODO(Momo): support this type?
         return false;
       } break;
       case 0b01: 
@@ -265,8 +251,6 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
         
         if (BTYPE == 0b01) {
           // Fixed huffman
-          _png_log(">>>> Fixed huffman\n");
-          
           U16 lit_codes[288] = {};
           U16 dist_codes[32] = {};
           
@@ -302,13 +286,9 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
         }
         else // BTYPE == 0b10
         {
-          _png_log(">>>> Dynamic huffman\n");
           U32 HLIT = consume_bits(src_stream, 5) + 257;
           U32 HDIST = consume_bits(src_stream, 5) + 1;
           U32 HCLEN = consume_bits(src_stream, 4) + 4;
-          _png_log(">>>>> HLIT: %d\n", HLIT);
-          _png_log(">>>>> HDIST: %d\n", HDIST);
-          _png_log(">>>>> HCLEN: %d\n", HCLEN);
           
           static const U32 order[] = {
             16, 17, 18, 0, 8 ,7, 9, 6, 10, 5, 
@@ -436,10 +416,8 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena)
             break;
           }
         }
-        _png_log("\n");
       } break;
       default: {
-        _png_log("Error\n");
         return false;
       }
     }
@@ -518,10 +496,8 @@ _png_filter_none(_PNG_Context* c) {
     if (pixel_byte == nullptr) {
       return false;
     }
-    _png_log("%02X ", (U32)(*pixel_byte));
     write<U8>(&c->image_stream, *pixel_byte);
   }
-  _png_log("\n");
   return true;
 }
 
@@ -536,7 +512,6 @@ _png_filter_sub(_PNG_Context* c) {
     
     U8 pixel_byte = (*pixel_byte_p); // sub(x)
     if (i < bpp) {
-      _png_log("%02X ", (U32)pixel_byte);
       write(&c->image_stream, pixel_byte);
     }
     else {
@@ -544,12 +519,10 @@ _png_filter_sub(_PNG_Context* c) {
       U8 left_reference = c->image_stream.data[current_index - bpp]; // Raw(x-bpp)
       U8 pixel_byte_to_write = (pixel_byte + left_reference) % 256;  
       
-      _png_log("%02X ", (U32)pixel_byte_to_write);
       write(&c->image_stream, pixel_byte_to_write);
     }
     
   }    
-  _png_log("\n");
   
   return true;
 }
@@ -574,11 +547,9 @@ _png_filter_average(_PNG_Context* c) {
     // Integer Truncation should do the job!
     U8 pixel_byte_to_write = (pixel_byte + (left + top)/2) % 256;  
     
-    _png_log("%02X ", (U32)pixel_byte_to_write);
     write(&c->image_stream, pixel_byte_to_write);
   }
   
-  _png_log("\n");
   
   return true;
 }
@@ -625,10 +596,8 @@ _png_filter_paeth(_PNG_Context* cx) {
     
     U8 pixel_byte_to_write = (pixel_byte + paeth_predictor)%256;  
     
-    _png_log("%02X ", (U32)pixel_byte_to_write);
     write(&cx->image_stream, pixel_byte_to_write);
   }
-  _png_log("\n");
   return true;
 }
 
@@ -644,7 +613,6 @@ _png_filter_up(_PNG_Context* c) {
     
     // NOTE(Momo): Ignore first scanline
     if (c->image_stream.pos < bpl) {
-      _png_log("%02X ", (U32)pixel_byte);
       write(&c->image_stream, pixel_byte);
     }
     else {
@@ -652,11 +620,9 @@ _png_filter_up(_PNG_Context* c) {
       U8 top = c->image_stream.data[current_index - bpl]; 
       U8 pixel_byte_to_write = (pixel_byte + top) % 256;  
       
-      _png_log("%02X ", (U32)pixel_byte_to_write);
       write(&c->image_stream, pixel_byte_to_write);
     }
   }
-  _png_log("\n");
   
   return true;
 }
@@ -676,7 +642,6 @@ _png_filter(_PNG_Context* c) {
     U8* filter_type_p = consume<U8>(&c->unfiltered_image_stream);
     U8 filter_type = (*filter_type_p);
     // NOTE(Momo): https://www.w3.org/TR/PNG-Filters.html
-    _png_log("%d: filter(%d): ", counter++, (U32)(filter_type));
     switch(filter_type) {
       case 0: { // None
         if (!_png_filter_none(c)) return false;
@@ -745,38 +710,18 @@ static B32
 _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
   auto* IDAT = consume<_PNG_IDAT_Header>(zlib_stream);
   
-  _png_log("flags: %d %d\n", IDAT->compression_flags, IDAT->additional_flags);
   U32 CM = IDAT->compression_flags & 0x0F;
   U32 CINFO = IDAT->compression_flags >> 4;
   U32 FCHECK = IDAT->additional_flags & 0x1F; //not needed?
   U32 FDICT = (IDAT->additional_flags >> 5) & 0x01;
   U32 FLEVEL = (IDAT->additional_flags >> 6); //useless?
   
-  _png_log(">> CM: %d\n>> CINFO: %d\n>> FCHECK: %d\n>> FDICT: %d\n>> FLEVEL: %d\n",
-           CM, 
-           CINFO,
-           FCHECK, 
-           FDICT, 
-           FLEVEL); 
   
   if (CM != 8 || FDICT != 0 || CINFO > 7) {
     return false;
   }
   
   return _png_deflate(zlib_stream, &c->unfiltered_image_stream, c->arena);
-}
-
-static B32
-_png_process_IEND(_PNG_Context* c) {
-  
-  _png_log("Ended\n");
-  for (U32 i = 0; i < c->unfiltered_image_stream.size; ++i) {
-    _png_log("%02X ", c->unfiltered_image_stream.data[i]);	
-  }
-  _png_log("\n");
-  
-  return _png_filter(c);
-  
 }
 
 
@@ -853,7 +798,7 @@ create_bitmap(PNG* png, Arena* arena)
   }
   
   // TODO(Momo): Rename to 'filter'
-  if(!_png_process_IEND(&ctx)) {					
+  if(!_png_filter(&ctx)) {					
     Bitmap ret = {};
     return ret;
   }
