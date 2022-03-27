@@ -1,7 +1,4 @@
 Engine
-  Renderer
-		Support for unique_renderer_ids to be returned by renderer to game
-	Unloading assets
 	Sound
 
 4coder
