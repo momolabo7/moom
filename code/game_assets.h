@@ -4,9 +4,10 @@
 #include "game_asset_types.h"
 #include "karu.h"
 
+struct Renderer_Texture_Handle { U32 value; };
 struct Bitmap_ID { U32 value; };
 struct Bitmap_Asset {
-  U32 renderer_bitmap_id;
+  U32 renderer_texture_handle;
   U32 width;
   U32 height;
 };
@@ -35,13 +36,6 @@ struct Font_Asset {
 };
 
 struct Game_Assets {
-  // TODO(Momo): Figure out a better system and how to 'reset' this value
-  // Maybe do something like this:
-  //
-  // U32 start_texture_handle;
-  // U32 end_texture_handle;
-  //
-  U32 next_renderer_texture_handle;
   
   U32 sprite_count;
   Sprite_Asset* sprites;

@@ -1,179 +1,24 @@
 
-
-
-// DELETE OR REFACTOR ME ONCE DONE
-#if 0
-struct Load_Asset_Task {
-  Asset* asset;
-  
-  U32 data_offset;
-  U32 data_size;
-  void* destination;
-  
-  // For bitmaps
-  Texture_Payload* texture_payload;
-};
-Load_Asset_Task tasks[128];
-U32 task_count = 0;
-
-static void
-load_asset_task(void* context) {
-  Load_Asset_Task* task = (Load_Asset_Task*)context;
-  
-  // Read in file
-  Platform_File file = 
-    platform.open_file("test.sui",
-                       PLATFORM_FILE_ACCESS_READ, 
-                       PLATFORM_FILE_PATH_EXE);
-  if (file.error) { 
-    if (task->texture_payload) {
-      cancel_texture_transfer(task->texture_payload);
-    }
-    return;
-  }
-  else {
-    // Open the file
-    // This goes into a thread
-    platform.read_file(&file, 
-                       task->data_size, 
-                       task->data_offset,
-                       task->destination);
-    
-    if (task->texture_payload) {
-      complete_texture_transfer(task->texture_payload);
-    }
-  }
-}
-
-
-static void 
-unload_bitmap(Game_Assets* ga, 
-              Bitmap_Asset_ID bitmap_id, 
-              Game_Render_Commands* commands) 
-{
-  Asset* asset = ga->assets + bitmap_id.value;
-  assert(asset->type == ASSET_TYPE_BITMAP);
-  push_delete_texture(commands, asset->bitmap.renderer_bitmap_id);
-}
-
-static void 
-load_bitmap(Game_Assets* ga, 
-            Bitmap_Asset_ID bitmap_id) 
-{
-  Asset* asset = ga->assets + bitmap_id.value;
-  assert(asset->type == ASSET_TYPE_BITMAP);
-  
-  U32 bitmap_size = asset->bitmap.width * asset->bitmap.height * 4;
-  Texture_Payload* payload = begin_texture_transfer(ga->texture_queue, bitmap_size);
-  if (!payload) return;
-  
-  payload->texture_index = 0;
-  payload->texture_width = asset->bitmap.width;
-  payload->texture_height = asset->bitmap.height;
-  
-  Load_Asset_Task* task = tasks + task_count++;  
-  task->texture_payload = payload;
-  task->asset = asset;
-  task->data_offset = asset->offset_to_data;
-  task->data_size = bitmap_size;
-  task->destination = payload->texture_data;
-  
-  
-  platform.add_task(load_asset_task, task); 
-}
-
-#endif
-
-#if 0
-static void 
-load_font(Game_Assets* ga, 
-          Gfx* renderer, 
-          Bitmap_Asset_ID bitmap_id) 
-{
-  Asset* asset = ga->assets + bitmap_id.value;
-  assert(asset->type == ASSET_TYPE_FONT);
-  
-  Load_Asset_Work_Data* work = works + work_count++;  
-  work->asset = asset;
-  
-  
-  
-  
-  
-  platform.add_task(load_bitmap_work_callback, work); 
-  
-  
-  U32 glyph_count = karu_asset.font.glyph_count;
-  U32 one_past_highest_codepoint = ;
-  
-  
-  auto* codepoint_map = push_array<U16>(&ga->arena, one_past_highest_codepoint);
-  assert(codepoint_map);
-  
-  auto* glyphs = push_array<Font_Glyph_Asset>(&ga->arena, glyph_count);
-  assert(glyphs);
-  auto* advances = push_array<F32>(&ga->arena, glyph_count*glyph_count);
-  assert(advances);
-  
-  U32 current_data_offset = karu_asset.offset_to_data;
-  for(U16 glyph_index = 0; 
-      glyph_index < glyph_count;
-      ++glyph_index)
-  {
-    U32 glyph_data_offset = 
-      karu_asset.offset_to_data + 
-      sizeof(Karu_Font_Glyph)*glyph_index;
-    
-    Karu_Font_Glyph karu_glyph = {};
-    
-    platform.read_file(&file, 
-                       sizeof(Karu_Font_Glyph), 
-                       glyph_data_offset,
-                       &karu_glyph); 
-    
-    auto* glyph = glyphs + glyph_index;
-    glyph->uv = karu_glyph.uv;
-    glyph->bitmap_id = {karu_glyph.bitmap_asset_id};
-    
-    codepoint_map[karu_glyph.codepoint] = glyph_index;
-    
-  }
-  
-  // Horizontal advances
-  U32 advance_index = 0;
-  for(U32 gi1 = 0; gi1 < glyph_count; ++gi1) {
-    for (U32 gi2 = 0; gi2 < glyph_count; ++gi2) {
-      U32 advance_data_offset = 
-        karu_asset.offset_to_data + 
-        sizeof(Karu_Font_Glyph)*glyph_count+
-        sizeof(F32)*advance_index;
-      platform.read_file(&file,
-                         sizeof(F32),
-                         advance_data_offset,
-                         advances + gi1*glyph_count + gi2);
-      ++advance_index;
-    }
-  }
-  
-  asset->font.glyphs = glyphs;
-  asset->font.codepoint_map = codepoint_map;
-  asset->font.horizontal_advances = advances;
-  asset->font.one_past_highest_codepoint = one_past_highest_codepoint;
-  asset->font.glyph_count = glyph_count;
-  
-}
-#endif
-
+// NOTE(Momo): Yes. Magic.
 static U32
-aquire_renderer_texture_handle(Game_Assets* ga) {
-  return ga->next_renderer_texture_handle++;
+get_next_texture_handle() {
+  static U32 next_texture_handle = 0;
+  U32 ret = next_texture_handle++;
+  assert(next_texture_handle < 256);
+  return ret;
 }
 
 static B32
 unload_game_assets(Game_Assets* ga, 
                    Game_Render_Commands* render_commands) 
 {
-  // TODO(Momo): Free textures for renderer
+  for(U32 bitmap_index = 0; 
+      bitmap_index < ga->bitmap_count; 
+      ++bitmap_index) 
+  {
+    Bitmap_Asset* bmp = ga->bitmaps + bitmap_index;
+    push_delete_texture(render_commands, bmp->renderer_texture_handle);
+  }
 }
 
 static B32
@@ -181,8 +26,7 @@ load_game_assets(Game_Assets* ga,
                  Renderer_Texture_Queue* texture_queue,
                  const char* filename,
                  Arena* arena) 
-{
-  
+{ 
   // Read in file
   Platform_File file_ = 
     platform.open_file(filename,
@@ -216,7 +60,7 @@ load_game_assets(Game_Assets* ga,
       platform.read_file(file, sizeof(Karu_Bitmap), offset, &kb);
       
       U32 bitmap_size = kb.width*kb.height*4;
-      U32 texture_handle = aquire_renderer_texture_handle(ga);  
+      U32 texture_handle = get_next_texture_handle();  
       
       Texture_Payload* payload = begin_texture_transfer(texture_queue, bitmap_size);
       if (!payload) return false;
@@ -230,7 +74,7 @@ load_game_assets(Game_Assets* ga,
       complete_texture_transfer(payload);
       
       Bitmap_Asset* ba = ga->bitmaps + bitmap_index;
-      ba->renderer_bitmap_id = texture_handle; 
+      ba->renderer_texture_handle = texture_handle; 
       ba->width = kb.width;
       ba->height = kb.height;
       
