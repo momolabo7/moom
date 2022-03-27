@@ -84,14 +84,18 @@ static B32 is_held(Game_Input_Button);
 
 
 struct Game_Input {
-  Game_Input_Button buttons[4];
-  struct {
-    Game_Input_Button button_up;
-    Game_Input_Button button_down;
-    Game_Input_Button button_left;
-    Game_Input_Button button_right;
-  };  
-  
+  union {
+    Game_Input_Button buttons[5];
+    struct {
+      Game_Input_Button button_up;
+      Game_Input_Button button_down;
+      Game_Input_Button button_left;
+      Game_Input_Button button_right;
+      
+      Game_Input_Button button_console;
+    };  
+  };
+
   V2 design_mouse_pos;
   V2U screen_mouse_pos;
   V2U render_mouse_pos;

@@ -219,6 +219,10 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
       kfg.uv = pfg->uv;
       kfg.codepoint = pfg->codepoint;
       
+      U32 ttf_glyph_index = get_glyph_index_from_codepoint(pf->ttf,kfg.codepoint);
+      F32 s = get_scale_for_pixel_height(pf->ttf, 1.f);
+      kfg.box = get_glyph_box(pf->ttf, ttf_glyph_index, s);
+      
       fwrite(&kfg, sizeof(kfg), 1, file);
       offset_to_data += sizeof(kfg);
     }

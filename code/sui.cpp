@@ -15,10 +15,11 @@ int main() {
   
   Sui_Atlas atlas = begin_atlas_builder(1024, 1024);
   {
-    U32 at_bullet_circle = push_sprite(&atlas, asset_dir("bullet_circle.png"));
-    U32 at_bullet_dot = push_sprite(&atlas, asset_dir("bullet_dot.png"));
-    U32 at_player_black = push_sprite(&atlas, asset_dir("player_black.png"));
-    U32 at_player_white = push_sprite(&atlas, asset_dir("player_white.png"));
+    push_sprite(&atlas, asset_dir("blank.png"));
+    push_sprite(&atlas, asset_dir("bullet_circle.png"));
+    push_sprite(&atlas, asset_dir("bullet_dot.png"));
+    push_sprite(&atlas, asset_dir("player_black.png"));
+    push_sprite(&atlas, asset_dir("player_white.png"));
     U32 interested_cps[] = { 
       32,65,66,67,68,69,
       70,71,72,73,74,75,76,77,78,79,
@@ -29,9 +30,9 @@ int main() {
       110,111,112,113,114,115,116,117,118,119,
     };
     
-    U32 at_font_id = push_font(&atlas, &loaded_ttf, 
-                               interested_cps, array_count(interested_cps), 
-                               128.f);
+    push_font(&atlas, &loaded_ttf, 
+              interested_cps, array_count(interested_cps), 
+              128.f);
   }
   end_atlas_builder(&atlas, arena);
   sui_log("Finished atlas...\n");

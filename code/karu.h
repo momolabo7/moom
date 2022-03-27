@@ -33,6 +33,7 @@ struct Karu_Sprite {
 
 struct Karu_Font_Glyph {
   Rect2 uv;
+  Rect2 box;
   U32 codepoint;
 };
 

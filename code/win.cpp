@@ -787,9 +787,11 @@ WinMain(HINSTANCE instance,
             U32 code = (U32)msg.wParam;
             B32 is_key_down = msg.message == WM_KEYDOWN;
             switch(code) {
-              case 0x57: /* W  */ 
-              {
+              case 0x57: /* W */ {
                 input.button_up.now = is_key_down;
+              } break;
+              case 0x70: /* F1 */{
+                input.button_console.now = is_key_down;
               } break;
             }
             
@@ -813,7 +815,6 @@ WinMain(HINSTANCE instance,
     }
     
     
-#if 1   
     //-Frame-rate control
     // 1. Calculate how much time has passed since the last frame
     // 2. If the time elapsed is greater than the target time elapsed,
@@ -857,7 +858,6 @@ WinMain(HINSTANCE instance,
       }
       
     }
-#endif
     
     
     //- End render frame

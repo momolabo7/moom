@@ -145,6 +145,7 @@ load_game_assets(Game_Assets* ga,
         
         Font_Glyph_Asset* glyph = font->glyphs + glyph_index;
         glyph->uv = kfg.uv;
+        glyph->box = kfg.box;
         
         font->codepoint_map[kfg.codepoint] = glyph_index;
       }

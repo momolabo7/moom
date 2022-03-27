@@ -3,7 +3,7 @@
 #include "game.h"
 
 
-
+B32 show_console;
 
 Platform_API platform;
 
@@ -44,6 +44,10 @@ game_update(Game_Memory* memory,
   
   if (is_poked(input->button_up)) {
     platform.hot_reload();
+  }
+  
+  if (is_poked(input->button_console)) {
+    show_console = !show_console;
   }
   
   
@@ -107,6 +111,81 @@ game_update(Game_Memory* memory,
                      0, 
                      glyph->uv);
 #endif
+    }
+    
+    // Debug console
+    if (show_console) {
+      Game_Assets* ga = &memory->state->game_assets;
+      
+      // Camera
+      {
+        V3 position = {};
+        Rect3 frustum;
+        frustum.min.x = frustum.min.y = frustum.min.z = 0;
+        frustum.max.x = 1600;
+        frustum.max.y = 900;
+        frustum.max.z = 500;
+        push_orthographic_camera(render_commands, position, frustum);
+      }
+      
+      // Draw background
+      {
+        RGBA bg_color = create_rgba(0.5f, 0.5f, 0.5f, 1.f);
+        M44 bgs = create_m44_scale(1600.f, 400.f, 10.f);
+        M44 bgt = create_m44_translation(800.f, 200.f, 10.f);
+        
+        Sprite_Asset* sprite=  ga->sprites + 0;
+        push_subsprite(render_commands, 
+                       bg_color,
+                       bgt*bgs,
+                       0, 
+                       sprite->uv);
+      }
+      
+      // Draw text
+      {
+        Font_Asset* font = ga->fonts + 0;
+        V2 position = {};
+        const F32 font_height = 40.f;
+        Str8 test_str = str8_from_lit("Hello World");
+        for(U32 char_index = 0; 
+            char_index < test_str.count;
+            ++char_index) 
+        {
+          U32 curr_cp = test_str.e[char_index];
+          if (char_index > 0) {
+            U32 prev_cp = test_str.e[char_index-1];
+            U32 g1 = font->codepoint_map[prev_cp];
+            U32 g2 = font->codepoint_map[curr_cp];
+            U32 advance_index = g1 * font->glyph_count + g2;
+            position.x += font->horizontal_advances[advance_index]*font_height;
+          }
+          
+          U32 glyph_index = font->codepoint_map[curr_cp];
+          
+          Font_Glyph_Asset *glyph = font->glyphs + glyph_index;
+          
+          F32 width = (glyph->box.max.x - glyph->box.min.x)*font_height;
+          F32 height = (glyph->box.max.y - glyph->box.min.y)*font_height;
+          
+          M44 transform = 
+            create_m44_translation(position.x + (glyph->box.min.x*font_height), 
+                                   position.y + (glyph->box.min.y*font_height), 
+                                   9.f)*
+            create_m44_scale(width, height, 1.f)*
+            create_m44_translation(0.5f, 0.5f, 0.f);
+          
+          
+          
+          push_subsprite(render_commands, 
+                         colors,
+                         transform,
+                         0, 
+                         glyph->uv);
+        }
+        
+        
+      }
     }
     
   }

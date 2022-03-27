@@ -1,7 +1,7 @@
 #ifndef GAME_ASSETS_H
 #define GAME_ASSETS_H
 
-#include "game_asset_types.h"
+//#include "game_asset_types.h"
 #include "karu.h"
 
 struct Renderer_Texture_Handle { U32 value; };
@@ -15,6 +15,7 @@ struct Bitmap_Asset {
 struct Font_ID { U32 value; }; 
 struct Font_Glyph_Asset{
   Rect2 uv;
+  Rect2 box;
 };
 
 struct Sprite_ID { U32 value; };
