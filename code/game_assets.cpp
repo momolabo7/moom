@@ -8,6 +8,33 @@ get_next_texture_handle() {
   return ret;
 }
 
+
+static Bitmap_Asset* 
+get_bitmap(Game_Assets* ga, Bitmap_ID id) {
+  if (get_pack_id(id) != 0) { return nullptr; }
+  return ga->bitmaps + get_real_id(id);
+}
+
+static Font_Asset* 
+get_font(Game_Assets* ga, Font_ID id) {
+  if (get_pack_id(id) != 0) { return nullptr; }
+  return ga->fonts + get_real_id(id);
+}
+
+static Sprite_Asset* 
+get_sprite(Game_Assets* ga, Sprite_ID id) {
+  if (get_pack_id(id) != 0) { return nullptr; }
+  return ga->sprites + get_real_id(id);
+}
+
+static Font_Glyph_Asset* 
+get_glyph(Font_Asset* font, U32 codepoint) {
+  U32 glyph_index = font->codepoint_map[codepoint];
+  // TODO(Momo): test for invalid glyph index
+  Font_Glyph_Asset *glyph = font->glyphs + glyph_index;
+  return glyph;
+}
+
 static B32
 unload_game_assets(Game_Assets* ga, 
                    Game_Render_Commands* render_commands) 
@@ -96,7 +123,7 @@ load_game_assets(Game_Assets* ga,
       platform.read_file(file, sizeof(Karu_Sprite), offset, &ks);
       
       Sprite_Asset* sa = ga->sprites + sprite_index;
-      sa->bitmap_id = { ks.bitmap_id };
+      sa->bitmap_id = Bitmap_ID(ks.bitmap_id); // TODO(Momo): this is a hack!
       sa->uv = ks.uv;
       
     }
@@ -117,7 +144,7 @@ load_game_assets(Game_Assets* ga,
       Font_Asset* font = ga->fonts + font_index;
       font->highest_codepoint = kf.highest_codepoint + 1;
       font->glyph_count = kf.glyph_count;
-      font->bitmap_id = { kf.bitmap_id };
+      font->bitmap_id = Bitmap_ID(kf.bitmap_id); // TODO(Momo): This is a hack!
       
       // TODO(Momo): we probably need an invalid glyph index
       // Maybe use index 0 of glyphs array as invalid

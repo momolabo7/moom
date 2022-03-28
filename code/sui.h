@@ -16,6 +16,9 @@ static unsigned sui_log_spaces = 0;
 #define sui_log(...) { for(unsigned sui_log_spaces_index = 0; sui_log_spaces_index < sui_log_spaces; ++sui_log_spaces_index) { printf(" "); } printf(__VA_ARGS__); };
 #define sui_create_log_section_until_scope sui_log_spaces += 2; defer {sui_log_spaces -= 2;}
 
+
+
+
 // Utility files for ass
 Memory sui_malloc(UMI size) {
   void* mem = malloc(size);

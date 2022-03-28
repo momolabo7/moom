@@ -1,5 +1,7 @@
 Engine
 	Sound
+	Asset lookup (game-side)
+  Asset lookup (generator-side)
 
 4coder
   Support strongly typed enums

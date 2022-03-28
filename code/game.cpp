@@ -100,10 +100,10 @@ game_update(Game_Memory* memory,
                      0, 
                      sprite->uv);
 #else
-      Font_Asset* font = ga->fonts + 0;
-      // TODO(Momo): Test for invalid maps
-      U32 glyph_index = font->codepoint_map[65];
-      Font_Glyph_Asset *glyph = font->glyphs + glyph_index;
+      Font_Asset* font = get_font(ga, FONT_DEFAULT);
+      assert(font);
+      
+      Font_Glyph_Asset* glyph = get_glyph(font, 65);
       
       push_subsprite(render_commands, 
                      colors,
