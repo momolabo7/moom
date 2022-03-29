@@ -29,10 +29,23 @@ get_sprite(Game_Assets* ga, Sprite_ID id) {
 
 static Font_Glyph_Asset* 
 get_glyph(Font_Asset* font, U32 codepoint) {
-  U32 glyph_index = font->codepoint_map[codepoint];
-  if (glyph_index == 0) return nullptr;
-  Font_Glyph_Asset *glyph = font->glyphs + glyph_index;
+  U32 glyph_index_plus_one = font->codepoint_map[codepoint];
+  if (glyph_index_plus_one == 0) return nullptr;
+  Font_Glyph_Asset *glyph = font->glyphs + glyph_index_plus_one - 1;
   return glyph;
+}
+
+static F32
+get_horizontal_advance(Font_Asset* font,
+                       U32 left_codepoint, 
+                       U32 right_codepoint) 
+{
+  U32 g1 = font->codepoint_map[left_codepoint];
+  U32 g2 = font->codepoint_map[right_codepoint];
+  if (!g1 || !g2) return 0.f;
+  
+  U32 advance_index = (g1-1)*font->glyph_count+(g2+1);
+  return font->horizontal_advances[advance_index];
 }
 
 static B32
@@ -145,11 +158,9 @@ load_game_assets(Game_Assets* ga,
       font->highest_codepoint = kf.highest_codepoint + 1;
       
       // +1 glyph count to let [0] be the 'invalid glyph' index
-      font->glyph_count = kf.glyph_count + 1;
+      font->glyph_count = kf.glyph_count;
       font->bitmap_id = Bitmap_ID(kf.bitmap_id); // TODO(Momo): This is a hack!
       
-      // TODO(Momo): we probably need an invalid glyph index
-      // Maybe use index 0 of glyphs array as invalid
       U32 codepoint_map_size = sizeof(U32)*(font->highest_codepoint+1);
       U32 glyphs_size = sizeof(Font_Glyph_Asset)*(font->glyph_count); 
       U32 advances_size = sizeof(F32)*font->glyph_count*font->glyph_count;
@@ -159,28 +170,28 @@ load_game_assets(Game_Assets* ga,
       font->codepoint_map = (U32*)font_memory;
       font->glyphs = (Font_Glyph_Asset*)((U8*)font->codepoint_map + codepoint_map_size);
       font->horizontal_advances = (F32*)((U8*)font->glyphs + glyphs_size);
-      
       zero_memory(font_memory, memory_required);
       
       // glyphs
-      for(U32 glyph_index = 1; 
+      for(U32 glyph_index = 0; 
           glyph_index < font->glyph_count; 
           ++glyph_index) 
       {
         Karu_Font_Glyph kfg = {};
-        U32 kfg_offset = sizeof(Karu_Font_Glyph)*(glyph_index-1)+kf.offset_to_data;
+        U32 kfg_offset = sizeof(Karu_Font_Glyph)*(glyph_index)+kf.offset_to_data;
         platform.read_file(file, sizeof(Karu_Font_Glyph), kfg_offset, &kfg);
         
         Font_Glyph_Asset* glyph = font->glyphs + glyph_index;
         glyph->uv = kfg.uv;
         glyph->box = kfg.box;
         
-        font->codepoint_map[kfg.codepoint] = glyph_index;
+        // NOTE(Momo): Codepoint map values is always the glyph_index + 1;
+        // So we need to adjust by -1 when we index the glyphs
+        font->codepoint_map[kfg.codepoint] = glyph_index + 1;
       }
       
       // horizontal advances
       {
-        // TODO(Momo): fix this?
         U32 advance_offset = sizeof(Karu_Font_Glyph)*font->glyph_count+kf.offset_to_data;
         U32 block_size = font->glyph_count * font->glyph_count * sizeof(F32);
         platform.read_file(file, block_size, advance_offset, font->horizontal_advances);

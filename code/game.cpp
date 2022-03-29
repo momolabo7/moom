@@ -156,15 +156,9 @@ game_update(Game_Memory* memory,
           U32 curr_cp = test_str.e[char_index];
           if (char_index > 0) {
             U32 prev_cp = test_str.e[char_index-1];
-            U32 g1 = font->codepoint_map[prev_cp];
-            U32 g2 = font->codepoint_map[curr_cp];
-            U32 advance_index = g1 * font->glyph_count + g2;
-            position.x += font->horizontal_advances[advance_index]*font_height;
+            position.x += get_horizontal_advance(font, prev_cp, curr_cp)*font_height;
           }
-          
-          U32 glyph_index = font->codepoint_map[curr_cp];
-          
-          Font_Glyph_Asset *glyph = font->glyphs + glyph_index;
+          Font_Glyph_Asset *glyph = get_glyph(font, curr_cp);
           
           F32 width = (glyph->box.max.x - glyph->box.min.x)*font_height;
           F32 height = (glyph->box.max.y - glyph->box.min.y)*font_height;
