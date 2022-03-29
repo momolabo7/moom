@@ -92,8 +92,9 @@ game_update(Game_Memory* memory,
     
     {
       Game_Assets* ga = &memory->state->game_assets;
-#if 0
-      Sprite_Asset* sprite=  ga->sprites + 0;
+#if 1
+      Sprite_Asset* sprite = get_sprite(ga, SPRITE_BULLET_CIRCLE);
+      assert(sprite);
       push_subsprite(render_commands, 
                      colors,
                      t*r*s,
@@ -144,7 +145,7 @@ game_update(Game_Memory* memory,
       
       // Draw text
       {
-        Font_Asset* font = ga->fonts + 0;
+        Font_Asset* font = get_font(ga, FONT_DEFAULT);
         V2 position = {};
         const F32 font_height = 40.f;
         Str8 test_str = str8_from_lit("Hello World");
