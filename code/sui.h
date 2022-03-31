@@ -10,6 +10,7 @@
 
 #include "momo.h"
 
+#define code_dir(filename) "../code/" ##filename
 #define asset_dir(filename) "../assets/" ##filename
 
 static unsigned sui_log_spaces = 0;

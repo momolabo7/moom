@@ -1,16 +1,20 @@
 static U32
-push_sprite(Sui_Atlas* ab, const char* filename) {
+push_sprite(Sui_Atlas* ab, const char* sprite_id_name, const char* filename) 
+{
   assert(ab->sprite_count < array_count(ab->sprites));
   U32 index = ab->sprite_count++;
   
   Sui_Atlas_Sprite* sprite = ab->sprites + index;
+  
   sprite->filename = filename;
+  sprite->sprite_id_name = sprite_id_name;
   return index;
 }
 
 
 static U32
 push_font(Sui_Atlas* ab, 
+          const char* font_id_name, 
           TTF* loaded_ttf,
           U32* codepoints,
           U32 codepoint_count,
@@ -20,7 +24,7 @@ push_font(Sui_Atlas* ab,
   U32 index = ab->font_count++;
   
   Sui_Atlas_Font* font = ab->fonts + index;
-  
+  font->font_id_name = font_id_name;
   font->loaded_ttf = loaded_ttf;
   font->codepoints = codepoints;
   font->codepoint_count = codepoint_count;
@@ -30,13 +34,15 @@ push_font(Sui_Atlas* ab,
 }
 
 static Sui_Atlas
-begin_atlas_builder(U32 atlas_width,
+begin_atlas_builder(const char* bitmap_id_name,
+                    U32 atlas_width,
                     U32 atlas_height) 
 {
   Sui_Atlas ret = {};
   assert(atlas_width);
   assert(atlas_height);
   
+  ret.bitmap_id_name = bitmap_id_name;
   ret.bitmap.width = atlas_width;
   ret.bitmap.height = atlas_height;
   

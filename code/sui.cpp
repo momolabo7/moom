@@ -13,13 +13,14 @@ int main() {
   
   sui_log("Building atlas...\n");
   
-  Sui_Atlas atlas = begin_atlas_builder(1024, 1024);
+  Sui_Atlas atlas = begin_atlas_builder("BITMAP_DEFAULT", 1024, 1024);
   {
-    push_sprite(&atlas, asset_dir("blank.png"));
-    push_sprite(&atlas, asset_dir("bullet_circle.png"));
-    push_sprite(&atlas, asset_dir("bullet_dot.png"));
-    push_sprite(&atlas, asset_dir("player_black.png"));
-    push_sprite(&atlas, asset_dir("player_white.png"));
+    push_sprite(&atlas, "SPRITE_BLANK", asset_dir("blank.png"));
+    push_sprite(&atlas, "SPRITE_BULLET_CIRCLE", asset_dir("bullet_circle.png"));
+    push_sprite(&atlas, "SPRITE_BULLET_DOT", asset_dir("bullet_dot.png"));
+    push_sprite(&atlas, "SPRITE_PLAYER_BLACK", asset_dir("player_black.png"));
+    push_sprite(&atlas, "SPRITE_PLAYER_WHITE", asset_dir("player_white.png"));
+    
     U32 interested_cps[] = { 
       32,65,66,67,68,69,
       70,71,72,73,74,75,76,77,78,79,
@@ -30,7 +31,7 @@ int main() {
       110,111,112,113,114,115,116,117,118,119,
     };
     
-    push_font(&atlas, &loaded_ttf, 
+    push_font(&atlas, "FONT_DEFAULT", &loaded_ttf, 
               interested_cps, array_count(interested_cps), 
               128.f);
   }
@@ -45,7 +46,9 @@ int main() {
   sui_write_file("test.png", png_to_write_memory);
 #endif
   
-  Sui_Packer _sp = sui_begin_packing();
+  Sui_Packer _sp = sui_begin_packing(code_dir("bitmaps.id"),
+                                     code_dir("sprites.id"),
+                                     code_dir("fonts.id"));
   Sui_Packer* sp = &_sp;
   {
     add_atlas(sp, &atlas);

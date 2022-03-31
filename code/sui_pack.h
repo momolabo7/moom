@@ -16,22 +16,29 @@ struct Packer_Font {
   U32 glyph_start_index;
   U32 one_past_glyph_end_index;
   
+  const char* font_id_name;
 };
 
 struct Packer_Bitmap {
   U32 width;
   U32 height;
   U32* pixels;
+  const char* bitmap_id_name;
 };
 
 
 struct Packer_Sprite {
   U32 bitmap_id;
   Rect2 uv;
+  const char* sprite_id_name;
 };
 
 
 struct Sui_Packer {
+  FILE* bitmap_id_file;
+  FILE* font_id_file;
+  FILE* sprite_id_file;
+  
   U32 bitmap_count;
   Packer_Bitmap bitmaps[128];
   

@@ -1,30 +1,40 @@
 
 
 static Sui_Packer
-sui_begin_packing() {
+sui_begin_packing(const char* bitmap_id_filename,
+                  const char* sprite_id_filename,
+                  const char* font_id_filename)
+{
   Sui_Packer ret = {};
+  ret.bitmap_id_file = fopen(bitmap_id_filename, "w");
+  ret.font_id_file = fopen(font_id_filename, "w");
+  ret.sprite_id_file = fopen(sprite_id_filename, "w");
+  
   return ret;
 }
 
 static U32
-add_bitmap(Sui_Packer* p, U32 w, U32 h, U32* pixels) {
+add_bitmap(Sui_Packer* p, U32 w, U32 h, U32* pixels, const char* bitmap_id_name) 
+{
   assert(p->bitmap_count < array_count(p->bitmaps));
   
   Packer_Bitmap* bitmap = p->bitmaps + p->bitmap_count;
   bitmap->width = w;
   bitmap->height = h;
   bitmap->pixels = pixels;
+  bitmap->bitmap_id_name = bitmap_id_name;
   
   return p->bitmap_count++;
 }
 
 static U32 
-add_sprite(Sui_Packer* p, U32 bitmap_id, Rect2 uv) {
+add_sprite(Sui_Packer* p, U32 bitmap_id, Rect2 uv, const char* sprite_id_name) {
   assert(p->sprite_count < array_count(p->sprites));
   
   Packer_Sprite* sprite = p->sprites + p->sprite_count;
   sprite->bitmap_id = bitmap_id;
   sprite->uv = uv;
+  sprite->sprite_id_name = sprite_id_name;
   return p->sprite_count++;
 }
 
@@ -63,10 +73,10 @@ push_glyph(Sui_Packer* p, Rect2 uv, U32 codepoint) {
 }
 
 static void
-end_font(Sui_Packer* p, TTF* ttf, U32 bitmap_id) {
+end_font(Sui_Packer* p, const char* font_id_name, TTF* ttf, U32 bitmap_id) {
   Packer_Font* font = p->current_font;
   assert(font);
-  
+  font->font_id_name = font_id_name;
   font->bitmap_id = bitmap_id;
   font->ttf = ttf;
   
@@ -84,7 +94,8 @@ add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
   U32 bitmap_id = add_bitmap(p, 
                              atlas->bitmap.width,
                              atlas->bitmap.height,
-                             atlas->bitmap.pixels);
+                             atlas->bitmap.pixels,
+                             atlas->bitmap_id_name);
   
   for (U32 sprite_index = 0; 
        sprite_index < atlas->sprite_count;
@@ -98,7 +109,7 @@ add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
     uv.max.x = (F32)(sas->rect->x+sas->rect->w) / atlas->bitmap.width;
     uv.max.y = (F32)(sas->rect->y+sas->rect->h) / atlas->bitmap.height;
     
-    add_sprite(p, bitmap_id, uv);
+    add_sprite(p, bitmap_id, uv, sas->sprite_id_name);
   }
   
   for (U32 font_index = 0; 
@@ -124,7 +135,7 @@ add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
       push_glyph(p, uv, sac->font_glyph.codepoint);
     }
     
-    end_font(p, saf->loaded_ttf, bitmap_id);
+    end_font(p, saf->font_id_name, saf->loaded_ttf, bitmap_id);
   }
   
 }
@@ -143,7 +154,6 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
   
   // Packed in this order:
   // - Bitmap, Sprite, Font, Sound, Msgs
-  
   Karu_Header header = {};
   header.signature = KARU_SIGNATURE;
   header.font_count = p->font_count;
@@ -177,6 +187,14 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
     fseek(file, current_pos, SEEK_SET);
     
     offset_to_data += image_size;
+    
+    // Write to bitmap_id file
+    U8 buffer[256];
+    Str8Bld builder = create_str8bld(buffer, array_count(buffer));
+    Str8 format = str8_from_lit("%s = PACK_DEFAULT << 16 | %d,\n");
+    builder.push_format(format, pb->bitmap_id_name, bitmap_index);
+    fwrite(builder.e, builder.count, 1, p->bitmap_id_file);
+    
   }
   
   for (U32 sprite_index = 0;
@@ -190,6 +208,13 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
     ks.bitmap_id = ps->bitmap_id;
     ks.uv = ps->uv;
     fwrite(&ks, sizeof(Karu_Sprite), 1, file);
+    
+    // write sprite id
+    U8 buffer[256];
+    Str8Bld builder = create_str8bld(buffer, array_count(buffer));
+    Str8 format = str8_from_lit("%s = PACK_DEFAULT << 16 | %d,\n");
+    builder.push_format(format, ps->sprite_id_name, sprite_index);
+    fwrite(builder.e, builder.count, 1, p->sprite_id_file);
   }
   
   for (U32 font_index = 0;
@@ -263,12 +288,22 @@ sui_end_packing(Sui_Packer* p, const char* filename, Arena* arena) {
     
     
     fseek(file, current_pos, SEEK_SET);
+    
+    // write font id
+    U8 buffer[256];
+    Str8Bld builder = create_str8bld(buffer, array_count(buffer));
+    Str8 format = str8_from_lit("%s = PACK_DEFAULT << 16 | %d,\n");
+    builder.push_format(format, pf->font_id_name, font_index);
+    fwrite(builder.e, builder.count, 1, p->font_id_file);
   }
   
   // Write the header
   fseek(file, 0, SEEK_SET);
   fwrite(&header, sizeof(header), 1, file);
   
-  
+  // close the files
+  fclose(p->bitmap_id_file);
+  fclose(p->font_id_file);
+  fclose(p->sprite_id_file);
 }
 

@@ -1,7 +1,7 @@
 #ifndef GAME_ASSETS_H
 #define GAME_ASSETS_H
 
-#include "game_asset_types.h"
+#include "game_asset_ids.h"
 #include "karu.h"
 
 struct Bitmap_Asset {

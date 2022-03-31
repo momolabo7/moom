@@ -42,6 +42,7 @@ struct Sui_Atlas_Context {
 // Entry types
 
 struct Sui_Atlas_Font {
+  const char* font_id_name;
   TTF* loaded_ttf;
   U32* codepoints;
   U32 codepoint_count;
@@ -54,6 +55,7 @@ struct Sui_Atlas_Font {
 };
 
 struct Sui_Atlas_Sprite {
+  const char* sprite_id_name;
   const char* filename;
   
   // will be generated when end
@@ -65,6 +67,7 @@ struct Sui_Atlas_Sprite {
 // Builder
 struct Sui_Atlas {  
   Bitmap bitmap;
+  const char* bitmap_id_name;
   
   Sui_Atlas_Font fonts[128];
   U32 font_count;
