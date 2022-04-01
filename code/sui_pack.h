@@ -35,6 +35,10 @@ struct Packer_Sprite {
 
 
 struct Sui_Packer {
+  FILE* pack_id_file;
+  U32 pack_count;
+  const char* current_pack_id_name;
+  
   FILE* bitmap_id_file;
   FILE* font_id_file;
   FILE* sprite_id_file;

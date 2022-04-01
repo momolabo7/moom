@@ -2,7 +2,6 @@
 
 #include "game.h"
 
-
 B32 show_console;
 
 Platform_API platform;
@@ -95,10 +94,13 @@ game_update(Game_Memory* memory,
 #if 1
       Sprite_Asset* sprite = get_sprite(ga, SPRITE_BULLET_CIRCLE);
       assert(sprite);
+      Bitmap_Asset* bitmap = get_bitmap(ga, sprite->bitmap_id);
+      assert(bitmap);
+      
       push_subsprite(render_commands, 
                      colors,
                      t*r*s,
-                     0, 
+                     bitmap->renderer_texture_handle, 
                      sprite->uv);
 #else
       Font_Asset* font = get_font(ga, FONT_DEFAULT);

@@ -46,12 +46,26 @@ int main() {
   sui_write_file("test.png", png_to_write_memory);
 #endif
   
-  Sui_Packer _sp = sui_begin_packing(code_dir("bitmaps.id"),
-                                     code_dir("sprites.id"),
-                                     code_dir("fonts.id"));
+#if 0
+  sui_begin_packer();
+  {
+    sui_begin_asset_pack();
+    add_atlas(...);
+    sui_end_asset_pack();
+  }
+  sui_end_packer();
+#endif
+  
+  Sui_Packer _sp = begin_packer(code_dir("generated_pack_ids.h"),
+                                code_dir("generated_bitmap_ids.h"),
+                                code_dir("generated_sprite_ids.h"),
+                                code_dir("generated_font_ids.h"));
   Sui_Packer* sp = &_sp;
   {
+    begin_asset_pack(sp);
     add_atlas(sp, &atlas);
+    end_asset_pack(sp, "PACK_DEFAULT", "test.sui", arena);
   }
-  sui_end_packing(sp, "test.sui", arena);
+  
+  end_packer(sp);
 }

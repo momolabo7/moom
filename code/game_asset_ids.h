@@ -3,23 +3,10 @@
 #ifndef GAME_ASSET_IDS_H
 #define GAME_ASSET_IDS_H
 
-// TODO(Momo): Generate?
-enum Pack_ID {
-  PACK_DEFAULT,
-};
-
-enum Bitmap_ID {
-#include "bitmaps.id"
-};
-
-enum Font_ID {
-#include "fonts.id"
-};
-
-enum Sprite_ID {  
-#include "sprites.id"
-};
-
+#include "generated_pack_ids.h"
+#include "generated_bitmap_ids.h"
+#include "generated_font_ids.h"
+#include "generated_sprite_ids.h"
 
 static U32 get_pack_id(Bitmap_ID id) {return id >> 16;}
 static U32 get_pack_id(Font_ID id) {return id >> 16;}

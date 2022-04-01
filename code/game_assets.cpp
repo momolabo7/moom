@@ -136,7 +136,9 @@ load_game_assets(Game_Assets* ga,
       platform.read_file(file, sizeof(Karu_Sprite), offset, &ks);
       
       Sprite_Asset* sa = ga->sprites + sprite_index;
-      sa->bitmap_id = Bitmap_ID(ks.bitmap_id); // TODO(Momo): this is a hack!
+      
+      // TODO(Momo): this is a hack!
+      sa->bitmap_id = Bitmap_ID(ks.bitmap_id); 
       sa->uv = ks.uv;
       
     }
