@@ -445,7 +445,8 @@ template<typename F> zawarudo_ScopeGuard<F> operator+(zawarudo_defer_dummy, F f)
 #define zawarudo_AnonVar(x) zawarudo_AnonVarSub(x)
 #define defer auto zawarudo_AnonVar(__LINE__) = zawarudo_defer_dummy{} + [&]()
 
-
+//~NOTE(Momo): Helper macros 
+#define declare_and_pointerize(type, name) type zawarudo_##name = {}; type* name = &zawarudo_##name
 
 #include "momo_essentials.cpp"
 

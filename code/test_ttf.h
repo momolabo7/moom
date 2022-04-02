@@ -17,9 +17,8 @@ void test_ttf() {
   }
   defer { free(memory); };
   
-  
-  Arena _arena = create_arena(memory, memory_size);
-  Arena* arena = &_arena;
+  declare_and_pointerize(Arena, arena);
+  init_arena(arena, memory, memory_size);
   Memory ttf_memory = 
     test_read_file_to_memory(arena, 
 #if 0 

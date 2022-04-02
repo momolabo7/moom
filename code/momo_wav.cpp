@@ -12,10 +12,11 @@ read_wav(void* memory,
   
   WAV ret = {};
   
-  Stream stream = create_stream((U8*)memory, memory_size);
+  declare_and_pointerize(Stream, stream);
+  init_stream(stream, (U8*)memory, memory_size);
   
   // NOTE(Momo): Load Riff Chunk
-  auto* riff_chunk = consume<WAV_Riff_Chunk>(&stream);
+  auto* riff_chunk = consume<WAV_Riff_Chunk>(stream);
   if (!riff_chunk) {
     return ret;
   }
@@ -29,7 +30,7 @@ read_wav(void* memory,
   }
   
   // NOTE(Momo): Load fmt Chunk
-  auto* fmt_chunk = consume<WAV_Fmt_Chunk>(&stream);
+  auto* fmt_chunk = consume<WAV_Fmt_Chunk>(stream);
   if (!fmt_chunk) {
     return ret;
   }
@@ -54,7 +55,7 @@ read_wav(void* memory,
   }
   
   // Load data Chunk
-  auto* data_chunk = consume<WAV_Data_Chunk>(&stream);
+  auto* data_chunk = consume<WAV_Data_Chunk>(stream);
   if (!data_chunk) {
     return ret;
   }
@@ -63,7 +64,7 @@ read_wav(void* memory,
     return ret;
   }
   
-  void* data = consume_block(&stream, data_chunk->size);
+  void* data = consume_block(stream, data_chunk->size);
   if (data == nullptr) {
     return ret;
   }

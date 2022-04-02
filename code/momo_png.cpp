@@ -736,7 +736,7 @@ create_bitmap(PNG* png, Arena* arena)
   
   _PNG_Context ctx = {};
   ctx.arena = arena;
-  ctx.stream = create_stream(png->data, png->data_size);
+  init_stream(&ctx.stream, png->data, png->data_size);
   ctx.image_width = png->width;
   ctx.image_height = png->height;
   ctx.bit_depth = png->bit_depth;
@@ -744,14 +744,14 @@ create_bitmap(PNG* png, Arena* arena)
   U32 image_size = png->width * png->height * PNG_CHANNELS;
   U8* image_stream_memory = push_array<U8>(arena, image_size);
   assert(image_stream_memory);
-  ctx.image_stream = create_stream(image_stream_memory, image_size);
+  init_stream(&ctx.image_stream, image_stream_memory, image_size);
   
   set_arena_reset_point(arena);
   
   U32 unfiltered_size = png->width * png->height * PNG_CHANNELS + png->height;
   U8* unfiltered_image_stream_memory = push_array<U8>(arena, unfiltered_size);
   assert(unfiltered_image_stream_memory);
-  ctx.unfiltered_image_stream = create_stream(unfiltered_image_stream_memory, unfiltered_size);
+  init_stream(&ctx.unfiltered_image_stream, unfiltered_image_stream_memory, unfiltered_size);
   
   consume<_PNG_Header>(&ctx.stream);
   
@@ -775,24 +775,25 @@ create_bitmap(PNG* png, Arena* arena)
   }
   
   U8* zlib_data = push_array<U8>(arena, zlib_size);
-  Stream zlib_stream = create_stream(zlib_data,
-                                     zlib_size);
+  declare_and_pointerize(Stream, zlib_stream);
+  init_stream(zlib_stream, zlib_data, zlib_size);
+  
   // Second pass to allocate memory
   while(!is_eos(&ctx.stream)) {
     auto* chunk_header = consume<_PNG_Chunk_Header>(&ctx.stream);
     U32 chunk_length = endian_swap_32(chunk_header->length);
     U32 chunk_type = endian_swap_32(chunk_header->type_U32);
     if (chunk_type == 'IDAT') {
-      write_block(&zlib_stream, 
+      write_block(zlib_stream, 
                   ctx.stream.data + ctx.stream.pos,
                   chunk_length);
     }
     consume_block(&ctx.stream, chunk_length);
     consume<_PNG_Chunk_Footer>(&ctx.stream);
   }
-  reset(&zlib_stream);
+  reset(zlib_stream);
   
-  if (!_png_decompress_zlib(&ctx, &zlib_stream)) {
+  if (!_png_decompress_zlib(&ctx, zlib_stream)) {
     Bitmap ret = {};
     return ret;
   }
@@ -849,9 +850,11 @@ write_bitmap_as_png(Bitmap bm, Arena* arena) {
                                   IDAT_chunk_size);
   
   U8* stream_memory = (U8*)push_block(arena, expected_memory_required);
-  Stream stream = create_stream(stream_memory, expected_memory_required);
+  assert(stream_memory);
+  declare_and_pointerize(Stream, stream);
+  init_stream(stream, stream_memory, expected_memory_required);
   
-  write_block(&stream, (void*)signature, sizeof(signature));
+  write_block(stream, (void*)signature, sizeof(signature));
   
   
   // NOTE(Momo): write IHDR
@@ -862,8 +865,8 @@ write_bitmap_as_png(Bitmap bm, Arena* arena) {
     header.type_U32 = endian_swap_32('IHDR');
     header.length = sizeof(_PNG_IHDR);
     header.length = endian_swap_32(header.length);
-    write(&stream, header);
-    crc_start = stream.data + stream.pos - sizeof(header.type_U32);
+    write(stream, header);
+    crc_start = stream->data + stream->pos - sizeof(header.type_U32);
     
     _PNG_IHDR IHDR = {};
     IHDR.width = endian_swap_32(bm.width);
@@ -873,13 +876,13 @@ write_bitmap_as_png(Bitmap bm, Arena* arena) {
     IHDR.compression_method = 0;
     IHDR.filter_method = 0;
     IHDR.interlace_method = 0;
-    write(&stream, IHDR);
+    write(stream, IHDR);
     
     _PNG_Chunk_Footer footer = {};
-    U32 crc_size = (U32)(stream.data + stream.pos - crc_start);
+    U32 crc_size = (U32)(stream->data + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
     footer.crc = endian_swap_32(footer.crc);
-    write(&stream, footer);
+    write(stream, footer);
     
   }
   
@@ -896,8 +899,8 @@ write_bitmap_as_png(Bitmap bm, Arena* arena) {
     header.type_U32 = endian_swap_32('IDAT');
     header.length = sizeof(_PNG_IDAT_Header) + (chunk_overhead*chunk_count) + data_size; 
     header.length = endian_swap_32(header.length);    
-    write(&stream, header);
-    crc_start = stream.data + stream.pos - sizeof(header.type_U32);
+    write(stream, header);
+    crc_start = stream->data + stream->pos - sizeof(header.type_U32);
     
     // NOTE(Momo): Hardcoded IDAT chunk header header that fits our use-case
     //
@@ -909,7 +912,7 @@ write_bitmap_as_png(Bitmap bm, Arena* arena) {
     _PNG_IDAT_Header IDAT;
     IDAT.compression_flags = 8;
     IDAT.additional_flags = 29;
-    write(&stream, IDAT);
+    write(stream, IDAT);
     
     
     // NOTE(Momo): Deflate chunk header
@@ -925,21 +928,21 @@ write_bitmap_as_png(Bitmap bm, Arena* arena) {
       lines_remaining -= lines_to_write;
       
       U8 BFINAL = ((chunk_index + 1) == chunk_count) ? 1 : 0;
-      write(&stream, BFINAL);
+      write(stream, BFINAL);
       
       U16 LEN = (U16)(lines_to_write * data_bpl); // number of data bytes in the block
       U16 NLEN = ~LEN; // one's complement of LEN
-      write(&stream, LEN);
-      write(&stream, NLEN);
+      write(stream, LEN);
+      write(stream, NLEN);
       
       // NOTE(Momo): Output data here
       // We have to do it row by row to add the filter byte at the front
       for (U32 line_index = 0; line_index < lines_to_write; ++line_index) 
       {
         U8 no_filter = 0;
-        write(&stream, no_filter); // Filter type: None
+        write(stream, no_filter); // Filter type: None
         
-        write_block(&stream,
+        write_block(stream,
                     (U8*)bm.pixels + (current_line * image_bpl),
                     image_bpl);
         
@@ -952,10 +955,10 @@ write_bitmap_as_png(Bitmap bm, Arena* arena) {
     
     
     _PNG_Chunk_Footer footer = {};
-    U32 crc_size = (U32)(stream.data + stream.pos - crc_start);
+    U32 crc_size = (U32)(stream->data + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
     footer.crc = endian_swap_32(footer.crc);
-    write(&stream, footer);
+    write(stream, footer);
   }
   
   // NOTE(Momo): write IEND
@@ -965,42 +968,42 @@ write_bitmap_as_png(Bitmap bm, Arena* arena) {
     _PNG_Chunk_Header header = {};
     header.type_U32 = endian_swap_32('IEND');
     header.length = 0;
-    write(&stream, header);
-    crc_start = stream.data + stream.pos - sizeof(header.type_U32);
+    write(stream, header);
+    crc_start = stream->data + stream->pos - sizeof(header.type_U32);
     
     
     _PNG_Chunk_Footer footer = {};
-    U32 crc_size = (U32)(stream.data + stream.pos - crc_start);
+    U32 crc_size = (U32)(stream->data + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
     footer.crc = endian_swap_32(footer.crc);
-    write(&stream, footer);
+    write(stream, footer);
   }
   
   Memory ret;
-  ret.data = (U8*)stream.data;
-  ret.size = stream.pos;
+  ret.data = (U8*)stream->data;
+  ret.size = stream->pos;
   
   return ret;
 }
 
 static PNG
 create_png(Memory png_memory) {
-  
-  Stream stream = create_stream((U8*)png_memory.data, png_memory.size);
+  declare_and_pointerize(Stream, stream);
+  init_stream(stream, (U8*)png_memory.data, png_memory.size);
   
   // Read Signature
-  auto* png_header = consume<_PNG_Header>(&stream);  
+  auto* png_header = consume<_PNG_Header>(stream);  
   if (!_png_is_signature_valid(png_header->signature)) return {}; 
   
   // Read Chunk Header
-  auto* chunk_header = consume<_PNG_Chunk_Header>(&stream);
+  auto* chunk_header = consume<_PNG_Chunk_Header>(stream);
   U32 chunk_length = endian_swap_32(chunk_header->length);
   U32 chunk_type = endian_swap_32(chunk_header->type_U32);
   
   
   if(chunk_type != 'IHDR') { return {}; }
   
-  _PNG_IHDR* IHDR = consume<_PNG_IHDR>(&stream);
+  _PNG_IHDR* IHDR = consume<_PNG_IHDR>(stream);
   
   // NOTE(Momo): Width and height is in Big Endian
   // We assume that we are currently in a Little Endian system

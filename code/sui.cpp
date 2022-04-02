@@ -6,8 +6,8 @@ int main() {
   Memory memory = sui_malloc(MB(10));
   defer { sui_free(&memory); };
   
-  Arena _arena = create_arena(memory.data, memory.size);
-  Arena* arena = &_arena;
+  declare_and_pointerize(Arena, arena);
+  init_arena(arena, memory.data, memory.size);
   
   TTF loaded_ttf = sui_load_font(asset_dir("nokiafc22.ttf"), arena);
   

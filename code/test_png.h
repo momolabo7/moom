@@ -3,9 +3,6 @@
 #ifndef TEST_PNG_H
 #define TEST_PNG_H
 
-using namespace std;
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
 
 void test_png() {
@@ -29,9 +26,6 @@ void test_png() {
     test_assets_dir("paint.png"), "paint_out.png",
   }; 
   
-  int x, y, c;
-  stbi_load(test_assets_dir("test.png"), &x, &y, &c, 4);
-  
   U32 memory_size = MB(100);
   U8* memory = (U8*)malloc(memory_size);
   if (!memory) { 
@@ -44,7 +38,8 @@ void test_png() {
     test_log("Test Case: %d\n", i);
     test_create_log_section_until_scope;
     
-    Arena app_arena = create_arena(memory, memory_size);
+    Arena app_arena = {};
+    init_arena(&app_arena, memory, memory_size);
     Memory png_file = test_read_file_to_memory(&app_arena, test_cases[i].in);
     
     if (!is_ok(png_file)){

@@ -24,11 +24,11 @@ struct Arena{
 	UMI cap;
 };
 
-static Arena create_arena(void* mem, UMI cap);
+static void  init_arena(Arena* a, void* mem, UMI cap);
 static void  clear(Arena* a);
 static void* push_block(Arena* a, UMI size, UMI align = 4);
-static Arena partition(Arena* a, UMI size);
-static UMI remaining_of(Arena* a);
+static void  partition(Arena* a, UMI size);
+static UMI   remaining_of(Arena* a);
 
 // NOTE(Momo): Why do these return the same type? :(
 // Is there a way to avoid pointers?

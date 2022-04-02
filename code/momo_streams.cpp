@@ -1,12 +1,10 @@
-static Stream
-create_stream(U8* memory, UMI memory_size) {
-	Stream ret;
-	ret.data = memory;
-	ret.size = memory_size;
-  ret.pos = 0;
-  ret.bit_buffer = 0;
-  ret.bit_count = 0;
-  return ret;
+static void
+init_stream(Stream* s, U8* memory, UMI memory_size) {
+	s->data = memory;
+	s->size = memory_size;
+  s->pos = 0;
+  s->bit_buffer = 0;
+  s->bit_count = 0;
 }
 
 static void
