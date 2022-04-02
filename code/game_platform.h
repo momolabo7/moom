@@ -95,7 +95,7 @@ struct Game_Input {
       Game_Input_Button button_console;
     };  
   };
-
+  
   V2 design_mouse_pos;
   V2U screen_mouse_pos;
   V2U render_mouse_pos;
@@ -114,6 +114,7 @@ struct Game_Memory {
   
   Platform_API platform_api;
   Renderer_Texture_Queue* texture_queue;
+  
 };
 
 struct Game_Render_Commands;

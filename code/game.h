@@ -6,6 +6,7 @@
 #include "game_platform.h"
 #include "game_renderer.h"
 #include "game_assets.h"
+#include "game_debug.h"
 
 struct Sandbox_Mode {
   F32 tmp_delta;
@@ -14,11 +15,13 @@ struct Sandbox_Mode {
   
 };
 
+
 struct Game_State {
   union {
     Sandbox_Mode sandbox_mode;  
   };
   Game_Assets game_assets;
+  Debug_Console debug_console;
 };
 
 
