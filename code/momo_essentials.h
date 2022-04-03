@@ -3,7 +3,6 @@
 #define MOMO_ESSENTIALS_H
 
 #include <stdarg.h>
-#undef min
 
 //~Contexts
 // Language specs
@@ -172,8 +171,7 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 #define ascii_to_digit(a) ((a) - '0')
 
 
-
-//~Helper functions
+//~Useful calculations
 static UMI ptr_to_int(void* p);
 static U8* int_to_ptr(UMI u);
 
@@ -226,8 +224,30 @@ template<typename T, typename U> static T align_up_pow2(T value, U align);
 template<typename T> static B32 is_pow2(T value);
 template<typename T> static void swap(T* lhs, T* rhs); 
 
+static B32 is_digit(U8 c);
 
-//~NOTE(Momo): assert
+static F32 deg_to_rad(F32 degrees) ;
+static F64 deg_to_rad(F64 degrees) ;
+static F32 rad_to_deg(F32 radians);
+static F64 rad_to_deg(F64 radians);
+
+// Beats per min to Secs per beat
+static F32 bpm_to_spb(F32 bpm); 
+static F64 bpm_to_spb(F64 bpm); 
+
+
+// NOTE(Momo): I'm not entirely sure if this prototype makes sense.
+// It sounds more reasonable to endian swap ANY type. 
+// We COULD use a template approach like so:
+//   template<typename T> endian_swap_16(T value);
+//   template<typename T> endian_swap_32(T value); 
+// Or we COULD just ignore the concept of type:
+//   void _EndianSwap16(U8* ptr)
+//   #define endian_swap_16(value) _EndianSwap16((U8*)&value)
+static U16 endian_swap_16(U16 value);
+static U32 endian_swap_32(U32 value);
+
+//~assert
 // NOTE(Momo): Others can provide their own 'assert_callback' 
 #if !defined(assert_callback)
 #define assert_callback(s) (*(volatile int*)0 = 0)
@@ -240,8 +260,8 @@ template<typename T> static void swap(T* lhs, T* rhs);
 #endif // ENABLE_ASSERT
 
 //////////////////////////////////////////
-//~NOTE(Momo): Constants
-// I'm fairly convinced that if we compile with C++, 
+//~Constants
+// NOTE(Momo): I'm fairly convinced that if we compile with C++, 
 // static variables should be better than #define literals.
 // Memory-wise they *should* the produces the same results, 
 // but provides stronger typing. 
@@ -266,11 +286,14 @@ static F64 F64_EPSILON = 2.220446E-16;
 
 static F32 F32_INFINITY();
 static F32 F32_NEG_INFINITY();
+static F32 F32_NAN();
 static F64 F64_INFINITY();
 static F64 F64_NEG_INFINITY();
-//~ NOTE(Momo): Memory-related helpers
+static F64 F64_NAN();
 
-// This is a really useful construct I find myself using 
+//~Memory-related helpers
+
+// NOTE(Momo):  This is a really useful construct I find myself using 
 // more and more. 
 struct Memory  {
   union {
@@ -294,8 +317,7 @@ static B32  is_memory_same(const void* lhs, const void* rhs, UMI size);
 #define copy_array(p)     copy_memory((p), sizeof(p))
 #define copy_range(p,s)   copy_memory((p), sizeof(*(p)) * (s))
 
-//~ NOTE(Momo): C-string
-// TODO(Momo): rename these to e.g: len_of_cstr, copy_cstr, etc
+//~C-string
 static UMI  cstr_len(const char* str);
 static void cstr_copy(char * dest, const char* Src);
 static B32  cstr_compare(const char* lhs, const char* rhs);
@@ -305,32 +327,17 @@ static void cstr_clear(char* dest);
 static void cstr_reverse(char* dest);
 static void cstr_itoa(char* dest, S32 num);
 
-//~ NOTE(Momo): IEEE floating point functions 
+//~IEEE floating point functions 
 static B32 is_close(F32 lhs, F32 rhs);
 static B32 is_close(F64 lhs, F64 rhs);
-// Ah...cannot overload operator==...
 
-//~ NOTE(Momo): Useful calculations
-static F32 deg_to_rad(F32 degrees) ;
-static F64 deg_to_rad(F64 degrees) ;
-static F32 rad_to_deg(F32 radians);
-static F64 rad_to_deg(F64 radians);
+static B32 is_nan(F32 f);
+static B32 is_nan(F64 f);
 
-// Beats per min to Secs per beat
-static F32 bpm_to_spb(F32 bpm); 
-static F64 bpm_to_spb(F64 bpm); 
-
-
-// NOTE(Momo): I'm not entirely sure if this prototype makes sense.
-// It sounds more reasonable to endian swap ANY type. 
-// We COULD use a template approach like so:
-//   template<typename T> endian_swap_16(T value);
-//   template<typename T> endian_swap_32(T value); 
-// Or we COULD just ignore the concept of type:
-//   void _EndianSwap16(U8* ptr)
-//   #define endian_swap_16(value) _EndianSwap16((U8*)&value)
-static U16 endian_swap_16(U16 value);
-static U32 endian_swap_32(U32 value);
+// NOTE(Momo): Returns F64_NAN() if unsucceessful. Use is_nan() to check if needed.
+// In debug mode, it will assert if unsuccessful.
+static F64 str_to_f64(const U8* p);
+static F64 str_to_f64(const char* p);
 
 
 //~ NOTE(Momo): Math functions that are not trivial
@@ -447,6 +454,8 @@ template<typename F> zawarudo_ScopeGuard<F> operator+(zawarudo_defer_dummy, F f)
 
 //~NOTE(Momo): Helper macros 
 #define declare_and_pointerize(type, name) type zawarudo_##name = {}; type* name = &zawarudo_##name
+
+
 
 #include "momo_essentials.cpp"
 
