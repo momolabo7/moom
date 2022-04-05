@@ -11,8 +11,7 @@ update(Game_Input* input) {
   for (U32 i = 0; i < array_count(input->buttons); ++i) {
     input->buttons[i].before = input->buttons[i].now;
   }
-  
-  
+  input->char_count = 0;
 }
 
 

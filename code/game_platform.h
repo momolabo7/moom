@@ -84,6 +84,7 @@ static B32 is_held(Game_Input_Button);
 
 
 struct Game_Input {
+  
   union {
     Game_Input_Button buttons[5];
     struct {
@@ -101,6 +102,9 @@ struct Game_Input {
   V2U render_mouse_pos;
   
   F32 seconds_since_last_frame; //aka dt
+  
+  U8 chars[32];
+  U32 char_count;
 };
 
 void update(Game_Input_Button button);

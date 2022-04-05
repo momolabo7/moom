@@ -14,9 +14,7 @@
 static inline LONG width_of(RECT r) { return r.right - r.left; }
 static inline LONG height_of(RECT r) { return r.bottom - r.top; }
 
-//#define WIN_LOG_ENABLED
-
-#ifdef WIN_LOG_ENABLED
+#ifdef INTERNAL
 #include <stdio.h>
 static void
 win_log_proc(const char* fmt, ...) {
@@ -774,6 +772,10 @@ WinMain(HINSTANCE instance,
       MSG msg = {};
       while(PeekMessage(&msg, window, 0, 0, PM_REMOVE)) {
         switch(msg.message) {
+          case WM_CHAR: {
+            assert(input.char_count < array_count(input.chars));
+            input.chars[input.char_count++] = (U8)msg.wParam;
+          } break;
           case WM_QUIT:
           case WM_DESTROY:
           case WM_CLOSE: {
@@ -794,6 +796,7 @@ WinMain(HINSTANCE instance,
                 input.button_console.now = is_key_down;
               } break;
             }
+            TranslateMessage(&msg);
             
           } break;
           
