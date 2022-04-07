@@ -16,6 +16,12 @@ test_command2(void* ctx) {
   (*i) -= 10;
 }
 
+static void
+bootstrap_arena_for_game(Arena* a, UMI size) {
+  init_arena(a, platform.alloc(size), size);
+}
+
+
 exported B32 
 game_update(Game_Memory* memory,
             Game_Input* input, 
@@ -24,27 +30,23 @@ game_update(Game_Memory* memory,
   
   F32 dt = input->seconds_since_last_frame;
   
-  
   // Initialization
   if (!memory->state) {
     game_log("initialized!");
-    platform.set_aspect_ratio(16, 9);
-    
     memory->state = (Game_State*)platform.alloc(sizeof(Game_State));
     if (!memory->state) return false;
     
-    // TODO(Momo): Figure out what we want to do with 
-    // game asset memory?
-    UMI memory_size = MB(20);
-    void* mem = platform.alloc(memory_size);
+    platform.set_aspect_ratio(16, 9);
     
-    declare_and_pointerize(Arena, arena);
-    init_arena(arena, mem, memory_size);
+    bootstrap_arena_for_game(&memory->state->asset_arena, MB(20));
+    bootstrap_arena_for_game(&memory->state->debug_arena, MB(1));
+    bootstrap_arena_for_game(&memory->state->frame_arena, MB(1));
+    
     
     B32 success = load_game_assets(&memory->state->game_assets, 
                                    memory->texture_queue,
                                    "test.sui",
-                                   arena);
+                                   &memory->state->asset_arena);
     if(!success) return false;
     
     
@@ -56,7 +58,7 @@ game_update(Game_Memory* memory,
     
     // Initialize Debug Console
     Debug_Console* dc = &memory->state->debug_console;
-    init_debug_console(dc);
+    init_debug_console(dc, &memory->state->debug_arena);
     add_debug_command(dc, string_from_lit("add"), &debug_test, test_command);
     add_debug_command(dc, string_from_lit("sub"), &debug_test, test_command2);
   }
@@ -139,11 +141,9 @@ game_update(Game_Memory* memory,
                      glyph->uv);
 #endif
     }
-    
-    render_debug_console(dc, ga, render_commands);
-    
   }
   
+  render_debug_console(dc, ga, render_commands);
   return true;
   
 }

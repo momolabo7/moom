@@ -21,24 +21,28 @@ struct Debug_Console {
   U32 command_count;
   Console_Command commands[10];
   
-  Console_Line info_lines[5];
-  
-  Console_Line input_line;
+  String_Builder info_lines[9];
+  String_Builder input_line;
 };
 
 static void
-init_debug_console(Debug_Console* dc) {
+init_debug_console(Debug_Console* dc, Arena* arena) {
   dc->is_showing = false;
   
-  // REMOVE WHEN DONE
-  dc->input_line.str.e = dc->input_line.buffer;
+  
+  UMI line_size = 256;
+  init_string_builder(&dc->input_line,
+                      push_array<U8>(arena, line_size),
+                      line_size);
   
   for (U32 info_line_index = 0;
        info_line_index < array_count(dc->info_lines);
        ++info_line_index) 
-  {
-    Console_Line* info_line = dc->info_lines + info_line_index;
-    info_line->str.e = info_line->buffer;
+  {    
+    String_Builder* info_line = dc->info_lines + info_line_index;
+    init_string_builder(info_line,
+                        push_array<U8>(arena, line_size),
+                        line_size);
   }
 }
 
@@ -55,28 +59,28 @@ add_debug_command(Debug_Console* dc,
   cmd->func = func;
 }
 
-
 static void
-push(Console_Line* line, U8 c) {
-  if (line->str.count < array_count(line->buffer)) {
-    line->str.e[line->str.count++] = c;
-  }
+_push_info(Debug_Console* dc, String str) {
+  // NOTE(Momo): There's probably a better to do with via some
+  // crazy indexing scheme, but this is debug so we don't care for now
+  
+  // Copy everything from i + 1 from i
+  for (U32 i = 0; 
+       i < array_count(dc->info_lines) - 1;
+       ++i)
+  {
+    U32 line_index = array_count(dc->info_lines) - 1 - i;
+    String_Builder* line_to = dc->info_lines + line_index;
+    String_Builder* line_from = dc->info_lines + line_index - 1;
+    clear(line_to);
+    push_string(line_to, line_from->str);
+  } 
+  clear(dc->info_lines + 0);
+  push_string(dc->info_lines + 0, str);
 }
 
 static void
-pop(Console_Line* line) {
-  if (line->str.count > 0) {
-    line->str.count--;
-  }
-}
-
-static void
-clear(Console_Line* line) {
-  line->str.count = 0;
-}
-
-static void
-exec(Debug_Console* dc) {
+_execute(Debug_Console* dc) {
   for(U32 command_index = 0; 
       command_index < dc->command_count; 
       ++command_index) 
@@ -87,7 +91,7 @@ exec(Debug_Console* dc) {
     }
   }
   
-  
+  _push_info(dc, dc->input_line.str);
   clear(&dc->input_line);
 }
 
@@ -98,6 +102,8 @@ update_debug_console(Debug_Console* dc, Game_Input* input) {
     dc->is_showing = !dc->is_showing;
   }
   
+  if (!dc->is_showing) return;
+  
   for (U32 char_index = 0; 
        char_index < input->char_count;
        ++char_index) 
@@ -105,15 +111,17 @@ update_debug_console(Debug_Console* dc, Game_Input* input) {
     // NOTE(Momo): Not very portable to other platforms....
     U8 c = input->chars[char_index];
     if (c >= 32 && c <= 126) {
-      push(&dc->input_line, c);
+      push_u8(&dc->input_line, c);
     }
     // backspace 
     if (c == 8) {
-      pop(&dc->input_line);
+      if (dc->input_line.count > 0) 
+        pop(&dc->input_line);
     }    
     
     if (c == '\r') {
-      exec(dc);
+      _execute(dc);
+      break;
     }
   }
 }
@@ -128,6 +136,8 @@ render_debug_console(Debug_Console* dc,
   if (dc->is_showing) {
     // Camera
     {
+      // TODO(Momo): This values should come from
+      // some 'design width' and 'design height' value from elsewhere.
       V3 position = {};
       Rect3 frustum;
       frustum.min.x = frustum.min.y = frustum.min.z = 0;
@@ -137,51 +147,78 @@ render_debug_console(Debug_Console* dc,
       push_orthographic_camera(render_commands, position, frustum);
     }
     
+    // TODO(Momo): These should be percentages
+    // but we'll work with this for now
+    const F32 console_width = 1600.f;
+    const F32 console_height = 400.f;
+    const F32 line_height = console_height/(array_count(dc->info_lines)+1);
+    
     // Draw background
+#if 0
     {
       RGBA bg_color = create_rgba(0.5f, 0.5f, 0.5f, 1.f);
-      M44 bgs = create_m44_scale(1600.f, 400.f, 10.f);
-      M44 bgt = create_m44_translation(800.f, 200.f, 10.f);
+      M44 bgs = create_m44_scale(console_width, console_height, 10.f);
+      M44 bgt = create_m44_translation(console_width/2, console_height/2, 10.f);
       
-      Sprite_Asset* sprite=  ga->sprites + 0;
+      // Blank sprite
+      Sprite_Asset* sprite =  ga->sprites + 0;
       push_subsprite(render_commands, 
                      bg_color,
                      bgt*bgs,
                      0, 
                      sprite->uv);
     }
+#endif
     
-#if 0
+    draw_rect(ga, render_commands,
+              create_rgba(0x787878FF),
+              console_width/2,
+              console_height/2,
+              console_width, 
+              console_height,
+              100.f);
+    
+    draw_rect(ga, render_commands,
+              create_rgba(0x505050FF),
+              console_width/2,
+              line_height/2,
+              console_width,
+              line_height,
+              90.f);
+    
+    
     // Draw info text
-    for (U32 info_line_index = 0;
-         info_line_index < array_count(dc->info_lines);
-         ++info_line_index)
+    for (U32 line_index = 0;
+         line_index < array_count(dc->info_lines);
+         ++line_index)
     {
-      Console_Line* info_line = dc->info_lines + info_line_index;
+      String_Builder* line = dc->info_lines + line_index;
       
       Font_Asset* font = get_font(ga, FONT_DEFAULT);
       V2 position = {};
-      const F32 font_height = 40.f;
+      position.x = 0;
+      position.y = (line_height*(line_index+1));
+      
       for(U32 char_index = 0; 
-          char_index < info_line->str.count;
+          char_index < line->str.count;
           ++char_index) 
       {
-        U32 curr_cp = info_line->str.e[char_index];
+        U32 curr_cp = line->str.e[char_index];
         if (char_index > 0) {
-          U32 prev_cp = info_line->str.e[char_index-1];
-          position.x += get_horizontal_advance(font, prev_cp, curr_cp)*font_height;
+          U32 prev_cp = line->str.e[char_index-1];
+          position.x += get_horizontal_advance(font, prev_cp, curr_cp)*line_height;
         }
         Font_Glyph_Asset *glyph = get_glyph(font, curr_cp);
         
-        F32 width = (glyph->box.max.x - glyph->box.min.x)*font_height;
-        F32 height = (glyph->box.max.y - glyph->box.min.y)*font_height;
+        F32 width = (glyph->box.max.x - glyph->box.min.x)*line_height;
+        F32 height = (glyph->box.max.y - glyph->box.min.y)*line_height;
         
         M44 transform = 
-          create_m44_translation(position.x + (glyph->box.min.x*font_height), 
-                                 position.y + (glyph->box.min.y*font_height), 
+          create_m44_translation(position.x + (glyph->box.min.x*line_height), 
+                                 position.y + (glyph->box.min.y*line_height), 
                                  9.f)*
           create_m44_scale(width, height, 1.f)*
-          create_m44_translation(0.5f, 0.5f, 0.f);
+          create_m44_translation(0.5f, 0.5f, 1.f);
         
         
         RGBA colors = create_rgba(1.f, 1.f, 1.f, 1.f);
@@ -193,13 +230,11 @@ render_debug_console(Debug_Console* dc,
                        glyph->uv);
       }
     }
-#endif
     
     // Draw input text
     {
       Font_Asset* font = get_font(ga, FONT_DEFAULT);
       V2 position = {};
-      const F32 font_height = 40.f;
       for(U32 char_index = 0; 
           char_index < dc->input_line.str.count;
           ++char_index) 
@@ -207,19 +242,19 @@ render_debug_console(Debug_Console* dc,
         U32 curr_cp = dc->input_line.str.e[char_index];
         if (char_index > 0) {
           U32 prev_cp = dc->input_line.str.e[char_index-1];
-          position.x += get_horizontal_advance(font, prev_cp, curr_cp)*font_height;
+          position.x += get_horizontal_advance(font, prev_cp, curr_cp)*line_height;
         }
         Font_Glyph_Asset *glyph = get_glyph(font, curr_cp);
         
-        F32 width = (glyph->box.max.x - glyph->box.min.x)*font_height;
-        F32 height = (glyph->box.max.y - glyph->box.min.y)*font_height;
+        F32 width = (glyph->box.max.x - glyph->box.min.x)*line_height;
+        F32 height = (glyph->box.max.y - glyph->box.min.y)*line_height;
         
         M44 transform = 
-          create_m44_translation(position.x + (glyph->box.min.x*font_height), 
-                                 position.y + (glyph->box.min.y*font_height), 
+          create_m44_translation(position.x + (glyph->box.min.x*line_height), 
+                                 position.y + (glyph->box.min.y*line_height), 
                                  9.f)*
           create_m44_scale(width, height, 1.f)*
-          create_m44_translation(0.5f, 0.5f, 0.f);
+          create_m44_translation(0.5f, 0.5f, 1.f);
         
         
         RGBA colors = create_rgba(1.f, 1.f, 1.f, 1.f);

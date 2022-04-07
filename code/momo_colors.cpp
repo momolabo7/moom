@@ -9,6 +9,18 @@ create_rgba(F32 r, F32 g, F32 b, F32 a){
 	return ret;
 }
 
+static RGBA
+create_rgba(U32 hex) {
+  RGBA ret;
+  
+  ret.r = (F32)((hex & 0xFF000000) >> 24)/255.f;
+  ret.g = (F32)((hex & 0x00FF0000) >> 16)/255.f;
+  ret.b = (F32)((hex & 0x0000FF00) >> 8)/255.f;
+  ret.a = (F32)(hex & 0x000000FF)/255.f;
+  
+  return ret;
+}
+
 static HSL
 create_hsl(F32 h, F32 s, F32 l) {
   HSL ret;

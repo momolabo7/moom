@@ -227,6 +227,10 @@ end_asset_pack(Sui_Packer* p,
   
   U32 offset_to_data = header.offset_to_fonts + sizeof(Karu_Font)*p->font_count;
   
+  U8 buffer[256];
+  declare_and_pointerize(String_Builder, builder);
+  init_string_builder(builder, buffer, array_count(buffer));
+  
   for (U32 bitmap_index = 0;
        bitmap_index < p->bitmap_count;
        ++bitmap_index) 
@@ -250,12 +254,11 @@ end_asset_pack(Sui_Packer* p,
     offset_to_data += image_size;
     
     // Write to bitmap_id file
-    U8 buffer[256];
-    StringBld builder = create_stringbld(buffer, array_count(buffer));
-    String format = string_from_lit("%s = %s << 16 | %d,\n");
-    builder.push_format(format, pb->bitmap_id_name, pack_id_name, bitmap_index);
-    fwrite(builder.e, builder.count, 1, p->bitmap_id_file);
     
+    String format = string_from_lit("%s = %s << 16 | %d,\n");
+    push_format(builder, format, pb->bitmap_id_name, pack_id_name, bitmap_index);
+    fwrite(builder->e, builder->count, 1, p->bitmap_id_file);
+    clear(builder);
   }
   
   for (U32 sprite_index = 0;
@@ -271,11 +274,10 @@ end_asset_pack(Sui_Packer* p,
     fwrite(&ks, sizeof(Karu_Sprite), 1, file);
     
     // write sprite id
-    U8 buffer[256];
-    StringBld builder = create_stringbld(buffer, array_count(buffer));
     String format = string_from_lit("%s = %s << 16 | %d,\n");
-    builder.push_format(format, ps->sprite_id_name, pack_id_name, sprite_index);
-    fwrite(builder.e, builder.count, 1, p->sprite_id_file);
+    push_format(builder, format, ps->sprite_id_name, pack_id_name, sprite_index);
+    fwrite(builder->e, builder->count, 1, p->sprite_id_file);
+    clear(builder);
   }
   
   for (U32 font_index = 0;
@@ -351,11 +353,10 @@ end_asset_pack(Sui_Packer* p,
     fseek(file, current_pos, SEEK_SET);
     
     // write font id
-    U8 buffer[256];
-    StringBld builder = create_stringbld(buffer, array_count(buffer));
     String format = string_from_lit("%s = %s << 16 | %d,\n");
-    builder.push_format(format, pf->font_id_name, pack_id_name, font_index);
-    fwrite(builder.e, builder.count, 1, p->font_id_file);
+    push_format(builder, format, pf->font_id_name, pack_id_name, font_index);
+    fwrite(builder->e, builder->count, 1, p->font_id_file);
+    clear(builder);
   }
   
   // Write the header
@@ -364,11 +365,10 @@ end_asset_pack(Sui_Packer* p,
   
   // Write the pack id
   {
-    U8 buffer[256];
-    StringBld builder = create_stringbld(buffer, array_count(buffer));
     String format = string_from_lit("%s = %d,\n");
-    builder.push_format(format, pack_id_name, p->pack_count);
-    fwrite(builder.e, builder.count, 1, p->pack_id_file);
+    push_format(builder, format, pack_id_name, p->pack_count);
+    fwrite(builder->e, builder->count, 1, p->pack_id_file);
+    clear(builder);
     ++p->pack_count;
     
   }

@@ -46,7 +46,7 @@ static void     push_s32(String_Builder* b, S32 num);
 static void     push_string(String_Builder* b, String num);
 static void     push_format(String_Builder* b, String fmt, ...);
 
-static String_Builder  init_string_builder(U8* data, UMI cap);
+static void     init_string_builder(String_Builder* b, U8* data, UMI cap);
 //#define StringBld_temp(name, cap) U8 temp##__line__[cap]; StringBld name = StringBld_Create(temp##__line__, cap);
 
 

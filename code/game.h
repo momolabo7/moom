@@ -14,6 +14,8 @@ Platform_API platform;
 
 #include "game_renderer.h"
 #include "game_assets.h"
+#include "game_draw.h"
+
 #include "game_debug.h"
 
 struct Sandbox_Mode {
@@ -23,8 +25,11 @@ struct Sandbox_Mode {
   
 };
 
-
 struct Game_State {
+  Arena asset_arena;
+  Arena debug_arena;
+  Arena frame_arena;
+  
   union {
     Sandbox_Mode sandbox_mode;  
   };
