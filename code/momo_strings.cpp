@@ -1,8 +1,8 @@
-//~ NOTE(Momo): Str8
+//~ NOTE(Momo): String
 
-static Str8
-create_str8(U8* str, UMI size) {
-	Str8 ret;
+static String
+create_string(U8* str, UMI size) {
+	String ret;
 	ret.e = str;
 	ret.count = size;
 	return ret;
@@ -10,9 +10,9 @@ create_str8(U8* str, UMI size) {
 
 
 
-static Str8 
-substr(Str8 str, UMI start, UMI count) {
-	Str8 ret;
+static String 
+substr(String str, UMI start, UMI count) {
+	String ret;
 	ret.e = str.e + start;
 	ret.count = count;
 	
@@ -20,7 +20,7 @@ substr(Str8 str, UMI start, UMI count) {
 }
 
 static B32
-match(Str8 lhs, Str8 rhs) {
+match(String lhs, String rhs) {
   if(lhs.count != rhs.count) {
     return false;
   }
@@ -32,107 +32,111 @@ match(Str8 lhs, Str8 rhs) {
   return true;
 }
 
-static B32 operator==(Str8 lhs, Str8 rhs) {
+static B32 operator==(String lhs, String rhs) {
 	return match(lhs, rhs);
 }
 
-static B32 operator!=(Str8 lhs, Str8 rhs) {
+static B32 operator!=(String lhs, String rhs) {
 	return !match(lhs, rhs);
 }
 
 
-//~ NOTE(Momo): Str8Bld
-static Str8Bld  
-create_str8bld(U8* data, UMI cap) {
-	Str8Bld ret;
-	ret.e = data;
-	ret.count = 0;
-	ret.cap = cap;
-	
-	return ret;
+//~ NOTE(Momo): StringBld
+static void  
+init_string_builder(String_Builder* b, U8* data, UMI cap) {
+	b->e = data;
+	b->count = 0;
+	b->cap = cap;
 }
 
-UMI
-Str8Bld::remaining() {
-	return this->cap - this->count; 
+static UMI
+remaining(String_Builder* b) {
+	return b->cap - b->count; 
 }
 
-void     
-Str8Bld::clear() {
-	this->count = 0;
+static void     
+clear(String_Builder* b) {
+	b->count = 0;
 }
 
-void     
-Str8Bld::pop() {
-	assert(this->count > 0);
-	--this->count;
+static void     
+pop(String_Builder* b) {
+	assert(b->count > 0);
+	--b->count;
 }
 
-void     
-Str8Bld::push_C8(C8 num) {
-	assert(this->count < this->cap);
-	this->e[this->count++] = num;
+static void     
+push_u8(String_Builder* b, U8 num) {
+	assert(b->count < b->cap);
+	b->e[b->count++] = num;
 }
-void     
-Str8Bld::push_U32(U32 num) {
+
+static void     
+push_c8(String_Builder* b, C8 num) {
+	assert(b->count < b->cap);
+	b->e[b->count++] = num;
+}
+
+static void     
+push_u32(String_Builder* b, U32 num) {
 	if (num == 0) {
-    push_C8('0');
+    push_c8(b, '0');
 		return;
   }
-  UMI start_pt = this->count; 
+  UMI start_pt = b->count; 
   
   for(; num != 0; num /= 10) {
     U8 digit_to_convert = (U8)(num % 10);
-		push_C8(digit_to_ascii(digit_to_convert));
+		push_c8(b, digit_to_ascii(digit_to_convert));
   }
   
   // Reverse starting from start point to count
-  UMI sub_str_len_half = (this->count - start_pt)/2;
+  UMI sub_str_len_half = (b->count - start_pt)/2;
   for(UMI i = 0; i < sub_str_len_half; ++i) {
-    swap(this->e + start_pt + i, this->e + this->count - 1 - i);
+    swap(b->e + start_pt + i, b->e + b->count - 1 - i);
   }
 }
-void     
-Str8Bld::push_S32(S32 num) {
+static void     
+push_s32(String_Builder* b, S32 num) {
   if (num == 0) {
-    push_C8('0');
+    push_c8(b, '0');
     return;
   }
   
-  UMI start_pt = this->count; 
+  UMI start_pt = b->count; 
   
   B32 negate = num < 0;
   num = abs_of(num);
   
   for(; num != 0; num /= 10) {
     U8 digit_to_convert = (U8)(num % 10);
-		push_C8(digit_to_ascii(digit_to_convert));
+		push_c8(b, digit_to_ascii(digit_to_convert));
   }
   
   if (negate) {
-    push_C8('-');
+    push_c8(b, '-');
   }
   
   // Reverse starting from start point to count
-  UMI sub_str_len_half = (this->count - start_pt)/2;
+  UMI sub_str_len_half = (b->count - start_pt)/2;
   for(UMI i = 0; i < sub_str_len_half; ++i) {
-    swap(this->e + start_pt + i, 
-         this->e + this->count-1-i);
+    swap(b->e + start_pt + i, 
+         b->e + b->count-1-i);
     
   }
   
 }
 
-void     
-Str8Bld::push_F32(F32 value, U32 precision) {
+static void     
+push_f32(String_Builder* b, F32 value, U32 precision) {
 	if (value < 0.f) {
-		push_C8('-');	
+		push_c8(b, '-');	
 		value = -value;
 	}
 	// NOTE(Momo): won't work for values that U32 can't contain
 	U32 integer_part = (U32)value;
-	push_U32(integer_part);
-	push_C8('.');
+	push_u32(b, integer_part);
+	push_c8(b, '.');
 	
 	value -= (F32)integer_part;
 	
@@ -141,14 +145,14 @@ Str8Bld::push_F32(F32 value, U32 precision) {
 	}
 	
 	U32 decimal_part = (U32)value;
-	push_U32(decimal_part);
+	push_u32(b, decimal_part);
 }
 
 // Minimal implementation of sprintf
 // %[flags][width][.precision][length]specifier
 // NOTE(Momo): flags, width, precision and length not done
-void
-_PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
+static void
+_push_fmt_list(String_Builder* b, String format, va_list args) {
 	UMI at = 0;
   while(at < format.count) {
 		
@@ -160,26 +164,26 @@ _PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
 				case 'd': 
 				case 'i':{
 					S32 value = va_arg(args, S32);
-					dest->push_S32(value);
+					push_s32(b, value);
 				} break;
 				case 'f': {
 					F64 value = va_arg(args, F64);
-					dest->push_F32((F32)value, 5);
+					push_f32(b, (F32)value, 5);
 				} break;
 				case 's': {
 					// c-string
 					const char* cstr = va_arg(args, const char*);
 					while(cstr[0] != 0) {
-						dest->push_C8((U8)cstr[0]);
+						push_c8(b, (U8)cstr[0]);
 						++cstr;
 					}
 				} break;
 				
 				//- NOTE(Momo): Custom types
 				case 'S': {
-					// Str8
-					Str8 str = va_arg(args, Str8);
-					dest->push_Str8(str);
+					// String
+					String str = va_arg(args, String);
+					push_string(b, str);
 				} break;
 				
 				default: {
@@ -192,7 +196,7 @@ _PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
       
     }
     else {
-      dest->push_C8(format.e[at++]);
+      push_c8(b, format.e[at++]);
     }
 		
   }
@@ -201,19 +205,19 @@ _PushFmtList(Str8Bld* dest, Str8 format, va_list args) {
 }
 
 
-void     
-Str8Bld::push_format(Str8 fmt, ...) {
+static void     
+push_format(String_Builder* b, String fmt, ...) {
   va_list args;
   va_start(args, fmt);
-  _PushFmtList(this, fmt, args);
+  _push_fmt_list(b, fmt, args);
   va_end(args);
 }
 
-void     
-Str8Bld::push_Str8(Str8 src) {
-	assert(this->count + src.count <= this->cap);
+static void     
+push_string(String_Builder* b, String src) {
+	assert(b->count + src.count <= b->cap);
 	for (UMI i = 0; i < src.count; ++i ) {
-		this->e[this->count++] = src.e[i];
+		b->e[b->count++] = src.e[i];
 	}
 }
 

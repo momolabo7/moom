@@ -30,6 +30,9 @@ win_log_proc(const char* fmt, ...) {
 #define win_log(...)
 #endif // INTERNAL
 
+
+
+
 #if 0
 static void
 win_toggle_fullscreen(HWND Window)
@@ -549,6 +552,7 @@ win_create_platform_api()
   pf_api.set_aspect_ratio = win_set_aspect_ratio;
   pf_api.add_task = win_add_task;
   pf_api.complete_all_tasks = win_complete_all_tasks;
+  pf_api.debug_log = win_log_proc;
   return pf_api;
 }
 

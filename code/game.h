@@ -4,6 +4,14 @@
 #define GAME_H
 
 #include "game_platform.h"
+
+Platform_API platform;
+#ifdef INTERNAL
+#define game_log(...) platform.debug_log(__VA_ARGS__)
+#else
+#define game_log(...)
+#endif // INTERNAL
+
 #include "game_renderer.h"
 #include "game_assets.h"
 #include "game_debug.h"

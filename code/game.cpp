@@ -1,9 +1,20 @@
 #include "momo.h"
-
 #include "game.h"
 
 
-Platform_API platform;
+static U32 debug_test;
+
+static void
+test_command(void* ctx) {
+  U32* i = (U32*)ctx;
+  (*i) += 10;
+}
+
+static void
+test_command2(void* ctx) {
+  U32* i = (U32*)ctx;
+  (*i) -= 10;
+}
 
 exported B32 
 game_update(Game_Memory* memory,
@@ -16,6 +27,7 @@ game_update(Game_Memory* memory,
   
   // Initialization
   if (!memory->state) {
+    game_log("initialized!");
     platform.set_aspect_ratio(16, 9);
     
     memory->state = (Game_State*)platform.alloc(sizeof(Game_State));
@@ -44,7 +56,9 @@ game_update(Game_Memory* memory,
     
     // Initialize Debug Console
     Debug_Console* dc = &memory->state->debug_console;
-    dc->is_showing = false;
+    init_debug_console(dc);
+    add_debug_command(dc, string_from_lit("add"), &debug_test, test_command);
+    add_debug_command(dc, string_from_lit("sub"), &debug_test, test_command2);
   }
   
   
@@ -58,9 +72,7 @@ game_update(Game_Memory* memory,
     platform.hot_reload();
   }
   
-  if (is_poked(input->button_console)) {
-    dc->is_showing = !dc->is_showing;
-  }
+  update_debug_console(dc, input);
   
   
   // Clear colors

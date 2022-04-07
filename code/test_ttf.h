@@ -45,8 +45,8 @@ void test_ttf() {
       Bitmap codepoint_image = rasterize_glyph(&ttf, glyph_index, scale_factor, arena);
       {
         U8 buffer[256];
-        Str8Bld strbld= create_str8bld(buffer, 256); 
-        strbld.push_format(str8_from_lit("%d.png"), codepoint);
+        StringBld strbld= create_stringbld(buffer, 256); 
+        strbld.push_format(string_from_lit("%d.png"), codepoint);
         strbld.push_C8(0);
         
         Memory image_mem = write_bitmap_as_png(codepoint_image, arena);

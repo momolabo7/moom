@@ -44,6 +44,7 @@ typedef void  Platform_Shutdown(); // trigger shutdown of application
 typedef void* Platform_Alloc(UMI size); // allocate memory
 typedef void  Platform_Free(void* ptr);     // frees memory
 typedef void  Platform_Set_Aspect_Ratio(U32 width, U32 height); // sets aspect ratio of game
+typedef void  Platform_Debug_Log(const char* fmt, ...);
 
 
 struct Platform_API {
@@ -60,6 +61,8 @@ struct Platform_API {
   
   Platform_Add_Task* add_task;
   Platform_Complete_All_Tasks* complete_all_tasks;
+  
+  Platform_Debug_Log* debug_log;
 };
 extern Platform_API platform;
 

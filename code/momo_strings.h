@@ -5,48 +5,49 @@
 
 
 //~ NOTE(Momo): 'Immutable' Strings
-typedef struct {
+struct String{
 	U8* e;
 	UMI count;
-} Str8;
+};
 
-static Str8 create_str8(U8* Str, UMI size);
-static Str8 substr(Str8 Str, UMI start, UMI ope);
-static B32  match(Str8 lhs, Str8 rhs);
+static String create_string(U8* Str, UMI size);
+static String substr(String Str, UMI start, UMI ope);
+static B32  match(String lhs, String rhs);
 
 // NOTE(Momo): No one should be using this
 // Maybe make a macro to enable/disable this?
-#define str8_from_lit(s) create_str8((U8*)(s), sizeof(s)-1)
+#define string_from_lit(s) create_string((U8*)(s), sizeof(s)-1)
 
-static B32 operator==(Str8 lhs, Str8 rhs);
-static B32 operator!=(Str8 lhs, Str8 rhs);
+static B32 operator==(String lhs, String rhs);
+static B32 operator!=(String lhs, String rhs);
 
 
 
-//~ note(momo): String builders
-struct Str8Bld{
+//~ String builders
+struct String_Builder{
 	union {
-		Str8 Str;
+		String str;
 		struct {
 			U8* e;
 			UMI count;
 		};
 	};
 	UMI cap;
-	UMI      remaining();
-	void     clear();
-	void     pop();
-	void     push_C8(C8 num);
-	void     push_U32(U32 num);
-	void     push_F32(F32 value, U32 precision);
-	void     push_S32(S32 num);
-	void     push_Str8(Str8 num);
-	void     push_format(Str8 fmt, ...);
-  
 };
 
-static Str8Bld  create_str8bld(U8* data, UMI cap);
-//#define Str8Bld_temp(name, cap) U8 temp##__line__[cap]; Str8Bld name = Str8Bld_Create(temp##__line__, cap);
+static UMI      remaining(String_Builder* b);
+static void     clear(String_Builder* b);
+static void     pop(String_Builder* b);
+static void     push_c8(String_Builder* b, C8 num);
+static void     push_u8(String_Builder* b, U8 num);
+static void     push_u32(String_Builder* b, U32 num);
+static void     push_f32(String_Builder* b, F32 value, U32 precision);
+static void     push_s32(String_Builder* b, S32 num);
+static void     push_string(String_Builder* b, String num);
+static void     push_format(String_Builder* b, String fmt, ...);
+
+static String_Builder  init_string_builder(U8* data, UMI cap);
+//#define StringBld_temp(name, cap) U8 temp##__line__[cap]; StringBld name = StringBld_Create(temp##__line__, cap);
 
 
 #include "momo_strings.cpp"
