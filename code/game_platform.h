@@ -64,7 +64,6 @@ struct Platform_API {
   
   Platform_Debug_Log* debug_log;
 };
-extern Platform_API platform;
 
 
 

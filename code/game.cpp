@@ -2,34 +2,8 @@
 #include "game.h"
 
 
-static U32 debug_test;
-
-static void
-test_command(void* ctx) {
-  U32* i = (U32*)ctx;
-  (*i) += 10;
-}
-
-static void
-test_command2(void* ctx) {
-  U32* i = (U32*)ctx;
-  (*i) -= 10;
-}
-
-static void
-bootstrap_arena_for_game(Arena* a, UMI size) {
-  init_arena(a, platform.alloc(size), size);
-}
-
-
-exported B32 
-game_update(Game_Memory* memory,
-            Game_Input* input, 
-            Game_Render_Commands* render_commands) { 
-  platform = memory->platform_api;
-  
-  F32 dt = input->seconds_since_last_frame;
-  
+static B32
+game_init(Game_Memory* memory) {
   // Initialization
   if (!memory->state) {
     game_log("initialized!");
@@ -38,10 +12,13 @@ game_update(Game_Memory* memory,
     
     platform.set_aspect_ratio(16, 9);
     
-    bootstrap_arena_for_game(&memory->state->asset_arena, MB(20));
-    bootstrap_arena_for_game(&memory->state->debug_arena, MB(1));
-    bootstrap_arena_for_game(&memory->state->frame_arena, MB(1));
     
+    // Init arenas
+    {
+      init_arena(&memory->state->asset_arena, platform.alloc(MB(20)), MB(20));
+      init_arena(&memory->state->debug_arena, platform.alloc(MB(1)), MB(1));
+      init_arena(&memory->state->frame_arena, platform.alloc(MB(1)), MB(1));
+    }
     
     B32 success = load_game_assets(&memory->state->game_assets, 
                                    memory->texture_queue,
@@ -59,10 +36,24 @@ game_update(Game_Memory* memory,
     // Initialize Debug Console
     Debug_Console* dc = &memory->state->debug_console;
     init_debug_console(dc, &memory->state->debug_arena);
-    add_debug_command(dc, string_from_lit("add"), &debug_test, test_command);
-    add_debug_command(dc, string_from_lit("sub"), &debug_test, test_command2);
   }
   
+  return true;
+  
+}
+
+exported B32 
+game_update(Game_Memory* memory,
+            Game_Input* input, 
+            Game_Render_Commands* render_commands) 
+{ 
+  platform = memory->platform_api;
+  
+  F32 dt = input->seconds_since_last_frame;
+  
+  if (!game_init(memory)) {
+    return false;
+  }
   
   // Actual update here.
   Sandbox_Mode* sandbox = &memory->state->sandbox_mode;

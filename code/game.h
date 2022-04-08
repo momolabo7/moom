@@ -14,8 +14,7 @@ Platform_API platform;
 
 #include "game_renderer.h"
 #include "game_assets.h"
-#include "game_draw.h"
-
+#include "game_assets_render.h"
 #include "game_debug.h"
 
 struct Sandbox_Mode {

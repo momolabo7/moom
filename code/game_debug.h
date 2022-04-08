@@ -149,42 +149,30 @@ render_debug_console(Debug_Console* dc,
     
     // TODO(Momo): These should be percentages
     // but we'll work with this for now
-    const F32 console_width = 1600.f;
-    const F32 console_height = 400.f;
-    const F32 line_height = console_height/(array_count(dc->info_lines)+1);
+    static const F32 console_width = 1600.f;
+    static const F32 console_height = 400.f;
+    static const F32 line_height = console_height/(array_count(dc->info_lines)+1);
+    static const F32 font_height = line_height * 0.8f;
+    static const F32 font_bottom_pad = (line_height - font_height);
+    static const F32 left_pad = 10.f;
     
-    // Draw background
-#if 0
-    {
-      RGBA bg_color = create_rgba(0.5f, 0.5f, 0.5f, 1.f);
-      M44 bgs = create_m44_scale(console_width, console_height, 10.f);
-      M44 bgt = create_m44_translation(console_width/2, console_height/2, 10.f);
-      
-      // Blank sprite
-      Sprite_Asset* sprite =  ga->sprites + 0;
-      push_subsprite(render_commands, 
-                     bg_color,
-                     bgt*bgs,
-                     0, 
-                     sprite->uv);
-    }
-#endif
+    draw_sprite(ga, render_commands,
+                SPRITE_BLANK,
+                create_rgba(0x787878FF),
+                console_width/2,
+                console_height/2,
+                console_width, 
+                console_height,
+                100.f);
     
-    draw_rect(ga, render_commands,
-              create_rgba(0x787878FF),
-              console_width/2,
-              console_height/2,
-              console_width, 
-              console_height,
-              100.f);
-    
-    draw_rect(ga, render_commands,
-              create_rgba(0x505050FF),
-              console_width/2,
-              line_height/2,
-              console_width,
-              line_height,
-              90.f);
+    draw_sprite(ga, render_commands,
+                SPRITE_BLANK,
+                create_rgba(0x505050FF),
+                console_width/2,
+                line_height/2,
+                console_width,
+                line_height,
+                90.f);
     
     
     // Draw info text
@@ -194,80 +182,25 @@ render_debug_console(Debug_Console* dc,
     {
       String_Builder* line = dc->info_lines + line_index;
       
-      Font_Asset* font = get_font(ga, FONT_DEFAULT);
-      V2 position = {};
-      position.x = 0;
-      position.y = (line_height*(line_index+1));
+      draw_text(ga, render_commands,
+                FONT_DEFAULT,
+                line->str,
+                create_rgba(0xFFFFFFFF),
+                left_pad, 
+                line_height * (line_index+1) + font_bottom_pad,
+                font_height,
+                80.f);
       
-      for(U32 char_index = 0; 
-          char_index < line->str.count;
-          ++char_index) 
-      {
-        U32 curr_cp = line->str.e[char_index];
-        if (char_index > 0) {
-          U32 prev_cp = line->str.e[char_index-1];
-          position.x += get_horizontal_advance(font, prev_cp, curr_cp)*line_height;
-        }
-        Font_Glyph_Asset *glyph = get_glyph(font, curr_cp);
-        
-        F32 width = (glyph->box.max.x - glyph->box.min.x)*line_height;
-        F32 height = (glyph->box.max.y - glyph->box.min.y)*line_height;
-        
-        M44 transform = 
-          create_m44_translation(position.x + (glyph->box.min.x*line_height), 
-                                 position.y + (glyph->box.min.y*line_height), 
-                                 9.f)*
-          create_m44_scale(width, height, 1.f)*
-          create_m44_translation(0.5f, 0.5f, 1.f);
-        
-        
-        RGBA colors = create_rgba(1.f, 1.f, 1.f, 1.f);
-        
-        push_subsprite(render_commands, 
-                       colors,
-                       transform,
-                       0, 
-                       glyph->uv);
-      }
     }
     
-    // Draw input text
-    {
-      Font_Asset* font = get_font(ga, FONT_DEFAULT);
-      V2 position = {};
-      for(U32 char_index = 0; 
-          char_index < dc->input_line.str.count;
-          ++char_index) 
-      {
-        U32 curr_cp = dc->input_line.str.e[char_index];
-        if (char_index > 0) {
-          U32 prev_cp = dc->input_line.str.e[char_index-1];
-          position.x += get_horizontal_advance(font, prev_cp, curr_cp)*line_height;
-        }
-        Font_Glyph_Asset *glyph = get_glyph(font, curr_cp);
-        
-        F32 width = (glyph->box.max.x - glyph->box.min.x)*line_height;
-        F32 height = (glyph->box.max.y - glyph->box.min.y)*line_height;
-        
-        M44 transform = 
-          create_m44_translation(position.x + (glyph->box.min.x*line_height), 
-                                 position.y + (glyph->box.min.y*line_height), 
-                                 9.f)*
-          create_m44_scale(width, height, 1.f)*
-          create_m44_translation(0.5f, 0.5f, 1.f);
-        
-        
-        RGBA colors = create_rgba(1.f, 1.f, 1.f, 1.f);
-        
-        push_subsprite(render_commands, 
-                       colors,
-                       transform,
-                       0, 
-                       glyph->uv);
-      }
-      
-      
-    }
+    draw_text(ga, render_commands,
+              FONT_DEFAULT,
+              dc->input_line.str,
+              create_rgba(0xFFFFFFFF),
+              left_pad, 
+              font_bottom_pad,
+              font_height,
+              80.f);
   }
 }
 
