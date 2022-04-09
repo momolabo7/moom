@@ -33,6 +33,7 @@ init_profiler(U32 frames, U32 entry_count, Arena* arena) {
 
 static Profiler_Entry*
 _begin_profiling_block(U32 index, const char* filename, U32 line, const char* function_name) {
+  assert(index < profiler.entry_count);
   Profiler_Entry* entry = profiler.entries + index;
   entry->filename = filename;
   entry->function_name = function_name;
@@ -45,6 +46,7 @@ _begin_profiling_block(U32 index, const char* filename, U32 line, const char* fu
 static void
 _end_profiling_block(Profiler_Entry* entry) {
   entry->cycles += platform.get_performance_counter();
+  //game_log("%lld\n", entry->cycles);
 }
 
 #define _profile_block_la(number) auto* zawarudo_profile_##number = _begin_profiling_block(__COUNTER__, __FILE__, __LINE__, __FUNCTION__); defer { _end_profiling_block(zawarudo_profile_##number); };

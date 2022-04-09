@@ -72,8 +72,10 @@ game_update(Game_Memory* memory,
   Console* dc = &memory->state->console;
   Game_Assets* ga = &memory->state->game_assets;
   
-  
-  update_console(dc, input);
+  {
+    profile_block;
+    update_console(dc, input);
+  }
   
   
   // Clear colors
