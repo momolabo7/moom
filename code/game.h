@@ -15,7 +15,8 @@ Platform_API platform;
 #include "game_renderer.h"
 #include "game_assets.h"
 #include "game_assets_render.h"
-#include "game_debug.h"
+#include "game_console.h"
+
 
 struct Sandbox_Mode {
   F32 tmp_delta;
@@ -25,15 +26,20 @@ struct Sandbox_Mode {
 };
 
 struct Game_State {
+  // Arenas
   Arena asset_arena;
   Arena debug_arena;
   Arena frame_arena;
   
+  // Mode Management
   union {
     Sandbox_Mode sandbox_mode;  
+    
   };
+  
+  
   Game_Assets game_assets;
-  Debug_Console debug_console;
+  Console console;
 };
 
 

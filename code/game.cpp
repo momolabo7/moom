@@ -2,10 +2,16 @@
 #include "game.h"
 
 
+#include "game_profiler.h"
+
+
 static B32
 game_init(Game_Memory* memory) {
+  
   // Initialization
   if (!memory->state) {
+    
+    
     game_log("initialized!");
     memory->state = (Game_State*)platform.alloc(sizeof(Game_State));
     if (!memory->state) return false;
@@ -34,8 +40,14 @@ game_init(Game_Memory* memory) {
     sandbox->tmp_rot = 0.f;
     
     // Initialize Debug Console
-    Debug_Console* dc = &memory->state->debug_console;
-    init_debug_console(dc, &memory->state->debug_arena);
+    Console* dc = &memory->state->console;
+    init_console(dc, &memory->state->debug_arena);
+    
+    // Initialize profiler 
+    // TODO(Momo): Profiler should really be a seperate system
+    // on it's own. Maybe it's own module even!
+    init_profiler(1234, 32, &memory->state->debug_arena);
+    
   }
   
   return true;
@@ -57,15 +69,11 @@ game_update(Game_Memory* memory,
   
   // Actual update here.
   Sandbox_Mode* sandbox = &memory->state->sandbox_mode;
-  Debug_Console* dc = &memory->state->debug_console;
+  Console* dc = &memory->state->console;
   Game_Assets* ga = &memory->state->game_assets;
   
   
-  if (is_poked(input->button_up)) {
-    platform.hot_reload();
-  }
-  
-  update_debug_console(dc, input);
+  update_console(dc, input);
   
   
   // Clear colors
@@ -134,7 +142,7 @@ game_update(Game_Memory* memory,
     }
   }
   
-  render_debug_console(dc, ga, render_commands);
+  render_console(dc, ga, render_commands);
   return true;
   
 }

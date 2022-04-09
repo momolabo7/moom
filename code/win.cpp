@@ -143,6 +143,13 @@ win_get_performance_counter(void) {
   return result;
 }
 
+static U64
+win_get_performance_counter_u64(void) {
+  LARGE_INTEGER counter = win_get_performance_counter();
+  U64 ret = (U64)counter.QuadPart;
+  return ret;
+}
+
 static F32
 win_get_secs_elapsed(LARGE_INTEGER start,
                      LARGE_INTEGER end,
@@ -151,7 +158,25 @@ win_get_secs_elapsed(LARGE_INTEGER start,
   
   return (F32(end.QuadPart - start.QuadPart)) / performance_frequency.QuadPart;
 }
+static inline LARGE_INTEGER
+win_file_time_to_large_integer(FILETIME file_time) {
+  LARGE_INTEGER ret = {};
+  ret.LowPart = file_time.dwLowDateTime;
+  ret.HighPart = file_time.dwHighDateTime;
+  
+  return ret;
+}
 
+static inline LARGE_INTEGER 
+win_get_file_last_write_time(const char* filename) {
+  WIN32_FILE_ATTRIBUTE_DATA data;
+  FILETIME last_write_time = {};
+  
+  if(GetFileAttributesEx(filename, GetFileExInfoStandard, &data)) {
+    last_write_time = data.ftLastWriteTime;
+  }
+  return win_file_time_to_large_integer(last_write_time); 
+}
 
 //~DLL loading
 struct Win_Loaded_Code {
@@ -160,7 +185,9 @@ struct Win_Loaded_Code {
   const char** function_names;
   const char* module_path;
   void** functions;
+  
 #if INTERNAL
+  LARGE_INTEGER module_write_time;
   const char* tmp_path;
 #endif  
   
@@ -206,7 +233,7 @@ win_load_code(Win_Loaded_Code* code) {
     {
       void* function = GetProcAddress(code->dll, code->function_names[function_index]);
       if (!function) {
-        code->is_valid = true;
+        code->is_valid = false;
         break;
       }
       code->functions[function_index] = function;
@@ -217,20 +244,31 @@ win_load_code(Win_Loaded_Code* code) {
   if(!code->is_valid) {
     win_unload_code(code);
   }
+  
+  
+  
 }
 
+#if INTERNAL
 static void
-win_reload_code(Win_Loaded_Code* code) {
-  win_unload_code(code); 
-  for (U32 i = 0; i < 100; ++i ){
-    win_load_code(code);
-    if (code->is_valid) {
-      break;
+win_reload_code_if_outdated(Win_Loaded_Code* code) {
+  // Check last modified date
+  LARGE_INTEGER last_write_time = win_get_file_last_write_time(code->module_path);
+  if(last_write_time.QuadPart > code->module_write_time.QuadPart) { 
+    win_unload_code(code); 
+    for (U32 i = 0; i < 100; ++i ){
+      win_load_code(code);
+      if (code->is_valid) {
+        win_log("[%s] reloaded successfully\n", code->module_path);
+        code->module_write_time = win_get_file_last_write_time(code->module_path);
+        break;
+      }
+      Sleep(100);
     }
-    Sleep(100);
   }
 }
 
+#endif
 
 
 //~Worker/Producer  functionality
@@ -369,7 +407,6 @@ win_add_task_entry(Win_Work_Queue* wq, void (*callback)(void* ctx), void *data) 
 //~Global variables
 struct Win_State{
   B32 is_running;
-  B32 is_hot_reloading;
   
   U32 aspect_ratio_width;
   U32 aspect_ratio_height;
@@ -384,10 +421,6 @@ struct Win_File {
 };
 
 //~ For Platform API
-static void 
-win_hot_reload() {
-  win_global_state.is_hot_reloading = true;
-}
 
 static void 
 win_shutdown() {
@@ -444,7 +477,7 @@ win_open_file(const char* filename,
       access_flag = GENERIC_READ | GENERIC_WRITE;
       creation_disposition = OPEN_ALWAYS;
     } break;
-		*/
+    */
     
   }
   
@@ -541,7 +574,7 @@ static Platform_API
 win_create_platform_api()
 {
   Platform_API pf_api;
-  pf_api.hot_reload = win_hot_reload;
+  //pf_api.hot_reload = win_hot_reload;
   pf_api.alloc = win_allocate_memory;
   pf_api.free = win_free_memory;
   pf_api.shutdown = win_shutdown;
@@ -553,6 +586,7 @@ win_create_platform_api()
   pf_api.add_task = win_add_task;
   pf_api.complete_all_tasks = win_complete_all_tasks;
   pf_api.debug_log = win_log_proc;
+  pf_api.get_performance_counter = win_get_performance_counter_u64;
   return pf_api;
 }
 
@@ -593,7 +627,7 @@ WinMain(HINSTANCE instance,
   //- Initialize window state
   {
     win_global_state.is_running = true;
-    win_global_state.is_hot_reloading = true;
+    //win_global_state.is_hot_reloading = true;
     win_global_state.aspect_ratio_width = 16;
     win_global_state.aspect_ratio_height = 9;
     
@@ -762,12 +796,10 @@ WinMain(HINSTANCE instance,
                                                        render_region);
     }
     
-    
-    //-NOTE(Momo): Hot reload game.dll functions
-    if (win_global_state.is_hot_reloading){
-      win_reload_code(&game_code);
-      win_global_state.is_hot_reloading = false;
-    }
+#if INTERNAL
+    //-Hot reload game.dll functions
+    win_reload_code_if_outdated(&game_code);
+#endif
     
     //-Process messages and input
     input.seconds_since_last_frame = target_secs_per_frame;
