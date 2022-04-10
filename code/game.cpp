@@ -2,7 +2,6 @@
 #include "game.h"
 
 
-#include "game_profiler.h"
 
 
 static B32
@@ -72,79 +71,80 @@ game_update(Game_Memory* memory,
   Console* dc = &memory->state->console;
   Game_Assets* ga = &memory->state->game_assets;
   
+  update_console(dc, input);
+  
   {
     profile_block;
-    update_console(dc, input);
-  }
-  
-  
-  // Clear colors
-  {
-    RGBA colors;
-    colors.r = colors.g = colors.b  = colors.a = 0.3f;
-    push_colors(render_commands, colors);
-  }
-  
-  // Set camera
-  {
-    V3 position = {};
-    Rect3 frustum;
-    frustum.min.x = frustum.min.y = frustum.min.z = 0;
-    frustum.max.x = 1600;
-    frustum.max.y = 900;
-    frustum.max.z = 500;
-    push_orthographic_camera(render_commands, position, frustum);
-  }
-  
-  {
-    if (sandbox->tmp_increase)
-      sandbox->tmp_delta += dt; 
-    else
-      sandbox->tmp_delta -= dt;
-    
-    if (sandbox->tmp_delta >= 1.f ){
-      sandbox->tmp_delta = 1.f;
-      sandbox->tmp_increase = false;
+    // Clear colors
+    {
+      RGBA colors;
+      colors.r = colors.g = colors.b  = colors.a = 0.3f;
+      push_colors(render_commands, colors);
     }
     
-    if (sandbox->tmp_delta <= 0.f) {
-      sandbox->tmp_delta = 0.f;
-      sandbox->tmp_increase = true;
+    // Set camera
+    {
+      V3 position = {};
+      Rect3 frustum;
+      frustum.min.x = frustum.min.y = frustum.min.z = 0;
+      frustum.max.x = 1600;
+      frustum.max.y = 900;
+      frustum.max.z = 500;
+      push_orthographic_camera(render_commands, position, frustum);
     }
-    
-    RGBA colors = create_rgba(1.f, 1.f, 1.f, 1.f);
-    M44 s = create_m44_scale(600.f, 600.f, 10.f);
-    M44 r = create_m44_rotation_z(sandbox->tmp_rot += dt);
-    M44 t = create_m44_translation(800.f, 450.f, 300.f);
     
     {
+      if (sandbox->tmp_increase)
+        sandbox->tmp_delta += dt; 
+      else
+        sandbox->tmp_delta -= dt;
+      
+      if (sandbox->tmp_delta >= 1.f ){
+        sandbox->tmp_delta = 1.f;
+        sandbox->tmp_increase = false;
+      }
+      
+      if (sandbox->tmp_delta <= 0.f) {
+        sandbox->tmp_delta = 0.f;
+        sandbox->tmp_increase = true;
+      }
+      
+      RGBA colors = create_rgba(1.f, 1.f, 1.f, 1.f);
+      M44 s = create_m44_scale(600.f, 600.f, 10.f);
+      M44 r = create_m44_rotation_z(sandbox->tmp_rot += dt);
+      M44 t = create_m44_translation(800.f, 450.f, 300.f);
+      
+      {
 #if 1
-      Sprite_Asset* sprite = get_sprite(ga, SPRITE_BULLET_CIRCLE);
-      assert(sprite);
-      Bitmap_Asset* bitmap = get_bitmap(ga, sprite->bitmap_id);
-      assert(bitmap);
-      
-      push_subsprite(render_commands, 
-                     colors,
-                     t*r*s,
-                     bitmap->renderer_texture_handle, 
-                     sprite->uv);
+        Sprite_Asset* sprite = get_sprite(ga, SPRITE_BULLET_CIRCLE);
+        assert(sprite);
+        Bitmap_Asset* bitmap = get_bitmap(ga, sprite->bitmap_id);
+        assert(bitmap);
+        
+        push_subsprite(render_commands, 
+                       colors,
+                       t*r*s,
+                       bitmap->renderer_texture_handle, 
+                       sprite->uv);
 #else
-      Font_Asset* font = get_font(ga, FONT_DEFAULT);
-      assert(font);
-      
-      Font_Glyph_Asset* glyph = get_glyph(font, 65);
-      
-      push_subsprite(render_commands, 
-                     colors,
-                     t*r*s,
-                     0, 
-                     glyph->uv);
+        Font_Asset* font = get_font(ga, FONT_DEFAULT);
+        assert(font);
+        
+        Font_Glyph_Asset* glyph = get_glyph(font, 65);
+        
+        push_subsprite(render_commands, 
+                       colors,
+                       t*r*s,
+                       0, 
+                       glyph->uv);
 #endif
+      }
     }
   }
   
   render_console(dc, ga, render_commands);
+  render_profiler(ga, render_commands);
+  
   return true;
   
 }

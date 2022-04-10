@@ -1,6 +1,5 @@
 Engine
 	Sound
-	Debug console
 	Debug profiler
     TIMED_BLOCK
 		Display

@@ -9,6 +9,16 @@ create_string(U8* str, UMI size) {
 }
 
 
+static String
+create_string_from_cstr(const char* cstr) {
+  return {(U8*)cstr, cstr_len(cstr)};
+}
+
+static String
+create_string_from_cstr(char* cstr) {
+  create_string_from_cstr((const char*)cstr);
+}
+
 
 static String 
 substr(String str, UMI start, UMI count) {
@@ -97,7 +107,57 @@ push_u32(String_Builder* b, U32 num) {
   }
 }
 static void     
+push_u64(String_Builder* b, U64 num) {
+	if (num == 0) {
+    push_c8(b, '0');
+		return;
+  }
+  UMI start_pt = b->count; 
+  
+  for(; num != 0; num /= 10) {
+    U8 digit_to_convert = (U8)(num % 10);
+		push_c8(b, digit_to_ascii(digit_to_convert));
+  }
+  
+  // Reverse starting from start point to count
+  UMI sub_str_len_half = (b->count - start_pt)/2;
+  for(UMI i = 0; i < sub_str_len_half; ++i) {
+    swap(b->e + start_pt + i, b->e + b->count - 1 - i);
+  }
+}
+static void     
 push_s32(String_Builder* b, S32 num) {
+  if (num == 0) {
+    push_c8(b, '0');
+    return;
+  }
+  
+  UMI start_pt = b->count; 
+  
+  B32 negate = num < 0;
+  num = abs_of(num);
+  
+  for(; num != 0; num /= 10) {
+    U8 digit_to_convert = (U8)(num % 10);
+		push_c8(b, digit_to_ascii(digit_to_convert));
+  }
+  
+  if (negate) {
+    push_c8(b, '-');
+  }
+  
+  // Reverse starting from start point to count
+  UMI sub_str_len_half = (b->count - start_pt)/2;
+  for(UMI i = 0; i < sub_str_len_half; ++i) {
+    swap(b->e + start_pt + i, 
+         b->e + b->count-1-i);
+    
+  }
+  
+}
+
+static void     
+push_s64(String_Builder* b, S64 num) {
   if (num == 0) {
     push_c8(b, '0');
     return;
@@ -161,15 +221,27 @@ _push_fmt_list(String_Builder* b, String format, va_list args) {
 			
 			switch(format.e[at]) {
 				//- NOTE(Momo): Standard Types
-				case 'd': 
-				case 'i':{
+				case 'i': {
 					S32 value = va_arg(args, S32);
 					push_s32(b, value);
 				} break;
+        case 'I': {
+          S64 value = va_arg(args, S64);
+					push_s64(b, value);
+        } break;
+        case 'U': {
+          U64 value = va_arg(args, U64);
+					push_u64(b, value);
+        } break;
+        case 'u': {
+          U32 value = va_arg(args, U32);
+					push_u32(b, value);
+        } break;
 				case 'f': {
 					F64 value = va_arg(args, F64);
 					push_f32(b, (F32)value, 5);
 				} break;
+        
 				case 's': {
 					// c-string
 					const char* cstr = va_arg(args, const char*);
@@ -181,7 +253,7 @@ _push_fmt_list(String_Builder* b, String format, va_list args) {
 				
 				//- NOTE(Momo): Custom types
 				case 'S': {
-					// String
+					// String, or 'text'.
 					String str = va_arg(args, String);
 					push_string(b, str);
 				} break;
@@ -200,8 +272,6 @@ _push_fmt_list(String_Builder* b, String format, va_list args) {
     }
 		
   }
-	
-	
 }
 
 

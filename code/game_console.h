@@ -96,6 +96,8 @@ _execute(Console* dc) {
 
 static void
 update_console(Console* dc, Game_Input* input) {
+  profile_block;
+  
   // Update console code
   if (is_poked(input->button_console)) {
     dc->is_showing = !dc->is_showing;
@@ -131,6 +133,8 @@ render_console(Console* dc,
                Game_Assets* ga, 
                Game_Render_Commands* render_commands)
 {
+  profile_block;
+  
   // Debug console
   if (dc->is_showing) {
     // Camera
