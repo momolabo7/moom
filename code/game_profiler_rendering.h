@@ -21,15 +21,11 @@ render_profiler(Game_Assets* ga, Game_Render_Commands* cmds) {
     U64 hits_and_cycles = atomic_assign(&entry->hits_and_cycles, 0);
     U32 hits = (U32)(hits_and_cycles >> 32);
     if(hits) {
-      U8 buffer[256];
-      declare_and_pointerize(String_Builder, builder);
-      init_string_builder(builder, buffer, array_count(buffer));
-      
-      
+      demand_string_builder(sb, 256);
       
       U32 cycles = (U32)(hits_and_cycles & 0xFFFFFFFF);
       
-      push_format(builder, 
+      push_format(sb, 
                   create_string_from_lit("[%s][%u] %ucy %uh %ucy/h"),
                   entry->function_name,
                   entry->line,
@@ -40,7 +36,7 @@ render_profiler(Game_Assets* ga, Game_Render_Commands* cmds) {
       const F32 font_height = 20.f;
       // Assumes 1600x900
       draw_text(ga, cmds, FONT_DEFAULT, 
-                builder->str,
+                sb->str,
                 create_rgba(0xFFFFFFFF),
                 0.f, 
                 900.f - font_height * (entry_index+1), 

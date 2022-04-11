@@ -208,69 +208,85 @@ push_f32(String_Builder* b, F32 value, U32 precision) {
 	push_u32(b, decimal_part);
 }
 
-// Minimal implementation of sprintf
-// %[flags][width][.precision][length]specifier
-// NOTE(Momo): flags, width, precision and length not done
 static void
 _push_fmt_list(String_Builder* b, String format, va_list args) {
-	UMI at = 0;
+  UMI at = 0;
   while(at < format.count) {
-		
+    
     if (format.e[at] == '%') {
       ++at;
-			
-			switch(format.e[at]) {
-				//- NOTE(Momo): Standard Types
-				case 'i': {
-					S32 value = va_arg(args, S32);
-					push_s32(b, value);
-				} break;
+      
+      // Width
+      U32 width = 0;
+      while (format.e[at] >= '0' && format.e[at] <= '9') {
+        U32 digit = ascii_to_digit(format.e[at]);
+        width = (width * 10) + digit;
+        ++at;
+      }
+      
+      demand_string_builder(tb, 64);
+      
+      switch(format.e[at]) {
+        case 'i': {
+          S32 value = va_arg(args, S32);
+          push_s32(tb, value);
+        } break;
         case 'I': {
           S64 value = va_arg(args, S64);
-					push_s64(b, value);
+          push_s64(tb, value);
         } break;
         case 'U': {
           U64 value = va_arg(args, U64);
-					push_u64(b, value);
+          push_u64(tb, value);
         } break;
         case 'u': {
           U32 value = va_arg(args, U32);
-					push_u32(b, value);
+          push_u32(tb, value);
         } break;
-				case 'f': {
-					F64 value = va_arg(args, F64);
-					push_f32(b, (F32)value, 5);
-				} break;
+        case 'f': {
+          F64 value = va_arg(args, F64);
+          push_f32(tb, (F32)value, 5);
+        } break;
         
-				case 's': {
-					// c-string
-					const char* cstr = va_arg(args, const char*);
-					while(cstr[0] != 0) {
-						push_c8(b, (U8)cstr[0]);
-						++cstr;
-					}
-				} break;
-				
-				//- NOTE(Momo): Custom types
-				case 'S': {
-					// String, or 'text'.
-					String str = va_arg(args, String);
-					push_string(b, str);
-				} break;
-				
-				default: {
-					// death
-					assert(false);
-				} break;
-			}
-			++at;
-			
+        case 's': {
+          // c-string
+          const char* cstr = va_arg(args, const char*);
+          while(cstr[0] != 0) {
+            push_c8(tb, (U8)cstr[0]);
+            ++cstr;
+          }
+        } break;
+        
+        case 'S': {
+          // String, or 'text'.
+          String str = va_arg(args, String);
+          push_string(tb, str);
+        } break;
+        
+        default: {
+          // death
+          assert(false);
+        } break;
+      }
+      ++at;
+      
+      if (width > 0 && tb->str.count < width) {
+        UMI spaces_to_pad = width - tb->str.count;
+        while(spaces_to_pad--) {
+          push_c8(b, ' ');
+        }
+        push_string(b, tb->str);
+      }
+      else {
+        push_string(b, tb->str);
+      }
+      
       
     }
     else {
       push_c8(b, format.e[at++]);
     }
-		
+    
   }
 }
 
