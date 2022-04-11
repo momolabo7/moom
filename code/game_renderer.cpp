@@ -141,14 +141,14 @@ push_orthographic_camera(Game_Render_Commands* c,
                          Rect3 frustum)   
 {
   auto* data = push_command<Render_Command_Basis>(c, RENDER_COMMAND_TYPE_BASIS);
-  M44 p  = create_m44_orthographic(frustum.min.x,  
+  M44 p  = m44_orthographic(frustum.min.x,  
                                    frustum.max.x, 
                                    frustum.min.y, 
                                    frustum.max.y,
                                    frustum.min.z, 
                                    frustum.max.z);
   
-  M44 v = create_m44_translation(-position.x, -position.y, -position.z);
+  M44 v = m44_translation(-position.x, -position.y, -position.z);
   data->basis = p*v;
   
 }
@@ -218,9 +218,9 @@ push_line(Game_Render_Commands* c,
   V2 x_axis = { 1.f, 0.f };
   F32 angle = angle_between(line_vector, x_axis);
   
-  M44 T = create_m44_translation(line_mid.x, line_mid.y, pos_z);
-  M44 R = create_m44_rotation_z(angle);
-  M44 S = create_m44_scale(line_length, thickness, 1.f) ;
+  M44 T = m44_translation(line_mid.x, line_mid.y, pos_z);
+  M44 R = m44_rotation_z(angle);
+  M44 S = m44_scale(line_length, thickness, 1.f) ;
   
   push_rect(c, colors, 
             T*R*S);

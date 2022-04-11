@@ -26,7 +26,7 @@ render_profiler(Game_Assets* ga, Game_Render_Commands* cmds) {
       U32 cycles = (U32)(hits_and_cycles & 0xFFFFFFFF);
       
       push_format(sb, 
-                  create_string_from_lit("[%s][%u] %ucy %uh %ucy/h"),
+                  string_from_lit("[%s][%u] %ucy %uh %ucy/h"),
                   entry->function_name,
                   entry->line,
                   cycles,
@@ -37,7 +37,7 @@ render_profiler(Game_Assets* ga, Game_Render_Commands* cmds) {
       // Assumes 1600x900
       draw_text(ga, cmds, FONT_DEFAULT, 
                 sb->str,
-                create_rgba(0xFFFFFFFF),
+                rgba(0xFFFFFFFF),
                 0.f, 
                 900.f - font_height * (entry_index+1), 
                 font_height,

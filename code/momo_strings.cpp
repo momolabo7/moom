@@ -1,7 +1,7 @@
 //~ NOTE(Momo): String
 
 static String
-create_string(U8* str, UMI size) {
+string(U8* str, UMI size) {
 	String ret;
 	ret.e = str;
 	ret.count = size;
@@ -10,13 +10,13 @@ create_string(U8* str, UMI size) {
 
 
 static String
-create_string_from_cstr(const char* cstr) {
+string_from_cstr(const char* cstr) {
   return {(U8*)cstr, cstr_len(cstr)};
 }
 
 static String
-create_string_from_cstr(char* cstr) {
-  create_string_from_cstr((const char*)cstr);
+string_from_cstr(char* cstr) {
+  string_from_cstr((const char*)cstr);
 }
 
 

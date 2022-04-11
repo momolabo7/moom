@@ -110,10 +110,10 @@ game_update(Game_Memory* memory,
         sandbox->tmp_increase = true;
       }
       
-      RGBA colors = create_rgba(1.f, 1.f, 1.f, 1.f);
-      M44 s = create_m44_scale(600.f, 600.f, 10.f);
-      M44 r = create_m44_rotation_z(sandbox->tmp_rot += dt);
-      M44 t = create_m44_translation(800.f, 450.f, 300.f);
+      RGBA colors = rgba(1.f, 1.f, 1.f, 1.f);
+      M44 s = m44_scale(600.f, 600.f, 10.f);
+      M44 r = m44_rotation_z(sandbox->tmp_rot += dt);
+      M44 t = m44_translation(800.f, 450.f, 300.f);
       
       {
 #if 1

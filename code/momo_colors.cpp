@@ -1,5 +1,5 @@
 static RGBA 
-create_rgba(F32 r, F32 g, F32 b, F32 a){
+rgba(F32 r, F32 g, F32 b, F32 a){
 	RGBA ret;
 	ret.r = r;
 	ret.g = g;
@@ -10,7 +10,7 @@ create_rgba(F32 r, F32 g, F32 b, F32 a){
 }
 
 static RGBA
-create_rgba(U32 hex) {
+rgba(U32 hex) {
   RGBA ret;
   
   ret.r = (F32)((hex & 0xFF000000) >> 24)/255.f;
@@ -22,7 +22,7 @@ create_rgba(U32 hex) {
 }
 
 static HSL
-create_hsl(F32 h, F32 s, F32 l) {
+hsl(F32 h, F32 s, F32 l) {
   HSL ret;
   ret.h = h;
   ret.s = s;

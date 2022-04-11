@@ -16,12 +16,12 @@ static B32 operator==(String lhs, String rhs);
 static B32 operator!=(String lhs, String rhs);
 
 //- Constructors
-static String create_string(U8* Str, UMI size);
-static String create_string_from_cstr(const char* cstr);
-static String create_string_from_cstr(char* cstr);
+static String string(U8* Str, UMI size);
+static String string_from_cstr(const char* cstr);
+static String string_from_cstr(char* cstr);
 // NOTE(Momo): No one should be using this
 // Maybe make a macro to enable/disable this?
-#define create_string_from_lit(s) create_string((U8*)(s), sizeof(s)-1)
+#define string_from_lit(s) string((U8*)(s), sizeof(s)-1)
 
 
 

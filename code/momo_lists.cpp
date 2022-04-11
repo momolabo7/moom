@@ -2,7 +2,7 @@
 
 
 template<typename T> static Array<T> 
-create_array(T* data, UMI count) {
+array(T* data, UMI count) {
   Array<T> ret;
   ret.e = data;
   ret.count = count;
@@ -10,7 +10,7 @@ create_array(T* data, UMI count) {
 }
 
 template<typename T> static List<T> 
-create_list(T* data, UMI cap) {
+list(T* data, UMI cap) {
   List<T> ret;
   ret.e = data;
   ret.count = 0;

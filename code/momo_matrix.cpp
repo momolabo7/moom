@@ -19,7 +19,7 @@ static M44 transpose(M44 m) {
 	}
 	return ret;
 }
-static M44 create_m44_scale(F32 x, F32 y, F32 z) {
+static M44 m44_scale(F32 x, F32 y, F32 z) {
 	M44 ret = {};
 	ret.e[0][0] = x;
 	ret.e[1][1] = y;
@@ -28,7 +28,7 @@ static M44 create_m44_scale(F32 x, F32 y, F32 z) {
 	
 	return ret;
 }
-static M44 create_m44_identity() {
+static M44 m44_identity() {
 	M44 ret = {};
 	ret.e[0][0] = 1.f;
 	ret.e[1][1] = 1.f;
@@ -37,8 +37,8 @@ static M44 create_m44_identity() {
 	
 	return ret;
 }
-static M44 create_m44_translation(F32 x, F32 y, F32 z) {
-	M44 ret = create_m44_identity();
+static M44 m44_translation(F32 x, F32 y, F32 z) {
+	M44 ret = m44_identity();
 	ret.e[0][3] = x;
 	ret.e[1][3] = y;
 	ret.e[2][3] = z;
@@ -46,7 +46,7 @@ static M44 create_m44_translation(F32 x, F32 y, F32 z) {
 	
 	return ret;
 }
-static M44 create_m44_rotation_x(F32 rad) {
+static M44 m44_rotation_x(F32 rad) {
 	
 	// NOTE(Momo): 
 	// 1  0  0  0
@@ -65,7 +65,7 @@ static M44 create_m44_rotation_x(F32 rad) {
 	
 	return ret;
 }
-static M44 create_m44_rotation_y(F32 rad) {
+static M44 m44_rotation_y(F32 rad) {
 	
 	// NOTE(Momo): 
 	//  c  0  s  0
@@ -84,7 +84,7 @@ static M44 create_m44_rotation_y(F32 rad) {
 	
 	return ret;
 }
-static M44 create_m44_rotation_z(F32 rad) {
+static M44 m44_rotation_z(F32 rad) {
 	
 	// NOTE(Momo): 
 	//  c -s  0  0
@@ -104,7 +104,7 @@ static M44 create_m44_rotation_z(F32 rad) {
 	
 	return ret;
 }
-static M44 create_m44_orthographic(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 far) {
+static M44 m44_orthographic(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 far) {
 	
 	M44 ret = {};
 	ret.e[0][0] = 2.f/(right-left);
@@ -117,7 +117,7 @@ static M44 create_m44_orthographic(F32 left, F32 right, F32 bottom, F32 top, F32
 	
 	return ret;
 }
-static M44 create_m44_frustum(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 far) {
+static M44 m44_frustum(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 far) {
 	M44 ret = {};
 	ret.e[0][0] = (2.f*near)/(right-left);
 	ret.e[1][1] = (2.f*near)/(top-bottom);
@@ -130,10 +130,10 @@ static M44 create_m44_frustum(F32 left, F32 right, F32 bottom, F32 top, F32 near
 	
 	return ret;
 }
-static M44 create_m44_perspective(F32 fov, F32 aspect, F32 near, F32 far){
+static M44 m44_perspective(F32 fov, F32 aspect, F32 near, F32 far){
 	F32 top = near * tan(fov*0.5f);
 	F32 right = top * aspect;
-	return create_m44_frustum(-right, right,
+	return m44_frustum(-right, right,
                         -top, top,
                         near, far);
 }

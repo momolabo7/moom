@@ -667,45 +667,6 @@ _png_filter(_PNG_Context* c) {
   
 }
 
-//~Chunk processing
-
-#if 0
-static B32
-_png_process_IHDR(_PNG_Context* c) {
-  Stream stream = c->stream; 
-  auto* IHDR = consume<_PNG_IHDR>(&stream);
-  
-  // NOTE(Momo): Width and height is in Big Endian
-  // We assume that we are currently in a Little Endian system
-  U32 width = endian_swap_32(IHDR->width);
-  U32 height = endian_swap_32(IHDR->height);
-  
-  _png_log("IHDR: \nwidth: %d\nheight: %d\nbit_depth: %d\ncolour_type: %d\ncompression_method: %d\nfilter_method: %d\ninterlace_method: %d\n\n",
-           IHDR->width, IHDR->height, IHDR->bit_depth, IHDR->colour_type, IHDR->compression_method, IHDR->filter_method, IHDR->interlace_method);
-  
-  if (!_png_is_format_supported(IHDR)) {
-    return false;
-  }
-  
-  c->image_width = width;
-  c->image_height = height;
-  c->bit_depth = IHDR->bit_depth;
-  
-  // NOTE(Momo): For reserving memory for bm
-  U8* image_stream_memory = push_array<U8>(c->arena, _png_get_image_size(c));
-  c->image_stream = create_stream(image_stream_memory, _png_get_image_size(c));
-  
-  // NOTE(Momo): Allow space for unfiltered bm. 
-  // One extra byte per row for filter 'type'
-  UMI unfiltered_size = c->image_width * c->image_height * PNG_CHANNELS + c->image_height;
-  U8* unfiltered_image_stream_memory = push_array<U8>(c->arena, unfiltered_size);
-  c->unfiltered_image_stream = 
-    create_stream(unfiltered_image_stream_memory, unfiltered_size);
-  return true;
-}
-#endif
-
-
 static B32
 _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
   auto* IDAT = consume<_PNG_IDAT_Header>(zlib_stream);

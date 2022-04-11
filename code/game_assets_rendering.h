@@ -14,7 +14,7 @@ draw_sprite(Game_Assets* ga,
             F32 depth)
 {
   
-  M44 transform = create_m44_identity();
+  M44 transform = m44_identity();
   transform.e[0][0] = sw;
   transform.e[1][1] = sh;
   transform.e[0][3] = px;
@@ -59,11 +59,11 @@ draw_text(Game_Assets* ga,
     
     
     M44 transform = 
-      create_m44_translation(px + (glyph->box.min.x*font_height), 
+      m44_translation(px + (glyph->box.min.x*font_height), 
                              py + (glyph->box.min.y*font_height), 
                              9.f)*
-      create_m44_scale(width, height, 1.f)*
-      create_m44_translation(0.5f, 0.5f, 1.f);
+      m44_scale(width, height, 1.f)*
+      m44_translation(0.5f, 0.5f, 1.f);
     
     
     push_subsprite(render_commands, 

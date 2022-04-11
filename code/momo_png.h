@@ -34,10 +34,12 @@ struct PNG {
 // - probably need a 'get channels' function?
 //      static U32 get_channels(PNG);
 
+// TODO(Momo): Change to init_png or read_as_png
 static PNG create_png(Memory png_memory);
 static B32 is_ok(PNG png);
 static B32 is_ok(PNG* png);
 
+// TODO(Momo): change to init_bitmap
 static Bitmap create_bitmap(PNG* png, Arena* arena);
 static Memory write_bitmap_as_png(Bitmap bm, Arena* arena);
 

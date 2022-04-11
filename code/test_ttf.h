@@ -45,7 +45,7 @@ void test_ttf() {
       Bitmap codepoint_image = rasterize_glyph(&ttf, glyph_index, scale_factor, arena);
       {
         demand_string_builder(strbld, 256);
-        push_format(strbld, create_string_from_lit("%d.png\0"), codepoint);
+        push_format(strbld, string_from_lit("%d.png\0"), codepoint);
         
         Memory image_mem = write_bitmap_as_png(codepoint_image, arena);
         test_write_memory_to_file(image_mem, (const char*)strbld->e);

@@ -34,6 +34,7 @@ typedef struct WAV {
   void* data;
 } WAV;
 
+// TODO(Momo): take in WAV and return b32
 static WAV read_wav(void* memory, U32 size);
 
 

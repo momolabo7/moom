@@ -736,7 +736,7 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
             });
   
   // create an 'active edges list'
-  auto active_edges = create_list(push_array<_TTF_Edge*>(arena, edge_count), edge_count);
+  auto active_edges = list(push_array<_TTF_Edge*>(arena, edge_count), edge_count);
   
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
