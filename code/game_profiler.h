@@ -106,8 +106,6 @@ render_profiler(Game_Assets* ga, Game_Render_Commands* cmds) {
                 font_height,
                 0.f);
       
-      entry->start_hits = 0;
-      entry->start_cycles = 0;
     }
   }
 }
