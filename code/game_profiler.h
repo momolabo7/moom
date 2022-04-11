@@ -79,14 +79,17 @@ render_profiler(Game_Assets* ga, Game_Render_Commands* cmds) {
   {
     Profiler_Entry* entry = profiler.entries + entry_index;
     
-    U32 hits = (U32)(entry->hits_and_cycles >> 32);
+    // reading needs to be atomic!
+    U64 hits_and_cycles = atomic_assign(&entry->hits_and_cycles, 0);
+    U32 hits = (U32)(hits_and_cycles >> 32);
     if(hits) {
       U8 buffer[256];
       declare_and_pointerize(String_Builder, builder);
       init_string_builder(builder, buffer, array_count(buffer));
       
-      U32 cycles = (U32)(entry->hits_and_cycles & 0xFFFFFFFF);
-      entry->hits_and_cycles = 0;
+      
+      
+      U32 cycles = (U32)(hits_and_cycles & 0xFFFFFFFF);
       
       push_format(builder, 
                   create_string_from_lit("[%s][%u] %ucy %uh %ucy/h"),
