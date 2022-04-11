@@ -24,6 +24,11 @@ game_init(Game_Memory* memory) {
       init_arena(&memory->state->debug_arena, platform.alloc(MB(1)), MB(1));
       init_arena(&memory->state->frame_arena, platform.alloc(MB(1)), MB(1));
     }
+    // Initialize profiler 
+    // TODO(Momo): Profiler should really be a seperate system
+    // on it's own. Maybe it's own module even!
+    init_profiler(1234, 32, &memory->state->debug_arena);
+    
     
     B32 success = load_game_assets(&memory->state->game_assets, 
                                    memory->texture_queue,
@@ -42,10 +47,6 @@ game_init(Game_Memory* memory) {
     Console* dc = &memory->state->console;
     init_console(dc, &memory->state->debug_arena);
     
-    // Initialize profiler 
-    // TODO(Momo): Profiler should really be a seperate system
-    // on it's own. Maybe it's own module even!
-    init_profiler(1234, 32, &memory->state->debug_arena);
     
   }
   

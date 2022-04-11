@@ -1,7 +1,7 @@
 
 // NOTE(Momo): Yes. Magic.
 static U32
-get_next_texture_handle() {
+get_next_texture_handle() {  
   static U32 next_texture_handle = 0;
   U32 ret = next_texture_handle++;
   assert(next_texture_handle < 256);
@@ -11,24 +11,32 @@ get_next_texture_handle() {
 
 static Bitmap_Asset* 
 get_bitmap(Game_Assets* ga, Bitmap_ID id) {
+  profile_block;
+  
   if (get_pack_id(id) != 0) return nullptr;
   return ga->bitmaps + get_real_id(id);
 }
 
 static Font_Asset* 
 get_font(Game_Assets* ga, Font_ID id) {
+  profile_block;
+  
   if (get_pack_id(id) != 0) return nullptr;
   return ga->fonts + get_real_id(id);
 }
 
 static Sprite_Asset* 
 get_sprite(Game_Assets* ga, Sprite_ID id) {
+  profile_block;
+  
   if (get_pack_id(id) != 0) return nullptr; 
   return ga->sprites + get_real_id(id);
 }
 
 static Font_Glyph_Asset* 
 get_glyph(Font_Asset* font, U32 codepoint) {
+  profile_block;
+  
   U32 glyph_index_plus_one = font->codepoint_map[codepoint];
   if (glyph_index_plus_one == 0) return nullptr;
   Font_Glyph_Asset *glyph = font->glyphs + glyph_index_plus_one - 1;
@@ -40,6 +48,8 @@ get_horizontal_advance(Font_Asset* font,
                        U32 left_codepoint, 
                        U32 right_codepoint) 
 {
+  profile_block;
+  
   U32 g1 = font->codepoint_map[left_codepoint];
   U32 g2 = font->codepoint_map[right_codepoint];
   if (!g1 || !g2) return 0.f;

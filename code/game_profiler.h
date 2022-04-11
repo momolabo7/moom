@@ -69,48 +69,4 @@ _end_profiling_block(Profiler_Entry* entry) {
 #define _profile_block(number) _profile_block_la(number);
 #define profile_block _profile_block(__LINE__)
 
-// TODO(Momo): Change name to update_and_render()
-static void
-render_profiler(Game_Assets* ga, Game_Render_Commands* cmds) {
-  // TODO(Momo): UI coorindates?
-  for (U32 entry_index = 0;
-       entry_index < profiler.entry_count;
-       ++entry_index) 
-  {
-    Profiler_Entry* entry = profiler.entries + entry_index;
-    
-    // reading needs to be atomic!
-    U64 hits_and_cycles = atomic_assign(&entry->hits_and_cycles, 0);
-    U32 hits = (U32)(hits_and_cycles >> 32);
-    if(hits) {
-      U8 buffer[256];
-      declare_and_pointerize(String_Builder, builder);
-      init_string_builder(builder, buffer, array_count(buffer));
-      
-      
-      
-      U32 cycles = (U32)(hits_and_cycles & 0xFFFFFFFF);
-      
-      push_format(builder, 
-                  create_string_from_lit("[%s][%u] %ucy %uh %ucy/h"),
-                  entry->function_name,
-                  entry->line,
-                  cycles,
-                  hits,
-                  cycles/hits);
-      
-      const F32 font_height = 20.f;
-      // Assumes 1600x900
-      draw_text(ga, cmds, FONT_DEFAULT, 
-                builder->str,
-                create_rgba(0xFFFFFFFF),
-                0.f, 
-                900.f - font_height * (entry_index+1), 
-                font_height,
-                0.f);
-      
-    }
-  }
-}
-
 #endif //GAME_PROFILER_H

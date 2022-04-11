@@ -13,9 +13,11 @@ Platform_API platform;
 #endif // INTERNAL
 
 #include "game_renderer.h"
-#include "game_assets.h"
-#include "game_assets_render.h"
 #include "game_profiler.h"
+
+#include "game_assets.h"
+#include "game_assets_rendering.h"
+#include "game_profiler_rendering.h"
 
 #include "game_console.h"
 
