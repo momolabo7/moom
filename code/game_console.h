@@ -131,7 +131,7 @@ update_console(Console* dc, Game_Input* input) {
 static void
 render_console(Console* dc, 
                Game_Assets* ga, 
-               Game_Render_Commands* render_commands)
+               Renderer_Command_Queue* render_commands)
 {
   profile_block;
   

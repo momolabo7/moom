@@ -20,13 +20,12 @@ Win_Load_Renderer(HWND window,
 typedef void 
 Win_Unload_Renderer(Renderer* renderer);
 
-typedef Game_Render_Commands* 
+typedef void
 Win_Begin_Renderer_Frame(Renderer* renderer, 
                          V2U render_wh, 
                          Rect2U render_region);
 typedef void 
-Win_End_Renderer_Frame(Renderer* renderer, 
-                       Game_Render_Commands* commands);
+Win_End_Renderer_Frame(Renderer* renderer);
 
 
 //~Function table

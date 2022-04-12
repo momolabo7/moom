@@ -648,7 +648,6 @@ WinMain(HINSTANCE instance,
     const int icon_w = 256;
     const int icon_h = 256;
     
-    
     WNDCLASSA win_class = {};
     win_class.style = CS_HREDRAW | CS_VREDRAW;
     win_class.lpfnWndProc = win_window_callback;
@@ -757,28 +756,27 @@ WinMain(HINSTANCE instance,
   defer { win_unload_code(&game_code); };
   
   
-  //-NOTE(Momo): Init renderer
+  //-Init renderer
   Renderer* renderer = renderer_functions.load(window, MB(128), MB(128));
   if (!renderer) { return 1; }
   defer { renderer_functions.unload(renderer); };
   
   
   //-Game Memory setup
-  Game_Memory game = {};
-  game.platform_api = win_create_platform_api();
-  game.texture_queue = &renderer->texture_queue;
+  declare_and_pointerize(Game_Memory, game);
+  game->platform_api = win_create_platform_api();
+  game->renderer_texture_queue = &renderer->texture_queue;
+  game->renderer_command_queue = &renderer->command_queue;
   
-  //-Init input
-  
-  Game_Input input = {};
+  //- Init input
+  declare_and_pointerize(Game_Input, input);
   
   //- Begin game loop
   B32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   
-  // TODO(Momo): send this to global state
+  //- Send this to global state
   LARGE_INTEGER performance_frequency;
   QueryPerformanceFrequency(&performance_frequency);
-  
   LARGE_INTEGER last_frame_count = win_get_performance_counter();
   
   while (win_global_state.is_running) {
@@ -789,11 +787,11 @@ WinMain(HINSTANCE instance,
                                                   render_wh.h,
                                                   win_global_state.aspect_ratio_width,
                                                   win_global_state.aspect_ratio_height);
-    Game_Render_Commands* render_commands = nullptr;
+    Renderer_Command_Queue* render_commands = nullptr;
     if (renderer_code.is_valid) {
-      render_commands = renderer_functions.begin_frame(renderer, 
-                                                       render_wh, 
-                                                       render_region);
+      renderer_functions.begin_frame(renderer, 
+                                     render_wh, 
+                                     render_region);
     }
     
 #if INTERNAL
@@ -802,15 +800,15 @@ WinMain(HINSTANCE instance,
 #endif
     
     //-Process messages and input
-    input.seconds_since_last_frame = target_secs_per_frame;
-    update(&input);
+    input->seconds_since_last_frame = target_secs_per_frame;
+    update(input);
     {
       MSG msg = {};
       while(PeekMessage(&msg, window, 0, 0, PM_REMOVE)) {
         switch(msg.message) {
           case WM_CHAR: {
-            assert(input.char_count < array_count(input.chars));
-            input.chars[input.char_count++] = (U8)msg.wParam;
+            assert(input->char_count < array_count(input->chars));
+            input->chars[input->char_count++] = (U8)msg.wParam;
           } break;
           case WM_QUIT:
           case WM_DESTROY:
@@ -826,10 +824,10 @@ WinMain(HINSTANCE instance,
             B32 is_key_down = msg.message == WM_KEYDOWN;
             switch(code) {
               case 0x57: /* W */ {
-                input.button_up.now = is_key_down;
+                input->button_up.now = is_key_down;
               } break;
               case 0x70: /* F1 */{
-                input.button_console.now = is_key_down;
+                input->button_console.now = is_key_down;
               } break;
             }
             TranslateMessage(&msg);
@@ -848,9 +846,8 @@ WinMain(HINSTANCE instance,
     
     
     //-Game logic
-    
-    if(game_code.is_valid && render_commands) { 
-      game_functions.update_and_render(&game, &input, render_commands);
+    if(game_code.is_valid) { 
+      game_functions.update_and_render(game, input);
     }
     
     
@@ -901,7 +898,7 @@ WinMain(HINSTANCE instance,
     
     //- End render frame
     if (renderer_code.is_valid) {
-      renderer_functions.end_frame(renderer, render_commands);
+      renderer_functions.end_frame(renderer);
     }
     
     LARGE_INTEGER end_frame_count = win_get_performance_counter();

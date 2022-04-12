@@ -482,22 +482,22 @@ process_texture_queue(Opengl* ogl) {
   
 }
 
-static Game_Render_Commands*
+static void
 opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) 
 {
-  Game_Render_Commands* ret = &ogl->render_commands;
-  clear_commands(ret);  
+  Renderer_Command_Queue* cmds = &ogl->command_queue;
+  clear_commands(cmds);  
+  cmds->platform_render_wh = render_wh;
+  cmds->platform_render_region = region;
   
-  ret->platform_render_wh = render_wh;
-  ret->platform_render_region = region;
-  
-  return ret;
 }
 
 // Only call opengl functions when we end frame
 static void
-opengl_end_frame(Opengl* ogl, Game_Render_Commands* commands) {
-  align_viewport(ogl, commands->platform_render_wh, commands->platform_render_region);
+opengl_end_frame(Opengl* ogl) {
+  Renderer_Command_Queue* cmds = &ogl->command_queue;
+  
+  align_viewport(ogl, cmds->platform_render_wh, cmds->platform_render_region);
   process_texture_queue(ogl);
   
   F32 quad_uv[] = {
@@ -514,8 +514,8 @@ opengl_end_frame(Opengl* ogl, Game_Render_Commands* commands) {
   GLsizei last_drawn_instance_index = 0;
   GLuint current_instance_index = 0;
   
-  for (U32 i = 0; i < commands->entry_count; ++i) {
-    Render_Command* entry = get_command(commands, i);
+  for (U32 i = 0; i < cmds->entry_count; ++i) {
+    Render_Command* entry = get_command(cmds, i);
     switch(entry->id) {
       case RENDER_COMMAND_TYPE_BASIS: {
         auto* data = (Render_Command_Basis*)entry->data;

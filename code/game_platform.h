@@ -112,21 +112,21 @@ void update(Game_Input_Button button);
 //~ NOTE(Momo): Game API
 // For things that don't change from the platform after setting it once
 struct Renderer_Texture_Queue;
+struct Renderer_Command_Queue;
 struct Debugger;
 struct Game_Memory {
   struct Game_State* game;    // pointer for game memory usage
   struct Debug_State* debug;  // pointer for debug memory usage
   
   Platform_API platform_api;
-  Renderer_Texture_Queue* texture_queue;
+  Renderer_Texture_Queue* renderer_texture_queue;
+  Renderer_Command_Queue* renderer_command_queue;
   Debugger* debugger;
   
 };
 
-struct Game_Render_Commands;
 typedef void Game_Update_And_Render(Game_Memory* memory,
-                                    Game_Input* input,
-                                    Game_Render_Commands* render_commands);
+                                    Game_Input* input);
 
 // To be called by platform
 struct Game_Functions {

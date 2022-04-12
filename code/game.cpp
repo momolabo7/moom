@@ -7,8 +7,7 @@ Debugger* g_debugger;
 
 exported B32 
 game_update_and_render(Game_Memory* memory,
-                       Game_Input* input, 
-                       Game_Render_Commands* render_commands) 
+                       Game_Input* input) 
 { 
   g_platform = memory->platform_api;
   g_debugger = memory->debugger;
@@ -37,7 +36,7 @@ game_update_and_render(Game_Memory* memory,
     
     
     B32 success = load_game_assets(&memory->game->game_assets, 
-                                   memory->texture_queue,
+                                   memory->renderer_texture_queue,
                                    "test.sui",
                                    &memory->game->asset_arena);
     if(!success) return false;
@@ -63,6 +62,7 @@ game_update_and_render(Game_Memory* memory,
   Sandbox_Mode* sandbox = &game->sandbox_mode;
   Console* dc = &game->console;
   Game_Assets* ga = &game->game_assets;
+  Renderer_Command_Queue* cmds = memory->renderer_command_queue;
   
   update_console(dc, input);
   {
@@ -71,7 +71,7 @@ game_update_and_render(Game_Memory* memory,
     {
       RGBA colors;
       colors.r = colors.g = colors.b  = colors.a = 0.3f;
-      push_colors(render_commands, colors);
+      push_colors(cmds, colors);
     }
     
     // Set camera
@@ -82,7 +82,7 @@ game_update_and_render(Game_Memory* memory,
       frustum.max.x = 1600;
       frustum.max.y = 900;
       frustum.max.z = 500;
-      push_orthographic_camera(render_commands, position, frustum);
+      push_orthographic_camera(cmds, position, frustum);
     }
     
     {
@@ -112,7 +112,7 @@ game_update_and_render(Game_Memory* memory,
         Bitmap_Asset* bitmap = get_bitmap(ga, sprite->bitmap_id);
         assert(bitmap);
         
-        push_subsprite(render_commands, 
+        push_subsprite(cmds, 
                        colors,
                        t*r*s,
                        bitmap->renderer_texture_handle, 
@@ -122,11 +122,11 @@ game_update_and_render(Game_Memory* memory,
     }
   }
   
-  render_console(dc, ga, render_commands);
+  render_console(dc, ga, cmds);
   
   // Do together?
   update_entries(profiler); 
-  render_profiler(profiler, ga, render_commands);
+  render_profiler(profiler, ga, cmds);
   
   
   return true;

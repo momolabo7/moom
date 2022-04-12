@@ -1,6 +1,6 @@
 
 static void
-clear_commands(Game_Render_Commands* q) {
+clear_commands(Renderer_Command_Queue* q) {
   q->data_pos = 0;	
 	q->entry_count = 0;
 	
@@ -11,14 +11,14 @@ clear_commands(Game_Render_Commands* q) {
 }
 
 static void 
-init_commands(Game_Render_Commands* q, void* memory, U32 memory_size) {
+init_commands(Renderer_Command_Queue* q, void* memory, U32 memory_size) {
   q->memory = (U8*)memory;
   q->memory_size = memory_size;
   clear_commands(q);
 }
 
 static Render_Command*
-get_command(Game_Render_Commands* q, U32 index) {
+get_command(Renderer_Command_Queue* q, U32 index) {
   assert(index < q->entry_count);
   
 	UMI stride = align_up_pow2(sizeof(Render_Command), 4);
@@ -26,7 +26,7 @@ get_command(Game_Render_Commands* q, U32 index) {
 }
 
 static void*
-_push_command_block(Game_Render_Commands* q, U32 size, U32 id, U32 align = 4) {
+_push_command_block(Renderer_Command_Queue* q, U32 size, U32 id, U32 align = 4) {
 	UMI imem = ptr_to_int(q->memory);
 	
 	UMI adjusted_data_pos = align_up_pow2(imem + q->data_pos, (UMI)align) - imem;
@@ -58,7 +58,7 @@ init_texture_queue(Renderer_Texture_Queue* q, void* memory, U32 memory_size) {
 }
 
 template<typename T> static T*
-push_command(Game_Render_Commands* q, U32 id, U32 align = 4) {
+push_command(Renderer_Command_Queue* q, U32 id, U32 align = 4) {
   return (T*)_push_command_block(q, sizeof(T), id, align);
 }
 
@@ -129,14 +129,14 @@ cancel_texture_transfer(Texture_Payload* entry) {
 
 
 static void
-push_basis(Game_Render_Commands* c, M44 basis) {
+push_basis(Renderer_Command_Queue* c, M44 basis) {
   
   auto* data = push_command<Render_Command_Basis>(c, RENDER_COMMAND_TYPE_BASIS);
   data->basis = basis;
 }
 
 static void
-push_orthographic_camera(Game_Render_Commands* c, 
+push_orthographic_camera(Renderer_Command_Queue* c, 
                          V3 position,
                          Rect3 frustum)   
 {
@@ -154,14 +154,14 @@ push_orthographic_camera(Game_Render_Commands* c,
 }
 
 static void
-push_colors(Game_Render_Commands* c, RGBA colors) {
+push_colors(Renderer_Command_Queue* c, RGBA colors) {
   auto* data = push_command<Render_Command_Clear>(c, RENDER_COMMAND_TYPE_CLEAR);
   
   data->colors = colors;
 }
 
 static void
-push_subsprite(Game_Render_Commands* c, 
+push_subsprite(Renderer_Command_Queue* c, 
                RGBA colors, 
                M44 transform, 
                U32 texture_index,
@@ -177,7 +177,7 @@ push_subsprite(Game_Render_Commands* c,
 }
 
 static void
-push_sprite(Game_Render_Commands* c,
+push_sprite(Renderer_Command_Queue* c,
             RGBA colors, 
             M44 transform, 
             U32 texture_index)  
@@ -190,7 +190,7 @@ push_sprite(Game_Render_Commands* c,
 }
 
 static void
-push_rect(Game_Render_Commands* c, 
+push_rect(Renderer_Command_Queue* c, 
           RGBA colors, 
           M44 transform) 
 {
@@ -200,7 +200,7 @@ push_rect(Game_Render_Commands* c,
 }
 
 static void 
-push_line(Game_Render_Commands* c, 
+push_line(Renderer_Command_Queue* c, 
           Line2 line,
           F32 thickness,
           RGBA colors,
@@ -227,7 +227,7 @@ push_line(Game_Render_Commands* c,
 }
 
 static  void
-push_circle(Game_Render_Commands* c, 
+push_circle(Renderer_Command_Queue* c, 
             Circ2 circle,
             F32 thickness, 
             U32 line_count,
@@ -258,7 +258,7 @@ push_circle(Game_Render_Commands* c,
 }
 
 static void 
-push_aabb(Game_Render_Commands* c, 
+push_aabb(Renderer_Command_Queue* c, 
           Rect2 rect,
           F32 thickness,
           RGBA colors,
@@ -327,12 +327,12 @@ push_aabb(Game_Render_Commands* c,
 }
 
 static void 
-push_delete_all_textures(Game_Render_Commands* c) {
+push_delete_all_textures(Renderer_Command_Queue* c) {
   push_command<Render_Command_Delete_All_Textures>(c, RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES);
 }
 
 static void 
-push_delete_texture(Game_Render_Commands* c, U32 texture_index) {
+push_delete_texture(Renderer_Command_Queue* c, U32 texture_index) {
   auto* data= push_command<Render_Command_Delete_Texture>(c, RENDER_COMMAND_TYPE_DELETE_TEXTURE);
   data->texture_index = texture_index;
   

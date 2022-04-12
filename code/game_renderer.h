@@ -69,7 +69,7 @@ struct Render_Command {
   void* data;
 };
 
-struct Game_Render_Commands {
+struct Renderer_Command_Queue {
   V2U platform_render_wh;
   Rect2U platform_render_region;
   
@@ -123,7 +123,7 @@ struct Render_Command_Rect {
 
 //- Gfx API
 struct Renderer {	
-  Game_Render_Commands render_commands;
+  Renderer_Command_Queue command_queue;
   Renderer_Texture_Queue texture_queue;
 };
 

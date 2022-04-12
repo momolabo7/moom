@@ -60,7 +60,7 @@ get_horizontal_advance(Font_Asset* font,
 
 static B32
 unload_game_assets(Game_Assets* ga, 
-                   Game_Render_Commands* render_commands) 
+                   Renderer_Command_Queue* render_commands) 
 {
   for(U32 bitmap_index = 0; 
       bitmap_index < ga->bitmap_count; 

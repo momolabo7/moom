@@ -49,7 +49,7 @@ end_stat(Stat* stat) {
 }
 
 static void
-render_profiler(Profiler* p, Game_Assets* ga, Game_Render_Commands* cmds) {
+render_profiler(Profiler* p, Game_Assets* ga, Renderer_Command_Queue* cmds) {
   // TODO(Momo): UI coorindates?
   const F32 font_height = 30.f;
   

@@ -247,8 +247,8 @@ struct Opengl : Renderer {
 };
 
 static B32 opengl_init(Opengl* ogl);
-static Game_Render_Commands* opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region);
-static void opengl_end_frame(Opengl* ogl, Game_Render_Commands* commands);
+static void opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region);
+static void opengl_end_frame(Opengl* ogl);
 
 
 #include "game_renderer_opengl.cpp"

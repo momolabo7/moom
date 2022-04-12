@@ -6,7 +6,7 @@
 // Draw background
 static void
 draw_sprite(Game_Assets* ga,
-            Game_Render_Commands* render_commands,
+            Renderer_Command_Queue* render_commands,
             Sprite_ID sprite_id,
             RGBA color, 
             F32 px, F32 py, 
@@ -33,7 +33,7 @@ draw_sprite(Game_Assets* ga,
 
 static void
 draw_text(Game_Assets* ga, 
-          Game_Render_Commands* render_commands,
+          Renderer_Command_Queue* render_commands,
           Font_ID font_id,
           String str,
           RGBA color,
