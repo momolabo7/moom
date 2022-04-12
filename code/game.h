@@ -9,7 +9,7 @@
 #include "game_renderer.h"
 
 #ifdef INTERNAL
-#define game_log(...) platform.debug_log(__VA_ARGS__)
+#define game_log(...) g_platform.debug_log(__VA_ARGS__)
 #else
 #define game_log(...)
 #endif // INTERNAL

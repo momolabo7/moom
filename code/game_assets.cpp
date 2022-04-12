@@ -79,7 +79,7 @@ load_game_assets(Game_Assets* ga,
 { 
   // Read in file
   Platform_File file_ = 
-    platform.open_file(filename,
+    g_platform.open_file(filename,
                        PLATFORM_FILE_ACCESS_READ, 
                        PLATFORM_FILE_PATH_EXE);
   Platform_File* file = &file_;
@@ -87,7 +87,7 @@ load_game_assets(Game_Assets* ga,
   
   // Read header
   Karu_Header karu_header;
-  platform.read_file(file, sizeof(Karu_Header), 0, &karu_header);
+  g_platform.read_file(file, sizeof(Karu_Header), 0, &karu_header);
   
   if (karu_header.signature != KARU_SIGNATURE) {
     return false;
@@ -107,7 +107,7 @@ load_game_assets(Game_Assets* ga,
     {
       Karu_Bitmap kb = {};
       U32 offset = karu_header.offset_to_bitmaps + sizeof(Karu_Bitmap)*bitmap_index;
-      platform.read_file(file, sizeof(Karu_Bitmap), offset, &kb);
+      g_platform.read_file(file, sizeof(Karu_Bitmap), offset, &kb);
       
       U32 bitmap_size = kb.width*kb.height*4;
       U32 texture_handle = get_next_texture_handle();  
@@ -117,7 +117,7 @@ load_game_assets(Game_Assets* ga,
       payload->texture_index =  texture_handle;
       payload->texture_width = kb.width;
       payload->texture_height = kb.height;
-      platform.read_file(file, 
+      g_platform.read_file(file, 
                          bitmap_size, 
                          kb.offset_to_data, 
                          payload->texture_data);
@@ -143,7 +143,7 @@ load_game_assets(Game_Assets* ga,
     {
       Karu_Sprite ks = {};
       U32 offset = karu_header.offset_to_sprites + sizeof(Karu_Sprite)*sprite_index;
-      platform.read_file(file, sizeof(Karu_Sprite), offset, &ks);
+      g_platform.read_file(file, sizeof(Karu_Sprite), offset, &ks);
       
       Sprite_Asset* sa = ga->sprites + sprite_index;
       
@@ -164,7 +164,7 @@ load_game_assets(Game_Assets* ga,
     {
       Karu_Font kf = {};
       U32 kf_offset = karu_header.offset_to_fonts + sizeof(Karu_Font)*font_index;
-      platform.read_file(file, sizeof(Karu_Font), kf_offset, &kf);
+      g_platform.read_file(file, sizeof(Karu_Font), kf_offset, &kf);
       
       Font_Asset* font = ga->fonts + font_index;
       font->highest_codepoint = kf.highest_codepoint + 1;
@@ -191,7 +191,7 @@ load_game_assets(Game_Assets* ga,
       {
         Karu_Font_Glyph kfg = {};
         U32 kfg_offset = sizeof(Karu_Font_Glyph)*(glyph_index)+kf.offset_to_data;
-        platform.read_file(file, sizeof(Karu_Font_Glyph), kfg_offset, &kfg);
+        g_platform.read_file(file, sizeof(Karu_Font_Glyph), kfg_offset, &kfg);
         
         Font_Glyph_Asset* glyph = font->glyphs + glyph_index;
         glyph->uv = kfg.uv;
@@ -206,7 +206,7 @@ load_game_assets(Game_Assets* ga,
       {
         U32 advance_offset = sizeof(Karu_Font_Glyph)*font->glyph_count+kf.offset_to_data;
         U32 block_size = font->glyph_count * font->glyph_count * sizeof(F32);
-        platform.read_file(file, block_size, advance_offset, font->horizontal_advances);
+        g_platform.read_file(file, block_size, advance_offset, font->horizontal_advances);
         
       }
     }

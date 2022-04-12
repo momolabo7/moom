@@ -11,14 +11,14 @@ _begin_profiling_block(Profiler* p,
   entry->function_name = function_name;
   entry->line = line;
   
-  entry->start_cycles = (U32)platform.get_performance_counter();
+  entry->start_cycles = (U32)g_platform.get_performance_counter();
   entry->start_hits = 1;
   return entry;
 }
 
 static void
 _end_profiling_block(Profiler_Entry* entry) {
-  U64 delta = ((U32)platform.get_performance_counter() - entry->start_cycles) | 
+  U64 delta = ((U32)g_platform.get_performance_counter() - entry->start_cycles) | 
   (U64)entry->start_hits << 32;
   
   atomic_add(&entry->hits_and_cycles, delta);

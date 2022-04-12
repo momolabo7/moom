@@ -52,19 +52,16 @@ struct Platform_API {
   Platform_Alloc* alloc;
   Platform_Free* free;
   Platform_Set_Aspect_Ratio* set_aspect_ratio;
-  
   Platform_Open_File* open_file;
   Platform_Read_File* read_file;
   Platform_Write_File* write_file;
   Platform_Close_File* close_file;
-  
   Platform_Add_Task* add_task;
   Platform_Complete_All_Tasks* complete_all_tasks;
   Platform_Get_Performance_Counter* get_performance_counter;
-  
   Platform_Debug_Log* debug_log;
 };
-extern Platform_API platform;
+extern Platform_API g_platform;
 
 
 //~Input API
@@ -115,12 +112,14 @@ void update(Game_Input_Button button);
 //~ NOTE(Momo): Game API
 // For things that don't change from the platform after setting it once
 struct Renderer_Texture_Queue;
+struct Debugger;
 struct Game_Memory {
   struct Game_State* game;    // pointer for game memory usage
   struct Debug_State* debug;  // pointer for debug memory usage
   
   Platform_API platform_api;
   Renderer_Texture_Queue* texture_queue;
+  Debugger* debugger;
   
 };
 

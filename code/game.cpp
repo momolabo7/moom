@@ -1,15 +1,17 @@
 #include "momo.h"
 #include "game.h"
 
-Platform_API platform;
+Platform_API g_platform;
+Debugger* g_debugger;
+
 
 exported B32 
 game_update_and_render(Game_Memory* memory,
                        Game_Input* input, 
                        Game_Render_Commands* render_commands) 
 { 
-  platform = memory->platform_api;
-  
+  g_platform = memory->platform_api;
+  g_debugger = memory->debugger;
   F32 dt = input->seconds_since_last_frame;
   
   // Initialization
@@ -17,17 +19,17 @@ game_update_and_render(Game_Memory* memory,
     
     
     game_log("initialized!");
-    memory->game = (Game_State*)platform.alloc(sizeof(Game_State));
+    memory->game = (Game_State*)g_platform.alloc(sizeof(Game_State));
     if (!memory->game) return false;
     
-    platform.set_aspect_ratio(16, 9);
+    g_platform.set_aspect_ratio(16, 9);
     
     
     // Init arenas
     {
-      init_arena(&memory->game->asset_arena, platform.alloc(MB(20)), MB(20));
-      init_arena(&memory->game->debug_arena, platform.alloc(MB(1)), MB(1));
-      init_arena(&memory->game->frame_arena, platform.alloc(MB(1)), MB(1));
+      init_arena(&memory->game->asset_arena, g_platform.alloc(MB(20)), MB(20));
+      init_arena(&memory->game->debug_arena, g_platform.alloc(MB(1)), MB(1));
+      init_arena(&memory->game->frame_arena, g_platform.alloc(MB(1)), MB(1));
       
     }
     

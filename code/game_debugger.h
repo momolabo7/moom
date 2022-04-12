@@ -1,7 +1,13 @@
-/* date = April 12th 2022 8:14 am */
+// NOTE(Momo): Requires game_platform.h
 
 #ifndef GAME_DEBUGGER_H
 #define GAME_DEBUGGER_H
+
+
+struct Debugger {
+};
+
+extern Debugger* g_debugger;
 
 
 #endif //GAME_DEBUGGER_H
