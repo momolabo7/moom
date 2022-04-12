@@ -850,7 +850,7 @@ WinMain(HINSTANCE instance,
     //-Game logic
     
     if(game_code.is_valid && render_commands) { 
-      game_functions.update(&game, &input, render_commands);
+      game_functions.update_and_render(&game, &input, render_commands);
     }
     
     

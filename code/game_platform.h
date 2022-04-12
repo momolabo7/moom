@@ -64,7 +64,7 @@ struct Platform_API {
   
   Platform_Debug_Log* debug_log;
 };
-
+extern Platform_API platform;
 
 
 //~Input API
@@ -116,7 +116,7 @@ void update(Game_Input_Button button);
 // For things that don't change from the platform after setting it once
 struct Renderer_Texture_Queue;
 struct Game_Memory {
-  struct Game_State* state; // pointer for game memory usage
+  struct Game_State* game; // pointer for game memory usage
   
   Platform_API platform_api;
   Renderer_Texture_Queue* texture_queue;
@@ -124,17 +124,17 @@ struct Game_Memory {
 };
 
 struct Game_Render_Commands;
-typedef void Game_Update(Game_Memory* memory,
-                         Game_Input* input,
-                         Game_Render_Commands* render_commands);
+typedef void Game_Update_And_Render(Game_Memory* memory,
+                                    Game_Input* input,
+                                    Game_Render_Commands* render_commands);
 
 // To be called by platform
 struct Game_Functions {
-  Game_Update* update;
+  Game_Update_And_Render* update_and_render;
 };
 
 static const char* game_function_names[] {
-  "game_update",
+  "game_update_and_render",
 };
 
 

@@ -33,7 +33,6 @@ struct Font_Asset {
 };
 
 struct Game_Assets {
-  
   U32 sprite_count;
   Sprite_Asset* sprites;
   

@@ -27,8 +27,8 @@
 // * ---
 // */
 
-#ifndef GFX_H
-#define GFX_H
+#ifndef GAME_RENDERER_H
+#define GAME_RENDERER_H
 
 
 

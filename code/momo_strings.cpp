@@ -208,6 +208,27 @@ push_f32(String_Builder* b, F32 value, U32 precision) {
 	push_u32(b, decimal_part);
 }
 
+static void     
+push_f64(String_Builder* b, F64 value, U32 precision) {
+	if (value < 0.0) {
+		push_c8(b, '-');	
+		value = -value;
+	}
+	// NOTE(Momo): won't work for values that U32 can't contain
+	U32 integer_part = (U32)value;
+	push_u32(b, integer_part);
+	push_c8(b, '.');
+	
+	value -= (F64)integer_part;
+	
+	for (U32 i = 0; i < precision; ++i) {
+		value *= 10.0;
+	}
+	
+	U32 decimal_part = (U32)value;
+	push_u32(b, decimal_part);
+}
+
 static void
 _push_fmt_list(String_Builder* b, String format, va_list args) {
   UMI at = 0;
@@ -247,7 +268,10 @@ _push_fmt_list(String_Builder* b, String format, va_list args) {
           F64 value = va_arg(args, F64);
           push_f32(tb, (F32)value, 5);
         } break;
-        
+        case 'F': {
+          F64 value = va_arg(args, F64);
+          push_f64(tb, (F64)value, 5);
+        } break;
         case 's': {
           // c-string
           const char* cstr = va_arg(args, const char*);

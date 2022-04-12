@@ -1,79 +1,67 @@
 #include "momo.h"
 #include "game.h"
 
+Platform_API platform;
 
-
-
-static B32
-game_init(Game_Memory* memory) {
+exported B32 
+game_update_and_render(Game_Memory* memory,
+                       Game_Input* input, 
+                       Game_Render_Commands* render_commands) 
+{ 
+  platform = memory->platform_api;
+  
+  F32 dt = input->seconds_since_last_frame;
   
   // Initialization
-  if (!memory->state) {
+  if (!memory->game) {
     
     
     game_log("initialized!");
-    memory->state = (Game_State*)platform.alloc(sizeof(Game_State));
-    if (!memory->state) return false;
+    memory->game = (Game_State*)platform.alloc(sizeof(Game_State));
+    if (!memory->game) return false;
     
     platform.set_aspect_ratio(16, 9);
     
     
     // Init arenas
     {
-      init_arena(&memory->state->asset_arena, platform.alloc(MB(20)), MB(20));
-      init_arena(&memory->state->debug_arena, platform.alloc(MB(1)), MB(1));
-      init_arena(&memory->state->frame_arena, platform.alloc(MB(1)), MB(1));
+      init_arena(&memory->game->asset_arena, platform.alloc(MB(20)), MB(20));
+      init_arena(&memory->game->debug_arena, platform.alloc(MB(1)), MB(1));
+      init_arena(&memory->game->frame_arena, platform.alloc(MB(1)), MB(1));
     }
-    // Initialize profiler 
-    // TODO(Momo): Profiler should really be a seperate system
-    // on it's own. Maybe it's own module even!
-    init_profiler(1234, 32, &memory->state->debug_arena);
+    
+    init_profiler(32, &memory->game->debug_arena);
     
     
-    B32 success = load_game_assets(&memory->state->game_assets, 
+    B32 success = load_game_assets(&memory->game->game_assets, 
                                    memory->texture_queue,
                                    "test.sui",
-                                   &memory->state->asset_arena);
+                                   &memory->game->asset_arena);
     if(!success) return false;
     
     
     // Initialize perm memory
-    Sandbox_Mode* sandbox = &memory->state->sandbox_mode;
+    Sandbox_Mode* sandbox = &memory->game->sandbox_mode;
     sandbox->tmp_delta = 0.f;
     sandbox->tmp_increase = true;
     sandbox->tmp_rot = 0.f;
     
     // Initialize Debug Console
-    Console* dc = &memory->state->console;
-    init_console(dc, &memory->state->debug_arena);
+    Console* dc = &memory->game->console;
+    init_console(dc, &memory->game->debug_arena);
     
     
   }
   
-  return true;
   
-}
-
-exported B32 
-game_update(Game_Memory* memory,
-            Game_Input* input, 
-            Game_Render_Commands* render_commands) 
-{ 
-  platform = memory->platform_api;
-  
-  F32 dt = input->seconds_since_last_frame;
-  
-  if (!game_init(memory)) {
-    return false;
-  }
+  Game_State* game = memory->game;
   
   // Actual update here.
-  Sandbox_Mode* sandbox = &memory->state->sandbox_mode;
-  Console* dc = &memory->state->console;
-  Game_Assets* ga = &memory->state->game_assets;
+  Sandbox_Mode* sandbox = &game->sandbox_mode;
+  Console* dc = &game->console;
+  Game_Assets* ga = &game->game_assets;
   
   update_console(dc, input);
-  
   {
     profile_block;
     // Clear colors
@@ -116,7 +104,6 @@ game_update(Game_Memory* memory,
       M44 t = m44_translation(800.f, 450.f, 300.f);
       
       {
-#if 1
         Sprite_Asset* sprite = get_sprite(ga, SPRITE_BULLET_CIRCLE);
         assert(sprite);
         Bitmap_Asset* bitmap = get_bitmap(ga, sprite->bitmap_id);
@@ -127,24 +114,18 @@ game_update(Game_Memory* memory,
                        t*r*s,
                        bitmap->renderer_texture_handle, 
                        sprite->uv);
-#else
-        Font_Asset* font = get_font(ga, FONT_DEFAULT);
-        assert(font);
         
-        Font_Glyph_Asset* glyph = get_glyph(font, 65);
-        
-        push_subsprite(render_commands, 
-                       colors,
-                       t*r*s,
-                       0, 
-                       glyph->uv);
-#endif
       }
     }
   }
   
   render_console(dc, ga, render_commands);
-  render_profiler(ga, render_commands);
+  
+  // Do together?
+  update_entries(profiler); // TODO: this probably needs to be called outside
+  
+  render_profiler(profiler, ga, render_commands);
+  
   
   return true;
   
