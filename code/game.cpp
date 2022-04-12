@@ -28,6 +28,7 @@ game_update_and_render(Game_Memory* memory,
       init_arena(&memory->game->asset_arena, platform.alloc(MB(20)), MB(20));
       init_arena(&memory->game->debug_arena, platform.alloc(MB(1)), MB(1));
       init_arena(&memory->game->frame_arena, platform.alloc(MB(1)), MB(1));
+      
     }
     
     init_profiler(32, &memory->game->debug_arena);
@@ -122,8 +123,7 @@ game_update_and_render(Game_Memory* memory,
   render_console(dc, ga, render_commands);
   
   // Do together?
-  update_entries(profiler); // TODO: this probably needs to be called outside
-  
+  update_entries(profiler); 
   render_profiler(profiler, ga, render_commands);
   
   

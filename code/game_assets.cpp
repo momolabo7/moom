@@ -210,12 +210,7 @@ load_game_assets(Game_Assets* ga,
         
       }
     }
-    
-    
   }
-  
-  
-  
   return true;
 }
 

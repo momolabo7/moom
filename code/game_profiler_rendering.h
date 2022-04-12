@@ -19,8 +19,8 @@ struct Stat {
 
 static void
 begin_stat(Stat* stat) {
-  stat->min = F64_NEG_INFINITY();
-  stat->max = F64_INFINITY();
+  stat->min = F64_INFINITY();
+  stat->max = F64_NEG_INFINITY();
   stat->average = 0.0;
   stat->count = 0;
 }
@@ -51,6 +51,8 @@ end_stat(Stat* stat) {
 static void
 render_profiler(Profiler* p, Game_Assets* ga, Game_Render_Commands* cmds) {
   // TODO(Momo): UI coorindates?
+  const F32 font_height = 30.f;
+  
   for (U32 entry_index = 0;
        entry_index < p->entry_count;
        ++entry_index) 
@@ -87,23 +89,44 @@ render_profiler(Profiler* p, Game_Assets* ga, Game_Render_Commands* cmds) {
       
       demand_string_builder(sb, 256);
       push_format(sb, 
-                  string_from_lit("[%s][%u] %ucy %uh %ucy/h"),
+                  string_from_lit("[%25s] %5ucy %4uh %5ucy/h"),
                   entry->function_name,
-                  entry->line,
+                  //entry->line,
                   (U32)cycles.average,
                   (U32)hits.average,
                   (U32)cycles_per_hit.average);
       
-      const F32 font_height = 20.f;
       // Assumes 1600x900
-      draw_text(ga, cmds, FONT_DEFAULT, 
+      draw_text(ga, cmds, FONT_DEBUG, 
                 sb->str,
                 rgba(0xFFFFFFFF),
                 0.f, 
                 900.f - font_height * (entry_index+1), 
                 font_height,
-                0.f);
+                10.f);
+      
+      // Draw graph
+      
+      for (U32 snapshot_index = 0;
+           snapshot_index < array_count(entry->snapshots);
+           ++snapshot_index)
+      {
+        Profiler_Snapshot * snapshot = entry->snapshots + snapshot_index;
+        
+        const F32 snapshot_bar_width = 5.f;
+        F32 height_scale = 1.0f / (F32)cycles.max;
+        F32 snapshot_bar_height = height_scale * font_height * (F32)snapshot->cycles;
+        draw_sprite(ga, cmds, SPRITE_BLANK, 
+                    rgba(0x00FF00FF),
+                    830.f + snapshot_bar_width * (snapshot_index+1), 
+                    900.f - font_height * (entry_index+1) + font_height/4,
+                    snapshot_bar_width, 
+                    snapshot_bar_height,
+                    9.f);
+      }
     }
+    
+    
   }
 }
 

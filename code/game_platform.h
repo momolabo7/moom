@@ -116,7 +116,8 @@ void update(Game_Input_Button button);
 // For things that don't change from the platform after setting it once
 struct Renderer_Texture_Queue;
 struct Game_Memory {
-  struct Game_State* game; // pointer for game memory usage
+  struct Game_State* game;    // pointer for game memory usage
+  struct Debug_State* debug;  // pointer for debug memory usage
   
   Platform_API platform_api;
   Renderer_Texture_Queue* texture_queue;

@@ -3,17 +3,18 @@
 #include "sui.h"
 
 int main() {
-  Memory memory = sui_malloc(MB(10));
+  Memory memory = sui_malloc(MB(100));
   defer { sui_free(&memory); };
   
   declare_and_pointerize(Arena, arena);
   init_arena(arena, memory.data, memory.size);
   
   TTF loaded_ttf = sui_load_font(asset_dir("nokiafc22.ttf"), arena);
+  TTF loaded_ttf2 = sui_load_font(asset_dir("liberation-mono.ttf"), arena);
   
   sui_log("Building atlas...\n");
   
-  Sui_Atlas atlas = begin_atlas_builder("BITMAP_DEFAULT", 1024, 1024);
+  Sui_Atlas atlas = begin_atlas_builder("BITMAP_DEFAULT", 2048, 2048);
   {
     push_sprite(&atlas, "SPRITE_BLANK", asset_dir("blank.png"));
     push_sprite(&atlas, "SPRITE_BULLET_CIRCLE", asset_dir("bullet_circle.png"));
@@ -38,6 +39,10 @@ int main() {
     push_font(&atlas, "FONT_DEFAULT", &loaded_ttf, 
               interested_cps, array_count(interested_cps), 
               128.f);
+    
+    push_font(&atlas, "FONT_DEBUG", &loaded_ttf2, 
+              interested_cps, array_count(interested_cps), 
+              128.f);
   }
   end_atlas_builder(&atlas, arena);
   sui_log("Finished atlas...\n");
@@ -50,26 +55,16 @@ int main() {
   sui_write_file("test.png", png_to_write_memory);
 #endif
   
-#if 0
-  sui_begin_packer();
-  {
-    sui_begin_asset_pack();
-    add_atlas(...);
-    sui_end_asset_pack();
-  }
-  sui_end_packer();
-#endif
-  
-  Sui_Packer _sp = begin_packer(code_dir("generated_pack_ids.h"),
-                                code_dir("generated_bitmap_ids.h"),
-                                code_dir("generated_sprite_ids.h"),
-                                code_dir("generated_font_ids.h"));
-  Sui_Packer* sp = &_sp;
+  declare_and_pointerize(Sui_Packer, sp);
+  if(begin_packer(sp, 
+                  code_dir("generated_pack_ids.h"),
+                  code_dir("generated_bitmap_ids.h"),
+                  code_dir("generated_sprite_ids.h"),
+                  code_dir("generated_font_ids.h")))
   {
     begin_asset_pack(sp);
     add_atlas(sp, &atlas);
     end_asset_pack(sp, "PACK_DEFAULT", "test.sui", arena);
+    end_packer(sp);
   }
-  
-  end_packer(sp);
 }

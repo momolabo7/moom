@@ -52,6 +52,8 @@ update_entries(Profiler* p) {
       
       entry->snapshots[p->snapshot_index].hits = hits;
       entry->snapshots[p->snapshot_index].cycles = cycles;
+      
+      
     }
   }
   

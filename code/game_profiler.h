@@ -15,8 +15,9 @@ struct Profiler_Entry {
   U32 line;
   const char* filename;
   const char* function_name;
-  
   U64 hits_and_cycles;
+  
+  Profiler_Snapshot snapshots[PROFILER_SNAPSHOT_COUNT];
   
   
   // For initialization of entry. 
@@ -26,7 +27,7 @@ struct Profiler_Entry {
   U32 start_cycles;
   U32 start_hits;
   
-  Profiler_Snapshot snapshots[PROFILER_SNAPSHOT_COUNT];
+  
 };
 
 struct Profiler {

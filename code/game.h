@@ -33,16 +33,13 @@ struct Sandbox_Mode {
 struct Game_State {
   // Arenas
   Arena asset_arena;
-  Arena debug_arena;
   Arena frame_arena;
+  Arena debug_arena;
   
   // Mode Management
   union {
     Sandbox_Mode sandbox_mode;  
-    
   };
-  
-  
   Game_Assets game_assets;
   Console console;
 };

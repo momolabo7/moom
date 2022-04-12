@@ -5,6 +5,11 @@
 
 
 
+struct Debug_State {
+  Arena arena;
+  
+};
+
 
 
 
