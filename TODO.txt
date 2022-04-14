@@ -1,12 +1,12 @@
 Engine
 	Sound
-	Debug profiler
-    TIMED_BLOCK
-		Display
+	Debugger
+		Event based logging
+		Profile arenas
 	Find out if there is a automated way to deform a single triangle to ANY other triangle	
 	  If so, upgrade renderer to cater fo rthat
-	Allocator struct?
 	There are like 3 'interface' game files that might require renaming? I'm not sure
+	Consider letting platform layer be the only place that initializes arenas!
 
 4coder
   Support strongly typed enums

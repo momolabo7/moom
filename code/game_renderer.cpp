@@ -142,11 +142,11 @@ push_orthographic_camera(Renderer_Command_Queue* c,
 {
   auto* data = push_command<Render_Command_Basis>(c, RENDER_COMMAND_TYPE_BASIS);
   M44 p  = m44_orthographic(frustum.min.x,  
-                                   frustum.max.x, 
-                                   frustum.min.y, 
-                                   frustum.max.y,
-                                   frustum.min.z, 
-                                   frustum.max.z);
+                            frustum.max.x, 
+                            frustum.min.y, 
+                            frustum.max.y,
+                            frustum.min.z, 
+                            frustum.max.z);
   
   M44 v = m44_translation(-position.x, -position.y, -position.z);
   data->basis = p*v;

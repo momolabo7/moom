@@ -114,6 +114,7 @@ void update(Game_Input_Button button);
 struct Renderer_Texture_Queue;
 struct Renderer_Command_Queue;
 struct Debugger;
+struct Profiler;
 struct Game_Memory {
   struct Game_State* game;    // pointer for game memory usage
   struct Debug_State* debug;  // pointer for debug memory usage
@@ -121,6 +122,7 @@ struct Game_Memory {
   Platform_API platform_api;
   Renderer_Texture_Queue* renderer_texture_queue;
   Renderer_Command_Queue* renderer_command_queue;
+  Profiler* profiler; // TODO
   Debugger* debugger;
   
 };

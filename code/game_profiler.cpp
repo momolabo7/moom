@@ -29,10 +29,10 @@ _end_profiling_block(Profiler_Entry* entry) {
 static void
 init_profiler(U32 entry_count, Arena* arena) {
   // TODO(Momo): Frames
-  profiler->entry_count = entry_count;
-  profiler->entries = push_array<Profiler_Entry>(arena, entry_count); 
-  assert(profiler->entries);
-  zero_range(profiler->entries, entry_count);
+  g_profiler->entry_count = entry_count;
+  g_profiler->entries = push_array<Profiler_Entry>(arena, entry_count); 
+  assert(g_profiler->entries);
+  zero_range(g_profiler->entries, entry_count);
   
 }
 

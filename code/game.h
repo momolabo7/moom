@@ -22,7 +22,6 @@
 
 #include "game_console.h"
 
-
 struct Sandbox_Mode {
   F32 tmp_delta;
   B32 tmp_increase;

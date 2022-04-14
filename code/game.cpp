@@ -2,21 +2,18 @@
 #include "game.h"
 
 Platform_API g_platform;
-Debugger* g_debugger;
-
+Profiler* g_profiler;
 
 exported B32 
 game_update_and_render(Game_Memory* memory,
                        Game_Input* input) 
 { 
   g_platform = memory->platform_api;
-  g_debugger = memory->debugger;
+  g_profiler = memory->profiler;
   F32 dt = input->seconds_since_last_frame;
   
   // Initialization
   if (!memory->game) {
-    
-    
     game_log("initialized!");
     memory->game = (Game_State*)g_platform.alloc(sizeof(Game_State));
     if (!memory->game) return false;
@@ -32,7 +29,6 @@ game_update_and_render(Game_Memory* memory,
       
     }
     
-    init_profiler(32, &memory->game->debug_arena);
     
     
     B32 success = load_game_assets(&memory->game->game_assets, 
@@ -51,8 +47,6 @@ game_update_and_render(Game_Memory* memory,
     // Initialize Debug Console
     Console* dc = &memory->game->console;
     init_console(dc, &memory->game->debug_arena);
-    
-    
   }
   
   
@@ -125,8 +119,8 @@ game_update_and_render(Game_Memory* memory,
   render_console(dc, ga, cmds);
   
   // Do together?
-  update_entries(profiler); 
-  render_profiler(profiler, ga, cmds);
+  update_entries(g_profiler); 
+  render_profiler(g_profiler, ga, cmds);
   
   
   return true;

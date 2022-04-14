@@ -36,12 +36,10 @@ struct Profiler {
   U32 snapshot_index;
 };
 
-static Profiler _profiler;
-static Profiler* profiler = &_profiler;
+extern Profiler* g_profiler;
 
-
-#define _profile_block_la(number) auto* zawarudo_profile_##number = _begin_profiling_block(profiler,__COUNTER__, __FILE__, __LINE__, __FUNCTION__); defer { _end_profiling_block(zawarudo_profile_##number); };
-#define _profile_block(number) _profile_block_la(number);
+#define __profile_block(number) auto* zawarudo_profile_##number = _begin_profiling_block(g_profiler,__COUNTER__, __FILE__, __LINE__, __FUNCTION__); defer { _end_profiling_block(zawarudo_profile_##number); };
+#define _profile_block(number) __profile_block(number);
 #define profile_block _profile_block(__LINE__)
 
 #include "game_profiler.cpp"

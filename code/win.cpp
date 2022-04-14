@@ -3,7 +3,7 @@
 #include "momo.h"
 #include "win_renderer.h"
 #include "game_platform.h"
-
+#include "game_profiler.h"
 
 #define NOMINMAX
 #include <windows.h>
@@ -31,7 +31,8 @@ win_log_proc(const char* fmt, ...) {
 #endif // INTERNAL
 
 
-
+Profiler _g_profiler;
+Profiler* g_profiler = &_g_profiler;
 
 #if 0
 static void
@@ -413,7 +414,7 @@ struct Win_State{
   
   Win_Work_Queue work_queue;
 };
-static Win_State win_global_state;
+static Win_State g_win_state;
 
 
 struct Win_File {
@@ -424,12 +425,12 @@ struct Win_File {
 
 static void 
 win_shutdown() {
-  win_global_state.is_running = false;
+  g_win_state.is_running = false;
 }
 static void 
 win_set_aspect_ratio(U32 width, U32 height) {
-  win_global_state.aspect_ratio_width = width;
-  win_global_state.aspect_ratio_height = height;
+  g_win_state.aspect_ratio_width = width;
+  g_win_state.aspect_ratio_height = height;
 }
 
 
@@ -451,7 +452,14 @@ win_free_memory(void* memory) {
                 MEM_RELEASE); 
 }
 
-
+static Arena
+win_create_arena_with_memory(UMI memory_size) {
+  Arena ret = {};
+  void* memory = win_allocate_memory(memory_size);
+  init_arena(a, memory, memory_size);
+  
+  return ret;
+}
 
 static Platform_File
 win_open_file(const char* filename, 
@@ -561,12 +569,12 @@ win_write_file(Platform_File* file, UMI size, UMI offset, void* src)
 
 static void
 win_add_task(Platform_Task_Callback callback, void* data) {
-  win_add_task_entry(&win_global_state.work_queue, callback, data);
+  win_add_task_entry(&g_win_state.work_queue, callback, data);
 }
 
 static void
 win_complete_all_tasks() {
-  win_complete_all_tasks_entries(&win_global_state.work_queue);
+  win_complete_all_tasks_entries(&g_win_state.work_queue);
 }
 
 
@@ -602,7 +610,7 @@ win_window_callback(HWND window,
     case WM_CLOSE:  
     case WM_QUIT:
     case WM_DESTROY: {
-      win_global_state.is_running = false;
+      g_win_state.is_running = false;
     } break;
     default: {
       result = DefWindowProcA(window, message, w_param, l_param);
@@ -626,12 +634,12 @@ WinMain(HINSTANCE instance,
   
   //- Initialize window state
   {
-    win_global_state.is_running = true;
-    //win_global_state.is_hot_reloading = true;
-    win_global_state.aspect_ratio_width = 16;
-    win_global_state.aspect_ratio_height = 9;
+    g_win_state.is_running = true;
+    //g_win_state.is_hot_reloading = true;
+    g_win_state.aspect_ratio_width = 16;
+    g_win_state.aspect_ratio_height = 9;
     
-    if (!win_init_work_queue(&win_global_state.work_queue, 8)) {
+    if (!win_init_work_queue(&g_win_state.work_queue, 8)) {
       return 1;
     }
   }
@@ -761,12 +769,17 @@ WinMain(HINSTANCE instance,
   if (!renderer) { return 1; }
   defer { renderer_functions.unload(renderer); };
   
+  //- Init profiler
+  declare_and_pointerize(Arena, debug_arena);
+  init_arena(debug_arena, win_allocate_memory(MB(32)), MB(32));
+  init_profiler(32, debug_arena);
   
   //-Game Memory setup
   declare_and_pointerize(Game_Memory, game);
   game->platform_api = win_create_platform_api();
   game->renderer_texture_queue = &renderer->texture_queue;
   game->renderer_command_queue = &renderer->command_queue;
+  game->profiler = g_profiler;
   
   //- Init input
   declare_and_pointerize(Game_Input, input);
@@ -779,14 +792,14 @@ WinMain(HINSTANCE instance,
   QueryPerformanceFrequency(&performance_frequency);
   LARGE_INTEGER last_frame_count = win_get_performance_counter();
   
-  while (win_global_state.is_running) {
+  while (g_win_state.is_running) {
     
     //- Begin render frame
     V2U render_wh = win_get_client_dims(window);
     Rect2U render_region = win_calc_render_region(render_wh.w,
                                                   render_wh.h,
-                                                  win_global_state.aspect_ratio_width,
-                                                  win_global_state.aspect_ratio_height);
+                                                  g_win_state.aspect_ratio_width,
+                                                  g_win_state.aspect_ratio_height);
     Renderer_Command_Queue* render_commands = nullptr;
     if (renderer_code.is_valid) {
       renderer_functions.begin_frame(renderer, 
@@ -813,7 +826,7 @@ WinMain(HINSTANCE instance,
           case WM_QUIT:
           case WM_DESTROY:
           case WM_CLOSE: {
-            win_global_state.is_running = false;
+            g_win_state.is_running = false;
           } break;
           case WM_KEYUP:
           case WM_KEYDOWN:

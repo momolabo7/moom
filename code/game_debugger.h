@@ -5,6 +5,7 @@
 
 
 struct Debugger {
+  
 };
 
 extern Debugger* g_debugger;
