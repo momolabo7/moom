@@ -435,7 +435,7 @@ win_set_aspect_ratio(U32 width, U32 height) {
 
 
 static void*
-win_allocate_memory(UMI memory_size) {
+win_allocate(UMI memory_size) {
   return (U8*)VirtualAllocEx(GetCurrentProcess(),
                              0, 
                              memory_size,
@@ -445,21 +445,37 @@ win_allocate_memory(UMI memory_size) {
 
 
 static void
-win_free_memory(void* memory) {
+win_free(void* memory) {
   VirtualFreeEx(GetCurrentProcess(), 
                 memory,    
                 0, 
                 MEM_RELEASE); 
 }
 
-static Arena
-win_create_arena_with_memory(UMI memory_size) {
-  Arena ret = {};
-  void* memory = win_allocate_memory(memory_size);
-  init_arena(a, memory, memory_size);
-  
-  return ret;
+
+static B32
+win_allocate_memory_into_arena(Arena* a, UMI memory_size) {
+  void* data = VirtualAllocEx(GetCurrentProcess(),
+                              0, 
+                              memory_size,
+                              MEM_RESERVE | MEM_COMMIT, 
+                              PAGE_READWRITE);
+  if(data == nullptr) return false;
+  init_arena(a, data, memory_size);
+  return true;
 }
+
+
+
+
+static void
+win_free_memory_from_arena(Arena* a) {
+  VirtualFreeEx(GetCurrentProcess(), 
+                a->memory,    
+                0, 
+                MEM_RELEASE); 
+}
+
 
 static Platform_File
 win_open_file(const char* filename, 
@@ -503,7 +519,7 @@ win_open_file(const char* filename,
   }
   else {
     // TODO(Momo): We should definitely use an arena for this
-    auto* win_file = (Win_File*)win_allocate_memory(sizeof(Win_File));
+    auto* win_file = (Win_File*)win_allocate(sizeof(Win_File));
     win_file->handle = handle;
     
     ret.platform_data = win_file;
@@ -517,7 +533,7 @@ win_close_file(Platform_File* file) {
   auto* win_file = (Win_File*)file->platform_data;
   CloseHandle(win_file->handle);
   
-  win_free_memory(file->platform_data);
+  win_free(file->platform_data);
   file->platform_data = nullptr;
 }
 
@@ -583,8 +599,6 @@ win_create_platform_api()
 {
   Platform_API pf_api;
   //pf_api.hot_reload = win_hot_reload;
-  pf_api.alloc = win_allocate_memory;
-  pf_api.free = win_free_memory;
   pf_api.shutdown = win_shutdown;
   pf_api.open_file = win_open_file;
   pf_api.read_file = win_read_file;
@@ -765,21 +779,36 @@ WinMain(HINSTANCE instance,
   
   
   //-Init renderer
-  Renderer* renderer = renderer_functions.load(window, MB(128), MB(128));
+  declare_and_pointerize(Arena, renderer_arena);
+  if (!win_allocate_memory_into_arena(renderer_arena, MB(256))) return false;
+  defer { win_free_memory_from_arena(renderer_arena); };
+  
+  Renderer* renderer = 
+    renderer_functions.load(window, 
+                            MB(100),
+                            MB(100), 
+                            renderer_arena);
   if (!renderer) { return 1; }
   defer { renderer_functions.unload(renderer); };
   
   //- Init profiler
-  declare_and_pointerize(Arena, debug_arena);
-  init_arena(debug_arena, win_allocate_memory(MB(32)), MB(32));
-  init_profiler(32, debug_arena);
+  declare_and_pointerize(Arena, debugger_arena);
+  if (!win_allocate_memory_into_arena(debugger_arena, MB(32))) return false;
+  defer { win_free_memory_from_arena(debugger_arena); };
+  init_profiler(32, debugger_arena);
   
   //-Game Memory setup
   declare_and_pointerize(Game_Memory, game);
+  
+  declare_and_pointerize(Arena, game_arena);
+  if (!win_allocate_memory_into_arena(game_arena, MB(32))) return false;
+  defer { win_free_memory_from_arena(game_arena); };
+  
   game->platform_api = win_create_platform_api();
   game->renderer_texture_queue = &renderer->texture_queue;
   game->renderer_command_queue = &renderer->command_queue;
   game->profiler = g_profiler;
+  game->game_arena = game_arena;
   
   //- Init input
   declare_and_pointerize(Game_Input, input);

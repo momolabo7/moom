@@ -40,8 +40,10 @@ typedef void Platform_Complete_All_Tasks();
 
 //~Other platform API
 typedef void  Platform_Shutdown(); // trigger shutdown of application
+#if 0
 typedef void* Platform_Alloc(UMI size); // allocate memory
 typedef void  Platform_Free(void* ptr);     // frees memory
+#endif
 typedef void  Platform_Set_Aspect_Ratio(U32 width, U32 height); // sets aspect ratio of game
 typedef void  Platform_Debug_Log(const char* fmt, ...);
 typedef U64   Platform_Get_Performance_Counter();
@@ -49,8 +51,10 @@ typedef U64   Platform_Get_Performance_Counter();
 
 struct Platform_API {
   Platform_Shutdown* shutdown;
+#if 0
   Platform_Alloc* alloc;
   Platform_Free* free;
+#endif
   Platform_Set_Aspect_Ratio* set_aspect_ratio;
   Platform_Open_File* open_file;
   Platform_Read_File* read_file;
@@ -116,15 +120,16 @@ struct Renderer_Command_Queue;
 struct Debugger;
 struct Profiler;
 struct Game_Memory {
-  struct Game_State* game;    // pointer for game memory usage
-  struct Debug_State* debug;  // pointer for debug memory usage
-  
+  Arena* game_arena; // Require 32MB
   Platform_API platform_api;
   Renderer_Texture_Queue* renderer_texture_queue;
   Renderer_Command_Queue* renderer_command_queue;
-  Profiler* profiler; // TODO
+  Profiler* profiler; 
   Debugger* debugger;
   
+  
+  
+  struct Game_State* game; // do not touch!
 };
 
 typedef void Game_Update_And_Render(Game_Memory* memory,

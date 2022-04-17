@@ -304,6 +304,7 @@ struct Memory  {
 };
 static B32 is_ok(Memory);
 
+// TODO(Momo): Use memory construct instead?
 static void copy_memory(void* dest, const void* src, UMI size);
 static void zero_memory(void* dest, UMI size);
 static void swap_memory(void* lhs, void* rhs, UMI size);

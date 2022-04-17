@@ -20,7 +20,7 @@ struct Profiler_Entry {
   Profiler_Snapshot snapshots[PROFILER_SNAPSHOT_COUNT];
   
   
-  // For initialization of entry. 
+  // NOTE(Momo): For initialization of entry. 
   // Maybe it shouldn't be stored here
   // but on where they called it? 
   // i.e. use a functor that wraps?

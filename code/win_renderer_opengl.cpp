@@ -168,66 +168,42 @@ win_load_wgl_extentions() {
     return false;
   }
 }
-static void*
-win_allocate_memory(UMI memory_size) {
-  return VirtualAllocEx(GetCurrentProcess(),
-                        0, 
-                        memory_size,
-                        MEM_RESERVE | MEM_COMMIT, 
-                        PAGE_READWRITE);
-  
-}
-
-static void
-win_free_memory(void* memory) {
-  VirtualFreeEx(GetCurrentProcess(), 
-                memory,    
-                0, 
-                MEM_RELEASE); 
-}
-
 
 //~API implementation
 exported void
 win_unload_renderer(Renderer* r) {
-  Opengl* opengl = (Opengl*)r;
-  win_free_memory(opengl->command_queue.memory);
-  win_free_memory(opengl->texture_queue.transfer_memory);
-  win_free_memory(opengl);
+  // Unused?
 }
 
-exported Renderer*
-win_load_renderer(HWND window, 
-                  U32 render_commands_memory_size,
-                  U32 texture_transfer_memory_size) 
+exported
+Win_Load_Renderer_Interface(win_load_renderer)
 {
-  
-  
   HDC dc = GetDC(window); 
   if (!dc) {
     return nullptr;
   }
   //defer { ReleaseDC(window, dc); };
   
-  Opengl* opengl = (Opengl*)win_allocate_memory(sizeof(Opengl));
+  
+  Opengl* opengl = push<Opengl>(arena);
   
   // Allocate memory for render commands
-  void* render_commands_memory = win_allocate_memory(render_commands_memory_size);
-  init_commands(&opengl->command_queue, 
-                render_commands_memory, 
-                render_commands_memory_size);
+  init_command_queue(&opengl->command_queue, 
+                     push_block(arena, command_queue_size), 
+                     command_queue_size);
   
   // Allocate memory for texture transfer queue
-  void* texture_transfer_memory = win_allocate_memory(texture_transfer_memory_size);
-  init_texture_queue(&opengl->texture_queue, texture_transfer_memory, texture_transfer_memory_size);
+  init_texture_queue(&opengl->texture_queue, 
+                     push_block(arena, texture_queue_size),
+                     texture_queue_size);
   
   
   if (!opengl) {
-    goto failed;
+    return nullptr;
   }
   
   if (!win_load_wgl_extentions()) {
-    goto failed;
+    return nullptr;
   }
   
   win_set_pixel_format(dc);
@@ -245,7 +221,7 @@ win_load_renderer(HWND window,
                                                 opengl_attribs); 
   
   if (!opengl_ctx) {
-    goto failed;
+    return nullptr;
   }
   
   
@@ -253,7 +229,7 @@ win_load_renderer(HWND window,
     HMODULE module = LoadLibraryA("opengl32.dll");
 #define WGL_SetOpenglFunction(name) \
 opengl->name = (GL_##name*)win_try_get_wgl_function(#name, module); \
-if (!opengl->name) { goto failed; } 
+if (!opengl->name) { return nullptr; } 
     
     WGL_SetOpenglFunction(glEnable);
     WGL_SetOpenglFunction(glDisable); 
@@ -297,7 +273,7 @@ if (!opengl->name) { goto failed; }
 #undef WGL_SetOpenglFunction
   
   if (!opengl_init(opengl)) {
-    goto failed;
+    return nullptr;
   }
   
   // TODO(Momo): Figure out how to get callback?
@@ -319,15 +295,6 @@ if (!opengl->name) { goto failed; }
 #endif
   
   return (Renderer*)opengl;
-  
-  failed: 
-  {
-    win_free_memory(opengl->command_queue.memory);
-    win_free_memory(opengl->texture_queue.transfer_memory);
-    win_free_memory(opengl);
-    return nullptr;
-  }
-  
   
 }
 

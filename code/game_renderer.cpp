@@ -11,9 +11,9 @@ clear_commands(Renderer_Command_Queue* q) {
 }
 
 static void 
-init_commands(Renderer_Command_Queue* q, void* memory, U32 memory_size) {
-  q->memory = (U8*)memory;
-  q->memory_size = memory_size;
+init_command_queue(Renderer_Command_Queue* q, void* data, UMI size) {
+  q->memory = (U8*)data;
+  q->memory_size = size;
   clear_commands(q);
 }
 
@@ -48,9 +48,9 @@ _push_command_block(Renderer_Command_Queue* q, U32 size, U32 id, U32 align = 4) 
 }
 
 static void 
-init_texture_queue(Renderer_Texture_Queue* q, void* memory, U32 memory_size) {
-  q->transfer_memory = (U8*)memory;
-  q->transfer_memory_size = memory_size;
+init_texture_queue(Renderer_Texture_Queue* q, void* data, UMI size) {
+  q->transfer_memory = (U8*)data;
+  q->transfer_memory_size = size;
   q->transfer_memory_start = 0;
   q->transfer_memory_end = 0;
   q->first_payload_index = 0;
@@ -69,8 +69,8 @@ begin_texture_transfer(Renderer_Texture_Queue* q, U32 required_space) {
   Texture_Payload* ret = 0;
   
   if (q->payload_count < array_count(q->payloads)) {
-    U32 avaliable_space = 0;
-    U32 memory_at = q->transfer_memory_end;
+    UMI avaliable_space = 0;
+    UMI memory_at = q->transfer_memory_end;
     // Memory is being used like a ring buffer
     if (q->transfer_memory_start == q->transfer_memory_end) {
       // This is either ALL the space or NONE of the space. 
@@ -101,7 +101,7 @@ begin_texture_transfer(Renderer_Texture_Queue* q, U32 required_space) {
     
     if(avaliable_space >= required_space) {
       // We found enough space
-      U32 payload_index = q->first_payload_index + q->payload_count++;
+      UMI payload_index = q->first_payload_index + q->payload_count++;
       ret = q->payloads + (payload_index % array_count(q->payloads));
       ret->texture_data = q->transfer_memory + memory_at;
       ret->transfer_memory_start = memory_at;

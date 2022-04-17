@@ -6,6 +6,7 @@ init_arena(Arena* a, void* mem, UMI cap) {
 }
 
 
+
 static void
 clear(Arena* a) {
   a->pos = 0;
@@ -35,10 +36,14 @@ push_block(Arena* a, UMI size, UMI align) {
 	
 }
 
-static void
+static Arena
 partition(Arena* a, UMI size) {	
+  Arena ret = {};
 	void* mem = push_block(a, size, 16);
-  init_arena(a, mem, size);
+  
+  init_arena(&ret, mem, size);
+  return ret;
+  
 }
 
 template<typename T> static T*

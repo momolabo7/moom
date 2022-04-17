@@ -8,38 +8,32 @@ exported B32
 game_update_and_render(Game_Memory* memory,
                        Game_Input* input) 
 { 
+  
   g_platform = memory->platform_api;
   g_profiler = memory->profiler;
   F32 dt = input->seconds_since_last_frame;
   
+  
   // Initialization
   if (!memory->game) {
-    game_log("initialized!");
-    memory->game = (Game_State*)g_platform.alloc(sizeof(Game_State));
-    if (!memory->game) return false;
-    
     g_platform.set_aspect_ratio(16, 9);
+    memory->game = push<Game_State>(memory->game_arena);
+    Game_State* game = memory->game;
+    
+    game->asset_arena = partition(memory->game_arena, MB(20));
+    game->debug_arena = partition(memory->game_arena, MB(1));
+    game->frame_arena = partition(memory->game_arena, MB(1));
     
     
-    // Init arenas
-    {
-      init_arena(&memory->game->asset_arena, g_platform.alloc(MB(20)), MB(20));
-      init_arena(&memory->game->debug_arena, g_platform.alloc(MB(1)), MB(1));
-      init_arena(&memory->game->frame_arena, g_platform.alloc(MB(1)), MB(1));
-      
-    }
-    
-    
-    
-    B32 success = load_game_assets(&memory->game->game_assets, 
+    B32 success = load_game_assets(&game->game_assets, 
                                    memory->renderer_texture_queue,
                                    "test.sui",
-                                   &memory->game->asset_arena);
+                                   &game->asset_arena);
     if(!success) return false;
     
     
     // Initialize perm memory
-    Sandbox_Mode* sandbox = &memory->game->sandbox_mode;
+    Sandbox_Mode* sandbox = &game->sandbox_mode;
     sandbox->tmp_delta = 0.f;
     sandbox->tmp_increase = true;
     sandbox->tmp_rot = 0.f;
@@ -47,6 +41,8 @@ game_update_and_render(Game_Memory* memory,
     // Initialize Debug Console
     Console* dc = &memory->game->console;
     init_console(dc, &memory->game->debug_arena);
+    
+    game_log("Initialized!");
   }
   
   

@@ -41,8 +41,8 @@ enum Texture_Payload_State {
 
 struct Texture_Payload {
   volatile Texture_Payload_State state;
-  U32 transfer_memory_start;
-  U32 transfer_memory_end;
+  UMI transfer_memory_start;
+  UMI transfer_memory_end;
   
   // For game to input
   U32 texture_index;
@@ -53,13 +53,13 @@ struct Texture_Payload {
 
 struct Renderer_Texture_Queue {
   U8* transfer_memory;
-  U32 transfer_memory_size;
-  U32 transfer_memory_start;
-  U32 transfer_memory_end;
+  UMI transfer_memory_size;
+  UMI transfer_memory_start;
+  UMI transfer_memory_end;
   
   Texture_Payload payloads[256];
-  U32 first_payload_index;
-  U32 payload_count;
+  UMI first_payload_index;
+  UMI payload_count;
   
 };
 
@@ -75,11 +75,11 @@ struct Renderer_Command_Queue {
   
   // Push buffer
 	U8* memory;
-  U32 memory_size;
-	U32 data_pos;
-	U32 entry_pos;
-	U32 entry_start;
-	U32 entry_count;
+  UMI memory_size;
+	UMI data_pos;
+	UMI entry_pos;
+	UMI entry_start;
+	UMI entry_count;
 };
 
 enum Render_Command_Type {
