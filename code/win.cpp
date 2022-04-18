@@ -359,6 +359,8 @@ win_worker_func(LPVOID ctx) {
   }
 }
 
+
+
 static B32
 win_init_work_queue(Win_Work_Queue* wq, U32 thread_count) {
   wq->semaphore = CreateSemaphoreEx(0,
@@ -403,7 +405,42 @@ win_add_task_entry(Win_Work_Queue* wq, void (*callback)(void* ctx), void *data) 
   ReleaseSemaphore(wq->semaphore, 1, 0);
 }
 
+//~File cabinet
 
+struct Win_File {
+  HANDLE handle;
+  U32 cabinet_index;
+};
+
+struct Win_File_Cabinet {
+  Win_File files[32]; 
+  U32 free_files[32];
+  U32 free_file_count;
+};
+
+static void
+win_init_file_cabinet(Win_File_Cabinet* c) {
+  for(U32 i = 0; i < array_count(c->files); ++i) {
+    c->files[i].cabinet_index = i;
+    c->free_files[i] = i;
+  }
+  c->free_file_count = array_count(c->files);
+}
+
+static Win_File*
+win_get_next_free_file(Win_File_Cabinet* c) {
+  if (c->free_file_count == 0) {
+    return nullptr;
+  }
+  U32 free_file_index = c->free_files[c->free_file_count--];
+  return c->files + free_file_index; 
+  
+}
+
+static void
+win_return_file(Win_File_Cabinet* c, Win_File* f) {
+  c->free_files[c->free_file_count++] = f->cabinet_index;
+}
 
 //~Global variables
 struct Win_State{
@@ -413,13 +450,11 @@ struct Win_State{
   U32 aspect_ratio_height;
   
   Win_Work_Queue work_queue;
+  Win_File_Cabinet file_cabinet;
+  
 };
 static Win_State g_win_state;
 
-
-struct Win_File {
-  HANDLE handle;
-};
 
 //~ For Platform API
 
@@ -434,6 +469,7 @@ win_set_aspect_ratio(U32 width, U32 height) {
 }
 
 
+#if 0
 static void*
 win_allocate(UMI memory_size) {
   return (U8*)VirtualAllocEx(GetCurrentProcess(),
@@ -452,6 +488,7 @@ win_free(void* memory) {
                 MEM_RELEASE); 
 }
 
+#endif
 
 static B32
 win_allocate_memory_into_arena(Arena* a, UMI memory_size) {
@@ -518,8 +555,9 @@ win_open_file(const char* filename,
     return ret;
   }
   else {
-    // TODO(Momo): We should definitely use an arena for this
-    auto* win_file = (Win_File*)win_allocate(sizeof(Win_File));
+    
+    Win_File* win_file = win_get_next_free_file(&g_win_state.file_cabinet);
+    assert(win_file);
     win_file->handle = handle;
     
     ret.platform_data = win_file;
@@ -533,7 +571,7 @@ win_close_file(Platform_File* file) {
   auto* win_file = (Win_File*)file->platform_data;
   CloseHandle(win_file->handle);
   
-  win_free(file->platform_data);
+  win_return_file(&g_win_state.file_cabinet, win_file);
   file->platform_data = nullptr;
 }
 
@@ -656,6 +694,7 @@ WinMain(HINSTANCE instance,
     if (!win_init_work_queue(&g_win_state.work_queue, 8)) {
       return 1;
     }
+    win_init_file_cabinet(&g_win_state.file_cabinet);
   }
   
   
