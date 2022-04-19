@@ -5,6 +5,8 @@
 #define GAME_PROFILER_H
 
 #define PROFILER_SNAPSHOT_COUNT 120
+#define PROFILER_MAX_TRANSLATION_UNITS 2
+#define PROFILER_ENTRY_COUNT 256
 
 struct Profiler_Snapshot {
   U32 hits;
@@ -26,21 +28,29 @@ struct Profiler_Entry {
   // i.e. use a functor that wraps?
   U32 start_cycles;
   U32 start_hits;
-  
-  
+};
+
+typedef U64 Profiler_Platform_Get_Performance_Counter(void);
+struct Profiler_Platform_API {
+  Profiler_Platform_Get_Performance_Counter* get_performance_counter;
 };
 
 struct Profiler {
-	U32 entry_count;
-  Profiler_Entry* entries;
+  Profiler_Platform_API platform;
+  
+  Profiler_Entry entries[PROFILER_MAX_TRANSLATION_UNITS][PROFILER_ENTRY_COUNT];
   U32 snapshot_index;
 };
 
 extern Profiler* g_profiler;
 
-#define __profile_block(number) auto* zawarudo_profile_##number = _begin_profiling_block(g_profiler,__COUNTER__, __FILE__, __LINE__, __FUNCTION__); defer { _end_profiling_block(zawarudo_profile_##number); };
-#define _profile_block(number) __profile_block(number);
-#define profile_block _profile_block(__LINE__)
+#ifdef TRANSLATION_UNIT_INDEX
+# define __profile_block(number) auto* zawarudo_profile_##number = _begin_profiling_block(g_profiler, TRANSLATION_UNIT_INDEX, __COUNTER__, __FILE__, __LINE__, __FUNCTION__); defer { _end_profiling_block(g_profiler, zawarudo_profile_##number); };
+# define _profile_block(number) __profile_block(number);
+# define profile_block _profile_block(__LINE__)
+#else
+# define profile_block
+#endif
 
 #include "game_profiler.cpp"
 

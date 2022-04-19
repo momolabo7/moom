@@ -831,10 +831,10 @@ WinMain(HINSTANCE instance,
   defer { renderer_functions.unload(renderer); };
   
   //- Init profiler
-  declare_and_pointerize(Arena, debugger_arena);
-  if (!win_allocate_memory_into_arena(debugger_arena, MB(32))) return false;
-  defer { win_free_memory_from_arena(debugger_arena); };
-  init_profiler(32, debugger_arena);
+  
+  Profiler_Platform_API ppapi = {};
+  ppapi.get_performance_counter = win_get_performance_counter_u64;
+  init_profiler(g_profiler, ppapi);
   
   //-Game Memory setup
   declare_and_pointerize(Game_Memory, game);
@@ -861,6 +861,7 @@ WinMain(HINSTANCE instance,
   LARGE_INTEGER last_frame_count = win_get_performance_counter();
   
   while (g_win_state.is_running) {
+    profile_block;
     
     //- Begin render frame
     V2U render_wh = win_get_client_dims(window);
@@ -997,6 +998,9 @@ WinMain(HINSTANCE instance,
     last_frame_count = end_frame_count;
     
     
+    
+    
+    update_entries(g_profiler); 
   }
   
   

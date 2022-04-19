@@ -1,9 +1,4 @@
-
-
-
 #include "test.h"
-
-
 
 int main() {
   test_unit(test_essentials());

@@ -11,32 +11,24 @@ get_next_texture_handle() {
 
 static Bitmap_Asset* 
 get_bitmap(Game_Assets* ga, Bitmap_ID id) {
-  profile_block;
-  
   if (get_pack_id(id) != 0) return nullptr;
   return ga->bitmaps + get_real_id(id);
 }
 
 static Font_Asset* 
 get_font(Game_Assets* ga, Font_ID id) {
-  profile_block;
-  
   if (get_pack_id(id) != 0) return nullptr;
   return ga->fonts + get_real_id(id);
 }
 
 static Sprite_Asset* 
 get_sprite(Game_Assets* ga, Sprite_ID id) {
-  profile_block;
-  
   if (get_pack_id(id) != 0) return nullptr; 
   return ga->sprites + get_real_id(id);
 }
 
 static Font_Glyph_Asset* 
 get_glyph(Font_Asset* font, U32 codepoint) {
-  profile_block;
-  
   U32 glyph_index_plus_one = font->codepoint_map[codepoint];
   if (glyph_index_plus_one == 0) return nullptr;
   Font_Glyph_Asset *glyph = font->glyphs + glyph_index_plus_one - 1;
@@ -48,8 +40,6 @@ get_horizontal_advance(Font_Asset* font,
                        U32 left_codepoint, 
                        U32 right_codepoint) 
 {
-  profile_block;
-  
   U32 g1 = font->codepoint_map[left_codepoint];
   U32 g2 = font->codepoint_map[right_codepoint];
   if (!g1 || !g2) return 0.f;
@@ -80,8 +70,8 @@ load_game_assets(Game_Assets* ga,
   // Read in file
   Platform_File file_ = 
     g_platform.open_file(filename,
-                       PLATFORM_FILE_ACCESS_READ, 
-                       PLATFORM_FILE_PATH_EXE);
+                         PLATFORM_FILE_ACCESS_READ, 
+                         PLATFORM_FILE_PATH_EXE);
   Platform_File* file = &file_;
   assert(!file->error);
   
@@ -118,9 +108,9 @@ load_game_assets(Game_Assets* ga,
       payload->texture_width = kb.width;
       payload->texture_height = kb.height;
       g_platform.read_file(file, 
-                         bitmap_size, 
-                         kb.offset_to_data, 
-                         payload->texture_data);
+                           bitmap_size, 
+                           kb.offset_to_data, 
+                           payload->texture_data);
       complete_texture_transfer(payload);
       
       Bitmap_Asset* ba = ga->bitmaps + bitmap_index;

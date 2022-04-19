@@ -115,7 +115,6 @@ game_update_and_render(Game_Memory* memory,
   render_console(dc, ga, cmds);
   
   // Do together?
-  update_entries(g_profiler); 
   render_profiler(g_profiler, ga, cmds);
   
   
