@@ -96,7 +96,6 @@ _execute(Console* dc) {
 
 static void
 update_console(Console* dc, Game_Input* input) {
-  profile_block;
   
   // Update console code
   if (is_poked(input->button_console)) {
@@ -105,6 +104,7 @@ update_console(Console* dc, Game_Input* input) {
   
   if (!dc->is_showing) return;
   
+  profile_block();
   for (U32 char_index = 0; 
        char_index < input->char_count;
        ++char_index) 
@@ -133,7 +133,7 @@ render_console(Console* dc,
                Game_Assets* ga, 
                Renderer_Command_Queue* render_commands)
 {
-  profile_block;
+  profile_block();
   
   // Debug console
   if (dc->is_showing) {

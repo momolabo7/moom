@@ -42,14 +42,18 @@ struct Profiler {
   U32 snapshot_index;
 };
 
-extern Profiler* g_profiler;
+
 
 #ifdef TRANSLATION_UNIT_INDEX
-# define __profile_block(number) auto* zawarudo_profile_##number = _begin_profiling_block(g_profiler, TRANSLATION_UNIT_INDEX, __COUNTER__, __FILE__, __LINE__, __FUNCTION__); defer { _end_profiling_block(g_profiler, zawarudo_profile_##number); };
-# define _profile_block(number) __profile_block(number);
-# define profile_block _profile_block(__LINE__)
+extern Profiler* g_profiler;
+static_assert(TRANSLATION_UNIT_INDEX >= 0 && 
+              TRANSLATION_UNIT_INDEX < PROFILER_MAX_TRANSLATION_UNITS);
+
+# define __profile_block(number, ...) auto* zawarudo_profile_##number = _begin_profiling_block(g_profiler, TRANSLATION_UNIT_INDEX, __COUNTER__, __FILE__, __LINE__, __FUNCTION__, __VA_ARGS__); defer { _end_profiling_block(g_profiler, zawarudo_profile_##number); };
+# define _profile_block(number, ...) __profile_block(number, __VA_ARGS__);
+# define profile_block(...) _profile_block(__LINE__, __VA_ARGS__)
 #else
-# define profile_block
+# define profile_block(...)
 #endif
 
 #include "game_profiler.cpp"

@@ -4,11 +4,12 @@ _begin_profiling_block(Profiler* p,
                        U32 entry_index, 
                        const char* filename, 
                        U32 line,
-                       const char* function_name) 
+                       const char* function_name,
+                       const char* block_name = 0) 
 {
   Profiler_Entry* entry = &p->entries[translation_index][entry_index];
   entry->filename = filename;
-  entry->function_name = function_name;
+  entry->function_name = block_name ? block_name : function_name;
   entry->line = line;
   
   entry->start_cycles = (U32)p->platform.get_performance_counter();

@@ -861,7 +861,7 @@ WinMain(HINSTANCE instance,
   LARGE_INTEGER last_frame_count = win_get_performance_counter();
   
   while (g_win_state.is_running) {
-    profile_block;
+    profile_block("game loop");
     
     //- Begin render frame
     V2U render_wh = win_get_client_dims(window);
@@ -932,7 +932,6 @@ WinMain(HINSTANCE instance,
       game_functions.update_and_render(game, input);
     }
     
-    
     //-Frame-rate control
     // 1. Calculate how much time has passed since the last frame
     // 2. If the time elapsed is greater than the target time elapsed,
@@ -979,6 +978,7 @@ WinMain(HINSTANCE instance,
     
     
     //- End render frame
+    update_entries(g_profiler);
     if (renderer_code.is_valid) {
       renderer_functions.end_frame(renderer);
     }
@@ -999,8 +999,6 @@ WinMain(HINSTANCE instance,
     
     
     
-    
-    update_entries(g_profiler); 
   }
   
   

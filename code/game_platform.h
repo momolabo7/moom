@@ -128,12 +128,14 @@ struct Game_Memory {
   Debugger* debugger;
   
   
-  
   struct Game_State* game; // do not touch!
 };
 
 typedef void Game_Update_And_Render(Game_Memory* memory,
                                     Game_Input* input);
+
+typedef void Game_Debug_Update_And_Render(Game_Memory* memory,
+                                          Game_Input* input);
 
 // To be called by platform
 struct Game_Functions {

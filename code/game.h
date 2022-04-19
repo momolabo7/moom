@@ -15,7 +15,6 @@
 #endif // INTERNAL
 
 #include "game_profiler.h"
-
 #include "game_assets.h"
 #include "game_assets_rendering.h"
 #include "game_profiler_rendering.h"
@@ -26,19 +25,42 @@ struct Sandbox_Mode {
   F32 tmp_delta;
   B32 tmp_increase;
   F32 tmp_rot;
+};
+struct Splash_Mode {
+  F32 timer;
+};
+typedef void Mode_Init_Function(Game_Memory* memory, Game_Input* input);
+typedef void Mode_Update_Function(Game_Memory* memory, Game_Input* input);
+static void mode_noop(Game_Memory*, Game_Input*) {}
+
+
+enum Game_Mode {
+  GAME_MODE_NONE, 
   
+  GAME_MODE_SPLASH,
+  GAME_MODE_SANDBOX,
 };
 
 struct Game_State {
+  B32 show_profiler;
+  
   // Arenas
   Arena asset_arena;
   Arena frame_arena;
   Arena debug_arena;
   
   // Mode Management
+  enum Game_Mode current_mode;
+  enum Game_Mode next_mode;
   union {
+    Splash_Mode splash_mode;
     Sandbox_Mode sandbox_mode;  
   };
+  Mode_Init_Function* mode_init;
+  Mode_Update_Function* mode_update;
+  
+  
+  // Other stuff
   Game_Assets game_assets;
   Console console;
 };
