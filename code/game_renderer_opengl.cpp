@@ -192,6 +192,8 @@ void main(void) {
 })###";
   
   
+  
+  
   // Stuff to work with game
   F32 quad_model[] = {
     -0.5f, -0.5f, 0.0f,  // bottom left
@@ -546,6 +548,22 @@ opengl_end_frame(Opengl* ogl) {
         ogl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
       } break;
+      case RENDER_COMMAND_TYPE_TRIANGLE: {
+#if 0
+        auto* data = (Render_Command_Triangle*)entry->data;
+        GLuint ogl_texture_handle = ogl->blank_texture;
+        if (current_texture != ogl->blank_texture) {
+          draw_instances(ogl,
+                         current_texture, 
+                         instances_to_draw, 
+                         last_drawn_instance_index);
+          last_drawn_instance_index += instances_to_draw;
+          instances_to_draw = 0;
+          current_texture = ogl_texture_handle;
+        }
+#endif
+        
+      } break;
       case RENDER_COMMAND_TYPE_RECT: {
         auto* data = (Render_Command_Rect*)entry->data;
         
@@ -642,6 +660,7 @@ opengl_end_frame(Opengl* ogl) {
       case RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
         delete_all_textures(ogl);
       } break;
+      
     }
   }
   

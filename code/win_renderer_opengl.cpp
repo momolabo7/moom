@@ -175,8 +175,11 @@ win_unload_renderer(Renderer* r) {
   // Unused?
 }
 
-exported
-Win_Load_Renderer_Interface(win_load_renderer)
+exported Renderer*
+win_load_renderer(HWND window, 
+                  UMI command_queue_size,
+                  UMI texture_queue_size, 
+                  Arena* arena) 
 {
   HDC dc = GetDC(window); 
   if (!dc) {

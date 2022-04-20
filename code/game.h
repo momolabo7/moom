@@ -42,7 +42,7 @@ enum Game_Mode {
 };
 
 struct Game_State {
-  B32 show_profiler;
+  B32 show_debug;
   
   // Arenas
   Arena asset_arena;

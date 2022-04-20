@@ -12,9 +12,7 @@
 
 
 //~API for Win platform to use
-#define Win_Load_Renderer_Interface(name) \
-Renderer* name(HWND window, UMI command_queue_size, UMI texture_queue_size, Arena* arena)
-typedef Win_Load_Renderer_Interface(Win_Load_Renderer);
+typedef Renderer* Win_Load_Renderer(HWND window, UMI command_queue_size, UMI texture_queue_size, Arena* arena);
 
 
 typedef void 

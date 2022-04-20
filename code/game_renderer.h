@@ -85,6 +85,7 @@ struct Renderer_Command_Queue {
 enum Render_Command_Type {
   RENDER_COMMAND_TYPE_CLEAR,
   RENDER_COMMAND_TYPE_BASIS,
+  RENDER_COMMAND_TYPE_TRIANGLE,
   RENDER_COMMAND_TYPE_RECT,
   RENDER_COMMAND_TYPE_SUBSPRITE,
   RENDER_COMMAND_TYPE_DELETE_TEXTURE,
@@ -116,6 +117,11 @@ struct Render_Command_Delete_All_Textures {
 };
 
 struct Render_Command_Rect {
+  RGBA colors;
+  M44 transform;
+};
+
+struct Render_Command_Triangle {
   RGBA colors;
   M44 transform;
 };

@@ -160,10 +160,12 @@ game_update_and_render(Game_Memory* memory,
   
   // Update console code
   if (is_poked(input->button_console)) {
-    game->show_profiler = !game->show_profiler;
+    game->show_debug = !game->show_debug;
   }
   
-  update_console(dc, input);
+  if (game->show_debug) {
+    update_console(dc, input);
+  }
   
   
   // Game state management
@@ -193,12 +195,12 @@ game_update_and_render(Game_Memory* memory,
   game->mode_update(memory, input);
   
   
-  
-  render_console(dc, ga, cmds);
-  
-  
-  if (game->show_profiler)
+  // render debug stuff
+  if (game->show_debug)
+  {
+    render_console(dc, ga, cmds);
     render_profiler(memory->profiler, ga, cmds);
+  }
   
   return is_done;
   

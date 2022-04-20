@@ -15,8 +15,6 @@ struct Console_Line {
 };
 
 struct Console {
-  B32 is_showing;
-  
   U32 command_count;
   Console_Command commands[10];
   
@@ -26,9 +24,6 @@ struct Console {
 
 static void
 init_console(Console* dc, Arena* arena) {
-  dc->is_showing = false;
-  
-  
   UMI line_size = 256;
   init_string_builder(&dc->input_line,
                       push_array<U8>(arena, line_size),
@@ -97,13 +92,6 @@ _execute(Console* dc) {
 static void
 update_console(Console* dc, Game_Input* input) {
   
-  // Update console code
-  if (is_poked(input->button_console)) {
-    dc->is_showing = !dc->is_showing;
-  }
-  
-  if (!dc->is_showing) return;
-  
   profile_block();
   for (U32 char_index = 0; 
        char_index < input->char_count;
@@ -136,75 +124,73 @@ render_console(Console* dc,
   profile_block();
   
   // Debug console
-  if (dc->is_showing) {
-    // Camera
-    {
-      // TODO(Momo): This values should come from
-      // some 'design width' and 'design height' value from elsewhere.
-      V3 position = {};
-      Rect3 frustum;
-      frustum.min.x = frustum.min.y = frustum.min.z = 0;
-      frustum.max.x = 1600;
-      frustum.max.y = 900;
-      frustum.max.z = 500;
-      push_orthographic_camera(render_commands, position, frustum);
-    }
-    
-    // TODO(Momo): These should be percentages
-    // but we'll work with this for now
-    static const F32 console_width = 1600.f;
-    static const F32 console_height = 400.f;
-    static const F32 line_height = console_height/(array_count(dc->info_lines)+1);
-    static const F32 font_height = line_height * 0.8f;
-    static const F32 font_bottom_pad = (line_height - font_height);
-    static const F32 left_pad = 10.f;
-    
-    draw_sprite(ga, render_commands,
-                SPRITE_BLANK,
-                rgba(0x787878FF),
-                console_width/2,
-                console_height/2,
-                console_width, 
-                console_height,
-                100.f);
-    
-    draw_sprite(ga, render_commands,
-                SPRITE_BLANK,
-                rgba(0x505050FF),
-                console_width/2,
-                line_height/2,
-                console_width,
-                line_height,
-                90.f);
-    
-    
-    // Draw info text
-    for (U32 line_index = 0;
-         line_index < array_count(dc->info_lines);
-         ++line_index)
-    {
-      String_Builder* line = dc->info_lines + line_index;
-      
-      draw_text(ga, render_commands,
-                FONT_DEFAULT,
-                line->str,
-                rgba(0xFFFFFFFF),
-                left_pad, 
-                line_height * (line_index+1) + font_bottom_pad,
-                font_height,
-                80.f);
-      
-    }
+  // Camera
+  {
+    // TODO(Momo): This values should come from
+    // some 'design width' and 'design height' value from elsewhere.
+    V3 position = {};
+    Rect3 frustum;
+    frustum.min.x = frustum.min.y = frustum.min.z = 0;
+    frustum.max.x = 1600;
+    frustum.max.y = 900;
+    frustum.max.z = 500;
+    push_orthographic_camera(render_commands, position, frustum);
+  }
+  
+  // TODO(Momo): These should be percentages
+  // but we'll work with this for now
+  static const F32 console_width = 1600.f;
+  static const F32 console_height = 400.f;
+  static const F32 line_height = console_height/(array_count(dc->info_lines)+1);
+  static const F32 font_height = line_height * 0.8f;
+  static const F32 font_bottom_pad = (line_height - font_height);
+  static const F32 left_pad = 10.f;
+  
+  draw_sprite(ga, render_commands,
+              SPRITE_BLANK,
+              rgba(0x787878FF),
+              console_width/2,
+              console_height/2,
+              console_width, 
+              console_height,
+              100.f);
+  
+  draw_sprite(ga, render_commands,
+              SPRITE_BLANK,
+              rgba(0x505050FF),
+              console_width/2,
+              line_height/2,
+              console_width,
+              line_height,
+              90.f);
+  
+  
+  // Draw info text
+  for (U32 line_index = 0;
+       line_index < array_count(dc->info_lines);
+       ++line_index)
+  {
+    String_Builder* line = dc->info_lines + line_index;
     
     draw_text(ga, render_commands,
               FONT_DEFAULT,
-              dc->input_line.str,
+              line->str,
               rgba(0xFFFFFFFF),
               left_pad, 
-              font_bottom_pad,
+              line_height * (line_index+1) + font_bottom_pad,
               font_height,
               80.f);
+    
   }
+  
+  draw_text(ga, render_commands,
+            FONT_DEFAULT,
+            dc->input_line.str,
+            rgba(0xFFFFFFFF),
+            left_pad, 
+            font_bottom_pad,
+            font_height,
+            80.f);
 }
 
 #endif //GAME_CONSOLE_H
