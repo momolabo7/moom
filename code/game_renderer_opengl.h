@@ -198,20 +198,21 @@ enum Vertex_Buffer_Type {
   VERTEX_BUFFER_TYPE_COUNT // 5
 };
 
-struct Sprite_Renderer {
-};
-
-struct Shadow_Renderer {
-};
-
-struct Opengl : Renderer {
-  Sprite_Renderer sprite_renderer;
-  Shadow_Renderer shadow_renderer;
-  
-  GLuint textures[256];
+struct Sprite_Batcher {
   GLuint buffers[VERTEX_BUFFER_TYPE_COUNT]; // Opengl__VBO_Count
   GLuint shader;
   GLuint model; 
+};
+
+struct Opengl : Renderer {
+  Sprite_Batcher sprite_batcher;
+  
+  GLuint textures[256];
+#if 0
+  GLuint buffers[VERTEX_BUFFER_TYPE_COUNT]; // Opengl__VBO_Count
+  GLuint shader;
+  GLuint model; 
+#endif
   GLuint dummy_texture;
   GLuint blank_texture;
   
