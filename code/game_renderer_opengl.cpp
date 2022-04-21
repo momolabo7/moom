@@ -1,4 +1,4 @@
-#define OPENGL_MAX_ENTITIES 4096
+#define OPENGL_MAX_SPRITES 4096
 
 static void 
 attach_shader(Opengl* ogl,
@@ -33,14 +33,14 @@ align_viewport(Opengl* ogl,
   ogl->glViewport(x, y, w, h);
 }
 
-
+// TODO(Momo): Probably change to 'draw_instanced_sprites'
 static void 
 draw_instances(Opengl* ogl,
                GLuint texture, 
                GLsizei instances_to_draw, 
                GLuint index_to_draw_from) 
 {
-  assert(instances_to_draw + index_to_draw_from < OPENGL_MAX_ENTITIES);
+  assert(instances_to_draw + index_to_draw_from < OPENGL_MAX_SPRITES);
   
   if (instances_to_draw > 0) {
     ogl->glBindTexture(GL_TEXTURE_2D, texture);
@@ -160,8 +160,7 @@ add_predefined_textures(Opengl* ogl) {
 }
 
 static B32 
-init_sprite_entity(Opengl* ogl) {
-  
+init_sprite_renderer(Opengl* ogl) {
   const char* vertex_shader = R"###(
 #version 450 core
 layout(location=0) in vec3 aModelVtx; 
@@ -194,24 +193,17 @@ void main(void) {
   
   
   // Stuff to work with game
-  F32 sprite_model[] = {
+  const F32 sprite_model[] = {
     -0.5f, -0.5f, 0.0f,  // bottom left
     0.5f, -0.5f, 0.0f,  // bottom right
     0.5f,  0.5f, 0.0f,  // top right
     -0.5f,  0.5f, 0.0f,   // top left 
   };
   
-  U8 sprite_indices[] = {
+  const U8 sprite_indices[] = {
     0, 1, 2,
     0, 2, 3,
   };
-  
-  
-  
-  
-  ogl->glEnable(GL_DEPTH_TEST);
-  ogl->glEnable(GL_SCISSOR_TEST);
-  
   
   
   // NOTE(Momo): Setup VBO
@@ -227,17 +219,17 @@ void main(void) {
                             0);
   
   ogl->glNamedBufferStorage(ogl->buffers[VERTEX_BUFFER_TYPE_TEXTURE], 
-                            sizeof(V2) * 4 * OPENGL_MAX_ENTITIES, 
+                            sizeof(V2) * 4 * OPENGL_MAX_SPRITES, 
                             nullptr, 
                             GL_DYNAMIC_STORAGE_BIT);
   
   ogl->glNamedBufferStorage(ogl->buffers[VERTEX_BUFFER_TYPE_COLORS], 
-                            sizeof(V4) * OPENGL_MAX_ENTITIES, 
+                            sizeof(V4) * OPENGL_MAX_SPRITES, 
                             nullptr, 
                             GL_DYNAMIC_STORAGE_BIT);
   
   ogl->glNamedBufferStorage(ogl->buffers[VERTEX_BUFFER_TYPE_TRANSFORM], 
-                            sizeof(M44) * OPENGL_MAX_ENTITIES, 
+                            sizeof(M44) * OPENGL_MAX_SPRITES, 
                             nullptr, 
                             GL_DYNAMIC_STORAGE_BIT);
   
@@ -431,10 +423,13 @@ void main(void) {
 static B32
 opengl_init(Opengl* ogl)
 {	
-  if (!init_sprite_entity(ogl)) return false;
+  
+  ogl->glEnable(GL_DEPTH_TEST);
+  ogl->glEnable(GL_SCISSOR_TEST);
+  
+  if (!init_sprite_renderer(ogl)) return false;
   add_predefined_textures(ogl);
   delete_all_textures(ogl);
-  
   
   return true;
   
