@@ -159,9 +159,8 @@ add_predefined_textures(Opengl* ogl) {
   
 }
 
-static B32
-opengl_init(Opengl* ogl)
-{	
+static B32 
+init_sprite_entity(Opengl* ogl) {
   
   const char* vertex_shader = R"###(
 #version 450 core
@@ -195,14 +194,14 @@ void main(void) {
   
   
   // Stuff to work with game
-  F32 quad_model[] = {
+  F32 sprite_model[] = {
     -0.5f, -0.5f, 0.0f,  // bottom left
     0.5f, -0.5f, 0.0f,  // bottom right
     0.5f,  0.5f, 0.0f,  // top right
     -0.5f,  0.5f, 0.0f,   // top left 
   };
   
-  U8 quad_indices[] = {
+  U8 sprite_indices[] = {
     0, 1, 2,
     0, 2, 3,
   };
@@ -218,13 +217,13 @@ void main(void) {
   // NOTE(Momo): Setup VBO
   ogl->glCreateBuffers(VERTEX_BUFFER_TYPE_COUNT, ogl->buffers);
   ogl->glNamedBufferStorage(ogl->buffers[VERTEX_BUFFER_TYPE_MODEL], 
-                            sizeof(quad_model), 
-                            quad_model, 
+                            sizeof(sprite_model), 
+                            sprite_model, 
                             0);
   
   ogl->glNamedBufferStorage(ogl->buffers[VERTEX_BUFFER_TYPE_INDICES], 
-                            sizeof(quad_indices), 
-                            quad_indices, 
+                            sizeof(sprite_indices), 
+                            sprite_indices, 
                             0);
   
   ogl->glNamedBufferStorage(ogl->buffers[VERTEX_BUFFER_TYPE_TEXTURE], 
@@ -426,6 +425,13 @@ void main(void) {
     ogl->glGetProgramInfoLog(ogl->shader, KB(1), nullptr, msg);
     return false;
   }
+  return true;
+}
+
+static B32
+opengl_init(Opengl* ogl)
+{	
+  if (!init_sprite_entity(ogl)) return false;
   add_predefined_textures(ogl);
   delete_all_textures(ogl);
   
