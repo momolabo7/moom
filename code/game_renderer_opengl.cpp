@@ -1,45 +1,5 @@
 
 
-static void 
-push_sprite(Opengl* ogl, 
-            M44 transform,
-            RGBA colors,
-            Rect2 uv) 
-{
-  Sprite_Batcher* sb = &ogl->sprite_batcher;
-  
-  
-  
-  ogl->glNamedBufferSubData(sb->buffers[VERTEX_BUFFER_TYPE_COLORS], 
-                            sb->current_instance_index * sizeof(V4),
-                            sizeof(V4), 
-                            &colors);
-  
-  F32 uv_per_vertex[] = {
-    uv.min.x, uv.max.y,
-    uv.max.x, uv.max.y,
-    uv.max.x, uv.min.y,
-    uv.min.x, uv.min.y
-  };
-  ogl->glNamedBufferSubData(sb->buffers[VERTEX_BUFFER_TYPE_TEXTURE],
-                            sb->current_instance_index * sizeof(uv_per_vertex),
-                            sizeof(uv_per_vertex),
-                            &uv_per_vertex);
-  
-  // NOTE(Momo): transpose; game is row-major
-  M44 ogl_transform = transpose(transform);
-  ogl->glNamedBufferSubData(sb->buffers[VERTEX_BUFFER_TYPE_TRANSFORM], 
-                            sb->current_instance_index* sizeof(M44), 
-                            sizeof(M44), 
-                            &ogl_transform);
-  
-  // NOTE(Momo): Update Bookkeeping
-  ++sb->instances_to_draw;
-  ++sb->current_instance_index;
-  
-}
-
-
 static void
 flush_sprites(Opengl* ogl) {
   Sprite_Batcher* sb = &ogl->sprite_batcher;
@@ -68,6 +28,49 @@ flush_sprites(Opengl* ogl) {
     sb->last_drawn_instance_index += sb->instances_to_draw;
     sb->instances_to_draw = 0;
   }
+}
+
+
+static void 
+push_sprite(Opengl* ogl, 
+            M44 transform,
+            RGBA colors,
+            Rect2 uv,
+            GLuint texture) 
+{
+  Sprite_Batcher* sb = &ogl->sprite_batcher;
+  if (sb->current_texture != texture) {
+    flush_sprites(ogl);
+    sb->current_texture = texture;
+  }
+  
+  ogl->glNamedBufferSubData(sb->buffers[VERTEX_BUFFER_TYPE_COLORS], 
+                            sb->current_instance_index * sizeof(V4),
+                            sizeof(V4), 
+                            &colors);
+  
+  F32 uv_per_vertex[] = {
+    uv.min.x, uv.max.y,
+    uv.max.x, uv.max.y,
+    uv.max.x, uv.min.y,
+    uv.min.x, uv.min.y
+  };
+  ogl->glNamedBufferSubData(sb->buffers[VERTEX_BUFFER_TYPE_TEXTURE],
+                            sb->current_instance_index * sizeof(uv_per_vertex),
+                            sizeof(uv_per_vertex),
+                            &uv_per_vertex);
+  
+  // NOTE(Momo): transpose; game is row-major
+  M44 ogl_transform = transpose(transform);
+  ogl->glNamedBufferSubData(sb->buffers[VERTEX_BUFFER_TYPE_TRANSFORM], 
+                            sb->current_instance_index* sizeof(M44), 
+                            sizeof(M44), 
+                            &ogl_transform);
+  
+  // NOTE(Momo): Update Bookkeeping
+  ++sb->instances_to_draw;
+  ++sb->current_instance_index;
+  
 }
 
 static void 
@@ -590,25 +593,11 @@ opengl_end_frame(Opengl* ogl) {
   align_viewport(ogl, cmds->platform_render_wh, cmds->platform_render_region);
   process_texture_queue(ogl);
   
-  const F32 quad_uv[] = {
-    0.0f, 1.0f,  // top left
-    1.0f, 1.0f, // top right
-    1.0f, 0.f, // bottom right
-    0.f, 0.f, // bottom left
-  };
   
   begin_sprites(ogl);
-  defer { end_sprites(ogl); };
   
-#if 0  
-  GLuint current_texture = 0;
-  GLsizei instances_to_draw = 0;
-  GLsizei last_drawn_instance_index = 0;
-  GLuint current_instance_index = 0;
-#endif
-  
-  for (U32 i = 0; i < cmds->entry_count; ++i) {
-    Render_Command* entry = get_command(cmds, i);
+  for (U32 cmd_index = 0; cmd_index < cmds->entry_count; ++cmd_index) {
+    Render_Command* entry = get_command(cmds, cmd_index);
     switch(entry->id) {
       case RENDER_COMMAND_TYPE_BASIS: {
         auto* data = (Render_Command_Basis*)entry->data;
@@ -617,7 +606,7 @@ opengl_end_frame(Opengl* ogl) {
         flush_sprites(ogl);
         
         
-        // TODO: Do we share shader here?
+        // TODO: Do we share shaders? Or just have a 'view' shader?
         M44 result = transpose(data->basis);
         GLint uProjectionLoc = ogl->glGetUniformLocation(sb->shader,
                                                          "uProjection");
@@ -627,29 +616,7 @@ opengl_end_frame(Opengl* ogl) {
                                        1, 
                                        GL_FALSE, 
                                        (const GLfloat*)&result);
-#if 0
-        draw_instances(ogl,
-                       current_texture, 
-                       instances_to_draw, 
-                       last_drawn_instance_index);
-        last_drawn_instance_index += instances_to_draw;
-        instances_to_draw = 0;
         
-        
-        // TODO(Momo): Figure out how to do this for other batchers?
-        // Maybe store basis in Opengl?
-        Sprite_Batcher* sb = &ogl->sprite_batcher;
-        
-        M44 result = transpose(data->basis);
-        GLint uProjectionLoc = ogl->glGetUniformLocation(sb->shader,
-                                                         "uProjection");
-        
-        ogl->glProgramUniformMatrix4fv(sb->shader, 
-                                       uProjectionLoc, 
-                                       1, 
-                                       GL_FALSE, 
-                                       (const GLfloat*)&result);
-#endif
       } break;
       case RENDER_COMMAND_TYPE_CLEAR: {
         auto* data = (Render_Command_Clear*)entry->data;
@@ -662,122 +629,37 @@ opengl_end_frame(Opengl* ogl) {
         
       } break;
       case RENDER_COMMAND_TYPE_TRIANGLE: {
-        // Unused for now
+        // NOTE(Momo): Unbatched. 1 Triangle is 
+        
+        
+        
       } break;
-#if 0
       case RENDER_COMMAND_TYPE_RECT: {
-        // TODO: Actually is this unused?
+        Rect2 uv = {
+          { 0.f, 0.f },
+          { 1.f, 1.f },
+        };
+        
         auto* data = (Render_Command_Rect*)entry->data;
-        GLuint ogl_texture_handle = ogl->blank_texture;
-        
-        // NOTE(Momo): If the currently set texture is not same as the 
-        // currently processed texture, batch draw all instances before 
-        // the current instance.
-        if (current_texture != ogl->blank_texture) {
-          draw_instances(ogl,
-                         current_texture, 
-                         instances_to_draw, 
-                         last_drawn_instance_index);
-          last_drawn_instance_index += instances_to_draw;
-          instances_to_draw = 0;
-          current_texture = ogl_texture_handle;
-        }
-        
-        // NOTE(Momo): Update the current instance values
-        // TODO(Momo): Figure out how to do this for other batchers?
-        // current_instance_index should probably be stored in sprite_batcher
-        
-        Sprite_Batcher* sb = &ogl->sprite_batcher;
-        
-        ogl->glNamedBufferSubData(sb->buffers[VERTEX_BUFFER_TYPE_COLORS], 
-                                  current_instance_index * sizeof(V4),
-                                  sizeof(V4), 
-                                  &data->colors);
-        
-        ogl->glNamedBufferSubData(sb->buffers[VERTEX_BUFFER_TYPE_TEXTURE],
-                                  current_instance_index * sizeof(quad_uv),
-                                  sizeof(quad_uv),
-                                  &quad_uv);
-        
-        // NOTE(Momo): transpose; game is row-major
-        M44 transform = transpose(data->transform);
-        ogl->glNamedBufferSubData(sb->buffers[VERTEX_BUFFER_TYPE_TRANSFORM], 
-                                  current_instance_index* sizeof(M44), 
-                                  sizeof(M44), 
-                                  &transform);
-        
-        // NOTE(Momo): Update Bookkeeping
-        ++instances_to_draw;
-        ++current_instance_index;
+        GLuint texture = ogl->blank_texture;
+        push_sprite(ogl, 
+                    data->transform,
+                    data->colors,
+                    uv,
+                    texture);
       } break;
-#endif
+      
       case RENDER_COMMAND_TYPE_SUBSPRITE: {
         auto* data = (Render_Command_Subsprite*)entry->data;
-        Sprite_Batcher* sb = &ogl->sprite_batcher;
-        
         GLuint texture = ogl->textures[data->texture_index]; 
         if (texture == 0) {
           texture = ogl->dummy_texture;
-        }
-        
-        // TODO(Momo): where should this condition REALLY be?
-        if (sb->current_texture != texture) {
-          flush_sprites(ogl);
-          sb->current_texture = texture;
         }
         push_sprite(ogl, 
                     data->transform,
                     data->colors,
-                    data->texture_uv);
-#if 0
-        auto* data = (Render_Command_Subsprite*)entry->data;
-        
-        GLuint texture = ogl->textures[data->texture_index]; 
-        if (texture == 0) {
-          texture = ogl->dummy_texture;
-        }
-        
-        // NOTE(Momo): If the currently set texture is not same as the currently
-        // processed texture, batch draw all instances before the current instance.
-        if (current_texture != texture) {
-          draw_instances(ogl,
-                         current_texture, 
-                         instances_to_draw, 
-                         last_drawn_instance_index);
-          last_drawn_instance_index += instances_to_draw;
-          instances_to_draw = 0;
-          current_texture = texture;
-        }
-        
-        // NOTE(Momo): Update the current instance values
-        Sprite_Batcher* sb = &ogl->sprite_batcher;
-        ogl->glNamedBufferSubData(sb->buffers[VERTEX_BUFFER_TYPE_COLORS], 
-                                  current_instance_index * sizeof(V4),
-                                  sizeof(V4), 
-                                  &data->colors);
-        
-        F32 texture_uv_in_vertices[] = {
-          data->texture_uv.min.x, data->texture_uv.max.y,
-          data->texture_uv.max.x, data->texture_uv.max.y,
-          data->texture_uv.max.x, data->texture_uv.min.y,
-          data->texture_uv.min.x, data->texture_uv.min.y
-        };
-        ogl->glNamedBufferSubData(sb->buffers[VERTEX_BUFFER_TYPE_TEXTURE],
-                                  current_instance_index * sizeof(quad_uv),
-                                  sizeof(quad_uv),
-                                  &texture_uv_in_vertices);
-        
-        // NOTE(Momo): transpose; game is row-major
-        M44 transform = transpose(data->transform);
-        ogl->glNamedBufferSubData(sb->buffers[VERTEX_BUFFER_TYPE_TRANSFORM], 
-                                  current_instance_index* sizeof(M44), 
-                                  sizeof(M44), 
-                                  &transform);
-        
-        // NOTE(Momo): Update Bookkeeping
-        ++instances_to_draw;
-        ++current_instance_index;
-#endif
+                    data->texture_uv,
+                    texture);
         
       } break;
       case RENDER_COMMAND_TYPE_DELETE_TEXTURE: {
@@ -791,9 +673,7 @@ opengl_end_frame(Opengl* ogl) {
     }
   }
   
-#if 0
-  draw_instances(ogl, current_texture, instances_to_draw, last_drawn_instance_index);
-#endif
+  end_sprites(ogl);
 }
 
 
