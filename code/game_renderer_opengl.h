@@ -1,6 +1,7 @@
 #ifndef GFX_OPENGL_H
 #define GFX_OPENGL_H
 
+#define OPENGL_MAX_SPRITES 4096
 
 
 //- Opengl typedefs
@@ -202,7 +203,16 @@ struct Sprite_Batcher {
   GLuint buffers[VERTEX_BUFFER_TYPE_COUNT]; // Opengl__VBO_Count
   GLuint shader;
   GLuint model; 
+  
+  GLuint current_texture;
+  GLsizei instances_to_draw;
+  GLsizei last_drawn_instance_index;
+  GLuint current_instance_index;
+  
 };
+
+
+
 
 struct Opengl : Renderer {
   Sprite_Batcher sprite_batcher;
@@ -259,6 +269,7 @@ struct Opengl : Renderer {
 static B32 opengl_init(Opengl* ogl);
 static void opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region);
 static void opengl_end_frame(Opengl* ogl);
+
 
 
 #include "game_renderer_opengl.cpp"
