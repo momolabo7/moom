@@ -167,6 +167,9 @@ typedef void    GL_glProgramUniformMatrix4fv(GLuint program,
                                              const GLfloat* value);
 typedef void    GL_glDeleteTextures(GLsizei n, 
                                     const GLuint* textures);
+typedef void    GL_glDrawArrays(GLenum mode,
+                                GLint first,
+                                GLsizei count);
 typedef void    GL_glDebugMessageCallbackARB(GLDEBUGPROC *callback, 
                                              const void* userParams);
 
@@ -264,6 +267,8 @@ struct Opengl : Renderer {
   GL_glDebugMessageCallbackARB* glDebugMessageCallbackARB;
   GL_glNamedBufferSubData* glNamedBufferSubData;
   GL_glUseProgram* glUseProgram;  
+  
+  GL_glDrawArrays* glDrawArrays;
 };
 
 static B32 opengl_init(Opengl* ogl);

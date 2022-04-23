@@ -272,6 +272,7 @@ if (!opengl->name) { return nullptr; }
     WGL_SetOpenglFunction(glUseProgram);
     WGL_SetOpenglFunction(glDeleteTextures);
     WGL_SetOpenglFunction(glDebugMessageCallbackARB);
+    WGL_SetOpenglFunction(glDrawArrays);
   }
 #undef WGL_SetOpenglFunction
   

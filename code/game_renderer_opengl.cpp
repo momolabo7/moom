@@ -121,6 +121,7 @@ align_viewport(Opengl* ogl,
   ogl->glViewport(x, y, w, h);
 }
 
+#if 0
 // TODO(Momo): Probably change to 'draw_instanced_sprites'
 static void 
 draw_instances(Opengl* ogl,
@@ -153,6 +154,7 @@ draw_instances(Opengl* ogl,
                                              index_to_draw_from);
   }
 }
+#endif
 
 
 
@@ -510,6 +512,10 @@ void main(void) {
   return true;
 }
 
+GLuint triangle_shader;
+GLuint triangle_VBO;
+GLuint triangle_model;
+
 static B32
 opengl_init(Opengl* ogl)
 {	
@@ -521,8 +527,79 @@ opengl_init(Opengl* ogl)
   add_predefined_textures(ogl);
   delete_all_textures(ogl);
   
+  // Triangle model
+  // TODO(Momo): shift this somewhere else
+  {
+    float v[] = {
+      -0.5f, -0.5f, 0.f,
+      0.5f, -0.5f, 0.f,
+      0.f, 0.5f, 0.f,
+    };
+    char *vertex_shader_src = R"###(
+#version 450 core
+layout(location=0) in vec3 aPos;
+void main(void)
+{
+	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+})###";
+    
+    char *fragment_shader_src = R"###(
+#version 450 core
+out vec4 FragColor;
+void main(void)
+{
+    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+})###";
+    
+    
+    ogl->glCreateBuffers(1, &triangle_VBO);
+    ogl->glNamedBufferStorage(triangle_VBO,
+                              sizeof(v),
+                              v, 0);
+    
+    ogl->glCreateVertexArrays(1, &triangle_model);
+    ogl->glVertexArrayVertexBuffer(triangle_model, 
+                                   0, //BINDING INDEX
+                                   triangle_VBO,
+                                   0,
+                                   sizeof(F32)*3);
+    ogl->glEnableVertexArrayAttrib(triangle_model, 0);
+    ogl->glVertexArrayAttribFormat(triangle_model, 
+                                   0, // ATTRIBUTE 'TYPE'
+                                   3, 
+                                   GL_FLOAT, 
+                                   GL_FALSE, 
+                                   0);
+    ogl->glVertexArrayAttribBinding(triangle_model, 
+                                    0,  // ATTRIBUTE 'TYPE'
+                                    0  // BINDING_INDEX
+                                    );
+
+#if 0    
+    ogl->glVertexArrayBindingDivisor(triangle_model, 
+                                     0,  
+                                     1); 
+#endif
+    
+    // TODO(Momo): //BeginShader/EndShader?
+    triangle_shader = ogl->glCreateProgram();
+    attach_shader(ogl, triangle_shader,
+                  GL_VERTEX_SHADER,
+                  vertex_shader_src);
+    attach_shader(ogl, triangle_shader,
+                  GL_FRAGMENT_SHADER,
+                  fragment_shader_src);
+    
+    ogl->glLinkProgram(triangle_shader);
+    GLint result;
+    ogl->glGetProgramiv(triangle_shader, GL_LINK_STATUS, &result);
+    if (result != GL_TRUE) {
+      char msg[KB(1)] = {};
+      ogl->glGetProgramInfoLog(triangle_shader, KB(1), nullptr, msg);
+      return false;
+    }
+  }
   return true;
-  
 }
 
 static void
@@ -605,7 +682,6 @@ opengl_end_frame(Opengl* ogl) {
         Sprite_Batcher* sb = &ogl->sprite_batcher;
         flush_sprites(ogl);
         
-        
         // TODO: Do we share shaders? Or just have a 'view' shader?
         M44 result = transpose(data->basis);
         GLint uProjectionLoc = ogl->glGetUniformLocation(sb->shader,
@@ -629,9 +705,10 @@ opengl_end_frame(Opengl* ogl) {
         
       } break;
       case RENDER_COMMAND_TYPE_TRIANGLE: {
-        // NOTE(Momo): Unbatched. 1 Triangle is 
-        
-        
+        // TODO(Momo): This is just for test
+        ogl->glBindVertexArray(triangle_model);
+        ogl->glUseProgram(triangle_shader);
+        ogl->glDrawArrays(GL_TRIANGLES, 0, 3);
         
       } break;
       case RENDER_COMMAND_TYPE_RECT: {

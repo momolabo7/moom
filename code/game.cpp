@@ -37,6 +37,7 @@ update_splash_mode(Game_Memory* memory,
 {
   Game_State* game = memory->game;
   Splash_Mode* splash = &game->splash_mode;
+  Renderer_Command_Queue* cmds = memory->renderer_command_queue;
   
   F32 dt = input->seconds_since_last_frame;
   splash->timer -= dt;
@@ -44,7 +45,16 @@ update_splash_mode(Game_Memory* memory,
   if (splash->timer < 0.f) {
     game->next_mode = GAME_MODE_SANDBOX;
   }
+  // Clear colors
+  {
+    RGBA colors;
+    colors.r = colors.g = colors.b  = colors.a = 0.2f;
+    push_colors(cmds, colors);
+  }
   
+  {
+    push_triangle(cmds);
+  }
 }
 
 static void 

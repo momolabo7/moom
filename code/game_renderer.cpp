@@ -199,6 +199,13 @@ push_rect(Renderer_Command_Queue* c,
   data->transform = transform;
 }
 
+static void
+push_triangle(Renderer_Command_Queue* c)
+{
+  auto* data = push_command<Render_Command_Triangle>(c, RENDER_COMMAND_TYPE_TRIANGLE);
+  // TODO
+}
+
 static void 
 push_line(Renderer_Command_Queue* c, 
           Line2 line,
