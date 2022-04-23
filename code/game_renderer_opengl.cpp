@@ -531,16 +531,19 @@ opengl_init(Opengl* ogl)
   // TODO(Momo): shift this somewhere else
   {
     float v[] = {
-      -0.5f, -0.5f, 0.f,
-      0.5f, -0.5f, 0.f,
-      0.f, 0.5f, 0.f,
+      0.f, 0.f, 0.f,
+      500.f, 500.f, 0.f,
+      0.f, 500.f, 0.f,
     };
     char *vertex_shader_src = R"###(
 #version 450 core
-layout(location=0) in vec3 aPos;
+layout(location=0) in vec3 aModelVtx;
+uniform mat4 uProjection;
+//uniform mat4 uTransform;
+
 void main(void)
 {
-	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+	gl_Position = uProjection * vec4(aModelVtx, 1.0);
 })###";
     
     char *fragment_shader_src = R"###(
@@ -574,7 +577,7 @@ void main(void)
                                     0,  // ATTRIBUTE 'TYPE'
                                     0  // BINDING_INDEX
                                     );
-
+    
 #if 0    
     ogl->glVertexArrayBindingDivisor(triangle_model, 
                                      0,  
@@ -684,14 +687,25 @@ opengl_end_frame(Opengl* ogl) {
         
         // TODO: Do we share shaders? Or just have a 'view' shader?
         M44 result = transpose(data->basis);
-        GLint uProjectionLoc = ogl->glGetUniformLocation(sb->shader,
-                                                         "uProjection");
+        {
+          GLint uProjectionLoc = ogl->glGetUniformLocation(sb->shader,
+                                                           "uProjection");
+          ogl->glProgramUniformMatrix4fv(sb->shader, 
+                                         uProjectionLoc, 
+                                         1, 
+                                         GL_FALSE, 
+                                         (const GLfloat*)&result);
+        }
         
-        ogl->glProgramUniformMatrix4fv(sb->shader, 
-                                       uProjectionLoc, 
-                                       1, 
-                                       GL_FALSE, 
-                                       (const GLfloat*)&result);
+        {
+          GLint uProjectionLoc = ogl->glGetUniformLocation(triangle_shader,
+                                                           "uProjection");
+          ogl->glProgramUniformMatrix4fv(triangle_shader, 
+                                         uProjectionLoc, 
+                                         1, 
+                                         GL_FALSE, 
+                                         (const GLfloat*)&result);
+        }
         
       } break;
       case RENDER_COMMAND_TYPE_CLEAR: {

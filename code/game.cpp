@@ -52,6 +52,17 @@ update_splash_mode(Game_Memory* memory,
     push_colors(cmds, colors);
   }
   
+  // Set camera
+  {
+    V3 position = {};
+    Rect3 frustum;
+    frustum.min.x = frustum.min.y = frustum.min.z = 0;
+    frustum.max.x = 1600;
+    frustum.max.y = 900;
+    frustum.max.z = 500;
+    push_orthographic_camera(cmds, position, frustum);
+  }
+  
   {
     push_triangle(cmds);
   }
