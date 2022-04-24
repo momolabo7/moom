@@ -267,8 +267,9 @@ if (!opengl->name) { return nullptr; }
     WGL_SetOpenglFunction(glBindVertexArray);
     WGL_SetOpenglFunction(glDrawElementsInstancedBaseInstance);
     WGL_SetOpenglFunction(glGetUniformLocation);
-    WGL_SetOpenglFunction(glProgramUniformMatrix4fv);
     WGL_SetOpenglFunction(glNamedBufferSubData);
+    WGL_SetOpenglFunction(glProgramUniform4fv);
+    WGL_SetOpenglFunction(glProgramUniformMatrix4fv);
     WGL_SetOpenglFunction(glUseProgram);
     WGL_SetOpenglFunction(glDeleteTextures);
     WGL_SetOpenglFunction(glDebugMessageCallbackARB);

@@ -43,7 +43,7 @@ update_splash_mode(Game_Memory* memory,
   splash->timer -= dt;
   
   if (splash->timer < 0.f) {
-    game->next_mode = GAME_MODE_SANDBOX;
+    //game->next_mode = GAME_MODE_SANDBOX;
   }
   // Clear colors
   {
@@ -55,16 +55,73 @@ update_splash_mode(Game_Memory* memory,
   // Set camera
   {
     V3 position = {};
-    Rect3 frustum;
-    frustum.min.x = frustum.min.y = frustum.min.z = 0;
-    frustum.max.x = 1600;
-    frustum.max.y = 900;
-    frustum.max.z = 500;
+    Rect3 frustum = {};
+    
+    frustum.min.x = 0.f;
+    frustum.min.y = 0.f;
+    frustum.max.x = 0.f;
+    frustum.max.x = 1600.f;
+    frustum.max.y = 900.f;
+    frustum.max.z = 500.f;
+    
     push_orthographic_camera(cmds, position, frustum);
   }
   
   {
-    push_triangle(cmds);
+    
+    RGBA colors;
+    colors.r = colors.g = colors.b  = colors.a = 1.f;
+    
+#if 1
+    M44 inverse_of_model = m44_identity();
+    inverse_of_model.e[0][0] = -1.f;
+    inverse_of_model.e[1][0] = 0.f;
+    inverse_of_model.e[2][0] = 1.f;
+    inverse_of_model.e[3][0] = 0.f;
+    
+    inverse_of_model.e[0][1] = -1.f;
+    inverse_of_model.e[1][1] = 1.f;
+    inverse_of_model.e[2][1] = 0.f;
+    inverse_of_model.e[3][1] = 0.f;
+    
+    inverse_of_model.e[0][2] = 1.f;
+    inverse_of_model.e[1][2] = -1.f;
+    inverse_of_model.e[2][2] = -1.f;
+    inverse_of_model.e[3][2] = 1.f;
+    
+    inverse_of_model.e[0][3] = 1.f;
+    inverse_of_model.e[1][3] = 0.f;
+    inverse_of_model.e[2][3] = 0.f;
+    inverse_of_model.e[3][3] = 0.f;
+    
+    M44 target_vertices = m44_identity();
+    target_vertices.e[0][0] = 0.f;
+    target_vertices.e[1][0] = 0.f;
+    target_vertices.e[2][0] = 0.f;
+    target_vertices.e[3][0] = 1.f;
+    
+    target_vertices.e[0][1] = 500.f;
+    target_vertices.e[1][1] = 500.f;
+    target_vertices.e[2][1] = 0.f;
+    target_vertices.e[3][1] = 1.f;
+    
+    target_vertices.e[0][2] = 1000.f;
+    target_vertices.e[1][2] = 0.f;
+    target_vertices.e[2][2] = 0.f;
+    target_vertices.e[3][2] = 1.f;
+    
+    target_vertices.e[0][3] = 1.f;
+    target_vertices.e[1][3] = 1.f;
+    target_vertices.e[2][3] = 1.f;
+    target_vertices.e[3][3] = 1.f;
+    
+    M44 transform = target_vertices * inverse_of_model;
+#else
+    M44 transform = m44_translation(100.f, 100.f) * m44_scale(500.f, 500.f);
+#endif
+    
+    
+    push_triangle(cmds, colors, transform);
   }
 }
 
@@ -81,7 +138,7 @@ update_sandbox_mode(Game_Memory* memory,
   // Clear colors
   {
     RGBA colors;
-    colors.r = colors.g = colors.b  = colors.a = 0.3f;
+    colors.r = colors.g = colors.b  = colors.a = 0.1f;
     push_colors(cmds, colors);
   }
   

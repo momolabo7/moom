@@ -19,7 +19,7 @@ static M44 transpose(M44 m) {
 	}
 	return ret;
 }
-static M44 m44_scale(F32 x, F32 y, F32 z) {
+static M44 m44_scale(F32 x, F32 y, F32 z = 1.f) {
 	M44 ret = {};
 	ret.e[0][0] = x;
 	ret.e[1][1] = y;
@@ -37,7 +37,7 @@ static M44 m44_identity() {
 	
 	return ret;
 }
-static M44 m44_translation(F32 x, F32 y, F32 z) {
+static M44 m44_translation(F32 x, F32 y, F32 z = 0.f) {
 	M44 ret = m44_identity();
 	ret.e[0][3] = x;
 	ret.e[1][3] = y;
@@ -134,8 +134,8 @@ static M44 m44_perspective(F32 fov, F32 aspect, F32 near, F32 far){
 	F32 top = near * tan(fov*0.5f);
 	F32 right = top * aspect;
 	return m44_frustum(-right, right,
-                        -top, top,
-                        near, far);
+                     -top, top,
+                     near, far);
 }
 
 static M44 operator*(M44 lhs, M44 rhs) {

@@ -165,6 +165,10 @@ typedef void    GL_glProgramUniformMatrix4fv(GLuint program,
                                              GLsizei count,
                                              GLboolean transpose,
                                              const GLfloat* value);
+typedef void    GL_glProgramUniform4fv(GLuint program,
+                                       GLint location,
+                                       GLsizei count,
+                                       const GLfloat* value);
 typedef void    GL_glDeleteTextures(GLsizei n, 
                                     const GLuint* textures);
 typedef void    GL_glDrawArrays(GLenum mode,
@@ -262,6 +266,7 @@ struct Opengl : Renderer {
   GL_glBindVertexArray* glBindVertexArray;
   GL_glDrawElementsInstancedBaseInstance* glDrawElementsInstancedBaseInstance;
   GL_glGetUniformLocation* glGetUniformLocation;
+  GL_glProgramUniform4fv* glProgramUniform4fv;
   GL_glProgramUniformMatrix4fv* glProgramUniformMatrix4fv;
   GL_glDeleteTextures* glDeleteTextures;
   GL_glDebugMessageCallbackARB* glDebugMessageCallbackARB;

@@ -121,43 +121,6 @@ align_viewport(Opengl* ogl,
   ogl->glViewport(x, y, w, h);
 }
 
-#if 0
-// TODO(Momo): Probably change to 'draw_instanced_sprites'
-static void 
-draw_instances(Opengl* ogl,
-               GLuint texture, 
-               GLsizei instances_to_draw, 
-               GLuint index_to_draw_from) 
-{
-  // TODO(Momo): these should be in SpriteBatcher
-  assert(instances_to_draw + index_to_draw_from < OPENGL_MAX_SPRITES);
-  
-  Sprite_Batcher* sb = &ogl->sprite_batcher;
-  if (instances_to_draw > 0) {
-    ogl->glBindTexture(GL_TEXTURE_2D, texture);
-    ogl->glTexParameteri(GL_TEXTURE_2D, 
-                         GL_TEXTURE_MIN_FILTER, 
-                         GL_NEAREST);
-    ogl->glTexParameteri(GL_TEXTURE_2D, 
-                         GL_TEXTURE_MAG_FILTER, 
-                         GL_NEAREST);
-    ogl->glEnable(GL_BLEND);
-    ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ogl->glBindVertexArray(sb->model);
-    ogl->glUseProgram(sb->shader);
-    
-    ogl->glDrawElementsInstancedBaseInstance(GL_TRIANGLES, 
-                                             6, 
-                                             GL_UNSIGNED_BYTE, 
-                                             nullptr, 
-                                             instances_to_draw,
-                                             index_to_draw_from);
-  }
-}
-#endif
-
-
-
 static void
 set_texture(Opengl* ogl,
             UMI index,
@@ -532,26 +495,29 @@ opengl_init(Opengl* ogl)
   {
     float v[] = {
       0.f, 0.f, 0.f,
-      500.f, 500.f, 0.f,
-      0.f, 500.f, 0.f,
+      0.f, 1.f, 0.f,
+      1.f, 0.f, 0.f,
     };
     char *vertex_shader_src = R"###(
 #version 450 core
 layout(location=0) in vec3 aModelVtx;
 uniform mat4 uProjection;
-//uniform mat4 uTransform;
+uniform mat4 uTransform;
 
 void main(void)
 {
-	gl_Position = uProjection * vec4(aModelVtx, 1.0);
+	gl_Position = uProjection * uTransform * vec4(aModelVtx, 1.0);
 })###";
     
     char *fragment_shader_src = R"###(
 #version 450 core
 out vec4 FragColor;
+uniform vec4 uFragColor;
+
 void main(void)
 {
-    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+    //FragColor = vec4(1.f, 0.f, 0.f, 1.f);
+    FragColor = uFragColor;
 })###";
     
     
@@ -577,12 +543,6 @@ void main(void)
                                     0,  // ATTRIBUTE 'TYPE'
                                     0  // BINDING_INDEX
                                     );
-    
-#if 0    
-    ogl->glVertexArrayBindingDivisor(triangle_model, 
-                                     0,  
-                                     1); 
-#endif
     
     // TODO(Momo): //BeginShader/EndShader?
     triangle_shader = ogl->glCreateProgram();
@@ -719,9 +679,32 @@ opengl_end_frame(Opengl* ogl) {
         
       } break;
       case RENDER_COMMAND_TYPE_TRIANGLE: {
+        auto* data = (Render_Command_Triangle*)entry->data;
+        
         // TODO(Momo): This is just for test
+        
+        
         ogl->glBindVertexArray(triangle_model);
         ogl->glUseProgram(triangle_shader);
+        {
+          GLint transform_loc = ogl->glGetUniformLocation(triangle_shader,
+                                                          "uTransform");
+          M44 res = transpose(data->transform);
+          ogl->glProgramUniformMatrix4fv(triangle_shader, 
+                                         transform_loc, 
+                                         1, 
+                                         GL_FALSE, 
+                                         (const GLfloat*)&res);
+        }
+        {
+          GLint frag_color_loc = ogl->glGetUniformLocation(triangle_shader,
+                                                           "uFragColor");
+          ogl->glProgramUniform4fv(triangle_shader, 
+                                   frag_color_loc, 
+                                   1, 
+                                   (const GLfloat*)&data->colors);
+        }
+        
         ogl->glDrawArrays(GL_TRIANGLES, 0, 3);
         
       } break;
