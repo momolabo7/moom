@@ -219,10 +219,16 @@ struct Sprite_Batcher {
 };
 
 
+struct Triangle_Batcher {
+  GLuint shader;
+  GLuint buffers;
+  GLuint model;
+};
 
 
 struct Opengl : Renderer {
   Sprite_Batcher sprite_batcher;
+  Triangle_Batcher triangle_batcher;
   
   GLuint textures[256];
 #if 0

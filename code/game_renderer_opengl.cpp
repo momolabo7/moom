@@ -214,8 +214,85 @@ add_predefined_textures(Opengl* ogl) {
   
 }
 
+static B32
+init_triangle_batcher(Opengl* ogl) {
+  Triangle_Batcher* tb = &ogl->triangle_batcher;
+  
+  // Triangle model
+  // TODO(Momo): shift this somewhere else
+  float v[] = {
+    0.f, 0.f, 0.f,
+    0.f, 1.f, 0.f,
+    1.f, 0.f, 0.f,
+  };
+  char *vertex_shader_src = R"###(
+#version 450 core
+layout(location=0) in vec3 aModelVtx;
+uniform mat4 uProjection;
+uniform mat4 uTransform;
+
+void main(void)
+{
+gl_Position = uProjection * uTransform * vec4(aModelVtx, 1.0);
+})###";
+  
+  char *fragment_shader_src = R"###(
+#version 450 core
+out vec4 FragColor;
+uniform vec4 uFragColor;
+
+void main(void)
+{
+  //FragColor = vec4(1.f, 0.f, 0.f, 1.f);
+  FragColor = uFragColor;
+})###";
+  
+  
+  ogl->glCreateBuffers(1, &tb->buffers);
+  ogl->glNamedBufferStorage(tb->buffers,
+                            sizeof(v),
+                            v, 0);
+  
+  ogl->glCreateVertexArrays(1, &tb->model);
+  ogl->glVertexArrayVertexBuffer(tb->model, 
+                                 0, //BINDING INDEX
+                                 tb->buffers,
+                                 0,
+                                 sizeof(F32)*3);
+  ogl->glEnableVertexArrayAttrib(tb->model, 0);
+  ogl->glVertexArrayAttribFormat(tb->model, 
+                                 0, // ATTRIBUTE 'TYPE'
+                                 3, 
+                                 GL_FLOAT, 
+                                 GL_FALSE, 
+                                 0);
+  ogl->glVertexArrayAttribBinding(tb->model, 
+                                  0,  // ATTRIBUTE 'TYPE'
+                                  0  // BINDING_INDEX
+                                  );
+  
+  // TODO(Momo): //BeginShader/EndShader?
+  tb->shader = ogl->glCreateProgram();
+  attach_shader(ogl, tb->shader,
+                GL_VERTEX_SHADER,
+                vertex_shader_src);
+  attach_shader(ogl, tb->shader,
+                GL_FRAGMENT_SHADER,
+                fragment_shader_src);
+  
+  ogl->glLinkProgram(tb->shader);
+  GLint result;
+  ogl->glGetProgramiv(tb->shader, GL_LINK_STATUS, &result);
+  if (result != GL_TRUE) {
+    char msg[KB(1)] = {};
+    ogl->glGetProgramInfoLog(tb->shader, KB(1), nullptr, msg);
+    return false;
+  }
+  return true;
+}
+
 static B32 
-init_sprite_renderer(Opengl* ogl) {
+init_sprite_batcher(Opengl* ogl) {
   Sprite_Batcher* sb = &ogl->sprite_batcher;
   
   
@@ -475,9 +552,6 @@ void main(void) {
   return true;
 }
 
-GLuint triangle_shader;
-GLuint triangle_VBO;
-GLuint triangle_model;
 
 static B32
 opengl_init(Opengl* ogl)
@@ -486,82 +560,10 @@ opengl_init(Opengl* ogl)
   ogl->glEnable(GL_DEPTH_TEST);
   ogl->glEnable(GL_SCISSOR_TEST);
   
-  if (!init_sprite_renderer(ogl)) return false;
+  if (!init_sprite_batcher(ogl)) return false;
+  if (!init_triangle_batcher(ogl)) return false;
   add_predefined_textures(ogl);
   delete_all_textures(ogl);
-  
-  // Triangle model
-  // TODO(Momo): shift this somewhere else
-  {
-    float v[] = {
-      0.f, 0.f, 0.f,
-      0.f, 1.f, 0.f,
-      1.f, 0.f, 0.f,
-    };
-    char *vertex_shader_src = R"###(
-#version 450 core
-layout(location=0) in vec3 aModelVtx;
-uniform mat4 uProjection;
-uniform mat4 uTransform;
-
-void main(void)
-{
-	gl_Position = uProjection * uTransform * vec4(aModelVtx, 1.0);
-})###";
-    
-    char *fragment_shader_src = R"###(
-#version 450 core
-out vec4 FragColor;
-uniform vec4 uFragColor;
-
-void main(void)
-{
-    //FragColor = vec4(1.f, 0.f, 0.f, 1.f);
-    FragColor = uFragColor;
-})###";
-    
-    
-    ogl->glCreateBuffers(1, &triangle_VBO);
-    ogl->glNamedBufferStorage(triangle_VBO,
-                              sizeof(v),
-                              v, 0);
-    
-    ogl->glCreateVertexArrays(1, &triangle_model);
-    ogl->glVertexArrayVertexBuffer(triangle_model, 
-                                   0, //BINDING INDEX
-                                   triangle_VBO,
-                                   0,
-                                   sizeof(F32)*3);
-    ogl->glEnableVertexArrayAttrib(triangle_model, 0);
-    ogl->glVertexArrayAttribFormat(triangle_model, 
-                                   0, // ATTRIBUTE 'TYPE'
-                                   3, 
-                                   GL_FLOAT, 
-                                   GL_FALSE, 
-                                   0);
-    ogl->glVertexArrayAttribBinding(triangle_model, 
-                                    0,  // ATTRIBUTE 'TYPE'
-                                    0  // BINDING_INDEX
-                                    );
-    
-    // TODO(Momo): //BeginShader/EndShader?
-    triangle_shader = ogl->glCreateProgram();
-    attach_shader(ogl, triangle_shader,
-                  GL_VERTEX_SHADER,
-                  vertex_shader_src);
-    attach_shader(ogl, triangle_shader,
-                  GL_FRAGMENT_SHADER,
-                  fragment_shader_src);
-    
-    ogl->glLinkProgram(triangle_shader);
-    GLint result;
-    ogl->glGetProgramiv(triangle_shader, GL_LINK_STATUS, &result);
-    if (result != GL_TRUE) {
-      char msg[KB(1)] = {};
-      ogl->glGetProgramInfoLog(triangle_shader, KB(1), nullptr, msg);
-      return false;
-    }
-  }
   return true;
 }
 
@@ -640,14 +642,15 @@ opengl_end_frame(Opengl* ogl) {
     Render_Command* entry = get_command(cmds, cmd_index);
     switch(entry->id) {
       case RENDER_COMMAND_TYPE_BASIS: {
+        flush_sprites(ogl);
+        
         auto* data = (Render_Command_Basis*)entry->data;
         
-        Sprite_Batcher* sb = &ogl->sprite_batcher;
-        flush_sprites(ogl);
         
         // TODO: Do we share shaders? Or just have a 'view' shader?
         M44 result = transpose(data->basis);
         {
+          Sprite_Batcher* sb = &ogl->sprite_batcher;
           GLint uProjectionLoc = ogl->glGetUniformLocation(sb->shader,
                                                            "uProjection");
           ogl->glProgramUniformMatrix4fv(sb->shader, 
@@ -658,9 +661,10 @@ opengl_end_frame(Opengl* ogl) {
         }
         
         {
-          GLint uProjectionLoc = ogl->glGetUniformLocation(triangle_shader,
+          Triangle_Batcher* tb = &ogl->triangle_batcher;
+          GLint uProjectionLoc = ogl->glGetUniformLocation(tb->shader,
                                                            "uProjection");
-          ogl->glProgramUniformMatrix4fv(triangle_shader, 
+          ogl->glProgramUniformMatrix4fv(tb->shader, 
                                          uProjectionLoc, 
                                          1, 
                                          GL_FALSE, 
@@ -679,27 +683,29 @@ opengl_end_frame(Opengl* ogl) {
         
       } break;
       case RENDER_COMMAND_TYPE_TRIANGLE: {
+        flush_sprites(ogl);
+        
         auto* data = (Render_Command_Triangle*)entry->data;
         
         // TODO(Momo): This is just for test
+        Triangle_Batcher* tb = &ogl->triangle_batcher;
         
-        
-        ogl->glBindVertexArray(triangle_model);
-        ogl->glUseProgram(triangle_shader);
+        ogl->glBindVertexArray(tb->model);
+        ogl->glUseProgram(tb->shader);
         {
-          GLint transform_loc = ogl->glGetUniformLocation(triangle_shader,
+          GLint transform_loc = ogl->glGetUniformLocation(tb->shader,
                                                           "uTransform");
           M44 res = transpose(data->transform);
-          ogl->glProgramUniformMatrix4fv(triangle_shader, 
+          ogl->glProgramUniformMatrix4fv(tb->shader, 
                                          transform_loc, 
                                          1, 
                                          GL_FALSE, 
                                          (const GLfloat*)&res);
         }
         {
-          GLint frag_color_loc = ogl->glGetUniformLocation(triangle_shader,
+          GLint frag_color_loc = ogl->glGetUniformLocation(tb->shader,
                                                            "uFragColor");
-          ogl->glProgramUniform4fv(triangle_shader, 
+          ogl->glProgramUniform4fv(tb->shader, 
                                    frag_color_loc, 
                                    1, 
                                    (const GLfloat*)&data->colors);

@@ -200,6 +200,27 @@ push_rect(Renderer_Command_Queue* c,
 }
 
 static void
+push_rect(Renderer_Command_Queue* c, 
+          RGBA colors, 
+          V2 position,
+          V2 scale,
+          F32 z) 
+{
+  // TODO:
+}
+
+static void
+push_rect(Renderer_Command_Queue* c, 
+          RGBA colors, 
+          V2 position,
+          V2 scale,
+          F32 rotation,
+          F32 z) 
+{
+  // TODO:
+}
+
+static void
 push_triangle(Renderer_Command_Queue* c,
               RGBA colors,
               M44 transform)
@@ -207,6 +228,15 @@ push_triangle(Renderer_Command_Queue* c,
   auto* data = push_command<Render_Command_Triangle>(c, RENDER_COMMAND_TYPE_TRIANGLE);
   data->colors = colors;
   data->transform = transform;
+}
+
+static void
+push_triangle(Renderer_Command_Queue* c,
+              RGBA colors,
+              V2 p0, V2 p1, V2 p2,
+              F32 z)
+{
+  
 }
 
 static void 
