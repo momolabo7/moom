@@ -21,11 +21,8 @@
 
 #include "game_console.h"
 
-struct Sandbox_Mode {
-  F32 tmp_delta;
-  B32 tmp_increase;
-  F32 tmp_rot;
-};
+#include "game_mode_sandbox.h"
+
 struct Splash_Mode {
   F32 timer;
 };
@@ -65,6 +62,8 @@ struct Game_State {
   Console console;
 };
 
+#include "game_mode_sandbox.cpp"
+#include "game_mode_splash.h"
 
 
 #endif //GAME_H

@@ -3,15 +3,15 @@
 #ifndef GAME_ASSETS_RENDER_H
 #define GAME_ASSETS_RENDER_H
 
-// Draw background
+// TODO: Rotation
 static void
 draw_sprite(Game_Assets* ga,
             Renderer_Command_Queue* render_commands,
             Sprite_ID sprite_id,
-            RGBA color, 
             F32 px, F32 py, 
             F32 sw, F32 sh, 
-            F32 depth)
+            F32 depth,
+            RGBA color = {1.f,1.f,1.f,1.f})
 {
   
   M44 transform = m44_identity();
@@ -30,6 +30,8 @@ draw_sprite(Game_Assets* ga,
                  bitmap->renderer_texture_handle, 
                  sprite->uv);
 }
+
+
 
 static void
 draw_text(Game_Assets* ga, 
@@ -60,8 +62,8 @@ draw_text(Game_Assets* ga,
     
     M44 transform = 
       m44_translation(px + (glyph->box.min.x*font_height), 
-                             py + (glyph->box.min.y*font_height), 
-                             9.f)*
+                      py + (glyph->box.min.y*font_height), 
+                      9.f)*
       m44_scale(width, height, 1.f)*
       m44_translation(0.5f, 0.5f, 1.f);
     

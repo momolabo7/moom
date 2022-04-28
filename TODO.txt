@@ -1,7 +1,7 @@
 Engine
+  BLEND MODES
 	Sound
 	Debugger
-		Event based logging
 		Profile arenas
 	Find out if there is a automated way to deform a single triangle to ANY other triangle	
 	  If so, upgrade renderer to cater fo rthat

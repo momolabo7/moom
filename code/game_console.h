@@ -148,21 +148,21 @@ render_console(Console* dc,
   
   draw_sprite(ga, render_commands,
               SPRITE_BLANK,
-              rgba(0x787878FF),
               console_width/2,
               console_height/2,
               console_width, 
               console_height,
-              100.f);
+              100.f,
+              rgba(0x787878FF));
   
   draw_sprite(ga, render_commands,
               SPRITE_BLANK,
-              rgba(0x505050FF),
               console_width/2,
               line_height/2,
               console_width,
               line_height,
-              90.f);
+              90.f,
+              rgba(0x505050FF));
   
   
   // Draw info text

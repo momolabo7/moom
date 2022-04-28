@@ -122,12 +122,12 @@ render_profiler(Profiler* p, Game_Assets* ga, Renderer_Command_Queue* cmds) {
           F32 snapshot_bar_height = height_scale * font_height * (F32)snapshot->cycles * 0.95f;
           
           draw_sprite(ga, cmds, SPRITE_BLANK, 
-                      rgba(0x00FF00FF),
                       900.f + snapshot_bar_width * (snapshot_index), 
                       900.f - font_height * (line_num) + font_height/4,
                       snapshot_bar_width, 
                       snapshot_bar_height,
-                      9.f);
+                      9.f,
+                      rgba(0x00FF00FF));
         }
       }
       else { 

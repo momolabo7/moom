@@ -200,27 +200,6 @@ push_rect(Renderer_Command_Queue* c,
 }
 
 static void
-push_rect(Renderer_Command_Queue* c, 
-          RGBA colors, 
-          V2 position,
-          V2 scale,
-          F32 z) 
-{
-  // TODO:
-}
-
-static void
-push_rect(Renderer_Command_Queue* c, 
-          RGBA colors, 
-          V2 position,
-          V2 scale,
-          F32 rotation,
-          F32 z) 
-{
-  // TODO:
-}
-
-static void
 push_triangle(Renderer_Command_Queue* c,
               RGBA colors,
               M44 transform)
@@ -236,7 +215,52 @@ push_triangle(Renderer_Command_Queue* c,
               V2 p0, V2 p1, V2 p2,
               F32 z)
 {
+  // TODO: put this into the shader itself?
+  M44 inverse_of_model = m44_identity();
+  inverse_of_model.e[0][0] = -1.f;
+  inverse_of_model.e[1][0] = 0.f;
+  inverse_of_model.e[2][0] = 1.f;
+  inverse_of_model.e[3][0] = 0.f;
   
+  inverse_of_model.e[0][1] = -1.f;
+  inverse_of_model.e[1][1] = 1.f;
+  inverse_of_model.e[2][1] = 0.f;
+  inverse_of_model.e[3][1] = 0.f;
+  
+  inverse_of_model.e[0][2] = 1.f;
+  inverse_of_model.e[1][2] = -1.f;
+  inverse_of_model.e[2][2] = -1.f;
+  inverse_of_model.e[3][2] = 1.f;
+  
+  inverse_of_model.e[0][3] = 1.f;
+  inverse_of_model.e[1][3] = 0.f;
+  inverse_of_model.e[2][3] = 0.f;
+  inverse_of_model.e[3][3] = 0.f;
+  
+  
+  M44 target_vertices = m44_identity();
+  target_vertices.e[0][0] = p0.x;
+  target_vertices.e[1][0] = p0.y;
+  target_vertices.e[2][0] = z;
+  target_vertices.e[3][0] = 1.f;
+  
+  target_vertices.e[0][1] = p1.x;
+  target_vertices.e[1][1] = p1.y;
+  target_vertices.e[2][1] = z;
+  target_vertices.e[3][1] = 1.f;
+  
+  target_vertices.e[0][2] = p2.x;
+  target_vertices.e[1][2] = p2.y;
+  target_vertices.e[2][2] = z;
+  target_vertices.e[3][2] = 1.f;
+  
+  target_vertices.e[0][3] = 1.f;
+  target_vertices.e[1][3] = 1.f;
+  target_vertices.e[2][3] = 1.f;
+  target_vertices.e[3][3] = 1.f;
+  
+  M44 transform = target_vertices * inverse_of_model;
+  push_triangle(c, colors, transform);
 }
 
 static void 

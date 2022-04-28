@@ -908,6 +908,15 @@ WinMain(HINSTANCE instance,
               case 0x57: /* W */ {
                 input->button_up.now = is_key_down;
               } break;
+              case 0x41: /* A */ {
+                input->button_left.now = is_key_down;
+              } break;
+              case 0x53: /* S */ {
+                input->button_down.now = is_key_down;
+              } break;
+              case 0x44: /* D */ {
+                input->button_right.now = is_key_down;
+              } break;
               case 0x70: /* F1 */{
                 input->button_console.now = is_key_down;
               } break;
