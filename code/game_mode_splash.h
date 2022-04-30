@@ -19,6 +19,7 @@ update_splash_mode(Game_Memory* memory,
   Game_State* game = memory->game;
   Splash_Mode* splash = &game->splash_mode;
   Renderer_Command_Queue* cmds = memory->renderer_command_queue;
+  Game_Assets* ga = &game->game_assets;
   
   F32 dt = input->seconds_since_last_frame;
   splash->timer -= dt;
@@ -48,16 +49,17 @@ update_splash_mode(Game_Memory* memory,
     push_orthographic_camera(cmds, position, frustum);
   }
   
-  {
-    RGBA colors;
-    colors.r = colors.g = colors.b  = colors.a = 1.f;
-    
-    V2 p0 = { 0.f, 0.f };
-    V2 p1 = { 500.f, 500.f };
-    V2 p2 = { 1000.f, 0.f };
-    
-    push_triangle(cmds, colors, p0, p1, p2, 0.f);
-  }
+  draw_sprite(ga, cmds, SPRITE_BULLET_DOT, 
+              800.f, 450.f, 128.f, 128.f,
+              11.f);
+  
+  draw_sprite(ga, cmds, SPRITE_BLANK, 
+              800.f, 450.f, 1600.f, 900.f,
+              10.f, rgba(0x000000FF));
+  
+  draw_sprite(ga, cmds, SPRITE_BLANK, 
+              800.f, 450.f, 1600.f/2, 900.f/2,
+              9.f, rgba(0xFFFFFFFF));
 }
 
 #endif //GAME_MODE_SPLASH_H

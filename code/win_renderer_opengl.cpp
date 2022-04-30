@@ -215,8 +215,10 @@ win_load_renderer(HWND window,
     WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
     WGL_CONTEXT_MINOR_VERSION_ARB, 5,
     WGL_CONTEXT_FLAG_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
-      //    | WGL_CONTEXT_DEBUG_BIT_ARB
-      ,
+#if 0
+    | WGL_CONTEXT_DEBUG_BIT_ARB
+#endif
+    ,
     WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
     0,
   };
@@ -254,6 +256,7 @@ if (!opengl->name) { return nullptr; }
     WGL_SetOpenglFunction(glVertexArrayAttribBinding);
     WGL_SetOpenglFunction(glVertexArrayBindingDivisor);
     WGL_SetOpenglFunction(glBlendFunc);
+    WGL_SetOpenglFunction(glBlendFuncSeparate);
     WGL_SetOpenglFunction(glCreateProgram);
     WGL_SetOpenglFunction(glLinkProgram);
     WGL_SetOpenglFunction(glGetProgramiv);

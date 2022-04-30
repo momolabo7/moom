@@ -8,6 +8,17 @@
 #define GL_TRUE                 1
 #define GL_FALSE                0
 
+// Blends
+#define GL_ZERO								 0
+#define GL_ONE									1
+#define GL_ZERO                           0
+#define GL_ONE                            1
+#define GL_SRC_COLOR                      0x0300
+#define GL_ONE_MINUS_SRC_COLOR            0x0301
+#define GL_SRC_ALPHA                      0x0302
+#define GL_ONE_MINUS_SRC_ALPHA            0x0303
+#define GL_DST_ALPHA                      0x0304
+
 #define GL_DEPTH_TEST                   0x0B71
 #define GL_SCISSOR_TEST                 0x0C11
 #define GL_DEPTH_BUFFER_BIT             0x00000100
@@ -21,8 +32,7 @@
 #define GL_VERTEX_SHADER                0x8B31
 #define GL_LINK_STATUS                  0x8B82
 #define GL_BLEND                        0x0BE2
-#define GL_SRC_ALPHA                    0x0302
-#define GL_ONE_MINUS_SRC_ALPHA          0x0303
+
 #define GL_RGBA                         0x1908
 #define GL_RGBA8                        0x8058
 #define GL_UNSIGNED_BYTE                0x1401
@@ -119,6 +129,10 @@ typedef void    GL_glVertexArrayBindingDivisor(GLuint vaobj,
                                                GLuint bindingindex,
                                                GLuint divisor);
 typedef void    GL_glBlendFunc(GLenum sfactor, GLenum dfactor);
+typedef void    GL_glBlendFuncSeparate(GLenum srcRGB, 
+                                       GLenum destRGB, 
+                                       GLenum srcAlpha,
+                                       GLenum destAlpha);
 typedef void    GL_glVertexArrayElementBuffer(GLuint vaobj, GLuint buffer);
 typedef GLuint  GL_glCreateProgram();
 typedef void    GL_glLinkProgram(GLuint program);
@@ -231,11 +245,7 @@ struct Opengl : Renderer {
   Triangle_Batcher triangle_batcher;
   
   GLuint textures[256];
-#if 0
-  GLuint buffers[VERTEX_BUFFER_TYPE_COUNT]; // Opengl__VBO_Count
-  GLuint shader;
-  GLuint model; 
-#endif
+  
   GLuint dummy_texture;
   GLuint blank_texture;
   
@@ -259,6 +269,7 @@ struct Opengl : Renderer {
   GL_glVertexArrayAttribBinding* glVertexArrayAttribBinding;
   GL_glVertexArrayBindingDivisor* glVertexArrayBindingDivisor;
   GL_glBlendFunc* glBlendFunc;
+  GL_glBlendFuncSeparate* glBlendFuncSeparate;
   GL_glVertexArrayElementBuffer* glVertexArrayElementBuffer;
   GL_glLinkProgram* glLinkProgram;
   GL_glCreateProgram* glCreateProgram;

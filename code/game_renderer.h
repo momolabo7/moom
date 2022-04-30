@@ -31,7 +31,6 @@
 #define GAME_RENDERER_H
 
 
-
 //-Texture Queue API
 enum Texture_Payload_State {
   TEXTURE_PAYLOAD_STATE_EMPTY,
@@ -90,9 +89,9 @@ enum Render_Command_Type {
   RENDER_COMMAND_TYPE_SUBSPRITE,
   RENDER_COMMAND_TYPE_DELETE_TEXTURE,
   RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES,
-  
+  RENDER_COMMAND_TYPE_BEGIN_MASK,
+  RENDER_COMMAND_TYPE_END_MASK,
 };
-
 
 struct Render_Command_Clear {
   RGBA colors;
@@ -124,6 +123,9 @@ struct Render_Command_Rect {
 struct Render_Command_Triangle {
   RGBA colors;
   M44 transform;
+};
+
+struct Render_Command_Blend {
 };
 
 

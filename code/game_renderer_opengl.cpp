@@ -519,7 +519,7 @@ void main(void) {
                                    VERTEX_ARRAY_BINDING_TRANSFORM, 
                                    1); 
   
-  // NOTE(Momo): alpha blend
+  // NOTE(Momo): alpha blend is default
   ogl->glEnable(GL_BLEND);
   ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   
@@ -741,6 +741,12 @@ opengl_end_frame(Opengl* ogl) {
                     data->texture_uv,
                     texture);
         
+      } break;
+      case RENDER_COMMAND_TYPE_BEGIN_MASK: {
+        //ogl->glBlendFuncSeperate*(
+      } break;
+      case RENDER_COMMAND_TYPE_END_MASK: {
+        //ogl->glBlendFuncSeperate*(
       } break;
       case RENDER_COMMAND_TYPE_DELETE_TEXTURE: {
         auto* data = (Render_Command_Delete_Texture*)entry->data;
