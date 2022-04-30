@@ -22,7 +22,7 @@ scale(V2 lhs, F32 rhs) {
 
 static V2 
 div(V2 lhs, F32 rhs) {
-  //assert(is_close(rhs, 0.f));
+  assert(!is_close(rhs, 0.f));
   lhs.x /= rhs;
   lhs.y /= rhs;
   return lhs;
@@ -138,7 +138,7 @@ scale(V3 lhs, F32 rhs) {
 
 static V3 
 div(V3 lhs, F32 rhs) {
-  assert(is_close(rhs, 0.f));
+  assert(!is_close(rhs, 0.f));
   lhs.x /= rhs;
   lhs.y /= rhs;
   lhs.z /= rhs;
