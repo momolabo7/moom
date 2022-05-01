@@ -7,13 +7,15 @@ struct Edge {
   Line2 line;
 };
 
+struct Light_Ray {
+  Line2 ray;
+};
+
 struct Sandbox_Mode {
   V2 position;
   
-  
   U32 edge_count;
   Edge edges[32];
-  
   
   
 };

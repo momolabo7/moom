@@ -35,6 +35,11 @@ struct Line2 {
   V2 min, max;
 };
 
+struct Ray2 {
+  V2 pt;
+  V2 dir;
+};
+
 
 #include "momo_shapes.cpp"
 

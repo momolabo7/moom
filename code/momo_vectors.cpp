@@ -217,7 +217,7 @@ angle_between(V3 lhs, V3 rhs) {
 }
 
 static V3
-Cross(V3 lhs, V3 rhs) {
+cross(V3 lhs, V3 rhs) {
   V3 ret = {};
   ret.x = (lhs.y * rhs.z) - (lhs.z * rhs.y);
   ret.y = (lhs.z * rhs.x) - (lhs.x * rhs.z);
