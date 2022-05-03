@@ -91,7 +91,7 @@ render_profiler(Profiler* p, Game_Assets* ga, Renderer_Command_Queue* cmds) {
         end_stat(&hits);
         end_stat(&cycles_per_hit);
         
-        demand_string_builder(sb, 256);
+        make_string_builder(sb, 256);
         push_format(sb, 
                     string_from_lit("[%25s] %7ucy %4uh %7ucy/h"),
                     entry->function_name,

@@ -53,7 +53,7 @@ static void     push_format(String_Builder* b, String fmt, ...);
 
 static void     init_string_builder(String_Builder* b, U8* data, UMI cap);
 
-#define demand_string_builder(name, cap) U8 temp_buffer_##__LINE__[cap] = {}; String_Builder name_; String_Builder* name = &name_; init_string_builder(name, temp_buffer_##__LINE__, cap);
+#define make_string_builder(name, cap) U8 temp_buffer_##__LINE__[cap] = {}; String_Builder name_; String_Builder* name = &name_; init_string_builder(name, temp_buffer_##__LINE__, cap);
 
 //#define StringBld_temp(name, cap) U8 temp##__line__[cap]; StringBld name = StringBld_Create(temp##__line__, cap);
 

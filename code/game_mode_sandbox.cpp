@@ -120,12 +120,27 @@ update_sandbox_mode(Game_Memory* memory,
       
       
       // Add intersection
-      intersections[intersection_count++] = found ? light_ray.pt + lowest_t1 * light_ray.dir : ep_edge->line.max;
+      intersections[intersection_count++] = 
+        found ? light_ray.pt + lowest_t1 * light_ray.dir : ep_edge->line.max;
       
       
     }
     
   }
+  
+  // Sort intersections in a clockwise order
+  auto pred = [&](V2* lhs, V2* rhs){
+    V2 lhs_vec = (*lhs) - s->position;
+    V2 rhs_vec = (*rhs) - s->position;
+    F32 lhs_angle = angle_between({1.f, 0.f}, lhs_vec);
+    F32 rhs_angle = angle_between({1.f, 0.f}, rhs_vec);
+    if (rhs_vec.y < 0.f) rhs_angle += PI_32*0.5f;
+    return lhs_angle < rhs_angle;
+  };
+  quicksort(intersections, intersection_count, pred);
+  
+  
+  
   
   // Rendering
   {
@@ -157,21 +172,7 @@ update_sandbox_mode(Game_Memory* memory,
     }
     
     
-#if 0
-    for(U32 edge_index = 0; 
-        edge_index <  s->edge_count;
-        ++edge_index) 
-    {
-      Line2 line = {};
-      line.min = s->position;
-      line.max = s->edges[edge_index].line.max;
-      
-      push_line(cmds, line, 1.f, rgba(0xFF0000FF), 1.f);
-      
-    }
-#else
-    
-    demand_string_builder(sb, 128);
+    make_string_builder(sb, 128);
     
     for (U32 intersection_index = 0;
          intersection_index < intersection_count;
@@ -183,21 +184,18 @@ update_sandbox_mode(Game_Memory* memory,
       line.min = s->position;
       line.max = intersections[intersection_index];
       
-      push_format(sb, string_from_lit("[%f %f]"), 
-                  line.max.x,
-                  line.max.y);
+      push_format(sb, string_from_lit("[%u]"), intersection_index);
       
       draw_text(ga, cmds, FONT_DEFAULT, 
                 sb->str,
                 rgba(0xFF0000FF),
                 line.max.x,
                 line.max.y + 10.f,
-                12.f,
+                18.f,
                 1.f);
       push_line(cmds, line, 1.f, rgba(0xFF0000FF), 1.f);
       
     }
-#endif
     
     
     

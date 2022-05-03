@@ -245,7 +245,7 @@ _push_fmt_list(String_Builder* b, String format, va_list args) {
         ++at;
       }
       
-      demand_string_builder(tb, 64);
+      make_string_builder(tb, 64);
       
       switch(format.e[at]) {
         case 'i': {
