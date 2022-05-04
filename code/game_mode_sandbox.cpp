@@ -32,9 +32,9 @@ init_sandbox_mode(Game_Memory* memory,
   }
   
   {
-    push_edge(s, {500.f, 500.f}, {700.f, 500.f}); 
-    push_edge(s, {700.f, 500.f}, {700.f, 700.f}); 
-    push_edge(s, {700.f, 700.f}, {500.f, 500.f}); 
+    push_edge(s, {499.9f, 500.f}, {700.1f, 500.f}); 
+    push_edge(s, {700.f, 499.9f}, {700.f, 700.1f}); 
+    push_edge(s, {700.1f, 700.1f}, {499.9f, 499.9f}); 
   }
   
 }
