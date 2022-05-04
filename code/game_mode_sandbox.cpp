@@ -25,17 +25,18 @@ init_sandbox_mode(Game_Memory* memory,
   
   // World edges
   {
-    push_edge(s, {0.f,0.f}, {1500.f, 0.f});
-    push_edge(s, {1500.f,0.f}, {1500.f, 800.f});
-    push_edge(s, {1500.f,800.f}, {0.f, 800.f});
-    push_edge(s, {0.f,800.f}, {0.f, 0.f});
+    push_edge(s, {100.f,100.f}, {1500.f, 100.f});
+    push_edge(s, {1500.f,100.f}, {1500.f, 800.f});
+    push_edge(s, {1500.f,800.f}, {100.f, 800.f});
+    push_edge(s, {100.f,800.f}, {100.f, 100.f});
   }
   
   {
-    push_edge(s, {499.9f, 500.f}, {700.1f, 500.f}); 
-    push_edge(s, {700.f, 499.9f}, {700.f, 700.1f}); 
-    push_edge(s, {700.1f, 700.1f}, {499.9f, 499.9f}); 
+    push_edge(s, {500.f, 500.f}, {700.f, 500.f}); 
+    push_edge(s, {700.f, 500.f}, {700.f, 700.f}); 
+    push_edge(s, {700.f, 700.f}, {500.f, 500.f}); 
   }
+  
   
 }
 
@@ -79,7 +80,13 @@ update_sandbox_mode(Game_Memory* memory,
   // to all the end points of the edge
   U32 intersection_count = 0;
   V2 intersections[32] = {};
+  F32 offset_angles[] = {0.0f};
+  for (U32 offset_index = 0;
+       offset_index < array_count(offset_angles);
+       ++offset_index) 
   {
+    F32 offset_angle = offset_angles[offset_index];
+    
     // For each endpoint
     for(U32 ep_edge_index = 0; 
         ep_edge_index <  s->edge_count;
@@ -91,11 +98,16 @@ update_sandbox_mode(Game_Memory* memory,
       light_ray.pt = s->position;
       light_ray.dir = ep_edge->line.max - s->position; 
       
+      // rotate the light ray by offset
+      F32 cos_angle = cos(offset_angle);
+      F32 sin_angle = sin(offset_angle);
+      light_ray.dir.x = light_ray.dir.x*cos_angle - light_ray.dir.y*sin_angle;
+      light_ray.dir.y = light_ray.dir.x*sin_angle + light_ray.dir.y*cos_angle;
+      
       F32 lowest_t1 = F32_INFINITY();
       B32 found = false;
       
       
-      // For each edge
       for(U32 edge_index = 0; 
           edge_index <  s->edge_count;
           ++edge_index) 
@@ -112,6 +124,7 @@ update_sandbox_mode(Game_Memory* memory,
         light_ray_normal.x = light_ray.dir.y;
         light_ray_normal.y = -light_ray.dir.x;
         
+        
         if (!is_close(dot(light_ray_normal, edge_ray.dir), 0.f)) {
           F32 t2 = 
           (light_ray.dir.x*(edge_ray.pt.y - light_ray.pt.y) + 
@@ -120,7 +133,7 @@ update_sandbox_mode(Game_Memory* memory,
           
           F32 t1 = (edge_ray.pt.x + edge_ray.dir.x * t2 - light_ray.pt.x)/light_ray.dir.x;
           
-          if (0.f < t1 && 0.f < t2 && t2 < 1.f){
+          if (0.f < t1 && t1 < 1.f && 0.f < t2 && t2 < 1.f){
             if (t1 < lowest_t1) {
               lowest_t1 = t1;
               found = true;
@@ -136,8 +149,8 @@ update_sandbox_mode(Game_Memory* memory,
       
       
     }
-    
   }
+  
   
   // Sort intersections in a clockwise order
   auto pred = [&](V2* lhs, V2* rhs){
@@ -146,7 +159,7 @@ update_sandbox_mode(Game_Memory* memory,
     
     // TODO: this is super hardcoded please change onegai
     V2 offset = s->size * 0.5f;
-    V2 basis_vec = V2{1.f, 0.f} + s->position + offset ;
+    V2 basis_vec = V2{1.f, 0.f} ;
     
     F32 lhs_angle = angle_between(basis_vec, lhs_vec);
     F32 rhs_angle = angle_between(basis_vec, rhs_vec);
