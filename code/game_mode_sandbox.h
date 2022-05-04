@@ -13,6 +13,7 @@ struct Light_Ray {
 
 struct Sandbox_Mode {
   V2 position;
+  V2 size;
   
   U32 edge_count;
   Edge edges[32];

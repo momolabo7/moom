@@ -49,17 +49,12 @@ update_splash_mode(Game_Memory* memory,
     push_orthographic_camera(cmds, position, frustum);
   }
   
-  draw_sprite(ga, cmds, SPRITE_BULLET_DOT, 
-              800.f, 450.f, 128.f, 128.f,
-              11.f);
-  
-  draw_sprite(ga, cmds, SPRITE_BLANK, 
-              800.f, 450.f, 1600.f, 900.f,
-              10.f, rgba(0x000000FF));
-  
-  draw_sprite(ga, cmds, SPRITE_BLANK, 
-              800.f, 450.f, 1600.f/2, 900.f/2,
-              9.f, rgba(0xFFFFFFFF));
+  draw_text(ga, cmds, FONT_DEFAULT, 
+            string_from_lit("momo"),
+            rgba(0x38c677FF),
+            450.f, 400.f, 
+            256.f, 
+            1.f);
 }
 
 #endif //GAME_MODE_SPLASH_H

@@ -20,6 +20,17 @@ init_sandbox_mode(Game_Memory* memory,
   s->position.x = 0.f;
   s->position.y = 0.f;
   
+  s->size.x = 32.f;
+  s->size.y = 32.f;
+  
+  // World edges
+  {
+    push_edge(s, {0.f,0.f}, {1500.f, 0.f});
+    push_edge(s, {1500.f,0.f}, {1500.f, 800.f});
+    push_edge(s, {1500.f,800.f}, {0.f, 800.f});
+    push_edge(s, {0.f,800.f}, {0.f, 0.f});
+  }
+  
   {
     push_edge(s, {500.f, 500.f}, {700.f, 500.f}); 
     push_edge(s, {700.f, 500.f}, {700.f, 700.f}); 
@@ -109,7 +120,7 @@ update_sandbox_mode(Game_Memory* memory,
           
           F32 t1 = (edge_ray.pt.x + edge_ray.dir.x * t2 - light_ray.pt.x)/light_ray.dir.x;
           
-          if (0.f < t1 && t1 < 1.f && 0.f < t2 && t2 < 1.f){
+          if (0.f < t1 && 0.f < t2 && t2 < 1.f){
             if (t1 < lowest_t1) {
               lowest_t1 = t1;
               found = true;
@@ -132,14 +143,18 @@ update_sandbox_mode(Game_Memory* memory,
   auto pred = [&](V2* lhs, V2* rhs){
     V2 lhs_vec = (*lhs) - s->position;
     V2 rhs_vec = (*rhs) - s->position;
-    F32 lhs_angle = angle_between({1.f, 0.f}, lhs_vec);
-    F32 rhs_angle = angle_between({1.f, 0.f}, rhs_vec);
-    if (rhs_vec.y < 0.f) rhs_angle += PI_32*0.5f;
+    
+    // TODO: this is super hardcoded please change onegai
+    V2 offset = s->size * 0.5f;
+    V2 basis_vec = V2{1.f, 0.f} + s->position + offset ;
+    
+    F32 lhs_angle = angle_between(basis_vec, lhs_vec);
+    F32 rhs_angle = angle_between(basis_vec, rhs_vec);
+    if (lhs_vec.y < 0.f) lhs_angle = PI_32*2.f - lhs_angle;
+    if (rhs_vec.y < 0.f) rhs_angle = PI_32*2.f - rhs_angle;
     return lhs_angle < rhs_angle;
   };
   quicksort(intersections, intersection_count, pred);
-  
-  
   
   
   // Rendering
@@ -168,9 +183,7 @@ update_sandbox_mode(Game_Memory* memory,
       Edge* edge = s->edges + edge_index;
       push_line(cmds, edge->line, 
                 1.f, rgba(0x00FF00FF), 2.f);
-      
     }
-    
     
     make_string_builder(sb, 128);
     
@@ -191,7 +204,7 @@ update_sandbox_mode(Game_Memory* memory,
                 rgba(0xFF0000FF),
                 line.max.x,
                 line.max.y + 10.f,
-                18.f,
+                32.f,
                 1.f);
       push_line(cmds, line, 1.f, rgba(0xFF0000FF), 1.f);
       
@@ -205,7 +218,7 @@ update_sandbox_mode(Game_Memory* memory,
       Bitmap_Asset* bitmap = get_bitmap(ga, sprite->bitmap_id);
       draw_sprite(ga, cmds, SPRITE_BULLET_CIRCLE, 
                   s->position.x, s->position.y, 
-                  100.f, 100.f,
+                  s->size.x, s->size.y,
                   1.f);
       
     }
