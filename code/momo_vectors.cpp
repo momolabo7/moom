@@ -111,6 +111,10 @@ rotate(V2 v, F32 rad) {
   return ret;
 }
 
+static F32
+cross(V2 lhs, V2 rhs) {
+  return  lhs.x * rhs.y - lhs.y * rhs.x;
+}
 
 //~ NOTE(Momo): V3
 static V3 

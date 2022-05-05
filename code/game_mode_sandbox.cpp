@@ -1,4 +1,5 @@
 
+
 static void
 push_edge(Sandbox_Mode* s, V2 min, V2 max) {
   assert(s->edge_count < array_count(s->edges));
@@ -24,20 +25,15 @@ init_sandbox_mode(Game_Memory* memory,
   s->size.y = 32.f;
   
   // World edges
-  {
-    push_edge(s, {100.f,100.f}, {1500.f, 100.f});
-    push_edge(s, {1500.f,100.f}, {1500.f, 800.f});
-    push_edge(s, {1500.f,800.f}, {100.f, 800.f});
-    push_edge(s, {100.f,800.f}, {100.f, 100.f});
-  }
+  push_edge(s, {99.999f,100.f}, {1500.001f, 100.f});
+  push_edge(s, {1500.f,99.999f}, {1500.f, 800.001f});
+  push_edge(s, {1500.001f,800.f}, {99.9f, 800.f});
+  push_edge(s, {100.f,800.001f}, {100.f, 99.999f});
   
-  {
-    push_edge(s, {500.f, 500.f}, {700.f, 500.f}); 
-    push_edge(s, {700.f, 500.f}, {700.f, 700.f}); 
-    push_edge(s, {700.f, 700.f}, {500.f, 500.f}); 
-  }
-  
-  
+  // triangle
+  push_edge(s, {499.999f, 500.f}, {700.001f, 500.f}); 
+  push_edge(s, {700.f, 499.999f}, {700.f, 700.001f}); 
+  push_edge(s, {700.001f, 700.001f}, {499.999f, 499.999f}); 
 }
 
 static void 
@@ -76,11 +72,20 @@ update_sandbox_mode(Game_Memory* memory,
   }
   
   
+  
+  s->player_light.pos = s->position;
+  gen_light_intersections(s, &s->player_light);
+  
+#if 0  
   // Find all intersections for current light source
   // to all the end points of the edge
   U32 intersection_count = 0;
-  V2 intersections[32] = {};
-  F32 offset_angles[] = {0.0f};
+  V2 intersections[64] = {};
+  
+  U32 light_ray_count = {};
+  V2 light_rays[64] = {};
+  
+  F32 offset_angles[] = {0.001f, 0.0f, -0.001f};
   for (U32 offset_index = 0;
        offset_index < array_count(offset_angles);
        ++offset_index) 
@@ -95,24 +100,26 @@ update_sandbox_mode(Game_Memory* memory,
       Edge* ep_edge = s->edges + ep_edge_index;
       
       Ray2 light_ray = {};
-      light_ray.pt = s->position;
-      light_ray.dir = ep_edge->line.max - s->position; 
-      
-      // rotate the light ray by offset
-      F32 cos_angle = cos(offset_angle);
-      F32 sin_angle = sin(offset_angle);
-      light_ray.dir.x = light_ray.dir.x*cos_angle - light_ray.dir.y*sin_angle;
-      light_ray.dir.y = light_ray.dir.x*sin_angle + light_ray.dir.y*cos_angle;
+      {
+        light_ray.pt = s->position;
+        V2 dir = ep_edge->line.max - s->position; 
+        
+        // rotate the direction by angle offset
+        F32 cos_angle = cos(offset_angle);
+        F32 sin_angle = sin(offset_angle);
+        light_ray.dir.x = dir.x*cos_angle - dir.y*sin_angle;
+        light_ray.dir.y = dir.x*sin_angle + dir.y*cos_angle;
+        
+        light_rays[light_ray_count++] = light_ray.dir; 
+      }
       
       F32 lowest_t1 = F32_INFINITY();
       B32 found = false;
-      
       
       for(U32 edge_index = 0; 
           edge_index <  s->edge_count;
           ++edge_index) 
       {
-        if (edge_index == ep_edge_index) continue;
         Edge* edge = s->edges + edge_index;
         
         Ray2 edge_ray = {};
@@ -133,7 +140,12 @@ update_sandbox_mode(Game_Memory* memory,
           
           F32 t1 = (edge_ray.pt.x + edge_ray.dir.x * t2 - light_ray.pt.x)/light_ray.dir.x;
           
-          if (0.f < t1 && t1 < 1.f && 0.f < t2 && t2 < 1.f){
+          if (0.f < t1 && 
+              // t1 < 1.f && 
+              0.f < t2 && 
+              t2 < 1.f)
+          {
+            
             if (t1 < lowest_t1) {
               lowest_t1 = t1;
               found = true;
@@ -141,7 +153,6 @@ update_sandbox_mode(Game_Memory* memory,
           }
         }
       }
-      
       
       // Add intersection
       intersections[intersection_count++] = 
@@ -168,6 +179,7 @@ update_sandbox_mode(Game_Memory* memory,
     return lhs_angle < rhs_angle;
   };
   quicksort(intersections, intersection_count, pred);
+#endif
   
   
   // Rendering
@@ -187,28 +199,45 @@ update_sandbox_mode(Game_Memory* memory,
     }
     
     
-    
-    
+    // Draw the world collision
     for(U32 edge_index = 0; 
         edge_index <  s->edge_count;
         ++edge_index) 
     {
       Edge* edge = s->edges + edge_index;
       push_line(cmds, edge->line, 
-                1.f, rgba(0x00FF00FF), 2.f);
+                1.f, rgba(0x00FF00FF), 5.f);
     }
+    
+#if 1
+    // Draw the light rays
+    for(U32 light_ray_index = 0; 
+        light_ray_index < s->player_light.debug_ray_count;
+        ++light_ray_index) 
+    {
+      V2 light_ray = s->player_light.debug_rays[light_ray_index];
+      
+      Line2 line = {};
+      line.min = s->position;
+      line.max = s->position + light_ray;
+      
+      push_line(cmds, line, 
+                1.f, rgba(0x00FFFFFF), 4.f);
+    }
+#endif
     
     make_string_builder(sb, 128);
     
+#if 1    
     for (U32 intersection_index = 0;
-         intersection_index < intersection_count;
+         intersection_index < s->player_light.intersection_count;
          ++intersection_index) 
     {
       clear(sb);
       
       Line2 line = {};
       line.min = s->position;
-      line.max = intersections[intersection_index];
+      line.max = s->player_light.intersections[intersection_index];
       
       push_format(sb, string_from_lit("[%u]"), intersection_index);
       
@@ -219,10 +248,10 @@ update_sandbox_mode(Game_Memory* memory,
                 line.max.y + 10.f,
                 32.f,
                 1.f);
-      push_line(cmds, line, 1.f, rgba(0xFF0000FF), 1.f);
+      push_line(cmds, line, 1.f, rgba(0xFF0000FF), 3.f);
       
     }
-    
+#endif
     
     
     // Draw player
@@ -232,9 +261,29 @@ update_sandbox_mode(Game_Memory* memory,
       draw_sprite(ga, cmds, SPRITE_BULLET_CIRCLE, 
                   s->position.x, s->position.y, 
                   s->size.x, s->size.y,
-                  1.f);
+                  2.f);
       
     }
+    
+    // Draw 'light'
+    {
+      for (U32 intersection_index = 0;
+           intersection_index < s->player_light.intersection_count - 1;
+           intersection_index++)
+      {
+        V2 p0 = s->player_light.intersections[intersection_index];
+        V2 p1 = s->position;
+        V2 p2 = s->player_light.intersections[intersection_index+1];
+        push_triangle(cmds, rgba(0xFF888888), p0, p1, p2, 1.f);
+      }
+      V2 p0 = s->player_light.intersections[s->player_light.intersection_count-1];
+      V2 p1 = s->position;
+      V2 p2 = s->player_light.intersections[0];
+      if (cross(p0-p1, p2-p1) > 0.f) {
+        push_triangle(cmds, rgba(0xFF888888), p0, p1, p2, 1.f);
+      }
+    }
+    
   }
   
 }
