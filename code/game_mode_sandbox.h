@@ -17,6 +17,13 @@ struct Light {
   V2 debug_rays[64];
 };
 
+
+struct Light_Triangle {
+  V2 p0;
+  V2 p1; 
+  V2 p2;
+};
+
 struct Sandbox_Mode {
   V2 position;
   V2 size;
@@ -29,15 +36,15 @@ struct Sandbox_Mode {
   Light lights[32];
   
   
+  U32 light_triangle_count;
+  Light_Triangle light_triangles[64];
+  
 };
 
-
-static void add_light(Sandbox_Mode* s, V2 pos) {
-  assert(s->light_count < array_count(s->lights));
-  Light light = {};
-  light.pos = pos;
-  
-  s->lights[s->light_count++] = light;
+static void
+push_triangle(Sandbox_Mode* s, V2 p0, V2 p1, V2 p2) {
+  assert(s->light_triangle_count < array_count(s->light_triangles));
+  s->light_triangles[s->light_triangle_count++] = { p0, p1, p2 };
 }
 
 static void
@@ -141,6 +148,23 @@ gen_light_intersections(Sandbox_Mode* s, Light* l) {
     return lhs_angle < rhs_angle;
   };
   quicksort(l->intersections, l->intersection_count, pred);
+  
+  for (U32 intersection_index = 0;
+       intersection_index < s->player_light.intersection_count - 1;
+       intersection_index++)
+  {
+    V2 p0 = s->player_light.intersections[intersection_index];
+    V2 p1 = s->position;
+    V2 p2 = s->player_light.intersections[intersection_index+1];
+    push_triangle(s, p0, p1, p2);
+  }
+  V2 p0 = s->player_light.intersections[s->player_light.intersection_count-1];
+  V2 p1 = s->position;
+  V2 p2 = s->player_light.intersections[0];
+  if (cross(p0-p1, p2-p1) > 0.f) {
+    push_triangle(s, p0, p1, p2);
+  }
+  
 }
 
 
