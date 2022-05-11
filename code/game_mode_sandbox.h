@@ -9,6 +9,7 @@ struct Edge {
 
 struct Light {
   V2 pos;  
+  U32 color;
   
   U32 intersection_count;
   V2 intersections[64];
@@ -22,12 +23,13 @@ struct Light_Triangle {
   V2 p0;
   V2 p1; 
   V2 p2;
+  U32 color;
 };
 
 struct Sandbox_Mode {
   V2 position;
   V2 size;
-  Light player_light;
+  Light* player_light;
   
   U32 edge_count;
   Edge edges[32];
@@ -35,16 +37,15 @@ struct Sandbox_Mode {
   U32 light_count;
   Light lights[32];
   
-  
   U32 light_triangle_count;
-  Light_Triangle light_triangles[64];
+  Light_Triangle light_triangles[128];
   
 };
 
 static void
-push_triangle(Sandbox_Mode* s, V2 p0, V2 p1, V2 p2) {
+push_triangle(Sandbox_Mode* s, V2 p0, V2 p1, V2 p2, U32 color) {
   assert(s->light_triangle_count < array_count(s->light_triangles));
-  s->light_triangles[s->light_triangle_count++] = { p0, p1, p2 };
+  s->light_triangles[s->light_triangle_count++] = { p0, p1, p2, color };
 }
 
 static void
@@ -68,8 +69,8 @@ gen_light_intersections(Sandbox_Mode* s, Light* l) {
       
       Ray2 light_ray = {};
       {
-        light_ray.pt = s->position;
-        V2 dir = ep_edge->line.max - s->position; 
+        light_ray.pt = l->pos;
+        V2 dir = ep_edge->line.max - l->pos; 
         
         // rotate the direction by angle offset
         F32 cos_angle = cos(offset_angle);
@@ -134,8 +135,8 @@ gen_light_intersections(Sandbox_Mode* s, Light* l) {
   
   // Sort intersections in a clockwise order
   auto pred = [&](V2* lhs, V2* rhs){
-    V2 lhs_vec = (*lhs) - s->position;
-    V2 rhs_vec = (*rhs) - s->position;
+    V2 lhs_vec = (*lhs) - l->pos;
+    V2 rhs_vec = (*rhs) - l->pos;
     
     // TODO: this is super hardcoded please change onegai
     V2 offset = s->size * 0.5f;
@@ -149,22 +150,24 @@ gen_light_intersections(Sandbox_Mode* s, Light* l) {
   };
   quicksort(l->intersections, l->intersection_count, pred);
   
-  for (U32 intersection_index = 0;
-       intersection_index < s->player_light.intersection_count - 1;
-       intersection_index++)
-  {
-    V2 p0 = s->player_light.intersections[intersection_index];
-    V2 p1 = s->position;
-    V2 p2 = s->player_light.intersections[intersection_index+1];
-    push_triangle(s, p0, p1, p2);
+  if (l->intersection_count > 0) {
+    for (U32 intersection_index = 0;
+         intersection_index < l->intersection_count - 1;
+         intersection_index++)
+    {
+      V2 p0 = l->intersections[intersection_index];
+      V2 p1 = l->pos;
+      V2 p2 = l->intersections[intersection_index+1];
+      push_triangle(s, p0, p1, p2, l->color);
+    }
+    V2 p0 = l->intersections[l->intersection_count-1];
+    V2 p1 = l->pos;
+    V2 p2 = l->intersections[0];
+    if (cross(p0-p1, p2-p1) > 0.f) {
+      push_triangle(s, p0, p1, p2, l->color);
+    }
+    
   }
-  V2 p0 = s->player_light.intersections[s->player_light.intersection_count-1];
-  V2 p1 = s->position;
-  V2 p2 = s->player_light.intersections[0];
-  if (cross(p0-p1, p2-p1) > 0.f) {
-    push_triangle(s, p0, p1, p2);
-  }
-  
 }
 
 

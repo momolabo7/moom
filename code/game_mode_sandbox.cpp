@@ -9,12 +9,14 @@ push_edge(Sandbox_Mode* s, V2 min, V2 max) {
   edge->line.max = max;
 }
 
-static void push_light(Sandbox_Mode* s, V2 pos) {
+static Light*
+push_light(Sandbox_Mode* s, V2 pos, U32 color) {
   assert(s->light_count < array_count(s->lights));
-  Light light = {};
-  light.pos = pos;
+  Light* light = s->lights + s->light_count++;
+  light->pos = pos;
+  light->color = color;
   
-  s->lights[s->light_count++] = light;
+  return light;
 }
 
 static void 
@@ -43,7 +45,9 @@ init_sandbox_mode(Game_Memory* memory,
   push_edge(s, {700.f, 499.999f}, {700.f, 700.001f}); 
   push_edge(s, {700.001f, 700.001f}, {499.999f, 499.999f}); 
   
-  // 
+  //
+  push_light(s, {500.f, 500.f}, 0xFFFF0033);
+  s->player_light = push_light(s, {}, 0xFFFFFF33);
 }
 
 static void 
@@ -88,9 +92,15 @@ update_sandbox_mode(Game_Memory* memory,
   
   
   
-  s->player_light.pos = s->position;
-  gen_light_intersections(s, &s->player_light);
-  
+  s->player_light->pos = s->position;
+  gen_light_intersections(s, s->player_light);
+  for(U32 light_index = 0; 
+      light_index < s->light_count;
+      ++light_index)
+  {
+    Light* light = s->lights + light_index;
+    gen_light_intersections(s, light);
+  }
   
   // Rendering
   {
@@ -119,7 +129,7 @@ update_sandbox_mode(Game_Memory* memory,
                 1.f, rgba(0x00FF00FF), 5.f);
     }
     
-#if 1
+#if 0
     // Draw the light rays
     for(U32 light_ray_index = 0; 
         light_ray_index < s->player_light.debug_ray_count;
@@ -138,7 +148,7 @@ update_sandbox_mode(Game_Memory* memory,
     
     make_string_builder(sb, 128);
     
-#if 1  
+#if 0  
     for (U32 intersection_index = 0;
          intersection_index < s->player_light.intersection_count;
          ++intersection_index) 
@@ -175,17 +185,23 @@ update_sandbox_mode(Game_Memory* memory,
       
     }
     
+    // TODO(Momo): This is terrible
+    // one light should be set to one 'layer' of triangles'
+    // Maybe each light should store an array of triangles?
+    // Would that be more reasonable?
+    F32 z = 0.f;
     for (U32 light_triangle_index = 0;
          light_triangle_index < s->light_triangle_count;
          ++light_triangle_index)
     {
       Light_Triangle* lt = s->light_triangles + light_triangle_index;
       push_triangle(cmds, 
-                    rgba(0xFF888888),
+                    rgba(lt->color),
                     lt->p0,
                     lt->p1,
                     lt->p2,
-                    1.f);
+                    1.f - z);
+      z += 0.01f;
     }
     
     
