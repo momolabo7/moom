@@ -4,11 +4,5 @@
 #define GAME_DEBUGGER_H
 
 
-struct Debugger {
-  
-};
-
-extern Debugger* g_debugger;
-
 
 #endif //GAME_DEBUGGER_H

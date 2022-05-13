@@ -1,12 +1,14 @@
 Engine
-  BLEND MODES
 	Sound
 	Debugger
 		Profile arenas
-	Find out if there is a automated way to deform a single triangle to ANY other triangle	
-	  If so, upgrade renderer to cater fo rthat
-	There are like 3 'interface' game files that might require renaming? I'm not sure
-	Consider letting platform layer be the only place that initializes arenas!
+		Inspector
+	Others
+	  There are like 3 'interface' game files that might require renaming? I'm not sure
+	
+
+Game
+	Directional light
 
 4coder
   Support strongly typed enums

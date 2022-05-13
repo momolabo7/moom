@@ -521,7 +521,6 @@ void main(void) {
   
   // NOTE(Momo): alpha blend is default
   ogl->glEnable(GL_BLEND);
-  ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   
   // NOTE(Momo): Setup indices
   ogl->glVertexArrayElementBuffer(sb->model, 
@@ -565,6 +564,18 @@ opengl_init(Opengl* ogl)
   add_predefined_textures(ogl);
   delete_all_textures(ogl);
   return true;
+}
+
+static void 
+set_blend_mode(Opengl* ogl, Blend_Type type) {
+  switch(type) {
+    case BLEND_TYPE_ADD: {
+      ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
+    } break;
+    case BLEND_TYPE_ALPHA: {
+      ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    } break;
+  }
 }
 
 static void
@@ -645,7 +656,6 @@ opengl_end_frame(Opengl* ogl) {
         flush_sprites(ogl);
         
         auto* data = (Render_Command_Basis*)entry->data;
-        
         
         // TODO: Do we share shaders? Or just have a 'view' shader?
         M44 result = transpose(data->basis);
@@ -742,11 +752,10 @@ opengl_end_frame(Opengl* ogl) {
                     texture);
         
       } break;
-      case RENDER_COMMAND_TYPE_BEGIN_MASK: {
-        //ogl->glBlendFuncSeperate*(
-      } break;
-      case RENDER_COMMAND_TYPE_END_MASK: {
-        //ogl->glBlendFuncSeperate*(
+      case RENDER_COMMAND_TYPE_BLEND: {
+        flush_sprites(ogl);
+        auto* data = (Render_Command_Blend*)entry->data;
+        set_blend_mode(ogl, data->type);
       } break;
       case RENDER_COMMAND_TYPE_DELETE_TEXTURE: {
         auto* data = (Render_Command_Delete_Texture*)entry->data;

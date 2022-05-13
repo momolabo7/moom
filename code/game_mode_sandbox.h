@@ -7,6 +7,12 @@ struct Edge {
   Line2 line;
 };
 
+struct Light_Triangle {
+  V2 p0;
+  V2 p1; 
+  V2 p2;
+};
+
 struct Light {
   V2 pos;  
   U32 color;
@@ -16,15 +22,11 @@ struct Light {
   
   U32 debug_ray_count;
   V2 debug_rays[64];
+  
+  U32 triangle_count;
+  Light_Triangle triangles[128];
 };
 
-
-struct Light_Triangle {
-  V2 p0;
-  V2 p1; 
-  V2 p2;
-  U32 color;
-};
 
 struct Sandbox_Mode {
   V2 position;
@@ -37,19 +39,17 @@ struct Sandbox_Mode {
   U32 light_count;
   Light lights[32];
   
-  U32 light_triangle_count;
-  Light_Triangle light_triangles[128];
-  
 };
 
 static void
-push_triangle(Sandbox_Mode* s, V2 p0, V2 p1, V2 p2, U32 color) {
-  assert(s->light_triangle_count < array_count(s->light_triangles));
-  s->light_triangles[s->light_triangle_count++] = { p0, p1, p2, color };
+push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
+  assert(l->triangle_count < array_count(l->triangles));
+  l->triangles[l->triangle_count++] = { p0, p1, p2 };
 }
 
 static void
 gen_light_intersections(Sandbox_Mode* s, Light* l) {
+  l->triangle_count = 0;
   l->intersection_count = 0;
   l->debug_ray_count = 0;
   
@@ -158,13 +158,13 @@ gen_light_intersections(Sandbox_Mode* s, Light* l) {
       V2 p0 = l->intersections[intersection_index];
       V2 p1 = l->pos;
       V2 p2 = l->intersections[intersection_index+1];
-      push_triangle(s, p0, p1, p2, l->color);
+      push_triangle(l, p0, p1, p2, l->color);
     }
     V2 p0 = l->intersections[l->intersection_count-1];
     V2 p1 = l->pos;
     V2 p2 = l->intersections[0];
     if (cross(p0-p1, p2-p1) > 0.f) {
-      push_triangle(s, p0, p1, p2, l->color);
+      push_triangle(l, p0, p1, p2, l->color);
     }
     
   }

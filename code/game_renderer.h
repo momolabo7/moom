@@ -63,6 +63,7 @@ struct Renderer_Texture_Queue {
 };
 
 //-Command API
+
 struct Render_Command {
   U32 id; // type id from user
   void* data;
@@ -81,6 +82,11 @@ struct Renderer_Command_Queue {
 	UMI entry_count;
 };
 
+enum Blend_Type {
+  BLEND_TYPE_ADD,
+  BLEND_TYPE_ALPHA,
+};
+
 enum Render_Command_Type {
   RENDER_COMMAND_TYPE_CLEAR,
   RENDER_COMMAND_TYPE_BASIS,
@@ -89,8 +95,7 @@ enum Render_Command_Type {
   RENDER_COMMAND_TYPE_SUBSPRITE,
   RENDER_COMMAND_TYPE_DELETE_TEXTURE,
   RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES,
-  RENDER_COMMAND_TYPE_BEGIN_MASK,
-  RENDER_COMMAND_TYPE_END_MASK,
+  RENDER_COMMAND_TYPE_BLEND,
 };
 
 struct Render_Command_Clear {
@@ -126,6 +131,7 @@ struct Render_Command_Triangle {
 };
 
 struct Render_Command_Blend {
+  Blend_Type type;
 };
 
 

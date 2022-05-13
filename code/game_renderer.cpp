@@ -401,3 +401,9 @@ push_delete_texture(Renderer_Command_Queue* c, U32 texture_index) {
   data->texture_index = texture_index;
   
 }
+
+static void 
+push_blend(Renderer_Command_Queue* c, Blend_Type blend_type) {
+  auto* data= push_command<Render_Command_Blend>(c, RENDER_COMMAND_TYPE_BLEND);
+  data->type = blend_type;
+}

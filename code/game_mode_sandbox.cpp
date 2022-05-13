@@ -46,8 +46,8 @@ init_sandbox_mode(Game_Memory* memory,
   push_edge(s, {700.001f, 700.001f}, {499.999f, 499.999f}); 
   
   //
-  push_light(s, {500.f, 500.f}, 0xFFFF0033);
-  s->player_light = push_light(s, {}, 0xFFFFFF33);
+  push_light(s, {500.f, 400.f}, 0x00FF0088);
+  s->player_light = push_light(s, {}, 0xFF000088);
 }
 
 static void 
@@ -61,8 +61,6 @@ update_sandbox_mode(Game_Memory* memory,
   F32 dt = input->seconds_since_last_frame;
   
   
-  // Reset stuff
-  s->light_triangle_count = 0;
   
   // Input and player movement
   {
@@ -106,6 +104,7 @@ update_sandbox_mode(Game_Memory* memory,
   {
     // Clear colors
     push_colors(cmds, rgba(0x111111FF));
+    push_blend(cmds, BLEND_TYPE_ALPHA);
     
     // Set camera
     {
@@ -126,16 +125,17 @@ update_sandbox_mode(Game_Memory* memory,
     {
       Edge* edge = s->edges + edge_index;
       push_line(cmds, edge->line, 
-                1.f, rgba(0x00FF00FF), 5.f);
+                1.f, rgba(0x00FF00FF), 
+                400.f);
     }
     
 #if 0
     // Draw the light rays
     for(U32 light_ray_index = 0; 
-        light_ray_index < s->player_light.debug_ray_count;
+        light_ray_index < s->player_light->debug_ray_count;
         ++light_ray_index) 
     {
-      V2 light_ray = s->player_light.debug_rays[light_ray_index];
+      V2 light_ray = s->player_light->debug_rays[light_ray_index];
       
       Line2 line = {};
       line.min = s->position;
@@ -150,14 +150,14 @@ update_sandbox_mode(Game_Memory* memory,
     
 #if 0  
     for (U32 intersection_index = 0;
-         intersection_index < s->player_light.intersection_count;
+         intersection_index < s->player_light->intersection_count;
          ++intersection_index) 
     {
       clear(sb);
       
       Line2 line = {};
       line.min = s->position;
-      line.max = s->player_light.intersections[intersection_index];
+      line.max = s->player_light->intersections[intersection_index];
       
       push_format(sb, string_from_lit("[%u]"), intersection_index);
       
@@ -176,32 +176,51 @@ update_sandbox_mode(Game_Memory* memory,
     
     // Draw player
     {
-      Sprite_Asset* sprite = get_sprite(ga, SPRITE_BULLET_CIRCLE);
-      Bitmap_Asset* bitmap = get_bitmap(ga, sprite->bitmap_id);
       draw_sprite(ga, cmds, SPRITE_BULLET_CIRCLE, 
                   s->position.x, s->position.y, 
                   s->size.x, s->size.y,
-                  2.f);
+                  300.f);
       
     }
     
+    // Draw lights
+    for (U32 light_index = 0;
+         light_index < s->light_count;
+         ++light_index)
+    {
+      Light* light = s->lights + light_index;
+      draw_sprite(ga, cmds, SPRITE_BULLET_DOT, 
+                  light->pos.x, light->pos.y ,
+                  16, 16,
+                  300.f);
+      
+    }
+    
+    push_blend(cmds, BLEND_TYPE_ADD);
     // TODO(Momo): This is terrible
     // one light should be set to one 'layer' of triangles'
     // Maybe each light should store an array of triangles?
     // Would that be more reasonable?
-    F32 z = 0.f;
-    for (U32 light_triangle_index = 0;
-         light_triangle_index < s->light_triangle_count;
-         ++light_triangle_index)
+    F32 z = 0.1f;
+    for (U32 light_index = 0;
+         light_index < s->light_count; 
+         ++light_index )
     {
-      Light_Triangle* lt = s->light_triangles + light_triangle_index;
-      push_triangle(cmds, 
-                    rgba(lt->color),
-                    lt->p0,
-                    lt->p1,
-                    lt->p2,
-                    1.f - z);
+      Light* l = s->lights + light_index;
+      for (U32 triangle_index = 0;
+           triangle_index < l->triangle_count;
+           ++triangle_index)
+      {
+        Light_Triangle* lt = l->triangles + triangle_index;
+        push_triangle(cmds, 
+                      rgba(l->color),
+                      lt->p0,
+                      lt->p1,
+                      lt->p2,
+                      200.f - z);
+      }
       z += 0.01f;
+      
     }
     
     
