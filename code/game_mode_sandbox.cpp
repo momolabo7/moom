@@ -7,6 +7,9 @@ push_edge(Sandbox_Mode* s, V2 min, V2 max) {
   Edge* edge = s->edges + s->edge_count++;
   edge->line.min = min;
   edge->line.max = max;
+  
+  V2* ep = s->endpoints + s->endpoint_count++;
+  (*ep) = edge->line.max;
 }
 
 static Light*

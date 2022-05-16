@@ -25,6 +25,7 @@ struct Light {
   
   U32 triangle_count;
   Light_Triangle triangles[128];
+  
 };
 
 
@@ -32,6 +33,9 @@ struct Sandbox_Mode {
   V2 position;
   V2 size;
   Light* player_light;
+  
+  U32 endpoint_count;
+  V2 endpoints[32];
   
   U32 edge_count;
   Edge edges[32];
@@ -61,16 +65,16 @@ gen_light_intersections(Sandbox_Mode* s, Light* l) {
     F32 offset_angle = offset_angles[offset_index];
     
     // For each endpoint
-    for(U32 ep_edge_index = 0; 
-        ep_edge_index <  s->edge_count;
-        ++ep_edge_index) 
+    for(U32 ep_index = 0; 
+        ep_index <  s->endpoint_count;
+        ++ep_index) 
     {
-      Edge* ep_edge = s->edges + ep_edge_index;
+      V2 ep = s->endpoints[ep_index];
       
       Ray2 light_ray = {};
       {
         light_ray.pt = l->pos;
-        V2 dir = ep_edge->line.max - l->pos; 
+        V2 dir = ep - l->pos; 
         
         // rotate the direction by angle offset
         F32 cos_angle = cos(offset_angle);
@@ -126,7 +130,7 @@ gen_light_intersections(Sandbox_Mode* s, Light* l) {
       // Add intersection
       assert(l->intersection_count < array_count(l->intersections));
       l->intersections[l->intersection_count++] = 
-        found ? light_ray.pt + lowest_t1 * light_ray.dir : ep_edge->line.max;
+        found ? light_ray.pt + lowest_t1 * light_ray.dir : ep;
       
       
     }
