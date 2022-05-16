@@ -68,6 +68,7 @@ test_write_memory_to_file(Memory block, const char* filename) {
 }
 
 #include "test_essentials.h"
+#include "test_list.h"
 #include "test_sort.h"
 #include "test_png.h"
 #include "test_ttf.h"

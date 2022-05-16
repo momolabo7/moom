@@ -2,6 +2,41 @@
 #define MOMO_ARRAY_H
 
 
+// List helpers
+
+
+
+//~ NOTE(Momo): 'Static' list API
+//
+// A static array MUST consist of the following named variables:
+//  - count: integral type that represents the current 
+//           count of the array
+//  
+//  - e: an array  of elements of the type that the array stores
+//
+// Example array struct that fits the requirements:
+//  struct {
+//    U32 count;
+//    int e[10];
+//  };
+//
+
+// TODO: comments for each macro 
+#define slist_cap(l)             (array_count((l)->e))
+#define slist_clear(l)           ((l)->count = 0)
+#define slist_has_space(l)       ((l)->count < slist_cap(l)) 
+#define slist_is_empty(l)				((l)->count == 0)
+#define slist_push(l)            ((l)->e + (l)->count++)
+#define slist_pop(l)             (--((l)->count));
+#define slist_remaining(l)       (slist_cap(l) - (l)->count)
+#define slist_push_item(l,item)  ((l)->e[(l)->count++] = (item))
+
+#define slist_is_index_valid(l,i) ((i) < (l)->count)
+#define slist_get(l,i)            ((l)->e + (i))
+#define slist_get_copy(l,i)       ((l)->e[i])
+#define slist_slear(l,i)				  ((l)->e[i] = (l)->e[(l)->count-1]), slist_pop(l)	
+#define slist_remove(l,i)				 (copy_memory((l)->e+i, (l)->e+i+1, sizeof((l)->e[0])*((l)->count--)-i))
+
 //~ NOTE(Momo): 'Dynamic' list API
 //
 // A dynamic array MUST consist of the following named variables:
@@ -19,66 +54,23 @@
 //  };
 //
 
-#define List_Init(l,d,c) 	((l)->cap = (c), (l)->count = 0, (l)->e = (d))
-#define List_Alloc(l,a,c)  ((l)->cap = c, (l)->count = 0, Arena_PushBlock(a, sizeof((l)->e[0]) * c))
-#define List_Clear(l)      ((l)->count = 0)
-#define List_Push(l)       (((l)->count < ((l)->cap)) ? ((l)->e + (l)->count++) : 0)
-#define List_Pop(l)        (((l)->count > 0) ? (--(l)->count), 1 : 0)
-#define List_Get(l,i)      ((i < (l)->count) ? ((l)->e + i) : 0)
-#define List_Slear(l,i)    ((i < (l)->count) ? ((l)->e[i] = (l)->e[(l)->count-1]), List_Pop(l), 1 : 0)
-#define List_Remove(l,i)   ((i < (l)->count) ? (copy_memory((l)->e+i, (l)->e+i+1, sizeof((l)->e[0])*((l)->count--)-i)), 1 : 0)
-#define List_Remain(l)     ((l)->cap - (l)->count)
+// TODO: comments for each macro
+#define list_init(l,d,c) 	     ((l)->cap = (c), (l)->count = 0, (l)->e = (d))
+#define list_is_valid(l)				((l)->cap > 0 && (l)->e != 0)
+#define list_cap(l)             ((l)->cap)
+#define list_clear(l)           (slist_clear(l))
+#define list_has_space(l)       ((l)->count < list_cap(l)) 
+#define list_is_empty(l)				(slist_is_empty(l))
+#define list_push(l)            (slist_push(l))
+#define list_pop(l)             (slist_pop(l));
+#define list_remaining(l)       (list_cap(l) - (l)->count)
+#define list_push_item(l,item)  (slist_push_item(l,item))
 
-//~ NOTE(Momo): 'Static' list API
-//
-// A static array MUST consist of the following named variables:
-//  - count: integral type that represents the current 
-//           count of the array
-//  
-//  - e: an array  of elements of the type that the array stores
-//
-// Example array struct that fits the requirements:
-//  struct {
-//    U32 count;
-//    int e[10];
-//  };
-//
+#define list_is_index_valid(l,i) (slist_is_index_valid(l,i)
+#define list_get(l,i)            (slist_get(l,i))
+#define list_slear(l,i)				  (slist_slear(l,i))	
+#define list_remove(l,i)				 (slist_remove(l,i))
 
-#define SList_Cap(l) 	     (array_count((l)->e))
-#define SList_Clear(l)      ((l)->count = 0)
-#define SList_Push(l)       (((l)->count < (SList_Cap(l))) ? ((l)->e + (l)->count++) : 0)
-#define SList_Pop(l)        (((l)->count > 0) ? (--(l)->count), 1 : 0)
-#define SList_Get(l,i)      ((i < (l)->count) ? ((l)->e + i) : 0)
-#define SList_Slear(l,i)    ((i < (l)->count) ? ((l)->e[i] = (l)->e[(l)->count-1]), SList_Pop(l), 1 : 0)
-#define SList_Remove(l,i)   ((i < (l)->count) ? (copy_memory((l)->e+i, (l)->e+i+1, sizeof((l)->e[0])*((l)->count--)-i)), 1 : 0)
-#define SList_Remain(l)     (SList_Cap(l) - (l)->count)
-
-
-//~ Static array
-template<typename T>
-struct Array {
-  T* e;
-  UMI count;
-  inline T& operator[](UMI index) { return e[index]; }
-};
-
-template<typename T> static Array<T> array(T* data, UMI count);
-
-//~Static list
-template<typename T>
-struct List {
-  union {
-    struct{ T* e; UMI count; };
-    Array<T> arr;
-  };
-  UMI cap;
-  inline T& operator[](UMI index) { return e[index]; }
-};
-template<typename T> static List<T> list(T* data, UMI cap);
-template<typename T> static void push_back(List<T>* list, T item);
-template<typename T> static void clear(List<T>* list);
-
-#include "momo_lists.cpp"
 
 
 

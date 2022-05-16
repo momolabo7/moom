@@ -1,5 +1,6 @@
 struct _TTF_Glyph_Box : Rect2S {
   B32 exists;
+  
 };
 
 struct _TTF_Glyph_Point {
@@ -29,6 +30,11 @@ struct _TTF_Edge {
   F32 x_intersect;
 };
 
+struct _TTF_Edge_List {
+  U32 cap;
+  U32 count;
+  _TTF_Edge** e;
+};
 
 enum {
   _TTF_CMAP_PLATFORM_ID_UNICODE = 0,
@@ -46,7 +52,6 @@ enum {
   _TTF_CMAP_MS_ID_BIG_FIVE = 4,
   _TTF_CMAP_MS_ID_JOHAB = 5,
   _TTF_CMAP_MS_ID_UNICODE_FULL = 10,
-  
 };
 
 static U16
@@ -727,7 +732,7 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   }
   
   
-  // Rasterazation algo
+  // Rasterazation algorithm starts here
   // Sort edges by top most edge
   quicksort(edges, edge_count, [](_TTF_Edge* lhs, _TTF_Edge* rhs) {
               F32 lhs_y = max_of(lhs->p0.y, lhs->p1.y);
@@ -735,17 +740,24 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
               return lhs_y < rhs_y;
             });
   
-  // create an 'active edges list'
-  auto active_edges = list(push_array<_TTF_Edge*>(arena, edge_count), edge_count);
+  
+  // create an 'active edges list' as a temporary buffer
+  declare_and_pointerize(_TTF_Edge_List, active_edges);
+  list_init(active_edges,
+            push_array<_TTF_Edge*>(arena, edge_count),
+            edge_count);
+  assert(list_is_valid(active_edges));
   
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
   // clearing and refilling the active_edges list per scan line
   for(U32 y = 0; y <= bitmap_dims.h; ++y) {
-    //for(U32 y = 58; y <= 58; ++y) {
+    // Clear the active edges
+    list_clear(active_edges);
+    
     F32 yf = (F32)y; // 'center' of pixel
-    clear(&active_edges);
-    // In general, add to 'active edge list' any edges which have an 
+    
+    // Add to 'active edge list' any edges which have an 
     // uppermost vertex (p0) before y and lowermost vertex (p1) after this y.
     // Also, ignore p1 that ends EXACTLY on this y.
     for (U32 edge_index = 0; edge_index < edge_count; ++edge_index){
@@ -758,32 +770,34 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
         if (dy != 0.f) {
           F32 t = (yf - edge->p0.y) / dy;
           edge->x_intersect = edge->p0.x + (t * dx);
-          push_back(&active_edges, edge);
+          
+          assert(list_has_space(active_edges));
+          list_push_item(active_edges, edge);
         }
       }
     }
     
     //sort the active edge list by their x_intersect
-    quicksort(active_edges.e, active_edges.count, 
+    quicksort(active_edges->e, active_edges->count, 
               [](_TTF_Edge**lhs, _TTF_Edge** rhs) {
                 return (*lhs)->x_intersect < (*rhs)->x_intersect;
               });
     
-    if (active_edges.count >= 2) {
+    if (active_edges->count >= 2) {
       U32 crossings = 0;
       for (UMI active_edge_index = 0; 
-           active_edge_index < active_edges.count-1;
+           active_edge_index < active_edges->count-1;
            ++active_edge_index) 
       {
-        auto* start_edge = active_edges.e[active_edge_index];
-        auto* end_edge = active_edges.e[active_edge_index+1];
+        auto* start_edge = active_edges->e[active_edge_index];
+        auto* end_edge = active_edges->e[active_edge_index+1];
         
         
         start_edge->is_inverted ? ++crossings : --crossings;
         
         if (crossings > 0) {
-          U32 start_x = (U32)active_edges.e[active_edge_index]->x_intersect;
-          U32 end_x = (U32)active_edges.e[active_edge_index + 1]->x_intersect;
+          U32 start_x = (U32)active_edges->e[active_edge_index]->x_intersect;
+          U32 end_x = (U32)active_edges->e[active_edge_index + 1]->x_intersect;
           for(U32 x = start_x; x <= end_x; ++x) {
             pixels[x + y * bitmap_dims.w] = 0xFFFFFFFF;
           }

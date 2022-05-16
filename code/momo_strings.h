@@ -1,7 +1,7 @@
 /* date = november 20th 2021 11:58 am */
 
-#ifndef momo_string_h
-#define momo_string_h
+#ifndef MOMO_STRING_H
+#define MOMO_STRING_H
 
 
 //~ NOTE(Momo): 'Immutable' Strings
