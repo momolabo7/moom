@@ -4,19 +4,8 @@ push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
   l->triangles[l->triangle_count++] = { p0, p1, p2 };
 }
 
-static void
-gen_light_intersection_wrt_direction(Light* l,
-                                     Edge_List* edges, 
-                                     V2 dir)
-{
-  Ray2 light_ray = {};
-  {
-    light_ray.pt = l->pos;
-    light_ray.dir = dir;
-    
-    assert(l->debug_ray_count < array_count(l->debug_rays));
-    l->debug_rays[l->debug_ray_count++] = light_ray.dir; 
-  }
+static Maybe<F32> 
+get_light_ray_intersection_time(Ray2 light_ray, Edge_List* edges) {
   
   F32 lowest_t1 = F32_INFINITY();
   B32 found = false;
@@ -58,11 +47,36 @@ gen_light_intersection_wrt_direction(Light* l,
     }
   }
   
+  return { found, lowest_t1 }; 
+  
+}
+
+static Maybe<V2>
+get_light_ray_intersection(Ray2 light_ray, Edge_List* edges) {
+  
+}
+
+static void
+gen_light_intersection_wrt_direction(Light* l,
+                                     Edge_List* edges, 
+                                     V2 dir)
+{
+  Ray2 light_ray = {};
+  {
+    light_ray.pt = l->pos;
+    light_ray.dir = dir;
+    
+    assert(l->debug_ray_count < array_count(l->debug_rays));
+    l->debug_rays[l->debug_ray_count++] = light_ray.dir; 
+  }
+  
+  auto [found, time] = get_light_ray_intersection_time(light_ray, edges);
   
   // Add intersection
   if(found) {
-    assert(l->intersection_count < array_count(l->intersections));
-    l->intersections[l->intersection_count++] = light_ray.pt + lowest_t1 * light_ray.dir; 
+    assert(slist_has_space(&l->intersections));
+    slist_push_copy(&l->intersections, 
+                    light_ray.pt + time * light_ray.dir);
   }
 }
 
@@ -81,58 +95,19 @@ gen_light_intersection_wrt_endpoint(Light* l,
     assert(l->debug_ray_count < array_count(l->debug_rays));
     l->debug_rays[l->debug_ray_count++] = light_ray.dir; 
   }
-  
-  F32 lowest_t1 = F32_INFINITY();
-  B32 found = false;
-  
-  for(U32 edge_index = 0; 
-      edge_index <  edges->count;
-      ++edge_index) 
-  {
-    Edge* edge = slist_get(edges, edge_index);
-    
-    Ray2 edge_ray = {};
-    edge_ray.pt = edge->line.min;
-    edge_ray.dir = edge->line.max - edge->line.min; 
-    
-    // Check for parallel
-    V2 light_ray_normal = {};
-    light_ray_normal.x = light_ray.dir.y;
-    light_ray_normal.y = -light_ray.dir.x;
-    
-    
-    if (!is_close(dot(light_ray_normal, edge_ray.dir), 0.f)) {
-      F32 t2 = 
-      (light_ray.dir.x*(edge_ray.pt.y - light_ray.pt.y) + 
-       light_ray.dir.y*(light_ray.pt.x - edge_ray.pt.x))/
-      (edge_ray.dir.x*light_ray.dir.y - edge_ray.dir.y*light_ray.dir.x);
-      
-      F32 t1 = (edge_ray.pt.x + edge_ray.dir.x * t2 - light_ray.pt.x)/light_ray.dir.x;
-      
-      if (0.f < t1 && 
-          // t1 < 1.f && 
-          0.f < t2 && 
-          t2 < 1.f)
-      {
-        
-        if (t1 < lowest_t1) {
-          lowest_t1 = t1;
-          found = true;
-        }
-      }
-    }
-  }
+  auto [found, time] = get_light_ray_intersection_time(light_ray, edges);
   
   // Add intersection
-  assert(l->intersection_count < array_count(l->intersections));
-  l->intersections[l->intersection_count++] = 
-    found ? light_ray.pt + lowest_t1 * light_ray.dir : ep;
+  assert(slist_has_space(&l->intersections));
+  slist_push_copy(&l->intersections, 
+                  found ? light_ray.pt + time * light_ray.dir : ep);
 }
 
 static void
 gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
+  slist_clear(&l->intersections);
+  
   l->triangle_count = 0;
-  l->intersection_count = 0;
   l->debug_ray_count = 0;
   
   F32 offset_angles[] = {0.001f, 0.0f, -0.001f};
@@ -154,22 +129,23 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
       F32 angle = angle_between(l->dir, ep - l->pos);
       if (angle > l->half_angle) continue;
       
+      
       gen_light_intersection_wrt_endpoint(l, edges, ep, offset_angle);
     }
     
-    // TODO: Only do this for point light
-    {
-      V2 dir = rotate(l->dir, l->half_angle);
-      gen_light_intersection_wrt_direction(l, edges, dir);
-    }
     
-    {
-      V2 dir = rotate(l->dir, -l->half_angle);
-      gen_light_intersection_wrt_direction(l, edges, dir);
-    }
   }
   
+  // TODO: Only do these for point light
+  {
+    V2 dir = rotate(l->dir, l->half_angle);
+    gen_light_intersection_wrt_direction(l, edges, dir);
+  }
   
+  {
+    V2 dir = rotate(l->dir, -l->half_angle);
+    gen_light_intersection_wrt_direction(l, edges, dir);
+  }  
   
   // Sort intersections in a clockwise order
   auto pred = [&](V2* lhs, V2* rhs){
@@ -184,21 +160,21 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
     if (rhs_vec.y < 0.f) rhs_angle = PI_32*2.f - rhs_angle;
     return lhs_angle < rhs_angle;
   };
-  quicksort(l->intersections, l->intersection_count, pred);
+  quicksort(l->intersections.e, l->intersections.count, pred);
   
-  if (l->intersection_count > 0) {
+  if (l->intersections.count > 0) {
     for (U32 intersection_index = 0;
-         intersection_index < l->intersection_count - 1;
+         intersection_index < l->intersections.count - 1;
          intersection_index++)
     {
-      V2 p0 = l->intersections[intersection_index];
+      V2 p0 = slist_get_copy(&l->intersections, intersection_index);
       V2 p1 = l->pos;
-      V2 p2 = l->intersections[intersection_index+1];
+      V2 p2 = slist_get_copy(&l->intersections, intersection_index+1);
       push_triangle(l, p0, p1, p2, l->color);
     }
-    V2 p0 = l->intersections[l->intersection_count-1];
+    V2 p0 = slist_get_copy(&l->intersections, l->intersections.count-1);
     V2 p1 = l->pos;
-    V2 p2 = l->intersections[0];
+    V2 p2 = slist_get_copy(&l->intersections, 0);
     
     // Check if p0-p1 is 
     if (cross(p0-p1, p2-p1) > 0.f) {

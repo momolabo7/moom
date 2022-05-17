@@ -456,7 +456,13 @@ template<typename F> zawarudo_ScopeGuard<F> operator+(zawarudo_defer_dummy, F f)
 //~NOTE(Momo): Helper macros 
 #define declare_and_pointerize(type, name) type zawarudo_##name = {}; type* name = &zawarudo_##name
 
-
+//~NOTE(Momo): Maybe 
+template<typename T>
+struct Maybe {
+  B32 success;
+  T item;
+  operator T() { return item; }
+};
 
 #include "momo_essentials.cpp"
 

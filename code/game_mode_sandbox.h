@@ -23,6 +23,7 @@ struct Light_Triangle {
   V2 p2;
 };
 
+
 struct Light {
   V2 dir;
   F32 half_angle;
@@ -30,8 +31,10 @@ struct Light {
   V2 pos;  
   U32 color;
   
-  U32 intersection_count;
-  V2 intersections[64];
+  struct {
+    U32 count;
+    V2 e[64];
+  } intersections;
   
   U32 debug_ray_count;
   V2 debug_rays[64];
