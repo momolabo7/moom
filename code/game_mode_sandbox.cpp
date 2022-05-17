@@ -5,8 +5,8 @@ push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
 }
 
 static void
-gen_light_intersection_wrt_direction(Sandbox_Mode* s, 
-                                     Light* l,
+gen_light_intersection_wrt_direction(Light* l,
+                                     Edge_List* edges, 
                                      V2 dir)
 {
   Ray2 light_ray = {};
@@ -22,10 +22,10 @@ gen_light_intersection_wrt_direction(Sandbox_Mode* s,
   B32 found = false;
   
   for(U32 edge_index = 0; 
-      edge_index <  s->edge_count;
+      edge_index <  edges->count;
       ++edge_index) 
   {
-    Edge* edge = s->edges + edge_index;
+    Edge* edge = slist_get(edges, edge_index);
     
     Ray2 edge_ray = {};
     edge_ray.pt = edge->line.min;
@@ -67,12 +67,11 @@ gen_light_intersection_wrt_direction(Sandbox_Mode* s,
 }
 
 static void
-gen_light_intersection_wrt_endpoint(Sandbox_Mode* s,
-                                    Light* l,
+gen_light_intersection_wrt_endpoint(Light* l,
+                                    Edge_List* edges,
                                     V2 ep,
                                     F32 offset_angle) 
 {
-  
   Ray2 light_ray = {};
   {
     light_ray.pt = l->pos;
@@ -87,10 +86,10 @@ gen_light_intersection_wrt_endpoint(Sandbox_Mode* s,
   B32 found = false;
   
   for(U32 edge_index = 0; 
-      edge_index <  s->edge_count;
+      edge_index <  edges->count;
       ++edge_index) 
   {
-    Edge* edge = s->edges + edge_index;
+    Edge* edge = slist_get(edges, edge_index);
     
     Ray2 edge_ray = {};
     edge_ray.pt = edge->line.min;
@@ -131,7 +130,7 @@ gen_light_intersection_wrt_endpoint(Sandbox_Mode* s,
 }
 
 static void
-gen_light_intersections(Sandbox_Mode* s, Light* l) {
+gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
   l->triangle_count = 0;
   l->intersection_count = 0;
   l->debug_ray_count = 0;
@@ -146,27 +145,27 @@ gen_light_intersections(Sandbox_Mode* s, Light* l) {
     
     // For each endpoint
     for(U32 ep_index = 0; 
-        ep_index <  s->endpoint_count;
+        ep_index <  eps->count;
         ++ep_index) 
     {
-      V2 ep = s->endpoints[ep_index];
+      V2 ep = slist_get_copy(eps, ep_index);
       
       // ignore endpoints that are not within the angle 
       F32 angle = angle_between(l->dir, ep - l->pos);
       if (angle > l->half_angle) continue;
       
-      gen_light_intersection_wrt_endpoint(s,l,ep,offset_angle);
+      gen_light_intersection_wrt_endpoint(l, edges, ep, offset_angle);
     }
     
     // TODO: Only do this for point light
     {
       V2 dir = rotate(l->dir, l->half_angle);
-      gen_light_intersection_wrt_direction(s,l,dir);
+      gen_light_intersection_wrt_direction(l, edges, dir);
     }
     
     {
       V2 dir = rotate(l->dir, -l->half_angle);
-      gen_light_intersection_wrt_direction(s,l,dir);
+      gen_light_intersection_wrt_direction(l, edges, dir);
     }
   }
   
@@ -177,8 +176,6 @@ gen_light_intersections(Sandbox_Mode* s, Light* l) {
     V2 lhs_vec = (*lhs) - l->pos;
     V2 rhs_vec = (*rhs) - l->pos;
     
-    // TODO: this is super hardcoded please change onegai
-    V2 offset = s->size * 0.5f;
     V2 basis_vec = V2{1.f, 0.f} ;
     
     F32 lhs_angle = angle_between(basis_vec, lhs_vec);
@@ -215,14 +212,13 @@ gen_light_intersections(Sandbox_Mode* s, Light* l) {
 
 static void
 push_edge(Sandbox_Mode* s, V2 min, V2 max) {
-  assert(s->edge_count < array_count(s->edges));
+  assert(slist_has_space(&s->edges));
   
-  Edge* edge = s->edges + s->edge_count++;
+  Edge* edge = slist_push(&s->edges);
   edge->line.min = min;
   edge->line.max = max;
   
-  V2* ep = s->endpoints + s->endpoint_count++;
-  (*ep) = edge->line.max;
+  slist_push_copy(&s->endpoints, edge->line.max);
 }
 
 static Light*
@@ -312,13 +308,13 @@ update_sandbox_mode(Game_Memory* memory,
   
   
   s->player_light->pos = s->position;
-  gen_light_intersections(s, s->player_light);
+  gen_light_intersections(s->player_light, &s->endpoints, &s->edges);
   for(U32 light_index = 0; 
       light_index < s->light_count;
       ++light_index)
   {
     Light* light = s->lights + light_index;
-    gen_light_intersections(s, light);
+    gen_light_intersections(light, &s->endpoints, &s->edges);
   }
   
   // Rendering
@@ -341,10 +337,10 @@ update_sandbox_mode(Game_Memory* memory,
     
     // Draw the world collision
     for(U32 edge_index = 0; 
-        edge_index <  s->edge_count;
+        edge_index <  s->edges.count;
         ++edge_index) 
     {
-      Edge* edge = s->edges + edge_index;
+      Edge* edge = slist_get(&s->edges, edge_index);
       push_line(cmds, edge->line, 
                 1.f, rgba(0x00FF00FF), 
                 400.f);

@@ -29,7 +29,7 @@
 #define slist_push(l)            ((l)->e + (l)->count++)
 #define slist_pop(l)             (--((l)->count));
 #define slist_remaining(l)       (slist_cap(l) - (l)->count)
-#define slist_push_item(l,item)  ((l)->e[(l)->count++] = (item))
+#define slist_push_copy(l,item)  ((l)->e[(l)->count++] = (item))
 
 #define slist_is_index_valid(l,i) ((i) < (l)->count)
 #define slist_get(l,i)            ((l)->e + (i))
@@ -64,10 +64,11 @@
 #define list_push(l)            (slist_push(l))
 #define list_pop(l)             (slist_pop(l));
 #define list_remaining(l)       (list_cap(l) - (l)->count)
-#define list_push_item(l,item)  (slist_push_item(l,item))
+#define list_push_copy(l,item)  (slist_push_copy(l,item))
 
 #define list_is_index_valid(l,i) (slist_is_index_valid(l,i)
 #define list_get(l,i)            (slist_get(l,i))
+#define list_get_copy(l,i)       (slist_get_copy(l,i))
 #define list_slear(l,i)				  (slist_slear(l,i))	
 #define list_remove(l,i)				 (slist_remove(l,i))
 

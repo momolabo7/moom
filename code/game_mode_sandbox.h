@@ -7,6 +7,16 @@ struct Edge {
   Line2 line;
 };
 
+struct Edge_List {
+  U32 count;
+  Edge e[64];
+};
+
+struct Endpoint_List {
+  U32 count;
+  V2 e[64];
+};
+
 struct Light_Triangle {
   V2 p0;
   V2 p1; 
@@ -37,11 +47,8 @@ struct Sandbox_Mode {
   V2 size;
   Light* player_light;
   
-  U32 endpoint_count;
-  V2 endpoints[32];
-  
-  U32 edge_count;
-  Edge edges[32];
+  Endpoint_List endpoints;
+  Edge_List edges;
   
   U32 light_count;
   Light lights[32];

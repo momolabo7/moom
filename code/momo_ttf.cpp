@@ -772,7 +772,8 @@ rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
           edge->x_intersect = edge->p0.x + (t * dx);
           
           assert(list_has_space(active_edges));
-          list_push_item(active_edges, edge);
+          list_push_copy(active_edges, edge);
+          
         }
       }
     }
