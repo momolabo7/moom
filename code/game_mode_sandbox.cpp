@@ -46,32 +46,12 @@ get_light_ray_intersection(Ray2 light_ray, Edge_List* edges) {
     }
   }
   
-  if (!found) { return {false}; }
-  
-  return { true, light_ray.pt + lowest_t1 * light_ray.dir }; 
-  
-}
-
-static void
-gen_light_intersection_wrt_direction(Light* l,
-                                     Edge_List* edges, 
-                                     V2 dir)
-{
-  Ray2 light_ray = {};
-  light_ray.pt = l->pos;
-  light_ray.dir = dir;
-  
-  assert(l->debug_ray_count < array_count(l->debug_rays));
-  l->debug_rays[l->debug_ray_count++] = light_ray.dir; 
-  
-  auto [found, intersection] = get_light_ray_intersection(light_ray, edges);
-  
-  // Add intersection
-  if(found) {
-    assert(slist_has_space(&l->intersections));
-    slist_push_copy(&l->intersections, 
-                    intersection);
+  if (!found) {
+    return { false };
   }
+  
+  return { true, light_ray.pt + lowest_t1 * light_ray.dir  }; 
+  
 }
 
 static void
@@ -107,43 +87,37 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
       assert(l->debug_ray_count < array_count(l->debug_rays));
       l->debug_rays[l->debug_ray_count++] = light_ray.dir; 
       
-      auto [found, intersection] = get_light_ray_intersection(light_ray, edges);
+      auto [found, intersection] =
+        get_light_ray_intersection(light_ray, edges);
       
-      // Add intersection
       assert(slist_has_space(&l->intersections));
       slist_push_copy(&l->intersections, 
                       found ? intersection : ep);
-      
     }
     
     
   }
   
-  // TODO: Only do these for directional light
+  // TODO: Only do these for point light
   {
-    Ray2 shell_rays[2];
+    Ray2 shell_rays[2] = {};
     shell_rays[0].pt = l->pos;
     shell_rays[0].dir = rotate(l->dir, l->half_angle);
     shell_rays[1].pt = l->pos;
     shell_rays[1].dir = rotate(l->dir, -l->half_angle);
     
-    for (U32 shell_ray_index = 0;
-         shell_ray_index < array_count(shell_rays);
-         ++shell_ray_index)
-    {
-      auto [found, intersection] = 
-        get_light_ray_intersection(shell_rays[shell_ray_index], edges);
+    for (U32 i = 0; i < array_count(shell_rays); ++i) {
+      auto [found, intersection] =
+        get_light_ray_intersection(shell_rays[i], edges);
       
+      assert(slist_has_space(&l->intersections));
       if(found) {
-        assert(slist_has_space(&l->intersections));
         slist_push_copy(&l->intersections, 
                         intersection);
       }
     }
     
   }
-  
-  
   
   // Sort intersections in a clockwise order
   auto pred = [&](V2* lhs, V2* rhs){
