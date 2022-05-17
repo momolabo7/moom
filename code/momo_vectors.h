@@ -75,7 +75,7 @@ static F32   length_sq(V3 v);
 static B32   is_close(V3 lhs, V3 rhs);
 static V3 negate(V3 v);
 static V3 midpoint(V3 lhs, V3 rhs);
-static V3 Cross(V3 lhs, V3 rhs);
+static V3 cross(V3 lhs, V3 rhs);
 static F32   distance(V3 lhs, V3 rhs);
 static F32   length(V3 v);
 static V3 normalize(V3 v);
