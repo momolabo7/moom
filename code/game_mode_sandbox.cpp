@@ -4,9 +4,8 @@ push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
   l->triangles[l->triangle_count++] = { p0, p1, p2 };
 }
 
-static Maybe<F32> 
-get_light_ray_intersection_time(Ray2 light_ray, Edge_List* edges) {
-  
+static Maybe<V2> 
+get_light_ray_intersection(Ray2 light_ray, Edge_List* edges) {
   F32 lowest_t1 = F32_INFINITY();
   B32 found = false;
   
@@ -47,12 +46,9 @@ get_light_ray_intersection_time(Ray2 light_ray, Edge_List* edges) {
     }
   }
   
-  return { found, lowest_t1 }; 
+  if (!found) { return {false}; }
   
-}
-
-static Maybe<V2>
-get_light_ray_intersection(Ray2 light_ray, Edge_List* edges) {
+  return { true, light_ray.pt + lowest_t1 * light_ray.dir }; 
   
 }
 
@@ -62,45 +58,20 @@ gen_light_intersection_wrt_direction(Light* l,
                                      V2 dir)
 {
   Ray2 light_ray = {};
-  {
-    light_ray.pt = l->pos;
-    light_ray.dir = dir;
-    
-    assert(l->debug_ray_count < array_count(l->debug_rays));
-    l->debug_rays[l->debug_ray_count++] = light_ray.dir; 
-  }
+  light_ray.pt = l->pos;
+  light_ray.dir = dir;
   
-  auto [found, time] = get_light_ray_intersection_time(light_ray, edges);
+  assert(l->debug_ray_count < array_count(l->debug_rays));
+  l->debug_rays[l->debug_ray_count++] = light_ray.dir; 
+  
+  auto [found, intersection] = get_light_ray_intersection(light_ray, edges);
   
   // Add intersection
   if(found) {
     assert(slist_has_space(&l->intersections));
     slist_push_copy(&l->intersections, 
-                    light_ray.pt + time * light_ray.dir);
+                    intersection);
   }
-}
-
-static void
-gen_light_intersection_wrt_endpoint(Light* l,
-                                    Edge_List* edges,
-                                    V2 ep,
-                                    F32 offset_angle) 
-{
-  Ray2 light_ray = {};
-  {
-    light_ray.pt = l->pos;
-    V2 dir = ep - l->pos; 
-    light_ray.dir = rotate(dir, offset_angle);
-    
-    assert(l->debug_ray_count < array_count(l->debug_rays));
-    l->debug_rays[l->debug_ray_count++] = light_ray.dir; 
-  }
-  auto [found, time] = get_light_ray_intersection_time(light_ray, edges);
-  
-  // Add intersection
-  assert(slist_has_space(&l->intersections));
-  slist_push_copy(&l->intersections, 
-                  found ? light_ray.pt + time * light_ray.dir : ep);
 }
 
 static void
@@ -129,23 +100,50 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
       F32 angle = angle_between(l->dir, ep - l->pos);
       if (angle > l->half_angle) continue;
       
+      Ray2 light_ray = {};
+      light_ray.pt = l->pos;
+      light_ray.dir = rotate(ep - l->pos, offset_angle);
       
-      gen_light_intersection_wrt_endpoint(l, edges, ep, offset_angle);
+      assert(l->debug_ray_count < array_count(l->debug_rays));
+      l->debug_rays[l->debug_ray_count++] = light_ray.dir; 
+      
+      auto [found, intersection] = get_light_ray_intersection(light_ray, edges);
+      
+      // Add intersection
+      assert(slist_has_space(&l->intersections));
+      slist_push_copy(&l->intersections, 
+                      found ? intersection : ep);
+      
     }
     
     
   }
   
-  // TODO: Only do these for point light
+  // TODO: Only do these for directional light
   {
-    V2 dir = rotate(l->dir, l->half_angle);
-    gen_light_intersection_wrt_direction(l, edges, dir);
+    Ray2 shell_rays[2];
+    shell_rays[0].pt = l->pos;
+    shell_rays[0].dir = rotate(l->dir, l->half_angle);
+    shell_rays[1].pt = l->pos;
+    shell_rays[1].dir = rotate(l->dir, -l->half_angle);
+    
+    for (U32 shell_ray_index = 0;
+         shell_ray_index < array_count(shell_rays);
+         ++shell_ray_index)
+    {
+      auto [found, intersection] = 
+        get_light_ray_intersection(shell_rays[shell_ray_index], edges);
+      
+      if(found) {
+        assert(slist_has_space(&l->intersections));
+        slist_push_copy(&l->intersections, 
+                        intersection);
+      }
+    }
+    
   }
   
-  {
-    V2 dir = rotate(l->dir, -l->half_angle);
-    gen_light_intersection_wrt_direction(l, edges, dir);
-  }  
+  
   
   // Sort intersections in a clockwise order
   auto pred = [&](V2* lhs, V2* rhs){
