@@ -6,16 +6,15 @@
 #include "momo_essentials.h"
 #include "momo_intrinsics.h"
 #include "momo_sort.h"
-
-
-//-TODO(Momo): These are currently under consideration for namespacing
 #include "momo_colors.h"
 #include "momo_vectors.h"
+#include "momo_shapes.h"
+
+//-TODO(Momo): These are currently under consideration for namespacing
 #include "momo_interval.h"
 #include "momo_matrix.h"
-#include "momo_shapes.h"
-#include "momo_arena.h"
 
+#include "momo_arena.h"
 #include "momo_crc.h"
 //#include "momo_mailbox.h"
 #include "momo_strings.h"
