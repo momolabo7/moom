@@ -50,7 +50,7 @@ int main() {
   
 #if 1
   sui_log("Writing test png file...\n");
-  Memory png_to_write_memory = write_bitmap_as_png(atlas.bitmap, arena);
+  Memory png_to_write_memory = png_write(atlas.bitmap, arena);
   assert(is_ok(png_to_write_memory));
   sui_write_file("test.png", png_to_write_memory);
 #endif

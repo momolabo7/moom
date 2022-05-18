@@ -1,6 +1,6 @@
 
 static RNG
-create_rng(U32 seed)
+rng_create(U32 seed)
 {
   RNG series = {};
   series.index = seed;
@@ -8,7 +8,7 @@ create_rng(U32 seed)
 }
 
 static U32 
-next(RNG* r)
+rng_next(RNG* r)
 {
   U32 result = r->index;
 	result ^= result << 13;
@@ -19,17 +19,17 @@ next(RNG* r)
 }
 
 static U32 
-next_choice(RNG* r, U32 choice_count) {
+rng_choice(RNG* r, U32 choice_count) {
   assert(choice_count > 0);
-  return next(r) % choice_count;
+  return rng_next(r) % choice_count;
 }
 
 // Get number within [0, 1]
 static F32 
-next_unilateral(RNG* r)
+rng_unilateral(RNG* r)
 {
   F32 divisor = 1.0f / (F32)U32_MAX;
-  F32 result = divisor*(F32)next(r);
+  F32 result = divisor*(F32)rng_next(r);
   
   return result;
 }
@@ -37,32 +37,32 @@ next_unilateral(RNG* r)
 
 // Get number within [-1, 1]
 static F32 
-next_bilateral(RNG* r)
+rng_bilateral(RNG* r)
 {
-  F32 result = 2.0f * next_unilateral(r) - 1.0f;  
+  F32 result = 2.0f * rng_unilateral(r) - 1.0f;  
   return(result);
 }
 
 static F32 
-next_range_F32(RNG* r, F32 min, F32 max)
+rng_range_F32(RNG* r, F32 min, F32 max)
 {
   assert(max >= min);
-  F32 result = lerp(min, next_unilateral(r), max);
+  F32 result = lerp(min, rng_unilateral(r), max);
   return(result);
 }
 
 static S32 
-next_range_S32(RNG* r, S32 min, S32 max)
+rng_range_S32(RNG* r, S32 min, S32 max)
 {
   assert(max >= min);
-  S32 result = min + (S32)(next(r)%((max + 1) - min));
+  S32 result = min + (S32)(rng_next(r)%((max + 1) - min));
   return(result);
 }
 
 static U32
-next_range_U32(RNG* r, U32 min, U32 max)
+rng_range_U32(RNG* r, U32 min, U32 max)
 {
   assert(max >= min);
-  U32 result = min + (U32)(next(r)%((max + 1) - min));
+  U32 result = min + (U32)(rng_next(r)%((max + 1) - min));
   return(result);
 }

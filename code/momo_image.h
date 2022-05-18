@@ -1,12 +1,13 @@
 // Authors: Gerald Wong, momodevelop
 // 
-// This file contains generic Bitmap types..
+// This file contains generic Bitmap types.
 //
 // Notes:
 // - Right now, we only support 32-bit images in RGBA format
 //
 // Todo:
 // - Come up with a better way that can represent different image types.
+// - We could possibly want to tie this together with image loaders?
 // 
 
 #ifndef MOMO_IMAGE_H
@@ -19,7 +20,6 @@ struct Bitmap {
   U32 width, height;
   U32* pixels;
 };
-
 
 static B32 is_ok(Bitmap);
 

@@ -308,9 +308,9 @@ end_asset_pack(Sui_Packer* p,
       kfg.uv = pfg->uv;
       kfg.codepoint = pfg->codepoint;
       
-      U32 ttf_glyph_index = get_glyph_index_from_codepoint(pf->ttf,kfg.codepoint);
-      F32 s = get_scale_for_pixel_height(pf->ttf, 1.f);
-      kfg.box = get_glyph_box(pf->ttf, ttf_glyph_index, s);
+      U32 ttf_glyph_index = ttf_get_glyph_index(pf->ttf,kfg.codepoint);
+      F32 s = ttf_get_scale_for_pixel_height(pf->ttf, 1.f);
+      kfg.box = ttf_get_glyph_box(pf->ttf, ttf_glyph_index, s);
       
       fwrite(&kfg, sizeof(kfg), 1, file);
       offset_to_data += sizeof(kfg);
@@ -320,7 +320,7 @@ end_asset_pack(Sui_Packer* p,
          pgi1 < pf->one_past_glyph_end_index;
          ++pgi1) 
     {
-      F32 pixel_scale = get_scale_for_pixel_height(pf->ttf, 1.f);
+      F32 pixel_scale = ttf_get_scale_for_pixel_height(pf->ttf, 1.f);
       
       Packer_Font_Glyph* pfg1 = p->font_glyphs + pgi1;
       for (U32 pgi2 = pf->glyph_start_index;
@@ -332,11 +332,11 @@ end_asset_pack(Sui_Packer* p,
         U32 cp1 = pfg1->codepoint;
         U32 cp2 = pfg2->codepoint;
         
-        U32 gi1 = get_glyph_index_from_codepoint(pf->ttf, cp1);
-        U32 gi2 = get_glyph_index_from_codepoint(pf->ttf, cp2);
+        U32 gi1 = ttf_get_glyph_index(pf->ttf, cp1);
+        U32 gi2 = ttf_get_glyph_index(pf->ttf, cp2);
         
-        auto g1_metrics = get_glyph_horizontal_metrics(pf->ttf, gi1);
-        S32 raw_kern = get_glyph_kerning(pf->ttf, gi1, gi2);
+        auto g1_metrics = ttf_get_glyph_horiozontal_metrics(pf->ttf, gi1);
+        S32 raw_kern = ttf_get_glyph_kerning(pf->ttf, gi1, gi2);
         
         F32 advance_width = (F32)g1_metrics.advance_width * pixel_scale;
         F32 kerning = (F32)raw_kern * pixel_scale;

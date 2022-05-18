@@ -30,24 +30,24 @@ void test_ttf() {
   
   
   assert(is_ok(ttf_memory));
-  TTF ttf = read_ttf(ttf_memory);
+  TTF ttf = ttf_read(ttf_memory);
   
   test_log("Testing rasterization\n");
   {
     test_create_log_section_until_scope;
-    F32 scale_factor = get_scale_for_pixel_height(&ttf, 512.f);
+    F32 scale_factor = ttf_get_scale_for_pixel_height(&ttf, 512.f);
     for (U32 codepoint = 65; codepoint <= 65+26; ++codepoint) {
       //for (U32 codepoint = 87; codepoint <= 87; ++codepoint) {
       test_log("rasterizing codepoint %X\n", codepoint);
       set_arena_reset_point(arena);
       
-      U32 glyph_index = get_glyph_index_from_codepoint(&ttf, codepoint);
-      Bitmap codepoint_image = rasterize_glyph(&ttf, glyph_index, scale_factor, arena);
+      U32 glyph_index = ttf_get_glyph_index(&ttf, codepoint);
+      Bitmap codepoint_image = ttf_rasterize_glyph(&ttf, glyph_index, scale_factor, arena);
       {
         make_string_builder(strbld, 256);
         push_format(strbld, string_from_lit("%d.png\0"), codepoint);
         
-        Memory image_mem = write_bitmap_as_png(codepoint_image, arena);
+        Memory image_mem = png_write(codepoint_image, arena);
         test_write_memory_to_file(image_mem, (const char*)strbld->e);
       }
     }
@@ -61,7 +61,7 @@ void test_ttf() {
     U32 e = 65+26;
     for (U32 cp1 = s; cp1 <= e; ++cp1) {
       for (U32 cp2 = s; cp2 <= e; ++cp2) {
-        test_log("(%d, %d) = %d\n", cp1, cp2, get_glyph_kerning(&ttf, cp1, cp2));
+        test_log("(%d, %d) = %d\n", cp1, cp2, ttf_get_glyph_kerning(&ttf, cp1, cp2));
       }
     }
   }

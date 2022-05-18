@@ -60,7 +60,7 @@ _rp_sort(_RP_Sort_Entry* sort_entries,
   }
 }
 static void
-pack_rects(RP_Rect* rects, 
+rp_pack(RP_Rect* rects, 
            U32 rect_count, 
            U32 padding,
            U32 total_width,

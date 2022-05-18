@@ -1,4 +1,4 @@
-/* date = November 26th 2021 6:57 pm */
+// TODO: Namespace this. Need a good name though.
 
 #ifndef MOMO_STREAM_H
 #define MOMO_STREAM_H

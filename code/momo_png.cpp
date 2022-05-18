@@ -691,7 +691,7 @@ _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
 static Bitmap
-create_bitmap(PNG* png, Arena* arena) 
+png_to_bitmap(PNG* png, Arena* arena) 
 {
   if (!is_ok(png)) return {};
   
@@ -779,7 +779,7 @@ create_bitmap(PNG* png, Arena* arena)
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
 static Memory
-write_bitmap_as_png(Bitmap bm, Arena* arena) {
+png_write(Bitmap bm, Arena* arena) {
   assert(bm.width > 0);
   assert(bm.height > 0);
   assert(bm.pixels != 0);
@@ -948,7 +948,7 @@ write_bitmap_as_png(Bitmap bm, Arena* arena) {
 }
 
 static PNG
-create_png(Memory png_memory) {
+png_read(Memory png_memory) {
   declare_and_pointerize(Stream, stream);
   init_stream(stream, (U8*)png_memory.data, png_memory.size);
   

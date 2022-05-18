@@ -70,7 +70,7 @@ sui_load_font(const char* filename, Arena* arena) {
   Memory mem = sui_read_file(filename, arena);
   assert(is_ok(mem));
   
-  TTF ret = read_ttf(mem);
+  TTF ret = ttf_read(mem);
   return ret;
 }
 

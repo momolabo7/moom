@@ -1,4 +1,3 @@
-// TODO(Momo): This should really be just 'momo_intrinsics.h'
 // So all the sqrt, sin, cos functions are gonna be here instead
 // of litering #if everywhere
 

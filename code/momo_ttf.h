@@ -17,6 +17,7 @@
 //   - gpos support
 //   - other format support for kern (other than 0)
 // - Different rasterization color modes
+// - codepoint versions of all functions
 
 #ifndef MOMO_TTF_H
 #define MOMO_TTF_H
@@ -39,24 +40,23 @@ struct TTF_Glyph_Horizontal_Metrics
   S16 left_side_bearing;
 };
 
+static TTF ttf_read(Memory ttf_memory);
 
-static TTF read_ttf(Memory ttf_memory);
-
-static U32 get_glyph_index_from_codepoint(TTF* ttf, U32 codepoint);
+static U32 ttf_get_glyph_index(TTF* ttf, U32 codepoint);
 // returns 0 for invalid codepoints
 
-static TTF_Glyph_Horizontal_Metrics get_glyph_horizontal_metrics(TTF* ttf, U32 glyph_index);
+static TTF_Glyph_Horizontal_Metrics ttf_get_glyph_horiozontal_metrics(TTF* ttf, U32 glyph_index);
 
-static F32 get_scale_for_pixel_height(TTF* ttf, F32 pixel_height);
+static F32 ttf_get_scale_for_pixel_height(TTF* ttf, F32 pixel_height);
 // This returns the 'scale factor' you need to apply to the font's coordinates
 // (box, glyphs, etc) to scale it to a font height equals to pixel_height
 
 
-static Bitmap rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena);
+static Bitmap ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena);
 // Returns an RGBA image where the glyph is white and the background is transparent
 
-static S32 get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);
-static Rect2 get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor);
+static S32 ttf_get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);
+static Rect2 ttf_get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor);
 
 #include "momo_ttf.cpp"
 

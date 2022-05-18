@@ -100,7 +100,7 @@ _ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
 // with respect to the coordinate system stated above.
 // 
 static _TTF_Glyph_Box
-_ttf_get_glyph_box(TTF* ttf, U32 glyph_index) {
+_ttf_ttf_get_glyph_box(TTF* ttf, U32 glyph_index) {
   _TTF_Glyph_Box ret = {};
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
 	if(g != 0)
@@ -433,7 +433,7 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
 //////////////////////////////////////////////////////////
 //~Public interface implementation
 static U32
-get_glyph_index_from_codepoint(TTF* ttf, U32 codepoint) {
+ttf_get_glyph_index(TTF* ttf, U32 codepoint) {
   
   U16 format = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 0);
   
@@ -491,14 +491,14 @@ get_glyph_index_from_codepoint(TTF* ttf, U32 codepoint) {
 
 
 static F32
-get_scale_for_pixel_height(TTF* ttf, F32 pixel_height) {
+ttf_get_scale_for_pixel_height(TTF* ttf, F32 pixel_height) {
   S32 font_height = _ttf_read_s16(ttf->data + ttf->hhea + 4) - _ttf_read_s16(ttf->data + ttf->hhea + 6);
   return (F32)pixel_height/font_height;
 }
 
 
 static TTF_Glyph_Horizontal_Metrics 
-get_glyph_horizontal_metrics(TTF* ttf, U32 glyph_index)
+ttf_get_glyph_horiozontal_metrics(TTF* ttf, U32 glyph_index)
 {
   U16 num_of_long_horizontal_metrices = _ttf_read_u16(ttf->data + ttf->hhea + 34);
   TTF_Glyph_Horizontal_Metrics ret = {};
@@ -524,7 +524,7 @@ get_glyph_horizontal_metrics(TTF* ttf, U32 glyph_index)
 
 
 static TTF
-read_ttf(Memory ttf_memory) {
+ttf_read(Memory ttf_memory) {
   TTF ret = {};
   ret.data = ttf_memory.data_u8;
   
@@ -631,7 +631,7 @@ read_ttf(Memory ttf_memory) {
 }
 
 static S32 
-get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
+ttf_get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
   
   if (ttf->gpos) {
     assert(false);
@@ -644,10 +644,10 @@ get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
 }
 
 static Rect2 
-get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor) {
+ttf_get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor) {
   Rect2 ret = {};
   
-  Rect2S raw_box = _ttf_get_glyph_box(ttf, glyph_index);
+  Rect2S raw_box = _ttf_ttf_get_glyph_box(ttf, glyph_index);
   ret.min.x = (F32)raw_box.min.x * scale_factor;
   ret.min.y = (F32)raw_box.min.y * scale_factor;
   ret.max.x = (F32)raw_box.max.x * scale_factor;
@@ -672,8 +672,8 @@ get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
 
 
 static Bitmap 
-rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
-  Rect2 box = get_glyph_box(ttf, glyph_index, scale_factor);
+ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
+  Rect2 box = ttf_get_glyph_box(ttf, glyph_index, scale_factor);
   V2U bitmap_dims = get_bitmap_dims_from_glyph_box(box);
   
   if (bitmap_dims.w == 0 || bitmap_dims.h == 0) return {};

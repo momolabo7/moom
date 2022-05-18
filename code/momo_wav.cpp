@@ -2,7 +2,7 @@
 
 
 static inline WAV 
-read_wav(void* memory, 
+wav_read(void* memory, 
          U32 memory_size) 
 {
   const static U32 riff_id_signature = 0x52494646;

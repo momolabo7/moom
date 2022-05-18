@@ -1,5 +1,3 @@
-/* date = november 20th 2021 11:58 am */
-
 #ifndef MOMO_STRING_H
 #define MOMO_STRING_H
 
