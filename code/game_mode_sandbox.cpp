@@ -200,6 +200,12 @@ init_sandbox_mode(Game_Memory* memory,
   s->size.y = 32.f;
   
   // World edges
+  push_edge(s, {0.f,0.f}, {1600.f, 0.f});
+  push_edge(s, {1600.f, 0.f}, { 1600.f, 900.f });
+  push_edge(s, {1600.f, 900.f}, {0.f, 900.f});
+  push_edge(s, {0.f, 900.f}, {0.f, 0.f});
+  
+  // Room edges
   push_edge(s, {99.999f,100.f}, {1500.001f, 100.f});
   push_edge(s, {1500.f,99.999f}, {1500.f, 800.001f});
   push_edge(s, {1500.001f,800.f}, {99.9f, 800.f});
