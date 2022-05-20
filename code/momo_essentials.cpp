@@ -139,34 +139,6 @@ abs_of(S64 x) {
   return (x ^ y)-y;
 }
 
-static F32 
-sign_of(F32 x) {
-  return x >= 0 ? 1.f : -1.f;
-}
-
-static F64
-sign_of(F64 x) {
-  return x >= 0 ? 1.0 : -1.0;
-}
-
-
-static S8   
-sign_of(S8 x) {
-  return x >= 0 ? 1 : -1;
-}
-static S16  
-sign_of(S16 x) {
-  return x >= 0 ? 1 : -1;
-}
-static S32  
-sign_of(S32 x) {
-  return x >= 0 ? 1 : -1;
-}
-static S64  
-sign_of(S64 x) {
-  return x >= 0 ? 1 : -1;
-}
-
 template<typename T> static T
 lerp(T s, T e, F32 f) { 
   return (T)(s + (e-s) * f); 

@@ -40,6 +40,12 @@ struct Ray2 {
   V2 dir;
 };
 
+//~ Triangle
+struct Tri2 {
+  V2 pts[3];
+};
+
+static B32 is_point_in_triangle(Tri2 tri, V2 pt);
 
 #include "momo_shapes.cpp"
 

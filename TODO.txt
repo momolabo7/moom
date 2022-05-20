@@ -8,7 +8,7 @@ Engine
 	
 
 Game
-	Directional light
+	single edge with two endpoints?
 
 4coder
   Support strongly typed enums

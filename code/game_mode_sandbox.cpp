@@ -4,6 +4,12 @@ push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
   l->triangles[l->triangle_count++] = { p0, p1, p2 };
 }
 
+static void 
+push_sensor(Sandbox_Mode* s, V2 pos, U32 color) {
+  assert(s->sensor_count < array_count(s->sensors));
+  s->sensors[s->sensor_count++] = { pos, color };
+}
+
 static Maybe<V2> 
 get_light_ray_intersection(Ray2 light_ray, Edge_List* edges) {
   F32 lowest_t1 = F32_INFINITY();
@@ -199,6 +205,9 @@ init_sandbox_mode(Game_Memory* memory,
   s->size.x = 32.f;
   s->size.y = 32.f;
   
+  s->sensor_count = 0;
+  
+  
   // World edges
   push_edge(s, {0.f,0.f}, {1600.f, 0.f});
   push_edge(s, {1600.f, 0.f}, { 1600.f, 900.f });
@@ -216,9 +225,11 @@ init_sandbox_mode(Game_Memory* memory,
   push_edge(s, {700.f, 499.999f}, {700.f, 700.001f}); 
   push_edge(s, {700.001f, 700.001f}, {499.999f, 499.999f}); 
   
-  //
+  // lights
   push_light(s, {500.f, 400.f}, 0x00FF0088);
   s->player_light = push_light(s, {}, 0xFF000088);
+  
+  push_sensor(s, {400.f, 600.f}, 0xFFFF0000);
 }
 
 static void 
@@ -271,6 +282,39 @@ update_sandbox_mode(Game_Memory* memory,
     gen_light_intersections(light, &s->endpoints, &s->edges);
   }
   
+  // check sensor correctness
+  for (U32 sensor_index = 0;
+       sensor_index < array_count(s->sensors);
+       ++sensor_index)
+  {
+    Light_Sensor* sensor = s->sensors + sensor_index;
+    
+    U32 current_color = 0x0000000;
+    
+    // For each light, for each triangle, add light
+    for(U32 light_index = 0;
+        light_index < s->light_count;
+        ++light_index) 
+    {
+      Light* light = s->lights + light_index;
+      for (U32 tri_index = 0;
+           tri_index < light->triangle_count;
+           ++tri_index)
+      {
+        
+        if (is_point_in_triangle(light->triangles[tri_index], sensor->pos)) {
+          current_color += 1;
+        }
+        
+        
+      }
+      
+    }
+    
+    sensor->current_color = current_color;
+    
+  }
+  
   // Rendering
   {
     // Clear colors
@@ -300,6 +344,7 @@ update_sandbox_mode(Game_Memory* memory,
                 400.f);
     }
     
+    
 #if 0
     // Draw the light rays
     for(U32 light_ray_index = 0; 
@@ -315,11 +360,9 @@ update_sandbox_mode(Game_Memory* memory,
       push_line(cmds, line, 
                 1.f, rgba(0x00FFFFFF), 4.f);
     }
-#endif
     
     make_string_builder(sb, 128);
     
-#if 0  
     for (U32 intersection_index = 0;
          intersection_index < s->player_light->intersection_count;
          ++intersection_index) 
@@ -354,6 +397,33 @@ update_sandbox_mode(Game_Memory* memory,
       
     }
     
+    // Draw sensors
+    for (U32 sensor_index = 0;
+         sensor_index < s->sensor_count;
+         ++sensor_index)
+    {
+      
+      Light_Sensor* sensor = s->sensors + sensor_index;
+      draw_sprite(ga, cmds, 
+                  SPRITE_BULLET_DOT, 
+                  sensor->pos.x, sensor->pos.y, 
+                  16, 16,
+                  300.f);
+      
+      // only for debugging
+      make_string_builder(sb, 128);
+      push_format(sb, string_from_lit("[%u]"), sensor->current_color);
+      draw_text(ga, cmds, FONT_DEFAULT, 
+                sb->str,
+                rgba(0xFFFFFFFF),
+                sensor->pos.x,
+                sensor->pos.y + 10.f,
+                32.f,
+                300.f);
+    }
+    
+
+    
     // Draw lights
     for (U32 light_index = 0;
          light_index < s->light_count;
@@ -361,7 +431,7 @@ update_sandbox_mode(Game_Memory* memory,
     {
       Light* light = s->lights + light_index;
       draw_sprite(ga, cmds, SPRITE_BULLET_DOT, 
-                  light->pos.x, light->pos.y ,
+                  light->pos.x, light->pos.y,
                   16, 16,
                   300.f);
       
@@ -382,12 +452,12 @@ update_sandbox_mode(Game_Memory* memory,
            triangle_index < l->triangle_count;
            ++triangle_index)
       {
-        Light_Triangle* lt = l->triangles + triangle_index;
+        Tri2* lt = l->triangles + triangle_index;
         push_triangle(cmds, 
                       rgba(l->color),
-                      lt->p0,
-                      lt->p1,
-                      lt->p2,
+                      lt->pts[0],
+                      lt->pts[1],
+                      lt->pts[2],
                       200.f - z);
       }
       z += 0.01f;

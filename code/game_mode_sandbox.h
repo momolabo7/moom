@@ -3,6 +3,13 @@
 #ifndef GAME_MODE_SANDBOX_H
 #define GAME_MODE_SANDBOX_H
 
+struct Light_Sensor {
+  V2 pos;
+  U32 target_color;
+  U32 current_color;
+};
+
+
 struct Edge {
   Line2 line;
 };
@@ -15,12 +22,6 @@ struct Edge_List {
 struct Endpoint_List {
   U32 count;
   V2 e[64];
-};
-
-struct Light_Triangle {
-  V2 p0;
-  V2 p1; 
-  V2 p2;
 };
 
 
@@ -40,7 +41,8 @@ struct Light {
   V2 debug_rays[64];
   
   U32 triangle_count;
-  Light_Triangle triangles[128];
+  Tri2 triangles[128];
+  
   
 };
 
@@ -56,6 +58,8 @@ struct Sandbox_Mode {
   U32 light_count;
   Light lights[32];
   
+  U32 sensor_count;
+  Light_Sensor sensors[32];
 };
 
 

@@ -63,7 +63,7 @@ draw_text(Game_Assets* ga,
     M44 transform = 
       m44_translation(px + (glyph->box.min.x*font_height), 
                       py + (glyph->box.min.y*font_height), 
-                      9.f)*
+                      depth)*
       m44_scale(width, height, 1.f)*
       m44_translation(0.5f, 0.5f, 1.f);
     

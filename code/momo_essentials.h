@@ -193,13 +193,6 @@ static S16 abs_of(S16 value);
 static S32 abs_of(S32 value);
 static S64 abs_of(S64 value);
 
-static F32 sign_of(F32 value);
-static F64 sign_of(F64 value);
-static S8  sign_of(S8 value);
-static S16 sign_of(S16 value);
-static S32 sign_of(S32 value);
-static S64 sign_of(S64 value);
-
 
 // NOTE(Momo): Lerp is tricky because the 'f' variable the 'percentage'.
 // and must be of a floating point type. I'm not sure if I want to go into
