@@ -47,6 +47,9 @@ static void     push_f32(String_Builder* b, F32 value, U32 precision);
 static void     push_s32(String_Builder* b, S32 num);
 static void     push_s64(String_Builder* b, S64 num);
 static void     push_string(String_Builder* b, String num);
+static void     push_hex_u8(String_Builder* b, U8 num);
+static void     push_hex_u32(String_Builder* b, U32 num);
+
 static void     push_format(String_Builder* b, String fmt, ...);
 
 static void     init_string_builder(String_Builder* b, U8* data, UMI cap);

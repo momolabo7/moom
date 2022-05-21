@@ -24,6 +24,15 @@ struct Endpoint_List {
   V2 e[64];
 };
 
+struct Light_Intersection_List {
+  U32 count;
+  V2 e[64];
+};
+
+struct Light_Triangle_List {
+  U32 count;
+  Tri2 e[64];
+};
 
 struct Light {
   V2 dir;
@@ -32,16 +41,13 @@ struct Light {
   V2 pos;  
   U32 color;
   
-  struct {
-    U32 count;
-    V2 e[64];
-  } intersections;
+	Light_Intersection_List intersections;
+  Light_Triangle_List triangles;
+  
   
   U32 debug_ray_count;
   V2 debug_rays[64];
   
-  U32 triangle_count;
-  Tri2 triangles[128];
   
   
 };

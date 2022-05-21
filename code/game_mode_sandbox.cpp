@@ -1,7 +1,8 @@
 static void
 push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
-  assert(l->triangle_count < array_count(l->triangles));
-  l->triangles[l->triangle_count++] = { p0, p1, p2 };
+  assert(slist_has_space(&l->triangles));
+  Tri2 tri = { p0, p1, p2 };
+  slist_push_copy(&l->triangles, tri);
 }
 
 static void 
@@ -15,9 +16,7 @@ get_light_ray_intersection(Ray2 light_ray, Edge_List* edges) {
   F32 lowest_t1 = F32_INFINITY();
   B32 found = false;
   
-  for(U32 edge_index = 0; 
-      edge_index <  edges->count;
-      ++edge_index) 
+  slist_foreach(edge_index, edges)
   {
     Edge* edge = slist_get(edges, edge_index);
     
@@ -63,8 +62,7 @@ get_light_ray_intersection(Ray2 light_ray, Edge_List* edges) {
 static void
 gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
   slist_clear(&l->intersections);
-  
-  l->triangle_count = 0;
+  slist_clear(&l->triangles);  
   l->debug_ray_count = 0;
   
   F32 offset_angles[] = {0.001f, 0.0f, -0.001f};
@@ -297,13 +295,12 @@ update_sandbox_mode(Game_Memory* memory,
         ++light_index) 
     {
       Light* light = s->lights + light_index;
-      for (U32 tri_index = 0;
-           tri_index < light->triangle_count;
-           ++tri_index)
+      slist_foreach(tri_index, &light->triangles)
       {
-        
-        if (is_point_in_triangle(light->triangles[tri_index], sensor->pos)) {
-          current_color += 1;
+        if (is_point_in_triangle(slist_get_copy(&light->triangles, tri_index), 
+                                 sensor->pos)) 
+        {
+          current_color += light->color >> 8 << 8; // ignore alpha
         }
         
         
@@ -333,138 +330,133 @@ update_sandbox_mode(Game_Memory* memory,
     }
     
     
-    // Draw the world collision
-    for(U32 edge_index = 0; 
-        edge_index <  s->edges.count;
-        ++edge_index) 
-    {
-      Edge* edge = slist_get(&s->edges, edge_index);
-      push_line(cmds, edge->line, 
-                1.f, rgba(0x00FF00FF), 
-                400.f);
-    }
-    
-    
+  }
+  // Draw the world collision
+  slist_foreach(edge_index, &s->edges) 
+  {
+    Edge* edge = slist_get(&s->edges, edge_index);
+    push_line(cmds, edge->line, 
+              1.f, rgba(0x00FF00FF), 
+              400.f);
+  }
+  
+  
 #if 0
-    // Draw the light rays
-    for(U32 light_ray_index = 0; 
-        light_ray_index < s->player_light->debug_ray_count;
-        ++light_ray_index) 
-    {
-      V2 light_ray = s->player_light->debug_rays[light_ray_index];
-      
-      Line2 line = {};
-      line.min = s->position;
-      line.max = s->position + light_ray;
-      
-      push_line(cmds, line, 
-                1.f, rgba(0x00FFFFFF), 4.f);
-    }
+  // Draw the light rays
+  for(U32 light_ray_index = 0; 
+      light_ray_index < s->player_light->debug_ray_count;
+      ++light_ray_index) 
+  {
+    V2 light_ray = s->player_light->debug_rays[light_ray_index];
     
-    make_string_builder(sb, 128);
+    Line2 line = {};
+    line.min = s->position;
+    line.max = s->position + light_ray;
     
-    for (U32 intersection_index = 0;
-         intersection_index < s->player_light->intersection_count;
-         ++intersection_index) 
-    {
-      clear(sb);
-      
-      Line2 line = {};
-      line.min = s->position;
-      line.max = s->player_light->intersections[intersection_index];
-      
-      push_format(sb, string_from_lit("[%u]"), intersection_index);
-      
-      draw_text(ga, cmds, FONT_DEFAULT, 
-                sb->str,
-                rgba(0xFF0000FF),
-                line.max.x,
-                line.max.y + 10.f,
-                32.f,
-                1.f);
-      push_line(cmds, line, 1.f, rgba(0xFF0000FF), 3.f);
-      
-    }
-#endif
+    push_line(cmds, line, 
+              1.f, rgba(0x00FFFFFF), 4.f);
+  }
+  
+  make_string_builder(sb, 128);
+  
+  for (U32 intersection_index = 0;
+       intersection_index < s->player_light->intersection_count;
+       ++intersection_index) 
+  {
+    clear(sb);
     
+    Line2 line = {};
+    line.min = s->position;
+    line.max = s->player_light->intersections[intersection_index];
     
-    // Draw player
-    {
-      draw_sprite(ga, cmds, SPRITE_BULLET_CIRCLE, 
-                  s->position.x, s->position.y, 
-                  s->size.x, s->size.y,
-                  300.f);
-      
-    }
+    push_format(sb, string_from_lit("[%u]"), intersection_index);
     
-    // Draw sensors
-    for (U32 sensor_index = 0;
-         sensor_index < s->sensor_count;
-         ++sensor_index)
-    {
-      
-      Light_Sensor* sensor = s->sensors + sensor_index;
-      draw_sprite(ga, cmds, 
-                  SPRITE_BULLET_DOT, 
-                  sensor->pos.x, sensor->pos.y, 
-                  16, 16,
-                  300.f);
-      
-      // only for debugging
-      make_string_builder(sb, 128);
-      push_format(sb, string_from_lit("[%u]"), sensor->current_color);
-      draw_text(ga, cmds, FONT_DEFAULT, 
-                sb->str,
-                rgba(0xFFFFFFFF),
-                sensor->pos.x,
-                sensor->pos.y + 10.f,
-                32.f,
-                300.f);
-    }
-    
-
-    
-    // Draw lights
-    for (U32 light_index = 0;
-         light_index < s->light_count;
-         ++light_index)
-    {
-      Light* light = s->lights + light_index;
-      draw_sprite(ga, cmds, SPRITE_BULLET_DOT, 
-                  light->pos.x, light->pos.y,
-                  16, 16,
-                  300.f);
-      
-    }
-    
-    push_blend(cmds, BLEND_TYPE_ADD);
-    // TODO(Momo): This is terrible
-    // one light should be set to one 'layer' of triangles'
-    // Maybe each light should store an array of triangles?
-    // Would that be more reasonable?
-    F32 z = 0.1f;
-    for (U32 light_index = 0;
-         light_index < s->light_count; 
-         ++light_index )
-    {
-      Light* l = s->lights + light_index;
-      for (U32 triangle_index = 0;
-           triangle_index < l->triangle_count;
-           ++triangle_index)
-      {
-        Tri2* lt = l->triangles + triangle_index;
-        push_triangle(cmds, 
-                      rgba(l->color),
-                      lt->pts[0],
-                      lt->pts[1],
-                      lt->pts[2],
-                      200.f - z);
-      }
-      z += 0.01f;
-      
-    }
-    
+    draw_text(ga, cmds, FONT_DEFAULT, 
+              sb->str,
+              rgba(0xFF0000FF),
+              line.max.x,
+              line.max.y + 10.f,
+              32.f,
+              1.f);
+    push_line(cmds, line, 1.f, rgba(0xFF0000FF), 3.f);
     
   }
+#endif
+  
+  
+  // Draw player
+  {
+    draw_sprite(ga, cmds, SPRITE_BULLET_CIRCLE, 
+                s->position.x, s->position.y, 
+                s->size.x, s->size.y,
+                300.f);
+    
+  }
+  
+  // Draw sensors
+  for (U32 sensor_index = 0;
+       sensor_index < s->sensor_count;
+       ++sensor_index)
+  {
+    
+    Light_Sensor* sensor = s->sensors + sensor_index;
+    draw_sprite(ga, cmds, 
+                SPRITE_BULLET_DOT, 
+                sensor->pos.x, sensor->pos.y, 
+                16, 16,
+                300.f);
+    
+    // only for debugging
+    make_string_builder(sb, 128);
+    push_format(sb, string_from_lit("[%X]"), sensor->current_color);
+    draw_text(ga, cmds, FONT_DEFAULT, 
+              sb->str,
+              rgba(0xFFFFFFFF),
+              sensor->pos.x - 100.f,
+              sensor->pos.y + 10.f,
+              32.f,
+              300.f);
+  }
+  
+  
+  
+  // Draw lights
+  for (U32 light_index = 0;
+       light_index < s->light_count;
+       ++light_index)
+  {
+    Light* light = s->lights + light_index;
+    draw_sprite(ga, cmds, SPRITE_BULLET_DOT, 
+                light->pos.x, light->pos.y,
+                16, 16,
+                300.f);
+    
+  }
+  
+  push_blend(cmds, BLEND_TYPE_ADD);
+  // TODO(Momo): This is terrible
+  // one light should be set to one 'layer' of triangles'
+  // Maybe each light should store an array of triangles?
+  // Would that be more reasonable?
+  F32 z = 0.1f;
+  for (U32 light_index = 0;
+       light_index < s->light_count; 
+       ++light_index )
+  {
+    Light* l = s->lights + light_index;
+    slist_foreach(tri_index, &l->triangles)
+    {
+      Tri2* lt = slist_get(&l->triangles, tri_index);
+      push_triangle(cmds, 
+                    rgba(l->color),
+                    lt->pts[0],
+                    lt->pts[1],
+                    lt->pts[2],
+                    200.f - z);
+    }
+    z += 0.01f;
+    
+  }
+  
   
 }

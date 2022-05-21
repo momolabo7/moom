@@ -229,6 +229,41 @@ push_f64(String_Builder* b, F64 value, U32 precision) {
 	push_u32(b, decimal_part);
 }
 
+
+static void
+push_hex_u8(String_Builder* b, U8 value) {
+  
+  C8 parts[2] = {
+    value >> 4,
+    value & 0xF,
+    
+  };
+  
+  for(U32 i = 0; i < array_count(parts); ++i) {
+    if (parts[i] >= 0 && parts[i] <= 9) {
+      push_c8(b, parts[i] + '0');
+    }
+    else if (parts[i] >= 10 && parts[i] <= 15) {
+      push_c8(b, parts[i] - 10 + 'A');
+    }
+  }
+  
+  
+  
+  
+}
+
+static void
+push_hex_u32(String_Builder* b, U32 value) {
+  union { U32 v; U8 b[4]; } combine;
+  combine.v = value;
+  for(S32 i = 3; i >= 0; --i) {
+    push_hex_u8(b, combine.b[i]);
+  }
+  
+  
+}
+
 static void
 _push_fmt_list(String_Builder* b, String format, va_list args) {
   UMI at = 0;
@@ -271,6 +306,11 @@ _push_fmt_list(String_Builder* b, String format, va_list args) {
         case 'F': {
           F64 value = va_arg(args, F64);
           push_f64(tb, (F64)value, 5);
+        } break;
+        case 'x':
+        case 'X': {
+          U32 value = va_arg(args, U32);
+          push_hex_u32(tb, value);
         } break;
         case 's': {
           // c-string
@@ -325,10 +365,10 @@ push_format(String_Builder* b, String fmt, ...) {
 
 static void     
 push_string(String_Builder* b, String src) {
-	assert(b->count + src.count <= b->cap);
-	for (UMI i = 0; i < src.count; ++i ) {
-		b->e[b->count++] = src.e[i];
-	}
+  assert(b->count + src.count <= b->cap);
+  for (UMI i = 0; i < src.count; ++i ) {
+    b->e[b->count++] = src.e[i];
+  }
 }
 
 

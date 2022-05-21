@@ -36,6 +36,7 @@
 #define slist_get_copy(l,i)       ((l)->e[i])
 #define slist_slear(l,i)				  ((l)->e[i] = (l)->e[(l)->count-1]), slist_pop(l)	
 #define slist_remove(l,i)				 (copy_memory((l)->e+i, (l)->e+i+1, sizeof((l)->e[0])*((l)->count--)-i))
+#define slist_foreach(i,l) 			 for(decltype((l)->count) i = 0; i < (l)->count; ++i)
 
 //~ NOTE(Momo): 'Dynamic' list API
 //
@@ -71,6 +72,7 @@
 #define list_get_copy(l,i)       (slist_get_copy(l,i))
 #define list_slear(l,i)				  (slist_slear(l,i))	
 #define list_remove(l,i)				 (slist_remove(l,i))
+#define list_foreach(i,l) 			 for(decltype((l)->count) i = 0; i < (l)->count; ++i)
 
 
 
