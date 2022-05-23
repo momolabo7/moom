@@ -5,8 +5,9 @@ push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
   slist_push_copy(&l->triangles, tri);
 }
 
+
 static Maybe<V2> 
-get_light_ray_intersection(Ray2 light_ray, Edge_List* edges) {
+get_ray_intersection_wrt_edges(Ray2 light_ray, Edge_List* edges) {
   F32 lowest_t1 = F32_INFINITY();
   B32 found = false;
   
@@ -57,9 +58,10 @@ static void
 gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
   slist_clear(&l->intersections);
   slist_clear(&l->triangles);  
-  l->debug_ray_count = 0;
+  slist_clear(&l->debug_rays);
   
-  F32 offset_angles[] = {0.001f, 0.0f, -0.001f};
+  F32 offset_angles[] = {0.0f, 0.01f, -0.01f};
+  //F32 offset_angles[] = {0.0f};
   for (U32 offset_index = 0;
        offset_index < array_count(offset_angles);
        ++offset_index) 
@@ -82,11 +84,10 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
       light_ray.pt = l->pos;
       light_ray.dir = rotate(ep - l->pos, offset_angle);
       
-      assert(l->debug_ray_count < array_count(l->debug_rays));
-      l->debug_rays[l->debug_ray_count++] = light_ray.dir; 
+      assert(slist_has_space(&l->debug_rays));
+      slist_push_copy(&l->debug_rays, light_ray.dir);
       
-      auto [found, intersection] =
-        get_light_ray_intersection(light_ray, edges);
+      auto [found, intersection] = get_ray_intersection_wrt_edges(light_ray, edges);
       
       assert(slist_has_space(&l->intersections));
       slist_push_copy(&l->intersections, 
@@ -105,8 +106,7 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
     shell_rays[1].dir = rotate(l->dir, -l->half_angle);
     
     for (U32 i = 0; i < array_count(shell_rays); ++i) {
-      auto [found, intersection] =
-        get_light_ray_intersection(shell_rays[i], edges);
+      auto [found, intersection] = get_ray_intersection_wrt_edges(shell_rays[i], edges);
       
       assert(slist_has_space(&l->intersections));
       if(found) {

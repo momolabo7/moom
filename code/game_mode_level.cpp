@@ -41,8 +41,8 @@ init_level_mode(Game_Memory* memory,
   Game_Assets* ga = &game->game_assets;
   Renderer_Command_Queue* cmds = memory->renderer_command_queue;
   
-  s->position.x = 0.f;
-  s->position.y = 0.f;
+  s->position.x = 500.f;
+  s->position.y = 400.f;
   
   s->size.x = 32.f;
   s->size.y = 32.f;
@@ -50,6 +50,7 @@ init_level_mode(Game_Memory* memory,
   s->sensor_count = 0;
   
   
+#if 1 //sigh
   // World edges
   push_edge(s, {0.f,0.f}, {1600.f, 0.f});
   push_edge(s, {1600.f, 0.f}, { 1600.f, 900.f });
@@ -66,6 +67,19 @@ init_level_mode(Game_Memory* memory,
   push_edge(s, {499.999f, 500.f}, {700.001f, 500.f}); 
   push_edge(s, {700.f, 499.999f}, {700.f, 700.001f}); 
   push_edge(s, {700.001f, 700.001f}, {499.999f, 499.999f}); 
+#else
+  push_edge(s, {0.f,0.f}, {1600.f, 0.f});
+  push_edge(s, {1600.f, 0.f}, { 1600.f, 900.f });
+  push_edge(s, {1600.f, 900.f}, {0.f, 900.f});
+  push_edge(s, {0.f, 900.f}, {0.f, 0.f});
+  
+  // Room edges
+  push_edge(s, {100.f,100.f}, {1500.f, 100.f});
+  push_edge(s, {1500.f,100.f}, {1500.f, 800.f});
+  push_edge(s, {1500.f,800.f}, {100.f, 800.f});
+  push_edge(s, {100.f,800.f}, {100.f, 100.f});
+  
+#endif
   
   // lights
   push_light(s, {500.f, 400.f}, 0x00FF0088);
@@ -185,13 +199,11 @@ update_level_mode(Game_Memory* memory,
   }
   
   
-#if 0
+#if 1
   // Draw the light rays
-  for(U32 light_ray_index = 0; 
-      light_ray_index < m->player_light->debug_ray_count;
-      ++light_ray_index) 
+  slist_foreach(light_ray_index, &m->player_light->debug_rays)
   {
-    V2 light_ray = m->player_light->debug_rays[light_ray_index];
+    V2 light_ray = m->player_light->debug_rays.e[light_ray_index];
     
     Line2 line = {};
     line.min = m->position;
@@ -201,17 +213,18 @@ update_level_mode(Game_Memory* memory,
               1.f, rgba(0x00FFFFFF), 4.f);
   }
   
-  make_string_builder(sb, 128);
   
   for (U32 intersection_index = 0;
-       intersection_index < m->player_light->intersection_count;
+       intersection_index < m->player_light->intersections.count;
        ++intersection_index) 
   {
+    make_string_builder(sb, 128);
+    
     clear(sb);
     
     Line2 line = {};
     line.min = m->position;
-    line.max = m->player_light->intersections[intersection_index];
+    line.max = m->player_light->intersections.e[intersection_index];
     
     push_format(sb, string_from_lit("[%u]"), intersection_index);
     
@@ -282,6 +295,7 @@ update_level_mode(Game_Memory* memory,
   // one light should be set to one 'layer' of triangles'
   // Maybe each light should store an array of triangles?
   // Would that be more reasonable?
+#if 1
   F32 z = 0.1f;
   for (U32 light_index = 0;
        light_index < m->light_count; 
@@ -301,6 +315,7 @@ update_level_mode(Game_Memory* memory,
     z += 0.01f;
     
   }
+#endif
   
   
 }

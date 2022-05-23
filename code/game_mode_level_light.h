@@ -13,6 +13,11 @@ struct Light_Triangle_List {
   Tri2 e[64];
 };
 
+struct Light_Debug_Ray_List {
+  U32 count;
+  V2 e[64];
+};
+
 struct Light {
   V2 dir;
   F32 half_angle;
@@ -22,10 +27,7 @@ struct Light {
   
 	Light_Intersection_List intersections;
   Light_Triangle_List triangles;
-  
-  
-  U32 debug_ray_count;
-  V2 debug_rays[64];
+  Light_Debug_Ray_List debug_rays;
   
   
   
