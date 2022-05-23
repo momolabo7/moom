@@ -21,7 +21,7 @@
 
 #include "game_console.h"
 
-#include "game_mode_sandbox.h"
+#include "game_mode_level.h"
 
 struct Splash_Mode {
   F32 timer;
