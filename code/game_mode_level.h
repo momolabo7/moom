@@ -1,7 +1,7 @@
 /* date = April 27th 2022 8:10 pm */
 
-#ifndef GAME_MODE_SANDBOX_H
-#define GAME_MODE_SANDBOX_H
+#ifndef GAME_MODE_LEVEL_H
+#define GAME_MODE_LEVEL_H
 
 struct Light_Sensor {
   V2 pos;
@@ -24,33 +24,7 @@ struct Endpoint_List {
   V2 e[64];
 };
 
-struct Light_Intersection_List {
-  U32 count;
-  V2 e[64];
-};
-
-struct Light_Triangle_List {
-  U32 count;
-  Tri2 e[64];
-};
-
-struct Light {
-  V2 dir;
-  F32 half_angle;
-  
-  V2 pos;  
-  U32 color;
-  
-	Light_Intersection_List intersections;
-  Light_Triangle_List triangles;
-  
-  
-  U32 debug_ray_count;
-  V2 debug_rays[64];
-  
-  
-  
-};
+#include "game_mode_level_light.h"
 
 
 struct Level_Mode {
@@ -69,5 +43,6 @@ struct Level_Mode {
 };
 
 
+#include "game_mode_level_light.cpp"
 
-#endif //GAME_MODE_SANDBOX_H
+#endif //GAME_MODE_LEVEL_H
