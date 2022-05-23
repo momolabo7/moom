@@ -62,7 +62,7 @@ struct Game_State {
   Console console;
 };
 
-#include "game_mode_sandbox.cpp"
+#include "game_mode_level.cpp"
 #include "game_mode_splash.h"
 
 
