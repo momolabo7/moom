@@ -35,7 +35,7 @@ enum Game_Mode {
   GAME_MODE_NONE, 
   
   GAME_MODE_SPLASH,
-  GAME_MODE_SANDBOX,
+  GAME_MODE_LEVEL,
 };
 
 struct Game_State {
@@ -51,7 +51,7 @@ struct Game_State {
   enum Game_Mode next_mode;
   union {
     Splash_Mode splash_mode;
-    Sandbox_Mode sandbox_mode;  
+    Level_Mode level_mode;  
   };
   Mode_Init_Function* mode_init;
   Mode_Update_Function* mode_update;

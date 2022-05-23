@@ -70,9 +70,9 @@ game_update_and_render(Game_Memory* memory,
         game->mode_init = init_splash_mode;
         game->mode_update = update_splash_mode;
       } break;
-      case GAME_MODE_SANDBOX: {
-        game->mode_init = init_sandbox_mode;
-        game->mode_update = update_sandbox_mode;
+      case GAME_MODE_LEVEL: {
+        game->mode_init = init_level_mode;
+        game->mode_update = update_level_mode;
       } break;
       default: {
         is_done = true;

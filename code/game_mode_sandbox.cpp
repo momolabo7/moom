@@ -6,9 +6,9 @@ push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
 }
 
 static void 
-push_sensor(Sandbox_Mode* s, V2 pos, U32 color) {
-  assert(s->sensor_count < array_count(s->sensors));
-  s->sensors[s->sensor_count++] = { pos, color };
+push_sensor(Level_Mode* m, V2 pos, U32 color) {
+  assert(m->sensor_count < array_count(m->sensors));
+  m->sensors[m->sensor_count++] = { pos, color };
 }
 
 static Maybe<V2> 
@@ -163,7 +163,7 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
 
 
 static void
-push_edge(Sandbox_Mode* s, V2 min, V2 max) {
+push_edge(Level_Mode* s, V2 min, V2 max) {
   assert(slist_has_space(&s->edges));
   
   Edge* edge = slist_push(&s->edges);
@@ -174,7 +174,7 @@ push_edge(Sandbox_Mode* s, V2 min, V2 max) {
 }
 
 static Light*
-push_light(Sandbox_Mode* s, V2 pos, U32 color) {
+push_light(Level_Mode* s, V2 pos, U32 color) {
   assert(s->light_count < array_count(s->lights));
   Light* light = s->lights + s->light_count++;
   light->pos = pos;
@@ -189,11 +189,11 @@ push_light(Sandbox_Mode* s, V2 pos, U32 color) {
 }
 
 static void 
-init_sandbox_mode(Game_Memory* memory,
-                  Game_Input* input) 
+init_level_mode(Game_Memory* memory,
+                Game_Input* input) 
 {
   Game_State* game = memory->game;
-  Sandbox_Mode* s = &game->sandbox_mode;
+  Level_Mode* s = &game->level_mode;
   Game_Assets* ga = &game->game_assets;
   Renderer_Command_Queue* cmds = memory->renderer_command_queue;
   
@@ -231,11 +231,11 @@ init_sandbox_mode(Game_Memory* memory,
 }
 
 static void 
-update_sandbox_mode(Game_Memory* memory,
-                    Game_Input* input) 
+update_level_mode(Game_Memory* memory,
+                  Game_Input* input) 
 {
   Game_State* game = memory->game;
-  Sandbox_Mode* s = &game->sandbox_mode;
+  Level_Mode* m = &game->level_mode;
   Game_Assets* ga = &game->game_assets;
   Renderer_Command_Queue* cmds = memory->renderer_command_queue;
   F32 dt = input->seconds_since_last_frame;
@@ -264,37 +264,37 @@ update_sandbox_mode(Game_Memory* memory,
       F32 speed = 300.f;
       V2 velocity = normalize(direction);
       velocity *= speed * dt;
-      s->position += velocity;
+      m->position += velocity;
     }
   }
   
   
   
-  s->player_light->pos = s->position;
-  gen_light_intersections(s->player_light, &s->endpoints, &s->edges);
+  m->player_light->pos = m->position;
+  gen_light_intersections(m->player_light, &m->endpoints, &m->edges);
   for(U32 light_index = 0; 
-      light_index < s->light_count;
+      light_index < m->light_count;
       ++light_index)
   {
-    Light* light = s->lights + light_index;
-    gen_light_intersections(light, &s->endpoints, &s->edges);
+    Light* light = m->lights + light_index;
+    gen_light_intersections(light, &m->endpoints, &m->edges);
   }
   
   // check sensor correctness
   for (U32 sensor_index = 0;
-       sensor_index < array_count(s->sensors);
+       sensor_index < array_count(m->sensors);
        ++sensor_index)
   {
-    Light_Sensor* sensor = s->sensors + sensor_index;
+    Light_Sensor* sensor = m->sensors + sensor_index;
     
     U32 current_color = 0x0000000;
     
     // For each light, for each triangle, add light
     for(U32 light_index = 0;
-        light_index < s->light_count;
+        light_index < m->light_count;
         ++light_index) 
     {
-      Light* light = s->lights + light_index;
+      Light* light = m->lights + light_index;
       slist_foreach(tri_index, &light->triangles)
       {
         if (is_point_in_triangle(slist_get_copy(&light->triangles, tri_index), 
@@ -332,9 +332,9 @@ update_sandbox_mode(Game_Memory* memory,
     
   }
   // Draw the world collision
-  slist_foreach(edge_index, &s->edges) 
+  slist_foreach(edge_index, &m->edges) 
   {
-    Edge* edge = slist_get(&s->edges, edge_index);
+    Edge* edge = slist_get(&m->edges, edge_index);
     push_line(cmds, edge->line, 
               1.f, rgba(0x00FF00FF), 
               400.f);
@@ -344,14 +344,14 @@ update_sandbox_mode(Game_Memory* memory,
 #if 0
   // Draw the light rays
   for(U32 light_ray_index = 0; 
-      light_ray_index < s->player_light->debug_ray_count;
+      light_ray_index < m->player_light->debug_ray_count;
       ++light_ray_index) 
   {
-    V2 light_ray = s->player_light->debug_rays[light_ray_index];
+    V2 light_ray = m->player_light->debug_rays[light_ray_index];
     
     Line2 line = {};
-    line.min = s->position;
-    line.max = s->position + light_ray;
+    line.min = m->position;
+    line.max = m->position + light_ray;
     
     push_line(cmds, line, 
               1.f, rgba(0x00FFFFFF), 4.f);
@@ -360,14 +360,14 @@ update_sandbox_mode(Game_Memory* memory,
   make_string_builder(sb, 128);
   
   for (U32 intersection_index = 0;
-       intersection_index < s->player_light->intersection_count;
+       intersection_index < m->player_light->intersection_count;
        ++intersection_index) 
   {
     clear(sb);
     
     Line2 line = {};
-    line.min = s->position;
-    line.max = s->player_light->intersections[intersection_index];
+    line.min = m->position;
+    line.max = m->player_light->intersections[intersection_index];
     
     push_format(sb, string_from_lit("[%u]"), intersection_index);
     
@@ -387,19 +387,19 @@ update_sandbox_mode(Game_Memory* memory,
   // Draw player
   {
     draw_sprite(ga, cmds, SPRITE_BULLET_CIRCLE, 
-                s->position.x, s->position.y, 
-                s->size.x, s->size.y,
+                m->position.x, m->position.y, 
+                m->size.x, m->size.y,
                 300.f);
     
   }
   
   // Draw sensors
   for (U32 sensor_index = 0;
-       sensor_index < s->sensor_count;
+       sensor_index < m->sensor_count;
        ++sensor_index)
   {
     
-    Light_Sensor* sensor = s->sensors + sensor_index;
+    Light_Sensor* sensor = m->sensors + sensor_index;
     draw_sprite(ga, cmds, 
                 SPRITE_BULLET_DOT, 
                 sensor->pos.x, sensor->pos.y, 
@@ -422,10 +422,10 @@ update_sandbox_mode(Game_Memory* memory,
   
   // Draw lights
   for (U32 light_index = 0;
-       light_index < s->light_count;
+       light_index < m->light_count;
        ++light_index)
   {
-    Light* light = s->lights + light_index;
+    Light* light = m->lights + light_index;
     draw_sprite(ga, cmds, SPRITE_BULLET_DOT, 
                 light->pos.x, light->pos.y,
                 16, 16,
@@ -440,10 +440,10 @@ update_sandbox_mode(Game_Memory* memory,
   // Would that be more reasonable?
   F32 z = 0.1f;
   for (U32 light_index = 0;
-       light_index < s->light_count; 
+       light_index < m->light_count; 
        ++light_index )
   {
-    Light* l = s->lights + light_index;
+    Light* l = m->lights + light_index;
     slist_foreach(tri_index, &l->triangles)
     {
       Tri2* lt = slist_get(&l->triangles, tri_index);

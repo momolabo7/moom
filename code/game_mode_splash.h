@@ -25,7 +25,7 @@ update_splash_mode(Game_Memory* memory,
   splash->timer -= dt;
   
   if (splash->timer < 0.f) {
-    game->next_mode = GAME_MODE_SANDBOX;
+    game->next_mode = GAME_MODE_LEVEL;
   }
   // Clear colors
   {

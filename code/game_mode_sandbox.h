@@ -53,7 +53,7 @@ struct Light {
 };
 
 
-struct Sandbox_Mode {
+struct Level_Mode {
   V2 position;
   V2 size;
   Light* player_light;
