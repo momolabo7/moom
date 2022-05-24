@@ -905,6 +905,15 @@ WinMain(HINSTANCE instance,
             U32 code = (U32)msg.wParam;
             B32 is_key_down = msg.message == WM_KEYDOWN;
             switch(code) {
+              case 0x51: /* Q */ {
+                input->button_rotate_left.now = is_key_down;
+              } break;
+              case 0x45: /* E */ {
+                input->button_rotate_right.now = is_key_down;
+              } break;
+              case 0x46: /* E */ {
+                input->button_use.now = is_key_down;
+              } break;
               case 0x57: /* W */ {
                 input->button_up.now = is_key_down;
               } break;

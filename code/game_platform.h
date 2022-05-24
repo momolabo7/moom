@@ -84,20 +84,22 @@ static B32 is_released(Game_Input_Button);
 static B32 is_down(Game_Input_Button);
 static B32 is_held(Game_Input_Button);
 
-
-
 struct Game_Input {
-  
   union {
-    Game_Input_Button buttons[5];
     struct {
       Game_Input_Button button_up;
       Game_Input_Button button_down;
       Game_Input_Button button_left;
       Game_Input_Button button_right;
-      
       Game_Input_Button button_console;
+      
+      Game_Input_Button button_rotate_left;
+      Game_Input_Button button_rotate_right;
+      
+      Game_Input_Button button_use;
+      
     };  
+    Game_Input_Button buttons[8];
   };
   
   V2 design_mouse_pos;
@@ -117,7 +119,6 @@ void update(Game_Input_Button button);
 // For things that don't change from the platform after setting it once
 struct Renderer_Texture_Queue;
 struct Renderer_Command_Queue;
-struct Debugger;
 struct Profiler;
 struct Game_Memory {
   Arena* game_arena; // Require 32MB
@@ -125,7 +126,6 @@ struct Game_Memory {
   Renderer_Texture_Queue* renderer_texture_queue;
   Renderer_Command_Queue* renderer_command_queue;
   Profiler* profiler; 
-  Debugger* debugger;
   
   
   struct Game_State* game; // do not touch!

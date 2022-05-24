@@ -31,6 +31,22 @@ draw_sprite(Game_Assets* ga,
                  sprite->uv);
 }
 
+static void
+draw_sprite(Game_Assets* ga,
+            Renderer_Command_Queue* render_commands,
+            Sprite_ID sprite_id,
+            V2 pos,
+            V2 size,
+            F32 depth,
+            RGBA color = {1.f,1.f,1.f,1.f})
+{
+	draw_sprite(ga, render_commands,
+              sprite_id,
+              pos.x, pos.y,
+              size.x, size.y,
+              depth, color);
+}
+
 
 
 static void

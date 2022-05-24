@@ -26,17 +26,23 @@ struct Endpoint_List {
 
 #include "game_mode_level_light.h"
 
+struct Light_List {
+  U32 count;
+  Light e[64];
+};
+
+struct Player {
+  V2 pos;
+  V2 size;
+  Light* held_light;
+};
 
 struct Level_Mode {
-  V2 position;
-  V2 size;
-  Light* player_light;
+  Player player;
   
   Endpoint_List endpoints;
   Edge_List edges;
-  
-  U32 light_count;
-  Light lights[32];
+  Light_List lights;
   
   U32 sensor_count;
   Light_Sensor sensors[32];
