@@ -3,10 +3,16 @@
 #ifndef GAME_MODE_LEVEL_H
 #define GAME_MODE_LEVEL_H
 
-struct Light_Sensor {
+struct Sensor {
   V2 pos;
   U32 target_color;
   U32 current_color;
+};
+
+
+struct Sensor_List {
+  U32 count;
+  Sensor e[64];
 };
 
 
@@ -39,13 +45,10 @@ struct Player {
 
 struct Level_Mode {
   Player player;
-  
   Endpoint_List endpoints;
   Edge_List edges;
   Light_List lights;
-  
-  U32 sensor_count;
-  Light_Sensor sensors[32];
+  Sensor_List sensors;
 };
 
 

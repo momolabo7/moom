@@ -1,26 +1,29 @@
 
 static void 
-push_sensor(Level_Mode* m, V2 pos, U32 color) {
-  assert(m->sensor_count < array_count(m->sensors));
-  m->sensors[m->sensor_count++] = { pos, color };
+push_sensor(Level_Mode* m, V2 pos, U32 target_color) {
+  assert(slist_has_space(&m->sensors));
+  Sensor* s = slist_push(&m->sensors);
+  s->pos = pos;
+  s->target_color = target_color;
+  s->current_color = 0;
 }
 
 
 static void
-push_edge(Level_Mode* s, V2 min, V2 max) {
-  assert(slist_has_space(&s->edges));
+push_edge(Level_Mode* m, V2 min, V2 max) {
+  assert(slist_has_space(&m->edges));
   
-  Edge* edge = slist_push(&s->edges);
+  Edge* edge = slist_push(&m->edges);
   edge->line.min = min;
   edge->line.max = max;
   
-  slist_push_copy(&s->endpoints, edge->line.max);
+  slist_push_copy(&m->endpoints, edge->line.max);
 }
 
 static Light*
-push_light(Level_Mode* s, V2 pos, U32 color) {
-  assert(slist_has_space(&s->lights));
-  Light* light = slist_push(&s->lights);
+push_light(Level_Mode* m, V2 pos, U32 color) {
+  assert(slist_has_space(&m->lights));
+  Light* light = slist_push(&m->lights);
   light->pos = pos;
   light->color = color;
   
@@ -42,13 +45,7 @@ init_level_mode(Game_Memory* memory,
   Renderer_Command_Queue* cmds = memory->renderer_command_queue;
   Player* player = &m->player;
   
-  player->pos.x = 500.f;
-  player->pos.y = 400.f;
-  
-  player->size.x = 32.f;
-  player->size.y = 32.f;
-  
-  m->sensor_count = 0;
+  slist_clear(&m->sensors);
   
   
 #if 1 //sigh
@@ -83,12 +80,27 @@ init_level_mode(Game_Memory* memory,
 #endif
   
   // lights
+  push_light(m, {750.f, 600.f}, 0xFF000088);
   push_light(m, {500.f, 400.f}, 0x00FF0088);
   push_light(m, {1000.f, 400.f}, 0x0000FF88);
-  player->held_light = push_light(m, {}, 0xFF000088);
+  push_light(m, {750.f, 600.f}, 0xFF000088);
+  push_light(m, {500.f, 400.f}, 0x00FF0088);
+  push_light(m, {1000.f, 400.f}, 0x0000FF88);
+  push_light(m, {750.f, 600.f}, 0xFF000088);
+  push_light(m, {500.f, 400.f}, 0x00FF0088);
+  push_light(m, {1000.f, 400.f}, 0x0000FF88);
+  
+  player->held_light = nullptr;
+  
+  player->pos.x = 500.f;
+  player->pos.y = 400.f;
+  player->size.x = 32.f;
+  player->size.y = 32.f;
   
   push_sensor(m, {400.f, 600.f}, 0xFFFF0000);
+  
 }
+
 
 static void 
 update_level_mode(Game_Memory* memory,
@@ -100,8 +112,6 @@ update_level_mode(Game_Memory* memory,
   Renderer_Command_Queue* cmds = memory->renderer_command_queue;
   Player* player = &m->player;
   F32 dt = input->seconds_since_last_frame;
-  
-  
   
   // Input
   {
@@ -165,18 +175,11 @@ update_level_mode(Game_Memory* memory,
       velocity *= speed * dt;
       player->pos += velocity;
     }
-    
-    
-    
-    
-    
   }
   
-  
-  
-  if (player->held_light)
+  if (player->held_light) {
     player->held_light->pos = player->pos;
-  
+  }
   
   slist_foreach(light_index, &m->lights)
   {
@@ -185,11 +188,9 @@ update_level_mode(Game_Memory* memory,
   }
   
   // check sensor correctness
-  for (U32 sensor_index = 0;
-       sensor_index < array_count(m->sensors);
-       ++sensor_index)
+  slist_foreach(sensor_index, &m->sensors)
   {
-    Light_Sensor* sensor = m->sensors + sensor_index;
+    Sensor* sensor = slist_get(&m->sensors, sensor_index);
     
     U32 current_color = 0x0000000;
     
@@ -200,9 +201,11 @@ update_level_mode(Game_Memory* memory,
       
       slist_foreach(tri_index, &light->triangles)
       {
-        if (is_point_in_triangle(slist_get_copy(&light->triangles, tri_index), 
+        Tri2 tri = slist_get_copy(&light->triangles, tri_index);
+        if (is_point_in_triangle(tri,
                                  sensor->pos)) 
         {
+          // TODO(Momo): THIS IS WRONG!!!!
           current_color += light->color >> 8 << 8; // ignore alpha
         }
         
@@ -244,7 +247,7 @@ update_level_mode(Game_Memory* memory,
   }
   
   
-#if 0
+#if 1
   // Draw the light rays
   if (player->held_light) {
     slist_foreach(light_ray_index, &player->held_light->debug_rays)
@@ -299,12 +302,9 @@ update_level_mode(Game_Memory* memory,
   }
   
   // Draw sensors
-  for (U32 sensor_index = 0;
-       sensor_index < m->sensor_count;
-       ++sensor_index)
+  slist_foreach(sensor_index, &m->sensors)
   {
-    
-    Light_Sensor* sensor = m->sensors + sensor_index;
+    Sensor* sensor = slist_get(&m->sensors, sensor_index);
     draw_sprite(ga, cmds, 
                 SPRITE_BULLET_DOT, 
                 sensor->pos.x, sensor->pos.y, 

@@ -7,8 +7,11 @@ push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
 
 
 static Maybe<V2> 
-get_ray_intersection_wrt_edges(Ray2 light_ray, Edge_List* edges) {
-  F32 lowest_t1 = F32_INFINITY();
+get_ray_intersection_wrt_edges(Ray2 light_ray, 
+                               Edge_List* edges, 
+                               B32 strict = false)
+{
+  F32 lowest_t1 = strict ? 1.f : F32_INFINITY();
   B32 found = false;
   
   slist_foreach(edge_index, edges)
@@ -87,7 +90,8 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
       assert(slist_has_space(&l->debug_rays));
       slist_push_copy(&l->debug_rays, light_ray.dir);
       
-      auto [found, intersection] = get_ray_intersection_wrt_edges(light_ray, edges);
+      auto [found, intersection] = 
+        get_ray_intersection_wrt_edges(light_ray, edges, offset_index == 0);
       
       assert(slist_has_space(&l->intersections));
       slist_push_copy(&l->intersections, 
