@@ -102,6 +102,7 @@ struct Game_Input {
     Game_Input_Button buttons[8];
   };
   
+  // TODO: support mouse
   V2 design_mouse_pos;
   V2U screen_mouse_pos;
   V2U render_mouse_pos;

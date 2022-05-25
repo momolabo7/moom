@@ -6,6 +6,14 @@ add(V2 lhs, V2 rhs) {
 	return lhs;
 }
 
+static V2U
+to_v2u(V2 v) {
+  return {
+    (U32)v.x,
+    (U32)v.y,
+  };
+}
+
 static V2 
 sub(V2 lhs, V2 rhs) {
   lhs.x -= rhs.x;
@@ -230,26 +238,43 @@ cross(V3 lhs, V3 rhs) {
   return ret;
 }
 
+//~ V2U
+static V2U    
+add(V2U lhs, V2U rhs) {
+  lhs.x += rhs.x;
+	lhs.y += rhs.y;
+	return lhs;
+}
+
+static V2U    
+sub(V2U lhs, V2U rhs){
+  lhs.x -= rhs.x;
+	lhs.y -= rhs.y;
+	return lhs;
+}
 
 //~Operator Overloading
-static V2 operator+(V2 lhs, V2 rhs) { return add(lhs, rhs); }
-static V2 operator-(V2 lhs, V2 rhs) { return sub(lhs, rhs); }
-static V2 operator*(V2 lhs, F32 rhs) { return scale(lhs, rhs); }
-static V2 operator*(F32 lhs, V2 rhs) { return scale(rhs, lhs); }
-static B32   operator==(V2 lhs, V2 rhs) { return is_close(lhs, rhs); }
-static B32   operator!=(V2 lhs, V2 rhs) { return !is_close(lhs, rhs); }
-static V2 operator-(V2 v) { return negate(v); }
+static V2  operator+(V2 lhs, V2 rhs) { return add(lhs, rhs); }
+static V2  operator-(V2 lhs, V2 rhs) { return sub(lhs, rhs); }
+static V2  operator*(V2 lhs, F32 rhs) { return scale(lhs, rhs); }
+static V2  operator*(F32 lhs, V2 rhs) { return scale(rhs, lhs); }
+static B32 operator==(V2 lhs, V2 rhs) { return is_close(lhs, rhs); }
+static B32 operator!=(V2 lhs, V2 rhs) { return !is_close(lhs, rhs); }
+static V2  operator-(V2 v) { return negate(v); }
 static V2& operator+=(V2& lhs, V2 rhs) { return lhs = add(lhs, rhs); } 
 static V2& operator-=(V2& lhs, V2 rhs) { return lhs = sub(lhs, rhs); } 
 static V2& operator*=(V2& lhs, F32 rhs) { return lhs = scale(lhs, rhs); }
 
-static V3 operator+(V3 lhs, V3 rhs) { return add(lhs, rhs); }
-static V3 operator-(V3 lhs, V3 rhs) { return sub(lhs, rhs); }
-static V3 operator*(V3 lhs, F32 rhs) { return scale(lhs, rhs); }
-static V3 operator*(F32 lhs, V3 rhs) { return scale(rhs, lhs); }
-static B32   operator==(V3 lhs, V3 rhs) { return is_close(lhs, rhs); }
-static B32   operator!=(V3 lhs, V3 rhs) { return !is_close(lhs, rhs); }
-static V3 operator-(V3 v) { return negate(v); }
+static V2U operator+(V2U lhs, V2U rhs) { return add(lhs, rhs); }
+static V2U operator-(V2U lhs, V2U rhs) { return sub(lhs, rhs); }
+
+static V3  operator+(V3 lhs, V3 rhs) { return add(lhs, rhs); }
+static V3  operator-(V3 lhs, V3 rhs) { return sub(lhs, rhs); }
+static V3  operator*(V3 lhs, F32 rhs) { return scale(lhs, rhs); }
+static V3  operator*(F32 lhs, V3 rhs) { return scale(rhs, lhs); }
+static B32 operator==(V3 lhs, V3 rhs) { return is_close(lhs, rhs); }
+static B32 operator!=(V3 lhs, V3 rhs) { return !is_close(lhs, rhs); }
+static V3  operator-(V3 v) { return negate(v); }
 static V3& operator+=(V3& lhs, V3 rhs) { return lhs = add(lhs, rhs); } 
 static V3& operator-=(V3& lhs, V3 rhs) { return lhs = sub(lhs, rhs); } 
 static V3& operator*=(V3& lhs, F32 rhs) { return lhs = scale(lhs, rhs); }

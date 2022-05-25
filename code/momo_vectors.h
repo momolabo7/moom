@@ -46,6 +46,9 @@ union V4 {
   F32 e[4];
 };
 
+static V2U    add(V2U lhs, V2U rhs);
+static V2U    sub(V2U lhs, V2U rhs);
+
 
 static V2    add(V2 lhs, V2 rhs);
 static V2    sub(V2 lhs, V2 rhs);
@@ -63,7 +66,7 @@ static V2 normalize(V2 v);
 static V2 project(V2 v, V2 onto);
 static V2 rotate(V2 v, F32 rad);
 static F32   angle_between(V2 lhs, V2 rhs);
-
+static V2U to_v2u(V2 v);
 
 static V3 add(V3 lhs, V3 rhs);
 static V3 sub(V3 lhs, V3 rhs);

@@ -8,8 +8,15 @@ Engine
 	
 
 Game
-	single edge with two endpoints?
-
+	Mouse support
+	Level Editor
+		UI???
+		Create shapes
+		Create single edge???
+		Create light
+	Point light support
+	Single edge with two endpoints???
+	
 4coder
   Support strongly typed enums
   

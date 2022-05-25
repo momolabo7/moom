@@ -943,6 +943,14 @@ WinMain(HINSTANCE instance,
       }
     }
     
+    //- Mouse input 
+    {
+      POINT cursor_pos = {};
+			GetCursorPos(&cursor_pos);
+			ScreenToClient(window, &cursor_pos);
+			input->screen_mouse_pos = to_v2u(cursor_pos);
+      input->render_mouse_pos.x = input->screen_mouse_pos - render_region.min;
+    }
     
     
     //-Game logic
