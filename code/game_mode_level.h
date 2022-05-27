@@ -50,16 +50,21 @@ enum Level_State {
   LEVEL_STATE_NORMAL,
 };
 
+
 struct Level_Editor_Vertices {
-  U32 count;
+  U32 count; 
   V2 e[64];
-  
 };
+
 struct Level_Editor {
   Level_Editor_Vertices vertices;
-  
-  
 };
+
+static void
+push_editor_vertex(Level_Editor* e, V2 pos) {
+  assert(als_has_space(&e->vertices));
+  als_push_copy(&e->vertices, pos);
+}
 
 
 struct Level_Mode {
@@ -72,6 +77,7 @@ struct Level_Mode {
   Light_List lights;
   Sensor_List sensors;
 };
+
 
 
 #include "game_mode_level_light.cpp"

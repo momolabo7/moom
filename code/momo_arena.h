@@ -42,7 +42,7 @@ static void		     revert(Arena_Marker marker);
 
 //static void* BootBlock(UMI struct_size, UMI offset_to_arena, void* memory, UMI memory_size);
 //#define Arena_Boot(type, member, memory, memory_size) \
-//(type*)Arena_BootBlock(sizeof(type), OffsetOf(type, member), (memory), (memory_size)) 
+//(type*)Arena_BootBlock(sizeof(type), offset_of(type, member), (memory), (memory_size)) 
 
 #define set_arena_reset_point(arena) auto ttt = mark(arena); defer{revert(ttt);};
 

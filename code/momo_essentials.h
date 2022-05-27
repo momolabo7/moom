@@ -155,9 +155,9 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 // >>    ...
 // which causes an invalid ';' error
 //
-#define Stmt(s) do { s } while(0)
+#define stmt(s) do { s } while(0)
 #define array_count(A) (sizeof(A)/sizeof(*A))
-#define OffsetOf(type, member) (UMI)&(((type*)0)->member)
+#define offset_of(type, member) (UMI)&(((type*)0)->member)
 
 // These need to be macros instead of function
 // because I don't want these to return or take in to a specific strict type.
@@ -247,7 +247,7 @@ static U32 endian_swap_32(U32 value);
 #endif // AssertBreak
 
 #if ENABLE_ASSERT
-#define assert(s) Stmt(if(!(s)) { assert_callback(s); })
+#define assert(s) stmt(if(!(s)) { assert_callback(s); })
 #else // !ENABLE_ASSERT
 #define assert(s)
 #endif // ENABLE_ASSERT

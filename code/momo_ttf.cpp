@@ -743,17 +743,17 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   
   // create an 'active edges list' as a temporary buffer
   declare_and_pointerize(_TTF_Edge_List, active_edges);
-  list_init(active_edges,
+  al_init(active_edges,
             push_array<_TTF_Edge*>(arena, edge_count),
             edge_count);
-  assert(list_is_valid(active_edges));
+  assert(al_is_valid(active_edges));
   
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
   // clearing and refilling the active_edges list per scan line
   for(U32 y = 0; y <= bitmap_dims.h; ++y) {
     // Clear the active edges
-    list_clear(active_edges);
+    al_clear(active_edges);
     
     F32 yf = (F32)y; // 'center' of pixel
     
@@ -771,8 +771,8 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
           F32 t = (yf - edge->p0.y) / dy;
           edge->x_intersect = edge->p0.x + (t * dx);
           
-          assert(list_has_space(active_edges));
-          list_push_copy(active_edges, edge);
+          assert(al_has_space(active_edges));
+          al_push_copy(active_edges, edge);
           
         }
       }
