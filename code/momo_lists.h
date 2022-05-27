@@ -38,6 +38,7 @@
 #define slist_remove(l,i)				 (copy_memory((l)->e+i, (l)->e+i+1, sizeof((l)->e[0])*((l)->count--)-i))
 #define slist_foreach(i,l) 			 for(decltype((l)->count) i = 0; i < (l)->count; ++i)
 
+
 //~ NOTE(Momo): 'Dynamic' list API
 //
 // A dynamic array MUST consist of the following named variables:

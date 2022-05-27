@@ -209,8 +209,8 @@ template<typename T> static T lerp(T s, T e, F64 f);
 // Maybe we will to resort to a RatioF32 and a RatioF64?
 // 
 // For now, we will just overload the Ratio function, until it bugs us.
-static F32 ratio(F32 v, F32 min, F32 max);
-static F64 ratio(F64 v, F64 min, F64 max);
+static F32 ratio_of(F32 v, F32 min, F32 max);
+static F64 ratio_of(F64 v, F64 min, F64 max);
 
 template<typename T, typename U> static T align_down_pow2(T value, U align);
 template<typename T, typename U> static T align_up_pow2(T value, U align);

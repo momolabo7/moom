@@ -16,10 +16,8 @@ game_update_and_render(Game_Memory* memory,
   
   profile_block("game.dll");
   
-  
   // Initialization
   if (!memory->game) {
-    g_platform.set_aspect_ratio(16, 9);
     memory->game = push<Game_State>(memory->game_arena);
     Game_State* game = memory->game;
     
@@ -44,6 +42,7 @@ game_update_and_render(Game_Memory* memory,
     game_log("Initialized!");
   }
   
+  // calculate design dimentions
   
   Game_State* game = memory->game;
   

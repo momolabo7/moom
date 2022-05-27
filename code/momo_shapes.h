@@ -19,7 +19,11 @@ struct Rect3 {
 };
 
 // Gets the normalized values of Rect lhs based on another Rect rhs
-static Rect2 ratio(Rect2 lhs, Rect2 rhs);
+static F32 width_of(Rect2 lhs);
+static F32 height_of(Rect2 lhs);
+static U32 width_of(Rect2U lhs);
+static U32 height_of(Rect2U lhs);
+
 
 
 //~ Circles

@@ -48,11 +48,14 @@ union V4 {
 
 static V2U    add(V2U lhs, V2U rhs);
 static V2U    sub(V2U lhs, V2U rhs);
+static V2     v2(V2U v);
 
 
 static V2    add(V2 lhs, V2 rhs);
 static V2    sub(V2 lhs, V2 rhs);
 static V2    scale(V2 lhs, F32 rhs);
+static V2		inv(V2 v);
+static V2		ratio(V2 lhs, V2 rhs);
 static V2    div(V2 lhs, F32 rhs);
 static F32   dot(V2 lhs, V2 rhs);
 static F32   distance_sq(V2 lhs, V2 rhs);
@@ -62,27 +65,27 @@ static B32   is_close(V2 lhs, V2 rhs);
 static V2    midpoint(V2 lhs, V2 rhs);
 static F32   distance(V2 lhs, V2 rhs);
 static F32   length(V2 v);
-static V2 normalize(V2 v);
-static V2 project(V2 v, V2 onto);
-static V2 rotate(V2 v, F32 rad);
+static V2    normalize(V2 v);
+static V2    project(V2 v, V2 onto);
+static V2    rotate(V2 v, F32 rad);
 static F32   angle_between(V2 lhs, V2 rhs);
-static V2U to_v2u(V2 v);
+static V2U   v2u(V2 v);
 
-static V3 add(V3 lhs, V3 rhs);
-static V3 sub(V3 lhs, V3 rhs);
-static V3 scale(V3 lhs, F32 rhs);
-static V3 div(V3 lhs, F32 rhs);
+static V3    add(V3 lhs, V3 rhs);
+static V3    sub(V3 lhs, V3 rhs);
+static V3    scale(V3 lhs, F32 rhs);
+static V3    div(V3 lhs, F32 rhs);
 static F32   dot(V3 lhs, V3 rhs);
 static F32   distance_sq(V3 lhs, V3 rhs);
 static F32   length_sq(V3 v);
 static B32   is_close(V3 lhs, V3 rhs);
-static V3 negate(V3 v);
-static V3 midpoint(V3 lhs, V3 rhs);
-static V3 cross(V3 lhs, V3 rhs);
+static V3    negate(V3 v);
+static V3    midpoint(V3 lhs, V3 rhs);
+static V3    cross(V3 lhs, V3 rhs);
 static F32   distance(V3 lhs, V3 rhs);
 static F32   length(V3 v);
-static V3 normalize(V3 v);
-static V3 project(V3 v, V3 onto);
+static V3    normalize(V3 v);
+static V3    project(V3 v, V3 onto);
 static F32 	angle_between(V3 lhs, V3 rhs);
 
 static V2 operator+(V2 lhs, V2 rhs);

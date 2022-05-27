@@ -32,6 +32,8 @@ struct Endpoint_List {
 
 #include "game_mode_level_light.h"
 
+
+
 struct Light_List {
   U32 count;
   Light e[64];
@@ -43,7 +45,27 @@ struct Player {
   Light* held_light;
 };
 
+enum Level_State {
+  LEVEL_STATE_EDITOR,
+  LEVEL_STATE_NORMAL,
+};
+
+struct Level_Editor_Vertices {
+  U32 count;
+  V2 e[64];
+  
+};
+struct Level_Editor {
+  Level_Editor_Vertices vertices;
+  
+  
+};
+
+
 struct Level_Mode {
+  Level_State state;
+  Level_Editor editor;
+  
   Player player;
   Endpoint_List endpoints;
   Edge_List edges;

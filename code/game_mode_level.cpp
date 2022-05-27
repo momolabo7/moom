@@ -144,6 +144,12 @@ update_level_mode(Game_Memory* memory,
       }
     }
     
+    // TODO: editor button test
+    if(is_poked(input->button_editor0)) {
+      push_light(m, input->design_mouse_pos, 0xFF000088);
+    }
+    
+    
     // Use button
     if (is_poked(input->button_use)) {
       if (player->held_light == nullptr) {

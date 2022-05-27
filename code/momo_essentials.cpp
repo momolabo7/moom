@@ -150,12 +150,12 @@ lerp(T s, T e, F64 f) {
 }
 
 static F32 
-ratio(F32 v, F32 min, F32 max) { 
+percent(F32 v, F32 min, F32 max) { 
   return (v - min)/(max - min); 
 }
 
 static F64 
-ratio(F64 v, F64 min, F64 max) { 
+percent(F64 v, F64 min, F64 max) { 
   return (v - min)/(max - min); 
 }
 

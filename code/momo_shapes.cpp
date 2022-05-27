@@ -1,11 +1,22 @@
-static Rect2
-ratio(Rect2 lhs, Rect2 rhs) {
-  Rect2 ret = {};
-  for (U32 i = 0; i < 2; ++i) {
-    ret.min.e[i] = ratio(lhs.min.e[i], rhs.min.e[i], rhs.max.e[i]);
-    ret.max.e[i] = ratio(lhs.max.e[i], rhs.min.e[i], rhs.max.e[i]);
-  }
-  return ret;
+
+static F32
+width_of(Rect2 r) {
+  return abs_of(r.max.x - r.min.x);
+}
+
+static F32
+height_of(Rect2 r) {
+  return abs_of(r.max.y - r.min.y);
+}
+
+static U32
+width_of(Rect2U r) {
+  return r.max.x - r.min.x;
+}
+
+static U32
+height_of(Rect2U r) {
+  return r.max.y - r.min.y;
 }
 
 // https://totologic.blogspot.com/2014/01/accurate-point-in-triangle-test.html

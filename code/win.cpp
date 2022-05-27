@@ -99,15 +99,14 @@ win_get_client_dims(HWND window) {
 static Rect2U 
 win_calc_render_region(U32 window_w, 
                        U32 window_h, 
-                       U32 render_w, 
-                       U32 render_h) 
+                       F32 aspect_ratio)
 {
-	assert(render_w > 0 && render_h > 0 && window_w > 0 && window_h > 0);
+	assert(aspect_ratio > 0.f && window_w > 0 && window_h > 0);
   
 	Rect2U ret;
 	
-	F32 optimal_window_w = (F32)window_h * ((F32)render_w / (F32)render_h);
-	F32 optimal_window_h = (F32)window_w * ((F32)render_h / (F32)render_w);
+	F32 optimal_window_w = (F32)window_h * aspect_ratio;
+	F32 optimal_window_h = (F32)window_w * 1.f/aspect_ratio;
 	
 	if (optimal_window_w > (F32)window_w) {
 		// NOTE(Momo): width has priority - top and bottom bars
@@ -462,12 +461,6 @@ static void
 win_shutdown() {
   g_win_state.is_running = false;
 }
-static void 
-win_set_aspect_ratio(U32 width, U32 height) {
-  g_win_state.aspect_ratio_width = width;
-  g_win_state.aspect_ratio_height = height;
-}
-
 
 #if 0
 static void*
@@ -642,7 +635,6 @@ win_create_platform_api()
   pf_api.read_file = win_read_file;
   pf_api.write_file = win_write_file;
   pf_api.close_file = win_close_file;
-  pf_api.set_aspect_ratio = win_set_aspect_ratio;
   pf_api.add_task = win_add_task;
   pf_api.complete_all_tasks = win_complete_all_tasks;
   pf_api.debug_log = win_log_proc;
@@ -687,7 +679,6 @@ WinMain(HINSTANCE instance,
   //- Initialize window state
   {
     g_win_state.is_running = true;
-    //g_win_state.is_hot_reloading = true;
     g_win_state.aspect_ratio_width = 16;
     g_win_state.aspect_ratio_height = 9;
     
@@ -867,8 +858,7 @@ WinMain(HINSTANCE instance,
     V2U render_wh = win_get_client_dims(window);
     Rect2U render_region = win_calc_render_region(render_wh.w,
                                                   render_wh.h,
-                                                  g_win_state.aspect_ratio_width,
-                                                  g_win_state.aspect_ratio_height);
+                                                  game_aspect_ratio);
     Renderer_Command_Queue* render_commands = nullptr;
     if (renderer_code.is_valid) {
       renderer_functions.begin_frame(renderer, 
@@ -896,6 +886,18 @@ WinMain(HINSTANCE instance,
           case WM_DESTROY:
           case WM_CLOSE: {
             g_win_state.is_running = false;
+          } break;
+          case WM_LBUTTONUP:
+          case WM_LBUTTONDOWN: {
+            U32 code = (U32)msg.wParam;
+            B32 is_key_down = msg.message == WM_LBUTTONDOWN;
+            input->button_editor0.now = is_key_down;
+          } break;
+          case WM_RBUTTONUP:
+          case WM_RBUTTONDOWN: {
+            U32 code = (U32)msg.wParam;
+            B32 is_key_down = msg.message == WM_LBUTTONDOWN;
+            input->button_editor1.now = is_key_down;
           } break;
           case WM_KEYUP:
           case WM_KEYDOWN:
@@ -948,8 +950,26 @@ WinMain(HINSTANCE instance,
       POINT cursor_pos = {};
 			GetCursorPos(&cursor_pos);
 			ScreenToClient(window, &cursor_pos);
-			input->screen_mouse_pos = to_v2u(cursor_pos);
-      input->render_mouse_pos.x = input->screen_mouse_pos - render_region.min;
+      
+			input->screen_mouse_pos.x = cursor_pos.x;
+      input->screen_mouse_pos.y = cursor_pos.y;
+      
+      input->render_mouse_pos = input->screen_mouse_pos - render_region.min;
+      
+      F32 design_to_render_w = game_width / width_of(render_region);
+      F32 design_to_render_h = game_height / height_of(render_region);
+      
+      input->design_mouse_pos.x = F32(input->render_mouse_pos.x) * design_to_render_w;
+      input->design_mouse_pos.y = F32(input->render_mouse_pos.y) * design_to_render_h;
+      
+      
+      // NOTE(Momo): Flip y
+      // TODO(Momo): should this really be here?
+      // Maybe we should really make y-axis downwards...
+      // since this is a 2D engine.
+      input->design_mouse_pos.y = lerp(game_height, 
+                                       0.f, 
+                                       input->design_mouse_pos.y/game_height);	
     }
     
     

@@ -7,7 +7,7 @@ add(V2 lhs, V2 rhs) {
 }
 
 static V2U
-to_v2u(V2 v) {
+v2u(V2 v) {
   return {
     (U32)v.x,
     (U32)v.y,
@@ -34,6 +34,13 @@ div(V2 lhs, F32 rhs) {
   lhs.x /= rhs;
   lhs.y /= rhs;
   return lhs;
+}
+
+static V2
+inv(V2 v) {
+  v.x = 1.f/v.x;
+  v.y = 1.f/v.y;
+  return v;
 }
 
 static V2 
@@ -242,15 +249,20 @@ cross(V3 lhs, V3 rhs) {
 static V2U    
 add(V2U lhs, V2U rhs) {
   lhs.x += rhs.x;
-	lhs.y += rhs.y;
-	return lhs;
+  lhs.y += rhs.y;
+  return lhs;
 }
 
 static V2U    
 sub(V2U lhs, V2U rhs){
   lhs.x -= rhs.x;
-	lhs.y -= rhs.y;
-	return lhs;
+  lhs.y -= rhs.y;
+  return lhs;
+}
+
+static V2    
+v2(V2U v){
+  return { (F32)v.x, (F32)v.y };
 }
 
 //~Operator Overloading

@@ -4,6 +4,10 @@
 #ifndef GAME_PLATFORM_H
 #define GAME_PLATFORM_H
 
+const F32 game_width = 1600.f;
+const F32 game_height = 900.f;
+const F32 game_aspect_ratio = game_width/game_height;
+
 //~Platform File API
 enum Platform_File_Path {
   PLATFORM_FILE_PATH_EXE,
@@ -55,7 +59,6 @@ struct Platform_API {
   Platform_Alloc* alloc;
   Platform_Free* free;
 #endif
-  Platform_Set_Aspect_Ratio* set_aspect_ratio;
   Platform_Open_File* open_file;
   Platform_Read_File* read_file;
   Platform_Write_File* write_file;
@@ -98,11 +101,12 @@ struct Game_Input {
       
       Game_Input_Button button_use;
       
+      Game_Input_Button button_editor0;
+      Game_Input_Button button_editor1;
     };  
-    Game_Input_Button buttons[8];
+    Game_Input_Button buttons[10];
   };
   
-  // TODO: support mouse
   V2 design_mouse_pos;
   V2U screen_mouse_pos;
   V2U render_mouse_pos;
