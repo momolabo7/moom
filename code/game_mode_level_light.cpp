@@ -19,8 +19,8 @@ get_ray_intersection_wrt_edges(Ray2 light_ray,
     Edge* edge = als_get(edges, edge_index);
     
     Ray2 edge_ray = {};
-    edge_ray.pt = edge->line.min;
-    edge_ray.dir = edge->line.max - edge->line.min; 
+    edge_ray.pt = edge->ghost.min;
+    edge_ray.dir = edge->ghost.max - edge->ghost.min; 
     
     // Check for parallel
     V2 light_ray_normal = {};
@@ -95,7 +95,7 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
       
       assert(als_has_space(&l->intersections));
       als_push_copy(&l->intersections, 
-                      found ? intersection : ep);
+                    found ? intersection : ep);
     }
     
     
@@ -115,7 +115,7 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
       assert(als_has_space(&l->intersections));
       if(found) {
         als_push_copy(&l->intersections, 
-                        intersection);
+                      intersection);
       }
     }
     

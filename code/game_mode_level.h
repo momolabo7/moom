@@ -17,7 +17,9 @@ struct Sensor_List {
 
 
 struct Edge {
+  // do we have different typed edges?
   Line2 line;
+  Line2 ghost;
 };
 
 struct Edge_List {
@@ -31,8 +33,7 @@ struct Endpoint_List {
 };
 
 #include "game_mode_level_light.h"
-
-
+#include "game_mode_level_editor.h"
 
 struct Light_List {
   U32 count;
@@ -51,25 +52,9 @@ enum Level_State {
 };
 
 
-struct Level_Editor_Vertices {
-  U32 count; 
-  V2 e[64];
-};
-
-struct Level_Editor {
-  Level_Editor_Vertices vertices;
-};
-
-static void
-push_editor_vertex(Level_Editor* e, V2 pos) {
-  assert(als_has_space(&e->vertices));
-  als_push_copy(&e->vertices, pos);
-}
-
-
 struct Level_Mode {
   Level_State state;
-  Level_Editor editor;
+  Editor editor;
   
   Player player;
   Endpoint_List endpoints;
@@ -78,8 +63,7 @@ struct Level_Mode {
   Sensor_List sensors;
 };
 
-
-
 #include "game_mode_level_light.cpp"
+#include "game_mode_level_editor.cpp"
 
 #endif //GAME_MODE_LEVEL_H

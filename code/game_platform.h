@@ -103,8 +103,11 @@ struct Game_Input {
       
       Game_Input_Button button_editor0;
       Game_Input_Button button_editor1;
+      Game_Input_Button button_editor2;
+      Game_Input_Button button_editor3;
+      
     };  
-    Game_Input_Button buttons[10];
+    Game_Input_Button buttons[12];
   };
   
   V2 design_mouse_pos;

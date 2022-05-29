@@ -1,4 +1,3 @@
-/* date = April 11th 2022 9:11 am */
 
 #ifndef GAME_PROFILER_RENDERING_H
 #define GAME_PROFILER_RENDERING_H

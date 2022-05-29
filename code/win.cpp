@@ -625,6 +625,86 @@ win_complete_all_tasks() {
 }
 
 
+static void
+win_process_input(HWND window, Game_Input* input) 
+{
+  MSG msg = {};
+  while(PeekMessage(&msg, window, 0, 0, PM_REMOVE)) {
+    switch(msg.message) {
+      case WM_CHAR: {
+        assert(input->char_count < array_count(input->chars));
+        input->chars[input->char_count++] = (U8)msg.wParam;
+      } break;
+      case WM_QUIT:
+      case WM_DESTROY:
+      case WM_CLOSE: {
+        g_win_state.is_running = false;
+      } break;
+      case WM_LBUTTONUP:
+      case WM_LBUTTONDOWN: {
+        U32 code = (U32)msg.wParam;
+        B32 is_key_down = msg.message == WM_LBUTTONDOWN;
+        input->button_editor0.now = is_key_down;
+      } break;
+      case WM_RBUTTONUP:
+      case WM_RBUTTONDOWN: {
+        U32 code = (U32)msg.wParam;
+        B32 is_key_down = msg.message == WM_RBUTTONDOWN;
+        input->button_editor1.now = is_key_down;
+      } break;
+      
+      case WM_KEYUP:
+      case WM_KEYDOWN:
+      case WM_SYSKEYDOWN:
+      case WM_SYSKEYUP:
+      {
+        U32 code = (U32)msg.wParam;
+        B32 is_key_down = msg.message == WM_KEYDOWN;
+        switch(code) {
+          case 0x51: /* Q */ {
+            input->button_rotate_left.now = is_key_down;
+          } break;
+          case 0x45: /* E */ {
+            input->button_rotate_right.now = is_key_down;
+          } break;
+          case 0x46: /* E */ {
+            input->button_use.now = is_key_down;
+          } break;
+          case 0x57: /* W */ {
+            input->button_up.now = is_key_down;
+          } break;
+          case 0x41: /* A */ {
+            input->button_left.now = is_key_down;
+          } break;
+          case 0x53: /* S */ {
+            input->button_down.now = is_key_down;
+          } break;
+          case 0x44: /* D */ {
+            input->button_right.now = is_key_down;
+          } break;
+          case 0x70: /* F1 */{
+            input->button_console.now = is_key_down;
+          } break;
+          case 0xDB: /* [ */{
+            input->button_editor2.now = is_key_down;
+          } break;
+          case 0xDD: /* ] */{
+            input->button_editor3.now = is_key_down;
+          } break;
+        }
+        TranslateMessage(&msg);
+      } break;
+      
+      default: {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+      }
+    }
+    
+  }
+  
+}
+
 static Platform_API
 win_create_platform_api()
 {
@@ -874,76 +954,7 @@ WinMain(HINSTANCE instance,
     //-Process messages and input
     input->seconds_since_last_frame = target_secs_per_frame;
     update(input);
-    {
-      MSG msg = {};
-      while(PeekMessage(&msg, window, 0, 0, PM_REMOVE)) {
-        switch(msg.message) {
-          case WM_CHAR: {
-            assert(input->char_count < array_count(input->chars));
-            input->chars[input->char_count++] = (U8)msg.wParam;
-          } break;
-          case WM_QUIT:
-          case WM_DESTROY:
-          case WM_CLOSE: {
-            g_win_state.is_running = false;
-          } break;
-          case WM_LBUTTONUP:
-          case WM_LBUTTONDOWN: {
-            U32 code = (U32)msg.wParam;
-            B32 is_key_down = msg.message == WM_LBUTTONDOWN;
-            input->button_editor0.now = is_key_down;
-          } break;
-          case WM_RBUTTONUP:
-          case WM_RBUTTONDOWN: {
-            U32 code = (U32)msg.wParam;
-            B32 is_key_down = msg.message == WM_LBUTTONDOWN;
-            input->button_editor1.now = is_key_down;
-          } break;
-          case WM_KEYUP:
-          case WM_KEYDOWN:
-          case WM_SYSKEYDOWN:
-          case WM_SYSKEYUP:
-          {
-            U32 code = (U32)msg.wParam;
-            B32 is_key_down = msg.message == WM_KEYDOWN;
-            switch(code) {
-              case 0x51: /* Q */ {
-                input->button_rotate_left.now = is_key_down;
-              } break;
-              case 0x45: /* E */ {
-                input->button_rotate_right.now = is_key_down;
-              } break;
-              case 0x46: /* E */ {
-                input->button_use.now = is_key_down;
-              } break;
-              case 0x57: /* W */ {
-                input->button_up.now = is_key_down;
-              } break;
-              case 0x41: /* A */ {
-                input->button_left.now = is_key_down;
-              } break;
-              case 0x53: /* S */ {
-                input->button_down.now = is_key_down;
-              } break;
-              case 0x44: /* D */ {
-                input->button_right.now = is_key_down;
-              } break;
-              case 0x70: /* F1 */{
-                input->button_console.now = is_key_down;
-              } break;
-            }
-            TranslateMessage(&msg);
-            
-          } break;
-          
-          default: {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-          }
-        }
-        
-      }
-    }
+    win_process_input(window, input); 
     
     //- Mouse input 
     {

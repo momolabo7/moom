@@ -17,6 +17,12 @@ push_edge(Level_Mode* m, V2 min, V2 max) {
   edge->line.min = min;
   edge->line.max = max;
   
+  // Precalculate ghost edges
+  V2 dir = normalize(max - min) * 0.0001f;
+  edge->ghost.min = edge->line.min - dir;
+  edge->ghost.max = edge->line.max + dir;
+  
+  
   als_push_copy(&m->endpoints, edge->line.max);
 }
 
@@ -47,25 +53,6 @@ init_level_mode(Game_Memory* memory,
   
   als_clear(&m->sensors);
   
-  
-#if 1 //sigh
-  // World edges
-  push_edge(m, {0.f,0.f}, {1600.f, 0.f});
-  push_edge(m, {1600.f, 0.f}, { 1600.f, 900.f });
-  push_edge(m, {1600.f, 900.f}, {0.f, 900.f});
-  push_edge(m, {0.f, 900.f}, {0.f, 0.f});
-  
-  // Room edges
-  push_edge(m, {99.999f,100.f}, {1500.001f, 100.f});
-  push_edge(m, {1500.f,99.999f}, {1500.f, 800.001f});
-  push_edge(m, {1500.001f,800.f}, {99.9f, 800.f});
-  push_edge(m, {100.f,800.001f}, {100.f, 99.999f});
-  
-  // triangle
-  push_edge(m, {499.999f, 500.f}, {700.001f, 500.f}); 
-  push_edge(m, {700.f, 499.999f}, {700.f, 700.001f}); 
-  push_edge(m, {700.001f, 700.001f}, {499.999f, 499.999f}); 
-#else
   push_edge(m, {0.f,0.f}, {1600.f, 0.f});
   push_edge(m, {1600.f, 0.f}, { 1600.f, 900.f });
   push_edge(m, {1600.f, 900.f}, {0.f, 900.f});
@@ -77,18 +64,14 @@ init_level_mode(Game_Memory* memory,
   push_edge(m, {1500.f,800.f}, {100.f, 800.f});
   push_edge(m, {100.f,800.f}, {100.f, 100.f});
   
-#endif
+  // triangle
+  push_edge(m, {500.f, 500.f}, {700.001f, 500.f}); 
+  push_edge(m, {700.f, 500.f}, {700.f, 700.f}); 
+  push_edge(m, {700.f, 700.f}, {500.f, 500.f}); 
   
   // lights
-  push_light(m, {750.f, 600.f}, 0xFF000088);
-  push_light(m, {500.f, 400.f}, 0x00FF0088);
-  push_light(m, {1000.f, 400.f}, 0x0000FF88);
-  push_light(m, {750.f, 600.f}, 0xFF000088);
-  push_light(m, {500.f, 400.f}, 0x00FF0088);
-  push_light(m, {1000.f, 400.f}, 0x0000FF88);
-  push_light(m, {750.f, 600.f}, 0xFF000088);
-  push_light(m, {500.f, 400.f}, 0x00FF0088);
-  push_light(m, {1000.f, 400.f}, 0x0000FF88);
+  push_light(m, {750.f, 600.f}, 0x880000FF);
+  
   
   player->held_light = nullptr;
   
@@ -144,10 +127,7 @@ update_level_mode(Game_Memory* memory,
       }
     }
     
-    // Editor input
-    if(is_poked(input->button_editor0)) {
-      push_editor_vertex(&m->editor, input->design_mouse_pos);
-    }
+    update_editor(&m->editor, m, input, dt);
     
     
     // Use button
@@ -343,11 +323,7 @@ update_level_mode(Game_Memory* memory,
   }
   
   
-  als_foreach(vertex_index, &m->editor.vertices) {
-    V2 vertex = als_get_copy(&m->editor.vertices, vertex_index);
-    draw_sprite(ga, cmds, SPRITE_BULLET_CIRCLE,
-                vertex.x, vertex.y, 16, 16, 250.f);
-  }
+  
   push_blend(cmds, BLEND_TYPE_ADD);
   // TODO(Momo): This is terrible
   // one light should be set to one 'layer' of triangles'
@@ -372,4 +348,5 @@ update_level_mode(Game_Memory* memory,
   }
   
   
+  render_editor(&m->editor, ga, cmds);
 }

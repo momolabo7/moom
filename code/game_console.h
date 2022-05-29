@@ -152,7 +152,7 @@ render_console(Console* dc,
               console_height/2,
               console_width, 
               console_height,
-              100.f,
+              49.f,
               rgba(0x787878FF));
   
   draw_sprite(ga, render_commands,
@@ -161,7 +161,7 @@ render_console(Console* dc,
               line_height/2,
               console_width,
               line_height,
-              90.f,
+              48.f,
               rgba(0x505050FF));
   
   
@@ -179,7 +179,7 @@ render_console(Console* dc,
               left_pad, 
               line_height * (line_index+1) + font_bottom_pad,
               font_height,
-              80.f);
+              47.f);
     
   }
   
@@ -190,7 +190,7 @@ render_console(Console* dc,
             left_pad, 
             font_bottom_pad,
             font_height,
-            80.f);
+            46.f);
 }
 
 #endif //GAME_CONSOLE_H
