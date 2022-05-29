@@ -1,23 +1,32 @@
 #define EDITOR_MODE_DISPLAY_DURATION 1.f
 #define EDITOR_EDGE_CLOSURE_DISTANCE 64.f
 
+static B32 
+process_editor_toolbar() {
+  
+}
+
 static void 
 update_editor_place_lights(Level_Mode* m,
                            Game_Input* input) 
 {
   
   if (is_poked(input->button_editor0)) {
-    push_light(m, input->design_mouse_pos, 0x880000FF);
+    push_light(m, input->design_mouse_pos, 0x220000FF);
   }
 }
 static void 
-update_editor_place_edges(Editor* e, Level_Mode* m,
+update_editor_place_edges(Editor* e, 
+                          Level_Mode* m,
                           Game_Input* input) 
 {
+  
+  
+  
   if(is_poked(input->button_editor0)) {
     F32 shortest_dist = F32_INFINITY();
-    als_foreach(vertex_index, &e->vertices) {
-      V2 vertex = als_get_copy(&e->vertices, vertex_index);
+    al_foreach(vertex_index, &e->vertices) {
+      V2 vertex = al_get_copy(&e->vertices, vertex_index);
       F32 dist = distance_sq(input->design_mouse_pos, vertex); 
       if (shortest_dist > dist) {
         shortest_dist = dist;
@@ -25,10 +34,10 @@ update_editor_place_edges(Editor* e, Level_Mode* m,
     }
     
     if (shortest_dist > EDITOR_EDGE_CLOSURE_DISTANCE || 
-        als_is_empty(&e->vertices)) 
+        al_is_empty(&e->vertices)) 
     {
-      if(als_has_space(&e->vertices)) {
-        als_push_copy(&e->vertices, input->design_mouse_pos);
+      if(al_has_space(&e->vertices)) {
+        al_push_copy(&e->vertices, input->design_mouse_pos);
       }
     }
     else {
@@ -37,20 +46,20 @@ update_editor_place_edges(Editor* e, Level_Mode* m,
             vertex_index < e->vertices.count;
             ++vertex_index) 
         {
-          V2 vertex = als_get_copy(&e->vertices, vertex_index);
-          V2 prev_vertex = als_get_copy(&e->vertices, vertex_index-1);
+          V2 vertex = al_get_copy(&e->vertices, vertex_index);
+          V2 prev_vertex = al_get_copy(&e->vertices, vertex_index-1);
           push_edge(m, prev_vertex, vertex);
         }
-        V2 first_vertex = als_get_copy(&e->vertices, 0);
-        V2 last_vertex = als_get_copy(&e->vertices, e->vertices.count-1);
+        V2 first_vertex = al_get_copy(&e->vertices, 0);
+        V2 last_vertex = al_get_copy(&e->vertices, e->vertices.count-1);
         push_edge(m, last_vertex, first_vertex);
       }
-      als_clear(&e->vertices);
+      al_clear(&e->vertices);
     }
     
     if(is_poked(input->button_editor1)) {
-      if (!als_is_empty(&e->vertices)){
-        als_pop(&e->vertices);
+      if (!al_is_empty(&e->vertices)){
+        al_pop(&e->vertices);
       }
     }
     
@@ -99,7 +108,17 @@ static void
 render_editor(Editor* e, Game_Assets* ga,
               Renderer_Command_Queue* cmds) 
 {
+  //- Toolbar
+  {
+    draw_sprite(ga, cmds, SPRITE_BLANK, 
+                e->toolbar.pos, 
+                {100.f, 300.f},
+                100.f,
+                {0.8f, 0.8f, 0.8f, 1.f});
+  }
+  
   //- Renders what the current mode is
+  
   String mode_str = {}; 
   
   switch(e->state) {
@@ -133,12 +152,12 @@ render_editor(Editor* e, Game_Assets* ga,
             100.f);
   
   //- Vertices
-  als_foreach(vertex_index, &e->vertices) {
-    V2 vertex = als_get_copy(&e->vertices, vertex_index);
+  al_foreach(vertex_index, &e->vertices) {
+    V2 vertex = al_get_copy(&e->vertices, vertex_index);
     draw_sprite(ga, cmds, SPRITE_BULLET_CIRCLE,
                 vertex.x, vertex.y, 16, 16, 100.f);
     if (vertex_index > 0) {
-      V2 prev_vertex = als_get_copy(&e->vertices, vertex_index-1);
+      V2 prev_vertex = al_get_copy(&e->vertices, vertex_index-1);
       Line2 line = {};
       line.min = prev_vertex;
       line.max = vertex;

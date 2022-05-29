@@ -10,11 +10,6 @@ struct Sensor {
 };
 
 
-struct Sensor_List {
-  U32 count;
-  Sensor e[64];
-};
-
 
 struct Edge {
   // do we have different typed edges?
@@ -22,23 +17,14 @@ struct Edge {
   Line2 ghost;
 };
 
-struct Edge_List {
-  U32 count;
-  Edge e[64];
-};
-
-struct Endpoint_List {
-  U32 count;
-  V2 e[64];
-};
-
 #include "game_mode_level_light.h"
 #include "game_mode_level_editor.h"
 
-struct Light_List {
-  U32 count;
-  Light e[64];
-};
+#define LIGHT_RED   1 << 0
+#define LIGHT_GREEN 1 << 1
+#define LIGHT_BLUE  1 << 2
+
+
 
 struct Player {
   V2 pos;
@@ -57,10 +43,10 @@ struct Level_Mode {
   Editor editor;
   
   Player player;
-  Endpoint_List endpoints;
-  Edge_List edges;
-  Light_List lights;
-  Sensor_List sensors;
+  ArrayList<V2> endpoints;
+  ArrayList<Edge> edges;
+  ArrayList<Light> lights;
+  ArrayList<Sensor> sensors;
 };
 
 #include "game_mode_level_light.cpp"

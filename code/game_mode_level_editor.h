@@ -1,5 +1,3 @@
-/* date = May 29th 2022 5:07 pm */
-
 #ifndef GAME_MODE_LEVEL_EDITOR_H
 #define GAME_MODE_LEVEL_EDITOR_H
 
@@ -8,6 +6,7 @@ struct Light;
 
 static void push_edge(Level_Mode* m, V2 min, V2 max);
 static Light* push_light(Level_Mode* m, V2 pos, U32 color);
+
 
 enum Editor_State {
   EDITOR_STATE_MIN,
@@ -26,16 +25,18 @@ enum Editor_State {
 };
 
 
-struct Editor_Vertices {
-  U32 count; 
-  V2 e[64];
+struct Editor_Toolbar_Button {
+  
+};
+
+struct Editor_Toolbar {
+  V2 pos;
 };
 
 struct Editor {
-  Level_Mode* level;
   Editor_State state;
-  Editor_Vertices vertices;
-  
+  Editor_Toolbar toolbar;
+  ArrayList<V2> vertices;
   F32 mode_display_timer;
 };
 

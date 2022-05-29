@@ -100,7 +100,5 @@ game_update_and_render(Game_Memory* memory,
     render_console(dc, ga, cmds);
     render_profiler(memory->profiler, ga, cmds);
   }
-  
   return is_done;
-  
 }

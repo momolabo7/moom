@@ -1,8 +1,8 @@
 
 static void 
 push_sensor(Level_Mode* m, V2 pos, U32 target_color) {
-  assert(als_has_space(&m->sensors));
-  Sensor* s = als_push(&m->sensors);
+  assert(al_has_space(&m->sensors));
+  Sensor* s = al_push(&m->sensors);
   s->pos = pos;
   s->target_color = target_color;
   s->current_color = 0;
@@ -11,9 +11,9 @@ push_sensor(Level_Mode* m, V2 pos, U32 target_color) {
 
 static void
 push_edge(Level_Mode* m, V2 min, V2 max) {
-  assert(als_has_space(&m->edges));
+  assert(al_has_space(&m->edges));
   
-  Edge* edge = als_push(&m->edges);
+  Edge* edge = al_push(&m->edges);
   edge->line.min = min;
   edge->line.max = max;
   
@@ -23,13 +23,13 @@ push_edge(Level_Mode* m, V2 min, V2 max) {
   edge->ghost.max = edge->line.max + dir;
   
   
-  als_push_copy(&m->endpoints, edge->line.max);
+  al_push_copy(&m->endpoints, edge->line.max);
 }
 
 static Light*
 push_light(Level_Mode* m, V2 pos, U32 color) {
-  assert(als_has_space(&m->lights));
-  Light* light = als_push(&m->lights);
+  assert(al_has_space(&m->lights));
+  Light* light = al_push(&m->lights);
   light->pos = pos;
   light->color = color;
   
@@ -51,7 +51,7 @@ init_level_mode(Game_Memory* memory,
   Renderer_Command_Queue* cmds = memory->renderer_command_queue;
   Player* player = &m->player;
   
-  als_clear(&m->sensors);
+  al_clear(&m->sensors);
   
   push_edge(m, {0.f,0.f}, {1600.f, 0.f});
   push_edge(m, {1600.f, 0.f}, { 1600.f, 900.f });
@@ -70,7 +70,7 @@ init_level_mode(Game_Memory* memory,
   push_edge(m, {700.f, 700.f}, {500.f, 500.f}); 
   
   // lights
-  push_light(m, {750.f, 600.f}, 0x880000FF);
+  push_light(m, {750.f, 600.f}, 0x220000FF);
   
   
   player->held_light = nullptr;
@@ -135,8 +135,8 @@ update_level_mode(Game_Memory* memory,
       if (player->held_light == nullptr) {
         F32 shortest_dist = 128.f; // limit
         Light* nearest_light = nullptr;
-        als_foreach(light_index, &m->lights) {
-          Light* l = als_get(&m->lights, light_index);
+        al_foreach(light_index, &m->lights) {
+          Light* l = al_get(&m->lights, light_index);
           F32 dist = distance_sq(l->pos, player->pos);
           if (shortest_dist > dist) {
             nearest_light = l;
@@ -167,27 +167,27 @@ update_level_mode(Game_Memory* memory,
     player->held_light->pos = player->pos;
   }
   
-  als_foreach(light_index, &m->lights)
+  al_foreach(light_index, &m->lights)
   {
-    Light* light = als_get(&m->lights, light_index);
+    Light* light = al_get(&m->lights, light_index);
     gen_light_intersections(light, &m->endpoints, &m->edges);
   }
   
   // check sensor correctness
-  als_foreach(sensor_index, &m->sensors)
+  al_foreach(sensor_index, &m->sensors)
   {
-    Sensor* sensor = als_get(&m->sensors, sensor_index);
+    Sensor* sensor = al_get(&m->sensors, sensor_index);
     
     U32 current_color = 0x0000000;
     
     // For each light, for each triangle, add light
-    als_foreach(light_index, &m->lights)
+    al_foreach(light_index, &m->lights)
     {
-      Light* light = als_get(&m->lights, light_index);
+      Light* light = al_get(&m->lights, light_index);
       
-      als_foreach(tri_index, &light->triangles)
+      al_foreach(tri_index, &light->triangles)
       {
-        Tri2 tri = als_get_copy(&light->triangles, tri_index);
+        Tri2 tri = al_get_copy(&light->triangles, tri_index);
         if (is_point_in_triangle(tri,
                                  sensor->pos)) 
         {
@@ -224,9 +224,9 @@ update_level_mode(Game_Memory* memory,
     
   }
   // Draw the world collision
-  als_foreach(edge_index, &m->edges) 
+  al_foreach(edge_index, &m->edges) 
   {
-    Edge* edge = als_get(&m->edges, edge_index);
+    Edge* edge = al_get(&m->edges, edge_index);
     push_line(cmds, edge->line, 
               1.f, rgba(0x00FF00FF), 
               400.f);
@@ -236,7 +236,7 @@ update_level_mode(Game_Memory* memory,
 #if 1
   // Draw the light rays
   if (player->held_light) {
-    als_foreach(light_ray_index, &player->held_light->debug_rays)
+    al_foreach(light_ray_index, &player->held_light->debug_rays)
     {
       V2 light_ray = player->held_light->debug_rays.e[light_ray_index];
       
@@ -288,9 +288,9 @@ update_level_mode(Game_Memory* memory,
   }
   
   // Draw sensors
-  als_foreach(sensor_index, &m->sensors)
+  al_foreach(sensor_index, &m->sensors)
   {
-    Sensor* sensor = als_get(&m->sensors, sensor_index);
+    Sensor* sensor = al_get(&m->sensors, sensor_index);
     draw_sprite(ga, cmds, 
                 SPRITE_BULLET_DOT, 
                 sensor->pos.x, sensor->pos.y, 
@@ -312,9 +312,9 @@ update_level_mode(Game_Memory* memory,
   
   
   //- Draw lights
-  als_foreach(light_index, &m->lights)
+  al_foreach(light_index, &m->lights)
   {
-    Light* light = als_get(&m->lights, light_index);
+    Light* light = al_get(&m->lights, light_index);
     draw_sprite(ga, cmds, SPRITE_BULLET_DOT, 
                 light->pos.x, light->pos.y,
                 16, 16,
@@ -330,12 +330,12 @@ update_level_mode(Game_Memory* memory,
   // Maybe each light should store an array of triangles?
   // Would that be more reasonable?
   F32 z = 0.1f;
-  als_foreach(light_index, &m->lights)
+  al_foreach(light_index, &m->lights)
   {
-    Light* l = als_get(&m->lights, light_index);
-    als_foreach(tri_index, &l->triangles)
+    Light* l = al_get(&m->lights, light_index);
+    al_foreach(tri_index, &l->triangles)
     {
-      Tri2* lt = als_get(&l->triangles, tri_index);
+      Tri2* lt = al_get(&l->triangles, tri_index);
       push_triangle(cmds, 
                     rgba(l->color),
                     lt->pts[0],

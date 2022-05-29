@@ -95,7 +95,7 @@ end_atlas_builder(Sui_Atlas* ab, Arena* arena) {
       U32 cp = font->codepoints[cpi];
       U32 glyph_index = ttf_get_glyph_index(ttf, cp);
       Rect2 box = ttf_get_glyph_box(ttf, glyph_index, s);
-      V2U dims = get_bitmap_dims_from_glyph_box(box);
+      V2U dims = ttf_get_bitmap_dims_from_glyph_box(box);
       
       auto* context = contexts + context_index++;
       context->font_glyph.codepoint = cp;

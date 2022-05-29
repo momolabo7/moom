@@ -657,7 +657,7 @@ ttf_get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor) {
 }
 
 static V2U 
-get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
+ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
   V2U ret = {};
   
   F32 width = abs_of(glyph_box.max.x - glyph_box.min.x);
@@ -674,7 +674,7 @@ get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
 static Bitmap 
 ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   Rect2 box = ttf_get_glyph_box(ttf, glyph_index, scale_factor);
-  V2U bitmap_dims = get_bitmap_dims_from_glyph_box(box);
+  V2U bitmap_dims = ttf_get_bitmap_dims_from_glyph_box(box);
   
   if (bitmap_dims.w == 0 || bitmap_dims.h == 0) return {};
   
@@ -742,18 +742,20 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   
   
   // create an 'active edges list' as a temporary buffer
-  declare_and_pointerize(_TTF_Edge_List, active_edges);
-  al_init(active_edges,
-            push_array<_TTF_Edge*>(arena, edge_count),
-            edge_count);
-  assert(al_is_valid(active_edges));
+  
+  declare_and_pointerize(SliceList<_TTF_Edge*>, active_edges);
+  {
+    _TTF_Edge** edge_store = push_array<_TTF_Edge*>(arena, edge_count);
+    assert(edge_store);
+    sl_init(active_edges, edge_store, edge_count);
+  }
   
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
   // clearing and refilling the active_edges list per scan line
   for(U32 y = 0; y <= bitmap_dims.h; ++y) {
     // Clear the active edges
-    al_clear(active_edges);
+    sl_clear(active_edges);
     
     F32 yf = (F32)y; // 'center' of pixel
     
@@ -771,8 +773,8 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
           F32 t = (yf - edge->p0.y) / dy;
           edge->x_intersect = edge->p0.x + (t * dx);
           
-          assert(al_has_space(active_edges));
-          al_push_copy(active_edges, edge);
+          assert(sl_has_space(active_edges));
+          sl_push_copy(active_edges, edge);
           
         }
       }

@@ -51,7 +51,7 @@ static F32 ttf_get_scale_for_pixel_height(TTF* ttf, F32 pixel_height);
 // This returns the 'scale factor' you need to apply to the font's coordinates
 // (box, glyphs, etc) to scale it to a font height equals to pixel_height
 
-
+static V2U ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box);
 static Bitmap ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena);
 // Returns an RGBA image where the glyph is white and the background is transparent
 

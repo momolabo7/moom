@@ -1,22 +1,22 @@
 static void
 push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
-  assert(als_has_space(&l->triangles));
+  assert(al_has_space(&l->triangles));
   Tri2 tri = { p0, p1, p2 };
-  als_push_copy(&l->triangles, tri);
+  al_push_copy(&l->triangles, tri);
 }
 
 
 static Maybe<V2> 
 get_ray_intersection_wrt_edges(Ray2 light_ray, 
-                               Edge_List* edges, 
+                               ArrayList<Edge>* edges, 
                                B32 strict = false)
 {
   F32 lowest_t1 = strict ? 1.f : F32_INFINITY();
   B32 found = false;
   
-  als_foreach(edge_index, edges)
+  al_foreach(edge_index, edges)
   {
-    Edge* edge = als_get(edges, edge_index);
+    Edge* edge = al_get(edges, edge_index);
     
     Ray2 edge_ray = {};
     edge_ray.pt = edge->ghost.min;
@@ -58,10 +58,12 @@ get_ray_intersection_wrt_edges(Ray2 light_ray,
 }
 
 static void
-gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
-  als_clear(&l->intersections);
-  als_clear(&l->triangles);  
-  als_clear(&l->debug_rays);
+gen_light_intersections(Light* l, 
+                        ArrayList<V2>* eps, 
+                        ArrayList<Edge>* edges) {
+  al_clear(&l->intersections);
+  al_clear(&l->triangles);  
+  al_clear(&l->debug_rays);
   
   F32 offset_angles[] = {0.0f, 0.01f, -0.01f};
   //F32 offset_angles[] = {0.0f};
@@ -77,7 +79,7 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
         ep_index <  eps->count;
         ++ep_index) 
     {
-      V2 ep = als_get_copy(eps, ep_index);
+      V2 ep = al_get_copy(eps, ep_index);
       
       // ignore endpoints that are not within the angle 
       F32 angle = angle_between(l->dir, ep - l->pos);
@@ -87,15 +89,15 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
       light_ray.pt = l->pos;
       light_ray.dir = rotate(ep - l->pos, offset_angle);
       
-      assert(als_has_space(&l->debug_rays));
-      als_push_copy(&l->debug_rays, light_ray.dir);
+      assert(al_has_space(&l->debug_rays));
+      al_push_copy(&l->debug_rays, light_ray.dir);
       
       auto [found, intersection] = 
         get_ray_intersection_wrt_edges(light_ray, edges, offset_index == 0);
       
-      assert(als_has_space(&l->intersections));
-      als_push_copy(&l->intersections, 
-                    found ? intersection : ep);
+      assert(al_has_space(&l->intersections));
+      al_push_copy(&l->intersections, 
+                   found ? intersection : ep);
     }
     
     
@@ -112,10 +114,10 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
     for (U32 i = 0; i < array_count(shell_rays); ++i) {
       auto [found, intersection] = get_ray_intersection_wrt_edges(shell_rays[i], edges);
       
-      assert(als_has_space(&l->intersections));
+      assert(al_has_space(&l->intersections));
       if(found) {
-        als_push_copy(&l->intersections, 
-                      intersection);
+        al_push_copy(&l->intersections, 
+                     intersection);
       }
     }
     
@@ -141,14 +143,14 @@ gen_light_intersections(Light* l, Endpoint_List* eps, Edge_List* edges) {
          intersection_index < l->intersections.count - 1;
          intersection_index++)
     {
-      V2 p0 = als_get_copy(&l->intersections, intersection_index);
+      V2 p0 = al_get_copy(&l->intersections, intersection_index);
       V2 p1 = l->pos;
-      V2 p2 = als_get_copy(&l->intersections, intersection_index+1);
+      V2 p2 = al_get_copy(&l->intersections, intersection_index+1);
       push_triangle(l, p0, p1, p2, l->color);
     }
-    V2 p0 = als_get_copy(&l->intersections, l->intersections.count-1);
+    V2 p0 = al_get_copy(&l->intersections, l->intersections.count-1);
     V2 p1 = l->pos;
-    V2 p2 = als_get_copy(&l->intersections, 0);
+    V2 p2 = al_get_copy(&l->intersections, 0);
     
     // Check if p0-p1 is 
     if (cross(p0-p1, p2-p1) > 0.f) {
