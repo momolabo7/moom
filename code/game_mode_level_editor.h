@@ -24,21 +24,17 @@ enum Editor_State {
 };
 
 
-struct Editor_Toolbar_Button {
-  V2 pos;
-};
-
-struct Editor_Toolbar {
-  V2 pos;
-  B32 follow_mouse;
-  V2 follow_mouse_offset;
-};
 
 struct Editor {
   Editor_State state;
-  Editor_Toolbar toolbar;
   Array_List<V2> vertices;
   F32 mode_display_timer;
+  
+  V2 toolbar_pos;
+  B32 toolbar_follow_mouse;
+  V2 toolbar_follow_mouse_offset;
+  
+  
 };
 
 #endif //GAME_MODE_LEVEL_EDITOR_H

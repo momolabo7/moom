@@ -4,14 +4,14 @@
 #define EDITOR_TOOLBAR_HEIGHT 300.f
 
 //~Editor Toolbar
+
 static B32
 is_point_on_editor_toolbar(Editor* e, V2 pt) {
-  return pt.x >= e->toolbar.pos.x - EDITOR_TOOLBAR_WIDTH/2 &&
-    pt.y >= e->toolbar.pos.y - EDITOR_TOOLBAR_HEIGHT/2 &&
-    pt.x <= e->toolbar.pos.x + EDITOR_TOOLBAR_WIDTH/2 &&
-    pt.y <= e->toolbar.pos.y + EDITOR_TOOLBAR_HEIGHT/2;
+  return pt.x >= e->toolbar_pos.x - EDITOR_TOOLBAR_WIDTH/2 &&
+    pt.y >= e->toolbar_pos.y - EDITOR_TOOLBAR_HEIGHT/2 &&
+    pt.x <= e->toolbar_pos.x + EDITOR_TOOLBAR_WIDTH/2 &&
+    pt.y <= e->toolbar_pos.y + EDITOR_TOOLBAR_HEIGHT/2;
 }
-
 
 static B32 
 update_editor_toolbar(Editor* e, Game_Input* input) {
@@ -19,13 +19,14 @@ update_editor_toolbar(Editor* e, Game_Input* input) {
   
   // TODO: check if a toolbar button is clicked
   
+  
   // follow mouse logic
-  if(e->toolbar.follow_mouse) {
+  if(e->toolbar_follow_mouse) {
     if (is_released(input->button_editor0)) {
-      e->toolbar.follow_mouse = false;
+      e->toolbar_follow_mouse = false;
     }
     else {
-      e->toolbar.pos = input->design_mouse_pos + e->toolbar.follow_mouse_offset;
+      e->toolbar_pos = input->design_mouse_pos + e->toolbar_follow_mouse_offset;
       
     }
   }
@@ -33,8 +34,8 @@ update_editor_toolbar(Editor* e, Game_Input* input) {
     if (is_poked(input->button_editor0) && 
         is_point_on_editor_toolbar(e, input->design_mouse_pos)) 
     {
-      e->toolbar.follow_mouse = true;
-      e->toolbar.follow_mouse_offset = e->toolbar.pos - input->design_mouse_pos;
+      e->toolbar_follow_mouse = true;
+      e->toolbar_follow_mouse_offset = e->toolbar_pos - input->design_mouse_pos;
       processed = true;
     }
   }
@@ -49,11 +50,14 @@ render_editor_toolbar(Editor* e,
                       Game_Assets* ga,
                       Renderer_Command_Queue* cmds) 
 {
+  // Background
   draw_sprite(ga, cmds, SPRITE_BLANK, 
-              e->toolbar.pos, 
+              e->toolbar_pos, 
               {EDITOR_TOOLBAR_WIDTH, EDITOR_TOOLBAR_HEIGHT},
               100.f,
               {0.2f, 0.2f, 0.2f, 1.f});
+  
+  // TODO: Draw buttons
   
 }
 //~ Editor
@@ -163,7 +167,8 @@ render_editor(Editor* e,
               Game_Assets* ga,
               Renderer_Command_Queue* cmds) 
 {
-  render_editor_toolbar(e, ga, cmds);
+  if (e->state != EDITOR_STATE_INACTIVE)
+    render_editor_toolbar(e, ga, cmds);
   
   //- Renders what the current mode is
   String mode_str = {}; 
