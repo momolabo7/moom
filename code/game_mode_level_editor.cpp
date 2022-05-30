@@ -1,27 +1,75 @@
 #define EDITOR_MODE_DISPLAY_DURATION 1.f
 #define EDITOR_EDGE_CLOSURE_DISTANCE 64.f
+#define EDITOR_TOOLBAR_WIDTH 100.f
+#define EDITOR_TOOLBAR_HEIGHT 300.f
 
-static B32 
-process_editor_toolbar() {
-  
+//~Editor Toolbar
+static B32
+is_point_on_editor_toolbar(Editor* e, V2 pt) {
+  return pt.x >= e->toolbar.pos.x - EDITOR_TOOLBAR_WIDTH/2 &&
+    pt.y >= e->toolbar.pos.y - EDITOR_TOOLBAR_HEIGHT/2 &&
+    pt.x <= e->toolbar.pos.x + EDITOR_TOOLBAR_WIDTH/2 &&
+    pt.y <= e->toolbar.pos.y + EDITOR_TOOLBAR_HEIGHT/2;
 }
 
-static void 
-update_editor_place_lights(Level_Mode* m,
-                           Game_Input* input) 
-{
+
+static B32 
+update_editor_toolbar(Editor* e, Game_Input* input) {
+  B32 processed = false;
   
+  // TODO: check if a toolbar button is clicked
+  
+  // follow mouse logic
+  if(e->toolbar.follow_mouse) {
+    if (is_released(input->button_editor0)) {
+      e->toolbar.follow_mouse = false;
+    }
+    else {
+      e->toolbar.pos = input->design_mouse_pos + e->toolbar.follow_mouse_offset;
+      
+    }
+  }
+  else {
+    if (is_poked(input->button_editor0) && 
+        is_point_on_editor_toolbar(e, input->design_mouse_pos)) 
+    {
+      e->toolbar.follow_mouse = true;
+      e->toolbar.follow_mouse_offset = e->toolbar.pos - input->design_mouse_pos;
+      processed = true;
+    }
+  }
+  
+  
+  return processed;
+}
+
+
+static void
+render_editor_toolbar(Editor* e,
+                      Game_Assets* ga,
+                      Renderer_Command_Queue* cmds) 
+{
+  draw_sprite(ga, cmds, SPRITE_BLANK, 
+              e->toolbar.pos, 
+              {EDITOR_TOOLBAR_WIDTH, EDITOR_TOOLBAR_HEIGHT},
+              100.f,
+              {0.2f, 0.2f, 0.2f, 1.f});
+  
+}
+//~ Editor
+static void 
+process_editor_place_lights_input(Level_Mode* m,
+                                  Game_Input* input) 
+{
   if (is_poked(input->button_editor0)) {
     push_light(m, input->design_mouse_pos, 0x220000FF);
   }
 }
 static void 
-update_editor_place_edges(Editor* e, 
-                          Level_Mode* m,
-                          Game_Input* input) 
+process_editor_place_edges_input(Editor* e, 
+                                 Level_Mode* m,
+                                 Game_Input* input) 
 {
-  
-  
   
   if(is_poked(input->button_editor0)) {
     F32 shortest_dist = F32_INFINITY();
@@ -67,9 +115,12 @@ update_editor_place_edges(Editor* e,
   }
 }
 
-
-static void
+static void 
 update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {
+  update_editor_toolbar(e, input);
+  
+  
+  
   if (is_poked(input->button_editor2)){
     if (e->state <= EDITOR_STATE_MIN) {
       e->state = (Editor_State)(EDITOR_STATE_MAX-1);
@@ -88,37 +139,33 @@ update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {
     e->mode_display_timer = EDITOR_MODE_DISPLAY_DURATION;
   }
   
-  e->mode_display_timer = 
-    max_of(e->mode_display_timer-dt, 0.f);
   
   switch(e->state) {
     case EDITOR_STATE_PLACE_EDGES: {
-      update_editor_place_edges(e, m, input);
+      process_editor_place_edges_input(e, m, input);
     } break;
     case EDITOR_STATE_PLACE_LIGHTS: {
-      update_editor_place_lights(m, input);
+      process_editor_place_lights_input(m, input);
     } break;
     
   }
   
   
+  e->mode_display_timer = max_of(e->mode_display_timer-dt, 0.f);
+  
+  
+  
+  
 }
 
 static void 
-render_editor(Editor* e, Game_Assets* ga,
+render_editor(Editor* e,
+              Game_Assets* ga,
               Renderer_Command_Queue* cmds) 
 {
-  //- Toolbar
-  {
-    draw_sprite(ga, cmds, SPRITE_BLANK, 
-                e->toolbar.pos, 
-                {100.f, 300.f},
-                100.f,
-                {0.8f, 0.8f, 0.8f, 1.f});
-  }
+  render_editor_toolbar(e, ga, cmds);
   
   //- Renders what the current mode is
-  
   String mode_str = {}; 
   
   switch(e->state) {

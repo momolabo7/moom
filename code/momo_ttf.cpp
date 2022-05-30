@@ -743,7 +743,7 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Arena* arena) {
   
   // create an 'active edges list' as a temporary buffer
   
-  declare_and_pointerize(SliceList<_TTF_Edge*>, active_edges);
+  declare_and_pointerize(Slice_List<_TTF_Edge*>, active_edges);
   {
     _TTF_Edge** edge_store = push_array<_TTF_Edge*>(arena, edge_count);
     assert(edge_store);

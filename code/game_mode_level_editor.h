@@ -17,7 +17,6 @@ enum Editor_State {
   EDITOR_STATE_PLACE_LIGHTS,
   EDITOR_STATE_EDIT_LIGHT,
   // TODO: place lights
-  
   // TODO: Edit edges
   // TODO: remove edges
   
@@ -26,17 +25,19 @@ enum Editor_State {
 
 
 struct Editor_Toolbar_Button {
-  
+  V2 pos;
 };
 
 struct Editor_Toolbar {
   V2 pos;
+  B32 follow_mouse;
+  V2 follow_mouse_offset;
 };
 
 struct Editor {
   Editor_State state;
   Editor_Toolbar toolbar;
-  ArrayList<V2> vertices;
+  Array_List<V2> vertices;
   F32 mode_display_timer;
 };
 

@@ -8,7 +8,7 @@ push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
 
 static Maybe<V2> 
 get_ray_intersection_wrt_edges(Ray2 light_ray, 
-                               ArrayList<Edge>* edges, 
+                               Array_List<Edge>* edges, 
                                B32 strict = false)
 {
   F32 lowest_t1 = strict ? 1.f : F32_INFINITY();
@@ -59,8 +59,8 @@ get_ray_intersection_wrt_edges(Ray2 light_ray,
 
 static void
 gen_light_intersections(Light* l, 
-                        ArrayList<V2>* eps, 
-                        ArrayList<Edge>* edges) {
+                        Array_List<V2>* eps, 
+                        Array_List<Edge>* edges) {
   al_clear(&l->intersections);
   al_clear(&l->triangles);  
   al_clear(&l->debug_rays);

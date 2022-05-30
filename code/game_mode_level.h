@@ -43,10 +43,10 @@ struct Level_Mode {
   Editor editor;
   
   Player player;
-  ArrayList<V2> endpoints;
-  ArrayList<Edge> edges;
-  ArrayList<Light> lights;
-  ArrayList<Sensor> sensors;
+  Array_List<V2> endpoints;
+  Array_List<Edge> edges;
+  Array_List<Light> lights;
+  Array_List<Sensor> sensors;
 };
 
 #include "game_mode_level_light.cpp"

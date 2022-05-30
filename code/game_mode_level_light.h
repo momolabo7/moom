@@ -10,9 +10,9 @@ struct Light {
   V2 pos;  
   U32 color;
   
-	ArrayList<V2> intersections;
-  ArrayList<Tri2> triangles;
-  ArrayList<V2> debug_rays;
+	Array_List<V2> intersections;
+  Array_List<Tri2> triangles;
+  Array_List<V2> debug_rays;
 };
 
 

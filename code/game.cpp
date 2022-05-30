@@ -91,7 +91,6 @@ game_update_and_render(Game_Memory* memory,
   // render debug stuff
   if (game->show_debug)
   {
-    // background
     draw_sprite(ga, cmds, SPRITE_BLANK, 
                 game_width/2, game_height/2, 
                 game_width, game_height,
