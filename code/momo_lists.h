@@ -18,6 +18,13 @@ struct Slice_List {
 template<typename T>
 static void sl_init(Slice_List<T>* l, T* arr, U32 cap);
 
+#if 0
+// NOTE(Momo): I don't actually know how useful this actually 
+// is within our current use cases...
+template<typename T>
+static void sl_make(Slice_List<T>* l, U32 cap, Arena arena);
+#endif
+
 template<typename T>
 static U32 sl_cap(Slice_List<T>* l);
 

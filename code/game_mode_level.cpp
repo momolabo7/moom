@@ -82,6 +82,9 @@ init_level_mode(Game_Memory* memory,
   
   push_sensor(m, {400.f, 600.f}, 0xFFFF0000);
   
+  init_editor(&m->editor, {1500.f, 800.f});
+  
+  
 }
 
 

@@ -62,6 +62,8 @@ game_update_and_render(Game_Memory* memory,
   
   
   // Game state management
+  // NOTE(Momo): We might want to rethink how to do this
+  // so that it supports hot reloading cleanly...
   B32 is_done = false;
   if (game->next_mode != game->current_mode) {
     switch(game->next_mode) {
@@ -84,7 +86,21 @@ game_update_and_render(Game_Memory* memory,
     game->current_mode = game->next_mode;
   }
   
-  
+  // TODO: eww copy pasted code from above, kinda
+#if INTERNAL
+  if (input->reloaded) {
+    switch(game->current_mode) {
+      case GAME_MODE_SPLASH: {
+        game->mode_init = init_splash_mode;
+        game->mode_update = update_splash_mode;
+      } break;
+      case GAME_MODE_LEVEL: {
+        game->mode_init = init_level_mode;
+        game->mode_update = update_level_mode;
+      } break;
+    }
+  }
+#endif
   game->mode_update(memory, input);
   
   

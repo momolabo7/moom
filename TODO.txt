@@ -5,12 +5,6 @@ Engine
 		Inspector
 	Others
 	  There are like 3 'interface' game files that might require renaming? I'm not sure
-	List - refactor name?
-		change name to al = array list
-		sal = static array list
-		nsal = named static array lsit
-		nal = etc 
-	
 	
 
 Game

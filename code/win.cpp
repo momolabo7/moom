@@ -250,8 +250,9 @@ win_load_code(Win_Loaded_Code* code) {
 }
 
 #if INTERNAL
-static void
+static B32
 win_reload_code_if_outdated(Win_Loaded_Code* code) {
+  B32 reloaded = false;
   // Check last modified date
   LARGE_INTEGER last_write_time = win_get_file_last_write_time(code->module_path);
   if(last_write_time.QuadPart > code->module_write_time.QuadPart) { 
@@ -261,11 +262,15 @@ win_reload_code_if_outdated(Win_Loaded_Code* code) {
       if (code->is_valid) {
         win_log("[%s] reloaded successfully\n", code->module_path);
         code->module_write_time = win_get_file_last_write_time(code->module_path);
+        reloaded = true;
         break;
       }
       Sleep(100);
     }
   }
+  
+  
+  return reloaded;
 }
 
 #endif
@@ -685,6 +690,9 @@ win_process_input(HWND window, Game_Input* input)
           case 0x70: /* F1 */{
             input->button_console.now = is_key_down;
           } break;
+          case 0x71: /* F2 */{
+            input->button_editor_on.now = is_key_down;
+          } break;
           case 0xDB: /* [ */{
             input->button_editor2.now = is_key_down;
           } break;
@@ -948,7 +956,7 @@ WinMain(HINSTANCE instance,
     
 #if INTERNAL
     //-Hot reload game.dll functions
-    win_reload_code_if_outdated(&game_code);
+    input->reloaded = win_reload_code_if_outdated(&game_code);
 #endif
     
     //-Process messages and input
@@ -959,10 +967,10 @@ WinMain(HINSTANCE instance,
     //- Mouse input 
     {
       POINT cursor_pos = {};
-			GetCursorPos(&cursor_pos);
-			ScreenToClient(window, &cursor_pos);
+      GetCursorPos(&cursor_pos);
+      ScreenToClient(window, &cursor_pos);
       
-			input->screen_mouse_pos.x = cursor_pos.x;
+      input->screen_mouse_pos.x = cursor_pos.x;
       input->screen_mouse_pos.y = cursor_pos.y;
       
       input->render_mouse_pos = input->screen_mouse_pos - render_region.min;

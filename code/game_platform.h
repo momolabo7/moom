@@ -101,13 +101,14 @@ struct Game_Input {
       
       Game_Input_Button button_use;
       
+      Game_Input_Button button_editor_on;
       Game_Input_Button button_editor0;
       Game_Input_Button button_editor1;
       Game_Input_Button button_editor2;
       Game_Input_Button button_editor3;
       
     };  
-    Game_Input_Button buttons[12];
+    Game_Input_Button buttons[13];
   };
   
   V2 design_mouse_pos;
@@ -118,6 +119,10 @@ struct Game_Input {
   
   U8 chars[32];
   U32 char_count;
+  
+#if INTERNAL
+  B32 reloaded;
+#endif
 };
 
 void update(Game_Input_Button button);

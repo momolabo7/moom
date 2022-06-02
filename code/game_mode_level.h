@@ -25,7 +25,6 @@ struct Edge {
 #define LIGHT_BLUE  1 << 2
 
 
-
 struct Player {
   V2 pos;
   V2 size;

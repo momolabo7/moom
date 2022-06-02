@@ -10,9 +10,7 @@ static Light* push_light(Level_Mode* m, V2 pos, U32 color);
 
 enum Editor_State {
   EDITOR_STATE_MIN,
-  
-  EDITOR_STATE_INACTIVE = EDITOR_STATE_MIN,
-  EDITOR_STATE_PLACE_EDGES,
+  EDITOR_STATE_PLACE_EDGES = EDITOR_STATE_MIN,
   EDITOR_STATE_EDIT_EDGES,
   EDITOR_STATE_PLACE_LIGHTS,
   EDITOR_STATE_EDIT_LIGHT,
@@ -26,6 +24,7 @@ enum Editor_State {
 
 
 struct Editor {
+  B32 active;
   Editor_State state;
   Array_List<V2> vertices;
   F32 mode_display_timer;

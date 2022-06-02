@@ -92,6 +92,17 @@ sl_init(Slice_List<T>* l, T* arr, U32 cap) {
   l->cap = cap;
 }
 
+#if 0
+template<typename T>
+static B32 sl_make(Slice_List<T>* l, U32 cap, Arena* arena)
+{
+  T* data = push<T>(arena, cap);
+  if (!data) return false;
+  sl_init(l, data, cap);
+  return true;
+}
+#endif
+
 template<typename T>
 static U32 
 sl_cap(Slice_List<T>* l) {
