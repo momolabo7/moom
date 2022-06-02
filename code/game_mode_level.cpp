@@ -12,13 +12,12 @@ push_sensor(Level_Mode* m, V2 pos, U32 target_color) {
 static void
 push_edge(Level_Mode* m, V2 min, V2 max) {
   assert(al_has_space(&m->edges));
+  // Precalculate ghost edges
+  V2 dir = normalize(max - min) * 0.0001f;
   
   Edge* edge = al_push(&m->edges);
   edge->line.min = min;
   edge->line.max = max;
-  
-  // Precalculate ghost edges
-  V2 dir = normalize(max - min) * 0.0001f;
   edge->ghost.min = edge->line.min - dir;
   edge->ghost.max = edge->line.max + dir;
   

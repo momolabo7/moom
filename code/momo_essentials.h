@@ -170,6 +170,7 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 #define digit_to_ascii(d) ((d) + '0')
 #define ascii_to_digit(a) ((a) - '0')
 
+#define foreach(i,l) for(UMI (i) = 0; (i) < array_count(l); ++(i)) 
 
 //~Useful calculations
 static UMI ptr_to_int(void* p);

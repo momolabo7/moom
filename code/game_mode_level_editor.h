@@ -21,7 +21,10 @@ enum Editor_State {
   EDITOR_STATE_MAX,
 };
 
-
+struct Editor_State_Button {
+  V2 pos;
+  Sprite_ID sprite_id;
+};
 
 struct Editor {
   B32 active;
@@ -29,10 +32,12 @@ struct Editor {
   Array_List<V2> vertices;
   F32 mode_display_timer;
   
+  // TODO: change to AABB?
   V2 toolbar_pos;
   B32 toolbar_follow_mouse;
   V2 toolbar_follow_mouse_offset;
   
+  Editor_State_Button state_btns[EDITOR_STATE_MAX];
   
 };
 

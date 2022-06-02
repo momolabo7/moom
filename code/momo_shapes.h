@@ -18,6 +18,11 @@ struct Rect3 {
   V3 min, max;
 };
 
+struct Aabb2 {
+  V2 center;
+  V2 half_dims;
+};
+
 // Gets the normalized values of Rect lhs based on another Rect rhs
 static F32 width_of(Rect2 lhs);
 static F32 height_of(Rect2 lhs);

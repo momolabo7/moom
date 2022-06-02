@@ -15,12 +15,23 @@
 #define EDITOR_TOOLBAR_H (EDITOR_TOOLBAR_PAD*2 + EDITOR_TOOLBAR_BTN_PAD*(EDITOR_STATE_MAX/2) + EDITOR_TOOLBAR_BTN_SELECT_H*(EDITOR_STATE_MAX/2+1))
 
 //~Editor Toolbar
-static void
-render_editor_toolbar_state_button_select(Editor* e,
-                                          Game_Assets* ga,
-                                          Renderer_Command_Queue* cmds) 
-{  
+static B32
+is_point_in_editor_toolbar_state_button(Editor* e, UMI btn_index, V2 pt) {
+  assert(btn_index < array_count(e->state_btns));
+  Editor_State_Button* btn = e->state_btns + btn_index;
   
+  return (pt.x >= e->toolbar_pos.x + btn->pos.x - EDITOR_TOOLBAR_BTN_W/2 &&
+          pt.y >= e->toolbar_pos.y + btn->pos.y - EDITOR_TOOLBAR_BTN_H/2 &&
+          pt.x <= e->toolbar_pos.x + btn->pos.x + EDITOR_TOOLBAR_BTN_W/2 &&
+          pt.y <= e->toolbar_pos.y + btn->pos.y + EDITOR_TOOLBAR_BTN_H/2);
+}
+
+
+static void
+render_editor_toolbar_state_button_selector(Editor* e,
+                                            Game_Assets* ga,
+                                            Renderer_Command_Queue* cmds) 
+{  
   U32 state_index = (U32)e->state;
   U32 row = state_index / 2;
   U32 col = state_index % 2;
@@ -40,8 +51,8 @@ render_editor_toolbar_state_button_select(Editor* e,
   
   draw_sprite(ga, cmds, SPRITE_BLANK, 
               x, y,
-              EDITOR_TOOLBAR_BTN_W, 
-              EDITOR_TOOLBAR_BTN_H, 
+              EDITOR_TOOLBAR_BTN_SELECT_W, 
+              EDITOR_TOOLBAR_BTN_SELECT_H, 
               91.f);
 }
 static void
@@ -50,33 +61,18 @@ render_editor_toolbar_state_buttons(Editor* e,
                                     Renderer_Command_Queue* cmds) 
 {
   const F32 z = 90.f;
-  F32 ox = e->toolbar_pos.x - 
-    EDITOR_TOOLBAR_W/2 + 
-    EDITOR_TOOLBAR_PAD + 
-    EDITOR_TOOLBAR_BTN_SELECT_W/2;
-  F32 x = ox;
-  F32 y = e->toolbar_pos.y + 
-    EDITOR_TOOLBAR_H/2 - 
-    EDITOR_TOOLBAR_PAD - 
-    EDITOR_TOOLBAR_BTN_SELECT_H/2; 
-  
-  for (U32 state_index = 0; 
-       state_index < EDITOR_STATE_MAX; 
-       ++state_index) 
+  for (U32 btn_index = 0; 
+       btn_index < array_count(e->state_btns); 
+       ++btn_index) 
   {
+    Editor_State_Button* btn = e->state_btns + btn_index;
     draw_sprite(ga, cmds, SPRITE_BLANK, 
-                x, y, 
+                e->toolbar_pos.x + btn->pos.x, 
+                e->toolbar_pos.y + btn->pos.y, 
                 EDITOR_TOOLBAR_BTN_W, 
                 EDITOR_TOOLBAR_BTN_H, 
                 z,
                 {1.f, 0.f, 0.f, 0.5f});
-    if(state_index % 2 == 0) {
-      x += EDITOR_TOOLBAR_BTN_PAD + EDITOR_TOOLBAR_BTN_SELECT_W;
-    }
-    else {
-      x = ox;
-      y -= EDITOR_TOOLBAR_PAD + EDITOR_TOOLBAR_BTN_SELECT_H;
-    }
     
   }
 }
@@ -89,38 +85,6 @@ is_point_on_editor_toolbar(Editor* e, V2 pt) {
     pt.y <= e->toolbar_pos.y + EDITOR_TOOLBAR_H/2;
 }
 
-static B32 
-update_editor_toolbar(Editor* e, Game_Input* input) {
-  B32 processed = false;
-  
-  // TODO: check if a toolbar button is clicked
-  
-  
-  // follow mouse logic
-  if(e->toolbar_follow_mouse) {
-    if (is_released(input->button_editor0)) {
-      e->toolbar_follow_mouse = false;
-    }
-    else {
-      e->toolbar_pos = input->design_mouse_pos + e->toolbar_follow_mouse_offset;
-      
-    }
-  }
-  else {
-    if (is_poked(input->button_editor0) && 
-        is_point_on_editor_toolbar(e, input->design_mouse_pos)) 
-    {
-      e->toolbar_follow_mouse = true;
-      e->toolbar_follow_mouse_offset = e->toolbar_pos - input->design_mouse_pos;
-      processed = true;
-    }
-  }
-  
-  
-  return processed;
-}
-
-
 static void
 render_editor_toolbar(Editor* e,
                       Game_Assets* ga,
@@ -132,13 +96,50 @@ render_editor_toolbar(Editor* e,
               {EDITOR_TOOLBAR_W, EDITOR_TOOLBAR_H},
               100.f,
               {0.2f, 0.2f, 0.2f, 1.f});
-  render_editor_toolbar_state_button_select(e,ga,cmds);
+  render_editor_toolbar_state_button_selector(e,ga,cmds);
   render_editor_toolbar_state_buttons(e, ga, cmds);
 }
 //~ Editor
 static void
+clear_editor_state(Editor* e) {
+  al_clear(&e->vertices);
+}
+
+static void 
+init_editor_state_button(Editor* e, Editor_State state, 
+                         V2 pos, Sprite_ID sprite_id )
+{
+  assert(state < array_count(e->state_btns));
+  Editor_State_Button* btn = e->state_btns + state;
+  btn->pos = pos;
+  btn->sprite_id = sprite_id;
+}
+
+static void
 init_editor(Editor* e, V2 pos) {
   e->toolbar_pos = pos;
+  
+  // State Buttons
+  const F32 z = 90.f;
+  F32 ox = -EDITOR_TOOLBAR_W/2 + 
+    EDITOR_TOOLBAR_PAD + 
+    EDITOR_TOOLBAR_BTN_SELECT_W/2;
+  F32 x = ox;
+  F32 y = EDITOR_TOOLBAR_H/2 - 
+    EDITOR_TOOLBAR_PAD - 
+    EDITOR_TOOLBAR_BTN_SELECT_H/2; 
+  
+  init_editor_state_button(e, EDITOR_STATE_PLACE_EDGES, {x, y}, SPRITE_BLANK);
+  x += EDITOR_TOOLBAR_BTN_PAD + EDITOR_TOOLBAR_BTN_SELECT_W;
+  
+  init_editor_state_button(e, EDITOR_STATE_EDIT_EDGES, {x, y}, SPRITE_BLANK);
+  x = ox; y -= EDITOR_TOOLBAR_PAD + EDITOR_TOOLBAR_BTN_SELECT_H;
+  
+  init_editor_state_button(e, EDITOR_STATE_PLACE_LIGHTS, {x, y}, SPRITE_BLANK);
+  x += EDITOR_TOOLBAR_BTN_PAD + EDITOR_TOOLBAR_BTN_SELECT_W;
+  
+  init_editor_state_button(e, EDITOR_STATE_EDIT_LIGHT, {x, y}, SPRITE_BLANK);
+  x = ox; y -= EDITOR_TOOLBAR_PAD + EDITOR_TOOLBAR_BTN_SELECT_H;
 }
 static void 
 process_editor_place_lights_input(Level_Mode* m,
@@ -165,7 +166,7 @@ process_editor_place_edges_input(Editor* e,
     }
     
     if (shortest_dist > EDITOR_EDGE_CLOSURE_DISTANCE || 
-        al_is_empty(&e->vertices)) 
+        e->vertices.count < 2) 
     {
       if(al_has_space(&e->vertices)) {
         al_push_copy(&e->vertices, input->design_mouse_pos);
@@ -198,34 +199,42 @@ process_editor_place_edges_input(Editor* e,
   }
 }
 
+static B32
+process_input_for_editor_toolbar(Editor* e, Game_Input* input) {
+  //- Check if state buttons are clicked
+  if (is_poked(input->button_editor0)) {
+    foreach(btn_index, e->state_btns) {
+      Editor_State_Button* btn = e->state_btns + btn_index;
+      if (is_point_in_editor_toolbar_state_button(e, btn_index, input->design_mouse_pos)){
+        e->state = (Editor_State)btn_index;
+        e->mode_display_timer = EDITOR_MODE_DISPLAY_DURATION;
+        return true;
+      }
+    }
+    
+    if (is_point_on_editor_toolbar(e, input->design_mouse_pos)) 
+    {
+      e->toolbar_follow_mouse = true;
+      e->toolbar_follow_mouse_offset = e->toolbar_pos - input->design_mouse_pos;
+      return true;
+    }
+  }
+  
+  return false;
+}
+
 static void 
 update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {
   if (is_poked(input->button_editor_on)) {
     e->active = !e->active;
+    clear_editor_state(e); // I know this will call 2x too much but idc
   }
   if (!e->active) return;
   
-  update_editor_toolbar(e, input);
+  B32 toolbar_captured = process_input_for_editor_toolbar(e, input);
   
-  if (is_poked(input->button_editor2)){
-    if (e->state <= EDITOR_STATE_MIN) {
-      e->state = (Editor_State)(EDITOR_STATE_MAX-1);
-    }
-    else {
-      e->state = (Editor_State)(e->state-1);
-    }
-    e->mode_display_timer = EDITOR_MODE_DISPLAY_DURATION;
-  }
-  
-  else if (is_poked(input->button_editor3)) {
-    e->state = (Editor_State)(e->state+1);
-    if (e->state >= EDITOR_STATE_MAX) {
-      e->state = EDITOR_STATE_MIN;
-    }
-    e->mode_display_timer = EDITOR_MODE_DISPLAY_DURATION;
-  }
-  
-  if (!e->toolbar_follow_mouse) {
+  //-Input outside of the button
+  if (!toolbar_captured && !e->toolbar_follow_mouse) {
     switch(e->state) {
       case EDITOR_STATE_PLACE_EDGES: {
         process_editor_place_edges_input(e, m, input);
@@ -237,6 +246,15 @@ update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {
     }
   }
   
+  //-Toolbar Drag Logic
+  if(e->toolbar_follow_mouse) {
+    if (is_released(input->button_editor0)) {
+      e->toolbar_follow_mouse = false;
+    }
+    else {
+      e->toolbar_pos = input->design_mouse_pos + e->toolbar_follow_mouse_offset;
+    }
+  }
   
   e->mode_display_timer = max_of(e->mode_display_timer-dt, 0.f);
   
@@ -259,7 +277,6 @@ render_editor(Editor* e,
   String mode_str = {}; 
   
   switch(e->state) {
-    
     case EDITOR_STATE_PLACE_EDGES: {
       mode_str = string_from_lit("PLACE EDGES");
     } break;
