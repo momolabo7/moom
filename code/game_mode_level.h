@@ -11,9 +11,9 @@ struct Sensor {
 
 
 
-struct Edge {
-  // do we have different typed edges?
-  Line2 line;
+struct Edge{
+  U32 min_pt_id;
+  U32 max_pt_id;
   Line2 ghost;
 };
 
@@ -36,13 +36,16 @@ enum Level_State {
   LEVEL_STATE_NORMAL,
 };
 
-
 struct Level_Mode {
   Level_State state;
   Editor editor;
   
   Player player;
-  Array_List<V2> endpoints;
+  
+  // TODO: complete this
+  Array_List<V2> points;
+  //Array_List<Shape> shapes;
+  
   Array_List<Edge> edges;
   Array_List<Light> lights;
   Array_List<Sensor> sensors;

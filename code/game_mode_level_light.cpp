@@ -59,8 +59,9 @@ get_ray_intersection_wrt_edges(Ray2 light_ray,
 
 static void
 gen_light_intersections(Light* l, 
-                        Array_List<V2>* eps, 
-                        Array_List<Edge>* edges) {
+                        Array_List<V2>* points,
+                        Array_List<Edge>* edges)
+{
   al_clear(&l->intersections);
   al_clear(&l->triangles);  
   al_clear(&l->debug_rays);
@@ -75,11 +76,10 @@ gen_light_intersections(Light* l,
     
     
     // For each endpoint
-    for(U32 ep_index = 0; 
-        ep_index <  eps->count;
-        ++ep_index) 
+    al_foreach(edge_index, edges) 
     {
-      V2 ep = al_get_copy(eps, ep_index);
+      U32 ep_index = al_get(edges, edge_index)->max_pt_id;
+      V2 ep = al_get_copy(points, ep_index);
       
       // ignore endpoints that are not within the angle 
       F32 angle = angle_between(l->dir, ep - l->pos);

@@ -9,10 +9,11 @@ push_sensor(Level_Mode* m, V2 pos, U32 target_color) {
 }
 
 
+#if 0
 static void
 push_edge(Level_Mode* m, V2 min, V2 max) {
   assert(al_has_space(&m->edges));
-  // Precalculate ghost edges
+  
   V2 dir = normalize(max - min) * 0.0001f;
   
   Edge* edge = al_push(&m->edges);
@@ -20,10 +21,36 @@ push_edge(Level_Mode* m, V2 min, V2 max) {
   edge->line.max = max;
   edge->ghost.min = edge->line.min - dir;
   edge->ghost.max = edge->line.max + dir;
-  
-  
-  al_push_copy(&m->endpoints, edge->line.max);
 }
+#endif
+
+static U32
+push_point(Level_Mode* m, V2 pt) {
+  assert(al_has_space(&m->points));
+  al_push_copy(&m->points, pt);
+  return m->points.count-1;
+}
+
+static void 
+push_edge(Level_Mode* m, U32 min_pt_id, U32 max_pt_id) {
+  assert(al_has_space(&m->edges));
+  assert(al_can_get(&m->points, min_pt_id));
+  assert(al_can_get(&m->points, max_pt_id));
+  assert(min_pt_id != max_pt_id);
+  
+  Edge* edge = al_push(&m->edges);
+  edge->min_pt_id = min_pt_id;
+  edge->max_pt_id = max_pt_id;
+  
+  // TODO: move this to another function.
+  // We will need to do this every time a point has changed
+  V2 min = al_get_copy(&m->points, min_pt_id);
+  V2 max = al_get_copy(&m->points, max_pt_id);
+  V2 dir = normalize(max - min) * 0.0001f;
+  edge->ghost.min = max - dir;
+  edge->ghost.max = min + dir;
+}
+
 
 static Light*
 push_light(Level_Mode* m, V2 pos, U32 color) {
@@ -52,6 +79,7 @@ init_level_mode(Game_Memory* memory,
   
   al_clear(&m->sensors);
   
+#if 0  
   push_edge(m, {0.f,0.f}, {1600.f, 0.f});
   push_edge(m, {1600.f, 0.f}, { 1600.f, 900.f });
   push_edge(m, {1600.f, 900.f}, {0.f, 900.f});
@@ -67,6 +95,27 @@ init_level_mode(Game_Memory* memory,
   push_edge(m, {500.f, 500.f}, {700.001f, 500.f}); 
   push_edge(m, {700.f, 500.f}, {700.f, 700.f}); 
   push_edge(m, {700.f, 700.f}, {500.f, 500.f}); 
+#endif
+  push_point(m, {0.f, 0.f});     // 0
+  push_point(m, {1600.f, 0.f});  // 1
+  push_point(m, {1600.f, 900.f});// 2
+  push_point(m, {0.f, 900.f});   // 3
+  
+  push_point(m, {100.f, 100.f});  //4
+  push_point(m, {1500.f, 100.f}); //5
+  push_point(m, {1500.f, 800.f}); //6
+  push_point(m, {100.f, 800.f});  //7
+  
+  push_edge(m, 0, 1);
+  push_edge(m, 1, 2);
+  push_edge(m, 2, 3);
+  push_edge(m, 3, 0);
+  
+  push_edge(m, 4, 5);
+  push_edge(m, 5, 6);
+  push_edge(m, 6, 7);
+  push_edge(m, 7, 4);
+  
   
   // lights
   push_light(m, {750.f, 600.f}, 0x220000FF);
@@ -172,7 +221,7 @@ update_level_mode(Game_Memory* memory,
   al_foreach(light_index, &m->lights)
   {
     Light* light = al_get(&m->lights, light_index);
-    gen_light_intersections(light, &m->endpoints, &m->edges);
+    gen_light_intersections(light, &m->points, &m->edges);
   }
   
   // check sensor correctness
@@ -229,7 +278,13 @@ update_level_mode(Game_Memory* memory,
   al_foreach(edge_index, &m->edges) 
   {
     Edge* edge = al_get(&m->edges, edge_index);
-    push_line(cmds, edge->line, 
+    
+    Line2 line = { 
+      al_get_copy(&m->points, edge->min_pt_id),
+      al_get_copy(&m->points, edge->max_pt_id),
+    };
+    
+    push_line(cmds, line, 
               1.f, rgba(0x00FF00FF), 
               400.f);
   }

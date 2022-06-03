@@ -141,6 +141,14 @@ init_editor(Editor* e, V2 pos) {
   init_editor_state_button(e, EDITOR_STATE_EDIT_LIGHT, {x, y}, SPRITE_BLANK);
   x = ox; y -= EDITOR_TOOLBAR_PAD + EDITOR_TOOLBAR_BTN_SELECT_H;
 }
+
+static void
+process_editor_edit_edges_input(Level_Mode* m,
+                                Game_Input* input)
+{
+  // TODO
+}
+
 static void 
 process_editor_place_lights_input(Level_Mode* m,
                                   Game_Input* input) 
@@ -173,19 +181,24 @@ process_editor_place_edges_input(Editor* e,
       }
     }
     else {
-      if (e->vertices.count > 0) {
-        for(U32 vertex_index = 1; 
-            vertex_index < e->vertices.count;
-            ++vertex_index) 
-        {
-          V2 vertex = al_get_copy(&e->vertices, vertex_index);
-          V2 prev_vertex = al_get_copy(&e->vertices, vertex_index-1);
-          push_edge(m, prev_vertex, vertex);
-        }
-        V2 first_vertex = al_get_copy(&e->vertices, 0);
-        V2 last_vertex = al_get_copy(&e->vertices, e->vertices.count-1);
-        push_edge(m, last_vertex, first_vertex);
+      U32 first_vertex_id = 0;
+      for(U32 vertex_index = 1; 
+          vertex_index < e->vertices.count;
+          ++vertex_index) 
+      {
+        V2 v0 = al_get_copy(&e->vertices, vertex_index-1);
+        V2 v1 = al_get_copy(&e->vertices, vertex_index);
+        
+        U32 v0_id = push_point(m, v0);
+        U32 v1_id = push_point(m, v1);
+        push_edge(m, v0_id, v1_id);
+        
+        if (vertex_index == 1) first_vertex_id = v0_id;
       }
+      V2 v = al_get_copy(&e->vertices, e->vertices.count-1);
+      U32 v_id = push_point(m, v);
+      push_edge(m, first_vertex_id, v_id);
+      
       al_clear(&e->vertices);
     }
     
@@ -194,8 +207,6 @@ process_editor_place_edges_input(Editor* e,
         al_pop(&e->vertices);
       }
     }
-    
-    
   }
 }
 
@@ -241,6 +252,9 @@ update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {
       } break;
       case EDITOR_STATE_PLACE_LIGHTS: {
         process_editor_place_lights_input(m, input);
+      } break;
+      case EDITOR_STATE_EDIT_EDGES: {
+        process_editor_edit_edges_input(m, input);
       } break;
       
     }
