@@ -38,7 +38,6 @@ struct Editor {
   V2 toolbar_follow_mouse_offset;
   
   Editor_State_Button state_btns[EDITOR_STATE_MAX];
-  
 };
 
 #endif //GAME_MODE_LEVEL_EDITOR_H

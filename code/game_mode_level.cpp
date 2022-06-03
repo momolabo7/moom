@@ -245,14 +245,9 @@ update_level_mode(Game_Memory* memory,
           // TODO(Momo): THIS IS WRONG!!!!
           current_color += light->color >> 8 << 8; // ignore alpha
         }
-        
-        
       }
-      
     }
-    
     sensor->current_color = current_color;
-    
   }
   
   // Rendering

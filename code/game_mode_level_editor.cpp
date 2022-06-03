@@ -26,41 +26,28 @@ is_point_in_editor_toolbar_state_button(Editor* e, UMI btn_index, V2 pt) {
           pt.y <= e->toolbar_pos.y + btn->pos.y + EDITOR_TOOLBAR_BTN_H/2);
 }
 
-
 static void
 render_editor_toolbar_state_button_selector(Editor* e,
                                             Game_Assets* ga,
-                                            Renderer_Command_Queue* cmds) 
-{  
-  U32 state_index = (U32)e->state;
-  U32 row = state_index / 2;
-  U32 col = state_index % 2;
-  
-  F32 x = (e->toolbar_pos.x - 
-           EDITOR_TOOLBAR_W/2 + 
-           EDITOR_TOOLBAR_PAD + 
-           EDITOR_TOOLBAR_BTN_SELECT_W/2 +
-           (EDITOR_TOOLBAR_BTN_PAD + EDITOR_TOOLBAR_BTN_SELECT_W) * col);
-  
-  F32 y = (e->toolbar_pos.y + 
-           EDITOR_TOOLBAR_H/2 - 
-           EDITOR_TOOLBAR_PAD - 
-           EDITOR_TOOLBAR_BTN_SELECT_H/2 -
-           (EDITOR_TOOLBAR_PAD + EDITOR_TOOLBAR_BTN_SELECT_H)*row);
-  
-  
+                                            Renderer_Command_Queue* cmds,
+                                            F32 z) 
+{ 
+  Editor_State_Button* btn = e->state_btns + (U32)e->state;
   draw_sprite(ga, cmds, SPRITE_BLANK, 
-              x, y,
+              e->toolbar_pos.x + btn->pos.x, 
+              e->toolbar_pos.y + btn->pos.y,
               EDITOR_TOOLBAR_BTN_SELECT_W, 
               EDITOR_TOOLBAR_BTN_SELECT_H, 
-              91.f);
+              z);
+  
 }
+
 static void
 render_editor_toolbar_state_buttons(Editor* e,
                                     Game_Assets* ga,
-                                    Renderer_Command_Queue* cmds) 
+                                    Renderer_Command_Queue* cmds,
+                                    F32 z) 
 {
-  const F32 z = 90.f;
   for (U32 btn_index = 0; 
        btn_index < array_count(e->state_btns); 
        ++btn_index) 
@@ -73,7 +60,6 @@ render_editor_toolbar_state_buttons(Editor* e,
                 EDITOR_TOOLBAR_BTN_H, 
                 z,
                 {1.f, 0.f, 0.f, 0.5f});
-    
   }
 }
 
@@ -83,6 +69,13 @@ is_point_on_editor_toolbar(Editor* e, V2 pt) {
     pt.y >= e->toolbar_pos.y - EDITOR_TOOLBAR_H/2 &&
     pt.x <= e->toolbar_pos.x + EDITOR_TOOLBAR_W/2 &&
     pt.y <= e->toolbar_pos.y + EDITOR_TOOLBAR_H/2;
+}
+static void
+render_editor_edit_edges_state(Editor* e,
+                               Game_Assets* ga,
+                               Renderer_Command_Queue* cmds)
+{
+  // TODO render places to drag
 }
 
 static void
@@ -94,10 +87,10 @@ render_editor_toolbar(Editor* e,
   draw_sprite(ga, cmds, SPRITE_BLANK, 
               e->toolbar_pos, 
               {EDITOR_TOOLBAR_W, EDITOR_TOOLBAR_H},
-              100.f,
+              99.9f,
               {0.2f, 0.2f, 0.2f, 1.f});
-  render_editor_toolbar_state_button_selector(e,ga,cmds);
-  render_editor_toolbar_state_buttons(e, ga, cmds);
+  render_editor_toolbar_state_button_selector(e,ga,cmds,99.8f);
+  render_editor_toolbar_state_buttons(e, ga, cmds,99.7f);
 }
 //~ Editor
 static void
@@ -242,10 +235,10 @@ update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {
   }
   if (!e->active) return;
   
-  B32 toolbar_captured = process_input_for_editor_toolbar(e, input);
+  B32 input_captured = process_input_for_editor_toolbar(e, input);
   
   //-Input outside of the button
-  if (!toolbar_captured && !e->toolbar_follow_mouse) {
+  if (!input_captured && !e->toolbar_follow_mouse) {
     switch(e->state) {
       case EDITOR_STATE_PLACE_EDGES: {
         process_editor_place_edges_input(e, m, input);
@@ -272,9 +265,6 @@ update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {
   
   e->mode_display_timer = max_of(e->mode_display_timer-dt, 0.f);
   
-  
-  
-  
 }
 
 static void 
@@ -293,6 +283,7 @@ render_editor(Editor* e,
   switch(e->state) {
     case EDITOR_STATE_PLACE_EDGES: {
       mode_str = string_from_lit("PLACE EDGES");
+      render_editor_edit_edges_state(e, ga, cmds);
     } break;
     
     case EDITOR_STATE_EDIT_EDGES: {
