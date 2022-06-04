@@ -24,7 +24,7 @@ push_edge(Level_Mode* m, V2 min, V2 max) {
 }
 #endif
 
-static U32
+static UMI
 push_point(Level_Mode* m, V2 pt) {
   assert(al_has_space(&m->points));
   al_push_copy(&m->points, pt);
@@ -32,7 +32,7 @@ push_point(Level_Mode* m, V2 pt) {
 }
 
 static void 
-push_edge(Level_Mode* m, U32 min_pt_id, U32 max_pt_id) {
+push_edge(Level_Mode* m, UMI min_pt_id, UMI max_pt_id) {
   assert(al_has_space(&m->edges));
   assert(al_can_get(&m->points, min_pt_id));
   assert(al_can_get(&m->points, max_pt_id));

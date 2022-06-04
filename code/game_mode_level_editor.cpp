@@ -174,22 +174,22 @@ process_editor_place_edges_input(Editor* e,
       }
     }
     else {
-      U32 first_vertex_id = 0;
-      for(U32 vertex_index = 1; 
+      UMI first_vertex_id = 0;
+      for(UMI vertex_index = 1; 
           vertex_index < e->vertices.count;
           ++vertex_index) 
       {
         V2 v0 = al_get_copy(&e->vertices, vertex_index-1);
         V2 v1 = al_get_copy(&e->vertices, vertex_index);
         
-        U32 v0_id = push_point(m, v0);
-        U32 v1_id = push_point(m, v1);
+        UMI v0_id = push_point(m, v0);
+        UMI v1_id = push_point(m, v1);
         push_edge(m, v0_id, v1_id);
         
         if (vertex_index == 1) first_vertex_id = v0_id;
       }
       V2 v = al_get_copy(&e->vertices, e->vertices.count-1);
-      U32 v_id = push_point(m, v);
+      UMI v_id = push_point(m, v);
       push_edge(m, first_vertex_id, v_id);
       
       al_clear(&e->vertices);

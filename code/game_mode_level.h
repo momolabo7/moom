@@ -12,8 +12,8 @@ struct Sensor {
 
 
 struct Edge{
-  U32 min_pt_id;
-  U32 max_pt_id;
+  UMI min_pt_id;
+  UMI max_pt_id;
   Line2 ghost;
 };
 

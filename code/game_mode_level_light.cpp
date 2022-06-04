@@ -62,6 +62,8 @@ gen_light_intersections(Light* l,
                         Array_List<V2>* points,
                         Array_List<Edge>* edges)
 {
+  profile_block("light_generation");
+  
   al_clear(&l->intersections);
   al_clear(&l->triangles);  
   al_clear(&l->debug_rays);
@@ -78,7 +80,7 @@ gen_light_intersections(Light* l,
     // For each endpoint
     al_foreach(edge_index, edges) 
     {
-      U32 ep_index = al_get(edges, edge_index)->max_pt_id;
+      UMI ep_index = al_get(edges, edge_index)->max_pt_id;
       V2 ep = al_get_copy(points, ep_index);
       
       // ignore endpoints that are not within the angle 

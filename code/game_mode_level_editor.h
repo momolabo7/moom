@@ -3,9 +3,9 @@
 
 struct Level_Mode;
 
-static void push_edge(Level_Mode* m, U32 min, U32 max);
+static void push_edge(Level_Mode* m, UMI min, UMI max);
 static Light* push_light(Level_Mode* m, V2 pos, U32 color);
-static U32 push_point(Level_Mode* m, V2 pt);
+static UMI push_point(Level_Mode* m, V2 pt);
 
 
 enum Editor_State {
