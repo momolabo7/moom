@@ -4,14 +4,14 @@
 
 template<typename T> 
 struct Slice {
-  U32 count;
+  UMI count;
   T* e;
 };
 
 template<typename T>
 struct Slice_List {
-  U32 count;
-  U32 cap;
+  UMI count;
+  UMI cap;
   T* e;
 };
 

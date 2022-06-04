@@ -3,12 +3,12 @@
 #define MOMO_H
 
 //-These are 'generic' across all projects and will not need namespaces (i.e.modularize)
-#include "momo_essentials.h"
+#include "momo_common.h"
 #include "momo_intrinsics.h"
-#include "momo_sort.h"
 #include "momo_colors.h"
 #include "momo_vectors.h"
 #include "momo_shapes.h"
+#include "momo_sort.h"
 
 //-TODO(Momo): These are currently under consideration for namespacing
 #include "momo_interval.h"

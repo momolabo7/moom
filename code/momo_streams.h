@@ -16,12 +16,12 @@ struct Stream {
 
 
 static void   init_stream(Stream* s, U8* memory, UMI memory_size);
-static void     reset(Stream* s);
-static B32      is_eos(Stream* s);
-static U8*      consume_block(Stream* s, UMI amount);
-static void     write_block(Stream* s, void* src, UMI size);
-static void     flush_bits(Stream* s);
-static U32		  consume_bits(Stream* s, U32 amount);
+static void   reset(Stream* s);
+static B32    is_eos(Stream* s);
+static U8*    consume_block(Stream* s, UMI amount);
+static void   write_block(Stream* s, void* src, UMI size);
+static void   flush_bits(Stream* s);
+static U32		consume_bits(Stream* s, U32 amount);
 
 template<typename T> static T* consume(Stream* s);
 template<typename T> static void write(Stream* s, T item);

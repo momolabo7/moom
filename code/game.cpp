@@ -62,7 +62,7 @@ game_update_and_render(Game_Memory* memory,
   
   
   // Game state management
-  // NOTE(Momo): We might want to rethink how to do this
+  // TODO(Momo): We might want to rethink how to do this
   // so that it supports hot reloading cleanly...
   B32 is_done = false;
   if (game->next_mode != game->current_mode) {
