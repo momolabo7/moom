@@ -5,14 +5,13 @@ push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
   al_push_copy(&l->triangles, tri);
 }
 
-
-static Maybe<V2> 
-get_ray_intersection_wrt_edges(Ray2 light_ray, 
-                               Array_List<Edge>* edges, 
-                               B32 strict = false)
+// Returns F32_INFINITY() if cannot find
+static F32
+get_ray_intersection_time_wrt_edges(Ray2 ray,
+                                    Array_List<Edge>* edges,
+                                    B32 clamp_to_ray_max = false)
 {
-  F32 lowest_t1 = strict ? 1.f : F32_INFINITY();
-  B32 found = false;
+  F32 lowest_t1 = clamp_to_ray_max ? 1.f : F32_INFINITY();
   
   al_foreach(edge_index, edges)
   {
@@ -23,18 +22,18 @@ get_ray_intersection_wrt_edges(Ray2 light_ray,
     edge_ray.dir = edge->ghost.max - edge->ghost.min; 
     
     // Check for parallel
-    V2 light_ray_normal = {};
-    light_ray_normal.x = light_ray.dir.y;
-    light_ray_normal.y = -light_ray.dir.x;
+    V2 ray_normal = {};
+    ray_normal.x = ray.dir.y;
+    ray_normal.y = -ray.dir.x;
     
     
-    if (!is_close(dot(light_ray_normal, edge_ray.dir), 0.f)) {
+    if (!is_close(dot(ray_normal, edge_ray.dir), 0.f)) {
       F32 t2 = 
-      (light_ray.dir.x*(edge_ray.pt.y - light_ray.pt.y) + 
-       light_ray.dir.y*(light_ray.pt.x - edge_ray.pt.x))/
-      (edge_ray.dir.x*light_ray.dir.y - edge_ray.dir.y*light_ray.dir.x);
+      (ray.dir.x*(edge_ray.pt.y - ray.pt.y) + 
+       ray.dir.y*(ray.pt.x - edge_ray.pt.x))/
+      (edge_ray.dir.x*ray.dir.y - edge_ray.dir.y*ray.dir.x);
       
-      F32 t1 = (edge_ray.pt.x + edge_ray.dir.x * t2 - light_ray.pt.x)/light_ray.dir.x;
+      F32 t1 = (edge_ray.pt.x + edge_ray.dir.x * t2 - ray.pt.x)/ray.dir.x;
       
       if (0.f < t1 && 
           0.f < t2 && 
@@ -43,19 +42,15 @@ get_ray_intersection_wrt_edges(Ray2 light_ray,
         
         if (t1 < lowest_t1) {
           lowest_t1 = t1;
-          found = true;
         }
       }
     }
   }
   
-  if (!found) {
-    return { false };
-  }
-  
-  return { true, light_ray.pt + lowest_t1 * light_ray.dir  }; 
+  return lowest_t1;
   
 }
+
 
 static void
 gen_light_intersections(Light* l, 
@@ -94,12 +89,13 @@ gen_light_intersections(Light* l,
       assert(al_has_space(&l->debug_rays));
       al_push_copy(&l->debug_rays, light_ray.dir);
       
-      auto [found, intersection] = 
-        get_ray_intersection_wrt_edges(light_ray, edges, offset_index == 0);
+      F32 t = get_ray_intersection_time_wrt_edges(light_ray, edges, offset_index == 0);
       
       assert(al_has_space(&l->intersections));
       al_push_copy(&l->intersections, 
-                   found ? intersection : ep);
+                   t == F32_INFINITY() ? 
+                   ep : 
+                   light_ray.pt + t*light_ray.dir);
     }
     
     
@@ -114,16 +110,16 @@ gen_light_intersections(Light* l,
     shell_rays[1].dir = rotate(l->dir, -l->half_angle);
     
     for (U32 i = 0; i < array_count(shell_rays); ++i) {
-      auto [found, intersection] = get_ray_intersection_wrt_edges(shell_rays[i], edges);
+      F32 t = get_ray_intersection_time_wrt_edges(shell_rays[i], edges);
       
       assert(al_has_space(&l->intersections));
-      if(found) {
-        al_push_copy(&l->intersections, 
-                     intersection);
-      }
+      al_push_copy(&l->intersections, 
+                   shell_rays[i].pt + t*shell_rays[i].dir);
+      
     }
-    
   }
+  
+  
   
   // Sort intersections in a clockwise order
   auto pred = [&](V2* lhs, V2* rhs){
