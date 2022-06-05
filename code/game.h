@@ -40,10 +40,10 @@ enum Game_Mode {
 struct Game_State {
   B32 show_debug;
   
-  // Arenas
-  Arena asset_arena;
-  Arena frame_arena;
-  Arena debug_arena;
+  // Memory_Pools
+  Memory_Pool asset_arena;
+  Memory_Pool frame_arena;
+  Memory_Pool debug_arena;
   
   // Mode Management
   enum Game_Mode current_mode;

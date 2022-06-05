@@ -33,7 +33,7 @@ void sui_free(Memory* mem) {
   mem->size = 0;
 }
 
-Memory sui_read_file(const char* filename, Arena* arena) {
+Memory sui_read_file(const char* filename, Memory_Pool* arena) {
   FILE* file = fopen(filename, "rb");
   
   if (!file) {
@@ -44,7 +44,7 @@ Memory sui_read_file(const char* filename, Arena* arena) {
   UMI file_size = ftell(file);
   fseek(file, 0, SEEK_SET);
   
-  void* file_memory = push_block(arena, file_size); 
+  void* file_memory = mp_push_block(arena, file_size); 
   assert(file_memory);
   UMI read_amount = fread(file_memory, 1, file_size, file);
   assert(read_amount == file_size);
@@ -66,7 +66,7 @@ void sui_write_file(const char* filename, Memory memory) {
 }
 
 static TTF 
-sui_load_font(const char* filename, Arena* arena) {
+sui_load_font(const char* filename, Memory_Pool* arena) {
   Memory mem = sui_read_file(filename, arena);
   assert(is_ok(mem));
   

@@ -22,7 +22,7 @@ static void sl_init(Slice_List<T>* l, T* arr, UMI cap);
 // NOTE(Momo): I don't actually know how useful this actually 
 // is within our current use cases...
 template<typename T>
-static void sl_make(Slice_List<T>* l, U32 cap, Arena arena);
+static void sl_make(Slice_List<T>* l, U32 cap, Memory_Pool arena);
 #endif
 
 template<typename T>

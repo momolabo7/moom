@@ -6,7 +6,7 @@
 
 
 struct Debug_State {
-  Arena arena;
+  Memory_Pool arena;
   
 };
 

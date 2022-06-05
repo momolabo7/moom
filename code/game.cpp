@@ -18,12 +18,12 @@ game_update_and_render(Game_Memory* memory,
   
   // Initialization
   if (!memory->game) {
-    memory->game = push<Game_State>(memory->game_arena);
+    memory->game = mp_push<Game_State>(memory->game_arena);
     Game_State* game = memory->game;
     
-    game->asset_arena = partition(memory->game_arena, MB(20));
-    game->debug_arena = partition(memory->game_arena, MB(1));
-    game->frame_arena = partition(memory->game_arena, MB(1));
+    game->asset_arena = mp_partition(memory->game_arena, MB(20));
+    game->debug_arena = mp_partition(memory->game_arena, MB(1));
+    game->frame_arena = mp_partition(memory->game_arena, MB(1));
     
     
     B32 success = load_game_assets(&game->game_assets, 

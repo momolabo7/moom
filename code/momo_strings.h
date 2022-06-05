@@ -3,7 +3,7 @@
 
 
 //~ NOTE(Momo): 'Immutable' Strings
-struct String{
+struct String {
 	U8* e;
 	UMI count;
 };

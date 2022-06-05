@@ -97,9 +97,9 @@ sl_init(Slice_List<T>* l, T* arr, UMI cap) {
 
 #if 0
 template<typename T>
-static B32 sl_make(Slice_List<T>* l, UMI cap, Arena* arena)
+static B32 sl_make(Slice_List<T>* l, UMI cap, Memory_Pool* arena)
 {
-  T* data = push<T>(arena, cap);
+  T* data = mp_push<T>(arena, cap);
   if (!data) return false;
   sl_init(l, data, cap);
   return true;

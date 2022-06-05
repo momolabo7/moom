@@ -28,7 +28,7 @@ test_log(">> " #unit_name " end\n\n"); \
 #include "momo.h"
 
 static inline Memory
-test_read_file_to_memory(Arena* arena, const char* filename) {
+test_read_file_to_memory(Memory_Pool* arena, const char* filename) {
   Memory result = {0};
   FILE* file = fopen(filename, "rb");
   if (!file) { 
@@ -40,7 +40,7 @@ test_read_file_to_memory(Arena* arena, const char* filename) {
   S32 file_size = ftell(file);
   fseek(file, 0, SEEK_SET);
   
-  void* file_memory = push_block(arena, file_size, 4);
+  void* file_memory = mp_push_block(arena, file_size, 4);
   fread(file_memory, 1, file_size, file); 
   
   result.data = file_memory;

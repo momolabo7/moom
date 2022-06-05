@@ -13,13 +13,12 @@
 //-TODO(Momo): These are currently under consideration for namespacing
 #include "momo_interval.h"
 #include "momo_matrix.h"
-
-#include "momo_arena.h"
 #include "momo_crc.h"
 #include "momo_strings.h"
 #include "momo_image.h" 
 
 //-These are 'modules' and thus need namespacing
+#include "momo_memory_pool.h"
 #include "momo_rng.h"
 #include "momo_streams.h"   // TODO: namespace
 #include "momo_lists.h" 

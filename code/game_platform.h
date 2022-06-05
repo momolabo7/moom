@@ -134,7 +134,7 @@ struct Renderer_Texture_Queue;
 struct Renderer_Command_Queue;
 struct Profiler;
 struct Game_Memory {
-  Arena* game_arena; // Require 32MB
+  Memory_Pool* game_arena; // Require 32MB
   Platform_API platform_api;
   Renderer_Texture_Queue* renderer_texture_queue;
   Renderer_Command_Queue* renderer_command_queue;

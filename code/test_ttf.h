@@ -17,8 +17,8 @@ void test_ttf() {
   }
   defer { free(memory); };
   
-  declare_and_pointerize(Arena, arena);
-  init_arena(arena, memory, memory_size);
+  declare_and_pointerize(Memory_Pool, arena);
+  mp_init(arena, memory, memory_size);
   Memory ttf_memory = 
     test_read_file_to_memory(arena, 
 #if 0 
@@ -39,7 +39,7 @@ void test_ttf() {
     for (U32 codepoint = 65; codepoint <= 65+26; ++codepoint) {
       //for (U32 codepoint = 87; codepoint <= 87; ++codepoint) {
       test_log("rasterizing codepoint %X\n", codepoint);
-      set_arena_reset_point(arena);
+      mp_set_revert_point(arena);
       
       U32 glyph_index = ttf_get_glyph_index(&ttf, codepoint);
       Bitmap codepoint_image = ttf_rasterize_glyph(&ttf, glyph_index, scale_factor, arena);

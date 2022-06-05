@@ -51,8 +51,8 @@ begin_atlas_builder(const char* bitmap_id_name,
 
 
 static void
-end_atlas_builder(Sui_Atlas* ab, Arena* arena) {
-  ab->bitmap.pixels = push_array<U32>(arena, ab->bitmap.width * ab->bitmap.height);
+end_atlas_builder(Sui_Atlas* ab, Memory_Pool* arena) {
+  ab->bitmap.pixels = mp_push_array<U32>(arena, ab->bitmap.width * ab->bitmap.height);
   assert(ab->bitmap.pixels);
   
   // Count the amount of rects
@@ -68,8 +68,8 @@ end_atlas_builder(Sui_Atlas* ab, Arena* arena) {
   if (rect_count == 0) return; 
   
   // Allocate required memory required 
-  auto* rects = push_array<RP_Rect>(arena, rect_count);
-  auto* contexts = push_array<Sui_Atlas_Context>(arena, rect_count);
+  auto* rects = mp_push_array<RP_Rect>(arena, rect_count);
+  auto* contexts = mp_push_array<Sui_Atlas_Context>(arena, rect_count);
   
   // Prepare the rects with the correct info
   U32 rect_index = 0;
@@ -80,7 +80,7 @@ end_atlas_builder(Sui_Atlas* ab, Arena* arena) {
        ++font_index) 
   {
     
-    set_arena_reset_point(arena);
+    mp_set_revert_point(arena);
     Sui_Atlas_Font* font = ab->fonts + font_index;
     
     TTF* ttf = font->loaded_ttf;
@@ -116,7 +116,7 @@ end_atlas_builder(Sui_Atlas* ab, Arena* arena) {
        sprite_index < ab->sprite_count;
        ++sprite_index) 
   {
-    set_arena_reset_point(arena);
+    mp_set_revert_point(arena);
     
     Sui_Atlas_Sprite* sprite = ab->sprites + sprite_index;
     
@@ -167,7 +167,7 @@ end_atlas_builder(Sui_Atlas* ab, Arena* arena) {
     auto* context = (Sui_Atlas_Context*)(rect->user_data);
     switch(context->type) {
       case SUI_ATLAS_CONTEXT_TYPE_SPRITE: {
-        set_arena_reset_point(arena);
+        mp_set_revert_point(arena);
         Sui_Atlas_Sprite* related_entry = context->sprite.sprite;
         
         Memory file_memory = sui_read_file(related_entry->filename, arena);
@@ -189,7 +189,7 @@ end_atlas_builder(Sui_Atlas* ab, Arena* arena) {
         
       } break;
       case SUI_ATLAS_CONTEXT_TYPE_FONT_GLYPH: {
-        set_arena_reset_point(arena);
+        mp_set_revert_point(arena);
         Sui_Atlas_Font* related_entry = context->font_glyph.font;
         Sui_Atlas_Font_Glyph_Context* related_context = &context->font_glyph;
         

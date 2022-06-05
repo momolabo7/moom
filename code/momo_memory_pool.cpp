@@ -1,5 +1,5 @@
 static void
-init_arena(Arena* a, void* mem, UMI cap) {
+mp_init(Memory_Pool* a, void* mem, UMI cap) {
   a->memory = (U8*)mem;
   a->pos = 0; 
   a->cap = cap;
@@ -8,18 +8,18 @@ init_arena(Arena* a, void* mem, UMI cap) {
 
 
 static void
-clear(Arena* a) {
+clear(Memory_Pool* a) {
   a->pos = 0;
 }
 
 
 static UMI 
-remaining_of(Arena* a) {
+mp_remaining(Memory_Pool* a) {
   return a->cap - a->pos;
 }
 
 static void* 
-push_block(Arena* a, UMI size, UMI align) {
+mp_push_block(Memory_Pool* a, UMI size, UMI align) {
   //assert(size);
   if (size == 0) return nullptr;
 	
@@ -36,29 +36,29 @@ push_block(Arena* a, UMI size, UMI align) {
 	
 }
 
-static Arena
-partition(Arena* a, UMI size) {	
-  Arena ret = {};
-	void* mem = push_block(a, size, 16);
+static Memory_Pool
+mp_partition(Memory_Pool* a, UMI size) {	
+  Memory_Pool ret = {};
+	void* mem = mp_push_block(a, size, 16);
   
-  init_arena(&ret, mem, size);
+  mp_init(&ret, mem, size);
   return ret;
   
 }
 
 template<typename T> static T*
-push(Arena* a, UMI align) {
-  return (T*)push_block(a, sizeof(T), align);
+mp_push(Memory_Pool* a, UMI align) {
+  return (T*)mp_push_block(a, sizeof(T), align);
 }
 
 template<typename T> static T*
-push_array(Arena* a, UMI num, UMI align) {
-  return (T*)push_block(a, sizeof(T)*num, align);
+mp_push_array(Memory_Pool* a, UMI num, UMI align) {
+  return (T*)mp_push_block(a, sizeof(T)*num, align);
 }
 
 /*
 static inline void* 
-Arena_BootBlock(UMI struct_size,
+Memory_Pool_BootBlock(UMI struct_size,
                 UMI offset_to_arena,
                 void* memory,
                 UMI memory_size)
@@ -69,16 +69,16 @@ Arena_BootBlock(UMI struct_size,
 	
 	void* arena_memory = (U8*)memory + struct_size; 
 	UMI arena_memory_size = memory_size - struct_size;
-	Arena* arena_ptr = (Arena*)((U8*)memory + offset_to_arena);
-	(*arena_ptr) = Arena_Create(arena_memory, arena_memory_size);
+	Memory_Pool* arena_ptr = (Memory_Pool*)((U8*)memory + offset_to_arena);
+	(*arena_ptr) = Memory_Pool_Create(arena_memory, arena_memory_size);
 	
 	return int_to_ptr(imem);
 }
 //*/
 
-static Arena_Marker
-mark(Arena* a) {
-  Arena_Marker ret;
+static Memory_Pool_Marker
+mp_mark(Memory_Pool* a) {
+  Memory_Pool_Marker ret;
   ret.arena = a;
   ret.old_pos = a->pos;
   
@@ -86,10 +86,10 @@ mark(Arena* a) {
 }
 
 static void
-revert(Arena_Marker marker) {
+mp_revert(Memory_Pool_Marker marker) {
   marker.arena->pos = marker.old_pos;
 }
 
-Arena_Marker::operator Arena*() {
+Memory_Pool_Marker::operator Memory_Pool*() {
   return arena;
 }
