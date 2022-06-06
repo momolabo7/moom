@@ -148,7 +148,6 @@ load_game_assets(Game_Assets* ga,
       
       Sprite_Asset* sa = ga->sprites + sprite_index;
       
-      // TODO(Momo): this is a hack!
       sa->bitmap_id = Bitmap_ID(ks.bitmap_id); 
       sa->uv = ks.uv;
       
@@ -170,16 +169,17 @@ load_game_assets(Game_Assets* ga,
       Font_Asset* font = ga->fonts + font_index;
       font->highest_codepoint = kf.highest_codepoint + 1;
       
-      // +1 glyph count to let [0] be the 'invalid glyph' index
       font->glyph_count = kf.glyph_count;
-      font->bitmap_id = Bitmap_ID(kf.bitmap_id); // TODO(Momo): This is a hack!
+      font->bitmap_id = Bitmap_ID(kf.bitmap_id); 
       
       U32 codepoint_map_size = sizeof(U32)*(font->highest_codepoint+1);
       U32 glyphs_size = sizeof(Font_Glyph_Asset)*(font->glyph_count); 
       U32 advances_size = sizeof(F32)*font->glyph_count*font->glyph_count;
       U32 memory_required = codepoint_map_size + glyphs_size + advances_size;
+      
       void* font_memory = mp_push_block(arena, memory_required, 4);
       assert(font_memory);
+      
       font->codepoint_map = (U32*)font_memory;
       font->glyphs = (Font_Glyph_Asset*)((U8*)font->codepoint_map + codepoint_map_size);
       font->horizontal_advances = (F32*)((U8*)font->glyphs + glyphs_size);

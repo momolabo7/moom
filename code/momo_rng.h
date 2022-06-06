@@ -14,7 +14,6 @@ static F32 rng_bilateral(RNG* r);
 static F32 rng_range_F32(RNG* r, F32 min, F32 max);
 static S32 rng_range_S32(RNG* r, S32 min, S32 max);
 static U32 rng_range_U32(RNG* r, U32 min, U32 max);
-
 // TODO: rng_unit_circle()
 
 #include "momo_rng.cpp"

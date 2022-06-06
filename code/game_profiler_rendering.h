@@ -2,13 +2,7 @@
 #ifndef GAME_PROFILER_RENDERING_H
 #define GAME_PROFILER_RENDERING_H
 
-// TODO(Momo): Change filename? We are not just rendering. 
-// We are also updating.
 
-// TODO(Momo): Change name to update_and_render()
-// Might need to seperate this to a 'rendering' file
-
-// TODO(Momo): Add to momo_stat? Looks useful.
 struct Stat {
   F64 min;
   F64 max;
@@ -49,7 +43,6 @@ end_stat(Stat* stat) {
 
 static void
 render_profiler(Profiler* p, Game_Assets* ga, Renderer_Command_Queue* cmds) {
-  // TODO(Momo): UI coorindates?
   const F32 font_height = 30.f;
   U32 line_num = 1;
   for (U32 translation_index = 0;

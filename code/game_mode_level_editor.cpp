@@ -84,7 +84,7 @@ render_editor_edit_edges_state(Level_Mode* m,
     c.center = pt;
     c.radius = EDITOR_EDIT_PT_CLICK_RADIUS;
     
-    RGBA color = (pt_index == m->selected_pt_index) ? rgba(0xFFFF00FF) : rgba(0xFF0000FF);
+    RGBA color = rgba(0xFFFF00FF);
     
     push_circle(cmds, 
                 c,
@@ -157,9 +157,8 @@ static void
 process_editor_edit_edges_input(Level_Mode* m,
                                 Game_Input* input)
 {
-  // TODO
-  if (is_poked(input->button_editor0)) {
-    UMI selected_pt_index = 0;
+  if (is_down(input->button_editor0)) {
+    UMI selected_pt_index = m->points.count;
     F32 shortest_dist = F32_INFINITY();
     al_foreach(pt_index, &m->points) {
       V2 pt = al_get_copy(&m->points, pt_index);
@@ -170,10 +169,16 @@ process_editor_edit_edges_input(Level_Mode* m,
       }
     }
     
+    // TODO: Gerald play this is wrong. Fix ASAP
     if (shortest_dist < EDITOR_EDIT_PT_CLICK_RADIUS*EDITOR_EDIT_PT_CLICK_RADIUS) {
-      m->selected_pt_index = selected_pt_index;
+      m->points.e[selected_pt_index] = input->design_mouse_pos;
+      
     }
+    
+    
   }
+  
+  
   
 }
 

@@ -3,7 +3,6 @@
 #ifndef GAME_ASSETS_RENDER_H
 #define GAME_ASSETS_RENDER_H
 
-// TODO: Rotation
 static void
 draw_sprite(Game_Assets* ga,
             Renderer_Command_Queue* render_commands,

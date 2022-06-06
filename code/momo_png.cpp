@@ -759,7 +759,6 @@ png_to_bitmap(PNG* png, Memory_Pool* arena)
     return ret;
   }
   
-  // TODO(Momo): Rename to 'filter'
   if(!_png_filter(&ctx)) {					
     Bitmap ret = {};
     return ret;

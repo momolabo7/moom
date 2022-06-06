@@ -215,7 +215,6 @@ push_triangle(Renderer_Command_Queue* c,
               V2 p0, V2 p1, V2 p2,
               F32 z)
 {
-  // TODO: put this into the shader itself?
   M44 inverse_of_model = m44_identity();
   inverse_of_model.e[0][0] = -1.f;
   inverse_of_model.e[1][0] = 0.f;

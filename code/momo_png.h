@@ -41,7 +41,6 @@ static PNG png_read(Memory png_memory);
 static B32 is_ok(PNG png);
 static B32 is_ok(PNG* png);
 
-// TODO(Momo): change to init_bitmap?
 static Bitmap png_to_bitmap(PNG* png, Memory_Pool* arena);
 static Memory png_write(Bitmap bm, Memory_Pool* arena);
 

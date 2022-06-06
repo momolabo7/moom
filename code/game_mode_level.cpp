@@ -242,7 +242,7 @@ update_level_mode(Game_Memory* memory,
         if (is_point_in_triangle(tri,
                                  sensor->pos)) 
         {
-          // TODO(Momo): THIS IS WRONG!!!!
+          // TODO(Momo): Probably not the right way do sensor
           current_color += light->color >> 8 << 8; // ignore alpha
         }
       }

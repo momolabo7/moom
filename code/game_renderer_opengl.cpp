@@ -697,7 +697,6 @@ opengl_end_frame(Opengl* ogl) {
         
         auto* data = (Render_Command_Triangle*)entry->data;
         
-        // TODO(Momo): This is just for test
         Triangle_Batcher* tb = &ogl->triangle_batcher;
         
         ogl->glBindVertexArray(tb->model);
