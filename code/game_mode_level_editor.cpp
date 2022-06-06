@@ -14,6 +14,8 @@
 
 #define EDITOR_TOOLBAR_H (EDITOR_TOOLBAR_PAD*2 + EDITOR_TOOLBAR_BTN_PAD*(EDITOR_STATE_MAX/2) + EDITOR_TOOLBAR_BTN_SELECT_H*(EDITOR_STATE_MAX/2+1))
 
+#define EDITOR_EDIT_PT_CLICK_RADIUS 8.f
+
 //~Editor Toolbar
 static B32
 is_point_in_editor_toolbar_state_button(Editor* e, UMI btn_index, V2 pt) {
@@ -71,11 +73,26 @@ is_point_on_editor_toolbar(Editor* e, V2 pt) {
     pt.y <= e->toolbar_pos.y + EDITOR_TOOLBAR_H/2;
 }
 static void
-render_editor_edit_edges_state(Editor* e,
+render_editor_edit_edges_state(Level_Mode* m,
+                               Editor* e,
                                Game_Assets* ga,
                                Renderer_Command_Queue* cmds)
 {
-  // TODO render places to drag
+  al_foreach(pt_index, &m->points) {
+    V2 pt = al_get_copy(&m->points, pt_index);
+    Circ2 c = {};
+    c.center = pt;
+    c.radius = EDITOR_EDIT_PT_CLICK_RADIUS;
+    
+    RGBA color = (pt_index == m->selected_pt_index) ? rgba(0xFFFF00FF) : rgba(0xFF0000FF);
+    
+    push_circle(cmds, 
+                c,
+                1.f,
+                8,
+                color,
+                95.f);
+  }
 }
 
 static void
@@ -87,10 +104,10 @@ render_editor_toolbar(Editor* e,
   draw_sprite(ga, cmds, SPRITE_BLANK, 
               e->toolbar_pos, 
               {EDITOR_TOOLBAR_W, EDITOR_TOOLBAR_H},
-              99.9f,
+              95.0f,
               {0.2f, 0.2f, 0.2f, 1.f});
-  render_editor_toolbar_state_button_selector(e,ga,cmds,99.8f);
-  render_editor_toolbar_state_buttons(e, ga, cmds,99.7f);
+  render_editor_toolbar_state_button_selector(e,ga,cmds,94.9f);
+  render_editor_toolbar_state_buttons(e, ga, cmds,94.8f);
 }
 //~ Editor
 static void
@@ -133,6 +150,7 @@ init_editor(Editor* e, V2 pos) {
   
   init_editor_state_button(e, EDITOR_STATE_EDIT_LIGHT, {x, y}, SPRITE_BLANK);
   x = ox; y -= EDITOR_TOOLBAR_PAD + EDITOR_TOOLBAR_BTN_SELECT_H;
+  
 }
 
 static void
@@ -140,6 +158,23 @@ process_editor_edit_edges_input(Level_Mode* m,
                                 Game_Input* input)
 {
   // TODO
+  if (is_poked(input->button_editor0)) {
+    UMI selected_pt_index = 0;
+    F32 shortest_dist = F32_INFINITY();
+    al_foreach(pt_index, &m->points) {
+      V2 pt = al_get_copy(&m->points, pt_index);
+      F32 dist = distance_sq(input->design_mouse_pos, pt); 
+      if (shortest_dist > dist) {
+        shortest_dist = dist;
+        selected_pt_index = pt_index;
+      }
+    }
+    
+    if (shortest_dist < EDITOR_EDIT_PT_CLICK_RADIUS*EDITOR_EDIT_PT_CLICK_RADIUS) {
+      m->selected_pt_index = selected_pt_index;
+    }
+  }
+  
 }
 
 static void 
@@ -269,6 +304,7 @@ update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {
 
 static void 
 render_editor(Editor* e,
+              Level_Mode* m, 
               Game_Assets* ga,
               Renderer_Command_Queue* cmds) 
 {
@@ -283,11 +319,12 @@ render_editor(Editor* e,
   switch(e->state) {
     case EDITOR_STATE_PLACE_EDGES: {
       mode_str = string_from_lit("PLACE EDGES");
-      render_editor_edit_edges_state(e, ga, cmds);
     } break;
     
     case EDITOR_STATE_EDIT_EDGES: {
       mode_str = string_from_lit("EDIT EDGES");
+      render_editor_edit_edges_state(m, e, ga, cmds);
+      
     } break;
     
     case EDITOR_STATE_PLACE_LIGHTS: {

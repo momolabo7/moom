@@ -321,6 +321,7 @@ push_circle(Renderer_Command_Queue* c,
   }
 }
 
+//TODO: Buggy? Or change to AABB? Instead of Rect?
 static void 
 push_aabb(Renderer_Command_Queue* c, 
           Rect2 rect,

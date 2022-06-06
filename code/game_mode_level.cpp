@@ -400,5 +400,5 @@ update_level_mode(Game_Memory* memory,
   }
   
   
-  render_editor(&m->editor, ga, cmds);
+  render_editor(&m->editor, m, ga, cmds);
 }

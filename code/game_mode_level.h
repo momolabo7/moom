@@ -49,6 +49,8 @@ struct Level_Mode {
   Array_List<Edge> edges;
   Array_List<Light> lights;
   Array_List<Sensor> sensors;
+  
+  UMI selected_pt_index;
 };
 
 #include "game_mode_level_light.cpp"
