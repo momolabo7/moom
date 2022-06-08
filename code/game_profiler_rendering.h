@@ -42,18 +42,18 @@ end_stat(Stat* stat) {
 }
 
 static void
-render_profiler(Profiler* p, Game_Assets* ga, Renderer_Command_Queue* cmds) {
+render_profiler(Profiler* pf, Painter* p) {
   const F32 font_height = 30.f;
   U32 line_num = 1;
   for (U32 translation_index = 0;
-       translation_index < array_count(p->entries);
+       translation_index < array_count(pf->entries);
        ++translation_index) 
   {
     for(U32 entry_index = 0;
-        entry_index < array_count(p->entries[0]);
+        entry_index < array_count(pf->entries[0]);
         ++entry_index)  
     {
-      Profiler_Entry* entry = &p->entries[translation_index][entry_index];
+      Profiler_Entry* entry = &pf->entries[translation_index][entry_index];
       if (entry->function_name ) {
         Stat cycles;
         Stat hits;
@@ -93,13 +93,13 @@ render_profiler(Profiler* p, Game_Assets* ga, Renderer_Command_Queue* cmds) {
                     (U32)cycles_per_hit.average);
         
         // Assumes 1600x900
-        draw_text(ga, cmds, FONT_DEBUG, 
-                  sb->str,
-                  rgba(0xFFFFFFFF),
-                  0.f, 
-                  900.f - font_height * (line_num), 
-                  font_height,
-                  10.f);
+        paint_text(p,
+                   FONT_DEBUG, 
+                   sb->str,
+                   rgba(0xFFFFFFFF),
+                   0.f, 
+                   900.f - font_height * (line_num), 
+                   font_height);
         
         
         // Draw graph
@@ -113,13 +113,12 @@ render_profiler(Profiler* p, Game_Assets* ga, Renderer_Command_Queue* cmds) {
           F32 height_scale = 1.0f / (F32)cycles.max;
           F32 snapshot_bar_height = height_scale * font_height * (F32)snapshot->cycles * 0.95f;
           
-          draw_sprite(ga, cmds, SPRITE_BLANK, 
-                      900.f + snapshot_bar_width * (snapshot_index), 
-                      900.f - font_height * (line_num) + font_height/4,
-                      snapshot_bar_width, 
-                      snapshot_bar_height,
-                      9.f,
-                      rgba(0x00FF00FF));
+          paint_sprite(p, SPRITE_BLANK, 
+                       900.f + snapshot_bar_width * (snapshot_index), 
+                       900.f - font_height * (line_num) + font_height/4,
+                       snapshot_bar_width, 
+                       snapshot_bar_height,
+                       rgba(0x00FF00FF));
         }
       }
       else { 

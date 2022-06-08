@@ -3,6 +3,7 @@
 #ifndef GAME_ASSETS_RENDER_H
 #define GAME_ASSETS_RENDER_H
 
+#if 0
 static void
 draw_sprite(Game_Assets* ga,
             Renderer_Command_Queue* render_commands,
@@ -92,5 +93,6 @@ draw_text(Game_Assets* ga,
   
 }
 
+#endif
 
 #endif //GAME_ASSETS_RENDER_H

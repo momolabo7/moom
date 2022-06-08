@@ -117,9 +117,8 @@ update_console(Console* dc, Game_Input* input) {
 
 
 static void
-render_console(Console* dc, 
-               Game_Assets* ga, 
-               Renderer_Command_Queue* render_commands)
+render_console(Console* dc,
+               Painter* p)
 {
   profile_block();
   
@@ -134,7 +133,7 @@ render_console(Console* dc,
     frustum.max.x = 1600;
     frustum.max.y = 900;
     frustum.max.z = 500;
-    push_orthographic_camera(render_commands, position, frustum);
+    push_orthographic_camera(p->cmds, position, frustum);
   }
   
   // TODO(Momo): These should be percentages
@@ -146,23 +145,21 @@ render_console(Console* dc,
   static const F32 font_bottom_pad = (line_height - font_height);
   static const F32 left_pad = 10.f;
   
-  draw_sprite(ga, render_commands,
-              SPRITE_BLANK,
-              console_width/2,
-              console_height/2,
-              console_width, 
-              console_height,
-              49.f,
-              rgba(0x787878FF));
+  paint_sprite(p,
+               SPRITE_BLANK,
+               console_width/2,
+               console_height/2,
+               console_width, 
+               console_height,
+               rgba(0x787878FF));
   
-  draw_sprite(ga, render_commands,
-              SPRITE_BLANK,
-              console_width/2,
-              line_height/2,
-              console_width,
-              line_height,
-              48.f,
-              rgba(0x505050FF));
+  paint_sprite(p,
+               SPRITE_BLANK,
+               console_width/2,
+               line_height/2,
+               console_width,
+               line_height,
+               rgba(0x505050FF));
   
   
   // Draw info text
@@ -172,25 +169,23 @@ render_console(Console* dc,
   {
     String_Builder* line = dc->info_lines + line_index;
     
-    draw_text(ga, render_commands,
-              FONT_DEFAULT,
-              line->str,
-              rgba(0xFFFFFFFF),
-              left_pad, 
-              line_height * (line_index+1) + font_bottom_pad,
-              font_height,
-              47.f);
+    paint_text(p,
+               FONT_DEFAULT,
+               line->str,
+               rgba(0xFFFFFFFF),
+               left_pad, 
+               line_height * (line_index+1) + font_bottom_pad,
+               font_height);
     
   }
   
-  draw_text(ga, render_commands,
-            FONT_DEFAULT,
-            dc->input_line.str,
-            rgba(0xFFFFFFFF),
-            left_pad, 
-            font_bottom_pad,
-            font_height,
-            46.f);
+  paint_text(p,
+             FONT_DEFAULT,
+             dc->input_line.str,
+             rgba(0xFFFFFFFF),
+             left_pad, 
+             font_bottom_pad,
+             font_height);
 }
 
 #endif //GAME_CONSOLE_H

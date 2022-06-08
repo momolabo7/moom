@@ -13,13 +13,14 @@ init_splash_mode(Game_Memory* memory,
 }
 
 static void 
-update_splash_mode(Game_Memory* memory,
-                   Game_Input* input) 
+update_and_render_splash_mode(Game_Memory* memory,
+                              Game_Input* input) 
 {
   Game_State* game = memory->game;
   Splash_Mode* splash = &game->splash_mode;
   Renderer_Command_Queue* cmds = memory->renderer_command_queue;
   Game_Assets* ga = &game->game_assets;
+  Painter* p = &game->painter;
   
   F32 dt = input->seconds_since_last_frame;
   splash->timer -= dt;
@@ -41,7 +42,7 @@ update_splash_mode(Game_Memory* memory,
     
     frustum.min.x = 0.f;
     frustum.min.y = 0.f;
-    frustum.max.x = 0.f;
+    frustum.max.z = 0.f;
     frustum.max.x = 1600.f;
     frustum.max.y = 900.f;
     frustum.max.z = 500.f;
@@ -49,12 +50,11 @@ update_splash_mode(Game_Memory* memory,
     push_orthographic_camera(cmds, position, frustum);
   }
   
-  draw_text(ga, cmds, FONT_DEFAULT, 
-            string_from_lit("momo"),
-            rgba(0x38c677FF),
-            450.f, 400.f, 
-            256.f, 
-            1.f);
+  paint_text(p, FONT_DEFAULT, 
+             string_from_lit("momo"),
+             rgba(0x38c677FF),
+             450.f, 400.f, 
+             256.f);
 }
 
 #endif //GAME_MODE_SPLASH_H

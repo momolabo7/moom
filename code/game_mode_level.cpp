@@ -115,10 +115,11 @@ init_level_mode(Game_Memory* memory,
 
 
 static void 
-update_level_mode(Game_Memory* memory,
-                  Game_Input* input) 
+update_and_render_level_mode(Game_Memory* memory,
+                             Game_Input* input) 
 {
   Game_State* game = memory->game;
+  Painter* painter = &game->painter;
   Level_Mode* m = &game->level_mode;
   Game_Assets* ga = &game->game_assets;
   Renderer_Command_Queue* cmds = memory->renderer_command_queue;
@@ -257,9 +258,8 @@ update_level_mode(Game_Memory* memory,
       al_get_copy(&m->points, edge->max_pt_id),
     };
     
-    push_line(cmds, line, 
-              1.f, rgba(0x00FF00FF), 
-              400.f);
+    paint_line(painter, line, 
+               1.f, rgba(0x00FF00FF));
   }
   
   
@@ -274,8 +274,8 @@ update_level_mode(Game_Memory* memory,
       line.min = player->pos;
       line.max = player->pos + light_ray;
       
-      push_line(cmds, line, 
-                1.f, rgba(0x00FFFFFF), 4.f);
+      paint_line(painter, line, 
+                 1.f, rgba(0x00FFFFFF));
     }
     
     
@@ -293,14 +293,14 @@ update_level_mode(Game_Memory* memory,
       
       push_format(sb, string_from_lit("[%u]"), intersection_index);
       
-      draw_text(ga, cmds, FONT_DEFAULT, 
-                sb->str,
-                rgba(0xFF0000FF),
-                line.max.x,
-                line.max.y + 10.f,
-                32.f,
-                1.f);
-      push_line(cmds, line, 1.f, rgba(0xFF0000FF), 3.f);
+      paint_text(painter,
+                 FONT_DEFAULT, 
+                 sb->str,
+                 rgba(0xFF0000FF),
+                 line.max.x,
+                 line.max.y + 10.f,
+                 32.f);
+      paint_line(painter, line, 1.f, rgba(0xFF0000FF));
       
     }
   }
@@ -310,10 +310,10 @@ update_level_mode(Game_Memory* memory,
   
   // Draw player
   {
-    draw_sprite(ga, cmds, SPRITE_BULLET_CIRCLE, 
-                player->pos, 
-                player->size,
-                300.f);
+    paint_sprite(painter, 
+                 SPRITE_BULLET_CIRCLE, 
+                 player->pos, 
+                 player->size);
     
   }
   
@@ -321,22 +321,21 @@ update_level_mode(Game_Memory* memory,
   al_foreach(sensor_index, &m->sensors)
   {
     Sensor* sensor = al_get(&m->sensors, sensor_index);
-    draw_sprite(ga, cmds, 
-                SPRITE_BULLET_DOT, 
-                sensor->pos.x, sensor->pos.y, 
-                16, 16,
-                300.f);
+    paint_sprite(painter,
+                 SPRITE_BULLET_DOT, 
+                 sensor->pos.x, sensor->pos.y, 
+                 16, 16);
     
     // only for debugging
     make_string_builder(sb, 128);
     push_format(sb, string_from_lit("[%X]"), sensor->current_color);
-    draw_text(ga, cmds, FONT_DEFAULT, 
-              sb->str,
-              rgba(0xFFFFFFFF),
-              sensor->pos.x - 100.f,
-              sensor->pos.y + 10.f,
-              32.f,
-              300.f);
+    paint_text(painter,
+               FONT_DEFAULT, 
+               sb->str,
+               rgba(0xFFFFFFFF),
+               sensor->pos.x - 100.f,
+               sensor->pos.y + 10.f,
+               32.f);
   }
   
   
@@ -345,14 +344,12 @@ update_level_mode(Game_Memory* memory,
   al_foreach(light_index, &m->lights)
   {
     Light* light = al_get(&m->lights, light_index);
-    draw_sprite(ga, cmds, SPRITE_BULLET_DOT, 
-                light->pos.x, light->pos.y,
-                16, 16,
-                300.f);
+    paint_sprite(painter,
+                 SPRITE_BULLET_DOT, 
+                 light->pos.x, light->pos.y,
+                 16, 16);
     
   }
-  
-  
   
   push_blend(cmds, BLEND_TYPE_ADD);
   // TODO(Momo): This is terrible
@@ -366,17 +363,15 @@ update_level_mode(Game_Memory* memory,
     al_foreach(tri_index, &l->triangles)
     {
       Tri2* lt = al_get(&l->triangles, tri_index);
-      push_triangle(cmds, 
-                    rgba(l->color),
-                    lt->pts[0],
-                    lt->pts[1],
-                    lt->pts[2],
-                    200.f - z);
+      paint_triangle(painter, 
+                     rgba(l->color),
+                     lt->pts[0],
+                     lt->pts[1],
+                     lt->pts[2]);
     }
     z += 0.01f;
     
   }
   
-  
-  render_editor(&m->editor, m, ga, cmds);
+  render_editor(&m->editor, m, painter);
 }

@@ -50,6 +50,7 @@ game_update_and_render(Game_Memory* memory,
   Console* dc = &game->console;
   Game_Assets* ga = &game->game_assets;
   Renderer_Command_Queue* cmds = memory->renderer_command_queue;
+  Painter* p = &game->painter;
   
   // Update console code
   if (is_poked(input->button_console)) {
@@ -60,6 +61,7 @@ game_update_and_render(Game_Memory* memory,
     update_console(dc, input);
   }
   
+  begin_painting(p, ga, cmds);
   
   //-Game state management
   B32 is_done = false;
@@ -81,10 +83,10 @@ game_update_and_render(Game_Memory* memory,
     
     switch(game->current_mode) {
       case GAME_MODE_SPLASH: {
-        update_splash_mode(memory, input);
+        update_and_render_splash_mode(memory, input);
       } break;
       case GAME_MODE_LEVEL: {
-        update_level_mode(memory, input);
+        update_and_render_level_mode(memory, input);
       } break;
     }
   }
@@ -94,13 +96,12 @@ game_update_and_render(Game_Memory* memory,
   // render debug stuff
   if (game->show_debug)
   {
-    draw_sprite(ga, cmds, SPRITE_BLANK, 
-                game_width/2, game_height/2, 
-                game_width, game_height,
-                50.f,
-                {0.f, 0.f, 0.f, 0.8f});
-    render_console(dc, ga, cmds);
-    render_profiler(memory->profiler, ga, cmds);
+    paint_sprite(p, SPRITE_BLANK, 
+                 game_width/2, game_height/2, 
+                 game_width, game_height,
+                 {0.f, 0.f, 0.f, 0.8f});
+    render_console(dc, p);
+    render_profiler(memory->profiler, p);
   }
   return is_done;
 }

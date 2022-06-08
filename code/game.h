@@ -15,11 +15,11 @@
 
 #include "game_profiler.h"
 #include "game_assets.h"
-#include "game_assets_rendering.h"
+#include "game_painter.h"
+
 #include "game_profiler_rendering.h"
 
 #include "game_console.h"
-
 #include "game_mode_level.h"
 
 struct Splash_Mode {
@@ -53,6 +53,7 @@ struct Game_State {
   // Other stuff
   Game_Assets game_assets;
   Console console;
+  Painter painter;
 };
 
 #include "game_mode_splash.h"

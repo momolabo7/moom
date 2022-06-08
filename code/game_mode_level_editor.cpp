@@ -30,38 +30,32 @@ is_point_in_editor_toolbar_state_button(Editor* e, UMI btn_index, V2 pt) {
 
 static void
 render_editor_toolbar_state_button_selector(Editor* e,
-                                            Game_Assets* ga,
-                                            Renderer_Command_Queue* cmds,
-                                            F32 z) 
+                                            Painter* p)
 { 
   auto* btn = e->state_btns + (U32)e->current_state;
-  draw_sprite(ga, cmds, SPRITE_BLANK, 
-              e->toolbar_pos.x + btn->pos.x, 
-              e->toolbar_pos.y + btn->pos.y,
-              EDITOR_TOOLBAR_BTN_SELECT_W, 
-              EDITOR_TOOLBAR_BTN_SELECT_H, 
-              z);
+  paint_sprite(p, SPRITE_BLANK, 
+               e->toolbar_pos.x + btn->pos.x, 
+               e->toolbar_pos.y + btn->pos.y,
+               EDITOR_TOOLBAR_BTN_SELECT_W, 
+               EDITOR_TOOLBAR_BTN_SELECT_H);
   
 }
 
 static void
 render_editor_toolbar_state_buttons(Editor* e,
-                                    Game_Assets* ga,
-                                    Renderer_Command_Queue* cmds,
-                                    F32 z) 
+                                    Painter* p) 
 {
   for (U32 btn_index = 0; 
        btn_index < array_count(e->state_btns); 
        ++btn_index) 
   {
     auto* btn = e->state_btns + btn_index;
-    draw_sprite(ga, cmds, SPRITE_BLANK, 
-                e->toolbar_pos.x + btn->pos.x, 
-                e->toolbar_pos.y + btn->pos.y, 
-                EDITOR_TOOLBAR_BTN_W, 
-                EDITOR_TOOLBAR_BTN_H, 
-                z,
-                {1.f, 0.f, 0.f, 0.5f});
+    paint_sprite(p, SPRITE_BLANK, 
+                 e->toolbar_pos.x + btn->pos.x, 
+                 e->toolbar_pos.y + btn->pos.y, 
+                 EDITOR_TOOLBAR_BTN_W, 
+                 EDITOR_TOOLBAR_BTN_H, 
+                 {1.f, 0.f, 0.f, 0.5f});
   }
 }
 
@@ -75,8 +69,7 @@ is_point_on_editor_toolbar(Editor* e, V2 pt) {
 static void
 render_editor_edit_edges_state(Level_Mode* m,
                                Editor* e,
-                               Game_Assets* ga,
-                               Renderer_Command_Queue* cmds)
+                               Painter* p)
 {
   al_foreach(pt_index, &m->points) {
     V2 pt = al_get_copy(&m->points, pt_index);
@@ -86,28 +79,21 @@ render_editor_edit_edges_state(Level_Mode* m,
     
     RGBA color = rgba(0xFFFF00FF);
     
-    push_circle(cmds, 
-                c,
-                1.f,
-                8,
-                color,
-                95.f);
+    paint_circle(p, c, 1.f, 8, color);
   }
 }
 
 static void
-render_editor_toolbar(Editor* e,
-                      Game_Assets* ga,
-                      Renderer_Command_Queue* cmds) 
+render_editor_toolbar(Editor* e, 
+                      Painter* p) 
 {
   // Background
-  draw_sprite(ga, cmds, SPRITE_BLANK, 
-              e->toolbar_pos, 
-              {EDITOR_TOOLBAR_W, EDITOR_TOOLBAR_H},
-              95.0f,
-              {0.2f, 0.2f, 0.2f, 1.f});
-  render_editor_toolbar_state_button_selector(e,ga,cmds,94.9f);
-  render_editor_toolbar_state_buttons(e, ga, cmds,94.8f);
+  paint_sprite(p, SPRITE_BLANK, 
+               e->toolbar_pos, 
+               {EDITOR_TOOLBAR_W, EDITOR_TOOLBAR_H},
+               {0.2f, 0.2f, 0.2f, 1.f});
+  render_editor_toolbar_state_button_selector(e,p);
+  render_editor_toolbar_state_buttons(e,p);
 }
 //~ Editor
 static void
@@ -319,14 +305,13 @@ update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {
 
 static void 
 render_editor(Editor* e,
-              Level_Mode* m, 
-              Game_Assets* ga,
-              Renderer_Command_Queue* cmds) 
+              Level_Mode* m,
+              Painter* p) 
 {
   //if (!e->active) return;
   if (!e->active) return;
   
-  render_editor_toolbar(e, ga, cmds);
+  render_editor_toolbar(e,p);
   
   //- Renders what the current mode is
   String mode_str = {}; 
@@ -338,7 +323,7 @@ render_editor(Editor* e,
     
     case EDITOR_STATE_EDIT_EDGES: {
       mode_str = string_from_lit("EDIT EDGES");
-      render_editor_edit_edges_state(m, e, ga, cmds);
+      render_editor_edit_edges_state(m, e, p);
       
     } break;
     
@@ -350,27 +335,25 @@ render_editor(Editor* e,
   F32 alpha = lerp(0.f , 1.f,
                    e->mode_display_timer/EDITOR_MODE_DISPLAY_DURATION);
   RGBA color = { 1.f, 1.f, 1.f, alpha };
-  draw_text(ga, 
-            cmds, 
-            FONT_DEFAULT, 
-            mode_str,
-            color,
-            10.f , 900.f - 32.f, 
-            32.f, 
-            100.f);
+  paint_text(p,
+             FONT_DEFAULT, 
+             mode_str,
+             color,
+             10.f , 900.f - 32.f, 
+             32.f);
   
   //- Vertices
   al_foreach(vertex_index, &e->vertices) {
     V2 vertex = al_get_copy(&e->vertices, vertex_index);
-    draw_sprite(ga, cmds, SPRITE_BULLET_CIRCLE,
-                vertex.x, vertex.y, 16, 16, 100.f);
+    paint_sprite(p, SPRITE_BULLET_CIRCLE,
+                 vertex.x, vertex.y, 16, 16);
     if (vertex_index > 0) {
       V2 prev_vertex = al_get_copy(&e->vertices, vertex_index-1);
       Line2 line = {};
       line.min = prev_vertex;
       line.max = vertex;
+      paint_line(p, line, 8.f, rgba(0xFF0000FF)); 
       
-      push_line(cmds, line, 8.f, rgba(0xFF0000FF), 90.f); 
     }
     
   }
