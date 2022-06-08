@@ -123,17 +123,18 @@ end_atlas_builder(Sui_Atlas* ab, Memory_Pool* arena) {
     Memory file_memory = sui_read_file(sprite->filename, arena);
     assert(is_ok(file_memory));
     
-    PNG png = png_read(file_memory);
-    assert(is_ok(&png));
-    assert(png.width != 0 && png.height != 0);
+    declare_and_pointerize(PNG, png);
+    B32 ok = png_read(png, file_memory.data, file_memory.size);
+    assert(ok);
+    assert(png->width != 0 && png->height != 0);
     
     auto* context = contexts + context_index++;
     context->type = SUI_ATLAS_CONTEXT_TYPE_SPRITE;
     context->sprite.sprite = sprite;
     
     RP_Rect* rect = rects + rect_index++;
-    rect->w = png.width;
-    rect->h = png.height;
+    rect->w = png->width;
+    rect->h = png->height;
     rect->user_data = context;
     
     sprite->rect = rect;
@@ -149,9 +150,9 @@ end_atlas_builder(Sui_Atlas* ab, Memory_Pool* arena) {
 #endif
   
   rp_pack(rects, rect_count, 1, 
-             ab->bitmap.width, ab->bitmap.height, 
-             RP_SORT_TYPE_HEIGHT,
-             arena);
+          ab->bitmap.width, ab->bitmap.height, 
+          RP_SORT_TYPE_HEIGHT,
+          arena);
   
 #if 0
   sui_log("=== After packing: ===\n");
@@ -173,10 +174,11 @@ end_atlas_builder(Sui_Atlas* ab, Memory_Pool* arena) {
         Memory file_memory = sui_read_file(related_entry->filename, arena);
         assert(is_ok(file_memory));
         
-        PNG png = png_read(file_memory);
-        assert(is_ok(&png));
+        declare_and_pointerize(PNG, png);
+        B32 ok = png_read(png, file_memory.data, file_memory.size);
+        assert(ok);
         
-        Bitmap bm = png_to_bitmap(&png, arena);
+        Bitmap bm = png_to_bitmap(png, arena);
         if (!is_ok(bm)) continue;
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {

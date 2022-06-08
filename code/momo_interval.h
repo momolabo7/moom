@@ -1,5 +1,3 @@
-// TODO: What do we do about this?
-
 #ifndef MOMO_INTERVAL_H
 #define MOMO_INTERVAL_H
 

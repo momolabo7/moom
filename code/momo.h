@@ -10,7 +10,7 @@
 #include "momo_shapes.h"
 #include "momo_sort.h"
 
-//-TODO(Momo): These are currently under consideration for namespacing
+//-These are currently under consideration for namespacing
 #include "momo_interval.h"
 #include "momo_matrix.h"
 #include "momo_crc.h"

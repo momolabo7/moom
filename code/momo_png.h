@@ -16,7 +16,7 @@
 
 struct PNG {
   U8* data;
-  U32 data_size;
+  UMI data_size;
   
   U32 width;
   U32 height;
@@ -34,12 +34,7 @@ struct PNG {
 // - probably need a 'get channels' function?
 //      static U32 get_channels(PNG);
 
-// TODO: change to init_png that returns a B32
-static PNG png_read(Memory png_memory);
-
-// TODO(Momo): change to png_is_valid?
-static B32 is_ok(PNG png);
-static B32 is_ok(PNG* png);
+static B32 png_read(PNG* p, void* png_memory, UMI png_size);
 
 static Bitmap png_to_bitmap(PNG* png, Memory_Pool* arena);
 static Memory png_write(Bitmap bm, Memory_Pool* arena);

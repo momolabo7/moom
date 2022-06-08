@@ -452,8 +452,12 @@ ttf_get_glyph_index(TTF* ttf, U32 codepoint) {
       
       if (codepoint == 0xffff) return 0;
       
-      // find the first end code that is greater than or equal to the codepoint
-      // TODO: binary search?
+      // Find the first end code that is greater than or equal to the codepoint
+      //
+      // NOTE(Momo): To optimize this, we could do a binary search based
+      // on the data given but there are some documentations that seem
+      // to suggest against this...
+      // 
       U16 seg_id = 0;
       U16 end_code = 0;
       for(U16 i = 0; i < seg_count; ++i) {

@@ -21,14 +21,16 @@ enum Editor_State {
   EDITOR_STATE_MAX,
 };
 
-struct Editor_State_Button {
+struct Editor_Toolbar_Button {
   V2 pos;
   Sprite_ID sprite_id;
 };
 
+
 struct Editor {
   B32 active;
-  Editor_State state;
+  Editor_State next_state;
+  Editor_State current_state;
   Array_List<V2> vertices;
   F32 mode_display_timer;
   
@@ -37,7 +39,11 @@ struct Editor {
   B32 toolbar_follow_mouse;
   V2 toolbar_follow_mouse_offset;
   
-  Editor_State_Button state_btns[EDITOR_STATE_MAX];
+  Editor_Toolbar_Button state_btns[EDITOR_STATE_MAX];
+  
+  
+  B32 is_selecting_pt;
+  UMI selected_pt_index;
 };
 
 #endif //GAME_MODE_LEVEL_EDITOR_H

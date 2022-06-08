@@ -1,3 +1,19 @@
+static Line2 
+calc_ghost_edge_line(Array_List<V2>* points, Edge* e) {
+	Line2 ret = {};
+  
+  V2 min = al_get_copy(points, e->min_pt_id);
+  V2 max = al_get_copy(points, e->max_pt_id);
+  V2 dir = normalize(max - min) * 0.0001f;
+  
+  ret.min = max - dir;
+  ret.max = min + dir;
+  
+  return ret;
+}
+
+
+
 static void
 push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
   assert(al_has_space(&l->triangles));
@@ -9,6 +25,7 @@ push_triangle(Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
 static F32
 get_ray_intersection_time_wrt_edges(Ray2 ray,
                                     Array_List<Edge>* edges,
+                                    Array_List<V2>* points,
                                     B32 clamp_to_ray_max = false)
 {
   F32 lowest_t1 = clamp_to_ray_max ? 1.f : F32_INFINITY();
@@ -18,8 +35,10 @@ get_ray_intersection_time_wrt_edges(Ray2 ray,
     Edge* edge = al_get(edges, edge_index);
     
     Ray2 edge_ray = {};
-    edge_ray.pt = edge->ghost.min;
-    edge_ray.dir = edge->ghost.max - edge->ghost.min; 
+    
+    Line2 ghost = calc_ghost_edge_line(points, edge);
+    edge_ray.pt = ghost.min;
+    edge_ray.dir = ghost.max - ghost.min; 
     
     // Check for parallel
     V2 ray_normal = {};
@@ -89,7 +108,7 @@ gen_light_intersections(Light* l,
       assert(al_has_space(&l->debug_rays));
       al_push_copy(&l->debug_rays, light_ray.dir);
       
-      F32 t = get_ray_intersection_time_wrt_edges(light_ray, edges, offset_index == 0);
+      F32 t = get_ray_intersection_time_wrt_edges(light_ray, edges, points, offset_index == 0);
       
       assert(al_has_space(&l->intersections));
       al_push_copy(&l->intersections, 
@@ -110,7 +129,7 @@ gen_light_intersections(Light* l,
     shell_rays[1].dir = rotate(l->dir, -l->half_angle);
     
     for (U32 i = 0; i < array_count(shell_rays); ++i) {
-      F32 t = get_ray_intersection_time_wrt_edges(shell_rays[i], edges);
+      F32 t = get_ray_intersection_time_wrt_edges(shell_rays[i], edges, points);
       
       assert(al_has_space(&l->intersections));
       al_push_copy(&l->intersections, 

@@ -20,9 +20,8 @@ height_of(Rect2U r) {
 }
 
 // https://totologic.blogspot.com/2014/01/accurate-point-in-triangle-test.html
-// TODO: We should really profile to see which is the best but I'm assuming
+// NOTE(Momo): We should really profile to see which is the best but I'm assuming
 // it's the dot product one
-
 static B32
 _is_point_in_triangle_parametric(Tri2 tri, V2 pt) {
   F32 denominator = (tri.pts[0].x*(tri.pts[1].y - tri.pts[2].y) + 

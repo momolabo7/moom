@@ -9,21 +9,6 @@ push_sensor(Level_Mode* m, V2 pos, U32 target_color) {
 }
 
 
-#if 0
-static void
-push_edge(Level_Mode* m, V2 min, V2 max) {
-  assert(al_has_space(&m->edges));
-  
-  V2 dir = normalize(max - min) * 0.0001f;
-  
-  Edge* edge = al_push(&m->edges);
-  edge->line.min = min;
-  edge->line.max = max;
-  edge->ghost.min = edge->line.min - dir;
-  edge->ghost.max = edge->line.max + dir;
-}
-#endif
-
 static UMI
 push_point(Level_Mode* m, V2 pt) {
   assert(al_has_space(&m->points));
@@ -42,13 +27,6 @@ push_edge(Level_Mode* m, UMI min_pt_id, UMI max_pt_id) {
   edge->min_pt_id = min_pt_id;
   edge->max_pt_id = max_pt_id;
   
-  // TODO: move this to another function.
-  // We will need to do this every time a point has changed
-  V2 min = al_get_copy(&m->points, min_pt_id);
-  V2 max = al_get_copy(&m->points, max_pt_id);
-  V2 dir = normalize(max - min) * 0.0001f;
-  edge->ghost.min = max - dir;
-  edge->ghost.max = min + dir;
 }
 
 

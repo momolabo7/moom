@@ -25,10 +25,6 @@
 struct Splash_Mode {
   F32 timer;
 };
-typedef void Mode_Init_Function(Game_Memory* memory, Game_Input* input);
-typedef void Mode_Update_Function(Game_Memory* memory, Game_Input* input);
-static void mode_noop(Game_Memory*, Game_Input*) {}
-
 
 enum Game_Mode {
   GAME_MODE_NONE, 
@@ -52,8 +48,6 @@ struct Game_State {
     Splash_Mode splash_mode;
     Level_Mode level_mode;  
   };
-  Mode_Init_Function* mode_init;
-  Mode_Update_Function* mode_update;
   
   
   // Other stuff

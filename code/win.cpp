@@ -391,7 +391,6 @@ win_init_work_queue(Win_Work_Queue* wq, U32 thread_count) {
 }
 
 // NOTE(Momo): This is not very thread safe. Other threads shouldn't call this.
-// TODO(Momo): Make it so that other threads can call this?
 static void
 win_add_task_entry(Win_Work_Queue* wq, void (*callback)(void* ctx), void *data) {
   U32 old_next_entry_to_write = wq->next_entry_to_write;

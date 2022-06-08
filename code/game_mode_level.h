@@ -9,13 +9,12 @@ struct Sensor {
   U32 current_color;
 };
 
-
-
 struct Edge{
   UMI min_pt_id;
   UMI max_pt_id;
-  Line2 ghost;
+  //  Line2 ghost;
 };
+
 
 #include "game_mode_level_light.h"
 #include "game_mode_level_editor.h"
@@ -42,7 +41,7 @@ struct Level_Mode {
   
   Player player;
   
-  // TODO: complete this
+  // TODO: points and edges should really be in a struct
   Array_List<V2> points;
   //Array_List<Shape> shapes;
   

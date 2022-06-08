@@ -284,7 +284,6 @@ if (!opengl->name) { return nullptr; }
     return nullptr;
   }
   
-  // TODO(Momo): Figure out how to get callback?
 #if 0
   opengl->glEnable(GL_DEBUG_OUTPUT);
   opengl->glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);

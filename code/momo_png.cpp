@@ -693,8 +693,6 @@ _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
 static Bitmap
 png_to_bitmap(PNG* png, Memory_Pool* arena) 
 {
-  if (!is_ok(png)) return {};
-  
   _PNG_Context ctx = {};
   ctx.arena = arena;
   init_stream(&ctx.stream, png->data, png->data_size);
@@ -946,14 +944,14 @@ png_write(Bitmap bm, Memory_Pool* arena) {
   return ret;
 }
 
-static PNG
-png_read(Memory png_memory) {
+static B32
+png_read(PNG* p, void* png_memory, UMI png_size) {
   declare_and_pointerize(Stream, stream);
-  init_stream(stream, (U8*)png_memory.data, png_memory.size);
+  init_stream(stream, png_memory, png_size);
   
   // Read Signature
   auto* png_header = consume<_PNG_Header>(stream);  
-  if (!_png_is_signature_valid(png_header->signature)) return {}; 
+  if (!_png_is_signature_valid(png_header->signature)) return false; 
   
   // Read Chunk Header
   auto* chunk_header = consume<_PNG_Chunk_Header>(stream);
@@ -961,7 +959,7 @@ png_read(Memory png_memory) {
   U32 chunk_type = endian_swap_32(chunk_header->type_U32);
   
   
-  if(chunk_type != 'IHDR') { return {}; }
+  if(chunk_type != 'IHDR') { return false; }
   
   _PNG_IHDR* IHDR = consume<_PNG_IHDR>(stream);
   
@@ -970,28 +968,17 @@ png_read(Memory png_memory) {
   U32 width = endian_swap_32(IHDR->width);
   U32 height = endian_swap_32(IHDR->height);
   
-  if (!_png_is_format_supported(IHDR)) { return {}; }
+  if (!_png_is_format_supported(IHDR)) { return false; }
   
-  PNG ret;
-  ret.data = (U8*)png_memory.data;
-  ret.data_size = (U32)png_memory.size;
-  ret.width = width;
-  ret.height = height;
-  ret.bit_depth = IHDR->bit_depth;
-  ret.colour_type = IHDR->colour_type;
-  ret.compression_method = IHDR->compression_method;
-  ret.filter_method = IHDR->filter_method;
-  ret.interlace_method = IHDR->interlace_method;
+  p->data = (U8*)png_memory;
+  p->data_size = png_size;
+  p->width = width;
+  p->height = height;
+  p->bit_depth = IHDR->bit_depth;
+  p->colour_type = IHDR->colour_type;
+  p->compression_method = IHDR->compression_method;
+  p->filter_method = IHDR->filter_method;
+  p->interlace_method = IHDR->interlace_method;
   
-  return ret;
-}
-
-static B32 
-is_ok(PNG png) {
-  return png.data != nullptr;
-}
-
-static B32 
-is_ok(PNG* png) {
-  return png->data != nullptr;
+  return true;
 }

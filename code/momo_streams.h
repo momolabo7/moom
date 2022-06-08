@@ -1,5 +1,3 @@
-// TODO: Namespace this. Need a good name though.
-
 #ifndef MOMO_STREAM_H
 #define MOMO_STREAM_H
 
@@ -15,7 +13,7 @@ struct Stream {
 };
 
 
-static void   init_stream(Stream* s, U8* memory, UMI memory_size);
+static void   init_stream(Stream* s, void* memory, UMI memory_size);
 static void   reset(Stream* s);
 static B32    is_eos(Stream* s);
 static U8*    consume_block(Stream* s, UMI amount);
