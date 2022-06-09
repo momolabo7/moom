@@ -100,6 +100,7 @@ render_profiler(Profiler* pf, Painter* p) {
                    0.f, 
                    900.f - font_height * (line_num), 
                    font_height);
+        advance_depth(p);
         
         
         // Draw graph
@@ -111,15 +112,24 @@ render_profiler(Profiler* pf, Painter* p) {
           
           const F32 snapshot_bar_width = 5.f;
           F32 height_scale = 1.0f / (F32)cycles.max;
-          F32 snapshot_bar_height = height_scale * font_height * (F32)snapshot->cycles * 0.95f;
+          F32 snapshot_bar_height = 
+            height_scale * font_height * (F32)snapshot->cycles * 0.95f;
           
-          paint_sprite(p, SPRITE_BLANK, 
-                       900.f + snapshot_bar_width * (snapshot_index), 
-                       900.f - font_height * (line_num) + font_height/4,
-                       snapshot_bar_width, 
-                       snapshot_bar_height,
+          V2 pos = {
+            900.f + snapshot_bar_width * (snapshot_index), 
+            900.f - font_height * (line_num) + font_height/4
+          };
+          V2 size = {snapshot_bar_width, snapshot_bar_height};
+          
+          
+          paint_sprite(p, 
+                       SPRITE_BLANK, 
+                       pos,
+                       size,
                        rgba(0x00FF00FF));
         }
+        advance_depth(p);
+        
       }
       else { 
         break;

@@ -45,7 +45,7 @@ update_and_render_splash_mode(Game_Memory* memory,
     frustum.max.z = 0.f;
     frustum.max.x = 1600.f;
     frustum.max.y = 900.f;
-    frustum.max.z = 500.f;
+    frustum.max.z = 1000.f;
     
     push_orthographic_camera(cmds, position, frustum);
   }

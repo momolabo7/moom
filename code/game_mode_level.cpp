@@ -230,6 +230,7 @@ update_and_render_level_mode(Game_Memory* memory,
   }
   
   // Rendering
+  // TODO: these should shift to Painter
   {
     // Clear colors
     push_colors(cmds, rgba(0x111111FF));
@@ -240,9 +241,9 @@ update_and_render_level_mode(Game_Memory* memory,
       V3 position = {};
       Rect3 frustum;
       frustum.min.x = frustum.min.y = frustum.min.z = 0;
-      frustum.max.x = 1600;
-      frustum.max.y = 900;
-      frustum.max.z = 500;
+      frustum.max.x = 1600.f;
+      frustum.max.y = 900.f;
+      frustum.max.z = 1000.f;
       push_orthographic_camera(cmds, position, frustum);
     }
     
@@ -262,6 +263,8 @@ update_and_render_level_mode(Game_Memory* memory,
                1.f, rgba(0x00FF00FF));
   }
   
+  advance_depth(painter);
+  
   
 #if 1
   // Draw the light rays
@@ -277,6 +280,7 @@ update_and_render_level_mode(Game_Memory* memory,
       paint_line(painter, line, 
                  1.f, rgba(0x00FFFFFF));
     }
+    advance_depth(painter);
     
     
     for (U32 intersection_index = 0;
@@ -303,19 +307,19 @@ update_and_render_level_mode(Game_Memory* memory,
       paint_line(painter, line, 1.f, rgba(0xFF0000FF));
       
     }
+    advance_depth(painter);
   }
   
 #endif
   
   
   // Draw player
-  {
-    paint_sprite(painter, 
-                 SPRITE_BULLET_CIRCLE, 
-                 player->pos, 
-                 player->size);
-    
-  }
+  paint_sprite(painter, 
+               SPRITE_BULLET_CIRCLE, 
+               player->pos, 
+               player->size);
+  advance_depth(painter);
+  
   
   // Draw sensors
   al_foreach(sensor_index, &m->sensors)
@@ -323,8 +327,8 @@ update_and_render_level_mode(Game_Memory* memory,
     Sensor* sensor = al_get(&m->sensors, sensor_index);
     paint_sprite(painter,
                  SPRITE_BULLET_DOT, 
-                 sensor->pos.x, sensor->pos.y, 
-                 16, 16);
+                 sensor->pos, 
+                 {16, 16});
     
     // only for debugging
     make_string_builder(sb, 128);
@@ -336,6 +340,7 @@ update_and_render_level_mode(Game_Memory* memory,
                sensor->pos.x - 100.f,
                sensor->pos.y + 10.f,
                32.f);
+    advance_depth(painter);
   }
   
   
@@ -346,8 +351,9 @@ update_and_render_level_mode(Game_Memory* memory,
     Light* light = al_get(&m->lights, light_index);
     paint_sprite(painter,
                  SPRITE_BULLET_DOT, 
-                 light->pos.x, light->pos.y,
-                 16, 16);
+                 light->pos,
+                 {16, 16});
+    advance_depth(painter);
     
   }
   
@@ -369,8 +375,7 @@ update_and_render_level_mode(Game_Memory* memory,
                      lt->pts[1],
                      lt->pts[2]);
     }
-    z += 0.01f;
-    
+    advance_depth(painter);
   }
   
   render_editor(&m->editor, m, painter);

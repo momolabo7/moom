@@ -122,20 +122,6 @@ render_console(Console* dc,
 {
   profile_block();
   
-  // Debug console
-  // Camera
-  {
-    // TODO(Momo): This values should come from
-    // some 'design width' and 'design height' value from elsewhere.
-    V3 position = {};
-    Rect3 frustum;
-    frustum.min.x = frustum.min.y = frustum.min.z = 0;
-    frustum.max.x = 1600;
-    frustum.max.y = 900;
-    frustum.max.z = 500;
-    push_orthographic_camera(p->cmds, position, frustum);
-  }
-  
   // TODO(Momo): These should be percentages
   // but we'll work with this for now
   static const F32 console_width = 1600.f;
@@ -145,21 +131,15 @@ render_console(Console* dc,
   static const F32 font_bottom_pad = (line_height - font_height);
   static const F32 left_pad = 10.f;
   
-  paint_sprite(p,
-               SPRITE_BLANK,
-               console_width/2,
-               console_height/2,
-               console_width, 
-               console_height,
-               rgba(0x787878FF));
+  V2 console_size = { console_width, console_height };
+  V2 console_pos = { console_width/2, console_height/2 };
+  V2 input_area_size = { console_width, line_height };
+  V2 input_area_pos = { console_width/2, line_height/2 };
   
-  paint_sprite(p,
-               SPRITE_BLANK,
-               console_width/2,
-               line_height/2,
-               console_width,
-               line_height,
-               rgba(0x505050FF));
+  paint_sprite(p, SPRITE_BLANK, console_pos, console_size, rgba(0x787878FF));
+  advance_depth(p);
+  paint_sprite(p, SPRITE_BLANK, input_area_pos, input_area_size, rgba(0x505050FF));
+  advance_depth(p);
   
   
   // Draw info text
@@ -178,7 +158,7 @@ render_console(Console* dc,
                font_height);
     
   }
-  
+  advance_depth(p);
   paint_text(p,
              FONT_DEFAULT,
              dc->input_line.str,

@@ -97,9 +97,10 @@ game_update_and_render(Game_Memory* memory,
   if (game->show_debug)
   {
     paint_sprite(p, SPRITE_BLANK, 
-                 game_width/2, game_height/2, 
-                 game_width, game_height,
+                 game_wh * 0.5f, 
+                 game_wh,
                  {0.f, 0.f, 0.f, 0.8f});
+    advance_depth(p);
     render_console(dc, p);
     render_profiler(memory->profiler, p);
   }

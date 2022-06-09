@@ -9,6 +9,7 @@ struct Painter {
   F32 current_depth;
 };
 
+
 static void
 begin_painting(Painter* p, 
                Game_Assets* ga, 
@@ -18,15 +19,15 @@ begin_painting(Painter* p,
   p->cmds = cmds;
   
   // TODO: remove hard code
-  p->current_depth = 498.f;
+  p->current_depth = 995.f;
 }
 
 static F32
-get_and_advance_depth(Painter* p) {
+advance_depth(Painter* p) {
   F32 ret = p->current_depth;
   
   // TODO: remove hard code
-  p->current_depth -= 0.1f;
+  p->current_depth -= 1.f;
   
   return ret;
 }
@@ -34,17 +35,16 @@ get_and_advance_depth(Painter* p) {
 static void
 paint_sprite(Painter* p,
              Sprite_ID sprite_id,
-             F32 px, F32 py, 
-             F32 sw, F32 sh, 
+             V2 pos,
+             V2 size,
              RGBA color = {1.f,1.f,1.f,1.f})
 {
-  
   M44 transform = m44_identity();
-  transform.e[0][0] = sw;
-  transform.e[1][1] = sh;
-  transform.e[0][3] = px;
-  transform.e[1][3] = py;
-  transform.e[2][3] = get_and_advance_depth(p);
+  transform.e[0][0] = size.w;
+  transform.e[1][1] = size.h;
+  transform.e[0][3] = pos.x;
+  transform.e[1][3] = pos.y;
+  transform.e[2][3] = p->current_depth;
   
   
   Sprite_Asset* sprite = get_sprite(p->ga, sprite_id);
@@ -55,19 +55,7 @@ paint_sprite(Painter* p,
                  bitmap->renderer_texture_handle, 
                  sprite->uv);
 }
-static void
-paint_sprite(Painter* p,
-             Sprite_ID sprite_id,
-             V2 pos,
-             V2 size,
-             RGBA color = {1.f,1.f,1.f,1.f})
-{
-	paint_sprite(p, 
-               sprite_id,
-               pos.x, pos.y,
-               size.x, size.y,
-               color);
-}
+
 
 static void
 paint_text(Painter* p,
@@ -77,7 +65,7 @@ paint_text(Painter* p,
            F32 px, F32 py,
            F32 font_height) 
 {
-  F32 depth = get_and_advance_depth(p);
+  F32 depth = p->current_depth;
   Font_Asset* font = get_font(p->ga, font_id);
   Bitmap_Asset* bitmap = get_bitmap(p->ga, font->bitmap_id);
   for(U32 char_index = 0; 
@@ -124,7 +112,7 @@ paint_line(Painter* p,
             line, 
             thickness, 
             color, 
-            get_and_advance_depth(p)); 
+            p->current_depth); 
   
 }
 
@@ -141,7 +129,7 @@ paint_circle(Painter* p,
               thickness,
               line_count,
               color,
-              get_and_advance_depth(p));
+              p->current_depth);
 }
 
 static void
@@ -152,7 +140,7 @@ paint_triangle(Painter* p,
   push_triangle(p->cmds, 
                 colors,
                 p0, p1, p2,
-                get_and_advance_depth(p));
+                p->current_depth);
 }
 
 #endif //GAME_PAINTER_H

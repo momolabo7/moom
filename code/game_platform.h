@@ -6,6 +6,7 @@
 
 const F32 game_width = 1600.f;
 const F32 game_height = 900.f;
+const V2 game_wh = V2{game_width, game_height};
 const F32 game_aspect_ratio = game_width/game_height;
 
 //~Platform File API

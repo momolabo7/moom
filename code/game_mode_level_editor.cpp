@@ -5,14 +5,19 @@
 
 #define EDITOR_TOOLBAR_BTN_SELECT_W 32.f
 #define EDITOR_TOOLBAR_BTN_SELECT_H 32.f
+#define EDITOR_TOOLBAR_BTN_SELECT_WH V2{EDITOR_TOOLBAR_BTN_SELECT_W,EDITOR_TOOLBAR_BTN_SELECT_H}
 
 #define EDITOR_TOOLBAR_BTN_W 24.f
 #define EDITOR_TOOLBAR_BTN_H 24.f
+#define EDITOR_TOOLBAR_BTN_WH V2{EDITOR_TOOLBAR_BTN_W,EDITOR_TOOLBAR_BTN_H}
+
 #define EDITOR_TOOLBAR_BTN_PAD 8.f
 
 #define EDITOR_TOOLBAR_W (EDITOR_TOOLBAR_PAD*2 + EDITOR_TOOLBAR_BTN_PAD + EDITOR_TOOLBAR_BTN_SELECT_W*2)
 
 #define EDITOR_TOOLBAR_H (EDITOR_TOOLBAR_PAD*2 + EDITOR_TOOLBAR_BTN_PAD*(EDITOR_STATE_MAX/2) + EDITOR_TOOLBAR_BTN_SELECT_H*(EDITOR_STATE_MAX/2+1))
+
+#define EDITOR_TOOLBAR_WH V2{EDITOR_TOOLBAR_W, EDITOR_TOOLBAR_H}
 
 #define EDITOR_EDIT_PT_CLICK_RADIUS 8.f
 
@@ -26,37 +31,6 @@ is_point_in_editor_toolbar_state_button(Editor* e, UMI btn_index, V2 pt) {
           pt.y >= e->toolbar_pos.y + btn->pos.y - EDITOR_TOOLBAR_BTN_H/2 &&
           pt.x <= e->toolbar_pos.x + btn->pos.x + EDITOR_TOOLBAR_BTN_W/2 &&
           pt.y <= e->toolbar_pos.y + btn->pos.y + EDITOR_TOOLBAR_BTN_H/2);
-}
-
-static void
-render_editor_toolbar_state_button_selector(Editor* e,
-                                            Painter* p)
-{ 
-  auto* btn = e->state_btns + (U32)e->current_state;
-  paint_sprite(p, SPRITE_BLANK, 
-               e->toolbar_pos.x + btn->pos.x, 
-               e->toolbar_pos.y + btn->pos.y,
-               EDITOR_TOOLBAR_BTN_SELECT_W, 
-               EDITOR_TOOLBAR_BTN_SELECT_H);
-  
-}
-
-static void
-render_editor_toolbar_state_buttons(Editor* e,
-                                    Painter* p) 
-{
-  for (U32 btn_index = 0; 
-       btn_index < array_count(e->state_btns); 
-       ++btn_index) 
-  {
-    auto* btn = e->state_btns + btn_index;
-    paint_sprite(p, SPRITE_BLANK, 
-                 e->toolbar_pos.x + btn->pos.x, 
-                 e->toolbar_pos.y + btn->pos.y, 
-                 EDITOR_TOOLBAR_BTN_W, 
-                 EDITOR_TOOLBAR_BTN_H, 
-                 {1.f, 0.f, 0.f, 0.5f});
-  }
 }
 
 static B32
@@ -81,6 +55,7 @@ render_editor_edit_edges_state(Level_Mode* m,
     
     paint_circle(p, c, 1.f, 8, color);
   }
+  advance_depth(p);
 }
 
 static void
@@ -90,10 +65,34 @@ render_editor_toolbar(Editor* e,
   // Background
   paint_sprite(p, SPRITE_BLANK, 
                e->toolbar_pos, 
-               {EDITOR_TOOLBAR_W, EDITOR_TOOLBAR_H},
+               EDITOR_TOOLBAR_WH,
                {0.2f, 0.2f, 0.2f, 1.f});
-  render_editor_toolbar_state_button_selector(e,p);
-  render_editor_toolbar_state_buttons(e,p);
+  advance_depth(p);
+  
+  
+  // Selector
+  {
+    auto* btn = e->state_btns + (U32)e->current_state;
+    paint_sprite(p, SPRITE_BLANK, 
+                 e->toolbar_pos + btn->pos, 
+                 EDITOR_TOOLBAR_BTN_SELECT_WH);
+    advance_depth(p);
+  }
+  
+  // Buttons
+  for (U32 btn_index = 0; 
+       btn_index < array_count(e->state_btns); 
+       ++btn_index) 
+  {
+    auto* btn = e->state_btns + btn_index;
+    paint_sprite(p, SPRITE_BLANK, 
+                 e->toolbar_pos + btn->pos, 
+                 EDITOR_TOOLBAR_BTN_WH,
+                 {1.f, 0.f, 0.f, 0.5f});
+  }
+  advance_depth(p);
+  
+  
 }
 //~ Editor
 static void
@@ -269,7 +268,7 @@ update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {
       switch(e->next_state) {
         case EDITOR_STATE_EDIT_EDGES: {
           e->is_selecting_pt = false;
-        };
+        } break;
       }
       e->current_state = e->next_state;
     }
@@ -311,7 +310,6 @@ render_editor(Editor* e,
   //if (!e->active) return;
   if (!e->active) return;
   
-  render_editor_toolbar(e,p);
   
   //- Renders what the current mode is
   String mode_str = {}; 
@@ -339,14 +337,17 @@ render_editor(Editor* e,
              FONT_DEFAULT, 
              mode_str,
              color,
-             10.f , 900.f - 32.f, 
+             10.f , 
+             900.f - 32.f, 
              32.f);
+  advance_depth(p);
   
   //- Vertices
   al_foreach(vertex_index, &e->vertices) {
     V2 vertex = al_get_copy(&e->vertices, vertex_index);
     paint_sprite(p, SPRITE_BULLET_CIRCLE,
-                 vertex.x, vertex.y, 16, 16);
+                 vertex, {16, 16});
+    
     if (vertex_index > 0) {
       V2 prev_vertex = al_get_copy(&e->vertices, vertex_index-1);
       Line2 line = {};
@@ -355,7 +356,10 @@ render_editor(Editor* e,
       paint_line(p, line, 8.f, rgba(0xFF0000FF)); 
       
     }
+    advance_depth(p);
     
   }
+  render_editor_toolbar(e,p);
+  
   
 }
