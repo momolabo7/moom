@@ -3,6 +3,8 @@
 #ifndef GAME_PAINTER_H
 #define GAME_PAINTER_H
 
+
+
 struct Painter {
   Game_Assets* ga;
   Renderer_Command_Queue* cmds;
@@ -13,20 +15,36 @@ struct Painter {
 static void
 begin_painting(Painter* p, 
                Game_Assets* ga, 
-               Renderer_Command_Queue* cmds) 
+               Renderer_Command_Queue* cmds,
+               F32 canvas_width,
+               F32 canvas_height,
+               U32 max_layers = 10000) 
 {
   p->ga = ga;
   p->cmds = cmds;
+  p->current_depth = (F32)max_layers;
   
-  // TODO: remove hard code
-  p->current_depth = 995.f;
+  // Set camera
+  {
+    V3 position = {};
+    Rect3 frustum = {};
+    
+    frustum.min.x = 0.f;
+    frustum.min.y = 0.f;
+    frustum.max.z = 0.f;
+    frustum.max.x = canvas_width;
+    frustum.max.y = canvas_height;
+    frustum.max.z = p->current_depth + 1.f;
+    
+    push_orthographic_camera(cmds, position, frustum);
+  }
+  
 }
 
 static F32
 advance_depth(Painter* p) {
   F32 ret = p->current_depth;
   
-  // TODO: remove hard code
   p->current_depth -= 1.f;
   
   return ret;

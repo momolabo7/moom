@@ -229,26 +229,8 @@ update_and_render_level_mode(Game_Memory* memory,
     sensor->current_color = current_color;
   }
   
-  // Rendering
-  // TODO: these should shift to Painter
-  {
-    // Clear colors
-    push_colors(cmds, rgba(0x111111FF));
-    push_blend(cmds, BLEND_TYPE_ALPHA);
-    
-    // Set camera
-    {
-      V3 position = {};
-      Rect3 frustum;
-      frustum.min.x = frustum.min.y = frustum.min.z = 0;
-      frustum.max.x = 1600.f;
-      frustum.max.y = 900.f;
-      frustum.max.z = 1000.f;
-      push_orthographic_camera(cmds, position, frustum);
-    }
-    
-    
-  }
+  //- Rendering
+  
   // Draw the world collision
   al_foreach(edge_index, &m->edges) 
   {

@@ -43,7 +43,6 @@ game_update_and_render(Game_Memory* memory,
   }
   
   // calculate design dimentions
-  
   Game_State* game = memory->game;
   
   // Actual update here.
@@ -55,13 +54,11 @@ game_update_and_render(Game_Memory* memory,
   // Update console code
   if (is_poked(input->button_console)) {
     game->show_debug = !game->show_debug;
-  }
-  
-  if (game->show_debug) {
+  }if (game->show_debug) {
     update_console(dc, input);
   }
   
-  begin_painting(p, ga, cmds);
+  begin_painting(p, ga, cmds, 1600.f, 900.f);
   
   //-Game state management
   B32 is_done = false;

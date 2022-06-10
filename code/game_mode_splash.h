@@ -35,20 +35,6 @@ update_and_render_splash_mode(Game_Memory* memory,
     push_colors(cmds, colors);
   }
   
-  // Set camera
-  {
-    V3 position = {};
-    Rect3 frustum = {};
-    
-    frustum.min.x = 0.f;
-    frustum.min.y = 0.f;
-    frustum.max.z = 0.f;
-    frustum.max.x = 1600.f;
-    frustum.max.y = 900.f;
-    frustum.max.z = 1000.f;
-    
-    push_orthographic_camera(cmds, position, frustum);
-  }
   
   paint_text(p, FONT_DEFAULT, 
              string_from_lit("momo"),
