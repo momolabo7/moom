@@ -34,7 +34,7 @@ begin_painting(Painter* p,
     frustum.max.z = 0.f;
     frustum.max.x = canvas_width;
     frustum.max.y = canvas_height;
-    frustum.max.z = p->current_depth + 2.f;
+    frustum.max.z = p->current_depth + 1.f;
     
     push_orthographic_camera(cmds, position, frustum);
   }
@@ -44,9 +44,7 @@ begin_painting(Painter* p,
 static F32
 advance_depth(Painter* p) {
   F32 ret = p->current_depth;
-  
   p->current_depth -= 1.f;
-  
   return ret;
 }
 
@@ -101,13 +99,14 @@ paint_text(Painter* p,
     F32 width = (glyph->box.max.x - glyph->box.min.x)*font_height;
     F32 height = (glyph->box.max.y - glyph->box.min.y)*font_height;
     
+    // TODO: combine matrix
+    M44 a = m44_translation(0.5f, 0.5f);
+    M44 s = m44_scale(width, height, 1.f);
+    M44 t = m44_translation(px + (glyph->box.min.x*font_height), 
+                            py + (glyph->box.min.y*font_height), 
+                            depth);
+    M44 transform = t*s*a;
     
-    M44 transform = 
-      m44_translation(px + (glyph->box.min.x*font_height), 
-                      py + (glyph->box.min.y*font_height), 
-                      depth)*
-      m44_scale(width, height, 1.f)*
-      m44_translation(0.5f, 0.5f, 1.f);
     
     
     push_subsprite(p->cmds, 

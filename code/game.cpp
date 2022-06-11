@@ -39,24 +39,15 @@ game_update_and_render(Game_Memory* memory,
     Console* dc = &memory->game->console;
     init_console(dc, &memory->game->debug_arena);
     
+    game->show_debug_type = SHOW_DEBUG_NONE;
     game_log("Initialized!");
   }
   
-  // calculate design dimentions
   Game_State* game = memory->game;
-  
-  // Actual update here.
   Console* dc = &game->console;
   Game_Assets* ga = &game->game_assets;
   Renderer_Command_Queue* cmds = memory->renderer_command_queue;
   Painter* p = &game->painter;
-  
-  // Update console code
-  if (is_poked(input->button_console)) {
-    game->show_debug = !game->show_debug;
-  }if (game->show_debug) {
-    update_console(dc, input);
-  }
   
   begin_painting(p, ga, cmds, 1600.f, 900.f);
   
@@ -89,17 +80,18 @@ game_update_and_render(Game_Memory* memory,
   }
   
   
+  //-Debug
+  if (is_poked(input->button_console)) {
+    game->show_debug_type = (Show_Debug_Type)((game->show_debug_type + 1)%SHOW_DEBUG_MAX);
+  }
   
-  // render debug stuff
-  if (game->show_debug)
-  {
-    paint_sprite(p, SPRITE_BLANK, 
-                 game_wh * 0.5f, 
-                 game_wh,
-                 {0.f, 0.f, 0.f, 0.8f});
-    advance_depth(p);
-    render_console(dc, p);
-    render_profiler(memory->profiler, p);
+  switch (game->show_debug_type) {
+    case SHOW_DEBUG_CONSOLE: {
+      update_and_render_console(dc, input, p); 
+    }break;
+    case SHOW_DEBUG_PROFILER: {
+      update_and_render_profiler(memory->profiler, p); 
+    }break;
   }
   return is_done;
 }

@@ -90,9 +90,7 @@ _execute(Console* dc) {
 }
 
 static void
-update_console(Console* dc, Game_Input* input) {
-  
-  profile_block();
+update_and_render_console(Console* dc, Game_Input* input, Painter* p) {
   for (U32 char_index = 0; 
        char_index < input->char_count;
        ++char_index) 
@@ -113,15 +111,8 @@ update_console(Console* dc, Game_Input* input) {
       break;
     }
   }
-}
-
-
-static void
-render_console(Console* dc,
-               Painter* p)
-{
-  profile_block();
   
+  // Render
   // TODO(Momo): These should be percentages
   // but we'll work with this for now
   static const F32 console_width = 1600.f;
@@ -135,6 +126,12 @@ render_console(Console* dc,
   V2 console_pos = { console_width/2, console_height/2 };
   V2 input_area_size = { console_width, line_height };
   V2 input_area_pos = { console_width/2, line_height/2 };
+  
+  paint_sprite(p, SPRITE_BLANK, 
+               game_wh * 0.5f, 
+               game_wh,
+               {0.f, 0.f, 0.f, 0.8f});
+  advance_depth(p);
   
   paint_sprite(p, SPRITE_BLANK, console_pos, console_size, rgba(0x787878FF));
   advance_depth(p);
@@ -166,6 +163,8 @@ render_console(Console* dc,
              left_pad, 
              font_bottom_pad,
              font_height);
+  advance_depth(p);
 }
+
 
 #endif //GAME_CONSOLE_H

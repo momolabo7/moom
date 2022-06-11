@@ -26,6 +26,15 @@ struct Splash_Mode {
   F32 timer;
 };
 
+enum Show_Debug_Type {
+  SHOW_DEBUG_NONE,
+  SHOW_DEBUG_PROFILER,
+  SHOW_DEBUG_CONSOLE,
+  //SHOW_DEBUG_INSPECTOR,
+  
+  SHOW_DEBUG_MAX
+};
+
 enum Game_Mode {
   GAME_MODE_NONE, 
   
@@ -34,7 +43,7 @@ enum Game_Mode {
 };
 
 struct Game_State {
-  B32 show_debug;
+  Show_Debug_Type show_debug_type;
   
   // Memory_Pools
   Memory_Pool asset_arena;

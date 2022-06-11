@@ -42,7 +42,13 @@ end_stat(Stat* stat) {
 }
 
 static void
-render_profiler(Profiler* pf, Painter* p) {
+update_and_render_profiler(Profiler* pf, Painter* p) {
+  paint_sprite(p, SPRITE_BLANK, 
+               game_wh * 0.5f, 
+               game_wh,
+               {0.f, 0.f, 0.f, 0.5f});
+  advance_depth(p);
+  
   const F32 font_height = 30.f;
   U32 line_num = 1;
   for (U32 translation_index = 0;
@@ -54,7 +60,7 @@ render_profiler(Profiler* pf, Painter* p) {
         ++entry_index)  
     {
       Profiler_Entry* entry = &pf->entries[translation_index][entry_index];
-      if (entry->function_name ) {
+      if (entry->function_name) {
         Stat cycles;
         Stat hits;
         Stat cycles_per_hit;
@@ -92,7 +98,7 @@ render_profiler(Profiler* pf, Painter* p) {
                     (U32)hits.average,
                     (U32)cycles_per_hit.average);
         
-        // Assumes 1600x900
+        // Assumes 1600x900        
         paint_text(p,
                    FONT_DEBUG, 
                    sb->str,
@@ -129,9 +135,13 @@ render_profiler(Profiler* pf, Painter* p) {
                        rgba(0x00FF00FF));
         }
         advance_depth(p);
-        
       }
       else { 
+        // TODO: this is probably not correct. 
+        // It is possible that a profile_block() is not run 
+        // and thus create a hole between two entries.
+        // We might want a more robust profiler though, which might solve this.
+        //
         break;
       }
       
