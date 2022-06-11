@@ -34,7 +34,7 @@ begin_painting(Painter* p,
     frustum.max.z = 0.f;
     frustum.max.x = canvas_width;
     frustum.max.y = canvas_height;
-    frustum.max.z = p->current_depth + 1.f;
+    frustum.max.z = p->current_depth + 2.f;
     
     push_orthographic_camera(cmds, position, frustum);
   }

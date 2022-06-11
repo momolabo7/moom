@@ -28,12 +28,6 @@ update_and_render_splash_mode(Game_Memory* memory,
   if (splash->timer < 0.f) {
     game->next_mode = GAME_MODE_LEVEL;
   }
-  // Clear colors
-  {
-    RGBA colors;
-    colors.r = colors.g = colors.b  = colors.a = 0.2f;
-    push_colors(cmds, colors);
-  }
   
   
   paint_text(p, FONT_DEFAULT, 
@@ -41,6 +35,7 @@ update_and_render_splash_mode(Game_Memory* memory,
              rgba(0x38c677FF),
              450.f, 400.f, 
              256.f);
+  advance_depth(p);
 }
 
 #endif //GAME_MODE_SPLASH_H
