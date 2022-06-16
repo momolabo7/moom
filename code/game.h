@@ -18,7 +18,7 @@
 #include "game_painter.h"
 
 #include "game_profiler_rendering.h"
-
+#include "game_inspector.h"
 #include "game_console.h"
 #include "game_mode_level.h"
 
@@ -30,7 +30,7 @@ enum Show_Debug_Type {
   SHOW_DEBUG_NONE,
   SHOW_DEBUG_PROFILER,
   SHOW_DEBUG_CONSOLE,
-  //SHOW_DEBUG_INSPECTOR,
+  SHOW_DEBUG_INSPECTOR,
   
   SHOW_DEBUG_MAX
 };
@@ -63,6 +63,7 @@ struct Game_State {
   Game_Assets game_assets;
   Console console;
   Painter painter;
+  Inspector inspector;
 };
 
 #include "game_mode_splash.h"
