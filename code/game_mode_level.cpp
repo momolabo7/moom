@@ -340,11 +340,7 @@ update_and_render_level_mode(Game_Memory* memory,
   }
   
   push_blend(cmds, BLEND_TYPE_ADD);
-  // TODO(Momo): This is terrible
-  // one light should be set to one 'layer' of triangles'
-  // Maybe each light should store an array of triangles?
-  // Would that be more reasonable?
-  F32 z = 0.1f;
+  
   al_foreach(light_index, &m->lights)
   {
     Light* l = al_get(&m->lights, light_index);

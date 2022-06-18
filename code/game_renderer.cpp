@@ -161,32 +161,23 @@ push_colors(Renderer_Command_Queue* c, RGBA colors) {
 }
 
 static void
-push_subsprite(Renderer_Command_Queue* c, 
-               RGBA colors, 
-               M44 transform, 
-               U32 texture_index,
-               Rect2 texture_uv)  
-
-{
-  auto* data = push_command<Render_Command_Subsprite>(c, RENDER_COMMAND_TYPE_SUBSPRITE);
-  
-  data->colors = colors;
-  data->transform = transform;
-  data->texture_index = texture_index;
-  data->texture_uv = texture_uv;
-}
-
-static void
-push_sprite(Renderer_Command_Queue* c,
+push_sprite(Renderer_Command_Queue* c, 
             RGBA colors, 
-            M44 transform, 
-            U32 texture_index)  
-
+            V2 pos, 
+            V2 size,
+            V2 anchor,
+            F32 depth,
+            U32 texture_index,
+            Rect2 uv)
 {
-  Rect2 uv = {};
-  uv.max.x = 1.f;
-  uv.max.y = 1.f;
-  push_subsprite(c, colors, transform, texture_index, uv);
+  auto* data = push_command<Render_Command_Sprite>(c, RENDER_COMMAND_TYPE_SPRITE);
+  data->colors = colors;
+  data->texture_index = texture_index;
+  data->uv = uv;
+  data->pos = pos;
+  data->size = size;
+  data->depth = depth;
+  data->anchor = anchor;
 }
 
 static void

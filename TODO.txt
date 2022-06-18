@@ -5,7 +5,8 @@ Engine
 		Inspector
 	Others
 	  There are like 3 'interface' game files that might require renaming? I'm not sure
-	
+	Renderer
+		Refactor. Game engine shouldn't need to care about matrices because they wouldn't know about the specifics of the renderer's coordinate system (e.g. coordinate handed-ness, etc);
 
 Game
 	Mouse support

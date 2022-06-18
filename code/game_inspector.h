@@ -7,7 +7,6 @@
 enum Inspector_Entry_Type {
   INSPECTOR_ENTRY_TYPE_F32,
   INSPECTOR_ENTRY_TYPE_U32,
-  INSPECTOR_ENTRY_TYPE_UMI
 };
 
 struct Inspector_Entry {
@@ -41,16 +40,6 @@ add_inspector_entry(Inspector* in, String name, F32* item) {
   Inspector_Entry* entry = al_push(&in->entries);
   entry->item = item;
   entry->type = INSPECTOR_ENTRY_TYPE_F32;
-  entry->name = name;
-}
-
-
-static void
-add_inspector_entry(Inspector* in, String name, UMI* item) {
-  assert(al_has_space(&in->entries));
-  Inspector_Entry* entry = al_push(&in->entries);
-  entry->item = item;
-  entry->type = INSPECTOR_ENTRY_TYPE_UMI;
   entry->name = name;
 }
 

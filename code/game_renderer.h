@@ -92,7 +92,7 @@ enum Render_Command_Type {
   RENDER_COMMAND_TYPE_BASIS,
   RENDER_COMMAND_TYPE_TRIANGLE,
   RENDER_COMMAND_TYPE_RECT,
-  RENDER_COMMAND_TYPE_SUBSPRITE,
+  RENDER_COMMAND_TYPE_SPRITE,
   RENDER_COMMAND_TYPE_DELETE_TEXTURE,
   RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES,
   RENDER_COMMAND_TYPE_BLEND,
@@ -106,11 +106,15 @@ struct Render_Command_Basis {
   M44 basis;
 };
 
-struct Render_Command_Subsprite {
-  U32 texture_index;
+struct Render_Command_Sprite{
+  V2 pos;
+  V2 size;
+  Rect2 uv; 
   RGBA colors;
-  M44 transform;
-  Rect2 texture_uv; 
+  U32 texture_index;
+  V2 anchor;
+  
+  F32 depth; // TODO: remove this?
 };
 
 struct Render_Command_Delete_Texture {

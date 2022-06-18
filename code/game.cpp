@@ -100,38 +100,8 @@ game_update_and_render(Game_Memory* memory,
       update_and_render_profiler(memory->profiler, p); 
     }break;
     case SHOW_DEBUG_INSPECTOR: {
-      // Render inspector
-      // TODO: finish this
-      paint_sprite(p, SPRITE_BLANK, 
-                   game_wh * 0.5f, 
-                   game_wh,
-                   {0.f, 0.f, 0.f, 0.5f});
-      advance_depth(p);
+      update_and_render_inspector(in, p);
       
-      F32 line_height = 32.f;
-      make_string_builder(sb, 256);
-      
-      al_foreach(entry_index, &in->entries)
-      {
-        Inspector_Entry* entry = al_get(&in->entries, entry_index);
-        
-        
-        U32 item = *(U32*)entry->item;
-        push_format(sb, string_from_lit("[%10S] %7u"),
-                    entry->name, item);
-        F32 y = game_wh.h - line_height * (entry_index+1);
-        
-        paint_text(p,
-                   FONT_DEBUG, 
-                   sb->str,
-                   rgba(0xFFFFFFFF),
-                   0.f, 
-                   y, 
-                   line_height);
-        advance_depth(p);
-        
-        
-      }
     }break;
   }
   return is_done;

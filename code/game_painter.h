@@ -29,12 +29,21 @@ begin_painting(Painter* p,
     V3 position = {};
     Rect3 frustum = {};
     
+#if 1  
     frustum.min.x = 0.f;
     frustum.min.y = 0.f;
     frustum.max.z = 0.f;
     frustum.max.x = canvas_width;
     frustum.max.y = canvas_height;
     frustum.max.z = p->current_depth + 1.f;
+#else
+    frustum.min.x = 0.f;
+    frustum.min.y = canvas_height;
+    frustum.max.z = 0.f;
+    frustum.max.x = canvas_width;
+    frustum.max.y = 0.f;
+    frustum.max.z = p->current_depth + 1.f;
+#endif
     
     push_orthographic_camera(cmds, position, frustum);
   }
@@ -55,21 +64,26 @@ paint_sprite(Painter* p,
              V2 size,
              RGBA color = {1.f,1.f,1.f,1.f})
 {
+#if 0
   M44 transform = m44_identity();
   transform.e[0][0] = size.w;
   transform.e[1][1] = size.h;
   transform.e[0][3] = pos.x;
   transform.e[1][3] = pos.y;
   transform.e[2][3] = p->current_depth;
+#endif
   
   
   Sprite_Asset* sprite = get_sprite(p->ga, sprite_id);
   Bitmap_Asset* bitmap = get_bitmap(p->ga, sprite->bitmap_id);
-  push_subsprite(p->cmds, 
-                 color,
-                 transform,
-                 bitmap->renderer_texture_handle, 
-                 sprite->uv);
+  V2 anchor = {0.5f, 0.5f}; 
+  
+  push_sprite(p->cmds, 
+              color,
+              pos, size, anchor,
+              p->current_depth,
+              bitmap->renderer_texture_handle, 
+              sprite->uv);
 }
 
 
@@ -99,21 +113,16 @@ paint_text(Painter* p,
     F32 width = (glyph->box.max.x - glyph->box.min.x)*font_height;
     F32 height = (glyph->box.max.y - glyph->box.min.y)*font_height;
     
-    // TODO: combine matrix
-    M44 a = m44_translation(0.5f, 0.5f);
-    M44 s = m44_scale(width, height, 1.f);
-    M44 t = m44_translation(px + (glyph->box.min.x*font_height), 
-                            py + (glyph->box.min.y*font_height), 
-                            depth);
-    M44 transform = t*s*a;
     
-    
-    
-    push_subsprite(p->cmds, 
-                   color,
-                   transform,
-                   bitmap->renderer_texture_handle, 
-                   glyph->uv);
+    V2 pos = { px + (glyph->box.min.x*font_height), py + (glyph->box.min.y*font_height)};
+    V2 size = { width, height };
+    V2 anchor = {0.f, 0.f}; // bottom left
+    push_sprite(p->cmds, 
+                color,
+                pos, size, anchor,
+                p->current_depth,
+                bitmap->renderer_texture_handle, 
+                glyph->uv);
   }
   
 }

@@ -311,6 +311,8 @@ void main(void) {
    mColor = aColor;
    mTexCoord = aTexCoord[gl_VertexID];
    //mTexCoord.y = 1.0 - mTexCoord.y;
+
+
 })###";
   
   const char* fragment_shader = R"###(
@@ -738,16 +740,27 @@ opengl_end_frame(Opengl* ogl) {
                     texture);
       } break;
       
-      case RENDER_COMMAND_TYPE_SUBSPRITE: {
-        auto* data = (Render_Command_Subsprite*)entry->data;
+      case RENDER_COMMAND_TYPE_SPRITE: {
+        auto* data = (Render_Command_Sprite*)entry->data;
         GLuint texture = ogl->textures[data->texture_index]; 
         if (texture == 0) {
           texture = ogl->dummy_texture;
         }
+        M44 transform = m44_identity();
+        transform.e[0][0] = data->size.w;
+        transform.e[1][1] = data->size.h;
+        transform.e[0][3] = data->pos.x;
+        transform.e[1][3] = data->pos.y;
+        transform.e[2][3] = data->depth;
+        
+        F32 lerped_x = lerp(0.5f, -0.5f, data->anchor.x);
+        F32 lerped_y = lerp(0.5f, -0.5f, data->anchor.y);
+        M44 a = m44_translation(lerped_x, lerped_y);
+        
         push_sprite(ogl, 
-                    data->transform,
+                    transform*a,
                     data->colors,
-                    data->texture_uv,
+                    data->uv,
                     texture);
         
       } break;
