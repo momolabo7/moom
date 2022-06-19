@@ -89,21 +89,28 @@ enum Blend_Type {
 
 enum Render_Command_Type {
   RENDER_COMMAND_TYPE_CLEAR,
-  RENDER_COMMAND_TYPE_BASIS,
   RENDER_COMMAND_TYPE_TRIANGLE,
   RENDER_COMMAND_TYPE_RECT,
   RENDER_COMMAND_TYPE_SPRITE,
   RENDER_COMMAND_TYPE_DELETE_TEXTURE,
   RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES,
   RENDER_COMMAND_TYPE_BLEND,
+  
+  RENDER_COMMAND_TYPE_VIEW
 };
 
 struct Render_Command_Clear {
   RGBA colors;
 };
 
-struct Render_Command_Basis {
-  M44 basis;
+
+struct Render_Command_View {
+  
+  F32 width;
+  F32 height;
+  F32 depth; // remove?
+  
+  V2 pos;
 };
 
 struct Render_Command_Sprite{
@@ -121,8 +128,7 @@ struct Render_Command_Delete_Texture {
   U32 texture_index;
 };
 
-struct Render_Command_Delete_All_Textures {
-};
+struct Render_Command_Delete_All_Textures {};
 
 struct Render_Command_Rect {
   RGBA colors;
@@ -139,12 +145,11 @@ struct Render_Command_Blend {
 };
 
 
-//- Gfx API
+//- Renderer API
 struct Renderer {	
   Renderer_Command_Queue command_queue;
   Renderer_Texture_Queue texture_queue;
 };
-
 
 
 

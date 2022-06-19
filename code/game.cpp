@@ -4,9 +4,6 @@
 Platform_API g_platform;
 Profiler* g_profiler;
 
-
-
-
 exported B32 
 game_update_and_render(Game_Memory* memory,
                        Game_Input* input) 

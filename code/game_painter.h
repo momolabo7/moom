@@ -24,30 +24,7 @@ begin_painting(Painter* p,
   p->cmds = cmds;
   p->current_depth = (F32)max_layers;
   
-  // Set camera
-  {
-    V3 position = {};
-    Rect3 frustum = {};
-    
-#if 1  
-    frustum.min.x = 0.f;
-    frustum.min.y = 0.f;
-    frustum.max.z = 0.f;
-    frustum.max.x = canvas_width;
-    frustum.max.y = canvas_height;
-    frustum.max.z = p->current_depth + 1.f;
-#else
-    frustum.min.x = 0.f;
-    frustum.min.y = canvas_height;
-    frustum.max.z = 0.f;
-    frustum.max.x = canvas_width;
-    frustum.max.y = 0.f;
-    frustum.max.z = p->current_depth + 1.f;
-#endif
-    
-    push_orthographic_camera(cmds, position, frustum);
-  }
-  
+  push_view(cmds, {}, canvas_width, canvas_height, p->current_depth + 1.f);
 }
 
 static F32
@@ -64,16 +41,6 @@ paint_sprite(Painter* p,
              V2 size,
              RGBA color = {1.f,1.f,1.f,1.f})
 {
-#if 0
-  M44 transform = m44_identity();
-  transform.e[0][0] = size.w;
-  transform.e[1][1] = size.h;
-  transform.e[0][3] = pos.x;
-  transform.e[1][3] = pos.y;
-  transform.e[2][3] = p->current_depth;
-#endif
-  
-  
   Sprite_Asset* sprite = get_sprite(p->ga, sprite_id);
   Bitmap_Asset* bitmap = get_bitmap(p->ga, sprite->bitmap_id);
   V2 anchor = {0.5f, 0.5f}; 

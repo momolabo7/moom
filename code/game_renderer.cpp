@@ -128,31 +128,14 @@ cancel_texture_transfer(Texture_Payload* entry) {
 }
 
 
-static void
-push_basis(Renderer_Command_Queue* c, M44 basis) {
-  
-  auto* data = push_command<Render_Command_Basis>(c, RENDER_COMMAND_TYPE_BASIS);
-  data->basis = basis;
+static void 
+push_view(Renderer_Command_Queue* c, V2 pos, F32 width, F32 height, F32 depth) {
+  auto* data = push_command<Render_Command_View>(c, RENDER_COMMAND_TYPE_VIEW);
+  data->pos = pos;
+  data->width = width;
+  data->height = height;
+  data->depth = depth;
 }
-
-static void
-push_orthographic_camera(Renderer_Command_Queue* c, 
-                         V3 position,
-                         Rect3 frustum)   
-{
-  auto* data = push_command<Render_Command_Basis>(c, RENDER_COMMAND_TYPE_BASIS);
-  M44 p  = m44_orthographic(frustum.min.x,  
-                            frustum.max.x, 
-                            frustum.min.y, 
-                            frustum.max.y,
-                            frustum.min.z, 
-                            frustum.max.z);
-  
-  M44 v = m44_translation(-position.x, -position.y, -position.z);
-  data->basis = p*v;
-  
-}
-
 static void
 push_colors(Renderer_Command_Queue* c, RGBA colors) {
   auto* data = push_command<Render_Command_Clear>(c, RENDER_COMMAND_TYPE_CLEAR);

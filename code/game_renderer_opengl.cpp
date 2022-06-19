@@ -654,13 +654,19 @@ opengl_end_frame(Opengl* ogl) {
   for (U32 cmd_index = 0; cmd_index < cmds->entry_count; ++cmd_index) {
     Render_Command* entry = get_command(cmds, cmd_index);
     switch(entry->id) {
-      case RENDER_COMMAND_TYPE_BASIS: {
+      case RENDER_COMMAND_TYPE_VIEW: {
         flush_sprites(ogl);
         
-        auto* data = (Render_Command_Basis*)entry->data;
+        auto* data = (Render_Command_View*)entry->data;
+        
+        // TODO: Avoid computation of matrices
+        M44 p = m44_orthographic(0.f, data->width,
+                                 0.f, data->height, 
+                                 0.f, data->depth);
+        M44 v = m44_translation(-data->pos.x, -data->pos.y);
         
         // TODO: Do we share shaders? Or just have a 'view' shader?
-        M44 result = transpose(data->basis);
+        M44 result = transpose(p*v);
         {
           Sprite_Batcher* sb = &ogl->sprite_batcher;
           GLint uProjectionLoc = ogl->glGetUniformLocation(sb->shader,

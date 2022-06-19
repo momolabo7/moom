@@ -135,6 +135,8 @@ update_and_render_profiler(Profiler* pf, Painter* p) {
                        rgba(0x00FF00FF));
         }
         advance_depth(p);
+        ++line_num;
+        
       }
       else { 
         // TODO: this is probably not correct. 
@@ -142,10 +144,9 @@ update_and_render_profiler(Profiler* pf, Painter* p) {
         // and thus create a hole between two entries.
         // We might want a more robust profiler though, which might solve this.
         //
-        break;
+        continue;
       }
       
-      ++line_num;
     }
     
   }
