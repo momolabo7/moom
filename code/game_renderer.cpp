@@ -129,17 +129,16 @@ cancel_texture_transfer(Texture_Payload* entry) {
 
 
 static void 
-push_view(Renderer_Command_Queue* c, V2 pos, F32 width, F32 height, F32 depth) {
+push_view(Renderer_Command_Queue* c, V2 pos, F32 width, F32 height, U32 layers) {
   auto* data = push_command<Render_Command_View>(c, RENDER_COMMAND_TYPE_VIEW);
   data->pos = pos;
   data->width = width;
   data->height = height;
-  data->depth = depth;
+  data->layers = layers;
 }
 static void
 push_colors(Renderer_Command_Queue* c, RGBA colors) {
   auto* data = push_command<Render_Command_Clear>(c, RENDER_COMMAND_TYPE_CLEAR);
-  
   data->colors = colors;
 }
 
@@ -149,7 +148,6 @@ push_sprite(Renderer_Command_Queue* c,
             V2 pos, 
             V2 size,
             V2 anchor,
-            F32 depth,
             U32 texture_index,
             Rect2 uv)
 {
@@ -159,33 +157,32 @@ push_sprite(Renderer_Command_Queue* c,
   data->uv = uv;
   data->pos = pos;
   data->size = size;
-  data->depth = depth;
   data->anchor = anchor;
 }
 
 static void
 push_rect(Renderer_Command_Queue* c, 
           RGBA colors, 
-          M44 transform) 
+          V2 pos, F32 rot, V2 size)
 {
   auto* data = push_command<Render_Command_Rect>(c, RENDER_COMMAND_TYPE_RECT);
   data->colors = colors;
-  data->transform = transform;
+  data->pos = pos;
+  data->rot = rot;
+  data->size = size;
 }
 
 
 static void
 push_triangle(Renderer_Command_Queue* c,
               RGBA colors,
-              V2 p0, V2 p1, V2 p2,
-              F32 z)
+              V2 p0, V2 p1, V2 p2)
 {
   auto* data = push_command<Render_Command_Triangle>(c, RENDER_COMMAND_TYPE_TRIANGLE);
   data->colors = colors;
   data->p0 = p0;
   data->p1 = p1;
   data->p2 = p2;
-  data->depth = z;
 }
 
 static void
@@ -197,10 +194,10 @@ static void
 push_line(Renderer_Command_Queue* c, 
           Line2 line,
           F32 thickness,
-          RGBA colors,
-          F32 pos_z) 
-{
+          RGBA colors) 
+{ 
   // NOTE(Momo): Min.Y needs to be lower than Max.y
+  
   if (line.min.y > line.max.y) {
     swap(&line.min.x, &line.max.x);
   }
@@ -212,12 +209,10 @@ push_line(Renderer_Command_Queue* c,
   V2 x_axis = { 1.f, 0.f };
   F32 angle = angle_between(line_vector, x_axis);
   
-  M44 T = m44_translation(line_mid.x, line_mid.y, pos_z);
-  M44 R = m44_rotation_z(angle);
-  M44 S = m44_scale(line_length, thickness, 1.f) ;
-  
   push_rect(c, colors, 
-            T*R*S);
+            {line_mid.x, line_mid.y},
+            angle, 
+            {line_length, thickness});
 }
 
 static  void
@@ -225,8 +220,7 @@ push_circle(Renderer_Command_Queue* c,
             Circ2 circle,
             F32 thickness, 
             U32 line_count,
-            RGBA color,
-            F32 pos_z) 
+            RGBA color) 
 {
   // NOTE(Momo): Essentially a bunch of lines
   // We can't really have a surface with less than 3 lines
@@ -242,8 +236,7 @@ push_circle(Renderer_Command_Queue* c,
     push_line(c, 
               line,
               thickness,
-              color,
-              pos_z);
+              color);
     
     pt1 = pt2;
     pt2 = rotate(pt1, angle_increment);
@@ -270,8 +263,7 @@ push_aabb(Renderer_Command_Queue* c,
     push_line(c,
               line,
               thickness, 
-              colors,
-              pos_z);
+              colors);
   }
   
   // Left
@@ -285,8 +277,7 @@ push_aabb(Renderer_Command_Queue* c,
     push_line(c,
               line,
               thickness, 
-              colors,
-              pos_z);
+              colors);
   }
   
   //Top
@@ -300,8 +291,7 @@ push_aabb(Renderer_Command_Queue* c,
     push_line(c,
               line,
               thickness, 
-              colors,
-              pos_z);
+              colors);
     
   }
   
@@ -316,8 +306,7 @@ push_aabb(Renderer_Command_Queue* c,
     push_line(c,
               line,
               thickness, 
-              colors,
-              pos_z);
+              colors);
   }
 }
 
@@ -337,4 +326,9 @@ static void
 push_blend(Renderer_Command_Queue* c, Blend_Type blend_type) {
   auto* data= push_command<Render_Command_Blend>(c, RENDER_COMMAND_TYPE_BLEND);
   data->type = blend_type;
+}
+
+static void
+advance_depth(Renderer_Command_Queue* c) {
+  push_command<Render_Command_Advance_Depth>(c, RENDER_COMMAND_TYPE_ADVANCE_DEPTH);
 }

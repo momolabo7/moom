@@ -295,7 +295,6 @@ static B32
 init_sprite_batcher(Opengl* ogl) {
   Sprite_Batcher* sb = &ogl->sprite_batcher;
   
-  
   const char* vertex_shader = R"###(
 #version 450 core
 layout(location=0) in vec3 aModelVtx; 
@@ -637,7 +636,7 @@ opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region)
   clear_commands(cmds);  
   cmds->platform_render_wh = render_wh;
   cmds->platform_render_region = region;
-  ogl->current_layer = 0.f;
+  ogl->current_layer = 1000.f;
 }
 
 // Only call opengl functions when we end frame
@@ -659,10 +658,11 @@ opengl_end_frame(Opengl* ogl) {
         
         auto* data = (Render_Command_View*)entry->data;
         
+        F32 depth = (F32)(ogl->current_layer + 1);
         // TODO: Avoid computation of matrices
         M44 p = m44_orthographic(0.f, data->width,
                                  0.f, data->height, 
-                                 0.f, data->depth);
+                                 0.f, depth);
         M44 v = m44_translation(-data->pos.x, -data->pos.y);
         
         // TODO: Do we share shaders? Or just have a 'view' shader?
@@ -730,17 +730,17 @@ opengl_end_frame(Opengl* ogl) {
         M44 target_vertices = m44_identity();
         target_vertices.e[0][0] = data->p0.x;
         target_vertices.e[1][0] = data->p0.y;
-        target_vertices.e[2][0] = data->depth;
+        target_vertices.e[2][0] = ogl->current_layer;
         target_vertices.e[3][0] = 1.f;
         
         target_vertices.e[0][1] = data->p1.x;
         target_vertices.e[1][1] = data->p1.y;
-        target_vertices.e[2][1] = data->depth;
+        target_vertices.e[2][1] = ogl->current_layer;
         target_vertices.e[3][1] = 1.f;
         
         target_vertices.e[0][2] = data->p2.x;
         target_vertices.e[1][2] = data->p2.y;
-        target_vertices.e[2][2] = data->depth;
+        target_vertices.e[2][2] = ogl->current_layer;
         target_vertices.e[3][2] = 1.f;
         
         target_vertices.e[0][3] = 1.f;
@@ -775,9 +775,6 @@ opengl_end_frame(Opengl* ogl) {
         ogl->glDrawArrays(GL_TRIANGLES, 0, 3);
         
       } break;
-      case RENDER_COMMAND_TYPE_ADVANCE_DEPTH: {
-        ogl->current_layer += 1.f;
-      } break;
       case RENDER_COMMAND_TYPE_RECT: {
         Rect2 uv = {
           { 0.f, 0.f },
@@ -785,9 +782,13 @@ opengl_end_frame(Opengl* ogl) {
         };
         
         auto* data = (Render_Command_Rect*)entry->data;
+        M44 T = m44_translation(data->pos.x, data->pos.y, ogl->current_layer);
+        M44 R = m44_rotation_z(data->rot);
+        M44 S = m44_scale(data->size.w, data->size.h, 1.f) ;
+        
         GLuint texture = ogl->blank_texture;
         push_sprite(ogl, 
-                    data->transform,
+                    T*R*S,
                     data->colors,
                     uv,
                     texture);
@@ -804,7 +805,7 @@ opengl_end_frame(Opengl* ogl) {
         transform.e[1][1] = data->size.h;
         transform.e[0][3] = data->pos.x;
         transform.e[1][3] = data->pos.y;
-        transform.e[2][3] = data->depth;
+        transform.e[2][3] = ogl->current_layer;
         
         F32 lerped_x = lerp(0.5f, -0.5f, data->anchor.x);
         F32 lerped_y = lerp(0.5f, -0.5f, data->anchor.y);
@@ -828,6 +829,9 @@ opengl_end_frame(Opengl* ogl) {
       } break;
       case RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
         delete_all_textures(ogl);
+      } break;
+      case RENDER_COMMAND_TYPE_ADVANCE_DEPTH: {
+        ogl->current_layer -= 1.f;
       } break;
       
     }

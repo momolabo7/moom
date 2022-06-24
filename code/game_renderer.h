@@ -91,6 +91,7 @@ enum Render_Command_Type {
   RENDER_COMMAND_TYPE_CLEAR,
   RENDER_COMMAND_TYPE_TRIANGLE,
   RENDER_COMMAND_TYPE_RECT,
+  RENDER_COMMAND_TYPE_LINE,
   RENDER_COMMAND_TYPE_SPRITE,
   RENDER_COMMAND_TYPE_DELETE_TEXTURE,
   RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES,
@@ -98,7 +99,9 @@ enum Render_Command_Type {
   
   RENDER_COMMAND_TYPE_VIEW,
   RENDER_COMMAND_TYPE_ADVANCE_DEPTH,
+  
 };
+
 
 struct Render_Command_Clear {
   RGBA colors;
@@ -106,12 +109,10 @@ struct Render_Command_Clear {
 
 
 struct Render_Command_View {
-  
   F32 width;
   F32 height;
-  F32 depth; // remove?
-  
   V2 pos;
+  U32 layers;
 };
 
 struct Render_Command_Sprite{
@@ -121,8 +122,6 @@ struct Render_Command_Sprite{
   RGBA colors;
   U32 texture_index;
   V2 anchor;
-  
-  F32 depth; // TODO: remove this?
 };
 
 struct Render_Command_Delete_Texture {
@@ -134,16 +133,14 @@ struct Render_Command_Advance_Depth {};
 
 struct Render_Command_Rect {
   RGBA colors;
-  M44 transform;
+  V2 pos;
+  F32 rot;
+  V2 size;
 };
 
 struct Render_Command_Triangle {
   RGBA colors;
-#if 0
-  M44 transform;
-#endif
   V2 p0, p1, p2;
-  F32 depth;
 };
 
 struct Render_Command_Blend {

@@ -229,7 +229,6 @@ struct Sprite_Batcher {
   GLsizei instances_to_draw;
   GLsizei last_drawn_instance_index;
   GLuint current_instance_index;
-  
 };
 
 

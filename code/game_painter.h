@@ -8,7 +8,6 @@
 struct Painter {
   Game_Assets* ga;
   Renderer_Command_Queue* cmds;
-  F32 current_depth;
 };
 
 
@@ -22,16 +21,13 @@ begin_painting(Painter* p,
 {
   p->ga = ga;
   p->cmds = cmds;
-  p->current_depth = (F32)max_layers;
   
-  push_view(cmds, {}, canvas_width, canvas_height, p->current_depth + 1.f);
+  push_view(cmds, {}, canvas_width, canvas_height, max_layers);
 }
 
-static F32
+static void
 advance_depth(Painter* p) {
-  F32 ret = p->current_depth;
-  p->current_depth -= 1.f;
-  return ret;
+  advance_depth(p->cmds);
 }
 
 static void
@@ -48,7 +44,6 @@ paint_sprite(Painter* p,
   push_sprite(p->cmds, 
               color,
               pos, size, anchor,
-              p->current_depth,
               bitmap->renderer_texture_handle, 
               sprite->uv);
 }
@@ -62,7 +57,6 @@ paint_text(Painter* p,
            F32 px, F32 py,
            F32 font_height) 
 {
-  F32 depth = p->current_depth;
   Font_Asset* font = get_font(p->ga, font_id);
   Bitmap_Asset* bitmap = get_bitmap(p->ga, font->bitmap_id);
   for(U32 char_index = 0; 
@@ -87,7 +81,6 @@ paint_text(Painter* p,
     push_sprite(p->cmds, 
                 color,
                 pos, size, anchor,
-                p->current_depth,
                 bitmap->renderer_texture_handle, 
                 glyph->uv);
   }
@@ -104,9 +97,7 @@ paint_line(Painter* p,
   push_line(p->cmds, 
             line, 
             thickness, 
-            color, 
-            p->current_depth); 
-  
+            color); 
 }
 
 
@@ -121,8 +112,7 @@ paint_circle(Painter* p,
               circle,
               thickness,
               line_count,
-              color,
-              p->current_depth);
+              color);
 }
 
 static void
@@ -132,8 +122,7 @@ paint_triangle(Painter* p,
 {
   push_triangle(p->cmds, 
                 colors,
-                p0, p1, p2,
-                p->current_depth);
+                p0, p1, p2);
 }
 
 #endif //GAME_PAINTER_H
