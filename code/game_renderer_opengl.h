@@ -249,6 +249,8 @@ struct Opengl : Renderer {
   GLuint dummy_texture;
   GLuint blank_texture;
   
+  F32 current_layer;
+  
   GL_glEnable* glEnable;
   GL_glDisable* glDisable;
   GL_glViewport* glViewport;

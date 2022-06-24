@@ -637,7 +637,7 @@ opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region)
   clear_commands(cmds);  
   cmds->platform_render_wh = render_wh;
   cmds->platform_render_region = region;
-  
+  ogl->current_layer = 0.f;
 }
 
 // Only call opengl functions when we end frame
@@ -700,11 +700,55 @@ opengl_end_frame(Opengl* ogl) {
         ogl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
       } break;
+      
       case RENDER_COMMAND_TYPE_TRIANGLE: {
         flush_sprites(ogl);
         
         auto* data = (Render_Command_Triangle*)entry->data;
+        M44 inverse_of_model = m44_identity();
+        inverse_of_model.e[0][0] = -1.f;
+        inverse_of_model.e[1][0] = 0.f;
+        inverse_of_model.e[2][0] = 1.f;
+        inverse_of_model.e[3][0] = 0.f;
         
+        inverse_of_model.e[0][1] = -1.f;
+        inverse_of_model.e[1][1] = 1.f;
+        inverse_of_model.e[2][1] = 0.f;
+        inverse_of_model.e[3][1] = 0.f;
+        
+        inverse_of_model.e[0][2] = 1.f;
+        inverse_of_model.e[1][2] = -1.f;
+        inverse_of_model.e[2][2] = -1.f;
+        inverse_of_model.e[3][2] = 1.f;
+        
+        inverse_of_model.e[0][3] = 1.f;
+        inverse_of_model.e[1][3] = 0.f;
+        inverse_of_model.e[2][3] = 0.f;
+        inverse_of_model.e[3][3] = 0.f;
+        
+        
+        M44 target_vertices = m44_identity();
+        target_vertices.e[0][0] = data->p0.x;
+        target_vertices.e[1][0] = data->p0.y;
+        target_vertices.e[2][0] = data->depth;
+        target_vertices.e[3][0] = 1.f;
+        
+        target_vertices.e[0][1] = data->p1.x;
+        target_vertices.e[1][1] = data->p1.y;
+        target_vertices.e[2][1] = data->depth;
+        target_vertices.e[3][1] = 1.f;
+        
+        target_vertices.e[0][2] = data->p2.x;
+        target_vertices.e[1][2] = data->p2.y;
+        target_vertices.e[2][2] = data->depth;
+        target_vertices.e[3][2] = 1.f;
+        
+        target_vertices.e[0][3] = 1.f;
+        target_vertices.e[1][3] = 1.f;
+        target_vertices.e[2][3] = 1.f;
+        target_vertices.e[3][3] = 1.f;
+        
+        M44 transform = target_vertices * inverse_of_model;
         Triangle_Batcher* tb = &ogl->triangle_batcher;
         
         ogl->glBindVertexArray(tb->model);
@@ -712,7 +756,7 @@ opengl_end_frame(Opengl* ogl) {
         {
           GLint transform_loc = ogl->glGetUniformLocation(tb->shader,
                                                           "uTransform");
-          M44 res = transpose(data->transform);
+          M44 res = transpose(transform);
           ogl->glProgramUniformMatrix4fv(tb->shader, 
                                          transform_loc, 
                                          1, 
@@ -730,6 +774,9 @@ opengl_end_frame(Opengl* ogl) {
         
         ogl->glDrawArrays(GL_TRIANGLES, 0, 3);
         
+      } break;
+      case RENDER_COMMAND_TYPE_ADVANCE_DEPTH: {
+        ogl->current_layer += 1.f;
       } break;
       case RENDER_COMMAND_TYPE_RECT: {
         Rect2 uv = {

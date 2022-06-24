@@ -96,7 +96,8 @@ enum Render_Command_Type {
   RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES,
   RENDER_COMMAND_TYPE_BLEND,
   
-  RENDER_COMMAND_TYPE_VIEW
+  RENDER_COMMAND_TYPE_VIEW,
+  RENDER_COMMAND_TYPE_ADVANCE_DEPTH,
 };
 
 struct Render_Command_Clear {
@@ -129,6 +130,7 @@ struct Render_Command_Delete_Texture {
 };
 
 struct Render_Command_Delete_All_Textures {};
+struct Render_Command_Advance_Depth {};
 
 struct Render_Command_Rect {
   RGBA colors;
@@ -137,7 +139,11 @@ struct Render_Command_Rect {
 
 struct Render_Command_Triangle {
   RGBA colors;
+#if 0
   M44 transform;
+#endif
+  V2 p0, p1, p2;
+  F32 depth;
 };
 
 struct Render_Command_Blend {
