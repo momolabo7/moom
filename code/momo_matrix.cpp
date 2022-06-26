@@ -1,4 +1,4 @@
-static M44 concat(M44 lhs, M44 rhs) {
+static M44 m44_concat(M44 lhs, M44 rhs) {
 	M44 ret = {};
   for (U8 r = 0; r < 4; r++) { 
     for (U8 c = 0; c < 4; c++) { 
@@ -10,7 +10,7 @@ static M44 concat(M44 lhs, M44 rhs) {
 	return ret;
 }
 
-static M44 transpose(M44 m) {
+static M44 m44_transpose(M44 m) {
 	M44 ret = {};
 	for (U32 i = 0; i < 4; ++i ) {
 		for (U32 j = 0; j < 4; ++j) {
@@ -139,5 +139,5 @@ static M44 m44_perspective(F32 fov, F32 aspect, F32 near, F32 far){
 }
 
 static M44 operator*(M44 lhs, M44 rhs) {
-  return concat(lhs, rhs);
+  return m44_concat(lhs, rhs);
 }

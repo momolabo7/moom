@@ -3,6 +3,21 @@
 // but they might not be avaliable. 
 
 static B32
+is_whitespace(C8 c) {
+  return c == ' ' || c == '\n' || c == '\r' || c == '\t';
+}
+
+static B32
+is_number(C8 c) {
+  return c >= '0' && c <= '9';
+}
+
+static B32
+is_alpha(C8 c) {
+  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+}
+
+static B32
 is_ok(Memory mem) {
   return mem.data && mem.size;
 }
@@ -217,7 +232,7 @@ cstr_compare_n(const char* lhs, const char* rhs, UMI n) {
   return true;
 }
 static void
-cstr_concat(char* dest, const char* Src) {
+cstr_m44_concat(char* dest, const char* Src) {
   // Go to the end of dest
   for (; (*dest) != 0; ++dest);
   for (; (*Src) != 0; ++Src, ++dest) {

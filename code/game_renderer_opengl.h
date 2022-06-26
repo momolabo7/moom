@@ -177,7 +177,7 @@ typedef GLint   GL_glGetUniformLocation(GLuint program,
 typedef void    GL_glProgramUniformMatrix4fv(GLuint program,
                                              GLint location,
                                              GLsizei count,
-                                             GLboolean transpose,
+                                             GLboolean m44_transpose,
                                              const GLfloat* value);
 typedef void    GL_glProgramUniform4fv(GLuint program,
                                        GLint location,

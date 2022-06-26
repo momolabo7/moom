@@ -18,8 +18,8 @@ struct M44 {
 	F32 e[4][4];
 };
 
-static M44 concat(M44 lhs, M44 rhs);
-static M44 transpose(M44 m);
+static M44 m44_concat(M44 lhs, M44 rhs);
+static M44 m44_transpose(M44 m);
 static M44 operator*(M44 lhs, M44 rhs);
 
 //-Constructors

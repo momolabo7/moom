@@ -316,7 +316,7 @@ static UMI  cstr_len(const char* str);
 static void cstr_copy(char * dest, const char* Src);
 static B32  cstr_compare(const char* lhs, const char* rhs);
 static B32  cstr_compare_n(const char* lhs, const char* rhs, UMI n);
-static void cstr_concat(char* dest, const char* Src);
+static void cstr_m44_concat(char* dest, const char* Src);
 static void cstr_clear(char* dest);
 static void cstr_reverse(char* dest);
 static void cstr_itoa(char* dest, S32 num);
@@ -432,7 +432,7 @@ static F64 ease_in_expo(F64 t);
 static F64 ease_out_expo(F64 t);
 static F64 ease_inout_expo(F64 t);
 
-//~ NOTE(Momo): Defer construct
+//~ NOTE(Momo): Defer
 template<typename F> 
 struct zawarudo_ScopeGuard {
   F f;
@@ -457,7 +457,10 @@ struct Maybe {
   operator T() { return item; }
 };
 
-
+//~NOTE(Momo): Ascii Parsing Helpers
+static B32 is_whitespace(C8 c);
+static B32 is_number(C8 c);
+static B32 is_alpha(C8 c);
 
 #include "momo_common.cpp"
 

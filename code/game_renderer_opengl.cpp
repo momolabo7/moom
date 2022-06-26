@@ -60,8 +60,8 @@ push_sprite(Opengl* ogl,
                             sizeof(uv_per_vertex),
                             &uv_per_vertex);
   
-  // NOTE(Momo): transpose; game is row-major
-  M44 ogl_transform = transpose(transform);
+  // NOTE(Momo): m44_transpose; game is row-major
+  M44 ogl_transform = m44_transpose(transform);
   ogl->glNamedBufferSubData(sb->buffers[VERTEX_BUFFER_TYPE_TRANSFORM], 
                             sb->current_instance_index* sizeof(M44), 
                             sizeof(M44), 
@@ -666,7 +666,7 @@ opengl_end_frame(Opengl* ogl) {
         M44 v = m44_translation(-data->pos.x, -data->pos.y);
         
         // TODO: Do we share shaders? Or just have a 'view' shader?
-        M44 result = transpose(p*v);
+        M44 result = m44_transpose(p*v);
         {
           Sprite_Batcher* sb = &ogl->sprite_batcher;
           GLint uProjectionLoc = ogl->glGetUniformLocation(sb->shader,
@@ -756,7 +756,7 @@ opengl_end_frame(Opengl* ogl) {
         {
           GLint transform_loc = ogl->glGetUniformLocation(tb->shader,
                                                           "uTransform");
-          M44 res = transpose(transform);
+          M44 res = m44_transpose(transform);
           ogl->glProgramUniformMatrix4fv(tb->shader, 
                                          transform_loc, 
                                          1, 
