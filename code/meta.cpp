@@ -12,9 +12,11 @@ enum Meta_Token_Type {
   META_TOKEN_TYPE_OPEN_BRACE,
   META_TOKEN_TYPE_CLOSE_BRACE,
   
+  
   META_TOKEN_TYPE_IDENTIFIER,
   META_TOKEN_TYPE_STRING,
   META_TOKEN_TYPE_NUMBER,
+  META_TOKEN_TYPE_MACRO,
   
   META_TOKEN_TYPE_EOF
 };
@@ -126,6 +128,14 @@ meta_next_token(Tokenizer* t) {
       ret.type = META_TOKEN_TYPE_SEMICOLON; 
       ++t->at;
     } break;
+    case '#': {
+      ret.type = META_TOKEN_TYPE_MACRO;
+      //ignore the whole line
+      while(t->text[t->at] != '\n' && t->text[t->at] != '\r') {
+        ++t->at;
+      }
+      ret.ope = t->at;
+    } break;
     case '"': // strings
     {
       ++t->at;
@@ -201,6 +211,10 @@ meta_print_token(Tokenizer* t, Meta_Token token)  {
     case META_TOKEN_TYPE_UNKNOWN: {
       printf("unknown: ");
     } break;
+    case META_TOKEN_TYPE_MACRO: {
+      printf("macro: ");
+    } break;
+    
   }
   for(U32 i = token.begin; i < token.ope; ++i) {
     printf("%c", t->text[i]);
