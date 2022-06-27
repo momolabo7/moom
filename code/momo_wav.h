@@ -3,6 +3,9 @@
 #ifndef MOMO_WAV_H
 #define MOMO_WAV_H
 
+#include "momo_common.h"
+#include "momo_streams.h"
+
 struct WAV_Riff_Chunk {
   U32 id; // big endian
   U32 size;

@@ -1,6 +1,8 @@
 #ifndef MOMO_RANDOM_H
 #define MOMO_RANDOM_H
 
+#include "momo_common.h"
+
 struct RNG
 {
   U32 index;

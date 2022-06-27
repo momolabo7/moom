@@ -3,6 +3,8 @@
 #ifndef MOMO_RECT_PACK_H
 #define MOMO_RECT_PACK_H
 
+#include "momo_common.h"
+
 enum RP_Sort_Type {
   RP_SORT_TYPE_WIDTH,
   RP_SORT_TYPE_HEIGHT,
@@ -39,12 +41,12 @@ struct RP_Rect {
 //   
 
 static void rp_pack(RP_Rect* rects, 
-                       U32 rect_count, 
-                       U32 padding,
-                       U32 total_width,
-                       U32 total_height,
-                       RP_Sort_Type sort_type,
-                       Bump_Allocator* allocator);
+                    U32 rect_count, 
+                    U32 padding,
+                    U32 total_width,
+                    U32 total_height,
+                    RP_Sort_Type sort_type,
+                    Bump_Allocator* allocator);
 
 
 

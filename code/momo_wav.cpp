@@ -12,10 +12,10 @@ wav_read(WAV* w,
   const static U32 data_id_signature = 0x64617461;
   
   declare_and_pointerize(Stream, stream);
-  init_stream(stream, (U8*)memory, memory_size);
+  srm_init(stream, (U8*)memory, memory_size);
   
   // NOTE(Momo): Load Riff Chunk
-  auto* riff_chunk = consume<WAV_Riff_Chunk>(stream);
+  auto* riff_chunk = srm_consume<WAV_Riff_Chunk>(stream);
   if (!riff_chunk) {
     return false;
   }
@@ -29,7 +29,7 @@ wav_read(WAV* w,
   }
   
   // NOTE(Momo): Load fmt Chunk
-  auto* fmt_chunk = consume<WAV_Fmt_Chunk>(stream);
+  auto* fmt_chunk = srm_consume<WAV_Fmt_Chunk>(stream);
   if (!fmt_chunk) {
     return false;
   }
@@ -54,7 +54,7 @@ wav_read(WAV* w,
   }
   
   // Load data Chunk
-  auto* data_chunk = consume<WAV_Data_Chunk>(stream);
+  auto* data_chunk = srm_consume<WAV_Data_Chunk>(stream);
   if (!data_chunk) {
     return false;
   }
@@ -63,7 +63,7 @@ wav_read(WAV* w,
     return false;
   }
   
-  void* data = consume_block(stream, data_chunk->size);
+  void* data = srm_consume_block(stream, data_chunk->size);
   if (data == nullptr) {
     return false;
   }

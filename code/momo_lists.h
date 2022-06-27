@@ -1,6 +1,7 @@
 #ifndef MOMO_LISTS_H
 #define MOMO_LISTS_H
 
+#include "momo_common.h"
 
 template<typename T> 
 struct Slice {

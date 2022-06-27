@@ -2,7 +2,6 @@
 #ifndef MOMO_H
 #define MOMO_H
 
-//-These are 'generic' across all projects and will not need namespaces (i.e.modularize)
 #include "momo_common.h"
 #include "momo_intrinsics.h"
 #include "momo_colors.h"
@@ -13,7 +12,9 @@
 #include "momo_crc.h"
 #include "momo_strings.h"
 
-//idk what we are going to do with image api?
+// idk what we are going to do with image api?
+// Or do we care not have an image api and have each image format do their own shit?
+// i.e. we always stick to RGBA format?
 #include "momo_image.h" 
 
 #include "momo_easing.h"

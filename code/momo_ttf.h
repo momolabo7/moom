@@ -22,6 +22,9 @@
 #ifndef MOMO_TTF_H
 #define MOMO_TTF_H
 
+#include "momo_common.h"
+#include "momo_memory.h"
+
 
 struct TTF {
   U8* data;

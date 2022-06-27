@@ -1,18 +1,23 @@
 // Authors: Gerald Wong, momodevelop
-// 
+//
 // This file processes PNG files:
 // - Reads and writes to PNG
 //
 // Notes:
 // - Only works in little-endian OS
 // - Only reads and writes into 32-bit RGBA format
-// 
+//
 // Todo:
 // - Support other formats for reading/writeing
-// 
+//
 
 #ifndef MOMO_PNG
 #define MOMO_PNG
+
+#include "momo_common.h"
+#include "momo_memory.h"
+#include "momo_streams.h"
+#include "momo_crc.h"
 
 struct PNG {
   U8* data;
@@ -35,7 +40,6 @@ struct PNG {
 //      static U32 get_channels(PNG);
 
 static B32 png_read(PNG* p, void* png_memory, UMI png_size);
-
 static Bitmap png_to_bitmap(PNG* png, Bump_Allocator* allocator);
 static Memory png_write(Bitmap bm, Bump_Allocator* allocator);
 
