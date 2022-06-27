@@ -23,10 +23,10 @@ struct Console {
 };
 
 static void
-init_console(Console* dc, Memory_Pool* arena) {
+init_console(Console* dc, Bump_Allocator* allocator) {
   UMI line_size = 256;
   init_string_builder(&dc->input_line,
-                      mp_push_array<U8>(arena, line_size),
+                      ba_push_array<U8>(allocator, line_size),
                       line_size);
   
   for (U32 info_line_index = 0;
@@ -35,7 +35,7 @@ init_console(Console* dc, Memory_Pool* arena) {
   {    
     String_Builder* info_line = dc->info_lines + info_line_index;
     init_string_builder(info_line,
-                        mp_push_array<U8>(arena, line_size),
+                        ba_push_array<U8>(allocator, line_size),
                         line_size);
   }
 }

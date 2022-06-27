@@ -1,5 +1,5 @@
 static void
-mp_init(Memory_Pool* a, void* mem, UMI cap) {
+ba_init(Bump_Allocator* a, void* mem, UMI cap) {
   a->memory = (U8*)mem;
   a->pos = 0; 
   a->cap = cap;
@@ -8,18 +8,18 @@ mp_init(Memory_Pool* a, void* mem, UMI cap) {
 
 
 static void
-clear(Memory_Pool* a) {
+ba_clear(Bump_Allocator* a) {
   a->pos = 0;
 }
 
 
 static UMI 
-mp_remaining(Memory_Pool* a) {
+ba_remaining(Bump_Allocator* a) {
   return a->cap - a->pos;
 }
 
 static void* 
-mp_push_block(Memory_Pool* a, UMI size, UMI align) {
+ba_push_block(Bump_Allocator* a, UMI size, UMI align) {
   //assert(size);
   if (size == 0) return nullptr;
 	
@@ -36,29 +36,29 @@ mp_push_block(Memory_Pool* a, UMI size, UMI align) {
 	
 }
 
-static Memory_Pool
-mp_partition(Memory_Pool* a, UMI size) {	
-  Memory_Pool ret = {};
-	void* mem = mp_push_block(a, size, 16);
+static Bump_Allocator
+ba_partition(Bump_Allocator* a, UMI size) {	
+  Bump_Allocator ret = {};
+	void* mem = ba_push_block(a, size, 16);
   
-  mp_init(&ret, mem, size);
+  ba_init(&ret, mem, size);
   return ret;
   
 }
 
 template<typename T> static T*
-mp_push(Memory_Pool* a, UMI align) {
-  return (T*)mp_push_block(a, sizeof(T), align);
+ba_push(Bump_Allocator* a, UMI align) {
+  return (T*)ba_push_block(a, sizeof(T), align);
 }
 
 template<typename T> static T*
-mp_push_array(Memory_Pool* a, UMI num, UMI align) {
-  return (T*)mp_push_block(a, sizeof(T)*num, align);
+ba_push_array(Bump_Allocator* a, UMI num, UMI align) {
+  return (T*)ba_push_block(a, sizeof(T)*num, align);
 }
 
 /*
 static inline void* 
-Memory_Pool_BootBlock(UMI struct_size,
+Bump_Allocator_BootBlock(UMI struct_size,
                 UMI offset_to_arena,
                 void* memory,
                 UMI memory_size)
@@ -69,27 +69,27 @@ Memory_Pool_BootBlock(UMI struct_size,
 	
 	void* arena_memory = (U8*)memory + struct_size; 
 	UMI arena_memory_size = memory_size - struct_size;
-	Memory_Pool* arena_ptr = (Memory_Pool*)((U8*)memory + offset_to_arena);
-	(*arena_ptr) = Memory_Pool_Create(arena_memory, arena_memory_size);
+	Bump_Allocator* arena_ptr = (Bump_Allocator*)((U8*)memory + offset_to_arena);
+	(*arena_ptr) = Bump_Allocator_Create(arena_memory, arena_memory_size);
 	
 	return int_to_ptr(imem);
 }
 //*/
 
-static Memory_Pool_Marker
-mp_mark(Memory_Pool* a) {
-  Memory_Pool_Marker ret;
-  ret.arena = a;
+static Bump_Allocator_Marker
+ba_mark(Bump_Allocator* a) {
+  Bump_Allocator_Marker ret;
+  ret.allocator = a;
   ret.old_pos = a->pos;
   
   return ret;
 }
 
 static void
-mp_revert(Memory_Pool_Marker marker) {
-  marker.arena->pos = marker.old_pos;
+ba_revert(Bump_Allocator_Marker marker) {
+  marker.allocator->pos = marker.old_pos;
 }
 
-Memory_Pool_Marker::operator Memory_Pool*() {
-  return arena;
+Bump_Allocator_Marker::operator Bump_Allocator*() {
+  return allocator;
 }

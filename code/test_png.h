@@ -38,8 +38,8 @@ void test_png() {
     test_log("Test Case: %d\n", i);
     test_create_log_section_until_scope;
     
-    Memory_Pool app_arena = {};
-    mp_init(&app_arena, memory, memory_size);
+    Bump_Allocator app_arena = {};
+    ba_init(&app_arena, memory, memory_size);
     Memory png_file = test_read_file_to_memory(&app_arena, test_cases[i].in);
     
     if (!is_ok(png_file)){
@@ -47,8 +47,8 @@ void test_png() {
       continue;
     }
     
-    PNG png = png_read(png_file);
-    if (!is_ok(png)) {
+    PNG png = {};
+    if (!png_read(&png, png_file.data, png_file.size)) {
       test_log("Create PNG failed: %d\n", i);
       continue;
     }

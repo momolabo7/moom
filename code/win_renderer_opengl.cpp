@@ -179,7 +179,7 @@ exported Renderer*
 win_load_renderer(HWND window, 
                   UMI command_queue_size,
                   UMI texture_queue_size, 
-                  Memory_Pool* arena) 
+                  Bump_Allocator* allocator) 
 {
   HDC dc = GetDC(window); 
   if (!dc) {
@@ -188,16 +188,16 @@ win_load_renderer(HWND window,
   //defer { ReleaseDC(window, dc); };
   
   
-  Opengl* opengl = mp_push<Opengl>(arena);
+  Opengl* opengl = ba_push<Opengl>(allocator);
   
   // Allocate memory for render commands
   init_command_queue(&opengl->command_queue, 
-                     mp_push_block(arena, command_queue_size), 
+                     ba_push_block(allocator, command_queue_size), 
                      command_queue_size);
   
   // Allocate memory for texture transfer queue
   init_texture_queue(&opengl->texture_queue, 
-                     mp_push_block(arena, texture_queue_size),
+                     ba_push_block(allocator, texture_queue_size),
                      texture_queue_size);
   
   

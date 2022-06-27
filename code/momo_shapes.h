@@ -1,6 +1,8 @@
 #ifndef MOMO_SHAPES_H
 #define MOMO_SHAPES_H
 
+#include "momo_common.h"
+
 //~ Rects
 struct Rect2 {
   V2 min, max;

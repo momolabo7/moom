@@ -97,9 +97,9 @@ sl_init(Slice_List<T>* l, T* arr, UMI cap) {
 
 #if 0
 template<typename T>
-static B32 sl_make(Slice_List<T>* l, UMI cap, Memory_Pool* arena)
+static B32 sl_make(Slice_List<T>* l, UMI cap, Bump_Allocator* allocator)
 {
-  T* data = mp_push<T>(arena, cap);
+  T* data = ba_push<T>(allocator, cap);
   if (!data) return false;
   sl_init(l, data, cap);
   return true;

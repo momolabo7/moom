@@ -12,6 +12,8 @@
 // - 
 // 
 
+#include "momo_common.h"
+
 #ifndef MOMO_VECTOR_H
 #define MOMO_VECTOR_H
 

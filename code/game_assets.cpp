@@ -76,7 +76,7 @@ static B32
 load_game_assets(Game_Assets* ga, 
                  Renderer_Texture_Queue* texture_queue,
                  const char* filename,
-                 Memory_Pool* arena) 
+                 Bump_Allocator* allocator) 
 { 
   // Read in file
   Platform_File file_ = 
@@ -101,7 +101,7 @@ load_game_assets(Game_Assets* ga,
   // Loading bitmaps
   if (ga->bitmap_count > 0)
   {
-    ga->bitmaps = mp_push_array<Bitmap_Asset>(arena, ga->bitmap_count);
+    ga->bitmaps = ba_push_array<Bitmap_Asset>(allocator, ga->bitmap_count);
     for(U32 bitmap_index = 0; 
         bitmap_index < ga->bitmap_count; 
         ++bitmap_index) 
@@ -137,7 +137,7 @@ load_game_assets(Game_Assets* ga,
   // Loading sprites
   if (ga->sprite_count > 0)
   {
-    ga->sprites = mp_push_array<Sprite_Asset>(arena, ga->sprite_count);
+    ga->sprites = ba_push_array<Sprite_Asset>(allocator, ga->sprite_count);
     for(U32 sprite_index = 0; 
         sprite_index < ga->sprite_count; 
         ++sprite_index) 
@@ -157,7 +157,7 @@ load_game_assets(Game_Assets* ga,
   // Loading fonts
   if (ga->font_count > 0) 
   {
-    ga->fonts = mp_push_array<Font_Asset>(arena, ga->font_count);
+    ga->fonts = ba_push_array<Font_Asset>(allocator, ga->font_count);
     for(U32 font_index = 0; 
         font_index < ga->font_count; 
         ++font_index) 
@@ -177,7 +177,7 @@ load_game_assets(Game_Assets* ga,
       U32 advances_size = sizeof(F32)*font->glyph_count*font->glyph_count;
       U32 memory_required = codepoint_map_size + glyphs_size + advances_size;
       
-      void* font_memory = mp_push_block(arena, memory_required, 4);
+      void* font_memory = ba_push_block(allocator, memory_required, 4);
       assert(font_memory);
       
       font->codepoint_map = (U32*)font_memory;

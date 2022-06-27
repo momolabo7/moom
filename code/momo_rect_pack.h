@@ -44,7 +44,7 @@ static void rp_pack(RP_Rect* rects,
                        U32 total_width,
                        U32 total_height,
                        RP_Sort_Type sort_type,
-                       Memory_Pool* arena);
+                       Bump_Allocator* allocator);
 
 
 

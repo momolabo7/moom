@@ -10,6 +10,8 @@
 // - We could possibly want to tie this together with image loaders?
 // 
 
+#include "momo_common.h"
+
 #ifndef MOMO_IMAGE_H
 #define MOMO_IMAGE_H
 

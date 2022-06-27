@@ -488,14 +488,14 @@ win_free(void* memory) {
 #endif
 
 static B32
-win_allocate_memory_into_arena(Memory_Pool* a, UMI memory_size) {
+win_allocate_memory_into_arena(Bump_Allocator* a, UMI memory_size) {
   void* data = VirtualAllocEx(GetCurrentProcess(),
                               0, 
                               memory_size,
                               MEM_RESERVE | MEM_COMMIT, 
                               PAGE_READWRITE);
   if(data == nullptr) return false;
-  mp_init(a, data, memory_size);
+  ba_init(a, data, memory_size);
   return true;
 }
 
@@ -503,7 +503,7 @@ win_allocate_memory_into_arena(Memory_Pool* a, UMI memory_size) {
 
 
 static void
-win_free_memory_from_arena(Memory_Pool* a) {
+win_free_memory_from_arena(Bump_Allocator* a) {
   VirtualFreeEx(GetCurrentProcess(), 
                 a->memory,    
                 0, 
@@ -896,7 +896,7 @@ WinMain(HINSTANCE instance,
   
   
   //-Init renderer
-  declare_and_pointerize(Memory_Pool, renderer_arena);
+  declare_and_pointerize(Bump_Allocator, renderer_arena);
   if (!win_allocate_memory_into_arena(renderer_arena, MB(256))) return false;
   defer { win_free_memory_from_arena(renderer_arena); };
   
@@ -917,7 +917,7 @@ WinMain(HINSTANCE instance,
   //-Game Memory setup
   declare_and_pointerize(Game_Memory, game);
   
-  declare_and_pointerize(Memory_Pool, game_arena);
+  declare_and_pointerize(Bump_Allocator, game_arena);
   if (!win_allocate_memory_into_arena(game_arena, MB(32))) return false;
   defer { win_free_memory_from_arena(game_arena); };
   

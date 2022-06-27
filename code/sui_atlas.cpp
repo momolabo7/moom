@@ -51,8 +51,8 @@ begin_atlas_builder(const char* bitmap_id_name,
 
 
 static void
-end_atlas_builder(Sui_Atlas* ab, Memory_Pool* arena) {
-  ab->bitmap.pixels = mp_push_array<U32>(arena, ab->bitmap.width * ab->bitmap.height);
+end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
+  ab->bitmap.pixels = ba_push_array<U32>(allocator, ab->bitmap.width * ab->bitmap.height);
   assert(ab->bitmap.pixels);
   
   // Count the amount of rects
@@ -68,8 +68,8 @@ end_atlas_builder(Sui_Atlas* ab, Memory_Pool* arena) {
   if (rect_count == 0) return; 
   
   // Allocate required memory required 
-  auto* rects = mp_push_array<RP_Rect>(arena, rect_count);
-  auto* contexts = mp_push_array<Sui_Atlas_Context>(arena, rect_count);
+  auto* rects = ba_push_array<RP_Rect>(allocator, rect_count);
+  auto* contexts = ba_push_array<Sui_Atlas_Context>(allocator, rect_count);
   
   // Prepare the rects with the correct info
   U32 rect_index = 0;
@@ -80,7 +80,7 @@ end_atlas_builder(Sui_Atlas* ab, Memory_Pool* arena) {
        ++font_index) 
   {
     
-    mp_set_revert_point(arena);
+    ba_set_revert_point(allocator);
     Sui_Atlas_Font* font = ab->fonts + font_index;
     
     TTF* ttf = font->loaded_ttf;
@@ -116,11 +116,11 @@ end_atlas_builder(Sui_Atlas* ab, Memory_Pool* arena) {
        sprite_index < ab->sprite_count;
        ++sprite_index) 
   {
-    mp_set_revert_point(arena);
+    ba_set_revert_point(allocator);
     
     Sui_Atlas_Sprite* sprite = ab->sprites + sprite_index;
     
-    Memory file_memory = sui_read_file(sprite->filename, arena);
+    Memory file_memory = sui_read_file(sprite->filename, allocator);
     assert(is_ok(file_memory));
     
     declare_and_pointerize(PNG, png);
@@ -152,7 +152,7 @@ end_atlas_builder(Sui_Atlas* ab, Memory_Pool* arena) {
   rp_pack(rects, rect_count, 1, 
           ab->bitmap.width, ab->bitmap.height, 
           RP_SORT_TYPE_HEIGHT,
-          arena);
+          allocator);
   
 #if 0
   sui_log("=== After packing: ===\n");
@@ -168,17 +168,17 @@ end_atlas_builder(Sui_Atlas* ab, Memory_Pool* arena) {
     auto* context = (Sui_Atlas_Context*)(rect->user_data);
     switch(context->type) {
       case SUI_ATLAS_CONTEXT_TYPE_SPRITE: {
-        mp_set_revert_point(arena);
+        ba_set_revert_point(allocator);
         Sui_Atlas_Sprite* related_entry = context->sprite.sprite;
         
-        Memory file_memory = sui_read_file(related_entry->filename, arena);
+        Memory file_memory = sui_read_file(related_entry->filename, allocator);
         assert(is_ok(file_memory));
         
         declare_and_pointerize(PNG, png);
         B32 ok = png_read(png, file_memory.data, file_memory.size);
         assert(ok);
         
-        Bitmap bm = png_to_bitmap(png, arena);
+        Bitmap bm = png_to_bitmap(png, allocator);
         if (!is_ok(bm)) continue;
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
@@ -191,7 +191,7 @@ end_atlas_builder(Sui_Atlas* ab, Memory_Pool* arena) {
         
       } break;
       case SUI_ATLAS_CONTEXT_TYPE_FONT_GLYPH: {
-        mp_set_revert_point(arena);
+        ba_set_revert_point(allocator);
         Sui_Atlas_Font* related_entry = context->font_glyph.font;
         Sui_Atlas_Font_Glyph_Context* related_context = &context->font_glyph;
         
@@ -199,7 +199,7 @@ end_atlas_builder(Sui_Atlas* ab, Memory_Pool* arena) {
         F32 s = ttf_get_scale_for_pixel_height(ttf, related_entry->raster_font_height);
         U32 glyph_index = ttf_get_glyph_index(ttf, related_context->codepoint);
         
-        Bitmap bm = ttf_rasterize_glyph(ttf, glyph_index, s, arena);
+        Bitmap bm = ttf_rasterize_glyph(ttf, glyph_index, s, allocator);
         if (!is_ok(bm)) continue;
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {

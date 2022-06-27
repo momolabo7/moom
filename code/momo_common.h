@@ -210,15 +210,14 @@ template<typename T> static T lerp(T s, T e, F64 f);
 // Maybe we will to resort to a RatioF32 and a RatioF64?
 // 
 // For now, we will just overload the Ratio function, until it bugs us.
-static F32 ratio_of(F32 v, F32 min, F32 max);
-static F64 ratio_of(F64 v, F64 min, F64 max);
+static F32 percent(F32 v, F32 min, F32 max);
+static F64 percent(F64 v, F64 min, F64 max);
 
 template<typename T, typename U> static T align_down_pow2(T value, U align);
 template<typename T, typename U> static T align_up_pow2(T value, U align);
 template<typename T> static B32 is_pow2(T value);
 template<typename T> static void swap(T* lhs, T* rhs); 
 
-static B32 is_digit(U8 c);
 
 static F32 deg_to_rad(F32 degrees) ;
 static F64 deg_to_rad(F64 degrees) ;
@@ -228,7 +227,6 @@ static F64 rad_to_deg(F64 radians);
 // Beats per min to Secs per beat
 static F32 bpm_to_spb(F32 bpm); 
 static F64 bpm_to_spb(F64 bpm); 
-
 
 // NOTE(Momo): I'm not entirely sure if this prototype makes sense.
 // It sounds more reasonable to endian swap ANY type. 
@@ -312,14 +310,18 @@ static B32  is_memory_same(const void* lhs, const void* rhs, UMI size);
 #define copy_range(p,s)   copy_memory((p), sizeof(*(p)) * (s))
 
 //~C-string
-static UMI  cstr_len(const char* str);
-static void cstr_copy(char * dest, const char* Src);
-static B32  cstr_compare(const char* lhs, const char* rhs);
-static B32  cstr_compare_n(const char* lhs, const char* rhs, UMI n);
-static void cstr_m44_concat(char* dest, const char* Src);
-static void cstr_clear(char* dest);
-static void cstr_reverse(char* dest);
-static void cstr_itoa(char* dest, S32 num);
+static UMI  cstr_len(const C8* str);
+static void cstr_copy(C8 * dest, const C8* Src);
+static B32  cstr_compare(const C8* lhs, const C8* rhs);
+static B32  cstr_compare_n(const C8* lhs, const C8* rhs, UMI n);
+static void cstr_m44_concat(C8* dest, const C8* Src);
+static void cstr_clear(C8* dest);
+static void cstr_reverse(C8* dest);
+static void cstr_itoa(C8* dest, S32 num);
+
+// NOTE(Momo): Returns F64_NAN() if unsucceessful. Use is_nan() to check.
+// In debug mode, it will assert if unsuccessful.
+static F64 cstr_to_f64(const C8* p);
 
 //~IEEE floating point functions 
 static B32 is_close(F32 lhs, F32 rhs);
@@ -328,13 +330,7 @@ static B32 is_close(F64 lhs, F64 rhs);
 static B32 is_nan(F32 f);
 static B32 is_nan(F64 f);
 
-// NOTE(Momo): Returns F64_NAN() if unsucceessful. Use is_nan() to check if needed.
-// In debug mode, it will assert if unsuccessful.
-static F64 str_to_f64(const U8* p);
-static F64 str_to_f64(const char* p);
-
-
-//~ NOTE(Momo): Math functions that are not trivial
+//~Math 
 static F32 PI_32 = 3.14159265359f;
 static F64 PI_64 = 3.14159265359;
 static F32 TAU_32 = 6.28318530718f;
@@ -342,95 +338,7 @@ static F64 TAU_64 = 6.28318530718;
 static F32 GOLD_32 = 1.61803398875f;
 static F64 GOLD_64 = 1.61803398875;
 
-static F32 sin(F32 x);
-static F32 cos(F32 x);
-static F32 tan(F32 x);
-static F32 sqrt(F32 x);
-static F32 asin(F32 x);
-static F32 acos(F32 x);
-static F32 atan(F32 x);
-static F32 pow(F32 v, F32 e);
 
-static F64 sin(F64 x);
-static F64 cos(F64 x);
-static F64 tan(F64 x);
-static F64 sqrt(F64 x);
-static F64 asin(F64 x);
-static F64 acos(F64 x);
-static F64 atan(F64 x);
-static F64 pow(F64 , F64 e);
-
-static F32 ceil(F32 value);
-static F32 floor(F32 value);
-static F32 round(F32 value);
-
-static F64 ceil(F64 value);
-static F64 floor(F64 value);
-static F64 round(F64 value);
-
-
-//~ NOTE(Momo): Easing functions
-static F32 ease_in_sine(F32 t);
-static F32 ease_out_sine(F32 t);
-static F32 ease_inout_sine(F32 t);
-static F32 ease_in_quad(F32 t);
-static F32 ease_out_quad(F32 t);
-static F32 ease_inout_quad(F32 t);
-static F32 ease_in_cubic(F32 t);
-static F32 ease_out_cubic(F32 t);
-static F32 ease_inout_cubic(F32 t);
-static F32 ease_in_quart(F32 t);
-static F32 ease_out_quart(F32 t);
-static F32 ease_inout_quart(F32 t);
-static F32 ease_in_quint(F32 t);
-static F32 ease_out_quint(F32 t);;
-static F32 ease_inout_quint(F32 t);
-static F32 ease_in_circ(F32 t);
-static F32 ease_out_circ(F32 t);
-static F32 ease_inout_circ(F32 t);
-static F32 ease_in_back(F32 t);
-static F32 ease_out_back(F32 t);
-static F32 ease_inout_back(F32 t);
-static F32 ease_in_elastic(F32 t);
-static F32 ease_out_elastic(F32 t);
-static F32 ease_inout_elastic(F32 t);
-static F32 ease_in_bounce(F32 t);
-static F32 ease_out_bounce(F32 t);
-static F32 ease_inout_bounce(F32 t);
-static F32 ease_in_expo(F32 t);
-static F32 ease_out_expo(F32 t);
-static F32 ease_inout_expo(F32 t);
-
-static F64 ease_in_sine(F64 t);
-static F64 ease_out_sine(F64 t);
-static F64 ease_inout_sine(F64 t);
-static F64 ease_in_quad(F64 t);
-static F64 ease_out_quad(F64 t);
-static F64 ease_inout_quad(F64 t);
-static F64 ease_in_cubic(F64 t);
-static F64 ease_out_cubic(F64 t);
-static F64 ease_inout_cubic(F64 t);
-static F64 ease_in_quart(F64 t);
-static F64 ease_out_quart(F64 t);
-static F64 ease_inout_quart(F64 t);
-static F64 ease_in_quint(F64 t);
-static F64 ease_out_quint(F64 t);;
-static F64 ease_inout_quint(F64 t);
-static F64 ease_in_circ(F64 t);
-static F64 ease_out_circ(F64 t);
-static F64 ease_inout_circ(F64 t);
-static F64 ease_in_back(F64 t);
-static F64 ease_out_back(F64 t);
-static F64 ease_inout_back(F64 t);
-static F64 ease_in_elastic(F64 t);
-static F64 ease_out_elastic(F64 t);
-static F64 ease_inout_elastic(F64 t);
-static F64 ease_in_bounce(F64 t);
-static F64 ease_out_bounce(F64 t);
-static F64 ease_inout_bounce(F64 t);
-static F64 ease_in_expo(F64 t);
-static F64 ease_out_expo(F64 t);
-static F64 ease_inout_expo(F64 t);
 
 //~ NOTE(Momo): Defer
 template<typename F> 
@@ -449,17 +357,9 @@ template<typename F> zawarudo_ScopeGuard<F> operator+(zawarudo_defer_dummy, F f)
 //~NOTE(Momo): Helper macros 
 #define declare_and_pointerize(type, name) type zawarudo_##name = {}; type* name = &zawarudo_##name
 
-//~NOTE(Momo): Maybe 
-template<typename T>
-struct Maybe {
-  B32 success;
-  T item;
-  operator T() { return item; }
-};
-
 //~NOTE(Momo): Ascii Parsing Helpers
 static B32 is_whitespace(C8 c);
-static B32 is_number(C8 c);
+static B32 is_digit(U8 c);
 static B32 is_alpha(C8 c);
 
 #include "momo_common.cpp"

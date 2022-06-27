@@ -4,7 +4,7 @@
 
 struct _PNG_Context {
   Stream stream;
-  Memory_Pool* arena; 
+  Bump_Allocator* allocator; 
   
   Stream image_stream;
   U32 image_width;
@@ -157,7 +157,7 @@ _png_huffman_decode(Stream* src_stream, _PNG_Huffman huffman) {
 // Section 3.2.2
 static void
 _png_huffman_compute(_PNG_Huffman* h,
-                     Memory_Pool* arena, 
+                     Bump_Allocator* allocator, 
                      U16* codes,
                      U32 codes_size, 
                      U32 max_lengths) 
@@ -166,13 +166,13 @@ _png_huffman_compute(_PNG_Huffman* h,
   
   // Each code corresponds to a symbol
   h->symbol_count = codes_size;
-  h->symbols = mp_push_array<U16>(arena, codes_size);
+  h->symbols = ba_push_array<U16>(allocator, codes_size);
   zero_memory(h->symbols, h->symbol_count * sizeof(U16));
   
   
   // We add +1 because lengths[0] is not possible
   h->length_count = max_lengths + 1;
-  h->lengths = mp_push_array<U16>(arena, max_lengths + 1);
+  h->lengths = ba_push_array<U16>(allocator, max_lengths + 1);
   zero_memory(h->lengths, h->length_count * sizeof(U16));
   
   // 1. Count the number of codes for each code length
@@ -182,9 +182,9 @@ _png_huffman_compute(_PNG_Huffman* h,
   }
   
   // 2. Numerical value of smallest code for each code length
-  mp_set_revert_point(arena);
+  ba_set_revert_point(allocator);
   
-  U16* len_offset_table = mp_push_array<U16>(arena, max_lengths+1);
+  U16* len_offset_table = ba_push_array<U16>(allocator, max_lengths+1);
   zero_memory(len_offset_table, (max_lengths+1) * sizeof(U16));
   
   for (U32 len = 1; len < max_lengths; ++len) {
@@ -206,7 +206,7 @@ _png_huffman_compute(_PNG_Huffman* h,
 
 
 static B32
-_png_deflate(Stream* src_stream, Stream* dest_stream, Memory_Pool* arena) 
+_png_deflate(Stream* src_stream, Stream* dest_stream, Bump_Allocator* allocator) 
 {
   
   static const U16 lens[29] = { /* Size base for length codes 257..285 */
@@ -227,7 +227,7 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Memory_Pool* arena)
   
   U8 BFINAL = 0;
   while(BFINAL == 0){
-    mp_set_revert_point(arena);
+    ba_set_revert_point(allocator);
     
     BFINAL = (U8)consume_bits(src_stream, 1);
     U16 BTYPE = (U8)consume_bits(src_stream, 2);
@@ -273,12 +273,12 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Memory_Pool* arena)
           
           
           _png_huffman_compute(&lit_huffman,
-                               arena, 
+                               allocator, 
                                lit_codes, 
                                array_count(lit_codes),
                                15);
           _png_huffman_compute(&dist_huffman,
-                               arena,
+                               allocator,
                                dist_codes,
                                array_count(dist_codes),
                                15);
@@ -303,13 +303,13 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Memory_Pool* arena)
           
           _PNG_Huffman code_huffman = {};
           _png_huffman_compute(&code_huffman,
-                               arena,
+                               allocator,
                                code_codes,
                                array_count(code_codes),
                                15); 
           
           
-          U16* lit_dist_codes = mp_push_array<U16>(arena, HDIST + HLIT);
+          U16* lit_dist_codes = ba_push_array<U16>(allocator, HDIST + HLIT);
           
           // NOTE(Momo): Decode
           // Loop until end of block code recognize
@@ -356,12 +356,12 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Memory_Pool* arena)
           }
           
           _png_huffman_compute(&lit_huffman,
-                               arena, 
+                               allocator, 
                                lit_dist_codes, 
                                HLIT,
                                15);
           _png_huffman_compute(&dist_huffman,
-                               arena,
+                               allocator,
                                lit_dist_codes + HLIT,
                                HDIST,
                                15);					
@@ -682,7 +682,7 @@ _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
     return false;
   }
   
-  return _png_deflate(zlib_stream, &c->unfiltered_image_stream, c->arena);
+  return _png_deflate(zlib_stream, &c->unfiltered_image_stream, c->allocator);
 }
 
 
@@ -691,24 +691,24 @@ _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
 static Bitmap
-png_to_bitmap(PNG* png, Memory_Pool* arena) 
+png_to_bitmap(PNG* png, Bump_Allocator* allocator) 
 {
   _PNG_Context ctx = {};
-  ctx.arena = arena;
+  ctx.allocator = allocator;
   init_stream(&ctx.stream, png->data, png->data_size);
   ctx.image_width = png->width;
   ctx.image_height = png->height;
   ctx.bit_depth = png->bit_depth;
   
   U32 image_size = png->width * png->height * PNG_CHANNELS;
-  U8* image_stream_memory = mp_push_array<U8>(arena, image_size);
+  U8* image_stream_memory = ba_push_array<U8>(allocator, image_size);
   assert(image_stream_memory);
   init_stream(&ctx.image_stream, image_stream_memory, image_size);
   
-  mp_set_revert_point(arena);
+  ba_set_revert_point(allocator);
   
   U32 unfiltered_size = png->width * png->height * PNG_CHANNELS + png->height;
-  U8* unfiltered_image_stream_memory = mp_push_array<U8>(arena, unfiltered_size);
+  U8* unfiltered_image_stream_memory = ba_push_array<U8>(allocator, unfiltered_size);
   assert(unfiltered_image_stream_memory);
   init_stream(&ctx.unfiltered_image_stream, unfiltered_image_stream_memory, unfiltered_size);
   
@@ -733,7 +733,7 @@ png_to_bitmap(PNG* png, Memory_Pool* arena)
     }
   }
   
-  U8* zlib_data = mp_push_array<U8>(arena, zlib_size);
+  U8* zlib_data = ba_push_array<U8>(allocator, zlib_size);
   declare_and_pointerize(Stream, zlib_stream);
   init_stream(zlib_stream, zlib_data, zlib_size);
   
@@ -776,7 +776,7 @@ png_to_bitmap(PNG* png, Memory_Pool* arena)
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
 static Memory
-png_write(Bitmap bm, Memory_Pool* arena) {
+png_write(Bitmap bm, Bump_Allocator* allocator) {
   assert(bm.width > 0);
   assert(bm.height > 0);
   assert(bm.pixels != 0);
@@ -807,7 +807,7 @@ png_write(Bitmap bm, Memory_Pool* arena) {
                                   data_size + 
                                   IDAT_chunk_size);
   
-  U8* stream_memory = (U8*)mp_push_block(arena, expected_memory_required);
+  U8* stream_memory = (U8*)ba_push_block(allocator, expected_memory_required);
   assert(stream_memory);
   declare_and_pointerize(Stream, stream);
   init_stream(stream, stream_memory, expected_memory_required);

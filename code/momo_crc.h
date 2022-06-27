@@ -10,6 +10,8 @@
 // - 
 // 
 
+#include "momo_common.h"
+
 #ifndef MOMO_CRC_H
 #define MOMO_CRC_H
 
@@ -25,7 +27,6 @@ struct CRC8_Table {
 	U8 remainders[256];
 };
 
-// We should be able to these
 static CRC32_Table gen_crc32_table(U32 polynomial);
 static CRC16_Table gen_crc16_table(U16 polynomial);
 static CRC8_Table  gen_crc8_table(U8 polynomial); 

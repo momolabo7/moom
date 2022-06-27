@@ -1,21 +1,25 @@
-//~Memory functions
-// NOTE(Momo): These functions can use memset/memcopy/memcmp
-// but they might not be avaliable. 
-
 static B32
 is_whitespace(C8 c) {
   return c == ' ' || c == '\n' || c == '\r' || c == '\t';
 }
 
 static B32
-is_number(C8 c) {
-  return c >= '0' && c <= '9';
-}
-
-static B32
 is_alpha(C8 c) {
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
+
+static B32
+is_digit(U8 c) {
+  return (c >= '0' && c <= '9');
+  // this gets compiled to (uint8_t)(c - '0') <= 9 on all decent compilers
+}
+
+
+
+//~Memory functions
+// NOTE(Momo): These functions can use memset/memcopy/memcmp
+// but they might not be avaliable. 
+
 
 static B32
 is_ok(Memory mem) {
@@ -39,7 +43,6 @@ is_memory_same(const void* lhs, const void* rhs, UMI size) {
 }
 
 #else
-
 static void
 copy_memory(void* dest, const void* src, UMI size) {
   U8 *p = (U8*)dest;
@@ -286,85 +289,6 @@ cstr_itoa(char* dest, S32 num) {
   (*it) = 0;
   
   cstr_reverse(dest);
-}
-
-
-//~ NOTE(Momo): Constants
-static F32 
-F32_INFINITY() {
-  // NOTE(Momo): Use 'type pruning'
-  // Infinity is when bits 1-8 are on
-  union { F32 f; U32 u; } ret = {};
-  ret.u = 0x7f800000;
-  
-  return ret.f;
-  
-}
-
-static F32 
-F32_NEG_INFINITY() {
-  // NOTE(Momo): Use 'type pruning'
-  // Infinity is when bits 1-8 are on
-  // Negative is when bit 0 is on
-  union { F32 f; U32 u; } ret = {};
-  ret.u = 0xff800000;
-  
-  return ret.f;	
-}
-
-static F32
-F32_NAN() {
-  // NOTE(Momo): Use 'type pruning'
-  // NAN is when bits 1-11 and 1 other bit is on
-  // In this case, we will just turn on all bits
-  union { F32 f; U32 u; } ret = {};
-  ret.u = 0xFFFFFFFF;
-  return ret.f;
-}
-
-static F64
-F64_NAN() {
-  // NOTE(Momo): Use 'type pruning'
-  // NAN is when bits 1-11 and 1 other bit is on
-  // In this case, we will just turn on all bits
-  union { F64 f; U64 u; } ret = {};
-  ret.u = 0xFFFFFFFFFFFFFFFF;
-  return ret.f;
-}
-
-
-static F64 
-F64_INFINITY() {
-  // NOTE(Momo): Use 'type pruning'
-  // Infinity is when bits 1-11 are on
-  union { F64 f; U64 u; } ret = {};
-  ret.u = 0x7FF0000000000000;
-  
-  return ret.f;
-  
-}
-
-static F64 
-F64_NEG_INFINITY() {
-  // NOTE(Momo): Use 'type pruning'
-  // Infinity is when bits 1-11 are on
-  // Negative is when bit 0 is on
-  union { F64 f; U64 u; } ret = {};
-  ret.u = 0xFFF0000000000000;
-  
-  return ret.f;	
-}
-
-
-//~IEEE floating point functions 
-static B32 
-is_close(F32 lhs, F32 rhs) {
-  return abs_of(lhs - rhs) <= F32_EPSILON;
-}
-
-static B32 
-is_close(F64 lhs, F64 rhs) {
-  return abs_of(lhs - rhs) <= F64_EPSILON;
 }
 
 
@@ -1036,8 +960,8 @@ compute_f64(S64 power, U64 i, B32 negative)
 }
 
 static F64
-str_to_f64(const U8* p) {
-  const U8* pinit = p;
+cstr_to_f64(const C8* p) {
+  const C8* pinit = p;
   bool found_minus = (*p == '-');
   bool negative = false;
   if (found_minus) {
@@ -1047,9 +971,9 @@ str_to_f64(const U8* p) {
       return 0.0;
     }
   }
-  const U8 *const start_digits = p;
+  const C8 *const start_digits = p;
   
-  uint64_t i;      // an unsigned int avoids signed overflows (which are bad)
+  U64 i;      // an unsigned int avoids signed overflows (which are bad)
   if (*p == '0') { // 0 cannot be followed by an integer
     ++p;
     if (is_digit(*p)) {
@@ -1073,8 +997,8 @@ str_to_f64(const U8* p) {
       ++p;
     }
   }
-  int64_t exponent = 0;
-  const U8 *first_after_period = NULL;
+  S64 exponent = 0;
+  const C8 *first_after_period = NULL;
   if (*p == '.') {
     ++p;
     first_after_period = p;
@@ -1133,10 +1057,10 @@ str_to_f64(const U8* p) {
   }
   
   if (digit_count >= 19) {
-    return F64_INFINITY();
+    return F64_NAN();
   }
   if (exponent < -325 && exponent > 308) {
-    return F64_INFINITY();
+    return F64_NAN();
   }
   
   // Unlikely cases. Can go for 'slow' path instead of asserting
@@ -1145,11 +1069,85 @@ str_to_f64(const U8* p) {
   
   return compute_f64(exponent, i, negative);
 }
+//~ NOTE(Momo): Constants
+static F32 
+F32_INFINITY() {
+  // NOTE(Momo): Use 'type pruning'
+  // Infinity is when bits 1-8 are on
+  union { F32 f; U32 u; } ret = {};
+  ret.u = 0x7f800000;
+  
+  return ret.f;
+  
+}
+
+static F32 
+F32_NEG_INFINITY() {
+  // NOTE(Momo): Use 'type pruning'
+  // Infinity is when bits 1-8 are on
+  // Negative is when bit 0 is on
+  union { F32 f; U32 u; } ret = {};
+  ret.u = 0xff800000;
+  
+  return ret.f;	
+}
+
+static F32
+F32_NAN() {
+  // NOTE(Momo): Use 'type pruning'
+  // NAN is when bits 1-11 and 1 other bit is on
+  // In this case, we will just turn on all bits
+  union { F32 f; U32 u; } ret = {};
+  ret.u = 0xFFFFFFFF;
+  return ret.f;
+}
+
+static F64
+F64_NAN() {
+  // NOTE(Momo): Use 'type pruning'
+  // NAN is when bits 1-11 and 1 other bit is on
+  // In this case, we will just turn on all bits
+  union { F64 f; U64 u; } ret = {};
+  ret.u = 0xFFFFFFFFFFFFFFFF;
+  return ret.f;
+}
+
 
 static F64 
-str_to_f64(const char* p) {
-  return str_to_f64((const U8*)p);
+F64_INFINITY() {
+  // NOTE(Momo): Use 'type pruning'
+  // Infinity is when bits 1-11 are on
+  union { F64 f; U64 u; } ret = {};
+  ret.u = 0x7FF0000000000000;
+  
+  return ret.f;
+  
 }
+
+static F64 
+F64_NEG_INFINITY() {
+  // NOTE(Momo): Use 'type pruning'
+  // Infinity is when bits 1-11 are on
+  // Negative is when bit 0 is on
+  union { F64 f; U64 u; } ret = {};
+  ret.u = 0xFFF0000000000000;
+  
+  return ret.f;	
+}
+
+
+//~IEEE floating point functions 
+static B32 
+is_close(F32 lhs, F32 rhs) {
+  return abs_of(lhs - rhs) <= F32_EPSILON;
+}
+
+static B32 
+is_close(F64 lhs, F64 rhs) {
+  return abs_of(lhs - rhs) <= F64_EPSILON;
+}
+
+
 
 static B32 
 is_nan(F32 f) {
@@ -1196,11 +1194,7 @@ deg_to_rad(F64 degrees) {
 static F64 
 rad_to_deg(F64 radians) {
   return radians * 180.0 / PI_64;
-  
 }
-
-
-
 
 static U16
 endian_swap_16(U16 value) {
@@ -1221,553 +1215,6 @@ endian_swap_32(U32 value) {
   
 }
 
-static B32
-is_digit(U8 c) {
-  return (c >= '0' && c <= '9');
-  // this gets compiled to (uint8_t)(c - '0') <= 9 on all decent compilers
-}
 
-
-///////////////////////////////////
-//~ NOTE(Momo): Non-trivial math functions
-// We have to use math.h here as default
-ns_begin(std)
-#include <math.h>
-ns_end(std)
-
-static F32 
-sin(F32 x) {
-  return std::sinf(x);
-}
-
-static F32 
-cos(F32 x) {
-  return std::cosf(x);
-}
-
-static F32
-tan(F32 x) {
-  return std::tanf(x);
-}
-static F32 
-sqrt(F32 x) {
-  return std::sqrtf(x);
-  
-}
-static F32 
-asin(F32 x) {
-  return std::asinf(x);
-}
-static F32 
-acos(F32 x) {
-  return std::acosf(x);
-}
-
-static F32
-atan(F32 x){
-  return std::atanf(x);
-}
-static F32 
-pow(F32 b, F32 e){
-  return std::powf(b,e);
-}
-
-
-static F64 
-sin(F64 x) {
-  return std::sin(x);
-}
-
-static F64 
-cos(F64 x) {
-  return std::cos(x);
-}
-
-static F64
-tan(F64 x) {
-  return std::tan(x);
-}
-static F64 
-sqrt(F64 x) {
-  return std::sqrt(x);
-  
-}
-static F64 
-asin(F64 x) {
-  return std::asin(x);
-}
-static F64 
-acos(F64 x) {
-  return std::acos(x);
-}
-
-static F64
-atan(F64 x){
-  return std::atan(x);
-}
-static F64 
-pow(F64 b, F64 e){
-  return std::pow(b,e);
-}
-
-
-// TODO(Momo): IEEE version of these?
-static F32 floor(F32 value) {
-  return std::floorf(value);
-  
-}
-static F64 floor(F64 value){
-  return std::floor(value);
-}
-
-static F32 ceil(F32 value) {
-  return std::ceilf(value);
-}
-
-static F64 ceil(F64 value) {
-  return std::ceil(value);
-}
-
-static F32 round(F32 value) {
-  return std::roundf(value);
-}
-
-static F64 round(F64 value) {
-  return std::round(value);
-}
-
-
-//~Easing functions
-
-static F32 
-ease_in_sine(F32 t)  {
-  return sin(PI_32 * 0.5f * t);
-}
-
-
-static F32 
-ease_out_sine(F32 t) {
-  return 1.0f + sin(PI_32 * 0.5f * (--t));
-}
-
-static F32 
-ease_inout_sine(F32 t)  {
-  return 0.5f * (1.f + sin(PI_32 * (t - 0.5f)));
-}
-
-static F32 
-ease_in_quad(F32 t)  {
-  return t * t;
-}
-
-static F32 
-ease_out_quad(F32 t)  {
-  return t * (2.f -t);
-}
-
-static F32 
-ease_inout_quad(F32 t)  {
-  return t < 0.5f ? 2.f * t * t : t * (4.f -2.f * t) - 1.f;
-}
-
-static F32 
-ease_in_cubic(F32 t)  {
-  return t * t * t;
-}
-
-static F32 
-ease_out_cubic(F32 t)  {
-  return 1.f + (t-1) * (t-1) * (t-1);
-}
-
-static F32 
-ease_inout_cubic(F32 t)  {
-  return t < 0.5f ? 4.f * t * t * t : 1.f + (t-1) * (2.f * (t-2)) * (2.f * (t-2));
-}
-
-static F32 
-ease_in_quart(F32 t)  {
-  t *= t;
-  return t * t;
-}
-
-static F32 
-ease_out_quart(F32 t) {
-  --t;
-  t = t * t;
-  return 1.f - t * t;
-}
-
-static F32 
-ease_inout_quart(F32 t)  {
-  if (t < 0.5f) {
-    t *= t;
-    return 8.f * t * t;
-  }
-  else {
-    --t;
-    t = t * t;
-    return 1.f -8.f * t * t;
-  }
-}
-
-static F32
-ease_in_quint(F32 t)  {
-  F32 t2 = t * t;
-  return t * t2 * t2;
-}
-
-static F32
-ease_out_quint(F32 t)  {
-  --t;
-  F32 t2 = t * t;
-  return 1.f +t * t2 * t2;
-}
-
-static F32
-ease_inout_quint(F32 t)  {
-  F32 t2;
-  if (t < 0.5f) {
-    t2 = t * t;
-    return 16.f * t * t2 * t2;
-  }
-  else {
-    --t;
-    t2 = t * t;
-    return 1.f +16.f * t * t2 * t2;
-  }
-}
-
-
-
-static F32 
-ease_in_circ(F32 t)  {
-  return 1.f -sqrt(1.f -t);
-}
-
-static F32 
-ease_out_circ(F32 t)  {
-  return sqrt(t);
-}
-
-static F32 
-ease_inout_circ(F32 t)  {
-  if (t < 0.5f) {
-    return (1.f -sqrt(1.f -2.f * t)) * 0.5f;
-  }
-  else {
-    return (1.f +sqrt(2.f * t - 1.f)) * 0.5f;
-  }
-}
-
-static F32 
-ease_in_back(F32 t)  {
-  return t * t * (2.7f * t - 1.7f);
-}
-
-static F32 
-ease_out_back(F32 t)  {
-  --t;
-  return 1.f + t * t * (2.7f * t + 1.7f);
-}
-
-static F32 
-ease_inout_back(F32 t)  {
-  if (t < 0.5f) {
-    return t * t * (7.f * t - 2.5f) * 2.f;
-  }
-  else {
-    --t;
-    return 1.f + t * t * 2.f * (7.f * t + 2.5f);
-  }
-}
-
-static F32 
-ease_in_elastic(F32 t)  {
-  F32 t2 = t * t;
-  return t2 * t2 * sin(t * PI_32 * 4.5f);
-}
-
-static F32 
-ease_out_elastic(F32 t)  {
-  F32 t2 = (t - 1.f) * (t - 1.f);
-  return 1.f -t2 * t2 * cos(t * PI_32 * 4.5f);
-}
-
-static F32 
-ease_inout_elastic(F32 t)  {
-  F32 t2;
-  if (t < 0.45f) {
-    t2 = t * t;
-    return 8.f * t2 * t2 * sin(t * PI_32 * 9.f);
-  }
-  else if (t < 0.55f) {
-    return 0.5f +0.75f * sin(t * PI_32 * 4.f);
-  }
-  else {
-    t2 = (t - 1.f) * (t - 1.f);
-    return 1.f -8.f * t2 * t2 * sin(t * PI_32 * 9.f);
-  }
-}
-
-static F32 
-ease_in_bounce(F32 t)  {
-  return pow(2.f, 6.f * (t - 1.f)) * abs_of(sin(t * PI_32 * 3.5f));
-}
-
-
-static F32 
-ease_out_bounce(F32 t) {
-  return 1.f -pow(2.f, -6.f * t) * abs_of(cos(t * PI_32 * 3.5f));
-}
-
-static F32 
-ease_inout_bounce(F32 t) {
-  if (t < 0.5f) {
-    return 8.f * pow(2.f, 8.f * (t - 1.f)) * abs_of(sin(t * PI_32 * 7.f));
-  }
-  else {
-    return 1.f -8.f * pow(2.f, -8.f * t) * abs_of(sin(t * PI_32 * 7.f));
-  }
-}
-
-static F32
-ease_in_expo(F32 t)  {
-  return (pow(2.f, 8.f * t) - 1.f) / 255.f;
-}
-
-
-static F32 
-ease_out_expo(F32 t)  {
-  return t == 1.f ? 1.f : 1.f -pow(2.f, -10.f * t);
-}
-
-static F32 
-ease_inout_expo(F32 t)  {
-  if (t < 0.5f) {
-    return (pow(2.f, 16.f * t) - 1.f) / 510.f;
-  }
-  else {
-    return 1.f -0.5f * pow(2.f, -16.f * (t - 0.5f));
-  }
-}
-
-
-
-static F64 
-ease_in_sine(F64 t)  {
-  return sin(PI_64 * 0.5 * t);
-}
-
-
-static F64 
-ease_out_sine(F64 t) {
-  return 1.0f + sin(PI_64 * 0.5 * (--t));
-}
-
-static F64 
-ease_inout_sine(F64 t)  {
-  return 0.5 * (1.0 + sin(PI_64 * (t - 0.5)));
-}
-
-static F64 
-ease_in_quad(F64 t)  {
-  return t * t;
-}
-
-static F64 
-ease_out_quad(F64 t)  {
-  return t * (2.0 -t);
-}
-
-static F64 
-ease_inout_quad(F64 t)  {
-  return t < 0.5 ? 2.0 * t * t : t * (4.0 -2.0 * t) - 1.0;
-}
-
-static F64 
-ease_in_cubic(F64 t)  {
-  return t * t * t;
-}
-
-static F64 
-ease_out_cubic(F64 t)  {
-  return 1.0 + (t-1) * (t-1) * (t-1);
-}
-
-static F64 
-ease_inout_cubic(F64 t)  {
-  return t < 0.5 ? 4.0 * t * t * t : 1.0 + (t-1) * (2.0 * (t-2)) * (2.0 * (t-2));
-}
-
-static F64 
-ease_in_quart(F64 t)  {
-  t *= t;
-  return t * t;
-}
-
-static F64 
-ease_out_quart(F64 t) {
-  --t;
-  t = t * t;
-  return 1.0 - t * t;
-}
-
-static F64 
-ease_inout_quart(F64 t)  {
-  if (t < 0.5) {
-    t *= t;
-    return 8.0 * t * t;
-  }
-  else {
-    --t;
-    t = t * t;
-    return 1.0 -8.0 * t * t;
-  }
-}
-
-static F64
-ease_in_quint(F64 t)  {
-  F64 t2 = t * t;
-  return t * t2 * t2;
-}
-
-static F64
-ease_out_quint(F64 t)  {
-  --t;
-  F64 t2 = t * t;
-  return 1.0 +t * t2 * t2;
-}
-
-static F64
-ease_inout_quint(F64 t)  {
-  F64 t2;
-  if (t < 0.5) {
-    t2 = t * t;
-    return 16.0 * t * t2 * t2;
-  }
-  else {
-    --t;
-    t2 = t * t;
-    return 1.0 +16.0 * t * t2 * t2;
-  }
-}
-
-
-
-static F64 
-ease_in_circ(F64 t)  {
-  return 1.0 -sqrt(1.0 -t);
-}
-
-static F64 
-ease_out_circ(F64 t)  {
-  return sqrt(t);
-}
-
-static F64 
-ease_inout_circ(F64 t)  {
-  if (t < 0.5) {
-    return (1.0 -sqrt(1.0 -2.0 * t)) * 0.5;
-  }
-  else {
-    return (1.0 +sqrt(2.0 * t - 1.0)) * 0.5;
-  }
-}
-
-static F64 
-ease_in_back(F64 t)  {
-  return t * t * (2.7 * t - 1.7);
-}
-
-static F64 
-ease_out_back(F64 t)  {
-  --t;
-  return 1.0 + t * t * (2.7 * t + 1.7);
-}
-
-static F64 
-ease_inout_back(F64 t)  {
-  if (t < 0.5) {
-    return t * t * (7.0 * t - 2.5) * 2.0;
-  }
-  else {
-    --t;
-    return 1.0 + t * t * 2.0 * (7.0 * t + 2.5);
-  }
-}
-
-static F64 
-ease_in_elastic(F64 t)  {
-  F64 t2 = t * t;
-  return t2 * t2 * sin(t * PI_64 * 4.5);
-}
-
-static F64 
-ease_out_elastic(F64 t)  {
-  F64 t2 = (t - 1.0) * (t - 1.0);
-  return 1.0 -t2 * t2 * cos(t * PI_64 * 4.5);
-}
-
-static F64 
-ease_inout_elastic(F64 t)  {
-  F64 t2;
-  if (t < 0.45) {
-    t2 = t * t;
-    return 8.0 * t2 * t2 * sin(t * PI_64 * 9.0);
-  }
-  else if (t < 0.55) {
-    return 0.5 +0.75 * sin(t * PI_64 * 4.0);
-  }
-  else {
-    t2 = (t - 1.0) * (t - 1.0);
-    return 1.0 -8.0 * t2 * t2 * sin(t * PI_64 * 9.0);
-  }
-}
-
-
-
-// NOTE(Momo): These require power function. 
-static F64 
-ease_in_bounce(F64 t)  {
-  return pow(2.0, 6.0 * (t - 1.0)) * abs_of(sin(t * PI_64 * 3.5));
-}
-
-
-static F64 
-ease_out_bounce(F64 t) {
-  return 1.0 -pow(2.0, -6.0 * t) * abs_of(cos(t * PI_64 * 3.5));
-}
-
-static F64 
-ease_inout_bounce(F64 t) {
-  if (t < 0.5) {
-    return 8.0 * pow(2.0, 8.0 * (t - 1.0)) * abs_of(sin(t * PI_64 * 7.0));
-  }
-  else {
-    return 1.0 -8.0 * pow(2.0, -8.0 * t) * abs_of(sin(t * PI_64 * 7.0));
-  }
-}
-
-static F64
-ease_in_expo(F64 t)  {
-  return (pow(2.0, 8.0 * t) - 1.0) / 255.0;
-}
-
-
-static F64 
-ease_out_expo(F64 t)  {
-  return t == 1.0 ? 1.0 : 1.0 -pow(2.0, -10.0 * t);
-}
-
-static F64 
-ease_inout_expo(F64 t)  {
-  if (t < 0.5) {
-    return (pow(2.0, 16.0 * t) - 1.0) / 510.0;
-  }
-  else {
-    return 1.0 -0.5 * pow(2.0, -16.0 * (t - 0.5));
-  }
-}
 
 

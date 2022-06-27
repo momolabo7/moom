@@ -1,6 +1,8 @@
 #ifndef MOMO_SORT_H
 #define MOMO_SORT_H
 
+#include "momo_common.h"
+
 template<typename T, typename BinaryCompare> 
 static void quicksort(T* arr, UMI count, BinaryCompare pred);
 

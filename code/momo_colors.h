@@ -1,6 +1,6 @@
 // Authors: Gerald Wong, momodevelop
 // 
-// This file contains implementation of a simple linear memory arena.
+// This file contains implementation of a simple linear memory allocator.
 //
 // Notes:
 // - While there could be several representation of colors,
@@ -16,6 +16,7 @@
 #ifndef MOMO_COLORS_H
 #define MOMO_COLORS_H
 
+#include "momo_common.h"
 
 // Each component of RGBA are in the range [0 - 1].
 struct RGB {

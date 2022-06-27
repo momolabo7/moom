@@ -12,7 +12,7 @@
 
 
 //~API for Win platform to use
-typedef Renderer* Win_Load_Renderer(HWND window, UMI command_queue_size, UMI texture_queue_size, Memory_Pool* arena);
+typedef Renderer* Win_Load_Renderer(HWND window, UMI command_queue_size, UMI texture_queue_size, Bump_Allocator* allocator);
 
 
 typedef void 

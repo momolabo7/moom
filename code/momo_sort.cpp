@@ -1,5 +1,5 @@
 template<typename T, typename BinaryCompare> static UMI
-_quicksort_mp_partition(T* a,
+_quicksort_ba_partition(T* a,
                     UMI start, 
                     UMI ope,
                     BinaryCompare cmp) 
@@ -38,7 +38,7 @@ _quicksort_range(T* a,
   if (ope - start <= 1) {
     return;
   }
-  UMI pivot = _quicksort_mp_partition(a, start, ope, cmp);
+  UMI pivot = _quicksort_ba_partition(a, start, ope, cmp);
   _quicksort_range(a, start, pivot, cmp);
   _quicksort_range(a, pivot+1, ope, cmp);
   

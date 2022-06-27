@@ -6,11 +6,11 @@ int main() {
   Memory memory = sui_malloc(MB(100));
   defer { sui_free(&memory); };
   
-  declare_and_pointerize(Memory_Pool, arena);
-  mp_init(arena, memory.data, memory.size);
+  declare_and_pointerize(Bump_Allocator, allocator);
+  ba_init(allocator, memory.data, memory.size);
   
-  TTF loaded_ttf = sui_load_font(asset_dir("nokiafc22.ttf"), arena);
-  TTF loaded_ttf2 = sui_load_font(asset_dir("liberation-mono.ttf"), arena);
+  TTF loaded_ttf = sui_load_font(asset_dir("nokiafc22.ttf"), allocator);
+  TTF loaded_ttf2 = sui_load_font(asset_dir("liberation-mono.ttf"), allocator);
   
   sui_log("Building atlas...\n");
   
@@ -44,13 +44,13 @@ int main() {
               interested_cps, array_count(interested_cps), 
               128.f);
   }
-  end_atlas_builder(&atlas, arena);
+  end_atlas_builder(&atlas, allocator);
   sui_log("Finished atlas...\n");
   
   
 #if 1
   sui_log("Writing test png file...\n");
-  Memory png_to_write_memory = png_write(atlas.bitmap, arena);
+  Memory png_to_write_memory = png_write(atlas.bitmap, allocator);
   assert(is_ok(png_to_write_memory));
   sui_write_file("test.png", png_to_write_memory);
 #endif
@@ -64,7 +64,7 @@ int main() {
   {
     begin_asset_pack(sp);
     add_atlas(sp, &atlas);
-    end_asset_pack(sp, "PACK_DEFAULT", "test.sui", arena);
+    end_asset_pack(sp, "PACK_DEFAULT", "test.sui", allocator);
     end_packer(sp);
   }
 }

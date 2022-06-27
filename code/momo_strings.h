@@ -1,6 +1,7 @@
 #ifndef MOMO_STRING_H
 #define MOMO_STRING_H
 
+#include "momo_common.h"
 
 //~ NOTE(Momo): 'Immutable' Strings
 struct String {
@@ -8,17 +9,15 @@ struct String {
 	UMI count;
 };
 
-static String substr(String Str, UMI start, UMI ope);
+static String substr(String str, UMI start, UMI ope);
 static B32  match(String lhs, String rhs);
 static B32 operator==(String lhs, String rhs);
 static B32 operator!=(String lhs, String rhs);
 
 //- Constructors
-static String string(U8* Str, UMI size);
+static String string(U8* str, UMI size);
 static String string_from_cstr(const char* cstr);
 static String string_from_cstr(char* cstr);
-// NOTE(Momo): No one should be using this
-// Maybe make a macro to enable/disable this?
 #define string_from_lit(s) string((U8*)(s), sizeof(s)-1)
 
 

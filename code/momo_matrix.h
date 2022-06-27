@@ -1,6 +1,6 @@
 // Authors: Gerald Wong, momodevelop
 // 
-// This file contains implementation of a simple linear memory arena.
+// This file contains implementation of a simple linear memory allocator.
 //
 // Notes:
 // - All matrices are in F32. I don't see any reason why they shouldn't be, 
@@ -10,6 +10,8 @@
 // Todo:
 // - column major?
 // 
+
+#include "momo_common.h"
 
 #ifndef MOMO_MATRIX_H
 #define MOMO_MATRIX_H

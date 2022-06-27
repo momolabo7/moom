@@ -16,8 +16,8 @@ void test_essentials() {
   test_eval_d(align_up_pow2(15, 4));
   test_eval_d(is_pow2(10));
   test_eval_d(is_pow2(16));
-  test_eval_f(ratio(2.f, 1.f, 10.f));
-  test_eval_f(ratio(2.0, 0.0, 100));
+  test_eval_f(percent(2.f, 1.f, 10.f));
+  test_eval_f(percent(2.0, 0.0, 100));
   test_eval_f(deg_to_rad(180.f));
   test_eval_f(deg_to_rad(180.0));
   test_eval_f(rad_to_deg(PI_32));
@@ -30,8 +30,8 @@ void test_essentials() {
   test_eval_f(ceil(12.3));
   test_eval_f(ceil(123.0f));
   test_eval_f(ceil(123.0));
-  test_eval_f(str_to_f64("123.123"));
-  test_eval_f(str_to_f64("123456789.123"));
+  test_eval_f(cstr_to_f64("123.123"));
+  test_eval_f(cstr_to_f64("123456789.123"));
   test_eval_d(is_nan(F64_NAN()));
   test_eval_d(is_nan(F32_NAN()));
   

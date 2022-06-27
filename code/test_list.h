@@ -7,6 +7,7 @@
 
 static void
 test_list() {
+#if 0
   struct {
     U32 count;
     U32 e[10];
@@ -80,6 +81,7 @@ test_list() {
   test_log("remaining: %lld\n", als_remaining(a));
   test_log("cap: %lld\n", als_cap(a));
   
+#endif
   
 }
 #endif //TEST_LIST_H

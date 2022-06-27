@@ -170,7 +170,7 @@ _ttf_get_kern_advance(TTF* ttf, S32 g1, S32 g2) {
 // ----x
 //
 static _TTF_Glyph_Outline
-_ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Memory_Pool* arena) {
+_ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Bump_Allocator* allocator) {
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   S16 number_of_contours = _ttf_read_s16(ttf->data + g + 0);
   
@@ -185,7 +185,7 @@ _ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Memory_Pool* arena) {
     //test_eval_d(number_of_contours);
     //test_eval_d(point_count);
     
-    auto* points = mp_push_array<_TTF_Glyph_Point>(arena, point_count);
+    auto* points = ba_push_array<_TTF_Glyph_Point>(allocator, point_count);
     assert(points);
     zero_range(points, point_count);
     U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
@@ -267,7 +267,7 @@ _ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Memory_Pool* arena) {
     }
     
     // mark the points that are contour endpoints
-    U16 *end_pt_indices = mp_push_array<U16>(arena, number_of_contours);
+    U16 *end_pt_indices = ba_push_array<U16>(allocator, number_of_contours);
     assert(end_pt_indices);
     zero_range(end_pt_indices, number_of_contours); 
     {
@@ -347,7 +347,7 @@ _ttf_tessellate_bezier(V2* vertices,
 
 static _TTF_Glyph_Paths
 _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
-                                  Memory_Pool* arena) 
+                                  Bump_Allocator* allocator) 
 {
   // Count the amount of points generated
   V2* vertices = nullptr;
@@ -355,7 +355,7 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
   F32 flatness = 0.35f;
   F32 flatness_squared = flatness*flatness;
   
-  U32* path_lengths = mp_push_array<U32>(arena, outline.contour_count);
+  U32* path_lengths = ba_push_array<U32>(allocator, outline.contour_count);
   assert(path_lengths);
   zero_range(path_lengths, outline.contour_count);
   U32 path_count = 0;
@@ -366,7 +366,7 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
   for (U32 pass = 0; pass < 2; ++pass)
   {
     if (pass == 1) {
-      vertices = mp_push_array<V2>(arena, vertex_count);
+      vertices = ba_push_array<V2>(allocator, vertex_count);
       assert(vertices);
       zero_range(vertices, vertex_count);
       vertex_count = 0;
@@ -676,7 +676,7 @@ ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
 
 
 static Bitmap 
-ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Memory_Pool* arena) {
+ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator* allocator) {
   Rect2 box = ttf_get_glyph_box(ttf, glyph_index, scale_factor);
   V2U bitmap_dims = ttf_get_bitmap_dims_from_glyph_box(box);
   
@@ -684,17 +684,17 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Memory_Pool* ar
   
   F32 height = abs_of(box.max.y - box.min.y);   
   U32 bitmap_size = bitmap_dims.w*bitmap_dims.h*4;
-  U32* pixels = (U32*)mp_push_block(arena, bitmap_size);
+  U32* pixels = (U32*)ba_push_block(allocator, bitmap_size);
   if (!pixels) return {};
   zero_memory(pixels, bitmap_size);
   
-  mp_set_revert_point(arena);
+  ba_set_revert_point(allocator);
   
-  auto outline = _ttf_get_glyph_outline(ttf, glyph_index, arena);
-  auto paths = _ttf_get_paths_from_glyph_outline(outline, arena);
+  auto outline = _ttf_get_glyph_outline(ttf, glyph_index, allocator);
+  auto paths = _ttf_get_paths_from_glyph_outline(outline, allocator);
   
   // generate scaled edges based on points
-  auto* edges = mp_push_array<_TTF_Edge>(arena, paths.vertex_count);
+  auto* edges = ba_push_array<_TTF_Edge>(allocator, paths.vertex_count);
   assert(edges);
   zero_range(edges, paths.vertex_count);
   
@@ -749,7 +749,7 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Memory_Pool* ar
   
   declare_and_pointerize(Slice_List<_TTF_Edge*>, active_edges);
   {
-    _TTF_Edge** edge_store = mp_push_array<_TTF_Edge*>(arena, edge_count);
+    _TTF_Edge** edge_store = ba_push_array<_TTF_Edge*>(allocator, edge_count);
     assert(edge_store);
     sl_init(active_edges, edge_store, edge_count);
   }

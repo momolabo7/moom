@@ -36,8 +36,8 @@ struct PNG {
 
 static B32 png_read(PNG* p, void* png_memory, UMI png_size);
 
-static Bitmap png_to_bitmap(PNG* png, Memory_Pool* arena);
-static Memory png_write(Bitmap bm, Memory_Pool* arena);
+static Bitmap png_to_bitmap(PNG* png, Bump_Allocator* allocator);
+static Memory png_write(Bitmap bm, Bump_Allocator* allocator);
 
 #include "momo_png.cpp"
 

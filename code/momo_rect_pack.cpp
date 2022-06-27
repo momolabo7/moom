@@ -66,16 +66,16 @@ rp_pack(RP_Rect* rects,
            U32 total_width,
            U32 total_height,
            RP_Sort_Type sort_type,
-           Memory_Pool* arena) 
+           Bump_Allocator* allocator) 
 {
   
-  auto* sort_entries = mp_push_array<_RP_Sort_Entry>(arena, rect_count);
+  auto* sort_entries = ba_push_array<_RP_Sort_Entry>(allocator, rect_count);
   for (U32 i = 0; i < rect_count; ++i) {
     sort_entries[i].rect = rects + i;
   }
   _rp_sort(sort_entries, rect_count, sort_type);
   
-  auto* nodes = mp_push_array<_RP_Node>(arena, rect_count+1);
+  auto* nodes = ba_push_array<_RP_Node>(allocator, rect_count+1);
   
   U32 current_node_count = 1;
   nodes[0].x = 0;

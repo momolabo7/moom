@@ -203,7 +203,7 @@ static void
 end_asset_pack(Sui_Packer* p, 
                const char* pack_id_name,
                const char* filename, 
-               Memory_Pool* arena) 
+               Bump_Allocator* allocator) 
 
 {
   sui_log("Starting writing to %s\n", filename);

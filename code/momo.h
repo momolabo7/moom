@@ -9,16 +9,15 @@
 #include "momo_vectors.h"
 #include "momo_shapes.h"
 #include "momo_sort.h"
-
-//-These are currently under consideration for namespacing
-#include "momo_interval.h"
 #include "momo_matrix.h"
 #include "momo_crc.h"
 #include "momo_strings.h"
+
+//idk what we are going to do with image api?
 #include "momo_image.h" 
 
-//-These are 'modules' and thus need namespacing
-#include "momo_memory_pool.h"
+#include "momo_easing.h"
+#include "momo_memory.h"
 #include "momo_rng.h"
 #include "momo_streams.h"   // TODO: namespace
 #include "momo_lists.h" 

@@ -46,10 +46,10 @@ enum Game_Mode {
 struct Game_State {
   Show_Debug_Type show_debug_type;
   
-  // Memory_Pools
-  Memory_Pool asset_arena;
-  Memory_Pool frame_arena;
-  Memory_Pool debug_arena;
+  // Bump_Allocators
+  Bump_Allocator asset_arena;
+  Bump_Allocator frame_arena;
+  Bump_Allocator debug_arena;
   
   // Mode Management
   enum Game_Mode current_mode;
