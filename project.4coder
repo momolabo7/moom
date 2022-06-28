@@ -61,13 +61,12 @@ command_list = {
  
  { .name = "build meta",
    .out = "*compilation*", .footer_panel = true, .save_dirty_files = true,
-   .cmd = { { build_test, .os="win" }, }, },
+   .cmd = { { build_meta, .os="win" }, }, },
 
 };
 
 fkey_command[1] = "bun karu";
 fkey_command[2] = "build game";
 fkey_command[3] = "build win";
-fkey_command[4] = "build test";
+fkey_command[4] = "build meta";
 fkey_command[5] = "run win";
-fkey_command[6] = "build meta";

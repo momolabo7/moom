@@ -28,14 +28,14 @@ struct Meta_Token {
   U32 ope;
 };
 
-struct Tokenizer {
+struct Meta_Tokenizer {
   C8* text;
   U32 at;
   U32 text_length;
 };
 
 static void
-meta_eat_ignorables(Tokenizer* t) {
+meta_eat_ignorables(Meta_Tokenizer* t) {
   for (;;) {
     if(is_whitespace(t->text[t->at])) {
       ++t->at;
@@ -57,8 +57,8 @@ meta_eat_ignorables(Tokenizer* t) {
   
 }
 
-static void
-meta_tokenizer_init(Tokenizer* t, const char* filename) {
+static B32
+meta_tokenizer_init(Meta_Tokenizer* t, const char* filename) {
   FILE* fp = fopen(filename, "r");
   if (fp) {
     fseek(fp, 0, SEEK_END);
@@ -74,16 +74,19 @@ meta_tokenizer_init(Tokenizer* t, const char* filename) {
     // null terminate
     t->text[size] = 0;
     
+    return true;
   }
+  return false;
 }
 
-static void meta_tokenizer_free(Tokenizer* t) {
+static void 
+meta_tokenizer_free(Meta_Tokenizer* t) {
   free(t->text);
 }
 
 
 static Meta_Token
-meta_next_token(Tokenizer* t) {
+meta_next_token(Meta_Tokenizer* t) {
   meta_eat_ignorables(t);
   
   Meta_Token ret = {};
@@ -160,7 +163,7 @@ meta_next_token(Tokenizer* t) {
       
       if (is_alpha(t->text[t->at]) || t->text[t->at] == '_') {
         while(is_alpha(t->text[t->at]) ||
-              is_number(t->text[t->at]) ||
+              is_digit(t->text[t->at]) ||
               t->text[t->at] == '_') 
         {
           ++t->at;
@@ -170,7 +173,7 @@ meta_next_token(Tokenizer* t) {
         
       }
 #if 0
-      else if (is_number(t->text[t->at])) {
+      else if (is_digit(t->text[t->at])) {
         // TODO:
         // - binary
         // - hexa
@@ -187,7 +190,7 @@ meta_next_token(Tokenizer* t) {
 }
 
 static void
-meta_print_token(Tokenizer* t, Meta_Token token)  {
+meta_print_token(Meta_Tokenizer* t, Meta_Token token)  {
   switch(token.type) {
     case META_TOKEN_TYPE_OPEN_PAREN: 
     case META_TOKEN_TYPE_CLOSE_PAREN:
@@ -221,21 +224,70 @@ meta_print_token(Tokenizer* t, Meta_Token token)  {
   }
 }
 
+static B32
+meta_compare_token_with_string(Meta_Tokenizer* t, Meta_Token token, String str) {
+  if( str.count != (token.ope - token.begin)) {
+    return false;
+  }
+  
+  for(U32 i = 0; i < str.count; ++i) {
+    if (str.e[i] != t->text[token.begin+i]) {
+      return false;
+    }
+  }
+  
+  return true;
+}
 
+struct Profiler_Codegen {
+  U32 state; // 
+  U32 units;
+};
+
+static void
+meta_update_profiler_codegen(Profiler_Codegen* p, Meta_Tokenizer* t, Meta_Token token) {
+  switch(p->state) {
+    case 0: {
+      if (meta_compare_token_with_string(t, token, string_from_lit("wtf_sia"))) {
+        printf(" <-");
+        ++p->state;
+      }  
+    } break; 
+    case 1: {
+      if (token.type == META_TOKEN_TYPE_OPEN_PAREN) ++p->state;
+    } break;
+    case 2: {
+      // grab the next identifier
+      if (token.type == META_TOKEN_TYPE_IDENTIFIER) {
+        printf(" <!");
+        p->state = 0;
+        ++p->units;
+      }
+    }; 
+    
+  }
+}
 
 
 int main() {
-  declare_and_pointerize(Tokenizer, t);
-  meta_tokenizer_init(t, "meta_test.cpp");
+  declare_and_pointerize(Meta_Tokenizer, t);
+  if (!meta_tokenizer_init(t, "meta_test.cpp")){
+    printf("Cannot open file\n");
+    return ;
+  }
   defer { meta_tokenizer_free(t); };
   
-  Meta_Token token = {};
+  declare_and_pointerize(Profiler_Codegen, p);
+  
   for(;;) {
     Meta_Token token = meta_next_token(t);
     meta_print_token(t, token);
+    meta_update_profiler_codegen(p, t, token);
+    
     printf("\n");
     if (token.type == META_TOKEN_TYPE_EOF) 
       break;
   } 
   
+  printf("number of profiler units: %d\n", p->units);
 }

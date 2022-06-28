@@ -20,7 +20,7 @@
 #include "momo_easing.h"
 #include "momo_memory.h"
 #include "momo_rng.h"
-#include "momo_streams.h"   // TODO: namespace
+#include "momo_streams.h"
 #include "momo_lists.h" 
 #include "momo_rect_pack.h"
 #include "momo_wav.h"     
