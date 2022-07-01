@@ -84,12 +84,18 @@ add_bitmap(Sui_Packer* p, U32 w, U32 h, U32* pixels, const char* bitmap_id_name)
 }
 
 static U32 
-add_sprite(Sui_Packer* p, U32 bitmap_id, Rect2 uv, const char* sprite_id_name) {
+add_sprite(Sui_Packer* p, 
+           U32 bitmap_id, 
+           Rect2 uv, 
+           Rect2U texel_uv, 
+           const char* sprite_id_name) 
+{
   assert(p->sprite_count < array_count(p->sprites));
   
   Packer_Sprite* sprite = p->sprites + p->sprite_count;
   sprite->bitmap_id = bitmap_id;
   sprite->uv = uv;
+  sprite->texel_uv = texel_uv;
   sprite->sprite_id_name = sprite_id_name;
   return p->sprite_count++;
 }
@@ -109,12 +115,13 @@ begin_font(Sui_Packer* p)
 }
 
 static void
-push_glyph(Sui_Packer* p, Rect2 uv, U32 codepoint) {
+push_glyph(Sui_Packer* p, Rect2U texel_uv, Rect2 uv, U32 codepoint) {
   Packer_Font* font = p->current_font;
   assert(font);
   assert(p->font_glyph_count < array_count(p->font_glyphs));
   
   Packer_Font_Glyph* glyph = p->font_glyphs + p->font_glyph_count++;
+  glyph->texel_uv = texel_uv;
   glyph->uv = uv;
   glyph->codepoint = codepoint;
   
@@ -166,7 +173,14 @@ add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
     uv.max.x = (F32)(sas->rect->x+sas->rect->w) / atlas->bitmap.width;
     uv.max.y = (F32)(sas->rect->y+sas->rect->h) / atlas->bitmap.height;
     
-    add_sprite(p, bitmap_id, uv, sas->sprite_id_name);
+    Rect2U texel_uv = {};
+    texel_uv.min.x = sas->rect->x;
+    texel_uv.min.y = sas->rect->y;
+    texel_uv.max.x = sas->rect->x + sas->rect->w;
+    texel_uv.max.y = sas->rect->y + sas->rect->h;
+    
+    
+    add_sprite(p, bitmap_id, uv, texel_uv, sas->sprite_id_name);
   }
   
   for (U32 font_index = 0; 
@@ -189,7 +203,14 @@ add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
       uv.min.y = (F32)rect->y / atlas->bitmap.height;
       uv.max.x = (F32)(rect->x+rect->w) / atlas->bitmap.width;
       uv.max.y = (F32)(rect->y+rect->h) / atlas->bitmap.height;
-      push_glyph(p, uv, sac->font_glyph.codepoint);
+      
+      Rect2U texel_uv = {};
+      texel_uv.min.x = rect->x;
+      texel_uv.min.y = rect->y;
+      texel_uv.max.x = rect->x + rect->w;
+      texel_uv.max.y = rect->y + rect->h;
+      
+      push_glyph(p, texel_uv, uv, sac->font_glyph.codepoint);
     }
     
     end_font(p, saf->font_id_name, saf->loaded_ttf, bitmap_id);
@@ -271,6 +292,7 @@ end_asset_pack(Sui_Packer* p,
     Packer_Sprite* ps = p->sprites + sprite_index;
     Karu_Sprite ks = {};
     ks.bitmap_id = ps->bitmap_id;
+    ks.texel_uv = ps->texel_uv;
     ks.uv = ps->uv;
     fwrite(&ks, sizeof(Karu_Sprite), 1, file);
     
@@ -305,6 +327,7 @@ end_asset_pack(Sui_Packer* p,
       Packer_Font_Glyph* pfg = p->font_glyphs + glyph_index;
       Karu_Font_Glyph kfg = {};
       
+      kfg.texel_uv = pfg->texel_uv;
       kfg.uv = pfg->uv;
       kfg.codepoint = pfg->codepoint;
       

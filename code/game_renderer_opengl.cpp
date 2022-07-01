@@ -124,26 +124,28 @@ align_viewport(Opengl* ogl,
 static void
 set_texture(Opengl* ogl,
             UMI index,
-            S32 width,
-            S32 height,
+            U32 width,
+            U32 height,
             U8* pixels) 
 {
   
   assert(index < array_count(ogl->textures));
   
-  GLuint entry;
+  Texture entry = {};
+  entry.width = width;
+  entry.height = height;
   
   ogl->glCreateTextures(GL_TEXTURE_2D, 
                         1, 
-                        &entry);
+                        &entry.handle);
   
-  ogl->glTextureStorage2D(entry, 
+  ogl->glTextureStorage2D(entry.handle, 
                           1, 
                           GL_RGBA8, 
                           width, 
                           height);
   
-  ogl->glTextureSubImage2D(entry, 
+  ogl->glTextureSubImage2D(entry.handle, 
                            0, 
                            0, 
                            0, 
@@ -156,18 +158,19 @@ set_texture(Opengl* ogl,
 }
 
 static void 
-delete_texture(Opengl* ogl, U32 texture_index) {
+delete_texture(Opengl* ogl, UMI texture_index) {
   assert(texture_index < array_count(ogl->textures));
-  ogl->glDeleteTextures(1, ogl->textures + texture_index);
-  ogl->textures[texture_index] = 0;
+  Texture* texture = ogl->textures + texture_index;
+  ogl->glDeleteTextures(1, &texture->handle);
+  ogl->textures[texture_index].handle = 0;
 }
 
 static void
 delete_all_textures(Opengl* ogl) {
-  ogl->glDeleteTextures((GLsizei)array_count(ogl->textures), 
-                        ogl->textures);
   for (UMI i = 0; i < array_count(ogl->textures); ++i ){
-    ogl->textures[i] = 0;
+    if (ogl->textures[i].handle != 0) {
+      delete_texture(ogl, i);
+    }
   }
 }
 
@@ -191,8 +194,12 @@ add_predefined_textures(Opengl* ogl) {
                              GL_RGBA, 
                              GL_UNSIGNED_BYTE, 
                              &pixels);
+    Texture texture = {};
+    texture.width = 2;
+    texture.height = 2;
+    texture.handle = dummy_texture;
     
-    ogl->dummy_texture = dummy_texture;
+    ogl->dummy_texture = texture;
     
   }
   
@@ -207,8 +214,12 @@ add_predefined_textures(Opengl* ogl) {
                              1, 1, 
                              GL_RGBA, GL_UNSIGNED_BYTE, 
                              &pixels);
+    Texture texture = {};
+    texture.width = 2;
+    texture.height = 2;
+    texture.handle = blank_texture;
     
-    ogl->blank_texture = blank_texture;
+    ogl->blank_texture = texture;
   }
   
   
@@ -786,19 +797,20 @@ opengl_end_frame(Opengl* ogl) {
         M44 R = m44_rotation_z(data->rot);
         M44 S = m44_scale(data->size.w, data->size.h, 1.f) ;
         
-        GLuint texture = ogl->blank_texture;
         push_sprite(ogl, 
                     T*R*S,
                     data->colors,
                     uv,
-                    texture);
+                    ogl->blank_texture.handle);
       } break;
       
       case RENDER_COMMAND_TYPE_SPRITE: {
         auto* data = (Render_Command_Sprite*)entry->data;
-        GLuint texture = ogl->textures[data->texture_index]; 
-        if (texture == 0) {
-          texture = ogl->dummy_texture;
+        assert(array_count(ogl->textures) > data->texture_index);
+        
+        Texture* texture = ogl->textures + data->texture_index; 
+        if (texture->handle == 0) {
+          texture->handle = ogl->dummy_texture.handle;
         }
         M44 transform = m44_identity();
         transform.e[0][0] = data->size.w;
@@ -811,11 +823,17 @@ opengl_end_frame(Opengl* ogl) {
         F32 lerped_y = lerp(0.5f, -0.5f, data->anchor.y);
         M44 a = m44_translation(lerped_x, lerped_y);
         
+        Rect2 uv = {};
+        uv.min.x = (F32)data->texel_uv.min.x / texture->width;
+        uv.min.y = (F32)data->texel_uv.min.y / texture->height;
+        uv.max.x = (F32)data->texel_uv.max.x / texture->width;
+        uv.max.y = (F32)data->texel_uv.max.y / texture->height;
+        
         push_sprite(ogl, 
                     transform*a,
                     data->colors,
-                    data->uv,
-                    texture);
+                    uv,
+                    texture->handle);
         
       } break;
       case RENDER_COMMAND_TYPE_BLEND: {

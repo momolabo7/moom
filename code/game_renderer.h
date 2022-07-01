@@ -118,6 +118,7 @@ struct Render_Command_View {
 struct Render_Command_Sprite{
   V2 pos;
   V2 size;
+  Rect2U texel_uv;
   Rect2 uv; 
   RGBA colors;
   U32 texture_index;

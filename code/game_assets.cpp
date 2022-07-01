@@ -147,7 +147,7 @@ load_game_assets(Game_Assets* ga,
       g_platform.read_file(file, sizeof(Karu_Sprite), offset, &ks);
       
       Sprite_Asset* sa = ga->sprites + sprite_index;
-      
+      sa->texel_uv = ks.texel_uv;
       sa->bitmap_id = Bitmap_ID(ks.bitmap_id); 
       sa->uv = ks.uv;
       
@@ -195,6 +195,7 @@ load_game_assets(Game_Assets* ga,
         g_platform.read_file(file, sizeof(Karu_Font_Glyph), kfg_offset, &kfg);
         
         Font_Glyph_Asset* glyph = font->glyphs + glyph_index;
+        glyph->texel_uv = kfg.texel_uv;
         glyph->uv = kfg.uv;
         glyph->box = kfg.box;
         

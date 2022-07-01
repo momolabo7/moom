@@ -45,6 +45,7 @@ paint_sprite(Painter* p,
               color,
               pos, size, anchor,
               bitmap->renderer_texture_handle, 
+              sprite->texel_uv,
               sprite->uv);
 }
 
@@ -74,7 +75,6 @@ paint_text(Painter* p,
     F32 width = (glyph->box.max.x - glyph->box.min.x)*font_height;
     F32 height = (glyph->box.max.y - glyph->box.min.y)*font_height;
     
-    
     V2 pos = { px + (glyph->box.min.x*font_height), py + (glyph->box.min.y*font_height)};
     V2 size = { width, height };
     V2 anchor = {0.f, 0.f}; // bottom left
@@ -82,6 +82,7 @@ paint_text(Painter* p,
                 color,
                 pos, size, anchor,
                 bitmap->renderer_texture_handle, 
+                glyph->texel_uv,
                 glyph->uv);
   }
   

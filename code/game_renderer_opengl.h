@@ -220,6 +220,13 @@ enum Vertex_Buffer_Type {
   VERTEX_BUFFER_TYPE_COUNT // 5
 };
 
+// TODO(Momo): Start using this please Momo
+struct Texture {
+  GLuint handle;
+  U32 width; 
+  U32 height;
+};
+
 struct Sprite_Batcher {
   GLuint buffers[VERTEX_BUFFER_TYPE_COUNT]; // Opengl__VBO_Count
   GLuint shader;
@@ -238,15 +245,14 @@ struct Triangle_Batcher {
   GLuint model;
 };
 
-
 struct Opengl : Renderer {
   Sprite_Batcher sprite_batcher;
   Triangle_Batcher triangle_batcher;
   
-  GLuint textures[256];
+  Texture textures[256];
   
-  GLuint dummy_texture;
-  GLuint blank_texture;
+  Texture dummy_texture;
+  Texture blank_texture;
   
   F32 current_layer;
   

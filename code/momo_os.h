@@ -4,8 +4,5 @@
 #ifndef MOMO_OS_H
 #define MOMO_OS_H
 
-// TODO
-
-
-
+#include "momo_common.h"
 #endif //MOMO_OS_H
