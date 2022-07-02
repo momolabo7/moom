@@ -12,13 +12,11 @@ struct Bitmap_Asset {
 
 struct Font_Glyph_Asset{
   Rect2U texel_uv;
-  Rect2 uv;
   Rect2 box;
 };
 
 struct Sprite_Asset {
   Rect2U texel_uv;
-  Rect2 uv;
   Bitmap_ID bitmap_id;
 };
 

@@ -3,8 +3,6 @@ Engine
 	Sound
 	Debugger
 		Arena Profiler?
-	Renderer
-    Instead of passing UVs, should just pass a discrete rect. UVs should be calculated on the renderer side.
 
 Game
 	Level Editor

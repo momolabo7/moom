@@ -45,8 +45,7 @@ paint_sprite(Painter* p,
               color,
               pos, size, anchor,
               bitmap->renderer_texture_handle, 
-              sprite->texel_uv,
-              sprite->uv);
+              sprite->texel_uv);
 }
 
 
@@ -82,8 +81,7 @@ paint_text(Painter* p,
                 color,
                 pos, size, anchor,
                 bitmap->renderer_texture_handle, 
-                glyph->texel_uv,
-                glyph->uv);
+                glyph->texel_uv);
   }
   
 }

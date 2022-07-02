@@ -27,7 +27,6 @@ struct Karu_Header {
 };
 
 struct Karu_Sprite {
-  Rect2 uv; // TODO: I think this should be removed
   Rect2U texel_uv;
   U32 bitmap_id;
 };

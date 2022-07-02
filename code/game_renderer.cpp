@@ -149,14 +149,12 @@ push_sprite(Renderer_Command_Queue* c,
             V2 size,
             V2 anchor,
             U32 texture_index,
-            Rect2U texel_uv,
-            Rect2 uv)
+            Rect2U texel_uv)
 {
   auto* data = push_command<Render_Command_Sprite>(c, RENDER_COMMAND_TYPE_SPRITE);
   data->colors = colors;
   data->texture_index = texture_index;
   data->texel_uv = texel_uv;
-  data->uv = uv;
   data->pos = pos;
   data->size = size;
   data->anchor = anchor;

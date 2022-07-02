@@ -86,7 +86,6 @@ add_bitmap(Sui_Packer* p, U32 w, U32 h, U32* pixels, const char* bitmap_id_name)
 static U32 
 add_sprite(Sui_Packer* p, 
            U32 bitmap_id, 
-           Rect2 uv, 
            Rect2U texel_uv, 
            const char* sprite_id_name) 
 {
@@ -94,7 +93,6 @@ add_sprite(Sui_Packer* p,
   
   Packer_Sprite* sprite = p->sprites + p->sprite_count;
   sprite->bitmap_id = bitmap_id;
-  sprite->uv = uv;
   sprite->texel_uv = texel_uv;
   sprite->sprite_id_name = sprite_id_name;
   return p->sprite_count++;
@@ -180,7 +178,7 @@ add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
     texel_uv.max.y = sas->rect->y + sas->rect->h;
     
     
-    add_sprite(p, bitmap_id, uv, texel_uv, sas->sprite_id_name);
+    add_sprite(p, bitmap_id, texel_uv, sas->sprite_id_name);
   }
   
   for (U32 font_index = 0; 
@@ -293,7 +291,6 @@ end_asset_pack(Sui_Packer* p,
     Karu_Sprite ks = {};
     ks.bitmap_id = ps->bitmap_id;
     ks.texel_uv = ps->texel_uv;
-    ks.uv = ps->uv;
     fwrite(&ks, sizeof(Karu_Sprite), 1, file);
     
     // write sprite id

@@ -30,7 +30,6 @@ struct Packer_Bitmap {
 
 struct Packer_Sprite {
   U32 bitmap_id;
-  Rect2 uv;
   Rect2U texel_uv;
   const char* sprite_id_name;
 };
