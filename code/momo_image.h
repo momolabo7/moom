@@ -25,8 +25,11 @@ struct Bitmap {
 
 static B32 is_ok(Bitmap);
 
-
-#include "momo_image.cpp"
-
+//////////////////////////////////////////////////////////
+// IMPLEMENTATION
+static B32
+is_ok(Bitmap bm) {
+  return bm.width && bm.height && bm.pixels;
+}
 
 #endif //MOMO_IMAGE_H
