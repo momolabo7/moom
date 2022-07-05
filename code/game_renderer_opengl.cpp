@@ -1,7 +1,7 @@
 
 
 static void
-flush_sprites(Opengl* ogl) {
+_ogl_flush_sprites(Opengl* ogl) {
   Sprite_Batcher* sb = &ogl->sprite_batcher;
   assert(sb->instances_to_draw + sb->last_drawn_instance_index < OPENGL_MAX_SPRITES);
   
@@ -32,15 +32,15 @@ flush_sprites(Opengl* ogl) {
 
 
 static void 
-push_sprite(Opengl* ogl, 
-            M44 transform,
-            RGBA colors,
-            Rect2 uv,
-            GLuint texture) 
+_ogl_push_sprite(Opengl* ogl, 
+                 M44 transform,
+                 RGBA colors,
+                 Rect2 uv,
+                 GLuint texture) 
 {
   Sprite_Batcher* sb = &ogl->sprite_batcher;
   if (sb->current_texture != texture) {
-    flush_sprites(ogl);
+    _ogl_flush_sprites(ogl);
     sb->current_texture = texture;
   }
   
@@ -74,7 +74,7 @@ push_sprite(Opengl* ogl,
 }
 
 static void 
-begin_sprites(Opengl* ogl) {
+_ogl_begin_sprites(Opengl* ogl) {
   Sprite_Batcher* sb = &ogl->sprite_batcher;
   
   sb->current_texture = 0;
@@ -84,15 +84,15 @@ begin_sprites(Opengl* ogl) {
 }
 
 static void 
-end_sprites(Opengl* ogl) {
-  flush_sprites(ogl);
+_ogl_end_sprites(Opengl* ogl) {
+  _ogl_flush_sprites(ogl);
 }
 
 static void 
-attach_shader(Opengl* ogl,
-              U32 program, 
-              U32 type, 
-              char* Code) 
+_ogl_attach_shader(Opengl* ogl,
+                   U32 program, 
+                   U32 type, 
+                   char* Code) 
 {
   GLuint shader_handle = ogl->glCreateShader(type);
   ogl->glShaderSource(shader_handle, 1, &Code, NULL);
@@ -284,12 +284,12 @@ void main(void)
   
   // TODO(Momo): //BeginShader/EndShader?
   tb->shader = ogl->glCreateProgram();
-  attach_shader(ogl, tb->shader,
-                GL_VERTEX_SHADER,
-                vertex_shader_src);
-  attach_shader(ogl, tb->shader,
-                GL_FRAGMENT_SHADER,
-                fragment_shader_src);
+  _ogl_attach_shader(ogl, tb->shader,
+                     GL_VERTEX_SHADER,
+                     vertex_shader_src);
+  _ogl_attach_shader(ogl, tb->shader,
+                     GL_FRAGMENT_SHADER,
+                     fragment_shader_src);
   
   ogl->glLinkProgram(tb->shader);
   GLint result;
@@ -542,14 +542,14 @@ void main(void) {
   
   // NOTE(Momo): Setup shader Program
   sb->shader = ogl->glCreateProgram();
-  attach_shader(ogl,
-                sb->shader, 
-                GL_VERTEX_SHADER, 
-                (char*)vertex_shader);
-  attach_shader(ogl,
-                sb->shader, 
-                GL_FRAGMENT_SHADER, 
-                (char*)fragment_shader);
+  _ogl_attach_shader(ogl,
+                     sb->shader, 
+                     GL_VERTEX_SHADER, 
+                     (char*)vertex_shader);
+  _ogl_attach_shader(ogl,
+                     sb->shader, 
+                     GL_FRAGMENT_SHADER, 
+                     (char*)fragment_shader);
   
   ogl->glLinkProgram(sb->shader);
   
@@ -579,7 +579,7 @@ opengl_init(Opengl* ogl)
 }
 
 static void 
-set_blend_mode(Opengl* ogl, Blend_Type type) {
+_ogl_set_blend_mode(Opengl* ogl, Gfx_Blend_Type type) {
   switch(type) {
     case BLEND_TYPE_ADD: {
       ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
@@ -597,9 +597,9 @@ process_texture_queue(Opengl* ogl) {
   // is loading forever, the rest of the payloads will never be processed.
   // This is fine and intentional. A payload should never be loading forever.
   // 
-  Renderer_Texture_Queue* textures = &ogl->texture_queue;
+  Gfx_Texture_Queue* textures = &ogl->texture_queue;
   while(textures->payload_count) {
-    Texture_Payload* payload = textures->payloads + textures->first_payload_index;
+    Gfx_Texture_Payload* payload = textures->payloads + textures->first_payload_index;
     
     B32 stop_loop = false;
     switch(payload->state) {
@@ -643,8 +643,8 @@ process_texture_queue(Opengl* ogl) {
 static void
 opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) 
 {
-  Renderer_Command_Queue* cmds = &ogl->command_queue;
-  clear_commands(cmds);  
+  Gfx_Command_Queue* cmds = &ogl->command_queue;
+  gfx_clear_commands(cmds);  
   cmds->platform_render_wh = render_wh;
   cmds->platform_render_region = region;
   ogl->current_layer = 1000.f;
@@ -653,21 +653,21 @@ opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region)
 // Only call opengl functions when we end frame
 static void
 opengl_end_frame(Opengl* ogl) {
-  Renderer_Command_Queue* cmds = &ogl->command_queue;
+  Gfx_Command_Queue* cmds = &ogl->command_queue;
   
   align_viewport(ogl, cmds->platform_render_wh, cmds->platform_render_region);
   process_texture_queue(ogl);
   
   
-  begin_sprites(ogl);
+  _ogl_begin_sprites(ogl);
   
   for (U32 cmd_index = 0; cmd_index < cmds->entry_count; ++cmd_index) {
-    Render_Command* entry = get_command(cmds, cmd_index);
+    Gfx_Command* entry = gfx_get_command(cmds, cmd_index);
     switch(entry->id) {
       case RENDER_COMMAND_TYPE_VIEW: {
-        flush_sprites(ogl);
+        _ogl_flush_sprites(ogl);
         
-        auto* data = (Render_Command_View*)entry->data;
+        auto* data = (Gfx_Command_View*)entry->data;
         
         F32 depth = (F32)(ogl->current_layer + 1);
         // TODO: Avoid computation of matrices
@@ -702,7 +702,7 @@ opengl_end_frame(Opengl* ogl) {
         
       } break;
       case RENDER_COMMAND_TYPE_CLEAR: {
-        auto* data = (Render_Command_Clear*)entry->data;
+        auto* data = (Gfx_Command_Clear*)entry->data;
         
         ogl->glClearColor(data->colors.r, 
                           data->colors.g, 
@@ -713,9 +713,9 @@ opengl_end_frame(Opengl* ogl) {
       } break;
       
       case RENDER_COMMAND_TYPE_TRIANGLE: {
-        flush_sprites(ogl);
+        _ogl_flush_sprites(ogl);
         
-        auto* data = (Render_Command_Triangle*)entry->data;
+        auto* data = (Gfx_Command_Triangle*)entry->data;
         M44 inverse_of_model = m44_identity();
         inverse_of_model.e[0][0] = -1.f;
         inverse_of_model.e[1][0] = 0.f;
@@ -792,20 +792,20 @@ opengl_end_frame(Opengl* ogl) {
           { 1.f, 1.f },
         };
         
-        auto* data = (Render_Command_Rect*)entry->data;
+        auto* data = (Gfx_Command_Rect*)entry->data;
         M44 T = m44_translation(data->pos.x, data->pos.y, ogl->current_layer);
         M44 R = m44_rotation_z(data->rot);
         M44 S = m44_scale(data->size.w, data->size.h, 1.f) ;
         
-        push_sprite(ogl, 
-                    T*R*S,
-                    data->colors,
-                    uv,
-                    ogl->blank_texture.handle);
+        _ogl_push_sprite(ogl, 
+                         T*R*S,
+                         data->colors,
+                         uv,
+                         ogl->blank_texture.handle);
       } break;
       
       case RENDER_COMMAND_TYPE_SPRITE: {
-        auto* data = (Render_Command_Sprite*)entry->data;
+        auto* data = (Gfx_Command_Sprite*)entry->data;
         assert(array_count(ogl->textures) > data->texture_index);
         
         Texture* texture = ogl->textures + data->texture_index; 
@@ -829,20 +829,20 @@ opengl_end_frame(Opengl* ogl) {
         uv.max.x = (F32)data->texel_uv.max.x / texture->width;
         uv.max.y = (F32)data->texel_uv.max.y / texture->height;
         
-        push_sprite(ogl, 
-                    transform*a,
-                    data->colors,
-                    uv,
-                    texture->handle);
+        _ogl_push_sprite(ogl, 
+                         transform*a,
+                         data->colors,
+                         uv,
+                         texture->handle);
         
       } break;
       case RENDER_COMMAND_TYPE_BLEND: {
-        flush_sprites(ogl);
-        auto* data = (Render_Command_Blend*)entry->data;
-        set_blend_mode(ogl, data->type);
+        _ogl_flush_sprites(ogl);
+        auto* data = (Gfx_Command_Blend*)entry->data;
+        _ogl_set_blend_mode(ogl, data->type);
       } break;
       case RENDER_COMMAND_TYPE_DELETE_TEXTURE: {
-        auto* data = (Render_Command_Delete_Texture*)entry->data;
+        auto* data = (Gfx_Command_Delete_Texture*)entry->data;
         delete_texture(ogl, data->texture_index);
       } break;
       case RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
@@ -855,7 +855,7 @@ opengl_end_frame(Opengl* ogl) {
     }
   }
   
-  end_sprites(ogl);
+  _ogl_end_sprites(ogl);
 }
 
 

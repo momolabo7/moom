@@ -131,14 +131,14 @@ void update(Game_Input_Button button);
 
 //~ NOTE(Momo): Game API
 // For things that don't change from the platform after setting it once
-struct Renderer_Texture_Queue;
-struct Renderer_Command_Queue;
+struct Gfx_Texture_Queue;
+struct Gfx_Command_Queue;
 struct Profiler;
 struct Game_Memory {
   Bump_Allocator* game_arena; // Require 32MB
   Platform_API platform_api;
-  Renderer_Texture_Queue* renderer_texture_queue;
-  Renderer_Command_Queue* renderer_command_queue;
+  Gfx_Texture_Queue* renderer_texture_queue;
+  Gfx_Command_Queue* renderer_command_queue;
   Profiler* profiler; 
   
   

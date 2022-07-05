@@ -900,7 +900,7 @@ WinMain(HINSTANCE instance,
   if (!win_allocate_memory_into_arena(renderer_arena, MB(256))) return false;
   defer { win_free_memory_from_arena(renderer_arena); };
   
-  Renderer* renderer = 
+  Gfx* renderer = 
     renderer_functions.load(window, 
                             MB(100),
                             MB(100), 
@@ -946,7 +946,7 @@ WinMain(HINSTANCE instance,
     Rect2U render_region = win_calc_render_region(render_wh.w,
                                                   render_wh.h,
                                                   game_aspect_ratio);
-    Renderer_Command_Queue* render_commands = nullptr;
+    Gfx_Command_Queue* render_commands = nullptr;
     if (renderer_code.is_valid) {
       renderer_functions.begin_frame(renderer, 
                                      render_wh, 

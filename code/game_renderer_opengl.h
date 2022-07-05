@@ -245,7 +245,7 @@ struct Triangle_Batcher {
   GLuint model;
 };
 
-struct Opengl : Renderer {
+struct Opengl : Gfx {
   Sprite_Batcher sprite_batcher;
   Triangle_Batcher triangle_batcher;
   

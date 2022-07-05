@@ -7,14 +7,14 @@
 
 struct Painter {
   Game_Assets* ga;
-  Renderer_Command_Queue* cmds;
+  Gfx_Command_Queue* cmds;
 };
 
 
 static void
 begin_painting(Painter* p, 
                Game_Assets* ga, 
-               Renderer_Command_Queue* cmds,
+               Gfx_Command_Queue* cmds,
                F32 canvas_width,
                F32 canvas_height,
                U32 max_layers = 10000) 
@@ -22,12 +22,12 @@ begin_painting(Painter* p,
   p->ga = ga;
   p->cmds = cmds;
   
-  push_view(cmds, {}, canvas_width, canvas_height, max_layers);
+  gfx_push_view(cmds, {}, canvas_width, canvas_height, max_layers);
 }
 
 static void
 advance_depth(Painter* p) {
-  advance_depth(p->cmds);
+  gfx_advance_depth(p->cmds);
 }
 
 static void
@@ -41,11 +41,11 @@ paint_sprite(Painter* p,
   Bitmap_Asset* bitmap = get_bitmap(p->ga, sprite->bitmap_id);
   V2 anchor = {0.5f, 0.5f}; 
   
-  push_sprite(p->cmds, 
-              color,
-              pos, size, anchor,
-              bitmap->renderer_texture_handle, 
-              sprite->texel_uv);
+  gfx_push_sprite(p->cmds, 
+                  color,
+                  pos, size, anchor,
+                  bitmap->renderer_texture_handle, 
+                  sprite->texel_uv);
 }
 
 
@@ -77,11 +77,11 @@ paint_text(Painter* p,
     V2 pos = { px + (glyph->box.min.x*font_height), py + (glyph->box.min.y*font_height)};
     V2 size = { width, height };
     V2 anchor = {0.f, 0.f}; // bottom left
-    push_sprite(p->cmds, 
-                color,
-                pos, size, anchor,
-                bitmap->renderer_texture_handle, 
-                glyph->texel_uv);
+    gfx_push_sprite(p->cmds, 
+                    color,
+                    pos, size, anchor,
+                    bitmap->renderer_texture_handle, 
+                    glyph->texel_uv);
   }
   
 }
@@ -93,10 +93,10 @@ paint_line(Painter* p,
            F32 thickness,
            RGBA color = {1.f,1.f,1.f,1.f})
 {
-  push_line(p->cmds, 
-            line, 
-            thickness, 
-            color); 
+  gfx_push_line(p->cmds, 
+                line, 
+                thickness, 
+                color); 
 }
 
 
@@ -107,11 +107,11 @@ paint_circle(Painter* p,
              U32 line_count,
              RGBA color) 
 {
-  push_circle(p->cmds, 
-              circle,
-              thickness,
-              line_count,
-              color);
+  gfx_push_circle(p->cmds, 
+                  circle,
+                  thickness,
+                  line_count,
+                  color);
 }
 
 static void
@@ -119,9 +119,9 @@ paint_triangle(Painter* p,
                RGBA colors,
                V2 p0, V2 p1, V2 p2) 
 {
-  push_triangle(p->cmds, 
-                colors,
-                p0, p1, p2);
+  gfx_push_triangle(p->cmds, 
+                    colors,
+                    p0, p1, p2);
 }
 
 #endif //GAME_PAINTER_H

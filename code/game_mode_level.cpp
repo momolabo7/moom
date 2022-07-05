@@ -52,7 +52,7 @@ init_level_mode(Game_Memory* memory,
   Game_State* game = memory->game;
   Level_Mode* m = &game->level_mode;
   Game_Assets* ga = &game->game_assets;
-  Renderer_Command_Queue* cmds = memory->renderer_command_queue;
+  Gfx_Command_Queue* cmds = memory->renderer_command_queue;
   Player* player = &m->player;
   
   al_clear(&m->sensors);
@@ -122,7 +122,7 @@ update_and_render_level_mode(Game_Memory* memory,
   Painter* painter = &game->painter;
   Level_Mode* m = &game->level_mode;
   Game_Assets* ga = &game->game_assets;
-  Renderer_Command_Queue* cmds = memory->renderer_command_queue;
+  Gfx_Command_Queue* cmds = memory->renderer_command_queue;
   Player* player = &m->player;
   F32 dt = input->seconds_since_last_frame;
   
@@ -339,7 +339,7 @@ update_and_render_level_mode(Game_Memory* memory,
     
   }
   
-  push_blend(cmds, BLEND_TYPE_ADD);
+  gfx_push_blend(cmds, BLEND_TYPE_ADD);
   
   al_foreach(light_index, &m->lights)
   {

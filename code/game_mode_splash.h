@@ -18,7 +18,7 @@ update_and_render_splash_mode(Game_Memory* memory,
 {
   Game_State* game = memory->game;
   Splash_Mode* splash = &game->splash_mode;
-  Renderer_Command_Queue* cmds = memory->renderer_command_queue;
+  Gfx_Command_Queue* cmds = memory->renderer_command_queue;
   Game_Assets* ga = &game->game_assets;
   Painter* p = &game->painter;
   

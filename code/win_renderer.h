@@ -12,18 +12,21 @@
 
 
 //~API for Win platform to use
-typedef Renderer* Win_Load_Renderer(HWND window, UMI command_queue_size, UMI texture_queue_size, Bump_Allocator* allocator);
+typedef Gfx* Win_Load_Renderer(HWND window, 
+                               UMI command_queue_size, 
+                               UMI texture_queue_size,
+                               Bump_Allocator* allocator);
 
 
 typedef void 
-Win_Unload_Renderer(Renderer* renderer);
+Win_Unload_Renderer(Gfx* renderer);
 
 typedef void
-Win_Begin_Renderer_Frame(Renderer* renderer, 
+Win_Begin_Renderer_Frame(Gfx* renderer, 
                          V2U render_wh, 
                          Rect2U render_region);
 typedef void 
-Win_End_Renderer_Frame(Renderer* renderer);
+Win_End_Renderer_Frame(Gfx* renderer);
 
 
 //~Function table

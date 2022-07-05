@@ -44,7 +44,7 @@ game_update_and_render(Game_Memory* memory,
   Game_State* game = memory->game;
   Console* dc = &game->console;
   Game_Assets* ga = &game->game_assets;
-  Renderer_Command_Queue* cmds = memory->renderer_command_queue;
+  Gfx_Command_Queue* cmds = memory->renderer_command_queue;
   Painter* p = &game->painter;
   Inspector* in = &game->inspector;
   

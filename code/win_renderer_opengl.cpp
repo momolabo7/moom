@@ -1,4 +1,4 @@
-// NOTE(Momo): Renderer code for Win w/ Openg
+// NOTE(Momo): Gfx code for Win w/ Openg
 
 
 #include "win_renderer.h"
@@ -171,11 +171,11 @@ win_load_wgl_extentions() {
 
 //~API implementation
 exported void
-win_unload_renderer(Renderer* r) {
+win_unload_renderer(Gfx* r) {
   // Unused?
 }
 
-exported Renderer*
+exported Gfx*
 win_load_renderer(HWND window, 
                   UMI command_queue_size,
                   UMI texture_queue_size, 
@@ -191,14 +191,14 @@ win_load_renderer(HWND window,
   Opengl* opengl = ba_push<Opengl>(allocator);
   
   // Allocate memory for render commands
-  init_command_queue(&opengl->command_queue, 
-                     ba_push_block(allocator, command_queue_size), 
-                     command_queue_size);
+  gfx_init_command_queue(&opengl->command_queue, 
+                         ba_push_block(allocator, command_queue_size), 
+                         command_queue_size);
   
   // Allocate memory for texture transfer queue
-  init_texture_queue(&opengl->texture_queue, 
-                     ba_push_block(allocator, texture_queue_size),
-                     texture_queue_size);
+  gfx_init_texture_queue(&opengl->texture_queue, 
+                         ba_push_block(allocator, texture_queue_size),
+                         texture_queue_size);
   
   
   if (!opengl) {
@@ -301,18 +301,18 @@ if (!opengl->name) { return nullptr; }
   }
 #endif
   
-  return (Renderer*)opengl;
+  return (Gfx*)opengl;
   
 }
 
 
 exported void
-win_begin_renderer_frame(Renderer* renderer,  V2U render_wh, Rect2U region) {
+win_begin_renderer_frame(Gfx* renderer,  V2U render_wh, Rect2U region) {
   return opengl_begin_frame((Opengl*)renderer, render_wh, region);
 }
 
 exported void
-win_end_renderer_frame(Renderer* renderer) {
+win_end_renderer_frame(Gfx* renderer) {
   opengl_end_frame((Opengl*)renderer);
   SwapBuffers(wglGetCurrentDC());
 }
