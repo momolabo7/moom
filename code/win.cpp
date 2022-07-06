@@ -575,7 +575,7 @@ win_close_file(Platform_File* file) {
 static void
 win_read_file(Platform_File* file, UMI size, UMI offset, void* dest) 
 { 
-  if (!is_ok(file)) return;
+  if (!pf_is_file_ok(file)) return;
   
   auto* win_file = (Win_File*)file->platform_data;
   
@@ -599,7 +599,7 @@ win_read_file(Platform_File* file, UMI size, UMI offset, void* dest)
 static void 
 win_write_file(Platform_File* file, UMI size, UMI offset, void* src)
 {
-  if (!is_ok(file)) return;
+  if (!pf_is_file_ok(file)) return;
   
   auto* win_file = (Win_File*)file->platform_data;
   
@@ -960,7 +960,7 @@ WinMain(HINSTANCE instance,
     
     //-Process messages and input
     input->seconds_since_last_frame = target_secs_per_frame;
-    update(input);
+    pf_update_input(input);
     win_process_input(window, input); 
     
     //- Mouse input 

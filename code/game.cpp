@@ -51,7 +51,6 @@ game_update_and_render(Game_Memory* memory,
   begin_painting(p, ga, cmds, 1600.f, 900.f);
   begin_inspector(in);
   
-  
   static U32 test_value = 32;
   add_inspector_entry(in, string_from_lit("Test"), &test_value);
   
@@ -85,7 +84,7 @@ game_update_and_render(Game_Memory* memory,
   
   
   //-Debug
-  if (is_poked(input->button_console)) {
+  if (pf_is_button_poked(input->button_console)) {
     game->show_debug_type = (Show_Debug_Type)((game->show_debug_type + 1)%SHOW_DEBUG_MAX);
   }
   
@@ -98,8 +97,9 @@ game_update_and_render(Game_Memory* memory,
     }break;
     case SHOW_DEBUG_INSPECTOR: {
       update_and_render_inspector(in, p);
-      
     }break;
   }
+  
   return is_done;
+  
 }

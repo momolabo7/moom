@@ -130,27 +130,27 @@ update_and_render_level_mode(Game_Memory* memory,
   {
     V2 direction = {};
     {
-      if (is_down(input->button_up)) {
+      if (pf_is_button_down(input->button_up)) {
         direction.y += 1.f;
       }
-      if (is_down(input->button_down)) {
+      if (pf_is_button_down(input->button_down)) {
         direction.y -= 1.f;
       }
-      if (is_down(input->button_right)) {
+      if (pf_is_button_down(input->button_right)) {
         direction.x += 1.f;
       }
-      if (is_down(input->button_left)) {
+      if (pf_is_button_down(input->button_left)) {
         direction.x -= 1.f;
       }
       
       // Held light controls
       if (player->held_light != nullptr) {
         const F32 speed = 5.f;
-        if (is_down(input->button_rotate_left)){ 
+        if (pf_is_button_down(input->button_rotate_left)){ 
           player->held_light->dir = 
             rotate(player->held_light->dir, speed * dt );
         }
-        if (is_down(input->button_rotate_right)){ 
+        if (pf_is_button_down(input->button_rotate_right)){ 
           player->held_light->dir = 
             rotate(player->held_light->dir, -speed * dt);
         }
@@ -161,7 +161,7 @@ update_and_render_level_mode(Game_Memory* memory,
     
     
     // Use button
-    if (is_poked(input->button_use)) {
+    if (pf_is_button_poked(input->button_use)) {
       if (player->held_light == nullptr) {
         F32 shortest_dist = 128.f; // limit
         Light* nearest_light = nullptr;
@@ -247,7 +247,6 @@ update_and_render_level_mode(Game_Memory* memory,
   
   advance_depth(painter);
   
-  
 #if 1
   // Draw the light rays
   if (player->held_light) {
@@ -291,9 +290,7 @@ update_and_render_level_mode(Game_Memory* memory,
     }
     advance_depth(painter);
   }
-  
 #endif
-  
   
   // Draw player
   paint_sprite(painter, 
@@ -336,10 +333,9 @@ update_and_render_level_mode(Game_Memory* memory,
                  light->pos,
                  {16, 16});
     advance_depth(painter);
-    
   }
   
-  gfx_push_blend(cmds, BLEND_TYPE_ADD);
+  gfx_push_blend(cmds, GFX_BLEND_TYPE_ADD);
   
   al_foreach(light_index, &m->lights)
   {

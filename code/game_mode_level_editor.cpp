@@ -143,7 +143,7 @@ update_editor_state_edit_edges(Editor* e,
                                Level_Mode* m, // list of points instead?
                                Game_Input* input)
 {
-  if (is_poked(input->button_editor0)) {
+  if (pf_is_button_poked(input->button_editor0)) {
     e->selected_pt_index = m->points.count;
     F32 shortest_dist = F32_INFINITY();
     al_foreach(pt_index, &m->points) {
@@ -158,7 +158,7 @@ update_editor_state_edit_edges(Editor* e,
       }
     }
   }
-  if (is_released(input->button_editor0)) {
+  if (pf_is_button_released(input->button_editor0)) {
     e->is_selecting_pt = false;
   }
   
@@ -171,7 +171,7 @@ static void
 update_editor_place_lights(Level_Mode* m,
                            Game_Input* input) 
 {
-  if (is_poked(input->button_editor0)) {
+  if (pf_is_button_poked(input->button_editor0)) {
     push_light(m, input->design_mouse_pos, 0x220000FF);
   }
 }
@@ -181,7 +181,7 @@ update_editor_place_edges(Editor* e,
                           Game_Input* input) 
 {
   
-  if(is_poked(input->button_editor0)) {
+  if(pf_is_button_poked(input->button_editor0)) {
     F32 shortest_dist = F32_INFINITY();
     al_foreach(vertex_index, &e->vertices) {
       V2 vertex = al_get_copy(&e->vertices, vertex_index);
@@ -220,7 +220,7 @@ update_editor_place_edges(Editor* e,
       al_clear(&e->vertices);
     }
     
-    if(is_poked(input->button_editor1)) {
+    if(pf_is_button_poked(input->button_editor1)) {
       if (!al_is_empty(&e->vertices)){
         al_pop(&e->vertices);
       }
@@ -231,7 +231,7 @@ update_editor_place_edges(Editor* e,
 static B32
 process_input_for_editor_toolbar(Editor* e, Game_Input* input) {
   //- Check if state buttons are clicked
-  if (is_poked(input->button_editor0)) {
+  if (pf_is_button_poked(input->button_editor0)) {
     foreach(btn_index, e->state_btns) {
       Editor_Toolbar_Button* btn = e->state_btns + btn_index;
       if (is_point_in_editor_toolbar_state_button(e, btn_index, input->design_mouse_pos)){
@@ -254,7 +254,7 @@ process_input_for_editor_toolbar(Editor* e, Game_Input* input) {
 
 static void 
 update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {
-  if (is_poked(input->button_editor_on)) {
+  if (pf_is_button_poked(input->button_editor_on)) {
     e->active = !e->active;
     clear_editor_state(e); // I know this will call 2x too much but idc
   }
@@ -290,7 +290,7 @@ update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {
   
   //-Toolbar Drag Logic
   if(e->toolbar_follow_mouse) {
-    if (is_released(input->button_editor0)) {
+    if (pf_is_button_released(input->button_editor0)) {
       e->toolbar_follow_mouse = false;
     }
     else {

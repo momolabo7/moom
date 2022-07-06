@@ -280,7 +280,7 @@ if (!opengl->name) { return nullptr; }
   }
 #undef WGL_SetOpenglFunction
   
-  if (!opengl_init(opengl)) {
+  if (!ogl_init(opengl)) {
     return nullptr;
   }
   
@@ -308,12 +308,12 @@ if (!opengl->name) { return nullptr; }
 
 exported void
 win_begin_renderer_frame(Gfx* renderer,  V2U render_wh, Rect2U region) {
-  return opengl_begin_frame((Opengl*)renderer, render_wh, region);
+  return ogl_begin_frame((Opengl*)renderer, render_wh, region);
 }
 
 exported void
 win_end_renderer_frame(Gfx* renderer) {
-  opengl_end_frame((Opengl*)renderer);
+  ogl_end_frame((Opengl*)renderer);
   SwapBuffers(wglGetCurrentDC());
 }
 

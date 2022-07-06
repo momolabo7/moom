@@ -33,9 +33,9 @@
 
 //-Texture Queue API
 enum Gfx_Texture_Payload_State {
-  TEXTURE_PAYLOAD_STATE_EMPTY,
-  TEXTURE_PAYLOAD_STATE_LOADING,
-  TEXTURE_PAYLOAD_STATE_READY,
+  GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
+  GFX_TEXTURE_PAYLOAD_STATE_LOADING,
+  GFX_TEXTURE_PAYLOAD_STATE_READY,
 };
 
 struct Gfx_Texture_Payload {
@@ -83,22 +83,21 @@ struct Gfx_Command_Queue {
 };
 
 enum Gfx_Blend_Type {
-  BLEND_TYPE_ADD,
-  BLEND_TYPE_ALPHA,
+  GFX_BLEND_TYPE_ADD,
+  GFX_BLEND_TYPE_ALPHA,
 };
 
 enum Gfx_Command_Type {
-  RENDER_COMMAND_TYPE_CLEAR,
-  RENDER_COMMAND_TYPE_TRIANGLE,
-  RENDER_COMMAND_TYPE_RECT,
-  RENDER_COMMAND_TYPE_LINE,
-  RENDER_COMMAND_TYPE_SPRITE,
-  RENDER_COMMAND_TYPE_DELETE_TEXTURE,
-  RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES,
-  RENDER_COMMAND_TYPE_BLEND,
-  RENDER_COMMAND_TYPE_VIEW,
-  RENDER_COMMAND_TYPE_ADVANCE_DEPTH,
-  
+  GFX_COMMAND_TYPE_CLEAR,
+  GFX_COMMAND_TYPE_TRIANGLE,
+  GFX_COMMAND_TYPE_RECT,
+  GFX_COMMAND_TYPE_LINE,
+  GFX_COMMAND_TYPE_SPRITE,
+  GFX_COMMAND_TYPE_DELETE_TEXTURE,
+  GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,
+  GFX_COMMAND_TYPE_BLEND,
+  GFX_COMMAND_TYPE_VIEW,
+  GFX_COMMAND_TYPE_ADVANCE_DEPTH,
 };
 
 
@@ -267,7 +266,7 @@ gfx_begin_texture_transfer(Gfx_Texture_Queue* q, U32 required_space) {
       ret->texture_data = q->transfer_memory + memory_at;
       ret->transfer_memory_start = memory_at;
       ret->transfer_memory_end = memory_at + required_space;
-      ret->state = TEXTURE_PAYLOAD_STATE_LOADING;
+      ret->state = GFX_TEXTURE_PAYLOAD_STATE_LOADING;
       
       q->transfer_memory_end = ret->transfer_memory_end;
     }
@@ -280,18 +279,18 @@ gfx_begin_texture_transfer(Gfx_Texture_Queue* q, U32 required_space) {
 
 static void
 gfx_complete_texture_transfer(Gfx_Texture_Payload* entry) {
-  entry->state = TEXTURE_PAYLOAD_STATE_READY;
+  entry->state = GFX_TEXTURE_PAYLOAD_STATE_READY;
 }
 
 static void
 gfx_cancel_texture_transfer(Gfx_Texture_Payload* entry) {
-  entry->state = TEXTURE_PAYLOAD_STATE_EMPTY;
+  entry->state = GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
 }
 
 
 static void 
 gfx_push_view(Gfx_Command_Queue* c, V2 pos, F32 width, F32 height, U32 layers) {
-  auto* data = _gfx_push_command<Gfx_Command_View>(c, RENDER_COMMAND_TYPE_VIEW);
+  auto* data = _gfx_push_command<Gfx_Command_View>(c, GFX_COMMAND_TYPE_VIEW);
   data->pos = pos;
   data->width = width;
   data->height = height;
@@ -299,7 +298,7 @@ gfx_push_view(Gfx_Command_Queue* c, V2 pos, F32 width, F32 height, U32 layers) {
 }
 static void
 gfx_push_colors(Gfx_Command_Queue* c, RGBA colors) {
-  auto* data = _gfx_push_command<Gfx_Command_Clear>(c, RENDER_COMMAND_TYPE_CLEAR);
+  auto* data = _gfx_push_command<Gfx_Command_Clear>(c, GFX_COMMAND_TYPE_CLEAR);
   data->colors = colors;
 }
 
@@ -312,7 +311,7 @@ gfx_push_sprite(Gfx_Command_Queue* c,
                 U32 texture_index,
                 Rect2U texel_uv)
 {
-  auto* data = _gfx_push_command<Gfx_Command_Sprite>(c, RENDER_COMMAND_TYPE_SPRITE);
+  auto* data = _gfx_push_command<Gfx_Command_Sprite>(c, GFX_COMMAND_TYPE_SPRITE);
   data->colors = colors;
   data->texture_index = texture_index;
   data->texel_uv = texel_uv;
@@ -326,7 +325,7 @@ gfx_push_rect(Gfx_Command_Queue* c,
               RGBA colors, 
               V2 pos, F32 rot, V2 size)
 {
-  auto* data = _gfx_push_command<Gfx_Command_Rect>(c, RENDER_COMMAND_TYPE_RECT);
+  auto* data = _gfx_push_command<Gfx_Command_Rect>(c, GFX_COMMAND_TYPE_RECT);
   
   data->colors = colors;
   data->pos = pos;
@@ -340,7 +339,7 @@ gfx_push_triangle(Gfx_Command_Queue* c,
                   RGBA colors,
                   V2 p0, V2 p1, V2 p2)
 {
-  auto* data = _gfx_push_command<Gfx_Command_Triangle>(c, RENDER_COMMAND_TYPE_TRIANGLE);
+  auto* data = _gfx_push_command<Gfx_Command_Triangle>(c, GFX_COMMAND_TYPE_TRIANGLE);
   data->colors = colors;
   data->p0 = p0;
   data->p1 = p1;
@@ -349,7 +348,7 @@ gfx_push_triangle(Gfx_Command_Queue* c,
 
 static void
 gfx_push_advance_depth(Gfx_Command_Queue* c) {
-  _gfx_push_command<Gfx_Command_Advance_Depth>(c, RENDER_COMMAND_TYPE_ADVANCE_DEPTH);
+  _gfx_push_command<Gfx_Command_Advance_Depth>(c, GFX_COMMAND_TYPE_ADVANCE_DEPTH);
 }
 
 static void 
@@ -474,25 +473,25 @@ gfx_push_aabb(Gfx_Command_Queue* c,
 
 static void 
 gfx_push_delete_all_textures(Gfx_Command_Queue* c) {
-  _gfx_push_command<Gfx_Command_Delete_All_Textures>(c, RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES);
+  _gfx_push_command<Gfx_Command_Delete_All_Textures>(c, GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES);
 }
 
 static void 
 gfx_push_delete_texture(Gfx_Command_Queue* c, U32 texture_index) {
-  auto* data= _gfx_push_command<Gfx_Command_Delete_Texture>(c, RENDER_COMMAND_TYPE_DELETE_TEXTURE);
+  auto* data= _gfx_push_command<Gfx_Command_Delete_Texture>(c, GFX_COMMAND_TYPE_DELETE_TEXTURE);
   data->texture_index = texture_index;
   
 }
 
 static void 
 gfx_push_blend(Gfx_Command_Queue* c, Gfx_Blend_Type blend_type) {
-  auto* data= _gfx_push_command<Gfx_Command_Blend>(c, RENDER_COMMAND_TYPE_BLEND);
+  auto* data= _gfx_push_command<Gfx_Command_Blend>(c, GFX_COMMAND_TYPE_BLEND);
   data->type = blend_type;
 }
 
 static void
 gfx_advance_depth(Gfx_Command_Queue* c) {
-  _gfx_push_command<Gfx_Command_Advance_Depth>(c, RENDER_COMMAND_TYPE_ADVANCE_DEPTH);
+  _gfx_push_command<Gfx_Command_Advance_Depth>(c, GFX_COMMAND_TYPE_ADVANCE_DEPTH);
 }
 
 

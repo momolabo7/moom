@@ -1,5 +1,3 @@
-
-
 static void
 _ogl_flush_sprites(Opengl* ogl) {
   Sprite_Batcher* sb = &ogl->sprite_batcher;
@@ -102,9 +100,9 @@ _ogl_attach_shader(Opengl* ogl,
 }
 
 static void 
-align_viewport(Opengl* ogl, 
-               V2U render_wh, 
-               Rect2U region) 
+_ogl_align_viewport(Opengl* ogl, 
+                    V2U render_wh, 
+                    Rect2U region) 
 {
   
   U32 x, y, w, h;
@@ -122,11 +120,11 @@ align_viewport(Opengl* ogl,
 }
 
 static void
-set_texture(Opengl* ogl,
-            UMI index,
-            U32 width,
-            U32 height,
-            U8* pixels) 
+_ogl_set_texture(Opengl* ogl,
+                 UMI index,
+                 U32 width,
+                 U32 height,
+                 U8* pixels) 
 {
   
   assert(index < array_count(ogl->textures));
@@ -158,7 +156,7 @@ set_texture(Opengl* ogl,
 }
 
 static void 
-delete_texture(Opengl* ogl, UMI texture_index) {
+_ogl_delete_texture(Opengl* ogl, UMI texture_index) {
   assert(texture_index < array_count(ogl->textures));
   Texture* texture = ogl->textures + texture_index;
   ogl->glDeleteTextures(1, &texture->handle);
@@ -166,16 +164,16 @@ delete_texture(Opengl* ogl, UMI texture_index) {
 }
 
 static void
-delete_all_textures(Opengl* ogl) {
+_ogl_delete_all_textures(Opengl* ogl) {
   for (UMI i = 0; i < array_count(ogl->textures); ++i ){
     if (ogl->textures[i].handle != 0) {
-      delete_texture(ogl, i);
+      _ogl_delete_texture(ogl, i);
     }
   }
 }
 
 void 
-add_predefined_textures(Opengl* ogl) {
+_ogl_add_predefined_textures(Opengl* ogl) {
   // NOTE(Momo): Dummy texture setup
   {
     U8 pixels[4][4] {
@@ -226,7 +224,7 @@ add_predefined_textures(Opengl* ogl) {
 }
 
 static B32
-init_triangle_batcher(Opengl* ogl) {
+_ogl_init_triangle_batcher(Opengl* ogl) {
   Triangle_Batcher* tb = &ogl->triangle_batcher;
   
   // Triangle model
@@ -303,7 +301,7 @@ void main(void)
 }
 
 static B32 
-init_sprite_batcher(Opengl* ogl) {
+_ogl_init_sprite_batcher(Opengl* ogl) {
   Sprite_Batcher* sb = &ogl->sprite_batcher;
   
   const char* vertex_shader = R"###(
@@ -336,7 +334,6 @@ void main(void) {
    fragColor = texture(uTexture, mTexCoord) * mColor; 
 })###";
   
-  
   const F32 sprite_model[] = {
     -0.5f, -0.5f, 0.0f,  // bottom left
     0.5f, -0.5f, 0.0f,  // bottom right
@@ -348,7 +345,6 @@ void main(void) {
     0, 1, 2,
     0, 2, 3,
   };
-  
   
   // NOTE(Momo): Setup VBO
   ogl->glCreateBuffers(VERTEX_BUFFER_TYPE_COUNT, sb->buffers);
@@ -376,7 +372,6 @@ void main(void) {
                             sizeof(M44) * OPENGL_MAX_SPRITES, 
                             nullptr, 
                             GL_DYNAMIC_STORAGE_BIT);
-  
   
   // NOTE(Momo): Setup VAO
   ogl->glCreateVertexArrays(1, &sb->model);
@@ -565,33 +560,34 @@ void main(void) {
 
 
 static B32
-opengl_init(Opengl* ogl)
+ogl_init(Opengl* ogl)
 {	
   
   ogl->glEnable(GL_DEPTH_TEST);
   ogl->glEnable(GL_SCISSOR_TEST);
   
-  if (!init_sprite_batcher(ogl)) return false;
-  if (!init_triangle_batcher(ogl)) return false;
-  add_predefined_textures(ogl);
-  delete_all_textures(ogl);
+  if (!_ogl_init_sprite_batcher(ogl)) return false;
+  if (!_ogl_init_triangle_batcher(ogl)) return false;
+  _ogl_add_predefined_textures(ogl);
+  _ogl_delete_all_textures(ogl);
+  
   return true;
 }
 
 static void 
 _ogl_set_blend_mode(Opengl* ogl, Gfx_Blend_Type type) {
   switch(type) {
-    case BLEND_TYPE_ADD: {
+    case GFX_BLEND_TYPE_ADD: {
       ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
     } break;
-    case BLEND_TYPE_ALPHA: {
+    case GFX_BLEND_TYPE_ALPHA: {
       ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     } break;
   }
 }
 
 static void
-process_texture_queue(Opengl* ogl) {
+_ogl_process_texture_queue(Opengl* ogl) {
   // NOTE(Momo): In this algorithm of processing the texture queue,
   // it is entirely possible that if the first payload in the queue
   // is loading forever, the rest of the payloads will never be processed.
@@ -603,23 +599,23 @@ process_texture_queue(Opengl* ogl) {
     
     B32 stop_loop = false;
     switch(payload->state) {
-      case TEXTURE_PAYLOAD_STATE_LOADING: {
+      case GFX_TEXTURE_PAYLOAD_STATE_LOADING: {
         stop_loop = true;
       } break;
-      case TEXTURE_PAYLOAD_STATE_READY: {
+      case GFX_TEXTURE_PAYLOAD_STATE_READY: {
         assert(payload->texture_width < (U32)S32_MAX);
         assert(payload->texture_height < (U32)S32_MAX);
         assert(payload->texture_width > 0);
         assert(payload->texture_height > 0);
         
-        set_texture(ogl, 
-                    payload->texture_index, 
-                    (S32)payload->texture_width, 
-                    (S32)payload->texture_height, 
-                    (U8*)payload->texture_data);
+        _ogl_set_texture(ogl, 
+                         payload->texture_index, 
+                         (S32)payload->texture_width, 
+                         (S32)payload->texture_height, 
+                         (U8*)payload->texture_data);
         
       } break;
-      case TEXTURE_PAYLOAD_STATE_EMPTY: {
+      case GFX_TEXTURE_PAYLOAD_STATE_EMPTY: {
         // Possibly 'cancelled'. i.e. Do nothing either way?
       } break;
       default: {
@@ -641,7 +637,7 @@ process_texture_queue(Opengl* ogl) {
 }
 
 static void
-opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) 
+ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) 
 {
   Gfx_Command_Queue* cmds = &ogl->command_queue;
   gfx_clear_commands(cmds);  
@@ -652,19 +648,18 @@ opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region)
 
 // Only call opengl functions when we end frame
 static void
-opengl_end_frame(Opengl* ogl) {
+ogl_end_frame(Opengl* ogl) {
   Gfx_Command_Queue* cmds = &ogl->command_queue;
   
-  align_viewport(ogl, cmds->platform_render_wh, cmds->platform_render_region);
-  process_texture_queue(ogl);
-  
+  _ogl_align_viewport(ogl, cmds->platform_render_wh, cmds->platform_render_region);
+  _ogl_process_texture_queue(ogl);
   
   _ogl_begin_sprites(ogl);
   
   for (U32 cmd_index = 0; cmd_index < cmds->entry_count; ++cmd_index) {
     Gfx_Command* entry = gfx_get_command(cmds, cmd_index);
     switch(entry->id) {
-      case RENDER_COMMAND_TYPE_VIEW: {
+      case GFX_COMMAND_TYPE_VIEW: {
         _ogl_flush_sprites(ogl);
         
         auto* data = (Gfx_Command_View*)entry->data;
@@ -701,7 +696,7 @@ opengl_end_frame(Opengl* ogl) {
         }
         
       } break;
-      case RENDER_COMMAND_TYPE_CLEAR: {
+      case GFX_COMMAND_TYPE_CLEAR: {
         auto* data = (Gfx_Command_Clear*)entry->data;
         
         ogl->glClearColor(data->colors.r, 
@@ -712,7 +707,7 @@ opengl_end_frame(Opengl* ogl) {
         
       } break;
       
-      case RENDER_COMMAND_TYPE_TRIANGLE: {
+      case GFX_COMMAND_TYPE_TRIANGLE: {
         _ogl_flush_sprites(ogl);
         
         auto* data = (Gfx_Command_Triangle*)entry->data;
@@ -786,7 +781,7 @@ opengl_end_frame(Opengl* ogl) {
         ogl->glDrawArrays(GL_TRIANGLES, 0, 3);
         
       } break;
-      case RENDER_COMMAND_TYPE_RECT: {
+      case GFX_COMMAND_TYPE_RECT: {
         Rect2 uv = {
           { 0.f, 0.f },
           { 1.f, 1.f },
@@ -804,7 +799,7 @@ opengl_end_frame(Opengl* ogl) {
                          ogl->blank_texture.handle);
       } break;
       
-      case RENDER_COMMAND_TYPE_SPRITE: {
+      case GFX_COMMAND_TYPE_SPRITE: {
         auto* data = (Gfx_Command_Sprite*)entry->data;
         assert(array_count(ogl->textures) > data->texture_index);
         
@@ -836,25 +831,23 @@ opengl_end_frame(Opengl* ogl) {
                          texture->handle);
         
       } break;
-      case RENDER_COMMAND_TYPE_BLEND: {
+      case GFX_COMMAND_TYPE_BLEND: {
         _ogl_flush_sprites(ogl);
         auto* data = (Gfx_Command_Blend*)entry->data;
         _ogl_set_blend_mode(ogl, data->type);
       } break;
-      case RENDER_COMMAND_TYPE_DELETE_TEXTURE: {
+      case GFX_COMMAND_TYPE_DELETE_TEXTURE: {
         auto* data = (Gfx_Command_Delete_Texture*)entry->data;
-        delete_texture(ogl, data->texture_index);
+        _ogl_delete_texture(ogl, data->texture_index);
       } break;
-      case RENDER_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
-        delete_all_textures(ogl);
+      case GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
+        _ogl_delete_all_textures(ogl);
       } break;
-      case RENDER_COMMAND_TYPE_ADVANCE_DEPTH: {
+      case GFX_COMMAND_TYPE_ADVANCE_DEPTH: {
         ogl->current_layer -= 1.f;
       } break;
-      
     }
   }
-  
   _ogl_end_sprites(ogl);
 }
 

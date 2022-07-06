@@ -83,11 +83,6 @@ struct Game_Input_Button {
   B32 now; 
 };
 
-static B32 is_poked(Game_Input_Button) ;
-static B32 is_released(Game_Input_Button);
-static B32 is_down(Game_Input_Button);
-static B32 is_held(Game_Input_Button);
-
 struct Game_Input {
   union {
     struct {
@@ -126,7 +121,11 @@ struct Game_Input {
 #endif
 };
 
-void update(Game_Input_Button button);
+static B32 pf_is_button_poked(Game_Input_Button) ;
+static B32 pf_is_button_released(Game_Input_Button);
+static B32 pf_is_button_down(Game_Input_Button);
+static B32 pf_is_button_held(Game_Input_Button);
+static void pf_update_input(Game_Input_Button button);
 
 
 //~ NOTE(Momo): Game API
@@ -140,7 +139,6 @@ struct Game_Memory {
   Gfx_Texture_Queue* renderer_texture_queue;
   Gfx_Command_Queue* renderer_command_queue;
   Profiler* profiler; 
-  
   
   struct Game_State* game; // do not touch!
 };
@@ -160,7 +158,44 @@ static const char* game_function_names[] {
   "game_update_and_render",
 };
 
+/////////////////////////////////////////////////////////////
+// Implementation
+static B32
+pf_is_file_ok(Platform_File* file) {
+  return file->platform_data && !file->error;
+}
 
-#include "game_platform.cpp"
+static void 
+pf_update_input(Game_Input* input) {
+  for (U32 i = 0; i < array_count(input->buttons); ++i) {
+    input->buttons[i].before = input->buttons[i].now;
+  }
+  input->char_count = 0;
+}
+
+// before: 0, now: 1
+static B32 
+pf_is_button_poked(Game_Input_Button btn) {
+  return !btn.before && btn.now;
+}
+
+// before: 1, now: 0
+static B32
+pf_is_button_released(Game_Input_Button btn) {
+  return btn.before && !btn.now;
+}
+
+
+// before: X, now: 1
+static B32
+pf_is_button_down(Game_Input_Button btn){
+  return btn.now;
+}
+
+// before: 1, now: 1
+static B32
+pf_is_button_held(Game_Input_Button btn) {
+  return btn.before && btn.now;
+}
 
 #endif //GAME_PLATFORM_H
