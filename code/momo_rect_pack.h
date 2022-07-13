@@ -4,6 +4,8 @@
 #define MOMO_RECT_PACK_H
 
 #include "momo_common.h"
+#include "momo_sort.h"
+#include "momo_memory.h"
 
 enum RP_Sort_Type {
   RP_SORT_TYPE_WIDTH,

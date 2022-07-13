@@ -12,11 +12,12 @@
 // - 
 // 
 
-#include "momo_common.h"
 
 #ifndef MOMO_VECTOR_H
 #define MOMO_VECTOR_H
 
+
+#include "momo_common.h"
 
 union V2U {
 	struct { U32 x, y; };
@@ -114,7 +115,7 @@ static V3& operator*=(V3& lhs, V3 rhs);
 
 ////////////////////////////////////////////////////////
 // IMPLEMENTATION
-//~ NOTE(Momo): V2
+// NOTE(Momo): V2
 static V2 
 add(V2 lhs, V2 rhs) {
 	lhs.x += rhs.x;

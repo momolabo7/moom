@@ -1,7 +1,13 @@
-/* date = April 9th 2022 8:27 pm */
 
 #ifndef GAME_CONSOLE_H
 #define GAME_CONSOLE_H
+
+#include "momo_common.h"
+#include "momo_strings.h"
+#include "momo_memory.h"
+#include "momo_vectors.h"
+
+#include "game_painter.h"
 
 struct Console_Command {
   String key;
@@ -117,7 +123,8 @@ update_and_render_console(Console* dc, Game_Input* input, Painter* p) {
   // but we'll work with this for now
   static const F32 console_width = 1600.f;
   static const F32 console_height = 400.f;
-  static const F32 line_height = console_height/(array_count(dc->info_lines)+1);
+  static const U32 line_count = array_count(dc->info_lines)+1;
+  static const F32 line_height = console_height/line_count;
   static const F32 font_height = line_height * 0.8f;
   static const F32 font_bottom_pad = (line_height - font_height);
   static const F32 left_pad = 10.f;

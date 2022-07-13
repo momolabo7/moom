@@ -2,6 +2,7 @@
 #define MOMO_SHAPES_H
 
 #include "momo_common.h"
+#include "momo_vectors.h"
 
 struct Rect2 {
   V2 min, max;

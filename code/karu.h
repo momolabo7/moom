@@ -1,13 +1,16 @@
 #ifndef KARU_H
 #define KARU_H
 
+#include "momo_common.h"
+#include "momo_shapes.h"
+
 /////////////////////////////////////////////////////////////
 // Sui file related
+
+#define KARU_CODE(a, b, c, d) (((U32)(a) << 0) | ((U32)(b) << 8) | ((U32)(c) << 16) | ((U32)(d) << 24))
+#define KARU_SIGNATURE KARU_CODE('k', 'a', 'r', 'u')
+
 #pragma pack(push,1)
-
-#define _KARU_CODE(a, b, c, d) (((U32)(a) << 0) | ((U32)(b) << 8) | ((U32)(c) << 16) | ((U32)(d) << 24))
-#define KARU_SIGNATURE _KARU_CODE('k', 'a', 'r', 'u')
-
 
 struct Karu_Asset_Group {
   U32 first_asset_index;
@@ -62,7 +65,6 @@ struct Karu_Bitmap {
   // U32 pixels[width*height]
   //
 };
-
 
 #pragma pack(pop)
 

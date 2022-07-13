@@ -3,6 +3,8 @@
 #ifndef GAME_INSPECTOR_H
 #define GAME_INSPECTOR_H
 
+#include "momo_lists.h"
+#include "momo_strings.h"
 
 enum Inspector_Entry_Type {
   INSPECTOR_ENTRY_TYPE_F32,
@@ -19,6 +21,10 @@ struct Inspector {
   Array_List<Inspector_Entry> entries;
 };
 
+
+/////////////////////////////////////////////////////////////
+// IMPLEMENTATION
+//
 static void 
 begin_inspector(Inspector* in) {
   al_clear(&in->entries);

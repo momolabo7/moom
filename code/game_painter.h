@@ -3,7 +3,8 @@
 #ifndef GAME_PAINTER_H
 #define GAME_PAINTER_H
 
-
+#include "game_assets.h"
+#include "game_renderer.h"
 
 struct Painter {
   Game_Assets* ga;

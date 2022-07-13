@@ -30,6 +30,9 @@
 #ifndef GAME_RENDERER_H
 #define GAME_RENDERER_H
 
+#include "momo_common.h"
+#include "momo_shapes.h" 
+#include "momo_colors.h"
 
 //-Texture Queue API
 enum Gfx_Texture_Payload_State {
@@ -221,7 +224,6 @@ template<typename T> static T*
 _gfx_push_command(Gfx_Command_Queue* q, U32 id, U32 align = 4) {
   return (T*)_gfx_push_command_block(q, sizeof(T), id, align);
 }
-
 
 
 static Gfx_Texture_Payload*

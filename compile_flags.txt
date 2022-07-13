@@ -1,0 +1,15 @@
+-xc++
+/DINTERNAL=1
+/EHa
+/MT 
+/WX /W4 
+/wd4116 
+/wd4189 
+/wd4702 
+/wd4201 
+/wd4505 
+/wd4996 
+/wd4100 
+/Zi 
+/GR 
+/std:c++17

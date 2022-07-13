@@ -79,6 +79,7 @@ game_update_and_render(Game_Memory* memory,
       case GAME_MODE_LEVEL: {
         update_and_render_level_mode(memory, input);
       } break;
+      default:{}
     }
   }
   
@@ -98,6 +99,7 @@ game_update_and_render(Game_Memory* memory,
     case SHOW_DEBUG_INSPECTOR: {
       update_and_render_inspector(in, p);
     }break;
+    default: {}
   }
   
   return is_done;

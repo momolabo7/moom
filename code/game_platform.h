@@ -4,6 +4,10 @@
 #ifndef GAME_PLATFORM_H
 #define GAME_PLATFORM_H
 
+#include "momo_common.h"
+#include "momo_vectors.h"
+
+
 const F32 game_width = 1600.f;
 const F32 game_height = 900.f;
 const V2 game_wh = V2{game_width, game_height};
@@ -133,6 +137,7 @@ static void pf_update_input(Game_Input_Button button);
 struct Gfx_Texture_Queue;
 struct Gfx_Command_Queue;
 struct Profiler;
+struct Bump_Allocator;
 struct Game_Memory {
   Bump_Allocator* game_arena; // Require 32MB
   Platform_API platform_api;

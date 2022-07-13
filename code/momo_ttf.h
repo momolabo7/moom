@@ -24,6 +24,11 @@
 
 #include "momo_common.h"
 #include "momo_memory.h"
+#include "momo_image.h"
+#include "momo_shapes.h"
+#include "momo_vectors.h"
+#include "momo_lists.h"
+
 
 
 struct TTF {

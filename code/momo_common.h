@@ -104,10 +104,14 @@
 #endif
 
 //////////////////////////////////////////
-//~Compile options
+//~Default Compile options
 #if !defined(ENABLE_ASSERT)
 #define ENABLE_ASSERT 1
 #endif // ENABLE_ASSERT
+      
+#if !defined(INTERNAL)
+#define INTERNAL 0
+#endif // INTERNAL
 
 //////////////////////////////////////////
 //~Basic types

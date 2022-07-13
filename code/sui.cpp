@@ -1,6 +1,9 @@
 // This is the asset builder tool
 //
 #include "sui.h"
+#include "sui_atlas.h"
+#include "sui_pack.h"
+#include "karu.h"
 
 int main() {
   Memory memory = sui_malloc(MB(100));
