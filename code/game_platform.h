@@ -145,7 +145,7 @@ struct Game_Memory {
   Gfx_Command_Queue* renderer_command_queue;
   Profiler* profiler; 
   
-  struct Game_State* game; // do not touch!
+  struct Game* game; // do not touch!
 };
 
 typedef void Game_Update_And_Render(Game_Memory* memory,

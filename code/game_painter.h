@@ -3,6 +3,7 @@
 #ifndef GAME_PAINTER_H
 #define GAME_PAINTER_H
 
+#include "momo_strings.h"
 #include "game_assets.h"
 #include "game_renderer.h"
 
@@ -125,4 +126,8 @@ paint_triangle(Painter* p,
                     p0, p1, p2);
 }
 
+static void
+set_blend(Painter* p, Gfx_Blend_Type type) {
+  gfx_push_blend(p->cmds, type);
+}
 #endif //GAME_PAINTER_H

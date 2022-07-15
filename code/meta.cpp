@@ -263,8 +263,7 @@ meta_update_profiler_codegen(Profiler_Codegen* p, Meta_Tokenizer* t, Meta_Token 
         p->state = 0;
         ++p->units;
       }
-    }; 
-    
+    } 
   }
 }
 
@@ -273,7 +272,7 @@ int main() {
   declare_and_pointerize(Meta_Tokenizer, t);
   if (!meta_tokenizer_init(t, "meta_test.cpp")){
     printf("Cannot open file\n");
-    return ;
+    return 1;
   }
   defer { meta_tokenizer_free(t); };
   

@@ -17,7 +17,7 @@ struct Edge{
 
 
 #include "game_mode_level_light.h"
-#include "game_mode_level_editor.h"
+//#include "game_mode_level_editor.h"
 
 #define LIGHT_RED   1 << 0
 #define LIGHT_GREEN 1 << 1

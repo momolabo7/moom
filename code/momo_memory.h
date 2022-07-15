@@ -30,6 +30,7 @@ static void*           ba_push_block(Bump_Allocator* a, UMI size, UMI align = 4)
 static Bump_Allocator  ba_partition(Bump_Allocator* a, UMI size);
 static UMI             ba_remaining(Bump_Allocator* a);
 
+//TODO:  Remove template for compatibility with C?
 template<typename T> static T* ba_push(Bump_Allocator* a, UMI align = 4); 
 template<typename T> static T* ba_push_array(Bump_Allocator* a, UMI num, UMI align = 4);
 

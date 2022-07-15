@@ -96,7 +96,7 @@ rbg_to_hsl(RGB c) {
   
   if (is_close(max, c.r)) {
     F32 segment = (c.g - c.b)/delta;
-    F32 shift = 0 / 60;
+    F32 shift = 0.f / 60;
     if (segment < 0) {
       shift = 360 / 60;
     }
