@@ -1,13 +1,16 @@
 // This file and GFX.h contain structs that need to be 
 // initialized by the OS and passed to the main Game_Update() 
 // function. 
+// 
+// NOTE(Momo): This should probably be in pure C?
+//
 #ifndef GAME_PLATFORM_H
 #define GAME_PLATFORM_H
 
 #include "momo_common.h"
 #include "momo_vectors.h"
 
-
+// TODO: This should be in a function give by game I think
 const F32 game_width = 1600.f;
 const F32 game_height = 900.f;
 const V2 game_wh = V2{game_width, game_height};
@@ -32,6 +35,7 @@ struct Platform_File {
   B32 error;
   void* platform_data; // pointer for platform's usage
 };
+
 typedef Platform_File  
 Platform_Open_File(const char* filename,
                    Platform_File_Access file_access,
@@ -73,8 +77,9 @@ struct Platform_API {
   Platform_Get_Performance_Counter* get_performance_counter;
   Platform_Debug_Log* debug_log;
 };
-extern Platform_API g_platform;
 
+// TODO(Momo): Remove this?
+extern Platform_API g_platform;
 
 //~Input API
 // NOTE(Momo): Game_Input is not just 'controllers'.
@@ -129,11 +134,72 @@ static B32 pf_is_button_poked(Game_Input_Button) ;
 static B32 pf_is_button_released(Game_Input_Button);
 static B32 pf_is_button_down(Game_Input_Button);
 static B32 pf_is_button_held(Game_Input_Button);
-static void pf_update_input(Game_Input_Button button);
+static void pf_update_input(Game_Input_Button);
 
 
-//~ NOTE(Momo): Game API
+//~ NOTE(Momo): Game Memory API
 // For things that don't change from the platform after setting it once
+//~ Audio API
+struct Platform_Audio {
+    S16* sample_buffer;
+    U32 sample_count;
+    U32 channels;
+};
+
+
+#if PLATFORM_V2
+struct Platform_Button {
+  B32 before;
+  B32 now; 
+};
+
+struct Platform {
+  Bump_Allocator* game_arena; // Require 32MB
+  Platform_API platform_api;
+  Gfx_Texture_Queue* renderer_texture_queue;
+  Gfx_Command_Queue* renderer_command_queue;
+  Profiler* profiler; 
+  Platform_Audio* audio;
+
+  union {
+    struct {
+      Platform_Button button_up;
+      Platform_Button button_down;
+      Platform_Button button_left;
+      Platform_Button button_right;
+      Platform_Button button_console;
+      
+      Platform_Button button_rotate_left;
+      Platform_Button button_rotate_right;
+      
+      Platform_Button button_use;
+      
+      Platform_Button button_editor_on;
+      Platform_Button button_editor0;
+      Platform_Button button_editor1;
+      Platform_Button button_editor2;
+      Platform_Button button_editor3;
+      
+    };  
+    Platform_Button buttons[13];
+  };
+  
+  V2 design_mouse_pos;
+  V2U screen_mouse_pos;
+  V2U render_mouse_pos;
+  
+  F32 seconds_since_last_frame; //aka dt
+  
+  U8 chars[32];
+  U32 char_count;
+  
+  B32 reloaded;
+
+  void* game;
+};
+#endif // PLATFORM_V2
+
+
 struct Gfx_Texture_Queue;
 struct Gfx_Command_Queue;
 struct Profiler;
@@ -144,10 +210,11 @@ struct Game_Memory {
   Gfx_Texture_Queue* renderer_texture_queue;
   Gfx_Command_Queue* renderer_command_queue;
   Profiler* profiler; 
-  
-  struct Game* game; // do not touch!
-};
+  Platform_Audio* audio;
 
+  struct Game* game; // for game to use;
+
+};
 typedef void Game_Update_And_Render(Game_Memory* memory,
                                     Game_Input* input);
 
@@ -159,7 +226,7 @@ struct Game_Functions {
   Game_Update_And_Render* update_and_render;
 };
 
-static const char* game_function_names[] {
+static constexpr const char* game_function_names[] {
   "game_update_and_render",
 };
 
