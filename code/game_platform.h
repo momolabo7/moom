@@ -87,56 +87,6 @@ extern Platform_API g_platform;
 // so hence it's name and also why delta time is in there
 
 
-struct Game_Input_Button {
-  B32 before;
-  B32 now; 
-};
-
-struct Game_Input {
-  union {
-    struct {
-      Game_Input_Button button_up;
-      Game_Input_Button button_down;
-      Game_Input_Button button_left;
-      Game_Input_Button button_right;
-      Game_Input_Button button_console;
-      
-      Game_Input_Button button_rotate_left;
-      Game_Input_Button button_rotate_right;
-      
-      Game_Input_Button button_use;
-      
-      Game_Input_Button button_editor_on;
-      Game_Input_Button button_editor0;
-      Game_Input_Button button_editor1;
-      Game_Input_Button button_editor2;
-      Game_Input_Button button_editor3;
-      
-    };  
-    Game_Input_Button buttons[13];
-  };
-  
-  V2 design_mouse_pos;
-  V2U screen_mouse_pos;
-  V2U render_mouse_pos;
-  
-  F32 seconds_since_last_frame; //aka dt
-  
-  U8 chars[32];
-  U32 char_count;
-  
-#if INTERNAL
-  B32 reloaded;
-#endif
-};
-
-static B32 pf_is_button_poked(Game_Input_Button) ;
-static B32 pf_is_button_released(Game_Input_Button);
-static B32 pf_is_button_down(Game_Input_Button);
-static B32 pf_is_button_held(Game_Input_Button);
-static void pf_update_input(Game_Input_Button);
-
-
 //~ NOTE(Momo): Game Memory API
 // For things that don't change from the platform after setting it once
 //~ Audio API
@@ -147,12 +97,15 @@ struct Platform_Audio {
 };
 
 
-#if PLATFORM_V2
 struct Platform_Button {
   B32 before;
   B32 now; 
 };
 
+struct Gfx_Texture_Queue;
+struct Gfx_Command_Queue;
+struct Profiler;
+struct Bump_Allocator;
 struct Platform {
   Bump_Allocator* game_arena; // Require 32MB
   Platform_API platform_api;
@@ -195,31 +148,13 @@ struct Platform {
   
   B32 reloaded;
 
+  // For game to use
   void* game;
 };
-#endif // PLATFORM_V2
 
+typedef void Game_Update_And_Render(Platform* pf);
 
-struct Gfx_Texture_Queue;
-struct Gfx_Command_Queue;
-struct Profiler;
-struct Bump_Allocator;
-struct Game_Memory {
-  Bump_Allocator* game_arena; // Require 32MB
-  Platform_API platform_api;
-  Gfx_Texture_Queue* renderer_texture_queue;
-  Gfx_Command_Queue* renderer_command_queue;
-  Profiler* profiler; 
-  Platform_Audio* audio;
-
-  struct Game* game; // for game to use;
-
-};
-typedef void Game_Update_And_Render(Game_Memory* memory,
-                                    Game_Input* input);
-
-typedef void Game_Debug_Update_And_Render(Game_Memory* memory,
-                                          Game_Input* input);
+typedef void Game_Debug_Update_And_Render(Platform* pf);
 
 // To be called by platform
 struct Game_Functions {
@@ -230,6 +165,13 @@ static constexpr const char* game_function_names[] {
   "game_update_and_render",
 };
 
+static B32 pf_is_button_poked(Platform_Button) ;
+static B32 pf_is_button_released(Platform_Button);
+static B32 pf_is_button_down(Platform_Button);
+static B32 pf_is_button_held(Platform_Button);
+static void pf_update_input(Platform_Button);
+
+
 /////////////////////////////////////////////////////////////
 // Implementation
 static B32
@@ -238,35 +180,35 @@ pf_is_file_ok(Platform_File* file) {
 }
 
 static void 
-pf_update_input(Game_Input* input) {
-  for (U32 i = 0; i < array_count(input->buttons); ++i) {
-    input->buttons[i].before = input->buttons[i].now;
+pf_update_input(Platform* pf) {
+  for (U32 i = 0; i < array_count(pf->buttons); ++i) {
+    pf->buttons[i].before = pf->buttons[i].now;
   }
-  input->char_count = 0;
+  pf->char_count = 0;
 }
 
 // before: 0, now: 1
 static B32 
-pf_is_button_poked(Game_Input_Button btn) {
+pf_is_button_poked(Platform_Button btn) {
   return !btn.before && btn.now;
 }
 
 // before: 1, now: 0
 static B32
-pf_is_button_released(Game_Input_Button btn) {
+pf_is_button_released(Platform_Button btn) {
   return btn.before && !btn.now;
 }
 
 
 // before: X, now: 1
 static B32
-pf_is_button_down(Game_Input_Button btn){
+pf_is_button_down(Platform_Button btn){
   return btn.now;
 }
 
 // before: 1, now: 1
 static B32
-pf_is_button_held(Game_Input_Button btn) {
+pf_is_button_held(Platform_Button btn) {
   return btn.before && btn.now;
 }
 
