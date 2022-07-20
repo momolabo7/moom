@@ -36,7 +36,7 @@ enum Game_Show_Debug_Type {
 
 // Main game structure
 typedef void Game_Mode_Init(struct Game*);
-typedef void Game_Mode_Update(struct Game*, Game_Input*, Painter*);
+typedef void Game_Mode_Update(struct Game*, Painter*, Platform*);
 
 struct Game {
   Game_Show_Debug_Type show_debug_type;

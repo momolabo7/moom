@@ -21,12 +21,12 @@ splash_init(Game* game)
 
 static void 
 splash_tick(Game* game,
-            Game_Input* input,
-            Painter* painter) 
+            Painter* painter,
+            Platform* pf) 
 {
   auto* splash = (Splash*)game->mode_context;
   
-  F32 dt = input->seconds_since_last_frame;
+  F32 dt = pf->seconds_since_last_frame;
   splash->timer -= dt;
   
   if (splash->timer < 0.f) {

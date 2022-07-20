@@ -96,13 +96,13 @@ _execute(Console* dc) {
 }
 
 static void
-update_and_render_console(Console* dc, Game_Input* input, Painter* p) {
+update_and_render_console(Console* dc, Painter* p, Platform* pf) {
   for (U32 char_index = 0; 
-       char_index < input->char_count;
+       char_index < pf->char_count;
        ++char_index) 
   {
     // NOTE(Momo): Not very portable to other platforms....
-    U8 c = input->chars[char_index];
+    U8 c = pf->chars[char_index];
     if (c >= 32 && c <= 126) {
       push_u8(&dc->input_line, c);
     }

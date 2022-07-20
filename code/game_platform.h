@@ -161,7 +161,7 @@ struct Game_Functions {
   Game_Update_And_Render* update_and_render;
 };
 
-static constexpr const char* game_function_names[] {
+static const char* game_function_names[] {
   "game_update_and_render",
 };
 

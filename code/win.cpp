@@ -630,14 +630,14 @@ win_complete_all_tasks() {
 
 
 static void
-win_process_input(HWND window, Game_Input* input) 
+win_process_input(HWND window, Platform* pf) 
 {
   MSG msg = {};
   while(PeekMessage(&msg, window, 0, 0, PM_REMOVE)) {
     switch(msg.message) {
       case WM_CHAR: {
-        assert(input->char_count < array_count(input->chars));
-        input->chars[input->char_count++] = (U8)msg.wParam;
+        assert(pf->char_count < array_count(pf->chars));
+        pf->chars[pf->char_count++] = (U8)msg.wParam;
       } break;
       case WM_QUIT:
       case WM_DESTROY:
@@ -648,13 +648,13 @@ win_process_input(HWND window, Game_Input* input)
       case WM_LBUTTONDOWN: {
         U32 code = (U32)msg.wParam;
         B32 is_key_down = msg.message == WM_LBUTTONDOWN;
-        input->button_editor0.now = is_key_down;
+        pf->button_editor0.now = is_key_down;
       } break;
       case WM_RBUTTONUP:
       case WM_RBUTTONDOWN: {
         U32 code = (U32)msg.wParam;
         B32 is_key_down = msg.message == WM_RBUTTONDOWN;
-        input->button_editor1.now = is_key_down;
+        pf->button_editor1.now = is_key_down;
       } break;
       
       case WM_KEYUP:
@@ -666,37 +666,37 @@ win_process_input(HWND window, Game_Input* input)
         B32 is_key_down = msg.message == WM_KEYDOWN;
         switch(code) {
           case 0x51: /* Q */ {
-            input->button_rotate_left.now = is_key_down;
+            pf->button_rotate_left.now = is_key_down;
           } break;
           case 0x45: /* E */ {
-            input->button_rotate_right.now = is_key_down;
+            pf->button_rotate_right.now = is_key_down;
           } break;
           case 0x46: /* E */ {
-            input->button_use.now = is_key_down;
+            pf->button_use.now = is_key_down;
           } break;
           case 0x57: /* W */ {
-            input->button_up.now = is_key_down;
+            pf->button_up.now = is_key_down;
           } break;
           case 0x41: /* A */ {
-            input->button_left.now = is_key_down;
+            pf->button_left.now = is_key_down;
           } break;
           case 0x53: /* S */ {
-            input->button_down.now = is_key_down;
+            pf->button_down.now = is_key_down;
           } break;
           case 0x44: /* D */ {
-            input->button_right.now = is_key_down;
+            pf->button_right.now = is_key_down;
           } break;
           case 0x70: /* F1 */{
-            input->button_console.now = is_key_down;
+            pf->button_console.now = is_key_down;
           } break;
           case 0x71: /* F2 */{
-            input->button_editor_on.now = is_key_down;
+            pf->button_editor_on.now = is_key_down;
           } break;
           case 0xDB: /* [ */{
-            input->button_editor2.now = is_key_down;
+            pf->button_editor2.now = is_key_down;
           } break;
           case 0xDD: /* ] */{
-            input->button_editor3.now = is_key_down;
+            pf->button_editor3.now = is_key_down;
           } break;
         }
         TranslateMessage(&msg);
@@ -914,21 +914,19 @@ WinMain(HINSTANCE instance,
   ppapi.get_performance_counter = win_get_performance_counter_u64;
   init_profiler(g_profiler, ppapi);
   
-  //-Game Memory setup
-  declare_and_pointerize(Game_Memory, game);
+  //-Platform setup
+  declare_and_pointerize(Platform, pf);
   
   declare_and_pointerize(Bump_Allocator, game_arena);
   if (!win_allocate_memory_into_arena(game_arena, MB(32))) return false;
   defer { win_free_memory_from_arena(game_arena); };
   
-  game->platform_api = win_create_platform_api();
-  game->renderer_texture_queue = &renderer->texture_queue;
-  game->renderer_command_queue = &renderer->command_queue;
-  game->profiler = g_profiler;
-  game->game_arena = game_arena;
+  pf->platform_api = win_create_platform_api();
+  pf->renderer_texture_queue = &renderer->texture_queue;
+  pf->renderer_command_queue = &renderer->command_queue;
+  pf->profiler = g_profiler;
+  pf->game_arena = game_arena;
   
-  //- Init input
-  declare_and_pointerize(Game_Input, input);
   
   //- Begin game loop
   B32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
@@ -955,13 +953,13 @@ WinMain(HINSTANCE instance,
     
 #if INTERNAL
     //-Hot reload game.dll functions
-    input->reloaded = win_reload_code_if_outdated(&game_code);
+    pf->reloaded = win_reload_code_if_outdated(&game_code);
 #endif
     
     //-Process messages and input
-    input->seconds_since_last_frame = target_secs_per_frame;
-    pf_update_input(input);
-    win_process_input(window, input); 
+    pf->seconds_since_last_frame = target_secs_per_frame;
+    pf_update_input(pf);
+    win_process_input(window, pf); 
     
     //- Mouse input 
     {
@@ -969,31 +967,31 @@ WinMain(HINSTANCE instance,
       GetCursorPos(&cursor_pos);
       ScreenToClient(window, &cursor_pos);
       
-      input->screen_mouse_pos.x = cursor_pos.x;
-      input->screen_mouse_pos.y = cursor_pos.y;
+      pf->screen_mouse_pos.x = cursor_pos.x;
+      pf->screen_mouse_pos.y = cursor_pos.y;
       
-      input->render_mouse_pos = input->screen_mouse_pos - render_region.min;
+      pf->render_mouse_pos = pf->screen_mouse_pos - render_region.min;
       
       F32 design_to_render_w = game_width / width_of(render_region);
       F32 design_to_render_h = game_height / height_of(render_region);
       
-      input->design_mouse_pos.x = F32(input->render_mouse_pos.x) * design_to_render_w;
-      input->design_mouse_pos.y = F32(input->render_mouse_pos.y) * design_to_render_h;
+      pf->design_mouse_pos.x = F32(pf->render_mouse_pos.x) * design_to_render_w;
+      pf->design_mouse_pos.y = F32(pf->render_mouse_pos.y) * design_to_render_h;
       
       
       // NOTE(Momo): Flip y
       // TODO(Momo): should this really be here?
       // Maybe we should really make y-axis downwards...
       // since this is a 2D engine.
-      input->design_mouse_pos.y = lerp(game_height, 
+      pf->design_mouse_pos.y = lerp(game_height, 
                                        0.f, 
-                                       input->design_mouse_pos.y/game_height);	
+                                       pf->design_mouse_pos.y/game_height);	
     }
     
     
     //-Game logic
     if(game_code.is_valid) { 
-      game_functions.update_and_render(game, input);
+      game_functions.update_and_render(pf);
     }
     
     //-Frame-rate control

@@ -9,28 +9,27 @@ Profiler* g_profiler;
 /////////////////////////////////////////////////////////
 // GAME
 exported B32 
-game_update_and_render(Game_Memory* memory,
-                       Game_Input* input) 
+game_update_and_render(Platform* pf)
 { 
   
-  g_platform = memory->platform_api;
-  g_profiler = memory->profiler;
+  g_platform = pf->platform_api;
+  g_profiler = pf->profiler;
   
   profile_block("game.dll");
   
   // Initialization
-  if (!memory->game) {
-    memory->game = ba_push<Game>(memory->game_arena);
-    Game* game = memory->game;
+  if (!pf->game) {
+    pf->game = ba_push<Game>(pf->game_arena);
+    Game* game = (Game*)pf->game;
    
     // around 32MB worth
-    game->asset_arena = ba_partition(memory->game_arena, MB(20));
-    game->mode_arena = ba_partition(memory->game_arena, MB(5)); 
-    game->debug_arena = ba_partition(memory->game_arena, MB(1));
-    game->frame_arena = ba_partition(memory->game_arena, MB(1));
+    game->asset_arena = ba_partition(pf->game_arena, MB(20));
+    game->mode_arena = ba_partition(pf->game_arena, MB(5)); 
+    game->debug_arena = ba_partition(pf->game_arena, MB(1));
+    game->frame_arena = ba_partition(pf->game_arena, MB(1));
     
     B32 success = load_game_assets(&game->game_assets, 
-                                   memory->renderer_texture_queue,
+                                   pf->renderer_texture_queue,
                                    "test.sui",
                                    &game->asset_arena);
     if(!success) return false;
@@ -47,10 +46,10 @@ game_update_and_render(Game_Memory* memory,
     game_log("Initialized!");
   }
   
-  Game* game = memory->game;
+  Game* game = (Game*)pf->game;
   Console* console = &game->console;
   Game_Assets* ga = &game->game_assets;
-  Gfx_Command_Queue* cmds = memory->renderer_command_queue;
+  Gfx_Command_Queue* cmds = pf->renderer_command_queue;
   Inspector* in = &game->inspector;
  
   declare_and_pointerize(Painter, painter);
@@ -61,36 +60,9 @@ game_update_and_render(Game_Memory* memory,
   add_inspector_entry(in, string_from_lit("Test"), &test_value);
   
   //-Game state management
+  // TODO: Figure out is_done
   B32 is_done = false;
-#if 0
-  {
-    if (game->next_mode != game->current_mode) {
-      switch(game->next_mode) {
-        case GAME_MODE_SPLASH: {
-          splash_init(game);
-        } break;
-        case GAME_MODE_SB1: {
-          init_level_mode(game);
-        } break;
-        default: {
-          is_done = true;
-        }
-      }
-      game->current_mode = game->next_mode;
-    }
-    
-    switch(game->current_mode) {
-      case GAME_MODE_SPLASH: {
-        splash_tick(game, input, painter);
-      } break;
-      case GAME_MODE_SB1: {
-        update_and_render_level_mode(game, input, painter);
-      } break;
-      default:{}
-    }
-  }
-#endif
-
+   
   //~ GSM
   if (game->is_mode_changed && game->init_mode) {
     game->init_mode(game);
@@ -98,21 +70,21 @@ game_update_and_render(Game_Memory* memory,
   }
 
   if (game->update_mode) {
-    game->update_mode(game, input, painter);
+    game->update_mode(game, painter, pf);
   }
   
   //-Debug Rendering Stuff
-  if (pf_is_button_poked(input->button_console)) {
+  if (pf_is_button_poked(pf->button_console)) {
     game->show_debug_type = 
       (Game_Show_Debug_Type)((game->show_debug_type + 1)%GAME_SHOW_DEBUG_MAX);
   }
   
   switch (game->show_debug_type) {
     case GAME_SHOW_DEBUG_CONSOLE: {
-      update_and_render_console(console, input, painter); 
+      update_and_render_console(console, painter, pf); 
     }break;
     case GAME_SHOW_DEBUG_PROFILER: {
-      update_and_render_profiler(memory->profiler, painter); 
+      update_and_render_profiler(pf->profiler, painter); 
     }break;
     case GAME_SHOW_DEBUG_INSPECTOR: {
       update_and_render_inspector(in, painter);
