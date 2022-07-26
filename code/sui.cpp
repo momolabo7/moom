@@ -70,9 +70,20 @@ int main() {
                   code_dir("generated_sound_ids.h")))
   {
     begin_asset_pack(sp);
+#if 0
+    // Maybe we want to do something like this:
+    begin_atlas(sp);
+    push_atlas_font(sp, "FONT_DEFAULT", asset_dir("liberation-mono.ttf"), 128.f, interested_cps, array_count(interested_cps));
+    push_atlas_sprite(sp, "SPRITE_BLANK", asset_dir("blank.png"));
+
+    end_atlas();
+#endif
+
     add_atlas(sp, &atlas);
     add_sound(sp, "SOUND_TEST", &loaded_wav);
     end_asset_pack(sp, "PACK_DEFAULT", "test.sui", allocator);
+
+
     end_packer(sp);
   }
 }
