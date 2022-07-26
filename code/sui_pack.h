@@ -40,6 +40,11 @@ struct Packer_Sprite {
   const char* sprite_id_name;
 };
 
+struct Packer_Sound {
+  const char* sound_id_name;
+  WAV* wav;
+};
+
 
 struct Sui_Packer {
   FILE* pack_id_file;
@@ -49,6 +54,7 @@ struct Sui_Packer {
   FILE* bitmap_id_file;
   FILE* font_id_file;
   FILE* sprite_id_file;
+  FILE* sound_id_file;
   
   U32 bitmap_count;
   Packer_Bitmap bitmaps[128];
@@ -56,7 +62,9 @@ struct Sui_Packer {
   U32 sprite_count;
   Packer_Sprite sprites[256];
   
-  
+  U32 sound_count;
+  Packer_Sound sounds[256];
+
   Packer_Font* current_font;
   
   U32 font_count;
@@ -74,18 +82,23 @@ begin_packer(Sui_Packer* packer,
              const char* pack_id_filename,
              const char* bitmap_id_filename,
              const char* sprite_id_filename,
-             const char* font_id_filename) {
+             const char* font_id_filename,
+             const char* sound_id_filename)
+{
   Sui_Packer ret = {};
   
   packer->pack_id_file = fopen(pack_id_filename, "w");
   packer->bitmap_id_file = fopen(bitmap_id_filename, "w");
   packer->font_id_file = fopen(font_id_filename, "w");
   packer->sprite_id_file = fopen(sprite_id_filename, "w");
-  
+  packer->sound_id_file = fopen(sound_id_filename, "w");
+ 
+
   if (!packer->pack_id_file) return false;
   if (!packer->bitmap_id_file) return false;
   if (!packer->font_id_file) return false;
   if (!packer->sprite_id_file) return false;
+  if (!packer->sound_id_file) return false;
   
   // boiler plate:
   {
@@ -94,6 +107,7 @@ begin_packer(Sui_Packer* packer,
     fwrite(boiler.e, boiler.count, 1, packer->bitmap_id_file);
     fwrite(boiler.e, boiler.count, 1, packer->font_id_file);
     fwrite(boiler.e, boiler.count, 1, packer->sprite_id_file);
+    fwrite(boiler.e, boiler.count, 1, packer->sound_id_file);
   }
   
   
@@ -106,7 +120,9 @@ begin_packer(Sui_Packer* packer,
   fwrite(str.e, str.count, 1, packer->font_id_file);
   str = string_from_lit("enum Sprite_ID {\n");
   fwrite(str.e, str.count, 1, packer->sprite_id_file);
-  
+  str = string_from_lit("enum Sound_ID {\n");
+  fwrite(str.e, str.count, 1, packer->sound_id_file);
+
   return true;
 }
 
@@ -120,12 +136,14 @@ end_packer(Sui_Packer* p) {
   fwrite(str.e, str.count, 1, p->bitmap_id_file);
   fwrite(str.e, str.count, 1, p->font_id_file);
   fwrite(str.e, str.count, 1, p->sprite_id_file);
+  fwrite(str.e, str.count, 1, p->sound_id_file);
   
   // close the files
   fclose(p->pack_id_file);
   fclose(p->bitmap_id_file);
   fclose(p->font_id_file);
   fclose(p->sprite_id_file);
+  fclose(p->sound_id_file);
 }
 
 static void
@@ -216,7 +234,16 @@ end_font(Sui_Packer* p, const char* font_id_name, TTF* ttf, U32 bitmap_id) {
   
 }
 
+static U32
+add_sound(Sui_Packer* p, const char* sound_id_name, WAV* wav) { 
+  assert(p->sound_count < array_count(p->sounds));
 
+  Packer_Sound* sound = p->sounds + p->sound_count;
+  sound->sound_id_name = sound_id_name;
+  sound->wav = wav;
+
+  return p->sound_count++;
+}
 
 static void
 add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
@@ -309,9 +336,11 @@ end_asset_pack(Sui_Packer* p,
   header.font_count = p->font_count;
   header.sprite_count = p->sprite_count;
   header.bitmap_count = p->bitmap_count;
+  header.sound_count = p->sound_count;
   header.offset_to_bitmaps = sizeof(Karu_Header);
   header.offset_to_sprites = header.offset_to_bitmaps + sizeof(Karu_Bitmap)*p->bitmap_count;
   header.offset_to_fonts = header.offset_to_sprites + sizeof(Karu_Sprite)*p->sprite_count;
+  header.offset_to_sounds = header.offset_to_fonts + sizeof(Karu_Sprite)*p->font_count;
   fwrite(&header, sizeof(header), 1, file);
   
   U32 offset_to_data = header.offset_to_fonts + sizeof(Karu_Font)*p->font_count;
@@ -343,7 +372,6 @@ end_asset_pack(Sui_Packer* p,
     offset_to_data += image_size;
     
     // Write to bitmap_id file
-    
     String format = string_from_lit("%s = %s << 16 | %u,\n");
     push_format(builder, format, pb->bitmap_id_name, pack_id_name, bitmap_index);
     fwrite(builder->e, builder->count, 1, p->bitmap_id_file);
@@ -448,6 +476,36 @@ end_asset_pack(Sui_Packer* p,
     fwrite(builder->e, builder->count, 1, p->font_id_file);
     clear(builder);
   }
+
+
+  for(U32 sound_index = 0;
+      sound_index < p->sound_count;
+      ++sound_index) 
+  {
+    sui_create_log_section_until_scope;
+    sui_log("Writing sound %u\n", sound_index);
+    Packer_Sound* ps = p->sounds + sound_index;
+    Karu_Sound ks = {};
+    ks.offset_to_data = offset_to_data;
+    ks.data_count = ps->wav->data_chunk.size / sizeof(S16);
+    fwrite(&ks, sizeof(Karu_Sound), 1, file);
+
+    U32 current_pos = ftell(file);
+    U32 data_size = ps->wav->data_chunk.size;
+    fseek(file, ks.offset_to_data, SEEK_SET);
+    fwrite(ps->wav->data, data_size, 1, file);
+    fseek(file, current_pos, SEEK_SET);
+    
+    offset_to_data += data_size;
+
+    // Write to sound_id file
+    String format = string_from_lit("%s = %s << 16 | %u,\n");
+    push_format(builder, format, ps->sound_id_name, pack_id_name, sound_index);
+    fwrite(builder->e, builder->count, 1, p->bitmap_id_file);
+    clear(builder);
+
+  }
+
   
   // Write the header
   fseek(file, 0, SEEK_SET);

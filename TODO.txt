@@ -1,17 +1,10 @@
-Platform should just be one big table of stuff, seriously, to be passed into to game. And they should be prefixed with "Platform"
+Assets 
+  9 Slice 
+  Audio/Sound
+
 
 Engine
 	Sound
 	Debugger
 		Arena Profiler?
 
-Game
-	Level Editor
-		Create shapes
-		Create single edge???
-		Create light
-	Point light support
-	
-4coder
-  Support strongly typed enums
-  

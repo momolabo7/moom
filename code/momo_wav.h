@@ -46,7 +46,7 @@ static B32 wav_read(WAV* wav, void* memory, U32 size);
 static B32 
 wav_read(WAV* w,
          void* memory, 
-         U32 memory_size) 
+         UMI memory_size) 
 {
   const static U32 riff_id_signature = 0x52494646;
   const static U32 riff_format_signature = 0x57415645;

@@ -106,6 +106,7 @@ struct Gfx_Texture_Queue;
 struct Gfx_Command_Queue;
 struct Profiler;
 struct Bump_Allocator;
+
 struct Platform {
   Bump_Allocator* game_arena; // Require 32MB
   Platform_API platform_api;
@@ -114,6 +115,7 @@ struct Platform {
   Profiler* profiler; 
   Platform_Audio* audio;
 
+  // Maybe this should be a seperate struct
   union {
     struct {
       Platform_Button button_up;

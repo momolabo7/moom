@@ -11,9 +11,12 @@ int main() {
   
   declare_and_pointerize(Bump_Allocator, allocator);
   ba_init(allocator, memory.data, memory.size);
-  
+ 
+
+
   TTF loaded_ttf = sui_load_font(asset_dir("nokiafc22.ttf"), allocator);
   TTF loaded_ttf2 = sui_load_font(asset_dir("liberation-mono.ttf"), allocator);
+  WAV loaded_wav = sui_load_wav(asset_dir("bgm_menu.wav"), allocator); 
   
   sui_log("Building atlas...\n");
   
@@ -63,10 +66,12 @@ int main() {
                   code_dir("generated_pack_ids.h"),
                   code_dir("generated_bitmap_ids.h"),
                   code_dir("generated_sprite_ids.h"),
-                  code_dir("generated_font_ids.h")))
+                  code_dir("generated_font_ids.h"),
+                  code_dir("generated_sound_ids.h")))
   {
     begin_asset_pack(sp);
     add_atlas(sp, &atlas);
+    add_sound(sp, "SOUND_TEST", &loaded_wav);
     end_asset_pack(sp, "PACK_DEFAULT", "test.sui", allocator);
     end_packer(sp);
   }

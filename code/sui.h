@@ -75,4 +75,16 @@ sui_load_font(const char* filename, Bump_Allocator* allocator) {
   return ret;
 }
 
+static WAV 
+sui_load_wav(const char* filename, Bump_Allocator* allocator) {
+  Memory mem = sui_read_file(filename, allocator);
+  assert(is_ok(mem));
+
+  WAV wav = {};
+  if (!wav_read(&wav, mem.data, mem.size)) {
+    assert(false);
+  }
+  return wav;
+}
+
 #endif //Karu_EXPORT_H

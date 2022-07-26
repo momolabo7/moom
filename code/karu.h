@@ -23,10 +23,12 @@ struct Karu_Header {
   U32 bitmap_count;
   U32 sprite_count;
   U32 font_count;
+  U32 sound_count;
   
   U32 offset_to_bitmaps;
   U32 offset_to_sprites;
   U32 offset_to_fonts;
+  U32 offset_to_sounds;
 };
 
 struct Karu_Sprite {
@@ -53,6 +55,16 @@ struct Karu_Font {
   // 
   // Karu_Font_Glyph glyphs[glyph_count]
   // F32 horizontal_advances[glyph_count][glyph_count]
+  //
+};
+
+struct Karu_Sound {
+  U32 offset_to_data;
+  U32 data_count;
+
+  // Data is: 
+  //
+  // S16 data[data_count]
   //
 };
 
