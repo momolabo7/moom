@@ -72,11 +72,13 @@ int main() {
     begin_asset_pack(sp);
 #if 0
     // Maybe we want to do something like this:
-    begin_atlas(sp);
+    begin_atlas(sp, "BITMAP_DEFAULT", 1024, 1024);
     push_atlas_font(sp, "FONT_DEFAULT", asset_dir("liberation-mono.ttf"), 128.f, interested_cps, array_count(interested_cps));
-    push_atlas_sprite(sp, "SPRITE_BLANK", asset_dir("blank.png"));
-
-    end_atlas();
+    push_atlas_sprite(&atlas, "SPRITE_BULLET_CIRCLE", asset_dir("bullet_circle.png"));
+    push_atlas_sprite(&atlas, "SPRITE_BULLET_DOT", asset_dir("bullet_dot.png"));
+    push_atlas_sprite(&atlas, "SPRITE_PLAYER_BLACK", asset_dir("player_black.png"));
+    push_atlas_sprite(&atlas, "SPRITE_PLAYER_WHITE", asset_dir("player_white.png"));
+    end_atlas(sp);
 #endif
 
     add_atlas(sp, &atlas);
