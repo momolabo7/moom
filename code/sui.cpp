@@ -17,14 +17,15 @@ int main() {
   sui_read_wav_from_file(loaded_wav,asset_dir("bgm_menu.wav"), allocator); 
   
   sui_log("Building atlas...\n");
-  
-  Sui_Atlas atlas = begin_atlas_builder("BITMAP_DEFAULT", 2048, 2048);
+  declare_and_pointerize(Sui_Atlas, atlas);
+
+  if (!begin_atlas_builder(atlas, "BITMAP_DEFAULT", 2048, 2048)) return 1;
   {
-    push_sprite(&atlas, "SPRITE_BLANK", asset_dir("blank.png"));
-    push_sprite(&atlas, "SPRITE_BULLET_CIRCLE", asset_dir("bullet_circle.png"));
-    push_sprite(&atlas, "SPRITE_BULLET_DOT", asset_dir("bullet_dot.png"));
-    push_sprite(&atlas, "SPRITE_PLAYER_BLACK", asset_dir("player_black.png"));
-    push_sprite(&atlas, "SPRITE_PLAYER_WHITE", asset_dir("player_white.png"));
+    push_sprite(atlas, "SPRITE_BLANK", asset_dir("blank.png"));
+    push_sprite(atlas, "SPRITE_BULLET_CIRCLE", asset_dir("bullet_circle.png"));
+    push_sprite(atlas, "SPRITE_BULLET_DOT", asset_dir("bullet_dot.png"));
+    push_sprite(atlas, "SPRITE_PLAYER_BLACK", asset_dir("player_black.png"));
+    push_sprite(atlas, "SPRITE_PLAYER_WHITE", asset_dir("player_white.png"));
     
     U32 interested_cps[] = { 
       32,33,32,34,35,36,37,38,39,
@@ -40,18 +41,18 @@ int main() {
       120,121,122,123,124,125,126,
     };
     
-    push_font(&atlas, "FONT_DEFAULT", asset_dir("nokiafc22.ttf"), interested_cps, array_count(interested_cps), 128.f);
+    push_font(atlas, "FONT_DEFAULT", asset_dir("nokiafc22.ttf"), interested_cps, array_count(interested_cps), 128.f);
     
-    push_font(&atlas, "FONT_DEBUG", asset_dir("liberation-mono.ttf"), interested_cps, array_count(interested_cps), 128.f);
+    push_font(atlas, "FONT_DEBUG", asset_dir("liberation-mono.ttf"), interested_cps, array_count(interested_cps), 128.f);
   }
-  end_atlas_builder(&atlas, allocator);
+  if(!end_atlas_builder(atlas, allocator)) return 1;
   sui_log("Finished atlas...\n");
   
   
 #if 1
   sui_log("Writing test png file...\n");
-  Memory png_to_write_memory = png_write(atlas.bitmap, allocator);
-  assert(is_ok(png_to_write_memory));
+  Memory png_to_write_memory = png_write(atlas->bitmap, allocator);
+  if (!is_ok(png_to_write_memory)) return 1;
   sui_write_file_from_memory("test.png", png_to_write_memory);
 #endif
   
@@ -75,7 +76,7 @@ int main() {
     end_atlas(sp);
 #endif
 
-    add_atlas(sp, &atlas);
+    add_atlas(sp, atlas);
     add_sound(sp, "SOUND_TEST", loaded_wav);
     end_asset_pack(sp, "PACK_DEFAULT", "test.sui", allocator);
 

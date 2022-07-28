@@ -136,14 +136,14 @@ begin_atlas_builder(Sui_Atlas* ab,
   ab->bitmap.width = atlas_width;
   ab->bitmap.height = atlas_height;
   
-  return ret;
+  return true;;
 }
 
 
-static void
+static B32
 end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
   ab->bitmap.pixels = ba_push_array<U32>(allocator, ab->bitmap.width * ab->bitmap.height);
-  assert(ab->bitmap.pixels);
+  if (!ab->bitmap.pixels) return false;
   
   // Count the amount of rects
   U32 rect_count = ab->sprite_count;
@@ -155,7 +155,7 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
     rect_count += ab->fonts[font_index].codepoint_count;
   }
   
-  if (rect_count == 0) return; 
+  if (rect_count == 0) return false; 
   
   // Allocate required memory required
   auto* rects = ba_push_array<RP_Rect>(allocator, rect_count);
@@ -175,7 +175,7 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
     Sui_Atlas_Font* font = ab->fonts + font_index;
     TTF* ttf = &font->ttf; 
     B32 ok = sui_read_font_from_file(ttf, font->font_file_name, allocator); 
-    assert(ok);
+    if (!ok) return false;
     F32 s = ttf_get_scale_for_pixel_height(ttf, font->raster_font_height);
     
     // grab the slice of RP_Rects that belongs to this font
@@ -214,12 +214,12 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
 
     declare_and_pointerize(Memory, mem);
     B32 ok = sui_read_file_to_memory(mem, sprite->filename, allocator);
-    assert(ok);
+    if (!ok) return false;
     
     declare_and_pointerize(PNG, png);
     ok = png_read(png, mem->data, mem->size);
-    assert(ok);
-    assert(png->width != 0 && png->height != 0);
+    if (!ok) return false;
+    if(png->width == 0 || png->height == 0) return false;
     
     auto* context = contexts + context_index++;
     context->type = SUI_ATLAS_CONTEXT_TYPE_SPRITE;
@@ -267,11 +267,11 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
         declare_and_pointerize(Memory, mem);
        
         B32 ok = sui_read_file_to_memory(mem, related_entry->filename, allocator);
-        assert(ok);
+        if (!ok) return false;
         
         declare_and_pointerize(PNG, png);
         ok = png_read(png, mem->data, mem->size);
-        assert(ok);
+        if(!ok) return false;
         
         Bitmap bm = png_to_bitmap(png, allocator);
         if (!is_ok(bm)) continue;
@@ -308,6 +308,7 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
     
   }
   
+  return true;
   
 }
 #endif // SUI_ATLAS_H
