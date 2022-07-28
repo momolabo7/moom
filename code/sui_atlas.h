@@ -124,18 +124,17 @@ push_font(Sui_Atlas* ab,
 }
 
 
-static Sui_Atlas
-begin_atlas_builder(const char* bitmap_id_name,
+static B32
+begin_atlas_builder(Sui_Atlas* ab,
+                    const char* bitmap_id_name,
                     U32 atlas_width,
                     U32 atlas_height) 
 {
-  Sui_Atlas ret = {};
-  assert(atlas_width);
-  assert(atlas_height);
+  if (atlas_width == 0 || atlas_height == 0) return false;
   
-  ret.bitmap_id_name = bitmap_id_name;
-  ret.bitmap.width = atlas_width;
-  ret.bitmap.height = atlas_height;
+  ab->bitmap_id_name = bitmap_id_name;
+  ab->bitmap.width = atlas_width;
+  ab->bitmap.height = atlas_height;
   
   return ret;
 }
