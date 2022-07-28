@@ -55,6 +55,8 @@ struct Sui_Atlas_Font {
   U32* codepoints;
   U32 codepoint_count;
   F32 raster_font_height;
+
+  TTF ttf;
   
   // will be generated when end
   RP_Rect* glyph_rects;
@@ -164,14 +166,15 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
   U32 rect_index = 0;
   U32 context_index = 0;
   
+  ba_set_revert_point(allocator);
+
   for (U32 font_index = 0;
        font_index < ab->font_count;
        ++font_index) 
   {
-    declare_and_pointerize(TTF, ttf);
-    ba_set_revert_point(allocator);
 
     Sui_Atlas_Font* font = ab->fonts + font_index;
+    TTF* ttf = &font->ttf; 
     B32 ok = sui_read_font_from_file(ttf, font->font_file_name, allocator); 
     assert(ok);
     F32 s = ttf_get_scale_for_pixel_height(ttf, font->raster_font_height);
@@ -264,7 +267,6 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
        
         declare_and_pointerize(Memory, mem);
        
-        //TODO: return false?
         B32 ok = sui_read_file_to_memory(mem, related_entry->filename, allocator);
         assert(ok);
         
@@ -285,16 +287,10 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
         
       } break;
       case SUI_ATLAS_CONTEXT_TYPE_FONT_GLYPH: {
-        ba_set_revert_point(allocator);
         Sui_Atlas_Font* related_entry = context->font_glyph.font;
         Sui_Atlas_Font_Glyph_Context* related_context = &context->font_glyph;
         
-        declare_and_pointerize(TTF, ttf);
-        
-        // TODO: return false?
-        B32 ok = sui_read_font_from_file(ttf, related_entry->font_file_name, allocator); 
-        assert(ok);
-
+        TTF* ttf = &related_entry->ttf;
         F32 s = ttf_get_scale_for_pixel_height(ttf, related_entry->raster_font_height);
         U32 glyph_index = ttf_get_glyph_index(ttf, related_context->codepoint);
         

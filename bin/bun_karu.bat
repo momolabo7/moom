@@ -18,8 +18,6 @@ pushd %BuildDir%
 
 cl %CommonCompilerFlags% %CodeDir%\sui.cpp
 
-if NOT %ERRORLEVEL% == 0 goto exit
-
 call sui.exe
 
 popd

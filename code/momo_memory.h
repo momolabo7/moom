@@ -38,7 +38,11 @@ template<typename T> static T* ba_push_array(Bump_Allocator* a, UMI num, UMI ali
 static Bump_Allocator_Marker ba_mark(Bump_Allocator* allocator);
 static void		              ba_revert(Bump_Allocator_Marker marker);
 
-#define ba_set_revert_point(allocator) auto ttt = ba_mark(allocator); defer{ba_revert(ttt);};
+
+
+#define __ba_set_revert_point(a,l) auto ttt##l = ba_mark(allocator); defer{ba_revert(ttt##l);};
+#define _ba_set_revert_point(a,l) __ba_set_revert_point(a,l)
+#define ba_set_revert_point(allocator) _ba_set_revert_point(allocator, __LINE__) 
 
 /////////////////////////////////////////////////////////
 // IMPLEMENTATION
