@@ -48,7 +48,7 @@ struct TTF_Glyph_Horizontal_Metrics
   S16 left_side_bearing;
 };
 
-static TTF ttf_read(Memory ttf_memory);
+static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);
 
 static U32 ttf_get_glyph_index(TTF* ttf, U32 codepoint);
 // returns 0 for invalid codepoints
@@ -597,45 +597,44 @@ ttf_get_glyph_horiozontal_metrics(TTF* ttf, U32 glyph_index)
 }
 
 
-static TTF
-ttf_read(Memory ttf_memory) {
-  TTF ret = {};
-  ret.data = ttf_memory.data_u8;
+static B32
+ttf_read(TTF* ttf, void* memory, UMI memory_size) {
+  ttf->data = (U8*)memory;
   
-  U32 num_tables = _ttf_read_u16(ret.data + 4);
+  U32 num_tables = _ttf_read_u16(ttf->data + 4);
   
   for (U32 i= 0 ; i < num_tables; ++i ) {
     U32 directory = 12 + (16 * i);
-    U32 tag = _ttf_read_u32(ret.data + directory + 0);
+    U32 tag = _ttf_read_u32(ttf->data + directory + 0);
     
     
     switch(tag) {
       case 'loca': {
-        ret.loca = _ttf_read_u32(ret.data + directory + 8);
+        ttf->loca = _ttf_read_u32(ttf->data + directory + 8);
       }; break;
       case 'head': {
-        ret.head = _ttf_read_u32(ret.data + directory + 8);
+        ttf->head = _ttf_read_u32(ttf->data + directory + 8);
       }; break;
       case 'glyf': {
-        ret.glyf = _ttf_read_u32(ret.data + directory + 8);
+        ttf->glyf = _ttf_read_u32(ttf->data + directory + 8);
       }; break;
       case 'maxp': {
-        ret.maxp = _ttf_read_u32(ret.data + directory + 8);
+        ttf->maxp = _ttf_read_u32(ttf->data + directory + 8);
       } break;
       case 'cmap': {
-        ret.cmap = _ttf_read_u32(ret.data + directory + 8);
+        ttf->cmap = _ttf_read_u32(ttf->data + directory + 8);
       } break;
       case 'hhea': {
-        ret.hhea = _ttf_read_u32(ret.data + directory + 8);
+        ttf->hhea = _ttf_read_u32(ttf->data + directory + 8);
       } break;
       case 'hmtx': {
-        ret.hmtx = _ttf_read_u32(ret.data + directory + 8);
+        ttf->hmtx = _ttf_read_u32(ttf->data + directory + 8);
       } break;
       case 'kern': {
-        ret.kern = _ttf_read_u32(ret.data + directory + 8);
+        ttf->kern = _ttf_read_u32(ttf->data + directory + 8);
       } break;
       case 'GPOS': {
-        ret.gpos = _ttf_read_u32(ret.data + directory + 8);
+        ttf->gpos = _ttf_read_u32(ttf->data + directory + 8);
       } break;
       default: {
 #if 0
@@ -647,47 +646,46 @@ ttf_read(Memory ttf_memory) {
     
   }
   
+  if (!ttf->loca || 
+      !ttf->maxp ||
+      !ttf->head ||
+      !ttf->glyf ||
+      !ttf->cmap ||
+      !ttf->hhea ||
+      !ttf->hmtx) return false;
+    
+  ttf->loca_format = _ttf_read_u16(ttf->data + ttf->head + 50);
+  if (ttf->loca_format >= 2) return false;
   
-  assert(ret.loca);
-  assert(ret.maxp);
-  assert(ret.head);
-  assert(ret.glyf);
-  assert(ret.cmap);
-  assert(ret.hhea);
-  assert(ret.hmtx);
-  
-  ret.loca_format = _ttf_read_u16(ret.data + ret.head + 50);
-  assert(ret.loca_format < 2);
-  
-  ret.glyph_count = _ttf_read_u16(ret.data + ret.maxp + 4);
+  ttf->glyph_count = _ttf_read_u16(ttf->data + ttf->maxp + 4);
   
   // Get index map
   {
-    U32 subtable_count = _ttf_read_u16(ret.data + ret.cmap + 2);
+    U32 subtable_count = _ttf_read_u16(ttf->data + ttf->cmap + 2);
     
     B32 found_index_table = false;
     
     for( U32 i = 0; i < subtable_count; ++i) {
-      U32 subtable = ret.cmap + 4 + (8 * i);
+      U32 subtable = ttf->cmap + 4 + (8 * i);
       
       
       // We only support unicode encoding...
       // NOTE(Momo): They say mac is discouraged, so we won't care about it.
-      U32 platform_id = _ttf_read_u16(ret.data + subtable + 0);
+      U32 platform_id = _ttf_read_u16(ttf->data + subtable + 0);
       switch(platform_id) {
         case _TTF_CMAP_PLATFORM_ID_MICROSOFT: {
-          U32 platform_specific_id = _ttf_read_u16(ret.data + subtable + 2);
+          U32 platform_specific_id = _ttf_read_u16(ttf->data + subtable + 2);
           switch(platform_specific_id) {
             case _TTF_CMAP_MS_ID_UNICODE_BMP:
             case _TTF_CMAP_MS_ID_UNICODE_FULL: {
-              ret.cmap_mappings = ret.cmap + _ttf_read_u32(ret.data + subtable + 4);
+              ttf->cmap_mappings = ttf->cmap + _ttf_read_u32(ttf->data + subtable + 4);
               found_index_table =  true;
             }break;
             
           }
         }
         case _TTF_CMAP_PLATFORM_ID_UNICODE: {
-          ret.cmap_mappings = ret.cmap + _ttf_read_u32(ret.data + subtable + 4);
+          ttf->cmap_mappings = ttf->cmap + _ttf_read_u32(ttf->data + subtable + 4);
           found_index_table = true;
         } break;
         
@@ -695,13 +693,14 @@ ttf_read(Memory ttf_memory) {
       
       if (found_index_table) break;
     }
-    
-    assert(found_index_table && "unsupported cmap");
+   
+    if (!found_index_table) 
+      return false;
   }
   
   
   
-  return ret;
+  return true;
 }
 
 static S32 

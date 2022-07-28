@@ -13,10 +13,8 @@ int main() {
   ba_init(allocator, memory.data, memory.size);
  
 
-
-  TTF loaded_ttf = sui_load_font(asset_dir("nokiafc22.ttf"), allocator);
-  TTF loaded_ttf2 = sui_load_font(asset_dir("liberation-mono.ttf"), allocator);
-  WAV loaded_wav = sui_load_wav(asset_dir("bgm_menu.wav"), allocator); 
+  declare_and_pointerize(WAV, loaded_wav);
+  sui_read_wav_from_file(loaded_wav,asset_dir("bgm_menu.wav"), allocator); 
   
   sui_log("Building atlas...\n");
   
@@ -42,13 +40,9 @@ int main() {
       120,121,122,123,124,125,126,
     };
     
-    push_font(&atlas, "FONT_DEFAULT", &loaded_ttf, 
-              interested_cps, array_count(interested_cps), 
-              128.f);
+    push_font(&atlas, "FONT_DEFAULT", asset_dir("nokiafc22.ttf"), interested_cps, array_count(interested_cps), 128.f);
     
-    push_font(&atlas, "FONT_DEBUG", &loaded_ttf2, 
-              interested_cps, array_count(interested_cps), 
-              128.f);
+    push_font(&atlas, "FONT_DEBUG", asset_dir("liberation-mono.ttf"), interested_cps, array_count(interested_cps), 128.f);
   }
   end_atlas_builder(&atlas, allocator);
   sui_log("Finished atlas...\n");
@@ -58,7 +52,7 @@ int main() {
   sui_log("Writing test png file...\n");
   Memory png_to_write_memory = png_write(atlas.bitmap, allocator);
   assert(is_ok(png_to_write_memory));
-  sui_write_file("test.png", png_to_write_memory);
+  sui_write_file_from_memory("test.png", png_to_write_memory);
 #endif
   
   declare_and_pointerize(Sui_Packer, sp);
@@ -82,7 +76,7 @@ int main() {
 #endif
 
     add_atlas(sp, &atlas);
-    add_sound(sp, "SOUND_TEST", &loaded_wav);
+    add_sound(sp, "SOUND_TEST", loaded_wav);
     end_asset_pack(sp, "PACK_DEFAULT", "test.sui", allocator);
 
 

@@ -18,7 +18,7 @@ struct Packer_Font_Glyph {
 struct Packer_Font {
   U32 bitmap_id;
   U32 highest_codepoint;
-  TTF* ttf;
+  const char* font_file_name;
   
   U32 glyph_start_index;
   U32 one_past_glyph_end_index;
@@ -220,14 +220,15 @@ push_glyph(Sui_Packer* p, Rect2U texel_uv, Rect2 uv, U32 codepoint) {
   
 }
 
+
+
 static void
-end_font(Sui_Packer* p, const char* font_id_name, TTF* ttf, U32 bitmap_id) {
+end_font(Sui_Packer* p, const char* font_id_name, const char* font_file_name, U32 bitmap_id) {
   Packer_Font* font = p->current_font;
   assert(font);
   font->font_id_name = font_id_name;
   font->bitmap_id = bitmap_id;
-  font->ttf = ttf;
-  
+  font->font_file_name = font_file_name;
   
   font = nullptr;
   p->current_font = nullptr;
@@ -307,7 +308,7 @@ add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
       push_glyph(p, texel_uv, uv, sac->font_glyph.codepoint);
     }
     
-    end_font(p, saf->font_id_name, saf->loaded_ttf, bitmap_id);
+    end_font(p, saf->font_id_name, saf->font_file_name, bitmap_id);
   }
   
 }
@@ -401,6 +402,7 @@ end_asset_pack(Sui_Packer* p,
        font_index < p->font_count;
        ++font_index) 
   {
+    ba_set_revert_point(allocator);
     sui_create_log_section_until_scope;
     sui_log("Writing font %u\n", font_index);
     Packer_Font* pf = p->fonts + font_index;
@@ -413,6 +415,10 @@ end_asset_pack(Sui_Packer* p,
     
     U32 current_pos = ftell(file);
     fseek(file, kf.offset_to_data, SEEK_SET);
+
+    declare_and_pointerize(TTF, ttf);
+    B32 ok = sui_read_font_from_file(ttf, pf->font_file_name, allocator);
+    assert(ok);
     
     for (U32 glyph_index = pf->glyph_start_index;
          glyph_index < pf->one_past_glyph_end_index;
@@ -425,10 +431,10 @@ end_asset_pack(Sui_Packer* p,
       kfg.uv = pfg->uv;
       kfg.codepoint = pfg->codepoint;
       
-      U32 ttf_glyph_index = ttf_get_glyph_index(pf->ttf,kfg.codepoint);
-      F32 s = ttf_get_scale_for_pixel_height(pf->ttf, 1.f);
-      kfg.box = ttf_get_glyph_box(pf->ttf, ttf_glyph_index, s);
-      
+
+      U32 ttf_glyph_index = ttf_get_glyph_index(ttf,kfg.codepoint);
+      F32 s = ttf_get_scale_for_pixel_height(ttf, 1.f);
+      kfg.box = ttf_get_glyph_box(ttf, ttf_glyph_index, s);
       fwrite(&kfg, sizeof(kfg), 1, file);
       offset_to_data += sizeof(kfg);
     }
@@ -437,7 +443,7 @@ end_asset_pack(Sui_Packer* p,
          pgi1 < pf->one_past_glyph_end_index;
          ++pgi1) 
     {
-      F32 pixel_scale = ttf_get_scale_for_pixel_height(pf->ttf, 1.f);
+      F32 pixel_scale = ttf_get_scale_for_pixel_height(ttf, 1.f);
       
       Packer_Font_Glyph* pfg1 = p->font_glyphs + pgi1;
       for (U32 pgi2 = pf->glyph_start_index;
@@ -449,11 +455,11 @@ end_asset_pack(Sui_Packer* p,
         U32 cp1 = pfg1->codepoint;
         U32 cp2 = pfg2->codepoint;
         
-        U32 gi1 = ttf_get_glyph_index(pf->ttf, cp1);
-        U32 gi2 = ttf_get_glyph_index(pf->ttf, cp2);
+        U32 gi1 = ttf_get_glyph_index(ttf, cp1);
+        U32 gi2 = ttf_get_glyph_index(ttf, cp2);
         
-        auto g1_metrics = ttf_get_glyph_horiozontal_metrics(pf->ttf, gi1);
-        S32 raw_kern = ttf_get_glyph_kerning(pf->ttf, gi1, gi2);
+        auto g1_metrics = ttf_get_glyph_horiozontal_metrics(ttf, gi1);
+        S32 raw_kern = ttf_get_glyph_kerning(ttf, gi1, gi2);
         
         F32 advance_width = (F32)g1_metrics.advance_width * pixel_scale;
         F32 kerning = (F32)raw_kern * pixel_scale;
@@ -461,7 +467,6 @@ end_asset_pack(Sui_Packer* p,
         F32 advance = advance_width + kerning;
         fwrite(&advance, sizeof(advance), 1, file);
         offset_to_data += sizeof(advance);
-        
         
       }
       

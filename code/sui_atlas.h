@@ -50,7 +50,8 @@ struct Sui_Atlas_Context {
 
 struct Sui_Atlas_Font {
   const char* font_id_name;
-  TTF* loaded_ttf;
+  const char* font_file_name;
+
   U32* codepoints;
   U32 codepoint_count;
   F32 raster_font_height;
@@ -102,7 +103,7 @@ push_sprite(Sui_Atlas* ab, const char* sprite_id_name, const char* filename)
 static U32
 push_font(Sui_Atlas* ab, 
           const char* font_id_name, 
-          TTF* loaded_ttf,
+          const char* font_file_name,
           U32* codepoints,
           U32 codepoint_count,
           F32 raster_font_height) 
@@ -112,13 +113,14 @@ push_font(Sui_Atlas* ab,
   
   Sui_Atlas_Font* font = ab->fonts + index;
   font->font_id_name = font_id_name;
-  font->loaded_ttf = loaded_ttf;
+  font->font_file_name = font_file_name;
   font->codepoints = codepoints;
   font->codepoint_count = codepoint_count;
   font->raster_font_height = raster_font_height;
   
   return index;
 }
+
 
 static Sui_Atlas
 begin_atlas_builder(const char* bitmap_id_name,
@@ -154,7 +156,7 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
   
   if (rect_count == 0) return; 
   
-  // Allocate required memory required 
+  // Allocate required memory required
   auto* rects = ba_push_array<RP_Rect>(allocator, rect_count);
   auto* contexts = ba_push_array<Sui_Atlas_Context>(allocator, rect_count);
   
@@ -166,11 +168,12 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
        font_index < ab->font_count;
        ++font_index) 
   {
-    
+    declare_and_pointerize(TTF, ttf);
     ba_set_revert_point(allocator);
+
     Sui_Atlas_Font* font = ab->fonts + font_index;
-    
-    TTF* ttf = font->loaded_ttf;
+    B32 ok = sui_read_font_from_file(ttf, font->font_file_name, allocator); 
+    assert(ok);
     F32 s = ttf_get_scale_for_pixel_height(ttf, font->raster_font_height);
     
     // grab the slice of RP_Rects that belongs to this font
@@ -206,12 +209,13 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
     ba_set_revert_point(allocator);
     
     Sui_Atlas_Sprite* sprite = ab->sprites + sprite_index;
-    
-    Memory file_memory = sui_read_file(sprite->filename, allocator);
-    assert(is_ok(file_memory));
+
+    declare_and_pointerize(Memory, mem);
+    B32 ok = sui_read_file_to_memory(mem, sprite->filename, allocator);
+    assert(ok);
     
     declare_and_pointerize(PNG, png);
-    B32 ok = png_read(png, file_memory.data, file_memory.size);
+    ok = png_read(png, mem->data, mem->size);
     assert(ok);
     assert(png->width != 0 && png->height != 0);
     
@@ -257,12 +261,15 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
       case SUI_ATLAS_CONTEXT_TYPE_SPRITE: {
         ba_set_revert_point(allocator);
         Sui_Atlas_Sprite* related_entry = context->sprite.sprite;
-        
-        Memory file_memory = sui_read_file(related_entry->filename, allocator);
-        assert(is_ok(file_memory));
+       
+        declare_and_pointerize(Memory, mem);
+       
+        //TODO: return false?
+        B32 ok = sui_read_file_to_memory(mem, related_entry->filename, allocator);
+        assert(ok);
         
         declare_and_pointerize(PNG, png);
-        B32 ok = png_read(png, file_memory.data, file_memory.size);
+        ok = png_read(png, mem->data, mem->size);
         assert(ok);
         
         Bitmap bm = png_to_bitmap(png, allocator);
@@ -282,7 +289,12 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
         Sui_Atlas_Font* related_entry = context->font_glyph.font;
         Sui_Atlas_Font_Glyph_Context* related_context = &context->font_glyph;
         
-        TTF* ttf = related_entry->loaded_ttf;
+        declare_and_pointerize(TTF, ttf);
+        
+        // TODO: return false?
+        B32 ok = sui_read_font_from_file(ttf, related_entry->font_file_name, allocator); 
+        assert(ok);
+
         F32 s = ttf_get_scale_for_pixel_height(ttf, related_entry->raster_font_height);
         U32 glyph_index = ttf_get_glyph_index(ttf, related_context->codepoint);
         

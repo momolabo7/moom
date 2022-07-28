@@ -33,58 +33,53 @@ sui_free(Memory* mem) {
   mem->size = 0;
 }
 
-static Memory 
-sui_read_file(const char* filename, Bump_Allocator* allocator) {
+static B32 
+sui_read_file_to_memory(Memory* mem, const char* filename, Bump_Allocator* allocator) {
   FILE *file = fopen(filename, "rb");
-  if (!file) return {};
+  if (!file) return false;
   defer { fclose(file); };
 
   fseek(file, 0, SEEK_END);
   UMI file_size = ftell(file);
   fseek(file, 0, SEEK_SET);
  
-  printf("%s, %lld\n", filename, file_size);
+  sui_log("%s, %lld\n", filename, file_size);
   void* file_memory = ba_push_block(allocator, file_size); 
   assert(file_memory);
   UMI read_amount = fread(file_memory, 1, file_size, file);
   assert(read_amount == file_size);
   
-  Memory ret;
-  ret.data = file_memory;
-  ret.size = file_size; 
+  mem->data = file_memory;
+  mem->size = file_size; 
   
-  return ret;
+  return true;
   
 }
 
-static void
-sui_write_file(const char* filename, Memory memory) {
+static B32
+sui_write_file_from_memory(const char* filename, Memory memory) {
   FILE *file = fopen(filename, "wb");
-  if (!file) return;
+  if (!file) return false;
   defer { fclose(file); };
   
   fwrite(memory.data, 1, memory.size, file);
+  return true;
 }
 
-static TTF 
-sui_load_font(const char* filename, Bump_Allocator* allocator) {
-  Memory mem = sui_read_file(filename, allocator);
-  assert(is_ok(mem));
-  
-  TTF ret = ttf_read(mem);
-  return ret;
+static B32 
+sui_read_font_from_file(TTF* ttf, const char* filename, Bump_Allocator* allocator) {
+  declare_and_pointerize(Memory, mem);
+  if (!sui_read_file_to_memory(mem, filename, allocator)) 
+    return false;
+  return ttf_read(ttf, mem->data, mem->size);
 }
 
-static WAV 
-sui_load_wav(const char* filename, Bump_Allocator* allocator) {
-  Memory mem = sui_read_file(filename, allocator);
-  assert(is_ok(mem));
-
-  WAV wav = {};
-  if (!wav_read(&wav, mem.data, mem.size)) {
-    assert(false);
-  }
-  return wav;
+static B32 
+sui_read_wav_from_file(WAV* wav, const char* filename, Bump_Allocator* allocator) {
+  declare_and_pointerize(Memory, mem);
+  if(!sui_read_file_to_memory(mem, filename, allocator))
+    return false;
+  return wav_read(wav, mem->data, mem->size);
 }
 
 #endif //Karu_EXPORT_H
