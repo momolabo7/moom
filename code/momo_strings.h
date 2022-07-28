@@ -21,8 +21,6 @@ static String string_from_cstr(char* cstr);
 #define string_from_lit(s) string((U8*)(s), sizeof(s)-1)
 
 
-
-
 //~ String builders
 struct String_Builder{
 	union {

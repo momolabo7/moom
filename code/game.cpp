@@ -5,18 +5,17 @@
 Platform_API g_platform;
 Profiler* g_profiler;
 
-
 /////////////////////////////////////////////////////////
 // GAME
 exported B32 
 game_update_and_render(Platform* pf)
 { 
-  
   g_platform = pf->platform_api;
   g_profiler = pf->profiler;
   
   profile_block("game.dll");
-  
+
+
   // Initialization
   if (!pf->game) {
     pf->game = ba_push<Game>(pf->game_arena);
@@ -60,7 +59,7 @@ game_update_and_render(Platform* pf)
   add_inspector_entry(in, string_from_lit("Test"), &test_value);
   
   //-Game state management
-  // TODO: Figure out is_done
+  //TODO: Figure out is_done
   B32 is_done = false;
    
   //~ GSM
