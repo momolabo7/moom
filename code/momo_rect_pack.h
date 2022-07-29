@@ -29,8 +29,6 @@ struct RP_Rect {
 //   fill up the w and h. After RP_Pack() is called
 //   x and y will be overwritten and the rects will be 
 //   sorted
-// nodes:
-//   Just need an array of RP_Node == rect_count+1
 // rect_count:
 //   Amount of elements in rects
 // padding: 
@@ -40,6 +38,10 @@ struct RP_Rect {
 // sort_type:
 //   The method to sort, as per RP_SortType. 
 //   Usually, you want to just call RP_SortType_Height
+// allocator: 
+//   Bump allocator used for memory allocation needed
+//   for sorting. All memory used is just temporary and
+//   will be cleared.
 //   
 
 static void rp_pack(RP_Rect* rects, 
@@ -114,6 +116,7 @@ _rp_sort(_RP_Sort_Entry* sort_entries,
     } break;
   }
 }
+
 static void
 rp_pack(RP_Rect* rects, 
         U32 rect_count, 
@@ -123,13 +126,12 @@ rp_pack(RP_Rect* rects,
         RP_Sort_Type sort_type,
         Bump_Allocator* allocator) 
 {
-  
+  ba_set_revert_point(allocator);t
   auto* sort_entries = ba_push_array<_RP_Sort_Entry>(allocator, rect_count);
   for (U32 i = 0; i < rect_count; ++i) {
     sort_entries[i].rect = rects + i;
   }
   _rp_sort(sort_entries, rect_count, sort_type);
-  
   auto* nodes = ba_push_array<_RP_Node>(allocator, rect_count+1);
   
   U32 current_node_count = 1;

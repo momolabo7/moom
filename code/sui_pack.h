@@ -47,6 +47,7 @@ struct Sui_Packer_Sprite {
   const C8* filename;
   const C8* sprite_id_name;
   U32 bitmap_id;
+
 };
 
 struct Sui_Packer_Font {
@@ -54,6 +55,7 @@ struct Sui_Packer_Font {
   const char* file_name;
   const U32* codepoints;
   const U32 codepoint_count;
+  U32 bitmap_id;
 };
 #endif
 
@@ -76,7 +78,6 @@ struct Sui_Packer {
 
   U32 bitmap_count;
   Sui_Packer_Bitmap bitmaps[128];
-
   
   U32 sprite_count;
   Sui_Packer_Sprite sprites[128];
@@ -192,7 +193,7 @@ begin_atlas(Sui_Packer *p) {
   p->ope_atlas_font_id = p->first_atlas_font_id;
 }
 
-static void 
+static B32 
 end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
 {
   Sui_Packer_Bitmap* bmp = p->bitmaps + p->current_atlas_bitmap_id;
@@ -201,8 +202,8 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
   bmp->height = height;
   bmp->pixels = ba_push_array<U32>(p->allocator, w * h);
   bmp->id_name = id_name;
-  
-  assert(bmp->pixels);
+
+  if (!bmp->pixels) return false; 
    
   // Count the amount of rects
   U32 rect_count = p->ope_atlas_sprite_id - p->first_atlas_sprite_id;
@@ -215,26 +216,68 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
     }
   }
 
-  if (rect_count == 0) return;
+  if (rect_count == 0) return false;
 
   auto* rects = ba_push_array<RP_Rect>(p->allocator, rect_count);
-  auto* contexts = ba_push_array<Sui_Atlas_Context>(p->allocator, rect_count);
+  if (!rects) return false;
 
   ba_set_revert_point(p->allocator);
+  U32 rect_index = 0;
+
   for (U32 font_id = p->first_atlas_font_id;
        font_id < p->ope_atlas_font_id;
        ++font_id)
   {
+    ba_set_revert_point(p->allocator);
     Sui_Packer_Font* font = p->fonts + font_id;
+
+    declare_and_pointerize(TTF, ttf);
+    if (!sui_read_font_from_file(ttf, font->file_name, allocator))
+      return false; 
+
+    F32 s = ttf_get_scale_for_pixel_height(ttf, font->raster_font_height);
+    
+    // grab the slice of RP_Rects that belongs to this font
+    font->glyph_rects = rects + rect_index;
+    font->glyph_rect_contexts = contexts + context_index;
+    font->rect_count = 0;
+    
+    for (U32 cpi = 0; cpi < font->codepoint_count; ++cpi) {
+      U32 cp = font->codepoints[cpi];
+      U32 glyph_index = ttf_get_glyph_index(ttf, cp);
+      Rect2 box = ttf_get_glyph_box(ttf, glyph_index, s);
+      V2U dims = ttf_get_bitmap_dims_from_glyph_box(box);
+      
+      RP_Rect* rect = rects + rect_index++;
+      rect->w = dims.w;
+      rect->h = dims.h;
+      
+      // TODO: set font's RP_Rect to this
     
   }
   for (U32 sprite_id = p->first_atlas_sprite_id;
        sprite_id < p->ope_atlas_sprite_id;
        ++sprite_id)
   {
+    ba_set_revert_point(p->allocator);
     Sui_Packer_Sprite* sprite = p->sprites + sprite_id;
+    declare_and_pointerize(Memory, mem);
+    declare_and_pointerize(PNG, png);
+    if (!sui_read_file_to_memory(mem, sprite_filename, p->allocator))
+      return false;
+    if (!png_read(png, mem->data, mem->size)) 
+      return false;
+   
+    RP_Rect* rect = rects + rect_index++;
+    rect->w = png->width;
+    rect->h = png->height;
+
+    sprite->rect = rect;
+
   }
 
+  // Pack the rects
+  rp_pack(rects, rect_count, 1, bmp->width, bmp->height, RP_SORT_TYPE_HEIGHT, p->allocator);
 }
 
 static void
@@ -259,6 +302,7 @@ push_atlas_font(Sui_Packer* p,
   f->file_name = file_name
   f->codepoints = codepoints;
   f->codepoint_count = codepoint_count;
+  f->bitmap_id = p->current_atlas_bitmap_id;
 }
 
 #if 0
