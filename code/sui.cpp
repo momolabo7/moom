@@ -65,7 +65,10 @@ int main() {
                   code_dir("generated_sound_ids.h")))
   {
     begin_asset_pack(sp);
+    begin_atlas(sp, "BITMAP_DEFAULT", 1024, 1024);
 #if 0
+    
+
     // Maybe we want to do something like this:
     begin_atlas(sp, "BITMAP_DEFAULT", 1024, 1024);
     push_atlas_font(sp, "FONT_DEFAULT", asset_dir("liberation-mono.ttf"), 128.f, interested_cps, array_count(interested_cps));
