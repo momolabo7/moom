@@ -65,22 +65,22 @@ int main() {
                   code_dir("generated_sound_ids.h")))
   {
     begin_asset_pack(sp);
-    begin_atlas(sp, "BITMAP_DEFAULT", 1024, 1024);
-#if 0
+    begin_atlas(sp);
+#if 1
     
 
     // Maybe we want to do something like this:
-    begin_atlas(sp, "BITMAP_DEFAULT", 1024, 1024);
-    push_atlas_font(sp, "FONT_DEFAULT", asset_dir("liberation-mono.ttf"), 128.f, interested_cps, array_count(interested_cps));
-    push_atlas_sprite(&atlas, "SPRITE_BULLET_CIRCLE", asset_dir("bullet_circle.png"));
-    push_atlas_sprite(&atlas, "SPRITE_BULLET_DOT", asset_dir("bullet_dot.png"));
-    push_atlas_sprite(&atlas, "SPRITE_PLAYER_BLACK", asset_dir("player_black.png"));
-    push_atlas_sprite(&atlas, "SPRITE_PLAYER_WHITE", asset_dir("player_white.png"));
-    end_atlas(sp);
+    begin_atlas(sp);
+    //push_atlas_font(sp, "FONT_DEFAULT", asset_dir("liberation-mono.ttf"), 128.f, interested_cps, array_count(interested_cps));
+    push_atlas_sprite(sp, "SPRITE_BULLET_CIRCLE", asset_dir("bullet_circle.png"));
+    push_atlas_sprite(sp, "SPRITE_BULLET_DOT", asset_dir("bullet_dot.png"));
+    push_atlas_sprite(sp, "SPRITE_PLAYER_BLACK", asset_dir("player_black.png"));
+    push_atlas_sprite(sp, "SPRITE_PLAYER_WHITE", asset_dir("player_white.png"));
+    end_atlas(sp, "BITMAP_DEFAULT", 1024, 1024);
+#else 
+    push_atlas(sp, atlas);
+    push_sound(sp, "SOUND_TEST", loaded_wav);
 #endif
-
-    add_atlas(sp, atlas);
-    add_sound(sp, "SOUND_TEST", loaded_wav);
     end_asset_pack(sp, "PACK_DEFAULT", "test.sui", allocator);
 
 

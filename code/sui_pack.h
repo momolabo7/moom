@@ -44,18 +44,22 @@ struct Sui_Packer_Font {
 };
 #else 
 struct Sui_Packer_Sprite {
-  const C8* filename;
-  const C8* sprite_id_name;
+  const C8* file_name;
+  const C8* id_name;
   U32 bitmap_id;
-
+  RP_Rect* rect;
 };
 
 struct Sui_Packer_Font {
   const char* id_name;
   const char* file_name;
-  const U32* codepoints;
-  const U32 codepoint_count;
+  U32* codepoints;
+  U32 codepoint_count;
   U32 bitmap_id;
+
+  U32 rect_count;
+  RP_Rect* glyph_rects;
+
 };
 #endif
 
@@ -69,6 +73,8 @@ struct Sui_Packer {
   FILE* pack_id_file;
   U32 pack_count;
   const char* current_pack_id_name;
+
+  Bump_Allocator* allocator;
 
   FILE* bitmap_id_file;
   FILE* font_id_file;
@@ -200,7 +206,7 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
 
   bmp->width = width;
   bmp->height = height;
-  bmp->pixels = ba_push_array<U32>(p->allocator, w * h);
+  bmp->pixels = ba_push_array<U32>(p->allocator, width * height);
   bmp->id_name = id_name;
 
   if (!bmp->pixels) return false; 
@@ -208,12 +214,15 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
   // Count the amount of rects
   U32 rect_count = p->ope_atlas_sprite_id - p->first_atlas_sprite_id;
   {
+    // Figure out font
+#if 0
     for (U32 font_id = p->first_atlas_font_id;
          font_id < p->ope_atlas_font_id;
          ++font_id)
     {
       rect_count += fonts[font_id].codepoint_count;
     }
+#endif
   }
 
   if (rect_count == 0) return false;
@@ -224,6 +233,8 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
   ba_set_revert_point(p->allocator);
   U32 rect_index = 0;
 
+  // Figure out font
+#if 0 
   for (U32 font_id = p->first_atlas_font_id;
        font_id < p->ope_atlas_font_id;
        ++font_id)
@@ -255,6 +266,7 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
       // TODO: set font's RP_Rect to this
     
   }
+#endif 
   for (U32 sprite_id = p->first_atlas_sprite_id;
        sprite_id < p->ope_atlas_sprite_id;
        ++sprite_id)
@@ -263,7 +275,7 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
     Sui_Packer_Sprite* sprite = p->sprites + sprite_id;
     declare_and_pointerize(Memory, mem);
     declare_and_pointerize(PNG, png);
-    if (!sui_read_file_to_memory(mem, sprite_filename, p->allocator))
+    if (!sui_read_file_to_memory(mem, sprite->file_name, p->allocator))
       return false;
     if (!png_read(png, mem->data, mem->size)) 
       return false;
@@ -278,6 +290,37 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
 
   // Pack the rects
   rp_pack(rects, rect_count, 1, bmp->width, bmp->height, RP_SORT_TYPE_HEIGHT, p->allocator);
+
+  // Rasterize the bitmap
+  {
+    // Sprites
+    for (U32 sprite_id = p->first_atlas_sprite_id;
+         sprite_id < p->ope_atlas_sprite_id;
+         ++sprite_id)
+    {
+      ba_set_revert_point(p->allocator);
+      Sui_Packer_Sprite* sprite = p->sprites + sprite_id;
+      declare_and_pointerize(Memory, mem);
+      declare_and_pointerize(PNG, png);
+      if (!sui_read_file_to_memory(mem, sprite->file_name, p->allocator))
+        return false;
+      if (!png_read(png, mem->data, mem->size)) 
+        return false;
+      Bitmap sprite_bmp = png_to_bitmap(png, p->allocator);
+      if (!is_ok(sprite_bmp)) continue;
+
+      RP_Rect* rect = sprite->rect;
+      for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
+        for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
+          UMI index = (x + y *  bmp->width);
+          ((U32*)(bmp->pixels))[index] = ((U32*)(sprite_bmp.pixels))[j++];
+        }
+      }
+    }
+  }
+
+
+  return true;
 }
 
 static void
@@ -291,15 +334,15 @@ push_atlas_sprite(Sui_Packer* p, const char* id_name, const char* file_name) {
 
 static void
 push_atlas_font(Sui_Packer* p, 
-                const C8* font_id_name,
-                const C8* filename, 
-                const U32* codepoints, 
+                const C8* id_name,
+                const C8* file_name, 
+                U32* codepoints, 
                 U32 codepoint_count)
 {
   assert(p->font_count < array_count(p->fonts));
   Sui_Packer_Font* f = p->fonts + p->font_count++;
   f->id_name = id_name;
-  f->file_name = file_name
+  f->file_name = file_name;
   f->codepoints = codepoints;
   f->codepoint_count = codepoint_count;
   f->bitmap_id = p->current_atlas_bitmap_id;
@@ -481,9 +524,6 @@ end_asset_pack(Sui_Packer* p,
   if (file) return false;
   defer { fclose(file); };
   
-
-
-  
   // Packed in this order:
   // - Bitmap, Sprite, Font, Sound, Msgs
   Karu_Header header = {};
@@ -505,7 +545,8 @@ end_asset_pack(Sui_Packer* p,
   U8 buffer[256];
   declare_and_pointerize(String_Builder, builder);
   init_string_builder(builder, buffer, array_count(buffer));
-  
+ 
+#if 0
   for (U32 bitmap_index = 0;
        bitmap_index < p->bitmap_count;
        ++bitmap_index) 
@@ -530,7 +571,7 @@ end_asset_pack(Sui_Packer* p,
     
     // Write to bitmap_id file
     String format = string_from_lit("%s = %s << 16 | %u,\n");
-    push_format(builder, format, pb->bitmap_id_name, pack_id_name, bitmap_index);
+    push_format(builder, format, pb->id_name, pack_id_name, bitmap_index);
     fwrite(builder->e, builder->count, 1, p->bitmap_id_file);
     clear(builder);
   }
@@ -671,6 +712,7 @@ end_asset_pack(Sui_Packer* p,
   // Write the header
   fseek(file, 0, SEEK_SET);
   fwrite(&header, sizeof(header), 1, file);
+#endif
   
   // Write the pack id
   {

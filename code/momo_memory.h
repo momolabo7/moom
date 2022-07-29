@@ -40,7 +40,7 @@ static void		              ba_revert(Bump_Allocator_Marker marker);
 
 
 
-#define __ba_set_revert_point(a,l) auto ttt##l = ba_mark(allocator); defer{ba_revert(ttt##l);};
+#define __ba_set_revert_point(a,l) auto ttt##l = ba_mark(a); defer{ba_revert(ttt##l);};
 #define _ba_set_revert_point(a,l) __ba_set_revert_point(a,l)
 #define ba_set_revert_point(allocator) _ba_set_revert_point(allocator, __LINE__) 
 

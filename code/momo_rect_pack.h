@@ -126,7 +126,7 @@ rp_pack(RP_Rect* rects,
         RP_Sort_Type sort_type,
         Bump_Allocator* allocator) 
 {
-  ba_set_revert_point(allocator);t
+  ba_set_revert_point(allocator);
   auto* sort_entries = ba_push_array<_RP_Sort_Entry>(allocator, rect_count);
   for (U32 i = 0; i < rect_count; ++i) {
     sort_entries[i].rect = rects + i;
