@@ -1,5 +1,3 @@
-/* date = January 20th 2022 10:14 am */
-
 #ifndef SUI_H
 #define SUI_H
 

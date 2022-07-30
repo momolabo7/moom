@@ -8,14 +8,13 @@
 int main() {
   Memory memory = sui_malloc(MB(100));
   defer { sui_free(&memory); };
-  
   declare_and_pointerize(Bump_Allocator, allocator);
   ba_init(allocator, memory.data, memory.size);
  
-
-  declare_and_pointerize(WAV, loaded_wav);
-  sui_read_wav_from_file(loaded_wav,asset_dir("bgm_menu.wav"), allocator); 
-  
+  //declare_and_pointerize(WAV, loaded_wav);
+  //sui_read_wav_from_file(loaded_wav,asset_dir("bgm_menu.wav"), allocator); 
+ 
+#if 0
   sui_log("Building atlas...\n");
   declare_and_pointerize(Sui_Atlas, atlas);
 
@@ -47,17 +46,11 @@ int main() {
   }
   if(!end_atlas_builder(atlas, allocator)) return 1;
   sui_log("Finished atlas...\n");
+#endif  
   
-  
-#if 1
-  sui_log("Writing test png file...\n");
-  Memory png_to_write_memory = png_write(atlas->bitmap, allocator);
-  if (!is_ok(png_to_write_memory)) return 1;
-  sui_write_file_from_memory("test.png", png_to_write_memory);
-#endif
   
   declare_and_pointerize(Sui_Packer, sp);
-  if(begin_packer(sp, 
+  if(begin_packer(sp, allocator,
                   code_dir("generated_pack_ids.h"),
                   code_dir("generated_bitmap_ids.h"),
                   code_dir("generated_sprite_ids.h"),

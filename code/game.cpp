@@ -15,7 +15,6 @@ game_update_and_render(Platform* pf)
   
   profile_block("game.dll");
 
-
   // Initialization
   if (!pf->game) {
     pf->game = ba_push<Game>(pf->game_arena);
@@ -57,12 +56,8 @@ game_update_and_render(Platform* pf)
   
   static U32 test_value = 32;
   add_inspector_entry(in, string_from_lit("Test"), &test_value);
-  
-  //-Game state management
-  //TODO: Figure out is_done
-  B32 is_done = false;
-   
-  //~ GSM
+
+  // Game state management
   if (game->is_mode_changed && game->init_mode) {
     game->init_mode(game);
     game->is_mode_changed = false;
@@ -91,6 +86,6 @@ game_update_and_render(Platform* pf)
     default: {}
   }
   
-  return is_done;
+  return game->is_done;
   
 }

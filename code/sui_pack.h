@@ -113,13 +113,15 @@ struct Sui_Packer {
 //
 static B32
 begin_packer(Sui_Packer* p,
+             Bump_Allocator* allocator,
              const char* pack_id_filename,
              const char* bitmap_id_filename,
              const char* sprite_id_filename,
              const char* font_id_filename,
              const char* sound_id_filename)
 {
-   
+  p->allocator = allocator;
+
   p->pack_id_file = fopen(pack_id_filename, "w");
   p->bitmap_id_file = fopen(bitmap_id_filename, "w");
   p->font_id_file = fopen(font_id_filename, "w");
@@ -319,6 +321,22 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
     }
   }
 
+#if 1
+  // test
+  {
+    Bitmap bitmap = {};
+    bitmap.width = bmp->width;
+    bitmap.height = bmp->height;
+    bitmap.pixels = bmp->pixels; 
+
+    ba_set_revert_point(p->allocator);
+    sui_log("Writing test png file...\n");
+    Memory png_to_write_memory = png_write(bitmap, p->allocator);
+    if (!is_ok(png_to_write_memory)) return 1;
+    sui_write_file_from_memory("test.png", png_to_write_memory);
+  }
+#endif
+
 
   return true;
 }
@@ -330,6 +348,8 @@ push_atlas_sprite(Sui_Packer* p, const char* id_name, const char* file_name) {
   s->file_name = file_name;
   s->id_name = id_name;
   s->bitmap_id = p->current_atlas_bitmap_id;
+
+  ++p->ope_atlas_sprite_id;
 }
 
 static void
