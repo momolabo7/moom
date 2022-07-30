@@ -189,6 +189,25 @@ begin_asset_pack(Sui_Packer* p)
   p->font_glyph_count = 0;
 }
 
+#if 0
+static U32
+push_bitmap(Sui_Packer* p, 
+            U32 w, U32 h, 
+            U32* pixels, 
+            const char* bitmap_id_name) 
+{
+  assert(p->bitmap_count < array_count(p->bitmaps));
+  
+  Sui_Packer_Bitmap* bitmap = p->bitmaps + p->bitmap_count;
+  bitmap->width = w;
+  bitmap->height = h;
+  bitmap->pixels = pixels;
+  bitmap->bitmap_id_name = bitmap_id_name;
+  
+  return p->bitmap_count++;
+}
+#endif
+
 static void 
 begin_atlas(Sui_Packer *p) {
   assert(p->bitmap_count < array_count(p->bitmaps));
@@ -366,26 +385,13 @@ push_atlas_font(Sui_Packer* p,
   f->codepoints = codepoints;
   f->codepoint_count = codepoint_count;
   f->bitmap_id = p->current_atlas_bitmap_id;
+
+  ++p->ope_atlas_font_id;
 }
+
+
 
 #if 0
-static U32
-push_bitmap(Sui_Packer* p, 
-            U32 w, U32 h, 
-            U32* pixels, 
-            const char* bitmap_id_name) 
-{
-  assert(p->bitmap_count < array_count(p->bitmaps));
-  
-  Sui_Packer_Bitmap* bitmap = p->bitmaps + p->bitmap_count;
-  bitmap->width = w;
-  bitmap->height = h;
-  bitmap->pixels = pixels;
-  bitmap->bitmap_id_name = bitmap_id_name;
-  
-  return p->bitmap_count++;
-}
-
 static U32 
 add_sprite(Sui_Packer* p, 
            U32 bitmap_id, 
@@ -541,7 +547,7 @@ end_asset_pack(Sui_Packer* p,
   defer { sui_log("End writing to %s\n", filename); };
   
   FILE* file = fopen(filename, "wb");
-  if (file) return false;
+  if (!file) return false;
   defer { fclose(file); };
   
   // Packed in this order:
@@ -566,7 +572,6 @@ end_asset_pack(Sui_Packer* p,
   declare_and_pointerize(String_Builder, builder);
   init_string_builder(builder, buffer, array_count(buffer));
  
-#if 0
   for (U32 bitmap_index = 0;
        bitmap_index < p->bitmap_count;
        ++bitmap_index) 
@@ -596,6 +601,7 @@ end_asset_pack(Sui_Packer* p,
     clear(builder);
   }
   
+#if 0
   for (U32 sprite_index = 0;
        sprite_index < p->sprite_count;
        ++sprite_index) 
