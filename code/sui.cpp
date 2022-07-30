@@ -62,6 +62,10 @@ int main() {
     // Maybe we want to do something like this:
     begin_atlas(sp);
     //push_atlas_font(sp, "FONT_DEFAULT", asset_dir("liberation-mono.ttf"), 128.f, interested_cps, array_count(interested_cps));
+    begin_atlas_font();
+    push_atlas_font_glyph();
+    end_atlas_font();
+    
     push_atlas_sprite(sp, "SPRITE_BULLET_CIRCLE", asset_dir("bullet_circle.png"));
     push_atlas_sprite(sp, "SPRITE_BULLET_DOT", asset_dir("bullet_dot.png"));
     push_atlas_sprite(sp, "SPRITE_PLAYER_BLACK", asset_dir("player_black.png"));
