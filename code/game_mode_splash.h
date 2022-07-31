@@ -5,6 +5,9 @@
 
 #include "game.h"
 
+static void sb1_init(Game*);
+static void sb1_tick(Game*, Painter*, Platform* );
+
 //////////////////////////////////////////////////
 // SPLASH MODE
 //
@@ -32,7 +35,7 @@ splash_tick(Game* game,
   if (splash->timer < 0.f) {
     //game_set_mode(game, 0, 0); 
 
-    game_set_mode(game, splash_init, splash_tick);
+    game_set_mode(game, sb1_init, sb1_tick);
   }
  
   auto color = rgba(splash->timer, splash->timer, splash->timer, splash->timer);

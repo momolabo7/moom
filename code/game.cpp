@@ -1,6 +1,7 @@
 #include "momo.h"
 #include "game.h"
 #include "game_mode_splash.h"
+#include "game_sb1.h"
 
 Platform_API g_platform;
 Profiler* g_profiler;
