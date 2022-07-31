@@ -49,6 +49,7 @@ struct Game {
   
 
   // Mode Management 
+  B32 is_done;
   B32 is_mode_changed;
   Game_Mode_Init* init_mode;
   Game_Mode_Update* update_mode;

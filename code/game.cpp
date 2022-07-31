@@ -41,6 +41,7 @@ game_update_and_render(Platform* pf)
     init_console(console, &game->debug_arena);
     
     game->show_debug_type = GAME_SHOW_DEBUG_NONE;
+    game->is_done = false;
     game_log("Initialized!");
   }
   

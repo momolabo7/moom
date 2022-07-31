@@ -9,16 +9,6 @@
 #include "momo_ttf.h"
 #include "momo_strings.h"
 
-struct Sui_Packer_Font_Glyph {
-  Rect2 uv;
-  Rect2U texel_uv;
-  U32 codepoint;
-};
-
-#if 0
-
-#endif 
-
 struct Sui_Packer_Bitmap {
   U32 width;
   U32 height;
@@ -26,23 +16,6 @@ struct Sui_Packer_Bitmap {
   const C8* id_name;
 };
 
-#if 0
-struct Sui_Packer_Sprite {
-  U32 bitmap_id;
-  Rect2U texel_uv;
-  const char* sprite_id_name;
-};
-struct Sui_Packer_Font {
-  U32 bitmap_id;
-  U32 highest_codepoint;
-  const char* font_file_name;
-  
-  U32 glyph_start_index;
-  U32 one_past_glyph_end_index;
-  
-  const char* font_id_name;
-};
-#else 
 struct Sui_Packer_Sprite {
   const C8* file_name;
   const C8* id_name;
@@ -53,15 +26,18 @@ struct Sui_Packer_Sprite {
 struct Sui_Packer_Font {
   const char* id_name;
   const char* file_name;
-  U32* codepoints;
-  U32 codepoint_count;
   U32 bitmap_id;
 
-  U32 rect_count;
-  RP_Rect* glyph_rects;
-
+  U32 first_atlas_font_glyph_id;
+  U32 ope_atlas_font_glyph_id;
+  F32 glyph_height;
+  U32 highest_codepoint; // TODO: we should get rid of this?
 };
-#endif
+
+struct Sui_Packer_Font_Glyph{ 
+  U32 codepoint; 
+  RP_Rect* rect;
+};
 
 struct Sui_Packer_Sound {
   const char* sound_id_name;
@@ -83,20 +59,20 @@ struct Sui_Packer {
   
 
   U32 bitmap_count;
-  Sui_Packer_Bitmap bitmaps[128];
+  Sui_Packer_Bitmap bitmaps[32];
   
   U32 sprite_count;
   Sui_Packer_Sprite sprites[128];
   
   U32 sound_count;
-  Sui_Packer_Sound sounds[128];
+  Sui_Packer_Sound sounds[64];
 
   Sui_Packer_Font* current_font;
   
   U32 font_count;
   U32 font_glyph_count;
-  Sui_Packer_Font fonts[128];
-  Sui_Packer_Font_Glyph font_glyphs[128];
+  Sui_Packer_Font fonts[64];
+  Sui_Packer_Font_Glyph font_glyphs[256];
 
   // For atlas building
   U32 current_atlas_bitmap_id;
@@ -104,7 +80,7 @@ struct Sui_Packer {
   U32 ope_atlas_sprite_id;
   U32 first_atlas_font_id;
   U32 ope_atlas_font_id;
-
+  U32 current_atlas_font_id; 
 };
 
 
@@ -220,6 +196,80 @@ begin_atlas(Sui_Packer *p) {
   p->ope_atlas_font_id = p->first_atlas_font_id;
 }
 
+
+static void
+push_atlas_sprite(Sui_Packer* p, const char* id_name, const char* file_name) {
+  assert(p->sprite_count < array_count(p->sprites));
+  Sui_Packer_Sprite* s = p->sprites + p->sprite_count++;
+  s->file_name = file_name;
+  s->id_name = id_name;
+  s->bitmap_id = p->current_atlas_bitmap_id;
+
+  ++p->ope_atlas_sprite_id;
+}
+
+#if 0 
+static void
+push_atlas_font(Sui_Packer* p, 
+                const C8* id_name,
+                const C8* file_name, 
+                U32* codepoints, 
+                U32 codepoint_count)
+{
+  assert(p->font_count < array_count(p->fonts));
+  Sui_Packer_Font* f = p->fonts + p->font_count++;
+  f->id_name = id_name;
+  f->file_name = file_name;
+  f->codepoints = codepoints;
+  f->codepoint_count = codepoint_count;
+  f->bitmap_id = p->current_atlas_bitmap_id;
+
+  ++p->ope_atlas_font_id;
+}
+#endif
+
+
+
+static void
+begin_atlas_font(Sui_Packer* p,
+                 const C8* id_name,
+                 const C8* file_name,
+                 F32 glyph_height)
+{
+  assert(p->font_count < array_count(p->fonts));
+  p->current_atlas_font_id = p->font_count++;
+
+  Sui_Packer_Font* f = p->fonts + p->current_atlas_font_id;
+  f->id_name = id_name;
+  f->file_name = file_name;
+  f->glyph_height = glyph_height;
+  f->highest_codepoint = 0;
+
+  f->first_atlas_font_glyph_id = p->font_glyph_count;
+  f->ope_atlas_font_glyph_id = f->first_atlas_font_glyph_id;
+
+  ++p->ope_atlas_font_id;
+}
+
+static void 
+end_atlas_font(Sui_Packer* p) {
+  // Do nothing?
+}
+
+static void 
+push_atlas_font_glyph(Sui_Packer* p, U32 codepoint) {
+  assert(p->font_glyph_count < array_count(p->font_glyphs));
+  Sui_Packer_Font_Glyph* g = p->font_glyphs + p->font_glyph_count++;
+  g->codepoint = codepoint;
+
+  Sui_Packer_Font* f = p->fonts + p->current_atlas_font_id;
+  f->ope_atlas_font_glyph_id = p->font_glyph_count;
+
+  if (codepoint > f->highest_codepoint) {
+    f->highest_codepoint = codepoint;
+  }
+}
+
 static B32 
 end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
 {
@@ -236,14 +286,13 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
   U32 rect_count = p->ope_atlas_sprite_id - p->first_atlas_sprite_id;
   {
     // Figure out font
-#if 0
     for (U32 font_id = p->first_atlas_font_id;
          font_id < p->ope_atlas_font_id;
          ++font_id)
     {
-      rect_count += fonts[font_id].codepoint_count;
+      Sui_Packer_Font* f = p->fonts + font_id;
+      rect_count += f->ope_atlas_font_glyph_id - f->first_atlas_font_glyph_id;
     }
-#endif
   }
 
   if (rect_count == 0) return false;
@@ -255,7 +304,6 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
   U32 rect_index = 0;
 
   // Figure out font
-#if 0 
   for (U32 font_id = p->first_atlas_font_id;
        font_id < p->ope_atlas_font_id;
        ++font_id)
@@ -264,30 +312,30 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
     Sui_Packer_Font* font = p->fonts + font_id;
 
     declare_and_pointerize(TTF, ttf);
-    if (!sui_read_font_from_file(ttf, font->file_name, allocator))
+    if (!sui_read_font_from_file(ttf, font->file_name, p->allocator))
       return false; 
 
-    F32 s = ttf_get_scale_for_pixel_height(ttf, font->raster_font_height);
-    
-    // grab the slice of RP_Rects that belongs to this font
-    font->glyph_rects = rects + rect_index;
-    font->glyph_rect_contexts = contexts + context_index;
-    font->rect_count = 0;
-    
-    for (U32 cpi = 0; cpi < font->codepoint_count; ++cpi) {
-      U32 cp = font->codepoints[cpi];
+    F32 s = ttf_get_scale_for_pixel_height(ttf, font->glyph_height);
+   
+    for (U32 glyph_id = font->first_atlas_font_glyph_id;
+         glyph_id < font->ope_atlas_font_glyph_id;
+         ++glyph_id)
+    {
+      Sui_Packer_Font_Glyph* g = p->font_glyphs + glyph_id;
+      U32 cp = g->codepoint;
       U32 glyph_index = ttf_get_glyph_index(ttf, cp);
       Rect2 box = ttf_get_glyph_box(ttf, glyph_index, s);
       V2U dims = ttf_get_bitmap_dims_from_glyph_box(box);
-      
+ 
       RP_Rect* rect = rects + rect_index++;
       rect->w = dims.w;
       rect->h = dims.h;
-      
-      // TODO: set font's RP_Rect to this
-    
+
+      g->rect = rect;
+    }
   }
-#endif 
+
+
   for (U32 sprite_id = p->first_atlas_sprite_id;
        sprite_id < p->ope_atlas_sprite_id;
        ++sprite_id)
@@ -306,35 +354,66 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
     rect->h = png->height;
 
     sprite->rect = rect;
-
   }
 
   // Pack the rects
   rp_pack(rects, rect_count, 1, bmp->width, bmp->height, RP_SORT_TYPE_HEIGHT, p->allocator);
 
   // Rasterize the bitmap
+  // Sprites
+  for (U32 sprite_id = p->first_atlas_sprite_id;
+       sprite_id < p->ope_atlas_sprite_id;
+       ++sprite_id)
   {
-    // Sprites
-    for (U32 sprite_id = p->first_atlas_sprite_id;
-         sprite_id < p->ope_atlas_sprite_id;
-         ++sprite_id)
-    {
-      ba_set_revert_point(p->allocator);
-      Sui_Packer_Sprite* sprite = p->sprites + sprite_id;
-      declare_and_pointerize(Memory, mem);
-      declare_and_pointerize(PNG, png);
-      if (!sui_read_file_to_memory(mem, sprite->file_name, p->allocator))
-        return false;
-      if (!png_read(png, mem->data, mem->size)) 
-        return false;
-      Bitmap sprite_bmp = png_to_bitmap(png, p->allocator);
-      if (!is_ok(sprite_bmp)) continue;
+    ba_set_revert_point(p->allocator);
+    Sui_Packer_Sprite* sprite = p->sprites + sprite_id;
+    declare_and_pointerize(Memory, mem);
+    declare_and_pointerize(PNG, png);
+    if (!sui_read_file_to_memory(mem, sprite->file_name, p->allocator))
+      return false;
+    if (!png_read(png, mem->data, mem->size)) 
+      return false;
+    Bitmap sprite_bmp = png_to_bitmap(png, p->allocator);
+    if (!is_ok(sprite_bmp)) continue;
 
-      RP_Rect* rect = sprite->rect;
+    RP_Rect* rect = sprite->rect;
+    for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
+      for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
+        UMI index = (x + y *  bmp->width);
+        ((U32*)(bmp->pixels))[index] = ((U32*)(sprite_bmp.pixels))[j++];
+      }
+    }
+  }
+
+  // Font Glyphs
+  for (U32 font_id = p->first_atlas_font_id;
+       font_id < p->ope_atlas_font_id;
+       ++font_id)
+  {
+    ba_set_revert_point(p->allocator);
+    Sui_Packer_Font* f = p->fonts + font_id;
+
+    // TODO: Cache this into Sui_Packer_Font?
+    declare_and_pointerize(TTF, ttf);
+    if (!sui_read_font_from_file(ttf, f->file_name, p->allocator))
+      return false; 
+
+    for (U32 glyph_id = f->first_atlas_font_glyph_id;
+         glyph_id < f->ope_atlas_font_glyph_id;
+         ++glyph_id)
+    {
+      Sui_Packer_Font_Glyph* g = p->font_glyphs + glyph_id;
+      F32 s = ttf_get_scale_for_pixel_height(ttf, f->glyph_height);
+      U32 glyph_index = ttf_get_glyph_index(ttf, g->codepoint);
+
+      Bitmap glyph_bmp = ttf_rasterize_glyph(ttf, glyph_index, s, p->allocator);
+      if (!is_ok(glyph_bmp)) continue;
+
+      RP_Rect* rect = g->rect;
       for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
         for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
           UMI index = (x + y *  bmp->width);
-          ((U32*)(bmp->pixels))[index] = ((U32*)(sprite_bmp.pixels))[j++];
+          ((U32*)(bmp->pixels))[index] = ((U32*)(glyph_bmp.pixels))[j++];
         }
       }
     }
@@ -355,40 +434,8 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
     sui_write_file_from_memory("test.png", png_to_write_memory);
   }
 #endif
-
-
   return true;
 }
-
-static void
-push_atlas_sprite(Sui_Packer* p, const char* id_name, const char* file_name) {
-  assert(p->sprite_count < array_count(p->sprites));
-  Sui_Packer_Sprite* s = p->sprites + p->sprite_count++;
-  s->file_name = file_name;
-  s->id_name = id_name;
-  s->bitmap_id = p->current_atlas_bitmap_id;
-
-  ++p->ope_atlas_sprite_id;
-}
-
-static void
-push_atlas_font(Sui_Packer* p, 
-                const C8* id_name,
-                const C8* file_name, 
-                U32* codepoints, 
-                U32 codepoint_count)
-{
-  assert(p->font_count < array_count(p->fonts));
-  Sui_Packer_Font* f = p->fonts + p->font_count++;
-  f->id_name = id_name;
-  f->file_name = file_name;
-  f->codepoints = codepoints;
-  f->codepoint_count = codepoint_count;
-  f->bitmap_id = p->current_atlas_bitmap_id;
-
-  ++p->ope_atlas_font_id;
-}
-
 
 
 #if 0
@@ -455,16 +502,16 @@ end_font(Sui_Packer* p, const char* font_id_name, const char* font_file_name, U3
 }
 #endif
 
-static U32
+#if 0
+static void
 push_sound(Sui_Packer* p, const char* sound_id_name, WAV* wav) { 
   assert(p->sound_count < array_count(p->sounds));
 
-  Sui_Packer_Sound* sound = p->sounds + p->sound_count;
+  Sui_Packer_Sound* sound = p->sounds + p->sound_count++;
   sound->sound_id_name = sound_id_name;
   sound->wav = wav;
-
-  return p->sound_count++;
 }
+#endif
 
 
 #if 0
@@ -539,8 +586,7 @@ add_atlas(Sui_Packer* p, Sui_Atlas* atlas) {
 static B32
 end_asset_pack(Sui_Packer* p, 
                const char* pack_id_name,
-               const char* filename, 
-               Bump_Allocator* allocator) 
+               const char* filename) 
 
 {
   sui_log("Starting writing to %s\n", filename);
@@ -601,7 +647,7 @@ end_asset_pack(Sui_Packer* p,
     clear(builder);
   }
   
-#if 0
+
   for (U32 sprite_index = 0;
        sprite_index < p->sprite_count;
        ++sprite_index) 
@@ -609,30 +655,42 @@ end_asset_pack(Sui_Packer* p,
     sui_create_log_section_until_scope;
     sui_log("Writing sprite %u\n", sprite_index);
     Sui_Packer_Sprite* ps = p->sprites + sprite_index;
+    Sui_Packer_Bitmap* pb = p->bitmaps + ps->bitmap_id;
+
+    // Convert to rect to texel
+    RP_Rect* rect = ps->rect;
+    Rect2U texel_uv = {};
+    texel_uv.min.x = rect->x;
+    texel_uv.min.y = rect->y;
+    texel_uv.max.x = rect->x + rect->w;
+    texel_uv.max.y = rect->y + rect->h;
+
+    // Write sprite data
     Karu_Sprite ks = {};
     ks.bitmap_id = ps->bitmap_id;
-    ks.texel_uv = ps->texel_uv;
+    ks.texel_uv = texel_uv;
     fwrite(&ks, sizeof(Karu_Sprite), 1, file);
     
-    // write sprite id
+    // Add to sprite id
     String format = string_from_lit("%s = %s << 16 | %u,\n");
-    push_format(builder, format, ps->sprite_id_name, pack_id_name, sprite_index);
+    push_format(builder, format, ps->id_name, pack_id_name, sprite_index);
     fwrite(builder->e, builder->count, 1, p->sprite_id_file);
     clear(builder);
   }
-  
+ 
   for (U32 font_index = 0;
        font_index < p->font_count;
        ++font_index) 
   {
-    ba_set_revert_point(allocator);
+    ba_set_revert_point(p->allocator);
     sui_create_log_section_until_scope;
     sui_log("Writing font %u\n", font_index);
     Sui_Packer_Font* pf = p->fonts + font_index;
     Karu_Font kf = {};
+    
     kf.bitmap_id = pf->bitmap_id;
-    kf.highest_codepoint = pf->highest_codepoint;
-    kf.glyph_count = pf->one_past_glyph_end_index - pf->glyph_start_index;
+    kf.highest_codepoint = pf->highest_codepoint; // ????????
+    kf.glyph_count = pf->ope_atlas_font_glyph_id - pf->first_atlas_font_glyph_id;
     kf.offset_to_data = offset_to_data;
     fwrite(&kf, sizeof(Karu_Font), 1, file);
     
@@ -640,20 +698,26 @@ end_asset_pack(Sui_Packer* p,
     fseek(file, kf.offset_to_data, SEEK_SET);
 
     declare_and_pointerize(TTF, ttf);
-    B32 ok = sui_read_font_from_file(ttf, pf->font_file_name, allocator);
-    assert(ok);
-    
-    for (U32 glyph_index = pf->glyph_start_index;
-         glyph_index < pf->one_past_glyph_end_index;
+    if(!sui_read_font_from_file(ttf, pf->file_name, p->allocator))
+      return false;
+   
+    for (U32 glyph_index = pf->first_atlas_font_glyph_id;
+         glyph_index < pf->ope_atlas_font_glyph_id;
          ++glyph_index) 
     {
       Sui_Packer_Font_Glyph* pfg = p->font_glyphs + glyph_index;
+      
+      // Convert to rect to texel
+      RP_Rect* rect = pfg->rect;
+      Rect2U texel_uv = {};
+      texel_uv.min.x = rect->x;
+      texel_uv.min.y = rect->y;
+      texel_uv.max.x = rect->x + rect->w;
+      texel_uv.max.y = rect->y + rect->h;
+
       Karu_Font_Glyph kfg = {};
-      
-      kfg.texel_uv = pfg->texel_uv;
-      kfg.uv = pfg->uv;
+      kfg.texel_uv = texel_uv;
       kfg.codepoint = pfg->codepoint;
-      
 
       U32 ttf_glyph_index = ttf_get_glyph_index(ttf,kfg.codepoint);
       F32 s = ttf_get_scale_for_pixel_height(ttf, 1.f);
@@ -662,15 +726,15 @@ end_asset_pack(Sui_Packer* p,
       offset_to_data += sizeof(kfg);
     }
     
-    for (U32 pgi1 = pf->glyph_start_index;
-         pgi1 < pf->one_past_glyph_end_index;
+    for (U32 pgi1 = pf->first_atlas_font_glyph_id;
+         pgi1 < pf->ope_atlas_font_glyph_id;
          ++pgi1) 
     {
       F32 pixel_scale = ttf_get_scale_for_pixel_height(ttf, 1.f);
       
       Sui_Packer_Font_Glyph* pfg1 = p->font_glyphs + pgi1;
-      for (U32 pgi2 = pf->glyph_start_index;
-           pgi2 < pf->one_past_glyph_end_index;
+      for (U32 pgi2 = pf->first_atlas_font_glyph_id;
+           pgi2 < pf->ope_atlas_font_glyph_id;
            ++pgi2) 
       {
         Sui_Packer_Font_Glyph* pfg2 = p->font_glyphs + pgi2;
@@ -700,12 +764,13 @@ end_asset_pack(Sui_Packer* p,
     
     // write font id
     String format = string_from_lit("%s = %s << 16 | %u,\n");
-    push_format(builder, format, pf->font_id_name, pack_id_name, font_index);
+    push_format(builder, format, pf->id_name, pack_id_name, font_index);
     fwrite(builder->e, builder->count, 1, p->font_id_file);
     clear(builder);
   }
 
 
+#if 0
   for(U32 sound_index = 0;
       sound_index < p->sound_count;
       ++sound_index) 
