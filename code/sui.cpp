@@ -5,6 +5,9 @@
 #include "sui_pack.h"
 #include "karu.h"
 
+#define sui_check_death(e) if (!e) goto fail;
+
+
 int main() {
   Memory memory = sui_malloc(MB(100));
   defer { sui_free(&memory); };
@@ -50,42 +53,44 @@ int main() {
   
   
   declare_and_pointerize(Sui_Packer, sp);
-  if(begin_packer(sp, allocator,
+  
+
+  sui_check_death(begin_packer(sp, allocator,
                   code_dir("generated_pack_ids.h"),
                   code_dir("generated_bitmap_ids.h"),
                   code_dir("generated_sprite_ids.h"),
                   code_dir("generated_font_ids.h"),
-                  code_dir("generated_sound_ids.h")))
-  {
-    begin_asset_pack(sp);
-#if 1
-    // Maybe we want to do something like this:
-    begin_atlas(sp);
-    
-    begin_atlas_font(sp, "FONT_DEFAULT", asset_dir("nokiafc22.ttf"), 72.f);
-    for (U32 i = 32 ; i <= 126; ++i) 
-      push_atlas_font_glyph(sp, i);
-    end_atlas_font(sp);
+                  code_dir("generated_sound_ids.h")));
+  begin_asset_pack(sp);
+  // Maybe we want to do something like this:
+  begin_atlas(sp);
+  
+  begin_atlas_font(sp, "FONT_DEFAULT", asset_dir("nokiafc22.ttf"), 72.f);
+  for (U32 i = 32 ; i <= 126; ++i) 
+    push_atlas_font_glyph(sp, i);
+  end_atlas_font(sp);
 
-    begin_atlas_font(sp, "FONT_DEBUG", asset_dir("liberation-mono.ttf"), 72.f);
-    for (U32 i = 32 ; i <= 126; ++i) 
-      push_atlas_font_glyph(sp, i);
-    end_atlas_font(sp);
+  begin_atlas_font(sp, "FONT_DEBUG", asset_dir("liberation-mono.ttf"), 72.f);
+  for (U32 i = 32 ; i <= 126; ++i) 
+    push_atlas_font_glyph(sp, i);
+  end_atlas_font(sp);
 
-    
-    push_atlas_sprite(sp, "SPRITE_BLANK",         asset_dir("blank.png"));
-    push_atlas_sprite(sp, "SPRITE_BULLET_CIRCLE", asset_dir("bullet_circle.png"));
-    push_atlas_sprite(sp, "SPRITE_BULLET_DOT",    asset_dir("bullet_dot.png"));
-    push_atlas_sprite(sp, "SPRITE_PLAYER_BLACK",  asset_dir("player_black.png"));
-    push_atlas_sprite(sp, "SPRITE_PLAYER_WHITE",  asset_dir("player_white.png"));
-    end_atlas(sp, "BITMAP_DEFAULT", 1024, 1024);
-#else 
-    push_atlas(sp, atlas);
-    push_sound(sp, "SOUND_TEST", loaded_wav);
-#endif
-    end_asset_pack(sp, "PACK_DEFAULT", "test.sui");
+  
+  push_atlas_sprite(sp, "SPRITE_BLANK",         asset_dir("blank.png"));
+  push_atlas_sprite(sp, "SPRITE_BULLET_CIRCLE", asset_dir("bullet_circle.png"));
+  push_atlas_sprite(sp, "SPRITE_BULLET_DOT",    asset_dir("bullet_dot.png"));
+  push_atlas_sprite(sp, "SPRITE_PLAYER_BLACK",  asset_dir("player_black.png"));
+  push_atlas_sprite(sp, "SPRITE_PLAYER_WHITE",  asset_dir("player_white.png"));
+  end_atlas(sp, "BITMAP_DEFAULT", 1024, 1024);
 
+  //push_sound(sp, "SOUND_TEST", loaded_wav);
+  sui_check_death(end_asset_pack(sp, "PACK_DEFAULT", "test.sui"));
+  end_packer(sp);
 
-    end_packer(sp);
-  }
+  return 0;
+
+fail:
+  sui_log("Something went wrong");
+  return 1;
+
 }

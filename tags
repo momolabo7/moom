@@ -1117,8 +1117,8 @@ m44_transpose	code/momo_matrix.h	/^static M44 m44_transpose(M44 m) {$/;"	f	langu
 m44_transpose	code/momo_matrix.h	/^static M44 m44_transpose(M44 m);$/;"	p	language:C++	typeref:typename:M44
 main	build/meta_test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/meta.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
-main	code/sui.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
+main	D:/work/git/txt/code/sui.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 make_string_builder	code/momo_strings.h	/^#define make_string_builder(/;"	d	language:C++
 match	code/momo_strings.h	/^match(String lhs, String rhs) {$/;"	f	language:C++	typeref:typename:B32
 match	code/momo_strings.h	/^static B32  match(String lhs, String rhs);$/;"	p	language:C++	typeref:typename:B32
@@ -1720,6 +1720,7 @@ Sui_Atlas_Font_Glyph_Context	code/sui_atlas.h	/^struct Sui_Atlas_Font_Glyph_Cont
 SUI_ATLAS_H	code/sui_atlas.h	/^#define SUI_ATLAS_H$/;"	d	language:C++
 Sui_Atlas_Sprite	code/sui_atlas.h	/^struct Sui_Atlas_Sprite {$/;"	s	language:C++
 Sui_Atlas_Sprite_Context	code/sui_atlas.h	/^struct Sui_Atlas_Sprite_Context {$/;"	s	language:C++
+sui_check_death	D:/work/git/txt/code/sui.cpp	/^#define sui_check_death(/;"	d	language:C++	file:
 sui_create_log_section_until_scope	code/sui.h	/^#define sui_create_log_section_until_scope /;"	d	language:C++
 sui_free	code/sui.h	/^sui_free(Memory* mem) {$/;"	f	language:C++	typeref:typename:void
 SUI_H	code/sui.h	/^#define SUI_H$/;"	d	language:C++

@@ -511,14 +511,13 @@ win_free_memory_from_arena(Bump_Allocator* a) {
 }
 
 
-static Platform_File
-win_open_file(const char* filename, 
+static B32
+win_open_file(Platform_File* file,
+              const char* filename, 
               Platform_File_Access access,
               Platform_File_Path path) 
 {
   // Opening the file
-  Platform_File ret = {};
-  
   DWORD access_flag = {};
   DWORD creation_disposition = {};
   switch (access) {
@@ -547,9 +546,8 @@ win_open_file(const char* filename,
                               0,
                               0) ;
   if (handle == INVALID_HANDLE_VALUE) {
-    ret.platform_data = nullptr;
-    ret.error = false;
-    return ret;
+    file->platform_data = nullptr;
+    return false;
   }
   else {
     
@@ -557,9 +555,8 @@ win_open_file(const char* filename,
     assert(win_file);
     win_file->handle = handle;
     
-    ret.platform_data = win_file;
-    ret.error = false;
-    return ret;
+    file->platform_data = win_file;
+    return true;
   }
 }
 
@@ -572,11 +569,9 @@ win_close_file(Platform_File* file) {
   file->platform_data = nullptr;
 }
 
-static void
+static B32
 win_read_file(Platform_File* file, UMI size, UMI offset, void* dest) 
 { 
-  if (!pf_is_file_ok(file)) return;
-  
   auto* win_file = (Win_File*)file->platform_data;
   
   // Reading the file
@@ -589,18 +584,16 @@ win_read_file(Platform_File* file, UMI size, UMI offset, void* dest)
   if(ReadFile(win_file->handle, dest, (DWORD)size, &bytes_read, &overlapped) &&
      (DWORD)size == bytes_read) 
   {
-    // success;
+    return true;
   }
   else {
-    file->error = true;
+    return false;
   }
 }
 
-static void 
+static B32 
 win_write_file(Platform_File* file, UMI size, UMI offset, void* src)
 {
-  if (!pf_is_file_ok(file)) return;
-  
   auto* win_file = (Win_File*)file->platform_data;
   
   OVERLAPPED overlapped = {};
@@ -611,10 +604,10 @@ win_write_file(Platform_File* file, UMI size, UMI offset, void* src)
   if(WriteFile(win_file->handle, src, (DWORD)size, &bytes_wrote, &overlapped) &&
      (DWORD)size == bytes_wrote) 
   {
-    // success
+    return true;
   }
   else {
-    file->error = true;
+    return false;
   }
 }
 
@@ -717,7 +710,7 @@ win_create_platform_api()
 {
   Platform_API pf_api;
   //pf_api.hot_reload = win_hot_reload;
-  pf_api.shutdown = win_shutdown;
+  //pf_api.shutdown = win_shutdown;
   pf_api.open_file = win_open_file;
   pf_api.read_file = win_read_file;
   pf_api.write_file = win_write_file;

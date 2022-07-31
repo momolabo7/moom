@@ -32,18 +32,18 @@ enum Platform_File_Access {
 };
 
 struct Platform_File {
-  B32 error;
   void* platform_data; // pointer for platform's usage
 };
 
-typedef Platform_File  
-Platform_Open_File(const char* filename,
+typedef B32  
+Platform_Open_File(Platform_File* file,
+                   const char* filename,
                    Platform_File_Access file_access,
                    Platform_File_Path file_path);
 
 typedef void Platform_Close_File(Platform_File* file);
-typedef void Platform_Read_File(Platform_File* file, UMI size, UMI offset, void* dest);
-typedef void Platform_Write_File(Platform_File* file, UMI size, UMI offset, void* src);
+typedef B32 Platform_Read_File(Platform_File* file, UMI size, UMI offset, void* dest);
+typedef B32 Platform_Write_File(Platform_File* file, UMI size, UMI offset, void* src);
 
 //~Platform multithreaded work API
 typedef void Platform_Task_Callback(void* data);
@@ -52,8 +52,8 @@ typedef void Platform_Complete_All_Tasks();
 
 
 //~Other platform API
-typedef void  Platform_Shutdown(); // trigger shutdown of application
 #if 0
+typedef void  Platform_Shutdown(); // trigger shutdown of application
 typedef void* Platform_Alloc(UMI size); // allocate memory
 typedef void  Platform_Free(void* ptr);     // frees memory
 #endif
@@ -63,8 +63,8 @@ typedef U64   Platform_Get_Performance_Counter();
 
 
 struct Platform_API {
-  Platform_Shutdown* shutdown;
 #if 0
+  Platform_Shutdown* shutdown;
   Platform_Alloc* alloc;
   Platform_Free* free;
 #endif
@@ -176,11 +176,6 @@ static void pf_update_input(Platform_Button);
 
 /////////////////////////////////////////////////////////////
 // Implementation
-static B32
-pf_is_file_ok(Platform_File* file) {
-  return file->platform_data && !file->error;
-}
-
 static void 
 pf_update_input(Platform* pf) {
   for (U32 i = 0; i < array_count(pf->buttons); ++i) {

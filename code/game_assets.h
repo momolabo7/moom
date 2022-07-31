@@ -130,20 +130,18 @@ load_game_assets(Game_Assets* ga,
                  Bump_Allocator* allocator) 
 { 
   // Read in file
-  Platform_File file_ = 
-    g_platform.open_file(filename,
-                         PLATFORM_FILE_ACCESS_READ, 
-                         PLATFORM_FILE_PATH_EXE);
-  Platform_File* file = &file_;
-  assert(!file->error);
+  declare_and_pointerize(Platform_File, file);
+  B32 ok = g_platform.open_file(file,
+                                filename,
+                                PLATFORM_FILE_ACCESS_READ, 
+                                PLATFORM_FILE_PATH_EXE);
+  if (!ok) return false;
   
   // Read header
   Karu_Header karu_header;
   g_platform.read_file(file, sizeof(Karu_Header), 0, &karu_header);
   
-  if (karu_header.signature != KARU_SIGNATURE) {
-    return false;
-  }
+  if (karu_header.signature != KARU_SIGNATURE) return false;
   
   ga->bitmap_count = karu_header.bitmap_count;
   ga->sprite_count = karu_header.sprite_count;
@@ -228,7 +226,7 @@ load_game_assets(Game_Assets* ga,
       U32 memory_required = codepoint_map_size + glyphs_size + advances_size;
       
       void* font_memory = ba_push_block(allocator, memory_required, 4);
-      assert(font_memory);
+      if (!font_memory) return false;
       
       font->codepoint_map = (U32*)font_memory;
       font->glyphs = (Font_Glyph_Asset*)((U8*)font->codepoint_map + codepoint_map_size);
