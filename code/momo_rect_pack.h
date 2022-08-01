@@ -13,6 +13,7 @@ enum RP_Sort_Type {
   RP_SORT_TYPE_AREA,
   RP_SORT_TYPE_PERIMETER,
   RP_SORT_TYPE_BIGGER_SIDE,
+  RP_SORT_TYPE_PATHOLOGICAL,
 };
 
 struct RP_Rect {
@@ -94,27 +95,55 @@ _rp_sort_by_bigger_side(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {
 
 
 static void 
-_rp_sort(_RP_Sort_Entry* sort_entries,
+_rp_sort(RP_Rect* rects,
+         Sort_Entry* entries,
          U32 count,
          RP_Sort_Type sort_type) 
 {
   switch(sort_type) {
     case RP_SORT_TYPE_HEIGHT: {
-      quicksort(sort_entries, count, _rp_sort_by_height);
+      for (U32 i = 0; i < count; ++i) {
+        entries[i].key = -(F32)rects[i].h;
+        entries[i].index = i;
+      }
     } break;
     case RP_SORT_TYPE_WIDTH: {
-      quicksort(sort_entries, count, _rp_sort_by_width);
+      for (U32 i = 0; i < count; ++i) {
+        entries[i].key = -(F32)rects[i].w;
+        entries[i].index = i;
+      }
     } break;
     case RP_SORT_TYPE_AREA: {
-      quicksort(sort_entries, count, _rp_sort_by_area);
+      for (U32 i = 0; i < count; ++i) {
+        entries[i].key = -((F32)rects[i].h * (F32)rects[i].w);
+        entries[i].index = i;
+      }
     } break;
     case RP_SORT_TYPE_PERIMETER: {
-      quicksort(sort_entries, count, _rp_sort_by_perimeter);
+      for (U32 i = 0; i < count; ++i) {
+        entries[i].key = -((F32)rects[i].h + (F32)rects[i].w);
+        entries[i].index = i;
+      }
     } break;
     case RP_SORT_TYPE_BIGGER_SIDE: {
-      quicksort(sort_entries, count, _rp_sort_by_bigger_side);
+      for (U32 i = 0; i < count; ++i) {
+        F32 key = -(F32)(max_of(rects[i].w, rects[i].h));
+        entries[i].key = key;
+        entries[i].index = i;
+      }
+    } break;
+    case RP_SORT_TYPE_PATHOLOGICAL: {
+      for (U32 i = 0; i < count; ++i) {
+        U32 wh_max = max_of(rects[i].w, rects[i].h);
+        U32 wh_min = min_of(rects[i].w, rects[i].h);
+        F32 key = -(F32)(wh_max/wh_min * rects[i].w * rects[i].h);
+        entries[i].key = key;
+        entries[i].index = i;
+      }
+
     } break;
   }
+  quicksort(entries, count);
 }
 
 static void
@@ -127,11 +156,8 @@ rp_pack(RP_Rect* rects,
         Bump_Allocator* allocator) 
 {
   ba_set_revert_point(allocator);
-  auto* sort_entries = ba_push_array<_RP_Sort_Entry>(allocator, rect_count);
-  for (U32 i = 0; i < rect_count; ++i) {
-    sort_entries[i].rect = rects + i;
-  }
-  _rp_sort(sort_entries, rect_count, sort_type);
+  Sort_Entry* sort_entries = ba_push_array<Sort_Entry>(allocator, rect_count);
+  _rp_sort(rects, sort_entries, rect_count, sort_type);
   auto* nodes = ba_push_array<_RP_Node>(allocator, rect_count+1);
   
   U32 current_node_count = 1;
@@ -141,7 +167,7 @@ rp_pack(RP_Rect* rects,
   nodes[0].h = total_height;
   
   for (U32 i = 0; i < rect_count; ++i) {
-    RP_Rect* rect = (sort_entries + i)->rect;
+    RP_Rect* rect = rects + sort_entries[i].index;
     
     // ignore rects with 0 width or height
     if(rect->w == 0 || rect->h == 0) continue;

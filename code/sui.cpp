@@ -64,7 +64,7 @@ int main() {
   begin_asset_pack(sp);
   // Maybe we want to do something like this:
   begin_atlas(sp);
-  
+
   begin_atlas_font(sp, "FONT_DEFAULT", asset_dir("nokiafc22.ttf"), 72.f);
   for (U32 i = 32 ; i <= 126; ++i) 
     push_atlas_font_glyph(sp, i);
@@ -75,7 +75,6 @@ int main() {
     push_atlas_font_glyph(sp, i);
   end_atlas_font(sp);
 
-  
   push_atlas_sprite(sp, "SPRITE_BLANK",         asset_dir("blank.png"));
   push_atlas_sprite(sp, "SPRITE_BULLET_CIRCLE", asset_dir("bullet_circle.png"));
   push_atlas_sprite(sp, "SPRITE_BULLET_DOT",    asset_dir("bullet_dot.png"));

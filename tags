@@ -293,7 +293,6 @@ cos	code/momo_intrinsics.h	/^static F32 cos(F32 x);$/;"	p	language:C++	typeref:t
 cos	code/momo_intrinsics.h	/^static F64 cos(F64 x);$/;"	p	language:C++	typeref:typename:F64
 count	code/game_profiler_rendering.h	/^  U32 count;$/;"	m	language:C++	struct:Stat	typeref:typename:U32
 count	code/momo_lists.h	/^  UMI count;$/;"	m	language:C++	struct:Array_List	typeref:typename:UMI
-count	code/momo_lists.h	/^  UMI count;$/;"	m	language:C++	struct:Slice	typeref:typename:UMI
 count	code/momo_lists.h	/^  UMI count;$/;"	m	language:C++	struct:Slice_List	typeref:typename:UMI
 count	code/momo_strings.h	/^			UMI count;$/;"	m	language:C++	struct:String_Builder::__anon71355586010a::__anon713555860208	typeref:typename:UMI
 count	code/momo_strings.h	/^	UMI count;$/;"	m	language:C++	struct:String	typeref:typename:UMI
@@ -341,6 +340,7 @@ c_link_end	code/momo_common.h	/^#define c_link_end /;"	d	language:C++
 d	code/momo_vectors.h	/^	struct { F32 w, h, d; };$/;"	m	language:C++	struct:V3::__anon8de67fa20908	typeref:typename:F32
 data	code/game_renderer.h	/^  void* data;$/;"	m	language:C++	struct:Gfx_Command	typeref:typename:void *
 data	code/momo_common.h	/^    void* data;$/;"	m	language:C++	union:Memory::__anonbacee3e5010a	typeref:typename:void *
+data	code/momo_lists.h	/^  void* data;$/;"	m	language:C++	struct:Slice_List	typeref:typename:void *
 data	code/momo_png.h	/^  U8* data;$/;"	m	language:C++	struct:PNG	typeref:typename:U8 *
 data	code/momo_streams.h	/^  U8* data;$/;"	m	language:C++	struct:Stream	typeref:typename:U8 *
 data	code/momo_ttf.h	/^  U8* data;$/;"	m	language:C++	struct:TTF	typeref:typename:U8 *
@@ -384,8 +384,6 @@ dot	code/momo_vectors.h	/^static F32   dot(V2 lhs, V2 rhs);$/;"	p	language:C++	t
 dot	code/momo_vectors.h	/^static F32   dot(V3 lhs, V3 rhs);$/;"	p	language:C++	typeref:typename:F32
 dummy_texture	code/game_renderer_opengl.h	/^  Texture dummy_texture;$/;"	m	language:C++	struct:Opengl	typeref:typename:Texture
 e	code/momo_lists.h	/^  T e[N];$/;"	m	language:C++	struct:Array_List	typeref:typename:T[]
-e	code/momo_lists.h	/^  T* e;$/;"	m	language:C++	struct:Slice	typeref:typename:T *
-e	code/momo_lists.h	/^  T* e;$/;"	m	language:C++	struct:Slice_List	typeref:typename:T *
 e	code/momo_matrix.h	/^	F32 e[4][4];$/;"	m	language:C++	struct:M44	typeref:typename:F32[4][4]
 e	code/momo_strings.h	/^			U8* e;$/;"	m	language:C++	struct:String_Builder::__anon71355586010a::__anon713555860208	typeref:typename:U8 *
 e	code/momo_strings.h	/^	U8* e;$/;"	m	language:C++	struct:String	typeref:typename:U8 *
@@ -518,6 +516,7 @@ ease_out_sine	code/momo_easing.h	/^static F64 ease_out_sine(F64 t);$/;"	p	langua
 Edge	code/game_mode_level.h	/^struct Edge{$/;"	s	language:C++
 edges	code/game_mode_level.h	/^  Array_List<Edge> edges;$/;"	m	language:C++	struct:Level_Mode	typeref:typename:Array_List<Edge>
 edges	code/game_sb1.h	/^  Array_List<SB1_Edge> edges;$/;"	m	language:C++	struct:SB1	typeref:typename:Array_List<SB1_Edge>
+edges	code/game_sb1.h	/^  SB1_Edge* edges[4]; \/\/ TODO: use id instead?$/;"	m	language:C++	struct:SB1_Sensor	typeref:typename:SB1_Edge * [4]
 editor	code/game_mode_level.h	/^  Editor editor;$/;"	m	language:C++	struct:Level_Mode	typeref:typename:Editor
 Editor	code/game_mode_level_editor.h	/^struct Editor {$/;"	s	language:C++
 EDITOR_EDGE_CLOSURE_DISTANCE	code/game_mode_level_editor.cpp	/^#define EDITOR_EDGE_CLOSURE_DISTANCE /;"	d	language:C++	file:
@@ -923,12 +922,12 @@ g_profiler	code/game.cpp	/^Profiler* g_profiler;$/;"	v	language:C++	typeref:type
 g_profiler	code/win.cpp	/^Profiler* g_profiler = &_g_profiler;$/;"	v	language:C++	typeref:typename:Profiler *
 g_win_state	code/win.cpp	/^static Win_State g_win_state;$/;"	v	language:C++	typeref:typename:Win_State	file:
 h	code/momo_colors.h	/^  F32 h, s, l;  $/;"	m	language:C++	struct:HSL	typeref:typename:F32
-h	code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect	typeref:typename:U32
-h	code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:U32
 h	code/momo_vectors.h	/^	struct { F32 w, h, d; };$/;"	m	language:C++	struct:V3::__anon8de67fa20908	typeref:typename:F32
 h	code/momo_vectors.h	/^	struct { F32 w, h; };$/;"	m	language:C++	struct:V2::__anon8de67fa20608	typeref:typename:F32
 h	code/momo_vectors.h	/^	struct { S32 w, h; };$/;"	m	language:C++	struct:V2S::__anon8de67fa20408	typeref:typename:S32
 h	code/momo_vectors.h	/^	struct { U32 w, h; };$/;"	m	language:C++	struct:V2U::__anon8de67fa20208	typeref:typename:U32
+h	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect	typeref:typename:U32
+h	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:U32
 half_angle	code/game_sb1.h	/^  F32 half_angle;$/;"	m	language:C++	struct:SB1_Light	typeref:typename:F32
 half_dims	code/momo_shapes.h	/^  V2 half_dims;$/;"	m	language:C++	struct:Aabb2	typeref:typename:V2
 handle	code/game_renderer_opengl.h	/^  GLuint handle;$/;"	m	language:C++	struct:Texture	typeref:typename:GLuint
@@ -974,6 +973,7 @@ image_stream	code/momo_png.h	/^  Stream image_stream;$/;"	m	language:C++	struct:
 image_width	code/momo_png.h	/^  U32 image_width;$/;"	m	language:C++	struct:_PNG_Context	typeref:typename:U32
 in	code/test_png.h	/^    const char* in;$/;"	m	language:C++	struct:test_png::__anonee61d0a90108	typeref:typename:const char *
 index	code/momo_rng.h	/^  U32 index;$/;"	m	language:C++	struct:RNG	typeref:typename:U32
+index	D:/work/git/txt/code/momo_sort.h	/^  U32 index;$/;"	m	language:C++	struct:Sort_Entry	typeref:typename:U32
 info_lines	code/game_console.h	/^  String_Builder info_lines[9];$/;"	m	language:C++	struct:Console	typeref:typename:String_Builder[9]
 init_console	code/game_console.h	/^init_console(Console* dc, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:void
 init_editor	code/game_mode_level_editor.cpp	/^init_editor(Editor* e, V2 pos) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1037,6 +1037,7 @@ is_selecting_pt	code/game_mode_level_editor.h	/^  B32 is_selecting_pt;$/;"	m	lan
 is_valid	code/win.cpp	/^  B32 is_valid;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:B32	file:
 is_whitespace	code/momo_common.h	/^is_whitespace(C8 c) {$/;"	f	language:C++	typeref:typename:B32
 is_whitespace	code/momo_common.h	/^static B32 is_whitespace(C8 c);$/;"	p	language:C++	typeref:typename:B32
+is_win_reached	code/game_sb1.h	/^  B32 is_win_reached;$/;"	m	language:C++	struct:SB1	typeref:typename:B32
 item	code/game_inspector.h	/^  void* item;$/;"	m	language:C++	struct:Inspector_Entry	typeref:typename:void *
 Karu_Asset_Group	code/karu.h	/^struct Karu_Asset_Group {$/;"	s	language:C++
 Karu_Bitmap	code/karu.h	/^struct Karu_Bitmap {$/;"	s	language:C++
@@ -1051,6 +1052,7 @@ Karu_Sprite	code/karu.h	/^struct Karu_Sprite {$/;"	s	language:C++
 KB	code/momo_common.h	/^#define KB(/;"	d	language:C++
 kern	code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
 key	code/game_console.h	/^  String key;$/;"	m	language:C++	struct:Console_Command	typeref:typename:String
+key	D:/work/git/txt/code/momo_sort.h	/^  F32 key;$/;"	m	language:C++	struct:Sort_Entry	typeref:typename:F32
 l	code/momo_colors.h	/^  F32 h, s, l;  $/;"	m	language:C++	struct:HSL	typeref:typename:F32
 last_drawn_instance_index	code/game_renderer_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLsizei
 layers	code/game_renderer.h	/^  U32 layers;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:U32
@@ -1073,9 +1075,7 @@ lerp	code/momo_common.h	/^template<typename T> static T lerp(T s, T e, F64 f); $
 Level_Mode	code/game_mode_level.h	/^struct Level_Mode {$/;"	s	language:C++
 Level_State	code/game_mode_level.h	/^enum Level_State {$/;"	g	language:C++
 LEVEL_STATE_EDITOR	code/game_mode_level.h	/^  LEVEL_STATE_EDITOR,$/;"	e	language:C++	enum:Level_State
-LEVEL_STATE_EDITOR	code/game_sb1.h	/^  LEVEL_STATE_EDITOR,$/;"	e	language:C++	enum:SB1_State
 LEVEL_STATE_NORMAL	code/game_mode_level.h	/^  LEVEL_STATE_NORMAL,$/;"	e	language:C++	enum:Level_State
-LEVEL_STATE_NORMAL	code/game_sb1.h	/^  LEVEL_STATE_NORMAL,$/;"	e	language:C++	enum:SB1_State
 lights	code/game_mode_level.h	/^  Array_List<Light> lights;$/;"	m	language:C++	struct:Level_Mode	typeref:typename:Array_List<Light>
 lights	code/game_sb1.h	/^  Array_List<SB1_Light> lights;$/;"	m	language:C++	struct:SB1	typeref:typename:Array_List<SB1_Light>
 LIGHT_BLUE	code/game_mode_level.h	/^#define LIGHT_BLUE /;"	d	language:C++
@@ -1191,9 +1191,9 @@ MOMO_MEMORY_H	code/momo_memory.h	/^#define MOMO_MEMORY_H$/;"	d	language:C++
 MOMO_OS_H	code/momo_os.h	/^#define MOMO_OS_H$/;"	d	language:C++
 MOMO_PNG	code/momo_png.h	/^#define MOMO_PNG$/;"	d	language:C++
 MOMO_RANDOM_H	code/momo_rng.h	/^#define MOMO_RANDOM_H$/;"	d	language:C++
-MOMO_RECT_PACK_H	code/momo_rect_pack.h	/^#define MOMO_RECT_PACK_H$/;"	d	language:C++
+MOMO_RECT_PACK_H	D:/work/git/txt/code/momo_rect_pack.h	/^#define MOMO_RECT_PACK_H$/;"	d	language:C++
 MOMO_SHAPES_H	code/momo_shapes.h	/^#define MOMO_SHAPES_H$/;"	d	language:C++
-MOMO_SORT_H	code/momo_sort.h	/^#define MOMO_SORT_H$/;"	d	language:C++
+MOMO_SORT_H	D:/work/git/txt/code/momo_sort.h	/^#define MOMO_SORT_H$/;"	d	language:C++
 MOMO_STREAM_H	code/momo_streams.h	/^#define MOMO_STREAM_H$/;"	d	language:C++
 MOMO_STRING_H	code/momo_strings.h	/^#define MOMO_STRING_H$/;"	d	language:C++
 MOMO_TTF_H	code/momo_ttf.h	/^#define MOMO_TTF_H$/;"	d	language:C++
@@ -1445,8 +1445,9 @@ push_u64	code/momo_strings.h	/^push_u64(String_Builder* b, U64 num) {$/;"	f	lang
 push_u64	code/momo_strings.h	/^static void     push_u64(String_Builder* b, U64 num);$/;"	p	language:C++	typeref:typename:void
 push_u8	code/momo_strings.h	/^push_u8(String_Builder* b, U8 num) {$/;"	f	language:C++	typeref:typename:void
 push_u8	code/momo_strings.h	/^static void     push_u8(String_Builder* b, U8 num);$/;"	p	language:C++	typeref:typename:void
-quicksort	code/momo_sort.h	/^quicksort(T* arr, UMI count, BinaryCompare cmp) {$/;"	f	language:C++	typeref:typename:void
-quicksort	code/momo_sort.h	/^static void quicksort(T* arr, UMI count, BinaryCompare pred);$/;"	p	language:C++	typeref:typename:void
+quicksort	D:/work/git/txt/code/momo_sort.h	/^quicksort(Sort_Entry* entries, U32 entry_count) {$/;"	f	language:C++	typeref:typename:void
+quicksort	D:/work/git/txt/code/momo_sort.h	/^quicksort(T* arr, UMI count, BinaryCompare cmp) {$/;"	f	language:C++	typeref:typename:void
+quicksort	D:/work/git/txt/code/momo_sort.h	/^static void quicksort(T* arr, UMI count, BinaryCompare pred);$/;"	p	language:C++	typeref:typename:void
 r	code/momo_colors.h	/^    struct { F32 r, g, b; };  $/;"	m	language:C++	struct:RGBA::__anonb89fa6ae010a::__anonb89fa6ae0208	typeref:typename:F32
 r	code/momo_colors.h	/^  F32 r, g, b;   $/;"	m	language:C++	struct:RGB	typeref:typename:F32
 radius	code/momo_shapes.h	/^  F32 radius;$/;"	m	language:C++	struct:Circ2	typeref:typename:F32
@@ -1460,10 +1461,10 @@ Ray2	code/momo_shapes.h	/^struct Ray2 {$/;"	s	language:C++
 rbg_to_hsl	code/momo_colors.h	/^rbg_to_hsl(RGB c) {$/;"	f	language:C++	typeref:typename:HSL
 rbg_to_hsl	code/momo_colors.h	/^static HSL  rbg_to_hsl(RGB c);$/;"	p	language:C++	typeref:typename:HSL
 read_file	code/game_platform.h	/^  Platform_Read_File* read_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Read_File *
-rect	code/momo_rect_pack.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:_RP_Sort_Entry	typeref:typename:RP_Rect *
 rect	code/sui_atlas.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Atlas_Sprite	typeref:typename:RP_Rect *
 rect	code/sui_pack.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Packer_Font_Glyph	typeref:typename:RP_Rect *
 rect	code/sui_pack.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Packer_Sprite	typeref:typename:RP_Rect *
+rect	D:/work/git/txt/code/momo_rect_pack.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:_RP_Sort_Entry	typeref:typename:RP_Rect *
 Rect2	code/momo_shapes.h	/^struct Rect2 {$/;"	s	language:C++
 Rect2S	code/momo_shapes.h	/^struct Rect2S{$/;"	s	language:C++
 Rect2U	code/momo_shapes.h	/^struct Rect2U {$/;"	s	language:C++
@@ -1514,15 +1515,16 @@ round	code/momo_intrinsics.h	/^static F32 round(F32 value) {$/;"	f	language:C++	
 round	code/momo_intrinsics.h	/^static F32 round(F32 value);$/;"	p	language:C++	typeref:typename:F32
 round	code/momo_intrinsics.h	/^static F64 round(F64 value) {$/;"	f	language:C++	typeref:typename:F64
 round	code/momo_intrinsics.h	/^static F64 round(F64 value);$/;"	p	language:C++	typeref:typename:F64
-rp_pack	code/momo_rect_pack.h	/^rp_pack(RP_Rect* rects, $/;"	f	language:C++	typeref:typename:void
-rp_pack	code/momo_rect_pack.h	/^static void rp_pack(RP_Rect* rects, $/;"	p	language:C++	typeref:typename:void
-RP_Rect	code/momo_rect_pack.h	/^struct RP_Rect {$/;"	s	language:C++
-RP_Sort_Type	code/momo_rect_pack.h	/^enum RP_Sort_Type {$/;"	g	language:C++
-RP_SORT_TYPE_AREA	code/momo_rect_pack.h	/^  RP_SORT_TYPE_AREA,$/;"	e	language:C++	enum:RP_Sort_Type
-RP_SORT_TYPE_BIGGER_SIDE	code/momo_rect_pack.h	/^  RP_SORT_TYPE_BIGGER_SIDE,$/;"	e	language:C++	enum:RP_Sort_Type
-RP_SORT_TYPE_HEIGHT	code/momo_rect_pack.h	/^  RP_SORT_TYPE_HEIGHT,$/;"	e	language:C++	enum:RP_Sort_Type
-RP_SORT_TYPE_PERIMETER	code/momo_rect_pack.h	/^  RP_SORT_TYPE_PERIMETER,$/;"	e	language:C++	enum:RP_Sort_Type
-RP_SORT_TYPE_WIDTH	code/momo_rect_pack.h	/^  RP_SORT_TYPE_WIDTH,$/;"	e	language:C++	enum:RP_Sort_Type
+rp_pack	D:/work/git/txt/code/momo_rect_pack.h	/^rp_pack(RP_Rect* rects, $/;"	f	language:C++	typeref:typename:void
+rp_pack	D:/work/git/txt/code/momo_rect_pack.h	/^static void rp_pack(RP_Rect* rects, $/;"	p	language:C++	typeref:typename:void
+RP_Rect	D:/work/git/txt/code/momo_rect_pack.h	/^struct RP_Rect {$/;"	s	language:C++
+RP_Sort_Type	D:/work/git/txt/code/momo_rect_pack.h	/^enum RP_Sort_Type {$/;"	g	language:C++
+RP_SORT_TYPE_AREA	D:/work/git/txt/code/momo_rect_pack.h	/^  RP_SORT_TYPE_AREA,$/;"	e	language:C++	enum:RP_Sort_Type
+RP_SORT_TYPE_BIGGER_SIDE	D:/work/git/txt/code/momo_rect_pack.h	/^  RP_SORT_TYPE_BIGGER_SIDE,$/;"	e	language:C++	enum:RP_Sort_Type
+RP_SORT_TYPE_HEIGHT	D:/work/git/txt/code/momo_rect_pack.h	/^  RP_SORT_TYPE_HEIGHT,$/;"	e	language:C++	enum:RP_Sort_Type
+RP_SORT_TYPE_PATHOLOGICAL	D:/work/git/txt/code/momo_rect_pack.h	/^  RP_SORT_TYPE_PATHOLOGICAL,$/;"	e	language:C++	enum:RP_Sort_Type
+RP_SORT_TYPE_PERIMETER	D:/work/git/txt/code/momo_rect_pack.h	/^  RP_SORT_TYPE_PERIMETER,$/;"	e	language:C++	enum:RP_Sort_Type
+RP_SORT_TYPE_WIDTH	D:/work/git/txt/code/momo_rect_pack.h	/^  RP_SORT_TYPE_WIDTH,$/;"	e	language:C++	enum:RP_Sort_Type
 s	code/momo_colors.h	/^  F32 h, s, l;  $/;"	m	language:C++	struct:HSL	typeref:typename:F32
 S16	code/momo_common.h	/^typedef int16_t S16;$/;"	t	language:C++	typeref:typename:int16_t
 S16_MAX	code/momo_common.h	/^static S16 S16_MAX = 0x7FFF; $/;"	v	language:C++	typeref:typename:S16
@@ -1548,14 +1550,13 @@ sb1_init	code/game_mode_splash.h	/^static void sb1_init(Game*);$/;"	p	language:C
 sb1_init	code/game_sb1.h	/^sb1_init(Game* game) $/;"	f	language:C++	typeref:typename:void
 SB1_Light	code/game_sb1.h	/^struct SB1_Light {$/;"	s	language:C++
 SB1_Player	code/game_sb1.h	/^struct SB1_Player {$/;"	s	language:C++
-sb1_push_edge	code/game_sb1.h	/^sb1_push_edge(SB1* m, UMI min_pt_id, UMI max_pt_id) {$/;"	f	language:C++	typeref:typename:void
+sb1_push_edge	code/game_sb1.h	/^sb1_push_edge(SB1* m, UMI min_pt_id, UMI max_pt_id) {$/;"	f	language:C++	typeref:typename:SB1_Edge *
 sb1_push_light	code/game_sb1.h	/^sb1_push_light(SB1* m, V2 pos, U32 color, F32 angle) {$/;"	f	language:C++	typeref:typename:SB1_Light *
 sb1_push_point	code/game_sb1.h	/^sb1_push_point(SB1* m, V2 pt) {$/;"	f	language:C++	typeref:typename:UMI
-sb1_push_sensor	code/game_sb1.h	/^sb1_push_sensor(SB1* m, V2 pos, U32 target_color) {$/;"	f	language:C++	typeref:typename:void
+sb1_push_sensor	code/game_sb1.h	/^sb1_push_sensor(SB1* m, V2 pos, U32 target_color, $/;"	f	language:C++	typeref:typename:void
 sb1_push_triangle	code/game_sb1.h	/^sb1_push_triangle(SB1_Light* l, V2 p0, V2 p1, V2 p2, U32 color) {$/;"	f	language:C++	typeref:typename:void
 SB1_Sensor	code/game_sb1.h	/^struct SB1_Sensor {$/;"	s	language:C++
 sb1_set_win_point	code/game_sb1.h	/^sb1_set_win_point(SB1* m, V2 pos) {$/;"	f	language:C++	typeref:typename:void
-SB1_State	code/game_sb1.h	/^enum SB1_State {$/;"	g	language:C++
 sb1_tick	code/game_mode_splash.h	/^static void sb1_tick(Game*, Painter*, Platform* );$/;"	p	language:C++	typeref:typename:void
 sb1_tick	code/game_sb1.h	/^sb1_tick(Game* game,$/;"	f	language:C++	typeref:typename:void
 scale	code/momo_vectors.h	/^scale(V2 lhs, F32 rhs) {$/;"	f	language:C++	typeref:typename:V2
@@ -1587,40 +1588,18 @@ size	code/momo_streams.h	/^  UMI size;$/;"	m	language:C++	struct:Stream	typeref:
 size	code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:WAV_Data_Chunk	typeref:typename:U32
 size	code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:WAV_Fmt_Chunk	typeref:typename:U32
 size	code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:WAV_Riff_Chunk	typeref:typename:U32
-Slice	code/momo_lists.h	/^struct Slice {$/;"	s	language:C++
 Slice_List	code/momo_lists.h	/^struct Slice_List {$/;"	s	language:C++
-sl_can_get	code/momo_lists.h	/^sl_can_get(Slice_List<T>* l, UMI index) {$/;"	f	language:C++	typeref:typename:B32
-sl_can_get	code/momo_lists.h	/^static B32 sl_can_get(Slice_List<T>* l, U32 index);$/;"	p	language:C++	typeref:typename:B32
-sl_cap	code/momo_lists.h	/^sl_cap(Slice_List<T>* l) {$/;"	f	language:C++	typeref:typename:UMI
-sl_cap	code/momo_lists.h	/^static UMI sl_cap(Slice_List<T>* l);$/;"	p	language:C++	typeref:typename:UMI
-sl_clear	code/momo_lists.h	/^sl_clear(Slice_List<T>* l) {$/;"	f	language:C++	typeref:typename:void
-sl_clear	code/momo_lists.h	/^static void sl_clear(Slice_List<T>* l);$/;"	p	language:C++	typeref:typename:void
-sl_foreach	code/momo_lists.h	/^#define sl_foreach(/;"	d	language:C++
-sl_get	code/momo_lists.h	/^sl_get(Slice_List<T>* l, UMI index) {$/;"	f	language:C++	typeref:typename:T *
-sl_get	code/momo_lists.h	/^static T* sl_get(Slice_List<T>* l, U32 index);$/;"	p	language:C++	typeref:typename:T *
-sl_get_copy	code/momo_lists.h	/^sl_get_copy(Slice_List<T>* l, UMI index) {$/;"	f	language:C++	typeref:typename:T
-sl_get_copy	code/momo_lists.h	/^static T sl_get_copy(Slice_List<T>* l, U32 index);$/;"	p	language:C++	typeref:typename:T
-sl_has_space	code/momo_lists.h	/^sl_has_space(Slice_List<T>* l) {$/;"	f	language:C++	typeref:typename:B32
-sl_has_space	code/momo_lists.h	/^static B32 sl_has_space(Slice_List<T>* l);$/;"	p	language:C++	typeref:typename:B32
-sl_init	code/momo_lists.h	/^sl_init(Slice_List<T>* l, T* arr, UMI cap) {$/;"	f	language:C++	typeref:typename:void
-sl_init	code/momo_lists.h	/^static void sl_init(Slice_List<T>* l, T* arr, UMI cap);$/;"	p	language:C++	typeref:typename:void
-sl_is_empty	code/momo_lists.h	/^sl_is_empty(Slice_List<T>* l) {$/;"	f	language:C++	typeref:typename:B32
-sl_is_empty	code/momo_lists.h	/^static B32 sl_is_empty(Slice_List<T>* l);$/;"	p	language:C++	typeref:typename:B32
-sl_pop	code/momo_lists.h	/^sl_pop(Slice_List<T>* l) {$/;"	f	language:C++	typeref:typename:void
-sl_pop	code/momo_lists.h	/^static void sl_pop(Slice_List<T>* l);$/;"	p	language:C++	typeref:typename:void
-sl_push	code/momo_lists.h	/^sl_push(Slice_List<T>* l) {$/;"	f	language:C++	typeref:typename:T *
-sl_push	code/momo_lists.h	/^static T* sl_push(Slice_List<T>* l);$/;"	p	language:C++	typeref:typename:T *
-sl_push_copy	code/momo_lists.h	/^sl_push_copy(Slice_List<T>* l, T item) {$/;"	f	language:C++	typeref:typename:void
-sl_push_copy	code/momo_lists.h	/^static void sl_push_copy(Slice_List<T>* l, T item);$/;"	p	language:C++	typeref:typename:void
-sl_remaining	code/momo_lists.h	/^sl_remaining(Slice_List<T>* l) {$/;"	f	language:C++	typeref:typename:B32
-sl_remaining	code/momo_lists.h	/^static B32 sl_remaining(Slice_List<T>* l);$/;"	p	language:C++	typeref:typename:B32
-sl_remove	code/momo_lists.h	/^sl_remove(Slice_List<T>* l, UMI index) {$/;"	f	language:C++	typeref:typename:void
-sl_remove	code/momo_lists.h	/^static void sl_remove(Slice_List<T>* l, U32 index);$/;"	p	language:C++	typeref:typename:void
-sl_slear	code/momo_lists.h	/^sl_slear(Slice_List<T>* l, UMI index) {$/;"	f	language:C++	typeref:typename:void
-sl_slear	code/momo_lists.h	/^static void sl_slear(Slice_List<T>* l, U32 index);$/;"	p	language:C++	typeref:typename:void
+sl_clear	code/momo_lists.h	/^sl_clear(Slice_List* l) {$/;"	f	language:C++	typeref:typename:void
+sl_get	code/momo_lists.h	/^#define sl_get(/;"	d	language:C++
+sl_get_block	code/momo_lists.h	/^sl_get_block(Slice_List* l, UMI index, UMI size) {$/;"	f	language:C++	typeref:typename:void *
+sl_has_space	code/momo_lists.h	/^sl_has_space(Slice_List* l) {$/;"	f	language:C++	typeref:typename:B32
+sl_init	code/momo_lists.h	/^sl_init(Slice_List* l, void* data, UMI cap) {$/;"	f	language:C++	typeref:typename:void
+sl_push	code/momo_lists.h	/^#define sl_push(/;"	d	language:C++
+sl_push_block	code/momo_lists.h	/^sl_push_block(Slice_List* l, void* e, UMI size) {$/;"	f	language:C++	typeref:typename:void *
 SMI	code/momo_common.h	/^typedef ptrdiff_t SMI; \/\/ aka 'signed memory index'$/;"	t	language:C++	typeref:typename:ptrdiff_t
 snapshots	code/game_profiler.h	/^  Profiler_Snapshot snapshots[PROFILER_SNAPSHOT_COUNT];$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:Profiler_Snapshot[]
 snapshot_index	code/game_profiler.h	/^  U32 snapshot_index;$/;"	m	language:C++	struct:Profiler	typeref:typename:U32
+Sort_Entry	D:/work/git/txt/code/momo_sort.h	/^struct Sort_Entry {$/;"	s	language:C++
 sounds	code/sui_pack.h	/^  Sui_Packer_Sound sounds[64];$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Sui_Packer_Sound[64]
 sound_count	code/karu.h	/^  U32 sound_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 sound_count	code/sui_pack.h	/^  U32 sound_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
@@ -1678,7 +1657,6 @@ start_hits	code/game_profiler.h	/^  U32 start_hits;$/;"	m	language:C++	struct:Pr
 Stat	code/game_profiler_rendering.h	/^struct Stat {$/;"	s	language:C++
 state	code/game_mode_level.h	/^  Level_State state;$/;"	m	language:C++	struct:Level_Mode	typeref:typename:Level_State
 state	code/game_renderer.h	/^  volatile Gfx_Texture_Payload_State state;$/;"	m	language:C++	struct:Gfx_Texture_Payload	typeref:typename:volatile Gfx_Texture_Payload_State
-state	code/game_sb1.h	/^  SB1_State state;$/;"	m	language:C++	struct:SB1	typeref:typename:SB1_State
 state	code/meta.cpp	/^  U32 state; \/\/ $/;"	m	language:C++	struct:Profiler_Codegen	typeref:typename:U32	file:
 state_btns	code/game_mode_level_editor.h	/^  Editor_Toolbar_Button state_btns[EDITOR_STATE_MAX];$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_Toolbar_Button[]
 stmt	code/momo_common.h	/^#define stmt(/;"	d	language:C++
@@ -1862,7 +1840,7 @@ update_editor_place_lights	code/game_mode_level_editor.cpp	/^update_editor_place
 update_editor_state_edit_edges	code/game_mode_level_editor.cpp	/^update_editor_state_edit_edges(Editor* e, $/;"	f	language:C++	typeref:typename:void	file:
 update_entries	code/game_profiler.h	/^update_entries(Profiler* p) {$/;"	f	language:C++	typeref:typename:void
 update_mode	code/game.h	/^  Game_Mode_Update* update_mode;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Mode_Update *
-user_data	code/momo_rect_pack.h	/^  void* user_data;$/;"	m	language:C++	struct:RP_Rect	typeref:typename:void *
+user_data	D:/work/git/txt/code/momo_rect_pack.h	/^  void* user_data;$/;"	m	language:C++	struct:RP_Rect	typeref:typename:void *
 uv	code/game_renderer.h	/^  Rect2 uv; $/;"	m	language:C++	struct:Gfx_Command_Sprite	typeref:typename:Rect2
 v	code/momo_strings.h	/^  union { U32 v; U8 b[4]; } combine;$/;"	m	language:C++	union:push_hex_u32::__anon71355586030a	typeref:typename:U32
 v	code/momo_vectors.h	/^	struct { F32 u, v; };$/;"	m	language:C++	struct:V2::__anon8de67fa20708	typeref:typename:F32
@@ -1875,6 +1853,7 @@ V2U	code/momo_vectors.h	/^union V2U {$/;"	u	language:C++
 v2u	code/momo_vectors.h	/^v2u(V2 v) {$/;"	f	language:C++	typeref:typename:V2U
 V3	code/momo_vectors.h	/^union V3{$/;"	u	language:C++
 V4	code/momo_vectors.h	/^union V4 {$/;"	u	language:C++
+vel	code/game_mode_level.h	/^  V2 vel;$/;"	m	language:C++	struct:Player	typeref:typename:V2
 VERTEX_ARRAY_BINDING	code/game_renderer_opengl.h	/^enum VERTEX_ARRAY_BINDING {$/;"	g	language:C++
 VERTEX_ARRAY_BINDING_COLORS	code/game_renderer_opengl.h	/^  VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:VERTEX_ARRAY_BINDING
 VERTEX_ARRAY_BINDING_MODEL	code/game_renderer_opengl.h	/^  VERTEX_ARRAY_BINDING_MODEL,$/;"	e	language:C++	enum:VERTEX_ARRAY_BINDING
@@ -1901,13 +1880,13 @@ VERTEX_BUFFER_TYPE_TRANSFORM	code/game_renderer_opengl.h	/^  VERTEX_BUFFER_TYPE_
 vertex_count	code/momo_ttf.h	/^  U32 vertex_count;$/;"	m	language:C++	struct:_TTF_Glyph_Paths	typeref:typename:U32
 vertices	code/game_mode_level_editor.h	/^  Array_List<V2> vertices;$/;"	m	language:C++	struct:Editor	typeref:typename:Array_List<V2>
 vertices	code/momo_ttf.h	/^  V2* vertices;$/;"	m	language:C++	struct:_TTF_Glyph_Paths	typeref:typename:V2 *
-w	code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect	typeref:typename:U32
-w	code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:U32
 w	code/momo_vectors.h	/^	struct { F32 w, h, d; };$/;"	m	language:C++	struct:V3::__anon8de67fa20908	typeref:typename:F32
 w	code/momo_vectors.h	/^	struct { F32 w, h; };$/;"	m	language:C++	struct:V2::__anon8de67fa20608	typeref:typename:F32
 w	code/momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:V4::__anon8de67fa20a08	typeref:typename:F32
 w	code/momo_vectors.h	/^	struct { S32 w, h; };$/;"	m	language:C++	struct:V2S::__anon8de67fa20408	typeref:typename:S32
 w	code/momo_vectors.h	/^	struct { U32 w, h; };$/;"	m	language:C++	struct:V2U::__anon8de67fa20208	typeref:typename:U32
+w	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect	typeref:typename:U32
+w	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:U32
 WAV	code/momo_wav.h	/^struct WAV {$/;"	s	language:C++
 wav	code/sui_pack.h	/^  WAV* wav;$/;"	m	language:C++	struct:Sui_Packer_Sound	typeref:typename:WAV *
 WAV_Data_Chunk	code/momo_wav.h	/^struct WAV_Data_Chunk {$/;"	s	language:C++
@@ -2014,23 +1993,23 @@ win_write_file	code/win.cpp	/^win_write_file(Platform_File* file, UMI size, UMI 
 work_queue	code/win.cpp	/^  Win_Work_Queue work_queue;$/;"	m	language:C++	struct:Win_State	typeref:typename:Win_Work_Queue	file:
 write_file	code/game_platform.h	/^  Platform_Write_File* write_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Write_File *
 wtf_sia	build/meta_test.cpp	/^#define wtf_sia(/;"	d	language:C++	file:
-x	code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect	typeref:typename:U32
-x	code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:U32
 x	code/momo_ttf.h	/^  S16 x, y; $/;"	m	language:C++	struct:_TTF_Glyph_Point	typeref:typename:S16
 x	code/momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:V4::__anon8de67fa20a08	typeref:typename:F32
 x	code/momo_vectors.h	/^	struct { F32 x, y, z; };$/;"	m	language:C++	struct:V3::__anon8de67fa20808	typeref:typename:F32
 x	code/momo_vectors.h	/^	struct { F32 x, y; };$/;"	m	language:C++	struct:V2::__anon8de67fa20508	typeref:typename:F32
 x	code/momo_vectors.h	/^	struct { S32 x, y; };$/;"	m	language:C++	struct:V2S::__anon8de67fa20308	typeref:typename:S32
 x	code/momo_vectors.h	/^	struct { U32 x, y; };$/;"	m	language:C++	struct:V2U::__anon8de67fa20108	typeref:typename:U32
+x	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect	typeref:typename:U32
+x	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:U32
 x_intersect	code/momo_ttf.h	/^  F32 x_intersect;$/;"	m	language:C++	struct:_TTF_Edge	typeref:typename:F32
-y	code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect	typeref:typename:U32
-y	code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:U32
 y	code/momo_ttf.h	/^  S16 x, y; $/;"	m	language:C++	struct:_TTF_Glyph_Point	typeref:typename:S16
 y	code/momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:V4::__anon8de67fa20a08	typeref:typename:F32
 y	code/momo_vectors.h	/^	struct { F32 x, y, z; };$/;"	m	language:C++	struct:V3::__anon8de67fa20808	typeref:typename:F32
 y	code/momo_vectors.h	/^	struct { F32 x, y; };$/;"	m	language:C++	struct:V2::__anon8de67fa20508	typeref:typename:F32
 y	code/momo_vectors.h	/^	struct { S32 x, y; };$/;"	m	language:C++	struct:V2S::__anon8de67fa20308	typeref:typename:S32
 y	code/momo_vectors.h	/^	struct { U32 x, y; };$/;"	m	language:C++	struct:V2U::__anon8de67fa20108	typeref:typename:U32
+y	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect	typeref:typename:U32
+y	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:U32
 z	code/momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:V4::__anon8de67fa20a08	typeref:typename:F32
 z	code/momo_vectors.h	/^	struct { F32 x, y, z; };$/;"	m	language:C++	struct:V3::__anon8de67fa20808	typeref:typename:F32
 zawarudo_AnonVar	code/momo_common.h	/^#define zawarudo_AnonVar(/;"	d	language:C++
@@ -2093,16 +2072,19 @@ _png_is_signature_valid	code/momo_png.h	/^_png_is_signature_valid(U8* comparee) 
 _profile_block	code/game_profiler.h	/^# define _profile_block(/;"	d	language:C++
 _push_fmt_list	code/momo_strings.h	/^_push_fmt_list(String_Builder* b, String format, va_list args) {$/;"	f	language:C++	typeref:typename:void
 _push_info	code/game_console.h	/^_push_info(Console* dc, String str) {$/;"	f	language:C++	typeref:typename:void
-_quicksort_partition	code/momo_sort.h	/^_quicksort_partition(T* a,$/;"	f	language:C++	typeref:typename:UMI
-_quicksort_range	code/momo_sort.h	/^_quicksort_range(T* a, $/;"	f	language:C++	typeref:typename:void
-_RP_Node	code/momo_rect_pack.h	/^struct _RP_Node {$/;"	s	language:C++
-_rp_sort	code/momo_rect_pack.h	/^_rp_sort(_RP_Sort_Entry* sort_entries,$/;"	f	language:C++	typeref:typename:void
-_rp_sort_by_area	code/momo_rect_pack.h	/^_rp_sort_by_area(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++	typeref:typename:B32
-_rp_sort_by_bigger_side	code/momo_rect_pack.h	/^_rp_sort_by_bigger_side(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++	typeref:typename:B32
-_rp_sort_by_height	code/momo_rect_pack.h	/^_rp_sort_by_height(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++	typeref:typename:B32
-_rp_sort_by_perimeter	code/momo_rect_pack.h	/^_rp_sort_by_perimeter(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++	typeref:typename:B32
-_rp_sort_by_width	code/momo_rect_pack.h	/^_rp_sort_by_width(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++	typeref:typename:B32
-_RP_Sort_Entry	code/momo_rect_pack.h	/^struct _RP_Sort_Entry {$/;"	s	language:C++
+_quicksort_partition	D:/work/git/txt/code/momo_sort.h	/^_quicksort_partition(T* a,$/;"	f	language:C++	typeref:typename:UMI
+_quicksort_partition	D:/work/git/txt/code/momo_sort.h	/^_quicksort_partition(T* a,$/;"	f	language:C++	typeref:typename:UMI
+_quicksort_range	D:/work/git/txt/code/momo_sort.h	/^_quicksort_range(T* a, $/;"	f	language:C++	typeref:typename:void
+_quicksort_range	D:/work/git/txt/code/momo_sort.h	/^_quicksort_range(T* a, $/;"	f	language:C++	typeref:typename:void
+_RP_Node	D:/work/git/txt/code/momo_rect_pack.h	/^struct _RP_Node {$/;"	s	language:C++
+_rp_sort	D:/work/git/txt/code/momo_rect_pack.h	/^_rp_sort(RP_Rect* rects,$/;"	f	language:C++	typeref:typename:void
+_rp_sort_by_area	D:/work/git/txt/code/momo_rect_pack.h	/^_rp_sort_by_area(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++	typeref:typename:B32
+_rp_sort_by_bigger_side	D:/work/git/txt/code/momo_rect_pack.h	/^_rp_sort_by_bigger_side(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++	typeref:typename:B32
+_rp_sort_by_height	D:/work/git/txt/code/momo_rect_pack.h	/^_rp_sort_by_height(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++	typeref:typename:B32
+_rp_sort_by_perimeter	D:/work/git/txt/code/momo_rect_pack.h	/^_rp_sort_by_perimeter(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++	typeref:typename:B32
+_rp_sort_by_width	D:/work/git/txt/code/momo_rect_pack.h	/^_rp_sort_by_width(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++	typeref:typename:B32
+_RP_Sort_Entry	D:/work/git/txt/code/momo_rect_pack.h	/^struct _RP_Sort_Entry {$/;"	s	language:C++
+_sort_swap_entries	D:/work/git/txt/code/momo_sort.h	/^_sort_swap_entries(Sort_Entry* a, Sort_Entry* b) {$/;"	f	language:C++	typeref:typename:void
 _ttf_add_vertex	code/momo_ttf.h	/^_ttf_add_vertex(V2* vertices, U32 n, F32 x, F32 y) {$/;"	f	language:C++	typeref:typename:void
 _ttf_add_vertex	code/momo_ttf.h	/^_ttf_add_vertex(V2* vertices, U32 n, V2 v) {$/;"	f	language:C++	typeref:typename:void
 _TTF_CMAP_MS_ID_BIG_FIVE	code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_BIG_FIVE = 4,$/;"	e	language:C++	enum:__anon54d1bdca0203

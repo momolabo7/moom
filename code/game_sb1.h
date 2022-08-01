@@ -141,9 +141,9 @@ sb1_push_triangle(SB1_Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
 // Returns F32_INFINITY() if cannot find
 static F32
 sb1_get_ray_intersection_time_wrt_edges(Ray2 ray,
-                                    Array_List<SB1_Edge>* edges,
-                                    Array_List<V2>* points,
-                                    B32 clamp_to_ray_max = false)
+                                        Array_List<SB1_Edge>* edges,
+                                        Array_List<V2>* points,
+                                        B32 clamp_to_ray_max = false)
 {
   F32 lowest_t1 = clamp_to_ray_max ? 1.f : F32_INFINITY();
   
@@ -191,9 +191,11 @@ sb1_get_ray_intersection_time_wrt_edges(Ray2 ray,
 static void
 sb1_gen_light_intersections(SB1_Light* l,
                             Array_List<V2>* points,
-                            Array_List<SB1_Edge>* edges)
+                            Array_List<SB1_Edge>* edges,
+                            Bump_Allocator* allocator)
 {
   profile_block("light_generation");
+  ba_set_revert_point(allocator);
   
   al_clear(&l->intersections);
   al_clear(&l->triangles);  
@@ -258,39 +260,40 @@ sb1_gen_light_intersections(SB1_Light* l,
       
     }
   }
-  
-  
-  
-  // Sort intersections in a clockwise order
-  auto pred = [&](V2* lhs, V2* rhs){
-    V2 lhs_vec = (*lhs) - l->pos;
-    V2 rhs_vec = (*rhs) - l->pos;
-    
-    V2 basis_vec = V2{1.f, 0.f} ;
-    
-    F32 lhs_angle = angle_between(basis_vec, lhs_vec);
-    F32 rhs_angle = angle_between(basis_vec, rhs_vec);
-    if (lhs_vec.y < 0.f) lhs_angle = PI_32*2.f - lhs_angle;
-    if (rhs_vec.y < 0.f) rhs_angle = PI_32*2.f - rhs_angle;
-    return lhs_angle < rhs_angle;
-  };
-  quicksort(l->intersections.e, l->intersections.count, pred);
-  
+     
   if (l->intersections.count > 0) {
-    for (U32 intersection_index = 0;
-         intersection_index < l->intersections.count - 1;
-         intersection_index++)
+    auto* sorted_its = ba_push_array<Sort_Entry>(allocator, l->intersections.count);
+
+    assert(sorted_its);
+    for (U32 intersection_id = 0; 
+         intersection_id < l->intersections.count; 
+         ++intersection_id) 
     {
-      V2 p0 = al_get_copy(&l->intersections, intersection_index);
+      V2 intersection = l->intersections.e[intersection_id];
+      V2 basis_vec = V2{1.f, 0.f} ;
+      V2 intersection_vec = intersection - l->pos;
+      F32 key = angle_between(basis_vec, intersection_vec);
+      if (intersection_vec.y < 0.f) key = PI_32*2.f - key;
+
+      sorted_its[intersection_id].index = intersection_id;
+      sorted_its[intersection_id].key = key; 
+    }
+    quicksort(sorted_its, (U32)l->intersections.count);
+
+    for (U32 sorted_its_id = 0;
+         sorted_its_id < l->intersections.count - 1;
+         sorted_its_id++)
+    {
+      V2 p0 = al_get_copy(&l->intersections, sorted_its[sorted_its_id].index);
       V2 p1 = l->pos;
-      V2 p2 = al_get_copy(&l->intersections, intersection_index+1);
+      V2 p2 = al_get_copy(&l->intersections, sorted_its[sorted_its_id+1].index);
       if (cross(p0-p1, p2-p1) > 0.f) {
         sb1_push_triangle(l, p0, p1, p2, l->color);
       }
     }
-    V2 p0 = al_get_copy(&l->intersections, l->intersections.count-1);
+    V2 p0 = al_get_copy(&l->intersections, sorted_its[l->intersections.count-1].index);
     V2 p1 = l->pos;
-    V2 p2 = al_get_copy(&l->intersections, 0);
+    V2 p2 = al_get_copy(&l->intersections, sorted_its[0].index);
     
     // Check if p0-p1 is 
     if (cross(p0-p1, p2-p1) > 0.f) {
@@ -447,7 +450,7 @@ sb1_tick(Game* game,
   al_foreach(light_index, &m->lights)
   {
     auto* light = al_get(&m->lights, light_index);
-    sb1_gen_light_intersections(light, &m->points, &m->edges);
+    sb1_gen_light_intersections(light, &m->points, &m->edges, &game->frame_arena);
   }
   
   // check sensor correctness

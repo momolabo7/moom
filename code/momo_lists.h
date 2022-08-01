@@ -4,71 +4,51 @@
 #include "momo_common.h"
 
 // idk man i feel like i have been dealing with this problem for too long
-
-
-template<typename T> 
-struct Slice {
-  UMI count;
-  T* e;
-};
-
-template<typename T>
 struct Slice_List {
+  void* data;
   UMI count;
   UMI cap;
-  T* e;
 };
 
-template<typename T>
-static void sl_init(Slice_List<T>* l, T* arr, UMI cap);
+static void  
+sl_init(Slice_List* l, void* data, UMI cap) {
+  l->data = data;
+  l->count = 0;
+  l->cap = cap;
+}
 
-#if 0
-// NOTE(Momo): I don't actually know how useful this actually 
-// is within our current use cases...
-template<typename T>
-static void sl_make(Slice_List<T>* l, U32 cap, Bump_Allocator allocator);
-#endif
+static void 
+sl_clear(Slice_List* l) {
+  l->count = 0;
+}
 
-template<typename T>
-static UMI sl_cap(Slice_List<T>* l);
+static B32 
+sl_has_space(Slice_List* l) {
+  return l->count < l->cap;
+}
 
-template<typename T>
-static void sl_clear(Slice_List<T>* l);
 
-template<typename T>
-static B32 sl_has_space(Slice_List<T>* l);
+static void*
+sl_push_block(Slice_List* l, void* e, UMI size) {
+  // This is surprisingly easy to reason with;
+  // since the compiler does the same thing for
+  // copying 'objects'. 
+  if (sl_has_space(l)) {
+    void* dst = (U8*)l->data + size*l->count++;
+    copy_memory(dst, e, size);
+    return dst;
+  }
 
-template<typename T>
-static B32 sl_is_empty(Slice_List<T>* l);
+  return 0;
+}
+static void*
+sl_get_block(Slice_List* l, UMI index, UMI size) {
+  return index < l->count ? (U8*)l->data + index * size : 0; 
+}
 
-template<typename T>
-static T* sl_push(Slice_List<T>* l);
 
-template<typename T>
-static void sl_pop(Slice_List<T>* l);
-
-template<typename T>
-static B32 sl_remaining(Slice_List<T>* l);
-
-template<typename T>
-static B32 sl_can_get(Slice_List<T>* l, U32 index);
-
-template<typename T>
-static T* sl_get(Slice_List<T>* l, U32 index);
-
-template<typename T>
-static T sl_get_copy(Slice_List<T>* l, U32 index);
-
-template<typename T>
-static void sl_push_copy(Slice_List<T>* l, T item);
-
-template<typename T>
-static void sl_slear(Slice_List<T>* l, U32 index);
-
-template<typename T> 
-static void sl_remove(Slice_List<T>* l, U32 index);
-
-#define sl_foreach(i,l)  for(decltype((l)->count) i = 0; i < (l)->count; ++i)
+#define sl_push(l,e) sl_push_block(l, &(e), sizeof(e))
+#define sl_get(l,t,i) (t*)sl_get_block(l,i,sizeof(t)) 
 
 //~ Array_List
 template<typename T, UMI N = 256>
@@ -208,109 +188,6 @@ al_remove(Array_List<T,N>* l, UMI index) {
 }
 
 
-//~Slice_List
-template<typename T>
-static void
-sl_init(Slice_List<T>* l, T* arr, UMI cap) {
-  l->e = arr;
-  l->count = 0;
-  l->cap = cap;
-}
 
-#if 0
-template<typename T>
-static B32 sl_make(Slice_List<T>* l, UMI cap, Bump_Allocator* allocator)
-{
-  T* data = ba_push<T>(allocator, cap);
-  if (!data) return false;
-  sl_init(l, data, cap);
-  return true;
-}
-#endif
-
-template<typename T>
-static UMI
-sl_cap(Slice_List<T>* l) {
-  return l->cap;
-}
-
-template<typename T>
-static void
-sl_clear(Slice_List<T>* l) {
-  l->count = 0;
-}
-
-template<typename T>
-static B32
-sl_has_space(Slice_List<T>* l) {
-  return l->count < sl_cap(l); 
-}  
-
-template<typename T>
-static B32
-sl_is_empty(Slice_List<T>* l) {
-  return l->count == 0;
-}  
-
-template<typename T>
-static T*
-sl_push(Slice_List<T>* l) {
-  assert(l->count < l->cap);
-  return l->e + l->count++; 
-}  
-
-template<typename T>
-static void
-sl_pop(Slice_List<T>* l) {
-  assert(l->count > 0);
-  --l->count; 
-}  
-
-template<typename T>
-static B32
-sl_remaining(Slice_List<T>* l) {
-  return l->cap - l->count; 
-}  
-
-template<typename T>
-static B32
-sl_can_get(Slice_List<T>* l, UMI index) {
-  return index < l->count; 
-}  
-
-template<typename T>
-static T*
-sl_get(Slice_List<T>* l, UMI index) {
-  return l->e + i; 
-}  
-
-template<typename T>
-static T
-sl_get_copy(Slice_List<T>* l, UMI index) {
-  return l->e[i]; 
-}  
-
-template<typename T>
-static void
-sl_push_copy(Slice_List<T>* l, T item) {
-  assert(l->count < l->cap);
-  l->e[l->count++] = item; 
-}
-
-template<typename T>
-static void
-sl_slear(Slice_List<T>* l, UMI index) {
-  l->e[index] = l->e[l->count-1]; 
-  sl_pop(l);
-}
-
-
-template<typename T>
-static void
-sl_remove(Slice_List<T>* l, UMI index) {
-  copy_memory(l->e+i, 
-              l->e+index+1, 
-              sizeof(l->e[0])*(l->count--)-index);
-}
 
 #endif //MOMO_ARRAY_LIST_H

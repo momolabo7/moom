@@ -3,63 +3,67 @@
 
 #include "momo_common.h"
 
-template<typename T, typename BinaryCompare> 
-static void quicksort(T* arr, UMI count, BinaryCompare pred);
+// Chances are that we won't be sorting 
+// more than 32-bits worth of indices?
+struct Sort_Entry {
+  F32 key;
+  U32 index;
+};
 
-/////////////////////////////////////////////////
-// IMPLEMENTATION
-template<typename T, typename BinaryCompare> 
-static UMI
-_quicksort_partition(T* a,
-                        UMI start, 
-                        UMI ope,
-                        BinaryCompare cmp) 
+static void
+_sort_swap_entries(Sort_Entry* a, Sort_Entry* b) {
+  Sort_Entry temp = *b;
+  *b = *a;
+  *a = temp;
+}
+
+///////////////////////////////////////////////////////////////////
+// Quick sort
+//
+static U32
+_quicksort_partition(Sort_Entry* a,
+                     U32 start, 
+                     U32 ope) 
 {
   // Save the rightmost index as pivot
   // This frees up the right most index as a slot
-  UMI pivot_idx = ope-1;
-  UMI eventual_pivot_idx = start;
+  U32 pivot_idx = ope-1;
+  U32 eventual_pivot_idx = start;
   
-  for (UMI i = start; i < ope-1; ++i) {
-    T* i_ptr = a + i;
-    T* pivot_ptr = a + pivot_idx;
-    if (cmp(i_ptr, pivot_ptr)) {
-      T* eventual_pivot_ptr = a + eventual_pivot_idx;
-      swap(i_ptr, eventual_pivot_ptr);
+  for (U32 i = start; i < ope-1; ++i) {
+    Sort_Entry* i_ptr = a + i;
+    Sort_Entry* pivot_ptr = a + pivot_idx;
+    if (i_ptr->key < pivot_ptr->key) {
+      Sort_Entry* eventual_pivot_ptr = a + eventual_pivot_idx;
+      _sort_swap_entries(i_ptr, eventual_pivot_ptr);
       ++eventual_pivot_idx;
     }
     
   }
   
-  swap(a + eventual_pivot_idx,
-       a + pivot_idx);
+  _sort_swap_entries(a + eventual_pivot_idx, a + pivot_idx);
   
   return eventual_pivot_idx;
-  
-  
 }
 
 // NOTE(Momo): This is done inplace
-template<typename T, typename BinaryCompare> static void 
-_quicksort_range(T* a, 
-                 UMI start, 
-                 UMI ope,
-                 BinaryCompare cmp) 
+static void
+_quicksort_range(Sort_Entry* a, 
+                 U32 start, 
+                 U32 ope) 
 {
   if (ope - start <= 1) {
     return;
   }
-  UMI pivot = _quicksort_partition(a, start, ope, cmp);
-  _quicksort_range(a, start, pivot, cmp);
-  _quicksort_range(a, pivot+1, ope, cmp);
-  
+  U32 pivot = _quicksort_partition(a, start, ope);
+  _quicksort_range(a, start, pivot);
+  _quicksort_range(a, pivot+1, ope);
 }
 
+static void
+quicksort(Sort_Entry* entries, U32 entry_count) {
+  _quicksort_range(entries, 0, entry_count);
 
-template<typename T, typename BinaryCompare> static void
-quicksort(T* arr, UMI count, BinaryCompare cmp) {
-  _quicksort_range(arr, 0, count, cmp);
-  //QuickSortBlock(arr, count, sizeof(T), pred);
 }
 
 #endif //MOMO_SORT_H

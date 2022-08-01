@@ -807,6 +807,20 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator*
   
   // Rasterazation algorithm starts here
   // Sort edges by top most edge
+  Sort_Entry* y_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
+  assert(y_edges);
+  for (U32 i = 0; i < edge_count; ++i) {
+    y_edges[i].index = i;
+    y_edges[i].key = -(F32)max_of(edges[i].p0.y, edges[i].p1.y);
+  }
+  quicksort(y_edges, edge_count);
+
+
+  // 
+  Sort_Entry* active_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
+  assert(active_edges);
+
+#if 0
   quicksort(edges, edge_count, [](_TTF_Edge* lhs, _TTF_Edge* rhs) {
               F32 lhs_y = max_of(lhs->p0.y, lhs->p1.y);
               F32 rhs_y = max_of(rhs->p0.y, rhs->p1.y);
@@ -816,27 +830,26 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator*
   
   // create an 'active edges list' as a temporary buffer
   
-  declare_and_pointerize(Slice_List<_TTF_Edge*>, active_edges);
+  declare_and_pointerize(Slice_List, active_edges);
   {
     _TTF_Edge** edge_store = ba_push_array<_TTF_Edge*>(allocator, edge_count);
     assert(edge_store);
     sl_init(active_edges, edge_store, edge_count);
   }
   
+#endif
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
   // clearing and refilling the active_edges list per scan line
   for(U32 y = 0; y <= bitmap_dims.h; ++y) {
-    // Clear the active edges
-    sl_clear(active_edges);
-    
+    U32 act_edge_count = 0; 
     F32 yf = (F32)y; // 'center' of pixel
     
     // Add to 'active edge list' any edges which have an 
     // uppermost vertex (p0) before y and lowermost vertex (p1) after this y.
     // Also, ignore p1 that ends EXACTLY on this y.
-    for (U32 edge_index = 0; edge_index < edge_count; ++edge_index){
-      auto* edge = edges + edge_index;
+    for (U32 y_edge_id = 0; y_edge_id < edge_count; ++y_edge_id){
+      _TTF_Edge* edge = edges + y_edges[y_edge_id].index;
       
       if (edge->p0.y <= yf && edge->p1.y > yf) {
         // calculate the x intersection
@@ -845,35 +858,37 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator*
         if (dy != 0.f) {
           F32 t = (yf - edge->p0.y) / dy;
           edge->x_intersect = edge->p0.x + (t * dx);
-          
-          assert(sl_has_space(active_edges));
-          sl_push_copy(active_edges, edge);
-          
+         
+          // prepare Sort_Entry for active_edges
+          active_edges[act_edge_count].index = y_edges[y_edge_id].index;
+          active_edges[act_edge_count].key = edge->x_intersect;
+
+          ++act_edge_count;
         }
       }
     }
-    
-    //sort the active edge list by their x_intersect
-    quicksort(active_edges->e, active_edges->count, 
+    quicksort(active_edges, act_edge_count);
+#if 0
+    quicksort((_TTF_Edge**)active_edges->data, active_edges->count, 
               [](_TTF_Edge**lhs, _TTF_Edge** rhs) {
                 return (*lhs)->x_intersect < (*rhs)->x_intersect;
               });
+#endif
     
-    if (active_edges->count >= 2) {
+    if (act_edge_count >= 2) {
       U32 crossings = 0;
-      for (UMI active_edge_index = 0; 
-           active_edge_index < active_edges->count-1;
-           ++active_edge_index) 
+      for (U32 act_edge_id = 0; 
+           act_edge_id < act_edge_count-1;
+           ++act_edge_id) 
       {
-        auto* start_edge = active_edges->e[active_edge_index];
-        auto* end_edge = active_edges->e[active_edge_index+1];
-        
+        _TTF_Edge* start_edge = edges + active_edges[act_edge_id].index; 
+        _TTF_Edge* end_edge = edges + active_edges[act_edge_id+1].index; 
         
         start_edge->is_inverted ? ++crossings : --crossings;
         
         if (crossings > 0) {
-          U32 start_x = (U32)active_edges->e[active_edge_index]->x_intersect;
-          U32 end_x = (U32)active_edges->e[active_edge_index + 1]->x_intersect;
+          U32 start_x = (U32)start_edge->x_intersect;
+          U32 end_x = (U32)end_edge->x_intersect;
           for(U32 x = start_x; x <= end_x; ++x) {
             pixels[x + y * bitmap_dims.w] = 0xFFFFFFFF;
           }
@@ -883,11 +898,11 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator*
     
 #if 0
     // Draw edges in green
-    for (U32 i =0 ; i < active_edges.count; ++i) 
+    for (U32 i =0 ; i < act_edge_count; ++i) 
     {
-      _TTF_Edge** edge = active_edges.e + i;
-      F32 x0 = (*edge)->p0.x;
-      F32 y0 = (*edge)->p0.y;
+      _TTF_Edge* edge = active_edges.e + i;
+      F32 x0 = edge)->p0.x;
+      F32 y0 =*edge)->p0.y;
       
       F32 x1 = (*edge)->p1.x;
       F32 y1 = (*edge)->p1.y;
