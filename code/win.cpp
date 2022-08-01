@@ -664,7 +664,8 @@ win_process_input(HWND window, Platform* pf)
           case 0x45: /* E */ {
             pf->button_rotate_right.now = is_key_down;
           } break;
-          case 0x46: /* E */ {
+          //case 0x46: /* F */ {
+          case 0x20: /* space */ { 
             pf->button_use.now = is_key_down;
           } break;
           case 0x57: /* W */ {

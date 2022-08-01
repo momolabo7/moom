@@ -5,6 +5,7 @@
 
 //////////////////////////////////////////////////
 // SB1 MODE
+
 struct SB1_Light {
   V2 dir;
   F32 half_angle;
@@ -17,21 +18,18 @@ struct SB1_Light {
   Array_List<V2> debug_rays;
 };
 
-struct SB1_Sensor {
-  V2 pos;
-  U32 target_color;
-  U32 current_color;
-};
-
 struct SB1_Edge{
+  //B32 is_disabled;
   UMI min_pt_id;
   UMI max_pt_id;
   //  Line2 ghost;
 };
 
-enum SB1_State {
-  LEVEL_STATE_EDITOR,
-  LEVEL_STATE_NORMAL,
+struct SB1_Sensor {
+  V2 pos;
+  SB1_Edge* edges[4]; // TODO: use id instead?
+  U32 target_color;
+  U32 current_color;
 };
 
 struct SB1_Player {
@@ -40,46 +38,8 @@ struct SB1_Player {
   SB1_Light* held_light;
 };
 
-enum SB1_Editor_State {
-  EDITOR_STATE_MIN,
-  EDITOR_STATE_PLACE_EDGES = EDITOR_STATE_MIN,
-  EDITOR_STATE_EDIT_EDGES,
-  EDITOR_STATE_PLACE_LIGHTS,
-  EDITOR_STATE_EDIT_LIGHT,
-  // TODO: place lights
-  // TODO: Edit edges
-  // TODO: remove edges
-  
-  EDITOR_STATE_MAX,
-};
-
-struct SB1_Editor_Toolbar_Button {
-  V2 pos;
-  Sprite_ID sprite_id;
-};
-
-struct SB1_Editor {
-  B32 active;
-  SB1_Editor_State next_state;
-  SB1_Editor_State current_state;
-  Array_List<V2> vertices;
-  F32 mode_display_timer;
-  
-  // TODO: change to AABB?
-  V2 toolbar_pos;
-  B32 toolbar_follow_mouse;
-  V2 toolbar_follow_mouse_offset;
-  
-  SB1_Editor_Toolbar_Button state_btns[EDITOR_STATE_MAX];
-  
-  B32 is_selecting_pt;
-  UMI selected_pt_index;
-};
 
 struct SB1 {
-  SB1_State state;
-  //SB1_Editor editor;
-  
   SB1_Player player;
   
   // TODO: points and edges should really be in a struct
@@ -89,15 +49,34 @@ struct SB1 {
   Array_List<SB1_Edge> edges;
   Array_List<SB1_Light> lights;
   Array_List<SB1_Sensor> sensors;
+
+  V2 win_point;
+  B32 is_win_reached;
 };
 
+static void
+sb1_set_win_point(SB1* m, V2 pos) {
+  m->win_point = pos; 
+}
+
 static void 
-sb1_push_sensor(SB1* m, V2 pos, U32 target_color) {
+sb1_push_sensor(SB1* m, V2 pos, U32 target_color, 
+                SB1_Edge* e1,
+                SB1_Edge* e2,
+                SB1_Edge* e3,
+                SB1_Edge* e4) 
+{
   assert(al_has_space(&m->sensors));
-  auto* s = al_push(&m->sensors);
+  SB1_Sensor* s = al_push(&m->sensors);
   s->pos = pos;
   s->target_color = target_color;
   s->current_color = 0;
+ 
+  // TODO:
+  s->edges[0] = e1;
+  s->edges[1] = e2;
+  s->edges[2] = e3;
+  s->edges[3] = e4;
 }
 
 
@@ -108,29 +87,29 @@ sb1_push_point(SB1* m, V2 pt) {
   return m->points.count-1;
 }
 
-static void 
+static SB1_Edge*
 sb1_push_edge(SB1* m, UMI min_pt_id, UMI max_pt_id) {
   assert(al_has_space(&m->edges));
   assert(al_can_get(&m->points, min_pt_id));
   assert(al_can_get(&m->points, max_pt_id));
   assert(min_pt_id != max_pt_id);
   
-  auto* edge = al_push(&m->edges);
+  SB1_Edge* edge = al_push(&m->edges);
   edge->min_pt_id = min_pt_id;
   edge->max_pt_id = max_pt_id;
-  
-}
+  //edge->is_disabled = false;
 
+  return edge;
+}
 static SB1_Light*
-sb1_push_light(SB1* m, V2 pos, U32 color) {
+sb1_push_light(SB1* m, V2 pos, U32 color, F32 angle) {
   assert(al_has_space(&m->lights));
   auto* light = al_push(&m->lights);
   light->pos = pos;
   light->color = color;
   
-  // TODO: remove hard code
-  light->dir.x = 0.f;
-  light->dir.y = 1.f;
+  light->dir.x = cos(angle);
+  light->dir.y = sin(angle);
   light->half_angle = PI_32*0.25f;
   
   return light;
@@ -171,6 +150,9 @@ sb1_get_ray_intersection_time_wrt_edges(Ray2 ray,
   al_foreach(edge_index, edges)
   {
     auto* edge = al_get(edges, edge_index);
+
+    // if (edge->is_disabled) continue;
+
     Ray2 edge_ray = {};
     
     Line2 ghost = sb1_calc_ghost_edge_line(points, edge);
@@ -202,9 +184,7 @@ sb1_get_ray_intersection_time_wrt_edges(Ray2 ray,
       }
     }
   }
-  
   return lowest_t1;
-  
 }
 
 
@@ -231,7 +211,11 @@ sb1_gen_light_intersections(SB1_Light* l,
     // For each endpoint
     al_foreach(edge_index, edges) 
     {
-      UMI ep_index = al_get(edges, edge_index)->max_pt_id;
+      SB1_Edge* edge = al_get(edges, edge_index);
+      
+      //if (edge->is_disabled) continue;
+
+      UMI ep_index = edge->max_pt_id;
       V2 ep = al_get_copy(points, ep_index);
       
       // ignore endpoints that are not within the angle 
@@ -300,7 +284,9 @@ sb1_gen_light_intersections(SB1_Light* l,
       V2 p0 = al_get_copy(&l->intersections, intersection_index);
       V2 p1 = l->pos;
       V2 p2 = al_get_copy(&l->intersections, intersection_index+1);
-      sb1_push_triangle(l, p0, p1, p2, l->color);
+      if (cross(p0-p1, p2-p1) > 0.f) {
+        sb1_push_triangle(l, p0, p1, p2, l->color);
+      }
     }
     V2 p0 = al_get_copy(&l->intersections, l->intersections.count-1);
     V2 p1 = l->pos;
@@ -322,39 +308,25 @@ sb1_init(Game* game)
   auto* player = &m->player;
   
   al_clear(&m->sensors);
+  al_clear(&m->lights);
+  al_clear(&m->edges);
   
-#if 0  
-  push_edge(m, {0.f,0.f}, {1600.f, 0.f});
-  push_edge(m, {1600.f, 0.f}, { 1600.f, 900.f });
-  push_edge(m, {1600.f, 900.f}, {0.f, 900.f});
-  push_edge(m, {0.f, 900.f}, {0.f, 0.f});
-  
-  // Room edges
-  push_edge(m, {100.f,100.f}, {1500.f, 100.f});
-  push_edge(m, {1500.f,100.f}, {1500.f, 800.f});
-  push_edge(m, {1500.f,800.f}, {100.f, 800.f});
-  push_edge(m, {100.f,800.f}, {100.f, 100.f});
-  
-  // triangle
-  push_edge(m, {500.f, 500.f}, {700.001f, 500.f}); 
-  push_edge(m, {700.f, 500.f}, {700.f, 700.f}); 
-  push_edge(m, {700.f, 700.f}, {500.f, 500.f}); 
-#endif
   sb1_push_point(m, {0.f, 0.f});     // 0
   sb1_push_point(m, {1600.f, 0.f});  // 1
   sb1_push_point(m, {1600.f, 900.f});// 2
   sb1_push_point(m, {0.f, 900.f});   // 3
   
+  sb1_push_edge(m, 0, 1);
+  sb1_push_edge(m, 1, 2);
+  sb1_push_edge(m, 2, 3);
+  sb1_push_edge(m, 3, 0);
+
   sb1_push_point(m, {100.f, 100.f});  //4
   sb1_push_point(m, {1500.f, 100.f}); //5
   sb1_push_point(m, {1500.f, 800.f}); //6
   sb1_push_point(m, {100.f, 800.f});  //7
   
-  sb1_push_edge(m, 0, 1);
-  sb1_push_edge(m, 1, 2);
-  sb1_push_edge(m, 2, 3);
-  sb1_push_edge(m, 3, 0);
-  
+    
   sb1_push_edge(m, 4, 5);
   sb1_push_edge(m, 5, 6);
   sb1_push_edge(m, 6, 7);
@@ -362,19 +334,34 @@ sb1_init(Game* game)
   
   
   // lights
-  sb1_push_light(m, {750.f, 600.f}, 0x220000FF);
+  sb1_push_light(m, {250.f, 600.f}, 0x220000FF, 0.f);
+  //sb1_push_light(m, {450.f, 600.f}, 0x002200FF, PI_32/2.f);
+  //sb1_push_light(m, {650.f, 600.f}, 0x000022FF, PI_32);
   
   player->held_light = nullptr;
-  
   player->pos.x = 500.f;
   player->pos.y = 400.f;
   player->size.x = 32.f;
   player->size.y = 32.f;
-  
-  sb1_push_sensor(m, {400.f, 600.f}, 0xFFFF0000);
 
-  //init_editor(&m->editor, {1500.f, 800.f});
- 
+  // Test sensor
+  {
+    sb1_push_point(m, {400.f, 400.f}); // 8
+    sb1_push_point(m, {450.f, 400.f}); // 9 
+    sb1_push_point(m, {450.f, 500.f}); // 10
+    sb1_push_point(m, {400.f, 500.f}); // 11
+                                       
+        
+    sb1_push_sensor(m, {400.f, 600.f}, 0x22220000, 
+      sb1_push_edge(m, 8, 9),
+      sb1_push_edge(m, 9, 10),
+      sb1_push_edge(m, 10, 11),
+      sb1_push_edge(m, 11, 8)
+    );
+  }
+  sb1_set_win_point(m, {800.f, 400.f});
+
+  m->is_win_reached = false;
 }
 
 static void 
@@ -423,7 +410,7 @@ sb1_tick(Game* game,
     // Use button
     if (pf_is_button_poked(pf->button_use)) {
       if (player->held_light == nullptr) {
-        F32 shortest_dist = 128.f; // limit
+        F32 shortest_dist = 512.f; // limit
         SB1_Light* nearest_light = nullptr;
         al_foreach(light_index, &m->lights) {
           SB1_Light* l = al_get(&m->lights, light_index);
@@ -466,7 +453,7 @@ sb1_tick(Game* game,
   // check sensor correctness
   al_foreach(sensor_index, &m->sensors)
   {
-    auto* sensor = al_get(&m->sensors, sensor_index);
+    SB1_Sensor* sensor = al_get(&m->sensors, sensor_index);
     U32 current_color = 0x0000000;
     
     // For each light, for each triangle, add light
@@ -482,26 +469,78 @@ sb1_tick(Game* game,
         {
           // TODO(Momo): Probably not the right way do sensor
           current_color += light->color >> 8 << 8; // ignore alpha
+          break; // ignore the rest of the triangles
         }
       }
     }
     sensor->current_color = current_color;
+
+    // TODO: Goodbye CPU. We should do some kind of
+    // OnEnter/OnExit kind of algo
+    if (sensor->current_color == sensor->target_color) {
+      for(UMI edge_index = 0; 
+          edge_index < array_count(sensor->edges);
+          ++edge_index) 
+      {
+        //sensor->edges[edge_index]->is_disabled = true; 
+      }
+
+    }
+    else {
+      for(UMI edge_index = 0; 
+          edge_index < array_count(sensor->edges);
+          ++edge_index) 
+      {
+        //sensor->edges[edge_index]->is_disabled = false; 
+      }
+    }
+
+
   }
-  
-  //- Rendering
-  
+
+
+
+
+  // Check win condition?
+  {
+    Circ2 player_col = {};
+    player_col.radius = 16.f; 
+    player_col.center = player->pos;
+    
+    Circ2 win_col = {};
+    win_col.radius = 8.f;
+    win_col.center = m->win_point;
+
+    F32 dist_sq = distance_sq(player_col.center, win_col.center); 
+    F32 radius_sq = (player_col.radius + win_col.radius) * (player_col.radius + win_col.radius);
+    if (dist_sq < radius_sq)  
+    {
+      //m->is_win_reached = true;
+      game_set_mode(game, sb1_init, sb1_tick);
+    }
+
+
+  }
+
+
+
+  //////////////////////////////////////////////////////////
+  // Rendering
+  //
+
   // Draw the world collision
   al_foreach(edge_index, &m->edges) 
   {
     auto* edge = al_get(&m->edges, edge_index);
+    //if (edge->is_disabled) continue;
     
     Line2 line = { 
       al_get_copy(&m->points, edge->min_pt_id),
       al_get_copy(&m->points, edge->max_pt_id),
     };
-    
+
     paint_line(painter, line, 
-               1.f, rgba(0x00FF00FF));
+               3.f, rgba(0x888888FF));
   }
   
   advance_depth(painter);
@@ -543,7 +582,7 @@ sb1_tick(Game* game,
                  rgba(0xFF0000FF),
                  line.max.x,
                  line.max.y + 10.f,
-                 32.f);
+                 8.f);
       paint_line(painter, line, 1.f, rgba(0xFF0000FF));
       
     }
@@ -564,7 +603,7 @@ sb1_tick(Game* game,
   {
     auto* sensor = al_get(&m->sensors, sensor_index);
     paint_sprite(painter,
-                 SPRITE_BULLET_DOT, 
+                 SPRITE_BULLET_CIRCLE, 
                  sensor->pos, 
                  {16, 16});
     
@@ -583,7 +622,7 @@ sb1_tick(Game* game,
   
   
   
-  //- Draw lights
+  // Draw lights
   al_foreach(light_index, &m->lights)
   {
     auto* light = al_get(&m->lights, light_index);
@@ -610,7 +649,18 @@ sb1_tick(Game* game,
     }
     advance_depth(painter);
   }
-  
+ 
+  // Render win point
+  {
+    Circ2 circ = {};
+    circ.radius = 32.f;
+    circ.center = m->win_point; 
+    
+    // TODO: only for testing purposes?
+    RGBA color = m->is_win_reached ? rgba(0x00ff00ff) : rgba(0xff0000ff); 
+    paint_circle(painter, circ, 2.f, 16, color); 
+  }
+
   //render_editor(&m->editor, m, painter);
 }
 #endif 

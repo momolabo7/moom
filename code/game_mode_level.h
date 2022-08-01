@@ -27,6 +27,7 @@ struct Edge{
 struct Player {
   V2 pos;
   V2 size;
+  V2 vel;
   Light* held_light;
 };
 
