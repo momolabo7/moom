@@ -60,6 +60,7 @@ static F32 ttf_get_scale_for_pixel_height(TTF* ttf, F32 pixel_height);
 // (box, glyphs, etc) to scale it to a font height equals to pixel_height
 
 static V2U ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box);
+
 static Bitmap ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator* allocator);
 // Returns an RGBA image where the glyph is white and the background is transparent
 
@@ -816,28 +817,8 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator*
   quicksort(y_edges, edge_count);
 
 
-  // 
   Sort_Entry* active_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
   assert(active_edges);
-
-#if 0
-  quicksort(edges, edge_count, [](_TTF_Edge* lhs, _TTF_Edge* rhs) {
-              F32 lhs_y = max_of(lhs->p0.y, lhs->p1.y);
-              F32 rhs_y = max_of(rhs->p0.y, rhs->p1.y);
-              return lhs_y < rhs_y;
-            });
-  
-  
-  // create an 'active edges list' as a temporary buffer
-  
-  declare_and_pointerize(Slice_List, active_edges);
-  {
-    _TTF_Edge** edge_store = ba_push_array<_TTF_Edge*>(allocator, edge_count);
-    assert(edge_store);
-    sl_init(active_edges, edge_store, edge_count);
-  }
-  
-#endif
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
   // clearing and refilling the active_edges list per scan line
@@ -868,13 +849,7 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator*
       }
     }
     quicksort(active_edges, act_edge_count);
-#if 0
-    quicksort((_TTF_Edge**)active_edges->data, active_edges->count, 
-              [](_TTF_Edge**lhs, _TTF_Edge** rhs) {
-                return (*lhs)->x_intersect < (*rhs)->x_intersect;
-              });
-#endif
-    
+ 
     if (act_edge_count >= 2) {
       U32 crossings = 0;
       for (U32 act_edge_id = 0; 

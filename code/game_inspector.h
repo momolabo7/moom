@@ -17,8 +17,13 @@ struct Inspector_Entry {
   void* item;
 };
 
+struct Inspector_Entry_List {
+  U32 count;
+  Inspector_Entry e[64];
+};
+
 struct Inspector {
-  Array_List<Inspector_Entry> entries;
+  Inspector_Entry_List entries;
 };
 
 
@@ -32,8 +37,8 @@ begin_inspector(Inspector* in) {
 
 static void
 add_inspector_entry(Inspector* in, String name, U32* item) {
-  assert(al_has_space(&in->entries));
-  Inspector_Entry* entry = al_push(&in->entries);
+  Inspector_Entry* entry = al_append(&in->entries);
+  assert(entry);
   entry->item = item;
   entry->type = INSPECTOR_ENTRY_TYPE_U32;
   entry->name = name;
@@ -42,8 +47,8 @@ add_inspector_entry(Inspector* in, String name, U32* item) {
 
 static void
 add_inspector_entry(Inspector* in, String name, F32* item) {
-  assert(al_has_space(&in->entries));
-  Inspector_Entry* entry = al_push(&in->entries);
+  Inspector_Entry* entry = al_append(&in->entries);
+  assert(entry);
   entry->item = item;
   entry->type = INSPECTOR_ENTRY_TYPE_F32;
   entry->name = name;

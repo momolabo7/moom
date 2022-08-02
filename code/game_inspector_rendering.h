@@ -7,7 +7,6 @@
 static void 
 update_and_render_inspector(Inspector* in, Painter* p) 
 {
-  // TODO: Render inspector
   paint_sprite(p, SPRITE_BLANK, 
                game_wh * 0.5f, 
                game_wh,
@@ -19,7 +18,7 @@ update_and_render_inspector(Inspector* in, Painter* p)
   
   al_foreach(entry_index, &in->entries)
   {
-    Inspector_Entry* entry = al_get(&in->entries, entry_index);
+    Inspector_Entry* entry = al_at(&in->entries, entry_index);
     switch(entry->type){
       case INSPECTOR_ENTRY_TYPE_U32: {
         U32 item = *(U32*)entry->item;

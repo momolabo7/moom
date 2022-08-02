@@ -3,8 +3,27 @@
 
 #include "game.h"
 
+#define DEBUG_LIGHT 0
+
 //////////////////////////////////////////////////
 // SB1 MODE
+
+struct SB1_Light_Intersections {
+  U32 count;
+  V2 e[256];
+};
+
+struct SB1_Light_Triangles {
+  U32 count;
+  Tri2 e[256];
+};
+
+#if DEBUG_LIGHT
+struct SB1_Light_Debug_Rays {
+  U32 count;
+  Ray2 e[256];
+};
+#endif //DEBUG_LIGHT
 
 struct SB1_Light {
   V2 dir;
@@ -12,10 +31,13 @@ struct SB1_Light {
   
   V2 pos;  
   U32 color;
-  
-	Array_List<V2> intersections;
-  Array_List<Tri2> triangles;
-  Array_List<V2> debug_rays;
+
+  SB1_Light_Triangles triangles;
+  SB1_Light_Intersections intersections;
+
+#if DEBUG_LIGHT
+  SB1_Light_Debug_Rays debug_rays;
+#endif
 };
 
 struct SB1_Edge{
@@ -38,17 +60,36 @@ struct SB1_Player {
   SB1_Light* held_light;
 };
 
+struct SB1_Point_List {
+  U32 count;
+  V2 e[256];
+};
+
+
+struct SB1_Edge_List {
+  U32 count;
+  SB1_Edge e[256];
+};
+
+
+struct SB1_Light_List {
+  U32 count;
+  SB1_Light e[32];
+};
+
+struct SB1_Sensor_List {
+  U32 count;
+  SB1_Sensor e[32];
+};
 
 struct SB1 {
   SB1_Player player;
   
-  // TODO: points and edges should really be in a struct
-  Array_List<V2> points;
-  //Array_List<Shape> shapes;
-  
-  Array_List<SB1_Edge> edges;
-  Array_List<SB1_Light> lights;
-  Array_List<SB1_Sensor> sensors;
+  // TODO: points and edges should really be in a struct?
+  SB1_Point_List points;
+  SB1_Edge_List edges;
+  SB1_Light_List lights;
+  SB1_Sensor_List sensors;
 
   V2 win_point;
   B32 is_win_reached;
@@ -66,8 +107,8 @@ sb1_push_sensor(SB1* m, V2 pos, U32 target_color,
                 SB1_Edge* e3,
                 SB1_Edge* e4) 
 {
-  assert(al_has_space(&m->sensors));
-  SB1_Sensor* s = al_push(&m->sensors);
+  assert(!al_is_full(&m->sensors));
+  SB1_Sensor* s = al_append(&m->sensors);
   s->pos = pos;
   s->target_color = target_color;
   s->current_color = 0;
@@ -80,21 +121,22 @@ sb1_push_sensor(SB1* m, V2 pos, U32 target_color,
 }
 
 
-static UMI
+static U32
 sb1_push_point(SB1* m, V2 pt) {
-  assert(al_has_space(&m->points));
-  al_push_copy(&m->points, pt);
+  V2* p = al_append(&m->points);
+  assert(p);
+  (*p) = pt;
   return m->points.count-1;
 }
 
 static SB1_Edge*
 sb1_push_edge(SB1* m, UMI min_pt_id, UMI max_pt_id) {
-  assert(al_has_space(&m->edges));
-  assert(al_can_get(&m->points, min_pt_id));
-  assert(al_can_get(&m->points, max_pt_id));
+  assert(!al_is_full(&m->edges));
+  assert(al_at(&m->points, min_pt_id));
+  assert(al_at(&m->points, max_pt_id));
   assert(min_pt_id != max_pt_id);
   
-  SB1_Edge* edge = al_push(&m->edges);
+  SB1_Edge* edge = al_append(&m->edges);
   edge->min_pt_id = min_pt_id;
   edge->max_pt_id = max_pt_id;
   //edge->is_disabled = false;
@@ -103,8 +145,8 @@ sb1_push_edge(SB1* m, UMI min_pt_id, UMI max_pt_id) {
 }
 static SB1_Light*
 sb1_push_light(SB1* m, V2 pos, U32 color, F32 angle) {
-  assert(al_has_space(&m->lights));
-  auto* light = al_push(&m->lights);
+  auto* light = al_append(&m->lights);
+  assert(light);
   light->pos = pos;
   light->color = color;
   
@@ -116,11 +158,11 @@ sb1_push_light(SB1* m, V2 pos, U32 color, F32 angle) {
 }
 
 static Line2 
-sb1_calc_ghost_edge_line(Array_List<V2>* points, SB1_Edge* e) {
+sb1_calc_ghost_edge_line(SB1_Point_List* points, SB1_Edge* e) {
 	Line2 ret = {};
   
-  V2 min = al_get_copy(points, e->min_pt_id);
-  V2 max = al_get_copy(points, e->max_pt_id);
+  V2 min = *al_at(points, e->min_pt_id);
+  V2 max = *al_at(points, e->max_pt_id);
   V2 dir = normalize(max - min) * 0.0001f;
   
   ret.min = max - dir;
@@ -133,23 +175,25 @@ sb1_calc_ghost_edge_line(Array_List<V2>* points, SB1_Edge* e) {
 
 static void
 sb1_push_triangle(SB1_Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
-  assert(al_has_space(&l->triangles));
-  Tri2 tri = { p0, p1, p2 };
-  al_push_copy(&l->triangles, tri);
+  Tri2* tri = al_append(&l->triangles);
+  assert(tri);
+  tri->pts[0] = p0;
+  tri->pts[1] = p1;
+  tri->pts[2] = p2;
 }
 
 // Returns F32_INFINITY() if cannot find
 static F32
 sb1_get_ray_intersection_time_wrt_edges(Ray2 ray,
-                                        Array_List<SB1_Edge>* edges,
-                                        Array_List<V2>* points,
+                                        SB1_Edge_List* edges,
+                                        SB1_Point_List* points,
                                         B32 clamp_to_ray_max = false)
 {
   F32 lowest_t1 = clamp_to_ray_max ? 1.f : F32_INFINITY();
   
   al_foreach(edge_index, edges)
   {
-    auto* edge = al_get(edges, edge_index);
+    auto* edge = al_at(edges, edge_index);
 
     // if (edge->is_disabled) continue;
 
@@ -190,8 +234,8 @@ sb1_get_ray_intersection_time_wrt_edges(Ray2 ray,
 
 static void
 sb1_gen_light_intersections(SB1_Light* l,
-                            Array_List<V2>* points,
-                            Array_List<SB1_Edge>* edges,
+                            SB1_Point_List* points,
+                            SB1_Edge_List* edges,
                             Bump_Allocator* allocator)
 {
   profile_block("light_generation");
@@ -199,8 +243,11 @@ sb1_gen_light_intersections(SB1_Light* l,
   
   al_clear(&l->intersections);
   al_clear(&l->triangles);  
+
+#if DEBUG_LIGHT
   al_clear(&l->debug_rays);
-  
+#endif
+
   F32 offset_angles[] = {0.0f, 0.01f, -0.01f};
   //F32 offset_angles[] = {0.0f};
   for (U32 offset_index = 0;
@@ -213,31 +260,32 @@ sb1_gen_light_intersections(SB1_Light* l,
     // For each endpoint
     al_foreach(edge_index, edges) 
     {
-      SB1_Edge* edge = al_get(edges, edge_index);
+      SB1_Edge* edge = al_at(edges, edge_index);
       
       //if (edge->is_disabled) continue;
 
       UMI ep_index = edge->max_pt_id;
-      V2 ep = al_get_copy(points, ep_index);
+      V2 ep = *al_at(points, ep_index);
       
       // ignore endpoints that are not within the angle 
       F32 angle = angle_between(l->dir, ep - l->pos);
       if (angle > l->half_angle) continue;
-      
+     
       Ray2 light_ray = {};
       light_ray.pt = l->pos;
       light_ray.dir = rotate(ep - l->pos, offset_angle);
-      
-      assert(al_has_space(&l->debug_rays));
-      al_push_copy(&l->debug_rays, light_ray.dir);
-      
+
+#if DEBUG_LIGHT
+      Ray2* debug_ray = al_append(&l->debug_rays);
+      assert(light_ray);
+      debug_ray = (*light_ray);
+#endif // DEBUG_LIGHT
       F32 t = sb1_get_ray_intersection_time_wrt_edges(light_ray, edges, points, offset_index == 0);
       
-      assert(al_has_space(&l->intersections));
-      al_push_copy(&l->intersections, 
-                   t == F32_INFINITY() ? 
-                   ep : 
-                   light_ray.pt + t*light_ray.dir);
+      V2* intersection = al_append(&l->intersections);
+      assert(intersection);
+      (*intersection) = (t == F32_INFINITY()) ? ep : light_ray.pt + t*light_ray.dir;
+
     }
     
     
@@ -253,11 +301,10 @@ sb1_gen_light_intersections(SB1_Light* l,
     
     for (U32 i = 0; i < array_count(shell_rays); ++i) {
       F32 t = sb1_get_ray_intersection_time_wrt_edges(shell_rays[i], edges, points);
-      
-      assert(al_has_space(&l->intersections));
-      al_push_copy(&l->intersections, 
-                   shell_rays[i].pt + t*shell_rays[i].dir);
-      
+      assert(!al_is_full(&l->intersections));
+      V2* intersection = al_append(&l->intersections);
+      assert(intersection);
+      (*intersection) = shell_rays[i].pt + t*shell_rays[i].dir;
     }
   }
      
@@ -284,16 +331,16 @@ sb1_gen_light_intersections(SB1_Light* l,
          sorted_its_id < l->intersections.count - 1;
          sorted_its_id++)
     {
-      V2 p0 = al_get_copy(&l->intersections, sorted_its[sorted_its_id].index);
+      V2 p0 = *al_at(&l->intersections, sorted_its[sorted_its_id].index);
       V2 p1 = l->pos;
-      V2 p2 = al_get_copy(&l->intersections, sorted_its[sorted_its_id+1].index);
+      V2 p2 = *al_at(&l->intersections, sorted_its[sorted_its_id+1].index);
       if (cross(p0-p1, p2-p1) > 0.f) {
         sb1_push_triangle(l, p0, p1, p2, l->color);
       }
     }
-    V2 p0 = al_get_copy(&l->intersections, sorted_its[l->intersections.count-1].index);
+    V2 p0 = *al_at(&l->intersections, sorted_its[l->intersections.count-1].index);
     V2 p1 = l->pos;
-    V2 p2 = al_get_copy(&l->intersections, sorted_its[0].index);
+    V2 p2 = *al_at(&l->intersections, sorted_its[0].index);
     
     // Check if p0-p1 is 
     if (cross(p0-p1, p2-p1) > 0.f) {
@@ -416,7 +463,7 @@ sb1_tick(Game* game,
         F32 shortest_dist = 512.f; // limit
         SB1_Light* nearest_light = nullptr;
         al_foreach(light_index, &m->lights) {
-          SB1_Light* l = al_get(&m->lights, light_index);
+          SB1_Light* l = al_at(&m->lights, light_index);
           F32 dist = distance_sq(l->pos, player->pos);
           if (shortest_dist > dist) {
             nearest_light = l;
@@ -449,24 +496,24 @@ sb1_tick(Game* game,
   
   al_foreach(light_index, &m->lights)
   {
-    auto* light = al_get(&m->lights, light_index);
+    auto* light = al_at(&m->lights, light_index);
     sb1_gen_light_intersections(light, &m->points, &m->edges, &game->frame_arena);
   }
   
   // check sensor correctness
   al_foreach(sensor_index, &m->sensors)
   {
-    SB1_Sensor* sensor = al_get(&m->sensors, sensor_index);
+    SB1_Sensor* sensor = al_at(&m->sensors, sensor_index);
     U32 current_color = 0x0000000;
     
     // For each light, for each triangle, add light
     al_foreach(light_index, &m->lights)
     {
-      auto* light = al_get(&m->lights, light_index);
+      auto* light = al_at(&m->lights, light_index);
       
       al_foreach(tri_index, &light->triangles)
       {
-        Tri2 tri = al_get_copy(&light->triangles, tri_index);
+        Tri2 tri = *al_at(&light->triangles, tri_index);
         if (is_point_in_triangle(tri,
                                  sensor->pos)) 
         {
@@ -534,12 +581,12 @@ sb1_tick(Game* game,
   // Draw the world collision
   al_foreach(edge_index, &m->edges) 
   {
-    auto* edge = al_get(&m->edges, edge_index);
+    auto* edge = al_at(&m->edges, edge_index);
     //if (edge->is_disabled) continue;
     
     Line2 line = { 
-      al_get_copy(&m->points, edge->min_pt_id),
-      al_get_copy(&m->points, edge->max_pt_id),
+      *al_at(&m->points, edge->min_pt_id),
+      *al_at(&m->points, edge->max_pt_id),
     };
 
     paint_line(painter, line, 
@@ -548,16 +595,16 @@ sb1_tick(Game* game,
   
   advance_depth(painter);
   
-#if 1
+#if DEBUG_LIGHT
   // Draw the light rays
   if (player->held_light) {
     al_foreach(light_ray_index, &player->held_light->debug_rays)
     {
-      V2 light_ray = player->held_light->debug_rays.e[light_ray_index];
+      Ray2 light_ray = player->held_light->debug_rays.e[light_ray_index];
       
       Line2 line = {};
       line.min = player->pos;
-      line.max = player->pos + light_ray;
+      line.max = player->pos + light_ray.dir;
       
       paint_line(painter, line, 
                  1.f, rgba(0x00FFFFFF));
@@ -591,7 +638,7 @@ sb1_tick(Game* game,
     }
     advance_depth(painter);
   }
-#endif
+#endif // DEBUG_LIGHT
   
   // Draw player
   paint_sprite(painter, 
@@ -604,7 +651,7 @@ sb1_tick(Game* game,
   // Draw sensors
   al_foreach(sensor_index, &m->sensors)
   {
-    auto* sensor = al_get(&m->sensors, sensor_index);
+    auto* sensor = al_at(&m->sensors, sensor_index);
     paint_sprite(painter,
                  SPRITE_BULLET_CIRCLE, 
                  sensor->pos, 
@@ -628,7 +675,7 @@ sb1_tick(Game* game,
   // Draw lights
   al_foreach(light_index, &m->lights)
   {
-    auto* light = al_get(&m->lights, light_index);
+    auto* light = al_at(&m->lights, light_index);
     paint_sprite(painter,
                  SPRITE_BULLET_DOT, 
                  light->pos,
@@ -640,10 +687,10 @@ sb1_tick(Game* game,
   
   al_foreach(light_index, &m->lights)
   {
-    auto* l = al_get(&m->lights, light_index);
+    auto* l = al_at(&m->lights, light_index);
     al_foreach(tri_index, &l->triangles)
     {
-      Tri2* lt = al_get(&l->triangles, tri_index);
+      Tri2* lt = al_at(&l->triangles, tri_index);
       paint_triangle(painter, 
                      rgba(l->color),
                      lt->pts[0],

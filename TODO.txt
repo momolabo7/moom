@@ -1,7 +1,13 @@
+IMPORTANT 
+  Remove al_list, sb1 will need to allocate its lists using the new API. Fk the dependency injection shit too.
+  refactor the code for sb1 to be 'cleaner'
+  frame_arena should be cleared every frame
+
 Game
   Transitions
     Go to next level
     Picking up light
+
 
 Assets 
   9 Slice 
