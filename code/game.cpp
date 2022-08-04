@@ -33,9 +33,9 @@ game_update_and_render(Platform* pf)
                                    &game->asset_arena);
     if(!success) return false;
     
-    //game->next_mode = GAME_MODE_SPLASH;
-    game_set_mode(game, splash_init, splash_tick);
+    //game_set_mode(game, splash_init, splash_tick);
      
+    game_set_mode(game, sb1_init, sb1_tick);
     
     // Initialize Debug Console
     Console* console = &game->console;

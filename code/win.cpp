@@ -1046,7 +1046,7 @@ WinMain(HINSTANCE instance,
     
     // only do this when VSYNC is enabled
     //target_secs_per_frame = secs_this_frame;
-#if 0
+#if 0 
     win_log("target: %f vs %f \n", 
             target_secs_per_frame,
             secs_this_frame);

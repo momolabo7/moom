@@ -3,23 +3,28 @@
 
 #include "game.h"
 
-#define DEBUG_LIGHT 0
+#define DEBUG_LIGHT 1
 
 //////////////////////////////////////////////////
 // SB1 MODE
 
-struct SB1_Light_Intersections {
-  U32 count;
-  V2 e[256];
+struct SB1_Light_Intersection {
+  B32 is_shell;
+  V2 pt;
 };
 
-struct SB1_Light_Triangles {
+struct SB1_Light_Intersection_List {
+  U32 count;
+  SB1_Light_Intersection e[256];
+};
+
+struct SB1_Light_Triangle_List {
   U32 count;
   Tri2 e[256];
 };
 
 #if DEBUG_LIGHT
-struct SB1_Light_Debug_Rays {
+struct SB1_Light_Debug_Ray_List {
   U32 count;
   Ray2 e[256];
 };
@@ -32,11 +37,11 @@ struct SB1_Light {
   V2 pos;  
   U32 color;
 
-  SB1_Light_Triangles triangles;
-  SB1_Light_Intersections intersections;
+  SB1_Light_Triangle_List triangles;
+  SB1_Light_Intersection_List intersections;
 
 #if DEBUG_LIGHT
-  SB1_Light_Debug_Rays debug_rays;
+  SB1_Light_Debug_Ray_List debug_rays;
 #endif
 };
 
@@ -144,15 +149,15 @@ sb1_push_edge(SB1* m, UMI min_pt_id, UMI max_pt_id) {
   return edge;
 }
 static SB1_Light*
-sb1_push_light(SB1* m, V2 pos, U32 color, F32 angle) {
+sb1_push_light(SB1* m, V2 pos, U32 color, F32 angle, F32 facing) {
   auto* light = al_append(&m->lights);
   assert(light);
   light->pos = pos;
   light->color = color;
   
-  light->dir.x = cos(angle);
-  light->dir.y = sin(angle);
-  light->half_angle = PI_32*0.25f;
+  light->dir.x = cos(0.f);
+  light->dir.y = sin(0.f);
+  light->half_angle = deg_to_rad(angle/2.f);
   
   return light;
 }
@@ -231,6 +236,11 @@ sb1_get_ray_intersection_time_wrt_edges(Ray2 ray,
   return lowest_t1;
 }
 
+enum SB1_Light_Type {
+  SB1_LIGHT_TYPE_POINT,
+  SB1_LIGHT_TYPE_DIRECTIONAL,
+  SB1_LIGHT_TYPE_WEIRD
+};
 
 static void
 sb1_gen_light_intersections(SB1_Light* l,
@@ -240,7 +250,15 @@ sb1_gen_light_intersections(SB1_Light* l,
 {
   profile_block("light_generation");
   ba_set_revert_point(allocator);
-  
+
+  SB1_Light_Type light_type = SB1_LIGHT_TYPE_POINT;
+  if (l->half_angle < PI_32/2) {
+    light_type = SB1_LIGHT_TYPE_DIRECTIONAL; 
+  }
+  else if(l->half_angle < PI_32) {
+    light_type = SB1_LIGHT_TYPE_WEIRD;
+  }
+
   al_clear(&l->intersections);
   al_clear(&l->triangles);  
 
@@ -269,61 +287,80 @@ sb1_gen_light_intersections(SB1_Light* l,
       
       // ignore endpoints that are not within the angle 
       F32 angle = angle_between(l->dir, ep - l->pos);
-      if (angle > l->half_angle) continue;
-     
+      if (light_type == SB1_LIGHT_TYPE_WEIRD || 
+          light_type == SB1_LIGHT_TYPE_DIRECTIONAL) 
+      {
+        if (angle > l->half_angle) continue;
+      }
+      else // light_type == SB1_LIGHT_TYPE_POINT 
+      {
+        // if it's a point light, we don't do anything here.
+      }
+
+           
       Ray2 light_ray = {};
       light_ray.pt = l->pos;
       light_ray.dir = rotate(ep - l->pos, offset_angle);
 
 #if DEBUG_LIGHT
       Ray2* debug_ray = al_append(&l->debug_rays);
-      assert(light_ray);
-      debug_ray = (*light_ray);
+      assert(debug_ray);
+      (*debug_ray) = light_ray;
 #endif // DEBUG_LIGHT
       F32 t = sb1_get_ray_intersection_time_wrt_edges(light_ray, edges, points, offset_index == 0);
       
-      V2* intersection = al_append(&l->intersections);
+      SB1_Light_Intersection* intersection = al_append(&l->intersections);
       assert(intersection);
-      (*intersection) = (t == F32_INFINITY()) ? ep : light_ray.pt + t*light_ray.dir;
+      intersection->pt = (t == F32_INFINITY()) ? ep : light_ray.pt + t*light_ray.dir;
+      intersection->is_shell = false;
+
 
     }
     
     
   }
-  
-  // TODO: Only do these for point light
+
+  // Consider 'shell rays', which are rays that are at the 
+  // extreme ends of the light (only for non-point lights)
+  if (light_type != SB1_LIGHT_TYPE_POINT)
   {
-    Ray2 shell_rays[2] = {};
-    shell_rays[0].pt = l->pos;
-    shell_rays[0].dir = rotate(l->dir, l->half_angle);
-    shell_rays[1].pt = l->pos;
-    shell_rays[1].dir = rotate(l->dir, -l->half_angle);
-    
-    for (U32 i = 0; i < array_count(shell_rays); ++i) {
-      F32 t = sb1_get_ray_intersection_time_wrt_edges(shell_rays[i], edges, points);
-      assert(!al_is_full(&l->intersections));
-      V2* intersection = al_append(&l->intersections);
-      assert(intersection);
-      (*intersection) = shell_rays[i].pt + t*shell_rays[i].dir;
+    for (U32 offset_index = 0;
+         offset_index < array_count(offset_angles);
+         ++offset_index) 
+    { 
+      F32 offset_angle = offset_angles[offset_index];
+      Ray2 shell_rays[2] = {};
+      shell_rays[0].pt = l->pos;
+      shell_rays[0].dir = rotate(l->dir, l->half_angle + offset_angle);
+      shell_rays[1].pt = l->pos;
+      shell_rays[1].dir = rotate(l->dir, -l->half_angle + offset_angle);
+        
+      for (U32 i = 0; i < 2; ++i) {
+        F32 t = sb1_get_ray_intersection_time_wrt_edges(shell_rays[i], edges, points);
+        assert(!al_is_full(&l->intersections));
+        SB1_Light_Intersection* intersection = al_append(&l->intersections);
+        assert(intersection);
+        intersection->pt = shell_rays[i].pt + t*shell_rays[i].dir;
+        intersection->is_shell = true;
+      }
     }
   }
-     
+
   if (l->intersections.count > 0) {
     auto* sorted_its = ba_push_array<Sort_Entry>(allocator, l->intersections.count);
-
     assert(sorted_its);
-    for (U32 intersection_id = 0; 
-         intersection_id < l->intersections.count; 
-         ++intersection_id) 
+    for (U32 its_id = 0; 
+         its_id < l->intersections.count; 
+         ++its_id) 
     {
-      V2 intersection = l->intersections.e[intersection_id];
+      SB1_Light_Intersection* its = al_at(&l->intersections, its_id) ;
       V2 basis_vec = V2{1.f, 0.f} ;
-      V2 intersection_vec = intersection - l->pos;
+      V2 intersection_vec = its->pt - l->pos;
       F32 key = angle_between(basis_vec, intersection_vec);
       if (intersection_vec.y < 0.f) key = PI_32*2.f - key;
 
-      sorted_its[intersection_id].index = intersection_id;
-      sorted_its[intersection_id].key = key; 
+      sorted_its[its_id].index = its_id;
+      sorted_its[its_id].key = key; 
     }
     quicksort(sorted_its, (U32)l->intersections.count);
 
@@ -331,22 +368,54 @@ sb1_gen_light_intersections(SB1_Light* l,
          sorted_its_id < l->intersections.count - 1;
          sorted_its_id++)
     {
-      V2 p0 = *al_at(&l->intersections, sorted_its[sorted_its_id].index);
+      SB1_Light_Intersection* its0 = al_at(&l->intersections, sorted_its[sorted_its_id].index);
+      SB1_Light_Intersection* its1 = al_at(&l->intersections, sorted_its[sorted_its_id+1].index);
+
+      B32 ignore = false;
+
+      // In the case of 'wierd' lights,
+      // shell ray should not have a triangle to another shell ray 
+      if (light_type == SB1_LIGHT_TYPE_WEIRD) {
+        if (its0->is_shell && its1->is_shell) {
+          ignore = true;
+        }
+      }
+      
+      if (!ignore) {
+        V2 p0 = its0->pt;
+        V2 p1 = l->pos;
+        V2 p2 = its1->pt;
+  
+        // Make sure we are going CCW
+        if (cross(p0-p1, p2-p1) > 0.f) {
+          sb1_push_triangle(l, p0, p1, p2, l->color);
+        }
+      }
+    }
+
+    SB1_Light_Intersection* its0 = al_at(&l->intersections, sorted_its[l->intersections.count-1].index);
+    SB1_Light_Intersection* its1 = al_at(&l->intersections, sorted_its[0].index);
+
+    // In the case of 'wierd' lights,
+    // shell ray should not have a triangle to another shell ray 
+
+    B32 ignore = false;
+    if (light_type == SB1_LIGHT_TYPE_WEIRD) {
+      if (its0->is_shell && its1->is_shell) {
+        ignore = true;
+      }
+    }
+    
+    if (!ignore) {
+      V2 p0 = its0->pt;
       V2 p1 = l->pos;
-      V2 p2 = *al_at(&l->intersections, sorted_its[sorted_its_id+1].index);
+      V2 p2 = its1->pt;
+
+      // Make sure we are going CCW
       if (cross(p0-p1, p2-p1) > 0.f) {
         sb1_push_triangle(l, p0, p1, p2, l->color);
       }
     }
-    V2 p0 = *al_at(&l->intersections, sorted_its[l->intersections.count-1].index);
-    V2 p1 = l->pos;
-    V2 p2 = *al_at(&l->intersections, sorted_its[0].index);
-    
-    // Check if p0-p1 is 
-    if (cross(p0-p1, p2-p1) > 0.f) {
-      sb1_push_triangle(l, p0, p1, p2, l->color);
-    }
-    
   }
 }
 
@@ -371,22 +440,22 @@ sb1_init(Game* game)
   sb1_push_edge(m, 2, 3);
   sb1_push_edge(m, 3, 0);
 
+#if 1
   sb1_push_point(m, {100.f, 100.f});  //4
   sb1_push_point(m, {1500.f, 100.f}); //5
   sb1_push_point(m, {1500.f, 800.f}); //6
   sb1_push_point(m, {100.f, 800.f});  //7
-  
-    
   sb1_push_edge(m, 4, 5);
   sb1_push_edge(m, 5, 6);
   sb1_push_edge(m, 6, 7);
   sb1_push_edge(m, 7, 4);
+#endif
   
   
   // lights
-  sb1_push_light(m, {250.f, 600.f}, 0x220000FF, 0.f);
-  //sb1_push_light(m, {450.f, 600.f}, 0x002200FF, PI_32/2.f);
-  //sb1_push_light(m, {650.f, 600.f}, 0x000022FF, PI_32);
+  sb1_push_light(m, {250.f, 600.f}, 0x220000FF, 90.f, 0.f);
+  sb1_push_light(m, {450.f, 600.f}, 0x002200FF, 270.f, 0.f);
+  sb1_push_light(m, {650.f, 600.f}, 0x000022FF, 360.f, 0.f);
   
   player->held_light = nullptr;
   player->pos.x = 500.f;
@@ -395,6 +464,7 @@ sb1_init(Game* game)
   player->size.y = 32.f;
 
   // Test sensor
+#if 0
   {
     sb1_push_point(m, {400.f, 400.f}); // 8
     sb1_push_point(m, {450.f, 400.f}); // 9 
@@ -409,6 +479,7 @@ sb1_init(Game* game)
       sb1_push_edge(m, 11, 8)
     );
   }
+#endif
   sb1_set_win_point(m, {800.f, 400.f});
 
   m->is_win_reached = false;
@@ -598,6 +669,8 @@ sb1_tick(Game* game,
 #if DEBUG_LIGHT
   // Draw the light rays
   if (player->held_light) {
+    SB1_Light* l = player->held_light;
+    ba_set_revert_point(&game->frame_arena);
     al_foreach(light_ray_index, &player->held_light->debug_rays)
     {
       Ray2 light_ray = player->held_light->debug_rays.e[light_ray_index];
@@ -610,11 +683,27 @@ sb1_tick(Game* game,
                  1.f, rgba(0x00FFFFFF));
     }
     advance_depth(painter);
-    
-    
-    for (U32 intersection_index = 0;
-         intersection_index < player->held_light->intersections.count;
-         ++intersection_index) 
+   
+    auto* sorted_its = ba_push_array<Sort_Entry>(&game->frame_arena, l->intersections.count);
+    assert(sorted_its);
+    for (U32 intersection_id = 0; 
+         intersection_id < l->intersections.count; 
+         ++intersection_id) 
+    {
+      V2 intersection = al_at(&l->intersections, intersection_id)->pt;
+      V2 basis_vec = V2{1.f, 0.f} ;
+      V2 intersection_vec = intersection - l->pos;
+      F32 key = angle_between(basis_vec, intersection_vec);
+      if (intersection_vec.y < 0.f) key = PI_32*2.f - key;
+
+      sorted_its[intersection_id].index = intersection_id;
+      sorted_its[intersection_id].key = key; 
+    }
+    quicksort(sorted_its, (U32)l->intersections.count);
+
+    for (U32 its_id = 0;
+         its_id < l->intersections.count;
+         ++its_id) 
     {
       make_string_builder(sb, 128);
       
@@ -622,17 +711,16 @@ sb1_tick(Game* game,
       
       Line2 line = {};
       line.min = player->pos;
-      line.max = player->held_light->intersections.e[intersection_index];
+      line.max = al_at(&l->intersections, sorted_its[its_id].index)->pt;
       
-      push_format(sb, string_from_lit("[%u]"), intersection_index);
-      
+      push_format(sb, string_from_lit("[%u]"), its_id);
       paint_text(painter,
                  FONT_DEFAULT, 
                  sb->str,
                  rgba(0xFF0000FF),
                  line.max.x,
                  line.max.y + 10.f,
-                 8.f);
+                 12.f);
       paint_line(painter, line, 1.f, rgba(0xFF0000FF));
       
     }

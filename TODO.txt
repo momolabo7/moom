@@ -1,12 +1,12 @@
-IMPORTANT 
-  Remove al_list, sb1 will need to allocate its lists using the new API. Fk the dependency injection shit too.
-  refactor the code for sb1 to be 'cleaner'
-  frame_arena should be cleared every frame
-
 Game
+  Lights need to be able to define angle and point light
+    Intersection need to store if it is a shell. For cases where light angle is beeg, don't do draw triangle for shell to shell
+  Sensors need to fking work
   Transitions
     Go to next level
     Picking up light
+  Easier Level Coding
+
 
 
 Assets 
