@@ -17,7 +17,8 @@ game_update_and_render(Platform* pf)
   profile_block("game.dll");
 
   // Initialization
-  if (!pf->game) {
+  if (!pf->game || pf->reloaded) {
+    ba_clear(pf->game_arena);
     pf->game = ba_push<Game>(pf->game_arena);
     Game* game = (Game*)pf->game;
    

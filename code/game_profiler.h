@@ -24,7 +24,6 @@ struct Profiler_Entry {
   
   Profiler_Snapshot snapshots[PROFILER_SNAPSHOT_COUNT];
   
-  
   // NOTE(Momo): For initialization of entry. 
   // Maybe it shouldn't be stored here
   // but on where they called it? 
@@ -40,7 +39,6 @@ struct Profiler_Platform_API {
 
 struct Profiler {
   Profiler_Platform_API platform;
-  
   Profiler_Entry entries[PROFILER_MAX_TRANSLATION_UNITS][PROFILER_ENTRY_COUNT];
   U32 snapshot_index;
 };

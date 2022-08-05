@@ -440,7 +440,7 @@ sb1_init(Game* game)
   sb1_push_edge(m, 2, 3);
   sb1_push_edge(m, 3, 0);
 
-#if 1
+#if 1 
   sb1_push_point(m, {100.f, 100.f});  //4
   sb1_push_point(m, {1500.f, 100.f}); //5
   sb1_push_point(m, {1500.f, 800.f}); //6
@@ -458,7 +458,7 @@ sb1_init(Game* game)
   sb1_push_light(m, {650.f, 600.f}, 0x000022FF, 360.f, 0.f);
   
   player->held_light = nullptr;
-  player->pos.x = 500.f;
+  player->pos.x = 400.f;
   player->pos.y = 400.f;
   player->size.x = 32.f;
   player->size.y = 32.f;
