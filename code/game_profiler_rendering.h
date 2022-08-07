@@ -60,7 +60,7 @@ update_and_render_profiler(Profiler* pf, Painter* p) {
         ++entry_index)  
     {
       Profiler_Entry* entry = &pf->entries[translation_index][entry_index];
-      if (entry->function_name) {
+      if (entry->block_name) {
         Stat cycles;
         Stat hits;
         Stat cycles_per_hit;
@@ -92,7 +92,7 @@ update_and_render_profiler(Profiler* pf, Painter* p) {
         make_string_builder(sb, 256);
         push_format(sb, 
                     string_from_lit("[%25s] %7ucy %4uh %7ucy/h"),
-                    entry->function_name,
+                    entry->block_name,
                     //entry->line,
                     (U32)cycles.average,
                     (U32)hits.average,

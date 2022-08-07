@@ -904,9 +904,7 @@ WinMain(HINSTANCE instance,
   
   //- Init profiler
   
-  Profiler_Platform_API ppapi = {};
-  ppapi.get_performance_counter = win_get_performance_counter_u64;
-  init_profiler(g_profiler, ppapi);
+  init_profiler(g_profiler, win_get_performance_counter_u64);
   
   //-Platform setup
   declare_and_pointerize(Platform, pf);

@@ -460,12 +460,12 @@ swap_memory(void* lhs, void* rhs, UMI size) {
 //~Helper functions
 static UMI 
 ptr_to_int(void* p) { 
-  return (UMI)((char*)p - (char*)0); 
+  return (UMI)((C8*)p - (char*)0); 
 }
 
 static U8* 
 int_to_ptr(UMI u) { 
-  return (U8*)((char*)0 + u);
+  return (U8*)((C8*)0 + u);
 }
 
 template<typename T> static T 
@@ -571,14 +571,14 @@ swap(T* lhs, T* rhs) {
 
 //~C-strings, aka null-terminated strings
 static UMI
-cstr_len(const char* str) {
+cstr_len(const C8* str) {
   UMI count = 0;
   for(; (*str) != 0 ; ++count, ++str);
   return count;
 }
 
 static void
-cstr_copy(char * dest, const char* src) {
+cstr_copy(char * dest, const C8* src) {
   for(; (*src) != 0 ; ++src, ++dest) {
     (*dest) = (*src);
   }
@@ -586,7 +586,7 @@ cstr_copy(char * dest, const char* src) {
 }
 
 static B32
-cstr_compare(const char* lhs, const char* rhs) {
+cstr_compare(const C8* lhs, const char* rhs) {
   for(; (*rhs) != 0 ; ++rhs, ++lhs) {
     if ((*lhs) != (*rhs)) {
       return false;
@@ -596,7 +596,7 @@ cstr_compare(const char* lhs, const char* rhs) {
 }
 
 static B32
-cstr_compare_n(const char* lhs, const char* rhs, UMI n) {
+cstr_compare_n(const C8* lhs, const char* rhs, UMI n) {
   while(n--) {
     if ((*lhs++) != (*rhs++)) {
       return false;
@@ -605,7 +605,7 @@ cstr_compare_n(const char* lhs, const char* rhs, UMI n) {
   return true;
 }
 static void
-cstr_m44_concat(char* dest, const char* Src) {
+cstr_m44_concat(C8* dest, const char* Src) {
   // Go to the end of dest
   for (; (*dest) != 0; ++dest);
   for (; (*Src) != 0; ++Src, ++dest) {
@@ -616,13 +616,13 @@ cstr_m44_concat(char* dest, const char* Src) {
 
 
 static void 
-cstr_clear(char* dest) {
+cstr_clear(C8* dest) {
   (*dest) = 0;
 }
 
 static void
-cstr_reverse(char* dest) {
-  char* back_ptr = dest;
+cstr_reverse(C8* dest) {
+  C8* back_ptr = dest;
   for (; *(back_ptr+1) != 0; ++back_ptr);
   for (;dest < back_ptr; ++dest, --back_ptr) {
     swap(dest, back_ptr);
@@ -632,7 +632,7 @@ cstr_reverse(char* dest) {
 
 
 static void 
-cstr_itoa(char* dest, S32 num) {
+cstr_itoa(C8* dest, S32 num) {
   // Naive method. 
   // Extract each number starting from the back and fill the buffer. 
   // Then reverse it.
@@ -647,7 +647,7 @@ cstr_itoa(char* dest, S32 num) {
   B32 negative = num < 0;
   num = abs_of(num);
   
-  char* it = dest;
+  C8* it = dest;
   for(; num != 0; num /= 10) {
     S32 digit_to_convert = num % 10;
     *(it++) = (char)(digit_to_convert + '0');
@@ -1583,6 +1583,26 @@ endian_swap_32(U32 value) {
            ((value >> 8) & 0xFF00) |
            (value >> 24));
   
+}
+
+/////////////////////////////////////////////////////////
+// Hash functions
+
+///////////////////////////////////////////////////////
+// DJB2
+// this algorithm (k=33) was first reported by dan bernstein many 
+// years ago in comp.lang.c. another version of this algorithm 
+// (now favored by bernstein) uses xor: hash(i) = hash(i - 1) * 33 ^ str[i]; 
+// the magic of number 33 (why it works better than many other constants, prime or not) 
+// has never been adequately explained.
+static U32 
+djb2(char* str)
+{
+  U32 hash = 5381;
+  S32 c;
+  while (c = *str++)
+    hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+  return hash;
 }
 
 

@@ -258,7 +258,7 @@ meta_update_profiler_codegen(Profiler_Codegen* p, Meta_Tokenizer* t, Meta_Token 
     } break;
     case 2: {
       // grab the next identifier
-      if (token.type == META_TOKEN_TYPE_IDENTIFIER) {
+      if (token.type == META_TOKEN_TYPE_IDENTIFIER){
         printf(" <!");
         p->state = 0;
         ++p->units;
@@ -267,8 +267,11 @@ meta_update_profiler_codegen(Profiler_Codegen* p, Meta_Tokenizer* t, Meta_Token 
   }
 }
 
+#define asdf() glue(glue(test,__LINE__),__FILE__)
 
+// TODO: refactor profiler codegen into it's own unit
 int main() {
+  int asdf();
   declare_and_pointerize(Meta_Tokenizer, t);
   if (!meta_tokenizer_init(t, "meta_test.cpp")){
     printf("Cannot open file\n");
@@ -287,6 +290,5 @@ int main() {
     if (token.type == META_TOKEN_TYPE_EOF) 
       break;
   } 
-  
   printf("number of profiler units: %d\n", p->units);
 }
