@@ -1,6 +1,7 @@
+Profiler need to assert when there is collision
+
+
 Game
-  Lights need to be able to define angle and point light
-    Intersection need to store if it is a shell. For cases where light angle is beeg, don't do draw triangle for shell to shell
   Sensors need to fking work
   Transitions
     Go to next level

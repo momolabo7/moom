@@ -1596,12 +1596,13 @@ endian_swap_32(U32 value) {
 // the magic of number 33 (why it works better than many other constants, prime or not) 
 // has never been adequately explained.
 static U32 
-djb2(char* str)
+djb2(const char* str)
 {
   U32 hash = 5381;
   S32 c;
-  while (c = *str++)
+  while (c = *str++) {
     hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+  }
   return hash;
 }
 

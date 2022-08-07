@@ -12,7 +12,7 @@ SET Opt=%1
 if not exist %BuildDir% mkdir %BuildDir%
 
 
-SET CompilerFlags=-MT -WX -W4 -wd4116 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi -GR -EHa -std:c++17
+SET CompilerFlags=-MT -WX -W4 -wd4116 -wd4706 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi -GR -EHa -std:c++17
 SET CompilerFlags=-DTRANSLATION_UNIT_INDEX=1 -DINTERNAL=1 %CompilerFlags%
 
 SET LinkerFlags=-incremental:no -opt:ref

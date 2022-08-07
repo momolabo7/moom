@@ -51,105 +51,87 @@ update_and_render_profiler(Profiler* pf, Painter* p) {
   
   const F32 font_height = 30.f;
   U32 line_num = 1;
-  for (U32 translation_index = 0;
-       translation_index < array_count(pf->entries);
-       ++translation_index) 
-  {
-    for(U32 entry_index = 0;
-        entry_index < array_count(pf->entries[0]);
-        ++entry_index)  
-    {
-      Profiler_Entry* entry = &pf->entries[translation_index][entry_index];
-      if (entry->block_name) {
-        Stat cycles;
-        Stat hits;
-        Stat cycles_per_hit;
-        
-        begin_stat(&cycles);
-        begin_stat(&hits);
-        begin_stat(&cycles_per_hit);
-        
-        for (U32 snapshot_index = 0;
-             snapshot_index < array_count(entry->snapshots);
-             ++snapshot_index)
-        {
-          
-          Profiler_Snapshot * snapshot = entry->snapshots + snapshot_index;
-          
-          accumulate_stat(&cycles, (F64)snapshot->cycles);
-          accumulate_stat(&hits, (F64)snapshot->hits);
-          
-          F64 cph = 0.0;
-          if (snapshot->hits) {
-            cph = (F64)snapshot->cycles/(F64)snapshot->hits;
-          }
-          accumulate_stat(&cycles_per_hit, cph);
-        }
-        end_stat(&cycles);
-        end_stat(&hits);
-        end_stat(&cycles_per_hit);
-        
-        make_string_builder(sb, 256);
-        push_format(sb, 
-                    string_from_lit("[%25s] %7ucy %4uh %7ucy/h"),
-                    entry->block_name,
-                    //entry->line,
-                    (U32)cycles.average,
-                    (U32)hits.average,
-                    (U32)cycles_per_hit.average);
-        
-        // Assumes 1600x900        
-        paint_text(p,
-                   FONT_DEBUG, 
-                   sb->str,
-                   rgba(0xFFFFFFFF),
-                   0.f, 
-                   900.f - font_height * (line_num), 
-                   font_height);
-        advance_depth(p);
-        
-        
-        // Draw graph
-        for (U32 snapshot_index = 0;
-             snapshot_index < array_count(entry->snapshots);
-             ++snapshot_index)
-        {
-          Profiler_Snapshot * snapshot = entry->snapshots + snapshot_index;
-          
-          const F32 snapshot_bar_width = 5.f;
-          F32 height_scale = 1.0f / (F32)cycles.max;
-          F32 snapshot_bar_height = 
-            height_scale * font_height * (F32)snapshot->cycles * 0.95f;
-          
-          V2 pos = {
-            900.f + snapshot_bar_width * (snapshot_index), 
-            900.f - font_height * (line_num) + font_height/4
-          };
-          V2 size = {snapshot_bar_width, snapshot_bar_height};
-          
-          
-          paint_sprite(p, 
-                       SPRITE_BLANK, 
-                       pos,
-                       size,
-                       rgba(0x00FF00FF));
-        }
-        advance_depth(p);
-        ++line_num;
-        
-      }
-      else { 
-        // TODO: this is probably not correct. 
-        // It is possible that a profile_block() is not run 
-        // and thus create a hole between two entries.
-        // We might want a more robust profiler though, which might solve this.
-        //
-        continue;
-      }
-      
-    }
-    
-  }
   
+  Profiler_Entry* itr = pf->first;
+  while(itr != 0)
+  {
+    Stat cycles;
+    Stat hits;
+    Stat cycles_per_hit;
+    
+    begin_stat(&cycles);
+    begin_stat(&hits);
+    begin_stat(&cycles_per_hit);
+    
+    for (U32 snapshot_index = 0;
+         snapshot_index < array_count(itr->snapshots);
+         ++snapshot_index)
+    {
+      
+      Profiler_Snapshot * snapshot = itr->snapshots + snapshot_index;
+      
+      accumulate_stat(&cycles, (F64)snapshot->cycles);
+      accumulate_stat(&hits, (F64)snapshot->hits);
+      
+      F64 cph = 0.0;
+      if (snapshot->hits) {
+        cph = (F64)snapshot->cycles/(F64)snapshot->hits;
+      }
+      accumulate_stat(&cycles_per_hit, cph);
+    }
+    end_stat(&cycles);
+    end_stat(&hits);
+    end_stat(&cycles_per_hit);
+    
+    make_string_builder(sb, 256);
+    push_format(sb, 
+                string_from_lit("[%25s] %7ucy %4uh %7ucy/h"),
+                itr->block_name,
+                //itr->line,
+                (U32)cycles.average,
+                (U32)hits.average,
+                (U32)cycles_per_hit.average);
+    
+    // Assumes 1600x900        
+    paint_text(p,
+               FONT_DEBUG, 
+               sb->str,
+               rgba(0xFFFFFFFF),
+               0.f, 
+               900.f - font_height * (line_num), 
+               font_height);
+    advance_depth(p);
+    
+    
+    // Draw graph
+    for (U32 snapshot_index = 0;
+         snapshot_index < array_count(itr->snapshots);
+         ++snapshot_index)
+    {
+      Profiler_Snapshot * snapshot = itr->snapshots + snapshot_index;
+      
+      const F32 snapshot_bar_width = 5.f;
+      F32 height_scale = 1.0f / (F32)cycles.max;
+      F32 snapshot_bar_height = 
+        height_scale * font_height * (F32)snapshot->cycles * 0.95f;
+      
+      V2 pos = {
+        900.f + snapshot_bar_width * (snapshot_index), 
+        900.f - font_height * (line_num) + font_height/4
+      };
+      V2 size = {snapshot_bar_width, snapshot_bar_height};
+      
+      
+      paint_sprite(p, 
+                   SPRITE_BLANK, 
+                   pos,
+                   size,
+                   rgba(0x00FF00FF));
+    }
+    advance_depth(p);
+    ++line_num;
+    
+    itr = itr->next;
+  }
 }
 #endif //GAME_PROFILER_RENDERING_H

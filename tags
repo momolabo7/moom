@@ -363,7 +363,7 @@ div	code/momo_vectors.h	/^div(V2 lhs, F32 rhs) {$/;"	f	language:C++	typeref:type
 div	code/momo_vectors.h	/^div(V3 lhs, F32 rhs) {$/;"	f	language:C++	typeref:typename:V3
 div	code/momo_vectors.h	/^static V2    div(V2 lhs, F32 rhs);$/;"	p	language:C++	typeref:typename:V2
 div	code/momo_vectors.h	/^static V3    div(V3 lhs, F32 rhs);$/;"	p	language:C++	typeref:typename:V3
-djb2	code/momo_common.h	/^djb2(char* str)$/;"	f	language:C++	typeref:typename:U32
+djb2	code/momo_common.h	/^djb2(const char* str)$/;"	f	language:C++	typeref:typename:U32
 dll	code/win.cpp	/^  HMODULE dll; $/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:HMODULE	file:
 dot	code/momo_vectors.h	/^dot(V2 lhs, V2 rhs) {$/;"	f	language:C++	typeref:typename:F32
 dot	code/momo_vectors.h	/^dot(V3 lhs, V3 rhs) {$/;"	f	language:C++	typeref:typename:F32
@@ -550,7 +550,7 @@ end_packer	code/sui_pack.h	/^end_packer(Sui_Packer* p) {$/;"	f	language:C++	type
 end_point_indices	code/momo_ttf.h	/^  U16* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:_TTF_Glyph_Outline	typeref:typename:U16 *
 end_stat	code/game_profiler_rendering.h	/^end_stat(Stat* stat) {$/;"	f	language:C++	typeref:typename:void
 entries	code/game_inspector.h	/^  Inspector_Entry_List entries;$/;"	m	language:C++	struct:Inspector	typeref:typename:Inspector_Entry_List
-entries	code/game_profiler.h	/^  Profiler_Entry entries[PROFILER_MAX_TRANSLATION_UNITS][PROFILER_MAX_ENTRIES];$/;"	m	language:C++	struct:Profiler	typeref:typename:Profiler_Entry[][]
+entries	code/game_profiler.h	/^  Profiler_Entry entries[PROFILER_MAX_ENTRIES];$/;"	m	language:C++	struct:Profiler	typeref:typename:Profiler_Entry[]
 entries	code/win.cpp	/^  Win_Work entries[256];$/;"	m	language:C++	struct:Win_Work_Queue	typeref:typename:Win_Work[256]	file:
 entry_count	code/game_renderer.h	/^	UMI entry_count;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:UMI
 entry_pos	code/game_renderer.h	/^	UMI entry_pos;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:UMI
@@ -592,6 +592,7 @@ file_name	code/sui_pack.h	/^  const C8* file_name;$/;"	m	language:C++	struct:Sui
 file_name	code/sui_pack.h	/^  const char* file_name;$/;"	m	language:C++	struct:Sui_Packer_Font	typeref:typename:const char *
 filter_method	code/momo_png.h	/^  U8 filter_method;$/;"	m	language:C++	struct:PNG	typeref:typename:U8
 filter_method	code/momo_png.h	/^  U8 filter_method;$/;"	m	language:C++	struct:_PNG_IHDR	typeref:typename:U8
+first	code/game_profiler.h	/^  Profiler_Entry* first;$/;"	m	language:C++	struct:Profiler	typeref:typename:Profiler_Entry *
 first_asset_index	code/karu.h	/^  U32 first_asset_index;$/;"	m	language:C++	struct:Karu_Asset_Group	typeref:typename:U32
 first_atlas_font_glyph_id	code/sui_pack.h	/^  U32 first_atlas_font_glyph_id;$/;"	m	language:C++	struct:Sui_Packer_Font	typeref:typename:U32
 first_atlas_font_id	code/sui_pack.h	/^  U32 first_atlas_font_id;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
@@ -1049,6 +1050,7 @@ kern	code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpo
 key	code/game_console.h	/^  String key;$/;"	m	language:C++	struct:Console_Command	typeref:typename:String
 key	code/momo_sort.h	/^  F32 key;$/;"	m	language:C++	struct:Sort_Entry	typeref:typename:F32
 l	code/momo_colors.h	/^  F32 h, s, l;  $/;"	m	language:C++	struct:HSL	typeref:typename:F32
+last	code/game_profiler.h	/^  Profiler_Entry* last;$/;"	m	language:C++	struct:Profiler	typeref:typename:Profiler_Entry *
 last_drawn_instance_index	code/game_renderer_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLsizei
 layers	code/game_renderer.h	/^  U32 layers;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:U32
 left_side_bearing	code/momo_ttf.h	/^  S16 left_side_bearing;$/;"	m	language:C++	struct:TTF_Glyph_Horizontal_Metrics	typeref:typename:S16
@@ -1199,6 +1201,7 @@ negate	code/momo_vectors.h	/^negate(V2 v) {$/;"	f	language:C++	typeref:typename:
 negate	code/momo_vectors.h	/^negate(V3 v) {$/;"	f	language:C++	typeref:typename:V3
 negate	code/momo_vectors.h	/^static V2    negate(V2 v);$/;"	p	language:C++	typeref:typename:V2
 negate	code/momo_vectors.h	/^static V3    negate(V3 v);$/;"	p	language:C++	typeref:typename:V3
+next	code/game_profiler.h	/^  Profiler_Entry* next;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:Profiler_Entry *
 next_entry_to_read	code/win.cpp	/^  U32 volatile next_entry_to_read;$/;"	m	language:C++	struct:Win_Work_Queue	typeref:typename:U32 volatile	file:
 next_entry_to_write	code/win.cpp	/^  U32 volatile next_entry_to_write;$/;"	m	language:C++	struct:Win_Work_Queue	typeref:typename:U32 volatile	file:
 next_state	code/game_mode_level_editor.h	/^  Editor_State next_state;$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_State
@@ -1393,9 +1396,9 @@ Profiler	code/game_profiler.h	/^struct Profiler {$/;"	s	language:C++
 Profiler_Codegen	code/meta.cpp	/^struct Profiler_Codegen {$/;"	s	language:C++	file:
 Profiler_Entry	code/game_profiler.h	/^struct Profiler_Entry {$/;"	s	language:C++
 Profiler_Get_Performance_Counter	code/game_profiler.h	/^typedef U64 Profiler_Get_Performance_Counter(void);$/;"	t	language:C++	typeref:typename:U64 ()(void)
+PROFILER_HASH_TEST	code/game_profiler.h	/^#define PROFILER_HASH_TEST /;"	d	language:C++
 PROFILER_MAX_ENTRIES	code/game_profiler.h	/^#define PROFILER_MAX_ENTRIES /;"	d	language:C++
 PROFILER_MAX_SNAPSHOTS	code/game_profiler.h	/^#define PROFILER_MAX_SNAPSHOTS /;"	d	language:C++
-PROFILER_MAX_TRANSLATION_UNITS	code/game_profiler.h	/^#define PROFILER_MAX_TRANSLATION_UNITS /;"	d	language:C++
 Profiler_Snapshot	code/game_profiler.h	/^struct Profiler_Snapshot {$/;"	s	language:C++
 profile_block	code/game_profiler.h	/^# define profile_block(/;"	d	language:C++
 profile_block	code/game_profiler.h	/^# define profile_block(/;"	d	language:C++
@@ -1592,6 +1595,8 @@ size	code/momo_streams.h	/^  UMI size;$/;"	m	language:C++	struct:Stream	typeref:
 size	code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:WAV_Data_Chunk	typeref:typename:U32
 size	code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:WAV_Fmt_Chunk	typeref:typename:U32
 size	code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:WAV_Riff_Chunk	typeref:typename:U32
+sll_append	code/game_profiler.h	/^#define sll_append(/;"	d	language:C++
+sll_prepend	code/game_profiler.h	/^#define sll_prepend(/;"	d	language:C++
 SMI	code/momo_common.h	/^typedef ptrdiff_t SMI; \/\/ aka 'signed memory index'$/;"	t	language:C++	typeref:typename:ptrdiff_t
 snapshots	code/game_profiler.h	/^  Profiler_Snapshot snapshots[PROFILER_MAX_SNAPSHOTS];$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:Profiler_Snapshot[]
 snapshot_index	code/game_profiler.h	/^  U32 snapshot_index;$/;"	m	language:C++	struct:Profiler	typeref:typename:U32
@@ -2063,10 +2068,9 @@ _PNG_IDAT_Header	code/momo_png.h	/^struct _PNG_IDAT_Header{$/;"	s	language:C++
 _PNG_IHDR	code/momo_png.h	/^struct _PNG_IHDR {$/;"	s	language:C++
 _png_is_format_supported	code/momo_png.h	/^_png_is_format_supported(_PNG_IHDR* IHDR){$/;"	f	language:C++	typeref:typename:B32
 _png_is_signature_valid	code/momo_png.h	/^_png_is_signature_valid(U8* comparee) {$/;"	f	language:C++	typeref:typename:B32
-_prf_begin_profiling_block	code/game_profiler.h	/^_prf_begin_profiling_block(Profiler* p,$/;"	f	language:C++	typeref:typename:Profiler_Entry *
+_prf_begin_profiling_block	code/game_profiler.h	/^_prf_begin_profiling_block(Profiler* p, Profiler_Entry* entry) $/;"	f	language:C++	typeref:typename:void
 _prf_end_profiling_block	code/game_profiler.h	/^_prf_end_profiling_block(Profiler* p, Profiler_Entry* entry) {$/;"	f	language:C++	typeref:typename:void
-_prf_get_unique_entry_id	code/game_profiler.h	/^_prf_get_unique_entry_id() {$/;"	f	language:C++	typeref:typename:_Profiler_Entry_ID
-_Profiler_Entry_ID	code/game_profiler.h	/^typedef U32 _Profiler_Entry_ID;$/;"	t	language:C++	typeref:typename:U32
+_prf_init_block	code/game_profiler.h	/^_prf_init_block(Profiler* p,$/;"	f	language:C++	typeref:typename:Profiler_Entry *
 _profile_block	code/game_profiler.h	/^# define _profile_block(/;"	d	language:C++
 _push_fmt_list	code/momo_strings.h	/^_push_fmt_list(String_Builder* b, String format, va_list args) {$/;"	f	language:C++	typeref:typename:void
 _push_info	code/game_console.h	/^_push_info(Console* dc, String str) {$/;"	f	language:C++	typeref:typename:void
