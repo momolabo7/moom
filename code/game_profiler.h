@@ -33,11 +33,7 @@ struct Profiler_Entry {
   U32 start_hits;
 
   Profiler_Entry* next;
- };
-
-
-#define sll_prepend(f,l,n) (f) ? (n)->next = (f), (f) = (n) : (f) = (l) = (n) 
-#define sll_append(f,l,n) (f) ? (l)->next = (n), (l) = (n) : (f) = (l) = (n)
+};
 
 typedef U64 Profiler_Get_Performance_Counter(void);
 
@@ -52,19 +48,18 @@ struct Profiler {
 };
 
 #if PROFILER_DISABLED
-# define profile_block(...)
+# define profile_block(p, ...)
 #else
-extern Profiler* g_profiler;
-# define __profile_block(line, ...) \
+# define __profile_block(p, line, ...) \
   static Profiler_Entry* _prf_block_##line = 0; \
   if (_prf_block_##line == 0) {\
-    _prf_block_##line = _prf_init_block(g_profiler,  glue(__FILE__, #line), __FILE__, line, __FUNCTION__, __VA_ARGS__);  \
-    sll_append(g_profiler->first, g_profiler->last, _prf_block_##line); \
+    _prf_block_##line = _prf_init_block(p,  glue(__FILE__, #line), __FILE__, line, __FUNCTION__, __VA_ARGS__);  \
+    sll_append(p->first, p->last, _prf_block_##line); \
   }\
-  _prf_begin_profiling_block(g_profiler, _prf_block_##line);\
-defer { _prf_end_profiling_block(g_profiler, _prf_block_##line); };
-# define _profile_block(line, ...) __profile_block(line, __VA_ARGS__);
-# define profile_block(...) _profile_block(__LINE__, __VA_ARGS__)
+  _prf_begin_profiling_block(p, _prf_block_##line);\
+  defer { _prf_end_profiling_block(p, _prf_block_##line); };
+# define _profile_block(p, line, ...) __profile_block(p, line, __VA_ARGS__);
+# define profile_block(p, ...) _profile_block(p, __LINE__, __VA_ARGS__)
 #endif
 
 

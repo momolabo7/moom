@@ -31,6 +31,7 @@ additional_flags	code/momo_png.h	/^  U8 additional_flags;$/;"	m	language:C++	str
 add_command	code/game_console.h	/^add_command(Console* dc, $/;"	f	language:C++	typeref:typename:void
 add_inspector_entry	code/game_inspector.h	/^add_inspector_entry(Inspector* in, String name, F32* item) {$/;"	f	language:C++	typeref:typename:void
 add_inspector_entry	code/game_inspector.h	/^add_inspector_entry(Inspector* in, String name, U32* item) {$/;"	f	language:C++	typeref:typename:void
+add_task	code/game_platform.h	/^  Platform_Add_Task* add_task;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Add_Task *
 add_task	code/game_platform.h	/^  Platform_Add_Task* add_task;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Add_Task *
 advance_depth	code/game_painter.h	/^advance_depth(Painter* p) {$/;"	f	language:C++	typeref:typename:void
 advance_width	code/momo_ttf.h	/^  S16 advance_width;$/;"	m	language:C++	struct:TTF_Glyph_Horizontal_Metrics	typeref:typename:S16
@@ -221,6 +222,7 @@ clamp	code/momo_common.h	/^template<typename T> static T clamp(T x, T b, T t);$/
 clear	code/momo_strings.h	/^clear(String_Builder* b) {$/;"	f	language:C++	typeref:typename:void
 clear	code/momo_strings.h	/^static void     clear(String_Builder* b);$/;"	p	language:C++	typeref:typename:void
 clear_editor_state	code/game_mode_level_editor.cpp	/^clear_editor_state(Editor* e) {$/;"	f	language:C++	typeref:typename:void	file:
+close_file	code/game_platform.h	/^  Platform_Close_File* close_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Close_File *
 close_file	code/game_platform.h	/^  Platform_Close_File* close_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Close_File *
 cmap	code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
 cmap_mappings	code/momo_ttf.h	/^  U32 cmap_mappings;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
@@ -248,6 +250,7 @@ COMPILER_GCC	code/momo_common.h	/^# define COMPILER_GCC /;"	d	language:C++
 COMPILER_GCC	code/momo_common.h	/^# define COMPILER_GCC /;"	d	language:C++
 COMPILER_MSVC	code/momo_common.h	/^# define COMPILER_MSVC /;"	d	language:C++
 COMPILER_MSVC	code/momo_common.h	/^# define COMPILER_MSVC /;"	d	language:C++
+complete_all_tasks	code/game_platform.h	/^  Platform_Complete_All_Tasks* complete_all_tasks;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Complete_All_Tasks *
 complete_all_tasks	code/game_platform.h	/^  Platform_Complete_All_Tasks* complete_all_tasks;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Complete_All_Tasks *
 completion_count	code/win.cpp	/^  U32 volatile completion_count;$/;"	m	language:C++	struct:Win_Work_Queue	typeref:typename:U32 volatile	file:
 completion_goal	code/win.cpp	/^  U32 volatile completion_goal;$/;"	m	language:C++	struct:Win_Work_Queue	typeref:typename:U32 volatile	file:
@@ -338,6 +341,7 @@ data_size	code/momo_png.h	/^  UMI data_size;$/;"	m	language:C++	struct:PNG	typer
 data_u8	code/momo_common.h	/^    U8* data_u8;$/;"	m	language:C++	union:Memory::__anonbacee3e5010a	typeref:typename:U8 *
 debug_arena	code/game.h	/^  Bump_Allocator debug_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Bump_Allocator
 DEBUG_LIGHT	code/game_sb1.h	/^#define DEBUG_LIGHT /;"	d	language:C++
+debug_log	code/game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Debug_Log *
 debug_log	code/game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Debug_Log *
 debug_rays	code/game_sb1.h	/^  SB1_Light_Debug_Ray_List debug_rays;$/;"	m	language:C++	struct:SB1_Light	typeref:typename:SB1_Light_Debug_Ray_List
 Debug_State	code/game_debug.h	/^struct Debug_State {$/;"	s	language:C++
@@ -665,8 +669,10 @@ GAME_MODE_SPLASH_H	code/game_mode_splash.h	/^#define GAME_MODE_SPLASH_H$/;"	d	la
 Game_Mode_Update	code/game.h	/^typedef void Game_Mode_Update(struct Game*, Painter*, Platform*);$/;"	t	language:C++	typeref:typename:void ()(struct Game *,Painter *,Platform *)
 GAME_PAINTER_H	code/game_painter.h	/^#define GAME_PAINTER_H$/;"	d	language:C++
 GAME_PLATFORM_H	code/game_platform.h	/^#define GAME_PLATFORM_H$/;"	d	language:C++
+game_profiler_block	code/game.h	/^#define game_profiler_block(/;"	d	language:C++
 GAME_PROFILER_H	code/game_profiler.h	/^#define GAME_PROFILER_H$/;"	d	language:C++
 GAME_PROFILER_RENDERING_H	code/game_profiler_rendering.h	/^#define GAME_PROFILER_RENDERING_H$/;"	d	language:C++
+game_profile_block	code/game.h	/^#define game_profile_block(/;"	d	language:C++
 GAME_RENDERER_H	code/game_renderer.h	/^#define GAME_RENDERER_H$/;"	d	language:C++
 GAME_SB1_H	code/game_sb1.h	/^#define GAME_SB1_H$/;"	d	language:C++
 game_set_mode	code/game.h	/^game_set_mode(Game* game, Game_Mode_Init* init, Game_Mode_Update* update) $/;"	f	language:C++	typeref:typename:void
@@ -695,6 +701,7 @@ get_next_texture_handle	code/game_assets.h	/^get_next_texture_handle() {  $/;"	f
 get_pack_id	code/game_asset_ids.h	/^static U32 get_pack_id(Bitmap_ID id) {return id >> 16;}$/;"	f	language:C++	typeref:typename:U32
 get_pack_id	code/game_asset_ids.h	/^static U32 get_pack_id(Font_ID id) {return id >> 16;}$/;"	f	language:C++	typeref:typename:U32
 get_pack_id	code/game_asset_ids.h	/^static U32 get_pack_id(Sprite_ID id) {return id >> 16;}$/;"	f	language:C++	typeref:typename:U32
+get_performance_counter	code/game_platform.h	/^  Platform_Get_Performance_Counter* get_performance_counter;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Get_Performance_Counter *
 get_performance_counter	code/game_platform.h	/^  Platform_Get_Performance_Counter* get_performance_counter;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Get_Performance_Counter *
 get_performance_counter	code/game_profiler.h	/^  Profiler_Get_Performance_Counter* get_performance_counter;$/;"	m	language:C++	struct:Profiler	typeref:typename:Profiler_Get_Performance_Counter *
 get_ray_intersection_time_wrt_edges	code/game_mode_level_light.cpp	/^get_ray_intersection_time_wrt_edges(Ray2 ray,$/;"	f	language:C++	typeref:typename:F32	file:
@@ -911,8 +918,7 @@ GL_ZERO	code/game_renderer_opengl.h	/^#define GL_ZERO /;"	d	language:C++
 GOLD_32	code/momo_common.h	/^static F32 GOLD_32 = 1.61803398875f;$/;"	v	language:C++	typeref:typename:F32
 GOLD_64	code/momo_common.h	/^static F64 GOLD_64 = 1.61803398875;$/;"	v	language:C++	typeref:typename:F64
 gpos	code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
-g_platform	code/game.cpp	/^Platform_API g_platform;$/;"	v	language:C++	typeref:typename:Platform_API
-g_profiler	code/game.cpp	/^Profiler* g_profiler;$/;"	v	language:C++	typeref:typename:Profiler *
+g_platform	code/game.cpp	/^Platform* g_platform;$/;"	v	language:C++	typeref:typename:Platform *
 g_profiler	code/win.cpp	/^Profiler* g_profiler = &_g_profiler;$/;"	v	language:C++	typeref:typename:Profiler *
 g_win_state	code/win.cpp	/^static Win_State g_win_state;$/;"	v	language:C++	typeref:typename:Win_State	file:
 h	code/momo_colors.h	/^  F32 h, s, l;  $/;"	m	language:C++	struct:HSL	typeref:typename:F32
@@ -1234,6 +1240,7 @@ opengl_begin_frame	code/game_renderer_opengl.h	/^static void opengl_begin_frame(
 opengl_end_frame	code/game_renderer_opengl.h	/^static void opengl_end_frame(Opengl* ogl);$/;"	p	language:C++	typeref:typename:void
 opengl_init	code/game_renderer_opengl.h	/^static B32 opengl_init(Opengl* ogl);$/;"	p	language:C++	typeref:typename:B32
 OPENGL_MAX_SPRITES	code/game_renderer_opengl.h	/^#define OPENGL_MAX_SPRITES /;"	d	language:C++
+open_file	code/game_platform.h	/^  Platform_Open_File* open_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Open_File *
 open_file	code/game_platform.h	/^  Platform_Open_File* open_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Open_File *
 operator !=	code/momo_strings.h	/^static B32 operator!=(String lhs, String rhs) {$/;"	f	language:C++	typeref:typename:B32
 operator !=	code/momo_strings.h	/^static B32 operator!=(String lhs, String rhs);$/;"	p	language:C++	typeref:typename:B32
@@ -1333,9 +1340,9 @@ pixels	code/momo_image.h	/^  U32* pixels;$/;"	m	language:C++	struct:Bitmap	typer
 pixels	code/sui_pack.h	/^  U32* pixels;$/;"	m	language:C++	struct:Sui_Packer_Bitmap	typeref:typename:U32 *
 PI_32	code/momo_common.h	/^static F32 PI_32 = 3.14159265359f;$/;"	v	language:C++	typeref:typename:F32
 PI_64	code/momo_common.h	/^static F64 PI_64 = 3.14159265359;$/;"	v	language:C++	typeref:typename:F64
+platform	code/game.h	/^Platform* platform;$/;"	v	language:C++	typeref:typename:Platform *
 Platform	code/game_platform.h	/^struct Platform {$/;"	s	language:C++
 Platform_Add_Task	code/game_platform.h	/^typedef void Platform_Add_Task(Platform_Task_Callback callback, void* data);$/;"	t	language:C++	typeref:typename:void ()(Platform_Task_Callback callback,void * data)
-platform_api	code/game_platform.h	/^  Platform_API platform_api;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_API
 Platform_API	code/game_platform.h	/^struct Platform_API {$/;"	s	language:C++
 Platform_Audio	code/game_platform.h	/^struct Platform_Audio {$/;"	s	language:C++
 Platform_Button	code/game_platform.h	/^struct Platform_Button {$/;"	s	language:C++
@@ -1455,6 +1462,7 @@ ratio	code/momo_vectors.h	/^static V2		ratio(V2 lhs, V2 rhs);$/;"	p	language:C++
 Ray2	code/momo_shapes.h	/^struct Ray2 {$/;"	s	language:C++
 rbg_to_hsl	code/momo_colors.h	/^rbg_to_hsl(RGB c) {$/;"	f	language:C++	typeref:typename:HSL
 rbg_to_hsl	code/momo_colors.h	/^static HSL  rbg_to_hsl(RGB c);$/;"	p	language:C++	typeref:typename:HSL
+read_file	code/game_platform.h	/^  Platform_Read_File* read_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Read_File *
 read_file	code/game_platform.h	/^  Platform_Read_File* read_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Read_File *
 rect	code/momo_rect_pack.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:_RP_Sort_Entry	typeref:typename:RP_Rect *
 rect	code/sui_atlas.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Atlas_Sprite	typeref:typename:RP_Rect *
@@ -1595,8 +1603,8 @@ size	code/momo_streams.h	/^  UMI size;$/;"	m	language:C++	struct:Stream	typeref:
 size	code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:WAV_Data_Chunk	typeref:typename:U32
 size	code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:WAV_Fmt_Chunk	typeref:typename:U32
 size	code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:WAV_Riff_Chunk	typeref:typename:U32
-sll_append	code/game_profiler.h	/^#define sll_append(/;"	d	language:C++
-sll_prepend	code/game_profiler.h	/^#define sll_prepend(/;"	d	language:C++
+sll_append	code/momo_lists.h	/^#define sll_append(/;"	d	language:C++
+sll_prepend	code/momo_lists.h	/^#define sll_prepend(/;"	d	language:C++
 SMI	code/momo_common.h	/^typedef ptrdiff_t SMI; \/\/ aka 'signed memory index'$/;"	t	language:C++	typeref:typename:ptrdiff_t
 snapshots	code/game_profiler.h	/^  Profiler_Snapshot snapshots[PROFILER_MAX_SNAPSHOTS];$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:Profiler_Snapshot[]
 snapshot_index	code/game_profiler.h	/^  U32 snapshot_index;$/;"	m	language:C++	struct:Profiler	typeref:typename:U32
@@ -1944,7 +1952,6 @@ win_calc_render_region	code/win.cpp	/^win_calc_render_region(U32 window_w, $/;"	
 win_close_file	code/win.cpp	/^win_close_file(Platform_File* file) {$/;"	f	language:C++	typeref:typename:void	file:
 win_complete_all_tasks	code/win.cpp	/^win_complete_all_tasks() {$/;"	f	language:C++	typeref:typename:void	file:
 win_complete_all_tasks_entries	code/win.cpp	/^win_complete_all_tasks_entries(Win_Work_Queue* wq) {$/;"	f	language:C++	typeref:typename:void	file:
-win_create_platform_api	code/win.cpp	/^win_create_platform_api()$/;"	f	language:C++	typeref:typename:Platform_API	file:
 win_do_next_work_entry	code/win.cpp	/^win_do_next_work_entry(Win_Work_Queue* wq) {$/;"	f	language:C++	typeref:typename:B32	file:
 Win_End_Renderer_Frame	code/win_renderer.h	/^Win_End_Renderer_Frame(Gfx* renderer);$/;"	t	language:C++	typeref:typename:void ()(Gfx * renderer)
 win_end_renderer_frame	code/win_renderer_opengl.cpp	/^win_end_renderer_frame(Gfx* renderer) {$/;"	f	language:C++	typeref:typename:exported void
@@ -1979,6 +1986,7 @@ Win_Renderer_Functions	code/win_renderer.h	/^struct Win_Renderer_Functions {$/;"
 win_renderer_function_names	code/win_renderer.h	/^static const char* win_renderer_function_names[] = {$/;"	v	language:C++	typeref:typename:const char * []
 WIN_RENDERER_H	code/win_renderer.h	/^#define WIN_RENDERER_H$/;"	d	language:C++
 win_return_file	code/win.cpp	/^win_return_file(Win_File_Cabinet* c, Win_File* f) {$/;"	f	language:C++	typeref:typename:void	file:
+win_setup_platform_functions	code/win.cpp	/^win_setup_platform_functions(Platform* pf)$/;"	f	language:C++	typeref:typename:void	file:
 win_set_pixel_format	code/win_renderer_opengl.cpp	/^win_set_pixel_format(HDC dc) {$/;"	f	language:C++	typeref:typename:void	file:
 win_shutdown	code/win.cpp	/^win_shutdown() {$/;"	f	language:C++	typeref:typename:void	file:
 Win_State	code/win.cpp	/^struct Win_State{$/;"	s	language:C++	file:
@@ -1992,6 +2000,7 @@ win_worker_func	code/win.cpp	/^win_worker_func(LPVOID ctx) {$/;"	f	language:C++	
 Win_Work_Queue	code/win.cpp	/^struct Win_Work_Queue {$/;"	s	language:C++	file:
 win_write_file	code/win.cpp	/^win_write_file(Platform_File* file, UMI size, UMI offset, void* src)$/;"	f	language:C++	typeref:typename:B32	file:
 work_queue	code/win.cpp	/^  Win_Work_Queue work_queue;$/;"	m	language:C++	struct:Win_State	typeref:typename:Win_Work_Queue	file:
+write_file	code/game_platform.h	/^  Platform_Write_File* write_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Write_File *
 write_file	code/game_platform.h	/^  Platform_Write_File* write_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Write_File *
 wtf_sia	build/meta_test.cpp	/^#define wtf_sia(/;"	d	language:C++	file:
 x	code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect	typeref:typename:U32

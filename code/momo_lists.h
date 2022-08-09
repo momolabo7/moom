@@ -11,6 +11,11 @@
 #define al_at(l,i)          (al_is_valid(l,i) ? (l)->e + i : 0)
 #define al_foreach(i,l)     for(U32 i = 0; i < (l)->count; ++i)
 
+
+#define sll_prepend(f,l,n) (f) ? (n)->next = (f), (f) = (n) : (f) = (l) = (n) 
+#define sll_append(f,l,n) (f) ? (l)->next = (n), (l) = (n) : (f) = (l) = (n)
+
+
 #if 0
 
 template<typename T, UMI N>

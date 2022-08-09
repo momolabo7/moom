@@ -706,21 +706,19 @@ win_process_input(HWND window, Platform* pf)
   
 }
 
-static Platform_API
-win_create_platform_api()
+static void
+win_setup_platform_functions(Platform* pf)
 {
-  Platform_API pf_api;
-  //pf_api.hot_reload = win_hot_reload;
-  //pf_api.shutdown = win_shutdown;
-  pf_api.open_file = win_open_file;
-  pf_api.read_file = win_read_file;
-  pf_api.write_file = win_write_file;
-  pf_api.close_file = win_close_file;
-  pf_api.add_task = win_add_task;
-  pf_api.complete_all_tasks = win_complete_all_tasks;
-  pf_api.debug_log = win_log_proc;
-  pf_api.get_performance_counter = win_get_performance_counter_u64;
-  return pf_api;
+  //pf->hot_reload = win_hot_reload;
+  //pf->shutdown = win_shutdown;
+  pf->open_file = win_open_file;
+  pf->read_file = win_read_file;
+  pf->write_file = win_write_file;
+  pf->close_file = win_close_file;
+  pf->add_task = win_add_task;
+  pf->complete_all_tasks = win_complete_all_tasks;
+  pf->debug_log = win_log_proc;
+  pf->get_performance_counter = win_get_performance_counter_u64;
 }
 
 //~ Main functions
@@ -913,7 +911,7 @@ WinMain(HINSTANCE instance,
   if (!win_allocate_memory_into_arena(game_arena, MB(32))) return false;
   defer { win_free_memory_from_arena(game_arena); };
   
-  pf->platform_api = win_create_platform_api();
+  win_setup_platform_functions(pf);
   pf->renderer_texture_queue = &renderer->texture_queue;
   pf->renderer_command_queue = &renderer->command_queue;
   pf->profiler = g_profiler;
@@ -929,7 +927,7 @@ WinMain(HINSTANCE instance,
   LARGE_INTEGER last_frame_count = win_get_performance_counter();
   
   while (g_win_state.is_running) {
-    profile_block("game loop");
+    profile_block(pf->profiler, "game loop");
     
     //- Begin render frame
     V2U render_wh = win_get_client_dims(window);

@@ -248,7 +248,7 @@ sb1_gen_light_intersections(SB1_Light* l,
                             SB1_Edge_List* edges,
                             Bump_Allocator* allocator)
 {
-  profile_block("light_generation");
+  game_profile_block("light_generation");
   ba_set_revert_point(allocator);
 
   SB1_Light_Type light_type = SB1_LIGHT_TYPE_POINT;

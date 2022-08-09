@@ -63,11 +63,6 @@ typedef U64   Platform_Get_Performance_Counter();
 
 
 struct Platform_API {
-#if 0
-  Platform_Shutdown* shutdown;
-  Platform_Alloc* alloc;
-  Platform_Free* free;
-#endif
   Platform_Open_File* open_file;
   Platform_Read_File* read_file;
   Platform_Write_File* write_file;
@@ -78,8 +73,6 @@ struct Platform_API {
   Platform_Debug_Log* debug_log;
 };
 
-// TODO(Momo): Remove this?
-extern Platform_API g_platform;
 
 //~Input API
 // NOTE(Momo): Game_Input is not just 'controllers'.
@@ -107,9 +100,11 @@ struct Gfx_Command_Queue;
 struct Profiler;
 struct Bump_Allocator;
 
+
+// These could really all be functions on the platform side
 struct Platform {
   Bump_Allocator* game_arena; // Require 32MB
-  Platform_API platform_api;
+  //Platform_API platform_api;
   Gfx_Texture_Queue* renderer_texture_queue;
   Gfx_Command_Queue* renderer_command_queue;
   Profiler* profiler; 
@@ -150,12 +145,25 @@ struct Platform {
   
   B32 reloaded;
 
+  // API Functions
+  // Ideally, everything in here should be like this
+  Platform_Open_File* open_file;
+  Platform_Read_File* read_file;
+  Platform_Write_File* write_file;
+  Platform_Close_File* close_file;
+  Platform_Add_Task* add_task;
+  Platform_Complete_All_Tasks* complete_all_tasks;
+  Platform_Get_Performance_Counter* get_performance_counter;
+  Platform_Debug_Log* debug_log;
+
+
   // For game to use
   void* game;
 };
 
-typedef void Game_Update_And_Render(Platform* pf);
+extern Platform* g_platform;
 
+typedef void Game_Update_And_Render(Platform* pf);
 typedef void Game_Debug_Update_And_Render(Platform* pf);
 
 // To be called by platform

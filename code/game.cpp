@@ -3,18 +3,16 @@
 #include "game_mode_splash.h"
 #include "game_sb1.h"
 
-Platform_API g_platform;
-Profiler* g_profiler;
+Platform* g_platform;
 
 /////////////////////////////////////////////////////////
 // GAME
 exported B32 
 game_update_and_render(Platform* pf)
 { 
-  g_platform = pf->platform_api;
-  g_profiler = pf->profiler;
+  g_platform = pf;
   
-  profile_block("game.dll");
+  game_profile_block("game.dll");
 
   // Initialization
   if (!pf->game || pf->reloaded) {
