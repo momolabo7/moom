@@ -26,14 +26,13 @@ win_log_proc(const char* fmt, ...) {
   OutputDebugStringA(buffer);
 }
 #define win_log(...) win_log_proc(__VA_ARGS__)
-#define win_profile_block(...) profile_block(g_profiler, __VA_ARGS__)
+#define win_profile_block(...) prf_block(g_profiler, __VA_ARGS__)
 #else
 #define win_log(...)
 #define win_profiler_block(...)
 #endif // INTERNAL
 
-Profiler _g_profiler = {0};
-Profiler* g_profiler = &_g_profiler;
+declare_and_pointerize(Profiler, g_profiler);
 
 #if 0
 static void
@@ -903,7 +902,7 @@ WinMain(HINSTANCE instance,
   
   //- Init profiler
   
-  init_profiler(g_profiler, win_get_performance_counter_u64);
+  prf_init(g_profiler, win_get_performance_counter_u64);
   
   //-Platform setup
   declare_and_pointerize(Platform, pf);
@@ -1031,7 +1030,7 @@ WinMain(HINSTANCE instance,
     
     
     //- End render frame
-    update_entries(g_profiler);
+    prf_update_entries(g_profiler);
     if (renderer_code.is_valid) {
       renderer_functions.end_frame(renderer);
     }

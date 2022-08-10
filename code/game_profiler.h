@@ -1,6 +1,3 @@
-// NOTE(Momo): We might actually port this to a seperate DLL one day
-// and make it like tracey :)
-
 #ifndef GAME_PROFILER_H
 #define GAME_PROFILER_H
 
@@ -9,8 +6,6 @@
 
 #define PROFILER_MAX_SNAPSHOTS 120
 #define PROFILER_MAX_ENTRIES 256
-
-#define PROFILER_HASH_TEST 1
 
 struct Profiler_Snapshot {
   U32 hits;
@@ -47,10 +42,7 @@ struct Profiler {
 
 };
 
-#if PROFILER_DISABLED
-# define profile_block(p, ...)
-#else
-# define __profile_block(p, line, ...) \
+#define __prf_block(p, line, ...) \
   static Profiler_Entry* _prf_block_##line = 0; \
   if (_prf_block_##line == 0) {\
     _prf_block_##line = _prf_init_block(p,  glue(__FILE__, #line), __FILE__, line, __FUNCTION__, __VA_ARGS__);  \
@@ -58,9 +50,8 @@ struct Profiler {
   }\
   _prf_begin_profiling_block(p, _prf_block_##line);\
   defer { _prf_end_profiling_block(p, _prf_block_##line); };
-# define _profile_block(p, line, ...) __profile_block(p, line, __VA_ARGS__);
-# define profile_block(p, ...) _profile_block(p, __LINE__, __VA_ARGS__)
-#endif
+#define _prf_block(p, line, ...) __prf_block(p, line, __VA_ARGS__);
+#define prf_block(p, ...) _prf_block(p, __LINE__, __VA_ARGS__)
 
 
 ///////////////////////////////////////////////////////////////////
@@ -106,14 +97,14 @@ _prf_end_profiling_block(Profiler* p, Profiler_Entry* entry) {
 
 
 static void
-init_profiler(Profiler* p, Profiler_Get_Performance_Counter get_performance_counter_fp) {
+prf_init(Profiler* p, Profiler_Get_Performance_Counter get_performance_counter_fp) {
   p->get_performance_counter = get_performance_counter_fp;
   p->first = p->last = 0;
 }
 
 
 static void
-update_entries(Profiler* p) {
+prf_update_entries(Profiler* p) {
   
   for(Profiler_Entry* itr = p->first;
       itr != 0;

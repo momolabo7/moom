@@ -346,6 +346,7 @@ debug_log	code/game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language
 debug_rays	code/game_sb1.h	/^  SB1_Light_Debug_Ray_List debug_rays;$/;"	m	language:C++	struct:SB1_Light	typeref:typename:SB1_Light_Debug_Ray_List
 Debug_State	code/game_debug.h	/^struct Debug_State {$/;"	s	language:C++
 declare_and_pointerize	code/momo_common.h	/^#define declare_and_pointerize(/;"	d	language:C++
+declare_and_pointerize	code/win.cpp	/^declare_and_pointerize(Profiler, g_profiler);$/;"	p	language:C++	file:
 defer	code/momo_common.h	/^#define defer /;"	d	language:C++
 deg_to_rad	code/momo_common.h	/^deg_to_rad(F32 degrees) {$/;"	f	language:C++	typeref:typename:F32
 deg_to_rad	code/momo_common.h	/^deg_to_rad(F64 degrees) {$/;"	f	language:C++	typeref:typename:F64
@@ -919,7 +920,6 @@ GOLD_32	code/momo_common.h	/^static F32 GOLD_32 = 1.61803398875f;$/;"	v	language
 GOLD_64	code/momo_common.h	/^static F64 GOLD_64 = 1.61803398875;$/;"	v	language:C++	typeref:typename:F64
 gpos	code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
 g_platform	code/game.cpp	/^Platform* g_platform;$/;"	v	language:C++	typeref:typename:Platform *
-g_profiler	code/win.cpp	/^Profiler* g_profiler = &_g_profiler;$/;"	v	language:C++	typeref:typename:Profiler *
 g_win_state	code/win.cpp	/^static Win_State g_win_state;$/;"	v	language:C++	typeref:typename:Win_State	file:
 h	code/momo_colors.h	/^  F32 h, s, l;  $/;"	m	language:C++	struct:HSL	typeref:typename:F32
 h	code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect	typeref:typename:U32
@@ -979,7 +979,6 @@ init_console	code/game_console.h	/^init_console(Console* dc, Bump_Allocator* all
 init_editor	code/game_mode_level_editor.cpp	/^init_editor(Editor* e, V2 pos) {$/;"	f	language:C++	typeref:typename:void	file:
 init_editor_toolbar_button	code/game_mode_level_editor.cpp	/^init_editor_toolbar_button(Editor* e, Editor_State state, $/;"	f	language:C++	typeref:typename:void	file:
 init_mode	code/game.h	/^  Game_Mode_Init* init_mode;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Mode_Init *
-init_profiler	code/game_profiler.h	/^init_profiler(Profiler* p, Profiler_Get_Performance_Counter get_performance_counter_fp) {$/;"	f	language:C++	typeref:typename:void
 init_string_builder	code/momo_strings.h	/^init_string_builder(String_Builder* b, U8* data, UMI cap) {$/;"	f	language:C++	typeref:typename:void
 init_string_builder	code/momo_strings.h	/^static void     init_string_builder(String_Builder* b, U8* data, UMI cap);$/;"	p	language:C++	typeref:typename:void
 input_line	code/game_console.h	/^  String_Builder input_line;$/;"	m	language:C++	struct:Console	typeref:typename:String_Builder
@@ -1397,13 +1396,13 @@ pow	code/momo_intrinsics.h	/^pow(F32 b, F32 e){$/;"	f	language:C++	typeref:typen
 pow	code/momo_intrinsics.h	/^pow(F64 b, F64 e){$/;"	f	language:C++	typeref:typename:F64
 pow	code/momo_intrinsics.h	/^static F32 pow(F32 v, F32 e);$/;"	p	language:C++	typeref:typename:F32
 pow	code/momo_intrinsics.h	/^static F64 pow(F64 , F64 e);$/;"	p	language:C++	typeref:typename:F64
+prf_init	code/game_profiler.h	/^prf_init(Profiler* p, Profiler_Get_Performance_Counter get_performance_counter_fp) {$/;"	f	language:C++	typeref:typename:void
 process_input_for_editor_toolbar	code/game_mode_level_editor.cpp	/^process_input_for_editor_toolbar(Editor* e, Game_Input* input) {$/;"	f	language:C++	typeref:typename:B32	file:
 profiler	code/game_platform.h	/^  Profiler* profiler; $/;"	m	language:C++	struct:Platform	typeref:typename:Profiler *
 Profiler	code/game_profiler.h	/^struct Profiler {$/;"	s	language:C++
 Profiler_Codegen	code/meta.cpp	/^struct Profiler_Codegen {$/;"	s	language:C++	file:
 Profiler_Entry	code/game_profiler.h	/^struct Profiler_Entry {$/;"	s	language:C++
 Profiler_Get_Performance_Counter	code/game_profiler.h	/^typedef U64 Profiler_Get_Performance_Counter(void);$/;"	t	language:C++	typeref:typename:U64 ()(void)
-PROFILER_HASH_TEST	code/game_profiler.h	/^#define PROFILER_HASH_TEST /;"	d	language:C++
 PROFILER_MAX_ENTRIES	code/game_profiler.h	/^#define PROFILER_MAX_ENTRIES /;"	d	language:C++
 PROFILER_MAX_SNAPSHOTS	code/game_profiler.h	/^#define PROFILER_MAX_SNAPSHOTS /;"	d	language:C++
 Profiler_Snapshot	code/game_profiler.h	/^struct Profiler_Snapshot {$/;"	s	language:C++
@@ -2038,7 +2037,6 @@ _ba_set_revert_point	code/momo_memory.h	/^#define _ba_set_revert_point(/;"	d	lan
 _execute	code/game_console.h	/^_execute(Console* dc) {$/;"	f	language:C++	typeref:typename:void
 _gfx_push_command	code/game_renderer.h	/^_gfx_push_command(Gfx_Command_Queue* q, U32 id, U32 align = 4) {$/;"	f	language:C++	typeref:typename:T *
 _gfx_push_command_block	code/game_renderer.h	/^_gfx_push_command_block(Gfx_Command_Queue* q, U32 size, U32 id, U32 align = 4) {$/;"	f	language:C++	typeref:typename:void *
-_g_profiler	code/win.cpp	/^Profiler _g_profiler = {0};$/;"	v	language:C++	typeref:typename:Profiler
 _HueToColor	code/momo_colors.h	/^_HueToColor(F32 p, F32 q, F32 t) {$/;"	f	language:C++	typeref:typename:F32
 _is_point_in_triangle_barycentric	code/momo_shapes.h	/^_is_point_in_triangle_barycentric(Tri2 tri, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
 _is_point_in_triangle_dot_product	code/momo_shapes.h	/^_is_point_in_triangle_dot_product(Tri2 tri, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
