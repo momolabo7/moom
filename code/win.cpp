@@ -26,12 +26,13 @@ win_log_proc(const char* fmt, ...) {
   OutputDebugStringA(buffer);
 }
 #define win_log(...) win_log_proc(__VA_ARGS__)
+#define win_profile_block(...) profile_block(g_profiler, __VA_ARGS__)
 #else
 #define win_log(...)
+#define win_profiler_block(...)
 #endif // INTERNAL
 
-
-Profiler _g_profiler;
+Profiler _g_profiler = {0};
 Profiler* g_profiler = &_g_profiler;
 
 #if 0
@@ -927,7 +928,7 @@ WinMain(HINSTANCE instance,
   LARGE_INTEGER last_frame_count = win_get_performance_counter();
   
   while (g_win_state.is_running) {
-    profile_block(pf->profiler, "game loop");
+    win_profile_block("game loop");
     
     //- Begin render frame
     V2U render_wh = win_get_client_dims(window);

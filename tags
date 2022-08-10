@@ -1980,6 +1980,8 @@ win_log_proc	code/win.cpp	/^win_log_proc(const char* fmt, ...) {$/;"	f	language:
 win_open_file	code/win.cpp	/^win_open_file(Platform_File* file,$/;"	f	language:C++	typeref:typename:B32	file:
 win_point	code/game_sb1.h	/^  V2 win_point;$/;"	m	language:C++	struct:SB1	typeref:typename:V2
 win_process_input	code/win.cpp	/^win_process_input(HWND window, Platform* pf) $/;"	f	language:C++	typeref:typename:void	file:
+win_profiler_block	code/win.cpp	/^#define win_profiler_block(/;"	d	language:C++	file:
+win_profile_block	code/win.cpp	/^#define win_profile_block(/;"	d	language:C++	file:
 win_read_file	code/win.cpp	/^win_read_file(Platform_File* file, UMI size, UMI offset, void* dest) $/;"	f	language:C++	typeref:typename:B32	file:
 win_reload_code_if_outdated	code/win.cpp	/^win_reload_code_if_outdated(Win_Loaded_Code* code) {$/;"	f	language:C++	typeref:typename:B32	file:
 Win_Renderer_Functions	code/win_renderer.h	/^struct Win_Renderer_Functions {$/;"	s	language:C++
@@ -2036,7 +2038,7 @@ _ba_set_revert_point	code/momo_memory.h	/^#define _ba_set_revert_point(/;"	d	lan
 _execute	code/game_console.h	/^_execute(Console* dc) {$/;"	f	language:C++	typeref:typename:void
 _gfx_push_command	code/game_renderer.h	/^_gfx_push_command(Gfx_Command_Queue* q, U32 id, U32 align = 4) {$/;"	f	language:C++	typeref:typename:T *
 _gfx_push_command_block	code/game_renderer.h	/^_gfx_push_command_block(Gfx_Command_Queue* q, U32 size, U32 id, U32 align = 4) {$/;"	f	language:C++	typeref:typename:void *
-_g_profiler	code/win.cpp	/^Profiler _g_profiler;$/;"	v	language:C++	typeref:typename:Profiler
+_g_profiler	code/win.cpp	/^Profiler _g_profiler = {0};$/;"	v	language:C++	typeref:typename:Profiler
 _HueToColor	code/momo_colors.h	/^_HueToColor(F32 p, F32 q, F32 t) {$/;"	f	language:C++	typeref:typename:F32
 _is_point_in_triangle_barycentric	code/momo_shapes.h	/^_is_point_in_triangle_barycentric(Tri2 tri, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
 _is_point_in_triangle_dot_product	code/momo_shapes.h	/^_is_point_in_triangle_dot_product(Tri2 tri, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
