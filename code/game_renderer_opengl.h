@@ -249,6 +249,7 @@ struct Triangle_Batcher {
   GLuint model;
 };
 
+// TODO: Remove inheritance?
 struct Opengl : Gfx {
   Sprite_Batcher sprite_batcher;
   Triangle_Batcher triangle_batcher;

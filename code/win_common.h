@@ -100,7 +100,6 @@ win_get_secs_elapsed(LARGE_INTEGER start,
                      LARGE_INTEGER end,
                      LARGE_INTEGER performance_frequency) 
 {
-  
   return (F32(end.QuadPart - start.QuadPart)) / performance_frequency.QuadPart;
 }
 

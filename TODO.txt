@@ -1,3 +1,5 @@
+Audio memory allocation a bit sus
+
 Game
   Sensors need to fking work
   Transitions
