@@ -1,3 +1,4 @@
+
 #ifndef GAME_PROFILER_H
 #define GAME_PROFILER_H
 
@@ -53,12 +54,13 @@ struct Profiler {
 #define _prf_block(p, line, ...) __prf_block(p, line, __VA_ARGS__);
 #define prf_block(p, ...) _prf_block(p, __LINE__, __VA_ARGS__)
 
+static void prf_init(Profiler* p, Profiler_Get_Performance_Counter get_performance_counter_fp);
+static void prf_update_entries(Profiler* p);
+
 
 ///////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 //
-//
-
 static Profiler_Entry*
 _prf_init_block(Profiler* p,
                 const char* key, 
@@ -71,12 +73,12 @@ _prf_init_block(Profiler* p,
   Profiler_Entry* entry = p->entries + (hash % array_count(p->entries));
   // This means that there is collision! Need to increase entries array size
   assert(entry->next == 0);   
+  if (entry->next != 0) return 0; // invalid 
   entry->filename = filename;
   entry->block_name = block_name ? block_name : function_name;
   entry->line = line;
   entry->start_cycles = (U32)p->get_performance_counter();
   entry->start_hits = 1;
-
 
   return entry;
 }

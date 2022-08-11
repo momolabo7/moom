@@ -1,6 +1,3 @@
-Profiler need to assert when there is collision
-
-
 Game
   Sensors need to fking work
   Transitions
