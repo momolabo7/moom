@@ -177,37 +177,24 @@ win_unload_renderer(Gfx* r) {
 
 exported Gfx*
 win_load_renderer(HWND window, 
-                  UMI command_queue_size,
-                  UMI texture_queue_size, 
+                  U32 command_queue_size,
+                  U32 texture_queue_size, 
                   Bump_Allocator* allocator) 
 {
   HDC dc = GetDC(window); 
-  if (!dc) {
-    return nullptr;
-  }
-  //defer { ReleaseDC(window, dc); };
-  
-  
+  if (!dc) return 0;
+
   Opengl* opengl = ba_push<Opengl>(allocator);
-  
+  if (!opengl) return 0; 
+
   // Allocate memory for render commands
-  gfx_init_command_queue(&opengl->command_queue, 
-                         ba_push_block(allocator, command_queue_size), 
-                         command_queue_size);
-  
-  // Allocate memory for texture transfer queue
-  gfx_init_texture_queue(&opengl->texture_queue, 
-                         ba_push_block(allocator, texture_queue_size),
-                         texture_queue_size);
-  
-  
-  if (!opengl) {
-    return nullptr;
-  }
-  
-  if (!win_load_wgl_extentions()) {
-    return nullptr;
-  }
+  void* command_queue_memory =  ba_push_block(allocator, command_queue_size);
+  if (!command_queue_memory) return 0;
+
+  void* texture_queue_memory = ba_push_block(allocator, texture_queue_size);
+  if (!texture_queue_memory) return 0; 
+ 
+  if (!win_load_wgl_extentions()) return 0;
   
   win_set_pixel_format(dc);
   
@@ -280,8 +267,13 @@ if (!opengl->name) { return nullptr; }
   }
 #undef WGL_SetOpenglFunction
   
-  if (!ogl_init(opengl)) {
-    return nullptr;
+  if (!ogl_init(opengl, 
+                command_queue_memory, 
+                command_queue_size,
+                texture_queue_memory,
+                texture_queue_size)) 
+  {
+    return 0;
   }
   
 #if 0
@@ -300,9 +292,7 @@ if (!opengl->name) { return nullptr; }
     wglSwapIntervalEXT(1);
   }
 #endif
-  
-  return (Gfx*)opengl;
-  
+  return &opengl->gfx;
 }
 
 

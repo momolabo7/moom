@@ -722,6 +722,7 @@ get_real_id	code/game_asset_ids.h	/^static U32 get_real_id(Font_ID id) {return i
 get_real_id	code/game_asset_ids.h	/^static U32 get_real_id(Sprite_ID id) {return id & 0x0000FFFF;}$/;"	f	language:C++	typeref:typename:U32
 get_sprite	code/game_assets.h	/^get_sprite(Game_Assets* ga, Sprite_ID id) {$/;"	f	language:C++	typeref:typename:Sprite_Asset *
 Gfx	code/game_renderer.h	/^struct Gfx {	$/;"	s	language:C++
+gfx	code/game_renderer_opengl.h	/^  Gfx gfx; $/;"	m	language:C++	struct:Opengl	typeref:typename:Gfx
 gfx_advance_depth	code/game_renderer.h	/^gfx_advance_depth(Gfx_Command_Queue* c) {$/;"	f	language:C++	typeref:typename:void
 gfx_begin_texture_transfer	code/game_renderer.h	/^gfx_begin_texture_transfer(Gfx_Texture_Queue* q, U32 required_space) {$/;"	f	language:C++	typeref:typename:Gfx_Texture_Payload *
 Gfx_Blend_Type	code/game_renderer.h	/^enum Gfx_Blend_Type {$/;"	g	language:C++
@@ -1246,15 +1247,15 @@ offset_to_fonts	code/karu.h	/^  U32 offset_to_fonts;$/;"	m	language:C++	struct:K
 offset_to_sounds	code/karu.h	/^  U32 offset_to_sounds;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 offset_to_sprites	code/karu.h	/^  U32 offset_to_sprites;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 ogl_begin_frame	code/game_renderer_opengl.h	/^ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) $/;"	f	language:C++	typeref:typename:void
+ogl_begin_frame	code/game_renderer_opengl.h	/^static void ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region);$/;"	p	language:C++	typeref:typename:void
 ogl_end_frame	code/game_renderer_opengl.h	/^ogl_end_frame(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
+ogl_end_frame	code/game_renderer_opengl.h	/^static void ogl_end_frame(Opengl* ogl);$/;"	p	language:C++	typeref:typename:void
 ogl_init	code/game_renderer_opengl.h	/^ogl_init(Opengl* ogl)$/;"	f	language:C++	typeref:typename:B32
+ogl_init	code/game_renderer_opengl.h	/^static B32 ogl_init(Opengl* ogl);$/;"	p	language:C++	typeref:typename:B32
 old_pos	code/momo_memory.h	/^  UMI old_pos;$/;"	m	language:C++	struct:Bump_Allocator_Marker	typeref:typename:UMI
 one_past_last_asset_index	code/karu.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Karu_Asset_Group	typeref:typename:U32
 ope	code/meta.cpp	/^  U32 ope;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:U32	file:
-Opengl	code/game_renderer_opengl.h	/^struct Opengl : Gfx {$/;"	s	language:C++
-opengl_begin_frame	code/game_renderer_opengl.h	/^static void opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region);$/;"	p	language:C++	typeref:typename:void
-opengl_end_frame	code/game_renderer_opengl.h	/^static void opengl_end_frame(Opengl* ogl);$/;"	p	language:C++	typeref:typename:void
-opengl_init	code/game_renderer_opengl.h	/^static B32 opengl_init(Opengl* ogl);$/;"	p	language:C++	typeref:typename:B32
+Opengl	code/game_renderer_opengl.h	/^struct Opengl {$/;"	s	language:C++
 OPENGL_MAX_SPRITES	code/game_renderer_opengl.h	/^#define OPENGL_MAX_SPRITES /;"	d	language:C++
 open_file	code/game_platform.h	/^  Platform_Open_File* open_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Open_File *
 open_file	code/game_platform.h	/^  Platform_Open_File* open_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Open_File *
@@ -2151,11 +2152,11 @@ _ttf_read_u32	code/momo_ttf.h	/^_ttf_read_u32(U8* location) {$/;"	f	language:C++
 _ttf_tessellate_bezier	code/momo_ttf.h	/^_ttf_tessellate_bezier(V2* vertices,$/;"	f	language:C++	typeref:typename:void
 _ttf_ttf_get_glyph_box	code/momo_ttf.h	/^_ttf_ttf_get_glyph_box(TTF* ttf, U32 glyph_index) {$/;"	f	language:C++	typeref:typename:_TTF_Glyph_Box
 _win_audio_notif_client_AddRef	code/win_audio.h	/^_win_audio_notif_client_AddRef(IMMNotificationClient* client) {$/;"	f	language:C++	typeref:typename:ULONG
-_win_audio_notif_client_OnDefaultDeviceChanged	code/win_audio.h	/^_win_audio_notif_client_OnDefaultDeviceChanged(EDataFlow flow,$/;"	f	language:C++	typeref:typename:HRESULT
-_win_audio_notif_client_OnDeviceAdded	code/win_audio.h	/^_win_audio_notif_client_OnDeviceAdded(LPCWSTR pwstr_device_id)$/;"	f	language:C++	typeref:typename:HRESULT
-_win_audio_notif_client_OnDeviceRemoved	code/win_audio.h	/^_win_audio_notif_client_OnDeviceRemoved(pwstr_device_id)$/;"	f	language:C++	typeref:typename:HRESULT
-_win_audio_notif_client_OnDeviceStateChanged	code/win_audio.h	/^_win_audio_notif_client_OnDeviceStateChanged(LPCWSTR pwstr_device_id, $/;"	f	language:C++	typeref:typename:HRESULT
-_win_audio_notif_client_OnPropertyValueChanged	code/win_audio.h	/^_win_audio_notif_client_OnPropertyValueChanged(LPCWSTR pwstr_device_id, $/;"	f	language:C++	typeref:typename:HRESULT
+_win_audio_notif_client_OnDefaultDeviceChanged	code/win_audio.h	/^_win_audio_notif_client_OnDefaultDeviceChanged(IMMNotificationClient* client,$/;"	f	language:C++	typeref:typename:HRESULT
+_win_audio_notif_client_OnDeviceAdded	code/win_audio.h	/^_win_audio_notif_client_OnDeviceAdded(IMMNotificationClient* client, LPCWSTR pwstr_device_id)$/;"	f	language:C++	typeref:typename:HRESULT
+_win_audio_notif_client_OnDeviceRemoved	code/win_audio.h	/^_win_audio_notif_client_OnDeviceRemoved(IMMNotificationClient* client, LPWSTR pwstr_device_id)$/;"	f	language:C++	typeref:typename:HRESULT
+_win_audio_notif_client_OnDeviceStateChanged	code/win_audio.h	/^_win_audio_notif_client_OnDeviceStateChanged(IMMNotificationClient* client,$/;"	f	language:C++	typeref:typename:HRESULT
+_win_audio_notif_client_OnPropertyValueChanged	code/win_audio.h	/^_win_audio_notif_client_OnPropertyValueChanged(IMMNotificationClient* client,$/;"	f	language:C++	typeref:typename:HRESULT
 _win_audio_notif_client_QueryInterface	code/win_audio.h	/^_win_audio_notif_client_QueryInterface(IMMNotificationClient* client,$/;"	f	language:C++	typeref:typename:HRESULT
 _win_audio_notif_client_Release	code/win_audio.h	/^_win_audio_notif_client_Release(IMMNotificationClient* client) {$/;"	f	language:C++	typeref:typename:ULONG
 _win_audio_release_current_device	code/win_audio.h	/^_win_audio_release_current_device(Win_Audio* audio) {$/;"	f	language:C++	typeref:typename:void

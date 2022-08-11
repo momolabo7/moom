@@ -249,8 +249,8 @@ struct Triangle_Batcher {
   GLuint model;
 };
 
-// TODO: Remove inheritance?
-struct Opengl : Gfx {
+struct Opengl {
+  Gfx gfx; 
   Sprite_Batcher sprite_batcher;
   Triangle_Batcher triangle_batcher;
   
@@ -305,10 +305,13 @@ struct Opengl : Gfx {
   GL_glDrawArrays* glDrawArrays;
 };
 
-static B32 opengl_init(Opengl* ogl);
-static void opengl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region);
-static void opengl_end_frame(Opengl* ogl);
-
+static B32 ogl_init(Opengl* ogl, 
+                    void* command_queue_memory, 
+                    U32 command_queue_size, 
+                    void* texture_queue_memory,
+                    U32 texture_queue_size);
+static void ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region);
+static void ogl_end_frame(Opengl* ogl);
 
 ////////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
@@ -874,9 +877,19 @@ void main(void) {
 
 
 static B32
-ogl_init(Opengl* ogl)
+ogl_init(Opengl* ogl,
+         void* command_queue_memory, 
+         U32 command_queue_size, 
+         void* texture_queue_memory,
+         U32 texture_queue_size)
 {	
-  
+  gfx_init_command_queue(&ogl->gfx.command_queue, 
+                         command_queue_memory, 
+                         command_queue_size);
+  gfx_init_texture_queue(&ogl->gfx.texture_queue, 
+                         texture_queue_memory,
+                         texture_queue_size);
+
   ogl->glEnable(GL_DEPTH_TEST);
   ogl->glEnable(GL_SCISSOR_TEST);
   
@@ -907,7 +920,7 @@ _ogl_process_texture_queue(Opengl* ogl) {
   // is loading forever, the rest of the payloads will never be processed.
   // This is fine and intentional. A payload should never be loading forever.
   // 
-  Gfx_Texture_Queue* textures = &ogl->texture_queue;
+  Gfx_Texture_Queue* textures = &ogl->gfx.texture_queue;
   while(textures->payload_count) {
     Gfx_Texture_Payload* payload = textures->payloads + textures->first_payload_index;
     
@@ -953,7 +966,7 @@ _ogl_process_texture_queue(Opengl* ogl) {
 static void
 ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) 
 {
-  Gfx_Command_Queue* cmds = &ogl->command_queue;
+  Gfx_Command_Queue* cmds = &ogl->gfx.command_queue;
   gfx_clear_commands(cmds);  
   cmds->platform_render_wh = render_wh;
   cmds->platform_render_region = region;
@@ -963,7 +976,7 @@ ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region)
 // Only call opengl functions when we end frame
 static void
 ogl_end_frame(Opengl* ogl) {
-  Gfx_Command_Queue* cmds = &ogl->command_queue;
+  Gfx_Command_Queue* cmds = &ogl->gfx.command_queue;
   
   _ogl_align_viewport(ogl, cmds->platform_render_wh, cmds->platform_render_region);
   _ogl_process_texture_queue(ogl);
