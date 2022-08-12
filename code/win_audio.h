@@ -2,8 +2,6 @@
 
 #include "win_audio_wasapi.h"
 
-
-// TODO: Turn audio into a multi-tiered system like graphics?
 static Platform_Audio*
 win_audio_load(U32 samples_per_second, 
                U16 bits_per_sample,
@@ -12,6 +10,7 @@ win_audio_load(U32 samples_per_second,
                U32 refresh_rate,
                Bump_Allocator* allocator) 
 {
+  // TODO: Ideally, we should give WASAPI a seperate arena 
   Win_Wasapi* wasapi = ba_push<Win_Wasapi>(allocator);
   if (!wasapi) return 0;
 

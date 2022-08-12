@@ -43,7 +43,7 @@ allocator	code/game_debug.h	/^  Bump_Allocator allocator;$/;"	m	language:C++	str
 allocator	code/momo_memory.h	/^  Bump_Allocator* allocator;$/;"	m	language:C++	struct:Bump_Allocator_Marker	typeref:typename:Bump_Allocator *
 allocator	code/momo_png.h	/^  Bump_Allocator* allocator; $/;"	m	language:C++	struct:_PNG_Context	typeref:typename:Bump_Allocator *
 allocator	code/sui_pack.h	/^  Bump_Allocator* allocator;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Bump_Allocator *
-allocator	code/win_audio_wasapi.h	/^  Bump_Allocator* allocator;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Bump_Allocator *
+allocator	code/win_audio_wasapi.h	/^  Bump_Allocator allocator;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Bump_Allocator
 al_append	code/momo_lists.h	/^#define al_append(/;"	d	language:C++
 al_at	code/momo_lists.h	/^#define al_at(/;"	d	language:C++
 al_clear	code/momo_lists.h	/^#define al_clear(/;"	d	language:C++
@@ -112,12 +112,12 @@ ba_init	code/momo_memory.h	/^ba_init(Bump_Allocator* a, void* mem, UMI cap) {$/;
 ba_init	code/momo_memory.h	/^static void   ba_init(Bump_Allocator* a, void* mem, UMI cap);$/;"	p	language:C++	typeref:typename:void
 ba_mark	code/momo_memory.h	/^ba_mark(Bump_Allocator* a) {$/;"	f	language:C++	typeref:typename:Bump_Allocator_Marker
 ba_mark	code/momo_memory.h	/^static Bump_Allocator_Marker ba_mark(Bump_Allocator* allocator);$/;"	p	language:C++	typeref:typename:Bump_Allocator_Marker
-ba_parition_with_remaining	code/momo_memory.h	/^ba_parition_with_remaining(Bump_Allocator* a, Bump_Allocator* partition) {$/;"	f	language:C++	typeref:typename:B32
-ba_partition	code/momo_memory.h	/^ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size) {	$/;"	f	language:C++	typeref:typename:B32
-ba_partition	code/momo_memory.h	/^static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size);$/;"	p	language:C++	typeref:typename:B32
+ba_partition	code/momo_memory.h	/^ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align) {	$/;"	f	language:C++	typeref:typename:B32
+ba_partition	code/momo_memory.h	/^static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align = 1/;"	p	language:C++	typeref:typename:B32
+ba_partition_with_remaining	code/momo_memory.h	/^ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* partition, UMI align){$/;"	f	language:C++	typeref:typename:B32
+ba_partition_with_remaining	code/momo_memory.h	/^static B32    ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* parition);$/;"	p	language:C++	typeref:typename:B32
 ba_push	code/momo_memory.h	/^ba_push(Bump_Allocator* a, UMI align) {$/;"	f	language:C++	typeref:typename:T *
 ba_push	code/momo_memory.h	/^template<typename T> static T* ba_push(Bump_Allocator* a, UMI align = 4); $/;"	p	language:C++	typeref:typename:T *
-ba_push_all	code/momo_memory.h	/^ba_push_all(Bump_Allocator* a, UMI align) {$/;"	f	language:C++	typeref:typename:void *
 ba_push_array	code/momo_memory.h	/^ba_push_array(Bump_Allocator* a, UMI num, UMI align) {$/;"	f	language:C++	typeref:typename:T *
 ba_push_array	code/momo_memory.h	/^template<typename T> static T* ba_push_array(Bump_Allocator* a, UMI num, UMI align = 4);$/;"	p	language:C++	typeref:typename:T *
 ba_push_block	code/momo_memory.h	/^ba_push_block(Bump_Allocator* a, UMI size, UMI align) {$/;"	f	language:C++	typeref:typename:void *
@@ -1136,7 +1136,6 @@ main	code/meta.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/sui.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 make_string_builder	code/momo_strings.h	/^#define make_string_builder(/;"	d	language:C++
-mark	code/win_audio_wasapi.h	/^  Bump_Allocator_Marker mark;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Bump_Allocator_Marker
 match	code/momo_strings.h	/^match(String lhs, String rhs) {$/;"	f	language:C++	typeref:typename:B32
 match	code/momo_strings.h	/^static B32  match(String lhs, String rhs);$/;"	p	language:C++	typeref:typename:B32
 max	code/game_profiler_rendering.h	/^  F64 max;$/;"	m	language:C++	struct:Stat	typeref:typename:F64

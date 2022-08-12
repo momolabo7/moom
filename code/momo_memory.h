@@ -27,7 +27,8 @@ struct Bump_Allocator{
 static void   ba_init(Bump_Allocator* a, void* mem, UMI cap);
 static void   ba_clear(Bump_Allocator* a);
 static void*  ba_push_block(Bump_Allocator* a, UMI size, UMI align = 4);
-static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size);
+static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align = 16);
+static B32    ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* parition, UMI align = 16);
 static UMI    ba_remaining(Bump_Allocator* a);
 
 //TODO:  Remove template for compatibility with C?
@@ -37,7 +38,6 @@ template<typename T> static T* ba_push_array(Bump_Allocator* a, UMI num, UMI ali
 // Temporary memory API
 static Bump_Allocator_Marker ba_mark(Bump_Allocator* allocator);
 static void		               ba_revert(Bump_Allocator_Marker marker);
-
 
 #define __ba_set_revert_point(a,l) auto ttt##l = ba_mark(a); defer{ba_revert(ttt##l);};
 #define _ba_set_revert_point(a,l) __ba_set_revert_point(a,l)
@@ -67,14 +67,12 @@ ba_remaining(Bump_Allocator* a) {
 
 static void* 
 ba_push_block(Bump_Allocator* a, UMI size, UMI align) {
-  //assert(size);
   if (size == 0) return nullptr;
 	
 	UMI imem = ptr_to_int(a->memory);
 	UMI adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
 	
   if (imem + adjusted_pos + size >= imem + a->cap) return nullptr;
-  //assert(imem + adjusted_pos + size < imem + a->cap);
 	
 	U8* ret = int_to_ptr(imem + adjusted_pos);
 	a->pos = adjusted_pos + size;
@@ -85,14 +83,29 @@ ba_push_block(Bump_Allocator* a, UMI size, UMI align) {
 
 
 static B32
-ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size) {	
-	void* mem = ba_push_block(a, size, 16);
+ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align) {	
+	void* mem = ba_push_block(a, size, align);
   if (!mem) return false; 
   ba_init(partition, mem, size);
   return true;
   
 }
 
+
+static B32    
+ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* partition, UMI align){
+	UMI imem = ptr_to_int(a->memory);
+	UMI adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
+	
+  if (imem + adjusted_pos >= imem + a->cap) return false;
+  UMI size = a->cap - adjusted_pos;	
+	void* mem = int_to_ptr(imem + adjusted_pos);
+	a->pos = a->cap;
+
+  ba_init(partition, mem, size);
+	return true;
+
+}
 template<typename T> static T*
 ba_push(Bump_Allocator* a, UMI align) {
   return (T*)ba_push_block(a, sizeof(T), align);

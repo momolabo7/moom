@@ -29,8 +29,7 @@ struct Win_Wasapi {
 	B32 is_device_changed;
 	B32 is_device_ready;
 
-  Bump_Allocator* allocator;
-  Bump_Allocator_Marker buffer_mark;
+  Bump_Allocator allocator;
 };
 
 ///////////////////////////////////////////////////////////
@@ -198,9 +197,9 @@ _win_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
     return false;
   }
 
-  ba_revert(wasapi->buffer_mark);
+  ba_clear(&wasapi->allocator);
   wasapi->buffer_size = sound_frame_count;
-  wasapi->buffer = ba_push<S16>(wasapi->allocator, wasapi->buffer_size);
+  wasapi->buffer = ba_push<S16>(&wasapi->allocator, wasapi->buffer_size);
   if (!wasapi->buffer) {
     win_log("[win_wasapi] Failed to allocate secondary buffer\n");
     return false;
@@ -223,8 +222,8 @@ win_wasapi_init(Win_Wasapi* wasapi,
   wasapi->bits_per_sample = bits_per_sample;
   wasapi->samples_per_second = samples_per_second;
   wasapi->latency_sample_count = (samples_per_second / refresh_rate) * latency_frames;
-  wasapi->allocator = allocator;
-  wasapi->buffer_mark = ba_mark(allocator);
+
+  if (!ba_partition_with_remaining(allocator, &wasapi->allocator)) return false;
   
   HRESULT hr = CoInitializeEx(0, COINIT_SPEED_OVER_MEMORY);
   if (FAILED(hr)) {
@@ -254,7 +253,7 @@ win_wasapi_init(Win_Wasapi* wasapi,
 	
 	// NOTE(Momo): Allocate the maximum buffer possible given allowed latency
 	wasapi->buffer_size = wasapi->latency_sample_count * sizeof(S16);
-  wasapi->buffer = ba_push<S16>(wasapi->allocator, wasapi->buffer_size);
+  wasapi->buffer = ba_push<S16>(&wasapi->allocator, wasapi->buffer_size);
   if (!wasapi->buffer) {
     win_log("[win_wasapi] Failed to allocate memory\n");
     goto cleanup_3;
@@ -268,7 +267,7 @@ win_wasapi_init(Win_Wasapi* wasapi,
 	
 	// NOTE(Momo): Cleanup
 	cleanup_3: 	
-    ba_revert(wasapi->buffer_mark);
+    ba_clear(&wasapi->allocator);
 	cleanup_2: 
 		IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
 	cleanup_1:
@@ -297,7 +296,7 @@ win_wasapi_free(Win_Wasapi* wasapi) {
   _win_wasapi_release_current_device(wasapi);
 	IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
 	IMMDeviceEnumerator_Release(wasapi->mm_device_enum);
-  ba_revert(wasapi->buffer_mark);
+  ba_clear(&wasapi->allocator);
 }
 
 static void 
