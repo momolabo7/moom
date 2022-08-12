@@ -30,7 +30,7 @@ struct Win_Wasapi {
 	B32 is_device_ready;
 
   Bump_Allocator* allocator;
-  Bump_Allocator_Marker mark;
+  Bump_Allocator_Marker buffer_mark;
 };
 
 ///////////////////////////////////////////////////////////
@@ -198,6 +198,7 @@ _win_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
     return false;
   }
 
+  ba_revert(wasapi->buffer_mark);
   wasapi->buffer_size = sound_frame_count;
   wasapi->buffer = ba_push<S16>(wasapi->allocator, wasapi->buffer_size);
   if (!wasapi->buffer) {
@@ -223,6 +224,7 @@ win_wasapi_init(Win_Wasapi* wasapi,
   wasapi->samples_per_second = samples_per_second;
   wasapi->latency_sample_count = (samples_per_second / refresh_rate) * latency_frames;
   wasapi->allocator = allocator;
+  wasapi->buffer_mark = ba_mark(allocator);
   
   HRESULT hr = CoInitializeEx(0, COINIT_SPEED_OVER_MEMORY);
   if (FAILED(hr)) {
@@ -266,7 +268,7 @@ win_wasapi_init(Win_Wasapi* wasapi,
 	
 	// NOTE(Momo): Cleanup
 	cleanup_3: 	
-    ba_clear(wasapi->allocator);
+    ba_revert(wasapi->buffer_mark);
 	cleanup_2: 
 		IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
 	cleanup_1:
@@ -295,10 +297,10 @@ win_wasapi_free(Win_Wasapi* wasapi) {
   _win_wasapi_release_current_device(wasapi);
 	IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
 	IMMDeviceEnumerator_Release(wasapi->mm_device_enum);
-  ba_clear(wasapi->allocator);
+  ba_revert(wasapi->buffer_mark);
 }
 
-static Platform_Audio 
+static void 
 win_wasapi_begin_frame(Win_Wasapi* wasapi) {
 	if (wasapi->is_device_changed) {
 		win_log("[win_wasapi] Resetting wasapi device\n");
@@ -308,9 +310,6 @@ win_wasapi_begin_frame(Win_Wasapi* wasapi) {
 		wasapi->is_device_changed = false;
 	}
 	
-	
-  Platform_Audio ret = {};
-  
   UINT32 sound_padding_size;
   UINT32 samples_to_write = 0;
     
@@ -333,38 +332,37 @@ win_wasapi_begin_frame(Win_Wasapi* wasapi) {
 		// just write to the whole 'dummy' buffer.
 		samples_to_write = wasapi->buffer_size;
 	}
-	
-  ret.sample_buffer = wasapi->buffer;
-  ret.sample_count = samples_to_write; 
-  ret.channels = wasapi->channels;
-  
-  return ret;
+
+  // Get Platform_Audio
+  wasapi->platform_audio.sample_buffer = wasapi->buffer;
+  wasapi->platform_audio.sample_count = samples_to_write; 
+  wasapi->platform_audio.channels = wasapi->channels;
 
 }
 static void
-win_wasapi_end_frame(Win_Wasapi* wasapi, 
-                     Platform_Audio output) 
+win_wasapi_end_frame(Win_Wasapi* wasapi) 
 {
 	if (!wasapi->is_device_ready) return;
+  Platform_Audio* output = &wasapi->platform_audio;
 
   // NOTE(Momo): Kinda assumes 16-bit Sound
   BYTE* sound_buffer_data;
   HRESULT hr = IAudioRenderClient_GetBuffer(wasapi->audio_render_client, 
-                                            (UINT32)output.sample_count, 
+                                            (UINT32)output->sample_count, 
                                             &sound_buffer_data);
   if (FAILED(hr)) return;
 
-  S16* src_sample = output.sample_buffer;
+  S16* src_sample = output->sample_buffer;
   S16* dest_sample = (S16*)sound_buffer_data;
   // buffer structure for stereo:
   // S16   S16    S16  S16   S16  S16
   // [LEFT RIGHT] LEFT RIGHT LEFT RIGHT....
-  for(U32 sample_index = 0; sample_index < output.sample_count; ++sample_index){
+  for(U32 sample_index = 0; sample_index < output->sample_count; ++sample_index){
     for (U32 channel_index = 0; channel_index < wasapi->channels; ++channel_index) {
       *dest_sample++ = *src_sample++;
     }
   }
-  IAudioRenderClient_ReleaseBuffer(wasapi->audio_render_client, (UINT32)output.sample_count, 0);
+  IAudioRenderClient_ReleaseBuffer(wasapi->audio_render_client, (UINT32)output->sample_count, 0);
 }
 
 #endif 

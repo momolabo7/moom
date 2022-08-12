@@ -171,15 +171,15 @@ win_load_wgl_extentions() {
 
 //~API implementation
 exported void
-win_unload_renderer(Gfx* r) {
+win_gfx_unload(Gfx* r) {
   // Unused?
 }
 
 exported Gfx*
-win_load_renderer(HWND window, 
-                  U32 command_queue_size,
-                  U32 texture_queue_size, 
-                  Bump_Allocator* allocator) 
+win_gfx_load(HWND window, 
+             U32 command_queue_size,
+             U32 texture_queue_size, 
+             Bump_Allocator* allocator) 
 {
   HDC dc = GetDC(window); 
   if (!dc) return 0;
@@ -297,12 +297,12 @@ if (!opengl->name) { return nullptr; }
 
 
 exported void
-win_begin_renderer_frame(Gfx* renderer,  V2U render_wh, Rect2U region) {
+win_gfx_begin_frame(Gfx* renderer,  V2U render_wh, Rect2U region) {
   return ogl_begin_frame((Opengl*)renderer, render_wh, region);
 }
 
 exported void
-win_end_renderer_frame(Gfx* renderer) {
+win_gfx_end_frame(Gfx* renderer) {
   ogl_end_frame((Opengl*)renderer);
   SwapBuffers(wglGetCurrentDC());
 }

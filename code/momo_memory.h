@@ -24,11 +24,11 @@ struct Bump_Allocator{
 	UMI cap;
 };
 
-static void            ba_init(Bump_Allocator* a, void* mem, UMI cap);
-static void            ba_clear(Bump_Allocator* a);
-static void*           ba_push_block(Bump_Allocator* a, UMI size, UMI align = 4);
-static Bump_Allocator  ba_partition(Bump_Allocator* a, UMI size);
-static UMI             ba_remaining(Bump_Allocator* a);
+static void   ba_init(Bump_Allocator* a, void* mem, UMI cap);
+static void   ba_clear(Bump_Allocator* a);
+static void*  ba_push_block(Bump_Allocator* a, UMI size, UMI align = 4);
+static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size);
+static UMI    ba_remaining(Bump_Allocator* a);
 
 //TODO:  Remove template for compatibility with C?
 template<typename T> static T* ba_push(Bump_Allocator* a, UMI align = 4); 
@@ -36,8 +36,7 @@ template<typename T> static T* ba_push_array(Bump_Allocator* a, UMI num, UMI ali
 
 // Temporary memory API
 static Bump_Allocator_Marker ba_mark(Bump_Allocator* allocator);
-static void		              ba_revert(Bump_Allocator_Marker marker);
-
+static void		               ba_revert(Bump_Allocator_Marker marker);
 
 
 #define __ba_set_revert_point(a,l) auto ttt##l = ba_mark(a); defer{ba_revert(ttt##l);};
@@ -84,13 +83,13 @@ ba_push_block(Bump_Allocator* a, UMI size, UMI align) {
 	
 }
 
-static Bump_Allocator
-ba_partition(Bump_Allocator* a, UMI size) {	
-  Bump_Allocator ret = {};
+
+static B32
+ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size) {	
 	void* mem = ba_push_block(a, size, 16);
-  
-  ba_init(&ret, mem, size);
-  return ret;
+  if (!mem) return false; 
+  ba_init(partition, mem, size);
+  return true;
   
 }
 
@@ -129,7 +128,6 @@ ba_mark(Bump_Allocator* a) {
   Bump_Allocator_Marker ret;
   ret.allocator = a;
   ret.old_pos = a->pos;
-  
   return ret;
 }
 

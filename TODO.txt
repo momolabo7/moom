@@ -1,4 +1,6 @@
 Audio memory allocation a bit sus
+Gfx should just use one name
+
 
 Game
   Sensors need to fking work

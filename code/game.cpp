@@ -21,10 +21,10 @@ game_update_and_render(Platform* pf)
     Game* game = (Game*)pf->game;
    
     // around 32MB worth
-    game->asset_arena = ba_partition(pf->game_arena, MB(20));
-    game->mode_arena = ba_partition(pf->game_arena, MB(5)); 
-    game->debug_arena = ba_partition(pf->game_arena, MB(1));
-    game->frame_arena = ba_partition(pf->game_arena, MB(1));
+    if (!ba_partition(pf->game_arena, &game->asset_arena, MB(20))) return false;
+    if (!ba_partition(pf->game_arena, &game->mode_arena, MB(5))) return false; 
+    if (!ba_partition(pf->game_arena, &game->debug_arena, MB(1))) return false;
+    if (!ba_partition(pf->game_arena, &game->frame_arena, MB(1))) return false;
     
     B32 success = load_game_assets(&game->game_assets, 
                                    pf->renderer_texture_queue,

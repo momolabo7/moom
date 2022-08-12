@@ -621,7 +621,7 @@ WinMain(HINSTANCE instance,
   
   
   //-Load Renderer functions
-  Win_Renderer_Functions renderer_functions = {};
+  Win_Gfx_Functions renderer_functions = {};
   Win_Loaded_Code renderer_code = {};
   renderer_code.function_count = array_count(win_renderer_function_names);
   renderer_code.function_names = win_renderer_function_names;
@@ -667,9 +667,10 @@ WinMain(HINSTANCE instance,
   if (!win_allocate_memory_into_arena(audio_arena, MB(256))) return false;
   defer { win_free_memory_from_arena(audio_arena); };
 
-  declare_and_pointerize(Win_Wasapi, win_wasapi); 
-  if (!win_wasapi_init(win_wasapi, 48000, 16, 2, 1, monitor_refresh_rate, audio_arena)) return false;
-  defer { win_wasapi_free(win_wasapi); };
+  Platform_Audio* audio = win_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
+  if (!audio) return false;
+  defer{ win_audio_unload(audio); };
+
 
   // Init profiler
   prf_init(g_profiler, win_get_performance_counter_u64);
@@ -686,6 +687,7 @@ WinMain(HINSTANCE instance,
   pf->renderer_command_queue = &renderer->command_queue;
   pf->profiler = g_profiler;
   pf->game_arena = game_arena;
+  pf->audio = audio;
   
   
   //- Begin game loop
@@ -699,11 +701,8 @@ WinMain(HINSTANCE instance,
   while (g_win_state.is_running) {
     win_profile_block("game loop");
     
-    // Begin audio frame
-    Platform_Audio pf_audio = win_wasapi_begin_frame(win_wasapi);
-    pf->audio = &pf_audio; // TODO: this syntax seems a bit janky..
-
-    // Begin render frame
+    // Begin frame
+    win_audio_begin_frame(audio);
     V2U render_wh = win_get_client_dims(window);
     Rect2U render_region = win_calc_render_region(render_wh.w,
                                                   render_wh.h,
@@ -762,7 +761,7 @@ WinMain(HINSTANCE instance,
     if (renderer_code.is_valid) {
       renderer_functions.end_frame(renderer);
     }
-    win_wasapi_end_frame(win_wasapi, pf_audio);
+    win_audio_end_frame(audio);
 
     
     //-Frame-rate control
