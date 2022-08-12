@@ -1,6 +1,17 @@
+
+DEFINE_GUID(CLSID_MMDeviceEnumerator,  0xbcde0395, 0xe52f, 0x467c, 0x8e, 0x3d, 0xc4, 0x57, 0x92, 0x91, 0x69, 0x2e);
+DEFINE_GUID(IID_IMMDeviceEnumerator,   0xa95664d2, 0x9614, 0x4f35, 0xa7, 0x46, 0xde, 0x8d, 0xb6, 0x36, 0x17, 0xe6);
+DEFINE_GUID(IID_IAudioRenderClient,    0xf294acfc, 0x3146, 0x4483, 0xa7, 0xbf, 0xad, 0xdc, 0xa7, 0xc2, 0x60, 0xe2);
+DEFINE_GUID(IID_IAudioClient2,         0x726778cd, 0xf60a, 0x4eda, 0x82, 0xde, 0xe4, 0x76, 0x10, 0xcd,0x78, 0xaa);
+DEFINE_GUID(IID_IMMNotificationClient, 0x7991eec9, 0x7e89, 0x4d85, 0x83, 0x90, 0x6c, 0x70, 0x3c, 0xec, 0x60, 0xc0);
+
+
+
+
+struct Win_Audio;
 struct Win_Audio_Notif_Client {
   IMMNotificationClient imm_notif_client;
-  struct Win_Audio* audio;
+  Win_Audio* audio;
   LONG ref;
 };
 
@@ -66,10 +77,10 @@ _win_audio_notif_client_QueryInterface(IMMNotificationClient* client,
   return S_OK;
 }
 static STDMETHODIMP_(HRESULT) 
-_win_audio_notif_client_OnDefaultDeviceChanged(IMMNotificationClient* client,
-                                               EDataFlow flow,
-                                               ERole role,
-                                               LPCWSTR pwstr_device_id)
+_win_audio_notif_client_OnDefaultDeviceChange(IMMNotificationClient* client,
+                                              EDataFlow flow,
+                                              ERole role,
+                                              LPCWSTR pwstr_device_id)
 {
   return S_OK;
 }
@@ -79,7 +90,7 @@ _win_audio_notif_client_OnDeviceAdded(IMMNotificationClient* client, LPCWSTR pws
   return S_OK;
 }
 static STDMETHODIMP_(HRESULT) 
-_win_audio_notif_client_OnDeviceRemoved(IMMNotificationClient* client, LPWSTR pwstr_device_id)
+_win_audio_notif_client_OnDeviceRemoved(IMMNotificationClient* client, LPCWSTR pwstr_device_id)
 {
   return S_OK;
 }
@@ -104,6 +115,17 @@ _win_audio_notif_client_OnPropertyValueChanged(IMMNotificationClient* client,
 ////////////////////////////////////////////////////
 // Win Audio implementation
 //
+static IMMNotificationClientVtbl _win_audio_notif_client {
+  _win_audio_notif_client_QueryInterface,
+  _win_audio_notif_client_AddRef,
+  _win_audio_notif_client_Release,
+  _win_audio_notif_client_OnDeviceStateChanged,
+  _win_audio_notif_client_OnDeviceAdded,
+  _win_audio_notif_client_OnDeviceRemoved,
+  _win_audio_notif_client_OnDefaultDeviceChange,
+  _win_audio_notif_client_OnPropertyValueChanged,
+};
+
 static B32 
 _win_audio_set_default_device_as_current_device(Win_Audio* audio) {
   IMMDevice* device;
@@ -112,7 +134,7 @@ _win_audio_set_default_device_as_current_device(Win_Audio* audio) {
                                                            eConsole, 
                                                            &device);
   if (FAILED(hr)) {
-    win_log("[Win32::Audio] Failed to get audio endpoint\n");
+    win_log("[win_audio] Failed to get audio endpoint\n");
     return false;
   }
   defer { IMMDevice_Release(device); };
@@ -123,7 +145,7 @@ _win_audio_set_default_device_as_current_device(Win_Audio* audio) {
                           0, 
                           (LPVOID*)&audio->client);
   if(FAILED(hr)) {
-    win_log("[Win32::Audio] Failed to create IAudioClient\n");
+    win_log("[win_audio] Failed to create IAudioClient\n");
     return false;
   }
   
@@ -136,50 +158,50 @@ _win_audio_set_default_device_as_current_device(Win_Audio* audio) {
   wave_format.nAvgBytesPerSec = wave_format.nSamplesPerSec * wave_format.nBlockAlign;
   
   REFERENCE_TIME buffer_duration = 0;
-  hr = IAudioClient_GetDevicePeriod(audio->client, 0, &buffer_duration);
+  hr = IAudioClient2_GetDevicePeriod(audio->client, 0, &buffer_duration);
   
-  DWORD stream_flags = ( AUDCLNT_STREAMFLAGS_RATEADJUST 
-                        | AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM
-                        | AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY );
+  DWORD stream_flags = (AUDCLNT_STREAMFLAGS_RATEADJUST |
+                        AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM |
+                        AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY);
 
-  hr = IAudioClient_Initialize(audio->client,
-                               AUDCLNT_SHAREMODE_SHARED, 
-                               stream_flags, 
-                               buffer_duration,
-                               0, 
-                               &wave_format, 
-                               0);
+  hr = IAudioClient2_Initialize(audio->client,
+                                AUDCLNT_SHAREMODE_SHARED, 
+                                stream_flags, 
+                                buffer_duration,
+                                0, 
+                                &wave_format, 
+                                0);
   if (FAILED(hr))
   {
-    win_log("[Win32::Audio] Failed to initialize audio client\n");
+    win_log("[win_audio] Failed to initialize audio client\n");
     return false;
   }
   
-  hr = IAudioClient_GetService(audio->client, 
+  hr = IAudioClient2_GetService(audio->client, 
                                IID_IAudioRenderClient, 
                                (LPVOID*)&audio->render_client);
   if (FAILED(hr))
   {
-    win_log("[Win32::Audio] Failed to create IAudioClient\n");
+    win_log("[win_audio] Failed to create IAudioClient\n");
     return false;
   }
   
   UINT32 sound_frame_count;
-  hr = IAudioClient_GetBufferSize(audio->client, &sound_frame_count);
+  hr = IAudioClient2_GetBufferSize(audio->client, &sound_frame_count);
   if (FAILED(hr))
   {
-    win_log("[Win32::Audio] Failed to get buffer size\n");
+    win_log("[win_audio] Failed to get buffer size\n");
     return false;
   }
 
   audio->buffer_size = sound_frame_count;
   audio->buffer = ba_push<S16>(audio->allocator, audio->buffer_size);
   if (!audio->buffer) {
-    win_log("[Win32::Audio] Failed to allocate secondary buffer\n");
+    win_log("[win_audio] Failed to allocate secondary buffer\n");
     return false;
   }
 	
-  IAudioClient_Start(audio->client);
+  IAudioClient2_Start(audio->client);
 	audio->is_device_ready = true;
   return true;
 
@@ -201,26 +223,27 @@ win_audio_init(Win_Audio* audio,
   
   HRESULT hr = CoInitializeEx(0, COINIT_SPEED_OVER_MEMORY);
   if (FAILED(hr)) {
-    win_log("[Win32::Audio] Failed CoInitializeEx\n");
+    win_log("[win_audio] Failed CoInitializeEx\n");
     return false;
   }
   
-  hr = CoCreateInstance(IID_IMMDeviceEnumerator, 
+  hr = CoCreateInstance(CLSID_MMDeviceEnumerator, 
                         0,
                         CLSCTX_ALL, 
                         IID_IMMDeviceEnumerator,
                         (LPVOID*)(&audio->device_enum));
   if (FAILED(hr)) {
-    win_log("[Win32::Audio] Failed to create IMMDeviceEnumerator\n");
+    win_log("[win_audio] Failed to create IMMDeviceEnumerator\n");
     goto cleanup_1;
   }
-    
+   
+  audio->notif_client.imm_notif_client.lpVtbl = &_win_audio_notif_client;
 	audio->notif_client.ref = 1;
 	audio->notif_client.audio = audio;
   hr = IMMDeviceEnumerator_RegisterEndpointNotificationCallback(audio->device_enum, &audio->notif_client.imm_notif_client);
 
 	if(FAILED(hr)) {
-		win_log("[Win32::Audio] Failed to register notification callback\n");
+		win_log("[win_audio] Failed to register notification callback\n");
 		goto cleanup_2;
 	}
 	
@@ -228,12 +251,11 @@ win_audio_init(Win_Audio* audio,
 	audio->buffer_size = audio->latency_sample_count * sizeof(S16);
   audio->buffer = ba_push<S16>(audio->allocator, audio->buffer_size);
   if (!audio->buffer) {
-    win_log("[Win32::Audio] Failed to allocate memory\n");
+    win_log("[win_audio] Failed to allocate memory\n");
     goto cleanup_3;
   }
 	
-  _win_audio_set_default_device_as_current_device(audio);
-	return true;
+	return _win_audio_set_default_device_as_current_device(audio);
 	
 	// NOTE(Momo): Cleanup
 	cleanup_3: 	
@@ -250,8 +272,8 @@ win_audio_init(Win_Audio* audio,
 static inline void 
 _win_audio_release_current_device(Win_Audio* audio) {
 	if (audio->client) {
-		IAudioClient_Stop(audio->client);
-		IAudioClient_Release(audio->client);
+		IAudioClient2_Stop(audio->client);
+		IAudioClient2_Release(audio->client);
 		audio->client = 0;
 	}
 	
@@ -273,7 +295,7 @@ win_audio_free(Win_Audio* audio) {
 static Platform_Audio 
 win_audio_begin_frame(Win_Audio* audio) {
 	if (audio->is_device_changed) {
-		win_log("[Win32::Audio] Resetting audio device\n");
+		win_log("[win_audio] Resetting audio device\n");
 		// Attempt to change device
 		_win_audio_release_current_device(audio);
 		_win_audio_set_default_device_as_current_device(audio);
@@ -289,7 +311,7 @@ win_audio_begin_frame(Win_Audio* audio) {
 	if (audio->is_device_ready) {
 		// Padding is how much valid data is queued up in the sound buffer
 		// if there's enough padding then we could skip writing more data
-		HRESULT hr = IAudioClient_GetCurrentPadding(audio->client, &sound_padding_size);
+		HRESULT hr = IAudioClient2_GetCurrentPadding(audio->client, &sound_padding_size);
 		
 		if (SUCCEEDED(hr)) {
 			samples_to_write = (UINT32)audio->buffer_size - sound_padding_size;
@@ -333,7 +355,7 @@ win_audio_end_frame(Win_Audio* audio,
   // [LEFT RIGHT] LEFT RIGHT LEFT RIGHT....
   for(U32 sample_index = 0; sample_index < output.sample_count; ++sample_index){
     for (U32 channel_index = 0; channel_index < audio->channels; ++channel_index) {
-        *dest_sample++ = *src_sample++;
+      *dest_sample++ = *src_sample++;
     }
   }
   IAudioRenderClient_ReleaseBuffer(audio->render_client, (UINT32)output.sample_count, 0);

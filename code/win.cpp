@@ -1,6 +1,7 @@
 #include "win.h"
 
-declare_and_pointerize(Profiler, g_profiler);
+Profiler _g_profiler = {0};
+Profiler* g_profiler = &_g_profiler; 
 
 #if 0
 static void
@@ -660,12 +661,20 @@ WinMain(HINSTANCE instance,
                             renderer_arena);
   if (!renderer) { return 1; }
   defer { renderer_functions.unload(renderer); };
-  
-  //- Init profiler
-  
+ 
+  // Init Audio
+  declare_and_pointerize(Bump_Allocator, audio_arena);
+  if (!win_allocate_memory_into_arena(audio_arena, MB(256))) return false;
+  defer { win_free_memory_from_arena(audio_arena); };
+
+  declare_and_pointerize(Win_Audio, win_audio); 
+  if (!win_audio_init(win_audio, 48000, 16, 2, 1, monitor_refresh_rate, audio_arena)) return false;
+  defer { win_audio_free(win_audio); };
+
+  // Init profiler
   prf_init(g_profiler, win_get_performance_counter_u64);
   
-  //-Platform setup
+  // Platform setup
   declare_and_pointerize(Platform, pf);
   
   declare_and_pointerize(Bump_Allocator, game_arena);
@@ -690,7 +699,11 @@ WinMain(HINSTANCE instance,
   while (g_win_state.is_running) {
     win_profile_block("game loop");
     
-    //- Begin render frame
+    // Begin audio frame
+    Platform_Audio pf_audio = win_audio_begin_frame(win_audio);
+    pf->audio = &pf_audio; // TODO: this syntax seems a bit janky..
+
+    // Begin render frame
     V2U render_wh = win_get_client_dims(window);
     Rect2U render_region = win_calc_render_region(render_wh.w,
                                                   render_wh.h,
@@ -744,6 +757,14 @@ WinMain(HINSTANCE instance,
     if(game_code.is_valid) { 
       game_functions.update_and_render(pf);
     }
+
+    // End  frame
+    prf_update_entries(g_profiler);
+    if (renderer_code.is_valid) {
+      renderer_functions.end_frame(renderer);
+    }
+    win_audio_end_frame(win_audio, pf_audio);
+
     
     //-Frame-rate control
     // 1. Calculate how much time has passed since the last frame
@@ -790,12 +811,7 @@ WinMain(HINSTANCE instance,
     }
     
     
-    //- End render frame
-    prf_update_entries(g_profiler);
-    if (renderer_code.is_valid) {
-      renderer_functions.end_frame(renderer);
-    }
-    
+        
     LARGE_INTEGER end_frame_count = win_get_performance_counter();
     F32 secs_this_frame =  win_get_secs_elapsed(last_frame_count,
                                                 end_frame_count,

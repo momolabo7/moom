@@ -86,7 +86,7 @@ struct Platform_API {
 struct Platform_Audio {
     S16* sample_buffer;
     U32 sample_count;
-    U32 channels;
+    U32 channels; //TODO: remove this?
 };
 
 

@@ -10,12 +10,14 @@
 
 #define NOMINMAX
 #define CINTERFACE
+#define COBJMACROS
 #define INITGUID
 #define COBJMACROS
 #define CONST_VTABLE
 #include <windows.h>
 #include <timeapi.h>
 #include <imm.h>
+#include <initguid.h>
 #include <audioclient.h>
 #include <mmdeviceapi.h>
 #undef near

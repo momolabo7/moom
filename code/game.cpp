@@ -73,7 +73,6 @@ game_update_and_render(Platform* pf)
     game->show_debug_type = 
       (Game_Show_Debug_Type)((game->show_debug_type + 1)%GAME_SHOW_DEBUG_MAX);
   }
-  
   switch (game->show_debug_type) {
     case GAME_SHOW_DEBUG_CONSOLE: {
       update_and_render_console(console, painter, pf); 
@@ -86,7 +85,22 @@ game_update_and_render(Platform* pf)
     }break;
     default: {}
   }
-  
+
+#if 1
+  static F32 sine = 0.f;
+  Platform_Audio* audio = pf->audio;
+  S16* sample_out = audio->sample_buffer;
+  S16 volume = 3000;
+  for(U32 sample_index = 0; sample_index < audio->sample_count; ++sample_index) {
+    for (U32 channel_index = 0; channel_index < audio->channels; ++channel_index) {
+      F32 sine_value = sin(sine);
+      sample_out[channel_index] = S16(sine_value * volume);
+    }
+    sample_out += audio->channels;
+    sine += 2.f;
+  }
+#endif
+
   return game->is_done;
   
 }

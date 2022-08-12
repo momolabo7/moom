@@ -95,7 +95,7 @@ atomic_assign	code/momo_intrinsics.h	/^static U64 atomic_assign(U64 volatile* va
 atomic_compare_assign	code/momo_intrinsics.h	/^atomic_compare_assign(U32 volatile* value,$/;"	f	language:C++	typeref:typename:U32
 atomic_compare_assign	code/momo_intrinsics.h	/^static U32 atomic_compare_assign(U32 volatile* value,$/;"	p	language:C++	typeref:typename:U32
 audio	code/game_platform.h	/^  Platform_Audio* audio;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Audio *
-audio	code/win_audio.h	/^  struct Win_Audio* audio;$/;"	m	language:C++	struct:Win_Audio_Notif_Client	typeref:struct:Win_Audio *
+audio	code/win_audio.h	/^  Win_Audio* audio;$/;"	m	language:C++	struct:Win_Audio_Notif_Client	typeref:typename:Win_Audio *
 audio_format	code/momo_wav.h	/^  U16 audio_format;$/;"	m	language:C++	struct:WAV_Fmt_Chunk	typeref:typename:U16
 average	code/game_profiler_rendering.h	/^  F64 average;$/;"	m	language:C++	struct:Stat	typeref:typename:F64
 b	code/momo_colors.h	/^    struct { F32 r, g, b; };  $/;"	m	language:C++	struct:RGBA::__anonb89fa6ae010a::__anonb89fa6ae0208	typeref:typename:F32
@@ -218,7 +218,7 @@ ceil	code/momo_intrinsics.h	/^static F64 ceil(F64 value) {$/;"	f	language:C++	ty
 ceil	code/momo_intrinsics.h	/^static F64 ceil(F64 value);$/;"	p	language:C++	typeref:typename:F64
 center	code/momo_shapes.h	/^  V2 center;$/;"	m	language:C++	struct:Aabb2	typeref:typename:V2
 center	code/momo_shapes.h	/^  V2 center;$/;"	m	language:C++	struct:Circ2	typeref:typename:V2
-channels	code/game_platform.h	/^    U32 channels;$/;"	m	language:C++	struct:Platform_Audio	typeref:typename:U32
+channels	code/game_platform.h	/^    U32 channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:Platform_Audio	typeref:typename:U32
 channels	code/win_audio.h	/^  U16 channels;$/;"	m	language:C++	struct:Win_Audio	typeref:typename:U16
 chars	code/game_platform.h	/^  U8 chars[32];$/;"	m	language:C++	struct:Platform	typeref:typename:U8[32]
 char_count	code/game_platform.h	/^  U32 char_count;$/;"	m	language:C++	struct:Platform	typeref:typename:U32
@@ -235,6 +235,7 @@ close_file	code/game_platform.h	/^  Platform_Close_File* close_file;$/;"	m	langu
 cmap	code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
 cmap_mappings	code/momo_ttf.h	/^  U32 cmap_mappings;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
 cmds	code/game_painter.h	/^  Gfx_Command_Queue* cmds;$/;"	m	language:C++	struct:Painter	typeref:typename:Gfx_Command_Queue *
+COBJMACROS	code/win.h	/^#define COBJMACROS$/;"	d	language:C++
 COBJMACROS	code/win.h	/^#define COBJMACROS$/;"	d	language:C++
 codepoint	code/karu.h	/^  U32 codepoint;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:U32
 codepoint	code/sui_atlas.h	/^  U32 codepoint;$/;"	m	language:C++	struct:Sui_Atlas_Font_Glyph_Context	typeref:typename:U32
@@ -356,7 +357,6 @@ debug_log	code/game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language
 debug_rays	code/game_sb1.h	/^  SB1_Light_Debug_Ray_List debug_rays;$/;"	m	language:C++	struct:SB1_Light	typeref:typename:SB1_Light_Debug_Ray_List
 Debug_State	code/game_debug.h	/^struct Debug_State {$/;"	s	language:C++
 declare_and_pointerize	code/momo_common.h	/^#define declare_and_pointerize(/;"	d	language:C++
-declare_and_pointerize	code/win.cpp	/^declare_and_pointerize(Profiler, g_profiler);$/;"	p	language:C++	file:
 defer	code/momo_common.h	/^#define defer /;"	d	language:C++
 deg_to_rad	code/momo_common.h	/^deg_to_rad(F32 degrees) {$/;"	f	language:C++	typeref:typename:F32
 deg_to_rad	code/momo_common.h	/^deg_to_rad(F64 degrees) {$/;"	f	language:C++	typeref:typename:F64
@@ -932,6 +932,7 @@ GOLD_32	code/momo_common.h	/^static F32 GOLD_32 = 1.61803398875f;$/;"	v	language
 GOLD_64	code/momo_common.h	/^static F64 GOLD_64 = 1.61803398875;$/;"	v	language:C++	typeref:typename:F64
 gpos	code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
 g_platform	code/game.cpp	/^Platform* g_platform;$/;"	v	language:C++	typeref:typename:Platform *
+g_profiler	code/win.cpp	/^Profiler* g_profiler = &_g_profiler; $/;"	v	language:C++	typeref:typename:Profiler *
 g_win_state	code/win.cpp	/^static Win_State g_win_state;$/;"	v	language:C++	typeref:typename:Win_State	file:
 h	code/momo_colors.h	/^  F32 h, s, l;  $/;"	m	language:C++	struct:HSL	typeref:typename:F32
 h	code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect	typeref:typename:U32
@@ -1250,8 +1251,8 @@ ogl_begin_frame	code/game_renderer_opengl.h	/^ogl_begin_frame(Opengl* ogl, V2U r
 ogl_begin_frame	code/game_renderer_opengl.h	/^static void ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region);$/;"	p	language:C++	typeref:typename:void
 ogl_end_frame	code/game_renderer_opengl.h	/^ogl_end_frame(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
 ogl_end_frame	code/game_renderer_opengl.h	/^static void ogl_end_frame(Opengl* ogl);$/;"	p	language:C++	typeref:typename:void
-ogl_init	code/game_renderer_opengl.h	/^ogl_init(Opengl* ogl)$/;"	f	language:C++	typeref:typename:B32
-ogl_init	code/game_renderer_opengl.h	/^static B32 ogl_init(Opengl* ogl);$/;"	p	language:C++	typeref:typename:B32
+ogl_init	code/game_renderer_opengl.h	/^ogl_init(Opengl* ogl,$/;"	f	language:C++	typeref:typename:B32
+ogl_init	code/game_renderer_opengl.h	/^static B32 ogl_init(Opengl* ogl, $/;"	p	language:C++	typeref:typename:B32
 old_pos	code/momo_memory.h	/^  UMI old_pos;$/;"	m	language:C++	struct:Bump_Allocator_Marker	typeref:typename:UMI
 one_past_last_asset_index	code/karu.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Karu_Asset_Group	typeref:typename:U32
 ope	code/meta.cpp	/^  U32 ope;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:U32	file:
@@ -2066,6 +2067,7 @@ _ba_set_revert_point	code/momo_memory.h	/^#define _ba_set_revert_point(/;"	d	lan
 _execute	code/game_console.h	/^_execute(Console* dc) {$/;"	f	language:C++	typeref:typename:void
 _gfx_push_command	code/game_renderer.h	/^_gfx_push_command(Gfx_Command_Queue* q, U32 id, U32 align = 4) {$/;"	f	language:C++	typeref:typename:T *
 _gfx_push_command_block	code/game_renderer.h	/^_gfx_push_command_block(Gfx_Command_Queue* q, U32 size, U32 id, U32 align = 4) {$/;"	f	language:C++	typeref:typename:void *
+_g_profiler	code/win.cpp	/^Profiler _g_profiler = {0};$/;"	v	language:C++	typeref:typename:Profiler
 _HueToColor	code/momo_colors.h	/^_HueToColor(F32 p, F32 q, F32 t) {$/;"	f	language:C++	typeref:typename:F32
 _is_point_in_triangle_barycentric	code/momo_shapes.h	/^_is_point_in_triangle_barycentric(Tri2 tri, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
 _is_point_in_triangle_dot_product	code/momo_shapes.h	/^_is_point_in_triangle_dot_product(Tri2 tri, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
@@ -2151,10 +2153,11 @@ _ttf_read_u16	code/momo_ttf.h	/^_ttf_read_u16(U8* location) {$/;"	f	language:C++
 _ttf_read_u32	code/momo_ttf.h	/^_ttf_read_u32(U8* location) {$/;"	f	language:C++	typeref:typename:U32
 _ttf_tessellate_bezier	code/momo_ttf.h	/^_ttf_tessellate_bezier(V2* vertices,$/;"	f	language:C++	typeref:typename:void
 _ttf_ttf_get_glyph_box	code/momo_ttf.h	/^_ttf_ttf_get_glyph_box(TTF* ttf, U32 glyph_index) {$/;"	f	language:C++	typeref:typename:_TTF_Glyph_Box
+_win_audio_notif_client	code/win_audio.h	/^static IMMNotificationClientVtbl _win_audio_notif_client {$/;"	v	language:C++	typeref:typename:IMMNotificationClientVtbl
 _win_audio_notif_client_AddRef	code/win_audio.h	/^_win_audio_notif_client_AddRef(IMMNotificationClient* client) {$/;"	f	language:C++	typeref:typename:ULONG
-_win_audio_notif_client_OnDefaultDeviceChanged	code/win_audio.h	/^_win_audio_notif_client_OnDefaultDeviceChanged(IMMNotificationClient* client,$/;"	f	language:C++	typeref:typename:HRESULT
+_win_audio_notif_client_OnDefaultDeviceChange	code/win_audio.h	/^_win_audio_notif_client_OnDefaultDeviceChange(IMMNotificationClient* client,$/;"	f	language:C++	typeref:typename:HRESULT
 _win_audio_notif_client_OnDeviceAdded	code/win_audio.h	/^_win_audio_notif_client_OnDeviceAdded(IMMNotificationClient* client, LPCWSTR pwstr_device_id)$/;"	f	language:C++	typeref:typename:HRESULT
-_win_audio_notif_client_OnDeviceRemoved	code/win_audio.h	/^_win_audio_notif_client_OnDeviceRemoved(IMMNotificationClient* client, LPWSTR pwstr_device_id)$/;"	f	language:C++	typeref:typename:HRESULT
+_win_audio_notif_client_OnDeviceRemoved	code/win_audio.h	/^_win_audio_notif_client_OnDeviceRemoved(IMMNotificationClient* client, LPCWSTR pwstr_device_id)$/;"	f	language:C++	typeref:typename:HRESULT
 _win_audio_notif_client_OnDeviceStateChanged	code/win_audio.h	/^_win_audio_notif_client_OnDeviceStateChanged(IMMNotificationClient* client,$/;"	f	language:C++	typeref:typename:HRESULT
 _win_audio_notif_client_OnPropertyValueChanged	code/win_audio.h	/^_win_audio_notif_client_OnPropertyValueChanged(IMMNotificationClient* client,$/;"	f	language:C++	typeref:typename:HRESULT
 _win_audio_notif_client_QueryInterface	code/win_audio.h	/^_win_audio_notif_client_QueryInterface(IMMNotificationClient* client,$/;"	f	language:C++	typeref:typename:HRESULT
