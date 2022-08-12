@@ -12,10 +12,11 @@
 
 
 //~API for Win platform to use
-typedef Gfx* Win_Load_Renderer(HWND window, 
-                               UMI command_queue_size, 
-                               UMI texture_queue_size,
-                               Bump_Allocator* allocator);
+typedef Gfx* 
+Win_Load_Renderer(HWND window, 
+                  U32 command_queue_size, 
+                  U32 texture_queue_size,
+                  Bump_Allocator* allocator);
 
 
 typedef void 

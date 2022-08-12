@@ -250,7 +250,8 @@ struct Triangle_Batcher {
 };
 
 struct Opengl {
-  Gfx gfx; 
+  Gfx gfx; // Must be first member
+
   Sprite_Batcher sprite_batcher;
   Triangle_Batcher triangle_batcher;
   

@@ -97,7 +97,7 @@ game_update_and_render(Platform* pf)
       sample_out[channel_index] = S16(sine_value * volume);
     }
     sample_out += audio->channels;
-    sine += 2.f;
+    sine += 2.0f;
   }
 #endif
 
