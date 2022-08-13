@@ -464,7 +464,7 @@ sb1_init(Game* game)
   player->size.y = 32.f;
 
   // Test sensor
-#if 0
+#if 1
   {
     sb1_push_point(m, {400.f, 400.f}); // 8
     sb1_push_point(m, {450.f, 400.f}); // 9 

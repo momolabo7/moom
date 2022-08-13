@@ -715,6 +715,9 @@ WinMain(HINSTANCE instance,
 #if INTERNAL
     //-Hot reload game.dll functions
     pf->reloaded = win_reload_code_if_outdated(&game_code);
+    if (pf->reloaded) {
+      prf_reset(g_profiler);
+    }
 #endif
     
     //-Process messages and input

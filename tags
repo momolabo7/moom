@@ -714,12 +714,16 @@ gfx	.\code\game_platform.h	/^  Gfx* gfx;$/;"	m	language:C++	struct:Platform
 Gfx	.\code\game_renderer.h	/^struct Gfx {	$/;"	s	language:C++
 gfx	.\code\game_renderer_opengl.h	/^  Gfx gfx; \/\/ Must be first member$/;"	m	language:C++	struct:Opengl
 gfx_advance_depth	.\code\game_renderer.h	/^gfx_advance_depth(Gfx* g) {$/;"	f	language:C++
+gfx_advance_depth	.\code\game_renderer.h	/^static void gfx_advance_depth(Gfx* g);$/;"	p	language:C++
 gfx_begin_texture_transfer	.\code\game_renderer.h	/^gfx_begin_texture_transfer(Gfx* g, U32 required_space) {$/;"	f	language:C++
+gfx_begin_texture_transfer	.\code\game_renderer.h	/^static Gfx_Texture_Payload* gfx_begin_texture_transfer(Gfx* g, U32 required_space);$/;"	p	language:C++
 Gfx_Blend_Type	.\code\game_renderer.h	/^enum Gfx_Blend_Type {$/;"	g	language:C++
 GFX_BLEND_TYPE_ADD	.\code\game_renderer.h	/^  GFX_BLEND_TYPE_ADD,$/;"	e	language:C++	enum:Gfx_Blend_Type
 GFX_BLEND_TYPE_ALPHA	.\code\game_renderer.h	/^  GFX_BLEND_TYPE_ALPHA,$/;"	e	language:C++	enum:Gfx_Blend_Type
 gfx_cancel_texture_transfer	.\code\game_renderer.h	/^gfx_cancel_texture_transfer(Gfx_Texture_Payload* entry) {$/;"	f	language:C++
+gfx_cancel_texture_transfer	.\code\game_renderer.h	/^static void gfx_cancel_texture_transfer(Gfx_Texture_Payload* entry);$/;"	p	language:C++
 gfx_clear_commands	.\code\game_renderer.h	/^gfx_clear_commands(Gfx* g) {$/;"	f	language:C++
+gfx_clear_commands	.\code\game_renderer.h	/^static void gfx_clear_commands(Gfx* g);$/;"	p	language:C++
 Gfx_Command	.\code\game_renderer.h	/^struct Gfx_Command {$/;"	s	language:C++
 Gfx_Command_Advance_Depth	.\code\game_renderer.h	/^struct Gfx_Command_Advance_Depth {};$/;"	s	language:C++
 Gfx_Command_Blend	.\code\game_renderer.h	/^struct Gfx_Command_Blend {$/;"	s	language:C++
@@ -743,23 +747,39 @@ GFX_COMMAND_TYPE_TRIANGLE	.\code\game_renderer.h	/^  GFX_COMMAND_TYPE_TRIANGLE,$
 GFX_COMMAND_TYPE_VIEW	.\code\game_renderer.h	/^  GFX_COMMAND_TYPE_VIEW,$/;"	e	language:C++	enum:Gfx_Command_Type
 Gfx_Command_View	.\code\game_renderer.h	/^struct Gfx_Command_View {$/;"	s	language:C++
 gfx_complete_texture_transfer	.\code\game_renderer.h	/^gfx_complete_texture_transfer(Gfx_Texture_Payload* entry) {$/;"	f	language:C++
-gfx_foreach_command	.\code\game_renderer.h	157;"	d	language:C++
+gfx_complete_texture_transfer	.\code\game_renderer.h	/^static void gfx_complete_texture_transfer(Gfx_Texture_Payload* entry);$/;"	p	language:C++
+gfx_foreach_command	.\code\game_renderer.h	179;"	d	language:C++
 gfx_get_command	.\code\game_renderer.h	/^gfx_get_command(Gfx* g, U32 index) {$/;"	f	language:C++
+gfx_get_command	.\code\game_renderer.h	/^static Gfx_Command* gfx_get_command(Gfx* g, U32 index);$/;"	p	language:C++
 gfx_init_command_queue	.\code\game_renderer.h	/^gfx_init_command_queue(Gfx* g, void* data, UMI size) {$/;"	f	language:C++
+gfx_init_command_queue	.\code\game_renderer.h	/^static void gfx_init_command_queue(Gfx* g, void* data, UMI size);$/;"	p	language:C++
 gfx_init_texture_queue	.\code\game_renderer.h	/^gfx_init_texture_queue(Gfx* g, void* data, UMI size) {$/;"	f	language:C++
+gfx_init_texture_queue	.\code\game_renderer.h	/^static void gfx_init_texture_queue(Gfx* g, void* data, UMI size);$/;"	p	language:C++
 GFX_OPENGL_H	.\code\game_renderer_opengl.h	2;"	d	language:C++
 gfx_push_aabb	.\code\game_renderer.h	/^gfx_push_aabb(Gfx* g, $/;"	f	language:C++
+gfx_push_aabb	.\code\game_renderer.h	/^static void gfx_push_aabb(Gfx* g, Rect2 rect, F32 thickness, RGBA colors, F32 pos_z);$/;"	p	language:C++
 gfx_push_advance_depth	.\code\game_renderer.h	/^gfx_push_advance_depth(Gfx* g) {$/;"	f	language:C++
+gfx_push_advance_depth	.\code\game_renderer.h	/^static void gfx_push_advance_depth(Gfx* g); $/;"	p	language:C++
 gfx_push_blend	.\code\game_renderer.h	/^gfx_push_blend(Gfx* g, Gfx_Blend_Type blend_type) {$/;"	f	language:C++
+gfx_push_blend	.\code\game_renderer.h	/^static void gfx_push_blend(Gfx* g, Gfx_Blend_Type blend_type);$/;"	p	language:C++
 gfx_push_circle	.\code\game_renderer.h	/^gfx_push_circle(Gfx* g, $/;"	f	language:C++
+gfx_push_circle	.\code\game_renderer.h	/^static void gfx_push_circle(Gfx* g, Circ2 circle, F32 thickness, U32 line_count, RGBA color); $/;"	p	language:C++
 gfx_push_colors	.\code\game_renderer.h	/^gfx_push_colors(Gfx* g, RGBA colors) {$/;"	f	language:C++
+gfx_push_colors	.\code\game_renderer.h	/^static void gfx_push_colors(Gfx* g, RGBA colors); $/;"	p	language:C++
 gfx_push_delete_all_textures	.\code\game_renderer.h	/^gfx_push_delete_all_textures(Gfx* g) {$/;"	f	language:C++
+gfx_push_delete_all_textures	.\code\game_renderer.h	/^static void gfx_push_delete_all_textures(Gfx* g);$/;"	p	language:C++
 gfx_push_delete_texture	.\code\game_renderer.h	/^gfx_push_delete_texture(Gfx* g, U32 texture_index) {$/;"	f	language:C++
+gfx_push_delete_texture	.\code\game_renderer.h	/^static void gfx_push_delete_texture(Gfx* g, U32 texture_index);$/;"	p	language:C++
 gfx_push_line	.\code\game_renderer.h	/^gfx_push_line(Gfx* g, $/;"	f	language:C++
+gfx_push_line	.\code\game_renderer.h	/^static void gfx_push_line(Gfx* g, Line2 line, F32 thickness, RGBA colors);$/;"	p	language:C++
 gfx_push_rect	.\code\game_renderer.h	/^gfx_push_rect(Gfx* g, $/;"	f	language:C++
+gfx_push_rect	.\code\game_renderer.h	/^static void gfx_push_rect(Gfx* g, RGBA colors, V2 pos, F32 rot, V2 size);$/;"	p	language:C++
 gfx_push_sprite	.\code\game_renderer.h	/^gfx_push_sprite(Gfx* g, $/;"	f	language:C++
+gfx_push_sprite	.\code\game_renderer.h	/^static void gfx_push_sprite(Gfx* g, RGBA colors, V2 pos, V2 size, V2 anchor, U32 texture_index, Rect2U texel_uv);$/;"	p	language:C++
 gfx_push_triangle	.\code\game_renderer.h	/^gfx_push_triangle(Gfx* g,$/;"	f	language:C++
+gfx_push_triangle	.\code\game_renderer.h	/^static void gfx_push_triangle(Gfx* g, RGBA colors, V2 p0, V2 p1, V2 p2);$/;"	p	language:C++
 gfx_push_view	.\code\game_renderer.h	/^gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height, U32 layers) {$/;"	f	language:C++
+gfx_push_view	.\code\game_renderer.h	/^static void gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height, U32 layers);$/;"	p	language:C++
 Gfx_Texture_Payload	.\code\game_renderer.h	/^struct Gfx_Texture_Payload {$/;"	s	language:C++
 Gfx_Texture_Payload_State	.\code\game_renderer.h	/^enum Gfx_Texture_Payload_State {$/;"	g	language:C++
 GFX_TEXTURE_PAYLOAD_STATE_EMPTY	.\code\game_renderer.h	/^  GFX_TEXTURE_PAYLOAD_STATE_EMPTY,$/;"	e	language:C++	enum:Gfx_Texture_Payload_State
@@ -1410,6 +1430,7 @@ pow	.\code\momo_intrinsics.h	/^static F64 pow(F64 , F64 e);$/;"	p	language:C++
 prf_block	.\code\game_profiler.h	55;"	d	language:C++
 prf_init	.\code\game_profiler.h	/^prf_init(Profiler* p, Profiler_Get_Performance_Counter get_performance_counter_fp) {$/;"	f	language:C++
 prf_init	.\code\game_profiler.h	/^static void prf_init(Profiler* p, Profiler_Get_Performance_Counter get_performance_counter_fp);$/;"	p	language:C++
+prf_reset	.\code\game_profiler.h	/^prf_reset(Profiler* p) {$/;"	f	language:C++
 prf_update_entries	.\code\game_profiler.h	/^prf_update_entries(Profiler* p) {$/;"	f	language:C++
 prf_update_entries	.\code\game_profiler.h	/^static void prf_update_entries(Profiler* p);$/;"	p	language:C++
 process_input_for_editor_toolbar	.\code\game_mode_level_editor.cpp	/^process_input_for_editor_toolbar(Editor* e, Game_Input* input) {$/;"	f	language:C++	file:
@@ -1426,6 +1447,7 @@ project	.\code\momo_vectors.h	/^project(V2 v, V2 onto) {$/;"	f	language:C++
 project	.\code\momo_vectors.h	/^project(V3 v, V3 onto) {$/;"	f	language:C++
 project	.\code\momo_vectors.h	/^static V2    project(V2 v, V2 onto);$/;"	p	language:C++
 project	.\code\momo_vectors.h	/^static V3    project(V3 v, V3 onto);$/;"	p	language:C++
+prt_reset	.\code\game_profiler.h	/^static void prt_reset(Profiler* p);$/;"	p	language:C++
 pt	.\code\game_sb1.h	/^  V2 pt;$/;"	m	language:C++	struct:SB1_Light_Intersection
 pt	.\code\momo_shapes.h	/^  V2 pt;$/;"	m	language:C++	struct:Ray2
 ptr_to_int	.\code\momo_common.h	/^ptr_to_int(void* p) { $/;"	f	language:C++

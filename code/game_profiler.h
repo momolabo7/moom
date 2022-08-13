@@ -56,7 +56,7 @@ struct Profiler {
 
 static void prf_init(Profiler* p, Profiler_Get_Performance_Counter get_performance_counter_fp);
 static void prf_update_entries(Profiler* p);
-
+static void prf_reset(Profiler* p);
 
 ///////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
@@ -102,6 +102,7 @@ static void
 prf_init(Profiler* p, Profiler_Get_Performance_Counter get_performance_counter_fp) {
   p->get_performance_counter = get_performance_counter_fp;
   p->first = p->last = 0;
+  prf_reset(p);
 }
 
 
@@ -125,6 +126,17 @@ prf_update_entries(Profiler* p) {
   }
   
   
+}
+
+static void 
+prf_reset(Profiler* p) {
+  Profiler_Entry* itr = p->first;
+  while(itr != 0) {  
+    Profiler_Entry* next = itr->next; 
+    itr->next = 0;
+    itr = next;
+  }
+  p->first = p->last = 0;
 }
 
 

@@ -167,8 +167,8 @@ static void gfx_push_colors(Gfx* g, RGBA colors);
 static void gfx_push_sprite(Gfx* g, RGBA colors, V2 pos, V2 size, V2 anchor, U32 texture_index, Rect2U texel_uv);
 static void gfx_push_rect(Gfx* g, RGBA colors, V2 pos, F32 rot, V2 size);
 static void gfx_push_triangle(Gfx* g, RGBA colors, V2 p0, V2 p1, V2 p2);
-static void gfx_push_advance_depth(Gfx* g) 
-static void gfx_push_line(Gfx* g, Line2 line, F32 thickness, RGBA colors) 
+static void gfx_push_advance_depth(Gfx* g); 
+static void gfx_push_line(Gfx* g, Line2 line, F32 thickness, RGBA colors);
 static void gfx_push_circle(Gfx* g, Circ2 circle, F32 thickness, U32 line_count, RGBA color); 
 static void gfx_push_aabb(Gfx* g, Rect2 rect, F32 thickness, RGBA colors, F32 pos_z);
 static void gfx_push_delete_all_textures(Gfx* g);
@@ -178,12 +178,7 @@ static void gfx_advance_depth(Gfx* g);
 
 #define gfx_foreach_command(g,i) \
   for(U32 (i) = 0; (i) < (g)->command_queue.entry_count; ++(i))
-  
-// TODO: maybe we should change this to a macro to support C users
-template<typename T> 
-static T* _gfx_push_command(Gfx_Command_Queue* q, U32 id, U32 align = 4);
-
-
+ 
 //////////////////////////////////////////////////////
 // IMPLEMENTATION
 static void
