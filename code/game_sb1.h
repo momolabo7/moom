@@ -3,7 +3,7 @@
 
 #include "game.h"
 
-#define DEBUG_LIGHT 1
+#define SB1_DEBUG_LIGHT 0
 
 //////////////////////////////////////////////////
 // SB1 MODE
@@ -23,12 +23,12 @@ struct SB1_Light_Triangle_List {
   Tri2 e[256];
 };
 
-#if DEBUG_LIGHT
+#if SB1_DEBUG_LIGHT
 struct SB1_Light_Debug_Ray_List {
   U32 count;
   Ray2 e[256];
 };
-#endif //DEBUG_LIGHT
+#endif //SB1_DEBUG_LIGHT
 
 struct SB1_Light {
   V2 dir;
@@ -40,13 +40,13 @@ struct SB1_Light {
   SB1_Light_Triangle_List triangles;
   SB1_Light_Intersection_List intersections;
 
-#if DEBUG_LIGHT
+#if SB1_DEBUG_LIGHT
   SB1_Light_Debug_Ray_List debug_rays;
 #endif
 };
 
 struct SB1_Edge{
-  //B32 is_disabled;
+  B32 is_disabled;
   UMI min_pt_id;
   UMI max_pt_id;
   //  Line2 ghost;
@@ -54,7 +54,7 @@ struct SB1_Edge{
 
 struct SB1_Sensor {
   V2 pos;
-  SB1_Edge* edges[4]; // TODO: use id instead?
+  SB1_Edge* edge;
   U32 target_color;
   U32 current_color;
 };
@@ -107,10 +107,7 @@ sb1_set_win_point(SB1* m, V2 pos) {
 
 static void 
 sb1_push_sensor(SB1* m, V2 pos, U32 target_color, 
-                SB1_Edge* e1,
-                SB1_Edge* e2,
-                SB1_Edge* e3,
-                SB1_Edge* e4) 
+                SB1_Edge* edge) 
 {
   assert(!al_is_full(&m->sensors));
   SB1_Sensor* s = al_append(&m->sensors);
@@ -118,11 +115,7 @@ sb1_push_sensor(SB1* m, V2 pos, U32 target_color,
   s->target_color = target_color;
   s->current_color = 0;
  
-  // TODO:
-  s->edges[0] = e1;
-  s->edges[1] = e2;
-  s->edges[2] = e3;
-  s->edges[3] = e4;
+  s->edge = edge;
 }
 
 
@@ -144,7 +137,7 @@ sb1_push_edge(SB1* m, UMI min_pt_id, UMI max_pt_id) {
   SB1_Edge* edge = al_append(&m->edges);
   edge->min_pt_id = min_pt_id;
   edge->max_pt_id = max_pt_id;
-  //edge->is_disabled = false;
+  edge->is_disabled = false;
 
   return edge;
 }
@@ -198,9 +191,9 @@ sb1_get_ray_intersection_time_wrt_edges(Ray2 ray,
   
   al_foreach(edge_index, edges)
   {
-    auto* edge = al_at(edges, edge_index);
+    SB1_Edge* edge = al_at(edges, edge_index);
 
-    // if (edge->is_disabled) continue;
+    if (edge->is_disabled) continue;
 
     Ray2 edge_ray = {};
     
@@ -262,7 +255,7 @@ sb1_gen_light_intersections(SB1_Light* l,
   al_clear(&l->intersections);
   al_clear(&l->triangles);  
 
-#if DEBUG_LIGHT
+#if SB1_DEBUG_LIGHT
   al_clear(&l->debug_rays);
 #endif
 
@@ -273,14 +266,12 @@ sb1_gen_light_intersections(SB1_Light* l,
        ++offset_index) 
   {
     F32 offset_angle = offset_angles[offset_index];
-    
-    
     // For each endpoint
     al_foreach(edge_index, edges) 
     {
       SB1_Edge* edge = al_at(edges, edge_index);
       
-      //if (edge->is_disabled) continue;
+      if (edge->is_disabled) continue;
 
       UMI ep_index = edge->max_pt_id;
       V2 ep = *al_at(points, ep_index);
@@ -302,11 +293,11 @@ sb1_gen_light_intersections(SB1_Light* l,
       light_ray.pt = l->pos;
       light_ray.dir = rotate(ep - l->pos, offset_angle);
 
-#if DEBUG_LIGHT
+#if SB1_DEBUG_LIGHT
       Ray2* debug_ray = al_append(&l->debug_rays);
       assert(debug_ray);
       (*debug_ray) = light_ray;
-#endif // DEBUG_LIGHT
+#endif // SB1_DEBUG_LIGHT
       F32 t = sb1_get_ray_intersection_time_wrt_edges(light_ray, edges, points, offset_index == 0);
       
       SB1_Light_Intersection* intersection = al_append(&l->intersections);
@@ -471,13 +462,12 @@ sb1_init(Game* game)
     sb1_push_point(m, {450.f, 500.f}); // 10
     sb1_push_point(m, {400.f, 500.f}); // 11
                                        
-        
-    sb1_push_sensor(m, {400.f, 600.f}, 0x22220000, 
-      sb1_push_edge(m, 8, 9),
-      sb1_push_edge(m, 9, 10),
-      sb1_push_edge(m, 10, 11),
-      sb1_push_edge(m, 11, 8)
-    );
+    sb1_push_edge(m, 8, 9);
+    sb1_push_edge(m, 9, 10);
+    sb1_push_edge(m, 10, 11);
+    SB1_Edge* e = sb1_push_edge(m, 11, 8);
+
+    sb1_push_sensor(m, {400.f, 600.f}, 0x22220000, e); 
   }
 #endif
   sb1_set_win_point(m, {800.f, 400.f});
@@ -599,27 +589,12 @@ sb1_tick(Game* game,
     // TODO: Goodbye CPU. We should do some kind of
     // OnEnter/OnExit kind of algo
     if (sensor->current_color == sensor->target_color) {
-      for(UMI edge_index = 0; 
-          edge_index < array_count(sensor->edges);
-          ++edge_index) 
-      {
-        //sensor->edges[edge_index]->is_disabled = true; 
-      }
-
+      sensor->edge->is_disabled = true; 
     }
     else {
-      for(UMI edge_index = 0; 
-          edge_index < array_count(sensor->edges);
-          ++edge_index) 
-      {
-        //sensor->edges[edge_index]->is_disabled = false; 
-      }
+      sensor->edge->is_disabled = false; 
     }
-
-
   }
-
-
 
 
   // Check win condition?
@@ -653,7 +628,7 @@ sb1_tick(Game* game,
   al_foreach(edge_index, &m->edges) 
   {
     auto* edge = al_at(&m->edges, edge_index);
-    //if (edge->is_disabled) continue;
+    if (edge->is_disabled) continue;
     
     Line2 line = { 
       *al_at(&m->points, edge->min_pt_id),
@@ -666,7 +641,7 @@ sb1_tick(Game* game,
   
   advance_depth(painter);
   
-#if DEBUG_LIGHT
+#if SB1_DEBUG_LIGHT
   // Draw the light rays
   if (player->held_light) {
     SB1_Light* l = player->held_light;
@@ -726,7 +701,7 @@ sb1_tick(Game* game,
     }
     advance_depth(painter);
   }
-#endif // DEBUG_LIGHT
+#endif // SB1_DEBUG_LIGHT
   
   // Draw player
   paint_sprite(painter, 
@@ -779,12 +754,12 @@ sb1_tick(Game* game,
     al_foreach(tri_index, &l->triangles)
     {
       Tri2* lt = al_at(&l->triangles, tri_index);
-      paint_triangle(painter, 
-                     rgba(l->color),
-                     lt->pts[0],
-                     lt->pts[1],
-                     lt->pts[2]);
-    }
+      paint_filled_triangle(painter, 
+                            rgba(l->color),
+                            lt->pts[0],
+                            lt->pts[1],
+                            lt->pts[2]);
+    } 
     advance_depth(painter);
   }
  
@@ -796,7 +771,7 @@ sb1_tick(Game* game,
     
     // TODO: only for testing purposes?
     RGBA color = m->is_win_reached ? rgba(0x00ff00ff) : rgba(0xff0000ff); 
-    paint_circle(painter, circ, 2.f, 16, color); 
+    paint_filled_circle(painter, circ, 16, color); 
   }
 
   //render_editor(&m->editor, m, painter);

@@ -165,12 +165,12 @@ static void gfx_cancel_texture_transfer(Gfx_Texture_Payload* entry);
 static void gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height, U32 layers);
 static void gfx_push_colors(Gfx* g, RGBA colors); 
 static void gfx_push_sprite(Gfx* g, RGBA colors, V2 pos, V2 size, V2 anchor, U32 texture_index, Rect2U texel_uv);
-static void gfx_push_rect(Gfx* g, RGBA colors, V2 pos, F32 rot, V2 size);
-static void gfx_push_triangle(Gfx* g, RGBA colors, V2 p0, V2 p1, V2 p2);
+static void gfx_push_filled_rect(Gfx* g, RGBA colors, V2 pos, F32 rot, V2 size);
+static void gfx_push_filled_triangle(Gfx* g, RGBA colors, V2 p0, V2 p1, V2 p2);
 static void gfx_push_advance_depth(Gfx* g); 
 static void gfx_push_line(Gfx* g, Line2 line, F32 thickness, RGBA colors);
-static void gfx_push_circle(Gfx* g, Circ2 circle, F32 thickness, U32 line_count, RGBA color); 
-static void gfx_push_aabb(Gfx* g, Rect2 rect, F32 thickness, RGBA colors, F32 pos_z);
+static void gfx_push_circle_outline(Gfx* g, Circ2 circle, F32 thickness, U32 line_count, RGBA color); 
+static void gfx_push_rect_outline(Gfx* g, Rect2 rect, F32 thickness, RGBA colors, F32 pos_z);
 static void gfx_push_delete_all_textures(Gfx* g);
 static void gfx_push_delete_texture(Gfx* g, U32 texture_index);
 static void gfx_push_blend(Gfx* g, Gfx_Blend_Type blend_type);
@@ -354,9 +354,9 @@ gfx_push_sprite(Gfx* g,
 }
 
 static void
-gfx_push_rect(Gfx* g, 
-              RGBA colors, 
-              V2 pos, F32 rot, V2 size)
+gfx_push_filled_rect(Gfx* g, 
+                     RGBA colors, 
+                     V2 pos, F32 rot, V2 size)
 {
   Gfx_Command_Queue* c = &g->command_queue; 
 
@@ -369,9 +369,9 @@ gfx_push_rect(Gfx* g,
 
 
 static void
-gfx_push_triangle(Gfx* g,
-                  RGBA colors,
-                  V2 p0, V2 p1, V2 p2)
+gfx_push_filled_triangle(Gfx* g,
+                         RGBA colors,
+                         V2 p0, V2 p1, V2 p2)
 {
   Gfx_Command_Queue* c = &g->command_queue; 
   auto* data = _gfx_push_command<Gfx_Command_Triangle>(c, GFX_COMMAND_TYPE_TRIANGLE);
@@ -407,24 +407,60 @@ gfx_push_line(Gfx* g,
   V2 x_axis = { 1.f, 0.f };
   F32 angle = angle_between(line_vector, x_axis);
   
-  gfx_push_rect(g, colors, 
-                {line_mid.x, line_mid.y},
-                angle, 
-                {line_length, thickness});
+  gfx_push_filled_rect(g, colors, 
+                       {line_mid.x, line_mid.y},
+                       angle, 
+                       {line_length, thickness});
 }
 
+static void
+gfx_push_filled_circle(Gfx* g,
+                       Circ2 circle,
+                       U32 sections,
+                       RGBA color)
+{
+  // We must have at least 3 sections
+  // which would form a triangle
+  if (sections < 3) {
+    assert(sections >= 3);
+    return;
+  }
+  Gfx_Command_Queue* q = &g->command_queue; 
+  F32 section_angle = TAU_32/sections;
+  F32 current_angle = 0.f;
+
+  // Basically it's just a bunch of triangles
+  for(U32 section_id = 0;
+      section_id < sections;
+      ++section_id)
+  {
+    F32 next_angle = current_angle + section_angle; 
+
+    V2 p0 = circle.center;
+    V2 p1 = p0 + v2(cos(current_angle), sin(current_angle)) * circle.radius;
+    V2 p2 = p0 + v2(cos(next_angle), sin(next_angle)) * circle.radius; 
+
+    gfx_push_filled_triangle(g, color, p0, p1, p2); 
+    current_angle += section_angle;
+  }
+}
+
+
 static  void
-gfx_push_circle(Gfx* g, 
-                Circ2 circle,
-                F32 thickness, 
-                U32 line_count,
-                RGBA color) 
+gfx_push_circle_outline(Gfx* g, 
+                        Circ2 circle,
+                        F32 thickness, 
+                        U32 line_count,
+                        RGBA color) 
 {
   Gfx_Command_Queue* q = &g->command_queue; 
 
   // NOTE(Momo): Essentially a bunch of lines
   // We can't really have a surface with less than 3 lines
-  assert(line_count >= 3);
+  if (line_count < 3) {
+    assert(line_count >= 3);
+    return;
+  }
   F32 angle_increment = TAU_32 / line_count;
   V2 pt1 = { 0.f, circle.radius }; 
   V2 pt2 = rotate(pt1, angle_increment);
@@ -443,11 +479,11 @@ gfx_push_circle(Gfx* g,
 
 //TODO: Buggy? Or change to AABB? Instead of Rect?
 static void 
-gfx_push_aabb(Gfx* g, 
-              Rect2 rect,
-              F32 thickness,
-              RGBA colors,
-              F32 pos_z) 
+gfx_push_rect_outline(Gfx* g, 
+                      Rect2 rect,
+                      F32 thickness,
+                      RGBA colors,
+                      F32 pos_z) 
 {
   Gfx_Command_Queue* c = &g->command_queue; 
   //Bottom

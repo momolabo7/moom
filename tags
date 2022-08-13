@@ -349,7 +349,6 @@ data_pos	.\code\game_renderer.h	/^	UMI data_pos;$/;"	m	language:C++	struct:Gfx_C
 data_size	.\code\momo_png.h	/^  UMI data_size;$/;"	m	language:C++	struct:PNG
 data_u8	.\code\momo_common.h	/^    U8* data_u8;$/;"	m	language:C++	union:Memory::__anon5
 debug_arena	.\code\game.h	/^  Bump_Allocator debug_arena;$/;"	m	language:C++	struct:Game
-DEBUG_LIGHT	.\code\game_sb1.h	6;"	d	language:C++
 debug_log	.\code\game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language:C++	struct:Platform
 debug_log	.\code\game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language:C++	struct:Platform_API
 debug_rays	.\code\game_sb1.h	/^  SB1_Light_Debug_Ray_List debug_rays;$/;"	m	language:C++	struct:SB1_Light
@@ -521,8 +520,8 @@ ease_out_sine	.\code\momo_easing.h	/^ease_out_sine(F64 t) {$/;"	f	language:C++
 ease_out_sine	.\code\momo_easing.h	/^static F32 ease_out_sine(F32 t);$/;"	p	language:C++
 ease_out_sine	.\code\momo_easing.h	/^static F64 ease_out_sine(F64 t);$/;"	p	language:C++
 Edge	.\code\game_mode_level.h	/^struct Edge{$/;"	s	language:C++
+edge	.\code\game_sb1.h	/^  SB1_Edge* edge;$/;"	m	language:C++	struct:SB1_Sensor
 edges	.\code\game_mode_level.h	/^  Array_List<Edge> edges;$/;"	m	language:C++	struct:Level_Mode
-edges	.\code\game_sb1.h	/^  SB1_Edge* edges[4]; \/\/ TODO: use id instead?$/;"	m	language:C++	struct:SB1_Sensor
 edges	.\code\game_sb1.h	/^  SB1_Edge_List edges;$/;"	m	language:C++	struct:SB1
 editor	.\code\game_mode_level.h	/^  Editor editor;$/;"	m	language:C++	struct:Level_Mode
 Editor	.\code\game_mode_level_editor.h	/^struct Editor {$/;"	s	language:C++
@@ -756,28 +755,29 @@ gfx_init_command_queue	.\code\game_renderer.h	/^static void gfx_init_command_que
 gfx_init_texture_queue	.\code\game_renderer.h	/^gfx_init_texture_queue(Gfx* g, void* data, UMI size) {$/;"	f	language:C++
 gfx_init_texture_queue	.\code\game_renderer.h	/^static void gfx_init_texture_queue(Gfx* g, void* data, UMI size);$/;"	p	language:C++
 GFX_OPENGL_H	.\code\game_renderer_opengl.h	2;"	d	language:C++
-gfx_push_aabb	.\code\game_renderer.h	/^gfx_push_aabb(Gfx* g, $/;"	f	language:C++
-gfx_push_aabb	.\code\game_renderer.h	/^static void gfx_push_aabb(Gfx* g, Rect2 rect, F32 thickness, RGBA colors, F32 pos_z);$/;"	p	language:C++
 gfx_push_advance_depth	.\code\game_renderer.h	/^gfx_push_advance_depth(Gfx* g) {$/;"	f	language:C++
 gfx_push_advance_depth	.\code\game_renderer.h	/^static void gfx_push_advance_depth(Gfx* g); $/;"	p	language:C++
 gfx_push_blend	.\code\game_renderer.h	/^gfx_push_blend(Gfx* g, Gfx_Blend_Type blend_type) {$/;"	f	language:C++
 gfx_push_blend	.\code\game_renderer.h	/^static void gfx_push_blend(Gfx* g, Gfx_Blend_Type blend_type);$/;"	p	language:C++
-gfx_push_circle	.\code\game_renderer.h	/^gfx_push_circle(Gfx* g, $/;"	f	language:C++
-gfx_push_circle	.\code\game_renderer.h	/^static void gfx_push_circle(Gfx* g, Circ2 circle, F32 thickness, U32 line_count, RGBA color); $/;"	p	language:C++
+gfx_push_circle_outline	.\code\game_renderer.h	/^gfx_push_circle_outline(Gfx* g, $/;"	f	language:C++
+gfx_push_circle_outline	.\code\game_renderer.h	/^static void gfx_push_circle_outline(Gfx* g, Circ2 circle, F32 thickness, U32 line_count, RGBA color); $/;"	p	language:C++
 gfx_push_colors	.\code\game_renderer.h	/^gfx_push_colors(Gfx* g, RGBA colors) {$/;"	f	language:C++
 gfx_push_colors	.\code\game_renderer.h	/^static void gfx_push_colors(Gfx* g, RGBA colors); $/;"	p	language:C++
 gfx_push_delete_all_textures	.\code\game_renderer.h	/^gfx_push_delete_all_textures(Gfx* g) {$/;"	f	language:C++
 gfx_push_delete_all_textures	.\code\game_renderer.h	/^static void gfx_push_delete_all_textures(Gfx* g);$/;"	p	language:C++
 gfx_push_delete_texture	.\code\game_renderer.h	/^gfx_push_delete_texture(Gfx* g, U32 texture_index) {$/;"	f	language:C++
 gfx_push_delete_texture	.\code\game_renderer.h	/^static void gfx_push_delete_texture(Gfx* g, U32 texture_index);$/;"	p	language:C++
+gfx_push_filled_circle	.\code\game_renderer.h	/^gfx_push_filled_circle(Gfx* g,$/;"	f	language:C++
+gfx_push_filled_rect	.\code\game_renderer.h	/^gfx_push_filled_rect(Gfx* g, $/;"	f	language:C++
+gfx_push_filled_rect	.\code\game_renderer.h	/^static void gfx_push_filled_rect(Gfx* g, RGBA colors, V2 pos, F32 rot, V2 size);$/;"	p	language:C++
+gfx_push_filled_triangle	.\code\game_renderer.h	/^gfx_push_filled_triangle(Gfx* g,$/;"	f	language:C++
+gfx_push_filled_triangle	.\code\game_renderer.h	/^static void gfx_push_filled_triangle(Gfx* g, RGBA colors, V2 p0, V2 p1, V2 p2);$/;"	p	language:C++
 gfx_push_line	.\code\game_renderer.h	/^gfx_push_line(Gfx* g, $/;"	f	language:C++
 gfx_push_line	.\code\game_renderer.h	/^static void gfx_push_line(Gfx* g, Line2 line, F32 thickness, RGBA colors);$/;"	p	language:C++
-gfx_push_rect	.\code\game_renderer.h	/^gfx_push_rect(Gfx* g, $/;"	f	language:C++
-gfx_push_rect	.\code\game_renderer.h	/^static void gfx_push_rect(Gfx* g, RGBA colors, V2 pos, F32 rot, V2 size);$/;"	p	language:C++
+gfx_push_rect_outline	.\code\game_renderer.h	/^gfx_push_rect_outline(Gfx* g, $/;"	f	language:C++
+gfx_push_rect_outline	.\code\game_renderer.h	/^static void gfx_push_rect_outline(Gfx* g, Rect2 rect, F32 thickness, RGBA colors, F32 pos_z);$/;"	p	language:C++
 gfx_push_sprite	.\code\game_renderer.h	/^gfx_push_sprite(Gfx* g, $/;"	f	language:C++
 gfx_push_sprite	.\code\game_renderer.h	/^static void gfx_push_sprite(Gfx* g, RGBA colors, V2 pos, V2 size, V2 anchor, U32 texture_index, Rect2U texel_uv);$/;"	p	language:C++
-gfx_push_triangle	.\code\game_renderer.h	/^gfx_push_triangle(Gfx* g,$/;"	f	language:C++
-gfx_push_triangle	.\code\game_renderer.h	/^static void gfx_push_triangle(Gfx* g, RGBA colors, V2 p0, V2 p1, V2 p2);$/;"	p	language:C++
 gfx_push_view	.\code\game_renderer.h	/^gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height, U32 layers) {$/;"	f	language:C++
 gfx_push_view	.\code\game_renderer.h	/^static void gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height, U32 layers);$/;"	p	language:C++
 Gfx_Texture_Payload	.\code\game_renderer.h	/^struct Gfx_Texture_Payload {$/;"	s	language:C++
@@ -1039,6 +1039,7 @@ is_device_changed	.\code\win_audio_wasapi.h	/^	B32 is_device_changed;$/;"	m	lang
 is_device_ready	.\code\win_audio_wasapi.h	/^	B32 is_device_ready;$/;"	m	language:C++	struct:Win_Wasapi
 is_digit	.\code\momo_common.h	/^is_digit(U8 c) {$/;"	f	language:C++
 is_digit	.\code\momo_common.h	/^static B32 is_digit(U8 c);$/;"	p	language:C++
+is_disabled	.\code\game_sb1.h	/^  B32 is_disabled;$/;"	m	language:C++	struct:SB1_Edge
 is_done	.\code\game.h	/^  B32 is_done;$/;"	m	language:C++	struct:Game
 is_inverted	.\code\momo_ttf.h	/^  B32 is_inverted;$/;"	m	language:C++	struct:_TTF_Edge
 is_memory_same	.\code\momo_common.h	/^is_memory_same(const void* lhs, const void* rhs, UMI size) {$/;"	f	language:C++
@@ -1342,11 +1343,12 @@ PACK_DEFAULT	.\code\generated_pack_ids.h	/^PACK_DEFAULT = 0,$/;"	e	language:C++	
 Pack_ID	.\code\generated_pack_ids.h	/^enum Pack_ID {$/;"	g	language:C++
 pack_id_file	.\code\sui_pack.h	/^  FILE* pack_id_file;$/;"	m	language:C++	struct:Sui_Packer
 Painter	.\code\game_painter.h	/^struct Painter {$/;"	s	language:C++
-paint_circle	.\code\game_painter.h	/^paint_circle(Painter* p,$/;"	f	language:C++
+paint_circle_outline	.\code\game_painter.h	/^paint_circle_outline(Painter* p,$/;"	f	language:C++
+paint_filled_circle	.\code\game_painter.h	/^paint_filled_circle(Painter* p,$/;"	f	language:C++
+paint_filled_triangle	.\code\game_painter.h	/^paint_filled_triangle(Painter* p,$/;"	f	language:C++
 paint_line	.\code\game_painter.h	/^paint_line(Painter* p,$/;"	f	language:C++
 paint_sprite	.\code\game_painter.h	/^paint_sprite(Painter* p,$/;"	f	language:C++
 paint_text	.\code\game_painter.h	/^paint_text(Painter* p,$/;"	f	language:C++
-paint_triangle	.\code\game_painter.h	/^paint_triangle(Painter* p,$/;"	f	language:C++
 path_count	.\code\momo_ttf.h	/^  U32 path_count;$/;"	m	language:C++	struct:_TTF_Glyph_Paths
 path_lengths	.\code\momo_ttf.h	/^  U32* path_lengths;$/;"	m	language:C++	struct:_TTF_Glyph_Paths
 payloads	.\code\game_renderer.h	/^  Gfx_Texture_Payload payloads[256];$/;"	m	language:C++	struct:Gfx_Texture_Queue
@@ -1431,6 +1433,7 @@ prf_block	.\code\game_profiler.h	55;"	d	language:C++
 prf_init	.\code\game_profiler.h	/^prf_init(Profiler* p, Profiler_Get_Performance_Counter get_performance_counter_fp) {$/;"	f	language:C++
 prf_init	.\code\game_profiler.h	/^static void prf_init(Profiler* p, Profiler_Get_Performance_Counter get_performance_counter_fp);$/;"	p	language:C++
 prf_reset	.\code\game_profiler.h	/^prf_reset(Profiler* p) {$/;"	f	language:C++
+prf_reset	.\code\game_profiler.h	/^static void prf_reset(Profiler* p);$/;"	p	language:C++
 prf_update_entries	.\code\game_profiler.h	/^prf_update_entries(Profiler* p) {$/;"	f	language:C++
 prf_update_entries	.\code\game_profiler.h	/^static void prf_update_entries(Profiler* p);$/;"	p	language:C++
 process_input_for_editor_toolbar	.\code\game_mode_level_editor.cpp	/^process_input_for_editor_toolbar(Editor* e, Game_Input* input) {$/;"	f	language:C++	file:
@@ -1447,7 +1450,6 @@ project	.\code\momo_vectors.h	/^project(V2 v, V2 onto) {$/;"	f	language:C++
 project	.\code\momo_vectors.h	/^project(V3 v, V3 onto) {$/;"	f	language:C++
 project	.\code\momo_vectors.h	/^static V2    project(V2 v, V2 onto);$/;"	p	language:C++
 project	.\code\momo_vectors.h	/^static V3    project(V3 v, V3 onto);$/;"	p	language:C++
-prt_reset	.\code\game_profiler.h	/^static void prt_reset(Profiler* p);$/;"	p	language:C++
 pt	.\code\game_sb1.h	/^  V2 pt;$/;"	m	language:C++	struct:SB1_Light_Intersection
 pt	.\code\momo_shapes.h	/^  V2 pt;$/;"	m	language:C++	struct:Ray2
 ptr_to_int	.\code\momo_common.h	/^ptr_to_int(void* p) { $/;"	f	language:C++
@@ -1581,6 +1583,7 @@ sample_count	.\code\game_platform.h	/^    U32 sample_count;$/;"	m	language:C++	s
 sample_rate	.\code\momo_wav.h	/^  U32 sample_rate;$/;"	m	language:C++	struct:WAV_Fmt_Chunk
 SB1	.\code\game_sb1.h	/^struct SB1 {$/;"	s	language:C++
 sb1_calc_ghost_edge_line	.\code\game_sb1.h	/^sb1_calc_ghost_edge_line(SB1_Point_List* points, SB1_Edge* e) {$/;"	f	language:C++
+SB1_DEBUG_LIGHT	.\code\game_sb1.h	6;"	d	language:C++
 SB1_Edge	.\code\game_sb1.h	/^struct SB1_Edge{$/;"	s	language:C++
 SB1_Edge_List	.\code\game_sb1.h	/^struct SB1_Edge_List {$/;"	s	language:C++
 sb1_gen_light_intersections	.\code\game_sb1.h	/^sb1_gen_light_intersections(SB1_Light* l,$/;"	f	language:C++

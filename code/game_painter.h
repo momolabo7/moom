@@ -102,27 +102,36 @@ paint_line(Painter* p,
 
 
 static void
-paint_circle(Painter* p,
-             Circ2 circle,
-             F32 thickness, 
-             U32 line_count,
-             RGBA color) 
+paint_circle_outline(Painter* p,
+                     Circ2 circle,
+                     F32 thickness, 
+                     U32 line_count,
+                     RGBA color) 
 {
-  gfx_push_circle(p->gfx, 
-                  circle,
-                  thickness,
-                  line_count,
-                  color);
+  gfx_push_circle_outline(p->gfx, 
+                          circle,
+                          thickness,
+                          line_count,
+                          color);
 }
 
 static void
-paint_triangle(Painter* p,
-               RGBA colors,
-               V2 p0, V2 p1, V2 p2) 
+paint_filled_triangle(Painter* p,
+                      RGBA color,
+                      V2 p0, V2 p1, V2 p2) 
 {
-  gfx_push_triangle(p->gfx, 
-                    colors,
-                    p0, p1, p2);
+  gfx_push_filled_triangle(p->gfx, 
+                           color,
+                           p0, p1, p2);
+}
+
+static void
+paint_filled_circle(Painter* p,
+                    Circ2 circle,
+                    U32 sections,
+                    RGBA color)
+{
+  gfx_push_filled_circle(p->gfx, circle, sections, color); 
 }
 
 static void

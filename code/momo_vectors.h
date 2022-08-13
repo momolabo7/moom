@@ -52,13 +52,14 @@ union V4 {
 static V2U    add(V2U lhs, V2U rhs);
 static V2U    sub(V2U lhs, V2U rhs);
 static V2     v2(V2U v);
+static V2     v2(F32 x, F32 y); 
 
 
 static V2    add(V2 lhs, V2 rhs);
 static V2    sub(V2 lhs, V2 rhs);
 static V2    scale(V2 lhs, F32 rhs);
-static V2		inv(V2 v);
-static V2		ratio(V2 lhs, V2 rhs);
+static V2		 inv(V2 v);
+static V2		 ratio(V2 lhs, V2 rhs);
 static V2    div(V2 lhs, F32 rhs);
 static F32   dot(V2 lhs, V2 rhs);
 static F32   distance_sq(V2 lhs, V2 rhs);
@@ -380,6 +381,11 @@ sub(V2U lhs, V2U rhs){
 static V2    
 v2(V2U v){
   return { (F32)v.x, (F32)v.y };
+}
+
+static V2    
+v2(F32 x, F32 y){
+  return { x, y };
 }
 
 //~Operator Overloading
