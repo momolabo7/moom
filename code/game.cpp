@@ -1,4 +1,3 @@
-#include "momo.h"
 #include "game.h"
 #include "game_mode_splash.h"
 #include "game_sb1.h"
@@ -11,9 +10,7 @@ exported B32
 game_update_and_render(Platform* pf)
 { 
   g_platform = pf;
-  
   game_profile_block("game.dll");
-
   // Initialization
   if (!pf->game || pf->reloaded) {
     ba_clear(pf->game_arena);
@@ -27,7 +24,7 @@ game_update_and_render(Platform* pf)
     if (!ba_partition(pf->game_arena, &game->frame_arena, MB(1))) return false;
     
     B32 success = load_game_assets(&game->game_assets, 
-                                   pf->renderer_texture_queue,
+                                   pf->gfx,
                                    "test.sui",
                                    &game->asset_arena);
     if(!success) return false;
@@ -48,11 +45,11 @@ game_update_and_render(Platform* pf)
   Game* game = (Game*)pf->game;
   Console* console = &game->console;
   Game_Assets* ga = &game->game_assets;
-  Gfx_Command_Queue* cmds = pf->renderer_command_queue;
+  Gfx* gfx = pf->gfx;
   Inspector* in = &game->inspector;
  
   declare_and_pointerize(Painter, painter);
-  begin_painting(painter, ga, cmds, 1600.f, 900.f);
+  begin_painting(painter, ga, gfx, 1600.f, 900.f);
   begin_inspector(in);
   
   static U32 test_value = 32;
@@ -86,7 +83,7 @@ game_update_and_render(Platform* pf)
     default: {}
   }
 
-#if 1
+#if 0
   static F32 sine = 0.f;
   Platform_Audio* audio = pf->audio;
   S16* sample_out = audio->sample_buffer;

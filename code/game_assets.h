@@ -112,20 +112,20 @@ get_horizontal_advance(Font_Asset* font,
 
 static B32
 unload_game_assets(Game_Assets* ga, 
-                   Gfx_Command_Queue* cmds) 
+                   Gfx* gfx) 
 {
   for(U32 bitmap_index = 0; 
       bitmap_index < ga->bitmap_count; 
       ++bitmap_index) 
   {
     Bitmap_Asset* bmp = ga->bitmaps + bitmap_index;
-    gfx_push_delete_texture(cmds, bmp->renderer_texture_handle);
+    gfx_push_delete_texture(gfx, bmp->renderer_texture_handle);
   }
 }
 
 static B32
 load_game_assets(Game_Assets* ga, 
-                 Gfx_Texture_Queue* texture_queue,
+                 Gfx* gfx,
                  const char* filename,
                  Bump_Allocator* allocator) 
 { 
@@ -162,7 +162,7 @@ load_game_assets(Game_Assets* ga,
       U32 bitmap_size = kb.width*kb.height*4;
       U32 texture_handle = get_next_texture_handle();  
       
-      auto* payload = gfx_begin_texture_transfer(texture_queue, bitmap_size);
+      auto* payload = gfx_begin_texture_transfer(gfx, bitmap_size);
       if (!payload) return false;
       payload->texture_index =  texture_handle;
       payload->texture_width = kb.width;

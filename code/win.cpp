@@ -683,8 +683,7 @@ WinMain(HINSTANCE instance,
   defer { win_free_memory_from_arena(game_arena); };
   
   win_setup_platform_functions(pf);
-  pf->renderer_texture_queue = &renderer->texture_queue;
-  pf->renderer_command_queue = &renderer->command_queue;
+  pf->gfx = renderer;
   pf->profiler = g_profiler;
   pf->game_arena = game_arena;
   pf->audio = audio;

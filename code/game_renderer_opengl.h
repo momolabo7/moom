@@ -252,6 +252,9 @@ struct Triangle_Batcher {
 struct Opengl {
   Gfx gfx; // Must be first member
 
+  V2U platform_render_wh;
+  Rect2U platform_render_region;
+
   Sprite_Batcher sprite_batcher;
   Triangle_Batcher triangle_batcher;
   
@@ -884,10 +887,10 @@ ogl_init(Opengl* ogl,
          void* texture_queue_memory,
          U32 texture_queue_size)
 {	
-  gfx_init_command_queue(&ogl->gfx.command_queue, 
+  gfx_init_command_queue(&ogl->gfx, 
                          command_queue_memory, 
                          command_queue_size);
-  gfx_init_texture_queue(&ogl->gfx.texture_queue, 
+  gfx_init_texture_queue(&ogl->gfx, 
                          texture_queue_memory,
                          texture_queue_size);
 
@@ -967,25 +970,25 @@ _ogl_process_texture_queue(Opengl* ogl) {
 static void
 ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) 
 {
-  Gfx_Command_Queue* cmds = &ogl->gfx.command_queue;
-  gfx_clear_commands(cmds);  
-  cmds->platform_render_wh = render_wh;
-  cmds->platform_render_region = region;
+  gfx_clear_commands(&ogl->gfx);  
+  ogl->platform_render_wh = render_wh;
+  ogl->platform_render_region = region;
+
   ogl->current_layer = 1000.f;
 }
 
 // Only call opengl functions when we end frame
 static void
 ogl_end_frame(Opengl* ogl) {
-  Gfx_Command_Queue* cmds = &ogl->gfx.command_queue;
+  Gfx* gfx = &ogl->gfx;
   
-  _ogl_align_viewport(ogl, cmds->platform_render_wh, cmds->platform_render_region);
+  _ogl_align_viewport(ogl, ogl->platform_render_wh, ogl->platform_render_region);
   _ogl_process_texture_queue(ogl);
-  
   _ogl_begin_sprites(ogl);
   
-  for (U32 cmd_index = 0; cmd_index < cmds->entry_count; ++cmd_index) {
-    Gfx_Command* entry = gfx_get_command(cmds, cmd_index);
+  //for (U32 cmd_index = 0; cmd_index < cmds->entry_count; ++cmd_index) {
+  gfx_foreach_command(gfx, cmd_index) {
+    Gfx_Command* entry = gfx_get_command(gfx, cmd_index);
     switch(entry->id) {
       case GFX_COMMAND_TYPE_VIEW: {
         _ogl_flush_sprites(ogl);

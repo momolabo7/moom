@@ -95,8 +95,7 @@ struct Platform_Button {
   B32 now; 
 };
 
-struct Gfx_Texture_Queue;
-struct Gfx_Command_Queue;
+struct Gfx;
 struct Profiler;
 struct Bump_Allocator;
 
@@ -106,10 +105,8 @@ struct Platform {
   Bump_Allocator* game_arena; // Require 32MB
   //Platform_API platform_api;
   
-  // TODO: Gfx should just be under one big API
-  Gfx_Texture_Queue* renderer_texture_queue;
-  Gfx_Command_Queue* renderer_command_queue;
-
+  Gfx* gfx;
+  
   Profiler* profiler; 
   Platform_Audio* audio;
 
