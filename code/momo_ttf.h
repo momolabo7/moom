@@ -393,7 +393,7 @@ _ttf_tessellate_bezier(V2* vertices,
                        U32 n) 
 {
   V2 mid = (p0 + p1*2.f + p2) * 0.25f;
-  V2 d = midpoint(p0, p2) - mid;
+  V2 d = v2_mid(p0, p2) - mid;
   
   // if n == 16, that's 65535 segments which should be
   // more than enough. Increase this number if we are 
@@ -402,10 +402,10 @@ _ttf_tessellate_bezier(V2* vertices,
   
   if (d.x*d.x + d.y*d.y > flatness_squared) {
     _ttf_tessellate_bezier(vertices, vertex_count, p0,
-                           midpoint(p0, p1), 
+                           v2_mid(p0, p1), 
                            mid, flatness_squared, n+1 );
     _ttf_tessellate_bezier(vertices, vertex_count, mid,
-                           midpoint(p1, p2), 
+                           v2_mid(p1, p2), 
                            p2, flatness_squared, n+1 );
   }
   else {
@@ -764,7 +764,7 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator*
   auto paths = _ttf_get_paths_from_glyph_outline(outline, allocator);
   
   // generate scaled edges based on points
-  auto* edges = ba_push_array<_TTF_Edge>(allocator, paths.vertex_count);
+  _TTF_Edge* edges = ba_push_array<_TTF_Edge>(allocator, paths.vertex_count);
   assert(edges);
   zero_range(edges, paths.vertex_count);
   
@@ -797,7 +797,7 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator*
         // NOTE(Momo): It's easier for the rasterization algorithm to have the edges'
         // p0 be on top of p1. If we flip, we will indicate it within the edge.
         if (edge.p0.y > edge.p1.y) {
-          swap(&edge.p0, &edge.p1);
+          swap(V2, edge.p0, edge.p1);
           edge.is_inverted = true;
         }
         edges[edge_count++] = edge;

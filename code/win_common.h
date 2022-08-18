@@ -16,8 +16,8 @@ win_log_proc(const char* fmt, ...) {
 #define win_profiler_block(...)
 #endif // INTERNAL
 
-static inline LONG width_of(RECT r) { return r.right - r.left; }
-static inline LONG height_of(RECT r) { return r.bottom - r.top; }
+static inline LONG win_rect_width(RECT r) { return r.right - r.left; }
+static inline LONG win_rect_height(RECT r) { return r.bottom - r.top; }
 
 static inline V2U
 win_get_window_dims(HWND window) {

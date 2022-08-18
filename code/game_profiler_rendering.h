@@ -83,20 +83,19 @@ update_and_render_profiler(Profiler* pf, Painter* p) {
     end_stat(&hits);
     end_stat(&cycles_per_hit);
     
-    make_string_builder(sb, 256);
-    push_format(sb, 
-                string_from_lit("[%25s] %7ucy %4uh %7ucy/h"),
-                itr->block_name,
-                //itr->line,
-                (U32)cycles.average,
-                (U32)hits.average,
-                (U32)cycles_per_hit.average);
+    sb8_make(sb, 256);
+    sb8_push_fmt(sb, 
+                 str8_from_lit("[%25s] %7ucy %4uh %7ucy/h"),
+                 itr->block_name,
+                 (U32)cycles.average,
+                 (U32)hits.average,
+                 (U32)cycles_per_hit.average);
     
     // Assumes 1600x900        
     paint_text(p,
                FONT_DEBUG, 
                sb->str,
-               rgba(0xFFFFFFFF),
+               hex_to_rgba(0xFFFFFFFF),
                0.f, 
                900.f - font_height * (line_num), 
                font_height);
@@ -126,7 +125,7 @@ update_and_render_profiler(Profiler* pf, Painter* p) {
                    SPRITE_BLANK, 
                    pos,
                    size,
-                   rgba(0x00FF00FF));
+                   hex_to_rgba(0x00FF00FF));
     }
     advance_depth(p);
     ++line_num;

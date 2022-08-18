@@ -148,9 +148,9 @@ sb1_push_light(SB1* m, V2 pos, U32 color, F32 angle, F32 facing) {
   light->pos = pos;
   light->color = color;
   
-  light->dir.x = cos(0.f);
-  light->dir.y = sin(0.f);
-  light->half_angle = deg_to_rad(angle/2.f);
+  light->dir.x = cos_f32(0.f);
+  light->dir.y = sin_f32(0.f);
+  light->half_angle = deg_to_rad_f32(angle/2.f);
   
   return light;
 }
@@ -161,7 +161,7 @@ sb1_calc_ghost_edge_line(SB1_Point_List* points, SB1_Edge* e) {
   
   V2 min = *al_at(points, e->min_pt_id);
   V2 max = *al_at(points, e->max_pt_id);
-  V2 dir = normalize(max - min) * 0.0001f;
+  V2 dir = v2_norm(max - min) * 0.0001f;
   
   ret.min = max - dir;
   ret.max = min + dir;
@@ -207,7 +207,7 @@ sb1_get_ray_intersection_time_wrt_edges(Ray2 ray,
     ray_normal.y = -ray.dir.x;
     
     
-    if (!is_close(dot(ray_normal, edge_ray.dir), 0.f)) {
+    if (!is_close_f32(v2_dot(ray_normal, edge_ray.dir), 0.f)) {
       F32 t2 = 
       (ray.dir.x*(edge_ray.pt.y - ray.pt.y) + 
        ray.dir.y*(ray.pt.x - edge_ray.pt.x))/
@@ -277,7 +277,7 @@ sb1_gen_light_intersections(SB1_Light* l,
       V2 ep = *al_at(points, ep_index);
       
       // ignore endpoints that are not within the angle 
-      F32 angle = angle_between(l->dir, ep - l->pos);
+      F32 angle = v2_angle(l->dir, ep - l->pos);
       if (light_type == SB1_LIGHT_TYPE_WEIRD || 
           light_type == SB1_LIGHT_TYPE_DIRECTIONAL) 
       {
@@ -291,7 +291,7 @@ sb1_gen_light_intersections(SB1_Light* l,
            
       Ray2 light_ray = {};
       light_ray.pt = l->pos;
-      light_ray.dir = rotate(ep - l->pos, offset_angle);
+      light_ray.dir = v2_rotate(ep - l->pos, offset_angle);
 
 #if SB1_DEBUG_LIGHT
       Ray2* debug_ray = al_append(&l->debug_rays);
@@ -322,9 +322,9 @@ sb1_gen_light_intersections(SB1_Light* l,
       F32 offset_angle = offset_angles[offset_index];
       Ray2 shell_rays[2] = {};
       shell_rays[0].pt = l->pos;
-      shell_rays[0].dir = rotate(l->dir, l->half_angle + offset_angle);
+      shell_rays[0].dir = v2_rotate(l->dir, l->half_angle + offset_angle);
       shell_rays[1].pt = l->pos;
-      shell_rays[1].dir = rotate(l->dir, -l->half_angle + offset_angle);
+      shell_rays[1].dir = v2_rotate(l->dir, -l->half_angle + offset_angle);
         
       for (U32 i = 0; i < 2; ++i) {
         F32 t = sb1_get_ray_intersection_time_wrt_edges(shell_rays[i], edges, points);
@@ -347,7 +347,7 @@ sb1_gen_light_intersections(SB1_Light* l,
       SB1_Light_Intersection* its = al_at(&l->intersections, its_id) ;
       V2 basis_vec = V2{1.f, 0.f} ;
       V2 intersection_vec = its->pt - l->pos;
-      F32 key = angle_between(basis_vec, intersection_vec);
+      F32 key = v2_angle(basis_vec, intersection_vec);
       if (intersection_vec.y < 0.f) key = PI_32*2.f - key;
 
       sorted_its[its_id].index = its_id;
@@ -378,7 +378,7 @@ sb1_gen_light_intersections(SB1_Light* l,
         V2 p2 = its1->pt;
   
         // Make sure we are going CCW
-        if (cross(p0-p1, p2-p1) > 0.f) {
+        if (v2_cross(p0-p1, p2-p1) > 0.f) {
           sb1_push_triangle(l, p0, p1, p2, l->color);
         }
       }
@@ -403,7 +403,7 @@ sb1_gen_light_intersections(SB1_Light* l,
       V2 p2 = its1->pt;
 
       // Make sure we are going CCW
-      if (cross(p0-p1, p2-p1) > 0.f) {
+      if (v2_cross(p0-p1, p2-p1) > 0.f) {
         sb1_push_triangle(l, p0, p1, p2, l->color);
       }
     }
@@ -467,7 +467,7 @@ sb1_init(Game* game)
     sb1_push_edge(m, 10, 11);
     SB1_Edge* e = sb1_push_edge(m, 11, 8);
 
-    sb1_push_sensor(m, {400.f, 600.f}, 0x22220000, e); 
+    sb1_push_sensor(m, {400.f, 600.f}, 0x222200FF, e); 
   }
 #endif
   sb1_set_win_point(m, {800.f, 400.f});
@@ -506,11 +506,11 @@ sb1_tick(Game* game,
         const F32 speed = 5.f;
         if (pf_is_button_down(pf->button_rotate_left)){ 
           player->held_light->dir = 
-            rotate(player->held_light->dir, speed * dt );
+            v2_rotate(player->held_light->dir, speed * dt );
         }
         if (pf_is_button_down(pf->button_rotate_right)){ 
           player->held_light->dir = 
-            rotate(player->held_light->dir, -speed * dt);
+            v2_rotate(player->held_light->dir, -speed * dt);
         }
       }
     }
@@ -525,7 +525,7 @@ sb1_tick(Game* game,
         SB1_Light* nearest_light = nullptr;
         al_foreach(light_index, &m->lights) {
           SB1_Light* l = al_at(&m->lights, light_index);
-          F32 dist = distance_sq(l->pos, player->pos);
+          F32 dist = v2_dist_sq(l->pos, player->pos);
           if (shortest_dist > dist) {
             nearest_light = l;
             shortest_dist = dist;
@@ -543,9 +543,9 @@ sb1_tick(Game* game,
     }
     
     // Movement
-    if (length_sq(direction) > 0.f) {
+    if (v2_len_sq(direction) > 0.f) {
       F32 speed = 300.f;
-      V2 velocity = normalize(direction);
+      V2 velocity = v2_norm(direction);
       velocity *= speed * dt;
       player->pos += velocity;
     }
@@ -575,8 +575,8 @@ sb1_tick(Game* game,
       al_foreach(tri_index, &light->triangles)
       {
         Tri2 tri = *al_at(&light->triangles, tri_index);
-        if (is_point_in_triangle(tri,
-                                 sensor->pos)) 
+        if (t2_is_point_within(tri,
+                               sensor->pos)) 
         {
           // TODO(Momo): Probably not the right way do sensor
           current_color += light->color >> 8 << 8; // ignore alpha
@@ -607,7 +607,7 @@ sb1_tick(Game* game,
     win_col.radius = 8.f;
     win_col.center = m->win_point;
 
-    F32 dist_sq = distance_sq(player_col.center, win_col.center); 
+    F32 dist_sq = v2_dist_sq(player_col.center, win_col.center); 
     F32 radius_sq = (player_col.radius + win_col.radius) * (player_col.radius + win_col.radius);
     if (dist_sq < radius_sq)  
     {
@@ -624,6 +624,7 @@ sb1_tick(Game* game,
   // Rendering
   //
 
+  paint_set_blend(painter, GFX_BLEND_TYPE_ALPHA); 
   // Draw the world collision
   al_foreach(edge_index, &m->edges) 
   {
@@ -635,8 +636,8 @@ sb1_tick(Game* game,
       *al_at(&m->points, edge->max_pt_id),
     };
 
-    paint_line(painter, line, 
-               3.f, rgba(0x888888FF));
+    paint_line(painter, line, 3.f, 
+               hex_to_rgba(0x888888FF));
   }
   
   advance_depth(painter);
@@ -688,7 +689,7 @@ sb1_tick(Game* game,
       line.min = player->pos;
       line.max = al_at(&l->intersections, sorted_its[its_id].index)->pt;
       
-      push_format(sb, string_from_lit("[%u]"), its_id);
+      push_format(sb, str8_from_lit("[%u]"), its_id);
       paint_text(painter,
                  FONT_DEFAULT, 
                  sb->str,
@@ -711,27 +712,7 @@ sb1_tick(Game* game,
   advance_depth(painter);
   
   
-  // Draw sensors
-  al_foreach(sensor_index, &m->sensors)
-  {
-    auto* sensor = al_at(&m->sensors, sensor_index);
-    paint_sprite(painter,
-                 SPRITE_BULLET_CIRCLE, 
-                 sensor->pos, 
-                 {16, 16});
-    
-    // only for debugging
-    make_string_builder(sb, 128);
-    push_format(sb, string_from_lit("[%X]"), sensor->current_color);
-    paint_text(painter,
-               FONT_DEFAULT, 
-               sb->str,
-               rgba(0xFFFFFFFF),
-               sensor->pos.x - 100.f,
-               sensor->pos.y + 10.f,
-               32.f);
-    advance_depth(painter);
-  }
+
   
   
   
@@ -746,7 +727,7 @@ sb1_tick(Game* game,
     advance_depth(painter);
   }
   
-  set_blend(painter, GFX_BLEND_TYPE_ADD); 
+  paint_set_blend(painter, GFX_BLEND_TYPE_ADD); 
   
   al_foreach(light_index, &m->lights)
   {
@@ -755,7 +736,7 @@ sb1_tick(Game* game,
     {
       Tri2* lt = al_at(&l->triangles, tri_index);
       paint_filled_triangle(painter, 
-                            rgba(l->color),
+                            hex_to_rgba(l->color),
                             lt->pts[0],
                             lt->pts[1],
                             lt->pts[2]);
@@ -770,8 +751,30 @@ sb1_tick(Game* game,
     circ.center = m->win_point; 
     
     // TODO: only for testing purposes?
-    RGBA color = m->is_win_reached ? rgba(0x00ff00ff) : rgba(0xff0000ff); 
+    RGBA color = m->is_win_reached ? hex_to_rgba(0x00ff00ff) : hex_to_rgba(0xff0000ff); 
     paint_filled_circle(painter, circ, 16, color); 
+  }
+
+  // Draw sensors
+  paint_set_blend(painter, GFX_BLEND_TYPE_TEST);
+  al_foreach(sensor_index, &m->sensors)
+  {
+    auto* sensor = al_at(&m->sensors, sensor_index);
+    Circ2 circ = { 8, sensor->pos };
+    paint_filled_circle(painter, circ, 8, hex_to_rgba(sensor->target_color)); 
+
+    
+    // only for debugging
+    sb8_make(sb, 128);
+    sb8_push_fmt(sb, str8_from_lit("[%X]"), sensor->current_color);
+    paint_text(painter,
+               FONT_DEFAULT, 
+               sb->str,
+               hex_to_rgba(0xFFFFFFFF),
+               sensor->pos.x - 100.f,
+               sensor->pos.y + 10.f,
+               32.f);
+    advance_depth(painter);
   }
 
   //render_editor(&m->editor, m, painter);

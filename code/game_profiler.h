@@ -93,7 +93,7 @@ _prf_begin_profiling_block(Profiler* p, Profiler_Entry* entry)
 static void
 _prf_end_profiling_block(Profiler* p, Profiler_Entry* entry) {
   U64 delta = ((U32)p->get_performance_counter() - entry->start_cycles) | ((U64)(entry->start_hits)) << 32;
-  atomic_add(&entry->hits_and_cycles, delta);
+  atomic_add_u64(&entry->hits_and_cycles, delta);
 }
 
 
@@ -113,7 +113,7 @@ prf_update_entries(Profiler* p) {
       itr != 0;
       itr = itr->next)
   {
-    U64 hits_and_cycles = atomic_assign(&itr->hits_and_cycles, 0);
+    U64 hits_and_cycles = atomic_assign_u64(&itr->hits_and_cycles, 0);
     U32 hits = (U32)(hits_and_cycles >> 32);
     U32 cycles = (U32)(hits_and_cycles & 0xFFFFFFFF);
     

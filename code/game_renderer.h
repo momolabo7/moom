@@ -85,6 +85,7 @@ struct Gfx_Command_Queue {
 enum Gfx_Blend_Type {
   GFX_BLEND_TYPE_ADD,
   GFX_BLEND_TYPE_ALPHA,
+  GFX_BLEND_TYPE_TEST,
 };
 
 enum Gfx_Command_Type {
@@ -397,15 +398,15 @@ gfx_push_line(Gfx* g,
   // NOTE(Momo): Min.Y needs to be lower than Max.y
   
   if (line.min.y > line.max.y) {
-    swap(&line.min.x, &line.max.x);
+    swap(F32, line.min.x, line.max.x);
   }
   
   V2 line_vector = line.max - line.min;
-  F32 line_length = length(line_vector);
-  V2 line_mid = midpoint(line.max, line.min);
+  F32 line_length = v2_len(line_vector);
+  V2 line_mid = v2_mid(line.max, line.min);
   
   V2 x_axis = { 1.f, 0.f };
-  F32 angle = angle_between(line_vector, x_axis);
+  F32 angle = v2_angle(line_vector, x_axis);
   
   gfx_push_filled_rect(g, colors, 
                        {line_mid.x, line_mid.y},
@@ -437,8 +438,8 @@ gfx_push_filled_circle(Gfx* g,
     F32 next_angle = current_angle + section_angle; 
 
     V2 p0 = circle.center;
-    V2 p1 = p0 + v2(cos(current_angle), sin(current_angle)) * circle.radius;
-    V2 p2 = p0 + v2(cos(next_angle), sin(next_angle)) * circle.radius; 
+    V2 p1 = p0 + v2(cos_f32(current_angle), sin_f32(current_angle)) * circle.radius;
+    V2 p2 = p0 + v2(cos_f32(next_angle), sin_f32(next_angle)) * circle.radius; 
 
     gfx_push_filled_triangle(g, color, p0, p1, p2); 
     current_angle += section_angle;
@@ -463,16 +464,16 @@ gfx_push_circle_outline(Gfx* g,
   }
   F32 angle_increment = TAU_32 / line_count;
   V2 pt1 = { 0.f, circle.radius }; 
-  V2 pt2 = rotate(pt1, angle_increment);
+  V2 pt2 = v2_rotate(pt1, angle_increment);
   
   for (U32 i = 0; i < line_count; ++i) {
-    V2 line_pt_1 = add(pt1, circle.center);
-    V2 line_pt_2 = add(pt2, circle.center);
+    V2 line_pt_1 = v2_add(pt1, circle.center);
+    V2 line_pt_2 = v2_add(pt2, circle.center);
     Line2 line = { line_pt_1, line_pt_2 };
     gfx_push_line(g, line, thickness, color);
     
     pt1 = pt2;
-    pt2 = rotate(pt1, angle_increment);
+    pt2 = v2_rotate(pt1, angle_increment);
     
   }
 }

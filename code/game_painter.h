@@ -53,7 +53,7 @@ paint_sprite(Painter* p,
 static void
 paint_text(Painter* p,
            Font_ID font_id,
-           String str,
+           String8 str,
            RGBA color,
            F32 px, F32 py,
            F32 font_height) 
@@ -135,7 +135,7 @@ paint_filled_circle(Painter* p,
 }
 
 static void
-set_blend(Painter* p, Gfx_Blend_Type type) {
+paint_set_blend(Painter* p, Gfx_Blend_Type type) {
   gfx_push_blend(p->gfx, type);
 }
 #endif //GAME_PAINTER_H

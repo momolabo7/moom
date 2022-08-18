@@ -2,14 +2,18 @@
 #ifndef MOMO_H
 #define MOMO_H
 
+// BEGIN C MARKER
 #include "momo_common.h"
 #include "momo_intrinsics.h"
-#include "momo_colors.h"
 #include "momo_vectors.h"
+#include "momo_colors.h"
+#include "momo_easing.h"
 #include "momo_shapes.h"
-#include "momo_sort.h" // C++ only
+#include "momo_sort.h" 
 #include "momo_matrix.h"
 #include "momo_crc.h"
+// END C MARKER
+
 #include "momo_strings.h"
 
 // idk what we are going to do with image api?
@@ -17,7 +21,6 @@
 // i.e. we always stick to RGBA format?
 #include "momo_image.h" 
 
-#include "momo_easing.h"
 #include "momo_memory.h"
 #include "momo_rng.h"
 #include "momo_streams.h"

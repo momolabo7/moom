@@ -4,77 +4,74 @@
 #include "momo_common.h"
 #include "momo_vectors.h"
 
-struct Rect2 {
+typedef struct{
   V2 min, max;
-};
+}Rect2;
 
-struct Rect2S{
+typedef struct {
   V2S min, max;
-};
+}Rect2S;
 
-struct Rect2U {
+typedef struct {
   V2U min, max;
-};
+}Rect2U;
 
-struct Rect3 {
+typedef struct {
   V3 min, max;
-};
+}Rect3;
 
-struct Aabb2 {
+typedef struct {
   V2 center;
   V2 half_dims;
-};
+}Aabb2;
 
-struct Circ2
+typedef struct 
 {
   F32 radius;
   V2 center;
-};
+}Circ2;
 
 
-struct Line2 {
+typedef struct {
   V2 min, max;
-};
+}Line2;
 
-struct Ray2 {
+typedef struct {
   V2 pt;
   V2 dir;
-};
+}Ray2;
 
-struct Tri2 {
+typedef struct{
   V2 pts[3];
-};
+}Tri2;
 
 // Gets the normalized values of Rect lhs based on another Rect rhs
-static F32 width_of(Rect2 lhs);
-static F32 height_of(Rect2 lhs);
-static U32 width_of(Rect2U lhs);
-static U32 height_of(Rect2U lhs);
-static B32 is_point_in_triangle(Tri2 tri, V2 pt);
-
-
-
+static F32 r2_width(Rect2 lhs);
+static F32 r2_height(Rect2 lhs);
+static U32 r2u_width(Rect2U lhs);
+static U32 r2u_height(Rect2U lhs);
+static B32 t2_is_point_within(Tri2 tri, V2 pt);
 
 ///////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 
 static F32
-width_of(Rect2 r) {
+r2_width(Rect2 r) {
   return abs_of(r.max.x - r.min.x);
 }
 
 static F32
-height_of(Rect2 r) {
+r2_height(Rect2 r) {
   return abs_of(r.max.y - r.min.y);
 }
 
 static U32
-width_of(Rect2U r) {
+r2u_width(Rect2U r) {
   return r.max.x - r.min.x;
 }
 
 static U32
-height_of(Rect2U r) {
+r2u_height(Rect2U r) {
   return r.max.y - r.min.y;
 }
 
@@ -82,7 +79,7 @@ height_of(Rect2U r) {
 // NOTE(Momo): We should really profile to see which is the best but I'm assuming
 // it's the dot product one
 static B32
-_is_point_in_triangle_parametric(Tri2 tri, V2 pt) {
+_t2_is_point_within_parametric(Tri2 tri, V2 pt) {
   F32 denominator = (tri.pts[0].x*(tri.pts[1].y - tri.pts[2].y) + 
                      tri.pts[0].y*(tri.pts[2].x - tri.pts[1].x) + 
                      tri.pts[1].x*tri.pts[2].y - tri.pts[1].y*tri.pts[2].x);
@@ -101,7 +98,7 @@ _is_point_in_triangle_parametric(Tri2 tri, V2 pt) {
 }
 
 static B32
-_is_point_in_triangle_barycentric(Tri2 tri, V2 pt) {
+_t2_is_point_within_barycentric(Tri2 tri, V2 pt) {
   
   F32 denominator = ((tri.pts[1].y - tri.pts[2].y)*
                      (tri.pts[0].x - tri.pts[2].x) + (tri.pts[2].x - tri.pts[1].x)*
@@ -123,7 +120,7 @@ _is_point_in_triangle_barycentric(Tri2 tri, V2 pt) {
 
 
 static B32
-_is_point_in_triangle_dot_product(Tri2 tri, V2 pt) {
+_t2_is_point_within_dot_product(Tri2 tri, V2 pt) {
   V2 v0 = { pt.x - tri.pts[0].x, pt.y - tri.pts[0].y };      
   V2 v1 = { pt.x - tri.pts[1].x, pt.y - tri.pts[1].y };      
   V2 v2 = { pt.x - tri.pts[2].x, pt.y - tri.pts[2].y };      
@@ -132,17 +129,17 @@ _is_point_in_triangle_dot_product(Tri2 tri, V2 pt) {
   V2 n1 = { tri.pts[2].y - tri.pts[1].y, -tri.pts[2].x + tri.pts[1].x };
   V2 n2 = { tri.pts[0].y - tri.pts[2].y, -tri.pts[0].x + tri.pts[2].x };
   
-  B32 side0 = dot(n0,v0) < 0.f;
-  B32 side1 = dot(n1,v1) < 0.f;
-  B32 side2 = dot(n2,v2) < 0.f;
+  B32 side0 = v2_dot(n0,v0) < 0.f;
+  B32 side1 = v2_dot(n1,v1) < 0.f;
+  B32 side2 = v2_dot(n2,v2) < 0.f;
   
   return side0 == side1 && side0 == side2;
 }
 
 
 static B32
-is_point_in_triangle(Tri2 tri, V2 pt) {
-  return _is_point_in_triangle_dot_product(tri, pt);
+t2_is_point_within(Tri2 tri, V2 pt) {
+  return _t2_is_point_within_dot_product(tri, pt);
 }
 
 #endif //MOMO_SHAPES_H

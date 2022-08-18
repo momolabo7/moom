@@ -567,8 +567,8 @@ WinMain(HINSTANCE instance,
       monitor_info.cbSize = sizeof(monitor_info);
       GetMonitorInfo(monitor, &monitor_info); 
       
-      LONG monitor_w = width_of(monitor_info.rcMonitor);
-      LONG monitor_h = height_of(monitor_info.rcMonitor);
+      LONG monitor_w = win_rect_width(monitor_info.rcMonitor);
+      LONG monitor_h = win_rect_height(monitor_info.rcMonitor);
       
       win_rect.left = monitor_w/2 - win_w/2;
       win_rect.right = monitor_w/2 + win_w/2;
@@ -589,8 +589,8 @@ WinMain(HINSTANCE instance,
                              style,
                              win_rect.left,
                              win_rect.top,
-                             width_of(win_rect),
-                             height_of(win_rect),
+                             win_rect_width(win_rect),
+                             win_rect_height(win_rect),
                              0,
                              0,
                              instance,
@@ -736,8 +736,8 @@ WinMain(HINSTANCE instance,
       
       pf->render_mouse_pos = pf->screen_mouse_pos - render_region.min;
       
-      F32 design_to_render_w = game_width / width_of(render_region);
-      F32 design_to_render_h = game_height / height_of(render_region);
+      F32 design_to_render_w = game_width / r2u_width(render_region);
+      F32 design_to_render_h = game_height / r2u_height(render_region);
       
       pf->design_mouse_pos.x = F32(pf->render_mouse_pos.x) * design_to_render_w;
       pf->design_mouse_pos.y = F32(pf->render_mouse_pos.y) * design_to_render_h;
@@ -747,9 +747,8 @@ WinMain(HINSTANCE instance,
       // TODO(Momo): should this really be here?
       // Maybe we should really make y-axis downwards...
       // since this is a 2D engine.
-      pf->design_mouse_pos.y = lerp(game_height, 
-                                       0.f, 
-                                       pf->design_mouse_pos.y/game_height);	
+      pf->design_mouse_pos.y = lerp_f32(game_height, 0.f, pf->design_mouse_pos.y/game_height);	
+
     }
     
     

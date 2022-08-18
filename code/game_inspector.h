@@ -12,7 +12,7 @@ enum Inspector_Entry_Type {
 };
 
 struct Inspector_Entry {
-  String name;
+  String8 name;
   Inspector_Entry_Type type;
   void* item;
 };
@@ -36,7 +36,7 @@ begin_inspector(Inspector* in) {
 }
 
 static void
-add_inspector_entry(Inspector* in, String name, U32* item) {
+add_inspector_entry(Inspector* in, String8 name, U32* item) {
   Inspector_Entry* entry = al_append(&in->entries);
   assert(entry);
   entry->item = item;
@@ -46,7 +46,7 @@ add_inspector_entry(Inspector* in, String name, U32* item) {
 
 
 static void
-add_inspector_entry(Inspector* in, String name, F32* item) {
+add_inspector_entry(Inspector* in, String8 name, F32* item) {
   Inspector_Entry* entry = al_append(&in->entries);
   assert(entry);
   entry->item = item;

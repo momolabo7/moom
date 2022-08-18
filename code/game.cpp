@@ -53,7 +53,7 @@ game_update_and_render(Platform* pf)
   begin_inspector(in);
   
   static U32 test_value = 32;
-  add_inspector_entry(in, string_from_lit("Test"), &test_value);
+  add_inspector_entry(in, str8_from_lit("Test"), &test_value);
 
   // Game state management
   if (game->is_mode_changed && game->init_mode) {

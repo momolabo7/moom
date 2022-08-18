@@ -69,7 +69,7 @@ static F32
 rng_range_F32(RNG* r, F32 min, F32 max)
 {
   assert(max >= min);
-  F32 result = lerp(min, rng_unilateral(r), max);
+  F32 result = lerp_f32(min, rng_unilateral(r), max);
   return(result);
 }
 

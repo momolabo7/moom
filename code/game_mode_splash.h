@@ -41,7 +41,7 @@ splash_tick(Game* game,
   auto color = rgba(splash->timer, splash->timer, splash->timer, splash->timer);
   paint_text(painter,
              FONT_DEFAULT, 
-             string_from_lit("momo"),
+             str8_from_lit("momo"),
              color,
              450.f, 400.f, 
              256.f);

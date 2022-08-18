@@ -10,45 +10,45 @@
 #include "game_painter.h"
 
 struct Console_Command {
-  String key;
+  String8 key;
   void* ctx;
   void (*func)(void*);
 };
 
 struct Console_Line {
   U8 buffer[256];
-  String str;
+  String8 str;
 };
 
 struct Console {
   U32 command_count;
   Console_Command commands[10];
   
-  String_Builder info_lines[9];
-  String_Builder input_line;
+  String8_Builder info_lines[9];
+  String8_Builder input_line;
 };
 
 static void
 init_console(Console* dc, Bump_Allocator* allocator) {
   UMI line_size = 256;
-  init_string_builder(&dc->input_line,
-                      ba_push_array<U8>(allocator, line_size),
-                      line_size);
+  sb8_init(&dc->input_line,
+           ba_push_array<U8>(allocator, line_size),
+           line_size);
   
   for (U32 info_line_index = 0;
        info_line_index < array_count(dc->info_lines);
        ++info_line_index) 
   {    
-    String_Builder* info_line = dc->info_lines + info_line_index;
-    init_string_builder(info_line,
-                        ba_push_array<U8>(allocator, line_size),
-                        line_size);
+    String8_Builder* info_line = dc->info_lines + info_line_index;
+    sb8_init(info_line,
+             ba_push_array<U8>(allocator, line_size),
+             line_size);
   }
 }
 
 static void
 add_command(Console* dc, 
-            String key, 
+            String8 key, 
             void* ctx,
             void(*func)(void*)) {
   
@@ -60,7 +60,7 @@ add_command(Console* dc,
 }
 
 static void
-_push_info(Console* dc, String str) {
+_push_info(Console* dc, String8 str) {
   // NOTE(Momo): There's probably a better to do with via some
   // crazy indexing scheme, but this is debug so we don't care for now
   
@@ -70,13 +70,13 @@ _push_info(Console* dc, String str) {
        ++i)
   {
     U32 line_index = array_count(dc->info_lines) - 1 - i;
-    String_Builder* line_to = dc->info_lines + line_index;
-    String_Builder* line_from = dc->info_lines + line_index - 1;
-    clear(line_to);
-    push_string(line_to, line_from->str);
+    String8_Builder* line_to = dc->info_lines + line_index;
+    String8_Builder* line_from = dc->info_lines + line_index - 1;
+    sb8_clear(line_to);
+    sb8_push_str8(line_to, line_from->str);
   } 
-  clear(dc->info_lines + 0);
-  push_string(dc->info_lines + 0, str);
+  sb8_clear(dc->info_lines + 0);
+  sb8_push_str8(dc->info_lines + 0, str);
 }
 
 static void
@@ -86,13 +86,13 @@ _execute(Console* dc) {
       ++command_index) 
   {
     Console_Command* cmd = dc->commands + command_index;
-    if (match(cmd->key, dc->input_line.str)) {
+    if (str8_match(cmd->key, dc->input_line.str)) {
       cmd->func(cmd->ctx);
     }
   }
   
   _push_info(dc, dc->input_line.str);
-  clear(&dc->input_line);
+  sb8_clear(&dc->input_line);
 }
 
 static void
@@ -104,12 +104,12 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf) {
     // NOTE(Momo): Not very portable to other platforms....
     U8 c = pf->chars[char_index];
     if (c >= 32 && c <= 126) {
-      push_u8(&dc->input_line, c);
+      sb8_push_u8(&dc->input_line, c);
     }
     // backspace 
     if (c == 8) {
       if (dc->input_line.count > 0) 
-        pop(&dc->input_line);
+        sb8_pop(&dc->input_line);
     }    
     
     if (c == '\r') {
@@ -140,9 +140,9 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf) {
                {0.f, 0.f, 0.f, 0.8f});
   advance_depth(p);
   
-  paint_sprite(p, SPRITE_BLANK, console_pos, console_size, rgba(0x787878FF));
+  paint_sprite(p, SPRITE_BLANK, console_pos, console_size, hex_to_rgba(0x787878FF));
   advance_depth(p);
-  paint_sprite(p, SPRITE_BLANK, input_area_pos, input_area_size, rgba(0x505050FF));
+  paint_sprite(p, SPRITE_BLANK, input_area_pos, input_area_size, hex_to_rgba(0x505050FF));
   advance_depth(p);
   
   
@@ -151,12 +151,12 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf) {
        line_index < array_count(dc->info_lines);
        ++line_index)
   {
-    String_Builder* line = dc->info_lines + line_index;
+    String8_Builder* line = dc->info_lines + line_index;
     
     paint_text(p,
                FONT_DEFAULT,
                line->str,
-               rgba(0xFFFFFFFF),
+               hex_to_rgba(0xFFFFFFFF),
                left_pad, 
                line_height * (line_index+1) + font_bottom_pad,
                font_height);
@@ -166,7 +166,7 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf) {
   paint_text(p,
              FONT_DEFAULT,
              dc->input_line.str,
-             rgba(0xFFFFFFFF),
+             hex_to_rgba(0xFFFFFFFF),
              left_pad, 
              font_bottom_pad,
              font_height);

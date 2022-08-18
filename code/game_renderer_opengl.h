@@ -914,6 +914,10 @@ _ogl_set_blend_mode(Opengl* ogl, Gfx_Blend_Type type) {
     case GFX_BLEND_TYPE_ALPHA: {
       ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     } break;
+    case GFX_BLEND_TYPE_TEST: {
+      // TODO
+    } break;
+    default: {}
   }
 }
 
@@ -1145,8 +1149,8 @@ ogl_end_frame(Opengl* ogl) {
         transform.e[1][3] = data->pos.y;
         transform.e[2][3] = ogl->current_layer;
         
-        F32 lerped_x = lerp(0.5f, -0.5f, data->anchor.x);
-        F32 lerped_y = lerp(0.5f, -0.5f, data->anchor.y);
+        F32 lerped_x = lerp_f32(0.5f, -0.5f, data->anchor.x);
+        F32 lerped_y = lerp_f32(0.5f, -0.5f, data->anchor.y);
         M44 a = m44_translation(lerped_x, lerped_y);
         
         Rect2 uv = {};

@@ -19,113 +19,115 @@
 
 #include "momo_common.h"
 
-union V2U {
+typedef union {
 	struct { U32 x, y; };
 	struct { U32 w, h; };
 	U32 e[2];
-};
+} V2U;
 
-union V2S {
+typedef union {
 	struct { S32 x, y; };
 	struct { S32 w, h; };
 	S32 e[2];
-};
+} V2S;
 
-union V2 {
+typedef union {
 	struct { F32 x, y; };
 	struct { F32 w, h; };
 	struct { F32 u, v; };
 	F32 e[2];
-};
+} V2;
 
-union V3{
+typedef union {
 	struct { F32 x, y, z; };
 	struct { F32 w, h, d; };
   F32 e[3];
-};
+} V3;
 
-union V4 {
+typedef union {
 	struct { F32 x, y, z, w; };
   F32 e[4];
-};
+} V4;
 
-static V2U    add(V2U lhs, V2U rhs);
-static V2U    sub(V2U lhs, V2U rhs);
-static V2     v2(V2U v);
-static V2     v2(F32 x, F32 y); 
+static V2    v2(F32 x, F32 y); 
+static V2    v2_from_v2u(V2U v);
+static V2    v2_add(V2 lhs, V2 rhs);
+static V2    v2_sub(V2 lhs, V2 rhs);
+static V2    v2_scale(V2 lhs, F32 rhs);
+static V2		 v2_inv(V2 v);
+static V2		 v2_ratio(V2 lhs, V2 rhs);
+static V2    v2_div(V2 lhs, F32 rhs);
+static F32   v2_dot(V2 lhs, V2 rhs);
+static F32   v2_dist_sq(V2 lhs, V2 rhs);
+static F32   v2_len_sq(V2 v);
+static V2    v2_negate(V2 v);
+static B32   v2_is_close(V2 lhs, V2 rhs);
+static V2    v2_mid(V2 lhs, V2 rhs);
+static F32   v2_dist(V2 lhs, V2 rhs);
+static F32   v2_len(V2 v);
+static V2    v2_norm(V2 v);
+static V2    v2_proj(V2 v, V2 onto);
+static V2    v2_rotate(V2 v, F32 rad);
+static F32   v2_angle(V2 lhs, V2 rhs);
+static F32   v2_cross(V2 lhs, V2 rhs);
 
+static V2U   v2u_from_v2(V2 v);
+static V2U   v2u_add(V2U lhs, V2U rhs);
+static V2U   v2u_sub(V2U lhs, V2U rhs);
 
-static V2    add(V2 lhs, V2 rhs);
-static V2    sub(V2 lhs, V2 rhs);
-static V2    scale(V2 lhs, F32 rhs);
-static V2		 inv(V2 v);
-static V2		 ratio(V2 lhs, V2 rhs);
-static V2    div(V2 lhs, F32 rhs);
-static F32   dot(V2 lhs, V2 rhs);
-static F32   distance_sq(V2 lhs, V2 rhs);
-static F32   length_sq(V2 v);
-static V2    negate(V2 v);
-static B32   is_close(V2 lhs, V2 rhs);
-static V2    midpoint(V2 lhs, V2 rhs);
-static F32   distance(V2 lhs, V2 rhs);
-static F32   length(V2 v);
-static V2    normalize(V2 v);
-static V2    project(V2 v, V2 onto);
-static V2    rotate(V2 v, F32 rad);
-static F32   angle_between(V2 lhs, V2 rhs);
-static V2U   v2u(V2 v);
+static V3    v3_add(V3 lhs, V3 rhs);
+static V3    v3_sub(V3 lhs, V3 rhs);
+static V3    v3_scale(V3 lhs, F32 rhs);
+static V3    v3_div(V3 lhs, F32 rhs);
+static F32   v3_dot(V3 lhs, V3 rhs);
+static F32   v3_dist_sq(V3 lhs, V3 rhs);
+static F32   v3_len_sq(V3 v);
+static B32   v3_is_close(V3 lhs, V3 rhs);
+static V3    v3_negate(V3 v);
+static V3    v3_mid(V3 lhs, V3 rhs);
+static V3    v3_cross(V3 lhs, V3 rhs);
+static F32   v3_dist(V3 lhs, V3 rhs);
+static F32   v3_len(V3 v);
+static V3    v3_norm(V3 v);
+static V3    v3_proj(V3 v, V3 onto);
+static F32 	 v3_angle(V3 lhs, V3 rhs);
 
-static V3    add(V3 lhs, V3 rhs);
-static V3    sub(V3 lhs, V3 rhs);
-static V3    scale(V3 lhs, F32 rhs);
-static V3    div(V3 lhs, F32 rhs);
-static F32   dot(V3 lhs, V3 rhs);
-static F32   distance_sq(V3 lhs, V3 rhs);
-static F32   length_sq(V3 v);
-static B32   is_close(V3 lhs, V3 rhs);
-static V3    negate(V3 v);
-static V3    midpoint(V3 lhs, V3 rhs);
-static V3    cross(V3 lhs, V3 rhs);
-static F32   distance(V3 lhs, V3 rhs);
-static F32   length(V3 v);
-static V3    normalize(V3 v);
-static V3    project(V3 v, V3 onto);
-static F32 	angle_between(V3 lhs, V3 rhs);
-
-static V2 operator+(V2 lhs, V2 rhs);
-static V2 operator-(V2 lhs, V2 rhs);
-static V2 operator*(V2 lhs, F32 rhs); // scale
-static V2 operator*(F32 lhs, V2 rhs); // scale
-static B32   operator==(V2 lhs, V2 rhs);
-static B32   operator!=(V2 lhs, V2 rhs);
-static V2 operator-(V2 v);
+#if IS_CPP
+static V2  operator+(V2 lhs, V2 rhs);
+static V2  operator-(V2 lhs, V2 rhs);
+static V2  operator*(V2 lhs, F32 rhs); // scale
+static V2  operator*(F32 lhs, V2 rhs); // scale
+static B32 operator==(V2 lhs, V2 rhs);
+static B32 operator!=(V2 lhs, V2 rhs);
+static V2  operator-(V2 v);
 static V2& operator+=(V2& lhs, V2 rhs);
 static V2& operator-=(V2& lhs, V2 rhs);
 static V2& operator*=(V2& lhs, V2 rhs);
 
-static V3 operator+(V3 lhs, V3 rhs);
-static V3 operator-(V3 lhs, V3 rhs);
-static V3 operator*(V3 lhs, F32 rhs); // scale
-static V3 operator*(F32 lhs, V3 rhs); // scale
-static B32   operator==(V3 lhs, V3 rhs);
-static B32   operator!=(V3 lhs, V3 rhs);
-static V3 operator-(V3 v);
+static V3  operator+(V3 lhs, V3 rhs);
+static V3  operator-(V3 lhs, V3 rhs);
+static V3  operator*(V3 lhs, F32 rhs); // scale
+static V3  operator*(F32 lhs, V3 rhs); // scale
+static B32 operator==(V3 lhs, V3 rhs);
+static B32 operator!=(V3 lhs, V3 rhs);
+static V3  operator-(V3 v);
 static V3& operator+=(V3& lhs, V3 rhs);
 static V3& operator-=(V3& lhs, V3 rhs);
 static V3& operator*=(V3& lhs, V3 rhs);
+#endif // IS_CPP
 
 ////////////////////////////////////////////////////////
 // IMPLEMENTATION
 // NOTE(Momo): V2
 static V2 
-add(V2 lhs, V2 rhs) {
+v2_add(V2 lhs, V2 rhs) {
 	lhs.x += rhs.x;
 	lhs.y += rhs.y;
 	return lhs;
 }
 
 static V2U
-v2u(V2 v) {
+v2u_from_v2(V2 v) {
   return {
     (U32)v.x,
     (U32)v.y,
@@ -133,110 +135,111 @@ v2u(V2 v) {
 }
 
 static V2 
-sub(V2 lhs, V2 rhs) {
+v2_sub(V2 lhs, V2 rhs) {
   lhs.x -= rhs.x;
   lhs.y -= rhs.y;
   return lhs;
 }
 
 static V2 
-scale(V2 lhs, F32 rhs) {
+v2_scale(V2 lhs, F32 rhs) {
   lhs.x *= rhs;
   lhs.y *= rhs;
   return lhs;
 }
 
 static V2 
-div(V2 lhs, F32 rhs) {
-  assert(!is_close(rhs, 0.f));
+v2_div(V2 lhs, F32 rhs) {
+  assert(!is_close_f32(rhs, 0.f));
   lhs.x /= rhs;
   lhs.y /= rhs;
   return lhs;
 }
 
 static V2
-inv(V2 v) {
+v2_inv(V2 v) {
   v.x = 1.f/v.x;
   v.y = 1.f/v.y;
   return v;
 }
 
 static V2 
-negate(V2 v) {
+v2_negate(V2 v) {
   v.x = -v.x;
   v.y = -v.y;
   return v;
 }
 
 static F32 
-dot(V2 lhs, V2 rhs) {
+v2_dot(V2 lhs, V2 rhs) {
   return (lhs.x * rhs.x) + (lhs.y * rhs.y);
 }
 
 static F32  
-distance_sq(V2 lhs, V2 rhs) {
-  return length_sq(sub(lhs, rhs));
+v2_dist_sq(V2 lhs, V2 rhs) {
+  return v2_len_sq(v2_sub(lhs, rhs));
 }
 static F32  
-distance(V2 lhs, V2 rhs) {
-  return sqrt(distance_sq(lhs, rhs));
+v2_dist(V2 lhs, V2 rhs) {
+  return sqrt_f32(v2_dist_sq(lhs, rhs));
 }
 
 static F32  
-length_sq(V2 v) {
-  return dot(v, v);
+v2_len_sq(V2 v) {
+  return v2_dot(v, v);
 }
 
 static F32   
-length(V2 v) {
-  return sqrt(length_sq(v));
+v2_len(V2 v) {
+  return sqrt_f32(v2_len_sq(v));
 }
 
 static V2 
-normalize(V2 v) {
-  F32 leng = length(v);
-  return div(v, leng);
+v2_norm(V2 v) {
+  F32 len = v2_len(v);
+  return v2_div(v, len);
 }
 
 static B32
-is_close(V2 lhs, V2 rhs) {
-  return (is_close(lhs.x, rhs.x) &&
-          is_close(lhs.y, rhs.y)); 
+v2_is_close(V2 lhs, V2 rhs) {
+  return (is_close_f32(lhs.x, rhs.x) &&
+          is_close_f32(lhs.y, rhs.y)); 
 }
 
 static V2 
-midpoint(V2 lhs, V2 rhs) {
-  return scale(add(lhs, rhs), 0.5f); 
+v2_mid(V2 lhs, V2 rhs) {
+  return v2_scale(v2_add(lhs, rhs), 0.5f); 
   
 }
 static V2 
-project(V2 v, V2 onto) {
+v2_proj(V2 v, V2 onto) {
   // (to . from)/LenSq(to) * to
-  F32 onto_len_sq = length_sq(onto);
-  assert(!is_close(onto_len_sq, 0.f));
-  F32 v_dot_onto = dot(v, onto);
+  F32 onto_len_sq = v2_len_sq(onto);
+  assert(is_close_f32(onto_len_sq, 0.f));
+  F32 v_dot_onto = v2_dot(v, onto);
   F32 scalar = v_dot_onto / onto_len_sq;
-  V2 ret = scale(onto, scalar);
+  V2 ret = v2_scale(onto, scalar);
   
   return ret;
 }
 
+// Angle Between
 static F32
-angle_between(V2 lhs, V2 rhs) {
-  F32 l_len = length(lhs);
-  F32 r_len = length(rhs);
-  F32 lr_dot = dot(lhs, rhs);
-  F32 ret = acos(lr_dot/(l_len * r_len));
+v2_angle(V2 lhs, V2 rhs) {
+  F32 l_len = v2_len(lhs);
+  F32 r_len = v2_len(rhs);
+  F32 lr_dot = v2_dot(lhs, rhs);
+  F32 ret = acos_f32(lr_dot/(l_len * r_len));
   return ret;
 }
 
 static V2 
-rotate(V2 v, F32 rad) {
+v2_rotate(V2 v, F32 rad) {
   // Technically, we can use matrices but
   // meh, it's easy to code this out without it.
   // Removes dependencies too
-  F32 c = cos(rad);
-  F32 s = sin(rad);
+  F32 c = cos_f32(rad);
+  F32 s = sin_f32(rad);
   
   V2 ret = {};
   ret.x = (c * v.x) - (s * v.y);
@@ -245,20 +248,20 @@ rotate(V2 v, F32 rad) {
 }
 
 static F32
-cross(V2 lhs, V2 rhs) {
+v2_cross(V2 lhs, V2 rhs) {
   return  lhs.x * rhs.y - lhs.y * rhs.x;
 }
 
 //~ NOTE(Momo): V3
 static V3 
-add(V3 lhs, V3 rhs) {
+v3_add(V3 lhs, V3 rhs) {
   lhs.x += rhs.x;
   lhs.y += rhs.y;
   lhs.z += rhs.z;
   return lhs;
 }
 static V3 
-sub(V3 lhs, V3 rhs) {
+v3_sub(V3 lhs, V3 rhs) {
   lhs.x -= rhs.x;
   lhs.y -= rhs.y;
   lhs.z -= rhs.z;
@@ -266,7 +269,7 @@ sub(V3 lhs, V3 rhs) {
 }
 
 static V3 
-scale(V3 lhs, F32 rhs) {
+v3_scale(V3 lhs, F32 rhs) {
   lhs.x *= rhs;
   lhs.y *= rhs;
   lhs.z *= rhs;
@@ -274,8 +277,8 @@ scale(V3 lhs, F32 rhs) {
 }
 
 static V3 
-div(V3 lhs, F32 rhs) {
-  assert(!is_close(rhs, 0.f));
+v3_div(V3 lhs, F32 rhs) {
+  assert(!is_close_f32(rhs, 0.f));
   lhs.x /= rhs;
   lhs.y /= rhs;
   lhs.z /= rhs;
@@ -283,7 +286,7 @@ div(V3 lhs, F32 rhs) {
 }
 
 static V3 
-negate(V3 v) {
+v3_negate(V3 v) {
   v.x = -v.x;
   v.y = -v.y;
   v.z = -v.z;
@@ -291,70 +294,70 @@ negate(V3 v) {
 }
 
 static F32 
-dot(V3 lhs, V3 rhs) {
+v3_dot(V3 lhs, V3 rhs) {
   return (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z);
 }
 
 static F32  
-distance_sq(V3 lhs, V3 rhs) {
-  return length_sq(sub(lhs, rhs));
+v3_dist_sq(V3 lhs, V3 rhs) {
+  return v3_len_sq(v3_sub(lhs, rhs));
 }
 
 static F32  
-distance(V3 lhs, V3 rhs) {
-  return sqrt(distance_sq(lhs, rhs));
+v3_dist(V3 lhs, V3 rhs) {
+  return sqrt_f32(v3_dist_sq(lhs, rhs));
 }
 
 static F32  
-length_sq(V3 v) {
-  return dot(v, v);
+v3_len_sq(V3 v) {
+  return v3_dot(v, v);
 }
 
 static F32   
-length(V3 v) {
-  return sqrt(length_sq(v));
+v3_len(V3 v) {
+  return sqrt_f32(v3_len_sq(v));
 }
 
 static V3 
-normalize(V3 v) {
-  F32 len = length(v);
-  return div(v, len);
+v3_norm(V3 v) {
+  F32 len = v3_len(v);
+  return v3_div(v, len);
 }
 
 static B32
-is_close(V3 lhs, V3 rhs) {
-  return (is_close(lhs.x, rhs.x) &&
-          is_close(lhs.y, rhs.y)); 
+v3_is_close(V3 lhs, V3 rhs) {
+  return (is_close_f32(lhs.x, rhs.x) &&
+          is_close_f32(lhs.y, rhs.y)); 
 }
 
 static V3 
-midpoint(V3 lhs, V3 rhs) {
-  return scale(add(lhs, rhs), 0.5f); 
+v3_mid(V3 lhs, V3 rhs) {
+  return v3_scale(v3_add(lhs, rhs), 0.5f); 
   
 }
 static V3 
-project(V3 v, V3 onto) {
+v3_project(V3 v, V3 onto) {
   // (to . from)/LenSq(to) * to
-  F32 onto_len_sq = length_sq(onto);
-  assert(!is_close(onto_len_sq, 0.f));
-  F32 v_dot_onto = dot(v, onto);
+  F32 onto_len_sq = v3_len_sq(onto);
+  assert(!is_close_f32(onto_len_sq, 0.f));
+  F32 v_dot_onto = v3_dot(v, onto);
   F32 scalar = v_dot_onto / onto_len_sq;
-  V3 ret = scale(onto, scalar);
+  V3 ret = v3_scale(onto, scalar);
   
   return ret;
 }
 
 static F32
-angle_between(V3 lhs, V3 rhs) {
-  F32 l_len = length(lhs);
-  F32 r_len = length(rhs);
-  F32 lr_dot = dot(lhs, rhs);
-  F32 ret = acos(lr_dot/(l_len * r_len));
+v3_angle(V3 lhs, V3 rhs) {
+  F32 l_len = v3_len(lhs);
+  F32 r_len = v3_len(rhs);
+  F32 lr_dot = v3_dot(lhs, rhs);
+  F32 ret = acos_f32(lr_dot/(l_len * r_len));
   return ret;
 }
 
 static V3
-cross(V3 lhs, V3 rhs) {
+v3_cross(V3 lhs, V3 rhs) {
   V3 ret = {};
   ret.x = (lhs.y * rhs.z) - (lhs.z * rhs.y);
   ret.y = (lhs.z * rhs.x) - (lhs.x * rhs.z);
@@ -365,21 +368,21 @@ cross(V3 lhs, V3 rhs) {
 
 //~ V2U
 static V2U    
-add(V2U lhs, V2U rhs) {
+v2u_add(V2U lhs, V2U rhs) {
   lhs.x += rhs.x;
   lhs.y += rhs.y;
   return lhs;
 }
 
 static V2U    
-sub(V2U lhs, V2U rhs){
+v2u_sub(V2U lhs, V2U rhs){
   lhs.x -= rhs.x;
   lhs.y -= rhs.y;
   return lhs;
 }
 
 static V2    
-v2(V2U v){
+v2_from_v2u(V2U v){
   return { (F32)v.x, (F32)v.y };
 }
 
@@ -388,31 +391,33 @@ v2(F32 x, F32 y){
   return { x, y };
 }
 
+#if IS_CPP
 //~Operator Overloading
-static V2  operator+(V2 lhs, V2 rhs) { return add(lhs, rhs); }
-static V2  operator-(V2 lhs, V2 rhs) { return sub(lhs, rhs); }
-static V2  operator*(V2 lhs, F32 rhs) { return scale(lhs, rhs); }
-static V2  operator*(F32 lhs, V2 rhs) { return scale(rhs, lhs); }
-static B32 operator==(V2 lhs, V2 rhs) { return is_close(lhs, rhs); }
-static B32 operator!=(V2 lhs, V2 rhs) { return !is_close(lhs, rhs); }
-static V2  operator-(V2 v) { return negate(v); }
-static V2& operator+=(V2& lhs, V2 rhs) { return lhs = add(lhs, rhs); } 
-static V2& operator-=(V2& lhs, V2 rhs) { return lhs = sub(lhs, rhs); } 
-static V2& operator*=(V2& lhs, F32 rhs) { return lhs = scale(lhs, rhs); }
+static V2  operator+(V2 lhs, V2 rhs) { return v2_add(lhs, rhs); }
+static V2  operator-(V2 lhs, V2 rhs) { return v2_sub(lhs, rhs); }
+static V2  operator*(V2 lhs, F32 rhs) { return v2_scale(lhs, rhs); }
+static V2  operator*(F32 lhs, V2 rhs) { return v2_scale(rhs, lhs); }
+static B32 operator==(V2 lhs, V2 rhs) { return v2_is_close(lhs, rhs); }
+static B32 operator!=(V2 lhs, V2 rhs) { return !v2_is_close(lhs, rhs); }
+static V2  operator-(V2 v) { return v2_negate(v); }
+static V2& operator+=(V2& lhs, V2 rhs) { return lhs = v2_add(lhs, rhs); } 
+static V2& operator-=(V2& lhs, V2 rhs) { return lhs = v2_sub(lhs, rhs); } 
+static V2& operator*=(V2& lhs, F32 rhs) { return lhs = v2_scale(lhs, rhs); }
 
-static V2U operator+(V2U lhs, V2U rhs) { return add(lhs, rhs); }
-static V2U operator-(V2U lhs, V2U rhs) { return sub(lhs, rhs); }
+static V2U operator+(V2U lhs, V2U rhs) { return v2u_add(lhs, rhs); }
+static V2U operator-(V2U lhs, V2U rhs) { return v2u_sub(lhs, rhs); }
 
-static V3  operator+(V3 lhs, V3 rhs) { return add(lhs, rhs); }
-static V3  operator-(V3 lhs, V3 rhs) { return sub(lhs, rhs); }
-static V3  operator*(V3 lhs, F32 rhs) { return scale(lhs, rhs); }
-static V3  operator*(F32 lhs, V3 rhs) { return scale(rhs, lhs); }
-static B32 operator==(V3 lhs, V3 rhs) { return is_close(lhs, rhs); }
-static B32 operator!=(V3 lhs, V3 rhs) { return !is_close(lhs, rhs); }
-static V3  operator-(V3 v) { return negate(v); }
-static V3& operator+=(V3& lhs, V3 rhs) { return lhs = add(lhs, rhs); } 
-static V3& operator-=(V3& lhs, V3 rhs) { return lhs = sub(lhs, rhs); } 
-static V3& operator*=(V3& lhs, F32 rhs) { return lhs = scale(lhs, rhs); }
+static V3  operator+(V3 lhs, V3 rhs) { return v3_add(lhs, rhs); }
+static V3  operator-(V3 lhs, V3 rhs) { return v3_sub(lhs, rhs); }
+static V3  operator*(V3 lhs, F32 rhs) { return v3_scale(lhs, rhs); }
+static V3  operator*(F32 lhs, V3 rhs) { return v3_scale(rhs, lhs); }
+static B32 operator==(V3 lhs, V3 rhs) { return v3_is_close(lhs, rhs); }
+static B32 operator!=(V3 lhs, V3 rhs) { return !v3_is_close(lhs, rhs); }
+static V3  operator-(V3 v) { return v3_negate(v); }
+static V3& operator+=(V3& lhs, V3 rhs) { return lhs = v3_add(lhs, rhs); } 
+static V3& operator-=(V3& lhs, V3 rhs) { return lhs = v3_sub(lhs, rhs); } 
+static V3& operator*=(V3& lhs, F32 rhs) { return lhs = v3_scale(lhs, rhs); }
+#endif // IS_CPP
 
 
 #endif //MOMO_VECTOR_H

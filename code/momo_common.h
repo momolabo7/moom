@@ -186,27 +186,25 @@ static U8* int_to_ptr(UMI u);
 // For now we keep these simple and use template functions, so that
 // we do not need to reevaluate the arguments every time.
 //
-template<typename T> static T min_of(T l, T r);
-template<typename T> static T max_of(T l, T r);
-template<typename T> static T clamp(T x, T b, T t);
-
-template<typename T> static T abs_of(T x);
-static F32 abs_of(F32 value);
-static F64 abs_of(F64 value);
-static S8  abs_of(S8 value);
-static S16 abs_of(S16 value);
-static S32 abs_of(S32 value);
-static S64 abs_of(S64 value);
-
+#define min_of(l,r) ((l) < (r) ? (l) : (r))
+#define max_of(l,r) ((l) > (r) ? (l) : (r))
+#define clamp_of(x,t,b) (min_of(max_of(x,t),b))
+#define abs_of(x) ((x) < 0 ? -(x) : (x))  
+static F32 abs_f32(F32 value);
+static F64 abs_f64(F64 value);
+static S8  abs_s8(S8 value);
+static S16 abs_s16(S16 value);
+static S32 abs_s32(S32 value);
+static S64 abs_s64(S64 value);
 
 // NOTE(Momo): Lerp is tricky because the 'f' variable the 'percentage'.
 // and must be of a floating point type. I'm not sure if I want to go into
 // the hellhole of checking if 'f' is a floating point via TMP. Seems overkill
 // since there are only 2 floating point types I generally care about.
-template<typename T> static T lerp(T s, T e, F32 f); 
-template<typename T> static T lerp(T s, T e, F64 f); 
+static F32 lerp_f32(F32 s, F32 e, F32 f); 
+static F64 lerp_f64(F64 s, F64 e, F64 f); 
 
-// NOTE(Momo): Ratio is an interesting function. 
+// NOTE(Momo): percent is an interesting function. 
 // All 1D Ratios will end up with a 1D FXX type.
 // All 2D ratios will end up with a 2D FXX type.
 // The problem is that, there doesn't seem to be a neat way to express that
@@ -214,23 +212,23 @@ template<typename T> static T lerp(T s, T e, F64 f);
 // Maybe we will to resort to a RatioF32 and a RatioF64?
 // 
 // For now, we will just overload the Ratio function, until it bugs us.
-static F32 percent(F32 v, F32 min, F32 max);
-static F64 percent(F64 v, F64 min, F64 max);
+static F32 percent_f32(F32 v, F32 min, F32 max);
+static F64 percent_f64(F64 v, F64 min, F64 max);
 
-template<typename T, typename U> static T align_down_pow2(T value, U align);
-template<typename T, typename U> static T align_up_pow2(T value, U align);
-template<typename T> static B32 is_pow2(T value);
-template<typename T> static void swap(T* lhs, T* rhs); 
+#define align_down_pow2(v,a) ((v) & ~((a)-1))
+#define align_up_pow2(v,a) ((v) + ((a)-1) & ~((a)-1))
+#define is_pow2(v) ((v) & ((v)-1) == 0)
+#define swap(t,l,r) { t tmp = (l); (l) = (r); (r) = tmp; } 
 
 
-static F32 deg_to_rad(F32 degrees) ;
-static F64 deg_to_rad(F64 degrees) ;
-static F32 rad_to_deg(F32 radians);
-static F64 rad_to_deg(F64 radians);
+static F32 deg_to_rad_f32(F32 degrees);
+static F64 deg_to_rad_f64(F64 degrees);
+static F32 rad_to_deg_f32(F32 radians);
+static F64 rad_to_deg_f64(F64 radians);
 
 // Beats per min to Secs per beat
-static F32 bpm_to_spb(F32 bpm); 
-static F64 bpm_to_spb(F64 bpm); 
+static F32 bpm_to_spb_f32(F32 bpm); 
+static F64 bpm_to_spb_f64(F64 bpm); 
 
 // NOTE(Momo): I'm not entirely sure if this prototype makes sense.
 // It sounds more reasonable to endian swap ANY type. 
@@ -240,8 +238,8 @@ static F64 bpm_to_spb(F64 bpm);
 // Or we COULD just ignore the concept of type:
 //   void _EndianSwap16(U8* ptr)
 //   #define endian_swap_16(value) _EndianSwap16((U8*)&value)
-static U16 endian_swap_16(U16 value);
-static U32 endian_swap_32(U32 value);
+static U16 endian_swap_u16(U16 value);
+static U32 endian_swap_u32(U32 value);
 
 //~assert
 // NOTE(Momo): Others can provide their own 'assert_callback' 
@@ -257,28 +255,23 @@ static U32 endian_swap_32(U32 value);
 
 //////////////////////////////////////////
 //~Constants
-// NOTE(Momo): I'm fairly convinced that if we compile with C++, 
-// static variables should be better than #define literals.
-// Memory-wise they *should* the produces the same results, 
-// but provides stronger typing. 
-// This should be my attitude for all constants.
-static S8  S8_MIN  = -0x80;
-static S16 S16_MIN = -0x8000; 
-static S32 S32_MIN = -0x80000000ll;
-static S64 S64_MIN = -0x8000000000000001ll - 1;
+#define S8_MIN  -0x80
+#define S16_MIN -0x8000
+#define S32_MIN -0x80000000ll
+#define S64_MIN (-0x8000000000000001ll - 1)
 
-static S8  S8_MAX  = 0x7F;
-static S16 S16_MAX = 0x7FFF; 
-static S32 S32_MAX = 0x7FFFFFFFl;
-static S64 S64_MAX = 0x7FFFFFFFFFFFFFFFll;
+#define S8_MAX  0x7F
+#define S16_MAX 0x7FFF
+#define S32_MAX 0x7FFFFFFFl
+#define S64_MAX 0x7FFFFFFFFFFFFFFFll
 
-static U8  U8_MAX  = 0xFF;
-static U16 U16_MAX = 0xFFFF; 
-static U32 U32_MAX = 0xFFFFFFFF;
-static U64 U64_MAX = 0xFFFFFFFFFFFFFFFFllu;
+#define U8_MAX  0xFF
+#define U16_MAX 0xFFFF
+#define U32_MAX 0xFFFFFFFF
+#define U64_MAX 0xFFFFFFFFFFFFFFFFllu
 
-static F32 F32_EPSILON = 1.1920929E-7f;
-static F64 F64_EPSILON = 2.220446E-16;
+#define F32_EPSILON 1.1920929E-7f
+#define F64_EPSILON 2.220446E-16
 
 static F32 F32_INFINITY();
 static F32 F32_NEG_INFINITY();
@@ -286,8 +279,6 @@ static F32 F32_NAN();
 static F64 F64_INFINITY();
 static F64 F64_NEG_INFINITY();
 static F64 F64_NAN();
-
-//~Memory-related helpers
 
 // NOTE(Momo):  This is a really useful construct I find myself using 
 // more and more. 
@@ -315,10 +306,10 @@ static B32  is_memory_same(const void* lhs, const void* rhs, UMI size);
 
 //~C-string
 static UMI  cstr_len(const C8* str);
-static void cstr_copy(C8 * dest, const C8* Src);
+static void cstr_copy(C8* dest, const C8* Src);
 static B32  cstr_compare(const C8* lhs, const C8* rhs);
 static B32  cstr_compare_n(const C8* lhs, const C8* rhs, UMI n);
-static void cstr_m44_concat(C8* dest, const C8* Src);
+static void cstr_concat(C8* dest, const C8* Src);
 static void cstr_clear(C8* dest);
 static void cstr_reverse(C8* dest);
 static void cstr_itoa(C8* dest, S32 num);
@@ -328,22 +319,28 @@ static void cstr_itoa(C8* dest, S32 num);
 static F64 cstr_to_f64(const C8* p);
 
 //~IEEE floating point functions 
-static B32 is_close(F32 lhs, F32 rhs);
-static B32 is_close(F64 lhs, F64 rhs);
-
-static B32 is_nan(F32 f);
-static B32 is_nan(F64 f);
+static B32 is_close_f32(F32 lhs, F32 rhs);
+static B32 is_close_f64(F64 lhs, F64 rhs);
+static B32 is_nan_f32(F32 f);
+static B32 is_nan_f64(F64 f);
 
 //~Math 
-static F32 PI_32 = 3.14159265359f;
-static F64 PI_64 = 3.14159265359;
-static F32 TAU_32 = 6.28318530718f;
-static F64 TAU_64 = 6.28318530718;
-static F32 GOLD_32 = 1.61803398875f;
-static F64 GOLD_64 = 1.61803398875;
+#define PI_32 3.14159265359f
+#define PI_64 3.14159265359
+#define TAU_32 6.28318530718f
+#define TAU_64 6.28318530718
+#define GOLD_32 1.61803398875f
+#define GOLD_64 1.61803398875
 
+//~NOTE(Momo): Helper macros 
+#define declare_and_pointerize(type, name) type zawarudo_##name = {}; type* name = &zawarudo_##name
 
+//~NOTE(Momo): Ascii Parsing Helpers
+static B32 is_whitespace(C8 c);
+static B32 is_digit(U8 c);
+static B32 is_alpha(C8 c);
 
+#if IS_CPP
 //~ NOTE(Momo): Defer
 template<typename F> 
 struct zawarudo_ScopeGuard {
@@ -357,14 +354,9 @@ template<typename F> zawarudo_ScopeGuard<F> operator+(zawarudo_defer_dummy, F f)
 #define zawarudo_AnonVarSub(x) zawarudo_defer##x
 #define zawarudo_AnonVar(x) zawarudo_AnonVarSub(x)
 #define defer auto zawarudo_AnonVar(__LINE__) = zawarudo_defer_dummy{} + [&]()
+#endif // IS_CPP
 
-//~NOTE(Momo): Helper macros 
-#define declare_and_pointerize(type, name) type zawarudo_##name = {}; type* name = &zawarudo_##name
 
-//~NOTE(Momo): Ascii Parsing Helpers
-static B32 is_whitespace(C8 c);
-static B32 is_digit(U8 c);
-static B32 is_alpha(C8 c);
 
 ///////////////////////////////////////////////////////////////////
 // IMPLENTATION STARTS HERE ///////////////////////////////////////
@@ -468,28 +460,10 @@ int_to_ptr(UMI u) {
   return (U8*)((C8*)0 + u);
 }
 
-template<typename T> static T 
-min_of(T l, T r) { 
-  return l < r ? l : r; 
-}
 
-template<typename T> static T 
-max_of(T l, T r) { 
-  return l > r ? l : r; 
-}
-
-template<typename T> static T 
-clamp(T x, T b, T t) { 
-  return max_of(min_of(x,t),b); 
-}
-
-template<typename T> static T
-abs_of(T x) { 
-  return x < 0 ? -x : x; 
-}
 
 static F32 
-abs_of(F32 x) {
+abs_f32(F32 x) {
   union { F32 f; U32 u; } val = {};
   val.f = x;
   val.u &= 0x7fffffff;  
@@ -497,7 +471,7 @@ abs_of(F32 x) {
 }
 
 static F64
-abs_of(F64 x) {
+abs_f64(F64 x) {
   union { F64 f; U64 u; } val = {};
   val.f = x;
   val.u &= 0x7fffffffffffffff;
@@ -507,66 +481,46 @@ abs_of(F64 x) {
 
 
 static S8   
-abs_of(S8 x) {
+abs_s8(S8 x) {
   S8 y = x >> 7;
   return (x ^ y)-y;
 }
+
 static S16  
-abs_of(S16 x) {
+abs_s16(S16 x) {
   S16 y = x >> 15;
   return (x ^ y)-y;
 }
 static S32  
-abs_of(S32 x) {
+abs_s32(S32 x) {
   S32 y = x >> 31;
   return (x ^ y)-y;
 }
 static S64  
-abs_of(S64 x) {
+abs_s64(S64 x) {
   S64 y = x >> 63;
   return (x ^ y)-y;
 }
 
-template<typename T> static T
-lerp(T s, T e, F32 f) { 
-  return (T)(s + (e-s) * f); 
+static F32
+lerp_f32(F32 s, F32 e, F32 f) { 
+  return (F32)(s + (e-s) * f); 
 }
 
-template<typename T> static T 
-lerp(T s, T e, F64 f) { 
-  return (T)(s + (e-s) * f); 
+static F64 
+lerp_f64(F64 s, F64 e, F64 f) { 
+  return (F64)(s + (e-s) * f); 
 }
 
 static F32 
-percent(F32 v, F32 min, F32 max) { 
+percent_f32(F32 v, F32 min, F32 max) { 
   return (v - min)/(max - min); 
 }
 
 static F64 
-percent(F64 v, F64 min, F64 max) { 
+percent_f64(F64 v, F64 min, F64 max) { 
   return (v - min)/(max - min); 
 }
-
-template<typename T, typename U> static T
-align_down_pow2(T value, U align) { 
-  return value & ~(align-1); 
-}
-
-template<typename T, typename U> static T
-align_up_pow2(T value, U align) { 
-  return (value + (align-1)) & ~(align-1); 
-}
-
-template<typename T> static B32 
-is_pow2(T value) { 
-  return (value & (value - 1)) == 0; 
-}
-template<typename T> static void 
-swap(T* lhs, T* rhs) { 
-  T tmp = *lhs; 
-  *lhs = *rhs; 
-  *rhs = tmp; 
-} 
 
 
 //~C-strings, aka null-terminated strings
@@ -605,7 +559,7 @@ cstr_compare_n(const C8* lhs, const char* rhs, UMI n) {
   return true;
 }
 static void
-cstr_m44_concat(C8* dest, const char* Src) {
+cstr_concat(C8* dest, const char* Src) {
   // Go to the end of dest
   for (; (*dest) != 0; ++dest);
   for (; (*Src) != 0; ++Src, ++dest) {
@@ -625,7 +579,7 @@ cstr_reverse(C8* dest) {
   C8* back_ptr = dest;
   for (; *(back_ptr+1) != 0; ++back_ptr);
   for (;dest < back_ptr; ++dest, --back_ptr) {
-    swap(dest, back_ptr);
+    swap(C8, *dest, *back_ptr);
   }
 }
 
@@ -663,7 +617,7 @@ cstr_itoa(C8* dest, S32 num) {
 
 
 static F64
-compute_f64(S64 power, U64 i, B32 negative) 
+_compute_f64(S64 power, U64 i, B32 negative) 
 {
   static const F64 power_of_ten[] = {
     1e0,  1e1,  1e2,  1e3,  1e4,  1e5,  1e6,  1e7,  1e8,  1e9,  1e10, 1e11,
@@ -1437,7 +1391,7 @@ cstr_to_f64(const C8* p) {
   assert(digit_count < 19);
   assert(exponent >= -325 && exponent <= 308);
   
-  return compute_f64(exponent, i, negative);
+  return _compute_f64(exponent, i, negative);
 }
 //~ NOTE(Momo): Constants
 static F32 
@@ -1508,26 +1462,26 @@ F64_NEG_INFINITY() {
 
 //~IEEE floating point functions 
 static B32 
-is_close(F32 lhs, F32 rhs) {
+is_close_f32(F32 lhs, F32 rhs) {
   return abs_of(lhs - rhs) <= F32_EPSILON;
 }
 
 static B32 
-is_close(F64 lhs, F64 rhs) {
+is_close_f64(F64 lhs, F64 rhs) {
   return abs_of(lhs - rhs) <= F64_EPSILON;
 }
 
 
 
 static B32 
-is_nan(F32 f) {
+is_nan_f32(F32 f) {
   union { F32 f; U64 u; } ret = {};
   ret.f = f;
   return (ret.u & 0xFFFFFFFF) == 0xFFFFFFFF;
 }
 
 static B32 
-is_nan(F64 f) {
+is_nan_f64(F64 f) {
   union { F64 f; U64 u; } ret = {};
   ret.f = f;
   return (ret.u & 0xFFFFFFFFFFFFFFFF) == 0xFFFFFFFFFFFFFFFF;
@@ -1535,34 +1489,34 @@ is_nan(F64 f) {
 
 //~Helper functions
 static F32
-bpm_to_spb(F32 bpm) {
+bpm_to_spb_f32(F32 bpm) {
   assert(bpm >= 0.f);
   return 60.f/bpm;
 }
 
 static F64
-bpm_to_spb(F64 bpm) {
+bpm_to_spb_f64(F64 bpm) {
   assert(bpm >= 0.f);
   return 60.0/bpm;
 }
 
 
 static F32 
-deg_to_rad(F32 degrees) {
+deg_to_rad_f32(F32 degrees) {
   return degrees * PI_32 / 180.f;
 }
 static F32 
-rad_to_deg(F32 radians) {
+rad_to_deg_f32(F32 radians) {
   return radians * 180.f / PI_32;	
 }
 
 static F64
-deg_to_rad(F64 degrees) {
+deg_to_rad_f64(F64 degrees) {
   return degrees * PI_32 / 180.0;
   
 }
 static F64 
-rad_to_deg(F64 radians) {
+rad_to_deg_f64(F64 radians) {
   return radians * 180.0 / PI_64;
 }
 
@@ -1596,7 +1550,7 @@ endian_swap_32(U32 value) {
 // the magic of number 33 (why it works better than many other constants, prime or not) 
 // has never been adequately explained.
 static U32 
-djb2(const char* str)
+djb2(const C8* str)
 {
   U32 hash = 5381;
   S32 c;
