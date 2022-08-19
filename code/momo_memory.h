@@ -3,9 +3,6 @@
 #ifndef MOMO_MEMORY_H
 #define MOMO_MEMORY_H
 
-#include "momo_common.h"
-
-
 //~ Bump Allocator
 struct Bump_Allocator;
 

@@ -1,9 +1,6 @@
 #ifndef MOMO_EASING_H
 #define MOMO_EASING_H
 
-#include "momo_common.h"
-#include "momo_intrinsics.h"
-
 static F32 ease_in_sine_f32(F32 t);
 static F32 ease_out_sine_f32(F32 t);
 static F32 ease_inout_sine_f32(F32 t);

@@ -17,8 +17,6 @@
 #define MOMO_VECTOR_H
 
 
-#include "momo_common.h"
-
 typedef union {
 	struct { U32 x, y; };
 	struct { U32 w, h; };

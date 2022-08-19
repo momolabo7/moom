@@ -11,7 +11,6 @@
 // - column major?
 // 
 
-#include "momo_common.h"
 
 #ifndef MOMO_MATRIX_H
 #define MOMO_MATRIX_H

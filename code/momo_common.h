@@ -94,8 +94,6 @@
 #define c_link_end }
 #define c_link extern "C"
 
-#define ns_begin(name) namespace name {
-#define ns_end(name) }
 
 #if COMPILER_MSVC
 # define exported c_link __declspec(dllexport)
@@ -341,6 +339,9 @@ static B32 is_digit(U8 c);
 static B32 is_alpha(C8 c);
 
 #if IS_CPP
+#define ns_begin(name) namespace name {
+#define ns_end(name) }
+
 //~ NOTE(Momo): Defer
 template<typename F> 
 struct zawarudo_ScopeGuard {

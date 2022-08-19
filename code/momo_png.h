@@ -14,11 +14,6 @@
 #ifndef MOMO_PNG
 #define MOMO_PNG
 
-#include "momo_common.h"
-#include "momo_memory.h"
-#include "momo_streams.h"
-#include "momo_crc.h"
-
 struct PNG {
   U8* data;
   UMI data_size;
@@ -539,11 +534,11 @@ static B32
 _png_filter_none(_PNG_Context* c) {
   U32 bpl = c->image_width * _PNG_CHANNELS; // bytes per line
   for (U32 i = 0; i < bpl; ++i ){
-    U8* pixel_byte = srm_consume<U8>(&c->unfiltered_image_stream);
+    U8* pixel_byte = srm_consume(U8, &c->unfiltered_image_stream);
     if (pixel_byte == nullptr) {
       return false;
     }
-    srm_write<U8>(&c->image_stream, *pixel_byte);
+    srm_write(&c->image_stream, *pixel_byte);
   }
   return true;
 }
@@ -554,7 +549,7 @@ _png_filter_sub(_PNG_Context* c) {
   U32 bpl = c->image_width * _PNG_CHANNELS; // bytes per line
   for (U32 i = 0; i < bpl; ++i ){
     
-    U8* pixel_byte_p = srm_consume<U8>(&c->unfiltered_image_stream);
+    U8* pixel_byte_p = srm_consume(U8, &c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr)return false;
     
     U8 pixel_byte = (*pixel_byte_p); // sub(x)
@@ -581,7 +576,7 @@ _png_filter_average(_PNG_Context* c) {
   
   for (U32 i = 0; i < bpl; ++i ){
     
-    U8* pixel_byte_p = srm_consume<U8>(&c->unfiltered_image_stream);
+    U8* pixel_byte_p = srm_consume(U8, &c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) return false;
     
     U8 pixel_byte = (*pixel_byte_p); // sub(x)
@@ -607,7 +602,7 @@ _png_filter_paeth(_PNG_Context* cx) {
   U32 bpl = cx->image_width * _PNG_CHANNELS; // bytes per line
   
   for (U32 i = 0; i < bpl; ++i ){
-    U8* pixel_byte_p = srm_consume<U8>(&cx->unfiltered_image_stream);
+    U8* pixel_byte_p = srm_consume(U8, &cx->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) return false;
     U8 pixel_byte = (*pixel_byte_p); // Paeth(x)
     
@@ -652,7 +647,7 @@ static B32
 _png_filter_up(_PNG_Context* c) {
   U32 bpl = c->image_width * _PNG_CHANNELS; // bytes per line
   for (U32 i = 0; i < bpl; ++i ){
-    U8* pixel_byte_p = srm_consume<U8>(&c->unfiltered_image_stream);
+    U8* pixel_byte_p = srm_consume(U8, &c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) {
       return false;
     }
@@ -686,7 +681,7 @@ _png_filter(_PNG_Context* c) {
   U32 counter = 0;
   
   while(!srm_is_eos(&c->unfiltered_image_stream)) {
-    U8* filter_type_p = srm_consume<U8>(&c->unfiltered_image_stream);
+    U8* filter_type_p = srm_consume(U8, &c->unfiltered_image_stream);
     U8 filter_type = (*filter_type_p);
     // NOTE(Momo): https://www.w3.org/TR/PNG-Filters.html
     switch(filter_type) {
@@ -716,7 +711,7 @@ _png_filter(_PNG_Context* c) {
 
 static B32
 _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
-  auto* IDAT = srm_consume<_PNG_IDAT_Header>(zlib_stream);
+  auto* IDAT = srm_consume(_PNG_IDAT_Header, zlib_stream);
   
   U32 CM = IDAT->compression_flags & 0x0F;
   U32 CINFO = IDAT->compression_flags >> 4;
@@ -759,7 +754,7 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
   assert(unfiltered_image_stream_memory);
   srm_init(&ctx.unfiltered_image_stream, unfiltered_image_stream_memory, unfiltered_size);
   
-  srm_consume<_PNG_Header>(&ctx.stream);
+  srm_consume(_PNG_Header, &ctx.stream);
   
   
   // NOTE(Momo): This is really lousy method.
@@ -769,14 +764,14 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
   {
     Stream stream = ctx.stream;
     while(!srm_is_eos(&stream)) {
-      auto* chunk_header = srm_consume<_PNG_Chunk_Header>(&stream);
+      auto* chunk_header = srm_consume(_PNG_Chunk_Header, &stream);
       U32 chunk_length = endian_swap_32(chunk_header->length);
       U32 chunk_type = endian_swap_32(chunk_header->type_U32);
       if (chunk_type == 'IDAT') {
         zlib_size += chunk_length;
       }
       srm_consume_block(&stream, chunk_length);
-      srm_consume<_PNG_Chunk_Footer>(&stream);
+      srm_consume(_PNG_Chunk_Footer, &stream);
     }
   }
   
@@ -786,7 +781,7 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
   
   // Second pass to allocate memory
   while(!srm_is_eos(&ctx.stream)) {
-    auto* chunk_header = srm_consume<_PNG_Chunk_Header>(&ctx.stream);
+    auto* chunk_header = srm_consume(_PNG_Chunk_Header, &ctx.stream);
     U32 chunk_length = endian_swap_32(chunk_header->length);
     U32 chunk_type = endian_swap_32(chunk_header->type_U32);
     if (chunk_type == 'IDAT') {
@@ -795,7 +790,7 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
                       chunk_length);
     }
     srm_consume_block(&ctx.stream, chunk_length);
-    srm_consume<_PNG_Chunk_Footer>(&ctx.stream);
+    srm_consume(_PNG_Chunk_Footer, &ctx.stream);
   }
   srm_reset(zlib_stream);
   
@@ -997,18 +992,18 @@ png_read(PNG* p, void* png_memory, UMI png_size) {
   srm_init(stream, png_memory, png_size);
   
   // Read Signature
-  auto* png_header = srm_consume<_PNG_Header>(stream);  
+  auto* png_header = srm_consume(_PNG_Header, stream);  
   if (!_png_is_signature_valid(png_header->signature)) return false; 
   
   // Read Chunk Header
-  auto* chunk_header = srm_consume<_PNG_Chunk_Header>(stream);
+  auto* chunk_header = srm_consume(_PNG_Chunk_Header, stream);
   U32 chunk_length = endian_swap_32(chunk_header->length);
   U32 chunk_type = endian_swap_32(chunk_header->type_U32);
   
   
   if(chunk_type != 'IHDR') { return false; }
   
-  _PNG_IHDR* IHDR = srm_consume<_PNG_IHDR>(stream);
+  _PNG_IHDR* IHDR = srm_consume(_PNG_IHDR, stream);
   
   // NOTE(Momo): Width and height is in Big Endian
   // We assume that we are currently in a Little Endian system

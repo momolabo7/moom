@@ -1,8 +1,6 @@
 #ifndef MOMO_STREAM_H
 #define MOMO_STREAM_H
 
-#include "momo_common.h"
-
 struct Stream {
   U8* data;
   UMI size;
@@ -22,8 +20,9 @@ static void   srm_write_block(Stream* s, void* src, UMI size);
 static void   srm_flush_bits(Stream* s);
 static U32		srm_consume_bits(Stream* s, U32 amount);
 
-template<typename T> static T* srm_consume(Stream* s);
-template<typename T> static void srm_write(Stream* s, T item);
+#define srm_consume(t,s) (t*)srm_consume_block((s), sizeof(t))
+#define srm_write(s,item) srm_write_block((s), &(item), sizeof(item));
+
 
 ///////////////////////////////////////////////////////////////
 // IMPLEMENTATION
@@ -74,7 +73,7 @@ srm_consume_bits(Stream* s, U32 amount){
   assert(amount <= 32);
   
   while(s->bit_count < amount) {
-    U32 byte = *srm_consume<U8>(s);
+    U32 byte = *srm_consume(U8, s);
     s->bit_buffer |= (byte << s->bit_count);
     s->bit_count += 8;
   }
@@ -86,15 +85,7 @@ srm_consume_bits(Stream* s, U32 amount){
   
   return result;
 }
-template<typename T> static T* 
-srm_consume(Stream* s) 
-{
-  return (T*)srm_consume_block(s, sizeof(T));
-}
-template<typename T> static void 
-srm_write(Stream* s, T item) {
-  srm_write_block(s, &item, sizeof(T));
-}
+
 
 
 

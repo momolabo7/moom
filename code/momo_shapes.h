@@ -1,8 +1,6 @@
 #ifndef MOMO_SHAPES_H
 #define MOMO_SHAPES_H
 
-#include "momo_common.h"
-#include "momo_vectors.h"
 
 typedef struct{
   V2 min, max;
@@ -21,8 +19,8 @@ typedef struct {
 }Rect3;
 
 typedef struct {
-  V2 center;
-  V2 half_dims;
+  V2 anchor;
+  V2 dims;
 }Aabb2;
 
 typedef struct 
@@ -46,32 +44,32 @@ typedef struct{
 }Tri2;
 
 // Gets the normalized values of Rect lhs based on another Rect rhs
-static F32 r2_width(Rect2 lhs);
-static F32 r2_height(Rect2 lhs);
-static U32 r2u_width(Rect2U lhs);
-static U32 r2u_height(Rect2U lhs);
-static B32 t2_is_point_within(Tri2 tri, V2 pt);
+static F32 rec2_width(Rect2 lhs);
+static F32 rec2_height(Rect2 lhs);
+static U32 rec2u_width(Rect2U lhs);
+static U32 rec2u_height(Rect2U lhs);
+static B32 tri2_is_point_within(Tri2 tri, V2 pt);
 
 ///////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 
 static F32
-r2_width(Rect2 r) {
-  return abs_of(r.max.x - r.min.x);
+rec2_width(Rect2 r) {
+  return abs_f32(r.max.x - r.min.x);
 }
 
 static F32
-r2_height(Rect2 r) {
-  return abs_of(r.max.y - r.min.y);
+rec2_height(Rect2 r) {
+  return abs_f32(r.max.y - r.min.y);
 }
 
 static U32
-r2u_width(Rect2U r) {
+rec2u_width(Rect2U r) {
   return r.max.x - r.min.x;
 }
 
 static U32
-r2u_height(Rect2U r) {
+rec2u_height(Rect2U r) {
   return r.max.y - r.min.y;
 }
 

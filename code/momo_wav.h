@@ -57,7 +57,7 @@ wav_read(WAV* w,
   srm_init(stream, (U8*)memory, memory_size);
   
   // NOTE(Momo): Load Riff Chunk
-  auto* riff_chunk = srm_consume<WAV_Riff_Chunk>(stream);
+  auto* riff_chunk = srm_consume(WAV_Riff_Chunk, stream);
   if (!riff_chunk) {
     return false;
   }
@@ -71,7 +71,7 @@ wav_read(WAV* w,
   }
   
   // NOTE(Momo): Load fmt Chunk
-  auto* fmt_chunk = srm_consume<WAV_Fmt_Chunk>(stream);
+  auto* fmt_chunk = srm_consume(WAV_Fmt_Chunk, stream);
   if (!fmt_chunk) {
     return false;
   }
@@ -96,7 +96,7 @@ wav_read(WAV* w,
   }
   
   // Load data Chunk
-  auto* data_chunk = srm_consume<WAV_Data_Chunk>(stream);
+  auto* data_chunk = srm_consume(WAV_Data_Chunk, stream);
   if (!data_chunk) {
     return false;
   }

@@ -1,12 +1,11 @@
 #ifndef MOMO_RANDOM_H
 #define MOMO_RANDOM_H
 
-#include "momo_common.h"
 
-struct RNG
+typedef struct 
 {
   U32 index;
-};
+} RNG;
 
 static RNG rng_create(U32 seed);
 static U32 rng_next(RNG* r);

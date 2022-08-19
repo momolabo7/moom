@@ -12,9 +12,10 @@
 #include "momo_sort.h" 
 #include "momo_matrix.h"
 #include "momo_crc.h"
+#include "momo_strings.h"
+#include "momo_streams.h"
 // END C MARKER
 
-#include "momo_strings.h"
 
 // idk what we are going to do with image api?
 // Or do we care not have an image api and have each image format do their own shit?
@@ -23,7 +24,6 @@
 
 #include "momo_memory.h"
 #include "momo_rng.h"
-#include "momo_streams.h"
 #include "momo_lists.h"  // C++ only
 #include "momo_rect_pack.h"
 #include "momo_wav.h"     

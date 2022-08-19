@@ -1,7 +1,6 @@
 #ifndef MOMO_SORT_H
 #define MOMO_SORT_H
 
-#include "momo_common.h"
 
 // Chances are that we won't be sorting 
 // more than 32-bits worth of indices?

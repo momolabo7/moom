@@ -1,7 +1,6 @@
 #ifndef MOMO_LISTS_H
 #define MOMO_LISTS_H
 
-#include "momo_common.h"
 
 #define al_is_full(l)       ((l)->count == array_count((l)->e))
 #define al_is_empty(l)      ((l)->count == 0)
@@ -9,7 +8,7 @@
 #define al_append(l)        (al_is_full(l) ? 0 : (l)->e + (l)->count++)
 #define al_clear(l)         ((l)->count = 0) 
 #define al_at(l,i)          (al_is_valid(l,i) ? (l)->e + i : 0)
-#define al_foreach(i,l)     for(U32 i = 0; i < (l)->count; ++i)
+#define al_foreach(i,l)     for(UMI i = 0; i < (l)->count; ++i)
 
 
 #define sll_prepend(f,l,n) (f) ? (n)->next = (f), (f) = (n) : (f) = (l) = (n) 

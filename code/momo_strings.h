@@ -1,7 +1,6 @@
 #ifndef MOMO_STRING_H
 #define MOMO_STRING_H
 
-#include "momo_common.h"
 
 //~ NOTE(Momo): 'Immutable' String8s
 typedef struct {

@@ -14,7 +14,6 @@
 #ifndef MOMO_CRC_H
 #define MOMO_CRC_H
 
-#include "momo_common.h"
 
 typedef struct {
 	U32 remainders[256];
