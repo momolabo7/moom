@@ -14,7 +14,7 @@ game_update_and_render(Platform* pf)
   // Initialization
   if (!pf->game || pf->reloaded) {
     ba_clear(pf->game_arena);
-    pf->game = ba_push(Game, pf->game_arena);
+    pf->game = ba_push<Game>(pf->game_arena);
     Game* game = (Game*)pf->game;
    
     // around 32MB worth

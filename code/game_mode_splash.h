@@ -18,7 +18,7 @@ struct Splash {
 static void
 splash_init(Game* game) 
 {
-  Splash* splash = game_allocate_mode(Splash, game);
+  auto* splash = game_allocate_mode<Splash>(game);
   splash->timer = 1.f;
 }
 
@@ -27,16 +27,18 @@ splash_tick(Game* game,
             Painter* painter,
             Platform* pf) 
 {
-  Splash* splash = (Splash*)game->mode_context;
+  auto* splash = (Splash*)game->mode_context;
   
   F32 dt = pf->seconds_since_last_frame;
   splash->timer -= dt;
   
   if (splash->timer < 0.f) {
+    //game_set_mode(game, 0, 0); 
+
     game_set_mode(game, sb1_init, sb1_tick);
   }
  
-  RGBA color = rgba(splash->timer, splash->timer, splash->timer, splash->timer);
+  auto color = rgba(splash->timer, splash->timer, splash->timer, splash->timer);
   paint_text(painter,
              FONT_DEFAULT, 
              str8_from_lit("momo"),

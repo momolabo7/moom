@@ -339,7 +339,7 @@ sb1_gen_light_intersections(SB1_Light* l,
   }
 
   if (l->intersections.count > 0) {
-    auto* sorted_its = ba_push_array(Sort_Entry, allocator, l->intersections.count);
+    auto* sorted_its = ba_push_array<Sort_Entry>(allocator, l->intersections.count);
     assert(sorted_its);
     for (U32 its_id = 0; 
          its_id < l->intersections.count; 
@@ -444,7 +444,7 @@ sb1_render_sensors(Game* game,
 static void 
 sb1_init(Game* game) 
 {
-  auto* m = game_allocate_mode(SB1, game);
+  auto* m = game_allocate_mode<SB1>(game);
   auto* player = &m->player;
   
   al_clear(&m->sensors);
@@ -693,7 +693,7 @@ sb1_tick(Game* game,
     }
     advance_depth(painter);
    
-    auto* sorted_its = ba_push_array(Sort_Entry, &game->frame_arena, l->intersections.count);
+    auto* sorted_its = ba_push_array<Sort_Entry>(&game->frame_arena, l->intersections.count);
     assert(sorted_its);
     for (U32 intersection_id = 0; 
          intersection_id < l->intersections.count; 
