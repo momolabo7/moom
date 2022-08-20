@@ -1,11 +1,11 @@
 !_TAG_FILE_SORTED	2	/0=unsorted, 1=sorted, 2=foldcase/
 a	.\code\momo_colors.h	/^  F32 a;$/;"	m	language:C++	struct:__anon5
-Aabb2	.\code\momo_shapes.h	/^}Aabb2;$/;"	t	language:C++	typeref:struct:__anon19
+Aabb2	.\code\momo_shapes.h	/^}Aabb2;$/;"	t	language:C++	typeref:struct:__anon22
 abs_f32	.\code\momo_common.h	/^abs_f32(F32 x) {$/;"	f	language:C++
 abs_f32	.\code\momo_common.h	/^static F32 abs_f32(F32 value);$/;"	p	language:C++
 abs_f64	.\code\momo_common.h	/^abs_f64(F64 x) {$/;"	f	language:C++
 abs_f64	.\code\momo_common.h	/^static F64 abs_f64(F64 value);$/;"	p	language:C++
-abs_of	.\code\momo_common.h	190;"	d	language:C++
+abs_of	.\code\momo_common.h	189;"	d	language:C++
 abs_s16	.\code\momo_common.h	/^abs_s16(S16 x) {$/;"	f	language:C++
 abs_s16	.\code\momo_common.h	/^static S16 abs_s16(S16 value);$/;"	p	language:C++
 abs_s32	.\code\momo_common.h	/^abs_s32(S32 x) {$/;"	f	language:C++
@@ -27,9 +27,9 @@ add_inspector_entry	.\code\game_inspector.h	/^add_inspector_entry(Inspector* in,
 add_task	.\code\game_platform.h	/^  Platform_Add_Task* add_task;$/;"	m	language:C++	struct:Platform
 add_task	.\code\game_platform.h	/^  Platform_Add_Task* add_task;$/;"	m	language:C++	struct:Platform_API
 advance_depth	.\code\game_painter.h	/^advance_depth(Painter* p) {$/;"	f	language:C++
-advance_width	C:\Users\geral\work\txt\code\momo_ttf.h	/^  S16 advance_width;$/;"	m	language:C++	struct:__anon2
-align_down_pow2	.\code\momo_common.h	216;"	d	language:C++
-align_up_pow2	.\code\momo_common.h	217;"	d	language:C++
+advance_width	.\code\momo_ttf.h	/^  S16 advance_width;$/;"	m	language:C++	struct:__anon33
+align_down_pow2	.\code\momo_common.h	215;"	d	language:C++
+align_up_pow2	.\code\momo_common.h	216;"	d	language:C++
 allocator	.\code\game_debug.h	/^  Bump_Allocator allocator;$/;"	m	language:C++	struct:Debug_State
 allocator	.\code\momo_memory.h	/^  Bump_Allocator* allocator;$/;"	m	language:C++	struct:Bump_Allocator_Marker
 allocator	.\code\momo_png.h	/^  Bump_Allocator* allocator; $/;"	m	language:C++	struct:_PNG_Context
@@ -43,7 +43,7 @@ al_is_empty	.\code\momo_lists.h	6;"	d	language:C++
 al_is_full	.\code\momo_lists.h	5;"	d	language:C++
 al_is_valid	.\code\momo_lists.h	7;"	d	language:C++
 anchor	.\code\game_renderer.h	/^  V2 anchor;$/;"	m	language:C++	struct:Gfx_Command_Sprite
-anchor	.\code\momo_shapes.h	/^  V2 anchor;$/;"	m	language:C++	struct:__anon19
+anchor	.\code\momo_shapes.h	/^  V2 anchor;$/;"	m	language:C++	struct:__anon22
 ARCH_ARM	.\code\momo_common.h	65;"	d	language:C++
 ARCH_ARM	.\code\momo_common.h	75;"	d	language:C++
 ARCH_ARM	.\code\momo_common.h	88;"	d	language:C++
@@ -53,8 +53,8 @@ ARCH_X64	.\code\momo_common.h	85;"	d	language:C++
 ARCH_X86	.\code\momo_common.h	61;"	d	language:C++
 ARCH_X86	.\code\momo_common.h	71;"	d	language:C++
 ARCH_X86	.\code\momo_common.h	82;"	d	language:C++
-array_count	.\code\momo_common.h	161;"	d	language:C++
-ascii_to_digit	.\code\momo_common.h	173;"	d	language:C++
+array_count	.\code\momo_common.h	160;"	d	language:C++
+ascii_to_digit	.\code\momo_common.h	172;"	d	language:C++
 asdf	.\code\meta.cpp	270;"	d	language:C++	file:
 asin_f32	.\code\momo_intrinsics.h	/^asin_f32(F32 x) {$/;"	f	language:C++
 asin_f32	.\code\momo_intrinsics.h	/^static F32 asin_f32(F32 x);$/;"	p	language:C++
@@ -62,9 +62,9 @@ asin_f64	.\code\momo_intrinsics.h	/^asin_f64(F64 x) {$/;"	f	language:C++
 asin_f64	.\code\momo_intrinsics.h	/^static F64 asin_f64(F64 x);$/;"	p	language:C++
 aspect_ratio_height	.\code\win.cpp	/^  U32 aspect_ratio_height;$/;"	m	language:C++	struct:Win_State	file:
 aspect_ratio_width	.\code\win.cpp	/^  U32 aspect_ratio_width;$/;"	m	language:C++	struct:Win_State	file:
-assert	.\code\momo_common.h	250;"	d	language:C++
-assert	.\code\momo_common.h	252;"	d	language:C++
-assert_callback	.\code\momo_common.h	246;"	d	language:C++
+assert	.\code\momo_common.h	249;"	d	language:C++
+assert	.\code\momo_common.h	251;"	d	language:C++
+assert_callback	.\code\momo_common.h	245;"	d	language:C++
 assert_callback	.\code\sui.h	7;"	d	language:C++
 assert_callback	.\code\test.h	9;"	d	language:C++
 asset_arena	.\code\game.h	/^  Bump_Allocator asset_arena;$/;"	m	language:C++	struct:Game
@@ -84,7 +84,7 @@ atomic_compare_assign_u32	.\code\momo_intrinsics.h	/^atomic_compare_assign_u32(U
 atomic_compare_assign_u32	.\code\momo_intrinsics.h	/^static U32 atomic_compare_assign_u32(U32 volatile* value, U32 new_value, U32 expected_value);$/;"	p	language:C++
 audio	.\code\game_platform.h	/^  Platform_Audio* audio;$/;"	m	language:C++	struct:Platform
 audio_client	.\code\win_audio_wasapi.h	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:Win_Wasapi
-audio_format	.\code\momo_wav.h	/^  U16 audio_format;$/;"	m	language:C++	struct:__anon54
+audio_format	.\code\momo_wav.h	/^  U16 audio_format;$/;"	m	language:C++	struct:__anon57
 audio_render_client	.\code\win_audio_wasapi.h	/^  IAudioRenderClient* audio_render_client;$/;"	m	language:C++	struct:Win_Wasapi
 average	.\code\game_profiler_rendering.h	/^  F64 average;$/;"	m	language:C++	struct:Stat
 b	.\code\momo_colors.h	/^    struct { F32 r, g, b; };  $/;"	m	language:C++	struct:__anon5::__anon6::__anon7
@@ -97,8 +97,7 @@ ba_clear	.\code\momo_memory.h	/^ba_clear(Bump_Allocator* a) {$/;"	f	language:C++
 ba_clear	.\code\momo_memory.h	/^static void   ba_clear(Bump_Allocator* a);$/;"	p	language:C++
 ba_init	.\code\momo_memory.h	/^ba_init(Bump_Allocator* a, void* mem, UMI cap) {$/;"	f	language:C++
 ba_init	.\code\momo_memory.h	/^static void   ba_init(Bump_Allocator* a, void* mem, UMI cap);$/;"	p	language:C++
-ba_mark	.\code\momo_memory.h	/^ba_mark(Bump_Allocator* a) {$/;"	f	language:C++
-ba_mark	.\code\momo_memory.h	/^static Bump_Allocator_Marker ba_mark(Bump_Allocator* allocator);$/;"	p	language:C++
+ba_mark	.\code\momo_memory.h	38;"	d	language:C++
 ba_partition	.\code\momo_memory.h	/^ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align) {	$/;"	f	language:C++
 ba_partition	.\code\momo_memory.h	/^static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align = 16);$/;"	p	language:C++
 ba_partition_with_remaining	.\code\momo_memory.h	/^ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* partition, UMI align){$/;"	f	language:C++
@@ -111,9 +110,8 @@ ba_push_block	.\code\momo_memory.h	/^ba_push_block(Bump_Allocator* a, UMI size, 
 ba_push_block	.\code\momo_memory.h	/^static void*  ba_push_block(Bump_Allocator* a, UMI size, UMI align = 4);$/;"	p	language:C++
 ba_remaining	.\code\momo_memory.h	/^ba_remaining(Bump_Allocator* a) {$/;"	f	language:C++
 ba_remaining	.\code\momo_memory.h	/^static UMI    ba_remaining(Bump_Allocator* a);$/;"	p	language:C++
-ba_revert	.\code\momo_memory.h	/^ba_revert(Bump_Allocator_Marker marker) {$/;"	f	language:C++
-ba_revert	.\code\momo_memory.h	/^static void		               ba_revert(Bump_Allocator_Marker marker);$/;"	p	language:C++
-ba_set_revert_point	.\code\momo_memory.h	43;"	d	language:C++
+ba_revert	.\code\momo_memory.h	40;"	d	language:C++
+ba_set_revert_point	.\code\momo_memory.h	49;"	d	language:C++
 before	.\code\game_platform.h	/^  B32 before;$/;"	m	language:C++	struct:Platform_Button
 begin	.\code\meta.cpp	/^  U32 begin;$/;"	m	language:C++	struct:Meta_Token	file:
 begin_asset_pack	.\code\sui_pack.h	/^begin_asset_pack(Sui_Packer* p)$/;"	f	language:C++
@@ -143,7 +141,7 @@ bitmap_id	.\code\sui_pack.h	/^  U32 bitmap_id;$/;"	m	language:C++	struct:Sui_Pac
 bitmap_id	.\code\sui_pack.h	/^  U32 bitmap_id;$/;"	m	language:C++	struct:Sui_Packer_Sprite
 bitmap_id_file	.\code\sui_pack.h	/^  FILE* bitmap_id_file;$/;"	m	language:C++	struct:Sui_Packer
 bitmap_id_name	.\code\sui_atlas.h	/^  const char* bitmap_id_name;$/;"	m	language:C++	struct:Sui_Atlas
-bits_per_sample	.\code\momo_wav.h	/^  U16 bits_per_sample;$/;"	m	language:C++	struct:__anon54
+bits_per_sample	.\code\momo_wav.h	/^  U16 bits_per_sample;$/;"	m	language:C++	struct:__anon57
 bits_per_sample	.\code\win_audio_wasapi.h	/^  U16 bits_per_sample;$/;"	m	language:C++	struct:Win_Wasapi
 bit_buffer	.\code\momo_streams.h	/^  U32 bit_buffer;$/;"	m	language:C++	struct:Stream
 bit_count	.\code\momo_streams.h	/^  U32 bit_count;$/;"	m	language:C++	struct:Stream
@@ -151,7 +149,7 @@ bit_depth	.\code\momo_png.h	/^  U32 bit_depth;$/;"	m	language:C++	struct:_PNG_Co
 bit_depth	.\code\momo_png.h	/^  U8 bit_depth;$/;"	m	language:C++	struct:PNG
 bit_depth	.\code\momo_png.h	/^  U8 bit_depth;$/;"	m	language:C++	struct:_PNG_IHDR
 blank_texture	.\code\game_renderer_opengl.h	/^  Texture blank_texture;$/;"	m	language:C++	struct:Opengl
-block_align	.\code\momo_wav.h	/^  U16 block_align;$/;"	m	language:C++	struct:__anon54
+block_align	.\code\momo_wav.h	/^  U16 block_align;$/;"	m	language:C++	struct:__anon57
 block_name	.\code\game_profiler.h	/^  const char* block_name;$/;"	m	language:C++	struct:Profiler_Entry
 box	.\code\game_assets.h	/^  Rect2 box;$/;"	m	language:C++	struct:Font_Glyph_Asset
 box	.\code\karu.h	/^  Rect2 box;$/;"	m	language:C++	struct:Karu_Font_Glyph
@@ -180,31 +178,31 @@ button_rotate_left	.\code\game_platform.h	/^      Platform_Button button_rotate_
 button_rotate_right	.\code\game_platform.h	/^      Platform_Button button_rotate_right;$/;"	m	language:C++	struct:Platform::__anon1::__anon2
 button_up	.\code\game_platform.h	/^      Platform_Button button_up;$/;"	m	language:C++	struct:Platform::__anon1::__anon2
 button_use	.\code\game_platform.h	/^      Platform_Button button_use;$/;"	m	language:C++	struct:Platform::__anon1::__anon2
-byte_rate	.\code\momo_wav.h	/^  U32 byte_rate;$/;"	m	language:C++	struct:__anon54
+byte_rate	.\code\momo_wav.h	/^  U32 byte_rate;$/;"	m	language:C++	struct:__anon57
 C8	.\code\momo_common.h	/^typedef char C8;$/;"	t	language:C++
 cabinet_index	.\code\win.cpp	/^  U32 cabinet_index;$/;"	m	language:C++	struct:Win_File	file:
 calc_ghost_edge_line	.\code\game_mode_level_light.cpp	/^calc_ghost_edge_line(Array_List<V2>* points, Edge* e) {$/;"	f	language:C++	file:
 callback	.\code\win.cpp	/^  Platform_Task_Callback* callback;$/;"	m	language:C++	struct:Win_Work	file:
 cap	.\code\momo_memory.h	/^	UMI cap;$/;"	m	language:C++	struct:Bump_Allocator
-cap	.\code\momo_strings.h	/^	UMI cap;$/;"	m	language:C++	struct:__anon26
-cap	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 cap;$/;"	m	language:C++	struct:__anon7
+cap	.\code\momo_strings.h	/^	UMI cap;$/;"	m	language:C++	struct:__anon29
+cap	.\code\momo_ttf.h	/^  U32 cap;$/;"	m	language:C++	struct:__anon38
 ceil_f32	.\code\momo_intrinsics.h	/^static F32 ceil_f32(F32 value) {$/;"	f	language:C++
 ceil_f32	.\code\momo_intrinsics.h	/^static F32 ceil_f32(F32 value);$/;"	p	language:C++
 ceil_f64	.\code\momo_intrinsics.h	/^static F64 ceil_f64(F64 value) {$/;"	f	language:C++
 ceil_f64	.\code\momo_intrinsics.h	/^static F64 ceil_f64(F64 value);$/;"	p	language:C++
-center	.\code\momo_shapes.h	/^  V2 center;$/;"	m	language:C++	struct:__anon20
+center	.\code\momo_shapes.h	/^  V2 center;$/;"	m	language:C++	struct:__anon23
 channels	.\code\game_platform.h	/^    U32 channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:Platform_Audio
 channels	.\code\win_audio_wasapi.h	/^  U16 channels;$/;"	m	language:C++	struct:Win_Wasapi
 chars	.\code\game_platform.h	/^  U8 chars[32];$/;"	m	language:C++	struct:Platform
 char_count	.\code\game_platform.h	/^  U32 char_count;$/;"	m	language:C++	struct:Platform
 CINTERFACE	.\code\win.h	12;"	d	language:C++
-Circ2	.\code\momo_shapes.h	/^}Circ2;$/;"	t	language:C++	typeref:struct:__anon20
-clamp_of	.\code\momo_common.h	189;"	d	language:C++
+Circ2	.\code\momo_shapes.h	/^}Circ2;$/;"	t	language:C++	typeref:struct:__anon23
+clamp_of	.\code\momo_common.h	188;"	d	language:C++
 clear_editor_state	.\code\game_mode_level_editor.cpp	/^clear_editor_state(Editor* e) {$/;"	f	language:C++	file:
 close_file	.\code\game_platform.h	/^  Platform_Close_File* close_file;$/;"	m	language:C++	struct:Platform
 close_file	.\code\game_platform.h	/^  Platform_Close_File* close_file;$/;"	m	language:C++	struct:Platform_API
-cmap	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon1
-cmap_mappings	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 cmap_mappings;$/;"	m	language:C++	struct:__anon1
+cmap	.\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon32
+cmap_mappings	.\code\momo_ttf.h	/^  U32 cmap_mappings;$/;"	m	language:C++	struct:__anon32
 COBJMACROS	.\code\win.h	13;"	d	language:C++
 COBJMACROS	.\code\win.h	15;"	d	language:C++
 codepoint	.\code\karu.h	/^  U32 codepoint;$/;"	m	language:C++	struct:Karu_Font_Glyph
@@ -244,13 +242,13 @@ Console	.\code\game_console.h	/^struct Console {$/;"	s	language:C++
 Console_Command	.\code\game_console.h	/^struct Console_Command {$/;"	s	language:C++
 Console_Line	.\code\game_console.h	/^struct Console_Line {$/;"	s	language:C++
 CONST_VTABLE	.\code\win.h	16;"	d	language:C++
-contour_count	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 contour_count;$/;"	m	language:C++	struct:__anon4
-copy_array	.\code\momo_common.h	303;"	d	language:C++
+contour_count	.\code\momo_ttf.h	/^  U32 contour_count;$/;"	m	language:C++	struct:__anon35
+copy_array	.\code\momo_common.h	302;"	d	language:C++
 copy_memory	.\code\momo_common.h	/^copy_memory(void* dest, const void* src, UMI size) {$/;"	f	language:C++
 copy_memory	.\code\momo_common.h	/^copy_memory(void* dest, const void* src, UMI size) {$/;"	f	language:C++
 copy_memory	.\code\momo_common.h	/^static void copy_memory(void* dest, const void* src, UMI size);$/;"	p	language:C++
-copy_range	.\code\momo_common.h	304;"	d	language:C++
-copy_struct	.\code\momo_common.h	302;"	d	language:C++
+copy_range	.\code\momo_common.h	303;"	d	language:C++
+copy_struct	.\code\momo_common.h	301;"	d	language:C++
 cos_f32	.\code\momo_intrinsics.h	/^cos_f32(F32 x) {$/;"	f	language:C++
 cos_f32	.\code\momo_intrinsics.h	/^static F32 cos_f32(F32 x);$/;"	p	language:C++
 cos_f64	.\code\momo_intrinsics.h	/^cos_f64(F64 x) {$/;"	f	language:C++
@@ -271,9 +269,9 @@ count	.\code\game_sb1.h	/^  U32 count;$/;"	m	language:C++	struct:SB1_Light_List
 count	.\code\game_sb1.h	/^  U32 count;$/;"	m	language:C++	struct:SB1_Light_Triangle_List
 count	.\code\game_sb1.h	/^  U32 count;$/;"	m	language:C++	struct:SB1_Point_List
 count	.\code\game_sb1.h	/^  U32 count;$/;"	m	language:C++	struct:SB1_Sensor_List
-count	.\code\momo_strings.h	/^			UMI count;$/;"	m	language:C++	struct:__anon26::__anon27::__anon28
-count	.\code\momo_strings.h	/^	UMI count;$/;"	m	language:C++	struct:__anon25
-count	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 count;$/;"	m	language:C++	struct:__anon7
+count	.\code\momo_strings.h	/^			UMI count;$/;"	m	language:C++	struct:__anon29::__anon30::__anon31
+count	.\code\momo_strings.h	/^	UMI count;$/;"	m	language:C++	struct:__anon28
+count	.\code\momo_ttf.h	/^  U32 count;$/;"	m	language:C++	struct:__anon38
 crc	.\code\momo_png.h	/^  U32 crc; $/;"	m	language:C++	struct:_PNG_Chunk_Footer
 crc16	.\code\momo_crc.h	/^crc16(U8* data, U32 data_size, U16 start_register, CRC16_Table* table) {$/;"	f	language:C++
 crc16	.\code\momo_crc.h	/^static U32 crc16(U8* data, U32 data_size, U16 start_register, CRC16_Table* table);$/;"	p	language:C++
@@ -330,15 +328,15 @@ cycles	.\code\game_profiler.h	/^  U32 cycles;$/;"	m	language:C++	struct:Profiler
 c_link	.\code\momo_common.h	95;"	d	language:C++
 c_link_begin	.\code\momo_common.h	93;"	d	language:C++
 c_link_end	.\code\momo_common.h	94;"	d	language:C++
-d	.\code\momo_vectors.h	/^	struct { F32 w, h, d; };$/;"	m	language:C++	struct:__anon48::__anon50
+d	.\code\momo_vectors.h	/^	struct { F32 w, h, d; };$/;"	m	language:C++	struct:__anon51::__anon53
 data	.\code\game_renderer.h	/^  void* data;$/;"	m	language:C++	struct:Gfx_Command
 data	.\code\momo_common.h	/^    void* data;$/;"	m	language:C++	union:Memory::__anon8
 data	.\code\momo_png.h	/^  U8* data;$/;"	m	language:C++	struct:PNG
 data	.\code\momo_streams.h	/^  U8* data;$/;"	m	language:C++	struct:Stream
-data	.\code\momo_wav.h	/^  void* data;$/;"	m	language:C++	struct:__anon56
+data	.\code\momo_ttf.h	/^  U8* data;$/;"	m	language:C++	struct:__anon32
+data	.\code\momo_wav.h	/^  void* data;$/;"	m	language:C++	struct:__anon59
 data	.\code\win.cpp	/^  void* data;$/;"	m	language:C++	struct:Win_Work	file:
-data	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U8* data;$/;"	m	language:C++	struct:__anon1
-data_chunk	.\code\momo_wav.h	/^  WAV_Data_Chunk data_chunk;$/;"	m	language:C++	struct:__anon56
+data_chunk	.\code\momo_wav.h	/^  WAV_Data_Chunk data_chunk;$/;"	m	language:C++	struct:__anon59
 data_count	.\code\karu.h	/^  U32 data_count;$/;"	m	language:C++	struct:Karu_Sound
 data_pos	.\code\game_renderer.h	/^	UMI data_pos;$/;"	m	language:C++	struct:Gfx_Command_Queue
 data_size	.\code\momo_png.h	/^  UMI data_size;$/;"	m	language:C++	struct:PNG
@@ -349,18 +347,18 @@ debug_log	.\code\game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	langua
 debug_rays	.\code\game_mode_sb1.h	/^  SB1_Light_Debug_Ray_List debug_rays;$/;"	m	language:C++	struct:SB1_Light
 debug_rays	.\code\game_sb1.h	/^  SB1_Light_Debug_Ray_List debug_rays;$/;"	m	language:C++	struct:SB1_Light
 Debug_State	.\code\game_debug.h	/^struct Debug_State {$/;"	s	language:C++
-declare_and_pointerize	.\code\momo_common.h	335;"	d	language:C++
-defer	.\code\momo_common.h	358;"	d	language:C++
+make	.\code\momo_common.h	334;"	d	language:C++
+defer	.\code\momo_common.h	359;"	d	language:C++
 deg_to_rad_f32	.\code\momo_common.h	/^deg_to_rad_f32(F32 degrees) {$/;"	f	language:C++
 deg_to_rad_f32	.\code\momo_common.h	/^static F32 deg_to_rad_f32(F32 degrees);$/;"	p	language:C++
 deg_to_rad_f64	.\code\momo_common.h	/^deg_to_rad_f64(F64 degrees) {$/;"	f	language:C++
 deg_to_rad_f64	.\code\momo_common.h	/^static F64 deg_to_rad_f64(F64 degrees);$/;"	p	language:C++
 design_mouse_pos	.\code\game_platform.h	/^  V2 design_mouse_pos;$/;"	m	language:C++	struct:Platform
-digit_to_ascii	.\code\momo_common.h	172;"	d	language:C++
-dims	.\code\momo_shapes.h	/^  V2 dims;$/;"	m	language:C++	struct:__anon19
+digit_to_ascii	.\code\momo_common.h	171;"	d	language:C++
+dims	.\code\momo_shapes.h	/^  V2 dims;$/;"	m	language:C++	struct:__anon22
 dir	.\code\game_mode_sb1.h	/^  V2 dir;$/;"	m	language:C++	struct:SB1_Light
 dir	.\code\game_sb1.h	/^  V2 dir;$/;"	m	language:C++	struct:SB1_Light
-dir	.\code\momo_shapes.h	/^  V2 dir;$/;"	m	language:C++	struct:__anon22
+dir	.\code\momo_shapes.h	/^  V2 dir;$/;"	m	language:C++	struct:__anon25
 djb2	.\code\momo_common.h	/^djb2(const C8* str)$/;"	f	language:C++
 dll	.\code\win_loaded_code.h	/^  HMODULE dll; $/;"	m	language:C++	struct:Win_Loaded_Code
 dst	.\code\game_renderer.h	/^  Gfx_Blend_Type dst;$/;"	m	language:C++	struct:Gfx_Command_Blend
@@ -381,14 +379,14 @@ e	.\code\game_sb1.h	/^  SB1_Sensor e[32];$/;"	m	language:C++	struct:SB1_Sensor_L
 e	.\code\game_sb1.h	/^  Tri2 e[256];$/;"	m	language:C++	struct:SB1_Light_Triangle_List
 e	.\code\game_sb1.h	/^  V2 e[256];$/;"	m	language:C++	struct:SB1_Point_List
 e	.\code\momo_matrix.h	/^	F32 e[4][4];$/;"	m	language:C++	struct:__anon12
-e	.\code\momo_strings.h	/^			U8* e;$/;"	m	language:C++	struct:__anon26::__anon27::__anon28
-e	.\code\momo_strings.h	/^	U8* e;$/;"	m	language:C++	struct:__anon25
-e	.\code\momo_vectors.h	/^	F32 e[2];$/;"	m	language:C++	union:__anon44
-e	.\code\momo_vectors.h	/^	S32 e[2];$/;"	m	language:C++	union:__anon41
-e	.\code\momo_vectors.h	/^	U32 e[2];$/;"	m	language:C++	union:__anon38
-e	.\code\momo_vectors.h	/^  F32 e[3];$/;"	m	language:C++	union:__anon48
-e	.\code\momo_vectors.h	/^  F32 e[4];$/;"	m	language:C++	union:__anon51
-e	C:\Users\geral\work\txt\code\momo_ttf.h	/^  _TTF_Edge** e;$/;"	m	language:C++	struct:__anon7
+e	.\code\momo_strings.h	/^			U8* e;$/;"	m	language:C++	struct:__anon29::__anon30::__anon31
+e	.\code\momo_strings.h	/^	U8* e;$/;"	m	language:C++	struct:__anon28
+e	.\code\momo_ttf.h	/^  _TTF_Edge** e;$/;"	m	language:C++	struct:__anon38
+e	.\code\momo_vectors.h	/^	F32 e[2];$/;"	m	language:C++	union:__anon47
+e	.\code\momo_vectors.h	/^	S32 e[2];$/;"	m	language:C++	union:__anon44
+e	.\code\momo_vectors.h	/^	U32 e[2];$/;"	m	language:C++	union:__anon41
+e	.\code\momo_vectors.h	/^  F32 e[3];$/;"	m	language:C++	union:__anon51
+e	.\code\momo_vectors.h	/^  F32 e[4];$/;"	m	language:C++	union:__anon54
 ease_inout_back_f32	.\code\momo_easing.h	/^ease_inout_back_f32(F32 t)  {$/;"	f	language:C++
 ease_inout_back_f32	.\code\momo_easing.h	/^static F32 ease_inout_back_f32(F32 t);$/;"	p	language:C++
 ease_inout_back_f64	.\code\momo_easing.h	/^ease_inout_back_f64(F64 t)  {$/;"	f	language:C++
@@ -539,7 +537,7 @@ EDITOR_TOOLBAR_H	.\code\game_mode_level_editor.cpp	18;"	d	language:C++	file:
 EDITOR_TOOLBAR_PAD	.\code\game_mode_level_editor.cpp	4;"	d	language:C++	file:
 EDITOR_TOOLBAR_W	.\code\game_mode_level_editor.cpp	16;"	d	language:C++	file:
 EDITOR_TOOLBAR_WH	.\code\game_mode_level_editor.cpp	20;"	d	language:C++	file:
-ENABLE_ASSERT	.\code\momo_common.h	107;"	d	language:C++
+ENABLE_ASSERT	.\code\momo_common.h	106;"	d	language:C++
 endian_swap_s16	.\code\momo_common.h	/^endian_swap_s16(S16 value) {$/;"	f	language:C++
 endian_swap_s16	.\code\momo_common.h	/^static S16 endian_swap_s16(S16 value);$/;"	p	language:C++
 endian_swap_u16	.\code\momo_common.h	/^endian_swap_u16(U16 value) {$/;"	f	language:C++
@@ -552,7 +550,7 @@ end_atlas_builder	.\code\sui_atlas.h	/^end_atlas_builder(Sui_Atlas* ab, Bump_All
 end_atlas_font	.\code\sui_pack.h	/^end_atlas_font(Sui_Packer* p) {$/;"	f	language:C++
 end_frame	.\code\win_renderer.h	/^  Win_Gfx_End_Frame* end_frame;$/;"	m	language:C++	struct:Win_Gfx_Functions
 end_packer	.\code\sui_pack.h	/^end_packer(Sui_Packer* p) {$/;"	f	language:C++
-end_point_indices	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U16* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:__anon4
+end_point_indices	.\code\momo_ttf.h	/^  U16* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:__anon35
 end_stat	.\code\game_profiler_rendering.h	/^end_stat(Stat* stat) {$/;"	f	language:C++
 entries	.\code\game_inspector.h	/^  Inspector_Entry_List entries;$/;"	m	language:C++	struct:Inspector
 entries	.\code\game_profiler.h	/^  Profiler_Entry entries[PROFILER_MAX_ENTRIES];$/;"	m	language:C++	struct:Profiler
@@ -560,10 +558,10 @@ entries	.\code\win.cpp	/^  Win_Work entries[256];$/;"	m	language:C++	struct:Win_
 entry_count	.\code\game_renderer.h	/^	UMI entry_count;$/;"	m	language:C++	struct:Gfx_Command_Queue
 entry_pos	.\code\game_renderer.h	/^	UMI entry_pos;$/;"	m	language:C++	struct:Gfx_Command_Queue
 entry_start	.\code\game_renderer.h	/^	UMI entry_start;$/;"	m	language:C++	struct:Gfx_Command_Queue
-exported	.\code\momo_common.h	99;"	d	language:C++
+exported	.\code\momo_common.h	98;"	d	language:C++
 f	.\code\momo_common.h	/^  F f;$/;"	m	language:C++	struct:zawarudo_ScopeGuard
 F32	.\code\momo_common.h	/^typedef float F32;$/;"	t	language:C++
-F32_EPSILON	.\code\momo_common.h	272;"	d	language:C++
+F32_EPSILON	.\code\momo_common.h	271;"	d	language:C++
 F32_INFINITY	.\code\momo_common.h	/^F32_INFINITY() {$/;"	f	language:C++
 F32_INFINITY	.\code\momo_common.h	/^static F32 F32_INFINITY();$/;"	p	language:C++
 F32_NAN	.\code\momo_common.h	/^F32_NAN() {$/;"	f	language:C++
@@ -571,13 +569,14 @@ F32_NAN	.\code\momo_common.h	/^static F32 F32_NAN();$/;"	p	language:C++
 F32_NEG_INFINITY	.\code\momo_common.h	/^F32_NEG_INFINITY() {$/;"	f	language:C++
 F32_NEG_INFINITY	.\code\momo_common.h	/^static F32 F32_NEG_INFINITY();$/;"	p	language:C++
 F64	.\code\momo_common.h	/^typedef double F64;$/;"	t	language:C++
-F64_EPSILON	.\code\momo_common.h	273;"	d	language:C++
+F64_EPSILON	.\code\momo_common.h	272;"	d	language:C++
 F64_INFINITY	.\code\momo_common.h	/^F64_INFINITY() {$/;"	f	language:C++
 F64_INFINITY	.\code\momo_common.h	/^static F64 F64_INFINITY();$/;"	p	language:C++
 F64_NAN	.\code\momo_common.h	/^F64_NAN() {$/;"	f	language:C++
 F64_NAN	.\code\momo_common.h	/^static F64 F64_NAN();$/;"	p	language:C++
 F64_NEG_INFINITY	.\code\momo_common.h	/^F64_NEG_INFINITY() {$/;"	f	language:C++
 F64_NEG_INFINITY	.\code\momo_common.h	/^static F64 F64_NEG_INFINITY();$/;"	p	language:C++
+false	.\code\momo_common.h	364;"	d	language:C++
 far	.\code\win.h	24;"	d	language:C++
 far	.\code\win_renderer.h	8;"	d	language:C++
 filename	.\code\game_profiler.h	/^  const char* filename;$/;"	m	language:C++	struct:Profiler_Entry
@@ -594,12 +593,12 @@ first_atlas_font_glyph_id	.\code\sui_pack.h	/^  U32 first_atlas_font_glyph_id;$/
 first_atlas_font_id	.\code\sui_pack.h	/^  U32 first_atlas_font_id;$/;"	m	language:C++	struct:Sui_Packer
 first_atlas_sprite_id	.\code\sui_pack.h	/^  U32 first_atlas_sprite_id;$/;"	m	language:C++	struct:Sui_Packer
 first_payload_index	.\code\game_renderer.h	/^  UMI first_payload_index;$/;"	m	language:C++	struct:Gfx_Texture_Queue
-flags	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U8 flags;$/;"	m	language:C++	struct:__anon3
+flags	.\code\momo_ttf.h	/^  U8 flags;$/;"	m	language:C++	struct:__anon34
 floor_f32	.\code\momo_intrinsics.h	/^static F32 floor_f32(F32 value) {$/;"	f	language:C++
 floor_f32	.\code\momo_intrinsics.h	/^static F32 floor_f32(F32 value);$/;"	p	language:C++
 floor_f64	.\code\momo_intrinsics.h	/^static F64 floor_f64(F64 value);$/;"	p	language:C++
 floor_f64	.\code\momo_intrinsics.h	/^static F64 floor_f64(F64 value){$/;"	f	language:C++
-fmt_chunk	.\code\momo_wav.h	/^  WAV_Fmt_Chunk fmt_chunk;$/;"	m	language:C++	struct:__anon56
+fmt_chunk	.\code\momo_wav.h	/^  WAV_Fmt_Chunk fmt_chunk;$/;"	m	language:C++	struct:__anon59
 font	.\code\sui_atlas.h	/^  Sui_Atlas_Font* font;$/;"	m	language:C++	struct:Sui_Atlas_Font_Glyph_Context
 fonts	.\code\game_assets.h	/^  Font_Asset* fonts;$/;"	m	language:C++	struct:Game_Assets
 fonts	.\code\sui_atlas.h	/^  Sui_Atlas_Font fonts[128];$/;"	m	language:C++	struct:Sui_Atlas
@@ -612,15 +611,15 @@ font_count	.\code\sui_pack.h	/^  U32 font_count;$/;"	m	language:C++	struct:Sui_P
 FONT_DEBUG	.\code\generated_font_ids.h	/^FONT_DEBUG = PACK_DEFAULT << 16 | 1,$/;"	e	language:C++	enum:Font_ID
 FONT_DEFAULT	.\code\generated_font_ids.h	/^FONT_DEFAULT = PACK_DEFAULT << 16 | 0,$/;"	e	language:C++	enum:Font_ID
 font_file_name	.\code\sui_atlas.h	/^  const char* font_file_name;$/;"	m	language:C++	struct:Sui_Atlas_Font
-font_glyph	.\code\sui_atlas.h	/^    Sui_Atlas_Font_Glyph_Context font_glyph;$/;"	m	language:C++	union:Sui_Atlas_Context::__anon57
+font_glyph	.\code\sui_atlas.h	/^    Sui_Atlas_Font_Glyph_Context font_glyph;$/;"	m	language:C++	union:Sui_Atlas_Context::__anon60
 font_glyphs	.\code\sui_pack.h	/^  Sui_Packer_Font_Glyph font_glyphs[256];$/;"	m	language:C++	struct:Sui_Packer
 Font_Glyph_Asset	.\code\game_assets.h	/^struct Font_Glyph_Asset{$/;"	s	language:C++
 font_glyph_count	.\code\sui_pack.h	/^  U32 font_glyph_count;$/;"	m	language:C++	struct:Sui_Packer
 Font_ID	.\code\generated_font_ids.h	/^enum Font_ID {$/;"	g	language:C++
 font_id_file	.\code\sui_pack.h	/^  FILE* font_id_file;$/;"	m	language:C++	struct:Sui_Packer
 font_id_name	.\code\sui_atlas.h	/^  const char* font_id_name;$/;"	m	language:C++	struct:Sui_Atlas_Font
-foreach	.\code\momo_common.h	175;"	d	language:C++
-format	.\code\momo_wav.h	/^  U32 format; \/\/ big endian$/;"	m	language:C++	struct:__anon53
+foreach	.\code\momo_common.h	174;"	d	language:C++
+format	.\code\momo_wav.h	/^  U32 format; \/\/ big endian$/;"	m	language:C++	struct:__anon56
 frame_arena	.\code\game.h	/^  Bump_Allocator frame_arena;$/;"	m	language:C++	struct:Game
 free_files	.\code\win.cpp	/^  U32 free_files[32];$/;"	m	language:C++	struct:Win_File_Cabinet	file:
 free_file_count	.\code\win.cpp	/^  U32 free_file_count;$/;"	m	language:C++	struct:Win_File_Cabinet	file:
@@ -677,7 +676,7 @@ game_update_and_render	.\code\game.cpp	/^game_update_and_render(Platform* pf)$/;
 Game_Update_And_Render	.\code\game_platform.h	/^typedef void Game_Update_And_Render(Platform* pf);$/;"	t	language:C++
 game_wh	.\code\game_platform.h	/^const V2 game_wh = V2{game_width, game_height};$/;"	v	language:C++
 game_width	.\code\game_platform.h	/^const F32 game_width = 1600.f;$/;"	v	language:C++
-GB	.\code\momo_common.h	171;"	d	language:C++
+GB	.\code\momo_common.h	170;"	d	language:C++
 gen_light_intersections	.\code\game_mode_level_light.cpp	/^gen_light_intersections(Light* l, $/;"	f	language:C++	file:
 get_bitmap	.\code\game_assets.h	/^get_bitmap(Game_Assets* ga, Bitmap_ID id) {$/;"	f	language:C++
 get_font	.\code\game_assets.h	/^get_font(Game_Assets* ga, Font_ID id) {$/;"	f	language:C++
@@ -826,8 +825,8 @@ GLsizeiptr	.\code\game_renderer_opengl.h	/^typedef SMI  GLsizeiptr; $/;"	t	langu
 glTexParameteri	.\code\game_renderer_opengl.h	/^  GL_glTexParameteri*  glTexParameteri ;$/;"	m	language:C++	struct:Opengl
 glTextureStorage2D	.\code\game_renderer_opengl.h	/^  GL_glTextureStorage2D* glTextureStorage2D ;$/;"	m	language:C++	struct:Opengl
 glTextureSubImage2D	.\code\game_renderer_opengl.h	/^  GL_glTextureSubImage2D*  glTextureSubImage2D;$/;"	m	language:C++	struct:Opengl
-glue	.\code\momo_common.h	145;"	d	language:C++
-glue_	.\code\momo_common.h	144;"	d	language:C++
+glue	.\code\momo_common.h	144;"	d	language:C++
+glue_	.\code\momo_common.h	143;"	d	language:C++
 GLuint	.\code\game_renderer_opengl.h	/^typedef U32  GLuint;$/;"	t	language:C++
 glUseProgram	.\code\game_renderer_opengl.h	/^  GL_glUseProgram* glUseProgram;  $/;"	m	language:C++	struct:Opengl
 glVertexArrayAttribBinding	.\code\game_renderer_opengl.h	/^  GL_glVertexArrayAttribBinding* glVertexArrayAttribBinding;$/;"	m	language:C++	struct:Opengl
@@ -836,11 +835,11 @@ glVertexArrayBindingDivisor	.\code\game_renderer_opengl.h	/^  GL_glVertexArrayBi
 glVertexArrayElementBuffer	.\code\game_renderer_opengl.h	/^  GL_glVertexArrayElementBuffer* glVertexArrayElementBuffer;$/;"	m	language:C++	struct:Opengl
 glVertexArrayVertexBuffer	.\code\game_renderer_opengl.h	/^  GL_glVertexArrayVertexBuffer* glVertexArrayVertexBuffer;$/;"	m	language:C++	struct:Opengl
 glViewport	.\code\game_renderer_opengl.h	/^  GL_glViewport* glViewport;$/;"	m	language:C++	struct:Opengl
-glyf	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon1
+glyf	.\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon32
 glyphs	.\code\game_assets.h	/^  Font_Glyph_Asset* glyphs;$/;"	m	language:C++	struct:Font_Asset
 glyph_count	.\code\game_assets.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Font_Asset
 glyph_count	.\code\karu.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Karu_Font
-glyph_count	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:__anon1
+glyph_count	.\code\momo_ttf.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:__anon32
 glyph_height	.\code\sui_pack.h	/^  F32 glyph_height;$/;"	m	language:C++	struct:Sui_Packer_Font
 glyph_rects	.\code\sui_atlas.h	/^  RP_Rect* glyph_rects;$/;"	m	language:C++	struct:Sui_Atlas_Font
 glyph_rect_contexts	.\code\sui_atlas.h	/^  Sui_Atlas_Context* glyph_rect_contexts;$/;"	m	language:C++	struct:Sui_Atlas_Font
@@ -935,24 +934,24 @@ GL_TRUE	.\code\game_renderer_opengl.h	12;"	d	language:C++
 GL_UNSIGNED_BYTE	.\code\game_renderer_opengl.h	43;"	d	language:C++
 GL_VERTEX_SHADER	.\code\game_renderer_opengl.h	37;"	d	language:C++
 GL_ZERO	.\code\game_renderer_opengl.h	16;"	d	language:C++
-GOLD_32	.\code\momo_common.h	331;"	d	language:C++
-GOLD_64	.\code\momo_common.h	332;"	d	language:C++
-gpos	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon1
+GOLD_32	.\code\momo_common.h	330;"	d	language:C++
+GOLD_64	.\code\momo_common.h	331;"	d	language:C++
+gpos	.\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon32
 g_platform	.\code\game.cpp	/^Platform* g_platform;$/;"	v	language:C++
 g_profiler	.\code\win.cpp	/^Profiler* g_profiler = &_g_profiler; $/;"	v	language:C++
 g_win_state	.\code\win.cpp	/^static Win_State g_win_state;$/;"	v	language:C++	file:
 h	.\code\momo_colors.h	/^  F32 h, s, l;  $/;"	m	language:C++	struct:__anon4
-h	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect
-h	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:_RP_Node
-h	.\code\momo_vectors.h	/^	struct { F32 w, h, d; };$/;"	m	language:C++	struct:__anon48::__anon50
-h	.\code\momo_vectors.h	/^	struct { F32 w, h; };$/;"	m	language:C++	struct:__anon44::__anon46
-h	.\code\momo_vectors.h	/^	struct { S32 w, h; };$/;"	m	language:C++	struct:__anon41::__anon43
-h	.\code\momo_vectors.h	/^	struct { U32 w, h; };$/;"	m	language:C++	struct:__anon38::__anon40
+h	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon15
+h	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon16
+h	.\code\momo_vectors.h	/^	struct { F32 w, h, d; };$/;"	m	language:C++	struct:__anon51::__anon53
+h	.\code\momo_vectors.h	/^	struct { F32 w, h; };$/;"	m	language:C++	struct:__anon47::__anon49
+h	.\code\momo_vectors.h	/^	struct { S32 w, h; };$/;"	m	language:C++	struct:__anon44::__anon46
+h	.\code\momo_vectors.h	/^	struct { U32 w, h; };$/;"	m	language:C++	struct:__anon41::__anon43
 half_angle	.\code\game_mode_sb1.h	/^  F32 half_angle;$/;"	m	language:C++	struct:SB1_Light
 half_angle	.\code\game_sb1.h	/^  F32 half_angle;$/;"	m	language:C++	struct:SB1_Light
 handle	.\code\game_renderer_opengl.h	/^  GLuint handle;$/;"	m	language:C++	struct:Texture
 handle	.\code\win.cpp	/^  HANDLE handle;$/;"	m	language:C++	struct:Win_File	file:
-head	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon1
+head	.\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon32
 height	.\code\game_assets.h	/^  U32 height;$/;"	m	language:C++	struct:Bitmap_Asset
 height	.\code\game_renderer.h	/^  F32 height;$/;"	m	language:C++	struct:Gfx_Command_View
 height	.\code\game_renderer_opengl.h	/^  U32 height;$/;"	m	language:C++	struct:Texture
@@ -966,13 +965,13 @@ held_light	.\code\game_mode_sb1.h	/^  SB1_Light* held_light;$/;"	m	language:C++	
 held_light	.\code\game_sb1.h	/^  SB1_Light* held_light;$/;"	m	language:C++	struct:SB1_Player
 hex_to_rgba	.\code\momo_colors.h	/^hex_to_rgba(U32 hex) {$/;"	f	language:C++
 hex_to_rgba	.\code\momo_colors.h	/^static RGBA hex_to_rgba(U32 hex);  $/;"	p	language:C++
-hhea	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon1
+hhea	.\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon32
 highest_codepoint	.\code\game_assets.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Font_Asset
 highest_codepoint	.\code\karu.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Karu_Font
 highest_codepoint	.\code\sui_pack.h	/^  U32 highest_codepoint; \/\/ TODO: we should get rid of this?$/;"	m	language:C++	struct:Sui_Packer_Font
 hits	.\code\game_profiler.h	/^  U32 hits;$/;"	m	language:C++	struct:Profiler_Snapshot
 hits_and_cycles	.\code\game_profiler.h	/^  U64 hits_and_cycles;$/;"	m	language:C++	struct:Profiler_Entry
-hmtx	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon1
+hmtx	.\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon32
 horizontal_advances	.\code\game_assets.h	/^  F32* horizontal_advances;$/;"	m	language:C++	struct:Font_Asset
 hsl	.\code\momo_colors.h	/^hsl(F32 h, F32 s, F32 l) {$/;"	f	language:C++
 hsl	.\code\momo_colors.h	/^static HSL  hsl(F32 h, F32 s, F32 l);$/;"	p	language:C++
@@ -980,9 +979,9 @@ HSL	.\code\momo_colors.h	/^} HSL;$/;"	t	language:C++	typeref:struct:__anon4
 hsl_to_rgb	.\code\momo_colors.h	/^hsl_to_rgb(HSL c) {$/;"	f	language:C++
 hsl_to_rgb	.\code\momo_colors.h	/^static RGB  hsl_to_rgb(HSL c);$/;"	p	language:C++
 id	.\code\game_renderer.h	/^  U32 id; \/\/ type id from user$/;"	m	language:C++	struct:Gfx_Command
-id	.\code\momo_wav.h	/^  U32 id; \/\/ big endian$/;"	m	language:C++	struct:__anon53
-id	.\code\momo_wav.h	/^  U32 id;$/;"	m	language:C++	struct:__anon54
-id	.\code\momo_wav.h	/^  U32 id;$/;"	m	language:C++	struct:__anon55
+id	.\code\momo_wav.h	/^  U32 id; \/\/ big endian$/;"	m	language:C++	struct:__anon56
+id	.\code\momo_wav.h	/^  U32 id;$/;"	m	language:C++	struct:__anon57
+id	.\code\momo_wav.h	/^  U32 id;$/;"	m	language:C++	struct:__anon58
 id_name	.\code\sui_pack.h	/^  const C8* id_name;$/;"	m	language:C++	struct:Sui_Packer_Bitmap
 id_name	.\code\sui_pack.h	/^  const C8* id_name;$/;"	m	language:C++	struct:Sui_Packer_Sprite
 id_name	.\code\sui_pack.h	/^  const char* id_name;$/;"	m	language:C++	struct:Sui_Packer_Font
@@ -990,8 +989,8 @@ image_height	.\code\momo_png.h	/^  U32 image_height;$/;"	m	language:C++	struct:_
 image_stream	.\code\momo_png.h	/^  Stream image_stream;$/;"	m	language:C++	struct:_PNG_Context
 image_width	.\code\momo_png.h	/^  U32 image_width;$/;"	m	language:C++	struct:_PNG_Context
 imm_notifs	.\code\win_audio_wasapi.h	/^  IMMNotificationClient imm_notifs;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client
-index	.\code\momo_rng.h	/^  U32 index;$/;"	m	language:C++	struct:__anon14
-index	.\code\momo_sort.h	/^  U32 index;$/;"	m	language:C++	struct:__anon24
+index	.\code\momo_rng.h	/^  U32 index;$/;"	m	language:C++	struct:__anon17
+index	.\code\momo_sort.h	/^  U32 index;$/;"	m	language:C++	struct:__anon27
 info_lines	.\code\game_console.h	/^  String8_Builder info_lines[9];$/;"	m	language:C++	struct:Console
 INITGUID	.\code\win.h	14;"	d	language:C++
 init_console	.\code\game_console.h	/^init_console(Console* dc, Bump_Allocator* allocator) {$/;"	f	language:C++
@@ -1009,7 +1008,7 @@ INSPECTOR_ENTRY_TYPE_U32	.\code\game_inspector.h	/^  INSPECTOR_ENTRY_TYPE_U32,$/
 instances_to_draw	.\code\game_renderer_opengl.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:Sprite_Batcher
 interlace_method	.\code\momo_png.h	/^  U8 interlace_method;$/;"	m	language:C++	struct:PNG
 interlace_method	.\code\momo_png.h	/^  U8 interlace_method;$/;"	m	language:C++	struct:_PNG_IHDR
-INTERNAL	.\code\momo_common.h	111;"	d	language:C++
+INTERNAL	.\code\momo_common.h	110;"	d	language:C++
 intersections	.\code\game_mode_sb1.h	/^  SB1_Light_Intersection_List intersections;$/;"	m	language:C++	struct:SB1_Light
 intersections	.\code\game_sb1.h	/^  SB1_Light_Intersection_List intersections;$/;"	m	language:C++	struct:SB1_Light
 int_to_ptr	.\code\momo_common.h	/^int_to_ptr(UMI u) { $/;"	f	language:C++
@@ -1029,7 +1028,7 @@ is_digit	.\code\momo_common.h	/^static B32 is_digit(U8 c);$/;"	p	language:C++
 is_disabled	.\code\game_mode_sb1.h	/^  B32 is_disabled;$/;"	m	language:C++	struct:SB1_Edge
 is_disabled	.\code\game_sb1.h	/^  B32 is_disabled;$/;"	m	language:C++	struct:SB1_Edge
 is_done	.\code\game.h	/^  B32 is_done;$/;"	m	language:C++	struct:Game
-is_inverted	C:\Users\geral\work\txt\code\momo_ttf.h	/^  B32 is_inverted;$/;"	m	language:C++	struct:__anon6
+is_inverted	.\code\momo_ttf.h	/^  B32 is_inverted;$/;"	m	language:C++	struct:__anon37
 is_memory_same	.\code\momo_common.h	/^is_memory_same(const void* lhs, const void* rhs, UMI size) {$/;"	f	language:C++
 is_memory_same	.\code\momo_common.h	/^is_memory_same(const void* lhs, const void* rhs, UMI size) {$/;"	f	language:C++
 is_memory_same	.\code\momo_common.h	/^static B32  is_memory_same(const void* lhs, const void* rhs, UMI size);$/;"	p	language:C++
@@ -1044,7 +1043,7 @@ is_ok	.\code\momo_image.h	/^is_ok(Bitmap bm) {$/;"	f	language:C++
 is_ok	.\code\momo_image.h	/^static B32 is_ok(Bitmap);$/;"	p	language:C++
 is_point_in_editor_toolbar_state_button	.\code\game_mode_level_editor.cpp	/^is_point_in_editor_toolbar_state_button(Editor* e, UMI btn_index, V2 pt) {$/;"	f	language:C++	file:
 is_point_on_editor_toolbar	.\code\game_mode_level_editor.cpp	/^is_point_on_editor_toolbar(Editor* e, V2 pt) {$/;"	f	language:C++	file:
-is_pow2	.\code\momo_common.h	218;"	d	language:C++
+is_pow2	.\code\momo_common.h	217;"	d	language:C++
 is_running	.\code\win.cpp	/^  B32 is_running;$/;"	m	language:C++	struct:Win_State	file:
 is_selecting_pt	.\code\game_mode_level_editor.h	/^  B32 is_selecting_pt;$/;"	m	language:C++	struct:Editor
 is_shell	.\code\game_mode_sb1.h	/^  B32 is_shell;$/;"	m	language:C++	struct:SB1_Light_Intersection
@@ -1065,16 +1064,16 @@ Karu_Header	.\code\karu.h	/^struct Karu_Header {$/;"	s	language:C++
 KARU_SIGNATURE	.\code\karu.h	11;"	d	language:C++
 Karu_Sound	.\code\karu.h	/^struct Karu_Sound {$/;"	s	language:C++
 Karu_Sprite	.\code\karu.h	/^struct Karu_Sprite {$/;"	s	language:C++
-KB	.\code\momo_common.h	169;"	d	language:C++
-kern	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon1
+KB	.\code\momo_common.h	168;"	d	language:C++
+kern	.\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon32
 key	.\code\game_console.h	/^  String8 key;$/;"	m	language:C++	struct:Console_Command
-key	.\code\momo_sort.h	/^  F32 key;$/;"	m	language:C++	struct:__anon24
+key	.\code\momo_sort.h	/^  F32 key;$/;"	m	language:C++	struct:__anon27
 l	.\code\momo_colors.h	/^  F32 h, s, l;  $/;"	m	language:C++	struct:__anon4
 last	.\code\game_profiler.h	/^  Profiler_Entry* last;$/;"	m	language:C++	struct:Profiler
 last_drawn_instance_index	.\code\game_renderer_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:Sprite_Batcher
 latency_sample_count	.\code\win_audio_wasapi.h	/^  U32 latency_sample_count;$/;"	m	language:C++	struct:Win_Wasapi
 layers	.\code\game_renderer.h	/^  U32 layers;$/;"	m	language:C++	struct:Gfx_Command_View
-left_side_bearing	C:\Users\geral\work\txt\code\momo_ttf.h	/^  S16 left_side_bearing;$/;"	m	language:C++	struct:__anon2
+left_side_bearing	.\code\momo_ttf.h	/^  S16 left_side_bearing;$/;"	m	language:C++	struct:__anon33
 length	.\code\momo_png.h	/^  U32 length;$/;"	m	language:C++	struct:_PNG_Chunk_Header
 lengths	.\code\momo_png.h	/^  U16* lengths;$/;"	m	language:C++	struct:_PNG_Huffman
 length_count	.\code\momo_png.h	/^  U32 length_count;$/;"	m	language:C++	struct:_PNG_Huffman
@@ -1093,11 +1092,11 @@ LIGHT_BLUE	.\code\game_mode_level.h	24;"	d	language:C++
 LIGHT_GREEN	.\code\game_mode_level.h	23;"	d	language:C++
 LIGHT_RED	.\code\game_mode_level.h	22;"	d	language:C++
 line	.\code\game_profiler.h	/^  U32 line;$/;"	m	language:C++	struct:Profiler_Entry
-Line2	.\code\momo_shapes.h	/^}Line2;$/;"	t	language:C++	typeref:struct:__anon21
+Line2	.\code\momo_shapes.h	/^}Line2;$/;"	t	language:C++	typeref:struct:__anon24
 load	.\code\win_renderer.h	/^  Win_Gfx_Load* load;$/;"	m	language:C++	struct:Win_Gfx_Functions
 load_game_assets	.\code\game_assets.h	/^load_game_assets(Game_Assets* ga, $/;"	f	language:C++
-loca	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon1
-loca_format	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U16 loca_format;$/;"	m	language:C++	struct:__anon1
+loca	.\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon32
+loca_format	.\code\momo_ttf.h	/^  U16 loca_format;$/;"	m	language:C++	struct:__anon32
 M44	.\code\momo_matrix.h	/^}M44;$/;"	t	language:C++	typeref:struct:__anon12
 m44_concat	.\code\momo_matrix.h	/^static M44 m44_concat(M44 lhs, M44 rhs) {$/;"	f	language:C++
 m44_concat	.\code\momo_matrix.h	/^static M44 m44_concat(M44 lhs, M44 rhs);$/;"	p	language:C++
@@ -1126,17 +1125,17 @@ main	.\code\meta.cpp	/^int main() {$/;"	f	language:C++
 main	.\code\sui.cpp	/^int main() {$/;"	f	language:C++
 main	.\code\test.cpp	/^int main() {$/;"	f	language:C++
 max	.\code\game_profiler_rendering.h	/^  F64 max;$/;"	m	language:C++	struct:Stat
-max	.\code\momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:__anon15
-max	.\code\momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:__anon21
-max	.\code\momo_shapes.h	/^  V2S min, max;$/;"	m	language:C++	struct:__anon16
-max	.\code\momo_shapes.h	/^  V2U min, max;$/;"	m	language:C++	struct:__anon17
-max	.\code\momo_shapes.h	/^  V3 min, max;$/;"	m	language:C++	struct:__anon18
-maxp	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon1
-max_of	.\code\momo_common.h	188;"	d	language:C++
+max	.\code\momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:__anon18
+max	.\code\momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:__anon24
+max	.\code\momo_shapes.h	/^  V2S min, max;$/;"	m	language:C++	struct:__anon19
+max	.\code\momo_shapes.h	/^  V2U min, max;$/;"	m	language:C++	struct:__anon20
+max	.\code\momo_shapes.h	/^  V3 min, max;$/;"	m	language:C++	struct:__anon21
+maxp	.\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon32
+max_of	.\code\momo_common.h	187;"	d	language:C++
 max_pt_id	.\code\game_mode_level.h	/^  UMI max_pt_id;$/;"	m	language:C++	struct:Edge
 max_pt_id	.\code\game_mode_sb1.h	/^  UMI max_pt_id;$/;"	m	language:C++	struct:SB1_Edge
 max_pt_id	.\code\game_sb1.h	/^  UMI max_pt_id;$/;"	m	language:C++	struct:SB1_Edge
-MB	.\code\momo_common.h	170;"	d	language:C++
+MB	.\code\momo_common.h	169;"	d	language:C++
 memory	.\code\game_renderer.h	/^	U8* memory;$/;"	m	language:C++	struct:Gfx_Command_Queue
 Memory	.\code\momo_common.h	/^struct Memory  {$/;"	s	language:C++
 memory	.\code\momo_memory.h	/^	U8* memory;$/;"	m	language:C++	struct:Bump_Allocator
@@ -1166,12 +1165,12 @@ META_TOKEN_TYPE_STRING	.\code\meta.cpp	/^  META_TOKEN_TYPE_STRING,$/;"	e	languag
 META_TOKEN_TYPE_UNKNOWN	.\code\meta.cpp	/^  META_TOKEN_TYPE_UNKNOWN,$/;"	e	language:C++	enum:Meta_Token_Type	file:
 meta_update_profiler_codegen	.\code\meta.cpp	/^meta_update_profiler_codegen(Profiler_Codegen* p, Meta_Tokenizer* t, Meta_Token token) {$/;"	f	language:C++	file:
 min	.\code\game_profiler_rendering.h	/^  F64 min;$/;"	m	language:C++	struct:Stat
-min	.\code\momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:__anon15
-min	.\code\momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:__anon21
-min	.\code\momo_shapes.h	/^  V2S min, max;$/;"	m	language:C++	struct:__anon16
-min	.\code\momo_shapes.h	/^  V2U min, max;$/;"	m	language:C++	struct:__anon17
-min	.\code\momo_shapes.h	/^  V3 min, max;$/;"	m	language:C++	struct:__anon18
-min_of	.\code\momo_common.h	187;"	d	language:C++
+min	.\code\momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:__anon18
+min	.\code\momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:__anon24
+min	.\code\momo_shapes.h	/^  V2S min, max;$/;"	m	language:C++	struct:__anon19
+min	.\code\momo_shapes.h	/^  V2U min, max;$/;"	m	language:C++	struct:__anon20
+min	.\code\momo_shapes.h	/^  V3 min, max;$/;"	m	language:C++	struct:__anon21
+min_of	.\code\momo_common.h	186;"	d	language:C++
 min_pt_id	.\code\game_mode_level.h	/^  UMI min_pt_id;$/;"	m	language:C++	struct:Edge
 min_pt_id	.\code\game_mode_sb1.h	/^  UMI min_pt_id;$/;"	m	language:C++	struct:SB1_Edge
 min_pt_id	.\code\game_sb1.h	/^  UMI min_pt_id;$/;"	m	language:C++	struct:SB1_Edge
@@ -1202,7 +1201,7 @@ MOMO_SHAPES_H	.\code\momo_shapes.h	2;"	d	language:C++
 MOMO_SORT_H	.\code\momo_sort.h	2;"	d	language:C++
 MOMO_STREAM_H	.\code\momo_streams.h	2;"	d	language:C++
 MOMO_STRING_H	.\code\momo_strings.h	2;"	d	language:C++
-MOMO_TTF_H	C:\Users\geral\work\txt\code\momo_ttf.h	23;"	d	language:C++
+MOMO_TTF_H	.\code\momo_ttf.h	23;"	d	language:C++
 MOMO_VECTOR_H	.\code\momo_vectors.h	17;"	d	language:C++
 MOMO_WAV_H	.\code\momo_wav.h	4;"	d	language:C++
 name	.\code\game_inspector.h	/^  String8 name;$/;"	m	language:C++	struct:Inspector_Entry
@@ -1215,10 +1214,12 @@ next_state	.\code\game_mode_level_editor.h	/^  Editor_State next_state;$/;"	m	la
 NOMINMAX	.\code\win.h	11;"	d	language:C++
 notifs	.\code\win_audio_wasapi.h	/^  Win_Wasapi_Notif_Client notifs;$/;"	m	language:C++	struct:Win_Wasapi
 now	.\code\game_platform.h	/^  B32 now; $/;"	m	language:C++	struct:Platform_Button
-ns_begin	.\code\momo_common.h	343;"	d	language:C++
-ns_end	.\code\momo_common.h	344;"	d	language:C++
-num_channels	.\code\momo_wav.h	/^  U16 num_channels;$/;"	m	language:C++	struct:__anon54
-offset_of	.\code\momo_common.h	162;"	d	language:C++
+ns_begin	.\code\momo_common.h	344;"	d	language:C++
+ns_end	.\code\momo_common.h	345;"	d	language:C++
+null	.\code\momo_common.h	342;"	d	language:C++
+null	.\code\momo_common.h	365;"	d	language:C++
+num_channels	.\code\momo_wav.h	/^  U16 num_channels;$/;"	m	language:C++	struct:__anon57
+offset_of	.\code\momo_common.h	161;"	d	language:C++
 offset_to_bitmaps	.\code\karu.h	/^  U32 offset_to_bitmaps;$/;"	m	language:C++	struct:Karu_Header
 offset_to_data	.\code\karu.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Bitmap
 offset_to_data	.\code\karu.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Font
@@ -1300,9 +1301,9 @@ OS_MAC	.\code\momo_common.h	54;"	d	language:C++
 OS_WINDOWS	.\code\momo_common.h	38;"	d	language:C++
 OS_WINDOWS	.\code\momo_common.h	48;"	d	language:C++
 p0	.\code\game_renderer.h	/^  V2 p0, p1, p2;$/;"	m	language:C++	struct:Gfx_Command_Triangle
-p0	C:\Users\geral\work\txt\code\momo_ttf.h	/^  V2 p0, p1;$/;"	m	language:C++	struct:__anon6
+p0	.\code\momo_ttf.h	/^  V2 p0, p1;$/;"	m	language:C++	struct:__anon37
 p1	.\code\game_renderer.h	/^  V2 p0, p1, p2;$/;"	m	language:C++	struct:Gfx_Command_Triangle
-p1	C:\Users\geral\work\txt\code\momo_ttf.h	/^  V2 p0, p1;$/;"	m	language:C++	struct:__anon6
+p1	.\code\momo_ttf.h	/^  V2 p0, p1;$/;"	m	language:C++	struct:__anon37
 p2	.\code\game_renderer.h	/^  V2 p0, p1, p2;$/;"	m	language:C++	struct:Gfx_Command_Triangle
 pack_count	.\code\sui_pack.h	/^  U32 pack_count;$/;"	m	language:C++	struct:Sui_Packer
 PACK_DEFAULT	.\code\generated_pack_ids.h	/^PACK_DEFAULT = 0,$/;"	e	language:C++	enum:Pack_ID
@@ -1316,8 +1317,8 @@ paint_line	.\code\game_painter.h	/^paint_line(Painter* p,$/;"	f	language:C++
 paint_set_blend	.\code\game_painter.h	/^paint_set_blend(Painter* p, Gfx_Blend_Type src, Gfx_Blend_Type dst) {$/;"	f	language:C++
 paint_sprite	.\code\game_painter.h	/^paint_sprite(Painter* p,$/;"	f	language:C++
 paint_text	.\code\game_painter.h	/^paint_text(Painter* p,$/;"	f	language:C++
-path_count	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 path_count;$/;"	m	language:C++	struct:__anon5
-path_lengths	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32* path_lengths;$/;"	m	language:C++	struct:__anon5
+path_count	.\code\momo_ttf.h	/^  U32 path_count;$/;"	m	language:C++	struct:__anon36
+path_lengths	.\code\momo_ttf.h	/^  U32* path_lengths;$/;"	m	language:C++	struct:__anon36
 payloads	.\code\game_renderer.h	/^  Gfx_Texture_Payload payloads[256];$/;"	m	language:C++	struct:Gfx_Texture_Queue
 payload_count	.\code\game_renderer.h	/^  UMI payload_count;$/;"	m	language:C++	struct:Gfx_Texture_Queue
 percent_f32	.\code\momo_common.h	/^percent_f32(F32 v, F32 min, F32 max) { $/;"	f	language:C++
@@ -1336,8 +1337,8 @@ pf_update_input	.\code\game_platform.h	/^pf_update_input(Platform* pf) {$/;"	f	l
 pf_update_input	.\code\game_platform.h	/^static void pf_update_input(Platform_Button);$/;"	p	language:C++
 pixels	.\code\momo_image.h	/^  U32* pixels;$/;"	m	language:C++	struct:Bitmap
 pixels	.\code\sui_pack.h	/^  U32* pixels;$/;"	m	language:C++	struct:Sui_Packer_Bitmap
-PI_32	.\code\momo_common.h	327;"	d	language:C++
-PI_64	.\code\momo_common.h	328;"	d	language:C++
+PI_32	.\code\momo_common.h	326;"	d	language:C++
+PI_64	.\code\momo_common.h	327;"	d	language:C++
 platform	.\code\game.h	/^Platform* platform;$/;"	v	language:C++
 Platform	.\code\game_platform.h	/^struct Platform {$/;"	s	language:C++
 Platform_Add_Task	.\code\game_platform.h	/^typedef void Platform_Add_Task(Platform_Task_Callback callback, void* data);$/;"	t	language:C++
@@ -1379,8 +1380,8 @@ png_write	.\code\momo_png.h	/^static Memory png_write(Bitmap bm, Bump_Allocator*
 points	.\code\game_mode_level.h	/^  Array_List<V2> points;$/;"	m	language:C++	struct:Level_Mode
 points	.\code\game_mode_sb1.h	/^  SB1_Point_List points;$/;"	m	language:C++	struct:SB1
 points	.\code\game_sb1.h	/^  SB1_Point_List points;$/;"	m	language:C++	struct:SB1
-points	C:\Users\geral\work\txt\code\momo_ttf.h	/^  _TTF_Glyph_Point* points;$/;"	m	language:C++	struct:__anon4
-point_count	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 point_count;$/;"	m	language:C++	struct:__anon4
+points	.\code\momo_ttf.h	/^  _TTF_Glyph_Point* points;$/;"	m	language:C++	struct:__anon35
+point_count	.\code\momo_ttf.h	/^  U32 point_count;$/;"	m	language:C++	struct:__anon35
 pos	.\code\game_mode_level.h	/^  V2 pos;$/;"	m	language:C++	struct:Player
 pos	.\code\game_mode_level.h	/^  V2 pos;$/;"	m	language:C++	struct:Sensor
 pos	.\code\game_mode_level_editor.h	/^  V2 pos;$/;"	m	language:C++	struct:Editor_Toolbar_Button
@@ -1418,10 +1419,10 @@ PROFILER_MAX_SNAPSHOTS	.\code\game_profiler.h	8;"	d	language:C++
 Profiler_Snapshot	.\code\game_profiler.h	/^struct Profiler_Snapshot {$/;"	s	language:C++
 pt	.\code\game_mode_sb1.h	/^  V2 pt;$/;"	m	language:C++	struct:SB1_Light_Intersection
 pt	.\code\game_sb1.h	/^  V2 pt;$/;"	m	language:C++	struct:SB1_Light_Intersection
-pt	.\code\momo_shapes.h	/^  V2 pt;$/;"	m	language:C++	struct:__anon22
+pt	.\code\momo_shapes.h	/^  V2 pt;$/;"	m	language:C++	struct:__anon25
 ptr_to_int	.\code\momo_common.h	/^ptr_to_int(void* p) { $/;"	f	language:C++
 ptr_to_int	.\code\momo_common.h	/^static UMI ptr_to_int(void* p);$/;"	p	language:C++
-pts	.\code\momo_shapes.h	/^  V2 pts[3];$/;"	m	language:C++	struct:__anon23
+pts	.\code\momo_shapes.h	/^  V2 pts[3];$/;"	m	language:C++	struct:__anon26
 push_atlas_font_glyph	.\code\sui_pack.h	/^push_atlas_font_glyph(Sui_Packer* p, U32 codepoint) {$/;"	f	language:C++
 push_atlas_sprite	.\code\sui_pack.h	/^push_atlas_sprite(Sui_Packer* p, const char* id_name, const char* file_name) {$/;"	f	language:C++
 push_edge	.\code\game_mode_level_editor.h	/^static void push_edge(Level_Mode* m, UMI min, UMI max);$/;"	p	language:C++
@@ -1433,13 +1434,13 @@ push_triangle	.\code\game_mode_level_light.cpp	/^push_triangle(Light* l, V2 p0, 
 quicksort	.\code\momo_sort.h	/^quicksort(Sort_Entry* entries, U32 entry_count) {$/;"	f	language:C++
 r	.\code\momo_colors.h	/^    struct { F32 r, g, b; };  $/;"	m	language:C++	struct:__anon5::__anon6::__anon7
 r	.\code\momo_colors.h	/^  F32 r, g, b;   $/;"	m	language:C++	struct:__anon3
-radius	.\code\momo_shapes.h	/^  F32 radius;$/;"	m	language:C++	struct:__anon20
+radius	.\code\momo_shapes.h	/^  F32 radius;$/;"	m	language:C++	struct:__anon23
 rad_to_deg_f32	.\code\momo_common.h	/^rad_to_deg_f32(F32 radians) {$/;"	f	language:C++
 rad_to_deg_f32	.\code\momo_common.h	/^static F32 rad_to_deg_f32(F32 radians);$/;"	p	language:C++
 rad_to_deg_f64	.\code\momo_common.h	/^rad_to_deg_f64(F64 radians) {$/;"	f	language:C++
 rad_to_deg_f64	.\code\momo_common.h	/^static F64 rad_to_deg_f64(F64 radians);$/;"	p	language:C++
 raster_font_height	.\code\sui_atlas.h	/^  F32 raster_font_height;$/;"	m	language:C++	struct:Sui_Atlas_Font
-Ray2	.\code\momo_shapes.h	/^}Ray2;$/;"	t	language:C++	typeref:struct:__anon22
+Ray2	.\code\momo_shapes.h	/^}Ray2;$/;"	t	language:C++	typeref:struct:__anon25
 rbg_to_hsl	.\code\momo_colors.h	/^rbg_to_hsl(RGB c) {$/;"	f	language:C++
 rbg_to_hsl	.\code\momo_colors.h	/^static HSL  rbg_to_hsl(RGB c);$/;"	p	language:C++
 read_file	.\code\game_platform.h	/^  Platform_Read_File* read_file;$/;"	m	language:C++	struct:Platform
@@ -1452,14 +1453,13 @@ rec2_height	.\code\momo_shapes.h	/^rec2_height(Rect2 r) {$/;"	f	language:C++
 rec2_height	.\code\momo_shapes.h	/^static F32 rec2_height(Rect2 lhs);$/;"	p	language:C++
 rec2_width	.\code\momo_shapes.h	/^rec2_width(Rect2 r) {$/;"	f	language:C++
 rec2_width	.\code\momo_shapes.h	/^static F32 rec2_width(Rect2 lhs);$/;"	p	language:C++
-rect	.\code\momo_rect_pack.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:_RP_Sort_Entry
 rect	.\code\sui_atlas.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Atlas_Sprite
 rect	.\code\sui_pack.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Packer_Font_Glyph
 rect	.\code\sui_pack.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Packer_Sprite
-Rect2	.\code\momo_shapes.h	/^}Rect2;$/;"	t	language:C++	typeref:struct:__anon15
-Rect2S	.\code\momo_shapes.h	/^}Rect2S;$/;"	t	language:C++	typeref:struct:__anon16
-Rect2U	.\code\momo_shapes.h	/^}Rect2U;$/;"	t	language:C++	typeref:struct:__anon17
-Rect3	.\code\momo_shapes.h	/^}Rect3;$/;"	t	language:C++	typeref:struct:__anon18
+Rect2	.\code\momo_shapes.h	/^}Rect2;$/;"	t	language:C++	typeref:struct:__anon18
+Rect2S	.\code\momo_shapes.h	/^}Rect2S;$/;"	t	language:C++	typeref:struct:__anon19
+Rect2U	.\code\momo_shapes.h	/^}Rect2U;$/;"	t	language:C++	typeref:struct:__anon20
+Rect3	.\code\momo_shapes.h	/^}Rect3;$/;"	t	language:C++	typeref:struct:__anon21
 rect_context	.\code\sui_atlas.h	/^  Sui_Atlas_Context* rect_context;$/;"	m	language:C++	struct:Sui_Atlas_Sprite
 rect_count	.\code\sui_atlas.h	/^  U32 rect_count;$/;"	m	language:C++	struct:Sui_Atlas_Font
 ref	.\code\win_audio_wasapi.h	/^  LONG ref;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client
@@ -1477,8 +1477,8 @@ RGB	.\code\momo_colors.h	/^} RGB;$/;"	t	language:C++	typeref:struct:__anon3
 rgba	.\code\momo_colors.h	/^rgba(F32 r, F32 g, F32 b, F32 a){$/;"	f	language:C++
 rgba	.\code\momo_colors.h	/^static RGBA rgba(F32 r, F32 g, F32 b, F32 a);$/;"	p	language:C++
 RGBA	.\code\momo_colors.h	/^} RGBA;$/;"	t	language:C++	typeref:struct:__anon5
-riff_chunk	.\code\momo_wav.h	/^  WAV_Riff_Chunk riff_chunk;$/;"	m	language:C++	struct:__anon56
-RNG	.\code\momo_rng.h	/^} RNG;$/;"	t	language:C++	typeref:struct:__anon14
+riff_chunk	.\code\momo_wav.h	/^  WAV_Riff_Chunk riff_chunk;$/;"	m	language:C++	struct:__anon59
+RNG	.\code\momo_rng.h	/^} RNG;$/;"	t	language:C++	typeref:struct:__anon17
 rng_bilateral	.\code\momo_rng.h	/^rng_bilateral(RNG* r)$/;"	f	language:C++
 rng_bilateral	.\code\momo_rng.h	/^static F32 rng_bilateral(RNG* r);$/;"	p	language:C++
 rng_choice	.\code\momo_rng.h	/^rng_choice(RNG* r, U32 choice_count) {$/;"	f	language:C++
@@ -1502,31 +1502,31 @@ round_f64	.\code\momo_intrinsics.h	/^static F64 round_f64(F64 value) {$/;"	f	lan
 round_f64	.\code\momo_intrinsics.h	/^static F64 round_f64(F64 value);$/;"	p	language:C++
 rp_pack	.\code\momo_rect_pack.h	/^rp_pack(RP_Rect* rects, $/;"	f	language:C++
 rp_pack	.\code\momo_rect_pack.h	/^static void rp_pack(RP_Rect* rects, $/;"	p	language:C++
-RP_Rect	.\code\momo_rect_pack.h	/^struct RP_Rect {$/;"	s	language:C++
-RP_Sort_Type	.\code\momo_rect_pack.h	/^enum RP_Sort_Type {$/;"	g	language:C++
-RP_SORT_TYPE_AREA	.\code\momo_rect_pack.h	/^  RP_SORT_TYPE_AREA,$/;"	e	language:C++	enum:RP_Sort_Type
-RP_SORT_TYPE_BIGGER_SIDE	.\code\momo_rect_pack.h	/^  RP_SORT_TYPE_BIGGER_SIDE,$/;"	e	language:C++	enum:RP_Sort_Type
-RP_SORT_TYPE_HEIGHT	.\code\momo_rect_pack.h	/^  RP_SORT_TYPE_HEIGHT,$/;"	e	language:C++	enum:RP_Sort_Type
-RP_SORT_TYPE_PATHOLOGICAL	.\code\momo_rect_pack.h	/^  RP_SORT_TYPE_PATHOLOGICAL,$/;"	e	language:C++	enum:RP_Sort_Type
-RP_SORT_TYPE_PERIMETER	.\code\momo_rect_pack.h	/^  RP_SORT_TYPE_PERIMETER,$/;"	e	language:C++	enum:RP_Sort_Type
-RP_SORT_TYPE_WIDTH	.\code\momo_rect_pack.h	/^  RP_SORT_TYPE_WIDTH,$/;"	e	language:C++	enum:RP_Sort_Type
+RP_Rect	.\code\momo_rect_pack.h	/^}RP_Rect;$/;"	t	language:C++	typeref:struct:__anon15
+RP_Sort_Type	.\code\momo_rect_pack.h	/^}RP_Sort_Type;$/;"	t	language:C++	typeref:enum:__anon14
+RP_SORT_TYPE_AREA	.\code\momo_rect_pack.h	/^  RP_SORT_TYPE_AREA,$/;"	e	language:C++	enum:__anon14
+RP_SORT_TYPE_BIGGER_SIDE	.\code\momo_rect_pack.h	/^  RP_SORT_TYPE_BIGGER_SIDE,$/;"	e	language:C++	enum:__anon14
+RP_SORT_TYPE_HEIGHT	.\code\momo_rect_pack.h	/^  RP_SORT_TYPE_HEIGHT,$/;"	e	language:C++	enum:__anon14
+RP_SORT_TYPE_PATHOLOGICAL	.\code\momo_rect_pack.h	/^  RP_SORT_TYPE_PATHOLOGICAL,$/;"	e	language:C++	enum:__anon14
+RP_SORT_TYPE_PERIMETER	.\code\momo_rect_pack.h	/^  RP_SORT_TYPE_PERIMETER,$/;"	e	language:C++	enum:__anon14
+RP_SORT_TYPE_WIDTH	.\code\momo_rect_pack.h	/^  RP_SORT_TYPE_WIDTH,$/;"	e	language:C++	enum:__anon14
 s	.\code\momo_colors.h	/^  F32 h, s, l;  $/;"	m	language:C++	struct:__anon4
 S16	.\code\momo_common.h	/^typedef int16_t S16;$/;"	t	language:C++
-S16_MAX	.\code\momo_common.h	263;"	d	language:C++
-S16_MIN	.\code\momo_common.h	258;"	d	language:C++
+S16_MAX	.\code\momo_common.h	262;"	d	language:C++
+S16_MIN	.\code\momo_common.h	257;"	d	language:C++
 S32	.\code\momo_common.h	/^typedef int32_t S32;$/;"	t	language:C++
-S32_MAX	.\code\momo_common.h	264;"	d	language:C++
-S32_MIN	.\code\momo_common.h	259;"	d	language:C++
+S32_MAX	.\code\momo_common.h	263;"	d	language:C++
+S32_MIN	.\code\momo_common.h	258;"	d	language:C++
 S64	.\code\momo_common.h	/^typedef int64_t S64;$/;"	t	language:C++
-S64_MAX	.\code\momo_common.h	265;"	d	language:C++
-S64_MIN	.\code\momo_common.h	260;"	d	language:C++
+S64_MAX	.\code\momo_common.h	264;"	d	language:C++
+S64_MIN	.\code\momo_common.h	259;"	d	language:C++
 S8	.\code\momo_common.h	/^typedef int8_t S8;$/;"	t	language:C++
-S8_MAX	.\code\momo_common.h	262;"	d	language:C++
-S8_MIN	.\code\momo_common.h	257;"	d	language:C++
+S8_MAX	.\code\momo_common.h	261;"	d	language:C++
+S8_MIN	.\code\momo_common.h	256;"	d	language:C++
 samples_per_second	.\code\win_audio_wasapi.h	/^  U32 samples_per_second;$/;"	m	language:C++	struct:Win_Wasapi
 sample_buffer	.\code\game_platform.h	/^    S16* sample_buffer;$/;"	m	language:C++	struct:Platform_Audio
 sample_count	.\code\game_platform.h	/^    U32 sample_count;$/;"	m	language:C++	struct:Platform_Audio
-sample_rate	.\code\momo_wav.h	/^  U32 sample_rate;$/;"	m	language:C++	struct:__anon54
+sample_rate	.\code\momo_wav.h	/^  U32 sample_rate;$/;"	m	language:C++	struct:__anon57
 SB1	.\code\game_mode_sb1.h	/^struct SB1 {$/;"	s	language:C++
 SB1	.\code\game_sb1.h	/^struct SB1 {$/;"	s	language:C++
 sb1_calc_ghost_edge_line	.\code\game_mode_sb1.h	/^sb1_calc_ghost_edge_line(SB1_Point_List* points, SB1_Edge* e) {$/;"	f	language:C++
@@ -1645,9 +1645,9 @@ size	.\code\game_renderer.h	/^  V2 size;$/;"	m	language:C++	struct:Gfx_Command_S
 size	.\code\game_sb1.h	/^  V2 size;$/;"	m	language:C++	struct:SB1_Player
 size	.\code\momo_common.h	/^  UMI size;  $/;"	m	language:C++	struct:Memory
 size	.\code\momo_streams.h	/^  UMI size;$/;"	m	language:C++	struct:Stream
-size	.\code\momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:__anon53
-size	.\code\momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:__anon54
-size	.\code\momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:__anon55
+size	.\code\momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:__anon56
+size	.\code\momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:__anon57
+size	.\code\momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:__anon58
 sll_append	.\code\momo_lists.h	25;"	d	language:C++
 sll_prepend	.\code\momo_lists.h	24;"	d	language:C++
 sl_append	.\code\momo_lists.h	17;"	d	language:C++
@@ -1660,7 +1660,7 @@ sl_is_valid	.\code\momo_lists.h	16;"	d	language:C++
 SMI	.\code\momo_common.h	/^typedef ptrdiff_t SMI; \/\/ aka 'signed memory index'$/;"	t	language:C++
 snapshots	.\code\game_profiler.h	/^  Profiler_Snapshot snapshots[PROFILER_MAX_SNAPSHOTS];$/;"	m	language:C++	struct:Profiler_Entry
 snapshot_index	.\code\game_profiler.h	/^  U32 snapshot_index;$/;"	m	language:C++	struct:Profiler
-Sort_Entry	.\code\momo_sort.h	/^} Sort_Entry;$/;"	t	language:C++	typeref:struct:__anon24
+Sort_Entry	.\code\momo_sort.h	/^} Sort_Entry;$/;"	t	language:C++	typeref:struct:__anon27
 sounds	.\code\sui_pack.h	/^  Sui_Packer_Sound sounds[64];$/;"	m	language:C++	struct:Sui_Packer
 sound_count	.\code\karu.h	/^  U32 sound_count;$/;"	m	language:C++	struct:Karu_Header
 sound_count	.\code\sui_pack.h	/^  U32 sound_count;$/;"	m	language:C++	struct:Sui_Packer
@@ -1670,7 +1670,7 @@ sound_id_name	.\code\sui_pack.h	/^  const char* sound_id_name;$/;"	m	language:C+
 Splash	.\code\game_mode_splash.h	/^struct Splash {$/;"	s	language:C++
 splash_init	.\code\game_mode_splash.h	/^splash_init(Game* game) $/;"	f	language:C++
 splash_tick	.\code\game_mode_splash.h	/^splash_tick(Game* game,$/;"	f	language:C++
-sprite	.\code\sui_atlas.h	/^    Sui_Atlas_Sprite_Context sprite;$/;"	m	language:C++	union:Sui_Atlas_Context::__anon57
+sprite	.\code\sui_atlas.h	/^    Sui_Atlas_Sprite_Context sprite;$/;"	m	language:C++	union:Sui_Atlas_Context::__anon60
 sprite	.\code\sui_atlas.h	/^  Sui_Atlas_Sprite* sprite;$/;"	m	language:C++	struct:Sui_Atlas_Sprite_Context
 sprites	.\code\game_assets.h	/^  Sprite_Asset* sprites;$/;"	m	language:C++	struct:Game_Assets
 sprites	.\code\sui_atlas.h	/^  Sui_Atlas_Sprite sprites[128];$/;"	m	language:C++	struct:Sui_Atlas
@@ -1719,9 +1719,9 @@ state	.\code\game_mode_level.h	/^  Level_State state;$/;"	m	language:C++	struct:
 state	.\code\game_renderer.h	/^  volatile Gfx_Texture_Payload_State state;$/;"	m	language:C++	struct:Gfx_Texture_Payload
 state	.\code\meta.cpp	/^  U32 state; \/\/ $/;"	m	language:C++	struct:Profiler_Codegen	file:
 state_btns	.\code\game_mode_level_editor.h	/^  Editor_Toolbar_Button state_btns[EDITOR_STATE_MAX];$/;"	m	language:C++	struct:Editor
-stmt	.\code\momo_common.h	160;"	d	language:C++
+stmt	.\code\momo_common.h	159;"	d	language:C++
 str	.\code\game_console.h	/^  String8 str;$/;"	m	language:C++	struct:Console_Line
-str	.\code\momo_strings.h	/^		String8 str;$/;"	m	language:C++	union:__anon26::__anon27
+str	.\code\momo_strings.h	/^		String8 str;$/;"	m	language:C++	union:__anon29::__anon30
 str8	.\code\momo_strings.h	/^static String8 str8(U8* str, UMI size);$/;"	p	language:C++
 str8	.\code\momo_strings.h	/^str8(U8* str, UMI size) {$/;"	f	language:C++
 str8_from_cstr	.\code\momo_strings.h	/^static String8 str8_from_cstr(const char* cstr);$/;"	p	language:C++
@@ -1733,10 +1733,10 @@ str8_substr	.\code\momo_strings.h	/^static String8 str8_substr(String8 str, UMI 
 str8_substr	.\code\momo_strings.h	/^str8_substr(String8 str, UMI start, UMI count) {$/;"	f	language:C++
 stream	.\code\momo_png.h	/^  Stream stream;$/;"	m	language:C++	struct:_PNG_Context
 Stream	.\code\momo_streams.h	/^struct Stream {$/;"	s	language:C++
-String8	.\code\momo_strings.h	/^} String8;$/;"	t	language:C++	typeref:struct:__anon25
-String8_Builder	.\code\momo_strings.h	/^} String8_Builder;$/;"	t	language:C++	typeref:struct:__anon26
-stringify	.\code\momo_common.h	143;"	d	language:C++
-stringify_	.\code\momo_common.h	142;"	d	language:C++
+String8	.\code\momo_strings.h	/^} String8;$/;"	t	language:C++	typeref:struct:__anon28
+String8_Builder	.\code\momo_strings.h	/^} String8_Builder;$/;"	t	language:C++	typeref:struct:__anon29
+stringify	.\code\momo_common.h	142;"	d	language:C++
+stringify_	.\code\momo_common.h	141;"	d	language:C++
 Sui_Atlas	.\code\sui_atlas.h	/^struct Sui_Atlas {  $/;"	s	language:C++
 Sui_Atlas_Context	.\code\sui_atlas.h	/^struct Sui_Atlas_Context {$/;"	s	language:C++
 Sui_Atlas_Context_Type	.\code\sui_atlas.h	/^enum Sui_Atlas_Context_Type {$/;"	g	language:C++
@@ -1765,7 +1765,7 @@ sui_read_file_to_memory	.\code\sui.h	/^sui_read_file_to_memory(Memory* mem, cons
 sui_read_font_from_file	.\code\sui.h	/^sui_read_font_from_file(TTF* ttf, const char* filename, Bump_Allocator* allocator) {$/;"	f	language:C++
 sui_read_wav_from_file	.\code\sui.h	/^sui_read_wav_from_file(WAV* wav, const char* filename, Bump_Allocator* allocator) {$/;"	f	language:C++
 sui_write_file_from_memory	.\code\sui.h	/^sui_write_file_from_memory(const char* filename, Memory memory) {$/;"	f	language:C++
-swap	.\code\momo_common.h	219;"	d	language:C++
+swap	.\code\momo_common.h	218;"	d	language:C++
 swap_memory	.\code\momo_common.h	/^static void swap_memory(void* lhs, void* rhs, UMI size);$/;"	p	language:C++
 swap_memory	.\code\momo_common.h	/^swap_memory(void* lhs, void* rhs, UMI size) {$/;"	f	language:C++
 symbols	.\code\momo_png.h	/^  U16* symbols; $/;"	m	language:C++	struct:_PNG_Huffman
@@ -1778,8 +1778,8 @@ tan_f64	.\code\momo_intrinsics.h	/^tan_f64(F64 x) {$/;"	f	language:C++
 target_color	.\code\game_mode_level.h	/^  U32 target_color;$/;"	m	language:C++	struct:Sensor
 target_color	.\code\game_mode_sb1.h	/^  U32 target_color;$/;"	m	language:C++	struct:SB1_Sensor
 target_color	.\code\game_sb1.h	/^  U32 target_color;$/;"	m	language:C++	struct:SB1_Sensor
-TAU_32	.\code\momo_common.h	329;"	d	language:C++
-TAU_64	.\code\momo_common.h	330;"	d	language:C++
+TAU_32	.\code\momo_common.h	328;"	d	language:C++
+TAU_64	.\code\momo_common.h	329;"	d	language:C++
 test_assets_dir	.\code\test.h	15;"	d	language:C++
 test_create_log_section_until_scope	.\code\test.h	19;"	d	language:C++
 test_essentials	.\code\test_essentials.h	/^void test_essentials() { $/;"	f	language:C++
@@ -1828,46 +1828,47 @@ transfer_memory_end	.\code\game_renderer.h	/^  UMI transfer_memory_end;$/;"	m	la
 transfer_memory_size	.\code\game_renderer.h	/^  UMI transfer_memory_size;$/;"	m	language:C++	struct:Gfx_Texture_Queue
 transfer_memory_start	.\code\game_renderer.h	/^  UMI transfer_memory_start;$/;"	m	language:C++	struct:Gfx_Texture_Payload
 transfer_memory_start	.\code\game_renderer.h	/^  UMI transfer_memory_start;$/;"	m	language:C++	struct:Gfx_Texture_Queue
-Tri2	.\code\momo_shapes.h	/^}Tri2;$/;"	t	language:C++	typeref:struct:__anon23
+Tri2	.\code\momo_shapes.h	/^}Tri2;$/;"	t	language:C++	typeref:struct:__anon26
 tri2_is_point_within	.\code\momo_shapes.h	/^static B32 tri2_is_point_within(Tri2 tri, V2 pt);$/;"	p	language:C++
 triangles	.\code\game_mode_sb1.h	/^  SB1_Light_Triangle_List triangles;$/;"	m	language:C++	struct:SB1_Light
 triangles	.\code\game_sb1.h	/^  SB1_Light_Triangle_List triangles;$/;"	m	language:C++	struct:SB1_Light
 triangle_batcher	.\code\game_renderer_opengl.h	/^  Triangle_Batcher triangle_batcher;$/;"	m	language:C++	struct:Opengl
 Triangle_Batcher	.\code\game_renderer_opengl.h	/^struct Triangle_Batcher {$/;"	s	language:C++
+true	.\code\momo_common.h	363;"	d	language:C++
+TTF	.\code\momo_ttf.h	/^}TTF;$/;"	t	language:C++	typeref:struct:__anon32
 ttf	.\code\sui_atlas.h	/^  TTF ttf;$/;"	m	language:C++	struct:Sui_Atlas_Font
-TTF	C:\Users\geral\work\txt\code\momo_ttf.h	/^}TTF;$/;"	t	language:C++	typeref:struct:__anon1
-ttf_get_bitmap_dims_from_glyph_box	C:\Users\geral\work\txt\code\momo_ttf.h	/^static V2U ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box);$/;"	p	language:C++
-ttf_get_bitmap_dims_from_glyph_box	C:\Users\geral\work\txt\code\momo_ttf.h	/^ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {$/;"	f	language:C++
-ttf_get_glyph_box	C:\Users\geral\work\txt\code\momo_ttf.h	/^static Rect2 ttf_get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor);$/;"	p	language:C++
-ttf_get_glyph_box	C:\Users\geral\work\txt\code\momo_ttf.h	/^ttf_get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor) {$/;"	f	language:C++
-ttf_get_glyph_horiozontal_metrics	C:\Users\geral\work\txt\code\momo_ttf.h	/^static TTF_Glyph_Horizontal_Metrics ttf_get_glyph_horiozontal_metrics(TTF* ttf, U32 glyph_index);$/;"	p	language:C++
-ttf_get_glyph_horiozontal_metrics	C:\Users\geral\work\txt\code\momo_ttf.h	/^ttf_get_glyph_horiozontal_metrics(TTF* ttf, U32 glyph_index)$/;"	f	language:C++
-ttf_get_glyph_index	C:\Users\geral\work\txt\code\momo_ttf.h	/^static U32 ttf_get_glyph_index(TTF* ttf, U32 codepoint);$/;"	p	language:C++
-ttf_get_glyph_index	C:\Users\geral\work\txt\code\momo_ttf.h	/^ttf_get_glyph_index(TTF* ttf, U32 codepoint) {$/;"	f	language:C++
-ttf_get_glyph_kerning	C:\Users\geral\work\txt\code\momo_ttf.h	/^static S32 ttf_get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);$/;"	p	language:C++
-ttf_get_glyph_kerning	C:\Users\geral\work\txt\code\momo_ttf.h	/^ttf_get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {$/;"	f	language:C++
-ttf_get_scale_for_pixel_height	C:\Users\geral\work\txt\code\momo_ttf.h	/^static F32 ttf_get_scale_for_pixel_height(TTF* ttf, F32 pixel_height);$/;"	p	language:C++
-ttf_get_scale_for_pixel_height	C:\Users\geral\work\txt\code\momo_ttf.h	/^ttf_get_scale_for_pixel_height(TTF* ttf, F32 pixel_height) {$/;"	f	language:C++
-TTF_Glyph_Horizontal_Metrics	C:\Users\geral\work\txt\code\momo_ttf.h	/^}TTF_Glyph_Horizontal_Metrics;$/;"	t	language:C++	typeref:struct:__anon2
-ttf_rasterize_glyph	C:\Users\geral\work\txt\code\momo_ttf.h	/^static Bitmap ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator* allocator);$/;"	p	language:C++
-ttf_rasterize_glyph	C:\Users\geral\work\txt\code\momo_ttf.h	/^ttf_rasterize_glyph(TTF* ttf, $/;"	f	language:C++
-ttf_read	C:\Users\geral\work\txt\code\momo_ttf.h	/^static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);$/;"	p	language:C++
-ttf_read	C:\Users\geral\work\txt\code\momo_ttf.h	/^ttf_read(TTF* ttf, void* memory, UMI memory_size) {$/;"	f	language:C++
+ttf_get_bitmap_dims_from_glyph_box	.\code\momo_ttf.h	/^static V2U ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box);$/;"	p	language:C++
+ttf_get_bitmap_dims_from_glyph_box	.\code\momo_ttf.h	/^ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {$/;"	f	language:C++
+ttf_get_glyph_box	.\code\momo_ttf.h	/^static Rect2 ttf_get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor);$/;"	p	language:C++
+ttf_get_glyph_box	.\code\momo_ttf.h	/^ttf_get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor) {$/;"	f	language:C++
+ttf_get_glyph_horiozontal_metrics	.\code\momo_ttf.h	/^static TTF_Glyph_Horizontal_Metrics ttf_get_glyph_horiozontal_metrics(TTF* ttf, U32 glyph_index);$/;"	p	language:C++
+ttf_get_glyph_horiozontal_metrics	.\code\momo_ttf.h	/^ttf_get_glyph_horiozontal_metrics(TTF* ttf, U32 glyph_index)$/;"	f	language:C++
+ttf_get_glyph_index	.\code\momo_ttf.h	/^static U32 ttf_get_glyph_index(TTF* ttf, U32 codepoint);$/;"	p	language:C++
+ttf_get_glyph_index	.\code\momo_ttf.h	/^ttf_get_glyph_index(TTF* ttf, U32 codepoint) {$/;"	f	language:C++
+ttf_get_glyph_kerning	.\code\momo_ttf.h	/^static S32 ttf_get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);$/;"	p	language:C++
+ttf_get_glyph_kerning	.\code\momo_ttf.h	/^ttf_get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {$/;"	f	language:C++
+ttf_get_scale_for_pixel_height	.\code\momo_ttf.h	/^static F32 ttf_get_scale_for_pixel_height(TTF* ttf, F32 pixel_height);$/;"	p	language:C++
+ttf_get_scale_for_pixel_height	.\code\momo_ttf.h	/^ttf_get_scale_for_pixel_height(TTF* ttf, F32 pixel_height) {$/;"	f	language:C++
+TTF_Glyph_Horizontal_Metrics	.\code\momo_ttf.h	/^}TTF_Glyph_Horizontal_Metrics;$/;"	t	language:C++	typeref:struct:__anon33
+ttf_rasterize_glyph	.\code\momo_ttf.h	/^static Bitmap ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator* allocator);$/;"	p	language:C++
+ttf_rasterize_glyph	.\code\momo_ttf.h	/^ttf_rasterize_glyph(TTF* ttf, $/;"	f	language:C++
+ttf_read	.\code\momo_ttf.h	/^static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);$/;"	p	language:C++
+ttf_read	.\code\momo_ttf.h	/^ttf_read(TTF* ttf, void* memory, UMI memory_size) {$/;"	f	language:C++
 txt	README.md	/^# txt/;"	c	language:Markdown
 type	.\code\game_inspector.h	/^  Inspector_Entry_Type type;$/;"	m	language:C++	struct:Inspector_Entry
 type	.\code\meta.cpp	/^  Meta_Token_Type type;$/;"	m	language:C++	struct:Meta_Token	file:
 type	.\code\momo_png.h	/^    U8 type[4];$/;"	m	language:C++	union:_PNG_Chunk_Header::__anon13
 type	.\code\sui_atlas.h	/^  Sui_Atlas_Context_Type type;$/;"	m	language:C++	struct:Sui_Atlas_Context
 type_U32	.\code\momo_png.h	/^    U32 type_U32;$/;"	m	language:C++	union:_PNG_Chunk_Header::__anon13
-u	.\code\momo_vectors.h	/^	struct { F32 u, v; };$/;"	m	language:C++	struct:__anon44::__anon47
+u	.\code\momo_vectors.h	/^	struct { F32 u, v; };$/;"	m	language:C++	struct:__anon47::__anon50
 U16	.\code\momo_common.h	/^typedef uint16_t U16;$/;"	t	language:C++
-U16_MAX	.\code\momo_common.h	268;"	d	language:C++
+U16_MAX	.\code\momo_common.h	267;"	d	language:C++
 U32	.\code\momo_common.h	/^typedef uint32_t U32;$/;"	t	language:C++
-U32_MAX	.\code\momo_common.h	269;"	d	language:C++
+U32_MAX	.\code\momo_common.h	268;"	d	language:C++
 U64	.\code\momo_common.h	/^typedef uint64_t U64;$/;"	t	language:C++
-U64_MAX	.\code\momo_common.h	270;"	d	language:C++
+U64_MAX	.\code\momo_common.h	269;"	d	language:C++
 U8	.\code\momo_common.h	/^typedef uint8_t U8;$/;"	t	language:C++
-U8_MAX	.\code\momo_common.h	267;"	d	language:C++
+U8_MAX	.\code\momo_common.h	266;"	d	language:C++
 UMI	.\code\momo_common.h	/^typedef uintptr_t UMI; \/\/ aka 'unsigned memory index'$/;"	t	language:C++
 unfiltered_image_stream	.\code\momo_png.h	/^  Stream unfiltered_image_stream; \/\/ for filtering and deflating$/;"	m	language:C++	struct:_PNG_Context
 units	.\code\meta.cpp	/^  U32 units;$/;"	m	language:C++	struct:Profiler_Codegen	file:
@@ -1882,14 +1883,14 @@ update_editor_place_edges	.\code\game_mode_level_editor.cpp	/^update_editor_plac
 update_editor_place_lights	.\code\game_mode_level_editor.cpp	/^update_editor_place_lights(Level_Mode* m,$/;"	f	language:C++	file:
 update_editor_state_edit_edges	.\code\game_mode_level_editor.cpp	/^update_editor_state_edit_edges(Editor* e, $/;"	f	language:C++	file:
 update_mode	.\code\game.h	/^  Game_Mode_Update* update_mode;$/;"	m	language:C++	struct:Game
-user_data	.\code\momo_rect_pack.h	/^  void* user_data;$/;"	m	language:C++	struct:RP_Rect
+user_data	.\code\momo_rect_pack.h	/^  void* user_data;$/;"	m	language:C++	struct:__anon15
 uv	.\code\game_renderer.h	/^  Rect2 uv; $/;"	m	language:C++	struct:Gfx_Command_Sprite
-v	.\code\momo_vectors.h	/^	struct { F32 u, v; };$/;"	m	language:C++	struct:__anon44::__anon47
+v	.\code\momo_vectors.h	/^	struct { F32 u, v; };$/;"	m	language:C++	struct:__anon47::__anon50
 v2	.\code\momo_vectors.h	/^static V2    v2(F32 x, F32 y); $/;"	p	language:C++
 v2	.\code\momo_vectors.h	/^v2(F32 x, F32 y){$/;"	f	language:C++
-V2	.\code\momo_vectors.h	/^} V2;$/;"	t	language:C++	typeref:union:__anon44
-V2S	.\code\momo_vectors.h	/^} V2S;$/;"	t	language:C++	typeref:union:__anon41
-V2U	.\code\momo_vectors.h	/^} V2U;$/;"	t	language:C++	typeref:union:__anon38
+V2	.\code\momo_vectors.h	/^} V2;$/;"	t	language:C++	typeref:union:__anon47
+V2S	.\code\momo_vectors.h	/^} V2S;$/;"	t	language:C++	typeref:union:__anon44
+V2U	.\code\momo_vectors.h	/^} V2U;$/;"	t	language:C++	typeref:union:__anon41
 v2u_add	.\code\momo_vectors.h	/^static V2U   v2u_add(V2U lhs, V2U rhs);$/;"	p	language:C++
 v2u_add	.\code\momo_vectors.h	/^v2u_add(V2U lhs, V2U rhs) {$/;"	f	language:C++
 v2u_from_v2	.\code\momo_vectors.h	/^static V2U   v2u_from_v2(V2 v);$/;"	p	language:C++
@@ -1935,7 +1936,7 @@ v2_scale	.\code\momo_vectors.h	/^static V2    v2_scale(V2 lhs, F32 rhs);$/;"	p	l
 v2_scale	.\code\momo_vectors.h	/^v2_scale(V2 lhs, F32 rhs) {$/;"	f	language:C++
 v2_sub	.\code\momo_vectors.h	/^static V2    v2_sub(V2 lhs, V2 rhs);$/;"	p	language:C++
 v2_sub	.\code\momo_vectors.h	/^v2_sub(V2 lhs, V2 rhs) {$/;"	f	language:C++
-V3	.\code\momo_vectors.h	/^} V3;$/;"	t	language:C++	typeref:union:__anon48
+V3	.\code\momo_vectors.h	/^} V3;$/;"	t	language:C++	typeref:union:__anon51
 v3_add	.\code\momo_vectors.h	/^static V3    v3_add(V3 lhs, V3 rhs);$/;"	p	language:C++
 v3_add	.\code\momo_vectors.h	/^v3_add(V3 lhs, V3 rhs) {$/;"	f	language:C++
 v3_angle	.\code\momo_vectors.h	/^static F32 	 v3_angle(V3 lhs, V3 rhs);$/;"	p	language:C++
@@ -1968,7 +1969,7 @@ v3_scale	.\code\momo_vectors.h	/^static V3    v3_scale(V3 lhs, F32 rhs);$/;"	p	l
 v3_scale	.\code\momo_vectors.h	/^v3_scale(V3 lhs, F32 rhs) {$/;"	f	language:C++
 v3_sub	.\code\momo_vectors.h	/^static V3    v3_sub(V3 lhs, V3 rhs);$/;"	p	language:C++
 v3_sub	.\code\momo_vectors.h	/^v3_sub(V3 lhs, V3 rhs) {$/;"	f	language:C++
-V4	.\code\momo_vectors.h	/^} V4;$/;"	t	language:C++	typeref:union:__anon51
+V4	.\code\momo_vectors.h	/^} V4;$/;"	t	language:C++	typeref:union:__anon54
 vel	.\code\game_mode_level.h	/^  V2 vel;$/;"	m	language:C++	struct:Player
 VERTEX_ARRAY_BINDING	.\code\game_renderer_opengl.h	/^enum VERTEX_ARRAY_BINDING {$/;"	g	language:C++
 VERTEX_ARRAY_BINDING_COLORS	.\code\game_renderer_opengl.h	/^  VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:VERTEX_ARRAY_BINDING
@@ -1993,24 +1994,24 @@ VERTEX_BUFFER_TYPE_INDICES	.\code\game_renderer_opengl.h	/^  VERTEX_BUFFER_TYPE_
 VERTEX_BUFFER_TYPE_MODEL	.\code\game_renderer_opengl.h	/^  VERTEX_BUFFER_TYPE_MODEL,$/;"	e	language:C++	enum:Vertex_Buffer_Type
 VERTEX_BUFFER_TYPE_TEXTURE	.\code\game_renderer_opengl.h	/^  VERTEX_BUFFER_TYPE_TEXTURE,$/;"	e	language:C++	enum:Vertex_Buffer_Type
 VERTEX_BUFFER_TYPE_TRANSFORM	.\code\game_renderer_opengl.h	/^  VERTEX_BUFFER_TYPE_TRANSFORM,$/;"	e	language:C++	enum:Vertex_Buffer_Type
-vertex_count	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 vertex_count;$/;"	m	language:C++	struct:__anon5
+vertex_count	.\code\momo_ttf.h	/^  U32 vertex_count;$/;"	m	language:C++	struct:__anon36
 vertices	.\code\game_mode_level_editor.h	/^  Array_List<V2> vertices;$/;"	m	language:C++	struct:Editor
-vertices	C:\Users\geral\work\txt\code\momo_ttf.h	/^  V2* vertices;$/;"	m	language:C++	struct:__anon5
-w	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect
-w	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:_RP_Node
-w	.\code\momo_vectors.h	/^	struct { F32 w, h, d; };$/;"	m	language:C++	struct:__anon48::__anon50
-w	.\code\momo_vectors.h	/^	struct { F32 w, h; };$/;"	m	language:C++	struct:__anon44::__anon46
-w	.\code\momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:__anon51::__anon52
-w	.\code\momo_vectors.h	/^	struct { S32 w, h; };$/;"	m	language:C++	struct:__anon41::__anon43
-w	.\code\momo_vectors.h	/^	struct { U32 w, h; };$/;"	m	language:C++	struct:__anon38::__anon40
+vertices	.\code\momo_ttf.h	/^  V2* vertices;$/;"	m	language:C++	struct:__anon36
+w	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon15
+w	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon16
+w	.\code\momo_vectors.h	/^	struct { F32 w, h, d; };$/;"	m	language:C++	struct:__anon51::__anon53
+w	.\code\momo_vectors.h	/^	struct { F32 w, h; };$/;"	m	language:C++	struct:__anon47::__anon49
+w	.\code\momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:__anon54::__anon55
+w	.\code\momo_vectors.h	/^	struct { S32 w, h; };$/;"	m	language:C++	struct:__anon44::__anon46
+w	.\code\momo_vectors.h	/^	struct { U32 w, h; };$/;"	m	language:C++	struct:__anon41::__anon43
 wasapi	.\code\win_audio_wasapi.h	/^  Win_Wasapi* wasapi;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client
-WAV	.\code\momo_wav.h	/^}WAV;$/;"	t	language:C++	typeref:struct:__anon56
+WAV	.\code\momo_wav.h	/^}WAV;$/;"	t	language:C++	typeref:struct:__anon59
 wav	.\code\sui_pack.h	/^  WAV* wav;$/;"	m	language:C++	struct:Sui_Packer_Sound
-WAV_Data_Chunk	.\code\momo_wav.h	/^}WAV_Data_Chunk;$/;"	t	language:C++	typeref:struct:__anon55
-WAV_Fmt_Chunk	.\code\momo_wav.h	/^}WAV_Fmt_Chunk;$/;"	t	language:C++	typeref:struct:__anon54
+WAV_Data_Chunk	.\code\momo_wav.h	/^}WAV_Data_Chunk;$/;"	t	language:C++	typeref:struct:__anon58
+WAV_Fmt_Chunk	.\code\momo_wav.h	/^}WAV_Fmt_Chunk;$/;"	t	language:C++	typeref:struct:__anon57
 wav_read	.\code\momo_wav.h	/^static B32 wav_read(WAV* wav, void* memory, UMI size);$/;"	p	language:C++
 wav_read	.\code\momo_wav.h	/^wav_read(WAV* w, void* memory, UMI memory_size) $/;"	f	language:C++
-WAV_Riff_Chunk	.\code\momo_wav.h	/^}WAV_Riff_Chunk;$/;"	t	language:C++	typeref:struct:__anon53
+WAV_Riff_Chunk	.\code\momo_wav.h	/^}WAV_Riff_Chunk;$/;"	t	language:C++	typeref:struct:__anon56
 wglChoosePixelFormatARB	.\code\win_renderer_opengl.cpp	/^static wglChoosePixelFormatARBFn* wglChoosePixelFormatARB;$/;"	v	language:C++	file:
 wglChoosePixelFormatARBFn	.\code\win_renderer_opengl.cpp	/^wglChoosePixelFormatARBFn(HDC hdc,$/;"	t	language:C++	file:
 wglCreateContextAttribsARB	.\code\win_renderer_opengl.cpp	/^static wglCreateContextAttribsARBFn* wglCreateContextAttribsARB;$/;"	v	language:C++	file:
@@ -2123,36 +2124,38 @@ win_write_file	.\code\win.cpp	/^win_write_file(Platform_File* file, UMI size, UM
 work_queue	.\code\win.cpp	/^  Win_Work_Queue work_queue;$/;"	m	language:C++	struct:Win_State	file:
 write_file	.\code\game_platform.h	/^  Platform_Write_File* write_file;$/;"	m	language:C++	struct:Platform
 write_file	.\code\game_platform.h	/^  Platform_Write_File* write_file;$/;"	m	language:C++	struct:Platform_API
-x	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect
-x	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:_RP_Node
-x	.\code\momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:__anon51::__anon52
-x	.\code\momo_vectors.h	/^	struct { F32 x, y, z; };$/;"	m	language:C++	struct:__anon48::__anon49
-x	.\code\momo_vectors.h	/^	struct { F32 x, y; };$/;"	m	language:C++	struct:__anon44::__anon45
-x	.\code\momo_vectors.h	/^	struct { S32 x, y; };$/;"	m	language:C++	struct:__anon41::__anon42
-x	.\code\momo_vectors.h	/^	struct { U32 x, y; };$/;"	m	language:C++	struct:__anon38::__anon39
-x	C:\Users\geral\work\txt\code\momo_ttf.h	/^  S16 x, y; $/;"	m	language:C++	struct:__anon3
-x_intersect	C:\Users\geral\work\txt\code\momo_ttf.h	/^  F32 x_intersect;$/;"	m	language:C++	struct:__anon6
-y	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:RP_Rect
-y	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:_RP_Node
-y	.\code\momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:__anon51::__anon52
-y	.\code\momo_vectors.h	/^	struct { F32 x, y, z; };$/;"	m	language:C++	struct:__anon48::__anon49
-y	.\code\momo_vectors.h	/^	struct { F32 x, y; };$/;"	m	language:C++	struct:__anon44::__anon45
-y	.\code\momo_vectors.h	/^	struct { S32 x, y; };$/;"	m	language:C++	struct:__anon41::__anon42
-y	.\code\momo_vectors.h	/^	struct { U32 x, y; };$/;"	m	language:C++	struct:__anon38::__anon39
-y	C:\Users\geral\work\txt\code\momo_ttf.h	/^  S16 x, y; $/;"	m	language:C++	struct:__anon3
-z	.\code\momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:__anon51::__anon52
-z	.\code\momo_vectors.h	/^	struct { F32 x, y, z; };$/;"	m	language:C++	struct:__anon48::__anon49
-zawarudo_AnonVar	.\code\momo_common.h	357;"	d	language:C++
-zawarudo_AnonVarSub	.\code\momo_common.h	356;"	d	language:C++
+x	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon15
+x	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon16
+x	.\code\momo_ttf.h	/^  S16 x, y; $/;"	m	language:C++	struct:__anon34
+x	.\code\momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:__anon54::__anon55
+x	.\code\momo_vectors.h	/^	struct { F32 x, y, z; };$/;"	m	language:C++	struct:__anon51::__anon52
+x	.\code\momo_vectors.h	/^	struct { F32 x, y; };$/;"	m	language:C++	struct:__anon47::__anon48
+x	.\code\momo_vectors.h	/^	struct { S32 x, y; };$/;"	m	language:C++	struct:__anon44::__anon45
+x	.\code\momo_vectors.h	/^	struct { U32 x, y; };$/;"	m	language:C++	struct:__anon41::__anon42
+x_intersect	.\code\momo_ttf.h	/^  F32 x_intersect;$/;"	m	language:C++	struct:__anon37
+y	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon15
+y	.\code\momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon16
+y	.\code\momo_ttf.h	/^  S16 x, y; $/;"	m	language:C++	struct:__anon34
+y	.\code\momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:__anon54::__anon55
+y	.\code\momo_vectors.h	/^	struct { F32 x, y, z; };$/;"	m	language:C++	struct:__anon51::__anon52
+y	.\code\momo_vectors.h	/^	struct { F32 x, y; };$/;"	m	language:C++	struct:__anon47::__anon48
+y	.\code\momo_vectors.h	/^	struct { S32 x, y; };$/;"	m	language:C++	struct:__anon44::__anon45
+y	.\code\momo_vectors.h	/^	struct { U32 x, y; };$/;"	m	language:C++	struct:__anon41::__anon42
+z	.\code\momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:__anon54::__anon55
+z	.\code\momo_vectors.h	/^	struct { F32 x, y, z; };$/;"	m	language:C++	struct:__anon51::__anon52
+zawarudo_AnonVar	.\code\momo_common.h	358;"	d	language:C++
+zawarudo_AnonVarSub	.\code\momo_common.h	357;"	d	language:C++
 zawarudo_defer_dummy	.\code\momo_common.h	/^struct zawarudo_defer_dummy {};$/;"	s	language:C++
 zawarudo_ScopeGuard	.\code\momo_common.h	/^struct zawarudo_ScopeGuard {$/;"	s	language:C++
-zero_array	.\code\momo_common.h	299;"	d	language:C++
+zero_array	.\code\momo_common.h	298;"	d	language:C++
 zero_memory	.\code\momo_common.h	/^static void zero_memory(void* dest, UMI size);$/;"	p	language:C++
 zero_memory	.\code\momo_common.h	/^zero_memory(void* dest, UMI size) {$/;"	f	language:C++
 zero_memory	.\code\momo_common.h	/^zero_memory(void* dest, UMI size) {$/;"	f	language:C++
-zero_range	.\code\momo_common.h	300;"	d	language:C++
-zero_struct	.\code\momo_common.h	298;"	d	language:C++
-_ba_set_revert_point	.\code\momo_memory.h	42;"	d	language:C++
+zero_range	.\code\momo_common.h	299;"	d	language:C++
+zero_struct	.\code\momo_common.h	297;"	d	language:C++
+_ba_mark	.\code\momo_memory.h	/^_ba_mark(Bump_Allocator* a) {$/;"	f	language:C++
+_ba_revert	.\code\momo_memory.h	/^_ba_revert(Bump_Allocator_Marker marker) {$/;"	f	language:C++
+_ba_set_revert_point	.\code\momo_memory.h	47;"	d	language:C++
 _compute_f64	.\code\momo_common.h	/^_compute_f64(S64 power, U64 i, B32 negative) $/;"	f	language:C++
 _execute	.\code\game_console.h	/^_execute(Console* dc) {$/;"	f	language:C++
 _gfx_push_command	.\code\game_renderer.h	/^_gfx_push_command(Gfx_Command_Queue* q, U32 id, U32 align = 4) {$/;"	f	language:C++
@@ -2203,46 +2206,40 @@ _prf_init_block	.\code\game_profiler.h	/^_prf_init_block(Profiler* p,$/;"	f	lang
 _push_info	.\code\game_console.h	/^_push_info(Console* dc, String8 str) {$/;"	f	language:C++
 _quicksort_partition	.\code\momo_sort.h	/^_quicksort_partition(Sort_Entry* a,$/;"	f	language:C++
 _quicksort_range	.\code\momo_sort.h	/^_quicksort_range(Sort_Entry* a, $/;"	f	language:C++
-_RP_Node	.\code\momo_rect_pack.h	/^struct _RP_Node {$/;"	s	language:C++
+_RP_Node	.\code\momo_rect_pack.h	/^}_RP_Node;$/;"	t	language:C++	typeref:struct:__anon16
 _rp_sort	.\code\momo_rect_pack.h	/^_rp_sort(RP_Rect* rects,$/;"	f	language:C++
-_rp_sort_by_area	.\code\momo_rect_pack.h	/^_rp_sort_by_area(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++
-_rp_sort_by_bigger_side	.\code\momo_rect_pack.h	/^_rp_sort_by_bigger_side(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++
-_rp_sort_by_height	.\code\momo_rect_pack.h	/^_rp_sort_by_height(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++
-_rp_sort_by_perimeter	.\code\momo_rect_pack.h	/^_rp_sort_by_perimeter(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++
-_rp_sort_by_width	.\code\momo_rect_pack.h	/^_rp_sort_by_width(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {$/;"	f	language:C++
-_RP_Sort_Entry	.\code\momo_rect_pack.h	/^struct _RP_Sort_Entry {$/;"	s	language:C++
 _sb8_push_fmt_list	.\code\momo_strings.h	/^_sb8_push_fmt_list(String8_Builder* b, String8 format, va_list args) {$/;"	f	language:C++
 _sort_swap_entries	.\code\momo_sort.h	/^_sort_swap_entries(Sort_Entry* a, Sort_Entry* b) {$/;"	f	language:C++
 _t2_is_point_within_barycentric	.\code\momo_shapes.h	/^_t2_is_point_within_barycentric(Tri2 tri, V2 pt) {$/;"	f	language:C++
 _t2_is_point_within_dot_product	.\code\momo_shapes.h	/^_t2_is_point_within_dot_product(Tri2 tri, V2 pt) {$/;"	f	language:C++
 _t2_is_point_within_parametric	.\code\momo_shapes.h	/^_t2_is_point_within_parametric(Tri2 tri, V2 pt) {$/;"	f	language:C++
-_ttf_add_vertex	C:\Users\geral\work\txt\code\momo_ttf.h	/^_ttf_add_vertex(V2* vertices, U32 n, F32 x, F32 y) {$/;"	f	language:C++
-_ttf_add_vertex	C:\Users\geral\work\txt\code\momo_ttf.h	/^_ttf_add_vertex(V2* vertices, U32 n, V2 v) {$/;"	f	language:C++
-_TTF_CMAP_MS_ID_BIG_FIVE	C:\Users\geral\work\txt\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_BIG_FIVE = 4,$/;"	e	language:C++	enum:__anon9
-_TTF_CMAP_MS_ID_JOHAB	C:\Users\geral\work\txt\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_JOHAB = 5,$/;"	e	language:C++	enum:__anon9
-_TTF_CMAP_MS_ID_PRC	C:\Users\geral\work\txt\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_PRC = 3,$/;"	e	language:C++	enum:__anon9
-_TTF_CMAP_MS_ID_SHIFT_JIS	C:\Users\geral\work\txt\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_SHIFT_JIS = 2,$/;"	e	language:C++	enum:__anon9
-_TTF_CMAP_MS_ID_SYMBOL	C:\Users\geral\work\txt\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_SYMBOL = 0,$/;"	e	language:C++	enum:__anon9
-_TTF_CMAP_MS_ID_UNICODE_BMP	C:\Users\geral\work\txt\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_BMP = 1,$/;"	e	language:C++	enum:__anon9
-_TTF_CMAP_MS_ID_UNICODE_FULL	C:\Users\geral\work\txt\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_FULL = 10,$/;"	e	language:C++	enum:__anon9
-_TTF_CMAP_PLATFORM_ID_MACINTOSH	C:\Users\geral\work\txt\code\momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MACINTOSH = 1,$/;"	e	language:C++	enum:__anon8
-_TTF_CMAP_PLATFORM_ID_MICROSOFT	C:\Users\geral\work\txt\code\momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MICROSOFT = 3,$/;"	e	language:C++	enum:__anon8
-_TTF_CMAP_PLATFORM_ID_RESERVED	C:\Users\geral\work\txt\code\momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_RESERVED = 2,$/;"	e	language:C++	enum:__anon8
-_TTF_CMAP_PLATFORM_ID_UNICODE	C:\Users\geral\work\txt\code\momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_UNICODE = 0,$/;"	e	language:C++	enum:__anon8
-_TTF_Edge	C:\Users\geral\work\txt\code\momo_ttf.h	/^}_TTF_Edge;$/;"	t	language:C++	typeref:struct:__anon6
-_TTF_Edge_List	C:\Users\geral\work\txt\code\momo_ttf.h	/^}_TTF_Edge_List;$/;"	t	language:C++	typeref:struct:__anon7
-_ttf_get_glyph_outline	C:\Users\geral\work\txt\code\momo_ttf.h	/^_ttf_get_glyph_outline(TTF* ttf, $/;"	f	language:C++
-_ttf_get_kern_advance	C:\Users\geral\work\txt\code\momo_ttf.h	/^_ttf_get_kern_advance(TTF* ttf, S32 g1, S32 g2) {$/;"	f	language:C++
-_ttf_get_offset_to_glyph	C:\Users\geral\work\txt\code\momo_ttf.h	/^_ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {$/;"	f	language:C++
-_ttf_get_paths_from_glyph_outline	C:\Users\geral\work\txt\code\momo_ttf.h	/^_ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,$/;"	f	language:C++
-_ttf_get_raw_glyph_box	C:\Users\geral\work\txt\code\momo_ttf.h	/^_ttf_get_raw_glyph_box(TTF* ttf, U32 glyph_index) {$/;"	f	language:C++
-_TTF_Glyph_Outline	C:\Users\geral\work\txt\code\momo_ttf.h	/^}_TTF_Glyph_Outline;$/;"	t	language:C++	typeref:struct:__anon4
-_TTF_Glyph_Paths	C:\Users\geral\work\txt\code\momo_ttf.h	/^}_TTF_Glyph_Paths;$/;"	t	language:C++	typeref:struct:__anon5
-_TTF_Glyph_Point	C:\Users\geral\work\txt\code\momo_ttf.h	/^}_TTF_Glyph_Point;$/;"	t	language:C++	typeref:struct:__anon3
-_ttf_read_s16	C:\Users\geral\work\txt\code\momo_ttf.h	/^_ttf_read_s16(U8* location) {$/;"	f	language:C++
-_ttf_read_u16	C:\Users\geral\work\txt\code\momo_ttf.h	/^_ttf_read_u16(U8* location) {$/;"	f	language:C++
-_ttf_read_u32	C:\Users\geral\work\txt\code\momo_ttf.h	/^_ttf_read_u32(U8* location) {$/;"	f	language:C++
-_ttf_tessellate_bezier	C:\Users\geral\work\txt\code\momo_ttf.h	/^_ttf_tessellate_bezier(V2* vertices,$/;"	f	language:C++
+_ttf_add_vertex	.\code\momo_ttf.h	/^_ttf_add_vertex(V2* vertices, U32 n, F32 x, F32 y) {$/;"	f	language:C++
+_ttf_add_vertex	.\code\momo_ttf.h	/^_ttf_add_vertex(V2* vertices, U32 n, V2 v) {$/;"	f	language:C++
+_TTF_CMAP_MS_ID_BIG_FIVE	.\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_BIG_FIVE = 4,$/;"	e	language:C++	enum:__anon40
+_TTF_CMAP_MS_ID_JOHAB	.\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_JOHAB = 5,$/;"	e	language:C++	enum:__anon40
+_TTF_CMAP_MS_ID_PRC	.\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_PRC = 3,$/;"	e	language:C++	enum:__anon40
+_TTF_CMAP_MS_ID_SHIFT_JIS	.\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_SHIFT_JIS = 2,$/;"	e	language:C++	enum:__anon40
+_TTF_CMAP_MS_ID_SYMBOL	.\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_SYMBOL = 0,$/;"	e	language:C++	enum:__anon40
+_TTF_CMAP_MS_ID_UNICODE_BMP	.\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_BMP = 1,$/;"	e	language:C++	enum:__anon40
+_TTF_CMAP_MS_ID_UNICODE_FULL	.\code\momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_FULL = 10,$/;"	e	language:C++	enum:__anon40
+_TTF_CMAP_PLATFORM_ID_MACINTOSH	.\code\momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MACINTOSH = 1,$/;"	e	language:C++	enum:__anon39
+_TTF_CMAP_PLATFORM_ID_MICROSOFT	.\code\momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MICROSOFT = 3,$/;"	e	language:C++	enum:__anon39
+_TTF_CMAP_PLATFORM_ID_RESERVED	.\code\momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_RESERVED = 2,$/;"	e	language:C++	enum:__anon39
+_TTF_CMAP_PLATFORM_ID_UNICODE	.\code\momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_UNICODE = 0,$/;"	e	language:C++	enum:__anon39
+_TTF_Edge	.\code\momo_ttf.h	/^}_TTF_Edge;$/;"	t	language:C++	typeref:struct:__anon37
+_TTF_Edge_List	.\code\momo_ttf.h	/^}_TTF_Edge_List;$/;"	t	language:C++	typeref:struct:__anon38
+_ttf_get_glyph_outline	.\code\momo_ttf.h	/^_ttf_get_glyph_outline(TTF* ttf, $/;"	f	language:C++
+_ttf_get_kern_advance	.\code\momo_ttf.h	/^_ttf_get_kern_advance(TTF* ttf, S32 g1, S32 g2) {$/;"	f	language:C++
+_ttf_get_offset_to_glyph	.\code\momo_ttf.h	/^_ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {$/;"	f	language:C++
+_ttf_get_paths_from_glyph_outline	.\code\momo_ttf.h	/^_ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,$/;"	f	language:C++
+_ttf_get_raw_glyph_box	.\code\momo_ttf.h	/^_ttf_get_raw_glyph_box(TTF* ttf, U32 glyph_index) {$/;"	f	language:C++
+_TTF_Glyph_Outline	.\code\momo_ttf.h	/^}_TTF_Glyph_Outline;$/;"	t	language:C++	typeref:struct:__anon35
+_TTF_Glyph_Paths	.\code\momo_ttf.h	/^}_TTF_Glyph_Paths;$/;"	t	language:C++	typeref:struct:__anon36
+_TTF_Glyph_Point	.\code\momo_ttf.h	/^}_TTF_Glyph_Point;$/;"	t	language:C++	typeref:struct:__anon34
+_ttf_read_s16	.\code\momo_ttf.h	/^_ttf_read_s16(U8* location) {$/;"	f	language:C++
+_ttf_read_u16	.\code\momo_ttf.h	/^_ttf_read_u16(U8* location) {$/;"	f	language:C++
+_ttf_read_u32	.\code\momo_ttf.h	/^_ttf_read_u32(U8* location) {$/;"	f	language:C++
+_ttf_tessellate_bezier	.\code\momo_ttf.h	/^_ttf_tessellate_bezier(V2* vertices,$/;"	f	language:C++
 _win_wasapi_notif_client_AddRef	.\code\win_audio_wasapi.h	/^_win_wasapi_notif_client_AddRef(IMMNotificationClient* mm_notif) {$/;"	f	language:C++
 _win_wasapi_notif_client_OnDefaultDeviceChange	.\code\win_audio_wasapi.h	/^_win_wasapi_notif_client_OnDefaultDeviceChange(IMMNotificationClient* mm_notif,$/;"	f	language:C++
 _win_wasapi_notif_client_OnDeviceAdded	.\code\win_audio_wasapi.h	/^_win_wasapi_notif_client_OnDeviceAdded(IMMNotificationClient* client, LPCWSTR pwstr_device_id)$/;"	f	language:C++
@@ -2253,6 +2250,6 @@ _win_wasapi_notif_client_QueryInterface	.\code\win_audio_wasapi.h	/^_win_wasapi_
 _win_wasapi_notif_client_Release	.\code\win_audio_wasapi.h	/^_win_wasapi_notif_client_Release(IMMNotificationClient* mm_notif) {$/;"	f	language:C++
 _win_wasapi_release_current_device	.\code\win_audio_wasapi.h	/^_win_wasapi_release_current_device(Win_Wasapi* wasapi) {$/;"	f	language:C++
 _win_wasapi_set_default_device_as_current_device	.\code\win_audio_wasapi.h	/^_win_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {$/;"	f	language:C++
-__ba_set_revert_point	.\code\momo_memory.h	41;"	d	language:C++
+__ba_set_revert_point	.\code\momo_memory.h	43;"	d	language:C++
 __prf_block	.\code\game_profiler.h	46;"	d	language:C++
 ~zawarudo_ScopeGuard	.\code\momo_common.h	/^  ~zawarudo_ScopeGuard() { f(); }$/;"	f	language:C++	struct:zawarudo_ScopeGuard

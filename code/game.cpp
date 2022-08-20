@@ -48,7 +48,7 @@ game_update_and_render(Platform* pf)
   Gfx* gfx = pf->gfx;
   Inspector* in = &game->inspector;
  
-  declare_and_pointerize(Painter, painter);
+  make(Painter, painter);
   begin_painting(painter, ga, gfx, 1600.f, 900.f);
   begin_inspector(in);
   

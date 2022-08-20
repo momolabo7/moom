@@ -776,7 +776,7 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
   }
   
   U8* zlib_data = ba_push_array<U8>(allocator, zlib_size);
-  declare_and_pointerize(Stream, zlib_stream);
+  make(Stream, zlib_stream);
   srm_init(zlib_stream, zlib_data, zlib_size);
   
   // Second pass to allocate memory
@@ -851,7 +851,7 @@ png_write(Bitmap bm, Bump_Allocator* allocator) {
   
   U8* stream_memory = (U8*)ba_push_block(allocator, expected_memory_required);
   assert(stream_memory);
-  declare_and_pointerize(Stream, stream);
+  make(Stream, stream);
   srm_init(stream, stream_memory, expected_memory_required);
   
   srm_write_block(stream, (void*)signature, sizeof(signature));
@@ -988,7 +988,7 @@ png_write(Bitmap bm, Bump_Allocator* allocator) {
 
 static B32
 png_read(PNG* p, void* png_memory, UMI png_size) {
-  declare_and_pointerize(Stream, stream);
+  make(Stream, stream);
   srm_init(stream, png_memory, png_size);
   
   // Read Signature

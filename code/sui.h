@@ -66,7 +66,7 @@ sui_write_file_from_memory(const char* filename, Memory memory) {
 
 static B32 
 sui_read_font_from_file(TTF* ttf, const char* filename, Bump_Allocator* allocator) {
-  declare_and_pointerize(Memory, mem);
+  make(Memory, mem);
   if (!sui_read_file_to_memory(mem, filename, allocator)) 
     return false;
   return ttf_read(ttf, mem->data, mem->size);
@@ -74,7 +74,7 @@ sui_read_font_from_file(TTF* ttf, const char* filename, Bump_Allocator* allocato
 
 static B32 
 sui_read_wav_from_file(WAV* wav, const char* filename, Bump_Allocator* allocator) {
-  declare_and_pointerize(Memory, mem);
+  make(Memory, mem);
   if(!sui_read_file_to_memory(mem, filename, allocator))
     return false;
   return wav_read(wav, mem->data, mem->size);

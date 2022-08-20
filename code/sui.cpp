@@ -11,15 +11,15 @@
 int main() {
   Memory memory = sui_malloc(MB(100));
   defer { sui_free(&memory); };
-  declare_and_pointerize(Bump_Allocator, allocator);
+  make(Bump_Allocator, allocator);
   ba_init(allocator, memory.data, memory.size);
  
-  //declare_and_pointerize(WAV, loaded_wav);
+  //make(WAV, loaded_wav);
   //sui_read_wav_from_file(loaded_wav,asset_dir("bgm_menu.wav"), allocator); 
  
 #if 0
   sui_log("Building atlas...\n");
-  declare_and_pointerize(Sui_Atlas, atlas);
+  make(Sui_Atlas, atlas);
 
   if (!begin_atlas_builder(atlas, "BITMAP_DEFAULT", 2048, 2048)) return 1;
   {
@@ -52,7 +52,7 @@ int main() {
 #endif  
   
   
-  declare_and_pointerize(Sui_Packer, sp);
+  make(Sui_Packer, sp);
   
 
   sui_check_death(begin_packer(sp, allocator,

@@ -17,7 +17,7 @@ void test_ttf() {
   }
   defer { free(memory); };
   
-  declare_and_pointerize(Bump_Allocator, allocator);
+  make(Bump_Allocator, allocator);
   ba_init(allocator, memory, memory_size);
   Memory ttf_memory = 
     test_read_file_to_memory(allocator, 

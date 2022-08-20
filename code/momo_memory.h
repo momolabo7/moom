@@ -10,8 +10,6 @@ struct Bump_Allocator;
 struct Bump_Allocator_Marker {
   Bump_Allocator* allocator;
   UMI old_pos;
-  
-  operator Bump_Allocator*();
 };
 
 // Standard Linear allocator
@@ -34,12 +32,17 @@ template<typename T> static T* ba_push(Bump_Allocator* a, UMI align = 4);
 template<typename T> static T* ba_push_array(Bump_Allocator* a, UMI num, UMI align = 4);
 
 // Temporary memory API
-static Bump_Allocator_Marker ba_mark(Bump_Allocator* allocator);
-static void		               ba_revert(Bump_Allocator_Marker marker);
+
+#define ba_mark(ba,name) Bump_Allocator_Marker name = _ba_mark(ba)
+#define ba_revert(name) _ba_revert(name)
 
 #if IS_CPP
-#define __ba_set_revert_point(a,l) auto ttt##l = ba_mark(a); defer{ba_revert(ttt##l);};
+#define __ba_set_revert_point(a,l) \
+  auto _ba_marker_##l = _ba_mark(a); \
+  defer{_ba_revert(_ba_marker_##l);};
+
 #define _ba_set_revert_point(a,l) __ba_set_revert_point(a,l)
+
 #define ba_set_revert_point(allocator) _ba_set_revert_point(allocator, __LINE__) 
 #endif // IS_CPP
 
@@ -137,7 +140,7 @@ Bump_Allocator_BootBlock(UMI struct_size,
 //*/
 
 static Bump_Allocator_Marker
-ba_mark(Bump_Allocator* a) {
+_ba_mark(Bump_Allocator* a) {
   Bump_Allocator_Marker ret;
   ret.allocator = a;
   ret.old_pos = a->pos;
@@ -145,12 +148,8 @@ ba_mark(Bump_Allocator* a) {
 }
 
 static void
-ba_revert(Bump_Allocator_Marker marker) {
+_ba_revert(Bump_Allocator_Marker marker) {
   marker.allocator->pos = marker.old_pos;
-}
-
-Bump_Allocator_Marker::operator Bump_Allocator*() {
-  return allocator;
 }
 
 #endif //MOMO_MEMORY_H

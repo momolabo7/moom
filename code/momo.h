@@ -26,9 +26,10 @@
 #include "momo_image.h" 
 
 #include "momo_memory.h"
-#include "momo_rect_pack.h"
 #include "momo_png.h"
 #include "momo_ttf.h"
 
+// note: is already in C
+#include "momo_rect_pack.h"
 
 #endif //MOMO_H

@@ -46,7 +46,7 @@ wav_read(WAV* w, void* memory, UMI memory_size)
   const static U32 fmt_id_signature = 0x666d7420;
   const static U32 data_id_signature = 0x64617461;
   
-  declare_and_pointerize(Stream, stream);
+  make(Stream, stream);
   srm_init(stream, (U8*)memory, memory_size);
   
   // NOTE(Momo): Load Riff Chunk

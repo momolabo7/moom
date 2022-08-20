@@ -4,19 +4,19 @@
 #define MOMO_RECT_PACK_H
 
 
-enum RP_Sort_Type {
+typedef enum {
   RP_SORT_TYPE_WIDTH,
   RP_SORT_TYPE_HEIGHT,
   RP_SORT_TYPE_AREA,
   RP_SORT_TYPE_PERIMETER,
   RP_SORT_TYPE_BIGGER_SIDE,
   RP_SORT_TYPE_PATHOLOGICAL,
-};
+}RP_Sort_Type;
 
-struct RP_Rect {
+typedef struct{
 	U32 x, y, w, h;
   void* user_data;
-};
+}RP_Rect;
 
 /////////////////////////////////////////////////////////////////////////////
 // This is the procedure that will pack the rects. 
@@ -42,56 +42,25 @@ struct RP_Rect {
 //   will be cleared.
 //   
 
-static void rp_pack(RP_Rect* rects, 
-                    U32 rect_count, 
-                    U32 padding,
-                    U32 total_width,
-                    U32 total_height,
-                    RP_Sort_Type sort_type,
-                    Bump_Allocator* allocator);
+static B32 
+rp_pack(RP_Rect* rects, 
+        U32 rect_count, 
+        U32 padding,
+        U32 total_width,
+        U32 total_height,
+        RP_Sort_Type sort_type,
+        Bump_Allocator* allocator);
 
 
 
 /////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 
-struct _RP_Sort_Entry {
-  RP_Rect* rect;
-};
-
-
-struct _RP_Node {
+typedef struct {
 	U32 x, y, w, h;
-};
+}_RP_Node;
 
-// NOTE(Momo): Predicates
-static B32
-_rp_sort_by_height(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {
-  return l->rect->h > r->rect->h;
-}
-
-static B32 
-_rp_sort_by_width(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {
-  return l->rect->w > r->rect->w;
-}
-
-static B32 
-_rp_sort_by_area(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {
-  return (l->rect->w * l->rect->h) > (r->rect->w * r->rect->h);
-}
-
-static B32 
-_rp_sort_by_perimeter(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {
-  return (l->rect->w + l->rect->h) > (r->rect->w + r->rect->h);
-}
-
-static B32 
-_rp_sort_by_bigger_side(_RP_Sort_Entry* l, _RP_Sort_Entry* r) {
-  return (max_of(l->rect->w, l->rect->h)) > (max_of(r->rect->w, r->rect->h));
-}
-
-
-static void 
+static void
 _rp_sort(RP_Rect* rects,
          Sort_Entry* entries,
          U32 count,
@@ -143,7 +112,7 @@ _rp_sort(RP_Rect* rects,
   quicksort(entries, count);
 }
 
-static void
+static B32
 rp_pack(RP_Rect* rects, 
         U32 rect_count, 
         U32 padding,
@@ -152,7 +121,8 @@ rp_pack(RP_Rect* rects,
         RP_Sort_Type sort_type,
         Bump_Allocator* allocator) 
 {
-  ba_set_revert_point(allocator);
+  ba_mark(allocator, restore_point);
+  
   Sort_Entry* sort_entries = ba_push_array<Sort_Entry>(allocator, rect_count);
   _rp_sort(rects, sort_entries, rect_count, sort_type);
   auto* nodes = ba_push_array<_RP_Node>(allocator, rect_count+1);
@@ -189,7 +159,10 @@ rp_pack(RP_Rect* rects,
     
     // NOTE(Momo): If an empty space that can fit is found, 
     // we remove that space and split.
-    assert(chosen_space_index != current_node_count);
+    if(chosen_space_index == current_node_count) { 
+      ba_revert(restore_point);
+      return false;
+    }
     
     // NOTE(Momo): swap and pop the chosen space
     _RP_Node chosen_space = nodes[chosen_space_index];
@@ -253,8 +226,9 @@ rp_pack(RP_Rect* rects,
     rect->x = chosen_space.x + padding;
     rect->y = chosen_space.y + padding;
   }
-  
-  
+ 
+  ba_revert(restore_point);
+  return true;
 }
 
 

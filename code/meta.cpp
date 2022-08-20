@@ -272,14 +272,14 @@ meta_update_profiler_codegen(Profiler_Codegen* p, Meta_Tokenizer* t, Meta_Token 
 // TODO: refactor profiler codegen into it's own unit
 int main() {
   int asdf();
-  declare_and_pointerize(Meta_Tokenizer, t);
+  make(Meta_Tokenizer, t);
   if (!meta_tokenizer_init(t, "meta_test.cpp")){
     printf("Cannot open file\n");
     return 1;
   }
   defer { meta_tokenizer_free(t); };
   
-  declare_and_pointerize(Profiler_Codegen, p);
+  make(Profiler_Codegen, p);
   
   for(;;) {
     Meta_Token token = meta_next_token(t);

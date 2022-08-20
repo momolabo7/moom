@@ -94,7 +94,6 @@
 #define c_link_end }
 #define c_link extern "C"
 
-
 #if COMPILER_MSVC
 # define exported c_link __declspec(dllexport)
 #else
@@ -332,7 +331,7 @@ static B32 is_nan_f64(F64 f);
 #define GOLD_64 1.61803398875
 
 //~NOTE(Momo): Helper macros 
-#define declare_and_pointerize(type, name) type zawarudo_##name = {}; type* name = &zawarudo_##name
+#define make(type, name) type zawarudo_##name = {}; type* name = &zawarudo_##name
 
 //~NOTE(Momo): Ascii Parsing Helpers
 static B32 is_whitespace(C8 c);
@@ -340,22 +339,28 @@ static B32 is_digit(U8 c);
 static B32 is_alpha(C8 c);
 
 #if IS_CPP
-#define ns_begin(name) namespace name {
-#define ns_end(name) }
+# define null nullptr
+# define ns_begin(name) namespace name {
+# define ns_end(name) }
 
 //~ NOTE(Momo): Defer
 template<typename F> 
-struct zawarudo_ScopeGuard {
+struct _defer_scope_guard {
   F f;
-  ~zawarudo_ScopeGuard() { f(); }
+  ~_defer_scope_guard() { f(); }
 };
-struct zawarudo_defer_dummy {};
-template<typename F> zawarudo_ScopeGuard<F> operator+(zawarudo_defer_dummy, F f) {
+struct _defer_dummy {};
+template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
   return { f };
 }
-#define zawarudo_AnonVarSub(x) zawarudo_defer##x
-#define zawarudo_AnonVar(x) zawarudo_AnonVarSub(x)
-#define defer auto zawarudo_AnonVar(__LINE__) = zawarudo_defer_dummy{} + [&]()
+# define defer auto glue(_defer, __LINE__) = _defer_dummy{} + [&]()
+
+#else // IS_CPP 
+      
+# define true 1
+# define false 0
+# define null 0 
+
 #endif // IS_CPP
 
 

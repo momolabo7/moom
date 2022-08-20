@@ -212,11 +212,11 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
     
     Sui_Atlas_Sprite* sprite = ab->sprites + sprite_index;
 
-    declare_and_pointerize(Memory, mem);
+    make(Memory, mem);
     B32 ok = sui_read_file_to_memory(mem, sprite->filename, allocator);
     if (!ok) return false;
     
-    declare_and_pointerize(PNG, png);
+    make(PNG, png);
     ok = png_read(png, mem->data, mem->size);
     if (!ok) return false;
     if(png->width == 0 || png->height == 0) return false;
@@ -264,12 +264,12 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
         ba_set_revert_point(allocator);
         Sui_Atlas_Sprite* related_entry = context->sprite.sprite;
        
-        declare_and_pointerize(Memory, mem);
+        make(Memory, mem);
        
         B32 ok = sui_read_file_to_memory(mem, related_entry->filename, allocator);
         if (!ok) return false;
         
-        declare_and_pointerize(PNG, png);
+        make(PNG, png);
         ok = png_read(png, mem->data, mem->size);
         if(!ok) return false;
         

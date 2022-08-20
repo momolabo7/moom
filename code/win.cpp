@@ -650,7 +650,7 @@ WinMain(HINSTANCE instance,
   
   
   //-Init renderer
-  declare_and_pointerize(Bump_Allocator, renderer_arena);
+  make(Bump_Allocator, renderer_arena);
   if (!win_allocate_memory_into_arena(renderer_arena, MB(256))) return false;
   defer { win_free_memory_from_arena(renderer_arena); };
   
@@ -663,7 +663,7 @@ WinMain(HINSTANCE instance,
   defer { renderer_functions.unload(renderer); };
  
   // Init Audio
-  declare_and_pointerize(Bump_Allocator, audio_arena);
+  make(Bump_Allocator, audio_arena);
   if (!win_allocate_memory_into_arena(audio_arena, MB(256))) return false;
   defer { win_free_memory_from_arena(audio_arena); };
 
@@ -676,9 +676,9 @@ WinMain(HINSTANCE instance,
   prf_init(g_profiler, win_get_performance_counter_u64);
   
   // Platform setup
-  declare_and_pointerize(Platform, pf);
+  make(Platform, pf);
   
-  declare_and_pointerize(Bump_Allocator, game_arena);
+  make(Bump_Allocator, game_arena);
   if (!win_allocate_memory_into_arena(game_arena, MB(32))) return false;
   defer { win_free_memory_from_arena(game_arena); };
   

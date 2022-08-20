@@ -130,7 +130,7 @@ load_game_assets(Game_Assets* ga,
                  Bump_Allocator* allocator) 
 { 
   // Read in file
-  declare_and_pointerize(Platform_File, file);
+  make(Platform_File, file);
   B32 ok = g_platform->open_file(file,
                                  filename,
                                  PLATFORM_FILE_ACCESS_READ, 

@@ -130,7 +130,8 @@ _ttf_read_u32(U8* location) {
 // returns 0 is failure
 static U32
 _ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
-  assert(glyph_index < ttf->glyph_count);
+  
+  if(glyph_index >= ttf->glyph_count) return 0;
   
   U32 g1 = 0, g2 = 0;
   switch(ttf->loca_format) {
@@ -248,7 +249,7 @@ _ttf_get_glyph_outline(TTF* ttf,
     //test_eval_d(point_count);
     
     _TTF_Glyph_Point* points = ba_push_array<_TTF_Glyph_Point>(allocator, point_count);
-    if (!points) return 0;
+    if (!points) return false;
     zero_range(points, point_count);
     U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
     
@@ -330,8 +331,7 @@ _ttf_get_glyph_outline(TTF* ttf,
     
     // mark the points that are contour endpoints
     U16 *end_pt_indices = ba_push_array<U16>(allocator, number_of_contours);
-    if (!end_pt_indices) return 0;
-    assert(end_pt_indices);
+    if (!end_pt_indices) return false;
     zero_range(end_pt_indices, number_of_contours); 
     {
       U32 contour_end_pts = g + 10; 
@@ -418,7 +418,7 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,
   
   U32* path_lengths = ba_push_array<U32>(allocator, 
                                          outline->contour_count);
-  if (!path_lengths) return 0;
+  if (!path_lengths) return false;
   zero_range(path_lengths, outline->contour_count);
   U32 path_count = 0;
   
@@ -429,7 +429,7 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,
   {
     if (pass == 1) {
       vertices = ba_push_array<V2>(allocator, vertex_count);
-      if (!vertices) return 0;
+      if (!vertices) return false;
       zero_range(vertices, vertex_count);
       vertex_count = 0;
       path_count = 0;
@@ -486,7 +486,7 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,
   paths->path_lengths = path_lengths;
   paths->path_count = path_count;
   
-  return 1;
+  return true;
   
 }
 
@@ -743,26 +743,26 @@ ttf_rasterize_glyph(TTF* ttf,
   Rect2 box = ttf_get_glyph_box(ttf, glyph_index, scale_factor);
   V2U bitmap_dims = ttf_get_bitmap_dims_from_glyph_box(box);
   
-  if (bitmap_dims.w == 0 || bitmap_dims.h == 0) return {};
+  if (bitmap_dims.w == 0 || bitmap_dims.h == 0) return {0};
   
   F32 height = abs_f32(box.max.y - box.min.y);   
   U32 bitmap_size = bitmap_dims.w*bitmap_dims.h*4;
   U32* pixels = (U32*)ba_push_block(allocator, bitmap_size);
   if (!pixels) return {0};
   zero_memory(pixels, bitmap_size);
-  
-  ba_set_revert_point(allocator);
  
-  declare_and_pointerize(_TTF_Glyph_Outline, outline);
-  declare_and_pointerize(_TTF_Glyph_Paths, paths);
+  ba_mark(allocator, restore_point);
+ 
+  make(_TTF_Glyph_Outline, outline);
+  make(_TTF_Glyph_Paths, paths);
   if(!_ttf_get_glyph_outline(ttf, outline, glyph_index, allocator))
-    return {0};
+    goto failed;
   if (!_ttf_get_paths_from_glyph_outline(outline, paths, allocator))
-    return {0};
+    goto failed;
   
   // generate scaled edges based on points
   _TTF_Edge* edges = ba_push_array<_TTF_Edge>(allocator, paths->vertex_count);
-  if (!edges) return {0};
+  if (!edges) goto failed;
   zero_range(edges, paths->vertex_count);
   
   U32 edge_count = 0;
@@ -806,7 +806,7 @@ ttf_rasterize_glyph(TTF* ttf,
   // Rasterazation algorithm starts here
   // Sort edges by top most edge
   Sort_Entry* y_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
-  if (!y_edges) return {0};
+  if (!y_edges) goto failed;
   for (U32 i = 0; i < edge_count; ++i) {
     y_edges[i].index = i;
     y_edges[i].key = -(F32)max_of(edges[i].p0.y, edges[i].p1.y);
@@ -815,7 +815,7 @@ ttf_rasterize_glyph(TTF* ttf,
 
 
   Sort_Entry* active_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
-  if (!active_edges) return {0};
+  if (!active_edges) goto failed;
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
   // clearing and refilling the active_edges list per scan line
@@ -921,7 +921,12 @@ ttf_rasterize_glyph(TTF* ttf,
   ret.height = bitmap_dims.h;
   ret.pixels = pixels;
   
+  ba_revert(restore_point);
   return ret;
+
+failed: 
+  ba_revert(restore_point);
+  return {0};
   
 }
 

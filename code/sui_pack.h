@@ -311,7 +311,7 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
     ba_set_revert_point(p->allocator);
     Sui_Packer_Font* font = p->fonts + font_id;
 
-    declare_and_pointerize(TTF, ttf);
+    make(TTF, ttf);
     if (!sui_read_font_from_file(ttf, font->file_name, p->allocator))
       return false; 
 
@@ -342,8 +342,8 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
   {
     ba_set_revert_point(p->allocator);
     Sui_Packer_Sprite* sprite = p->sprites + sprite_id;
-    declare_and_pointerize(Memory, mem);
-    declare_and_pointerize(PNG, png);
+    make(Memory, mem);
+    make(PNG, png);
     if (!sui_read_file_to_memory(mem, sprite->file_name, p->allocator))
       return false;
     if (!png_read(png, mem->data, mem->size)) 
@@ -367,8 +367,8 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
   {
     ba_set_revert_point(p->allocator);
     Sui_Packer_Sprite* sprite = p->sprites + sprite_id;
-    declare_and_pointerize(Memory, mem);
-    declare_and_pointerize(PNG, png);
+    make(Memory, mem);
+    make(PNG, png);
     if (!sui_read_file_to_memory(mem, sprite->file_name, p->allocator))
       return false;
     if (!png_read(png, mem->data, mem->size)) 
@@ -394,7 +394,7 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
     Sui_Packer_Font* f = p->fonts + font_id;
 
     // TODO: Cache this into Sui_Packer_Font?
-    declare_and_pointerize(TTF, ttf);
+    make(TTF, ttf);
     if (!sui_read_font_from_file(ttf, f->file_name, p->allocator))
       return false; 
 
@@ -694,7 +694,7 @@ end_asset_pack(Sui_Packer* p,
     U32 current_pos = ftell(file);
     fseek(file, kf.offset_to_data, SEEK_SET);
 
-    declare_and_pointerize(TTF, ttf);
+    make(TTF, ttf);
     if(!sui_read_font_from_file(ttf, pf->file_name, p->allocator))
       return false;
    
