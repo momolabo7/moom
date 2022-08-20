@@ -17,7 +17,7 @@ static unsigned sui_log_spaces = 0;
 
 
 // Utility files for ass
-static Memory 
+static Block 
 sui_malloc(UMI size) {
   void* mem = malloc(size);
   assert(mem);
@@ -25,14 +25,14 @@ sui_malloc(UMI size) {
 }
 
 static void 
-sui_free(Memory* mem) {
+sui_free(Block* mem) {
   free(mem->data);
   mem->data = nullptr;
   mem->size = 0;
 }
 
 static B32 
-sui_read_file_to_memory(Memory* mem, const char* filename, Bump_Allocator* allocator) {
+sui_read_file_to_blk(Block* mem, const char* filename, Bump_Allocator* allocator) {
   FILE *file = fopen(filename, "rb");
   if (!file) return false;
   defer { fclose(file); };
@@ -42,12 +42,12 @@ sui_read_file_to_memory(Memory* mem, const char* filename, Bump_Allocator* alloc
   fseek(file, 0, SEEK_SET);
  
   //sui_log("%s, %lld\n", filename, file_size);
-  void* file_memory = ba_push_block(allocator, file_size, 16); 
-  if (!file_memory) return false;
-  UMI read_amount = fread(file_memory, 1, file_size, file);
+  void* file_blk = ba_push_block(allocator, file_size, 16); 
+  if (!file_blk) return false;
+  UMI read_amount = fread(file_blk, 1, file_size, file);
   if(read_amount != file_size) return false;
   
-  mem->data = file_memory;
+  mem->data = file_blk;
   mem->size = file_size; 
   
   return true;
@@ -55,27 +55,27 @@ sui_read_file_to_memory(Memory* mem, const char* filename, Bump_Allocator* alloc
 }
 
 static B32
-sui_write_file_from_memory(const char* filename, Memory memory) {
+sui_write_file_from_blk(const char* filename, Block blk) {
   FILE *file = fopen(filename, "wb");
   if (!file) return false;
   defer { fclose(file); };
   
-  fwrite(memory.data, 1, memory.size, file);
+  fwrite(blk.data, 1, blk.size, file);
   return true;
 }
 
 static B32 
 sui_read_font_from_file(TTF* ttf, const char* filename, Bump_Allocator* allocator) {
-  make(Memory, mem);
-  if (!sui_read_file_to_memory(mem, filename, allocator)) 
+  make(Block, mem);
+  if (!sui_read_file_to_blk(mem, filename, allocator)) 
     return false;
   return ttf_read(ttf, mem->data, mem->size);
 }
 
 static B32 
 sui_read_wav_from_file(WAV* wav, const char* filename, Bump_Allocator* allocator) {
-  make(Memory, mem);
-  if(!sui_read_file_to_memory(mem, filename, allocator))
+  make(Block, mem);
+  if(!sui_read_file_to_blk(mem, filename, allocator))
     return false;
   return wav_read(wav, mem->data, mem->size);
 }

@@ -25,7 +25,7 @@ typedef struct {
   U8 compression_method;
   U8 filter_method;
   U8 interlace_method;
-}PNG;
+} PNG;
 
 // Only reads and writes in RGBA format.
 // Only works in little-endian OS
@@ -36,7 +36,7 @@ typedef struct {
 
 static B32 png_read(PNG* p, void* png_memory, UMI png_size);
 static Bitmap png_to_bitmap(PNG* png, Bump_Allocator* allocator);
-static Memory png_write(Bitmap bm, Bump_Allocator* allocator);
+static Block png_write(Bitmap bm, Bump_Allocator* allocator);
 
 //////////////////////////////////////////////////////////////
 // IMPLEMENTATION
@@ -817,7 +817,7 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
 
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
-static Memory
+static Block
 png_write(Bitmap bm, Bump_Allocator* allocator) {
   assert(bm.width > 0);
   assert(bm.height > 0);
@@ -979,7 +979,7 @@ png_write(Bitmap bm, Bump_Allocator* allocator) {
     srm_write(stream, footer);
   }
   
-  Memory ret;
+  Block ret;
   ret.data = (U8*)stream->data;
   ret.size = stream->pos;
   

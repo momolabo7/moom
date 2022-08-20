@@ -1,3 +1,5 @@
+Change Bitmap to Image32
+
 Game
   Sensors need to fking work
   Transitions

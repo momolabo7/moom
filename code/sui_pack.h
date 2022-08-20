@@ -342,9 +342,9 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
   {
     ba_set_revert_point(p->allocator);
     Sui_Packer_Sprite* sprite = p->sprites + sprite_id;
-    make(Memory, mem);
+    make(Block, mem);
     make(PNG, png);
-    if (!sui_read_file_to_memory(mem, sprite->file_name, p->allocator))
+    if (!sui_read_file_to_blk(mem, sprite->file_name, p->allocator))
       return false;
     if (!png_read(png, mem->data, mem->size)) 
       return false;
@@ -367,9 +367,9 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
   {
     ba_set_revert_point(p->allocator);
     Sui_Packer_Sprite* sprite = p->sprites + sprite_id;
-    make(Memory, mem);
+    make(Block, mem);
     make(PNG, png);
-    if (!sui_read_file_to_memory(mem, sprite->file_name, p->allocator))
+    if (!sui_read_file_to_blk(mem, sprite->file_name, p->allocator))
       return false;
     if (!png_read(png, mem->data, mem->size)) 
       return false;
@@ -429,9 +429,9 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
 
     ba_set_revert_point(p->allocator);
     sui_log("Writing test png file...\n");
-    Memory png_to_write_memory = png_write(bitmap, p->allocator);
-    if (!is_ok(png_to_write_memory)) return 1;
-    sui_write_file_from_memory("test.png", png_to_write_memory);
+    Block png_blk = png_write(bitmap, p->allocator);
+    if (!blk_ok(png_blk)) return 1;
+    sui_write_file_from_blk("test.png", png_blk);
   }
 #endif
   return true;

@@ -279,15 +279,15 @@ static F64 F64_NEG_INFINITY();
 static F64 F64_NAN();
 
 // NOTE(Momo):  This is a really useful construct I find myself using 
-// more and more. 
+// more and more. It represents a 'Block' of memory. 
 typedef struct {
   union {
     void* data;
     U8* data_u8;
   };
   UMI size;  
-} Memory;
-static B32 is_ok(Memory);
+} Block;
+static B32 blk_ok(Block);
 
 static void copy_memory(void* dest, const void* src, UMI size);
 static void zero_memory(void* dest, UMI size);
@@ -391,8 +391,8 @@ is_digit(U8 c) {
 
 
 static B32
-is_ok(Memory mem) {
-  return mem.data && mem.size;
+blk_ok(Block blk) {
+  return blk.data != null;
 }
 
 #if 1

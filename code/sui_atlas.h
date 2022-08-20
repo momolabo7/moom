@@ -157,7 +157,7 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
   
   if (rect_count == 0) return false; 
   
-  // Allocate required memory required
+  // Allocate required blk required
   auto* rects = ba_push_array<RP_Rect>(allocator, rect_count);
   auto* contexts = ba_push_array<Sui_Atlas_Context>(allocator, rect_count);
   
@@ -212,12 +212,12 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
     
     Sui_Atlas_Sprite* sprite = ab->sprites + sprite_index;
 
-    make(Memory, mem);
-    B32 ok = sui_read_file_to_memory(mem, sprite->filename, allocator);
+    make(Block, blk);
+    B32 ok = sui_read_file_to_blk(blk, sprite->filename, allocator);
     if (!ok) return false;
     
     make(PNG, png);
-    ok = png_read(png, mem->data, mem->size);
+    ok = png_read(png, blk->data, blk->size);
     if (!ok) return false;
     if(png->width == 0 || png->height == 0) return false;
     
@@ -264,13 +264,13 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
         ba_set_revert_point(allocator);
         Sui_Atlas_Sprite* related_entry = context->sprite.sprite;
        
-        make(Memory, mem);
+        make(Block, blk);
        
-        B32 ok = sui_read_file_to_memory(mem, related_entry->filename, allocator);
+        B32 ok = sui_read_file_to_blk(blk, related_entry->filename, allocator);
         if (!ok) return false;
         
         make(PNG, png);
-        ok = png_read(png, mem->data, mem->size);
+        ok = png_read(png, blk->data, blk->size);
         if(!ok) return false;
         
         Bitmap bm = png_to_bitmap(png, allocator);

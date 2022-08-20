@@ -9,10 +9,10 @@
 
 
 int main() {
-  Memory memory = sui_malloc(MB(100));
-  defer { sui_free(&memory); };
+  Block block = sui_malloc(MB(100));
+  defer { sui_free(&block); };
   make(Bump_Allocator, allocator);
-  ba_init(allocator, memory.data, memory.size);
+  ba_init(allocator, block.data, block.size);
  
   //make(WAV, loaded_wav);
   //sui_read_wav_from_file(loaded_wav,asset_dir("bgm_menu.wav"), allocator); 
