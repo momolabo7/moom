@@ -747,7 +747,7 @@ ttf_rasterize_glyph(TTF* ttf,
   
   F32 height = abs_f32(box.max.y - box.min.y);   
   U32 bitmap_size = bitmap_dims.w*bitmap_dims.h*4;
-  U32* pixels = (U32*)ba_push_block(allocator, bitmap_size);
+  U32* pixels = ba_push_array<U32>(allocator, bitmap_size);
   if (!pixels) return {0};
   zero_memory(pixels, bitmap_size);
  

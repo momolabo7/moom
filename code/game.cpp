@@ -18,16 +18,22 @@ game_update_and_render(Platform* pf)
     Game* game = (Game*)pf->game;
    
     // around 32MB worth
-    if (!ba_partition(pf->game_arena, &game->asset_arena, MB(20))) return false;
-    if (!ba_partition(pf->game_arena, &game->mode_arena, MB(5))) return false; 
-    if (!ba_partition(pf->game_arena, &game->debug_arena, MB(1))) return false;
-    if (!ba_partition(pf->game_arena, &game->frame_arena, MB(1))) return false;
+    if (!ba_partition(pf->game_arena, &game->asset_arena, MB(20), 16)) 
+      return false;
+    if (!ba_partition(pf->game_arena, &game->mode_arena, MB(5), 16)) 
+      return false; 
+    if (!ba_partition(pf->game_arena, &game->debug_arena, MB(1), 16)) 
+      return false;
+    if (!ba_partition(pf->game_arena, &game->frame_arena, MB(1), 16)) 
+      return false;
     
-    B32 success = load_game_assets(&game->game_assets, 
-                                   pf->gfx,
-                                   "test.sui",
-                                   &game->asset_arena);
-    if(!success) return false;
+    if(!load_game_assets(&game->game_assets, 
+                               pf->gfx,
+                               "test.sui",
+                               &game->asset_arena))
+    {
+      return false;
+    }
     
     //game_set_mode(game, splash_init, splash_tick);
      
