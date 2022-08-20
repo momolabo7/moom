@@ -9,8 +9,8 @@ SET Opt=%1
 
 if not exist %BuildDir% mkdir %BuildDir%
 
-SET CommonCompilerFlags=-MT -WX -W4 -wd4706 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa  -std:c++17
-SET CommonCompilerFlags=-DENABLE_ASSERTS=1 -DINTERNAL=1 -DTRANSLATION_UNIT_INDEX=0 %CommonCompilerFlags%
+SET CommonCompilerFlags=-MT -WX -W4 -wd4533 -wd4706 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa  -std:c++17
+SET CommonCompilerFlags=-DINTERNAL=1 %CommonCompilerFlags%
 
 pushd %BuildDir%
 cl %CommonCompilerFlags% %CodeDir%\game.cpp -LD -link -OUT:game.dll

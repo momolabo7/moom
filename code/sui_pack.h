@@ -403,10 +403,10 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
          ++glyph_id)
     {
       Sui_Packer_Font_Glyph* g = p->font_glyphs + glyph_id;
-      F32 s = ttf_get_scale_for_pixel_height(ttf, f->glyph_height);
+      F32 scale = ttf_get_scale_for_pixel_height(ttf, f->glyph_height);
       U32 glyph_index = ttf_get_glyph_index(ttf, g->codepoint);
 
-      Bitmap glyph_bmp = ttf_rasterize_glyph(ttf, glyph_index, s, p->allocator);
+      Bitmap glyph_bmp = ttf_rasterize_glyph(ttf, glyph_index, scale, p->allocator);
       if (!is_ok(glyph_bmp)) continue;
 
       RP_Rect* rect = g->rect;

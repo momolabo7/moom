@@ -242,13 +242,13 @@ static U32 endian_swap_u32(U32 value);
 //~assert
 // NOTE(Momo): Others can provide their own 'assert_callback' 
 #if !defined(assert_callback)
-#define assert_callback(s) (*(volatile int*)0 = 0)
+# define assert_callback(s) (*(volatile int*)0 = 0)
 #endif // AssertBreak
 
 #if ENABLE_ASSERT
-#define assert(s) stmt(if(!(s)) { assert_callback(s); })
+# define assert(s) stmt(if(!(s)) { assert_callback(s); })
 #else // !ENABLE_ASSERT
-#define assert(s)
+# define assert(s)
 #endif // ENABLE_ASSERT
 
 //////////////////////////////////////////
@@ -280,13 +280,13 @@ static F64 F64_NAN();
 
 // NOTE(Momo):  This is a really useful construct I find myself using 
 // more and more. 
-struct Memory  {
+typedef struct {
   union {
     void* data;
     U8* data_u8;
   };
   UMI size;  
-};
+} Memory;
 static B32 is_ok(Memory);
 
 static void copy_memory(void* dest, const void* src, UMI size);

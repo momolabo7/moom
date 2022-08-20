@@ -14,7 +14,7 @@
 #ifndef MOMO_PNG
 #define MOMO_PNG
 
-struct PNG {
+typedef struct {
   U8* data;
   UMI data_size;
   
@@ -25,7 +25,7 @@ struct PNG {
   U8 compression_method;
   U8 filter_method;
   U8 interlace_method;
-};
+}PNG;
 
 // Only reads and writes in RGBA format.
 // Only works in little-endian OS

@@ -22,6 +22,10 @@
 #ifndef MOMO_TTF_H
 #define MOMO_TTF_H
 
+#ifndef ttf_log
+# define ttf_log(...)
+#endif 
+
 typedef struct {
   U8* data;
   U32 glyph_count;
@@ -565,7 +569,8 @@ static TTF_Glyph_Horizontal_Metrics
 ttf_get_glyph_horiozontal_metrics(TTF* ttf, U32 glyph_index)
 {
   U16 num_of_long_horizontal_metrices = _ttf_read_u16(ttf->data + ttf->hhea + 34);
-  TTF_Glyph_Horizontal_Metrics ret = {};
+  TTF_Glyph_Horizontal_Metrics ret = {0};
+
   if (glyph_index < num_of_long_horizontal_metrices) {
     ret.advance_width = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index);
     ret.left_side_bearing = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index + 2);
@@ -708,7 +713,7 @@ ttf_get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
 
 static Rect2 
 ttf_get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor) {
-  Rect2 ret = {};
+  Rect2 ret = {0};
   
   Rect2S raw_box = _ttf_get_raw_glyph_box(ttf, glyph_index);
   ret.min.x = (F32)raw_box.min.x * scale_factor;
@@ -721,14 +726,12 @@ ttf_get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor) {
 
 static V2U 
 ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
-  V2U ret = {};
+  V2U ret = {0};
   
   F32 width = abs_f32(glyph_box.max.x - glyph_box.min.x);
   F32 height = abs_f32(glyph_box.max.y - glyph_box.min.y);
-  if (width > 0.f && height > 0) {
-    ret.w = (U32)width + 1;
-    ret.h = (U32)height + 1;
-  }
+  ret.w = (U32)width + 1;
+  ret.h = (U32)height + 1;
   
   return ret;
 }
@@ -740,29 +743,45 @@ ttf_rasterize_glyph(TTF* ttf,
                     F32 scale_factor, 
                     Bump_Allocator* allocator) 
 {
+  Bitmap ret = {0};
+
   Rect2 box = ttf_get_glyph_box(ttf, glyph_index, scale_factor);
   V2U bitmap_dims = ttf_get_bitmap_dims_from_glyph_box(box);
   
-  if (bitmap_dims.w == 0 || bitmap_dims.h == 0) return {0};
+  if (bitmap_dims.w == 0 || bitmap_dims.h == 0) {
+    ttf_log("[ttf] Glyph dimension are bad\nj");
+    goto cleanup_pre_restore_point;
+  }
   
   F32 height = abs_f32(box.max.y - box.min.y);   
   U32 bitmap_size = bitmap_dims.w*bitmap_dims.h*4;
   U32* pixels = ba_push_array<U32>(allocator, bitmap_size);
-  if (!pixels) return {0};
+  if (!pixels) {
+    ttf_log("[ttf] Unable to allocate bitmap pixel\n");
+    goto cleanup_pre_restore_point;
+  }
   zero_memory(pixels, bitmap_size);
  
   Bump_Allocator_Marker restore_point = ba_mark(allocator);
  
   make(_TTF_Glyph_Outline, outline);
   make(_TTF_Glyph_Paths, paths);
-  if(!_ttf_get_glyph_outline(ttf, outline, glyph_index, allocator))
-    goto failed;
-  if (!_ttf_get_paths_from_glyph_outline(outline, paths, allocator))
-    goto failed;
+
+  if(!_ttf_get_glyph_outline(ttf, outline, glyph_index, allocator)) {
+    ttf_log("[ttf] Unable to get glyph outline\n");
+    goto cleanup_post_restore_point;
+  }
+  if (!_ttf_get_paths_from_glyph_outline(outline, paths, allocator)) {
+    ttf_log("[ttf] Unable glyph paths\n");
+    goto cleanup_post_restore_point;
+  }
   
   // generate scaled edges based on points
   _TTF_Edge* edges = ba_push_array<_TTF_Edge>(allocator, paths->vertex_count);
-  if (!edges) goto failed;
+  if (!edges) {
+    ttf_log("[ttf] Unable to allocate edges\n");
+    goto cleanup_post_restore_point;
+  }
   zero_range(edges, paths->vertex_count);
   
   U32 edge_count = 0;
@@ -806,7 +825,11 @@ ttf_rasterize_glyph(TTF* ttf,
   // Rasterazation algorithm starts here
   // Sort edges by top most edge
   Sort_Entry* y_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
-  if (!y_edges) goto failed;
+  if (!y_edges) { 
+    ttf_log("[ttf] Unable to allocate sort entries for edges\n");
+    goto cleanup_post_restore_point;
+  }
+
   for (U32 i = 0; i < edge_count; ++i) {
     y_edges[i].index = i;
     y_edges[i].key = -(F32)max_of(edges[i].p0.y, edges[i].p1.y);
@@ -814,7 +837,10 @@ ttf_rasterize_glyph(TTF* ttf,
   quicksort(y_edges, edge_count);
 
   Sort_Entry* active_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
-  if (!active_edges) goto failed;
+  if (!active_edges) {
+    ttf_log("[ttf] Unable to allocate sort entries for active edges\n");
+    goto cleanup_post_restore_point;
+  }
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
   // clearing and refilling the active_edges list per scan line
@@ -913,19 +939,15 @@ ttf_rasterize_glyph(TTF* ttf,
   }
 #endif
   
-  
-  
-  Bitmap ret;
   ret.width = bitmap_dims.w;
   ret.height = bitmap_dims.h;
   ret.pixels = pixels;
-  
+ 
+cleanup_post_restore_point: 
   ba_revert(restore_point);
-  return ret;
 
-failed: 
-  ba_revert(restore_point);
-  return {0};
+cleanup_pre_restore_point:
+  return ret;
   
 }
 
