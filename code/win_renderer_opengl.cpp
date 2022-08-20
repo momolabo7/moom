@@ -184,7 +184,7 @@ win_gfx_load(HWND window,
   HDC dc = GetDC(window); 
   if (!dc) return 0;
 
-  Opengl* opengl = ba_push<Opengl>(allocator);
+  Opengl* opengl = ba_push(Opengl, allocator);
   if (!opengl) return 0; 
 
   // Allocate memory for render commands
