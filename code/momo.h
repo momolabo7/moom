@@ -16,6 +16,7 @@
 #include "momo_streams.h"
 #include "momo_lists.h"  
 #include "momo_rng.h"
+#include "momo_wav.h"     
 // END C MARKER
 
 
@@ -26,7 +27,6 @@
 
 #include "momo_memory.h"
 #include "momo_rect_pack.h"
-#include "momo_wav.h"     
 #include "momo_png.h"
 #include "momo_ttf.h"
 

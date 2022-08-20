@@ -237,6 +237,7 @@ static F64 bpm_to_spb_f64(F64 bpm);
 //   void _EndianSwap16(U8* ptr)
 //   #define endian_swap_16(value) _EndianSwap16((U8*)&value)
 static U16 endian_swap_u16(U16 value);
+static S16 endian_swap_s16(S16 value);
 static U32 endian_swap_u32(U32 value);
 
 //~assert
@@ -1522,17 +1523,17 @@ rad_to_deg_f64(F64 radians) {
 }
 
 static U16
-endian_swap_16(U16 value) {
+endian_swap_u16(U16 value) {
   return (value << 8) | (value >> 8);
 }
 
 static S16
-endian_swap_16(S16 value) {
+endian_swap_s16(S16 value) {
   return (value << 8) | (value >> 8);
 }
 
 static U32
-endian_swap_32(U32 value) {
+endian_swap_u32(U32 value) {
   return  ((value << 24) |
            ((value & 0xFF00) << 8) |
            ((value >> 8) & 0xFF00) |

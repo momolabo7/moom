@@ -765,8 +765,8 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
     Stream stream = ctx.stream;
     while(!srm_is_eos(&stream)) {
       auto* chunk_header = srm_consume(_PNG_Chunk_Header, &stream);
-      U32 chunk_length = endian_swap_32(chunk_header->length);
-      U32 chunk_type = endian_swap_32(chunk_header->type_U32);
+      U32 chunk_length = endian_swap_u32(chunk_header->length);
+      U32 chunk_type = endian_swap_u32(chunk_header->type_U32);
       if (chunk_type == 'IDAT') {
         zlib_size += chunk_length;
       }
@@ -782,8 +782,8 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
   // Second pass to allocate memory
   while(!srm_is_eos(&ctx.stream)) {
     auto* chunk_header = srm_consume(_PNG_Chunk_Header, &ctx.stream);
-    U32 chunk_length = endian_swap_32(chunk_header->length);
-    U32 chunk_type = endian_swap_32(chunk_header->type_U32);
+    U32 chunk_length = endian_swap_u32(chunk_header->length);
+    U32 chunk_type = endian_swap_u32(chunk_header->type_U32);
     if (chunk_type == 'IDAT') {
       srm_write_block(zlib_stream, 
                       ctx.stream.data + ctx.stream.pos,
@@ -862,15 +862,15 @@ png_write(Bitmap bm, Bump_Allocator* allocator) {
     U8* crc_start = nullptr;
     
     _PNG_Chunk_Header header = {};
-    header.type_U32 = endian_swap_32('IHDR');
+    header.type_U32 = endian_swap_u32('IHDR');
     header.length = sizeof(_PNG_IHDR);
-    header.length = endian_swap_32(header.length);
+    header.length = endian_swap_u32(header.length);
     srm_write(stream, header);
     crc_start = stream->data + stream->pos - sizeof(header.type_U32);
     
     _PNG_IHDR IHDR = {};
-    IHDR.width = endian_swap_32(bm.width);
-    IHDR.height = endian_swap_32(bm.height);
+    IHDR.width = endian_swap_u32(bm.width);
+    IHDR.height = endian_swap_u32(bm.height);
     IHDR.bit_depth = 8; // ??
     IHDR.colour_type = 6;
     IHDR.compression_method = 0;
@@ -881,7 +881,7 @@ png_write(Bitmap bm, Bump_Allocator* allocator) {
     _PNG_Chunk_Footer footer = {};
     U32 crc_size = (U32)(stream->data + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
-    footer.crc = endian_swap_32(footer.crc);
+    footer.crc = endian_swap_u32(footer.crc);
     srm_write(stream, footer);
     
   }
@@ -896,9 +896,9 @@ png_write(Bitmap bm, Bump_Allocator* allocator) {
     U8* crc_start = nullptr;
     
     _PNG_Chunk_Header header = {};
-    header.type_U32 = endian_swap_32('IDAT');
+    header.type_U32 = endian_swap_u32('IDAT');
     header.length = sizeof(_PNG_IDAT_Header) + (chunk_overhead*chunk_count) + data_size; 
-    header.length = endian_swap_32(header.length);    
+    header.length = endian_swap_u32(header.length);    
     srm_write(stream, header);
     crc_start = stream->data + stream->pos - sizeof(header.type_U32);
     
@@ -957,7 +957,7 @@ png_write(Bitmap bm, Bump_Allocator* allocator) {
     _PNG_Chunk_Footer footer = {};
     U32 crc_size = (U32)(stream->data + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
-    footer.crc = endian_swap_32(footer.crc);
+    footer.crc = endian_swap_u32(footer.crc);
     srm_write(stream, footer);
   }
   
@@ -966,7 +966,7 @@ png_write(Bitmap bm, Bump_Allocator* allocator) {
     U8* crc_start = nullptr;
     
     _PNG_Chunk_Header header = {};
-    header.type_U32 = endian_swap_32('IEND');
+    header.type_U32 = endian_swap_u32('IEND');
     header.length = 0;
     srm_write(stream, header);
     crc_start = stream->data + stream->pos - sizeof(header.type_U32);
@@ -975,7 +975,7 @@ png_write(Bitmap bm, Bump_Allocator* allocator) {
     _PNG_Chunk_Footer footer = {};
     U32 crc_size = (U32)(stream->data + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
-    footer.crc = endian_swap_32(footer.crc);
+    footer.crc = endian_swap_u32(footer.crc);
     srm_write(stream, footer);
   }
   
@@ -997,8 +997,8 @@ png_read(PNG* p, void* png_memory, UMI png_size) {
   
   // Read Chunk Header
   auto* chunk_header = srm_consume(_PNG_Chunk_Header, stream);
-  U32 chunk_length = endian_swap_32(chunk_header->length);
-  U32 chunk_type = endian_swap_32(chunk_header->type_U32);
+  U32 chunk_length = endian_swap_u32(chunk_header->length);
+  U32 chunk_type = endian_swap_u32(chunk_header->type_U32);
   
   
   if(chunk_type != 'IHDR') { return false; }
@@ -1007,8 +1007,8 @@ png_read(PNG* p, void* png_memory, UMI png_size) {
   
   // NOTE(Momo): Width and height is in Big Endian
   // We assume that we are currently in a Little Endian system
-  U32 width = endian_swap_32(IHDR->width);
-  U32 height = endian_swap_32(IHDR->height);
+  U32 width = endian_swap_u32(IHDR->width);
+  U32 height = endian_swap_u32(IHDR->height);
   
   if (!_png_is_format_supported(IHDR)) { return false; }
   

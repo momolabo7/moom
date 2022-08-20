@@ -54,8 +54,8 @@ wav_read(WAV* w, void* memory, UMI memory_size)
   if (!riff_chunk) {
     return 0;
   }
-  riff_chunk->id = endian_swap_32(riff_chunk->id);
-  riff_chunk->format = endian_swap_32(riff_chunk->format);
+  riff_chunk->id = endian_swap_u32(riff_chunk->id);
+  riff_chunk->format = endian_swap_u32(riff_chunk->format);
   if (riff_chunk->id != riff_id_signature) {
     return 0;
   }
@@ -68,7 +68,7 @@ wav_read(WAV* w, void* memory, UMI memory_size)
   if (!fmt_chunk) {
     return 0;
   }
-  fmt_chunk->id = endian_swap_32(fmt_chunk->id);
+  fmt_chunk->id = endian_swap_u32(fmt_chunk->id);
   if (fmt_chunk->id != fmt_id_signature) {
     return 0;
   }
@@ -93,7 +93,7 @@ wav_read(WAV* w, void* memory, UMI memory_size)
   if (!data_chunk) {
     return 0;
   }
-  data_chunk->id = endian_swap_32(data_chunk->id);
+  data_chunk->id = endian_swap_u32(data_chunk->id);
   if (data_chunk->id != data_id_signature) {
     return 0;
   }

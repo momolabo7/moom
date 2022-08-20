@@ -33,11 +33,11 @@ typedef struct {
   U16 loca_format;
 }TTF;
 
-struct TTF_Glyph_Horizontal_Metrics
+typedef struct 
 {
   S16 advance_width;
   S16 left_side_bearing;
-};
+}TTF_Glyph_Horizontal_Metrics;
 
 static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);
 
@@ -61,42 +61,39 @@ static Rect2 ttf_get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor);
 
 ///////////////////////////////////////////////////////////////
 // IMPLEMENTATION
-struct _TTF_Glyph_Box : Rect2S {
-  B32 exists;
-};
-
-struct _TTF_Glyph_Point {
+typedef struct {
   S16 x, y; 
   U8 flags;
-};
+}_TTF_Glyph_Point;
 
-struct _TTF_Glyph_Outline {
+typedef struct {
   _TTF_Glyph_Point* points;
   U32 point_count;
   
   U16* end_point_indices; // as many as contour_counts
   U32 contour_count;
-};
-struct _TTF_Glyph_Paths {
+}_TTF_Glyph_Outline;
+
+typedef struct {
   V2* vertices;
   U32 vertex_count;
   
   U32* path_lengths;
   U32 path_count;
-};
+}_TTF_Glyph_Paths;
 
 
-struct _TTF_Edge {
+typedef struct {
   V2 p0, p1;
   B32 is_inverted;
   F32 x_intersect;
-};
+}_TTF_Edge;
 
-struct _TTF_Edge_List {
+typedef struct {
   U32 cap;
   U32 count;
   _TTF_Edge** e;
-};
+}_TTF_Edge_List;
 
 enum {
   _TTF_CMAP_PLATFORM_ID_UNICODE = 0,
@@ -118,16 +115,16 @@ enum {
 
 static U16
 _ttf_read_u16(U8* location) {
-  return endian_swap_16(*(U16*)location);
+  return endian_swap_u16(*(U16*)location);
 };
 
 static S16
 _ttf_read_s16(U8* location) {
-  return endian_swap_16(*(U16*)location);
+  return endian_swap_u16(*(U16*)location);
 };
 static U32
 _ttf_read_u32(U8* location) {
-  return endian_swap_32(*(U32*)location);
+  return endian_swap_u32(*(U32*)location);
 };
 
 // returns 0 is failure
@@ -161,9 +158,9 @@ _ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
 //   max = top right of the glyph
 // with respect to the coordinate system stated above.
 // 
-static _TTF_Glyph_Box
-_ttf_ttf_get_glyph_box(TTF* ttf, U32 glyph_index) {
-  _TTF_Glyph_Box ret = {};
+static Rect2S 
+_ttf_get_raw_glyph_box(TTF* ttf, U32 glyph_index) {
+  Rect2S  ret = {0};
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
 	if(g != 0)
   {  
@@ -171,7 +168,6 @@ _ttf_ttf_get_glyph_box(TTF* ttf, U32 glyph_index) {
     ret.min.y = _ttf_read_s16(ttf->data + g + 4);
     ret.max.x = _ttf_read_s16(ttf->data + g + 6);
     ret.max.y = _ttf_read_s16(ttf->data + g + 8);
-    ret.exists = true;
   }
   
   return ret;
@@ -231,8 +227,12 @@ _ttf_get_kern_advance(TTF* ttf, S32 g1, S32 g2) {
 // | 
 // ----x
 //
-static _TTF_Glyph_Outline
-_ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Bump_Allocator* allocator) {
+static B32 
+_ttf_get_glyph_outline(TTF* ttf, 
+                       _TTF_Glyph_Outline* outline,
+                       U32 glyph_index, 
+                       Bump_Allocator* allocator) 
+{
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   S16 number_of_contours = _ttf_read_s16(ttf->data + g + 0);
   
@@ -247,8 +247,8 @@ _ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Bump_Allocator* allocator) {
     //test_eval_d(number_of_contours);
     //test_eval_d(point_count);
     
-    auto* points = ba_push_array<_TTF_Glyph_Point>(allocator, point_count);
-    assert(points);
+    _TTF_Glyph_Point* points = ba_push_array<_TTF_Glyph_Point>(allocator, point_count);
+    if (!points) return 0;
     zero_range(points, point_count);
     U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
     
@@ -330,6 +330,7 @@ _ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Bump_Allocator* allocator) {
     
     // mark the points that are contour endpoints
     U16 *end_pt_indices = ba_push_array<U16>(allocator, number_of_contours);
+    if (!end_pt_indices) return 0;
     assert(end_pt_indices);
     zero_range(end_pt_indices, number_of_contours); 
     {
@@ -339,22 +340,19 @@ _ttf_get_glyph_outline(TTF* ttf, U32 glyph_index, Bump_Allocator* allocator) {
       }
     }
     
-    _TTF_Glyph_Outline ret;
-    ret.points = points; 
-    ret.point_count = point_count;
-    ret.end_point_indices = end_pt_indices;
-    ret.contour_count = number_of_contours;
+    outline->points = points; 
+    outline->point_count = point_count;
+    outline->end_point_indices = end_pt_indices;
+    outline->contour_count = number_of_contours;
     
-    return ret;
+    return 1;
   }
   
   else if (number_of_contours < 0) { // compound glyph case
-    assert(false);
-    return {};
+    return 0;
   }
   else { //contour_count == 0
-    // do nothing
-    return {};
+    return 0;
   } 
 }
 
@@ -407,19 +405,21 @@ _ttf_tessellate_bezier(V2* vertices,
   
 }
 
-static _TTF_Glyph_Paths
-_ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
+static B32 
+_ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,
+                                  _TTF_Glyph_Paths* paths,
                                   Bump_Allocator* allocator) 
 {
   // Count the amount of points generated
-  V2* vertices = nullptr;
+  V2* vertices = 0;
   U32 vertex_count = 0;
   F32 flatness = 0.35f;
   F32 flatness_squared = flatness*flatness;
   
-  U32* path_lengths = ba_push_array<U32>(allocator, outline.contour_count);
-  assert(path_lengths);
-  zero_range(path_lengths, outline.contour_count);
+  U32* path_lengths = ba_push_array<U32>(allocator, 
+                                         outline->contour_count);
+  if (!path_lengths) return 0;
+  zero_range(path_lengths, outline->contour_count);
   U32 path_count = 0;
   
   // On the first pass, we count the number of points we will generate.
@@ -429,7 +429,7 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
   {
     if (pass == 1) {
       vertices = ba_push_array<V2>(allocator, vertex_count);
-      assert(vertices);
+      if (!vertices) return 0;
       zero_range(vertices, vertex_count);
       vertex_count = 0;
       path_count = 0;
@@ -439,30 +439,31 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
     // always on curve, which is not always the case.
     V2 anchor_pt = {};
     U32 j = 0;
-    for (U32 i = 0; i < outline.contour_count; ++i) {
+    for (U32 i = 0; i < outline->contour_count; ++i) {
       U32 contour_start_index = j;
       U32 start_vertex_count = vertex_count;
       
-      for(; j <= outline.end_point_indices[i]; ++j) {
-        U8 flags = outline.points[j].flags;
+      for(; j <= outline->end_point_indices[i]; ++j) {
+        U8 flags = outline->points[j].flags;
         
         if (flags & 0x1) { // on curve 
-          anchor_pt.x = (F32)outline.points[j].x;
-          anchor_pt.y = (F32)outline.points[j].y;
+          anchor_pt.x = (F32)outline->points[j].x;
+          anchor_pt.y = (F32)outline->points[j].y;
           
           _ttf_add_vertex(vertices, vertex_count++, anchor_pt);
         }
         else{ // not on curve
-          U32 next_index = (j == outline.end_point_indices[i]) ? contour_start_index : j+1;
+          U32 next_index = (j == outline->end_point_indices[i]) ? contour_start_index : j+1;
           
           // Check if next point is on curve
           V2 p0 = anchor_pt;
-          V2 p1 = { (F32)outline.points[j].x, (F32)outline.points[j].y };
-          V2 p2 = { (F32)outline.points[next_index].x, (F32)outline.points[next_index].y } ;
+          V2 p1 = { (F32)outline->points[j].x, (F32)outline->points[j].y };
+          V2 p2 = { (F32)outline->points[next_index].x, (F32)outline->points[next_index].y } ;
           
-          U8 next_flags = outline.points[next_index].flags;
+          U8 next_flags = outline->points[next_index].flags;
           if (!(next_flags & 0x1)) {
-            // not on curve, thus it's a cubic curve, so we have to generate midpoint
+            // not on curve, thus it's a cubic curve, 
+            // so we have to generate midpoint
             p2.x = p1.x + (p2.x - p1.x)*0.5f;
             p2.y = p1.y + (p2.y - p1.y)*0.5f;
           }
@@ -479,16 +480,13 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline outline,
       }
       path_lengths[path_count++] = vertex_count - start_vertex_count;
     }
-    
   }
+  paths->vertices = vertices;
+  paths->vertex_count = vertex_count;
+  paths->path_lengths = path_lengths;
+  paths->path_count = path_count;
   
-  _TTF_Glyph_Paths ret = {};
-  ret.vertices = vertices;
-  ret.vertex_count = vertex_count;
-  ret.path_lengths = path_lengths;
-  ret.path_count = path_count;
-  
-  return ret;
+  return 1;
   
 }
 
@@ -712,7 +710,7 @@ static Rect2
 ttf_get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor) {
   Rect2 ret = {};
   
-  Rect2S raw_box = _ttf_ttf_get_glyph_box(ttf, glyph_index);
+  Rect2S raw_box = _ttf_get_raw_glyph_box(ttf, glyph_index);
   ret.min.x = (F32)raw_box.min.x * scale_factor;
   ret.min.y = (F32)raw_box.min.y * scale_factor;
   ret.max.x = (F32)raw_box.max.x * scale_factor;
@@ -725,8 +723,8 @@ static V2U
 ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
   V2U ret = {};
   
-  F32 width = abs_of(glyph_box.max.x - glyph_box.min.x);
-  F32 height = abs_of(glyph_box.max.y - glyph_box.min.y);
+  F32 width = abs_f32(glyph_box.max.x - glyph_box.min.x);
+  F32 height = abs_f32(glyph_box.max.y - glyph_box.min.y);
   if (width > 0.f && height > 0) {
     ret.w = (U32)width + 1;
     ret.h = (U32)height + 1;
@@ -737,40 +735,48 @@ ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
 
 
 static Bitmap 
-ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator* allocator) {
+ttf_rasterize_glyph(TTF* ttf, 
+                    U32 glyph_index, 
+                    F32 scale_factor, 
+                    Bump_Allocator* allocator) 
+{
   Rect2 box = ttf_get_glyph_box(ttf, glyph_index, scale_factor);
   V2U bitmap_dims = ttf_get_bitmap_dims_from_glyph_box(box);
   
   if (bitmap_dims.w == 0 || bitmap_dims.h == 0) return {};
   
-  F32 height = abs_of(box.max.y - box.min.y);   
+  F32 height = abs_f32(box.max.y - box.min.y);   
   U32 bitmap_size = bitmap_dims.w*bitmap_dims.h*4;
   U32* pixels = (U32*)ba_push_block(allocator, bitmap_size);
-  if (!pixels) return {};
+  if (!pixels) return {0};
   zero_memory(pixels, bitmap_size);
   
   ba_set_revert_point(allocator);
-  
-  auto outline = _ttf_get_glyph_outline(ttf, glyph_index, allocator);
-  auto paths = _ttf_get_paths_from_glyph_outline(outline, allocator);
+ 
+  declare_and_pointerize(_TTF_Glyph_Outline, outline);
+  declare_and_pointerize(_TTF_Glyph_Paths, paths);
+  if(!_ttf_get_glyph_outline(ttf, outline, glyph_index, allocator))
+    return {0};
+  if (!_ttf_get_paths_from_glyph_outline(outline, paths, allocator))
+    return {0};
   
   // generate scaled edges based on points
-  _TTF_Edge* edges = ba_push_array<_TTF_Edge>(allocator, paths.vertex_count);
-  assert(edges);
-  zero_range(edges, paths.vertex_count);
+  _TTF_Edge* edges = ba_push_array<_TTF_Edge>(allocator, paths->vertex_count);
+  if (!edges) return {0};
+  zero_range(edges, paths->vertex_count);
   
   U32 edge_count = 0;
   {
-    
     U32 vertex_index = 0;
-    for (UMI path_index = 0; path_index < paths.path_count; ++path_index) {
-      U32 path_length = paths.path_lengths[path_index];
-      for (UMI i = 0; i < path_length; ++i) {
-        
-        
+    for (U32 path_index = 0; 
+         path_index < paths->path_count; 
+         ++path_index)
+    {
+      U32 path_length = paths->path_lengths[path_index];
+      for (U32 i = 0; i < path_length; ++i) {
         _TTF_Edge edge = {};
-        V2 start_vertex = paths.vertices[vertex_index];
-        V2 end_vertex = (i == path_length-1) ? paths.vertices[vertex_index-i] : paths.vertices[vertex_index+1];
+        V2 start_vertex = paths->vertices[vertex_index];
+        V2 end_vertex = (i == path_length-1) ? paths->vertices[vertex_index-i] : paths->vertices[vertex_index+1];
         ++vertex_index;
         
         // Skip if edge is going to be completely horizontal
@@ -800,7 +806,7 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator*
   // Rasterazation algorithm starts here
   // Sort edges by top most edge
   Sort_Entry* y_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
-  assert(y_edges);
+  if (!y_edges) return {0};
   for (U32 i = 0; i < edge_count; ++i) {
     y_edges[i].index = i;
     y_edges[i].key = -(F32)max_of(edges[i].p0.y, edges[i].p1.y);
@@ -809,7 +815,7 @@ ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator*
 
 
   Sort_Entry* active_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
-  assert(active_edges);
+  if (!active_edges) return {0};
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
   // clearing and refilling the active_edges list per scan line
