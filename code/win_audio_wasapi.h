@@ -223,13 +223,7 @@ win_wasapi_init(Win_Wasapi* wasapi,
   wasapi->samples_per_second = samples_per_second;
   wasapi->latency_sample_count = (samples_per_second / refresh_rate) * latency_frames;
 
-  if (!ba_partition_with_remaining(allocator, 
-                                   &wasapi->allocator, 
-                                   16)) 
-  {
-    win_log("[win_wasapi] Failed to partition memory\n");
-    return false;
-  }
+  if (!ba_partition_with_remaining(allocator, &wasapi->allocator)) return false;
   
   HRESULT hr = CoInitializeEx(0, COINIT_SPEED_OVER_MEMORY);
   if (FAILED(hr)) {

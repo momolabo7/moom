@@ -188,10 +188,10 @@ win_gfx_load(HWND window,
   if (!opengl) return 0; 
 
   // Allocate memory for render commands
-  void* command_queue_memory =  ba_push_block(allocator, command_queue_size, 16);
+  void* command_queue_memory =  ba_push_block(allocator, command_queue_size);
   if (!command_queue_memory) return 0;
 
-  void* texture_queue_memory = ba_push_block(allocator, texture_queue_size, 16);
+  void* texture_queue_memory = ba_push_block(allocator, texture_queue_size);
   if (!texture_queue_memory) return 0; 
  
   if (!win_load_wgl_extentions()) return 0;

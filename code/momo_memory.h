@@ -21,9 +21,9 @@ struct Bump_Allocator{
 
 static void   ba_init(Bump_Allocator* a, void* mem, UMI cap);
 static void   ba_clear(Bump_Allocator* a);
-static void*  ba_push_block(Bump_Allocator* a, UMI size, UMI align);
-static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align);
-static B32    ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* parition, UMI align);
+static void*  ba_push_block(Bump_Allocator* a, UMI size, UMI align = 4);
+static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align = 16);
+static B32    ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* parition, UMI align = 16);
 static UMI    ba_remaining(Bump_Allocator* a);
 
 
