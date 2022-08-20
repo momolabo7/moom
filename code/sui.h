@@ -42,10 +42,10 @@ sui_read_file_to_memory(Memory* mem, const char* filename, Bump_Allocator* alloc
   fseek(file, 0, SEEK_SET);
  
   //sui_log("%s, %lld\n", filename, file_size);
-  void* file_memory = ba_push_block(allocator, file_size); 
-  assert(file_memory);
+  void* file_memory = ba_push_block(allocator, file_size, 16); 
+  if (!file_memory) return false;
   UMI read_amount = fread(file_memory, 1, file_size, file);
-  assert(read_amount == file_size);
+  if(read_amount != file_size) return false;
   
   mem->data = file_memory;
   mem->size = file_size; 

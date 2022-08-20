@@ -849,7 +849,7 @@ png_write(Bitmap bm, Bump_Allocator* allocator) {
                                   data_size + 
                                   IDAT_chunk_size);
   
-  U8* stream_memory = (U8*)ba_push_block(allocator, expected_memory_required);
+  U8* stream_memory = ba_push_array<U8>(allocator, expected_memory_required);
   assert(stream_memory);
   make(Stream, stream);
   srm_init(stream, stream_memory, expected_memory_required);
