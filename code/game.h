@@ -77,11 +77,12 @@ game_set_mode(Game* game, Game_Mode_Init* init, Game_Mode_Update* update)
 
 
 
-template<typename T>
-static T*
-game_allocate_mode(Game* game) {
+static void*
+_game_allocate_mode(Game* game, UMI size) {
   ba_clear(&game->mode_arena);
-  game->mode_context = ba_push<T>(&game->mode_arena, 4);
-  return (T*)game->mode_context;
+  game->mode_context = ba_push_block(&game->mode_arena, size, 16);
+  return game->mode_context;
 }
+#define game_allocate_mode(t,g) (t*)_game_allocate_mode(g,sizeof(t))
+
 #endif //GAME_H

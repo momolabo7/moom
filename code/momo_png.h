@@ -208,13 +208,13 @@ _png_huffman_compute(_PNG_Huffman* h,
   
   // Each code corresponds to a symbol
   h->symbol_count = codes_size;
-  h->symbols = ba_push_array<U16>(allocator, codes_size);
+  h->symbols = ba_push_array(U16, allocator, codes_size);
   zero_memory(h->symbols, h->symbol_count * sizeof(U16));
   
   
   // We add +1 because lengths[0] is not possible
   h->length_count = max_lengths + 1;
-  h->lengths = ba_push_array<U16>(allocator, max_lengths + 1);
+  h->lengths = ba_push_array(U16, allocator, max_lengths + 1);
   zero_memory(h->lengths, h->length_count * sizeof(U16));
   
   // 1. Count the number of codes for each code length
@@ -226,7 +226,7 @@ _png_huffman_compute(_PNG_Huffman* h,
   // 2. Numerical value of smallest code for each code length
   ba_set_revert_point(allocator);
   
-  U16* len_offset_table = ba_push_array<U16>(allocator, max_lengths+1);
+  U16* len_offset_table = ba_push_array(U16, allocator, max_lengths+1);
   zero_memory(len_offset_table, (max_lengths+1) * sizeof(U16));
   
   for (U32 len = 1; len < max_lengths; ++len) {
@@ -351,7 +351,7 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Bump_Allocator* allocator)
                                15); 
           
           
-          U16* lit_dist_codes = ba_push_array<U16>(allocator, HDIST + HLIT);
+          U16* lit_dist_codes = ba_push_array(U16, allocator, HDIST + HLIT);
           
           // NOTE(Momo): Decode
           // Loop until end of block code recognize
@@ -743,14 +743,14 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
   ctx.bit_depth = png->bit_depth;
   
   U32 image_size = png->width * png->height * _PNG_CHANNELS;
-  U8* image_stream_memory = ba_push_array<U8>(allocator, image_size);
+  U8* image_stream_memory = ba_push_array(U8, allocator, image_size);
   assert(image_stream_memory);
   srm_init(&ctx.image_stream, image_stream_memory, image_size);
   
   ba_set_revert_point(allocator);
   
   U32 unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
-  U8* unfiltered_image_stream_memory = ba_push_array<U8>(allocator, unfiltered_size);
+  U8* unfiltered_image_stream_memory = ba_push_array(U8, allocator, unfiltered_size);
   assert(unfiltered_image_stream_memory);
   srm_init(&ctx.unfiltered_image_stream, unfiltered_image_stream_memory, unfiltered_size);
   
@@ -775,7 +775,7 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
     }
   }
   
-  U8* zlib_data = ba_push_array<U8>(allocator, zlib_size);
+  U8* zlib_data = ba_push_array(U8, allocator, zlib_size);
   make(Stream, zlib_stream);
   srm_init(zlib_stream, zlib_data, zlib_size);
   
@@ -849,7 +849,7 @@ png_write(Bitmap bm, Bump_Allocator* allocator) {
                                   data_size + 
                                   IDAT_chunk_size);
   
-  U8* stream_memory = ba_push_array<U8>(allocator, expected_memory_required);
+  U8* stream_memory = ba_push_array(U8, allocator, expected_memory_required);
   assert(stream_memory);
   make(Stream, stream);
   srm_init(stream, stream_memory, expected_memory_required);
