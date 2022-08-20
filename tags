@@ -100,18 +100,19 @@ ba_init	.\code\momo_memory.h	/^static void   ba_init(Bump_Allocator* a, void* me
 ba_mark	.\code\momo_memory.h	/^ba_mark(Bump_Allocator* a) {$/;"	f	language:C++
 ba_mark	.\code\momo_memory.h	/^static Bump_Allocator_Marker ba_mark(Bump_Allocator* a);$/;"	p	language:C++
 ba_partition	.\code\momo_memory.h	/^ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align) {	$/;"	f	language:C++
-ba_partition	.\code\momo_memory.h	/^static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align);$/;"	p	language:C++
+ba_partition	.\code\momo_memory.h	/^static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align = 16);$/;"	p	language:C++
 ba_partition_with_remaining	.\code\momo_memory.h	/^ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* partition, UMI align){$/;"	f	language:C++
-ba_partition_with_remaining	.\code\momo_memory.h	/^static B32    ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* parition, UMI align);$/;"	p	language:C++
-ba_push	.\code\momo_memory.h	31;"	d	language:C++
-ba_push_array	.\code\momo_memory.h	32;"	d	language:C++
+ba_partition_with_remaining	.\code\momo_memory.h	/^static B32    ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* parition, UMI align = 16);$/;"	p	language:C++
+ba_push	.\code\momo_memory.h	/^ba_push(Bump_Allocator* a, UMI align) {$/;"	f	language:C++
+ba_push	.\code\momo_memory.h	/^template<typename T> static T* ba_push(Bump_Allocator* a, UMI align = 4); $/;"	p	language:C++
+ba_push_array	.\code\momo_memory.h	/^ba_push_array(Bump_Allocator* a, UMI num, UMI align) {$/;"	f	language:C++
+ba_push_array	.\code\momo_memory.h	/^template<typename T> static T* ba_push_array(Bump_Allocator* a, UMI num, UMI align = 4);$/;"	p	language:C++
 ba_push_block	.\code\momo_memory.h	/^ba_push_block(Bump_Allocator* a, UMI size, UMI align) {$/;"	f	language:C++
-ba_push_block	.\code\momo_memory.h	/^static void*  ba_push_block(Bump_Allocator* a, UMI size, UMI align);$/;"	p	language:C++
+ba_push_block	.\code\momo_memory.h	/^static void*  ba_push_block(Bump_Allocator* a, UMI size, UMI align = 4);$/;"	p	language:C++
 ba_remaining	.\code\momo_memory.h	/^ba_remaining(Bump_Allocator* a) {$/;"	f	language:C++
 ba_remaining	.\code\momo_memory.h	/^static UMI    ba_remaining(Bump_Allocator* a);$/;"	p	language:C++
 ba_revert	.\code\momo_memory.h	/^ba_revert(Bump_Allocator_Marker marker) {$/;"	f	language:C++
-ba_revert	.\code\momo_memory.h	/^static void ba_revert(Bump_Allocator_Marker marker);$/;"	p	language:C++
-ba_set_revert_point	.\code\momo_memory.h	43;"	d	language:C++
+ba_set_revert_point	.\code\momo_memory.h	42;"	d	language:C++
 before	.\code\game_platform.h	/^  B32 before;$/;"	m	language:C++	struct:Platform_Button
 begin	.\code\meta.cpp	/^  U32 begin;$/;"	m	language:C++	struct:Meta_Token	file:
 begin_asset_pack	.\code\sui_pack.h	/^begin_asset_pack(Sui_Packer* p)$/;"	f	language:C++
@@ -631,7 +632,7 @@ g	.\code\momo_colors.h	/^  F32 r, g, b;   $/;"	m	language:C++	struct:__anon3
 ga	.\code\game_painter.h	/^  Game_Assets* ga;$/;"	m	language:C++	struct:Painter
 Game	.\code\game.h	/^struct Game {$/;"	s	language:C++
 game	.\code\game_platform.h	/^  void* game;$/;"	m	language:C++	struct:Platform
-game_allocate_mode	.\code\game.h	86;"	d	language:C++
+game_allocate_mode	.\code\game.h	/^game_allocate_mode(Game* game) {$/;"	f	language:C++
 game_arena	.\code\game_platform.h	/^  Bump_Allocator* game_arena; \/\/ Require 32MB$/;"	m	language:C++	struct:Platform
 game_aspect_ratio	.\code\game_platform.h	/^const F32 game_aspect_ratio = game_width\/game_height;$/;"	v	language:C++
 game_assets	.\code\game.h	/^  Game_Assets game_assets;$/;"	m	language:C++	struct:Game
@@ -1847,7 +1848,7 @@ ttf_get_glyph_kerning	.\code\momo_ttf.h	/^static S32 ttf_get_glyph_kerning(TTF* 
 ttf_get_glyph_kerning	.\code\momo_ttf.h	/^ttf_get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {$/;"	f	language:C++
 ttf_get_scale_for_pixel_height	.\code\momo_ttf.h	/^static F32 ttf_get_scale_for_pixel_height(TTF* ttf, F32 pixel_height);$/;"	p	language:C++
 ttf_get_scale_for_pixel_height	.\code\momo_ttf.h	/^ttf_get_scale_for_pixel_height(TTF* ttf, F32 pixel_height) {$/;"	f	language:C++
-TTF_Glyph_Horizontal_Metrics	.\code\momo_ttf.h	/^} TTF_Glyph_Horizontal_Metrics;$/;"	t	language:C++	typeref:struct:__anon33
+TTF_Glyph_Horizontal_Metrics	.\code\momo_ttf.h	/^}TTF_Glyph_Horizontal_Metrics;$/;"	t	language:C++	typeref:struct:__anon33
 ttf_rasterize_glyph	.\code\momo_ttf.h	/^static Bitmap ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator* allocator);$/;"	p	language:C++
 ttf_rasterize_glyph	.\code\momo_ttf.h	/^ttf_rasterize_glyph(TTF* ttf, $/;"	f	language:C++
 ttf_read	.\code\momo_ttf.h	/^static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);$/;"	p	language:C++
@@ -2147,12 +2148,11 @@ zero_memory	.\code\momo_common.h	/^zero_memory(void* dest, UMI size) {$/;"	f	lan
 zero_memory	.\code\momo_common.h	/^zero_memory(void* dest, UMI size) {$/;"	f	language:C++
 zero_range	.\code\momo_common.h	299;"	d	language:C++
 zero_struct	.\code\momo_common.h	297;"	d	language:C++
-_ba_set_revert_point	.\code\momo_memory.h	42;"	d	language:C++
+_ba_set_revert_point	.\code\momo_memory.h	41;"	d	language:C++
 _compute_f64	.\code\momo_common.h	/^_compute_f64(S64 power, U64 i, B32 negative) $/;"	f	language:C++
 _defer_dummy	.\code\momo_common.h	/^struct _defer_dummy {};$/;"	s	language:C++
 _defer_scope_guard	.\code\momo_common.h	/^struct _defer_scope_guard {$/;"	s	language:C++
 _execute	.\code\game_console.h	/^_execute(Console* dc) {$/;"	f	language:C++
-_game_allocate_mode	.\code\game.h	/^_game_allocate_mode(Game* game, UMI size) {$/;"	f	language:C++
 _gfx_push_command	.\code\game_renderer.h	/^_gfx_push_command(Gfx_Command_Queue* q, U32 id, U32 align = 4) {$/;"	f	language:C++
 _gfx_push_command_block	.\code\game_renderer.h	/^_gfx_push_command_block(Gfx_Command_Queue* q, U32 size, U32 id, U32 align = 4) {$/;"	f	language:C++
 _g_profiler	.\code\win.cpp	/^Profiler _g_profiler = {0};$/;"	v	language:C++
@@ -2245,6 +2245,6 @@ _win_wasapi_notif_client_QueryInterface	.\code\win_audio_wasapi.h	/^_win_wasapi_
 _win_wasapi_notif_client_Release	.\code\win_audio_wasapi.h	/^_win_wasapi_notif_client_Release(IMMNotificationClient* mm_notif) {$/;"	f	language:C++
 _win_wasapi_release_current_device	.\code\win_audio_wasapi.h	/^_win_wasapi_release_current_device(Win_Wasapi* wasapi) {$/;"	f	language:C++
 _win_wasapi_set_default_device_as_current_device	.\code\win_audio_wasapi.h	/^_win_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {$/;"	f	language:C++
-__ba_set_revert_point	.\code\momo_memory.h	39;"	d	language:C++
+__ba_set_revert_point	.\code\momo_memory.h	38;"	d	language:C++
 __prf_block	.\code\game_profiler.h	46;"	d	language:C++
 ~_defer_scope_guard	.\code\momo_common.h	/^  ~_defer_scope_guard() { f(); }$/;"	f	language:C++	struct:_defer_scope_guard

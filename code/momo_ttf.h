@@ -248,7 +248,7 @@ _ttf_get_glyph_outline(TTF* ttf,
     //test_eval_d(number_of_contours);
     //test_eval_d(point_count);
     
-    _TTF_Glyph_Point* points = ba_push_array(_TTF_Glyph_Point, allocator, point_count);
+    _TTF_Glyph_Point* points = ba_push_array<_TTF_Glyph_Point>(allocator, point_count);
     if (!points) return false;
     zero_range(points, point_count);
     U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
@@ -330,7 +330,7 @@ _ttf_get_glyph_outline(TTF* ttf,
     }
     
     // mark the points that are contour endpoints
-    U16 *end_pt_indices = ba_push_array(U16, allocator, number_of_contours);
+    U16 *end_pt_indices = ba_push_array<U16>(allocator, number_of_contours);
     if (!end_pt_indices) return false;
     zero_range(end_pt_indices, number_of_contours); 
     {
@@ -416,7 +416,7 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,
   F32 flatness = 0.35f;
   F32 flatness_squared = flatness*flatness;
   
-  U32* path_lengths = ba_push_array(U32, allocator, 
+  U32* path_lengths = ba_push_array<U32>(allocator, 
                                          outline->contour_count);
   if (!path_lengths) return false;
   zero_range(path_lengths, outline->contour_count);
@@ -428,7 +428,7 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,
   for (U32 pass = 0; pass < 2; ++pass)
   {
     if (pass == 1) {
-      vertices = ba_push_array(V2, allocator, vertex_count);
+      vertices = ba_push_array<V2>(allocator, vertex_count);
       if (!vertices) return false;
       zero_range(vertices, vertex_count);
       vertex_count = 0;
@@ -747,7 +747,7 @@ ttf_rasterize_glyph(TTF* ttf,
   
   F32 height = abs_f32(box.max.y - box.min.y);   
   U32 bitmap_size = bitmap_dims.w*bitmap_dims.h*4;
-  U32* pixels = ba_push_array(U32, allocator, bitmap_size);
+  U32* pixels = ba_push_array<U32>(allocator, bitmap_size);
   if (!pixels) return {0};
   zero_memory(pixels, bitmap_size);
  
@@ -761,7 +761,7 @@ ttf_rasterize_glyph(TTF* ttf,
     goto failed;
   
   // generate scaled edges based on points
-  _TTF_Edge* edges = ba_push_array(_TTF_Edge, allocator, paths->vertex_count);
+  _TTF_Edge* edges = ba_push_array<_TTF_Edge>(allocator, paths->vertex_count);
   if (!edges) goto failed;
   zero_range(edges, paths->vertex_count);
   
@@ -805,7 +805,7 @@ ttf_rasterize_glyph(TTF* ttf,
   
   // Rasterazation algorithm starts here
   // Sort edges by top most edge
-  Sort_Entry* y_edges = ba_push_array(Sort_Entry, allocator, edge_count);
+  Sort_Entry* y_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
   if (!y_edges) goto failed;
   for (U32 i = 0; i < edge_count; ++i) {
     y_edges[i].index = i;
@@ -813,7 +813,7 @@ ttf_rasterize_glyph(TTF* ttf,
   }
   quicksort(y_edges, edge_count);
 
-  Sort_Entry* active_edges = ba_push_array(Sort_Entry, allocator, edge_count);
+  Sort_Entry* active_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
   if (!active_edges) goto failed;
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 

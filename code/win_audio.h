@@ -11,7 +11,7 @@ win_audio_load(U32 samples_per_second,
                Bump_Allocator* allocator) 
 {
   // TODO: Ideally, we should give WASAPI a seperate arena 
-  Win_Wasapi* wasapi = ba_push(Win_Wasapi, allocator);
+  Win_Wasapi* wasapi = ba_push<Win_Wasapi>(allocator);
   if (!wasapi) return 0;
 
   B32 success = win_wasapi_init(wasapi, samples_per_second, bits_per_sample, channels, latency_frames, refresh_rate, allocator);

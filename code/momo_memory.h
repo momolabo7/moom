@@ -28,9 +28,8 @@ static UMI    ba_remaining(Bump_Allocator* a);
 
 
 //TODO:  Remove template for compatibility with C?
-#define ba_push(t,b) (t*)ba_push_block(b, sizeof(t), 4)
-#define ba_push_array(t,b,n) (t*)ba_push_block(b, sizeof(t)*n, 4)
-
+template<typename T> static T* ba_push(Bump_Allocator* a, UMI align = 4); 
+template<typename T> static T* ba_push_array(Bump_Allocator* a, UMI num, UMI align = 4);
 
 static Bump_Allocator_Marker ba_mark(Bump_Allocator* a);
 static void ba_revert(Bump_Allocator_Marker marker);
@@ -106,7 +105,15 @@ ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* partition, UMI al
 	return true;
 
 }
+template<typename T> static T*
+ba_push(Bump_Allocator* a, UMI align) {
+  return (T*)ba_push_block(a, sizeof(T), align);
+}
 
+template<typename T> static T*
+ba_push_array(Bump_Allocator* a, UMI num, UMI align) {
+  return (T*)ba_push_block(a, sizeof(T)*num, align);
+}
 
 /*
 static inline void* 
