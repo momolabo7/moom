@@ -1,6 +1,6 @@
 #include "game.h"
 #include "game_mode_splash.h"
-#include "game_sb1.h"
+#include "game_mode_sb1.h"
 
 Platform* g_platform;
 

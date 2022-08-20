@@ -13,8 +13,6 @@
 #define GL_FALSE                0
 
 // Blends
-#define GL_ZERO								 0
-#define GL_ONE									1
 #define GL_ZERO                           0
 #define GL_ONE                            1
 #define GL_SRC_COLOR                      0x0300
@@ -22,6 +20,9 @@
 #define GL_SRC_ALPHA                      0x0302
 #define GL_ONE_MINUS_SRC_ALPHA            0x0303
 #define GL_DST_ALPHA                      0x0304
+#define GL_ONE_MINUS_DST_ALPHA            0x0305
+#define GL_DST_COLOR                      0x0306
+#define GL_ONE_MINUS_DST_COLOR            0x0307
 
 #define GL_DEPTH_TEST                   0x0B71
 #define GL_SCISSOR_TEST                 0x0C11
@@ -905,8 +906,53 @@ ogl_init(Opengl* ogl,
   return true;
 }
 
+static GLenum
+_ogl_get_blend_mode_from_gfx_blend_type(Gfx_Blend_Type type) {
+  GLenum  ret = {0};
+  switch(type) {
+    case GFX_BLEND_TYPE_ZERO: 
+      ret = GL_ZERO;
+      break;
+    case GFX_BLEND_TYPE_ONE:
+      ret = GL_ONE;
+      break;
+    case GFX_BLEND_TYPE_SRC_COLOR:
+      ret = GL_SRC_COLOR;
+      break;
+    case GFX_BLEND_TYPE_INV_SRC_COLOR:
+      ret = GL_ONE_MINUS_SRC_COLOR;
+      break;
+    case GFX_BLEND_TYPE_SRC_ALPHA:
+      ret = GL_SRC_ALPHA;
+      break;
+    case GFX_BLEND_TYPE_INV_SRC_ALPHA: 
+      ret = GL_ONE_MINUS_SRC_ALPHA;
+      break;
+    case GFX_BLEND_TYPE_DST_ALPHA:
+      ret = GL_DST_ALPHA;
+      break;
+    case GFX_BLEND_TYPE_INV_DST_ALPHA:
+      ret = GL_ONE_MINUS_DST_ALPHA; 
+      break;
+    case GFX_BLEND_TYPE_DST_COLOR: 
+      ret = GL_DST_COLOR; 
+      break;
+    case GFX_BLEND_TYPE_INV_DST_COLOR:
+      ret = GL_ONE_MINUS_DST_COLOR; 
+      break;
+  }
+
+  return ret;
+}
+
+
 static void 
-_ogl_set_blend_mode(Opengl* ogl, Gfx_Blend_Type type) {
+_ogl_set_blend_mode(Opengl* ogl, Gfx_Blend_Type src, Gfx_Blend_Type dst) {
+  GLenum src_e = _ogl_get_blend_mode_from_gfx_blend_type(src);
+  GLenum dst_e = _ogl_get_blend_mode_from_gfx_blend_type(dst);
+  ogl->glBlendFunc(src_e, dst_e);
+
+#if 0
   switch(type) {
     case GFX_BLEND_TYPE_ADD: {
       ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
@@ -919,6 +965,7 @@ _ogl_set_blend_mode(Opengl* ogl, Gfx_Blend_Type type) {
     } break;
     default: {}
   }
+#endif
 }
 
 static void
@@ -1168,8 +1215,8 @@ ogl_end_frame(Opengl* ogl) {
       } break;
       case GFX_COMMAND_TYPE_BLEND: {
         _ogl_flush_sprites(ogl);
-        auto* data = (Gfx_Command_Blend*)entry->data;
-        _ogl_set_blend_mode(ogl, data->type);
+        Gfx_Command_Blend* data = (Gfx_Command_Blend*)entry->data;
+        _ogl_set_blend_mode(ogl, data->src, data->dst);
       } break;
       case GFX_COMMAND_TYPE_DELETE_TEXTURE: {
         auto* data = (Gfx_Command_Delete_Texture*)entry->data;

@@ -135,7 +135,8 @@ paint_filled_circle(Painter* p,
 }
 
 static void
-paint_set_blend(Painter* p, Gfx_Blend_Type type) {
-  gfx_push_blend(p->gfx, type);
+paint_set_blend(Painter* p, Gfx_Blend_Type src, Gfx_Blend_Type dst) {
+  gfx_push_blend(p->gfx, src, dst);
+
 }
 #endif //GAME_PAINTER_H

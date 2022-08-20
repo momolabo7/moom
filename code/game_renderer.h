@@ -83,9 +83,16 @@ struct Gfx_Command_Queue {
 };
 
 enum Gfx_Blend_Type {
-  GFX_BLEND_TYPE_ADD,
-  GFX_BLEND_TYPE_ALPHA,
-  GFX_BLEND_TYPE_TEST,
+  GFX_BLEND_TYPE_ZERO,
+  GFX_BLEND_TYPE_ONE,
+  GFX_BLEND_TYPE_SRC_COLOR,
+  GFX_BLEND_TYPE_INV_SRC_COLOR,
+  GFX_BLEND_TYPE_SRC_ALPHA,
+  GFX_BLEND_TYPE_INV_SRC_ALPHA,
+  GFX_BLEND_TYPE_DST_ALPHA,
+  GFX_BLEND_TYPE_INV_DST_ALPHA,
+  GFX_BLEND_TYPE_DST_COLOR,
+  GFX_BLEND_TYPE_INV_DST_COLOR,
 };
 
 enum Gfx_Command_Type {
@@ -144,7 +151,8 @@ struct Gfx_Command_Triangle {
 };
 
 struct Gfx_Command_Blend {
-  Gfx_Blend_Type type;
+  Gfx_Blend_Type src;
+  Gfx_Blend_Type dst;
 };
 
 
@@ -548,10 +556,11 @@ gfx_push_delete_texture(Gfx* g, U32 texture_index) {
 }
 
 static void 
-gfx_push_blend(Gfx* g, Gfx_Blend_Type blend_type) {
+gfx_push_blend(Gfx* g, Gfx_Blend_Type src, Gfx_Blend_Type dst) {
   Gfx_Command_Queue* c = &g->command_queue; 
   auto* data= _gfx_push_command<Gfx_Command_Blend>(c, GFX_COMMAND_TYPE_BLEND);
-  data->type = blend_type;
+  data->src = src;
+  data->dst = dst;
 }
 
 static void

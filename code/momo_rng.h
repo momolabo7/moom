@@ -41,7 +41,6 @@ rng_next(RNG* r)
 
 static U32 
 rng_choice(RNG* r, U32 choice_count) {
-  assert(choice_count > 0);
   return rng_next(r) % choice_count;
 }
 
@@ -67,7 +66,6 @@ rng_bilateral(RNG* r)
 static F32 
 rng_range_F32(RNG* r, F32 min, F32 max)
 {
-  assert(max >= min);
   F32 result = lerp_f32(min, rng_unilateral(r), max);
   return(result);
 }
@@ -75,7 +73,6 @@ rng_range_F32(RNG* r, F32 min, F32 max)
 static S32 
 rng_range_S32(RNG* r, S32 min, S32 max)
 {
-  assert(max >= min);
   S32 result = min + (S32)(rng_next(r)%((max + 1) - min));
   return(result);
 }
@@ -83,7 +80,6 @@ rng_range_S32(RNG* r, S32 min, S32 max)
 static U32
 rng_range_U32(RNG* r, U32 min, U32 max)
 {
-  assert(max >= min);
   U32 result = min + (U32)(rng_next(r)%((max + 1) - min));
   return(result);
 }

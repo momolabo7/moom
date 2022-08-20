@@ -22,16 +22,7 @@
 #ifndef MOMO_TTF_H
 #define MOMO_TTF_H
 
-#include "momo_common.h"
-#include "momo_memory.h"
-#include "momo_image.h"
-#include "momo_shapes.h"
-#include "momo_vectors.h"
-#include "momo_lists.h"
-
-
-
-struct TTF {
+typedef struct {
   U8* data;
   U32 glyph_count;
   
@@ -40,7 +31,7 @@ struct TTF {
   U32 cmap_mappings;
   
   U16 loca_format;
-};
+}TTF;
 
 struct TTF_Glyph_Horizontal_Metrics
 {

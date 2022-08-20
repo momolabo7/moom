@@ -28,6 +28,7 @@ static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI siz
 static B32    ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* parition, UMI align = 16);
 static UMI    ba_remaining(Bump_Allocator* a);
 
+
 //TODO:  Remove template for compatibility with C?
 template<typename T> static T* ba_push(Bump_Allocator* a, UMI align = 4); 
 template<typename T> static T* ba_push_array(Bump_Allocator* a, UMI num, UMI align = 4);
@@ -36,9 +37,11 @@ template<typename T> static T* ba_push_array(Bump_Allocator* a, UMI num, UMI ali
 static Bump_Allocator_Marker ba_mark(Bump_Allocator* allocator);
 static void		               ba_revert(Bump_Allocator_Marker marker);
 
+#if IS_CPP
 #define __ba_set_revert_point(a,l) auto ttt##l = ba_mark(a); defer{ba_revert(ttt##l);};
 #define _ba_set_revert_point(a,l) __ba_set_revert_point(a,l)
 #define ba_set_revert_point(allocator) _ba_set_revert_point(allocator, __LINE__) 
+#endif // IS_CPP
 
 /////////////////////////////////////////////////////////
 // IMPLEMENTATION
