@@ -97,7 +97,8 @@ ba_clear	.\code\momo_memory.h	/^ba_clear(Bump_Allocator* a) {$/;"	f	language:C++
 ba_clear	.\code\momo_memory.h	/^static void   ba_clear(Bump_Allocator* a);$/;"	p	language:C++
 ba_init	.\code\momo_memory.h	/^ba_init(Bump_Allocator* a, void* mem, UMI cap) {$/;"	f	language:C++
 ba_init	.\code\momo_memory.h	/^static void   ba_init(Bump_Allocator* a, void* mem, UMI cap);$/;"	p	language:C++
-ba_mark	.\code\momo_memory.h	38;"	d	language:C++
+ba_mark	.\code\momo_memory.h	/^ba_mark(Bump_Allocator* a) {$/;"	f	language:C++
+ba_mark	.\code\momo_memory.h	/^static Bump_Allocator_Marker ba_mark(Bump_Allocator* a);$/;"	p	language:C++
 ba_partition	.\code\momo_memory.h	/^ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align) {	$/;"	f	language:C++
 ba_partition	.\code\momo_memory.h	/^static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align = 16);$/;"	p	language:C++
 ba_partition_with_remaining	.\code\momo_memory.h	/^ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* partition, UMI align){$/;"	f	language:C++
@@ -110,8 +111,8 @@ ba_push_block	.\code\momo_memory.h	/^ba_push_block(Bump_Allocator* a, UMI size, 
 ba_push_block	.\code\momo_memory.h	/^static void*  ba_push_block(Bump_Allocator* a, UMI size, UMI align = 4);$/;"	p	language:C++
 ba_remaining	.\code\momo_memory.h	/^ba_remaining(Bump_Allocator* a) {$/;"	f	language:C++
 ba_remaining	.\code\momo_memory.h	/^static UMI    ba_remaining(Bump_Allocator* a);$/;"	p	language:C++
-ba_revert	.\code\momo_memory.h	40;"	d	language:C++
-ba_set_revert_point	.\code\momo_memory.h	49;"	d	language:C++
+ba_revert	.\code\momo_memory.h	/^ba_revert(Bump_Allocator_Marker marker) {$/;"	f	language:C++
+ba_set_revert_point	.\code\momo_memory.h	42;"	d	language:C++
 before	.\code\game_platform.h	/^  B32 before;$/;"	m	language:C++	struct:Platform_Button
 begin	.\code\meta.cpp	/^  U32 begin;$/;"	m	language:C++	struct:Meta_Token	file:
 begin_asset_pack	.\code\sui_pack.h	/^begin_asset_pack(Sui_Packer* p)$/;"	f	language:C++
@@ -347,8 +348,7 @@ debug_log	.\code\game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	langua
 debug_rays	.\code\game_mode_sb1.h	/^  SB1_Light_Debug_Ray_List debug_rays;$/;"	m	language:C++	struct:SB1_Light
 debug_rays	.\code\game_sb1.h	/^  SB1_Light_Debug_Ray_List debug_rays;$/;"	m	language:C++	struct:SB1_Light
 Debug_State	.\code\game_debug.h	/^struct Debug_State {$/;"	s	language:C++
-make	.\code\momo_common.h	334;"	d	language:C++
-defer	.\code\momo_common.h	359;"	d	language:C++
+defer	.\code\momo_common.h	356;"	d	language:C++
 deg_to_rad_f32	.\code\momo_common.h	/^deg_to_rad_f32(F32 degrees) {$/;"	f	language:C++
 deg_to_rad_f32	.\code\momo_common.h	/^static F32 deg_to_rad_f32(F32 degrees);$/;"	p	language:C++
 deg_to_rad_f64	.\code\momo_common.h	/^deg_to_rad_f64(F64 degrees) {$/;"	f	language:C++
@@ -559,7 +559,7 @@ entry_count	.\code\game_renderer.h	/^	UMI entry_count;$/;"	m	language:C++	struct
 entry_pos	.\code\game_renderer.h	/^	UMI entry_pos;$/;"	m	language:C++	struct:Gfx_Command_Queue
 entry_start	.\code\game_renderer.h	/^	UMI entry_start;$/;"	m	language:C++	struct:Gfx_Command_Queue
 exported	.\code\momo_common.h	98;"	d	language:C++
-f	.\code\momo_common.h	/^  F f;$/;"	m	language:C++	struct:zawarudo_ScopeGuard
+f	.\code\momo_common.h	/^  F f;$/;"	m	language:C++	struct:_defer_scope_guard
 F32	.\code\momo_common.h	/^typedef float F32;$/;"	t	language:C++
 F32_EPSILON	.\code\momo_common.h	271;"	d	language:C++
 F32_INFINITY	.\code\momo_common.h	/^F32_INFINITY() {$/;"	f	language:C++
@@ -576,7 +576,7 @@ F64_NAN	.\code\momo_common.h	/^F64_NAN() {$/;"	f	language:C++
 F64_NAN	.\code\momo_common.h	/^static F64 F64_NAN();$/;"	p	language:C++
 F64_NEG_INFINITY	.\code\momo_common.h	/^F64_NEG_INFINITY() {$/;"	f	language:C++
 F64_NEG_INFINITY	.\code\momo_common.h	/^static F64 F64_NEG_INFINITY();$/;"	p	language:C++
-false	.\code\momo_common.h	364;"	d	language:C++
+false	.\code\momo_common.h	361;"	d	language:C++
 far	.\code\win.h	24;"	d	language:C++
 far	.\code\win_renderer.h	8;"	d	language:C++
 filename	.\code\game_profiler.h	/^  const char* filename;$/;"	m	language:C++	struct:Profiler_Entry
@@ -1124,6 +1124,7 @@ main	.\build\meta_test.cpp	/^int main() {$/;"	f	language:C++
 main	.\code\meta.cpp	/^int main() {$/;"	f	language:C++
 main	.\code\sui.cpp	/^int main() {$/;"	f	language:C++
 main	.\code\test.cpp	/^int main() {$/;"	f	language:C++
+make	.\code\momo_common.h	334;"	d	language:C++
 max	.\code\game_profiler_rendering.h	/^  F64 max;$/;"	m	language:C++	struct:Stat
 max	.\code\momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:__anon18
 max	.\code\momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:__anon24
@@ -1214,10 +1215,10 @@ next_state	.\code\game_mode_level_editor.h	/^  Editor_State next_state;$/;"	m	la
 NOMINMAX	.\code\win.h	11;"	d	language:C++
 notifs	.\code\win_audio_wasapi.h	/^  Win_Wasapi_Notif_Client notifs;$/;"	m	language:C++	struct:Win_Wasapi
 now	.\code\game_platform.h	/^  B32 now; $/;"	m	language:C++	struct:Platform_Button
-ns_begin	.\code\momo_common.h	344;"	d	language:C++
-ns_end	.\code\momo_common.h	345;"	d	language:C++
+ns_begin	.\code\momo_common.h	343;"	d	language:C++
+ns_end	.\code\momo_common.h	344;"	d	language:C++
 null	.\code\momo_common.h	342;"	d	language:C++
-null	.\code\momo_common.h	365;"	d	language:C++
+null	.\code\momo_common.h	362;"	d	language:C++
 num_channels	.\code\momo_wav.h	/^  U16 num_channels;$/;"	m	language:C++	struct:__anon57
 offset_of	.\code\momo_common.h	161;"	d	language:C++
 offset_to_bitmaps	.\code\karu.h	/^  U32 offset_to_bitmaps;$/;"	m	language:C++	struct:Karu_Header
@@ -1260,7 +1261,7 @@ operator *=	.\code\momo_vectors.h	/^static V2& operator*=(V2& lhs, F32 rhs) { re
 operator *=	.\code\momo_vectors.h	/^static V2& operator*=(V2& lhs, V2 rhs);$/;"	p	language:C++
 operator *=	.\code\momo_vectors.h	/^static V3& operator*=(V3& lhs, F32 rhs) { return lhs = v3_scale(lhs, rhs); }$/;"	f	language:C++
 operator *=	.\code\momo_vectors.h	/^static V3& operator*=(V3& lhs, V3 rhs);$/;"	p	language:C++
-operator +	.\code\momo_common.h	/^template<typename F> zawarudo_ScopeGuard<F> operator+(zawarudo_defer_dummy, F f) {$/;"	f	language:C++
+operator +	.\code\momo_common.h	/^template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {$/;"	f	language:C++
 operator +	.\code\momo_vectors.h	/^static V2  operator+(V2 lhs, V2 rhs) { return v2_add(lhs, rhs); }$/;"	f	language:C++
 operator +	.\code\momo_vectors.h	/^static V2  operator+(V2 lhs, V2 rhs);$/;"	p	language:C++
 operator +	.\code\momo_vectors.h	/^static V2U operator+(V2U lhs, V2U rhs) { return v2u_add(lhs, rhs); }$/;"	f	language:C++
@@ -1289,8 +1290,6 @@ operator ==	.\code\momo_vectors.h	/^static B32 operator==(V2 lhs, V2 rhs) { retu
 operator ==	.\code\momo_vectors.h	/^static B32 operator==(V2 lhs, V2 rhs);$/;"	p	language:C++
 operator ==	.\code\momo_vectors.h	/^static B32 operator==(V3 lhs, V3 rhs) { return v3_is_close(lhs, rhs); }$/;"	f	language:C++
 operator ==	.\code\momo_vectors.h	/^static B32 operator==(V3 lhs, V3 rhs);$/;"	p	language:C++
-operator Bump_Allocator*	.\code\momo_memory.h	/^  operator Bump_Allocator*();$/;"	p	language:C++	struct:Bump_Allocator_Marker
-operator Bump_Allocator*	.\code\momo_memory.h	/^Bump_Allocator_Marker::operator Bump_Allocator*() {$/;"	f	language:C++	class:Bump_Allocator_Marker
 ope_atlas_font_glyph_id	.\code\sui_pack.h	/^  U32 ope_atlas_font_glyph_id;$/;"	m	language:C++	struct:Sui_Packer_Font
 ope_atlas_font_id	.\code\sui_pack.h	/^  U32 ope_atlas_font_id;$/;"	m	language:C++	struct:Sui_Packer
 ope_atlas_sprite_id	.\code\sui_pack.h	/^  U32 ope_atlas_sprite_id;$/;"	m	language:C++	struct:Sui_Packer
@@ -1501,7 +1500,7 @@ round_f32	.\code\momo_intrinsics.h	/^static F32 round_f32(F32 value);$/;"	p	lang
 round_f64	.\code\momo_intrinsics.h	/^static F64 round_f64(F64 value) {$/;"	f	language:C++
 round_f64	.\code\momo_intrinsics.h	/^static F64 round_f64(F64 value);$/;"	p	language:C++
 rp_pack	.\code\momo_rect_pack.h	/^rp_pack(RP_Rect* rects, $/;"	f	language:C++
-rp_pack	.\code\momo_rect_pack.h	/^static void rp_pack(RP_Rect* rects, $/;"	p	language:C++
+rp_pack	.\code\momo_rect_pack.h	/^rp_pack(RP_Rect* rects, $/;"	p	language:C++
 RP_Rect	.\code\momo_rect_pack.h	/^}RP_Rect;$/;"	t	language:C++	typeref:struct:__anon15
 RP_Sort_Type	.\code\momo_rect_pack.h	/^}RP_Sort_Type;$/;"	t	language:C++	typeref:enum:__anon14
 RP_SORT_TYPE_AREA	.\code\momo_rect_pack.h	/^  RP_SORT_TYPE_AREA,$/;"	e	language:C++	enum:__anon14
@@ -1834,7 +1833,7 @@ triangles	.\code\game_mode_sb1.h	/^  SB1_Light_Triangle_List triangles;$/;"	m	la
 triangles	.\code\game_sb1.h	/^  SB1_Light_Triangle_List triangles;$/;"	m	language:C++	struct:SB1_Light
 triangle_batcher	.\code\game_renderer_opengl.h	/^  Triangle_Batcher triangle_batcher;$/;"	m	language:C++	struct:Opengl
 Triangle_Batcher	.\code\game_renderer_opengl.h	/^struct Triangle_Batcher {$/;"	s	language:C++
-true	.\code\momo_common.h	363;"	d	language:C++
+true	.\code\momo_common.h	360;"	d	language:C++
 TTF	.\code\momo_ttf.h	/^}TTF;$/;"	t	language:C++	typeref:struct:__anon32
 ttf	.\code\sui_atlas.h	/^  TTF ttf;$/;"	m	language:C++	struct:Sui_Atlas_Font
 ttf_get_bitmap_dims_from_glyph_box	.\code\momo_ttf.h	/^static V2U ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box);$/;"	p	language:C++
@@ -2143,20 +2142,16 @@ y	.\code\momo_vectors.h	/^	struct { S32 x, y; };$/;"	m	language:C++	struct:__ano
 y	.\code\momo_vectors.h	/^	struct { U32 x, y; };$/;"	m	language:C++	struct:__anon41::__anon42
 z	.\code\momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:__anon54::__anon55
 z	.\code\momo_vectors.h	/^	struct { F32 x, y, z; };$/;"	m	language:C++	struct:__anon51::__anon52
-zawarudo_AnonVar	.\code\momo_common.h	358;"	d	language:C++
-zawarudo_AnonVarSub	.\code\momo_common.h	357;"	d	language:C++
-zawarudo_defer_dummy	.\code\momo_common.h	/^struct zawarudo_defer_dummy {};$/;"	s	language:C++
-zawarudo_ScopeGuard	.\code\momo_common.h	/^struct zawarudo_ScopeGuard {$/;"	s	language:C++
 zero_array	.\code\momo_common.h	298;"	d	language:C++
 zero_memory	.\code\momo_common.h	/^static void zero_memory(void* dest, UMI size);$/;"	p	language:C++
 zero_memory	.\code\momo_common.h	/^zero_memory(void* dest, UMI size) {$/;"	f	language:C++
 zero_memory	.\code\momo_common.h	/^zero_memory(void* dest, UMI size) {$/;"	f	language:C++
 zero_range	.\code\momo_common.h	299;"	d	language:C++
 zero_struct	.\code\momo_common.h	297;"	d	language:C++
-_ba_mark	.\code\momo_memory.h	/^_ba_mark(Bump_Allocator* a) {$/;"	f	language:C++
-_ba_revert	.\code\momo_memory.h	/^_ba_revert(Bump_Allocator_Marker marker) {$/;"	f	language:C++
-_ba_set_revert_point	.\code\momo_memory.h	47;"	d	language:C++
+_ba_set_revert_point	.\code\momo_memory.h	41;"	d	language:C++
 _compute_f64	.\code\momo_common.h	/^_compute_f64(S64 power, U64 i, B32 negative) $/;"	f	language:C++
+_defer_dummy	.\code\momo_common.h	/^struct _defer_dummy {};$/;"	s	language:C++
+_defer_scope_guard	.\code\momo_common.h	/^struct _defer_scope_guard {$/;"	s	language:C++
 _execute	.\code\game_console.h	/^_execute(Console* dc) {$/;"	f	language:C++
 _gfx_push_command	.\code\game_renderer.h	/^_gfx_push_command(Gfx_Command_Queue* q, U32 id, U32 align = 4) {$/;"	f	language:C++
 _gfx_push_command_block	.\code\game_renderer.h	/^_gfx_push_command_block(Gfx_Command_Queue* q, U32 size, U32 id, U32 align = 4) {$/;"	f	language:C++
@@ -2250,6 +2245,6 @@ _win_wasapi_notif_client_QueryInterface	.\code\win_audio_wasapi.h	/^_win_wasapi_
 _win_wasapi_notif_client_Release	.\code\win_audio_wasapi.h	/^_win_wasapi_notif_client_Release(IMMNotificationClient* mm_notif) {$/;"	f	language:C++
 _win_wasapi_release_current_device	.\code\win_audio_wasapi.h	/^_win_wasapi_release_current_device(Win_Wasapi* wasapi) {$/;"	f	language:C++
 _win_wasapi_set_default_device_as_current_device	.\code\win_audio_wasapi.h	/^_win_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {$/;"	f	language:C++
-__ba_set_revert_point	.\code\momo_memory.h	43;"	d	language:C++
+__ba_set_revert_point	.\code\momo_memory.h	38;"	d	language:C++
 __prf_block	.\code\game_profiler.h	46;"	d	language:C++
-~zawarudo_ScopeGuard	.\code\momo_common.h	/^  ~zawarudo_ScopeGuard() { f(); }$/;"	f	language:C++	struct:zawarudo_ScopeGuard
+~_defer_scope_guard	.\code\momo_common.h	/^  ~_defer_scope_guard() { f(); }$/;"	f	language:C++	struct:_defer_scope_guard

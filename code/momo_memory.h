@@ -31,19 +31,15 @@ static UMI    ba_remaining(Bump_Allocator* a);
 template<typename T> static T* ba_push(Bump_Allocator* a, UMI align = 4); 
 template<typename T> static T* ba_push_array(Bump_Allocator* a, UMI num, UMI align = 4);
 
-// Temporary memory API
-
-#define ba_mark(ba,name) Bump_Allocator_Marker name = _ba_mark(ba)
-#define ba_revert(name) _ba_revert(name)
+static Bump_Allocator_Marker ba_mark(Bump_Allocator* a);
+static void ba_revert(Bump_Allocator_Marker marker);
 
 #if IS_CPP
-#define __ba_set_revert_point(a,l) \
-  auto _ba_marker_##l = _ba_mark(a); \
-  defer{_ba_revert(_ba_marker_##l);};
-
-#define _ba_set_revert_point(a,l) __ba_set_revert_point(a,l)
-
-#define ba_set_revert_point(allocator) _ba_set_revert_point(allocator, __LINE__) 
+# define __ba_set_revert_point(a,l) \
+  auto _ba_marker_##l = ba_mark(a); \
+  defer{ba_revert(_ba_marker_##l);};
+# define _ba_set_revert_point(a,l) __ba_set_revert_point(a,l)
+# define ba_set_revert_point(allocator) _ba_set_revert_point(allocator, __LINE__) 
 #endif // IS_CPP
 
 /////////////////////////////////////////////////////////
@@ -70,12 +66,12 @@ ba_remaining(Bump_Allocator* a) {
 
 static void* 
 ba_push_block(Bump_Allocator* a, UMI size, UMI align) {
-  if (size == 0) return nullptr;
+  if (size == 0) return null;
 	
 	UMI imem = ptr_to_int(a->memory);
 	UMI adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
 	
-  if (imem + adjusted_pos + size >= imem + a->cap) return nullptr;
+  if (imem + adjusted_pos + size >= imem + a->cap) return null;
 	
 	U8* ret = int_to_ptr(imem + adjusted_pos);
 	a->pos = adjusted_pos + size;
@@ -140,7 +136,7 @@ Bump_Allocator_BootBlock(UMI struct_size,
 //*/
 
 static Bump_Allocator_Marker
-_ba_mark(Bump_Allocator* a) {
+ba_mark(Bump_Allocator* a) {
   Bump_Allocator_Marker ret;
   ret.allocator = a;
   ret.old_pos = a->pos;
@@ -148,7 +144,7 @@ _ba_mark(Bump_Allocator* a) {
 }
 
 static void
-_ba_revert(Bump_Allocator_Marker marker) {
+ba_revert(Bump_Allocator_Marker marker) {
   marker.allocator->pos = marker.old_pos;
 }
 

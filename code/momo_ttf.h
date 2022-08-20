@@ -37,7 +37,7 @@ typedef struct
 {
   S16 advance_width;
   S16 left_side_bearing;
-}TTF_Glyph_Horizontal_Metrics;
+} TTF_Glyph_Horizontal_Metrics;
 
 static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);
 
@@ -751,7 +751,7 @@ ttf_rasterize_glyph(TTF* ttf,
   if (!pixels) return {0};
   zero_memory(pixels, bitmap_size);
  
-  ba_mark(allocator, restore_point);
+  Bump_Allocator_Marker restore_point = ba_mark(allocator);
  
   make(_TTF_Glyph_Outline, outline);
   make(_TTF_Glyph_Paths, paths);
@@ -812,7 +812,6 @@ ttf_rasterize_glyph(TTF* ttf,
     y_edges[i].key = -(F32)max_of(edges[i].p0.y, edges[i].p1.y);
   }
   quicksort(y_edges, edge_count);
-
 
   Sort_Entry* active_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
   if (!active_edges) goto failed;

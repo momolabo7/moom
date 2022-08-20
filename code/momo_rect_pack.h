@@ -121,7 +121,7 @@ rp_pack(RP_Rect* rects,
         RP_Sort_Type sort_type,
         Bump_Allocator* allocator) 
 {
-  ba_mark(allocator, restore_point);
+  Bump_Allocator_Marker restore_point = ba_mark(allocator);
   
   Sort_Entry* sort_entries = ba_push_array<Sort_Entry>(allocator, rect_count);
   _rp_sort(rects, sort_entries, rect_count, sort_type);
