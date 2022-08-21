@@ -1,10 +1,18 @@
+// momo_common.h
+// authored 2020-2021 by Gerald Wong
+//
+// WHAT
+//   This file contains common functions and defines
+//   used in my day to day programming for gamedev.
+//   
+// TODO
+// 
 
-#ifndef MOMO_ESSENTIALS_H
-#define MOMO_ESSENTIALS_H
+#ifndef MOMO_COMMON_H
+#define MOMO_COMMON_H
 
 #include <stdarg.h>
 
-//~Contexts
 // Language specs
 #if defined(__cplusplus)
 # define IS_CPP 1
@@ -12,6 +20,7 @@
 # define IS_CPP 0
 #endif // __cplusplus
 
+//////////////////////////////////////////////////////////////////////////////
 // Compiler contexts
 #if defined(_MSC_VER) 
 # define COMPILER_MSVC 1
@@ -33,6 +42,7 @@
 # define COMPILER_GCC 0
 #endif
 
+//////////////////////////////////////////////////////////////////////////////
 // OS contexts
 #if defined(_WIN32)
 # define OS_WINDOWS 1
@@ -54,6 +64,7 @@
 # define OS_MAC 0
 #endif 
 
+//////////////////////////////////////////////////////////////////////////////
 // CPU architecture contexts
 // NOTE(Momo): For ARM, there are probably different versions
 #if COMPILER_MSVC
@@ -88,8 +99,8 @@
 # define ARCH_ARM 0
 #endif 
 
-///////////////////////////////////////////
-//~function specifier helpers
+//////////////////////////////////////////////////////////////////////////////
+// Function specifier helpers
 #define c_link_begin extern "C" {
 #define c_link_end }
 #define c_link extern "C"
@@ -100,8 +111,8 @@
 # error exported not defined for this compiler
 #endif
 
-//////////////////////////////////////////
-//~Default Compile options
+//////////////////////////////////////////////////////////////////////////////
+// Default Compile options
 #if !defined(ENABLE_ASSERT)
 #define ENABLE_ASSERT 1
 #endif // ENABLE_ASSERT
@@ -110,8 +121,8 @@
 #define INTERNAL 0
 #endif // INTERNAL
 
-//////////////////////////////////////////
-//~Basic types
+//////////////////////////////////////////////////////////////////////////////
+// Basic types
 #include <stdint.h>
 typedef uint8_t U8;
 typedef uint16_t U16;
@@ -137,7 +148,106 @@ typedef char C8;
 typedef uintptr_t UMI; // aka 'unsigned memory index'
 typedef ptrdiff_t SMI; // aka 'signed memory index'
 
-//~Helper Macros
+
+//////////////////////////////////////////////////////////////////////////////
+// Constants
+//
+#define S8_MIN  -0x80
+#define S16_MIN -0x8000
+#define S32_MIN -0x80000000ll
+#define S64_MIN (-0x8000000000000001ll - 1)
+
+#define S8_MAX  0x7F
+#define S16_MAX 0x7FFF
+#define S32_MAX 0x7FFFFFFFl
+#define S64_MAX 0x7FFFFFFFFFFFFFFFll
+
+#define U8_MAX  0xFF
+#define U16_MAX 0xFFFF
+#define U32_MAX 0xFFFFFFFF
+#define U64_MAX 0xFFFFFFFFFFFFFFFFllu
+
+#define F32_EPSILON 1.1920929E-7f
+#define F64_EPSILON 2.220446E-16
+
+#define PI_32 3.14159265359f
+#define PI_64 3.14159265359
+#define TAU_32 6.28318530718f
+#define TAU_64 6.28318530718
+#define GOLD_32 1.61803398875f
+#define GOLD_64 1.61803398875
+    
+# define true 1
+# define false 0
+# define null 0 
+
+static F32 
+F32_INFINITY() {
+  // NOTE(Momo): Use 'type pruning'
+  // Infinity is when bits 1-8 are on
+  union { F32 f; U32 u; } ret = {};
+  ret.u = 0x7f800000;
+  
+  return ret.f;
+  
+}
+
+static F32 
+F32_NEG_INFINITY() {
+  // NOTE(Momo): Use 'type pruning'
+  // Infinity is when bits 1-8 are on
+  // Negative is when bit 0 is on
+  union { F32 f; U32 u; } ret = {};
+  ret.u = 0xff800000;
+  
+  return ret.f;	
+}
+
+static F32
+F32_NAN() {
+  // NOTE(Momo): Use 'type pruning'
+  // NAN is when bits 1-11 and 1 other bit is on
+  // In this case, we will just turn on all bits
+  union { F32 f; U32 u; } ret = {};
+  ret.u = 0xFFFFFFFF;
+  return ret.f;
+}
+
+static F64
+F64_NAN() {
+  // NOTE(Momo): Use 'type pruning'
+  // NAN is when bits 1-11 and 1 other bit is on
+  // In this case, we will just turn on all bits
+  union { F64 f; U64 u; } ret = {};
+  ret.u = 0xFFFFFFFFFFFFFFFF;
+  return ret.f;
+}
+
+
+static F64 
+F64_INFINITY() {
+  // NOTE(Momo): Use 'type pruning'
+  // Infinity is when bits 1-11 are on
+  union { F64 f; U64 u; } ret = {};
+  ret.u = 0x7FF0000000000000;
+  
+  return ret.f;
+  
+}
+
+static F64 
+F64_NEG_INFINITY() {
+  // NOTE(Momo): Use 'type pruning'
+  // Infinity is when bits 1-11 are on
+  // Negative is when bit 0 is on
+  union { F64 f; U64 u; } ret = {};
+  ret.u = 0xFFF0000000000000;
+  
+  return ret.f;	
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Helper Macros
 #define stringify_(s) #s
 #define stringify(s) stringify_(s)
 #define glue_(a,b) a##b
@@ -159,7 +269,9 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 #define stmt(s) do { s } while(0)
 #define array_count(A) (sizeof(A)/sizeof(*A))
 #define offset_of(type, member) (UMI)&(((type*)0)->member)
-
+#define make(t, name) \
+  t glue(name_,__LINE__) = {0}; \
+  t* name = &(glue(name_,__LINE__))
 // These need to be macros instead of function
 // because I don't want these to return or take in to a specific strict type.
 // Returning a strict type almost always end up requiring an explicit
@@ -168,15 +280,11 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 #define KB(n) ((1<<10) * n)
 #define MB(n) ((1<<20) * n)
 #define GB(n) ((1<<30) * n)
-#define digit_to_ascii(d) ((d) + '0')
-#define ascii_to_digit(a) ((a) - '0')
-
 #define foreach(i,l) for(UMI (i) = 0; (i) < array_count(l); ++(i)) 
 
-//~Useful calculations
-static UMI ptr_to_int(void* p);
-static U8* int_to_ptr(UMI u);
 
+
+//  
 // NOTE(Momo): It's ridiculous how much goes into the implementation of 
 // a generic Min/Max function in modern C++. 
 // https://www.drdobbs.com/generic-min-and-max-redivivus/184403774
@@ -185,188 +293,31 @@ static U8* int_to_ptr(UMI u);
 //
 #define min_of(l,r) ((l) < (r) ? (l) : (r))
 #define max_of(l,r) ((l) > (r) ? (l) : (r))
+
 #define clamp_of(x,t,b) (min_of(max_of(x,t),b))
-#define abs_of(x) ((x) < 0 ? -(x) : (x))  
-static F32 abs_f32(F32 value);
-static F64 abs_f64(F64 value);
-static S8  abs_s8(S8 value);
-static S16 abs_s16(S16 value);
-static S32 abs_s32(S32 value);
-static S64 abs_s64(S64 value);
-
-// NOTE(Momo): Lerp is tricky because the 'f' variable the 'percentage'.
-// and must be of a floating point type. I'm not sure if I want to go into
-// the hellhole of checking if 'f' is a floating point via TMP. Seems overkill
-// since there are only 2 floating point types I generally care about.
-static F32 lerp_f32(F32 s, F32 e, F32 f); 
-static F64 lerp_f64(F64 s, F64 e, F64 f); 
-
-// NOTE(Momo): percent is an interesting function. 
-// All 1D Ratios will end up with a 1D FXX type.
-// All 2D ratios will end up with a 2D FXX type.
-// The problem is that, there doesn't seem to be a neat way to express that
-// without forcing users to specify the return type somewhere in the function.
-// Maybe we will to resort to a RatioF32 and a RatioF64?
-// 
-// For now, we will just overload the Ratio function, until it bugs us.
-static F32 percent_f32(F32 v, F32 min, F32 max);
-static F64 percent_f64(F64 v, F64 min, F64 max);
 
 #define align_down_pow2(v,a) ((v) & ~((a)-1))
 #define align_up_pow2(v,a) ((v) + ((a)-1) & ~((a)-1))
 #define is_pow2(v) ((v) & ((v)-1) == 0)
 #define swap(t,l,r) { t tmp = (l); (l) = (r); (r) = tmp; } 
 
-
-static F32 deg_to_rad_f32(F32 degrees);
-static F64 deg_to_rad_f64(F64 degrees);
-static F32 rad_to_deg_f32(F32 radians);
-static F64 rad_to_deg_f64(F64 radians);
-
-// Beats per min to Secs per beat
-static F32 bpm_to_spb_f32(F32 bpm); 
-static F64 bpm_to_spb_f64(F64 bpm); 
-
-// NOTE(Momo): I'm not entirely sure if this prototype makes sense.
-// It sounds more reasonable to endian swap ANY type. 
-// We COULD use a template approach like so:
-//   template<typename T> endian_swap_16(T value);
-//   template<typename T> endian_swap_32(T value); 
-// Or we COULD just ignore the concept of type:
-//   void _EndianSwap16(U8* ptr)
-//   #define endian_swap_16(value) _EndianSwap16((U8*)&value)
-static U16 endian_swap_u16(U16 value);
-static S16 endian_swap_s16(S16 value);
-static U32 endian_swap_u32(U32 value);
-
-//~assert
-// NOTE(Momo): Others can provide their own 'assert_callback' 
-#if !defined(assert_callback)
-# define assert_callback(s) (*(volatile int*)0 = 0)
-#endif // AssertBreak
-
-#if ENABLE_ASSERT
-# define assert(s) stmt(if(!(s)) { assert_callback(s); })
-#else // !ENABLE_ASSERT
-# define assert(s)
-#endif // ENABLE_ASSERT
-
-//////////////////////////////////////////
-//~Constants
-#define S8_MIN  -0x80
-#define S16_MIN -0x8000
-#define S32_MIN -0x80000000ll
-#define S64_MIN (-0x8000000000000001ll - 1)
-
-#define S8_MAX  0x7F
-#define S16_MAX 0x7FFF
-#define S32_MAX 0x7FFFFFFFl
-#define S64_MAX 0x7FFFFFFFFFFFFFFFll
-
-#define U8_MAX  0xFF
-#define U16_MAX 0xFFFF
-#define U32_MAX 0xFFFFFFFF
-#define U64_MAX 0xFFFFFFFFFFFFFFFFllu
-
-#define F32_EPSILON 1.1920929E-7f
-#define F64_EPSILON 2.220446E-16
-
-static F32 F32_INFINITY();
-static F32 F32_NEG_INFINITY();
-static F32 F32_NAN();
-static F64 F64_INFINITY();
-static F64 F64_NEG_INFINITY();
-static F64 F64_NAN();
-
-// NOTE(Momo):  This is a really useful construct I find myself using 
-// more and more. It represents a 'Block' of memory. 
-typedef struct {
-  union {
-    void* data;
-    U8* data_u8;
-  };
-  UMI size;  
-} Block;
-static B32 blk_ok(Block);
-
-static void copy_memory(void* dest, const void* src, UMI size);
-static void zero_memory(void* dest, UMI size);
-static void swap_memory(void* lhs, void* rhs, UMI size);
-static B32  is_memory_same(const void* lhs, const void* rhs, UMI size);
-
-#define zero_struct(p)    zero_memory((p), sizeof(*(p)))
-#define zero_array(p)     zero_memory((p), sizeof(p))
-#define zero_range(p,s)   zero_memory((p), sizeof(*(p)) * (s))
-
-#define copy_struct(p)    copy_memory((p), sizeof(*(p)))
-#define copy_array(p)     copy_memory((p), sizeof(p))
-#define copy_range(p,s)   copy_memory((p), sizeof(*(p)) * (s))
-
-//~C-string
-static UMI  cstr_len(const C8* str);
-static void cstr_copy(C8* dest, const C8* Src);
-static B32  cstr_compare(const C8* lhs, const C8* rhs);
-static B32  cstr_compare_n(const C8* lhs, const C8* rhs, UMI n);
-static void cstr_concat(C8* dest, const C8* Src);
-static void cstr_clear(C8* dest);
-static void cstr_reverse(C8* dest);
-static void cstr_itoa(C8* dest, S32 num);
-
-// NOTE(Momo): Returns F64_NAN() if unsucceessful. Use is_nan() to check.
-// In debug mode, it will assert if unsuccessful.
-static F64 cstr_to_f64(const C8* p);
-
-//~IEEE floating point functions 
-static B32 is_close_f32(F32 lhs, F32 rhs);
-static B32 is_close_f64(F64 lhs, F64 rhs);
-static B32 is_nan_f32(F32 f);
-static B32 is_nan_f64(F64 f);
-
-//~Math 
-#define PI_32 3.14159265359f
-#define PI_64 3.14159265359
-#define TAU_32 6.28318530718f
-#define TAU_64 6.28318530718
-#define GOLD_32 1.61803398875f
-#define GOLD_64 1.61803398875
-
-//~NOTE(Momo): Helper macros 
-#define make(type, name) type zawarudo_##name = {}; type* name = &zawarudo_##name
-
-//~NOTE(Momo): Ascii Parsing Helpers
-static B32 is_whitespace(C8 c);
-static B32 is_digit(U8 c);
-static B32 is_alpha(C8 c);
-
-#if IS_CPP
-# define null nullptr
-# define ns_begin(name) namespace name {
-# define ns_end(name) }
-
-//~ NOTE(Momo): Defer
-template<typename F> 
-struct _defer_scope_guard {
-  F f;
-  ~_defer_scope_guard() { f(); }
-};
-struct _defer_dummy {};
-template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
-  return { f };
+//////////////////////////////////////////////////////////////////////////////
+// Integer  to pointer conversions
+static UMI 
+ptr_to_int(void* p) { 
+  return (UMI)((C8*)p - (char*)0); 
 }
-# define defer auto glue(_defer, __LINE__) = _defer_dummy{} + [&]()
 
-#else // IS_CPP 
-      
-# define true 1
-# define false 0
-# define null 0 
+static U8* 
+int_to_ptr(UMI u) { 
+  return (U8*)((C8*)0 + u);
+}
 
-#endif // IS_CPP
+//////////////////////////////////////////////////////////////////////////////
+// Ascii helpers
+#define digit_to_ascii(d) ((d) + '0')
+#define ascii_to_digit(a) ((a) - '0')
 
-
-
-///////////////////////////////////////////////////////////////////
-// IMPLENTATION STARTS HERE ///////////////////////////////////////
 static B32
 is_whitespace(C8 c) {
   return c == ' ' || c == '\n' || c == '\r' || c == '\t';
@@ -383,18 +334,185 @@ is_digit(U8 c) {
   // this gets compiled to (uint8_t)(c - '0') <= 9 on all decent compilers
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// Absolutes
+#define abs_of(x) ((x) < 0 ? -(x) : (x))  
+static F32 
+abs_f32(F32 x) {
+  union { F32 f; U32 u; } val = {};
+  val.f = x;
+  val.u &= 0x7fffffff;  
+  return val.f;
+}
+
+static F64
+abs_f64(F64 x) {
+  union { F64 f; U64 u; } val = {};
+  val.f = x;
+  val.u &= 0x7fffffffffffffff;
+  
+  return val.f;
+}
 
 
-//~Memory functions
-// NOTE(Momo): These functions can use memset/memcopy/memcmp
-// but they might not be avaliable. 
+static S8   
+abs_s8(S8 x) {
+  S8 y = x >> 7;
+  return (x ^ y)-y;
+}
 
+static S16  
+abs_s16(S16 x) {
+  S16 y = x >> 15;
+  return (x ^ y)-y;
+}
+static S32  
+abs_s32(S32 x) {
+  S32 y = x >> 31;
+  return (x ^ y)-y;
+}
+static S64  
+abs_s64(S64 x) {
+  S64 y = x >> 63;
+  return (x ^ y)-y;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Basic lerps
+//
+// NOTE(Momo): Lerp is tricky because the 'f' variable the 'percentage'.
+// and must be of a floating point type. I'm not sure if I want to go into
+// the hellhole of checking if 'f' is a floating point via TMP. Seems overkill
+// since there are only 2 floating point types I generally care about.
+//
+static F32
+lerp_f32(F32 s, F32 e, F32 f) { 
+  return (F32)(s + (e-s) * f); 
+}
+
+static F64 
+lerp_f64(F64 s, F64 e, F64 f) { 
+  return (F64)(s + (e-s) * f); 
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Percentage
+//
+static F32 
+percent_f32(F32 v, F32 min, F32 max) { 
+  return (v - min)/(max - min); 
+}
+
+static F64 
+percent_f64(F64 v, F64 min, F64 max) { 
+  return (v - min)/(max - min); 
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Degrees to Radians
+//
+static F32 
+deg_to_rad_f32(F32 degrees) {
+  return degrees * PI_32 / 180.f;
+}
+static F32 
+rad_to_deg_f32(F32 radians) {
+  return radians * 180.f / PI_32;	
+}
+
+static F64
+deg_to_rad_f64(F64 degrees) {
+  return degrees * PI_32 / 180.0;
+  
+}
+static F64 
+rad_to_deg_f64(F64 radians) {
+  return radians * 180.0 / PI_64;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Beats Per Minute to Seconds Per Beat
+//
+static F32
+bpm_to_spb_f32(F32 bpm) {
+  return 60.f/bpm;
+}
+
+static F64
+bpm_to_spb_f64(F64 bpm) {
+  return 60.0/bpm;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Endian Swap
+// 
+// NOTE(Momo): I'm not entirely sure if this prototype makes sense.
+// It sounds more reasonable to endian swap ANY type. 
+// We COULD use a template approach like so:
+//   template<typename T> endian_swap_16(T value);
+//   template<typename T> endian_swap_32(T value); 
+// Or we COULD just ignore the concept of type:
+//   void _EndianSwap16(U8* ptr)
+//   #define endian_swap_16(value) _EndianSwap16((U8*)&value)
+//
+static U16
+endian_swap_u16(U16 value) {
+  return (value << 8) | (value >> 8);
+}
+
+static S16
+endian_swap_s16(S16 value) {
+  return (value << 8) | (value >> 8);
+}
+
+static U32
+endian_swap_u32(U32 value) {
+  return  ((value << 24) |
+           ((value & 0xFF00) << 8) |
+           ((value >> 8) & 0xFF00) |
+           (value >> 24));
+  
+}
+
+
+//////////////////////////////////////////////////////////////////////////////
+// Assert
+//
+// NOTE(Momo): Others can provide their own 'assert_callback' 
+//
+#if !defined(assert_callback)
+# define assert_callback(s) (*(volatile int*)0 = 0)
+#endif // AssertBreak
+
+#if ENABLE_ASSERT
+# define assert(s) stmt(if(!(s)) { assert_callback(s); })
+#else // !ENABLE_ASSERT
+# define assert(s)
+#endif // ENABLE_ASSERT
+
+
+//////////////////////////////////////////////////////////////////////////////
+// Memory Block construct
+//
+// NOTE(Momo):  This is a really useful construct I find myself using 
+// more and more. It represents a 'Block' of memory. 
+//
+typedef struct {
+  union {
+    void* data;
+    U8* data_u8;
+  };
+  UMI size;  
+} Block;
 
 static B32
 blk_ok(Block blk) {
   return blk.data != null;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// Raw memory manipulation
+//
 #if 1
 #include <string.h>
 static void 
@@ -455,82 +573,16 @@ swap_memory(void* lhs, void* rhs, UMI size) {
   }
 }
 
+#define zero_struct(p)    zero_memory((p), sizeof(*(p)))
+#define zero_array(p)     zero_memory((p), sizeof(p))
+#define zero_range(p,s)   zero_memory((p), sizeof(*(p)) * (s))
 
-//~Helper functions
-static UMI 
-ptr_to_int(void* p) { 
-  return (UMI)((C8*)p - (char*)0); 
-}
+#define copy_struct(p)    copy_memory((p), sizeof(*(p)))
+#define copy_array(p)     copy_memory((p), sizeof(p))
+#define copy_range(p,s)   copy_memory((p), sizeof(*(p)) * (s))
 
-static U8* 
-int_to_ptr(UMI u) { 
-  return (U8*)((C8*)0 + u);
-}
-
-
-
-static F32 
-abs_f32(F32 x) {
-  union { F32 f; U32 u; } val = {};
-  val.f = x;
-  val.u &= 0x7fffffff;  
-  return val.f;
-}
-
-static F64
-abs_f64(F64 x) {
-  union { F64 f; U64 u; } val = {};
-  val.f = x;
-  val.u &= 0x7fffffffffffffff;
-  
-  return val.f;
-}
-
-
-static S8   
-abs_s8(S8 x) {
-  S8 y = x >> 7;
-  return (x ^ y)-y;
-}
-
-static S16  
-abs_s16(S16 x) {
-  S16 y = x >> 15;
-  return (x ^ y)-y;
-}
-static S32  
-abs_s32(S32 x) {
-  S32 y = x >> 31;
-  return (x ^ y)-y;
-}
-static S64  
-abs_s64(S64 x) {
-  S64 y = x >> 63;
-  return (x ^ y)-y;
-}
-
-static F32
-lerp_f32(F32 s, F32 e, F32 f) { 
-  return (F32)(s + (e-s) * f); 
-}
-
-static F64 
-lerp_f64(F64 s, F64 e, F64 f) { 
-  return (F64)(s + (e-s) * f); 
-}
-
-static F32 
-percent_f32(F32 v, F32 min, F32 max) { 
-  return (v - min)/(max - min); 
-}
-
-static F64 
-percent_f64(F64 v, F64 min, F64 max) { 
-  return (v - min)/(max - min); 
-}
-
-
-//~C-strings, aka null-terminated strings
+//////////////////////////////////////////////////////////////////////////////
+// C-string
 static UMI
 cstr_len(const C8* str) {
   UMI count = 0;
@@ -574,54 +626,6 @@ cstr_concat(C8* dest, const char* Src) {
   }
   (*dest) = 0;
 }
-
-
-static void 
-cstr_clear(C8* dest) {
-  (*dest) = 0;
-}
-
-static void
-cstr_reverse(C8* dest) {
-  C8* back_ptr = dest;
-  for (; *(back_ptr+1) != 0; ++back_ptr);
-  for (;dest < back_ptr; ++dest, --back_ptr) {
-    swap(C8, *dest, *back_ptr);
-  }
-}
-
-
-
-static void 
-cstr_itoa(C8* dest, S32 num) {
-  // Naive method. 
-  // Extract each number starting from the back and fill the buffer. 
-  // Then reverse it.
-  
-  // Special case for 0
-  if (num == 0) {
-    dest[0] = '0';
-    dest[1] = 0;
-    return;
-  }
-  
-  B32 negative = num < 0;
-  num = abs_of(num);
-  
-  C8* it = dest;
-  for(; num != 0; num /= 10) {
-    S32 digit_to_convert = num % 10;
-    *(it++) = (char)(digit_to_convert + '0');
-  }
-  
-  if (negative) {
-    *(it++) = '-';
-  }
-  (*it) = 0;
-  
-  cstr_reverse(dest);
-}
-
 
 static F64
 _compute_f64(S64 power, U64 i, B32 negative) 
@@ -1400,72 +1404,58 @@ cstr_to_f64(const C8* p) {
   
   return _compute_f64(exponent, i, negative);
 }
-//~ NOTE(Momo): Constants
-static F32 
-F32_INFINITY() {
-  // NOTE(Momo): Use 'type pruning'
-  // Infinity is when bits 1-8 are on
-  union { F32 f; U32 u; } ret = {};
-  ret.u = 0x7f800000;
-  
-  return ret.f;
-  
+
+static void 
+cstr_clear(C8* dest) {
+  (*dest) = 0;
 }
 
-static F32 
-F32_NEG_INFINITY() {
-  // NOTE(Momo): Use 'type pruning'
-  // Infinity is when bits 1-8 are on
-  // Negative is when bit 0 is on
-  union { F32 f; U32 u; } ret = {};
-  ret.u = 0xff800000;
-  
-  return ret.f;	
-}
-
-static F32
-F32_NAN() {
-  // NOTE(Momo): Use 'type pruning'
-  // NAN is when bits 1-11 and 1 other bit is on
-  // In this case, we will just turn on all bits
-  union { F32 f; U32 u; } ret = {};
-  ret.u = 0xFFFFFFFF;
-  return ret.f;
-}
-
-static F64
-F64_NAN() {
-  // NOTE(Momo): Use 'type pruning'
-  // NAN is when bits 1-11 and 1 other bit is on
-  // In this case, we will just turn on all bits
-  union { F64 f; U64 u; } ret = {};
-  ret.u = 0xFFFFFFFFFFFFFFFF;
-  return ret.f;
+static void
+cstr_reverse(C8* dest) {
+  C8* back_ptr = dest;
+  for (; *(back_ptr+1) != 0; ++back_ptr);
+  for (;dest < back_ptr; ++dest, --back_ptr) {
+    swap(C8, *dest, *back_ptr);
+  }
 }
 
 
-static F64 
-F64_INFINITY() {
-  // NOTE(Momo): Use 'type pruning'
-  // Infinity is when bits 1-11 are on
-  union { F64 f; U64 u; } ret = {};
-  ret.u = 0x7FF0000000000000;
+
+static void 
+cstr_itoa(C8* dest, S32 num) {
+  // Naive method. 
+  // Extract each number starting from the back and fill the buffer. 
+  // Then reverse it.
   
-  return ret.f;
+  // Special case for 0
+  if (num == 0) {
+    dest[0] = '0';
+    dest[1] = 0;
+    return;
+  }
   
+  B32 negative = num < 0;
+  num = abs_of(num);
+  
+  C8* it = dest;
+  for(; num != 0; num /= 10) {
+    S32 digit_to_convert = num % 10;
+    *(it++) = (char)(digit_to_convert + '0');
+  }
+  
+  if (negative) {
+    *(it++) = '-';
+  }
+  (*it) = 0;
+  
+  cstr_reverse(dest);
 }
 
-static F64 
-F64_NEG_INFINITY() {
-  // NOTE(Momo): Use 'type pruning'
-  // Infinity is when bits 1-11 are on
-  // Negative is when bit 0 is on
-  union { F64 f; U64 u; } ret = {};
-  ret.u = 0xFFF0000000000000;
-  
-  return ret.f;	
-}
 
+
+// NOTE(Momo): Returns F64_NAN() if unsucceessful. Use is_nan() to check.
+// In debug mode, it will assert if unsuccessful.
+static F64 cstr_to_f64(const C8* p);
 
 //~IEEE floating point functions 
 static B32 
@@ -1494,71 +1484,21 @@ is_nan_f64(F64 f) {
   return (ret.u & 0xFFFFFFFFFFFFFFFF) == 0xFFFFFFFFFFFFFFFF;
 }
 
-//~Helper functions
-static F32
-bpm_to_spb_f32(F32 bpm) {
-  assert(bpm >= 0.f);
-  return 60.f/bpm;
-}
 
-static F64
-bpm_to_spb_f64(F64 bpm) {
-  assert(bpm >= 0.f);
-  return 60.0/bpm;
-}
-
-
-static F32 
-deg_to_rad_f32(F32 degrees) {
-  return degrees * PI_32 / 180.f;
-}
-static F32 
-rad_to_deg_f32(F32 radians) {
-  return radians * 180.f / PI_32;	
-}
-
-static F64
-deg_to_rad_f64(F64 degrees) {
-  return degrees * PI_32 / 180.0;
-  
-}
-static F64 
-rad_to_deg_f64(F64 radians) {
-  return radians * 180.0 / PI_64;
-}
-
-static U16
-endian_swap_u16(U16 value) {
-  return (value << 8) | (value >> 8);
-}
-
-static S16
-endian_swap_s16(S16 value) {
-  return (value << 8) | (value >> 8);
-}
-
-static U32
-endian_swap_u32(U32 value) {
-  return  ((value << 24) |
-           ((value & 0xFF00) << 8) |
-           ((value >> 8) & 0xFF00) |
-           (value >> 24));
-  
-}
-
-/////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 // Hash functions
-
-///////////////////////////////////////////////////////
-// DJB2
-// this algorithm (k=33) was first reported by dan bernstein many 
-// years ago in comp.lang.c. another version of this algorithm 
-// (now favored by bernstein) uses xor: hash(i) = hash(i - 1) * 33 ^ str[i]; 
-// the magic of number 33 (why it works better than many other constants, prime or not) 
-// has never been adequately explained.
+//
 static U32 
 djb2(const C8* str)
 {
+  // DJB2
+  //
+  // this algorithm (k=33) was first reported by dan bernstein many 
+  // years ago in comp.lang.c. another version of this algorithm 
+  // (now favored by bernstein) uses xor: hash(i) = hash(i - 1) * 33 ^ str[i]; 
+  // the magic of number 33 (why it works better than many other constants, prime or not) 
+  // has never been adequately explained.
+
   U32 hash = 5381;
   S32 c;
   while (c = *str++) {
@@ -1567,5 +1507,26 @@ djb2(const C8* str)
   return hash;
 }
 
+//////////////////////////////////////////////////////////////////////////////
+// CPP Only!
+#if IS_CPP
 
-#endif //MOMO_ESSENTIALS_H
+// Namespace helpers
+# define ns_begin(name) namespace name {
+# define ns_end(name) }
+
+// Defer
+template<typename F> 
+struct _defer_scope_guard {
+  F f;
+  ~_defer_scope_guard() { f(); }
+};
+struct _defer_dummy {};
+template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
+  return { f };
+}
+# define defer auto glue(_defer, __LINE__) = _defer_dummy{} + [&]()
+#endif // IS_CPP
+
+
+#endif //MOMO_COMMON_H
