@@ -122,11 +122,11 @@ rp_pack(RP_Rect* rects,
         Bump_Allocator* allocator) 
 {
   Bump_Allocator_Marker restore_point = ba_mark(allocator);
-  
-  Sort_Entry* sort_entries = ba_push_array<Sort_Entry>(allocator, rect_count);
+ 
+  ba_make_arr(Sort_Entry, allocator, sort_entries, rect_count);
   _rp_sort(rects, sort_entries, rect_count, sort_type);
-  auto* nodes = ba_push_array<_RP_Node>(allocator, rect_count+1);
-  
+  ba_make_arr(_RP_Node, allocator, nodes, rect_count+1);
+
   U32 current_node_count = 1;
   nodes[0].x = 0;
   nodes[0].y = 0;

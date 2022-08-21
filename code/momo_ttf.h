@@ -56,7 +56,7 @@ static F32 ttf_get_scale_for_pixel_height(TTF* ttf, F32 pixel_height);
 
 static V2U ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box);
 
-static Bitmap ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator* allocator);
+static Image32 ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator* allocator);
 // Returns an RGBA image where the glyph is white and the background is transparent
 
 static S32 ttf_get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);
@@ -251,8 +251,8 @@ _ttf_get_glyph_outline(TTF* ttf,
     // output end pts of contours
     //test_eval_d(number_of_contours);
     //test_eval_d(point_count);
-    
-    _TTF_Glyph_Point* points = ba_push_array<_TTF_Glyph_Point>(allocator, point_count);
+   
+    ba_make_arr(_TTF_Glyph_Point, allocator, points, point_count);
     if (!points) return false;
     zero_range(points, point_count);
     U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
@@ -334,7 +334,7 @@ _ttf_get_glyph_outline(TTF* ttf,
     }
     
     // mark the points that are contour endpoints
-    U16 *end_pt_indices = ba_push_array<U16>(allocator, number_of_contours);
+    ba_make_arr(U16, allocator, end_pt_indices, number_of_contours);
     if (!end_pt_indices) return false;
     zero_range(end_pt_indices, number_of_contours); 
     {
@@ -419,9 +419,8 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,
   U32 vertex_count = 0;
   F32 flatness = 0.35f;
   F32 flatness_squared = flatness*flatness;
-  
-  U32* path_lengths = ba_push_array<U32>(allocator, 
-                                         outline->contour_count);
+ 
+  ba_make_arr(U32, allocator, path_lengths, outline->contour_count);
   if (!path_lengths) return false;
   zero_range(path_lengths, outline->contour_count);
   U32 path_count = 0;
@@ -432,7 +431,7 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,
   for (U32 pass = 0; pass < 2; ++pass)
   {
     if (pass == 1) {
-      vertices = ba_push_array<V2>(allocator, vertex_count);
+      vertices = ba_push_arr<V2>(allocator, vertex_count);
       if (!vertices) return false;
       zero_range(vertices, vertex_count);
       vertex_count = 0;
@@ -737,13 +736,13 @@ ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
 }
 
 
-static Bitmap 
+static Image32 
 ttf_rasterize_glyph(TTF* ttf, 
                     U32 glyph_index, 
                     F32 scale_factor, 
                     Bump_Allocator* allocator) 
 {
-  Bitmap ret = {0};
+  Image32 ret = {0};
 
   Rect2 box = ttf_get_glyph_box(ttf, glyph_index, scale_factor);
   V2U bitmap_dims = ttf_get_bitmap_dims_from_glyph_box(box);
@@ -755,7 +754,7 @@ ttf_rasterize_glyph(TTF* ttf,
   
   F32 height = abs_f32(box.max.y - box.min.y);   
   U32 bitmap_size = bitmap_dims.w*bitmap_dims.h*4;
-  U32* pixels = ba_push_array<U32>(allocator, bitmap_size);
+  ba_make_arr(U32, allocator, pixels, bitmap_size);
   if (!pixels) {
     ttf_log("[ttf] Unable to allocate bitmap pixel\n");
     goto cleanup_pre_restore_point;
@@ -777,7 +776,7 @@ ttf_rasterize_glyph(TTF* ttf,
   }
   
   // generate scaled edges based on points
-  _TTF_Edge* edges = ba_push_array<_TTF_Edge>(allocator, paths->vertex_count);
+  ba_make_arr(_TTF_Edge, allocator, edges, paths->vertex_count);
   if (!edges) {
     ttf_log("[ttf] Unable to allocate edges\n");
     goto cleanup_post_restore_point;
@@ -824,7 +823,7 @@ ttf_rasterize_glyph(TTF* ttf,
   
   // Rasterazation algorithm starts here
   // Sort edges by top most edge
-  Sort_Entry* y_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
+  ba_make_arr(Sort_Entry, allocator, y_edges, edge_count);
   if (!y_edges) { 
     ttf_log("[ttf] Unable to allocate sort entries for edges\n");
     goto cleanup_post_restore_point;
@@ -836,7 +835,7 @@ ttf_rasterize_glyph(TTF* ttf,
   }
   quicksort(y_edges, edge_count);
 
-  Sort_Entry* active_edges = ba_push_array<Sort_Entry>(allocator, edge_count);
+  ba_make_arr(Sort_Entry, allocator, active_edges, edge_count);
   if (!active_edges) {
     ttf_log("[ttf] Unable to allocate sort entries for active edges\n");
     goto cleanup_post_restore_point;

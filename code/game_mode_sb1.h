@@ -339,7 +339,7 @@ sb1_gen_light_intersections(SB1_Light* l,
   }
 
   if (l->intersections.count > 0) {
-    auto* sorted_its = ba_push_array<Sort_Entry>(allocator, l->intersections.count);
+    ba_make_arr(Sort_Entry, allocator, sorted_its, l->intersections.count);
     assert(sorted_its);
     for (U32 its_id = 0; 
          its_id < l->intersections.count; 

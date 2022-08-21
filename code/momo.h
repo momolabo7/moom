@@ -2,8 +2,11 @@
 #ifndef MOMO_H
 #define MOMO_H
 
-// BEGIN C MARKER
+// Begin Perfection
 #include "momo_common.h"
+// End Perfection
+
+// BEGIN C MARKER
 #include "momo_intrinsics.h"
 #include "momo_vectors.h"
 #include "momo_colors.h"

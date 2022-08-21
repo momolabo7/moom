@@ -30,10 +30,15 @@ static UMI    ba_remaining(Bump_Allocator* a);
 
 //TODO:  Remove template for compatibility with C?
 template<typename T> static T* ba_push(Bump_Allocator* a, UMI align = 4); 
-template<typename T> static T* ba_push_array(Bump_Allocator* a, UMI num, UMI align = 4);
+template<typename T> static T* ba_push_arr(Bump_Allocator* a, UMI num, UMI align = 4);
 
 static Bump_Allocator_Marker ba_mark(Bump_Allocator* a);
 static void ba_revert(Bump_Allocator_Marker marker);
+
+
+
+#define ba_make(t,b,v) t* v = ba_push<t>(b)
+#define ba_make_arr(t,b,v,n) t* v = ba_push_arr<t>(b,n)
 
 #if IS_CPP
 # define __ba_set_revert_point(a,l) \
@@ -112,7 +117,7 @@ ba_push(Bump_Allocator* a, UMI align) {
 }
 
 template<typename T> static T*
-ba_push_array(Bump_Allocator* a, UMI num, UMI align) {
+ba_push_arr(Bump_Allocator* a, UMI num, UMI align) {
   return (T*)ba_push_block(a, sizeof(T)*num, align);
 }
 

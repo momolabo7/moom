@@ -277,7 +277,7 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
 
   bmp->width = width;
   bmp->height = height;
-  bmp->pixels = ba_push_array<U32>(p->allocator, width * height);
+  bmp->pixels = ba_push_arr<U32>(p->allocator, width * height);
   bmp->id_name = id_name;
 
   if (!bmp->pixels) return false; 
@@ -297,7 +297,7 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
 
   if (rect_count == 0) return false;
 
-  auto* rects = ba_push_array<RP_Rect>(p->allocator, rect_count);
+  ba_make_arr(RP_Rect, p->allocator, rects, rect_count);
   if (!rects) return false;
 
   ba_set_revert_point(p->allocator);
@@ -373,8 +373,8 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
       return false;
     if (!png_read(png, mem->data, mem->size)) 
       return false;
-    Bitmap sprite_bmp = png_to_bitmap(png, p->allocator);
-    if (!is_ok(sprite_bmp)) continue;
+    Image32 sprite_bmp = png_to_img32(png, p->allocator);
+    if (!img32_ok(sprite_bmp)) continue;
 
     RP_Rect* rect = sprite->rect;
     for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
@@ -406,8 +406,8 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
       F32 scale = ttf_get_scale_for_pixel_height(ttf, f->glyph_height);
       U32 glyph_index = ttf_get_glyph_index(ttf, g->codepoint);
 
-      Bitmap glyph_bmp = ttf_rasterize_glyph(ttf, glyph_index, scale, p->allocator);
-      if (!is_ok(glyph_bmp)) continue;
+      Image32 glyph_bmp = ttf_rasterize_glyph(ttf, glyph_index, scale, p->allocator);
+      if (!img32_ok(glyph_bmp)) continue;
 
       RP_Rect* rect = g->rect;
       for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
@@ -422,7 +422,7 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
 #if 1
   // test
   {
-    Bitmap bitmap = {};
+    Image32 bitmap = {};
     bitmap.width = bmp->width;
     bitmap.height = bmp->height;
     bitmap.pixels = bmp->pixels; 

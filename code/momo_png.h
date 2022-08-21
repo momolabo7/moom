@@ -33,10 +33,9 @@ typedef struct {
 // - Make these work in big endian OS
 // - probably need a 'get channels' function?
 //      static U32 get_channels(PNG);
-
 static B32 png_read(PNG* p, void* png_memory, UMI png_size);
-static Bitmap png_to_bitmap(PNG* png, Bump_Allocator* allocator);
-static Block png_write(Bitmap bm, Bump_Allocator* allocator);
+static Image32 png_to_img32(PNG* png, Bump_Allocator* allocator);
+static Block png_write(Image32 img, Bump_Allocator* allocator);
 
 //////////////////////////////////////////////////////////////
 // IMPLEMENTATION
@@ -208,13 +207,13 @@ _png_huffman_compute(_PNG_Huffman* h,
   
   // Each code corresponds to a symbol
   h->symbol_count = codes_size;
-  h->symbols = ba_push_array<U16>(allocator, codes_size);
+  h->symbols = ba_push_arr<U16>(allocator, codes_size);
   zero_memory(h->symbols, h->symbol_count * sizeof(U16));
   
   
   // We add +1 because lengths[0] is not possible
   h->length_count = max_lengths + 1;
-  h->lengths = ba_push_array<U16>(allocator, max_lengths + 1);
+  h->lengths = ba_push_arr<U16>(allocator, max_lengths + 1);
   zero_memory(h->lengths, h->length_count * sizeof(U16));
   
   // 1. Count the number of codes for each code length
@@ -226,7 +225,7 @@ _png_huffman_compute(_PNG_Huffman* h,
   // 2. Numerical value of smallest code for each code length
   ba_set_revert_point(allocator);
   
-  U16* len_offset_table = ba_push_array<U16>(allocator, max_lengths+1);
+  U16* len_offset_table = ba_push_arr<U16>(allocator, max_lengths+1);
   zero_memory(len_offset_table, (max_lengths+1) * sizeof(U16));
   
   for (U32 len = 1; len < max_lengths; ++len) {
@@ -350,8 +349,8 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Bump_Allocator* allocator)
                                array_count(code_codes),
                                15); 
           
-          
-          U16* lit_dist_codes = ba_push_array<U16>(allocator, HDIST + HLIT);
+         
+          ba_make_arr(U16, allocator, lit_dist_codes, HDIST + HLIT);
           
           // NOTE(Momo): Decode
           // Loop until end of block code recognize
@@ -732,8 +731,8 @@ _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
 // the PNG file we are reading is correct. i.e. we don't emphasize on 
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
-static Bitmap
-png_to_bitmap(PNG* png, Bump_Allocator* allocator) 
+static Image32
+png_to_img32(PNG* png, Bump_Allocator* allocator) 
 {
   _PNG_Context ctx = {};
   ctx.allocator = allocator;
@@ -743,14 +742,14 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
   ctx.bit_depth = png->bit_depth;
   
   U32 image_size = png->width * png->height * _PNG_CHANNELS;
-  U8* image_stream_memory = ba_push_array<U8>(allocator, image_size);
+  ba_make_arr(U8, allocator, image_stream_memory, image_size);
   assert(image_stream_memory);
   srm_init(&ctx.image_stream, image_stream_memory, image_size);
   
   ba_set_revert_point(allocator);
   
   U32 unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
-  U8* unfiltered_image_stream_memory = ba_push_array<U8>(allocator, unfiltered_size);
+  ba_make_arr(U8, allocator, unfiltered_image_stream_memory, unfiltered_size);
   assert(unfiltered_image_stream_memory);
   srm_init(&ctx.unfiltered_image_stream, unfiltered_image_stream_memory, unfiltered_size);
   
@@ -775,7 +774,7 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
     }
   }
   
-  U8* zlib_data = ba_push_array<U8>(allocator, zlib_size);
+  ba_make_arr(U8, allocator, zlib_data, zlib_size);
   make(Stream, zlib_stream);
   srm_init(zlib_stream, zlib_data, zlib_size);
   
@@ -795,16 +794,14 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
   srm_reset(zlib_stream);
   
   if (!_png_decompress_zlib(&ctx, zlib_stream)) {
-    Bitmap ret = {};
-    return ret;
+    return img32_bad();
   }
   
   if(!_png_filter(&ctx)) {					
-    Bitmap ret = {};
-    return ret;
+    return img32_bad();
   }
   else {	
-    Bitmap ret = {};
+    Image32 ret = {0};
     ret.width = ctx.image_width;
     ret.height = ctx.image_height;
     ret.pixels = (U32*)ctx.image_stream.data;
@@ -818,7 +815,7 @@ png_to_bitmap(PNG* png, Bump_Allocator* allocator)
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
 static Block
-png_write(Bitmap bm, Bump_Allocator* allocator) {
+png_write(Image32 bm, Bump_Allocator* allocator) {
   assert(bm.width > 0);
   assert(bm.height > 0);
   assert(bm.pixels != 0);
@@ -849,7 +846,7 @@ png_write(Bitmap bm, Bump_Allocator* allocator) {
                                   data_size + 
                                   IDAT_chunk_size);
   
-  U8* stream_memory = ba_push_array<U8>(allocator, expected_memory_required);
+  ba_make_arr(U8, allocator, stream_memory, expected_memory_required);
   assert(stream_memory);
   make(Stream, stream);
   srm_init(stream, stream_memory, expected_memory_required);

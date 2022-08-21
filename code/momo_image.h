@@ -17,18 +17,23 @@
 // For now, we only care about images that are in RGBA format,
 // with U8 representing each channel. 
 // Maybe have different image types like Image_RGBA?
-struct Bitmap {
+typedef struct {
   U32 width, height;
   U32* pixels;
-};
+}Image32;
 
-static B32 is_ok(Bitmap);
 
-//////////////////////////////////////////////////////////
-// IMPLEMENTATION
 static B32
-is_ok(Bitmap bm) {
-  return bm.width && bm.height && bm.pixels;
+img32_ok(Image32 img) {
+  return img.pixels != null;
+}
+
+// Creates an Image32 that is not okay
+static Image32 
+img32_bad() {
+  Image32 ret; 
+  ret.pixels = null;
+  return ret; 
 }
 
 #endif //MOMO_IMAGE_H

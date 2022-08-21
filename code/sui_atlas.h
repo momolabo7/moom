@@ -76,7 +76,7 @@ struct Sui_Atlas_Sprite {
 //////////////////////////////////////////////
 // Builder
 struct Sui_Atlas {  
-  Bitmap bitmap;
+  Image32 bitmap;
   const char* bitmap_id_name;
   
   Sui_Atlas_Font fonts[128];
@@ -142,7 +142,7 @@ begin_atlas_builder(Sui_Atlas* ab,
 
 static B32
 end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
-  ab->bitmap.pixels = ba_push_array<U32>(allocator, ab->bitmap.width * ab->bitmap.height);
+  ab->bitmap.pixels = ba_push_arr<U32>(allocator, ab->bitmap.width * ab->bitmap.height);
   if (!ab->bitmap.pixels) return false;
   
   // Count the amount of rects
@@ -158,8 +158,8 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
   if (rect_count == 0) return false; 
   
   // Allocate required blk required
-  auto* rects = ba_push_array<RP_Rect>(allocator, rect_count);
-  auto* contexts = ba_push_array<Sui_Atlas_Context>(allocator, rect_count);
+  ba_make_arr(RP_Rect, allocator, rects, rect_count);
+  ba_make_arr(Sui_Atlas_Context, allocator, contexts, rect_count);
   
   // Prepare the rects with the correct info
   U32 rect_index = 0;
@@ -273,8 +273,8 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
         ok = png_read(png, blk->data, blk->size);
         if(!ok) return false;
         
-        Bitmap bm = png_to_bitmap(png, allocator);
-        if (!is_ok(bm)) continue;
+        Image32 bm = png_to_img32(png, allocator);
+        if (!img32_ok(bm)) continue;
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
@@ -293,8 +293,8 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
         F32 s = ttf_get_scale_for_pixel_height(ttf, related_entry->raster_font_height);
         U32 glyph_index = ttf_get_glyph_index(ttf, related_context->codepoint);
         
-        Bitmap bm = ttf_rasterize_glyph(ttf, glyph_index, s, allocator);
-        if (!is_ok(bm)) continue;
+        Image32 bm = ttf_rasterize_glyph(ttf, glyph_index, s, allocator);
+        if (!img32_ok(bm)) continue;
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
