@@ -28,7 +28,7 @@
 #include "game_profiler.h"
 
 #include "win_common.h"
-#include "win_renderer.h"
+#include "win_gfx.h"
 #include "win_audio.h"
 #include "win_loaded_code.h"
 

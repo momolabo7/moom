@@ -3,7 +3,7 @@
 
 #include "momo_common.h"
 #include "momo_matrix.h"
-#include "game_renderer.h"
+#include "game_gfx.h"
 
 #define OPENGL_MAX_SPRITES 4096
 

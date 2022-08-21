@@ -8,7 +8,7 @@
 #undef far
 
 #include "momo.h"
-#include "game_renderer.h"
+#include "game_gfx.h"
 
 
 // Interfaces

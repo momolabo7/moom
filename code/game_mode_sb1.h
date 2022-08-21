@@ -478,7 +478,7 @@ sb1_init(Game* game)
   sb1_push_light(m, {450.f, 600.f}, 0x008800FF, 270.f, 0.f);
   sb1_push_light(m, {650.f, 600.f}, 0x000088FF, 360.f, 0.f);
   
-  player->held_light = nullptr;
+  player->held_light = null;
   player->pos.x = 400.f;
   player->pos.y = 400.f;
   player->size.x = 32.f;
@@ -722,7 +722,7 @@ sb1_tick(Game* game,
       line.min = player->pos;
       line.max = al_at(&l->intersections, sorted_its[its_id].index)->pt;
       
-      push_format(sb, str8_from_lit("[%u]"), its_id);
+      sb8_push_fmt(sb, str8_from_lit("[%u]"), its_id);
       paint_text(painter,
                  FONT_DEFAULT, 
                  sb->str,
