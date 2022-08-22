@@ -3,7 +3,7 @@
 
 #include "momo_common.h"
 #include "momo_memory.h"
-#include "game_renderer.h"
+#include "game_gfx.h"
 #include "game_platform.h"
 #include "game_profiler.h"
 #include "game_asset_ids.h"

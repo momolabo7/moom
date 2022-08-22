@@ -339,7 +339,7 @@ sb1_gen_light_intersections(SB1_Light* l,
   }
 
   if (l->intersections.count > 0) {
-    ba_make_arr(Sort_Entry, allocator, sorted_its, l->intersections.count);
+    Sort_Entry* sorted_its = ba_push_arr<Sort_Entry>(allocator, l->intersections.count);
     assert(sorted_its);
     for (U32 its_id = 0; 
          its_id < l->intersections.count; 
@@ -349,7 +349,8 @@ sb1_gen_light_intersections(SB1_Light* l,
       V2 basis_vec = V2{1.f, 0.f} ;
       V2 intersection_vec = its->pt - l->pos;
       F32 key = v2_angle(basis_vec, intersection_vec);
-      if (intersection_vec.y < 0.f) key = PI_32*2.f - key;
+      if (intersection_vec.y < 0.f) 
+        key = PI_32*2.f - key;
 
       sorted_its[its_id].index = its_id;
       sorted_its[its_id].key = key; 
@@ -441,6 +442,8 @@ sb1_render_sensors(Game* game,
   }
 }
 
+
+
 static void 
 sb1_init(Game* game) 
 {
@@ -450,7 +453,7 @@ sb1_init(Game* game)
   al_clear(&m->sensors);
   al_clear(&m->lights);
   al_clear(&m->edges);
-  
+
   sb1_push_point(m, {0.f, 0.f});     // 0
   sb1_push_point(m, {1600.f, 0.f});  // 1
   sb1_push_point(m, {1600.f, 900.f});// 2
@@ -478,6 +481,7 @@ sb1_init(Game* game)
   sb1_push_light(m, {450.f, 600.f}, 0x008800FF, 270.f, 0.f);
   sb1_push_light(m, {650.f, 600.f}, 0x000088FF, 360.f, 0.f);
   
+  // initialize player
   player->held_light = null;
   player->pos.x = 400.f;
   player->pos.y = 400.f;

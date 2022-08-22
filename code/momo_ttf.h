@@ -252,7 +252,7 @@ _ttf_get_glyph_outline(TTF* ttf,
     //test_eval_d(number_of_contours);
     //test_eval_d(point_count);
    
-    ba_make_arr(_TTF_Glyph_Point, allocator, points, point_count);
+    _TTF_Glyph_Point* points = ba_push_arr<_TTF_Glyph_Point>(allocator, point_count);
     if (!points) return false;
     zero_range(points, point_count);
     U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
@@ -334,7 +334,7 @@ _ttf_get_glyph_outline(TTF* ttf,
     }
     
     // mark the points that are contour endpoints
-    ba_make_arr(U16, allocator, end_pt_indices, number_of_contours);
+    U16* end_pt_indices = ba_push_arr<U16>(allocator, number_of_contours);
     if (!end_pt_indices) return false;
     zero_range(end_pt_indices, number_of_contours); 
     {
@@ -420,7 +420,7 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,
   F32 flatness = 0.35f;
   F32 flatness_squared = flatness*flatness;
  
-  ba_make_arr(U32, allocator, path_lengths, outline->contour_count);
+  U32* path_lengths = ba_push_arr<U32>(allocator, outline->contour_count);
   if (!path_lengths) return false;
   zero_range(path_lengths, outline->contour_count);
   U32 path_count = 0;
@@ -754,7 +754,7 @@ ttf_rasterize_glyph(TTF* ttf,
   
   F32 height = abs_f32(box.max.y - box.min.y);   
   U32 bitmap_size = bitmap_dims.w*bitmap_dims.h*4;
-  ba_make_arr(U32, allocator, pixels, bitmap_size);
+  U32* pixels = ba_push_arr<U32>(allocator, bitmap_size);
   if (!pixels) {
     ttf_log("[ttf] Unable to allocate bitmap pixel\n");
     goto cleanup_pre_restore_point;
@@ -776,7 +776,7 @@ ttf_rasterize_glyph(TTF* ttf,
   }
   
   // generate scaled edges based on points
-  ba_make_arr(_TTF_Edge, allocator, edges, paths->vertex_count);
+  _TTF_Edge* edges = ba_push_arr<_TTF_Edge>(allocator, paths->vertex_count);
   if (!edges) {
     ttf_log("[ttf] Unable to allocate edges\n");
     goto cleanup_post_restore_point;
@@ -823,7 +823,7 @@ ttf_rasterize_glyph(TTF* ttf,
   
   // Rasterazation algorithm starts here
   // Sort edges by top most edge
-  ba_make_arr(Sort_Entry, allocator, y_edges, edge_count);
+  Sort_Entry* y_edges = ba_push_arr<Sort_Entry>(allocator, edge_count);
   if (!y_edges) { 
     ttf_log("[ttf] Unable to allocate sort entries for edges\n");
     goto cleanup_post_restore_point;
@@ -835,7 +835,7 @@ ttf_rasterize_glyph(TTF* ttf,
   }
   quicksort(y_edges, edge_count);
 
-  ba_make_arr(Sort_Entry, allocator, active_edges, edge_count);
+  Sort_Entry* active_edges = ba_push_arr<Sort_Entry>(allocator, edge_count);
   if (!active_edges) {
     ttf_log("[ttf] Unable to allocate sort entries for active edges\n");
     goto cleanup_post_restore_point;

@@ -27,12 +27,14 @@ typedef struct {
   U8 interlace_method;
 } PNG;
 
+//
 // Only reads and writes in RGBA format.
 // Only works in little-endian OS
 //
 // - Make these work in big endian OS
 // - probably need a 'get channels' function?
 //      static U32 get_channels(PNG);
+//
 static B32 png_read(PNG* p, void* png_memory, UMI png_size);
 static Image32 png_to_img32(PNG* png, Bump_Allocator* allocator);
 static Block png_write(Image32 img, Bump_Allocator* allocator);
@@ -350,7 +352,7 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Bump_Allocator* allocator)
                                15); 
           
          
-          ba_make_arr(U16, allocator, lit_dist_codes, HDIST + HLIT);
+          U16* lit_dist_codes = ba_push_arr<U16>(allocator, HDIST + HLIT);
           
           // NOTE(Momo): Decode
           // Loop until end of block code recognize
@@ -742,14 +744,14 @@ png_to_img32(PNG* png, Bump_Allocator* allocator)
   ctx.bit_depth = png->bit_depth;
   
   U32 image_size = png->width * png->height * _PNG_CHANNELS;
-  ba_make_arr(U8, allocator, image_stream_memory, image_size);
+  U8* image_stream_memory =  ba_push_arr<U8>(allocator, image_size);
   assert(image_stream_memory);
   srm_init(&ctx.image_stream, image_stream_memory, image_size);
   
   ba_set_revert_point(allocator);
   
   U32 unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
-  ba_make_arr(U8, allocator, unfiltered_image_stream_memory, unfiltered_size);
+  U8* unfiltered_image_stream_memory = ba_push_arr<U8>(allocator, unfiltered_size);
   assert(unfiltered_image_stream_memory);
   srm_init(&ctx.unfiltered_image_stream, unfiltered_image_stream_memory, unfiltered_size);
   
@@ -763,7 +765,7 @@ png_to_img32(PNG* png, Bump_Allocator* allocator)
   {
     Stream stream = ctx.stream;
     while(!srm_is_eos(&stream)) {
-      auto* chunk_header = srm_consume(_PNG_Chunk_Header, &stream);
+      _PNG_Chunk_Header* chunk_header = srm_consume(_PNG_Chunk_Header, &stream);
       U32 chunk_length = endian_swap_u32(chunk_header->length);
       U32 chunk_type = endian_swap_u32(chunk_header->type_U32);
       if (chunk_type == 'IDAT') {
@@ -774,7 +776,7 @@ png_to_img32(PNG* png, Bump_Allocator* allocator)
     }
   }
   
-  ba_make_arr(U8, allocator, zlib_data, zlib_size);
+  U8* zlib_data = ba_push_arr<U8>(allocator, zlib_size);
   make(Stream, zlib_stream);
   srm_init(zlib_stream, zlib_data, zlib_size);
   
@@ -846,7 +848,7 @@ png_write(Image32 bm, Bump_Allocator* allocator) {
                                   data_size + 
                                   IDAT_chunk_size);
   
-  ba_make_arr(U8, allocator, stream_memory, expected_memory_required);
+  U8* stream_memory = ba_push_arr<U8>(allocator, expected_memory_required);
   assert(stream_memory);
   make(Stream, stream);
   srm_init(stream, stream_memory, expected_memory_required);

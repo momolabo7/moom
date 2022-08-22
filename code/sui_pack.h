@@ -297,7 +297,7 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
 
   if (rect_count == 0) return false;
 
-  ba_make_arr(RP_Rect, p->allocator, rects, rect_count);
+  RP_Rect* rects = ba_push_arr<RP_Rect>(p->allocator, rect_count);
   if (!rects) return false;
 
   ba_set_revert_point(p->allocator);

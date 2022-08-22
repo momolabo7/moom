@@ -158,8 +158,11 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
   if (rect_count == 0) return false; 
   
   // Allocate required blk required
-  ba_make_arr(RP_Rect, allocator, rects, rect_count);
-  ba_make_arr(Sui_Atlas_Context, allocator, contexts, rect_count);
+  RP_Rect* rects = ba_push_arr<RP_Rect>(allocator, rect_count);
+  if (!rects) return false;
+
+  Sui_Atlas_Context* contexts = ba_push_arr<Sui_Atlas_Context>(allocator, rect_count);
+  if (!contexts) return false;
   
   // Prepare the rects with the correct info
   U32 rect_index = 0;

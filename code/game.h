@@ -7,7 +7,7 @@
 
 // NOTE(Momo): These are 'interfaces'
 #include "game_platform.h"
-#include "game_renderer.h"
+#include "game_gfx.h"
 
 Platform* platform;
 
@@ -84,4 +84,6 @@ game_allocate_mode(Game* game) {
   game->mode_context = ba_push<T>(&game->mode_arena, 4);
   return (T*)game->mode_context;
 }
+
+
 #endif //GAME_H

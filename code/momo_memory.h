@@ -36,10 +36,6 @@ static Bump_Allocator_Marker ba_mark(Bump_Allocator* a);
 static void ba_revert(Bump_Allocator_Marker marker);
 
 
-
-#define ba_make(t,b,v) t* v = ba_push<t>(b)
-#define ba_make_arr(t,b,v,n) t* v = ba_push_arr<t>(b,n)
-
 #if IS_CPP
 # define __ba_set_revert_point(a,l) \
   auto _ba_marker_##l = ba_mark(a); \
@@ -48,8 +44,6 @@ static void ba_revert(Bump_Allocator_Marker marker);
 # define ba_set_revert_point(allocator) _ba_set_revert_point(allocator, __LINE__) 
 #endif // IS_CPP
 
-/////////////////////////////////////////////////////////
-// IMPLEMENTATION
 static void
 ba_init(Bump_Allocator* a, void* mem, UMI cap) {
   a->memory = (U8*)mem;
