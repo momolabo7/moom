@@ -142,7 +142,7 @@ begin_atlas_builder(Sui_Atlas* ab,
 
 static B32
 end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
-  ab->bitmap.pixels = ba_push_arr<U32>(allocator, ab->bitmap.width * ab->bitmap.height);
+  ab->bitmap.pixels = ba_push_arr(U32, allocator, ab->bitmap.width * ab->bitmap.height);
   if (!ab->bitmap.pixels) return false;
   
   // Count the amount of rects
@@ -158,10 +158,10 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
   if (rect_count == 0) return false; 
   
   // Allocate required blk required
-  RP_Rect* rects = ba_push_arr<RP_Rect>(allocator, rect_count);
+  RP_Rect* rects = ba_push_arr(RP_Rect, allocator, rect_count);
   if (!rects) return false;
 
-  Sui_Atlas_Context* contexts = ba_push_arr<Sui_Atlas_Context>(allocator, rect_count);
+  Sui_Atlas_Context* contexts = ba_push_arr(Sui_Atlas_Context, allocator, rect_count);
   if (!contexts) return false;
   
   // Prepare the rects with the correct info

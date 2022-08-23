@@ -7,8 +7,7 @@
 #ifndef GAME_PLATFORM_H
 #define GAME_PLATFORM_H
 
-#include "momo_common.h"
-#include "momo_vectors.h"
+#include "momo.h"
 
 // TODO: This should be in a function give by game I think
 const F32 game_width = 1600.f;
@@ -97,8 +96,6 @@ struct Platform_Button {
 
 struct Gfx;
 struct Profiler;
-struct Bump_Allocator;
-
 
 // These could really all be functions on the platform side
 struct Platform {

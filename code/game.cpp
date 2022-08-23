@@ -1,6 +1,4 @@
 #include "game.h"
-#include "game_mode_splash.h"
-#include "game_mode_sb1.h"
 
 Platform* g_platform;
 
@@ -14,7 +12,7 @@ game_update_and_render(Platform* pf)
   // Initialization
   if (!pf->game || pf->reloaded) {
     ba_clear(pf->game_arena);
-    pf->game = ba_push<Game>(pf->game_arena);
+    pf->game = ba_push(Game, pf->game_arena);
     Game* game = (Game*)pf->game;
    
     // around 32MB worth
@@ -34,10 +32,11 @@ game_update_and_render(Platform* pf)
     {
       return false;
     }
+   
+    game_goto_mode(game, GAME_MODE_TYPE_SPLASH);
     
     //game_set_mode(game, splash_init, splash_tick);
-     
-    game_set_mode(game, sb1_init, sb1_tick);
+    //game_set_mode(game, lit_init, lit_tick);
     
     // Initialize Debug Console
     Console* console = &game->console;
@@ -61,17 +60,16 @@ game_update_and_render(Platform* pf)
   static U32 test_value = 32;
   add_inspector_entry(in, str8_from_lit("Test"), &test_value);
 
+  
   // Game state management
-  if (game->is_mode_changed && game->init_mode) {
-    game->init_mode(game);
+  if (game->is_mode_changed) {
+    ba_clear(&game->mode_arena);
+    game->mode_context = null;
     game->is_mode_changed = false;
   }
+  game_modes[game->current_game_mode](game, painter, pf);
 
-  if (game->update_mode) {
-    game->update_mode(game, painter, pf);
-  }
-  
-  //-Debug Rendering Stuff
+  // Debug Rendering Stuff
   if (pf_is_button_poked(pf->button_console)) {
     game->show_debug_type = 
       (Game_Show_Debug_Type)((game->show_debug_type + 1)%GAME_SHOW_DEBUG_MAX);

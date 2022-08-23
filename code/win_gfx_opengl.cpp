@@ -184,14 +184,14 @@ win_gfx_load(HWND window,
   HDC dc = GetDC(window); 
   if (!dc) return 0;
 
-  Opengl* opengl = ba_push<Opengl>(allocator);
+  Opengl* opengl = ba_push(Opengl, allocator);
   if (!opengl) return 0; 
 
   // Allocate memory for render commands
-  void* command_queue_memory =  ba_push_block(allocator, command_queue_size, 16);
+  void* command_queue_memory =  ba_push_size(allocator, command_queue_size, 16);
   if (!command_queue_memory) return 0;
 
-  void* texture_queue_memory = ba_push_block(allocator, texture_queue_size, 16);
+  void* texture_queue_memory = ba_push_size(allocator, texture_queue_size, 16);
   if (!texture_queue_memory) return 0; 
  
   if (!win_load_wgl_extentions()) return 0;

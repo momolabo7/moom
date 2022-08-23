@@ -9,7 +9,6 @@
 #include "game_platform.h"
 #include "game_gfx.h"
 
-Platform* platform;
 
 #ifdef INTERNAL
 #define game_log(...) g_platform->debug_log(__VA_ARGS__)
@@ -40,13 +39,18 @@ enum Game_Show_Debug_Type {
   GAME_SHOW_DEBUG_MAX
 };
 
-// Main game structure
-typedef void Game_Mode_Init(struct Game*);
-typedef void Game_Mode_Update(struct Game*, Painter*, Platform*);
+/////////////////////////////////////////////////////////////////////////////
+// Game Modes
+enum Game_Mode_Type {
+  GAME_MODE_TYPE_SPLASH,
+  GAME_MODE_TYPE_LIT
+};
+
+
 
 struct Game {
   Game_Show_Debug_Type show_debug_type;
-  
+    
   // Bump_Allocators
   Bump_Allocator asset_arena;
   Bump_Allocator frame_arena;
@@ -57,33 +61,45 @@ struct Game {
   // Mode Management 
   B32 is_done;
   B32 is_mode_changed;
-  Game_Mode_Init* init_mode;
-  Game_Mode_Update* update_mode;
   void* mode_context;
-  
+  Game_Mode_Type current_game_mode;
+
   // Other stuff
   Game_Assets game_assets;
   Console console;
   Inspector inspector;
 };
 
-static void
-game_set_mode(Game* game, Game_Mode_Init* init, Game_Mode_Update* update) 
-{
-  game->init_mode = init;
-  game->update_mode = update;
+static void 
+game_goto_mode(Game* game, Game_Mode_Type type) {
+  game->current_game_mode = type;
   game->is_mode_changed = true;
 }
 
-
-
-template<typename T>
-static T*
-game_allocate_mode(Game* game) {
-  ba_clear(&game->mode_arena);
-  game->mode_context = ba_push<T>(&game->mode_arena, 4);
-  return (T*)game->mode_context;
+static B32
+game_mode_initialized(Game* game) {
+  return game->mode_context != null;
 }
+
+
+static void*
+game_allocate_mode_size(Game* game, UMI size) {
+  ba_clear(&game->mode_arena);
+  game->mode_context = ba_push_size(&game->mode_arena, size, 16);
+  return game->mode_context;
+}
+
+#define game_allocate_mode(t,g) (t*)game_allocate_mode_size(g,sizeof(t))
+
+
+#include "game_mode_splash.h"
+#include "game_mode_sb1.h"
+
+typedef void (*Game_Mode_Tick)(Game*, Painter*, Platform*);
+static Game_Mode_Tick game_modes[] = {
+  splash_tick,
+  lit_tick,
+};
 
 
 #endif //GAME_H

@@ -277,7 +277,7 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
 
   bmp->width = width;
   bmp->height = height;
-  bmp->pixels = ba_push_arr<U32>(p->allocator, width * height);
+  bmp->pixels = ba_push_arr(U32, p->allocator, width * height);
   bmp->id_name = id_name;
 
   if (!bmp->pixels) return false; 
@@ -297,7 +297,7 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
 
   if (rect_count == 0) return false;
 
-  RP_Rect* rects = ba_push_arr<RP_Rect>(p->allocator, rect_count);
+  RP_Rect* rects = ba_push_arr(RP_Rect, p->allocator, rect_count);
   if (!rects) return false;
 
   ba_set_revert_point(p->allocator);

@@ -199,7 +199,7 @@ _win_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
 
   ba_clear(&wasapi->allocator);
   wasapi->buffer_size = sound_frame_count;
-  wasapi->buffer = ba_push_arr<S16>(&wasapi->allocator, wasapi->buffer_size);
+  wasapi->buffer = ba_push_arr(S16, &wasapi->allocator, wasapi->buffer_size);
   if (!wasapi->buffer) {
     win_log("[win_wasapi] Failed to allocate secondary buffer\n");
     return false;
@@ -259,7 +259,7 @@ win_wasapi_init(Win_Wasapi* wasapi,
 	
 	// NOTE(Momo): Allocate the maximum buffer possible given allowed latency
 	wasapi->buffer_size = wasapi->latency_sample_count * sizeof(S16);
-  wasapi->buffer = ba_push_arr<S16>(&wasapi->allocator, wasapi->buffer_size);
+  wasapi->buffer = ba_push_arr(S16, &wasapi->allocator, wasapi->buffer_size);
   if (!wasapi->buffer) {
     win_log("[win_wasapi] Failed to allocate memory\n");
     goto cleanup_3;

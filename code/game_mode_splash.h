@@ -3,10 +3,9 @@
 #ifndef GAME_MODE_SPLASH_H
 #define GAME_MODE_SPLASH_H
 
-#include "game.h"
 
-static void sb1_init(Game*);
-static void sb1_tick(Game*, Painter*, Platform* );
+static void lit_init(Game*);
+static void lit_tick(Game*, Painter*, Platform* );
 
 //////////////////////////////////////////////////
 // SPLASH MODE
@@ -15,18 +14,17 @@ struct Splash {
   F32 timer;
 };
 
-static void
-splash_init(Game* game) 
-{
-  auto* splash = game_allocate_mode<Splash>(game);
-  splash->timer = 1.f;
-}
-
-static void 
+  static void 
 splash_tick(Game* game,
             Painter* painter,
             Platform* pf) 
 {
+
+  if (!game_mode_initialized(game)) {
+    auto* splash = game_allocate_mode(Splash, game);
+    splash->timer = 1.f;
+  }
+  
   auto* splash = (Splash*)game->mode_context;
   
   F32 dt = pf->seconds_since_last_frame;
@@ -34,8 +32,8 @@ splash_tick(Game* game,
   
   if (splash->timer < 0.f) {
     //game_set_mode(game, 0, 0); 
-
-    game_set_mode(game, sb1_init, sb1_tick);
+    // game_set_mode(game, lit_init, lit_tick);
+    game_goto_mode(game, GAME_MODE_TYPE_LIT);
   }
  
   auto color = rgba(splash->timer, splash->timer, splash->timer, splash->timer);

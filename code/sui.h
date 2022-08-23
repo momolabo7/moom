@@ -42,7 +42,7 @@ sui_read_file_to_blk(Block* mem, const char* filename, Bump_Allocator* allocator
   fseek(file, 0, SEEK_SET);
  
   //sui_log("%s, %lld\n", filename, file_size);
-  void* file_blk = ba_push_block(allocator, file_size, 16); 
+  void* file_blk = ba_push_size(allocator, file_size, 16); 
   if (!file_blk) return false;
   UMI read_amount = fread(file_blk, 1, file_size, file);
   if(read_amount != file_size) return false;

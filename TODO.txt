@@ -1,4 +1,5 @@
-Change Bitmap to Image32
+Change how GSM work. Probably better with an enum/array system
+Add ZERO push memory functionality
 
 Game
   Sensors need to fking work

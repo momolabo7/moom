@@ -1,36 +1,65 @@
 // Authors: Gerald Wong
 //
+// USAGE:
+//   
+//   Default Allocation API
+//     ba_push_size()            -- Allocates raw memory based on size
+//     ba_push_size_zero()       -- Same as ba_push_size but memory is initialized to zero 
+//
+//   Helper Allocation API
+//     ba_push()                 -- Allocates memory based on type. 
+//     ba_push_align()           -- ba_push() with alignment specificaion
+//     ba_push_zero()            -- ba_push() but memory is zero'ed.
+//     ba_push_align_zero        -- ba_push_align() but memory is zero'ed.
+//
+//     ba_push_arr()             -- Allocates an array of a type. 
+//     ba_push_arr_align()       -- ba_push_arr() with alignment specification.
+//     ba_push_arr_zero()        -- ba_push_arr() but memory is zero'ed.
+//     ba_push_arr_align_zero()  -- ba_push_arr_align() but memory is zero'ed.
+//
+//
+// TODO:
+//   - Documentation
+//   - Rethink 'Temporary Memory API'. 
+//       Maybe remove the whole thing? 
+//       We can just  do a 'get_current_pos' and 'pop to pos'.
+//       It feels janky to have a Bump_Allocator_Marker store an allocator like this. 
+//
 
 #ifndef MOMO_MEMORY_H
 #define MOMO_MEMORY_H
 
-//~ Bump Allocator
-struct Bump_Allocator;
-
-// Temporary memory API used to ba_revert an allocator to an original state;
-struct Bump_Allocator_Marker {
-  Bump_Allocator* allocator;
-  UMI old_pos;
-};
-
 // Standard Linear allocator
-struct Bump_Allocator{
+typedef struct {
 	U8* memory;
 	UMI pos;
 	UMI cap;
-};
+} Bump_Allocator;
+
+// Temporary memory API used to ba_revert an allocator to an original state;
+typedef struct {
+  Bump_Allocator* allocator;
+  UMI old_pos;
+} Bump_Allocator_Marker;
 
 static void   ba_init(Bump_Allocator* a, void* mem, UMI cap);
 static void   ba_clear(Bump_Allocator* a);
-static void*  ba_push_block(Bump_Allocator* a, UMI size, UMI align);
+static void*  ba_push_size(Bump_Allocator* a, UMI size, UMI align);
+static void*  ba_push_size_zero(Bump_Allocator* a, UMI size, UMI align); 
 static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align);
 static B32    ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* parition, UMI align);
 static UMI    ba_remaining(Bump_Allocator* a);
 
+#define ba_push_arr_align(t,b,n,a) (t*)ba_push_size(b, sizeof(t)*(n), a)
+#define ba_push_arr(t,b,n)         (t*)ba_push_size(b, sizeof(t)*(n),alignof(t))
+#define ba_push_align(t,b,a)       (t*)ba_push_size(b, sizeof(t), a)
+#define ba_push(t,b)               (t*)ba_push_size(b, sizeof(t), alignof(t))
 
-//TODO:  Remove template for compatibility with C?
-template<typename T> static T* ba_push(Bump_Allocator* a, UMI align = 4); 
-template<typename T> static T* ba_push_arr(Bump_Allocator* a, UMI num, UMI align = 4);
+#define ba_push_arr_zero_align(t,b,n,a) (t*)ba_push_size_zero(b, sizeof(t)*(n), a)
+#define ba_push_arr_zero(t,b,n)         (t*)ba_push_size_zero(b, sizeof(t)*(n),alignof(t))
+#define ba_push_zero_align(t,b,a)       (t*)ba_push_size_zero(b, sizeof(t), a)
+#define ba_push_zero(t,b)               (t*)ba_push_size_zero(b, sizeof(t), alignof(t))
+
 
 static Bump_Allocator_Marker ba_mark(Bump_Allocator* a);
 static void ba_revert(Bump_Allocator_Marker marker);
@@ -65,7 +94,7 @@ ba_remaining(Bump_Allocator* a) {
 }
 
 static void* 
-ba_push_block(Bump_Allocator* a, UMI size, UMI align) {
+ba_push_size(Bump_Allocator* a, UMI size, UMI align) {
   if (size == 0) return null;
 	
 	UMI imem = ptr_to_int(a->memory);
@@ -80,10 +109,19 @@ ba_push_block(Bump_Allocator* a, UMI size, UMI align) {
 	
 }
 
+static void*
+ba_push_size_zero(Bump_Allocator* a, UMI size, UMI align) 
+{
+  void* mem = ba_push_size(a, size, align);
+  if (!mem) return null;
+  zero_memory(mem, size);
+  return mem;
+}
+
 
 static B32
 ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align) {	
-	void* mem = ba_push_block(a, size, align);
+	void* mem = ba_push_size(a, size, align);
   if (!mem) return false; 
   ba_init(partition, mem, size);
   return true;
@@ -105,16 +143,6 @@ ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* partition, UMI al
 	return true;
 
 }
-template<typename T> static T*
-ba_push(Bump_Allocator* a, UMI align) {
-  return (T*)ba_push_block(a, sizeof(T), align);
-}
-
-template<typename T> static T*
-ba_push_arr(Bump_Allocator* a, UMI num, UMI align) {
-  return (T*)ba_push_block(a, sizeof(T)*num, align);
-}
-
 /*
 static inline void* 
 Bump_Allocator_BootBlock(UMI struct_size,
