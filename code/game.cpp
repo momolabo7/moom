@@ -1,13 +1,15 @@
 #include "game.h"
 
-Platform* g_platform;
 
 /////////////////////////////////////////////////////////
 // GAME
 exported B32 
 game_update_and_render(Platform* pf)
 { 
+#if INTERNAL
   g_platform = pf;
+  g_profiler = pf->profiler;
+#endif
   game_profile_block("game.dll");
   // Initialization
   if (!pf->game || pf->reloaded) {
@@ -26,9 +28,9 @@ game_update_and_render(Platform* pf)
       return false;
     
     if(!load_game_assets(&game->game_assets, 
-                               pf->gfx,
-                               "test.sui",
-                               &game->asset_arena))
+                         pf,
+                         "test.sui",
+                         &game->asset_arena))
     {
       return false;
     }

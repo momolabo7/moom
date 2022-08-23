@@ -11,8 +11,10 @@
 
 
 #ifdef INTERNAL
+Profiler* g_profiler;
+Platform* g_platform;
 #define game_log(...) g_platform->debug_log(__VA_ARGS__)
-#define game_profile_block(...) prf_block(g_platform->profiler, __VA_ARGS__)
+#define game_profile_block(...) prf_block(g_profiler, __VA_ARGS__)
 #else
 #define game_log(...)
 #define game_profiler_block(...)

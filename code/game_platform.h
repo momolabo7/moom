@@ -158,7 +158,6 @@ struct Platform {
   void* game;
 };
 
-extern Platform* g_platform;
 
 typedef void Game_Update_And_Render(Platform* pf);
 typedef void Game_Debug_Update_And_Render(Platform* pf);
