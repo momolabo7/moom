@@ -29,7 +29,8 @@ lit_level_0(Lit* m) {
   lit_push_light(m, {650.f, 600.f}, 0x000088FF, 360.f, 0.f);
   
   // initialize player
-  lit_init_player(m, 400.f, 400.f);
+  Lit_Player* p = &m->player;
+  lit_init_player(p, 400.f, 400.f);
   // Test sensor
 #if 1
   {
@@ -41,9 +42,8 @@ lit_level_0(Lit* m) {
     lit_push_edge(m, 8, 9);
     lit_push_edge(m, 9, 10);
     lit_push_edge(m, 10, 11);
-    Lit_Edge* e = lit_push_edge(m, 11, 8);
 
-    lit_push_sensor(m, {400.f, 600.f}, 0x888800FF, e); 
+    lit_push_sensor(m, {400.f, 600.f}, 0x888800FF); 
   }
 #endif
   lit_set_win_point(m, {800.f, 400.f});
@@ -66,7 +66,8 @@ lit_level_1(Lit* m) {
   lit_push_light(m, {250.f, 600.f}, 0x880000FF, 90.f, 0.f);
   
   // initialize player
-  lit_init_player(m, 400.f, 400.f);
+  Lit_Player* p = &m->player;
+  lit_init_player(p, 400.f, 400.f);
 
   lit_set_win_point(m, {800.f, 400.f});
 }
