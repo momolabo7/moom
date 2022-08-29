@@ -276,6 +276,8 @@ count	.\code\game_sb1.h	/^  U32 count;$/;"	m	language:C++	struct:SB1_Light_Trian
 count	.\code\game_sb1.h	/^  U32 count;$/;"	m	language:C++	struct:SB1_Point_List
 count	.\code\game_sb1.h	/^  U32 count;$/;"	m	language:C++	struct:SB1_Sensor_List
 count	code/game_inspector.h	/^  U32 count;$/;"	m	language:C++	struct:Inspector_Entry_List	typeref:typename:U32
+count	code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Edge_List	typeref:typename:U32
+count	code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Point_List	typeref:typename:U32
 count	code/game_mode_lit_light.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Light_Debug_Ray_List	typeref:typename:U32
 count	code/game_mode_lit_light.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Light_Intersection_List	typeref:typename:U32
 count	code/game_mode_lit_light.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Light_List	typeref:typename:U32
@@ -331,6 +333,7 @@ current_instance_index	code/game_gfx_opengl.h	/^  GLuint current_instance_index;
 current_instance_index	code/game_renderer_opengl.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLuint
 current_layer	code/game_gfx_opengl.h	/^  F32 current_layer;$/;"	m	language:C++	struct:Opengl	typeref:typename:F32
 current_layer	code/game_renderer_opengl.h	/^  F32 current_layer;$/;"	m	language:C++	struct:Opengl	typeref:typename:F32
+current_level_id	code/game_mode_lit.h	/^  U32 current_level_id;$/;"	m	language:C++	struct:Lit	typeref:typename:U32
 current_level_id	code/game_mode_sb1.h	/^  U32 current_level_id;$/;"	m	language:C++	struct:Lit	typeref:typename:U32
 current_pack_id_name	code/sui_pack.h	/^  const char* current_pack_id_name;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:const char *
 current_state	code/game_mode_level_editor.h	/^  Editor_State current_state;$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_State
@@ -384,6 +387,8 @@ e	.\code\game_sb1.h	/^  SB1_Sensor e[32];$/;"	m	language:C++	struct:SB1_Sensor_L
 e	.\code\game_sb1.h	/^  Tri2 e[256];$/;"	m	language:C++	struct:SB1_Light_Triangle_List
 e	.\code\game_sb1.h	/^  V2 e[256];$/;"	m	language:C++	struct:SB1_Point_List
 e	code/game_inspector.h	/^  Inspector_Entry e[64];$/;"	m	language:C++	struct:Inspector_Entry_List	typeref:typename:Inspector_Entry[64]
+e	code/game_mode_lit.h	/^  Lit_Edge e[256];$/;"	m	language:C++	struct:Lit_Edge_List	typeref:typename:Lit_Edge[256]
+e	code/game_mode_lit.h	/^  V2 e[256];$/;"	m	language:C++	struct:Lit_Point_List	typeref:typename:V2[256]
 e	code/game_mode_lit_light.h	/^  Lit_Light e[32];$/;"	m	language:C++	struct:Lit_Light_List	typeref:typename:Lit_Light[32]
 e	code/game_mode_lit_light.h	/^  Lit_Light_Intersection e[256];$/;"	m	language:C++	struct:Lit_Light_Intersection_List	typeref:typename:Lit_Light_Intersection[256]
 e	code/game_mode_lit_light.h	/^  Ray2 e[256];$/;"	m	language:C++	struct:Lit_Light_Debug_Ray_List	typeref:typename:Ray2[256]
@@ -524,6 +529,7 @@ edge	.\code\game_sb1.h	/^  SB1_Edge* edge;$/;"	m	language:C++	struct:SB1_Sensor
 Edge	code/game_mode_level.h	/^struct Edge{$/;"	s	language:C++
 edges	.\code\game_sb1.h	/^  SB1_Edge_List edges;$/;"	m	language:C++	struct:SB1
 edges	code/game_mode_level.h	/^  Array_List<Edge> edges;$/;"	m	language:C++	struct:Level_Mode	typeref:typename:Array_List<Edge>
+edges	code/game_mode_lit.h	/^  Lit_Edge_List edges;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Edge_List
 edges	code/game_mode_sb1.h	/^  Lit_Edge_List edges;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Edge_List
 editor	code/game_mode_level.h	/^  Editor editor;$/;"	m	language:C++	struct:Level_Mode	typeref:typename:Editor
 Editor	code/game_mode_level_editor.h	/^struct Editor {$/;"	s	language:C++
@@ -549,6 +555,9 @@ EDITOR_TOOLBAR_H	code/game_mode_level_editor.cpp	/^#define EDITOR_TOOLBAR_H /;"	
 EDITOR_TOOLBAR_PAD	code/game_mode_level_editor.cpp	/^#define EDITOR_TOOLBAR_PAD /;"	d	language:C++	file:
 EDITOR_TOOLBAR_W	code/game_mode_level_editor.cpp	/^#define EDITOR_TOOLBAR_W /;"	d	language:C++	file:
 EDITOR_TOOLBAR_WH	code/game_mode_level_editor.cpp	/^#define EDITOR_TOOLBAR_WH /;"	d	language:C++	file:
+emit_cooldown_max	code/game_mode_lit_particles.h	/^  F32 emit_cooldown_max;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
+emit_cooldown_min	code/game_mode_lit_particles.h	/^  F32 emit_cooldown_min;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
+emit_cooldown_now	code/game_mode_lit_particles.h	/^  F32 emit_cooldown_now; $/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
 ENABLE_ASSERT	code/momo_common.h	/^#define ENABLE_ASSERT /;"	d	language:C++
 endian_swap_s16	code/momo_common.h	/^endian_swap_s16(S16 value) {$/;"	f	language:C++	typeref:typename:S16
 endian_swap_u16	code/momo_common.h	/^endian_swap_u16(U16 value) {$/;"	f	language:C++	typeref:typename:U16
@@ -675,6 +684,7 @@ game_mode_initialized	code/game.h	/^game_mode_initialized(Game* game) {$/;"	f	la
 GAME_MODE_LEVEL_EDITOR_H	code/game_mode_level_editor.h	/^#define GAME_MODE_LEVEL_EDITOR_H$/;"	d	language:C++
 GAME_MODE_LEVEL_H	code/game_mode_level.h	/^#define GAME_MODE_LEVEL_H$/;"	d	language:C++
 GAME_MODE_LEVEL_LIGHT_H	code/game_mode_level_light.h	/^#define GAME_MODE_LEVEL_LIGHT_H$/;"	d	language:C++
+GAME_MODE_LIT_H	code/game_mode_lit.h	/^#define GAME_MODE_LIT_H$/;"	d	language:C++
 GAME_MODE_LIT_H	code/game_mode_sb1.h	/^#define GAME_MODE_LIT_H$/;"	d	language:C++
 GAME_MODE_SPLASH_H	code/game_mode_splash.h	/^#define GAME_MODE_SPLASH_H$/;"	d	language:C++
 Game_Mode_Tick	code/game.h	/^typedef void (*Game_Mode_Tick)(Game*, Painter*, Platform*);$/;"	t	language:C++	typeref:typename:void (*)(Game *,Painter *,Platform *)
@@ -1281,6 +1291,7 @@ is_device_changed	code/win_audio_wasapi.h	/^	B32 is_device_changed;$/;"	m	langua
 is_device_ready	code/win_audio_wasapi.h	/^	B32 is_device_ready;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:B32
 is_digit	code/momo_common.h	/^is_digit(U8 c) {$/;"	f	language:C++	typeref:typename:B32
 is_disabled	.\code\game_sb1.h	/^  B32 is_disabled;$/;"	m	language:C++	struct:SB1_Edge
+is_disabled	code/game_mode_lit.h	/^  B32 is_disabled;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:B32
 is_disabled	code/game_mode_sb1.h	/^  B32 is_disabled;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:B32
 is_done	code/game.h	/^  B32 is_done;$/;"	m	language:C++	struct:Game	typeref:typename:B32
 is_inverted	code/momo_ttf.h	/^  B32 is_inverted;$/;"	m	language:C++	struct:__anon54d1bdca0608	typeref:typename:B32
@@ -1299,6 +1310,7 @@ is_shell	code/game_mode_lit_light.h	/^  B32 is_shell;$/;"	m	language:C++	struct:
 is_valid	code/win_loaded_code.h	/^  B32 is_valid;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:B32
 is_whitespace	code/momo_common.h	/^is_whitespace(C8 c) {$/;"	f	language:C++	typeref:typename:B32
 is_win_reached	.\code\game_sb1.h	/^  B32 is_win_reached;$/;"	m	language:C++	struct:SB1
+is_win_reached	code/game_mode_lit.h	/^  B32 is_win_reached;$/;"	m	language:C++	struct:Lit	typeref:typename:B32
 is_win_reached	code/game_mode_sb1.h	/^  B32 is_win_reached;$/;"	m	language:C++	struct:Lit	typeref:typename:B32
 item	code/game_inspector.h	/^  void* item;$/;"	m	language:C++	struct:Inspector_Entry	typeref:typename:void *
 Karu_Asset_Group	code/karu.h	/^struct Karu_Asset_Group {$/;"	s	language:C++
@@ -1335,25 +1347,37 @@ LEVEL_STATE_NORMAL	code/game_mode_level.h	/^  LEVEL_STATE_NORMAL,$/;"	e	language
 life	code/game_mode_lit_particles.h	/^  F32 life;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:F32
 lights	.\code\game_sb1.h	/^  SB1_Light_List lights;$/;"	m	language:C++	struct:SB1
 lights	code/game_mode_level.h	/^  Array_List<Light> lights;$/;"	m	language:C++	struct:Level_Mode	typeref:typename:Array_List<Light>
+lights	code/game_mode_lit.h	/^  Lit_Light_List lights;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Light_List
 lights	code/game_mode_sb1.h	/^  Lit_Light_List lights;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Light_List
 LIGHT_BLUE	code/game_mode_level.h	/^#define LIGHT_BLUE /;"	d	language:C++
 LIGHT_GREEN	code/game_mode_level.h	/^#define LIGHT_GREEN /;"	d	language:C++
 LIGHT_RED	code/game_mode_level.h	/^#define LIGHT_RED /;"	d	language:C++
 line	code/game_profiler.h	/^  U32 line;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:U32
 Line2	code/momo_shapes.h	/^}Line2;$/;"	t	language:C++	typeref:struct:__anon484784200708
+Lit	code/game_mode_lit.h	/^struct Lit {$/;"	s	language:C++
 Lit	code/game_mode_sb1.h	/^struct Lit {$/;"	s	language:C++
+lit_calc_ghost_edge_line	code/game_mode_lit.h	/^lit_calc_ghost_edge_line(Lit_Point_List* points, Lit_Edge* e) {$/;"	f	language:C++	typeref:typename:Line2
 lit_calc_ghost_edge_line	code/game_mode_sb1.h	/^lit_calc_ghost_edge_line(Lit_Point_List* points, Lit_Edge* e) {$/;"	f	language:C++	typeref:typename:Line2
+LIT_DEBUG_EDGES	code/game_mode_lit.h	/^#define LIT_DEBUG_EDGES /;"	d	language:C++
 LIT_DEBUG_EDGES	code/game_mode_sb1.h	/^#define LIT_DEBUG_EDGES /;"	d	language:C++
+LIT_DEBUG_LIGHT	code/game_mode_lit.h	/^#define LIT_DEBUG_LIGHT /;"	d	language:C++
 LIT_DEBUG_LIGHT	code/game_mode_sb1.h	/^#define LIT_DEBUG_LIGHT /;"	d	language:C++
+Lit_Edge	code/game_mode_lit.h	/^struct Lit_Edge{$/;"	s	language:C++
 Lit_Edge	code/game_mode_sb1.h	/^struct Lit_Edge{$/;"	s	language:C++
+Lit_Edge_List	code/game_mode_lit.h	/^struct Lit_Edge_List {$/;"	s	language:C++
 Lit_Edge_List	code/game_mode_sb1.h	/^struct Lit_Edge_List {$/;"	s	language:C++
+lit_gen_lights	code/game_mode_lit_light.h	/^lit_gen_lights(Lit_Light_List* lights, $/;"	f	language:C++	typeref:typename:void
 lit_gen_light_intersections	code/game_mode_lit_light.h	/^lit_gen_light_intersections(Lit_Light* l,$/;"	f	language:C++	typeref:typename:void
 lit_get_ray_intersection_time_wrt_edges	code/game_mode_lit_light.h	/^lit_get_ray_intersection_time_wrt_edges(Ray2 ray,$/;"	f	language:C++	typeref:typename:F32
 lit_init	code/game_mode_splash.h	/^static void lit_init(Game*);$/;"	p	language:C++	typeref:typename:void
 lit_init_player	code/game_mode_lit_player.h	/^lit_init_player(Lit_Player* player, F32 x, F32 y) {$/;"	f	language:C++	typeref:typename:void
+Lit_Level	code/game_mode_lit_levels.h	/^typedef void (*Lit_Level)(Lit* mode); $/;"	t	language:C++	typeref:typename:void (*)(Lit * mode)
 Lit_Level	code/game_mode_sb1_levels.h	/^typedef void (*Lit_Level)(Lit* mode); $/;"	t	language:C++	typeref:typename:void (*)(Lit * mode)
+lit_levels	code/game_mode_lit_levels.h	/^static Lit_Level lit_levels[] = {$/;"	v	language:C++	typeref:typename:Lit_Level[]
 lit_levels	code/game_mode_sb1_levels.h	/^static Lit_Level lit_levels[] = {$/;"	v	language:C++	typeref:typename:Lit_Level[]
+lit_level_0	code/game_mode_lit_levels.h	/^lit_level_0(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_0	code/game_mode_sb1_levels.h	/^lit_level_0(Lit* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_1	code/game_mode_lit_levels.h	/^lit_level_1(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_1	code/game_mode_sb1_levels.h	/^lit_level_1(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 Lit_Light	code/game_mode_lit_light.h	/^struct Lit_Light {$/;"	s	language:C++
 Lit_Light_Debug_Ray_List	code/game_mode_lit_light.h	/^struct Lit_Light_Debug_Ray_List {$/;"	s	language:C++
@@ -1365,26 +1389,35 @@ Lit_Light_Type	code/game_mode_lit_light.h	/^enum Lit_Light_Type {$/;"	g	language
 Lit_LIGHT_TYPE_DIRECTIONAL	code/game_mode_lit_light.h	/^  Lit_LIGHT_TYPE_DIRECTIONAL,$/;"	e	language:C++	enum:Lit_Light_Type
 Lit_LIGHT_TYPE_POINT	code/game_mode_lit_light.h	/^  Lit_LIGHT_TYPE_POINT,$/;"	e	language:C++	enum:Lit_Light_Type
 Lit_LIGHT_TYPE_WEIRD	code/game_mode_lit_light.h	/^  Lit_LIGHT_TYPE_WEIRD$/;"	e	language:C++	enum:Lit_Light_Type
+lit_load_level	code/game_mode_lit_levels.h	/^lit_load_level(Lit* m, U32 level_id) {$/;"	f	language:C++	typeref:typename:void
 lit_load_level	code/game_mode_sb1_levels.h	/^lit_load_level(Lit* m, U32 level_id) {$/;"	f	language:C++	typeref:typename:void
+lit_load_next_level	code/game_mode_lit_levels.h	/^lit_load_next_level(Lit* m){$/;"	f	language:C++	typeref:typename:void
 lit_load_next_level	code/game_mode_sb1_levels.h	/^lit_load_next_level(Lit* m){$/;"	f	language:C++	typeref:typename:void
 Lit_Particle	code/game_mode_lit_particles.h	/^struct Lit_Particle {$/;"	s	language:C++
 Lit_Particle_System	code/game_mode_lit_particles.h	/^struct Lit_Particle_System {$/;"	s	language:C++
 Lit_Player	code/game_mode_lit_player.h	/^struct Lit_Player {$/;"	s	language:C++
+Lit_Point_List	code/game_mode_lit.h	/^struct Lit_Point_List {$/;"	s	language:C++
 Lit_Point_List	code/game_mode_sb1.h	/^struct Lit_Point_List {$/;"	s	language:C++
+lit_push_edge	code/game_mode_lit.h	/^lit_push_edge(Lit* m, UMI min_pt_id, UMI max_pt_id) {$/;"	f	language:C++	typeref:typename:Lit_Edge *
 lit_push_edge	code/game_mode_sb1.h	/^lit_push_edge(Lit* m, UMI min_pt_id, UMI max_pt_id) {$/;"	f	language:C++	typeref:typename:Lit_Edge *
+lit_push_light	code/game_mode_lit.h	/^lit_push_light(Lit* m, V2 pos, U32 color, F32 angle, F32 facing) {$/;"	f	language:C++	typeref:typename:Lit_Light *
 lit_push_light	code/game_mode_sb1.h	/^lit_push_light(Lit* m, V2 pos, U32 color, F32 angle, F32 facing) {$/;"	f	language:C++	typeref:typename:Lit_Light *
+lit_push_point	code/game_mode_lit.h	/^lit_push_point(Lit* m, V2 pt) {$/;"	f	language:C++	typeref:typename:U32
 lit_push_point	code/game_mode_sb1.h	/^lit_push_point(Lit* m, V2 pt) {$/;"	f	language:C++	typeref:typename:U32
+lit_push_sensor	code/game_mode_lit.h	/^lit_push_sensor(Lit* m, V2 pos, U32 target_color) $/;"	f	language:C++	typeref:typename:void
 lit_push_sensor	code/game_mode_sb1.h	/^lit_push_sensor(Lit* m, V2 pos, U32 target_color) $/;"	f	language:C++	typeref:typename:void
 lit_push_triangle	code/game_mode_lit_light.h	/^lit_push_triangle(Lit_Light* l, V2 p0, V2 p1, V2 p2, U32 color) {$/;"	f	language:C++	typeref:typename:void
 lit_render_particles	code/game_mode_lit_particles.h	/^lit_render_particles(Lit_Particle_System* ps, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
 lit_render_sensors	code/game_mode_lit_sensors.h	/^lit_render_sensors(Lit_Sensor_List* sensors, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
 Lit_Sensor	code/game_mode_lit_sensors.h	/^struct Lit_Sensor {$/;"	s	language:C++
 Lit_Sensor_List	code/game_mode_lit_sensors.h	/^struct Lit_Sensor_List {$/;"	s	language:C++
+lit_set_win_point	code/game_mode_lit.h	/^lit_set_win_point(Lit* m, V2 pos) {$/;"	f	language:C++	typeref:typename:void
 lit_set_win_point	code/game_mode_sb1.h	/^lit_set_win_point(Lit* m, V2 pos) {$/;"	f	language:C++	typeref:typename:void
 lit_spawn_particle	code/game_mode_lit_particles.h	/^lit_spawn_particle(Lit_Particle_System* ps) {$/;"	f	language:C++	typeref:typename:Lit_Particle *
+lit_tick	code/game_mode_lit.h	/^lit_tick(Game* game,$/;"	f	language:C++	typeref:typename:void
 lit_tick	code/game_mode_sb1.h	/^lit_tick(Game* game,$/;"	f	language:C++	typeref:typename:void
 lit_tick	code/game_mode_splash.h	/^static void lit_tick(Game*, Painter*, Platform* );$/;"	p	language:C++	typeref:typename:void
-lit_update_particles	code/game_mode_lit_particles.h	/^lit_update_particles(Lit_Particle_System* ps, float dt) {$/;"	f	language:C++	typeref:typename:void
+lit_update_particles	code/game_mode_lit_particles.h	/^lit_update_particles(Lit_Particle_System* ps, F32 dt) {$/;"	f	language:C++	typeref:typename:void
 lit_update_player	code/game_mode_lit_player.h	/^lit_update_player(Lit_Player* player, $/;"	f	language:C++	typeref:typename:void
 lit_update_sensors	code/game_mode_lit_sensors.h	/^lit_update_sensors(Lit_Sensor_List* sensors, Lit_Light_List* lights) {$/;"	f	language:C++	typeref:typename:void
 load	code/win_gfx.h	/^  Win_Gfx_Load* load;$/;"	m	language:C++	struct:Win_Gfx_Functions	typeref:typename:Win_Gfx_Load *
@@ -1430,6 +1463,7 @@ maxp	code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpo
 max_of	code/momo_common.h	/^#define max_of(/;"	d	language:C++
 max_pt_id	.\code\game_sb1.h	/^  UMI max_pt_id;$/;"	m	language:C++	struct:SB1_Edge
 max_pt_id	code/game_mode_level.h	/^  UMI max_pt_id;$/;"	m	language:C++	struct:Edge	typeref:typename:UMI
+max_pt_id	code/game_mode_lit.h	/^  UMI max_pt_id;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:UMI
 max_pt_id	code/game_mode_sb1.h	/^  UMI max_pt_id;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:UMI
 MB	code/momo_common.h	/^#define MB(/;"	d	language:C++
 memory	code/game_gfx.h	/^	U8* memory;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:U8 *
@@ -1470,6 +1504,7 @@ min	code/momo_shapes.h	/^  V3 min, max;$/;"	m	language:C++	struct:__anon48478420
 min_of	code/momo_common.h	/^#define min_of(/;"	d	language:C++
 min_pt_id	.\code\game_sb1.h	/^  UMI min_pt_id;$/;"	m	language:C++	struct:SB1_Edge
 min_pt_id	code/game_mode_level.h	/^  UMI min_pt_id;$/;"	m	language:C++	struct:Edge	typeref:typename:UMI
+min_pt_id	code/game_mode_lit.h	/^  UMI min_pt_id;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:UMI
 min_pt_id	code/game_mode_sb1.h	/^  UMI min_pt_id;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:UMI
 mm_device_enum	code/win_audio_wasapi.h	/^  IMMDeviceEnumerator * mm_device_enum;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:IMMDeviceEnumerator *
 model	code/game_gfx_opengl.h	/^  GLuint model; $/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLuint
@@ -1624,7 +1659,12 @@ paint_set_blend	code/game_painter.h	/^paint_set_blend(Painter* p, Gfx_Blend_Type
 paint_sprite	code/game_painter.h	/^paint_sprite(Painter* p,$/;"	f	language:C++	typeref:typename:void
 paint_text	code/game_painter.h	/^paint_text(Painter* p,$/;"	f	language:C++	typeref:typename:void
 particles	code/game_mode_lit_particles.h	/^  Lit_Particle particles[256];$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:Lit_Particle[256]
+particle_color_end	code/game_mode_lit_particles.h	/^  F32 particle_color_end;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
+particle_color_start	code/game_mode_lit_particles.h	/^  F32 particle_color_start;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
 particle_count	code/game_mode_lit_particles.h	/^  U32 particle_count;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:U32
+particle_lifespan_max	code/game_mode_lit_particles.h	/^  F32 particle_lifespan_max;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
+particle_lifespan_min	code/game_mode_lit_particles.h	/^  F32 particle_lifespan_min;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
+particle_system	code/game_mode_lit.h	/^  Lit_Particle_System particle_system;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Particle_System
 particle_system	code/game_mode_sb1.h	/^  Lit_Particle_System particle_system;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Particle_System
 path_count	code/momo_ttf.h	/^  U32 path_count;$/;"	m	language:C++	struct:__anon54d1bdca0508	typeref:typename:U32
 path_lengths	code/momo_ttf.h	/^  U32* path_lengths;$/;"	m	language:C++	struct:__anon54d1bdca0508	typeref:typename:U32 *
@@ -1679,6 +1719,7 @@ Platform_Write_File	code/game_platform.h	/^typedef B32 Platform_Write_File(Platf
 player	.\code\game_sb1.h	/^  SB1_Player player;$/;"	m	language:C++	struct:SB1
 player	code/game_mode_level.h	/^  Player player;$/;"	m	language:C++	struct:Level_Mode	typeref:typename:Player
 Player	code/game_mode_level.h	/^struct Player {$/;"	s	language:C++
+player	code/game_mode_lit.h	/^  Lit_Player player;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Player
 player	code/game_mode_sb1.h	/^  Lit_Player player;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Player
 PNG	code/momo_png.h	/^} PNG;$/;"	t	language:C++	typeref:struct:__anon548615c10108
 png_read	code/momo_png.h	/^png_read(PNG* p, void* png_memory, UMI png_size) {$/;"	f	language:C++	typeref:typename:B32
@@ -1689,6 +1730,7 @@ png_write	code/momo_png.h	/^png_write(Image32 bm, Bump_Allocator* allocator) {$/
 png_write	code/momo_png.h	/^static Block png_write(Image32 img, Bump_Allocator* allocator);$/;"	p	language:C++	typeref:typename:Block
 points	.\code\game_sb1.h	/^  SB1_Point_List points;$/;"	m	language:C++	struct:SB1
 points	code/game_mode_level.h	/^  Array_List<V2> points;$/;"	m	language:C++	struct:Level_Mode	typeref:typename:Array_List<V2>
+points	code/game_mode_lit.h	/^  Lit_Point_List points;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Point_List
 points	code/game_mode_sb1.h	/^  Lit_Point_List points;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Point_List
 points	code/momo_ttf.h	/^  _TTF_Glyph_Point* points;$/;"	m	language:C++	struct:__anon54d1bdca0408	typeref:typename:_TTF_Glyph_Point *
 point_count	code/momo_ttf.h	/^  U32 point_count;$/;"	m	language:C++	struct:__anon54d1bdca0408	typeref:typename:U32
@@ -1907,6 +1949,7 @@ semaphore	code/win.cpp	/^  HANDLE semaphore; $/;"	m	language:C++	struct:Win_Work
 Sensor	code/game_mode_level.h	/^struct Sensor {$/;"	s	language:C++
 sensors	.\code\game_sb1.h	/^  SB1_Sensor_List sensors;$/;"	m	language:C++	struct:SB1
 sensors	code/game_mode_level.h	/^  Array_List<Sensor> sensors;$/;"	m	language:C++	struct:Level_Mode	typeref:typename:Array_List<Sensor>
+sensors	code/game_mode_lit.h	/^  Lit_Sensor_List sensors;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Sensor_List
 sensors	code/game_mode_sb1.h	/^  Lit_Sensor_List sensors;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Sensor_List
 shader	code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLuint
 shader	code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:Triangle_Batcher	typeref:typename:GLuint
@@ -2472,6 +2515,7 @@ win_log	code/win_common.h	/^#define win_log(/;"	d	language:C++
 win_log_proc	code/win_common.h	/^win_log_proc(const char* fmt, ...) {$/;"	f	language:C++	typeref:typename:void
 win_open_file	code/win.cpp	/^win_open_file(Platform_File* file,$/;"	f	language:C++	typeref:typename:B32	file:
 win_point	.\code\game_sb1.h	/^  V2 win_point;$/;"	m	language:C++	struct:SB1
+win_point	code/game_mode_lit.h	/^  V2 win_point;$/;"	m	language:C++	struct:Lit	typeref:typename:V2
 win_point	code/game_mode_sb1.h	/^  V2 win_point;$/;"	m	language:C++	struct:Lit	typeref:typename:V2
 win_process_input	code/win.cpp	/^win_process_input(HWND window, Platform* pf) $/;"	f	language:C++	typeref:typename:void	file:
 win_profiler_block	code/win_common.h	/^#define win_profiler_block(/;"	d	language:C++

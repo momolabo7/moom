@@ -113,12 +113,7 @@ lit_push_light(Lit* m, V2 pos, U32 color, F32 angle, F32 facing) {
   return light;
 }
 
-
-
-
-
-
-#include "game_mode_sb1_levels.h"
+#include "game_mode_lit_levels.h"
 
 static void 
 lit_tick(Game* game,
@@ -161,16 +156,6 @@ lit_tick(Game* game,
     if (dist_sq < radius_sq)  
     {
       lit_load_next_level(m);  
-    }
-  }
-
-  for(U32 i = 0; i < 1; ++i) {
-    Lit_Particle* p = lit_spawn_particle(&m->particle_system);
-    if (p) {
-      p->life = 3.f;
-      p->pos = {400.f, 400.f};
-      p->vel.x = 100.f;
-      p->vel.y = 100.f;
     }
   }
 
@@ -315,6 +300,6 @@ lit_tick(Game* game,
                   GFX_BLEND_TYPE_SRC_ALPHA, 
                   GFX_BLEND_TYPE_ZERO);
   lit_render_sensors(&m->sensors, painter); 
-  //lit_render_particles(&m->particle_system, painter);
+  lit_render_particles(&m->particle_system, painter);
 }
 #endif 

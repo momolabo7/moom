@@ -95,7 +95,7 @@ game_allocate_mode_size(Game* game, UMI size) {
 
 
 #include "game_mode_splash.h"
-#include "game_mode_sb1.h"
+#include "game_mode_lit.h"
 
 typedef void (*Game_Mode_Tick)(Game*, Painter*, Platform*);
 static Game_Mode_Tick game_modes[] = {

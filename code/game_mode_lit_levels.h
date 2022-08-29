@@ -42,6 +42,7 @@ lit_level_0(Lit* m) {
     lit_push_edge(m, 8, 9);
     lit_push_edge(m, 9, 10);
     lit_push_edge(m, 10, 11);
+    lit_push_edge(m, 11, 8);
 
     lit_push_sensor(m, {400.f, 600.f}, 0x888800FF); 
   }

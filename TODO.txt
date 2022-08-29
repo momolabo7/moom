@@ -1,11 +1,7 @@
-
 Game
-  Sensors need to fking work
   Transitions
     Go to next level
     Picking up light
-  Easier Level Coding
-
 
 
 Assets 
@@ -14,8 +10,6 @@ Assets
 
 
 Engine
-	Sound
 	Debugger
-		Arena Profiler?
-    Meta profiler
+		Arena Profiler
 
