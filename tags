@@ -13,6 +13,7 @@ acos_f32	code/momo_intrinsics.h	/^acos_f32(F32 x) {$/;"	f	language:C++	typeref:t
 acos_f32	code/momo_intrinsics.h	/^static F32 acos_f32(F32 x);$/;"	p	language:C++	typeref:typename:F32
 acos_f64	code/momo_intrinsics.h	/^acos_f64(F64 x) {$/;"	f	language:C++	typeref:typename:F64
 acos_f64	code/momo_intrinsics.h	/^static F64 acos_f64(F64 x);$/;"	p	language:C++	typeref:typename:F64
+activated	code/game_mode_lit_sensors.h	/^  U32 activated;$/;"	m	language:C++	struct:Lit_Sensor_List	typeref:typename:U32
 active	code/game_mode_level_editor.h	/^  B32 active;$/;"	m	language:C++	struct:Editor	typeref:typename:B32
 additional_flags	code/momo_png.h	/^  U8 additional_flags;$/;"	m	language:C++	struct:_PNG_IDAT_Header	typeref:typename:U8
 add_command	code/game_console.h	/^add_command(Console* dc, $/;"	f	language:C++	typeref:typename:void
@@ -555,9 +556,6 @@ EDITOR_TOOLBAR_H	code/game_mode_level_editor.cpp	/^#define EDITOR_TOOLBAR_H /;"	
 EDITOR_TOOLBAR_PAD	code/game_mode_level_editor.cpp	/^#define EDITOR_TOOLBAR_PAD /;"	d	language:C++	file:
 EDITOR_TOOLBAR_W	code/game_mode_level_editor.cpp	/^#define EDITOR_TOOLBAR_W /;"	d	language:C++	file:
 EDITOR_TOOLBAR_WH	code/game_mode_level_editor.cpp	/^#define EDITOR_TOOLBAR_WH /;"	d	language:C++	file:
-emit_cooldown_max	code/game_mode_lit_particles.h	/^  F32 emit_cooldown_max;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
-emit_cooldown_min	code/game_mode_lit_particles.h	/^  F32 emit_cooldown_min;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
-emit_cooldown_now	code/game_mode_lit_particles.h	/^  F32 emit_cooldown_now; $/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
 ENABLE_ASSERT	code/momo_common.h	/^#define ENABLE_ASSERT /;"	d	language:C++
 endian_swap_s16	code/momo_common.h	/^endian_swap_s16(S16 value) {$/;"	f	language:C++	typeref:typename:S16
 endian_swap_u16	code/momo_common.h	/^endian_swap_u16(U16 value) {$/;"	f	language:C++	typeref:typename:U16
@@ -1344,7 +1342,8 @@ Level_Mode	code/game_mode_level.h	/^struct Level_Mode {$/;"	s	language:C++
 Level_State	code/game_mode_level.h	/^enum Level_State {$/;"	g	language:C++
 LEVEL_STATE_EDITOR	code/game_mode_level.h	/^  LEVEL_STATE_EDITOR,$/;"	e	language:C++	enum:Level_State
 LEVEL_STATE_NORMAL	code/game_mode_level.h	/^  LEVEL_STATE_NORMAL,$/;"	e	language:C++	enum:Level_State
-life	code/game_mode_lit_particles.h	/^  F32 life;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:F32
+lifespan	code/game_mode_lit_particles.h	/^  F32 lifespan;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:F32
+lifespan_now	code/game_mode_lit_particles.h	/^  F32 lifespan_now;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:F32
 lights	.\code\game_sb1.h	/^  SB1_Light_List lights;$/;"	m	language:C++	struct:SB1
 lights	code/game_mode_level.h	/^  Array_List<Light> lights;$/;"	m	language:C++	struct:Level_Mode	typeref:typename:Array_List<Light>
 lights	code/game_mode_lit.h	/^  Lit_Light_List lights;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Light_List
@@ -1394,7 +1393,7 @@ lit_load_level	code/game_mode_sb1_levels.h	/^lit_load_level(Lit* m, U32 level_id
 lit_load_next_level	code/game_mode_lit_levels.h	/^lit_load_next_level(Lit* m){$/;"	f	language:C++	typeref:typename:void
 lit_load_next_level	code/game_mode_sb1_levels.h	/^lit_load_next_level(Lit* m){$/;"	f	language:C++	typeref:typename:void
 Lit_Particle	code/game_mode_lit_particles.h	/^struct Lit_Particle {$/;"	s	language:C++
-Lit_Particle_System	code/game_mode_lit_particles.h	/^struct Lit_Particle_System {$/;"	s	language:C++
+Lit_Particle_Pool	code/game_mode_lit_particles.h	/^struct Lit_Particle_Pool {$/;"	s	language:C++
 Lit_Player	code/game_mode_lit_player.h	/^struct Lit_Player {$/;"	s	language:C++
 Lit_Point_List	code/game_mode_lit.h	/^struct Lit_Point_List {$/;"	s	language:C++
 Lit_Point_List	code/game_mode_sb1.h	/^struct Lit_Point_List {$/;"	s	language:C++
@@ -1404,22 +1403,24 @@ lit_push_light	code/game_mode_lit.h	/^lit_push_light(Lit* m, V2 pos, U32 color, 
 lit_push_light	code/game_mode_sb1.h	/^lit_push_light(Lit* m, V2 pos, U32 color, F32 angle, F32 facing) {$/;"	f	language:C++	typeref:typename:Lit_Light *
 lit_push_point	code/game_mode_lit.h	/^lit_push_point(Lit* m, V2 pt) {$/;"	f	language:C++	typeref:typename:U32
 lit_push_point	code/game_mode_sb1.h	/^lit_push_point(Lit* m, V2 pt) {$/;"	f	language:C++	typeref:typename:U32
-lit_push_sensor	code/game_mode_lit.h	/^lit_push_sensor(Lit* m, V2 pos, U32 target_color) $/;"	f	language:C++	typeref:typename:void
+lit_push_sensor	code/game_mode_lit_sensors.h	/^lit_push_sensor(Lit_Sensor_List* sensors, V2 pos, U32 target_color) $/;"	f	language:C++	typeref:typename:void
 lit_push_sensor	code/game_mode_sb1.h	/^lit_push_sensor(Lit* m, V2 pos, U32 target_color) $/;"	f	language:C++	typeref:typename:void
 lit_push_triangle	code/game_mode_lit_light.h	/^lit_push_triangle(Lit_Light* l, V2 p0, V2 p1, V2 p2, U32 color) {$/;"	f	language:C++	typeref:typename:void
-lit_render_particles	code/game_mode_lit_particles.h	/^lit_render_particles(Lit_Particle_System* ps, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
+lit_render_particles	code/game_mode_lit_particles.h	/^lit_render_particles(Lit_Particle_Pool* ps, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
 lit_render_sensors	code/game_mode_lit_sensors.h	/^lit_render_sensors(Lit_Sensor_List* sensors, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
 Lit_Sensor	code/game_mode_lit_sensors.h	/^struct Lit_Sensor {$/;"	s	language:C++
+LIT_SENSOR_COLOR_MASK	code/game_mode_lit_sensors.h	/^#define LIT_SENSOR_COLOR_MASK /;"	d	language:C++
 Lit_Sensor_List	code/game_mode_lit_sensors.h	/^struct Lit_Sensor_List {$/;"	s	language:C++
-lit_set_win_point	code/game_mode_lit.h	/^lit_set_win_point(Lit* m, V2 pos) {$/;"	f	language:C++	typeref:typename:void
+LIT_SENSOR_PARTICLE_CD	code/game_mode_lit_sensors.h	/^#define LIT_SENSOR_PARTICLE_CD /;"	d	language:C++
+LIT_SENSOR_RADIUS	code/game_mode_lit_sensors.h	/^#define LIT_SENSOR_RADIUS /;"	d	language:C++
 lit_set_win_point	code/game_mode_sb1.h	/^lit_set_win_point(Lit* m, V2 pos) {$/;"	f	language:C++	typeref:typename:void
-lit_spawn_particle	code/game_mode_lit_particles.h	/^lit_spawn_particle(Lit_Particle_System* ps) {$/;"	f	language:C++	typeref:typename:Lit_Particle *
+lit_spawn_particle	code/game_mode_lit_particles.h	/^lit_spawn_particle(Lit_Particle_Pool* ps,$/;"	f	language:C++	typeref:typename:void
 lit_tick	code/game_mode_lit.h	/^lit_tick(Game* game,$/;"	f	language:C++	typeref:typename:void
 lit_tick	code/game_mode_sb1.h	/^lit_tick(Game* game,$/;"	f	language:C++	typeref:typename:void
 lit_tick	code/game_mode_splash.h	/^static void lit_tick(Game*, Painter*, Platform* );$/;"	p	language:C++	typeref:typename:void
-lit_update_particles	code/game_mode_lit_particles.h	/^lit_update_particles(Lit_Particle_System* ps, F32 dt) {$/;"	f	language:C++	typeref:typename:void
+lit_update_particles	code/game_mode_lit_particles.h	/^lit_update_particles(Lit_Particle_Pool* ps, F32 dt) {$/;"	f	language:C++	typeref:typename:void
 lit_update_player	code/game_mode_lit_player.h	/^lit_update_player(Lit_Player* player, $/;"	f	language:C++	typeref:typename:void
-lit_update_sensors	code/game_mode_lit_sensors.h	/^lit_update_sensors(Lit_Sensor_List* sensors, Lit_Light_List* lights) {$/;"	f	language:C++	typeref:typename:void
+lit_update_sensors	code/game_mode_lit_sensors.h	/^lit_update_sensors(Lit_Sensor_List* sensors, $/;"	f	language:C++	typeref:typename:void
 load	code/win_gfx.h	/^  Win_Gfx_Load* load;$/;"	m	language:C++	struct:Win_Gfx_Functions	typeref:typename:Win_Gfx_Load *
 load	code/win_renderer.h	/^  Win_Gfx_Load* load;$/;"	m	language:C++	struct:Win_Gfx_Functions	typeref:typename:Win_Gfx_Load *
 load_game_assets	code/game_assets.h	/^load_game_assets(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:B32
@@ -1658,13 +1659,14 @@ paint_line	code/game_painter.h	/^paint_line(Painter* p,$/;"	f	language:C++	typer
 paint_set_blend	code/game_painter.h	/^paint_set_blend(Painter* p, Gfx_Blend_Type src, Gfx_Blend_Type dst) {$/;"	f	language:C++	typeref:typename:void
 paint_sprite	code/game_painter.h	/^paint_sprite(Painter* p,$/;"	f	language:C++	typeref:typename:void
 paint_text	code/game_painter.h	/^paint_text(Painter* p,$/;"	f	language:C++	typeref:typename:void
-particles	code/game_mode_lit_particles.h	/^  Lit_Particle particles[256];$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:Lit_Particle[256]
-particle_color_end	code/game_mode_lit_particles.h	/^  F32 particle_color_end;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
-particle_color_start	code/game_mode_lit_particles.h	/^  F32 particle_color_start;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
-particle_count	code/game_mode_lit_particles.h	/^  U32 particle_count;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:U32
-particle_lifespan_max	code/game_mode_lit_particles.h	/^  F32 particle_lifespan_max;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
-particle_lifespan_min	code/game_mode_lit_particles.h	/^  F32 particle_lifespan_min;$/;"	m	language:C++	struct:Lit_Particle_System	typeref:typename:F32
-particle_system	code/game_mode_lit.h	/^  Lit_Particle_System particle_system;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Particle_System
+particles	code/game_mode_lit.h	/^  Lit_Particle_Pool particles;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Particle_Pool
+particles	code/game_mode_lit_particles.h	/^  Lit_Particle particles[256];$/;"	m	language:C++	struct:Lit_Particle_Pool	typeref:typename:Lit_Particle[256]
+particle_cd	code/game_mode_lit_sensors.h	/^  F32 particle_cd;$/;"	m	language:C++	struct:Lit_Sensor	typeref:typename:F32
+particle_color_end	code/game_mode_lit_particles.h	/^  F32 particle_color_end;$/;"	m	language:C++	struct:Lit_Particle_Pool	typeref:typename:F32
+particle_color_start	code/game_mode_lit_particles.h	/^  F32 particle_color_start;$/;"	m	language:C++	struct:Lit_Particle_Pool	typeref:typename:F32
+particle_count	code/game_mode_lit_particles.h	/^  U32 particle_count;$/;"	m	language:C++	struct:Lit_Particle_Pool	typeref:typename:U32
+particle_lifespan_max	code/game_mode_lit_particles.h	/^  F32 particle_lifespan_max;$/;"	m	language:C++	struct:Lit_Particle_Pool	typeref:typename:F32
+particle_lifespan_min	code/game_mode_lit_particles.h	/^  F32 particle_lifespan_min;$/;"	m	language:C++	struct:Lit_Particle_Pool	typeref:typename:F32
 particle_system	code/game_mode_sb1.h	/^  Lit_Particle_System particle_system;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Particle_System
 path_count	code/momo_ttf.h	/^  U32 path_count;$/;"	m	language:C++	struct:__anon54d1bdca0508	typeref:typename:U32
 path_lengths	code/momo_ttf.h	/^  U32* path_lengths;$/;"	m	language:C++	struct:__anon54d1bdca0508	typeref:typename:U32 *
@@ -1831,23 +1833,17 @@ rgba	code/momo_colors.h	/^rgba(F32 r, F32 g, F32 b, F32 a){$/;"	f	language:C++	t
 rgba	code/momo_colors.h	/^static RGBA rgba(F32 r, F32 g, F32 b, F32 a);$/;"	p	language:C++	typeref:typename:RGBA
 RGBA	code/momo_colors.h	/^} RGBA;$/;"	t	language:C++	typeref:struct:__anonb89fa6ae0308
 riff_chunk	code/momo_wav.h	/^  WAV_Riff_Chunk riff_chunk;$/;"	m	language:C++	struct:__anon54fde02a0408	typeref:typename:WAV_Riff_Chunk
+rng	code/game_mode_lit.h	/^  RNG rng;$/;"	m	language:C++	struct:Lit	typeref:typename:RNG
 RNG	code/momo_rng.h	/^} RNG;$/;"	t	language:C++	typeref:struct:__anon54aa46c30108
 rng_bilateral	code/momo_rng.h	/^rng_bilateral(RNG* r)$/;"	f	language:C++	typeref:typename:F32
-rng_bilateral	code/momo_rng.h	/^static F32 rng_bilateral(RNG* r);$/;"	p	language:C++	typeref:typename:F32
 rng_choice	code/momo_rng.h	/^rng_choice(RNG* r, U32 choice_count) {$/;"	f	language:C++	typeref:typename:U32
-rng_choice	code/momo_rng.h	/^static U32 rng_choice(RNG* r, U32 choice_count);$/;"	p	language:C++	typeref:typename:U32
 rng_create	code/momo_rng.h	/^rng_create(U32 seed)$/;"	f	language:C++	typeref:typename:RNG
-rng_create	code/momo_rng.h	/^static RNG rng_create(U32 seed);$/;"	p	language:C++	typeref:typename:RNG
 rng_next	code/momo_rng.h	/^rng_next(RNG* r)$/;"	f	language:C++	typeref:typename:U32
-rng_next	code/momo_rng.h	/^static U32 rng_next(RNG* r);$/;"	p	language:C++	typeref:typename:U32
 rng_range_F32	code/momo_rng.h	/^rng_range_F32(RNG* r, F32 min, F32 max)$/;"	f	language:C++	typeref:typename:F32
-rng_range_F32	code/momo_rng.h	/^static F32 rng_range_F32(RNG* r, F32 min, F32 max);$/;"	p	language:C++	typeref:typename:F32
 rng_range_S32	code/momo_rng.h	/^rng_range_S32(RNG* r, S32 min, S32 max)$/;"	f	language:C++	typeref:typename:S32
-rng_range_S32	code/momo_rng.h	/^static S32 rng_range_S32(RNG* r, S32 min, S32 max);$/;"	p	language:C++	typeref:typename:S32
 rng_range_U32	code/momo_rng.h	/^rng_range_U32(RNG* r, U32 min, U32 max)$/;"	f	language:C++	typeref:typename:U32
-rng_range_U32	code/momo_rng.h	/^static U32 rng_range_U32(RNG* r, U32 min, U32 max);$/;"	p	language:C++	typeref:typename:U32
 rng_unilateral	code/momo_rng.h	/^rng_unilateral(RNG* r)$/;"	f	language:C++	typeref:typename:F32
-rng_unilateral	code/momo_rng.h	/^static F32 rng_unilateral(RNG* r);$/;"	p	language:C++	typeref:typename:F32
+rng_unit_circle	code/momo_rng.h	/^rng_unit_circle(RNG* r) {$/;"	f	language:C++	typeref:typename:V2
 rot	code/game_gfx.h	/^  F32 rot;$/;"	m	language:C++	struct:Gfx_Command_Rect	typeref:typename:F32
 rot	code/game_renderer.h	/^  F32 rot;$/;"	m	language:C++	struct:Gfx_Command_Rect	typeref:typename:F32
 round_f32	code/momo_intrinsics.h	/^static F32 round_f32(F32 value) {$/;"	f	language:C++	typeref:typename:F32
@@ -2515,7 +2511,6 @@ win_log	code/win_common.h	/^#define win_log(/;"	d	language:C++
 win_log_proc	code/win_common.h	/^win_log_proc(const char* fmt, ...) {$/;"	f	language:C++	typeref:typename:void
 win_open_file	code/win.cpp	/^win_open_file(Platform_File* file,$/;"	f	language:C++	typeref:typename:B32	file:
 win_point	.\code\game_sb1.h	/^  V2 win_point;$/;"	m	language:C++	struct:SB1
-win_point	code/game_mode_lit.h	/^  V2 win_point;$/;"	m	language:C++	struct:Lit	typeref:typename:V2
 win_point	code/game_mode_sb1.h	/^  V2 win_point;$/;"	m	language:C++	struct:Lit	typeref:typename:V2
 win_process_input	code/win.cpp	/^win_process_input(HWND window, Platform* pf) $/;"	f	language:C++	typeref:typename:void	file:
 win_profiler_block	code/win_common.h	/^#define win_profiler_block(/;"	d	language:C++

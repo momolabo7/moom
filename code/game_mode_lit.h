@@ -55,26 +55,13 @@ struct Lit {
   Lit_Edge_List edges;
   Lit_Light_List lights;
   Lit_Sensor_List sensors;
-  Lit_Particle_System particle_system;
+  Lit_Particle_Pool particles;
 
-  V2 win_point;
   B32 is_win_reached;
+  RNG rng;
 };
 
-static void
-lit_set_win_point(Lit* m, V2 pos) {
-  m->win_point = pos; 
-}
 
-static void 
-lit_push_sensor(Lit* m, V2 pos, U32 target_color) 
-{
-  assert(!al_is_full(&m->sensors));
-  Lit_Sensor* s = al_append(&m->sensors);
-  s->pos = pos;
-  s->target_color = target_color;
-  s->current_color = 0;
-}
 
 
 static U32
@@ -124,6 +111,7 @@ lit_tick(Game* game,
   if (!game_mode_initialized(game)) {
     m = game_allocate_mode(Lit, game);
     lit_load_level(m, 0); 
+    m->rng = rng_create(65535);
   }
   Lit_Player* player = &m->player;
   F32 dt = pf->seconds_since_last_frame;
@@ -137,29 +125,16 @@ lit_tick(Game* game,
   }
   
   // check sensor correctness
-  lit_update_sensors(&m->sensors, &m->lights);
+  lit_update_sensors(&m->sensors, &m->particles, &m->lights, &m->rng, dt);
  
 
 
-  // Check win condition?
-  {
-    Circ2 player_col = {};
-    player_col.radius = 16.f; 
-    player_col.center = player->pos;
-    
-    Circ2 win_col = {};
-    win_col.radius = 8.f;
-    win_col.center = m->win_point;
-
-    F32 dist_sq = v2_dist_sq(player_col.center, win_col.center); 
-    F32 radius_sq = (player_col.radius + win_col.radius) * (player_col.radius + win_col.radius);
-    if (dist_sq < radius_sq)  
-    {
-      lit_load_next_level(m);  
-    }
+  // Do win condition
+  if (m->sensors.activated == m->sensors.count) {
+    lit_load_next_level(m);
   }
 
-  lit_update_particles(&m->particle_system, dt);
+  lit_update_particles(&m->particles, dt);
 
   //////////////////////////////////////////////////////////
   // Rendering
@@ -286,20 +261,12 @@ lit_tick(Game* game,
     advance_depth(painter);
   }
  
-  // Render win point
-  {
-    Circ2 circ = {};
-    circ.radius = 32.f;
-    circ.center = m->win_point; 
-    // TODO: only for testing purposes?
-    RGBA color = m->is_win_reached ? hex_to_rgba(0x00ff00ff) : hex_to_rgba(0xff0000ff); 
-    paint_filled_circle(painter, circ, 16, color); 
-  }
+
 
   paint_set_blend(painter, 
                   GFX_BLEND_TYPE_SRC_ALPHA, 
                   GFX_BLEND_TYPE_ZERO);
   lit_render_sensors(&m->sensors, painter); 
-  lit_render_particles(&m->particle_system, painter);
+  lit_render_particles(&m->particles, painter);
 }
 #endif 

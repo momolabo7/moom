@@ -25,8 +25,7 @@ lit_level_0(Lit* m) {
   
   // lights
   lit_push_light(m, {250.f, 600.f}, 0x880000FF, 90.f, 0.f);
-  lit_push_light(m, {450.f, 600.f}, 0x008800FF, 270.f, 0.f);
-  lit_push_light(m, {650.f, 600.f}, 0x000088FF, 360.f, 0.f);
+  lit_push_light(m, {650.f, 600.f}, 0x008800FF, 360.f, 0.f);
   
   // initialize player
   Lit_Player* p = &m->player;
@@ -44,10 +43,9 @@ lit_level_0(Lit* m) {
     lit_push_edge(m, 10, 11);
     lit_push_edge(m, 11, 8);
 
-    lit_push_sensor(m, {400.f, 600.f}, 0x888800FF); 
+    lit_push_sensor(&m->sensors, {100.f, 600.f}, 0x888800FF); 
   }
 #endif
-  lit_set_win_point(m, {800.f, 400.f});
 }
 
 static void
@@ -70,7 +68,6 @@ lit_level_1(Lit* m) {
   Lit_Player* p = &m->player;
   lit_init_player(p, 400.f, 400.f);
 
-  lit_set_win_point(m, {800.f, 400.f});
 }
 
 typedef void (*Lit_Level)(Lit* mode); 
