@@ -321,7 +321,6 @@ cstr_itoa	code/momo_common.h	/^cstr_itoa(C8* dest, S32 num) {$/;"	f	language:C++
 cstr_len	code/momo_common.h	/^cstr_len(const C8* str) {$/;"	f	language:C++	typeref:typename:UMI
 cstr_reverse	code/momo_common.h	/^cstr_reverse(C8* dest) {$/;"	f	language:C++	typeref:typename:void
 cstr_to_f64	code/momo_common.h	/^cstr_to_f64(const C8* p) {$/;"	f	language:C++	typeref:typename:F64
-cstr_to_f64	code/momo_common.h	/^static F64 cstr_to_f64(const C8* p);$/;"	p	language:C++	typeref:typename:F64
 ctx	code/game_console.h	/^  void* ctx;$/;"	m	language:C++	struct:Console_Command	typeref:typename:void *
 current_atlas_bitmap_id	code/sui_pack.h	/^  U32 current_atlas_bitmap_id;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 current_atlas_font_id	code/sui_pack.h	/^  U32 current_atlas_font_id; $/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32

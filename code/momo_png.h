@@ -225,7 +225,7 @@ _png_huffman_compute(_PNG_Huffman* h,
   }
   
   // 2. Numerical value of smallest code for each code length
-  ba_set_revert_point(allocator);
+  Bump_Allocator_Marker mark = ba_mark(allocator);
   
   U16* len_offset_table = ba_push_arr(U16, allocator, max_lengths+1);
   zero_memory(len_offset_table, (max_lengths+1) * sizeof(U16));
@@ -243,7 +243,7 @@ _png_huffman_compute(_PNG_Huffman* h,
       h->symbols[code] = (U16)sym;
     }
   }
-  
+  ba_revert(mark); 
   
 }
 
@@ -712,7 +712,7 @@ _png_filter(_PNG_Context* c) {
 
 static B32
 _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
-  auto* IDAT = srm_consume(_PNG_IDAT_Header, zlib_stream);
+  _PNG_IDAT_Header* IDAT = srm_consume(_PNG_IDAT_Header, zlib_stream);
   
   U32 CM = IDAT->compression_flags & 0x0F;
   U32 CINFO = IDAT->compression_flags >> 4;
@@ -745,14 +745,15 @@ png_to_img32(PNG* png, Bump_Allocator* allocator)
   
   U32 image_size = png->width * png->height * _PNG_CHANNELS;
   U8* image_stream_memory =  ba_push_arr(U8, allocator, image_size);
-  assert(image_stream_memory);
+  if (!image_stream_memory) goto fail;
   srm_init(&ctx.image_stream, image_stream_memory, image_size);
-  
-  ba_set_revert_point(allocator);
+ 
+  Bump_Allocator_Marker mark = ba_mark(allocator);
+  //ba_set_revert_point(allocator);
   
   U32 unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
   U8* unfiltered_image_stream_memory = ba_push_arr(U8, allocator, unfiltered_size);
-  assert(unfiltered_image_stream_memory);
+  if (!unfiltered_image_stream_memory) goto fail;
   srm_init(&ctx.unfiltered_image_stream, unfiltered_image_stream_memory, unfiltered_size);
   
   srm_consume(_PNG_Header, &ctx.stream);
@@ -766,6 +767,7 @@ png_to_img32(PNG* png, Bump_Allocator* allocator)
     Stream stream = ctx.stream;
     while(!srm_is_eos(&stream)) {
       _PNG_Chunk_Header* chunk_header = srm_consume(_PNG_Chunk_Header, &stream);
+      if (!chunk_header) goto fail_and_cleanup;
       U32 chunk_length = endian_swap_u32(chunk_header->length);
       U32 chunk_type = endian_swap_u32(chunk_header->type_U32);
       if (chunk_type == 'IDAT') {
@@ -777,12 +779,14 @@ png_to_img32(PNG* png, Bump_Allocator* allocator)
   }
   
   U8* zlib_data = ba_push_arr(U8, allocator, zlib_size);
+  if (!zlib_data) goto fail;
   make(Stream, zlib_stream);
   srm_init(zlib_stream, zlib_data, zlib_size);
   
   // Second pass to allocate memory
   while(!srm_is_eos(&ctx.stream)) {
-    auto* chunk_header = srm_consume(_PNG_Chunk_Header, &ctx.stream);
+    _PNG_Chunk_Header* chunk_header = srm_consume(_PNG_Chunk_Header, &ctx.stream);
+    if (!chunk_header) goto fail_and_cleanup;
     U32 chunk_length = endian_swap_u32(chunk_header->length);
     U32 chunk_type = endian_swap_u32(chunk_header->type_U32);
     if (chunk_type == 'IDAT') {
@@ -796,19 +800,24 @@ png_to_img32(PNG* png, Bump_Allocator* allocator)
   srm_reset(zlib_stream);
   
   if (!_png_decompress_zlib(&ctx, zlib_stream)) {
-    return img32_bad();
+    goto fail_and_cleanup;
   }
   
   if(!_png_filter(&ctx)) {					
-    return img32_bad();
+    goto fail_and_cleanup;
   }
-  else {	
-    Image32 ret = {0};
-    ret.width = ctx.image_width;
-    ret.height = ctx.image_height;
-    ret.pixels = (U32*)ctx.image_stream.data;
-    return ret;
-  }
+
+  Image32 ret = {0};
+  ret.width = ctx.image_width;
+  ret.height = ctx.image_height;
+  ret.pixels = (U32*)ctx.image_stream.data;
+  return ret;
+
+fail_and_cleanup:
+  ba_revert(mark);
+fail:
+  return img32_bad();
+
   
   
 }
@@ -991,11 +1000,11 @@ png_read(PNG* p, void* png_memory, UMI png_size) {
   srm_init(stream, png_memory, png_size);
   
   // Read Signature
-  auto* png_header = srm_consume(_PNG_Header, stream);  
+  _PNG_Header* png_header = srm_consume(_PNG_Header, stream);  
   if (!_png_is_signature_valid(png_header->signature)) return false; 
   
   // Read Chunk Header
-  auto* chunk_header = srm_consume(_PNG_Chunk_Header, stream);
+  _PNG_Chunk_Header* chunk_header = srm_consume(_PNG_Chunk_Header, stream);
   U32 chunk_length = endian_swap_u32(chunk_header->length);
   U32 chunk_type = endian_swap_u32(chunk_header->type_U32);
   

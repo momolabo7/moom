@@ -336,7 +336,8 @@ is_digit(U8 c) {
 
 //////////////////////////////////////////////////////////////////////////////
 // Absolutes
-#define abs_of(x) ((x) < 0 ? -(x) : (x))  
+#define abs_of(x) ((x) < 0 ? -(x) : (x))
+
 static F32 
 abs_f32(F32 x) {
   union { F32 f; U32 u; } val = {};
@@ -508,6 +509,12 @@ typedef struct {
 static B32
 blk_ok(Block blk) {
   return blk.data != null;
+}
+
+static Block
+blk_bad() {
+  Blk ret = {0};
+  return ret;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1452,12 +1459,7 @@ cstr_itoa(C8* dest, S32 num) {
 }
 
 
-
-// NOTE(Momo): Returns F64_NAN() if unsucceessful. Use is_nan() to check.
-// In debug mode, it will assert if unsuccessful.
-static F64 cstr_to_f64(const C8* p);
-
-//~IEEE floating point functions 
+//IEEE floating point functions 
 static B32 
 is_close_f32(F32 lhs, F32 rhs) {
   return abs_of(lhs - rhs) <= F32_EPSILON;
@@ -1467,8 +1469,6 @@ static B32
 is_close_f64(F64 lhs, F64 rhs) {
   return abs_of(lhs - rhs) <= F64_EPSILON;
 }
-
-
 
 static B32 
 is_nan_f32(F32 f) {

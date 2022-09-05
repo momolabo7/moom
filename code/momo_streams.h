@@ -47,11 +47,12 @@ srm_is_eos(Stream* s) {
 
 static U8*
 srm_consume_block(Stream* s, UMI amount) {
-	assert(s->pos + amount <= s->size);
-	
-	U8* ret = s->data + s->pos;
-  s->pos += amount;
-  return ret;
+	if(s->pos + amount <= s->size) {
+    U8* ret = s->data + s->pos;
+    s->pos += amount;
+    return ret;
+  }
+  return null;
 }
 
 static void

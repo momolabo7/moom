@@ -2,11 +2,8 @@
 #ifndef MOMO_H
 #define MOMO_H
 
-// Begin Perfection
 #include "momo_common.h"
-// End Perfection
 
-// BEGIN C MARKER
 #include "momo_intrinsics.h"
 #include "momo_vectors.h"
 #include "momo_colors.h"
@@ -20,19 +17,10 @@
 #include "momo_lists.h"  
 #include "momo_rng.h"
 #include "momo_wav.h"     
-// END C MARKER
-
-
-// idk what we are going to do with image api?
-// Or do we care not have an image api and have each image format do their own shit?
-// i.e. we always stick to RGBA format?
-#include "momo_image.h" 
-
 #include "momo_memory.h"
-#include "momo_png.h"
+#include "momo_image.h" 
 #include "momo_ttf.h"
-
-// note: is already in C
+#include "momo_png.h"
 #include "momo_rect_pack.h"
 
 #endif //MOMO_H
