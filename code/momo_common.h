@@ -513,7 +513,7 @@ blk_ok(Block blk) {
 
 static Block
 blk_bad() {
-  Blk ret = {0};
+  Block ret = {0};
   return ret;
 }
 

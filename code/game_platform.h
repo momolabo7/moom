@@ -10,10 +10,11 @@
 #include "momo.h"
 
 // TODO: This should be in a function give by game I think
-const F32 game_width = 1600.f;
-const F32 game_height = 900.f;
-const V2 game_wh = V2{game_width, game_height};
-const F32 game_aspect_ratio = game_width/game_height;
+#define GAME_WIDTH 1600.f
+#define GAME_HEIGHT 900.f
+#define GAME_DIMENSIONS V2 { GAME_WIDTH, GAME_HEIGHT } 
+#define GAME_MIDPOINT V2 { GAME_WIDTH/2, GAME_HEIGHT/2 } 
+#define GAME_ASPECT (GAME_WIDTH/GAME_HEIGHT)
 
 //~Platform File API
 enum Platform_File_Path {

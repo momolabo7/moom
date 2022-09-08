@@ -44,8 +44,8 @@ end_stat(Stat* stat) {
 static void
 update_and_render_profiler(Profiler* pf, Painter* p) {
   paint_sprite(p, SPRITE_BLANK, 
-               game_wh * 0.5f, 
-               game_wh,
+               GAME_MIDPOINT, 
+               GAME_DIMENSIONS,
                {0.f, 0.f, 0.f, 0.5f});
   advance_depth(p);
   

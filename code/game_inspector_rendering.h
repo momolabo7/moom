@@ -8,8 +8,8 @@ static void
 update_and_render_inspector(Inspector* in, Painter* p) 
 {
   paint_sprite(p, SPRITE_BLANK, 
-               game_wh * 0.5f, 
-               game_wh,
+               GAME_MIDPOINT, 
+               GAME_DIMENSIONS,
                {0.f, 0.f, 0.f, 0.5f});
   advance_depth(p);
   
@@ -34,7 +34,7 @@ update_and_render_inspector(Inspector* in, Painter* p)
     
     
     
-    F32 y = game_wh.h - line_height * (entry_index+1);
+    F32 y = GAME_HEIGHT - line_height * (entry_index+1);
     
     paint_text(p,
                FONT_DEBUG, 

@@ -135,8 +135,8 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf) {
   V2 input_area_pos = { console_width/2, line_height/2 };
   
   paint_sprite(p, SPRITE_BLANK, 
-               game_wh * 0.5f, 
-               game_wh,
+               GAME_MIDPOINT, 
+               GAME_DIMENSIONS,
                {0.f, 0.f, 0.f, 0.8f});
   advance_depth(p);
   

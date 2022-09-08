@@ -155,6 +155,7 @@ bit_depth	code/momo_png.h	/^  U8 bit_depth;$/;"	m	language:C++	struct:_PNG_IHDR	
 bit_depth	code/momo_png.h	/^  U8 bit_depth;$/;"	m	language:C++	struct:__anon548615c10108	typeref:typename:U8
 blank_texture	code/game_gfx_opengl.h	/^  Texture blank_texture;$/;"	m	language:C++	struct:Opengl	typeref:typename:Texture
 blank_texture	code/game_renderer_opengl.h	/^  Texture blank_texture;$/;"	m	language:C++	struct:Opengl	typeref:typename:Texture
+blk_bad	code/momo_common.h	/^blk_bad() {$/;"	f	language:C++	typeref:typename:Block
 blk_ok	code/momo_common.h	/^blk_ok(Block blk) {$/;"	f	language:C++	typeref:typename:B32
 Block	code/momo_common.h	/^} Block;$/;"	t	language:C++	typeref:struct:__anonbacee3e50908
 block_align	code/momo_wav.h	/^  U16 block_align;$/;"	m	language:C++	struct:__anon54fde02a0208	typeref:typename:U16
@@ -658,7 +659,7 @@ game	code/game_platform.h	/^  void* game;$/;"	m	language:C++	struct:Platform	typ
 game_allocate_mode	code/game.h	/^#define game_allocate_mode(/;"	d	language:C++
 game_allocate_mode_size	code/game.h	/^game_allocate_mode_size(Game* game, UMI size) {$/;"	f	language:C++	typeref:typename:void *
 game_arena	code/game_platform.h	/^  Bump_Allocator* game_arena; \/\/ Require 32MB$/;"	m	language:C++	struct:Platform	typeref:typename:Bump_Allocator *
-game_aspect_ratio	code/game_platform.h	/^const F32 game_aspect_ratio = game_width\/game_height;$/;"	v	language:C++	typeref:typename:const F32
+GAME_ASPECT	code/game_platform.h	/^#define GAME_ASPECT /;"	d	language:C++
 game_assets	code/game.h	/^  Game_Assets game_assets;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Assets
 Game_Assets	code/game_assets.h	/^struct Game_Assets {$/;"	s	language:C++
 GAME_ASSETS_H	code/game_assets.h	/^#define GAME_ASSETS_H$/;"	d	language:C++
@@ -667,15 +668,17 @@ GAME_ASSET_IDS_H	code/game_asset_ids.h	/^#define GAME_ASSET_IDS_H$/;"	d	language
 GAME_CONSOLE_H	code/game_console.h	/^#define GAME_CONSOLE_H$/;"	d	language:C++
 GAME_DEBUG_H	code/game_debug.h	/^#define GAME_DEBUG_H$/;"	d	language:C++
 Game_Debug_Update_And_Render	code/game_platform.h	/^typedef void Game_Debug_Update_And_Render(Platform* pf);$/;"	t	language:C++	typeref:typename:void ()(Platform * pf)
+GAME_DIMENSIONS	code/game_platform.h	/^#define GAME_DIMENSIONS /;"	d	language:C++
 Game_Functions	code/game_platform.h	/^struct Game_Functions {$/;"	s	language:C++
 game_function_names	code/game_platform.h	/^static const char* game_function_names[] {$/;"	v	language:C++	typeref:typename:const char * []
 game_goto_mode	code/game.h	/^game_goto_mode(Game* game, Game_Mode_Type type) {$/;"	f	language:C++	typeref:typename:void
 GAME_H	code/game.h	/^#define GAME_H$/;"	d	language:C++
-game_height	code/game_platform.h	/^const F32 game_height = 900.f;$/;"	v	language:C++	typeref:typename:const F32
+GAME_HEIGHT	code/game_platform.h	/^#define GAME_HEIGHT /;"	d	language:C++
 GAME_INSPECTOR_H	code/game_inspector.h	/^#define GAME_INSPECTOR_H$/;"	d	language:C++
 GAME_INSPECTOR_RENDERING_H	code/game_inspector_rendering.h	/^#define GAME_INSPECTOR_RENDERING_H$/;"	d	language:C++
 game_log	code/game.h	/^#define game_log(/;"	d	language:C++
 game_log	code/game.h	/^#define game_log(/;"	d	language:C++
+GAME_MIDPOINT	code/game_platform.h	/^#define GAME_MIDPOINT /;"	d	language:C++
 game_modes	code/game.h	/^static Game_Mode_Tick game_modes[] = {$/;"	v	language:C++	typeref:typename:Game_Mode_Tick[]
 game_mode_initialized	code/game.h	/^game_mode_initialized(Game* game) {$/;"	f	language:C++	typeref:typename:B32
 GAME_MODE_LEVEL_EDITOR_H	code/game_mode_level_editor.h	/^#define GAME_MODE_LEVEL_EDITOR_H$/;"	d	language:C++
@@ -705,7 +708,7 @@ GAME_SHOW_DEBUG_PROFILER	code/game.h	/^  GAME_SHOW_DEBUG_PROFILER,$/;"	e	languag
 Game_Show_Debug_Type	code/game.h	/^enum Game_Show_Debug_Type {$/;"	g	language:C++
 game_update_and_render	code/game.cpp	/^game_update_and_render(Platform* pf)$/;"	f	language:C++	typeref:typename:exported B32
 Game_Update_And_Render	code/game_platform.h	/^typedef void Game_Update_And_Render(Platform* pf);$/;"	t	language:C++	typeref:typename:void ()(Platform * pf)
-game_width	code/game_platform.h	/^const F32 game_width = 1600.f;$/;"	v	language:C++	typeref:typename:const F32
+GAME_WIDTH	code/game_platform.h	/^#define GAME_WIDTH /;"	d	language:C++
 GB	code/momo_common.h	/^#define GB(/;"	d	language:C++
 gen_light_intersections	code/game_mode_level_light.cpp	/^gen_light_intersections(Light* l, $/;"	f	language:C++	typeref:typename:void	file:
 get_bitmap	code/game_assets.h	/^get_bitmap(Game_Assets* ga, Bitmap_ID id) {$/;"	f	language:C++	typeref:typename:Bitmap_Asset *
@@ -1414,7 +1417,11 @@ LIT_SENSOR_PARTICLE_CD	code/game_mode_lit_sensors.h	/^#define LIT_SENSOR_PARTICL
 LIT_SENSOR_RADIUS	code/game_mode_lit_sensors.h	/^#define LIT_SENSOR_RADIUS /;"	d	language:C++
 lit_set_win_point	code/game_mode_sb1.h	/^lit_set_win_point(Lit* m, V2 pos) {$/;"	f	language:C++	typeref:typename:void
 lit_spawn_particle	code/game_mode_lit_particles.h	/^lit_spawn_particle(Lit_Particle_Pool* ps,$/;"	f	language:C++	typeref:typename:void
-lit_tick	code/game_mode_lit.h	/^lit_tick(Game* game,$/;"	f	language:C++	typeref:typename:void
+Lit_State_Type	code/game_mode_lit.h	/^enum Lit_State_Type {$/;"	g	language:C++
+LIT_STATE_TYPE_NORMAL	code/game_mode_lit.h	/^  LIT_STATE_TYPE_NORMAL,$/;"	e	language:C++	enum:Lit_State_Type
+LIT_STATE_TYPE_TRANSITION_IN	code/game_mode_lit.h	/^  LIT_STATE_TYPE_TRANSITION_IN,$/;"	e	language:C++	enum:Lit_State_Type
+LIT_STATE_TYPE_TRANSITION_OUT	code/game_mode_lit.h	/^  LIT_STATE_TYPE_TRANSITION_OUT,$/;"	e	language:C++	enum:Lit_State_Type
+lit_tick	code/game_mode_lit.h	/^lit_tick(Game* game, Painter* painter, Platform* pf) $/;"	f	language:C++	typeref:typename:void
 lit_tick	code/game_mode_sb1.h	/^lit_tick(Game* game,$/;"	f	language:C++	typeref:typename:void
 lit_tick	code/game_mode_splash.h	/^static void lit_tick(Game*, Painter*, Platform* );$/;"	p	language:C++	typeref:typename:void
 lit_update_particles	code/game_mode_lit_particles.h	/^lit_update_particles(Lit_Particle_Pool* ps, F32 dt) {$/;"	f	language:C++	typeref:typename:void
@@ -2035,11 +2042,13 @@ srm_reset	code/momo_streams.h	/^static void   srm_reset(Stream* s);$/;"	p	langua
 srm_write	code/momo_streams.h	/^#define srm_write(/;"	d	language:C++
 srm_write_block	code/momo_streams.h	/^srm_write_block(Stream* s, void* src, UMI src_size) {$/;"	f	language:C++	typeref:typename:void
 srm_write_block	code/momo_streams.h	/^static void   srm_write_block(Stream* s, void* src, UMI size);$/;"	p	language:C++	typeref:typename:void
+stage_fade	code/game_mode_lit.h	/^  F32 stage_fade;$/;"	m	language:C++	struct:Lit	typeref:typename:F32
 start_cycles	code/game_profiler.h	/^  U32 start_cycles;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:U32
 start_hits	code/game_profiler.h	/^  U32 start_hits;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:U32
 Stat	code/game_profiler_rendering.h	/^struct Stat {$/;"	s	language:C++
 state	code/game_gfx.h	/^  volatile Gfx_Texture_Payload_State state;$/;"	m	language:C++	struct:Gfx_Texture_Payload	typeref:typename:volatile Gfx_Texture_Payload_State
 state	code/game_mode_level.h	/^  Level_State state;$/;"	m	language:C++	struct:Level_Mode	typeref:typename:Level_State
+state	code/game_mode_lit.h	/^  Lit_State_Type state;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_State_Type
 state	code/game_renderer.h	/^  volatile Gfx_Texture_Payload_State state;$/;"	m	language:C++	struct:Gfx_Texture_Payload	typeref:typename:volatile Gfx_Texture_Payload_State
 state	code/meta.cpp	/^  U32 state; \/\/ $/;"	m	language:C++	struct:Profiler_Codegen	typeref:typename:U32	file:
 state_btns	code/game_mode_level_editor.h	/^  Editor_Toolbar_Button state_btns[EDITOR_STATE_MAX];$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_Toolbar_Button[]

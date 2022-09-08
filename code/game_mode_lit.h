@@ -46,7 +46,15 @@ lit_calc_ghost_edge_line(Lit_Point_List* points, Lit_Edge* e) {
 #include "game_mode_lit_sensors.h"
 #include "game_mode_lit_player.h"
 
+enum Lit_State_Type {
+  LIT_STATE_TYPE_TRANSITION_IN,
+  LIT_STATE_TYPE_TRANSITION_OUT,
+  LIT_STATE_TYPE_NORMAL,
+};
+
+
 struct Lit {
+  Lit_State_Type state;
   U32 current_level_id;
   Lit_Player player;
   
@@ -57,10 +65,12 @@ struct Lit {
   Lit_Sensor_List sensors;
   Lit_Particle_Pool particles;
 
+  F32 stage_fade;
+
   B32 is_win_reached;
   RNG rng;
-};
 
+};
 
 
 
@@ -103,37 +113,58 @@ lit_push_light(Lit* m, V2 pos, U32 color, F32 angle, F32 facing) {
 #include "game_mode_lit_levels.h"
 
 static void 
-lit_tick(Game* game,
-         Painter* painter,
-         Platform* pf) 
+lit_tick(Game* game, Painter* painter, Platform* pf) 
 {
   Lit* m = (Lit*)game->mode_context;
   if (!game_mode_initialized(game)) {
     m = game_allocate_mode(Lit, game);
     lit_load_level(m, 0); 
     m->rng = rng_create(65535);
+    m->state = LIT_STATE_TYPE_TRANSITION_IN;
+    m->stage_fade = 1.f;
   }
+
   Lit_Player* player = &m->player;
   F32 dt = pf->seconds_since_last_frame;
-   
-  lit_update_player(player, &m->lights, pf, dt);
-      
+
+  // Transition Logic
+  if (m->state == LIT_STATE_TYPE_TRANSITION_IN) {
+    if (m->stage_fade >= 0.f) {
+      m->stage_fade -= dt;
+    }
+    else {
+      m->stage_fade = 0.f;
+      m->state = LIT_STATE_TYPE_NORMAL;
+    }
+  }
+  else if(m->state == LIT_STATE_TYPE_TRANSITION_OUT) {
+    if (m->stage_fade <= 1.f) {
+      m->stage_fade += dt;
+    }
+    else {
+      m->stage_fade = 1.f;
+      lit_load_next_level(m);
+      m->state = LIT_STATE_TYPE_TRANSITION_IN;
+    }
+
+  }
+
+  // Transition in logic
+  if (m->state == LIT_STATE_TYPE_NORMAL) {
+    lit_update_player(player, &m->lights, pf, dt);
+  }
+
   al_foreach(light_index, &m->lights)
   {
     Lit_Light* light = al_at(&m->lights, light_index);
     lit_gen_light_intersections(light, &m->points, &m->edges, &game->frame_arena);
   }
-  
-  // check sensor correctness
   lit_update_sensors(&m->sensors, &m->particles, &m->lights, &m->rng, dt);
- 
 
-
-  // Do win condition
+  // win condition
   if (m->sensors.activated == m->sensors.count) {
-    lit_load_next_level(m);
+    m->state = LIT_STATE_TYPE_TRANSITION_OUT;
   }
-
   lit_update_particles(&m->particles, dt);
 
   //////////////////////////////////////////////////////////
@@ -160,7 +191,9 @@ lit_tick(Game* game,
   }
   advance_depth(painter);
 #endif 
-  
+ 
+
+
 #if LIT_DEBUG_LIGHT
   // Draw the light rays
   if (player->held_light) {
@@ -268,5 +301,16 @@ lit_tick(Game* game,
                   GFX_BLEND_TYPE_ZERO);
   lit_render_sensors(&m->sensors, painter); 
   lit_render_particles(&m->particles, painter);
+
+  // Draw the overlay for fade in/out
+  {
+    V2 position = {1600/2, 900/2};
+    V2 size = {1600, 900};
+    RGBA color = {0.f, 0.f, 0.f, m->stage_fade};
+
+    paint_sprite(painter, SPRITE_BLANK, position, size, color);
+    advance_depth(painter);
+  }
+
 }
 #endif 

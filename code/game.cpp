@@ -10,7 +10,7 @@ game_update_and_render(Platform* pf)
   g_platform = pf;
   g_profiler = pf->profiler;
 #endif
-  game_profile_block("game.dll");
+  game_profile_block("game");
   // Initialization
   if (!pf->game || pf->reloaded) {
     ba_clear(pf->game_arena);
@@ -58,9 +58,11 @@ game_update_and_render(Platform* pf)
   make(Painter, painter);
   begin_painting(painter, ga, gfx, 1600.f, 900.f);
   begin_inspector(in);
-  
+ 
+#if 0
   static U32 test_value = 32;
   add_inspector_entry(in, str8_from_lit("Test"), &test_value);
+#endif
 
   
   // Game state management
