@@ -1,7 +1,8 @@
 struct Lit_Particle {
   V2 pos, vel;
+  V2 size_start, size_end;
   RGBA color_start, color_end;
-
+  Sprite_ID sprite_id;
   F32 lifespan;
   F32 lifespan_now;
 };
@@ -20,18 +21,23 @@ struct Lit_Particle_Pool {
 static void
 lit_spawn_particle(Lit_Particle_Pool* ps,
                    F32 lifespan,
+                   Sprite_ID sprite_id,
                    V2 pos, V2 vel,
                    RGBA color_start,
-                   RGBA color_end) 
+                   RGBA color_end,
+                   V2 size_start,
+                   V2 size_end) 
 {
   if (ps->particle_count < array_count(ps->particles)) {
     Lit_Particle* p = ps->particles + ps->particle_count++; 
     p->pos = pos;
     p->vel = vel;
+    p->sprite_id = sprite_id;
     p->color_start = color_start;
     p->color_end = color_end;
     p->lifespan = p->lifespan_now = lifespan;
-
+    p->size_start = size_start;
+    p->size_end = size_end;    
   }
 }
 
@@ -63,14 +69,22 @@ lit_render_particles(Lit_Particle_Pool* ps, Painter* painter) {
       ++particle_id) 
   {
     Lit_Particle* p = ps->particles + particle_id;
-    RGBA color = {};
 
     F32 lifespan_ratio = 1.f -  p->lifespan_now / p->lifespan;
+
+    RGBA color = {0};
     color.r = lerp_f32(p->color_start.r, p->color_end.r, lifespan_ratio);  
     color.g = lerp_f32(p->color_start.g, p->color_end.g, lifespan_ratio);  
     color.b = lerp_f32(p->color_start.b, p->color_end.b, lifespan_ratio);  
     color.a = lerp_f32(p->color_start.a, p->color_end.a, lifespan_ratio);  
-    paint_sprite(painter, SPRITE_BLANK, p->pos, {64.f, 64.f}, color);
+  
+    V2 size = {0};
+    size.w = lerp_f32(p->size_start.w , p->size_end.w, lifespan_ratio);
+    size.h = lerp_f32(p->size_start.h , p->size_end.h, lifespan_ratio);
+
+
+    paint_sprite(painter, SPRITE_BLANK, p->pos, size, color);
+    advance_depth(painter);
   }
 }
 

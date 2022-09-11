@@ -1,4 +1,4 @@
-#define LIT_SENSOR_PARTICLE_CD 0.1f
+#define LIT_SENSOR_PARTICLE_CD 0.2f
 #define LIT_SENSOR_COLOR_MASK 0xFFFFFF00
 #define LIT_SENSOR_RADIUS 8.f
 
@@ -72,13 +72,27 @@ lit_update_sensors(Lit_Sensor_List* sensors,
     if (sensor->particle_cd <= 0.f) {
       sensor->particle_cd = LIT_SENSOR_PARTICLE_CD;
       V2 rand_dir = rng_unit_circle(rng);
-      V2 particle_vel = v2_scale(rand_dir, 100.f); 
+      V2 particle_vel = v2_scale(rand_dir, 10.f); 
+      RGBA target_color = hex_to_rgba(sensor->target_color); 
+
+      RGBA start_color = target_color;
+      start_color.a = 1.f;
+
+      RGBA end_color = target_color;
+      end_color.a = 0.f;
+
+      V2 size_start = { 32.f, 32.f };
+      V2 size_end = { 0.f, 0.f };
+
       lit_spawn_particle(particles, 
                          1.f,
+                         SPRITE_BLANK,
                          sensor->pos,
                          particle_vel,
-                         rgba(1.f, 1.f, 1.f, 1.f),
-                         rgba(1.f, 1.f, 1.f, 0.f));
+                         start_color,
+                         end_color,
+                         size_start,
+                         size_end);
 
     }
   }
