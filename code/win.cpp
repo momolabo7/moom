@@ -705,7 +705,7 @@ WinMain(HINSTANCE instance,
     V2U render_wh = win_get_client_dims(window);
     Rect2U render_region = win_calc_render_region(render_wh.w,
                                                   render_wh.h,
-                                                  game_aspect_ratio);
+                                                  GAME_ASPECT);
     if (renderer_code.is_valid) {
       renderer_functions.begin_frame(renderer, 
                                      render_wh, 
@@ -736,8 +736,8 @@ WinMain(HINSTANCE instance,
       
       pf->render_mouse_pos = pf->screen_mouse_pos - render_region.min;
       
-      F32 design_to_render_w = game_width / rec2u_width(render_region);
-      F32 design_to_render_h = game_height / rec2u_height(render_region);
+      F32 design_to_render_w = GAME_WIDTH / rec2u_width(render_region);
+      F32 design_to_render_h = GAME_HEIGHT / rec2u_height(render_region);
       
       pf->design_mouse_pos.x = F32(pf->render_mouse_pos.x) * design_to_render_w;
       pf->design_mouse_pos.y = F32(pf->render_mouse_pos.y) * design_to_render_h;
@@ -747,7 +747,7 @@ WinMain(HINSTANCE instance,
       // TODO(Momo): should this really be here?
       // Maybe we should really make y-axis downwards...
       // since this is a 2D engine.
-      pf->design_mouse_pos.y = lerp_f32(game_height, 0.f, pf->design_mouse_pos.y/game_height);	
+      pf->design_mouse_pos.y = lerp_f32(GAME_HEIGHT, 0.f, pf->design_mouse_pos.y/GAME_HEIGHT);	
 
     }
     

@@ -1,7 +1,13 @@
+#define LIT_PLAYER_LIGHT_RETRIEVE_DURATION 0.05f
+
 struct Lit_Player {
   V2 pos;
   V2 size;
   Lit_Light* held_light;
+
+  // For animating getting the light
+  F32 light_retrival_time;
+  V2 old_light_pos;
 };
 
 static void
@@ -49,9 +55,9 @@ lit_update_player(Lit_Player* player,
 
   // Use button
   if (pf_is_button_poked(pf->button_use)) {
-    if (player->held_light == nullptr) {
+    if (player->held_light == null) {
       F32 shortest_dist = 512.f; // limit
-      Lit_Light* nearest_light = nullptr;
+      Lit_Light* nearest_light = null;
       al_foreach(light_index, lights) {
         Lit_Light* l = al_at(lights, light_index);
         F32 dist = v2_dist_sq(l->pos, player->pos);
@@ -63,11 +69,13 @@ lit_update_player(Lit_Player* player,
       
       if (nearest_light) {          
         player->held_light = nearest_light;
+        player->old_light_pos = nearest_light->pos;
+        player->light_retrival_time = 0.f;
       }
       
     }
     else{ 
-      player->held_light = nullptr;
+      player->held_light = null;
     }
   }
   
@@ -80,7 +88,16 @@ lit_update_player(Lit_Player* player,
   }
   
   if (player->held_light) {
-    player->held_light->pos = player->pos;
+    if (player->light_retrival_time < LIT_PLAYER_LIGHT_RETRIEVE_DURATION) {
+      player->light_retrival_time += dt;
+    }
+    else {
+      player->light_retrival_time = LIT_PLAYER_LIGHT_RETRIEVE_DURATION;
+    }
+    F32 ratio = player->light_retrival_time / LIT_PLAYER_LIGHT_RETRIEVE_DURATION; 
+    player->held_light->pos.x = lerp_f32(player->old_light_pos.x, player->pos.x, ratio) ;
+    player->held_light->pos.y = lerp_f32(player->old_light_pos.y, player->pos.y,  ratio) ;
+
   }
 
 }
