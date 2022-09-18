@@ -536,7 +536,7 @@ _png_filter_none(_PNG_Context* c) {
   U32 bpl = c->image_width * _PNG_CHANNELS; // bytes per line
   for (U32 i = 0; i < bpl; ++i ){
     U8* pixel_byte = srm_consume(U8, &c->unfiltered_image_stream);
-    if (pixel_byte == nullptr) {
+    if (pixel_byte == null) {
       return false;
     }
     srm_write(&c->image_stream, *pixel_byte);
@@ -551,7 +551,7 @@ _png_filter_sub(_PNG_Context* c) {
   for (U32 i = 0; i < bpl; ++i ){
     
     U8* pixel_byte_p = srm_consume(U8, &c->unfiltered_image_stream);
-    if (pixel_byte_p == nullptr)return false;
+    if (pixel_byte_p == null)return false;
     
     U8 pixel_byte = (*pixel_byte_p); // sub(x)
     if (i < bpp) {
@@ -578,7 +578,7 @@ _png_filter_average(_PNG_Context* c) {
   for (U32 i = 0; i < bpl; ++i ){
     
     U8* pixel_byte_p = srm_consume(U8, &c->unfiltered_image_stream);
-    if (pixel_byte_p == nullptr) return false;
+    if (pixel_byte_p == null) return false;
     
     U8 pixel_byte = (*pixel_byte_p); // sub(x)
     
@@ -604,7 +604,7 @@ _png_filter_paeth(_PNG_Context* cx) {
   
   for (U32 i = 0; i < bpl; ++i ){
     U8* pixel_byte_p = srm_consume(U8, &cx->unfiltered_image_stream);
-    if (pixel_byte_p == nullptr) return false;
+    if (pixel_byte_p == null) return false;
     U8 pixel_byte = (*pixel_byte_p); // Paeth(x)
     
     // NOTE(Momo): PaethPredictor
@@ -649,7 +649,7 @@ _png_filter_up(_PNG_Context* c) {
   U32 bpl = c->image_width * _PNG_CHANNELS; // bytes per line
   for (U32 i = 0; i < bpl; ++i ){
     U8* pixel_byte_p = srm_consume(U8, &c->unfiltered_image_stream);
-    if (pixel_byte_p == nullptr) {
+    if (pixel_byte_p == null) {
       return false;
     }
     U8 pixel_byte = (*pixel_byte_p); // Up(x)
@@ -867,7 +867,7 @@ png_write(Image32 bm, Bump_Allocator* allocator) {
   
   // NOTE(Momo): write IHDR
   {
-    U8* crc_start = nullptr;
+    U8* crc_start = null;
     
     _PNG_Chunk_Header header = {};
     header.type_U32 = endian_swap_u32('IHDR');
@@ -901,7 +901,7 @@ png_write(Image32 bm, Bump_Allocator* allocator) {
     U32 chunk_overhead = sizeof(U16)*2 + sizeof(U8)*1;
     
     
-    U8* crc_start = nullptr;
+    U8* crc_start = null;
     
     _PNG_Chunk_Header header = {};
     header.type_U32 = endian_swap_u32('IDAT');
@@ -971,7 +971,7 @@ png_write(Image32 bm, Bump_Allocator* allocator) {
   
   // NOTE(Momo): srm_write IEND
   {
-    U8* crc_start = nullptr;
+    U8* crc_start = null;
     
     _PNG_Chunk_Header header = {};
     header.type_U32 = endian_swap_u32('IEND');
