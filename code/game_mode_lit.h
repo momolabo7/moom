@@ -28,6 +28,62 @@ struct Lit_Edge_List {
   Lit_Edge e[256];
 };
 
+static B32
+is_circle_on_finite_line(V2 circle_center, F32 circle_radius, V2 line_min, V2 line_max) {
+  // extend lines
+  V2 v = v2_norm(v2_sub(line_max, line_min));
+  line_min = v2_sub(line_min, v);
+  line_max = v2_add(line_max, v);
+
+  // get point on line that's the shortest distance
+  V2 s = v2_add(v2_proj(v2_sub(circle_center, line_min), v), line_min); 
+
+  F32 t = 0.f;
+  if (v.x != 0.f) {
+    t = (s.x, line_min.x)/v.x;
+  }
+  else if (v.y != 0.f) {
+    t = (s.y, line_min.y)/v.y;
+  }
+  else return false;
+  
+  F32 r_2 = circle_radius * circle_radius;
+  V2 cs = v2_sub(circle_center, s);
+  F32 d_2 = cs.x * cs.x + cs.y * cs.y; 
+
+  return d_2 <= r_2; 
+ 
+}
+
+static V2
+get_circle_to_finite_line_resp(V2 circle_center, F32 circle_radius, V2 line_min, V2 line_max) {
+
+  // extend lines
+  V2 v = v2_norm(v2_sub(line_max, line_min));
+  line_min = v2_sub(line_min, v);
+  line_max = v2_add(line_min, v);
+
+  // get point on line that's the shortest distance
+  V2 s = v2_add(v2_proj(v2_sub(circle_center, line_min), v), line_min); 
+
+  F32 t = 0.f;
+  if (v.x != 0.f) {
+    t = (s.x, line_min.x)/v.x;
+  }
+  else if (v.y != 0.f) {
+    t = (s.y, line_min.y)/v.y;
+  }
+  else return {0};
+  
+  F32 r_2 = circle_radius * circle_radius;
+  V2 cs = v2_sub(circle_center, s);
+  F32 d_2 = cs.x * cs.x + cs.y * cs.y; 
+
+  if (d_2 > r_2) return {0};
+
+  return v2_sub(circle_center, s);
+}
+
 static Line2 
 lit_calc_ghost_edge_line(Lit_Point_List* points, Lit_Edge* e) {
 	Line2 ret = {};
@@ -167,6 +223,24 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   }
   lit_update_particles(&m->particles, dt);
 
+
+  // Collision
+  al_foreach(edge_index, &m->edges) 
+  {
+    Lit_Edge* edge = al_at(&m->edges, edge_index);
+    if (edge->is_disabled) continue;
+    Line2 line = { 
+      *al_at(&m->points, edge->min_pt_id),
+      *al_at(&m->points, edge->max_pt_id),
+    };
+
+      
+    if (is_circle_on_finite_line(player->pos, LIT_PLAYER_RADIUS, line.min, line.max)) {
+      pf->debug_log("Hello\n");
+    }
+
+  }
+
   //////////////////////////////////////////////////////////
   // Rendering
   //
@@ -260,7 +334,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   paint_sprite(painter, 
                SPRITE_BULLET_CIRCLE, 
                player->pos, 
-               player->size);
+               v2(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
   advance_depth(painter);
   
  

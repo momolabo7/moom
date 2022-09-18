@@ -1,6 +1,7 @@
+#define LIT_PLAYER_RADIUS 16.f
+
 struct Lit_Player {
   V2 pos;
-  V2 size;
   Lit_Light* held_light;
 };
 
@@ -9,8 +10,6 @@ lit_init_player(Lit_Player* player, F32 x, F32 y) {
   player->held_light = null;
   player->pos.x = x;
   player->pos.y = y;
-  player->size.x = 32.f;
-  player->size.y = 32.f;
 }
 
 static void 

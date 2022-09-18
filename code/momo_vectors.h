@@ -213,7 +213,7 @@ static V2
 v2_proj(V2 v, V2 onto) {
   // (to . from)/LenSq(to) * to
   F32 onto_len_sq = v2_len_sq(onto);
-  assert(is_close_f32(onto_len_sq, 0.f));
+  assert(!is_close_f32(onto_len_sq, 0.f));
   F32 v_dot_onto = v2_dot(v, onto);
   F32 scalar = v_dot_onto / onto_len_sq;
   V2 ret = v2_scale(onto, scalar);

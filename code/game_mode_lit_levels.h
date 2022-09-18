@@ -1,6 +1,6 @@
 
 static void
-lit_level_0(Lit* m) {
+lit_level_1(Lit* m) {
   lit_push_point(m, {0.f, 0.f});     // 0
   lit_push_point(m, {1600.f, 0.f});  // 1
   lit_push_point(m, {1600.f, 900.f});// 2
@@ -49,7 +49,7 @@ lit_level_0(Lit* m) {
 }
 
 static void
-lit_level_1(Lit* m) {
+lit_level_0(Lit* m) {
   lit_push_point(m, {0.f, 0.f});     // 0
   lit_push_point(m, {1600.f, 0.f});  // 1
   lit_push_point(m, {1600.f, 900.f});// 2
@@ -60,8 +60,8 @@ lit_level_1(Lit* m) {
   lit_push_edge(m, 2, 3);
   lit_push_edge(m, 3, 0);
 
+  lit_push_sensor(&m->sensors, {100.f, 600.f}, 0x888888FF); 
   
-  // lights
   lit_push_light(m, {250.f, 600.f}, 0x880000FF, 90.f, 0.f);
   
   // initialize player
@@ -69,6 +69,7 @@ lit_level_1(Lit* m) {
   lit_init_player(p, 400.f, 400.f);
 
 }
+
 
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
@@ -82,9 +83,8 @@ lit_load_level(Lit* m, U32 level_id) {
   al_clear(&m->sensors);
   al_clear(&m->lights);
   al_clear(&m->edges);
-
+  al_clear(&m->points);
   lit_levels[level_id](m);
-
   m->is_win_reached = false;
 }
 

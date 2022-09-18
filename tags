@@ -712,6 +712,7 @@ GAME_WIDTH	code/game_platform.h	/^#define GAME_WIDTH /;"	d	language:C++
 GB	code/momo_common.h	/^#define GB(/;"	d	language:C++
 gen_light_intersections	code/game_mode_level_light.cpp	/^gen_light_intersections(Light* l, $/;"	f	language:C++	typeref:typename:void	file:
 get_bitmap	code/game_assets.h	/^get_bitmap(Game_Assets* ga, Bitmap_ID id) {$/;"	f	language:C++	typeref:typename:Bitmap_Asset *
+get_circle_to_finite_line_resp	code/game_mode_lit.h	/^get_circle_to_finite_line_resp(V2 circle_center, F32 circle_radius, V2 line_min, V2 line_max) {$/;"	f	language:C++	typeref:typename:V2
 get_font	code/game_assets.h	/^get_font(Game_Assets* ga, Font_ID id) {$/;"	f	language:C++	typeref:typename:Font_Asset *
 get_glyph	code/game_assets.h	/^get_glyph(Font_Asset* font, U32 codepoint) {$/;"	f	language:C++	typeref:typename:Font_Glyph_Asset *
 get_horizontal_advance	code/game_assets.h	/^get_horizontal_advance(Font_Asset* font,$/;"	f	language:C++	typeref:typename:F32
@@ -1283,6 +1284,7 @@ intersections	.\code\game_sb1.h	/^  SB1_Light_Intersection_List intersections;$/
 intersections	code/game_mode_lit_light.h	/^  Lit_Light_Intersection_List intersections;$/;"	m	language:C++	struct:Lit_Light	typeref:typename:Lit_Light_Intersection_List
 int_to_ptr	code/momo_common.h	/^int_to_ptr(UMI u) { $/;"	f	language:C++	typeref:typename:U8 *
 is_alpha	code/momo_common.h	/^is_alpha(C8 c) {$/;"	f	language:C++	typeref:typename:B32
+is_circle_on_finite_line	code/game_mode_lit.h	/^is_circle_on_finite_line(V2 circle_center, F32 circle_radius, V2 line_min, V2 line_max) {$/;"	f	language:C++	typeref:typename:B32
 is_close_f32	code/momo_common.h	/^is_close_f32(F32 lhs, F32 rhs) {$/;"	f	language:C++	typeref:typename:B32
 is_close_f64	code/momo_common.h	/^is_close_f64(F64 lhs, F64 rhs) {$/;"	f	language:C++	typeref:typename:B32
 IS_CPP	code/momo_common.h	/^# define IS_CPP /;"	d	language:C++
@@ -1397,6 +1399,7 @@ lit_load_next_level	code/game_mode_sb1_levels.h	/^lit_load_next_level(Lit* m){$/
 Lit_Particle	code/game_mode_lit_particles.h	/^struct Lit_Particle {$/;"	s	language:C++
 Lit_Particle_Pool	code/game_mode_lit_particles.h	/^struct Lit_Particle_Pool {$/;"	s	language:C++
 Lit_Player	code/game_mode_lit_player.h	/^struct Lit_Player {$/;"	s	language:C++
+LIT_PLAYER_RADIUS	code/game_mode_lit_player.h	/^#define LIT_PLAYER_RADIUS /;"	d	language:C++
 Lit_Point_List	code/game_mode_lit.h	/^struct Lit_Point_List {$/;"	s	language:C++
 Lit_Point_List	code/game_mode_sb1.h	/^struct Lit_Point_List {$/;"	s	language:C++
 lit_push_edge	code/game_mode_lit.h	/^lit_push_edge(Lit* m, UMI min_pt_id, UMI max_pt_id) {$/;"	f	language:C++	typeref:typename:Lit_Edge *
@@ -1968,7 +1971,6 @@ size	.\code\game_sb1.h	/^  V2 size;$/;"	m	language:C++	struct:SB1_Player
 size	code/game_gfx.h	/^  V2 size;$/;"	m	language:C++	struct:Gfx_Command_Rect	typeref:typename:V2
 size	code/game_gfx.h	/^  V2 size;$/;"	m	language:C++	struct:Gfx_Command_Sprite	typeref:typename:V2
 size	code/game_mode_level.h	/^  V2 size;$/;"	m	language:C++	struct:Player	typeref:typename:V2
-size	code/game_mode_lit_player.h	/^  V2 size;$/;"	m	language:C++	struct:Lit_Player	typeref:typename:V2
 size	code/game_renderer.h	/^  V2 size;$/;"	m	language:C++	struct:Gfx_Command_Rect	typeref:typename:V2
 size	code/game_renderer.h	/^  V2 size;$/;"	m	language:C++	struct:Gfx_Command_Sprite	typeref:typename:V2
 size	code/momo_common.h	/^  UMI size;  $/;"	m	language:C++	struct:__anonbacee3e50908	typeref:typename:UMI
@@ -1976,6 +1978,8 @@ size	code/momo_streams.h	/^  UMI size;$/;"	m	language:C++	struct:Stream	typeref:
 size	code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:__anon54fde02a0108	typeref:typename:U32
 size	code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:__anon54fde02a0208	typeref:typename:U32
 size	code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:__anon54fde02a0308	typeref:typename:U32
+size_end	code/game_mode_lit_particles.h	/^  V2 size_start, size_end;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:V2
+size_start	code/game_mode_lit_particles.h	/^  V2 size_start, size_end;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:V2
 sll_append	code/momo_lists.h	/^#define sll_append(/;"	d	language:C++
 sll_prepend	code/momo_lists.h	/^#define sll_prepend(/;"	d	language:C++
 sl_append	code/momo_lists.h	/^#define sl_append(/;"	d	language:C++
@@ -2015,6 +2019,7 @@ sprite_count	code/karu.h	/^  U32 sprite_count;$/;"	m	language:C++	struct:Karu_He
 sprite_count	code/sui_atlas.h	/^  U32 sprite_count;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:U32
 sprite_count	code/sui_pack.h	/^  U32 sprite_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 sprite_id	code/game_mode_level_editor.h	/^  Sprite_ID sprite_id;$/;"	m	language:C++	struct:Editor_Toolbar_Button	typeref:typename:Sprite_ID
+sprite_id	code/game_mode_lit_particles.h	/^  Sprite_ID sprite_id;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:Sprite_ID
 Sprite_ID	code/generated_sprite_ids.h	/^enum Sprite_ID {$/;"	g	language:C++
 sprite_id_file	code/sui_pack.h	/^  FILE* sprite_id_file;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:FILE *
 sprite_id_name	code/sui_atlas.h	/^  const char* sprite_id_name;$/;"	m	language:C++	struct:Sui_Atlas_Sprite	typeref:typename:const char *
