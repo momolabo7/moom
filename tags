@@ -1315,6 +1315,8 @@ is_win_reached	.\code\game_sb1.h	/^  B32 is_win_reached;$/;"	m	language:C++	stru
 is_win_reached	code/game_mode_lit.h	/^  B32 is_win_reached;$/;"	m	language:C++	struct:Lit	typeref:typename:B32
 is_win_reached	code/game_mode_sb1.h	/^  B32 is_win_reached;$/;"	m	language:C++	struct:Lit	typeref:typename:B32
 item	code/game_inspector.h	/^  void* item;$/;"	m	language:C++	struct:Inspector_Entry	typeref:typename:void *
+Json_Memory	code/json_test.cpp	/^struct Json_Memory {$/;"	s	language:C++	file:
+json_read_file_to_memory	code/json_test.cpp	/^json_read_file_to_memory(const char* filename) {$/;"	f	language:C++	typeref:typename:Json_Memory	file:
 Karu_Asset_Group	code/karu.h	/^struct Karu_Asset_Group {$/;"	s	language:C++
 Karu_Bitmap	code/karu.h	/^struct Karu_Bitmap {$/;"	s	language:C++
 KARU_CODE	code/karu.h	/^#define KARU_CODE(/;"	d	language:C++
@@ -1355,6 +1357,7 @@ lights	code/game_mode_sb1.h	/^  Lit_Light_List lights;$/;"	m	language:C++	struct
 LIGHT_BLUE	code/game_mode_level.h	/^#define LIGHT_BLUE /;"	d	language:C++
 LIGHT_GREEN	code/game_mode_level.h	/^#define LIGHT_GREEN /;"	d	language:C++
 LIGHT_RED	code/game_mode_level.h	/^#define LIGHT_RED /;"	d	language:C++
+light_retrival_time	code/game_mode_lit_player.h	/^  F32 light_retrival_time;$/;"	m	language:C++	struct:Lit_Player	typeref:typename:F32
 line	code/game_profiler.h	/^  U32 line;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:U32
 Line2	code/momo_shapes.h	/^}Line2;$/;"	t	language:C++	typeref:struct:__anon484784200708
 Lit	code/game_mode_lit.h	/^struct Lit {$/;"	s	language:C++
@@ -1399,6 +1402,7 @@ lit_load_next_level	code/game_mode_sb1_levels.h	/^lit_load_next_level(Lit* m){$/
 Lit_Particle	code/game_mode_lit_particles.h	/^struct Lit_Particle {$/;"	s	language:C++
 Lit_Particle_Pool	code/game_mode_lit_particles.h	/^struct Lit_Particle_Pool {$/;"	s	language:C++
 Lit_Player	code/game_mode_lit_player.h	/^struct Lit_Player {$/;"	s	language:C++
+LIT_PLAYER_LIGHT_RETRIEVE_DURATION	code/game_mode_lit_player.h	/^#define LIT_PLAYER_LIGHT_RETRIEVE_DURATION /;"	d	language:C++
 LIT_PLAYER_RADIUS	code/game_mode_lit_player.h	/^#define LIT_PLAYER_RADIUS /;"	d	language:C++
 Lit_Point_List	code/game_mode_lit.h	/^struct Lit_Point_List {$/;"	s	language:C++
 Lit_Point_List	code/game_mode_sb1.h	/^struct Lit_Point_List {$/;"	s	language:C++
@@ -1459,6 +1463,7 @@ m44_translation	code/momo_matrix.h	/^static M44 m44_translation(F32 x, F32 y, F3
 m44_transpose	code/momo_matrix.h	/^static M44 m44_transpose(M44 m) {$/;"	f	language:C++	typeref:typename:M44
 m44_transpose	code/momo_matrix.h	/^static M44 m44_transpose(M44 m);$/;"	p	language:C++	typeref:typename:M44
 main	build/meta_test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
+main	code/json_test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/meta.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/sui.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
@@ -1478,6 +1483,7 @@ max_pt_id	code/game_mode_sb1.h	/^  UMI max_pt_id;$/;"	m	language:C++	struct:Lit_
 MB	code/momo_common.h	/^#define MB(/;"	d	language:C++
 memory	code/game_gfx.h	/^	U8* memory;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:U8 *
 memory	code/game_renderer.h	/^	U8* memory;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:U8 *
+memory	code/json_test.cpp	/^  void* memory;$/;"	m	language:C++	struct:Json_Memory	typeref:typename:void *	file:
 memory	code/momo_memory.h	/^	U8* memory;$/;"	m	language:C++	struct:__anonf3c0da150108	typeref:typename:U8 *
 memory_size	code/game_gfx.h	/^  UMI memory_size;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:UMI
 memory_size	code/game_renderer.h	/^  UMI memory_size;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:UMI
@@ -1580,6 +1586,7 @@ ogl_init	code/game_gfx_opengl.h	/^ogl_init(Opengl* ogl,$/;"	f	language:C++	typer
 ogl_init	code/game_gfx_opengl.h	/^static B32 ogl_init(Opengl* ogl, $/;"	p	language:C++	typeref:typename:B32
 ogl_init	code/game_renderer_opengl.h	/^ogl_init(Opengl* ogl,$/;"	f	language:C++	typeref:typename:B32
 ogl_init	code/game_renderer_opengl.h	/^static B32 ogl_init(Opengl* ogl, $/;"	p	language:C++	typeref:typename:B32
+old_light_pos	code/game_mode_lit_player.h	/^  V2 old_light_pos;$/;"	m	language:C++	struct:Lit_Player	typeref:typename:V2
 old_pos	code/momo_memory.h	/^  UMI old_pos;$/;"	m	language:C++	struct:__anonf3c0da150208	typeref:typename:UMI
 one_past_last_asset_index	code/karu.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Karu_Asset_Group	typeref:typename:U32
 ope	code/meta.cpp	/^  U32 ope;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:U32	file:
@@ -1973,6 +1980,7 @@ size	code/game_gfx.h	/^  V2 size;$/;"	m	language:C++	struct:Gfx_Command_Sprite	t
 size	code/game_mode_level.h	/^  V2 size;$/;"	m	language:C++	struct:Player	typeref:typename:V2
 size	code/game_renderer.h	/^  V2 size;$/;"	m	language:C++	struct:Gfx_Command_Rect	typeref:typename:V2
 size	code/game_renderer.h	/^  V2 size;$/;"	m	language:C++	struct:Gfx_Command_Sprite	typeref:typename:V2
+size	code/json_test.cpp	/^  long size;$/;"	m	language:C++	struct:Json_Memory	typeref:typename:long	file:
 size	code/momo_common.h	/^  UMI size;  $/;"	m	language:C++	struct:__anonbacee3e50908	typeref:typename:UMI
 size	code/momo_streams.h	/^  UMI size;$/;"	m	language:C++	struct:Stream	typeref:typename:UMI
 size	code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:__anon54fde02a0108	typeref:typename:U32

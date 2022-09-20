@@ -95,7 +95,6 @@ lit_update_player(Lit_Player* player,
     F32 ratio = player->light_retrival_time / LIT_PLAYER_LIGHT_RETRIEVE_DURATION; 
     player->held_light->pos.x = lerp_f32(player->old_light_pos.x, player->pos.x, ratio) ;
     player->held_light->pos.y = lerp_f32(player->old_light_pos.y, player->pos.y,  ratio) ;
-
   }
 
 }
