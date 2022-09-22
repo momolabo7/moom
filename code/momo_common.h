@@ -270,8 +270,8 @@ F64_NEG_INFINITY() {
 #define array_count(A) (sizeof(A)/sizeof(*A))
 #define offset_of(type, member) (UMI)&(((type*)0)->member)
 #define make(t, name) \
-  t glue(name_,__LINE__) = {0}; \
-  t* name = &(glue(name_,__LINE__))
+  t glue(name##_,__LINE__) = {0}; \
+  t* name = &(glue(name##_,__LINE__))
 // These need to be macros instead of function
 // because I don't want these to return or take in to a specific strict type.
 // Returning a strict type almost always end up requiring an explicit

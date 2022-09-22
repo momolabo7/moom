@@ -234,10 +234,9 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
       *al_at(&m->points, edge->max_pt_id),
     };
 
-      
-    if (is_circle_on_finite_line(player->pos, LIT_PLAYER_RADIUS, line.min, line.max)) {
-      pf->debug_log("Hello\n");
-    }
+     
+    V2 resp = get_circle_to_finite_line_resp(player->pos, LIT_PLAYER_RADIUS, line.min, line.max);
+    player->pos = v2_add(player->pos, resp);
 
   }
 
