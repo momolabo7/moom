@@ -16,7 +16,7 @@ game_update_and_render(Platform* pf)
     ba_clear(pf->game_arena);
     pf->game = ba_push(Game, pf->game_arena);
     Game* game = (Game*)pf->game;
-   
+
     // around 32MB worth
     if (!ba_partition(pf->game_arena, &game->asset_arena, MB(20), 16)) 
       return false;

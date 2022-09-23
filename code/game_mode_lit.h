@@ -57,7 +57,6 @@ is_circle_on_finite_line(V2 circle_center, F32 circle_radius, V2 line_min, V2 li
 
 static V2
 get_circle_to_finite_line_resp(V2 circle_center, F32 circle_radius, V2 line_min, V2 line_max) {
-
   // extend lines
   V2 v = v2_norm(v2_sub(line_max, line_min));
   line_min = v2_sub(line_min, v);
@@ -81,7 +80,9 @@ get_circle_to_finite_line_resp(V2 circle_center, F32 circle_radius, V2 line_min,
 
   if (d_2 > r_2) return {0};
 
-  return v2_sub(circle_center, s);
+  // end point of circle that is along the line formed by circle_center to s
+  V2 e = v2_add(v2_scale(v2_norm(v2_sub(s, circle_center)), circle_radius), circle_center);
+  return v2_sub(s, e);
 }
 
 static Line2 
