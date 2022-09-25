@@ -736,7 +736,10 @@ _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
 static Image32
 png_to_img32(PNG* png, Bump_Allocator* allocator) 
 {
-  _PNG_Context ctx = {};
+  Image32 ret = {0};
+  make(Stream, zlib_stream);
+
+  _PNG_Context ctx = {0};
   ctx.allocator = allocator;
   srm_init(&ctx.stream, png->data, png->data_size);
   ctx.image_width = png->width;
@@ -757,7 +760,6 @@ png_to_img32(PNG* png, Bump_Allocator* allocator)
   srm_init(&ctx.unfiltered_image_stream, unfiltered_image_stream_memory, unfiltered_size);
   
   srm_consume(_PNG_Header, &ctx.stream);
-  
   
   // NOTE(Momo): This is really lousy method.
   // We will go through all the IDATs and allocate a giant contiguous 
@@ -780,7 +782,7 @@ png_to_img32(PNG* png, Bump_Allocator* allocator)
   
   U8* zlib_data = ba_push_arr(U8, allocator, zlib_size);
   if (!zlib_data) goto fail;
-  make(Stream, zlib_stream);
+
   srm_init(zlib_stream, zlib_data, zlib_size);
   
   // Second pass to allocate memory
@@ -807,7 +809,6 @@ png_to_img32(PNG* png, Bump_Allocator* allocator)
     goto fail_and_cleanup;
   }
 
-  Image32 ret = {0};
   ret.width = ctx.image_width;
   ret.height = ctx.image_height;
   ret.pixels = (U32*)ctx.image_stream.data;
@@ -818,8 +819,6 @@ fail_and_cleanup:
 fail:
   return img32_bad();
 
-  
-  
 }
 
 

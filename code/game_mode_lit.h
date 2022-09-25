@@ -153,6 +153,7 @@ lit_push_edge(Lit* m, UMI min_pt_id, UMI max_pt_id) {
 
   return edge;
 }
+
 static Lit_Light*
 lit_push_light(Lit* m, V2 pos, U32 color, F32 angle, F32 facing) {
   Lit_Light* light = al_append(&m->lights);

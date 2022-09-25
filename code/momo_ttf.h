@@ -743,6 +743,9 @@ ttf_rasterize_glyph(TTF* ttf,
                     Bump_Allocator* allocator) 
 {
   Image32 ret = {0};
+ 
+  make(_TTF_Glyph_Outline, outline);
+  make(_TTF_Glyph_Paths, paths);
 
   Rect2 box = ttf_get_glyph_box(ttf, glyph_index, scale_factor);
   V2U bitmap_dims = ttf_get_bitmap_dims_from_glyph_box(box);
@@ -762,9 +765,6 @@ ttf_rasterize_glyph(TTF* ttf,
   zero_memory(pixels, bitmap_size);
  
   Bump_Allocator_Marker restore_point = ba_mark(allocator);
- 
-  make(_TTF_Glyph_Outline, outline);
-  make(_TTF_Glyph_Paths, paths);
 
   if(!_ttf_get_glyph_outline(ttf, outline, glyph_index, allocator)) {
     ttf_log("[ttf] Unable to get glyph outline\n");
