@@ -225,6 +225,97 @@ typedef struct {
 #endif 
 
 
+typedef struct Json_Node{
+  String8 key;
+  String8 val;
+
+  struct Json_Node* left;
+  struct Json_Node* right;
+    
+} Json_Node;
+
+#include <string.h>
+static Json_Node*
+json_alloc_node(Json_Tokenizer* j, Json_Token key, Json_Token val) {
+  // TODO: this is hacky and just for testing
+  Json_Node* ret = (Json_Node*)malloc(sizeof(Json_Node)); 
+  U32 key_len = key.ope - key.begin;
+  U32 val_len = val.ope - val.begin;;
+
+  U8* key_mem = (U8*)malloc(key_len);
+  U8* val_mem = (U8*)malloc(val_len);
+  for(U32 i = 0; i < key_len; ++i) {
+    key_mem[i] = j->text[key.begin + i];
+  }
+  for(U32 i = 0; i < val_len; ++i) {
+    val_mem[i] = j->text[val.begin + i];
+  }
+  
+  ret->key = str8(key_mem, key_len);  
+  ret->val = str8(val_mem, val_len);
+  ret->left = null;
+  ret->right = null;
+
+  return ret;
+}
+
+
+static B32
+json_insert_node(Json_Node** root, Json_Node* new_node) {
+  
+  if ((*root) == null) {
+    (*root) = new_node; 
+    return true;
+  }
+  else {
+    Json_Node* itr = (*root);
+    while(itr != null) {
+      SMI cmp = str8_compare_lexographically(itr->key, new_node->key);
+      if (cmp > 0) {
+        if (itr->left == null) {
+          itr->left = new_node;
+          return true;
+        }
+        else {
+          itr = itr->left;
+        }
+      }
+      else if (cmp < 0) {
+        if (itr->right == null) {
+          itr->right = new_node;
+          return true;
+        }
+        else {
+          itr = itr->right;
+        }
+      }
+      else {
+        return false;
+      }
+    }
+    return false;
+  }
+}
+
+static void 
+json_print_nodes_in_order(Json_Node* root) {
+  if (root == null) {
+    return;
+  }
+  else {
+    json_print_nodes_in_order(root->left);
+    for (U32 i = 0; i < root->key.count; ++i)
+      printf("%c", root->key.e[i]);
+    printf(":");
+    for (U32 i = 0; i < root->val.count; ++i)
+      printf("%c", root->val.e[i]);
+
+    printf("\n");
+
+    json_print_nodes_in_order(root->right);
+  }
+}
+
 int main() {
   Json_Tokenizer j = json_read_for_tokenizer("test_json.json");
  
@@ -236,7 +327,12 @@ int main() {
   // 2 is value
   // 3 is ','
   U32 what_to_expect = 0; 
-  U32 error_no = 0;
+  B32 error = false;
+
+  Json_Token current_key = {0};
+  Json_Token current_val = {0};
+
+  Json_Node* root = null;
 
   while(!is_done) {
     Json_Token token = json_next_token(&j);
@@ -249,49 +345,41 @@ int main() {
         is_done = true;
       }
     }
-    else if(token.type == JSON_TOKEN_TYPE_STRING) {
+    else if(token.type == JSON_TOKEN_TYPE_STRING || 
+            token.type == JSON_TOKEN_TYPE_IDENTIFIER) 
+    {
       if (what_to_expect == 0) {
-        printf("key: "); 
+        printf("key found: "); 
         json_print_token(&j, token);
         printf("\n");
+        current_key = token;
         what_to_expect = 1;
       }
       else if (what_to_expect == 2) {
-        printf("value: "); 
+        printf("value found: "); 
         json_print_token(&j, token);
         printf("\n");
-        what_to_expect = 3;  
-      }
-      else {
-        // TODO: error
-        is_done = true;
-      }
-    }
-    else if (token.type == JSON_TOKEN_TYPE_IDENTIFIER) {
-      if (what_to_expect == 0) {
-        printf("key: "); 
-        json_print_token(&j, token);
-        printf("\n");
-        what_to_expect = 1;
-      }
-      else if (what_to_expect == 2) {
-        printf("value: "); 
-        json_print_token(&j, token);
-        printf("\n");
-        what_to_expect = 3;  
-      }
-      else {
-        // TODO: error
-        is_done = true;
-      }
+        current_val = token;
+        
+        // Ok we try to make a node
+        Json_Node* node = json_alloc_node(&j, current_key, current_val);
+        json_insert_node(&root, node);
 
+        what_to_expect = 3;  
+      }
+      else {
+        // TODO: error
+        error = true;
+        is_done = true;
+      }
     }
+    
     else if (token.type == JSON_TOKEN_TYPE_COLON) {
       if (what_to_expect == 1) {
         what_to_expect = 2;
       }
       else {
-        // TODO: error
+        error = true;
         is_done = true;
       }
     }
@@ -302,17 +390,23 @@ int main() {
       }
       else {
         // TODO: error
+        error = true;
         is_done = true;
       }
     }
     else if (token.type == JSON_TOKEN_TYPE_EOF) {
       // we shouldn't reach here?
-      // TODO: error
+      error = true;
       is_done = true;
     }
     
   } 
 
+
+
+  // print the node in order
+  printf("=== Printing json tree in-order ===\n");
+  json_print_nodes_in_order(root);
 
 }
 

@@ -95,6 +95,29 @@ str8_match(String8 lhs, String8 rhs) {
   return true;
 }
 
+// Compares lexographical order
+// If an unmatched character is found at an index, it will return the 'difference' between those characters
+// If no unmatched character is found at an index, it will return the size different between the strings 
+static SMI 
+str8_compare_lexographically(String8 lhs, String8 rhs) {
+  for (UMI i = 0; i < lhs.count && i < rhs.count; ++i) {
+    if (lhs.e[i] == rhs.e[i]) continue;
+    else {
+      return lhs.e[i] - rhs.e[i];
+    }
+  }
+
+  // Edge case for strings like:
+  // lhs == "asd" and rhs == "asdfg"
+  if (lhs.count == rhs.count) {
+    return 0;
+  }
+  else {
+    return (SMI)(lhs.count - rhs.count);
+  }
+  
+}
+
 #if IS_CPP
 static B32 operator==(String8 lhs, String8 rhs) {
 	return str8_match(lhs, rhs);
@@ -245,6 +268,7 @@ sb8_push_f32(String8_Builder* b, F32 value, U32 precision) {
 		sb8_push_c8(b, '-');	
 		value = -value;
 	}
+
 	// NOTE(Momo): won't work for values that U32 can't contain
 	U32 integer_part = (U32)value;
 	sb8_push_u32(b, integer_part);

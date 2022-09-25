@@ -305,7 +305,7 @@ F64_NEG_INFINITY() {
 // Integer  to pointer conversions
 static UMI 
 ptr_to_int(void* p) { 
-  return (UMI)((C8*)p - (char*)0); 
+  return (UMI)((C8*)p - (C8*)0); 
 }
 
 static U8* 
@@ -598,7 +598,7 @@ cstr_len(const C8* str) {
 }
 
 static void
-cstr_copy(char * dest, const C8* src) {
+cstr_copy(C8 * dest, const C8* src) {
   for(; (*src) != 0 ; ++src, ++dest) {
     (*dest) = (*src);
   }
@@ -606,7 +606,7 @@ cstr_copy(char * dest, const C8* src) {
 }
 
 static B32
-cstr_compare(const C8* lhs, const char* rhs) {
+cstr_compare(const C8* lhs, const C8* rhs) {
   for(; (*rhs) != 0 ; ++rhs, ++lhs) {
     if ((*lhs) != (*rhs)) {
       return false;
@@ -616,7 +616,7 @@ cstr_compare(const C8* lhs, const char* rhs) {
 }
 
 static B32
-cstr_compare_n(const C8* lhs, const char* rhs, UMI n) {
+cstr_compare_n(const C8* lhs, const C8* rhs, UMI n) {
   while(n--) {
     if ((*lhs++) != (*rhs++)) {
       return false;
@@ -625,7 +625,7 @@ cstr_compare_n(const C8* lhs, const char* rhs, UMI n) {
   return true;
 }
 static void
-cstr_concat(C8* dest, const char* Src) {
+cstr_concat(C8* dest, const C8* Src) {
   // Go to the end of dest
   for (; (*dest) != 0; ++dest);
   for (; (*Src) != 0; ++Src, ++dest) {
@@ -1447,7 +1447,7 @@ cstr_itoa(C8* dest, S32 num) {
   C8* it = dest;
   for(; num != 0; num /= 10) {
     S32 digit_to_convert = num % 10;
-    *(it++) = (char)(digit_to_convert + '0');
+    *(it++) = (C8)(digit_to_convert + '0');
   }
   
   if (negative) {
