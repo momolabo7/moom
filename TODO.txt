@@ -1,9 +1,3 @@
-Game
-  Going to next level  
-  Transitions
-    Go to next level
-    Picking up light
-
 
 Assets 
   9 Slice 

@@ -27,7 +27,6 @@ typedef enum {
   JSON_EXPECT_TYPE_VALUE,
   JSON_EXPECT_TYPE_COMMA_OR_CLOSE,
   JSON_EXPECT_TYPE_COLON,
-
 } Json_Expect_Type;
 
 typedef struct {
@@ -321,9 +320,11 @@ json_parse_object(Json_Tokenizer* j) {
       case JSON_EXPECT_TYPE_KEY_OR_CLOSE: {
 
         if (token.type == JSON_TOKEN_TYPE_STRING) {
+#if 0
           printf("key found: "); 
           json_print_token(j, token);
           printf("\n");
+#endif
           current_node = json_alloc_node();
           json_set_node_key(current_node, j, token); 
           
@@ -351,9 +352,11 @@ json_parse_object(Json_Tokenizer* j) {
         if(token.type == JSON_TOKEN_TYPE_STRING ||
            token.type == JSON_TOKEN_TYPE_IDENTIFIER) 
         {
+#if 0
           printf("value found: "); 
           json_print_token(j, token);
           printf("\n");
+#endif
           
           // Ok we try to make a node
           json_set_node_value_string(current_node, j, token);
@@ -364,13 +367,11 @@ json_parse_object(Json_Tokenizer* j) {
           Json_Node* node = json_parse_object(j); 
           current_node->value_object = node;
           json_insert_node(&root, current_node);
-
         }
         
         expect_type = JSON_EXPECT_TYPE_COMMA_OR_CLOSE;
 
         // TODO: array
-        // TODO: json
     
       } break;
       case JSON_EXPECT_TYPE_COMMA_OR_CLOSE:{
