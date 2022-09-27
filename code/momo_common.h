@@ -1304,8 +1304,8 @@ _compute_f64(S64 power, U64 i, B32 negative)
 static F64
 cstr_to_f64(const C8* p) {
   const C8* pinit = p;
-  bool found_minus = (*p == '-');
-  bool negative = false;
+  B32 found_minus = (*p == '-');
+  B32 negative = false;
   if (found_minus) {
     ++p;
     negative = true;
@@ -1322,7 +1322,8 @@ cstr_to_f64(const C8* p) {
       return 0.0;
     }
     i = 0;
-  } else {
+  } 
+  else {
     if (!(is_digit(*p))) { // must start with an integer
       return 0.0;
     }
@@ -1361,8 +1362,7 @@ cstr_to_f64(const C8* p) {
     }
     exponent = first_after_period - p;
   }
-  int digit_count =
-    int(p - start_digits - 1); // used later to guard against overflows
+  int digit_count = int(p - start_digits - 1); // used later to guard against overflows
   if (('e' == *p) || ('E' == *p)) {
     ++p;
     bool neg_exp = false;

@@ -13,7 +13,13 @@ static B32 str8_match(String8 lhs, String8 rhs);
 
 static String8 str8(U8* str, UMI size);
 static String8 str8_from_cstr(const char* cstr);
+
 #define str8_from_lit(s) str8((U8*)(s), sizeof(s)-1)
+
+// parsing strings to other types
+B32 str8_to_u32(U32* out);
+B32 str8_range_to(U32* out);
+
 
 #if IS_CPP
 static B32 operator==(String8 lhs, String8 rhs);
@@ -95,6 +101,8 @@ str8_match(String8 lhs, String8 rhs) {
   return true;
 }
 
+
+
 // Compares lexographical order
 // If an unmatched character is found at an index, it will return the 'difference' between those characters
 // If no unmatched character is found at an index, it will return the size different between the strings 
@@ -116,6 +124,49 @@ str8_compare_lexographically(String8 lhs, String8 rhs) {
     return (SMI)(lhs.count - rhs.count);
   }
   
+}
+static B32 
+str8_to_u32_range(String8 s, UMI begin, UMI ope, U32* out) {
+  if (ope >= s.count) return false;
+
+  U32 number = 0;
+  for (UMI i = begin; i < ope; ++i) {
+    if (!is_digit(s.e[i]))
+        return false;
+    number *= 10;
+    number += ascii_to_digit(s.e[i]);
+  }
+  (*out) = number;
+  return true;
+}
+
+// Parsing functions
+static B32 str8_to_u32(String8 s, U32* out) {
+  return str8_to_u32_range(s, 0, s.count, out);
+}
+static B32 
+str8_to_s32_range(String8 s, UMI begin, UMI ope, S32* out) {
+  if (ope >= s.count) return false;
+
+  B32 is_negative = false;
+  if (s.e[0] == '-') {
+    is_negative = true;
+  }
+
+  S32 number = 0;
+  for (UMI i = is_negative ? begin + 1 : begin; i < ope; ++i) {
+    if (!is_digit(s.e[i]))
+        return false;
+    number *= 10;
+    number += ascii_to_digit(s.e[i]);
+  }
+  (*out) = is_negative ? -number : number;
+  return true;
+}
+
+// Parsing functions
+static B32 str8_to_s32(String8 s, S32* out) {
+  return str8_to_s32_range(s, 0, s.count, out);
 }
 
 #if IS_CPP
