@@ -144,17 +144,20 @@ str8_to_u32_range(String8 s, UMI begin, UMI ope, U32* out) {
 static B32 str8_to_u32(String8 s, U32* out) {
   return str8_to_u32_range(s, 0, s.count, out);
 }
+
 static B32 
 str8_to_s32_range(String8 s, UMI begin, UMI ope, S32* out) {
   if (ope >= s.count) return false;
 
   B32 is_negative = false;
-  if (s.e[0] == '-') {
+  if (s.e[begin] == '-') {
     is_negative = true;
+    ++begin;
   }
 
+
   S32 number = 0;
-  for (UMI i = is_negative ? begin + 1 : begin; i < ope; ++i) {
+  for (UMI i = begin; i < ope; ++i) {
     if (!is_digit(s.e[i]))
         return false;
     number *= 10;

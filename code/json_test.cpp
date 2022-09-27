@@ -165,7 +165,6 @@ json_next_token(Json_Tokenizer* t) {
         {
           ++t->at;
         }
-        printf("Hello");
         ret.type = JSON_TOKEN_TYPE_SIGNED_INTEGER;
         ret.ope = t->at;
       }
@@ -359,10 +358,13 @@ json_parse_object(Json_Tokenizer* j) {
           }
         }
         else if(token.type == JSON_TOKEN_TYPE_SIGNED_INTEGER) {
+
           S32 number = 0;
           B32 success = str8_to_s32_range(j->text, token.begin, token.ope, &number);
           if (success) {
-            current_node->value_u32 = number;
+
+          printf("Hello");
+            current_node->value_s32 = number;
             current_node->value_type = JSON_VALUE_TYPE_S32;
             json_insert_node(&root, current_node);
           }
