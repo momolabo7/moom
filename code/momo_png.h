@@ -13,6 +13,7 @@
 // USAGE:
 //
 //   B32 png_read(PNG* png, void* png_memory, UMI png_size);
+//   B32 png_read_from_blk(PNG* p, Block blk);
 //   Image32 png_to_img32(PNG* png, Bump_Allocator* allocator);
 //   Block png_write_img32_to_blk(Image32 img, Bump_Allocator* allocator);
 //
@@ -986,6 +987,7 @@ png_write_img32_to_blk(Image32 bm, Bump_Allocator* allocator) {
   return ret;
 }
 
+
 static B32
 png_read(PNG* p, void* png_memory, UMI png_size) {
   make(Stream, stream);
@@ -1023,6 +1025,11 @@ png_read(PNG* p, void* png_memory, UMI png_size) {
   p->interlace_method = IHDR->interlace_method;
   
   return true;
+}
+
+static B32 
+png_read_from_blk(PNG* p, Block blk) {
+  return png_read(p, blk.data, blk.size);
 }
 
 #endif //MOMO_PNG
