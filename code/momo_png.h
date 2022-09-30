@@ -1,21 +1,19 @@
 // Authors: Gerald Wong, momodevelop
 //
-// This file processes PNG files:
-// - Reads and writes to PNG
+// This file processes PNG files
 //
 // NOTES:
-// - Only works in little-endian OS
-// - Only reads and writes into 32-bit RGBA format
+//   The code only supports little-endian OS and 32-bit PNG formats.
 //
 // TODO:
-// - Support other formats for reading/writeing
+//   Support other formats for reading/writing
 //
 // USAGE:
 //
-//   B32 png_read(PNG* png, void* png_memory, UMI png_size);
-//   B32 png_read_from_blk(PNG* p, Block blk);
+//   B32     png_read(PNG* png, void* png_memory, UMI png_size);
+//   B32     png_read_from_blk(PNG* p, Block blk);
 //   Image32 png_to_img32(PNG* png, Bump_Allocator* allocator);
-//   Block png_write_img32_to_blk(Image32 img, Bump_Allocator* allocator);
+//   Block   png_write_img32_to_blk(Image32 img, Bump_Allocator* allocator);
 //
 #ifndef MOMO_PNG
 #define MOMO_PNG

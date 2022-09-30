@@ -1,5 +1,6 @@
 #include <stdlib.h>
 
+#include <stdio.h>
 #define JSON_DEBUG 1
 #include "momo.h"
 
@@ -43,33 +44,6 @@ typedef struct  {
   String8 text;
   U32 at;
 } _JSON_Tokenizer;
-
-#include <stdio.h>
-static _JSON_Tokenizer 
-_json_read_for_tokenizer(const C8* filename) {
-  FILE* fp = fopen(filename, "r");
-  if (!fp) { 
-    printf("Cannot open file\n");
-    return {0};
-  }
-  fseek(fp, 0, SEEK_END);
-  long len = ftell(fp);
-  fseek(fp, 0, SEEK_SET);
-
-  void* mem = malloc(len);
-  if (!mem) {
-    printf("Cannot allocate memory\n");
-    return {0};
-  }
-  fread(mem, len, 1, fp);
-  fclose(fp);
-
-  _JSON_Tokenizer ret = {0};
-  ret.text = str8((U8*)mem, len);
-
-
-  return ret;
-}
 
 
 
@@ -547,19 +521,27 @@ _json_print_nodes_in_order(_JSON_Node* root) {
   }
 }
 #endif // JSON_DEBUG
+typedef struct 
+{
 
+  _JSON_Node* root;
+} JSON;
 
-int main() {
-  _JSON_Tokenizer j = _json_read_for_tokenizer("test_json.json");
- 
-  U32 scope_level = 0;
-  B32 is_done = false;
-  _JSON_Expect_Type expect_type = _JSON_EXPECT_TYPE_OPEN; 
+static _JSON_Tokenizer 
+_json_create_tokenizer(void* png_memory, UMI png_size) {
+  _JSON_Tokenizer ret = {0};
+  ret.text = str8((U8*)png_memory, png_size);
+  ret.at = 0;
+  return ret;
+}
 
-  _JSON_Token token = _json_next_token(&j);
-  if (token.type != _JSON_TOKEN_TYPE_OPEN_BRACE) return 1;
-  
-  _JSON_Node* root = _json_parse_object(&j);
+static B32
+json_read(JSON* j, void* memory, UMI size) 
+{
+  _JSON_Tokenizer tokenizer = _json_create_tokenizer(memory, size);
+  _JSON_Token token = _json_next_token(&tokenizer);
+  if (token.type != _JSON_TOKEN_TYPE_OPEN_BRACE) return false;
+  _JSON_Node* root = _json_parse_object(&tokenizer);
 
   // print the node in order
 #if JSON_DEBUG
@@ -567,6 +549,62 @@ int main() {
   _json_print_nodes_in_order(root);
 #endif //JSON_DEBUG
 
+  j->root = root;
+  return true;
+}
+
+
+static B32 
+json_read_from_blk(JSON* j, Block blk) {
+  return json_read(j, blk.data, blk.size);
+}
+
+static _JSON_Node* 
+json_get(JSON* j, String8 key) {
+  _JSON_Node* node = j->root;
+  while(node) {
+    SMI cmp = str8_compare_lexographically(key, node->key); 
+    if (cmp < 0) {
+      node = node->left;
+    }
+    else if (cmp > 0) {
+      node = node->right;
+    }
+    else {
+      return node;
+    }
+  }
+
+  return node;
+}
+
+
+int main() {
+ FILE* fp = fopen("test_json.json", "r");
+  if (!fp) { 
+    printf("Cannot open file\n");
+    return {0};
+  }
+  fseek(fp, 0, SEEK_END);
+  long len = ftell(fp);
+  fseek(fp, 0, SEEK_SET);
+
+  void* mem = malloc(len);
+  if (!mem) {
+    printf("Cannot allocate memory\n");
+    return {0};
+  }
+  fread(mem, len, 1, fp);
+  fclose(fp);
+
+  make(JSON, json);
+  json_read(json, mem, len);
+
+
+  _JSON_Node* node = json_get(json, str8_from_lit("age"));
+  printf("%d", node->value_u32);
+
+  
 }
 
 
