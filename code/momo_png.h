@@ -3,14 +3,19 @@
 // This file processes PNG files:
 // - Reads and writes to PNG
 //
-// Notes:
+// NOTES:
 // - Only works in little-endian OS
 // - Only reads and writes into 32-bit RGBA format
 //
-// Todo:
+// TODO:
 // - Support other formats for reading/writeing
 //
-
+// USAGE:
+//
+//   B32 png_read(PNG* png, void* png_memory, UMI png_size);
+//   Image32 png_to_img32(PNG* png, Bump_Allocator* allocator);
+//   Block png_write_img32_to_blk(Image32 img, Bump_Allocator* allocator);
+//
 #ifndef MOMO_PNG
 #define MOMO_PNG
 
@@ -27,19 +32,7 @@ typedef struct {
   U8 interlace_method;
 } PNG;
 
-//
-// Only reads and writes in RGBA format.
-// Only works in little-endian OS
-//
-// - Make these work in big endian OS
-// - probably need a 'get channels' function?
-//      static U32 get_channels(PNG);
-//
-static B32 png_read(PNG* p, void* png_memory, UMI png_size);
-static Image32 png_to_img32(PNG* png, Bump_Allocator* allocator);
-static Block png_write(Image32 img, Bump_Allocator* allocator);
-
-//////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 // We are only interested in 4-channel images in RGBA format
 #define _PNG_CHANNELS 4 
@@ -485,7 +478,6 @@ _png_get_channels_from_colour_type(U32 colour_type) {
       return 3; // RGB
     } break;
     case 3: { // Palette
-      assert(false);
       return 0;
     } break;
     case 4: {
@@ -495,7 +487,6 @@ _png_get_channels_from_colour_type(U32 colour_type) {
       return 4; // RGBA
     } break;
     default: {
-      assert(false);
       return 0;
     }
   }
@@ -825,10 +816,10 @@ fail:
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
 static Block
-png_write(Image32 bm, Bump_Allocator* allocator) {
-  assert(bm.width > 0);
-  assert(bm.height > 0);
-  assert(bm.pixels != 0);
+png_write_img32_to_blk(Image32 bm, Bump_Allocator* allocator) {
+  if (bm.width <= 0 || bm.height <= 0 || bm.pixels == 0) {
+    return blk_bad();
+  }
   
   static const U8 signature[] = { 
     137, 80, 78, 71, 13, 10, 26, 10 
@@ -857,10 +848,12 @@ png_write(Image32 bm, Bump_Allocator* allocator) {
                                   IDAT_chunk_size);
   
   U8* stream_memory = ba_push_arr(U8, allocator, expected_memory_required);
-  assert(stream_memory);
+  if (!stream_memory) {
+    return blk_bad();
+  }
+
   make(Stream, stream);
   srm_init(stream, stream_memory, expected_memory_required);
-  
   srm_write_block(stream, (void*)signature, sizeof(signature));
   
   

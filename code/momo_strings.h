@@ -141,9 +141,7 @@ str8_to_u32_range(String8 s, UMI begin, UMI ope, U32* out) {
 }
 
 // Parsing functions
-static B32 str8_to_u32(String8 s, U32* out) {
-  return str8_to_u32_range(s, 0, s.count, out);
-}
+
 
 static B32 
 str8_to_s32_range(String8 s, UMI begin, UMI ope, S32* out) {
@@ -167,8 +165,46 @@ str8_to_s32_range(String8 s, UMI begin, UMI ope, S32* out) {
   return true;
 }
 
+static B32 
+str8_to_f32_range(String8 s, UMI begin, UMI ope, F32* out) {
+  if (ope >= s.count) return false;
+  U32 place = 0;
+
+  // Really lousy algorithm
+  F32 number = 0.f;
+
+  for(UMI i = begin; i < ope; ++i) {
+    if (s.e[i] == '.') {
+      place = 1;
+      continue;
+    }
+
+    U8 digit = ascii_to_digit(s.e[i]);
+    if (place == 0) {
+      number *= 10.f;
+      number += (F32)digit;
+    }
+    else {
+      F32 value_to_add = (F32)digit / (F32)(10 * place);
+      number += value_to_add;
+      place *= 10;
+    }
+  }
+  (*out) = number;
+  return true; 
+}
+
+static B32 
+str8_to_f32(String8 s, F32* out) {
+  return str8_to_f32_range(s, 0, s.count, out);
+}
+static B32 
+str8_to_u32(String8 s, U32* out) {
+  return str8_to_u32_range(s, 0, s.count, out);
+}
 // Parsing functions
-static B32 str8_to_s32(String8 s, S32* out) {
+static B32 
+str8_to_s32(String8 s, S32* out) {
   return str8_to_s32_range(s, 0, s.count, out);
 }
 

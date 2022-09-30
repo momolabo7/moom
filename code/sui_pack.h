@@ -429,7 +429,7 @@ end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)
 
     ba_set_revert_point(p->allocator);
     sui_log("Writing test png file...\n");
-    Block png_blk = png_write(bitmap, p->allocator);
+    Block png_blk = png_write_img32_to_blk(bitmap, p->allocator);
     if (!blk_ok(png_blk)) return 1;
     sui_write_file_from_blk("test.png", png_blk);
   }
