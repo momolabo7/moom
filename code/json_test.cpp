@@ -560,7 +560,7 @@ json_read_from_blk(JSON* j, Block blk) {
 }
 
 static _JSON_Node* 
-json_get(JSON* j, String8 key) {
+_json_get(JSON* j, String8 key) {
   _JSON_Node* node = j->root;
   while(node) {
     SMI cmp = str8_compare_lexographically(key, node->key); 
@@ -576,6 +576,25 @@ json_get(JSON* j, String8 key) {
   }
 
   return node;
+}
+
+static B32 
+json_get_s32(JSON* j, String8 key, S32* out) {
+  _JSON_Node* node = _json_get(j, key);
+  if (!node) return false;
+  if (node->value_type != _JSON_VALUE_TYPE_S32) return false;
+  (*out) = node->value_s32;
+  return true;
+}
+
+
+static B32 
+json_get_u32(JSON* j, String8 key, U32* out) {
+  _JSON_Node* node = _json_get(j, key);
+  if (!node) return false;
+  if (node->value_type != _JSON_VALUE_TYPE_U32) return false;
+  (*out) = node->value_u32;
+  return true;
 }
 
 
@@ -601,8 +620,9 @@ int main() {
   json_read(json, mem, len);
 
 
-  _JSON_Node* node = json_get(json, str8_from_lit("age"));
-  printf("%d", node->value_u32);
+  U32 test = 0;
+  json_get_u32(json, str8_from_lit("age"), &test);
+  printf("%d", test);
 
   
 }
