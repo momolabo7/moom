@@ -67,7 +67,7 @@ assert_callback	code/sui.h	/^#define assert_callback(/;"	d	language:C++
 assert_callback	code/test.h	/^#define assert_callback(/;"	d	language:C++
 asset_arena	code/game.h	/^  Bump_Allocator asset_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Bump_Allocator
 asset_dir	code/sui.h	/^#define asset_dir(/;"	d	language:C++
-at	code/json_test.cpp	/^  U32 at;$/;"	m	language:C++	struct:__anon5420ae190408	typeref:typename:U32	file:
+at	code/json_test.cpp	/^  U32 at;$/;"	m	language:C++	struct:__anon5420ae190608	typeref:typename:U32	file:
 at	code/meta.cpp	/^  U32 at;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:U32	file:
 atan_f32	code/momo_intrinsics.h	/^atan_f32(F32 x){$/;"	f	language:C++	typeref:typename:F32
 atan_f32	code/momo_intrinsics.h	/^static F32 atan_f32(F32 x);$/;"	p	language:C++	typeref:typename:F32
@@ -90,6 +90,7 @@ b	code/momo_colors.h	/^    struct { F32 r, g, b; };  $/;"	m	language:C++	struct:
 b	code/momo_colors.h	/^  F32 r, g, b;   $/;"	m	language:C++	struct:__anonb89fa6ae0108	typeref:typename:F32
 b	code/momo_strings.h	/^  union { U32 v; U8 b[4]; } combine;$/;"	m	language:C++	union:sb8_push_hex_u32::__anon71355586050a	typeref:typename:U8[4]
 B16	code/momo_common.h	/^typedef U16 B16;$/;"	t	language:C++	typeref:typename:U16
+b32	code/json_test.cpp	/^    B32 b32;$/;"	m	language:C++	union:__anon5420ae190808::__anon5420ae19090a	typeref:typename:B32	file:
 B32	code/momo_common.h	/^typedef U32 B32;$/;"	t	language:C++	typeref:typename:U32
 B64	code/momo_common.h	/^typedef U64 B64;$/;"	t	language:C++	typeref:typename:U64
 B8	code/momo_common.h	/^typedef U8 B8;$/;"	t	language:C++	typeref:typename:U8
@@ -121,7 +122,7 @@ ba_revert	code/momo_memory.h	/^ba_revert(Bump_Allocator_Marker marker) {$/;"	f	l
 ba_revert	code/momo_memory.h	/^static void ba_revert(Bump_Allocator_Marker marker);$/;"	p	language:C++	typeref:typename:void
 ba_set_revert_point	code/momo_memory.h	/^# define ba_set_revert_point(/;"	d	language:C++
 before	code/game_platform.h	/^  B32 before;$/;"	m	language:C++	struct:Platform_Button	typeref:typename:B32
-begin	code/json_test.cpp	/^  U32 begin;$/;"	m	language:C++	struct:__anon5420ae190308	typeref:typename:U32	file:
+begin	code/json_test.cpp	/^  U32 begin;$/;"	m	language:C++	struct:__anon5420ae190508	typeref:typename:U32	file:
 begin	code/meta.cpp	/^  U32 begin;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:U32	file:
 begin_asset_pack	code/sui_pack.h	/^begin_asset_pack(Sui_Packer* p)$/;"	f	language:C++	typeref:typename:void
 begin_atlas	code/sui_pack.h	/^begin_atlas(Sui_Packer *p) {$/;"	f	language:C++	typeref:typename:void
@@ -598,6 +599,7 @@ f	code/momo_common.h	/^  union { F64 f; U64 u; } ret = {};$/;"	m	language:C++	un
 f	code/momo_common.h	/^  union { F64 f; U64 u; } ret = {};$/;"	m	language:C++	union:F64_NEG_INFINITY::__anonbacee3e5060a	typeref:typename:F64
 f	code/momo_common.h	/^  union { F64 f; U64 u; } ret = {};$/;"	m	language:C++	union:is_nan_f64::__anonbacee3e50c0a	typeref:typename:F64
 f	code/momo_common.h	/^  union { F64 f; U64 u; } val = {};$/;"	m	language:C++	union:abs_f64::__anonbacee3e5080a	typeref:typename:F64
+f32	code/json_test.cpp	/^    F32 f32;$/;"	m	language:C++	union:__anon5420ae190808::__anon5420ae19090a	typeref:typename:F32	file:
 F32	code/momo_common.h	/^typedef float F32;$/;"	t	language:C++	typeref:typename:float
 F32_EPSILON	code/momo_common.h	/^#define F32_EPSILON /;"	d	language:C++
 F32_INFINITY	code/momo_common.h	/^F32_INFINITY() {$/;"	f	language:C++	typeref:typename:F32
@@ -1332,8 +1334,14 @@ item2	build/test_json.json	/^    "item2":"hello",$/;"	s	language:JSON	object:obj
 item3	build/test_json.json	/^      "item3":123$/;"	n	language:JSON	object:obj.more_obj
 item3	build/test_json.json	/^    "item3":123,$/;"	n	language:JSON	object:obj
 JSON	code/json_test.cpp	/^} JSON;$/;"	t	language:C++	typeref:struct:__anon5420ae190708	file:
+JSON_Array	code/json_test.cpp	/^} JSON_Array;$/;"	t	language:C++	typeref:struct:__anon5420ae190408	file:
 JSON_DEBUG	code/json_test.cpp	/^#define JSON_DEBUG /;"	d	language:C++	file:
-json_get_s32	code/json_test.cpp	/^json_get_s32(JSON* j, String8 key, S32* out) {$/;"	f	language:C++	typeref:typename:B32	file:
+json_get_b32	code/json_test.cpp	/^json_get_b32(JSON* j, String8 key) {$/;"	f	language:C++	typeref:typename:B32 *	file:
+json_get_f32	code/json_test.cpp	/^json_get_f32(JSON* j, String8 key) {$/;"	f	language:C++	typeref:typename:F32 *	file:
+json_get_object	code/json_test.cpp	/^json_get_object(JSON* j, String8 key) {$/;"	f	language:C++	typeref:typename:JSON *	file:
+json_get_s32	code/json_test.cpp	/^json_get_s32(JSON* j, String8 key) {$/;"	f	language:C++	typeref:typename:S32 *	file:
+json_get_str8	code/json_test.cpp	/^json_get_str8(JSON* j, String8 key) {$/;"	f	language:C++	typeref:typename:String8 *	file:
+json_get_u32	code/json_test.cpp	/^json_get_u32(JSON* j, String8 key) {$/;"	f	language:C++	typeref:typename:U32 *	file:
 json_read	code/json_test.cpp	/^json_read(JSON* j, void* memory, UMI size) $/;"	f	language:C++	typeref:typename:B32	file:
 json_read_from_blk	code/json_test.cpp	/^json_read_from_blk(JSON* j, Block blk) {$/;"	f	language:C++	typeref:typename:B32	file:
 Karu_Asset_Group	code/karu.h	/^struct Karu_Asset_Group {$/;"	s	language:C++
@@ -1583,6 +1591,7 @@ next_entry_to_read	code/win.cpp	/^  U32 volatile next_entry_to_read;$/;"	m	langu
 next_entry_to_write	code/win.cpp	/^  U32 volatile next_entry_to_write;$/;"	m	language:C++	struct:Win_Work_Queue	typeref:typename:U32 volatile	file:
 next_obj	build/test_json.json	/^  "next_obj": {$/;"	o	language:JSON
 next_state	code/game_mode_level_editor.h	/^  Editor_State next_state;$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_State
+node	code/json_test.cpp	/^  struct _JSON_Node* node;$/;"	m	language:C++	struct:__anon5420ae190708	typeref:struct:_JSON_Node *	file:
 NOMINMAX	code/win.h	/^#define NOMINMAX$/;"	d	language:C++
 notifs	code/win_audio_wasapi.h	/^  Win_Wasapi_Notif_Client notifs;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Win_Wasapi_Notif_Client
 now	code/game_platform.h	/^  B32 now; $/;"	m	language:C++	struct:Platform_Button	typeref:typename:B32
@@ -1591,6 +1600,7 @@ ns_end	code/momo_common.h	/^# define ns_end(/;"	d	language:C++
 null	code/momo_common.h	/^# define null /;"	d	language:C++
 num_channels	code/momo_wav.h	/^  U16 num_channels;$/;"	m	language:C++	struct:__anon54fde02a0208	typeref:typename:U16
 obj	build/test_json.json	/^  "obj": { $/;"	o	language:JSON
+obj	code/json_test.cpp	/^    JSON obj;$/;"	m	language:C++	union:__anon5420ae190808::__anon5420ae19090a	typeref:typename:JSON	file:
 offset_of	code/momo_common.h	/^#define offset_of(/;"	d	language:C++
 offset_to_bitmaps	code/karu.h	/^  U32 offset_to_bitmaps;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 offset_to_data	code/karu.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Bitmap	typeref:typename:U32
@@ -1614,7 +1624,7 @@ ogl_init	code/game_renderer_opengl.h	/^static B32 ogl_init(Opengl* ogl, $/;"	p	l
 old_light_pos	code/game_mode_lit_player.h	/^  V2 old_light_pos;$/;"	m	language:C++	struct:Lit_Player	typeref:typename:V2
 old_pos	code/momo_memory.h	/^  UMI old_pos;$/;"	m	language:C++	struct:__anonf3c0da150208	typeref:typename:UMI
 one_past_last_asset_index	code/karu.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Karu_Asset_Group	typeref:typename:U32
-ope	code/json_test.cpp	/^  U32 ope;$/;"	m	language:C++	struct:__anon5420ae190308	typeref:typename:U32	file:
+ope	code/json_test.cpp	/^  U32 ope;$/;"	m	language:C++	struct:__anon5420ae190508	typeref:typename:U32	file:
 ope	code/meta.cpp	/^  U32 ope;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:U32	file:
 Opengl	code/game_gfx_opengl.h	/^struct Opengl {$/;"	s	language:C++
 Opengl	code/game_renderer_opengl.h	/^struct Opengl {$/;"	s	language:C++
@@ -1886,7 +1896,6 @@ rng_range_S32	code/momo_rng.h	/^rng_range_S32(RNG* r, S32 min, S32 max)$/;"	f	la
 rng_range_U32	code/momo_rng.h	/^rng_range_U32(RNG* r, U32 min, U32 max)$/;"	f	language:C++	typeref:typename:U32
 rng_unilateral	code/momo_rng.h	/^rng_unilateral(RNG* r)$/;"	f	language:C++	typeref:typename:F32
 rng_unit_circle	code/momo_rng.h	/^rng_unit_circle(RNG* r) {$/;"	f	language:C++	typeref:typename:V2
-root	code/json_test.cpp	/^  _JSON_Node* root;$/;"	m	language:C++	struct:__anon5420ae190708	typeref:typename:_JSON_Node *	file:
 rot	code/game_gfx.h	/^  F32 rot;$/;"	m	language:C++	struct:Gfx_Command_Rect	typeref:typename:F32
 rot	code/game_renderer.h	/^  F32 rot;$/;"	m	language:C++	struct:Gfx_Command_Rect	typeref:typename:F32
 round_f32	code/momo_intrinsics.h	/^static F32 round_f32(F32 value) {$/;"	f	language:C++	typeref:typename:F32
@@ -1907,6 +1916,7 @@ s	code/momo_colors.h	/^  F32 h, s, l;  $/;"	m	language:C++	struct:__anonb89fa6ae
 S16	code/momo_common.h	/^typedef int16_t S16;$/;"	t	language:C++	typeref:typename:int16_t
 S16_MAX	code/momo_common.h	/^#define S16_MAX /;"	d	language:C++
 S16_MIN	code/momo_common.h	/^#define S16_MIN /;"	d	language:C++
+s32	code/json_test.cpp	/^    S32 s32;$/;"	m	language:C++	union:__anon5420ae190808::__anon5420ae19090a	typeref:typename:S32	file:
 S32	code/momo_common.h	/^typedef int32_t S32;$/;"	t	language:C++	typeref:typename:int32_t
 S32_MAX	code/momo_common.h	/^#define S32_MAX /;"	d	language:C++
 S32_MIN	code/momo_common.h	/^#define S32_MIN /;"	d	language:C++
@@ -2115,6 +2125,7 @@ str8_to_u32	code/momo_strings.h	/^str8_to_u32(String8 s, U32* out) {$/;"	f	langu
 str8_to_u32_range	code/momo_strings.h	/^str8_to_u32_range(String8 s, UMI begin, UMI ope, U32* out) {$/;"	f	language:C++	typeref:typename:B32
 stream	code/momo_png.h	/^  Stream stream;$/;"	m	language:C++	struct:_PNG_Context	typeref:typename:Stream
 Stream	code/momo_streams.h	/^struct Stream {$/;"	s	language:C++
+string	code/json_test.cpp	/^    String8 string;$/;"	m	language:C++	union:__anon5420ae190808::__anon5420ae19090a	typeref:typename:String8	file:
 String8	code/momo_strings.h	/^} String8;$/;"	t	language:C++	typeref:struct:__anon713555860108
 String8_Builder	code/momo_strings.h	/^} String8_Builder;$/;"	t	language:C++	typeref:struct:__anon713555860208
 stringify	code/momo_common.h	/^#define stringify(/;"	d	language:C++
@@ -2189,7 +2200,7 @@ texel_uv	code/game_gfx.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Gfx_Comm
 texel_uv	code/game_renderer.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Gfx_Command_Sprite	typeref:typename:Rect2U
 texel_uv	code/karu.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:Rect2U
 texel_uv	code/karu.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Karu_Sprite	typeref:typename:Rect2U
-text	code/json_test.cpp	/^  String8 text;$/;"	m	language:C++	struct:__anon5420ae190408	typeref:typename:String8	file:
+text	code/json_test.cpp	/^  String8 text;$/;"	m	language:C++	struct:__anon5420ae190608	typeref:typename:String8	file:
 text	code/meta.cpp	/^  C8* text;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:C8 *	file:
 Texture	code/game_gfx_opengl.h	/^struct Texture {$/;"	s	language:C++
 Texture	code/game_renderer_opengl.h	/^struct Texture {$/;"	s	language:C++
@@ -2258,7 +2269,8 @@ ttf_read	code/momo_ttf.h	/^static B32 ttf_read(TTF* ttf, void* memory, UMI memor
 ttf_read	code/momo_ttf.h	/^ttf_read(TTF* ttf, void* memory, UMI memory_size) {$/;"	f	language:C++	typeref:typename:B32
 txt	README.md	/^# txt/;"	c	language:Markdown
 type	code/game_inspector.h	/^  Inspector_Entry_Type type;$/;"	m	language:C++	struct:Inspector_Entry	typeref:typename:Inspector_Entry_Type
-type	code/json_test.cpp	/^  _JSON_Token_Type type;$/;"	m	language:C++	struct:__anon5420ae190308	typeref:typename:_JSON_Token_Type	file:
+type	code/json_test.cpp	/^  _JSON_Token_Type type;$/;"	m	language:C++	struct:__anon5420ae190508	typeref:typename:_JSON_Token_Type	file:
+type	code/json_test.cpp	/^  _JSON_Value_Type type;$/;"	m	language:C++	struct:__anon5420ae190808	typeref:typename:_JSON_Value_Type	file:
 type	code/meta.cpp	/^  Meta_Token_Type type;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:Meta_Token_Type	file:
 type	code/momo_png.h	/^    U8 type[4];$/;"	m	language:C++	union:_PNG_Chunk_Header::__anon548615c1020a	typeref:typename:U8[4]
 type	code/sui_atlas.h	/^  Sui_Atlas_Context_Type type;$/;"	m	language:C++	struct:Sui_Atlas_Context	typeref:typename:Sui_Atlas_Context_Type
@@ -2278,6 +2290,7 @@ u	code/test_essentials.h	/^      U16 u;$/;"	m	language:C++	union:test_essentials
 u	code/test_essentials.h	/^      U32 u;$/;"	m	language:C++	union:test_essentials::__anon6a37947f020a	typeref:typename:U32
 U16	code/momo_common.h	/^typedef uint16_t U16;$/;"	t	language:C++	typeref:typename:uint16_t
 U16_MAX	code/momo_common.h	/^#define U16_MAX /;"	d	language:C++
+u32	code/json_test.cpp	/^    U32 u32;$/;"	m	language:C++	union:__anon5420ae190808::__anon5420ae19090a	typeref:typename:U32	file:
 U32	code/momo_common.h	/^typedef uint32_t U32;$/;"	t	language:C++	typeref:typename:uint32_t
 U32_MAX	code/momo_common.h	/^#define U32_MAX /;"	d	language:C++
 U64	code/momo_common.h	/^typedef uint64_t U64;$/;"	t	language:C++	typeref:typename:uint64_t
@@ -2387,13 +2400,7 @@ v3_scale	code/momo_vectors.h	/^v3_scale(V3 lhs, F32 rhs) {$/;"	f	language:C++	ty
 v3_sub	code/momo_vectors.h	/^static V3    v3_sub(V3 lhs, V3 rhs);$/;"	p	language:C++	typeref:typename:V3
 v3_sub	code/momo_vectors.h	/^v3_sub(V3 lhs, V3 rhs) {$/;"	f	language:C++	typeref:typename:V3
 V4	code/momo_vectors.h	/^} V4;$/;"	t	language:C++	typeref:union:__anon8de67fa20e0a
-value_b32	code/json_test.cpp	/^    B32 value_b32;$/;"	m	language:C++	union:_JSON_Node::__anon5420ae19060a	typeref:typename:B32	file:
-value_f32	code/json_test.cpp	/^    F32 value_f32;$/;"	m	language:C++	union:_JSON_Node::__anon5420ae19060a	typeref:typename:F32	file:
-value_obj	code/json_test.cpp	/^    _JSON_Node* value_obj;$/;"	m	language:C++	union:_JSON_Node::__anon5420ae19060a	typeref:typename:_JSON_Node *	file:
-value_s32	code/json_test.cpp	/^    S32 value_s32;$/;"	m	language:C++	union:_JSON_Node::__anon5420ae19060a	typeref:typename:S32	file:
-value_str8	code/json_test.cpp	/^    String8 value_str8;$/;"	m	language:C++	union:_JSON_Node::__anon5420ae19060a	typeref:typename:String8	file:
-value_type	code/json_test.cpp	/^  _JSON_Value_Type value_type;$/;"	m	language:C++	struct:_JSON_Node	typeref:typename:_JSON_Value_Type	file:
-value_u32	code/json_test.cpp	/^    U32 value_u32;$/;"	m	language:C++	union:_JSON_Node::__anon5420ae19060a	typeref:typename:U32	file:
+value	code/json_test.cpp	/^  _JSON_Value value;$/;"	m	language:C++	struct:_JSON_Node	typeref:typename:_JSON_Value	file:
 vel	code/game_mode_level.h	/^  V2 vel;$/;"	m	language:C++	struct:Player	typeref:typename:V2
 vel	code/game_mode_lit_particles.h	/^  V2 pos, vel;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:V2
 VERTEX_ARRAY_BINDING	code/game_gfx_opengl.h	/^enum VERTEX_ARRAY_BINDING {$/;"	g	language:C++
@@ -2652,23 +2659,24 @@ _hue_to_color	code/momo_colors.h	/^_hue_to_color(F32 p, F32 q, F32 t) {$/;"	f	la
 _json_alloc_node	code/json_test.cpp	/^_json_alloc_node() {$/;"	f	language:C++	typeref:typename:_JSON_Node *	file:
 _json_create_tokenizer	code/json_test.cpp	/^_json_create_tokenizer(void* png_memory, UMI png_size) {$/;"	f	language:C++	typeref:typename:_JSON_Tokenizer	file:
 _json_eat_ignorables	code/json_test.cpp	/^_json_eat_ignorables(_JSON_Tokenizer* t) {$/;"	f	language:C++	typeref:typename:void	file:
-_JSON_Expect_Type	code/json_test.cpp	/^} _JSON_Expect_Type;$/;"	t	language:C++	typeref:enum:__anon5420ae190203	file:
-_JSON_EXPECT_TYPE_COLON	code/json_test.cpp	/^  _JSON_EXPECT_TYPE_COLON,$/;"	e	language:C++	enum:__anon5420ae190203	file:
-_JSON_EXPECT_TYPE_COMMA_OR_CLOSE	code/json_test.cpp	/^  _JSON_EXPECT_TYPE_COMMA_OR_CLOSE,$/;"	e	language:C++	enum:__anon5420ae190203	file:
-_JSON_EXPECT_TYPE_KEY_OR_CLOSE	code/json_test.cpp	/^  _JSON_EXPECT_TYPE_KEY_OR_CLOSE,$/;"	e	language:C++	enum:__anon5420ae190203	file:
-_JSON_EXPECT_TYPE_OPEN	code/json_test.cpp	/^  _JSON_EXPECT_TYPE_OPEN,$/;"	e	language:C++	enum:__anon5420ae190203	file:
-_JSON_EXPECT_TYPE_VALUE	code/json_test.cpp	/^  _JSON_EXPECT_TYPE_VALUE,$/;"	e	language:C++	enum:__anon5420ae190203	file:
+_JSON_Expect_Type	code/json_test.cpp	/^} _JSON_Expect_Type;$/;"	t	language:C++	typeref:enum:__anon5420ae190303	file:
+_JSON_EXPECT_TYPE_COLON	code/json_test.cpp	/^  _JSON_EXPECT_TYPE_COLON,$/;"	e	language:C++	enum:__anon5420ae190303	file:
+_JSON_EXPECT_TYPE_COMMA_OR_CLOSE	code/json_test.cpp	/^  _JSON_EXPECT_TYPE_COMMA_OR_CLOSE,$/;"	e	language:C++	enum:__anon5420ae190303	file:
+_JSON_EXPECT_TYPE_KEY_OR_CLOSE	code/json_test.cpp	/^  _JSON_EXPECT_TYPE_KEY_OR_CLOSE,$/;"	e	language:C++	enum:__anon5420ae190303	file:
+_JSON_EXPECT_TYPE_OPEN	code/json_test.cpp	/^  _JSON_EXPECT_TYPE_OPEN,$/;"	e	language:C++	enum:__anon5420ae190303	file:
+_JSON_EXPECT_TYPE_VALUE	code/json_test.cpp	/^  _JSON_EXPECT_TYPE_VALUE,$/;"	e	language:C++	enum:__anon5420ae190303	file:
 _json_get	code/json_test.cpp	/^_json_get(JSON* j, String8 key) {$/;"	f	language:C++	typeref:typename:_JSON_Node *	file:
-_json_insert_node	code/json_test.cpp	/^_json_insert_node(_JSON_Node** root, _JSON_Node* new_node) {$/;"	f	language:C++	typeref:typename:B32	file:
+_json_insert_node	code/json_test.cpp	/^_json_insert_node(_JSON_Node** node, _JSON_Node* new_node) {$/;"	f	language:C++	typeref:typename:B32	file:
 _json_next_token	code/json_test.cpp	/^_json_next_token(_JSON_Tokenizer* t) {$/;"	f	language:C++	typeref:typename:_JSON_Token	file:
-_JSON_Node	code/json_test.cpp	/^typedef struct _JSON_Node{$/;"	s	language:C++	file:
+_JSON_Node	code/json_test.cpp	/^typedef struct _JSON_Node {$/;"	s	language:C++	file:
 _JSON_Node	code/json_test.cpp	/^} _JSON_Node;$/;"	t	language:C++	typeref:struct:_JSON_Node	file:
-_json_parse_object	code/json_test.cpp	/^_json_parse_object(_JSON_Tokenizer* j) {$/;"	f	language:C++	typeref:typename:_JSON_Node *	file:
-_json_print_nodes_in_order	code/json_test.cpp	/^_json_print_nodes_in_order(_JSON_Node* root) {$/;"	f	language:C++	typeref:typename:void	file:
+_json_parse_object	code/json_test.cpp	/^_json_parse_object(_JSON_Tokenizer* t) {$/;"	f	language:C++	typeref:typename:_JSON_Node *	file:
+_json_print_nodes_in_order	code/json_test.cpp	/^_json_print_nodes_in_order(_JSON_Node* node) {$/;"	f	language:C++	typeref:typename:void	file:
 _json_print_token	code/json_test.cpp	/^_json_print_token(_JSON_Tokenizer* t, _JSON_Token token)  {$/;"	f	language:C++	typeref:typename:void	file:
 _json_set_node_key	code/json_test.cpp	/^_json_set_node_key(_JSON_Node* node, _JSON_Tokenizer* j, _JSON_Token key)$/;"	f	language:C++	typeref:typename:void	file:
-_JSON_Token	code/json_test.cpp	/^}_JSON_Token;$/;"	t	language:C++	typeref:struct:__anon5420ae190308	file:
-_JSON_Tokenizer	code/json_test.cpp	/^} _JSON_Tokenizer;$/;"	t	language:C++	typeref:struct:__anon5420ae190408	file:
+_json_set_value_based_on_token	code/json_test.cpp	/^_json_set_value_based_on_token(JSON_Value* value, _JSON_Token token) {$/;"	f	language:C++	typeref:typename:B32	file:
+_JSON_Token	code/json_test.cpp	/^}_JSON_Token;$/;"	t	language:C++	typeref:struct:__anon5420ae190508	file:
+_JSON_Tokenizer	code/json_test.cpp	/^}  _JSON_Tokenizer;$/;"	t	language:C++	typeref:struct:__anon5420ae190608	file:
 _JSON_Token_Type	code/json_test.cpp	/^} _JSON_Token_Type;$/;"	t	language:C++	typeref:enum:__anon5420ae190103	file:
 _JSON_TOKEN_TYPE_CLOSE_BRACE	code/json_test.cpp	/^  _JSON_TOKEN_TYPE_CLOSE_BRACE,$/;"	e	language:C++	enum:__anon5420ae190103	file:
 _JSON_TOKEN_TYPE_CLOSE_BRACKET	code/json_test.cpp	/^  _JSON_TOKEN_TYPE_CLOSE_BRACKET,$/;"	e	language:C++	enum:__anon5420ae190103	file:
@@ -2686,15 +2694,16 @@ _JSON_TOKEN_TYPE_STRING	code/json_test.cpp	/^  _JSON_TOKEN_TYPE_STRING,$/;"	e	la
 _JSON_TOKEN_TYPE_TRUE	code/json_test.cpp	/^  _JSON_TOKEN_TYPE_TRUE,$/;"	e	language:C++	enum:__anon5420ae190103	file:
 _JSON_TOKEN_TYPE_UNKNOWN	code/json_test.cpp	/^  _JSON_TOKEN_TYPE_UNKNOWN,$/;"	e	language:C++	enum:__anon5420ae190103	file:
 _JSON_TOKEN_TYPE_UNSIGNED_INTEGER	code/json_test.cpp	/^  _JSON_TOKEN_TYPE_UNSIGNED_INTEGER,$/;"	e	language:C++	enum:__anon5420ae190103	file:
-_JSON_Value_Type	code/json_test.cpp	/^} _JSON_Value_Type;$/;"	t	language:C++	typeref:enum:__anon5420ae190503	file:
-_JSON_VALUE_TYPE_ARRAY	code/json_test.cpp	/^  _JSON_VALUE_TYPE_ARRAY,$/;"	e	language:C++	enum:__anon5420ae190503	file:
-_JSON_VALUE_TYPE_B32	code/json_test.cpp	/^  _JSON_VALUE_TYPE_B32,$/;"	e	language:C++	enum:__anon5420ae190503	file:
-_JSON_VALUE_TYPE_F32	code/json_test.cpp	/^  _JSON_VALUE_TYPE_F32,$/;"	e	language:C++	enum:__anon5420ae190503	file:
-_JSON_VALUE_TYPE_NULL	code/json_test.cpp	/^  _JSON_VALUE_TYPE_NULL$/;"	e	language:C++	enum:__anon5420ae190503	file:
-_JSON_VALUE_TYPE_OBJECT	code/json_test.cpp	/^  _JSON_VALUE_TYPE_OBJECT,$/;"	e	language:C++	enum:__anon5420ae190503	file:
-_JSON_VALUE_TYPE_S32	code/json_test.cpp	/^  _JSON_VALUE_TYPE_S32,$/;"	e	language:C++	enum:__anon5420ae190503	file:
-_JSON_VALUE_TYPE_STR8	code/json_test.cpp	/^  _JSON_VALUE_TYPE_STR8,$/;"	e	language:C++	enum:__anon5420ae190503	file:
-_JSON_VALUE_TYPE_U32	code/json_test.cpp	/^  _JSON_VALUE_TYPE_U32,$/;"	e	language:C++	enum:__anon5420ae190503	file:
+_JSON_Value	code/json_test.cpp	/^} _JSON_Value;$/;"	t	language:C++	typeref:struct:__anon5420ae190808	file:
+_JSON_Value_Type	code/json_test.cpp	/^} _JSON_Value_Type;$/;"	t	language:C++	typeref:enum:__anon5420ae190203	file:
+_JSON_VALUE_TYPE_ARRAY	code/json_test.cpp	/^  _JSON_VALUE_TYPE_ARRAY,$/;"	e	language:C++	enum:__anon5420ae190203	file:
+_JSON_VALUE_TYPE_B32	code/json_test.cpp	/^  _JSON_VALUE_TYPE_B32,$/;"	e	language:C++	enum:__anon5420ae190203	file:
+_JSON_VALUE_TYPE_F32	code/json_test.cpp	/^  _JSON_VALUE_TYPE_F32,$/;"	e	language:C++	enum:__anon5420ae190203	file:
+_JSON_VALUE_TYPE_NULL	code/json_test.cpp	/^  _JSON_VALUE_TYPE_NULL$/;"	e	language:C++	enum:__anon5420ae190203	file:
+_JSON_VALUE_TYPE_OBJECT	code/json_test.cpp	/^  _JSON_VALUE_TYPE_OBJECT,$/;"	e	language:C++	enum:__anon5420ae190203	file:
+_JSON_VALUE_TYPE_S32	code/json_test.cpp	/^  _JSON_VALUE_TYPE_S32,$/;"	e	language:C++	enum:__anon5420ae190203	file:
+_JSON_VALUE_TYPE_STR8	code/json_test.cpp	/^  _JSON_VALUE_TYPE_STR8,$/;"	e	language:C++	enum:__anon5420ae190203	file:
+_JSON_VALUE_TYPE_U32	code/json_test.cpp	/^  _JSON_VALUE_TYPE_U32,$/;"	e	language:C++	enum:__anon5420ae190203	file:
 _ogl_add_predefined_textures	code/game_gfx_opengl.h	/^_ogl_add_predefined_textures(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
 _ogl_add_predefined_textures	code/game_renderer_opengl.h	/^_ogl_add_predefined_textures(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
 _ogl_align_viewport	code/game_gfx_opengl.h	/^_ogl_align_viewport(Opengl* ogl, $/;"	f	language:C++	typeref:typename:void
@@ -2813,12 +2822,14 @@ __anon539cf7b40108	code/momo_crc.h	/^typedef struct {$/;"	s	language:C++
 __anon539cf7b40208	code/momo_crc.h	/^typedef struct{$/;"	s	language:C++
 __anon539cf7b40308	code/momo_crc.h	/^typedef struct {$/;"	s	language:C++
 __anon5420ae190103	code/json_test.cpp	/^typedef enum  {$/;"	g	language:C++	file:
-__anon5420ae190203	code/json_test.cpp	/^typedef enum {$/;"	g	language:C++	file:
-__anon5420ae190308	code/json_test.cpp	/^typedef struct {$/;"	s	language:C++	file:
-__anon5420ae190408	code/json_test.cpp	/^typedef struct  {$/;"	s	language:C++	file:
-__anon5420ae190503	code/json_test.cpp	/^typedef enum  {$/;"	g	language:C++	file:
-__anon5420ae19060a	code/json_test.cpp	/^  union {$/;"	u	language:C++	struct:_JSON_Node	file:
+__anon5420ae190203	code/json_test.cpp	/^typedef enum  {$/;"	g	language:C++	file:
+__anon5420ae190303	code/json_test.cpp	/^typedef enum {$/;"	g	language:C++	file:
+__anon5420ae190408	code/json_test.cpp	/^typedef struct {$/;"	s	language:C++	file:
+__anon5420ae190508	code/json_test.cpp	/^typedef struct {$/;"	s	language:C++	file:
+__anon5420ae190608	code/json_test.cpp	/^typedef struct  {$/;"	s	language:C++	file:
 __anon5420ae190708	code/json_test.cpp	/^{$/;"	s	language:C++	file:
+__anon5420ae190808	code/json_test.cpp	/^typedef struct {$/;"	s	language:C++	file:
+__anon5420ae19090a	code/json_test.cpp	/^  union {$/;"	u	language:C++	struct:__anon5420ae190808	file:
 __anon548615c10108	code/momo_png.h	/^typedef struct {$/;"	s	language:C++
 __anon548615c1020a	code/momo_png.h	/^  union {$/;"	u	language:C++	struct:_PNG_Chunk_Header
 __anon54aa46c30108	code/momo_rng.h	/^{$/;"	s	language:C++
