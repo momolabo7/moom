@@ -43,16 +43,13 @@ typedef enum  {
 
 
 typedef enum {
-  _JSON_EXPECT_TYPE_OPEN,
-  _JSON_EXPECT_TYPE_KEY_OR_CLOSE,
-  _JSON_EXPECT_TYPE_VALUE,
-  _JSON_EXPECT_TYPE_COMMA_OR_CLOSE,
-  _JSON_EXPECT_TYPE_COLON,
-} _JSON_Expect_Type;
+  _JSON_OBJECT_EXPECT_TYPE_OPEN,
+  _JSON_OBJECT_EXPECT_TYPE_KEY_OR_CLOSE,
+  _JSON_OBJECT_EXPECT_TYPE_VALUE,
+  _JSON_OBJECT_EXPECT_TYPE_COMMA_OR_CLOSE,
+  _JSON_OBJECT_EXPECT_TYPE_COLON,
+} _JSON_Object_Expect_Type;
 
-typedef struct {
-  // TODO
-} JSON_Array;
 
 typedef struct {
   _JSON_Token_Type type;
@@ -67,7 +64,7 @@ typedef struct  {
 
 typedef struct 
 {
-  struct _JSON_Node* node;
+  struct _JSON_Object_Node* node;
 } JSON;
 
 typedef struct {
@@ -82,15 +79,29 @@ typedef struct {
   };
 } _JSON_Value;
 
-typedef struct _JSON_Node {
+typedef struct _JSON_Object_Node {
   String8 key;
   _JSON_Value value;
-  struct _JSON_Node* left;
-  struct _JSON_Node* right;
+  struct _JSON_Object_Node* left;
+  struct _JSON_Object_Node* right;
     
-} _JSON_Node;
+} _JSON_Object_Node;
 
 
+typedef struct _JSON_Array_Node{
+  _JSON_Value value;
+  struct _JSON_Array_Node* next;
+} _JSON_Array_Node;
+
+typedef struct {
+  _JSON_Array_Node* head;  
+  _JSON_Array_Node* tail;
+} JSON_Array;
+
+static void
+_json_append_array(JSON_Array* arr, _JSON_Array_Node* node) {
+  sll_append(arr->head, arr->tail, node); 
+}
 
 static void
 _json_eat_ignorables(_JSON_Tokenizer* t) {
@@ -130,6 +141,7 @@ _json_next_token(_JSON_Tokenizer* t) {
     } break;
     case '[': {
       ret.type = _JSON_TOKEN_TYPE_OPEN_BRACKET; 
+      ++t->at;
     } break;
     case ']': {
       ret.type = _JSON_TOKEN_TYPE_CLOSE_BRACKET; 
@@ -287,17 +299,24 @@ _json_print_token(_JSON_Tokenizer* t, _JSON_Token token)  {
   }
 }
 
-static _JSON_Node*
-_json_alloc_node() {
-  _JSON_Node* ret = (_JSON_Node*)malloc(sizeof(_JSON_Node)); 
+static _JSON_Object_Node*
+_json_alloc_object_node() {
+  _JSON_Object_Node* ret = (_JSON_Object_Node*)malloc(sizeof(_JSON_Object_Node)); 
   ret->left = null;
   ret->right = null;
 
   return ret;
 }
 
+static _JSON_Array_Node*
+_json_alloc_array_node() {
+  _JSON_Array_Node* ret = (_JSON_Array_Node*)malloc(sizeof(_JSON_Array_Node)); 
+  ret->next = null;
+  return ret;
+}
+
 static void
-_json_set_node_key(_JSON_Node* node, _JSON_Tokenizer* j, _JSON_Token key)
+_json_set_node_key(_JSON_Object_Node* node, _JSON_Tokenizer* j, _JSON_Token key)
 {
   U32 key_len = key.ope - key.begin;
   U8* key_mem = (U8*)malloc(key_len);
@@ -309,14 +328,13 @@ _json_set_node_key(_JSON_Node* node, _JSON_Tokenizer* j, _JSON_Token key)
 
 
 static B32
-_json_insert_node(_JSON_Node** node, _JSON_Node* new_node) {
-  
+_json_insert_node(_JSON_Object_Node** node, _JSON_Object_Node* new_node) {
   if ((*node) == null) {
     (*node) = new_node; 
     return true;
   }
   else {
-    _JSON_Node* itr = (*node);
+    _JSON_Object_Node* itr = (*node);
     while(itr != null) {
       SMI cmp = str8_compare_lexographically(itr->key, new_node->key);
       if (cmp > 0) {
@@ -345,11 +363,11 @@ _json_insert_node(_JSON_Node** node, _JSON_Node* new_node) {
   }
 }
 
-static _JSON_Node* _json_parse_object(_JSON_Tokenizer* t);
+static _JSON_Object_Node* _json_parse_object(_JSON_Tokenizer* t);
 
 static B32 
 _json_set_value_based_on_token(_JSON_Value* value, _JSON_Tokenizer* t, _JSON_Token token) {
-  B32 error = false;;
+  B32 error = false;
   if (token.type == _JSON_TOKEN_TYPE_UNSIGNED_INTEGER) {
     U32 number = 0;
     B32 success = str8_to_u32_range(t->text, token.begin, token.ope, &number);
@@ -407,30 +425,69 @@ _json_set_value_based_on_token(_JSON_Value* value, _JSON_Tokenizer* t, _JSON_Tok
   }
   else if (token.type == _JSON_TOKEN_TYPE_OPEN_BRACE) {
     // Parse json object
-    _JSON_Node* obj = _json_parse_object(t); 
+    _JSON_Object_Node* obj = _json_parse_object(t); 
     value->obj.node = obj;
     value->type = _JSON_VALUE_TYPE_OBJECT;
+  }
+  else if (token.type == _JSON_TOKEN_TYPE_OPEN_BRACKET) {
+    // TODO:  Parse json array
+    JSON_Array arr = {0};
+    B32 is_done = false;
+    U32 expect_type = 0;
+
+    while(!is_done) {
+      _JSON_Token token2 = _json_next_token(t);
+
+      if (expect_type == 0) {
+        _JSON_Array_Node* array_node = _json_alloc_array_node(); 
+        if(_json_set_value_based_on_token(&array_node->value, t, token2)) {
+          _json_append_array(&arr, array_node);
+        }
+        else {
+          is_done = true;
+          error = true;
+        }
+        expect_type = 1;
+      }
+      else if (expect_type == 1) {
+        if (token2.type == _JSON_TOKEN_TYPE_COMMA) {
+
+          expect_type = 0;
+        }
+        else if (token2.type == _JSON_TOKEN_TYPE_CLOSE_BRACKET) {
+          is_done = true;
+        }
+        else {
+
+          is_done = true;
+          error = true;
+
+        }
+      }
+    }
+    value->type = _JSON_VALUE_TYPE_ARRAY;
+
   }
   return !error;
 }
 
-static _JSON_Node* 
+static _JSON_Object_Node* 
 _json_parse_object(_JSON_Tokenizer* t) {
-  _JSON_Node* node = null;
-  _JSON_Expect_Type expect_type = _JSON_EXPECT_TYPE_KEY_OR_CLOSE; 
+  _JSON_Object_Node* node = null;
+  _JSON_Object_Expect_Type expect_type = _JSON_OBJECT_EXPECT_TYPE_KEY_OR_CLOSE; 
   B32 is_done = false;
   B32 error = false;
 
-  _JSON_Node* current_node = null;
+  _JSON_Object_Node* current_node = null;
 
   while(!is_done) {
     _JSON_Token token = _json_next_token(t);
     switch(expect_type) {
-      case _JSON_EXPECT_TYPE_KEY_OR_CLOSE: {
+      case _JSON_OBJECT_EXPECT_TYPE_KEY_OR_CLOSE: {
         if (token.type == _JSON_TOKEN_TYPE_STRING) {
-          current_node = _json_alloc_node();
+          current_node = _json_alloc_object_node();
           _json_set_node_key(current_node, t, token); 
-          expect_type = _JSON_EXPECT_TYPE_COLON;
+          expect_type = _JSON_OBJECT_EXPECT_TYPE_COLON;
         }
         else if(token.type == _JSON_TOKEN_TYPE_CLOSE_BRACE) {
           is_done = true;
@@ -440,16 +497,16 @@ _json_parse_object(_JSON_Tokenizer* t) {
           error = true;
         }
       } break;
-      case _JSON_EXPECT_TYPE_COLON: {
+      case _JSON_OBJECT_EXPECT_TYPE_COLON: {
         if ( token.type == _JSON_TOKEN_TYPE_COLON ) {
-          expect_type = _JSON_EXPECT_TYPE_VALUE; 
+          expect_type = _JSON_OBJECT_EXPECT_TYPE_VALUE; 
         }
         else {
           is_done = true;
           error = true;
         }
       } break;
-      case _JSON_EXPECT_TYPE_VALUE: {
+      case _JSON_OBJECT_EXPECT_TYPE_VALUE: {
         if (_json_set_value_based_on_token(&current_node->value, t, token)) {
           _json_insert_node(&node, current_node);
         }
@@ -458,13 +515,13 @@ _json_parse_object(_JSON_Tokenizer* t) {
           error = true;
         }
 
-        expect_type = _JSON_EXPECT_TYPE_COMMA_OR_CLOSE;
+        expect_type = _JSON_OBJECT_EXPECT_TYPE_COMMA_OR_CLOSE;
 
     
       } break;
-      case _JSON_EXPECT_TYPE_COMMA_OR_CLOSE:{
+      case _JSON_OBJECT_EXPECT_TYPE_COMMA_OR_CLOSE:{
         if (token.type == _JSON_TOKEN_TYPE_COMMA) {
-          expect_type = _JSON_EXPECT_TYPE_KEY_OR_CLOSE;
+          expect_type = _JSON_OBJECT_EXPECT_TYPE_KEY_OR_CLOSE;
         }
         if (token.type == _JSON_TOKEN_TYPE_CLOSE_BRACE) {
           is_done = true; //is this right?? 
@@ -481,7 +538,7 @@ _json_parse_object(_JSON_Tokenizer* t) {
 #if JSON_DEBUG 
 #include <stdio.h>
 static void 
-_json_print_nodes_in_order(_JSON_Node* node) {
+_json_print_nodes_in_order(_JSON_Object_Node* node) {
   static U32 scope = 0;
   if (node == null) {
     return;
@@ -526,7 +583,10 @@ _json_print_nodes_in_order(_JSON_Node* node) {
 
         printf("}");
         break;
-      }
+      } break;
+      case _JSON_VALUE_TYPE_ARRAY: {
+      } break;
+      
     }
     
     printf("\n");
@@ -550,7 +610,7 @@ json_read(JSON* j, void* memory, UMI size)
   _JSON_Tokenizer tokenizer = _json_create_tokenizer(memory, size);
   _JSON_Token token = _json_next_token(&tokenizer);
   if (token.type != _JSON_TOKEN_TYPE_OPEN_BRACE) return false;
-  _JSON_Node* node = _json_parse_object(&tokenizer);
+  _JSON_Object_Node* node = _json_parse_object(&tokenizer);
 
   // print the node in order
 #if JSON_DEBUG
@@ -568,9 +628,9 @@ json_read_from_blk(JSON* j, Block blk) {
   return json_read(j, blk.data, blk.size);
 }
 
-static _JSON_Node* 
+static _JSON_Object_Node* 
 _json_get(JSON* j, String8 key) {
-  _JSON_Node* node = j->node;
+  _JSON_Object_Node* node = j->node;
   while(node) {
     SMI cmp = str8_compare_lexographically(key, node->key); 
     if (cmp < 0) {
@@ -589,7 +649,7 @@ _json_get(JSON* j, String8 key) {
 
 static S32* 
 json_get_s32(JSON* j, String8 key) {
-  _JSON_Node* node = _json_get(j, key);
+  _JSON_Object_Node* node = _json_get(j, key);
   if (!node) return null;
   if (node->value.type != _JSON_VALUE_TYPE_S32) return null;
   return &node->value.s32;
@@ -597,7 +657,7 @@ json_get_s32(JSON* j, String8 key) {
 
 static U32* 
 json_get_u32(JSON* j, String8 key) {
-  _JSON_Node* node = _json_get(j, key);
+  _JSON_Object_Node* node = _json_get(j, key);
   if (!node) return null;
   if (node->value.type != _JSON_VALUE_TYPE_U32) return null;
   return &node->value.u32;
@@ -605,7 +665,7 @@ json_get_u32(JSON* j, String8 key) {
 
 static F32* 
 json_get_f32(JSON* j, String8 key) {
-  _JSON_Node* node = _json_get(j, key);
+  _JSON_Object_Node* node = _json_get(j, key);
   if (!node) return null;
   if (node->value.type != _JSON_VALUE_TYPE_F32) return null;
   return &node->value.f32;
@@ -613,7 +673,7 @@ json_get_f32(JSON* j, String8 key) {
 
 static B32* 
 json_get_b32(JSON* j, String8 key) {
-  _JSON_Node* node = _json_get(j, key);
+  _JSON_Object_Node* node = _json_get(j, key);
   if (!node) return null;
   if (node->value.type != _JSON_VALUE_TYPE_B32) return null;
   return &node->value.b32;
@@ -621,7 +681,7 @@ json_get_b32(JSON* j, String8 key) {
 
 static String8* 
 json_get_str8(JSON* j, String8 key) {
-  _JSON_Node* node = _json_get(j, key);
+  _JSON_Object_Node* node = _json_get(j, key);
   if (!node) return null;
   if (node->value.type != _JSON_VALUE_TYPE_STR8) return null;
   return &node->value.string;
@@ -629,7 +689,7 @@ json_get_str8(JSON* j, String8 key) {
 
 static JSON*
 json_get_object(JSON* j, String8 key) {
-  _JSON_Node* node = _json_get(j, key);
+  _JSON_Object_Node* node = _json_get(j, key);
   if (!node) return null;
   if (node->value.type != _JSON_VALUE_TYPE_OBJECT) return null;
   return &node->value.obj;
