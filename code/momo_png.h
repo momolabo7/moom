@@ -1,19 +1,16 @@
 // Authors: Gerald Wong, momodevelop
 //
 // This file processes PNG files
+// - Extracts PNG information
+// - Reads PNG memoryinto 32-bit bitmap format
+// - Writes 32-bit bitmap format to PNG memory
 //
 // NOTES:
-//   The code only supports little-endian OS and 32-bit PNG formats.
+//   - Only supports little-endian OS 
+//   - Only reads and writes 32-bit RGBA formats.
 //
 // TODO:
-//   Support other formats for reading/writing
-//
-// USAGE:
-//
-//   B32     png_read(PNG* png, void* png_memory, UMI png_size);
-//   B32     png_read_from_blk(PNG* p, Block blk);
-//   Image32 png_to_img32(PNG* png, Bump_Allocator* allocator);
-//   Block   png_write_img32_to_blk(Image32 img, Bump_Allocator* allocator);
+//   - Support other formats for reading/writing
 //
 #ifndef MOMO_PNG
 #define MOMO_PNG
@@ -30,6 +27,12 @@ typedef struct {
   U8 filter_method;
   U8 interlace_method;
 } PNG;
+
+static B32     png_read(PNG* png, void* png_memory, UMI png_size);
+static B32     png_read_from_blk(PNG* p, Block blk);
+static Image32 png_to_img32(PNG* png, Bump_Allocator* allocator);
+static Block   png_write_img32_to_blk(Image32 img, Bump_Allocator* allocator);
+
 
 ///////////////////////////////////////////////////////////////
 // IMPLEMENTATION

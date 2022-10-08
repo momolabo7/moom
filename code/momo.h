@@ -22,5 +22,6 @@
 #include "momo_ttf.h"
 #include "momo_png.h"
 #include "momo_rect_pack.h"
+#include "momo_json.h"
 
 #endif //MOMO_H

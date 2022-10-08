@@ -1,15 +1,15 @@
-// Authors: Gerald Wong, momodevelop
+// Authors: Gerald Wong
 // 
 // This file processes TTF files:
 // - Extracts font and glyph information
 // - Performs rasterization
 //
-// Notes:
+// NOTES:
 // - Only works in little-endian OS
 // - Only reads and writes into 32-bit RGBA format
 // - Prioritizes formats recognized by Windows first.
 // 
-// Todo:
+// TODO:
 // - Cater for glyphs which start from an off-curve point.
 // - Anti-aliasing
 // - Complex glyphs.
