@@ -333,8 +333,8 @@ _ogl_flush_sprites(Opengl* ogl) {
     ogl->glTexParameteri(GL_TEXTURE_2D, 
                          GL_TEXTURE_MAG_FILTER, 
                          GL_NEAREST);
-    ogl->glEnable(GL_BLEND);
-    ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //ogl->glEnable(GL_BLEND);
+    //ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     ogl->glBindVertexArray(sb->model);
     ogl->glUseProgram(sb->shader);
     
