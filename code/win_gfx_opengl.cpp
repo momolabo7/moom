@@ -220,8 +220,8 @@ win_gfx_load(HWND window,
   if(wglMakeCurrent(dc, opengl_ctx)) {
     HMODULE module = LoadLibraryA("opengl32.dll");
 #define WGL_SetOpenglFunction(name) \
-opengl->name = (GL_##name*)win_try_get_wgl_function(#name, module); \
-if (!opengl->name) { return nullptr; } 
+opengl->name = (OGL_##name*)win_try_get_wgl_function(#name, module); \
+if (!opengl->name) { return null; } 
     
     WGL_SetOpenglFunction(glEnable);
     WGL_SetOpenglFunction(glDisable); 
