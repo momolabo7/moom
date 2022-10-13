@@ -3,29 +3,25 @@
 #ifndef GAME_MODE_SPLASH_H
 #define GAME_MODE_SPLASH_H
 
-
-static void lit_init(Game*);
-static void lit_tick(Game*, Painter*, Platform* );
-
 //////////////////////////////////////////////////
 // SPLASH MODE
 //
-struct Splash {
+typedef struct  {
   F32 timer;
-};
+}Splash;
 
-  static void 
+static void 
 splash_tick(Game* game,
             Painter* painter,
             Platform* pf) 
 {
 
   if (!game_mode_initialized(game)) {
-    auto* splash = game_allocate_mode(Splash, game);
+    Splash* splash = game_allocate_mode(Splash, game);
     splash->timer = 1.f;
   }
   
-  auto* splash = (Splash*)game->mode_context;
+  Splash* splash = (Splash*)game->mode_context;
   
   F32 dt = pf->seconds_since_last_frame;
   splash->timer -= dt;
@@ -33,10 +29,10 @@ splash_tick(Game* game,
   if (splash->timer < 0.f) {
     //game_set_mode(game, 0, 0); 
     // game_set_mode(game, lit_init, lit_tick);
-    game_goto_mode(game, GAME_MODE_TYPE_LIT);
+    game_goto_mode(game, GAME_MODE_TYPE_COMPUTER);
   }
  
-  auto color = rgba(splash->timer, splash->timer, splash->timer, splash->timer);
+  RGBA color = rgba(splash->timer, splash->timer, splash->timer, splash->timer);
   paint_text(painter,
              FONT_DEFAULT, 
              str8_from_lit("momo"),

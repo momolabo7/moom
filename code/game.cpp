@@ -35,7 +35,7 @@ game_update_and_render(Platform* pf)
       return false;
     }
    
-    game_goto_mode(game, GAME_MODE_TYPE_SPLASH);
+    game_goto_mode(game, GAME_MODE_TYPE_COMPUTER);
     
     //game_set_mode(game, splash_init, splash_tick);
     //game_set_mode(game, lit_init, lit_tick);

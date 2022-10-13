@@ -28,62 +28,46 @@ struct Lit_Edge_List {
   Lit_Edge e[256];
 };
 
-static B32
-is_circle_on_finite_line(V2 circle_center, F32 circle_radius, V2 line_min, V2 line_max) {
-  // extend lines
-  V2 v = v2_norm(v2_sub(line_max, line_min));
-  line_min = v2_sub(line_min, v);
-  line_max = v2_add(line_max, v);
-
-  // get point on line that's the shortest distance
-  V2 s = v2_add(v2_proj(v2_sub(circle_center, line_min), v), line_min); 
-
-  F32 t = 0.f;
-  if (v.x != 0.f) {
-    t = (s.x, line_min.x)/v.x;
-  }
-  else if (v.y != 0.f) {
-    t = (s.y, line_min.y)/v.y;
-  }
-  else return false;
-  
-  F32 r_2 = circle_radius * circle_radius;
-  V2 cs = v2_sub(circle_center, s);
-  F32 d_2 = cs.x * cs.x + cs.y * cs.y; 
-
-  return d_2 <= r_2; 
- 
-}
-
+#if 0 
 static V2
-get_circle_to_finite_line_resp(V2 circle_center, F32 circle_radius, V2 line_min, V2 line_max) {
+circle_to_finite_line_resp(V2 circle_center, F32 circle_radius, V2 line_min, V2 line_max) {
   // extend lines
-  V2 v = v2_norm(v2_sub(line_max, line_min));
-  line_min = v2_sub(line_min, v);
-  line_max = v2_add(line_min, v);
+  V2 v = v2_sub(line_max, line_min);
+  V2 unit_v = v2_norm(v);
+  V2 unit_v_scaled_by_circle_radius = v2_scale(unit_v, circle_radius); 
+  line_min = v2_sub(line_min, unit_v_scaled_by_circle_radius);
+  line_max = v2_add(line_max, unit_v_scaled_by_circle_radius);
+  v = v2_sub(line_max, line_min);
 
   // get point on line that's the shortest distance
-  V2 s = v2_add(v2_proj(v2_sub(circle_center, line_min), v), line_min); 
+  V2 line_min_to_circle = v2_sub(circle_center, line_min);
+  V2 line_min_to_circle_proj_onto_unit_v = v2_proj(line_min_to_circle, unit_v);
+  V2 s = v2_add(line_min_to_circle_proj_onto_unit_v, line_min); 
 
   F32 t = 0.f;
   if (v.x != 0.f) {
-    t = (s.x, line_min.x)/v.x;
+    t = (s.x - line_min.x)/v.x;
   }
   else if (v.y != 0.f) {
-    t = (s.y, line_min.y)/v.y;
+    t = (s.y - line_min.y)/v.y;
   }
   else return {0};
+
+  if (t <= 0.f || t >= 1.f) {
+    return {0};
+  }
   
   F32 r_2 = circle_radius * circle_radius;
   V2 cs = v2_sub(circle_center, s);
   F32 d_2 = cs.x * cs.x + cs.y * cs.y; 
 
-  if (d_2 > r_2) return {0};
+  if (d_2 >= r_2) return {0};
 
   // end point of circle that is along the line formed by circle_center to s
   V2 e = v2_add(v2_scale(v2_norm(v2_sub(s, circle_center)), circle_radius), circle_center);
   return v2_sub(s, e);
 }
+#endif
 
 static Line2 
 lit_calc_ghost_edge_line(Lit_Point_List* points, Lit_Edge* e) {
@@ -226,7 +210,9 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   lit_update_particles(&m->particles, dt);
 
 
+#if 0
   // Collision
+  V2 deepest_penetration = {0};
   al_foreach(edge_index, &m->edges) 
   {
     Lit_Edge* edge = al_at(&m->edges, edge_index);
@@ -236,11 +222,14 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
       *al_at(&m->points, edge->max_pt_id),
     };
 
-     
-    V2 resp = get_circle_to_finite_line_resp(player->pos, LIT_PLAYER_RADIUS, line.min, line.max);
-    player->pos = v2_add(player->pos, resp);
-
+    V2 resp = circle_to_finite_line_resp(player->pos, LIT_PLAYER_RADIUS, line.min, line.max);
+    if (v2_len_sq(resp) > v2_len_sq(deepest_penetration)) {
+      deepest_penetration = resp;
+    }
   }
+
+  player->pos = v2_add(player->pos, deepest_penetration);
+#endif
 
   //////////////////////////////////////////////////////////
   // Rendering
@@ -333,7 +322,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   
   // Draw player
   paint_sprite(painter, 
-               SPRITE_BULLET_CIRCLE, 
+               SPRITE_CIRCLE, 
                player->pos, 
                v2(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
   advance_depth(painter);
@@ -344,9 +333,10 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   {
     Lit_Light* light = al_at(&m->lights, light_index);
     paint_sprite(painter,
-                 SPRITE_BULLET_DOT, 
+                 SPRITE_CIRCLE, 
                  light->pos,
-                 {16, 16});
+                 {16.f, 16.f},
+                 {0.8f, 0.8f, 0.8f, 1.f});
     advance_depth(painter);
   }
   

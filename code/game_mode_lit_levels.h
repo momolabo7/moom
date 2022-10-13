@@ -29,7 +29,7 @@ lit_level_1(Lit* m) {
   
   // initialize player
   Lit_Player* p = &m->player;
-  lit_init_player(p, 400.f, 400.f);
+  lit_init_player(p, 500.f, 600.f);
   // Test sensor
 #if 1
   {
@@ -60,7 +60,7 @@ lit_level_0(Lit* m) {
   lit_push_edge(m, 2, 3);
   lit_push_edge(m, 3, 0);
 
-  lit_push_sensor(&m->sensors, {100.f, 600.f}, 0x888888FF); 
+  lit_push_sensor(&m->sensors, {100.f, 600.f}, 0x880000FF); 
   
   lit_push_light(m, {250.f, 600.f}, 0x880000FF, 90.f, 0.f);
   

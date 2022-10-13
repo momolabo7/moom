@@ -52,6 +52,20 @@ static B32 tri2_is_point_within(Tri2 tri, V2 pt);
 
 ///////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
+static Circ2
+circ2(V2 center, F32 radius) {
+  Circ2 ret = {0};
+  ret.center = center;
+  ret.radius = radius;
+  return ret;
+}
+static Line2
+line2(V2 min, V2 max) {
+  Line2 ret = {0};
+  ret.min = min;
+  ret.max = max;
+  return ret;
+}
 
 static F32
 rec2_width(Rect2 r) {

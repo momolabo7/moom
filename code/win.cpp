@@ -617,7 +617,8 @@ WinMain(HINSTANCE instance,
     }
   }
   F32 target_secs_per_frame = 1.f/(F32)monitor_refresh_rate;
-  win_log("Monitor Refresh Rate: %d\n", monitor_refresh_rate);
+  win_log("Monitor Refresh Rate: %d Hz\n", monitor_refresh_rate);
+  win_log("Target Secs per Frame: %.2f\n", target_secs_per_frame);
   
   
   //-Load Renderer functions
@@ -677,7 +678,8 @@ WinMain(HINSTANCE instance,
   
   // Platform setup
   make(Platform, pf);
-  
+ 
+  // Game memory set up
   make(Bump_Allocator, game_arena);
   if (!win_allocate_memory_into_arena(game_arena, MB(32))) return false;
   defer { win_free_memory_from_arena(game_arena); };
@@ -764,12 +766,13 @@ WinMain(HINSTANCE instance,
     }
     win_audio_end_frame(audio);
 
-    
-    //-Frame-rate control
+    // Frame-rate control
+    //
     // 1. Calculate how much time has passed since the last frame
     // 2. If the time elapsed is greater than the target time elapsed,
     //    sleep/spin-lock until then.    
-    // NOTE(Momo): We might want to think about VSYNC or getting VBLANK
+    //
+    // NOTE: We might want to think about VSYNC or getting VBLANK
     // value so that we can figure out how long we *should* sleep
     F32 secs_elapsed_after_update = 
       win_get_secs_elapsed(last_frame_count,

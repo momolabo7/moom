@@ -7,7 +7,6 @@
 
 #define sui_check_death(e) if (!e) goto fail;
 
-
 int main() {
   Block block = sui_malloc(MB(100));
   defer { sui_free(&block); };
@@ -80,7 +79,8 @@ int main() {
   push_atlas_sprite(sp, "SPRITE_BULLET_DOT",    asset_dir("bullet_dot.png"));
   push_atlas_sprite(sp, "SPRITE_PLAYER_BLACK",  asset_dir("player_black.png"));
   push_atlas_sprite(sp, "SPRITE_PLAYER_WHITE",  asset_dir("player_white.png"));
-  end_atlas(sp, "BITMAP_DEFAULT", 1024, 1024);
+  push_atlas_sprite(sp, "SPRITE_CIRCLE",        asset_dir("circle.png"));
+  sui_check_death(end_atlas(sp, "BITMAP_DEFAULT", 1024, 1024));
 
   //push_sound(sp, "SOUND_TEST", loaded_wav);
   sui_check_death(end_asset_pack(sp, "PACK_DEFAULT", "test.sui"));

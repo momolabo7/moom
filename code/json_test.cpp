@@ -1,19 +1,10 @@
 #include <stdlib.h>
 
 #include <stdio.h>
+
 #define JSON_DEBUG 1
 
 #include "momo.h"
-
-
-
-
-
-
-
-
-
-
 
 int main() {
  FILE* fp = fopen("test_json.json", "r");
@@ -33,8 +24,11 @@ int main() {
   fread(mem, len, 1, fp);
   fclose(fp);
 
+  Bump_Allocator ba = {0}; 
+  ba_init(&ba, malloc(MB(1)), MB(1)); 
+
   make(JSON_Object, json);
-  json_read(json, mem, len);
+  json_read(json, mem, len, &ba);
 
   JSON_Object* one = json_get_object(json, str8_from_lit("obj"));
   U32* two = json_get_u32(one, str8_from_lit("item3"));

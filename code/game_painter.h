@@ -84,7 +84,6 @@ paint_text(Painter* p,
   
 }
 
-
 static void
 paint_line(Painter* p,
            Line2 line,
@@ -126,7 +125,7 @@ static void
 paint_filled_circle(Painter* p,
                     Circ2 circle,
                     U32 sections,
-                    RGBA color)
+                    RGBA color = {1.f, 1.f, 1.f, 1.f})
 {
   gfx_push_filled_circle(p->gfx, circle, sections, color); 
 }

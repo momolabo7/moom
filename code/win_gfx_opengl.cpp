@@ -283,7 +283,7 @@ if (!opengl->name) { return nullptr; }
 #endif
   
   
-#if 0
+#if 1
   // VSync. 
   if (!wglSwapIntervalEXT) {
     wglSwapIntervalEXT = (wglSwapIntervalEXTFn*)wglGetProcAddress("wglSwapIntervalEXT");
