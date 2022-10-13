@@ -360,7 +360,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   }
  
 
- paint_set_blend(painter, 
+  paint_set_blend(painter, 
                  GFX_BLEND_TYPE_SRC_ALPHA,
                  GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
