@@ -182,8 +182,8 @@ bpm_to_spb_f64	code/momo_common.h	/^bpm_to_spb_f64(F64 bpm) {$/;"	f	language:C++
 buffer	code/game_console.h	/^  U8 buffer[256];$/;"	m	language:C++	struct:Console_Line	typeref:typename:U8[256]
 buffer	code/win_audio_wasapi.h	/^  S16* buffer;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:S16 *
 bufferCount	test.c	/^    int bufferCount;            \/\/ Number of vertex buffers (multi-buffering support)$/;"	m	language:C	struct:rlRenderBatch	typeref:typename:int	file:
-buffers	code/game_gfx_opengl.h	/^  GLuint buffers;$/;"	m	language:C++	struct:__anon1d4ae8470608	typeref:typename:GLuint
-buffers	code/game_gfx_opengl.h	/^  GLuint buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; \/\/ Opengl__VBO_Count$/;"	m	language:C++	struct:__anon1d4ae8470508	typeref:typename:GLuint[]
+buffers	code/game_gfx_opengl.h	/^  GLuint buffers;$/;"	m	language:C++	struct:__anon1d4ae8470908	typeref:typename:GLuint
+buffers	code/game_gfx_opengl.h	/^  GLuint buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; \/\/ Opengl__VBO_Count$/;"	m	language:C++	struct:__anon1d4ae8470808	typeref:typename:GLuint[]
 buffers	code/game_renderer_opengl.h	/^  GLuint buffers;$/;"	m	language:C++	struct:Triangle_Batcher	typeref:typename:GLuint
 buffers	code/game_renderer_opengl.h	/^  GLuint buffers[VERTEX_BUFFER_TYPE_COUNT]; \/\/ Opengl__VBO_Count$/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLuint[]
 buffer_size	code/win_audio_wasapi.h	/^  U32 buffer_size;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U32
@@ -369,7 +369,7 @@ current_color	code/game_mode_level.h	/^  U32 current_color;$/;"	m	language:C++	s
 current_color	code/game_mode_lit_sensors.h	/^  U32 current_color;$/;"	m	language:C++	struct:Lit_Sensor	typeref:typename:U32
 current_font	code/sui_pack.h	/^  Sui_Packer_Font* current_font;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Sui_Packer_Font *
 current_game_mode	code/game.h	/^  Game_Mode_Type current_game_mode;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Mode_Type
-current_instance_index	code/game_gfx_opengl.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:__anon1d4ae8470508	typeref:typename:GLuint
+current_instance_index	code/game_gfx_opengl.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:__anon1d4ae8470808	typeref:typename:GLuint
 current_instance_index	code/game_renderer_opengl.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLuint
 current_layer	code/game_gfx_opengl.h	/^  F32 current_layer;$/;"	m	language:C++	struct:Opengl	typeref:typename:F32
 current_layer	code/game_renderer_opengl.h	/^  F32 current_layer;$/;"	m	language:C++	struct:Opengl	typeref:typename:F32
@@ -377,7 +377,7 @@ current_level_id	code/game_mode_lit.h	/^  U32 current_level_id;$/;"	m	language:C
 current_level_id	code/game_mode_sb1.h	/^  U32 current_level_id;$/;"	m	language:C++	struct:Lit	typeref:typename:U32
 current_pack_id_name	code/sui_pack.h	/^  const char* current_pack_id_name;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:const char *
 current_state	code/game_mode_level_editor.h	/^  Editor_State current_state;$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_State
-current_texture	code/game_gfx_opengl.h	/^  GLuint current_texture;$/;"	m	language:C++	struct:__anon1d4ae8470508	typeref:typename:GLuint
+current_texture	code/game_gfx_opengl.h	/^  GLuint current_texture;$/;"	m	language:C++	struct:__anon1d4ae8470808	typeref:typename:GLuint
 current_texture	code/game_renderer_opengl.h	/^  GLuint current_texture;$/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLuint
 cycles	code/game_profiler.h	/^  U32 cycles;$/;"	m	language:C++	struct:Profiler_Snapshot	typeref:typename:U32
 c_link	code/momo_common.h	/^#define c_link /;"	d	language:C++
@@ -1272,14 +1272,14 @@ h	code/momo_vectors.h	/^	struct { S32 w, h; };$/;"	m	language:C++	struct:__anon8
 h	code/momo_vectors.h	/^	struct { U32 w, h; };$/;"	m	language:C++	struct:__anon8de67fa2010a::__anon8de67fa20308	typeref:typename:U32
 half_angle	.\code\game_sb1.h	/^  F32 half_angle;$/;"	m	language:C++	struct:SB1_Light
 half_angle	code/game_mode_lit_light.h	/^  F32 half_angle;$/;"	m	language:C++	struct:Lit_Light	typeref:typename:F32
-handle	code/game_gfx_opengl.h	/^  GLuint handle;$/;"	m	language:C++	struct:__anon1d4ae8470408	typeref:typename:GLuint
+handle	code/game_gfx_opengl.h	/^  GLuint handle;$/;"	m	language:C++	struct:__anon1d4ae8470708	typeref:typename:GLuint
 handle	code/game_renderer_opengl.h	/^  GLuint handle;$/;"	m	language:C++	struct:Texture	typeref:typename:GLuint
 handle	code/win.cpp	/^  HANDLE handle;$/;"	m	language:C++	struct:Win_File	typeref:typename:HANDLE	file:
 head	code/momo_json.h	/^  struct _JSON_Array_Node* head;  $/;"	m	language:C++	struct:JSON_Array	typeref:struct:_JSON_Array_Node *
 head	code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon54d1bdca0108	typeref:typename:U32
 height	code/game_assets.h	/^  U32 height;$/;"	m	language:C++	struct:Bitmap_Asset	typeref:typename:U32
 height	code/game_gfx.h	/^  F32 height;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:F32
-height	code/game_gfx_opengl.h	/^  U32 height;$/;"	m	language:C++	struct:__anon1d4ae8470408	typeref:typename:U32
+height	code/game_gfx_opengl.h	/^  U32 height;$/;"	m	language:C++	struct:__anon1d4ae8470708	typeref:typename:U32
 height	code/game_renderer.h	/^  F32 height;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:F32
 height	code/game_renderer_opengl.h	/^  U32 height;$/;"	m	language:C++	struct:Texture	typeref:typename:U32
 height	code/karu.h	/^  U32 width, height;$/;"	m	language:C++	struct:Karu_Bitmap	typeref:typename:U32
@@ -1338,7 +1338,7 @@ Inspector_Entry_List	code/game_inspector.h	/^struct Inspector_Entry_List {$/;"	s
 Inspector_Entry_Type	code/game_inspector.h	/^enum Inspector_Entry_Type {$/;"	g	language:C++
 INSPECTOR_ENTRY_TYPE_F32	code/game_inspector.h	/^  INSPECTOR_ENTRY_TYPE_F32,$/;"	e	language:C++	enum:Inspector_Entry_Type
 INSPECTOR_ENTRY_TYPE_U32	code/game_inspector.h	/^  INSPECTOR_ENTRY_TYPE_U32,$/;"	e	language:C++	enum:Inspector_Entry_Type
-instances_to_draw	code/game_gfx_opengl.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:__anon1d4ae8470508	typeref:typename:GLsizei
+instances_to_draw	code/game_gfx_opengl.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:__anon1d4ae8470808	typeref:typename:GLsizei
 instances_to_draw	code/game_renderer_opengl.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLsizei
 instancing	test.c	/^        bool instancing;                    \/\/ Instancing supported (GL_ANGLE_instanced_arrays/;"	m	language:C	struct:rlglData::__anon1dda1bf60c08	typeref:typename:bool	file:
 interlace_method	code/momo_png.h	/^  U8 interlace_method;$/;"	m	language:C++	struct:_PNG_IHDR	typeref:typename:U8
@@ -1425,7 +1425,7 @@ key	code/momo_json.h	/^  String8 key;$/;"	m	language:C++	struct:_JSON_Object_Nod
 key	code/momo_sort.h	/^  F32 key;$/;"	m	language:C++	struct:__anonec618b240108	typeref:typename:F32
 l	code/momo_colors.h	/^  F32 h, s, l;  $/;"	m	language:C++	struct:__anonb89fa6ae0208	typeref:typename:F32
 last	code/game_profiler.h	/^  Profiler_Entry* last;$/;"	m	language:C++	struct:Profiler	typeref:typename:Profiler_Entry *
-last_drawn_instance_index	code/game_gfx_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:__anon1d4ae8470508	typeref:typename:GLsizei
+last_drawn_instance_index	code/game_gfx_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:__anon1d4ae8470808	typeref:typename:GLsizei
 last_drawn_instance_index	code/game_renderer_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLsizei
 latency_sample_count	code/win_audio_wasapi.h	/^  U32 latency_sample_count;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U32
 layers	code/game_gfx.h	/^  U32 layers;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:U32
@@ -1637,8 +1637,8 @@ min_pt_id	code/game_mode_lit.h	/^  UMI min_pt_id;$/;"	m	language:C++	struct:Lit_
 min_pt_id	code/game_mode_sb1.h	/^  UMI min_pt_id;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:UMI
 mm_device_enum	code/win_audio_wasapi.h	/^  IMMDeviceEnumerator * mm_device_enum;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:IMMDeviceEnumerator *
 mode	test.c	/^    int mode;                   \/\/ Drawing mode: LINES, TRIANGLES, QUADS$/;"	m	language:C	struct:rlDrawCall	typeref:typename:int	file:
-model	code/game_gfx_opengl.h	/^  GLuint model; $/;"	m	language:C++	struct:__anon1d4ae8470508	typeref:typename:GLuint
-model	code/game_gfx_opengl.h	/^  GLuint model;$/;"	m	language:C++	struct:__anon1d4ae8470608	typeref:typename:GLuint
+model	code/game_gfx_opengl.h	/^  GLuint model; $/;"	m	language:C++	struct:__anon1d4ae8470808	typeref:typename:GLuint
+model	code/game_gfx_opengl.h	/^  GLuint model;$/;"	m	language:C++	struct:__anon1d4ae8470908	typeref:typename:GLuint
 model	code/game_renderer_opengl.h	/^  GLuint model; $/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLuint
 model	code/game_renderer_opengl.h	/^  GLuint model;$/;"	m	language:C++	struct:Triangle_Batcher	typeref:typename:GLuint
 modelview	test.c	/^        Matrix modelview;                   \/\/ Default modelview matrix$/;"	m	language:C	struct:rlglData::__anon1dda1bf60b08	typeref:typename:Matrix	file:
@@ -1777,7 +1777,21 @@ OGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES	code/game_gfx_opengl.h	/^  OGL_SPRITE_VERT
 OGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL	code/game_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL,$/;"	e	language:C++	enum:__anon1d4ae8470303
 OGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE	code/game_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE,$/;"	e	language:C++	enum:__anon1d4ae8470303
 OGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM	code/game_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM,$/;"	e	language:C++	enum:__anon1d4ae8470303
-OGL_Texture	code/game_gfx_opengl.h	/^} OGL_Texture;$/;"	t	language:C++	typeref:struct:__anon1d4ae8470408
+OGL_Texture	code/game_gfx_opengl.h	/^} OGL_Texture;$/;"	t	language:C++	typeref:struct:__anon1d4ae8470708
+OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:__anon1d4ae8470503
+OGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL,$/;"	e	language:C++	enum:__anon1d4ae8470503
+OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM$/;"	e	language:C++	enum:__anon1d4ae8470503
+OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS,   \/\/ 1$/;"	e	language:C++	enum:__anon1d4ae8470403
+OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL,    \/\/ 0 $/;"	e	language:C++	enum:__anon1d4ae8470403
+OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, \/\/ 6$/;"	e	language:C++	enum:__anon1d4ae8470403
+OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, \/\/ 7$/;"	e	language:C++	enum:__anon1d4ae8470403
+OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, \/\/ 8$/;"	e	language:C++	enum:__anon1d4ae8470403
+OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  \/\/ 9$/;"	e	language:C++	enum:__anon1d4ae8470403
+OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS,$/;"	e	language:C++	enum:__anon1d4ae8470603
+OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT \/\/ 5$/;"	e	language:C++	enum:__anon1d4ae8470603
+OGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES,$/;"	e	language:C++	enum:__anon1d4ae8470603
+OGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL,$/;"	e	language:C++	enum:__anon1d4ae8470603
+OGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM	code/game_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM,$/;"	e	language:C++	enum:__anon1d4ae8470603
 old_light_pos	code/game_mode_lit_player.h	/^  V2 old_light_pos;$/;"	m	language:C++	struct:Lit_Player	typeref:typename:V2
 old_pos	code/momo_memory.h	/^  UMI old_pos;$/;"	m	language:C++	struct:__anonf3c0da150208	typeref:typename:UMI
 one_past_last_asset_index	code/karu.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Karu_Asset_Group	typeref:typename:U32
@@ -2690,8 +2704,8 @@ sensors	.\code\game_sb1.h	/^  SB1_Sensor_List sensors;$/;"	m	language:C++	struct
 sensors	code/game_mode_level.h	/^  Array_List<Sensor> sensors;$/;"	m	language:C++	struct:Level_Mode	typeref:typename:Array_List<Sensor>
 sensors	code/game_mode_lit.h	/^  Lit_Sensor_List sensors;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Sensor_List
 sensors	code/game_mode_sb1.h	/^  Lit_Sensor_List sensors;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Sensor_List
-shader	code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon1d4ae8470508	typeref:typename:GLuint
-shader	code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon1d4ae8470608	typeref:typename:GLuint
+shader	code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon1d4ae8470808	typeref:typename:GLuint
+shader	code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon1d4ae8470908	typeref:typename:GLuint
 shader	code/game_renderer_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLuint
 shader	code/game_renderer_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:Triangle_Batcher	typeref:typename:GLuint
 show_debug_type	code/game.h	/^  Game_Show_Debug_Type show_debug_type;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Show_Debug_Type
@@ -2742,7 +2756,7 @@ sprites	code/game_assets.h	/^  Sprite_Asset* sprites;$/;"	m	language:C++	struct:
 sprites	code/sui_atlas.h	/^  Sui_Atlas_Sprite sprites[128];$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:Sui_Atlas_Sprite[128]
 sprites	code/sui_pack.h	/^  Sui_Packer_Sprite sprites[128];$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Sui_Packer_Sprite[128]
 Sprite_Asset	code/game_assets.h	/^struct Sprite_Asset {$/;"	s	language:C++
-Sprite_Batch	code/game_gfx_opengl.h	/^} Sprite_Batch;$/;"	t	language:C++	typeref:struct:__anon1d4ae8470508
+Sprite_Batch	code/game_gfx_opengl.h	/^} Sprite_Batch;$/;"	t	language:C++	typeref:struct:__anon1d4ae8470808
 sprite_batcher	code/game_gfx_opengl.h	/^  Sprite_Batch sprite_batcher;$/;"	m	language:C++	struct:Opengl	typeref:typename:Sprite_Batch
 sprite_batcher	code/game_renderer_opengl.h	/^  Sprite_Batcher sprite_batcher;$/;"	m	language:C++	struct:Opengl	typeref:typename:Sprite_Batcher
 Sprite_Batcher	code/game_renderer_opengl.h	/^struct Sprite_Batcher {$/;"	s	language:C++
@@ -2957,7 +2971,7 @@ Tri2	code/momo_shapes.h	/^}Tri2;$/;"	t	language:C++	typeref:struct:__anon4847842
 tri2_is_point_within	code/momo_shapes.h	/^static B32 tri2_is_point_within(Tri2 tri, V2 pt);$/;"	p	language:C++	typeref:typename:B32
 triangles	.\code\game_sb1.h	/^  SB1_Light_Triangle_List triangles;$/;"	m	language:C++	struct:SB1_Light
 triangles	code/game_mode_lit_light.h	/^  Lit_Light_Triangle_List triangles;$/;"	m	language:C++	struct:Lit_Light	typeref:typename:Lit_Light_Triangle_List
-Triangle_Batch	code/game_gfx_opengl.h	/^} Triangle_Batch;$/;"	t	language:C++	typeref:struct:__anon1d4ae8470608
+Triangle_Batch	code/game_gfx_opengl.h	/^} Triangle_Batch;$/;"	t	language:C++	typeref:struct:__anon1d4ae8470908
 triangle_batcher	code/game_gfx_opengl.h	/^  Triangle_Batcher triangle_batcher;$/;"	m	language:C++	struct:Opengl	typeref:typename:Triangle_Batcher
 triangle_batcher	code/game_renderer_opengl.h	/^  Triangle_Batcher triangle_batcher;$/;"	m	language:C++	struct:Opengl	typeref:typename:Triangle_Batcher
 Triangle_Batcher	code/game_renderer_opengl.h	/^struct Triangle_Batcher {$/;"	s	language:C++
@@ -3223,7 +3237,7 @@ WGL_TYPE_RGBA_ARB	code/win_gfx_opengl.cpp	/^#define WGL_TYPE_RGBA_ARB /;"	d	lang
 WGL_TYPE_RGBA_ARB	code/win_renderer_opengl.cpp	/^#define WGL_TYPE_RGBA_ARB /;"	d	language:C++	file:
 width	code/game_assets.h	/^  U32 width;$/;"	m	language:C++	struct:Bitmap_Asset	typeref:typename:U32
 width	code/game_gfx.h	/^  F32 width;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:F32
-width	code/game_gfx_opengl.h	/^  U32 width; $/;"	m	language:C++	struct:__anon1d4ae8470408	typeref:typename:U32
+width	code/game_gfx_opengl.h	/^  U32 width; $/;"	m	language:C++	struct:__anon1d4ae8470708	typeref:typename:U32
 width	code/game_renderer.h	/^  F32 width;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:F32
 width	code/game_renderer_opengl.h	/^  U32 width; $/;"	m	language:C++	struct:Texture	typeref:typename:U32
 width	code/karu.h	/^  U32 width, height;$/;"	m	language:C++	struct:Karu_Bitmap	typeref:typename:U32
@@ -3521,9 +3535,12 @@ _win_wasapi_set_default_device_as_current_device	code/win_audio_wasapi.h	/^_win_
 __anon1d4ae8470103	code/game_gfx_opengl.h	/^enum{ $/;"	g	language:C++
 __anon1d4ae8470203	code/game_gfx_opengl.h	/^enum {$/;"	g	language:C++
 __anon1d4ae8470303	code/game_gfx_opengl.h	/^enum {$/;"	g	language:C++
-__anon1d4ae8470408	code/game_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
-__anon1d4ae8470508	code/game_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
-__anon1d4ae8470608	code/game_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
+__anon1d4ae8470403	code/game_gfx_opengl.h	/^enum{ $/;"	g	language:C++
+__anon1d4ae8470503	code/game_gfx_opengl.h	/^enum {$/;"	g	language:C++
+__anon1d4ae8470603	code/game_gfx_opengl.h	/^enum {$/;"	g	language:C++
+__anon1d4ae8470708	code/game_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
+__anon1d4ae8470808	code/game_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
+__anon1d4ae8470908	code/game_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
 __anon1dda1bf60103	test.c	/^typedef enum {$/;"	g	language:C	file:
 __anon1dda1bf60203	test.c	/^typedef enum {$/;"	g	language:C	file:
 __anon1dda1bf60303	test.c	/^typedef enum {$/;"	g	language:C	file:
