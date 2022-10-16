@@ -1,11 +1,11 @@
-#include "win.h"
+#include "w32.h"
 
 Profiler _g_profiler = {0};
 Profiler* g_profiler = &_g_profiler; 
 
 #if 0
 static void
-win_toggle_fullscreen(HWND Window)
+w32_toggle_fullscreen(HWND Window)
 {
   // NOTE(casey): This follows Raymond Chen's prescription
   // for fullscreen toggling, see:
@@ -39,13 +39,13 @@ win_toggle_fullscreen(HWND Window)
 #endif
 
 //~Worker/Producer  functionality
-struct Win_Work {
+struct W32_Work {
   void* data;
   Platform_Task_Callback* callback;
 };
 
-struct Win_Work_Queue {
-  Win_Work entries[256];
+struct W32_Work_Queue {
+  W32_Work entries[256];
   U32 volatile next_entry_to_read;
   U32 volatile next_entry_to_write;
   
@@ -57,7 +57,7 @@ struct Win_Work_Queue {
 
 // NOTE(Momo): This function is accessed by multiple threads!
 static B32
-win_do_next_work_entry(Win_Work_Queue* wq) {
+w32_do_next_work_entry(W32_Work_Queue* wq) {
   B32 should_sleep = false;
   
   // NOTE(Momo): Generally, we want to do: 
@@ -83,7 +83,7 @@ win_do_next_work_entry(Win_Work_Queue* wq) {
                                  new_next_entry_to_read,
                                  old_next_entry_to_read);
     if (initial_value == old_next_entry_to_read) {
-      Win_Work work = wq->entries[old_next_entry_to_read];
+      W32_Work work = wq->entries[old_next_entry_to_read];
       work.callback(work.data);
       InterlockedIncrement((LONG volatile*)&wq->completion_count);
     }
@@ -103,9 +103,9 @@ win_do_next_work_entry(Win_Work_Queue* wq) {
 // work in the work queue is done!
 //
 static void
-win_complete_all_tasks_entries(Win_Work_Queue* wq) {
+w32_complete_all_tasks_entries(W32_Work_Queue* wq) {
   while(wq->completion_goal != wq->completion_count) {
-    win_do_next_work_entry(wq);
+    w32_do_next_work_entry(wq);
   }
   wq->completion_goal = 0;
   wq->completion_count = 0;
@@ -114,11 +114,11 @@ win_complete_all_tasks_entries(Win_Work_Queue* wq) {
 
 
 static DWORD WINAPI 
-win_worker_func(LPVOID ctx) {
-  auto* wq = (Win_Work_Queue*)ctx;
+w32_worker_func(LPVOID ctx) {
+  auto* wq = (W32_Work_Queue*)ctx;
   
   while(true) {
-    if (win_do_next_work_entry(wq)){
+    if (w32_do_next_work_entry(wq)){
       WaitForSingleObjectEx(wq->semaphore, INFINITE, FALSE);
     }
     
@@ -128,7 +128,7 @@ win_worker_func(LPVOID ctx) {
 
 
 static B32
-win_init_work_queue(Win_Work_Queue* wq, U32 thread_count) {
+w32_init_work_queue(W32_Work_Queue* wq, U32 thread_count) {
   wq->semaphore = CreateSemaphoreEx(0,
                                     0,                                
                                     thread_count,
@@ -139,7 +139,7 @@ win_init_work_queue(Win_Work_Queue* wq, U32 thread_count) {
   for (U32 i = 0; i < thread_count; ++i) {
     DWORD thread_id;
     HANDLE thread = CreateThread(NULL, 0, 
-                                 win_worker_func, 
+                                 w32_worker_func, 
                                  wq, 
                                  0, //CREATE_SUSPENDED, 
                                  &thread_id);
@@ -154,7 +154,7 @@ win_init_work_queue(Win_Work_Queue* wq, U32 thread_count) {
 
 // NOTE(Momo): This is not very thread safe. Other threads shouldn't call this.
 static void
-win_add_task_entry(Win_Work_Queue* wq, void (*callback)(void* ctx), void *data) {
+w32_add_task_entry(W32_Work_Queue* wq, void (*callback)(void* ctx), void *data) {
   U32 old_next_entry_to_write = wq->next_entry_to_write;
   U32 new_next_entry_to_write = (old_next_entry_to_write + 1) % array_count(wq->entries);
   assert(wq->next_entry_to_read != new_next_entry_to_write);  
@@ -172,19 +172,19 @@ win_add_task_entry(Win_Work_Queue* wq, void (*callback)(void* ctx), void *data) 
 
 //~File cabinet
 
-struct Win_File {
+struct W32_File {
   HANDLE handle;
   U32 cabinet_index;
 };
 
-struct Win_File_Cabinet {
-  Win_File files[32]; 
+struct W32_File_Cabinet {
+  W32_File files[32]; 
   U32 free_files[32];
   U32 free_file_count;
 };
 
 static void
-win_init_file_cabinet(Win_File_Cabinet* c) {
+w32_init_file_cabinet(W32_File_Cabinet* c) {
   for(U32 i = 0; i < array_count(c->files); ++i) {
     c->files[i].cabinet_index = i;
     c->free_files[i] = i;
@@ -192,8 +192,8 @@ win_init_file_cabinet(Win_File_Cabinet* c) {
   c->free_file_count = array_count(c->files);
 }
 
-static Win_File*
-win_get_next_free_file(Win_File_Cabinet* c) {
+static W32_File*
+w32_get_next_free_file(W32_File_Cabinet* c) {
   if (c->free_file_count == 0) {
     return nullptr;
   }
@@ -203,34 +203,34 @@ win_get_next_free_file(Win_File_Cabinet* c) {
 }
 
 static void
-win_return_file(Win_File_Cabinet* c, Win_File* f) {
+w32_return_file(W32_File_Cabinet* c, W32_File* f) {
   c->free_files[c->free_file_count++] = f->cabinet_index;
 }
 
 //~Global variables
-struct Win_State{
+struct W32_State{
   B32 is_running;
   
   U32 aspect_ratio_width;
   U32 aspect_ratio_height;
   
-  Win_Work_Queue work_queue;
-  Win_File_Cabinet file_cabinet;
+  W32_Work_Queue work_queue;
+  W32_File_Cabinet file_cabinet;
   
 };
-static Win_State g_win_state;
+static W32_State g_w32_state;
 
 
 //~ For Platform API
 
 static void 
-win_shutdown() {
-  g_win_state.is_running = false;
+w32_shutdown() {
+  g_w32_state.is_running = false;
 }
 
 #if 0
 static void*
-win_allocate(UMI memory_size) {
+w32_allocate(UMI memory_size) {
   return (U8*)VirtualAllocEx(GetCurrentProcess(),
                              0, 
                              memory_size,
@@ -240,7 +240,7 @@ win_allocate(UMI memory_size) {
 
 
 static void
-win_free(void* memory) {
+w32_free(void* memory) {
   VirtualFreeEx(GetCurrentProcess(), 
                 memory,    
                 0, 
@@ -250,7 +250,7 @@ win_free(void* memory) {
 #endif
 
 static B32
-win_allocate_memory_into_arena(Bump_Allocator* a, UMI memory_size) {
+w32_allocate_memory_into_arena(Bump_Allocator* a, UMI memory_size) {
   void* data = VirtualAllocEx(GetCurrentProcess(),
                               0, 
                               memory_size,
@@ -265,7 +265,7 @@ win_allocate_memory_into_arena(Bump_Allocator* a, UMI memory_size) {
 
 
 static void
-win_free_memory_from_arena(Bump_Allocator* a) {
+w32_free_memory_from_arena(Bump_Allocator* a) {
   VirtualFreeEx(GetCurrentProcess(), 
                 a->memory,    
                 0, 
@@ -274,7 +274,7 @@ win_free_memory_from_arena(Bump_Allocator* a) {
 
 
 static B32
-win_open_file(Platform_File* file,
+w32_open_file(Platform_File* file,
               const char* filename, 
               Platform_File_Access access,
               Platform_File_Path path) 
@@ -313,28 +313,28 @@ win_open_file(Platform_File* file,
   }
   else {
     
-    Win_File* win_file = win_get_next_free_file(&g_win_state.file_cabinet);
-    assert(win_file);
-    win_file->handle = handle;
+    W32_File* w32_file = w32_get_next_free_file(&g_w32_state.file_cabinet);
+    assert(w32_file);
+    w32_file->handle = handle;
     
-    file->platform_data = win_file;
+    file->platform_data = w32_file;
     return true;
   }
 }
 
 static void
-win_close_file(Platform_File* file) {
-  auto* win_file = (Win_File*)file->platform_data;
-  CloseHandle(win_file->handle);
+w32_close_file(Platform_File* file) {
+  auto* w32_file = (W32_File*)file->platform_data;
+  CloseHandle(w32_file->handle);
   
-  win_return_file(&g_win_state.file_cabinet, win_file);
+  w32_return_file(&g_w32_state.file_cabinet, w32_file);
   file->platform_data = nullptr;
 }
 
 static B32
-win_read_file(Platform_File* file, UMI size, UMI offset, void* dest) 
+w32_read_file(Platform_File* file, UMI size, UMI offset, void* dest) 
 { 
-  auto* win_file = (Win_File*)file->platform_data;
+  auto* w32_file = (W32_File*)file->platform_data;
   
   // Reading the file
   OVERLAPPED overlapped = {};
@@ -343,7 +343,7 @@ win_read_file(Platform_File* file, UMI size, UMI offset, void* dest)
   
   DWORD bytes_read;
   
-  if(ReadFile(win_file->handle, dest, (DWORD)size, &bytes_read, &overlapped) &&
+  if(ReadFile(w32_file->handle, dest, (DWORD)size, &bytes_read, &overlapped) &&
      (DWORD)size == bytes_read) 
   {
     return true;
@@ -354,16 +354,16 @@ win_read_file(Platform_File* file, UMI size, UMI offset, void* dest)
 }
 
 static B32 
-win_write_file(Platform_File* file, UMI size, UMI offset, void* src)
+w32_write_file(Platform_File* file, UMI size, UMI offset, void* src)
 {
-  auto* win_file = (Win_File*)file->platform_data;
+  auto* w32_file = (W32_File*)file->platform_data;
   
   OVERLAPPED overlapped = {};
   overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
   overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
   
   DWORD bytes_wrote;
-  if(WriteFile(win_file->handle, src, (DWORD)size, &bytes_wrote, &overlapped) &&
+  if(WriteFile(w32_file->handle, src, (DWORD)size, &bytes_wrote, &overlapped) &&
      (DWORD)size == bytes_wrote) 
   {
     return true;
@@ -374,18 +374,18 @@ win_write_file(Platform_File* file, UMI size, UMI offset, void* src)
 }
 
 static void
-win_add_task(Platform_Task_Callback callback, void* data) {
-  win_add_task_entry(&g_win_state.work_queue, callback, data);
+w32_add_task(Platform_Task_Callback callback, void* data) {
+  w32_add_task_entry(&g_w32_state.work_queue, callback, data);
 }
 
 static void
-win_complete_all_tasks() {
-  win_complete_all_tasks_entries(&g_win_state.work_queue);
+w32_complete_all_tasks() {
+  w32_complete_all_tasks_entries(&g_w32_state.work_queue);
 }
 
 
 static void
-win_process_input(HWND window, Platform* pf) 
+w32_process_input(HWND window, Platform* pf) 
 {
   MSG msg = {};
   while(PeekMessage(&msg, window, 0, 0, PM_REMOVE)) {
@@ -397,7 +397,7 @@ win_process_input(HWND window, Platform* pf)
       case WM_QUIT:
       case WM_DESTROY:
       case WM_CLOSE: {
-        g_win_state.is_running = false;
+        g_w32_state.is_running = false;
       } break;
       case WM_LBUTTONUP:
       case WM_LBUTTONDOWN: {
@@ -469,23 +469,23 @@ win_process_input(HWND window, Platform* pf)
 }
 
 static void
-win_setup_platform_functions(Platform* pf)
+w32_setup_platform_functions(Platform* pf)
 {
-  //pf->hot_reload = win_hot_reload;
-  //pf->shutdown = win_shutdown;
-  pf->open_file = win_open_file;
-  pf->read_file = win_read_file;
-  pf->write_file = win_write_file;
-  pf->close_file = win_close_file;
-  pf->add_task = win_add_task;
-  pf->complete_all_tasks = win_complete_all_tasks;
-  pf->debug_log = win_log_proc;
-  pf->get_performance_counter = win_get_performance_counter_u64;
+  //pf->hot_reload = w32_hot_reload;
+  //pf->shutdown = w32_shutdown;
+  pf->open_file = w32_open_file;
+  pf->read_file = w32_read_file;
+  pf->write_file = w32_write_file;
+  pf->close_file = w32_close_file;
+  pf->add_task = w32_add_task;
+  pf->complete_all_tasks = w32_complete_all_tasks;
+  pf->debug_log = w32_log_proc;
+  pf->get_performance_counter = w32_get_performance_counter_u64;
 }
 
 //~ Main functions
 LRESULT CALLBACK
-win_window_callback(HWND window, 
+w32_window_callback(HWND window, 
                     UINT message, 
                     WPARAM w_param,
                     LPARAM l_param) 
@@ -495,7 +495,7 @@ win_window_callback(HWND window,
     case WM_CLOSE:  
     case WM_QUIT:
     case WM_DESTROY: {
-      g_win_state.is_running = false;
+      g_w32_state.is_running = false;
     } break;
     default: {
       result = DefWindowProcA(window, message, w_param, l_param);
@@ -519,14 +519,14 @@ WinMain(HINSTANCE instance,
   
   //- Initialize window state
   {
-    g_win_state.is_running = true;
-    g_win_state.aspect_ratio_width = 16;
-    g_win_state.aspect_ratio_height = 9;
+    g_w32_state.is_running = true;
+    g_w32_state.aspect_ratio_width = 16;
+    g_w32_state.aspect_ratio_height = 9;
     
-    if (!win_init_work_queue(&g_win_state.work_queue, 8)) {
+    if (!w32_init_work_queue(&g_w32_state.work_queue, 8)) {
       return 1;
     }
-    win_init_file_cabinet(&g_win_state.file_cabinet);
+    w32_init_file_cabinet(&g_w32_state.file_cabinet);
   }
   
   
@@ -534,32 +534,32 @@ WinMain(HINSTANCE instance,
   //- Create window in the middle of the screen
   HWND window;
   {
-    const int win_w = 1600;
-    const int win_h = 900;
+    const int w32_w = 1600;
+    const int w32_h = 900;
     const char* title = "Momodevelop: TXT";
     const char* icon_path = "window.ico";
     const int icon_w = 256;
     const int icon_h = 256;
     
-    WNDCLASSA win_class = {};
-    win_class.style = CS_HREDRAW | CS_VREDRAW;
-    win_class.lpfnWndProc = win_window_callback;
-    win_class.hInstance = instance;
-    win_class.hCursor = LoadCursor(0, IDC_ARROW);
-    win_class.lpszClassName = "MainWindowClass";
+    WNDCLASSA w32_class = {};
+    w32_class.style = CS_HREDRAW | CS_VREDRAW;
+    w32_class.lpfnWndProc = w32_window_callback;
+    w32_class.hInstance = instance;
+    w32_class.hCursor = LoadCursor(0, IDC_ARROW);
+    w32_class.lpszClassName = "MainWindowClass";
     
-    win_class.hIcon = (HICON)LoadImageA(NULL, 
+    w32_class.hIcon = (HICON)LoadImageA(NULL, 
                                         icon_path,
                                         IMAGE_ICON, 
                                         icon_w, 
                                         icon_h,
                                         LR_LOADFROMFILE);
     
-    if(!RegisterClassA(&win_class)) {
+    if(!RegisterClassA(&w32_class)) {
       return 1;
     }
     
-    RECT win_rect = {};
+    RECT w32_rect = {};
     {
       // NOTE(Momo): Monitor dimensions
       HMONITOR monitor = MonitorFromWindow(0, MONITOR_DEFAULTTONEAREST);
@@ -567,30 +567,30 @@ WinMain(HINSTANCE instance,
       monitor_info.cbSize = sizeof(monitor_info);
       GetMonitorInfo(monitor, &monitor_info); 
       
-      LONG monitor_w = win_rect_width(monitor_info.rcMonitor);
-      LONG monitor_h = win_rect_height(monitor_info.rcMonitor);
+      LONG monitor_w = w32_rect_width(monitor_info.rcMonitor);
+      LONG monitor_h = w32_rect_height(monitor_info.rcMonitor);
       
-      win_rect.left = monitor_w/2 - win_w/2;
-      win_rect.right = monitor_w/2 + win_w/2;
-      win_rect.top = monitor_h/2 - win_h/2;
-      win_rect.bottom = monitor_h/2 + win_h/2;
+      w32_rect.left = monitor_w/2 - w32_w/2;
+      w32_rect.right = monitor_w/2 + w32_w/2;
+      w32_rect.top = monitor_h/2 - w32_h/2;
+      w32_rect.bottom = monitor_h/2 + w32_h/2;
     }
     
     DWORD style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
     
-    AdjustWindowRectEx(&win_rect,
+    AdjustWindowRectEx(&w32_rect,
                        style,
                        FALSE,
                        0);    
     
     window = CreateWindowExA(0,
-                             win_class.lpszClassName,
+                             w32_class.lpszClassName,
                              title,
                              style,
-                             win_rect.left,
-                             win_rect.top,
-                             win_rect_width(win_rect),
-                             win_rect_height(win_rect),
+                             w32_rect.left,
+                             w32_rect.top,
+                             w32_rect_width(w32_rect),
+                             w32_rect_height(w32_rect),
                              0,
                              0,
                              instance,
@@ -602,7 +602,7 @@ WinMain(HINSTANCE instance,
     
     
   }
-  //  win_toggle_fullscreen(window);
+  //  w32_toggle_fullscreen(window);
   
   //-Determine refresh rate
   // NOTE(Momo): For now we will adjust according to user's monitor...?
@@ -610,34 +610,36 @@ WinMain(HINSTANCE instance,
   U32 monitor_refresh_rate = 60;
   {
     HDC dc = GetDC(window);
-    int win_refresh_rate = GetDeviceCaps(dc, VREFRESH);
+    int w32_refresh_rate = GetDeviceCaps(dc, VREFRESH);
     ReleaseDC(window, dc);
-    if (win_refresh_rate > 1) {
-      monitor_refresh_rate = (U32)win_refresh_rate;
+    if (w32_refresh_rate > 1) {
+      monitor_refresh_rate = (U32)w32_refresh_rate;
     }
   }
   F32 target_secs_per_frame = 1.f/(F32)monitor_refresh_rate;
-  win_log("Monitor Refresh Rate: %d Hz\n", monitor_refresh_rate);
-  win_log("Target Secs per Frame: %.2f\n", target_secs_per_frame);
+  w32_log("Monitor Refresh Rate: %d Hz\n", monitor_refresh_rate);
+  w32_log("Target Secs per Frame: %.2f\n", target_secs_per_frame);
   
   
   //-Load Renderer functions
-  Win_Gfx_Functions renderer_functions = {};
-  Win_Loaded_Code renderer_code = {};
-  renderer_code.function_count = array_count(win_renderer_function_names);
-  renderer_code.function_names = win_renderer_function_names;
+#if 0
+  W32_Gfx_Functions renderer_functions = {};
+  W32_Loaded_Code renderer_code = {};
+  renderer_code.function_count = array_count(w32_renderer_function_names);
+  renderer_code.function_names = w32_renderer_function_names;
   renderer_code.module_path = "renderer.dll";
   renderer_code.functions = (void**)&renderer_functions;
 #if INTERNAL
   renderer_code.tmp_path = "tmp_renderer.dll";
 #endif // INTERNAL
-  win_load_code(&renderer_code);
+  w32_load_code(&renderer_code);
   if (!renderer_code.is_valid) return 1;
-  defer { win_unload_code(&renderer_code); };
-  
+  defer { w32_unload_code(&renderer_code); };
+#endif  
+
   //-Load Game Functions
   Game_Functions game_functions = {};
-  Win_Loaded_Code game_code = {};
+  W32_Loaded_Code game_code = {};
   game_code.function_count = array_count(game_function_names);
   game_code.function_names = game_function_names;
   game_code.module_path = "game.dll";
@@ -645,46 +647,46 @@ WinMain(HINSTANCE instance,
 #if INTERNAL
   game_code.tmp_path = "tmp_game.dll";
 #endif // INTERNAL
-  win_load_code(&game_code);
+  w32_load_code(&game_code);
   if (!game_code.is_valid) return 1;
-  defer { win_unload_code(&game_code); };
+  defer { w32_unload_code(&game_code); };
   
   
   //-Init renderer
   make(Bump_Allocator, renderer_arena);
-  if (!win_allocate_memory_into_arena(renderer_arena, MB(256))) return false;
-  defer { win_free_memory_from_arena(renderer_arena); };
-  
-  Gfx* renderer = 
-    renderer_functions.load(window, 
-                            MB(100),
-                            MB(100), 
-                            renderer_arena);
+  if (!w32_allocate_memory_into_arena(renderer_arena, MB(256))) return false;
+  defer { w32_free_memory_from_arena(renderer_arena); };
+ 
+    
+  Gfx* renderer = w32_gfx_load(window, 
+                               MB(100),
+                               MB(100), 
+                               renderer_arena);
   if (!renderer) { return 1; }
-  defer { renderer_functions.unload(renderer); };
+  defer { w32_gfx_unload(renderer); };
  
   // Init Audio
   make(Bump_Allocator, audio_arena);
-  if (!win_allocate_memory_into_arena(audio_arena, MB(256))) return false;
-  defer { win_free_memory_from_arena(audio_arena); };
+  if (!w32_allocate_memory_into_arena(audio_arena, MB(256))) return false;
+  defer { w32_free_memory_from_arena(audio_arena); };
 
-  Platform_Audio* audio = win_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
+  Platform_Audio* audio = w32_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
   if (!audio) return false;
-  defer{ win_audio_unload(audio); };
+  defer{ w32_audio_unload(audio); };
 
 
   // Init profiler
-  prf_init(g_profiler, win_get_performance_counter_u64);
+  prf_init(g_profiler, w32_get_performance_counter_u64);
   
   // Platform setup
   make(Platform, pf);
  
   // Game memory set up
   make(Bump_Allocator, game_arena);
-  if (!win_allocate_memory_into_arena(game_arena, MB(32))) return false;
-  defer { win_free_memory_from_arena(game_arena); };
+  if (!w32_allocate_memory_into_arena(game_arena, MB(32))) return false;
+  defer { w32_free_memory_from_arena(game_arena); };
   
-  win_setup_platform_functions(pf);
+  w32_setup_platform_functions(pf);
   pf->gfx = renderer;
   pf->profiler = g_profiler;
   pf->game_arena = game_arena;
@@ -697,26 +699,24 @@ WinMain(HINSTANCE instance,
   //- Send this to global state
   LARGE_INTEGER performance_frequency;
   QueryPerformanceFrequency(&performance_frequency);
-  LARGE_INTEGER last_frame_count = win_get_performance_counter();
+  LARGE_INTEGER last_frame_count = w32_get_performance_counter();
   
-  while (g_win_state.is_running) {
-    win_profile_block("game loop");
+  while (g_w32_state.is_running) {
+    w32_profile_block("game loop");
     
     // Begin frame
-    win_audio_begin_frame(audio);
-    V2U render_wh = win_get_client_dims(window);
-    Rect2U render_region = win_calc_render_region(render_wh.w,
+    w32_audio_begin_frame(audio);
+    V2U render_wh = w32_get_client_dims(window);
+    Rect2U render_region = w32_calc_render_region(render_wh.w,
                                                   render_wh.h,
                                                   GAME_ASPECT);
-    if (renderer_code.is_valid) {
-      renderer_functions.begin_frame(renderer, 
-                                     render_wh, 
-                                     render_region);
-    }
+    w32_gfx_begin_frame(renderer, 
+                        render_wh, 
+                        render_region);
     
 #if INTERNAL
     //-Hot reload game.dll functions
-    pf->reloaded = win_reload_code_if_outdated(&game_code);
+    pf->reloaded = w32_reload_code_if_outdated(&game_code);
     if (pf->reloaded) {
       prf_reset(g_profiler);
     }
@@ -725,7 +725,7 @@ WinMain(HINSTANCE instance,
     //-Process messages and input
     pf->seconds_since_last_frame = target_secs_per_frame;
     pf_update_input(pf);
-    win_process_input(window, pf); 
+    w32_process_input(window, pf); 
     
     //- Mouse input 
     {
@@ -761,10 +761,8 @@ WinMain(HINSTANCE instance,
 
     // End  frame
     prf_update_entries(g_profiler);
-    if (renderer_code.is_valid) {
-      renderer_functions.end_frame(renderer);
-    }
-    win_audio_end_frame(audio);
+    w32_gfx_end_frame(renderer);
+    w32_audio_end_frame(audio);
 
     // Frame-rate control
     //
@@ -775,8 +773,8 @@ WinMain(HINSTANCE instance,
     // NOTE: We might want to think about VSYNC or getting VBLANK
     // value so that we can figure out how long we *should* sleep
     F32 secs_elapsed_after_update = 
-      win_get_secs_elapsed(last_frame_count,
-                           win_get_performance_counter(),
+      w32_get_secs_elapsed(last_frame_count,
+                           w32_get_performance_counter(),
                            performance_frequency);
     
     if(target_secs_per_frame > secs_elapsed_after_update) {
@@ -792,20 +790,20 @@ WinMain(HINSTANCE instance,
       
       // Spin lock
       F32 secs_elapsed_after_sleep = 
-        win_get_secs_elapsed(last_frame_count,
-                             win_get_performance_counter(),
+        w32_get_secs_elapsed(last_frame_count,
+                             w32_get_performance_counter(),
                              performance_frequency);
       if (secs_elapsed_after_sleep > target_secs_per_frame) {
         // log oversleep?
-        win_log("[Win] Overslept! %f vs %f\n", secs_elapsed_after_sleep,
+        w32_log("[Win] Overslept! %f vs %f\n", secs_elapsed_after_sleep,
                 target_secs_per_frame);
       }
       
       // Spin lock to simulate sleeping more
       while(target_secs_per_frame > secs_elapsed_after_sleep) {
         secs_elapsed_after_sleep = 
-          win_get_secs_elapsed(last_frame_count,
-                               win_get_performance_counter(),
+          w32_get_secs_elapsed(last_frame_count,
+                               w32_get_performance_counter(),
                                performance_frequency);
         
       }
@@ -814,15 +812,15 @@ WinMain(HINSTANCE instance,
     
     
         
-    LARGE_INTEGER end_frame_count = win_get_performance_counter();
-    F32 secs_this_frame =  win_get_secs_elapsed(last_frame_count,
+    LARGE_INTEGER end_frame_count = w32_get_performance_counter();
+    F32 secs_this_frame =  w32_get_secs_elapsed(last_frame_count,
                                                 end_frame_count,
                                                 performance_frequency);
     
     // only do this when VSYNC is enabled
     //target_secs_per_frame = secs_this_frame;
 #if 0 
-    win_log("target: %f vs %f \n", 
+    w32_log("target: %f vs %f \n", 
             target_secs_per_frame,
             secs_this_frame);
 #endif

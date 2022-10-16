@@ -1,7 +1,7 @@
 #ifdef INTERNAL
 #include <stdio.h>
 static void
-win_log_proc(const char* fmt, ...) {
+w32_log_proc(const char* fmt, ...) {
   char buffer[256] = {0};
   va_list args;
   va_start(args, fmt);
@@ -9,18 +9,18 @@ win_log_proc(const char* fmt, ...) {
   va_end(args);
   OutputDebugStringA(buffer);
 }
-#define win_log(...) win_log_proc(__VA_ARGS__)
-#define win_profile_block(...) prf_block(g_profiler, __VA_ARGS__)
+#define w32_log(...) w32_log_proc(__VA_ARGS__)
+#define w32_profile_block(...) prf_block(g_profiler, __VA_ARGS__)
 #else
-#define win_log(...)
-#define win_profiler_block(...)
+#define w32_log(...)
+#define w32_profiler_block(...)
 #endif // INTERNAL
 
-static inline LONG win_rect_width(RECT r) { return r.right - r.left; }
-static inline LONG win_rect_height(RECT r) { return r.bottom - r.top; }
+static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }
+static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }
 
 static inline V2U
-win_get_window_dims(HWND window) {
+w32_get_window_dims(HWND window) {
 	RECT rect;
 	GetWindowRect(window, &rect);
   
@@ -33,7 +33,7 @@ win_get_window_dims(HWND window) {
 }
 
 static V2U
-win_get_client_dims(HWND window) {
+w32_get_client_dims(HWND window) {
 	RECT rect;
 	GetClientRect(window, &rect);
   
@@ -46,7 +46,7 @@ win_get_client_dims(HWND window) {
 }
 
 static Rect2U 
-win_calc_render_region(U32 window_w, 
+w32_calc_render_region(U32 window_w, 
                        U32 window_h, 
                        F32 aspect_ratio)
 {
@@ -83,20 +83,20 @@ win_calc_render_region(U32 window_w,
 }
 
 static LARGE_INTEGER
-win_get_performance_counter(void) {
+w32_get_performance_counter(void) {
   LARGE_INTEGER result;
   QueryPerformanceCounter(&result);
   return result;
 }
 
 static U64
-win_get_performance_counter_u64(void) {
-  LARGE_INTEGER counter = win_get_performance_counter();
+w32_get_performance_counter_u64(void) {
+  LARGE_INTEGER counter = w32_get_performance_counter();
   U64 ret = (U64)counter.QuadPart;
   return ret;
 }
 static F32
-win_get_secs_elapsed(LARGE_INTEGER start,
+w32_get_secs_elapsed(LARGE_INTEGER start,
                      LARGE_INTEGER end,
                      LARGE_INTEGER performance_frequency) 
 {
@@ -104,7 +104,7 @@ win_get_secs_elapsed(LARGE_INTEGER start,
 }
 
 static inline LARGE_INTEGER
-win_file_time_to_large_integer(FILETIME file_time) {
+w32_file_time_to_large_integer(FILETIME file_time) {
   LARGE_INTEGER ret = {};
   ret.LowPart = file_time.dwLowDateTime;
   ret.HighPart = file_time.dwHighDateTime;
@@ -113,12 +113,12 @@ win_file_time_to_large_integer(FILETIME file_time) {
 }
 
 static inline LARGE_INTEGER 
-win_get_file_last_write_time(const char* filename) {
+w32_get_file_last_write_time(const char* filename) {
   WIN32_FILE_ATTRIBUTE_DATA data;
   FILETIME last_write_time = {};
   
   if(GetFileAttributesEx(filename, GetFileExInfoStandard, &data)) {
     last_write_time = data.ftLastWriteTime;
   }
-  return win_file_time_to_large_integer(last_write_time); 
+  return w32_file_time_to_large_integer(last_write_time); 
 }

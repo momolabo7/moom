@@ -1,6 +1,6 @@
 
 //~DLL loading
-struct Win_Loaded_Code {
+struct W32_Loaded_Code {
   // Need to fill these up
   U32 function_count;
   const char** function_names;
@@ -17,7 +17,7 @@ struct Win_Loaded_Code {
 };
 
 static void
-win_unload_code(Win_Loaded_Code* code) {
+w32_unload_code(W32_Loaded_Code* code) {
   if(code->dll) {
     FreeLibrary(code->dll);
     code->dll = 0;
@@ -27,7 +27,7 @@ win_unload_code(Win_Loaded_Code* code) {
 }
 
 static void
-win_load_code(Win_Loaded_Code* code) {
+w32_load_code(W32_Loaded_Code* code) {
   code->is_valid = false;
   
 #if INTERNAL
@@ -63,7 +63,7 @@ win_load_code(Win_Loaded_Code* code) {
   }
   
   if(!code->is_valid) {
-    win_unload_code(code);
+    w32_unload_code(code);
   }
   
   
@@ -72,17 +72,17 @@ win_load_code(Win_Loaded_Code* code) {
 
 #if INTERNAL
 static B32
-win_reload_code_if_outdated(Win_Loaded_Code* code) {
+w32_reload_code_if_outdated(W32_Loaded_Code* code) {
   B32 reloaded = false;
   // Check last modified date
-  LARGE_INTEGER last_write_time = win_get_file_last_write_time(code->module_path);
+  LARGE_INTEGER last_write_time = w32_get_file_last_write_time(code->module_path);
   if(last_write_time.QuadPart > code->module_write_time.QuadPart) { 
-    win_unload_code(code); 
+    w32_unload_code(code); 
     for (U32 i = 0; i < 100; ++i ){
-      win_load_code(code);
+      w32_load_code(code);
       if (code->is_valid) {
-        win_log("[%s] reloaded successfully\n", code->module_path);
-        code->module_write_time = win_get_file_last_write_time(code->module_path);
+        w32_log("[%s] reloaded successfully\n", code->module_path);
+        code->module_write_time = w32_get_file_last_write_time(code->module_path);
         reloaded = true;
         break;
       }

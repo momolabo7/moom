@@ -11,25 +11,29 @@
 #include "game_gfx.h"
 
 
-// Interfaces
-typedef Gfx* 
-Win_Gfx_Load(HWND window, 
+// win32 gfx api
+static Gfx* 
+w32_gfx_load(HWND window, 
              U32 command_queue_size, 
              U32 texture_queue_size,
              Bump_Allocator* allocator);
 
 
-typedef void 
-Win_Gfx_Unload(Gfx* renderer);
 
-typedef void
-Win_Gfx_Begin_Frame(Gfx* renderer, 
+static void 
+w32_gfx_unload(Gfx* renderer);
+
+static void
+w32_gfx_begin_frame(Gfx* renderer, 
                     V2U render_wh, 
                     Rect2U render_region);
-typedef void 
-Win_Gfx_End_Frame(Gfx* renderer);
+static void 
+w32_gfx_end_frame(Gfx* renderer);
 
 
+
+
+#if 0
 //~Function table
 struct Win_Gfx_Functions {
   Win_Gfx_Load* load;
@@ -45,6 +49,7 @@ static const char* win_renderer_function_names[] = {
   "win_gfx_begin_frame",
   "win_gfx_end_frame"
 };
+#endif
 
 
 

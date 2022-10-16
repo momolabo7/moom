@@ -46,28 +46,28 @@ DEFINE_GUID(IID_IMMNotificationClient, 0x7991eec9, 0x7e89, 0x4d85, 0x83, 0x90, 0
 //////////////////////////////////////////////////////////
 // Win Audio Notifs implementation
 static STDMETHODIMP_(ULONG)  
-_win_wasapi_notif_client_AddRef(IMMNotificationClient* mm_notif) {
-  Win_Wasapi_Notif_Client* win_notif = (Win_Wasapi_Notif_Client*)mm_notif;
-  return InterlockedIncrement(&win_notif->ref);
+_w32_wasapi_notif_client_AddRef(IMMNotificationClient* mm_notif) {
+  Win_Wasapi_Notif_Client* w32_notif = (Win_Wasapi_Notif_Client*)mm_notif;
+  return InterlockedIncrement(&w32_notif->ref);
 }
 static STDMETHODIMP_(ULONG)  
-_win_wasapi_notif_client_Release(IMMNotificationClient* mm_notif) {
-  Win_Wasapi_Notif_Client* win_notif = (Win_Wasapi_Notif_Client*)mm_notif;
-  return InterlockedDecrement(&win_notif->ref);
+_w32_wasapi_notif_client_Release(IMMNotificationClient* mm_notif) {
+  Win_Wasapi_Notif_Client* w32_notif = (Win_Wasapi_Notif_Client*)mm_notif;
+  return InterlockedDecrement(&w32_notif->ref);
 }
 static STDMETHODIMP_(HRESULT)  
-_win_wasapi_notif_client_QueryInterface(IMMNotificationClient* mm_notif,
+_w32_wasapi_notif_client_QueryInterface(IMMNotificationClient* mm_notif,
                                        REFIID riid,
                                        VOID **ppvInterface) 
 {
   if (IID_IUnknown == riid)
   {
-    _win_wasapi_notif_client_AddRef(mm_notif);
+    _w32_wasapi_notif_client_AddRef(mm_notif);
     *ppvInterface = (IUnknown*)mm_notif;
   }
   else if (IID_IMMNotificationClient == riid)
   {
-    _win_wasapi_notif_client_AddRef(mm_notif);
+    _w32_wasapi_notif_client_AddRef(mm_notif);
     *ppvInterface = (IMMNotificationClient*)mm_notif;
   }
   else
@@ -78,28 +78,28 @@ _win_wasapi_notif_client_QueryInterface(IMMNotificationClient* mm_notif,
   return S_OK;
 }
 static STDMETHODIMP_(HRESULT) 
-_win_wasapi_notif_client_OnDefaultDeviceChange(IMMNotificationClient* mm_notif,
+_w32_wasapi_notif_client_OnDefaultDeviceChange(IMMNotificationClient* mm_notif,
                                               EDataFlow flow,
                                               ERole role,
                                               LPCWSTR pwstr_device_id)
 {
-  Win_Wasapi_Notif_Client* win_notif = (Win_Wasapi_Notif_Client*)mm_notif;
-  win_notif->wasapi->is_device_changed = true;
+  Win_Wasapi_Notif_Client* w32_notif = (Win_Wasapi_Notif_Client*)mm_notif;
+  w32_notif->wasapi->is_device_changed = true;
   return S_OK;
 }
 static STDMETHODIMP_(HRESULT) 
-_win_wasapi_notif_client_OnDeviceAdded(IMMNotificationClient* client, LPCWSTR pwstr_device_id)
+_w32_wasapi_notif_client_OnDeviceAdded(IMMNotificationClient* client, LPCWSTR pwstr_device_id)
 {
   return S_OK;
 }
 static STDMETHODIMP_(HRESULT) 
-_win_wasapi_notif_client_OnDeviceRemoved(IMMNotificationClient* client, LPCWSTR pwstr_device_id)
+_w32_wasapi_notif_client_OnDeviceRemoved(IMMNotificationClient* client, LPCWSTR pwstr_device_id)
 {
   return S_OK;
 }
 
 static STDMETHODIMP_(HRESULT) 
-_win_wasapi_notif_client_OnDeviceStateChanged(IMMNotificationClient* client,
+_w32_wasapi_notif_client_OnDeviceStateChanged(IMMNotificationClient* client,
                                              LPCWSTR pwstr_device_id, 
                                              DWORD dwNewState)
 {
@@ -107,7 +107,7 @@ _win_wasapi_notif_client_OnDeviceStateChanged(IMMNotificationClient* client,
 }
 
 static STDMETHODIMP_(HRESULT) 
-_win_wasapi_notif_client_OnPropertyValueChanged(IMMNotificationClient* client,
+_w32_wasapi_notif_client_OnPropertyValueChanged(IMMNotificationClient* client,
                                                LPCWSTR pwstr_device_id, 
                                                const PROPERTYKEY key)
 {
@@ -118,26 +118,26 @@ _win_wasapi_notif_client_OnPropertyValueChanged(IMMNotificationClient* client,
 ////////////////////////////////////////////////////
 // Win Audio implementation
 //
-static IMMNotificationClientVtbl _win_wasapi_notifs_vtable {
-  _win_wasapi_notif_client_QueryInterface,
-  _win_wasapi_notif_client_AddRef,
-  _win_wasapi_notif_client_Release,
-  _win_wasapi_notif_client_OnDeviceStateChanged,
-  _win_wasapi_notif_client_OnDeviceAdded,
-  _win_wasapi_notif_client_OnDeviceRemoved,
-  _win_wasapi_notif_client_OnDefaultDeviceChange,
-  _win_wasapi_notif_client_OnPropertyValueChanged,
+static IMMNotificationClientVtbl _w32_wasapi_notifs_vtable {
+  _w32_wasapi_notif_client_QueryInterface,
+  _w32_wasapi_notif_client_AddRef,
+  _w32_wasapi_notif_client_Release,
+  _w32_wasapi_notif_client_OnDeviceStateChanged,
+  _w32_wasapi_notif_client_OnDeviceAdded,
+  _w32_wasapi_notif_client_OnDeviceRemoved,
+  _w32_wasapi_notif_client_OnDefaultDeviceChange,
+  _w32_wasapi_notif_client_OnPropertyValueChanged,
 };
 
 static B32 
-_win_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
+_w32_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
   IMMDevice* device;
   HRESULT hr = IMMDeviceEnumerator_GetDefaultAudioEndpoint(wasapi->mm_device_enum, 
                                                            eRender, 
                                                            eConsole, 
                                                            &device);
   if (FAILED(hr)) {
-    win_log("[win_wasapi] Failed to get wasapi endpoint\n");
+    w32_log("[w32_wasapi] Failed to get wasapi endpoint\n");
     return false;
   }
   defer { IMMDevice_Release(device); };
@@ -148,7 +148,7 @@ _win_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
                           0, 
                           (LPVOID*)&wasapi->audio_client);
   if(FAILED(hr)) {
-    win_log("[win_wasapi] Failed to create IAudioClient\n");
+    w32_log("[w32_wasapi] Failed to create IAudioClient\n");
     return false;
   }
   
@@ -176,7 +176,7 @@ _win_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
                                 0);
   if (FAILED(hr))
   {
-    win_log("[win_wasapi] Failed to initialize wasapi client\n");
+    w32_log("[w32_wasapi] Failed to initialize wasapi client\n");
     return false;
   }
   
@@ -185,7 +185,7 @@ _win_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
                                (LPVOID*)&wasapi->audio_render_client);
   if (FAILED(hr))
   {
-    win_log("[win_wasapi] Failed to create IAudioClient\n");
+    w32_log("[w32_wasapi] Failed to create IAudioClient\n");
     return false;
   }
   
@@ -193,7 +193,7 @@ _win_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
   hr = IAudioClient2_GetBufferSize(wasapi->audio_client, &sound_frame_count);
   if (FAILED(hr))
   {
-    win_log("[win_wasapi] Failed to get buffer size\n");
+    w32_log("[w32_wasapi] Failed to get buffer size\n");
     return false;
   }
 
@@ -201,7 +201,7 @@ _win_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
   wasapi->buffer_size = sound_frame_count;
   wasapi->buffer = ba_push_arr(S16, &wasapi->allocator, wasapi->buffer_size);
   if (!wasapi->buffer) {
-    win_log("[win_wasapi] Failed to allocate secondary buffer\n");
+    w32_log("[w32_wasapi] Failed to allocate secondary buffer\n");
     return false;
   }
   IAudioClient2_Start(wasapi->audio_client);
@@ -210,7 +210,7 @@ _win_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
 }
 
 static B32
-win_wasapi_init(Win_Wasapi* wasapi,
+w32_wasapi_init(Win_Wasapi* wasapi,
                 U32 samples_per_second, 
                 U16 bits_per_sample,
                 U16 channels,
@@ -227,13 +227,13 @@ win_wasapi_init(Win_Wasapi* wasapi,
                                    &wasapi->allocator, 
                                    16)) 
   {
-    win_log("[win_wasapi] Failed to partition memory\n");
+    w32_log("[w32_wasapi] Failed to partition memory\n");
     return false;
   }
   
   HRESULT hr = CoInitializeEx(0, COINIT_SPEED_OVER_MEMORY);
   if (FAILED(hr)) {
-    win_log("[win_wasapi] Failed CoInitializeEx\n");
+    w32_log("[w32_wasapi] Failed CoInitializeEx\n");
     return false;
   }
   
@@ -243,17 +243,17 @@ win_wasapi_init(Win_Wasapi* wasapi,
                         IID_IMMDeviceEnumerator,
                         (LPVOID*)(&wasapi->mm_device_enum));
   if (FAILED(hr)) {
-    win_log("[win_wasapi] Failed to create IMMDeviceEnumerator\n");
+    w32_log("[w32_wasapi] Failed to create IMMDeviceEnumerator\n");
     goto cleanup_1;
   }
    
-  wasapi->notifs.imm_notifs.lpVtbl = &_win_wasapi_notifs_vtable;
+  wasapi->notifs.imm_notifs.lpVtbl = &_w32_wasapi_notifs_vtable;
 	wasapi->notifs.ref = 1;
 	wasapi->notifs.wasapi = wasapi;
   hr = IMMDeviceEnumerator_RegisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
 
 	if(FAILED(hr)) {
-		win_log("[win_wasapi] Failed to register notification callback\n");
+		w32_log("[w32_wasapi] Failed to register notification callback\n");
 		goto cleanup_2;
 	}
 	
@@ -261,13 +261,13 @@ win_wasapi_init(Win_Wasapi* wasapi,
 	wasapi->buffer_size = wasapi->latency_sample_count * sizeof(S16);
   wasapi->buffer = ba_push_arr(S16, &wasapi->allocator, wasapi->buffer_size);
   if (!wasapi->buffer) {
-    win_log("[win_wasapi] Failed to allocate memory\n");
+    w32_log("[w32_wasapi] Failed to allocate memory\n");
     goto cleanup_3;
   }
 
   // Does the success of this matter?
   // Do we even need to return success for this method??
-  _win_wasapi_set_default_device_as_current_device(wasapi);
+  _w32_wasapi_set_default_device_as_current_device(wasapi);
 
 	return true;
 	
@@ -283,7 +283,7 @@ win_wasapi_init(Win_Wasapi* wasapi,
 }
 
 static inline void 
-_win_wasapi_release_current_device(Win_Wasapi* wasapi) {
+_w32_wasapi_release_current_device(Win_Wasapi* wasapi) {
 	if (wasapi->audio_client) {
 		IAudioClient2_Stop(wasapi->audio_client);
 		IAudioClient2_Release(wasapi->audio_client);
@@ -298,20 +298,20 @@ _win_wasapi_release_current_device(Win_Wasapi* wasapi) {
 }
 
 static void
-win_wasapi_free(Win_Wasapi* wasapi) {
-  _win_wasapi_release_current_device(wasapi);
+w32_wasapi_free(Win_Wasapi* wasapi) {
+  _w32_wasapi_release_current_device(wasapi);
 	IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
 	IMMDeviceEnumerator_Release(wasapi->mm_device_enum);
   ba_clear(&wasapi->allocator);
 }
 
 static void 
-win_wasapi_begin_frame(Win_Wasapi* wasapi) {
+w32_wasapi_begin_frame(Win_Wasapi* wasapi) {
 	if (wasapi->is_device_changed) {
-		win_log("[win_wasapi] Resetting wasapi device\n");
+		w32_log("[w32_wasapi] Resetting wasapi device\n");
 		// Attempt to change device
-		_win_wasapi_release_current_device(wasapi);
-		_win_wasapi_set_default_device_as_current_device(wasapi);
+		_w32_wasapi_release_current_device(wasapi);
+		_w32_wasapi_set_default_device_as_current_device(wasapi);
 		wasapi->is_device_changed = false;
 	}
 	
@@ -345,7 +345,7 @@ win_wasapi_begin_frame(Win_Wasapi* wasapi) {
 
 }
 static void
-win_wasapi_end_frame(Win_Wasapi* wasapi) 
+w32_wasapi_end_frame(Win_Wasapi* wasapi) 
 {
 	if (!wasapi->is_device_ready) return;
   Platform_Audio* output = &wasapi->platform_audio;

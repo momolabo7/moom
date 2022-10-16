@@ -7,6 +7,6 @@ SET Opt=%1%
 
 pushd %BuildDir%
 
-call win.exe
+call w32.exe
 
 popd

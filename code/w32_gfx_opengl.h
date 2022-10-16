@@ -1,7 +1,7 @@
 // NOTE(Momo): Gfx code for Win w/ Openg
 
 
-#include "win_gfx.h"
+#include "w32_gfx.h"
 #include "game_gfx_opengl.h"
 
 
@@ -53,7 +53,7 @@ static wglGetExtensionsStringEXTFn* wglGetExtensionsStringEXT;
 
 
 static void* 
-win_try_get_wgl_function(const char* name, HMODULE fallback_module)
+_w32_try_get_wgl_function(const char* name, HMODULE fallback_module)
 {
   void* p = (void*)wglGetProcAddress(name);
   if ((p == 0) || 
@@ -69,7 +69,7 @@ win_try_get_wgl_function(const char* name, HMODULE fallback_module)
 }
 
 static void
-win_set_pixel_format(HDC dc) {
+_w32_set_pixel_format(HDC dc) {
   S32 suggested_pixel_format_index = 0;
   U32 extended_pick = 0;
   
@@ -115,7 +115,7 @@ win_set_pixel_format(HDC dc) {
                  &suggested_pixel_format);
 }
 static B32
-win_load_wgl_extentions() {
+_w32_load_wgl_extentions() {
   WNDCLASSA window_class = {};
   // Er yeah...we have to create a 'fake' Opengl context 
   // to load the extensions lol.
@@ -139,7 +139,7 @@ win_load_wgl_extentions() {
                                   0);
     
     HDC dc = GetDC(window);
-    win_set_pixel_format(dc);
+    _w32_set_pixel_format(dc);
     HGLRC opengl_context = wglCreateContext(dc);
     
     B32 success = true;
@@ -170,13 +170,13 @@ win_load_wgl_extentions() {
 }
 
 //~API implementation
-exported void
-win_gfx_unload(Gfx* r) {
+static void
+w32_gfx_unload(Gfx* r) {
   // Unused?
 }
 
-exported Gfx*
-win_gfx_load(HWND window, 
+static Gfx*
+w32_gfx_load(HWND window, 
              U32 command_queue_size,
              U32 texture_queue_size, 
              Bump_Allocator* allocator) 
@@ -194,9 +194,9 @@ win_gfx_load(HWND window,
   void* texture_queue_memory = ba_push_size(allocator, texture_queue_size, 16);
   if (!texture_queue_memory) return 0; 
  
-  if (!win_load_wgl_extentions()) return 0;
+  if (!_w32_load_wgl_extentions()) return 0;
   
-  win_set_pixel_format(dc);
+  _w32_set_pixel_format(dc);
   
   S32 opengl_attribs[] {
     WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
@@ -213,14 +213,14 @@ win_gfx_load(HWND window,
                                                 opengl_attribs); 
   
   if (!opengl_ctx) {
-    return nullptr;
+    return null;
   }
   
   
   if(wglMakeCurrent(dc, opengl_ctx)) {
     HMODULE module = LoadLibraryA("opengl32.dll");
 #define WGL_SetOpenglFunction(name) \
-opengl->name = (OGL_##name*)win_try_get_wgl_function(#name, module); \
+opengl->name = (OGL_##name*)_w32_try_get_wgl_function(#name, module); \
 if (!opengl->name) { return null; } 
     
     WGL_SetOpenglFunction(glEnable);
@@ -296,13 +296,13 @@ if (!opengl->name) { return null; }
 }
 
 
-exported void
-win_gfx_begin_frame(Gfx* renderer,  V2U render_wh, Rect2U region) {
+static void
+w32_gfx_begin_frame(Gfx* renderer,  V2U render_wh, Rect2U region) {
   return ogl_begin_frame((Opengl*)renderer, render_wh, region);
 }
 
-exported void
-win_gfx_end_frame(Gfx* renderer) {
+static void
+w32_gfx_end_frame(Gfx* renderer) {
   ogl_end_frame((Opengl*)renderer);
   SwapBuffers(wglGetCurrentDC());
 }
