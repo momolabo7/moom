@@ -18,11 +18,12 @@ struct Lit_Sensor_List {
 };
 
 static void 
-lit_push_sensor(Lit_Sensor_List* sensors, V2 pos, U32 target_color) 
+lit_push_sensor(Lit_Sensor_List* sensors, F32 pos_x, F32 pos_y, U32 target_color) 
 {
   assert(!al_is_full(sensors));
   Lit_Sensor* s = al_append(sensors);
-  s->pos = pos;
+  s->pos.x = pos_x;
+  s->pos.y = pos_y;
   s->target_color = target_color;
   s->current_color = 0;
 }

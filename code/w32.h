@@ -27,10 +27,10 @@
 #include "game_platform.h"
 #include "game_profiler.h"
 
-
 #include "w32_common.h"
-#include "w32_gfx_opengl.h"
-#include "w32_audio.h"
 #include "w32_loaded_code.h"
+
+#include "w32_gfx_opengl.h"
+#include "w32_audio_wasapi.h"
 
 #endif //WIN_H

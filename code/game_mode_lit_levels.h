@@ -1,5 +1,26 @@
 
 static void
+lit_level_0(Lit* m) {
+  lit_push_point(m, {0.f, 0.f});     // 0
+  lit_push_point(m, {1600.f, 0.f});  // 1
+  lit_push_point(m, {1600.f, 900.f});// 2
+  lit_push_point(m, {0.f, 900.f});   // 3
+  
+  lit_push_edge(m, 0, 1);
+  lit_push_edge(m, 1, 2);
+  lit_push_edge(m, 2, 3);
+  lit_push_edge(m, 3, 0);
+
+  lit_push_sensor(&m->sensors, 100.f, GAME_HEIGHT * 0.5f, 0x880000FF); 
+  
+  lit_push_light(m, 250.f, GAME_HEIGHT * 0.5f, 0x880000FF, 90.f, 0.25f);
+  
+  // initialize player
+  Lit_Player* p = &m->player;
+  lit_init_player(p, 200.f, GAME_HEIGHT * 0.5f);
+}
+
+static void
 lit_level_1(Lit* m) {
   lit_push_point(m, {0.f, 0.f});     // 0
   lit_push_point(m, {1600.f, 0.f});  // 1
@@ -24,8 +45,8 @@ lit_level_1(Lit* m) {
   
   
   // lights
-  lit_push_light(m, {250.f, 600.f}, 0x880000FF, 90.f, 0.f);
-  lit_push_light(m, {650.f, 600.f}, 0x008800FF, 360.f, 0.f);
+  lit_push_light(m, 250.f, 600.f, 0x880000FF, 90.f, 0.5f);
+  lit_push_light(m, 650.f, 600.f, 0x008800FF, 360.f, 0.f);
   
   // initialize player
   Lit_Player* p = &m->player;
@@ -43,31 +64,9 @@ lit_level_1(Lit* m) {
     lit_push_edge(m, 10, 11);
     lit_push_edge(m, 11, 8);
 
-    lit_push_sensor(&m->sensors, {100.f, 600.f}, 0x888800FF); 
+    lit_push_sensor(&m->sensors, 100.f, 600.f, 0x888800FF); 
   }
 #endif
-}
-
-static void
-lit_level_0(Lit* m) {
-  lit_push_point(m, {0.f, 0.f});     // 0
-  lit_push_point(m, {1600.f, 0.f});  // 1
-  lit_push_point(m, {1600.f, 900.f});// 2
-  lit_push_point(m, {0.f, 900.f});   // 3
-  
-  lit_push_edge(m, 0, 1);
-  lit_push_edge(m, 1, 2);
-  lit_push_edge(m, 2, 3);
-  lit_push_edge(m, 3, 0);
-
-  lit_push_sensor(&m->sensors, {100.f, 600.f}, 0x880000FF); 
-  
-  lit_push_light(m, {250.f, 600.f}, 0x880000FF, 90.f, 0.f);
-  
-  // initialize player
-  Lit_Player* p = &m->player;
-  lit_init_player(p, 400.f, 400.f);
-
 }
 
 

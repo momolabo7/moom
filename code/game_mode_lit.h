@@ -139,20 +139,22 @@ lit_push_edge(Lit* m, UMI min_pt_id, UMI max_pt_id) {
 }
 
 static Lit_Light*
-lit_push_light(Lit* m, V2 pos, U32 color, F32 angle, F32 facing) {
+lit_push_light(Lit* m, F32 pos_x, F32 pos_y, U32 color, F32 angle, F32 turn) {
   Lit_Light* light = al_append(&m->lights);
   assert(light);
   light->pos = pos;
   light->color = color;
-  
-  light->dir.x = cos_f32(0.f);
-  light->dir.y = sin_f32(0.f);
+
+  light->dir.x = cos_f32(turn*TAU_32);
+  light->dir.y = sin_f32(turn*TAU_32);
   light->half_angle = deg_to_rad_f32(angle/2.f);
   
   return light;
 }
 
 #include "game_mode_lit_levels.h"
+
+
 
 static void 
 lit_tick(Game* game, Painter* painter, Platform* pf) 
@@ -234,6 +236,8 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   //////////////////////////////////////////////////////////
   // Rendering
   //
+  
+  set_zoom(painter, 0.9f); 
   paint_set_blend(painter, 
                   GFX_BLEND_TYPE_SRC_ALPHA,
                   GFX_BLEND_TYPE_INV_SRC_ALPHA); 

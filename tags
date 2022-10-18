@@ -61,6 +61,7 @@ allocator	code/game_debug.h	/^  Bump_Allocator allocator;$/;"	m	language:C++	str
 allocator	code/momo_memory.h	/^  Bump_Allocator* allocator;$/;"	m	language:C++	struct:__anonf3c0da150208	typeref:typename:Bump_Allocator *
 allocator	code/momo_png.h	/^  Bump_Allocator* allocator; $/;"	m	language:C++	struct:_PNG_Context	typeref:typename:Bump_Allocator *
 allocator	code/sui_pack.h	/^  Bump_Allocator* allocator;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Bump_Allocator *
+allocator	code/w32_audio_wasapi.h	/^  Bump_Allocator allocator;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Bump_Allocator
 allocator	code/win_audio_wasapi.h	/^  Bump_Allocator allocator;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Bump_Allocator
 allocator	game_debug.h	/^  Bump_Allocator allocator;$/;"	m	language:C++	struct:Debug_State	typeref:typename:Bump_Allocator
 allocator	momo_memory.h	/^  Bump_Allocator* allocator;$/;"	m	language:C++	struct:__anon3250fc2b0208	typeref:typename:Bump_Allocator *
@@ -123,8 +124,10 @@ asin_f64	code/momo_intrinsics.h	/^asin_f64(F64 x) {$/;"	f	language:C++	typeref:t
 asin_f64	code/momo_intrinsics.h	/^static F64 asin_f64(F64 x);$/;"	p	language:C++	typeref:typename:F64
 asin_f64	momo_intrinsics.h	/^asin_f64(F64 x) {$/;"	f	language:C++	typeref:typename:F64
 asin_f64	momo_intrinsics.h	/^static F64 asin_f64(F64 x);$/;"	p	language:C++	typeref:typename:F64
+aspect_ratio_height	code/w32.cpp	/^  U32 aspect_ratio_height;$/;"	m	language:C++	struct:W32_State	typeref:typename:U32	file:
 aspect_ratio_height	code/win.cpp	/^  U32 aspect_ratio_height;$/;"	m	language:C++	struct:Win_State	typeref:typename:U32	file:
 aspect_ratio_height	w32.cpp	/^  U32 aspect_ratio_height;$/;"	m	language:C++	struct:W32_State	typeref:typename:U32	file:
+aspect_ratio_width	code/w32.cpp	/^  U32 aspect_ratio_width;$/;"	m	language:C++	struct:W32_State	typeref:typename:U32	file:
 aspect_ratio_width	code/win.cpp	/^  U32 aspect_ratio_width;$/;"	m	language:C++	struct:Win_State	typeref:typename:U32	file:
 aspect_ratio_width	w32.cpp	/^  U32 aspect_ratio_width;$/;"	m	language:C++	struct:W32_State	typeref:typename:U32	file:
 assert	code/momo_common.h	/^# define assert(/;"	d	language:C++
@@ -171,10 +174,12 @@ atomic_compare_assign_u32	momo_intrinsics.h	/^atomic_compare_assign_u32(U32 vola
 atomic_compare_assign_u32	momo_intrinsics.h	/^static U32 atomic_compare_assign_u32(U32 volatile* value, U32 new_value, U32 expected_value);$/;"	p	language:C++	typeref:typename:U32
 audio	code/game_platform.h	/^  Platform_Audio* audio;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Audio *
 audio	game_platform.h	/^  Platform_Audio* audio;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Audio *
+audio_client	code/w32_audio_wasapi.h	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:IAudioClient2 *
 audio_client	code/win_audio_wasapi.h	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:IAudioClient2 *
 audio_client	w32_audio_wasapi.h	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:IAudioClient2 *
 audio_format	code/momo_wav.h	/^  U16 audio_format;$/;"	m	language:C++	struct:__anon54fde02a0208	typeref:typename:U16
 audio_format	momo_wav.h	/^  U16 audio_format;$/;"	m	language:C++	struct:__anon4ee54a000208	typeref:typename:U16
+audio_render_client	code/w32_audio_wasapi.h	/^  IAudioRenderClient* audio_render_client;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:IAudioRenderClient *
 audio_render_client	code/win_audio_wasapi.h	/^  IAudioRenderClient* audio_render_client;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:IAudioRenderClient *
 audio_render_client	w32_audio_wasapi.h	/^  IAudioRenderClient* audio_render_client;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:IAudioRenderClient *
 average	code/game_profiler_rendering.h	/^  F64 average;$/;"	m	language:C++	struct:Stat	typeref:typename:F64
@@ -307,6 +312,7 @@ bitmap_id_file	sui_pack.h	/^  FILE* bitmap_id_file;$/;"	m	language:C++	struct:Su
 bitmap_id_name	code/sui_atlas.h	/^  const char* bitmap_id_name;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:const char *
 bitmap_id_name	sui_atlas.h	/^  const char* bitmap_id_name;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:const char *
 bits_per_sample	code/momo_wav.h	/^  U16 bits_per_sample;$/;"	m	language:C++	struct:__anon54fde02a0208	typeref:typename:U16
+bits_per_sample	code/w32_audio_wasapi.h	/^  U16 bits_per_sample;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U16
 bits_per_sample	code/win_audio_wasapi.h	/^  U16 bits_per_sample;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U16
 bits_per_sample	momo_wav.h	/^  U16 bits_per_sample;$/;"	m	language:C++	struct:__anon4ee54a000208	typeref:typename:U16
 bits_per_sample	w32_audio_wasapi.h	/^  U16 bits_per_sample;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U16
@@ -344,6 +350,7 @@ bpm_to_spb_f32	momo_common.h	/^bpm_to_spb_f32(F32 bpm) {$/;"	f	language:C++	type
 bpm_to_spb_f64	code/momo_common.h	/^bpm_to_spb_f64(F64 bpm) {$/;"	f	language:C++	typeref:typename:F64
 bpm_to_spb_f64	momo_common.h	/^bpm_to_spb_f64(F64 bpm) {$/;"	f	language:C++	typeref:typename:F64
 buffer	code/game_console.h	/^  U8 buffer[256];$/;"	m	language:C++	struct:Console_Line	typeref:typename:U8[256]
+buffer	code/w32_audio_wasapi.h	/^  S16* buffer;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:S16 *
 buffer	code/win_audio_wasapi.h	/^  S16* buffer;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:S16 *
 buffer	game_console.h	/^  U8 buffer[256];$/;"	m	language:C++	struct:Console_Line	typeref:typename:U8[256]
 buffer	w32_audio_wasapi.h	/^  S16* buffer;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:S16 *
@@ -354,6 +361,7 @@ buffers	code/game_renderer_opengl.h	/^  GLuint buffers;$/;"	m	language:C++	struc
 buffers	code/game_renderer_opengl.h	/^  GLuint buffers[VERTEX_BUFFER_TYPE_COUNT]; \/\/ Opengl__VBO_Count$/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLuint[]
 buffers	game_gfx_opengl.h	/^  GLuint buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; \/\/ Opengl__VBO_Count$/;"	m	language:C++	struct:__anon8caa255d0808	typeref:typename:GLuint[]
 buffers	game_gfx_opengl.h	/^  GLuint buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT];$/;"	m	language:C++	struct:__anon8caa255d0908	typeref:typename:GLuint[]
+buffer_size	code/w32_audio_wasapi.h	/^  U32 buffer_size;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U32
 buffer_size	code/win_audio_wasapi.h	/^  U32 buffer_size;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U32
 buffer_size	w32_audio_wasapi.h	/^  U32 buffer_size;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U32
 Bump_Allocator	code/momo_memory.h	/^} Bump_Allocator;$/;"	t	language:C++	typeref:struct:__anonf3c0da150108
@@ -396,12 +404,16 @@ c	test_essentials.h	/^      char c[2];$/;"	m	language:C++	union:test_essentials:
 c	test_essentials.h	/^      char c[4];$/;"	m	language:C++	union:test_essentials::__anond996d195020a	typeref:typename:char[4]
 C8	code/momo_common.h	/^typedef char C8;$/;"	t	language:C++	typeref:typename:char
 C8	momo_common.h	/^typedef char C8;$/;"	t	language:C++	typeref:typename:char
+cabinet_index	code/w32.cpp	/^  U32 cabinet_index;$/;"	m	language:C++	struct:W32_File	typeref:typename:U32	file:
 cabinet_index	code/win.cpp	/^  U32 cabinet_index;$/;"	m	language:C++	struct:Win_File	typeref:typename:U32	file:
 cabinet_index	w32.cpp	/^  U32 cabinet_index;$/;"	m	language:C++	struct:W32_File	typeref:typename:U32	file:
 calc_ghost_edge_line	code/game_mode_level_light.cpp	/^calc_ghost_edge_line(Array_List<V2>* points, Edge* e) {$/;"	f	language:C++	typeref:typename:Line2	file:
 calc_ghost_edge_line	game_mode_level_light.cpp	/^calc_ghost_edge_line(Array_List<V2>* points, Edge* e) {$/;"	f	language:C++	typeref:typename:Line2	file:
+callback	code/w32.cpp	/^  Platform_Task_Callback* callback;$/;"	m	language:C++	struct:W32_Work	typeref:typename:Platform_Task_Callback *	file:
 callback	code/win.cpp	/^  Platform_Task_Callback* callback;$/;"	m	language:C++	struct:Win_Work	typeref:typename:Platform_Task_Callback *	file:
 callback	w32.cpp	/^  Platform_Task_Callback* callback;$/;"	m	language:C++	struct:W32_Work	typeref:typename:Platform_Task_Callback *	file:
+canvas_height	code/game_painter.h	/^  F32 canvas_height;$/;"	m	language:C++	struct:Painter	typeref:typename:F32
+canvas_width	code/game_painter.h	/^  F32 canvas_width;$/;"	m	language:C++	struct:Painter	typeref:typename:F32
 cap	code/momo_memory.h	/^	UMI cap;$/;"	m	language:C++	struct:__anonf3c0da150108	typeref:typename:UMI
 cap	code/momo_strings.h	/^	UMI cap;$/;"	m	language:C++	struct:__anon713555860208	typeref:typename:UMI
 cap	code/momo_ttf.h	/^  U32 cap;$/;"	m	language:C++	struct:__anon54d1bdca0708	typeref:typename:U32
@@ -421,6 +433,7 @@ ceil_f64	momo_intrinsics.h	/^static F64 ceil_f64(F64 value);$/;"	p	language:C++	
 center	code/momo_shapes.h	/^  V2 center;$/;"	m	language:C++	struct:__anon484784200608	typeref:typename:V2
 center	momo_shapes.h	/^  V2 center;$/;"	m	language:C++	struct:__anon86d7a6360608	typeref:typename:V2
 channels	code/game_platform.h	/^    U32 channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:Platform_Audio	typeref:typename:U32
+channels	code/w32_audio_wasapi.h	/^  U16 channels;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U16
 channels	code/win_audio_wasapi.h	/^  U16 channels;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U16
 channels	game_platform.h	/^    U32 channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:Platform_Audio	typeref:typename:U32
 channels	w32_audio_wasapi.h	/^  U16 channels;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U16
@@ -428,6 +441,7 @@ chars	code/game_platform.h	/^  U8 chars[32];$/;"	m	language:C++	struct:Platform	
 chars	game_platform.h	/^  U8 chars[32];$/;"	m	language:C++	struct:Platform	typeref:typename:U8[32]
 char_count	code/game_platform.h	/^  U32 char_count;$/;"	m	language:C++	struct:Platform	typeref:typename:U32
 char_count	game_platform.h	/^  U32 char_count;$/;"	m	language:C++	struct:Platform	typeref:typename:U32
+CINTERFACE	code/w32.h	/^#define CINTERFACE$/;"	d	language:C++
 CINTERFACE	code/win.h	/^#define CINTERFACE$/;"	d	language:C++
 CINTERFACE	w32.h	/^#define CINTERFACE$/;"	d	language:C++
 circ2	code/momo_shapes.h	/^circ2(V2 center, F32 radius) {$/;"	f	language:C++	typeref:typename:Circ2
@@ -446,6 +460,8 @@ cmap	code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpo
 cmap	momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon4eb927a00108	typeref:typename:U32
 cmap_mappings	code/momo_ttf.h	/^  U32 cmap_mappings;$/;"	m	language:C++	struct:__anon54d1bdca0108	typeref:typename:U32
 cmap_mappings	momo_ttf.h	/^  U32 cmap_mappings;$/;"	m	language:C++	struct:__anon4eb927a00108	typeref:typename:U32
+COBJMACROS	code/w32.h	/^#define COBJMACROS$/;"	d	language:C++
+COBJMACROS	code/w32.h	/^#define COBJMACROS$/;"	d	language:C++
 COBJMACROS	code/win.h	/^#define COBJMACROS$/;"	d	language:C++
 COBJMACROS	code/win.h	/^#define COBJMACROS$/;"	d	language:C++
 COBJMACROS	w32.h	/^#define COBJMACROS$/;"	d	language:C++
@@ -515,8 +531,10 @@ complete_all_tasks	code/game_platform.h	/^  Platform_Complete_All_Tasks* complet
 complete_all_tasks	code/game_platform.h	/^  Platform_Complete_All_Tasks* complete_all_tasks;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Complete_All_Tasks *
 complete_all_tasks	game_platform.h	/^  Platform_Complete_All_Tasks* complete_all_tasks;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Complete_All_Tasks *
 complete_all_tasks	game_platform.h	/^  Platform_Complete_All_Tasks* complete_all_tasks;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Complete_All_Tasks *
+completion_count	code/w32.cpp	/^  U32 volatile completion_count;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 completion_count	code/win.cpp	/^  U32 volatile completion_count;$/;"	m	language:C++	struct:Win_Work_Queue	typeref:typename:U32 volatile	file:
 completion_count	w32.cpp	/^  U32 volatile completion_count;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
+completion_goal	code/w32.cpp	/^  U32 volatile completion_goal;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 completion_goal	code/win.cpp	/^  U32 volatile completion_goal;$/;"	m	language:C++	struct:Win_Work_Queue	typeref:typename:U32 volatile	file:
 completion_goal	w32.cpp	/^  U32 volatile completion_goal;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 compressed_image_stream	code/momo_png.h	/^  Stream compressed_image_stream;$/;"	m	language:C++	struct:_PNG_Context	typeref:typename:Stream
@@ -546,6 +564,7 @@ Console_Command	code/game_console.h	/^struct Console_Command {$/;"	s	language:C+
 Console_Command	game_console.h	/^struct Console_Command {$/;"	s	language:C++
 Console_Line	code/game_console.h	/^struct Console_Line {$/;"	s	language:C++
 Console_Line	game_console.h	/^struct Console_Line {$/;"	s	language:C++
+CONST_VTABLE	code/w32.h	/^#define CONST_VTABLE$/;"	d	language:C++
 CONST_VTABLE	code/win.h	/^#define CONST_VTABLE$/;"	d	language:C++
 CONST_VTABLE	w32.h	/^#define CONST_VTABLE$/;"	d	language:C++
 contour_count	code/momo_ttf.h	/^  U32 contour_count;$/;"	m	language:C++	struct:__anon54d1bdca0408	typeref:typename:U32
@@ -722,6 +741,7 @@ data	code/momo_png.h	/^  U8* data;$/;"	m	language:C++	struct:__anon548615c10108	
 data	code/momo_streams.h	/^  U8* data;$/;"	m	language:C++	struct:Stream	typeref:typename:U8 *
 data	code/momo_ttf.h	/^  U8* data;$/;"	m	language:C++	struct:__anon54d1bdca0108	typeref:typename:U8 *
 data	code/momo_wav.h	/^  void* data;$/;"	m	language:C++	struct:__anon54fde02a0408	typeref:typename:void *
+data	code/w32.cpp	/^  void* data;$/;"	m	language:C++	struct:W32_Work	typeref:typename:void *	file:
 data	code/win.cpp	/^  void* data;$/;"	m	language:C++	struct:Win_Work	typeref:typename:void *	file:
 data	game_gfx.h	/^  void* data;$/;"	m	language:C++	struct:Gfx_Command	typeref:typename:void *
 data	momo_common.h	/^    void* data;$/;"	m	language:C++	union:__anonf95f05fb0908::__anonf95f05fb0a0a	typeref:typename:void *
@@ -778,6 +798,7 @@ dir	game_mode_lit_light.h	/^  V2 dir;$/;"	m	language:C++	struct:Lit_Light	typere
 dir	momo_shapes.h	/^  V2 dir;$/;"	m	language:C++	struct:__anon86d7a6360808	typeref:typename:V2
 djb2	code/momo_common.h	/^djb2(const C8* str)$/;"	f	language:C++	typeref:typename:U32
 djb2	momo_common.h	/^djb2(const C8* str)$/;"	f	language:C++	typeref:typename:U32
+dll	code/w32_loaded_code.h	/^  HMODULE dll; $/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:HMODULE
 dll	code/win_loaded_code.h	/^  HMODULE dll; $/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:HMODULE
 dll	w32_loaded_code.h	/^  HMODULE dll; $/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:HMODULE
 drawCounter	test.c	/^    int drawCounter;            \/\/ Draw calls counter$/;"	m	language:C	struct:rlRenderBatch	typeref:typename:int	file:
@@ -1153,6 +1174,7 @@ end_stat	code/game_profiler_rendering.h	/^end_stat(Stat* stat) {$/;"	f	language:
 end_stat	game_profiler_rendering.h	/^end_stat(Stat* stat) {$/;"	f	language:C++	typeref:typename:void
 entries	code/game_inspector.h	/^  Inspector_Entry_List entries;$/;"	m	language:C++	struct:Inspector	typeref:typename:Inspector_Entry_List
 entries	code/game_profiler.h	/^  Profiler_Entry entries[PROFILER_MAX_ENTRIES];$/;"	m	language:C++	struct:Profiler	typeref:typename:Profiler_Entry[]
+entries	code/w32.cpp	/^  W32_Work entries[256];$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:W32_Work[256]	file:
 entries	code/win.cpp	/^  Win_Work entries[256];$/;"	m	language:C++	struct:Win_Work_Queue	typeref:typename:Win_Work[256]	file:
 entries	game_inspector.h	/^  Inspector_Entry_List entries;$/;"	m	language:C++	struct:Inspector	typeref:typename:Inspector_Entry_List
 entries	game_profiler.h	/^  Profiler_Entry entries[PROFILER_MAX_ENTRIES];$/;"	m	language:C++	struct:Profiler	typeref:typename:Profiler_Entry[]
@@ -1219,8 +1241,10 @@ filename	code/game_profiler.h	/^  const char* filename;$/;"	m	language:C++	struc
 filename	code/sui_atlas.h	/^  const char* filename;$/;"	m	language:C++	struct:Sui_Atlas_Sprite	typeref:typename:const char *
 filename	game_profiler.h	/^  const char* filename;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:const char *
 filename	sui_atlas.h	/^  const char* filename;$/;"	m	language:C++	struct:Sui_Atlas_Sprite	typeref:typename:const char *
+files	code/w32.cpp	/^  W32_File files[32]; $/;"	m	language:C++	struct:W32_File_Cabinet	typeref:typename:W32_File[32]	file:
 files	code/win.cpp	/^  Win_File files[32]; $/;"	m	language:C++	struct:Win_File_Cabinet	typeref:typename:Win_File[32]	file:
 files	w32.cpp	/^  W32_File files[32]; $/;"	m	language:C++	struct:W32_File_Cabinet	typeref:typename:W32_File[32]	file:
+file_cabinet	code/w32.cpp	/^  W32_File_Cabinet file_cabinet;$/;"	m	language:C++	struct:W32_State	typeref:typename:W32_File_Cabinet	file:
 file_cabinet	code/win.cpp	/^  Win_File_Cabinet file_cabinet;$/;"	m	language:C++	struct:Win_State	typeref:typename:Win_File_Cabinet	file:
 file_cabinet	w32.cpp	/^  W32_File_Cabinet file_cabinet;$/;"	m	language:C++	struct:W32_State	typeref:typename:W32_File_Cabinet	file:
 file_name	code/sui_pack.h	/^  const C8* file_name;$/;"	m	language:C++	struct:Sui_Packer_Sprite	typeref:typename:const C8 *
@@ -1303,16 +1327,21 @@ framebufferHeight	test.c	/^        int framebufferHeight;              \/\/ Curr
 framebufferWidth	test.c	/^        int framebufferWidth;               \/\/ Current framebuffer width$/;"	m	language:C	struct:rlglData::__anon1dda1bf60b08	typeref:typename:int	file:
 frame_arena	code/game.h	/^  Bump_Allocator frame_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Bump_Allocator
 frame_arena	game.h	/^  Bump_Allocator frame_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Bump_Allocator
+free_files	code/w32.cpp	/^  U32 free_files[32];$/;"	m	language:C++	struct:W32_File_Cabinet	typeref:typename:U32[32]	file:
 free_files	code/win.cpp	/^  U32 free_files[32];$/;"	m	language:C++	struct:Win_File_Cabinet	typeref:typename:U32[32]	file:
 free_files	w32.cpp	/^  U32 free_files[32];$/;"	m	language:C++	struct:W32_File_Cabinet	typeref:typename:U32[32]	file:
+free_file_count	code/w32.cpp	/^  U32 free_file_count;$/;"	m	language:C++	struct:W32_File_Cabinet	typeref:typename:U32	file:
 free_file_count	code/win.cpp	/^  U32 free_file_count;$/;"	m	language:C++	struct:Win_File_Cabinet	typeref:typename:U32	file:
 free_file_count	w32.cpp	/^  U32 free_file_count;$/;"	m	language:C++	struct:W32_File_Cabinet	typeref:typename:U32	file:
 func	code/game_console.h	/^  void (*func)(void*);$/;"	m	language:C++	struct:Console_Command	typeref:typename:void (*)(void *)
 func	game_console.h	/^  void (*func)(void*);$/;"	m	language:C++	struct:Console_Command	typeref:typename:void (*)(void *)
+functions	code/w32_loaded_code.h	/^  void** functions;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:void **
 functions	code/win_loaded_code.h	/^  void** functions;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:void **
 functions	w32_loaded_code.h	/^  void** functions;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:void **
+function_count	code/w32_loaded_code.h	/^  U32 function_count;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:U32
 function_count	code/win_loaded_code.h	/^  U32 function_count;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:U32
 function_count	w32_loaded_code.h	/^  U32 function_count;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:U32
+function_names	code/w32_loaded_code.h	/^  const char** function_names;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:const char **
 function_names	code/win_loaded_code.h	/^  const char** function_names;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:const char **
 function_names	w32_loaded_code.h	/^  const char** function_names;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:const char **
 g	code/momo_colors.h	/^    struct { F32 r, g, b; };  $/;"	m	language:C++	struct:__anonb89fa6ae0308::__anonb89fa6ae040a::__anonb89fa6ae0508	typeref:typename:F32
@@ -1699,7 +1728,7 @@ gfx_push_sprite	code/game_renderer.h	/^gfx_push_sprite(Gfx* g, $/;"	f	language:C
 gfx_push_sprite	code/game_renderer.h	/^static void gfx_push_sprite(Gfx* g, RGBA colors, V2 pos, V2 size, V2 anchor, U32 texture_index, /;"	p	language:C++	typeref:typename:void
 gfx_push_sprite	game_gfx.h	/^gfx_push_sprite(Gfx* g, $/;"	f	language:C++	typeref:typename:void
 gfx_push_sprite	game_gfx.h	/^static void gfx_push_sprite(Gfx* g, RGBA colors, V2 pos, V2 size, V2 anchor, U32 texture_index, /;"	p	language:C++	typeref:typename:void
-gfx_push_view	code/game_gfx.h	/^gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height, U32 layers) {$/;"	f	language:C++	typeref:typename:void
+gfx_push_view	code/game_gfx.h	/^gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height) {$/;"	f	language:C++	typeref:typename:void
 gfx_push_view	code/game_gfx.h	/^static void gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height, U32 layers);$/;"	p	language:C++	typeref:typename:void
 gfx_push_view	code/game_renderer.h	/^gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height, U32 layers) {$/;"	f	language:C++	typeref:typename:void
 gfx_push_view	code/game_renderer.h	/^static void gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height, U32 layers);$/;"	p	language:C++	typeref:typename:void
@@ -2148,9 +2177,11 @@ GRAPHICS_API_OPENGL_33	test.c	/^    #define GRAPHICS_API_OPENGL_33$/;"	d	languag
 g_platform	code/game.h	/^Platform* g_platform;$/;"	v	language:C++	typeref:typename:Platform *
 g_platform	game.h	/^Platform* g_platform;$/;"	v	language:C++	typeref:typename:Platform *
 g_profiler	code/game.h	/^Profiler* g_profiler;$/;"	v	language:C++	typeref:typename:Profiler *
+g_profiler	code/w32.cpp	/^Profiler* g_profiler = &_g_profiler; $/;"	v	language:C++	typeref:typename:Profiler *
 g_profiler	code/win.cpp	/^Profiler* g_profiler = &_g_profiler; $/;"	v	language:C++	typeref:typename:Profiler *
 g_profiler	game.h	/^Profiler* g_profiler;$/;"	v	language:C++	typeref:typename:Profiler *
 g_profiler	w32.cpp	/^Profiler* g_profiler = &_g_profiler; $/;"	v	language:C++	typeref:typename:Profiler *
+g_w32_state	code/w32.cpp	/^static W32_State g_w32_state;$/;"	v	language:C++	typeref:typename:W32_State	file:
 g_w32_state	w32.cpp	/^static W32_State g_w32_state;$/;"	v	language:C++	typeref:typename:W32_State	file:
 g_win_state	code/win.cpp	/^static Win_State g_win_state;$/;"	v	language:C++	typeref:typename:Win_State	file:
 h	code/momo_colors.h	/^  F32 h, s, l;  $/;"	m	language:C++	struct:__anonb89fa6ae0208	typeref:typename:F32
@@ -2172,6 +2203,7 @@ half_angle	code/game_mode_lit_light.h	/^  F32 half_angle;$/;"	m	language:C++	str
 half_angle	game_mode_lit_light.h	/^  F32 half_angle;$/;"	m	language:C++	struct:Lit_Light	typeref:typename:F32
 handle	code/game_gfx_opengl.h	/^  GLuint handle;$/;"	m	language:C++	struct:__anon1d4ae8470708	typeref:typename:GLuint
 handle	code/game_renderer_opengl.h	/^  GLuint handle;$/;"	m	language:C++	struct:Texture	typeref:typename:GLuint
+handle	code/w32.cpp	/^  HANDLE handle;$/;"	m	language:C++	struct:W32_File	typeref:typename:HANDLE	file:
 handle	code/win.cpp	/^  HANDLE handle;$/;"	m	language:C++	struct:Win_File	typeref:typename:HANDLE	file:
 handle	game_gfx_opengl.h	/^  GLuint handle;$/;"	m	language:C++	struct:__anon8caa255d0708	typeref:typename:GLuint
 handle	w32.cpp	/^  HANDLE handle;$/;"	m	language:C++	struct:W32_File	typeref:typename:HANDLE	file:
@@ -2258,6 +2290,7 @@ img32_bad	code/momo_image.h	/^img32_bad() {$/;"	f	language:C++	typeref:typename:
 img32_bad	momo_image.h	/^img32_bad() {$/;"	f	language:C++	typeref:typename:Image32
 img32_ok	code/momo_image.h	/^img32_ok(Image32 img) {$/;"	f	language:C++	typeref:typename:B32
 img32_ok	momo_image.h	/^img32_ok(Image32 img) {$/;"	f	language:C++	typeref:typename:B32
+imm_notifs	code/w32_audio_wasapi.h	/^  IMMNotificationClient imm_notifs;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client	typeref:typename:IMMNotificationClient
 imm_notifs	code/win_audio_wasapi.h	/^  IMMNotificationClient imm_notifs;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client	typeref:typename:IMMNotificationClient
 imm_notifs	w32_audio_wasapi.h	/^  IMMNotificationClient imm_notifs;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client	typeref:typename:IMMNotificationClient
 in	code/test_png.h	/^    const char* in;$/;"	m	language:C++	struct:test_png::__anonee61d0a90108	typeref:typename:const char *
@@ -2270,6 +2303,7 @@ indices	test.c	/^    unsigned int *indices;      \/\/ Vertex indices (in case ve
 indices	test.c	/^    unsigned short *indices;    \/\/ Vertex indices (in case vertex data comes indexed) (6 indic/;"	m	language:C	struct:rlVertexBuffer	typeref:typename:unsigned short *	file:
 info_lines	code/game_console.h	/^  String8_Builder info_lines[9];$/;"	m	language:C++	struct:Console	typeref:typename:String8_Builder[9]
 info_lines	game_console.h	/^  String8_Builder info_lines[9];$/;"	m	language:C++	struct:Console	typeref:typename:String8_Builder[9]
+INITGUID	code/w32.h	/^#define INITGUID$/;"	d	language:C++
 INITGUID	code/win.h	/^#define INITGUID$/;"	d	language:C++
 INITGUID	w32.h	/^#define INITGUID$/;"	d	language:C++
 init_console	code/game_console.h	/^init_console(Console* dc, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:void
@@ -2321,8 +2355,10 @@ IS_CPP	code/momo_common.h	/^# define IS_CPP /;"	d	language:C++
 IS_CPP	code/momo_common.h	/^# define IS_CPP /;"	d	language:C++
 IS_CPP	momo_common.h	/^# define IS_CPP /;"	d	language:C++
 IS_CPP	momo_common.h	/^# define IS_CPP /;"	d	language:C++
+is_device_changed	code/w32_audio_wasapi.h	/^	B32 is_device_changed;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:B32
 is_device_changed	code/win_audio_wasapi.h	/^	B32 is_device_changed;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:B32
 is_device_changed	w32_audio_wasapi.h	/^	B32 is_device_changed;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:B32
+is_device_ready	code/w32_audio_wasapi.h	/^	B32 is_device_ready;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:B32
 is_device_ready	code/win_audio_wasapi.h	/^	B32 is_device_ready;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:B32
 is_device_ready	w32_audio_wasapi.h	/^	B32 is_device_ready;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:B32
 is_digit	code/momo_common.h	/^is_digit(U8 c) {$/;"	f	language:C++	typeref:typename:B32
@@ -2351,6 +2387,7 @@ is_point_on_editor_toolbar	code/game_mode_level_editor.cpp	/^is_point_on_editor_
 is_point_on_editor_toolbar	game_mode_level_editor.cpp	/^is_point_on_editor_toolbar(Editor* e, V2 pt) {$/;"	f	language:C++	typeref:typename:B32	file:
 is_pow2	code/momo_common.h	/^#define is_pow2(/;"	d	language:C++
 is_pow2	momo_common.h	/^#define is_pow2(/;"	d	language:C++
+is_running	code/w32.cpp	/^  B32 is_running;$/;"	m	language:C++	struct:W32_State	typeref:typename:B32	file:
 is_running	code/win.cpp	/^  B32 is_running;$/;"	m	language:C++	struct:Win_State	typeref:typename:B32	file:
 is_running	w32.cpp	/^  B32 is_running;$/;"	m	language:C++	struct:W32_State	typeref:typename:B32	file:
 is_selecting_pt	code/game_mode_level_editor.h	/^  B32 is_selecting_pt;$/;"	m	language:C++	struct:Editor	typeref:typename:B32
@@ -2358,6 +2395,7 @@ is_selecting_pt	game_mode_level_editor.h	/^  B32 is_selecting_pt;$/;"	m	language
 is_shell	.\code\game_sb1.h	/^  B32 is_shell;$/;"	m	language:C++	struct:SB1_Light_Intersection
 is_shell	code/game_mode_lit_light.h	/^  B32 is_shell;$/;"	m	language:C++	struct:Lit_Light_Intersection	typeref:typename:B32
 is_shell	game_mode_lit_light.h	/^  B32 is_shell;$/;"	m	language:C++	struct:Lit_Light_Intersection	typeref:typename:B32
+is_valid	code/w32_loaded_code.h	/^  B32 is_valid;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:B32
 is_valid	code/win_loaded_code.h	/^  B32 is_valid;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:B32
 is_valid	w32_loaded_code.h	/^  B32 is_valid;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:B32
 is_whitespace	code/momo_common.h	/^is_whitespace(C8 c) {$/;"	f	language:C++	typeref:typename:B32
@@ -2459,9 +2497,9 @@ last_drawn_instance_index	code/game_gfx_opengl.h	/^  GLsizei last_drawn_instance
 last_drawn_instance_index	code/game_renderer_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLsizei
 last_drawn_instance_index	game_gfx_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:__anon8caa255d0808	typeref:typename:GLsizei
 last_drawn_instance_index	game_gfx_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:__anon8caa255d0908	typeref:typename:GLsizei
+latency_sample_count	code/w32_audio_wasapi.h	/^  U32 latency_sample_count;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U32
 latency_sample_count	code/win_audio_wasapi.h	/^  U32 latency_sample_count;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U32
 latency_sample_count	w32_audio_wasapi.h	/^  U32 latency_sample_count;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U32
-layers	code/game_gfx.h	/^  U32 layers;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:U32
 layers	code/game_renderer.h	/^  U32 layers;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:U32
 layers	game_gfx.h	/^  U32 layers;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:U32
 left	code/momo_json.h	/^  struct _JSON_Object_Node* left;$/;"	m	language:C++	struct:_JSON_Object_Node	typeref:struct:_JSON_Object_Node *
@@ -2582,13 +2620,13 @@ Lit_Point_List	game_mode_lit.h	/^struct Lit_Point_List {$/;"	s	language:C++
 lit_push_edge	code/game_mode_lit.h	/^lit_push_edge(Lit* m, UMI min_pt_id, UMI max_pt_id) {$/;"	f	language:C++	typeref:typename:Lit_Edge *
 lit_push_edge	code/game_mode_sb1.h	/^lit_push_edge(Lit* m, UMI min_pt_id, UMI max_pt_id) {$/;"	f	language:C++	typeref:typename:Lit_Edge *
 lit_push_edge	game_mode_lit.h	/^lit_push_edge(Lit* m, UMI min_pt_id, UMI max_pt_id) {$/;"	f	language:C++	typeref:typename:Lit_Edge *
-lit_push_light	code/game_mode_lit.h	/^lit_push_light(Lit* m, V2 pos, U32 color, F32 angle, F32 facing) {$/;"	f	language:C++	typeref:typename:Lit_Light *
+lit_push_light	code/game_mode_lit.h	/^lit_push_light(Lit* m, F32 pos_x, F32 pos_y, U32 color, F32 angle, F32 turn) {$/;"	f	language:C++	typeref:typename:Lit_Light *
 lit_push_light	code/game_mode_sb1.h	/^lit_push_light(Lit* m, V2 pos, U32 color, F32 angle, F32 facing) {$/;"	f	language:C++	typeref:typename:Lit_Light *
 lit_push_light	game_mode_lit.h	/^lit_push_light(Lit* m, V2 pos, U32 color, F32 angle, F32 facing) {$/;"	f	language:C++	typeref:typename:Lit_Light *
 lit_push_point	code/game_mode_lit.h	/^lit_push_point(Lit* m, V2 pt) {$/;"	f	language:C++	typeref:typename:U32
 lit_push_point	code/game_mode_sb1.h	/^lit_push_point(Lit* m, V2 pt) {$/;"	f	language:C++	typeref:typename:U32
 lit_push_point	game_mode_lit.h	/^lit_push_point(Lit* m, V2 pt) {$/;"	f	language:C++	typeref:typename:U32
-lit_push_sensor	code/game_mode_lit_sensors.h	/^lit_push_sensor(Lit_Sensor_List* sensors, V2 pos, U32 target_color) $/;"	f	language:C++	typeref:typename:void
+lit_push_sensor	code/game_mode_lit_sensors.h	/^lit_push_sensor(Lit_Sensor_List* sensors, F32 pos_x, F32 pos_y, U32 target_color) $/;"	f	language:C++	typeref:typename:void
 lit_push_sensor	code/game_mode_sb1.h	/^lit_push_sensor(Lit* m, V2 pos, U32 target_color) $/;"	f	language:C++	typeref:typename:void
 lit_push_sensor	game_mode_lit_sensors.h	/^lit_push_sensor(Lit_Sensor_List* sensors, V2 pos, U32 target_color) $/;"	f	language:C++	typeref:typename:void
 lit_push_triangle	code/game_mode_lit_light.h	/^lit_push_triangle(Lit_Light* l, V2 p0, V2 p1, V2 p2, U32 color) {$/;"	f	language:C++	typeref:typename:void
@@ -2811,6 +2849,7 @@ min_pt_id	code/game_mode_level.h	/^  UMI min_pt_id;$/;"	m	language:C++	struct:Ed
 min_pt_id	code/game_mode_lit.h	/^  UMI min_pt_id;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:UMI
 min_pt_id	code/game_mode_sb1.h	/^  UMI min_pt_id;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:UMI
 min_pt_id	game_mode_lit.h	/^  UMI min_pt_id;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:UMI
+mm_device_enum	code/w32_audio_wasapi.h	/^  IMMDeviceEnumerator * mm_device_enum;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:IMMDeviceEnumerator *
 mm_device_enum	code/win_audio_wasapi.h	/^  IMMDeviceEnumerator * mm_device_enum;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:IMMDeviceEnumerator *
 mm_device_enum	w32_audio_wasapi.h	/^  IMMDeviceEnumerator * mm_device_enum;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:IMMDeviceEnumerator *
 mode	test.c	/^    int mode;                   \/\/ Drawing mode: LINES, TRIANGLES, QUADS$/;"	m	language:C	struct:rlDrawCall	typeref:typename:int	file:
@@ -2829,8 +2868,10 @@ mode_display_timer	code/game_mode_level_editor.h	/^  F32 mode_display_timer;$/;"
 mode_display_timer	game_mode_level_editor.h	/^  F32 mode_display_timer;$/;"	m	language:C++	struct:Editor	typeref:typename:F32
 mode_type	code/game_mode_computer.h	/^  Game_Mode_Type mode_type;$/;"	m	language:C++	struct:__anond0a24e910108	typeref:typename:Game_Mode_Type
 mode_type	game_mode_computer.h	/^  Game_Mode_Type mode_type;$/;"	m	language:C++	struct:__anon19207be70108	typeref:typename:Game_Mode_Type
+module_path	code/w32_loaded_code.h	/^  const char* module_path;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:const char *
 module_path	code/win_loaded_code.h	/^  const char* module_path;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:const char *
 module_path	w32_loaded_code.h	/^  const char* module_path;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:const char *
+module_write_time	code/w32_loaded_code.h	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:LARGE_INTEGER
 module_write_time	code/win_loaded_code.h	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:LARGE_INTEGER
 module_write_time	w32_loaded_code.h	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:LARGE_INTEGER
 MOMO_COLORS_H	code/momo_colors.h	/^#define MOMO_COLORS_H$/;"	d	language:C++
@@ -2888,8 +2929,10 @@ next	code/game_profiler.h	/^  Profiler_Entry* next;$/;"	m	language:C++	struct:Pr
 next	code/momo_json.h	/^  struct _JSON_Array_Node* next;$/;"	m	language:C++	struct:_JSON_Array_Node	typeref:struct:_JSON_Array_Node *
 next	game_profiler.h	/^  Profiler_Entry* next;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:Profiler_Entry *
 next	momo_json.h	/^  struct _JSON_Array_Node* next;$/;"	m	language:C++	struct:_JSON_Array_Node	typeref:struct:_JSON_Array_Node *
+next_entry_to_read	code/w32.cpp	/^  U32 volatile next_entry_to_read;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 next_entry_to_read	code/win.cpp	/^  U32 volatile next_entry_to_read;$/;"	m	language:C++	struct:Win_Work_Queue	typeref:typename:U32 volatile	file:
 next_entry_to_read	w32.cpp	/^  U32 volatile next_entry_to_read;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
+next_entry_to_write	code/w32.cpp	/^  U32 volatile next_entry_to_write;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 next_entry_to_write	code/win.cpp	/^  U32 volatile next_entry_to_write;$/;"	m	language:C++	struct:Win_Work_Queue	typeref:typename:U32 volatile	file:
 next_entry_to_write	w32.cpp	/^  U32 volatile next_entry_to_write;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 next_obj	build/test_json.json	/^  "next_obj": {$/;"	o	language:JSON
@@ -2897,11 +2940,13 @@ next_state	code/game_mode_level_editor.h	/^  Editor_State next_state;$/;"	m	lang
 next_state	game_mode_level_editor.h	/^  Editor_State next_state;$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_State
 node	code/momo_json.h	/^  struct _JSON_Object_Node* node;$/;"	m	language:C++	struct:__anond7a9c0d60108	typeref:struct:_JSON_Object_Node *
 node	momo_json.h	/^  struct _JSON_Object_Node* node;$/;"	m	language:C++	struct:__anon0e7e656c0108	typeref:struct:_JSON_Object_Node *
+NOMINMAX	code/w32.h	/^#define NOMINMAX$/;"	d	language:C++
 NOMINMAX	code/win.h	/^#define NOMINMAX$/;"	d	language:C++
 NOMINMAX	w32.h	/^#define NOMINMAX$/;"	d	language:C++
 normalx	test.c	/^        float normalx, normaly, normalz;    \/\/ Current active normal (added on glVertex*())$/;"	m	language:C	struct:rlglData::__anon1dda1bf60b08	typeref:typename:float	file:
 normaly	test.c	/^        float normalx, normaly, normalz;    \/\/ Current active normal (added on glVertex*())$/;"	m	language:C	struct:rlglData::__anon1dda1bf60b08	typeref:typename:float	file:
 normalz	test.c	/^        float normalx, normaly, normalz;    \/\/ Current active normal (added on glVertex*())$/;"	m	language:C	struct:rlglData::__anon1dda1bf60b08	typeref:typename:float	file:
+notifs	code/w32_audio_wasapi.h	/^  Win_Wasapi_Notif_Client notifs;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Win_Wasapi_Notif_Client
 notifs	code/win_audio_wasapi.h	/^  Win_Wasapi_Notif_Client notifs;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Win_Wasapi_Notif_Client
 notifs	w32_audio_wasapi.h	/^  Win_Wasapi_Notif_Client notifs;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Win_Wasapi_Notif_Client
 now	code/game_platform.h	/^  B32 now; $/;"	m	language:C++	struct:Platform_Button	typeref:typename:B32
@@ -3350,6 +3395,7 @@ Platform_Add_Task	game_platform.h	/^typedef void Platform_Add_Task(Platform_Task
 Platform_API	code/game_platform.h	/^struct Platform_API {$/;"	s	language:C++
 Platform_API	game_platform.h	/^struct Platform_API {$/;"	s	language:C++
 Platform_Audio	code/game_platform.h	/^struct Platform_Audio {$/;"	s	language:C++
+platform_audio	code/w32_audio_wasapi.h	/^  Platform_Audio platform_audio; \/\/ Must be first member$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Platform_Audio
 platform_audio	code/win_audio_wasapi.h	/^  Platform_Audio platform_audio; \/\/ Must be first member$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Platform_Audio
 Platform_Audio	game_platform.h	/^struct Platform_Audio {$/;"	s	language:C++
 platform_audio	w32_audio_wasapi.h	/^  Platform_Audio platform_audio; \/\/ Must be first member$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Platform_Audio
@@ -3586,6 +3632,7 @@ rect_context	code/sui_atlas.h	/^  Sui_Atlas_Context* rect_context;$/;"	m	languag
 rect_context	sui_atlas.h	/^  Sui_Atlas_Context* rect_context;$/;"	m	language:C++	struct:Sui_Atlas_Sprite	typeref:typename:Sui_Atlas_Context *
 rect_count	code/sui_atlas.h	/^  U32 rect_count;$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:U32
 rect_count	sui_atlas.h	/^  U32 rect_count;$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:U32
+ref	code/w32_audio_wasapi.h	/^  LONG ref;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client	typeref:typename:LONG
 ref	code/win_audio_wasapi.h	/^  LONG ref;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client	typeref:typename:LONG
 ref	w32_audio_wasapi.h	/^  LONG ref;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client	typeref:typename:LONG
 reloaded	code/game_platform.h	/^  B32 reloaded;$/;"	m	language:C++	struct:Platform	typeref:typename:B32
@@ -4221,6 +4268,7 @@ S8_MAX	code/momo_common.h	/^#define S8_MAX /;"	d	language:C++
 S8_MAX	momo_common.h	/^#define S8_MAX /;"	d	language:C++
 S8_MIN	code/momo_common.h	/^#define S8_MIN /;"	d	language:C++
 S8_MIN	momo_common.h	/^#define S8_MIN /;"	d	language:C++
+samples_per_second	code/w32_audio_wasapi.h	/^  U32 samples_per_second;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U32
 samples_per_second	code/win_audio_wasapi.h	/^  U32 samples_per_second;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U32
 samples_per_second	w32_audio_wasapi.h	/^  U32 samples_per_second;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U32
 sample_buffer	code/game_platform.h	/^    S16* sample_buffer;$/;"	m	language:C++	struct:Platform_Audio	typeref:typename:S16 *
@@ -4334,6 +4382,7 @@ selected_pt_index	code/game_mode_level_editor.h	/^  UMI selected_pt_index;$/;"	m
 selected_pt_index	game_mode_level_editor.h	/^  UMI selected_pt_index;$/;"	m	language:C++	struct:Editor	typeref:typename:UMI
 selection_list	code/game_mode_computer.h	/^  Computer_Selection_List selection_list;$/;"	m	language:C++	struct:__anond0a24e910308	typeref:typename:Computer_Selection_List
 selection_list	game_mode_computer.h	/^  Computer_Selection_List selection_list;$/;"	m	language:C++	struct:__anon19207be70308	typeref:typename:Computer_Selection_List
+semaphore	code/w32.cpp	/^  HANDLE semaphore; $/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:HANDLE	file:
 semaphore	code/win.cpp	/^  HANDLE semaphore; $/;"	m	language:C++	struct:Win_Work_Queue	typeref:typename:HANDLE	file:
 semaphore	w32.cpp	/^  HANDLE semaphore; $/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:HANDLE	file:
 Sensor	code/game_mode_level.h	/^struct Sensor {$/;"	s	language:C++
@@ -4342,6 +4391,8 @@ sensors	code/game_mode_level.h	/^  Array_List<Sensor> sensors;$/;"	m	language:C+
 sensors	code/game_mode_lit.h	/^  Lit_Sensor_List sensors;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Sensor_List
 sensors	code/game_mode_sb1.h	/^  Lit_Sensor_List sensors;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Sensor_List
 sensors	game_mode_lit.h	/^  Lit_Sensor_List sensors;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Sensor_List
+set_view	code/game_painter.h	/^set_view(Painter* p, F32 canvas_width, F32 canvas_height) {$/;"	f	language:C++	typeref:typename:void
+set_zoom	code/game_painter.h	/^set_zoom(Painter* p, F32 zoom_level) {$/;"	f	language:C++	typeref:typename:void
 shader	code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon1d4ae8470808	typeref:typename:GLuint
 shader	code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon1d4ae8470908	typeref:typename:GLuint
 shader	code/game_renderer_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:Sprite_Batcher	typeref:typename:GLuint
@@ -4784,6 +4835,7 @@ text_length	code/meta.cpp	/^  U32 text_length;$/;"	m	language:C++	struct:Meta_To
 text_length	meta.cpp	/^  U32 text_length;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:U32	file:
 timer	code/game_mode_splash.h	/^  F32 timer;$/;"	m	language:C++	struct:__anoncf1e9d2d0108	typeref:typename:F32
 timer	game_mode_splash.h	/^  F32 timer;$/;"	m	language:C++	struct:__anon2a657d030108	typeref:typename:F32
+tmp_path	code/w32_loaded_code.h	/^  const char* tmp_path;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:const char *
 tmp_path	code/win_loaded_code.h	/^  const char* tmp_path;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:const char *
 tmp_path	w32_loaded_code.h	/^  const char* tmp_path;$/;"	m	language:C++	struct:Win_Loaded_Code	typeref:typename:const char *
 toolbar_follow_mouse	code/game_mode_level_editor.h	/^  B32 toolbar_follow_mouse;$/;"	m	language:C++	struct:Editor	typeref:typename:B32
@@ -5189,70 +5241,135 @@ w	momo_vectors.h	/^	struct { F32 w, h; };$/;"	m	language:C++	struct:__anon9e7ae4
 w	momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:__anon9e7ae4780e0a::__anon9e7ae4780f08	typeref:typename:F32
 w	momo_vectors.h	/^	struct { S32 w, h; };$/;"	m	language:C++	struct:__anon9e7ae478040a::__anon9e7ae4780608	typeref:typename:S32
 w	momo_vectors.h	/^	struct { U32 w, h; };$/;"	m	language:C++	struct:__anon9e7ae478010a::__anon9e7ae4780308	typeref:typename:U32
+w32_add_task	code/w32.cpp	/^w32_add_task(Platform_Task_Callback callback, void* data) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_add_task	w32.cpp	/^w32_add_task(Platform_Task_Callback callback, void* data) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_add_task_entry	code/w32.cpp	/^w32_add_task_entry(W32_Work_Queue* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_add_task_entry	w32.cpp	/^w32_add_task_entry(W32_Work_Queue* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_allocate_memory_into_arena	code/w32.cpp	/^w32_allocate_memory_into_arena(Bump_Allocator* a, UMI memory_size) {$/;"	f	language:C++	typeref:typename:B32	file:
 w32_allocate_memory_into_arena	w32.cpp	/^w32_allocate_memory_into_arena(Bump_Allocator* a, UMI memory_size) {$/;"	f	language:C++	typeref:typename:B32	file:
+w32_audio_begin_frame	code/w32_audio.h	/^w32_audio_begin_frame(Platform_Audio* audio);$/;"	p	language:C++	typeref:typename:void
+w32_audio_begin_frame	code/w32_audio_wasapi.h	/^w32_audio_begin_frame(Platform_Audio* audio) {$/;"	f	language:C++	typeref:typename:void
 w32_audio_begin_frame	w32_audio.h	/^w32_audio_begin_frame(Platform_Audio* audio) {$/;"	f	language:C++	typeref:typename:void
+w32_audio_end_frame	code/w32_audio.h	/^w32_audio_end_frame(Platform_Audio* audio);$/;"	p	language:C++	typeref:typename:void
+w32_audio_end_frame	code/w32_audio_wasapi.h	/^w32_audio_end_frame(Platform_Audio* audio) {$/;"	f	language:C++	typeref:typename:void
 w32_audio_end_frame	w32_audio.h	/^w32_audio_end_frame(Platform_Audio* audio) {$/;"	f	language:C++	typeref:typename:void
+w32_audio_load	code/w32_audio.h	/^w32_audio_load(U32 samples_per_second, $/;"	p	language:C++	typeref:typename:Platform_Audio *
+w32_audio_load	code/w32_audio_wasapi.h	/^w32_audio_load(U32 samples_per_second, $/;"	f	language:C++	typeref:typename:Platform_Audio *
 w32_audio_load	w32_audio.h	/^w32_audio_load(U32 samples_per_second, $/;"	f	language:C++	typeref:typename:Platform_Audio *
+w32_audio_unload	code/w32_audio.h	/^w32_audio_unload(Platform_Audio* audio);$/;"	p	language:C++	typeref:typename:void
+w32_audio_unload	code/w32_audio_wasapi.h	/^w32_audio_unload(Platform_Audio* audio) {$/;"	f	language:C++	typeref:typename:void
 w32_audio_unload	w32_audio.h	/^w32_audio_unload(Platform_Audio* audio) {$/;"	f	language:C++	typeref:typename:void
+w32_calc_render_region	code/w32_common.h	/^w32_calc_render_region(U32 window_w, $/;"	f	language:C++	typeref:typename:Rect2U
 w32_calc_render_region	w32_common.h	/^w32_calc_render_region(U32 window_w, $/;"	f	language:C++	typeref:typename:Rect2U
+w32_close_file	code/w32.cpp	/^w32_close_file(Platform_File* file) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_close_file	w32.cpp	/^w32_close_file(Platform_File* file) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_complete_all_tasks	code/w32.cpp	/^w32_complete_all_tasks() {$/;"	f	language:C++	typeref:typename:void	file:
 w32_complete_all_tasks	w32.cpp	/^w32_complete_all_tasks() {$/;"	f	language:C++	typeref:typename:void	file:
+w32_complete_all_tasks_entries	code/w32.cpp	/^w32_complete_all_tasks_entries(W32_Work_Queue* wq) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_complete_all_tasks_entries	w32.cpp	/^w32_complete_all_tasks_entries(W32_Work_Queue* wq) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_do_next_work_entry	code/w32.cpp	/^w32_do_next_work_entry(W32_Work_Queue* wq) {$/;"	f	language:C++	typeref:typename:B32	file:
 w32_do_next_work_entry	w32.cpp	/^w32_do_next_work_entry(W32_Work_Queue* wq) {$/;"	f	language:C++	typeref:typename:B32	file:
+W32_File	code/w32.cpp	/^struct W32_File {$/;"	s	language:C++	file:
 W32_File	w32.cpp	/^struct W32_File {$/;"	s	language:C++	file:
+W32_File_Cabinet	code/w32.cpp	/^struct W32_File_Cabinet {$/;"	s	language:C++	file:
 W32_File_Cabinet	w32.cpp	/^struct W32_File_Cabinet {$/;"	s	language:C++	file:
+w32_file_time_to_large_integer	code/w32_common.h	/^w32_file_time_to_large_integer(FILETIME file_time) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER
 w32_file_time_to_large_integer	w32_common.h	/^w32_file_time_to_large_integer(FILETIME file_time) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER
+w32_free_memory_from_arena	code/w32.cpp	/^w32_free_memory_from_arena(Bump_Allocator* a) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_free_memory_from_arena	w32.cpp	/^w32_free_memory_from_arena(Bump_Allocator* a) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_get_client_dims	code/w32_common.h	/^w32_get_client_dims(HWND window) {$/;"	f	language:C++	typeref:typename:V2U
 w32_get_client_dims	w32_common.h	/^w32_get_client_dims(HWND window) {$/;"	f	language:C++	typeref:typename:V2U
+w32_get_file_last_write_time	code/w32_common.h	/^w32_get_file_last_write_time(const char* filename) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER
 w32_get_file_last_write_time	w32_common.h	/^w32_get_file_last_write_time(const char* filename) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER
+w32_get_next_free_file	code/w32.cpp	/^w32_get_next_free_file(W32_File_Cabinet* c) {$/;"	f	language:C++	typeref:typename:W32_File *	file:
 w32_get_next_free_file	w32.cpp	/^w32_get_next_free_file(W32_File_Cabinet* c) {$/;"	f	language:C++	typeref:typename:W32_File *	file:
+w32_get_performance_counter	code/w32_common.h	/^w32_get_performance_counter(void) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER
 w32_get_performance_counter	w32_common.h	/^w32_get_performance_counter(void) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER
+w32_get_performance_counter_u64	code/w32_common.h	/^w32_get_performance_counter_u64(void) {$/;"	f	language:C++	typeref:typename:U64
 w32_get_performance_counter_u64	w32_common.h	/^w32_get_performance_counter_u64(void) {$/;"	f	language:C++	typeref:typename:U64
+w32_get_secs_elapsed	code/w32_common.h	/^w32_get_secs_elapsed(LARGE_INTEGER start,$/;"	f	language:C++	typeref:typename:F32
 w32_get_secs_elapsed	w32_common.h	/^w32_get_secs_elapsed(LARGE_INTEGER start,$/;"	f	language:C++	typeref:typename:F32
+w32_get_window_dims	code/w32_common.h	/^w32_get_window_dims(HWND window) {$/;"	f	language:C++	typeref:typename:V2U
 w32_get_window_dims	w32_common.h	/^w32_get_window_dims(HWND window) {$/;"	f	language:C++	typeref:typename:V2U
+w32_gfx_begin_frame	code/w32_gfx.h	/^w32_gfx_begin_frame(Gfx* renderer, $/;"	p	language:C++	typeref:typename:void
+w32_gfx_begin_frame	code/w32_gfx_opengl.h	/^w32_gfx_begin_frame(Gfx* renderer,  V2U render_wh, Rect2U region) {$/;"	f	language:C++	typeref:typename:void
 w32_gfx_begin_frame	code/win_gfx.h	/^w32_gfx_begin_frame(Gfx* renderer, $/;"	p	language:C++	typeref:typename:void
 w32_gfx_begin_frame	code/win_gfx_opengl.cpp	/^w32_gfx_begin_frame(Gfx* renderer,  V2U render_wh, Rect2U region) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_gfx_begin_frame	w32_gfx.h	/^w32_gfx_begin_frame(Gfx* renderer, $/;"	p	language:C++	typeref:typename:void
 w32_gfx_begin_frame	w32_gfx_opengl.h	/^w32_gfx_begin_frame(Gfx* renderer,  V2U render_wh, Rect2U region) {$/;"	f	language:C++	typeref:typename:void
+w32_gfx_end_frame	code/w32_gfx.h	/^w32_gfx_end_frame(Gfx* renderer);$/;"	p	language:C++	typeref:typename:void
+w32_gfx_end_frame	code/w32_gfx_opengl.h	/^w32_gfx_end_frame(Gfx* renderer) {$/;"	f	language:C++	typeref:typename:void
 w32_gfx_end_frame	code/win_gfx.h	/^w32_gfx_end_frame(Gfx* renderer);$/;"	p	language:C++	typeref:typename:void
 w32_gfx_end_frame	code/win_gfx_opengl.cpp	/^w32_gfx_end_frame(Gfx* renderer) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_gfx_end_frame	w32_gfx.h	/^w32_gfx_end_frame(Gfx* renderer);$/;"	p	language:C++	typeref:typename:void
 w32_gfx_end_frame	w32_gfx_opengl.h	/^w32_gfx_end_frame(Gfx* renderer) {$/;"	f	language:C++	typeref:typename:void
+w32_gfx_load	code/w32_gfx.h	/^w32_gfx_load(HWND window, $/;"	p	language:C++	typeref:typename:Gfx *
+w32_gfx_load	code/w32_gfx_opengl.h	/^w32_gfx_load(HWND window, $/;"	f	language:C++	typeref:typename:Gfx *
 w32_gfx_load	code/win_gfx.h	/^w32_gfx_load(HWND window, $/;"	p	language:C++	typeref:typename:Gfx *
 w32_gfx_load	code/win_gfx_opengl.cpp	/^w32_gfx_load(HWND window, $/;"	f	language:C++	typeref:typename:Gfx *	file:
 w32_gfx_load	w32_gfx.h	/^w32_gfx_load(HWND window, $/;"	p	language:C++	typeref:typename:Gfx *
 w32_gfx_load	w32_gfx_opengl.h	/^w32_gfx_load(HWND window, $/;"	f	language:C++	typeref:typename:Gfx *
+w32_gfx_unload	code/w32_gfx.h	/^w32_gfx_unload(Gfx* renderer);$/;"	p	language:C++	typeref:typename:void
+w32_gfx_unload	code/w32_gfx_opengl.h	/^w32_gfx_unload(Gfx* r) {$/;"	f	language:C++	typeref:typename:void
 w32_gfx_unload	code/win_gfx.h	/^w32_gfx_unload(Gfx* renderer);$/;"	p	language:C++	typeref:typename:void
 w32_gfx_unload	code/win_gfx_opengl.cpp	/^w32_gfx_unload(Gfx* r) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_gfx_unload	w32_gfx.h	/^w32_gfx_unload(Gfx* renderer);$/;"	p	language:C++	typeref:typename:void
 w32_gfx_unload	w32_gfx_opengl.h	/^w32_gfx_unload(Gfx* r) {$/;"	f	language:C++	typeref:typename:void
+w32_init_file_cabinet	code/w32.cpp	/^w32_init_file_cabinet(W32_File_Cabinet* c) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_init_file_cabinet	w32.cpp	/^w32_init_file_cabinet(W32_File_Cabinet* c) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_init_work_queue	code/w32.cpp	/^w32_init_work_queue(W32_Work_Queue* wq, U32 thread_count) {$/;"	f	language:C++	typeref:typename:B32	file:
 w32_init_work_queue	w32.cpp	/^w32_init_work_queue(W32_Work_Queue* wq, U32 thread_count) {$/;"	f	language:C++	typeref:typename:B32	file:
+W32_Loaded_Code	code/w32_loaded_code.h	/^struct W32_Loaded_Code {$/;"	s	language:C++
+w32_load_code	code/w32_loaded_code.h	/^w32_load_code(W32_Loaded_Code* code) {$/;"	f	language:C++	typeref:typename:void
+w32_log	code/w32_common.h	/^#define w32_log(/;"	d	language:C++
+w32_log	code/w32_common.h	/^#define w32_log(/;"	d	language:C++
 w32_log	w32_common.h	/^#define w32_log(/;"	d	language:C++
 w32_log	w32_common.h	/^#define w32_log(/;"	d	language:C++
+w32_log_proc	code/w32_common.h	/^w32_log_proc(const char* fmt, ...) {$/;"	f	language:C++	typeref:typename:void
 w32_log_proc	w32_common.h	/^w32_log_proc(const char* fmt, ...) {$/;"	f	language:C++	typeref:typename:void
+w32_open_file	code/w32.cpp	/^w32_open_file(Platform_File* file,$/;"	f	language:C++	typeref:typename:B32	file:
 w32_open_file	w32.cpp	/^w32_open_file(Platform_File* file,$/;"	f	language:C++	typeref:typename:B32	file:
+w32_process_input	code/w32.cpp	/^w32_process_input(HWND window, Platform* pf) $/;"	f	language:C++	typeref:typename:void	file:
 w32_process_input	w32.cpp	/^w32_process_input(HWND window, Platform* pf) $/;"	f	language:C++	typeref:typename:void	file:
+w32_profiler_block	code/w32_common.h	/^#define w32_profiler_block(/;"	d	language:C++
 w32_profiler_block	w32_common.h	/^#define w32_profiler_block(/;"	d	language:C++
+w32_profile_block	code/w32_common.h	/^#define w32_profile_block(/;"	d	language:C++
 w32_profile_block	w32_common.h	/^#define w32_profile_block(/;"	d	language:C++
+w32_read_file	code/w32.cpp	/^w32_read_file(Platform_File* file, UMI size, UMI offset, void* dest) $/;"	f	language:C++	typeref:typename:B32	file:
 w32_read_file	w32.cpp	/^w32_read_file(Platform_File* file, UMI size, UMI offset, void* dest) $/;"	f	language:C++	typeref:typename:B32	file:
+w32_rect_height	code/w32_common.h	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG
 w32_rect_height	w32_common.h	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG
+w32_rect_width	code/w32_common.h	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG
 w32_rect_width	w32_common.h	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG
+w32_reload_code_if_outdated	code/w32_loaded_code.h	/^w32_reload_code_if_outdated(W32_Loaded_Code* code) {$/;"	f	language:C++	typeref:typename:B32
+w32_return_file	code/w32.cpp	/^w32_return_file(W32_File_Cabinet* c, W32_File* f) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_return_file	w32.cpp	/^w32_return_file(W32_File_Cabinet* c, W32_File* f) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_setup_platform_functions	code/w32.cpp	/^w32_setup_platform_functions(Platform* pf)$/;"	f	language:C++	typeref:typename:void	file:
 w32_setup_platform_functions	w32.cpp	/^w32_setup_platform_functions(Platform* pf)$/;"	f	language:C++	typeref:typename:void	file:
+w32_shutdown	code/w32.cpp	/^w32_shutdown() {$/;"	f	language:C++	typeref:typename:void	file:
 w32_shutdown	w32.cpp	/^w32_shutdown() {$/;"	f	language:C++	typeref:typename:void	file:
+W32_State	code/w32.cpp	/^struct W32_State{$/;"	s	language:C++	file:
 W32_State	w32.cpp	/^struct W32_State{$/;"	s	language:C++	file:
+w32_unload_code	code/w32_loaded_code.h	/^w32_unload_code(W32_Loaded_Code* code) {$/;"	f	language:C++	typeref:typename:void
+w32_wasapi_begin_frame	code/w32_audio_wasapi.h	/^w32_wasapi_begin_frame(Win_Wasapi* wasapi) {$/;"	f	language:C++	typeref:typename:void
 w32_wasapi_begin_frame	w32_audio_wasapi.h	/^w32_wasapi_begin_frame(Win_Wasapi* wasapi) {$/;"	f	language:C++	typeref:typename:void
+w32_wasapi_end_frame	code/w32_audio_wasapi.h	/^w32_wasapi_end_frame(Win_Wasapi* wasapi) $/;"	f	language:C++	typeref:typename:void
 w32_wasapi_end_frame	w32_audio_wasapi.h	/^w32_wasapi_end_frame(Win_Wasapi* wasapi) $/;"	f	language:C++	typeref:typename:void
+w32_wasapi_free	code/w32_audio_wasapi.h	/^w32_wasapi_free(Win_Wasapi* wasapi) {$/;"	f	language:C++	typeref:typename:void
 w32_wasapi_free	w32_audio_wasapi.h	/^w32_wasapi_free(Win_Wasapi* wasapi) {$/;"	f	language:C++	typeref:typename:void
+w32_wasapi_init	code/w32_audio_wasapi.h	/^w32_wasapi_init(Win_Wasapi* wasapi,$/;"	f	language:C++	typeref:typename:B32
 w32_wasapi_init	w32_audio_wasapi.h	/^w32_wasapi_init(Win_Wasapi* wasapi,$/;"	f	language:C++	typeref:typename:B32
+w32_window_callback	code/w32.cpp	/^w32_window_callback(HWND window, $/;"	f	language:C++	typeref:typename:LRESULT CALLBACK
 w32_window_callback	w32.cpp	/^w32_window_callback(HWND window, $/;"	f	language:C++	typeref:typename:LRESULT CALLBACK
+W32_Work	code/w32.cpp	/^struct W32_Work {$/;"	s	language:C++	file:
 W32_Work	w32.cpp	/^struct W32_Work {$/;"	s	language:C++	file:
+w32_worker_func	code/w32.cpp	/^w32_worker_func(LPVOID ctx) {$/;"	f	language:C++	typeref:typename:DWORD WINAPI	file:
 w32_worker_func	w32.cpp	/^w32_worker_func(LPVOID ctx) {$/;"	f	language:C++	typeref:typename:DWORD WINAPI	file:
+W32_Work_Queue	code/w32.cpp	/^struct W32_Work_Queue {$/;"	s	language:C++	file:
 W32_Work_Queue	w32.cpp	/^struct W32_Work_Queue {$/;"	s	language:C++	file:
+w32_write_file	code/w32.cpp	/^w32_write_file(Platform_File* file, UMI size, UMI offset, void* src)$/;"	f	language:C++	typeref:typename:B32	file:
 w32_write_file	w32.cpp	/^w32_write_file(Platform_File* file, UMI size, UMI offset, void* src)$/;"	f	language:C++	typeref:typename:B32	file:
+wasapi	code/w32_audio_wasapi.h	/^  Win_Wasapi* wasapi;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client	typeref:typename:Win_Wasapi *
 wasapi	code/win_audio_wasapi.h	/^  Win_Wasapi* wasapi;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client	typeref:typename:Win_Wasapi *
 wasapi	w32_audio_wasapi.h	/^  Win_Wasapi* wasapi;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client	typeref:typename:Win_Wasapi *
 WAV	code/momo_wav.h	/^}WAV;$/;"	t	language:C++	typeref:struct:__anon54fde02a0408
@@ -5269,81 +5386,107 @@ wav_read	momo_wav.h	/^static B32 wav_read(WAV* wav, void* memory, UMI size);$/;"
 wav_read	momo_wav.h	/^wav_read(WAV* w, void* memory, UMI memory_size) $/;"	f	language:C++	typeref:typename:B32
 WAV_Riff_Chunk	code/momo_wav.h	/^}WAV_Riff_Chunk;$/;"	t	language:C++	typeref:struct:__anon54fde02a0108
 WAV_Riff_Chunk	momo_wav.h	/^}WAV_Riff_Chunk;$/;"	t	language:C++	typeref:struct:__anon4ee54a000108
+wglChoosePixelFormatARB	code/w32_gfx_opengl.h	/^static wglChoosePixelFormatARBFn* wglChoosePixelFormatARB;$/;"	v	language:C++	typeref:typename:wglChoosePixelFormatARBFn *
 wglChoosePixelFormatARB	code/win_gfx_opengl.cpp	/^static wglChoosePixelFormatARBFn* wglChoosePixelFormatARB;$/;"	v	language:C++	typeref:typename:wglChoosePixelFormatARBFn *	file:
 wglChoosePixelFormatARB	code/win_renderer_opengl.cpp	/^static wglChoosePixelFormatARBFn* wglChoosePixelFormatARB;$/;"	v	language:C++	typeref:typename:wglChoosePixelFormatARBFn *	file:
 wglChoosePixelFormatARB	w32_gfx_opengl.h	/^static wglChoosePixelFormatARBFn* wglChoosePixelFormatARB;$/;"	v	language:C++	typeref:typename:wglChoosePixelFormatARBFn *
+wglChoosePixelFormatARBFn	code/w32_gfx_opengl.h	/^wglChoosePixelFormatARBFn(HDC hdc,$/;"	t	language:C++	typeref:typename:BOOL WINAPI ()(HDC hdc,const int * piAttribIList,const FLOAT * pfAttribFList,UINT nMaxFormats,int * piFormats,UINT * nNumFormats)
 wglChoosePixelFormatARBFn	code/win_gfx_opengl.cpp	/^wglChoosePixelFormatARBFn(HDC hdc,$/;"	t	language:C++	typeref:typename:BOOL WINAPI ()(HDC hdc,const int * piAttribIList,const FLOAT * pfAttribFList,UINT nMaxFormats,int * piFormats,UINT * nNumFormats)	file:
 wglChoosePixelFormatARBFn	code/win_renderer_opengl.cpp	/^wglChoosePixelFormatARBFn(HDC hdc,$/;"	t	language:C++	typeref:typename:BOOL WINAPI ()(HDC hdc,const int * piAttribIList,const FLOAT * pfAttribFList,UINT nMaxFormats,int * piFormats,UINT * nNumFormats)	file:
 wglChoosePixelFormatARBFn	w32_gfx_opengl.h	/^wglChoosePixelFormatARBFn(HDC hdc,$/;"	t	language:C++	typeref:typename:BOOL WINAPI ()(HDC hdc,const int * piAttribIList,const FLOAT * pfAttribFList,UINT nMaxFormats,int * piFormats,UINT * nNumFormats)
+wglCreateContextAttribsARB	code/w32_gfx_opengl.h	/^static wglCreateContextAttribsARBFn* wglCreateContextAttribsARB;$/;"	v	language:C++	typeref:typename:wglCreateContextAttribsARBFn *
 wglCreateContextAttribsARB	code/win_gfx_opengl.cpp	/^static wglCreateContextAttribsARBFn* wglCreateContextAttribsARB;$/;"	v	language:C++	typeref:typename:wglCreateContextAttribsARBFn *	file:
 wglCreateContextAttribsARB	code/win_renderer_opengl.cpp	/^static wglCreateContextAttribsARBFn* wglCreateContextAttribsARB;$/;"	v	language:C++	typeref:typename:wglCreateContextAttribsARBFn *	file:
 wglCreateContextAttribsARB	w32_gfx_opengl.h	/^static wglCreateContextAttribsARBFn* wglCreateContextAttribsARB;$/;"	v	language:C++	typeref:typename:wglCreateContextAttribsARBFn *
+wglCreateContextAttribsARBFn	code/w32_gfx_opengl.h	/^wglCreateContextAttribsARBFn(HDC hdc, $/;"	t	language:C++	typeref:typename:HGLRC WINAPI ()(HDC hdc,HGLRC hShareContext,const int * attribList)
 wglCreateContextAttribsARBFn	code/win_gfx_opengl.cpp	/^wglCreateContextAttribsARBFn(HDC hdc, $/;"	t	language:C++	typeref:typename:HGLRC WINAPI ()(HDC hdc,HGLRC hShareContext,const int * attribList)	file:
 wglCreateContextAttribsARBFn	code/win_renderer_opengl.cpp	/^wglCreateContextAttribsARBFn(HDC hdc, $/;"	t	language:C++	typeref:typename:HGLRC WINAPI ()(HDC hdc,HGLRC hShareContext,const int * attribList)	file:
 wglCreateContextAttribsARBFn	w32_gfx_opengl.h	/^wglCreateContextAttribsARBFn(HDC hdc, $/;"	t	language:C++	typeref:typename:HGLRC WINAPI ()(HDC hdc,HGLRC hShareContext,const int * attribList)
+wglGetExtensionsStringEXT	code/w32_gfx_opengl.h	/^static wglGetExtensionsStringEXTFn* wglGetExtensionsStringEXT;$/;"	v	language:C++	typeref:typename:wglGetExtensionsStringEXTFn *
 wglGetExtensionsStringEXT	code/win_gfx_opengl.cpp	/^static wglGetExtensionsStringEXTFn* wglGetExtensionsStringEXT;$/;"	v	language:C++	typeref:typename:wglGetExtensionsStringEXTFn *	file:
 wglGetExtensionsStringEXT	code/win_renderer_opengl.cpp	/^static wglGetExtensionsStringEXTFn* wglGetExtensionsStringEXT;$/;"	v	language:C++	typeref:typename:wglGetExtensionsStringEXTFn *	file:
 wglGetExtensionsStringEXT	w32_gfx_opengl.h	/^static wglGetExtensionsStringEXTFn* wglGetExtensionsStringEXT;$/;"	v	language:C++	typeref:typename:wglGetExtensionsStringEXTFn *
+wglGetExtensionsStringEXTFn	code/w32_gfx_opengl.h	/^wglGetExtensionsStringEXTFn(void);$/;"	t	language:C++	typeref:typename:const char * WINAPI ()(void)
 wglGetExtensionsStringEXTFn	code/win_gfx_opengl.cpp	/^wglGetExtensionsStringEXTFn(void);$/;"	t	language:C++	typeref:typename:const char * WINAPI ()(void)	file:
 wglGetExtensionsStringEXTFn	code/win_renderer_opengl.cpp	/^wglGetExtensionsStringEXTFn(void);$/;"	t	language:C++	typeref:typename:const char * WINAPI ()(void)	file:
 wglGetExtensionsStringEXTFn	w32_gfx_opengl.h	/^wglGetExtensionsStringEXTFn(void);$/;"	t	language:C++	typeref:typename:const char * WINAPI ()(void)
+wglSwapIntervalEXT	code/w32_gfx_opengl.h	/^static wglSwapIntervalEXTFn* wglSwapIntervalEXT;$/;"	v	language:C++	typeref:typename:wglSwapIntervalEXTFn *
 wglSwapIntervalEXT	code/win_gfx_opengl.cpp	/^static wglSwapIntervalEXTFn* wglSwapIntervalEXT;$/;"	v	language:C++	typeref:typename:wglSwapIntervalEXTFn *	file:
 wglSwapIntervalEXT	code/win_renderer_opengl.cpp	/^static wglSwapIntervalEXTFn* wglSwapIntervalEXT;$/;"	v	language:C++	typeref:typename:wglSwapIntervalEXTFn *	file:
 wglSwapIntervalEXT	w32_gfx_opengl.h	/^static wglSwapIntervalEXTFn* wglSwapIntervalEXT;$/;"	v	language:C++	typeref:typename:wglSwapIntervalEXTFn *
+wglSwapIntervalEXTFn	code/w32_gfx_opengl.h	/^wglSwapIntervalEXTFn(int interval);$/;"	t	language:C++	typeref:typename:BOOL WINAPI ()(int interval)
 wglSwapIntervalEXTFn	code/win_gfx_opengl.cpp	/^wglSwapIntervalEXTFn(int interval);$/;"	t	language:C++	typeref:typename:BOOL WINAPI ()(int interval)	file:
 wglSwapIntervalEXTFn	code/win_renderer_opengl.cpp	/^wglSwapIntervalEXTFn(int interval);$/;"	t	language:C++	typeref:typename:BOOL WINAPI ()(int interval)	file:
 wglSwapIntervalEXTFn	w32_gfx_opengl.h	/^wglSwapIntervalEXTFn(int interval);$/;"	t	language:C++	typeref:typename:BOOL WINAPI ()(int interval)
+WGL_ACCELERATION_ARB	code/w32_gfx_opengl.h	/^#define WGL_ACCELERATION_ARB /;"	d	language:C++
 WGL_ACCELERATION_ARB	code/win_gfx_opengl.cpp	/^#define WGL_ACCELERATION_ARB /;"	d	language:C++	file:
 WGL_ACCELERATION_ARB	code/win_renderer_opengl.cpp	/^#define WGL_ACCELERATION_ARB /;"	d	language:C++	file:
 WGL_ACCELERATION_ARB	w32_gfx_opengl.h	/^#define WGL_ACCELERATION_ARB /;"	d	language:C++
+WGL_CONTEXT_CORE_PROFILE_BIT_ARB	code/w32_gfx_opengl.h	/^#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB /;"	d	language:C++
 WGL_CONTEXT_CORE_PROFILE_BIT_ARB	code/win_gfx_opengl.cpp	/^#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_CORE_PROFILE_BIT_ARB	code/win_renderer_opengl.cpp	/^#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_CORE_PROFILE_BIT_ARB	w32_gfx_opengl.h	/^#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB /;"	d	language:C++
+WGL_CONTEXT_DEBUG_BIT_ARB	code/w32_gfx_opengl.h	/^#define WGL_CONTEXT_DEBUG_BIT_ARB /;"	d	language:C++
 WGL_CONTEXT_DEBUG_BIT_ARB	code/win_gfx_opengl.cpp	/^#define WGL_CONTEXT_DEBUG_BIT_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_DEBUG_BIT_ARB	code/win_renderer_opengl.cpp	/^#define WGL_CONTEXT_DEBUG_BIT_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_DEBUG_BIT_ARB	w32_gfx_opengl.h	/^#define WGL_CONTEXT_DEBUG_BIT_ARB /;"	d	language:C++
+WGL_CONTEXT_FLAGS_ARB	code/w32_gfx_opengl.h	/^#define WGL_CONTEXT_FLAGS_ARB /;"	d	language:C++
 WGL_CONTEXT_FLAGS_ARB	code/win_gfx_opengl.cpp	/^#define WGL_CONTEXT_FLAGS_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_FLAGS_ARB	code/win_renderer_opengl.cpp	/^#define WGL_CONTEXT_FLAGS_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_FLAGS_ARB	w32_gfx_opengl.h	/^#define WGL_CONTEXT_FLAGS_ARB /;"	d	language:C++
+WGL_CONTEXT_FLAG_ARB	code/w32_gfx_opengl.h	/^#define WGL_CONTEXT_FLAG_ARB /;"	d	language:C++
 WGL_CONTEXT_FLAG_ARB	code/win_gfx_opengl.cpp	/^#define WGL_CONTEXT_FLAG_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_FLAG_ARB	code/win_renderer_opengl.cpp	/^#define WGL_CONTEXT_FLAG_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_FLAG_ARB	w32_gfx_opengl.h	/^#define WGL_CONTEXT_FLAG_ARB /;"	d	language:C++
+WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	code/w32_gfx_opengl.h	/^#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB /;"	d	language:C++
 WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	code/win_gfx_opengl.cpp	/^#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	code/win_renderer_opengl.cpp	/^#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	w32_gfx_opengl.h	/^#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB /;"	d	language:C++
+WGL_CONTEXT_LAYER_PLANE_ARB	code/w32_gfx_opengl.h	/^#define WGL_CONTEXT_LAYER_PLANE_ARB /;"	d	language:C++
 WGL_CONTEXT_LAYER_PLANE_ARB	code/win_gfx_opengl.cpp	/^#define WGL_CONTEXT_LAYER_PLANE_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_LAYER_PLANE_ARB	code/win_renderer_opengl.cpp	/^#define WGL_CONTEXT_LAYER_PLANE_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_LAYER_PLANE_ARB	w32_gfx_opengl.h	/^#define WGL_CONTEXT_LAYER_PLANE_ARB /;"	d	language:C++
+WGL_CONTEXT_MAJOR_VERSION_ARB	code/w32_gfx_opengl.h	/^#define WGL_CONTEXT_MAJOR_VERSION_ARB /;"	d	language:C++
 WGL_CONTEXT_MAJOR_VERSION_ARB	code/win_gfx_opengl.cpp	/^#define WGL_CONTEXT_MAJOR_VERSION_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_MAJOR_VERSION_ARB	code/win_renderer_opengl.cpp	/^#define WGL_CONTEXT_MAJOR_VERSION_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_MAJOR_VERSION_ARB	w32_gfx_opengl.h	/^#define WGL_CONTEXT_MAJOR_VERSION_ARB /;"	d	language:C++
+WGL_CONTEXT_MINOR_VERSION_ARB	code/w32_gfx_opengl.h	/^#define WGL_CONTEXT_MINOR_VERSION_ARB /;"	d	language:C++
 WGL_CONTEXT_MINOR_VERSION_ARB	code/win_gfx_opengl.cpp	/^#define WGL_CONTEXT_MINOR_VERSION_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_MINOR_VERSION_ARB	code/win_renderer_opengl.cpp	/^#define WGL_CONTEXT_MINOR_VERSION_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_MINOR_VERSION_ARB	w32_gfx_opengl.h	/^#define WGL_CONTEXT_MINOR_VERSION_ARB /;"	d	language:C++
+WGL_CONTEXT_PROFILE_MASK_ARB	code/w32_gfx_opengl.h	/^#define WGL_CONTEXT_PROFILE_MASK_ARB /;"	d	language:C++
 WGL_CONTEXT_PROFILE_MASK_ARB	code/win_gfx_opengl.cpp	/^#define WGL_CONTEXT_PROFILE_MASK_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_PROFILE_MASK_ARB	code/win_renderer_opengl.cpp	/^#define WGL_CONTEXT_PROFILE_MASK_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_PROFILE_MASK_ARB	w32_gfx_opengl.h	/^#define WGL_CONTEXT_PROFILE_MASK_ARB /;"	d	language:C++
+WGL_DOUBLE_BUFFER_ARB	code/w32_gfx_opengl.h	/^#define WGL_DOUBLE_BUFFER_ARB /;"	d	language:C++
 WGL_DOUBLE_BUFFER_ARB	code/win_gfx_opengl.cpp	/^#define WGL_DOUBLE_BUFFER_ARB /;"	d	language:C++	file:
 WGL_DOUBLE_BUFFER_ARB	code/win_renderer_opengl.cpp	/^#define WGL_DOUBLE_BUFFER_ARB /;"	d	language:C++	file:
 WGL_DOUBLE_BUFFER_ARB	w32_gfx_opengl.h	/^#define WGL_DOUBLE_BUFFER_ARB /;"	d	language:C++
+WGL_DRAW_TO_WINDOW_ARB	code/w32_gfx_opengl.h	/^#define WGL_DRAW_TO_WINDOW_ARB /;"	d	language:C++
 WGL_DRAW_TO_WINDOW_ARB	code/win_gfx_opengl.cpp	/^#define WGL_DRAW_TO_WINDOW_ARB /;"	d	language:C++	file:
 WGL_DRAW_TO_WINDOW_ARB	code/win_renderer_opengl.cpp	/^#define WGL_DRAW_TO_WINDOW_ARB /;"	d	language:C++	file:
 WGL_DRAW_TO_WINDOW_ARB	w32_gfx_opengl.h	/^#define WGL_DRAW_TO_WINDOW_ARB /;"	d	language:C++
+WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB	code/w32_gfx_opengl.h	/^#define WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB /;"	d	language:C++
 WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB	code/win_gfx_opengl.cpp	/^#define WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB /;"	d	language:C++	file:
 WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB	code/win_renderer_opengl.cpp	/^#define WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB /;"	d	language:C++	file:
 WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB	w32_gfx_opengl.h	/^#define WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB /;"	d	language:C++
+WGL_FULL_ACCELERATION_ARB	code/w32_gfx_opengl.h	/^#define WGL_FULL_ACCELERATION_ARB /;"	d	language:C++
 WGL_FULL_ACCELERATION_ARB	code/win_gfx_opengl.cpp	/^#define WGL_FULL_ACCELERATION_ARB /;"	d	language:C++	file:
 WGL_FULL_ACCELERATION_ARB	code/win_renderer_opengl.cpp	/^#define WGL_FULL_ACCELERATION_ARB /;"	d	language:C++	file:
 WGL_FULL_ACCELERATION_ARB	w32_gfx_opengl.h	/^#define WGL_FULL_ACCELERATION_ARB /;"	d	language:C++
+WGL_PIXEL_TYPE_ARB	code/w32_gfx_opengl.h	/^#define WGL_PIXEL_TYPE_ARB /;"	d	language:C++
 WGL_PIXEL_TYPE_ARB	code/win_gfx_opengl.cpp	/^#define WGL_PIXEL_TYPE_ARB /;"	d	language:C++	file:
 WGL_PIXEL_TYPE_ARB	code/win_renderer_opengl.cpp	/^#define WGL_PIXEL_TYPE_ARB /;"	d	language:C++	file:
 WGL_PIXEL_TYPE_ARB	w32_gfx_opengl.h	/^#define WGL_PIXEL_TYPE_ARB /;"	d	language:C++
+WGL_SetOpenglFunction	code/w32_gfx_opengl.h	/^#define WGL_SetOpenglFunction(/;"	d	language:C++
 WGL_SetOpenglFunction	code/win_gfx_opengl.cpp	/^#define WGL_SetOpenglFunction(/;"	d	language:C++	file:
 WGL_SetOpenglFunction	code/win_renderer_opengl.cpp	/^#define WGL_SetOpenglFunction(/;"	d	language:C++	file:
 WGL_SetOpenglFunction	w32_gfx_opengl.h	/^#define WGL_SetOpenglFunction(/;"	d	language:C++
+WGL_SUPPORT_OPENGL_ARB	code/w32_gfx_opengl.h	/^#define WGL_SUPPORT_OPENGL_ARB /;"	d	language:C++
 WGL_SUPPORT_OPENGL_ARB	code/win_gfx_opengl.cpp	/^#define WGL_SUPPORT_OPENGL_ARB /;"	d	language:C++	file:
 WGL_SUPPORT_OPENGL_ARB	code/win_renderer_opengl.cpp	/^#define WGL_SUPPORT_OPENGL_ARB /;"	d	language:C++	file:
 WGL_SUPPORT_OPENGL_ARB	w32_gfx_opengl.h	/^#define WGL_SUPPORT_OPENGL_ARB /;"	d	language:C++
+WGL_TYPE_RGBA_ARB	code/w32_gfx_opengl.h	/^#define WGL_TYPE_RGBA_ARB /;"	d	language:C++
 WGL_TYPE_RGBA_ARB	code/win_gfx_opengl.cpp	/^#define WGL_TYPE_RGBA_ARB /;"	d	language:C++	file:
 WGL_TYPE_RGBA_ARB	code/win_renderer_opengl.cpp	/^#define WGL_TYPE_RGBA_ARB /;"	d	language:C++	file:
 WGL_TYPE_RGBA_ARB	w32_gfx_opengl.h	/^#define WGL_TYPE_RGBA_ARB /;"	d	language:C++
@@ -5365,14 +5508,17 @@ width	momo_image.h	/^  U32 width, height;$/;"	m	language:C++	struct:__anon825197
 width	momo_png.h	/^  U32 width;$/;"	m	language:C++	struct:_PNG_IHDR	typeref:typename:U32
 width	momo_png.h	/^  U32 width;$/;"	m	language:C++	struct:__anon4e6d7f970108	typeref:typename:U32
 width	sui_pack.h	/^  U32 width;$/;"	m	language:C++	struct:Sui_Packer_Bitmap	typeref:typename:U32
+WIN32_LEAN_AND_MEAN	code/w32.h	/^#define WIN32_LEAN_AND_MEAN$/;"	d	language:C++
 WIN32_LEAN_AND_MEAN	code/win.h	/^#define WIN32_LEAN_AND_MEAN$/;"	d	language:C++
 WIN32_LEAN_AND_MEAN	w32.h	/^#define WIN32_LEAN_AND_MEAN$/;"	d	language:C++
 WINGDIAPI	test.c	/^            #define WINGDIAPI /;"	d	language:C	file:
+WinMain	code/w32.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 WinMain	code/win.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 WinMain	w32.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 win_add_task	code/win.cpp	/^win_add_task(Platform_Task_Callback callback, void* data) {$/;"	f	language:C++	typeref:typename:void	file:
 win_add_task_entry	code/win.cpp	/^win_add_task_entry(Win_Work_Queue* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void	file:
 win_allocate_memory_into_arena	code/win.cpp	/^win_allocate_memory_into_arena(Bump_Allocator* a, UMI memory_size) {$/;"	f	language:C++	typeref:typename:B32	file:
+WIN_AUDIO	code/w32_audio.h	/^#define WIN_AUDIO$/;"	d	language:C++
 win_audio_begin_frame	code/win_audio.h	/^win_audio_begin_frame(Platform_Audio* audio) {$/;"	f	language:C++	typeref:typename:void
 win_audio_end_frame	code/win_audio.h	/^win_audio_end_frame(Platform_Audio* audio) {$/;"	f	language:C++	typeref:typename:void
 win_audio_load	code/win_audio.h	/^win_audio_load(U32 samples_per_second, $/;"	f	language:C++	typeref:typename:Platform_Audio *
@@ -5402,6 +5548,7 @@ Win_Gfx_Load	code/win_renderer.h	/^Win_Gfx_Load(HWND window, $/;"	t	language:C++
 win_gfx_load	code/win_renderer_opengl.cpp	/^win_gfx_load(HWND window, $/;"	f	language:C++	typeref:typename:exported Gfx *
 Win_Gfx_Unload	code/win_renderer.h	/^Win_Gfx_Unload(Gfx* renderer);$/;"	t	language:C++	typeref:typename:void ()(Gfx * renderer)
 win_gfx_unload	code/win_renderer_opengl.cpp	/^win_gfx_unload(Gfx* r) {$/;"	f	language:C++	typeref:typename:exported void
+WIN_H	code/w32.h	/^#define WIN_H$/;"	d	language:C++
 WIN_H	code/win.h	/^#define WIN_H$/;"	d	language:C++
 WIN_H	w32.h	/^#define WIN_H$/;"	d	language:C++
 win_init_file_cabinet	code/win.cpp	/^win_init_file_cabinet(Win_File_Cabinet* c) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -5426,6 +5573,7 @@ win_rect_width	code/win_common.h	/^static inline LONG win_rect_width(RECT r) { r
 win_reload_code_if_outdated	code/win_loaded_code.h	/^win_reload_code_if_outdated(Win_Loaded_Code* code) {$/;"	f	language:C++	typeref:typename:B32
 win_reload_code_if_outdated	w32_loaded_code.h	/^win_reload_code_if_outdated(Win_Loaded_Code* code) {$/;"	f	language:C++	typeref:typename:B32
 win_renderer_function_names	code/win_renderer.h	/^static const char* win_renderer_function_names[] = {$/;"	v	language:C++	typeref:typename:const char * []
+WIN_RENDERER_H	code/w32_gfx.h	/^#define WIN_RENDERER_H$/;"	d	language:C++
 WIN_RENDERER_H	code/win_gfx.h	/^#define WIN_RENDERER_H$/;"	d	language:C++
 WIN_RENDERER_H	code/win_renderer.h	/^#define WIN_RENDERER_H$/;"	d	language:C++
 WIN_RENDERER_H	w32_gfx.h	/^#define WIN_RENDERER_H$/;"	d	language:C++
@@ -5437,6 +5585,8 @@ Win_State	code/win.cpp	/^struct Win_State{$/;"	s	language:C++	file:
 win_try_get_wgl_function	code/win_renderer_opengl.cpp	/^win_try_get_wgl_function(const char* name, HMODULE fallback_module)$/;"	f	language:C++	typeref:typename:void *	file:
 win_unload_code	code/win_loaded_code.h	/^win_unload_code(Win_Loaded_Code* code) {$/;"	f	language:C++	typeref:typename:void
 win_unload_code	w32_loaded_code.h	/^win_unload_code(Win_Loaded_Code* code) {$/;"	f	language:C++	typeref:typename:void
+WIN_WASAPI	code/w32_audio_wasapi.h	/^#define WIN_WASAPI$/;"	d	language:C++
+Win_Wasapi	code/w32_audio_wasapi.h	/^struct Win_Wasapi {$/;"	s	language:C++
 WIN_WASAPI	code/win_audio_wasapi.h	/^#define WIN_WASAPI$/;"	d	language:C++
 Win_Wasapi	code/win_audio_wasapi.h	/^struct Win_Wasapi {$/;"	s	language:C++
 WIN_WASAPI	w32_audio_wasapi.h	/^#define WIN_WASAPI$/;"	d	language:C++
@@ -5445,6 +5595,7 @@ win_wasapi_begin_frame	code/win_audio_wasapi.h	/^win_wasapi_begin_frame(Win_Wasa
 win_wasapi_end_frame	code/win_audio_wasapi.h	/^win_wasapi_end_frame(Win_Wasapi* wasapi) $/;"	f	language:C++	typeref:typename:void
 win_wasapi_free	code/win_audio_wasapi.h	/^win_wasapi_free(Win_Wasapi* wasapi) {$/;"	f	language:C++	typeref:typename:void
 win_wasapi_init	code/win_audio_wasapi.h	/^win_wasapi_init(Win_Wasapi* wasapi,$/;"	f	language:C++	typeref:typename:B32
+Win_Wasapi_Notif_Client	code/w32_audio_wasapi.h	/^struct Win_Wasapi_Notif_Client {$/;"	s	language:C++
 Win_Wasapi_Notif_Client	code/win_audio_wasapi.h	/^struct Win_Wasapi_Notif_Client {$/;"	s	language:C++
 Win_Wasapi_Notif_Client	w32_audio_wasapi.h	/^struct Win_Wasapi_Notif_Client {$/;"	s	language:C++
 win_window_callback	code/win.cpp	/^win_window_callback(HWND window, $/;"	f	language:C++	typeref:typename:LRESULT CALLBACK
@@ -5452,6 +5603,7 @@ Win_Work	code/win.cpp	/^struct Win_Work {$/;"	s	language:C++	file:
 win_worker_func	code/win.cpp	/^win_worker_func(LPVOID ctx) {$/;"	f	language:C++	typeref:typename:DWORD WINAPI	file:
 Win_Work_Queue	code/win.cpp	/^struct Win_Work_Queue {$/;"	s	language:C++	file:
 win_write_file	code/win.cpp	/^win_write_file(Platform_File* file, UMI size, UMI offset, void* src)$/;"	f	language:C++	typeref:typename:B32	file:
+work_queue	code/w32.cpp	/^  W32_Work_Queue work_queue;$/;"	m	language:C++	struct:W32_State	typeref:typename:W32_Work_Queue	file:
 work_queue	code/win.cpp	/^  Win_Work_Queue work_queue;$/;"	m	language:C++	struct:Win_State	typeref:typename:Win_Work_Queue	file:
 work_queue	w32.cpp	/^  W32_Work_Queue work_queue;$/;"	m	language:C++	struct:W32_State	typeref:typename:W32_Work_Queue	file:
 write_file	code/game_platform.h	/^  Platform_Write_File* write_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Write_File *
@@ -5507,6 +5659,7 @@ zero_range	code/momo_common.h	/^#define zero_range(/;"	d	language:C++
 zero_range	momo_common.h	/^#define zero_range(/;"	d	language:C++
 zero_struct	code/momo_common.h	/^#define zero_struct(/;"	d	language:C++
 zero_struct	momo_common.h	/^#define zero_struct(/;"	d	language:C++
+zoom_level	code/game_painter.h	/^  F32 zoom_level;$/;"	m	language:C++	struct:Painter	typeref:typename:F32
 _ba_set_revert_point	code/momo_memory.h	/^# define _ba_set_revert_point(/;"	d	language:C++
 _ba_set_revert_point	momo_memory.h	/^# define _ba_set_revert_point(/;"	d	language:C++
 _compute_f64	code/momo_common.h	/^_compute_f64(S64 power, U64 i, B32 negative) $/;"	f	language:C++	typeref:typename:F64
@@ -5523,6 +5676,7 @@ _gfx_push_command	game_gfx.h	/^_gfx_push_command(Gfx_Command_Queue* q, U32 id, U
 _gfx_push_command_block	code/game_gfx.h	/^_gfx_push_command_block(Gfx_Command_Queue* q, U32 size, U32 id, U32 align = 4) {$/;"	f	language:C++	typeref:typename:void *
 _gfx_push_command_block	code/game_renderer.h	/^_gfx_push_command_block(Gfx_Command_Queue* q, U32 size, U32 id, U32 align = 4) {$/;"	f	language:C++	typeref:typename:void *
 _gfx_push_command_block	game_gfx.h	/^_gfx_push_command_block(Gfx_Command_Queue* q, U32 size, U32 id, U32 align = 4) {$/;"	f	language:C++	typeref:typename:void *
+_g_profiler	code/w32.cpp	/^Profiler _g_profiler = {0};$/;"	v	language:C++	typeref:typename:Profiler
 _g_profiler	code/win.cpp	/^Profiler _g_profiler = {0};$/;"	v	language:C++	typeref:typename:Profiler
 _g_profiler	w32.cpp	/^Profiler _g_profiler = {0};$/;"	v	language:C++	typeref:typename:Profiler
 _hue_to_color	code/momo_colors.h	/^_hue_to_color(F32 p, F32 q, F32 t) {$/;"	f	language:C++	typeref:typename:F32
@@ -5816,22 +5970,36 @@ _ttf_read_u32	code/momo_ttf.h	/^_ttf_read_u32(U8* location) {$/;"	f	language:C++
 _ttf_read_u32	momo_ttf.h	/^_ttf_read_u32(U8* location) {$/;"	f	language:C++	typeref:typename:U32
 _ttf_tessellate_bezier	code/momo_ttf.h	/^_ttf_tessellate_bezier(V2* vertices,$/;"	f	language:C++	typeref:typename:void
 _ttf_tessellate_bezier	momo_ttf.h	/^_ttf_tessellate_bezier(V2* vertices,$/;"	f	language:C++	typeref:typename:void
+_w32_load_wgl_extentions	code/w32_gfx_opengl.h	/^_w32_load_wgl_extentions() {$/;"	f	language:C++	typeref:typename:B32
 _w32_load_wgl_extentions	code/win_gfx_opengl.cpp	/^_w32_load_wgl_extentions() {$/;"	f	language:C++	typeref:typename:B32	file:
 _w32_load_wgl_extentions	w32_gfx_opengl.h	/^_w32_load_wgl_extentions() {$/;"	f	language:C++	typeref:typename:B32
+_w32_set_pixel_format	code/w32_gfx_opengl.h	/^_w32_set_pixel_format(HDC dc) {$/;"	f	language:C++	typeref:typename:void
 _w32_set_pixel_format	code/win_gfx_opengl.cpp	/^_w32_set_pixel_format(HDC dc) {$/;"	f	language:C++	typeref:typename:void	file:
 _w32_set_pixel_format	w32_gfx_opengl.h	/^_w32_set_pixel_format(HDC dc) {$/;"	f	language:C++	typeref:typename:void
+_w32_try_get_wgl_function	code/w32_gfx_opengl.h	/^_w32_try_get_wgl_function(const char* name, HMODULE fallback_module)$/;"	f	language:C++	typeref:typename:void *
 _w32_try_get_wgl_function	code/win_gfx_opengl.cpp	/^_w32_try_get_wgl_function(const char* name, HMODULE fallback_module)$/;"	f	language:C++	typeref:typename:void *	file:
 _w32_try_get_wgl_function	w32_gfx_opengl.h	/^_w32_try_get_wgl_function(const char* name, HMODULE fallback_module)$/;"	f	language:C++	typeref:typename:void *
+_w32_wasapi_notifs_vtable	code/w32_audio_wasapi.h	/^static IMMNotificationClientVtbl _w32_wasapi_notifs_vtable {$/;"	v	language:C++	typeref:typename:IMMNotificationClientVtbl
 _w32_wasapi_notifs_vtable	w32_audio_wasapi.h	/^static IMMNotificationClientVtbl _w32_wasapi_notifs_vtable {$/;"	v	language:C++	typeref:typename:IMMNotificationClientVtbl
+_w32_wasapi_notif_client_AddRef	code/w32_audio_wasapi.h	/^_w32_wasapi_notif_client_AddRef(IMMNotificationClient* mm_notif) {$/;"	f	language:C++	typeref:typename:ULONG
 _w32_wasapi_notif_client_AddRef	w32_audio_wasapi.h	/^_w32_wasapi_notif_client_AddRef(IMMNotificationClient* mm_notif) {$/;"	f	language:C++	typeref:typename:ULONG
+_w32_wasapi_notif_client_OnDefaultDeviceChange	code/w32_audio_wasapi.h	/^_w32_wasapi_notif_client_OnDefaultDeviceChange(IMMNotificationClient* mm_notif,$/;"	f	language:C++	typeref:typename:HRESULT
 _w32_wasapi_notif_client_OnDefaultDeviceChange	w32_audio_wasapi.h	/^_w32_wasapi_notif_client_OnDefaultDeviceChange(IMMNotificationClient* mm_notif,$/;"	f	language:C++	typeref:typename:HRESULT
+_w32_wasapi_notif_client_OnDeviceAdded	code/w32_audio_wasapi.h	/^_w32_wasapi_notif_client_OnDeviceAdded(IMMNotificationClient* client, LPCWSTR pwstr_device_id)$/;"	f	language:C++	typeref:typename:HRESULT
 _w32_wasapi_notif_client_OnDeviceAdded	w32_audio_wasapi.h	/^_w32_wasapi_notif_client_OnDeviceAdded(IMMNotificationClient* client, LPCWSTR pwstr_device_id)$/;"	f	language:C++	typeref:typename:HRESULT
+_w32_wasapi_notif_client_OnDeviceRemoved	code/w32_audio_wasapi.h	/^_w32_wasapi_notif_client_OnDeviceRemoved(IMMNotificationClient* client, LPCWSTR pwstr_device_id)$/;"	f	language:C++	typeref:typename:HRESULT
 _w32_wasapi_notif_client_OnDeviceRemoved	w32_audio_wasapi.h	/^_w32_wasapi_notif_client_OnDeviceRemoved(IMMNotificationClient* client, LPCWSTR pwstr_device_id)$/;"	f	language:C++	typeref:typename:HRESULT
+_w32_wasapi_notif_client_OnDeviceStateChanged	code/w32_audio_wasapi.h	/^_w32_wasapi_notif_client_OnDeviceStateChanged(IMMNotificationClient* client,$/;"	f	language:C++	typeref:typename:HRESULT
 _w32_wasapi_notif_client_OnDeviceStateChanged	w32_audio_wasapi.h	/^_w32_wasapi_notif_client_OnDeviceStateChanged(IMMNotificationClient* client,$/;"	f	language:C++	typeref:typename:HRESULT
+_w32_wasapi_notif_client_OnPropertyValueChanged	code/w32_audio_wasapi.h	/^_w32_wasapi_notif_client_OnPropertyValueChanged(IMMNotificationClient* client,$/;"	f	language:C++	typeref:typename:HRESULT
 _w32_wasapi_notif_client_OnPropertyValueChanged	w32_audio_wasapi.h	/^_w32_wasapi_notif_client_OnPropertyValueChanged(IMMNotificationClient* client,$/;"	f	language:C++	typeref:typename:HRESULT
+_w32_wasapi_notif_client_QueryInterface	code/w32_audio_wasapi.h	/^_w32_wasapi_notif_client_QueryInterface(IMMNotificationClient* mm_notif,$/;"	f	language:C++	typeref:typename:HRESULT
 _w32_wasapi_notif_client_QueryInterface	w32_audio_wasapi.h	/^_w32_wasapi_notif_client_QueryInterface(IMMNotificationClient* mm_notif,$/;"	f	language:C++	typeref:typename:HRESULT
+_w32_wasapi_notif_client_Release	code/w32_audio_wasapi.h	/^_w32_wasapi_notif_client_Release(IMMNotificationClient* mm_notif) {$/;"	f	language:C++	typeref:typename:ULONG
 _w32_wasapi_notif_client_Release	w32_audio_wasapi.h	/^_w32_wasapi_notif_client_Release(IMMNotificationClient* mm_notif) {$/;"	f	language:C++	typeref:typename:ULONG
+_w32_wasapi_release_current_device	code/w32_audio_wasapi.h	/^_w32_wasapi_release_current_device(Win_Wasapi* wasapi) {$/;"	f	language:C++	typeref:typename:void
 _w32_wasapi_release_current_device	w32_audio_wasapi.h	/^_w32_wasapi_release_current_device(Win_Wasapi* wasapi) {$/;"	f	language:C++	typeref:typename:void
+_w32_wasapi_set_default_device_as_current_device	code/w32_audio_wasapi.h	/^_w32_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {$/;"	f	language:C++	typeref:typename:B32
 _w32_wasapi_set_default_device_as_current_device	w32_audio_wasapi.h	/^_w32_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {$/;"	f	language:C++	typeref:typename:B32
 _win_wasapi_notifs_vtable	code/win_audio_wasapi.h	/^static IMMNotificationClientVtbl _win_wasapi_notifs_vtable {$/;"	v	language:C++	typeref:typename:IMMNotificationClientVtbl
 _win_wasapi_notif_client_AddRef	code/win_audio_wasapi.h	/^_win_wasapi_notif_client_AddRef(IMMNotificationClient* mm_notif) {$/;"	f	language:C++	typeref:typename:ULONG

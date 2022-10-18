@@ -161,7 +161,7 @@ lit_gen_light_intersections(Lit_Light* l,
       }
 
            
-      Ray2 light_ray = {};
+      Ray2 light_ray = {0};
       light_ray.pt = l->pos;
       light_ray.dir = v2_rotate(ep - l->pos, offset_angle);
 

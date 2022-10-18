@@ -39,7 +39,7 @@ lit_update_player(Lit_Player* player,
   }
   
   // Held light controls
-  if (player->held_light != nullptr) {
+  if (player->held_light != null) {
     const F32 speed = 5.f;
     if (pf_is_button_down(pf->button_rotate_left)){ 
       player->held_light->dir = 
@@ -97,5 +97,18 @@ lit_update_player(Lit_Player* player,
     player->held_light->pos.y = lerp_f32(player->old_light_pos.y, player->pos.y,  ratio) ;
   }
 
+  // Restrict movement
+  if (player->pos.x > GAME_WIDTH - LIT_PLAYER_RADIUS) {
+    player->pos.x = GAME_WIDTH - LIT_PLAYER_RADIUS;
+  }
+  if (player->pos.x < LIT_PLAYER_RADIUS) {
+    player->pos.x = LIT_PLAYER_RADIUS;
+  }
+  if (player->pos.y > GAME_HEIGHT - LIT_PLAYER_RADIUS) {
+    player->pos.y = GAME_HEIGHT - LIT_PLAYER_RADIUS;
+  }
+  if (player->pos.y < LIT_PLAYER_RADIUS) {
+    player->pos.y = LIT_PLAYER_RADIUS;
+  }
 }
 

@@ -118,7 +118,6 @@ struct Gfx_Command_View {
   F32 width;
   F32 height;
   V2 pos;
-  U32 layers;
 };
 
 struct Gfx_Command_Sprite{
@@ -326,20 +325,19 @@ gfx_cancel_texture_transfer(Gfx_Texture_Payload* entry) {
 
 
 static void 
-gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height, U32 layers) {
+gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height) {
   Gfx_Command_Queue* c = &g->command_queue; 
     
-  auto* data = _gfx_push_command<Gfx_Command_View>(c, GFX_COMMAND_TYPE_VIEW);
+  Gfx_Command_View* data = _gfx_push_command<Gfx_Command_View>(c, GFX_COMMAND_TYPE_VIEW);
   data->pos = pos;
   data->width = width;
   data->height = height;
-  data->layers = layers;
 }
 
 static void
 gfx_push_colors(Gfx* g, RGBA colors) {
   Gfx_Command_Queue* c = &g->command_queue; 
-  auto* data = _gfx_push_command<Gfx_Command_Clear>(c, GFX_COMMAND_TYPE_CLEAR);
+  Gfx_Command_Clear* data = _gfx_push_command<Gfx_Command_Clear>(c, GFX_COMMAND_TYPE_CLEAR);
   data->colors = colors;
 }
 

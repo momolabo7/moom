@@ -7,20 +7,35 @@
 struct Painter {
   Game_Assets* ga;
   Gfx* gfx;
+  F32 zoom_level;
+  F32 canvas_width;
+  F32 canvas_height;
 };
 
 
+
+
 static void
+set_view(Painter* p, F32 canvas_width, F32 canvas_height) {
+  p->canvas_width = canvas_width;
+  p->canvas_height = canvas_height;
+  gfx_push_view(p->gfx, {}, canvas_width, canvas_height);
+}
+
+  static void
 begin_painting(Painter* p, 
                Game_Assets* ga, 
                Gfx* gfx,
                F32 canvas_width,
-               F32 canvas_height,
-               U32 max_layers = 10000) 
+               F32 canvas_height) 
 {
   p->ga = ga;
   p->gfx = gfx;
-  gfx_push_view(gfx, {}, canvas_width, canvas_height, max_layers);
+  set_view(p, canvas_width, canvas_height);
+}
+static void
+set_zoom(Painter* p, F32 zoom_level) {
+  gfx_push_view(p->gfx, {}, p->canvas_width*zoom_level, p->canvas_height*zoom_level);
 }
 
 static void
