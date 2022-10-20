@@ -12,14 +12,8 @@
 
 struct Lit_Edge{
   B32 is_disabled;
-  UMI min_pt_id;
-  UMI max_pt_id;
-  //  Line2 ghost;
-};
-
-struct Lit_Point_List {
-  U32 count;
-  V2 e[256];
+  V2 start_pt;
+  V2 end_pt;
 };
 
 
@@ -70,15 +64,13 @@ circle_to_finite_line_resp(V2 circle_center, F32 circle_radius, V2 line_min, V2 
 #endif
 
 static Line2 
-lit_calc_ghost_edge_line(Lit_Point_List* points, Lit_Edge* e) {
-	Line2 ret = {};
+lit_calc_ghost_edge_line(Lit_Edge* e) {
+	Line2 ret = {0};
   
-  V2 min = *al_at(points, e->min_pt_id);
-  V2 max = *al_at(points, e->max_pt_id);
-  V2 dir = v2_norm(max - min) * 0.0001f;
+  V2 dir = v2_norm(e->end_pt - e->start_pt) * 0.0001f;
   
-  ret.min = max - dir;
-  ret.max = min + dir;
+  ret.min = v2_sub(e->start_pt, dir);
+  ret.max = v2_add(e->end_pt, dir);
   
   return ret;
 }
@@ -99,8 +91,6 @@ typedef struct {
   U32 current_level_id;
   Lit_Player player;
   
-  // TODO: points and edges should really be in a struct?
-  Lit_Point_List points;
   Lit_Edge_List edges;
   Lit_Light_List lights;
   Lit_Sensor_List sensors;
@@ -117,26 +107,14 @@ typedef struct {
 
 
 
-
-static U32
-lit_push_point(Lit* m, F32 x, F32 y) {
-  V2* p = al_append(&m->points);
-  assert(p);
-  p->x = x;
-  p->y = y;
-  return m->points.count-1;
-}
-
 static Lit_Edge*
-lit_push_edge(Lit* m, UMI min_pt_id, UMI max_pt_id) {
+lit_push_edge(Lit* m, F32 min_x, F32 min_y, F32 max_x, F32 max_y) {
   assert(!al_is_full(&m->edges));
-  assert(al_at(&m->points, min_pt_id));
-  assert(al_at(&m->points, max_pt_id));
-  assert(min_pt_id != max_pt_id);
   
   Lit_Edge* edge = al_append(&m->edges);
-  edge->min_pt_id = min_pt_id;
-  edge->max_pt_id = max_pt_id;
+  edge->start_pt = v2(min_x, min_y);
+  edge->end_pt = v2(max_x, max_y);;
+
   edge->is_disabled = false;
 
   return edge;
@@ -207,7 +185,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   al_foreach(light_index, &m->lights)
   {
     Lit_Light* light = al_at(&m->lights, light_index);
-    lit_gen_light_intersections(light, &m->points, &m->edges, &game->frame_arena);
+    lit_gen_light_intersections(light, &m->edges, &game->frame_arena);
   }
   lit_update_sensors(&m->sensors, &m->particles, &m->lights, &m->rng, dt);
 
@@ -263,10 +241,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
     Lit_Edge* edge = al_at(&m->edges, edge_index);
     if (edge->is_disabled) continue;
     
-    Line2 line = { 
-      *al_at(&m->points, edge->min_pt_id),
-      *al_at(&m->points, edge->max_pt_id),
-    };
+    Line2 line = line2(edge->start_pt,edge->end_pt);
 
     paint_line(painter, line, 3.f, 
                hex_to_rgba(0x888888FF));

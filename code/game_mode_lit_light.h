@@ -53,7 +53,6 @@ enum Lit_Light_Type {
 static F32
 lit_get_ray_intersection_time_wrt_edges(Ray2 ray,
                                         Lit_Edge_List* edges,
-                                        Lit_Point_List* points,
                                         B32 clamp_to_ray_max = false)
 {
   F32 lowest_t1 = clamp_to_ray_max ? 1.f : F32_INFINITY();
@@ -66,7 +65,7 @@ lit_get_ray_intersection_time_wrt_edges(Ray2 ray,
 
     Ray2 edge_ray = {};
     
-    Line2 ghost = lit_calc_ghost_edge_line(points, edge);
+    Line2 ghost = lit_calc_ghost_edge_line(edge);
     edge_ray.pt = ghost.min;
     edge_ray.dir = ghost.max - ghost.min; 
     
@@ -109,7 +108,6 @@ lit_push_triangle(Lit_Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
 
 static void
 lit_gen_light_intersections(Lit_Light* l,
-                            Lit_Point_List* points,
                             Lit_Edge_List* edges,
                             Bump_Allocator* tmp_arena)
 {
@@ -145,9 +143,8 @@ lit_gen_light_intersections(Lit_Light* l,
       
       if (edge->is_disabled) continue;
 
-      UMI ep_index = edge->max_pt_id;
-      V2 ep = *al_at(points, ep_index);
-      
+      V2 ep = edge->end_pt;      
+
       // ignore endpoints that are not within the angle 
       F32 angle = v2_angle(l->dir, ep - l->pos);
       if (light_type == Lit_LIGHT_TYPE_WEIRD || 
@@ -170,7 +167,7 @@ lit_gen_light_intersections(Lit_Light* l,
       assert(debug_ray);
       (*debug_ray) = light_ray;
 #endif // LIT_DEBUG_LIGHT
-      F32 t = lit_get_ray_intersection_time_wrt_edges(light_ray, edges, points, offset_index == 0);
+      F32 t = lit_get_ray_intersection_time_wrt_edges(light_ray, edges, offset_index == 0);
       
       Lit_Light_Intersection* intersection = al_append(&l->intersections);
       assert(intersection);
@@ -199,7 +196,7 @@ lit_gen_light_intersections(Lit_Light* l,
       shell_rays[1].dir = v2_rotate(l->dir, -l->half_angle + offset_angle);
         
       for (U32 i = 0; i < 2; ++i) {
-        F32 t = lit_get_ray_intersection_time_wrt_edges(shell_rays[i], edges, points);
+        F32 t = lit_get_ray_intersection_time_wrt_edges(shell_rays[i], edges);
         assert(!al_is_full(&l->intersections));
         Lit_Light_Intersection* intersection = al_append(&l->intersections);
         assert(intersection);
@@ -286,7 +283,6 @@ lit_gen_light_intersections(Lit_Light* l,
 
 static void
 lit_gen_lights(Lit_Light_List* lights, 
-               Lit_Point_List* points, 
                Lit_Edge_List* edges,
                Bump_Allocator* tmp_arena) 
 {
@@ -294,7 +290,7 @@ lit_gen_lights(Lit_Light_List* lights,
   al_foreach(light_index, lights)
   {
     Lit_Light* light = al_at(lights, light_index);
-    lit_gen_light_intersections(light, points, edges, tmp_arena);
+    lit_gen_light_intersections(light, edges, tmp_arena);
   }
 
 }

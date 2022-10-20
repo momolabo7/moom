@@ -1,15 +1,10 @@
 
 static void
 lit_level_0(Lit* m) {
-  lit_push_point(m, 0.f, 0.f);     // 0
-  lit_push_point(m, 1600.f, 0.f);  // 1
-  lit_push_point(m, 1600.f, 900.f);// 2
-  lit_push_point(m, 0.f, 900.f);   // 3
-  
-  lit_push_edge(m, 0, 1);
-  lit_push_edge(m, 1, 2);
-  lit_push_edge(m, 2, 3);
-  lit_push_edge(m, 3, 0);
+  lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
+  lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
+  lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
+  lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
 
   lit_push_sensor(&m->sensors, 1200.f, GAME_HEIGHT * 0.5f, 0x880000FF); 
   lit_push_light(m, 800.f, GAME_HEIGHT * 0.5f, 0x880000FF, 90.f, 0.5f);
@@ -21,6 +16,7 @@ lit_level_0(Lit* m) {
 
 static void
 lit_level_1(Lit* m) {
+#if 0
   lit_push_point(m, 0.f, 0.f);     // 0
   lit_push_point(m, 1600.f, 0.f);  // 1
   lit_push_point(m, 1600.f, 900.f);// 2
@@ -66,6 +62,7 @@ lit_level_1(Lit* m) {
     //lit_push_sensor(&m->sensors, 100.f, 600.f, 0x888800FF); 
   }
 #endif
+#endif
 }
 
 
@@ -81,7 +78,6 @@ lit_load_level(Lit* m, U32 level_id) {
   al_clear(&m->sensors);
   al_clear(&m->lights);
   al_clear(&m->edges);
-  al_clear(&m->points);
   lit_levels[level_id](m);
 }
 

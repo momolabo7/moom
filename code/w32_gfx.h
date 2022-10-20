@@ -10,14 +10,12 @@
 #include "momo.h"
 #include "game_gfx.h"
 
-// win32 gfx api
+// win32 gfx api that must be defined
 static Gfx*
 w32_gfx_load(HWND window, 
              U32 command_queue_size, 
              U32 texture_queue_size,
              Bump_Allocator* allocator);
-
-
 
 static void 
 w32_gfx_unload(Gfx* renderer);
@@ -29,6 +27,10 @@ w32_gfx_begin_frame(Gfx* renderer,
 static void 
 w32_gfx_end_frame(Gfx* renderer);
 
+#if 0
+static void 
+w32_gfx_swap_buffer(Gfx* renderer);
+#endif
 
 
 

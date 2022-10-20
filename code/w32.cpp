@@ -623,18 +623,18 @@ WinMain(HINSTANCE instance,
   
   //-Load Renderer functions
 #if 0
-  W32_Gfx_Functions renderer_functions = {};
-  W32_Loaded_Code renderer_code = {};
-  renderer_code.function_count = array_count(w32_renderer_function_names);
-  renderer_code.function_names = w32_renderer_function_names;
-  renderer_code.module_path = "renderer.dll";
-  renderer_code.functions = (void**)&renderer_functions;
+  W32_Gfx_Functions gfx_functions = {};
+  W32_Loaded_Code gfx_code = {};
+  gfx_code.function_count = array_count(w32_gfx_function_names);
+  gfx_code.function_names = w32_gfx_function_names;
+  gfx_code.module_path = "gfx.dll";
+  gfx_code.functions = (void**)&gfx_functions;
 #if INTERNAL
-  renderer_code.tmp_path = "tmp_renderer.dll";
+  gfx_code.tmp_path = "tmp_gfx.dll";
 #endif // INTERNAL
-  w32_load_code(&renderer_code);
-  if (!renderer_code.is_valid) return 1;
-  defer { w32_unload_code(&renderer_code); };
+  w32_load_code(&gfx_code);
+  if (!gfx_code.is_valid) return 1;
+  defer { w32_unload_code(&gfx_code); };
 #endif  
 
   //-Load Game Functions
@@ -652,18 +652,18 @@ WinMain(HINSTANCE instance,
   defer { w32_unload_code(&game_code); };
   
   
-  //-Init renderer
-  make(Bump_Allocator, renderer_arena);
-  if (!w32_allocate_memory_into_arena(renderer_arena, MB(256))) return false;
-  defer { w32_free_memory_from_arena(renderer_arena); };
+  //-Init gfx
+  make(Bump_Allocator, gfx_arena);
+  if (!w32_allocate_memory_into_arena(gfx_arena, MB(256))) return false;
+  defer { w32_free_memory_from_arena(gfx_arena); };
  
     
-  Gfx* renderer = w32_gfx_load(window, 
+  Gfx* gfx = w32_gfx_load(window, 
                                MB(100),
                                MB(100), 
-                               renderer_arena);
-  if (!renderer) { return 1; }
-  defer { w32_gfx_unload(renderer); };
+                               gfx_arena);
+  if (!gfx) { return 1; }
+  defer { w32_gfx_unload(gfx); };
  
   // Init Audio
   make(Bump_Allocator, audio_arena);
@@ -687,7 +687,7 @@ WinMain(HINSTANCE instance,
   defer { w32_free_memory_from_arena(game_arena); };
   
   w32_setup_platform_functions(pf);
-  pf->gfx = renderer;
+  pf->gfx = gfx;
   pf->profiler = g_profiler;
   pf->game_arena = game_arena;
   pf->audio = audio;
@@ -710,7 +710,7 @@ WinMain(HINSTANCE instance,
     Rect2U render_region = w32_calc_render_region(render_wh.w,
                                                   render_wh.h,
                                                   GAME_ASPECT);
-    w32_gfx_begin_frame(renderer, 
+    w32_gfx_begin_frame(gfx, 
                         render_wh, 
                         render_region);
     
@@ -761,7 +761,7 @@ WinMain(HINSTANCE instance,
 
     // End  frame
     prf_update_entries(g_profiler);
-    w32_gfx_end_frame(renderer);
+    w32_gfx_end_frame(gfx);
     w32_audio_end_frame(audio);
 
     // Frame-rate control
@@ -824,6 +824,7 @@ WinMain(HINSTANCE instance,
             target_secs_per_frame,
             secs_this_frame);
 #endif
+    //w32_gfx_swap_buffer(gfx);
     last_frame_count = end_frame_count;
     
     
