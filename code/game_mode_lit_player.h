@@ -24,7 +24,7 @@ lit_update_player(Lit_Player* player,
                   F32 dt)
 {
   // Get movement direction
-  V2 direction = {};
+  V2 direction = {0};
   if (pf_is_button_down(pf->button_up)) {
     direction.y += 1.f;
   }

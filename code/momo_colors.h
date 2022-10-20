@@ -44,6 +44,7 @@ static HSL  hsl(F32 h, F32 s, F32 l);
 static HSL  rbg_to_hsl(RGB c);
 static RGB  hsl_to_rgb(HSL c);
 
+#define RGBA_WHITE rgba(1.f, 1.f, 1.f, 1.f)
 ////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 static RGBA 
@@ -79,7 +80,7 @@ hsl(F32 h, F32 s, F32 l) {
   return ret;     
 }
 
-HSL 
+static HSL 
 rbg_to_hsl(RGB c) {
   assert(c.r >= 0.f &&
          c.r <= 1.f &&

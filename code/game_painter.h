@@ -19,7 +19,10 @@ static void
 set_view(Painter* p, F32 canvas_width, F32 canvas_height) {
   p->canvas_width = canvas_width;
   p->canvas_height = canvas_height;
-  gfx_push_view(p->gfx, {}, canvas_width, canvas_height);
+  gfx_push_view(p->gfx,
+                0.f, canvas_width, 
+                0.f, canvas_height,
+                0.f, 0.f);
 }
 
   static void
@@ -33,9 +36,11 @@ begin_painting(Painter* p,
   p->gfx = gfx;
   set_view(p, canvas_width, canvas_height);
 }
+
 static void
 set_zoom(Painter* p, F32 zoom_level) {
-  gfx_push_view(p->gfx, {}, p->canvas_width*zoom_level, p->canvas_height*zoom_level);
+  // TODO
+  //gfx_push_view(p->gfx, , p->canvas_width*zoom_level, p->canvas_height*zoom_level);
 }
 
 static void

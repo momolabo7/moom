@@ -1,19 +1,18 @@
 
 static void
 lit_level_0(Lit* m) {
-  lit_push_point(m, {0.f, 0.f});     // 0
-  lit_push_point(m, {1600.f, 0.f});  // 1
-  lit_push_point(m, {1600.f, 900.f});// 2
-  lit_push_point(m, {0.f, 900.f});   // 3
+  lit_push_point(m, 0.f, 0.f);     // 0
+  lit_push_point(m, 1600.f, 0.f);  // 1
+  lit_push_point(m, 1600.f, 900.f);// 2
+  lit_push_point(m, 0.f, 900.f);   // 3
   
   lit_push_edge(m, 0, 1);
   lit_push_edge(m, 1, 2);
   lit_push_edge(m, 2, 3);
   lit_push_edge(m, 3, 0);
 
-  lit_push_sensor(&m->sensors, 100.f, GAME_HEIGHT * 0.5f, 0x880000FF); 
-  
-  lit_push_light(m, 250.f, GAME_HEIGHT * 0.5f, 0x880000FF, 90.f, 0.25f);
+  lit_push_sensor(&m->sensors, 1200.f, GAME_HEIGHT * 0.5f, 0x880000FF); 
+  lit_push_light(m, 800.f, GAME_HEIGHT * 0.5f, 0x880000FF, 90.f, 0.5f);
   
   // initialize player
   Lit_Player* p = &m->player;
@@ -22,10 +21,10 @@ lit_level_0(Lit* m) {
 
 static void
 lit_level_1(Lit* m) {
-  lit_push_point(m, {0.f, 0.f});     // 0
-  lit_push_point(m, {1600.f, 0.f});  // 1
-  lit_push_point(m, {1600.f, 900.f});// 2
-  lit_push_point(m, {0.f, 900.f});   // 3
+  lit_push_point(m, 0.f, 0.f);     // 0
+  lit_push_point(m, 1600.f, 0.f);  // 1
+  lit_push_point(m, 1600.f, 900.f);// 2
+  lit_push_point(m, 0.f, 900.f);   // 3
   
   lit_push_edge(m, 0, 1);
   lit_push_edge(m, 1, 2);
@@ -33,10 +32,10 @@ lit_level_1(Lit* m) {
   lit_push_edge(m, 3, 0);
 
 #if 1 
-  lit_push_point(m, {100.f, 100.f});  //4
-  lit_push_point(m, {1500.f, 100.f}); //5
-  lit_push_point(m, {1500.f, 800.f}); //6
-  lit_push_point(m, {100.f, 800.f});  //7
+  lit_push_point(m, 100.f, 100.f);  //4
+  lit_push_point(m, 1500.f, 100.f); //5
+  lit_push_point(m, 1500.f, 800.f); //6
+  lit_push_point(m, 100.f, 800.f);  //7
   lit_push_edge(m, 4, 5);
   lit_push_edge(m, 5, 6);
   lit_push_edge(m, 6, 7);
@@ -54,17 +53,17 @@ lit_level_1(Lit* m) {
   // Test sensor
 #if 1
   {
-    lit_push_point(m, {400.f, 400.f}); // 8
-    lit_push_point(m, {450.f, 400.f}); // 9 
-    lit_push_point(m, {450.f, 500.f}); // 10
-    lit_push_point(m, {400.f, 500.f}); // 11
+    lit_push_point(m, 400.f, 400.f); // 8
+    lit_push_point(m, 450.f, 400.f); // 9 
+    lit_push_point(m, 450.f, 500.f); // 10
+    lit_push_point(m, 400.f, 500.f); // 11
                                        
     lit_push_edge(m, 8, 9);
     lit_push_edge(m, 9, 10);
     lit_push_edge(m, 10, 11);
     lit_push_edge(m, 11, 8);
 
-    lit_push_sensor(&m->sensors, 100.f, 600.f, 0x888800FF); 
+    //lit_push_sensor(&m->sensors, 100.f, 600.f, 0x888800FF); 
   }
 #endif
 }
@@ -84,7 +83,6 @@ lit_load_level(Lit* m, U32 level_id) {
   al_clear(&m->edges);
   al_clear(&m->points);
   lit_levels[level_id](m);
-  m->is_win_reached = false;
 }
 
 static void

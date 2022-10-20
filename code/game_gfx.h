@@ -115,9 +115,9 @@ struct Gfx_Command_Clear {
 
 
 struct Gfx_Command_View {
-  F32 width;
-  F32 height;
-  V2 pos;
+  F32 pos_x, pos_y;
+  F32 min_x, max_x;
+  F32 min_y, max_y;
 };
 
 struct Gfx_Command_Sprite{
@@ -325,13 +325,16 @@ gfx_cancel_texture_transfer(Gfx_Texture_Payload* entry) {
 
 
 static void 
-gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height) {
+gfx_push_view(Gfx* g, F32 min_x, F32 max_x, F32 min_y, F32 max_y, F32 pos_x, F32 pos_y) {
   Gfx_Command_Queue* c = &g->command_queue; 
     
   Gfx_Command_View* data = _gfx_push_command<Gfx_Command_View>(c, GFX_COMMAND_TYPE_VIEW);
-  data->pos = pos;
-  data->width = width;
-  data->height = height;
+  data->min_x = min_x;
+  data->min_y = min_y;
+  data->max_x = max_x;
+  data->max_y = max_y;
+  data->pos_x = pos_x;
+  data->pos_y = pos_y;
 }
 
 static void

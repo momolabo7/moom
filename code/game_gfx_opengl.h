@@ -1192,10 +1192,10 @@ ogl_end_frame(Opengl* ogl) {
         
         F32 depth = (F32)(ogl->current_layer + 1);
         // TODO: Avoid computation of matrices
-        M44 p = m44_orthographic(0.f, data->width,
-                                 0.f, data->height, 
+        M44 p = m44_orthographic(data->min_x, data->max_x,
+                                 data->min_y, data->max_y, 
                                  0.f, depth);
-        M44 v = m44_translation(-data->pos.x, -data->pos.y);
+        M44 v = m44_translation(-data->pos_x, -data->pos_y);
         
         // TODO: Do we share shaders? Or just have a 'view' shader?
         M44 result = m44_transpose(p*v);

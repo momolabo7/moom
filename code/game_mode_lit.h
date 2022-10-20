@@ -87,14 +87,14 @@ lit_calc_ghost_edge_line(Lit_Point_List* points, Lit_Edge* e) {
 #include "game_mode_lit_sensors.h"
 #include "game_mode_lit_player.h"
 
-enum Lit_State_Type {
+typedef enum {
   LIT_STATE_TYPE_TRANSITION_IN,
   LIT_STATE_TYPE_TRANSITION_OUT,
   LIT_STATE_TYPE_NORMAL,
-};
+} Lit_State_Type;
 
 
-struct Lit {
+typedef struct {
   Lit_State_Type state;
   U32 current_level_id;
   Lit_Player player;
@@ -111,15 +111,19 @@ struct Lit {
   B32 is_win_reached;
   RNG rng;
 
-};
+  U32 tutorial_id;
+
+} Lit;
+
 
 
 
 static U32
-lit_push_point(Lit* m, V2 pt) {
+lit_push_point(Lit* m, F32 x, F32 y) {
   V2* p = al_append(&m->points);
   assert(p);
-  (*p) = pt;
+  p->x = x;
+  p->y = y;
   return m->points.count-1;
 }
 
@@ -142,7 +146,8 @@ static Lit_Light*
 lit_push_light(Lit* m, F32 pos_x, F32 pos_y, U32 color, F32 angle, F32 turn) {
   Lit_Light* light = al_append(&m->lights);
   assert(light);
-  light->pos = pos;
+  light->pos.x = pos_x;
+  light->pos.y = pos_y;
   light->color = color;
 
   light->dir.x = cos_f32(turn*TAU_32);
@@ -166,6 +171,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
     m->rng = rng_create(65535);
     m->state = LIT_STATE_TYPE_TRANSITION_IN;
     m->stage_fade = 1.f;
+    m->tutorial_id = 0;
   }
 
   Lit_Player* player = &m->player;
@@ -206,7 +212,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   lit_update_sensors(&m->sensors, &m->particles, &m->lights, &m->rng, dt);
 
   // win condition
-  if (m->sensors.activated == m->sensors.count) {
+  if (lit_are_all_sensors_activated(&m->sensors)) {
     m->state = LIT_STATE_TYPE_TRANSITION_OUT;
   }
   lit_update_particles(&m->particles, dt);
@@ -236,8 +242,16 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   //////////////////////////////////////////////////////////
   // Rendering
   //
+ 
+  static F32 zoom = 1.f;
+  if (pf_is_button_down(pf->button_up)) {
+    zoom += 0.01f;
+  }
+  if (pf_is_button_down(pf->button_down)) {
+    zoom -= 0.01f;
+  }
+  set_zoom(painter, zoom); 
   
-  set_zoom(painter, 0.9f); 
   paint_set_blend(painter, 
                   GFX_BLEND_TYPE_SRC_ALPHA,
                   GFX_BLEND_TYPE_INV_SRC_ALPHA); 
@@ -371,12 +385,54 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   lit_render_sensors(&m->sensors, painter); 
   lit_render_particles(&m->particles, painter);
 
-  // Draw the overlay for fade in/out
+  // Tutorial
   {
-    RGBA color = {0.f, 0.f, 0.f, m->stage_fade};
-    paint_sprite(painter, SPRITE_BLANK, GAME_MIDPOINT, GAME_DIMENSIONS, color);
+    switch(m->tutorial_id) {
+      case 0:
+        if (pf_is_button_down(pf->button_up) || 
+            pf_is_button_down(pf->button_down) || 
+            pf_is_button_down(pf->button_right) ||
+            pf_is_button_down(pf->button_left)) 
+        {
+          m->tutorial_id++;
+        }
+        break;
+      case 1:
+        if (player->held_light != null) {
+          m->tutorial_id++;
+        }
+        break;
+      case 2:
+        if (lit_are_all_sensors_activated(&m->sensors)) {
+          m->tutorial_id++;
+        }
+        break;
+    }
+
+    switch(m->tutorial_id){
+      case 0: {
+        paint_text(painter, FONT_DEFAULT, str8_from_lit("WASD to move"), RGBA_WHITE, 100.f, 480.f, 32.f);
+      } break;
+      case 1:
+        paint_text(painter, FONT_DEFAULT, str8_from_lit("SPACE to pick up"), RGBA_WHITE, 680.f, 480.f, 32.f);
+        break;
+      case 2:
+        paint_text(painter, FONT_DEFAULT, str8_from_lit("Q/R to rotate light"), RGBA_WHITE, 680.f, 480.f, 32.f);
+        paint_text(painter, FONT_DEFAULT, str8_from_lit("Shine same colored"), RGBA_WHITE, 1100.f, 510.f, 32.f);
+        paint_text(painter, FONT_DEFAULT, str8_from_lit("light on this"), RGBA_WHITE, 1100.f, 480.f, 32.f);
+        break;
+      case 3:
+        break;
+    }
     advance_depth(painter);
   }
 
+  // Draw the overlay for fade in/out
+  {
+    RGBA color = rgba(0.f, 0.f, 0.f, m->stage_fade);
+    paint_sprite(painter, SPRITE_BLANK, GAME_MIDPOINT, GAME_DIMENSIONS, color);
+    advance_depth(painter);
+  }
 }
+
 #endif 

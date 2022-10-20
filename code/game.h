@@ -103,7 +103,7 @@ typedef void (*Game_Mode_Tick)(Game*, Painter*, Platform*);
 static Game_Mode_Tick game_modes[] = {
   splash_tick,
   lit_tick,
-  computer_tick
+  computer_tick,
 };
 
 

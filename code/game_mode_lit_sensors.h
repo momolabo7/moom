@@ -100,6 +100,10 @@ lit_update_sensors(Lit_Sensor_List* sensors,
 
 }
 
+static B32
+lit_are_all_sensors_activated(Lit_Sensor_List* sensors) {
+  return sensors->activated == sensors->count;
+}
 
 static void 
 lit_render_sensors(Lit_Sensor_List* sensors, Painter* painter) {
