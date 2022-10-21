@@ -5,3 +5,4 @@ build/
 *.obj
 *.pdb
 inno/output/
+emsdk/
