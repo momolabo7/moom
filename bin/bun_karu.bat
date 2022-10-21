@@ -1,5 +1,4 @@
 @echo off
-
 SET me=%~dp0
 
 SET RootDir=%me%..
@@ -16,7 +15,7 @@ SET CommonCompilerFlags=-DINTERNAL=1  %CommonCompilerFlags%
 
 pushd %BuildDir%
 
-cl %CommonCompilerFlags% %CodeDir%\sui.cpp
+call cl %CommonCompilerFlags% %CodeDir%\sui.cpp
 
 call sui.exe
 

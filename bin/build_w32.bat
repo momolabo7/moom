@@ -1,6 +1,5 @@
 @echo off
 
-
 SET me=%~dp0
 
 SET RootDir=%me%..
@@ -19,7 +18,7 @@ SET LinkerFlags=user32.lib opengl32.lib gdi32.lib winmm.lib ole32.lib imm32.lib 
 
 pushd %BuildDir%
 
-cl %CompilerFlags% %CodeDir%\w32.cpp -link %LinkerFlags%
+call cl %CompilerFlags% %CodeDir%\w32.cpp -link %LinkerFlags%
 
 rem Copy icon for window ----------------------
 xcopy %RootDir%\icons\window.ico  %BuildDir% /Q /Y
