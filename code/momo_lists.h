@@ -2,6 +2,7 @@
 #define MOMO_LISTS_H
 
 // Array Lists
+#define al_cap(l)           (array_count((l)->e))
 #define al_is_full(l)       ((l)->count == array_count((l)->e))
 #define al_is_empty(l)      ((l)->count == 0)
 #define al_is_valid(l,i)    ((i) < (l)->count) 

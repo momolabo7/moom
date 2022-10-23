@@ -2,25 +2,62 @@
 #define GAME_MODE_LIT_H
 
 #define LIT_DEBUG_LIGHT 0
-#define LIT_DEBUG_EDGES 1
 
 //////////////////////////////////////////////////
 // Lit MODE
 
 #include "game_mode_lit_particles.h"
 
-
-struct Lit_Edge{
+typedef struct {
   B32 is_disabled;
   V2 start_pt;
   V2 end_pt;
-};
+} Lit_Edge;
 
 
-struct Lit_Edge_List {
+typedef struct {
   U32 count;
   Lit_Edge e[256];
-};
+} Lit_Edge_List;
+
+
+#define LIT_TUTORIAL_TEXT_FADE_DURATION 1.f
+typedef enum {
+  LIT_TUTORIAL_TEXT_STATE_INVISIBLE,
+  LIT_TUTORIAL_TEXT_STATE_FADE_IN,
+  LIT_TUTORIAL_TEXT_STATE_VISIBLE,
+  LIT_TUTORIAL_TEXT_STATE_FADE_OUT,
+} Lit_Tutorial_Text_State;
+
+
+typedef B32 (*Lit_Tutorial_Trigger)(struct Lit* m, Platform* pf);
+typedef struct {
+  U32 current_id;
+  U32 count;
+  Lit_Tutorial_Trigger e[10];
+} Lit_Tutorial_Trigger_List;
+
+typedef struct
+{
+  String8 str;
+  F32 alpha;
+  Lit_Tutorial_Text_State state; 
+  F32 pos_x;
+  F32 pos_y;
+  F32 timer;
+
+} Lit_Tutorial_Text;
+
+
+typedef struct {
+  U32 count;
+  Lit_Tutorial_Text e[10];
+  U32 next_id_to_fade_in;
+  U32 next_id_to_fade_out;
+} Lit_Tutorial_Text_List;
+
+
+
 
 #if 0 
 static V2
@@ -86,7 +123,7 @@ typedef enum {
 } Lit_State_Type;
 
 
-typedef struct {
+typedef struct Lit {
   Lit_State_Type state;
   U32 current_level_id;
   Lit_Player player;
@@ -101,10 +138,11 @@ typedef struct {
   B32 is_win_reached;
   RNG rng;
 
-  U32 tutorial_id;
+  // Tutorial system
+  Lit_Tutorial_Text_List tutorial_texts;
+  Lit_Tutorial_Trigger_List tutorial_triggers;
 
 } Lit;
-
 
 
 static Lit_Edge*
@@ -135,7 +173,137 @@ lit_push_light(Lit* m, F32 pos_x, F32 pos_y, U32 color, F32 angle, F32 turn) {
   return light;
 }
 
+static Lit_Tutorial_Text*
+lit_push_tutorial_text(Lit_Tutorial_Text_List* texts, String8 str, F32 x, F32 y) {
+  Lit_Tutorial_Text* text = al_append(texts); 
+  if (text) {
+    text->pos_x = x;
+    text->pos_y = y;
+    text->str = str;
+    text->alpha = 0.f;
+    text->state = LIT_TUTORIAL_TEXT_STATE_INVISIBLE;
+  }
+  return text;
+}
+
+static Lit_Tutorial_Trigger*
+lit_push_tutorial_trigger(Lit_Tutorial_Trigger_List* triggers, Lit_Tutorial_Trigger fn) {
+  Lit_Tutorial_Trigger* trigger = al_append(triggers); 
+  if (trigger) {
+    (*trigger) = fn;
+  }
+  return trigger;
+}
+
+static void
+lit_fade_out_tutorial_text(Lit_Tutorial_Text* text) {
+  text->state = LIT_TUTORIAL_TEXT_STATE_FADE_OUT;
+  text->timer = 0.f;
+}
+
+static void
+lit_fade_in_tutorial_text(Lit_Tutorial_Text* text) {
+  text->state = LIT_TUTORIAL_TEXT_STATE_FADE_IN;
+  text->timer = 0.f;
+}
+static void 
+lit_fade_in_next_tutorial_text(Lit_Tutorial_Text_List* texts) {
+  assert(texts->next_id_to_fade_in != al_cap(texts));
+  lit_fade_in_tutorial_text(al_at(texts, texts->next_id_to_fade_in));
+  texts->next_id_to_fade_in++;
+}
+
+static void 
+lit_fade_out_next_tutorial_text(Lit_Tutorial_Text_List* texts) {
+  assert(texts->next_id_to_fade_out != al_cap(texts));
+  lit_fade_out_tutorial_text(al_at(texts, texts->next_id_to_fade_out));
+  texts->next_id_to_fade_out++;
+ 
+}
+
 #include "game_mode_lit_levels.h"
+
+
+
+
+static void
+lit_draw_edges(Lit_Edge_List* edges, Painter* painter) {
+  al_foreach(edge_index, edges) 
+  {
+    Lit_Edge* edge = al_at(edges, edge_index);
+    if (edge->is_disabled) continue;
+    
+    Line2 line = line2(edge->start_pt,edge->end_pt);
+
+    paint_line(painter, line, 3.f, 
+               hex_to_rgba(0x888888FF));
+  }
+  advance_depth(painter);
+}
+
+static void 
+lit_draw_debug_light_rays(Painter* painter) {
+ 
+#if LIT_DEBUG_LIGHT
+  // Draw the light rays
+  if (player->held_light) {
+    Lit_Light* l = player->held_light;
+    ba_set_revert_point(&game->frame_arena);
+    al_foreach(light_ray_index, &player->held_light->debug_rays)
+    {
+      Ray2 light_ray = player->held_light->debug_rays.e[light_ray_index];
+      
+      Line2 line = line2(player->pos, player->pos + light_ray.dir);
+      
+      paint_line(painter, line, 
+                 1.f, rgba(0x00FFFFFF));
+    }
+    advance_depth(painter);
+   
+    Sort_Entry* sorted_its = ba_push_array(Sort_Entry, &game->frame_arena, l->intersections.count);
+    assert(sorted_its);
+    for (U32 intersection_id = 0; 
+         intersection_id < l->intersections.count; 
+         ++intersection_id) 
+    {
+      V2 intersection = al_at(&l->intersections, intersection_id)->pt;
+      V2 basis_vec = V2{1.f, 0.f} ;
+      V2 intersection_vec = intersection - l->pos;
+      F32 key = angle_between(basis_vec, intersection_vec);
+      if (intersection_vec.y < 0.f) key = PI_32*2.f - key;
+
+      sorted_its[intersection_id].index = intersection_id;
+      sorted_its[intersection_id].key = key; 
+    }
+    quicksort(sorted_its, (U32)l->intersections.count);
+
+    for (U32 its_id = 0;
+         its_id < l->intersections.count;
+         ++its_id) 
+    {
+      make_string_builder(sb, 128);
+      
+      clear(sb);
+      
+      Line2 line = {0};
+      line.min = player->pos;
+      line.max = al_at(&l->intersections, sorted_its[its_id].index)->pt;
+      
+      sb8_push_fmt(sb, str8_from_lit("[%u]"), its_id);
+      paint_text(painter,
+                 FONT_DEFAULT, 
+                 sb->str,
+                 rgba(0xFF0000FF),
+                 line.max.x,
+                 line.max.y + 10.f,
+                 12.f);
+      paint_line(painter, line, 1.f, rgba(0xFF0000FF));
+      
+    }
+    advance_depth(painter);
+  }
+#endif
+}
 
 
 
@@ -149,7 +317,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
     m->rng = rng_create(65535);
     m->state = LIT_STATE_TYPE_TRANSITION_IN;
     m->stage_fade = 1.f;
-    m->tutorial_id = 0;
+
   }
 
   Lit_Player* player = &m->player;
@@ -165,6 +333,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
       m->state = LIT_STATE_TYPE_NORMAL;
     }
   }
+
   else if(m->state == LIT_STATE_TYPE_TRANSITION_OUT) {
     if (m->stage_fade <= 1.f) {
       m->stage_fade += dt;
@@ -216,142 +385,26 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
 
   player->pos = v2_add(player->pos, deepest_penetration);
 #endif
-
   //////////////////////////////////////////////////////////
   // Rendering
   //
  
-  static F32 zoom = 1.f;
-  if (pf_is_button_down(pf->button_up)) {
-    zoom += 0.01f;
-  }
-  if (pf_is_button_down(pf->button_down)) {
-    zoom -= 0.01f;
-  }
-  set_zoom(painter, zoom); 
-  
+   
   paint_set_blend(painter, 
                   GFX_BLEND_TYPE_SRC_ALPHA,
                   GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
-#if LIT_DEBUG_EDGES 
-  // Draw edges
-  al_foreach(edge_index, &m->edges) 
-  {
-    Lit_Edge* edge = al_at(&m->edges, edge_index);
-    if (edge->is_disabled) continue;
-    
-    Line2 line = line2(edge->start_pt,edge->end_pt);
+  lit_draw_edges(&m->edges, painter); 
 
-    paint_line(painter, line, 3.f, 
-               hex_to_rgba(0x888888FF));
-  }
-  advance_depth(painter);
-#endif 
+
+  lit_draw_debug_light_rays(painter);
+
  
-
-
-#if LIT_DEBUG_LIGHT
-  // Draw the light rays
-  if (player->held_light) {
-    Lit_Light* l = player->held_light;
-    ba_set_revert_point(&game->frame_arena);
-    al_foreach(light_ray_index, &player->held_light->debug_rays)
-    {
-      Ray2 light_ray = player->held_light->debug_rays.e[light_ray_index];
-      
-      Line2 line = {};
-      line.min = player->pos;
-      line.max = player->pos + light_ray.dir;
-      
-      paint_line(painter, line, 
-                 1.f, rgba(0x00FFFFFF));
-    }
-    advance_depth(painter);
-   
-    Sort_Entry* sorted_its = ba_push_array(Sort_Entry, &game->frame_arena, l->intersections.count);
-    assert(sorted_its);
-    for (U32 intersection_id = 0; 
-         intersection_id < l->intersections.count; 
-         ++intersection_id) 
-    {
-      V2 intersection = al_at(&l->intersections, intersection_id)->pt;
-      V2 basis_vec = V2{1.f, 0.f} ;
-      V2 intersection_vec = intersection - l->pos;
-      F32 key = angle_between(basis_vec, intersection_vec);
-      if (intersection_vec.y < 0.f) key = PI_32*2.f - key;
-
-      sorted_its[intersection_id].index = intersection_id;
-      sorted_its[intersection_id].key = key; 
-    }
-    quicksort(sorted_its, (U32)l->intersections.count);
-
-    for (U32 its_id = 0;
-         its_id < l->intersections.count;
-         ++its_id) 
-    {
-      make_string_builder(sb, 128);
-      
-      clear(sb);
-      
-      Line2 line = {};
-      line.min = player->pos;
-      line.max = al_at(&l->intersections, sorted_its[its_id].index)->pt;
-      
-      sb8_push_fmt(sb, str8_from_lit("[%u]"), its_id);
-      paint_text(painter,
-                 FONT_DEFAULT, 
-                 sb->str,
-                 rgba(0xFF0000FF),
-                 line.max.x,
-                 line.max.y + 10.f,
-                 12.f);
-      paint_line(painter, line, 1.f, rgba(0xFF0000FF));
-      
-    }
-    advance_depth(painter);
-  }
-#endif // LIT_DEBUG_LIGHT
-  
-  // Draw player
-  paint_sprite(painter, 
-               SPRITE_CIRCLE, 
-               player->pos, 
-               v2(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-  advance_depth(painter);
-  
+  lit_draw_player(player, painter);
  
-  // Draw lights
-  al_foreach(light_index, &m->lights)
-  {
-    Lit_Light* light = al_at(&m->lights, light_index);
-    paint_sprite(painter,
-                 SPRITE_CIRCLE, 
-                 light->pos,
-                 {16.f, 16.f},
-                 {0.8f, 0.8f, 0.8f, 1.f});
-    advance_depth(painter);
-  }
+  lit_draw_lights(&m->lights, painter);
   
-  paint_set_blend(painter, 
-                  GFX_BLEND_TYPE_SRC_ALPHA,
-                  GFX_BLEND_TYPE_ONE); 
   
-  al_foreach(light_index, &m->lights)
-  {
-    Lit_Light* l = al_at(&m->lights, light_index);
-    al_foreach(tri_index, &l->triangles)
-    {
-      Tri2* lt = al_at(&l->triangles, tri_index);
-      paint_filled_triangle(painter, 
-                            hex_to_rgba(l->color),
-                            lt->pts[0],
-                            lt->pts[1],
-                            lt->pts[2]);
-    } 
-    advance_depth(painter);
-  }
- 
 
   paint_set_blend(painter, 
                  GFX_BLEND_TYPE_SRC_ALPHA,
@@ -360,46 +413,72 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   lit_render_sensors(&m->sensors, painter); 
   lit_render_particles(&m->particles, painter);
 
-  // Tutorial
-  {
-    switch(m->tutorial_id) {
-      case 0:
-        if (pf_is_button_down(pf->button_up) || 
-            pf_is_button_down(pf->button_down) || 
-            pf_is_button_down(pf->button_right) ||
-            pf_is_button_down(pf->button_left)) 
-        {
-          m->tutorial_id++;
-        }
-        break;
-      case 1:
-        if (player->held_light != null) {
-          m->tutorial_id++;
-        }
-        break;
-      case 2:
-        if (lit_are_all_sensors_activated(&m->sensors)) {
-          m->tutorial_id++;
-        }
-        break;
-    }
 
-    switch(m->tutorial_id){
-      case 0: {
-        paint_text(painter, FONT_DEFAULT, str8_from_lit("WASD to move"), RGBA_WHITE, 100.f, 480.f, 32.f);
+  // Update tutorial texts
+  al_foreach(tutorial_text_id, &m->tutorial_texts)
+  {
+    Lit_Tutorial_Text* text = al_at(&m->tutorial_texts, tutorial_text_id);
+    switch(text->state){
+      case LIT_TUTORIAL_TEXT_STATE_FADE_IN: {
+        text->timer += dt;
+        if (text->timer > LIT_TUTORIAL_TEXT_FADE_DURATION) {
+          text->alpha = 1.f;
+          text->state = LIT_TUTORIAL_TEXT_STATE_VISIBLE;
+        }
+        else {
+          text->alpha = ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION);
+        }
+         
       } break;
-      case 1:
-        paint_text(painter, FONT_DEFAULT, str8_from_lit("SPACE to pick up"), RGBA_WHITE, 680.f, 480.f, 32.f);
-        break;
-      case 2:
-        paint_text(painter, FONT_DEFAULT, str8_from_lit("Q/R to rotate light"), RGBA_WHITE, 680.f, 480.f, 32.f);
-        paint_text(painter, FONT_DEFAULT, str8_from_lit("Shine same colored"), RGBA_WHITE, 1100.f, 510.f, 32.f);
-        paint_text(painter, FONT_DEFAULT, str8_from_lit("light on this"), RGBA_WHITE, 1100.f, 480.f, 32.f);
-        break;
-      case 3:
-        break;
+      case LIT_TUTORIAL_TEXT_STATE_FADE_OUT: {
+        text->timer += dt;
+        if (text->timer > LIT_TUTORIAL_TEXT_FADE_DURATION) {
+          text->alpha = 0.f;
+          text->state = LIT_TUTORIAL_TEXT_STATE_INVISIBLE;
+        }
+        else {
+          text->alpha = 1.f - ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION);
+        }
+      } break;
+      default: {
+        // Do nothing
+      }
     }
-    advance_depth(painter);
+  }
+
+
+  if (!al_is_empty(&m->tutorial_triggers))
+  {
+    Lit_Tutorial_Trigger* trigger = al_at(&m->tutorial_triggers, m->tutorial_triggers.current_id);
+    if(trigger && (*trigger)(m, pf)) {
+      m->tutorial_triggers.current_id++;
+    }
+  }
+
+  // Render all the tutorial texts
+  al_foreach(tutorial_text_id, &m->tutorial_texts)
+  {
+    Lit_Tutorial_Text* text = al_at(&m->tutorial_texts, tutorial_text_id);
+    switch(text->state) {
+      case LIT_TUTORIAL_TEXT_STATE_VISIBLE: {
+        paint_text(painter, FONT_DEFAULT, text->str, RGBA_WHITE, text->pos_x, text->pos_y, 32.f);
+        advance_depth(painter);
+      } break;
+      case LIT_TUTORIAL_TEXT_STATE_FADE_IN: {
+        F32 a = ease_out_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
+        F32 y = text->pos_y + (1.f-a) * 32.f;
+        RGBA color = rgba(1.f, 1.f, 1.f, text->alpha);
+        paint_text(painter, FONT_DEFAULT, text->str, color, text->pos_x, y, 32.f);
+        advance_depth(painter);
+      } break;
+      case LIT_TUTORIAL_TEXT_STATE_FADE_OUT: {
+        F32 a = ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
+        F32 y = text->pos_y + a * 32.f;
+        RGBA color = rgba(1.f, 1.f, 1.f, text->alpha);
+        paint_text(painter, FONT_DEFAULT, text->str, color, text->pos_x, y, 32.f);
+        advance_depth(painter);
+      } break;
+    }
   }
 
   // Draw the overlay for fade in/out

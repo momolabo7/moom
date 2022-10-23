@@ -295,3 +295,39 @@ lit_gen_lights(Lit_Light_List* lights,
 
 }
 
+static void
+lit_draw_lights(Lit_Light_List* lights, Painter* painter) {
+  // Emitters
+  al_foreach(light_index, lights)
+  {
+    Lit_Light* light = al_at(lights, light_index);
+    paint_sprite(painter,
+                 SPRITE_CIRCLE, 
+                 light->pos,
+                 {16.f, 16.f},
+                 {0.8f, 0.8f, 0.8f, 1.f});
+    advance_depth(painter);
+  }
+ 
+  // Lights
+  paint_set_blend(painter, 
+                  GFX_BLEND_TYPE_SRC_ALPHA,
+                  GFX_BLEND_TYPE_ONE); 
+  
+  al_foreach(light_index, lights)
+  {
+    Lit_Light* l = al_at(lights, light_index);
+    al_foreach(tri_index, &l->triangles)
+    {
+      Tri2* lt = al_at(&l->triangles, tri_index);
+      paint_filled_triangle(painter, 
+                            hex_to_rgba(l->color),
+                            lt->pts[0],
+                            lt->pts[1],
+                            lt->pts[2]);
+    } 
+    advance_depth(painter);
+  }
+
+}
+

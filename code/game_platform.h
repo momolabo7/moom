@@ -17,23 +17,23 @@
 #define GAME_ASPECT (GAME_WIDTH/GAME_HEIGHT)
 
 //~Platform File API
-enum Platform_File_Path {
+typedef enum Platform_File_Path {
   PLATFORM_FILE_PATH_EXE,
   PLATFORM_FILE_PATH_USER,
   PLATFORM_FILE_PATH_CACHE,
   
-};
+}Platform_File_Path;
 
 // Maybe for 'overwrite' or creating a new file, we 
 // use a compl
-enum Platform_File_Access {
+typedef enum Platform_File_Access {
   PLATFORM_FILE_ACCESS_READ,
   PLATFORM_FILE_ACCESS_OVERWRITE,
-};
+}Platform_File_Access;
 
-struct Platform_File {
+typedef struct Platform_File {
   void* platform_data; // pointer for platform's usage
-};
+}Platform_File;
 
 typedef B32  
 Platform_Open_File(Platform_File* file,
@@ -62,7 +62,7 @@ typedef void  Platform_Debug_Log(const char* fmt, ...);
 typedef U64   Platform_Get_Performance_Counter();
 
 
-struct Platform_API {
+typedef struct Platform_API {
   Platform_Open_File* open_file;
   Platform_Read_File* read_file;
   Platform_Write_File* write_file;
@@ -71,7 +71,7 @@ struct Platform_API {
   Platform_Complete_All_Tasks* complete_all_tasks;
   Platform_Get_Performance_Counter* get_performance_counter;
   Platform_Debug_Log* debug_log;
-};
+}Platform_API;
 
 
 //~Input API
@@ -83,23 +83,23 @@ struct Platform_API {
 //~ NOTE(Momo): Game Memory API
 // For things that don't change from the platform after setting it once
 //~ Audio API
-struct Platform_Audio {
+typedef struct Platform_Audio {
     S16* sample_buffer;
     U32 sample_count;
     U32 channels; //TODO: remove this?
-};
+}Platform_Audio;
 
 
-struct Platform_Button {
+typedef struct Platform_Button {
   B32 before;
   B32 now; 
-};
+}Platform_Button;
 
 struct Gfx;
 struct Profiler;
 
 // These could really all be functions on the platform side
-struct Platform {
+typedef struct Platform {
   Bump_Allocator* game_arena; // Require 32MB
   //Platform_API platform_api;
   
@@ -157,7 +157,7 @@ struct Platform {
 
   // For game to use
   void* game;
-};
+}Platform;
 
 
 typedef void Game_Update_And_Render(Platform* pf);

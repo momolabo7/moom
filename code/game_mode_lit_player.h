@@ -1,5 +1,6 @@
 #define LIT_PLAYER_RADIUS 16.f
 #define LIT_PLAYER_LIGHT_RETRIEVE_DURATION 0.05f
+#define LIT_PLAYER_BREATH_DURATION 2.f
 
 struct Lit_Player {
   V2 pos;
@@ -50,6 +51,7 @@ lit_update_player(Lit_Player* player,
         v2_rotate(player->held_light->dir, -speed * dt);
     }
   }
+
 
   // Use button
   if (pf_is_button_poked(pf->button_use)) {
@@ -112,3 +114,12 @@ lit_update_player(Lit_Player* player,
   }
 }
 
+static void
+lit_draw_player(Lit_Player* player, Painter* painter){
+  paint_sprite(painter, 
+               SPRITE_CIRCLE, 
+               player->pos, 
+               v2(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
+  advance_depth(painter);
+
+}
