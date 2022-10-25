@@ -544,6 +544,7 @@ entries	D:/work/git/txt/code/game_inspector.h	/^  Inspector_Entry_List entries;$
 entries	D:/work/git/txt/code/game_profiler.h	/^  Profiler_Entry entries[PROFILER_MAX_ENTRIES];$/;"	m	language:C++	struct:Profiler	typeref:typename:Profiler_Entry[]
 entries	D:/work/git/txt/code/w32.cpp	/^  W32_Work entries[256];$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:W32_Work[256]	file:
 entry_count	D:/work/git/txt/code/game_gfx.h	/^	UMI entry_count;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:UMI
+entry_count	D:/work/git/txt/code/game_profiler.h	/^  U32 entry_count;$/;"	m	language:C++	struct:Profiler	typeref:typename:U32
 entry_pos	D:/work/git/txt/code/game_gfx.h	/^	UMI entry_pos;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:UMI
 entry_start	D:/work/git/txt/code/game_gfx.h	/^	UMI entry_start;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:UMI
 exported	D:/work/git/txt/code/momo_common.h	/^# define exported /;"	d	language:C++
@@ -585,6 +586,7 @@ first_atlas_font_id	D:/work/git/txt/code/sui_pack.h	/^  U32 first_atlas_font_id;
 first_atlas_sprite_id	D:/work/git/txt/code/sui_pack.h	/^  U32 first_atlas_sprite_id;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 first_payload_index	D:/work/git/txt/code/game_gfx.h	/^  UMI first_payload_index;$/;"	m	language:C++	struct:Gfx_Texture_Queue	typeref:typename:UMI
 flags	D:/work/git/txt/code/momo_ttf.h	/^  U8 flags;$/;"	m	language:C++	struct:__anon68e2795f0308	typeref:typename:U8
+flag_for_reset	D:/work/git/txt/code/game_profiler.h	/^  B32 flag_for_reset;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:B32
 floor_f32	D:/work/git/txt/code/momo_intrinsics.h	/^static F32 floor_f32(F32 value) {$/;"	f	language:C++	typeref:typename:F32
 floor_f32	D:/work/git/txt/code/momo_intrinsics.h	/^static F32 floor_f32(F32 value);$/;"	p	language:C++	typeref:typename:F32
 floor_f64	D:/work/git/txt/code/momo_intrinsics.h	/^static F64 floor_f64(F64 value);$/;"	p	language:C++	typeref:typename:F64
@@ -663,7 +665,11 @@ GAME_PLATFORM_H	D:/work/git/txt/code/game_platform.h	/^#define GAME_PLATFORM_H$/
 game_profiler_block	D:/work/git/txt/code/game.h	/^#define game_profiler_block(/;"	d	language:C++
 GAME_PROFILER_H	D:/work/git/txt/code/game_profiler.h	/^#define GAME_PROFILER_H$/;"	d	language:C++
 GAME_PROFILER_RENDERING_H	D:/work/git/txt/code/game_profiler_rendering.h	/^#define GAME_PROFILER_RENDERING_H$/;"	d	language:C++
+game_profile_begin	D:/work/git/txt/code/game.h	/^#define game_profile_begin(/;"	d	language:C++
+game_profile_begin	D:/work/git/txt/code/game.h	/^#define game_profile_begin(/;"	d	language:C++
 game_profile_block	D:/work/git/txt/code/game.h	/^#define game_profile_block(/;"	d	language:C++
+game_profile_end	D:/work/git/txt/code/game.h	/^#define game_profile_end(/;"	d	language:C++
+game_profile_end	D:/work/git/txt/code/game.h	/^#define game_profile_end(/;"	d	language:C++
 GAME_RENDERER_H	D:/work/git/txt/code/game_gfx.h	/^#define GAME_RENDERER_H$/;"	d	language:C++
 GAME_SHOW_DEBUG_CONSOLE	D:/work/git/txt/code/game.h	/^  GAME_SHOW_DEBUG_CONSOLE,$/;"	e	language:C++	enum:Game_Show_Debug_Type
 GAME_SHOW_DEBUG_INSPECTOR	D:/work/git/txt/code/game.h	/^  GAME_SHOW_DEBUG_INSPECTOR,$/;"	e	language:C++	enum:Game_Show_Debug_Type
@@ -1240,7 +1246,6 @@ MOMO_TTF_H	D:/work/git/txt/code/momo_ttf.h	/^#define MOMO_TTF_H$/;"	d	language:C
 MOMO_VECTOR_H	D:/work/git/txt/code/momo_vectors.h	/^#define MOMO_VECTOR_H$/;"	d	language:C++
 MOMO_WAV_H	D:/work/git/txt/code/momo_wav.h	/^#define MOMO_WAV_H$/;"	d	language:C++
 name	D:/work/git/txt/code/game_inspector.h	/^  String8 name;$/;"	m	language:C++	struct:Inspector_Entry	typeref:typename:String8
-next	D:/work/git/txt/code/game_profiler.h	/^  Profiler_Entry* next;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:Profiler_Entry *
 next	D:/work/git/txt/code/momo_json.h	/^  struct _JSON_Array_Node* next;$/;"	m	language:C++	struct:_JSON_Array_Node	typeref:struct:_JSON_Array_Node *
 next_entry_to_read	D:/work/git/txt/code/w32.cpp	/^  U32 volatile next_entry_to_read;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 next_entry_to_write	D:/work/git/txt/code/w32.cpp	/^  U32 volatile next_entry_to_write;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
@@ -1522,7 +1527,9 @@ pow_f32	D:/work/git/txt/code/momo_intrinsics.h	/^pow_f32(F32 b, F32 e){$/;"	f	la
 pow_F32	D:/work/git/txt/code/momo_intrinsics.h	/^static F32 pow_F32(F32 v, F32 e);$/;"	p	language:C++	typeref:typename:F32
 pow_f64	D:/work/git/txt/code/momo_intrinsics.h	/^pow_f64(F64 b, F64 e){$/;"	f	language:C++	typeref:typename:F64
 pow_f64	D:/work/git/txt/code/momo_intrinsics.h	/^static F64 pow_f64(F64 , F64 e);$/;"	p	language:C++	typeref:typename:F64
+prf_begin_block	D:/work/git/txt/code/game_profiler.h	/^#define prf_begin_block(/;"	d	language:C++
 prf_block	D:/work/git/txt/code/game_profiler.h	/^#define prf_block(/;"	d	language:C++
+prf_end_block	D:/work/git/txt/code/game_profiler.h	/^#define prf_end_block(/;"	d	language:C++
 prf_init	D:/work/git/txt/code/game_profiler.h	/^prf_init(Profiler* p, Profiler_Get_Performance_Counter get_performance_counter_fp) {$/;"	f	language:C++	typeref:typename:void
 prf_init	D:/work/git/txt/code/game_profiler.h	/^static void prf_init(Profiler* p, Profiler_Get_Performance_Counter get_performance_counter_fp);$/;"	p	language:C++	typeref:typename:void
 prf_reset	D:/work/git/txt/code/game_profiler.h	/^prf_reset(Profiler* p) {$/;"	f	language:C++	typeref:typename:void
@@ -1530,6 +1537,7 @@ prf_reset	D:/work/git/txt/code/game_profiler.h	/^static void prf_reset(Profiler*
 prf_update_entries	D:/work/git/txt/code/game_profiler.h	/^prf_update_entries(Profiler* p) {$/;"	f	language:C++	typeref:typename:void
 prf_update_entries	D:/work/git/txt/code/game_profiler.h	/^static void prf_update_entries(Profiler* p);$/;"	p	language:C++	typeref:typename:void
 process_input_for_editor_toolbar	D:/work/git/txt/code/game_mode_level_editor.cpp	/^process_input_for_editor_toolbar(Editor* e, Game_Input* input) {$/;"	f	language:C++	typeref:typename:B32	file:
+profiler	D:/work/git/txt/code/game.h	/^  Profiler profiler;$/;"	m	language:C++	struct:Game	typeref:typename:Profiler
 profiler	D:/work/git/txt/code/game_platform.h	/^  Profiler* profiler; $/;"	m	language:C++	struct:Platform	typeref:typename:Profiler *
 Profiler	D:/work/git/txt/code/game_profiler.h	/^struct Profiler {$/;"	s	language:C++
 Profiler_Codegen	D:/work/git/txt/code/meta.cpp	/^struct Profiler_Codegen {$/;"	s	language:C++	file:

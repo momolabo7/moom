@@ -10,7 +10,8 @@ game_update_and_render(Platform* pf)
   g_platform = pf;
   g_profiler = pf->profiler;
 #endif
-  game_profile_block("game");
+
+  game_profile_block(GAME);
   // Initialization
   if (!pf->game || pf->reloaded) {
     ba_clear(pf->game_arena);
@@ -78,6 +79,8 @@ game_update_and_render(Platform* pf)
     game->show_debug_type = 
       (Game_Show_Debug_Type)((game->show_debug_type + 1)%GAME_SHOW_DEBUG_MAX);
   }
+
+  game_profile_begin(DEBUG);
   switch (game->show_debug_type) {
     case GAME_SHOW_DEBUG_CONSOLE: {
       update_and_render_console(console, painter, pf); 
@@ -90,7 +93,7 @@ game_update_and_render(Platform* pf)
     }break;
     default: {}
   }
-
+  game_profile_end(DEBUG);
 #if 0
   static F32 sine = 0.f;
   Platform_Audio* audio = pf->audio;

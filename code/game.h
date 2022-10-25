@@ -14,10 +14,14 @@
 Profiler* g_profiler;
 Platform* g_platform;
 #define game_log(...) g_platform->debug_log(__VA_ARGS__)
-#define game_profile_block(...) prf_block(g_profiler, __VA_ARGS__)
+#define game_profile_block(name) prf_block(g_profiler, name)
+#define game_profile_begin(name) prf_begin_block(g_profiler, name)
+#define game_profile_end(name) prf_end_block(g_profiler, name)
 #else
 #define game_log(...)
 #define game_profiler_block(...)
+#define game_profile_begin(...) 
+#define game_profile_end(...) 
 #endif 
 
 
@@ -71,6 +75,7 @@ struct Game {
   Game_Assets game_assets;
   Console console;
   Inspector inspector;
+  Profiler profiler;
 };
 
 static void 

@@ -115,7 +115,7 @@ w32_complete_all_tasks_entries(W32_Work_Queue* wq) {
 
 static DWORD WINAPI 
 w32_worker_func(LPVOID ctx) {
-  auto* wq = (W32_Work_Queue*)ctx;
+  W32_Work_Queue* wq = (W32_Work_Queue*)ctx;
   
   while(true) {
     if (w32_do_next_work_entry(wq)){
@@ -159,7 +159,7 @@ w32_add_task_entry(W32_Work_Queue* wq, void (*callback)(void* ctx), void *data) 
   U32 new_next_entry_to_write = (old_next_entry_to_write + 1) % array_count(wq->entries);
   assert(wq->next_entry_to_read != new_next_entry_to_write);  
   
-  auto* entry = wq->entries + old_next_entry_to_write;
+  W32_Work* entry = wq->entries + old_next_entry_to_write;
   entry->callback = callback;
   entry->data = data;
   ++wq->completion_goal;
@@ -324,7 +324,7 @@ w32_open_file(Platform_File* file,
 
 static void
 w32_close_file(Platform_File* file) {
-  auto* w32_file = (W32_File*)file->platform_data;
+  W32_File* w32_file = (W32_File*)file->platform_data;
   CloseHandle(w32_file->handle);
   
   w32_return_file(&g_w32_state.file_cabinet, w32_file);
@@ -334,7 +334,7 @@ w32_close_file(Platform_File* file) {
 static B32
 w32_read_file(Platform_File* file, UMI size, UMI offset, void* dest) 
 { 
-  auto* w32_file = (W32_File*)file->platform_data;
+  W32_File* w32_file = (W32_File*)file->platform_data;
   
   // Reading the file
   OVERLAPPED overlapped = {};
@@ -356,7 +356,7 @@ w32_read_file(Platform_File* file, UMI size, UMI offset, void* dest)
 static B32 
 w32_write_file(Platform_File* file, UMI size, UMI offset, void* src)
 {
-  auto* w32_file = (W32_File*)file->platform_data;
+  W32_File* w32_file = (W32_File*)file->platform_data;
   
   OVERLAPPED overlapped = {};
   overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
@@ -700,10 +700,19 @@ WinMain(HINSTANCE instance,
   LARGE_INTEGER performance_frequency;
   QueryPerformanceFrequency(&performance_frequency);
   LARGE_INTEGER last_frame_count = w32_get_performance_counter();
-  
+ 
   while (g_w32_state.is_running) {
+  
+#if 1
+    // Hot reload game.dll functions
+    pf->reloaded = w32_reload_code_if_outdated(&game_code);
+    if (pf->reloaded) {
+      prf_reset(g_profiler);
+    }
+#endif
+   
     w32_profile_block("game loop");
-    
+
     // Begin frame
     w32_audio_begin_frame(audio);
     V2U render_wh = w32_get_client_dims(window);
@@ -713,15 +722,7 @@ WinMain(HINSTANCE instance,
     w32_gfx_begin_frame(gfx, 
                         render_wh, 
                         render_region);
-    
-#if INTERNAL
-    //-Hot reload game.dll functions
-    pf->reloaded = w32_reload_code_if_outdated(&game_code);
-    if (pf->reloaded) {
-      prf_reset(g_profiler);
-    }
-#endif
-    
+       
     //-Process messages and input
     pf->seconds_since_last_frame = target_secs_per_frame;
     pf_update_input(pf);

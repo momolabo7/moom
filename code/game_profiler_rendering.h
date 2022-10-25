@@ -52,9 +52,10 @@ update_and_render_profiler(Profiler* pf, Painter* p) {
   const F32 font_height = 30.f;
   U32 line_num = 1;
   
-  Profiler_Entry* itr = pf->first;
-  while(itr != 0)
+  for(U32 entry_id = 0; entry_id < pf->entry_count; ++entry_id)
   {
+    Profiler_Entry* itr = pf->entries + entry_id;
+
     Stat cycles;
     Stat hits;
     Stat cycles_per_hit;
@@ -130,7 +131,6 @@ update_and_render_profiler(Profiler* pf, Painter* p) {
     advance_depth(p);
     ++line_num;
     
-    itr = itr->next;
   }
 }
 #endif //GAME_PROFILER_RENDERING_H
