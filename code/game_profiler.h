@@ -8,12 +8,12 @@
 #define PROFILER_MAX_SNAPSHOTS 120
 #define PROFILER_MAX_ENTRIES 256
 
-struct Profiler_Snapshot {
+typedef struct Profiler_Snapshot {
   U32 hits;
   U32 cycles;
-};
+} Profiler_Snapshot;
 
-struct Profiler_Entry {
+typedef struct Profiler_Entry {
   U32 line;
   const char* filename;
   const char* block_name;
@@ -28,16 +28,17 @@ struct Profiler_Entry {
   U32 start_cycles;
   U32 start_hits;
   B32 flag_for_reset;
-};
+} Profiler_Entry;
+
 
 typedef U64 Profiler_Get_Performance_Counter(void);
 
-struct Profiler {
+typedef struct Profiler {
   Profiler_Get_Performance_Counter* get_performance_counter;
   U32 entry_count;
   Profiler_Entry entries[PROFILER_MAX_ENTRIES];
   U32 snapshot_index;
-};
+} Profiler;
 
 #define prf_begin_block(p, name) \
   static Profiler_Entry* _prf_block_##name = 0; \
