@@ -1057,7 +1057,7 @@ Lit	D:/work/git/txt/code/game_mode_lit.h	/^} Lit;$/;"	t	language:C++	typeref:str
 lit_are_all_sensors_activated	D:/work/git/txt/code/game_mode_lit_sensors.h	/^lit_are_all_sensors_activated(Lit_Sensor_List* sensors) {$/;"	f	language:C++	typeref:typename:B32
 lit_calc_ghost_edge_line	D:/work/git/txt/code/game_mode_lit.h	/^lit_calc_ghost_edge_line(Lit_Edge* e) {$/;"	f	language:C++	typeref:typename:Line2
 LIT_DEBUG_LIGHT	D:/work/git/txt/code/game_mode_lit.h	/^#define LIT_DEBUG_LIGHT /;"	d	language:C++
-lit_draw_debug_light_rays	D:/work/git/txt/code/game_mode_lit.h	/^lit_draw_debug_light_rays(Painter* painter) {$/;"	f	language:C++	typeref:typename:void
+lit_draw_debug_light_rays	D:/work/git/txt/code/game_mode_lit.h	/^lit_draw_debug_light_rays(Game* game, Lit_Player* player, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
 lit_draw_edges	D:/work/git/txt/code/game_mode_lit.h	/^lit_draw_edges(Lit_Edge_List* edges, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
 lit_draw_lights	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_draw_lights(Lit_Light_List* lights, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
 lit_draw_player	D:/work/git/txt/code/game_mode_lit_player.h	/^lit_draw_player(Lit_Player* player, Painter* painter){$/;"	f	language:C++	typeref:typename:void
@@ -1074,9 +1074,10 @@ lit_init_player	D:/work/git/txt/code/game_mode_lit_player.h	/^lit_init_player(Li
 Lit_Level	D:/work/git/txt/code/game_mode_lit_levels.h	/^typedef void (*Lit_Level)(Lit* mode); $/;"	t	language:C++	typeref:typename:void (*)(Lit * mode)
 lit_levels	D:/work/git/txt/code/game_mode_lit_levels.h	/^static Lit_Level lit_levels[] = {$/;"	v	language:C++	typeref:typename:Lit_Level[]
 lit_level_0	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0(Lit* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_0_tutorial_trigger_0	D:/work/git/txt/code/game_mode_lit.h	/^lit_level_0_tutorial_trigger_0(Lit* m, Platform* pf) {$/;"	f	language:C++	typeref:typename:B32
-lit_level_0_tutorial_trigger_1	D:/work/git/txt/code/game_mode_lit.h	/^lit_level_0_tutorial_trigger_1(Lit* m, Platform* pf) {$/;"	f	language:C++	typeref:typename:B32
+lit_level_0_tutorial_trigger_0	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_tutorial_trigger_0(Lit* m, Platform* pf) {$/;"	f	language:C++	typeref:typename:B32
+lit_level_0_tutorial_trigger_1	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_tutorial_trigger_1(Lit* m, Platform* pf) {$/;"	f	language:C++	typeref:typename:B32
 lit_level_1	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_1(Lit* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_2	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_2(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 Lit_Light	D:/work/git/txt/code/game_mode_lit_light.h	/^struct Lit_Light {$/;"	s	language:C++
 Lit_Light_Debug_Ray_List	D:/work/git/txt/code/game_mode_lit_light.h	/^struct Lit_Light_Debug_Ray_List {$/;"	s	language:C++
 Lit_Light_Intersection	D:/work/git/txt/code/game_mode_lit_light.h	/^struct Lit_Light_Intersection {$/;"	s	language:C++
@@ -1921,7 +1922,6 @@ ttf_rasterize_glyph	D:/work/git/txt/code/momo_ttf.h	/^static Image32 ttf_rasteri
 ttf_rasterize_glyph	D:/work/git/txt/code/momo_ttf.h	/^ttf_rasterize_glyph(TTF* ttf, $/;"	f	language:C++	typeref:typename:Image32
 ttf_read	D:/work/git/txt/code/momo_ttf.h	/^static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);$/;"	p	language:C++	typeref:typename:B32
 ttf_read	D:/work/git/txt/code/momo_ttf.h	/^ttf_read(TTF* ttf, void* memory, UMI memory_size) {$/;"	f	language:C++	typeref:typename:B32
-tutorial_id	D:/work/git/txt/code/game_mode_lit.h	/^  U32 tutorial_id;$/;"	m	language:C++	struct:Lit	typeref:typename:U32
 tutorial_texts	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Text_List tutorial_texts;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Tutorial_Text_List
 tutorial_triggers	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Trigger_List tutorial_triggers;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Tutorial_Trigger_List
 type	D:/work/git/txt/code/game_inspector.h	/^  Inspector_Entry_Type type;$/;"	m	language:C++	struct:Inspector_Entry	typeref:typename:Inspector_Entry_Type

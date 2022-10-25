@@ -1,7 +1,7 @@
 #ifndef GAME_MODE_LIT_H
 #define GAME_MODE_LIT_H
 
-#define LIT_DEBUG_LIGHT 0
+#define LIT_DEBUG_LIGHT 1
 
 //////////////////////////////////////////////////
 // Lit MODE
@@ -241,10 +241,9 @@ lit_draw_edges(Lit_Edge_List* edges, Painter* painter) {
   advance_depth(painter);
 }
 
-static void 
-lit_draw_debug_light_rays(Painter* painter) {
- 
 #if LIT_DEBUG_LIGHT
+static void 
+lit_draw_debug_light_rays(Game* game, Lit_Player* player, Painter* painter) {
   // Draw the light rays
   if (player->held_light) {
     Lit_Light* l = player->held_light;
@@ -252,15 +251,12 @@ lit_draw_debug_light_rays(Painter* painter) {
     al_foreach(light_ray_index, &player->held_light->debug_rays)
     {
       Ray2 light_ray = player->held_light->debug_rays.e[light_ray_index];
-      
       Line2 line = line2(player->pos, player->pos + light_ray.dir);
-      
-      paint_line(painter, line, 
-                 1.f, rgba(0x00FFFFFF));
+      paint_line(painter, line, 1.f, hex_to_rgba(0x00FFFFFF));
     }
     advance_depth(painter);
    
-    Sort_Entry* sorted_its = ba_push_array(Sort_Entry, &game->frame_arena, l->intersections.count);
+    Sort_Entry* sorted_its = ba_push_arr(Sort_Entry, &game->frame_arena, l->intersections.count);
     assert(sorted_its);
     for (U32 intersection_id = 0; 
          intersection_id < l->intersections.count; 
@@ -269,7 +265,7 @@ lit_draw_debug_light_rays(Painter* painter) {
       V2 intersection = al_at(&l->intersections, intersection_id)->pt;
       V2 basis_vec = V2{1.f, 0.f} ;
       V2 intersection_vec = intersection - l->pos;
-      F32 key = angle_between(basis_vec, intersection_vec);
+      F32 key = v2_angle(basis_vec, intersection_vec);
       if (intersection_vec.y < 0.f) key = PI_32*2.f - key;
 
       sorted_its[intersection_id].index = intersection_id;
@@ -281,9 +277,8 @@ lit_draw_debug_light_rays(Painter* painter) {
          its_id < l->intersections.count;
          ++its_id) 
     {
-      make_string_builder(sb, 128);
-      
-      clear(sb);
+      sb8_make(sb, 128);
+      sb8_clear(sb);
       
       Line2 line = {0};
       line.min = player->pos;
@@ -293,18 +288,17 @@ lit_draw_debug_light_rays(Painter* painter) {
       paint_text(painter,
                  FONT_DEFAULT, 
                  sb->str,
-                 rgba(0xFF0000FF),
+                 hex_to_rgba(0xFF0000FF),
                  line.max.x,
                  line.max.y + 10.f,
                  12.f);
-      paint_line(painter, line, 1.f, rgba(0xFF0000FF));
+      paint_line(painter, line, 1.f, hex_to_rgba(0xFF0000FF));
       
     }
     advance_depth(painter);
   }
-#endif
 }
-
+#endif
 
 
 static void 
@@ -397,7 +391,9 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   lit_draw_edges(&m->edges, painter); 
 
 
-  lit_draw_debug_light_rays(painter);
+#if LIT_DEBUG_LIGHT
+  lit_draw_debug_light_rays(game, player, painter);
+#endif //LIT_DEBUG_LIGHT
 
  
   lit_draw_player(player, painter);

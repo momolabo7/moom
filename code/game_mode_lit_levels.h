@@ -52,67 +52,66 @@ lit_level_0(Lit* m) {
   lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("Shine same colored"), 1100.f, 510.f);
   lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("light on this"), 1100.f, 480.f);
   lit_fade_in_next_tutorial_text(&m->tutorial_texts);
+
   lit_push_tutorial_trigger(&m->tutorial_triggers, lit_level_0_tutorial_trigger_0);
   lit_push_tutorial_trigger(&m->tutorial_triggers, lit_level_0_tutorial_trigger_1);
 
 }
 
+/////////////////////////////////////////////////////////////////////
+// Level 1
 static void
 lit_level_1(Lit* m) {
-#if 0
-  lit_push_point(m, 0.f, 0.f);     // 0
-  lit_push_point(m, 1600.f, 0.f);  // 1
-  lit_push_point(m, 1600.f, 900.f);// 2
-  lit_push_point(m, 0.f, 900.f);   // 3
-  
-  lit_push_edge(m, 0, 1);
-  lit_push_edge(m, 1, 2);
-  lit_push_edge(m, 2, 3);
-  lit_push_edge(m, 3, 0);
+  lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
+  lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
+  lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
+  lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
 
-#if 1 
-  lit_push_point(m, 100.f, 100.f);  //4
-  lit_push_point(m, 1500.f, 100.f); //5
-  lit_push_point(m, 1500.f, 800.f); //6
-  lit_push_point(m, 100.f, 800.f);  //7
-  lit_push_edge(m, 4, 5);
-  lit_push_edge(m, 5, 6);
-  lit_push_edge(m, 6, 7);
-  lit_push_edge(m, 7, 4);
-#endif
-  
-  
-  // lights
-  lit_push_light(m, 250.f, 600.f, 0x880000FF, 90.f, 0.5f);
-  lit_push_light(m, 650.f, 600.f, 0x008800FF, 360.f, 0.f);
-  
+  // Need to 'enclose' the shape
+  lit_push_edge(m, 800.f, 100.f, 800.f, 800.f);
+  lit_push_edge(m, 800.f, 800.f, 800.f, 100.f);
+
   // initialize player
   Lit_Player* p = &m->player;
-  lit_init_player(p, 500.f, 600.f);
-  // Test sensor
-#if 1
-  {
-    lit_push_point(m, 400.f, 400.f); // 8
-    lit_push_point(m, 450.f, 400.f); // 9 
-    lit_push_point(m, 450.f, 500.f); // 10
-    lit_push_point(m, 400.f, 500.f); // 11
-                                       
-    lit_push_edge(m, 8, 9);
-    lit_push_edge(m, 9, 10);
-    lit_push_edge(m, 10, 11);
-    lit_push_edge(m, 11, 8);
+  lit_init_player(p, 200.f, GAME_HEIGHT * 0.5f);
 
-    //lit_push_sensor(&m->sensors, 100.f, 600.f, 0x888800FF); 
-  }
-#endif
-#endif
+  lit_push_sensor(&m->sensors, 1200.f, GAME_HEIGHT * 0.5f, 0x008800FF); 
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x008800FF, 90.f, 0.5f);
+ 
+  lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("Obstacles block light"), 650.f, 820.f);
+  lit_fade_in_next_tutorial_text(&m->tutorial_texts);
 }
 
+
+/////////////////////////////////////////////////////////////////////
+// Level 2
+static void
+lit_level_2(Lit* m) {
+  lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
+  lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
+  lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
+  lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
+
+  // Need to 'enclose' the shape
+  lit_push_edge(m, 800.f, 100.f, 800.f, 800.f);
+  lit_push_edge(m, 800.f, 800.f, 800.f, 100.f);
+
+  // initialize player
+  Lit_Player* p = &m->player;
+  lit_init_player(p, 200.f, GAME_HEIGHT * 0.5f);
+
+  lit_push_sensor(&m->sensors, 1200.f, GAME_HEIGHT * 0.5f, 0x008800FF); 
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x008800FF, 90.f, 0.5f);
+ 
+  lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("Obstacles block light"), 650.f, 820.f);
+  lit_fade_in_next_tutorial_text(&m->tutorial_texts);
+}
 
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
   lit_level_0,
   lit_level_1,
+  lit_level_2,
 };
 
 
