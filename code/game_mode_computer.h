@@ -3,20 +3,20 @@
 
 
 
-typedef struct {
+struct Computer_Selection{
   String8 text;
   Game_Mode_Type mode_type;
-} Computer_Selection;
+};
 
-typedef struct {
+struct Computer_Selection_List{
   U32 count;
   Computer_Selection e[10];
-} Computer_Selection_List;
+};
 
-typedef struct {
+struct Computer{
   U32 selected_id;
   Computer_Selection_List selection_list;
-} Computer;
+};
 
 static void 
 computer_add_selection(Computer* com, String8 text, Game_Mode_Type mode_type) {

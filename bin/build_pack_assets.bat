@@ -15,8 +15,8 @@ SET CommonCompilerFlags=-DINTERNAL=1  %CommonCompilerFlags%
 
 pushd %BuildDir%
 
-call cl %CommonCompilerFlags% %CodeDir%\sui.cpp -link -OUT:sui.exe
+call cl %CommonCompilerFlags% %CodeDir%\pack_assets.cpp
 
-call sui.exe
+call pack_assets.exe
 
 popd

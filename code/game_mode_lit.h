@@ -1,43 +1,43 @@
 #ifndef GAME_MODE_LIT_H
 #define GAME_MODE_LIT_H
 
-#define LIT_DEBUG_LIGHT 1
+#define LIT_DEBUG_LIGHT 0
 
 //////////////////////////////////////////////////
 // Lit MODE
 
 #include "game_mode_lit_particles.h"
 
-typedef struct {
+struct Lit_Edge{
   B32 is_disabled;
   V2 start_pt;
   V2 end_pt;
-} Lit_Edge;
+};
 
 
-typedef struct {
+struct Lit_Edge_List{
   U32 count;
   Lit_Edge e[256];
-} Lit_Edge_List;
+};
 
 
 #define LIT_TUTORIAL_TEXT_FADE_DURATION 1.f
-typedef enum {
+enum Lit_Tutorial_Text_State{
   LIT_TUTORIAL_TEXT_STATE_INVISIBLE,
   LIT_TUTORIAL_TEXT_STATE_FADE_IN,
   LIT_TUTORIAL_TEXT_STATE_VISIBLE,
   LIT_TUTORIAL_TEXT_STATE_FADE_OUT,
-} Lit_Tutorial_Text_State;
+};
 
 
 typedef B32 (*Lit_Tutorial_Trigger)(struct Lit* m, Platform* pf);
-typedef struct {
+struct Lit_Tutorial_Trigger_List{
   U32 current_id;
   U32 count;
   Lit_Tutorial_Trigger e[10];
-} Lit_Tutorial_Trigger_List;
+};
 
-typedef struct
+struct Lit_Tutorial_Text
 {
   String8 str;
   F32 alpha;
@@ -46,15 +46,15 @@ typedef struct
   F32 pos_y;
   F32 timer;
 
-} Lit_Tutorial_Text;
+};
 
 
-typedef struct {
+struct Lit_Tutorial_Text_List{
   U32 count;
   Lit_Tutorial_Text e[10];
   U32 next_id_to_fade_in;
   U32 next_id_to_fade_out;
-} Lit_Tutorial_Text_List;
+} ;
 
 
 
@@ -116,14 +116,14 @@ lit_calc_ghost_edge_line(Lit_Edge* e) {
 #include "game_mode_lit_sensors.h"
 #include "game_mode_lit_player.h"
 
-typedef enum {
+enum Lit_State_Type{
   LIT_STATE_TYPE_TRANSITION_IN,
   LIT_STATE_TYPE_TRANSITION_OUT,
   LIT_STATE_TYPE_NORMAL,
-} Lit_State_Type;
+};
 
 
-typedef struct Lit {
+struct Lit {
   Lit_State_Type state;
   U32 current_level_id;
   Lit_Player player;
@@ -142,7 +142,7 @@ typedef struct Lit {
   Lit_Tutorial_Text_List tutorial_texts;
   Lit_Tutorial_Trigger_List tutorial_triggers;
 
-} Lit;
+};
 
 
 static Lit_Edge*
@@ -241,9 +241,10 @@ lit_draw_edges(Lit_Edge_List* edges, Painter* painter) {
   advance_depth(painter);
 }
 
-#if LIT_DEBUG_LIGHT
 static void 
-lit_draw_debug_light_rays(Game* game, Lit_Player* player, Painter* painter) {
+lit_draw_debug_light_rays(Painter* painter) {
+ 
+#if LIT_DEBUG_LIGHT
   // Draw the light rays
   if (player->held_light) {
     Lit_Light* l = player->held_light;
@@ -251,12 +252,15 @@ lit_draw_debug_light_rays(Game* game, Lit_Player* player, Painter* painter) {
     al_foreach(light_ray_index, &player->held_light->debug_rays)
     {
       Ray2 light_ray = player->held_light->debug_rays.e[light_ray_index];
+      
       Line2 line = line2(player->pos, player->pos + light_ray.dir);
-      paint_line(painter, line, 1.f, hex_to_rgba(0x00FFFFFF));
+      
+      paint_line(painter, line, 
+                 1.f, rgba(0x00FFFFFF));
     }
     advance_depth(painter);
    
-    Sort_Entry* sorted_its = ba_push_arr(Sort_Entry, &game->frame_arena, l->intersections.count);
+    Sort_Entry* sorted_its = ba_push_array(Sort_Entry, &game->frame_arena, l->intersections.count);
     assert(sorted_its);
     for (U32 intersection_id = 0; 
          intersection_id < l->intersections.count; 
@@ -265,7 +269,7 @@ lit_draw_debug_light_rays(Game* game, Lit_Player* player, Painter* painter) {
       V2 intersection = al_at(&l->intersections, intersection_id)->pt;
       V2 basis_vec = V2{1.f, 0.f} ;
       V2 intersection_vec = intersection - l->pos;
-      F32 key = v2_angle(basis_vec, intersection_vec);
+      F32 key = angle_between(basis_vec, intersection_vec);
       if (intersection_vec.y < 0.f) key = PI_32*2.f - key;
 
       sorted_its[intersection_id].index = intersection_id;
@@ -277,8 +281,9 @@ lit_draw_debug_light_rays(Game* game, Lit_Player* player, Painter* painter) {
          its_id < l->intersections.count;
          ++its_id) 
     {
-      sb8_make(sb, 128);
-      sb8_clear(sb);
+      make_string_builder(sb, 128);
+      
+      clear(sb);
       
       Line2 line = {0};
       line.min = player->pos;
@@ -288,17 +293,18 @@ lit_draw_debug_light_rays(Game* game, Lit_Player* player, Painter* painter) {
       paint_text(painter,
                  FONT_DEFAULT, 
                  sb->str,
-                 hex_to_rgba(0xFF0000FF),
+                 rgba(0xFF0000FF),
                  line.max.x,
                  line.max.y + 10.f,
                  12.f);
-      paint_line(painter, line, 1.f, hex_to_rgba(0xFF0000FF));
+      paint_line(painter, line, 1.f, rgba(0xFF0000FF));
       
     }
     advance_depth(painter);
   }
-}
 #endif
+}
+
 
 
 static void 
@@ -391,9 +397,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   lit_draw_edges(&m->edges, painter); 
 
 
-#if LIT_DEBUG_LIGHT
-  lit_draw_debug_light_rays(game, player, painter);
-#endif //LIT_DEBUG_LIGHT
+  lit_draw_debug_light_rays(painter);
 
  
   lit_draw_player(player, painter);

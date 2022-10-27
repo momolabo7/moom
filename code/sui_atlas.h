@@ -10,13 +10,6 @@
 #ifndef SUI_ATLAS_H
 #define SUI_ATLAS_H
 
-#include "momo_common.h"
-#include "momo_rect_pack.h"
-#include "momo_ttf.h"
-#include "momo_png.h"
-
-#include "sui.h"
-
 struct Sui_Atlas_Font;
 struct Sui_Atlas_Sprite;
 
@@ -49,14 +42,13 @@ struct Sui_Atlas_Context {
 // Entry types
 
 struct Sui_Atlas_Font {
-  const char* font_id_name;
-  const char* font_file_name;
+  const char* filename;
 
-  U32* codepoints;
+  U32 codepoints[1024];
   U32 codepoint_count;
   F32 raster_font_height;
 
-  TTF ttf;
+  //TTF ttf;
   
   // will be generated when end
   RP_Rect* glyph_rects;
@@ -65,7 +57,6 @@ struct Sui_Atlas_Font {
 };
 
 struct Sui_Atlas_Sprite {
-  const char* sprite_id_name;
   const char* filename;
   
   // will be generated when end
@@ -84,104 +75,132 @@ struct Sui_Atlas {
   
   Sui_Atlas_Sprite sprites[128];
   U32 sprite_count;
+
+  Sui_Atlas_Font* active_font;
 };
 /////////////////////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
-// 
-static U32
-push_sprite(Sui_Atlas* ab, const char* sprite_id_name, const char* filename) 
+//
+static Sui_Atlas_Sprite*
+sui_atlas_push_sprite(Sui_Atlas* a, const char* filename) 
 {
-  assert(ab->sprite_count < array_count(ab->sprites));
-  U32 index = ab->sprite_count++;
+  assert(a->sprite_count < array_count(a->sprites));
+  U32 index = a->sprite_count++;
   
-  Sui_Atlas_Sprite* sprite = ab->sprites + index;
-  
+  Sui_Atlas_Sprite* sprite = a->sprites + index;
   sprite->filename = filename;
-  sprite->sprite_id_name = sprite_id_name;
-  return index;
+  return sprite;
+}
+ 
+// TODO: return the font instead?
+static void
+sui_atlas_begin_font(Sui_Atlas* a, const char* font_filename, F32 font_height) {
+  assert(a->font_count < array_count(a->fonts));
+  assert(!a->active_font);
+  a->active_font = a->fonts + a->font_count++; 
+  a->active_font->raster_font_height = font_height;
+  a->active_font->filename = font_filename;
+}
+
+static void
+sui_atlas_end_font(Sui_Atlas* a) {
+  a->active_font = null;
+}
+
+static void
+sui_atlas_push_font_codepoint(Sui_Atlas* a, U32 codepoint) {
+  assert(a->active_font);
+  assert(a->active_font->codepoint_count < array_count(a->active_font->codepoints));
+  a->active_font->codepoints[a->active_font->codepoint_count++] = codepoint;
 }
 
 
-static U32
-push_font(Sui_Atlas* ab, 
-          const char* font_id_name, 
-          const char* font_file_name,
-          U32* codepoints,
-          U32 codepoint_count,
-          F32 raster_font_height) 
+
+static void
+sui_atlas_begin(Sui_Atlas* a,
+                U32 atlas_width,
+                U32 atlas_height) 
 {
-  assert(ab->font_count < array_count(ab->fonts));
-  U32 index = ab->font_count++;
-  
-  Sui_Atlas_Font* font = ab->fonts + index;
-  font->font_id_name = font_id_name;
-  font->font_file_name = font_file_name;
-  font->codepoints = codepoints;
-  font->codepoint_count = codepoint_count;
-  font->raster_font_height = raster_font_height;
-  
-  return index;
+  assert(atlas_width > 0 && atlas_height > 0);
+  a->bitmap.width = atlas_width;
+  a->bitmap.height = atlas_height;
+  a->active_font = null;
+
 }
 
 
-static B32
-begin_atlas_builder(Sui_Atlas* ab,
-                    const char* bitmap_id_name,
-                    U32 atlas_width,
-                    U32 atlas_height) 
-{
-  if (atlas_width == 0 || atlas_height == 0) return false;
-  
-  ab->bitmap_id_name = bitmap_id_name;
-  ab->bitmap.width = atlas_width;
-  ab->bitmap.height = atlas_height;
-  
-  return true;;
-}
-
-
-static B32
-end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
-  ab->bitmap.pixels = ba_push_arr(U32, allocator, ab->bitmap.width * ab->bitmap.height);
-  if (!ab->bitmap.pixels) return false;
+static void
+sui_atlas_end(Sui_Atlas* a, Bump_Allocator* allocator) {
+  a->bitmap.pixels = ba_push_arr(U32, allocator, a->bitmap.width * a->bitmap.height);
+  assert(a->bitmap.pixels);
   
   // Count the amount of rects
-  U32 rect_count = ab->sprite_count;
+  U32 rect_count = a->sprite_count;
   
   for (U32 font_index = 0;
-       font_index < ab->font_count;
+       font_index < a->font_count;
        ++font_index) 
   {
-    rect_count += ab->fonts[font_index].codepoint_count;
+    rect_count += a->fonts[font_index].codepoint_count;
   }
   
-  if (rect_count == 0) return false; 
-  
+  assert(rect_count > 0);  
+
   // Allocate required blk required
   RP_Rect* rects = ba_push_arr(RP_Rect, allocator, rect_count);
-  if (!rects) return false;
+  assert(rects);
 
   Sui_Atlas_Context* contexts = ba_push_arr(Sui_Atlas_Context, allocator, rect_count);
-  if (!contexts) return false;
+  assert(contexts);
   
   // Prepare the rects with the correct info
   U32 rect_index = 0;
   U32 context_index = 0;
   
-  ba_set_revert_point(allocator);
+  for (U32 sprite_index = 0;
+       sprite_index < a->sprite_count;
+       ++sprite_index) 
+  {
+    ba_set_revert_point(allocator);
+    
+    Sui_Atlas_Sprite* sprite = a->sprites + sprite_index;
+
+    make(Block, blk);
+    B32 ok = sui_read_file_to_blk(blk, sprite->filename, allocator);
+    assert(ok);
+    
+    make(PNG, png);
+    ok = png_read(png, blk->data, blk->size);
+    assert(ok);
+    assert(png->width && png->height);
+    
+    Sui_Atlas_Context* context = contexts + context_index++;
+    context->type = SUI_ATLAS_CONTEXT_TYPE_SPRITE;
+    context->sprite.sprite = sprite;
+    
+    RP_Rect* rect = rects + rect_index++;
+    rect->w = png->width;
+    rect->h = png->height;
+    rect->user_data = context;
+    
+    sprite->rect = rect;
+    sprite->rect_context = context;
+  }
+ 
 
   for (U32 font_index = 0;
-       font_index < ab->font_count;
+       font_index < a->font_count;
        ++font_index) 
   {
 
-    Sui_Atlas_Font* font = ab->fonts + font_index;
-    TTF* ttf = &font->ttf; 
-    B32 ok = sui_read_font_from_file(ttf, font->font_file_name, allocator); 
-    if (!ok) return false;
+    ba_set_revert_point(allocator);
+    Sui_Atlas_Font* font = a->fonts + font_index;
+    make(TTF, ttf);
+    B32 ok = sui_read_font_from_file(ttf, font->filename, allocator); 
+    assert(ok);
     F32 s = ttf_get_scale_for_pixel_height(ttf, font->raster_font_height);
     
-    // grab the slice of RP_Rects that belongs to this font
+    // gra the slice of RP_Rects that belongs to this font
     font->glyph_rects = rects + rect_index;
     font->glyph_rect_contexts = contexts + context_index;
     font->rect_count = 0;
@@ -206,37 +225,7 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
     }
     
   }
-  
-  for (U32 sprite_index = 0;
-       sprite_index < ab->sprite_count;
-       ++sprite_index) 
-  {
-    ba_set_revert_point(allocator);
-    
-    Sui_Atlas_Sprite* sprite = ab->sprites + sprite_index;
-
-    make(Block, blk);
-    B32 ok = sui_read_file_to_blk(blk, sprite->filename, allocator);
-    if (!ok) return false;
-    
-    make(PNG, png);
-    ok = png_read(png, blk->data, blk->size);
-    if (!ok) return false;
-    if(png->width == 0 || png->height == 0) return false;
-    
-    auto* context = contexts + context_index++;
-    context->type = SUI_ATLAS_CONTEXT_TYPE_SPRITE;
-    context->sprite.sprite = sprite;
-    
-    RP_Rect* rect = rects + rect_index++;
-    rect->w = png->width;
-    rect->h = png->height;
-    rect->user_data = context;
-    
-    sprite->rect = rect;
-    sprite->rect_context = context;
-  }
-  
+   
   
 #if 0
   sui_log("=== Before packing: ===\n");
@@ -246,7 +235,7 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
 #endif
   
   rp_pack(rects, rect_count, 1, 
-          ab->bitmap.width, ab->bitmap.height, 
+          a->bitmap.width, a->bitmap.height, 
           RP_SORT_TYPE_HEIGHT,
           allocator);
   
@@ -270,19 +259,19 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
         make(Block, blk);
        
         B32 ok = sui_read_file_to_blk(blk, related_entry->filename, allocator);
-        if (!ok) return false;
+        assert(ok);
         
         make(PNG, png);
         ok = png_read(png, blk->data, blk->size);
-        if(!ok) return false;
+        assert(ok);
         
         Image32 bm = png_to_img32(png, allocator);
         if (!img32_ok(bm)) continue;
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
-            UMI index = (x + y * ab->bitmap.width);
-            ((U32*)(ab->bitmap.pixels))[index] = ((U32*)(bm.pixels))[j++];
+            UMI index = (x + y * a->bitmap.width);
+            ((U32*)(a->bitmap.pixels))[index] = ((U32*)(bm.pixels))[j++];
           }
         }
         
@@ -292,7 +281,10 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
         Sui_Atlas_Font* related_entry = context->font_glyph.font;
         Sui_Atlas_Font_Glyph_Context* related_context = &context->font_glyph;
         
-        TTF* ttf = &related_entry->ttf;
+        make(TTF, ttf);
+        B32 ok = sui_read_font_from_file(ttf, related_entry->filename, allocator); 
+        assert(ok);
+
         F32 s = ttf_get_scale_for_pixel_height(ttf, related_entry->raster_font_height);
         U32 glyph_index = ttf_get_glyph_index(ttf, related_context->codepoint);
         
@@ -301,8 +293,8 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
-            UMI index = (x + y * ab->bitmap.width);
-            ((U32*)(ab->bitmap.pixels))[index] = ((U32*)(bm.pixels))[j++];
+            UMI index = (x + y * a->bitmap.width);
+            ((U32*)(a->bitmap.pixels))[index] = ((U32*)(bm.pixels))[j++];
           }
         }
         
@@ -311,7 +303,6 @@ end_atlas_builder(Sui_Atlas* ab, Bump_Allocator* allocator) {
     
   }
   
-  return true;
   
 }
 #endif // SUI_ATLAS_H

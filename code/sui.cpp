@@ -20,13 +20,13 @@ int main() {
   sui_log("Building atlas...\n");
   make(Sui_Atlas, atlas);
 
-  if (!begin_atlas_builder(atlas, "BITMAP_DEFAULT", 2048, 2048)) return 1;
+  if (!begin_atlas_builder(atlas, "BITMAP_DEFAULT", 1024, 1024)) return 1;
   {
-    push_sprite(atlas, "SPRITE_BLANK", asset_dir("blank.png"));
-    push_sprite(atlas, "SPRITE_BULLET_CIRCLE", asset_dir("bullet_circle.png"));
-    push_sprite(atlas, "SPRITE_BULLET_DOT", asset_dir("bullet_dot.png"));
-    push_sprite(atlas, "SPRITE_PLAYER_BLACK", asset_dir("player_black.png"));
-    push_sprite(atlas, "SPRITE_PLAYER_WHITE", asset_dir("player_white.png"));
+    push_sprite(atlas, "SPRITE_BLANK", sui_asset_dir("blank.png"));
+    push_sprite(atlas, "SPRITE_BULLET_CIRCLE", sui_asset_dir("bullet_circle.png"));
+    push_sprite(atlas, "SPRITE_BULLET_DOT", sui_asset_dir("bullet_dot.png"));
+    push_sprite(atlas, "SPRITE_PLAYER_BLACK", sui_asset_dir("player_black.png"));
+    push_sprite(atlas, "SPRITE_PLAYER_WHITE", sui_asset_dir("player_white.png"));
     
     U32 interested_cps[] = { 
       32,33,32,34,35,36,37,38,39,
@@ -42,9 +42,9 @@ int main() {
       120,121,122,123,124,125,126,
     };
     
-    push_font(atlas, "FONT_DEFAULT", asset_dir("nokiafc22.ttf"), interested_cps, array_count(interested_cps), 128.f);
+    push_font(atlas, "FONT_DEFAULT", sui_asset_dir("nokiafc22.ttf"), interested_cps, array_count(interested_cps), 72.f);
     
-    push_font(atlas, "FONT_DEBUG", asset_dir("liberation-mono.ttf"), interested_cps, array_count(interested_cps), 128.f);
+    //push_font(atlas, "FONT_DEBUG", sui_asset_dir("liberation-mono.ttf"), interested_cps, array_count(interested_cps), 72.f);
   }
   if(!end_atlas_builder(atlas, allocator)) return 1;
   sui_log("Finished atlas...\n");
@@ -55,31 +55,31 @@ int main() {
   
 
   sui_check_death(begin_packer(sp, allocator,
-                  code_dir("generated_pack_ids.h"),
-                  code_dir("generated_bitmap_ids.h"),
-                  code_dir("generated_sprite_ids.h"),
-                  code_dir("generated_font_ids.h"),
-                  code_dir("generated_sound_ids.h")));
+                  sui_code_dir("generated_pack_ids.h"),
+                  sui_code_dir("generated_bitmap_ids.h"),
+                  sui_code_dir("generated_sprite_ids.h"),
+                  sui_code_dir("generated_font_ids.h"),
+                  sui_code_dir("generated_sound_ids.h")));
   begin_asset_pack(sp);
   // Maybe we want to do something like this:
   begin_atlas(sp);
 
-  begin_atlas_font(sp, "FONT_DEFAULT", asset_dir("nokiafc22.ttf"), 72.f);
+  begin_atlas_font(sp, "FONT_DEFAULT", sui_asset_dir("nokiafc22.ttf"), 72.f);
   for (U32 i = 32 ; i <= 126; ++i) 
     push_atlas_font_glyph(sp, i);
   end_atlas_font(sp);
 
-  begin_atlas_font(sp, "FONT_DEBUG", asset_dir("liberation-mono.ttf"), 72.f);
+  begin_atlas_font(sp, "FONT_DEBUG", sui_asset_dir("liberation-mono.ttf"), 72.f);
   for (U32 i = 32 ; i <= 126; ++i) 
     push_atlas_font_glyph(sp, i);
   end_atlas_font(sp);
 
-  push_atlas_sprite(sp, "SPRITE_BLANK",         asset_dir("blank.png"));
-  push_atlas_sprite(sp, "SPRITE_BULLET_CIRCLE", asset_dir("bullet_circle.png"));
-  push_atlas_sprite(sp, "SPRITE_BULLET_DOT",    asset_dir("bullet_dot.png"));
-  push_atlas_sprite(sp, "SPRITE_PLAYER_BLACK",  asset_dir("player_black.png"));
-  push_atlas_sprite(sp, "SPRITE_PLAYER_WHITE",  asset_dir("player_white.png"));
-  push_atlas_sprite(sp, "SPRITE_CIRCLE",        asset_dir("circle.png"));
+  push_atlas_sprite(sp, "SPRITE_BLANK",         sui_asset_dir("blank.png"));
+  push_atlas_sprite(sp, "SPRITE_BULLET_CIRCLE", sui_asset_dir("bullet_circle.png"));
+  push_atlas_sprite(sp, "SPRITE_BULLET_DOT",    sui_asset_dir("bullet_dot.png"));
+  push_atlas_sprite(sp, "SPRITE_PLAYER_BLACK",  sui_asset_dir("player_black.png"));
+  push_atlas_sprite(sp, "SPRITE_PLAYER_WHITE",  sui_asset_dir("player_white.png"));
+  push_atlas_sprite(sp, "SPRITE_CIRCLE",        sui_asset_dir("circle.png"));
   sui_check_death(end_atlas(sp, "BITMAP_DEFAULT", 1024, 1024));
 
   //push_sound(sp, "SOUND_TEST", loaded_wav);

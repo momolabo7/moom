@@ -6,9 +6,9 @@
 //////////////////////////////////////////////////
 // SPLASH MODE
 //
-typedef struct  {
+struct Splash {
   F32 timer;
-}Splash;
+};
 
 static void 
 splash_tick(Game* game,

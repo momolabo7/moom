@@ -111,7 +111,7 @@ lit_gen_light_intersections(Lit_Light* l,
                             Lit_Edge_List* edges,
                             Bump_Allocator* tmp_arena)
 {
-  game_profile_block(light_generation);
+  game_profile_block("light_generation");
   ba_set_revert_point(tmp_arena);
 
   Lit_Light_Type light_type = Lit_LIGHT_TYPE_POINT;
