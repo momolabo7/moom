@@ -46,7 +46,27 @@ struct Karu_Bitmap {
   //   U32 pixels[width*height]
 };
 
+struct Karu_Font_Glyph {
+  U32 bitmap_asset_id; 
+  Rect2U texel_uv;
+  Rect2 box;
+  U32 codepoint;
+};
+
 struct Karu_Font {
+  U32 offset_to_data;
+  
+  // TODO: Maybe add 'lowest codepoint'?
+  U32 bitmap_asset_id;
+  U32 highest_codepoint;
+  U32 glyph_count;
+  
+  // Data is: 
+  // 
+  // Karu_Font_Glyph glyphs[glyph_count]
+  // F32 horizontal_advances[glyph_count][glyph_count]
+  //
+
 };
 
 struct Karu_Sprite {
@@ -66,7 +86,7 @@ struct Karu_Asset {
   union {
     Karu_Bitmap bitmap;
     Karu_Font font;
-    Karu_Sprite prite;
+    Karu_Sprite sprite;
   };
 };
 
@@ -85,6 +105,7 @@ struct Karu_Tag {
 enum Sui_Packer_Source_Type {
   SUI_PACKER_SOURCE_TYPE_BITMAP,
   SUI_PACKER_SOURCE_TYPE_SPRITE,
+  SUI_PACKER_SOURCE_TYPE_FONT,
 };
 
 struct Sui_Packer_Source_Sprite {
@@ -98,11 +119,17 @@ struct Sui_Packer_Source_Bitmap {
   U32* pixels;
 };
 
+struct Sui_Packer_Source_Font {
+  U32 bitmap_asset_id;
+  Sui_Atlas_Font* atlas_font;
+};
+
 struct Sui_Packer_Source {
   Sui_Packer_Source_Type type;
   union {
     Sui_Packer_Source_Sprite sprite; 
     Sui_Packer_Source_Bitmap bitmap; 
+    Sui_Packer_Source_Font font;
   };
 };
 
@@ -200,6 +227,29 @@ sui_pack_push_bitmap(Sui_Packer* p, U32 width, U32 height, U32* pixels) {
   return asset_index;
 }
 
+// TODO: return something else?
+static U32
+sui_pack_push_font(Sui_Packer* p, Sui_Atlas_Font* font, U32 bitmap_asset_id) {
+  assert(p->active_group);
+  assert(p->asset_count < array_count(p->assets));
+
+  U32 asset_index = p->asset_count++;
+  ++p->active_group->one_past_last_asset_index;
+  p->active_asset_index = asset_index;
+
+  Karu_Asset* asset = p->assets + asset_index;
+  asset->first_tag_index = p->tag_count;
+  asset->one_past_last_tag_index = asset->first_tag_index;
+
+  Sui_Packer_Source* source = p->sources + asset_index;
+  source->type = SUI_PACKER_SOURCE_TYPE_FONT;
+
+  source->font.atlas_font = font;
+  source->font.bitmap_asset_id = bitmap_asset_id;
+
+  return asset_index;
+}
+
 struct Karu_Header {
   U32 signature;
 
@@ -213,7 +263,8 @@ struct Karu_Header {
 };
 
 static void
-sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena) {
+sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena) 
+{
   FILE* file = fopen(filename, "wb");
   defer { fclose (file); };
  
@@ -243,6 +294,8 @@ sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena) {
     switch(source->type) {
       case SUI_PACKER_SOURCE_TYPE_BITMAP:{
         sui_log("Writing bitmap\n");
+        asset->type = GAME_ASSET_TYPE_BITMAP;
+
         Karu_Bitmap* bitmap = &asset->bitmap;
         bitmap->width = source->bitmap.width;
         bitmap->height = source->bitmap.height;
@@ -253,11 +306,60 @@ sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena) {
       } break;
       case SUI_PACKER_SOURCE_TYPE_SPRITE: {
         sui_log("Writing sprite\n");
-        
+
+        asset->type = GAME_ASSET_TYPE_SPRITE;
+
+        Karu_Sprite* sprite = &asset->sprite;
+        sprite->bitmap_asset_id = source->sprite.bitmap_asset_id;
+        sprite->texel_uv = source->sprite.texel_uv;
+  
       } break;
+      case SUI_PACKER_SOURCE_TYPE_FONT: {
+        sui_log("Writing font\n");
+        asset->type = GAME_ASSET_TYPE_FONT;
 
+        Sui_Atlas_Font* atlas_font = source->font.atlas_font;
+
+        make(TTF, ttf);
+        B32 ok = sui_read_font_from_file(ttf, atlas_font->filename, arena); 
+        assert(ok);
+        
+        // Figure out the highest codepoint
+        U32 highest_codepoint = 0;
+        for (U32 codepoint_index = 0; 
+             codepoint_index < atlas_font->codepoint_count;
+             ++codepoint_index) 
+        {
+          U32 codepoint = atlas_font->codepoints[codepoint_index];
+          if(codepoint > highest_codepoint) {
+            highest_codepoint = codepoint;
+          }
+        }
+        if (highest_codepoint == 0) 
+          continue;
+
+        Karu_Font* font = &asset->font;
+        font->highest_codepoint = highest_codepoint;
+        font->glyph_count = atlas_font->codepoint_count;
+        font->bitmap_asset_id = source->font.bitmap_asset_id;
+        
+        // push glyphs
+        for (U32 rect_index = 0;
+             rect_index < atlas_font->rect_count;
+             ++rect_index) 
+        {
+          auto* glyph_rect = atlas_font->glyph_rects + rect_index;
+          auto* glyph_rect_context = atlas_font->glyph_rect_contexts + rect_index;
+          
+          Karu_Font_Glyph glyph = {0};
+          glyph.bitmap_asset_id = source->font.bitmap_asset_id;
+          glyph.codepoint = glyph_rect_context->font_glyph.codepoint;
+                   
+          glyph.texel_uv = sui_rp_rect_to_rect2u(*glyph_rect);
+          fwrite(&glyph, sizeof(glyph), 1, file);
+        }
+      } break;
     }
-
   }
 
   // Write metadata
@@ -284,42 +386,38 @@ int main() {
 
   sui_atlas_begin(atlas, 1024, 1024);
   Sui_Atlas_Sprite* blank_sprite = sui_atlas_push_sprite(atlas, sui_asset_dir("blank.png"));
-  sui_atlas_push_sprite(atlas, sui_asset_dir("bullet_circle.png"));
-  sui_atlas_push_sprite(atlas, sui_asset_dir("bullet_dot.png"));
-  sui_atlas_push_sprite(atlas, sui_asset_dir("player_black.png"));
-  sui_atlas_push_sprite(atlas, sui_asset_dir("player_white.png"));
+  Sui_Atlas_Sprite* circle_sprite = sui_atlas_push_sprite(atlas, sui_asset_dir("circle.png"));
     
   sui_atlas_begin_font(atlas, sui_asset_dir("nokiafc22.ttf"), 72.f);
   for (U32 i = 32; i <= 126; ++i){
     sui_atlas_push_font_codepoint(atlas, i);
   }
-  sui_atlas_end_font(atlas);
+  auto* font_a = sui_atlas_end_font(atlas);
 
   sui_atlas_begin_font(atlas, sui_asset_dir("liberation-mono.ttf"), 72.f);
   for (U32 i = 32; i <= 126; ++i){
     sui_atlas_push_font_codepoint(atlas, i);
   }
-  sui_atlas_end_font(atlas);
+  auto* font_b = sui_atlas_end_font(atlas);
   sui_atlas_end(atlas, allocator);
   sui_log("Finished atlas...\n");
+
 #if 1
   sui_log("Writing test png file...\n");
   Block png_to_write_memory = png_write_img32_to_blk(atlas->bitmap, allocator);
   sui_write_file_from_blk("test.png", png_to_write_memory);
 #endif
+
   make(Sui_Packer, packer);
   sui_pack_begin(packer);
-
-
 
   sui_pack_begin_group(packer, GAME_ASSET_GROUP_TEST);
   U32 bitmap_id = sui_pack_push_bitmap(packer, atlas->bitmap.width, atlas->bitmap.height, atlas->bitmap.pixels);
   sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*blank_sprite->rect));
-  sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*blank_sprite->rect));
+  sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*circle_sprite->rect));
+  sui_pack_push_font(packer, font_a, bitmap_id);
+  sui_pack_push_font(packer, font_b, bitmap_id);
   sui_pack_end_group(packer);
-
-
-  
 
   sui_pack_end(packer, "test_pack.sui", allocator);
 }

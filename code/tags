@@ -116,6 +116,7 @@ atan_f64	D:/work/git/txt/code/momo_intrinsics.h	/^static F64 atan_f64(F64 x);$/;
 atlas	D:/work/git/txt/code/karu_pack2.h	/^  Karu_Atlas* atlas;$/;"	m	language:C++	struct:Karu_Atlas_Font_Source	typeref:typename:Karu_Atlas *
 atlas	D:/work/git/txt/code/karu_pack2.h	/^  Karu_Atlas* atlas;$/;"	m	language:C++	struct:Karu_Atlas_Image_Source	typeref:typename:Karu_Atlas *
 atlas_font	D:/work/git/txt/code/karu_pack2.h	/^    Karu_Atlas_Font_Source atlas_font;$/;"	m	language:C++	union:Karu_Source::__anoned3c77bd010a	typeref:typename:Karu_Atlas_Font_Source
+atlas_font	D:/work/git/txt/code/pack_assets.cpp	/^  Sui_Atlas_Font* atlas_font;$/;"	m	language:C++	struct:Sui_Packer_Source_Font	typeref:typename:Sui_Atlas_Font *	file:
 atlas_font_id	D:/work/git/txt/code/karu_pack2.h	/^  U32 atlas_font_id;$/;"	m	language:C++	struct:Karu_Atlas_Font_Source	typeref:typename:U32
 atlas_image	D:/work/git/txt/code/karu_pack2.h	/^    Karu_Atlas_Image_Source atlas_image;$/;"	m	language:C++	union:Karu_Source::__anoned3c77bd010a	typeref:typename:Karu_Atlas_Image_Source
 atlas_image_id	D:/work/git/txt/code/karu_pack2.h	/^  U32 atlas_image_id;$/;"	m	language:C++	struct:Karu_Atlas_Image_Source	typeref:typename:U32
@@ -206,6 +207,7 @@ bitmap_id	D:/work/git/txt/code/game_assets_2.h	/^  Bitmap_Asset_ID bitmap_id;$/;
 Bitmap_ID	D:/work/git/txt/code/generated_bitmap_ids.h	/^enum Bitmap_ID {$/;"	g	language:C++
 bitmap_id	D:/work/git/txt/code/karu.h	/^  U32 bitmap_id;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
 bitmap_id	D:/work/git/txt/code/karu.h	/^  U32 bitmap_id;$/;"	m	language:C++	struct:Karu_Sprite	typeref:typename:U32
+bitmap_id	D:/work/git/txt/code/pack_assets.cpp	/^  U32 bitmap_id;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32	file:
 bitmap_id	D:/work/git/txt/code/sui_pack.h	/^  U32 bitmap_id;$/;"	m	language:C++	struct:Sui_Packer_Font	typeref:typename:U32
 bitmap_id	D:/work/git/txt/code/sui_pack.h	/^  U32 bitmap_id;$/;"	m	language:C++	struct:Sui_Packer_Sprite	typeref:typename:U32
 bitmap_id_file	D:/work/git/txt/code/sui_pack.h	/^  FILE* bitmap_id_file;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:FILE *
@@ -225,6 +227,7 @@ block_align	D:/work/git/txt/code/momo_wav.h	/^  U16 block_align;$/;"	m	language:
 block_name	D:/work/git/txt/code/game_profiler.h	/^  const char* block_name;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:const char *
 box	D:/work/git/txt/code/game_assets.h	/^  Rect2 box;$/;"	m	language:C++	struct:Font_Glyph_Asset	typeref:typename:Rect2
 box	D:/work/git/txt/code/karu.h	/^  Rect2 box;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:Rect2
+box	D:/work/git/txt/code/pack_assets.cpp	/^  Rect2 box;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:Rect2	file:
 bpm_to_spb_f32	D:/work/git/txt/code/momo_common.h	/^bpm_to_spb_f32(F32 bpm) {$/;"	f	language:C++	typeref:typename:F32
 bpm_to_spb_f64	D:/work/git/txt/code/momo_common.h	/^bpm_to_spb_f64(F64 bpm) {$/;"	f	language:C++	typeref:typename:F64
 buffer	D:/work/git/txt/code/game_console.h	/^  U8 buffer[256];$/;"	m	language:C++	struct:Console_Line	typeref:typename:U8[256]
@@ -281,6 +284,7 @@ cmap_mappings	D:/work/git/txt/code/momo_ttf.h	/^  U32 cmap_mappings;$/;"	m	langu
 COBJMACROS	D:/work/git/txt/code/w32.h	/^#define COBJMACROS$/;"	d	language:C++
 COBJMACROS	D:/work/git/txt/code/w32.h	/^#define COBJMACROS$/;"	d	language:C++
 codepoint	D:/work/git/txt/code/karu.h	/^  U32 codepoint;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:U32
+codepoint	D:/work/git/txt/code/pack_assets.cpp	/^  U32 codepoint;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:U32	file:
 codepoint	D:/work/git/txt/code/sui_atlas.h	/^  U32 codepoint;$/;"	m	language:C++	struct:Sui_Atlas_Font_Glyph_Context	typeref:typename:U32
 codepoint	D:/work/git/txt/code/sui_pack.h	/^  U32 codepoint; $/;"	m	language:C++	struct:Sui_Packer_Font_Glyph	typeref:typename:U32
 codepoints	D:/work/git/txt/code/sui_atlas.h	/^  U32 codepoints[1024];$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:U32[1024]
@@ -663,6 +667,7 @@ floor_f64	D:/work/git/txt/code/momo_intrinsics.h	/^static F64 floor_f64(F64 valu
 fmt_chunk	D:/work/git/txt/code/momo_wav.h	/^  WAV_Fmt_Chunk fmt_chunk;$/;"	m	language:C++	struct:__anon690e9bbf0408	typeref:typename:WAV_Fmt_Chunk
 font	D:/work/git/txt/code/game_assets_2.h	/^    Font_Asset font;$/;"	m	language:C++	union:Asset::__anon55685097010a	typeref:typename:Font_Asset
 font	D:/work/git/txt/code/pack_assets.cpp	/^    Karu_Font font;$/;"	m	language:C++	union:Karu_Asset::__anon1ecef806010a	typeref:typename:Karu_Font	file:
+font	D:/work/git/txt/code/pack_assets.cpp	/^    Sui_Packer_Source_Font font;$/;"	m	language:C++	union:Sui_Packer_Source::__anon1ecef806020a	typeref:typename:Sui_Packer_Source_Font	file:
 font	D:/work/git/txt/code/sui_atlas.h	/^  Sui_Atlas_Font* font;$/;"	m	language:C++	struct:Sui_Atlas_Font_Glyph_Context	typeref:typename:Sui_Atlas_Font *
 fonts	D:/work/git/txt/code/game_assets.h	/^  Font_Asset* fonts;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Font_Asset *
 fonts	D:/work/git/txt/code/sui_atlas.h	/^  Sui_Atlas_Font fonts[128];$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:Sui_Atlas_Font[128]
@@ -941,6 +946,7 @@ glyph_count	D:/work/git/txt/code/game_assets.h	/^  U32 glyph_count;$/;"	m	langua
 glyph_count	D:/work/git/txt/code/game_assets_2.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:U32
 glyph_count	D:/work/git/txt/code/karu.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
 glyph_count	D:/work/git/txt/code/momo_ttf.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
+glyph_count	D:/work/git/txt/code/pack_assets.cpp	/^  U32 glyph_count;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32	file:
 glyph_height	D:/work/git/txt/code/sui_pack.h	/^  F32 glyph_height;$/;"	m	language:C++	struct:Sui_Packer_Font	typeref:typename:F32
 glyph_rects	D:/work/git/txt/code/sui_atlas.h	/^  RP_Rect* glyph_rects;$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:RP_Rect *
 glyph_rect_contexts	D:/work/git/txt/code/sui_atlas.h	/^  Sui_Atlas_Context* glyph_rect_contexts;$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:Sui_Atlas_Context *
@@ -1034,6 +1040,7 @@ hex_to_rgba	D:/work/git/txt/code/momo_colors.h	/^static RGBA hex_to_rgba(U32 hex
 hhea	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
 highest_codepoint	D:/work/git/txt/code/game_assets.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:U32
 highest_codepoint	D:/work/git/txt/code/karu.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
+highest_codepoint	D:/work/git/txt/code/pack_assets.cpp	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32	file:
 highest_codepoint	D:/work/git/txt/code/sui_pack.h	/^  U32 highest_codepoint; \/\/ TODO: we should get rid of this?$/;"	m	language:C++	struct:Sui_Packer_Font	typeref:typename:U32
 hits	D:/work/git/txt/code/game_profiler.h	/^  U32 hits;$/;"	m	language:C++	struct:Profiler_Snapshot	typeref:typename:U32
 hits_and_cycles	D:/work/git/txt/code/game_profiler.h	/^  U64 hits_and_cycles;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:U64
@@ -1150,6 +1157,7 @@ KARU_CODE	D:/work/git/txt/code/pack_assets.cpp	/^#define KARU_CODE(/;"	d	languag
 Karu_Font	D:/work/git/txt/code/karu.h	/^struct Karu_Font {$/;"	s	language:C++
 Karu_Font	D:/work/git/txt/code/pack_assets.cpp	/^struct Karu_Font {$/;"	s	language:C++	file:
 Karu_Font_Glyph	D:/work/git/txt/code/karu.h	/^struct Karu_Font_Glyph {$/;"	s	language:C++
+Karu_Font_Glyph	D:/work/git/txt/code/pack_assets.cpp	/^struct Karu_Font_Glyph {$/;"	s	language:C++	file:
 Karu_Group	D:/work/git/txt/code/pack_assets.cpp	/^struct Karu_Group {$/;"	s	language:C++	file:
 KARU_H	D:/work/git/txt/code/karu.h	/^#define KARU_H$/;"	d	language:C++
 Karu_Header	D:/work/git/txt/code/karu.h	/^struct Karu_Header {$/;"	s	language:C++
@@ -1406,6 +1414,7 @@ offset_to_data	D:/work/git/txt/code/karu.h	/^  U32 offset_to_data;$/;"	m	languag
 offset_to_data	D:/work/git/txt/code/karu.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
 offset_to_data	D:/work/git/txt/code/karu.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Sound	typeref:typename:U32
 offset_to_data	D:/work/git/txt/code/pack_assets.cpp	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Asset	typeref:typename:U32	file:
+offset_to_data	D:/work/git/txt/code/pack_assets.cpp	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32	file:
 offset_to_fonts	D:/work/git/txt/code/karu.h	/^  U32 offset_to_fonts;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 offset_to_groups	D:/work/git/txt/code/pack_assets.cpp	/^  U32 offset_to_groups;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32	file:
 offset_to_sounds	D:/work/git/txt/code/karu.h	/^  U32 offset_to_sounds;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
@@ -1979,7 +1988,7 @@ Sui_Atlas_Context_Type	D:/work/git/txt/code/sui_atlas.h	/^enum Sui_Atlas_Context
 SUI_ATLAS_CONTEXT_TYPE_FONT_GLYPH	D:/work/git/txt/code/sui_atlas.h	/^  SUI_ATLAS_CONTEXT_TYPE_FONT_GLYPH,$/;"	e	language:C++	enum:Sui_Atlas_Context_Type
 SUI_ATLAS_CONTEXT_TYPE_SPRITE	D:/work/git/txt/code/sui_atlas.h	/^  SUI_ATLAS_CONTEXT_TYPE_SPRITE,$/;"	e	language:C++	enum:Sui_Atlas_Context_Type
 sui_atlas_end	D:/work/git/txt/code/sui_atlas.h	/^sui_atlas_end(Sui_Atlas* a, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:void
-sui_atlas_end_font	D:/work/git/txt/code/sui_atlas.h	/^sui_atlas_end_font(Sui_Atlas* a) {$/;"	f	language:C++	typeref:typename:void
+sui_atlas_end_font	D:/work/git/txt/code/sui_atlas.h	/^sui_atlas_end_font(Sui_Atlas* a) {$/;"	f	language:C++	typeref:typename:Sui_Atlas_Font *
 Sui_Atlas_Font	D:/work/git/txt/code/sui_atlas.h	/^struct Sui_Atlas_Font {$/;"	s	language:C++
 Sui_Atlas_Font_Glyph_Context	D:/work/git/txt/code/sui_atlas.h	/^struct Sui_Atlas_Font_Glyph_Context {$/;"	s	language:C++
 SUI_ATLAS_H	D:/work/git/txt/code/sui_atlas.h	/^#define SUI_ATLAS_H$/;"	d	language:C++
@@ -2003,9 +2012,11 @@ Sui_Packer_Font_Glyph	D:/work/git/txt/code/sui_pack.h	/^struct Sui_Packer_Font_G
 Sui_Packer_Sound	D:/work/git/txt/code/sui_pack.h	/^struct Sui_Packer_Sound {$/;"	s	language:C++
 Sui_Packer_Source	D:/work/git/txt/code/pack_assets.cpp	/^struct Sui_Packer_Source {$/;"	s	language:C++	file:
 Sui_Packer_Source_Bitmap	D:/work/git/txt/code/pack_assets.cpp	/^struct Sui_Packer_Source_Bitmap {$/;"	s	language:C++	file:
+Sui_Packer_Source_Font	D:/work/git/txt/code/pack_assets.cpp	/^struct Sui_Packer_Source_Font {$/;"	s	language:C++	file:
 Sui_Packer_Source_Sprite	D:/work/git/txt/code/pack_assets.cpp	/^struct Sui_Packer_Source_Sprite {$/;"	s	language:C++	file:
 Sui_Packer_Source_Type	D:/work/git/txt/code/pack_assets.cpp	/^enum Sui_Packer_Source_Type {$/;"	g	language:C++	file:
 SUI_PACKER_SOURCE_TYPE_BITMAP	D:/work/git/txt/code/pack_assets.cpp	/^  SUI_PACKER_SOURCE_TYPE_BITMAP,$/;"	e	language:C++	enum:Sui_Packer_Source_Type	file:
+SUI_PACKER_SOURCE_TYPE_FONT	D:/work/git/txt/code/pack_assets.cpp	/^  SUI_PACKER_SOURCE_TYPE_FONT,$/;"	e	language:C++	enum:Sui_Packer_Source_Type	file:
 SUI_PACKER_SOURCE_TYPE_SPRITE	D:/work/git/txt/code/pack_assets.cpp	/^  SUI_PACKER_SOURCE_TYPE_SPRITE,$/;"	e	language:C++	enum:Sui_Packer_Source_Type	file:
 Sui_Packer_Sprite	D:/work/git/txt/code/sui_pack.h	/^struct Sui_Packer_Sprite {$/;"	s	language:C++
 sui_pack_add_tag	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_add_tag(Sui_Packer* p, Game_Asset_Tag tag_type, F32 value) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -2014,12 +2025,13 @@ sui_pack_begin_group	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_begin_group
 sui_pack_end	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 sui_pack_end_group	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_end_group(Sui_Packer* p) $/;"	f	language:C++	typeref:typename:void	file:
 SUI_PACK_H	D:/work/git/txt/code/sui_pack.h	/^#define SUI_PACK_H$/;"	d	language:C++
-sui_pack_push_bitmap	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_push_bitmap(Sui_Packer* p, U32 width, U32 height, U32* pixels) {$/;"	f	language:C++	typeref:typename:void	file:
+sui_pack_push_bitmap	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_push_bitmap(Sui_Packer* p, U32 width, U32 height, U32* pixels) {$/;"	f	language:C++	typeref:typename:U32	file:
+sui_pack_push_font	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_push_font(Sui_Packer* p, Sui_Atlas_Font* font) {$/;"	f	language:C++	typeref:typename:U32	file:
 sui_pack_push_sprite	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_push_sprite(Sui_Packer* p, U32 bitmap_asset_id, Rect2U texel_uv) {$/;"	f	language:C++	typeref:typename:void	file:
 sui_read_file_to_blk	D:/work/git/txt/code/sui.h	/^sui_read_file_to_blk(Block* mem, const char* filename, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:B32
 sui_read_font_from_file	D:/work/git/txt/code/sui.h	/^sui_read_font_from_file(TTF* ttf, const char* filename, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:B32
 sui_read_wav_from_file	D:/work/git/txt/code/sui.h	/^sui_read_wav_from_file(WAV* wav, const char* filename, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:B32
-sui_rp_rect_to_rect2u	D:/work/git/txt/code/pack_assets.cpp	/^sui_rp_rect_to_rect2u() {$/;"	f	language:C++	typeref:typename:Rect2U	file:
+sui_rp_rect_to_rect2u	D:/work/git/txt/code/pack_assets.cpp	/^sui_rp_rect_to_rect2u(RP_Rect rp) {$/;"	f	language:C++	typeref:typename:Rect2U	file:
 sui_write_file_from_blk	D:/work/git/txt/code/sui.h	/^sui_write_file_from_blk(const char* filename, Block blk) {$/;"	f	language:C++	typeref:typename:B32
 swap	D:/work/git/txt/code/momo_common.h	/^#define swap(/;"	d	language:C++
 swap_memory	D:/work/git/txt/code/momo_common.h	/^swap_memory(void* lhs, void* rhs, UMI size) {$/;"	f	language:C++	typeref:typename:void
@@ -2070,6 +2082,7 @@ texel_uv	D:/work/git/txt/code/game_gfx.h	/^  Rect2U texel_uv;$/;"	m	language:C++
 texel_uv	D:/work/git/txt/code/karu.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:Rect2U
 texel_uv	D:/work/git/txt/code/karu.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Karu_Sprite	typeref:typename:Rect2U
 texel_uv	D:/work/git/txt/code/pack_assets.cpp	/^  Rect2U texel_uv; $/;"	m	language:C++	struct:Sui_Packer_Source_Sprite	typeref:typename:Rect2U	file:
+texel_uv	D:/work/git/txt/code/pack_assets.cpp	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:Rect2U	file:
 texel_uv	D:/work/git/txt/code/pack_assets.cpp	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Karu_Sprite	typeref:typename:Rect2U	file:
 text	D:/work/git/txt/code/game_mode_computer.h	/^  String8 text;$/;"	m	language:C++	struct:Computer_Selection	typeref:typename:String8
 text	D:/work/git/txt/code/meta.cpp	/^  C8* text;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:C8 *	file:

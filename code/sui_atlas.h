@@ -102,9 +102,11 @@ sui_atlas_begin_font(Sui_Atlas* a, const char* font_filename, F32 font_height) {
   a->active_font->filename = font_filename;
 }
 
-static void
+static Sui_Atlas_Font*
 sui_atlas_end_font(Sui_Atlas* a) {
+  Sui_Atlas_Font* ret = a->active_font;
   a->active_font = null;
+  return ret;
 }
 
 static void
