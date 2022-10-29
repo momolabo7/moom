@@ -28,9 +28,9 @@ game_update_and_render(Platform* pf)
     if (!ba_partition(pf->game_arena, &game->frame_arena, MB(1), 16)) 
       return false;
     
-    if(!load_game_assets(&game->game_assets, 
+    if(!init_game_assets(&game->game_assets, 
                          pf,
-                         "test.sui",
+                         "test_pack.sui",
                          &game->asset_arena))
     {
       return false;

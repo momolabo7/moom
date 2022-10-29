@@ -297,12 +297,13 @@ lit_gen_lights(Lit_Light_List* lights,
 
 static void
 lit_draw_lights(Lit_Light_List* lights, Painter* painter) {
+  Game_Sprite_ID sprite_id = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
   // Emitters
   al_foreach(light_index, lights)
   {
     Lit_Light* light = al_at(lights, light_index);
     paint_sprite(painter,
-                 SPRITE_CIRCLE, 
+                 sprite_id, 
                  light->pos,
                  {16.f, 16.f},
                  {0.8f, 0.8f, 0.8f, 1.f});

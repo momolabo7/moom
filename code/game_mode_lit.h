@@ -8,36 +8,36 @@
 
 #include "game_mode_lit_particles.h"
 
-struct Lit_Edge{
+typedef struct {
   B32 is_disabled;
   V2 start_pt;
   V2 end_pt;
-};
+} Lit_Edge;
 
 
-struct Lit_Edge_List{
+typedef struct {
   U32 count;
   Lit_Edge e[256];
-};
+} Lit_Edge_List;
 
 
 #define LIT_TUTORIAL_TEXT_FADE_DURATION 1.f
-enum Lit_Tutorial_Text_State{
+typedef enum {
   LIT_TUTORIAL_TEXT_STATE_INVISIBLE,
   LIT_TUTORIAL_TEXT_STATE_FADE_IN,
   LIT_TUTORIAL_TEXT_STATE_VISIBLE,
   LIT_TUTORIAL_TEXT_STATE_FADE_OUT,
-};
+} Lit_Tutorial_Text_State;
 
 
 typedef B32 (*Lit_Tutorial_Trigger)(struct Lit* m, Platform* pf);
-struct Lit_Tutorial_Trigger_List{
+typedef struct {
   U32 current_id;
   U32 count;
   Lit_Tutorial_Trigger e[10];
-};
+} Lit_Tutorial_Trigger_List;
 
-struct Lit_Tutorial_Text
+typedef struct
 {
   String8 str;
   F32 alpha;
@@ -46,15 +46,15 @@ struct Lit_Tutorial_Text
   F32 pos_y;
   F32 timer;
 
-};
+} Lit_Tutorial_Text;
 
 
-struct Lit_Tutorial_Text_List{
+typedef struct {
   U32 count;
   Lit_Tutorial_Text e[10];
   U32 next_id_to_fade_in;
   U32 next_id_to_fade_out;
-} ;
+} Lit_Tutorial_Text_List;
 
 
 
@@ -116,14 +116,14 @@ lit_calc_ghost_edge_line(Lit_Edge* e) {
 #include "game_mode_lit_sensors.h"
 #include "game_mode_lit_player.h"
 
-enum Lit_State_Type{
+typedef enum {
   LIT_STATE_TYPE_TRANSITION_IN,
   LIT_STATE_TYPE_TRANSITION_OUT,
   LIT_STATE_TYPE_NORMAL,
-};
+} Lit_State_Type;
 
 
-struct Lit {
+typedef struct Lit {
   Lit_State_Type state;
   U32 current_level_id;
   Lit_Player player;
@@ -142,7 +142,7 @@ struct Lit {
   Lit_Tutorial_Text_List tutorial_texts;
   Lit_Tutorial_Trigger_List tutorial_triggers;
 
-};
+} Lit;
 
 
 static Lit_Edge*
@@ -455,27 +455,30 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
     }
   }
 
+
+  Game_Sprite_ID sprite_id = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
+  Game_Font_ID font_id = get_first_font(painter->ga, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
   // Render all the tutorial texts
   al_foreach(tutorial_text_id, &m->tutorial_texts)
   {
     Lit_Tutorial_Text* text = al_at(&m->tutorial_texts, tutorial_text_id);
     switch(text->state) {
       case LIT_TUTORIAL_TEXT_STATE_VISIBLE: {
-        paint_text(painter, FONT_DEFAULT, text->str, RGBA_WHITE, text->pos_x, text->pos_y, 32.f);
+        paint_text(painter, font_id, text->str, RGBA_WHITE, text->pos_x, text->pos_y, 32.f);
         advance_depth(painter);
       } break;
       case LIT_TUTORIAL_TEXT_STATE_FADE_IN: {
         F32 a = ease_out_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
         F32 y = text->pos_y + (1.f-a) * 32.f;
         RGBA color = rgba(1.f, 1.f, 1.f, text->alpha);
-        paint_text(painter, FONT_DEFAULT, text->str, color, text->pos_x, y, 32.f);
+        paint_text(painter, font_id, text->str, color, text->pos_x, y, 32.f);
         advance_depth(painter);
       } break;
       case LIT_TUTORIAL_TEXT_STATE_FADE_OUT: {
         F32 a = ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
         F32 y = text->pos_y + a * 32.f;
         RGBA color = rgba(1.f, 1.f, 1.f, text->alpha);
-        paint_text(painter, FONT_DEFAULT, text->str, color, text->pos_x, y, 32.f);
+        paint_text(painter, font_id, text->str, color, text->pos_x, y, 32.f);
         advance_depth(painter);
       } break;
     }
@@ -484,7 +487,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   // Draw the overlay for fade in/out
   {
     RGBA color = rgba(0.f, 0.f, 0.f, m->stage_fade);
-    paint_sprite(painter, SPRITE_BLANK, GAME_MIDPOINT, GAME_DIMENSIONS, color);
+    paint_sprite(painter, sprite_id, GAME_MIDPOINT, GAME_DIMENSIONS, color);
     advance_depth(painter);
   }
 }

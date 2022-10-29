@@ -2,7 +2,7 @@ struct Lit_Particle {
   V2 pos, vel;
   V2 size_start, size_end;
   RGBA color_start, color_end;
-  Sprite_ID sprite_id;
+  Game_Sprite_ID sprite_id;
   F32 lifespan;
   F32 lifespan_now;
 };
@@ -21,7 +21,6 @@ struct Lit_Particle_Pool {
 static void
 lit_spawn_particle(Lit_Particle_Pool* ps,
                    F32 lifespan,
-                   Sprite_ID sprite_id,
                    V2 pos, V2 vel,
                    RGBA color_start,
                    RGBA color_end,
@@ -32,7 +31,6 @@ lit_spawn_particle(Lit_Particle_Pool* ps,
     Lit_Particle* p = ps->particles + ps->particle_count++; 
     p->pos = pos;
     p->vel = vel;
-    p->sprite_id = sprite_id;
     p->color_start = color_start;
     p->color_end = color_end;
     p->lifespan = p->lifespan_now = lifespan;
@@ -82,8 +80,8 @@ lit_render_particles(Lit_Particle_Pool* ps, Painter* painter) {
     size.w = lerp_f32(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = lerp_f32(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-
-    paint_sprite(painter, SPRITE_BLANK, p->pos, size, color);
+    Game_Sprite_ID sprite_id = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
+    paint_sprite(painter, sprite_id, p->pos, size, color);
     advance_depth(painter);
   }
 }

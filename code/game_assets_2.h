@@ -35,7 +35,7 @@ enum Asset_Type {
 
 struct Bitmap_Asset_ID { U32 value; };
 struct Font_Asset_ID { U32 value; }; 
-struct Image_Asset_ID { U32 value; };
+struct Sprite_Asset_ID { U32 value; };
 
 struct Bitmap_Asset {
   U32 renderer_bitmap_id;
@@ -504,8 +504,6 @@ get_best_asset_of_type(Game_Assets* ga,
 {
   U32 ret = 0;
   F32 best_diff = F32_INFINITY();
-  
-  
   Asset_Group* group = ga->groups + group_id;
   for (U32 asset_index = group->first_asset_index;
        asset_index != group->one_past_last_asset_index;

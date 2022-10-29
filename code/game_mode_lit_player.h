@@ -116,8 +116,9 @@ lit_update_player(Lit_Player* player,
 
 static void
 lit_draw_player(Lit_Player* player, Painter* painter){
+  Game_Sprite_ID sprite_id = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
   paint_sprite(painter, 
-               SPRITE_CIRCLE, 
+               sprite_id, 
                player->pos, 
                v2(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
   advance_depth(painter);

@@ -134,15 +134,18 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf) {
   V2 input_area_size = { console_width, line_height };
   V2 input_area_pos = { console_width/2, line_height/2 };
   
-  paint_sprite(p, SPRITE_BLANK, 
+  Game_Font_ID font_id = get_first_font(p->ga, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
+  Game_Sprite_ID sprite_id = get_first_sprite(p->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
+
+  paint_sprite(p, sprite_id, 
                GAME_MIDPOINT, 
                GAME_DIMENSIONS,
                {0.f, 0.f, 0.f, 0.8f});
   advance_depth(p);
   
-  paint_sprite(p, SPRITE_BLANK, console_pos, console_size, hex_to_rgba(0x787878FF));
+  paint_sprite(p, sprite_id, console_pos, console_size, hex_to_rgba(0x787878FF));
   advance_depth(p);
-  paint_sprite(p, SPRITE_BLANK, input_area_pos, input_area_size, hex_to_rgba(0x505050FF));
+  paint_sprite(p, sprite_id, input_area_pos, input_area_size, hex_to_rgba(0x505050FF));
   advance_depth(p);
   
   
@@ -154,7 +157,7 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf) {
     String8_Builder* line = dc->info_lines + line_index;
     
     paint_text(p,
-               FONT_DEFAULT,
+               font_id,
                line->str,
                hex_to_rgba(0xFFFFFFFF),
                left_pad, 
@@ -164,7 +167,7 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf) {
   }
   advance_depth(p);
   paint_text(p,
-             FONT_DEFAULT,
+             font_id,
              dc->input_line.str,
              hex_to_rgba(0xFFFFFFFF),
              left_pad, 

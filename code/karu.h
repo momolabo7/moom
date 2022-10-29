@@ -5,7 +5,7 @@
 #include "momo_shapes.h"
 
 /////////////////////////////////////////////////////////////
-// Sui file related
+// Karu file related
 
 #define KARU_CODE(a, b, c, d) (((U32)(a) << 0) | ((U32)(b) << 8) | ((U32)(c) << 16) | ((U32)(d) << 24))
 #define KARU_SIGNATURE KARU_CODE('k', 'a', 'r', 'u')

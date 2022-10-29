@@ -27,7 +27,8 @@ Platform* g_platform;
 
 
 #include "game_profiler.h"
-#include "game_assets.h"
+#include "game_assets2.h"
+//#include "game_assets.h"
 #include "game_painter.h"
 #include "game_inspector.h"
 

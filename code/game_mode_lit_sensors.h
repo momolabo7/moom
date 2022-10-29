@@ -87,7 +87,6 @@ lit_update_sensors(Lit_Sensor_List* sensors,
 
       lit_spawn_particle(particles, 
                          1.f,
-                         SPRITE_BLANK,
                          sensor->pos,
                          particle_vel,
                          start_color,

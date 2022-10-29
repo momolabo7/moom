@@ -78,6 +78,7 @@ computer_tick(Game* game,
   
 
   // Text
+#if 0
   {
     const F32 selection_x = 200.f;
     const F32 selection_y = 700.f;
@@ -111,6 +112,7 @@ computer_tick(Game* game,
       paint_filled_circle(painter, circle, 16);  
     }
   }
+#endif
 }
 
 

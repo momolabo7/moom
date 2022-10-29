@@ -50,13 +50,13 @@ advance_depth(Painter* p) {
 
 static void
 paint_sprite(Painter* p,
-             Sprite_ID sprite_id,
+             Game_Sprite_ID sprite_id,
              V2 pos,
              V2 size,
-             RGBA color = {1.f,1.f,1.f,1.f})
+             RGBA color = rgba(1.f,1.f,1.f,1.f))
 {
-  Sprite_Asset* sprite = get_sprite(p->ga, sprite_id);
-  Bitmap_Asset* bitmap = get_bitmap(p->ga, sprite->bitmap_id);
+  Game_Sprite* sprite = get_sprite(p->ga, sprite_id);
+  Game_Bitmap* bitmap = get_bitmap(p->ga, sprite->bitmap_asset_id);
   V2 anchor = {0.5f, 0.5f}; 
   
   gfx_push_sprite(p->gfx, 
@@ -69,14 +69,13 @@ paint_sprite(Painter* p,
 
 static void
 paint_text(Painter* p,
-           Font_ID font_id,
+           Game_Font_ID font_id,
            String8 str,
            RGBA color,
            F32 px, F32 py,
            F32 font_height) 
 {
-  Font_Asset* font = get_font(p->ga, font_id);
-  Bitmap_Asset* bitmap = get_bitmap(p->ga, font->bitmap_id);
+  Game_Font* font = get_font(p->ga, font_id);
   for(U32 char_index = 0; 
       char_index < str.count;
       ++char_index) 
@@ -87,8 +86,9 @@ paint_text(Painter* p,
       U32 prev_cp = str.e[char_index-1];
       px += get_horizontal_advance(font, prev_cp, curr_cp)*font_height;
     }
-    Font_Glyph_Asset *glyph = get_glyph(font, curr_cp);
-    
+    Game_Font_Glyph *glyph = get_glyph(font, curr_cp);
+    Game_Bitmap* bitmap = get_bitmap(p->ga, glyph->bitmap_asset_id);
+
     F32 width = (glyph->box.max.x - glyph->box.min.x)*font_height;
     F32 height = (glyph->box.max.y - glyph->box.min.y)*font_height;
     

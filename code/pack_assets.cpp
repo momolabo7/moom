@@ -3,6 +3,7 @@
 
 #include "sui.h"
 #include "sui_atlas.h"
+#include "karu2.h"
 
 static Rect2U
 sui_rp_rect_to_rect2u(RP_Rect rp) {
@@ -14,91 +15,6 @@ sui_rp_rect_to_rect2u(RP_Rect rp) {
 
   return ret;
 }
-
-// game_asset_types.h
-enum Game_Asset_Tag : U32 {
-  GAME_ASSET_TAG_MOOD,
-
-  GAME_ASSET_TAG_COUNT,
-};
-enum Game_Asset_Group : U32 {
-  GAME_ASSET_GROUP_TEST,
-  
-  GAME_ASSET_GROUP_COUNT,
-};
-
-enum Game_Asset_Type : U32 {
-  GAME_ASSET_TYPE_SPRITE,
-  GAME_ASSET_TYPE_FONT,
-  GAME_ASSET_TYPE_BITMAP,
-};
-
-// karu.h
-#define KARU_CODE(a, b, c, d) (((U32)(a) << 0) | ((U32)(b) << 8) | ((U32)(c) << 16) | ((U32)(d) << 24))
-#define KARU_SIGNATURE KARU_CODE('k', 'a', 'r', 'u')
-
-
-struct Karu_Bitmap {
-  U32 width;
-  U32 height;
-  
-  // data:
-  //   U32 pixels[width*height]
-};
-
-struct Karu_Font_Glyph {
-  U32 bitmap_asset_id; 
-  Rect2U texel_uv;
-  Rect2 box;
-  U32 codepoint;
-};
-
-struct Karu_Font {
-  U32 offset_to_data;
-  
-  // TODO: Maybe add 'lowest codepoint'?
-  U32 bitmap_asset_id;
-  U32 highest_codepoint;
-  U32 glyph_count;
-  
-  // Data is: 
-  // 
-  // Karu_Font_Glyph glyphs[glyph_count]
-  // F32 horizontal_advances[glyph_count][glyph_count]
-  //
-
-};
-
-struct Karu_Sprite {
-  U32 bitmap_asset_id; 
-  Rect2U texel_uv;
-};
-
-struct Karu_Asset {
-  Game_Asset_Type type; 
-
-  U32 offset_to_data;
-
-  // Tag info
-  U32 first_tag_index;
-  U32 one_past_last_tag_index;
-
-  union {
-    Karu_Bitmap bitmap;
-    Karu_Font font;
-    Karu_Sprite sprite;
-  };
-};
-
-struct Karu_Group {
-  U32 first_asset_index;
-  U32 one_past_last_asset_index;
-};
-
-struct Karu_Tag {
-  Game_Asset_Tag type; 
-  F32 value;
-};
 
 
 // sui_packer.h
@@ -141,7 +57,7 @@ struct Sui_Packer {
   Sui_Packer_Source sources[1024]; // additional data for assets
   Karu_Asset assets[1024]; // to be written to file
   
-  Karu_Group groups[GAME_ASSET_GROUP_COUNT]; //to be written to file
+  Karu_Group groups[GAME_ASSET_GROUP_TYPE_COUNT]; //to be written to file
   
   // Required context for interface
   Karu_Group* active_group;
@@ -155,7 +71,7 @@ sui_pack_begin(Sui_Packer* p) {
 }
 
 static void
-sui_pack_add_tag(Sui_Packer* p, Game_Asset_Tag tag_type, F32 value) {
+sui_pack_add_tag(Sui_Packer* p, Game_Asset_Tag_Type tag_type, F32 value) {
   U32 tag_index = p->tag_count++;
   
   Karu_Asset* asset = p->assets + p->active_asset_index;
@@ -167,7 +83,7 @@ sui_pack_add_tag(Sui_Packer* p, Game_Asset_Tag tag_type, F32 value) {
 }
 
 static void
-sui_pack_begin_group(Sui_Packer* p, Game_Asset_Group group) 
+sui_pack_begin_group(Sui_Packer* p, Game_Asset_Group_Type group) 
 {
   p->active_group = p->groups + group;
   p->active_group->first_asset_index = p->asset_count;
@@ -250,18 +166,6 @@ sui_pack_push_font(Sui_Packer* p, Sui_Atlas_Font* font, U32 bitmap_asset_id) {
   return asset_index;
 }
 
-struct Karu_Header {
-  U32 signature;
-
-  U32 group_count;
-  U32 asset_count;
-  U32 tag_count;
-
-  U32 offset_to_assets;
-  U32 offset_to_tags;
-  U32 offset_to_groups;
-};
-
 static void
 sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena) 
 {
@@ -270,11 +174,11 @@ sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena)
  
   U32 asset_tag_array_size = sizeof(Karu_Tag)*p->tag_count;
   U32 asset_array_size = sizeof(Karu_Asset)*p->asset_count;
-  U32 group_array_size = sizeof(Karu_Group)*GAME_ASSET_GROUP_COUNT;
+  U32 group_array_size = sizeof(Karu_Group)*GAME_ASSET_GROUP_TYPE_COUNT;
 
   Karu_Header header = {0};
   header.signature = KARU_SIGNATURE;
-  header.group_count = GAME_ASSET_GROUP_COUNT;
+  header.group_count = GAME_ASSET_GROUP_TYPE_COUNT;
   header.asset_count = p->asset_count;
   header.tag_count = p->tag_count;
   header.offset_to_assets = sizeof(Karu_Header);
@@ -354,8 +258,12 @@ sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena)
           Karu_Font_Glyph glyph = {0};
           glyph.bitmap_asset_id = source->font.bitmap_asset_id;
           glyph.codepoint = glyph_rect_context->font_glyph.codepoint;
-                   
           glyph.texel_uv = sui_rp_rect_to_rect2u(*glyph_rect);
+
+          U32 ttf_glyph_index = ttf_get_glyph_index(ttf, glyph.codepoint);
+          F32 s = ttf_get_scale_for_pixel_height(ttf, 1.f);
+          glyph.box = ttf_get_glyph_box(ttf, ttf_glyph_index, s);
+
           fwrite(&glyph, sizeof(glyph), 1, file);
         }
       } break;
@@ -402,7 +310,7 @@ int main() {
   sui_atlas_end(atlas, allocator);
   sui_log("Finished atlas...\n");
 
-#if 1
+#if 0
   sui_log("Writing test png file...\n");
   Block png_to_write_memory = png_write_img32_to_blk(atlas->bitmap, allocator);
   sui_write_file_from_blk("test.png", png_to_write_memory);
@@ -411,12 +319,20 @@ int main() {
   make(Sui_Packer, packer);
   sui_pack_begin(packer);
 
-  sui_pack_begin_group(packer, GAME_ASSET_GROUP_TEST);
+  sui_pack_begin_group(packer, GAME_ASSET_GROUP_TYPE_ATLAS);
   U32 bitmap_id = sui_pack_push_bitmap(packer, atlas->bitmap.width, atlas->bitmap.height, atlas->bitmap.pixels);
+  sui_pack_end_group(packer);
+  
+  sui_pack_begin_group(packer, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
   sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*blank_sprite->rect));
+  sui_pack_end_group(packer);
+
+  sui_pack_begin_group(packer, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
   sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*circle_sprite->rect));
+  sui_pack_end_group(packer);
+
+  sui_pack_begin_group(packer, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
   sui_pack_push_font(packer, font_a, bitmap_id);
-  sui_pack_push_font(packer, font_b, bitmap_id);
   sui_pack_end_group(packer);
 
   sui_pack_end(packer, "test_pack.sui", allocator);
