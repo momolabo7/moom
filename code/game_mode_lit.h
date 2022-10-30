@@ -486,8 +486,10 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
 
   // Draw the overlay for fade in/out
   {
+    Game_Sprite_ID blank = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
+
     RGBA color = rgba(0.f, 0.f, 0.f, m->stage_fade);
-    paint_sprite(painter, sprite_id, GAME_MIDPOINT, GAME_DIMENSIONS, color);
+    paint_sprite(painter, blank, GAME_MIDPOINT, GAME_DIMENSIONS, color);
     advance_depth(painter);
   }
 }

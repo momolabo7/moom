@@ -84,7 +84,8 @@ paint_text(Painter* p,
     U32 curr_cp = str.e[char_index];
     if (char_index > 0) {
       U32 prev_cp = str.e[char_index-1];
-      px += get_horizontal_advance(font, prev_cp, curr_cp)*font_height;
+      F32 advance = get_horizontal_advance(font, prev_cp, curr_cp);
+      px += advance * font_height;
     }
     Game_Font_Glyph *glyph = get_glyph(font, curr_cp);
     Game_Bitmap* bitmap = get_bitmap(p->ga, glyph->bitmap_asset_id);

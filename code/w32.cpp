@@ -711,7 +711,7 @@ WinMain(HINSTANCE instance,
     }
 #endif
    
-    w32_profile_block("game loop");
+    w32_profile_block(game_loop);
 
     // Begin frame
     w32_audio_begin_frame(audio);

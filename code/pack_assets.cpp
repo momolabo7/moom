@@ -266,6 +266,33 @@ sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena)
 
           fwrite(&glyph, sizeof(glyph), 1, file);
         }
+
+ 
+        // push horizontal advances
+        // they are scaled to 1 pixel scale.
+        F32 pixel_scale = ttf_get_scale_for_pixel_height(ttf, 1.f);
+        
+        for (U32 cpi1 = 0; cpi1 < atlas_font->codepoint_count; ++cpi1) {
+          for (U32 cpi2 = 0; cpi2 < atlas_font->codepoint_count; ++cpi2) {
+            U32 cp1 = atlas_font->codepoints[cpi1];
+            U32 cp2 = atlas_font->codepoints[cpi2];
+            
+            U32 gi1 = ttf_get_glyph_index(ttf, cp1);
+            U32 gi2 = ttf_get_glyph_index(ttf, cp2);
+            
+            TTF_Glyph_Horizontal_Metrics g1_metrics =
+              ttf_get_glyph_horiozontal_metrics(ttf, gi1);
+
+            S32 raw_kern = ttf_get_glyph_kerning(ttf, gi1, gi2);
+            
+            F32 advance_width = (F32)g1_metrics.advance_width * pixel_scale;
+            F32 kerning = (F32)raw_kern * pixel_scale;
+            
+            F32 advance = advance_width + kerning;
+            fwrite(&advance, sizeof(advance), 1, file);
+          }
+        }
+
       } break;
     }
   }

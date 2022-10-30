@@ -74,7 +74,6 @@ struct Game_Asset {
 };
 
 struct Game_Assets {
-  Bump_Allocator arena;
   Gfx_Texture_Queue* texture_queue;
   
   U32 asset_count;
@@ -109,11 +108,11 @@ init_game_assets(Game_Assets* ga,
   if (karu_header.signature != KARU_SIGNATURE) return false;
 
   // Allocation for asset components (asset slots and tags)
-  ga->assets = ba_push_arr(Game_Asset, &ga->arena, karu_header.asset_count);
+  ga->assets = ba_push_arr(Game_Asset, arena, karu_header.asset_count);
   if (!ga->assets) return false;
   ga->asset_count = karu_header.asset_count;
   
-  ga->tags = ba_push_arr(Game_Asset_Tag, &ga->arena, karu_header.tag_count);
+  ga->tags = ba_push_arr(Game_Asset_Tag, arena, karu_header.tag_count);
   if (!ga->tags) return false;
   ga->tag_count = karu_header.tag_count;
 
@@ -181,7 +180,19 @@ init_game_assets(Game_Assets* ga,
           asset->bitmap.renderer_texture_handle = bitmap_counter++;
           asset->bitmap.width = karu_asset.bitmap.width;
           asset->bitmap.height = karu_asset.bitmap.height;
-           
+            
+          U32 bitmap_size = asset->bitmap.width * asset->bitmap.height * 4;
+          Gfx_Texture_Payload* payload = gfx_begin_texture_transfer(gfx, bitmap_size);
+          if (!payload) return false;
+          payload->texture_index = asset->bitmap.renderer_texture_handle;
+          payload->texture_width = karu_asset.bitmap.width;
+          payload->texture_height = karu_asset.bitmap.height;
+          pf->read_file(file, 
+                        bitmap_size, 
+                        karu_asset.offset_to_data, 
+                        payload->texture_data);
+          gfx_complete_texture_transfer(payload);
+
         } break;
         case GAME_ASSET_TYPE_SPRITE: {
           asset->sprite.bitmap_asset_id.value = karu_asset.sprite.bitmap_asset_id;
@@ -191,11 +202,11 @@ init_game_assets(Game_Assets* ga,
           U32 glyph_count = karu_asset.font.glyph_count;
           U32 highest_codepoint = karu_asset.font.highest_codepoint;
           
-          U16* codepoint_map = ba_push_arr(U16, &ga->arena, highest_codepoint);
+          U16* codepoint_map = ba_push_arr(U16, arena, highest_codepoint);
           if(!codepoint_map) return false;
-          Game_Font_Glyph* glyphs = ba_push_arr(Game_Font_Glyph, &ga->arena, glyph_count);
+          Game_Font_Glyph* glyphs = ba_push_arr(Game_Font_Glyph, arena, glyph_count);
           if(!glyphs) return false;
-          F32* advances = ba_push_arr(F32, &ga->arena, glyph_count*glyph_count);
+          F32* advances = ba_push_arr(F32, arena, glyph_count*glyph_count);
           if (!advances) return false;
           
           U32 current_data_offset = karu_asset.offset_to_data;
@@ -216,32 +227,32 @@ init_game_assets(Game_Assets* ga,
             Game_Font_Glyph* glyph = glyphs + glyph_index;
             glyph->texel_uv = karu_glyph.texel_uv;
             glyph->bitmap_asset_id = Game_Bitmap_ID{ karu_glyph.bitmap_asset_id };
+            glyph->box = karu_glyph.box;
             
             codepoint_map[karu_glyph.codepoint] = glyph_index;
-
-            // Horizontal advances
-            U32 advance_index = 0;
-            for(U32 gi1 = 0; gi1 < glyph_count; ++gi1) {
-              for (U32 gi2 = 0; gi2 < glyph_count; ++gi2) {
-                U32 advance_data_offset = 
-                  karu_asset.offset_to_data + 
-                  sizeof(Game_Font_Glyph)*glyph_count+
-                  sizeof(F32)*advance_index;
-                pf->read_file(file,
-                              sizeof(F32),
-                              advance_data_offset,
-                              advances + gi1*glyph_count + gi2);
-                ++advance_index;
-              }
-            }
-            
-            asset->font.glyphs = glyphs;
-            asset->font.codepoint_map = codepoint_map;
-            asset->font.horizontal_advances = advances;
-            asset->font.highest_codepoint = highest_codepoint;
-            asset->font.glyph_count = glyph_count;
-
           }
+
+          // Horizontal advances
+          U32 advance_index = 0;
+          for(U32 gi1 = 0; gi1 < glyph_count; ++gi1) {
+            for (U32 gi2 = 0; gi2 < glyph_count; ++gi2) {
+              U32 advance_data_offset = 
+                karu_asset.offset_to_data + 
+                sizeof(Karu_Font_Glyph)*glyph_count+
+                sizeof(F32)*advance_index;
+              pf->read_file(file,
+                            sizeof(F32),
+                            advance_data_offset,
+                            advances + gi1*glyph_count + gi2);
+              ++advance_index;
+            }
+          }
+            
+          asset->font.glyphs = glyphs;
+          asset->font.codepoint_map = codepoint_map;
+          asset->font.horizontal_advances = advances;
+          asset->font.highest_codepoint = highest_codepoint;
+          asset->font.glyph_count = glyph_count;
         } break;
       }
     }
@@ -327,18 +338,19 @@ get_horizontal_advance(Game_Font* font,
                        U32 left_codepoint, 
                        U32 right_codepoint) 
 {
+  // TODO: Better error handling
   U32 g1 = font->codepoint_map[left_codepoint];
   U32 g2 = font->codepoint_map[right_codepoint];
-  if (!g1 || !g2) return 0.f;
+  //if (!g1 || !g2) return 0.f;
   
-  U32 advance_index = (g1-1)*font->glyph_count+(g2+1);
+  U32 advance_index = ((g1)*font->glyph_count)+(g2);
   return font->horizontal_advances[advance_index];
 }
 
 static Game_Font_Glyph*
 get_glyph(Game_Font* font, U32 codepoint) {
-  U32 glyph_index_plus_one = font->codepoint_map[codepoint];
-  if (glyph_index_plus_one == 0) return nullptr;
+  U32 glyph_index_plus_one = font->codepoint_map[codepoint] + 1;
+  if (glyph_index_plus_one == 0) return null;
   Game_Font_Glyph *glyph = font->glyphs + glyph_index_plus_one - 1;
   return glyph;
 }
