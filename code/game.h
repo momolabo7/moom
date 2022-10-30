@@ -9,10 +9,11 @@
 #include "game_platform.h"
 #include "game_gfx.h"
 
+// Globals
+static Platform* g_platform;
 
 #ifdef INTERNAL
-Profiler* g_profiler;
-Platform* g_platform;
+static Profiler* g_profiler;
 #define game_log(...) g_platform->debug_log(__VA_ARGS__)
 #define game_profile_block(name) prf_block(g_profiler, name)
 #define game_profile_begin(name) prf_begin_block(g_profiler, name)
@@ -26,8 +27,11 @@ Platform* g_platform;
 
 
 
+
 #include "game_profiler.h"
-#include "game_assets2.h"
+#include "game_assets.h"
+
+
 //#include "game_assets.h"
 #include "game_painter.h"
 #include "game_inspector.h"

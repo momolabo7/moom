@@ -91,5 +91,18 @@ sui_read_wav_from_file(WAV* wav, const char* filename, Bump_Allocator* allocator
     return false;
   return wav_read(wav, mem->data, mem->size);
 }
+static Rect2U
+sui_rp_rect_to_rect2u(RP_Rect rp) {
+  Rect2U ret = {0};
+  ret.min.x = rp.x;
+  ret.min.y = rp.y;
+  ret.max.x = rp.x + rp.w;
+  ret.max.y = rp.y + rp.h;
+
+  return ret;
+}
+#include "karu.h"
+#include "sui_atlas.h"
+#include "sui_pack.h"
 
 #endif //Karu_EXPORT_H

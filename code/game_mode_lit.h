@@ -142,6 +142,11 @@ typedef struct Lit {
   Lit_Tutorial_Text_List tutorial_texts;
   Lit_Tutorial_Trigger_List tutorial_triggers;
 
+  // Assets that we are interested in
+  Game_Font_ID tutorial_font;
+  Game_Sprite_ID blank_sprite;
+  Game_Sprite_ID circle_sprite;
+
 } Lit;
 
 
@@ -318,6 +323,9 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
     m->state = LIT_STATE_TYPE_TRANSITION_IN;
     m->stage_fade = 1.f;
 
+    // TODO: shouldn't use painter->ga
+    m->tutorial_font = get_first_font(painter->ga, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
+    m->blank_sprite = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
   }
 
   Lit_Player* player = &m->player;
@@ -455,30 +463,27 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
     }
   }
 
-
-  Game_Sprite_ID sprite_id = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
-  Game_Font_ID font_id = get_first_font(painter->ga, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
   // Render all the tutorial texts
   al_foreach(tutorial_text_id, &m->tutorial_texts)
   {
     Lit_Tutorial_Text* text = al_at(&m->tutorial_texts, tutorial_text_id);
     switch(text->state) {
       case LIT_TUTORIAL_TEXT_STATE_VISIBLE: {
-        paint_text(painter, font_id, text->str, RGBA_WHITE, text->pos_x, text->pos_y, 32.f);
+        paint_text(painter, m->tutorial_font, text->str, RGBA_WHITE, text->pos_x, text->pos_y, 32.f);
         advance_depth(painter);
       } break;
       case LIT_TUTORIAL_TEXT_STATE_FADE_IN: {
         F32 a = ease_out_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
         F32 y = text->pos_y + (1.f-a) * 32.f;
         RGBA color = rgba(1.f, 1.f, 1.f, text->alpha);
-        paint_text(painter, font_id, text->str, color, text->pos_x, y, 32.f);
+        paint_text(painter, m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
         advance_depth(painter);
       } break;
       case LIT_TUTORIAL_TEXT_STATE_FADE_OUT: {
         F32 a = ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
         F32 y = text->pos_y + a * 32.f;
         RGBA color = rgba(1.f, 1.f, 1.f, text->alpha);
-        paint_text(painter, font_id, text->str, color, text->pos_x, y, 32.f);
+        paint_text(painter, m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
         advance_depth(painter);
       } break;
     }
@@ -486,10 +491,8 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
 
   // Draw the overlay for fade in/out
   {
-    Game_Sprite_ID blank = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
-
     RGBA color = rgba(0.f, 0.f, 0.f, m->stage_fade);
-    paint_sprite(painter, blank, GAME_MIDPOINT, GAME_DIMENSIONS, color);
+    paint_sprite(painter, m->blank_sprite, GAME_MIDPOINT, GAME_DIMENSIONS, color);
     advance_depth(painter);
   }
 }

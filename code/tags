@@ -40,7 +40,7 @@ allocator	D:/work/git/txt/code/momo_memory.h	/^  Bump_Allocator* allocator;$/;"	
 allocator	D:/work/git/txt/code/momo_png.h	/^  Bump_Allocator* allocator; $/;"	m	language:C++	struct:_PNG_Context	typeref:typename:Bump_Allocator *
 allocator	D:/work/git/txt/code/sui_pack.h	/^  Bump_Allocator* allocator;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Bump_Allocator *
 allocator	D:/work/git/txt/code/w32_audio_wasapi.h	/^  Bump_Allocator allocator;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Bump_Allocator
-alpha	D:/work/git/txt/code/game_mode_lit.h	/^  F32 alpha;$/;"	m	language:C++	struct:Lit_Tutorial_Text	typeref:typename:F32
+alpha	D:/work/git/txt/code/game_mode_lit.h	/^  F32 alpha;$/;"	m	language:C++	struct:__anonaaa574c00508	typeref:typename:F32
 al_append	D:/work/git/txt/code/momo_lists.h	/^#define al_append(/;"	d	language:C++
 al_at	D:/work/git/txt/code/momo_lists.h	/^#define al_at(/;"	d	language:C++
 al_cap	D:/work/git/txt/code/momo_lists.h	/^#define al_cap(/;"	d	language:C++
@@ -60,7 +60,6 @@ ARCH_X64	D:/work/git/txt/code/momo_common.h	/^# define ARCH_X64 /;"	d	language:C
 ARCH_X86	D:/work/git/txt/code/momo_common.h	/^#  define ARCH_X86 /;"	d	language:C++
 ARCH_X86	D:/work/git/txt/code/momo_common.h	/^#  define ARCH_X86 /;"	d	language:C++
 ARCH_X86	D:/work/git/txt/code/momo_common.h	/^# define ARCH_X86 /;"	d	language:C++
-arena	D:/work/git/txt/code/game_assets2.h	/^  Bump_Allocator arena;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Bump_Allocator
 arena	D:/work/git/txt/code/game_assets_2.h	/^  Arena arena;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Arena
 arr	D:/work/git/txt/code/momo_json.h	/^    JSON_Array arr;$/;"	m	language:C++	union:__anon6dd1ef0b0708::__anon6dd1ef0b080a	typeref:typename:JSON_Array
 array_count	D:/work/git/txt/code/momo_common.h	/^#define array_count(/;"	d	language:C++
@@ -350,9 +349,9 @@ cos_f64	D:/work/git/txt/code/momo_intrinsics.h	/^cos_f64(F64 x) {$/;"	f	language
 cos_f64	D:/work/git/txt/code/momo_intrinsics.h	/^static F64 cos_f64(F64 x);$/;"	p	language:C++	typeref:typename:F64
 count	D:/work/git/txt/code/game_inspector.h	/^  U32 count;$/;"	m	language:C++	struct:Inspector_Entry_List	typeref:typename:U32
 count	D:/work/git/txt/code/game_mode_computer.h	/^  U32 count;$/;"	m	language:C++	struct:Computer_Selection_List	typeref:typename:U32
-count	D:/work/git/txt/code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Edge_List	typeref:typename:U32
-count	D:/work/git/txt/code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Tutorial_Text_List	typeref:typename:U32
-count	D:/work/git/txt/code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Tutorial_Trigger_List	typeref:typename:U32
+count	D:/work/git/txt/code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:__anonaaa574c00208	typeref:typename:U32
+count	D:/work/git/txt/code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:__anonaaa574c00408	typeref:typename:U32
+count	D:/work/git/txt/code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:__anonaaa574c00608	typeref:typename:U32
 count	D:/work/git/txt/code/game_mode_lit_light.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Light_Debug_Ray_List	typeref:typename:U32
 count	D:/work/git/txt/code/game_mode_lit_light.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Light_Intersection_List	typeref:typename:U32
 count	D:/work/git/txt/code/game_mode_lit_light.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Light_List	typeref:typename:U32
@@ -399,7 +398,7 @@ current_atlas_font_id	D:/work/git/txt/code/sui_pack.h	/^  U32 current_atlas_font
 current_color	D:/work/git/txt/code/game_mode_lit_sensors.h	/^  U32 current_color;$/;"	m	language:C++	struct:Lit_Sensor	typeref:typename:U32
 current_font	D:/work/git/txt/code/sui_pack.h	/^  Sui_Packer_Font* current_font;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Sui_Packer_Font *
 current_game_mode	D:/work/git/txt/code/game.h	/^  Game_Mode_Type current_game_mode;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Mode_Type
-current_id	D:/work/git/txt/code/game_mode_lit.h	/^  U32 current_id;$/;"	m	language:C++	struct:Lit_Tutorial_Trigger_List	typeref:typename:U32
+current_id	D:/work/git/txt/code/game_mode_lit.h	/^  U32 current_id;$/;"	m	language:C++	struct:__anonaaa574c00408	typeref:typename:U32
 current_instance_index	D:/work/git/txt/code/game_gfx_opengl.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:__anon982c2a3c0808	typeref:typename:GLuint
 current_instance_index	D:/work/git/txt/code/game_gfx_opengl.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:__anon982c2a3c0908	typeref:typename:GLuint
 current_layer	D:/work/git/txt/code/game_gfx_opengl.h	/^  F32 current_layer;$/;"	m	language:C++	struct:Opengl	typeref:typename:F32
@@ -448,9 +447,9 @@ e	D:/work/git/txt/code/game_assets2.h	/^  F32 e[GAME_ASSET_TAG_TYPE_COUNT];$/;"	
 e	D:/work/git/txt/code/game_assets_2.h	/^  F32 e[ASSET_TAG_TYPE_COUNT];$/;"	m	language:C++	struct:Asset_Vector	typeref:typename:F32[]
 e	D:/work/git/txt/code/game_inspector.h	/^  Inspector_Entry e[64];$/;"	m	language:C++	struct:Inspector_Entry_List	typeref:typename:Inspector_Entry[64]
 e	D:/work/git/txt/code/game_mode_computer.h	/^  Computer_Selection e[10];$/;"	m	language:C++	struct:Computer_Selection_List	typeref:typename:Computer_Selection[10]
-e	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Edge e[256];$/;"	m	language:C++	struct:Lit_Edge_List	typeref:typename:Lit_Edge[256]
-e	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Text e[10];$/;"	m	language:C++	struct:Lit_Tutorial_Text_List	typeref:typename:Lit_Tutorial_Text[10]
-e	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Trigger e[10];$/;"	m	language:C++	struct:Lit_Tutorial_Trigger_List	typeref:typename:Lit_Tutorial_Trigger[10]
+e	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Edge e[256];$/;"	m	language:C++	struct:__anonaaa574c00208	typeref:typename:Lit_Edge[256]
+e	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Text e[10];$/;"	m	language:C++	struct:__anonaaa574c00608	typeref:typename:Lit_Tutorial_Text[10]
+e	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Trigger e[10];$/;"	m	language:C++	struct:__anonaaa574c00408	typeref:typename:Lit_Tutorial_Trigger[10]
 e	D:/work/git/txt/code/game_mode_lit_light.h	/^  Lit_Light e[32];$/;"	m	language:C++	struct:Lit_Light_List	typeref:typename:Lit_Light[32]
 e	D:/work/git/txt/code/game_mode_lit_light.h	/^  Lit_Light_Intersection e[256];$/;"	m	language:C++	struct:Lit_Light_Intersection_List	typeref:typename:Lit_Light_Intersection[256]
 e	D:/work/git/txt/code/game_mode_lit_light.h	/^  Ray2 e[256];$/;"	m	language:C++	struct:Lit_Light_Debug_Ray_List	typeref:typename:Ray2[256]
@@ -619,7 +618,7 @@ end_atlas_font	D:/work/git/txt/code/sui_pack.h	/^end_atlas_font(Sui_Packer* p) {
 end_group	D:/work/git/txt/code/karu_pack2.h	/^end_group(Karu_Packer* sp) $/;"	f	language:C++	typeref:typename:void
 end_packer	D:/work/git/txt/code/sui_pack.h	/^end_packer(Sui_Packer* p) {$/;"	f	language:C++	typeref:typename:void
 end_point_indices	D:/work/git/txt/code/momo_ttf.h	/^  U16* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:__anon68e2795f0408	typeref:typename:U16 *
-end_pt	D:/work/git/txt/code/game_mode_lit.h	/^  V2 end_pt;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:V2
+end_pt	D:/work/git/txt/code/game_mode_lit.h	/^  V2 end_pt;$/;"	m	language:C++	struct:__anonaaa574c00108	typeref:typename:V2
 end_stat	D:/work/git/txt/code/game_profiler_rendering.h	/^end_stat(Stat* stat) {$/;"	f	language:C++	typeref:typename:void
 entries	D:/work/git/txt/code/game_inspector.h	/^  Inspector_Entry_List entries;$/;"	m	language:C++	struct:Inspector	typeref:typename:Inspector_Entry_List
 entries	D:/work/git/txt/code/game_profiler.h	/^  Profiler_Entry entries[PROFILER_MAX_ENTRIES];$/;"	m	language:C++	struct:Profiler	typeref:typename:Profiler_Entry[]
@@ -1155,7 +1154,7 @@ IS_CPP	D:/work/git/txt/code/momo_common.h	/^# define IS_CPP /;"	d	language:C++
 is_device_changed	D:/work/git/txt/code/w32_audio_wasapi.h	/^	B32 is_device_changed;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:B32
 is_device_ready	D:/work/git/txt/code/w32_audio_wasapi.h	/^	B32 is_device_ready;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:B32
 is_digit	D:/work/git/txt/code/momo_common.h	/^is_digit(U8 c) {$/;"	f	language:C++	typeref:typename:B32
-is_disabled	D:/work/git/txt/code/game_mode_lit.h	/^  B32 is_disabled;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:B32
+is_disabled	D:/work/git/txt/code/game_mode_lit.h	/^  B32 is_disabled;$/;"	m	language:C++	struct:__anonaaa574c00108	typeref:typename:B32
 is_done	D:/work/git/txt/code/game.h	/^  B32 is_done;$/;"	m	language:C++	struct:Game	typeref:typename:B32
 is_inverted	D:/work/git/txt/code/momo_ttf.h	/^  B32 is_inverted;$/;"	m	language:C++	struct:__anon68e2795f0608	typeref:typename:B32
 is_memory_same	D:/work/git/txt/code/momo_common.h	/^is_memory_same(const void* lhs, const void* rhs, UMI size) {$/;"	f	language:C++	typeref:typename:B32
@@ -1254,7 +1253,8 @@ light_retrival_time	D:/work/git/txt/code/game_mode_lit_player.h	/^  F32 light_re
 line	D:/work/git/txt/code/game_profiler.h	/^  U32 line;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:U32
 line2	D:/work/git/txt/code/momo_shapes.h	/^line2(V2 min, V2 max) {$/;"	f	language:C++	typeref:typename:Line2
 Line2	D:/work/git/txt/code/momo_shapes.h	/^}Line2;$/;"	t	language:C++	typeref:struct:__anon093413950708
-Lit	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit {$/;"	s	language:C++
+Lit	D:/work/git/txt/code/game_mode_lit.h	/^typedef struct Lit {$/;"	s	language:C++
+Lit	D:/work/git/txt/code/game_mode_lit.h	/^} Lit;$/;"	t	language:C++	typeref:struct:Lit
 lit_are_all_sensors_activated	D:/work/git/txt/code/game_mode_lit_sensors.h	/^lit_are_all_sensors_activated(Lit_Sensor_List* sensors) {$/;"	f	language:C++	typeref:typename:B32
 lit_calc_ghost_edge_line	D:/work/git/txt/code/game_mode_lit.h	/^lit_calc_ghost_edge_line(Lit_Edge* e) {$/;"	f	language:C++	typeref:typename:Line2
 LIT_DEBUG_LIGHT	D:/work/git/txt/code/game_mode_lit.h	/^#define LIT_DEBUG_LIGHT /;"	d	language:C++
@@ -1262,8 +1262,8 @@ lit_draw_debug_light_rays	D:/work/git/txt/code/game_mode_lit.h	/^lit_draw_debug_
 lit_draw_edges	D:/work/git/txt/code/game_mode_lit.h	/^lit_draw_edges(Lit_Edge_List* edges, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
 lit_draw_lights	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_draw_lights(Lit_Light_List* lights, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
 lit_draw_player	D:/work/git/txt/code/game_mode_lit_player.h	/^lit_draw_player(Lit_Player* player, Painter* painter){$/;"	f	language:C++	typeref:typename:void
-Lit_Edge	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit_Edge{$/;"	s	language:C++
-Lit_Edge_List	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit_Edge_List{$/;"	s	language:C++
+Lit_Edge	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_Edge;$/;"	t	language:C++	typeref:struct:__anonaaa574c00108
+Lit_Edge_List	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_Edge_List;$/;"	t	language:C++	typeref:struct:__anonaaa574c00208
 lit_fade_in_next_tutorial_text	D:/work/git/txt/code/game_mode_lit.h	/^lit_fade_in_next_tutorial_text(Lit_Tutorial_Text_List* texts) {$/;"	f	language:C++	typeref:typename:void
 lit_fade_in_tutorial_text	D:/work/git/txt/code/game_mode_lit.h	/^lit_fade_in_tutorial_text(Lit_Tutorial_Text* text) {$/;"	f	language:C++	typeref:typename:void
 lit_fade_out_next_tutorial_text	D:/work/git/txt/code/game_mode_lit.h	/^lit_fade_out_next_tutorial_text(Lit_Tutorial_Text_List* texts) {$/;"	f	language:C++	typeref:typename:void
@@ -1271,7 +1271,7 @@ lit_fade_out_tutorial_text	D:/work/git/txt/code/game_mode_lit.h	/^lit_fade_out_t
 lit_gen_lights	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_gen_lights(Lit_Light_List* lights, $/;"	f	language:C++	typeref:typename:void
 lit_gen_light_intersections	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_gen_light_intersections(Lit_Light* l,$/;"	f	language:C++	typeref:typename:void
 lit_get_ray_intersection_time_wrt_edges	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_get_ray_intersection_time_wrt_edges(Ray2 ray,$/;"	f	language:C++	typeref:typename:F32
-lit_init_player	D:/work/git/txt/code/game_mode_lit_player.h	/^lit_init_player(Lit_Player* player, F32 x, F32 y) {$/;"	f	language:C++	typeref:typename:void
+lit_init_player	D:/work/git/txt/code/game_mode_lit_player.h	/^lit_init_player(Lit_Player* player, F32 x, F32 y, Game_Sprite_ID sprite_id) {$/;"	f	language:C++	typeref:typename:void
 Lit_Level	D:/work/git/txt/code/game_mode_lit_levels.h	/^typedef void (*Lit_Level)(Lit* mode); $/;"	t	language:C++	typeref:typename:void (*)(Lit * mode)
 lit_levels	D:/work/git/txt/code/game_mode_lit_levels.h	/^static Lit_Level lit_levels[] = {$/;"	v	language:C++	typeref:typename:Lit_Level[]
 lit_level_0	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0(Lit* m) {$/;"	f	language:C++	typeref:typename:void
@@ -1311,21 +1311,21 @@ Lit_Sensor_List	D:/work/git/txt/code/game_mode_lit_sensors.h	/^struct Lit_Sensor
 LIT_SENSOR_PARTICLE_CD	D:/work/git/txt/code/game_mode_lit_sensors.h	/^#define LIT_SENSOR_PARTICLE_CD /;"	d	language:C++
 LIT_SENSOR_RADIUS	D:/work/git/txt/code/game_mode_lit_sensors.h	/^#define LIT_SENSOR_RADIUS /;"	d	language:C++
 lit_spawn_particle	D:/work/git/txt/code/game_mode_lit_particles.h	/^lit_spawn_particle(Lit_Particle_Pool* ps,$/;"	f	language:C++	typeref:typename:void
-Lit_State_Type	D:/work/git/txt/code/game_mode_lit.h	/^enum Lit_State_Type{$/;"	g	language:C++
-LIT_STATE_TYPE_NORMAL	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_NORMAL,$/;"	e	language:C++	enum:Lit_State_Type
-LIT_STATE_TYPE_TRANSITION_IN	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_TRANSITION_IN,$/;"	e	language:C++	enum:Lit_State_Type
-LIT_STATE_TYPE_TRANSITION_OUT	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_TRANSITION_OUT,$/;"	e	language:C++	enum:Lit_State_Type
+Lit_State_Type	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_State_Type;$/;"	t	language:C++	typeref:enum:__anonaaa574c00703
+LIT_STATE_TYPE_NORMAL	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_NORMAL,$/;"	e	language:C++	enum:__anonaaa574c00703
+LIT_STATE_TYPE_TRANSITION_IN	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_TRANSITION_IN,$/;"	e	language:C++	enum:__anonaaa574c00703
+LIT_STATE_TYPE_TRANSITION_OUT	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_TRANSITION_OUT,$/;"	e	language:C++	enum:__anonaaa574c00703
 lit_tick	D:/work/git/txt/code/game_mode_lit.h	/^lit_tick(Game* game, Painter* painter, Platform* pf) $/;"	f	language:C++	typeref:typename:void
-Lit_Tutorial_Text	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit_Tutorial_Text$/;"	s	language:C++
+Lit_Tutorial_Text	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Text;$/;"	t	language:C++	typeref:struct:__anonaaa574c00508
 LIT_TUTORIAL_TEXT_FADE_DURATION	D:/work/git/txt/code/game_mode_lit.h	/^#define LIT_TUTORIAL_TEXT_FADE_DURATION /;"	d	language:C++
-Lit_Tutorial_Text_List	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit_Tutorial_Text_List{$/;"	s	language:C++
-Lit_Tutorial_Text_State	D:/work/git/txt/code/game_mode_lit.h	/^enum Lit_Tutorial_Text_State{$/;"	g	language:C++
-LIT_TUTORIAL_TEXT_STATE_FADE_IN	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_FADE_IN,$/;"	e	language:C++	enum:Lit_Tutorial_Text_State
-LIT_TUTORIAL_TEXT_STATE_FADE_OUT	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_FADE_OUT,$/;"	e	language:C++	enum:Lit_Tutorial_Text_State
-LIT_TUTORIAL_TEXT_STATE_INVISIBLE	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_INVISIBLE,$/;"	e	language:C++	enum:Lit_Tutorial_Text_State
-LIT_TUTORIAL_TEXT_STATE_VISIBLE	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_VISIBLE,$/;"	e	language:C++	enum:Lit_Tutorial_Text_State
+Lit_Tutorial_Text_List	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Text_List;$/;"	t	language:C++	typeref:struct:__anonaaa574c00608
+Lit_Tutorial_Text_State	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Text_State;$/;"	t	language:C++	typeref:enum:__anonaaa574c00303
+LIT_TUTORIAL_TEXT_STATE_FADE_IN	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_FADE_IN,$/;"	e	language:C++	enum:__anonaaa574c00303
+LIT_TUTORIAL_TEXT_STATE_FADE_OUT	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_FADE_OUT,$/;"	e	language:C++	enum:__anonaaa574c00303
+LIT_TUTORIAL_TEXT_STATE_INVISIBLE	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_INVISIBLE,$/;"	e	language:C++	enum:__anonaaa574c00303
+LIT_TUTORIAL_TEXT_STATE_VISIBLE	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_VISIBLE,$/;"	e	language:C++	enum:__anonaaa574c00303
 Lit_Tutorial_Trigger	D:/work/git/txt/code/game_mode_lit.h	/^typedef B32 (*Lit_Tutorial_Trigger)(struct Lit* m, Platform* pf);$/;"	t	language:C++	typeref:typename:B32 (*)(struct Lit * m,Platform * pf)
-Lit_Tutorial_Trigger_List	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit_Tutorial_Trigger_List{$/;"	s	language:C++
+Lit_Tutorial_Trigger_List	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Trigger_List;$/;"	t	language:C++	typeref:struct:__anonaaa574c00408
 lit_update_particles	D:/work/git/txt/code/game_mode_lit_particles.h	/^lit_update_particles(Lit_Particle_Pool* ps, F32 dt) {$/;"	f	language:C++	typeref:typename:void
 lit_update_player	D:/work/git/txt/code/game_mode_lit_player.h	/^lit_update_player(Lit_Player* player, $/;"	f	language:C++	typeref:typename:void
 lit_update_sensors	D:/work/git/txt/code/game_mode_lit_sensors.h	/^lit_update_sensors(Lit_Sensor_List* sensors, $/;"	f	language:C++	typeref:typename:void
@@ -1448,8 +1448,8 @@ name	D:/work/git/txt/code/game_inspector.h	/^  String8 name;$/;"	m	language:C++	
 next	D:/work/git/txt/code/momo_json.h	/^  struct _JSON_Array_Node* next;$/;"	m	language:C++	struct:_JSON_Array_Node	typeref:struct:_JSON_Array_Node *
 next_entry_to_read	D:/work/git/txt/code/w32.cpp	/^  U32 volatile next_entry_to_read;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 next_entry_to_write	D:/work/git/txt/code/w32.cpp	/^  U32 volatile next_entry_to_write;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
-next_id_to_fade_in	D:/work/git/txt/code/game_mode_lit.h	/^  U32 next_id_to_fade_in;$/;"	m	language:C++	struct:Lit_Tutorial_Text_List	typeref:typename:U32
-next_id_to_fade_out	D:/work/git/txt/code/game_mode_lit.h	/^  U32 next_id_to_fade_out;$/;"	m	language:C++	struct:Lit_Tutorial_Text_List	typeref:typename:U32
+next_id_to_fade_in	D:/work/git/txt/code/game_mode_lit.h	/^  U32 next_id_to_fade_in;$/;"	m	language:C++	struct:__anonaaa574c00608	typeref:typename:U32
+next_id_to_fade_out	D:/work/git/txt/code/game_mode_lit.h	/^  U32 next_id_to_fade_out;$/;"	m	language:C++	struct:__anonaaa574c00608	typeref:typename:U32
 next_state	D:/work/git/txt/code/game_mode_level_editor.h	/^  Editor_State next_state;$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_State
 node	D:/work/git/txt/code/momo_json.h	/^  struct _JSON_Object_Node* node;$/;"	m	language:C++	struct:__anon6dd1ef0b0108	typeref:struct:_JSON_Object_Node *
 NOMINMAX	D:/work/git/txt/code/w32.h	/^#define NOMINMAX$/;"	d	language:C++
@@ -1735,9 +1735,9 @@ pos	D:/work/git/txt/code/game_mode_lit_sensors.h	/^  V2 pos;$/;"	m	language:C++	
 pos	D:/work/git/txt/code/momo_memory.h	/^	UMI pos;$/;"	m	language:C++	struct:__anonb4ad698a0108	typeref:typename:UMI
 pos	D:/work/git/txt/code/momo_streams.h	/^  UMI pos;$/;"	m	language:C++	struct:Stream	typeref:typename:UMI
 pos_x	D:/work/git/txt/code/game_gfx.h	/^  F32 pos_x, pos_y;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:F32
-pos_x	D:/work/git/txt/code/game_mode_lit.h	/^  F32 pos_x;$/;"	m	language:C++	struct:Lit_Tutorial_Text	typeref:typename:F32
+pos_x	D:/work/git/txt/code/game_mode_lit.h	/^  F32 pos_x;$/;"	m	language:C++	struct:__anonaaa574c00508	typeref:typename:F32
 pos_y	D:/work/git/txt/code/game_gfx.h	/^  F32 pos_x, pos_y;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:F32
-pos_y	D:/work/git/txt/code/game_mode_lit.h	/^  F32 pos_y;$/;"	m	language:C++	struct:Lit_Tutorial_Text	typeref:typename:F32
+pos_y	D:/work/git/txt/code/game_mode_lit.h	/^  F32 pos_y;$/;"	m	language:C++	struct:__anonaaa574c00508	typeref:typename:F32
 pow_f32	D:/work/git/txt/code/momo_intrinsics.h	/^pow_f32(F32 b, F32 e){$/;"	f	language:C++	typeref:typename:F32
 pow_F32	D:/work/git/txt/code/momo_intrinsics.h	/^static F32 pow_F32(F32 v, F32 e);$/;"	p	language:C++	typeref:typename:F32
 pow_f64	D:/work/git/txt/code/momo_intrinsics.h	/^pow_f64(F64 b, F64 e){$/;"	f	language:C++	typeref:typename:F64
@@ -1973,7 +1973,8 @@ sprite_count	D:/work/git/txt/code/karu.h	/^  U32 sprite_count;$/;"	m	language:C+
 sprite_count	D:/work/git/txt/code/sui_atlas.h	/^  U32 sprite_count;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:U32
 sprite_count	D:/work/git/txt/code/sui_pack.h	/^  U32 sprite_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 sprite_id	D:/work/git/txt/code/game_mode_level_editor.h	/^  Sprite_ID sprite_id;$/;"	m	language:C++	struct:Editor_Toolbar_Button	typeref:typename:Sprite_ID
-sprite_id	D:/work/git/txt/code/game_mode_lit_particles.h	/^  Sprite_ID sprite_id;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:Sprite_ID
+sprite_id	D:/work/git/txt/code/game_mode_lit_particles.h	/^  Game_Sprite_ID sprite_id;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:Game_Sprite_ID
+sprite_id	D:/work/git/txt/code/game_mode_lit_player.h	/^  Game_Sprite_ID sprite_id;$/;"	m	language:C++	struct:Lit_Player	typeref:typename:Game_Sprite_ID
 Sprite_ID	D:/work/git/txt/code/generated_sprite_ids.h	/^enum Sprite_ID {$/;"	g	language:C++
 sprite_id_file	D:/work/git/txt/code/sui_pack.h	/^  FILE* sprite_id_file;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:FILE *
 SPRITE_PLAYER_BLACK	D:/work/git/txt/code/generated_sprite_ids.h	/^SPRITE_PLAYER_BLACK = PACK_DEFAULT << 16 | 3,$/;"	e	language:C++	enum:Sprite_ID
@@ -2002,18 +2003,18 @@ srm_write_block	D:/work/git/txt/code/momo_streams.h	/^static void   srm_write_bl
 stage_fade	D:/work/git/txt/code/game_mode_lit.h	/^  F32 stage_fade;$/;"	m	language:C++	struct:Lit	typeref:typename:F32
 start_cycles	D:/work/git/txt/code/game_profiler.h	/^  U32 start_cycles;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:U32
 start_hits	D:/work/git/txt/code/game_profiler.h	/^  U32 start_hits;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:U32
-start_pt	D:/work/git/txt/code/game_mode_lit.h	/^  V2 start_pt;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:V2
+start_pt	D:/work/git/txt/code/game_mode_lit.h	/^  V2 start_pt;$/;"	m	language:C++	struct:__anonaaa574c00108	typeref:typename:V2
 Stat	D:/work/git/txt/code/game_profiler_rendering.h	/^struct Stat {$/;"	s	language:C++
 state	D:/work/git/txt/code/game_assets2.h	/^  Game_Asset_State state;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:Game_Asset_State
 state	D:/work/git/txt/code/game_assets_2.h	/^  Asset_State state;$/;"	m	language:C++	struct:Asset	typeref:typename:Asset_State
 state	D:/work/git/txt/code/game_gfx.h	/^  volatile Gfx_Texture_Payload_State state;$/;"	m	language:C++	struct:Gfx_Texture_Payload	typeref:typename:volatile Gfx_Texture_Payload_State
 state	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_State_Type state;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_State_Type
-state	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Text_State state; $/;"	m	language:C++	struct:Lit_Tutorial_Text	typeref:typename:Lit_Tutorial_Text_State
+state	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Text_State state; $/;"	m	language:C++	struct:__anonaaa574c00508	typeref:typename:Lit_Tutorial_Text_State
 state	D:/work/git/txt/code/meta.cpp	/^  U32 state; \/\/ $/;"	m	language:C++	struct:Profiler_Codegen	typeref:typename:U32	file:
 state_btns	D:/work/git/txt/code/game_mode_level_editor.h	/^  Editor_Toolbar_Button state_btns[EDITOR_STATE_MAX];$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_Toolbar_Button[]
 stmt	D:/work/git/txt/code/momo_common.h	/^#define stmt(/;"	d	language:C++
 str	D:/work/git/txt/code/game_console.h	/^  String8 str;$/;"	m	language:C++	struct:Console_Line	typeref:typename:String8
-str	D:/work/git/txt/code/game_mode_lit.h	/^  String8 str;$/;"	m	language:C++	struct:Lit_Tutorial_Text	typeref:typename:String8
+str	D:/work/git/txt/code/game_mode_lit.h	/^  String8 str;$/;"	m	language:C++	struct:__anonaaa574c00508	typeref:typename:String8
 str	D:/work/git/txt/code/momo_strings.h	/^		String8 str;$/;"	m	language:C++	union:__anon4fb3d39b0208::__anon4fb3d39b030a	typeref:typename:String8
 str8	D:/work/git/txt/code/momo_strings.h	/^static String8 str8(U8* str, UMI size);$/;"	p	language:C++	typeref:typename:String8
 str8	D:/work/git/txt/code/momo_strings.h	/^str8(U8* str, UMI size) {$/;"	f	language:C++	typeref:typename:String8
@@ -2164,7 +2165,7 @@ texture_queue	D:/work/git/txt/code/game_assets_2.h	/^  Renderer_Texture_Queue* t
 texture_queue	D:/work/git/txt/code/game_gfx.h	/^  Gfx_Texture_Queue texture_queue;$/;"	m	language:C++	struct:Gfx	typeref:typename:Gfx_Texture_Queue
 texture_width	D:/work/git/txt/code/game_gfx.h	/^  U32 texture_width;$/;"	m	language:C++	struct:Gfx_Texture_Payload	typeref:typename:U32
 text_length	D:/work/git/txt/code/meta.cpp	/^  U32 text_length;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:U32	file:
-timer	D:/work/git/txt/code/game_mode_lit.h	/^  F32 timer;$/;"	m	language:C++	struct:Lit_Tutorial_Text	typeref:typename:F32
+timer	D:/work/git/txt/code/game_mode_lit.h	/^  F32 timer;$/;"	m	language:C++	struct:__anonaaa574c00508	typeref:typename:F32
 timer	D:/work/git/txt/code/game_mode_splash.h	/^  F32 timer;$/;"	m	language:C++	struct:Splash	typeref:typename:F32
 tmp_path	D:/work/git/txt/code/w32_loaded_code.h	/^  const char* tmp_path;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:const char *
 toolbar_follow_mouse	D:/work/git/txt/code/game_mode_level_editor.h	/^  B32 toolbar_follow_mouse;$/;"	m	language:C++	struct:Editor	typeref:typename:B32
@@ -2768,6 +2769,13 @@ __anon982c2a3c0603	D:/work/git/txt/code/game_gfx_opengl.h	/^enum {$/;"	g	languag
 __anon982c2a3c0708	D:/work/git/txt/code/game_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
 __anon982c2a3c0808	D:/work/git/txt/code/game_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
 __anon982c2a3c0908	D:/work/git/txt/code/game_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
+__anonaaa574c00108	D:/work/git/txt/code/game_mode_lit.h	/^typedef struct {$/;"	s	language:C++
+__anonaaa574c00208	D:/work/git/txt/code/game_mode_lit.h	/^typedef struct {$/;"	s	language:C++
+__anonaaa574c00303	D:/work/git/txt/code/game_mode_lit.h	/^typedef enum {$/;"	g	language:C++
+__anonaaa574c00408	D:/work/git/txt/code/game_mode_lit.h	/^typedef struct {$/;"	s	language:C++
+__anonaaa574c00508	D:/work/git/txt/code/game_mode_lit.h	/^{$/;"	s	language:C++
+__anonaaa574c00608	D:/work/git/txt/code/game_mode_lit.h	/^typedef struct {$/;"	s	language:C++
+__anonaaa574c00703	D:/work/git/txt/code/game_mode_lit.h	/^typedef enum {$/;"	g	language:C++
 __anonb4ad698a0108	D:/work/git/txt/code/momo_memory.h	/^typedef struct {$/;"	s	language:C++
 __anonb4ad698a0208	D:/work/git/txt/code/momo_memory.h	/^typedef struct {$/;"	s	language:C++
 __anonc0f04f7f010a	D:/work/git/txt/code/sui_atlas.h	/^  union {$/;"	u	language:C++	struct:Sui_Atlas_Context

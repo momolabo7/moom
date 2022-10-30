@@ -1,95 +1,65 @@
-// This is the asset builder tool
-//
-#include "sui.h"
-#include "sui_atlas.h"
-#include "sui_pack.h"
-#include "karu.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-#define sui_check_death(e) if (!e) goto fail;
+#include "sui.h"
+
+
+
+
 
 int main() {
   Block block = sui_malloc(MB(100));
   defer { sui_free(&block); };
   make(Bump_Allocator, allocator);
   ba_init(allocator, block.data, block.size);
- 
-  //make(WAV, loaded_wav);
-  //sui_read_wav_from_file(loaded_wav,asset_dir("bgm_menu.wav"), allocator); 
- 
-#if 0
+
   sui_log("Building atlas...\n");
   make(Sui_Atlas, atlas);
 
-  if (!begin_atlas_builder(atlas, "BITMAP_DEFAULT", 1024, 1024)) return 1;
-  {
-    push_sprite(atlas, "SPRITE_BLANK", sui_asset_dir("blank.png"));
-    push_sprite(atlas, "SPRITE_BULLET_CIRCLE", sui_asset_dir("bullet_circle.png"));
-    push_sprite(atlas, "SPRITE_BULLET_DOT", sui_asset_dir("bullet_dot.png"));
-    push_sprite(atlas, "SPRITE_PLAYER_BLACK", sui_asset_dir("player_black.png"));
-    push_sprite(atlas, "SPRITE_PLAYER_WHITE", sui_asset_dir("player_white.png"));
+  sui_atlas_begin(atlas, 1024, 1024);
+  Sui_Atlas_Sprite* blank_sprite = sui_atlas_push_sprite(atlas, sui_asset_dir("blank.png"));
+  Sui_Atlas_Sprite* circle_sprite = sui_atlas_push_sprite(atlas, sui_asset_dir("circle.png"));
     
-    U32 interested_cps[] = { 
-      32,33,32,34,35,36,37,38,39,
-      40,41,42,43,44,45,46,47,48,49,
-      50,51,52,53,54,55,56,57,58,59,
-      60,61,62,63,64,65,66,67,68,69,
-      70,71,72,73,74,75,76,77,78,79,
-      80,81,82,83,84,85,86,87,88,89,
-      80,81,82,83,84,85,86,87,88,89,
-      90,91,92,93,94,95,96,97,98,99,
-      100,101,102,103,104,105,106,107,108,109,
-      110,111,112,113,114,115,116,117,118,119,
-      120,121,122,123,124,125,126,
-    };
-    
-    push_font(atlas, "FONT_DEFAULT", sui_asset_dir("nokiafc22.ttf"), interested_cps, array_count(interested_cps), 72.f);
-    
-    //push_font(atlas, "FONT_DEBUG", sui_asset_dir("liberation-mono.ttf"), interested_cps, array_count(interested_cps), 72.f);
+  sui_atlas_begin_font(atlas, sui_asset_dir("nokiafc22.ttf"), 72.f);
+  for (U32 i = 32; i <= 126; ++i){
+    sui_atlas_push_font_codepoint(atlas, i);
   }
-  if(!end_atlas_builder(atlas, allocator)) return 1;
+  auto* font_a = sui_atlas_end_font(atlas);
+
+  sui_atlas_begin_font(atlas, sui_asset_dir("liberation-mono.ttf"), 72.f);
+  for (U32 i = 32; i <= 126; ++i){
+    sui_atlas_push_font_codepoint(atlas, i);
+  }
+  auto* font_b = sui_atlas_end_font(atlas);
+  sui_atlas_end(atlas, allocator);
   sui_log("Finished atlas...\n");
-#endif  
+
+#if 0
+  sui_log("Writing test png file...\n");
+  Block png_to_write_memory = png_write_img32_to_blk(atlas->bitmap, allocator);
+  sui_write_file_from_blk("test.png", png_to_write_memory);
+#endif
+
+  make(Sui_Packer, packer);
+  sui_pack_begin(packer);
+
+  sui_pack_begin_group(packer, GAME_ASSET_GROUP_TYPE_ATLAS);
+  U32 bitmap_id = sui_pack_push_bitmap(packer, atlas->bitmap.width, atlas->bitmap.height, atlas->bitmap.pixels);
+  sui_pack_end_group(packer);
   
-  
-  make(Sui_Packer, sp);
-  
+  sui_pack_begin_group(packer, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
+  sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*blank_sprite->rect));
+  sui_pack_end_group(packer);
 
-  sui_check_death(begin_packer(sp, allocator,
-                  sui_code_dir("generated_pack_ids.h"),
-                  sui_code_dir("generated_bitmap_ids.h"),
-                  sui_code_dir("generated_sprite_ids.h"),
-                  sui_code_dir("generated_font_ids.h"),
-                  sui_code_dir("generated_sound_ids.h")));
-  begin_asset_pack(sp);
-  // Maybe we want to do something like this:
-  begin_atlas(sp);
+  sui_pack_begin_group(packer, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
+  sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*circle_sprite->rect));
+  sui_pack_end_group(packer);
 
-  begin_atlas_font(sp, "FONT_DEFAULT", sui_asset_dir("nokiafc22.ttf"), 72.f);
-  for (U32 i = 32 ; i <= 126; ++i) 
-    push_atlas_font_glyph(sp, i);
-  end_atlas_font(sp);
+  sui_pack_begin_group(packer, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
+  sui_pack_push_font(packer, font_a, bitmap_id);
+  sui_pack_end_group(packer);
 
-  begin_atlas_font(sp, "FONT_DEBUG", sui_asset_dir("liberation-mono.ttf"), 72.f);
-  for (U32 i = 32 ; i <= 126; ++i) 
-    push_atlas_font_glyph(sp, i);
-  end_atlas_font(sp);
-
-  push_atlas_sprite(sp, "SPRITE_BLANK",         sui_asset_dir("blank.png"));
-  push_atlas_sprite(sp, "SPRITE_BULLET_CIRCLE", sui_asset_dir("bullet_circle.png"));
-  push_atlas_sprite(sp, "SPRITE_BULLET_DOT",    sui_asset_dir("bullet_dot.png"));
-  push_atlas_sprite(sp, "SPRITE_PLAYER_BLACK",  sui_asset_dir("player_black.png"));
-  push_atlas_sprite(sp, "SPRITE_PLAYER_WHITE",  sui_asset_dir("player_white.png"));
-  push_atlas_sprite(sp, "SPRITE_CIRCLE",        sui_asset_dir("circle.png"));
-  sui_check_death(end_atlas(sp, "BITMAP_DEFAULT", 1024, 1024));
-
-  //push_sound(sp, "SOUND_TEST", loaded_wav);
-  sui_check_death(end_asset_pack(sp, "PACK_DEFAULT", "test.sui"));
-  end_packer(sp);
-
-  return 0;
-
-fail:
-  sui_log("Something went wrong");
-  return 1;
-
+  sui_pack_end(packer, "test_pack.sui", allocator);
 }
+
+
