@@ -96,7 +96,8 @@ _execute(Console* dc) {
 }
 
 static void
-update_and_render_console(Console* dc, Painter* p, Platform* pf) {
+update_and_render_console(Console* dc, Painter* p, Platform* pf, Game_Sprite_ID blank_sprite, Game_Font_ID font) 
+{
   for (U32 char_index = 0; 
        char_index < pf->char_count;
        ++char_index) 

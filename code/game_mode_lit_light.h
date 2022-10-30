@@ -296,8 +296,7 @@ lit_gen_lights(Lit_Light_List* lights,
 }
 
 static void
-lit_draw_lights(Lit_Light_List* lights, Painter* painter) {
-  Game_Sprite_ID sprite_id = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
+lit_draw_lights(Lit_Light_List* lights, Painter* painter, Game_Sprite_ID sprite_id) {
   // Emitters
   al_foreach(light_index, lights)
   {

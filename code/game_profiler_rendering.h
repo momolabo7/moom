@@ -42,11 +42,9 @@ end_stat(Stat* stat) {
 }
 
 static void
-update_and_render_profiler(Profiler* pf, Painter* p) {
-
-  Game_Font_ID font_id = get_first_font(p->ga, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
-  Game_Sprite_ID sprite_id = get_first_sprite(p->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
-  paint_sprite(p, sprite_id, 
+update_and_render_profiler(Profiler* pf, Painter* p, Game_Sprite_ID blank_sprite, Game_Font_ID font) 
+{
+  paint_sprite(p, blank_sprite, 
                GAME_MIDPOINT, 
                GAME_DIMENSIONS,
                {0.f, 0.f, 0.f, 0.5f});
@@ -97,7 +95,7 @@ update_and_render_profiler(Profiler* pf, Painter* p) {
     
     // Assumes 1600x900        
     paint_text(p,
-               font_id, 
+               font, 
                sb->str,
                hex_to_rgba(0xFFFFFFFF),
                0.f, 
@@ -126,7 +124,7 @@ update_and_render_profiler(Profiler* pf, Painter* p) {
       
       
       paint_sprite(p, 
-                   sprite_id, 
+                   blank_sprite, 
                    pos,
                    size,
                    hex_to_rgba(0x00FF00FF));

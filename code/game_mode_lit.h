@@ -326,6 +326,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
     // TODO: shouldn't use painter->ga
     m->tutorial_font = get_first_font(painter->ga, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
     m->blank_sprite = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
+    m->circle_sprite = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
   }
 
   Lit_Player* player = &m->player;
@@ -403,17 +404,10 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
                   GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
   lit_draw_edges(&m->edges, painter); 
-
-
   lit_draw_debug_light_rays(painter);
-
- 
-  lit_draw_player(player, painter);
- 
-  lit_draw_lights(&m->lights, painter);
+  lit_draw_player(player, painter, m->circle_sprite);
+  lit_draw_lights(&m->lights, painter, m->blank_sprite);
   
-  
-
   paint_set_blend(painter, 
                  GFX_BLEND_TYPE_SRC_ALPHA,
                  GFX_BLEND_TYPE_INV_SRC_ALPHA); 

@@ -81,6 +81,10 @@ struct Game {
   Console console;
   Inspector inspector;
   Profiler profiler;
+
+  // Interested game assets
+  Game_Sprite_ID blank_sprite;
+  Game_Font_ID debug_font;
 };
 
 static void 

@@ -36,6 +36,11 @@ game_update_and_render(Platform* pf)
       return false;
     }
    
+    game->blank_sprite = 
+      get_first_sprite(&game->game_assets, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
+    game->debug_font = 
+      get_first_font(&game->game_assets, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
+
     game_goto_mode(game, GAME_MODE_TYPE_LIT);
 
     
@@ -84,13 +89,19 @@ game_update_and_render(Platform* pf)
   game_profile_begin(DEBUG);
   switch (game->show_debug_type) {
     case GAME_SHOW_DEBUG_CONSOLE: {
-      update_and_render_console(console, painter, pf); 
+      update_and_render_console(console, painter, pf,
+                                game->blank_sprite, 
+                                game->debug_font); 
     }break;
     case GAME_SHOW_DEBUG_PROFILER: {
-      update_and_render_profiler(pf->profiler, painter); 
+      update_and_render_profiler(pf->profiler, painter, 
+                                 game->blank_sprite, 
+                                 game->debug_font); 
     }break;
     case GAME_SHOW_DEBUG_INSPECTOR: {
-      update_and_render_inspector(in, painter);
+      update_and_render_inspector(in, painter, 
+                                  game->blank_sprite, 
+                                  game->debug_font);
     }break;
     default: {}
   }
