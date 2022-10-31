@@ -13,7 +13,7 @@ update_and_render_inspector(Inspector* in, Painter* p, Game_Sprite_ID rect_sprit
                GAME_MIDPOINT, 
                GAME_DIMENSIONS,
                {0.f, 0.f, 0.f, 0.5f});
-  advance_depth(p);
+  gfx_advance_depth(gfx);
   
   F32 line_height = 32.f;
   sb8_make(sb, 256);
@@ -45,7 +45,7 @@ update_and_render_inspector(Inspector* in, Painter* p, Game_Sprite_ID rect_sprit
                0.f, 
                y, 
                line_height);
-    advance_depth(p);
+    gfx_advance_depth(gfx);
     
     
   }

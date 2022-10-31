@@ -243,7 +243,7 @@ lit_draw_edges(Lit_Edge_List* edges, Painter* painter) {
     paint_line(painter, line, 3.f, 
                hex_to_rgba(0x888888FF));
   }
-  advance_depth(painter);
+  gfx_advance_depth(gfx);
 }
 
 static void 
@@ -263,7 +263,7 @@ lit_draw_debug_light_rays(Painter* painter) {
       paint_line(painter, line, 
                  1.f, rgba(0x00FFFFFF));
     }
-    advance_depth(painter);
+    gfx_advance_depth(gfx);
    
     Sort_Entry* sorted_its = ba_push_array(Sort_Entry, &game->frame_arena, l->intersections.count);
     assert(sorted_its);
@@ -305,7 +305,7 @@ lit_draw_debug_light_rays(Painter* painter) {
       paint_line(painter, line, 1.f, rgba(0xFF0000FF));
       
     }
-    advance_depth(painter);
+    gfx_advance_depth(gfx);
   }
 #endif
 }
@@ -324,9 +324,9 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
     m->stage_fade = 1.f;
 
     // TODO: shouldn't use painter->ga
-    m->tutorial_font = find_first_font(painter->ga, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
-    m->blank_sprite = find_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
-    m->circle_sprite = find_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
+    m->tutorial_font = find_first_font(assets, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
+    m->blank_sprite = find_first_sprite(assets, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
+    m->circle_sprite = find_first_sprite(assets, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
   }
 
   Lit_Player* player = &m->player;
@@ -464,21 +464,21 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
     switch(text->state) {
       case LIT_TUTORIAL_TEXT_STATE_VISIBLE: {
         paint_text(painter, m->tutorial_font, text->str, RGBA_WHITE, text->pos_x, text->pos_y, 32.f);
-        advance_depth(painter);
+        gfx_advance_depth(gfx);
       } break;
       case LIT_TUTORIAL_TEXT_STATE_FADE_IN: {
         F32 a = ease_out_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
         F32 y = text->pos_y + (1.f-a) * 32.f;
         RGBA color = rgba(1.f, 1.f, 1.f, text->alpha);
         paint_text(painter, m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
-        advance_depth(painter);
+        gfx_advance_depth(gfx);
       } break;
       case LIT_TUTORIAL_TEXT_STATE_FADE_OUT: {
         F32 a = ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
         F32 y = text->pos_y + a * 32.f;
         RGBA color = rgba(1.f, 1.f, 1.f, text->alpha);
         paint_text(painter, m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
-        advance_depth(painter);
+        gfx_advance_depth(gfx);
       } break;
     }
   }
@@ -487,7 +487,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   {
     RGBA color = rgba(0.f, 0.f, 0.f, m->stage_fade);
     paint_sprite(painter, m->blank_sprite, GAME_MIDPOINT, GAME_DIMENSIONS, color);
-    advance_depth(painter);
+    gfx_advance_depth(gfx);
   }
 }
 

@@ -125,7 +125,7 @@ lit_render_sensors(Lit_Sensor_List* sensors, Painter* painter) {
                32.f);
 #endif
 
-    advance_depth(painter);
+    gfx_advance_depth(gfx);
   }
 
   

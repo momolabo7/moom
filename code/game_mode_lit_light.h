@@ -306,7 +306,7 @@ lit_draw_lights(Lit_Light_List* lights, Painter* painter, Game_Sprite_ID sprite_
                  light->pos,
                  {16.f, 16.f},
                  {0.8f, 0.8f, 0.8f, 1.f});
-    advance_depth(painter);
+    gfx_advance_depth(gfx);
   }
  
   // Lights
@@ -326,7 +326,7 @@ lit_draw_lights(Lit_Light_List* lights, Painter* painter, Game_Sprite_ID sprite_
                             lt->pts[1],
                             lt->pts[2]);
     } 
-    advance_depth(painter);
+    gfx_advance_depth(gfx);
   }
 
 }

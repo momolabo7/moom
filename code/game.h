@@ -10,14 +10,17 @@
 #include "game_gfx.h"
 
 // Globals
-static Platform* g_platform;
+static struct Platform* platform;
+static struct Game_Assets* assets;
+static struct Gfx* gfx;
+static struct Inspector* inspector;
 
 #ifdef INTERNAL
-static Profiler* g_profiler;
-#define game_log(...) g_platform->debug_log(__VA_ARGS__)
-#define game_profile_block(name) prf_block(g_profiler, name)
-#define game_profile_begin(name) prf_begin_block(g_profiler, name)
-#define game_profile_end(name) prf_end_block(g_profiler, name)
+static struct Profiler* profiler;
+#define game_log(...) platform->debug_log(__VA_ARGS__)
+#define game_profile_block(name) prf_block(profiler, name)
+#define game_profile_begin(name) prf_begin_block(profiler, name)
+#define game_profile_end(name) prf_end_block(profiler, name)
 #else
 #define game_log(...)
 #define game_profiler_block(...)

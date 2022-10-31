@@ -139,12 +139,12 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf, Game_Sprite_ID 
               GAME_MIDPOINT, 
               GAME_DIMENSIONS,
               rgba(0.f, 0.f, 0.f, 0.8f));
-  advance_depth(p);
+  gfx_advance_depth(gfx);
   
   paint_sprite(p, blank_sprite, console_pos, console_size, hex_to_rgba(0x787878FF));
-  advance_depth(p);
+  gfx_advance_depth(gfx);
   paint_sprite(p, blank_sprite, input_area_pos, input_area_size, hex_to_rgba(0x505050FF));
-  advance_depth(p);
+  gfx_advance_depth(gfx);
   
   
   // Draw info text
@@ -163,7 +163,7 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf, Game_Sprite_ID 
                font_height);
     
   }
-  advance_depth(p);
+  gfx_advance_depth(gfx);
   paint_text(p,
              font,
              dc->input_line.str,
@@ -171,7 +171,7 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf, Game_Sprite_ID 
              left_pad, 
              font_bottom_pad,
              font_height);
-  advance_depth(p);
+  gfx_advance_depth(gfx);
 }
 
 

@@ -120,6 +120,6 @@ lit_draw_player(Lit_Player* player, Painter* painter, Game_Sprite_ID sprite_id){
                sprite_id, 
                player->pos, 
                v2(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-  advance_depth(painter);
+  gfx_advance_depth(gfx);
 
 }

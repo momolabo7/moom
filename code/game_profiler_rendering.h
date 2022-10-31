@@ -48,7 +48,7 @@ update_and_render_profiler(Profiler* pf, Painter* p, Game_Sprite_ID blank_sprite
                GAME_MIDPOINT, 
                GAME_DIMENSIONS,
                {0.f, 0.f, 0.f, 0.5f});
-  advance_depth(p);
+  gfx_advance_depth(gfx);
   
   const F32 font_height = 30.f;
   U32 line_num = 1;
@@ -101,7 +101,7 @@ update_and_render_profiler(Profiler* pf, Painter* p, Game_Sprite_ID blank_sprite
                0.f, 
                900.f - font_height * (line_num), 
                font_height);
-    advance_depth(p);
+    gfx_advance_depth(gfx);
     
     
     // Draw graph
@@ -129,7 +129,7 @@ update_and_render_profiler(Profiler* pf, Painter* p, Game_Sprite_ID blank_sprite
                    size,
                    hex_to_rgba(0x00FF00FF));
     }
-    advance_depth(p);
+    gfx_advance_depth(gfx);
     ++line_num;
     
   }

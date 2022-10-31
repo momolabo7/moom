@@ -95,22 +95,20 @@ get_next_texture_handle() {
 
 static B32 
 init_game_assets(Game_Assets* ga, 
-                 Platform* pf,
                  const char* filename,
                  Bump_Allocator* arena) 
 {
-  Gfx* gfx = pf->gfx;
 
   make(Platform_File, file);
-  B32 ok = pf->open_file(file,
-                         filename,
-                         PLATFORM_FILE_ACCESS_READ, 
-                         PLATFORM_FILE_PATH_EXE);
+  B32 ok = platform->open_file(file,
+                               filename,
+                               PLATFORM_FILE_ACCESS_READ, 
+                               PLATFORM_FILE_PATH_EXE);
   if (!ok) return false;
 
   // Read header
   Karu_Header karu_header;
-  pf->read_file(file, sizeof(Karu_Header), 0, &karu_header);
+  platform->read_file(file, sizeof(Karu_Header), 0, &karu_header);
   if (karu_header.signature != KARU_SIGNATURE) return false;
 
   // Allocation for asset components (asset slots and tags)
@@ -131,7 +129,7 @@ init_game_assets(Game_Assets* ga,
     UMI offset_to_tag = karu_header.offset_to_tags + sizeof(Karu_Tag)*tag_index;
 
     Karu_Tag karu_tag;
-    pf->read_file(file, sizeof(Karu_Tag), offset_to_tag, &karu_tag);
+    platform->read_file(file, sizeof(Karu_Tag), offset_to_tag, &karu_tag);
     
     tag->type = karu_tag.type;
     tag->value = karu_tag.value;
@@ -149,10 +147,10 @@ init_game_assets(Game_Assets* ga,
       UMI offset_to_karu_group = 
         karu_header.offset_to_groups + sizeof(Karu_Group)*group_index;
       
-      pf->read_file(file, 
-                    sizeof(Karu_Group), 
-                    offset_to_karu_group, 
-                    &karu_group);
+      platform->read_file(file, 
+                          sizeof(Karu_Group), 
+                          offset_to_karu_group, 
+                          &karu_group);
       
       group->first_asset_index = karu_group.first_asset_index;
       group->one_past_last_asset_index = karu_group.one_past_last_asset_index;
@@ -171,9 +169,9 @@ init_game_assets(Game_Assets* ga,
       UMI offset_to_karu_asset = 
         karu_header.offset_to_assets + sizeof(Karu_Asset)*asset_index;
 
-      pf->read_file(file, sizeof(Karu_Asset), 
-                    offset_to_karu_asset, 
-                    &karu_asset);
+      platform->read_file(file, sizeof(Karu_Asset), 
+                          offset_to_karu_asset, 
+                          &karu_asset);
 
       // Process the assets
       asset->type = (Game_Asset_Type)karu_asset.type;
@@ -193,10 +191,10 @@ init_game_assets(Game_Assets* ga,
           payload->texture_index = asset->bitmap.renderer_texture_handle;
           payload->texture_width = karu_asset.bitmap.width;
           payload->texture_height = karu_asset.bitmap.height;
-          pf->read_file(file, 
-                        bitmap_size, 
-                        karu_asset.offset_to_data, 
-                        payload->texture_data);
+          platform->read_file(file, 
+                              bitmap_size, 
+                              karu_asset.offset_to_data, 
+                              payload->texture_data);
           gfx_complete_texture_transfer(payload);
           asset->state = GAME_ASSET_STATE_LOADED;
 
@@ -227,7 +225,7 @@ init_game_assets(Game_Assets* ga,
               sizeof(Karu_Font_Glyph)*glyph_index;
             
             Karu_Font_Glyph karu_glyph = {};
-            pf->read_file(file, 
+            platform->read_file(file, 
                           sizeof(Karu_Font_Glyph), 
                           glyph_data_offset,
                           &karu_glyph); 
@@ -246,10 +244,10 @@ init_game_assets(Game_Assets* ga,
                   karu_asset.offset_to_data + 
                   sizeof(Karu_Font_Glyph)*glyph_count;
 
-            pf->read_file(file, 
-                          sizeof(F32)*glyph_count*glyph_count, 
-                          advance_data_offset, 
-                          advances);
+            platform->read_file(file, 
+                                sizeof(F32)*glyph_count*glyph_count, 
+                                advance_data_offset, 
+                                advances);
              
             asset->font.glyphs = glyphs;
             asset->font.codepoint_map = codepoint_map;
