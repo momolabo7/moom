@@ -80,7 +80,7 @@ lit_render_particles(Lit_Particle_Pool* ps, Painter* painter) {
     size.w = lerp_f32(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = lerp_f32(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    Game_Sprite_ID sprite_id = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
+    Game_Sprite_ID sprite_id = find_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
     paint_sprite(painter, sprite_id, p->pos, size, color);
     advance_depth(painter);
   }

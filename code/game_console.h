@@ -135,8 +135,8 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf, Game_Sprite_ID 
   V2 input_area_size = { console_width, line_height };
   V2 input_area_pos = { console_width/2, line_height/2 };
   
-  Game_Font_ID font_id = get_first_font(p->ga, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
-  Game_Sprite_ID sprite_id = get_first_sprite(p->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
+  Game_Font_ID font_id = find_first_font(p->ga, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
+  Game_Sprite_ID sprite_id = find_first_sprite(p->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
 
   paint_sprite(p, sprite_id, 
                GAME_MIDPOINT, 

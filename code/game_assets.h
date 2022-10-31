@@ -8,7 +8,6 @@ struct Game_Bitmap_ID { U32 value; };
 struct Game_Font_ID { U32 value; };
 struct Game_Sprite_ID { U32 value; };
 
-
 struct Game_Bitmap {
   U32 renderer_texture_handle;
   U32 width;
@@ -86,6 +85,13 @@ struct Game_Assets {
   // TODO(Momo): We should remove this?
   U32 bitmap_counter;
 };
+
+static U32
+get_next_texture_handle() {
+  static U32 id = 0;
+  return id++ % GFX_MAX_TEXTURES;
+}
+
 
 static B32 
 init_game_assets(Game_Assets* ga, 
@@ -177,8 +183,7 @@ init_game_assets(Game_Assets* ga,
 
       switch(asset->type) {
         case GAME_ASSET_TYPE_BITMAP: {
-          static U32 bitmap_counter = 0; // TODO: eww
-          asset->bitmap.renderer_texture_handle = bitmap_counter++;
+          asset->bitmap.renderer_texture_handle = get_next_texture_handle();
           asset->bitmap.width = karu_asset.bitmap.width;
           asset->bitmap.height = karu_asset.bitmap.height;
             
@@ -193,11 +198,13 @@ init_game_assets(Game_Assets* ga,
                         karu_asset.offset_to_data, 
                         payload->texture_data);
           gfx_complete_texture_transfer(payload);
+          asset->state = GAME_ASSET_STATE_LOADED;
 
         } break;
         case GAME_ASSET_TYPE_SPRITE: {
           asset->sprite.bitmap_asset_id.value = karu_asset.sprite.bitmap_asset_id;
           asset->sprite.texel_uv = karu_asset.sprite.texel_uv;
+          asset->state = GAME_ASSET_STATE_LOADED;
         } break;
         case GAME_ASSET_TYPE_FONT: {
           U32 glyph_count = karu_asset.font.glyph_count;
@@ -250,7 +257,9 @@ init_game_assets(Game_Assets* ga,
             asset->font.highest_codepoint = highest_codepoint;
             asset->font.glyph_count = glyph_count;
           }
+          asset->state = GAME_ASSET_STATE_LOADED;
         } break;
+
       }
     }
 
@@ -261,7 +270,7 @@ init_game_assets(Game_Assets* ga,
 }
 
 static U32
-get_first_asset_of_type(Game_Assets* ga, 
+find_first_asset_of_type(Game_Assets* ga, 
                         Game_Asset_Group_Type group_type, 
                         Game_Asset_Type type) 
 {
@@ -279,7 +288,7 @@ get_first_asset_of_type(Game_Assets* ga,
 }
 
 static U32 
-get_best_asset_of_type(Game_Assets* ga, 
+find_best_asset_of_type(Game_Assets* ga, 
                        Game_Asset_Group_Type group_type, 
                        Game_Asset_Type asset_type,
                        Game_Asset_Vector* match_vector, 
@@ -378,29 +387,27 @@ get_font(Game_Assets* ga, Game_Font_ID font_id) {
   return &asset->font;
 }
 static Game_Bitmap_ID
-get_first_bitmap(Game_Assets* ga, Game_Asset_Group_Type group_type) {
-  return { get_first_asset_of_type(ga, group_type, GAME_ASSET_TYPE_BITMAP) };
+find_first_bitmap(Game_Assets* ga, Game_Asset_Group_Type group_type) {
+  return { find_first_asset_of_type(ga, group_type, GAME_ASSET_TYPE_BITMAP) };
 }
 
 static Game_Font_ID
-get_first_font(Game_Assets* ga, Game_Asset_Group_Type group_type) {
-  return { get_first_asset_of_type(ga, group_type, GAME_ASSET_TYPE_FONT) };
+find_first_font(Game_Assets* ga, Game_Asset_Group_Type group_type) {
+  return { find_first_asset_of_type(ga, group_type, GAME_ASSET_TYPE_FONT) };
 }
 
 static Game_Sprite_ID
-get_first_sprite(Game_Assets* ga, Game_Asset_Group_Type group_type) {
-  return { get_first_asset_of_type(ga, group_type, GAME_ASSET_TYPE_SPRITE) };
+find_first_sprite(Game_Assets* ga, Game_Asset_Group_Type group_type) {
+  return { find_first_asset_of_type(ga, group_type, GAME_ASSET_TYPE_SPRITE) };
 }
 
 static Game_Sprite_ID
-get_best_sprite(Game_Assets* ga, 
+find_best_sprite(Game_Assets* ga, 
                 Game_Asset_Group_Type group_type, 
                 Game_Asset_Vector* match_vector, 
                 Game_Asset_Vector* weight_vector)
 {
-  return { 
-    get_best_asset_of_type(ga, group_type, GAME_ASSET_TYPE_SPRITE, match_vector, weight_vector)
-  };
+  return { find_best_asset_of_type(ga, group_type, GAME_ASSET_TYPE_SPRITE, match_vector, weight_vector) };
   
 }
 #endif

@@ -480,7 +480,7 @@ _ogl_set_texture(Opengl* ogl,
   
   assert(index < array_count(ogl->textures));
   
-  OGL_Texture entry = {};
+  OGL_Texture entry = {0};
   entry.width = width;
   entry.height = height;
   

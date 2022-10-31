@@ -28,7 +28,7 @@ game_update_and_render(Platform* pf)
     if (!ba_partition(pf->game_arena, &game->frame_arena, MB(1), 16)) 
       return false;
     
-    if(!init_game_assets(&game->game_assets, 
+    if(!init_game_assets(&game->assets, 
                          pf,
                          "test_pack.sui",
                          &game->asset_arena))
@@ -37,9 +37,9 @@ game_update_and_render(Platform* pf)
     }
    
     game->blank_sprite = 
-      get_first_sprite(&game->game_assets, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
+      find_first_sprite(&game->assets, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
     game->debug_font = 
-      get_first_font(&game->game_assets, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
+      find_first_font(&game->assets, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
 
     game_goto_mode(game, GAME_MODE_TYPE_LIT);
 
@@ -58,7 +58,7 @@ game_update_and_render(Platform* pf)
   
   Game* game = (Game*)pf->game;
   Console* console = &game->console;
-  Game_Assets* ga = &game->game_assets;
+  Game_Assets* ga = &game->assets;
   Gfx* gfx = pf->gfx;
   Inspector* in = &game->inspector;
  

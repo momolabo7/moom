@@ -34,6 +34,8 @@
 #include "momo_shapes.h" 
 #include "momo_colors.h"
 
+#define GFX_MAX_TEXTURES 256
+
 //-Texture Queue API
 enum Gfx_Texture_Payload_State {
   GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
@@ -59,7 +61,7 @@ struct Gfx_Texture_Queue {
   UMI transfer_memory_start;
   UMI transfer_memory_end;
   
-  Gfx_Texture_Payload payloads[256];
+  Gfx_Texture_Payload payloads[GFX_MAX_TEXTURES];
   UMI first_payload_index;
   UMI payload_count;
   
@@ -166,6 +168,7 @@ static void gfx_init_command_queue(Gfx* g, void* data, UMI size);
 static Gfx_Command* gfx_get_command(Gfx* g, U32 index);
 static void gfx_init_texture_queue(Gfx* g, void* data, UMI size);
 
+static void gfx_next_texture_handle();
 
 static Gfx_Texture_Payload* gfx_begin_texture_transfer(Gfx* g, U32 required_space);
 static void gfx_complete_texture_transfer(Gfx_Texture_Payload* entry);

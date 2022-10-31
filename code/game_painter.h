@@ -25,7 +25,7 @@ set_view(Painter* p, F32 canvas_width, F32 canvas_height) {
                 0.f, 0.f);
 }
 
-  static void
+static void
 begin_painting(Painter* p, 
                Game_Assets* ga, 
                Gfx* gfx,

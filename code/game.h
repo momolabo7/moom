@@ -77,7 +77,7 @@ struct Game {
   Game_Mode_Type current_game_mode;
 
   // Other stuff
-  Game_Assets game_assets;
+  Game_Assets assets;
   Console console;
   Inspector inspector;
   Profiler profiler;

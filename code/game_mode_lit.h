@@ -8,36 +8,36 @@
 
 #include "game_mode_lit_particles.h"
 
-typedef struct {
+struct Lit_Edge {
   B32 is_disabled;
   V2 start_pt;
   V2 end_pt;
-} Lit_Edge;
+};
 
 
-typedef struct {
+struct Lit_Edge_List {
   U32 count;
   Lit_Edge e[256];
-} Lit_Edge_List;
+};
 
 
 #define LIT_TUTORIAL_TEXT_FADE_DURATION 1.f
-typedef enum {
+enum Lit_Tutorial_Text_State{
   LIT_TUTORIAL_TEXT_STATE_INVISIBLE,
   LIT_TUTORIAL_TEXT_STATE_FADE_IN,
   LIT_TUTORIAL_TEXT_STATE_VISIBLE,
   LIT_TUTORIAL_TEXT_STATE_FADE_OUT,
-} Lit_Tutorial_Text_State;
+};
 
 
 typedef B32 (*Lit_Tutorial_Trigger)(struct Lit* m, Platform* pf);
-typedef struct {
+struct Lit_Tutorial_Trigger_List {
   U32 current_id;
   U32 count;
   Lit_Tutorial_Trigger e[10];
-} Lit_Tutorial_Trigger_List;
+};
 
-typedef struct
+struct Lit_Tutorial_Text
 {
   String8 str;
   F32 alpha;
@@ -46,15 +46,15 @@ typedef struct
   F32 pos_y;
   F32 timer;
 
-} Lit_Tutorial_Text;
+};
 
 
-typedef struct {
+struct Lit_Tutorial_Text_List {
   U32 count;
   Lit_Tutorial_Text e[10];
   U32 next_id_to_fade_in;
   U32 next_id_to_fade_out;
-} Lit_Tutorial_Text_List;
+};
 
 
 
@@ -324,9 +324,9 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
     m->stage_fade = 1.f;
 
     // TODO: shouldn't use painter->ga
-    m->tutorial_font = get_first_font(painter->ga, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
-    m->blank_sprite = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
-    m->circle_sprite = get_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
+    m->tutorial_font = find_first_font(painter->ga, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
+    m->blank_sprite = find_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
+    m->circle_sprite = find_first_sprite(painter->ga, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
   }
 
   Lit_Player* player = &m->player;
