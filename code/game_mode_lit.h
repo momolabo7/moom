@@ -232,7 +232,7 @@ lit_fade_out_next_tutorial_text(Lit_Tutorial_Text_List* texts) {
 
 
 static void
-lit_draw_edges(Lit_Edge_List* edges, Painter* painter) {
+lit_draw_edges(Lit_Edge_List* edges) {
   al_foreach(edge_index, edges) 
   {
     Lit_Edge* edge = al_at(edges, edge_index);
@@ -246,7 +246,7 @@ lit_draw_edges(Lit_Edge_List* edges, Painter* painter) {
 }
 
 static void 
-lit_draw_debug_light_rays(Painter* painter) {
+lit_draw_debug_light_rays() {
  
 #if LIT_DEBUG_LIGHT
   // Draw the light rays
@@ -407,10 +407,10 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
                  GFX_BLEND_TYPE_SRC_ALPHA,
                  GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
-  lit_draw_edges(&m->edges, painter); 
-  lit_draw_debug_light_rays(painter);
+  lit_draw_edges(&m->edges); 
+  //lit_draw_debug_light_rays();
   lit_draw_player(player, m->circle_sprite);
-  lit_draw_lights(&m->lights, painter, m->blank_sprite);
+  lit_draw_lights(&m->lights, m->circle_sprite);
   
   gfx_push_blend(gfx, 
                  GFX_BLEND_TYPE_SRC_ALPHA,
@@ -490,7 +490,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   // Draw the overlay for fade in/out
   {
     RGBA color = rgba(0.f, 0.f, 0.f, m->stage_fade);
-    paint_sprite(m->circle_sprite, GAME_MIDPOINT, GAME_DIMENSIONS, color);
+    paint_sprite(m->blank_sprite, GAME_MIDPOINT, GAME_DIMENSIONS, color);
     gfx_advance_depth(gfx);
   }
 }

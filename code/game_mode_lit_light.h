@@ -296,7 +296,7 @@ lit_gen_lights(Lit_Light_List* lights,
 }
 
 static void
-lit_draw_lights(Lit_Light_List* lights, Painter* painter, Game_Sprite_ID sprite_id) {
+lit_draw_lights(Lit_Light_List* lights, Game_Sprite_ID sprite_id) {
   // Emitters
   al_foreach(light_index, lights)
   {
