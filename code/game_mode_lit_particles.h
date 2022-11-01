@@ -60,7 +60,7 @@ lit_update_particles(Lit_Particle_Pool* ps, F32 dt) {
 }
 
 static void
-lit_render_particles(Lit_Particle_Pool* ps, Painter* painter) {
+lit_render_particles(Lit_Particle_Pool* ps) {
   // Render particles
   for(U32 particle_id = 0; 
       particle_id < ps->particle_count;
@@ -81,7 +81,7 @@ lit_render_particles(Lit_Particle_Pool* ps, Painter* painter) {
     size.h = lerp_f32(p->size_start.h , p->size_end.h, lifespan_ratio);
 
     Game_Sprite_ID sprite_id = find_first_sprite(assets, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
-    paint_sprite(painter, sprite_id, p->pos, size, color);
+    paint_sprite(sprite_id, p->pos, size, color);
     gfx_advance_depth(gfx);
   }
 }

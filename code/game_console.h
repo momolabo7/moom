@@ -96,14 +96,14 @@ _execute(Console* dc) {
 }
 
 static void
-update_and_render_console(Console* dc, Painter* p, Platform* pf, Game_Sprite_ID blank_sprite, Game_Font_ID font) 
+update_and_render_console(Console* dc, Game_Sprite_ID blank_sprite, Game_Font_ID font) 
 {
   for (U32 char_index = 0; 
-       char_index < pf->char_count;
+       char_index < platform->char_count;
        ++char_index) 
   {
     // NOTE(Momo): Not very portable to other platforms....
-    U8 c = pf->chars[char_index];
+    U8 c = platform->chars[char_index];
     if (c >= 32 && c <= 126) {
       sb8_push_u8(&dc->input_line, c);
     }
@@ -135,15 +135,15 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf, Game_Sprite_ID 
   V2 input_area_size = { console_width, line_height };
   V2 input_area_pos = { console_width/2, line_height/2 };
   
-  paint_sprite(p, blank_sprite, 
-              GAME_MIDPOINT, 
-              GAME_DIMENSIONS,
-              rgba(0.f, 0.f, 0.f, 0.8f));
+  paint_sprite(blank_sprite, 
+               GAME_MIDPOINT, 
+               GAME_DIMENSIONS,
+               rgba(0.f, 0.f, 0.f, 0.8f));
   gfx_advance_depth(gfx);
   
-  paint_sprite(p, blank_sprite, console_pos, console_size, hex_to_rgba(0x787878FF));
+  paint_sprite(blank_sprite, console_pos, console_size, hex_to_rgba(0x787878FF));
   gfx_advance_depth(gfx);
-  paint_sprite(p, blank_sprite, input_area_pos, input_area_size, hex_to_rgba(0x505050FF));
+  paint_sprite(blank_sprite, input_area_pos, input_area_size, hex_to_rgba(0x505050FF));
   gfx_advance_depth(gfx);
   
   
@@ -154,8 +154,7 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf, Game_Sprite_ID 
   {
     String8_Builder* line = dc->info_lines + line_index;
     
-    paint_text(p,
-               font,
+    paint_text(font,
                line->str,
                hex_to_rgba(0xFFFFFFFF),
                left_pad, 
@@ -164,8 +163,7 @@ update_and_render_console(Console* dc, Painter* p, Platform* pf, Game_Sprite_ID 
     
   }
   gfx_advance_depth(gfx);
-  paint_text(p,
-             font,
+  paint_text(font,
              dc->input_line.str,
              hex_to_rgba(0xFFFFFFFF),
              left_pad, 

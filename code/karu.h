@@ -3,16 +3,19 @@
 
 
 // game_asset_types.h
+#define asset_tag(name) GAME_ASSET_TAG_TYPE_##name
 enum Game_Asset_Tag_Type : U32 {
-  GAME_ASSET_TAG_TYPE_MOOD,
+  asset_tag(FONT),
 
   GAME_ASSET_TAG_TYPE_COUNT,
 };
+
+#define asset_group(name) GAME_ASSET_GROUP_TYPE_##name
 enum Game_Asset_Group_Type : U32 {
-  GAME_ASSET_GROUP_TYPE_BLANK_SPRITE,
-  GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE,
-  GAME_ASSET_GROUP_TYPE_ATLAS,
-  GAME_ASSET_GROUP_TYPE_DEFAULT_FONT,
+  asset_group(BLANK_SPRITE),
+  asset_group(CIRCLE_SPRITE),
+  asset_group(ATLAS),
+  asset_group(FONTS),
 
   GAME_ASSET_GROUP_TYPE_COUNT,
 };

@@ -42,9 +42,9 @@ end_stat(Stat* stat) {
 }
 
 static void
-update_and_render_profiler(Profiler* pf, Painter* p, Game_Sprite_ID blank_sprite, Game_Font_ID font) 
+update_and_render_profiler(Game_Sprite_ID blank_sprite, Game_Font_ID font) 
 {
-  paint_sprite(p, blank_sprite, 
+  paint_sprite(blank_sprite, 
                GAME_MIDPOINT, 
                GAME_DIMENSIONS,
                {0.f, 0.f, 0.f, 0.5f});
@@ -53,9 +53,9 @@ update_and_render_profiler(Profiler* pf, Painter* p, Game_Sprite_ID blank_sprite
   const F32 font_height = 30.f;
   U32 line_num = 1;
   
-  for(U32 entry_id = 0; entry_id < pf->entry_count; ++entry_id)
+  for(U32 entry_id = 0; entry_id < profiler->entry_count; ++entry_id)
   {
-    Profiler_Entry* itr = pf->entries + entry_id;
+    Profiler_Entry* itr = profiler->entries + entry_id;
 
     Stat cycles;
     Stat hits;
@@ -94,8 +94,7 @@ update_and_render_profiler(Profiler* pf, Painter* p, Game_Sprite_ID blank_sprite
                  (U32)cycles_per_hit.average);
     
     // Assumes 1600x900        
-    paint_text(p,
-               font, 
+    paint_text(font, 
                sb->str,
                hex_to_rgba(0xFFFFFFFF),
                0.f, 
@@ -123,8 +122,7 @@ update_and_render_profiler(Profiler* pf, Painter* p, Game_Sprite_ID blank_sprite
       V2 size = {snapshot_bar_width, snapshot_bar_height};
       
       
-      paint_sprite(p, 
-                   blank_sprite, 
+      paint_sprite(blank_sprite, 
                    pos,
                    size,
                    hex_to_rgba(0x00FF00FF));

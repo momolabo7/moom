@@ -5,11 +5,10 @@
 
 
 static void 
-update_and_render_inspector(Inspector* in, Painter* p, Game_Sprite_ID rect_sprite, Game_Font_ID font) 
+update_and_render_inspector(Game_Sprite_ID rect_sprite, Game_Font_ID font) 
 {
 
-  paint_sprite(p, 
-               rect_sprite, 
+  paint_sprite(rect_sprite, 
                GAME_MIDPOINT, 
                GAME_DIMENSIONS,
                {0.f, 0.f, 0.f, 0.5f});
@@ -18,9 +17,9 @@ update_and_render_inspector(Inspector* in, Painter* p, Game_Sprite_ID rect_sprit
   F32 line_height = 32.f;
   sb8_make(sb, 256);
   
-  al_foreach(entry_index, &in->entries)
+  al_foreach(entry_index, &inspector->entries)
   {
-    Inspector_Entry* entry = al_at(&in->entries, entry_index);
+    Inspector_Entry* entry = al_at(&inspector->entries, entry_index);
     switch(entry->type){
       case INSPECTOR_ENTRY_TYPE_U32: {
         U32 item = *(U32*)entry->item;
@@ -38,8 +37,7 @@ update_and_render_inspector(Inspector* in, Painter* p, Game_Sprite_ID rect_sprit
     
     F32 y = GAME_HEIGHT - line_height * (entry_index+1);
     
-    paint_text(p,
-               font, 
+    paint_text(font, 
                sb->str,
                hex_to_rgba(0xFFFFFFFF),
                0.f, 

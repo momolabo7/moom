@@ -35,12 +35,14 @@ active_asset_index	C:/Users/geral/work/txt/code/karu_pack2.h	/^  U32 active_asse
 active_asset_index	C:/Users/geral/work/txt/code/sui_pack.h	/^  U32 active_asset_index;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 active_asset_index	D:/work/git/txt/code/karu_pack2.h	/^  U32 active_asset_index;$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:U32
 active_asset_index	D:/work/git/txt/code/pack_assets.cpp	/^  U32 active_asset_index;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32	file:
+active_asset_index	D:/work/git/txt/code/sui_pack.h	/^  U32 active_asset_index;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 active_font	C:/Users/geral/work/txt/code/sui_atlas.h	/^  Sui_Atlas_Font* active_font;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:Sui_Atlas_Font *
 active_font	D:/work/git/txt/code/sui_atlas.h	/^  Sui_Atlas_Font* active_font;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:Sui_Atlas_Font *
 active_group	C:/Users/geral/work/txt/code/karu_pack2.h	/^  Sui_Asset_Group* active_group;$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:Sui_Asset_Group *
 active_group	C:/Users/geral/work/txt/code/sui_pack.h	/^  Karu_Group* active_group;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Karu_Group *
 active_group	D:/work/git/txt/code/karu_pack2.h	/^  Sui_Asset_Group* active_group;$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:Sui_Asset_Group *
 active_group	D:/work/git/txt/code/pack_assets.cpp	/^  Karu_Group* active_group;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Karu_Group *	file:
+active_group	D:/work/git/txt/code/sui_pack.h	/^  Karu_Group* active_group;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Karu_Group *
 additional_flags	C:/Users/geral/work/txt/code/momo_png.h	/^  U8 additional_flags;$/;"	m	language:C++	struct:_PNG_IDAT_Header	typeref:typename:U8
 additional_flags	D:/work/git/txt/code/momo_png.h	/^  U8 additional_flags;$/;"	m	language:C++	struct:_PNG_IDAT_Header	typeref:typename:U8
 add_bitmap	C:/Users/geral/work/txt/code/karu_pack2.h	/^add_bitmap(Karu_Packer* sp, Bitmap bitmap) {$/;"	f	language:C++	typeref:typename:U32
@@ -64,7 +66,6 @@ add_task	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Add_Task* add
 add_task	D:/work/git/txt/code/game_platform.h	/^  Platform_Add_Task* add_task;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Add_Task *
 add_task	D:/work/git/txt/code/game_platform.h	/^  Platform_Add_Task* add_task;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Add_Task *
 advance_depth	C:/Users/geral/work/txt/code/game_painter.h	/^advance_depth(Painter* p) {$/;"	f	language:C++	typeref:typename:void
-advance_depth	D:/work/git/txt/code/game_painter.h	/^advance_depth(Painter* p) {$/;"	f	language:C++	typeref:typename:void
 advance_width	C:/Users/geral/work/txt/code/momo_ttf.h	/^  S16 advance_width;$/;"	m	language:C++	struct:__anon802a10330208	typeref:typename:S16
 advance_width	D:/work/git/txt/code/momo_ttf.h	/^  S16 advance_width;$/;"	m	language:C++	struct:__anon68e2795f0208	typeref:typename:S16
 align_down_pow2	C:/Users/geral/work/txt/code/momo_common.h	/^#define align_down_pow2(/;"	d	language:C++
@@ -78,10 +79,9 @@ allocator	C:/Users/geral/work/txt/code/w32_audio_wasapi.h	/^  Bump_Allocator all
 allocator	D:/work/git/txt/code/game_debug.h	/^  Bump_Allocator allocator;$/;"	m	language:C++	struct:Debug_State	typeref:typename:Bump_Allocator
 allocator	D:/work/git/txt/code/momo_memory.h	/^  Bump_Allocator* allocator;$/;"	m	language:C++	struct:__anonb4ad698a0208	typeref:typename:Bump_Allocator *
 allocator	D:/work/git/txt/code/momo_png.h	/^  Bump_Allocator* allocator; $/;"	m	language:C++	struct:_PNG_Context	typeref:typename:Bump_Allocator *
-allocator	D:/work/git/txt/code/sui_pack.h	/^  Bump_Allocator* allocator;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Bump_Allocator *
 allocator	D:/work/git/txt/code/w32_audio_wasapi.h	/^  Bump_Allocator allocator;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Bump_Allocator
 alpha	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  F32 alpha;$/;"	m	language:C++	struct:__anon3aa070140508	typeref:typename:F32
-alpha	D:/work/git/txt/code/game_mode_lit.h	/^  F32 alpha;$/;"	m	language:C++	struct:__anonaaa574c00508	typeref:typename:F32
+alpha	D:/work/git/txt/code/game_mode_lit.h	/^  F32 alpha;$/;"	m	language:C++	struct:Lit_Tutorial_Text	typeref:typename:F32
 al_append	C:/Users/geral/work/txt/code/momo_lists.h	/^#define al_append(/;"	d	language:C++
 al_append	D:/work/git/txt/code/momo_lists.h	/^#define al_append(/;"	d	language:C++
 al_at	C:/Users/geral/work/txt/code/momo_lists.h	/^#define al_at(/;"	d	language:C++
@@ -161,10 +161,14 @@ assets	C:/Users/geral/work/txt/code/game_assets.h	/^  Game_Asset* assets;$/;"	m	
 assets	C:/Users/geral/work/txt/code/game_assets_2.h	/^  Asset* assets;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Asset *
 assets	C:/Users/geral/work/txt/code/karu_pack2.h	/^  Sui_Asset assets[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:Sui_Asset[1024]
 assets	C:/Users/geral/work/txt/code/sui_pack.h	/^  Karu_Asset assets[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Karu_Asset[1024]
+assets	D:/work/git/txt/code/game.h	/^  Game_Assets assets;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Assets
+assets	D:/work/git/txt/code/game.h	/^static struct Game_Assets* assets;$/;"	v	language:C++	typeref:struct:Game_Assets *
+assets	D:/work/git/txt/code/game_assets.h	/^  Game_Asset* assets;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Game_Asset *
 assets	D:/work/git/txt/code/game_assets2.h	/^  Game_Asset* assets;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Game_Asset *
 assets	D:/work/git/txt/code/game_assets_2.h	/^  Asset* assets;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Asset *
 assets	D:/work/git/txt/code/karu_pack2.h	/^  Sui_Asset assets[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:Sui_Asset[1024]
 assets	D:/work/git/txt/code/pack_assets.cpp	/^  Karu_Asset assets[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Karu_Asset[1024]	file:
+assets	D:/work/git/txt/code/sui_pack.h	/^  Karu_Asset assets[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Karu_Asset[1024]
 asset_arena	C:/Users/geral/work/txt/code/game.h	/^  Bump_Allocator asset_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Bump_Allocator
 asset_arena	D:/work/git/txt/code/game.h	/^  Bump_Allocator asset_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Bump_Allocator
 asset_count	C:/Users/geral/work/txt/code/game_assets.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
@@ -172,13 +176,21 @@ asset_count	C:/Users/geral/work/txt/code/game_assets_2.h	/^  U32 asset_count;$/;
 asset_count	C:/Users/geral/work/txt/code/karu.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 asset_count	C:/Users/geral/work/txt/code/karu_pack2.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:U32
 asset_count	C:/Users/geral/work/txt/code/sui_pack.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
+asset_count	D:/work/git/txt/code/game_assets.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
 asset_count	D:/work/git/txt/code/game_assets2.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
 asset_count	D:/work/git/txt/code/game_assets_2.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
+asset_count	D:/work/git/txt/code/karu.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 asset_count	D:/work/git/txt/code/karu2.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 asset_count	D:/work/git/txt/code/karu_pack2.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:U32
 asset_count	D:/work/git/txt/code/pack_assets.cpp	/^  U32 asset_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32	file:
+asset_count	D:/work/git/txt/code/sui_pack.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 Asset_Group	C:/Users/geral/work/txt/code/game_assets_2.h	/^struct Asset_Group {$/;"	s	language:C++
 Asset_Group	D:/work/git/txt/code/game_assets_2.h	/^struct Asset_Group {$/;"	s	language:C++
+asset_group	D:/work/git/txt/code/karu.h	/^  asset_group(ATLAS),$/;"	e	language:C++	enum:Game_Asset_Group_Type
+asset_group	D:/work/git/txt/code/karu.h	/^  asset_group(BLANK_SPRITE),$/;"	e	language:C++	enum:Game_Asset_Group_Type
+asset_group	D:/work/git/txt/code/karu.h	/^  asset_group(CIRCLE_SPRITE),$/;"	e	language:C++	enum:Game_Asset_Group_Type
+asset_group	D:/work/git/txt/code/karu.h	/^  asset_group(FONTS),$/;"	e	language:C++	enum:Game_Asset_Group_Type
+asset_group	D:/work/git/txt/code/karu.h	/^#define asset_group(/;"	d	language:C++
 ASSET_GROUP_ATLASES	C:/Users/geral/work/txt/code/game_assets_2.h	/^  ASSET_GROUP_ATLASES,$/;"	e	language:C++	enum:Asset_Group_ID
 ASSET_GROUP_ATLASES	D:/work/git/txt/code/game_assets_2.h	/^  ASSET_GROUP_ATLASES,$/;"	e	language:C++	enum:Asset_Group_ID
 ASSET_GROUP_BULLET	C:/Users/geral/work/txt/code/game_assets_2.h	/^  ASSET_GROUP_BULLET,$/;"	e	language:C++	enum:Asset_Group_ID
@@ -203,6 +215,8 @@ ASSET_STATE_UNLOADED	C:/Users/geral/work/txt/code/game_assets_2.h	/^  ASSET_STAT
 ASSET_STATE_UNLOADED	D:/work/git/txt/code/game_assets_2.h	/^  ASSET_STATE_UNLOADED,$/;"	e	language:C++	enum:Asset_State
 Asset_Tag	C:/Users/geral/work/txt/code/game_assets_2.h	/^struct Asset_Tag {$/;"	s	language:C++
 Asset_Tag	D:/work/git/txt/code/game_assets_2.h	/^struct Asset_Tag {$/;"	s	language:C++
+asset_tag	D:/work/git/txt/code/karu.h	/^  asset_tag(FONT),$/;"	e	language:C++	enum:Game_Asset_Tag_Type
+asset_tag	D:/work/git/txt/code/karu.h	/^#define asset_tag(/;"	d	language:C++
 Asset_Tag_Type	C:/Users/geral/work/txt/code/game_assets_2.h	/^enum Asset_Tag_Type {$/;"	g	language:C++
 Asset_Tag_Type	D:/work/git/txt/code/game_assets_2.h	/^enum Asset_Tag_Type {$/;"	g	language:C++
 ASSET_TAG_TYPE_COUNT	C:/Users/geral/work/txt/code/game_assets_2.h	/^  ASSET_TAG_TYPE_COUNT,$/;"	e	language:C++	enum:Asset_Tag_Type
@@ -239,6 +253,7 @@ atlas_font	C:/Users/geral/work/txt/code/karu_pack2.h	/^    Karu_Atlas_Font_Sourc
 atlas_font	C:/Users/geral/work/txt/code/sui_pack.h	/^  Sui_Atlas_Font* atlas_font;$/;"	m	language:C++	struct:Sui_Packer_Source_Font	typeref:typename:Sui_Atlas_Font *
 atlas_font	D:/work/git/txt/code/karu_pack2.h	/^    Karu_Atlas_Font_Source atlas_font;$/;"	m	language:C++	union:Karu_Source::__anoned3c77bd010a	typeref:typename:Karu_Atlas_Font_Source
 atlas_font	D:/work/git/txt/code/pack_assets.cpp	/^  Sui_Atlas_Font* atlas_font;$/;"	m	language:C++	struct:Sui_Packer_Source_Font	typeref:typename:Sui_Atlas_Font *	file:
+atlas_font	D:/work/git/txt/code/sui_pack.h	/^  Sui_Atlas_Font* atlas_font;$/;"	m	language:C++	struct:Sui_Packer_Source_Font	typeref:typename:Sui_Atlas_Font *
 atlas_font_id	C:/Users/geral/work/txt/code/karu_pack2.h	/^  U32 atlas_font_id;$/;"	m	language:C++	struct:Karu_Atlas_Font_Source	typeref:typename:U32
 atlas_font_id	D:/work/git/txt/code/karu_pack2.h	/^  U32 atlas_font_id;$/;"	m	language:C++	struct:Karu_Atlas_Font_Source	typeref:typename:U32
 atlas_image	C:/Users/geral/work/txt/code/karu_pack2.h	/^    Karu_Atlas_Image_Source atlas_image;$/;"	m	language:C++	union:Karu_Source::__anonf4c51391010a	typeref:typename:Karu_Atlas_Image_Source
@@ -347,15 +362,10 @@ begin	C:/Users/geral/work/txt/code/meta.cpp	/^  U32 begin;$/;"	m	language:C++	st
 begin	C:/Users/geral/work/txt/code/momo_json.h	/^  U32 begin;$/;"	m	language:C++	struct:__anon6e0c605f0508	typeref:typename:U32
 begin	D:/work/git/txt/code/meta.cpp	/^  U32 begin;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:U32	file:
 begin	D:/work/git/txt/code/momo_json.h	/^  U32 begin;$/;"	m	language:C++	struct:__anon6dd1ef0b0508	typeref:typename:U32
-begin_asset_pack	D:/work/git/txt/code/sui_pack.h	/^begin_asset_pack(Sui_Packer* p)$/;"	f	language:C++	typeref:typename:void
-begin_atlas	D:/work/git/txt/code/sui_pack.h	/^begin_atlas(Sui_Packer *p) {$/;"	f	language:C++	typeref:typename:void
-begin_atlas_font	D:/work/git/txt/code/sui_pack.h	/^begin_atlas_font(Sui_Packer* p,$/;"	f	language:C++	typeref:typename:void
 begin_group	C:/Users/geral/work/txt/code/karu_pack2.h	/^begin_group(Karu_Packer* sp, Asset_Group_ID group_id) $/;"	f	language:C++	typeref:typename:void
 begin_group	D:/work/git/txt/code/karu_pack2.h	/^begin_group(Karu_Packer* sp, Asset_Group_ID group_id) $/;"	f	language:C++	typeref:typename:void
 begin_inspector	C:/Users/geral/work/txt/code/game_inspector.h	/^begin_inspector(Inspector* in) {$/;"	f	language:C++	typeref:typename:void
 begin_inspector	D:/work/git/txt/code/game_inspector.h	/^begin_inspector(Inspector* in) {$/;"	f	language:C++	typeref:typename:void
-begin_packer	D:/work/git/txt/code/sui_pack.h	/^begin_packer(Sui_Packer* p,$/;"	f	language:C++	typeref:typename:B32
-begin_painting	D:/work/git/txt/code/game_painter.h	/^begin_painting(Painter* p, $/;"	f	language:C++	typeref:typename:void
 begin_stat	C:/Users/geral/work/txt/code/game_profiler_rendering.h	/^begin_stat(Stat* stat) {$/;"	f	language:C++	typeref:typename:void
 begin_stat	D:/work/git/txt/code/game_profiler_rendering.h	/^begin_stat(Stat* stat) {$/;"	f	language:C++	typeref:typename:void
 begin_sui_packer	C:/Users/geral/work/txt/code/karu_pack2.h	/^begin_sui_packer() {$/;"	f	language:C++	typeref:typename:Karu_Packer
@@ -366,16 +376,16 @@ bitmap	C:/Users/geral/work/txt/code/karu.h	/^    Karu_Bitmap bitmap;$/;"	m	langu
 bitmap	C:/Users/geral/work/txt/code/karu_pack2.h	/^    Karu_Bitmap_Source bitmap;$/;"	m	language:C++	union:Karu_Source::__anonf4c51391010a	typeref:typename:Karu_Bitmap_Source
 bitmap	C:/Users/geral/work/txt/code/sui_atlas.h	/^  Image32 bitmap;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:Image32
 bitmap	C:/Users/geral/work/txt/code/sui_pack.h	/^    Sui_Packer_Source_Bitmap bitmap; $/;"	m	language:C++	union:Sui_Packer_Source::__anonf8efa15d010a	typeref:typename:Sui_Packer_Source_Bitmap
+bitmap	D:/work/git/txt/code/game_assets.h	/^    Game_Bitmap bitmap;$/;"	m	language:C++	union:Game_Asset::__anon329ebfe6020a	typeref:typename:Game_Bitmap
 bitmap	D:/work/git/txt/code/game_assets2.h	/^    Game_Bitmap bitmap;$/;"	m	language:C++	union:Game_Asset::__anon8676c698010a	typeref:typename:Game_Bitmap
 bitmap	D:/work/git/txt/code/game_assets_2.h	/^    Bitmap_Asset bitmap;$/;"	m	language:C++	union:Asset::__anon55685097010a	typeref:typename:Bitmap_Asset
+bitmap	D:/work/git/txt/code/karu.h	/^    Karu_Bitmap bitmap;$/;"	m	language:C++	union:Karu_Asset::__anon93330e6d010a	typeref:typename:Karu_Bitmap
 bitmap	D:/work/git/txt/code/karu2.h	/^    Karu_Bitmap bitmap;$/;"	m	language:C++	union:Karu_Asset::__anonf994e5ff010a	typeref:typename:Karu_Bitmap
 bitmap	D:/work/git/txt/code/karu_pack2.h	/^    Karu_Bitmap_Source bitmap;$/;"	m	language:C++	union:Karu_Source::__anoned3c77bd010a	typeref:typename:Karu_Bitmap_Source
 bitmap	D:/work/git/txt/code/pack_assets.cpp	/^    Sui_Packer_Source_Bitmap bitmap; $/;"	m	language:C++	union:Sui_Packer_Source::__anon1ecef806010a	typeref:typename:Sui_Packer_Source_Bitmap	file:
 bitmap	D:/work/git/txt/code/sui_atlas.h	/^  Image32 bitmap;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:Image32
-bitmaps	D:/work/git/txt/code/game_assets.h	/^  Bitmap_Asset* bitmaps;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Bitmap_Asset *
-bitmaps	D:/work/git/txt/code/sui_pack.h	/^  Sui_Packer_Bitmap bitmaps[32];$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Sui_Packer_Bitmap[32]
+bitmap	D:/work/git/txt/code/sui_pack.h	/^    Sui_Packer_Source_Bitmap bitmap; $/;"	m	language:C++	union:Sui_Packer_Source::__anone1a80a89010a	typeref:typename:Sui_Packer_Source_Bitmap
 Bitmap_Asset	C:/Users/geral/work/txt/code/game_assets_2.h	/^struct Bitmap_Asset {$/;"	s	language:C++
-Bitmap_Asset	D:/work/git/txt/code/game_assets.h	/^struct Bitmap_Asset {$/;"	s	language:C++
 Bitmap_Asset	D:/work/git/txt/code/game_assets_2.h	/^struct Bitmap_Asset {$/;"	s	language:C++
 bitmap_asset_id	C:/Users/geral/work/txt/code/game_assets.h	/^  Game_Bitmap_ID bitmap_asset_id;$/;"	m	language:C++	struct:Game_Font_Glyph	typeref:typename:Game_Bitmap_ID
 bitmap_asset_id	C:/Users/geral/work/txt/code/game_assets.h	/^  Game_Bitmap_ID bitmap_asset_id;$/;"	m	language:C++	struct:Game_Sprite	typeref:typename:Game_Bitmap_ID
@@ -388,9 +398,14 @@ bitmap_asset_id	C:/Users/geral/work/txt/code/karu_pack2.h	/^  U32 bitmap_asset_i
 bitmap_asset_id	C:/Users/geral/work/txt/code/karu_pack2.h	/^  U32 bitmap_asset_id;$/;"	m	language:C++	struct:Karu_Image_Source	typeref:typename:U32
 bitmap_asset_id	C:/Users/geral/work/txt/code/sui_pack.h	/^  U32 bitmap_asset_id;$/;"	m	language:C++	struct:Sui_Packer_Source_Font	typeref:typename:U32
 bitmap_asset_id	C:/Users/geral/work/txt/code/sui_pack.h	/^  U32 bitmap_asset_id;$/;"	m	language:C++	struct:Sui_Packer_Source_Sprite	typeref:typename:U32
+bitmap_asset_id	D:/work/git/txt/code/game_assets.h	/^  Game_Bitmap_ID bitmap_asset_id;$/;"	m	language:C++	struct:Game_Font_Glyph	typeref:typename:Game_Bitmap_ID
+bitmap_asset_id	D:/work/git/txt/code/game_assets.h	/^  Game_Bitmap_ID bitmap_asset_id;$/;"	m	language:C++	struct:Game_Sprite	typeref:typename:Game_Bitmap_ID
 bitmap_asset_id	D:/work/git/txt/code/game_assets2.h	/^  Game_Bitmap_ID bitmap_asset_id;$/;"	m	language:C++	struct:Game_Font_Glyph	typeref:typename:Game_Bitmap_ID
 bitmap_asset_id	D:/work/git/txt/code/game_assets2.h	/^  Game_Bitmap_ID bitmap_asset_id;$/;"	m	language:C++	struct:Game_Sprite	typeref:typename:Game_Bitmap_ID
 Bitmap_Asset_ID	D:/work/git/txt/code/game_assets_2.h	/^struct Bitmap_Asset_ID { U32 value; };$/;"	s	language:C++
+bitmap_asset_id	D:/work/git/txt/code/karu.h	/^  U32 bitmap_asset_id; $/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:U32
+bitmap_asset_id	D:/work/git/txt/code/karu.h	/^  U32 bitmap_asset_id; $/;"	m	language:C++	struct:Karu_Sprite	typeref:typename:U32
+bitmap_asset_id	D:/work/git/txt/code/karu.h	/^  U32 bitmap_asset_id;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
 bitmap_asset_id	D:/work/git/txt/code/karu2.h	/^  U32 bitmap_asset_id; $/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:U32
 bitmap_asset_id	D:/work/git/txt/code/karu2.h	/^  U32 bitmap_asset_id; $/;"	m	language:C++	struct:Karu_Sprite	typeref:typename:U32
 bitmap_asset_id	D:/work/git/txt/code/karu2.h	/^  U32 bitmap_asset_id;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
@@ -399,11 +414,11 @@ bitmap_asset_id	D:/work/git/txt/code/karu_pack2.h	/^  U32 bitmap_asset_id;$/;"	m
 bitmap_asset_id	D:/work/git/txt/code/karu_pack2.h	/^  U32 bitmap_asset_id;$/;"	m	language:C++	struct:Karu_Image_Source	typeref:typename:U32
 bitmap_asset_id	D:/work/git/txt/code/pack_assets.cpp	/^  U32 bitmap_asset_id;$/;"	m	language:C++	struct:Sui_Packer_Source_Font	typeref:typename:U32	file:
 bitmap_asset_id	D:/work/git/txt/code/pack_assets.cpp	/^  U32 bitmap_asset_id;$/;"	m	language:C++	struct:Sui_Packer_Source_Sprite	typeref:typename:U32	file:
-bitmap_count	D:/work/git/txt/code/game_assets.h	/^  U32 bitmap_count;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
-bitmap_count	D:/work/git/txt/code/karu.h	/^  U32 bitmap_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
-bitmap_count	D:/work/git/txt/code/sui_pack.h	/^  U32 bitmap_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
+bitmap_asset_id	D:/work/git/txt/code/sui_pack.h	/^  U32 bitmap_asset_id;$/;"	m	language:C++	struct:Sui_Packer_Source_Font	typeref:typename:U32
+bitmap_asset_id	D:/work/git/txt/code/sui_pack.h	/^  U32 bitmap_asset_id;$/;"	m	language:C++	struct:Sui_Packer_Source_Sprite	typeref:typename:U32
 bitmap_counter	C:/Users/geral/work/txt/code/game_assets.h	/^  U32 bitmap_counter;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
 bitmap_counter	C:/Users/geral/work/txt/code/game_assets_2.h	/^  U32 bitmap_counter;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
+bitmap_counter	D:/work/git/txt/code/game_assets.h	/^  U32 bitmap_counter;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
 bitmap_counter	D:/work/git/txt/code/game_assets2.h	/^  U32 bitmap_counter;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
 bitmap_counter	D:/work/git/txt/code/game_assets_2.h	/^  U32 bitmap_counter;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
 BITMAP_DEFAULT	C:/Users/geral/work/txt/code/generated_bitmap_ids.h	/^BITMAP_DEFAULT = PACK_DEFAULT << 16 | 0,$/;"	e	language:C++	enum:Bitmap_ID
@@ -411,16 +426,9 @@ BITMAP_DEFAULT	D:/work/git/txt/code/generated_bitmap_ids.h	/^BITMAP_DEFAULT = PA
 bitmap_id	C:/Users/geral/work/txt/code/game_assets_2.h	/^  Bitmap_Asset_ID bitmap_id;$/;"	m	language:C++	struct:Font_Glyph_Asset	typeref:typename:Bitmap_Asset_ID
 bitmap_id	C:/Users/geral/work/txt/code/game_assets_2.h	/^  Bitmap_Asset_ID bitmap_id;$/;"	m	language:C++	struct:Image_Asset	typeref:typename:Bitmap_Asset_ID
 Bitmap_ID	C:/Users/geral/work/txt/code/generated_bitmap_ids.h	/^enum Bitmap_ID {$/;"	g	language:C++
-bitmap_id	D:/work/git/txt/code/game_assets.h	/^  Bitmap_ID bitmap_id;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:Bitmap_ID
-bitmap_id	D:/work/git/txt/code/game_assets.h	/^  Bitmap_ID bitmap_id;$/;"	m	language:C++	struct:Sprite_Asset	typeref:typename:Bitmap_ID
 bitmap_id	D:/work/git/txt/code/game_assets_2.h	/^  Bitmap_Asset_ID bitmap_id;$/;"	m	language:C++	struct:Font_Glyph_Asset	typeref:typename:Bitmap_Asset_ID
 bitmap_id	D:/work/git/txt/code/game_assets_2.h	/^  Bitmap_Asset_ID bitmap_id;$/;"	m	language:C++	struct:Image_Asset	typeref:typename:Bitmap_Asset_ID
 Bitmap_ID	D:/work/git/txt/code/generated_bitmap_ids.h	/^enum Bitmap_ID {$/;"	g	language:C++
-bitmap_id	D:/work/git/txt/code/karu.h	/^  U32 bitmap_id;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
-bitmap_id	D:/work/git/txt/code/karu.h	/^  U32 bitmap_id;$/;"	m	language:C++	struct:Karu_Sprite	typeref:typename:U32
-bitmap_id	D:/work/git/txt/code/sui_pack.h	/^  U32 bitmap_id;$/;"	m	language:C++	struct:Sui_Packer_Font	typeref:typename:U32
-bitmap_id	D:/work/git/txt/code/sui_pack.h	/^  U32 bitmap_id;$/;"	m	language:C++	struct:Sui_Packer_Sprite	typeref:typename:U32
-bitmap_id_file	D:/work/git/txt/code/sui_pack.h	/^  FILE* bitmap_id_file;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:FILE *
 bitmap_id_name	C:/Users/geral/work/txt/code/sui_atlas.h	/^  const char* bitmap_id_name;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:const char *
 bitmap_id_name	D:/work/git/txt/code/sui_atlas.h	/^  const char* bitmap_id_name;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:const char *
 bits_per_sample	C:/Users/geral/work/txt/code/momo_wav.h	/^  U16 bits_per_sample;$/;"	m	language:C++	struct:__anon805632930208	typeref:typename:U16
@@ -439,6 +447,8 @@ bit_depth	D:/work/git/txt/code/momo_png.h	/^  U8 bit_depth;$/;"	m	language:C++	s
 bit_depth	D:/work/git/txt/code/momo_png.h	/^  U8 bit_depth;$/;"	m	language:C++	struct:__anon6896d1560108	typeref:typename:U8
 blank_sprite	C:/Users/geral/work/txt/code/game.h	/^  Game_Sprite_ID blank_sprite;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Sprite_ID
 blank_sprite	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  Game_Sprite_ID blank_sprite;$/;"	m	language:C++	struct:Lit	typeref:typename:Game_Sprite_ID
+blank_sprite	D:/work/git/txt/code/game.h	/^  Game_Sprite_ID blank_sprite;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Sprite_ID
+blank_sprite	D:/work/git/txt/code/game_mode_lit.h	/^  Game_Sprite_ID blank_sprite;$/;"	m	language:C++	struct:Lit	typeref:typename:Game_Sprite_ID
 blank_texture	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^  OGL_Texture blank_texture;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_Texture
 blank_texture	D:/work/git/txt/code/game_gfx_opengl.h	/^  OGL_Texture blank_texture;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_Texture
 blk_bad	C:/Users/geral/work/txt/code/momo_common.h	/^blk_bad() {$/;"	f	language:C++	typeref:typename:Block
@@ -453,7 +463,7 @@ block_name	C:/Users/geral/work/txt/code/game_profiler.h	/^  const char* block_na
 block_name	D:/work/git/txt/code/game_profiler.h	/^  const char* block_name;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:const char *
 box	C:/Users/geral/work/txt/code/game_assets.h	/^  Rect2 box;$/;"	m	language:C++	struct:Game_Font_Glyph	typeref:typename:Rect2
 box	C:/Users/geral/work/txt/code/karu.h	/^  Rect2 box;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:Rect2
-box	D:/work/git/txt/code/game_assets.h	/^  Rect2 box;$/;"	m	language:C++	struct:Font_Glyph_Asset	typeref:typename:Rect2
+box	D:/work/git/txt/code/game_assets.h	/^  Rect2 box;$/;"	m	language:C++	struct:Game_Font_Glyph	typeref:typename:Rect2
 box	D:/work/git/txt/code/game_assets2.h	/^  Rect2 box;$/;"	m	language:C++	struct:Game_Font_Glyph	typeref:typename:Rect2
 box	D:/work/git/txt/code/karu.h	/^  Rect2 box;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:Rect2
 box	D:/work/git/txt/code/karu2.h	/^  Rect2 box;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:Rect2
@@ -552,6 +562,7 @@ Circ2	C:/Users/geral/work/txt/code/momo_shapes.h	/^}Circ2;$/;"	t	language:C++	ty
 circ2	D:/work/git/txt/code/momo_shapes.h	/^circ2(V2 center, F32 radius) {$/;"	f	language:C++	typeref:typename:Circ2
 Circ2	D:/work/git/txt/code/momo_shapes.h	/^}Circ2;$/;"	t	language:C++	typeref:struct:__anon093413950608
 circle_sprite	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  Game_Sprite_ID circle_sprite;$/;"	m	language:C++	struct:Lit	typeref:typename:Game_Sprite_ID
+circle_sprite	D:/work/git/txt/code/game_mode_lit.h	/^  Game_Sprite_ID circle_sprite;$/;"	m	language:C++	struct:Lit	typeref:typename:Game_Sprite_ID
 clamp_of	C:/Users/geral/work/txt/code/momo_common.h	/^#define clamp_of(/;"	d	language:C++
 clamp_of	D:/work/git/txt/code/momo_common.h	/^#define clamp_of(/;"	d	language:C++
 clear_editor_state	C:/Users/geral/work/txt/code/game_mode_level_editor.cpp	/^clear_editor_state(Editor* e) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -573,14 +584,13 @@ codepoint	C:/Users/geral/work/txt/code/sui_atlas.h	/^  U32 codepoint;$/;"	m	lang
 codepoint	D:/work/git/txt/code/karu.h	/^  U32 codepoint;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:U32
 codepoint	D:/work/git/txt/code/karu2.h	/^  U32 codepoint;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:U32
 codepoint	D:/work/git/txt/code/sui_atlas.h	/^  U32 codepoint;$/;"	m	language:C++	struct:Sui_Atlas_Font_Glyph_Context	typeref:typename:U32
-codepoint	D:/work/git/txt/code/sui_pack.h	/^  U32 codepoint; $/;"	m	language:C++	struct:Sui_Packer_Font_Glyph	typeref:typename:U32
 codepoints	C:/Users/geral/work/txt/code/sui_atlas.h	/^  U32 codepoints[1024];$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:U32[1024]
 codepoints	D:/work/git/txt/code/sui_atlas.h	/^  U32 codepoints[1024];$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:U32[1024]
 codepoint_count	C:/Users/geral/work/txt/code/sui_atlas.h	/^  U32 codepoint_count;$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:U32
 codepoint_count	D:/work/git/txt/code/sui_atlas.h	/^  U32 codepoint_count;$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:U32
 codepoint_map	C:/Users/geral/work/txt/code/game_assets.h	/^  U16* codepoint_map;$/;"	m	language:C++	struct:Game_Font	typeref:typename:U16 *
 codepoint_map	C:/Users/geral/work/txt/code/game_assets_2.h	/^  U16* codepoint_map;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:U16 *
-codepoint_map	D:/work/git/txt/code/game_assets.h	/^  U32* codepoint_map;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:U32 *
+codepoint_map	D:/work/git/txt/code/game_assets.h	/^  U16* codepoint_map;$/;"	m	language:C++	struct:Game_Font	typeref:typename:U16 *
 codepoint_map	D:/work/git/txt/code/game_assets2.h	/^  U16* codepoint_map;$/;"	m	language:C++	struct:Game_Font	typeref:typename:U16 *
 codepoint_map	D:/work/git/txt/code/game_assets_2.h	/^  U16* codepoint_map;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:U16 *
 color	C:/Users/geral/work/txt/code/game_mode_lit_light.h	/^  U32 color;$/;"	m	language:C++	struct:Lit_Light	typeref:typename:U32
@@ -691,9 +701,9 @@ count	C:/Users/geral/work/txt/code/momo_strings.h	/^	UMI count;$/;"	m	language:C
 count	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 count;$/;"	m	language:C++	struct:__anon802a10330708	typeref:typename:U32
 count	D:/work/git/txt/code/game_inspector.h	/^  U32 count;$/;"	m	language:C++	struct:Inspector_Entry_List	typeref:typename:U32
 count	D:/work/git/txt/code/game_mode_computer.h	/^  U32 count;$/;"	m	language:C++	struct:Computer_Selection_List	typeref:typename:U32
-count	D:/work/git/txt/code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:__anonaaa574c00208	typeref:typename:U32
-count	D:/work/git/txt/code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:__anonaaa574c00408	typeref:typename:U32
-count	D:/work/git/txt/code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:__anonaaa574c00608	typeref:typename:U32
+count	D:/work/git/txt/code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Edge_List	typeref:typename:U32
+count	D:/work/git/txt/code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Tutorial_Text_List	typeref:typename:U32
+count	D:/work/git/txt/code/game_mode_lit.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Tutorial_Trigger_List	typeref:typename:U32
 count	D:/work/git/txt/code/game_mode_lit_light.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Light_Debug_Ray_List	typeref:typename:U32
 count	D:/work/git/txt/code/game_mode_lit_light.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Light_Intersection_List	typeref:typename:U32
 count	D:/work/git/txt/code/game_mode_lit_light.h	/^  U32 count;$/;"	m	language:C++	struct:Lit_Light_List	typeref:typename:U32
@@ -767,15 +777,12 @@ cstr_to_f64	C:/Users/geral/work/txt/code/momo_common.h	/^cstr_to_f64(const C8* p
 cstr_to_f64	D:/work/git/txt/code/momo_common.h	/^cstr_to_f64(const C8* p) {$/;"	f	language:C++	typeref:typename:F64
 ctx	C:/Users/geral/work/txt/code/game_console.h	/^  void* ctx;$/;"	m	language:C++	struct:Console_Command	typeref:typename:void *
 ctx	D:/work/git/txt/code/game_console.h	/^  void* ctx;$/;"	m	language:C++	struct:Console_Command	typeref:typename:void *
-current_atlas_bitmap_id	D:/work/git/txt/code/sui_pack.h	/^  U32 current_atlas_bitmap_id;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
-current_atlas_font_id	D:/work/git/txt/code/sui_pack.h	/^  U32 current_atlas_font_id; $/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 current_color	C:/Users/geral/work/txt/code/game_mode_lit_sensors.h	/^  U32 current_color;$/;"	m	language:C++	struct:Lit_Sensor	typeref:typename:U32
 current_color	D:/work/git/txt/code/game_mode_lit_sensors.h	/^  U32 current_color;$/;"	m	language:C++	struct:Lit_Sensor	typeref:typename:U32
-current_font	D:/work/git/txt/code/sui_pack.h	/^  Sui_Packer_Font* current_font;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Sui_Packer_Font *
 current_game_mode	C:/Users/geral/work/txt/code/game.h	/^  Game_Mode_Type current_game_mode;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Mode_Type
 current_game_mode	D:/work/git/txt/code/game.h	/^  Game_Mode_Type current_game_mode;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Mode_Type
 current_id	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  U32 current_id;$/;"	m	language:C++	struct:__anon3aa070140408	typeref:typename:U32
-current_id	D:/work/git/txt/code/game_mode_lit.h	/^  U32 current_id;$/;"	m	language:C++	struct:__anonaaa574c00408	typeref:typename:U32
+current_id	D:/work/git/txt/code/game_mode_lit.h	/^  U32 current_id;$/;"	m	language:C++	struct:Lit_Tutorial_Trigger_List	typeref:typename:U32
 current_instance_index	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:__anon12d34a900808	typeref:typename:GLuint
 current_instance_index	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:__anon12d34a900908	typeref:typename:GLuint
 current_instance_index	D:/work/git/txt/code/game_gfx_opengl.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:__anon982c2a3c0808	typeref:typename:GLuint
@@ -784,7 +791,6 @@ current_layer	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^  F32 current_lay
 current_layer	D:/work/git/txt/code/game_gfx_opengl.h	/^  F32 current_layer;$/;"	m	language:C++	struct:Opengl	typeref:typename:F32
 current_level_id	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  U32 current_level_id;$/;"	m	language:C++	struct:Lit	typeref:typename:U32
 current_level_id	D:/work/git/txt/code/game_mode_lit.h	/^  U32 current_level_id;$/;"	m	language:C++	struct:Lit	typeref:typename:U32
-current_pack_id_name	D:/work/git/txt/code/sui_pack.h	/^  const char* current_pack_id_name;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:const char *
 current_state	C:/Users/geral/work/txt/code/game_mode_level_editor.h	/^  Editor_State current_state;$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_State
 current_state	D:/work/git/txt/code/game_mode_level_editor.h	/^  Editor_State current_state;$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_State
 current_texture	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^  GLuint current_texture;$/;"	m	language:C++	struct:__anon12d34a900808	typeref:typename:GLuint
@@ -815,7 +821,6 @@ data	D:/work/git/txt/code/momo_wav.h	/^  void* data;$/;"	m	language:C++	struct:_
 data	D:/work/git/txt/code/w32.cpp	/^  void* data;$/;"	m	language:C++	struct:W32_Work	typeref:typename:void *	file:
 data_chunk	C:/Users/geral/work/txt/code/momo_wav.h	/^  WAV_Data_Chunk data_chunk;$/;"	m	language:C++	struct:__anon805632930408	typeref:typename:WAV_Data_Chunk
 data_chunk	D:/work/git/txt/code/momo_wav.h	/^  WAV_Data_Chunk data_chunk;$/;"	m	language:C++	struct:__anon690e9bbf0408	typeref:typename:WAV_Data_Chunk
-data_count	D:/work/git/txt/code/karu.h	/^  U32 data_count;$/;"	m	language:C++	struct:Karu_Sound	typeref:typename:U32
 data_offset	C:/Users/geral/work/txt/code/game_assets_2.h	/^  U32 data_offset;$/;"	m	language:C++	struct:Load_Asset_Task	typeref:typename:U32
 data_offset	D:/work/git/txt/code/game_assets_2.h	/^  U32 data_offset;$/;"	m	language:C++	struct:Load_Asset_Task	typeref:typename:U32
 data_pos	C:/Users/geral/work/txt/code/game_gfx.h	/^	UMI data_pos;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:UMI
@@ -829,6 +834,7 @@ data_u8	D:/work/git/txt/code/momo_common.h	/^    U8* data_u8;$/;"	m	language:C++
 debug_arena	C:/Users/geral/work/txt/code/game.h	/^  Bump_Allocator debug_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Bump_Allocator
 debug_arena	D:/work/git/txt/code/game.h	/^  Bump_Allocator debug_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Bump_Allocator
 debug_font	C:/Users/geral/work/txt/code/game.h	/^  Game_Font_ID debug_font;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Font_ID
+debug_font	D:/work/git/txt/code/game.h	/^  Game_Font_ID debug_font;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Font_ID
 debug_log	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Debug_Log *
 debug_log	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Debug_Log *
 debug_log	D:/work/git/txt/code/game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Debug_Log *
@@ -884,13 +890,14 @@ e	C:/Users/geral/work/txt/code/momo_vectors.h	/^	S32 e[2];$/;"	m	language:C++	un
 e	C:/Users/geral/work/txt/code/momo_vectors.h	/^	U32 e[2];$/;"	m	language:C++	union:__anon7883de8b010a	typeref:typename:U32[2]
 e	C:/Users/geral/work/txt/code/momo_vectors.h	/^  F32 e[3];$/;"	m	language:C++	union:__anon7883de8b0b0a	typeref:typename:F32[3]
 e	C:/Users/geral/work/txt/code/momo_vectors.h	/^  F32 e[4];$/;"	m	language:C++	union:__anon7883de8b0e0a	typeref:typename:F32[4]
+e	D:/work/git/txt/code/game_assets.h	/^  } e[GAME_ASSET_TAG_TYPE_COUNT];$/;"	m	language:C++	struct:Game_Asset_Match	typeref:struct:Game_Asset_Match::__anon329ebfe60108[]
 e	D:/work/git/txt/code/game_assets2.h	/^  F32 e[GAME_ASSET_TAG_TYPE_COUNT];$/;"	m	language:C++	struct:Game_Asset_Vector	typeref:typename:F32[]
 e	D:/work/git/txt/code/game_assets_2.h	/^  F32 e[ASSET_TAG_TYPE_COUNT];$/;"	m	language:C++	struct:Asset_Vector	typeref:typename:F32[]
 e	D:/work/git/txt/code/game_inspector.h	/^  Inspector_Entry e[64];$/;"	m	language:C++	struct:Inspector_Entry_List	typeref:typename:Inspector_Entry[64]
 e	D:/work/git/txt/code/game_mode_computer.h	/^  Computer_Selection e[10];$/;"	m	language:C++	struct:Computer_Selection_List	typeref:typename:Computer_Selection[10]
-e	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Edge e[256];$/;"	m	language:C++	struct:__anonaaa574c00208	typeref:typename:Lit_Edge[256]
-e	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Text e[10];$/;"	m	language:C++	struct:__anonaaa574c00608	typeref:typename:Lit_Tutorial_Text[10]
-e	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Trigger e[10];$/;"	m	language:C++	struct:__anonaaa574c00408	typeref:typename:Lit_Tutorial_Trigger[10]
+e	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Edge e[256];$/;"	m	language:C++	struct:Lit_Edge_List	typeref:typename:Lit_Edge[256]
+e	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Text e[10];$/;"	m	language:C++	struct:Lit_Tutorial_Text_List	typeref:typename:Lit_Tutorial_Text[10]
+e	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Trigger e[10];$/;"	m	language:C++	struct:Lit_Tutorial_Trigger_List	typeref:typename:Lit_Tutorial_Trigger[10]
 e	D:/work/git/txt/code/game_mode_lit_light.h	/^  Lit_Light e[32];$/;"	m	language:C++	struct:Lit_Light_List	typeref:typename:Lit_Light[32]
 e	D:/work/git/txt/code/game_mode_lit_light.h	/^  Lit_Light_Intersection e[256];$/;"	m	language:C++	struct:Lit_Light_Intersection_List	typeref:typename:Lit_Light_Intersection[256]
 e	D:/work/git/txt/code/game_mode_lit_light.h	/^  Ray2 e[256];$/;"	m	language:C++	struct:Lit_Light_Debug_Ray_List	typeref:typename:Ray2[256]
@@ -1201,16 +1208,12 @@ endian_swap_u16	C:/Users/geral/work/txt/code/momo_common.h	/^endian_swap_u16(U16
 endian_swap_u16	D:/work/git/txt/code/momo_common.h	/^endian_swap_u16(U16 value) {$/;"	f	language:C++	typeref:typename:U16
 endian_swap_u32	C:/Users/geral/work/txt/code/momo_common.h	/^endian_swap_u32(U32 value) {$/;"	f	language:C++	typeref:typename:U32
 endian_swap_u32	D:/work/git/txt/code/momo_common.h	/^endian_swap_u32(U32 value) {$/;"	f	language:C++	typeref:typename:U32
-end_asset_pack	D:/work/git/txt/code/sui_pack.h	/^end_asset_pack(Sui_Packer* p, $/;"	f	language:C++	typeref:typename:B32
-end_atlas	D:/work/git/txt/code/sui_pack.h	/^end_atlas(Sui_Packer* p, const char* id_name, U32 width, U32 height)$/;"	f	language:C++	typeref:typename:B32
-end_atlas_font	D:/work/git/txt/code/sui_pack.h	/^end_atlas_font(Sui_Packer* p) {$/;"	f	language:C++	typeref:typename:void
 end_group	C:/Users/geral/work/txt/code/karu_pack2.h	/^end_group(Karu_Packer* sp) $/;"	f	language:C++	typeref:typename:void
 end_group	D:/work/git/txt/code/karu_pack2.h	/^end_group(Karu_Packer* sp) $/;"	f	language:C++	typeref:typename:void
-end_packer	D:/work/git/txt/code/sui_pack.h	/^end_packer(Sui_Packer* p) {$/;"	f	language:C++	typeref:typename:void
 end_point_indices	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U16* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:__anon802a10330408	typeref:typename:U16 *
 end_point_indices	D:/work/git/txt/code/momo_ttf.h	/^  U16* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:__anon68e2795f0408	typeref:typename:U16 *
 end_pt	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  V2 end_pt;$/;"	m	language:C++	struct:__anon3aa070140108	typeref:typename:V2
-end_pt	D:/work/git/txt/code/game_mode_lit.h	/^  V2 end_pt;$/;"	m	language:C++	struct:__anonaaa574c00108	typeref:typename:V2
+end_pt	D:/work/git/txt/code/game_mode_lit.h	/^  V2 end_pt;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:V2
 end_stat	C:/Users/geral/work/txt/code/game_profiler_rendering.h	/^end_stat(Stat* stat) {$/;"	f	language:C++	typeref:typename:void
 end_stat	D:/work/git/txt/code/game_profiler_rendering.h	/^end_stat(Stat* stat) {$/;"	f	language:C++	typeref:typename:void
 entries	C:/Users/geral/work/txt/code/game_inspector.h	/^  Inspector_Entry_List entries;$/;"	m	language:C++	struct:Inspector	typeref:typename:Inspector_Entry_List
@@ -1285,35 +1288,40 @@ files	C:/Users/geral/work/txt/code/w32.cpp	/^  W32_File files[32]; $/;"	m	langua
 files	D:/work/git/txt/code/w32.cpp	/^  W32_File files[32]; $/;"	m	language:C++	struct:W32_File_Cabinet	typeref:typename:W32_File[32]	file:
 file_cabinet	C:/Users/geral/work/txt/code/w32.cpp	/^  W32_File_Cabinet file_cabinet;$/;"	m	language:C++	struct:W32_State	typeref:typename:W32_File_Cabinet	file:
 file_cabinet	D:/work/git/txt/code/w32.cpp	/^  W32_File_Cabinet file_cabinet;$/;"	m	language:C++	struct:W32_State	typeref:typename:W32_File_Cabinet	file:
-file_name	D:/work/git/txt/code/sui_pack.h	/^  const C8* file_name;$/;"	m	language:C++	struct:Sui_Packer_Sprite	typeref:typename:const C8 *
-file_name	D:/work/git/txt/code/sui_pack.h	/^  const char* file_name;$/;"	m	language:C++	struct:Sui_Packer_Font	typeref:typename:const char *
 filter_method	C:/Users/geral/work/txt/code/momo_png.h	/^  U8 filter_method;$/;"	m	language:C++	struct:_PNG_IHDR	typeref:typename:U8
 filter_method	C:/Users/geral/work/txt/code/momo_png.h	/^  U8 filter_method;$/;"	m	language:C++	struct:__anon7fde682a0108	typeref:typename:U8
 filter_method	D:/work/git/txt/code/momo_png.h	/^  U8 filter_method;$/;"	m	language:C++	struct:_PNG_IHDR	typeref:typename:U8
 filter_method	D:/work/git/txt/code/momo_png.h	/^  U8 filter_method;$/;"	m	language:C++	struct:__anon6896d1560108	typeref:typename:U8
 find_best_asset_of_type	C:/Users/geral/work/txt/code/game_assets.h	/^find_best_asset_of_type(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:U32
+find_best_asset_of_type	D:/work/git/txt/code/game_assets.h	/^find_best_asset_of_type(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:U32
+find_best_font	D:/work/git/txt/code/game_assets.h	/^find_best_font(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:Game_Font_ID
 find_best_sprite	C:/Users/geral/work/txt/code/game_assets.h	/^find_best_sprite(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:Game_Sprite_ID
+find_best_sprite	D:/work/git/txt/code/game_assets.h	/^find_best_sprite(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:Game_Sprite_ID
 find_first_asset_of_type	C:/Users/geral/work/txt/code/game_assets.h	/^find_first_asset_of_type(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:U32
+find_first_asset_of_type	D:/work/git/txt/code/game_assets.h	/^find_first_asset_of_type(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:U32
 find_first_bitmap	C:/Users/geral/work/txt/code/game_assets.h	/^find_first_bitmap(Game_Assets* ga, Game_Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:Game_Bitmap_ID
+find_first_bitmap	D:/work/git/txt/code/game_assets.h	/^find_first_bitmap(Game_Assets* ga, Game_Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:Game_Bitmap_ID
 find_first_font	C:/Users/geral/work/txt/code/game_assets.h	/^find_first_font(Game_Assets* ga, Game_Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:Game_Font_ID
+find_first_font	D:/work/git/txt/code/game_assets.h	/^find_first_font(Game_Assets* ga, Game_Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:Game_Font_ID
 find_first_sprite	C:/Users/geral/work/txt/code/game_assets.h	/^find_first_sprite(Game_Assets* ga, Game_Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:Game_Sprite_ID
+find_first_sprite	D:/work/git/txt/code/game_assets.h	/^find_first_sprite(Game_Assets* ga, Game_Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:Game_Sprite_ID
 first_asset_index	C:/Users/geral/work/txt/code/game_assets.h	/^  U32 first_asset_index;$/;"	m	language:C++	struct:Game_Asset_Group	typeref:typename:U32
 first_asset_index	C:/Users/geral/work/txt/code/game_assets_2.h	/^  U32 first_asset_index;$/;"	m	language:C++	struct:Asset_Group	typeref:typename:U32
 first_asset_index	C:/Users/geral/work/txt/code/karu.h	/^  U32 first_asset_index;$/;"	m	language:C++	struct:Karu_Group	typeref:typename:U32
+first_asset_index	D:/work/git/txt/code/game_assets.h	/^  U32 first_asset_index;$/;"	m	language:C++	struct:Game_Asset_Group	typeref:typename:U32
 first_asset_index	D:/work/git/txt/code/game_assets2.h	/^  U32 first_asset_index;$/;"	m	language:C++	struct:Game_Asset_Group	typeref:typename:U32
 first_asset_index	D:/work/git/txt/code/game_assets_2.h	/^  U32 first_asset_index;$/;"	m	language:C++	struct:Asset_Group	typeref:typename:U32
-first_asset_index	D:/work/git/txt/code/karu.h	/^  U32 first_asset_index;$/;"	m	language:C++	struct:Karu_Asset_Group	typeref:typename:U32
+first_asset_index	D:/work/git/txt/code/karu.h	/^  U32 first_asset_index;$/;"	m	language:C++	struct:Karu_Group	typeref:typename:U32
 first_asset_index	D:/work/git/txt/code/karu2.h	/^  U32 first_asset_index;$/;"	m	language:C++	struct:Karu_Group	typeref:typename:U32
-first_atlas_font_glyph_id	D:/work/git/txt/code/sui_pack.h	/^  U32 first_atlas_font_glyph_id;$/;"	m	language:C++	struct:Sui_Packer_Font	typeref:typename:U32
-first_atlas_font_id	D:/work/git/txt/code/sui_pack.h	/^  U32 first_atlas_font_id;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
-first_atlas_sprite_id	D:/work/git/txt/code/sui_pack.h	/^  U32 first_atlas_sprite_id;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 first_payload_index	C:/Users/geral/work/txt/code/game_gfx.h	/^  UMI first_payload_index;$/;"	m	language:C++	struct:Gfx_Texture_Queue	typeref:typename:UMI
 first_payload_index	D:/work/git/txt/code/game_gfx.h	/^  UMI first_payload_index;$/;"	m	language:C++	struct:Gfx_Texture_Queue	typeref:typename:UMI
 first_tag_index	C:/Users/geral/work/txt/code/game_assets.h	/^  U32 first_tag_index;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:U32
 first_tag_index	C:/Users/geral/work/txt/code/game_assets_2.h	/^  U32 first_tag_index;$/;"	m	language:C++	struct:Asset	typeref:typename:U32
 first_tag_index	C:/Users/geral/work/txt/code/karu.h	/^  U32 first_tag_index;$/;"	m	language:C++	struct:Karu_Asset	typeref:typename:U32
+first_tag_index	D:/work/git/txt/code/game_assets.h	/^  U32 first_tag_index;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:U32
 first_tag_index	D:/work/git/txt/code/game_assets2.h	/^  U32 first_tag_index;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:U32
 first_tag_index	D:/work/git/txt/code/game_assets_2.h	/^  U32 first_tag_index;$/;"	m	language:C++	struct:Asset	typeref:typename:U32
+first_tag_index	D:/work/git/txt/code/karu.h	/^  U32 first_tag_index;$/;"	m	language:C++	struct:Karu_Asset	typeref:typename:U32
 first_tag_index	D:/work/git/txt/code/karu2.h	/^  U32 first_tag_index;$/;"	m	language:C++	struct:Karu_Asset	typeref:typename:U32
 flags	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U8 flags;$/;"	m	language:C++	struct:__anon802a10330308	typeref:typename:U8
 flags	D:/work/git/txt/code/momo_ttf.h	/^  U8 flags;$/;"	m	language:C++	struct:__anon68e2795f0308	typeref:typename:U8
@@ -1334,39 +1342,32 @@ font	C:/Users/geral/work/txt/code/game_assets_2.h	/^    Font_Asset font;$/;"	m	l
 font	C:/Users/geral/work/txt/code/karu.h	/^    Karu_Font font;$/;"	m	language:C++	union:Karu_Asset::__anon81b85b41010a	typeref:typename:Karu_Font
 font	C:/Users/geral/work/txt/code/sui_atlas.h	/^  Sui_Atlas_Font* font;$/;"	m	language:C++	struct:Sui_Atlas_Font_Glyph_Context	typeref:typename:Sui_Atlas_Font *
 font	C:/Users/geral/work/txt/code/sui_pack.h	/^    Sui_Packer_Source_Font font;$/;"	m	language:C++	union:Sui_Packer_Source::__anonf8efa15d010a	typeref:typename:Sui_Packer_Source_Font
+font	D:/work/git/txt/code/game_assets.h	/^    Game_Font font;$/;"	m	language:C++	union:Game_Asset::__anon329ebfe6020a	typeref:typename:Game_Font
 font	D:/work/git/txt/code/game_assets2.h	/^    Game_Font font;$/;"	m	language:C++	union:Game_Asset::__anon8676c698010a	typeref:typename:Game_Font
 font	D:/work/git/txt/code/game_assets_2.h	/^    Font_Asset font;$/;"	m	language:C++	union:Asset::__anon55685097010a	typeref:typename:Font_Asset
+font	D:/work/git/txt/code/karu.h	/^    Karu_Font font;$/;"	m	language:C++	union:Karu_Asset::__anon93330e6d010a	typeref:typename:Karu_Font
 font	D:/work/git/txt/code/karu2.h	/^    Karu_Font font;$/;"	m	language:C++	union:Karu_Asset::__anonf994e5ff010a	typeref:typename:Karu_Font
 font	D:/work/git/txt/code/pack_assets.cpp	/^    Sui_Packer_Source_Font font;$/;"	m	language:C++	union:Sui_Packer_Source::__anon1ecef806010a	typeref:typename:Sui_Packer_Source_Font	file:
 font	D:/work/git/txt/code/sui_atlas.h	/^  Sui_Atlas_Font* font;$/;"	m	language:C++	struct:Sui_Atlas_Font_Glyph_Context	typeref:typename:Sui_Atlas_Font *
+font	D:/work/git/txt/code/sui_pack.h	/^    Sui_Packer_Source_Font font;$/;"	m	language:C++	union:Sui_Packer_Source::__anone1a80a89010a	typeref:typename:Sui_Packer_Source_Font
 fonts	C:/Users/geral/work/txt/code/sui_atlas.h	/^  Sui_Atlas_Font fonts[128];$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:Sui_Atlas_Font[128]
-fonts	D:/work/git/txt/code/game_assets.h	/^  Font_Asset* fonts;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Font_Asset *
 fonts	D:/work/git/txt/code/sui_atlas.h	/^  Sui_Atlas_Font fonts[128];$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:Sui_Atlas_Font[128]
-fonts	D:/work/git/txt/code/sui_pack.h	/^  Sui_Packer_Font fonts[64];$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Sui_Packer_Font[64]
 Font_Asset	C:/Users/geral/work/txt/code/game_assets_2.h	/^struct Font_Asset {$/;"	s	language:C++
-Font_Asset	D:/work/git/txt/code/game_assets.h	/^struct Font_Asset {$/;"	s	language:C++
 Font_Asset	D:/work/git/txt/code/game_assets_2.h	/^struct Font_Asset {$/;"	s	language:C++
 Font_Asset_ID	C:/Users/geral/work/txt/code/game_assets_2.h	/^struct Font_Asset_ID { U32 value; }; $/;"	s	language:C++
 Font_Asset_ID	D:/work/git/txt/code/game_assets_2.h	/^struct Font_Asset_ID { U32 value; }; $/;"	s	language:C++
 font_count	C:/Users/geral/work/txt/code/sui_atlas.h	/^  U32 font_count;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:U32
-font_count	D:/work/git/txt/code/game_assets.h	/^  U32 font_count;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
-font_count	D:/work/git/txt/code/karu.h	/^  U32 font_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 font_count	D:/work/git/txt/code/sui_atlas.h	/^  U32 font_count;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:U32
-font_count	D:/work/git/txt/code/sui_pack.h	/^  U32 font_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 FONT_DEBUG	C:/Users/geral/work/txt/code/generated_font_ids.h	/^FONT_DEBUG = PACK_DEFAULT << 16 | 1,$/;"	e	language:C++	enum:Font_ID
 FONT_DEBUG	D:/work/git/txt/code/generated_font_ids.h	/^FONT_DEBUG = PACK_DEFAULT << 16 | 1,$/;"	e	language:C++	enum:Font_ID
 FONT_DEFAULT	C:/Users/geral/work/txt/code/generated_font_ids.h	/^FONT_DEFAULT = PACK_DEFAULT << 16 | 0,$/;"	e	language:C++	enum:Font_ID
 FONT_DEFAULT	D:/work/git/txt/code/generated_font_ids.h	/^FONT_DEFAULT = PACK_DEFAULT << 16 | 0,$/;"	e	language:C++	enum:Font_ID
 font_glyph	C:/Users/geral/work/txt/code/sui_atlas.h	/^    Sui_Atlas_Font_Glyph_Context font_glyph;$/;"	m	language:C++	union:Sui_Atlas_Context::__anonc12ac0d3010a	typeref:typename:Sui_Atlas_Font_Glyph_Context
 font_glyph	D:/work/git/txt/code/sui_atlas.h	/^    Sui_Atlas_Font_Glyph_Context font_glyph;$/;"	m	language:C++	union:Sui_Atlas_Context::__anonc0f04f7f010a	typeref:typename:Sui_Atlas_Font_Glyph_Context
-font_glyphs	D:/work/git/txt/code/sui_pack.h	/^  Sui_Packer_Font_Glyph font_glyphs[256];$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Sui_Packer_Font_Glyph[256]
 Font_Glyph_Asset	C:/Users/geral/work/txt/code/game_assets_2.h	/^struct Font_Glyph_Asset{$/;"	s	language:C++
-Font_Glyph_Asset	D:/work/git/txt/code/game_assets.h	/^struct Font_Glyph_Asset{$/;"	s	language:C++
 Font_Glyph_Asset	D:/work/git/txt/code/game_assets_2.h	/^struct Font_Glyph_Asset{$/;"	s	language:C++
-font_glyph_count	D:/work/git/txt/code/sui_pack.h	/^  U32 font_glyph_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 Font_ID	C:/Users/geral/work/txt/code/generated_font_ids.h	/^enum Font_ID {$/;"	g	language:C++
 Font_ID	D:/work/git/txt/code/generated_font_ids.h	/^enum Font_ID {$/;"	g	language:C++
-font_id_file	D:/work/git/txt/code/sui_pack.h	/^  FILE* font_id_file;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:FILE *
 foreach	C:/Users/geral/work/txt/code/momo_common.h	/^#define foreach(/;"	d	language:C++
 foreach	D:/work/git/txt/code/momo_common.h	/^#define foreach(/;"	d	language:C++
 format	C:/Users/geral/work/txt/code/momo_wav.h	/^  U32 format; \/\/ big endian$/;"	m	language:C++	struct:__anon805632930108	typeref:typename:U32
@@ -1390,7 +1391,6 @@ g	C:/Users/geral/work/txt/code/momo_colors.h	/^  F32 r, g, b;   $/;"	m	language:
 g	D:/work/git/txt/code/momo_colors.h	/^    struct { F32 r, g, b; };  $/;"	m	language:C++	struct:__anon798c36230308::__anon798c3623040a::__anon798c36230508	typeref:typename:F32
 g	D:/work/git/txt/code/momo_colors.h	/^  F32 r, g, b;   $/;"	m	language:C++	struct:__anon798c36230108	typeref:typename:F32
 ga	C:/Users/geral/work/txt/code/game_painter.h	/^  Game_Assets* ga;$/;"	m	language:C++	struct:Painter	typeref:typename:Game_Assets *
-ga	D:/work/git/txt/code/game_painter.h	/^  Game_Assets* ga;$/;"	m	language:C++	struct:Painter	typeref:typename:Game_Assets *
 Game	C:/Users/geral/work/txt/code/game.h	/^struct Game {$/;"	s	language:C++
 game	C:/Users/geral/work/txt/code/game_platform.h	/^  void* game;$/;"	m	language:C++	struct:Platform	typeref:typename:void *
 Game	D:/work/git/txt/code/game.h	/^struct Game {$/;"	s	language:C++
@@ -1404,10 +1404,10 @@ game_arena	D:/work/git/txt/code/game_platform.h	/^  Bump_Allocator* game_arena; 
 GAME_ASPECT	C:/Users/geral/work/txt/code/game_platform.h	/^#define GAME_ASPECT /;"	d	language:C++
 GAME_ASPECT	D:/work/git/txt/code/game_platform.h	/^#define GAME_ASPECT /;"	d	language:C++
 Game_Asset	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Asset {$/;"	s	language:C++
+Game_Asset	D:/work/git/txt/code/game_assets.h	/^struct Game_Asset {$/;"	s	language:C++
 Game_Asset	D:/work/git/txt/code/game_assets2.h	/^struct Game_Asset {$/;"	s	language:C++
 Game_Assets	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Assets {$/;"	s	language:C++
 Game_Assets	C:/Users/geral/work/txt/code/game_assets_2.h	/^struct Game_Assets {$/;"	s	language:C++
-game_assets	D:/work/git/txt/code/game.h	/^  Game_Assets game_assets;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Assets
 Game_Assets	D:/work/git/txt/code/game_assets.h	/^struct Game_Assets {$/;"	s	language:C++
 Game_Assets	D:/work/git/txt/code/game_assets2.h	/^struct Game_Assets {$/;"	s	language:C++
 Game_Assets	D:/work/git/txt/code/game_assets_2.h	/^struct Game_Assets {$/;"	s	language:C++
@@ -1419,8 +1419,10 @@ GAME_ASSETS_H	D:/work/git/txt/code/game_assets2.h	/^#define GAME_ASSETS_H$/;"	d	
 GAME_ASSETS_RENDER_H	C:/Users/geral/work/txt/code/game_assets_rendering.h	/^#define GAME_ASSETS_RENDER_H$/;"	d	language:C++
 GAME_ASSETS_RENDER_H	D:/work/git/txt/code/game_assets_rendering.h	/^#define GAME_ASSETS_RENDER_H$/;"	d	language:C++
 Game_Asset_Group	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Asset_Group {$/;"	s	language:C++
+Game_Asset_Group	D:/work/git/txt/code/game_assets.h	/^struct Game_Asset_Group {$/;"	s	language:C++
 Game_Asset_Group	D:/work/git/txt/code/game_assets2.h	/^struct Game_Asset_Group {$/;"	s	language:C++
 Game_Asset_Group_Type	C:/Users/geral/work/txt/code/karu.h	/^enum Game_Asset_Group_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
+Game_Asset_Group_Type	D:/work/git/txt/code/karu.h	/^enum Game_Asset_Group_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
 Game_Asset_Group_Type	D:/work/git/txt/code/karu2.h	/^enum Game_Asset_Group_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
 GAME_ASSET_GROUP_TYPE_ATLAS	C:/Users/geral/work/txt/code/karu.h	/^  GAME_ASSET_GROUP_TYPE_ATLAS,$/;"	e	language:C++	enum:Game_Asset_Group_Type
 GAME_ASSET_GROUP_TYPE_ATLAS	D:/work/git/txt/code/karu2.h	/^  GAME_ASSET_GROUP_TYPE_ATLAS,$/;"	e	language:C++	enum:Game_Asset_Group_Type
@@ -1429,42 +1431,57 @@ GAME_ASSET_GROUP_TYPE_BLANK_SPRITE	D:/work/git/txt/code/karu2.h	/^  GAME_ASSET_G
 GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE	C:/Users/geral/work/txt/code/karu.h	/^  GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE,$/;"	e	language:C++	enum:Game_Asset_Group_Type
 GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE	D:/work/git/txt/code/karu2.h	/^  GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE,$/;"	e	language:C++	enum:Game_Asset_Group_Type
 GAME_ASSET_GROUP_TYPE_COUNT	C:/Users/geral/work/txt/code/karu.h	/^  GAME_ASSET_GROUP_TYPE_COUNT,$/;"	e	language:C++	enum:Game_Asset_Group_Type
+GAME_ASSET_GROUP_TYPE_COUNT	D:/work/git/txt/code/karu.h	/^  GAME_ASSET_GROUP_TYPE_COUNT,$/;"	e	language:C++	enum:Game_Asset_Group_Type
 GAME_ASSET_GROUP_TYPE_COUNT	D:/work/git/txt/code/karu2.h	/^  GAME_ASSET_GROUP_TYPE_COUNT,$/;"	e	language:C++	enum:Game_Asset_Group_Type
 GAME_ASSET_GROUP_TYPE_DEFAULT_FONT	C:/Users/geral/work/txt/code/karu.h	/^  GAME_ASSET_GROUP_TYPE_DEFAULT_FONT,$/;"	e	language:C++	enum:Game_Asset_Group_Type
 GAME_ASSET_GROUP_TYPE_DEFAULT_FONT	D:/work/git/txt/code/karu2.h	/^  GAME_ASSET_GROUP_TYPE_DEFAULT_FONT,$/;"	e	language:C++	enum:Game_Asset_Group_Type
 GAME_ASSET_IDS_H	C:/Users/geral/work/txt/code/game_asset_ids.h	/^#define GAME_ASSET_IDS_H$/;"	d	language:C++
 GAME_ASSET_IDS_H	D:/work/git/txt/code/game_asset_ids.h	/^#define GAME_ASSET_IDS_H$/;"	d	language:C++
+Game_Asset_Match	D:/work/git/txt/code/game_assets.h	/^struct Game_Asset_Match {$/;"	s	language:C++
 Game_Asset_State	C:/Users/geral/work/txt/code/game_assets.h	/^enum Game_Asset_State {$/;"	g	language:C++
+Game_Asset_State	D:/work/git/txt/code/game_assets.h	/^enum Game_Asset_State {$/;"	g	language:C++
 Game_Asset_State	D:/work/git/txt/code/game_assets2.h	/^enum Game_Asset_State {$/;"	g	language:C++
 GAME_ASSET_STATE_LOADED	C:/Users/geral/work/txt/code/game_assets.h	/^  GAME_ASSET_STATE_LOADED,$/;"	e	language:C++	enum:Game_Asset_State
+GAME_ASSET_STATE_LOADED	D:/work/git/txt/code/game_assets.h	/^  GAME_ASSET_STATE_LOADED,$/;"	e	language:C++	enum:Game_Asset_State
 GAME_ASSET_STATE_LOADED	D:/work/git/txt/code/game_assets2.h	/^  GAME_ASSET_STATE_LOADED,$/;"	e	language:C++	enum:Game_Asset_State
 GAME_ASSET_STATE_LOADING	C:/Users/geral/work/txt/code/game_assets.h	/^  GAME_ASSET_STATE_LOADING,$/;"	e	language:C++	enum:Game_Asset_State
+GAME_ASSET_STATE_LOADING	D:/work/git/txt/code/game_assets.h	/^  GAME_ASSET_STATE_LOADING,$/;"	e	language:C++	enum:Game_Asset_State
 GAME_ASSET_STATE_LOADING	D:/work/git/txt/code/game_assets2.h	/^  GAME_ASSET_STATE_LOADING,$/;"	e	language:C++	enum:Game_Asset_State
 GAME_ASSET_STATE_UNLOADED	C:/Users/geral/work/txt/code/game_assets.h	/^  GAME_ASSET_STATE_UNLOADED,$/;"	e	language:C++	enum:Game_Asset_State
+GAME_ASSET_STATE_UNLOADED	D:/work/git/txt/code/game_assets.h	/^  GAME_ASSET_STATE_UNLOADED,$/;"	e	language:C++	enum:Game_Asset_State
 GAME_ASSET_STATE_UNLOADED	D:/work/git/txt/code/game_assets2.h	/^  GAME_ASSET_STATE_UNLOADED,$/;"	e	language:C++	enum:Game_Asset_State
 Game_Asset_Tag	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Asset_Tag {$/;"	s	language:C++
+Game_Asset_Tag	D:/work/git/txt/code/game_assets.h	/^struct Game_Asset_Tag {$/;"	s	language:C++
 Game_Asset_Tag	D:/work/git/txt/code/game_assets2.h	/^struct Game_Asset_Tag {$/;"	s	language:C++
 Game_Asset_Tag_Type	C:/Users/geral/work/txt/code/karu.h	/^enum Game_Asset_Tag_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
+Game_Asset_Tag_Type	D:/work/git/txt/code/karu.h	/^enum Game_Asset_Tag_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
 Game_Asset_Tag_Type	D:/work/git/txt/code/karu2.h	/^enum Game_Asset_Tag_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
 GAME_ASSET_TAG_TYPE_COUNT	C:/Users/geral/work/txt/code/karu.h	/^  GAME_ASSET_TAG_TYPE_COUNT,$/;"	e	language:C++	enum:Game_Asset_Tag_Type
+GAME_ASSET_TAG_TYPE_COUNT	D:/work/git/txt/code/karu.h	/^  GAME_ASSET_TAG_TYPE_COUNT,$/;"	e	language:C++	enum:Game_Asset_Tag_Type
 GAME_ASSET_TAG_TYPE_COUNT	D:/work/git/txt/code/karu2.h	/^  GAME_ASSET_TAG_TYPE_COUNT,$/;"	e	language:C++	enum:Game_Asset_Tag_Type
 GAME_ASSET_TAG_TYPE_MOOD	C:/Users/geral/work/txt/code/karu.h	/^  GAME_ASSET_TAG_TYPE_MOOD,$/;"	e	language:C++	enum:Game_Asset_Tag_Type
 GAME_ASSET_TAG_TYPE_MOOD	D:/work/git/txt/code/karu2.h	/^  GAME_ASSET_TAG_TYPE_MOOD,$/;"	e	language:C++	enum:Game_Asset_Tag_Type
 Game_Asset_Type	C:/Users/geral/work/txt/code/karu.h	/^enum Game_Asset_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
+Game_Asset_Type	D:/work/git/txt/code/karu.h	/^enum Game_Asset_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
 Game_Asset_Type	D:/work/git/txt/code/karu2.h	/^enum Game_Asset_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
 GAME_ASSET_TYPES_H	C:/Users/geral/work/txt/code/game_assets_2.h	/^#define GAME_ASSET_TYPES_H$/;"	d	language:C++
 GAME_ASSET_TYPES_H	D:/work/git/txt/code/game_assets_2.h	/^#define GAME_ASSET_TYPES_H$/;"	d	language:C++
 GAME_ASSET_TYPE_BITMAP	C:/Users/geral/work/txt/code/karu.h	/^  GAME_ASSET_TYPE_BITMAP,$/;"	e	language:C++	enum:Game_Asset_Type
+GAME_ASSET_TYPE_BITMAP	D:/work/git/txt/code/karu.h	/^  GAME_ASSET_TYPE_BITMAP,$/;"	e	language:C++	enum:Game_Asset_Type
 GAME_ASSET_TYPE_BITMAP	D:/work/git/txt/code/karu2.h	/^  GAME_ASSET_TYPE_BITMAP,$/;"	e	language:C++	enum:Game_Asset_Type
 GAME_ASSET_TYPE_FONT	C:/Users/geral/work/txt/code/karu.h	/^  GAME_ASSET_TYPE_FONT,$/;"	e	language:C++	enum:Game_Asset_Type
+GAME_ASSET_TYPE_FONT	D:/work/git/txt/code/karu.h	/^  GAME_ASSET_TYPE_FONT,$/;"	e	language:C++	enum:Game_Asset_Type
 GAME_ASSET_TYPE_FONT	D:/work/git/txt/code/karu2.h	/^  GAME_ASSET_TYPE_FONT,$/;"	e	language:C++	enum:Game_Asset_Type
 GAME_ASSET_TYPE_SPRITE	C:/Users/geral/work/txt/code/karu.h	/^  GAME_ASSET_TYPE_SPRITE,$/;"	e	language:C++	enum:Game_Asset_Type
+GAME_ASSET_TYPE_SPRITE	D:/work/git/txt/code/karu.h	/^  GAME_ASSET_TYPE_SPRITE,$/;"	e	language:C++	enum:Game_Asset_Type
 GAME_ASSET_TYPE_SPRITE	D:/work/git/txt/code/karu2.h	/^  GAME_ASSET_TYPE_SPRITE,$/;"	e	language:C++	enum:Game_Asset_Type
 Game_Asset_Vector	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Asset_Vector {$/;"	s	language:C++
 Game_Asset_Vector	D:/work/git/txt/code/game_assets2.h	/^struct Game_Asset_Vector {$/;"	s	language:C++
 Game_Bitmap	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Bitmap {$/;"	s	language:C++
+Game_Bitmap	D:/work/git/txt/code/game_assets.h	/^struct Game_Bitmap {$/;"	s	language:C++
 Game_Bitmap	D:/work/git/txt/code/game_assets2.h	/^struct Game_Bitmap {$/;"	s	language:C++
 Game_Bitmap_ID	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Bitmap_ID { U32 value; };$/;"	s	language:C++
+Game_Bitmap_ID	D:/work/git/txt/code/game_assets.h	/^struct Game_Bitmap_ID { U32 value; };$/;"	s	language:C++
 Game_Bitmap_ID	D:/work/git/txt/code/game_assets2.h	/^struct Game_Bitmap_ID { U32 value; };$/;"	s	language:C++
 GAME_CONSOLE_H	C:/Users/geral/work/txt/code/game_console.h	/^#define GAME_CONSOLE_H$/;"	d	language:C++
 GAME_CONSOLE_H	D:/work/git/txt/code/game_console.h	/^#define GAME_CONSOLE_H$/;"	d	language:C++
@@ -1475,10 +1492,13 @@ Game_Debug_Update_And_Render	D:/work/git/txt/code/game_platform.h	/^typedef void
 GAME_DIMENSIONS	C:/Users/geral/work/txt/code/game_platform.h	/^#define GAME_DIMENSIONS /;"	d	language:C++
 GAME_DIMENSIONS	D:/work/git/txt/code/game_platform.h	/^#define GAME_DIMENSIONS /;"	d	language:C++
 Game_Font	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Font {$/;"	s	language:C++
+Game_Font	D:/work/git/txt/code/game_assets.h	/^struct Game_Font {$/;"	s	language:C++
 Game_Font	D:/work/git/txt/code/game_assets2.h	/^struct Game_Font {$/;"	s	language:C++
 Game_Font_Glyph	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Font_Glyph{$/;"	s	language:C++
+Game_Font_Glyph	D:/work/git/txt/code/game_assets.h	/^struct Game_Font_Glyph{$/;"	s	language:C++
 Game_Font_Glyph	D:/work/git/txt/code/game_assets2.h	/^struct Game_Font_Glyph{$/;"	s	language:C++
 Game_Font_ID	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Font_ID { U32 value; };$/;"	s	language:C++
+Game_Font_ID	D:/work/git/txt/code/game_assets.h	/^struct Game_Font_ID { U32 value; };$/;"	s	language:C++
 Game_Font_ID	D:/work/git/txt/code/game_assets2.h	/^struct Game_Font_ID { U32 value; };$/;"	s	language:C++
 Game_Functions	C:/Users/geral/work/txt/code/game_platform.h	/^struct Game_Functions {$/;"	s	language:C++
 Game_Functions	D:/work/git/txt/code/game_platform.h	/^struct Game_Functions {$/;"	s	language:C++
@@ -1559,8 +1579,10 @@ GAME_SHOW_DEBUG_PROFILER	D:/work/git/txt/code/game.h	/^  GAME_SHOW_DEBUG_PROFILE
 Game_Show_Debug_Type	C:/Users/geral/work/txt/code/game.h	/^enum Game_Show_Debug_Type {$/;"	g	language:C++
 Game_Show_Debug_Type	D:/work/git/txt/code/game.h	/^enum Game_Show_Debug_Type {$/;"	g	language:C++
 Game_Sprite	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Sprite {$/;"	s	language:C++
+Game_Sprite	D:/work/git/txt/code/game_assets.h	/^struct Game_Sprite {$/;"	s	language:C++
 Game_Sprite	D:/work/git/txt/code/game_assets2.h	/^struct Game_Sprite {$/;"	s	language:C++
 Game_Sprite_ID	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Sprite_ID { U32 value; };$/;"	s	language:C++
+Game_Sprite_ID	D:/work/git/txt/code/game_assets.h	/^struct Game_Sprite_ID { U32 value; };$/;"	s	language:C++
 Game_Sprite_ID	D:/work/git/txt/code/game_assets2.h	/^struct Game_Sprite_ID { U32 value; };$/;"	s	language:C++
 game_update_and_render	C:/Users/geral/work/txt/code/game.cpp	/^game_update_and_render(Platform* pf)$/;"	f	language:C++	typeref:typename:exported B32
 Game_Update_And_Render	C:/Users/geral/work/txt/code/game_platform.h	/^typedef void Game_Update_And_Render(Platform* pf);$/;"	t	language:C++	typeref:typename:void ()(Platform * pf)
@@ -1574,6 +1596,7 @@ gen_light_intersections	C:/Users/geral/work/txt/code/game_mode_level_light.cpp	/
 gen_light_intersections	D:/work/git/txt/code/game_mode_level_light.cpp	/^gen_light_intersections(Light* l, $/;"	f	language:C++	typeref:typename:void	file:
 get_asset	C:/Users/geral/work/txt/code/game_assets.h	/^get_asset(Game_Assets* ga, U32 asset_index){$/;"	f	language:C++	typeref:typename:Game_Asset *
 get_asset	C:/Users/geral/work/txt/code/game_assets_2.h	/^get_asset(Game_Assets* ga, U32 asset_index){$/;"	f	language:C++	typeref:typename:Asset *
+get_asset	D:/work/git/txt/code/game_assets.h	/^get_asset(Game_Assets* ga, U32 asset_index){$/;"	f	language:C++	typeref:typename:Game_Asset *
 get_asset	D:/work/git/txt/code/game_assets2.h	/^get_asset(Game_Assets* ga, U32 asset_index){$/;"	f	language:C++	typeref:typename:Game_Asset *
 get_asset	D:/work/git/txt/code/game_assets_2.h	/^get_asset(Game_Assets* ga, U32 asset_index){$/;"	f	language:C++	typeref:typename:Asset *
 get_best_asset_of_type	C:/Users/geral/work/txt/code/game_assets_2.h	/^get_best_asset_of_type(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:U32
@@ -1584,7 +1607,7 @@ get_best_image	D:/work/git/txt/code/game_assets_2.h	/^get_best_image(Game_Assets
 get_best_sprite	D:/work/git/txt/code/game_assets2.h	/^get_best_sprite(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:Game_Sprite_ID
 get_bitmap	C:/Users/geral/work/txt/code/game_assets.h	/^get_bitmap(Game_Assets* ga, Game_Bitmap_ID bitmap_id) {$/;"	f	language:C++	typeref:typename:Game_Bitmap *
 get_bitmap	C:/Users/geral/work/txt/code/game_assets_2.h	/^get_bitmap(Game_Assets* ga, Bitmap_Asset_ID bitmap_id) {$/;"	f	language:C++	typeref:typename:Bitmap_Asset *
-get_bitmap	D:/work/git/txt/code/game_assets.h	/^get_bitmap(Game_Assets* ga, Bitmap_ID id) {$/;"	f	language:C++	typeref:typename:Bitmap_Asset *
+get_bitmap	D:/work/git/txt/code/game_assets.h	/^get_bitmap(Game_Assets* ga, Game_Bitmap_ID bitmap_id) {$/;"	f	language:C++	typeref:typename:Game_Bitmap *
 get_bitmap	D:/work/git/txt/code/game_assets2.h	/^get_bitmap(Game_Assets* ga, Game_Bitmap_ID bitmap_id) {$/;"	f	language:C++	typeref:typename:Game_Bitmap *
 get_bitmap	D:/work/git/txt/code/game_assets_2.h	/^get_bitmap(Game_Assets* ga, Bitmap_Asset_ID bitmap_id) {$/;"	f	language:C++	typeref:typename:Bitmap_Asset *
 get_first_asset_of_type	C:/Users/geral/work/txt/code/game_assets_2.h	/^get_first_asset_of_type(Game_Assets* ga, Asset_Group_ID group_id, Asset_Type type) {$/;"	f	language:C++	typeref:typename:U32
@@ -1601,19 +1624,19 @@ get_first_image	D:/work/git/txt/code/game_assets_2.h	/^get_first_image(Game_Asse
 get_first_sprite	D:/work/git/txt/code/game_assets2.h	/^get_first_sprite(Game_Assets* ga, Game_Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:Game_Sprite_ID
 get_font	C:/Users/geral/work/txt/code/game_assets.h	/^get_font(Game_Assets* ga, Game_Font_ID font_id) {$/;"	f	language:C++	typeref:typename:Game_Font *
 get_font	C:/Users/geral/work/txt/code/game_assets_2.h	/^get_font(Game_Assets* ga, Font_Asset_ID image_id) {$/;"	f	language:C++	typeref:typename:Font_Asset *
-get_font	D:/work/git/txt/code/game_assets.h	/^get_font(Game_Assets* ga, Font_ID id) {$/;"	f	language:C++	typeref:typename:Font_Asset *
+get_font	D:/work/git/txt/code/game_assets.h	/^get_font(Game_Assets* ga, Game_Font_ID font_id) {$/;"	f	language:C++	typeref:typename:Game_Font *
 get_font	D:/work/git/txt/code/game_assets2.h	/^get_font(Game_Assets* ga, Game_Font_ID font_id) {$/;"	f	language:C++	typeref:typename:Game_Font *
 get_font	D:/work/git/txt/code/game_assets_2.h	/^get_font(Game_Assets* ga, Font_Asset_ID image_id) {$/;"	f	language:C++	typeref:typename:Font_Asset *
 get_glyph	C:/Users/geral/work/txt/code/game_assets.h	/^get_glyph(Game_Font* font, U32 codepoint) {$/;"	f	language:C++	typeref:typename:Game_Font_Glyph *
-get_glyph	D:/work/git/txt/code/game_assets.h	/^get_glyph(Font_Asset* font, U32 codepoint) {$/;"	f	language:C++	typeref:typename:Font_Glyph_Asset *
+get_glyph	D:/work/git/txt/code/game_assets.h	/^get_glyph(Game_Font* font, U32 codepoint) {$/;"	f	language:C++	typeref:typename:Game_Font_Glyph *
 get_glyph	D:/work/git/txt/code/game_assets2.h	/^get_glyph(Game_Font* font, U32 codepoint) {$/;"	f	language:C++	typeref:typename:Game_Font_Glyph *
 get_horizontal_advance	C:/Users/geral/work/txt/code/game_assets.h	/^get_horizontal_advance(Game_Font* font,$/;"	f	language:C++	typeref:typename:F32
-get_horizontal_advance	D:/work/git/txt/code/game_assets.h	/^get_horizontal_advance(Font_Asset* font,$/;"	f	language:C++	typeref:typename:F32
+get_horizontal_advance	D:/work/git/txt/code/game_assets.h	/^get_horizontal_advance(Game_Font* font,$/;"	f	language:C++	typeref:typename:F32
 get_horizontal_advance	D:/work/git/txt/code/game_assets2.h	/^get_horizontal_advance(Game_Font* font,$/;"	f	language:C++	typeref:typename:F32
 get_image	C:/Users/geral/work/txt/code/game_assets_2.h	/^get_image(Game_Assets* ga, Image_Asset_ID image_id) {$/;"	f	language:C++	typeref:typename:Image_Asset *
 get_image	D:/work/git/txt/code/game_assets_2.h	/^get_image(Game_Assets* ga, Image_Asset_ID image_id) {$/;"	f	language:C++	typeref:typename:Image_Asset *
 get_next_texture_handle	C:/Users/geral/work/txt/code/game_assets.h	/^get_next_texture_handle() {$/;"	f	language:C++	typeref:typename:U32
-get_next_texture_handle	D:/work/git/txt/code/game_assets.h	/^get_next_texture_handle() {  $/;"	f	language:C++	typeref:typename:U32
+get_next_texture_handle	D:/work/git/txt/code/game_assets.h	/^get_next_texture_handle() {$/;"	f	language:C++	typeref:typename:U32
 get_pack_id	C:/Users/geral/work/txt/code/game_asset_ids.h	/^static U32 get_pack_id(Bitmap_ID id) {return id >> 16;}$/;"	f	language:C++	typeref:typename:U32
 get_pack_id	C:/Users/geral/work/txt/code/game_asset_ids.h	/^static U32 get_pack_id(Font_ID id) {return id >> 16;}$/;"	f	language:C++	typeref:typename:U32
 get_pack_id	C:/Users/geral/work/txt/code/game_asset_ids.h	/^static U32 get_pack_id(Sprite_ID id) {return id >> 16;}$/;"	f	language:C++	typeref:typename:U32
@@ -1635,15 +1658,15 @@ get_real_id	D:/work/git/txt/code/game_asset_ids.h	/^static U32 get_real_id(Bitma
 get_real_id	D:/work/git/txt/code/game_asset_ids.h	/^static U32 get_real_id(Font_ID id) {return id & 0x0000FFFF;}$/;"	f	language:C++	typeref:typename:U32
 get_real_id	D:/work/git/txt/code/game_asset_ids.h	/^static U32 get_real_id(Sprite_ID id) {return id & 0x0000FFFF;}$/;"	f	language:C++	typeref:typename:U32
 get_sprite	C:/Users/geral/work/txt/code/game_assets.h	/^get_sprite(Game_Assets* ga, Game_Sprite_ID sprite_id) {$/;"	f	language:C++	typeref:typename:Game_Sprite *
-get_sprite	D:/work/git/txt/code/game_assets.h	/^get_sprite(Game_Assets* ga, Sprite_ID id) {$/;"	f	language:C++	typeref:typename:Sprite_Asset *
+get_sprite	D:/work/git/txt/code/game_assets.h	/^get_sprite(Game_Assets* ga, Game_Sprite_ID sprite_id) {$/;"	f	language:C++	typeref:typename:Game_Sprite *
 get_sprite	D:/work/git/txt/code/game_assets2.h	/^get_sprite(Game_Assets* ga, Game_Sprite_ID sprite_id) {$/;"	f	language:C++	typeref:typename:Game_Sprite *
 Gfx	C:/Users/geral/work/txt/code/game_gfx.h	/^struct Gfx {	$/;"	s	language:C++
 gfx	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^  Gfx gfx; \/\/ Must be first member$/;"	m	language:C++	struct:Opengl	typeref:typename:Gfx
 gfx	C:/Users/geral/work/txt/code/game_painter.h	/^  Gfx* gfx;$/;"	m	language:C++	struct:Painter	typeref:typename:Gfx *
 gfx	C:/Users/geral/work/txt/code/game_platform.h	/^  Gfx* gfx;$/;"	m	language:C++	struct:Platform	typeref:typename:Gfx *
+gfx	D:/work/git/txt/code/game.h	/^static struct Gfx* gfx;$/;"	v	language:C++	typeref:struct:Gfx *
 Gfx	D:/work/git/txt/code/game_gfx.h	/^struct Gfx {	$/;"	s	language:C++
 gfx	D:/work/git/txt/code/game_gfx_opengl.h	/^  Gfx gfx; \/\/ Must be first member$/;"	m	language:C++	struct:Opengl	typeref:typename:Gfx
-gfx	D:/work/git/txt/code/game_painter.h	/^  Gfx* gfx;$/;"	m	language:C++	struct:Painter	typeref:typename:Gfx *
 gfx	D:/work/git/txt/code/game_platform.h	/^  Gfx* gfx;$/;"	m	language:C++	struct:Platform	typeref:typename:Gfx *
 gfx_advance_depth	C:/Users/geral/work/txt/code/game_gfx.h	/^gfx_advance_depth(Gfx* g) {$/;"	f	language:C++	typeref:typename:void
 gfx_advance_depth	C:/Users/geral/work/txt/code/game_gfx.h	/^static void gfx_advance_depth(Gfx* g);$/;"	p	language:C++	typeref:typename:void
@@ -1746,7 +1769,9 @@ gfx_init_texture_queue	C:/Users/geral/work/txt/code/game_gfx.h	/^static void gfx
 gfx_init_texture_queue	D:/work/git/txt/code/game_gfx.h	/^gfx_init_texture_queue(Gfx* g, void* data, UMI size) {$/;"	f	language:C++	typeref:typename:void
 gfx_init_texture_queue	D:/work/git/txt/code/game_gfx.h	/^static void gfx_init_texture_queue(Gfx* g, void* data, UMI size);$/;"	p	language:C++	typeref:typename:void
 GFX_MAX_TEXTURES	C:/Users/geral/work/txt/code/game_gfx.h	/^#define GFX_MAX_TEXTURES /;"	d	language:C++
+GFX_MAX_TEXTURES	D:/work/git/txt/code/game_gfx.h	/^#define GFX_MAX_TEXTURES /;"	d	language:C++
 gfx_next_texture_handle	C:/Users/geral/work/txt/code/game_gfx.h	/^static void gfx_next_texture_handle();$/;"	p	language:C++	typeref:typename:void
+gfx_next_texture_handle	D:/work/git/txt/code/game_gfx.h	/^static void gfx_next_texture_handle();$/;"	p	language:C++	typeref:typename:void
 GFX_OGL_H	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^#define GFX_OGL_H$/;"	d	language:C++
 GFX_OGL_H	D:/work/git/txt/code/game_gfx_opengl.h	/^#define GFX_OGL_H$/;"	d	language:C++
 gfx_push_advance_depth	C:/Users/geral/work/txt/code/game_gfx.h	/^gfx_push_advance_depth(Gfx* g) {$/;"	f	language:C++	typeref:typename:void
@@ -1925,20 +1950,19 @@ glyf	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cma
 glyf	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
 glyphs	C:/Users/geral/work/txt/code/game_assets.h	/^  Game_Font_Glyph* glyphs;$/;"	m	language:C++	struct:Game_Font	typeref:typename:Game_Font_Glyph *
 glyphs	C:/Users/geral/work/txt/code/game_assets_2.h	/^  Font_Glyph_Asset* glyphs;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:Font_Glyph_Asset *
-glyphs	D:/work/git/txt/code/game_assets.h	/^  Font_Glyph_Asset* glyphs;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:Font_Glyph_Asset *
+glyphs	D:/work/git/txt/code/game_assets.h	/^  Game_Font_Glyph* glyphs;$/;"	m	language:C++	struct:Game_Font	typeref:typename:Game_Font_Glyph *
 glyphs	D:/work/git/txt/code/game_assets2.h	/^  Game_Font_Glyph* glyphs;$/;"	m	language:C++	struct:Game_Font	typeref:typename:Game_Font_Glyph *
 glyphs	D:/work/git/txt/code/game_assets_2.h	/^  Font_Glyph_Asset* glyphs;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:Font_Glyph_Asset *
 glyph_count	C:/Users/geral/work/txt/code/game_assets.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Game_Font	typeref:typename:U32
 glyph_count	C:/Users/geral/work/txt/code/game_assets_2.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:U32
 glyph_count	C:/Users/geral/work/txt/code/karu.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
 glyph_count	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:__anon802a10330108	typeref:typename:U32
-glyph_count	D:/work/git/txt/code/game_assets.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:U32
+glyph_count	D:/work/git/txt/code/game_assets.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Game_Font	typeref:typename:U32
 glyph_count	D:/work/git/txt/code/game_assets2.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Game_Font	typeref:typename:U32
 glyph_count	D:/work/git/txt/code/game_assets_2.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:U32
 glyph_count	D:/work/git/txt/code/karu.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
 glyph_count	D:/work/git/txt/code/karu2.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
 glyph_count	D:/work/git/txt/code/momo_ttf.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
-glyph_height	D:/work/git/txt/code/sui_pack.h	/^  F32 glyph_height;$/;"	m	language:C++	struct:Sui_Packer_Font	typeref:typename:F32
 glyph_rects	C:/Users/geral/work/txt/code/sui_atlas.h	/^  RP_Rect* glyph_rects;$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:RP_Rect *
 glyph_rects	D:/work/git/txt/code/sui_atlas.h	/^  RP_Rect* glyph_rects;$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:RP_Rect *
 glyph_rect_contexts	C:/Users/geral/work/txt/code/sui_atlas.h	/^  Sui_Atlas_Context* glyph_rect_contexts;$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:Sui_Atlas_Context *
@@ -2053,17 +2077,18 @@ groups	C:/Users/geral/work/txt/code/game_assets.h	/^  Game_Asset_Group groups[GA
 groups	C:/Users/geral/work/txt/code/game_assets_2.h	/^  Asset_Group groups[ASSET_GROUP_COUNT];$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Asset_Group[]
 groups	C:/Users/geral/work/txt/code/karu_pack2.h	/^  Sui_Asset_Group groups[ASSET_GROUP_COUNT]; \/\/to be written to file$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:Sui_Asset_Group[]
 groups	C:/Users/geral/work/txt/code/sui_pack.h	/^  Karu_Group groups[GAME_ASSET_GROUP_TYPE_COUNT]; \/\/to be written to file$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Karu_Group[]
+groups	D:/work/git/txt/code/game_assets.h	/^  Game_Asset_Group groups[GAME_ASSET_GROUP_TYPE_COUNT];$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Game_Asset_Group[]
 groups	D:/work/git/txt/code/game_assets2.h	/^  Game_Asset_Group groups[GAME_ASSET_GROUP_TYPE_COUNT];$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Game_Asset_Group[]
 groups	D:/work/git/txt/code/game_assets_2.h	/^  Asset_Group groups[ASSET_GROUP_COUNT];$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Asset_Group[]
 groups	D:/work/git/txt/code/karu_pack2.h	/^  Sui_Asset_Group groups[ASSET_GROUP_COUNT]; \/\/to be written to file$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:Sui_Asset_Group[]
 groups	D:/work/git/txt/code/pack_assets.cpp	/^  Karu_Group groups[GAME_ASSET_GROUP_TYPE_COUNT]; \/\/to be written to file$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Karu_Group[]	file:
+groups	D:/work/git/txt/code/sui_pack.h	/^  Karu_Group groups[GAME_ASSET_GROUP_TYPE_COUNT]; \/\/to be written to file$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Karu_Group[]
 group_count	C:/Users/geral/work/txt/code/karu.h	/^  U32 group_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
+group_count	D:/work/git/txt/code/karu.h	/^  U32 group_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 group_count	D:/work/git/txt/code/karu2.h	/^  U32 group_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 g_platform	C:/Users/geral/work/txt/code/game.h	/^static Platform* g_platform;$/;"	v	language:C++	typeref:typename:Platform *
-g_platform	D:/work/git/txt/code/game.h	/^Platform* g_platform;$/;"	v	language:C++	typeref:typename:Platform *
 g_profiler	C:/Users/geral/work/txt/code/game.h	/^static Profiler* g_profiler;$/;"	v	language:C++	typeref:typename:Profiler *
 g_profiler	C:/Users/geral/work/txt/code/w32.cpp	/^Profiler* g_profiler = &_g_profiler; $/;"	v	language:C++	typeref:typename:Profiler *
-g_profiler	D:/work/git/txt/code/game.h	/^Profiler* g_profiler;$/;"	v	language:C++	typeref:typename:Profiler *
 g_profiler	D:/work/git/txt/code/w32.cpp	/^Profiler* g_profiler = &_g_profiler; $/;"	v	language:C++	typeref:typename:Profiler *
 g_w32_state	C:/Users/geral/work/txt/code/w32.cpp	/^static W32_State g_w32_state;$/;"	v	language:C++	typeref:typename:W32_State	file:
 g_w32_state	D:/work/git/txt/code/w32.cpp	/^static W32_State g_w32_state;$/;"	v	language:C++	typeref:typename:W32_State	file:
@@ -2100,18 +2125,18 @@ height	C:/Users/geral/work/txt/code/momo_image.h	/^  U32 width, height;$/;"	m	la
 height	C:/Users/geral/work/txt/code/momo_png.h	/^  U32 height;$/;"	m	language:C++	struct:_PNG_IHDR	typeref:typename:U32
 height	C:/Users/geral/work/txt/code/momo_png.h	/^  U32 height;$/;"	m	language:C++	struct:__anon7fde682a0108	typeref:typename:U32
 height	C:/Users/geral/work/txt/code/sui_pack.h	/^  U32 height;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32
-height	D:/work/git/txt/code/game_assets.h	/^  U32 height;$/;"	m	language:C++	struct:Bitmap_Asset	typeref:typename:U32
+height	D:/work/git/txt/code/game_assets.h	/^  U32 height;$/;"	m	language:C++	struct:Game_Bitmap	typeref:typename:U32
 height	D:/work/git/txt/code/game_assets2.h	/^  U32 height;$/;"	m	language:C++	struct:Game_Bitmap	typeref:typename:U32
 height	D:/work/git/txt/code/game_assets_2.h	/^  U32 height;$/;"	m	language:C++	struct:Bitmap_Asset	typeref:typename:U32
 height	D:/work/git/txt/code/game_gfx_opengl.h	/^  U32 height;$/;"	m	language:C++	struct:__anon982c2a3c0708	typeref:typename:U32
-height	D:/work/git/txt/code/karu.h	/^  U32 width, height;$/;"	m	language:C++	struct:Karu_Bitmap	typeref:typename:U32
+height	D:/work/git/txt/code/karu.h	/^  U32 height;$/;"	m	language:C++	struct:Karu_Bitmap	typeref:typename:U32
 height	D:/work/git/txt/code/karu2.h	/^  U32 height;$/;"	m	language:C++	struct:Karu_Bitmap	typeref:typename:U32
 height	D:/work/git/txt/code/karu_pack2.h	/^  U32 height;$/;"	m	language:C++	struct:Karu_Bitmap_Source	typeref:typename:U32
 height	D:/work/git/txt/code/momo_image.h	/^  U32 width, height;$/;"	m	language:C++	struct:__anoncc1655140108	typeref:typename:U32
 height	D:/work/git/txt/code/momo_png.h	/^  U32 height;$/;"	m	language:C++	struct:_PNG_IHDR	typeref:typename:U32
 height	D:/work/git/txt/code/momo_png.h	/^  U32 height;$/;"	m	language:C++	struct:__anon6896d1560108	typeref:typename:U32
 height	D:/work/git/txt/code/pack_assets.cpp	/^  U32 height;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32	file:
-height	D:/work/git/txt/code/sui_pack.h	/^  U32 height;$/;"	m	language:C++	struct:Sui_Packer_Bitmap	typeref:typename:U32
+height	D:/work/git/txt/code/sui_pack.h	/^  U32 height;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32
 held_light	C:/Users/geral/work/txt/code/game_mode_lit_player.h	/^  Lit_Light* held_light;$/;"	m	language:C++	struct:Lit_Player	typeref:typename:Lit_Light *
 held_light	D:/work/git/txt/code/game_mode_lit_player.h	/^  Lit_Light* held_light;$/;"	m	language:C++	struct:Lit_Player	typeref:typename:Lit_Light *
 hex_to_rgba	C:/Users/geral/work/txt/code/momo_colors.h	/^hex_to_rgba(U32 hex) {$/;"	f	language:C++	typeref:typename:RGBA
@@ -2122,11 +2147,10 @@ hhea	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cma
 hhea	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
 highest_codepoint	C:/Users/geral/work/txt/code/game_assets.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Game_Font	typeref:typename:U32
 highest_codepoint	C:/Users/geral/work/txt/code/karu.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
-highest_codepoint	D:/work/git/txt/code/game_assets.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:U32
+highest_codepoint	D:/work/git/txt/code/game_assets.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Game_Font	typeref:typename:U32
 highest_codepoint	D:/work/git/txt/code/game_assets2.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Game_Font	typeref:typename:U32
 highest_codepoint	D:/work/git/txt/code/karu.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
 highest_codepoint	D:/work/git/txt/code/karu2.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
-highest_codepoint	D:/work/git/txt/code/sui_pack.h	/^  U32 highest_codepoint; \/\/ TODO: we should get rid of this?$/;"	m	language:C++	struct:Sui_Packer_Font	typeref:typename:U32
 hits	C:/Users/geral/work/txt/code/game_profiler.h	/^  U32 hits;$/;"	m	language:C++	struct:Profiler_Snapshot	typeref:typename:U32
 hits	D:/work/git/txt/code/game_profiler.h	/^  U32 hits;$/;"	m	language:C++	struct:Profiler_Snapshot	typeref:typename:U32
 hits_and_cycles	C:/Users/geral/work/txt/code/game_profiler.h	/^  U64 hits_and_cycles;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:U64
@@ -2135,7 +2159,7 @@ hmtx	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cma
 hmtx	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
 horizontal_advances	C:/Users/geral/work/txt/code/game_assets.h	/^  F32* horizontal_advances;$/;"	m	language:C++	struct:Game_Font	typeref:typename:F32 *
 horizontal_advances	C:/Users/geral/work/txt/code/game_assets_2.h	/^  F32* horizontal_advances;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:F32 *
-horizontal_advances	D:/work/git/txt/code/game_assets.h	/^  F32* horizontal_advances;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:F32 *
+horizontal_advances	D:/work/git/txt/code/game_assets.h	/^  F32* horizontal_advances;$/;"	m	language:C++	struct:Game_Font	typeref:typename:F32 *
 horizontal_advances	D:/work/git/txt/code/game_assets2.h	/^  F32* horizontal_advances;$/;"	m	language:C++	struct:Game_Font	typeref:typename:F32 *
 horizontal_advances	D:/work/git/txt/code/game_assets_2.h	/^  F32* horizontal_advances;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:F32 *
 hsl	C:/Users/geral/work/txt/code/momo_colors.h	/^hsl(F32 h, F32 s, F32 l) {$/;"	f	language:C++	typeref:typename:HSL
@@ -2156,9 +2180,6 @@ id	D:/work/git/txt/code/game_gfx.h	/^  U32 id; \/\/ type id from user$/;"	m	lang
 id	D:/work/git/txt/code/momo_wav.h	/^  U32 id; \/\/ big endian$/;"	m	language:C++	struct:__anon690e9bbf0108	typeref:typename:U32
 id	D:/work/git/txt/code/momo_wav.h	/^  U32 id;$/;"	m	language:C++	struct:__anon690e9bbf0208	typeref:typename:U32
 id	D:/work/git/txt/code/momo_wav.h	/^  U32 id;$/;"	m	language:C++	struct:__anon690e9bbf0308	typeref:typename:U32
-id_name	D:/work/git/txt/code/sui_pack.h	/^  const C8* id_name;$/;"	m	language:C++	struct:Sui_Packer_Bitmap	typeref:typename:const C8 *
-id_name	D:/work/git/txt/code/sui_pack.h	/^  const C8* id_name;$/;"	m	language:C++	struct:Sui_Packer_Sprite	typeref:typename:const C8 *
-id_name	D:/work/git/txt/code/sui_pack.h	/^  const char* id_name;$/;"	m	language:C++	struct:Sui_Packer_Font	typeref:typename:const char *
 image	C:/Users/geral/work/txt/code/game_assets_2.h	/^    Image_Asset image;$/;"	m	language:C++	union:Asset::__anone5634beb010a	typeref:typename:Image_Asset
 image	C:/Users/geral/work/txt/code/karu_pack2.h	/^    Karu_Image_Source image;$/;"	m	language:C++	union:Karu_Source::__anonf4c51391010a	typeref:typename:Karu_Image_Source
 image	D:/work/git/txt/code/game_assets_2.h	/^    Image_Asset image;$/;"	m	language:C++	union:Asset::__anon55685097010a	typeref:typename:Image_Asset
@@ -2197,6 +2218,7 @@ init_editor_toolbar_button	C:/Users/geral/work/txt/code/game_mode_level_editor.c
 init_editor_toolbar_button	D:/work/git/txt/code/game_mode_level_editor.cpp	/^init_editor_toolbar_button(Editor* e, Editor_State state, $/;"	f	language:C++	typeref:typename:void	file:
 init_game_assets	C:/Users/geral/work/txt/code/game_assets.h	/^init_game_assets(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:B32
 init_game_assets	C:/Users/geral/work/txt/code/game_assets_2.h	/^init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {$/;"	f	language:C++	typeref:typename:B32
+init_game_assets	D:/work/git/txt/code/game_assets.h	/^init_game_assets(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:B32
 init_game_assets	D:/work/git/txt/code/game_assets2.h	/^init_game_assets(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:B32
 init_game_assets	D:/work/git/txt/code/game_assets_2.h	/^init_game_assets(Game_Assets* ga, Renderer_Texture_Queue* texture_queue) {$/;"	f	language:C++	typeref:typename:B32
 input_line	C:/Users/geral/work/txt/code/game_console.h	/^  String8_Builder input_line;$/;"	m	language:C++	struct:Console	typeref:typename:String8_Builder
@@ -2204,6 +2226,7 @@ input_line	D:/work/git/txt/code/game_console.h	/^  String8_Builder input_line;$/
 inspector	C:/Users/geral/work/txt/code/game.h	/^  Inspector inspector;$/;"	m	language:C++	struct:Game	typeref:typename:Inspector
 Inspector	C:/Users/geral/work/txt/code/game_inspector.h	/^struct Inspector {$/;"	s	language:C++
 inspector	D:/work/git/txt/code/game.h	/^  Inspector inspector;$/;"	m	language:C++	struct:Game	typeref:typename:Inspector
+inspector	D:/work/git/txt/code/game.h	/^static struct Inspector* inspector;$/;"	v	language:C++	typeref:struct:Inspector *
 Inspector	D:/work/git/txt/code/game_inspector.h	/^struct Inspector {$/;"	s	language:C++
 Inspector_Entry	C:/Users/geral/work/txt/code/game_inspector.h	/^struct Inspector_Entry {$/;"	s	language:C++
 Inspector_Entry	D:/work/git/txt/code/game_inspector.h	/^struct Inspector_Entry {$/;"	s	language:C++
@@ -2246,7 +2269,7 @@ is_device_ready	D:/work/git/txt/code/w32_audio_wasapi.h	/^	B32 is_device_ready;$
 is_digit	C:/Users/geral/work/txt/code/momo_common.h	/^is_digit(U8 c) {$/;"	f	language:C++	typeref:typename:B32
 is_digit	D:/work/git/txt/code/momo_common.h	/^is_digit(U8 c) {$/;"	f	language:C++	typeref:typename:B32
 is_disabled	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  B32 is_disabled;$/;"	m	language:C++	struct:__anon3aa070140108	typeref:typename:B32
-is_disabled	D:/work/git/txt/code/game_mode_lit.h	/^  B32 is_disabled;$/;"	m	language:C++	struct:__anonaaa574c00108	typeref:typename:B32
+is_disabled	D:/work/git/txt/code/game_mode_lit.h	/^  B32 is_disabled;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:B32
 is_done	C:/Users/geral/work/txt/code/game.h	/^  B32 is_done;$/;"	m	language:C++	struct:Game	typeref:typename:B32
 is_done	D:/work/git/txt/code/game.h	/^  B32 is_done;$/;"	m	language:C++	struct:Game	typeref:typename:B32
 is_inverted	C:/Users/geral/work/txt/code/momo_ttf.h	/^  B32 is_inverted;$/;"	m	language:C++	struct:__anon802a10330608	typeref:typename:B32
@@ -2332,8 +2355,8 @@ json_read_from_blk	C:/Users/geral/work/txt/code/momo_json.h	/^static B32 json_re
 json_read_from_blk	D:/work/git/txt/code/momo_json.h	/^json_read_from_blk(JSON_Object* j, Block blk, Bump_Allocator* ba) {$/;"	f	language:C++	typeref:typename:B32
 json_read_from_blk	D:/work/git/txt/code/momo_json.h	/^static B32 json_read_from_blk(JSON_Object* j, Block blk);$/;"	p	language:C++	typeref:typename:B32
 Karu_Asset	C:/Users/geral/work/txt/code/karu.h	/^struct Karu_Asset {$/;"	s	language:C++
+Karu_Asset	D:/work/git/txt/code/karu.h	/^struct Karu_Asset {$/;"	s	language:C++
 Karu_Asset	D:/work/git/txt/code/karu2.h	/^struct Karu_Asset {$/;"	s	language:C++
-Karu_Asset_Group	D:/work/git/txt/code/karu.h	/^struct Karu_Asset_Group {$/;"	s	language:C++
 Karu_Atlas_Font_Source	C:/Users/geral/work/txt/code/karu_pack2.h	/^struct Karu_Atlas_Font_Source {$/;"	s	language:C++
 Karu_Atlas_Font_Source	D:/work/git/txt/code/karu_pack2.h	/^struct Karu_Atlas_Font_Source {$/;"	s	language:C++
 Karu_Atlas_Image_Source	C:/Users/geral/work/txt/code/karu_pack2.h	/^struct Karu_Atlas_Image_Source {$/;"	s	language:C++
@@ -2353,6 +2376,7 @@ Karu_Font_Glyph	C:/Users/geral/work/txt/code/karu.h	/^struct Karu_Font_Glyph {$/
 Karu_Font_Glyph	D:/work/git/txt/code/karu.h	/^struct Karu_Font_Glyph {$/;"	s	language:C++
 Karu_Font_Glyph	D:/work/git/txt/code/karu2.h	/^struct Karu_Font_Glyph {$/;"	s	language:C++
 Karu_Group	C:/Users/geral/work/txt/code/karu.h	/^struct Karu_Group {$/;"	s	language:C++
+Karu_Group	D:/work/git/txt/code/karu.h	/^struct Karu_Group {$/;"	s	language:C++
 Karu_Group	D:/work/git/txt/code/karu2.h	/^struct Karu_Group {$/;"	s	language:C++
 KARU_H	C:/Users/geral/work/txt/code/karu.h	/^#define KARU_H$/;"	d	language:C++
 KARU_H	D:/work/git/txt/code/karu.h	/^#define KARU_H$/;"	d	language:C++
@@ -2369,7 +2393,6 @@ KARU_PACK_H	D:/work/git/txt/code/karu_pack2.h	/^#define KARU_PACK_H$/;"	d	langua
 KARU_SIGNATURE	C:/Users/geral/work/txt/code/karu.h	/^#define KARU_SIGNATURE /;"	d	language:C++
 KARU_SIGNATURE	D:/work/git/txt/code/karu.h	/^#define KARU_SIGNATURE /;"	d	language:C++
 KARU_SIGNATURE	D:/work/git/txt/code/karu2.h	/^#define KARU_SIGNATURE /;"	d	language:C++
-Karu_Sound	D:/work/git/txt/code/karu.h	/^struct Karu_Sound {$/;"	s	language:C++
 Karu_Source	C:/Users/geral/work/txt/code/karu_pack2.h	/^struct Karu_Source {$/;"	s	language:C++
 Karu_Source	D:/work/git/txt/code/karu_pack2.h	/^struct Karu_Source {$/;"	s	language:C++
 Karu_Source_Type	C:/Users/geral/work/txt/code/karu_pack2.h	/^enum Karu_Source_Type{$/;"	g	language:C++
@@ -2386,6 +2409,7 @@ Karu_Sprite	C:/Users/geral/work/txt/code/karu.h	/^struct Karu_Sprite {$/;"	s	lan
 Karu_Sprite	D:/work/git/txt/code/karu.h	/^struct Karu_Sprite {$/;"	s	language:C++
 Karu_Sprite	D:/work/git/txt/code/karu2.h	/^struct Karu_Sprite {$/;"	s	language:C++
 Karu_Tag	C:/Users/geral/work/txt/code/karu.h	/^struct Karu_Tag {$/;"	s	language:C++
+Karu_Tag	D:/work/git/txt/code/karu.h	/^struct Karu_Tag {$/;"	s	language:C++
 Karu_Tag	D:/work/git/txt/code/karu2.h	/^struct Karu_Tag {$/;"	s	language:C++
 KB	C:/Users/geral/work/txt/code/momo_common.h	/^#define KB(/;"	d	language:C++
 KB	D:/work/git/txt/code/momo_common.h	/^#define KB(/;"	d	language:C++
@@ -2448,13 +2472,13 @@ lit_draw_debug_light_rays	D:/work/git/txt/code/game_mode_lit.h	/^lit_draw_debug_
 lit_draw_edges	C:/Users/geral/work/txt/code/game_mode_lit.h	/^lit_draw_edges(Lit_Edge_List* edges, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
 lit_draw_edges	D:/work/git/txt/code/game_mode_lit.h	/^lit_draw_edges(Lit_Edge_List* edges, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
 lit_draw_lights	C:/Users/geral/work/txt/code/game_mode_lit_light.h	/^lit_draw_lights(Lit_Light_List* lights, Painter* painter, Game_Sprite_ID sprite_id) {$/;"	f	language:C++	typeref:typename:void
-lit_draw_lights	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_draw_lights(Lit_Light_List* lights, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
+lit_draw_lights	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_draw_lights(Lit_Light_List* lights, Painter* painter, Game_Sprite_ID sprite_id) {$/;"	f	language:C++	typeref:typename:void
 lit_draw_player	C:/Users/geral/work/txt/code/game_mode_lit_player.h	/^lit_draw_player(Lit_Player* player, Painter* painter, Game_Sprite_ID sprite_id){$/;"	f	language:C++	typeref:typename:void
-lit_draw_player	D:/work/git/txt/code/game_mode_lit_player.h	/^lit_draw_player(Lit_Player* player, Painter* painter){$/;"	f	language:C++	typeref:typename:void
+lit_draw_player	D:/work/git/txt/code/game_mode_lit_player.h	/^lit_draw_player(Lit_Player* player, Game_Sprite_ID sprite_id){$/;"	f	language:C++	typeref:typename:void
 Lit_Edge	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit_Edge;$/;"	t	language:C++	typeref:struct:__anon3aa070140108
-Lit_Edge	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_Edge;$/;"	t	language:C++	typeref:struct:__anonaaa574c00108
+Lit_Edge	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit_Edge {$/;"	s	language:C++
 Lit_Edge_List	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit_Edge_List;$/;"	t	language:C++	typeref:struct:__anon3aa070140208
-Lit_Edge_List	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_Edge_List;$/;"	t	language:C++	typeref:struct:__anonaaa574c00208
+Lit_Edge_List	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit_Edge_List {$/;"	s	language:C++
 lit_fade_in_next_tutorial_text	C:/Users/geral/work/txt/code/game_mode_lit.h	/^lit_fade_in_next_tutorial_text(Lit_Tutorial_Text_List* texts) {$/;"	f	language:C++	typeref:typename:void
 lit_fade_in_next_tutorial_text	D:/work/git/txt/code/game_mode_lit.h	/^lit_fade_in_next_tutorial_text(Lit_Tutorial_Text_List* texts) {$/;"	f	language:C++	typeref:typename:void
 lit_fade_in_tutorial_text	C:/Users/geral/work/txt/code/game_mode_lit.h	/^lit_fade_in_tutorial_text(Lit_Tutorial_Text* text) {$/;"	f	language:C++	typeref:typename:void
@@ -2470,7 +2494,7 @@ lit_gen_light_intersections	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_gen
 lit_get_ray_intersection_time_wrt_edges	C:/Users/geral/work/txt/code/game_mode_lit_light.h	/^lit_get_ray_intersection_time_wrt_edges(Ray2 ray,$/;"	f	language:C++	typeref:typename:F32
 lit_get_ray_intersection_time_wrt_edges	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_get_ray_intersection_time_wrt_edges(Ray2 ray,$/;"	f	language:C++	typeref:typename:F32
 lit_init_player	C:/Users/geral/work/txt/code/game_mode_lit_player.h	/^lit_init_player(Lit_Player* player, F32 x, F32 y) {$/;"	f	language:C++	typeref:typename:void
-lit_init_player	D:/work/git/txt/code/game_mode_lit_player.h	/^lit_init_player(Lit_Player* player, F32 x, F32 y, Game_Sprite_ID sprite_id) {$/;"	f	language:C++	typeref:typename:void
+lit_init_player	D:/work/git/txt/code/game_mode_lit_player.h	/^lit_init_player(Lit_Player* player, F32 x, F32 y) {$/;"	f	language:C++	typeref:typename:void
 Lit_Level	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^typedef void (*Lit_Level)(Lit* mode); $/;"	t	language:C++	typeref:typename:void (*)(Lit * mode)
 Lit_Level	D:/work/git/txt/code/game_mode_lit_levels.h	/^typedef void (*Lit_Level)(Lit* mode); $/;"	t	language:C++	typeref:typename:void (*)(Lit * mode)
 lit_levels	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^static Lit_Level lit_levels[] = {$/;"	v	language:C++	typeref:typename:Lit_Level[]
@@ -2534,9 +2558,9 @@ lit_push_tutorial_text	D:/work/git/txt/code/game_mode_lit.h	/^lit_push_tutorial_
 lit_push_tutorial_trigger	C:/Users/geral/work/txt/code/game_mode_lit.h	/^lit_push_tutorial_trigger(Lit_Tutorial_Trigger_List* triggers, Lit_Tutorial_Trigger fn) {$/;"	f	language:C++	typeref:typename:Lit_Tutorial_Trigger *
 lit_push_tutorial_trigger	D:/work/git/txt/code/game_mode_lit.h	/^lit_push_tutorial_trigger(Lit_Tutorial_Trigger_List* triggers, Lit_Tutorial_Trigger fn) {$/;"	f	language:C++	typeref:typename:Lit_Tutorial_Trigger *
 lit_render_particles	C:/Users/geral/work/txt/code/game_mode_lit_particles.h	/^lit_render_particles(Lit_Particle_Pool* ps, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
-lit_render_particles	D:/work/git/txt/code/game_mode_lit_particles.h	/^lit_render_particles(Lit_Particle_Pool* ps, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
+lit_render_particles	D:/work/git/txt/code/game_mode_lit_particles.h	/^lit_render_particles(Lit_Particle_Pool* ps) {$/;"	f	language:C++	typeref:typename:void
 lit_render_sensors	C:/Users/geral/work/txt/code/game_mode_lit_sensors.h	/^lit_render_sensors(Lit_Sensor_List* sensors, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
-lit_render_sensors	D:/work/git/txt/code/game_mode_lit_sensors.h	/^lit_render_sensors(Lit_Sensor_List* sensors, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
+lit_render_sensors	D:/work/git/txt/code/game_mode_lit_sensors.h	/^lit_render_sensors(Lit_Sensor_List* sensors) {$/;"	f	language:C++	typeref:typename:void
 Lit_Sensor	C:/Users/geral/work/txt/code/game_mode_lit_sensors.h	/^struct Lit_Sensor {$/;"	s	language:C++
 Lit_Sensor	D:/work/git/txt/code/game_mode_lit_sensors.h	/^struct Lit_Sensor {$/;"	s	language:C++
 LIT_SENSOR_COLOR_MASK	C:/Users/geral/work/txt/code/game_mode_lit_sensors.h	/^#define LIT_SENSOR_COLOR_MASK /;"	d	language:C++
@@ -2550,35 +2574,35 @@ LIT_SENSOR_RADIUS	D:/work/git/txt/code/game_mode_lit_sensors.h	/^#define LIT_SEN
 lit_spawn_particle	C:/Users/geral/work/txt/code/game_mode_lit_particles.h	/^lit_spawn_particle(Lit_Particle_Pool* ps,$/;"	f	language:C++	typeref:typename:void
 lit_spawn_particle	D:/work/git/txt/code/game_mode_lit_particles.h	/^lit_spawn_particle(Lit_Particle_Pool* ps,$/;"	f	language:C++	typeref:typename:void
 Lit_State_Type	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit_State_Type;$/;"	t	language:C++	typeref:enum:__anon3aa070140703
-Lit_State_Type	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_State_Type;$/;"	t	language:C++	typeref:enum:__anonaaa574c00703
+Lit_State_Type	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_State_Type;$/;"	t	language:C++	typeref:enum:__anonaaa574c00103
 LIT_STATE_TYPE_NORMAL	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_NORMAL,$/;"	e	language:C++	enum:__anon3aa070140703
-LIT_STATE_TYPE_NORMAL	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_NORMAL,$/;"	e	language:C++	enum:__anonaaa574c00703
+LIT_STATE_TYPE_NORMAL	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_NORMAL,$/;"	e	language:C++	enum:__anonaaa574c00103
 LIT_STATE_TYPE_TRANSITION_IN	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_TRANSITION_IN,$/;"	e	language:C++	enum:__anon3aa070140703
-LIT_STATE_TYPE_TRANSITION_IN	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_TRANSITION_IN,$/;"	e	language:C++	enum:__anonaaa574c00703
+LIT_STATE_TYPE_TRANSITION_IN	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_TRANSITION_IN,$/;"	e	language:C++	enum:__anonaaa574c00103
 LIT_STATE_TYPE_TRANSITION_OUT	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_TRANSITION_OUT,$/;"	e	language:C++	enum:__anon3aa070140703
-LIT_STATE_TYPE_TRANSITION_OUT	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_TRANSITION_OUT,$/;"	e	language:C++	enum:__anonaaa574c00703
+LIT_STATE_TYPE_TRANSITION_OUT	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_TRANSITION_OUT,$/;"	e	language:C++	enum:__anonaaa574c00103
 lit_tick	C:/Users/geral/work/txt/code/game_mode_lit.h	/^lit_tick(Game* game, Painter* painter, Platform* pf) $/;"	f	language:C++	typeref:typename:void
 lit_tick	D:/work/git/txt/code/game_mode_lit.h	/^lit_tick(Game* game, Painter* painter, Platform* pf) $/;"	f	language:C++	typeref:typename:void
 Lit_Tutorial_Text	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Text;$/;"	t	language:C++	typeref:struct:__anon3aa070140508
-Lit_Tutorial_Text	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Text;$/;"	t	language:C++	typeref:struct:__anonaaa574c00508
+Lit_Tutorial_Text	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit_Tutorial_Text$/;"	s	language:C++
 LIT_TUTORIAL_TEXT_FADE_DURATION	C:/Users/geral/work/txt/code/game_mode_lit.h	/^#define LIT_TUTORIAL_TEXT_FADE_DURATION /;"	d	language:C++
 LIT_TUTORIAL_TEXT_FADE_DURATION	D:/work/git/txt/code/game_mode_lit.h	/^#define LIT_TUTORIAL_TEXT_FADE_DURATION /;"	d	language:C++
 Lit_Tutorial_Text_List	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Text_List;$/;"	t	language:C++	typeref:struct:__anon3aa070140608
-Lit_Tutorial_Text_List	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Text_List;$/;"	t	language:C++	typeref:struct:__anonaaa574c00608
+Lit_Tutorial_Text_List	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit_Tutorial_Text_List {$/;"	s	language:C++
 Lit_Tutorial_Text_State	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Text_State;$/;"	t	language:C++	typeref:enum:__anon3aa070140303
-Lit_Tutorial_Text_State	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Text_State;$/;"	t	language:C++	typeref:enum:__anonaaa574c00303
+Lit_Tutorial_Text_State	D:/work/git/txt/code/game_mode_lit.h	/^enum Lit_Tutorial_Text_State{$/;"	g	language:C++
 LIT_TUTORIAL_TEXT_STATE_FADE_IN	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_FADE_IN,$/;"	e	language:C++	enum:__anon3aa070140303
-LIT_TUTORIAL_TEXT_STATE_FADE_IN	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_FADE_IN,$/;"	e	language:C++	enum:__anonaaa574c00303
+LIT_TUTORIAL_TEXT_STATE_FADE_IN	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_FADE_IN,$/;"	e	language:C++	enum:Lit_Tutorial_Text_State
 LIT_TUTORIAL_TEXT_STATE_FADE_OUT	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_FADE_OUT,$/;"	e	language:C++	enum:__anon3aa070140303
-LIT_TUTORIAL_TEXT_STATE_FADE_OUT	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_FADE_OUT,$/;"	e	language:C++	enum:__anonaaa574c00303
+LIT_TUTORIAL_TEXT_STATE_FADE_OUT	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_FADE_OUT,$/;"	e	language:C++	enum:Lit_Tutorial_Text_State
 LIT_TUTORIAL_TEXT_STATE_INVISIBLE	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_INVISIBLE,$/;"	e	language:C++	enum:__anon3aa070140303
-LIT_TUTORIAL_TEXT_STATE_INVISIBLE	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_INVISIBLE,$/;"	e	language:C++	enum:__anonaaa574c00303
+LIT_TUTORIAL_TEXT_STATE_INVISIBLE	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_INVISIBLE,$/;"	e	language:C++	enum:Lit_Tutorial_Text_State
 LIT_TUTORIAL_TEXT_STATE_VISIBLE	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_VISIBLE,$/;"	e	language:C++	enum:__anon3aa070140303
-LIT_TUTORIAL_TEXT_STATE_VISIBLE	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_VISIBLE,$/;"	e	language:C++	enum:__anonaaa574c00303
+LIT_TUTORIAL_TEXT_STATE_VISIBLE	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_TUTORIAL_TEXT_STATE_VISIBLE,$/;"	e	language:C++	enum:Lit_Tutorial_Text_State
 Lit_Tutorial_Trigger	C:/Users/geral/work/txt/code/game_mode_lit.h	/^typedef B32 (*Lit_Tutorial_Trigger)(struct Lit* m, Platform* pf);$/;"	t	language:C++	typeref:typename:B32 (*)(struct Lit * m,Platform * pf)
 Lit_Tutorial_Trigger	D:/work/git/txt/code/game_mode_lit.h	/^typedef B32 (*Lit_Tutorial_Trigger)(struct Lit* m, Platform* pf);$/;"	t	language:C++	typeref:typename:B32 (*)(struct Lit * m,Platform * pf)
 Lit_Tutorial_Trigger_List	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Trigger_List;$/;"	t	language:C++	typeref:struct:__anon3aa070140408
-Lit_Tutorial_Trigger_List	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Trigger_List;$/;"	t	language:C++	typeref:struct:__anonaaa574c00408
+Lit_Tutorial_Trigger_List	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit_Tutorial_Trigger_List {$/;"	s	language:C++
 lit_update_particles	C:/Users/geral/work/txt/code/game_mode_lit_particles.h	/^lit_update_particles(Lit_Particle_Pool* ps, F32 dt) {$/;"	f	language:C++	typeref:typename:void
 lit_update_particles	D:/work/git/txt/code/game_mode_lit_particles.h	/^lit_update_particles(Lit_Particle_Pool* ps, F32 dt) {$/;"	f	language:C++	typeref:typename:void
 lit_update_player	C:/Users/geral/work/txt/code/game_mode_lit_player.h	/^lit_update_player(Lit_Player* player, $/;"	f	language:C++	typeref:typename:void
@@ -2591,7 +2615,6 @@ load_asset_task	D:/work/git/txt/code/game_assets_2.h	/^load_asset_task(void* con
 Load_Asset_Task	D:/work/git/txt/code/game_assets_2.h	/^struct Load_Asset_Task {$/;"	s	language:C++
 load_bitmap	C:/Users/geral/work/txt/code/game_assets_2.h	/^load_bitmap(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:void
 load_bitmap	D:/work/git/txt/code/game_assets_2.h	/^load_bitmap(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:void
-load_game_assets	D:/work/git/txt/code/game_assets.h	/^load_game_assets(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:B32
 loca	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon802a10330108	typeref:typename:U32
 loca	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
 loca_format	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U16 loca_format;$/;"	m	language:C++	struct:__anon802a10330108	typeref:typename:U16
@@ -2822,9 +2845,9 @@ next_entry_to_read	D:/work/git/txt/code/w32.cpp	/^  U32 volatile next_entry_to_r
 next_entry_to_write	C:/Users/geral/work/txt/code/w32.cpp	/^  U32 volatile next_entry_to_write;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 next_entry_to_write	D:/work/git/txt/code/w32.cpp	/^  U32 volatile next_entry_to_write;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 next_id_to_fade_in	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  U32 next_id_to_fade_in;$/;"	m	language:C++	struct:__anon3aa070140608	typeref:typename:U32
-next_id_to_fade_in	D:/work/git/txt/code/game_mode_lit.h	/^  U32 next_id_to_fade_in;$/;"	m	language:C++	struct:__anonaaa574c00608	typeref:typename:U32
+next_id_to_fade_in	D:/work/git/txt/code/game_mode_lit.h	/^  U32 next_id_to_fade_in;$/;"	m	language:C++	struct:Lit_Tutorial_Text_List	typeref:typename:U32
 next_id_to_fade_out	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  U32 next_id_to_fade_out;$/;"	m	language:C++	struct:__anon3aa070140608	typeref:typename:U32
-next_id_to_fade_out	D:/work/git/txt/code/game_mode_lit.h	/^  U32 next_id_to_fade_out;$/;"	m	language:C++	struct:__anonaaa574c00608	typeref:typename:U32
+next_id_to_fade_out	D:/work/git/txt/code/game_mode_lit.h	/^  U32 next_id_to_fade_out;$/;"	m	language:C++	struct:Lit_Tutorial_Text_List	typeref:typename:U32
 next_state	C:/Users/geral/work/txt/code/game_mode_level_editor.h	/^  Editor_State next_state;$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_State
 next_state	D:/work/git/txt/code/game_mode_level_editor.h	/^  Editor_State next_state;$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_State
 node	C:/Users/geral/work/txt/code/momo_json.h	/^  struct _JSON_Object_Node* node;$/;"	m	language:C++	struct:__anon6e0c605f0108	typeref:struct:_JSON_Object_Node *
@@ -2848,25 +2871,24 @@ obj	D:/work/git/txt/code/momo_json.h	/^    JSON_Object obj;$/;"	m	language:C++	u
 offset_of	C:/Users/geral/work/txt/code/momo_common.h	/^#define offset_of(/;"	d	language:C++
 offset_of	D:/work/git/txt/code/momo_common.h	/^#define offset_of(/;"	d	language:C++
 offset_to_assets	C:/Users/geral/work/txt/code/karu.h	/^  U32 offset_to_assets;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
+offset_to_assets	D:/work/git/txt/code/karu.h	/^  U32 offset_to_assets;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 offset_to_assets	D:/work/git/txt/code/karu2.h	/^  U32 offset_to_assets;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
-offset_to_bitmaps	D:/work/git/txt/code/karu.h	/^  U32 offset_to_bitmaps;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 offset_to_data	C:/Users/geral/work/txt/code/game_assets.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:U32
 offset_to_data	C:/Users/geral/work/txt/code/game_assets_2.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Asset	typeref:typename:U32
 offset_to_data	C:/Users/geral/work/txt/code/karu.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Asset	typeref:typename:U32
 offset_to_data	C:/Users/geral/work/txt/code/karu.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
+offset_to_data	D:/work/git/txt/code/game_assets.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:U32
 offset_to_data	D:/work/git/txt/code/game_assets2.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:U32
 offset_to_data	D:/work/git/txt/code/game_assets_2.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Asset	typeref:typename:U32
-offset_to_data	D:/work/git/txt/code/karu.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Bitmap	typeref:typename:U32
+offset_to_data	D:/work/git/txt/code/karu.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Asset	typeref:typename:U32
 offset_to_data	D:/work/git/txt/code/karu.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
-offset_to_data	D:/work/git/txt/code/karu.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Sound	typeref:typename:U32
 offset_to_data	D:/work/git/txt/code/karu2.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Asset	typeref:typename:U32
 offset_to_data	D:/work/git/txt/code/karu2.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
-offset_to_fonts	D:/work/git/txt/code/karu.h	/^  U32 offset_to_fonts;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 offset_to_groups	C:/Users/geral/work/txt/code/karu.h	/^  U32 offset_to_groups;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
+offset_to_groups	D:/work/git/txt/code/karu.h	/^  U32 offset_to_groups;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 offset_to_groups	D:/work/git/txt/code/karu2.h	/^  U32 offset_to_groups;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
-offset_to_sounds	D:/work/git/txt/code/karu.h	/^  U32 offset_to_sounds;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
-offset_to_sprites	D:/work/git/txt/code/karu.h	/^  U32 offset_to_sprites;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 offset_to_tags	C:/Users/geral/work/txt/code/karu.h	/^  U32 offset_to_tags;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
+offset_to_tags	D:/work/git/txt/code/karu.h	/^  U32 offset_to_tags;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 offset_to_tags	D:/work/git/txt/code/karu2.h	/^  U32 offset_to_tags;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 ogl_begin_frame	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) $/;"	f	language:C++	typeref:typename:void
 ogl_begin_frame	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^static void ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region);$/;"	p	language:C++	typeref:typename:void
@@ -3045,15 +3067,18 @@ one_past_highest_codepoint	D:/work/git/txt/code/game_assets_2.h	/^  U32 one_past
 one_past_last_asset_index	C:/Users/geral/work/txt/code/game_assets.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Game_Asset_Group	typeref:typename:U32
 one_past_last_asset_index	C:/Users/geral/work/txt/code/game_assets_2.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Asset_Group	typeref:typename:U32
 one_past_last_asset_index	C:/Users/geral/work/txt/code/karu.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Karu_Group	typeref:typename:U32
+one_past_last_asset_index	D:/work/git/txt/code/game_assets.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Game_Asset_Group	typeref:typename:U32
 one_past_last_asset_index	D:/work/git/txt/code/game_assets2.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Game_Asset_Group	typeref:typename:U32
 one_past_last_asset_index	D:/work/git/txt/code/game_assets_2.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Asset_Group	typeref:typename:U32
-one_past_last_asset_index	D:/work/git/txt/code/karu.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Karu_Asset_Group	typeref:typename:U32
+one_past_last_asset_index	D:/work/git/txt/code/karu.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Karu_Group	typeref:typename:U32
 one_past_last_asset_index	D:/work/git/txt/code/karu2.h	/^  U32 one_past_last_asset_index;$/;"	m	language:C++	struct:Karu_Group	typeref:typename:U32
 one_past_last_tag_index	C:/Users/geral/work/txt/code/game_assets.h	/^  U32 one_past_last_tag_index;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:U32
 one_past_last_tag_index	C:/Users/geral/work/txt/code/game_assets_2.h	/^  U32 one_past_last_tag_index;$/;"	m	language:C++	struct:Asset	typeref:typename:U32
 one_past_last_tag_index	C:/Users/geral/work/txt/code/karu.h	/^  U32 one_past_last_tag_index;$/;"	m	language:C++	struct:Karu_Asset	typeref:typename:U32
+one_past_last_tag_index	D:/work/git/txt/code/game_assets.h	/^  U32 one_past_last_tag_index;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:U32
 one_past_last_tag_index	D:/work/git/txt/code/game_assets2.h	/^  U32 one_past_last_tag_index;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:U32
 one_past_last_tag_index	D:/work/git/txt/code/game_assets_2.h	/^  U32 one_past_last_tag_index;$/;"	m	language:C++	struct:Asset	typeref:typename:U32
+one_past_last_tag_index	D:/work/git/txt/code/karu.h	/^  U32 one_past_last_tag_index;$/;"	m	language:C++	struct:Karu_Asset	typeref:typename:U32
 one_past_last_tag_index	D:/work/git/txt/code/karu2.h	/^  U32 one_past_last_tag_index;$/;"	m	language:C++	struct:Karu_Asset	typeref:typename:U32
 ope	C:/Users/geral/work/txt/code/meta.cpp	/^  U32 ope;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:U32	file:
 ope	C:/Users/geral/work/txt/code/momo_json.h	/^  U32 ope;$/;"	m	language:C++	struct:__anon6e0c605f0508	typeref:typename:U32
@@ -3163,9 +3188,6 @@ operator ==	D:/work/git/txt/code/momo_vectors.h	/^static B32 operator==(V2 lhs, 
 operator ==	D:/work/git/txt/code/momo_vectors.h	/^static B32 operator==(V2 lhs, V2 rhs);$/;"	p	language:C++	typeref:typename:B32
 operator ==	D:/work/git/txt/code/momo_vectors.h	/^static B32 operator==(V3 lhs, V3 rhs) { return v3_is_close(lhs, rhs); }$/;"	f	language:C++	typeref:typename:B32
 operator ==	D:/work/git/txt/code/momo_vectors.h	/^static B32 operator==(V3 lhs, V3 rhs);$/;"	p	language:C++	typeref:typename:B32
-ope_atlas_font_glyph_id	D:/work/git/txt/code/sui_pack.h	/^  U32 ope_atlas_font_glyph_id;$/;"	m	language:C++	struct:Sui_Packer_Font	typeref:typename:U32
-ope_atlas_font_id	D:/work/git/txt/code/sui_pack.h	/^  U32 ope_atlas_font_id;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
-ope_atlas_sprite_id	D:/work/git/txt/code/sui_pack.h	/^  U32 ope_atlas_sprite_id;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 OS_LINUX	C:/Users/geral/work/txt/code/momo_common.h	/^# define OS_LINUX /;"	d	language:C++
 OS_LINUX	C:/Users/geral/work/txt/code/momo_common.h	/^# define OS_LINUX /;"	d	language:C++
 OS_LINUX	D:/work/git/txt/code/momo_common.h	/^# define OS_LINUX /;"	d	language:C++
@@ -3190,28 +3212,21 @@ p1	D:/work/git/txt/code/game_gfx.h	/^  V2 p0, p1, p2;$/;"	m	language:C++	struct:
 p1	D:/work/git/txt/code/momo_ttf.h	/^  V2 p0, p1;$/;"	m	language:C++	struct:__anon68e2795f0608	typeref:typename:V2
 p2	C:/Users/geral/work/txt/code/game_gfx.h	/^  V2 p0, p1, p2;$/;"	m	language:C++	struct:Gfx_Command_Triangle	typeref:typename:V2
 p2	D:/work/git/txt/code/game_gfx.h	/^  V2 p0, p1, p2;$/;"	m	language:C++	struct:Gfx_Command_Triangle	typeref:typename:V2
-pack_count	D:/work/git/txt/code/sui_pack.h	/^  U32 pack_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 PACK_DEFAULT	C:/Users/geral/work/txt/code/generated_pack_ids.h	/^PACK_DEFAULT = 0,$/;"	e	language:C++	enum:Pack_ID
 PACK_DEFAULT	D:/work/git/txt/code/generated_pack_ids.h	/^PACK_DEFAULT = 0,$/;"	e	language:C++	enum:Pack_ID
 Pack_ID	C:/Users/geral/work/txt/code/generated_pack_ids.h	/^enum Pack_ID {$/;"	g	language:C++
 Pack_ID	D:/work/git/txt/code/generated_pack_ids.h	/^enum Pack_ID {$/;"	g	language:C++
-pack_id_file	D:/work/git/txt/code/sui_pack.h	/^  FILE* pack_id_file;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:FILE *
 Painter	C:/Users/geral/work/txt/code/game_painter.h	/^struct Painter {$/;"	s	language:C++
 Painter	D:/work/git/txt/code/game_painter.h	/^struct Painter {$/;"	s	language:C++
 paint_circle_outline	C:/Users/geral/work/txt/code/game_painter.h	/^paint_circle_outline(Painter* p,$/;"	f	language:C++	typeref:typename:void
-paint_circle_outline	D:/work/git/txt/code/game_painter.h	/^paint_circle_outline(Painter* p,$/;"	f	language:C++	typeref:typename:void
 paint_filled_circle	C:/Users/geral/work/txt/code/game_painter.h	/^paint_filled_circle(Painter* p,$/;"	f	language:C++	typeref:typename:void
-paint_filled_circle	D:/work/git/txt/code/game_painter.h	/^paint_filled_circle(Painter* p,$/;"	f	language:C++	typeref:typename:void
 paint_filled_triangle	C:/Users/geral/work/txt/code/game_painter.h	/^paint_filled_triangle(Painter* p,$/;"	f	language:C++	typeref:typename:void
-paint_filled_triangle	D:/work/git/txt/code/game_painter.h	/^paint_filled_triangle(Painter* p,$/;"	f	language:C++	typeref:typename:void
 paint_line	C:/Users/geral/work/txt/code/game_painter.h	/^paint_line(Painter* p,$/;"	f	language:C++	typeref:typename:void
-paint_line	D:/work/git/txt/code/game_painter.h	/^paint_line(Painter* p,$/;"	f	language:C++	typeref:typename:void
 paint_set_blend	C:/Users/geral/work/txt/code/game_painter.h	/^paint_set_blend(Painter* p, Gfx_Blend_Type src, Gfx_Blend_Type dst) {$/;"	f	language:C++	typeref:typename:void
-paint_set_blend	D:/work/git/txt/code/game_painter.h	/^paint_set_blend(Painter* p, Gfx_Blend_Type src, Gfx_Blend_Type dst) {$/;"	f	language:C++	typeref:typename:void
 paint_sprite	C:/Users/geral/work/txt/code/game_painter.h	/^paint_sprite(Painter* p,$/;"	f	language:C++	typeref:typename:void
-paint_sprite	D:/work/git/txt/code/game_painter.h	/^paint_sprite(Painter* p,$/;"	f	language:C++	typeref:typename:void
+paint_sprite	D:/work/git/txt/code/game_painter.h	/^paint_sprite(Game_Sprite_ID sprite_id,$/;"	f	language:C++	typeref:typename:void
 paint_text	C:/Users/geral/work/txt/code/game_painter.h	/^paint_text(Painter* p,$/;"	f	language:C++	typeref:typename:void
-paint_text	D:/work/git/txt/code/game_painter.h	/^paint_text(Painter* p,$/;"	f	language:C++	typeref:typename:void
+paint_text	D:/work/git/txt/code/game_painter.h	/^paint_text(Game_Font_ID font_id,$/;"	f	language:C++	typeref:typename:void
 particles	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  Lit_Particle_Pool particles;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Particle_Pool
 particles	C:/Users/geral/work/txt/code/game_mode_lit_particles.h	/^  Lit_Particle particles[256];$/;"	m	language:C++	struct:Lit_Particle_Pool	typeref:typename:Lit_Particle[256]
 particles	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Particle_Pool particles;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Particle_Pool
@@ -3233,7 +3248,7 @@ path_count	D:/work/git/txt/code/momo_ttf.h	/^  U32 path_count;$/;"	m	language:C+
 path_lengths	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32* path_lengths;$/;"	m	language:C++	struct:__anon802a10330508	typeref:typename:U32 *
 path_lengths	D:/work/git/txt/code/momo_ttf.h	/^  U32* path_lengths;$/;"	m	language:C++	struct:__anon68e2795f0508	typeref:typename:U32 *
 payloads	C:/Users/geral/work/txt/code/game_gfx.h	/^  Gfx_Texture_Payload payloads[GFX_MAX_TEXTURES];$/;"	m	language:C++	struct:Gfx_Texture_Queue	typeref:typename:Gfx_Texture_Payload[]
-payloads	D:/work/git/txt/code/game_gfx.h	/^  Gfx_Texture_Payload payloads[256];$/;"	m	language:C++	struct:Gfx_Texture_Queue	typeref:typename:Gfx_Texture_Payload[256]
+payloads	D:/work/git/txt/code/game_gfx.h	/^  Gfx_Texture_Payload payloads[GFX_MAX_TEXTURES];$/;"	m	language:C++	struct:Gfx_Texture_Queue	typeref:typename:Gfx_Texture_Payload[]
 payload_count	C:/Users/geral/work/txt/code/game_gfx.h	/^  UMI payload_count;$/;"	m	language:C++	struct:Gfx_Texture_Queue	typeref:typename:UMI
 payload_count	D:/work/git/txt/code/game_gfx.h	/^  UMI payload_count;$/;"	m	language:C++	struct:Gfx_Texture_Queue	typeref:typename:UMI
 percent_f32	C:/Users/geral/work/txt/code/momo_common.h	/^percent_f32(F32 v, F32 min, F32 max) { $/;"	f	language:C++	typeref:typename:F32
@@ -3266,13 +3281,14 @@ pixels	C:/Users/geral/work/txt/code/sui_pack.h	/^  U32* pixels;$/;"	m	language:C
 pixels	D:/work/git/txt/code/karu_pack2.h	/^  U32* pixels;$/;"	m	language:C++	struct:Karu_Bitmap_Source	typeref:typename:U32 *
 pixels	D:/work/git/txt/code/momo_image.h	/^  U32* pixels;$/;"	m	language:C++	struct:__anoncc1655140108	typeref:typename:U32 *
 pixels	D:/work/git/txt/code/pack_assets.cpp	/^  U32* pixels;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32 *	file:
-pixels	D:/work/git/txt/code/sui_pack.h	/^  U32* pixels;$/;"	m	language:C++	struct:Sui_Packer_Bitmap	typeref:typename:U32 *
+pixels	D:/work/git/txt/code/sui_pack.h	/^  U32* pixels;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32 *
 PI_32	C:/Users/geral/work/txt/code/momo_common.h	/^#define PI_32 /;"	d	language:C++
 PI_32	D:/work/git/txt/code/momo_common.h	/^#define PI_32 /;"	d	language:C++
 PI_64	C:/Users/geral/work/txt/code/momo_common.h	/^#define PI_64 /;"	d	language:C++
 PI_64	D:/work/git/txt/code/momo_common.h	/^#define PI_64 /;"	d	language:C++
 Platform	C:/Users/geral/work/txt/code/game_platform.h	/^typedef struct Platform {$/;"	s	language:C++
 Platform	C:/Users/geral/work/txt/code/game_platform.h	/^}Platform;$/;"	t	language:C++	typeref:struct:Platform
+platform	D:/work/git/txt/code/game.h	/^static struct Platform* platform;$/;"	v	language:C++	typeref:struct:Platform *
 Platform	D:/work/git/txt/code/game_platform.h	/^typedef struct Platform {$/;"	s	language:C++
 Platform	D:/work/git/txt/code/game_platform.h	/^}Platform;$/;"	t	language:C++	typeref:struct:Platform
 Platform_Add_Task	C:/Users/geral/work/txt/code/game_platform.h	/^typedef void Platform_Add_Task(Platform_Task_Callback callback, void* data);$/;"	t	language:C++	typeref:typename:void ()(Platform_Task_Callback callback,void * data)
@@ -3382,11 +3398,11 @@ pos	D:/work/git/txt/code/momo_streams.h	/^  UMI pos;$/;"	m	language:C++	struct:S
 pos_x	C:/Users/geral/work/txt/code/game_gfx.h	/^  F32 pos_x, pos_y;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:F32
 pos_x	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  F32 pos_x;$/;"	m	language:C++	struct:__anon3aa070140508	typeref:typename:F32
 pos_x	D:/work/git/txt/code/game_gfx.h	/^  F32 pos_x, pos_y;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:F32
-pos_x	D:/work/git/txt/code/game_mode_lit.h	/^  F32 pos_x;$/;"	m	language:C++	struct:__anonaaa574c00508	typeref:typename:F32
+pos_x	D:/work/git/txt/code/game_mode_lit.h	/^  F32 pos_x;$/;"	m	language:C++	struct:Lit_Tutorial_Text	typeref:typename:F32
 pos_y	C:/Users/geral/work/txt/code/game_gfx.h	/^  F32 pos_x, pos_y;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:F32
 pos_y	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  F32 pos_y;$/;"	m	language:C++	struct:__anon3aa070140508	typeref:typename:F32
 pos_y	D:/work/git/txt/code/game_gfx.h	/^  F32 pos_x, pos_y;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:F32
-pos_y	D:/work/git/txt/code/game_mode_lit.h	/^  F32 pos_y;$/;"	m	language:C++	struct:__anonaaa574c00508	typeref:typename:F32
+pos_y	D:/work/git/txt/code/game_mode_lit.h	/^  F32 pos_y;$/;"	m	language:C++	struct:Lit_Tutorial_Text	typeref:typename:F32
 pow_f32	C:/Users/geral/work/txt/code/momo_intrinsics.h	/^pow_f32(F32 b, F32 e){$/;"	f	language:C++	typeref:typename:F32
 pow_F32	C:/Users/geral/work/txt/code/momo_intrinsics.h	/^static F32 pow_F32(F32 v, F32 e);$/;"	p	language:C++	typeref:typename:F32
 pow_f32	D:/work/git/txt/code/momo_intrinsics.h	/^pow_f32(F32 b, F32 e){$/;"	f	language:C++	typeref:typename:F32
@@ -3420,6 +3436,7 @@ profiler	C:/Users/geral/work/txt/code/game_platform.h	/^  Profiler* profiler; $/
 Profiler	C:/Users/geral/work/txt/code/game_profiler.h	/^typedef struct Profiler {$/;"	s	language:C++
 Profiler	C:/Users/geral/work/txt/code/game_profiler.h	/^} Profiler;$/;"	t	language:C++	typeref:struct:Profiler
 profiler	D:/work/git/txt/code/game.h	/^  Profiler profiler;$/;"	m	language:C++	struct:Game	typeref:typename:Profiler
+profiler	D:/work/git/txt/code/game.h	/^static struct Profiler* profiler;$/;"	v	language:C++	typeref:struct:Profiler *
 profiler	D:/work/git/txt/code/game_platform.h	/^  Profiler* profiler; $/;"	m	language:C++	struct:Platform	typeref:typename:Profiler *
 Profiler	D:/work/git/txt/code/game_profiler.h	/^typedef struct Profiler {$/;"	s	language:C++
 Profiler	D:/work/git/txt/code/game_profiler.h	/^} Profiler;$/;"	t	language:C++	typeref:struct:Profiler
@@ -3447,8 +3464,6 @@ ptr_to_int	C:/Users/geral/work/txt/code/momo_common.h	/^ptr_to_int(void* p) { $/
 ptr_to_int	D:/work/git/txt/code/momo_common.h	/^ptr_to_int(void* p) { $/;"	f	language:C++	typeref:typename:UMI
 pts	C:/Users/geral/work/txt/code/momo_shapes.h	/^  V2 pts[3];$/;"	m	language:C++	struct:__anon01d029e90908	typeref:typename:V2[3]
 pts	D:/work/git/txt/code/momo_shapes.h	/^  V2 pts[3];$/;"	m	language:C++	struct:__anon093413950908	typeref:typename:V2[3]
-push_atlas_font_glyph	D:/work/git/txt/code/sui_pack.h	/^push_atlas_font_glyph(Sui_Packer* p, U32 codepoint) {$/;"	f	language:C++	typeref:typename:void
-push_atlas_sprite	D:/work/git/txt/code/sui_pack.h	/^push_atlas_sprite(Sui_Packer* p, const char* id_name, const char* file_name) {$/;"	f	language:C++	typeref:typename:void
 push_edge	C:/Users/geral/work/txt/code/game_mode_level_editor.h	/^static void push_edge(Level_Mode* m, UMI min, UMI max);$/;"	p	language:C++	typeref:typename:void
 push_edge	D:/work/git/txt/code/game_mode_level_editor.h	/^static void push_edge(Level_Mode* m, UMI min, UMI max);$/;"	p	language:C++	typeref:typename:void
 push_light	C:/Users/geral/work/txt/code/game_mode_level_editor.h	/^static Light* push_light(Level_Mode* m, V2 pos, U32 color);$/;"	p	language:C++	typeref:typename:Light *
@@ -3499,8 +3514,6 @@ rec2_width	D:/work/git/txt/code/momo_shapes.h	/^rec2_width(Rect2 r) {$/;"	f	lang
 rec2_width	D:/work/git/txt/code/momo_shapes.h	/^static F32 rec2_width(Rect2 lhs);$/;"	p	language:C++	typeref:typename:F32
 rect	C:/Users/geral/work/txt/code/sui_atlas.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Atlas_Sprite	typeref:typename:RP_Rect *
 rect	D:/work/git/txt/code/sui_atlas.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Atlas_Sprite	typeref:typename:RP_Rect *
-rect	D:/work/git/txt/code/sui_pack.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Packer_Font_Glyph	typeref:typename:RP_Rect *
-rect	D:/work/git/txt/code/sui_pack.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Packer_Sprite	typeref:typename:RP_Rect *
 Rect2	C:/Users/geral/work/txt/code/momo_shapes.h	/^}Rect2;$/;"	t	language:C++	typeref:struct:__anon01d029e90108
 Rect2	D:/work/git/txt/code/momo_shapes.h	/^}Rect2;$/;"	t	language:C++	typeref:struct:__anon093413950108
 Rect2S	C:/Users/geral/work/txt/code/momo_shapes.h	/^}Rect2S;$/;"	t	language:C++	typeref:struct:__anon01d029e90208
@@ -3526,7 +3539,7 @@ remainders	D:/work/git/txt/code/momo_crc.h	/^	U8 remainders[256];$/;"	m	language
 renderer_bitmap_id	C:/Users/geral/work/txt/code/game_assets_2.h	/^  U32 renderer_bitmap_id;$/;"	m	language:C++	struct:Bitmap_Asset	typeref:typename:U32
 renderer_bitmap_id	D:/work/git/txt/code/game_assets_2.h	/^  U32 renderer_bitmap_id;$/;"	m	language:C++	struct:Bitmap_Asset	typeref:typename:U32
 renderer_texture_handle	C:/Users/geral/work/txt/code/game_assets.h	/^  U32 renderer_texture_handle;$/;"	m	language:C++	struct:Game_Bitmap	typeref:typename:U32
-renderer_texture_handle	D:/work/git/txt/code/game_assets.h	/^  U32 renderer_texture_handle;$/;"	m	language:C++	struct:Bitmap_Asset	typeref:typename:U32
+renderer_texture_handle	D:/work/git/txt/code/game_assets.h	/^  U32 renderer_texture_handle;$/;"	m	language:C++	struct:Game_Bitmap	typeref:typename:U32
 renderer_texture_handle	D:/work/git/txt/code/game_assets2.h	/^  U32 renderer_texture_handle;$/;"	m	language:C++	struct:Game_Bitmap	typeref:typename:U32
 render_editor	C:/Users/geral/work/txt/code/game_mode_level_editor.cpp	/^render_editor(Editor* e,$/;"	f	language:C++	typeref:typename:void	file:
 render_editor	D:/work/git/txt/code/game_mode_level_editor.cpp	/^render_editor(Editor* e,$/;"	f	language:C++	typeref:typename:void	file:
@@ -3720,8 +3733,7 @@ semaphore	C:/Users/geral/work/txt/code/w32.cpp	/^  HANDLE semaphore; $/;"	m	lang
 semaphore	D:/work/git/txt/code/w32.cpp	/^  HANDLE semaphore; $/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:HANDLE	file:
 sensors	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  Lit_Sensor_List sensors;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Sensor_List
 sensors	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Sensor_List sensors;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Sensor_List
-set_view	D:/work/git/txt/code/game_painter.h	/^set_view(Painter* p, F32 canvas_width, F32 canvas_height) {$/;"	f	language:C++	typeref:typename:void
-set_zoom	D:/work/git/txt/code/game_painter.h	/^set_zoom(Painter* p, F32 zoom_level) {$/;"	f	language:C++	typeref:typename:void
+set_match_entry	D:/work/git/txt/code/game_assets.h	/^set_match_entry(Game_Asset_Match* vec, $/;"	f	language:C++	typeref:typename:void
 shader	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon12d34a900808	typeref:typename:GLuint
 shader	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon12d34a900908	typeref:typename:GLuint
 shader	D:/work/git/txt/code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon982c2a3c0808	typeref:typename:GLuint
@@ -3785,19 +3797,15 @@ snapshot_index	C:/Users/geral/work/txt/code/game_profiler.h	/^  U32 snapshot_ind
 snapshot_index	D:/work/git/txt/code/game_profiler.h	/^  U32 snapshot_index;$/;"	m	language:C++	struct:Profiler	typeref:typename:U32
 Sort_Entry	C:/Users/geral/work/txt/code/momo_sort.h	/^} Sort_Entry;$/;"	t	language:C++	typeref:struct:__anon82c42aad0108
 Sort_Entry	D:/work/git/txt/code/momo_sort.h	/^} Sort_Entry;$/;"	t	language:C++	typeref:struct:__anon8289b9590108
-sounds	D:/work/git/txt/code/sui_pack.h	/^  Sui_Packer_Sound sounds[64];$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Sui_Packer_Sound[64]
-sound_count	D:/work/git/txt/code/karu.h	/^  U32 sound_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
-sound_count	D:/work/git/txt/code/sui_pack.h	/^  U32 sound_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 Sound_ID	C:/Users/geral/work/txt/code/generated_sound_ids.h	/^enum Sound_ID {$/;"	g	language:C++
 Sound_ID	D:/work/git/txt/code/generated_sound_ids.h	/^enum Sound_ID {$/;"	g	language:C++
-sound_id_file	D:/work/git/txt/code/sui_pack.h	/^  FILE* sound_id_file;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:FILE *
-sound_id_name	D:/work/git/txt/code/sui_pack.h	/^  const char* sound_id_name;$/;"	m	language:C++	struct:Sui_Packer_Sound	typeref:typename:const char *
 source	C:/Users/geral/work/txt/code/karu_pack2.h	/^  Karu_Source* source;$/;"	m	language:C++	struct:_Karu_Packer_Added_Entry	typeref:typename:Karu_Source *
 source	D:/work/git/txt/code/karu_pack2.h	/^  Karu_Source* source;$/;"	m	language:C++	struct:_Karu_Packer_Added_Entry	typeref:typename:Karu_Source *
 sources	C:/Users/geral/work/txt/code/karu_pack2.h	/^  Karu_Source sources[1024]; \/\/ additional data for assets$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:Karu_Source[1024]
 sources	C:/Users/geral/work/txt/code/sui_pack.h	/^  Sui_Packer_Source sources[1024]; \/\/ additional data for assets$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Sui_Packer_Source[1024]
 sources	D:/work/git/txt/code/karu_pack2.h	/^  Karu_Source sources[1024]; \/\/ additional data for assets$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:Karu_Source[1024]
 sources	D:/work/git/txt/code/pack_assets.cpp	/^  Sui_Packer_Source sources[1024]; \/\/ additional data for assets$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Sui_Packer_Source[1024]	file:
+sources	D:/work/git/txt/code/sui_pack.h	/^  Sui_Packer_Source sources[1024]; \/\/ additional data for assets$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Sui_Packer_Source[1024]
 Splash	C:/Users/geral/work/txt/code/game_mode_splash.h	/^struct Splash {$/;"	s	language:C++
 Splash	D:/work/git/txt/code/game_mode_splash.h	/^struct Splash {$/;"	s	language:C++
 splash_tick	C:/Users/geral/work/txt/code/game_mode_splash.h	/^splash_tick(Game* game,$/;"	f	language:C++	typeref:typename:void
@@ -3807,16 +3815,16 @@ sprite	C:/Users/geral/work/txt/code/karu.h	/^    Karu_Sprite sprite;$/;"	m	langu
 sprite	C:/Users/geral/work/txt/code/sui_atlas.h	/^    Sui_Atlas_Sprite_Context sprite;$/;"	m	language:C++	union:Sui_Atlas_Context::__anonc12ac0d3010a	typeref:typename:Sui_Atlas_Sprite_Context
 sprite	C:/Users/geral/work/txt/code/sui_atlas.h	/^  Sui_Atlas_Sprite* sprite;$/;"	m	language:C++	struct:Sui_Atlas_Sprite_Context	typeref:typename:Sui_Atlas_Sprite *
 sprite	C:/Users/geral/work/txt/code/sui_pack.h	/^    Sui_Packer_Source_Sprite sprite; $/;"	m	language:C++	union:Sui_Packer_Source::__anonf8efa15d010a	typeref:typename:Sui_Packer_Source_Sprite
+sprite	D:/work/git/txt/code/game_assets.h	/^    Game_Sprite sprite;$/;"	m	language:C++	union:Game_Asset::__anon329ebfe6020a	typeref:typename:Game_Sprite
 sprite	D:/work/git/txt/code/game_assets2.h	/^    Game_Sprite sprite;$/;"	m	language:C++	union:Game_Asset::__anon8676c698010a	typeref:typename:Game_Sprite
+sprite	D:/work/git/txt/code/karu.h	/^    Karu_Sprite sprite;$/;"	m	language:C++	union:Karu_Asset::__anon93330e6d010a	typeref:typename:Karu_Sprite
 sprite	D:/work/git/txt/code/karu2.h	/^    Karu_Sprite sprite;$/;"	m	language:C++	union:Karu_Asset::__anonf994e5ff010a	typeref:typename:Karu_Sprite
 sprite	D:/work/git/txt/code/pack_assets.cpp	/^    Sui_Packer_Source_Sprite sprite; $/;"	m	language:C++	union:Sui_Packer_Source::__anon1ecef806010a	typeref:typename:Sui_Packer_Source_Sprite	file:
 sprite	D:/work/git/txt/code/sui_atlas.h	/^    Sui_Atlas_Sprite_Context sprite;$/;"	m	language:C++	union:Sui_Atlas_Context::__anonc0f04f7f010a	typeref:typename:Sui_Atlas_Sprite_Context
 sprite	D:/work/git/txt/code/sui_atlas.h	/^  Sui_Atlas_Sprite* sprite;$/;"	m	language:C++	struct:Sui_Atlas_Sprite_Context	typeref:typename:Sui_Atlas_Sprite *
+sprite	D:/work/git/txt/code/sui_pack.h	/^    Sui_Packer_Source_Sprite sprite; $/;"	m	language:C++	union:Sui_Packer_Source::__anone1a80a89010a	typeref:typename:Sui_Packer_Source_Sprite
 sprites	C:/Users/geral/work/txt/code/sui_atlas.h	/^  Sui_Atlas_Sprite sprites[128];$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:Sui_Atlas_Sprite[128]
-sprites	D:/work/git/txt/code/game_assets.h	/^  Sprite_Asset* sprites;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Sprite_Asset *
 sprites	D:/work/git/txt/code/sui_atlas.h	/^  Sui_Atlas_Sprite sprites[128];$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:Sui_Atlas_Sprite[128]
-sprites	D:/work/git/txt/code/sui_pack.h	/^  Sui_Packer_Sprite sprites[128];$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Sui_Packer_Sprite[128]
-Sprite_Asset	D:/work/git/txt/code/game_assets.h	/^struct Sprite_Asset {$/;"	s	language:C++
 Sprite_Asset_ID	C:/Users/geral/work/txt/code/game_assets_2.h	/^struct Sprite_Asset_ID { U32 value; };$/;"	s	language:C++
 Sprite_Asset_ID	D:/work/git/txt/code/game_assets_2.h	/^struct Sprite_Asset_ID { U32 value; };$/;"	s	language:C++
 sprite_batch	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^  Sprite_Batch sprite_batch;$/;"	m	language:C++	struct:Opengl	typeref:typename:Sprite_Batch
@@ -3832,18 +3840,13 @@ SPRITE_BULLET_DOT	D:/work/git/txt/code/generated_sprite_ids.h	/^SPRITE_BULLET_DO
 SPRITE_CIRCLE	C:/Users/geral/work/txt/code/generated_sprite_ids.h	/^SPRITE_CIRCLE = PACK_DEFAULT << 16 | 5,$/;"	e	language:C++	enum:Sprite_ID
 SPRITE_CIRCLE	D:/work/git/txt/code/generated_sprite_ids.h	/^SPRITE_CIRCLE = PACK_DEFAULT << 16 | 5,$/;"	e	language:C++	enum:Sprite_ID
 sprite_count	C:/Users/geral/work/txt/code/sui_atlas.h	/^  U32 sprite_count;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:U32
-sprite_count	D:/work/git/txt/code/game_assets.h	/^  U32 sprite_count;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
-sprite_count	D:/work/git/txt/code/karu.h	/^  U32 sprite_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 sprite_count	D:/work/git/txt/code/sui_atlas.h	/^  U32 sprite_count;$/;"	m	language:C++	struct:Sui_Atlas	typeref:typename:U32
-sprite_count	D:/work/git/txt/code/sui_pack.h	/^  U32 sprite_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 sprite_id	C:/Users/geral/work/txt/code/game_mode_level_editor.h	/^  Sprite_ID sprite_id;$/;"	m	language:C++	struct:Editor_Toolbar_Button	typeref:typename:Sprite_ID
 sprite_id	C:/Users/geral/work/txt/code/game_mode_lit_particles.h	/^  Game_Sprite_ID sprite_id;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:Game_Sprite_ID
 Sprite_ID	C:/Users/geral/work/txt/code/generated_sprite_ids.h	/^enum Sprite_ID {$/;"	g	language:C++
 sprite_id	D:/work/git/txt/code/game_mode_level_editor.h	/^  Sprite_ID sprite_id;$/;"	m	language:C++	struct:Editor_Toolbar_Button	typeref:typename:Sprite_ID
 sprite_id	D:/work/git/txt/code/game_mode_lit_particles.h	/^  Game_Sprite_ID sprite_id;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:Game_Sprite_ID
-sprite_id	D:/work/git/txt/code/game_mode_lit_player.h	/^  Game_Sprite_ID sprite_id;$/;"	m	language:C++	struct:Lit_Player	typeref:typename:Game_Sprite_ID
 Sprite_ID	D:/work/git/txt/code/generated_sprite_ids.h	/^enum Sprite_ID {$/;"	g	language:C++
-sprite_id_file	D:/work/git/txt/code/sui_pack.h	/^  FILE* sprite_id_file;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:FILE *
 SPRITE_PLAYER_BLACK	C:/Users/geral/work/txt/code/generated_sprite_ids.h	/^SPRITE_PLAYER_BLACK = PACK_DEFAULT << 16 | 3,$/;"	e	language:C++	enum:Sprite_ID
 SPRITE_PLAYER_BLACK	D:/work/git/txt/code/generated_sprite_ids.h	/^SPRITE_PLAYER_BLACK = PACK_DEFAULT << 16 | 3,$/;"	e	language:C++	enum:Sprite_ID
 SPRITE_PLAYER_WHITE	C:/Users/geral/work/txt/code/generated_sprite_ids.h	/^SPRITE_PLAYER_WHITE = PACK_DEFAULT << 16 | 4,$/;"	e	language:C++	enum:Sprite_ID
@@ -3897,7 +3900,7 @@ start_cycles	D:/work/git/txt/code/game_profiler.h	/^  U32 start_cycles;$/;"	m	la
 start_hits	C:/Users/geral/work/txt/code/game_profiler.h	/^  U32 start_hits;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:U32
 start_hits	D:/work/git/txt/code/game_profiler.h	/^  U32 start_hits;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:U32
 start_pt	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  V2 start_pt;$/;"	m	language:C++	struct:__anon3aa070140108	typeref:typename:V2
-start_pt	D:/work/git/txt/code/game_mode_lit.h	/^  V2 start_pt;$/;"	m	language:C++	struct:__anonaaa574c00108	typeref:typename:V2
+start_pt	D:/work/git/txt/code/game_mode_lit.h	/^  V2 start_pt;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:V2
 Stat	C:/Users/geral/work/txt/code/game_profiler_rendering.h	/^struct Stat {$/;"	s	language:C++
 Stat	D:/work/git/txt/code/game_profiler_rendering.h	/^struct Stat {$/;"	s	language:C++
 state	C:/Users/geral/work/txt/code/game_assets.h	/^  Game_Asset_State state;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:Game_Asset_State
@@ -3906,11 +3909,12 @@ state	C:/Users/geral/work/txt/code/game_gfx.h	/^  volatile Gfx_Texture_Payload_S
 state	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  Lit_State_Type state;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_State_Type
 state	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Text_State state; $/;"	m	language:C++	struct:__anon3aa070140508	typeref:typename:Lit_Tutorial_Text_State
 state	C:/Users/geral/work/txt/code/meta.cpp	/^  U32 state; \/\/ $/;"	m	language:C++	struct:Profiler_Codegen	typeref:typename:U32	file:
+state	D:/work/git/txt/code/game_assets.h	/^  Game_Asset_State state;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:Game_Asset_State
 state	D:/work/git/txt/code/game_assets2.h	/^  Game_Asset_State state;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:Game_Asset_State
 state	D:/work/git/txt/code/game_assets_2.h	/^  Asset_State state;$/;"	m	language:C++	struct:Asset	typeref:typename:Asset_State
 state	D:/work/git/txt/code/game_gfx.h	/^  volatile Gfx_Texture_Payload_State state;$/;"	m	language:C++	struct:Gfx_Texture_Payload	typeref:typename:volatile Gfx_Texture_Payload_State
 state	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_State_Type state;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_State_Type
-state	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Text_State state; $/;"	m	language:C++	struct:__anonaaa574c00508	typeref:typename:Lit_Tutorial_Text_State
+state	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Text_State state; $/;"	m	language:C++	struct:Lit_Tutorial_Text	typeref:typename:Lit_Tutorial_Text_State
 state	D:/work/git/txt/code/meta.cpp	/^  U32 state; \/\/ $/;"	m	language:C++	struct:Profiler_Codegen	typeref:typename:U32	file:
 state_btns	C:/Users/geral/work/txt/code/game_mode_level_editor.h	/^  Editor_Toolbar_Button state_btns[EDITOR_STATE_MAX];$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_Toolbar_Button[]
 state_btns	D:/work/git/txt/code/game_mode_level_editor.h	/^  Editor_Toolbar_Button state_btns[EDITOR_STATE_MAX];$/;"	m	language:C++	struct:Editor	typeref:typename:Editor_Toolbar_Button[]
@@ -3920,7 +3924,7 @@ str	C:/Users/geral/work/txt/code/game_console.h	/^  String8 str;$/;"	m	language:
 str	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  String8 str;$/;"	m	language:C++	struct:__anon3aa070140508	typeref:typename:String8
 str	C:/Users/geral/work/txt/code/momo_strings.h	/^		String8 str;$/;"	m	language:C++	union:__anon5bd2b46f0208::__anon5bd2b46f030a	typeref:typename:String8
 str	D:/work/git/txt/code/game_console.h	/^  String8 str;$/;"	m	language:C++	struct:Console_Line	typeref:typename:String8
-str	D:/work/git/txt/code/game_mode_lit.h	/^  String8 str;$/;"	m	language:C++	struct:__anonaaa574c00508	typeref:typename:String8
+str	D:/work/git/txt/code/game_mode_lit.h	/^  String8 str;$/;"	m	language:C++	struct:Lit_Tutorial_Text	typeref:typename:String8
 str	D:/work/git/txt/code/momo_strings.h	/^		String8 str;$/;"	m	language:C++	union:__anon4fb3d39b0208::__anon4fb3d39b030a	typeref:typename:String8
 str8	C:/Users/geral/work/txt/code/momo_strings.h	/^static String8 str8(U8* str, UMI size);$/;"	p	language:C++	typeref:typename:String8
 str8	C:/Users/geral/work/txt/code/momo_strings.h	/^str8(U8* str, UMI size) {$/;"	f	language:C++	typeref:typename:String8
@@ -4006,7 +4010,6 @@ Sui_Atlas_Sprite	C:/Users/geral/work/txt/code/sui_atlas.h	/^struct Sui_Atlas_Spr
 Sui_Atlas_Sprite	D:/work/git/txt/code/sui_atlas.h	/^struct Sui_Atlas_Sprite {$/;"	s	language:C++
 Sui_Atlas_Sprite_Context	C:/Users/geral/work/txt/code/sui_atlas.h	/^struct Sui_Atlas_Sprite_Context {$/;"	s	language:C++
 Sui_Atlas_Sprite_Context	D:/work/git/txt/code/sui_atlas.h	/^struct Sui_Atlas_Sprite_Context {$/;"	s	language:C++
-sui_check_death	D:/work/git/txt/code/sui.cpp	/^#define sui_check_death(/;"	d	language:C++	file:
 sui_code_dir	C:/Users/geral/work/txt/code/sui.h	/^#define sui_code_dir(/;"	d	language:C++
 sui_code_dir	D:/work/git/txt/code/sui.h	/^#define sui_code_dir(/;"	d	language:C++
 sui_create_log_section_until_scope	C:/Users/geral/work/txt/code/sui.h	/^#define sui_create_log_section_until_scope /;"	d	language:C++
@@ -4024,44 +4027,54 @@ sui_malloc	D:/work/git/txt/code/sui.h	/^sui_malloc(UMI size) {$/;"	f	language:C+
 Sui_Packer	C:/Users/geral/work/txt/code/sui_pack.h	/^struct Sui_Packer {$/;"	s	language:C++
 Sui_Packer	D:/work/git/txt/code/pack_assets.cpp	/^struct Sui_Packer {$/;"	s	language:C++	file:
 Sui_Packer	D:/work/git/txt/code/sui_pack.h	/^struct Sui_Packer {$/;"	s	language:C++
-Sui_Packer_Bitmap	D:/work/git/txt/code/sui_pack.h	/^struct Sui_Packer_Bitmap {$/;"	s	language:C++
-Sui_Packer_Font	D:/work/git/txt/code/sui_pack.h	/^struct Sui_Packer_Font {$/;"	s	language:C++
-Sui_Packer_Font_Glyph	D:/work/git/txt/code/sui_pack.h	/^struct Sui_Packer_Font_Glyph{ $/;"	s	language:C++
-Sui_Packer_Sound	D:/work/git/txt/code/sui_pack.h	/^struct Sui_Packer_Sound {$/;"	s	language:C++
 Sui_Packer_Source	C:/Users/geral/work/txt/code/sui_pack.h	/^struct Sui_Packer_Source {$/;"	s	language:C++
 Sui_Packer_Source	D:/work/git/txt/code/pack_assets.cpp	/^struct Sui_Packer_Source {$/;"	s	language:C++	file:
+Sui_Packer_Source	D:/work/git/txt/code/sui_pack.h	/^struct Sui_Packer_Source {$/;"	s	language:C++
 Sui_Packer_Source_Bitmap	C:/Users/geral/work/txt/code/sui_pack.h	/^struct Sui_Packer_Source_Bitmap {$/;"	s	language:C++
 Sui_Packer_Source_Bitmap	D:/work/git/txt/code/pack_assets.cpp	/^struct Sui_Packer_Source_Bitmap {$/;"	s	language:C++	file:
+Sui_Packer_Source_Bitmap	D:/work/git/txt/code/sui_pack.h	/^struct Sui_Packer_Source_Bitmap {$/;"	s	language:C++
 Sui_Packer_Source_Font	C:/Users/geral/work/txt/code/sui_pack.h	/^struct Sui_Packer_Source_Font {$/;"	s	language:C++
 Sui_Packer_Source_Font	D:/work/git/txt/code/pack_assets.cpp	/^struct Sui_Packer_Source_Font {$/;"	s	language:C++	file:
+Sui_Packer_Source_Font	D:/work/git/txt/code/sui_pack.h	/^struct Sui_Packer_Source_Font {$/;"	s	language:C++
 Sui_Packer_Source_Sprite	C:/Users/geral/work/txt/code/sui_pack.h	/^struct Sui_Packer_Source_Sprite {$/;"	s	language:C++
 Sui_Packer_Source_Sprite	D:/work/git/txt/code/pack_assets.cpp	/^struct Sui_Packer_Source_Sprite {$/;"	s	language:C++	file:
+Sui_Packer_Source_Sprite	D:/work/git/txt/code/sui_pack.h	/^struct Sui_Packer_Source_Sprite {$/;"	s	language:C++
 Sui_Packer_Source_Type	C:/Users/geral/work/txt/code/sui_pack.h	/^enum Sui_Packer_Source_Type {$/;"	g	language:C++
 Sui_Packer_Source_Type	D:/work/git/txt/code/pack_assets.cpp	/^enum Sui_Packer_Source_Type {$/;"	g	language:C++	file:
+Sui_Packer_Source_Type	D:/work/git/txt/code/sui_pack.h	/^enum Sui_Packer_Source_Type {$/;"	g	language:C++
 SUI_PACKER_SOURCE_TYPE_BITMAP	C:/Users/geral/work/txt/code/sui_pack.h	/^  SUI_PACKER_SOURCE_TYPE_BITMAP,$/;"	e	language:C++	enum:Sui_Packer_Source_Type
 SUI_PACKER_SOURCE_TYPE_BITMAP	D:/work/git/txt/code/pack_assets.cpp	/^  SUI_PACKER_SOURCE_TYPE_BITMAP,$/;"	e	language:C++	enum:Sui_Packer_Source_Type	file:
+SUI_PACKER_SOURCE_TYPE_BITMAP	D:/work/git/txt/code/sui_pack.h	/^  SUI_PACKER_SOURCE_TYPE_BITMAP,$/;"	e	language:C++	enum:Sui_Packer_Source_Type
 SUI_PACKER_SOURCE_TYPE_FONT	C:/Users/geral/work/txt/code/sui_pack.h	/^  SUI_PACKER_SOURCE_TYPE_FONT,$/;"	e	language:C++	enum:Sui_Packer_Source_Type
 SUI_PACKER_SOURCE_TYPE_FONT	D:/work/git/txt/code/pack_assets.cpp	/^  SUI_PACKER_SOURCE_TYPE_FONT,$/;"	e	language:C++	enum:Sui_Packer_Source_Type	file:
+SUI_PACKER_SOURCE_TYPE_FONT	D:/work/git/txt/code/sui_pack.h	/^  SUI_PACKER_SOURCE_TYPE_FONT,$/;"	e	language:C++	enum:Sui_Packer_Source_Type
 SUI_PACKER_SOURCE_TYPE_SPRITE	C:/Users/geral/work/txt/code/sui_pack.h	/^  SUI_PACKER_SOURCE_TYPE_SPRITE,$/;"	e	language:C++	enum:Sui_Packer_Source_Type
 SUI_PACKER_SOURCE_TYPE_SPRITE	D:/work/git/txt/code/pack_assets.cpp	/^  SUI_PACKER_SOURCE_TYPE_SPRITE,$/;"	e	language:C++	enum:Sui_Packer_Source_Type	file:
-Sui_Packer_Sprite	D:/work/git/txt/code/sui_pack.h	/^struct Sui_Packer_Sprite {$/;"	s	language:C++
+SUI_PACKER_SOURCE_TYPE_SPRITE	D:/work/git/txt/code/sui_pack.h	/^  SUI_PACKER_SOURCE_TYPE_SPRITE,$/;"	e	language:C++	enum:Sui_Packer_Source_Type
 sui_pack_add_tag	C:/Users/geral/work/txt/code/sui_pack.h	/^sui_pack_add_tag(Sui_Packer* p, Game_Asset_Tag_Type tag_type, F32 value) {$/;"	f	language:C++	typeref:typename:void
 sui_pack_add_tag	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_add_tag(Sui_Packer* p, Game_Asset_Tag_Type tag_type, F32 value) {$/;"	f	language:C++	typeref:typename:void	file:
 sui_pack_begin	C:/Users/geral/work/txt/code/sui_pack.h	/^sui_pack_begin(Sui_Packer* p) {$/;"	f	language:C++	typeref:typename:void
 sui_pack_begin	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_begin(Sui_Packer* p) {$/;"	f	language:C++	typeref:typename:void	file:
+sui_pack_begin	D:/work/git/txt/code/sui_pack.h	/^sui_pack_begin(Sui_Packer* p) {$/;"	f	language:C++	typeref:typename:void
 sui_pack_begin_group	C:/Users/geral/work/txt/code/sui_pack.h	/^sui_pack_begin_group(Sui_Packer* p, Game_Asset_Group_Type group) $/;"	f	language:C++	typeref:typename:void
 sui_pack_begin_group	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_begin_group(Sui_Packer* p, Game_Asset_Group_Type group) $/;"	f	language:C++	typeref:typename:void	file:
+sui_pack_begin_group	D:/work/git/txt/code/sui_pack.h	/^sui_pack_begin_group(Sui_Packer* p, Game_Asset_Group_Type group) $/;"	f	language:C++	typeref:typename:void
 sui_pack_end	C:/Users/geral/work/txt/code/sui_pack.h	/^sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena) $/;"	f	language:C++	typeref:typename:void
 sui_pack_end	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena) $/;"	f	language:C++	typeref:typename:void	file:
+sui_pack_end	D:/work/git/txt/code/sui_pack.h	/^sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena) $/;"	f	language:C++	typeref:typename:void
 sui_pack_end_group	C:/Users/geral/work/txt/code/sui_pack.h	/^sui_pack_end_group(Sui_Packer* p) $/;"	f	language:C++	typeref:typename:void
 sui_pack_end_group	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_end_group(Sui_Packer* p) $/;"	f	language:C++	typeref:typename:void	file:
-SUI_PACK_H	D:/work/git/txt/code/sui_pack.h	/^#define SUI_PACK_H$/;"	d	language:C++
+sui_pack_end_group	D:/work/git/txt/code/sui_pack.h	/^sui_pack_end_group(Sui_Packer* p) $/;"	f	language:C++	typeref:typename:void
 sui_pack_push_bitmap	C:/Users/geral/work/txt/code/sui_pack.h	/^sui_pack_push_bitmap(Sui_Packer* p, U32 width, U32 height, U32* pixels) {$/;"	f	language:C++	typeref:typename:U32
 sui_pack_push_bitmap	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_push_bitmap(Sui_Packer* p, U32 width, U32 height, U32* pixels) {$/;"	f	language:C++	typeref:typename:U32	file:
+sui_pack_push_bitmap	D:/work/git/txt/code/sui_pack.h	/^sui_pack_push_bitmap(Sui_Packer* p, U32 width, U32 height, U32* pixels) {$/;"	f	language:C++	typeref:typename:U32
 sui_pack_push_font	C:/Users/geral/work/txt/code/sui_pack.h	/^sui_pack_push_font(Sui_Packer* p, Sui_Atlas_Font* font, U32 bitmap_asset_id) {$/;"	f	language:C++	typeref:typename:U32
 sui_pack_push_font	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_push_font(Sui_Packer* p, Sui_Atlas_Font* font, U32 bitmap_asset_id) {$/;"	f	language:C++	typeref:typename:U32	file:
+sui_pack_push_font	D:/work/git/txt/code/sui_pack.h	/^sui_pack_push_font(Sui_Packer* p, Sui_Atlas_Font* font, U32 bitmap_asset_id) {$/;"	f	language:C++	typeref:typename:U32
 sui_pack_push_sprite	C:/Users/geral/work/txt/code/sui_pack.h	/^sui_pack_push_sprite(Sui_Packer* p, U32 bitmap_asset_id, Rect2U texel_uv) {$/;"	f	language:C++	typeref:typename:void
 sui_pack_push_sprite	D:/work/git/txt/code/pack_assets.cpp	/^sui_pack_push_sprite(Sui_Packer* p, U32 bitmap_asset_id, Rect2U texel_uv) {$/;"	f	language:C++	typeref:typename:void	file:
+sui_pack_push_sprite	D:/work/git/txt/code/sui_pack.h	/^sui_pack_push_sprite(Sui_Packer* p, U32 bitmap_asset_id, Rect2U texel_uv) {$/;"	f	language:C++	typeref:typename:void
+sui_pack_push_tag	D:/work/git/txt/code/sui_pack.h	/^sui_pack_push_tag(Sui_Packer* p, Game_Asset_Tag_Type tag_type, F32 value) {$/;"	f	language:C++	typeref:typename:void
 sui_read_file_to_blk	C:/Users/geral/work/txt/code/sui.h	/^sui_read_file_to_blk(Block* mem, const char* filename, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:B32
 sui_read_file_to_blk	D:/work/git/txt/code/sui.h	/^sui_read_file_to_blk(Block* mem, const char* filename, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:B32
 sui_read_font_from_file	C:/Users/geral/work/txt/code/sui.h	/^sui_read_font_from_file(TTF* ttf, const char* filename, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:B32
@@ -4070,6 +4083,7 @@ sui_read_wav_from_file	C:/Users/geral/work/txt/code/sui.h	/^sui_read_wav_from_fi
 sui_read_wav_from_file	D:/work/git/txt/code/sui.h	/^sui_read_wav_from_file(WAV* wav, const char* filename, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:B32
 sui_rp_rect_to_rect2u	C:/Users/geral/work/txt/code/sui.h	/^sui_rp_rect_to_rect2u(RP_Rect rp) {$/;"	f	language:C++	typeref:typename:Rect2U
 sui_rp_rect_to_rect2u	D:/work/git/txt/code/pack_assets.cpp	/^sui_rp_rect_to_rect2u(RP_Rect rp) {$/;"	f	language:C++	typeref:typename:Rect2U	file:
+sui_rp_rect_to_rect2u	D:/work/git/txt/code/sui.h	/^sui_rp_rect_to_rect2u(RP_Rect rp) {$/;"	f	language:C++	typeref:typename:Rect2U
 sui_write_file_from_blk	C:/Users/geral/work/txt/code/sui.h	/^sui_write_file_from_blk(const char* filename, Block blk) {$/;"	f	language:C++	typeref:typename:B32
 sui_write_file_from_blk	D:/work/git/txt/code/sui.h	/^sui_write_file_from_blk(const char* filename, Block blk) {$/;"	f	language:C++	typeref:typename:B32
 swap	C:/Users/geral/work/txt/code/momo_common.h	/^#define swap(/;"	d	language:C++
@@ -4086,20 +4100,27 @@ tags	C:/Users/geral/work/txt/code/game_assets.h	/^  Game_Asset_Tag* tags;$/;"	m	
 tags	C:/Users/geral/work/txt/code/game_assets_2.h	/^  Asset_Tag* tags;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Asset_Tag *
 tags	C:/Users/geral/work/txt/code/karu_pack2.h	/^  Sui_Tag tags[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:Sui_Tag[1024]
 tags	C:/Users/geral/work/txt/code/sui_pack.h	/^  Karu_Tag tags[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Karu_Tag[1024]
+tags	D:/work/git/txt/code/game_assets.h	/^  Game_Asset_Tag* tags;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Game_Asset_Tag *
 tags	D:/work/git/txt/code/game_assets2.h	/^  Game_Asset_Tag* tags;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Game_Asset_Tag *
 tags	D:/work/git/txt/code/game_assets_2.h	/^  Asset_Tag* tags;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Asset_Tag *
 tags	D:/work/git/txt/code/karu_pack2.h	/^  Sui_Tag tags[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:Sui_Tag[1024]
 tags	D:/work/git/txt/code/pack_assets.cpp	/^  Karu_Tag tags[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Karu_Tag[1024]	file:
+tags	D:/work/git/txt/code/sui_pack.h	/^  Karu_Tag tags[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Karu_Tag[1024]
 tag_count	C:/Users/geral/work/txt/code/game_assets.h	/^  U32 tag_count;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
 tag_count	C:/Users/geral/work/txt/code/game_assets_2.h	/^  U32 tag_count;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
 tag_count	C:/Users/geral/work/txt/code/karu.h	/^  U32 tag_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 tag_count	C:/Users/geral/work/txt/code/karu_pack2.h	/^  U32 tag_count;$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:U32
 tag_count	C:/Users/geral/work/txt/code/sui_pack.h	/^  U32 tag_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
+tag_count	D:/work/git/txt/code/game_assets.h	/^  U32 tag_count;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
 tag_count	D:/work/git/txt/code/game_assets2.h	/^  U32 tag_count;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
 tag_count	D:/work/git/txt/code/game_assets_2.h	/^  U32 tag_count;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
+tag_count	D:/work/git/txt/code/karu.h	/^  U32 tag_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 tag_count	D:/work/git/txt/code/karu2.h	/^  U32 tag_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 tag_count	D:/work/git/txt/code/karu_pack2.h	/^  U32 tag_count;$/;"	m	language:C++	struct:Karu_Packer	typeref:typename:U32
 tag_count	D:/work/git/txt/code/pack_assets.cpp	/^  U32 tag_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32	file:
+tag_count	D:/work/git/txt/code/sui_pack.h	/^  U32 tag_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
+tag_value_to_match	D:/work/git/txt/code/game_assets.h	/^    F32 tag_value_to_match;$/;"	m	language:C++	struct:Game_Asset_Match::__anon329ebfe60108	typeref:typename:F32
+tag_weight	D:/work/git/txt/code/game_assets.h	/^    F32 tag_weight;$/;"	m	language:C++	struct:Game_Asset_Match::__anon329ebfe60108	typeref:typename:F32
 tail	C:/Users/geral/work/txt/code/momo_json.h	/^  struct _JSON_Array_Node* tail;$/;"	m	language:C++	struct:JSON_Array	typeref:struct:_JSON_Array_Node *
 tail	D:/work/git/txt/code/momo_json.h	/^  struct _JSON_Array_Node* tail;$/;"	m	language:C++	struct:JSON_Array	typeref:struct:_JSON_Array_Node *
 tan_f32	C:/Users/geral/work/txt/code/momo_intrinsics.h	/^static F32 tan_f32(F32 x);$/;"	p	language:C++	typeref:typename:F32
@@ -4168,8 +4189,8 @@ texel_uv	C:/Users/geral/work/txt/code/game_gfx.h	/^  Rect2U texel_uv;$/;"	m	lang
 texel_uv	C:/Users/geral/work/txt/code/karu.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:Rect2U
 texel_uv	C:/Users/geral/work/txt/code/karu.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Karu_Sprite	typeref:typename:Rect2U
 texel_uv	C:/Users/geral/work/txt/code/sui_pack.h	/^  Rect2U texel_uv; $/;"	m	language:C++	struct:Sui_Packer_Source_Sprite	typeref:typename:Rect2U
-texel_uv	D:/work/git/txt/code/game_assets.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Font_Glyph_Asset	typeref:typename:Rect2U
-texel_uv	D:/work/git/txt/code/game_assets.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Sprite_Asset	typeref:typename:Rect2U
+texel_uv	D:/work/git/txt/code/game_assets.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Game_Font_Glyph	typeref:typename:Rect2U
+texel_uv	D:/work/git/txt/code/game_assets.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Game_Sprite	typeref:typename:Rect2U
 texel_uv	D:/work/git/txt/code/game_assets2.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Game_Font_Glyph	typeref:typename:Rect2U
 texel_uv	D:/work/git/txt/code/game_assets2.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Game_Sprite	typeref:typename:Rect2U
 texel_uv	D:/work/git/txt/code/game_gfx.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Gfx_Command_Sprite	typeref:typename:Rect2U
@@ -4178,6 +4199,7 @@ texel_uv	D:/work/git/txt/code/karu.h	/^  Rect2U texel_uv;$/;"	m	language:C++	str
 texel_uv	D:/work/git/txt/code/karu2.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:Rect2U
 texel_uv	D:/work/git/txt/code/karu2.h	/^  Rect2U texel_uv;$/;"	m	language:C++	struct:Karu_Sprite	typeref:typename:Rect2U
 texel_uv	D:/work/git/txt/code/pack_assets.cpp	/^  Rect2U texel_uv; $/;"	m	language:C++	struct:Sui_Packer_Source_Sprite	typeref:typename:Rect2U	file:
+texel_uv	D:/work/git/txt/code/sui_pack.h	/^  Rect2U texel_uv; $/;"	m	language:C++	struct:Sui_Packer_Source_Sprite	typeref:typename:Rect2U
 text	C:/Users/geral/work/txt/code/game_mode_computer.h	/^  String8 text;$/;"	m	language:C++	struct:Computer_Selection	typeref:typename:String8
 text	C:/Users/geral/work/txt/code/meta.cpp	/^  C8* text;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:C8 *	file:
 text	C:/Users/geral/work/txt/code/momo_json.h	/^  String8 text;$/;"	m	language:C++	struct:__anon6e0c605f0608	typeref:typename:String8
@@ -4201,6 +4223,7 @@ texture_payload	D:/work/git/txt/code/game_assets_2.h	/^  Texture_Payload* textur
 texture_queue	C:/Users/geral/work/txt/code/game_assets.h	/^  Gfx_Texture_Queue* texture_queue;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Gfx_Texture_Queue *
 texture_queue	C:/Users/geral/work/txt/code/game_assets_2.h	/^  Renderer_Texture_Queue* texture_queue;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Renderer_Texture_Queue *
 texture_queue	C:/Users/geral/work/txt/code/game_gfx.h	/^  Gfx_Texture_Queue texture_queue;$/;"	m	language:C++	struct:Gfx	typeref:typename:Gfx_Texture_Queue
+texture_queue	D:/work/git/txt/code/game_assets.h	/^  Gfx_Texture_Queue* texture_queue;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Gfx_Texture_Queue *
 texture_queue	D:/work/git/txt/code/game_assets2.h	/^  Gfx_Texture_Queue* texture_queue;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Gfx_Texture_Queue *
 texture_queue	D:/work/git/txt/code/game_assets_2.h	/^  Renderer_Texture_Queue* texture_queue;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Renderer_Texture_Queue *
 texture_queue	D:/work/git/txt/code/game_gfx.h	/^  Gfx_Texture_Queue texture_queue;$/;"	m	language:C++	struct:Gfx	typeref:typename:Gfx_Texture_Queue
@@ -4210,7 +4233,7 @@ text_length	C:/Users/geral/work/txt/code/meta.cpp	/^  U32 text_length;$/;"	m	lan
 text_length	D:/work/git/txt/code/meta.cpp	/^  U32 text_length;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:U32	file:
 timer	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  F32 timer;$/;"	m	language:C++	struct:__anon3aa070140508	typeref:typename:F32
 timer	C:/Users/geral/work/txt/code/game_mode_splash.h	/^  F32 timer;$/;"	m	language:C++	struct:Splash	typeref:typename:F32
-timer	D:/work/git/txt/code/game_mode_lit.h	/^  F32 timer;$/;"	m	language:C++	struct:__anonaaa574c00508	typeref:typename:F32
+timer	D:/work/git/txt/code/game_mode_lit.h	/^  F32 timer;$/;"	m	language:C++	struct:Lit_Tutorial_Text	typeref:typename:F32
 timer	D:/work/git/txt/code/game_mode_splash.h	/^  F32 timer;$/;"	m	language:C++	struct:Splash	typeref:typename:F32
 tmp_path	C:/Users/geral/work/txt/code/w32_loaded_code.h	/^  const char* tmp_path;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:const char *
 tmp_path	D:/work/git/txt/code/w32_loaded_code.h	/^  const char* tmp_path;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:const char *
@@ -4283,6 +4306,7 @@ ttf_read	C:/Users/geral/work/txt/code/momo_ttf.h	/^ttf_read(TTF* ttf, void* memo
 ttf_read	D:/work/git/txt/code/momo_ttf.h	/^static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);$/;"	p	language:C++	typeref:typename:B32
 ttf_read	D:/work/git/txt/code/momo_ttf.h	/^ttf_read(TTF* ttf, void* memory, UMI memory_size) {$/;"	f	language:C++	typeref:typename:B32
 tutorial_font	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  Game_Font_ID tutorial_font;$/;"	m	language:C++	struct:Lit	typeref:typename:Game_Font_ID
+tutorial_font	D:/work/git/txt/code/game_mode_lit.h	/^  Game_Font_ID tutorial_font;$/;"	m	language:C++	struct:Lit	typeref:typename:Game_Font_ID
 tutorial_texts	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Text_List tutorial_texts;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Tutorial_Text_List
 tutorial_texts	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Text_List tutorial_texts;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Tutorial_Text_List
 tutorial_triggers	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  Lit_Tutorial_Trigger_List tutorial_triggers;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Tutorial_Trigger_List
@@ -4301,11 +4325,15 @@ type	C:/Users/geral/work/txt/code/momo_json.h	/^  _JSON_Value_Type type;$/;"	m	l
 type	C:/Users/geral/work/txt/code/momo_png.h	/^    U8 type[4];$/;"	m	language:C++	union:_PNG_Chunk_Header::__anon7fde682a020a	typeref:typename:U8[4]
 type	C:/Users/geral/work/txt/code/sui_atlas.h	/^  Sui_Atlas_Context_Type type;$/;"	m	language:C++	struct:Sui_Atlas_Context	typeref:typename:Sui_Atlas_Context_Type
 type	C:/Users/geral/work/txt/code/sui_pack.h	/^  Sui_Packer_Source_Type type;$/;"	m	language:C++	struct:Sui_Packer_Source	typeref:typename:Sui_Packer_Source_Type
+type	D:/work/git/txt/code/game_assets.h	/^  Game_Asset_Tag_Type type; $/;"	m	language:C++	struct:Game_Asset_Tag	typeref:typename:Game_Asset_Tag_Type
+type	D:/work/git/txt/code/game_assets.h	/^  Game_Asset_Type type;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:Game_Asset_Type
 type	D:/work/git/txt/code/game_assets2.h	/^  Game_Asset_Tag_Type type; $/;"	m	language:C++	struct:Game_Asset_Tag	typeref:typename:Game_Asset_Tag_Type
 type	D:/work/git/txt/code/game_assets2.h	/^  Game_Asset_Type type;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:Game_Asset_Type
 type	D:/work/git/txt/code/game_assets_2.h	/^  Asset_Tag_Type type;$/;"	m	language:C++	struct:Asset_Tag	typeref:typename:Asset_Tag_Type
 type	D:/work/git/txt/code/game_assets_2.h	/^  Asset_Type type;$/;"	m	language:C++	struct:Asset	typeref:typename:Asset_Type
 type	D:/work/git/txt/code/game_inspector.h	/^  Inspector_Entry_Type type;$/;"	m	language:C++	struct:Inspector_Entry	typeref:typename:Inspector_Entry_Type
+type	D:/work/git/txt/code/karu.h	/^  Game_Asset_Tag_Type type; $/;"	m	language:C++	struct:Karu_Tag	typeref:typename:Game_Asset_Tag_Type
+type	D:/work/git/txt/code/karu.h	/^  Game_Asset_Type type; $/;"	m	language:C++	struct:Karu_Asset	typeref:typename:Game_Asset_Type
 type	D:/work/git/txt/code/karu2.h	/^  Game_Asset_Tag_Type type; $/;"	m	language:C++	struct:Karu_Tag	typeref:typename:Game_Asset_Tag_Type
 type	D:/work/git/txt/code/karu2.h	/^  Game_Asset_Type type; $/;"	m	language:C++	struct:Karu_Asset	typeref:typename:Game_Asset_Type
 type	D:/work/git/txt/code/karu_pack2.h	/^  Karu_Source_Type type;$/;"	m	language:C++	struct:Karu_Source	typeref:typename:Karu_Source_Type
@@ -4315,6 +4343,7 @@ type	D:/work/git/txt/code/momo_json.h	/^  _JSON_Value_Type type;$/;"	m	language:
 type	D:/work/git/txt/code/momo_png.h	/^    U8 type[4];$/;"	m	language:C++	union:_PNG_Chunk_Header::__anon6896d156020a	typeref:typename:U8[4]
 type	D:/work/git/txt/code/pack_assets.cpp	/^  Sui_Packer_Source_Type type;$/;"	m	language:C++	struct:Sui_Packer_Source	typeref:typename:Sui_Packer_Source_Type	file:
 type	D:/work/git/txt/code/sui_atlas.h	/^  Sui_Atlas_Context_Type type;$/;"	m	language:C++	struct:Sui_Atlas_Context	typeref:typename:Sui_Atlas_Context_Type
+type	D:/work/git/txt/code/sui_pack.h	/^  Sui_Packer_Source_Type type;$/;"	m	language:C++	struct:Sui_Packer_Source	typeref:typename:Sui_Packer_Source_Type
 type_U32	C:/Users/geral/work/txt/code/momo_png.h	/^    U32 type_U32;$/;"	m	language:C++	union:_PNG_Chunk_Header::__anon7fde682a020a	typeref:typename:U32
 type_U32	D:/work/git/txt/code/momo_png.h	/^    U32 type_U32;$/;"	m	language:C++	union:_PNG_Chunk_Header::__anon6896d156020a	typeref:typename:U32
 u	C:/Users/geral/work/txt/code/momo_common.h	/^  union { F32 f; U32 u; } ret = {};$/;"	m	language:C++	union:F32_INFINITY::__anon745789ae010a	typeref:typename:U32
@@ -4369,15 +4398,14 @@ units	C:/Users/geral/work/txt/code/meta.cpp	/^  U32 units;$/;"	m	language:C++	st
 units	D:/work/git/txt/code/meta.cpp	/^  U32 units;$/;"	m	language:C++	struct:Profiler_Codegen	typeref:typename:U32	file:
 unload_bitmap	C:/Users/geral/work/txt/code/game_assets_2.h	/^unload_bitmap(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:void
 unload_bitmap	D:/work/git/txt/code/game_assets_2.h	/^unload_bitmap(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:void
-unload_game_assets	D:/work/git/txt/code/game_assets.h	/^unload_game_assets(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:B32
 update_and_render	C:/Users/geral/work/txt/code/game_platform.h	/^  Game_Update_And_Render* update_and_render;$/;"	m	language:C++	struct:Game_Functions	typeref:typename:Game_Update_And_Render *
 update_and_render	D:/work/git/txt/code/game_platform.h	/^  Game_Update_And_Render* update_and_render;$/;"	m	language:C++	struct:Game_Functions	typeref:typename:Game_Update_And_Render *
 update_and_render_console	C:/Users/geral/work/txt/code/game_console.h	/^update_and_render_console(Console* dc, Painter* p, Platform* pf, Game_Sprite_ID blank_sprite, Ga/;"	f	language:C++	typeref:typename:void
-update_and_render_console	D:/work/git/txt/code/game_console.h	/^update_and_render_console(Console* dc, Painter* p, Platform* pf) {$/;"	f	language:C++	typeref:typename:void
+update_and_render_console	D:/work/git/txt/code/game_console.h	/^update_and_render_console(Console* dc, Game_Sprite_ID blank_sprite, Game_Font_ID font) $/;"	f	language:C++	typeref:typename:void
 update_and_render_inspector	C:/Users/geral/work/txt/code/game_inspector_rendering.h	/^update_and_render_inspector(Inspector* in, Painter* p, Game_Sprite_ID rect_sprite, Game_Font_ID /;"	f	language:C++	typeref:typename:void
-update_and_render_inspector	D:/work/git/txt/code/game_inspector_rendering.h	/^update_and_render_inspector(Inspector* in, Painter* p) $/;"	f	language:C++	typeref:typename:void
+update_and_render_inspector	D:/work/git/txt/code/game_inspector_rendering.h	/^update_and_render_inspector(Game_Sprite_ID rect_sprite, Game_Font_ID font) $/;"	f	language:C++	typeref:typename:void
 update_and_render_profiler	C:/Users/geral/work/txt/code/game_profiler_rendering.h	/^update_and_render_profiler(Profiler* pf, Painter* p, Game_Sprite_ID blank_sprite, Game_Font_ID f/;"	f	language:C++	typeref:typename:void
-update_and_render_profiler	D:/work/git/txt/code/game_profiler_rendering.h	/^update_and_render_profiler(Profiler* pf, Painter* p) {$/;"	f	language:C++	typeref:typename:void
+update_and_render_profiler	D:/work/git/txt/code/game_profiler_rendering.h	/^update_and_render_profiler(Game_Sprite_ID blank_sprite, Game_Font_ID font) $/;"	f	language:C++	typeref:typename:void
 update_editor	C:/Users/geral/work/txt/code/game_mode_level_editor.cpp	/^update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {$/;"	f	language:C++	typeref:typename:void	file:
 update_editor	D:/work/git/txt/code/game_mode_level_editor.cpp	/^update_editor(Editor* e, Level_Mode* m, Game_Input* input, F32 dt) {$/;"	f	language:C++	typeref:typename:void	file:
 update_editor_place_edges	C:/Users/geral/work/txt/code/game_mode_level_editor.cpp	/^update_editor_place_edges(Editor* e, $/;"	f	language:C++	typeref:typename:void	file:
@@ -4579,6 +4607,10 @@ value	C:/Users/geral/work/txt/code/game_assets_2.h	/^struct Sprite_Asset_ID { U3
 value	C:/Users/geral/work/txt/code/karu.h	/^  F32 value;$/;"	m	language:C++	struct:Karu_Tag	typeref:typename:F32
 value	C:/Users/geral/work/txt/code/momo_json.h	/^  _JSON_Value value;$/;"	m	language:C++	struct:_JSON_Array_Node	typeref:typename:_JSON_Value
 value	C:/Users/geral/work/txt/code/momo_json.h	/^  _JSON_Value value;$/;"	m	language:C++	struct:_JSON_Object_Node	typeref:typename:_JSON_Value
+value	D:/work/git/txt/code/game_assets.h	/^  F32 value;$/;"	m	language:C++	struct:Game_Asset_Tag	typeref:typename:F32
+value	D:/work/git/txt/code/game_assets.h	/^struct Game_Bitmap_ID { U32 value; };$/;"	m	language:C++	struct:Game_Bitmap_ID	typeref:typename:U32
+value	D:/work/git/txt/code/game_assets.h	/^struct Game_Font_ID { U32 value; };$/;"	m	language:C++	struct:Game_Font_ID	typeref:typename:U32
+value	D:/work/git/txt/code/game_assets.h	/^struct Game_Sprite_ID { U32 value; };$/;"	m	language:C++	struct:Game_Sprite_ID	typeref:typename:U32
 value	D:/work/git/txt/code/game_assets2.h	/^  F32 value;$/;"	m	language:C++	struct:Game_Asset_Tag	typeref:typename:F32
 value	D:/work/git/txt/code/game_assets2.h	/^struct Game_Bitmap_ID { U32 value; };$/;"	m	language:C++	struct:Game_Bitmap_ID	typeref:typename:U32
 value	D:/work/git/txt/code/game_assets2.h	/^struct Game_Font_ID { U32 value; };$/;"	m	language:C++	struct:Game_Font_ID	typeref:typename:U32
@@ -4587,6 +4619,7 @@ value	D:/work/git/txt/code/game_assets_2.h	/^  F32 value;$/;"	m	language:C++	str
 value	D:/work/git/txt/code/game_assets_2.h	/^struct Bitmap_Asset_ID { U32 value; };$/;"	m	language:C++	struct:Bitmap_Asset_ID	typeref:typename:U32
 value	D:/work/git/txt/code/game_assets_2.h	/^struct Font_Asset_ID { U32 value; }; $/;"	m	language:C++	struct:Font_Asset_ID	typeref:typename:U32
 value	D:/work/git/txt/code/game_assets_2.h	/^struct Sprite_Asset_ID { U32 value; };$/;"	m	language:C++	struct:Sprite_Asset_ID	typeref:typename:U32
+value	D:/work/git/txt/code/karu.h	/^  F32 value;$/;"	m	language:C++	struct:Karu_Tag	typeref:typename:F32
 value	D:/work/git/txt/code/karu2.h	/^  F32 value;$/;"	m	language:C++	struct:Karu_Tag	typeref:typename:F32
 value	D:/work/git/txt/code/momo_json.h	/^  _JSON_Value value;$/;"	m	language:C++	struct:_JSON_Array_Node	typeref:typename:_JSON_Value
 value	D:/work/git/txt/code/momo_json.h	/^  _JSON_Value value;$/;"	m	language:C++	struct:_JSON_Object_Node	typeref:typename:_JSON_Value
@@ -4744,7 +4777,6 @@ wasapi	C:/Users/geral/work/txt/code/w32_audio_wasapi.h	/^  Win_Wasapi* wasapi;$/
 wasapi	D:/work/git/txt/code/w32_audio_wasapi.h	/^  Win_Wasapi* wasapi;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client	typeref:typename:Win_Wasapi *
 WAV	C:/Users/geral/work/txt/code/momo_wav.h	/^}WAV;$/;"	t	language:C++	typeref:struct:__anon805632930408
 WAV	D:/work/git/txt/code/momo_wav.h	/^}WAV;$/;"	t	language:C++	typeref:struct:__anon690e9bbf0408
-wav	D:/work/git/txt/code/sui_pack.h	/^  WAV* wav;$/;"	m	language:C++	struct:Sui_Packer_Sound	typeref:typename:WAV *
 WAV_Data_Chunk	C:/Users/geral/work/txt/code/momo_wav.h	/^}WAV_Data_Chunk;$/;"	t	language:C++	typeref:struct:__anon805632930308
 WAV_Data_Chunk	D:/work/git/txt/code/momo_wav.h	/^}WAV_Data_Chunk;$/;"	t	language:C++	typeref:struct:__anon690e9bbf0308
 WAV_Fmt_Chunk	C:/Users/geral/work/txt/code/momo_wav.h	/^}WAV_Fmt_Chunk;$/;"	t	language:C++	typeref:struct:__anon805632930208
@@ -4816,18 +4848,18 @@ width	C:/Users/geral/work/txt/code/momo_image.h	/^  U32 width, height;$/;"	m	lan
 width	C:/Users/geral/work/txt/code/momo_png.h	/^  U32 width;$/;"	m	language:C++	struct:_PNG_IHDR	typeref:typename:U32
 width	C:/Users/geral/work/txt/code/momo_png.h	/^  U32 width;$/;"	m	language:C++	struct:__anon7fde682a0108	typeref:typename:U32
 width	C:/Users/geral/work/txt/code/sui_pack.h	/^  U32 width;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32
-width	D:/work/git/txt/code/game_assets.h	/^  U32 width;$/;"	m	language:C++	struct:Bitmap_Asset	typeref:typename:U32
+width	D:/work/git/txt/code/game_assets.h	/^  U32 width;$/;"	m	language:C++	struct:Game_Bitmap	typeref:typename:U32
 width	D:/work/git/txt/code/game_assets2.h	/^  U32 width;$/;"	m	language:C++	struct:Game_Bitmap	typeref:typename:U32
 width	D:/work/git/txt/code/game_assets_2.h	/^  U32 width;$/;"	m	language:C++	struct:Bitmap_Asset	typeref:typename:U32
 width	D:/work/git/txt/code/game_gfx_opengl.h	/^  U32 width; $/;"	m	language:C++	struct:__anon982c2a3c0708	typeref:typename:U32
-width	D:/work/git/txt/code/karu.h	/^  U32 width, height;$/;"	m	language:C++	struct:Karu_Bitmap	typeref:typename:U32
+width	D:/work/git/txt/code/karu.h	/^  U32 width;$/;"	m	language:C++	struct:Karu_Bitmap	typeref:typename:U32
 width	D:/work/git/txt/code/karu2.h	/^  U32 width;$/;"	m	language:C++	struct:Karu_Bitmap	typeref:typename:U32
 width	D:/work/git/txt/code/karu_pack2.h	/^  U32 width;$/;"	m	language:C++	struct:Karu_Bitmap_Source	typeref:typename:U32
 width	D:/work/git/txt/code/momo_image.h	/^  U32 width, height;$/;"	m	language:C++	struct:__anoncc1655140108	typeref:typename:U32
 width	D:/work/git/txt/code/momo_png.h	/^  U32 width;$/;"	m	language:C++	struct:_PNG_IHDR	typeref:typename:U32
 width	D:/work/git/txt/code/momo_png.h	/^  U32 width;$/;"	m	language:C++	struct:__anon6896d1560108	typeref:typename:U32
 width	D:/work/git/txt/code/pack_assets.cpp	/^  U32 width;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32	file:
-width	D:/work/git/txt/code/sui_pack.h	/^  U32 width;$/;"	m	language:C++	struct:Sui_Packer_Bitmap	typeref:typename:U32
+width	D:/work/git/txt/code/sui_pack.h	/^  U32 width;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32
 WIN32_LEAN_AND_MEAN	C:/Users/geral/work/txt/code/w32.h	/^#define WIN32_LEAN_AND_MEAN$/;"	d	language:C++
 WIN32_LEAN_AND_MEAN	D:/work/git/txt/code/w32.h	/^#define WIN32_LEAN_AND_MEAN$/;"	d	language:C++
 WinMain	C:/Users/geral/work/txt/code/w32.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
@@ -5260,6 +5292,8 @@ __anon2b3ad63a010a	C:/Users/geral/work/txt/code/game_assets.h	/^  union {$/;"	u	
 __anon2eb1bf3d0103	D:/work/git/txt/code/momo_rect_pack.h	/^typedef enum {$/;"	g	language:C++
 __anon2eb1bf3d0208	D:/work/git/txt/code/momo_rect_pack.h	/^typedef struct{$/;"	s	language:C++
 __anon2eb1bf3d0308	D:/work/git/txt/code/momo_rect_pack.h	/^typedef struct {$/;"	s	language:C++
+__anon329ebfe60108	D:/work/git/txt/code/game_assets.h	/^  struct {$/;"	s	language:C++	struct:Game_Asset_Match
+__anon329ebfe6020a	D:/work/git/txt/code/game_assets.h	/^  union {$/;"	u	language:C++	struct:Game_Asset
 __anon3aa070140108	C:/Users/geral/work/txt/code/game_mode_lit.h	/^typedef struct {$/;"	s	language:C++
 __anon3aa070140208	C:/Users/geral/work/txt/code/game_mode_lit.h	/^typedef struct {$/;"	s	language:C++
 __anon3aa070140303	C:/Users/geral/work/txt/code/game_mode_lit.h	/^typedef enum {$/;"	g	language:C++
@@ -5406,6 +5440,7 @@ __anon82c42aad0108	C:/Users/geral/work/txt/code/momo_sort.h	/^typedef struct{$/;
 __anon8676c698010a	D:/work/git/txt/code/game_assets2.h	/^  union {$/;"	u	language:C++	struct:Game_Asset
 __anon89e5ff1a0108	C:/Users/geral/work/txt/code/momo_matrix.h	/^typedef struct {$/;"	s	language:C++
 __anon9149e8c60108	D:/work/git/txt/code/momo_matrix.h	/^typedef struct {$/;"	s	language:C++
+__anon93330e6d010a	D:/work/git/txt/code/karu.h	/^  union {$/;"	u	language:C++	struct:Karu_Asset
 __anon982c2a3c0103	D:/work/git/txt/code/game_gfx_opengl.h	/^enum{ $/;"	g	language:C++
 __anon982c2a3c0203	D:/work/git/txt/code/game_gfx_opengl.h	/^enum {$/;"	g	language:C++
 __anon982c2a3c0303	D:/work/git/txt/code/game_gfx_opengl.h	/^enum {$/;"	g	language:C++
@@ -5415,13 +5450,7 @@ __anon982c2a3c0603	D:/work/git/txt/code/game_gfx_opengl.h	/^enum {$/;"	g	languag
 __anon982c2a3c0708	D:/work/git/txt/code/game_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
 __anon982c2a3c0808	D:/work/git/txt/code/game_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
 __anon982c2a3c0908	D:/work/git/txt/code/game_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
-__anonaaa574c00108	D:/work/git/txt/code/game_mode_lit.h	/^typedef struct {$/;"	s	language:C++
-__anonaaa574c00208	D:/work/git/txt/code/game_mode_lit.h	/^typedef struct {$/;"	s	language:C++
-__anonaaa574c00303	D:/work/git/txt/code/game_mode_lit.h	/^typedef enum {$/;"	g	language:C++
-__anonaaa574c00408	D:/work/git/txt/code/game_mode_lit.h	/^typedef struct {$/;"	s	language:C++
-__anonaaa574c00508	D:/work/git/txt/code/game_mode_lit.h	/^{$/;"	s	language:C++
-__anonaaa574c00608	D:/work/git/txt/code/game_mode_lit.h	/^typedef struct {$/;"	s	language:C++
-__anonaaa574c00703	D:/work/git/txt/code/game_mode_lit.h	/^typedef enum {$/;"	g	language:C++
+__anonaaa574c00103	D:/work/git/txt/code/game_mode_lit.h	/^typedef enum {$/;"	g	language:C++
 __anonad497fde0108	C:/Users/geral/work/txt/code/momo_memory.h	/^typedef struct {$/;"	s	language:C++
 __anonad497fde0208	C:/Users/geral/work/txt/code/momo_memory.h	/^typedef struct {$/;"	s	language:C++
 __anonb4ad698a0108	D:/work/git/txt/code/momo_memory.h	/^typedef struct {$/;"	s	language:C++
@@ -5437,6 +5466,7 @@ __anonc7a47d550102	C:/Users/geral/work/txt/code/game_mode_level_light.cpp	/^  au
 __anoncc1655140108	D:/work/git/txt/code/momo_image.h	/^typedef struct {$/;"	s	language:C++
 __anoncf0849010102	D:/work/git/txt/code/game_mode_level_light.cpp	/^  auto pred = [&](V2* lhs, V2* rhs){$/;"	f	language:C++	function:gen_light_intersections	file:
 __anond39ef0e80108	C:/Users/geral/work/txt/code/momo_image.h	/^typedef struct {$/;"	s	language:C++
+__anone1a80a89010a	D:/work/git/txt/code/sui_pack.h	/^  union {$/;"	u	language:C++	struct:Sui_Packer_Source
 __anone518d674010a	D:/work/git/txt/code/test_essentials.h	/^    union {$/;"	u	language:C++	function:test_essentials
 __anone518d674020a	D:/work/git/txt/code/test_essentials.h	/^    union {$/;"	u	language:C++	function:test_essentials
 __anone5634beb010a	C:/Users/geral/work/txt/code/game_assets_2.h	/^  union {$/;"	u	language:C++	struct:Asset

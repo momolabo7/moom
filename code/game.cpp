@@ -41,8 +41,12 @@ game_update_and_render(Platform* pf)
    
     game->blank_sprite = 
       find_first_sprite(&game->assets, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
-    game->debug_font = 
-      find_first_font(&game->assets, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
+    // Debug font
+    {
+      make(Game_Asset_Match, match);
+      set_match_entry(match, asset_tag(FONT), 1.f, 1.f);
+      game->debug_font = find_best_font(&game->assets, asset_group(FONTS), match);
+    }
 
     game_goto_mode(game, GAME_MODE_TYPE_LIT);
 
@@ -66,7 +70,10 @@ game_update_and_render(Platform* pf)
   Console* console = &game->console;
  
   make(Painter, painter);
-  begin_painting(painter, 1600.f, 900.f);
+
+  // TODO: should probably be in modes instead
+  gfx_push_view(gfx, 0.f, GAME_WIDTH, 0.f, GAME_HEIGHT, 0.f, 0.f);
+
   begin_inspector(inspector);
  
 #if 0
@@ -92,23 +99,22 @@ game_update_and_render(Platform* pf)
   game_profile_begin(DEBUG);
   switch (game->show_debug_type) {
     case GAME_SHOW_DEBUG_CONSOLE: {
-      update_and_render_console(console, painter, pf,
+      update_and_render_console(console,
                                 game->blank_sprite, 
                                 game->debug_font); 
     }break;
     case GAME_SHOW_DEBUG_PROFILER: {
-      update_and_render_profiler(platform->profiler, painter, 
-                                 game->blank_sprite, 
+      update_and_render_profiler(game->blank_sprite, 
                                  game->debug_font); 
     }break;
     case GAME_SHOW_DEBUG_INSPECTOR: {
-      update_and_render_inspector(inspector, painter, 
-                                  game->blank_sprite, 
+      update_and_render_inspector(game->blank_sprite, 
                                   game->debug_font);
     }break;
     default: {}
   }
   game_profile_end(DEBUG);
+
 #if 0
   static F32 sine = 0.f;
   Platform_Audio* audio = platform->audio;

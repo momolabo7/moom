@@ -105,12 +105,12 @@ lit_are_all_sensors_activated(Lit_Sensor_List* sensors) {
 }
 
 static void 
-lit_render_sensors(Lit_Sensor_List* sensors, Painter* painter) {
+lit_render_sensors(Lit_Sensor_List* sensors) {
   al_foreach(sensor_index, sensors)
   {
     Lit_Sensor* sensor = al_at(sensors, sensor_index);
     Circ2 circ = { LIT_SENSOR_RADIUS, sensor->pos };
-    paint_filled_circle(painter, circ, 8,  hex_to_rgba(sensor->target_color)); 
+    gfx_push_filled_circle(gfx, circ, 8,  hex_to_rgba(sensor->target_color)); 
 
     // only for debugging
 #if 0

@@ -12,34 +12,8 @@ struct Painter {
 
 
 
-
 static void
-set_view(Painter* p, F32 canvas_width, F32 canvas_height) {
-  p->canvas_width = canvas_width;
-  p->canvas_height = canvas_height;
-  gfx_push_view(gfx,
-                0.f, canvas_width, 
-                0.f, canvas_height,
-                0.f, 0.f);
-}
-
-static void
-begin_painting(Painter* p, 
-               F32 canvas_width,
-               F32 canvas_height) 
-{
-  set_view(p, canvas_width, canvas_height);
-}
-#if 0
-static void
-advance_depth(Painter* p) {
-  gfx_advance_depth(gfx);
-}
-#endif
-
-static void
-paint_sprite(Painter* p,
-             Game_Sprite_ID sprite_id,
+paint_sprite(Game_Sprite_ID sprite_id,
              V2 pos,
              V2 size,
              RGBA color = rgba(1.f,1.f,1.f,1.f))
@@ -57,8 +31,7 @@ paint_sprite(Painter* p,
 
 
 static void
-paint_text(Painter* p,
-           Game_Font_ID font_id,
+paint_text(Game_Font_ID font_id,
            String8 str,
            RGBA color,
            F32 px, F32 py,
@@ -94,55 +67,9 @@ paint_text(Painter* p,
   
 }
 
-static void
-paint_line(Painter* p,
-           Line2 line,
-           F32 thickness,
-           RGBA color = {1.f,1.f,1.f,1.f})
-{
-  gfx_push_line(gfx, 
-                line, 
-                thickness, 
-                color); 
-}
 
 
-static void
-paint_circle_outline(Painter* p,
-                     Circ2 circle,
-                     F32 thickness, 
-                     U32 line_count,
-                     RGBA color) 
-{
-  gfx_push_circle_outline(gfx, 
-                          circle,
-                          thickness,
-                          line_count,
-                          color);
-}
 
-static void
-paint_filled_triangle(Painter* p,
-                      RGBA color,
-                      V2 p0, V2 p1, V2 p2) 
-{
-  gfx_push_filled_triangle(gfx, 
-                           color,
-                           p0, p1, p2);
-}
 
-static void
-paint_filled_circle(Painter* p,
-                    Circ2 circle,
-                    U32 sections,
-                    RGBA color = {1.f, 1.f, 1.f, 1.f})
-{
-  gfx_push_filled_circle(gfx, circle, sections, color); 
-}
 
-static void
-paint_set_blend(Painter* p, Gfx_Blend_Type src, Gfx_Blend_Type dst) {
-  gfx_push_blend(gfx, src, dst);
-
-}
 #endif //GAME_PAINTER_H

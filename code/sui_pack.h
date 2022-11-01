@@ -52,7 +52,7 @@ sui_pack_begin(Sui_Packer* p) {
 }
 
 static void
-sui_pack_add_tag(Sui_Packer* p, Game_Asset_Tag_Type tag_type, F32 value) {
+sui_pack_push_tag(Sui_Packer* p, Game_Asset_Tag_Type tag_type, F32 value) {
   U32 tag_index = p->tag_count++;
   
   Karu_Asset* asset = p->assets + p->active_asset_index;

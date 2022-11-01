@@ -115,9 +115,8 @@ lit_update_player(Lit_Player* player,
 }
 
 static void
-lit_draw_player(Lit_Player* player, Painter* painter, Game_Sprite_ID sprite_id){
-  paint_sprite(painter, 
-               sprite_id, 
+lit_draw_player(Lit_Player* player, Game_Sprite_ID sprite_id){
+  paint_sprite(sprite_id, 
                player->pos, 
                v2(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
   gfx_advance_depth(gfx);

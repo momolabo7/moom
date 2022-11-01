@@ -64,15 +64,17 @@ computer_tick(Game* game,
     V2 min = v2(100.f, 100.f);
     V2 max = v2(800.f, 800.f);
 
+    // TODO: gfx_push_aabb_outline
     Line2 l1 = line2(v2(min.x, min.y), v2(max.x, min.y));
     Line2 l2 = line2(v2(min.x, min.y), v2(min.x, max.y));
     Line2 l3 = line2(v2(min.x, max.y), v2(max.x, max.y));
     Line2 l4 = line2(v2(max.x, min.y), v2(max.x, max.y));
+    RGBA white = rgba(1.f, 1.f, 1.f, 1.f);
 
-    paint_line(painter, l1, 5.f);
-    paint_line(painter, l2, 5.f);
-    paint_line(painter, l3, 5.f);
-    paint_line(painter, l4, 5.f);
+    gfx_push_line(gfx, l1, 5.f, white);
+    gfx_push_line(gfx, l2, 5.f, white);
+    gfx_push_line(gfx, l3, 5.f, white);
+    gfx_push_line(gfx, l4, 5.f, white);
   }
 
   

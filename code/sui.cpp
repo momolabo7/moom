@@ -43,20 +43,26 @@ int main() {
   make(Sui_Packer, packer);
   sui_pack_begin(packer);
 
-  sui_pack_begin_group(packer, GAME_ASSET_GROUP_TYPE_ATLAS);
+  sui_pack_begin_group(packer, asset_group(ATLAS));
   U32 bitmap_id = sui_pack_push_bitmap(packer, atlas->bitmap.width, atlas->bitmap.height, atlas->bitmap.pixels);
   sui_pack_end_group(packer);
   
-  sui_pack_begin_group(packer, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
+  sui_pack_begin_group(packer, asset_group(BLANK_SPRITE));
   sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*blank_sprite->rect));
   sui_pack_end_group(packer);
 
-  sui_pack_begin_group(packer, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
+  sui_pack_begin_group(packer, asset_group(CIRCLE_SPRITE));
   sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*circle_sprite->rect));
   sui_pack_end_group(packer);
 
-  sui_pack_begin_group(packer, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
-  sui_pack_push_font(packer, font_a, bitmap_id);
+  sui_pack_begin_group(packer, asset_group(FONTS));
+  {
+    sui_pack_push_font(packer, font_a, bitmap_id);
+    sui_pack_push_tag(packer, asset_tag(FONT), 0.f);
+
+    sui_pack_push_font(packer, font_b, bitmap_id);
+    sui_pack_push_tag(packer, asset_tag(FONT), 1.f);
+  }
   sui_pack_end_group(packer);
 
   sui_pack_end(packer, "test_pack.sui", allocator);

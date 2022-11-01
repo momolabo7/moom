@@ -31,12 +31,13 @@ splash_tick(Game* game,
     // game_set_mode(game, lit_init, lit_tick);
     game_goto_mode(game, GAME_MODE_TYPE_COMPUTER);
   }
-  
-  Game_Font_ID font_id = find_first_font(assets, GAME_ASSET_GROUP_TYPE_DEFAULT_FONT);
+ 
+  make(Game_Asset_Match, match);
+  set_match_entry(match, asset_tag(FONT), 1.f, 1.f); 
+  Game_Font_ID font_id = find_best_font(assets, GAME_ASSET_GROUP_TYPE_FONTS, match);
 
   RGBA color = rgba(splash->timer, splash->timer, splash->timer, splash->timer);
-  paint_text(painter,
-             font_id, 
+  paint_text(font_id, 
              str8_from_lit("momo"),
              color,
              450.f, 400.f, 

@@ -34,6 +34,7 @@ struct Game_Font {
   F32* horizontal_advances;
 };
 
+
 struct Game_Asset_Tag {
   Game_Asset_Tag_Type type; 
   F32 value;
@@ -51,9 +52,22 @@ struct Game_Asset_Group {
   U32 one_past_last_asset_index;
 };
 
-struct Game_Asset_Vector {
-  F32 e[GAME_ASSET_TAG_TYPE_COUNT];
+struct Game_Asset_Match {
+  struct {
+    F32 tag_value_to_match;
+    F32 tag_weight;
+  } e[GAME_ASSET_TAG_TYPE_COUNT];
 };
+
+static void
+set_match_entry(Game_Asset_Match* vec, 
+                       Game_Asset_Tag_Type tag,
+                       F32 tag_value_to_match, 
+                       F32 tag_weight) 
+{
+  vec->e[tag].tag_value_to_match = tag_value_to_match; // debug font
+  vec->e[tag].tag_weight = tag_weight;
+}
 
 struct Game_Asset {
   Game_Asset_State state;
@@ -287,10 +301,9 @@ find_first_asset_of_type(Game_Assets* ga,
 
 static U32 
 find_best_asset_of_type(Game_Assets* ga, 
-                       Game_Asset_Group_Type group_type, 
-                       Game_Asset_Type asset_type,
-                       Game_Asset_Vector* match_vector, 
-                       Game_Asset_Vector* weight_vector)
+                        Game_Asset_Group_Type group_type, 
+                        Game_Asset_Type asset_type,
+                        Game_Asset_Match* vector)
 {
   U32 ret = 0;
   F32 best_diff = F32_INFINITY();
@@ -310,8 +323,8 @@ find_best_asset_of_type(Game_Assets* ga,
         ++tag_index) 
     {
       Game_Asset_Tag* tag = ga->tags + tag_index;
-      F32 difference = match_vector->e[tag->type] - tag->value;
-      F32 weighted = weight_vector->e[tag->type]*abs_of(difference);
+      F32 difference = vector->e[tag->type].tag_value_to_match - tag->value;
+      F32 weighted = vector->e[tag->type].tag_weight*abs_of(difference);
       total_weighted_diff = weighted;
       
 #if 0      
@@ -401,11 +414,19 @@ find_first_sprite(Game_Assets* ga, Game_Asset_Group_Type group_type) {
 
 static Game_Sprite_ID
 find_best_sprite(Game_Assets* ga, 
-                Game_Asset_Group_Type group_type, 
-                Game_Asset_Vector* match_vector, 
-                Game_Asset_Vector* weight_vector)
+                 Game_Asset_Group_Type group_type, 
+                 Game_Asset_Match* match_vector)
 {
-  return { find_best_asset_of_type(ga, group_type, GAME_ASSET_TYPE_SPRITE, match_vector, weight_vector) };
+  return { find_best_asset_of_type(ga, group_type, GAME_ASSET_TYPE_SPRITE, match_vector) };
+  
+}
+
+static Game_Font_ID
+find_best_font(Game_Assets* ga, 
+               Game_Asset_Group_Type group_type, 
+               Game_Asset_Match* match_vector)
+{
+  return { find_best_asset_of_type(ga, group_type, GAME_ASSET_TYPE_FONT, match_vector) };
   
 }
 #endif

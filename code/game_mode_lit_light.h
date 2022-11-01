@@ -301,8 +301,7 @@ lit_draw_lights(Lit_Light_List* lights, Painter* painter, Game_Sprite_ID sprite_
   al_foreach(light_index, lights)
   {
     Lit_Light* light = al_at(lights, light_index);
-    paint_sprite(painter,
-                 sprite_id, 
+    paint_sprite(sprite_id, 
                  light->pos,
                  {16.f, 16.f},
                  {0.8f, 0.8f, 0.8f, 1.f});
@@ -310,9 +309,7 @@ lit_draw_lights(Lit_Light_List* lights, Painter* painter, Game_Sprite_ID sprite_
   }
  
   // Lights
-  paint_set_blend(painter, 
-                  GFX_BLEND_TYPE_SRC_ALPHA,
-                  GFX_BLEND_TYPE_ONE); 
+  gfx_push_blend(gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_ONE); 
   
   al_foreach(light_index, lights)
   {
@@ -320,11 +317,11 @@ lit_draw_lights(Lit_Light_List* lights, Painter* painter, Game_Sprite_ID sprite_
     al_foreach(tri_index, &l->triangles)
     {
       Tri2* lt = al_at(&l->triangles, tri_index);
-      paint_filled_triangle(painter, 
-                            hex_to_rgba(l->color),
-                            lt->pts[0],
-                            lt->pts[1],
-                            lt->pts[2]);
+      gfx_push_filled_triangle(gfx, 
+                               hex_to_rgba(l->color),
+                               lt->pts[0],
+                               lt->pts[1],
+                               lt->pts[2]);
     } 
     gfx_advance_depth(gfx);
   }
