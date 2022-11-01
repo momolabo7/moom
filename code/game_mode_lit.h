@@ -490,7 +490,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   // Draw the overlay for fade in/out
   {
     RGBA color = rgba(0.f, 0.f, 0.f, m->stage_fade);
-    paint_sprite(m->blank_sprite, GAME_MIDPOINT, GAME_DIMENSIONS, color);
+    paint_sprite(m->circle_sprite, GAME_MIDPOINT, GAME_DIMENSIONS, color);
     gfx_advance_depth(gfx);
   }
 }
