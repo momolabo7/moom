@@ -401,8 +401,6 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   //////////////////////////////////////////////////////////
   // Rendering
   //
- 
-   
   gfx_push_blend(gfx, 
                  GFX_BLEND_TYPE_SRC_ALPHA,
                  GFX_BLEND_TYPE_INV_SRC_ALPHA); 
@@ -412,9 +410,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   lit_draw_player(player, m->circle_sprite);
   lit_draw_lights(&m->lights, m->circle_sprite);
   
-  gfx_push_blend(gfx, 
-                 GFX_BLEND_TYPE_SRC_ALPHA,
-                 GFX_BLEND_TYPE_INV_SRC_ALPHA); 
+  gfx_push_blend(gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
   lit_render_sensors(&m->sensors); 
   lit_render_particles(&m->particles);
