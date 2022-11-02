@@ -6,20 +6,6 @@
 //////////////////////////////////////////////////
 // Lit MODE
 
-#include "game_mode_lit_particles.h"
-
-struct Lit_Edge {
-  B32 is_disabled;
-  V2 start_pt;
-  V2 end_pt;
-};
-
-
-struct Lit_Edge_List {
-  U32 count;
-  Lit_Edge e[256];
-};
-
 
 #define LIT_TUTORIAL_TEXT_FADE_DURATION 1.f
 enum Lit_Tutorial_Text_State{
@@ -30,7 +16,7 @@ enum Lit_Tutorial_Text_State{
 };
 
 
-typedef B32 (*Lit_Tutorial_Trigger)(struct Lit* m, Platform* pf);
+typedef B32 (*Lit_Tutorial_Trigger)(struct Lit* m);
 struct Lit_Tutorial_Trigger_List {
   U32 current_id;
   U32 count;
@@ -55,7 +41,6 @@ struct Lit_Tutorial_Text_List {
   U32 next_id_to_fade_in;
   U32 next_id_to_fade_out;
 };
-
 
 
 
@@ -100,22 +85,10 @@ circle_to_finite_line_resp(V2 circle_center, F32 circle_radius, V2 line_min, V2 
 }
 #endif
 
-static Line2 
-lit_calc_ghost_edge_line(Lit_Edge* e) {
-	Line2 ret = {0};
-  
-  V2 dir = v2_norm(e->end_pt - e->start_pt) * 0.0001f;
-  
-  ret.min = v2_sub(e->start_pt, dir);
-  ret.max = v2_add(e->end_pt, dir);
-  
-  return ret;
-}
 
-#include "game_mode_lit_light.h"
-#include "game_mode_lit_sensors.h"
-#include "game_mode_lit_player.h"
 
+#include "game_mode_lit_world.h"
+#include "game_mode_lit_entity.h"
 typedef enum {
   LIT_STATE_TYPE_TRANSITION_IN,
   LIT_STATE_TYPE_TRANSITION_OUT,
@@ -149,34 +122,9 @@ typedef struct Lit {
 
 } Lit;
 
-
-static Lit_Edge*
-lit_push_edge(Lit* m, F32 min_x, F32 min_y, F32 max_x, F32 max_y) {
-  assert(!al_is_full(&m->edges));
-  
-  Lit_Edge* edge = al_append(&m->edges);
-  edge->start_pt = v2(min_x, min_y);
-  edge->end_pt = v2(max_x, max_y);;
-
-  edge->is_disabled = false;
-
-  return edge;
-}
-
-static Lit_Light*
-lit_push_light(Lit* m, F32 pos_x, F32 pos_y, U32 color, F32 angle, F32 turn) {
-  Lit_Light* light = al_append(&m->lights);
-  assert(light);
-  light->pos.x = pos_x;
-  light->pos.y = pos_y;
-  light->color = color;
-
-  light->dir.x = cos_f32(turn*TAU_32);
-  light->dir.y = sin_f32(turn*TAU_32);
-  light->half_angle = deg_to_rad_f32(angle/2.f);
-  
-  return light;
-}
+// TODO: combine world and light to one file?
+#include "game_mode_lit_world.cpp"
+#include "game_mode_lit_entity.cpp"
 
 static Lit_Tutorial_Text*
 lit_push_tutorial_text(Lit_Tutorial_Text_List* texts, String8 str, F32 x, F32 y) {
@@ -230,87 +178,6 @@ lit_fade_out_next_tutorial_text(Lit_Tutorial_Text_List* texts) {
 
 
 
-
-static void
-lit_draw_edges(Lit_Edge_List* edges) {
-  al_foreach(edge_index, edges) 
-  {
-    Lit_Edge* edge = al_at(edges, edge_index);
-    if (edge->is_disabled) continue;
-    
-    Line2 line = line2(edge->start_pt,edge->end_pt);
-
-    gfx_push_line(gfx, line, 3.f, hex_to_rgba(0x888888FF));
-  }
-  gfx_advance_depth(gfx);
-}
-
-static void 
-lit_draw_debug_light_rays() {
- 
-#if LIT_DEBUG_LIGHT
-  // Draw the light rays
-  if (player->held_light) {
-    Lit_Light* l = player->held_light;
-    ba_set_revert_point(&game->frame_arena);
-    al_foreach(light_ray_index, &player->held_light->debug_rays)
-    {
-      Ray2 light_ray = player->held_light->debug_rays.e[light_ray_index];
-      
-      Line2 line = line2(player->pos, player->pos + light_ray.dir);
-      
-      paint_line(painter, line, 
-                 1.f, rgba(0x00FFFFFF));
-    }
-    gfx_advance_depth(gfx);
-   
-    Sort_Entry* sorted_its = ba_push_array(Sort_Entry, &game->frame_arena, l->intersections.count);
-    assert(sorted_its);
-    for (U32 intersection_id = 0; 
-         intersection_id < l->intersections.count; 
-         ++intersection_id) 
-    {
-      V2 intersection = al_at(&l->intersections, intersection_id)->pt;
-      V2 basis_vec = V2{1.f, 0.f} ;
-      V2 intersection_vec = intersection - l->pos;
-      F32 key = angle_between(basis_vec, intersection_vec);
-      if (intersection_vec.y < 0.f) key = PI_32*2.f - key;
-
-      sorted_its[intersection_id].index = intersection_id;
-      sorted_its[intersection_id].key = key; 
-    }
-    quicksort(sorted_its, (U32)l->intersections.count);
-
-    for (U32 its_id = 0;
-         its_id < l->intersections.count;
-         ++its_id) 
-    {
-      make_string_builder(sb, 128);
-      
-      clear(sb);
-      
-      Line2 line = {0};
-      line.min = player->pos;
-      line.max = al_at(&l->intersections, sorted_its[its_id].index)->pt;
-      
-      sb8_push_fmt(sb, str8_from_lit("[%u]"), its_id);
-      paint_text(painter,
-                 FONT_DEFAULT, 
-                 sb->str,
-                 rgba(0xFF0000FF),
-                 line.max.x,
-                 line.max.y + 10.f,
-                 12.f);
-      paint_line(painter, line, 1.f, rgba(0xFF0000FF));
-      
-    }
-    gfx_advance_depth(gfx);
-  }
-#endif
-}
-
-
-
 static void 
 lit_tick(Game* game, Painter* painter, Platform* pf) 
 {
@@ -361,7 +228,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
 
   // Transition in logic
   if (m->state == LIT_STATE_TYPE_NORMAL) {
-    lit_update_player(player, &m->lights, pf, dt);
+    lit_update_player(m, dt);
   }
 
   al_foreach(light_index, &m->lights)
@@ -369,13 +236,13 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
     Lit_Light* light = al_at(&m->lights, light_index);
     lit_gen_light_intersections(light, &m->edges, &game->frame_arena);
   }
-  lit_update_sensors(&m->sensors, &m->particles, &m->lights, &m->rng, dt);
+  lit_update_sensors(m, dt);
 
   // win condition
-  if (lit_are_all_sensors_activated(&m->sensors)) {
+  if (lit_are_all_sensors_activated(m)) {
     m->state = LIT_STATE_TYPE_TRANSITION_OUT;
   }
-  lit_update_particles(&m->particles, dt);
+  lit_update_particles(m, dt);
 
 
 #if 0
@@ -405,15 +272,15 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
                  GFX_BLEND_TYPE_SRC_ALPHA,
                  GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
-  lit_draw_edges(&m->edges); 
+  lit_draw_edges(m); 
   //lit_draw_debug_light_rays();
-  lit_draw_player(player, m->circle_sprite);
-  lit_draw_lights(&m->lights, m->circle_sprite);
+  lit_draw_player(m);
+  lit_draw_lights(m);
   
   gfx_push_blend(gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
-  lit_render_sensors(&m->sensors); 
-  lit_render_particles(&m->particles);
+  lit_render_sensors(m); 
+  lit_render_particles(m);
 
 
   // Update tutorial texts
@@ -452,7 +319,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   if (!al_is_empty(&m->tutorial_triggers))
   {
     Lit_Tutorial_Trigger* trigger = al_at(&m->tutorial_triggers, m->tutorial_triggers.current_id);
-    if(trigger && (*trigger)(m, pf)) {
+    if(trigger && (*trigger)(m)) {
       m->tutorial_triggers.current_id++;
     }
   }

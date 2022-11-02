@@ -2462,19 +2462,19 @@ Lit	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit;$/;"	t	language:C++	typ
 Lit	D:/work/git/txt/code/game_mode_lit.h	/^typedef struct Lit {$/;"	s	language:C++
 Lit	D:/work/git/txt/code/game_mode_lit.h	/^} Lit;$/;"	t	language:C++	typeref:struct:Lit
 lit_are_all_sensors_activated	C:/Users/geral/work/txt/code/game_mode_lit_sensors.h	/^lit_are_all_sensors_activated(Lit_Sensor_List* sensors) {$/;"	f	language:C++	typeref:typename:B32
-lit_are_all_sensors_activated	D:/work/git/txt/code/game_mode_lit_sensors.h	/^lit_are_all_sensors_activated(Lit_Sensor_List* sensors) {$/;"	f	language:C++	typeref:typename:B32
+lit_are_all_sensors_activated	D:/work/git/txt/code/game_mode_lit_sensors.cpp	/^lit_are_all_sensors_activated(Lit* lit) {$/;"	f	language:C++	typeref:typename:B32	file:
 lit_calc_ghost_edge_line	C:/Users/geral/work/txt/code/game_mode_lit.h	/^lit_calc_ghost_edge_line(Lit_Edge* e) {$/;"	f	language:C++	typeref:typename:Line2
 lit_calc_ghost_edge_line	D:/work/git/txt/code/game_mode_lit.h	/^lit_calc_ghost_edge_line(Lit_Edge* e) {$/;"	f	language:C++	typeref:typename:Line2
 LIT_DEBUG_LIGHT	C:/Users/geral/work/txt/code/game_mode_lit.h	/^#define LIT_DEBUG_LIGHT /;"	d	language:C++
 LIT_DEBUG_LIGHT	D:/work/git/txt/code/game_mode_lit.h	/^#define LIT_DEBUG_LIGHT /;"	d	language:C++
 lit_draw_debug_light_rays	C:/Users/geral/work/txt/code/game_mode_lit.h	/^lit_draw_debug_light_rays(Painter* painter) {$/;"	f	language:C++	typeref:typename:void
-lit_draw_debug_light_rays	D:/work/git/txt/code/game_mode_lit.h	/^lit_draw_debug_light_rays(Painter* painter) {$/;"	f	language:C++	typeref:typename:void
+lit_draw_debug_light_rays	D:/work/git/txt/code/game_mode_lit.h	/^lit_draw_debug_light_rays() {$/;"	f	language:C++	typeref:typename:void
 lit_draw_edges	C:/Users/geral/work/txt/code/game_mode_lit.h	/^lit_draw_edges(Lit_Edge_List* edges, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
-lit_draw_edges	D:/work/git/txt/code/game_mode_lit.h	/^lit_draw_edges(Lit_Edge_List* edges, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
+lit_draw_edges	D:/work/git/txt/code/game_mode_lit.h	/^lit_draw_edges(Lit_Edge_List* edges) {$/;"	f	language:C++	typeref:typename:void
 lit_draw_lights	C:/Users/geral/work/txt/code/game_mode_lit_light.h	/^lit_draw_lights(Lit_Light_List* lights, Painter* painter, Game_Sprite_ID sprite_id) {$/;"	f	language:C++	typeref:typename:void
-lit_draw_lights	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_draw_lights(Lit_Light_List* lights, Painter* painter, Game_Sprite_ID sprite_id) {$/;"	f	language:C++	typeref:typename:void
+lit_draw_lights	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_draw_lights(Lit_Light_List* lights, Game_Sprite_ID sprite_id) {$/;"	f	language:C++	typeref:typename:void
 lit_draw_player	C:/Users/geral/work/txt/code/game_mode_lit_player.h	/^lit_draw_player(Lit_Player* player, Painter* painter, Game_Sprite_ID sprite_id){$/;"	f	language:C++	typeref:typename:void
-lit_draw_player	D:/work/git/txt/code/game_mode_lit_player.h	/^lit_draw_player(Lit_Player* player, Game_Sprite_ID sprite_id){$/;"	f	language:C++	typeref:typename:void
+lit_draw_player	D:/work/git/txt/code/game_mode_lit_player.cpp	/^lit_draw_player(Lit* lit){$/;"	f	language:C++	typeref:typename:void	file:
 Lit_Edge	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit_Edge;$/;"	t	language:C++	typeref:struct:__anon3aa070140108
 Lit_Edge	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit_Edge {$/;"	s	language:C++
 Lit_Edge_List	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit_Edge_List;$/;"	t	language:C++	typeref:struct:__anon3aa070140208
@@ -2494,7 +2494,7 @@ lit_gen_light_intersections	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_gen
 lit_get_ray_intersection_time_wrt_edges	C:/Users/geral/work/txt/code/game_mode_lit_light.h	/^lit_get_ray_intersection_time_wrt_edges(Ray2 ray,$/;"	f	language:C++	typeref:typename:F32
 lit_get_ray_intersection_time_wrt_edges	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_get_ray_intersection_time_wrt_edges(Ray2 ray,$/;"	f	language:C++	typeref:typename:F32
 lit_init_player	C:/Users/geral/work/txt/code/game_mode_lit_player.h	/^lit_init_player(Lit_Player* player, F32 x, F32 y) {$/;"	f	language:C++	typeref:typename:void
-lit_init_player	D:/work/git/txt/code/game_mode_lit_player.h	/^lit_init_player(Lit_Player* player, F32 x, F32 y) {$/;"	f	language:C++	typeref:typename:void
+lit_init_player	D:/work/git/txt/code/game_mode_lit_player.cpp	/^lit_init_player(Lit* lit, F32 x, F32 y) {$/;"	f	language:C++	typeref:typename:void	file:
 Lit_Level	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^typedef void (*Lit_Level)(Lit* mode); $/;"	t	language:C++	typeref:typename:void (*)(Lit * mode)
 Lit_Level	D:/work/git/txt/code/game_mode_lit_levels.h	/^typedef void (*Lit_Level)(Lit* mode); $/;"	t	language:C++	typeref:typename:void (*)(Lit * mode)
 lit_levels	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^static Lit_Level lit_levels[] = {$/;"	v	language:C++	typeref:typename:Lit_Level[]
@@ -2502,7 +2502,7 @@ lit_levels	D:/work/git/txt/code/game_mode_lit_levels.h	/^static Lit_Level lit_le
 lit_level_0	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_0(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_0	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_0_tutorial_trigger_0	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_0_tutorial_trigger_0(Lit* m, Platform* pf) {$/;"	f	language:C++	typeref:typename:B32
-lit_level_0_tutorial_trigger_0	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_tutorial_trigger_0(Lit* m, Platform* pf) {$/;"	f	language:C++	typeref:typename:B32
+lit_level_0_tutorial_trigger_0	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_tutorial_trigger_0(Lit* m) {$/;"	f	language:C++	typeref:typename:B32
 lit_level_0_tutorial_trigger_1	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_0_tutorial_trigger_1(Lit* m, Platform* pf) {$/;"	f	language:C++	typeref:typename:B32
 lit_level_0_tutorial_trigger_1	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_tutorial_trigger_1(Lit* m, Platform* pf) {$/;"	f	language:C++	typeref:typename:B32
 lit_level_1	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_1(Lit* m) {$/;"	f	language:C++	typeref:typename:void
@@ -2550,7 +2550,7 @@ lit_push_edge	D:/work/git/txt/code/game_mode_lit.h	/^lit_push_edge(Lit* m, F32 m
 lit_push_light	C:/Users/geral/work/txt/code/game_mode_lit.h	/^lit_push_light(Lit* m, F32 pos_x, F32 pos_y, U32 color, F32 angle, F32 turn) {$/;"	f	language:C++	typeref:typename:Lit_Light *
 lit_push_light	D:/work/git/txt/code/game_mode_lit.h	/^lit_push_light(Lit* m, F32 pos_x, F32 pos_y, U32 color, F32 angle, F32 turn) {$/;"	f	language:C++	typeref:typename:Lit_Light *
 lit_push_sensor	C:/Users/geral/work/txt/code/game_mode_lit_sensors.h	/^lit_push_sensor(Lit_Sensor_List* sensors, F32 pos_x, F32 pos_y, U32 target_color) $/;"	f	language:C++	typeref:typename:void
-lit_push_sensor	D:/work/git/txt/code/game_mode_lit_sensors.h	/^lit_push_sensor(Lit_Sensor_List* sensors, F32 pos_x, F32 pos_y, U32 target_color) $/;"	f	language:C++	typeref:typename:void
+lit_push_sensor	D:/work/git/txt/code/game_mode_lit_sensors.cpp	/^lit_push_sensor(Lit* lit, F32 pos_x, F32 pos_y, U32 target_color) $/;"	f	language:C++	typeref:typename:void	file:
 lit_push_triangle	C:/Users/geral/work/txt/code/game_mode_lit_light.h	/^lit_push_triangle(Lit_Light* l, V2 p0, V2 p1, V2 p2, U32 color) {$/;"	f	language:C++	typeref:typename:void
 lit_push_triangle	D:/work/git/txt/code/game_mode_lit_light.h	/^lit_push_triangle(Lit_Light* l, V2 p0, V2 p1, V2 p2, U32 color) {$/;"	f	language:C++	typeref:typename:void
 lit_push_tutorial_text	C:/Users/geral/work/txt/code/game_mode_lit.h	/^lit_push_tutorial_text(Lit_Tutorial_Text_List* texts, String8 str, F32 x, F32 y) {$/;"	f	language:C++	typeref:typename:Lit_Tutorial_Text *
@@ -2558,9 +2558,9 @@ lit_push_tutorial_text	D:/work/git/txt/code/game_mode_lit.h	/^lit_push_tutorial_
 lit_push_tutorial_trigger	C:/Users/geral/work/txt/code/game_mode_lit.h	/^lit_push_tutorial_trigger(Lit_Tutorial_Trigger_List* triggers, Lit_Tutorial_Trigger fn) {$/;"	f	language:C++	typeref:typename:Lit_Tutorial_Trigger *
 lit_push_tutorial_trigger	D:/work/git/txt/code/game_mode_lit.h	/^lit_push_tutorial_trigger(Lit_Tutorial_Trigger_List* triggers, Lit_Tutorial_Trigger fn) {$/;"	f	language:C++	typeref:typename:Lit_Tutorial_Trigger *
 lit_render_particles	C:/Users/geral/work/txt/code/game_mode_lit_particles.h	/^lit_render_particles(Lit_Particle_Pool* ps, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
-lit_render_particles	D:/work/git/txt/code/game_mode_lit_particles.h	/^lit_render_particles(Lit_Particle_Pool* ps) {$/;"	f	language:C++	typeref:typename:void
+lit_render_particles	D:/work/git/txt/code/game_mode_lit_particles.cpp	/^lit_render_particles(Lit* lit) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_render_sensors	C:/Users/geral/work/txt/code/game_mode_lit_sensors.h	/^lit_render_sensors(Lit_Sensor_List* sensors, Painter* painter) {$/;"	f	language:C++	typeref:typename:void
-lit_render_sensors	D:/work/git/txt/code/game_mode_lit_sensors.h	/^lit_render_sensors(Lit_Sensor_List* sensors) {$/;"	f	language:C++	typeref:typename:void
+lit_render_sensors	D:/work/git/txt/code/game_mode_lit_sensors.cpp	/^lit_render_sensors(Lit* lit) {$/;"	f	language:C++	typeref:typename:void	file:
 Lit_Sensor	C:/Users/geral/work/txt/code/game_mode_lit_sensors.h	/^struct Lit_Sensor {$/;"	s	language:C++
 Lit_Sensor	D:/work/git/txt/code/game_mode_lit_sensors.h	/^struct Lit_Sensor {$/;"	s	language:C++
 LIT_SENSOR_COLOR_MASK	C:/Users/geral/work/txt/code/game_mode_lit_sensors.h	/^#define LIT_SENSOR_COLOR_MASK /;"	d	language:C++
@@ -2572,7 +2572,7 @@ LIT_SENSOR_PARTICLE_CD	D:/work/git/txt/code/game_mode_lit_sensors.h	/^#define LI
 LIT_SENSOR_RADIUS	C:/Users/geral/work/txt/code/game_mode_lit_sensors.h	/^#define LIT_SENSOR_RADIUS /;"	d	language:C++
 LIT_SENSOR_RADIUS	D:/work/git/txt/code/game_mode_lit_sensors.h	/^#define LIT_SENSOR_RADIUS /;"	d	language:C++
 lit_spawn_particle	C:/Users/geral/work/txt/code/game_mode_lit_particles.h	/^lit_spawn_particle(Lit_Particle_Pool* ps,$/;"	f	language:C++	typeref:typename:void
-lit_spawn_particle	D:/work/git/txt/code/game_mode_lit_particles.h	/^lit_spawn_particle(Lit_Particle_Pool* ps,$/;"	f	language:C++	typeref:typename:void
+lit_spawn_particle	D:/work/git/txt/code/game_mode_lit_particles.cpp	/^lit_spawn_particle(Lit* lit,$/;"	f	language:C++	typeref:typename:void	file:
 Lit_State_Type	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit_State_Type;$/;"	t	language:C++	typeref:enum:__anon3aa070140703
 Lit_State_Type	D:/work/git/txt/code/game_mode_lit.h	/^} Lit_State_Type;$/;"	t	language:C++	typeref:enum:__anonaaa574c00103
 LIT_STATE_TYPE_NORMAL	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_NORMAL,$/;"	e	language:C++	enum:__anon3aa070140703
@@ -2604,11 +2604,11 @@ Lit_Tutorial_Trigger	D:/work/git/txt/code/game_mode_lit.h	/^typedef B32 (*Lit_Tu
 Lit_Tutorial_Trigger_List	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Trigger_List;$/;"	t	language:C++	typeref:struct:__anon3aa070140408
 Lit_Tutorial_Trigger_List	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit_Tutorial_Trigger_List {$/;"	s	language:C++
 lit_update_particles	C:/Users/geral/work/txt/code/game_mode_lit_particles.h	/^lit_update_particles(Lit_Particle_Pool* ps, F32 dt) {$/;"	f	language:C++	typeref:typename:void
-lit_update_particles	D:/work/git/txt/code/game_mode_lit_particles.h	/^lit_update_particles(Lit_Particle_Pool* ps, F32 dt) {$/;"	f	language:C++	typeref:typename:void
+lit_update_particles	D:/work/git/txt/code/game_mode_lit_particles.cpp	/^lit_update_particles(Lit* lit, F32 dt) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_update_player	C:/Users/geral/work/txt/code/game_mode_lit_player.h	/^lit_update_player(Lit_Player* player, $/;"	f	language:C++	typeref:typename:void
-lit_update_player	D:/work/git/txt/code/game_mode_lit_player.h	/^lit_update_player(Lit_Player* player, $/;"	f	language:C++	typeref:typename:void
+lit_update_player	D:/work/git/txt/code/game_mode_lit_player.cpp	/^lit_update_player(Lit* lit, F32 dt)$/;"	f	language:C++	typeref:typename:void	file:
 lit_update_sensors	C:/Users/geral/work/txt/code/game_mode_lit_sensors.h	/^lit_update_sensors(Lit_Sensor_List* sensors, $/;"	f	language:C++	typeref:typename:void
-lit_update_sensors	D:/work/git/txt/code/game_mode_lit_sensors.h	/^lit_update_sensors(Lit_Sensor_List* sensors, $/;"	f	language:C++	typeref:typename:void
+lit_update_sensors	D:/work/git/txt/code/game_mode_lit_sensors.cpp	/^lit_update_sensors(Lit* lit,$/;"	f	language:C++	typeref:typename:void	file:
 load_asset_task	C:/Users/geral/work/txt/code/game_assets_2.h	/^load_asset_task(void* context) {$/;"	f	language:C++	typeref:typename:void
 Load_Asset_Task	C:/Users/geral/work/txt/code/game_assets_2.h	/^struct Load_Asset_Task {$/;"	s	language:C++
 load_asset_task	D:/work/git/txt/code/game_assets_2.h	/^load_asset_task(void* context) {$/;"	f	language:C++	typeref:typename:void
