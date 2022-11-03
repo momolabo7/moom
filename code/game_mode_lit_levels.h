@@ -84,6 +84,19 @@ lit_level_1(Lit* m) {
 
 /////////////////////////////////////////////////////////////////////
 // Level 2
+static B32
+lit_level_2_tutorial_trigger_0(Lit* m) {
+  if (pf_is_button_down(platform->button_up) || 
+      pf_is_button_down(platform->button_down) || 
+      pf_is_button_down(platform->button_right) ||
+      pf_is_button_down(platform->button_left)) 
+  {
+    lit_fade_out_next_tutorial_text(&m->tutorial_texts);
+    return true;
+  }
+
+  return false;
+}
 static void
 lit_level_2(Lit* m) {
   lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
@@ -91,19 +104,19 @@ lit_level_2(Lit* m) {
   lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
   lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
 
-  // Need to 'enclose' the shape
-  lit_push_edge(m, 800.f, 100.f, 800.f, 800.f);
-  lit_push_edge(m, 800.f, 800.f, 800.f, 100.f);
-
   // initialize player
   lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
 
-  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x008800FF); 
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x008800FF, 90.f, 0.5f);
- 
-  lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("Obstacles block light"), 650.f, 820.f);
+  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x888800FF); 
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x008800FF, 90.f, 0.5f);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.75f, 0x880000FF, 90.f, 0.5f);
+  lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("Combine colors to match the sensor!"), 550.f, 820.f);
   lit_fade_in_next_tutorial_text(&m->tutorial_texts);
+
+  lit_push_tutorial_trigger(&m->tutorial_triggers, lit_level_2_tutorial_trigger_0);
 }
+
+
 
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {

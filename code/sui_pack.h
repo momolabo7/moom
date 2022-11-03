@@ -227,6 +227,10 @@ sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena)
         font->highest_codepoint = highest_codepoint;
         font->glyph_count = atlas_font->codepoint_count;
         font->bitmap_asset_id = source->font.bitmap_asset_id;
+ 
+        // Use pixel scale of 1
+        F32 pixel_scale = ttf_get_scale_for_pixel_height(ttf, 1.f);
+
         
         // push glyphs
         for (U32 rect_index = 0;
@@ -242,16 +246,17 @@ sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena)
           glyph.texel_uv = sui_rp_rect_to_rect2u(*glyph_rect);
 
           U32 ttf_glyph_index = ttf_get_glyph_index(ttf, glyph.codepoint);
+          TTF_Glyph_Horizontal_Metrics metrics =
+            ttf_get_glyph_horiozontal_metrics(ttf, ttf_glyph_index);
+          glyph.horizontal_advance = (F32)metrics.advance_width * pixel_scale;
+
+
           F32 s = ttf_get_scale_for_pixel_height(ttf, 1.f);
           glyph.box = ttf_get_glyph_box(ttf, ttf_glyph_index, s);
 
           fwrite(&glyph, sizeof(glyph), 1, file);
         }
 
- 
-        // push horizontal advances
-        // they are scaled to 1 pixel scale.
-        F32 pixel_scale = ttf_get_scale_for_pixel_height(ttf, 1.f);
         
         for (U32 cpi1 = 0; cpi1 < atlas_font->codepoint_count; ++cpi1) {
           for (U32 cpi2 = 0; cpi2 < atlas_font->codepoint_count; ++cpi2) {
@@ -260,17 +265,10 @@ sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena)
             
             U32 gi1 = ttf_get_glyph_index(ttf, cp1);
             U32 gi2 = ttf_get_glyph_index(ttf, cp2);
-            
-            TTF_Glyph_Horizontal_Metrics g1_metrics =
-              ttf_get_glyph_horiozontal_metrics(ttf, gi1);
-
             S32 raw_kern = ttf_get_glyph_kerning(ttf, gi1, gi2);
-            
-            F32 advance_width = (F32)g1_metrics.advance_width * pixel_scale;
+ 
             F32 kerning = (F32)raw_kern * pixel_scale;
-            
-            F32 advance = advance_width + kerning;
-            fwrite(&advance, sizeof(advance), 1, file);
+            fwrite(&kerning, sizeof(kerning), 1, file);
           }
         }
 

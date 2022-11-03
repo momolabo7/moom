@@ -23,6 +23,7 @@ struct Game_Font_Glyph{
   Rect2U texel_uv;
   Rect2 box;
   Game_Bitmap_ID bitmap_asset_id;
+  F32 horizontal_advance;
 };
 
 struct Game_Font {
@@ -31,7 +32,7 @@ struct Game_Font {
   
   U32 glyph_count;
   Game_Font_Glyph* glyphs;
-  F32* horizontal_advances;
+  F32* kernings;
 };
 
 
@@ -226,8 +227,8 @@ init_game_assets(Game_Assets* ga,
           if(!codepoint_map) return false;
           Game_Font_Glyph* glyphs = ba_push_arr(Game_Font_Glyph, arena, glyph_count);
           if(!glyphs) return false;
-          F32* advances = ba_push_arr(F32, arena, glyph_count*glyph_count);
-          if (!advances) return false;
+          F32* kernings = ba_push_arr(F32, arena, glyph_count*glyph_count);
+          if (!kernings) return false;
           
           U32 current_data_offset = karu_asset.offset_to_data;
           for(U16 glyph_index = 0; 
@@ -248,24 +249,24 @@ init_game_assets(Game_Assets* ga,
             glyph->texel_uv = karu_glyph.texel_uv;
             glyph->bitmap_asset_id = Game_Bitmap_ID{ karu_glyph.bitmap_asset_id };
             glyph->box = karu_glyph.box;
-            
+            glyph->horizontal_advance = karu_glyph.horizontal_advance;
             codepoint_map[karu_glyph.codepoint] = glyph_index;
           }
 
           // Horizontal advances
           {
-            UMI advance_data_offset = 
+            UMI kernings_data_offset = 
                   karu_asset.offset_to_data + 
                   sizeof(Karu_Font_Glyph)*glyph_count;
 
             platform->read_file(file, 
                                 sizeof(F32)*glyph_count*glyph_count, 
-                                advance_data_offset, 
-                                advances);
+                                kernings_data_offset, 
+                                kernings);
              
             asset->font.glyphs = glyphs;
             asset->font.codepoint_map = codepoint_map;
-            asset->font.horizontal_advances = advances;
+            asset->font.kernings = kernings;
             asset->font.highest_codepoint = highest_codepoint;
             asset->font.glyph_count = glyph_count;
           }
@@ -351,9 +352,9 @@ find_best_asset_of_type(Game_Assets* ga,
 
 
 static F32
-get_horizontal_advance(Game_Font* font,
-                       U32 left_codepoint, 
-                       U32 right_codepoint) 
+get_kerning(Game_Font* font,
+            U32 left_codepoint, 
+            U32 right_codepoint) 
 {
   if (left_codepoint > font->highest_codepoint) return 0.f;
   if (right_codepoint > font->highest_codepoint) return 0.f;
@@ -361,7 +362,7 @@ get_horizontal_advance(Game_Font* font,
   U32 g1 = font->codepoint_map[left_codepoint];
   U32 g2 = font->codepoint_map[right_codepoint];
   U32 advance_index = ((g1)*font->glyph_count)+(g2);
-  return font->horizontal_advances[advance_index];
+  return font->kernings[advance_index];
 }
 
 static Game_Font_Glyph*
