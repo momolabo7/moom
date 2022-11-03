@@ -23,6 +23,12 @@ lit_push_edge(Lit* m, F32 min_x, F32 min_y, F32 max_x, F32 max_y) {
   return edge;
 }
 
+static void 
+lit_push_double_edge(Lit* m, F32 min_x, F32 min_y, F32 max_x, F32 max_y) {
+  lit_push_edge(m, min_x, min_y, max_x, max_y);
+  lit_push_edge(m, max_x, max_y, min_x, min_y);
+}
+
 static Lit_Light*
 lit_push_light(Lit* m, F32 pos_x, F32 pos_y, U32 color, F32 angle, F32 turn) {
   Lit_Light* light = al_append(&m->lights);

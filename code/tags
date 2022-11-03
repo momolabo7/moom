@@ -1648,10 +1648,10 @@ get_glyph	C:/Users/geral/work/txt/code/game_assets.h	/^get_glyph(Game_Font* font
 get_glyph	D:/work/git/txt/code/game_assets.h	/^get_glyph(Game_Font* font, U32 codepoint) {$/;"	f	language:C++	typeref:typename:Game_Font_Glyph *
 get_glyph	D:/work/git/txt/code/game_assets2.h	/^get_glyph(Game_Font* font, U32 codepoint) {$/;"	f	language:C++	typeref:typename:Game_Font_Glyph *
 get_horizontal_advance	C:/Users/geral/work/txt/code/game_assets.h	/^get_horizontal_advance(Game_Font* font,$/;"	f	language:C++	typeref:typename:F32
-get_horizontal_advance	D:/work/git/txt/code/game_assets.h	/^get_horizontal_advance(Game_Font* font,$/;"	f	language:C++	typeref:typename:F32
 get_horizontal_advance	D:/work/git/txt/code/game_assets2.h	/^get_horizontal_advance(Game_Font* font,$/;"	f	language:C++	typeref:typename:F32
 get_image	C:/Users/geral/work/txt/code/game_assets_2.h	/^get_image(Game_Assets* ga, Image_Asset_ID image_id) {$/;"	f	language:C++	typeref:typename:Image_Asset *
 get_image	D:/work/git/txt/code/game_assets_2.h	/^get_image(Game_Assets* ga, Image_Asset_ID image_id) {$/;"	f	language:C++	typeref:typename:Image_Asset *
+get_kerning	D:/work/git/txt/code/game_assets.h	/^get_kerning(Game_Font* font,$/;"	f	language:C++	typeref:typename:F32
 get_next_texture_handle	C:/Users/geral/work/txt/code/game_assets.h	/^get_next_texture_handle() {$/;"	f	language:C++	typeref:typename:U32
 get_next_texture_handle	D:/work/git/txt/code/game_assets.h	/^get_next_texture_handle() {$/;"	f	language:C++	typeref:typename:U32
 get_pack_id	C:/Users/geral/work/txt/code/game_asset_ids.h	/^static U32 get_pack_id(Bitmap_ID id) {return id >> 16;}$/;"	f	language:C++	typeref:typename:U32
@@ -2176,9 +2176,10 @@ hits_and_cycles	C:/Users/geral/work/txt/code/game_profiler.h	/^  U64 hits_and_cy
 hits_and_cycles	D:/work/git/txt/code/game_profiler.h	/^  U64 hits_and_cycles;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:U64
 hmtx	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon802a10330108	typeref:typename:U32
 hmtx	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
+horizontal_advance	D:/work/git/txt/code/game_assets.h	/^  F32 horizontal_advance;$/;"	m	language:C++	struct:Game_Font_Glyph	typeref:typename:F32
+horizontal_advance	D:/work/git/txt/code/karu.h	/^  F32 horizontal_advance;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:F32
 horizontal_advances	C:/Users/geral/work/txt/code/game_assets.h	/^  F32* horizontal_advances;$/;"	m	language:C++	struct:Game_Font	typeref:typename:F32 *
 horizontal_advances	C:/Users/geral/work/txt/code/game_assets_2.h	/^  F32* horizontal_advances;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:F32 *
-horizontal_advances	D:/work/git/txt/code/game_assets.h	/^  F32* horizontal_advances;$/;"	m	language:C++	struct:Game_Font	typeref:typename:F32 *
 horizontal_advances	D:/work/git/txt/code/game_assets2.h	/^  F32* horizontal_advances;$/;"	m	language:C++	struct:Game_Font	typeref:typename:F32 *
 horizontal_advances	D:/work/git/txt/code/game_assets_2.h	/^  F32* horizontal_advances;$/;"	m	language:C++	struct:Font_Asset	typeref:typename:F32 *
 hsl	C:/Users/geral/work/txt/code/momo_colors.h	/^hsl(F32 h, F32 s, F32 l) {$/;"	f	language:C++	typeref:typename:HSL
@@ -2436,6 +2437,7 @@ KB	C:/Users/geral/work/txt/code/momo_common.h	/^#define KB(/;"	d	language:C++
 KB	D:/work/git/txt/code/momo_common.h	/^#define KB(/;"	d	language:C++
 kern	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon802a10330108	typeref:typename:U32
 kern	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
+kernings	D:/work/git/txt/code/game_assets.h	/^  F32* kernings;$/;"	m	language:C++	struct:Game_Font	typeref:typename:F32 *
 key	C:/Users/geral/work/txt/code/game_console.h	/^  String8 key;$/;"	m	language:C++	struct:Console_Command	typeref:typename:String8
 key	C:/Users/geral/work/txt/code/momo_json.h	/^  String8 key;$/;"	m	language:C++	struct:_JSON_Object_Node	typeref:typename:String8
 key	C:/Users/geral/work/txt/code/momo_sort.h	/^  F32 key;$/;"	m	language:C++	struct:__anon82c42aad0108	typeref:typename:F32
@@ -2540,7 +2542,7 @@ lit_level_1	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_1(Li
 lit_level_1	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_1(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_2	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_2(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_2	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_2(Lit* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_2_tutorial_trigger_0	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_2_tutorial_trigger_0(Lit* m) {$/;"	f	language:C++	typeref:typename:B32
+lit_level_3	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_3(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 Lit_Light	C:/Users/geral/work/txt/code/game_mode_lit_light.h	/^struct Lit_Light {$/;"	s	language:C++
 Lit_Light	D:/work/git/txt/code/game_mode_lit_light.h	/^struct Lit_Light {$/;"	s	language:C++
 Lit_Light	D:/work/git/txt/code/game_mode_lit_world.h	/^struct Lit_Light {$/;"	s	language:C++
@@ -2641,6 +2643,7 @@ LIT_STATE_TYPE_TRANSITION_OUT	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  L
 LIT_STATE_TYPE_TRANSITION_OUT	D:/work/git/txt/code/game_mode_lit.h	/^  LIT_STATE_TYPE_TRANSITION_OUT,$/;"	e	language:C++	enum:__anonaaa574c00103
 lit_tick	C:/Users/geral/work/txt/code/game_mode_lit.h	/^lit_tick(Game* game, Painter* painter, Platform* pf) $/;"	f	language:C++	typeref:typename:void
 lit_tick	D:/work/git/txt/code/game_mode_lit.h	/^lit_tick(Game* game, Painter* painter, Platform* pf) $/;"	f	language:C++	typeref:typename:void
+lit_trigger_fade_next_text_on_move	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_trigger_fade_next_text_on_move(Lit* m) {$/;"	f	language:C++	typeref:typename:B32
 Lit_Tutorial_Text	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit_Tutorial_Text;$/;"	t	language:C++	typeref:struct:__anon3aa070140508
 Lit_Tutorial_Text	D:/work/git/txt/code/game_mode_lit.h	/^struct Lit_Tutorial_Text$/;"	s	language:C++
 LIT_TUTORIAL_TEXT_FADE_DURATION	C:/Users/geral/work/txt/code/game_mode_lit.h	/^#define LIT_TUTORIAL_TEXT_FADE_DURATION /;"	d	language:C++
@@ -3289,6 +3292,7 @@ paint_sprite	C:/Users/geral/work/txt/code/game_painter.h	/^paint_sprite(Painter*
 paint_sprite	D:/work/git/txt/code/game_painter.h	/^paint_sprite(Game_Sprite_ID sprite_id,$/;"	f	language:C++	typeref:typename:void
 paint_text	C:/Users/geral/work/txt/code/game_painter.h	/^paint_text(Painter* p,$/;"	f	language:C++	typeref:typename:void
 paint_text	D:/work/git/txt/code/game_painter.h	/^paint_text(Game_Font_ID font_id,$/;"	f	language:C++	typeref:typename:void
+paint_text_center_aligned	D:/work/git/txt/code/game_painter.h	/^paint_text_center_aligned(Game_Font_ID font_id,$/;"	f	language:C++	typeref:typename:void
 particles	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  Lit_Particle_Pool particles;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Particle_Pool
 particles	C:/Users/geral/work/txt/code/game_mode_lit_particles.h	/^  Lit_Particle particles[256];$/;"	m	language:C++	struct:Lit_Particle_Pool	typeref:typename:Lit_Particle[256]
 particles	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Particle_Pool particles;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Particle_Pool

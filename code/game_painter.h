@@ -80,7 +80,7 @@ paint_text_center_aligned(Game_Font_ID font_id,
   Game_Font* font = get_font(assets, font_id);
 
   
-  // Calculate the total width
+  // Calculate the total width of the text
   F32 offset = 0.f;
   for(U32 char_index = 1; 
       char_index < str.count;
