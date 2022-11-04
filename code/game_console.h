@@ -2,12 +2,6 @@
 #ifndef GAME_CONSOLE_H
 #define GAME_CONSOLE_H
 
-#include "momo_common.h"
-#include "momo_strings.h"
-#include "momo_memory.h"
-#include "momo_vectors.h"
-
-#include "game_painter.h"
 
 struct Console_Command {
   String8 key;

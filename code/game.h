@@ -33,12 +33,9 @@ static struct Profiler* profiler;
 
 #include "game_profiler.h"
 #include "game_assets.h"
-
-
-//#include "game_assets.h"
-#include "game_painter.h"
 #include "game_inspector.h"
 
+#include "game_asset_rendering.h"
 #include "game_inspector_rendering.h"
 #include "game_profiler_rendering.h"
 #include "game_console.h"
