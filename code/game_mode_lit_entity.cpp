@@ -184,7 +184,7 @@ lit_render_particles(Lit* lit) {
     size.w = lerp_f32(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = lerp_f32(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    paint_sprite(lit->blank_sprite, p->pos, size, color);
+    paint_sprite(lit->filled_circle_sprite, p->pos, size, color);
     gfx_advance_depth(gfx);
   }
 }

@@ -14,6 +14,7 @@ enum Game_Asset_Tag_Type : U32 {
 enum Game_Asset_Group_Type : U32 {
   asset_group(BLANK_SPRITE),
   asset_group(CIRCLE_SPRITE),
+  asset_group(FILLED_CIRCLE_SPRITE),
   asset_group(ATLAS),
   asset_group(FONTS),
 
@@ -47,8 +48,9 @@ struct Karu_Bitmap {
   U32 width;
   U32 height;
   
-  // data:
-  //   U32 pixels[width*height]
+  // Data:
+  //
+  // U32 pixels[width*height]
 };
 
 struct Karu_Font_Glyph {

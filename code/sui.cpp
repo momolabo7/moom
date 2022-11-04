@@ -19,6 +19,7 @@ int main() {
   sui_atlas_begin(atlas, 1024, 1024);
   Sui_Atlas_Sprite* blank_sprite = sui_atlas_push_sprite(atlas, sui_asset_dir("blank.png"));
   Sui_Atlas_Sprite* circle_sprite = sui_atlas_push_sprite(atlas, sui_asset_dir("circle.png"));
+  Sui_Atlas_Sprite* filled_circle_sprite = sui_atlas_push_sprite(atlas, sui_asset_dir("filled_circle.png"));
     
   sui_atlas_begin_font(atlas, sui_asset_dir("nokiafc22.ttf"), 72.f);
   for (U32 i = 32; i <= 126; ++i){
@@ -53,6 +54,10 @@ int main() {
 
   sui_pack_begin_group(packer, asset_group(CIRCLE_SPRITE));
   sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*circle_sprite->rect));
+  sui_pack_end_group(packer);
+
+  sui_pack_begin_group(packer, asset_group(FILLED_CIRCLE_SPRITE));
+  sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*filled_circle_sprite->rect));
   sui_pack_end_group(packer);
 
   sui_pack_begin_group(packer, asset_group(FONTS));

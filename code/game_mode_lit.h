@@ -119,6 +119,7 @@ typedef struct Lit {
   Game_Font_ID tutorial_font;
   Game_Sprite_ID blank_sprite;
   Game_Sprite_ID circle_sprite;
+  Game_Sprite_ID filled_circle_sprite;
 
 } Lit;
 
@@ -196,8 +197,9 @@ lit_tick(Game* game)
       m->tutorial_font = find_best_font(assets, GAME_ASSET_GROUP_TYPE_FONTS, match);
     }
   
-    m->blank_sprite = find_first_sprite(assets, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
-    m->circle_sprite = find_first_sprite(assets, GAME_ASSET_GROUP_TYPE_CIRCLE_SPRITE);
+    m->blank_sprite = find_first_sprite(assets, asset_group(BLANK_SPRITE));
+    m->circle_sprite = find_first_sprite(assets, asset_group(CIRCLE_SPRITE));
+    m->filled_circle_sprite = find_first_sprite(assets, asset_group(FILLED_CIRCLE_SPRITE));
   }
 
   Lit_Player* player = &m->player;
@@ -223,7 +225,6 @@ lit_tick(Game* game)
       lit_load_next_level(m);
       m->state = LIT_STATE_TYPE_TRANSITION_IN;
     }
-
   }
 
   // Transition in logic
