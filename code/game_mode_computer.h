@@ -26,9 +26,7 @@ computer_add_selection(Computer* com, String8 text, Game_Mode_Type mode_type) {
 }
 
 static void
-computer_tick(Game* game,
-              Painter* painter,
-              Platform* pf)
+computer_tick(Game* game)
 {
   if (!game_mode_initialized(game)) {
     Computer* com = game_allocate_mode(Computer, game);
@@ -41,17 +39,17 @@ computer_tick(Game* game,
   Computer* com = (Computer*)game->mode_context;
 
   // Input
-  if (pf_is_button_poked(pf->button_up)) {
+  if (pf_is_button_poked(platform->button_up)) {
     if (com->selected_id > 0)
       --com->selected_id;
     else 
       com->selected_id = com->selection_list.count - 1;
   }
-  if (pf_is_button_poked(pf->button_down)) {
+  if (pf_is_button_poked(platform->button_down)) {
     com->selected_id = ++com->selected_id % com->selection_list.count;
   }
 
-  if (pf_is_button_poked(pf->button_use)) {
+  if (pf_is_button_poked(platform->button_use)) {
     game_goto_mode(game, com->selection_list.e[com->selected_id].mode_type);
   }
 

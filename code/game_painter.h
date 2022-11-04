@@ -4,14 +4,6 @@
 #define GAME_PAINTER_H
 
 
-struct Painter {
-  F32 zoom_level;
-  F32 canvas_width;
-  F32 canvas_height;
-};
-
-
-
 static void
 paint_sprite(Game_Sprite_ID sprite_id,
              V2 pos,

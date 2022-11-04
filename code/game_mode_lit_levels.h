@@ -1,4 +1,3 @@
-
 static B32
 lit_trigger_fade_next_text_on_move(Lit* m) {
   if (pf_is_button_down(platform->button_up) || 
@@ -25,7 +24,6 @@ lit_level_0_tutorial_trigger_0(Lit* m) {
     lit_fade_in_next_tutorial_text(&m->tutorial_texts);
     return true;
   }
-
   return false;
 }
 
@@ -58,9 +56,7 @@ lit_level_0(Lit* m) {
 
   // tutorial text
   lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("WASD to move"), 100.f, 480.f);
-
   lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("SPACE to pick up"), 680.f, 480.f);
-
   lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("Q/R to rotate light"), 680.f, 480.f);
   lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("Shine same colored"), 1100.f, 510.f);
   lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("light on this"), 1100.f, 480.f);
@@ -148,6 +144,29 @@ lit_level_4(Lit* m) {
   lit_push_double_edge(m, 600.f, 300.f, 600.f, 600.f);
   lit_push_double_edge(m, 1000.f, 300.f, 1000.f, 600.f);
 
+  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x888888FF); 
+  lit_push_sensor(m, 800.f, 400.f, 0x008800FF); 
+  lit_push_sensor(m, 1200.f, 100.f, 0x880000FF); 
+  lit_push_sensor(m, 1200.f, 100.f, 0x880000FF); 
+
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x008800FF, 360.f, 0.5f);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.75f, 0x880000FF, 30.f, 0.5f);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x000088FF, 90.f, 0.5f);
+}
+
+
+static void
+lit_level_5(Lit* m) {
+  lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
+  lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
+  lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
+  lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
+
+  lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
+
+  lit_push_double_edge(m, 600.f, 300.f, 1000.f, 300.f);
+  lit_push_double_edge(m, 600.f, 300.f, 600.f, 600.f);
+  lit_push_double_edge(m, 1000.f, 300.f, 1000.f, 600.f);
 
   lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x888888FF); 
   lit_push_sensor(m, 800.f, 400.f, 0x008800FF); 
@@ -157,17 +176,16 @@ lit_level_4(Lit* m) {
   lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x008800FF, 360.f, 0.5f);
   lit_push_light(m, 500.f, GAME_HEIGHT * 0.75f, 0x880000FF, 30.f, 0.5f);
   lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x000088FF, 90.f, 0.5f);
-
 }
-
 
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
-  //lit_level_0,
-  //lit_level_1,
-  //lit_level_2,
-  //lit_level_3,
-  lit_level_4,
+  // lit_level_0,
+  // lit_level_1,
+  // lit_level_2,
+  // lit_level_3,
+  // lit_level_4,
+  lit_level_5,
 };
 
 

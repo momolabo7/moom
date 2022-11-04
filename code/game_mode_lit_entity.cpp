@@ -11,7 +11,7 @@ lit_init_player(Lit* lit, F32 x, F32 y) {
 }
 
 static void 
-lit_update_player(Lit* lit, F32 dt)
+lit_update_player(Lit* lit, F32 dt) 
 {
   Lit_Player* player = &lit->player; 
   Lit_Light_List* lights = &lit->lights;
@@ -64,7 +64,6 @@ lit_update_player(Lit* lit, F32 dt)
         player->old_light_pos = nearest_light->pos;
         player->light_retrival_time = 0.f;
       }
-      
     }
     else{ 
       player->held_light = null;
@@ -78,7 +77,7 @@ lit_update_player(Lit* lit, F32 dt)
     velocity *= speed * dt;
     player->pos += velocity;
   }
-  
+
   if (player->held_light) {
     if (player->light_retrival_time < LIT_PLAYER_LIGHT_RETRIEVE_DURATION) {
       player->light_retrival_time += dt;
@@ -185,8 +184,7 @@ lit_render_particles(Lit* lit) {
     size.w = lerp_f32(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = lerp_f32(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    Game_Sprite_ID sprite_id = find_first_sprite(assets, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
-    paint_sprite(sprite_id, p->pos, size, color);
+    paint_sprite(lit->blank_sprite, p->pos, size, color);
     gfx_advance_depth(gfx);
   }
 }
@@ -251,7 +249,8 @@ lit_update_sensors(Lit* lit,
 
     // Particle emission check
     sensor->particle_cd -= dt;
-    if (sensor->particle_cd <= 0.f) {
+    if (sensor->particle_cd <= 0.f) 
+    {
       sensor->particle_cd = LIT_SENSOR_PARTICLE_CD;
       V2 rand_dir = rng_unit_circle(rng);
       V2 particle_vel = v2_scale(rand_dir, 10.f); 
@@ -274,10 +273,8 @@ lit_update_sensors(Lit* lit,
                          end_color,
                          size_start,
                          size_end);
-
     }
   }
-
 }
 
 static B32
@@ -310,6 +307,4 @@ lit_render_sensors(Lit* lit) {
 
     gfx_advance_depth(gfx);
   }
-
-  
 }

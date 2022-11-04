@@ -179,7 +179,7 @@ lit_fade_out_next_tutorial_text(Lit_Tutorial_Text_List* texts) {
 
 
 static void 
-lit_tick(Game* game, Painter* painter, Platform* pf) 
+lit_tick(Game* game) 
 {
   Lit* m = (Lit*)game->mode_context;
   if (!game_mode_initialized(game)) {
@@ -201,7 +201,7 @@ lit_tick(Game* game, Painter* painter, Platform* pf)
   }
 
   Lit_Player* player = &m->player;
-  F32 dt = pf->seconds_since_last_frame;
+  F32 dt = platform->seconds_since_last_frame;
 
   // Transition Logic
   if (m->state == LIT_STATE_TYPE_TRANSITION_IN) {

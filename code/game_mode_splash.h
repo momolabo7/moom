@@ -11,9 +11,7 @@ struct Splash {
 };
 
 static void 
-splash_tick(Game* game,
-            Painter* painter,
-            Platform* pf) 
+splash_tick(Game* game)
 {
 
   if (!game_mode_initialized(game)) {
@@ -23,7 +21,7 @@ splash_tick(Game* game,
   
   Splash* splash = (Splash*)game->mode_context;
   
-  F32 dt = pf->seconds_since_last_frame;
+  F32 dt = platform->seconds_since_last_frame;
   splash->timer -= dt;
   
   if (splash->timer < 0.f) {

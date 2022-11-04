@@ -69,7 +69,6 @@ game_update_and_render(Platform* pf)
   inspector = &game->inspector;
   Console* console = &game->console;
  
-  make(Painter, painter);
 
   // TODO: should probably be in modes instead
   gfx_push_view(gfx, 0.f, GAME_WIDTH, 0.f, GAME_HEIGHT, 0.f, 0.f);
@@ -88,7 +87,7 @@ game_update_and_render(Platform* pf)
     game->mode_context = null;
     game->is_mode_changed = false;
   }
-  game_modes[game->current_game_mode](game, painter, pf);
+  game_modes[game->current_game_mode](game);
 
   // Debug Rendering Stuff
   if (pf_is_button_poked(platform->button_console)) {
