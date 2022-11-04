@@ -24,7 +24,7 @@ struct Console {
 
 static void
 init_console(Console* dc, Bump_Allocator* allocator) {
-  UMI line_size = 256;
+  U32 line_size = 256;
   sb8_init(&dc->input_line,
            ba_push_arr(U8, allocator, line_size),
            line_size);
