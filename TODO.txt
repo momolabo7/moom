@@ -1,7 +1,8 @@
-
+Game
+  sensor should remove particles and just be 'glowing'
+  sensor should take into account all sides of circle
 Assets 
-  Remove painter. Just pass in Game_Assets for rendering
-  'get_first_font' etc rename to 'find_first_font' etc
+
   9 Slice 
   Audio/Sound
 

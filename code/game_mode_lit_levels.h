@@ -168,14 +168,10 @@ lit_level_5(Lit* m) {
   lit_push_double_edge(m, 600.f, 300.f, 600.f, 600.f);
   lit_push_double_edge(m, 1000.f, 300.f, 1000.f, 600.f);
 
-  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x888888FF); 
-  lit_push_sensor(m, 800.f, 400.f, 0x008800FF); 
-  lit_push_sensor(m, 1200.f, 100.f, 0x880000FF); 
-  lit_push_sensor(m, 1200.f, 100.f, 0x880000FF); 
+  lit_push_sensor(m, 800.f,  400.f, 0x880000FF); 
 
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x008800FF, 360.f, 0.5f);
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.75f, 0x880000FF, 30.f, 0.5f);
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x000088FF, 90.f, 0.5f);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x440000FF, 30.f, 0.5f);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.75f, 0x440000FF, 30.f, 0.5f);
 }
 
 typedef void (*Lit_Level)(Lit* mode); 
