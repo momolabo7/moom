@@ -170,14 +170,12 @@ lit_level_5(Lit* m) {
 
   lit_push_sensor(m, 800.f,  400.f, 0x880000FF); 
 
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x440000FF, 30.f, 0.5f);
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.75f, 0x440000FF, 30.f, 0.5f);
 }
 
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
-  // lit_level_0,
-  // lit_level_1,
+  lit_level_0, // Basics 1
+  lit_level_1, // Basics 2
   // lit_level_2,
   // lit_level_3,
   // lit_level_4,
