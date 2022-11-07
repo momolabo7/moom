@@ -78,7 +78,7 @@ sui_pack_end_group(Sui_Packer* p)
 }
 
 static void
-sui_pack_push_sprite(Sui_Packer* p, U32 bitmap_asset_id, Rect2U texel_uv) {
+sui_pack_push_sprite(Sui_Packer* p, Sui_Atlas_Sprite* sprite, U32 bitmap_asset_id) {
   assert(p->active_group);
   assert(p->asset_count < array_count(p->assets));
 
@@ -94,7 +94,7 @@ sui_pack_push_sprite(Sui_Packer* p, U32 bitmap_asset_id, Rect2U texel_uv) {
   source->type = SUI_PACKER_SOURCE_TYPE_SPRITE;
 
   source->sprite.bitmap_asset_id = bitmap_asset_id;
-  source->sprite.texel_uv = texel_uv;
+  source->sprite.texel_uv = sui_rp_rect_to_rect2u(sprite->rect);
 
   //Karu_Sprite* sprite = &asset->sprite;
   
@@ -102,7 +102,7 @@ sui_pack_push_sprite(Sui_Packer* p, U32 bitmap_asset_id, Rect2U texel_uv) {
 
 // TODO: return something else?
 static U32
-sui_pack_push_bitmap(Sui_Packer* p, U32 width, U32 height, U32* pixels) {
+sui_pack_push_bitmap(Sui_Packer* p, Sui_Atlas* atlas) {
   assert(p->active_group);
   assert(p->asset_count < array_count(p->assets));
 

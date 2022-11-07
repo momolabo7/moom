@@ -45,19 +45,21 @@ int main() {
   sui_pack_begin(packer);
 
   sui_pack_begin_group(packer, asset_group(ATLAS));
-  U32 bitmap_id = sui_pack_push_bitmap(packer, atlas->bitmap.width, atlas->bitmap.height, atlas->bitmap.pixels);
+  U32 bitmap_id = sui_pack_push_bitmap(packer, atlas);
   sui_pack_end_group(packer);
   
   sui_pack_begin_group(packer, asset_group(BLANK_SPRITE));
-  sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*blank_sprite->rect));
+  //U32 atlas_id = sui_pack_push_atlas(...)
+  //sui_pack_push_atlas_sprite(packer, atlas_id, sui_asset_dir("blank.png"));
+  sui_pack_push_sprite(packer, blank_sprite, bitmap_id);
   sui_pack_end_group(packer);
 
   sui_pack_begin_group(packer, asset_group(CIRCLE_SPRITE));
-  sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*circle_sprite->rect));
+  sui_pack_push_sprite(packer, circle_sprite, bitmap_id);
   sui_pack_end_group(packer);
 
   sui_pack_begin_group(packer, asset_group(FILLED_CIRCLE_SPRITE));
-  sui_pack_push_sprite(packer, bitmap_id, sui_rp_rect_to_rect2u(*filled_circle_sprite->rect));
+  sui_pack_push_sprite(packer, filled_circle, bitmap_id);
   sui_pack_end_group(packer);
 
   sui_pack_begin_group(packer, asset_group(FONTS));
