@@ -41,27 +41,27 @@ static struct Profiler* profiler;
 #include "game_console.h"
 //////////////////////////////////////////////////////
 // GAME
-enum Game_Show_Debug_Type {
+typedef enum Game_Show_Debug_Type {
   GAME_SHOW_DEBUG_NONE,
   GAME_SHOW_DEBUG_PROFILER,
   GAME_SHOW_DEBUG_CONSOLE,
   GAME_SHOW_DEBUG_INSPECTOR,
   
   GAME_SHOW_DEBUG_MAX
-};
+} Game_Show_Debug_Type;
 
 /////////////////////////////////////////////////////////////////////////////
 // Game Modes
-enum Game_Mode_Type {
+typedef enum Game_Mode_Type {
   GAME_MODE_TYPE_SPLASH,
   GAME_MODE_TYPE_LIT,
   GAME_MODE_TYPE_COMPUTER,
   GAME_MODE_TYPE_SANDBOX,
-};
+} Game_Mode_Type;
 
 
 
-struct Game {
+typedef struct Game {
   Game_Show_Debug_Type show_debug_type;
     
   // Bump_Allocators
@@ -86,7 +86,7 @@ struct Game {
   // Interested game assets
   Game_Sprite_ID blank_sprite;
   Game_Font_ID debug_font;
-};
+} Game;
 
 static void 
 game_goto_mode(Game* game, Game_Mode_Type type) {

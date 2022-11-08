@@ -3742,7 +3742,7 @@ sample_count	D:/work/git/txt/code/game_platform.h	/^    U32 sample_count;$/;"	m	
 sample_rate	C:/Users/geral/work/txt/code/momo_wav.h	/^  U32 sample_rate;$/;"	m	language:C++	struct:__anon805632930208	typeref:typename:U32
 sample_rate	D:/work/git/txt/code/momo_wav.h	/^  U32 sample_rate;$/;"	m	language:C++	struct:__anon690e9bbf0208	typeref:typename:U32
 Sandbox	D:/work/git/txt/code/game_mode_sandbox.h	/^struct Sandbox {$/;"	s	language:C++
-sandbox_tick	D:/work/git/txt/code/game_mode_sandbox.h	/^sandbox_tick(Game* game) {$/;"	f	language:C++	typeref:typename:void
+sandbox_tick	D:/work/git/txt/code/game_mode_sandbox.h	/^sandbox_tick(Game* game) $/;"	f	language:C++	typeref:typename:void
 sb8_clear	C:/Users/geral/work/txt/code/momo_strings.h	/^sb8_clear(String8_Builder* b) {$/;"	f	language:C++	typeref:typename:void
 sb8_clear	C:/Users/geral/work/txt/code/momo_strings.h	/^static void     sb8_clear(String8_Builder* b);$/;"	p	language:C++	typeref:typename:void
 sb8_clear	D:/work/git/txt/code/momo_strings.h	/^sb8_clear(String8_Builder* b) {$/;"	f	language:C++	typeref:typename:void
