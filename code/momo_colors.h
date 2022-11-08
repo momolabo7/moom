@@ -18,7 +18,7 @@
 
 
 // Each component of RGBA are in the range [0 - 1].
-typedef struct  {
+typedef struct RGB {
   F32 r, g, b;   
 } RGB;
 
@@ -26,11 +26,11 @@ typedef struct  {
 // For hue, normally it is a number between [0 - 360], but
 // it will be mapped linearly to [0 - 1] in this case.
 // i.e. hue 0 is 0 degrees, hue 1 is 360 degrees.
-typedef struct {
+typedef struct HSL {
   F32 h, s, l;  
 } HSL;
 
-typedef struct  {
+typedef struct RGBA {
   union {
     struct { F32 r, g, b; };  
     RGB rgb;

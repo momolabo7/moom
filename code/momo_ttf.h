@@ -43,24 +43,24 @@ typedef struct
   S16 left_side_bearing;
 } TTF_Glyph_Horizontal_Metrics;
 
-static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);
+static B32 ttf_read(const TTF* ttf, void* memory, UMI memory_size);
 
-static U32 ttf_get_glyph_index(TTF* ttf, U32 codepoint);
+static U32 ttf_get_glyph_index(const TTF* ttf, U32 codepoint);
 // returns 0 for invalid codepoints
 
-static TTF_Glyph_Horizontal_Metrics ttf_get_glyph_horiozontal_metrics(TTF* ttf, U32 glyph_index);
+static TTF_Glyph_Horizontal_Metrics ttf_get_glyph_horiozontal_metrics(const TTF* ttf, U32 glyph_index);
 
-static F32 ttf_get_scale_for_pixel_height(TTF* ttf, F32 pixel_height);
+static F32 ttf_get_scale_for_pixel_height(const TTF* ttf, F32 pixel_height);
 // This returns the 'scale factor' you need to apply to the font's coordinates
 // (box, glyphs, etc) to scale it to a font height equals to pixel_height
 
 static V2U ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box);
 
-static Image32 ttf_rasterize_glyph(TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator* allocator);
+static Image32 ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator* allocator);
 // Returns an RGBA image where the glyph is white and the background is transparent
 
-static S32 ttf_get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);
-static Rect2 ttf_get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor);
+static S32 ttf_get_glyph_kerning(const TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);
+static Rect2 ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, F32 scale_factor);
 
 
 ///////////////////////////////////////////////////////////////
@@ -133,7 +133,7 @@ _ttf_read_u32(U8* location) {
 
 // returns 0 is failure
 static U32
-_ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
+_ttf_get_offset_to_glyph(const TTF* ttf, U32 glyph_index) {
   
   if(glyph_index >= ttf->glyph_count) return 0;
   
@@ -164,7 +164,7 @@ _ttf_get_offset_to_glyph(TTF* ttf, U32 glyph_index) {
 // with respect to the coordinate system stated above.
 // 
 static Rect2S 
-_ttf_get_raw_glyph_box(TTF* ttf, U32 glyph_index) {
+_ttf_get_raw_glyph_box(const TTF* ttf, U32 glyph_index) {
   Rect2S  ret = {0};
   U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
 	if(g != 0)
@@ -179,7 +179,7 @@ _ttf_get_raw_glyph_box(TTF* ttf, U32 glyph_index) {
 }
 
 static S32
-_ttf_get_kern_advance(TTF* ttf, S32 g1, S32 g2) {
+_ttf_get_kern_advance(const TTF* ttf, S32 g1, S32 g2) {
   // NOTE(Momo): We only care about format 0, which Windows cares
   // For now, OSX has too many things to handle for this table 
   // and I am not going to care because I mostly develop in Windows.
@@ -233,7 +233,7 @@ _ttf_get_kern_advance(TTF* ttf, S32 g1, S32 g2) {
 // ----x
 //
 static B32 
-_ttf_get_glyph_outline(TTF* ttf, 
+_ttf_get_glyph_outline(const TTF* ttf, 
                        _TTF_Glyph_Outline* outline,
                        U32 glyph_index, 
                        Bump_Allocator* allocator) 
@@ -496,7 +496,7 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,
 //////////////////////////////////////////////////////////
 //~Public interface implementation
 static U32
-ttf_get_glyph_index(TTF* ttf, U32 codepoint) {
+ttf_get_glyph_index(const TTF* ttf, U32 codepoint) {
   
   U16 format = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 0);
   
@@ -558,14 +558,14 @@ ttf_get_glyph_index(TTF* ttf, U32 codepoint) {
 
 
 static F32
-ttf_get_scale_for_pixel_height(TTF* ttf, F32 pixel_height) {
+ttf_get_scale_for_pixel_height(const TTF* ttf, F32 pixel_height) {
   S32 font_height = _ttf_read_s16(ttf->data + ttf->hhea + 4) - _ttf_read_s16(ttf->data + ttf->hhea + 6);
   return (F32)pixel_height/font_height;
 }
 
 
 static TTF_Glyph_Horizontal_Metrics 
-ttf_get_glyph_horiozontal_metrics(TTF* ttf, U32 glyph_index)
+ttf_get_glyph_horiozontal_metrics(const TTF* ttf, U32 glyph_index)
 {
   U16 num_of_long_horizontal_metrices = _ttf_read_u16(ttf->data + ttf->hhea + 34);
   TTF_Glyph_Horizontal_Metrics ret = {0};
@@ -592,7 +592,7 @@ ttf_get_glyph_horiozontal_metrics(TTF* ttf, U32 glyph_index)
 
 
 static B32
-ttf_read(TTF* ttf, void* memory, UMI memory_size) {
+ttf_read(const TTF* ttf, void* memory, UMI memory_size) {
   ttf->data = (U8*)memory;
   
   U32 num_tables = _ttf_read_u16(ttf->data + 4);
@@ -698,7 +698,7 @@ ttf_read(TTF* ttf, void* memory, UMI memory_size) {
 }
 
 static S32 
-ttf_get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
+ttf_get_glyph_kerning(const TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
   
   if (ttf->gpos) {
     assert(false);
@@ -711,7 +711,7 @@ ttf_get_glyph_kerning(TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
 }
 
 static Rect2 
-ttf_get_glyph_box(TTF* ttf, U32 glyph_index, F32 scale_factor) {
+ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, F32 scale_factor) {
   Rect2 ret = {0};
   
   Rect2S raw_box = _ttf_get_raw_glyph_box(ttf, glyph_index);
@@ -737,7 +737,7 @@ ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
 
 
 static Image32 
-ttf_rasterize_glyph(TTF* ttf, 
+ttf_rasterize_glyph(const TTF* ttf, 
                     U32 glyph_index, 
                     F32 scale_factor, 
                     Bump_Allocator* allocator) 
