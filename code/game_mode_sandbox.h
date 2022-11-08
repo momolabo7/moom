@@ -20,7 +20,6 @@ sandbox_tick(Game* game)
     dir.y -= 1.f;
   }
 
-
   if(pf_is_button_down(platform->button_left)) {
     dir.x -= 1.f;
   }
@@ -32,7 +31,6 @@ sandbox_tick(Game* game)
   if (dir.x != 0.f && dir.y != 0.f) 
     dir = v2_norm(dir);
   player_pos += dir * 10.f;
-
 
   gfx_push_circle_outline(gfx, player, 2.f, 16, white);
   gfx_push_filled_triangle(gfx, white,
