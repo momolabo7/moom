@@ -2,7 +2,8 @@
 #define MOMO_SHAPES_H
 
 
-typedef struct{
+// TODO: width height more important than min/max
+typedef struct {
   V2 min, max;
 }Rect2;
 
@@ -43,12 +44,6 @@ typedef struct{
   V2 pts[3];
 }Tri2;
 
-// Gets the normalized values of Rect lhs based on another Rect rhs
-static F32 rec2_width(Rect2 lhs);
-static F32 rec2_height(Rect2 lhs);
-static U32 rec2u_width(Rect2U lhs);
-static U32 rec2u_height(Rect2U lhs);
-static B32 tri2_is_point_within(Tri2 tri, V2 pt);
 
 ///////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
@@ -67,25 +62,7 @@ line2(V2 min, V2 max) {
   return ret;
 }
 
-static F32
-rec2_width(Rect2 r) {
-  return abs_f32(r.max.x - r.min.x);
-}
 
-static F32
-rec2_height(Rect2 r) {
-  return abs_f32(r.max.y - r.min.y);
-}
-
-static U32
-rec2u_width(Rect2U r) {
-  return r.max.x - r.min.x;
-}
-
-static U32
-rec2u_height(Rect2U r) {
-  return r.max.y - r.min.y;
-}
 
 // https://totologic.blogspot.com/2014/01/accurate-point-in-triangle-test.html
 // NOTE(Momo): We should really profile to see which is the best but I'm assuming

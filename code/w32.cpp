@@ -739,8 +739,12 @@ WinMain(HINSTANCE instance,
       
       pf->render_mouse_pos = pf->screen_mouse_pos - render_region.min;
       
-      F32 design_to_render_w = GAME_WIDTH / rec2u_width(render_region);
-      F32 design_to_render_h = GAME_HEIGHT / rec2u_height(render_region);
+      F32 region_width = (F32)render_region.max.x - render_region.min.x;
+      F32 region_height = (F32)render_region.max.x - render_region.min.x;
+
+
+      F32 design_to_render_w = GAME_WIDTH / region_width;
+      F32 design_to_render_h = GAME_HEIGHT / region_height;
       
       pf->design_mouse_pos.x = F32(pf->render_mouse_pos.x) * design_to_render_w;
       pf->design_mouse_pos.y = F32(pf->render_mouse_pos.y) * design_to_render_h;
