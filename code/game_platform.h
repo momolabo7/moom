@@ -164,9 +164,9 @@ typedef void Game_Update_And_Render(Platform* pf);
 typedef void Game_Debug_Update_And_Render(Platform* pf);
 
 // To be called by platform
-struct Game_Functions {
+typedef struct Game_Functions {
   Game_Update_And_Render* update_and_render;
-};
+} Game_Functions;
 
 static const char* game_function_names[] {
   "game_update_and_render",
