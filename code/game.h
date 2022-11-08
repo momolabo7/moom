@@ -56,6 +56,7 @@ enum Game_Mode_Type {
   GAME_MODE_TYPE_SPLASH,
   GAME_MODE_TYPE_LIT,
   GAME_MODE_TYPE_COMPUTER,
+  GAME_MODE_TYPE_SANDBOX,
 };
 
 
@@ -112,12 +113,14 @@ game_allocate_mode_size(Game* game, UMI size) {
 #include "game_mode_splash.h"
 #include "game_mode_lit.h"
 #include "game_mode_computer.h"
+#include "game_mode_sandbox.h"
 
 typedef void (*Game_Mode_Tick)(Game*);
 static Game_Mode_Tick game_modes[] = {
   splash_tick,
   lit_tick,
   computer_tick,
+  sandbox_tick,
 };
 
 

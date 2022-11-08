@@ -1,6 +1,5 @@
 #include "game.h"
 
-
 /////////////////////////////////////////////////////////
 // GAME
 exported B32 
@@ -48,7 +47,7 @@ game_update_and_render(Platform* pf)
       game->debug_font = find_best_font(&game->assets, asset_group(FONTS), match);
     }
 
-    game_goto_mode(game, GAME_MODE_TYPE_LIT);
+    game_goto_mode(game, GAME_MODE_TYPE_SANDBOX);
 
     
     //game_set_mode(game, splash_init, splash_tick);

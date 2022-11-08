@@ -2,7 +2,6 @@
 #define GAME_MODE_COMPUTER
 
 
-
 struct Computer_Selection{
   String8 text;
   Game_Mode_Type mode_type;

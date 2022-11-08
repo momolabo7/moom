@@ -59,7 +59,7 @@ int main() {
   sui_pack_end_group(packer);
 
   sui_pack_begin_group(packer, asset_group(FILLED_CIRCLE_SPRITE));
-  sui_pack_push_sprite(packer, filled_circle, bitmap_id);
+  sui_pack_push_sprite(packer, filled_circle_sprite, bitmap_id);
   sui_pack_end_group(packer);
 
   sui_pack_begin_group(packer, asset_group(FONTS));

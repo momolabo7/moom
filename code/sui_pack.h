@@ -117,9 +117,9 @@ sui_pack_push_bitmap(Sui_Packer* p, Sui_Atlas* atlas) {
   Sui_Packer_Source* source = p->sources + asset_index;
   source->type = SUI_PACKER_SOURCE_TYPE_BITMAP;
 
-  source->bitmap.width = width;
-  source->bitmap.height = height;
-  source->bitmap.pixels = pixels;
+  source->bitmap.width = atlas->bitmap.width;
+  source->bitmap.height = atlas->bitmap.height;
+  source->bitmap.pixels = atlas->bitmap.pixels;
 
   return asset_index;
 }
@@ -243,7 +243,7 @@ sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena)
           Karu_Font_Glyph glyph = {0};
           glyph.bitmap_asset_id = source->font.bitmap_asset_id;
           glyph.codepoint = glyph_rect_context->font_glyph.codepoint;
-          glyph.texel_uv = sui_rp_rect_to_rect2u(*glyph_rect);
+          glyph.texel_uv = sui_rp_rect_to_rect2u(glyph_rect);
 
           U32 ttf_glyph_index = ttf_get_glyph_index(ttf, glyph.codepoint);
           TTF_Glyph_Horizontal_Metrics metrics =
