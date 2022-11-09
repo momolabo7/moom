@@ -307,7 +307,7 @@ find_best_asset_of_type(Game_Assets* ga,
                         Game_Asset_Match* vector)
 {
   U32 ret = 0;
-  F32 best_diff = F32_INFINITY();
+  F32 best_diff = F32_INFINITY;
   Game_Asset_Group* group = ga->groups + group_type;
   for (U32 asset_index = group->first_asset_index;
        asset_index != group->one_past_last_asset_index;

@@ -6,11 +6,11 @@ static void
 sandbox_tick(Game* game) 
 {
   
-  static V2 player_pos = v2(800.f, 800.f); 
-  Circ2 player = circ2(player_pos, 16.f);
+  static V2 player_pos = v2_set(800.f, 800.f); 
+  Circ2 player = circ2_set(player_pos, 16.f);
   RGBA white = rgba(1.f, 1.f, 1.f, 1.f);
 
-  V2 dir = v2(0.f, 0.f);
+  V2 dir = v2_set(0.f, 0.f);
 
   if(pf_is_button_down(platform->button_up)) {
     dir.y += 1.f;
@@ -34,8 +34,8 @@ sandbox_tick(Game* game)
 
   gfx_push_circle_outline(gfx, player, 2.f, 16, white);
   gfx_push_filled_triangle(gfx, white,
-                           v2(100.f, 100.f),
-                           v2(400.f, 400.f),
-                           v2(100.f, 400.f));
+                           v2_set(100.f, 100.f),
+                           v2_set(400.f, 400.f),
+                           v2_set(100.f, 400.f));
 
 }

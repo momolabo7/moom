@@ -450,8 +450,8 @@ gfx_push_filled_circle(Gfx* g,
     F32 next_angle = current_angle + section_angle; 
 
     V2 p0 = circle.center;
-    V2 p1 = p0 + v2(cos_f32(current_angle), sin_f32(current_angle)) * circle.radius;
-    V2 p2 = p0 + v2(cos_f32(next_angle), sin_f32(next_angle)) * circle.radius; 
+    V2 p1 = p0 + v2_set(cos_f32(current_angle), sin_f32(current_angle)) * circle.radius;
+    V2 p2 = p0 + v2_set(cos_f32(next_angle), sin_f32(next_angle)) * circle.radius; 
 
     gfx_push_filled_triangle(g, color, p0, p1, p2); 
     current_angle += section_angle;

@@ -110,7 +110,7 @@ lit_draw_player(Lit* lit){
   Lit_Player* player = &lit->player;
   paint_sprite(lit->circle_sprite, 
                player->pos, 
-               v2(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
+               v2_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
   gfx_advance_depth(gfx);
 
 }

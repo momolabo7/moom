@@ -15,9 +15,9 @@
 #ifndef MOMO_MATRIX_H
 #define MOMO_MATRIX_H
 
-typedef struct {
+typedef struct M44 {
 	F32 e[4][4];
-}M44;
+} M44;
 
 static M44 m44_concat(M44 lhs, M44 rhs);
 static M44 m44_transpose(M44 m);

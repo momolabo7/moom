@@ -15,8 +15,8 @@ lit_push_edge(Lit* m, F32 min_x, F32 min_y, F32 max_x, F32 max_y) {
   assert(!al_is_full(&m->edges));
   
   Lit_Edge* edge = al_append(&m->edges);
-  edge->start_pt = v2(min_x, min_y);
-  edge->end_pt = v2(max_x, max_y);;
+  edge->start_pt = v2_set(min_x, min_y);
+  edge->end_pt = v2_set(max_x, max_y);;
 
   edge->is_disabled = false;
 
@@ -50,7 +50,7 @@ lit_get_ray_intersection_time_wrt_edges(Ray2 ray,
                                         Lit_Edge_List* edges,
                                         B32 clamp_to_ray_max = false)
 {
-  F32 lowest_t1 = clamp_to_ray_max ? 1.f : F32_INFINITY();
+  F32 lowest_t1 = clamp_to_ray_max ? 1.f : F32_INFINITY;
   
   al_foreach(edge_index, edges)
   {
@@ -166,7 +166,7 @@ lit_gen_light_intersections(Lit_Light* l,
       
       Lit_Light_Intersection* intersection = al_append(&l->intersections);
       assert(intersection);
-      intersection->pt = (t == F32_INFINITY()) ? ep : light_ray.pt + t*light_ray.dir;
+      intersection->pt = (t == F32_INFINITY) ? ep : light_ray.pt + t*light_ray.dir;
       intersection->is_shell = false;
 
 
@@ -336,7 +336,7 @@ lit_draw_debug_light_rays() {
     {
       Ray2 light_ray = player->held_light->debug_rays.e[light_ray_index];
       
-      Line2 line = line2(player->pos, player->pos + light_ray.dir);
+      Line2 line = line2_set(player->pos, player->pos + light_ray.dir);
       
       paint_line(painter, line, 
                  1.f, rgba(0x00FFFFFF));
@@ -400,7 +400,7 @@ lit_draw_edges(Lit* lit) {
     Lit_Edge* edge = al_at(edges, edge_index);
     if (edge->is_disabled) continue;
     
-    Line2 line = line2(edge->start_pt,edge->end_pt);
+    Line2 line = line2_set(edge->start_pt,edge->end_pt);
 
     gfx_push_line(gfx, line, 3.f, hex_to_rgba(0x888888FF));
   }

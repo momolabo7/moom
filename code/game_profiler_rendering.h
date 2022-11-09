@@ -12,8 +12,8 @@ struct Stat {
 
 static void
 begin_stat(Stat* stat) {
-  stat->min = F64_INFINITY();
-  stat->max = F64_NEG_INFINITY();
+  stat->min = F64_INFINITY;
+  stat->max = F64_NEG_INFINITY;
   stat->average = 0.0;
   stat->count = 0;
 }

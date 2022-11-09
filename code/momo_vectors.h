@@ -47,8 +47,8 @@ typedef union {
   F32 e[4];
 } V4;
 
-static V2    v2(F32 x, F32 y); 
-static V2    v2_from_v2u(V2U v);
+static V2    v2_zero(void);
+static V2    v2_set(F32 x, F32 y); 
 static V2    v2_add(V2 lhs, V2 rhs);
 static V2    v2_sub(V2 lhs, V2 rhs);
 static V2    v2_scale(V2 lhs, F32 rhs);
@@ -69,7 +69,6 @@ static V2    v2_rotate(V2 v, F32 rad);
 static F32   v2_angle(V2 lhs, V2 rhs);
 static F32   v2_cross(V2 lhs, V2 rhs);
 
-static V2U   v2u_from_v2(V2 v);
 static V2U   v2u_add(V2U lhs, V2U rhs);
 static V2U   v2u_sub(V2U lhs, V2U rhs);
 
@@ -117,19 +116,16 @@ static V3& operator*=(V3& lhs, V3 rhs);
 ////////////////////////////////////////////////////////
 // IMPLEMENTATION
 // NOTE(Momo): V2
+static V2
+v2_zero(void) {
+  V2 ret = { 0.f, 0.f };
+  return ret;
+}
 static V2 
 v2_add(V2 lhs, V2 rhs) {
 	lhs.x += rhs.x;
 	lhs.y += rhs.y;
 	return lhs;
-}
-
-static V2U
-v2u_from_v2(V2 v) {
-  return {
-    (U32)v.x,
-    (U32)v.y,
-  };
 }
 
 static V2 
@@ -380,12 +376,7 @@ v2u_sub(V2U lhs, V2U rhs){
 }
 
 static V2    
-v2_from_v2u(V2U v){
-  return { (F32)v.x, (F32)v.y };
-}
-
-static V2    
-v2(F32 x, F32 y){
+v2_set(F32 x, F32 y){
   return { x, y };
 }
 

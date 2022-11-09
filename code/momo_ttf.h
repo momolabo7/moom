@@ -43,7 +43,7 @@ typedef struct
   S16 left_side_bearing;
 } TTF_Glyph_Horizontal_Metrics;
 
-static B32 ttf_read(const TTF* ttf, void* memory, UMI memory_size);
+static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);
 
 static U32 ttf_get_glyph_index(const TTF* ttf, U32 codepoint);
 // returns 0 for invalid codepoints
@@ -592,7 +592,7 @@ ttf_get_glyph_horiozontal_metrics(const TTF* ttf, U32 glyph_index)
 
 
 static B32
-ttf_read(const TTF* ttf, void* memory, UMI memory_size) {
+ttf_read(TTF* ttf, void* memory, UMI memory_size) {
   ttf->data = (U8*)memory;
   
   U32 num_tables = _ttf_read_u16(ttf->data + 4);

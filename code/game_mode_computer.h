@@ -58,14 +58,14 @@ computer_tick(Game* game)
     
   // box
   {
-    V2 min = v2(100.f, 100.f);
-    V2 max = v2(800.f, 800.f);
+    V2 min = v2_set(100.f, 100.f);
+    V2 max = v2_set(800.f, 800.f);
 
     // TODO: gfx_push_aabb_outline
-    Line2 l1 = line2(v2(min.x, min.y), v2(max.x, min.y));
-    Line2 l2 = line2(v2(min.x, min.y), v2(min.x, max.y));
-    Line2 l3 = line2(v2(min.x, max.y), v2(max.x, max.y));
-    Line2 l4 = line2(v2(max.x, min.y), v2(max.x, max.y));
+    Line2 l1 = line2_set(v2_set(min.x, min.y), v2_set(max.x, min.y));
+    Line2 l2 = line2_set(v2_set(min.x, min.y), v2_set(min.x, max.y));
+    Line2 l3 = line2_set(v2_set(min.x, max.y), v2_set(max.x, max.y));
+    Line2 l4 = line2_set(v2_set(max.x, min.y), v2_set(max.x, max.y));
     RGBA white = rgba(1.f, 1.f, 1.f, 1.f);
 
     gfx_push_line(gfx, l1, 5.f, white);
@@ -107,7 +107,7 @@ computer_tick(Game* game)
       const F32 selector_offset_y = 80.f;
       const F32 y_offset = font_size + padding;
 
-      Circ2 circle = circ2(v2(selector_start_x, selector_start_y - y_offset * com->selected_id), 16.f);
+      Circ2 circle = circ2_set(v2_set(selector_start_x, selector_start_y - y_offset * com->selected_id), 16.f);
       paint_filled_circle(painter, circle, 16);  
     }
   }

@@ -148,6 +148,17 @@ typedef char C8;
 typedef uintptr_t UMI; // aka 'unsigned memory index'
 typedef ptrdiff_t SMI; // aka 'signed memory index'
 
+#if !defined(true)
+# define true 1
+#endif 
+
+#if !defined(false)
+# define false 0
+#endif 
+
+#if !defined(null)
+# define null 0 
+#endif 
 
 //////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -167,22 +178,27 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 #define U32_MAX 0xFFFFFFFF
 #define U64_MAX 0xFFFFFFFFFFFFFFFFllu
 
-#define F32_EPSILON 1.1920929E-7f
-#define F64_EPSILON 2.220446E-16
+#define F32_EPSILON       1.1920929E-7f
+#define F32_INFINITY      _F32_INFINITY()
+#define F32_NEG_INFINITY  _F32_NEG_INFINITY()
+#define F32_NAN           _F32_NAN()
 
-#define PI_32 3.14159265359f
-#define PI_64 3.14159265359
-#define TAU_32 6.28318530718f
-#define TAU_64 6.28318530718
+#define F64_EPSILON       2.220446E-16
+#define F64_INFINITY      _F64_INFINITY()
+#define F64_NEG_INFINITY  _F64_NEG_INFINITY()
+#define F64_NAN           _F64_NAN()
+
+
+#define PI_32   3.14159265359f
+#define PI_64   3.14159265359
+#define TAU_32  6.28318530718f
+#define TAU_64  6.28318530718
 #define GOLD_32 1.61803398875f
 #define GOLD_64 1.61803398875
-    
-# define true 1
-# define false 0
-# define null 0 
+
 
 static F32 
-F32_INFINITY() {
+_F32_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-8 are on
   union { F32 f; U32 u; } ret = {};
@@ -193,7 +209,7 @@ F32_INFINITY() {
 }
 
 static F32 
-F32_NEG_INFINITY() {
+_F32_NEG_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-8 are on
   // Negative is when bit 0 is on
@@ -204,7 +220,7 @@ F32_NEG_INFINITY() {
 }
 
 static F32
-F32_NAN() {
+_F32_NAN() {
   // NOTE(Momo): Use 'type pruning'
   // NAN is when bits 1-11 and 1 other bit is on
   // In this case, we will just turn on all bits
@@ -214,7 +230,7 @@ F32_NAN() {
 }
 
 static F64
-F64_NAN() {
+_F64_NAN() {
   // NOTE(Momo): Use 'type pruning'
   // NAN is when bits 1-11 and 1 other bit is on
   // In this case, we will just turn on all bits
@@ -225,7 +241,7 @@ F64_NAN() {
 
 
 static F64 
-F64_INFINITY() {
+_F64_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-11 are on
   union { F64 f; U64 u; } ret = {};
@@ -236,7 +252,7 @@ F64_INFINITY() {
 }
 
 static F64 
-F64_NEG_INFINITY() {
+_F64_NEG_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-11 are on
   // Negative is when bit 0 is on
@@ -302,7 +318,7 @@ F64_NEG_INFINITY() {
 #define swap(t,l,r) { t tmp = (l); (l) = (r); (r) = tmp; } 
 
 //////////////////////////////////////////////////////////////////////////////
-// Integer  to pointer conversions
+// Integer to pointer conversions
 static UMI 
 ptr_to_int(void* p) { 
   return (UMI)((C8*)p - (C8*)0); 
@@ -498,7 +514,7 @@ endian_swap_u32(U32 value) {
 // NOTE(Momo):  This is a really useful construct I find myself using 
 // more and more. It represents a 'Block' of memory. 
 //
-typedef struct {
+typedef struct Block {
   union {
     void* data;
     U8* data_u8;
@@ -1298,7 +1314,7 @@ _compute_f64(S64 power, U64 i, B32 negative)
   }
   
   //assert(false);
-  return F64_INFINITY();
+  return F64_INFINITY;
 }
 
 static F64
@@ -1399,10 +1415,10 @@ cstr_to_f64(const C8* p) {
   }
   
   if (digit_count >= 19) {
-    return F64_NAN();
+    return F64_NAN;
   }
   if (exponent < -325 && exponent > 308) {
-    return F64_NAN();
+    return F64_NAN;
   }
   
   // Unlikely cases. Can go for 'slow' path instead of asserting
