@@ -763,11 +763,6 @@ ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
 #endif
 
 #if NEW_TTF 
-typedef struct _TTF_Bitmap {
-  U32 width;
-  U32 height;
-  U32* pixels; 
-} _TTF_Bitmap;
 
 static U32* 
 ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32* out_h, Bump_Allocator* allocator) 
