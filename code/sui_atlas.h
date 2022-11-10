@@ -303,14 +303,14 @@ sui_atlas_end(Sui_Atlas* a, Bump_Allocator* allocator) {
 
         F32 s = ttf_get_scale_for_pixel_height(ttf, related_entry->raster_font_height);
         U32 glyph_index = ttf_get_glyph_index(ttf, related_context->codepoint);
-        
-        Image32 bm = ttf_rasterize_glyph(ttf, glyph_index, s, allocator);
-        if (!img32_ok(bm)) continue;
+       
+        U32* pixels = ttf_rasterize_glyph(ttf, glyph_index, s, null, null, allocator);
+        if (!pixels) continue;
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
             UMI index = (x + y * a->bitmap.width);
-            ((U32*)(a->bitmap.pixels))[index] = ((U32*)(bm.pixels))[j++];
+            ((U32*)(a->bitmap.pixels))[index] = (pixels)[j++];
           }
         }
         

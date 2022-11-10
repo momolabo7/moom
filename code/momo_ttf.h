@@ -53,17 +53,10 @@ static F32 ttf_get_scale_for_pixel_height(const TTF* ttf, F32 pixel_height);
 // (box, glyphs, etc) to scale it to a font height equals to pixel_height
 
 
-// TODO: remove Image32?
-static Image32 ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, Bump_Allocator* allocator);
-// Returns an RGBA image where the glyph is white and the background is transparent
+static U32* ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32* out_h, Bump_Allocator* allocator);
+// Returns array of U32 that represents 4 byte RGBA pixels where the glyph is white and the background is transparent
 
 static S32 ttf_get_glyph_kerning(const TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);
-
-// TODO: remove
-//static Rect2 ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, F32 scale_factor);
-static V2U ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box);
-
-// new
 static B32 ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, S32* x0, S32* y0, S32* x1, S32* y1);
 static void ttf_get_glyph_bitmap_box(const TTF* ttf, U32 glyph_index, F32 scale, S32* x0, S32* y0, S32* x1, S32* y1);
 
@@ -769,17 +762,17 @@ ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
 
 #endif
 
-
-
 #if NEW_TTF 
-static Image32 
-ttf_rasterize_glyph(const TTF* ttf, 
-                    U32 glyph_index, 
-                    F32 scale, 
-                    Bump_Allocator* allocator) 
+typedef struct _TTF_Bitmap {
+  U32 width;
+  U32 height;
+  U32* pixels; 
+} _TTF_Bitmap;
+
+static U32* 
+ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32* out_h, Bump_Allocator* allocator) 
 {
-  Image32 ret = {0};
- 
+  U32* pixels = 0;
   make(_TTF_Glyph_Outline, outline);
   make(_TTF_Glyph_Paths, paths);
 
@@ -795,7 +788,7 @@ ttf_rasterize_glyph(const TTF* ttf,
     goto cleanup_pre_restore_point;
   }
   
-  U32* pixels = ba_push_arr(U32, allocator, size);
+  pixels = ba_push_arr(U32, allocator, size);
   if (!pixels) {
     ttf_log("[ttf] Unable to allocate bitmap pixel\n");
     goto cleanup_pre_restore_point;
@@ -976,15 +969,14 @@ ttf_rasterize_glyph(const TTF* ttf,
   }
 #endif
   
-  ret.width = width;
-  ret.height = height;
-  ret.pixels = pixels;
+  if (out_w) *out_w = width;
+  if (out_h) *out_h = height;
  
 cleanup_post_restore_point: 
   ba_revert(restore_point);
 
 cleanup_pre_restore_point:
-  return ret;
+  return pixels;
   
 }
 
