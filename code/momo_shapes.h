@@ -6,27 +6,14 @@ typedef struct Rect2 {
   V2 min, max;
 }Rect2;
 
-typedef struct Rect2S {
-  V2S min, max;
-}Rect2S;
-
 typedef struct Rect2U {
   V2U min, max;
 }Rect2U;
-
-typedef struct Rect3 {
-  V3 min, max;
-}Rect3;
 
 typedef struct Aabb2{
   V2 anchor;
   V2 dims;
 }Aabb2;
-
-typedef struct Circ2{
-  F32 radius;
-  V2 center;
-}Circ2;
 
 
 typedef struct Line2 {
@@ -44,17 +31,10 @@ typedef struct Tri2 {
 
 
 static B32 bonk_tri2_pt2(Tri2 tri, V2 pt);
-static B32 bonk_circ2_circ2(Circ2 a, Circ2 b);
 
 ///////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
-static Circ2
-circ2_set(V2 center, F32 radius) {
-  Circ2 ret = {0};
-  ret.center = center;
-  ret.radius = radius;
-  return ret;
-}
+
 static Line2
 line2_set(V2 min, V2 max) {
   Line2 ret = {0};
@@ -132,10 +112,6 @@ bonk_tri2_pt2(Tri2 tri, V2 pt) {
   return _bonk_tri2_pt2_dot_product(tri, pt);
 }
 
-static B32
-bonk_circ2_circ2(Circ2 a, Circ2 b) {
-  F32 combined_radius = a.radius + b.radius;
-  return v2_dist_sq(a.center, b.center) < combined_radius*combined_radius;
-}
+
 
 #endif //MOMO_SHAPES_H

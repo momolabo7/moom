@@ -180,7 +180,7 @@ static void gfx_push_filled_rect(Gfx* g, RGBA colors, V2 pos, F32 rot, V2 size);
 static void gfx_push_filled_triangle(Gfx* g, RGBA colors, V2 p0, V2 p1, V2 p2);
 static void gfx_push_advance_depth(Gfx* g); 
 static void gfx_push_line(Gfx* g, Line2 line, F32 thickness, RGBA colors);
-static void gfx_push_circle_outline(Gfx* g, Circ2 circle, F32 thickness, U32 line_count, RGBA color); 
+static void gfx_push_circle_outline(Gfx* g, V2 center, F32 radius, F32 thickness, U32 line_count, RGBA color); 
 static void gfx_push_rect_outline(Gfx* g, Rect2 rect, F32 thickness, RGBA colors, F32 pos_z);
 static void gfx_push_delete_all_textures(Gfx* g);
 static void gfx_push_delete_texture(Gfx* g, U32 texture_index);
@@ -427,8 +427,7 @@ gfx_push_line(Gfx* g,
 }
 
 static void
-gfx_push_filled_circle(Gfx* g,
-                       Circ2 circle,
+gfx_push_filled_circle(Gfx* g, V2 center, F32 radius,
                        U32 sections,
                        RGBA color)
 {
@@ -449,9 +448,9 @@ gfx_push_filled_circle(Gfx* g,
   {
     F32 next_angle = current_angle + section_angle; 
 
-    V2 p0 = circle.center;
-    V2 p1 = p0 + v2_set(cos_f32(current_angle), sin_f32(current_angle)) * circle.radius;
-    V2 p2 = p0 + v2_set(cos_f32(next_angle), sin_f32(next_angle)) * circle.radius; 
+    V2 p0 = center;
+    V2 p1 = p0 + v2_set(cos_f32(current_angle), sin_f32(current_angle)) * radius;
+    V2 p2 = p0 + v2_set(cos_f32(next_angle), sin_f32(next_angle)) * radius; 
 
     gfx_push_filled_triangle(g, color, p0, p1, p2); 
     current_angle += section_angle;
@@ -460,11 +459,7 @@ gfx_push_filled_circle(Gfx* g,
 
 
 static  void
-gfx_push_circle_outline(Gfx* g, 
-                        Circ2 circle,
-                        F32 thickness, 
-                        U32 line_count,
-                        RGBA color) 
+gfx_push_circle_outline(Gfx* g, V2 center, F32 radius, F32 thickness, U32 line_count, RGBA color) 
 {
   Gfx_Command_Queue* q = &g->command_queue; 
 
@@ -475,12 +470,12 @@ gfx_push_circle_outline(Gfx* g,
     return;
   }
   F32 angle_increment = TAU_32 / line_count;
-  V2 pt1 = { 0.f, circle.radius }; 
+  V2 pt1 = v2_set( 0.f, radius); 
   V2 pt2 = v2_rotate(pt1, angle_increment);
   
   for (U32 i = 0; i < line_count; ++i) {
-    V2 line_pt_1 = v2_add(pt1, circle.center);
-    V2 line_pt_2 = v2_add(pt2, circle.center);
+    V2 line_pt_1 = v2_add(pt1, center);
+    V2 line_pt_2 = v2_add(pt2, center);
     Line2 line = { line_pt_1, line_pt_2 };
     gfx_push_line(g, line, thickness, color);
     

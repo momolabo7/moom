@@ -289,8 +289,7 @@ lit_render_sensors(Lit* lit) {
   al_foreach(sensor_index, sensors)
   {
     Lit_Sensor* sensor = al_at(sensors, sensor_index);
-    Circ2 circ = { LIT_SENSOR_RADIUS, sensor->pos };
-    gfx_push_filled_circle(gfx, circ, 8,  hex_to_rgba(sensor->target_color)); 
+    gfx_push_filled_circle(gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, hex_to_rgba(sensor->target_color)); 
 
     // only for debugging
 #if 0
