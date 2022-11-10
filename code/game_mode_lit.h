@@ -2,6 +2,7 @@
 #define GAME_MODE_LIT_H
 
 #define LIT_DEBUG_LIGHT 0
+#define LIT_DEBUG_COORDINATES 1
 
 //////////////////////////////////////////////////
 // Lit MODE
@@ -202,11 +203,12 @@ lit_tick(Game* game)
     m->filled_circle_sprite = find_first_sprite(assets, asset_group(FILLED_CIRCLE_SPRITE));
   }
 
+  // Update
   Lit_Player* player = &m->player;
   F32 dt = platform->seconds_since_last_frame;
 
   // Transition Logic
-  if (m->state == LIT_STATE_TYPE_TRANSITION_IN) {
+  if (m->state == LIT_STATE_TYPE_TRANSITION_IN || m->state == LIT_STATE_TYPE_NORMAL) {
     if (m->stage_fade >= 0.f) {
       m->stage_fade -= dt;
     }
@@ -228,7 +230,8 @@ lit_tick(Game* game)
   }
 
   // Transition in logic
-  if (m->state == LIT_STATE_TYPE_NORMAL) {
+  if (m->state == LIT_STATE_TYPE_NORMAL || m->state == LIT_STATE_TYPE_TRANSITION_OUT) 
+  {
     lit_update_player(m, dt);
   }
 
@@ -242,6 +245,9 @@ lit_tick(Game* game)
   // win condition
   if (lit_are_all_sensors_activated(m)) {
     m->state = LIT_STATE_TYPE_TRANSITION_OUT;
+  }
+  else {
+    m->state = LIT_STATE_TYPE_NORMAL;
   }
   lit_update_particles(m, dt);
 
@@ -273,7 +279,7 @@ lit_tick(Game* game)
                  GFX_BLEND_TYPE_SRC_ALPHA,
                  GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
-  lit_draw_edges(m); 
+  //lit_draw_edges(m); 
   //lit_draw_debug_light_rays();
   lit_draw_player(m);
   lit_draw_lights(m);
@@ -282,6 +288,15 @@ lit_tick(Game* game)
 
   lit_render_sensors(m); 
   lit_render_particles(m);
+#if LIT_DEBUG_COORDINATES 
+  // Debug coordinates
+  {
+    sb8_make(sb, 64);
+    sb8_push_fmt(sb, str8_from_lit("[%u %u]"), 
+        platform->render_mouse_pos.x, 900 - platform->render_mouse_pos.y);
+    paint_text(m->tutorial_font, sb->str, RGBA_WHITE, 0.f, 0.f, 32.f);
+  }
+#endif
 
 
   // Update tutorial texts

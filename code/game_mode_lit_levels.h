@@ -40,15 +40,20 @@ lit_level_0_tutorial_trigger_1(Lit* m) {
   return false;
 }
 
+////////////////////////////////////////////
+// Tutorial level
+// - Learn to move
+// - Learn to rotate
+// - Learn that light need to shine on sensors 
 static void
-lit_level_0(Lit* m) {
+lit_level_0_0(Lit* m) {
   lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
   lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
   lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
   lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
 
   lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x880000FF); 
-  lit_push_light(m, 800.f, GAME_HEIGHT * 0.5f, 0x880000FF, 90.f, 0.5f);
+  lit_push_light(m, 800.f, GAME_HEIGHT * 0.5f, 0x880000FF, 45.f, 0.5f);
   
   // initialize player
   Lit_Player* p = &m->player;
@@ -67,10 +72,10 @@ lit_level_0(Lit* m) {
 
 }
 
-/////////////////////////////////////////////////////////////////////
-// Level 1
+////////////////////////////////////////////
+// - Learn about obstacles
 static void
-lit_level_1(Lit* m) {
+lit_level_0_1(Lit* m) {
   lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
   lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
   lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
@@ -83,36 +88,72 @@ lit_level_1(Lit* m) {
   lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
 
   lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x008800FF); 
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x008800FF, 90.f, 0.5f);
- 
-  lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("Obstacles block light"), 650.f, 820.f);
-  lit_fade_in_next_tutorial_text(&m->tutorial_texts);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x008800FF, 45.f, 0.5f);
 }
 
-
-
+//////////////////////////////////////////
+// - Learn about light saturation 
 static void
-lit_level_2(Lit* m) {
+lit_level_0_2(Lit* m) {
   lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
   lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
   lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
   lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
 
+  // Need to 'enclose' the shape
+  lit_push_double_edge(m, 800.f, 100.f, 800.f, 800.f);
+
   // initialize player
   lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
 
-  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x888800FF); 
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x008800FF, 90.f, 0.5f);
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.75f, 0x880000FF, 90.f, 0.5f);
-  lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("Combine colors to match the sensor!"), 550.f, 820.f);
-  lit_fade_in_next_tutorial_text(&m->tutorial_texts);
+  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x444488FF); 
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.33f, 0x222244FF, 45.f, 0.5f);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.66f, 0x222244FF, 45.f, 0.5f);
+ 
+}
 
-  lit_push_tutorial_trigger(&m->tutorial_triggers, lit_trigger_fade_next_text_on_move);
+///////////////////////////////////////
+// - Learn about color combinations
+// - R + G = Y
+static void
+lit_level_0_3(Lit* m) {
+  lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
+
+  lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
+  lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
+  lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
+  lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
+
+  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x888800FF); 
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x008800FF, 30.f, 0.5f);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.75f, 0x880000FF, 30.f, 0.5f);
+}
+
+///////////////////////////////////////
+// - Learn about color combinations
+// - Learn about multiple sensors
+// - R + G = Y
+// - R + G + B = W
+static void
+lit_level_0_4(Lit* m) {
+  lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
+
+  lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
+  lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
+  lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
+  lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
+
+  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x666600FF); 
+  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x999999FF); 
+
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x330000FF, 30.f, 0.5f);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.75f, 0x003300FF, 30.f, 0.5f);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x000033FF, 90.f, 0.5f);
 }
 
 
 static void
-lit_level_3(Lit* m) {
+lit_level_0_123(Lit* m) {
   lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
 
   lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
@@ -121,9 +162,9 @@ lit_level_3(Lit* m) {
   lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
 
   lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x888888FF); 
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x008800FF, 360.f, 0.5f);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x008800FF, 30.f, 0.5f);
   lit_push_light(m, 500.f, GAME_HEIGHT * 0.75f, 0x880000FF, 30.f, 0.5f);
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x000088FF, 90.f, 0.5f);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x000088FF, 30.f, 0.5f);
   lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("Not all lights are made equal"), 550.f, 820.f);
   lit_fade_in_next_tutorial_text(&m->tutorial_texts);
 
@@ -131,7 +172,7 @@ lit_level_3(Lit* m) {
 }
 
 static void
-lit_level_4(Lit* m) {
+lit_level_0_4a(Lit* m) {
   lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
   lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
   lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
@@ -156,7 +197,7 @@ lit_level_4(Lit* m) {
 
 
 static void
-lit_level_5(Lit* m) {
+lit_level_0_5(Lit* m) {
   lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
   lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
   lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
@@ -174,12 +215,12 @@ lit_level_5(Lit* m) {
 
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
-  lit_level_0, // Basics 1
-  lit_level_1, // Basics 2
-  // lit_level_2,
-  // lit_level_3,
-  // lit_level_4,
-  lit_level_5,
+  lit_level_0_0, 
+  lit_level_0_1, 
+  lit_level_0_2,
+  lit_level_0_3,
+  lit_level_0_4,
+  lit_level_0_5,
 };
 
 
