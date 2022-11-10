@@ -6,6 +6,9 @@ int main() {
   test_unit(test_sort());
   test_unit(test_png());
   test_unit(test_ttf());
-#endif
   test_unit(test_list());
+
+#endif
+
+  test_unit(test_ttf());
 }

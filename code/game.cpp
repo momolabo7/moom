@@ -38,8 +38,7 @@ game_update_and_render(Platform* pf)
       return false;
     }
    
-    game->blank_sprite = 
-      find_first_sprite(&game->assets, GAME_ASSET_GROUP_TYPE_BLANK_SPRITE);
+    game->blank_sprite = find_first_sprite(&game->assets, asset_group(BLANK_SPRITE));
     // Debug font
     {
       make(Game_Asset_Match, match);
@@ -47,7 +46,7 @@ game_update_and_render(Platform* pf)
       game->debug_font = find_best_font(&game->assets, asset_group(FONTS), match);
     }
 
-    game_goto_mode(game, GAME_MODE_TYPE_SANDBOX);
+    game_goto_mode(game, GAME_MODE_TYPE_LIT);
 
     
     //game_set_mode(game, splash_init, splash_tick);

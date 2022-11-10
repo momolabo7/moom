@@ -49,14 +49,14 @@ static B32 bonk_circ2_circ2(Circ2 a, Circ2 b);
 ///////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 static Circ2
-circ2(V2 center, F32 radius) {
+circ2_set(V2 center, F32 radius) {
   Circ2 ret = {0};
   ret.center = center;
   ret.radius = radius;
   return ret;
 }
 static Line2
-line2(V2 min, V2 max) {
+line2_set(V2 min, V2 max) {
   Line2 ret = {0};
   ret.min = min;
   ret.max = max;

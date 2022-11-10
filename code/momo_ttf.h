@@ -10,6 +10,7 @@
 // - Prioritizes formats recognized by Windows first.
 // 
 // TODO:
+// - Remove reliance on Image32
 // - Cater for glyphs which start from an off-curve point.
 // - Anti-aliasing
 // - Complex glyphs.
@@ -18,6 +19,9 @@
 //   - other format support for kern (other than 0)
 // - Different rasterization color modes
 // - codepoint versions of all functions
+
+// TODO: remove this  
+#define NEW_TTF 1
 
 #ifndef MOMO_TTF_H
 #define MOMO_TTF_H
@@ -37,31 +41,31 @@ typedef struct {
   U16 loca_format;
 }TTF;
 
-typedef struct 
-{
-  S16 advance_width;
-  S16 left_side_bearing;
-} TTF_Glyph_Horizontal_Metrics;
-
 static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);
 
 static U32 ttf_get_glyph_index(const TTF* ttf, U32 codepoint);
 // returns 0 for invalid codepoints
 
-static TTF_Glyph_Horizontal_Metrics ttf_get_glyph_horiozontal_metrics(const TTF* ttf, U32 glyph_index);
+static void ttf_get_glyph_horizontal_metrics(const TTF* ttf, U32 glyph_index, S16* advance_width, S16* left_side_bearing);
 
 static F32 ttf_get_scale_for_pixel_height(const TTF* ttf, F32 pixel_height);
 // This returns the 'scale factor' you need to apply to the font's coordinates
 // (box, glyphs, etc) to scale it to a font height equals to pixel_height
 
-static V2U ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box);
 
-static Image32 ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Allocator* allocator);
+// TODO: remove Image32?
+static Image32 ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, Bump_Allocator* allocator);
 // Returns an RGBA image where the glyph is white and the background is transparent
 
 static S32 ttf_get_glyph_kerning(const TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);
-static Rect2 ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, F32 scale_factor);
 
+// TODO: remove
+//static Rect2 ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, F32 scale_factor);
+static V2U ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box);
+
+// new
+static B32 ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, S32* x0, S32* y0, S32* x1, S32* y1);
+static void ttf_get_glyph_bitmap_box(const TTF* ttf, U32 glyph_index, F32 scale, S32* x0, S32* y0, S32* x1, S32* y1);
 
 ///////////////////////////////////////////////////////////////
 // IMPLEMENTATION
@@ -163,6 +167,7 @@ _ttf_get_offset_to_glyph(const TTF* ttf, U32 glyph_index) {
 //   max = top right of the glyph
 // with respect to the coordinate system stated above.
 // 
+#if !NEW_TTF
 static Rect2S 
 _ttf_get_raw_glyph_box(const TTF* ttf, U32 glyph_index) {
   Rect2S  ret = {0};
@@ -177,9 +182,42 @@ _ttf_get_raw_glyph_box(const TTF* ttf, U32 glyph_index) {
   
   return ret;
 }
+#endif
+
+static B32 
+ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, S32* x0, S32* y0, S32* x1, S32* y1) {
+  
+  U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
+  if (g <= 0) return false;
+  
+  if (x0) (*x0) = _ttf_read_s16(ttf->data + g + 2);
+  if (y0) (*y0) = _ttf_read_s16(ttf->data + g + 4);
+  if (x1) (*x1) = _ttf_read_s16(ttf->data + g + 6);
+  if (y1) (*y1) = _ttf_read_s16(ttf->data + g + 8);
+  return true;
+
+}
+
+static void
+ttf_get_glyph_bitmap_box(const TTF* ttf, U32 glyph_index, F32 scale, S32* x0, S32* y0, S32* x1, S32* y1) {
+  S32 bx0, by0, bx1, by1;
+  if (ttf_get_glyph_box(ttf, glyph_index, &bx0, &by0, &bx1, &by1)) {
+    if(x0) (*x0) = (S32)(floor_f32((F32)bx0 * scale));
+    if(y0) (*y0) = (S32)(floor_f32((F32)by0 * scale));
+    if(x1) (*x1) = (S32)(ceil_f32((F32)bx1 * scale));
+    if(y1) (*y1) = (S32)(ceil_f32((F32)by1 * scale));
+  }
+  else {
+    if(x0) (*x0) = 0;
+    if(y0) (*y0) = 0;
+    if(x1) (*x1) = 0;
+    if(y1) (*y1) = 0;
+  }
+}
 
 static S32
-_ttf_get_kern_advance(const TTF* ttf, S32 g1, S32 g2) {
+_ttf_get_kern_advance(const TTF* ttf, S32 g1, S32 g2) 
+{
   // NOTE(Momo): We only care about format 0, which Windows cares
   // For now, OSX has too many things to handle for this table 
   // and I am not going to care because I mostly develop in Windows.
@@ -564,29 +602,22 @@ ttf_get_scale_for_pixel_height(const TTF* ttf, F32 pixel_height) {
 }
 
 
-static TTF_Glyph_Horizontal_Metrics 
-ttf_get_glyph_horiozontal_metrics(const TTF* ttf, U32 glyph_index)
+static void 
+ttf_get_glyph_horizontal_metrics(const TTF* ttf, 
+                                 U32 glyph_index, 
+                                 S16* advance_width, 
+                                 S16* left_side_bearing)
 {
   U16 num_of_long_horizontal_metrices = _ttf_read_u16(ttf->data + ttf->hhea + 34);
-  TTF_Glyph_Horizontal_Metrics ret = {0};
 
   if (glyph_index < num_of_long_horizontal_metrices) {
-    ret.advance_width = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index);
-    ret.left_side_bearing = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index + 2);
+    if (advance_width) (*advance_width) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index);
+    if (left_side_bearing) (*left_side_bearing) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index + 2);
   }
   else {
-    ret.advance_width = 
-      _ttf_read_s16(ttf->data + 
-                    ttf->hmtx + 
-                    4*(num_of_long_horizontal_metrices-1));
-    ret.left_side_bearing = 
-      _ttf_read_s16(ttf->data + 
-                    ttf->hmtx + 
-                    4*num_of_long_horizontal_metrices + 
-                    2*(glyph_index - num_of_long_horizontal_metrices));
+    if(advance_width) (*advance_width) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*(num_of_long_horizontal_metrices-1));
+    if(left_side_bearing) (*left_side_bearing) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*num_of_long_horizontal_metrices + 2*(glyph_index - num_of_long_horizontal_metrices));
   }
-  
-  return ret;
   
 }
 
@@ -710,6 +741,7 @@ ttf_get_glyph_kerning(const TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
   return 0;
 }
 
+#if !NEW_TTF
 static Rect2 
 ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, F32 scale_factor) {
   Rect2 ret = {0};
@@ -735,6 +767,228 @@ ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
   return ret;
 }
 
+#endif
+
+
+
+#if NEW_TTF 
+static Image32 
+ttf_rasterize_glyph(const TTF* ttf, 
+                    U32 glyph_index, 
+                    F32 scale, 
+                    Bump_Allocator* allocator) 
+{
+  Image32 ret = {0};
+ 
+  make(_TTF_Glyph_Outline, outline);
+  make(_TTF_Glyph_Paths, paths);
+
+  S32 x0, y0, x1, y1;
+  ttf_get_glyph_bitmap_box(ttf, glyph_index, scale, &x0, &y0, &x1, &y1);
+
+  U32 width = x1 - x0;
+  U32 height = y1 - y0;
+  U32 size = width * height * 4;
+
+  if (width == 0 || height == 0) {
+    ttf_log("[ttf] Glyph dimension are bad\nj");
+    goto cleanup_pre_restore_point;
+  }
+  
+  U32* pixels = ba_push_arr(U32, allocator, size);
+  if (!pixels) {
+    ttf_log("[ttf] Unable to allocate bitmap pixel\n");
+    goto cleanup_pre_restore_point;
+  }
+  zero_memory(pixels, size);
+ 
+  Bump_Allocator_Marker restore_point = ba_mark(allocator);
+
+  if(!_ttf_get_glyph_outline(ttf, outline, glyph_index, allocator)) {
+    ttf_log("[ttf] Unable to get glyph outline\n");
+    goto cleanup_post_restore_point;
+  }
+  if (!_ttf_get_paths_from_glyph_outline(outline, paths, allocator)) {
+    ttf_log("[ttf] Unable glyph paths\n");
+    goto cleanup_post_restore_point;
+  }
+  
+  // generate scaled edges based on points
+  _TTF_Edge* edges = ba_push_arr(_TTF_Edge, allocator, paths->vertex_count);
+  if (!edges) {
+    ttf_log("[ttf] Unable to allocate edges\n");
+    goto cleanup_post_restore_point;
+  }
+  zero_range(edges, paths->vertex_count);
+  
+  U32 edge_count = 0;
+  {
+    U32 vertex_index = 0;
+    for (U32 path_index = 0; 
+         path_index < paths->path_count; 
+         ++path_index)
+    {
+      U32 path_length = paths->path_lengths[path_index];
+      for (U32 i = 0; i < path_length; ++i) {
+        _TTF_Edge edge = {};
+        V2 v0 = paths->vertices[vertex_index];
+        V2 v1 = (i == path_length-1) ? paths->vertices[vertex_index-i] : paths->vertices[vertex_index+1];
+        ++vertex_index;
+        
+        // Skip if edge is going to be completely horizontal
+        if (v0.y == v1.y) {
+          continue;
+        }
+        
+        edge.p0.x = v0.x * scale - x0;
+        edge.p0.y = height - ((v0.y * scale) - y0);
+
+        edge.p1.x = v1.x * scale - x0;
+        edge.p1.y = height - ((v1.y * scale) - y0);
+        
+        // Check if edge's points need to be flipped.
+        // NOTE(Momo): It's easier for the rasterization algorithm to have the edges'
+        // p0 be on top of p1. If we flip, we will indicate it within the edge.
+        if (edge.p0.y > edge.p1.y) {
+          swap(V2, edge.p0, edge.p1);
+          edge.is_inverted = true;
+        }
+        edges[edge_count++] = edge;
+      }
+    }  
+  }
+  
+  
+  // Rasterazation algorithm starts here
+  // Sort edges by top most edge
+  Sort_Entry* y_edges = ba_push_arr(Sort_Entry, allocator, edge_count);
+  if (!y_edges) { 
+    ttf_log("[ttf] Unable to allocate sort entries for edges\n");
+    goto cleanup_post_restore_point;
+  }
+
+  for (U32 i = 0; i < edge_count; ++i) {
+    y_edges[i].index = i;
+    y_edges[i].key = -(F32)max_of(edges[i].p0.y, edges[i].p1.y);
+  }
+  quicksort(y_edges, edge_count);
+
+  Sort_Entry* active_edges = ba_push_arr(Sort_Entry, allocator, edge_count);
+  if (!active_edges) {
+    ttf_log("[ttf] Unable to allocate sort entries for active edges\n");
+    goto cleanup_post_restore_point;
+  }
+  
+  // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
+  // clearing and refilling the active_edges list per scan line
+  for(U32 y = 0; y <= height; ++y) {
+    U32 act_edge_count = 0; 
+    F32 yf = (F32)y; // 'center' of pixel
+    
+    // Add to 'active edge list' any edges which have an 
+    // uppermost vertex (p0) before y and lowermost vertex (p1) after this y.
+    // Also, ignore p1 that ends EXACTLY on this y.
+    for (U32 y_edge_id = 0; y_edge_id < edge_count; ++y_edge_id){
+      _TTF_Edge* edge = edges + y_edges[y_edge_id].index;
+      
+      if (edge->p0.y <= yf && edge->p1.y > yf) {
+        // calculate the x intersection
+        F32 dx = edge->p1.x - edge->p0.x;
+        F32 dy = edge->p1.y - edge->p0.y;
+        if (dy != 0.f) {
+          F32 t = (yf - edge->p0.y) / dy;
+          edge->x_intersect = edge->p0.x + (t * dx);
+         
+          // prepare Sort_Entry for active_edges
+          active_edges[act_edge_count].index = y_edges[y_edge_id].index;
+          active_edges[act_edge_count].key = edge->x_intersect;
+
+          ++act_edge_count;
+        }
+      }
+    }
+    quicksort(active_edges, act_edge_count);
+ 
+    if (act_edge_count >= 2) {
+      U32 crossings = 0;
+      for (U32 act_edge_id = 0; 
+           act_edge_id < act_edge_count-1;
+           ++act_edge_id) 
+      {
+        _TTF_Edge* start_edge = edges + active_edges[act_edge_id].index; 
+        _TTF_Edge* end_edge = edges + active_edges[act_edge_id+1].index; 
+        
+        start_edge->is_inverted ? ++crossings : --crossings;
+        
+        if (crossings > 0) {
+          U32 start_x = (U32)start_edge->x_intersect;
+          U32 end_x = (U32)end_edge->x_intersect;
+          for(U32 x = start_x; x < end_x; ++x) {
+            pixels[x + y * width] = 0xFFFFFFFF;
+          }
+        }
+      }
+    }
+    
+#if 0 
+    // Draw edges in green
+    for (U32 i =0 ; i < edge_count; ++i) 
+    {
+      _TTF_Edge* edge = edges + i;
+      F32 ex0 = edge->p0.x;
+      F32 ey0 = edge->p0.y;
+      
+      F32 ex1 = edge->p1.x;
+      F32 ey1 = edge->p1.y;
+      
+      F32 dx = (ex1 - ex0)/100;
+      F32 dy = (ey1 - ey0)/100;
+      
+      F32 xx = ex0;
+      F32 yy = ey0;
+      for (U32 z = 0; z < 100; ++z) {
+        xx += dx;
+        yy += dy;
+        pixels[(U32)xx + (U32)yy * width] = 0xFF00FF00;      
+      }
+    }
+#endif
+    
+    
+  }
+  
+  
+#if 0
+  // Draw vertices in red
+  
+  for (U32 i =0 ; i < edge_count; ++i) 
+  {
+    auto* edge = edges + i;
+    U32 x0 = (U32)edge->p0.x;
+    U32 y0 = (U32)edge->p0.y;
+    pixels[x0 + y0 * bitmap_dims.w] = 0xFF0000FF;
+    
+    
+    U32 x1 = (U32)edge->p1.x;
+    U32 y1 = (U32)edge->p1.y;
+    pixels[x1 + y1 * bitmap_dims.w] = 0xFF0000FF;
+    
+  }
+#endif
+  
+  ret.width = width;
+  ret.height = height;
+  ret.pixels = pixels;
+ 
+cleanup_post_restore_point: 
+  ba_revert(restore_point);
+
+cleanup_pre_restore_point:
+  return ret;
+  
+}
+
+#else 
 
 static Image32 
 ttf_rasterize_glyph(const TTF* ttf, 
@@ -950,5 +1204,7 @@ cleanup_pre_restore_point:
   
 }
 
+
+#endif
 
 #endif //MOMO_TTF_H

@@ -22,13 +22,9 @@ int main() {
   Sui_Atlas_Sprite* filled_circle_sprite = sui_atlas_push_sprite(atlas, sui_asset_dir("filled_circle.png"));
     
   sui_atlas_begin_font(atlas, sui_asset_dir("nokiafc22.ttf"), 72.f);
-#if 1 
   for (U32 i = 32; i <= 126; ++i){
     sui_atlas_push_font_codepoint(atlas, i);
   }
-#else 
-  sui_atlas_push_font_codepoint(atlas, ']'); 
-#endif
   auto* font_a = sui_atlas_end_font(atlas);
 
   sui_atlas_begin_font(atlas, sui_asset_dir("liberation-mono.ttf"), 72.f);

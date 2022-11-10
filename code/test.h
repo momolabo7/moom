@@ -9,8 +9,6 @@
 #define assert_callback(s) printf("[test][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout); (*(volatile int*)0 = 0);
 
 
-
-
 static unsigned test_log_spaces = 0;
 #define test_assets_dir(filename) "../assets/test/" ##filename
 #define test_eval_d(s) test_log(#s " = %d\n", s);
@@ -27,9 +25,9 @@ test_log(">> " #unit_name " end\n\n"); \
 
 #include "momo.h"
 
-static inline Memory
+static inline Block
 test_read_file_to_memory(Bump_Allocator* allocator, const char* filename) {
-  Memory result = {0};
+  Block result = {0};
   FILE* file = fopen(filename, "rb");
   if (!file) { 
     test_log("Cannot find file\n");
@@ -40,7 +38,7 @@ test_read_file_to_memory(Bump_Allocator* allocator, const char* filename) {
   S32 file_size = ftell(file);
   fseek(file, 0, SEEK_SET);
   
-  void* file_memory = ba_push_block(allocator, file_size, 4);
+  void* file_memory = ba_push_size(allocator, file_size, 4);
   fread(file_memory, 1, file_size, file); 
   
   result.data = file_memory;
@@ -53,7 +51,7 @@ test_read_file_to_memory(Bump_Allocator* allocator, const char* filename) {
 
 
 static inline B32
-test_write_memory_to_file(Memory block, const char* filename) {
+test_write_memory_to_file(Block block, const char* filename) {
   FILE* file = fopen(filename, "wb");
   if (!file) {
     test_log("Cannot open file for writing\n");
@@ -67,10 +65,12 @@ test_write_memory_to_file(Memory block, const char* filename) {
   
 }
 
+#if 0
 #include "test_essentials.h"
 #include "test_list.h"
 #include "test_sort.h"
 #include "test_png.h"
+#endif
 #include "test_ttf.h"
 
 #endif //TEST_H

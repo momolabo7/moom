@@ -246,13 +246,24 @@ sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena)
           glyph.texel_uv = sui_rp_rect_to_rect2u(glyph_rect);
 
           U32 ttf_glyph_index = ttf_get_glyph_index(ttf, glyph.codepoint);
-          TTF_Glyph_Horizontal_Metrics metrics =
-            ttf_get_glyph_horiozontal_metrics(ttf, ttf_glyph_index);
-          glyph.horizontal_advance = (F32)metrics.advance_width * pixel_scale;
 
+          // advance width
+          {
+            S16 advance_width = 0;
+            ttf_get_glyph_horizontal_metrics(ttf, ttf_glyph_index, &advance_width, null);
+            glyph.horizontal_advance = (F32)advance_width * pixel_scale;
+          }
 
-          F32 s = ttf_get_scale_for_pixel_height(ttf, 1.f);
-          glyph.box = ttf_get_glyph_box(ttf, ttf_glyph_index, s);
+          {
+            S32 x0, y0, x1, y1;
+            F32 s = ttf_get_scale_for_pixel_height(ttf, 1.f);
+            if (ttf_get_glyph_box(ttf, ttf_glyph_index, &x0, &y0, &x1, &y1)){
+              glyph.box.min.x = (F32)x0 * s;
+              glyph.box.min.y = (F32)y0 * s;
+              glyph.box.max.x = (F32)x1 * s;
+              glyph.box.max.y = (F32)y1 * s;
+            }
+          }
 
           fwrite(&glyph, sizeof(glyph), 1, file);
         }

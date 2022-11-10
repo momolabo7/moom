@@ -3,7 +3,7 @@ a	C:/Users/geral/work/txt/code/momo_colors.h	/^  F32 a;$/;"	m	language:C++	struc
 a	D:/work/git/txt/code/momo_colors.h	/^  F32 a;$/;"	m	language:C++	struct:RGBA	typeref:typename:F32
 Aabb2	C:/Users/geral/work/txt/code/momo_shapes.h	/^typedef struct Aabb2 {$/;"	s	language:C++
 Aabb2	C:/Users/geral/work/txt/code/momo_shapes.h	/^}Aabb2;$/;"	t	language:C++	typeref:struct:Aabb2
-Aabb2	D:/work/git/txt/code/momo_shapes.h	/^typedef struct Aabb2 {$/;"	s	language:C++
+Aabb2	D:/work/git/txt/code/momo_shapes.h	/^typedef struct Aabb2{$/;"	s	language:C++
 Aabb2	D:/work/git/txt/code/momo_shapes.h	/^}Aabb2;$/;"	t	language:C++	typeref:struct:Aabb2
 abs_f32	C:/Users/geral/work/txt/code/momo_common.h	/^abs_f32(F32 x) {$/;"	f	language:C++	typeref:typename:F32
 abs_f32	D:/work/git/txt/code/momo_common.h	/^abs_f32(F32 x) {$/;"	f	language:C++	typeref:typename:F32
@@ -50,7 +50,6 @@ add_task	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Add_Task* add
 add_task	D:/work/git/txt/code/game_platform.h	/^  Platform_Add_Task* add_task;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Add_Task *
 add_task	D:/work/git/txt/code/game_platform.h	/^  Platform_Add_Task* add_task;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Add_Task *
 advance_width	C:/Users/geral/work/txt/code/momo_ttf.h	/^  S16 advance_width;$/;"	m	language:C++	struct:__anon802a10330208	typeref:typename:S16
-advance_width	D:/work/git/txt/code/momo_ttf.h	/^  S16 advance_width;$/;"	m	language:C++	struct:__anon68e2795f0208	typeref:typename:S16
 align_down_pow2	C:/Users/geral/work/txt/code/momo_common.h	/^#define align_down_pow2(/;"	d	language:C++
 align_down_pow2	D:/work/git/txt/code/momo_common.h	/^#define align_down_pow2(/;"	d	language:C++
 align_up_pow2	C:/Users/geral/work/txt/code/momo_common.h	/^#define align_up_pow2(/;"	d	language:C++
@@ -343,14 +342,14 @@ block_align	C:/Users/geral/work/txt/code/momo_wav.h	/^  U16 block_align;$/;"	m	l
 block_align	D:/work/git/txt/code/momo_wav.h	/^  U16 block_align;$/;"	m	language:C++	struct:__anon690e9bbf0208	typeref:typename:U16
 block_name	C:/Users/geral/work/txt/code/game_profiler.h	/^  const char* block_name;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:const char *
 block_name	D:/work/git/txt/code/game_profiler.h	/^  const char* block_name;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:const char *
+bonk_circ2_circ2	D:/work/git/txt/code/momo_shapes.h	/^bonk_circ2_circ2(Circ2 a, Circ2 b) {$/;"	f	language:C++	typeref:typename:B32
+bonk_circ2_circ2	D:/work/git/txt/code/momo_shapes.h	/^static B32 bonk_circ2_circ2(Circ2 a, Circ2 b);$/;"	p	language:C++	typeref:typename:B32
 bonk_circ2_circ2_set	C:/Users/geral/work/txt/code/momo_shapes.h	/^bonk_circ2_circ2_set(Circ2 a, Circ2 b) {$/;"	f	language:C++	typeref:typename:B32
 bonk_circ2_circ2_set	C:/Users/geral/work/txt/code/momo_shapes.h	/^static B32 bonk_circ2_circ2_set(Circ2 a, Circ2 b);$/;"	p	language:C++	typeref:typename:B32
-bonk_circ2_circ2_set	D:/work/git/txt/code/momo_shapes.h	/^bonk_circ2_circ2_set(Circ2 a, Circ2 b) {$/;"	f	language:C++	typeref:typename:B32
-bonk_circ2_circ2_set	D:/work/git/txt/code/momo_shapes.h	/^static B32 bonk_circ2_circ2_set(Circ2 a, Circ2 b);$/;"	p	language:C++	typeref:typename:B32
 bonk_line2_pt2	C:/Users/geral/work/txt/code/momo_shapes.h	/^static B32 bonk_line2_pt2(Line2, V2 pt);$/;"	p	language:C++	typeref:typename:B32
-bonk_line2_pt2	D:/work/git/txt/code/momo_shapes.h	/^static B32 bonk_line2_pt2(Line2, V2 pt);$/;"	p	language:C++	typeref:typename:B32
 bonk_tri2_pt2	C:/Users/geral/work/txt/code/momo_shapes.h	/^bonk_tri2_pt2(Tri2 tri, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
 bonk_tri2_pt2	D:/work/git/txt/code/momo_shapes.h	/^bonk_tri2_pt2(Tri2 tri, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
+bonk_tri2_pt2	D:/work/git/txt/code/momo_shapes.h	/^static B32 bonk_tri2_pt2(Tri2 tri, V2 pt);$/;"	p	language:C++	typeref:typename:B32
 box	C:/Users/geral/work/txt/code/game_assets.h	/^  Rect2 box;$/;"	m	language:C++	struct:Game_Font_Glyph	typeref:typename:Rect2
 box	C:/Users/geral/work/txt/code/karu.h	/^  Rect2 box;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:Rect2
 box	D:/work/git/txt/code/game_assets.h	/^  Rect2 box;$/;"	m	language:C++	struct:Game_Font_Glyph	typeref:typename:Rect2
@@ -418,7 +417,7 @@ cap	C:/Users/geral/work/txt/code/momo_strings.h	/^	UMI cap;$/;"	m	language:C++	s
 cap	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 cap;$/;"	m	language:C++	struct:__anon802a10330708	typeref:typename:U32
 cap	D:/work/git/txt/code/momo_memory.h	/^	UMI cap;$/;"	m	language:C++	struct:__anonb4ad698a0108	typeref:typename:UMI
 cap	D:/work/git/txt/code/momo_strings.h	/^	UMI cap;$/;"	m	language:C++	struct:__anon4fb3d39b0208	typeref:typename:UMI
-cap	D:/work/git/txt/code/momo_ttf.h	/^  U32 cap;$/;"	m	language:C++	struct:__anon68e2795f0708	typeref:typename:U32
+cap	D:/work/git/txt/code/momo_ttf.h	/^  U32 cap;$/;"	m	language:C++	struct:__anon68e2795f0608	typeref:typename:U32
 ceil_f32	C:/Users/geral/work/txt/code/momo_intrinsics.h	/^static F32 ceil_f32(F32 value) {$/;"	f	language:C++	typeref:typename:F32
 ceil_f32	C:/Users/geral/work/txt/code/momo_intrinsics.h	/^static F32 ceil_f32(F32 value);$/;"	p	language:C++	typeref:typename:F32
 ceil_f32	D:/work/git/txt/code/momo_intrinsics.h	/^static F32 ceil_f32(F32 value) {$/;"	f	language:C++	typeref:typename:F32
@@ -441,12 +440,11 @@ CINTERFACE	C:/Users/geral/work/txt/code/w32.h	/^#define CINTERFACE$/;"	d	languag
 CINTERFACE	D:/work/git/txt/code/w32.h	/^#define CINTERFACE$/;"	d	language:C++
 Circ2	C:/Users/geral/work/txt/code/momo_shapes.h	/^typedef struct Circ2 {$/;"	s	language:C++
 Circ2	C:/Users/geral/work/txt/code/momo_shapes.h	/^}Circ2;$/;"	t	language:C++	typeref:struct:Circ2
-Circ2	D:/work/git/txt/code/momo_shapes.h	/^typedef struct Circ2 {$/;"	s	language:C++
+Circ2	D:/work/git/txt/code/momo_shapes.h	/^typedef struct Circ2{$/;"	s	language:C++
 Circ2	D:/work/git/txt/code/momo_shapes.h	/^}Circ2;$/;"	t	language:C++	typeref:struct:Circ2
 circ2_set	C:/Users/geral/work/txt/code/momo_shapes.h	/^circ2_set(V2 center, F32 radius) {$/;"	f	language:C++	typeref:typename:Circ2
 circ2_set	C:/Users/geral/work/txt/code/momo_shapes.h	/^static Circ2 circ2_set(V2 center, F32 radius);$/;"	p	language:C++	typeref:typename:Circ2
 circ2_set	D:/work/git/txt/code/momo_shapes.h	/^circ2_set(V2 center, F32 radius) {$/;"	f	language:C++	typeref:typename:Circ2
-circ2_set	D:/work/git/txt/code/momo_shapes.h	/^static Circ2 circ2_set(V2 center, F32 radius);$/;"	p	language:C++	typeref:typename:Circ2
 circle_sprite	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  Game_Sprite_ID circle_sprite;$/;"	m	language:C++	struct:Lit	typeref:typename:Game_Sprite_ID
 circle_sprite	D:/work/git/txt/code/game_mode_lit.h	/^  Game_Sprite_ID circle_sprite;$/;"	m	language:C++	struct:Lit	typeref:typename:Game_Sprite_ID
 clamp_of	C:/Users/geral/work/txt/code/momo_common.h	/^#define clamp_of(/;"	d	language:C++
@@ -546,7 +544,7 @@ Console_Line	D:/work/git/txt/code/game_console.h	/^struct Console_Line {$/;"	s	l
 CONST_VTABLE	C:/Users/geral/work/txt/code/w32.h	/^#define CONST_VTABLE$/;"	d	language:C++
 CONST_VTABLE	D:/work/git/txt/code/w32.h	/^#define CONST_VTABLE$/;"	d	language:C++
 contour_count	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 contour_count;$/;"	m	language:C++	struct:__anon802a10330408	typeref:typename:U32
-contour_count	D:/work/git/txt/code/momo_ttf.h	/^  U32 contour_count;$/;"	m	language:C++	struct:__anon68e2795f0408	typeref:typename:U32
+contour_count	D:/work/git/txt/code/momo_ttf.h	/^  U32 contour_count;$/;"	m	language:C++	struct:__anon68e2795f0308	typeref:typename:U32
 copy_array	C:/Users/geral/work/txt/code/momo_common.h	/^#define copy_array(/;"	d	language:C++
 copy_array	D:/work/git/txt/code/momo_common.h	/^#define copy_array(/;"	d	language:C++
 copy_memory	C:/Users/geral/work/txt/code/momo_common.h	/^copy_memory(void* dest, const void* src, UMI size) {$/;"	f	language:C++	typeref:typename:void
@@ -592,7 +590,7 @@ count	D:/work/git/txt/code/game_mode_lit_world.h	/^  U32 count;$/;"	m	language:C
 count	D:/work/git/txt/code/game_profiler_rendering.h	/^  U32 count;$/;"	m	language:C++	struct:Stat	typeref:typename:U32
 count	D:/work/git/txt/code/momo_strings.h	/^			UMI count;$/;"	m	language:C++	struct:__anon4fb3d39b0208::__anon4fb3d39b030a::__anon4fb3d39b0408	typeref:typename:UMI
 count	D:/work/git/txt/code/momo_strings.h	/^	UMI count;$/;"	m	language:C++	struct:__anon4fb3d39b0108	typeref:typename:UMI
-count	D:/work/git/txt/code/momo_ttf.h	/^  U32 count;$/;"	m	language:C++	struct:__anon68e2795f0708	typeref:typename:U32
+count	D:/work/git/txt/code/momo_ttf.h	/^  U32 count;$/;"	m	language:C++	struct:__anon68e2795f0608	typeref:typename:U32
 crc	C:/Users/geral/work/txt/code/momo_png.h	/^  U32 crc; $/;"	m	language:C++	struct:_PNG_Chunk_Footer	typeref:typename:U32
 crc	D:/work/git/txt/code/momo_png.h	/^  U32 crc; $/;"	m	language:C++	struct:_PNG_Chunk_Footer	typeref:typename:U32
 crc16	C:/Users/geral/work/txt/code/momo_crc.h	/^crc16(U8* data, U32 data_size, U16 start_register, CRC16_Table* table) {$/;"	f	language:C++	typeref:typename:U32
@@ -775,7 +773,7 @@ e	D:/work/git/txt/code/game_mode_lit_world.h	/^  Tri2 e[256];$/;"	m	language:C++
 e	D:/work/git/txt/code/momo_matrix.h	/^	F32 e[4][4];$/;"	m	language:C++	struct:M44	typeref:typename:F32[4][4]
 e	D:/work/git/txt/code/momo_strings.h	/^			U8* e;$/;"	m	language:C++	struct:__anon4fb3d39b0208::__anon4fb3d39b030a::__anon4fb3d39b0408	typeref:typename:U8 *
 e	D:/work/git/txt/code/momo_strings.h	/^	U8* e;$/;"	m	language:C++	struct:__anon4fb3d39b0108	typeref:typename:U8 *
-e	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_Edge** e;$/;"	m	language:C++	struct:__anon68e2795f0708	typeref:typename:_TTF_Edge **
+e	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_Edge** e;$/;"	m	language:C++	struct:__anon68e2795f0608	typeref:typename:_TTF_Edge **
 e	D:/work/git/txt/code/momo_vectors.h	/^	F32 e[2];$/;"	m	language:C++	union:__anon6c64fdb7070a	typeref:typename:F32[2]
 e	D:/work/git/txt/code/momo_vectors.h	/^	S32 e[2];$/;"	m	language:C++	union:__anon6c64fdb7040a	typeref:typename:S32[2]
 e	D:/work/git/txt/code/momo_vectors.h	/^	U32 e[2];$/;"	m	language:C++	union:__anon6c64fdb7010a	typeref:typename:U32[2]
@@ -1032,7 +1030,7 @@ endian_swap_u16	D:/work/git/txt/code/momo_common.h	/^endian_swap_u16(U16 value) 
 endian_swap_u32	C:/Users/geral/work/txt/code/momo_common.h	/^endian_swap_u32(U32 value) {$/;"	f	language:C++	typeref:typename:U32
 endian_swap_u32	D:/work/git/txt/code/momo_common.h	/^endian_swap_u32(U32 value) {$/;"	f	language:C++	typeref:typename:U32
 end_point_indices	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U16* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:__anon802a10330408	typeref:typename:U16 *
-end_point_indices	D:/work/git/txt/code/momo_ttf.h	/^  U16* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:__anon68e2795f0408	typeref:typename:U16 *
+end_point_indices	D:/work/git/txt/code/momo_ttf.h	/^  U16* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:__anon68e2795f0308	typeref:typename:U16 *
 end_pt	C:/Users/geral/work/txt/code/game_mode_lit_world.h	/^  V2 end_pt;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:V2
 end_pt	D:/work/git/txt/code/game_mode_lit_world.h	/^  V2 end_pt;$/;"	m	language:C++	struct:Lit_Edge	typeref:typename:V2
 end_stat	C:/Users/geral/work/txt/code/game_profiler_rendering.h	/^end_stat(Stat* stat) {$/;"	f	language:C++	typeref:typename:void
@@ -1140,7 +1138,7 @@ first_tag_index	C:/Users/geral/work/txt/code/karu.h	/^  U32 first_tag_index;$/;"
 first_tag_index	D:/work/git/txt/code/game_assets.h	/^  U32 first_tag_index;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:U32
 first_tag_index	D:/work/git/txt/code/karu.h	/^  U32 first_tag_index;$/;"	m	language:C++	struct:Karu_Asset	typeref:typename:U32
 flags	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U8 flags;$/;"	m	language:C++	struct:__anon802a10330308	typeref:typename:U8
-flags	D:/work/git/txt/code/momo_ttf.h	/^  U8 flags;$/;"	m	language:C++	struct:__anon68e2795f0308	typeref:typename:U8
+flags	D:/work/git/txt/code/momo_ttf.h	/^  U8 flags;$/;"	m	language:C++	struct:__anon68e2795f0208	typeref:typename:U8
 flag_for_reset	C:/Users/geral/work/txt/code/game_profiler.h	/^  B32 flag_for_reset;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:B32
 flag_for_reset	D:/work/git/txt/code/game_profiler.h	/^  B32 flag_for_reset;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:B32
 floor_f32	C:/Users/geral/work/txt/code/momo_intrinsics.h	/^static F32 floor_f32(F32 value) {$/;"	f	language:C++	typeref:typename:F32
@@ -1950,7 +1948,7 @@ is_disabled	D:/work/git/txt/code/game_mode_lit_world.h	/^  B32 is_disabled;$/;"	
 is_done	C:/Users/geral/work/txt/code/game.h	/^  B32 is_done;$/;"	m	language:C++	struct:Game	typeref:typename:B32
 is_done	D:/work/git/txt/code/game.h	/^  B32 is_done;$/;"	m	language:C++	struct:Game	typeref:typename:B32
 is_inverted	C:/Users/geral/work/txt/code/momo_ttf.h	/^  B32 is_inverted;$/;"	m	language:C++	struct:__anon802a10330608	typeref:typename:B32
-is_inverted	D:/work/git/txt/code/momo_ttf.h	/^  B32 is_inverted;$/;"	m	language:C++	struct:__anon68e2795f0608	typeref:typename:B32
+is_inverted	D:/work/git/txt/code/momo_ttf.h	/^  B32 is_inverted;$/;"	m	language:C++	struct:__anon68e2795f0508	typeref:typename:B32
 is_memory_same	C:/Users/geral/work/txt/code/momo_common.h	/^is_memory_same(const void* lhs, const void* rhs, UMI size) {$/;"	f	language:C++	typeref:typename:B32
 is_memory_same	C:/Users/geral/work/txt/code/momo_common.h	/^is_memory_same(const void* lhs, const void* rhs, UMI size) {$/;"	f	language:C++	typeref:typename:B32
 is_memory_same	D:/work/git/txt/code/momo_common.h	/^is_memory_same(const void* lhs, const void* rhs, UMI size) {$/;"	f	language:C++	typeref:typename:B32
@@ -2064,7 +2062,6 @@ latency_sample_count	D:/work/git/txt/code/w32_audio_wasapi.h	/^  U32 latency_sam
 left	C:/Users/geral/work/txt/code/momo_json.h	/^  struct _JSON_Object_Node* left;$/;"	m	language:C++	struct:_JSON_Object_Node	typeref:struct:_JSON_Object_Node *
 left	D:/work/git/txt/code/momo_json.h	/^  struct _JSON_Object_Node* left;$/;"	m	language:C++	struct:_JSON_Object_Node	typeref:struct:_JSON_Object_Node *
 left_side_bearing	C:/Users/geral/work/txt/code/momo_ttf.h	/^  S16 left_side_bearing;$/;"	m	language:C++	struct:__anon802a10330208	typeref:typename:S16
-left_side_bearing	D:/work/git/txt/code/momo_ttf.h	/^  S16 left_side_bearing;$/;"	m	language:C++	struct:__anon68e2795f0208	typeref:typename:S16
 length	C:/Users/geral/work/txt/code/momo_png.h	/^  U32 length;$/;"	m	language:C++	struct:_PNG_Chunk_Header	typeref:typename:U32
 length	D:/work/git/txt/code/momo_png.h	/^  U32 length;$/;"	m	language:C++	struct:_PNG_Chunk_Header	typeref:typename:U32
 lengths	C:/Users/geral/work/txt/code/momo_png.h	/^  U16* lengths;$/;"	m	language:C++	struct:_PNG_Huffman	typeref:typename:U16 *
@@ -2088,11 +2085,10 @@ line	D:/work/git/txt/code/game_profiler.h	/^  U32 line;$/;"	m	language:C++	struc
 Line2	C:/Users/geral/work/txt/code/momo_shapes.h	/^typedef struct Line2 {$/;"	s	language:C++
 Line2	C:/Users/geral/work/txt/code/momo_shapes.h	/^}Line2;$/;"	t	language:C++	typeref:struct:Line2
 Line2	D:/work/git/txt/code/momo_shapes.h	/^typedef struct Line2 {$/;"	s	language:C++
-Line2	D:/work/git/txt/code/momo_shapes.h	/^} Line2;$/;"	t	language:C++	typeref:struct:Line2
+Line2	D:/work/git/txt/code/momo_shapes.h	/^}Line2;$/;"	t	language:C++	typeref:struct:Line2
 line2_set	C:/Users/geral/work/txt/code/momo_shapes.h	/^line2_set(V2 min, V2 max) {$/;"	f	language:C++	typeref:typename:Line2
 line2_set	C:/Users/geral/work/txt/code/momo_shapes.h	/^static Line2 line2_set(V2 min, V2 max);$/;"	p	language:C++	typeref:typename:Line2
 line2_set	D:/work/git/txt/code/momo_shapes.h	/^line2_set(V2 min, V2 max) {$/;"	f	language:C++	typeref:typename:Line2
-line2_set	D:/work/git/txt/code/momo_shapes.h	/^static Line2 line2_set(V2 min, V2 max);$/;"	p	language:C++	typeref:typename:Line2
 Lit	C:/Users/geral/work/txt/code/game_mode_lit.h	/^typedef struct Lit {$/;"	s	language:C++
 Lit	C:/Users/geral/work/txt/code/game_mode_lit.h	/^} Lit;$/;"	t	language:C++	typeref:struct:Lit
 Lit	D:/work/git/txt/code/game_mode_lit.h	/^typedef struct Lit {$/;"	s	language:C++
@@ -2328,6 +2324,7 @@ max	C:/Users/geral/work/txt/code/momo_shapes.h	/^  V3 min, max;$/;"	m	language:C
 max	D:/work/git/txt/code/game_profiler_rendering.h	/^  F64 max;$/;"	m	language:C++	struct:Stat	typeref:typename:F64
 max	D:/work/git/txt/code/momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:Line2	typeref:typename:V2
 max	D:/work/git/txt/code/momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:Rect2	typeref:typename:V2
+max	D:/work/git/txt/code/momo_shapes.h	/^  V2S min, max;$/;"	m	language:C++	struct:Rect2S	typeref:typename:V2S
 max	D:/work/git/txt/code/momo_shapes.h	/^  V2U min, max;$/;"	m	language:C++	struct:Rect2U	typeref:typename:V2U
 max	D:/work/git/txt/code/momo_shapes.h	/^  V3 min, max;$/;"	m	language:C++	struct:Rect3	typeref:typename:V3
 maxp	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon802a10330108	typeref:typename:U32
@@ -2403,6 +2400,7 @@ min	C:/Users/geral/work/txt/code/momo_shapes.h	/^  V3 min, max;$/;"	m	language:C
 min	D:/work/git/txt/code/game_profiler_rendering.h	/^  F64 min;$/;"	m	language:C++	struct:Stat	typeref:typename:F64
 min	D:/work/git/txt/code/momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:Line2	typeref:typename:V2
 min	D:/work/git/txt/code/momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:Rect2	typeref:typename:V2
+min	D:/work/git/txt/code/momo_shapes.h	/^  V2S min, max;$/;"	m	language:C++	struct:Rect2S	typeref:typename:V2S
 min	D:/work/git/txt/code/momo_shapes.h	/^  V2U min, max;$/;"	m	language:C++	struct:Rect2U	typeref:typename:V2U
 min	D:/work/git/txt/code/momo_shapes.h	/^  V3 min, max;$/;"	m	language:C++	struct:Rect3	typeref:typename:V3
 min_of	C:/Users/geral/work/txt/code/momo_common.h	/^#define min_of(/;"	d	language:C++
@@ -2820,11 +2818,11 @@ out	D:/work/git/txt/code/test_png.h	/^    const char* out;$/;"	m	language:C++	st
 p0	C:/Users/geral/work/txt/code/game_gfx.h	/^  V2 p0, p1, p2;$/;"	m	language:C++	struct:Gfx_Command_Triangle	typeref:typename:V2
 p0	C:/Users/geral/work/txt/code/momo_ttf.h	/^  V2 p0, p1;$/;"	m	language:C++	struct:__anon802a10330608	typeref:typename:V2
 p0	D:/work/git/txt/code/game_gfx.h	/^  V2 p0, p1, p2;$/;"	m	language:C++	struct:Gfx_Command_Triangle	typeref:typename:V2
-p0	D:/work/git/txt/code/momo_ttf.h	/^  V2 p0, p1;$/;"	m	language:C++	struct:__anon68e2795f0608	typeref:typename:V2
+p0	D:/work/git/txt/code/momo_ttf.h	/^  V2 p0, p1;$/;"	m	language:C++	struct:__anon68e2795f0508	typeref:typename:V2
 p1	C:/Users/geral/work/txt/code/game_gfx.h	/^  V2 p0, p1, p2;$/;"	m	language:C++	struct:Gfx_Command_Triangle	typeref:typename:V2
 p1	C:/Users/geral/work/txt/code/momo_ttf.h	/^  V2 p0, p1;$/;"	m	language:C++	struct:__anon802a10330608	typeref:typename:V2
 p1	D:/work/git/txt/code/game_gfx.h	/^  V2 p0, p1, p2;$/;"	m	language:C++	struct:Gfx_Command_Triangle	typeref:typename:V2
-p1	D:/work/git/txt/code/momo_ttf.h	/^  V2 p0, p1;$/;"	m	language:C++	struct:__anon68e2795f0608	typeref:typename:V2
+p1	D:/work/git/txt/code/momo_ttf.h	/^  V2 p0, p1;$/;"	m	language:C++	struct:__anon68e2795f0508	typeref:typename:V2
 p2	C:/Users/geral/work/txt/code/game_gfx.h	/^  V2 p0, p1, p2;$/;"	m	language:C++	struct:Gfx_Command_Triangle	typeref:typename:V2
 p2	D:/work/git/txt/code/game_gfx.h	/^  V2 p0, p1, p2;$/;"	m	language:C++	struct:Gfx_Command_Triangle	typeref:typename:V2
 paint_sprite	C:/Users/geral/work/txt/code/game_asset_rendering.h	/^paint_sprite(Game_Sprite_ID sprite_id,$/;"	f	language:C++	typeref:typename:void
@@ -2850,9 +2848,9 @@ particle_lifespan_max	D:/work/git/txt/code/game_mode_lit_entity.h	/^  F32 partic
 particle_lifespan_min	C:/Users/geral/work/txt/code/game_mode_lit_entity.h	/^  F32 particle_lifespan_min;$/;"	m	language:C++	struct:Lit_Particle_Pool	typeref:typename:F32
 particle_lifespan_min	D:/work/git/txt/code/game_mode_lit_entity.h	/^  F32 particle_lifespan_min;$/;"	m	language:C++	struct:Lit_Particle_Pool	typeref:typename:F32
 path_count	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 path_count;$/;"	m	language:C++	struct:__anon802a10330508	typeref:typename:U32
-path_count	D:/work/git/txt/code/momo_ttf.h	/^  U32 path_count;$/;"	m	language:C++	struct:__anon68e2795f0508	typeref:typename:U32
+path_count	D:/work/git/txt/code/momo_ttf.h	/^  U32 path_count;$/;"	m	language:C++	struct:__anon68e2795f0408	typeref:typename:U32
 path_lengths	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32* path_lengths;$/;"	m	language:C++	struct:__anon802a10330508	typeref:typename:U32 *
-path_lengths	D:/work/git/txt/code/momo_ttf.h	/^  U32* path_lengths;$/;"	m	language:C++	struct:__anon68e2795f0508	typeref:typename:U32 *
+path_lengths	D:/work/git/txt/code/momo_ttf.h	/^  U32* path_lengths;$/;"	m	language:C++	struct:__anon68e2795f0408	typeref:typename:U32 *
 payloads	C:/Users/geral/work/txt/code/game_gfx.h	/^  Gfx_Texture_Payload payloads[GFX_MAX_TEXTURES];$/;"	m	language:C++	struct:Gfx_Texture_Queue	typeref:typename:Gfx_Texture_Payload[]
 payloads	D:/work/git/txt/code/game_gfx.h	/^  Gfx_Texture_Payload payloads[GFX_MAX_TEXTURES];$/;"	m	language:C++	struct:Gfx_Texture_Queue	typeref:typename:Gfx_Texture_Payload[]
 payload_count	C:/Users/geral/work/txt/code/game_gfx.h	/^  UMI payload_count;$/;"	m	language:C++	struct:Gfx_Texture_Queue	typeref:typename:UMI
@@ -2978,9 +2976,9 @@ png_write_img32_to_blk	C:/Users/geral/work/txt/code/momo_png.h	/^static Block   
 png_write_img32_to_blk	D:/work/git/txt/code/momo_png.h	/^png_write_img32_to_blk(Image32 bm, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:Block
 png_write_img32_to_blk	D:/work/git/txt/code/momo_png.h	/^static Block   png_write_img32_to_blk(Image32 img, Bump_Allocator* allocator);$/;"	p	language:C++	typeref:typename:Block
 points	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_Glyph_Point* points;$/;"	m	language:C++	struct:__anon802a10330408	typeref:typename:_TTF_Glyph_Point *
-points	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_Glyph_Point* points;$/;"	m	language:C++	struct:__anon68e2795f0408	typeref:typename:_TTF_Glyph_Point *
+points	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_Glyph_Point* points;$/;"	m	language:C++	struct:__anon68e2795f0308	typeref:typename:_TTF_Glyph_Point *
 point_count	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 point_count;$/;"	m	language:C++	struct:__anon802a10330408	typeref:typename:U32
-point_count	D:/work/git/txt/code/momo_ttf.h	/^  U32 point_count;$/;"	m	language:C++	struct:__anon68e2795f0408	typeref:typename:U32
+point_count	D:/work/git/txt/code/momo_ttf.h	/^  U32 point_count;$/;"	m	language:C++	struct:__anon68e2795f0308	typeref:typename:U32
 pos	C:/Users/geral/work/txt/code/game_gfx.h	/^  V2 pos;$/;"	m	language:C++	struct:Gfx_Command_Rect	typeref:typename:V2
 pos	C:/Users/geral/work/txt/code/game_gfx.h	/^  V2 pos;$/;"	m	language:C++	struct:Gfx_Command_Sprite	typeref:typename:V2
 pos	C:/Users/geral/work/txt/code/game_mode_lit_entity.h	/^  V2 pos, vel;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:V2
@@ -3082,7 +3080,7 @@ raster_font_height	D:/work/git/txt/code/sui_atlas.h	/^  F32 raster_font_height;$
 Ray2	C:/Users/geral/work/txt/code/momo_shapes.h	/^typedef struct Ray2 {$/;"	s	language:C++
 Ray2	C:/Users/geral/work/txt/code/momo_shapes.h	/^}Ray2;$/;"	t	language:C++	typeref:struct:Ray2
 Ray2	D:/work/git/txt/code/momo_shapes.h	/^typedef struct Ray2 {$/;"	s	language:C++
-Ray2	D:/work/git/txt/code/momo_shapes.h	/^} Ray2;$/;"	t	language:C++	typeref:struct:Ray2
+Ray2	D:/work/git/txt/code/momo_shapes.h	/^}Ray2;$/;"	t	language:C++	typeref:struct:Ray2
 rbg_to_hsl	C:/Users/geral/work/txt/code/momo_colors.h	/^rbg_to_hsl(RGB c) {$/;"	f	language:C++	typeref:typename:HSL
 rbg_to_hsl	C:/Users/geral/work/txt/code/momo_colors.h	/^static HSL  rbg_to_hsl(RGB c);$/;"	p	language:C++	typeref:typename:HSL
 rbg_to_hsl	D:/work/git/txt/code/momo_colors.h	/^rbg_to_hsl(RGB c) {$/;"	f	language:C++	typeref:typename:HSL
@@ -3099,6 +3097,8 @@ Rect2	D:/work/git/txt/code/momo_shapes.h	/^typedef struct Rect2 {$/;"	s	language
 Rect2	D:/work/git/txt/code/momo_shapes.h	/^}Rect2;$/;"	t	language:C++	typeref:struct:Rect2
 Rect2S	C:/Users/geral/work/txt/code/momo_shapes.h	/^typedef struct Rect2S {$/;"	s	language:C++
 Rect2S	C:/Users/geral/work/txt/code/momo_shapes.h	/^}Rect2S;$/;"	t	language:C++	typeref:struct:Rect2S
+Rect2S	D:/work/git/txt/code/momo_shapes.h	/^typedef struct Rect2S {$/;"	s	language:C++
+Rect2S	D:/work/git/txt/code/momo_shapes.h	/^}Rect2S;$/;"	t	language:C++	typeref:struct:Rect2S
 Rect2U	C:/Users/geral/work/txt/code/momo_shapes.h	/^typedef struct Rect2U {$/;"	s	language:C++
 Rect2U	C:/Users/geral/work/txt/code/momo_shapes.h	/^}Rect2U;$/;"	t	language:C++	typeref:struct:Rect2U
 Rect2U	D:/work/git/txt/code/momo_shapes.h	/^typedef struct Rect2U {$/;"	s	language:C++
@@ -3756,11 +3756,9 @@ transfer_memory_start	D:/work/git/txt/code/game_gfx.h	/^  UMI transfer_memory_st
 Tri2	C:/Users/geral/work/txt/code/momo_shapes.h	/^typedef struct Tri2 {$/;"	s	language:C++
 Tri2	C:/Users/geral/work/txt/code/momo_shapes.h	/^}Tri2;$/;"	t	language:C++	typeref:struct:Tri2
 Tri2	D:/work/git/txt/code/momo_shapes.h	/^typedef struct Tri2 {$/;"	s	language:C++
-Tri2	D:/work/git/txt/code/momo_shapes.h	/^} Tri2;$/;"	t	language:C++	typeref:struct:Tri2
+Tri2	D:/work/git/txt/code/momo_shapes.h	/^}Tri2;$/;"	t	language:C++	typeref:struct:Tri2
 tri2_set	C:/Users/geral/work/txt/code/momo_shapes.h	/^static Tri2  tri2_set(V2 pt0, V2 pt1, V2 p2);$/;"	p	language:C++	typeref:typename:Tri2
 tri2_set	C:/Users/geral/work/txt/code/momo_shapes.h	/^tri2_set(V2 pt0, V2 pt1, V2 pt2) {$/;"	f	language:C++	typeref:typename:Tri2
-tri2_set	D:/work/git/txt/code/momo_shapes.h	/^static Tri2  tri2_set(V2 pt0, V2 pt1, V2 p2);$/;"	p	language:C++	typeref:typename:Tri2
-tri2_set	D:/work/git/txt/code/momo_shapes.h	/^tri2_set(V2 pt0, V2 pt1, V2 pt2) {$/;"	f	language:C++	typeref:typename:Tri2
 triangles	C:/Users/geral/work/txt/code/game_mode_lit_world.h	/^  Lit_Light_Triangle_List triangles;$/;"	m	language:C++	struct:Lit_Light	typeref:typename:Lit_Light_Triangle_List
 triangles	D:/work/git/txt/code/game_mode_lit_world.h	/^  Lit_Light_Triangle_List triangles;$/;"	m	language:C++	struct:Lit_Light	typeref:typename:Lit_Light_Triangle_List
 triangle_batch	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^  Triangle_Batch triangle_batch;$/;"	m	language:C++	struct:Opengl	typeref:typename:Triangle_Batch
@@ -3774,15 +3772,16 @@ TTF	D:/work/git/txt/code/momo_ttf.h	/^}TTF;$/;"	t	language:C++	typeref:struct:__
 ttf_get_bitmap_dims_from_glyph_box	C:/Users/geral/work/txt/code/momo_ttf.h	/^static V2U ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box);$/;"	p	language:C++	typeref:typename:V2U
 ttf_get_bitmap_dims_from_glyph_box	C:/Users/geral/work/txt/code/momo_ttf.h	/^ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {$/;"	f	language:C++	typeref:typename:V2U
 ttf_get_bitmap_dims_from_glyph_box	D:/work/git/txt/code/momo_ttf.h	/^static V2U ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box);$/;"	p	language:C++	typeref:typename:V2U
-ttf_get_bitmap_dims_from_glyph_box	D:/work/git/txt/code/momo_ttf.h	/^ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {$/;"	f	language:C++	typeref:typename:V2U
+ttf_get_glyph_bitmap_box	D:/work/git/txt/code/momo_ttf.h	/^static B32 ttf_get_glyph_bitmap_box(const TTF* ttf, U32 glyph_index,S32* x0, S32* y0, S32* x1, S/;"	p	language:C++	typeref:typename:B32
+ttf_get_glyph_bitmap_box	D:/work/git/txt/code/momo_ttf.h	/^ttf_get_glyph_bitmap_box(const TTF* ttf, U32 glyph_index,S32* x0, S32* y0, S32* x1, S32* y1) {$/;"	f	language:C++	typeref:typename:B32
 ttf_get_glyph_box	C:/Users/geral/work/txt/code/momo_ttf.h	/^static Rect2 ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, F32 scale_factor);$/;"	p	language:C++	typeref:typename:Rect2
 ttf_get_glyph_box	C:/Users/geral/work/txt/code/momo_ttf.h	/^ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, F32 scale_factor) {$/;"	f	language:C++	typeref:typename:Rect2
-ttf_get_glyph_box	D:/work/git/txt/code/momo_ttf.h	/^static Rect2 ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, F32 scale_factor);$/;"	p	language:C++	typeref:typename:Rect2
-ttf_get_glyph_box	D:/work/git/txt/code/momo_ttf.h	/^ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, F32 scale_factor, F32* min_x, F32* min_y, F32/;"	f	language:C++	typeref:typename:Rect2
+ttf_get_glyph_box	D:/work/git/txt/code/momo_ttf.h	/^static B32 ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, S32* x0, S32* y0, S32* x1, S32* y1/;"	p	language:C++	typeref:typename:B32
+ttf_get_glyph_box	D:/work/git/txt/code/momo_ttf.h	/^ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, S32* x0, S32* y0, S32* x1, S32* y1) {$/;"	f	language:C++	typeref:typename:B32
 ttf_get_glyph_horiozontal_metrics	C:/Users/geral/work/txt/code/momo_ttf.h	/^static TTF_Glyph_Horizontal_Metrics ttf_get_glyph_horiozontal_metrics(const TTF* ttf, U32 glyph_/;"	p	language:C++	typeref:typename:TTF_Glyph_Horizontal_Metrics
 ttf_get_glyph_horiozontal_metrics	C:/Users/geral/work/txt/code/momo_ttf.h	/^ttf_get_glyph_horiozontal_metrics(const TTF* ttf, U32 glyph_index)$/;"	f	language:C++	typeref:typename:TTF_Glyph_Horizontal_Metrics
-ttf_get_glyph_horiozontal_metrics	D:/work/git/txt/code/momo_ttf.h	/^static TTF_Glyph_Horizontal_Metrics ttf_get_glyph_horiozontal_metrics(const TTF* ttf, U32 glyph_/;"	p	language:C++	typeref:typename:TTF_Glyph_Horizontal_Metrics
-ttf_get_glyph_horiozontal_metrics	D:/work/git/txt/code/momo_ttf.h	/^ttf_get_glyph_horiozontal_metrics(const TTF* ttf, U32 glyph_index)$/;"	f	language:C++	typeref:typename:TTF_Glyph_Horizontal_Metrics
+ttf_get_glyph_horizontal_metrics	D:/work/git/txt/code/momo_ttf.h	/^static void ttf_get_glyph_horizontal_metrics(const TTF* ttf, U32 glyph_index, S16* advance_width/;"	p	language:C++	typeref:typename:void
+ttf_get_glyph_horizontal_metrics	D:/work/git/txt/code/momo_ttf.h	/^ttf_get_glyph_horizontal_metrics(const TTF* ttf, $/;"	f	language:C++	typeref:typename:void
 ttf_get_glyph_index	C:/Users/geral/work/txt/code/momo_ttf.h	/^static U32 ttf_get_glyph_index(const TTF* ttf, U32 codepoint);$/;"	p	language:C++	typeref:typename:U32
 ttf_get_glyph_index	C:/Users/geral/work/txt/code/momo_ttf.h	/^ttf_get_glyph_index(const TTF* ttf, U32 codepoint) {$/;"	f	language:C++	typeref:typename:U32
 ttf_get_glyph_index	D:/work/git/txt/code/momo_ttf.h	/^static U32 ttf_get_glyph_index(const TTF* ttf, U32 codepoint);$/;"	p	language:C++	typeref:typename:U32
@@ -3796,12 +3795,11 @@ ttf_get_scale_for_pixel_height	C:/Users/geral/work/txt/code/momo_ttf.h	/^ttf_get
 ttf_get_scale_for_pixel_height	D:/work/git/txt/code/momo_ttf.h	/^static F32 ttf_get_scale_for_pixel_height(const TTF* ttf, F32 pixel_height);$/;"	p	language:C++	typeref:typename:F32
 ttf_get_scale_for_pixel_height	D:/work/git/txt/code/momo_ttf.h	/^ttf_get_scale_for_pixel_height(const TTF* ttf, F32 pixel_height) {$/;"	f	language:C++	typeref:typename:F32
 TTF_Glyph_Horizontal_Metrics	C:/Users/geral/work/txt/code/momo_ttf.h	/^} TTF_Glyph_Horizontal_Metrics;$/;"	t	language:C++	typeref:struct:__anon802a10330208
-TTF_Glyph_Horizontal_Metrics	D:/work/git/txt/code/momo_ttf.h	/^} TTF_Glyph_Horizontal_Metrics;$/;"	t	language:C++	typeref:struct:__anon68e2795f0208
 ttf_log	C:/Users/geral/work/txt/code/momo_ttf.h	/^# define ttf_log(/;"	d	language:C++
 ttf_log	D:/work/git/txt/code/momo_ttf.h	/^# define ttf_log(/;"	d	language:C++
 ttf_rasterize_glyph	C:/Users/geral/work/txt/code/momo_ttf.h	/^static Image32 ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Alloc/;"	p	language:C++	typeref:typename:Image32
 ttf_rasterize_glyph	C:/Users/geral/work/txt/code/momo_ttf.h	/^ttf_rasterize_glyph(const TTF* ttf, $/;"	f	language:C++	typeref:typename:Image32
-ttf_rasterize_glyph	D:/work/git/txt/code/momo_ttf.h	/^static Image32 ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Alloc/;"	p	language:C++	typeref:typename:Image32
+ttf_rasterize_glyph	D:/work/git/txt/code/momo_ttf.h	/^static Image32 ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, Bump_Allocator* a/;"	p	language:C++	typeref:typename:Image32
 ttf_rasterize_glyph	D:/work/git/txt/code/momo_ttf.h	/^ttf_rasterize_glyph(const TTF* ttf, $/;"	f	language:C++	typeref:typename:Image32
 ttf_read	C:/Users/geral/work/txt/code/momo_ttf.h	/^static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);$/;"	p	language:C++	typeref:typename:B32
 ttf_read	C:/Users/geral/work/txt/code/momo_ttf.h	/^ttf_read(TTF* ttf, void* memory, UMI memory_size) {$/;"	f	language:C++	typeref:typename:B32
@@ -4084,9 +4082,9 @@ value	D:/work/git/txt/code/momo_json.h	/^  _JSON_Value value;$/;"	m	language:C++
 vel	C:/Users/geral/work/txt/code/game_mode_lit_entity.h	/^  V2 pos, vel;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:V2
 vel	D:/work/git/txt/code/game_mode_lit_entity.h	/^  V2 pos, vel;$/;"	m	language:C++	struct:Lit_Particle	typeref:typename:V2
 vertex_count	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 vertex_count;$/;"	m	language:C++	struct:__anon802a10330508	typeref:typename:U32
-vertex_count	D:/work/git/txt/code/momo_ttf.h	/^  U32 vertex_count;$/;"	m	language:C++	struct:__anon68e2795f0508	typeref:typename:U32
+vertex_count	D:/work/git/txt/code/momo_ttf.h	/^  U32 vertex_count;$/;"	m	language:C++	struct:__anon68e2795f0408	typeref:typename:U32
 vertices	C:/Users/geral/work/txt/code/momo_ttf.h	/^  V2* vertices;$/;"	m	language:C++	struct:__anon802a10330508	typeref:typename:V2 *
-vertices	D:/work/git/txt/code/momo_ttf.h	/^  V2* vertices;$/;"	m	language:C++	struct:__anon68e2795f0508	typeref:typename:V2 *
+vertices	D:/work/git/txt/code/momo_ttf.h	/^  V2* vertices;$/;"	m	language:C++	struct:__anon68e2795f0408	typeref:typename:V2 *
 w	C:/Users/geral/work/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anonbe0c25110208	typeref:typename:U32
 w	C:/Users/geral/work/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anonbe0c25110308	typeref:typename:U32
 w	C:/Users/geral/work/txt/code/momo_vectors.h	/^	struct { F32 w, h, d; };$/;"	m	language:C++	struct:__anon7883de8b0b0a::__anon7883de8b0d08	typeref:typename:F32
@@ -4341,14 +4339,14 @@ x	C:/Users/geral/work/txt/code/momo_vectors.h	/^	struct { S32 x, y; };$/;"	m	lan
 x	C:/Users/geral/work/txt/code/momo_vectors.h	/^	struct { U32 x, y; };$/;"	m	language:C++	struct:__anon7883de8b010a::__anon7883de8b0208	typeref:typename:U32
 x	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon2eb1bf3d0208	typeref:typename:U32
 x	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon2eb1bf3d0308	typeref:typename:U32
-x	D:/work/git/txt/code/momo_ttf.h	/^  S16 x, y; $/;"	m	language:C++	struct:__anon68e2795f0308	typeref:typename:S16
+x	D:/work/git/txt/code/momo_ttf.h	/^  S16 x, y; $/;"	m	language:C++	struct:__anon68e2795f0208	typeref:typename:S16
 x	D:/work/git/txt/code/momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:__anon6c64fdb70e0a::__anon6c64fdb70f08	typeref:typename:F32
 x	D:/work/git/txt/code/momo_vectors.h	/^	struct { F32 x, y, z; };$/;"	m	language:C++	struct:__anon6c64fdb70b0a::__anon6c64fdb70c08	typeref:typename:F32
 x	D:/work/git/txt/code/momo_vectors.h	/^	struct { F32 x, y; };$/;"	m	language:C++	struct:__anon6c64fdb7070a::__anon6c64fdb70808	typeref:typename:F32
 x	D:/work/git/txt/code/momo_vectors.h	/^	struct { S32 x, y; };$/;"	m	language:C++	struct:__anon6c64fdb7040a::__anon6c64fdb70508	typeref:typename:S32
 x	D:/work/git/txt/code/momo_vectors.h	/^	struct { U32 x, y; };$/;"	m	language:C++	struct:__anon6c64fdb7010a::__anon6c64fdb70208	typeref:typename:U32
 x_intersect	C:/Users/geral/work/txt/code/momo_ttf.h	/^  F32 x_intersect;$/;"	m	language:C++	struct:__anon802a10330608	typeref:typename:F32
-x_intersect	D:/work/git/txt/code/momo_ttf.h	/^  F32 x_intersect;$/;"	m	language:C++	struct:__anon68e2795f0608	typeref:typename:F32
+x_intersect	D:/work/git/txt/code/momo_ttf.h	/^  F32 x_intersect;$/;"	m	language:C++	struct:__anon68e2795f0508	typeref:typename:F32
 y	C:/Users/geral/work/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anonbe0c25110208	typeref:typename:U32
 y	C:/Users/geral/work/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anonbe0c25110308	typeref:typename:U32
 y	C:/Users/geral/work/txt/code/momo_ttf.h	/^  S16 x, y; $/;"	m	language:C++	struct:__anon802a10330308	typeref:typename:S16
@@ -4359,7 +4357,7 @@ y	C:/Users/geral/work/txt/code/momo_vectors.h	/^	struct { S32 x, y; };$/;"	m	lan
 y	C:/Users/geral/work/txt/code/momo_vectors.h	/^	struct { U32 x, y; };$/;"	m	language:C++	struct:__anon7883de8b010a::__anon7883de8b0208	typeref:typename:U32
 y	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon2eb1bf3d0208	typeref:typename:U32
 y	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon2eb1bf3d0308	typeref:typename:U32
-y	D:/work/git/txt/code/momo_ttf.h	/^  S16 x, y; $/;"	m	language:C++	struct:__anon68e2795f0308	typeref:typename:S16
+y	D:/work/git/txt/code/momo_ttf.h	/^  S16 x, y; $/;"	m	language:C++	struct:__anon68e2795f0208	typeref:typename:S16
 y	D:/work/git/txt/code/momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:__anon6c64fdb70e0a::__anon6c64fdb70f08	typeref:typename:F32
 y	D:/work/git/txt/code/momo_vectors.h	/^	struct { F32 x, y, z; };$/;"	m	language:C++	struct:__anon6c64fdb70b0a::__anon6c64fdb70c08	typeref:typename:F32
 y	D:/work/git/txt/code/momo_vectors.h	/^	struct { F32 x, y; };$/;"	m	language:C++	struct:__anon6c64fdb7070a::__anon6c64fdb70808	typeref:typename:F32
@@ -4632,31 +4630,31 @@ _ttf_add_vertex	C:/Users/geral/work/txt/code/momo_ttf.h	/^_ttf_add_vertex(V2* ve
 _ttf_add_vertex	D:/work/git/txt/code/momo_ttf.h	/^_ttf_add_vertex(V2* vertices, U32 n, F32 x, F32 y) {$/;"	f	language:C++	typeref:typename:void
 _ttf_add_vertex	D:/work/git/txt/code/momo_ttf.h	/^_ttf_add_vertex(V2* vertices, U32 n, V2 v) {$/;"	f	language:C++	typeref:typename:void
 _TTF_CMAP_MS_ID_BIG_FIVE	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_BIG_FIVE = 4,$/;"	e	language:C++	enum:__anon802a10330903
-_TTF_CMAP_MS_ID_BIG_FIVE	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_BIG_FIVE = 4,$/;"	e	language:C++	enum:__anon68e2795f0903
+_TTF_CMAP_MS_ID_BIG_FIVE	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_BIG_FIVE = 4,$/;"	e	language:C++	enum:__anon68e2795f0803
 _TTF_CMAP_MS_ID_JOHAB	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_JOHAB = 5,$/;"	e	language:C++	enum:__anon802a10330903
-_TTF_CMAP_MS_ID_JOHAB	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_JOHAB = 5,$/;"	e	language:C++	enum:__anon68e2795f0903
+_TTF_CMAP_MS_ID_JOHAB	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_JOHAB = 5,$/;"	e	language:C++	enum:__anon68e2795f0803
 _TTF_CMAP_MS_ID_PRC	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_PRC = 3,$/;"	e	language:C++	enum:__anon802a10330903
-_TTF_CMAP_MS_ID_PRC	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_PRC = 3,$/;"	e	language:C++	enum:__anon68e2795f0903
+_TTF_CMAP_MS_ID_PRC	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_PRC = 3,$/;"	e	language:C++	enum:__anon68e2795f0803
 _TTF_CMAP_MS_ID_SHIFT_JIS	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_SHIFT_JIS = 2,$/;"	e	language:C++	enum:__anon802a10330903
-_TTF_CMAP_MS_ID_SHIFT_JIS	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_SHIFT_JIS = 2,$/;"	e	language:C++	enum:__anon68e2795f0903
+_TTF_CMAP_MS_ID_SHIFT_JIS	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_SHIFT_JIS = 2,$/;"	e	language:C++	enum:__anon68e2795f0803
 _TTF_CMAP_MS_ID_SYMBOL	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_SYMBOL = 0,$/;"	e	language:C++	enum:__anon802a10330903
-_TTF_CMAP_MS_ID_SYMBOL	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_SYMBOL = 0,$/;"	e	language:C++	enum:__anon68e2795f0903
+_TTF_CMAP_MS_ID_SYMBOL	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_SYMBOL = 0,$/;"	e	language:C++	enum:__anon68e2795f0803
 _TTF_CMAP_MS_ID_UNICODE_BMP	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_BMP = 1,$/;"	e	language:C++	enum:__anon802a10330903
-_TTF_CMAP_MS_ID_UNICODE_BMP	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_BMP = 1,$/;"	e	language:C++	enum:__anon68e2795f0903
+_TTF_CMAP_MS_ID_UNICODE_BMP	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_BMP = 1,$/;"	e	language:C++	enum:__anon68e2795f0803
 _TTF_CMAP_MS_ID_UNICODE_FULL	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_FULL = 10,$/;"	e	language:C++	enum:__anon802a10330903
-_TTF_CMAP_MS_ID_UNICODE_FULL	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_FULL = 10,$/;"	e	language:C++	enum:__anon68e2795f0903
+_TTF_CMAP_MS_ID_UNICODE_FULL	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_FULL = 10,$/;"	e	language:C++	enum:__anon68e2795f0803
 _TTF_CMAP_PLATFORM_ID_MACINTOSH	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MACINTOSH = 1,$/;"	e	language:C++	enum:__anon802a10330803
-_TTF_CMAP_PLATFORM_ID_MACINTOSH	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MACINTOSH = 1,$/;"	e	language:C++	enum:__anon68e2795f0803
+_TTF_CMAP_PLATFORM_ID_MACINTOSH	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MACINTOSH = 1,$/;"	e	language:C++	enum:__anon68e2795f0703
 _TTF_CMAP_PLATFORM_ID_MICROSOFT	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MICROSOFT = 3,$/;"	e	language:C++	enum:__anon802a10330803
-_TTF_CMAP_PLATFORM_ID_MICROSOFT	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MICROSOFT = 3,$/;"	e	language:C++	enum:__anon68e2795f0803
+_TTF_CMAP_PLATFORM_ID_MICROSOFT	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MICROSOFT = 3,$/;"	e	language:C++	enum:__anon68e2795f0703
 _TTF_CMAP_PLATFORM_ID_RESERVED	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_RESERVED = 2,$/;"	e	language:C++	enum:__anon802a10330803
-_TTF_CMAP_PLATFORM_ID_RESERVED	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_RESERVED = 2,$/;"	e	language:C++	enum:__anon68e2795f0803
+_TTF_CMAP_PLATFORM_ID_RESERVED	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_RESERVED = 2,$/;"	e	language:C++	enum:__anon68e2795f0703
 _TTF_CMAP_PLATFORM_ID_UNICODE	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_UNICODE = 0,$/;"	e	language:C++	enum:__anon802a10330803
-_TTF_CMAP_PLATFORM_ID_UNICODE	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_UNICODE = 0,$/;"	e	language:C++	enum:__anon68e2795f0803
+_TTF_CMAP_PLATFORM_ID_UNICODE	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_UNICODE = 0,$/;"	e	language:C++	enum:__anon68e2795f0703
 _TTF_Edge	C:/Users/geral/work/txt/code/momo_ttf.h	/^}_TTF_Edge;$/;"	t	language:C++	typeref:struct:__anon802a10330608
-_TTF_Edge	D:/work/git/txt/code/momo_ttf.h	/^}_TTF_Edge;$/;"	t	language:C++	typeref:struct:__anon68e2795f0608
+_TTF_Edge	D:/work/git/txt/code/momo_ttf.h	/^}_TTF_Edge;$/;"	t	language:C++	typeref:struct:__anon68e2795f0508
 _TTF_Edge_List	C:/Users/geral/work/txt/code/momo_ttf.h	/^}_TTF_Edge_List;$/;"	t	language:C++	typeref:struct:__anon802a10330708
-_TTF_Edge_List	D:/work/git/txt/code/momo_ttf.h	/^}_TTF_Edge_List;$/;"	t	language:C++	typeref:struct:__anon68e2795f0708
+_TTF_Edge_List	D:/work/git/txt/code/momo_ttf.h	/^}_TTF_Edge_List;$/;"	t	language:C++	typeref:struct:__anon68e2795f0608
 _ttf_get_glyph_outline	C:/Users/geral/work/txt/code/momo_ttf.h	/^_ttf_get_glyph_outline(const TTF* ttf, $/;"	f	language:C++	typeref:typename:B32
 _ttf_get_glyph_outline	D:/work/git/txt/code/momo_ttf.h	/^_ttf_get_glyph_outline(const TTF* ttf, $/;"	f	language:C++	typeref:typename:B32
 _ttf_get_kern_advance	C:/Users/geral/work/txt/code/momo_ttf.h	/^_ttf_get_kern_advance(const TTF* ttf, S32 g1, S32 g2) {$/;"	f	language:C++	typeref:typename:S32
@@ -4666,13 +4664,12 @@ _ttf_get_offset_to_glyph	D:/work/git/txt/code/momo_ttf.h	/^_ttf_get_offset_to_gl
 _ttf_get_paths_from_glyph_outline	C:/Users/geral/work/txt/code/momo_ttf.h	/^_ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,$/;"	f	language:C++	typeref:typename:B32
 _ttf_get_paths_from_glyph_outline	D:/work/git/txt/code/momo_ttf.h	/^_ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,$/;"	f	language:C++	typeref:typename:B32
 _ttf_get_raw_glyph_box	C:/Users/geral/work/txt/code/momo_ttf.h	/^_ttf_get_raw_glyph_box(const TTF* ttf, U32 glyph_index) {$/;"	f	language:C++	typeref:typename:Rect2S
-_ttf_get_raw_glyph_box	D:/work/git/txt/code/momo_ttf.h	/^_ttf_get_raw_glyph_box(const TTF* ttf, U32 glyph_index, S32* min_x, S32* min_y, S32* max_x, S32*/;"	f	language:C++	typeref:typename:B32
 _TTF_Glyph_Outline	C:/Users/geral/work/txt/code/momo_ttf.h	/^}_TTF_Glyph_Outline;$/;"	t	language:C++	typeref:struct:__anon802a10330408
-_TTF_Glyph_Outline	D:/work/git/txt/code/momo_ttf.h	/^}_TTF_Glyph_Outline;$/;"	t	language:C++	typeref:struct:__anon68e2795f0408
+_TTF_Glyph_Outline	D:/work/git/txt/code/momo_ttf.h	/^}_TTF_Glyph_Outline;$/;"	t	language:C++	typeref:struct:__anon68e2795f0308
 _TTF_Glyph_Paths	C:/Users/geral/work/txt/code/momo_ttf.h	/^}_TTF_Glyph_Paths;$/;"	t	language:C++	typeref:struct:__anon802a10330508
-_TTF_Glyph_Paths	D:/work/git/txt/code/momo_ttf.h	/^}_TTF_Glyph_Paths;$/;"	t	language:C++	typeref:struct:__anon68e2795f0508
+_TTF_Glyph_Paths	D:/work/git/txt/code/momo_ttf.h	/^}_TTF_Glyph_Paths;$/;"	t	language:C++	typeref:struct:__anon68e2795f0408
 _TTF_Glyph_Point	C:/Users/geral/work/txt/code/momo_ttf.h	/^}_TTF_Glyph_Point;$/;"	t	language:C++	typeref:struct:__anon802a10330308
-_TTF_Glyph_Point	D:/work/git/txt/code/momo_ttf.h	/^}_TTF_Glyph_Point;$/;"	t	language:C++	typeref:struct:__anon68e2795f0308
+_TTF_Glyph_Point	D:/work/git/txt/code/momo_ttf.h	/^}_TTF_Glyph_Point;$/;"	t	language:C++	typeref:struct:__anon68e2795f0208
 _ttf_read_s16	C:/Users/geral/work/txt/code/momo_ttf.h	/^_ttf_read_s16(U8* location) {$/;"	f	language:C++	typeref:typename:S16
 _ttf_read_s16	D:/work/git/txt/code/momo_ttf.h	/^_ttf_read_s16(U8* location) {$/;"	f	language:C++	typeref:typename:S16
 _ttf_read_u16	C:/Users/geral/work/txt/code/momo_ttf.h	/^_ttf_read_u16(U8* location) {$/;"	f	language:C++	typeref:typename:U16
@@ -4751,14 +4748,13 @@ __anon6896d1560108	D:/work/git/txt/code/momo_png.h	/^typedef struct {$/;"	s	lang
 __anon6896d156020a	D:/work/git/txt/code/momo_png.h	/^  union {$/;"	u	language:C++	struct:_PNG_Chunk_Header
 __anon68bb02580108	D:/work/git/txt/code/momo_rng.h	/^{$/;"	s	language:C++
 __anon68e2795f0108	D:/work/git/txt/code/momo_ttf.h	/^typedef struct {$/;"	s	language:C++
-__anon68e2795f0208	D:/work/git/txt/code/momo_ttf.h	/^{$/;"	s	language:C++
+__anon68e2795f0208	D:/work/git/txt/code/momo_ttf.h	/^typedef struct {$/;"	s	language:C++
 __anon68e2795f0308	D:/work/git/txt/code/momo_ttf.h	/^typedef struct {$/;"	s	language:C++
 __anon68e2795f0408	D:/work/git/txt/code/momo_ttf.h	/^typedef struct {$/;"	s	language:C++
 __anon68e2795f0508	D:/work/git/txt/code/momo_ttf.h	/^typedef struct {$/;"	s	language:C++
 __anon68e2795f0608	D:/work/git/txt/code/momo_ttf.h	/^typedef struct {$/;"	s	language:C++
-__anon68e2795f0708	D:/work/git/txt/code/momo_ttf.h	/^typedef struct {$/;"	s	language:C++
+__anon68e2795f0703	D:/work/git/txt/code/momo_ttf.h	/^enum {$/;"	g	language:C++
 __anon68e2795f0803	D:/work/git/txt/code/momo_ttf.h	/^enum {$/;"	g	language:C++
-__anon68e2795f0903	D:/work/git/txt/code/momo_ttf.h	/^enum {$/;"	g	language:C++
 __anon690e9bbf0108	D:/work/git/txt/code/momo_wav.h	/^typedef struct {$/;"	s	language:C++
 __anon690e9bbf0208	D:/work/git/txt/code/momo_wav.h	/^typedef struct {$/;"	s	language:C++
 __anon690e9bbf0308	D:/work/git/txt/code/momo_wav.h	/^typedef struct {$/;"	s	language:C++
