@@ -61,7 +61,7 @@ typedef void  Platform_Set_Aspect_Ratio(U32 width, U32 height); // sets aspect r
 typedef void  Platform_Debug_Log(const char* fmt, ...);
 typedef U64   Platform_Get_Performance_Counter();
 typedef void  Platform_Set_Window_Size(U32 width, U32 height);
-typedef void  Platform_Set_Aspect_Ratio(F32 width_over_height);
+typedef void  Platform_Set_Render_Region(U32 x, U32 y, U32 width, U32 height);
 
 
 //~Input API
@@ -144,7 +144,7 @@ typedef struct Platform {
   Platform_Get_Performance_Counter* get_performance_counter;
   Platform_Debug_Log* debug_log;
   Platform_Set_Window_Size* set_window_size;
-  Platform_Set_Aspect_Ratio* set_aspect_ratio;
+  Platform_Set_Render_Region* set_render_region;
 
   // For game to use
   void* game;

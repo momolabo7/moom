@@ -220,7 +220,10 @@ struct W32_State{
   
   HWND window;
 
-  F32 aspect_ratio;
+  U32 render_region_x0;
+  U32 render_region_x1;
+  U32 render_region_y0;
+  U32 render_region_y1;
 };
 static W32_State g_w32_state;
 
@@ -473,8 +476,11 @@ w32_process_input(HWND window, Platform* pf)
 }
 
 static void
-w32_set_aspect_ratio(F32 aspect_ratio) {
-  g_w32_state.aspect_ratio = aspect_ratio;
+w32_set_render_region(U32 x0, U32 y0, U32 x1, U32 y1) {
+  g_w32_state.render_region_x0 = x0;
+  g_w32_state.render_region_y0 = y0;
+  g_w32_state.render_region_x1 = x1;
+  g_w32_state.render_region_y1 = y1;
 }
 
 static void
@@ -501,7 +507,7 @@ w32_setup_platform_functions(Platform* pf)
   //pf->hot_reload = w32_hot_reload;
   //pf->shutdown = w32_shutdown;
   //
-  pf->set_aspect_ratio = w32_set_aspect_ratio;
+  pf->set_render_region = w32_set_render_region;
   pf->set_window_size = w32_set_window_size;
   pf->open_file = w32_open_file;
   pf->read_file = w32_read_file;
@@ -550,8 +556,6 @@ WinMain(HINSTANCE instance,
   //- Initialize window state
   {
     g_w32_state.is_running = true;
-    g_w32_state.aspect_ratio = 1.f;
-
     
     if (!w32_init_work_queue(&g_w32_state.work_queue, 8)) {
       return 1;
@@ -753,12 +757,19 @@ WinMain(HINSTANCE instance,
 
     // TODO: we shouldn't need to do this. Game should tell renderer aspect ratio
     // and renderer should be able to handle it automatically.
+#if 0 
     Rect2U render_region = w32_calc_render_region(render_wh.w,
                                                   render_wh.h,
                                                   g_w32_state.aspect_ratio);
+#endif
+    Rect2U rr;
+    rr.min.x = g_w32_state.render_region_x0;
+    rr.max.x = g_w32_state.render_region_x1;
+    rr.min.y = g_w32_state.render_region_y0;
+    rr.max.y = g_w32_state.render_region_y1;
     w32_gfx_begin_frame(gfx, 
                         render_wh, 
-                        render_region);
+                        rr);
        
     //-Process messages and input
     pf->seconds_since_last_frame = target_secs_per_frame;
@@ -774,7 +785,9 @@ WinMain(HINSTANCE instance,
       pf->screen_mouse_pos.x = cursor_pos.x;
       pf->screen_mouse_pos.y = cursor_pos.y;
       
-      pf->render_mouse_pos = pf->screen_mouse_pos - render_region.min;
+      pf->render_mouse_pos.x = pf->screen_mouse_pos.x - g_w32_state.render_region_x0;
+
+      pf->render_mouse_pos.y = pf->screen_mouse_pos.y - g_w32_state.render_region_y0;
 
 #if 0
       
