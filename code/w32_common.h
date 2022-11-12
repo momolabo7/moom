@@ -110,7 +110,7 @@ w32_file_time_to_large_integer(FILETIME file_time) {
   ret.HighPart = file_time.dwHighDateTime;
   
   return ret;
-}
+e
 
 static inline LARGE_INTEGER 
 w32_get_file_last_write_time(const char* filename) {

@@ -55,6 +55,7 @@ struct W32_Work_Queue {
   
 };
 
+
 // NOTE(Momo): This function is accessed by multiple threads!
 static B32
 w32_do_next_work_entry(W32_Work_Queue* wq) {
@@ -217,6 +218,9 @@ struct W32_State{
   W32_Work_Queue work_queue;
   W32_File_Cabinet file_cabinet;
   
+  HWND window;
+
+  F32 aspect_ratio;
 };
 static W32_State g_w32_state;
 
@@ -469,10 +473,36 @@ w32_process_input(HWND window, Platform* pf)
 }
 
 static void
+w32_set_aspect_ratio(F32 aspect_ratio) {
+  g_w32_state.aspect_ratio = aspect_ratio;
+}
+
+static void
+w32_set_window_size(U32 width, U32 height) {
+  // Get monitor info
+  HMONITOR monitor = MonitorFromWindow(0, MONITOR_DEFAULTTONEAREST);
+  MONITORINFOEX monitor_info;
+  monitor_info.cbSize = sizeof(monitor_info);
+  GetMonitorInfo(monitor, &monitor_info); 
+
+  LONG monitor_w = w32_rect_width(monitor_info.rcMonitor);
+  LONG monitor_h = w32_rect_height(monitor_info.rcMonitor);
+ 
+  LONG left = monitor_w/2 - width/2;
+  LONG top = monitor_h/2 - height/2;
+
+  // Make it right at the center!
+  MoveWindow(g_w32_state.window, left, top, (S32)width, (S32)height, TRUE);
+}
+
+static void
 w32_setup_platform_functions(Platform* pf)
 {
   //pf->hot_reload = w32_hot_reload;
   //pf->shutdown = w32_shutdown;
+  //
+  pf->set_aspect_ratio = w32_set_aspect_ratio;
+  pf->set_window_size = w32_set_window_size;
   pf->open_file = w32_open_file;
   pf->read_file = w32_read_file;
   pf->write_file = w32_write_file;
@@ -520,8 +550,8 @@ WinMain(HINSTANCE instance,
   //- Initialize window state
   {
     g_w32_state.is_running = true;
-    g_w32_state.aspect_ratio_width = 16;
-    g_w32_state.aspect_ratio_height = 9;
+    g_w32_state.aspect_ratio = 1.f;
+
     
     if (!w32_init_work_queue(&g_w32_state.work_queue, 8)) {
       return 1;
@@ -534,8 +564,8 @@ WinMain(HINSTANCE instance,
   //- Create window in the middle of the screen
   HWND window;
   {
-    const int w32_w = 1600;
-    const int w32_h = 900;
+    const int w32_w = (int)GAME_INITIAL_WINDOW_WIDTH;
+    const int w32_h = (int)GAME_INITIAL_WINDOW_HEIGHT;
     const char* title = "Momodevelop: TXT";
     const char* icon_path = "window.ico";
     const int icon_w = 256;
@@ -559,7 +589,7 @@ WinMain(HINSTANCE instance,
       return 1;
     }
     
-    RECT w32_rect = {};
+    RECT w32_rect = {0};
     {
       // NOTE(Momo): Monitor dimensions
       HMONITOR monitor = MonitorFromWindow(0, MONITOR_DEFAULTTONEAREST);
@@ -602,6 +632,9 @@ WinMain(HINSTANCE instance,
     
     
   }
+  g_w32_state.window = window;
+  
+
   //  w32_toggle_fullscreen(window);
   
   //-Determine refresh rate
@@ -716,9 +749,13 @@ WinMain(HINSTANCE instance,
     // Begin frame
     w32_audio_begin_frame(audio);
     V2U render_wh = w32_get_client_dims(window);
+
+
+    // TODO: we shouldn't need to do this. Game should tell renderer aspect ratio
+    // and renderer should be able to handle it automatically.
     Rect2U render_region = w32_calc_render_region(render_wh.w,
                                                   render_wh.h,
-                                                  GAME_ASPECT);
+                                                  g_w32_state.aspect_ratio);
     w32_gfx_begin_frame(gfx, 
                         render_wh, 
                         render_region);
@@ -738,10 +775,11 @@ WinMain(HINSTANCE instance,
       pf->screen_mouse_pos.y = cursor_pos.y;
       
       pf->render_mouse_pos = pf->screen_mouse_pos - render_region.min;
+
+#if 0
       
       F32 region_width = (F32)render_region.max.x - render_region.min.x;
       F32 region_height = (F32)render_region.max.x - render_region.min.x;
-
 
       F32 design_to_render_w = GAME_WIDTH / region_width;
       F32 design_to_render_h = GAME_HEIGHT / region_height;
@@ -752,9 +790,8 @@ WinMain(HINSTANCE instance,
       
       // NOTE(Momo): Flip y
       // TODO(Momo): should this really be here?
-      // Maybe we should really make y-axis downwards...
-      // since this is a 2D engine.
       pf->design_mouse_pos.y = lerp_f32(GAME_HEIGHT, 0.f, pf->design_mouse_pos.y/GAME_HEIGHT);	
+#endif
 
     }
     

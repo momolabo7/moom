@@ -9,12 +9,12 @@
 
 #include "momo.h"
 
-// TODO: This should be in a function give by game I think
-#define GAME_WIDTH 1600.f
-#define GAME_HEIGHT 900.f
-#define GAME_DIMENSIONS V2 { GAME_WIDTH, GAME_HEIGHT } 
-#define GAME_MIDPOINT V2 { GAME_WIDTH/2, GAME_HEIGHT/2 } 
-#define GAME_ASPECT (GAME_WIDTH/GAME_HEIGHT)
+// TODO: This should be in a function given by game I think
+#define GAME_WIDTH 800.f
+#define GAME_HEIGHT 800.f
+#define GAME_INITIAL_WINDOW_WIDTH 800
+#define GAME_INITIAL_WINDOW_HEIGHT 800
+
 
 //~Platform File API
 typedef enum Platform_File_Path {
@@ -56,22 +56,12 @@ typedef void Platform_Complete_All_Tasks();
 typedef void  Platform_Shutdown(); // trigger shutdown of application
 typedef void* Platform_Alloc(UMI size); // allocate memory
 typedef void  Platform_Free(void* ptr);     // frees memory
-#endif
 typedef void  Platform_Set_Aspect_Ratio(U32 width, U32 height); // sets aspect ratio of game
+#endif
 typedef void  Platform_Debug_Log(const char* fmt, ...);
 typedef U64   Platform_Get_Performance_Counter();
-
-
-typedef struct Platform_API {
-  Platform_Open_File* open_file;
-  Platform_Read_File* read_file;
-  Platform_Write_File* write_file;
-  Platform_Close_File* close_file;
-  Platform_Add_Task* add_task;
-  Platform_Complete_All_Tasks* complete_all_tasks;
-  Platform_Get_Performance_Counter* get_performance_counter;
-  Platform_Debug_Log* debug_log;
-}Platform_API;
+typedef void  Platform_Set_Window_Size(U32 width, U32 height);
+typedef void  Platform_Set_Aspect_Ratio(F32 width_over_height);
 
 
 //~Input API
@@ -153,7 +143,8 @@ typedef struct Platform {
   Platform_Complete_All_Tasks* complete_all_tasks;
   Platform_Get_Performance_Counter* get_performance_counter;
   Platform_Debug_Log* debug_log;
-
+  Platform_Set_Window_Size* set_window_size;
+  Platform_Set_Aspect_Ratio* set_aspect_ratio;
 
   // For game to use
   void* game;

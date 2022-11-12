@@ -2,6 +2,8 @@
 
 /////////////////////////////////////////////////////////
 // GAME
+
+
 exported B32 
 game_update_and_render(Platform* pf)
 { 
@@ -58,7 +60,10 @@ game_update_and_render(Platform* pf)
     
     game->show_debug_type = GAME_SHOW_DEBUG_NONE;
     game->is_done = false;
+    platform->set_aspect_ratio(GAME_WIDTH/GAME_HEIGHT);
+    gfx_push_view(gfx, 0.f, GAME_WIDTH, 0.f, GAME_HEIGHT, 0.f, 0.f);
     game_log("Initialized!");
+   
   }
   Game* game = (Game*)platform->game;
 
@@ -66,10 +71,8 @@ game_update_and_render(Platform* pf)
   assets = &game->assets;
   inspector = &game->inspector;
   Console* console = &game->console;
- 
 
   // TODO: should probably be in modes instead
-  gfx_push_view(gfx, 0.f, GAME_WIDTH, 0.f, GAME_HEIGHT, 0.f, 0.f);
 
   begin_inspector(inspector);
  
