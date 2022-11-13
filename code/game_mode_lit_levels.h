@@ -47,19 +47,19 @@ lit_level_0_tutorial_trigger_1(Lit* m) {
 // - Learn that light need to shine on sensors 
 static void
 lit_level_0_0(Lit* m) {
-  lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
-  lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
-  lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
-  lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
+  lit_push_edge(m, 0.f, 0.f, 800.f, 0.f);
+  lit_push_edge(m, 800.f, 0.f, 800.f, 800.f);
+  lit_push_edge(m, 800.f, 800.f, 0.f, 800.f);
+  lit_push_edge(m, 0.f, 800.f, 0.f, 0.f);
 
-  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x880000FF); 
-  lit_push_light(m, 800.f, GAME_HEIGHT * 0.5f, 0x880000FF, 45.f, 0.5f);
+  lit_push_sensor(m, 400.f, 600.f, 0x880000FF); 
+  lit_push_light(m, 400.f, 400, 0x880000FF, 45.f, 0.75f);
   
   // initialize player
-  Lit_Player* p = &m->player;
-  lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
+  lit_init_player(m, 400.f, 100.f);
 
   // tutorial text
+#if 0
   lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("WASD to move"), 100.f, 480.f);
   lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("SPACE to pick up"), 680.f, 480.f);
   lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("Q/R to rotate light"), 680.f, 480.f);
@@ -69,46 +69,46 @@ lit_level_0_0(Lit* m) {
 
   lit_push_tutorial_trigger(&m->tutorial_triggers, lit_level_0_tutorial_trigger_0);
   lit_push_tutorial_trigger(&m->tutorial_triggers, lit_level_0_tutorial_trigger_1);
-
+#endif
 }
 
 ////////////////////////////////////////////
 // - Learn about obstacles
 static void
 lit_level_0_1(Lit* m) {
-  lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
-  lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
-  lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
-  lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
+  lit_push_edge(m, 0.f, 0.f, 800.f, 0.f);
+  lit_push_edge(m, 800.f, 0.f, 800.f, 800.f);
+  lit_push_edge(m, 800.f, 800.f, 0.f, 800.f);
+  lit_push_edge(m, 0.f, 800.f, 0.f, 0.f);
+
+  lit_push_sensor(m, 400.f, 600.f, 0x008800FF); 
+  lit_push_light(m, 400.f, 200, 0x008800FF, 45.f, 0.75f);
+  
+  // initialize player
+  lit_init_player(m, 400.f, 100.f);
 
   // Need to 'enclose' the shape
-  lit_push_double_edge(m, 800.f, 100.f, 800.f, 800.f);
-
-  // initialize player
-  lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
-
-  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x008800FF); 
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x008800FF, 45.f, 0.5f);
+  lit_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
 }
 
 //////////////////////////////////////////
 // - Learn about light saturation 
 static void
 lit_level_0_2(Lit* m) {
-  lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
-  lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
-  lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
-  lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
+  lit_push_edge(m, 0.f, 0.f, 800.f, 0.f);
+  lit_push_edge(m, 800.f, 0.f, 800.f, 800.f);
+  lit_push_edge(m, 800.f, 800.f, 0.f, 800.f);
+  lit_push_edge(m, 0.f, 800.f, 0.f, 0.f);
 
   // Need to 'enclose' the shape
-  lit_push_double_edge(m, 800.f, 100.f, 800.f, 800.f);
+  lit_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
 
   // initialize player
-  lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
+  lit_init_player(m, 400.f, 100.f);
 
-  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x444488FF); 
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.33f, 0x222244FF, 45.f, 0.5f);
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.66f, 0x222244FF, 45.f, 0.5f);
+  lit_push_sensor(m, 400.f, 600.f, 0x444488FF); 
+  lit_push_light(m, 300.f, 200.f, 0x222244FF, 45.f, 0.75f);
+  lit_push_light(m, 500.f, 200.f, 0x222244FF, 45.f, 0.75f);
  
 }
 
@@ -215,8 +215,8 @@ lit_level_0_5(Lit* m) {
 
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
-  lit_level_0_0, 
-  lit_level_0_1, 
+  //lit_level_0_0, 
+  //lit_level_0_1, 
   lit_level_0_2,
   lit_level_0_3,
   lit_level_0_4,
