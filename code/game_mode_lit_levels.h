@@ -112,11 +112,40 @@ lit_level_0_2(Lit* m) {
  
 }
 
+//////////////////////////////////////
+// - Learn about light saturation 2
+// - Sensor is in a box 
+static void
+lit_level_0_3(Lit* m) {
+  lit_push_edge(m, 0.f, 0.f, 800.f, 0.f);
+  lit_push_edge(m, 800.f, 0.f, 800.f, 800.f);
+  lit_push_edge(m, 800.f, 800.f, 0.f, 800.f);
+  lit_push_edge(m, 0.f, 800.f, 0.f, 0.f);
+
+  // Need to 'enclose' the shape
+  lit_push_double_edge(m, 500.f, 200.f, 600.f, 300.f);
+  lit_push_double_edge(m, 300.f, 200.f, 200.f, 300.f);
+  lit_push_double_edge(m, 200.f, 500.f, 300.f, 600.f);
+  lit_push_double_edge(m, 500.f, 600.f, 600.f, 500.f);
+
+  // initialize player
+  lit_init_player(m, 400.f, 100.f);
+
+  lit_push_sensor(m, 400.f, 400.f, 0xCCCC00FF); 
+  lit_push_light(m, 150.f, 150.f, 0x333300FF, 45.f, 0.126f);
+  lit_push_light(m, 650.f, 150.f, 0x333300FF, 45.f, 0.376f);
+  lit_push_light(m, 650.f, 650.f, 0x333300FF, 45.f, 0.626f);
+  lit_push_light(m, 150.f, 650.f, 0x333300FF, 45.f, 0.876f);
+  //lit_push_light(m, 500.f, 200.f, 0x222244FF, 45.f, 0.75f);
+ 
+}
+
+
 ///////////////////////////////////////
 // - Learn about color combinations
 // - R + G = Y
 static void
-lit_level_0_3(Lit* m) {
+lit_level_0_3a(Lit* m) {
   lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
 
   lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
@@ -217,7 +246,7 @@ typedef void (*Lit_Level)(Lit* mode);
 static Lit_Level lit_levels[] = {
   //lit_level_0_0, 
   //lit_level_0_1, 
-  lit_level_0_2,
+  //lit_level_0_2,
   lit_level_0_3,
   lit_level_0_4,
   lit_level_0_5,

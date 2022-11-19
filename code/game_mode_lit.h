@@ -293,7 +293,7 @@ lit_tick(Game* game)
   {
     sb8_make(sb, 64);
     sb8_push_fmt(sb, str8_from_lit("[%u %u]"), 
-        platform->render_mouse_pos.x, 900 - platform->render_mouse_pos.y);
+        platform->render_mouse_pos.x, 800 - platform->render_mouse_pos.y);
     paint_text(m->tutorial_font, sb->str, RGBA_WHITE, 0.f, 0.f, 32.f);
   }
 #endif
