@@ -96,10 +96,12 @@ sqrt_f32(F32 x) {
 }
 static F32 
 asin_f32(F32 x) {
+  x = clamp_of(x, 1.f, -1.f);
   return asinf(x);
 }
 static F32 
 acos_f32(F32 x) {
+  x = clamp_of(x, 1.f, -1.f);
   return acosf(x);
 }
 
@@ -134,10 +136,12 @@ sqrt_f64(F64 x) {
 }
 static F64 
 asin_f64(F64 x) {
+  x = clamp_of(x, 1.f, -1.f);
   return asin(x);
 }
 static F64 
 acos_f64(F64 x) {
+  x = clamp_of(x, 1.f, -1.f);
   return acos(x);
 }
 

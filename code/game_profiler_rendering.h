@@ -44,13 +44,17 @@ end_stat(Stat* stat) {
 static void
 update_and_render_profiler(Game_Sprite_ID blank_sprite, Game_Font_ID font) 
 {
+  const F32 render_width = GAME_WIDTH;
+  const F32 render_height = GAME_HEIGHT;
+  const F32 font_height = 20.f;
+
+  // Overlay
   paint_sprite(blank_sprite, 
                GAME_MIDPOINT, 
                GAME_DIMENSIONS,
-               {0.f, 0.f, 0.f, 0.5f});
+               rgba(0.f, 0.f, 0.f, 0.5f));
   gfx_advance_depth(gfx);
   
-  const F32 font_height = 30.f;
   U32 line_num = 1;
   
   for(U32 entry_id = 0; entry_id < profiler->entry_count; ++entry_id)
@@ -87,18 +91,17 @@ update_and_render_profiler(Game_Sprite_ID blank_sprite, Game_Font_ID font)
     
     sb8_make(sb, 256);
     sb8_push_fmt(sb, 
-                 str8_from_lit("[%25s] %7ucy %4uh %7ucy/h"),
+                 str8_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
                  itr->block_name,
                  (U32)cycles.average,
                  (U32)hits.average,
                  (U32)cycles_per_hit.average);
     
-    // Assumes 1600x900        
     paint_text(font, 
                sb->str,
                hex_to_rgba(0xFFFFFFFF),
                0.f, 
-               900.f - font_height * (line_num), 
+               render_height - font_height * (line_num), 
                font_height);
     gfx_advance_depth(gfx);
     
@@ -110,14 +113,15 @@ update_and_render_profiler(Game_Sprite_ID blank_sprite, Game_Font_ID font)
     {
       Profiler_Snapshot * snapshot = itr->snapshots + snapshot_index;
       
-      const F32 snapshot_bar_width = 5.f;
+      const F32 snapshot_bar_width = 1.5f;
       F32 height_scale = 1.0f / (F32)cycles.max;
       F32 snapshot_bar_height = 
         height_scale * font_height * (F32)snapshot->cycles * 0.95f;
-      
+     
+      // TODO: Need a better way to decide x-position
       V2 pos = {
-        900.f + snapshot_bar_width * (snapshot_index), 
-        900.f - font_height * (line_num) + font_height/4
+        560.f + snapshot_bar_width * (snapshot_index), 
+        render_height - font_height * (line_num) + font_height/4
       };
       V2 size = {snapshot_bar_width, snapshot_bar_height};
       

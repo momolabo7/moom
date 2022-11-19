@@ -48,7 +48,6 @@ add_inspector_entry	D:/work/git/txt/code/game_inspector.h	/^add_inspector_entry(
 add_task	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Add_Task* add_task;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Add_Task *
 add_task	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Add_Task* add_task;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Add_Task *
 add_task	D:/work/git/txt/code/game_platform.h	/^  Platform_Add_Task* add_task;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Add_Task *
-add_task	D:/work/git/txt/code/game_platform.h	/^  Platform_Add_Task* add_task;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Add_Task *
 advance_width	C:/Users/geral/work/txt/code/momo_ttf.h	/^  S16 advance_width;$/;"	m	language:C++	struct:__anon802a10330208	typeref:typename:S16
 align_down_pow2	C:/Users/geral/work/txt/code/momo_common.h	/^#define align_down_pow2(/;"	d	language:C++
 align_down_pow2	D:/work/git/txt/code/momo_common.h	/^#define align_down_pow2(/;"	d	language:C++
@@ -446,7 +445,6 @@ clamp_of	D:/work/git/txt/code/momo_common.h	/^#define clamp_of(/;"	d	language:C+
 close_file	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Close_File* close_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Close_File *
 close_file	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Close_File* close_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Close_File *
 close_file	D:/work/git/txt/code/game_platform.h	/^  Platform_Close_File* close_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Close_File *
-close_file	D:/work/git/txt/code/game_platform.h	/^  Platform_Close_File* close_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Close_File *
 cmap	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon802a10330108	typeref:typename:U32
 cmap	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
 cmap_mappings	C:/Users/geral/work/txt/code/momo_ttf.h	/^  U32 cmap_mappings;$/;"	m	language:C++	struct:__anon802a10330108	typeref:typename:U32
@@ -504,7 +502,6 @@ COMPILER_MSVC	D:/work/git/txt/code/momo_common.h	/^# define COMPILER_MSVC /;"	d	
 complete_all_tasks	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Complete_All_Tasks* complete_all_tasks;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Complete_All_Tasks *
 complete_all_tasks	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Complete_All_Tasks* complete_all_tasks;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Complete_All_Tasks *
 complete_all_tasks	D:/work/git/txt/code/game_platform.h	/^  Platform_Complete_All_Tasks* complete_all_tasks;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Complete_All_Tasks *
-complete_all_tasks	D:/work/git/txt/code/game_platform.h	/^  Platform_Complete_All_Tasks* complete_all_tasks;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Complete_All_Tasks *
 completion_count	C:/Users/geral/work/txt/code/w32.cpp	/^  U32 volatile completion_count;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 completion_count	D:/work/git/txt/code/w32.cpp	/^  U32 volatile completion_count;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 completion_goal	C:/Users/geral/work/txt/code/w32.cpp	/^  U32 volatile completion_goal;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
@@ -704,7 +701,6 @@ debug_font	D:/work/git/txt/code/game.h	/^  Game_Font_ID debug_font;$/;"	m	langua
 debug_log	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Debug_Log *
 debug_log	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Debug_Log *
 debug_log	D:/work/git/txt/code/game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Debug_Log *
-debug_log	D:/work/git/txt/code/game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Debug_Log *
 debug_rays	C:/Users/geral/work/txt/code/game_mode_lit_world.h	/^  Lit_Light_Debug_Ray_List debug_rays;$/;"	m	language:C++	struct:Lit_Light	typeref:typename:Lit_Light_Debug_Ray_List
 debug_rays	D:/work/git/txt/code/game_mode_lit_world.h	/^  Lit_Light_Debug_Ray_List debug_rays;$/;"	m	language:C++	struct:Lit_Light	typeref:typename:Lit_Light_Debug_Ray_List
 Debug_State	C:/Users/geral/work/txt/code/game_debug.h	/^struct Debug_State {$/;"	s	language:C++
@@ -1194,7 +1190,6 @@ game_allocate_mode_size	D:/work/git/txt/code/game.h	/^game_allocate_mode_size(Ga
 game_arena	C:/Users/geral/work/txt/code/game_platform.h	/^  Bump_Allocator* game_arena; \/\/ Require 32MB$/;"	m	language:C++	struct:Platform	typeref:typename:Bump_Allocator *
 game_arena	D:/work/git/txt/code/game_platform.h	/^  Bump_Allocator* game_arena; \/\/ Require 32MB$/;"	m	language:C++	struct:Platform	typeref:typename:Bump_Allocator *
 GAME_ASPECT	C:/Users/geral/work/txt/code/game_platform.h	/^#define GAME_ASPECT /;"	d	language:C++
-GAME_ASPECT	D:/work/git/txt/code/game_platform.h	/^#define GAME_ASPECT /;"	d	language:C++
 Game_Asset	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Asset {$/;"	s	language:C++
 Game_Asset	D:/work/git/txt/code/game_assets.h	/^struct Game_Asset {$/;"	s	language:C++
 Game_Assets	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Assets {$/;"	s	language:C++
@@ -1244,7 +1239,7 @@ GAME_DEBUG_H	D:/work/git/txt/code/game_debug.h	/^#define GAME_DEBUG_H$/;"	d	lang
 Game_Debug_Update_And_Render	C:/Users/geral/work/txt/code/game_platform.h	/^typedef void Game_Debug_Update_And_Render(Platform* pf);$/;"	t	language:C++	typeref:typename:void ()(Platform * pf)
 Game_Debug_Update_And_Render	D:/work/git/txt/code/game_platform.h	/^typedef void Game_Debug_Update_And_Render(Platform* pf);$/;"	t	language:C++	typeref:typename:void ()(Platform * pf)
 GAME_DIMENSIONS	C:/Users/geral/work/txt/code/game_platform.h	/^#define GAME_DIMENSIONS /;"	d	language:C++
-GAME_DIMENSIONS	D:/work/git/txt/code/game_platform.h	/^#define GAME_DIMENSIONS /;"	d	language:C++
+GAME_DIMENSIONS	D:/work/git/txt/code/game.h	/^#define GAME_DIMENSIONS /;"	d	language:C++
 Game_Font	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Font {$/;"	s	language:C++
 Game_Font	D:/work/git/txt/code/game_assets.h	/^struct Game_Font {$/;"	s	language:C++
 Game_Font_Glyph	C:/Users/geral/work/txt/code/game_assets.h	/^struct Game_Font_Glyph{$/;"	s	language:C++
@@ -1257,12 +1252,15 @@ Game_Functions	D:/work/git/txt/code/game_platform.h	/^typedef struct Game_Functi
 Game_Functions	D:/work/git/txt/code/game_platform.h	/^} Game_Functions;$/;"	t	language:C++	typeref:struct:Game_Functions
 game_function_names	C:/Users/geral/work/txt/code/game_platform.h	/^static const char* game_function_names[] {$/;"	v	language:C++	typeref:typename:const char * []
 game_function_names	D:/work/git/txt/code/game_platform.h	/^static const char* game_function_names[] {$/;"	v	language:C++	typeref:typename:const char * []
+game_get_render_region	D:/work/git/txt/code/game.cpp	/^game_get_render_region(U32 window_w, U32 window_h, F32 aspect_ratio, U32* x0, U32* y0, U32* x1, /;"	f	language:C++	typeref:typename:void	file:
 game_goto_mode	C:/Users/geral/work/txt/code/game.h	/^game_goto_mode(Game* game, Game_Mode_Type type) {$/;"	f	language:C++	typeref:typename:void
 game_goto_mode	D:/work/git/txt/code/game.h	/^game_goto_mode(Game* game, Game_Mode_Type type) {$/;"	f	language:C++	typeref:typename:void
 GAME_H	C:/Users/geral/work/txt/code/game.h	/^#define GAME_H$/;"	d	language:C++
 GAME_H	D:/work/git/txt/code/game.h	/^#define GAME_H$/;"	d	language:C++
 GAME_HEIGHT	C:/Users/geral/work/txt/code/game_platform.h	/^#define GAME_HEIGHT /;"	d	language:C++
 GAME_HEIGHT	D:/work/git/txt/code/game_platform.h	/^#define GAME_HEIGHT /;"	d	language:C++
+GAME_INITIAL_WINDOW_HEIGHT	D:/work/git/txt/code/game_platform.h	/^#define GAME_INITIAL_WINDOW_HEIGHT /;"	d	language:C++
+GAME_INITIAL_WINDOW_WIDTH	D:/work/git/txt/code/game_platform.h	/^#define GAME_INITIAL_WINDOW_WIDTH /;"	d	language:C++
 GAME_INSPECTOR_H	C:/Users/geral/work/txt/code/game_inspector.h	/^#define GAME_INSPECTOR_H$/;"	d	language:C++
 GAME_INSPECTOR_H	D:/work/git/txt/code/game_inspector.h	/^#define GAME_INSPECTOR_H$/;"	d	language:C++
 GAME_INSPECTOR_RENDERING_H	C:/Users/geral/work/txt/code/game_inspector_rendering.h	/^#define GAME_INSPECTOR_RENDERING_H$/;"	d	language:C++
@@ -1272,7 +1270,7 @@ game_log	C:/Users/geral/work/txt/code/game.h	/^#define game_log(/;"	d	language:C
 game_log	D:/work/git/txt/code/game.h	/^#define game_log(/;"	d	language:C++
 game_log	D:/work/git/txt/code/game.h	/^#define game_log(/;"	d	language:C++
 GAME_MIDPOINT	C:/Users/geral/work/txt/code/game_platform.h	/^#define GAME_MIDPOINT /;"	d	language:C++
-GAME_MIDPOINT	D:/work/git/txt/code/game_platform.h	/^#define GAME_MIDPOINT /;"	d	language:C++
+GAME_MIDPOINT	D:/work/git/txt/code/game.h	/^#define GAME_MIDPOINT /;"	d	language:C++
 game_modes	C:/Users/geral/work/txt/code/game.h	/^static Game_Mode_Tick game_modes[] = {$/;"	v	language:C++	typeref:typename:Game_Mode_Tick[]
 game_modes	D:/work/git/txt/code/game.h	/^static Game_Mode_Tick game_modes[] = {$/;"	v	language:C++	typeref:typename:Game_Mode_Tick[]
 GAME_MODE_COMPUTER	C:/Users/geral/work/txt/code/game_mode_computer.h	/^#define GAME_MODE_COMPUTER$/;"	d	language:C++
@@ -1361,7 +1359,6 @@ get_performance_counter	C:/Users/geral/work/txt/code/game_platform.h	/^  Platfor
 get_performance_counter	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Get_Performance_Counter* get_performance_counter;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Get_Performance_Counter *
 get_performance_counter	C:/Users/geral/work/txt/code/game_profiler.h	/^  Profiler_Get_Performance_Counter* get_performance_counter;$/;"	m	language:C++	struct:Profiler	typeref:typename:Profiler_Get_Performance_Counter *
 get_performance_counter	D:/work/git/txt/code/game_platform.h	/^  Platform_Get_Performance_Counter* get_performance_counter;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Get_Performance_Counter *
-get_performance_counter	D:/work/git/txt/code/game_platform.h	/^  Platform_Get_Performance_Counter* get_performance_counter;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Get_Performance_Counter *
 get_performance_counter	D:/work/git/txt/code/game_profiler.h	/^  Profiler_Get_Performance_Counter* get_performance_counter;$/;"	m	language:C++	struct:Profiler	typeref:typename:Profiler_Get_Performance_Counter *
 get_sprite	C:/Users/geral/work/txt/code/game_assets.h	/^get_sprite(Game_Assets* ga, Game_Sprite_ID sprite_id) {$/;"	f	language:C++	typeref:typename:Game_Sprite *
 get_sprite	D:/work/git/txt/code/game_assets.h	/^get_sprite(Game_Assets* ga, Game_Sprite_ID sprite_id) {$/;"	f	language:C++	typeref:typename:Game_Sprite *
@@ -1818,7 +1815,6 @@ height	D:/work/git/txt/code/karu.h	/^  U32 height;$/;"	m	language:C++	struct:Kar
 height	D:/work/git/txt/code/momo_image.h	/^  U32 width, height;$/;"	m	language:C++	struct:__anoncc1655140108	typeref:typename:U32
 height	D:/work/git/txt/code/momo_png.h	/^  U32 height;$/;"	m	language:C++	struct:_PNG_IHDR	typeref:typename:U32
 height	D:/work/git/txt/code/momo_png.h	/^  U32 height;$/;"	m	language:C++	struct:__anon6896d1560108	typeref:typename:U32
-height	D:/work/git/txt/code/momo_ttf.h	/^  U32 height;$/;"	m	language:C++	struct:_TTF_Bitmap	typeref:typename:U32
 height	D:/work/git/txt/code/sui_pack.h	/^  U32 height;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32
 held_light	C:/Users/geral/work/txt/code/game_mode_lit_entity.h	/^  Lit_Light* held_light;$/;"	m	language:C++	struct:Lit_Player	typeref:typename:Lit_Light *
 held_light	D:/work/git/txt/code/game_mode_lit_entity.h	/^  Lit_Light* held_light;$/;"	m	language:C++	struct:Lit_Player	typeref:typename:Lit_Light *
@@ -2092,6 +2088,7 @@ lit_are_all_sensors_activated	C:/Users/geral/work/txt/code/game_mode_lit_entity.
 lit_are_all_sensors_activated	D:/work/git/txt/code/game_mode_lit_entity.cpp	/^lit_are_all_sensors_activated(Lit* lit) {$/;"	f	language:C++	typeref:typename:B32	file:
 lit_calc_ghost_edge_line	C:/Users/geral/work/txt/code/game_mode_lit_world.cpp	/^lit_calc_ghost_edge_line(Lit_Edge* e) {$/;"	f	language:C++	typeref:typename:Line2	file:
 lit_calc_ghost_edge_line	D:/work/git/txt/code/game_mode_lit_world.cpp	/^lit_calc_ghost_edge_line(Lit_Edge* e) {$/;"	f	language:C++	typeref:typename:Line2	file:
+LIT_DEBUG_COORDINATES	D:/work/git/txt/code/game_mode_lit.h	/^#define LIT_DEBUG_COORDINATES /;"	d	language:C++
 LIT_DEBUG_LIGHT	C:/Users/geral/work/txt/code/game_mode_lit.h	/^#define LIT_DEBUG_LIGHT /;"	d	language:C++
 LIT_DEBUG_LIGHT	D:/work/git/txt/code/game_mode_lit.h	/^#define LIT_DEBUG_LIGHT /;"	d	language:C++
 lit_draw_debug_light_rays	C:/Users/geral/work/txt/code/game_mode_lit_world.cpp	/^lit_draw_debug_light_rays() {$/;"	f	language:C++	typeref:typename:void	file:
@@ -2127,21 +2124,25 @@ Lit_Level	D:/work/git/txt/code/game_mode_lit_levels.h	/^typedef void (*Lit_Level
 lit_levels	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^static Lit_Level lit_levels[] = {$/;"	v	language:C++	typeref:typename:Lit_Level[]
 lit_levels	D:/work/git/txt/code/game_mode_lit_levels.h	/^static Lit_Level lit_levels[] = {$/;"	v	language:C++	typeref:typename:Lit_Level[]
 lit_level_0	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_0(Lit* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_0	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0(Lit* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_0_0	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_0(Lit* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_0_1	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_1(Lit* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_0_123	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_123(Lit* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_0_2	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_2(Lit* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_0_3	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_3(Lit* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_0_3a	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_3a(Lit* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_0_4	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_4(Lit* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_0_4a	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_4a(Lit* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_0_4a	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_4a(Lit* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_0_5	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_5(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_0_tutorial_trigger_0	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_0_tutorial_trigger_0(Lit* m) {$/;"	f	language:C++	typeref:typename:B32
 lit_level_0_tutorial_trigger_0	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_tutorial_trigger_0(Lit* m) {$/;"	f	language:C++	typeref:typename:B32
 lit_level_0_tutorial_trigger_1	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_0_tutorial_trigger_1(Lit* m) {$/;"	f	language:C++	typeref:typename:B32
 lit_level_0_tutorial_trigger_1	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_0_tutorial_trigger_1(Lit* m) {$/;"	f	language:C++	typeref:typename:B32
 lit_level_1	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_1(Lit* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_1	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_1(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_2	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_2(Lit* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_2	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_2(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_3	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_3(Lit* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_3	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_3(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_4	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_4(Lit* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_4	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_4(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_5	C:/Users/geral/work/txt/code/game_mode_lit_levels.h	/^lit_level_5(Lit* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_5	D:/work/git/txt/code/game_mode_lit_levels.h	/^lit_level_5(Lit* m) {$/;"	f	language:C++	typeref:typename:void
 Lit_Light	C:/Users/geral/work/txt/code/game_mode_lit_world.h	/^struct Lit_Light {$/;"	s	language:C++
 Lit_Light	D:/work/git/txt/code/game_mode_lit_world.h	/^struct Lit_Light {$/;"	s	language:C++
 Lit_Light_Debug_Ray_List	C:/Users/geral/work/txt/code/game_mode_lit_world.h	/^struct Lit_Light_Debug_Ray_List {$/;"	s	language:C++
@@ -2694,7 +2695,6 @@ Opengl	D:/work/git/txt/code/game_gfx_opengl.h	/^struct Opengl {$/;"	s	language:C
 open_file	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Open_File* open_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Open_File *
 open_file	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Open_File* open_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Open_File *
 open_file	D:/work/git/txt/code/game_platform.h	/^  Platform_Open_File* open_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Open_File *
-open_file	D:/work/git/txt/code/game_platform.h	/^  Platform_Open_File* open_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Open_File *
 operator !=	C:/Users/geral/work/txt/code/momo_strings.h	/^static B32 operator!=(String8 lhs, String8 rhs) {$/;"	f	language:C++	typeref:typename:B32
 operator !=	C:/Users/geral/work/txt/code/momo_strings.h	/^static B32 operator!=(String8 lhs, String8 rhs);$/;"	p	language:C++	typeref:typename:B32
 operator !=	C:/Users/geral/work/txt/code/momo_vectors.h	/^static B32 operator!=(V2 lhs, V2 rhs) { return !v2_is_close(lhs, rhs); }$/;"	f	language:C++	typeref:typename:B32
@@ -2874,7 +2874,6 @@ pf_update_input	D:/work/git/txt/code/game_platform.h	/^static void pf_update_inp
 pixels	C:/Users/geral/work/txt/code/momo_image.h	/^  U32* pixels;$/;"	m	language:C++	struct:__anond39ef0e80108	typeref:typename:U32 *
 pixels	C:/Users/geral/work/txt/code/sui_pack.h	/^  U32* pixels;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32 *
 pixels	D:/work/git/txt/code/momo_image.h	/^  U32* pixels;$/;"	m	language:C++	struct:__anoncc1655140108	typeref:typename:U32 *
-pixels	D:/work/git/txt/code/momo_ttf.h	/^  U32* pixels; $/;"	m	language:C++	struct:_TTF_Bitmap	typeref:typename:U32 *
 pixels	D:/work/git/txt/code/sui_pack.h	/^  U32* pixels;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32 *
 PI_32	C:/Users/geral/work/txt/code/momo_common.h	/^#define PI_32 /;"	d	language:C++
 PI_32	D:/work/git/txt/code/momo_common.h	/^#define PI_32 /;"	d	language:C++
@@ -2890,8 +2889,6 @@ Platform_Add_Task	C:/Users/geral/work/txt/code/game_platform.h	/^typedef void Pl
 Platform_Add_Task	D:/work/git/txt/code/game_platform.h	/^typedef void Platform_Add_Task(Platform_Task_Callback callback, void* data);$/;"	t	language:C++	typeref:typename:void ()(Platform_Task_Callback callback,void * data)
 Platform_API	C:/Users/geral/work/txt/code/game_platform.h	/^typedef struct Platform_API {$/;"	s	language:C++
 Platform_API	C:/Users/geral/work/txt/code/game_platform.h	/^}Platform_API;$/;"	t	language:C++	typeref:struct:Platform_API
-Platform_API	D:/work/git/txt/code/game_platform.h	/^typedef struct Platform_API {$/;"	s	language:C++
-Platform_API	D:/work/git/txt/code/game_platform.h	/^}Platform_API;$/;"	t	language:C++	typeref:struct:Platform_API
 Platform_Audio	C:/Users/geral/work/txt/code/game_platform.h	/^typedef struct Platform_Audio {$/;"	s	language:C++
 Platform_Audio	C:/Users/geral/work/txt/code/game_platform.h	/^}Platform_Audio;$/;"	t	language:C++	typeref:struct:Platform_Audio
 platform_audio	C:/Users/geral/work/txt/code/w32_audio_wasapi.h	/^  Platform_Audio platform_audio; \/\/ Must be first member$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Platform_Audio
@@ -2943,7 +2940,8 @@ platform_render_region	D:/work/git/txt/code/game_gfx_opengl.h	/^  Rect2U platfor
 platform_render_wh	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^  V2U platform_render_wh;$/;"	m	language:C++	struct:Opengl	typeref:typename:V2U
 platform_render_wh	D:/work/git/txt/code/game_gfx_opengl.h	/^  V2U platform_render_wh;$/;"	m	language:C++	struct:Opengl	typeref:typename:V2U
 Platform_Set_Aspect_Ratio	C:/Users/geral/work/txt/code/game_platform.h	/^typedef void  Platform_Set_Aspect_Ratio(U32 width, U32 height); \/\/ sets aspect ratio of game$/;"	t	language:C++	typeref:typename:void ()(U32 width,U32 height)
-Platform_Set_Aspect_Ratio	D:/work/git/txt/code/game_platform.h	/^typedef void  Platform_Set_Aspect_Ratio(U32 width, U32 height); \/\/ sets aspect ratio of game$/;"	t	language:C++	typeref:typename:void ()(U32 width,U32 height)
+Platform_Set_Render_Region	D:/work/git/txt/code/game_platform.h	/^typedef void  Platform_Set_Render_Region(U32 x, U32 y, U32 width, U32 height);$/;"	t	language:C++	typeref:typename:void ()(U32 x,U32 y,U32 width,U32 height)
+Platform_Set_Window_Size	D:/work/git/txt/code/game_platform.h	/^typedef void  Platform_Set_Window_Size(U32 width, U32 height);$/;"	t	language:C++	typeref:typename:void ()(U32 width,U32 height)
 Platform_Task_Callback	C:/Users/geral/work/txt/code/game_platform.h	/^typedef void Platform_Task_Callback(void* data);$/;"	t	language:C++	typeref:typename:void ()(void * data)
 Platform_Task_Callback	D:/work/git/txt/code/game_platform.h	/^typedef void Platform_Task_Callback(void* data);$/;"	t	language:C++	typeref:typename:void ()(void * data)
 Platform_Write_File	C:/Users/geral/work/txt/code/game_platform.h	/^typedef B32 Platform_Write_File(Platform_File* file, UMI size, UMI offset, void* src);$/;"	t	language:C++	typeref:typename:B32 ()(Platform_File * file,UMI size,UMI offset,void * src)
@@ -3080,7 +3078,6 @@ rbg_to_hsl	D:/work/git/txt/code/momo_colors.h	/^static HSL  rbg_to_hsl(RGB c);$/
 read_file	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Read_File* read_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Read_File *
 read_file	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Read_File* read_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Read_File *
 read_file	D:/work/git/txt/code/game_platform.h	/^  Platform_Read_File* read_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Read_File *
-read_file	D:/work/git/txt/code/game_platform.h	/^  Platform_Read_File* read_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Read_File *
 rect	C:/Users/geral/work/txt/code/sui_atlas.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Atlas_Sprite	typeref:typename:RP_Rect *
 rect	D:/work/git/txt/code/sui_atlas.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Atlas_Sprite	typeref:typename:RP_Rect *
 Rect2	C:/Users/geral/work/txt/code/momo_shapes.h	/^typedef struct Rect2 {$/;"	s	language:C++
@@ -3113,6 +3110,10 @@ renderer_texture_handle	C:/Users/geral/work/txt/code/game_assets.h	/^  U32 rende
 renderer_texture_handle	D:/work/git/txt/code/game_assets.h	/^  U32 renderer_texture_handle;$/;"	m	language:C++	struct:Game_Bitmap	typeref:typename:U32
 render_mouse_pos	C:/Users/geral/work/txt/code/game_platform.h	/^  V2U render_mouse_pos;$/;"	m	language:C++	struct:Platform	typeref:typename:V2U
 render_mouse_pos	D:/work/git/txt/code/game_platform.h	/^  V2U render_mouse_pos;$/;"	m	language:C++	struct:Platform	typeref:typename:V2U
+render_region_x0	D:/work/git/txt/code/w32.cpp	/^  U32 render_region_x0;$/;"	m	language:C++	struct:W32_State	typeref:typename:U32	file:
+render_region_x1	D:/work/git/txt/code/w32.cpp	/^  U32 render_region_x1;$/;"	m	language:C++	struct:W32_State	typeref:typename:U32	file:
+render_region_y0	D:/work/git/txt/code/w32.cpp	/^  U32 render_region_y0;$/;"	m	language:C++	struct:W32_State	typeref:typename:U32	file:
+render_region_y1	D:/work/git/txt/code/w32.cpp	/^  U32 render_region_y1;$/;"	m	language:C++	struct:W32_State	typeref:typename:U32	file:
 rgb	C:/Users/geral/work/txt/code/momo_colors.h	/^    RGB rgb;$/;"	m	language:C++	union:RGBA::__anon72284c77010a	typeref:typename:RGB
 RGB	C:/Users/geral/work/txt/code/momo_colors.h	/^typedef struct RGB {$/;"	s	language:C++
 RGB	C:/Users/geral/work/txt/code/momo_colors.h	/^} RGB;$/;"	t	language:C++	typeref:struct:RGB
@@ -3305,6 +3306,8 @@ sensors	C:/Users/geral/work/txt/code/game_mode_lit.h	/^  Lit_Sensor_List sensors
 sensors	D:/work/git/txt/code/game_mode_lit.h	/^  Lit_Sensor_List sensors;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Sensor_List
 set_match_entry	C:/Users/geral/work/txt/code/game_assets.h	/^set_match_entry(Game_Asset_Match* vec, $/;"	f	language:C++	typeref:typename:void
 set_match_entry	D:/work/git/txt/code/game_assets.h	/^set_match_entry(Game_Asset_Match* vec, $/;"	f	language:C++	typeref:typename:void
+set_render_region	D:/work/git/txt/code/game_platform.h	/^  Platform_Set_Render_Region* set_render_region;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Set_Render_Region *
+set_window_size	D:/work/git/txt/code/game_platform.h	/^  Platform_Set_Window_Size* set_window_size;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Set_Window_Size *
 shader	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon12d34a900808	typeref:typename:GLuint
 shader	C:/Users/geral/work/txt/code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon12d34a900908	typeref:typename:GLuint
 shader	D:/work/git/txt/code/game_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon982c2a3c0808	typeref:typename:GLuint
@@ -3788,7 +3791,7 @@ ttf_log	C:/Users/geral/work/txt/code/momo_ttf.h	/^# define ttf_log(/;"	d	languag
 ttf_log	D:/work/git/txt/code/momo_ttf.h	/^# define ttf_log(/;"	d	language:C++
 ttf_rasterize_glyph	C:/Users/geral/work/txt/code/momo_ttf.h	/^static Image32 ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale_factor, Bump_Alloc/;"	p	language:C++	typeref:typename:Image32
 ttf_rasterize_glyph	C:/Users/geral/work/txt/code/momo_ttf.h	/^ttf_rasterize_glyph(const TTF* ttf, $/;"	f	language:C++	typeref:typename:Image32
-ttf_rasterize_glyph	D:/work/git/txt/code/momo_ttf.h	/^static U32* ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, Bump_Allocator* allo/;"	p	language:C++	typeref:typename:U32 *
+ttf_rasterize_glyph	D:/work/git/txt/code/momo_ttf.h	/^static U32* ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32* out/;"	p	language:C++	typeref:typename:U32 *
 ttf_rasterize_glyph	D:/work/git/txt/code/momo_ttf.h	/^ttf_rasterize_glyph(const TTF* ttf, $/;"	f	language:C++	typeref:typename:Image32
 ttf_rasterize_glyph	D:/work/git/txt/code/momo_ttf.h	/^ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32* out_h, Bump_All/;"	f	language:C++	typeref:typename:U32 *
 ttf_read	C:/Users/geral/work/txt/code/momo_ttf.h	/^static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);$/;"	p	language:C++	typeref:typename:B32
@@ -4193,6 +4196,8 @@ w32_return_file	C:/Users/geral/work/txt/code/w32.cpp	/^w32_return_file(W32_File_
 w32_return_file	D:/work/git/txt/code/w32.cpp	/^w32_return_file(W32_File_Cabinet* c, W32_File* f) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_setup_platform_functions	C:/Users/geral/work/txt/code/w32.cpp	/^w32_setup_platform_functions(Platform* pf)$/;"	f	language:C++	typeref:typename:void	file:
 w32_setup_platform_functions	D:/work/git/txt/code/w32.cpp	/^w32_setup_platform_functions(Platform* pf)$/;"	f	language:C++	typeref:typename:void	file:
+w32_set_render_region	D:/work/git/txt/code/w32.cpp	/^w32_set_render_region(U32 x0, U32 y0, U32 x1, U32 y1) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_set_window_size	D:/work/git/txt/code/w32.cpp	/^w32_set_window_size(U32 width, U32 height) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_shutdown	C:/Users/geral/work/txt/code/w32.cpp	/^w32_shutdown() {$/;"	f	language:C++	typeref:typename:void	file:
 w32_shutdown	D:/work/git/txt/code/w32.cpp	/^w32_shutdown() {$/;"	f	language:C++	typeref:typename:void	file:
 W32_State	C:/Users/geral/work/txt/code/w32.cpp	/^struct W32_State{$/;"	s	language:C++	file:
@@ -4296,10 +4301,10 @@ width	D:/work/git/txt/code/karu.h	/^  U32 width;$/;"	m	language:C++	struct:Karu_
 width	D:/work/git/txt/code/momo_image.h	/^  U32 width, height;$/;"	m	language:C++	struct:__anoncc1655140108	typeref:typename:U32
 width	D:/work/git/txt/code/momo_png.h	/^  U32 width;$/;"	m	language:C++	struct:_PNG_IHDR	typeref:typename:U32
 width	D:/work/git/txt/code/momo_png.h	/^  U32 width;$/;"	m	language:C++	struct:__anon6896d1560108	typeref:typename:U32
-width	D:/work/git/txt/code/momo_ttf.h	/^  U32 width;$/;"	m	language:C++	struct:_TTF_Bitmap	typeref:typename:U32
 width	D:/work/git/txt/code/sui_pack.h	/^  U32 width;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32
 WIN32_LEAN_AND_MEAN	C:/Users/geral/work/txt/code/w32.h	/^#define WIN32_LEAN_AND_MEAN$/;"	d	language:C++
 WIN32_LEAN_AND_MEAN	D:/work/git/txt/code/w32.h	/^#define WIN32_LEAN_AND_MEAN$/;"	d	language:C++
+window	D:/work/git/txt/code/w32.cpp	/^  HWND window;$/;"	m	language:C++	struct:W32_State	typeref:typename:HWND	file:
 WinMain	C:/Users/geral/work/txt/code/w32.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 WinMain	D:/work/git/txt/code/w32.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 WIN_AUDIO	C:/Users/geral/work/txt/code/w32_audio.h	/^#define WIN_AUDIO$/;"	d	language:C++
@@ -4319,7 +4324,6 @@ work_queue	D:/work/git/txt/code/w32.cpp	/^  W32_Work_Queue work_queue;$/;"	m	lan
 write_file	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Write_File* write_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Write_File *
 write_file	C:/Users/geral/work/txt/code/game_platform.h	/^  Platform_Write_File* write_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Write_File *
 write_file	D:/work/git/txt/code/game_platform.h	/^  Platform_Write_File* write_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Write_File *
-write_file	D:/work/git/txt/code/game_platform.h	/^  Platform_Write_File* write_file;$/;"	m	language:C++	struct:Platform_API	typeref:typename:Platform_Write_File *
 x	C:/Users/geral/work/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anonbe0c25110208	typeref:typename:U32
 x	C:/Users/geral/work/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anonbe0c25110308	typeref:typename:U32
 x	C:/Users/geral/work/txt/code/momo_ttf.h	/^  S16 x, y; $/;"	m	language:C++	struct:__anon802a10330308	typeref:typename:S16
@@ -4620,8 +4624,6 @@ _ttf_add_vertex	C:/Users/geral/work/txt/code/momo_ttf.h	/^_ttf_add_vertex(V2* ve
 _ttf_add_vertex	C:/Users/geral/work/txt/code/momo_ttf.h	/^_ttf_add_vertex(V2* vertices, U32 n, V2 v) {$/;"	f	language:C++	typeref:typename:void
 _ttf_add_vertex	D:/work/git/txt/code/momo_ttf.h	/^_ttf_add_vertex(V2* vertices, U32 n, F32 x, F32 y) {$/;"	f	language:C++	typeref:typename:void
 _ttf_add_vertex	D:/work/git/txt/code/momo_ttf.h	/^_ttf_add_vertex(V2* vertices, U32 n, V2 v) {$/;"	f	language:C++	typeref:typename:void
-_TTF_Bitmap	D:/work/git/txt/code/momo_ttf.h	/^typedef struct _TTF_Bitmap {$/;"	s	language:C++
-_TTF_Bitmap	D:/work/git/txt/code/momo_ttf.h	/^} _TTF_Bitmap;$/;"	t	language:C++	typeref:struct:_TTF_Bitmap
 _TTF_CMAP_MS_ID_BIG_FIVE	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_BIG_FIVE = 4,$/;"	e	language:C++	enum:__anon802a10330903
 _TTF_CMAP_MS_ID_BIG_FIVE	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_BIG_FIVE = 4,$/;"	e	language:C++	enum:__anon68e2795f0803
 _TTF_CMAP_MS_ID_JOHAB	C:/Users/geral/work/txt/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_JOHAB = 5,$/;"	e	language:C++	enum:__anon802a10330903

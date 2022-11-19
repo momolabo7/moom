@@ -1,7 +1,7 @@
 #ifndef GAME_MODE_LIT_H
 #define GAME_MODE_LIT_H
 
-#define LIT_DEBUG_LIGHT 0
+#define LIT_DEBUG_LIGHT 1
 #define LIT_DEBUG_COORDINATES 1
 
 //////////////////////////////////////////////////
@@ -280,7 +280,7 @@ lit_tick(Game* game)
                  GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
   //lit_draw_edges(m); 
-  //lit_draw_debug_light_rays();
+  lit_draw_debug_light_rays(m, game);
   lit_draw_player(m);
   lit_draw_lights(m);
   
