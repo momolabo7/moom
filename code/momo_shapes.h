@@ -6,11 +6,9 @@ typedef struct Rect2 {
   V2 min, max;
 }Rect2;
 
-
 typedef struct Rect2U {
   V2U min, max;
 }Rect2U;
-
 
 typedef struct Ray2 {
   V2 pt;

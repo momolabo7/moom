@@ -122,7 +122,7 @@ struct Gfx_Command_View {
   F32 min_y, max_y;
 };
 
-struct Gfx_Command_Sprite{
+struct Gfx_Command_Sprite {
   V2 pos;
   V2 size;
   Rect2U texel_uv;
