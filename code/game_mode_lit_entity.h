@@ -18,7 +18,7 @@ struct Lit_Particle_Pool {
   Lit_Particle particles[256];
 };
 
-#define LIT_SENSOR_PARTICLE_CD 0.1f
+#define LIT_SENSOR_PARTICLE_CD 0.f
 #define LIT_SENSOR_COLOR_MASK 0xFFFFFF00
 #define LIT_SENSOR_RADIUS 8.f
 #define LIT_SENSOR_PARTICLE_SIZE 16.f

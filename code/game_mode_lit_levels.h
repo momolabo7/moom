@@ -177,17 +177,17 @@ lit_level_0_5(Lit* m) {
   lit_push_sensor(m, 600.f, 400.f, 0x008800FF); 
 
   lit_push_sensor(m, 400.f, 200.f, 0x880000FF); 
-  lit_push_sensor(m, 400.f, 600.f, 0x880088FF); 
+  lit_push_sensor(m, 400.f, 600.f, 0x880088FF); \f
 
   lit_push_light(m, 200.f, 150.f, 0x008800FF, 30.f, 0.75f);
   lit_push_light(m, 400.f, 150.f, 0x880000FF, 30.f, 0.75f);
-  lit_push_light(m, 600.f, 150.f, 0x000088FF, 30.f, 0.75f);
+  lit_push_light(m, 600.f, 10.f, 0x000088FF, 30.f, 0.75f);
   
 
 }
 
 typedef void (*Lit_Level)(Lit* mode); 
-static Lit_Level lit_levels[] = {
+static Lit_Level lit_levels[\f] = {
   //lit_level_0_0, 
   //lit_level_0_1, 
   //lit_level_0_2,
