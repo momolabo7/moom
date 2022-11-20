@@ -253,7 +253,7 @@ lit_update_sensors(Lit* lit,
     {
       sensor->particle_cd = LIT_SENSOR_PARTICLE_CD;
       V2 rand_dir = rng_unit_circle(rng);
-      V2 particle_vel = v2_scale(rand_dir, 10.f); 
+      V2 particle_vel = v2_scale(rand_dir, LIT_SENSOR_PARTICLE_SPEED); 
       RGBA target_color = hex_to_rgba(sensor->target_color); 
 
       RGBA start_color = target_color;
@@ -262,8 +262,8 @@ lit_update_sensors(Lit* lit,
       RGBA end_color = target_color;
       end_color.a = 0.f;
 
-      V2 size_start = { 32.f, 32.f };
-      V2 size_end = { 0.f, 0.f };
+      V2 size_start = v2_set(LIT_SENSOR_PARTICLE_SIZE, LIT_SENSOR_PARTICLE_SIZE);
+      V2 size_end = v2_zero();
 
       lit_spawn_particle(lit, 
                          1.f,
