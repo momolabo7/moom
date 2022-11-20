@@ -1,7 +1,7 @@
 #ifndef GAME_MODE_LIT_H
 #define GAME_MODE_LIT_H
 
-#define LIT_DEBUG_LIGHT 1
+#define LIT_DEBUG_LIGHT 0
 #define LIT_DEBUG_COORDINATES 1
 
 //////////////////////////////////////////////////

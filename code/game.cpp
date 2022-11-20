@@ -92,18 +92,19 @@ game_update_and_render(Platform* pf)
     game->is_done = false;
     
     // Render region
-    {
-      U32 x0, y0, x1, y1; 
-      game_get_render_region((U32)GAME_WIDTH, (U32)GAME_HEIGHT, GAME_WIDTH/GAME_HEIGHT, &x0, &y0, &x1, &y1); 
-
-      platform->set_render_region(x0, y0, x1, y1);
-    }
-    gfx_push_view(gfx, 0.f, GAME_WIDTH, 0.f, GAME_HEIGHT, 0.f, 0.f);
+   gfx_push_view(gfx, 0.f, GAME_WIDTH, 0.f, GAME_HEIGHT, 0.f, 0.f);
     game_log("Initialized!");
    
   }
   Game* game = (Game*)platform->game;
-
+  {
+    U32 x0, y0, x1, y1; 
+    U32 w, h;
+    platform->get_window_size(&w, &h);
+    game_get_render_region(w, h, GAME_WIDTH/GAME_HEIGHT, &x0, &y0, &x1, &y1); 
+    platform->set_render_region(x0, y0, x1, y1);
+  }
+ 
   // Set globals from game
   assets = &game->assets;
   inspector = &game->inspector;

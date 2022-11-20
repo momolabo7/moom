@@ -61,18 +61,12 @@ typedef void  Platform_Set_Aspect_Ratio(U32 width, U32 height); // sets aspect r
 typedef void  Platform_Debug_Log(const char* fmt, ...);
 typedef U64   Platform_Get_Performance_Counter();
 typedef void  Platform_Set_Window_Size(U32 width, U32 height);
+typedef void  Platform_Get_Window_Size(U32* width, U32* height);
 typedef void  Platform_Set_Render_Region(U32 x, U32 y, U32 width, U32 height);
 
-
-//~Input API
-// NOTE(Momo): Game_Input is not just 'controllers'.
-// It is filled with 'things the game need to respond to' 
-// so hence it's name and also why delta time is in there
-
-
-//~ NOTE(Momo): Game Memory API
-// For things that don't change from the platform after setting it once
-//~ Audio API
+//
+// Audio API
+//
 typedef struct Platform_Audio {
     S16* sample_buffer;
     U32 sample_count;
@@ -91,13 +85,17 @@ struct Profiler;
 // These could really all be functions on the platform side
 typedef struct Platform {
   Bump_Allocator* game_arena; // Require 32MB
-  //Platform_API platform_api;
   
+  // Rendering API
   Gfx* gfx;
-  
+ 
+  // Profiler API
   Profiler* profiler; 
+
+  // Audio API
   Platform_Audio* audio;
 
+  // Input API
   // Maybe this should be a seperate struct
   union {
     struct {
@@ -121,28 +119,40 @@ typedef struct Platform {
     };  
     Platform_Button buttons[13];
   };
-  
-  V2 design_mouse_pos;
+  U8 chars[32];
+  U32 char_count;
+
   V2U screen_mouse_pos;
   V2U render_mouse_pos;
   
   F32 seconds_since_last_frame; //aka dt
   
-  U8 chars[32];
-  U32 char_count;
-  
+   
   B32 reloaded;
 
   // API Functions
-  // Ideally, everything in here should be like this
+
+  // File IO
   Platform_Open_File* open_file;
   Platform_Read_File* read_file;
   Platform_Write_File* write_file;
   Platform_Close_File* close_file;
+  
+  // Multithreading API
   Platform_Add_Task* add_task;
   Platform_Complete_All_Tasks* complete_all_tasks;
-  Platform_Get_Performance_Counter* get_performance_counter;
+
+
+  // Logging
   Platform_Debug_Log* debug_log;
+
+  // Window related.
+  // TODO: Not sure if we should really expose this because asking game to
+  // know about pixel width/height of a window (and render region) is a bit sus.
+  // ...
+  // It's probably not a good idea, but we can deal with it when we are almost done
+  // with some kind of game.
+  Platform_Get_Window_Size* get_window_size;
   Platform_Set_Window_Size* set_window_size;
   Platform_Set_Render_Region* set_render_region;
 

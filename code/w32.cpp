@@ -1,8 +1,5 @@
 #include "w32.h"
 
-Profiler _g_profiler = {0};
-Profiler* g_profiler = &_g_profiler; 
-
 #if 0
 static void
 w32_toggle_fullscreen(HWND Window)
@@ -225,14 +222,14 @@ struct W32_State{
   U32 render_region_y0;
   U32 render_region_y1;
 };
-static W32_State g_w32_state;
+static W32_State w32_state;
 
 
 //~ For Platform API
 
 static void 
 w32_shutdown() {
-  g_w32_state.is_running = false;
+  w32_state.is_running = false;
 }
 
 #if 0
@@ -320,7 +317,7 @@ w32_open_file(Platform_File* file,
   }
   else {
     
-    W32_File* w32_file = w32_get_next_free_file(&g_w32_state.file_cabinet);
+    W32_File* w32_file = w32_get_next_free_file(&w32_state.file_cabinet);
     assert(w32_file);
     w32_file->handle = handle;
     
@@ -334,7 +331,7 @@ w32_close_file(Platform_File* file) {
   W32_File* w32_file = (W32_File*)file->platform_data;
   CloseHandle(w32_file->handle);
   
-  w32_return_file(&g_w32_state.file_cabinet, w32_file);
+  w32_return_file(&w32_state.file_cabinet, w32_file);
   file->platform_data = nullptr;
 }
 
@@ -382,12 +379,12 @@ w32_write_file(Platform_File* file, UMI size, UMI offset, void* src)
 
 static void
 w32_add_task(Platform_Task_Callback callback, void* data) {
-  w32_add_task_entry(&g_w32_state.work_queue, callback, data);
+  w32_add_task_entry(&w32_state.work_queue, callback, data);
 }
 
 static void
 w32_complete_all_tasks() {
-  w32_complete_all_tasks_entries(&g_w32_state.work_queue);
+  w32_complete_all_tasks_entries(&w32_state.work_queue);
 }
 
 
@@ -404,7 +401,7 @@ w32_process_input(HWND window, Platform* pf)
       case WM_QUIT:
       case WM_DESTROY:
       case WM_CLOSE: {
-        g_w32_state.is_running = false;
+        w32_state.is_running = false;
       } break;
       case WM_LBUTTONUP:
       case WM_LBUTTONDOWN: {
@@ -477,10 +474,10 @@ w32_process_input(HWND window, Platform* pf)
 
 static void
 w32_set_render_region(U32 x0, U32 y0, U32 x1, U32 y1) {
-  g_w32_state.render_region_x0 = x0;
-  g_w32_state.render_region_y0 = y0;
-  g_w32_state.render_region_x1 = x1;
-  g_w32_state.render_region_y1 = y1;
+  w32_state.render_region_x0 = x0;
+  w32_state.render_region_y0 = y0;
+  w32_state.render_region_x1 = x1;
+  w32_state.render_region_y1 = y1;
 }
 
 static void
@@ -498,9 +495,16 @@ w32_set_window_size(U32 width, U32 height) {
   LONG top = monitor_h/2 - height/2;
 
   // Make it right at the center!
-  MoveWindow(g_w32_state.window, left, top, (S32)width, (S32)height, TRUE);
+  MoveWindow(w32_state.window, left, top, (S32)width, (S32)height, TRUE);
 }
 
+static void
+w32_get_window_size(U32* width, U32* height) {
+  RECT rect = {0};
+  GetWindowRect(w32_state.window, &rect);
+  if (*width) *width = (U32)(rect.right - rect.left);
+  if (*height) *height = (U32)(rect.bottom - rect.top);
+}
 static void
 w32_setup_platform_functions(Platform* pf)
 {
@@ -509,6 +513,7 @@ w32_setup_platform_functions(Platform* pf)
   //
   pf->set_render_region = w32_set_render_region;
   pf->set_window_size = w32_set_window_size;
+  pf->get_window_size = w32_get_window_size;
   pf->open_file = w32_open_file;
   pf->read_file = w32_read_file;
   pf->write_file = w32_write_file;
@@ -516,7 +521,6 @@ w32_setup_platform_functions(Platform* pf)
   pf->add_task = w32_add_task;
   pf->complete_all_tasks = w32_complete_all_tasks;
   pf->debug_log = w32_log_proc;
-  pf->get_performance_counter = w32_get_performance_counter_u64;
 }
 
 //~ Main functions
@@ -531,7 +535,7 @@ w32_window_callback(HWND window,
     case WM_CLOSE:  
     case WM_QUIT:
     case WM_DESTROY: {
-      g_w32_state.is_running = false;
+      w32_state.is_running = false;
     } break;
     default: {
       result = DefWindowProcA(window, message, w_param, l_param);
@@ -555,12 +559,12 @@ WinMain(HINSTANCE instance,
   
   //- Initialize window state
   {
-    g_w32_state.is_running = true;
+    w32_state.is_running = true;
     
-    if (!w32_init_work_queue(&g_w32_state.work_queue, 8)) {
+    if (!w32_init_work_queue(&w32_state.work_queue, 8)) {
       return 1;
     }
-    w32_init_file_cabinet(&g_w32_state.file_cabinet);
+    w32_init_file_cabinet(&w32_state.file_cabinet);
   }
   
   
@@ -636,7 +640,7 @@ WinMain(HINSTANCE instance,
     
     
   }
-  g_w32_state.window = window;
+  w32_state.window = window;
   
 
   //  w32_toggle_fullscreen(window);
@@ -713,7 +717,7 @@ WinMain(HINSTANCE instance,
 
 
   // Init profiler
-  prf_init(g_profiler, w32_get_performance_counter_u64);
+  prf_init(profiler, w32_get_performance_counter_u64);
   
   // Platform setup
   make(Platform, pf);
@@ -725,7 +729,7 @@ WinMain(HINSTANCE instance,
   
   w32_setup_platform_functions(pf);
   pf->gfx = gfx;
-  pf->profiler = g_profiler;
+  pf->profiler = profiler;
   pf->game_arena = game_arena;
   pf->audio = audio;
   
@@ -738,13 +742,13 @@ WinMain(HINSTANCE instance,
   QueryPerformanceFrequency(&performance_frequency);
   LARGE_INTEGER last_frame_count = w32_get_performance_counter();
  
-  while (g_w32_state.is_running) {
+  while (w32_state.is_running) {
   
 #if 1
     // Hot reload game.dll functions
     pf->reloaded = w32_reload_code_if_outdated(&game_code);
     if (pf->reloaded) {
-      prf_reset(g_profiler);
+      prf_reset(profiler);
     }
 #endif
    
@@ -760,13 +764,13 @@ WinMain(HINSTANCE instance,
 #if 0 
     Rect2U render_region = w32_calc_render_region(render_wh.w,
                                                   render_wh.h,
-                                                  g_w32_state.aspect_ratio);
+                                                  w32_state.aspect_ratio);
 #endif
     Rect2U rr;
-    rr.min.x = g_w32_state.render_region_x0;
-    rr.max.x = g_w32_state.render_region_x1;
-    rr.min.y = g_w32_state.render_region_y0;
-    rr.max.y = g_w32_state.render_region_y1;
+    rr.min.x = w32_state.render_region_x0;
+    rr.max.x = w32_state.render_region_x1;
+    rr.min.y = w32_state.render_region_y0;
+    rr.max.y = w32_state.render_region_y1;
     w32_gfx_begin_frame(gfx, 
                         render_wh, 
                         rr);
@@ -785,9 +789,9 @@ WinMain(HINSTANCE instance,
       pf->screen_mouse_pos.x = cursor_pos.x;
       pf->screen_mouse_pos.y = cursor_pos.y;
       
-      pf->render_mouse_pos.x = pf->screen_mouse_pos.x - g_w32_state.render_region_x0;
+      pf->render_mouse_pos.x = pf->screen_mouse_pos.x - w32_state.render_region_x0;
 
-      pf->render_mouse_pos.y = pf->screen_mouse_pos.y - g_w32_state.render_region_y0;
+      pf->render_mouse_pos.y = pf->screen_mouse_pos.y - w32_state.render_region_y0;
 
 #if 0
       
@@ -815,7 +819,7 @@ WinMain(HINSTANCE instance,
     }
 
     // End  frame
-    prf_update_entries(g_profiler);
+    prf_update_entries(profiler);
     w32_gfx_end_frame(gfx);
     w32_audio_end_frame(audio);
 
