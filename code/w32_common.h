@@ -17,6 +17,8 @@ make(Profiler, profiler);
 #define w32_profiler_block(...)
 #endif // INTERNAL
 
+static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }
+static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }
 
 static inline V2U
 w32_get_window_dims(HWND window) {
