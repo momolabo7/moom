@@ -6,19 +6,11 @@ typedef struct Rect2 {
   V2 min, max;
 }Rect2;
 
+
 typedef struct Rect2U {
   V2U min, max;
 }Rect2U;
 
-typedef struct Aabb2{
-  V2 anchor;
-  V2 dims;
-}Aabb2;
-
-
-typedef struct Line2 {
-  V2 min, max;
-}Line2;
 
 typedef struct Ray2 {
   V2 pt;
@@ -34,14 +26,6 @@ static B32 bonk_tri2_pt2(Tri2 tri, V2 pt);
 
 ///////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
-
-static Line2
-line2_set(V2 min, V2 max) {
-  Line2 ret = {0};
-  ret.min = min;
-  ret.max = max;
-  return ret;
-}
 
 
 

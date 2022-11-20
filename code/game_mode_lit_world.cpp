@@ -1,13 +1,9 @@
-static Line2 
-lit_calc_ghost_edge_line(Lit_Edge* e) {
-	Line2 ret = {0};
-  
+static void 
+lit_calc_ghost_edge_line(Lit_Edge* e, V2* min, V2* max) {
   V2 dir = v2_norm(e->end_pt - e->start_pt) * 0.0001f;
   
-  ret.min = v2_sub(e->start_pt, dir);
-  ret.max = v2_add(e->end_pt, dir);
-  
-  return ret;
+  *min = v2_sub(e->start_pt, dir);
+  *max = v2_add(e->end_pt, dir);
 }
 
 static Lit_Edge*
@@ -59,10 +55,12 @@ lit_get_ray_intersection_time_wrt_edges(Ray2 ray,
     if (edge->is_disabled) continue;
 
     Ray2 edge_ray = {};
-    
-    Line2 ghost = lit_calc_ghost_edge_line(edge);
-    edge_ray.pt = ghost.min;
-    edge_ray.dir = ghost.max - ghost.min; 
+    {
+      V2 p0, p1;
+      lit_calc_ghost_edge_line(edge, &p0, &p1);
+      edge_ray.pt = p0;
+      edge_ray.dir = p1 - p0; 
+    }
     
     // Check for parallel
     V2 ray_normal = {};
@@ -368,16 +366,15 @@ lit_draw_debug_light_rays(Lit* lit, Game* game) {
       
       sb8_clear(sb);
       
-      Line2 line = {0};
-      line.min = player->pos;
-      line.max = al_at(&l->intersections, sorted_its[its_id].index)->pt;
+      V2 line_min = player->pos;
+      V2 line_max = al_at(&l->intersections, sorted_its[its_id].index)->pt;
       
       sb8_push_fmt(sb, str8_from_lit("[%u]"), its_id);
       paint_text(lit->tutorial_font, 
                  sb->str,
                  hex_to_rgba(0xFF0000FF),
-                 line.max.x,
-                 line.max.y + 10.f,
+                 line_max.x,
+                 line_max.y + 10.f,
                  12.f);
       gfx_push_line(gfx, line, 1.f, hex_to_rgba(0xFF0000FF));
       
@@ -399,9 +396,8 @@ lit_draw_edges(Lit* lit) {
     Lit_Edge* edge = al_at(edges, edge_index);
     if (edge->is_disabled) continue;
     
-    Line2 line = line2_set(edge->start_pt,edge->end_pt);
 
-    gfx_push_line(gfx, line, 3.f, hex_to_rgba(0x888888FF));
+    gfx_push_line(gfx, edge->start_pt, edge->end_pt, 3.f, hex_to_rgba(0x888888FF));
   }
   gfx_advance_depth(gfx);
 }

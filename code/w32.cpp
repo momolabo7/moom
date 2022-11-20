@@ -501,7 +501,7 @@ w32_set_window_size(U32 width, U32 height) {
 static void
 w32_get_window_size(U32* width, U32* height) {
   RECT rect = {0};
-  GetWindowRect(w32_state.window, &rect);
+  GetClientRect(w32_state.window, &rect);
   if (*width) *width = (U32)(rect.right - rect.left);
   if (*height) *height = (U32)(rect.bottom - rect.top);
 }

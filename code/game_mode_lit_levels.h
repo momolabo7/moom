@@ -211,24 +211,19 @@ lit_level_0_4a(Lit* m) {
 
 static void
 lit_level_0_5(Lit* m) {
-  lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
-  lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
-  lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
-  lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
-
   lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
 
   lit_push_double_edge(m, 600.f, 300.f, 1000.f, 300.f);
   lit_push_double_edge(m, 600.f, 300.f, 600.f, 600.f);
   lit_push_double_edge(m, 1000.f, 300.f, 1000.f, 600.f);
 
-  lit_push_sensor(m, 800.f,  400.f, 0x880000FF); 
+  lit_push_sensor(m, 400.f,  400.f, 0x880000FF); 
 
 }
 
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
-  //lit_level_0_0, 
+  lit_level_0_0, 
   //lit_level_0_1, 
   //lit_level_0_2,
   //lit_level_0_3,

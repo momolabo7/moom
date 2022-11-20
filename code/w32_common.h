@@ -89,6 +89,13 @@ w32_get_performance_counter(void) {
   QueryPerformanceCounter(&result);
   return result;
 }
+
+static U64
+w32_get_performance_counter_u64(void) {
+  LARGE_INTEGER counter = w32_get_performance_counter();
+  U64 ret = (U64)counter.QuadPart;
+  return ret;
+}
 static F32
 w32_get_secs_elapsed(LARGE_INTEGER start,
                      LARGE_INTEGER end,

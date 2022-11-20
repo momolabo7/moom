@@ -179,7 +179,7 @@ static void gfx_push_sprite(Gfx* g, RGBA colors, V2 pos, V2 size, V2 anchor, U32
 static void gfx_push_filled_rect(Gfx* g, RGBA colors, V2 pos, F32 rot, V2 size);
 static void gfx_push_filled_triangle(Gfx* g, RGBA colors, V2 p0, V2 p1, V2 p2);
 static void gfx_push_advance_depth(Gfx* g); 
-static void gfx_push_line(Gfx* g, Line2 line, F32 thickness, RGBA colors);
+static void gfx_push_line(Gfx* g, V2 p0, V2 p1, F32 thickness, RGBA colors);
 static void gfx_push_circle_outline(Gfx* g, V2 center, F32 radius, F32 thickness, U32 line_count, RGBA color); 
 static void gfx_push_rect_outline(Gfx* g, Rect2 rect, F32 thickness, RGBA colors, F32 pos_z);
 static void gfx_push_delete_all_textures(Gfx* g);
@@ -402,22 +402,22 @@ gfx_push_advance_depth(Gfx* g) {
 
 static void 
 gfx_push_line(Gfx* g, 
-              Line2 line,
+              V2 p0, V2 p1,
               F32 thickness,
               RGBA colors) 
 { 
   Gfx_Command_Queue* q = &g->command_queue; 
   // NOTE(Momo): Min.Y needs to be lower than Max.y
   
-  if (line.min.y > line.max.y) {
-    swap(F32, line.min.x, line.max.x);
+  if (p0.y > p1.y) {
+    swap(F32, p0.x, p1.x);
   }
   
-  V2 line_vector = line.max - line.min;
+  V2 line_vector = p1 - p0;
   F32 line_length = v2_len(line_vector);
-  V2 line_mid = v2_mid(line.max, line.min);
+  V2 line_mid = v2_mid(p1, p0);
   
-  V2 x_axis = { 1.f, 0.f };
+  V2 x_axis = v2_set(1.f, 0.f);
   F32 angle = v2_angle(line_vector, x_axis);
   
   gfx_push_filled_rect(g, colors, 
@@ -474,10 +474,9 @@ gfx_push_circle_outline(Gfx* g, V2 center, F32 radius, F32 thickness, U32 line_c
   V2 pt2 = v2_rotate(pt1, angle_increment);
   
   for (U32 i = 0; i < line_count; ++i) {
-    V2 line_pt_1 = v2_add(pt1, center);
-    V2 line_pt_2 = v2_add(pt2, center);
-    Line2 line = { line_pt_1, line_pt_2 };
-    gfx_push_line(g, line, thickness, color);
+    V2 p0 = v2_add(pt1, center);
+    V2 p1 = v2_add(pt2, center);
+    gfx_push_line(g, p0, p1, thickness, color);
     
     pt1 = pt2;
     pt2 = v2_rotate(pt1, angle_increment);
@@ -485,6 +484,7 @@ gfx_push_circle_outline(Gfx* g, V2 center, F32 radius, F32 thickness, U32 line_c
   }
 }
 
+#if 0
 //TODO: Buggy? Or change to AABB? Instead of Rect?
 static void 
 gfx_push_rect_outline(Gfx* g, 
@@ -497,10 +497,10 @@ gfx_push_rect_outline(Gfx* g,
   //Bottom
   {
     Line2 line;
-    line.min.x = rect.min.x;
-    line.min.y = rect.min.y;
-    line.max.x = rect.max.x;
-    line.min.y = rect.min.y; 
+    p0.x = rect.min.x;
+    p0.y = rect.min.y;
+    p1.x = rect.max.x;
+    p0.y = rect.min.y; 
     
     gfx_push_line(g, line, thickness, colors);
   }
@@ -508,10 +508,10 @@ gfx_push_rect_outline(Gfx* g,
   // Left
   {
     Line2 line;
-    line.min.x = rect.min.x;
-    line.min.y = rect.min.y;
-    line.max.x = rect.min.x;
-    line.min.y = rect.max.y; 
+    p0.x = rect.min.x;
+    p0.y = rect.min.y;
+    p1.x = rect.min.x;
+    p0.y = rect.max.y; 
     
     gfx_push_line(g, line, thickness, colors);
   }
@@ -519,10 +519,10 @@ gfx_push_rect_outline(Gfx* g,
   //Top
   {
     Line2 line;
-    line.min.x = rect.min.x;
-    line.min.y = rect.max.y;
-    line.max.x = rect.max.x;
-    line.min.y = rect.max.y; 
+    p0.x = rect.min.x;
+    p0.y = rect.max.y;
+    p1.x = rect.max.x;
+    p0.y = rect.max.y; 
     
     gfx_push_line(g, line, thickness, colors);
     
@@ -531,14 +531,15 @@ gfx_push_rect_outline(Gfx* g,
   //Right 
   {
     Line2 line;
-    line.min.x = rect.max.x;
-    line.min.y = rect.min.y;
-    line.max.x = rect.max.x;
-    line.min.y = rect.max.y; 
+    p0.x = rect.max.x;
+    p0.y = rect.min.y;
+    p1.x = rect.max.x;
+    p0.y = rect.max.y; 
     
     gfx_push_line(g, line, thickness, colors);
   }
 }
+#endif
 
 static void 
 gfx_push_delete_all_textures(Gfx* g) {
