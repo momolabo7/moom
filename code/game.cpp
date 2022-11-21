@@ -4,36 +4,6 @@
 // GAME
 // 
 
-static void
-game_get_render_region(U32 window_w, U32 window_h, F32 aspect_ratio, U32* x0, U32* y0, U32* x1, U32* y1) 
-{
-  assert(aspect_ratio > 0.f && window_w > 0 && window_h > 0);
-	F32 optimal_window_w = (F32)window_h * aspect_ratio;
-	F32 optimal_window_h = (F32)window_w * 1.f/aspect_ratio;
-	
-	if (optimal_window_w > (F32)window_w) {
-		// NOTE(Momo): width has priority - top and bottom bars
-    if (x0) *x0 = 0;
-    if (x1) *x1 = window_w;
-		
-		F32 empty_height = (F32)window_h - optimal_window_h;
-		
-		if(y0) *y0 = (U32)(empty_height * 0.5f);
-		if(y1) *y1 = (*y0) + (U32)optimal_window_h;
-	}
-	else {
-		// NOTE(Momo): height has priority - left and right bars
-		if(y0) *y0 = 0;
-		if(y1) *y1 = window_h;
-		
-		F32 empty_width = (F32)window_w - optimal_window_w;
-		
-		if (x0) *x0 = (U32)(empty_width * 0.5f);
-		if (x1) *x1 = (*x0) + (U32)optimal_window_w;
-	}
-	
-}
-
 exported B32 
 game_update_and_render(Platform* pf)
 { 
@@ -91,21 +61,18 @@ game_update_and_render(Platform* pf)
     game->show_debug_type = GAME_SHOW_DEBUG_NONE;
     game->is_done = false;
     
-    // Render region
-   gfx_push_view(gfx, 0.f, GAME_WIDTH, 0.f, GAME_HEIGHT, 0.f, 0.f);
+    // Inform platform what our game's dimensions are
+    platform->set_game_dims(GAME_WIDTH, GAME_HEIGHT);
+
+    // set up view for game
+    gfx_push_view(gfx, 0.f, GAME_WIDTH, 0.f, GAME_HEIGHT, 0.f, 0.f);
+
     game_log("Initialized!");
    
   }
-  Game* game = (Game*)platform->game;
-  {
-    U32 x0, y0, x1, y1; 
-    U32 w, h;
-    platform->get_window_size(&w, &h);
-    game_get_render_region(w, h, GAME_WIDTH/GAME_HEIGHT, &x0, &y0, &x1, &y1); 
-    platform->set_render_region(x0, y0, x1, y1);
-  }
  
   // Set globals from game
+  Game* game = (Game*)platform->game;
   assets = &game->assets;
   inspector = &game->inspector;
   Console* console = &game->console;

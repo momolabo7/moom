@@ -28,6 +28,7 @@ static struct Profiler* profiler;
 #define game_profile_end(...) 
 #endif 
 
+// TODO: REMOVE
 #define GAME_DIMENSIONS V2 { GAME_WIDTH, GAME_HEIGHT } 
 #define GAME_MIDPOINT V2 { GAME_WIDTH/2, GAME_HEIGHT/2 } 
 

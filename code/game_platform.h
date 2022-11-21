@@ -9,7 +9,7 @@
 
 #include "momo.h"
 
-// TODO: This should be in a function given by game I think
+// TODO: Remove these somehow
 #define GAME_WIDTH 800.f
 #define GAME_HEIGHT 800.f
 #define GAME_INITIAL_WINDOW_WIDTH 800
@@ -60,7 +60,8 @@ typedef void  Platform_Set_Aspect_Ratio(U32 width, U32 height); // sets aspect r
 #endif
 typedef void  Platform_Debug_Log(const char* fmt, ...);
 typedef U64   Platform_Get_Performance_Counter();
-typedef void  Platform_Set_Window_Size(U32 width, U32 height);
+typedef void  Platform_Set_Game_Dims(F32 width, F32 height);
+
 typedef void  Platform_Get_Window_Size(U32* width, U32* height);
 typedef void  Platform_Set_Render_Region(U32 x, U32 y, U32 width, U32 height);
 
@@ -153,16 +154,14 @@ typedef struct Platform {
   // It's probably not a good idea, but we can deal with it when we are almost done
   // with some kind of game.
   Platform_Get_Window_Size* get_window_size;
-  Platform_Set_Window_Size* set_window_size;
+  Platform_Set_Game_Dims* set_game_dims;
   Platform_Set_Render_Region* set_render_region;
 
   // For game to use
   void* game;
 }Platform;
 
-
 typedef void Game_Update_And_Render(Platform* pf);
-typedef void Game_Debug_Update_And_Render(Platform* pf);
 
 // To be called by platform
 typedef struct Game_Functions {

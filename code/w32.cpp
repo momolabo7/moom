@@ -209,18 +209,13 @@ w32_return_file(W32_File_Cabinet* c, W32_File* f) {
 struct W32_State{
   B32 is_running;
   
-  U32 aspect_ratio_width;
-  U32 aspect_ratio_height;
+  F32 game_width;
+  F32 game_height;
   
   W32_Work_Queue work_queue;
   W32_File_Cabinet file_cabinet;
   
   HWND window;
-
-  U32 render_region_x0;
-  U32 render_region_x1;
-  U32 render_region_y0;
-  U32 render_region_y1;
 };
 static W32_State w32_state;
 
@@ -473,15 +468,8 @@ w32_process_input(HWND window, Platform* pf)
 }
 
 static void
-w32_set_render_region(U32 x0, U32 y0, U32 x1, U32 y1) {
-  w32_state.render_region_x0 = x0;
-  w32_state.render_region_y0 = y0;
-  w32_state.render_region_x1 = x1;
-  w32_state.render_region_y1 = y1;
-}
-
-static void
-w32_set_window_size(U32 width, U32 height) {
+w32_set_game_dims(F32 width, F32 height) {
+  assert(width > 0.f && height > 0.f);
   // Get monitor info
   HMONITOR monitor = MonitorFromWindow(0, MONITOR_DEFAULTTONEAREST);
   MONITORINFOEX monitor_info;
@@ -491,29 +479,26 @@ w32_set_window_size(U32 width, U32 height) {
   LONG monitor_w = w32_rect_width(monitor_info.rcMonitor);
   LONG monitor_h = w32_rect_height(monitor_info.rcMonitor);
  
-  LONG left = monitor_w/2 - width/2;
-  LONG top = monitor_h/2 - height/2;
+  LONG left = monitor_w/2 - (U32)width/2;
+  LONG top = monitor_h/2 - (U32)height/2;
 
   // Make it right at the center!
   MoveWindow(w32_state.window, left, top, (S32)width, (S32)height, TRUE);
+
+  w32_state.game_width = width;
+  w32_state.game_height = height;
 }
 
-static void
-w32_get_window_size(U32* width, U32* height) {
-  RECT rect = {0};
-  GetClientRect(w32_state.window, &rect);
-  if (*width) *width = (U32)(rect.right - rect.left);
-  if (*height) *height = (U32)(rect.bottom - rect.top);
-}
 static void
 w32_setup_platform_functions(Platform* pf)
 {
   //pf->hot_reload = w32_hot_reload;
   //pf->shutdown = w32_shutdown;
   //
-  pf->set_render_region = w32_set_render_region;
-  pf->set_window_size = w32_set_window_size;
-  pf->get_window_size = w32_get_window_size;
+  //pf->set_render_region = w32_set_render_region;
+  //pf->set_window_size = w32_set_window_size;
+  //pf->get_window_size = w32_get_window_size;
+  pf->set_game_dims = w32_set_game_dims;
   pf->open_file = w32_open_file;
   pf->read_file = w32_read_file;
   pf->write_file = w32_write_file;
@@ -700,9 +685,9 @@ WinMain(HINSTANCE instance,
  
     
   Gfx* gfx = w32_gfx_load(window, 
-                               MB(100),
-                               MB(100), 
-                               gfx_arena);
+                          MB(100),
+                          MB(100), 
+                          gfx_arena);
   if (!gfx) { return 1; }
   defer { w32_gfx_unload(gfx); };
  
@@ -756,24 +741,18 @@ WinMain(HINSTANCE instance,
 
     // Begin frame
     w32_audio_begin_frame(audio);
-    V2U render_wh = w32_get_client_dims(window);
+    V2U client_wh = w32_get_client_dims(window);
 
 
     // TODO: we shouldn't need to do this. Game should tell renderer aspect ratio
     // and renderer should be able to handle it automatically.
-#if 0 
-    Rect2U render_region = w32_calc_render_region(render_wh.w,
-                                                  render_wh.h,
-                                                  w32_state.aspect_ratio);
-#endif
-    Rect2U rr;
-    rr.min.x = w32_state.render_region_x0;
-    rr.max.x = w32_state.render_region_x1;
-    rr.min.y = w32_state.render_region_y0;
-    rr.max.y = w32_state.render_region_y1;
-    w32_gfx_begin_frame(gfx, 
-                        render_wh, 
-                        rr);
+    F32 game_aspect = 1.f;
+    if (w32_state.game_height)
+      game_aspect = w32_state.game_width / w32_state.game_height;
+    Rect2U render_region = w32_calc_render_region(client_wh.w,
+                                                  client_wh.h,
+                                                  game_aspect);
+    w32_gfx_begin_frame(gfx, client_wh, render_region);
        
     //-Process messages and input
     pf->seconds_since_last_frame = target_secs_per_frame;
@@ -789,9 +768,9 @@ WinMain(HINSTANCE instance,
       pf->screen_mouse_pos.x = cursor_pos.x;
       pf->screen_mouse_pos.y = cursor_pos.y;
       
-      pf->render_mouse_pos.x = pf->screen_mouse_pos.x - w32_state.render_region_x0;
+      pf->render_mouse_pos.x = pf->screen_mouse_pos.x - render_region.min.x;
 
-      pf->render_mouse_pos.y = pf->screen_mouse_pos.y - w32_state.render_region_y0;
+      pf->render_mouse_pos.y = pf->screen_mouse_pos.y - render_region.min.y;
 
 #if 0
       
