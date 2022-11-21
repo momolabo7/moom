@@ -545,6 +545,8 @@ WinMain(HINSTANCE instance,
   //- Initialize window state
   {
     w32_state.is_running = true;
+    w32_state.game_width = 1.f;
+    w32_state.game_height = 1.f;
     
     if (!w32_init_work_queue(&w32_state.work_queue, 8)) {
       return 1;
@@ -557,8 +559,8 @@ WinMain(HINSTANCE instance,
   //- Create window in the middle of the screen
   HWND window;
   {
-    const int w32_w = (int)GAME_INITIAL_WINDOW_WIDTH;
-    const int w32_h = (int)GAME_INITIAL_WINDOW_HEIGHT;
+    const int window_w = (int)800;
+    const int window_h = (int)800;
     const char* title = "Momodevelop: TXT";
     const char* icon_path = "window.ico";
     const int icon_w = 256;
@@ -582,7 +584,7 @@ WinMain(HINSTANCE instance,
       return 1;
     }
     
-    RECT w32_rect = {0};
+    RECT window_rect = {0};
     {
       // NOTE(Momo): Monitor dimensions
       HMONITOR monitor = MonitorFromWindow(0, MONITOR_DEFAULTTONEAREST);
@@ -593,15 +595,15 @@ WinMain(HINSTANCE instance,
       LONG monitor_w = w32_rect_width(monitor_info.rcMonitor);
       LONG monitor_h = w32_rect_height(monitor_info.rcMonitor);
       
-      w32_rect.left = monitor_w/2 - w32_w/2;
-      w32_rect.right = monitor_w/2 + w32_w/2;
-      w32_rect.top = monitor_h/2 - w32_h/2;
-      w32_rect.bottom = monitor_h/2 + w32_h/2;
+      window_rect.left = monitor_w/2 - window_w/2;
+      window_rect.right = monitor_w/2 + window_w/2;
+      window_rect.top = monitor_h/2 - window_h/2;
+      window_rect.bottom = monitor_h/2 + window_h/2;
     }
     
     DWORD style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
     
-    AdjustWindowRectEx(&w32_rect,
+    AdjustWindowRectEx(&window_rect,
                        style,
                        FALSE,
                        0);    
@@ -610,10 +612,10 @@ WinMain(HINSTANCE instance,
                              w32_class.lpszClassName,
                              title,
                              style,
-                             w32_rect.left,
-                             w32_rect.top,
-                             w32_rect_width(w32_rect),
-                             w32_rect_height(w32_rect),
+                             window_rect.left,
+                             window_rect.top,
+                             w32_rect_width(window_rect),
+                             w32_rect_height(window_rect),
                              0,
                              0,
                              instance,
@@ -744,11 +746,8 @@ WinMain(HINSTANCE instance,
     V2U client_wh = w32_get_client_dims(window);
 
 
-    // TODO: we shouldn't need to do this. Game should tell renderer aspect ratio
-    // and renderer should be able to handle it automatically.
-    F32 game_aspect = 1.f;
-    if (w32_state.game_height)
-      game_aspect = w32_state.game_width / w32_state.game_height;
+    // TODO: this feels terrible
+    F32 game_aspect = w32_state.game_width / w32_state.game_height;
     Rect2U render_region = w32_calc_render_region(client_wh.w,
                                                   client_wh.h,
                                                   game_aspect);

@@ -12,8 +12,6 @@
 // TODO: Remove these somehow
 #define GAME_WIDTH 800.f
 #define GAME_HEIGHT 800.f
-#define GAME_INITIAL_WINDOW_WIDTH 800
-#define GAME_INITIAL_WINDOW_HEIGHT 800
 
 
 //~Platform File API
