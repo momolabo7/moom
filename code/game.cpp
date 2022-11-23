@@ -18,7 +18,6 @@ game_update_and_render(Platform* pf)
   game_profile_block(GAME);
   // Initialization
   if (!platform->game || platform->reloaded) {
-    // Initialize globals
     ba_clear(platform->game_arena);
     platform->game = ba_push(Game, platform->game_arena);
     Game* game = (Game*)platform->game;

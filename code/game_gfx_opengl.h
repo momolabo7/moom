@@ -1351,11 +1351,11 @@ ogl_end_frame(Opengl* ogl) {
         F32 lerped_y = lerp_f32(0.5f, -0.5f, data->anchor.y);
         M44 a = m44_translation(lerped_x, lerped_y);
         
-        Rect2 uv = {};
-        uv.min.x = (F32)data->texel_uv.min.x / texture->width;
-        uv.min.y = (F32)data->texel_uv.min.y / texture->height;
-        uv.max.x = (F32)data->texel_uv.max.x / texture->width;
-        uv.max.y = (F32)data->texel_uv.max.y / texture->height;
+        Rect2 uv = {0};
+        uv.min.x = (F32)data->texel_x0 / texture->width;
+        uv.min.y = (F32)data->texel_y0 / texture->height;
+        uv.max.x = (F32)data->texel_x1 / texture->width;
+        uv.max.y = (F32)data->texel_y1 / texture->height;
         
         _ogl_push_sprite(ogl, 
                          transform*a,

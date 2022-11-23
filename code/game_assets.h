@@ -15,12 +15,18 @@ struct Game_Bitmap {
 };
 
 struct Game_Sprite {
-  Rect2U texel_uv;
+
+  U32 texel_x0;
+  U32 texel_y0;
+  U32 texel_x1;
+  U32 texel_y1;
+
   Game_Bitmap_ID bitmap_asset_id;
 };
 
 struct Game_Font_Glyph{
-  Rect2U texel_uv;
+  U32 texel_x0, texel_y0;
+  U32 texel_x1, texel_y1;
   Rect2 box;
   Game_Bitmap_ID bitmap_asset_id;
   F32 horizontal_advance;
@@ -216,7 +222,12 @@ init_game_assets(Game_Assets* ga,
         } break;
         case GAME_ASSET_TYPE_SPRITE: {
           asset->sprite.bitmap_asset_id.value = karu_asset.sprite.bitmap_asset_id;
-          asset->sprite.texel_uv = karu_asset.sprite.texel_uv;
+
+          asset->sprite.texel_x0 = karu_asset.sprite.texel_x0;
+          asset->sprite.texel_y0 = karu_asset.sprite.texel_y0;
+          asset->sprite.texel_x1 = karu_asset.sprite.texel_x1;
+          asset->sprite.texel_y1 = karu_asset.sprite.texel_y1;
+
           asset->state = GAME_ASSET_STATE_LOADED;
         } break;
         case GAME_ASSET_TYPE_FONT: {
@@ -246,7 +257,11 @@ init_game_assets(Game_Assets* ga,
                           &karu_glyph); 
             
             Game_Font_Glyph* glyph = glyphs + glyph_index;
-            glyph->texel_uv = karu_glyph.texel_uv;
+            glyph->texel_x0 = karu_glyph.texel_x0;
+            glyph->texel_y0 = karu_glyph.texel_y0;
+            glyph->texel_x1 = karu_glyph.texel_x1;
+            glyph->texel_y1 = karu_glyph.texel_y1;
+
             glyph->bitmap_asset_id = Game_Bitmap_ID{ karu_glyph.bitmap_asset_id };
             glyph->box = karu_glyph.box;
             glyph->horizontal_advance = karu_glyph.horizontal_advance;

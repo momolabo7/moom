@@ -542,7 +542,7 @@ WinMain(HINSTANCE instance,
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
   
-  //- Initialize window state
+  //- Initialize w32 state
   {
     w32_state.is_running = true;
     w32_state.game_width = 1.f;
@@ -686,10 +686,7 @@ WinMain(HINSTANCE instance,
   defer { w32_free_memory_from_arena(gfx_arena); };
  
     
-  Gfx* gfx = w32_gfx_load(window, 
-                          MB(100),
-                          MB(100), 
-                          gfx_arena);
+  Gfx* gfx = w32_gfx_load(window, MB(100), MB(100), gfx_arena);
   if (!gfx) { return 1; }
   defer { w32_gfx_unload(gfx); };
  
@@ -768,7 +765,6 @@ WinMain(HINSTANCE instance,
       pf->screen_mouse_pos.y = cursor_pos.y;
       
       pf->render_mouse_pos.x = pf->screen_mouse_pos.x - render_region.min.x;
-
       pf->render_mouse_pos.y = pf->screen_mouse_pos.y - render_region.min.y;
 
 #if 0
@@ -832,7 +828,7 @@ WinMain(HINSTANCE instance,
                              performance_frequency);
       if (secs_elapsed_after_sleep > target_secs_per_frame) {
         // log oversleep?
-        w32_log("[Win] Overslept! %f vs %f\n", secs_elapsed_after_sleep,
+        w32_log("[w32] Overslept! %f vs %f\n", secs_elapsed_after_sleep,
                 target_secs_per_frame);
       }
       

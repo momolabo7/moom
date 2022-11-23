@@ -55,7 +55,12 @@ struct Karu_Bitmap {
 
 struct Karu_Font_Glyph {
   U32 bitmap_asset_id; 
-  Rect2U texel_uv;
+  
+  U32 texel_x0;
+  U32 texel_y0;
+  U32 texel_x1;
+  U32 texel_y1;
+
   Rect2 box;
   U32 codepoint;
   F32 horizontal_advance;
@@ -79,7 +84,11 @@ struct Karu_Font {
 
 struct Karu_Sprite {
   U32 bitmap_asset_id; 
-  Rect2U texel_uv;
+  U32 texel_x0;
+  U32 texel_y0;
+  U32 texel_x1;
+  U32 texel_y1;
+
 };
 
 struct Karu_Asset {

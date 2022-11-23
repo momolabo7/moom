@@ -125,8 +125,11 @@ struct Gfx_Command_View {
 struct Gfx_Command_Sprite {
   V2 pos;
   V2 size;
-  Rect2U texel_uv;
-  Rect2 uv; 
+
+  U32 texel_x0, texel_y0;
+  U32 texel_x1, texel_y1;
+
+
   RGBA colors;
   U32 texture_index;
   V2 anchor;
@@ -175,7 +178,7 @@ static void gfx_complete_texture_transfer(Gfx_Texture_Payload* entry);
 static void gfx_cancel_texture_transfer(Gfx_Texture_Payload* entry);
 static void gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height, U32 layers);
 static void gfx_push_colors(Gfx* g, RGBA colors); 
-static void gfx_push_sprite(Gfx* g, RGBA colors, V2 pos, V2 size, V2 anchor, U32 texture_index, Rect2U texel_uv);
+static void gfx_push_sprite(Gfx* g, RGBA colors, V2 pos, V2 size, V2 anchor, U32 texture_index, U32 texel_x0, U32 texel_y0, U32 texel_x1, U32 texel_y1);
 static void gfx_push_filled_rect(Gfx* g, RGBA colors, V2 pos, F32 rot, V2 size);
 static void gfx_push_filled_triangle(Gfx* g, RGBA colors, V2 p0, V2 p1, V2 p2);
 static void gfx_push_advance_depth(Gfx* g); 
@@ -354,13 +357,19 @@ gfx_push_sprite(Gfx* g,
                 V2 size,
                 V2 anchor,
                 U32 texture_index,
-                Rect2U texel_uv)
+                U32 texel_x0, U32 texel_y0, 
+                U32 texel_x1, U32 texel_y1)
 {
   Gfx_Command_Queue* c = &g->command_queue; 
   auto* data = _gfx_push_command<Gfx_Command_Sprite>(c, GFX_COMMAND_TYPE_SPRITE);
   data->colors = colors;
   data->texture_index = texture_index;
-  data->texel_uv = texel_uv;
+
+  data->texel_x0 = texel_x0;
+  data->texel_y0 = texel_y0;
+  data->texel_x1 = texel_x1;
+  data->texel_y1 = texel_y1;
+
   data->pos = pos;
   data->size = size;
   data->anchor = anchor;

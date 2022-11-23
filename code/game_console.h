@@ -130,8 +130,8 @@ update_and_render_console(Console* dc, Game_Sprite_ID blank_sprite, Game_Font_ID
   V2 input_area_pos = { console_width/2, line_height/2 };
   
   paint_sprite(blank_sprite, 
-               GAME_MIDPOINT, 
-               GAME_DIMENSIONS,
+               v2_set(GAME_WIDTH/2, GAME_HEIGHT/2), 
+               v2_set(GAME_WIDTH, GAME_HEIGHT),
                rgba(0.f, 0.f, 0.f, 0.8f));
   gfx_advance_depth(gfx);
   

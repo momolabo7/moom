@@ -18,7 +18,10 @@ paint_sprite(Game_Sprite_ID sprite_id,
                   color,
                   pos, size, anchor,
                   bitmap->renderer_texture_handle, 
-                  sprite->texel_uv);
+                  sprite->texel_x0,
+                  sprite->texel_y0,
+                  sprite->texel_x1,
+                  sprite->texel_y1);
 }
 
 
@@ -57,7 +60,10 @@ paint_text(Game_Font_ID font_id,
                     color,
                     pos, size, anchor,
                     bitmap->renderer_texture_handle, 
-                    glyph->texel_uv);
+                    glyph->texel_x0,
+                    glyph->texel_y0,
+                    glyph->texel_x1,
+                    glyph->texel_y1);
   }
   
 }
@@ -110,7 +116,10 @@ paint_text_center_aligned(Game_Font_ID font_id,
                     color,
                     pos, size, anchor,
                     bitmap->renderer_texture_handle, 
-                    glyph->texel_uv);
+                    glyph->texel_x0,
+                    glyph->texel_y0,
+                    glyph->texel_x1,
+                    glyph->texel_y1);
   }
   
 }

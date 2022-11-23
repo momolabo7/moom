@@ -9,8 +9,8 @@ update_and_render_inspector(Game_Sprite_ID rect_sprite, Game_Font_ID font)
 {
 
   paint_sprite(rect_sprite, 
-               GAME_MIDPOINT, 
-               GAME_DIMENSIONS,
+               v2_set(GAME_WIDTH/2, GAME_HEIGHT/2), 
+               v2_set(GAME_WIDTH, GAME_HEIGHT),
                {0.f, 0.f, 0.f, 0.5f});
   gfx_advance_depth(gfx);
   

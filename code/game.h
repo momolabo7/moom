@@ -28,12 +28,6 @@ static struct Profiler* profiler;
 #define game_profile_end(...) 
 #endif 
 
-// TODO: REMOVE
-#define GAME_DIMENSIONS V2 { GAME_WIDTH, GAME_HEIGHT } 
-#define GAME_MIDPOINT V2 { GAME_WIDTH/2, GAME_HEIGHT/2 } 
-
-
-
 
 #include "game_profiler.h"
 #include "game_assets.h"
@@ -67,6 +61,9 @@ typedef enum Game_Mode_Type {
 
 typedef struct Game {
   Game_Show_Debug_Type show_debug_type;
+
+  F32 design_width;
+  F32 design_height;
     
   // Bump_Allocators
   Bump_Allocator asset_arena;
@@ -103,6 +100,11 @@ game_mode_initialized(Game* game) {
   return game->mode_context != null;
 }
 
+static void 
+game_set_design_dims(Game* game, F32 design_width, F32 design_height) {
+  game->design_width = design_width;
+  game->design_height = design_height;
+}
 
 static void*
 game_allocate_mode_size(Game* game, UMI size) {

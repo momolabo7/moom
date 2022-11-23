@@ -196,7 +196,10 @@ sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena)
 
         Karu_Sprite* sprite = &asset->sprite;
         sprite->bitmap_asset_id = source->sprite.bitmap_asset_id;
-        sprite->texel_uv = source->sprite.texel_uv;
+        sprite->texel_x0 = source->sprite.texel_uv.min.x;
+        sprite->texel_y0 = source->sprite.texel_uv.min.y;
+        sprite->texel_x1 = source->sprite.texel_uv.max.x;
+        sprite->texel_y1 = source->sprite.texel_uv.max.y;
   
       } break;
       case SUI_PACKER_SOURCE_TYPE_FONT: {
@@ -243,7 +246,12 @@ sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena)
           Karu_Font_Glyph glyph = {0};
           glyph.bitmap_asset_id = source->font.bitmap_asset_id;
           glyph.codepoint = glyph_rect_context->font_glyph.codepoint;
-          glyph.texel_uv = sui_rp_rect_to_rect2u(glyph_rect);
+
+          glyph.texel_x0 = glyph_rect->x;
+          glyph.texel_y0 = glyph_rect->y;
+          glyph.texel_x1 = glyph_rect->x + glyph_rect->w;
+          glyph.texel_y1 = glyph_rect->y + glyph_rect->h;
+
 
           U32 ttf_glyph_index = ttf_get_glyph_index(ttf, glyph.codepoint);
 

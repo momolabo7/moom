@@ -50,8 +50,8 @@ update_and_render_profiler(Game_Sprite_ID blank_sprite, Game_Font_ID font)
 
   // Overlay
   paint_sprite(blank_sprite, 
-               GAME_MIDPOINT, 
-               GAME_DIMENSIONS,
+               v2_set(GAME_WIDTH/2, GAME_HEIGHT/2), 
+               v2_set(GAME_WIDTH, GAME_HEIGHT),
                rgba(0.f, 0.f, 0.f, 0.5f));
   gfx_advance_depth(gfx);
   

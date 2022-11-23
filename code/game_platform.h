@@ -60,8 +60,6 @@ typedef void  Platform_Debug_Log(const char* fmt, ...);
 typedef U64   Platform_Get_Performance_Counter();
 typedef void  Platform_Set_Game_Dims(F32 width, F32 height);
 
-typedef void  Platform_Get_Window_Size(U32* width, U32* height);
-typedef void  Platform_Set_Render_Region(U32 x, U32 y, U32 width, U32 height);
 
 //
 // Audio API
@@ -145,15 +143,7 @@ typedef struct Platform {
   // Logging
   Platform_Debug_Log* debug_log;
 
-  // Window related.
-  // TODO: Not sure if we should really expose this because asking game to
-  // know about pixel width/height of a window (and render region) is a bit sus.
-  // ...
-  // It's probably not a good idea, but we can deal with it when we are almost done
-  // with some kind of game.
-  Platform_Get_Window_Size* get_window_size;
   Platform_Set_Game_Dims* set_game_dims;
-  Platform_Set_Render_Region* set_render_region;
 
   // For game to use
   void* game;
