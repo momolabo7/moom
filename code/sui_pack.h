@@ -7,7 +7,10 @@ enum Sui_Packer_Source_Type {
 
 struct Sui_Packer_Source_Sprite {
   U32 bitmap_asset_id;
-  Rect2U texel_uv; 
+  U32 texel_x0;
+  U32 texel_y0;
+  U32 texel_x1;
+  U32 texel_y1;
 };
 
 struct Sui_Packer_Source_Bitmap {
@@ -94,7 +97,10 @@ sui_pack_push_sprite(Sui_Packer* p, Sui_Atlas_Sprite* sprite, U32 bitmap_asset_i
   source->type = SUI_PACKER_SOURCE_TYPE_SPRITE;
 
   source->sprite.bitmap_asset_id = bitmap_asset_id;
-  source->sprite.texel_uv = sui_rp_rect_to_rect2u(sprite->rect);
+  source->sprite.texel_x0 = sprite->rect->x;
+  source->sprite.texel_y0 = sprite->rect->y;
+  source->sprite.texel_x1 = sprite->rect->x + sprite->rect->w;
+  source->sprite.texel_y1 = sprite->rect->y + sprite->rect->h;
 
   //Karu_Sprite* sprite = &asset->sprite;
   
@@ -196,10 +202,10 @@ sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena)
 
         Karu_Sprite* sprite = &asset->sprite;
         sprite->bitmap_asset_id = source->sprite.bitmap_asset_id;
-        sprite->texel_x0 = source->sprite.texel_uv.min.x;
-        sprite->texel_y0 = source->sprite.texel_uv.min.y;
-        sprite->texel_x1 = source->sprite.texel_uv.max.x;
-        sprite->texel_y1 = source->sprite.texel_uv.max.y;
+        sprite->texel_x0 = source->sprite.texel_x0;
+        sprite->texel_y0 = source->sprite.texel_y0;
+        sprite->texel_x1 = source->sprite.texel_x1;
+        sprite->texel_y1 = source->sprite.texel_y1;
   
       } break;
       case SUI_PACKER_SOURCE_TYPE_FONT: {
