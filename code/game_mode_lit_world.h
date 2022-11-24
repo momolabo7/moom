@@ -21,9 +21,12 @@ struct Lit_Light_Intersection_List {
   Lit_Light_Intersection e[256];
 };
 
+struct Lit_Light_Triangle {
+  V2 p0, p1, p2;
+};
 struct Lit_Light_Triangle_List {
   U32 count;
-  Tri2 e[256];
+  Lit_Light_Triangle e[256];
 };
 
 #if LIT_DEBUG_LIGHT

@@ -91,11 +91,11 @@ lit_get_ray_intersection_time_wrt_edges(Ray2 ray,
 }
 static void
 lit_push_triangle(Lit_Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
-  Tri2* tri = al_append(&l->triangles);
+  Lit_Light_Triangle* tri = al_append(&l->triangles);
   assert(tri);
-  tri->pts[0] = p0;
-  tri->pts[1] = p1;
-  tri->pts[2] = p2;
+  tri->p0 = p0;
+  tri->p1 = p1;
+  tri->p2 = p2;
 }
 
 
@@ -310,12 +310,12 @@ lit_draw_lights(Lit* lit) {
     Lit_Light* l = al_at(lights, light_index);
     al_foreach(tri_index, &l->triangles)
     {
-      Tri2* lt = al_at(&l->triangles, tri_index);
+      Lit_Light_Triangle* lt = al_at(&l->triangles, tri_index);
       gfx_push_filled_triangle(gfx, 
                                hex_to_rgba(l->color),
-                               lt->pts[0],
-                               lt->pts[1],
-                               lt->pts[2]);
+                               lt->p0,
+                               lt->p1,
+                               lt->p2);
     } 
     gfx_advance_depth(gfx);
   }

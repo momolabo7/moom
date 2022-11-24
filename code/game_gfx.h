@@ -1,12 +1,13 @@
 // This file and game_platform.h contain structs that need to be 
 // initialized by the OS and passed to the main Game_Update() 
-// function.
+// function. It must be written in C for portability.
 //
 // All the code here is a representation of how the 
 // game views 'rendering'. The game simply adds commands
 // to a command queue, which will be dispatched to the 
 // appropriate graphics API, which details will be implemented
 // on top of the Gfx class (through inheritance or composition). 
+//
 //
 // Most importantly, other than the commands, the game
 // expects the following rules in its rendering logic:
@@ -22,28 +23,23 @@
 // >> 3. Bottom left
 // 
 // - Indices layout 2 triangles in the following fashion:
-// * ---
-// * |/|
-// * ---
-// */
-
-#ifndef GAME_RENDERER_H
-#define GAME_RENDERER_H
-
-#include "momo_common.h"
-#include "momo_shapes.h" 
-#include "momo_colors.h"
+//  ---
+//  |/|
+//  ---
+// 
+#ifndef GAME_GFX_H
+#define GAME_GFX_H
 
 #define GFX_MAX_TEXTURES 256
 
 //-Texture Queue API
-enum Gfx_Texture_Payload_State {
+typedef enum Gfx_Texture_Payload_State {
   GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
   GFX_TEXTURE_PAYLOAD_STATE_LOADING,
   GFX_TEXTURE_PAYLOAD_STATE_READY,
-};
+} Gfx_Texture_Payload_State;
 
-struct Gfx_Texture_Payload {
+typedef struct Gfx_Texture_Payload {
   volatile Gfx_Texture_Payload_State state;
   UMI transfer_memory_start;
   UMI transfer_memory_end;
@@ -53,9 +49,9 @@ struct Gfx_Texture_Payload {
   U32 texture_width;
   U32 texture_height;
   void* texture_data;
-};
+} Gfx_Texture_Payload;
 
-struct Gfx_Texture_Queue {
+typedef struct Gfx_Texture_Queue {
   U8* transfer_memory;
   UMI transfer_memory_size;
   UMI transfer_memory_start;
@@ -65,16 +61,17 @@ struct Gfx_Texture_Queue {
   UMI first_payload_index;
   UMI payload_count;
   
-};
+} Gfx_Texture_Queue;
 
-//-Command API
+////////////////////////////////////////////////
+// Command API
 
-struct Gfx_Command {
+typedef struct Gfx_Command {
   U32 id; // type id from user
   void* data;
-};
+} Gfx_Command;
 
-struct Gfx_Command_Queue {
+typedef struct Gfx_Command_Queue {
   // Push buffer
 	U8* memory;
   UMI memory_size;
@@ -82,9 +79,9 @@ struct Gfx_Command_Queue {
 	UMI entry_pos;
 	UMI entry_start;
 	UMI entry_count;
-};
+} Gfx_Command_Queue;
 
-enum Gfx_Blend_Type {
+typedef enum Gfx_Blend_Type {
   GFX_BLEND_TYPE_ZERO,
   GFX_BLEND_TYPE_ONE,
   GFX_BLEND_TYPE_SRC_COLOR,
@@ -95,9 +92,9 @@ enum Gfx_Blend_Type {
   GFX_BLEND_TYPE_INV_DST_ALPHA,
   GFX_BLEND_TYPE_DST_COLOR,
   GFX_BLEND_TYPE_INV_DST_COLOR,
-};
+} Gfx_Blend_Type;
 
-enum Gfx_Command_Type {
+typedef enum Gfx_Command_Type {
   GFX_COMMAND_TYPE_CLEAR,
   GFX_COMMAND_TYPE_TRIANGLE,
   GFX_COMMAND_TYPE_RECT,
@@ -108,21 +105,21 @@ enum Gfx_Command_Type {
   GFX_COMMAND_TYPE_BLEND,
   GFX_COMMAND_TYPE_VIEW,
   GFX_COMMAND_TYPE_ADVANCE_DEPTH,
-};
+}Gfx_Command_Type;
 
 
-struct Gfx_Command_Clear {
+typedef struct Gfx_Command_Clear {
   RGBA colors;
-};
+}Gfx_Command_Clear;
 
 
-struct Gfx_Command_View {
+typedef struct Gfx_Command_View {
   F32 pos_x, pos_y;
   F32 min_x, max_x;
   F32 min_y, max_y;
-};
+} Gfx_Command_View;
 
-struct Gfx_Command_Sprite {
+typedef struct Gfx_Command_Sprite {
   V2 pos;
   V2 size;
 
@@ -133,38 +130,41 @@ struct Gfx_Command_Sprite {
   RGBA colors;
   U32 texture_index;
   V2 anchor;
-};
+} Gfx_Command_Sprite;
 
-struct Gfx_Command_Delete_Texture {
+typedef struct Gfx_Command_Delete_Texture {
   U32 texture_index;
-};
+} Gfx_Command_Delete_Texture;
 
-struct Gfx_Command_Delete_All_Textures {};
-struct Gfx_Command_Advance_Depth {};
+typedef struct Gfx_Command_Delete_All_Textures {
+} Gfx_Command_Delete_All_Textures;
 
-struct Gfx_Command_Rect {
+typedef struct Gfx_Command_Advance_Depth {
+} Gfx_Command_Advance_Depth;
+
+typedef struct Gfx_Command_Rect {
   RGBA colors;
   V2 pos;
   F32 rot;
   V2 size;
-};
+} Gfx_Command_Rect;
 
-struct Gfx_Command_Triangle {
+typedef struct Gfx_Command_Triangle {
   RGBA colors;
   V2 p0, p1, p2;
-};
+} Gfx_Command_Triangle;
 
-struct Gfx_Command_Blend {
+typedef struct Gfx_Command_Blend {
   Gfx_Blend_Type src;
   Gfx_Blend_Type dst;
-};
+} Gfx_Command_Blend;
 
 
 //- Renderer API
-struct Gfx {	
+typedef struct Gfx {
   Gfx_Command_Queue command_queue;
   Gfx_Texture_Queue texture_queue;
-};
+} Gfx;
 
 static void gfx_clear_commands(Gfx* g);
 static void gfx_init_command_queue(Gfx* g, void* data, UMI size);

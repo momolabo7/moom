@@ -227,8 +227,8 @@ lit_update_sensors(Lit* lit,
       
       al_foreach(tri_index, &light->triangles)
       {
-        Tri2 tri = *al_at(&light->triangles, tri_index);
-        if (bonk_tri2_pt2(tri, sensor->pos)) 
+        Lit_Light_Triangle* tri = al_at(&light->triangles, tri_index);
+        if (bonk_tri2_pt2(tri->p0, tri->p1, tri->p2, sensor->pos)) 
         {
           // TODO(Momo): Probably not the right way do sensor
           current_color += light->color >> 8 << 8; // ignore alpha

@@ -147,7 +147,7 @@ w32_init_work_queue(W32_Work_Queue* wq, U32 thread_count) {
   }
   
   return true;
-};;p[popl
+}
 
 // NOTE(Momo): This is not very thread safe. Other threads shouldn't call this.
 static void
@@ -204,7 +204,6 @@ w32_return_file(W32_File_Cabinet* c, W32_File* f) {
   c->free_files[c->free_file_count++] = f->cabinet_index;
 }
 
-struct 
 
 //~Global variables
 struct W32_State{

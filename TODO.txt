@@ -1,5 +1,4 @@
 Game
-  debug coordinates on mouse
   sensor should take into account all sides of circle
   sensor should remove particles and just be 'glowing'
 
@@ -12,7 +11,6 @@ Assets
 Engine
   Shapes should not use V2
   PNG/TTF should not use Bump_Allocator and use their own? A bit tricky
-
 	Debugger
 		Arena Profiler
 
