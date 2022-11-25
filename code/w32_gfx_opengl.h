@@ -297,8 +297,9 @@ if (!opengl->name) { return null; }
 
 
 static void
-w32_gfx_begin_frame(Gfx* renderer,  V2U render_wh, Rect2U region) {
-  return ogl_begin_frame((Opengl*)renderer, render_wh, region);
+w32_gfx_begin_frame(Gfx* renderer,  V2U render_wh, U32 region_x0, U32 region_y0, U32 region_x1, U32 region_y1) 
+{
+  return ogl_begin_frame((Opengl*)renderer, render_wh, region_x0, region_y0, region_x1, region_y1);
 }
 
 static void

@@ -743,13 +743,11 @@ WinMain(HINSTANCE instance,
     V2U client_wh = w32_get_client_dims(window);
 
 
-    {
-      F32 game_aspect = w32_state.game_width / w32_state.game_height;
-      Rect2U rr = w32_calc_render_region(client_wh.w,
-                                         client_wh.h,
-                                         game_aspect);
-      w32_gfx_begin_frame(gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
-    }
+    F32 game_aspect = w32_state.game_width / w32_state.game_height;
+    RECT rr = w32_calc_render_region(client_wh.w,
+                                     client_wh.h,
+                                     game_aspect);
+    w32_gfx_begin_frame(gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
        
     //-Process messages and input
     pf->seconds_since_last_frame = target_secs_per_frame;
@@ -765,8 +763,8 @@ WinMain(HINSTANCE instance,
       pf->screen_mouse_pos.x = cursor_pos.x;
       pf->screen_mouse_pos.y = cursor_pos.y;
       
-      pf->render_mouse_pos.x = pf->screen_mouse_pos.x - render_region.min.x;
-      pf->render_mouse_pos.y = pf->screen_mouse_pos.y - render_region.min.y;
+      pf->render_mouse_pos.x = pf->screen_mouse_pos.x - rr.left;
+      pf->render_mouse_pos.y = pf->screen_mouse_pos.y - rr.bottom;
 
 #if 0
       

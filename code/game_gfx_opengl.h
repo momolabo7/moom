@@ -458,8 +458,8 @@ _ogl_align_viewport(Opengl* ogl)
   w = ogl->region_x1 - ogl->region_x0;
   h = ogl->region_y1 - ogl->region_y0;
   
-  ogl->glScissor(0, 0, render_wh.w, render_wh.h);
-  ogl->glViewport(0, 0, render_wh.w, render_wh.h);
+  ogl->glScissor(0, 0, ogl->render_wh.w, ogl->render_wh.h);
+  ogl->glViewport(0, 0, ogl->render_wh.w, ogl->render_wh.h);
   ogl->glClearColor(0.f, 0.f, 0.f, 0.f);
   ogl->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   ogl->glScissor(x, y, w, h);
@@ -1178,7 +1178,7 @@ static void
 ogl_end_frame(Opengl* ogl) {
   Gfx* gfx = &ogl->gfx;
   
-  _ogl_align_viewport(ogl, ogl->render_wh, ogl->platform_render_region);
+  _ogl_align_viewport(ogl);
   _ogl_process_texture_queue(ogl);
   _ogl_begin_sprites(ogl);
   _ogl_begin_triangles(ogl);
