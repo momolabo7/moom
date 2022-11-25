@@ -7,11 +7,6 @@ typedef struct Rect2 {
 }Rect2;
 
 
-typedef struct Ray2 {
-  V2 pt;
-  V2 dir;
-}Ray2;
-
 
 ///////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
