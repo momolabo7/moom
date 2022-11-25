@@ -23,7 +23,8 @@ w32_gfx_unload(Gfx* renderer);
 static void
 w32_gfx_begin_frame(Gfx* renderer, 
                     V2U render_wh, 
-                    Rect2U render_region);
+                    U32 region_x0, U32 region_y0, 
+                    U32 region_x1, U32 region_y1);
 static void 
 w32_gfx_end_frame(Gfx* renderer);
 

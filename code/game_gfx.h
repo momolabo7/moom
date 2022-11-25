@@ -1,5 +1,5 @@
 // This file and game_platform.h contain structs that need to be 
-// initialized by the OS and passed to the main Game_Update() 
+// initialized by the OS and passed to the main Game_Render_And_Update() 
 // function. It must be written in C for portability.
 //
 // All the code here is a representation of how the 
@@ -166,10 +166,13 @@ typedef struct Gfx {
   Gfx_Texture_Queue texture_queue;
 } Gfx;
 
-static void gfx_clear_commands(Gfx* g);
+
+// 
 static void gfx_init_command_queue(Gfx* g, void* data, UMI size);
-static Gfx_Command* gfx_get_command(Gfx* g, U32 index);
 static void gfx_init_texture_queue(Gfx* g, void* data, UMI size);
+
+static void gfx_clear_commands(Gfx* g);
+static Gfx_Command* gfx_get_command(Gfx* g, U32 index);
 
 static void gfx_next_texture_handle();
 

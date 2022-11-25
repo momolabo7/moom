@@ -46,38 +46,38 @@ w32_get_client_dims(HWND window) {
 	
 }
 
-static Rect2U 
+static RECT 
 w32_calc_render_region(U32 window_w, 
                        U32 window_h, 
                        F32 aspect_ratio)
 {
 	assert(aspect_ratio > 0.f && window_w > 0 && window_h > 0);
   
-	Rect2U ret;
+	RECT ret;
 	
 	F32 optimal_window_w = (F32)window_h * aspect_ratio;
 	F32 optimal_window_h = (F32)window_w * 1.f/aspect_ratio;
 	
 	if (optimal_window_w > (F32)window_w) {
 		// NOTE(Momo): width has priority - top and bottom bars
-		ret.min.x = 0;
-		ret.max.x = window_w;
+		ret.left = 0;
+		ret.right = window_w;
 		
 		F32 empty_height = (F32)window_h - optimal_window_h;
 		
-		ret.min.y = (U32)(empty_height * 0.5f);
-		ret.max.y = ret.min.y + (U32)optimal_window_h;
+		ret.bottom = (U32)(empty_height * 0.5f);
+		ret.top = ret.bottom + (U32)optimal_window_h;
 	}
 	else {
 		// NOTE(Momo): height has priority - left and right bars
-		ret.min.y = 0;
-		ret.max.y = window_h;
+		ret.bottom = 0;
+		ret.top = window_h;
 		
 		
 		F32 empty_width = (F32)window_w - optimal_window_w;
 		
-		ret.min.x = (U32)(empty_width * 0.5f);
-		ret.max.x = ret.min.x + (U32)optimal_window_w;
+		ret.left = (U32)(empty_width * 0.5f);
+		ret.right = ret.left + (U32)optimal_window_w;
 	}
 	
 	return ret;

@@ -743,12 +743,13 @@ WinMain(HINSTANCE instance,
     V2U client_wh = w32_get_client_dims(window);
 
 
-    // TODO: this feels terrible
-    F32 game_aspect = w32_state.game_width / w32_state.game_height;
-    Rect2U render_region = w32_calc_render_region(client_wh.w,
-                                                  client_wh.h,
-                                                  game_aspect);
-    w32_gfx_begin_frame(gfx, client_wh, render_region);
+    {
+      F32 game_aspect = w32_state.game_width / w32_state.game_height;
+      Rect2U rr = w32_calc_render_region(client_wh.w,
+                                         client_wh.h,
+                                         game_aspect);
+      w32_gfx_begin_frame(gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
+    }
        
     //-Process messages and input
     pf->seconds_since_last_frame = target_secs_per_frame;

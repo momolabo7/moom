@@ -13,7 +13,6 @@
 # define OGL_MAX_TRIANGLES 4096
 #endif
 
-
 // Opengl typedefs
 #define GL_TRUE                 1
 #define GL_FALSE                0
@@ -218,8 +217,12 @@ typedef struct {
 struct Opengl {
   Gfx gfx; // Must be first member
 
-  V2U platform_render_wh;
-  Rect2U platform_render_region;
+  V2U render_wh;
+
+  U32 region_x0; 
+  U32 region_y0; 
+  U32 region_x1;
+  U32 region_y1;
 
   Sprite_Batch sprite_batch;
   Triangle_Batch triangle_batch;
@@ -279,13 +282,8 @@ static B32 ogl_init(Opengl* ogl,
                     U32 command_queue_size, 
                     void* texture_queue_memory,
                     U32 texture_queue_size);
-static void ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region);
+static void ogl_begin_frame(Opengl* ogl, V2U render_wh, U32 region_x0, U32 region_y0, U32 region_x1, U32 region_y1);
 static void ogl_end_frame(Opengl* ogl);
-
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
@@ -451,16 +449,14 @@ _ogl_attach_shader(Opengl* ogl,
 }
 
 static void 
-_ogl_align_viewport(Opengl* ogl, 
-                    V2U render_wh, 
-                    Rect2U region) 
+_ogl_align_viewport(Opengl* ogl) 
 {
   
   U32 x, y, w, h;
-  x = region.min.x;
-  y = region.min.y;
-  w = region.max.x - region.min.x;
-  h = region.max.y - region.min.y;
+  x = ogl->region_x0;
+  y = ogl->region_y0;
+  w = ogl->region_x1 - ogl->region_x0;
+  h = ogl->region_y1 - ogl->region_y0;
   
   ogl->glScissor(0, 0, render_wh.w, render_wh.h);
   ogl->glViewport(0, 0, render_wh.w, render_wh.h);
@@ -1161,11 +1157,18 @@ _ogl_process_texture_queue(Opengl* ogl) {
 }
 
 static void
-ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) 
+ogl_begin_frame(Opengl* ogl, V2U render_wh,
+                U32 region_x0, U32 region_y0, 
+                U32 region_x1, U32 region_y1) 
 {
   gfx_clear_commands(&ogl->gfx);  
-  ogl->platform_render_wh = render_wh;
-  ogl->platform_render_region = region;
+
+  ogl->render_wh = render_wh;
+
+  ogl->region_x0 = region_x0;
+  ogl->region_y0 = region_y0;
+  ogl->region_x1 = region_x1;
+  ogl->region_y1 = region_y1;
 
   ogl->current_layer = 1000.f;
 }
@@ -1175,7 +1178,7 @@ static void
 ogl_end_frame(Opengl* ogl) {
   Gfx* gfx = &ogl->gfx;
   
-  _ogl_align_viewport(ogl, ogl->platform_render_wh, ogl->platform_render_region);
+  _ogl_align_viewport(ogl, ogl->render_wh, ogl->platform_render_region);
   _ogl_process_texture_queue(ogl);
   _ogl_begin_sprites(ogl);
   _ogl_begin_triangles(ogl);
