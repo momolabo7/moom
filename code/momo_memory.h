@@ -47,7 +47,7 @@ static void   arn_clear(Arena* a);
 static void*  arn_push_size(Arena* a, UMI size, UMI align);
 static void*  arn_push_size_zero(Arena* a, UMI size, UMI align); 
 static B32    arn_partition(Arena* a, Arena* partition, UMI size, UMI align);
-static B32    arn_partition_with_remaining(Arena* a, Arena* parition, UMI align);
+static B32    arn_partition_with_remaining(Arena* a, Arena* partition, UMI align);
 static UMI    arn_remaining(Arena* a);
 
 #define arn_push_arr_align(t,b,n,a) (t*)arn_push_size(b, sizeof(t)*(n), a)

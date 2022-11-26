@@ -545,6 +545,16 @@ w32_set_game_dims(F32 width, F32 height) {
   monitor_info.cbSize = sizeof(monitor_info);
   GetMonitorInfo(monitor, &monitor_info); 
 
+  RECT client_dims;
+  GetClientRect(w32_state.window, &client_dims); 
+
+  RECT window_dims;
+  GetWindowRect(w32_state.window, &window_dims);
+
+  POINT diff;
+  diff.x = (window_dims.right - window_dims.left) - client_dims.right;
+  diff.y = (window_dims.bottom - window_dims.top) - client_dims.bottom;
+
   LONG monitor_w = w32_rect_width(monitor_info.rcMonitor);
   LONG monitor_h = w32_rect_height(monitor_info.rcMonitor);
  
@@ -552,7 +562,7 @@ w32_set_game_dims(F32 width, F32 height) {
   LONG top = monitor_h/2 - (U32)height/2;
 
   // Make it right at the center!
-  MoveWindow(w32_state.window, left, top, (S32)width, (S32)height, TRUE);
+  MoveWindow(w32_state.window, left, top, (S32)width + diff.x, (S32)height + diff.y, TRUE);
 
   w32_state.game_width = width;
   w32_state.game_height = height;

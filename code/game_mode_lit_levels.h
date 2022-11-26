@@ -141,26 +141,7 @@ lit_level_0_4(Lit* m) {
   lit_push_light(m, 600.f, GAME_HEIGHT * 0.75f, 0x880000FF, 30.f, 0.0f);
 }
 
-///////////////////////////////////////
-// - Learn about color combinations
-// - Learn about multiple sensors
-// - R + G = Y
-static void
-lit_level_0_4b(Lit* m) {
-  lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
 
-  lit_push_edge(m, 0.f, 0.f, 1600.f, 0.f);
-  lit_push_edge(m, 1600.f, 0.f, 1600.f, 900.f);
-  lit_push_edge(m, 1600.f, 900.f, 0.f, 900.f);
-  lit_push_edge(m, 0.f, 900.f, 0.f, 0.f);
-
-  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x666600FF); 
-  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x999999FF); 
-
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x330000FF, 30.f, 0.5f);
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.75f, 0x003300FF, 30.f, 0.5f);
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x000033FF, 90.f, 0.5f);
-}
 
 ///////////////////////////////////////
 // - Learn about more color combinations
@@ -186,14 +167,30 @@ lit_level_0_5(Lit* m) {
 
 }
 
+///////////////////////////////////////
+// - Learn about color combinations
+// - Learn about multiple sensors
+// - R + G = Y
+static void
+lit_level_0_6(Lit* m) {
+  lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
+
+  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x666600FF); 
+  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x999999FF); 
+
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x330000FF, 30.f, 0.5f);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.75f, 0x003300FF, 30.f, 0.5f);
+  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x000033FF, 90.f, 0.5f);
+}
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
   //lit_level_0_0, 
   //lit_level_0_1, 
   //lit_level_0_2,
   //lit_level_0_3,
-  //lit_level_0_4,
-  lit_level_0_5,
+  lit_level_0_4,
+  //lit_level_0_5,
+  //lit_level_0_6,
 };
 
 
