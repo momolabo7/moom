@@ -102,10 +102,10 @@ lit_push_triangle(Lit_Light* l, V2 p0, V2 p1, V2 p2, U32 color) {
 static void
 lit_gen_light_intersections(Lit_Light* l,
                             Lit_Edge_List* edges,
-                            Bump_Allocator* tmp_arena)
+                            Arena* tmp_arena)
 {
   game_profile_block(light_generation);
-  ba_set_revert_point(tmp_arena);
+  arn_set_revert_point(tmp_arena);
 
   Lit_Light_Type light_type = Lit_LIGHT_TYPE_POINT;
   if (l->half_angle < PI_32/2) {
@@ -200,7 +200,7 @@ lit_gen_light_intersections(Lit_Light* l,
   }
 
   if (l->intersections.count > 0) {
-    Sort_Entry* sorted_its = ba_push_arr(Sort_Entry, tmp_arena, l->intersections.count);
+    Sort_Entry* sorted_its = arn_push_arr(Sort_Entry, tmp_arena, l->intersections.count);
     assert(sorted_its);
     for (U32 its_id = 0; 
          its_id < l->intersections.count; 
@@ -277,7 +277,7 @@ lit_gen_light_intersections(Lit_Light* l,
 static void
 lit_gen_lights(Lit_Light_List* lights, 
                Lit_Edge_List* edges,
-               Bump_Allocator* tmp_arena) 
+               Arena* tmp_arena) 
 {
   // Update all lights
   al_foreach(light_index, lights)
@@ -331,7 +331,7 @@ lit_draw_debug_light_rays(Lit* lit, Game* game) {
   // Draw the light rays
   if (player->held_light) {
     Lit_Light* l = player->held_light;
-    ba_set_revert_point(&game->frame_arena);
+    arn_set_revert_point(&game->frame_arena);
     al_foreach(light_ray_index, &player->held_light->debug_rays)
     {
       Ray2 light_ray = player->held_light->debug_rays.e[light_ray_index];
@@ -341,7 +341,7 @@ lit_draw_debug_light_rays(Lit* lit, Game* game) {
     }
     gfx_advance_depth(gfx);
    
-    Sort_Entry* sorted_its = ba_push_arr(Sort_Entry, &game->frame_arena, l->intersections.count);
+    Sort_Entry* sorted_its = arn_push_arr(Sort_Entry, &game->frame_arena, l->intersections.count);
     assert(sorted_its);
     for (U32 intersection_id = 0; 
          intersection_id < l->intersections.count; 

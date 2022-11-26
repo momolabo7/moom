@@ -25,5 +25,10 @@
 #define sll_prepend(f,l,n) (f) ? (n)->next = (f), (f) = (n) : (f) = (l) = (n) 
 #define sll_append(f,l,n) (f) ? (l)->next = (n), (l) = (n) : (f) = (l) = (n)
 
+// Circular Doubly Linked List with sentinel
+#define cll_init(s)     (s)->prev = (s), (s)->next = (s) 
+#define cll_append(s,n) (n)->next = (s), (n)->prev = (s)->prev, (n)->prev->next 
+#define cll_remove(n) (n)->prev->next = (n)->next, (n)->next->prev = (n)->prev;
+
 
 #endif //MOMO_LISTS_H

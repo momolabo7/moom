@@ -29,7 +29,7 @@ struct Win_Wasapi {
 	B32 is_device_changed;
 	B32 is_device_ready;
 
-  Bump_Allocator allocator;
+  Arena allocator;
 };
 
 ///////////////////////////////////////////////////////////
@@ -197,9 +197,9 @@ _w32_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
     return false;
   }
 
-  ba_clear(&wasapi->allocator);
+  arn_clear(&wasapi->allocator);
   wasapi->buffer_size = sound_frame_count;
-  wasapi->buffer = ba_push_arr(S16, &wasapi->allocator, wasapi->buffer_size);
+  wasapi->buffer = arn_push_arr(S16, &wasapi->allocator, wasapi->buffer_size);
   if (!wasapi->buffer) {
     w32_log("[w32_wasapi] Failed to allocate secondary buffer\n");
     return false;
@@ -216,14 +216,14 @@ w32_wasapi_init(Win_Wasapi* wasapi,
                 U16 channels,
                 U32 latency_frames,
                 U32 refresh_rate,
-                Bump_Allocator* allocator)
+                Arena* allocator)
 {
   wasapi->channels = channels;
   wasapi->bits_per_sample = bits_per_sample;
   wasapi->samples_per_second = samples_per_second;
   wasapi->latency_sample_count = (samples_per_second / refresh_rate) * latency_frames;
 
-  if (!ba_partition_with_remaining(allocator, 
+  if (!arn_partition_with_remaining(allocator, 
                                    &wasapi->allocator, 
                                    16)) 
   {
@@ -259,7 +259,7 @@ w32_wasapi_init(Win_Wasapi* wasapi,
 	
 	// NOTE(Momo): Allocate the maximum buffer possible given allowed latency
 	wasapi->buffer_size = wasapi->latency_sample_count * sizeof(S16);
-  wasapi->buffer = ba_push_arr(S16, &wasapi->allocator, wasapi->buffer_size);
+  wasapi->buffer = arn_push_arr(S16, &wasapi->allocator, wasapi->buffer_size);
   if (!wasapi->buffer) {
     w32_log("[w32_wasapi] Failed to allocate memory\n");
     goto cleanup_3;
@@ -273,7 +273,7 @@ w32_wasapi_init(Win_Wasapi* wasapi,
 	
 	// NOTE(Momo): Cleanup
 	cleanup_3: 	
-    ba_clear(&wasapi->allocator);
+    arn_clear(&wasapi->allocator);
 	cleanup_2: 
 		IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
 	cleanup_1:
@@ -302,7 +302,7 @@ w32_wasapi_free(Win_Wasapi* wasapi) {
   _w32_wasapi_release_current_device(wasapi);
 	IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
 	IMMDeviceEnumerator_Release(wasapi->mm_device_enum);
-  ba_clear(&wasapi->allocator);
+  arn_clear(&wasapi->allocator);
 }
 
 static void 
@@ -379,10 +379,10 @@ w32_audio_load(U32 samples_per_second,
                U16 channels,
                U32 latency_frames,
                U32 refresh_rate,
-               Bump_Allocator* allocator) 
+               Arena* allocator) 
 {
   // TODO: Ideally, we should give WASAPI a seperate arena 
-  Win_Wasapi* wasapi = ba_push(Win_Wasapi, allocator);
+  Win_Wasapi* wasapi = arn_push(Win_Wasapi, allocator);
   if (!wasapi) return 0;
 
   B32 success = w32_wasapi_init(wasapi, samples_per_second, bits_per_sample, channels, latency_frames, refresh_rate, allocator);

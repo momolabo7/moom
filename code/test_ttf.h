@@ -17,8 +17,8 @@ void test_ttf() {
   }
   defer { free(memory); };
   
-  make(Bump_Allocator, allocator);
-  ba_init(allocator, memory, memory_size);
+  make(Arena, allocator);
+  arn_init(allocator, memory, memory_size);
   Block ttf_memory = 
     test_read_file_to_memory(allocator, 
 #if 0 
@@ -40,7 +40,7 @@ void test_ttf() {
     for (U32 codepoint = 65; codepoint <= 65+26; ++codepoint) {
       //for (U32 codepoint = 87; codepoint <= 87; ++codepoint) {
       test_log("rasterizing codepoint %X\n", codepoint);
-      ba_set_revert_point(allocator);
+      arn_set_revert_point(allocator);
       
       U32 glyph_index = ttf_get_glyph_index(ttf, codepoint);
       Image32 codepoint_image = ttf_rasterize_glyph(ttf, glyph_index, scale_factor, allocator);

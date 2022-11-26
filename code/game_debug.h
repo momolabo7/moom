@@ -6,7 +6,7 @@
 
 
 struct Debug_State {
-  Bump_Allocator allocator;
+  Arena allocator;
   
 };
 

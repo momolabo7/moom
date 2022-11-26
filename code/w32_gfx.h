@@ -15,7 +15,7 @@ static Gfx*
 w32_gfx_load(HWND window, 
              U32 command_queue_size, 
              U32 texture_queue_size,
-             Bump_Allocator* allocator);
+             Arena* allocator);
 
 static void 
 w32_gfx_unload(Gfx* renderer);

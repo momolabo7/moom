@@ -49,7 +49,7 @@ rp_pack(RP_Rect* rects,
         U32 total_width,
         U32 total_height,
         RP_Sort_Type sort_type,
-        Bump_Allocator* allocator);
+        Arena* allocator);
 
 
 
@@ -119,13 +119,13 @@ rp_pack(RP_Rect* rects,
         U32 total_width,
         U32 total_height,
         RP_Sort_Type sort_type,
-        Bump_Allocator* allocator) 
+        Arena* allocator) 
 {
-  Bump_Allocator_Marker restore_point = ba_mark(allocator);
+  Arena_Marker restore_point = arn_mark(allocator);
  
-  Sort_Entry* sort_entries = ba_push_arr(Sort_Entry, allocator, rect_count);
+  Sort_Entry* sort_entries = arn_push_arr(Sort_Entry, allocator, rect_count);
   _rp_sort(rects, sort_entries, rect_count, sort_type);
-  _RP_Node* nodes = ba_push_arr(_RP_Node, allocator, rect_count+1);
+  _RP_Node* nodes = arn_push_arr(_RP_Node, allocator, rect_count+1);
 
   U32 current_node_count = 1;
   nodes[0].x = 0;
@@ -160,7 +160,7 @@ rp_pack(RP_Rect* rects,
     // NOTE(Momo): If an empty space that can fit is found, 
     // we remove that space and split.
     if(chosen_space_index == current_node_count) { 
-      ba_revert(restore_point);
+      arn_revert(restore_point);
       return false;
     }
     
@@ -227,7 +227,7 @@ rp_pack(RP_Rect* rects,
     rect->y = chosen_space.y + padding;
   }
  
-  ba_revert(restore_point);
+  arn_revert(restore_point);
   return true;
 }
 

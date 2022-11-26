@@ -117,7 +117,7 @@ get_next_texture_handle() {
 static B32 
 init_game_assets(Game_Assets* ga, 
                  const char* filename,
-                 Bump_Allocator* arena) 
+                 Arena* arena) 
 {
 
   make(Platform_File, file);
@@ -133,11 +133,11 @@ init_game_assets(Game_Assets* ga,
   if (karu_header.signature != KARU_SIGNATURE) return false;
 
   // Allocation for asset components (asset slots and tags)
-  ga->assets = ba_push_arr(Game_Asset, arena, karu_header.asset_count);
+  ga->assets = arn_push_arr(Game_Asset, arena, karu_header.asset_count);
   if (!ga->assets) return false;
   ga->asset_count = karu_header.asset_count;
   
-  ga->tags = ba_push_arr(Game_Asset_Tag, arena, karu_header.tag_count);
+  ga->tags = arn_push_arr(Game_Asset_Tag, arena, karu_header.tag_count);
   if (!ga->tags) return false;
   ga->tag_count = karu_header.tag_count;
 
@@ -234,11 +234,11 @@ init_game_assets(Game_Assets* ga,
           U32 glyph_count = karu_asset.font.glyph_count;
           U32 highest_codepoint = karu_asset.font.highest_codepoint;
           
-          U16* codepoint_map = ba_push_arr(U16, arena, highest_codepoint);
+          U16* codepoint_map = arn_push_arr(U16, arena, highest_codepoint);
           if(!codepoint_map) return false;
-          Game_Font_Glyph* glyphs = ba_push_arr(Game_Font_Glyph, arena, glyph_count);
+          Game_Font_Glyph* glyphs = arn_push_arr(Game_Font_Glyph, arena, glyph_count);
           if(!glyphs) return false;
-          F32* kernings = ba_push_arr(F32, arena, glyph_count*glyph_count);
+          F32* kernings = arn_push_arr(F32, arena, glyph_count*glyph_count);
           if (!kernings) return false;
           
           U32 current_data_offset = karu_asset.offset_to_data;

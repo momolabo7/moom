@@ -7,7 +7,7 @@ typedef struct {
 } JSON_Object;
 
 
-typedef struct JSON_Array {
+typedef struct {
   struct _JSON_Array_Node* head;  
   struct _JSON_Array_Node* tail;
 } JSON_Array;
@@ -319,11 +319,11 @@ _json_insert_node(_JSON_Object_Node** node, _JSON_Object_Node* new_node) {
     return false;
   }
 }
-static B32 _json_parse_object(JSON_Object*, _JSON_Tokenizer* t, Bump_Allocator* ba);
-static B32 _json_set_value_based_on_token(_JSON_Value* value, _JSON_Tokenizer* t, _JSON_Token token, Bump_Allocator* ba);
+static B32 _json_parse_object(JSON_Object*, _JSON_Tokenizer* t, Arena* ba);
+static B32 _json_set_value_based_on_token(_JSON_Value* value, _JSON_Tokenizer* t, _JSON_Token token, Arena* ba);
 
 static B32
-_json_parse_array(JSON_Array* arr, _JSON_Tokenizer* t, Bump_Allocator* ba) {
+_json_parse_array(JSON_Array* arr, _JSON_Tokenizer* t, Arena* ba) {
   B32 is_done = false;
   U32 expect_type = 0;
   B32 error = false;
@@ -335,7 +335,7 @@ _json_parse_array(JSON_Array* arr, _JSON_Tokenizer* t, Bump_Allocator* ba) {
     if (expect_type == 0) {
       _JSON_Value v = {0};
       if(_json_set_value_based_on_token(&v, t, token, ba)) {
-        _JSON_Array_Node* array_node = ba_push(_JSON_Array_Node, ba); 
+        _JSON_Array_Node* array_node = arn_push(_JSON_Array_Node, ba); 
         if (!array_node) {
           array_node->value = v;
           _json_append_array(arr, array_node);
@@ -374,7 +374,7 @@ static B32
 _json_set_value_based_on_token(_JSON_Value* value, 
                                _JSON_Tokenizer* t, 
                                _JSON_Token token,
-                               Bump_Allocator* ba) 
+                               Arena* ba) 
 {
   B32 error = false;
   if (token.type == _JSON_TOKEN_TYPE_UNSIGNED_INTEGER) {
@@ -413,7 +413,7 @@ _json_set_value_based_on_token(_JSON_Value* value,
   else if(token.type == _JSON_TOKEN_TYPE_STRING) 
   {
     U32 token_len = token.ope - token.begin;
-    U8* val_mem = ba_push_arr(U8, ba, token_len);     
+    U8* val_mem = arn_push_arr(U8, ba, token_len);     
     if (!val_mem) {
       for(U32 token_i = 0; token_i < token_len; ++token_i) {
         val_mem[token_i] = t->text.e[token.begin + token_i];
@@ -457,7 +457,7 @@ _json_set_value_based_on_token(_JSON_Value* value,
 }
 
 static B32  
-_json_parse_object(JSON_Object* obj, _JSON_Tokenizer* t, Bump_Allocator* ba) {
+_json_parse_object(JSON_Object* obj, _JSON_Tokenizer* t, Arena* ba) {
   _JSON_Object_Node* node = null;
   _JSON_Object_Expect_Type expect_type = _JSON_OBJECT_EXPECT_TYPE_KEY_OR_CLOSE; 
   B32 is_done = false;
@@ -470,7 +470,7 @@ _json_parse_object(JSON_Object* obj, _JSON_Tokenizer* t, Bump_Allocator* ba) {
     switch(expect_type) {
       case _JSON_OBJECT_EXPECT_TYPE_KEY_OR_CLOSE: {
         if (token.type == _JSON_TOKEN_TYPE_STRING) {
-          current_node = ba_push(_JSON_Object_Node, ba);
+          current_node = arn_push(_JSON_Object_Node, ba);
           if (!current_node) {
             is_done = true;
             error = true;
@@ -663,7 +663,7 @@ _json_get(JSON_Object* j, String8 key) {
   return node;
 }
 static B32
-json_read(JSON_Object* j, void* memory, UMI size, Bump_Allocator* ba) 
+json_read(JSON_Object* j, void* memory, UMI size, Arena* ba) 
 {
   _JSON_Tokenizer tokenizer = _json_create_tokenizer(memory, size);
   _JSON_Token token = _json_next_token(&tokenizer);
@@ -680,7 +680,7 @@ json_read(JSON_Object* j, void* memory, UMI size, Bump_Allocator* ba)
 
 
 static B32 
-json_read_from_blk(JSON_Object* j, Block blk, Bump_Allocator* ba) {
+json_read_from_blk(JSON_Object* j, Block blk, Arena* ba) {
   return json_read(j, blk.data, blk.size, ba);
 }
 

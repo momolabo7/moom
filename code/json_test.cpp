@@ -24,8 +24,8 @@ int main() {
   fread(mem, len, 1, fp);
   fclose(fp);
 
-  Bump_Allocator ba = {0}; 
-  ba_init(&ba, malloc(MB(1)), MB(1)); 
+  Arena ba = {0}; 
+  arn_init(&ba, malloc(MB(1)), MB(1)); 
 
   make(JSON_Object, json);
   json_read(json, mem, len, &ba);

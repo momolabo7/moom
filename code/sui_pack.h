@@ -154,7 +154,7 @@ sui_pack_push_font(Sui_Packer* p, Sui_Atlas_Font* font, U32 bitmap_asset_id) {
 }
 
 static void
-sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena) 
+sui_pack_end(Sui_Packer* p, const char* filename, Arena* arena) 
 {
   FILE* file = fopen(filename, "wb");
   defer { fclose (file); };

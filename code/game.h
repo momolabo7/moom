@@ -9,11 +9,8 @@
 #include "game_platform.h"
 #include "game_gfx.h"
 
-// Globals
-static struct Platform* platform;
-static struct Game_Assets* assets;
-static struct Gfx* gfx;
-static struct Inspector* inspector;
+#define GAME_WIDTH 800.f
+#define GAME_HEIGHT 800.f
 
 #ifdef INTERNAL
 static struct Profiler* profiler;
@@ -28,48 +25,55 @@ static struct Profiler* profiler;
 #define game_profile_end(...) 
 #endif 
 
+static Platform* platform;
+static Gfx* gfx;
+
 
 #include "game_profiler.h"
 #include "game_assets.h"
 #include "game_inspector.h"
 
+static Game_Assets* assets;
+static Inspector* inspector;
+
 #include "game_asset_rendering.h"
 #include "game_inspector_rendering.h"
 #include "game_profiler_rendering.h"
 #include "game_console.h"
-//////////////////////////////////////////////////////
-// GAME
-typedef enum Game_Show_Debug_Type {
+
+
+
+enum Game_Show_Debug_Type {
   GAME_SHOW_DEBUG_NONE,
   GAME_SHOW_DEBUG_PROFILER,
   GAME_SHOW_DEBUG_CONSOLE,
   GAME_SHOW_DEBUG_INSPECTOR,
   
   GAME_SHOW_DEBUG_MAX
-} Game_Show_Debug_Type;
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // Game Modes
-typedef enum Game_Mode_Type {
+enum Game_Mode_Type {
   GAME_MODE_TYPE_SPLASH,
   GAME_MODE_TYPE_LIT,
   GAME_MODE_TYPE_COMPUTER,
   GAME_MODE_TYPE_SANDBOX,
-} Game_Mode_Type;
+};
 
 
 
-typedef struct Game {
+struct Game {
   Game_Show_Debug_Type show_debug_type;
 
   F32 design_width;
   F32 design_height;
     
-  // Bump_Allocators
-  Bump_Allocator asset_arena;
-  Bump_Allocator frame_arena;
-  Bump_Allocator debug_arena;
-  Bump_Allocator mode_arena;
+  // Arenas
+  Arena asset_arena;
+  Arena frame_arena;
+  Arena debug_arena;
+  Arena mode_arena;
   
 
   // Mode Management 
@@ -87,7 +91,7 @@ typedef struct Game {
   // Interested game assets
   Game_Sprite_ID blank_sprite;
   Game_Font_ID debug_font;
-} Game;
+};
 
 static void 
 game_goto_mode(Game* game, Game_Mode_Type type) {
@@ -108,8 +112,8 @@ game_set_design_dims(Game* game, F32 design_width, F32 design_height) {
 
 static void*
 game_allocate_mode_size(Game* game, UMI size) {
-  ba_clear(&game->mode_arena);
-  game->mode_context = ba_push_size(&game->mode_arena, size, 16);
+  arn_clear(&game->mode_arena);
+  game->mode_context = arn_push_size(&game->mode_arena, size, 16);
   return game->mode_context;
 }
 

@@ -10,7 +10,7 @@ Assets
 
 Engine
   Shapes should not use V2
-  PNG/TTF should not use Bump_Allocator and use their own? A bit tricky
+  PNG/TTF should not use Arena and use their own? A bit tricky
 	Debugger
 		Arena Profiler
 

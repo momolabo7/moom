@@ -179,19 +179,19 @@ static Gfx*
 w32_gfx_load(HWND window, 
              U32 command_queue_size,
              U32 texture_queue_size, 
-             Bump_Allocator* allocator) 
+             Arena* allocator) 
 {
   HDC dc = GetDC(window); 
   if (!dc) return 0;
 
-  Opengl* opengl = ba_push(Opengl, allocator);
+  Opengl* opengl = arn_push(Opengl, allocator);
   if (!opengl) return 0; 
 
   // Allocate memory for render commands
-  void* command_queue_memory =  ba_push_size(allocator, command_queue_size, 16);
+  void* command_queue_memory =  arn_push_size(allocator, command_queue_size, 16);
   if (!command_queue_memory) return 0;
 
-  void* texture_queue_memory = ba_push_size(allocator, texture_queue_size, 16);
+  void* texture_queue_memory = arn_push_size(allocator, texture_queue_size, 16);
   if (!texture_queue_memory) return 0; 
  
   if (!_w32_load_wgl_extentions()) return 0;

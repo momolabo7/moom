@@ -30,8 +30,8 @@ typedef struct {
 
 static B32     png_read(PNG* png, void* png_memory, UMI png_size);
 static B32     png_read_from_blk(PNG* p, Block blk);
-static Image32 png_to_img32(PNG* png, Bump_Allocator* allocator);
-static Block   png_write_img32_to_blk(Image32 img, Bump_Allocator* allocator);
+static Image32 png_to_img32(PNG* png, Arena* allocator);
+static Block   png_write_img32_to_blk(Image32 img, Arena* allocator);
 
 
 ///////////////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ static Block   png_write_img32_to_blk(Image32 img, Bump_Allocator* allocator);
 
 struct _PNG_Context {
   Stream stream;
-  Bump_Allocator* allocator; 
+  Arena* allocator; 
   
   Stream image_stream;
   U32 image_width;
@@ -195,7 +195,7 @@ _png_huffman_decode(Stream* src_stream, _PNG_Huffman huffman) {
 // Section 3.2.2
 static void
 _png_huffman_compute(_PNG_Huffman* h,
-                     Bump_Allocator* allocator, 
+                     Arena* allocator, 
                      U16* codes,
                      U32 codes_size, 
                      U32 max_lengths) 
@@ -204,13 +204,13 @@ _png_huffman_compute(_PNG_Huffman* h,
   
   // Each code corresponds to a symbol
   h->symbol_count = codes_size;
-  h->symbols = ba_push_arr(U16, allocator, codes_size);
+  h->symbols = arn_push_arr(U16, allocator, codes_size);
   zero_memory(h->symbols, h->symbol_count * sizeof(U16));
   
   
   // We add +1 because lengths[0] is not possible
   h->length_count = max_lengths + 1;
-  h->lengths = ba_push_arr(U16, allocator, max_lengths + 1);
+  h->lengths = arn_push_arr(U16, allocator, max_lengths + 1);
   zero_memory(h->lengths, h->length_count * sizeof(U16));
   
   // 1. Count the number of codes for each code length
@@ -220,9 +220,9 @@ _png_huffman_compute(_PNG_Huffman* h,
   }
   
   // 2. Numerical value of smallest code for each code length
-  Bump_Allocator_Marker mark = ba_mark(allocator);
+  Arena_Marker mark = arn_mark(allocator);
   
-  U16* len_offset_table = ba_push_arr(U16, allocator, max_lengths+1);
+  U16* len_offset_table = arn_push_arr(U16, allocator, max_lengths+1);
   zero_memory(len_offset_table, (max_lengths+1) * sizeof(U16));
   
   for (U32 len = 1; len < max_lengths; ++len) {
@@ -238,13 +238,13 @@ _png_huffman_compute(_PNG_Huffman* h,
       h->symbols[code] = (U16)sym;
     }
   }
-  ba_revert(mark); 
+  arn_revert(mark); 
   
 }
 
 
 static B32
-_png_deflate(Stream* src_stream, Stream* dest_stream, Bump_Allocator* allocator) 
+_png_deflate(Stream* src_stream, Stream* dest_stream, Arena* allocator) 
 {
   
   static const U16 lens[29] = { /* Size base for length codes 257..285 */
@@ -265,7 +265,7 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Bump_Allocator* allocator)
   
   U8 BFINAL = 0;
   while(BFINAL == 0){
-    ba_set_revert_point(allocator);
+    arn_set_revert_point(allocator);
     
     BFINAL = (U8)srm_consume_bits(src_stream, 1);
     U16 BTYPE = (U8)srm_consume_bits(src_stream, 2);
@@ -347,7 +347,7 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Bump_Allocator* allocator)
                                15); 
           
          
-          U16* lit_dist_codes = ba_push_arr(U16, allocator, HDIST + HLIT);
+          U16* lit_dist_codes = arn_push_arr(U16, allocator, HDIST + HLIT);
           
           // NOTE(Momo): Decode
           // Loop until end of block code recognize
@@ -727,7 +727,7 @@ _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
 static Image32
-png_to_img32(PNG* png, Bump_Allocator* allocator) 
+png_to_img32(PNG* png, Arena* allocator) 
 {
   Image32 ret = {0};
   make(Stream, zlib_stream);
@@ -740,15 +740,15 @@ png_to_img32(PNG* png, Bump_Allocator* allocator)
   ctx.bit_depth = png->bit_depth;
   
   U32 image_size = png->width * png->height * _PNG_CHANNELS;
-  U8* image_stream_memory =  ba_push_arr(U8, allocator, image_size);
+  U8* image_stream_memory =  arn_push_arr(U8, allocator, image_size);
   if (!image_stream_memory) goto fail;
   srm_init(&ctx.image_stream, image_stream_memory, image_size);
  
-  Bump_Allocator_Marker mark = ba_mark(allocator);
-  //ba_set_revert_point(allocator);
+  Arena_Marker mark = arn_mark(allocator);
+  //arn_set_revert_point(allocator);
   
   U32 unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
-  U8* unfiltered_image_stream_memory = ba_push_arr(U8, allocator, unfiltered_size);
+  U8* unfiltered_image_stream_memory = arn_push_arr(U8, allocator, unfiltered_size);
   if (!unfiltered_image_stream_memory) goto fail;
   srm_init(&ctx.unfiltered_image_stream, unfiltered_image_stream_memory, unfiltered_size);
   
@@ -773,7 +773,7 @@ png_to_img32(PNG* png, Bump_Allocator* allocator)
     }
   }
   
-  U8* zlib_data = ba_push_arr(U8, allocator, zlib_size);
+  U8* zlib_data = arn_push_arr(U8, allocator, zlib_size);
   if (!zlib_data) goto fail;
 
   srm_init(zlib_stream, zlib_data, zlib_size);
@@ -808,7 +808,7 @@ png_to_img32(PNG* png, Bump_Allocator* allocator)
   return ret;
 
 fail_and_cleanup:
-  ba_revert(mark);
+  arn_revert(mark);
 fail:
   return img32_bad();
 
@@ -818,7 +818,7 @@ fail:
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
 static Block
-png_write_img32_to_blk(Image32 bm, Bump_Allocator* allocator) {
+png_write_img32_to_blk(Image32 bm, Arena* allocator) {
   if (bm.width <= 0 || bm.height <= 0 || bm.pixels == 0) {
     return blk_bad();
   }
@@ -849,7 +849,7 @@ png_write_img32_to_blk(Image32 bm, Bump_Allocator* allocator) {
                                   data_size + 
                                   IDAT_chunk_size);
   
-  U8* stream_memory = ba_push_arr(U8, allocator, expected_memory_required);
+  U8* stream_memory = arn_push_arr(U8, allocator, expected_memory_required);
   if (!stream_memory) {
     return blk_bad();
   }

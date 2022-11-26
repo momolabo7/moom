@@ -10,8 +10,8 @@
 int main() {
   Block block = sui_malloc(MB(100));
   defer { sui_free(&block); };
-  make(Bump_Allocator, allocator);
-  ba_init(allocator, block.data, block.size);
+  make(Arena, allocator);
+  arn_init(allocator, block.data, block.size);
 
   sui_log("Building atlas...\n");
   make(Sui_Atlas, atlas);

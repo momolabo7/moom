@@ -3,19 +3,19 @@
 // USAGE:
 //   
 //   Default Allocation API
-//     ba_push_size()            -- Allocates raw memory based on size
-//     ba_push_size_zero()       -- Same as ba_push_size but memory is initialized to zero 
+//     arn_push_size()            -- Allocates raw memory based on size
+//     arn_push_size_zero()       -- Same as arn_push_size but memory is initialized to zero 
 //
 //   Helper Allocation API
-//     ba_push()                 -- Allocates memory based on type. 
-//     ba_push_align()           -- ba_push() with alignment specificaion
-//     ba_push_zero()            -- ba_push() but memory is zero'ed.
-//     ba_push_align_zero        -- ba_push_align() but memory is zero'ed.
+//     arn_push()                 -- Allocates memory based on type. 
+//     arn_push_align()           -- arn_push() with alignment specificaion
+//     arn_push_zero()            -- arn_push() but memory is zero'ed.
+//     arn_push_align_zero        -- arn_push_align() but memory is zero'ed.
 //
-//     ba_push_arr()             -- Allocates an array of a type. 
-//     ba_push_arr_align()       -- ba_push_arr() with alignment specification.
-//     ba_push_arr_zero()        -- ba_push_arr() but memory is zero'ed.
-//     ba_push_arr_align_zero()  -- ba_push_arr_align() but memory is zero'ed.
+//     arn_push_arr()             -- Allocates an array of a type. 
+//     arn_push_arr_align()       -- arn_push_arr() with alignment specification.
+//     arn_push_arr_zero()        -- arn_push_arr() but memory is zero'ed.
+//     arn_push_arr_align_zero()  -- arn_push_arr_align() but memory is zero'ed.
 //
 //
 // TODO:
@@ -23,7 +23,7 @@
 //   - Rethink 'Temporary Memory API'. 
 //       Maybe remove the whole thing? 
 //       We can just  do a 'get_current_pos' and 'pop to pos'.
-//       It feels janky to have a Bump_Allocator_Marker store an allocator like this. 
+//       It feels janky to have a Arena_Marker store an allocator like this. 
 //
 
 #ifndef MOMO_MEMORY_H
@@ -34,47 +34,47 @@ typedef struct {
 	U8* memory;
 	UMI pos;
 	UMI cap;
-} Bump_Allocator;
+} Arena;
 
-// Temporary memory API used to ba_revert an allocator to an original state;
+// Temporary memory API used to arn_revert an allocator to an original state;
 typedef struct {
-  Bump_Allocator* allocator;
+  Arena* allocator;
   UMI old_pos;
-} Bump_Allocator_Marker;
+} Arena_Marker;
 
-static void   ba_init(Bump_Allocator* a, void* mem, UMI cap);
-static void   ba_clear(Bump_Allocator* a);
-static void*  ba_push_size(Bump_Allocator* a, UMI size, UMI align);
-static void*  ba_push_size_zero(Bump_Allocator* a, UMI size, UMI align); 
-static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align);
-static B32    ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* parition, UMI align);
-static UMI    ba_remaining(Bump_Allocator* a);
+static void   arn_init(Arena* a, void* mem, UMI cap);
+static void   arn_clear(Arena* a);
+static void*  arn_push_size(Arena* a, UMI size, UMI align);
+static void*  arn_push_size_zero(Arena* a, UMI size, UMI align); 
+static B32    arn_partition(Arena* a, Arena* partition, UMI size, UMI align);
+static B32    arn_partition_with_remaining(Arena* a, Arena* parition, UMI align);
+static UMI    arn_remaining(Arena* a);
 
-#define ba_push_arr_align(t,b,n,a) (t*)ba_push_size(b, sizeof(t)*(n), a)
-#define ba_push_arr(t,b,n)         (t*)ba_push_size(b, sizeof(t)*(n),alignof(t))
-#define ba_push_align(t,b,a)       (t*)ba_push_size(b, sizeof(t), a)
-#define ba_push(t,b)               (t*)ba_push_size(b, sizeof(t), alignof(t))
+#define arn_push_arr_align(t,b,n,a) (t*)arn_push_size(b, sizeof(t)*(n), a)
+#define arn_push_arr(t,b,n)         (t*)arn_push_size(b, sizeof(t)*(n),alignof(t))
+#define arn_push_align(t,b,a)       (t*)arn_push_size(b, sizeof(t), a)
+#define arn_push(t,b)               (t*)arn_push_size(b, sizeof(t), alignof(t))
 
-#define ba_push_arr_zero_align(t,b,n,a) (t*)ba_push_size_zero(b, sizeof(t)*(n), a)
-#define ba_push_arr_zero(t,b,n)         (t*)ba_push_size_zero(b, sizeof(t)*(n),alignof(t))
-#define ba_push_zero_align(t,b,a)       (t*)ba_push_size_zero(b, sizeof(t), a)
-#define ba_push_zero(t,b)               (t*)ba_push_size_zero(b, sizeof(t), alignof(t))
+#define arn_push_arr_zero_align(t,b,n,a) (t*)arn_push_size_zero(b, sizeof(t)*(n), a)
+#define arn_push_arr_zero(t,b,n)         (t*)arn_push_size_zero(b, sizeof(t)*(n),alignof(t))
+#define arn_push_zero_align(t,b,a)       (t*)arn_push_size_zero(b, sizeof(t), a)
+#define arn_push_zero(t,b)               (t*)arn_push_size_zero(b, sizeof(t), alignof(t))
 
 
-static Bump_Allocator_Marker ba_mark(Bump_Allocator* a);
-static void ba_revert(Bump_Allocator_Marker marker);
+static Arena_Marker arn_mark(Arena* a);
+static void arn_revert(Arena_Marker marker);
 
 
 #if IS_CPP
-# define __ba_set_revert_point(a,l) \
-  auto _ba_marker_##l = ba_mark(a); \
-  defer{ba_revert(_ba_marker_##l);};
-# define _ba_set_revert_point(a,l) __ba_set_revert_point(a,l)
-# define ba_set_revert_point(allocator) _ba_set_revert_point(allocator, __LINE__) 
+# define __arn_set_revert_point(a,l) \
+  auto _arn_marker_##l = arn_mark(a); \
+  defer{arn_revert(_arn_marker_##l);};
+# define _arn_set_revert_point(a,l) __arn_set_revert_point(a,l)
+# define arn_set_revert_point(allocator) _arn_set_revert_point(allocator, __LINE__) 
 #endif // IS_CPP
 
 static void
-ba_init(Bump_Allocator* a, void* mem, UMI cap) {
+arn_init(Arena* a, void* mem, UMI cap) {
   a->memory = (U8*)mem;
   a->pos = 0; 
   a->cap = cap;
@@ -83,18 +83,18 @@ ba_init(Bump_Allocator* a, void* mem, UMI cap) {
 
 
 static void
-ba_clear(Bump_Allocator* a) {
+arn_clear(Arena* a) {
   a->pos = 0;
 }
 
 
 static UMI 
-ba_remaining(Bump_Allocator* a) {
+arn_remaining(Arena* a) {
   return a->cap - a->pos;
 }
 
 static void* 
-ba_push_size(Bump_Allocator* a, UMI size, UMI align) {
+arn_push_size(Arena* a, UMI size, UMI align) {
   if (size == 0) return null;
 	
 	UMI imem = ptr_to_int(a->memory);
@@ -110,9 +110,9 @@ ba_push_size(Bump_Allocator* a, UMI size, UMI align) {
 }
 
 static void*
-ba_push_size_zero(Bump_Allocator* a, UMI size, UMI align) 
+arn_push_size_zero(Arena* a, UMI size, UMI align) 
 {
-  void* mem = ba_push_size(a, size, align);
+  void* mem = arn_push_size(a, size, align);
   if (!mem) return null;
   zero_memory(mem, size);
   return mem;
@@ -120,17 +120,17 @@ ba_push_size_zero(Bump_Allocator* a, UMI size, UMI align)
 
 
 static B32
-ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align) {	
-	void* mem = ba_push_size(a, size, align);
+arn_partition(Arena* a, Arena* partition, UMI size, UMI align) {	
+	void* mem = arn_push_size(a, size, align);
   if (!mem) return false; 
-  ba_init(partition, mem, size);
+  arn_init(partition, mem, size);
   return true;
   
 }
 
 
 static B32    
-ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* partition, UMI align){
+arn_partition_with_remaining(Arena* a, Arena* partition, UMI align){
 	UMI imem = ptr_to_int(a->memory);
 	UMI adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
 	
@@ -139,13 +139,13 @@ ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* partition, UMI al
 	void* mem = int_to_ptr(imem + adjusted_pos);
 	a->pos = a->cap;
 
-  ba_init(partition, mem, size);
+  arn_init(partition, mem, size);
 	return true;
 
 }
 /*
 static inline void* 
-Bump_Allocator_BootBlock(UMI struct_size,
+Arena_BootBlock(UMI struct_size,
                 UMI offset_to_arena,
                 void* memory,
                 UMI memory_size)
@@ -156,23 +156,23 @@ Bump_Allocator_BootBlock(UMI struct_size,
 	
 	void* arena_memory = (U8*)memory + struct_size; 
 	UMI arena_memory_size = memory_size - struct_size;
-	Bump_Allocator* arena_ptr = (Bump_Allocator*)((U8*)memory + offset_to_arena);
-	(*arena_ptr) = Bump_Allocator_Create(arena_memory, arena_memory_size);
+	Arena* arena_ptr = (Arena*)((U8*)memory + offset_to_arena);
+	(*arena_ptr) = Arena_Create(arena_memory, arena_memory_size);
 	
 	return int_to_ptr(imem);
 }
 //*/
 
-static Bump_Allocator_Marker
-ba_mark(Bump_Allocator* a) {
-  Bump_Allocator_Marker ret;
+static Arena_Marker
+arn_mark(Arena* a) {
+  Arena_Marker ret;
   ret.allocator = a;
   ret.old_pos = a->pos;
   return ret;
 }
 
 static void
-ba_revert(Bump_Allocator_Marker marker) {
+arn_revert(Arena_Marker marker) {
   marker.allocator->pos = marker.old_pos;
 }
 

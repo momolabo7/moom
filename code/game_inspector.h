@@ -31,12 +31,12 @@ struct Inspector {
 // IMPLEMENTATION
 //
 static void 
-begin_inspector(Inspector* in) {
+insp_clear(Inspector* in) {
   al_clear(&in->entries);
 }
 
 static void
-add_inspector_entry(Inspector* in, String8 name, U32* item) {
+insp_add_u32(Inspector* in, String8 name, U32* item) {
   Inspector_Entry* entry = al_append(&in->entries);
   assert(entry);
   entry->item = item;
@@ -46,14 +46,13 @@ add_inspector_entry(Inspector* in, String8 name, U32* item) {
 
 
 static void
-add_inspector_entry(Inspector* in, String8 name, F32* item) {
+insp_add_f32(Inspector* in, String8 name, F32* item) {
   Inspector_Entry* entry = al_append(&in->entries);
   assert(entry);
   entry->item = item;
   entry->type = INSPECTOR_ENTRY_TYPE_F32;
   entry->name = name;
 }
-
 
 
 

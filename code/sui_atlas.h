@@ -131,8 +131,8 @@ sui_atlas_begin(Sui_Atlas* a,
 
 
 static void
-sui_atlas_end(Sui_Atlas* a, Bump_Allocator* allocator) {
-  a->bitmap.pixels = ba_push_arr(U32, allocator, a->bitmap.width * a->bitmap.height);
+sui_atlas_end(Sui_Atlas* a, Arena* allocator) {
+  a->bitmap.pixels = arn_push_arr(U32, allocator, a->bitmap.width * a->bitmap.height);
   assert(a->bitmap.pixels);
   
   // Count the amount of rects
@@ -148,10 +148,10 @@ sui_atlas_end(Sui_Atlas* a, Bump_Allocator* allocator) {
   assert(rect_count > 0);  
 
   // Allocate required blk required
-  RP_Rect* rects = ba_push_arr(RP_Rect, allocator, rect_count);
+  RP_Rect* rects = arn_push_arr(RP_Rect, allocator, rect_count);
   assert(rects);
 
-  Sui_Atlas_Context* contexts = ba_push_arr(Sui_Atlas_Context, allocator, rect_count);
+  Sui_Atlas_Context* contexts = arn_push_arr(Sui_Atlas_Context, allocator, rect_count);
   assert(contexts);
   
   // Prepare the rects with the correct info
@@ -162,7 +162,7 @@ sui_atlas_end(Sui_Atlas* a, Bump_Allocator* allocator) {
        sprite_index < a->sprite_count;
        ++sprite_index) 
   {
-    ba_set_revert_point(allocator);
+    arn_set_revert_point(allocator);
     
     Sui_Atlas_Sprite* sprite = a->sprites + sprite_index;
 
@@ -194,7 +194,7 @@ sui_atlas_end(Sui_Atlas* a, Bump_Allocator* allocator) {
        ++font_index) 
   {
 
-    ba_set_revert_point(allocator);
+    arn_set_revert_point(allocator);
     Sui_Atlas_Font* font = a->fonts + font_index;
     make(TTF, ttf);
     B32 ok = sui_read_font_from_file(ttf, font->filename, allocator); 
@@ -269,7 +269,7 @@ sui_atlas_end(Sui_Atlas* a, Bump_Allocator* allocator) {
     auto* context = (Sui_Atlas_Context*)(rect->user_data);
     switch(context->type) {
       case SUI_ATLAS_CONTEXT_TYPE_SPRITE: {
-        ba_set_revert_point(allocator);
+        arn_set_revert_point(allocator);
         Sui_Atlas_Sprite* related_entry = context->sprite.sprite;
        
         make(Block, blk);

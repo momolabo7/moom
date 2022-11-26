@@ -35,6 +35,18 @@ w32_toggle_fullscreen(HWND Window)
 }
 #endif
 
+
+//////////////////////////////////////////////////////////////////
+// Memory allocation
+struct W32_Memory_Block {
+  Platform_Memory_Block platform_block;
+  W32_Memory_Block* prev;
+  W32_Memory_Block* next;
+};
+
+// TODO free memory block
+
+//////////////////////////////////////////////////////////////////
 //~Worker/Producer  functionality
 struct W32_Work {
   void* data;
@@ -167,6 +179,7 @@ w32_add_task_entry(W32_Work_Queue* wq, void (*callback)(void* ctx), void *data) 
   ReleaseSemaphore(wq->semaphore, 1, 0);
 }
 
+///////////////////////////////////////////////////////
 //~File cabinet
 
 struct W32_File {
@@ -205,8 +218,7 @@ w32_return_file(W32_File_Cabinet* c, W32_File* f) {
 }
 
 
-//~Global variables
-struct W32_State{
+struct W32_State {
   B32 is_running;
   
   F32 game_width;
@@ -216,11 +228,68 @@ struct W32_State{
   W32_File_Cabinet file_cabinet;
   
   HWND window;
+
+  W32_Memory_Block memory_sentinel;
 };
 static W32_State w32_state;
 
 
-//~ For Platform API
+
+static Platform_Memory_Block*
+w32_allocate_memory(UMI size)
+{
+  UMI total_size = size + sizeof(W32_Memory_Block);
+  UMI base_offset = sizeof(W32_Memory_Block);
+
+
+  W32_Memory_Block* block = (W32_Memory_Block*)
+    VirtualAllocEx(GetCurrentProcess(),
+                   0, 
+                   total_size,
+                   MEM_RESERVE | MEM_COMMIT, 
+                   PAGE_READWRITE);
+  if (!block) return null;
+
+
+  block->platform_block.data = (U8*)block + base_offset; 
+  block->platform_block.size = size;
+
+  W32_Memory_Block* sentinel = &w32_state.memory_sentinel;
+
+  cll_append(sentinel, block);
+
+#if 0
+  block->next = sentinel;
+  block->prev = sentinel->prev;
+  block->prev->next = block;
+  block->next->prev = block;
+#endif
+
+
+  return &block->platform_block;
+
+}
+
+static void
+w32_free_memory(Platform_Memory_Block* platform_block) {
+  if (platform_block) {
+    W32_Memory_Block* block = (W32_Memory_Block*)platform_block;
+    cll_remove(block);
+    VirtualFree(block, 0, MEM_RELEASE);
+  }
+}
+
+static void
+w32_free_all_memory() {
+  W32_Memory_Block* sentinel = &w32_state.memory_sentinel; 
+  W32_Memory_Block* itr = sentinel->next;
+  while(itr != sentinel) {
+    VirtualFree(itr, 0, MEM_RELEASE);
+    itr = itr->next;
+  }
+}
+
+
 
 static void 
 w32_shutdown() {
@@ -249,14 +318,14 @@ w32_free(void* memory) {
 #endif
 
 static B32
-w32_allocate_memory_into_arena(Bump_Allocator* a, UMI memory_size) {
+w32_allocate_memory_into_arena(Arena* a, UMI memory_size) {
   void* data = VirtualAllocEx(GetCurrentProcess(),
                               0, 
                               memory_size,
                               MEM_RESERVE | MEM_COMMIT, 
                               PAGE_READWRITE);
-  if(data == nullptr) return false;
-  ba_init(a, data, memory_size);
+  if(data == null) return false;
+  arn_init(a, data, memory_size);
   return true;
 }
 
@@ -264,7 +333,7 @@ w32_allocate_memory_into_arena(Bump_Allocator* a, UMI memory_size) {
 
 
 static void
-w32_free_memory_from_arena(Bump_Allocator* a) {
+w32_free_memory_from_arena(Arena* a) {
   VirtualFreeEx(GetCurrentProcess(), 
                 a->memory,    
                 0, 
@@ -545,14 +614,20 @@ WinMain(HINSTANCE instance,
   //- Initialize w32 state
   {
     w32_state.is_running = true;
+
     w32_state.game_width = 1.f;
-    w32_state.game_height = 1.f;
-    
+    w32_state.game_height = 1.f;  
+
+    // initialize the circular linked list
+    w32_state.memory_sentinel.next = &w32_state.memory_sentinel;    
+    w32_state.memory_sentinel.prev = &w32_state.memory_sentinel;    
+
     if (!w32_init_work_queue(&w32_state.work_queue, 8)) {
       return 1;
     }
     w32_init_file_cabinet(&w32_state.file_cabinet);
   }
+  defer { w32_free_all_memory(); };
   
   
   
@@ -681,7 +756,7 @@ WinMain(HINSTANCE instance,
   
   
   //-Init gfx
-  make(Bump_Allocator, gfx_arena);
+  make(Arena, gfx_arena);
   if (!w32_allocate_memory_into_arena(gfx_arena, MB(256))) return false;
   defer { w32_free_memory_from_arena(gfx_arena); };
  
@@ -691,7 +766,7 @@ WinMain(HINSTANCE instance,
   defer { w32_gfx_unload(gfx); };
  
   // Init Audio
-  make(Bump_Allocator, audio_arena);
+  make(Arena, audio_arena);
   if (!w32_allocate_memory_into_arena(audio_arena, MB(256))) return false;
   defer { w32_free_memory_from_arena(audio_arena); };
 
@@ -707,7 +782,7 @@ WinMain(HINSTANCE instance,
   make(Platform, pf);
  
   // Game memory set up
-  make(Bump_Allocator, game_arena);
+  make(Arena, game_arena);
   if (!w32_allocate_memory_into_arena(game_arena, MB(32))) return false;
   defer { w32_free_memory_from_arena(game_arena); };
   

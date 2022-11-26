@@ -23,10 +23,11 @@ add_inspector_entry	D:/work/git/txt/code/game_inspector.h	/^add_inspector_entry(
 add_task	D:/work/git/txt/code/game_platform.h	/^  Platform_Add_Task* add_task;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Add_Task *
 align_down_pow2	D:/work/git/txt/code/momo_common.h	/^#define align_down_pow2(/;"	d	language:C++
 align_up_pow2	D:/work/git/txt/code/momo_common.h	/^#define align_up_pow2(/;"	d	language:C++
-allocator	D:/work/git/txt/code/game_debug.h	/^  Bump_Allocator allocator;$/;"	m	language:C++	struct:Debug_State	typeref:typename:Bump_Allocator
-allocator	D:/work/git/txt/code/momo_memory.h	/^  Bump_Allocator* allocator;$/;"	m	language:C++	struct:__anonb4ad698a0208	typeref:typename:Bump_Allocator *
-allocator	D:/work/git/txt/code/momo_png.h	/^  Bump_Allocator* allocator; $/;"	m	language:C++	struct:_PNG_Context	typeref:typename:Bump_Allocator *
-allocator	D:/work/git/txt/code/w32_audio_wasapi.h	/^  Bump_Allocator allocator;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Bump_Allocator
+allocate_memory	D:/work/git/txt/code/game_platform.h	/^  Platform_Memory_Block* allocate_memory;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Memory_Block *
+allocator	D:/work/git/txt/code/game_debug.h	/^  Arena allocator;$/;"	m	language:C++	struct:Debug_State	typeref:typename:Arena
+allocator	D:/work/git/txt/code/momo_memory.h	/^  Arena* allocator;$/;"	m	language:C++	struct:__anonb4ad698a0208	typeref:typename:Arena *
+allocator	D:/work/git/txt/code/momo_png.h	/^  Arena* allocator; $/;"	m	language:C++	struct:_PNG_Context	typeref:typename:Arena *
+allocator	D:/work/git/txt/code/w32_audio_wasapi.h	/^  Arena allocator;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Arena
 alpha	D:/work/git/txt/code/game_mode_lit.h	/^  F32 alpha;$/;"	m	language:C++	struct:Lit_Tutorial_Text	typeref:typename:F32
 al_append	D:/work/git/txt/code/momo_lists.h	/^#define al_append(/;"	d	language:C++
 al_at	D:/work/git/txt/code/momo_lists.h	/^#define al_at(/;"	d	language:C++
@@ -46,7 +47,7 @@ ARCH_X64	D:/work/git/txt/code/momo_common.h	/^# define ARCH_X64 /;"	d	language:C
 ARCH_X86	D:/work/git/txt/code/momo_common.h	/^#  define ARCH_X86 /;"	d	language:C++
 ARCH_X86	D:/work/git/txt/code/momo_common.h	/^#  define ARCH_X86 /;"	d	language:C++
 ARCH_X86	D:/work/git/txt/code/momo_common.h	/^# define ARCH_X86 /;"	d	language:C++
-arr	D:/work/git/txt/code/momo_json.h	/^    JSON_Array arr;$/;"	m	language:C++	union:__anon6dd1ef0b0708::__anon6dd1ef0b080a	typeref:typename:JSON_Array
+arr	D:/work/git/txt/code/momo_json.h	/^    JSON_Array arr;$/;"	m	language:C++	union:__anon6dd1ef0b0808::__anon6dd1ef0b090a	typeref:typename:JSON_Array
 array_count	D:/work/git/txt/code/momo_common.h	/^#define array_count(/;"	d	language:C++
 ascii_to_digit	D:/work/git/txt/code/momo_common.h	/^#define ascii_to_digit(/;"	d	language:C++
 asdf	D:/work/git/txt/code/meta.cpp	/^#define asdf(/;"	d	language:C++	file:
@@ -60,10 +61,10 @@ assert_callback	D:/work/git/txt/code/momo_common.h	/^# define assert_callback(/;
 assert_callback	D:/work/git/txt/code/sui.h	/^#define assert_callback(/;"	d	language:C++
 assert_callback	D:/work/git/txt/code/test.h	/^#define assert_callback(/;"	d	language:C++
 assets	D:/work/git/txt/code/game.h	/^  Game_Assets assets;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Assets
-assets	D:/work/git/txt/code/game.h	/^static struct Game_Assets* assets;$/;"	v	language:C++	typeref:struct:Game_Assets *
+assets	D:/work/git/txt/code/game.h	/^static Game_Assets* assets;$/;"	v	language:C++	typeref:typename:Game_Assets *
 assets	D:/work/git/txt/code/game_assets.h	/^  Game_Asset* assets;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:Game_Asset *
 assets	D:/work/git/txt/code/sui_pack.h	/^  Karu_Asset assets[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:Karu_Asset[1024]
-asset_arena	D:/work/git/txt/code/game.h	/^  Bump_Allocator asset_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Bump_Allocator
+asset_arena	D:/work/git/txt/code/game.h	/^  Arena asset_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Arena
 asset_count	D:/work/git/txt/code/game_assets.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Game_Assets	typeref:typename:U32
 asset_count	D:/work/git/txt/code/karu.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 asset_count	D:/work/git/txt/code/sui_pack.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
@@ -76,7 +77,7 @@ asset_group	D:/work/git/txt/code/karu.h	/^#define asset_group(/;"	d	language:C++
 asset_tag	D:/work/git/txt/code/karu.h	/^  asset_tag(FONT),$/;"	e	language:C++	enum:Game_Asset_Tag_Type
 asset_tag	D:/work/git/txt/code/karu.h	/^#define asset_tag(/;"	d	language:C++
 at	D:/work/git/txt/code/meta.cpp	/^  U32 at;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:U32	file:
-at	D:/work/git/txt/code/momo_json.h	/^  U32 at;$/;"	m	language:C++	struct:__anon6dd1ef0b0608	typeref:typename:U32
+at	D:/work/git/txt/code/momo_json.h	/^  U32 at;$/;"	m	language:C++	struct:__anon6dd1ef0b0708	typeref:typename:U32
 atan_f32	D:/work/git/txt/code/momo_intrinsics.h	/^atan_f32(F32 x){$/;"	f	language:C++	typeref:typename:F32
 atan_f32	D:/work/git/txt/code/momo_intrinsics.h	/^static F32 atan_f32(F32 x);$/;"	p	language:C++	typeref:typename:F32
 atan_f64	D:/work/git/txt/code/momo_intrinsics.h	/^atan_f64(F64 x){$/;"	f	language:C++	typeref:typename:F64
@@ -100,39 +101,39 @@ b	D:/work/git/txt/code/momo_colors.h	/^  F32 r, g, b;   $/;"	m	language:C++	stru
 b	D:/work/git/txt/code/momo_strings.h	/^  union { U32 v; U8 b[4]; } combine;$/;"	m	language:C++	union:sb8_push_hex_u32::__anon4fb3d39b050a	typeref:typename:U8[4]
 B16	D:/work/git/txt/code/momo_common.h	/^typedef U16 B16;$/;"	t	language:C++	typeref:typename:U16
 B32	D:/work/git/txt/code/momo_common.h	/^typedef U32 B32;$/;"	t	language:C++	typeref:typename:U32
-b32	D:/work/git/txt/code/momo_json.h	/^    B32 b32;$/;"	m	language:C++	union:__anon6dd1ef0b0708::__anon6dd1ef0b080a	typeref:typename:B32
+b32	D:/work/git/txt/code/momo_json.h	/^    B32 b32;$/;"	m	language:C++	union:__anon6dd1ef0b0808::__anon6dd1ef0b090a	typeref:typename:B32
 B64	D:/work/git/txt/code/momo_common.h	/^typedef U64 B64;$/;"	t	language:C++	typeref:typename:U64
 B8	D:/work/git/txt/code/momo_common.h	/^typedef U8 B8;$/;"	t	language:C++	typeref:typename:U8
-ba_clear	D:/work/git/txt/code/momo_memory.h	/^ba_clear(Bump_Allocator* a) {$/;"	f	language:C++	typeref:typename:void
-ba_clear	D:/work/git/txt/code/momo_memory.h	/^static void   ba_clear(Bump_Allocator* a);$/;"	p	language:C++	typeref:typename:void
-ba_init	D:/work/git/txt/code/momo_memory.h	/^ba_init(Bump_Allocator* a, void* mem, UMI cap) {$/;"	f	language:C++	typeref:typename:void
-ba_init	D:/work/git/txt/code/momo_memory.h	/^static void   ba_init(Bump_Allocator* a, void* mem, UMI cap);$/;"	p	language:C++	typeref:typename:void
-ba_mark	D:/work/git/txt/code/momo_memory.h	/^ba_mark(Bump_Allocator* a) {$/;"	f	language:C++	typeref:typename:Bump_Allocator_Marker
-ba_mark	D:/work/git/txt/code/momo_memory.h	/^static Bump_Allocator_Marker ba_mark(Bump_Allocator* a);$/;"	p	language:C++	typeref:typename:Bump_Allocator_Marker
-ba_partition	D:/work/git/txt/code/momo_memory.h	/^ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align) {	$/;"	f	language:C++	typeref:typename:B32
-ba_partition	D:/work/git/txt/code/momo_memory.h	/^static B32    ba_partition(Bump_Allocator* a, Bump_Allocator* partition, UMI size, UMI align);$/;"	p	language:C++	typeref:typename:B32
-ba_partition_with_remaining	D:/work/git/txt/code/momo_memory.h	/^ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* partition, UMI align){$/;"	f	language:C++	typeref:typename:B32
-ba_partition_with_remaining	D:/work/git/txt/code/momo_memory.h	/^static B32    ba_partition_with_remaining(Bump_Allocator* a, Bump_Allocator* parition, UMI align/;"	p	language:C++	typeref:typename:B32
-ba_push	D:/work/git/txt/code/momo_memory.h	/^#define ba_push(/;"	d	language:C++
-ba_push_align	D:/work/git/txt/code/momo_memory.h	/^#define ba_push_align(/;"	d	language:C++
-ba_push_arr	D:/work/git/txt/code/momo_memory.h	/^#define ba_push_arr(/;"	d	language:C++
-ba_push_arr_align	D:/work/git/txt/code/momo_memory.h	/^#define ba_push_arr_align(/;"	d	language:C++
-ba_push_arr_zero	D:/work/git/txt/code/momo_memory.h	/^#define ba_push_arr_zero(/;"	d	language:C++
-ba_push_arr_zero_align	D:/work/git/txt/code/momo_memory.h	/^#define ba_push_arr_zero_align(/;"	d	language:C++
-ba_push_size	D:/work/git/txt/code/momo_memory.h	/^ba_push_size(Bump_Allocator* a, UMI size, UMI align) {$/;"	f	language:C++	typeref:typename:void *
-ba_push_size	D:/work/git/txt/code/momo_memory.h	/^static void*  ba_push_size(Bump_Allocator* a, UMI size, UMI align);$/;"	p	language:C++	typeref:typename:void *
-ba_push_size_zero	D:/work/git/txt/code/momo_memory.h	/^ba_push_size_zero(Bump_Allocator* a, UMI size, UMI align) $/;"	f	language:C++	typeref:typename:void *
-ba_push_size_zero	D:/work/git/txt/code/momo_memory.h	/^static void*  ba_push_size_zero(Bump_Allocator* a, UMI size, UMI align); $/;"	p	language:C++	typeref:typename:void *
-ba_push_zero	D:/work/git/txt/code/momo_memory.h	/^#define ba_push_zero(/;"	d	language:C++
-ba_push_zero_align	D:/work/git/txt/code/momo_memory.h	/^#define ba_push_zero_align(/;"	d	language:C++
-ba_remaining	D:/work/git/txt/code/momo_memory.h	/^ba_remaining(Bump_Allocator* a) {$/;"	f	language:C++	typeref:typename:UMI
-ba_remaining	D:/work/git/txt/code/momo_memory.h	/^static UMI    ba_remaining(Bump_Allocator* a);$/;"	p	language:C++	typeref:typename:UMI
-ba_revert	D:/work/git/txt/code/momo_memory.h	/^ba_revert(Bump_Allocator_Marker marker) {$/;"	f	language:C++	typeref:typename:void
-ba_revert	D:/work/git/txt/code/momo_memory.h	/^static void ba_revert(Bump_Allocator_Marker marker);$/;"	p	language:C++	typeref:typename:void
-ba_set_revert_point	D:/work/git/txt/code/momo_memory.h	/^# define ba_set_revert_point(/;"	d	language:C++
+arn_clear	D:/work/git/txt/code/momo_memory.h	/^arn_clear(Arena* a) {$/;"	f	language:C++	typeref:typename:void
+arn_clear	D:/work/git/txt/code/momo_memory.h	/^static void   arn_clear(Arena* a);$/;"	p	language:C++	typeref:typename:void
+arn_init	D:/work/git/txt/code/momo_memory.h	/^arn_init(Arena* a, void* mem, UMI cap) {$/;"	f	language:C++	typeref:typename:void
+arn_init	D:/work/git/txt/code/momo_memory.h	/^static void   arn_init(Arena* a, void* mem, UMI cap);$/;"	p	language:C++	typeref:typename:void
+arn_mark	D:/work/git/txt/code/momo_memory.h	/^arn_mark(Arena* a) {$/;"	f	language:C++	typeref:typename:Arena_Marker
+arn_mark	D:/work/git/txt/code/momo_memory.h	/^static Arena_Marker arn_mark(Arena* a);$/;"	p	language:C++	typeref:typename:Arena_Marker
+arn_partition	D:/work/git/txt/code/momo_memory.h	/^arn_partition(Arena* a, Arena* partition, UMI size, UMI align) {	$/;"	f	language:C++	typeref:typename:B32
+arn_partition	D:/work/git/txt/code/momo_memory.h	/^static B32    arn_partition(Arena* a, Arena* partition, UMI size, UMI align);$/;"	p	language:C++	typeref:typename:B32
+arn_partition_with_remaining	D:/work/git/txt/code/momo_memory.h	/^arn_partition_with_remaining(Arena* a, Arena* partition, UMI align){$/;"	f	language:C++	typeref:typename:B32
+arn_partition_with_remaining	D:/work/git/txt/code/momo_memory.h	/^static B32    arn_partition_with_remaining(Arena* a, Arena* parition, UMI align/;"	p	language:C++	typeref:typename:B32
+arn_push	D:/work/git/txt/code/momo_memory.h	/^#define arn_push(/;"	d	language:C++
+arn_push_align	D:/work/git/txt/code/momo_memory.h	/^#define arn_push_align(/;"	d	language:C++
+arn_push_arr	D:/work/git/txt/code/momo_memory.h	/^#define arn_push_arr(/;"	d	language:C++
+arn_push_arr_align	D:/work/git/txt/code/momo_memory.h	/^#define arn_push_arr_align(/;"	d	language:C++
+arn_push_arr_zero	D:/work/git/txt/code/momo_memory.h	/^#define arn_push_arr_zero(/;"	d	language:C++
+arn_push_arr_zero_align	D:/work/git/txt/code/momo_memory.h	/^#define arn_push_arr_zero_align(/;"	d	language:C++
+arn_push_size	D:/work/git/txt/code/momo_memory.h	/^arn_push_size(Arena* a, UMI size, UMI align) {$/;"	f	language:C++	typeref:typename:void *
+arn_push_size	D:/work/git/txt/code/momo_memory.h	/^static void*  arn_push_size(Arena* a, UMI size, UMI align);$/;"	p	language:C++	typeref:typename:void *
+arn_push_size_zero	D:/work/git/txt/code/momo_memory.h	/^arn_push_size_zero(Arena* a, UMI size, UMI align) $/;"	f	language:C++	typeref:typename:void *
+arn_push_size_zero	D:/work/git/txt/code/momo_memory.h	/^static void*  arn_push_size_zero(Arena* a, UMI size, UMI align); $/;"	p	language:C++	typeref:typename:void *
+arn_push_zero	D:/work/git/txt/code/momo_memory.h	/^#define arn_push_zero(/;"	d	language:C++
+arn_push_zero_align	D:/work/git/txt/code/momo_memory.h	/^#define arn_push_zero_align(/;"	d	language:C++
+arn_remaining	D:/work/git/txt/code/momo_memory.h	/^arn_remaining(Arena* a) {$/;"	f	language:C++	typeref:typename:UMI
+arn_remaining	D:/work/git/txt/code/momo_memory.h	/^static UMI    arn_remaining(Arena* a);$/;"	p	language:C++	typeref:typename:UMI
+arn_revert	D:/work/git/txt/code/momo_memory.h	/^arn_revert(Arena_Marker marker) {$/;"	f	language:C++	typeref:typename:void
+arn_revert	D:/work/git/txt/code/momo_memory.h	/^static void arn_revert(Arena_Marker marker);$/;"	p	language:C++	typeref:typename:void
+arn_set_revert_point	D:/work/git/txt/code/momo_memory.h	/^# define arn_set_revert_point(/;"	d	language:C++
 before	D:/work/git/txt/code/game_platform.h	/^  B32 before;$/;"	m	language:C++	struct:Platform_Button	typeref:typename:B32
 begin	D:/work/git/txt/code/meta.cpp	/^  U32 begin;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:U32	file:
-begin	D:/work/git/txt/code/momo_json.h	/^  U32 begin;$/;"	m	language:C++	struct:__anon6dd1ef0b0508	typeref:typename:U32
+begin	D:/work/git/txt/code/momo_json.h	/^  U32 begin;$/;"	m	language:C++	struct:__anon6dd1ef0b0608	typeref:typename:U32
 begin_inspector	D:/work/git/txt/code/game_inspector.h	/^begin_inspector(Inspector* in) {$/;"	f	language:C++	typeref:typename:void
 begin_stat	D:/work/git/txt/code/game_profiler_rendering.h	/^begin_stat(Stat* stat) {$/;"	f	language:C++	typeref:typename:void
 bitmap	D:/work/git/txt/code/game_assets.h	/^    Game_Bitmap bitmap;$/;"	m	language:C++	union:Game_Asset::__anon329ebfe6020a	typeref:typename:Game_Bitmap
@@ -164,7 +165,7 @@ Block	D:/work/git/txt/code/momo_common.h	/^typedef struct Block {$/;"	s	language
 Block	D:/work/git/txt/code/momo_common.h	/^} Block;$/;"	t	language:C++	typeref:struct:Block
 block_align	D:/work/git/txt/code/momo_wav.h	/^  U16 block_align;$/;"	m	language:C++	struct:__anon690e9bbf0208	typeref:typename:U16
 block_name	D:/work/git/txt/code/game_profiler.h	/^  const char* block_name;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:const char *
-bonk_tri2_pt2	D:/work/git/txt/code/momo_shapes.h	/^bonk_tri2_pt2(V2 t0, V2 t1, V2 t2, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
+bonk_tri2_pt2	D:/work/git/txt/code/momo_shapes.h	/^bonk_tri2_pt2(V2 tp0, V2 tp1, V2 tp2, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
 box	D:/work/git/txt/code/game_assets.h	/^  Rect2 box;$/;"	m	language:C++	struct:Game_Font_Glyph	typeref:typename:Rect2
 box	D:/work/git/txt/code/karu.h	/^  Rect2 box;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:Rect2
 bpm_to_spb_f32	D:/work/git/txt/code/momo_common.h	/^bpm_to_spb_f32(F32 bpm) {$/;"	f	language:C++	typeref:typename:F32
@@ -174,8 +175,8 @@ buffer	D:/work/git/txt/code/w32_audio_wasapi.h	/^  S16* buffer;$/;"	m	language:C
 buffers	D:/work/git/txt/code/game_gfx_opengl.h	/^  GLuint buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; \/\/ Opengl__VBO_Count$/;"	m	language:C++	struct:__anon982c2a3c0808	typeref:typename:GLuint[]
 buffers	D:/work/git/txt/code/game_gfx_opengl.h	/^  GLuint buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT];$/;"	m	language:C++	struct:__anon982c2a3c0908	typeref:typename:GLuint[]
 buffer_size	D:/work/git/txt/code/w32_audio_wasapi.h	/^  U32 buffer_size;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:U32
-Bump_Allocator	D:/work/git/txt/code/momo_memory.h	/^} Bump_Allocator;$/;"	t	language:C++	typeref:struct:__anonb4ad698a0108
-Bump_Allocator_Marker	D:/work/git/txt/code/momo_memory.h	/^} Bump_Allocator_Marker;$/;"	t	language:C++	typeref:struct:__anonb4ad698a0208
+Arena	D:/work/git/txt/code/momo_memory.h	/^} Arena;$/;"	t	language:C++	typeref:struct:__anonb4ad698a0108
+Arena_Marker	D:/work/git/txt/code/momo_memory.h	/^} Arena_Marker;$/;"	t	language:C++	typeref:struct:__anonb4ad698a0208
 buttons	D:/work/git/txt/code/game_platform.h	/^    Platform_Button buttons[13];$/;"	m	language:C++	union:Platform::__anon27c31d58010a	typeref:typename:Platform_Button[13]
 button_console	D:/work/git/txt/code/game_platform.h	/^      Platform_Button button_console;$/;"	m	language:C++	struct:Platform::__anon27c31d58010a::__anon27c31d580208	typeref:typename:Platform_Button
 button_down	D:/work/git/txt/code/game_platform.h	/^      Platform_Button button_down;$/;"	m	language:C++	struct:Platform::__anon27c31d58010a::__anon27c31d580208	typeref:typename:Platform_Button
@@ -194,6 +195,7 @@ byte_rate	D:/work/git/txt/code/momo_wav.h	/^  U32 byte_rate;$/;"	m	language:C++	
 c	D:/work/git/txt/code/test_essentials.h	/^      char c[2];$/;"	m	language:C++	union:test_essentials::__anone518d674010a	typeref:typename:char[2]
 c	D:/work/git/txt/code/test_essentials.h	/^      char c[4];$/;"	m	language:C++	union:test_essentials::__anone518d674020a	typeref:typename:char[4]
 C8	D:/work/git/txt/code/momo_common.h	/^typedef char C8;$/;"	t	language:C++	typeref:typename:char
+cabinet_index	D:/work/git/txt/code/w32.cpp	/^  U32 cabinet_index;$/;"	m	language:C++	struct:W32_File	typeref:typename:U32	file:
 callback	D:/work/git/txt/code/w32.cpp	/^  Platform_Task_Callback* callback;$/;"	m	language:C++	struct:W32_Work	typeref:typename:Platform_Task_Callback *	file:
 cap	D:/work/git/txt/code/momo_memory.h	/^	UMI cap;$/;"	m	language:C++	struct:__anonb4ad698a0108	typeref:typename:UMI
 cap	D:/work/git/txt/code/momo_strings.h	/^	UMI cap;$/;"	m	language:C++	struct:__anon4fb3d39b0208	typeref:typename:UMI
@@ -209,6 +211,9 @@ char_count	D:/work/git/txt/code/game_platform.h	/^  U32 char_count;$/;"	m	langua
 CINTERFACE	D:/work/git/txt/code/w32.h	/^#define CINTERFACE$/;"	d	language:C++
 circle_sprite	D:/work/git/txt/code/game_mode_lit.h	/^  Game_Sprite_ID circle_sprite;$/;"	m	language:C++	struct:Lit	typeref:typename:Game_Sprite_ID
 clamp_of	D:/work/git/txt/code/momo_common.h	/^#define clamp_of(/;"	d	language:C++
+cll_append	D:/work/git/txt/code/momo_lists.h	/^#define cll_append(/;"	d	language:C++
+cll_init	D:/work/git/txt/code/momo_lists.h	/^#define cll_init(/;"	d	language:C++
+cll_remove	D:/work/git/txt/code/momo_lists.h	/^#define cll_remove(/;"	d	language:C++
 close_file	D:/work/git/txt/code/game_platform.h	/^  Platform_Close_File* close_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Close_File *
 cmap	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
 cmap_mappings	D:/work/git/txt/code/momo_ttf.h	/^  U32 cmap_mappings;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
@@ -324,6 +329,7 @@ c_link_begin	D:/work/git/txt/code/momo_common.h	/^#define c_link_begin /;"	d	lan
 c_link_end	D:/work/git/txt/code/momo_common.h	/^#define c_link_end /;"	d	language:C++
 d	D:/work/git/txt/code/momo_vectors.h	/^	struct { F32 w, h, d; };$/;"	m	language:C++	struct:__anon6c64fdb70b0a::__anon6c64fdb70d08	typeref:typename:F32
 data	D:/work/git/txt/code/game_gfx.h	/^  void* data;$/;"	m	language:C++	struct:Gfx_Command	typeref:typename:void *
+data	D:/work/git/txt/code/game_platform.h	/^  void* data;$/;"	m	language:C++	struct:Platform_Memory_Block	typeref:typename:void *
 data	D:/work/git/txt/code/momo_common.h	/^    void* data;$/;"	m	language:C++	union:Block::__anon7bbb735a090a	typeref:typename:void *
 data	D:/work/git/txt/code/momo_png.h	/^  U8* data;$/;"	m	language:C++	struct:__anon6896d1560108	typeref:typename:U8 *
 data	D:/work/git/txt/code/momo_streams.h	/^  U8* data;$/;"	m	language:C++	struct:Stream	typeref:typename:U8 *
@@ -334,7 +340,7 @@ data_chunk	D:/work/git/txt/code/momo_wav.h	/^  WAV_Data_Chunk data_chunk;$/;"	m	
 data_pos	D:/work/git/txt/code/game_gfx.h	/^	UMI data_pos;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:UMI
 data_size	D:/work/git/txt/code/momo_png.h	/^  UMI data_size;$/;"	m	language:C++	struct:__anon6896d1560108	typeref:typename:UMI
 data_u8	D:/work/git/txt/code/momo_common.h	/^    U8* data_u8;$/;"	m	language:C++	union:Block::__anon7bbb735a090a	typeref:typename:U8 *
-debug_arena	D:/work/git/txt/code/game.h	/^  Bump_Allocator debug_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Bump_Allocator
+debug_arena	D:/work/git/txt/code/game.h	/^  Arena debug_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Arena
 debug_font	D:/work/git/txt/code/game.h	/^  Game_Font_ID debug_font;$/;"	m	language:C++	struct:Game	typeref:typename:Game_Font_ID
 debug_log	D:/work/git/txt/code/game_platform.h	/^  Platform_Debug_Log* debug_log;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Debug_Log *
 debug_rays	D:/work/git/txt/code/game_mode_lit_world.h	/^  Lit_Light_Debug_Ray_List debug_rays;$/;"	m	language:C++	struct:Lit_Light	typeref:typename:Lit_Light_Debug_Ray_List
@@ -519,7 +525,7 @@ f	D:/work/git/txt/code/momo_common.h	/^  union { F64 f; U64 u; } ret = {};$/;"	m
 f	D:/work/git/txt/code/momo_common.h	/^  union { F64 f; U64 u; } ret = {};$/;"	m	language:C++	union:_F64_NEG_INFINITY::__anon7bbb735a060a	typeref:typename:F64
 f	D:/work/git/txt/code/momo_common.h	/^  union { F64 f; U64 u; } val = {};$/;"	m	language:C++	union:abs_f64::__anon7bbb735a080a	typeref:typename:F64
 F32	D:/work/git/txt/code/momo_common.h	/^typedef float F32;$/;"	t	language:C++	typeref:typename:float
-f32	D:/work/git/txt/code/momo_json.h	/^    F32 f32;$/;"	m	language:C++	union:__anon6dd1ef0b0708::__anon6dd1ef0b080a	typeref:typename:F32
+f32	D:/work/git/txt/code/momo_json.h	/^    F32 f32;$/;"	m	language:C++	union:__anon6dd1ef0b0808::__anon6dd1ef0b090a	typeref:typename:F32
 F32_EPSILON	D:/work/git/txt/code/momo_common.h	/^#define F32_EPSILON /;"	d	language:C++
 F32_INFINITY	D:/work/git/txt/code/momo_common.h	/^#define F32_INFINITY /;"	d	language:C++
 F32_NAN	D:/work/git/txt/code/momo_common.h	/^#define F32_NAN /;"	d	language:C++
@@ -533,6 +539,8 @@ false	D:/work/git/txt/code/momo_common.h	/^# define false /;"	d	language:C++
 filename	D:/work/git/txt/code/game_profiler.h	/^  const char* filename;$/;"	m	language:C++	struct:Profiler_Entry	typeref:typename:const char *
 filename	D:/work/git/txt/code/sui_atlas.h	/^  const char* filename;$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:const char *
 filename	D:/work/git/txt/code/sui_atlas.h	/^  const char* filename;$/;"	m	language:C++	struct:Sui_Atlas_Sprite	typeref:typename:const char *
+files	D:/work/git/txt/code/w32.cpp	/^  W32_File files[32]; $/;"	m	language:C++	struct:W32_File_Cabinet	typeref:typename:W32_File[32]	file:
+file_cabinet	D:/work/git/txt/code/w32.cpp	/^  W32_File_Cabinet file_cabinet;$/;"	m	language:C++	struct:W32_State	typeref:typename:W32_File_Cabinet	file:
 filled_circle_sprite	D:/work/git/txt/code/game_mode_lit.h	/^  Game_Sprite_ID filled_circle_sprite;$/;"	m	language:C++	struct:Lit	typeref:typename:Game_Sprite_ID
 filter_method	D:/work/git/txt/code/momo_png.h	/^  U8 filter_method;$/;"	m	language:C++	struct:_PNG_IHDR	typeref:typename:U8
 filter_method	D:/work/git/txt/code/momo_png.h	/^  U8 filter_method;$/;"	m	language:C++	struct:__anon6896d1560108	typeref:typename:U8
@@ -564,19 +572,22 @@ font_count	D:/work/git/txt/code/sui_atlas.h	/^  U32 font_count;$/;"	m	language:C
 font_glyph	D:/work/git/txt/code/sui_atlas.h	/^    Sui_Atlas_Font_Glyph_Context font_glyph;$/;"	m	language:C++	union:Sui_Atlas_Context::__anonc0f04f7f010a	typeref:typename:Sui_Atlas_Font_Glyph_Context
 foreach	D:/work/git/txt/code/momo_common.h	/^#define foreach(/;"	d	language:C++
 format	D:/work/git/txt/code/momo_wav.h	/^  U32 format; \/\/ big endian$/;"	m	language:C++	struct:__anon690e9bbf0108	typeref:typename:U32
-frame_arena	D:/work/git/txt/code/game.h	/^  Bump_Allocator frame_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Bump_Allocator
+frame_arena	D:/work/git/txt/code/game.h	/^  Arena frame_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Arena
+free_files	D:/work/git/txt/code/w32.cpp	/^  U32 free_files[32];$/;"	m	language:C++	struct:W32_File_Cabinet	typeref:typename:U32[32]	file:
+free_file_count	D:/work/git/txt/code/w32.cpp	/^  U32 free_file_count;$/;"	m	language:C++	struct:W32_File_Cabinet	typeref:typename:U32	file:
+free_memory	D:/work/git/txt/code/game_platform.h	/^  Platform_Free_Memory* free_memory;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Free_Memory *
 func	D:/work/git/txt/code/game_console.h	/^  void (*func)(void*);$/;"	m	language:C++	struct:Console_Command	typeref:typename:void (*)(void *)
 functions	D:/work/git/txt/code/w32_loaded_code.h	/^  void** functions;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:void **
 function_count	D:/work/git/txt/code/w32_loaded_code.h	/^  U32 function_count;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:U32
 function_names	D:/work/git/txt/code/w32_loaded_code.h	/^  const char** function_names;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:const char **
 g	D:/work/git/txt/code/momo_colors.h	/^    struct { F32 r, g, b; };  $/;"	m	language:C++	struct:RGBA::__anon798c3623010a::__anon798c36230208	typeref:typename:F32
 g	D:/work/git/txt/code/momo_colors.h	/^  F32 r, g, b;   $/;"	m	language:C++	struct:RGB	typeref:typename:F32
-Game	D:/work/git/txt/code/game.h	/^typedef struct Game {$/;"	s	language:C++
-Game	D:/work/git/txt/code/game.h	/^} Game;$/;"	t	language:C++	typeref:struct:Game
+Game	D:/work/git/txt/code/game.h	/^struct Game {$/;"	s	language:C++
+Game	D:/work/git/txt/code/game.h	/^} Game;$/;"	v	language:C++	typeref:struct:Game
 game	D:/work/git/txt/code/game_platform.h	/^  void* game;$/;"	m	language:C++	struct:Platform	typeref:typename:void *
 game_allocate_mode	D:/work/git/txt/code/game.h	/^#define game_allocate_mode(/;"	d	language:C++
 game_allocate_mode_size	D:/work/git/txt/code/game.h	/^game_allocate_mode_size(Game* game, UMI size) {$/;"	f	language:C++	typeref:typename:void *
-game_arena	D:/work/git/txt/code/game_platform.h	/^  Bump_Allocator* game_arena; \/\/ Require 32MB$/;"	m	language:C++	struct:Platform	typeref:typename:Bump_Allocator *
+game_arena	D:/work/git/txt/code/game_platform.h	/^  Arena* game_arena; \/\/ Require 32MB$/;"	m	language:C++	struct:Platform	typeref:typename:Arena *
 Game_Asset	D:/work/git/txt/code/game_assets.h	/^struct Game_Asset {$/;"	s	language:C++
 Game_Assets	D:/work/git/txt/code/game_assets.h	/^struct Game_Assets {$/;"	s	language:C++
 GAME_ASSETS_H	D:/work/git/txt/code/game_assets.h	/^#define GAME_ASSETS_H$/;"	d	language:C++
@@ -610,6 +621,7 @@ GAME_GFX_H	D:/work/git/txt/code/game_gfx.h	/^#define GAME_GFX_H$/;"	d	language:C
 game_goto_mode	D:/work/git/txt/code/game.h	/^game_goto_mode(Game* game, Game_Mode_Type type) {$/;"	f	language:C++	typeref:typename:void
 GAME_H	D:/work/git/txt/code/game.h	/^#define GAME_H$/;"	d	language:C++
 GAME_HEIGHT	D:/work/git/txt/code/game_platform.h	/^#define GAME_HEIGHT /;"	d	language:C++
+game_height	D:/work/git/txt/code/w32.cpp	/^  F32 game_height;$/;"	m	language:C++	struct:W32_State	typeref:typename:F32	file:
 GAME_INSPECTOR_H	D:/work/git/txt/code/game_inspector.h	/^#define GAME_INSPECTOR_H$/;"	d	language:C++
 GAME_INSPECTOR_RENDERING_H	D:/work/git/txt/code/game_inspector_rendering.h	/^#define GAME_INSPECTOR_RENDERING_H$/;"	d	language:C++
 game_log	D:/work/git/txt/code/game.h	/^#define game_log(/;"	d	language:C++
@@ -620,8 +632,7 @@ game_mode_initialized	D:/work/git/txt/code/game.h	/^game_mode_initialized(Game* 
 GAME_MODE_LIT_H	D:/work/git/txt/code/game_mode_lit.h	/^#define GAME_MODE_LIT_H$/;"	d	language:C++
 GAME_MODE_SPLASH_H	D:/work/git/txt/code/game_mode_splash.h	/^#define GAME_MODE_SPLASH_H$/;"	d	language:C++
 Game_Mode_Tick	D:/work/git/txt/code/game.h	/^typedef void (*Game_Mode_Tick)(Game*);$/;"	t	language:C++	typeref:typename:void (*)(Game *)
-Game_Mode_Type	D:/work/git/txt/code/game.h	/^typedef enum Game_Mode_Type {$/;"	g	language:C++
-Game_Mode_Type	D:/work/git/txt/code/game.h	/^} Game_Mode_Type;$/;"	t	language:C++	typeref:enum:Game_Mode_Type
+Game_Mode_Type	D:/work/git/txt/code/game.h	/^enum Game_Mode_Type {$/;"	g	language:C++
 GAME_MODE_TYPE_COMPUTER	D:/work/git/txt/code/game.h	/^  GAME_MODE_TYPE_COMPUTER,$/;"	e	language:C++	enum:Game_Mode_Type
 GAME_MODE_TYPE_LIT	D:/work/git/txt/code/game.h	/^  GAME_MODE_TYPE_LIT,$/;"	e	language:C++	enum:Game_Mode_Type
 GAME_MODE_TYPE_SANDBOX	D:/work/git/txt/code/game.h	/^  GAME_MODE_TYPE_SANDBOX,$/;"	e	language:C++	enum:Game_Mode_Type
@@ -642,13 +653,13 @@ GAME_SHOW_DEBUG_INSPECTOR	D:/work/git/txt/code/game.h	/^  GAME_SHOW_DEBUG_INSPEC
 GAME_SHOW_DEBUG_MAX	D:/work/git/txt/code/game.h	/^  GAME_SHOW_DEBUG_MAX$/;"	e	language:C++	enum:Game_Show_Debug_Type
 GAME_SHOW_DEBUG_NONE	D:/work/git/txt/code/game.h	/^  GAME_SHOW_DEBUG_NONE,$/;"	e	language:C++	enum:Game_Show_Debug_Type
 GAME_SHOW_DEBUG_PROFILER	D:/work/git/txt/code/game.h	/^  GAME_SHOW_DEBUG_PROFILER,$/;"	e	language:C++	enum:Game_Show_Debug_Type
-Game_Show_Debug_Type	D:/work/git/txt/code/game.h	/^typedef enum Game_Show_Debug_Type {$/;"	g	language:C++
-Game_Show_Debug_Type	D:/work/git/txt/code/game.h	/^} Game_Show_Debug_Type;$/;"	t	language:C++	typeref:enum:Game_Show_Debug_Type
+Game_Show_Debug_Type	D:/work/git/txt/code/game.h	/^enum Game_Show_Debug_Type {$/;"	g	language:C++
 Game_Sprite	D:/work/git/txt/code/game_assets.h	/^struct Game_Sprite {$/;"	s	language:C++
 Game_Sprite_ID	D:/work/git/txt/code/game_assets.h	/^struct Game_Sprite_ID { U32 value; };$/;"	s	language:C++
 game_update_and_render	D:/work/git/txt/code/game.cpp	/^game_update_and_render(Platform* pf)$/;"	f	language:C++	typeref:typename:exported B32
 Game_Update_And_Render	D:/work/git/txt/code/game_platform.h	/^typedef void Game_Update_And_Render(Platform* pf);$/;"	t	language:C++	typeref:typename:void ()(Platform * pf)
 GAME_WIDTH	D:/work/git/txt/code/game_platform.h	/^#define GAME_WIDTH /;"	d	language:C++
+game_width	D:/work/git/txt/code/w32.cpp	/^  F32 game_width;$/;"	m	language:C++	struct:W32_State	typeref:typename:F32	file:
 GB	D:/work/git/txt/code/momo_common.h	/^#define GB(/;"	d	language:C++
 get_asset	D:/work/git/txt/code/game_assets.h	/^get_asset(Game_Assets* ga, U32 asset_index){$/;"	f	language:C++	typeref:typename:Game_Asset *
 get_bitmap	D:/work/git/txt/code/game_assets.h	/^get_bitmap(Game_Assets* ga, Game_Bitmap_ID bitmap_id) {$/;"	f	language:C++	typeref:typename:Game_Bitmap *
@@ -658,7 +669,7 @@ get_kerning	D:/work/git/txt/code/game_assets.h	/^get_kerning(Game_Font* font,$/;
 get_next_texture_handle	D:/work/git/txt/code/game_assets.h	/^get_next_texture_handle() {$/;"	f	language:C++	typeref:typename:U32
 get_performance_counter	D:/work/git/txt/code/game_profiler.h	/^  Profiler_Get_Performance_Counter* get_performance_counter;$/;"	m	language:C++	struct:Profiler	typeref:typename:Profiler_Get_Performance_Counter *
 get_sprite	D:/work/git/txt/code/game_assets.h	/^get_sprite(Game_Assets* ga, Game_Sprite_ID sprite_id) {$/;"	f	language:C++	typeref:typename:Game_Sprite *
-gfx	D:/work/git/txt/code/game.h	/^static struct Gfx* gfx;$/;"	v	language:C++	typeref:struct:Gfx *
+gfx	D:/work/git/txt/code/game.h	/^static Gfx* gfx;$/;"	v	language:C++	typeref:typename:Gfx *
 Gfx	D:/work/git/txt/code/game_gfx.h	/^typedef struct Gfx {$/;"	s	language:C++
 Gfx	D:/work/git/txt/code/game_gfx.h	/^} Gfx;$/;"	t	language:C++	typeref:struct:Gfx
 gfx	D:/work/git/txt/code/game_gfx_opengl.h	/^  Gfx gfx; \/\/ Must be first member$/;"	m	language:C++	struct:Opengl	typeref:typename:Gfx
@@ -889,7 +900,8 @@ h	D:/work/git/txt/code/momo_vectors.h	/^	struct { S32 w, h; };$/;"	m	language:C+
 h	D:/work/git/txt/code/momo_vectors.h	/^	struct { U32 w, h; };$/;"	m	language:C++	struct:__anon6c64fdb7010a::__anon6c64fdb70308	typeref:typename:U32
 half_angle	D:/work/git/txt/code/game_mode_lit_world.h	/^  F32 half_angle;$/;"	m	language:C++	struct:Lit_Light	typeref:typename:F32
 handle	D:/work/git/txt/code/game_gfx_opengl.h	/^  GLuint handle;$/;"	m	language:C++	struct:__anon982c2a3c0708	typeref:typename:GLuint
-head	D:/work/git/txt/code/momo_json.h	/^  struct _JSON_Array_Node* head;  $/;"	m	language:C++	struct:JSON_Array	typeref:struct:_JSON_Array_Node *
+handle	D:/work/git/txt/code/w32.cpp	/^  HANDLE handle;$/;"	m	language:C++	struct:W32_File	typeref:typename:HANDLE	file:
+head	D:/work/git/txt/code/momo_json.h	/^  struct _JSON_Array_Node* head;  $/;"	m	language:C++	struct:__anon6dd1ef0b0208	typeref:struct:_JSON_Array_Node *
 head	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
 height	D:/work/git/txt/code/game_assets.h	/^  U32 height;$/;"	m	language:C++	struct:Game_Bitmap	typeref:typename:U32
 height	D:/work/git/txt/code/game_gfx_opengl.h	/^  U32 height;$/;"	m	language:C++	struct:__anon982c2a3c0708	typeref:typename:U32
@@ -931,11 +943,11 @@ index	D:/work/git/txt/code/momo_rng.h	/^  U32 index;$/;"	m	language:C++	struct:_
 index	D:/work/git/txt/code/momo_sort.h	/^  U32 index;$/;"	m	language:C++	struct:__anon8289b9590108	typeref:typename:U32
 info_lines	D:/work/git/txt/code/game_console.h	/^  String8_Builder info_lines[9];$/;"	m	language:C++	struct:Console	typeref:typename:String8_Builder[9]
 INITGUID	D:/work/git/txt/code/w32.h	/^#define INITGUID$/;"	d	language:C++
-init_console	D:/work/git/txt/code/game_console.h	/^init_console(Console* dc, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:void
+init_console	D:/work/git/txt/code/game_console.h	/^init_console(Console* dc, Arena* allocator) {$/;"	f	language:C++	typeref:typename:void
 init_game_assets	D:/work/git/txt/code/game_assets.h	/^init_game_assets(Game_Assets* ga, $/;"	f	language:C++	typeref:typename:B32
 input_line	D:/work/git/txt/code/game_console.h	/^  String8_Builder input_line;$/;"	m	language:C++	struct:Console	typeref:typename:String8_Builder
 inspector	D:/work/git/txt/code/game.h	/^  Inspector inspector;$/;"	m	language:C++	struct:Game	typeref:typename:Inspector
-inspector	D:/work/git/txt/code/game.h	/^static struct Inspector* inspector;$/;"	v	language:C++	typeref:struct:Inspector *
+inspector	D:/work/git/txt/code/game.h	/^static Inspector* inspector;$/;"	v	language:C++	typeref:typename:Inspector *
 Inspector	D:/work/git/txt/code/game_inspector.h	/^struct Inspector {$/;"	s	language:C++
 Inspector_Entry	D:/work/git/txt/code/game_inspector.h	/^struct Inspector_Entry {$/;"	s	language:C++
 Inspector_Entry_List	D:/work/git/txt/code/game_inspector.h	/^struct Inspector_Entry_List {$/;"	s	language:C++
@@ -966,13 +978,13 @@ is_mode_changed	D:/work/git/txt/code/game.h	/^  B32 is_mode_changed;$/;"	m	langu
 is_nan_f32	D:/work/git/txt/code/momo_common.h	/^is_nan_f32(F32 f) {$/;"	f	language:C++	typeref:typename:B32
 is_nan_f64	D:/work/git/txt/code/momo_common.h	/^is_nan_f64(F64 f) {$/;"	f	language:C++	typeref:typename:B32
 is_pow2	D:/work/git/txt/code/momo_common.h	/^#define is_pow2(/;"	d	language:C++
+is_running	D:/work/git/txt/code/w32.cpp	/^  B32 is_running;$/;"	m	language:C++	struct:W32_State	typeref:typename:B32	file:
 is_shell	D:/work/git/txt/code/game_mode_lit_world.h	/^  B32 is_shell;$/;"	m	language:C++	struct:Lit_Light_Intersection	typeref:typename:B32
 is_valid	D:/work/git/txt/code/w32_loaded_code.h	/^  B32 is_valid;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:B32
 is_whitespace	D:/work/git/txt/code/momo_common.h	/^is_whitespace(C8 c) {$/;"	f	language:C++	typeref:typename:B32
 is_win_reached	D:/work/git/txt/code/game_mode_lit.h	/^  B32 is_win_reached;$/;"	m	language:C++	struct:Lit	typeref:typename:B32
 item	D:/work/git/txt/code/game_inspector.h	/^  void* item;$/;"	m	language:C++	struct:Inspector_Entry	typeref:typename:void *
-JSON_Array	D:/work/git/txt/code/momo_json.h	/^typedef struct JSON_Array {$/;"	s	language:C++
-JSON_Array	D:/work/git/txt/code/momo_json.h	/^} JSON_Array;$/;"	t	language:C++	typeref:struct:JSON_Array
+JSON_Array	D:/work/git/txt/code/momo_json.h	/^} JSON_Array;$/;"	t	language:C++	typeref:struct:__anon6dd1ef0b0208
 JSON_DEBUG	D:/work/git/txt/code/json_test.cpp	/^#define JSON_DEBUG /;"	d	language:C++	file:
 json_get_array	D:/work/git/txt/code/momo_json.h	/^json_get_array(JSON_Object* j, String8 key) {$/;"	f	language:C++	typeref:typename:JSON_Array *
 json_get_array	D:/work/git/txt/code/momo_json.h	/^static JSON_Array* json_get_array(JSON_Object* j, String8 key);$/;"	p	language:C++	typeref:typename:JSON_Array *
@@ -989,9 +1001,9 @@ json_get_str8	D:/work/git/txt/code/momo_json.h	/^static String8* json_get_str8(J
 json_get_u32	D:/work/git/txt/code/momo_json.h	/^json_get_u32(JSON_Object* j, String8 key) {$/;"	f	language:C++	typeref:typename:U32 *
 json_get_u32	D:/work/git/txt/code/momo_json.h	/^static U32* json_get_u32(JSON_Object* j, String8 key); $/;"	p	language:C++	typeref:typename:U32 *
 JSON_Object	D:/work/git/txt/code/momo_json.h	/^} JSON_Object;$/;"	t	language:C++	typeref:struct:__anon6dd1ef0b0108
-json_read	D:/work/git/txt/code/momo_json.h	/^json_read(JSON_Object* j, void* memory, UMI size, Bump_Allocator* ba) $/;"	f	language:C++	typeref:typename:B32
+json_read	D:/work/git/txt/code/momo_json.h	/^json_read(JSON_Object* j, void* memory, UMI size, Arena* ba) $/;"	f	language:C++	typeref:typename:B32
 json_read	D:/work/git/txt/code/momo_json.h	/^static B32 json_read(JSON_Object* j, void* memory, UMI size) ;$/;"	p	language:C++	typeref:typename:B32
-json_read_from_blk	D:/work/git/txt/code/momo_json.h	/^json_read_from_blk(JSON_Object* j, Block blk, Bump_Allocator* ba) {$/;"	f	language:C++	typeref:typename:B32
+json_read_from_blk	D:/work/git/txt/code/momo_json.h	/^json_read_from_blk(JSON_Object* j, Block blk, Arena* ba) {$/;"	f	language:C++	typeref:typename:B32
 json_read_from_blk	D:/work/git/txt/code/momo_json.h	/^static B32 json_read_from_blk(JSON_Object* j, Block blk);$/;"	p	language:C++	typeref:typename:B32
 Karu_Asset	D:/work/git/txt/code/karu.h	/^struct Karu_Asset {$/;"	s	language:C++
 Karu_Bitmap	D:/work/git/txt/code/karu.h	/^struct Karu_Bitmap {$/;"	s	language:C++
@@ -1146,7 +1158,6 @@ make	D:/work/git/txt/code/momo_common.h	/^#define make(/;"	d	language:C++
 make	D:/work/git/txt/code/w32_common.h	/^make(Profiler, profiler);$/;"	p	language:C++
 max	D:/work/git/txt/code/game_profiler_rendering.h	/^  F64 max;$/;"	m	language:C++	struct:Stat	typeref:typename:F64
 max	D:/work/git/txt/code/momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:Rect2	typeref:typename:V2
-max	D:/work/git/txt/code/momo_shapes.h	/^  V2U max;$/;"	m	language:C++	struct:Rect2U	typeref:typename:V2U
 maxp	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
 max_of	D:/work/git/txt/code/momo_common.h	/^#define max_of(/;"	d	language:C++
 max_x	D:/work/git/txt/code/game_gfx.h	/^  F32 min_x, max_x;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:F32
@@ -1154,6 +1165,7 @@ max_y	D:/work/git/txt/code/game_gfx.h	/^  F32 min_y, max_y;$/;"	m	language:C++	s
 MB	D:/work/git/txt/code/momo_common.h	/^#define MB(/;"	d	language:C++
 memory	D:/work/git/txt/code/game_gfx.h	/^	U8* memory;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:U8 *
 memory	D:/work/git/txt/code/momo_memory.h	/^	U8* memory;$/;"	m	language:C++	struct:__anonb4ad698a0108	typeref:typename:U8 *
+memory_sentinel	D:/work/git/txt/code/w32.cpp	/^  W32_Memory_Block memory_sentinel;$/;"	m	language:C++	struct:W32_State	typeref:typename:W32_Memory_Block	file:
 memory_size	D:/work/git/txt/code/game_gfx.h	/^  UMI memory_size;$/;"	m	language:C++	struct:Gfx_Command_Queue	typeref:typename:UMI
 meta_compare_token_with_string	D:/work/git/txt/code/meta.cpp	/^meta_compare_token_with_string(Meta_Tokenizer* t, Meta_Token token, String str) {$/;"	f	language:C++	typeref:typename:B32	file:
 meta_eat_ignorables	D:/work/git/txt/code/meta.cpp	/^meta_eat_ignorables(Meta_Tokenizer* t) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1181,14 +1193,13 @@ META_TOKEN_TYPE_UNKNOWN	D:/work/git/txt/code/meta.cpp	/^  META_TOKEN_TYPE_UNKNOW
 meta_update_profiler_codegen	D:/work/git/txt/code/meta.cpp	/^meta_update_profiler_codegen(Profiler_Codegen* p, Meta_Tokenizer* t, Meta_Token token) {$/;"	f	language:C++	typeref:typename:void	file:
 min	D:/work/git/txt/code/game_profiler_rendering.h	/^  F64 min;$/;"	m	language:C++	struct:Stat	typeref:typename:F64
 min	D:/work/git/txt/code/momo_shapes.h	/^  V2 min, max;$/;"	m	language:C++	struct:Rect2	typeref:typename:V2
-min	D:/work/git/txt/code/momo_shapes.h	/^  V2U min;$/;"	m	language:C++	struct:Rect2U	typeref:typename:V2U
 min_of	D:/work/git/txt/code/momo_common.h	/^#define min_of(/;"	d	language:C++
 min_x	D:/work/git/txt/code/game_gfx.h	/^  F32 min_x, max_x;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:F32
 min_y	D:/work/git/txt/code/game_gfx.h	/^  F32 min_y, max_y;$/;"	m	language:C++	struct:Gfx_Command_View	typeref:typename:F32
 mm_device_enum	D:/work/git/txt/code/w32_audio_wasapi.h	/^  IMMDeviceEnumerator * mm_device_enum;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:IMMDeviceEnumerator *
 model	D:/work/git/txt/code/game_gfx_opengl.h	/^  GLuint model; $/;"	m	language:C++	struct:__anon982c2a3c0808	typeref:typename:GLuint
 model	D:/work/git/txt/code/game_gfx_opengl.h	/^  GLuint model;$/;"	m	language:C++	struct:__anon982c2a3c0908	typeref:typename:GLuint
-mode_arena	D:/work/git/txt/code/game.h	/^  Bump_Allocator mode_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Bump_Allocator
+mode_arena	D:/work/git/txt/code/game.h	/^  Arena mode_arena;$/;"	m	language:C++	struct:Game	typeref:typename:Arena
 mode_context	D:/work/git/txt/code/game.h	/^  void* mode_context;$/;"	m	language:C++	struct:Game	typeref:typename:void *
 mode_type	D:/work/git/txt/code/game_mode_computer.h	/^  Game_Mode_Type mode_type;$/;"	m	language:C++	struct:Computer_Selection	typeref:typename:Game_Mode_Type
 module_path	D:/work/git/txt/code/w32_loaded_code.h	/^  const char* module_path;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:const char *
@@ -1218,6 +1229,7 @@ MOMO_WAV_H	D:/work/git/txt/code/momo_wav.h	/^#define MOMO_WAV_H$/;"	d	language:C
 name	D:/work/git/txt/code/game_inspector.h	/^  String8 name;$/;"	m	language:C++	struct:Inspector_Entry	typeref:typename:String8
 NEW_TTF	D:/work/git/txt/code/momo_ttf.h	/^#define NEW_TTF /;"	d	language:C++
 next	D:/work/git/txt/code/momo_json.h	/^  struct _JSON_Array_Node* next;$/;"	m	language:C++	struct:_JSON_Array_Node	typeref:struct:_JSON_Array_Node *
+next	D:/work/git/txt/code/w32.cpp	/^  W32_Memory_Block* next;$/;"	m	language:C++	struct:W32_Memory_Block	typeref:typename:W32_Memory_Block *	file:
 next_entry_to_read	D:/work/git/txt/code/w32.cpp	/^  U32 volatile next_entry_to_read;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 next_entry_to_write	D:/work/git/txt/code/w32.cpp	/^  U32 volatile next_entry_to_write;$/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:U32 volatile	file:
 next_id_to_fade_in	D:/work/git/txt/code/game_mode_lit.h	/^  U32 next_id_to_fade_in;$/;"	m	language:C++	struct:Lit_Tutorial_Text_List	typeref:typename:U32
@@ -1230,7 +1242,7 @@ ns_begin	D:/work/git/txt/code/momo_common.h	/^# define ns_begin(/;"	d	language:C
 ns_end	D:/work/git/txt/code/momo_common.h	/^# define ns_end(/;"	d	language:C++
 null	D:/work/git/txt/code/momo_common.h	/^# define null /;"	d	language:C++
 num_channels	D:/work/git/txt/code/momo_wav.h	/^  U16 num_channels;$/;"	m	language:C++	struct:__anon690e9bbf0208	typeref:typename:U16
-obj	D:/work/git/txt/code/momo_json.h	/^    JSON_Object obj;$/;"	m	language:C++	union:__anon6dd1ef0b0708::__anon6dd1ef0b080a	typeref:typename:JSON_Object
+obj	D:/work/git/txt/code/momo_json.h	/^    JSON_Object obj;$/;"	m	language:C++	union:__anon6dd1ef0b0808::__anon6dd1ef0b090a	typeref:typename:JSON_Object
 offset_of	D:/work/git/txt/code/momo_common.h	/^#define offset_of(/;"	d	language:C++
 offset_to_assets	D:/work/git/txt/code/karu.h	/^  U32 offset_to_assets;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 offset_to_data	D:/work/git/txt/code/game_assets.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:U32
@@ -1238,8 +1250,8 @@ offset_to_data	D:/work/git/txt/code/karu.h	/^  U32 offset_to_data;$/;"	m	languag
 offset_to_data	D:/work/git/txt/code/karu.h	/^  U32 offset_to_data;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
 offset_to_groups	D:/work/git/txt/code/karu.h	/^  U32 offset_to_groups;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 offset_to_tags	D:/work/git/txt/code/karu.h	/^  U32 offset_to_tags;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
-ogl_begin_frame	D:/work/git/txt/code/game_gfx_opengl.h	/^ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region) $/;"	f	language:C++	typeref:typename:void
-ogl_begin_frame	D:/work/git/txt/code/game_gfx_opengl.h	/^static void ogl_begin_frame(Opengl* ogl, V2U render_wh, Rect2U region);$/;"	p	language:C++	typeref:typename:void
+ogl_begin_frame	D:/work/git/txt/code/game_gfx_opengl.h	/^ogl_begin_frame(Opengl* ogl, V2U render_wh,$/;"	f	language:C++	typeref:typename:void
+ogl_begin_frame	D:/work/git/txt/code/game_gfx_opengl.h	/^static void ogl_begin_frame(Opengl* ogl, V2U render_wh, U32 region_x0, U32 region_y0, U32 region/;"	p	language:C++	typeref:typename:void
 ogl_end_frame	D:/work/git/txt/code/game_gfx_opengl.h	/^ogl_end_frame(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
 ogl_end_frame	D:/work/git/txt/code/game_gfx_opengl.h	/^static void ogl_end_frame(Opengl* ogl);$/;"	p	language:C++	typeref:typename:void
 OGL_glAttachShader	D:/work/git/txt/code/game_gfx_opengl.h	/^typedef void    OGL_glAttachShader(GLuint program, GLuint shader);$/;"	t	language:C++	typeref:typename:void ()(GLuint program,GLuint shader)
@@ -1329,7 +1341,7 @@ one_past_last_asset_index	D:/work/git/txt/code/karu.h	/^  U32 one_past_last_asse
 one_past_last_tag_index	D:/work/git/txt/code/game_assets.h	/^  U32 one_past_last_tag_index;$/;"	m	language:C++	struct:Game_Asset	typeref:typename:U32
 one_past_last_tag_index	D:/work/git/txt/code/karu.h	/^  U32 one_past_last_tag_index;$/;"	m	language:C++	struct:Karu_Asset	typeref:typename:U32
 ope	D:/work/git/txt/code/meta.cpp	/^  U32 ope;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:U32	file:
-ope	D:/work/git/txt/code/momo_json.h	/^  U32 ope;$/;"	m	language:C++	struct:__anon6dd1ef0b0508	typeref:typename:U32
+ope	D:/work/git/txt/code/momo_json.h	/^  U32 ope;$/;"	m	language:C++	struct:__anon6dd1ef0b0608	typeref:typename:U32
 Opengl	D:/work/git/txt/code/game_gfx_opengl.h	/^struct Opengl {$/;"	s	language:C++
 open_file	D:/work/git/txt/code/game_platform.h	/^  Platform_Open_File* open_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Open_File *
 operator !=	D:/work/git/txt/code/momo_strings.h	/^static B32 operator!=(String8 lhs, String8 rhs) {$/;"	f	language:C++	typeref:typename:B32
@@ -1427,13 +1439,15 @@ pixels	D:/work/git/txt/code/momo_image.h	/^  U32* pixels;$/;"	m	language:C++	str
 pixels	D:/work/git/txt/code/sui_pack.h	/^  U32* pixels;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32 *
 PI_32	D:/work/git/txt/code/momo_common.h	/^#define PI_32 /;"	d	language:C++
 PI_64	D:/work/git/txt/code/momo_common.h	/^#define PI_64 /;"	d	language:C++
-platform	D:/work/git/txt/code/game.h	/^static struct Platform* platform;$/;"	v	language:C++	typeref:struct:Platform *
+platform	D:/work/git/txt/code/game.h	/^static Platform* platform;$/;"	v	language:C++	typeref:typename:Platform *
 Platform	D:/work/git/txt/code/game_platform.h	/^typedef struct Platform {$/;"	s	language:C++
 Platform	D:/work/git/txt/code/game_platform.h	/^}Platform;$/;"	t	language:C++	typeref:struct:Platform
 Platform_Add_Task	D:/work/git/txt/code/game_platform.h	/^typedef void Platform_Add_Task(Platform_Task_Callback callback, void* data);$/;"	t	language:C++	typeref:typename:void ()(Platform_Task_Callback callback,void * data)
+Platform_Allocate_Memory	D:/work/git/txt/code/game_platform.h	/^typedef Platform_Memory_Block* Platform_Allocate_Memory(UMI size); \/\/ allocate memory$/;"	t	language:C++	typeref:typename:Platform_Memory_Block * ()(UMI size)
 Platform_Audio	D:/work/git/txt/code/game_platform.h	/^typedef struct Platform_Audio {$/;"	s	language:C++
 Platform_Audio	D:/work/git/txt/code/game_platform.h	/^}Platform_Audio;$/;"	t	language:C++	typeref:struct:Platform_Audio
 platform_audio	D:/work/git/txt/code/w32_audio_wasapi.h	/^  Platform_Audio platform_audio; \/\/ Must be first member$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Platform_Audio
+platform_block	D:/work/git/txt/code/w32.cpp	/^  Platform_Memory_Block platform_block;$/;"	m	language:C++	struct:W32_Memory_Block	typeref:typename:Platform_Memory_Block	file:
 Platform_Button	D:/work/git/txt/code/game_platform.h	/^typedef struct Platform_Button {$/;"	s	language:C++
 Platform_Button	D:/work/git/txt/code/game_platform.h	/^}Platform_Button;$/;"	t	language:C++	typeref:struct:Platform_Button
 Platform_Close_File	D:/work/git/txt/code/game_platform.h	/^typedef void Platform_Close_File(Platform_File* file);$/;"	t	language:C++	typeref:typename:void ()(Platform_File * file)
@@ -1451,11 +1465,12 @@ Platform_File_Path	D:/work/git/txt/code/game_platform.h	/^}Platform_File_Path;$/
 PLATFORM_FILE_PATH_CACHE	D:/work/git/txt/code/game_platform.h	/^  PLATFORM_FILE_PATH_CACHE,$/;"	e	language:C++	enum:Platform_File_Path
 PLATFORM_FILE_PATH_EXE	D:/work/git/txt/code/game_platform.h	/^  PLATFORM_FILE_PATH_EXE,$/;"	e	language:C++	enum:Platform_File_Path
 PLATFORM_FILE_PATH_USER	D:/work/git/txt/code/game_platform.h	/^  PLATFORM_FILE_PATH_USER,$/;"	e	language:C++	enum:Platform_File_Path
+Platform_Free_Memory	D:/work/git/txt/code/game_platform.h	/^typedef void  Platform_Free_Memory(Platform_Memory_Block* ptr);     \/\/ frees memory$/;"	t	language:C++	typeref:typename:void ()(Platform_Memory_Block * ptr)
 Platform_Get_Performance_Counter	D:/work/git/txt/code/game_platform.h	/^typedef U64   Platform_Get_Performance_Counter();$/;"	t	language:C++	typeref:typename:U64 ()()
+Platform_Memory_Block	D:/work/git/txt/code/game_platform.h	/^typedef struct Platform_Memory_Block {$/;"	s	language:C++
+Platform_Memory_Block	D:/work/git/txt/code/game_platform.h	/^} Platform_Memory_Block;$/;"	t	language:C++	typeref:struct:Platform_Memory_Block
 Platform_Open_File	D:/work/git/txt/code/game_platform.h	/^Platform_Open_File(Platform_File* file,$/;"	t	language:C++	typeref:typename:B32 ()(Platform_File * file,const char * filename,Platform_File_Access file_access,Platform_File_Path file_path)
 Platform_Read_File	D:/work/git/txt/code/game_platform.h	/^typedef B32 Platform_Read_File(Platform_File* file, UMI size, UMI offset, void* dest);$/;"	t	language:C++	typeref:typename:B32 ()(Platform_File * file,UMI size,UMI offset,void * dest)
-platform_render_region	D:/work/git/txt/code/game_gfx_opengl.h	/^  Rect2U platform_render_region;$/;"	m	language:C++	struct:Opengl	typeref:typename:Rect2U
-platform_render_wh	D:/work/git/txt/code/game_gfx_opengl.h	/^  V2U platform_render_wh;$/;"	m	language:C++	struct:Opengl	typeref:typename:V2U
 Platform_Set_Game_Dims	D:/work/git/txt/code/game_platform.h	/^typedef void  Platform_Set_Game_Dims(F32 width, F32 height);$/;"	t	language:C++	typeref:typename:void ()(F32 width,F32 height)
 Platform_Task_Callback	D:/work/git/txt/code/game_platform.h	/^typedef void Platform_Task_Callback(void* data);$/;"	t	language:C++	typeref:typename:void ()(void * data)
 Platform_Write_File	D:/work/git/txt/code/game_platform.h	/^typedef B32 Platform_Write_File(Platform_File* file, UMI size, UMI offset, void* src);$/;"	t	language:C++	typeref:typename:B32 ()(Platform_File * file,UMI size,UMI offset,void * src)
@@ -1465,10 +1480,10 @@ png_read	D:/work/git/txt/code/momo_png.h	/^png_read(PNG* p, void* png_memory, UM
 png_read	D:/work/git/txt/code/momo_png.h	/^static B32     png_read(PNG* png, void* png_memory, UMI png_size);$/;"	p	language:C++	typeref:typename:B32
 png_read_from_blk	D:/work/git/txt/code/momo_png.h	/^png_read_from_blk(PNG* p, Block blk) {$/;"	f	language:C++	typeref:typename:B32
 png_read_from_blk	D:/work/git/txt/code/momo_png.h	/^static B32     png_read_from_blk(PNG* p, Block blk);$/;"	p	language:C++	typeref:typename:B32
-png_to_img32	D:/work/git/txt/code/momo_png.h	/^png_to_img32(PNG* png, Bump_Allocator* allocator) $/;"	f	language:C++	typeref:typename:Image32
-png_to_img32	D:/work/git/txt/code/momo_png.h	/^static Image32 png_to_img32(PNG* png, Bump_Allocator* allocator);$/;"	p	language:C++	typeref:typename:Image32
-png_write_img32_to_blk	D:/work/git/txt/code/momo_png.h	/^png_write_img32_to_blk(Image32 bm, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:Block
-png_write_img32_to_blk	D:/work/git/txt/code/momo_png.h	/^static Block   png_write_img32_to_blk(Image32 img, Bump_Allocator* allocator);$/;"	p	language:C++	typeref:typename:Block
+png_to_img32	D:/work/git/txt/code/momo_png.h	/^png_to_img32(PNG* png, Arena* allocator) $/;"	f	language:C++	typeref:typename:Image32
+png_to_img32	D:/work/git/txt/code/momo_png.h	/^static Image32 png_to_img32(PNG* png, Arena* allocator);$/;"	p	language:C++	typeref:typename:Image32
+png_write_img32_to_blk	D:/work/git/txt/code/momo_png.h	/^png_write_img32_to_blk(Image32 bm, Arena* allocator) {$/;"	f	language:C++	typeref:typename:Block
+png_write_img32_to_blk	D:/work/git/txt/code/momo_png.h	/^static Block   png_write_img32_to_blk(Image32 img, Arena* allocator);$/;"	p	language:C++	typeref:typename:Block
 points	D:/work/git/txt/code/momo_ttf.h	/^  _TTF_Glyph_Point* points;$/;"	m	language:C++	struct:__anon68e2795f0308	typeref:typename:_TTF_Glyph_Point *
 point_count	D:/work/git/txt/code/momo_ttf.h	/^  U32 point_count;$/;"	m	language:C++	struct:__anon68e2795f0308	typeref:typename:U32
 pos	D:/work/git/txt/code/game_gfx.h	/^  V2 pos;$/;"	m	language:C++	struct:Gfx_Command_Rect	typeref:typename:V2
@@ -1487,6 +1502,7 @@ pow_f32	D:/work/git/txt/code/momo_intrinsics.h	/^pow_f32(F32 b, F32 e){$/;"	f	la
 pow_F32	D:/work/git/txt/code/momo_intrinsics.h	/^static F32 pow_F32(F32 v, F32 e);$/;"	p	language:C++	typeref:typename:F32
 pow_f64	D:/work/git/txt/code/momo_intrinsics.h	/^pow_f64(F64 b, F64 e){$/;"	f	language:C++	typeref:typename:F64
 pow_f64	D:/work/git/txt/code/momo_intrinsics.h	/^static F64 pow_f64(F64 , F64 e);$/;"	p	language:C++	typeref:typename:F64
+prev	D:/work/git/txt/code/w32.cpp	/^  W32_Memory_Block* prev;$/;"	m	language:C++	struct:W32_Memory_Block	typeref:typename:W32_Memory_Block *	file:
 prf_begin_block	D:/work/git/txt/code/game_profiler.h	/^#define prf_begin_block(/;"	d	language:C++
 prf_block	D:/work/git/txt/code/game_profiler.h	/^#define prf_block(/;"	d	language:C++
 prf_end_block	D:/work/git/txt/code/game_profiler.h	/^#define prf_end_block(/;"	d	language:C++
@@ -1512,7 +1528,6 @@ Profiler_Snapshot	D:/work/git/txt/code/game_profiler.h	/^} Profiler_Snapshot;$/;
 pt	D:/work/git/txt/code/game_mode_lit_world.h	/^  V2 pt;$/;"	m	language:C++	struct:Lit_Light_Intersection	typeref:typename:V2
 pt	D:/work/git/txt/code/momo_shapes.h	/^  V2 pt;$/;"	m	language:C++	struct:Ray2	typeref:typename:V2
 ptr_to_int	D:/work/git/txt/code/momo_common.h	/^ptr_to_int(void* p) { $/;"	f	language:C++	typeref:typename:UMI
-pts	D:/work/git/txt/code/momo_shapes.h	/^  V2 pts[3];$/;"	m	language:C++	struct:Tri2	typeref:typename:V2[3]
 quicksort	D:/work/git/txt/code/momo_sort.h	/^quicksort(Sort_Entry* entries, U32 entry_count) {$/;"	f	language:C++	typeref:typename:void
 r	D:/work/git/txt/code/momo_colors.h	/^    struct { F32 r, g, b; };  $/;"	m	language:C++	struct:RGBA::__anon798c3623010a::__anon798c36230208	typeref:typename:F32
 r	D:/work/git/txt/code/momo_colors.h	/^  F32 r, g, b;   $/;"	m	language:C++	struct:RGB	typeref:typename:F32
@@ -1527,17 +1542,20 @@ read_file	D:/work/git/txt/code/game_platform.h	/^  Platform_Read_File* read_file
 rect	D:/work/git/txt/code/sui_atlas.h	/^  RP_Rect* rect;$/;"	m	language:C++	struct:Sui_Atlas_Sprite	typeref:typename:RP_Rect *
 Rect2	D:/work/git/txt/code/momo_shapes.h	/^typedef struct Rect2 {$/;"	s	language:C++
 Rect2	D:/work/git/txt/code/momo_shapes.h	/^}Rect2;$/;"	t	language:C++	typeref:struct:Rect2
-Rect2U	D:/work/git/txt/code/momo_shapes.h	/^typedef struct Rect2U {$/;"	s	language:C++
-Rect2U	D:/work/git/txt/code/momo_shapes.h	/^} Rect2U;$/;"	t	language:C++	typeref:struct:Rect2U
 rect_context	D:/work/git/txt/code/sui_atlas.h	/^  Sui_Atlas_Context* rect_context;$/;"	m	language:C++	struct:Sui_Atlas_Sprite	typeref:typename:Sui_Atlas_Context *
 rect_count	D:/work/git/txt/code/sui_atlas.h	/^  U32 rect_count;$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:U32
 ref	D:/work/git/txt/code/w32_audio_wasapi.h	/^  LONG ref;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client	typeref:typename:LONG
+region_x0	D:/work/git/txt/code/game_gfx_opengl.h	/^  U32 region_x0; $/;"	m	language:C++	struct:Opengl	typeref:typename:U32
+region_x1	D:/work/git/txt/code/game_gfx_opengl.h	/^  U32 region_x1;$/;"	m	language:C++	struct:Opengl	typeref:typename:U32
+region_y0	D:/work/git/txt/code/game_gfx_opengl.h	/^  U32 region_y0; $/;"	m	language:C++	struct:Opengl	typeref:typename:U32
+region_y1	D:/work/git/txt/code/game_gfx_opengl.h	/^  U32 region_y1;$/;"	m	language:C++	struct:Opengl	typeref:typename:U32
 reloaded	D:/work/git/txt/code/game_platform.h	/^  B32 reloaded;$/;"	m	language:C++	struct:Platform	typeref:typename:B32
 remainders	D:/work/git/txt/code/momo_crc.h	/^	U16 remainders[256];$/;"	m	language:C++	struct:__anon67adb3490208	typeref:typename:U16[256]
 remainders	D:/work/git/txt/code/momo_crc.h	/^	U32 remainders[256];$/;"	m	language:C++	struct:__anon67adb3490108	typeref:typename:U32[256]
 remainders	D:/work/git/txt/code/momo_crc.h	/^	U8 remainders[256];$/;"	m	language:C++	struct:__anon67adb3490308	typeref:typename:U8[256]
 renderer_texture_handle	D:/work/git/txt/code/game_assets.h	/^  U32 renderer_texture_handle;$/;"	m	language:C++	struct:Game_Bitmap	typeref:typename:U32
 render_mouse_pos	D:/work/git/txt/code/game_platform.h	/^  V2U render_mouse_pos;$/;"	m	language:C++	struct:Platform	typeref:typename:V2U
+render_wh	D:/work/git/txt/code/game_gfx_opengl.h	/^  V2U render_wh;$/;"	m	language:C++	struct:Opengl	typeref:typename:V2U
 rgb	D:/work/git/txt/code/momo_colors.h	/^    RGB rgb;$/;"	m	language:C++	union:RGBA::__anon798c3623010a	typeref:typename:RGB
 RGB	D:/work/git/txt/code/momo_colors.h	/^typedef struct RGB {$/;"	s	language:C++
 RGB	D:/work/git/txt/code/momo_colors.h	/^} RGB;$/;"	t	language:C++	typeref:struct:RGB
@@ -1579,7 +1597,7 @@ S16	D:/work/git/txt/code/momo_common.h	/^typedef int16_t S16;$/;"	t	language:C++
 S16_MAX	D:/work/git/txt/code/momo_common.h	/^#define S16_MAX /;"	d	language:C++
 S16_MIN	D:/work/git/txt/code/momo_common.h	/^#define S16_MIN /;"	d	language:C++
 S32	D:/work/git/txt/code/momo_common.h	/^typedef int32_t S32;$/;"	t	language:C++	typeref:typename:int32_t
-s32	D:/work/git/txt/code/momo_json.h	/^    S32 s32;$/;"	m	language:C++	union:__anon6dd1ef0b0708::__anon6dd1ef0b080a	typeref:typename:S32
+s32	D:/work/git/txt/code/momo_json.h	/^    S32 s32;$/;"	m	language:C++	union:__anon6dd1ef0b0808::__anon6dd1ef0b090a	typeref:typename:S32
 S32_MAX	D:/work/git/txt/code/momo_common.h	/^#define S32_MAX /;"	d	language:C++
 S32_MIN	D:/work/git/txt/code/momo_common.h	/^#define S32_MIN /;"	d	language:C++
 S64	D:/work/git/txt/code/momo_common.h	/^typedef int64_t S64;$/;"	t	language:C++	typeref:typename:int64_t
@@ -1646,6 +1664,7 @@ sin_f64	D:/work/git/txt/code/momo_intrinsics.h	/^sin_f64(F64 x) {$/;"	f	language
 sin_f64	D:/work/git/txt/code/momo_intrinsics.h	/^static F64 sin_f64(F64 x);$/;"	p	language:C++	typeref:typename:F64
 size	D:/work/git/txt/code/game_gfx.h	/^  V2 size;$/;"	m	language:C++	struct:Gfx_Command_Rect	typeref:typename:V2
 size	D:/work/git/txt/code/game_gfx.h	/^  V2 size;$/;"	m	language:C++	struct:Gfx_Command_Sprite	typeref:typename:V2
+size	D:/work/git/txt/code/game_platform.h	/^  UMI size;$/;"	m	language:C++	struct:Platform_Memory_Block	typeref:typename:UMI
 size	D:/work/git/txt/code/momo_common.h	/^  UMI size;  $/;"	m	language:C++	struct:Block	typeref:typename:UMI
 size	D:/work/git/txt/code/momo_streams.h	/^  UMI size;$/;"	m	language:C++	struct:Stream	typeref:typename:UMI
 size	D:/work/git/txt/code/momo_wav.h	/^  U32 size;$/;"	m	language:C++	struct:__anon690e9bbf0108	typeref:typename:U32
@@ -1734,7 +1753,7 @@ str8_to_u32	D:/work/git/txt/code/momo_strings.h	/^str8_to_u32(String8 s, U32* ou
 str8_to_u32_range	D:/work/git/txt/code/momo_strings.h	/^str8_to_u32_range(String8 s, UMI begin, UMI ope, U32* out) {$/;"	f	language:C++	typeref:typename:B32
 stream	D:/work/git/txt/code/momo_png.h	/^  Stream stream;$/;"	m	language:C++	struct:_PNG_Context	typeref:typename:Stream
 Stream	D:/work/git/txt/code/momo_streams.h	/^struct Stream {$/;"	s	language:C++
-string	D:/work/git/txt/code/momo_json.h	/^    String8 string;$/;"	m	language:C++	union:__anon6dd1ef0b0708::__anon6dd1ef0b080a	typeref:typename:String8
+string	D:/work/git/txt/code/momo_json.h	/^    String8 string;$/;"	m	language:C++	union:__anon6dd1ef0b0808::__anon6dd1ef0b090a	typeref:typename:String8
 String8	D:/work/git/txt/code/momo_strings.h	/^} String8;$/;"	t	language:C++	typeref:struct:__anon4fb3d39b0108
 String8_Builder	D:/work/git/txt/code/momo_strings.h	/^} String8_Builder;$/;"	t	language:C++	typeref:struct:__anon4fb3d39b0208
 stringify	D:/work/git/txt/code/momo_common.h	/^#define stringify(/;"	d	language:C++
@@ -1747,7 +1766,7 @@ Sui_Atlas_Context	D:/work/git/txt/code/sui_atlas.h	/^struct Sui_Atlas_Context {$
 Sui_Atlas_Context_Type	D:/work/git/txt/code/sui_atlas.h	/^enum Sui_Atlas_Context_Type {$/;"	g	language:C++
 SUI_ATLAS_CONTEXT_TYPE_FONT_GLYPH	D:/work/git/txt/code/sui_atlas.h	/^  SUI_ATLAS_CONTEXT_TYPE_FONT_GLYPH,$/;"	e	language:C++	enum:Sui_Atlas_Context_Type
 SUI_ATLAS_CONTEXT_TYPE_SPRITE	D:/work/git/txt/code/sui_atlas.h	/^  SUI_ATLAS_CONTEXT_TYPE_SPRITE,$/;"	e	language:C++	enum:Sui_Atlas_Context_Type
-sui_atlas_end	D:/work/git/txt/code/sui_atlas.h	/^sui_atlas_end(Sui_Atlas* a, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:void
+sui_atlas_end	D:/work/git/txt/code/sui_atlas.h	/^sui_atlas_end(Sui_Atlas* a, Arena* allocator) {$/;"	f	language:C++	typeref:typename:void
 sui_atlas_end_font	D:/work/git/txt/code/sui_atlas.h	/^sui_atlas_end_font(Sui_Atlas* a) {$/;"	f	language:C++	typeref:typename:Sui_Atlas_Font *
 Sui_Atlas_Font	D:/work/git/txt/code/sui_atlas.h	/^struct Sui_Atlas_Font {$/;"	s	language:C++
 Sui_Atlas_Font_Glyph_Context	D:/work/git/txt/code/sui_atlas.h	/^struct Sui_Atlas_Font_Glyph_Context {$/;"	s	language:C++
@@ -1774,15 +1793,15 @@ SUI_PACKER_SOURCE_TYPE_FONT	D:/work/git/txt/code/sui_pack.h	/^  SUI_PACKER_SOURC
 SUI_PACKER_SOURCE_TYPE_SPRITE	D:/work/git/txt/code/sui_pack.h	/^  SUI_PACKER_SOURCE_TYPE_SPRITE,$/;"	e	language:C++	enum:Sui_Packer_Source_Type
 sui_pack_begin	D:/work/git/txt/code/sui_pack.h	/^sui_pack_begin(Sui_Packer* p) {$/;"	f	language:C++	typeref:typename:void
 sui_pack_begin_group	D:/work/git/txt/code/sui_pack.h	/^sui_pack_begin_group(Sui_Packer* p, Game_Asset_Group_Type group) $/;"	f	language:C++	typeref:typename:void
-sui_pack_end	D:/work/git/txt/code/sui_pack.h	/^sui_pack_end(Sui_Packer* p, const char* filename, Bump_Allocator* arena) $/;"	f	language:C++	typeref:typename:void
+sui_pack_end	D:/work/git/txt/code/sui_pack.h	/^sui_pack_end(Sui_Packer* p, const char* filename, Arena* arena) $/;"	f	language:C++	typeref:typename:void
 sui_pack_end_group	D:/work/git/txt/code/sui_pack.h	/^sui_pack_end_group(Sui_Packer* p) $/;"	f	language:C++	typeref:typename:void
 sui_pack_push_bitmap	D:/work/git/txt/code/sui_pack.h	/^sui_pack_push_bitmap(Sui_Packer* p, Sui_Atlas* atlas) {$/;"	f	language:C++	typeref:typename:U32
 sui_pack_push_font	D:/work/git/txt/code/sui_pack.h	/^sui_pack_push_font(Sui_Packer* p, Sui_Atlas_Font* font, U32 bitmap_asset_id) {$/;"	f	language:C++	typeref:typename:U32
 sui_pack_push_sprite	D:/work/git/txt/code/sui_pack.h	/^sui_pack_push_sprite(Sui_Packer* p, Sui_Atlas_Sprite* sprite, U32 bitmap_asset_id) {$/;"	f	language:C++	typeref:typename:void
 sui_pack_push_tag	D:/work/git/txt/code/sui_pack.h	/^sui_pack_push_tag(Sui_Packer* p, Game_Asset_Tag_Type tag_type, F32 value) {$/;"	f	language:C++	typeref:typename:void
-sui_read_file_to_blk	D:/work/git/txt/code/sui.h	/^sui_read_file_to_blk(Block* mem, const char* filename, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:B32
-sui_read_font_from_file	D:/work/git/txt/code/sui.h	/^sui_read_font_from_file(TTF* ttf, const char* filename, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:B32
-sui_read_wav_from_file	D:/work/git/txt/code/sui.h	/^sui_read_wav_from_file(WAV* wav, const char* filename, Bump_Allocator* allocator) {$/;"	f	language:C++	typeref:typename:B32
+sui_read_file_to_blk	D:/work/git/txt/code/sui.h	/^sui_read_file_to_blk(Block* mem, const char* filename, Arena* allocator) {$/;"	f	language:C++	typeref:typename:B32
+sui_read_font_from_file	D:/work/git/txt/code/sui.h	/^sui_read_font_from_file(TTF* ttf, const char* filename, Arena* allocator) {$/;"	f	language:C++	typeref:typename:B32
+sui_read_wav_from_file	D:/work/git/txt/code/sui.h	/^sui_read_wav_from_file(WAV* wav, const char* filename, Arena* allocator) {$/;"	f	language:C++	typeref:typename:B32
 sui_write_file_from_blk	D:/work/git/txt/code/sui.h	/^sui_write_file_from_blk(const char* filename, Block blk) {$/;"	f	language:C++	typeref:typename:B32
 swap	D:/work/git/txt/code/momo_common.h	/^#define swap(/;"	d	language:C++
 swap_memory	D:/work/git/txt/code/momo_common.h	/^swap_memory(void* lhs, void* rhs, UMI size) {$/;"	f	language:C++	typeref:typename:void
@@ -1795,7 +1814,7 @@ tag_count	D:/work/git/txt/code/karu.h	/^  U32 tag_count;$/;"	m	language:C++	stru
 tag_count	D:/work/git/txt/code/sui_pack.h	/^  U32 tag_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
 tag_value_to_match	D:/work/git/txt/code/game_assets.h	/^    F32 tag_value_to_match;$/;"	m	language:C++	struct:Game_Asset_Match::__anon329ebfe60108	typeref:typename:F32
 tag_weight	D:/work/git/txt/code/game_assets.h	/^    F32 tag_weight;$/;"	m	language:C++	struct:Game_Asset_Match::__anon329ebfe60108	typeref:typename:F32
-tail	D:/work/git/txt/code/momo_json.h	/^  struct _JSON_Array_Node* tail;$/;"	m	language:C++	struct:JSON_Array	typeref:struct:_JSON_Array_Node *
+tail	D:/work/git/txt/code/momo_json.h	/^  struct _JSON_Array_Node* tail;$/;"	m	language:C++	struct:__anon6dd1ef0b0208	typeref:struct:_JSON_Array_Node *
 tan_f32	D:/work/git/txt/code/momo_intrinsics.h	/^static F32 tan_f32(F32 x);$/;"	p	language:C++	typeref:typename:F32
 tan_f32	D:/work/git/txt/code/momo_intrinsics.h	/^tan_f32(F32 x) {$/;"	f	language:C++	typeref:typename:F32
 tan_f64	D:/work/git/txt/code/momo_intrinsics.h	/^static F64 tan_f64(F64 x);$/;"	p	language:C++	typeref:typename:F64
@@ -1817,7 +1836,7 @@ test_log	D:/work/git/txt/code/test.h	/^#define test_log(/;"	d	language:C++
 test_log_spaces	D:/work/git/txt/code/test.h	/^static unsigned test_log_spaces = 0;$/;"	v	language:C++	typeref:typename:unsigned
 test_png	D:/work/git/txt/code/test_png.h	/^void test_png() {$/;"	f	language:C++	typeref:typename:void
 TEST_PNG_H	D:/work/git/txt/code/test_png.h	/^#define TEST_PNG_H$/;"	d	language:C++
-test_read_file_to_memory	D:/work/git/txt/code/test.h	/^test_read_file_to_memory(Bump_Allocator* allocator, const char* filename) {$/;"	f	language:C++	typeref:typename:Block
+test_read_file_to_memory	D:/work/git/txt/code/test.h	/^test_read_file_to_memory(Arena* allocator, const char* filename) {$/;"	f	language:C++	typeref:typename:Block
 test_sort	D:/work/git/txt/code/test_sort.h	/^void test_sort() {$/;"	f	language:C++	typeref:typename:void
 TEST_SORT_H	D:/work/git/txt/code/test_sort.h	/^#define TEST_SORT_H$/;"	d	language:C++
 test_ttf	D:/work/git/txt/code/test_ttf.h	/^void test_ttf() {$/;"	f	language:C++	typeref:typename:void
@@ -1850,7 +1869,7 @@ texel_y1	D:/work/git/txt/code/karu.h	/^  U32 texel_y1;$/;"	m	language:C++	struct
 texel_y1	D:/work/git/txt/code/sui_pack.h	/^  U32 texel_y1;$/;"	m	language:C++	struct:Sui_Packer_Source_Sprite	typeref:typename:U32
 text	D:/work/git/txt/code/game_mode_computer.h	/^  String8 text;$/;"	m	language:C++	struct:Computer_Selection	typeref:typename:String8
 text	D:/work/git/txt/code/meta.cpp	/^  C8* text;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:C8 *	file:
-text	D:/work/git/txt/code/momo_json.h	/^  String8 text;$/;"	m	language:C++	struct:__anon6dd1ef0b0608	typeref:typename:String8
+text	D:/work/git/txt/code/momo_json.h	/^  String8 text;$/;"	m	language:C++	struct:__anon6dd1ef0b0708	typeref:typename:String8
 textures	D:/work/git/txt/code/game_gfx_opengl.h	/^  OGL_Texture textures[256];$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_Texture[256]
 texture_data	D:/work/git/txt/code/game_gfx.h	/^  void* texture_data;$/;"	m	language:C++	struct:Gfx_Texture_Payload	typeref:typename:void *
 texture_height	D:/work/git/txt/code/game_gfx.h	/^  U32 texture_height;$/;"	m	language:C++	struct:Gfx_Texture_Payload	typeref:typename:U32
@@ -1870,8 +1889,6 @@ transfer_memory_end	D:/work/git/txt/code/game_gfx.h	/^  UMI transfer_memory_end;
 transfer_memory_size	D:/work/git/txt/code/game_gfx.h	/^  UMI transfer_memory_size;$/;"	m	language:C++	struct:Gfx_Texture_Queue	typeref:typename:UMI
 transfer_memory_start	D:/work/git/txt/code/game_gfx.h	/^  UMI transfer_memory_start;$/;"	m	language:C++	struct:Gfx_Texture_Payload	typeref:typename:UMI
 transfer_memory_start	D:/work/git/txt/code/game_gfx.h	/^  UMI transfer_memory_start;$/;"	m	language:C++	struct:Gfx_Texture_Queue	typeref:typename:UMI
-Tri2	D:/work/git/txt/code/momo_shapes.h	/^typedef struct Tri2 {$/;"	s	language:C++
-Tri2	D:/work/git/txt/code/momo_shapes.h	/^}Tri2;$/;"	t	language:C++	typeref:struct:Tri2
 triangles	D:/work/git/txt/code/game_mode_lit_world.h	/^  Lit_Light_Triangle_List triangles;$/;"	m	language:C++	struct:Lit_Light	typeref:typename:Lit_Light_Triangle_List
 triangle_batch	D:/work/git/txt/code/game_gfx_opengl.h	/^  Triangle_Batch triangle_batch;$/;"	m	language:C++	struct:Opengl	typeref:typename:Triangle_Batch
 Triangle_Batch	D:/work/git/txt/code/game_gfx_opengl.h	/^} Triangle_Batch;$/;"	t	language:C++	typeref:struct:__anon982c2a3c0908
@@ -1906,8 +1923,8 @@ type	D:/work/git/txt/code/game_inspector.h	/^  Inspector_Entry_Type type;$/;"	m	
 type	D:/work/git/txt/code/karu.h	/^  Game_Asset_Tag_Type type; $/;"	m	language:C++	struct:Karu_Tag	typeref:typename:Game_Asset_Tag_Type
 type	D:/work/git/txt/code/karu.h	/^  Game_Asset_Type type; $/;"	m	language:C++	struct:Karu_Asset	typeref:typename:Game_Asset_Type
 type	D:/work/git/txt/code/meta.cpp	/^  Meta_Token_Type type;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:Meta_Token_Type	file:
-type	D:/work/git/txt/code/momo_json.h	/^  _JSON_Token_Type type;$/;"	m	language:C++	struct:__anon6dd1ef0b0508	typeref:typename:_JSON_Token_Type
-type	D:/work/git/txt/code/momo_json.h	/^  _JSON_Value_Type type;$/;"	m	language:C++	struct:__anon6dd1ef0b0708	typeref:typename:_JSON_Value_Type
+type	D:/work/git/txt/code/momo_json.h	/^  _JSON_Token_Type type;$/;"	m	language:C++	struct:__anon6dd1ef0b0608	typeref:typename:_JSON_Token_Type
+type	D:/work/git/txt/code/momo_json.h	/^  _JSON_Value_Type type;$/;"	m	language:C++	struct:__anon6dd1ef0b0808	typeref:typename:_JSON_Value_Type
 type	D:/work/git/txt/code/momo_png.h	/^    U8 type[4];$/;"	m	language:C++	union:_PNG_Chunk_Header::__anon6896d156020a	typeref:typename:U8[4]
 type	D:/work/git/txt/code/sui_atlas.h	/^  Sui_Atlas_Context_Type type;$/;"	m	language:C++	struct:Sui_Atlas_Context	typeref:typename:Sui_Atlas_Context_Type
 type	D:/work/git/txt/code/sui_pack.h	/^  Sui_Packer_Source_Type type;$/;"	m	language:C++	struct:Sui_Packer_Source	typeref:typename:Sui_Packer_Source_Type
@@ -1928,7 +1945,7 @@ u	D:/work/git/txt/code/test_essentials.h	/^      U32 u;$/;"	m	language:C++	union
 U16	D:/work/git/txt/code/momo_common.h	/^typedef uint16_t U16;$/;"	t	language:C++	typeref:typename:uint16_t
 U16_MAX	D:/work/git/txt/code/momo_common.h	/^#define U16_MAX /;"	d	language:C++
 U32	D:/work/git/txt/code/momo_common.h	/^typedef uint32_t U32;$/;"	t	language:C++	typeref:typename:uint32_t
-u32	D:/work/git/txt/code/momo_json.h	/^    U32 u32;$/;"	m	language:C++	union:__anon6dd1ef0b0708::__anon6dd1ef0b080a	typeref:typename:U32
+u32	D:/work/git/txt/code/momo_json.h	/^    U32 u32;$/;"	m	language:C++	union:__anon6dd1ef0b0808::__anon6dd1ef0b090a	typeref:typename:U32
 U32_MAX	D:/work/git/txt/code/momo_common.h	/^#define U32_MAX /;"	d	language:C++
 U64	D:/work/git/txt/code/momo_common.h	/^typedef uint64_t U64;$/;"	t	language:C++	typeref:typename:uint64_t
 U64_MAX	D:/work/git/txt/code/momo_common.h	/^#define U64_MAX /;"	d	language:C++
@@ -2043,6 +2060,10 @@ w	D:/work/git/txt/code/momo_vectors.h	/^	struct { F32 w, h; };$/;"	m	language:C+
 w	D:/work/git/txt/code/momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	m	language:C++	struct:__anon6c64fdb70e0a::__anon6c64fdb70f08	typeref:typename:F32
 w	D:/work/git/txt/code/momo_vectors.h	/^	struct { S32 w, h; };$/;"	m	language:C++	struct:__anon6c64fdb7040a::__anon6c64fdb70608	typeref:typename:S32
 w	D:/work/git/txt/code/momo_vectors.h	/^	struct { U32 w, h; };$/;"	m	language:C++	struct:__anon6c64fdb7010a::__anon6c64fdb70308	typeref:typename:U32
+w32_add_task	D:/work/git/txt/code/w32.cpp	/^w32_add_task(Platform_Task_Callback callback, void* data) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_add_task_entry	D:/work/git/txt/code/w32.cpp	/^w32_add_task_entry(W32_Work_Queue* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_allocate_memory	D:/work/git/txt/code/w32.cpp	/^w32_allocate_memory(UMI size)$/;"	f	language:C++	typeref:typename:Platform_Memory_Block *	file:
+w32_allocate_memory_into_arena	D:/work/git/txt/code/w32.cpp	/^w32_allocate_memory_into_arena(Arena* a, UMI memory_size) {$/;"	f	language:C++	typeref:typename:B32	file:
 w32_audio_begin_frame	D:/work/git/txt/code/w32_audio.h	/^w32_audio_begin_frame(Platform_Audio* audio);$/;"	p	language:C++	typeref:typename:void
 w32_audio_begin_frame	D:/work/git/txt/code/w32_audio_wasapi.h	/^w32_audio_begin_frame(Platform_Audio* audio) {$/;"	f	language:C++	typeref:typename:void
 w32_audio_end_frame	D:/work/git/txt/code/w32_audio.h	/^w32_audio_end_frame(Platform_Audio* audio);$/;"	p	language:C++	typeref:typename:void
@@ -2051,43 +2072,64 @@ w32_audio_load	D:/work/git/txt/code/w32_audio.h	/^w32_audio_load(U32 samples_per
 w32_audio_load	D:/work/git/txt/code/w32_audio_wasapi.h	/^w32_audio_load(U32 samples_per_second, $/;"	f	language:C++	typeref:typename:Platform_Audio *
 w32_audio_unload	D:/work/git/txt/code/w32_audio.h	/^w32_audio_unload(Platform_Audio* audio);$/;"	p	language:C++	typeref:typename:void
 w32_audio_unload	D:/work/git/txt/code/w32_audio_wasapi.h	/^w32_audio_unload(Platform_Audio* audio) {$/;"	f	language:C++	typeref:typename:void
-w32_calc_render_region	D:/work/git/txt/code/w32_common.h	/^w32_calc_render_region(U32 window_w, $/;"	f	language:C++	typeref:typename:Rect2U
+w32_calc_render_region	D:/work/git/txt/code/w32_common.h	/^w32_calc_render_region(U32 window_w, $/;"	f	language:C++	typeref:typename:RECT
+w32_close_file	D:/work/git/txt/code/w32.cpp	/^w32_close_file(Platform_File* file) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_complete_all_tasks	D:/work/git/txt/code/w32.cpp	/^w32_complete_all_tasks() {$/;"	f	language:C++	typeref:typename:void	file:
 w32_complete_all_tasks_entries	D:/work/git/txt/code/w32.cpp	/^w32_complete_all_tasks_entries(W32_Work_Queue* wq) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_do_next_work_entry	D:/work/git/txt/code/w32.cpp	/^w32_do_next_work_entry(W32_Work_Queue* wq) {$/;"	f	language:C++	typeref:typename:B32	file:
+W32_File	D:/work/git/txt/code/w32.cpp	/^struct W32_File {$/;"	s	language:C++	file:
+W32_File_Cabinet	D:/work/git/txt/code/w32.cpp	/^struct W32_File_Cabinet {$/;"	s	language:C++	file:
 w32_file_time_to_large_integer	D:/work/git/txt/code/w32_common.h	/^w32_file_time_to_large_integer(FILETIME file_time) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER
+w32_free_all_memory	D:/work/git/txt/code/w32.cpp	/^w32_free_all_memory() {$/;"	f	language:C++	typeref:typename:void	file:
+w32_free_memory	D:/work/git/txt/code/w32.cpp	/^w32_free_memory(Platform_Memory_Block* platform_block) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_free_memory_from_arena	D:/work/git/txt/code/w32.cpp	/^w32_free_memory_from_arena(Arena* a) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_get_client_dims	D:/work/git/txt/code/w32_common.h	/^w32_get_client_dims(HWND window) {$/;"	f	language:C++	typeref:typename:V2U
 w32_get_file_last_write_time	D:/work/git/txt/code/w32_common.h	/^w32_get_file_last_write_time(const char* filename) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER
+w32_get_next_free_file	D:/work/git/txt/code/w32.cpp	/^w32_get_next_free_file(W32_File_Cabinet* c) {$/;"	f	language:C++	typeref:typename:W32_File *	file:
 w32_get_performance_counter	D:/work/git/txt/code/w32_common.h	/^w32_get_performance_counter(void) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER
 w32_get_performance_counter_u64	D:/work/git/txt/code/w32_common.h	/^w32_get_performance_counter_u64(void) {$/;"	f	language:C++	typeref:typename:U64
 w32_get_secs_elapsed	D:/work/git/txt/code/w32_common.h	/^w32_get_secs_elapsed(LARGE_INTEGER start,$/;"	f	language:C++	typeref:typename:F32
 w32_get_window_dims	D:/work/git/txt/code/w32_common.h	/^w32_get_window_dims(HWND window) {$/;"	f	language:C++	typeref:typename:V2U
 w32_gfx_begin_frame	D:/work/git/txt/code/w32_gfx.h	/^w32_gfx_begin_frame(Gfx* renderer, $/;"	p	language:C++	typeref:typename:void
-w32_gfx_begin_frame	D:/work/git/txt/code/w32_gfx_opengl.h	/^w32_gfx_begin_frame(Gfx* renderer,  V2U render_wh, Rect2U region) {$/;"	f	language:C++	typeref:typename:void
+w32_gfx_begin_frame	D:/work/git/txt/code/w32_gfx_opengl.h	/^w32_gfx_begin_frame(Gfx* renderer,  V2U render_wh, U32 region_x0, U32 region_y0, U32 region_x1, /;"	f	language:C++	typeref:typename:void
 w32_gfx_end_frame	D:/work/git/txt/code/w32_gfx.h	/^w32_gfx_end_frame(Gfx* renderer);$/;"	p	language:C++	typeref:typename:void
 w32_gfx_end_frame	D:/work/git/txt/code/w32_gfx_opengl.h	/^w32_gfx_end_frame(Gfx* renderer) {$/;"	f	language:C++	typeref:typename:void
 w32_gfx_load	D:/work/git/txt/code/w32_gfx.h	/^w32_gfx_load(HWND window, $/;"	p	language:C++	typeref:typename:Gfx *
 w32_gfx_load	D:/work/git/txt/code/w32_gfx_opengl.h	/^w32_gfx_load(HWND window, $/;"	f	language:C++	typeref:typename:Gfx *
 w32_gfx_unload	D:/work/git/txt/code/w32_gfx.h	/^w32_gfx_unload(Gfx* renderer);$/;"	p	language:C++	typeref:typename:void
 w32_gfx_unload	D:/work/git/txt/code/w32_gfx_opengl.h	/^w32_gfx_unload(Gfx* r) {$/;"	f	language:C++	typeref:typename:void
+w32_init_file_cabinet	D:/work/git/txt/code/w32.cpp	/^w32_init_file_cabinet(W32_File_Cabinet* c) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_init_work_queue	D:/work/git/txt/code/w32.cpp	/^w32_init_work_queue(W32_Work_Queue* wq, U32 thread_count) {$/;"	f	language:C++	typeref:typename:B32	file:
 W32_Loaded_Code	D:/work/git/txt/code/w32_loaded_code.h	/^struct W32_Loaded_Code {$/;"	s	language:C++
 w32_load_code	D:/work/git/txt/code/w32_loaded_code.h	/^w32_load_code(W32_Loaded_Code* code) {$/;"	f	language:C++	typeref:typename:void
 w32_log	D:/work/git/txt/code/w32_common.h	/^#define w32_log(/;"	d	language:C++
 w32_log	D:/work/git/txt/code/w32_common.h	/^#define w32_log(/;"	d	language:C++
 w32_log_proc	D:/work/git/txt/code/w32_common.h	/^w32_log_proc(const char* fmt, ...) {$/;"	f	language:C++	typeref:typename:void
+W32_Memory_Block	D:/work/git/txt/code/w32.cpp	/^struct W32_Memory_Block {$/;"	s	language:C++	file:
+w32_open_file	D:/work/git/txt/code/w32.cpp	/^w32_open_file(Platform_File* file,$/;"	f	language:C++	typeref:typename:B32	file:
+w32_process_input	D:/work/git/txt/code/w32.cpp	/^w32_process_input(HWND window, Platform* pf) $/;"	f	language:C++	typeref:typename:void	file:
 w32_profiler_block	D:/work/git/txt/code/w32_common.h	/^#define w32_profiler_block(/;"	d	language:C++
 w32_profile_block	D:/work/git/txt/code/w32_common.h	/^#define w32_profile_block(/;"	d	language:C++
+w32_read_file	D:/work/git/txt/code/w32.cpp	/^w32_read_file(Platform_File* file, UMI size, UMI offset, void* dest) $/;"	f	language:C++	typeref:typename:B32	file:
 w32_rect_height	D:/work/git/txt/code/w32_common.h	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG
 w32_rect_width	D:/work/git/txt/code/w32_common.h	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG
 w32_reload_code_if_outdated	D:/work/git/txt/code/w32_loaded_code.h	/^w32_reload_code_if_outdated(W32_Loaded_Code* code) {$/;"	f	language:C++	typeref:typename:B32
+w32_return_file	D:/work/git/txt/code/w32.cpp	/^w32_return_file(W32_File_Cabinet* c, W32_File* f) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_setup_platform_functions	D:/work/git/txt/code/w32.cpp	/^w32_setup_platform_functions(Platform* pf)$/;"	f	language:C++	typeref:typename:void	file:
+w32_set_game_dims	D:/work/git/txt/code/w32.cpp	/^w32_set_game_dims(F32 width, F32 height) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_shutdown	D:/work/git/txt/code/w32.cpp	/^w32_shutdown() {$/;"	f	language:C++	typeref:typename:void	file:
+w32_state	D:/work/git/txt/code/w32.cpp	/^static W32_State w32_state;$/;"	v	language:C++	typeref:typename:W32_State	file:
+W32_State	D:/work/git/txt/code/w32.cpp	/^struct W32_State {$/;"	s	language:C++	file:
 w32_unload_code	D:/work/git/txt/code/w32_loaded_code.h	/^w32_unload_code(W32_Loaded_Code* code) {$/;"	f	language:C++	typeref:typename:void
 w32_wasapi_begin_frame	D:/work/git/txt/code/w32_audio_wasapi.h	/^w32_wasapi_begin_frame(Win_Wasapi* wasapi) {$/;"	f	language:C++	typeref:typename:void
 w32_wasapi_end_frame	D:/work/git/txt/code/w32_audio_wasapi.h	/^w32_wasapi_end_frame(Win_Wasapi* wasapi) $/;"	f	language:C++	typeref:typename:void
 w32_wasapi_free	D:/work/git/txt/code/w32_audio_wasapi.h	/^w32_wasapi_free(Win_Wasapi* wasapi) {$/;"	f	language:C++	typeref:typename:void
 w32_wasapi_init	D:/work/git/txt/code/w32_audio_wasapi.h	/^w32_wasapi_init(Win_Wasapi* wasapi,$/;"	f	language:C++	typeref:typename:B32
+w32_window_callback	D:/work/git/txt/code/w32.cpp	/^w32_window_callback(HWND window, $/;"	f	language:C++	typeref:typename:LRESULT CALLBACK
 W32_Work	D:/work/git/txt/code/w32.cpp	/^struct W32_Work {$/;"	s	language:C++	file:
 w32_worker_func	D:/work/git/txt/code/w32.cpp	/^w32_worker_func(LPVOID ctx) {$/;"	f	language:C++	typeref:typename:DWORD WINAPI	file:
 W32_Work_Queue	D:/work/git/txt/code/w32.cpp	/^struct W32_Work_Queue {$/;"	s	language:C++	file:
+w32_write_file	D:/work/git/txt/code/w32.cpp	/^w32_write_file(Platform_File* file, UMI size, UMI offset, void* src)$/;"	f	language:C++	typeref:typename:B32	file:
 wasapi	D:/work/git/txt/code/w32_audio_wasapi.h	/^  Win_Wasapi* wasapi;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client	typeref:typename:Win_Wasapi *
 WAV	D:/work/git/txt/code/momo_wav.h	/^}WAV;$/;"	t	language:C++	typeref:struct:__anon690e9bbf0408
 WAV_Data_Chunk	D:/work/git/txt/code/momo_wav.h	/^}WAV_Data_Chunk;$/;"	t	language:C++	typeref:struct:__anon690e9bbf0308
@@ -2129,12 +2171,15 @@ width	D:/work/git/txt/code/momo_png.h	/^  U32 width;$/;"	m	language:C++	struct:_
 width	D:/work/git/txt/code/momo_png.h	/^  U32 width;$/;"	m	language:C++	struct:__anon6896d1560108	typeref:typename:U32
 width	D:/work/git/txt/code/sui_pack.h	/^  U32 width;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32
 WIN32_LEAN_AND_MEAN	D:/work/git/txt/code/w32.h	/^#define WIN32_LEAN_AND_MEAN$/;"	d	language:C++
+window	D:/work/git/txt/code/w32.cpp	/^  HWND window;$/;"	m	language:C++	struct:W32_State	typeref:typename:HWND	file:
+WinMain	D:/work/git/txt/code/w32.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 WIN_AUDIO	D:/work/git/txt/code/w32_audio.h	/^#define WIN_AUDIO$/;"	d	language:C++
 WIN_H	D:/work/git/txt/code/w32.h	/^#define WIN_H$/;"	d	language:C++
 WIN_RENDERER_H	D:/work/git/txt/code/w32_gfx.h	/^#define WIN_RENDERER_H$/;"	d	language:C++
 WIN_WASAPI	D:/work/git/txt/code/w32_audio_wasapi.h	/^#define WIN_WASAPI$/;"	d	language:C++
 Win_Wasapi	D:/work/git/txt/code/w32_audio_wasapi.h	/^struct Win_Wasapi {$/;"	s	language:C++
 Win_Wasapi_Notif_Client	D:/work/git/txt/code/w32_audio_wasapi.h	/^struct Win_Wasapi_Notif_Client {$/;"	s	language:C++
+work_queue	D:/work/git/txt/code/w32.cpp	/^  W32_Work_Queue work_queue;$/;"	m	language:C++	struct:W32_State	typeref:typename:W32_Work_Queue	file:
 write_file	D:/work/git/txt/code/game_platform.h	/^  Platform_Write_File* write_file;$/;"	m	language:C++	struct:Platform	typeref:typename:Platform_Write_File *
 x	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon2eb1bf3d0208	typeref:typename:U32
 x	D:/work/git/txt/code/momo_rect_pack.h	/^	U32 x, y, w, h;$/;"	m	language:C++	struct:__anon2eb1bf3d0308	typeref:typename:U32
@@ -2160,10 +2205,10 @@ zero_memory	D:/work/git/txt/code/momo_common.h	/^zero_memory(void* dest, UMI siz
 zero_memory	D:/work/git/txt/code/momo_common.h	/^zero_memory(void* dest, UMI size) {$/;"	f	language:C++	typeref:typename:void
 zero_range	D:/work/git/txt/code/momo_common.h	/^#define zero_range(/;"	d	language:C++
 zero_struct	D:/work/git/txt/code/momo_common.h	/^#define zero_struct(/;"	d	language:C++
-_ba_set_revert_point	D:/work/git/txt/code/momo_memory.h	/^# define _ba_set_revert_point(/;"	d	language:C++
-_bonk_tri2_pt2_barycentric	D:/work/git/txt/code/momo_shapes.h	/^_bonk_tri2_pt2_barycentric(V2 t0, V2 t1, V2 t2, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
-_bonk_tri2_pt2_dot_product	D:/work/git/txt/code/momo_shapes.h	/^_bonk_tri2_pt2_dot_product(V2 t0, V2 t1, V2 t2, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
-_bonk_tri2_pt2_parametric	D:/work/git/txt/code/momo_shapes.h	/^_bonk_tri2_pt2_parametric(V2 t0, V2 t1, V2 t2, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
+_arn_set_revert_point	D:/work/git/txt/code/momo_memory.h	/^# define _arn_set_revert_point(/;"	d	language:C++
+_bonk_tri2_pt2_barycentric	D:/work/git/txt/code/momo_shapes.h	/^_bonk_tri2_pt2_barycentric(V2 tp0, V2 tp1, V2 tp2, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
+_bonk_tri2_pt2_dot_product	D:/work/git/txt/code/momo_shapes.h	/^_bonk_tri2_pt2_dot_product(V2 tp0, V2 tp1, V2 tp2, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
+_bonk_tri2_pt2_parametric	D:/work/git/txt/code/momo_shapes.h	/^_bonk_tri2_pt2_parametric(V2 tp0, V2 tp1, V2 tp2, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
 _compute_f64	D:/work/git/txt/code/momo_common.h	/^_compute_f64(S64 power, U64 i, B32 negative) $/;"	f	language:C++	typeref:typename:F64
 _defer_dummy	D:/work/git/txt/code/momo_common.h	/^struct _defer_dummy {};$/;"	s	language:C++
 _defer_scope_guard	D:/work/git/txt/code/momo_common.h	/^struct _defer_scope_guard {$/;"	s	language:C++
@@ -2185,17 +2230,17 @@ _json_eat_ignorables	D:/work/git/txt/code/momo_json.h	/^_json_eat_ignorables(_JS
 _json_get	D:/work/git/txt/code/momo_json.h	/^_json_get(JSON_Object* j, String8 key) {$/;"	f	language:C++	typeref:typename:_JSON_Object_Node *
 _json_insert_node	D:/work/git/txt/code/momo_json.h	/^_json_insert_node(_JSON_Object_Node** node, _JSON_Object_Node* new_node) {$/;"	f	language:C++	typeref:typename:B32
 _json_next_token	D:/work/git/txt/code/momo_json.h	/^_json_next_token(_JSON_Tokenizer* t) {$/;"	f	language:C++	typeref:typename:_JSON_Token
-_JSON_Object_Expect_Type	D:/work/git/txt/code/momo_json.h	/^} _JSON_Object_Expect_Type;$/;"	t	language:C++	typeref:enum:__anon6dd1ef0b0403
-_JSON_OBJECT_EXPECT_TYPE_COLON	D:/work/git/txt/code/momo_json.h	/^  _JSON_OBJECT_EXPECT_TYPE_COLON,$/;"	e	language:C++	enum:__anon6dd1ef0b0403
-_JSON_OBJECT_EXPECT_TYPE_COMMA_OR_CLOSE	D:/work/git/txt/code/momo_json.h	/^  _JSON_OBJECT_EXPECT_TYPE_COMMA_OR_CLOSE,$/;"	e	language:C++	enum:__anon6dd1ef0b0403
-_JSON_OBJECT_EXPECT_TYPE_KEY_OR_CLOSE	D:/work/git/txt/code/momo_json.h	/^  _JSON_OBJECT_EXPECT_TYPE_KEY_OR_CLOSE,$/;"	e	language:C++	enum:__anon6dd1ef0b0403
-_JSON_OBJECT_EXPECT_TYPE_OPEN	D:/work/git/txt/code/momo_json.h	/^  _JSON_OBJECT_EXPECT_TYPE_OPEN,$/;"	e	language:C++	enum:__anon6dd1ef0b0403
-_JSON_OBJECT_EXPECT_TYPE_VALUE	D:/work/git/txt/code/momo_json.h	/^  _JSON_OBJECT_EXPECT_TYPE_VALUE,$/;"	e	language:C++	enum:__anon6dd1ef0b0403
+_JSON_Object_Expect_Type	D:/work/git/txt/code/momo_json.h	/^} _JSON_Object_Expect_Type;$/;"	t	language:C++	typeref:enum:__anon6dd1ef0b0503
+_JSON_OBJECT_EXPECT_TYPE_COLON	D:/work/git/txt/code/momo_json.h	/^  _JSON_OBJECT_EXPECT_TYPE_COLON,$/;"	e	language:C++	enum:__anon6dd1ef0b0503
+_JSON_OBJECT_EXPECT_TYPE_COMMA_OR_CLOSE	D:/work/git/txt/code/momo_json.h	/^  _JSON_OBJECT_EXPECT_TYPE_COMMA_OR_CLOSE,$/;"	e	language:C++	enum:__anon6dd1ef0b0503
+_JSON_OBJECT_EXPECT_TYPE_KEY_OR_CLOSE	D:/work/git/txt/code/momo_json.h	/^  _JSON_OBJECT_EXPECT_TYPE_KEY_OR_CLOSE,$/;"	e	language:C++	enum:__anon6dd1ef0b0503
+_JSON_OBJECT_EXPECT_TYPE_OPEN	D:/work/git/txt/code/momo_json.h	/^  _JSON_OBJECT_EXPECT_TYPE_OPEN,$/;"	e	language:C++	enum:__anon6dd1ef0b0503
+_JSON_OBJECT_EXPECT_TYPE_VALUE	D:/work/git/txt/code/momo_json.h	/^  _JSON_OBJECT_EXPECT_TYPE_VALUE,$/;"	e	language:C++	enum:__anon6dd1ef0b0503
 _JSON_Object_Node	D:/work/git/txt/code/momo_json.h	/^typedef struct _JSON_Object_Node {$/;"	s	language:C++
 _JSON_Object_Node	D:/work/git/txt/code/momo_json.h	/^} _JSON_Object_Node;$/;"	t	language:C++	typeref:struct:_JSON_Object_Node
-_json_parse_array	D:/work/git/txt/code/momo_json.h	/^_json_parse_array(JSON_Array* arr, _JSON_Tokenizer* t, Bump_Allocator* ba) {$/;"	f	language:C++	typeref:typename:B32
-_json_parse_object	D:/work/git/txt/code/momo_json.h	/^static B32 _json_parse_object(JSON_Object*, _JSON_Tokenizer* t, Bump_Allocator* ba);$/;"	p	language:C++	typeref:typename:B32
-_json_parse_object	D:/work/git/txt/code/momo_json.h	/^_json_parse_object(JSON_Object* obj, _JSON_Tokenizer* t, Bump_Allocator* ba) {$/;"	f	language:C++	typeref:typename:B32
+_json_parse_array	D:/work/git/txt/code/momo_json.h	/^_json_parse_array(JSON_Array* arr, _JSON_Tokenizer* t, Arena* ba) {$/;"	f	language:C++	typeref:typename:B32
+_json_parse_object	D:/work/git/txt/code/momo_json.h	/^static B32 _json_parse_object(JSON_Object*, _JSON_Tokenizer* t, Arena* ba);$/;"	p	language:C++	typeref:typename:B32
+_json_parse_object	D:/work/git/txt/code/momo_json.h	/^_json_parse_object(JSON_Object* obj, _JSON_Tokenizer* t, Arena* ba) {$/;"	f	language:C++	typeref:typename:B32
 _json_print_nodes_in_order	D:/work/git/txt/code/momo_json.h	/^static void _json_print_nodes_in_order(_JSON_Object_Node* node);$/;"	p	language:C++	typeref:typename:void
 _json_print_nodes_in_order	D:/work/git/txt/code/momo_json.h	/^_json_print_nodes_in_order(_JSON_Object_Node* node) {$/;"	f	language:C++	typeref:typename:void
 _json_print_token	D:/work/git/txt/code/momo_json.h	/^_json_print_token(_JSON_Tokenizer* t, _JSON_Token token)  {$/;"	f	language:C++	typeref:typename:void
@@ -2203,37 +2248,37 @@ _json_print_value	D:/work/git/txt/code/momo_json.h	/^_json_print_value(_JSON_Val
 _json_set_node_key	D:/work/git/txt/code/momo_json.h	/^_json_set_node_key(_JSON_Object_Node* node, _JSON_Tokenizer* j, _JSON_Token key)$/;"	f	language:C++	typeref:typename:void
 _json_set_value_based_on_token	D:/work/git/txt/code/momo_json.h	/^static B32 _json_set_value_based_on_token(_JSON_Value* value, _JSON_Tokenizer* t, _JSON_Token to/;"	p	language:C++	typeref:typename:B32
 _json_set_value_based_on_token	D:/work/git/txt/code/momo_json.h	/^_json_set_value_based_on_token(_JSON_Value* value, $/;"	f	language:C++	typeref:typename:B32
-_JSON_Token	D:/work/git/txt/code/momo_json.h	/^}_JSON_Token;$/;"	t	language:C++	typeref:struct:__anon6dd1ef0b0508
-_JSON_Tokenizer	D:/work/git/txt/code/momo_json.h	/^} _JSON_Tokenizer;$/;"	t	language:C++	typeref:struct:__anon6dd1ef0b0608
-_JSON_Token_Type	D:/work/git/txt/code/momo_json.h	/^} _JSON_Token_Type;$/;"	t	language:C++	typeref:enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_CLOSE_BRACE	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_CLOSE_BRACE,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_CLOSE_BRACKET	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_CLOSE_BRACKET,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_COLON	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_COLON,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_COMMA	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_COMMA,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_EOF	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_EOF$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_FALSE	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_FALSE,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_FLOATING_POINT	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_FLOATING_POINT,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_IDENTIFIER	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_IDENTIFIER,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_NULL	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_NULL,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_OPEN_BRACE	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_OPEN_BRACE,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_OPEN_BRACKET	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_OPEN_BRACKET,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_SIGNED_INTEGER	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_SIGNED_INTEGER,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_STRING	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_STRING,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_TRUE	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_TRUE,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_UNKNOWN	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_UNKNOWN,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_TOKEN_TYPE_UNSIGNED_INTEGER	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_UNSIGNED_INTEGER,$/;"	e	language:C++	enum:__anon6dd1ef0b0203
-_JSON_Value	D:/work/git/txt/code/momo_json.h	/^} _JSON_Value;$/;"	t	language:C++	typeref:struct:__anon6dd1ef0b0708
-_JSON_Value_Type	D:/work/git/txt/code/momo_json.h	/^} _JSON_Value_Type;$/;"	t	language:C++	typeref:enum:__anon6dd1ef0b0303
-_JSON_VALUE_TYPE_ARRAY	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_ARRAY,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
-_JSON_VALUE_TYPE_B32	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_B32,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
-_JSON_VALUE_TYPE_F32	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_F32,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
-_JSON_VALUE_TYPE_NULL	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_NULL$/;"	e	language:C++	enum:__anon6dd1ef0b0303
-_JSON_VALUE_TYPE_OBJECT	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_OBJECT,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
-_JSON_VALUE_TYPE_S32	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_S32,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
-_JSON_VALUE_TYPE_STR8	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_STR8,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
-_JSON_VALUE_TYPE_U32	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_U32,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_Token	D:/work/git/txt/code/momo_json.h	/^}_JSON_Token;$/;"	t	language:C++	typeref:struct:__anon6dd1ef0b0608
+_JSON_Tokenizer	D:/work/git/txt/code/momo_json.h	/^} _JSON_Tokenizer;$/;"	t	language:C++	typeref:struct:__anon6dd1ef0b0708
+_JSON_Token_Type	D:/work/git/txt/code/momo_json.h	/^} _JSON_Token_Type;$/;"	t	language:C++	typeref:enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_CLOSE_BRACE	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_CLOSE_BRACE,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_CLOSE_BRACKET	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_CLOSE_BRACKET,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_COLON	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_COLON,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_COMMA	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_COMMA,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_EOF	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_EOF$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_FALSE	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_FALSE,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_FLOATING_POINT	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_FLOATING_POINT,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_IDENTIFIER	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_IDENTIFIER,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_NULL	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_NULL,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_OPEN_BRACE	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_OPEN_BRACE,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_OPEN_BRACKET	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_OPEN_BRACKET,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_SIGNED_INTEGER	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_SIGNED_INTEGER,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_STRING	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_STRING,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_TRUE	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_TRUE,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_UNKNOWN	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_UNKNOWN,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_TOKEN_TYPE_UNSIGNED_INTEGER	D:/work/git/txt/code/momo_json.h	/^  _JSON_TOKEN_TYPE_UNSIGNED_INTEGER,$/;"	e	language:C++	enum:__anon6dd1ef0b0303
+_JSON_Value	D:/work/git/txt/code/momo_json.h	/^} _JSON_Value;$/;"	t	language:C++	typeref:struct:__anon6dd1ef0b0808
+_JSON_Value_Type	D:/work/git/txt/code/momo_json.h	/^} _JSON_Value_Type;$/;"	t	language:C++	typeref:enum:__anon6dd1ef0b0403
+_JSON_VALUE_TYPE_ARRAY	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_ARRAY,$/;"	e	language:C++	enum:__anon6dd1ef0b0403
+_JSON_VALUE_TYPE_B32	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_B32,$/;"	e	language:C++	enum:__anon6dd1ef0b0403
+_JSON_VALUE_TYPE_F32	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_F32,$/;"	e	language:C++	enum:__anon6dd1ef0b0403
+_JSON_VALUE_TYPE_NULL	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_NULL$/;"	e	language:C++	enum:__anon6dd1ef0b0403
+_JSON_VALUE_TYPE_OBJECT	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_OBJECT,$/;"	e	language:C++	enum:__anon6dd1ef0b0403
+_JSON_VALUE_TYPE_S32	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_S32,$/;"	e	language:C++	enum:__anon6dd1ef0b0403
+_JSON_VALUE_TYPE_STR8	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_STR8,$/;"	e	language:C++	enum:__anon6dd1ef0b0403
+_JSON_VALUE_TYPE_U32	D:/work/git/txt/code/momo_json.h	/^  _JSON_VALUE_TYPE_U32,$/;"	e	language:C++	enum:__anon6dd1ef0b0403
 _ogl_add_predefined_textures	D:/work/git/txt/code/game_gfx_opengl.h	/^_ogl_add_predefined_textures(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
-_ogl_align_viewport	D:/work/git/txt/code/game_gfx_opengl.h	/^_ogl_align_viewport(Opengl* ogl, $/;"	f	language:C++	typeref:typename:void
+_ogl_align_viewport	D:/work/git/txt/code/game_gfx_opengl.h	/^_ogl_align_viewport(Opengl* ogl) $/;"	f	language:C++	typeref:typename:void
 _ogl_attach_shader	D:/work/git/txt/code/game_gfx_opengl.h	/^_ogl_attach_shader(Opengl* ogl,$/;"	f	language:C++	typeref:typename:void
 _ogl_begin_sprites	D:/work/git/txt/code/game_gfx_opengl.h	/^_ogl_begin_sprites(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
 _ogl_begin_triangles	D:/work/git/txt/code/game_gfx_opengl.h	/^_ogl_begin_triangles(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
@@ -2257,7 +2302,7 @@ _PNG_Chunk_Footer	D:/work/git/txt/code/momo_png.h	/^struct _PNG_Chunk_Footer {$/
 _PNG_Chunk_Header	D:/work/git/txt/code/momo_png.h	/^struct _PNG_Chunk_Header{$/;"	s	language:C++
 _PNG_Context	D:/work/git/txt/code/momo_png.h	/^struct _PNG_Context {$/;"	s	language:C++
 _png_decompress_zlib	D:/work/git/txt/code/momo_png.h	/^_png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {$/;"	f	language:C++	typeref:typename:B32
-_png_deflate	D:/work/git/txt/code/momo_png.h	/^_png_deflate(Stream* src_stream, Stream* dest_stream, Bump_Allocator* allocator) $/;"	f	language:C++	typeref:typename:B32
+_png_deflate	D:/work/git/txt/code/momo_png.h	/^_png_deflate(Stream* src_stream, Stream* dest_stream, Arena* allocator) $/;"	f	language:C++	typeref:typename:B32
 _png_filter	D:/work/git/txt/code/momo_png.h	/^_png_filter(_PNG_Context* c) {$/;"	f	language:C++	typeref:typename:B32
 _png_filter_average	D:/work/git/txt/code/momo_png.h	/^_png_filter_average(_PNG_Context* c) {$/;"	f	language:C++	typeref:typename:B32
 _png_filter_none	D:/work/git/txt/code/momo_png.h	/^_png_filter_none(_PNG_Context* c) {$/;"	f	language:C++	typeref:typename:B32
@@ -2372,13 +2417,14 @@ __anon6c64fdb70d08	D:/work/git/txt/code/momo_vectors.h	/^	struct { F32 w, h, d; 
 __anon6c64fdb70e0a	D:/work/git/txt/code/momo_vectors.h	/^typedef union {$/;"	u	language:C++
 __anon6c64fdb70f08	D:/work/git/txt/code/momo_vectors.h	/^	struct { F32 x, y, z, w; };$/;"	s	language:C++	union:__anon6c64fdb70e0a
 __anon6dd1ef0b0108	D:/work/git/txt/code/momo_json.h	/^typedef struct {$/;"	s	language:C++
-__anon6dd1ef0b0203	D:/work/git/txt/code/momo_json.h	/^typedef enum  {$/;"	g	language:C++
+__anon6dd1ef0b0208	D:/work/git/txt/code/momo_json.h	/^typedef struct {$/;"	s	language:C++
 __anon6dd1ef0b0303	D:/work/git/txt/code/momo_json.h	/^typedef enum  {$/;"	g	language:C++
-__anon6dd1ef0b0403	D:/work/git/txt/code/momo_json.h	/^typedef enum {$/;"	g	language:C++
-__anon6dd1ef0b0508	D:/work/git/txt/code/momo_json.h	/^typedef struct {$/;"	s	language:C++
-__anon6dd1ef0b0608	D:/work/git/txt/code/momo_json.h	/^typedef struct  {$/;"	s	language:C++
-__anon6dd1ef0b0708	D:/work/git/txt/code/momo_json.h	/^typedef struct {$/;"	s	language:C++
-__anon6dd1ef0b080a	D:/work/git/txt/code/momo_json.h	/^  union {$/;"	u	language:C++	struct:__anon6dd1ef0b0708
+__anon6dd1ef0b0403	D:/work/git/txt/code/momo_json.h	/^typedef enum  {$/;"	g	language:C++
+__anon6dd1ef0b0503	D:/work/git/txt/code/momo_json.h	/^typedef enum {$/;"	g	language:C++
+__anon6dd1ef0b0608	D:/work/git/txt/code/momo_json.h	/^typedef struct {$/;"	s	language:C++
+__anon6dd1ef0b0708	D:/work/git/txt/code/momo_json.h	/^typedef struct  {$/;"	s	language:C++
+__anon6dd1ef0b0808	D:/work/git/txt/code/momo_json.h	/^typedef struct {$/;"	s	language:C++
+__anon6dd1ef0b090a	D:/work/git/txt/code/momo_json.h	/^  union {$/;"	u	language:C++	struct:__anon6dd1ef0b0808
 __anon798c3623010a	D:/work/git/txt/code/momo_colors.h	/^  union {$/;"	u	language:C++	struct:RGBA
 __anon798c36230208	D:/work/git/txt/code/momo_colors.h	/^    struct { F32 r, g, b; };  $/;"	s	language:C++	union:RGBA::__anon798c3623010a
 __anon7bbb735a010a	D:/work/git/txt/code/momo_common.h	/^  union { F32 f; U32 u; } ret = {};$/;"	u	language:C++	function:_F32_INFINITY
@@ -2411,5 +2457,5 @@ __anoncc1655140108	D:/work/git/txt/code/momo_image.h	/^typedef struct {$/;"	s	la
 __anone1a80a89010a	D:/work/git/txt/code/sui_pack.h	/^  union {$/;"	u	language:C++	struct:Sui_Packer_Source
 __anone518d674010a	D:/work/git/txt/code/test_essentials.h	/^    union {$/;"	u	language:C++	function:test_essentials
 __anone518d674020a	D:/work/git/txt/code/test_essentials.h	/^    union {$/;"	u	language:C++	function:test_essentials
-__ba_set_revert_point	D:/work/git/txt/code/momo_memory.h	/^# define __ba_set_revert_point(/;"	d	language:C++
+__arn_set_revert_point	D:/work/git/txt/code/momo_memory.h	/^# define __arn_set_revert_point(/;"	d	language:C++
 ~_defer_scope_guard	D:/work/git/txt/code/momo_common.h	/^  ~_defer_scope_guard() { f(); }$/;"	f	language:C++	struct:_defer_scope_guard

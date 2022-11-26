@@ -18,18 +18,18 @@ game_update_and_render(Platform* pf)
   game_profile_block(GAME);
   // Initialization
   if (!platform->game || platform->reloaded) {
-    ba_clear(platform->game_arena);
-    platform->game = ba_push(Game, platform->game_arena);
+    arn_clear(platform->game_arena);
+    platform->game = arn_push(Game, platform->game_arena);
     Game* game = (Game*)platform->game;
 
     // around 32MB worth
-    if (!ba_partition(platform->game_arena, &game->asset_arena, MB(20), 16)) 
+    if (!arn_partition(platform->game_arena, &game->asset_arena, MB(20), 16)) 
       return false;
-    if (!ba_partition(platform->game_arena, &game->mode_arena, MB(5), 16)) 
+    if (!arn_partition(platform->game_arena, &game->mode_arena, MB(5), 16)) 
       return false; 
-    if (!ba_partition(platform->game_arena, &game->debug_arena, MB(1), 16)) 
+    if (!arn_partition(platform->game_arena, &game->debug_arena, MB(1), 16)) 
       return false;
-    if (!ba_partition(platform->game_arena, &game->frame_arena, MB(1), 16)) 
+    if (!arn_partition(platform->game_arena, &game->frame_arena, MB(1), 16)) 
       return false;
     
     if(!init_game_assets(&game->assets, 
@@ -76,19 +76,18 @@ game_update_and_render(Platform* pf)
   inspector = &game->inspector;
   Console* console = &game->console;
 
-  // TODO: should probably be in modes instead
-
-  begin_inspector(inspector);
  
 #if 0
+  // TODO: should probably be in modes instead
+  insp_clear(inspector);
   static U32 test_value = 32;
-  add_inspector_entry(in, str8_from_lit("Test"), &test_value);
+  insp_add_u32(in, str8_from_lit("Test"), &test_value);
 #endif
 
   
   // Game state management
   if (game->is_mode_changed) {
-    ba_clear(&game->mode_arena);
+    arn_clear(&game->mode_arena);
     game->mode_context = null;
     game->is_mode_changed = false;
   }

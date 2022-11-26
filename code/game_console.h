@@ -23,10 +23,10 @@ struct Console {
 };
 
 static void
-init_console(Console* dc, Bump_Allocator* allocator) {
+init_console(Console* dc, Arena* allocator) {
   U32 line_size = 256;
   sb8_init(&dc->input_line,
-           ba_push_arr(U8, allocator, line_size),
+           arn_push_arr(U8, allocator, line_size),
            line_size);
   
   for (U32 info_line_index = 0;
@@ -35,7 +35,7 @@ init_console(Console* dc, Bump_Allocator* allocator) {
   {    
     String8_Builder* info_line = dc->info_lines + info_line_index;
     sb8_init(info_line,
-             ba_push_arr(U8, allocator, line_size),
+             arn_push_arr(U8, allocator, line_size),
              line_size);
   }
 }

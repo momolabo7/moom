@@ -8,7 +8,7 @@ w32_audio_load(U32 samples_per_second,
                U16 channels,
                U32 latency_frames,
                U32 refresh_rate,
-               Bump_Allocator* allocator);
+               Arena* allocator);
 
 
 static void
