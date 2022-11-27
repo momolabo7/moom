@@ -11,15 +11,6 @@
 #define al_at(l,i)          (al_is_valid(l,i) ? (l)->e + i : 0)
 #define al_foreach(i,l)     for(UMI i = 0; i < (l)->count; ++i)
 
-#if IS_CPP
-template<typename ItemType, typename CountType, UMI size>
-struct Array_List {
-  CountType count;
-  ItemType e[size];
-};
-
-#endif //IS_CPP
-
 // Slice Lists
 #define sl_is_full(l)       ((l)->count == (l)->cap))
 #define sl_is_empty(l)      ((l)->count == 0)
@@ -31,13 +22,19 @@ struct Array_List {
 
 
 // Singly Linked Lists
+// f - first node
+// l - last node
+// n - node
 #define sll_prepend(f,l,n) (f) ? (n)->next = (f), (f) = (n) : (f) = (l) = (n) 
 #define sll_append(f,l,n) (f) ? (l)->next = (n), (l) = (n) : (f) = (l) = (n)
 
 // Circular Doubly Linked List with sentinel
+// 
+// s - sentinel
+// n - node
 #define cll_init(s)     (s)->prev = (s), (s)->next = (s) 
 #define cll_append(s,n) (n)->next = (s), (n)->prev = (s)->prev, (n)->prev->next 
-#define cll_remove(n) (n)->prev->next = (n)->next, (n)->next->prev = (n)->prev;
+#define cll_remove(n)   (n)->prev->next = (n)->next, (n)->next->prev = (n)->prev;
 
 
 #endif //MOMO_LISTS_H
