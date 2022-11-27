@@ -168,19 +168,39 @@ lit_level_0_5(Lit* m) {
 }
 
 ///////////////////////////////////////
-// - Learn about color combinations
-// - Learn about multiple sensors
-// - R + G = Y
+// TODO
+// - Sensors on inside room and outside room
+// - Point lights
 static void
 lit_level_0_6(Lit* m) {
   lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
 
-  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x666600FF); 
-  lit_push_sensor(m, 1200.f, GAME_HEIGHT * 0.5f, 0x999999FF); 
+  // middle
+  lit_push_sensor(m, 050.f,  450.f, 0x666666FF); 
+  lit_push_sensor(m, 750.f,  450.f, 0x666666FF); 
+  lit_push_sensor(m, 050.f,  350.f, 0x666666FF); 
+  lit_push_sensor(m, 750.f,  350.f, 0x666666FF); 
 
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.25f, 0x330000FF, 30.f, 0.5f);
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.75f, 0x003300FF, 30.f, 0.5f);
-  lit_push_light(m, 500.f, GAME_HEIGHT * 0.5f, 0x000033FF, 90.f, 0.5f);
+  lit_push_double_edge(m, 000.f, 400.f, 300.f, 400.f);
+  lit_push_double_edge(m, 300.f, 250.f, 300.f, 550.f);
+  lit_push_double_edge(m, 300.f, 650.f, 300.f, 800.f);
+  lit_push_double_edge(m, 300.f, 000.f, 300.f, 150.f);
+
+  lit_push_double_edge(m, 500.f, 400.f, 800.f, 400.f); 
+  lit_push_double_edge(m, 500.f, 250.f, 500.f, 550.f);
+  lit_push_double_edge(m, 500.f, 650.f, 500.f, 800.f);
+  lit_push_double_edge(m, 500.f, 000.f, 500.f, 150.f);
+
+  //lit_push_sensor(m, 200.f, 400.f, 0x008888FF); 
+  //lit_push_sensor(m, 600.f, 400.f, 0x008800FF); 
+
+ //lit_push_sensor(m, 400.f, 200.f, 0x880000FF); 
+  //lit_push_sensor(m, 400.f, 600.f, 0x880088FF); 
+
+  lit_push_light(m, 400.f, 400.f, 0x666666FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x666666FF, 360.f, 0.f);
+  
+
 }
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
@@ -188,9 +208,9 @@ static Lit_Level lit_levels[] = {
   //lit_level_0_1, 
   //lit_level_0_2,
   //lit_level_0_3,
-  lit_level_0_4,
+  //lit_level_0_4,
   //lit_level_0_5,
-  //lit_level_0_6,
+  lit_level_0_6,
 };
 
 

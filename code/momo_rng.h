@@ -2,8 +2,7 @@
 #define MOMO_RANDOM_H
 
 
-typedef struct 
-{
+typedef struct {
   U32 index;
 } RNG;
 

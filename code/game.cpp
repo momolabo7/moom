@@ -61,8 +61,7 @@ game_update_and_render(Platform* pf)
     game->is_done = false;
     
     // Inform platform what our game's dimensions are
-    if (!platform->reloaded)
-      platform->set_game_dims(GAME_WIDTH, GAME_HEIGHT);
+    platform->set_game_dims(GAME_WIDTH, GAME_HEIGHT);
 
     // set up view for game
     gfx_push_view(gfx, 0.f, GAME_WIDTH, 0.f, GAME_HEIGHT, 0.f, 0.f);

@@ -539,6 +539,13 @@ w32_process_input(HWND window, Platform* pf)
 static void
 w32_set_game_dims(F32 width, F32 height) {
   assert(width > 0.f && height > 0.f);
+
+  // Ignore if there is no change
+  if (width == w32_state.game_width && height == w32_state.game_height) return;
+
+  w32_state.game_width = width;
+  w32_state.game_height = height;
+
   // Get monitor info
   HMONITOR monitor = MonitorFromWindow(0, MONITOR_DEFAULTTONEAREST);
   MONITORINFOEX monitor_info;
@@ -564,9 +571,7 @@ w32_set_game_dims(F32 width, F32 height) {
   // Make it right at the center!
   MoveWindow(w32_state.window, left, top, (S32)width + diff.x, (S32)height + diff.y, TRUE);
 
-  w32_state.game_width = width;
-  w32_state.game_height = height;
-}
+  }
 
 static void
 w32_setup_platform_functions(Platform* pf)
@@ -841,32 +846,27 @@ WinMain(HINSTANCE instance,
     
     //- Mouse input 
     {
-      POINT cursor_pos = {};
+      POINT cursor_pos = {0};
       GetCursorPos(&cursor_pos);
       ScreenToClient(window, &cursor_pos);
       
-      pf->screen_mouse_pos.x = cursor_pos.x;
-      pf->screen_mouse_pos.y = cursor_pos.y;
       
-      pf->render_mouse_pos.x = pf->screen_mouse_pos.x - rr.left;
-      pf->render_mouse_pos.y = pf->screen_mouse_pos.y - rr.bottom;
+      F32 render_mouse_pos_x = (F32)(cursor_pos.x - rr.left);
+      F32 render_mouse_pos_y = (F32)(cursor_pos.y - rr.bottom);
 
-#if 0
-      
-      F32 region_width = (F32)render_region.max.x - render_region.min.x;
-      F32 region_height = (F32)render_region.max.x - render_region.min.x;
+      F32 region_width = (F32)(rr.right - rr.left);
+      F32 region_height = (F32)(rr.top - rr.bottom);
 
-      F32 design_to_render_w = GAME_WIDTH / region_width;
-      F32 design_to_render_h = GAME_HEIGHT / region_height;
+      F32 game_to_render_w = w32_state.game_width / region_width;
+      F32 game_to_render_h = w32_state.game_height / region_height;
       
-      pf->design_mouse_pos.x = F32(pf->render_mouse_pos.x) * design_to_render_w;
-      pf->design_mouse_pos.y = F32(pf->render_mouse_pos.y) * design_to_render_h;
+      pf->mouse_pos.x = render_mouse_pos_x * game_to_render_w;
+      pf->mouse_pos.y = render_mouse_pos_y * game_to_render_h;
       
       
       // NOTE(Momo): Flip y
       // TODO(Momo): should this really be here?
-      pf->design_mouse_pos.y = lerp_f32(GAME_HEIGHT, 0.f, pf->design_mouse_pos.y/GAME_HEIGHT);	
-#endif
+      //pf->design_mouse_pos.y = lerp_f32(GAME_HEIGHT, 0.f, pf->design_mouse_pos.y/GAME_HEIGHT);	
 
     }
     

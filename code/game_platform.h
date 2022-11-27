@@ -121,8 +121,15 @@ typedef struct {
   };
   U8 chars[32];
   U32 char_count;
-  V2U screen_mouse_pos;
-  V2U render_mouse_pos;
+
+  
+  //V2U screen_mouse_pos;
+  //V2U render_mouse_pos;
+
+  // NOTE(Momo): The mouse position is relative to the game's dimensions given
+  // via set_game_dims(). It is possible to get back the normalized dimensions
+  // by dividing the x/y by the width/height of the game.
+  V2 mouse_pos;
  
   /////////////////////////////////////////////////////////
   // Functions
@@ -153,7 +160,7 @@ typedef struct {
   F32 seconds_since_last_frame; //aka dt
   B32 reloaded;
 
-}Platform;
+} Platform;
 
 typedef void Game_Update_And_Render(Platform* pf);
 

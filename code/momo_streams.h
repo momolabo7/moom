@@ -1,7 +1,7 @@
 #ifndef MOMO_STREAM_H
 #define MOMO_STREAM_H
 
-struct Stream {
+typedef struct  {
   U8* data;
   UMI size;
   UMI pos;
@@ -9,7 +9,7 @@ struct Stream {
   // For bit reading
   U32 bit_buffer;
   U32 bit_count;
-};
+} Stream;
 
 
 static void   srm_init(Stream* s, void* memory, UMI memory_size);

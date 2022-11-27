@@ -15,7 +15,17 @@ lit_update_player(Lit* lit, F32 dt)
 {
   Lit_Player* player = &lit->player; 
   Lit_Light_List* lights = &lit->lights;
+  
 
+  // Get world mouse position
+  V2 world_mouse_pos = {0};
+  {
+    world_mouse_pos.x = platform->mouse_pos.x;
+    world_mouse_pos.y = GAME_HEIGHT - platform->mouse_pos.y;
+  }
+
+  player->pos = world_mouse_pos;
+#if 0
   // Get movement direction
   V2 direction = {0};
   if (pf_is_button_down(platform->button_up)) {
@@ -77,6 +87,7 @@ lit_update_player(Lit* lit, F32 dt)
     velocity *= speed * dt;
     player->pos += velocity;
   }
+#endif 
 
   if (player->held_light) {
     if (player->light_retrival_time < LIT_PLAYER_LIGHT_RETRIEVE_DURATION) {

@@ -9,7 +9,10 @@ w32_log_proc(const char* fmt, ...) {
   va_end(args);
   OutputDebugStringA(buffer);
 }
-make(Profiler, profiler);
+
+Profiler _profiler = {0};
+Profiler* profiler = &_profiler;
+
 #define w32_log(...) w32_log_proc(__VA_ARGS__)
 #define w32_profile_block(...) prf_block(profiler, __VA_ARGS__)
 #else

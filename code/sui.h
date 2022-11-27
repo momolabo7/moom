@@ -81,7 +81,7 @@ sui_read_font_from_file(TTF* ttf, const char* filename, Arena* allocator) {
   make(Block, mem);
   if (!sui_read_file_to_blk(mem, filename, allocator)) 
     return false;
-  return ttf_read(ttf, mem->data, mem->size);
+  return ttf->read(mem->data, mem->size);
 }
 
 static B32 

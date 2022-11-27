@@ -15,9 +15,9 @@
 #ifndef MOMO_MATRIX_H
 #define MOMO_MATRIX_H
 
-typedef struct M44 {
+struct M44 {
 	F32 e[4][4];
-} M44;
+};
 
 static M44 m44_concat(M44 lhs, M44 rhs);
 static M44 m44_transpose(M44 m);
@@ -38,7 +38,8 @@ static M44 operator*(M44 lhs, M44 rhs);
 //////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 
-static M44 m44_concat(M44 lhs, M44 rhs) {
+static M44
+m44_concat(M44 lhs, M44 rhs) {
 	M44 ret = {};
   for (U32 r = 0; r < 4; r++) { 
     for (U32 c = 0; c < 4; c++) { 
@@ -50,7 +51,8 @@ static M44 m44_concat(M44 lhs, M44 rhs) {
 	return ret;
 }
 
-static M44 m44_transpose(M44 m) {
+static M44 
+m44_transpose(M44 m) {
 	M44 ret = {};
 	for (U32 i = 0; i < 4; ++i ) {
 		for (U32 j = 0; j < 4; ++j) {
@@ -68,7 +70,9 @@ static M44 m44_scale(F32 x, F32 y, F32 z = 1.f) {
 	
 	return ret;
 }
-static M44 m44_identity() {
+
+static M44 
+m44_identity() {
 	M44 ret = {};
 	ret.e[0][0] = 1.f;
 	ret.e[1][1] = 1.f;
@@ -77,7 +81,9 @@ static M44 m44_identity() {
 	
 	return ret;
 }
-static M44 m44_translation(F32 x, F32 y, F32 z = 0.f) {
+
+static M44 
+m44_translation(F32 x, F32 y, F32 z = 0.f) {
 	M44 ret = m44_identity();
 	ret.e[0][3] = x;
 	ret.e[1][3] = y;
@@ -86,8 +92,9 @@ static M44 m44_translation(F32 x, F32 y, F32 z = 0.f) {
 	
 	return ret;
 }
-static M44 m44_rotation_x(F32 rad) {
-	
+
+static M44 
+m44_rotation_x(F32 rad) {
 	// NOTE(Momo): 
 	// 1  0  0  0
 	// 0  c -s  0
@@ -124,8 +131,9 @@ static M44 m44_rotation_y(F32 rad) {
 	
 	return ret;
 }
-static M44 m44_rotation_z(F32 rad) {
-	
+
+static M44 
+m44_rotation_z(F32 rad) {
 	// NOTE(Momo): 
 	//  c -s  0  0
 	//  s  c  0  0
@@ -144,9 +152,11 @@ static M44 m44_rotation_z(F32 rad) {
 	
 	return ret;
 }
-static M44 m44_orthographic(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 far) {
+
+static M44 
+m44_orthographic(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 far) {
 	
-	M44 ret = {};
+	M44 ret = {0};
 	ret.e[0][0] = 2.f/(right-left);
 	ret.e[1][1] = 2.f/(top-bottom);
 	ret.e[2][2] = 2.f/(far-near);
@@ -157,7 +167,9 @@ static M44 m44_orthographic(F32 left, F32 right, F32 bottom, F32 top, F32 near, 
 	
 	return ret;
 }
-static M44 m44_frustum(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 far) {
+
+static M44 
+m44_frustum(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 far) {
 	M44 ret = {};
 	ret.e[0][0] = (2.f*near)/(right-left);
 	ret.e[1][1] = (2.f*near)/(top-bottom);
@@ -170,7 +182,9 @@ static M44 m44_frustum(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 f
 	
 	return ret;
 }
-static M44 m44_perspective(F32 fov, F32 aspect, F32 near, F32 far){
+
+static M44 
+m44_perspective(F32 fov, F32 aspect, F32 near, F32 far){
 	F32 top = near * tan_f32(fov*0.5f);
 	F32 right = top * aspect;
 	return m44_frustum(-right, right,

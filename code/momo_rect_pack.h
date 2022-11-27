@@ -16,7 +16,7 @@ typedef enum {
 typedef struct{
 	U32 x, y, w, h;
   void* user_data;
-}RP_Rect;
+} RP_Rect;
 
 /////////////////////////////////////////////////////////////////////////////
 // This is the procedure that will pack the rects. 

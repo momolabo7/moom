@@ -17,35 +17,35 @@
 #define MOMO_VECTOR_H
 
 
-typedef union {
+union V2U {
 	struct { U32 x, y; };
 	struct { U32 w, h; };
 	U32 e[2];
-} V2U;
+};
 
-typedef union {
+union V2S {
 	struct { S32 x, y; };
 	struct { S32 w, h; };
 	S32 e[2];
-} V2S;
+};
 
-typedef union {
+union V2 {
 	struct { F32 x, y; };
 	struct { F32 w, h; };
 	struct { F32 u, v; };
 	F32 e[2];
-} V2;
+};
 
-typedef union {
+union V3 {
 	struct { F32 x, y, z; };
 	struct { F32 w, h, d; };
   F32 e[3];
-} V3;
+};
 
-typedef union {
+union V4 {
 	struct { F32 x, y, z, w; };
   F32 e[4];
-} V4;
+};
 
 static V2    v2_zero(void);
 static V2    v2_set(F32 x, F32 y); 

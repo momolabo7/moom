@@ -11,6 +11,15 @@
 #define al_at(l,i)          (al_is_valid(l,i) ? (l)->e + i : 0)
 #define al_foreach(i,l)     for(UMI i = 0; i < (l)->count; ++i)
 
+#if IS_CPP
+template<typename ItemType, typename CountType, UMI size>
+struct Array_List {
+  CountType count;
+  ItemType e[size];
+};
+
+#endif //IS_CPP
+
 // Slice Lists
 #define sl_is_full(l)       ((l)->count == (l)->cap))
 #define sl_is_empty(l)      ((l)->count == 0)

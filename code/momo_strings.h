@@ -53,6 +53,7 @@ static void     sb8_push_hex_u8(String8_Builder* b, U8 num);
 static void     sb8_push_hex_u32(String8_Builder* b, U32 num);
 static void     sb8_push_fmt(String8_Builder* b, String8 fmt, ...);
 static void     sb8_init(String8_Builder* b, U8* data, UMI cap);
+
 #define sb8_make(name, cap) \
   U8 temp_buffer_##__LINE__[cap] = {0}; \
   String8_Builder name_; \

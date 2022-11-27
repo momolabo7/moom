@@ -40,7 +40,7 @@ static Block   png_write_img32_to_blk(Image32 img, Arena* allocator);
 #define _PNG_CHANNELS 4 
 
 
-struct _PNG_Context {
+typedef struct {
   Stream stream;
   Arena* allocator; 
   
@@ -55,26 +55,26 @@ struct _PNG_Context {
   U32 bit_depth;
   
   Stream compressed_image_stream;
-};
+}_PNG_Context;
 
 
-struct _PNG_Header {
+typedef struct {
   U8 signature[8];
-}; 
+}_PNG_Header; 
 
 // 5.3 Chunk layout
 // | length | type | data | CRC
-struct _PNG_Chunk_Header{
+typedef struct {
   U32 length;
   union {
     U32 type_U32;
     U8 type[4];
   };
-};
+}_PNG_Chunk_Header;
 
 
 #pragma pack(push, 1)
-struct _PNG_IHDR {
+typedef struct {
   U32 width;
   U32 height;
   U8 bit_depth;
@@ -82,12 +82,12 @@ struct _PNG_IHDR {
   U8 compression_method;
   U8 filter_method;
   U8 interlace_method;
-};
+}_PNG_IHDR;
 #pragma pack(pop)
 
-struct _PNG_Chunk_Footer {
+typedef struct  {
   U32 crc; 
-};
+}_PNG_Chunk_Footer;
 
 // ZLIB header notes:
 // Bytes[0]:
@@ -97,13 +97,13 @@ struct _PNG_Chunk_Footer {
 // - additional flags bit 0-4: FCHECK 
 // - additional flags bit 5: Preset dictionary (FDICT)
 // - additional flags bit 6-7: Compression level (FLEVEL)
-struct _PNG_IDAT_Header{
+typedef struct {
   U8 compression_flags;
   U8 additional_flags;
-};
+}_PNG_IDAT_Header;
 
 
-struct _PNG_Huffman {
+typedef struct  {
   // Canonical ordered symbols
   U16* symbols; 
   U32 symbol_count;
@@ -112,7 +112,7 @@ struct _PNG_Huffman {
   // i.e. code_lengths[1] is the number of symbols with length 1.
   U16* lengths;
   U32 length_count;
-};
+}_PNG_Huffman;
 
 // Modified from Annex D of PNG specification:
 // https://www.w3.org/TR/2003/REC-PNG-20031110/#D-CRCAppendix
