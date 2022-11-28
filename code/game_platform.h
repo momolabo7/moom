@@ -36,7 +36,7 @@ typedef enum {
 
 typedef struct {
   void* platform_data; // pointer for platform's usage
-}Platform_File;
+} Platform_File;
 
 typedef B32  
 Platform_Open_File(Platform_File* file,

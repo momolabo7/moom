@@ -1,12 +1,28 @@
 // momo_common.h
-// authored 2020-2021 by Gerald Wong
+// authored by Gerald Wong (momohoudai)
 //
-// WHAT
-//   This file contains common functions and defines
-//   used in my day to day programming for gamedev.
+// WHAT 
+//   This file contains common functions, defines and macros. 
+//   
+//   This includes:
+//   - Defines of compilers, OS, CPU archetecture
+//   - Assert mechanism 
+//   - Primitive type redefines and their features such as their maximum and minimum value.
+//   - KB, MB, GB defines
+//   - Endian swapping helpers
+//   - C-String helpers and hashing functions. 
+//   - ASCII-related helpers 
+//   - Common math-like operations like: abs, clamp, lerp, max, min, etc.
+//   - Power of 2 functions (is this math-like?)
+//   - Integer to pointer conversions
+//   - Memory manipulation like memcpy, memmove, etc. 
+
 //   
 // TODO
-// 
+// - Runtime Assert support? Or some kind of panic system (without throw).
+// - Might want to split between uintptr, size_t and intptr and all that stuff
+// - Might want to move math-like operations to a math/intrinsics header.
+//
 
 #ifndef MOMO_COMMON_H
 #define MOMO_COMMON_H
@@ -145,6 +161,10 @@ typedef char C8;
 #if COMPILER_GCC || COMPILER_CLANG
 # include <stddef.h>
 #endif
+// TODO: This might be a bad idea.
+// We might want to have uintptr_t be it's own variable and size_t be another variable.
+// Might need to research on the theory behind it and blog it down.
+//
 typedef uintptr_t UMI; // aka 'unsigned memory index'
 typedef ptrdiff_t SMI; // aka 'signed memory index'
 
@@ -163,38 +183,38 @@ typedef ptrdiff_t SMI; // aka 'signed memory index'
 //////////////////////////////////////////////////////////////////////////////
 // Constants
 //
-#define S8_MIN  -0x80
-#define S16_MIN -0x8000
-#define S32_MIN -0x80000000ll
+#define S8_MIN  (-0x80)
+#define S16_MIN (-0x8000)
+#define S32_MIN (-0x80000000ll)
 #define S64_MIN (-0x8000000000000001ll - 1)
 
-#define S8_MAX  0x7F
-#define S16_MAX 0x7FFF
-#define S32_MAX 0x7FFFFFFFl
-#define S64_MAX 0x7FFFFFFFFFFFFFFFll
+#define S8_MAX  (0x7F)
+#define S16_MAX (0x7FFF)
+#define S32_MAX (0x7FFFFFFFl)
+#define S64_MAX (0x7FFFFFFFFFFFFFFFll)
 
-#define U8_MAX  0xFF
-#define U16_MAX 0xFFFF
-#define U32_MAX 0xFFFFFFFF
-#define U64_MAX 0xFFFFFFFFFFFFFFFFllu
+#define U8_MAX  (0xFF)
+#define U16_MAX (0xFFFF)
+#define U32_MAX (0xFFFFFFFF)
+#define U64_MAX (0xFFFFFFFFFFFFFFFFllu)
 
-#define F32_EPSILON       1.1920929E-7f
-#define F32_INFINITY      _F32_INFINITY()
-#define F32_NEG_INFINITY  _F32_NEG_INFINITY()
-#define F32_NAN           _F32_NAN()
+#define F32_EPSILON       (1.1920929E-7f)
+#define F32_INFINITY      (_F32_INFINITY())
+#define F32_NEG_INFINITY  (_F32_NEG_INFINITY())
+#define F32_NAN           (_F32_NAN())
 
-#define F64_EPSILON       2.220446E-16
-#define F64_INFINITY      _F64_INFINITY()
-#define F64_NEG_INFINITY  _F64_NEG_INFINITY()
-#define F64_NAN           _F64_NAN()
+#define F64_EPSILON       (2.220446E-16)
+#define F64_INFINITY      (_F64_INFINITY())
+#define F64_NEG_INFINITY  (_F64_NEG_INFINITY())
+#define F64_NAN           (_F64_NAN())
 
 
-#define PI_32   3.14159265359f
-#define PI_64   3.14159265359
-#define TAU_32  6.28318530718f
-#define TAU_64  6.28318530718
-#define GOLD_32 1.61803398875f
-#define GOLD_64 1.61803398875
+#define PI_32   (3.14159265359f)
+#define PI_64   (3.14159265359)
+#define TAU_32  (6.28318530718f)
+#define TAU_64  (6.28318530718)
+#define GOLD_32 (1.61803398875f)
+#define GOLD_64 (1.61803398875)
 
 
 static F32 
@@ -309,7 +329,6 @@ _F64_NEG_INFINITY() {
 //
 #define min_of(l,r) ((l) < (r) ? (l) : (r))
 #define max_of(l,r) ((l) > (r) ? (l) : (r))
-
 #define clamp_of(x,t,b) (max_of(min_of(x,t),b))
 
 #define align_down_pow2(v,a) ((v) & ~((a)-1))

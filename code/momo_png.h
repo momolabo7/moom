@@ -29,10 +29,18 @@ typedef struct {
 } PNG;
 
 static B32     png_read(PNG* png, void* png_memory, UMI png_size);
+
+// TODO: remove
 static B32     png_read_from_blk(PNG* p, Block blk);
+
+
 static Image32 png_to_img32(PNG* png, Arena* allocator);
+//static U32*    png_rasterize( 
+
 static Block   png_write_img32_to_blk(Image32 img, Arena* allocator);
 
+
+//static void*   png_write(UMI* out_size);
 
 ///////////////////////////////////////////////////////////////
 // IMPLEMENTATION
