@@ -527,30 +527,6 @@ endian_swap_u32(U32 value) {
 #endif // ENABLE_ASSERT
 
 
-//////////////////////////////////////////////////////////////////////////////
-// Memory Block construct
-//
-// NOTE(Momo):  This is a really useful construct I find myself using 
-// more and more. It represents a 'Block' of memory. 
-//
-typedef struct Block {
-  union {
-    void* data;
-    U8* data_u8;
-  };
-  UMI size;  
-} Block;
-
-static B32
-blk_ok(Block blk) {
-  return blk.data != null;
-}
-
-static Block
-blk_bad() {
-  Block ret = {0};
-  return ret;
-}
 
 //////////////////////////////////////////////////////////////////////////////
 // Raw memory manipulation

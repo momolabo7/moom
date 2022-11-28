@@ -39,6 +39,11 @@ struct Sui_Atlas_Context {
 
 ///////////////////////////////////////////////////
 // Entry types
+struct Sui_Atlas_Bitmap {
+  U32 width, height;
+  U32* pixels;
+};
+
 
 struct Sui_Atlas_Font {
   const char* filename;
@@ -66,7 +71,7 @@ struct Sui_Atlas_Sprite {
 //////////////////////////////////////////////
 // Builder
 struct Sui_Atlas {  
-  Image32 bitmap;
+  Sui_Atlas_Bitmap bitmap;
   const char* bitmap_id_name;
   
   Sui_Atlas_Font fonts[128];
@@ -166,12 +171,13 @@ sui_atlas_end(Sui_Atlas* a, Arena* allocator) {
     
     Sui_Atlas_Sprite* sprite = a->sprites + sprite_index;
 
-    make(Block, blk);
-    B32 ok = sui_read_file_to_blk(blk, sprite->filename, allocator);
-    assert(ok);
+
+    UMI file_size;
+    void* file_data = sui_read_file(sprite->filename, &file_size, allocator);
+    assert(file_data);
     
     make(PNG, png);
-    ok = png_read(png, blk->data, blk->size);
+    B32 ok = png_read(png, file_data, file_size);
     assert(ok);
     assert(png->width && png->height);
     
@@ -272,22 +278,20 @@ sui_atlas_end(Sui_Atlas* a, Arena* allocator) {
         arn_set_revert_point(allocator);
         Sui_Atlas_Sprite* related_entry = context->sprite.sprite;
        
-        make(Block, blk);
-       
-        B32 ok = sui_read_file_to_blk(blk, related_entry->filename, allocator);
-        assert(ok);
+      
+        UMI file_size;
+        void* file_data = sui_read_file(related_entry->filename, &file_size, allocator);
         
         make(PNG, png);
-        ok = png_read(png, blk->data, blk->size);
+        B32 ok = png_read(png, file_data, file_size);
         assert(ok);
         
-        Image32 bm = png_to_img32(png, allocator);
-        if (!img32_ok(bm)) continue;
+        U32* pixels = png_rasterize(png, null, null, allocator);
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
             UMI index = (x + y * a->bitmap.width);
-            ((U32*)(a->bitmap.pixels))[index] = ((U32*)(bm.pixels))[j++];
+            ((U32*)(a->bitmap.pixels))[index] = ((U32*)(pixels))[j++];
           }
         }
         

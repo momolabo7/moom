@@ -29,16 +29,8 @@ typedef struct {
 } PNG;
 
 static B32     png_read(PNG* png, void* png_memory, UMI png_size);
-
-// TODO: remove
-static B32     png_read_from_blk(PNG* p, Block blk);
-
-
-static Image32 png_to_img32(PNG* png, Arena* allocator);
-//static U32*    png_rasterize( 
-
-static Block   png_write_img32_to_blk(Image32 img, Arena* allocator);
-
+static U32*    png_rasterize(PNG* png, U32* out_w, U32* out_h, Arena* allocator); 
+static void*   png_write(PNG* png, UMI* out_size, Arena* allocator);
 
 //static void*   png_write(UMI* out_size);
 
@@ -55,7 +47,6 @@ typedef struct {
   Stream image_stream;
   U32 image_width;
   U32 image_height;
-  
   
   Stream unfiltered_image_stream; // for filtering and deflating
   
@@ -734,10 +725,9 @@ _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
 // the PNG file we are reading is correct. i.e. we don't emphasize on 
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
-static Image32
-png_to_img32(PNG* png, Arena* allocator) 
+static U32* 
+png_rasterize(PNG* png, U32* out_w, U32* out_h, Arena* allocator) 
 {
-  Image32 ret = {0};
   make(Stream, zlib_stream);
 
   _PNG_Context ctx = {0};
@@ -810,33 +800,31 @@ png_to_img32(PNG* png, Arena* allocator)
     goto fail_and_cleanup;
   }
 
-  ret.width = ctx.image_width;
-  ret.height = ctx.image_height;
-  ret.pixels = (U32*)ctx.image_stream.data;
-  return ret;
+  if (out_w) (*out_w) = ctx.image_width;
+  if (out_h) (*out_h) = ctx.image_height;
+  return (U32*)ctx.image_stream.data;
 
 fail_and_cleanup:
   arn_revert(mark);
 fail:
-  return img32_bad();
+  return null;
 
 }
-
-
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
-static Block
-png_write_img32_to_blk(Image32 bm, Arena* allocator) {
-  if (bm.width <= 0 || bm.height <= 0 || bm.pixels == 0) {
-    return blk_bad();
+static void*
+png_write(U32* pixels, U32 width, U32 height, UMI* out_size, Arena* allocator) {
+  if (!pixels || !width || !height) 
+  {
+    return null;
   }
   
   static const U8 signature[] = { 
     137, 80, 78, 71, 13, 10, 26, 10 
   };
-  U32 image_bpl = (bm.width * 4);
+  U32 image_bpl = (width * 4);
   U32 data_bpl = image_bpl + 1; // bytes per line
-  U32 data_size = data_bpl * bm.height;
+  U32 data_size = data_bpl * height;
   U32 max_chunk_size = 65535;
   U32 signature_size = sizeof(signature);
   U32 chunk_size = sizeof(_PNG_Chunk_Header) + sizeof(_PNG_Chunk_Footer);
@@ -844,8 +832,9 @@ png_write_img32_to_blk(Image32 bm, Arena* allocator) {
   U32 IEND_size = chunk_size;
   U32 IDAT_size = chunk_size + sizeof(_PNG_IDAT_Header);
   U32 lines_per_chunk = max_chunk_size / data_bpl;
-  U32 chunk_count = bm.height / lines_per_chunk;
-  if (bm.height % lines_per_chunk) {
+  U32 chunk_count = height / lines_per_chunk;
+
+  if (height % lines_per_chunk) {
     chunk_count += 1;
   }
   U32 IDAT_chunk_size = 5 * chunk_count;
@@ -859,7 +848,7 @@ png_write_img32_to_blk(Image32 bm, Arena* allocator) {
   
   U8* stream_memory = arn_push_arr(U8, allocator, expected_memory_required);
   if (!stream_memory) {
-    return blk_bad();
+    return null;
   }
 
   make(Stream, stream);
@@ -879,8 +868,8 @@ png_write_img32_to_blk(Image32 bm, Arena* allocator) {
     crc_start = stream->data + stream->pos - sizeof(header.type_U32);
     
     _PNG_IHDR IHDR = {};
-    IHDR.width = endian_swap_u32(bm.width);
-    IHDR.height = endian_swap_u32(bm.height);
+    IHDR.width = endian_swap_u32(width);
+    IHDR.height = endian_swap_u32(height);
     IHDR.bit_depth = 8; // ??
     IHDR.colour_type = 6;
     IHDR.compression_method = 0;
@@ -930,7 +919,7 @@ png_write_img32_to_blk(Image32 bm, Arena* allocator) {
     // BFINAL = 1 (1 bit); // indicates if it's the final block
     // BTYPE = 0 (2 bits); // indicates no compression
     // 
-    U32 lines_remaining = bm.height;
+    U32 lines_remaining = height;
     U32 current_line = 0;
     
     for (U32 chunk_index = 0; chunk_index < chunk_count; ++chunk_index){
@@ -953,7 +942,7 @@ png_write_img32_to_blk(Image32 bm, Arena* allocator) {
         srm_write(stream, no_filter); // Filter type: None
         
         srm_write_block(stream,
-                        (U8*)bm.pixels + (current_line * image_bpl),
+                        (U8*)pixels + (current_line * image_bpl),
                         image_bpl);
         
         ++current_line;
@@ -989,11 +978,9 @@ png_write_img32_to_blk(Image32 bm, Arena* allocator) {
     srm_write(stream, footer);
   }
   
-  Block ret;
-  ret.data = (U8*)stream->data;
-  ret.size = stream->pos;
+  if (out_size) *out_size = stream->pos;
   
-  return ret;
+  return stream->data;
 }
 
 
@@ -1034,11 +1021,6 @@ png_read(PNG* p, void* png_memory, UMI png_size) {
   p->interlace_method = IHDR->interlace_method;
   
   return true;
-}
-
-static B32 
-png_read_from_blk(PNG* p, Block blk) {
-  return png_read(p, blk.data, blk.size);
 }
 
 #endif //MOMO_PNG

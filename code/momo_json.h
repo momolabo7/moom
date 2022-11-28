@@ -13,7 +13,6 @@ typedef struct {
 } JSON_Array;
 
 static B32 json_read(JSON_Object* j, void* memory, UMI size) ;
-static B32 json_read_from_blk(JSON_Object* j, Block blk);
 static S32* json_get_s32(JSON_Object* j, String8 key); 
 static U32* json_get_u32(JSON_Object* j, String8 key); 
 static F32* json_get_f32(JSON_Object* j, String8 key);
@@ -680,9 +679,7 @@ json_read(JSON_Object* j, void* memory, UMI size, Arena* ba)
 
 
 static B32 
-json_read_from_blk(JSON_Object* j, Block blk, Arena* ba) {
-  return json_read(j, blk.data, blk.size, ba);
-}
+
 
 static S32* 
 json_get_s32(JSON_Object* j, String8 key) {

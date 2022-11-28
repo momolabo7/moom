@@ -29,22 +29,8 @@ static U32 sui_log_paces = 0;
 
 
 // Utility files for ass
-static Block 
-sui_malloc(UMI size) {
-  void* mem = malloc(size);
-  assert(mem);
-  return { mem, size };
-}
-
-static void 
-sui_free(Block* mem) {
-  free(mem->data);
-  mem->data = nullptr;
-  mem->size = 0;
-}
-
-static B32 
-sui_read_file_to_blk(Block* mem, const char* filename, Arena* allocator) {
+static void* 
+sui_read_file(const char* filename, UMI* out_size, Arena* allocator) {
   FILE *file = fopen(filename, "rb");
   if (!file) return false;
   defer { fclose(file); };
@@ -59,37 +45,41 @@ sui_read_file_to_blk(Block* mem, const char* filename, Arena* allocator) {
   UMI read_amount = fread(file_blk, 1, file_size, file);
   if(read_amount != file_size) return false;
   
-  mem->data = file_blk;
-  mem->size = file_size; 
+  if (out_size) *out_size = file_size;
   
-  return true;
+  return file_blk;;
   
 }
 
 static B32
-sui_write_file_from_blk(const char* filename, Block blk) {
+sui_write_file(const char* filename, void* memory, UMI memory_size) {
   FILE *file = fopen(filename, "wb");
   if (!file) return false;
   defer { fclose(file); };
   
-  fwrite(blk.data, 1, blk.size, file);
+  fwrite(memory, 1, memory_size, file);
   return true;
 }
 
 static B32 
 sui_read_font_from_file(TTF* ttf, const char* filename, Arena* allocator) {
-  make(Block, mem);
-  if (!sui_read_file_to_blk(mem, filename, allocator)) 
+
+  UMI size;
+  void* mem = sui_read_file(filename, &size, allocator); 
+
+  if (!sui_read_file(filename, &size, allocator)) 
     return false;
-  return ttf->read(mem->data, mem->size);
+  return ttf_read(ttf, mem, size);
 }
 
 static B32 
 sui_read_wav_from_file(WAV* wav, const char* filename, Arena* allocator) {
-  make(Block, mem);
-  if(!sui_read_file_to_blk(mem, filename, allocator))
+
+  UMI size;
+  void* mem = sui_read_file(filename, &size, allocator); 
+  if(!mem)
     return false;
-  return wav_read(wav, mem->data, mem->size);
+  return wav_read(wav, mem, size);
 }
 
 #include "karu.h"

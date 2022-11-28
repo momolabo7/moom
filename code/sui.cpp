@@ -8,10 +8,12 @@
 
 
 int main() {
-  Block block = sui_malloc(MB(100));
-  defer { sui_free(&block); };
+  UMI memory_size = MB(100);
+
+  void* memory = malloc(memory_size);
+  defer { free(memory); };
   make(Arena, allocator);
-  arn_init(allocator, block.data, block.size);
+  arn_init(allocator, memory, memory_size);
 
   sui_log("Building atlas...\n");
   make(Sui_Atlas, atlas);
@@ -40,9 +42,17 @@ int main() {
   sui_log("Finished atlas...\n");
 
 #if 1
-  sui_log("Writing test png file...\n");
-  Block png_to_write_memory = png_write_img32_to_blk(atlas->bitmap, allocator);
-  sui_write_file_from_blk("test.png", png_to_write_memory);
+  {
+    sui_log("Writing test png file...\n");
+    UMI size;
+    void* png_to_write_mem  = 
+      png_write(atlas->bitmap.pixels, 
+                atlas->bitmap.width, 
+                atlas->bitmap.height, 
+                &size,
+                allocator);
+    sui_write_file("test.png", png_to_write_mem, size);
+  }
 #endif
 
   make(Sui_Packer, packer);
