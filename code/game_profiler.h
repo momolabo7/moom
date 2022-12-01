@@ -2,9 +2,6 @@
 #ifndef GAME_PROFILER_H
 #define GAME_PROFILER_H
 
-#include "momo_common.h"
-#include "momo_intrinsics.h"
-
 #define PROFILER_MAX_SNAPSHOTS 120
 #define PROFILER_MAX_ENTRIES 256
 

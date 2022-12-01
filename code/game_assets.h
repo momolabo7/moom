@@ -340,15 +340,15 @@ find_best_asset_of_type(Game_Assets* ga,
     {
       Game_Asset_Tag* tag = ga->tags + tag_index;
       F32 difference = vector->e[tag->type].tag_value_to_match - tag->value;
-      F32 weighted = vector->e[tag->type].tag_weight*abs_of(difference);
+      F32 weighted = vector->e[tag->type].tag_weight*abs_f32(difference);
       total_weighted_diff = weighted;
       
 #if 0      
       // Uncomment if we want to do periodic match (values that wrap around)
       F32 a = match_vector->e[tag->type];
       F32 b = tag->value;
-      F32 diff0 = abs_of(a-b);
-      F32 diff1 = abs_of(a - 10000000.f*sign_of(a) - b);
+      F32 diff0 = abs_f32(a-b);
+      F32 diff1 = abs_f32a - 10000000.f*sign_of(a) - b);
       F32 diff = min_of(diff0, diff1);
       
       F32 weight = weight_vector->e[tag->type]*diff;

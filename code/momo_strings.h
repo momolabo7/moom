@@ -303,7 +303,7 @@ sb8_push_s32(String8_Builder* b, S32 num) {
   UMI start_pt = b->count; 
   
   B32 negate = num < 0;
-  num = abs_of(num);
+  num = abs_s32(num);
   
   for(; num != 0; num /= 10) {
     U8 digit_to_convert = (U8)(num % 10);
@@ -333,7 +333,7 @@ sb8_push_s64(String8_Builder* b, S64 num) {
   UMI start_pt = b->count; 
   
   B32 negate = num < 0;
-  num = abs_of(num);
+  num = abs_s64(num);
   
   for(; num != 0; num /= 10) {
     U8 digit_to_convert = (U8)(num % 10);

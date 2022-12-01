@@ -238,22 +238,22 @@ ease_inout_elastic_f32(F32 t)  {
 
 static F32 
 ease_in_bounce_f32(F32 t)  {
-  return pow_f32(2.f, 6.f * (t - 1.f)) * abs_of(sin_f32(t * PI_32 * 3.5f));
+  return pow_f32(2.f, 6.f * (t - 1.f)) * abs_f32(sin_f32(t * PI_32 * 3.5f));
 }
 
 
 static F32 
 ease_out_bounce_f32(F32 t) {
-  return 1.f -pow_f32(2.f, -6.f * t) * abs_of(cos_f32(t * PI_32 * 3.5f));
+  return 1.f -pow_f32(2.f, -6.f * t) * abs_f32(cos_f32(t * PI_32 * 3.5f));
 }
 
 static F32 
 ease_inout_bounce_f32(F32 t) {
   if (t < 0.5f) {
-    return 8.f * pow_f32(2.f, 8.f * (t - 1.f)) * abs_of(sin_f32(t * PI_32 * 7.f));
+    return 8.f * pow_f32(2.f, 8.f * (t - 1.f)) * abs_f32(sin_f32(t * PI_32 * 7.f));
   }
   else {
-    return 1.f -8.f * pow_f32(2.f, -8.f * t) * abs_of(sin_f32(t * PI_32 * 7.f));
+    return 1.f -8.f * pow_f32(2.f, -8.f * t) * abs_f32(sin_f32(t * PI_32 * 7.f));
   }
 }
 
@@ -456,22 +456,22 @@ ease_inout_elastic_f64(F64 t)  {
 // NOTE(Momo): These require power function. 
 static F64 
 ease_in_bounce_f64(F64 t)  {
-  return pow_f64(2.0, 6.0 * (t - 1.0)) * abs_of(sin_f64(t * PI_64 * 3.5));
+  return pow_f64(2.0, 6.0 * (t - 1.0)) * abs_f64(sin_f64(t * PI_64 * 3.5));
 }
 
 
 static F64 
 ease_out_bounce_f64(F64 t) {
-  return 1.0 -pow_f64(2.0, -6.0 * t) * abs_of(cos_f64(t * PI_64 * 3.5));
+  return 1.0 -pow_f64(2.0, -6.0 * t) * abs_f64(cos_f64(t * PI_64 * 3.5));
 }
 
 static F64 
 ease_inout_bounce_f64(F64 t) {
   if (t < 0.5) {
-    return 8.0 * pow_f64(2.0, 8.0 * (t - 1.0)) * abs_of(sin_f64(t * PI_64 * 7.0));
+    return 8.0 * pow_f64(2.0, 8.0 * (t - 1.0)) * abs_f64(sin_f64(t * PI_64 * 7.0));
   }
   else {
-    return 1.0 -8.0 * pow_f64(2.0, -8.0 * t) * abs_of(sin_f64(t * PI_64 * 7.0));
+    return 1.0 -8.0 * pow_f64(2.0, -8.0 * t) * abs_f64(sin_f64(t * PI_64 * 7.0));
   }
 }
 

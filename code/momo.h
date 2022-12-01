@@ -2,7 +2,7 @@
 #ifndef MOMO_H
 #define MOMO_H
 
-#include "momo_common.h"
+#include "moe_types.h"
 
 #include "momo_intrinsics.h"
 #include "momo_vectors.h"

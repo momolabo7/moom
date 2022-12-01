@@ -364,14 +364,16 @@ is_alpha(C8 c) {
 }
 
 static B32
-is_digit(U8 c) {
+is_digit(C8 c) {
   return (c >= '0' && c <= '9');
   // this gets compiled to (uint8_t)(c - '0') <= 9 on all decent compilers
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Absolutes
-#define abs_of(x) ((x) < 0 ? -(x) : (x))
+
+// Turns out we don't need a generic abs() function! 
+//#define abs_of(x) ((x) < 0 ? -(x) : (x))
 
 static F32 
 abs_f32(F32 x) {
@@ -1453,7 +1455,7 @@ cstr_itoa(C8* dest, S32 num) {
   }
   
   B32 negative = num < 0;
-  num = abs_of(num);
+  num = abs_s32(num);
   
   C8* it = dest;
   for(; num != 0; num /= 10) {
@@ -1473,12 +1475,12 @@ cstr_itoa(C8* dest, S32 num) {
 //IEEE floating point functions 
 static B32 
 is_close_f32(F32 lhs, F32 rhs) {
-  return abs_of(lhs - rhs) <= F32_EPSILON;
+  return abs_f32(lhs - rhs) <= F32_EPSILON;
 }
 
 static B32 
 is_close_f64(F64 lhs, F64 rhs) {
-  return abs_of(lhs - rhs) <= F64_EPSILON;
+  return abs_f64(lhs - rhs) <= F64_EPSILON;
 }
 
 static B32 

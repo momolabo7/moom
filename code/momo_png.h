@@ -613,9 +613,9 @@ _png_filter_paeth(_PNG_Context* cx) {
       c = (i < bpp || current_index < bpl) ? 0 : (S32)(cx->image_stream.data[current_index - bpl - bpp]); // Prior(x)
       
       S32 p = a + b - c; //initial estimate
-      S32 pa = abs_of(p - a);
-      S32 pb = abs_of(p - b);
-      S32 pc = abs_of(p - c);
+      S32 pa = abs_s32(p - a);
+      S32 pb = abs_s32(p - b);
+      S32 pc = abs_s32(p - c);
       // Return nearest of a,b,c
       // breaking ties in order a, b,c
       if (pa <= pb && pa <= pc) {

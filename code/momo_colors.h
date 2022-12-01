@@ -130,7 +130,7 @@ rbg_to_hsl(RGB c) {
     ret.s = 0.f;
   }
   else {
-    ret.s = delta/(1.f - abs_of(2.f * ret.l - 1.f));
+    ret.s = delta/(1.f - abs_f32(2.f * ret.l - 1.f));
   }
   
   return ret;

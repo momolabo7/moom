@@ -1,9 +1,7 @@
 #ifndef GFX_OGL_H
 #define GFX_OGL_H
 
-#include "momo_common.h"
-#include "momo_matrix.h"
-#include "game_gfx.h"
+#include "momo.h"
 
 #ifndef OGL_MAX_SPRITES
 # define OGL_MAX_SPRITES 4096
