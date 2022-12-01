@@ -24,10 +24,9 @@
 // - Might want to move math-like operations to a math/intrinsics header.
 //
 
-#ifndef MOMO_COMMON_H
-#define MOMO_COMMON_H
+#ifndef MOE_TYPES_H
+#define MOE_TYPES_H
 
-#include <stdarg.h>
 
 // Language specs
 #if defined(__cplusplus)
@@ -166,7 +165,7 @@ typedef char C8;
 // Might need to research on the theory behind it and blog it down.
 //
 typedef uintptr_t UMI; // aka 'unsigned memory index'
-typedef ptrdiff_t SMI; // aka 'signed memory index'
+typedef intptr_t  SMI; // aka 'signed memory index'
 
 #if !defined(true)
 # define true 1
