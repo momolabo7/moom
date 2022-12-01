@@ -353,14 +353,14 @@ lit_tick(Game* game)
       case LIT_TUTORIAL_TEXT_STATE_FADE_IN: {
         F32 a = ease_out_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
         F32 y = text->pos_y + (1.f-a) * 32.f;
-        RGBA color = rgba(1.f, 1.f, 1.f, text->alpha);
+        RGBA color = rgba_set(1.f, 1.f, 1.f, text->alpha);
         paint_text(m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
         gfx_advance_depth(gfx);
       } break;
       case LIT_TUTORIAL_TEXT_STATE_FADE_OUT: {
         F32 a = ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
         F32 y = text->pos_y + a * 32.f;
-        RGBA color = rgba(1.f, 1.f, 1.f, text->alpha);
+        RGBA color = rgba_set(1.f, 1.f, 1.f, text->alpha);
         paint_text(m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
         gfx_advance_depth(gfx);
       } break;
@@ -369,7 +369,7 @@ lit_tick(Game* game)
 
   // Draw the overlay for fade in/out
   {
-    RGBA color = rgba(0.f, 0.f, 0.f, m->stage_fade);
+    RGBA color = rgba_set(0.f, 0.f, 0.f, m->stage_fade);
     paint_sprite(m->blank_sprite, v2_set(GAME_WIDTH/2, GAME_HEIGHT/2), v2_set(GAME_WIDTH, GAME_HEIGHT), color);
     gfx_advance_depth(gfx);
   }

@@ -27,16 +27,23 @@
 #ifndef MOE_TYPES_H
 #define MOE_TYPES_H
 
+//
+// Varadic arguments
+//
+#include <stdarg.h>
 
+//
 // Language specs
+//
 #if defined(__cplusplus)
 # define IS_CPP 1
 #else
 # define IS_CPP 0
 #endif // __cplusplus
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // Compiler contexts
+//
 #if defined(_MSC_VER) 
 # define COMPILER_MSVC 1
 #elif defined(__clang__)
@@ -57,8 +64,9 @@
 # define COMPILER_GCC 0
 #endif
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // OS contexts
+//
 #if defined(_WIN32)
 # define OS_WINDOWS 1
 #elif defined(__gnu_linux__)
@@ -79,9 +87,11 @@
 # define OS_MAC 0
 #endif 
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // CPU architecture contexts
+//
 // NOTE(Momo): For ARM, there are probably different versions
+//
 #if COMPILER_MSVC
 # if defined(_M_X86)
 #  define ARCH_X86 1
@@ -114,8 +124,9 @@
 # define ARCH_ARM 0
 #endif 
 
-//////////////////////////////////////////////////////////////////////////////
-// Function specifier helpers
+//
+// Export helpers
+//
 #define c_link_begin extern "C" {
 #define c_link_end }
 #define c_link extern "C"
@@ -126,19 +137,29 @@
 # error exported not defined for this compiler
 #endif
 
-//////////////////////////////////////////////////////////////////////////////
-// Default Compile options
+//
+// Asserts
+//
 #if !defined(ENABLE_ASSERT)
-#define ENABLE_ASSERT 1
+# define ENABLE_ASSERT 1
 #endif // ENABLE_ASSERT
-      
+
+
+//
+// Internal
+//    
 #if !defined(INTERNAL)
-#define INTERNAL 0
+# define INTERNAL 0
 #endif // INTERNAL
 
-//////////////////////////////////////////////////////////////////////////////
-// Basic types
+//
+// Primitive types
+//
 #include <stdint.h>
+#if COMPILER_GCC || COMPILER_CLANG
+# include <stddef.h>
+#endif
+
 typedef uint8_t U8;
 typedef uint16_t U16;
 typedef uint32_t U32;
@@ -157,9 +178,6 @@ typedef char C8;
 
 // Memory indices. Integer values for storing memory addresses.
 // X32 when in 32-bit, X64 when in 64-bit, etc 
-#if COMPILER_GCC || COMPILER_CLANG
-# include <stddef.h>
-#endif
 // TODO: This might be a bad idea.
 // We might want to have uintptr_t be it's own variable and size_t be another variable.
 // Might need to research on the theory behind it and blog it down.

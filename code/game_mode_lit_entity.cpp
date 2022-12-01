@@ -265,7 +265,7 @@ lit_update_sensors(Lit* lit,
       sensor->particle_cd = LIT_SENSOR_PARTICLE_CD;
       V2 rand_dir = rng_unit_circle(rng);
       V2 particle_vel = v2_scale(rand_dir, LIT_SENSOR_PARTICLE_SPEED); 
-      RGBA target_color = hex_to_rgba(sensor->target_color); 
+      RGBA target_color = rgba_hex(sensor->target_color); 
 
       RGBA start_color = target_color;
       start_color.a = 1.f;
@@ -300,7 +300,7 @@ lit_render_sensors(Lit* lit) {
   al_foreach(sensor_index, sensors)
   {
     Lit_Sensor* sensor = al_at(sensors, sensor_index);
-    gfx_push_filled_circle(gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, hex_to_rgba(sensor->target_color)); 
+    gfx_push_filled_circle(gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, rgba_hex(sensor->target_color)); 
 
     // only for debugging
 #if 0
@@ -309,7 +309,7 @@ lit_render_sensors(Lit* lit) {
     paint_text(painter,
                FONT_DEFAULT, 
                sb->str,
-               hex_to_rgba(0xFFFFFFFF),
+               rgba_hex(0xFFFFFFFF),
                sensor->pos.x - 100.f,
                sensor->pos.y + 10.f,
                32.f);

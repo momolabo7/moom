@@ -34,7 +34,7 @@ splash_tick(Game* game)
   set_match_entry(match, asset_tag(FONT), 1.f, 1.f); 
   Game_Font_ID font_id = find_best_font(assets, GAME_ASSET_GROUP_TYPE_FONTS, match);
 
-  RGBA color = rgba(splash->timer, splash->timer, splash->timer, splash->timer);
+  RGBA color = rgba_set(splash->timer, splash->timer, splash->timer, splash->timer);
   paint_text(font_id, 
              str8_from_lit("momo"),
              color,

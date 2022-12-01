@@ -39,7 +39,7 @@ update_and_render_inspector(Game_Sprite_ID rect_sprite, Game_Font_ID font)
     
     paint_text(font, 
                sb->str,
-               hex_to_rgba(0xFFFFFFFF),
+               rgba_hex(0xFFFFFFFF),
                0.f, 
                y, 
                line_height);

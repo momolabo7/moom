@@ -54,13 +54,13 @@ computer_tick(Game* game)
 
 
   // Draw
-  const RGBA color = rgba(1.f, 1.f, 1.f, 1.f);
+  const RGBA color = rgba_set(1.f, 1.f, 1.f, 1.f);
     
   // box
   {
     V2 min = v2_set(100.f, 100.f);
     V2 max = v2_set(800.f, 800.f);
-    RGBA white = rgba(1.f, 1.f, 1.f, 1.f);
+    RGBA white = rgba_set(1.f, 1.f, 1.f, 1.f);
 
     gfx_push_line(gfx, v2_set(min.x, min.y), v2_set(max.x, min.y), 5.f, white);
     gfx_push_line(gfx, v2_set(min.x, min.y), v2_set(min.x, max.y), 5.f, white);

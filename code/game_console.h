@@ -132,12 +132,12 @@ update_and_render_console(Console* dc, Game_Sprite_ID blank_sprite, Game_Font_ID
   paint_sprite(blank_sprite, 
                v2_set(GAME_WIDTH/2, GAME_HEIGHT/2), 
                v2_set(GAME_WIDTH, GAME_HEIGHT),
-               rgba(0.f, 0.f, 0.f, 0.8f));
+               rgba_set(0.f, 0.f, 0.f, 0.8f));
   gfx_advance_depth(gfx);
   
-  paint_sprite(blank_sprite, console_pos, console_size, hex_to_rgba(0x787878FF));
+  paint_sprite(blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
   gfx_advance_depth(gfx);
-  paint_sprite(blank_sprite, input_area_pos, input_area_size, hex_to_rgba(0x505050FF));
+  paint_sprite(blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
   gfx_advance_depth(gfx);
   
   
@@ -150,7 +150,7 @@ update_and_render_console(Console* dc, Game_Sprite_ID blank_sprite, Game_Font_ID
     
     paint_text(font,
                line->str,
-               hex_to_rgba(0xFFFFFFFF),
+               rgba_hex(0xFFFFFFFF),
                left_pad, 
                line_height * (line_index+1) + font_bottom_pad,
                font_height);
@@ -159,7 +159,7 @@ update_and_render_console(Console* dc, Game_Sprite_ID blank_sprite, Game_Font_ID
   gfx_advance_depth(gfx);
   paint_text(font,
              dc->input_line.str,
-             hex_to_rgba(0xFFFFFFFF),
+             rgba_hex(0xFFFFFFFF),
              left_pad, 
              font_bottom_pad,
              font_height);

@@ -38,17 +38,17 @@ typedef struct RGBA {
   F32 a;
 } RGBA;
 
-static RGBA rgba(F32 r, F32 g, F32 b, F32 a);
-static RGBA hex_to_rgba(U32 hex);  
-static HSL  hsl(F32 h, F32 s, F32 l);
+static RGBA rgba_set(F32 r, F32 g, F32 b, F32 a);
+static RGBA rgba_hex(U32 hex);  
+static HSL  hsl_set(F32 h, F32 s, F32 l);
 static HSL  rbg_to_hsl(RGB c);
 static RGB  hsl_to_rgb(HSL c);
 
-#define RGBA_WHITE rgba(1.f, 1.f, 1.f, 1.f)
+#define RGBA_WHITE rgba_set(1.f, 1.f, 1.f, 1.f)
 ////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 static RGBA 
-rgba(F32 r, F32 g, F32 b, F32 a){
+rgba_set(F32 r, F32 g, F32 b, F32 a){
 	RGBA ret;
 	ret.r = r;
 	ret.g = g;
@@ -59,7 +59,7 @@ rgba(F32 r, F32 g, F32 b, F32 a){
 }
 
 static RGBA
-hex_to_rgba(U32 hex) {
+rgba_hex(U32 hex) {
   RGBA ret;
   
   ret.r = (F32)((hex & 0xFF000000) >> 24)/255.f;
@@ -71,7 +71,7 @@ hex_to_rgba(U32 hex) {
 }
 
 static HSL
-hsl(F32 h, F32 s, F32 l) {
+hsl_set(F32 h, F32 s, F32 l) {
   HSL ret;
   ret.h = h;
   ret.s = s;

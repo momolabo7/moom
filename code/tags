@@ -907,8 +907,8 @@ height	D:/work/git/txt/code/momo_png.h	/^  U32 height;$/;"	m	language:C++	struct
 height	D:/work/git/txt/code/sui_atlas.h	/^  U32 width, height;$/;"	m	language:C++	struct:Sui_Atlas_Bitmap	typeref:typename:U32
 height	D:/work/git/txt/code/sui_pack.h	/^  U32 height;$/;"	m	language:C++	struct:Sui_Packer_Source_Bitmap	typeref:typename:U32
 held_light	D:/work/git/txt/code/game_mode_lit_entity.h	/^  Lit_Light* held_light;$/;"	m	language:C++	struct:Lit_Player	typeref:typename:Lit_Light *
-hex_to_rgba	D:/work/git/txt/code/momo_colors.h	/^hex_to_rgba(U32 hex) {$/;"	f	language:C++	typeref:typename:RGBA
-hex_to_rgba	D:/work/git/txt/code/momo_colors.h	/^static RGBA hex_to_rgba(U32 hex);  $/;"	p	language:C++	typeref:typename:RGBA
+rgba_hex	D:/work/git/txt/code/momo_colors.h	/^rgba_hex(U32 hex) {$/;"	f	language:C++	typeref:typename:RGBA
+rgba_hex	D:/work/git/txt/code/momo_colors.h	/^static RGBA rgba_hex(U32 hex);  $/;"	p	language:C++	typeref:typename:RGBA
 hhea	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
 highest_codepoint	D:/work/git/txt/code/game_assets.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Game_Font	typeref:typename:U32
 highest_codepoint	D:/work/git/txt/code/karu.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
@@ -917,8 +917,8 @@ hits_and_cycles	D:/work/git/txt/code/game_profiler.h	/^  U64 hits_and_cycles;$/;
 hmtx	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon68e2795f0108	typeref:typename:U32
 horizontal_advance	D:/work/git/txt/code/game_assets.h	/^  F32 horizontal_advance;$/;"	m	language:C++	struct:Game_Font_Glyph	typeref:typename:F32
 horizontal_advance	D:/work/git/txt/code/karu.h	/^  F32 horizontal_advance;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:F32
-hsl	D:/work/git/txt/code/momo_colors.h	/^hsl(F32 h, F32 s, F32 l) {$/;"	f	language:C++	typeref:typename:HSL
-hsl	D:/work/git/txt/code/momo_colors.h	/^static HSL  hsl(F32 h, F32 s, F32 l);$/;"	p	language:C++	typeref:typename:HSL
+hsl_set	D:/work/git/txt/code/momo_colors.h	/^hsl_set(F32 h, F32 s, F32 l) {$/;"	f	language:C++	typeref:typename:HSL
+hsl_set	D:/work/git/txt/code/momo_colors.h	/^static HSL  hsl_set(F32 h, F32 s, F32 l);$/;"	p	language:C++	typeref:typename:HSL
 HSL	D:/work/git/txt/code/momo_colors.h	/^typedef struct HSL {$/;"	s	language:C++
 HSL	D:/work/git/txt/code/momo_colors.h	/^} HSL;$/;"	t	language:C++	typeref:struct:HSL
 hsl_to_rgb	D:/work/git/txt/code/momo_colors.h	/^hsl_to_rgb(HSL c) {$/;"	f	language:C++	typeref:typename:RGB
@@ -1546,8 +1546,8 @@ render_wh	D:/work/git/txt/code/game_gfx_opengl.h	/^  V2U render_wh;$/;"	m	langua
 rgb	D:/work/git/txt/code/momo_colors.h	/^    RGB rgb;$/;"	m	language:C++	union:RGBA::__anon798c3623010a	typeref:typename:RGB
 RGB	D:/work/git/txt/code/momo_colors.h	/^typedef struct RGB {$/;"	s	language:C++
 RGB	D:/work/git/txt/code/momo_colors.h	/^} RGB;$/;"	t	language:C++	typeref:struct:RGB
-rgba	D:/work/git/txt/code/momo_colors.h	/^rgba(F32 r, F32 g, F32 b, F32 a){$/;"	f	language:C++	typeref:typename:RGBA
-rgba	D:/work/git/txt/code/momo_colors.h	/^static RGBA rgba(F32 r, F32 g, F32 b, F32 a);$/;"	p	language:C++	typeref:typename:RGBA
+rgba_set	D:/work/git/txt/code/momo_colors.h	/^rgba_set(F32 r, F32 g, F32 b, F32 a){$/;"	f	language:C++	typeref:typename:RGBA
+rgba_set	D:/work/git/txt/code/momo_colors.h	/^static RGBA rgba_set(F32 r, F32 g, F32 b, F32 a);$/;"	p	language:C++	typeref:typename:RGBA
 RGBA	D:/work/git/txt/code/momo_colors.h	/^typedef struct RGBA {$/;"	s	language:C++
 RGBA	D:/work/git/txt/code/momo_colors.h	/^} RGBA;$/;"	t	language:C++	typeref:struct:RGBA
 RGBA_WHITE	D:/work/git/txt/code/momo_colors.h	/^#define RGBA_WHITE /;"	d	language:C++

@@ -52,7 +52,7 @@ update_and_render_profiler(Game_Sprite_ID blank_sprite, Game_Font_ID font)
   paint_sprite(blank_sprite, 
                v2_set(GAME_WIDTH/2, GAME_HEIGHT/2), 
                v2_set(GAME_WIDTH, GAME_HEIGHT),
-               rgba(0.f, 0.f, 0.f, 0.5f));
+               rgba_set(0.f, 0.f, 0.f, 0.5f));
   gfx_advance_depth(gfx);
   
   U32 line_num = 1;
@@ -99,7 +99,7 @@ update_and_render_profiler(Game_Sprite_ID blank_sprite, Game_Font_ID font)
     
     paint_text(font, 
                sb->str,
-               hex_to_rgba(0xFFFFFFFF),
+               rgba_hex(0xFFFFFFFF),
                0.f, 
                render_height - font_height * (line_num), 
                font_height);
@@ -129,7 +129,7 @@ update_and_render_profiler(Game_Sprite_ID blank_sprite, Game_Font_ID font)
       paint_sprite(blank_sprite, 
                    pos,
                    size,
-                   hex_to_rgba(0x00FF00FF));
+                   rgba_hex(0x00FF00FF));
     }
     gfx_advance_depth(gfx);
     ++line_num;

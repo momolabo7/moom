@@ -8,7 +8,7 @@ static void
 paint_sprite(Game_Sprite_ID sprite_id,
              V2 pos,
              V2 size,
-             RGBA color = rgba(1.f,1.f,1.f,1.f))
+             RGBA color = rgba_set(1.f,1.f,1.f,1.f))
 {
   Game_Sprite* sprite = get_sprite(assets, sprite_id);
   Game_Bitmap* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);

@@ -312,7 +312,7 @@ lit_draw_lights(Lit* lit) {
     {
       Lit_Light_Triangle* lt = al_at(&l->triangles, tri_index);
       gfx_push_filled_triangle(gfx, 
-                               hex_to_rgba(l->color),
+                               rgba_hex(l->color),
                                lt->p0,
                                lt->p1,
                                lt->p2);
@@ -397,7 +397,7 @@ lit_draw_edges(Lit* lit) {
     if (edge->is_disabled) continue;
     
 
-    gfx_push_line(gfx, edge->start_pt, edge->end_pt, 3.f, hex_to_rgba(0x888888FF));
+    gfx_push_line(gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
   }
   gfx_advance_depth(gfx);
 }
