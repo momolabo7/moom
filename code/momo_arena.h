@@ -26,10 +26,9 @@
 //       It feels janky to have a Arena_Marker store an allocator like this. 
 //
 
-#ifndef MOMO_MEMORY_H
-#define MOMO_MEMORY_H
+#ifndef MOMO_ARENA_H
+#define MOMO_ARENA_H
 
-// Standard Linear allocator
 typedef struct {
 	U8* memory;
 	UMI pos;

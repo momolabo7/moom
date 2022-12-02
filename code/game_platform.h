@@ -76,7 +76,6 @@ typedef struct {
 
 /////////////////////////////////////////////////////////////////////////
 // Input related API
-// TODO: do we need a better API for this?
 //
 typedef struct {
   B32 before;
@@ -86,6 +85,8 @@ typedef struct {
 
 struct Gfx;
 struct Profiler;
+
+
 
 // These could really all be functions on the platform side
 typedef struct {

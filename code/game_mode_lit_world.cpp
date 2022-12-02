@@ -42,7 +42,8 @@ lit_push_light(Lit* m, F32 pos_x, F32 pos_y, U32 color, F32 angle, F32 turn) {
 
 // Returns F32_INFINITY() if cannot find
 static F32
-lit_get_ray_intersection_time_wrt_edges(Ray2 ray,
+lit_get_ray_intersection_time_wrt_edges(V2 ray_origin, 
+                                        V2 ray_dir,
                                         Lit_Edge_List* edges,
                                         B32 clamp_to_ray_max = false)
 {
@@ -54,27 +55,28 @@ lit_get_ray_intersection_time_wrt_edges(Ray2 ray,
 
     if (edge->is_disabled) continue;
 
-    Ray2 edge_ray = {};
+    V2 edge_ray_origin;
+    V2 edge_ray_dir;
     {
       V2 p0, p1;
       lit_calc_ghost_edge_line(edge, &p0, &p1);
-      edge_ray.pt = p0;
-      edge_ray.dir = p1 - p0; 
+      edge_ray_origin = p0;
+      edge_ray_dir = p1 - p0; 
     }
     
     // Check for parallel
     V2 ray_normal = {};
-    ray_normal.x = ray.dir.y;
-    ray_normal.y = -ray.dir.x;
+    ray_normal.x = ray_dir.y;
+    ray_normal.y = -ray_dir.x;
     
     
-    if (!is_close_f32(v2_dot(ray_normal, edge_ray.dir), 0.f)) {
+    if (!is_close_f32(v2_dot(ray_normal, edge_ray_dir), 0.f)) {
       F32 t2 = 
-      (ray.dir.x*(edge_ray.pt.y - ray.pt.y) + 
-       ray.dir.y*(ray.pt.x - edge_ray.pt.x))/
-      (edge_ray.dir.x*ray.dir.y - edge_ray.dir.y*ray.dir.x);
+      (ray_dir.x*(edge_ray_origin.y - ray_origin.y) + 
+       ray_dir.y*(ray_origin.x - edge_ray_origin.x))/
+      (edge_ray_dir.x*ray_dir.y - edge_ray_dir.y*ray_dir.x);
       
-      F32 t1 = (edge_ray.pt.x + edge_ray.dir.x * t2 - ray.pt.x)/ray.dir.x;
+      F32 t1 = (edge_ray_origin.x + edge_ray_dir.x * t2 - ray_origin.x)/ray_dir.x;
       
       if (0.f < t1 && 
           0.f < t2 && 
@@ -151,20 +153,17 @@ lit_gen_light_intersections(Lit_Light* l,
       }
 
            
-      Ray2 light_ray = {0};
-      light_ray.pt = l->pos;
-      light_ray.dir = v2_rotate(ep - l->pos, offset_angle);
-
+      V2 light_ray_dir = v2_rotate(ep - l->pos, offset_angle);
 #if LIT_DEBUG_LIGHT
       Ray2* debug_ray = al_append(&l->debug_rays);
       assert(debug_ray);
       (*debug_ray) = light_ray;
 #endif // LIT_DEBUG_LIGHT
-      F32 t = lit_get_ray_intersection_time_wrt_edges(light_ray, edges, offset_index == 0);
+      F32 t = lit_get_ray_intersection_time_wrt_edges(l->pos, light_ray_dir, edges, offset_index == 0);
       
       Lit_Light_Intersection* intersection = al_append(&l->intersections);
       assert(intersection);
-      intersection->pt = (t == F32_INFINITY) ? ep : light_ray.pt + t*light_ray.dir;
+      intersection->pt = (t == F32_INFINITY) ? ep : l->pos + t*light_ray_dir;
       intersection->is_shell = false;
 
 
@@ -182,18 +181,16 @@ lit_gen_light_intersections(Lit_Light* l,
          ++offset_index) 
     { 
       F32 offset_angle = offset_angles[offset_index];
-      Ray2 shell_rays[2] = {};
-      shell_rays[0].pt = l->pos;
-      shell_rays[0].dir = v2_rotate(l->dir, l->half_angle + offset_angle);
-      shell_rays[1].pt = l->pos;
-      shell_rays[1].dir = v2_rotate(l->dir, -l->half_angle + offset_angle);
-        
+       
+      V2 dirs[2]; 
+      dirs[0] = v2_rotate(l->dir, l->half_angle + offset_angle);
+      dirs[1] = v2_rotate(l->dir, -l->half_angle + offset_angle);
       for (U32 i = 0; i < 2; ++i) {
-        F32 t = lit_get_ray_intersection_time_wrt_edges(shell_rays[i], edges);
+        F32 t = lit_get_ray_intersection_time_wrt_edges(l->pos, dirs[i], edges);
         assert(!al_is_full(&l->intersections));
         Lit_Light_Intersection* intersection = al_append(&l->intersections);
         assert(intersection);
-        intersection->pt = shell_rays[i].pt + t*shell_rays[i].dir;
+        intersection->pt = l->pos + t*dirs[i];
         intersection->is_shell = true;
       }
     }
@@ -336,7 +333,7 @@ lit_draw_debug_light_rays(Lit* lit, Game* game) {
     {
       Ray2 light_ray = player->held_light->debug_rays.e[light_ray_index];
       
-      Line2 line = line2_set(player->pos, player->pos + light_ray.dir);
+      Line2 line = line2_set(player->pos, player->pos + light_ray_dir);
       gfx_push_line(gfx, line, 1.f, hex_to_rgba(0x00FFFFFF));
     }
     gfx_advance_depth(gfx);
