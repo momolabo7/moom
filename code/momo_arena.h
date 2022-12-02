@@ -29,14 +29,14 @@
 #ifndef MOMO_ARENA_H
 #define MOMO_ARENA_H
 
-typedef struct {
+typedef struct Arena {
 	U8* memory;
 	UMI pos;
 	UMI cap;
 } Arena;
 
 // Temporary memory API used to arn_revert an allocator to an original state;
-typedef struct {
+typedef struct Arena_Marker {
   Arena* allocator;
   UMI old_pos;
 } Arena_Marker;

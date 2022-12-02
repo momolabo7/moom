@@ -15,7 +15,7 @@
 #ifndef MOMO_PNG
 #define MOMO_PNG
 
-typedef struct {
+typedef struct PNG {
   U8* data;
   UMI data_size;
   
@@ -29,8 +29,8 @@ typedef struct {
 } PNG;
 
 static B32     png_read(PNG* png, void* png_memory, UMI png_size);
-static U32*    png_rasterize(PNG* png, U32* out_w, U32* out_h, Arena* allocator); 
-static void*   png_write(PNG* png, UMI* out_size, Arena* allocator);
+static U32*    png_rasterize(PNG* png, U32* out_w, U32* out_h, Arena* arena); 
+static void*   png_write(PNG* png, UMI* out_size, Arena* arena);
 
 //static void*   png_write(UMI* out_size);
 
@@ -42,7 +42,7 @@ static void*   png_write(PNG* png, UMI* out_size, Arena* allocator);
 
 typedef struct {
   Stream stream;
-  Arena* allocator; 
+  Arena* arena; 
   
   Stream image_stream;
   U32 image_width;
@@ -194,7 +194,7 @@ _png_huffman_decode(Stream* src_stream, _PNG_Huffman huffman) {
 // Section 3.2.2
 static void
 _png_huffman_compute(_PNG_Huffman* h,
-                     Arena* allocator, 
+                     Arena* arena, 
                      U16* codes,
                      U32 codes_size, 
                      U32 max_lengths) 
@@ -203,13 +203,13 @@ _png_huffman_compute(_PNG_Huffman* h,
   
   // Each code corresponds to a symbol
   h->symbol_count = codes_size;
-  h->symbols = arn_push_arr(U16, allocator, codes_size);
+  h->symbols = arn_push_arr(U16, arena, codes_size);
   zero_memory(h->symbols, h->symbol_count * sizeof(U16));
   
   
   // We add +1 because lengths[0] is not possible
   h->length_count = max_lengths + 1;
-  h->lengths = arn_push_arr(U16, allocator, max_lengths + 1);
+  h->lengths = arn_push_arr(U16, arena, max_lengths + 1);
   zero_memory(h->lengths, h->length_count * sizeof(U16));
   
   // 1. Count the number of codes for each code length
@@ -219,9 +219,9 @@ _png_huffman_compute(_PNG_Huffman* h,
   }
   
   // 2. Numerical value of smallest code for each code length
-  Arena_Marker mark = arn_mark(allocator);
+  Arena_Marker mark = arn_mark(arena);
   
-  U16* len_offset_table = arn_push_arr(U16, allocator, max_lengths+1);
+  U16* len_offset_table = arn_push_arr(U16, arena, max_lengths+1);
   zero_memory(len_offset_table, (max_lengths+1) * sizeof(U16));
   
   for (U32 len = 1; len < max_lengths; ++len) {
@@ -243,7 +243,7 @@ _png_huffman_compute(_PNG_Huffman* h,
 
 
 static B32
-_png_deflate(Stream* src_stream, Stream* dest_stream, Arena* allocator) 
+_png_deflate(Stream* src_stream, Stream* dest_stream, Arena* arena) 
 {
   
   static const U16 lens[29] = { /* Size base for length codes 257..285 */
@@ -264,7 +264,7 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* allocator)
   
   U8 BFINAL = 0;
   while(BFINAL == 0){
-    arn_set_revert_point(allocator);
+    arn_set_revert_point(arena);
     
     BFINAL = (U8)srm_consume_bits(src_stream, 1);
     U16 BTYPE = (U8)srm_consume_bits(src_stream, 2);
@@ -310,12 +310,12 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* allocator)
           
           
           _png_huffman_compute(&lit_huffman,
-                               allocator, 
+                               arena, 
                                lit_codes, 
                                array_count(lit_codes),
                                15);
           _png_huffman_compute(&dist_huffman,
-                               allocator,
+                               arena,
                                dist_codes,
                                array_count(dist_codes),
                                15);
@@ -340,13 +340,13 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* allocator)
           
           _PNG_Huffman code_huffman = {};
           _png_huffman_compute(&code_huffman,
-                               allocator,
+                               arena,
                                code_codes,
                                array_count(code_codes),
                                15); 
           
          
-          U16* lit_dist_codes = arn_push_arr(U16, allocator, HDIST + HLIT);
+          U16* lit_dist_codes = arn_push_arr(U16, arena, HDIST + HLIT);
           
           // NOTE(Momo): Decode
           // Loop until end of block code recognize
@@ -393,12 +393,12 @@ _png_deflate(Stream* src_stream, Stream* dest_stream, Arena* allocator)
           }
           
           _png_huffman_compute(&lit_huffman,
-                               allocator, 
+                               arena, 
                                lit_dist_codes, 
                                HLIT,
                                15);
           _png_huffman_compute(&dist_huffman,
-                               allocator,
+                               arena,
                                lit_dist_codes + HLIT,
                                HDIST,
                                15);					
@@ -717,7 +717,7 @@ _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
     return false;
   }
   
-  return _png_deflate(zlib_stream, &c->unfiltered_image_stream, c->allocator);
+  return _png_deflate(zlib_stream, &c->unfiltered_image_stream, c->arena);
 }
 
 
@@ -726,27 +726,27 @@ _png_decompress_zlib(_PNG_Context* c, Stream* zlib_stream) {
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
 static U32* 
-png_rasterize(PNG* png, U32* out_w, U32* out_h, Arena* allocator) 
+png_rasterize(PNG* png, U32* out_w, U32* out_h, Arena* arena) 
 {
   make(Stream, zlib_stream);
 
   _PNG_Context ctx = {0};
-  ctx.allocator = allocator;
+  ctx.arena = arena;
   srm_init(&ctx.stream, png->data, png->data_size);
   ctx.image_width = png->width;
   ctx.image_height = png->height;
   ctx.bit_depth = png->bit_depth;
   
   U32 image_size = png->width * png->height * _PNG_CHANNELS;
-  U8* image_stream_memory =  arn_push_arr(U8, allocator, image_size);
+  U8* image_stream_memory =  arn_push_arr(U8, arena, image_size);
   if (!image_stream_memory) goto fail;
   srm_init(&ctx.image_stream, image_stream_memory, image_size);
  
-  Arena_Marker mark = arn_mark(allocator);
-  //arn_set_revert_point(allocator);
+  Arena_Marker mark = arn_mark(arena);
+  //arn_set_revert_point(arena);
   
   U32 unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
-  U8* unfiltered_image_stream_memory = arn_push_arr(U8, allocator, unfiltered_size);
+  U8* unfiltered_image_stream_memory = arn_push_arr(U8, arena, unfiltered_size);
   if (!unfiltered_image_stream_memory) goto fail;
   srm_init(&ctx.unfiltered_image_stream, unfiltered_image_stream_memory, unfiltered_size);
   
@@ -771,7 +771,7 @@ png_rasterize(PNG* png, U32* out_w, U32* out_h, Arena* allocator)
     }
   }
   
-  U8* zlib_data = arn_push_arr(U8, allocator, zlib_size);
+  U8* zlib_data = arn_push_arr(U8, arena, zlib_size);
   if (!zlib_data) goto fail;
 
   srm_init(zlib_stream, zlib_data, zlib_size);
@@ -813,7 +813,7 @@ fail:
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
 static void*
-png_write(U32* pixels, U32 width, U32 height, UMI* out_size, Arena* allocator) {
+png_write(U32* pixels, U32 width, U32 height, UMI* out_size, Arena* arena) {
   if (!pixels || !width || !height) 
   {
     return null;
@@ -846,7 +846,7 @@ png_write(U32* pixels, U32 width, U32 height, UMI* out_size, Arena* allocator) {
                                   data_size + 
                                   IDAT_chunk_size);
   
-  U8* stream_memory = arn_push_arr(U8, allocator, expected_memory_required);
+  U8* stream_memory = arn_push_arr(U8, arena, expected_memory_required);
   if (!stream_memory) {
     return null;
   }

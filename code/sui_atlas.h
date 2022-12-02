@@ -136,8 +136,8 @@ sui_atlas_begin(Sui_Atlas* a,
 
 
 static void
-sui_atlas_end(Sui_Atlas* a, Arena* allocator) {
-  a->bitmap.pixels = arn_push_arr(U32, allocator, a->bitmap.width * a->bitmap.height);
+sui_atlas_end(Sui_Atlas* a, Arena* arena) {
+  a->bitmap.pixels = arn_push_arr(U32, arena, a->bitmap.width * a->bitmap.height);
   assert(a->bitmap.pixels);
   
   // Count the amount of rects
@@ -153,10 +153,10 @@ sui_atlas_end(Sui_Atlas* a, Arena* allocator) {
   assert(rect_count > 0);  
 
   // Allocate required blk required
-  RP_Rect* rects = arn_push_arr(RP_Rect, allocator, rect_count);
+  RP_Rect* rects = arn_push_arr(RP_Rect, arena, rect_count);
   assert(rects);
 
-  Sui_Atlas_Context* contexts = arn_push_arr(Sui_Atlas_Context, allocator, rect_count);
+  Sui_Atlas_Context* contexts = arn_push_arr(Sui_Atlas_Context, arena, rect_count);
   assert(contexts);
   
   // Prepare the rects with the correct info
@@ -167,13 +167,13 @@ sui_atlas_end(Sui_Atlas* a, Arena* allocator) {
        sprite_index < a->sprite_count;
        ++sprite_index) 
   {
-    arn_set_revert_point(allocator);
+    arn_set_revert_point(arena);
     
     Sui_Atlas_Sprite* sprite = a->sprites + sprite_index;
 
 
     UMI file_size;
-    void* file_data = sui_read_file(sprite->filename, &file_size, allocator);
+    void* file_data = sui_read_file(sprite->filename, &file_size, arena);
     assert(file_data);
     
     make(PNG, png);
@@ -200,10 +200,10 @@ sui_atlas_end(Sui_Atlas* a, Arena* allocator) {
        ++font_index) 
   {
 
-    arn_set_revert_point(allocator);
+    arn_set_revert_point(arena);
     Sui_Atlas_Font* font = a->fonts + font_index;
     make(TTF, ttf);
-    B32 ok = sui_read_font_from_file(ttf, font->filename, allocator); 
+    B32 ok = sui_read_font_from_file(ttf, font->filename, arena); 
     assert(ok);
     F32 s = ttf_get_scale_for_pixel_height(ttf, font->raster_font_height);
     
@@ -248,7 +248,7 @@ sui_atlas_end(Sui_Atlas* a, Arena* allocator) {
   rp_pack(rects, rect_count, 1, 
           a->bitmap.width, a->bitmap.height, 
           RP_SORT_TYPE_HEIGHT,
-          allocator);
+          arena);
   
 #if 0
   sui_log("=== After packing: ===\n");
@@ -264,18 +264,18 @@ sui_atlas_end(Sui_Atlas* a, Arena* allocator) {
     auto* context = (Sui_Atlas_Context*)(rect->user_data);
     switch(context->type) {
       case SUI_ATLAS_CONTEXT_TYPE_SPRITE: {
-        arn_set_revert_point(allocator);
+        arn_set_revert_point(arena);
         Sui_Atlas_Sprite* related_entry = context->sprite.sprite;
        
       
         UMI file_size;
-        void* file_data = sui_read_file(related_entry->filename, &file_size, allocator);
+        void* file_data = sui_read_file(related_entry->filename, &file_size, arena);
         
         make(PNG, png);
         B32 ok = png_read(png, file_data, file_size);
         assert(ok);
         
-        U32* pixels = png_rasterize(png, null, null, allocator);
+        U32* pixels = png_rasterize(png, null, null, arena);
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (UMI x = rect->x; x < rect->x + rect->w; ++x) {
@@ -291,13 +291,13 @@ sui_atlas_end(Sui_Atlas* a, Arena* allocator) {
         Sui_Atlas_Font_Glyph_Context* related_context = &context->font_glyph;
         
         make(TTF, ttf);
-        B32 ok = sui_read_font_from_file(ttf, related_entry->filename, allocator); 
+        B32 ok = sui_read_font_from_file(ttf, related_entry->filename, arena); 
         assert(ok);
 
         F32 s = ttf_get_scale_for_pixel_height(ttf, related_entry->raster_font_height);
         U32 glyph_index = ttf_get_glyph_index(ttf, related_context->codepoint);
        
-        U32* pixels = ttf_rasterize_glyph(ttf, glyph_index, s, null, null, allocator);
+        U32* pixels = ttf_rasterize_glyph(ttf, glyph_index, s, null, null, arena);
         if (!pixels) continue;
         
         for (UMI y = rect->y, j = 0; y < rect->y + rect->h; ++y) {

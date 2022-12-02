@@ -28,7 +28,7 @@
 # define ttf_log(...)
 #endif 
 
-typedef struct {
+typedef struct TTF {
   U8* data;
   U32 glyph_count;
   
@@ -37,7 +37,7 @@ typedef struct {
   U32 cmap_mappings;
   
   U16 loca_format;
-}TTF;
+} TTF;
 
 static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);
 
