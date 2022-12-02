@@ -1,5 +1,5 @@
-#ifndef CORE_RANDOM_H
-#define CORE_RANDOM_H
+#ifndef MOMO_RANDOM_H
+#define MOMO_RANDOM_H
 
 
 typedef struct {
@@ -81,4 +81,4 @@ rng_unit_circle(RNG* r) {
 }
 
 
-#endif //CORE_RANDOM_H
+#endif //MOMO_RANDOM_H

@@ -12,8 +12,8 @@
 // TODO:
 //   - Support other formats for reading/writing
 //
-#ifndef CORE_PNG
-#define CORE_PNG
+#ifndef MOMO_PNG
+#define MOMO_PNG
 
 typedef struct {
   U8* data;
@@ -1023,4 +1023,4 @@ png_read(PNG* p, void* png_memory, UMI png_size) {
   return true;
 }
 
-#endif //CORE_PNG
+#endif //MOMO_PNG

@@ -1,5 +1,5 @@
-#ifndef CORE_EASING_H
-#define CORE_EASING_H
+#ifndef MOMO_EASING_H
+#define MOMO_EASING_H
 
 static F32 ease_in_sine_f32(F32 t);
 static F32 ease_out_sine_f32(F32 t);
@@ -497,4 +497,4 @@ ease_inout_expo_f64(F64 t)  {
 }
 
 
-#endif //CORE_EASING_H
+#endif //MOMO_EASING_H

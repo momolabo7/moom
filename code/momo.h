@@ -1,6 +1,6 @@
 
-#ifndef CORE_H
-#define CORE_H
+#ifndef MOMO_H
+#define MOMO_H
 
 // 
 // Primitive types
@@ -38,4 +38,4 @@
 //
 
 
-#endif //CORE_H
+#endif //MOMO_H

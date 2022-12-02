@@ -24,7 +24,7 @@
 #define WGL_CONTEXT_FLAG_ARB                    0x2094
 #define WGL_CONTEXT_DEBUG_BIT_ARB               0x0001
 #define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB  0x0002
-#define WGL_CONTEXT_CORE_PROFILE_BIT_ARB        0x00000001
+#define WGL_CONTEXT_MOMO_PROFILE_BIT_ARB        0x00000001
 
 typedef BOOL WINAPI 
 wglChoosePixelFormatARBFn(HDC hdc,
@@ -206,7 +206,7 @@ w32_gfx_load(HWND window,
     | WGL_CONTEXT_DEBUG_BIT_ARB
 #endif
     ,
-    WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
+    WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_MOMO_PROFILE_BIT_ARB,
     0,
   };
   HGLRC opengl_ctx = wglCreateContextAttribsARB(dc, 0, 

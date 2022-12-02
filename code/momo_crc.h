@@ -11,8 +11,8 @@
 // 
 
 
-#ifndef CORE_CRC_H
-#define CORE_CRC_H
+#ifndef MOMO_CRC_H
+#define MOMO_CRC_H
 
 
 typedef struct {
@@ -176,4 +176,4 @@ crc8(U8* data, U32 data_size, U8 start_register, CRC8_Table* table) {
   return crc;
 }
 
-#endif //CORE_CRC_H
+#endif //MOMO_CRC_H

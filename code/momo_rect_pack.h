@@ -1,7 +1,7 @@
 /* date = November 24th 2021 0:52 pm */
 
-#ifndef CORE_RECT_PACK_H
-#define CORE_RECT_PACK_H
+#ifndef MOMO_RECT_PACK_H
+#define MOMO_RECT_PACK_H
 
 
 typedef enum {
@@ -232,4 +232,4 @@ rp_pack(RP_Rect* rects,
 }
 
 
-#endif //CORE_RECT_PACK_H
+#endif //MOMO_RECT_PACK_H

@@ -24,8 +24,8 @@
 // - Might want to move math-like operations to a math/intrinsics header.
 //
 
-#ifndef CORE_TYPES_H
-#define CORE_TYPES_H
+#ifndef MOMO_TYPES_H
+#define MOMO_TYPES_H
 
 //
 // Varadic arguments
@@ -1559,4 +1559,4 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 #endif // IS_CPP
 
 
-#endif //CORE_COMMON_H
+#endif //MOMO_COMMON_H

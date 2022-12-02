@@ -1,7 +1,7 @@
 /* date = November 30th 2021 10:22 pm */
 
-#ifndef CORE_WAV_H
-#define CORE_WAV_H
+#ifndef MOMO_WAV_H
+#define MOMO_WAV_H
 
 typedef struct {
   U32 id; // big endian
@@ -112,4 +112,4 @@ wav_read(WAV* w, void* memory, UMI memory_size)
 }
 
 
-#endif //CORE_WAV_H
+#endif //MOMO_WAV_H

@@ -1,5 +1,5 @@
-#ifndef CORE_STREAM_H
-#define CORE_STREAM_H
+#ifndef MOMO_STREAM_H
+#define MOMO_STREAM_H
 
 typedef struct  {
   U8* data;
@@ -90,4 +90,4 @@ srm_consume_bits(Stream* s, U32 amount){
 
 
 
-#endif //CORE_STREAM_H
+#endif //MOMO_STREAM_H

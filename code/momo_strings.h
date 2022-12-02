@@ -1,5 +1,5 @@
-#ifndef CORE_STRING_H
-#define CORE_STRING_H
+#ifndef MOMO_STRING_H
+#define MOMO_STRING_H
 
 
 //~ NOTE(Momo): 'Immutable' String8s
@@ -540,4 +540,4 @@ sb8_push_str8(String8_Builder* b, String8 src) {
 
 
 
-#endif //CORE_STRING_H
+#endif //MOMO_STRING_H

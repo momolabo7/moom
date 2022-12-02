@@ -12,8 +12,8 @@
 // 
 
 
-#ifndef CORE_MATRIX_H
-#define CORE_MATRIX_H
+#ifndef MOMO_MATRIX_H
+#define MOMO_MATRIX_H
 
 struct M44 {
 	F32 e[4][4];
@@ -199,4 +199,4 @@ static M44 operator*(M44 lhs, M44 rhs) {
 #endif // IS_CPP
 
 
-#endif //CORE_MATRIX_H
+#endif //MOMO_MATRIX_H
