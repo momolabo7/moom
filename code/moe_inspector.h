@@ -1,7 +1,7 @@
 /* date = May 11th 2022 7:15 pm */
 
-#ifndef GAME_INSPECTOR_H
-#define GAME_INSPECTOR_H
+#ifndef MOE_INSPECTOR_H
+#define MOE_INSPECTOR_H
 
 typedef enum  {
   INSPECTOR_ENTRY_TYPE_F32,
@@ -53,4 +53,4 @@ insp_add_f32(Inspector* in, String8 name, F32* item) {
 
 
 
-#endif //GAME_INSPECTOR_H
+#endif //MOE_INSPECTOR_H

@@ -1,9 +1,9 @@
-// This file contain the API through which the engine/game interface with.
+// This file contain the API through which the engine/moe interface with.
 // Because it is just the API, it is written in pure C so that it can be used
 // in other languages.
 //
-#ifndef GAME_PLATFORM_H
-#define GAME_PLATFORM_H
+#ifndef MOE_PLATFORM_H
+#define MOE_PLATFORM_H
 
 // TODO: remove this and make this file as standalone as possible?
 #include "momo.h"
@@ -62,7 +62,7 @@ typedef void  Platform_Shutdown(); // trigger shutdown of application
 #endif
 typedef void  Platform_Debug_Log(const char* fmt, ...);
 typedef U64   Platform_Get_Performance_Counter();
-typedef void  Platform_Set_Game_Dims(F32 width, F32 height);
+typedef void  Platform_Set_Moe_Dims(F32 width, F32 height);
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ struct Profiler;
 
 // These could really all be functions on the platform side
 typedef struct {
-  Arena* game_arena; // Require 32MB
+  Arena* moe_arena; // Require 32MB
   Gfx* gfx;
   Profiler* profiler; 
   Platform_Audio* audio;
@@ -127,9 +127,9 @@ typedef struct {
   //V2U screen_mouse_pos;
   //V2U render_mouse_pos;
 
-  // NOTE(Momo): The mouse position is relative to the game's dimensions given
-  // via set_game_dims(). It is possible to get back the normalized dimensions
-  // by dividing the x/y by the width/height of the game.
+  // NOTE(Momo): The mouse position is relative to the moe's dimensions given
+  // via set_moe_dims(). It is possible to get back the normalized dimensions
+  // by dividing the x/y by the width/height of the moe.
   V2 mouse_pos;
  
   /////////////////////////////////////////////////////////
@@ -152,10 +152,10 @@ typedef struct {
   // Logging
   Platform_Debug_Log* debug_log;
 
-  Platform_Set_Game_Dims* set_game_dims;
+  Platform_Set_Moe_Dims* set_moe_dims;
 
-  // For game to use
-  void* game;
+  // For moe to use
+  void* moe;
 
   // Misc
   F32 seconds_since_last_frame; //aka dt
@@ -163,15 +163,15 @@ typedef struct {
 
 } Platform;
 
-typedef void Game_Update_And_Render(Platform* pf);
+typedef void Moe_Update_And_Render(Platform* pf);
 
 // To be called by platform
-typedef struct Game_Functions {
-  Game_Update_And_Render* update_and_render;
-} Game_Functions;
+typedef struct Moe_Functions {
+  Moe_Update_And_Render* update_and_render;
+} Moe_Functions;
 
-static const char* game_function_names[] {
-  "game_update_and_render",
+static const char* moe_function_names[] {
+  "moe_update_and_render",
 };
 
 static B32 pf_is_button_poked(Platform_Button) ;
@@ -216,4 +216,4 @@ pf_is_button_held(Platform_Button btn) {
   return btn.before && btn.now;
 }
 
-#endif //GAME_PLATFORM_H
+#endif //MOE_PLATFORM_H

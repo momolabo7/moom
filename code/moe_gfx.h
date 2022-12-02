@@ -1,19 +1,19 @@
-// This file and game_platform.h contain structs that need to be 
-// initialized by the OS and passed to the main Game_Render_And_Update() 
+// This file and moe_platform.h contain structs that need to be 
+// initialized by the OS and passed to the main Moe_Render_And_Update() 
 // function. It must be written in C for portability.
 //
 // All the code here is a representation of how the 
-// game views 'rendering'. The game simply adds commands
+// moe views 'rendering'. The moe simply adds commands
 // to a command queue, which will be dispatched to the 
 // appropriate graphics API, which details will be implemented
 // on top of the Gfx class (through inheritance or composition). 
 //
 //
-// Most importantly, other than the commands, the game
+// Most importantly, other than the commands, the moe
 // expects the following rules in its rendering logic:
 // - This is a 2D renderer in 3D space. 
 // - Right-handed coordinate system: +Y is up, +Z is towards you
-// - The game only have one type of object: A quad that can be 
+// - The moe only have one type of object: A quad that can be 
 //   textured and colored 
 // - UV origin is from top left. Points given for UV to map to the quad 
 //   is given in this order:
@@ -27,8 +27,8 @@
 //  |/|
 //  ---
 // 
-#ifndef GAME_GFX_H
-#define GAME_GFX_H
+#ifndef MOE_GFX_H
+#define MOE_GFX_H
 
 #define GFX_MAX_TEXTURES 256
 
@@ -44,7 +44,7 @@ typedef struct Gfx_Texture_Payload {
   UMI transfer_memory_start;
   UMI transfer_memory_end;
   
-  // For game to input
+  // For moe to input
   U32 texture_index;
   U32 texture_width;
   U32 texture_height;
@@ -582,4 +582,4 @@ gfx_advance_depth(Gfx* g) {
 }
 
 
-#endif //GAME_RENDERER_H
+#endif //MOE_RENDERER_H

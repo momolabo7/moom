@@ -126,7 +126,7 @@ lit_level_0_3(Lit* m) {
 // - R + G = Y
 static void
 lit_level_0_4(Lit* m) {
-  lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
+  lit_init_player(m, 200.f, MOE_HEIGHT * 0.5f);
 
 
   lit_push_sensor(m, 400.f, 400.f, 0x888800FF); 
@@ -137,8 +137,8 @@ lit_level_0_4(Lit* m) {
   lit_push_sensor(m, 400.f, 200.f, 0x880000FF); 
   lit_push_sensor(m, 400.f, 600.f, 0x880000FF); 
 
-  lit_push_light(m, 200.f, GAME_HEIGHT * 0.25f, 0x008800FF, 30.f, 0.5f);
-  lit_push_light(m, 600.f, GAME_HEIGHT * 0.75f, 0x880000FF, 30.f, 0.0f);
+  lit_push_light(m, 200.f, MOE_HEIGHT * 0.25f, 0x008800FF, 30.f, 0.5f);
+  lit_push_light(m, 600.f, MOE_HEIGHT * 0.75f, 0x880000FF, 30.f, 0.0f);
 }
 
 
@@ -149,7 +149,7 @@ lit_level_0_4(Lit* m) {
 // - R + G + B = W
 static void
 lit_level_0_5(Lit* m) {
-  lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
+  lit_init_player(m, 200.f, MOE_HEIGHT * 0.5f);
 
   // middle
   lit_push_sensor(m, 400.f,  400.f, 0x888888FF); 
@@ -173,7 +173,7 @@ lit_level_0_5(Lit* m) {
 // - Point lights
 static void
 lit_level_0_6(Lit* m) {
-  lit_init_player(m, 200.f, GAME_HEIGHT * 0.5f);
+  lit_init_player(m, 200.f, MOE_HEIGHT * 0.5f);
 
   // middle
   lit_push_sensor(m, 050.f,  450.f, 0x666666FF); 

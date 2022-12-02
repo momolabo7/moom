@@ -2,29 +2,29 @@
 #define KARU_H
 
 
-// game_asset_types.h
-#define asset_tag(name) GAME_ASSET_TAG_TYPE_##name
-enum Game_Asset_Tag_Type : U32 {
+// moe_asset_types.h
+#define asset_tag(name) MOE_ASSET_TAG_TYPE_##name
+enum Moe_Asset_Tag_Type : U32 {
   asset_tag(FONT),
 
-  GAME_ASSET_TAG_TYPE_COUNT,
+  MOE_ASSET_TAG_TYPE_COUNT,
 };
 
-#define asset_group(name) GAME_ASSET_GROUP_TYPE_##name
-enum Game_Asset_Group_Type : U32 {
+#define asset_group(name) MOE_ASSET_GROUP_TYPE_##name
+enum Moe_Asset_Group_Type : U32 {
   asset_group(BLANK_SPRITE),
   asset_group(CIRCLE_SPRITE),
   asset_group(FILLED_CIRCLE_SPRITE),
   asset_group(ATLAS),
   asset_group(FONTS),
 
-  GAME_ASSET_GROUP_TYPE_COUNT,
+  MOE_ASSET_GROUP_TYPE_COUNT,
 };
 
-enum Game_Asset_Type : U32 {
-  GAME_ASSET_TYPE_SPRITE,
-  GAME_ASSET_TYPE_FONT,
-  GAME_ASSET_TYPE_BITMAP,
+enum Moe_Asset_Type : U32 {
+  MOE_ASSET_TYPE_SPRITE,
+  MOE_ASSET_TYPE_FONT,
+  MOE_ASSET_TYPE_BITMAP,
 };
 
 // karu.h
@@ -92,7 +92,7 @@ struct Karu_Sprite {
 };
 
 struct Karu_Asset {
-  Game_Asset_Type type; 
+  Moe_Asset_Type type; 
 
   U32 offset_to_data;
 
@@ -113,7 +113,7 @@ struct Karu_Group {
 };
 
 struct Karu_Tag {
-  Game_Asset_Tag_Type type; 
+  Moe_Asset_Tag_Type type; 
   F32 value;
 };
 

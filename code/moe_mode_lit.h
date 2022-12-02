@@ -1,5 +1,5 @@
-#ifndef GAME_MODE_LIT_H
-#define GAME_MODE_LIT_H
+#ifndef MOE_MODE_LIT_H
+#define MOE_MODE_LIT_H
 
 #define LIT_DEBUG_LIGHT 0
 #define LIT_DEBUG_COORDINATES 1
@@ -88,8 +88,8 @@ circle_to_finite_line_resp(V2 circle_center, F32 circle_radius, V2 line_min, V2 
 
 
 
-#include "game_mode_lit_world.h"
-#include "game_mode_lit_entity.h"
+#include "moe_mode_lit_world.h"
+#include "moe_mode_lit_entity.h"
 typedef enum {
   LIT_STATE_TYPE_TRANSITION_IN,
   LIT_STATE_TYPE_TRANSITION_OUT,
@@ -117,16 +117,16 @@ typedef struct Lit {
   Lit_Tutorial_Trigger_List tutorial_triggers;
 
   // Assets that we are interested in
-  Game_Font_ID tutorial_font;
-  Game_Sprite_ID blank_sprite;
-  Game_Sprite_ID circle_sprite;
-  Game_Sprite_ID filled_circle_sprite;
+  Moe_Font_ID tutorial_font;
+  Moe_Sprite_ID blank_sprite;
+  Moe_Sprite_ID circle_sprite;
+  Moe_Sprite_ID filled_circle_sprite;
 
 } Lit;
 
 // TODO: combine world and light to one file?
-#include "game_mode_lit_world.cpp"
-#include "game_mode_lit_entity.cpp"
+#include "moe_mode_lit_world.cpp"
+#include "moe_mode_lit_entity.cpp"
 
 static Lit_Tutorial_Text*
 lit_push_tutorial_text(Lit_Tutorial_Text_List* texts, String8 str, F32 x, F32 y) {
@@ -176,26 +176,26 @@ lit_fade_out_next_tutorial_text(Lit_Tutorial_Text_List* texts) {
  
 }
 
-#include "game_mode_lit_levels.h"
+#include "moe_mode_lit_levels.h"
 
 
 
 static void 
-lit_tick(Game* game) 
+lit_tick(Game* moe) 
 {
-  Lit* m = (Lit*)game->mode_context;
-  if (!game_mode_initialized(game)) {
-    m = game_allocate_mode(Lit, game);
+  Lit* m = (Lit*)moe->mode_context;
+  if (!moe_mode_initialized(moe)) {
+    m = moe_allocate_mode(Lit, moe);
     lit_load_level(m, 0); 
     m->rng = rng_create(65535);
     m->state = LIT_STATE_TYPE_TRANSITION_IN;
     m->stage_fade = 1.f;
 
     {
-      make(Game_Asset_Match, match);
+      make(Moe_Asset_Match, match);
       set_match_entry(match, asset_tag(FONT), 0.f, 1.f);
 
-      m->tutorial_font = find_best_font(assets, GAME_ASSET_GROUP_TYPE_FONTS, match);
+      m->tutorial_font = find_best_font(assets, MOE_ASSET_GROUP_TYPE_FONTS, match);
     }
   
     m->blank_sprite = find_first_sprite(assets, asset_group(BLANK_SPRITE));
@@ -238,7 +238,7 @@ lit_tick(Game* game)
   al_foreach(light_index, &m->lights)
   {
     Lit_Light* light = al_at(&m->lights, light_index);
-    lit_gen_light_intersections(light, &m->edges, &game->frame_arena);
+    lit_gen_light_intersections(light, &m->edges, &moe->frame_arena);
   }
   lit_update_sensors(m, dt);
 
@@ -280,7 +280,7 @@ lit_tick(Game* game)
                  GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
   //lit_draw_edges(m); 
-  lit_draw_debug_light_rays(m, game);
+  lit_draw_debug_light_rays(m, moe);
   lit_draw_player(m);
   lit_draw_lights(m);
   
@@ -370,7 +370,7 @@ lit_tick(Game* game)
   // Draw the overlay for fade in/out
   {
     RGBA color = rgba_set(0.f, 0.f, 0.f, m->stage_fade);
-    paint_sprite(m->blank_sprite, v2_set(GAME_WIDTH/2, GAME_HEIGHT/2), v2_set(GAME_WIDTH, GAME_HEIGHT), color);
+    paint_sprite(m->blank_sprite, v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), v2_set(MOE_WIDTH, MOE_HEIGHT), color);
     gfx_advance_depth(gfx);
   }
 }

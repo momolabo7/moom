@@ -1,6 +1,6 @@
 
-#ifndef GAME_PROFILER_RENDERING_H
-#define GAME_PROFILER_RENDERING_H
+#ifndef MOE_PROFILER_RENDERING_H
+#define MOE_PROFILER_RENDERING_H
 
 
 struct Stat {
@@ -42,16 +42,16 @@ end_stat(Stat* stat) {
 }
 
 static void
-update_and_render_profiler(Game_Sprite_ID blank_sprite, Game_Font_ID font) 
+update_and_render_profiler(Moe_Sprite_ID blank_sprite, Moe_Font_ID font) 
 {
-  const F32 render_width = GAME_WIDTH;
-  const F32 render_height = GAME_HEIGHT;
+  const F32 render_width = MOE_WIDTH;
+  const F32 render_height = MOE_HEIGHT;
   const F32 font_height = 20.f;
 
   // Overlay
   paint_sprite(blank_sprite, 
-               v2_set(GAME_WIDTH/2, GAME_HEIGHT/2), 
-               v2_set(GAME_WIDTH, GAME_HEIGHT),
+               v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
+               v2_set(MOE_WIDTH, MOE_HEIGHT),
                rgba_set(0.f, 0.f, 0.f, 0.5f));
   gfx_advance_depth(gfx);
   
@@ -136,4 +136,4 @@ update_and_render_profiler(Game_Sprite_ID blank_sprite, Game_Font_ID font)
     
   }
 }
-#endif //GAME_PROFILER_RENDERING_H
+#endif //MOE_PROFILER_RENDERING_H

@@ -185,8 +185,8 @@ w32_return_file(W32_File_Cabinet* c, W32_File* f) {
 struct W32_State {
   B32 is_running;
   
-  F32 game_width;
-  F32 game_height;
+  F32 moe_width;
+  F32 moe_height;
   
   W32_Work_Queue work_queue;
   W32_File_Cabinet file_cabinet;
@@ -501,14 +501,14 @@ w32_process_input(HWND window, Platform* pf)
 }
 
 static void
-w32_set_game_dims(F32 width, F32 height) {
+w32_set_moe_dims(F32 width, F32 height) {
   assert(width > 0.f && height > 0.f);
 
   // Ignore if there is no change
-  if (width == w32_state.game_width && height == w32_state.game_height) return;
+  if (width == w32_state.moe_width && height == w32_state.moe_height) return;
 
-  w32_state.game_width = width;
-  w32_state.game_height = height;
+  w32_state.moe_width = width;
+  w32_state.moe_height = height;
 
   // Get monitor info
   HMONITOR monitor = MonitorFromWindow(0, MONITOR_DEFAULTTONEAREST);
@@ -546,7 +546,7 @@ w32_setup_platform_functions(Platform* pf)
   //pf->set_render_region = w32_set_render_region;
   //pf->set_window_size = w32_set_window_size;
   //pf->get_window_size = w32_get_window_size;
-  pf->set_game_dims = w32_set_game_dims;
+  pf->set_moe_dims = w32_set_moe_dims;
   pf->open_file = w32_open_file;
   pf->read_file = w32_read_file;
   pf->write_file = w32_write_file;
@@ -594,8 +594,8 @@ WinMain(HINSTANCE instance,
   {
     w32_state.is_running = true;
 
-    w32_state.game_width = 1.f;
-    w32_state.game_height = 1.f;  
+    w32_state.moe_width = 1.f;
+    w32_state.moe_height = 1.f;  
 
     // initialize the circular linked list
     w32_state.memory_sentinel.next = &w32_state.memory_sentinel;    
@@ -720,18 +720,18 @@ WinMain(HINSTANCE instance,
 #endif  
 
   //-Load Game Functions
-  Game_Functions game_functions = {};
-  W32_Loaded_Code game_code = {};
-  game_code.function_count = array_count(game_function_names);
-  game_code.function_names = game_function_names;
-  game_code.module_path = "game.dll";
-  game_code.functions = (void**)&game_functions;
+  Moe_Functions moe_functions = {};
+  W32_Loaded_Code moe_code = {};
+  moe_code.function_count = array_count(moe_function_names);
+  moe_code.function_names = moe_function_names;
+  moe_code.module_path = "moe.dll";
+  moe_code.functions = (void**)&moe_functions;
 #if INTERNAL
-  game_code.tmp_path = "tmp_game.dll";
+  moe_code.tmp_path = "tmp_moe.dll";
 #endif // INTERNAL
-  w32_load_code(&game_code);
-  if (!game_code.is_valid) return 1;
-  defer { w32_unload_code(&game_code); };
+  w32_load_code(&moe_code);
+  if (!moe_code.is_valid) return 1;
+  defer { w32_unload_code(&moe_code); };
   
   
   //-Init gfx
@@ -761,18 +761,18 @@ WinMain(HINSTANCE instance,
   make(Platform, pf);
  
   // Game memory set up
-  make(Arena, game_arena);
-  if (!w32_allocate_memory_into_arena(game_arena, MB(32))) return false;
-  defer { w32_free_memory_from_arena(game_arena); };
+  make(Arena, moe_arena);
+  if (!w32_allocate_memory_into_arena(moe_arena, MB(32))) return false;
+  defer { w32_free_memory_from_arena(moe_arena); };
   
   w32_setup_platform_functions(pf);
   pf->gfx = gfx;
   pf->profiler = profiler;
-  pf->game_arena = game_arena;
+  pf->moe_arena = moe_arena;
   pf->audio = audio;
   
   
-  //- Begin game loop
+  //- Begin moe loop
   B32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   
   //- Send this to global state
@@ -783,24 +783,24 @@ WinMain(HINSTANCE instance,
   while (w32_state.is_running) {
   
 #if 1
-    // Hot reload game.dll functions
-    pf->reloaded = w32_reload_code_if_outdated(&game_code);
+    // Hot reload moe.dll functions
+    pf->reloaded = w32_reload_code_if_outdated(&moe_code);
     if (pf->reloaded) {
       prf_reset(profiler);
     }
 #endif
    
-    w32_profile_block(game_loop);
+    w32_profile_block(moe_loop);
 
     // Begin frame
     w32_audio_begin_frame(audio);
     V2U client_wh = w32_get_client_dims(window);
 
 
-    F32 game_aspect = w32_state.game_width / w32_state.game_height;
+    F32 moe_aspect = w32_state.moe_width / w32_state.moe_height;
     RECT rr = w32_calc_render_region(client_wh.w,
                                      client_wh.h,
-                                     game_aspect);
+                                     moe_aspect);
     w32_gfx_begin_frame(gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
        
     //-Process messages and input
@@ -821,23 +821,23 @@ WinMain(HINSTANCE instance,
       F32 region_width = (F32)(rr.right - rr.left);
       F32 region_height = (F32)(rr.top - rr.bottom);
 
-      F32 game_to_render_w = w32_state.game_width / region_width;
-      F32 game_to_render_h = w32_state.game_height / region_height;
+      F32 moe_to_render_w = w32_state.moe_width / region_width;
+      F32 moe_to_render_h = w32_state.moe_height / region_height;
       
-      pf->mouse_pos.x = render_mouse_pos_x * game_to_render_w;
-      pf->mouse_pos.y = render_mouse_pos_y * game_to_render_h;
+      pf->mouse_pos.x = render_mouse_pos_x * moe_to_render_w;
+      pf->mouse_pos.y = render_mouse_pos_y * moe_to_render_h;
       
       
       // NOTE(Momo): Flip y
       // TODO(Momo): should this really be here?
-      //pf->design_mouse_pos.y = lerp_f32(GAME_HEIGHT, 0.f, pf->design_mouse_pos.y/GAME_HEIGHT);	
+      //pf->design_mouse_pos.y = lerp_f32(MOE_HEIGHT, 0.f, pf->design_mouse_pos.y/MOE_HEIGHT);	
 
     }
     
     
     //-Game logic
-    if(game_code.is_valid) { 
-      game_functions.update_and_render(pf);
+    if(moe_code.is_valid) { 
+      moe_functions.update_and_render(pf);
     }
 
     // End  frame

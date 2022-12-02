@@ -1,6 +1,6 @@
 
-#ifndef GAME_CONSOLE_H
-#define GAME_CONSOLE_H
+#ifndef MOE_CONSOLE_H
+#define MOE_CONSOLE_H
 
 
 struct Console_Command {
@@ -90,7 +90,7 @@ _execute(Console* dc) {
 }
 
 static void
-update_and_render_console(Console* dc, Game_Sprite_ID blank_sprite, Game_Font_ID font) 
+update_and_render_console(Console* dc, Moe_Sprite_ID blank_sprite, Moe_Font_ID font) 
 {
   for (U32 char_index = 0; 
        char_index < platform->char_count;
@@ -130,8 +130,8 @@ update_and_render_console(Console* dc, Game_Sprite_ID blank_sprite, Game_Font_ID
   V2 input_area_pos = { console_width/2, line_height/2 };
   
   paint_sprite(blank_sprite, 
-               v2_set(GAME_WIDTH/2, GAME_HEIGHT/2), 
-               v2_set(GAME_WIDTH, GAME_HEIGHT),
+               v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
+               v2_set(MOE_WIDTH, MOE_HEIGHT),
                rgba_set(0.f, 0.f, 0.f, 0.8f));
   gfx_advance_depth(gfx);
   
@@ -167,4 +167,4 @@ update_and_render_console(Console* dc, Game_Sprite_ID blank_sprite, Game_Font_ID
 }
 
 
-#endif //GAME_CONSOLE_H
+#endif //MOE_CONSOLE_H

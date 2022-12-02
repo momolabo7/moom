@@ -326,7 +326,7 @@ _ogl_push_triangle(Opengl* ogl,
                             sizeof(V4), 
                             &colors);
    
-  // NOTE(Momo): m44_transpose; game is row-major
+  // NOTE(Momo): m44_transpose; moe is row-major
   M44 ogl_transform = m44_transpose(transform);
   ogl->glNamedBufferSubData(tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
                             tb->current_instance_index* sizeof(M44), 
@@ -391,7 +391,7 @@ _ogl_push_sprite(Opengl* ogl,
                             sizeof(uv_per_vertex),
                             &uv_per_vertex);
   
-  // NOTE(Momo): m44_transpose; game is row-major
+  // NOTE(Momo): m44_transpose; moe is row-major
   M44 ogl_transform = m44_transpose(transform);
   ogl->glNamedBufferSubData(sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
                             sb->current_instance_index* sizeof(M44), 

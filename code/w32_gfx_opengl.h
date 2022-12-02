@@ -2,7 +2,7 @@
 
 
 #include "w32_gfx.h"
-#include "game_gfx_opengl.h"
+#include "moe_gfx_opengl.h"
 
 
 //~WGL stuff

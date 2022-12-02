@@ -1,16 +1,16 @@
 /* date = June 16th 2022 6:54 pm */
 
-#ifndef GAME_INSPECTOR_RENDERING_H
-#define GAME_INSPECTOR_RENDERING_H
+#ifndef MOE_INSPECTOR_RENDERING_H
+#define MOE_INSPECTOR_RENDERING_H
 
 
 static void 
-update_and_render_inspector(Game_Sprite_ID rect_sprite, Game_Font_ID font) 
+update_and_render_inspector(Moe_Sprite_ID rect_sprite, Moe_Font_ID font) 
 {
 
   paint_sprite(rect_sprite, 
-               v2_set(GAME_WIDTH/2, GAME_HEIGHT/2), 
-               v2_set(GAME_WIDTH, GAME_HEIGHT),
+               v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
+               v2_set(MOE_WIDTH, MOE_HEIGHT),
                {0.f, 0.f, 0.f, 0.5f});
   gfx_advance_depth(gfx);
   
@@ -35,7 +35,7 @@ update_and_render_inspector(Game_Sprite_ID rect_sprite, Game_Font_ID font)
     
     
     
-    F32 y = GAME_HEIGHT - line_height * (entry_index+1);
+    F32 y = MOE_HEIGHT - line_height * (entry_index+1);
     
     paint_text(font, 
                sb->str,
@@ -50,4 +50,4 @@ update_and_render_inspector(Game_Sprite_ID rect_sprite, Game_Font_ID font)
 }
 
 
-#endif //GAME_INSPECTOR_RENDERING_H
+#endif //MOE_INSPECTOR_RENDERING_H

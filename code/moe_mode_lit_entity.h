@@ -2,7 +2,7 @@ struct Lit_Particle {
   V2 pos, vel;
   V2 size_start, size_end;
   RGBA color_start, color_end;
-  Game_Sprite_ID sprite_id;
+  Moe_Sprite_ID sprite_id;
   F32 lifespan;
   F32 lifespan_now;
 };

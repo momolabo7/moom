@@ -106,7 +106,7 @@ lit_gen_light_intersections(Lit_Light* l,
                             Lit_Edge_List* edges,
                             Arena* tmp_arena)
 {
-  game_profile_block(light_generation);
+  moe_profile_block(light_generation);
   arn_set_revert_point(tmp_arena);
 
   Lit_Light_Type light_type = Lit_LIGHT_TYPE_POINT;
@@ -320,7 +320,7 @@ lit_draw_lights(Lit* lit) {
 }
 
 static void 
-lit_draw_debug_light_rays(Lit* lit, Game* game) {
+lit_draw_debug_light_rays(Lit* lit, Game* moe) {
  
 
 #if LIT_DEBUG_LIGHT
@@ -328,7 +328,7 @@ lit_draw_debug_light_rays(Lit* lit, Game* game) {
   // Draw the light rays
   if (player->held_light) {
     Lit_Light* l = player->held_light;
-    arn_set_revert_point(&game->frame_arena);
+    arn_set_revert_point(&moe->frame_arena);
     al_foreach(light_ray_index, &player->held_light->debug_rays)
     {
       Ray2 light_ray = player->held_light->debug_rays.e[light_ray_index];
@@ -338,7 +338,7 @@ lit_draw_debug_light_rays(Lit* lit, Game* game) {
     }
     gfx_advance_depth(gfx);
    
-    Sort_Entry* sorted_its = arn_push_arr(Sort_Entry, &game->frame_arena, l->intersections.count);
+    Sort_Entry* sorted_its = arn_push_arr(Sort_Entry, &moe->frame_arena, l->intersections.count);
     assert(sorted_its);
     for (U32 intersection_id = 0; 
          intersection_id < l->intersections.count; 

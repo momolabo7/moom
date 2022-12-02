@@ -41,7 +41,7 @@ struct Sui_Packer {
   Sui_Packer_Source sources[1024]; // additional data for assets
   Karu_Asset assets[1024]; // to be written to file
   
-  Karu_Group groups[GAME_ASSET_GROUP_TYPE_COUNT]; //to be written to file
+  Karu_Group groups[MOE_ASSET_GROUP_TYPE_COUNT]; //to be written to file
   
   // Required context for interface
   Karu_Group* active_group;
@@ -55,7 +55,7 @@ sui_pack_begin(Sui_Packer* p) {
 }
 
 static void
-sui_pack_push_tag(Sui_Packer* p, Game_Asset_Tag_Type tag_type, F32 value) {
+sui_pack_push_tag(Sui_Packer* p, Moe_Asset_Tag_Type tag_type, F32 value) {
   U32 tag_index = p->tag_count++;
   
   Karu_Asset* asset = p->assets + p->active_asset_index;
@@ -67,7 +67,7 @@ sui_pack_push_tag(Sui_Packer* p, Game_Asset_Tag_Type tag_type, F32 value) {
 }
 
 static void
-sui_pack_begin_group(Sui_Packer* p, Game_Asset_Group_Type group) 
+sui_pack_begin_group(Sui_Packer* p, Moe_Asset_Group_Type group) 
 {
   p->active_group = p->groups + group;
   p->active_group->first_asset_index = p->asset_count;
@@ -161,11 +161,11 @@ sui_pack_end(Sui_Packer* p, const char* filename, Arena* arena)
  
   U32 asset_tag_array_size = sizeof(Karu_Tag)*p->tag_count;
   U32 asset_array_size = sizeof(Karu_Asset)*p->asset_count;
-  U32 group_array_size = sizeof(Karu_Group)*GAME_ASSET_GROUP_TYPE_COUNT;
+  U32 group_array_size = sizeof(Karu_Group)*MOE_ASSET_GROUP_TYPE_COUNT;
 
   Karu_Header header = {0};
   header.signature = KARU_SIGNATURE;
-  header.group_count = GAME_ASSET_GROUP_TYPE_COUNT;
+  header.group_count = MOE_ASSET_GROUP_TYPE_COUNT;
   header.asset_count = p->asset_count;
   header.tag_count = p->tag_count;
   header.offset_to_assets = sizeof(Karu_Header);
@@ -185,7 +185,7 @@ sui_pack_end(Sui_Packer* p, const char* filename, Arena* arena)
     switch(source->type) {
       case SUI_PACKER_SOURCE_TYPE_BITMAP:{
         sui_log("Writing bitmap\n");
-        asset->type = GAME_ASSET_TYPE_BITMAP;
+        asset->type = MOE_ASSET_TYPE_BITMAP;
 
         Karu_Bitmap* bitmap = &asset->bitmap;
         bitmap->width = source->bitmap.width;
@@ -198,7 +198,7 @@ sui_pack_end(Sui_Packer* p, const char* filename, Arena* arena)
       case SUI_PACKER_SOURCE_TYPE_SPRITE: {
         sui_log("Writing sprite\n");
 
-        asset->type = GAME_ASSET_TYPE_SPRITE;
+        asset->type = MOE_ASSET_TYPE_SPRITE;
 
         Karu_Sprite* sprite = &asset->sprite;
         sprite->bitmap_asset_id = source->sprite.bitmap_asset_id;
@@ -210,7 +210,7 @@ sui_pack_end(Sui_Packer* p, const char* filename, Arena* arena)
       } break;
       case SUI_PACKER_SOURCE_TYPE_FONT: {
         sui_log("Writing font\n");
-        asset->type = GAME_ASSET_TYPE_FONT;
+        asset->type = MOE_ASSET_TYPE_FONT;
 
         Sui_Atlas_Font* atlas_font = source->font.atlas_font;
 

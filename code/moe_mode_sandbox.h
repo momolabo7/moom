@@ -3,7 +3,7 @@ struct Sandbox {
 
 
 static void
-sandbox_tick(Game* game) 
+sandbox_tick(Game* moe) 
 {
   
   static V2 player_pos = v2_set(800.f, 800.f); 

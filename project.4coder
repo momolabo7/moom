@@ -39,7 +39,7 @@ command_list = {
    .out = "*compilation*", .footer_panel = true, .save_dirty_files = true,
    .cmd = { { bun_karu, .os ="win"  }, }, },
  
- { .name = "build game",
+ { .name = "build moe",
    .out = "*compilation*", .footer_panel = true, .save_dirty_files = true,
    .cmd = { { build_game, .os ="win" }, }, },
  
@@ -66,7 +66,7 @@ command_list = {
 };
 
 fkey_command[1] = "bun karu";
-fkey_command[2] = "build game";
+fkey_command[2] = "build moe";
 fkey_command[3] = "build win";
 fkey_command[4] = "build meta";
 fkey_command[5] = "run win";

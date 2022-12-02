@@ -1,72 +1,72 @@
-#ifndef GAME_ASSETS_H
-#define GAME_ASSETS_H
+#ifndef MOE_ASSETS_H
+#define MOE_ASSETS_H
 
 #include "karu.h"
 
-struct Game_Bitmap_ID { U32 value; };
-struct Game_Font_ID { U32 value; };
-struct Game_Sprite_ID { U32 value; };
+struct Moe_Bitmap_ID { U32 value; };
+struct Moe_Font_ID { U32 value; };
+struct Moe_Sprite_ID { U32 value; };
 
-struct Game_Bitmap {
+struct Moe_Bitmap {
   U32 renderer_texture_handle;
   U32 width;
   U32 height;
 };
 
-struct Game_Sprite {
+struct Moe_Sprite {
   U32 texel_x0;
   U32 texel_y0;
   U32 texel_x1;
   U32 texel_y1;
 
-  Game_Bitmap_ID bitmap_asset_id;
+  Moe_Bitmap_ID bitmap_asset_id;
 };
 
-struct Game_Font_Glyph{
+struct Moe_Font_Glyph{
   U32 texel_x0, texel_y0;
   U32 texel_x1, texel_y1;
   Rect2 box;
-  Game_Bitmap_ID bitmap_asset_id;
+  Moe_Bitmap_ID bitmap_asset_id;
   F32 horizontal_advance;
 };
 
-struct Game_Font {
+struct Moe_Font {
   U32 highest_codepoint;
   U16* codepoint_map;
   
   U32 glyph_count;
-  Game_Font_Glyph* glyphs;
+  Moe_Font_Glyph* glyphs;
   F32* kernings;
 };
 
 
-struct Game_Asset_Tag {
-  Game_Asset_Tag_Type type; 
+struct Moe_Asset_Tag {
+  Moe_Asset_Tag_Type type; 
   F32 value;
 };
 
 
-enum Game_Asset_State {
-  GAME_ASSET_STATE_UNLOADED,
-  GAME_ASSET_STATE_LOADING,
-  GAME_ASSET_STATE_LOADED,
+enum Moe_Asset_State {
+  MOE_ASSET_STATE_UNLOADED,
+  MOE_ASSET_STATE_LOADING,
+  MOE_ASSET_STATE_LOADED,
 };
 
-struct Game_Asset_Group {
+struct Moe_Asset_Group {
   U32 first_asset_index;
   U32 one_past_last_asset_index;
 };
 
-struct Game_Asset_Match {
+struct Moe_Asset_Match {
   struct {
     F32 tag_value_to_match;
     F32 tag_weight;
-  } e[GAME_ASSET_TAG_TYPE_COUNT];
+  } e[MOE_ASSET_TAG_TYPE_COUNT];
 };
 
 static void
-set_match_entry(Game_Asset_Match* vec, 
-                Game_Asset_Tag_Type tag,
+set_match_entry(Moe_Asset_Match* vec, 
+                Moe_Asset_Tag_Type tag,
                 F32 tag_value_to_match, 
                 F32 tag_weight) 
 {
@@ -74,8 +74,8 @@ set_match_entry(Game_Asset_Match* vec,
   vec->e[tag].tag_weight = tag_weight;
 }
 
-struct Game_Asset {
-  Game_Asset_State state;
+struct Moe_Asset {
+  Moe_Asset_State state;
   
   U32 first_tag_index;
   U32 one_past_last_tag_index;
@@ -83,23 +83,23 @@ struct Game_Asset {
   //add file index?
   U32 offset_to_data;
   
-  Game_Asset_Type type;
+  Moe_Asset_Type type;
   union {
-    Game_Bitmap bitmap;
-    Game_Sprite sprite;
-    Game_Font font;
+    Moe_Bitmap bitmap;
+    Moe_Sprite sprite;
+    Moe_Font font;
   };
 };
 
-struct Game_Assets {
+struct Moe_Assets {
   Gfx_Texture_Queue* texture_queue;
   
   U32 asset_count;
-  Game_Asset* assets;
+  Moe_Asset* assets;
   
   U32 tag_count;
-  Game_Asset_Tag* tags;
-  Game_Asset_Group groups[GAME_ASSET_GROUP_TYPE_COUNT];
+  Moe_Asset_Tag* tags;
+  Moe_Asset_Group groups[MOE_ASSET_GROUP_TYPE_COUNT];
   
   // TODO(Momo): We should remove this?
   U32 bitmap_counter;
@@ -113,7 +113,7 @@ get_next_texture_handle() {
 
 
 static B32 
-init_game_assets(Game_Assets* ga, 
+init_moe_assets(Moe_Assets* ga, 
                  const char* filename,
                  Arena* arena) 
 {
@@ -131,11 +131,11 @@ init_game_assets(Game_Assets* ga,
   if (karu_header.signature != KARU_SIGNATURE) return false;
 
   // Allocation for asset components (asset slots and tags)
-  ga->assets = arn_push_arr(Game_Asset, arena, karu_header.asset_count);
+  ga->assets = arn_push_arr(Moe_Asset, arena, karu_header.asset_count);
   if (!ga->assets) return false;
   ga->asset_count = karu_header.asset_count;
   
-  ga->tags = arn_push_arr(Game_Asset_Tag, arena, karu_header.tag_count);
+  ga->tags = arn_push_arr(Moe_Asset_Tag, arena, karu_header.tag_count);
   if (!ga->tags) return false;
   ga->tag_count = karu_header.tag_count;
 
@@ -144,7 +144,7 @@ init_game_assets(Game_Assets* ga,
        tag_index < ga->tag_count; 
        ++tag_index) 
   {
-    Game_Asset_Tag* tag = ga->tags + tag_index;
+    Moe_Asset_Tag* tag = ga->tags + tag_index;
     UMI offset_to_tag = karu_header.offset_to_tags + sizeof(Karu_Tag)*tag_index;
 
     Karu_Tag karu_tag;
@@ -159,9 +159,9 @@ init_game_assets(Game_Assets* ga,
       group_index < karu_header.group_count;
       ++group_index) 
   {
-    Game_Asset_Group* group = ga->groups + group_index;
+    Moe_Asset_Group* group = ga->groups + group_index;
     {
-      // Look for corresponding Sui_Game_Asset_Group in file
+      // Look for corresponding Sui_Moe_Asset_Group in file
       Karu_Group karu_group;
       UMI offset_to_karu_group = 
         karu_header.offset_to_groups + sizeof(Karu_Group)*group_index;
@@ -182,7 +182,7 @@ init_game_assets(Game_Assets* ga,
          asset_index < group->one_past_last_asset_index;
          ++asset_index) 
     {
-      Game_Asset* asset = ga->assets + asset_index;
+      Moe_Asset* asset = ga->assets + asset_index;
        
       Karu_Asset karu_asset;
       UMI offset_to_karu_asset = 
@@ -193,13 +193,13 @@ init_game_assets(Game_Assets* ga,
                           &karu_asset);
 
       // Process the assets
-      asset->type = (Game_Asset_Type)karu_asset.type;
+      asset->type = (Moe_Asset_Type)karu_asset.type;
       asset->first_tag_index = karu_asset.first_tag_index;
       asset->one_past_last_tag_index = karu_asset.one_past_last_tag_index;
       asset->offset_to_data = karu_asset.offset_to_data;
 
       switch(asset->type) {
-        case GAME_ASSET_TYPE_BITMAP: {
+        case MOE_ASSET_TYPE_BITMAP: {
           asset->bitmap.renderer_texture_handle = get_next_texture_handle();
           asset->bitmap.width = karu_asset.bitmap.width;
           asset->bitmap.height = karu_asset.bitmap.height;
@@ -215,10 +215,10 @@ init_game_assets(Game_Assets* ga,
                               karu_asset.offset_to_data, 
                               payload->texture_data);
           gfx_complete_texture_transfer(payload);
-          asset->state = GAME_ASSET_STATE_LOADED;
+          asset->state = MOE_ASSET_STATE_LOADED;
 
         } break;
-        case GAME_ASSET_TYPE_SPRITE: {
+        case MOE_ASSET_TYPE_SPRITE: {
           asset->sprite.bitmap_asset_id.value = karu_asset.sprite.bitmap_asset_id;
 
           asset->sprite.texel_x0 = karu_asset.sprite.texel_x0;
@@ -226,15 +226,15 @@ init_game_assets(Game_Assets* ga,
           asset->sprite.texel_x1 = karu_asset.sprite.texel_x1;
           asset->sprite.texel_y1 = karu_asset.sprite.texel_y1;
 
-          asset->state = GAME_ASSET_STATE_LOADED;
+          asset->state = MOE_ASSET_STATE_LOADED;
         } break;
-        case GAME_ASSET_TYPE_FONT: {
+        case MOE_ASSET_TYPE_FONT: {
           U32 glyph_count = karu_asset.font.glyph_count;
           U32 highest_codepoint = karu_asset.font.highest_codepoint;
           
           U16* codepoint_map = arn_push_arr(U16, arena, highest_codepoint);
           if(!codepoint_map) return false;
-          Game_Font_Glyph* glyphs = arn_push_arr(Game_Font_Glyph, arena, glyph_count);
+          Moe_Font_Glyph* glyphs = arn_push_arr(Moe_Font_Glyph, arena, glyph_count);
           if(!glyphs) return false;
           F32* kernings = arn_push_arr(F32, arena, glyph_count*glyph_count);
           if (!kernings) return false;
@@ -254,13 +254,13 @@ init_game_assets(Game_Assets* ga,
                           glyph_data_offset,
                           &karu_glyph); 
             
-            Game_Font_Glyph* glyph = glyphs + glyph_index;
+            Moe_Font_Glyph* glyph = glyphs + glyph_index;
             glyph->texel_x0 = karu_glyph.texel_x0;
             glyph->texel_y0 = karu_glyph.texel_y0;
             glyph->texel_x1 = karu_glyph.texel_x1;
             glyph->texel_y1 = karu_glyph.texel_y1;
 
-            glyph->bitmap_asset_id = Game_Bitmap_ID{ karu_glyph.bitmap_asset_id };
+            glyph->bitmap_asset_id = Moe_Bitmap_ID{ karu_glyph.bitmap_asset_id };
             glyph->box = karu_glyph.box;
             glyph->horizontal_advance = karu_glyph.horizontal_advance;
             codepoint_map[karu_glyph.codepoint] = glyph_index;
@@ -283,7 +283,7 @@ init_game_assets(Game_Assets* ga,
             asset->font.highest_codepoint = highest_codepoint;
             asset->font.glyph_count = glyph_count;
           }
-          asset->state = GAME_ASSET_STATE_LOADED;
+          asset->state = MOE_ASSET_STATE_LOADED;
         } break;
 
       }
@@ -296,16 +296,16 @@ init_game_assets(Game_Assets* ga,
 }
 
 static U32
-find_first_asset_of_type(Game_Assets* ga, 
-                        Game_Asset_Group_Type group_type, 
-                        Game_Asset_Type type) 
+find_first_asset_of_type(Moe_Assets* ga, 
+                        Moe_Asset_Group_Type group_type, 
+                        Moe_Asset_Type type) 
 {
-  Game_Asset_Group* group = ga->groups + group_type;
+  Moe_Asset_Group* group = ga->groups + group_type;
   for (U32 asset_index = group->first_asset_index;
        asset_index != group->one_past_last_asset_index;
        ++asset_index ) 
   {
-    Game_Asset* asset = ga->assets + asset_index;
+    Moe_Asset* asset = ga->assets + asset_index;
     if (asset->type == type) {
       return asset_index;      
     }
@@ -314,19 +314,19 @@ find_first_asset_of_type(Game_Assets* ga,
 }
 
 static U32 
-find_best_asset_of_type(Game_Assets* ga, 
-                        Game_Asset_Group_Type group_type, 
-                        Game_Asset_Type asset_type,
-                        Game_Asset_Match* vector)
+find_best_asset_of_type(Moe_Assets* ga, 
+                        Moe_Asset_Group_Type group_type, 
+                        Moe_Asset_Type asset_type,
+                        Moe_Asset_Match* vector)
 {
   U32 ret = 0;
   F32 best_diff = F32_INFINITY;
-  Game_Asset_Group* group = ga->groups + group_type;
+  Moe_Asset_Group* group = ga->groups + group_type;
   for (U32 asset_index = group->first_asset_index;
        asset_index != group->one_past_last_asset_index;
        ++asset_index ) 
   {
-    Game_Asset* asset = ga->assets + asset_index;
+    Moe_Asset* asset = ga->assets + asset_index;
     if (asset->type != asset_type) {
       continue;
     }
@@ -336,7 +336,7 @@ find_best_asset_of_type(Game_Assets* ga,
         tag_index < asset->one_past_last_tag_index;
         ++tag_index) 
     {
-      Game_Asset_Tag* tag = ga->tags + tag_index;
+      Moe_Asset_Tag* tag = ga->tags + tag_index;
       F32 difference = vector->e[tag->type].tag_value_to_match - tag->value;
       F32 weighted = vector->e[tag->type].tag_weight*abs_f32(difference);
       total_weighted_diff = weighted;
@@ -365,7 +365,7 @@ find_best_asset_of_type(Game_Assets* ga,
 
 
 static F32
-get_kerning(Game_Font* font,
+get_kerning(Moe_Font* font,
             U32 left_codepoint, 
             U32 right_codepoint) 
 {
@@ -378,69 +378,69 @@ get_kerning(Game_Font* font,
   return font->kernings[advance_index];
 }
 
-static Game_Font_Glyph*
-get_glyph(Game_Font* font, U32 codepoint) {
+static Moe_Font_Glyph*
+get_glyph(Moe_Font* font, U32 codepoint) {
   U32 glyph_index_plus_one = font->codepoint_map[codepoint] + 1;
   if (glyph_index_plus_one == 0) return null;
-  Game_Font_Glyph *glyph = font->glyphs + glyph_index_plus_one - 1;
+  Moe_Font_Glyph *glyph = font->glyphs + glyph_index_plus_one - 1;
   return glyph;
 }
 
-static Game_Asset*
-get_asset(Game_Assets* ga, U32 asset_index){
+static Moe_Asset*
+get_asset(Moe_Assets* ga, U32 asset_index){
   return ga->assets + asset_index;
 }
 
-static Game_Bitmap*
-get_bitmap(Game_Assets* ga, Game_Bitmap_ID bitmap_id) {
-  Game_Asset* asset = get_asset(ga, bitmap_id.value);
-  if(asset->type != GAME_ASSET_TYPE_BITMAP) return null;
+static Moe_Bitmap*
+get_bitmap(Moe_Assets* ga, Moe_Bitmap_ID bitmap_id) {
+  Moe_Asset* asset = get_asset(ga, bitmap_id.value);
+  if(asset->type != MOE_ASSET_TYPE_BITMAP) return null;
   return &asset->bitmap;
 }
 
-static Game_Sprite*
-get_sprite(Game_Assets* ga, Game_Sprite_ID sprite_id) {
-  Game_Asset* asset = get_asset(ga, sprite_id.value);
-  if(asset->type != GAME_ASSET_TYPE_SPRITE) return null;
+static Moe_Sprite*
+get_sprite(Moe_Assets* ga, Moe_Sprite_ID sprite_id) {
+  Moe_Asset* asset = get_asset(ga, sprite_id.value);
+  if(asset->type != MOE_ASSET_TYPE_SPRITE) return null;
   return &asset->sprite;
 }
 
-static Game_Font*
-get_font(Game_Assets* ga, Game_Font_ID font_id) {
-  Game_Asset* asset = get_asset(ga, font_id.value);
-  if(asset->type != GAME_ASSET_TYPE_FONT) return null;
+static Moe_Font*
+get_font(Moe_Assets* ga, Moe_Font_ID font_id) {
+  Moe_Asset* asset = get_asset(ga, font_id.value);
+  if(asset->type != MOE_ASSET_TYPE_FONT) return null;
   return &asset->font;
 }
-static Game_Bitmap_ID
-find_first_bitmap(Game_Assets* ga, Game_Asset_Group_Type group_type) {
-  return { find_first_asset_of_type(ga, group_type, GAME_ASSET_TYPE_BITMAP) };
+static Moe_Bitmap_ID
+find_first_bitmap(Moe_Assets* ga, Moe_Asset_Group_Type group_type) {
+  return { find_first_asset_of_type(ga, group_type, MOE_ASSET_TYPE_BITMAP) };
 }
 
-static Game_Font_ID
-find_first_font(Game_Assets* ga, Game_Asset_Group_Type group_type) {
-  return { find_first_asset_of_type(ga, group_type, GAME_ASSET_TYPE_FONT) };
+static Moe_Font_ID
+find_first_font(Moe_Assets* ga, Moe_Asset_Group_Type group_type) {
+  return { find_first_asset_of_type(ga, group_type, MOE_ASSET_TYPE_FONT) };
 }
 
-static Game_Sprite_ID
-find_first_sprite(Game_Assets* ga, Game_Asset_Group_Type group_type) {
-  return { find_first_asset_of_type(ga, group_type, GAME_ASSET_TYPE_SPRITE) };
+static Moe_Sprite_ID
+find_first_sprite(Moe_Assets* ga, Moe_Asset_Group_Type group_type) {
+  return { find_first_asset_of_type(ga, group_type, MOE_ASSET_TYPE_SPRITE) };
 }
 
-static Game_Sprite_ID
-find_best_sprite(Game_Assets* ga, 
-                 Game_Asset_Group_Type group_type, 
-                 Game_Asset_Match* match_vector)
+static Moe_Sprite_ID
+find_best_sprite(Moe_Assets* ga, 
+                 Moe_Asset_Group_Type group_type, 
+                 Moe_Asset_Match* match_vector)
 {
-  return { find_best_asset_of_type(ga, group_type, GAME_ASSET_TYPE_SPRITE, match_vector) };
+  return { find_best_asset_of_type(ga, group_type, MOE_ASSET_TYPE_SPRITE, match_vector) };
   
 }
 
-static Game_Font_ID
-find_best_font(Game_Assets* ga, 
-               Game_Asset_Group_Type group_type, 
-               Game_Asset_Match* match_vector)
+static Moe_Font_ID
+find_best_font(Moe_Assets* ga, 
+               Moe_Asset_Group_Type group_type, 
+               Moe_Asset_Match* match_vector)
 {
-  return { find_best_asset_of_type(ga, group_type, GAME_ASSET_TYPE_FONT, match_vector) };
+  return { find_best_asset_of_type(ga, group_type, MOE_ASSET_TYPE_FONT, match_vector) };
   
 }
 #endif

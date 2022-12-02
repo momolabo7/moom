@@ -1,10 +1,10 @@
-#ifndef GAME_MODE_COMPUTER
-#define GAME_MODE_COMPUTER
+#ifndef MOE_MODE_COMPUTER
+#define MOE_MODE_COMPUTER
 
 
 struct Computer_Selection{
   String8 text;
-  Game_Mode_Type mode_type;
+  Moe_Mode_Type mode_type;
 };
 
 struct Computer_Selection_List{
@@ -18,24 +18,24 @@ struct Computer{
 };
 
 static void 
-computer_add_selection(Computer* com, String8 text, Game_Mode_Type mode_type) {
+computer_add_selection(Computer* com, String8 text, Moe_Mode_Type mode_type) {
   Computer_Selection* s = al_append(&com->selection_list); 
   s->text = text;
   s->mode_type = mode_type;
 }
 
 static void
-computer_tick(Game* game)
+computer_tick(Game* moe)
 {
-  if (!game_mode_initialized(game)) {
-    Computer* com = game_allocate_mode(Computer, game);
+  if (!moe_mode_initialized(moe)) {
+    Computer* com = moe_allocate_mode(Computer, moe);
     al_clear(&com->selection_list);
-    computer_add_selection(com, str8_from_lit("Splash"), GAME_MODE_TYPE_SPLASH);
-    computer_add_selection(com, str8_from_lit("GAME: Lit"), GAME_MODE_TYPE_LIT);
-    computer_add_selection(com, str8_from_lit("Exit"), GAME_MODE_TYPE_LIT);
+    computer_add_selection(com, str8_from_lit("Splash"), MOE_MODE_TYPE_SPLASH);
+    computer_add_selection(com, str8_from_lit("GAME: Lit"), MOE_MODE_TYPE_LIT);
+    computer_add_selection(com, str8_from_lit("Exit"), MOE_MODE_TYPE_LIT);
     com->selected_id = 0;
   }
-  Computer* com = (Computer*)game->mode_context;
+  Computer* com = (Computer*)moe->mode_context;
 
   // Input
   if (pf_is_button_poked(platform->button_up)) {
@@ -49,7 +49,7 @@ computer_tick(Game* game)
   }
 
   if (pf_is_button_poked(platform->button_use)) {
-    game_goto_mode(game, com->selection_list.e[com->selected_id].mode_type);
+    moe_goto_mode(moe, com->selection_list.e[com->selected_id].mode_type);
   }
 
 
@@ -109,4 +109,4 @@ computer_tick(Game* game)
 }
 
 
-#endif // GAME_MODE_COMPUTER
+#endif // MOE_MODE_COMPUTER

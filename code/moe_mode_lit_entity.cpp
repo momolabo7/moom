@@ -21,7 +21,7 @@ lit_update_player(Lit* lit, F32 dt)
   V2 world_mouse_pos = {0};
   {
     world_mouse_pos.x = platform->mouse_pos.x;
-    world_mouse_pos.y = GAME_HEIGHT - platform->mouse_pos.y;
+    world_mouse_pos.y = MOE_HEIGHT - platform->mouse_pos.y;
   }
 
   player->pos = world_mouse_pos;
@@ -104,14 +104,14 @@ lit_update_player(Lit* lit, F32 dt)
   }
 
   // Restrict movement
-  if (player->pos.x > GAME_WIDTH - LIT_PLAYER_RADIUS) {
-    player->pos.x = GAME_WIDTH - LIT_PLAYER_RADIUS;
+  if (player->pos.x > MOE_WIDTH - LIT_PLAYER_RADIUS) {
+    player->pos.x = MOE_WIDTH - LIT_PLAYER_RADIUS;
   }
   if (player->pos.x < LIT_PLAYER_RADIUS) {
     player->pos.x = LIT_PLAYER_RADIUS;
   }
-  if (player->pos.y > GAME_HEIGHT - LIT_PLAYER_RADIUS) {
-    player->pos.y = GAME_HEIGHT - LIT_PLAYER_RADIUS;
+  if (player->pos.y > MOE_HEIGHT - LIT_PLAYER_RADIUS) {
+    player->pos.y = MOE_HEIGHT - LIT_PLAYER_RADIUS;
   }
   if (player->pos.y < LIT_PLAYER_RADIUS) {
     player->pos.y = LIT_PLAYER_RADIUS;

@@ -12,7 +12,7 @@ SET CommonCompilerFlags=-MT -WX -W4 -wd4706 -wd4189 -wd4702 -wd4201 -wd4505 -wd4
 SET CommonCompilerFlags=-DINTERNAL=1 %CommonCompilerFlags%
 
 pushd %BuildDir%
-call cl %CommonCompilerFlags% %CodeDir%\game.cpp -LD -link -OUT:game.dll
+call cl %CommonCompilerFlags% %CodeDir%\moe.cpp -LD -link 
 
 rem We do this because for some reason, compiling will result in the DLL being modified twice and cus our hot reloading feature to be loaded twice. This *should* prevent it.
 

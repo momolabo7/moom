@@ -1,6 +1,6 @@
 
-#ifndef GAME_PROFILER_H
-#define GAME_PROFILER_H
+#ifndef MOE_PROFILER_H
+#define MOE_PROFILER_H
 
 #define PROFILER_MAX_SNAPSHOTS 120
 #define PROFILER_MAX_ENTRIES 256
@@ -142,4 +142,4 @@ prf_reset(Profiler* p) {
 }
 
 
-#endif //GAME_PROFILER_H
+#endif //MOE_PROFILER_H
