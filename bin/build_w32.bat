@@ -18,7 +18,7 @@ SET LinkerFlags=user32.lib opengl32.lib gdi32.lib winmm.lib ole32.lib imm32.lib 
 
 pushd %BuildDir%
 
-call cl %CompilerFlags% %CodeDir%\w32.cpp -link %LinkerFlags%
+call cl %CompilerFlags% %CodeDir%\w32_moe.cpp -link %LinkerFlags%
 
 rem Copy icon for window ----------------------
 xcopy %RootDir%\icons\window.ico  %BuildDir% /Q /Y

@@ -1,13 +1,13 @@
 /* date = March 11th 2022 6:38 pm */
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef MOE_H
+#define MOE_H
 
 #include "momo.h"
 
 // NOTE(Momo): These are 'interfaces'
-#include "game_platform.h"
-#include "game_gfx.h"
+#include "moe_platform.h"
+#include "moe_gfx.h"
 
 #define GAME_WIDTH 800.f
 #define GAME_HEIGHT 800.f
@@ -29,17 +29,17 @@ static Platform* platform;
 static Gfx* gfx;
 
 
-#include "game_profiler.h"
+#include "moe_profiler.h"
 #include "game_assets.h"
-#include "game_inspector.h"
+#include "moe_inspector.h"
 
 static Game_Assets* assets;
 static Inspector* inspector;
 
-#include "game_asset_rendering.h"
-#include "game_inspector_rendering.h"
-#include "game_profiler_rendering.h"
-#include "game_console.h"
+#include "moe_asset_rendering.h"
+#include "moe_inspector_rendering.h"
+#include "moe_profiler_rendering.h"
+#include "moe_console.h"
 
 
 

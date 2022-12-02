@@ -8,7 +8,7 @@
 #undef far
 
 #include "momo.h"
-#include "game_gfx.h"
+#include "moe_gfx.h"
 
 // win32 gfx api that must be defined
 static Gfx*
@@ -27,11 +27,6 @@ w32_gfx_begin_frame(Gfx* renderer,
                     U32 region_x1, U32 region_y1);
 static void 
 w32_gfx_end_frame(Gfx* renderer);
-
-#if 0
-static void 
-w32_gfx_swap_buffer(Gfx* renderer);
-#endif
 
 
 

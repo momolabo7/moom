@@ -7,6 +7,6 @@ SET Opt=%1%
 
 pushd %BuildDir%
 
-call w32.exe
+call w32_moe.exe
 
 popd

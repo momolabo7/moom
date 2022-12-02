@@ -24,8 +24,8 @@
 #undef far
 
 #include "momo.h"
-#include "game_platform.h"
-#include "game_profiler.h"
+#include "moe_platform.h"
+#include "moe_profiler.h"
 
 #include "w32_common.h"
 #include "w32_loaded_code.h"

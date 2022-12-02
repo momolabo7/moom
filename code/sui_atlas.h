@@ -217,13 +217,8 @@ sui_atlas_end(Sui_Atlas* a, Arena* allocator) {
       U32 cp = font->codepoints[cpi];
       U32 glyph_index = ttf_get_glyph_index(ttf, cp);
 
-#if NEW_TTF
       S32 x0, y0, x1, y1;
       ttf_get_glyph_bitmap_box(ttf, glyph_index, s, &x0, &y0, &x1, &y1);
-#else
-      Rect2 box = ttf_get_glyph_box(ttf, glyph_index, s);
-      V2U dims = ttf_get_bitmap_dims_from_glyph_box(box);
-#endif
 
       auto* context = contexts + context_index++;
       context->font_glyph.codepoint = cp;
@@ -231,14 +226,8 @@ sui_atlas_end(Sui_Atlas* a, Arena* allocator) {
       context->type = SUI_ATLAS_CONTEXT_TYPE_FONT_GLYPH;
       
       RP_Rect* rect = rects + rect_index++;
-#if NEW_TTF
       rect->w = x1 - x0;
       rect->h = y1 - y0;  
-#else
-
-      rect->w = dims.w;
-      rect->h = dims.h;
-#endif
 
       rect->user_data = context;
 

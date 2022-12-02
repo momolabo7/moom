@@ -1,39 +1,4 @@
-#include "w32.h"
-
-#if 0
-static void
-w32_toggle_fullscreen(HWND Window)
-{
-  // NOTE(casey): This follows Raymond Chen's prescription
-  // for fullscreen toggling, see:
-  // http://blogs.msdn.com/b/oldnewthing/archive/2010/04/12/9994016.aspx
-  static WINDOWPLACEMENT GlobalWindowPosition = {sizeof(GlobalWindowPosition)};
-  
-  DWORD Style = GetWindowLong(Window, GWL_STYLE);
-  if(Style & WS_OVERLAPPEDWINDOW)
-  {
-    MONITORINFO MonitorInfo = {sizeof(MonitorInfo)};
-    if(GetWindowPlacement(Window, &GlobalWindowPosition) &&
-       GetMonitorInfo(MonitorFromWindow(Window, MONITOR_DEFAULTTOPRIMARY), &MonitorInfo))
-    {
-      SetWindowLong(Window, GWL_STYLE, Style & ~WS_OVERLAPPEDWINDOW);
-      SetWindowPos(Window, HWND_TOP,
-                   MonitorInfo.rcMonitor.left, MonitorInfo.rcMonitor.top,
-                   MonitorInfo.rcMonitor.right - MonitorInfo.rcMonitor.left,
-                   MonitorInfo.rcMonitor.bottom - MonitorInfo.rcMonitor.top,
-                   SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
-    }
-  }
-  else
-  {
-    SetWindowLong(Window, GWL_STYLE, Style | WS_OVERLAPPEDWINDOW);
-    SetWindowPlacement(Window, &GlobalWindowPosition);
-    SetWindowPos(Window, 0, 0, 0, 0, 0,
-                 SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER |
-                 SWP_NOOWNERZORDER | SWP_FRAMECHANGED);
-  }
-}
-#endif
+#include "w32_moe.h"
 
 
 //////////////////////////////////////////////////////////////////
@@ -44,10 +9,9 @@ struct W32_Memory_Block {
   W32_Memory_Block* next;
 };
 
-// TODO free memory block
 
 //////////////////////////////////////////////////////////////////
-//~Worker/Producer  functionality
+// Worker/Producer  functionality
 struct W32_Work {
   void* data;
   Platform_Task_Callback* callback;
