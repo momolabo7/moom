@@ -45,6 +45,7 @@ struct Lit_Sensor_List {
 struct Lit_Player {
   V2 pos;
   Lit_Light* held_light;
+  B32 is_holding_light;
 
   // For animating getting the light
   F32 light_retrival_time;

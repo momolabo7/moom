@@ -3,7 +3,6 @@
 
 #include "karu.h"
 
-
 struct Game_Bitmap_ID { U32 value; };
 struct Game_Font_ID { U32 value; };
 struct Game_Sprite_ID { U32 value; };
@@ -15,7 +14,6 @@ struct Game_Bitmap {
 };
 
 struct Game_Sprite {
-
   U32 texel_x0;
   U32 texel_y0;
   U32 texel_x1;
@@ -68,9 +66,9 @@ struct Game_Asset_Match {
 
 static void
 set_match_entry(Game_Asset_Match* vec, 
-                       Game_Asset_Tag_Type tag,
-                       F32 tag_value_to_match, 
-                       F32 tag_weight) 
+                Game_Asset_Tag_Type tag,
+                F32 tag_value_to_match, 
+                F32 tag_weight) 
 {
   vec->e[tag].tag_value_to_match = tag_value_to_match; // debug font
   vec->e[tag].tag_weight = tag_weight;

@@ -55,7 +55,17 @@ lit_update_player(Lit* lit, F32 dt)
   }
 
 
-  // Use button
+  
+  
+  // Do Movement
+  if (v2_len_sq(direction) > 0.f) {
+    F32 speed = 300.f;
+    V2 velocity = v2_norm(direction);
+    velocity *= speed * dt;
+    player->pos += velocity;
+  }
+#endif 
+  // 'Pick up'  button
   if (pf_is_button_poked(platform->button_use)) {
     if (player->held_light == null) {
       F32 shortest_dist = 512.f; // limit
@@ -75,20 +85,12 @@ lit_update_player(Lit* lit, F32 dt)
         player->light_retrival_time = 0.f;
       }
     }
-    else{ 
-      player->held_light = null;
-    }
   }
-  
-  // Do Movement
-  if (v2_len_sq(direction) > 0.f) {
-    F32 speed = 300.f;
-    V2 velocity = v2_norm(direction);
-    velocity *= speed * dt;
-    player->pos += velocity;
+  if (pf_is_button_released(platform->button_use)) {
+    player->held_light = null;
   }
-#endif 
 
+  // Move the held light to player's position
   if (player->held_light) {
     if (player->light_retrival_time < LIT_PLAYER_LIGHT_RETRIEVE_DURATION) {
       player->light_retrival_time += dt;
