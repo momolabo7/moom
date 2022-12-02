@@ -20,8 +20,6 @@
 // - Different rasterization color modes
 // - codepoint versions of all functions
 
-// TODO: remove this  
-#define NEW_TTF 1
 
 #ifndef MOMO_TTF_H
 #define MOMO_TTF_H
@@ -153,29 +151,6 @@ _ttf_get_offset_to_glyph(const TTF* ttf, U32 glyph_index) {
   
 }
 
-// Get the glyph box as-is from the TTF.
-//
-// The box contains values where:
-//   min = bottom left of the glyph
-//   max = top right of the glyph
-// with respect to the coordinate system stated above.
-// 
-#if !NEW_TTF
-static Rect2S 
-_ttf_get_raw_glyph_box(const TTF* ttf, U32 glyph_index) {
-  Rect2S  ret = {0};
-  U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
-	if(g != 0)
-  {  
-    ret.min.x = _ttf_read_s16(ttf->data + g + 2);
-    ret.min.y = _ttf_read_s16(ttf->data + g + 4);
-    ret.max.x = _ttf_read_s16(ttf->data + g + 6);
-    ret.max.y = _ttf_read_s16(ttf->data + g + 8);
-  }
-  
-  return ret;
-}
-#endif
 
 static B32 
 ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, S32* x0, S32* y0, S32* x1, S32* y1) {
@@ -733,34 +708,6 @@ ttf_get_glyph_kerning(const TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
   }
   return 0;
 }
-
-#if !NEW_TTF
-static Rect2 
-ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, F32 scale_factor) {
-  Rect2 ret = {0};
-  
-  Rect2S raw_box = _ttf_get_raw_glyph_box(ttf, glyph_index);
-  ret.min.x = (F32)raw_box.min.x * scale_factor;
-  ret.min.y = (F32)raw_box.min.y * scale_factor;
-  ret.max.x = (F32)raw_box.max.x * scale_factor;
-  ret.max.y = (F32)raw_box.max.y * scale_factor;
-  
-  return ret;
-}
-
-static V2U 
-ttf_get_bitmap_dims_from_glyph_box(Rect2 glyph_box) {
-  V2U ret = {0};
-  
-  F32 width = abs_f32(glyph_box.max.x - glyph_box.min.x);
-  F32 height = abs_f32(glyph_box.max.y - glyph_box.min.y);
-  ret.w = (U32)width + 1;
-  ret.h = (U32)height + 1;
-  
-  return ret;
-}
-
-#endif
 
 static U32* 
 ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32* out_h, Arena* allocator) 
