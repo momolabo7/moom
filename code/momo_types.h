@@ -333,7 +333,6 @@ _F64_NEG_INFINITY() {
 #define KB(n) ((1<<10) * n)
 #define MB(n) ((1<<20) * n)
 #define GB(n) ((1<<30) * n)
-#define foreach(i,l) for(UMI (i) = 0; (i) < array_count(l); ++(i)) 
 
 
 
