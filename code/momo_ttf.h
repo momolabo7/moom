@@ -23,8 +23,8 @@
 // TODO: remove this  
 #define NEW_TTF 1
 
-#ifndef MOMO_TTF_H
-#define MOMO_TTF_H
+#ifndef CORE_TTF_H
+#define CORE_TTF_H
 
 #ifndef ttf_log
 # define ttf_log(...)
@@ -1194,4 +1194,4 @@ cleanup_pre_restore_point:
 
 #endif
 
-#endif //MOMO_TTF_H
+#endif //CORE_TTF_H

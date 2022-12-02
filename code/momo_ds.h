@@ -1,5 +1,5 @@
-#ifndef MOMO_LISTS_H
-#define MOMO_LISTS_H
+#ifndef CORE_LISTS_H
+#define CORE_LISTS_H
 
 // Array Lists
 #define al_cap(l)           (array_count((l)->e))
@@ -37,4 +37,4 @@
 #define cll_remove(n)   (n)->prev->next = (n)->next, (n)->next->prev = (n)->prev;
 
 
-#endif //MOMO_LISTS_H
+#endif //CORE_LISTS_H

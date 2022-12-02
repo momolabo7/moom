@@ -1198,28 +1198,28 @@ mode_context	D:/work/git/txt/code/game.h	/^  void* mode_context;$/;"	m	language:
 mode_type	D:/work/git/txt/code/game_mode_computer.h	/^  Game_Mode_Type mode_type;$/;"	m	language:C++	struct:Computer_Selection	typeref:typename:Game_Mode_Type
 module_path	D:/work/git/txt/code/w32_loaded_code.h	/^  const char* module_path;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:const char *
 module_write_time	D:/work/git/txt/code/w32_loaded_code.h	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:W32_Loaded_Code	typeref:typename:LARGE_INTEGER
-MOMO_COLORS_H	D:/work/git/txt/code/momo_colors.h	/^#define MOMO_COLORS_H$/;"	d	language:C++
-MOMO_COMMON_H	D:/work/git/txt/code/momo_common.h	/^#define MOMO_COMMON_H$/;"	d	language:C++
-MOMO_CRC_H	D:/work/git/txt/code/momo_crc.h	/^#define MOMO_CRC_H$/;"	d	language:C++
-MOMO_EASING_H	D:/work/git/txt/code/momo_easing.h	/^#define MOMO_EASING_H$/;"	d	language:C++
-MOMO_H	D:/work/git/txt/code/momo.h	/^#define MOMO_H$/;"	d	language:C++
-MOMO_IMAGE_H	D:/work/git/txt/code/momo_image.h	/^#define MOMO_IMAGE_H$/;"	d	language:C++
-MOMO_INTRINSICS_H	D:/work/git/txt/code/momo_intrinsics.h	/^#define MOMO_INTRINSICS_H$/;"	d	language:C++
-MOMO_JSON	D:/work/git/txt/code/momo_json.h	/^#define MOMO_JSON$/;"	d	language:C++
-MOMO_LISTS_H	D:/work/git/txt/code/momo_lists.h	/^#define MOMO_LISTS_H$/;"	d	language:C++
-MOMO_MATRIX_H	D:/work/git/txt/code/momo_matrix.h	/^#define MOMO_MATRIX_H$/;"	d	language:C++
-MOMO_MEMORY_H	D:/work/git/txt/code/momo_memory.h	/^#define MOMO_MEMORY_H$/;"	d	language:C++
-MOMO_OS_H	D:/work/git/txt/code/momo_os.h	/^#define MOMO_OS_H$/;"	d	language:C++
-MOMO_PNG	D:/work/git/txt/code/momo_png.h	/^#define MOMO_PNG$/;"	d	language:C++
-MOMO_RANDOM_H	D:/work/git/txt/code/momo_rng.h	/^#define MOMO_RANDOM_H$/;"	d	language:C++
-MOMO_RECT_PACK_H	D:/work/git/txt/code/momo_rect_pack.h	/^#define MOMO_RECT_PACK_H$/;"	d	language:C++
-MOMO_SHAPES_H	D:/work/git/txt/code/momo_shapes.h	/^#define MOMO_SHAPES_H$/;"	d	language:C++
-MOMO_SORT_H	D:/work/git/txt/code/momo_sort.h	/^#define MOMO_SORT_H$/;"	d	language:C++
-MOMO_STREAM_H	D:/work/git/txt/code/momo_streams.h	/^#define MOMO_STREAM_H$/;"	d	language:C++
-MOMO_STRING_H	D:/work/git/txt/code/momo_strings.h	/^#define MOMO_STRING_H$/;"	d	language:C++
-MOMO_TTF_H	D:/work/git/txt/code/momo_ttf.h	/^#define MOMO_TTF_H$/;"	d	language:C++
-MOMO_VECTOR_H	D:/work/git/txt/code/momo_vectors.h	/^#define MOMO_VECTOR_H$/;"	d	language:C++
-MOMO_WAV_H	D:/work/git/txt/code/momo_wav.h	/^#define MOMO_WAV_H$/;"	d	language:C++
+CORE_COLORS_H	D:/work/git/txt/code/momo_colors.h	/^#define CORE_COLORS_H$/;"	d	language:C++
+CORE_COMMON_H	D:/work/git/txt/code/momo_common.h	/^#define CORE_COMMON_H$/;"	d	language:C++
+CORE_CRC_H	D:/work/git/txt/code/momo_crc.h	/^#define CORE_CRC_H$/;"	d	language:C++
+CORE_EASING_H	D:/work/git/txt/code/momo_easing.h	/^#define CORE_EASING_H$/;"	d	language:C++
+CORE_H	D:/work/git/txt/code/momo.h	/^#define CORE_H$/;"	d	language:C++
+CORE_IMAGE_H	D:/work/git/txt/code/momo_image.h	/^#define CORE_IMAGE_H$/;"	d	language:C++
+CORE_INTRINSICS_H	D:/work/git/txt/code/momo_intrinsics.h	/^#define CORE_INTRINSICS_H$/;"	d	language:C++
+CORE_JSON	D:/work/git/txt/code/momo_json.h	/^#define CORE_JSON$/;"	d	language:C++
+CORE_LISTS_H	D:/work/git/txt/code/momo_lists.h	/^#define CORE_LISTS_H$/;"	d	language:C++
+CORE_MATRIX_H	D:/work/git/txt/code/momo_matrix.h	/^#define CORE_MATRIX_H$/;"	d	language:C++
+CORE_MEMORY_H	D:/work/git/txt/code/momo_memory.h	/^#define CORE_MEMORY_H$/;"	d	language:C++
+CORE_OS_H	D:/work/git/txt/code/momo_os.h	/^#define CORE_OS_H$/;"	d	language:C++
+CORE_PNG	D:/work/git/txt/code/momo_png.h	/^#define CORE_PNG$/;"	d	language:C++
+CORE_RANDOM_H	D:/work/git/txt/code/momo_rng.h	/^#define CORE_RANDOM_H$/;"	d	language:C++
+CORE_RECT_PACK_H	D:/work/git/txt/code/momo_rect_pack.h	/^#define CORE_RECT_PACK_H$/;"	d	language:C++
+CORE_SHAPES_H	D:/work/git/txt/code/momo_shapes.h	/^#define CORE_SHAPES_H$/;"	d	language:C++
+CORE_SORT_H	D:/work/git/txt/code/momo_sort.h	/^#define CORE_SORT_H$/;"	d	language:C++
+CORE_STREAM_H	D:/work/git/txt/code/momo_streams.h	/^#define CORE_STREAM_H$/;"	d	language:C++
+CORE_STRING_H	D:/work/git/txt/code/momo_strings.h	/^#define CORE_STRING_H$/;"	d	language:C++
+CORE_TTF_H	D:/work/git/txt/code/momo_ttf.h	/^#define CORE_TTF_H$/;"	d	language:C++
+CORE_VECTOR_H	D:/work/git/txt/code/momo_vectors.h	/^#define CORE_VECTOR_H$/;"	d	language:C++
+CORE_WAV_H	D:/work/git/txt/code/momo_wav.h	/^#define CORE_WAV_H$/;"	d	language:C++
 mouse_pos	D:/work/git/txt/code/game_platform.h	/^  V2 mouse_pos;$/;"	m	language:C++	struct:__anon27c31d580708	typeref:typename:V2
 name	D:/work/git/txt/code/game_inspector.h	/^  String8 name;$/;"	m	language:C++	struct:Inspector_Entry	typeref:typename:String8
 NEW_TTF	D:/work/git/txt/code/momo_ttf.h	/^#define NEW_TTF /;"	d	language:C++

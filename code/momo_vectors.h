@@ -13,8 +13,8 @@
 // 
 
 
-#ifndef MOMO_VECTOR_H
-#define MOMO_VECTOR_H
+#ifndef CORE_VECTOR_H
+#define CORE_VECTOR_H
 
 
 union V2U {
@@ -409,4 +409,4 @@ static V3& operator*=(V3& lhs, F32 rhs) { return lhs = v3_scale(lhs, rhs); }
 #endif // IS_CPP
 
 
-#endif //MOMO_VECTOR_H
+#endif //CORE_VECTOR_H

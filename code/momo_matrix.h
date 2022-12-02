@@ -12,8 +12,8 @@
 // 
 
 
-#ifndef MOMO_MATRIX_H
-#define MOMO_MATRIX_H
+#ifndef CORE_MATRIX_H
+#define CORE_MATRIX_H
 
 struct M44 {
 	F32 e[4][4];
@@ -61,7 +61,7 @@ m44_transpose(M44 m) {
 	}
 	return ret;
 }
-static M44 m44_scale(F32 x, F32 y, F32 z = 1.f) {
+static M44 m44_scale(F32 x, F32 y, F32 z) {
 	M44 ret = {};
 	ret.e[0][0] = x;
 	ret.e[1][1] = y;
@@ -199,4 +199,4 @@ static M44 operator*(M44 lhs, M44 rhs) {
 #endif // IS_CPP
 
 
-#endif //MOMO_MATRIX_H
+#endif //CORE_MATRIX_H

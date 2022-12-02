@@ -13,8 +13,8 @@
 // - HSV support?
 // 
 
-#ifndef MOMO_COLORS_H
-#define MOMO_COLORS_H
+#ifndef CORE_COLORS_H
+#define CORE_COLORS_H
 
 
 // Each component of RGBA are in the range [0 - 1].
@@ -182,5 +182,5 @@ hsl_to_rgb(HSL c) {
 }
 
 
-#endif //MOMO_COLORS_H
+#endif //CORE_COLORS_H
 

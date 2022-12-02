@@ -1,5 +1,5 @@
-#ifndef MOMO_SORT_H
-#define MOMO_SORT_H
+#ifndef CORE_SORT_H
+#define CORE_SORT_H
 
 
 // Chances are that we won't be sorting 
@@ -65,4 +65,4 @@ quicksort(Sort_Entry* entries, U32 entry_count) {
 
 }
 
-#endif //MOMO_SORT_H
+#endif //CORE_SORT_H

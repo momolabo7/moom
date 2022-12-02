@@ -1,5 +1,5 @@
-#ifndef MOMO_SHAPES_H
-#define MOMO_SHAPES_H
+#ifndef CORE_SHAPES_H
+#define CORE_SHAPES_H
 
 
 typedef struct Rect2 {
@@ -87,4 +87,4 @@ bonk_tri2_pt2(V2 tp0, V2 tp1, V2 tp2, V2 pt) {
 
 
 
-#endif //MOMO_SHAPES_H
+#endif //CORE_SHAPES_H

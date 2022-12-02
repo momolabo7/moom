@@ -1,7 +1,7 @@
 /* date = March 7th 2022 1:08 pm */
 
-#ifndef MOMO_INTRINSICS_H
-#define MOMO_INTRINSICS_H
+#ifndef CORE_INTRINSICS_H
+#define CORE_INTRINSICS_H
 
 // Returns the old value before the exchange
 static U32 atomic_compare_assign_u32(U32 volatile* value, U32 new_value, U32 expected_value);
@@ -181,4 +181,4 @@ static F64 round_f64(F64 value) {
 }
 
 
-#endif //MOMO_INTRINSICS_H
+#endif //CORE_INTRINSICS_H

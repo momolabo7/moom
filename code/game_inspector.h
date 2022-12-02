@@ -3,28 +3,25 @@
 #ifndef GAME_INSPECTOR_H
 #define GAME_INSPECTOR_H
 
-#include "momo_lists.h"
-#include "momo_strings.h"
-
-enum Inspector_Entry_Type {
+typedef enum  {
   INSPECTOR_ENTRY_TYPE_F32,
   INSPECTOR_ENTRY_TYPE_U32,
-};
+} Inspector_Entry_Type;
 
-struct Inspector_Entry {
+typedef struct  {
   String8 name;
   Inspector_Entry_Type type;
   void* item;
-};
+} Inspector_Entry;
 
-struct Inspector_Entry_List {
+typedef struct  {
   U32 count;
   Inspector_Entry e[64];
-};
+} Inspector_Entry_List;
 
-struct Inspector {
+typedef struct {
   Inspector_Entry_List entries;
-};
+} Inspector;
 
 
 /////////////////////////////////////////////////////////////

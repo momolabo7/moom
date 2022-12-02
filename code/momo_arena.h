@@ -26,8 +26,8 @@
 //       It feels janky to have a Arena_Marker store an allocator like this. 
 //
 
-#ifndef MOMO_MEMORY_H
-#define MOMO_MEMORY_H
+#ifndef CORE_MEMORY_H
+#define CORE_MEMORY_H
 
 // Standard Linear allocator
 typedef struct {
@@ -176,4 +176,4 @@ arn_revert(Arena_Marker marker) {
   marker.allocator->pos = marker.old_pos;
 }
 
-#endif //MOMO_MEMORY_H
+#endif //CORE_MEMORY_H

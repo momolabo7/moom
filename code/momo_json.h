@@ -1,5 +1,5 @@
-#ifndef MOMO_JSON
-#define MOMO_JSON
+#ifndef CORE_JSON
+#define CORE_JSON
 
 
 typedef struct {
@@ -740,4 +740,4 @@ json_get_array(JSON_Object* j, String8 key) {
 
 
 
-#endif //MOMO_JSON
+#endif //CORE_JSON
