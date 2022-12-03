@@ -10,18 +10,10 @@
 //#include "scene_computer.cpp"
 //#include "scene_lit.cpp"
 
-#if 0
 
-static Moe_Mode_Tick moe_modes[] = {
-  splash_tick,
-  lit_tick,
-  computer_tick,
-  sandbox_tick,
-};
-#endif
-
-
-// TODO: Is this terrible?
-static Scene_Tick first_scene_tick = lit_tick;
+// NOTE(momo): Is this terrible?
+// It's kind of like allowing Scene layer to pick what the entry scene is. 
+// Maybe we can think of a better API.
+static Scene_Tick entry_scene_tick = lit_tick;
 
 #endif
