@@ -25,7 +25,7 @@ computer_add_selection(Computer* com, String8 text, Moe_Mode_Type mode_type) {
 }
 
 static void
-computer_tick(Game* moe)
+computer_tick(Moe* moe)
 {
   if (!moe_mode_initialized(moe)) {
     Computer* com = moe_allocate_mode(Computer, moe);

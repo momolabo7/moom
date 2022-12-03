@@ -19,8 +19,8 @@ moe_update_and_render(Platform* pf)
   // Initialization
   if (!platform->moe || platform->reloaded) {
     arn_clear(platform->moe_arena);
-    platform->moe = arn_push(Game, platform->moe_arena);
-    Game* moe = (Game*)platform->moe;
+    platform->moe = arn_push(Moe, platform->moe_arena);
+    Moe* moe = (Moe*)platform->moe;
 
     // around 32MB worth
     if (!arn_partition(platform->moe_arena, &moe->asset_arena, MB(20), 16)) 
@@ -71,7 +71,7 @@ moe_update_and_render(Platform* pf)
   }
  
   // Set globals from moe
-  Game* moe = (Game*)platform->moe;
+  Moe* moe = (Moe*)platform->moe;
   assets = &moe->assets;
   inspector = &moe->inspector;
   Console* console = &moe->console;
@@ -85,7 +85,7 @@ moe_update_and_render(Platform* pf)
 #endif
 
   
-  // Game state management
+  // Moe state management
   if (moe->is_mode_changed) {
     arn_clear(&moe->mode_arena);
     moe->mode_context = null;

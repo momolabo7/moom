@@ -320,7 +320,7 @@ lit_draw_lights(Lit* lit) {
 }
 
 static void 
-lit_draw_debug_light_rays(Lit* lit, Game* moe) {
+lit_draw_debug_light_rays(Lit* lit, Moe* moe) {
  
 
 #if LIT_DEBUG_LIGHT

@@ -1,4 +1,4 @@
-Game
+Moe
   sensor should take into account all sides of circle
   sensor should remove particles and just be 'glowing'
 

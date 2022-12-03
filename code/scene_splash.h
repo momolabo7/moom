@@ -11,7 +11,7 @@ struct Splash {
 };
 
 static void 
-splash_tick(Game* moe)
+splash_tick(Moe* moe)
 {
 
   if (!moe_mode_initialized(moe)) {

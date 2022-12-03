@@ -181,7 +181,7 @@ lit_fade_out_next_tutorial_text(Lit_Tutorial_Text_List* texts) {
 
 
 static void 
-lit_tick(Game* moe) 
+lit_tick(Moe* moe) 
 {
   Lit* m = (Lit*)moe->mode_context;
   if (!moe_mode_initialized(moe)) {

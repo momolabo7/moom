@@ -719,7 +719,7 @@ WinMain(HINSTANCE instance,
   defer { w32_unload_code(&gfx_code); };
 #endif  
 
-  //-Load Game Functions
+  //-Load Moe Functions
   Moe_Functions moe_functions = {};
   W32_Loaded_Code moe_code = {};
   moe_code.function_count = array_count(moe_function_names);
@@ -760,7 +760,7 @@ WinMain(HINSTANCE instance,
   // Platform setup
   make(Platform, pf);
  
-  // Game memory set up
+  // Moe memory set up
   make(Arena, moe_arena);
   if (!w32_allocate_memory_into_arena(moe_arena, MB(32))) return false;
   defer { w32_free_memory_from_arena(moe_arena); };
@@ -835,7 +835,7 @@ WinMain(HINSTANCE instance,
     }
     
     
-    //-Game logic
+    //-Moe logic
     if(moe_code.is_valid) { 
       moe_functions.update_and_render(pf);
     }

@@ -53,7 +53,7 @@ enum Moe_Show_Debug_Type {
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// Game Modes
+// Moe Modes
 enum Moe_Mode_Type {
   MOE_MODE_TYPE_SPLASH,
   MOE_MODE_TYPE_LIT,
@@ -63,7 +63,7 @@ enum Moe_Mode_Type {
 
 
 
-struct Game {
+struct Moe {
   Moe_Show_Debug_Type show_debug_type;
 
   F32 design_width;
@@ -94,24 +94,24 @@ struct Game {
 };
 
 static void 
-moe_goto_mode(Game* moe, Moe_Mode_Type type) {
+moe_goto_mode(Moe* moe, Moe_Mode_Type type) {
   moe->current_moe_mode = type;
   moe->is_mode_changed = true;
 }
 
 static B32
-moe_mode_initialized(Game* moe) {
+moe_mode_initialized(Moe* moe) {
   return moe->mode_context != null;
 }
 
 static void 
-moe_set_design_dims(Game* moe, F32 design_width, F32 design_height) {
+moe_set_design_dims(Moe* moe, F32 design_width, F32 design_height) {
   moe->design_width = design_width;
   moe->design_height = design_height;
 }
 
 static void*
-moe_allocate_mode_size(Game* moe, UMI size) {
+moe_allocate_mode_size(Moe* moe, UMI size) {
   arn_clear(&moe->mode_arena);
   moe->mode_context = arn_push_size(&moe->mode_arena, size, 16);
   return moe->mode_context;
@@ -125,7 +125,7 @@ moe_allocate_mode_size(Game* moe, UMI size) {
 #include "moe_mode_computer.h"
 #include "moe_mode_sandbox.h"
 
-typedef void (*Moe_Mode_Tick)(Game*);
+typedef void (*Moe_Mode_Tick)(Moe*);
 static Moe_Mode_Tick moe_modes[] = {
   splash_tick,
   lit_tick,
