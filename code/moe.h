@@ -54,16 +54,21 @@ enum Moe_Show_Debug_Type {
 
 /////////////////////////////////////////////////////////////////////////////
 // Moe Modes
+
+// TODO need to remove this
+#if 0
 enum Moe_Mode_Type {
   MOE_MODE_TYPE_SPLASH,
   MOE_MODE_TYPE_LIT,
   MOE_MODE_TYPE_COMPUTER,
   MOE_MODE_TYPE_SANDBOX,
 };
+#endif
 
 
+typedef void (*Scene_Tick)(struct Moe*);
 
-struct Moe {
+typedef struct Moe {
   Moe_Show_Debug_Type show_debug_type;
 
   F32 design_width;
@@ -73,14 +78,15 @@ struct Moe {
   Arena asset_arena;
   Arena frame_arena;
   Arena debug_arena;
-  Arena mode_arena;
+  Arena scene_arena;
   
 
   // Mode Management 
   B32 is_done;
-  B32 is_mode_changed;
-  void* mode_context;
-  Moe_Mode_Type current_moe_mode;
+  B32 is_scene_changed;
+  void* scene_context;
+  Scene_Tick scene_tick;
+  //Moe_Mode_Type current_moe_scene;
 
   // Other stuff
   Moe_Assets assets;
@@ -91,17 +97,17 @@ struct Moe {
   // Interested moe assets
   Moe_Sprite_ID blank_sprite;
   Moe_Font_ID debug_font;
-};
+} Moe;
 
 static void 
-moe_goto_mode(Moe* moe, Moe_Mode_Type type) {
-  moe->current_moe_mode = type;
-  moe->is_mode_changed = true;
+moe_goto_scene(Moe* moe, Scene_Tick scene_tick) {
+  moe->scene_tick = scene_tick;
+  moe->is_scene_changed = true;
 }
 
 static B32
-moe_mode_initialized(Moe* moe) {
-  return moe->mode_context != null;
+moe_is_scene_initialized(Moe* moe) {
+  return moe->scene_context != null;
 }
 
 static void 
@@ -111,27 +117,17 @@ moe_set_design_dims(Moe* moe, F32 design_width, F32 design_height) {
 }
 
 static void*
-moe_allocate_mode_size(Moe* moe, UMI size) {
-  arn_clear(&moe->mode_arena);
-  moe->mode_context = arn_push_size(&moe->mode_arena, size, 16);
-  return moe->mode_context;
+moe_allocate_scene_size(Moe* moe, UMI size) {
+  arn_clear(&moe->scene_arena);
+  moe->scene_context = arn_push_size(&moe->scene_arena, size, 16);
+  return moe->scene_context;
 }
 
-#define moe_allocate_mode(t,g) (t*)moe_allocate_mode_size(g,sizeof(t))
+#define moe_allocate_scene(t,g) (t*)moe_allocate_scene_size(g,sizeof(t))
 
 
-#include "moe_mode_splash.h"
-#include "moe_mode_lit.h"
-#include "moe_mode_computer.h"
-#include "moe_mode_sandbox.h"
+#include "scene.h"
 
-typedef void (*Moe_Mode_Tick)(Moe*);
-static Moe_Mode_Tick moe_modes[] = {
-  splash_tick,
-  lit_tick,
-  computer_tick,
-  sandbox_tick,
-};
 
 
 #endif //MOE_H

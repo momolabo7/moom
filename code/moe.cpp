@@ -25,7 +25,7 @@ moe_update_and_render(Platform* pf)
     // around 32MB worth
     if (!arn_partition(platform->moe_arena, &moe->asset_arena, MB(20), 16)) 
       return false;
-    if (!arn_partition(platform->moe_arena, &moe->mode_arena, MB(5), 16)) 
+    if (!arn_partition(platform->moe_arena, &moe->scene_arena, MB(5), 16)) 
       return false; 
     if (!arn_partition(platform->moe_arena, &moe->debug_arena, MB(1), 16)) 
       return false;
@@ -47,11 +47,11 @@ moe_update_and_render(Platform* pf)
       moe->debug_font = find_best_font(&moe->assets, asset_group(FONTS), match);
     }
 
-    moe_goto_mode(moe, MOE_MODE_TYPE_LIT);
+    moe_goto_scene(moe, first_scene_tick);
 
     
-    //moe_set_mode(moe, splash_init, splash_tick);
-    //moe_set_mode(moe, lit_init, lit_tick);
+    //moe_set_scene(moe, splash_init, splash_tick);
+    //moe_set_scene(moe, lit_init, lit_tick);
     
     // Initialize Debug Console
     Console* console = &moe->console;
@@ -78,7 +78,7 @@ moe_update_and_render(Platform* pf)
 
  
 #if 0
-  // TODO: should probably be in modes instead
+  // TODO: should probably be in scenes instead
   insp_clear(inspector);
   static U32 test_value = 32;
   insp_add_u32(in, str8_from_lit("Test"), &test_value);
@@ -86,12 +86,12 @@ moe_update_and_render(Platform* pf)
 
   
   // Moe state management
-  if (moe->is_mode_changed) {
-    arn_clear(&moe->mode_arena);
-    moe->mode_context = null;
-    moe->is_mode_changed = false;
+  if (moe->is_scene_changed) {
+    arn_clear(&moe->scene_arena);
+    moe->scene_context = null;
+    moe->is_scene_changed = false;
   }
-  moe_modes[moe->current_moe_mode](moe);
+  moe->scene_tick(moe);
 
   // Debug Rendering Stuff
   if (pf_is_button_poked(platform->button_console)) {

@@ -88,8 +88,9 @@ circle_to_finite_line_resp(V2 circle_center, F32 circle_radius, V2 line_min, V2 
 
 
 
-#include "moe_mode_lit_world.h"
-#include "moe_mode_lit_entity.h"
+#include "scene_lit_world.h"
+#include "scene_lit_entity.h"
+
 typedef enum {
   LIT_STATE_TYPE_TRANSITION_IN,
   LIT_STATE_TYPE_TRANSITION_OUT,
@@ -125,8 +126,8 @@ typedef struct Lit {
 } Lit;
 
 // TODO: combine world and light to one file?
-#include "moe_mode_lit_world.cpp"
-#include "moe_mode_lit_entity.cpp"
+#include "scene_lit_world.cpp"
+#include "scene_lit_entity.cpp"
 
 static Lit_Tutorial_Text*
 lit_push_tutorial_text(Lit_Tutorial_Text_List* texts, String8 str, F32 x, F32 y) {
@@ -176,16 +177,16 @@ lit_fade_out_next_tutorial_text(Lit_Tutorial_Text_List* texts) {
  
 }
 
-#include "moe_mode_lit_levels.h"
+#include "scene_lit_levels.h"
 
 
 
 static void 
 lit_tick(Moe* moe) 
 {
-  Lit* m = (Lit*)moe->mode_context;
-  if (!moe_mode_initialized(moe)) {
-    m = moe_allocate_mode(Lit, moe);
+  Lit* m = (Lit*)moe->scene_context;
+  if (!moe_is_scene_initialized(moe)) {
+    m = moe_allocate_scene(Lit, moe);
     lit_load_level(m, 0); 
     m->rng = rng_create(65535);
     m->state = LIT_STATE_TYPE_TRANSITION_IN;
