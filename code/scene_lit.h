@@ -276,7 +276,7 @@ lit_tick(Moe* moe)
   //////////////////////////////////////////////////////////
   // Rendering
   //
-  gfx_push_blend(gfx, 
+  gfx_push_blend(platform->gfx, 
                  GFX_BLEND_TYPE_SRC_ALPHA,
                  GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
@@ -285,7 +285,7 @@ lit_tick(Moe* moe)
   lit_draw_player(m);
   lit_draw_lights(m);
   
-  gfx_push_blend(gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_INV_SRC_ALPHA); 
+  gfx_push_blend(platform->gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
   lit_render_sensors(m); 
   lit_render_particles(m);
@@ -349,21 +349,21 @@ lit_tick(Moe* moe)
     switch(text->state) {
       case LIT_TUTORIAL_TEXT_STATE_VISIBLE: {
         paint_text(m->tutorial_font, text->str, RGBA_WHITE, text->pos_x, text->pos_y, 32.f);
-        gfx_advance_depth(gfx);
+        gfx_advance_depth(platform->gfx);
       } break;
       case LIT_TUTORIAL_TEXT_STATE_FADE_IN: {
         F32 a = ease_out_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
         F32 y = text->pos_y + (1.f-a) * 32.f;
         RGBA color = rgba_set(1.f, 1.f, 1.f, text->alpha);
         paint_text(m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
-        gfx_advance_depth(gfx);
+        gfx_advance_depth(platform->gfx);
       } break;
       case LIT_TUTORIAL_TEXT_STATE_FADE_OUT: {
         F32 a = ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
         F32 y = text->pos_y + a * 32.f;
         RGBA color = rgba_set(1.f, 1.f, 1.f, text->alpha);
         paint_text(m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
-        gfx_advance_depth(gfx);
+        gfx_advance_depth(platform->gfx);
       } break;
     }
   }
@@ -372,7 +372,7 @@ lit_tick(Moe* moe)
   {
     RGBA color = rgba_set(0.f, 0.f, 0.f, m->stage_fade);
     paint_sprite(m->blank_sprite, v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), v2_set(MOE_WIDTH, MOE_HEIGHT), color);
-    gfx_advance_depth(gfx);
+    gfx_advance_depth(platform->gfx);
   }
 }
 

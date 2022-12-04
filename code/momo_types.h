@@ -325,16 +325,24 @@ _F64_NEG_INFINITY() {
 #define make(t, name) \
   t glue(name##_,__LINE__) = {0}; \
   t* name = &(glue(name##_,__LINE__))
+
+
 // These need to be macros instead of function
 // because I don't want these to return or take in to a specific strict type.
 // Returning a strict type almost always end up requiring an explicit
 // conversion on the user side.
 // 
-#define KB(n) ((1<<10) * n)
-#define MB(n) ((1<<20) * n)
-#define GB(n) ((1<<30) * n)
+#define kilobytes(n) ((1<<10) * n)
+#define megabytes(n) ((1<<20) * n)
+#define gigabytes(n) ((1<<30) * n)
 
+#define hundreds(x) ((x) * 100) 
+#define thousands(x) ((x) * 1000)
 
+// bit manipulation
+#define bit_is_set(mask,bit) ((mask) & ((U64)1 << (bit)))
+#define bit_set(mask, bit) ((mask) |= ((U64)1 << (bit)))
+#define bit_unset(mask, bit) ((mask) &= ~((U64)1 << (bit)))
 
 //  
 // NOTE(Momo): It's ridiculous how much goes into the implementation of 

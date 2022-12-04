@@ -124,7 +124,7 @@ lit_draw_player(Lit* lit){
   paint_sprite(lit->circle_sprite, 
                player->pos, 
                v2_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-  gfx_advance_depth(gfx);
+  gfx_advance_depth(platform->gfx);
 
 }
 
@@ -198,7 +198,7 @@ lit_render_particles(Lit* lit) {
     size.h = lerp_f32(p->size_start.h , p->size_end.h, lifespan_ratio);
 
     paint_sprite(lit->filled_circle_sprite, p->pos, size, color);
-    gfx_advance_depth(gfx);
+    gfx_advance_depth(platform->gfx);
   }
 }
 
@@ -302,7 +302,7 @@ lit_render_sensors(Lit* lit) {
   al_foreach(sensor_index, sensors)
   {
     Lit_Sensor* sensor = al_at(sensors, sensor_index);
-    gfx_push_filled_circle(gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, rgba_hex(sensor->target_color)); 
+    gfx_push_filled_circle(platform->gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, rgba_hex(sensor->target_color)); 
 
     // only for debugging
 #if 0
@@ -317,6 +317,6 @@ lit_render_sensors(Lit* lit) {
                32.f);
 #endif
 
-    gfx_advance_depth(gfx);
+    gfx_advance_depth(platform->gfx);
   }
 }

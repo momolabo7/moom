@@ -4,6 +4,7 @@
 #define MOE_H
 
 #include "momo.h"
+#include "karu.h"
 
 // NOTE(Momo): These are 'interfaces'
 #include "moe_platform.h"
@@ -26,7 +27,8 @@ static struct Profiler* profiler;
 #endif 
 
 static Platform* platform;
-static Gfx* gfx;
+//static Gfx* gfx;
+
 
 
 #include "moe_profiler.h"
@@ -36,9 +38,6 @@ static Gfx* gfx;
 static Moe_Assets* assets;
 static Inspector* inspector;
 
-#include "moe_asset_rendering.h"
-#include "moe_inspector_rendering.h"
-#include "moe_profiler_rendering.h"
 #include "moe_console.h"
 
 
@@ -52,25 +51,13 @@ enum Moe_Show_Debug_Type {
   MOE_SHOW_DEBUG_MAX
 };
 
-/////////////////////////////////////////////////////////////////////////////
-// Moe Modes
-
-// TODO need to remove this
-#if 0
-enum Moe_Mode_Type {
-  MOE_MODE_TYPE_SPLASH,
-  MOE_MODE_TYPE_LIT,
-  MOE_MODE_TYPE_COMPUTER,
-  MOE_MODE_TYPE_SANDBOX,
-};
-#endif
-
 
 typedef void (*Scene_Tick)(struct Moe*);
 
 typedef struct Moe {
   Moe_Show_Debug_Type show_debug_type;
 
+  
   F32 design_width;
   F32 design_height;
     
@@ -92,12 +79,20 @@ typedef struct Moe {
   Moe_Assets assets;
   Console console;
   Inspector inspector;
-  Profiler profiler;
+  Profiler* profiler;
 
   // Interested moe assets
   Moe_Sprite_ID blank_sprite;
   Moe_Font_ID debug_font;
 } Moe;
+
+
+#include "moe_assets.cpp"
+#include "moe_asset_rendering.h"
+#include "moe_inspector_rendering.h"
+#include "moe_profiler_rendering.h"
+#include "moe_console.cpp"
+
 
 static void 
 moe_goto_scene(Moe* moe, Scene_Tick scene_tick) {
@@ -117,15 +112,18 @@ moe_set_design_dims(Moe* moe, F32 design_width, F32 design_height) {
 }
 
 static void*
-moe_allocate_scene_size(Moe* moe, UMI size) {
+_moe_allocate_scene_size(Moe* moe, UMI size) {
   arn_clear(&moe->scene_arena);
   moe->scene_context = arn_push_size(&moe->scene_arena, size, 16);
   return moe->scene_context;
 }
 
-#define moe_allocate_scene(t,g) (t*)moe_allocate_scene_size(g,sizeof(t))
 
 
+#define moe_allocate_scene(t,g) (t*)_moe_allocate_scene_size(g,sizeof(t))
+
+// some scene apis
+#define scene_set_entry(entry) static Scene_Tick moe_entry_scene = (entry)
 #include "scene.h"
 
 

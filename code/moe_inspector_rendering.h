@@ -12,7 +12,7 @@ update_and_render_inspector(Moe_Sprite_ID rect_sprite, Moe_Font_ID font)
                v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
                v2_set(MOE_WIDTH, MOE_HEIGHT),
                {0.f, 0.f, 0.f, 0.5f});
-  gfx_advance_depth(gfx);
+  gfx_advance_depth(platform->gfx);
   
   F32 line_height = 32.f;
   sb8_make(sb, 256);
@@ -43,7 +43,7 @@ update_and_render_inspector(Moe_Sprite_ID rect_sprite, Moe_Font_ID font)
                0.f, 
                y, 
                line_height);
-    gfx_advance_depth(gfx);
+    gfx_advance_depth(platform->gfx);
     
     
   }

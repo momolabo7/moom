@@ -14,7 +14,7 @@ paint_sprite(Moe_Sprite_ID sprite_id,
   Moe_Bitmap* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);
   V2 anchor = {0.5f, 0.5f}; 
   
-  gfx_push_sprite(gfx, 
+  gfx_push_sprite(platform->gfx, 
                   color,
                   pos, size, anchor,
                   bitmap->renderer_texture_handle, 
@@ -56,7 +56,7 @@ paint_text(Moe_Font_ID font_id,
     V2 pos = { px + (glyph->box.min.x*font_height), py + (glyph->box.min.y*font_height)};
     V2 size = { width, height };
     V2 anchor = {0.f, 0.f}; // bottom left
-    gfx_push_sprite(gfx, 
+    gfx_push_sprite(platform->gfx, 
                     color,
                     pos, size, anchor,
                     bitmap->renderer_texture_handle, 
@@ -112,7 +112,7 @@ paint_text_center_aligned(Moe_Font_ID font_id,
     V2 pos = v2_set(px + (glyph->box.min.x*font_height), py + (glyph->box.min.y*font_height));
     V2 size = v2_set(width, height);
     V2 anchor = v2_set(0.f, 0.f); // bottom left
-    gfx_push_sprite(gfx, 
+    gfx_push_sprite(platform->gfx, 
                     color,
                     pos, size, anchor,
                     bitmap->renderer_texture_handle, 

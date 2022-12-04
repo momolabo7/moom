@@ -53,7 +53,7 @@ update_and_render_profiler(Moe_Sprite_ID blank_sprite, Moe_Font_ID font)
                v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
                v2_set(MOE_WIDTH, MOE_HEIGHT),
                rgba_set(0.f, 0.f, 0.f, 0.5f));
-  gfx_advance_depth(gfx);
+  gfx_advance_depth(platform->gfx);
   
   U32 line_num = 1;
   
@@ -103,7 +103,7 @@ update_and_render_profiler(Moe_Sprite_ID blank_sprite, Moe_Font_ID font)
                0.f, 
                render_height - font_height * (line_num), 
                font_height);
-    gfx_advance_depth(gfx);
+    gfx_advance_depth(platform->gfx);
     
     
     // Draw graph
@@ -131,7 +131,7 @@ update_and_render_profiler(Moe_Sprite_ID blank_sprite, Moe_Font_ID font)
                    size,
                    rgba_hex(0x00FF00FF));
     }
-    gfx_advance_depth(gfx);
+    gfx_advance_depth(platform->gfx);
     ++line_num;
     
   }

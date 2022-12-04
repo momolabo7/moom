@@ -23,7 +23,7 @@
 //   - Rethink 'Temporary Memory API'. 
 //       Maybe remove the whole thing? 
 //       We can just  do a 'get_current_pos' and 'pop to pos'.
-//       It feels janky to have a Arena_Marker store an allocator like this. 
+//       It feels janky to have a Arena_Marker store an arena like this. 
 //
 
 #ifndef MOMO_ARENA_H
@@ -35,9 +35,9 @@ typedef struct Arena {
 	UMI cap;
 } Arena;
 
-// Temporary memory API used to arn_revert an allocator to an original state;
+// Temporary memory API used to arn_revert an arena to an original state;
 typedef struct Arena_Marker {
-  Arena* allocator;
+  Arena* arena;
   UMI old_pos;
 } Arena_Marker;
 
@@ -69,7 +69,7 @@ static void arn_revert(Arena_Marker marker);
   auto _arn_marker_##l = arn_mark(a); \
   defer{arn_revert(_arn_marker_##l);};
 # define _arn_set_revert_point(a,l) __arn_set_revert_point(a,l)
-# define arn_set_revert_point(allocator) _arn_set_revert_point(allocator, __LINE__) 
+# define arn_set_revert_point(arena) _arn_set_revert_point(arena, __LINE__) 
 #endif // IS_CPP
 
 static void
@@ -165,14 +165,14 @@ Arena_BootBlock(UMI struct_size,
 static Arena_Marker
 arn_mark(Arena* a) {
   Arena_Marker ret;
-  ret.allocator = a;
+  ret.arena = a;
   ret.old_pos = a->pos;
   return ret;
 }
 
 static void
 arn_revert(Arena_Marker marker) {
-  marker.allocator->pos = marker.old_pos;
+  marker.arena->pos = marker.old_pos;
 }
 
-#endif //MOMO_MEMORY_H
+#endif 

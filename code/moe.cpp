@@ -9,7 +9,6 @@ moe_update_and_render(Platform* pf)
 { 
   // Set globals from platform
   platform = pf;
-  gfx = platform->gfx;
 #if INTERNAL
   profiler = platform->profiler;
 #endif
@@ -23,18 +22,19 @@ moe_update_and_render(Platform* pf)
     Moe* moe = (Moe*)platform->moe;
 
     // around 32MB worth
-    if (!arn_partition(platform->moe_arena, &moe->asset_arena, MB(20), 16)) 
+    if (!arn_partition(platform->moe_arena, &moe->asset_arena, megabytes(20), 16)) 
       return false;
-    if (!arn_partition(platform->moe_arena, &moe->scene_arena, MB(5), 16)) 
+    if (!arn_partition(platform->moe_arena, &moe->scene_arena, megabytes(5), 16)) 
       return false; 
-    if (!arn_partition(platform->moe_arena, &moe->debug_arena, MB(1), 16)) 
+    if (!arn_partition(platform->moe_arena, &moe->debug_arena, megabytes(1), 16)) 
       return false;
-    if (!arn_partition(platform->moe_arena, &moe->frame_arena, MB(1), 16)) 
+    if (!arn_partition(platform->moe_arena, &moe->frame_arena, megabytes(1), 16)) 
       return false;
     
-    if(!init_moe_assets(&moe->assets, 
-                         "test_pack.sui",
-                         &moe->asset_arena))
+    if(!moe_init_assets(moe,
+                        &moe->assets, 
+                        "test_pack.sui",
+                        &moe->asset_arena))
     {
       return false;
     }
@@ -47,7 +47,7 @@ moe_update_and_render(Platform* pf)
       moe->debug_font = find_best_font(&moe->assets, asset_group(FONTS), match);
     }
 
-    moe_goto_scene(moe, first_scene_tick);
+    moe_goto_scene(moe, moe_entry_scene);
 
     
     //moe_set_scene(moe, splash_init, splash_tick);
@@ -63,8 +63,10 @@ moe_update_and_render(Platform* pf)
     // Inform platform what our moe's dimensions are
     platform->set_moe_dims(MOE_WIDTH, MOE_HEIGHT);
 
+    // Systems
+
     // set up view for moe
-    gfx_push_view(gfx, 0.f, MOE_WIDTH, 0.f, MOE_HEIGHT, 0.f, 0.f);
+    gfx_push_view(platform->gfx, 0.f, MOE_WIDTH, 0.f, MOE_HEIGHT, 0.f, 0.f);
 
     moe_log("Initialized!");
    

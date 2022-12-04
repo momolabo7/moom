@@ -296,11 +296,11 @@ lit_draw_lights(Lit* lit) {
                  light->pos,
                  {16.f, 16.f},
                  {0.8f, 0.8f, 0.8f, 1.f});
-    gfx_advance_depth(gfx);
+    gfx_advance_depth(platform->gfx);
   }
  
   // Lights
-  gfx_push_blend(gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_ONE); 
+  gfx_push_blend(platform->gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_ONE); 
   
   al_foreach(light_index, lights)
   {
@@ -308,13 +308,13 @@ lit_draw_lights(Lit* lit) {
     al_foreach(tri_index, &l->triangles)
     {
       Lit_Light_Triangle* lt = al_at(&l->triangles, tri_index);
-      gfx_push_filled_triangle(gfx, 
+      gfx_push_filled_triangle(platform->gfx, 
                                rgba_hex(l->color),
                                lt->p0,
                                lt->p1,
                                lt->p2);
     } 
-    gfx_advance_depth(gfx);
+    gfx_advance_depth(platform->gfx);
   }
 
 }
@@ -334,9 +334,9 @@ lit_draw_debug_light_rays(Lit* lit, Moe* moe) {
       Ray2 light_ray = player->held_light->debug_rays.e[light_ray_index];
       
       Line2 line = line2_set(player->pos, player->pos + light_ray_dir);
-      gfx_push_line(gfx, line, 1.f, hex_to_rgba(0x00FFFFFF));
+      gfx_push_line(platform->gfx, line, 1.f, hex_to_rgba(0x00FFFFFF));
     }
-    gfx_advance_depth(gfx);
+    gfx_advance_depth(platform->gfx);
    
     Sort_Entry* sorted_its = arn_push_arr(Sort_Entry, &moe->frame_arena, l->intersections.count);
     assert(sorted_its);
@@ -373,10 +373,10 @@ lit_draw_debug_light_rays(Lit* lit, Moe* moe) {
                  line_max.x,
                  line_max.y + 10.f,
                  12.f);
-      gfx_push_line(gfx, line, 1.f, hex_to_rgba(0xFF0000FF));
+      gfx_push_line(platform->gfx, line, 1.f, hex_to_rgba(0xFF0000FF));
       
     }
-    gfx_advance_depth(gfx);
+    gfx_advance_depth(platform->gfx);
   }
 #endif
 }
@@ -394,8 +394,8 @@ lit_draw_edges(Lit* lit) {
     if (edge->is_disabled) continue;
     
 
-    gfx_push_line(gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
+    gfx_push_line(platform->gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
   }
-  gfx_advance_depth(gfx);
+  gfx_advance_depth(platform->gfx);
 }
 
