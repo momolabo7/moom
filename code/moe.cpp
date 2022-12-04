@@ -9,10 +9,6 @@ moe_update_and_render(Platform* pf)
 { 
   // Set globals from platform
   platform = pf;
-#if INTERNAL
-  profiler = platform->profiler;
-#endif
-
 
   moe_profile_block(GAME);
   // Initialization
@@ -31,10 +27,7 @@ moe_update_and_render(Platform* pf)
     if (!arn_partition(platform->moe_arena, &moe->frame_arena, megabytes(1), 16)) 
       return false;
     
-    if(!moe_init_assets(moe,
-                        &moe->assets, 
-                        "test_pack.sui",
-                        &moe->asset_arena))
+    if(!moe_init_assets(moe, "test_pack.sui"))
     {
       return false;
     }
@@ -48,10 +41,6 @@ moe_update_and_render(Platform* pf)
     }
 
     moe_goto_scene(moe, moe_entry_scene);
-
-    
-    //moe_set_scene(moe, splash_init, splash_tick);
-    //moe_set_scene(moe, lit_init, lit_tick);
     
     // Initialize Debug Console
     Console* console = &moe->console;

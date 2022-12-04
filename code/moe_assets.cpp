@@ -10,7 +10,7 @@ moe_init_assets(Moe* moe, const char* filename)
 {
 
   Arena* arena = &moe->asset_arena;
-  Moe_Assets* assets = &moe->assets;
+  Moe_Assets* ma = &moe->assets;
 
   make(Platform_File, file);
   B32 ok = platform->open_file(file,
@@ -25,20 +25,20 @@ moe_init_assets(Moe* moe, const char* filename)
   if (karu_header.signature != KARU_SIGNATURE) return false;
 
   // Allocation for asset components (asset slots and tags)
-  ga->assets = arn_push_arr(Moe_Asset, arena, karu_header.asset_count);
-  if (!ga->assets) return false;
-  ga->asset_count = karu_header.asset_count;
+  ma->assets = arn_push_arr(Moe_Asset, arena, karu_header.asset_count);
+  if (!ma->assets) return false;
+  ma->asset_count = karu_header.asset_count;
   
-  ga->tags = arn_push_arr(Moe_Asset_Tag, arena, karu_header.tag_count);
-  if (!ga->tags) return false;
-  ga->tag_count = karu_header.tag_count;
+  ma->tags = arn_push_arr(Moe_Asset_Tag, arena, karu_header.tag_count);
+  if (!ma->tags) return false;
+  ma->tag_count = karu_header.tag_count;
 
   // Fill data for tags
   for (U32 tag_index = 0;
-       tag_index < ga->tag_count; 
+       tag_index < ma->tag_count; 
        ++tag_index) 
   {
-    Moe_Asset_Tag* tag = ga->tags + tag_index;
+    Moe_Asset_Tag* tag = ma->tags + tag_index;
     UMI offset_to_tag = karu_header.offset_to_tags + sizeof(Karu_Tag)*tag_index;
 
     Karu_Tag karu_tag;
@@ -53,7 +53,7 @@ moe_init_assets(Moe* moe, const char* filename)
       group_index < karu_header.group_count;
       ++group_index) 
   {
-    Moe_Asset_Group* group = ga->groups + group_index;
+    Moe_Asset_Group* group = ma->groups + group_index;
     {
       // Look for corresponding Sui_Moe_Asset_Group in file
       Karu_Group karu_group;
@@ -76,7 +76,7 @@ moe_init_assets(Moe* moe, const char* filename)
          asset_index < group->one_past_last_asset_index;
          ++asset_index) 
     {
-      Moe_Asset* asset = ga->assets + asset_index;
+      Moe_Asset* asset = ma->assets + asset_index;
        
       Karu_Asset karu_asset;
       UMI offset_to_karu_asset = 
@@ -190,16 +190,16 @@ moe_init_assets(Moe* moe, const char* filename)
 }
 
 static U32
-find_first_asset_of_type(Moe_Assets* ga, 
+find_first_asset_of_type(Moe_Assets* ma, 
                         Moe_Asset_Group_Type group_type, 
                         Moe_Asset_Type type) 
 {
-  Moe_Asset_Group* group = ga->groups + group_type;
+  Moe_Asset_Group* group = ma->groups + group_type;
   for (U32 asset_index = group->first_asset_index;
        asset_index != group->one_past_last_asset_index;
        ++asset_index ) 
   {
-    Moe_Asset* asset = ga->assets + asset_index;
+    Moe_Asset* asset = ma->assets + asset_index;
     if (asset->type == type) {
       return asset_index;      
     }
@@ -208,19 +208,19 @@ find_first_asset_of_type(Moe_Assets* ga,
 }
 
 static U32 
-find_best_asset_of_type(Moe_Assets* ga, 
+find_best_asset_of_type(Moe_Assets* ma, 
                         Moe_Asset_Group_Type group_type, 
                         Moe_Asset_Type asset_type,
                         Moe_Asset_Match* vector)
 {
   U32 ret = 0;
   F32 best_diff = F32_INFINITY;
-  Moe_Asset_Group* group = ga->groups + group_type;
+  Moe_Asset_Group* group = ma->groups + group_type;
   for (U32 asset_index = group->first_asset_index;
        asset_index != group->one_past_last_asset_index;
        ++asset_index ) 
   {
-    Moe_Asset* asset = ga->assets + asset_index;
+    Moe_Asset* asset = ma->assets + asset_index;
     if (asset->type != asset_type) {
       continue;
     }
@@ -230,7 +230,7 @@ find_best_asset_of_type(Moe_Assets* ga,
         tag_index < asset->one_past_last_tag_index;
         ++tag_index) 
     {
-      Moe_Asset_Tag* tag = ga->tags + tag_index;
+      Moe_Asset_Tag* tag = ma->tags + tag_index;
       F32 difference = vector->e[tag->type].tag_value_to_match - tag->value;
       F32 weighted = vector->e[tag->type].tag_weight*abs_f32(difference);
       total_weighted_diff = weighted;
@@ -281,60 +281,60 @@ get_glyph(Moe_Font* font, U32 codepoint) {
 }
 
 static Moe_Asset*
-get_asset(Moe_Assets* ga, U32 asset_index){
-  return ga->assets + asset_index;
+get_asset(Moe_Assets* ma, U32 asset_index){
+  return ma->assets + asset_index;
 }
 
 static Moe_Bitmap*
-get_bitmap(Moe_Assets* ga, Moe_Bitmap_ID bitmap_id) {
-  Moe_Asset* asset = get_asset(ga, bitmap_id.value);
+get_bitmap(Moe_Assets* ma, Moe_Bitmap_ID bitmap_id) {
+  Moe_Asset* asset = get_asset(ma, bitmap_id.value);
   if(asset->type != MOE_ASSET_TYPE_BITMAP) return null;
   return &asset->bitmap;
 }
 
 static Moe_Sprite*
-get_sprite(Moe_Assets* ga, Moe_Sprite_ID sprite_id) {
-  Moe_Asset* asset = get_asset(ga, sprite_id.value);
+get_sprite(Moe_Assets* ma, Moe_Sprite_ID sprite_id) {
+  Moe_Asset* asset = get_asset(ma, sprite_id.value);
   if(asset->type != MOE_ASSET_TYPE_SPRITE) return null;
   return &asset->sprite;
 }
 
 static Moe_Font*
-get_font(Moe_Assets* ga, Moe_Font_ID font_id) {
-  Moe_Asset* asset = get_asset(ga, font_id.value);
+get_font(Moe_Assets* ma, Moe_Font_ID font_id) {
+  Moe_Asset* asset = get_asset(ma, font_id.value);
   if(asset->type != MOE_ASSET_TYPE_FONT) return null;
   return &asset->font;
 }
 static Moe_Bitmap_ID
-find_first_bitmap(Moe_Assets* ga, Moe_Asset_Group_Type group_type) {
-  return { find_first_asset_of_type(ga, group_type, MOE_ASSET_TYPE_BITMAP) };
+find_first_bitmap(Moe_Assets* ma, Moe_Asset_Group_Type group_type) {
+  return { find_first_asset_of_type(ma, group_type, MOE_ASSET_TYPE_BITMAP) };
 }
 
 static Moe_Font_ID
-find_first_font(Moe_Assets* ga, Moe_Asset_Group_Type group_type) {
-  return { find_first_asset_of_type(ga, group_type, MOE_ASSET_TYPE_FONT) };
+find_first_font(Moe_Assets* ma, Moe_Asset_Group_Type group_type) {
+  return { find_first_asset_of_type(ma, group_type, MOE_ASSET_TYPE_FONT) };
 }
 
 static Moe_Sprite_ID
-find_first_sprite(Moe_Assets* ga, Moe_Asset_Group_Type group_type) {
-  return { find_first_asset_of_type(ga, group_type, MOE_ASSET_TYPE_SPRITE) };
+find_first_sprite(Moe_Assets* ma, Moe_Asset_Group_Type group_type) {
+  return { find_first_asset_of_type(ma, group_type, MOE_ASSET_TYPE_SPRITE) };
 }
 
 static Moe_Sprite_ID
-find_best_sprite(Moe_Assets* ga, 
+find_best_sprite(Moe_Assets* ma, 
                  Moe_Asset_Group_Type group_type, 
                  Moe_Asset_Match* match_vector)
 {
-  return { find_best_asset_of_type(ga, group_type, MOE_ASSET_TYPE_SPRITE, match_vector) };
+  return { find_best_asset_of_type(ma, group_type, MOE_ASSET_TYPE_SPRITE, match_vector) };
   
 }
 
 static Moe_Font_ID
-find_best_font(Moe_Assets* ga, 
+find_best_font(Moe_Assets* ma, 
                Moe_Asset_Group_Type group_type, 
                Moe_Asset_Match* match_vector)
 {
-  return { find_best_asset_of_type(ga, group_type, MOE_ASSET_TYPE_FONT, match_vector) };
+  return { find_best_asset_of_type(ma, group_type, MOE_ASSET_TYPE_FONT, match_vector) };
   
 }
 
