@@ -6,11 +6,11 @@ get_next_texture_handle() {
 }
 
 static B32 
-moe_init_assets(Moe* moe,
-                Moe_Assets* ga, 
-                const char* filename,
-                Arena* arena) 
+moe_init_assets(Moe* moe, const char* filename) 
 {
+
+  Arena* arena = &moe->asset_arena;
+  Moe_Assets* assets = &moe->assets;
 
   make(Platform_File, file);
   B32 ok = platform->open_file(file,
