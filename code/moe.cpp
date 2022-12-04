@@ -10,9 +10,12 @@ moe_update_and_render(Platform* pf)
   // Set globals from platform
   platform = pf;
 
+
   moe_profile_block(GAME);
-  // Initialization
-  if (!platform->moe || platform->reloaded) {
+
+  if (platform->reloaded) {
+
+    //pf->allocate_memory(megabytes(1));
     arn_clear(platform->moe_arena);
     platform->moe = arn_push(Moe, platform->moe_arena);
     Moe* moe = (Moe*)platform->moe;
@@ -28,9 +31,7 @@ moe_update_and_render(Platform* pf)
       return false;
     
     if(!moe_init_assets(moe, "test_pack.sui"))
-    {
       return false;
-    }
    
     moe->blank_sprite = find_first_sprite(&moe->assets, asset_group(BLANK_SPRITE));
     // Debug font

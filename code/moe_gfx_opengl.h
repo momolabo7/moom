@@ -747,8 +747,8 @@ void main(void)
   GLint result;
   ogl->glGetProgramiv(tb->shader, GL_LINK_STATUS, &result);
   if (result != GL_TRUE) {
-    char msg[KB(1)] = {};
-    ogl->glGetProgramInfoLog(tb->shader, KB(1), null, msg);
+    char msg[kilobytes(1)] = {};
+    ogl->glGetProgramInfoLog(tb->shader, sizeof(msg), null, msg);
     return false;
   }
   return true;
@@ -1003,8 +1003,8 @@ void main(void) {
   GLint Result;
   ogl->glGetProgramiv(sb->shader, GL_LINK_STATUS, &Result);
   if (Result != GL_TRUE) {
-    char msg[KB(1)];
-    ogl->glGetProgramInfoLog(sb->shader, KB(1), null, msg);
+    char msg[kilobytes(1)];
+    ogl->glGetProgramInfoLog(sb->shader, sizeof(msg), null, msg);
     return false;
   }
   return true;

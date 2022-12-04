@@ -736,17 +736,17 @@ WinMain(HINSTANCE instance,
   
   //-Init gfx
   make(Arena, gfx_arena);
-  if (!w32_allocate_memory_into_arena(gfx_arena, MB(256))) return false;
+  if (!w32_allocate_memory_into_arena(gfx_arena, megabytes(256))) return false;
   defer { w32_free_memory_from_arena(gfx_arena); };
  
     
-  Gfx* gfx = w32_gfx_load(window, MB(100), MB(100), gfx_arena);
+  Gfx* gfx = w32_gfx_load(window, megabytes(100), megabytes(100), gfx_arena);
   if (!gfx) { return 1; }
   defer { w32_gfx_unload(gfx); };
  
   // Init Audio
   make(Arena, audio_arena);
-  if (!w32_allocate_memory_into_arena(audio_arena, MB(256))) return false;
+  if (!w32_allocate_memory_into_arena(audio_arena, megabytes(256))) return false;
   defer { w32_free_memory_from_arena(audio_arena); };
 
   Platform_Audio* audio = w32_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
@@ -762,7 +762,7 @@ WinMain(HINSTANCE instance,
  
   // Moe memory set up
   make(Arena, moe_arena);
-  if (!w32_allocate_memory_into_arena(moe_arena, MB(32))) return false;
+  if (!w32_allocate_memory_into_arena(moe_arena, megabytes(32))) return false;
   defer { w32_free_memory_from_arena(moe_arena); };
   
   w32_setup_platform_functions(pf);

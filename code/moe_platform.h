@@ -146,7 +146,7 @@ typedef struct {
   Platform_Complete_All_Tasks* complete_all_tasks;
 
   // Memory allocation
-  Platform_Memory_Block* allocate_memory;
+  Platform_Allocate_Memory* allocate_memory;
   Platform_Free_Memory* free_memory;
 
   // Logging
