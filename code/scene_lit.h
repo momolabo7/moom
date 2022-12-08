@@ -4,11 +4,23 @@
 #define LIT_DEBUG_LIGHT 0
 #define LIT_DEBUG_COORDINATES 1
 
-//////////////////////////////////////////////////
-// Lit MODE
+#define LIT_WIDTH  800.f
+#define LIT_HEIGHT 800.f
 
+#define LIT_SENSOR_PARTICLE_CD 0.1f
+#define LIT_SENSOR_COLOR_MASK 0xFFFFFF00
+#define LIT_SENSOR_RADIUS 8.f
+#define LIT_SENSOR_PARTICLE_SIZE 16.f
+#define LIT_SENSOR_PARTICLE_SPEED 20.f
+
+#define LIT_PLAYER_RADIUS 16.f
+#define LIT_PLAYER_LIGHT_RETRIEVE_DURATION 0.05f
+#define LIT_PLAYER_BREATH_DURATION 2.f
+#define LIT_PLAYER_PICKUP_DIST 512.f
+#define LIT_PLAYER_ROTATE_SPEED 3.5f
 
 #define LIT_TUTORIAL_TEXT_FADE_DURATION 1.f
+
 enum Lit_Tutorial_Text_State{
   LIT_TUTORIAL_TEXT_STATE_INVISIBLE,
   LIT_TUTORIAL_TEXT_STATE_FADE_IN,
@@ -185,10 +197,11 @@ static void
 lit_tick(Moe* moe) 
 {
   Lit* m = (Lit*)moe->scene_context;
-  if (!moe_is_scene_initialized(moe)) {
+  if (!moe_is_scene_initialized(moe)) 
+  {
     m = moe_allocate_scene(Lit, moe);
     lit_load_level(m, 0); 
-    m->rng = rng_create(65535);
+    m->rng = rng_create(65535); // don't really need to be strict 
     m->state = LIT_STATE_TYPE_TRANSITION_IN;
     m->stage_fade = 1.f;
 
@@ -196,12 +209,17 @@ lit_tick(Moe* moe)
       make(Moe_Asset_Match, match);
       set_match_entry(match, asset_tag(FONT), 0.f, 1.f);
 
-      m->tutorial_font = find_best_font(assets, MOE_ASSET_GROUP_TYPE_FONTS, match);
+      m->tutorial_font = find_best_font(assets, asset_group(FONTS), match);
     }
   
     m->blank_sprite = find_first_sprite(assets, asset_group(BLANK_SPRITE));
     m->circle_sprite = find_first_sprite(assets, asset_group(CIRCLE_SPRITE));
     m->filled_circle_sprite = find_first_sprite(assets, asset_group(FILLED_CIRCLE_SPRITE));
+
+    platform->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
+    gfx_push_view(platform->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
+
+
   }
 
   // Update
@@ -295,7 +313,7 @@ lit_tick(Moe* moe)
     sb8_make(sb, 64);
     sb8_push_fmt(sb, str8_from_lit("[%f %f]"), 
         platform->mouse_pos.x,
-        platform->mouse_pos.y);
+        LIT_HEIGHT - platform->mouse_pos.y);
     paint_text(m->tutorial_font, sb->str, RGBA_WHITE, 0.f, 0.f, 32.f);
   }
 #endif

@@ -1,5 +1,24 @@
 # Journal
 
+### 2022-12-08
+I have been looking into the platform input system recently and felt that I need to re-evaluate what's going on there.
+
+Right now, my understanding of the workflow for platform input is:
+- Platform API states what kind of input the engine accepts
+- Concrete platform layer will then implement the API
+
+This creates inflexibility on the 'Scene' layer.
+Basically, we can't really iterate over the 'best controls' for the 'Scene' layer.
+
+A solution to this is simply to do it the traditional way; expose all possible controls/keycodes and let the Scene layer handle it.
+A big issue I have with this is where the code for switching between different devices is going to be.
+Logically, it's not going to be within Scene; Scene shouldn't care about whether there is a change of device and all that as much as possible. If anything, I still strongly believe that the platform layer should handle it.
+
+This just means that I'm not going to change my current design. 
+If anything, I should start to slowly clamp down on exactly what kind of input I am allowing my game to have.
+
+Remapping is still something I will need to tackle at some point though. 
+Perhaps a good idea is to allow remapping at the concrete platform layer via reading in a text file?
 
 ### 2022-12-03
 

@@ -50,9 +50,6 @@ lit_level_0_0(Lit* m) {
   lit_push_sensor(m, 400.f, 600.f, 0x880000FF); 
   lit_push_light(m, 400.f, 400, 0x880000FF, 45.f, 0.75f);
   
-  // initialize player
-  lit_init_player(m, 400.f, 100.f);
-
   // tutorial text
 #if 0
   lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("WASD to move"), 100.f, 480.f);
@@ -74,9 +71,6 @@ lit_level_0_1(Lit* m) {
   lit_push_sensor(m, 400.f, 600.f, 0x008800FF); 
   lit_push_light(m, 400.f, 200, 0x008800FF, 45.f, 0.75f);
   
-  // initialize player
-  lit_init_player(m, 400.f, 100.f);
-
   // Need to 'enclose' the shape
   lit_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
 }
@@ -87,9 +81,6 @@ static void
 lit_level_0_2(Lit* m) { 
   // Need to 'enclose' the shape
   lit_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
-
-  // initialize player
-  lit_init_player(m, 400.f, 100.f);
 
   lit_push_sensor(m, 400.f, 600.f, 0x444488FF); 
   lit_push_light(m, 300.f, 200.f, 0x222244FF, 45.f, 0.75f);
@@ -108,9 +99,6 @@ lit_level_0_3(Lit* m) {
   lit_push_double_edge(m, 200.f, 500.f, 300.f, 600.f);
   lit_push_double_edge(m, 500.f, 600.f, 600.f, 500.f);
 
-  // initialize player
-  lit_init_player(m, 400.f, 100.f);
-
   lit_push_sensor(m, 400.f, 400.f, 0xCCCC00FF); 
   lit_push_light(m, 150.f, 150.f, 0x333300FF, 45.f, 0.125f);
   lit_push_light(m, 650.f, 150.f, 0x333300FF, 45.f, 0.376f);
@@ -126,7 +114,6 @@ lit_level_0_3(Lit* m) {
 // - R + G = Y
 static void
 lit_level_0_4(Lit* m) {
-  lit_init_player(m, 200.f, MOE_HEIGHT * 0.5f);
 
 
   lit_push_sensor(m, 400.f, 400.f, 0x888800FF); 
@@ -149,8 +136,6 @@ lit_level_0_4(Lit* m) {
 // - R + G + B = W
 static void
 lit_level_0_5(Lit* m) {
-  lit_init_player(m, 200.f, MOE_HEIGHT * 0.5f);
-
   // middle
   lit_push_sensor(m, 400.f,  400.f, 0x888888FF); 
 
@@ -168,12 +153,10 @@ lit_level_0_5(Lit* m) {
 }
 
 ///////////////////////////////////////
-// TODO
 // - Sensors on inside room and outside room
 // - Point lights
 static void
 lit_level_0_6(Lit* m) {
-  lit_init_player(m, 200.f, MOE_HEIGHT * 0.5f);
 
   // middle
   lit_push_sensor(m, 050.f,  450.f, 0x666666FF); 
@@ -202,6 +185,61 @@ lit_level_0_6(Lit* m) {
   
 
 }
+
+///////////////////////////////////////
+// More point lights but with colors
+// 
+static void
+lit_level_0_7(Lit* m) {
+
+  // bottom left room
+  lit_push_sensor(m, 050.f,  350.f, 0x660000FF); 
+  lit_push_sensor(m, 050.f,  050.f, 0x660000FF); 
+  lit_push_sensor(m, 250.f,  350.f, 0x660000FF); 
+  lit_push_sensor(m, 250.f,  050.f, 0x660000FF); 
+
+  // bottom right room
+  lit_push_sensor(m, 550.f,  350.f, 0x006600FF); 
+  lit_push_sensor(m, 550.f,  050.f, 0x006600FF); 
+  lit_push_sensor(m, 750.f,  350.f, 0x006600FF); 
+  lit_push_sensor(m, 750.f,  050.f, 0x006600FF); 
+
+  // top right room
+  lit_push_sensor(m, 550.f,  450.f, 0x000066FF); 
+  lit_push_sensor(m, 550.f,  750.f, 0x000066FF); 
+  lit_push_sensor(m, 750.f,  450.f, 0x000066FF); 
+  lit_push_sensor(m, 750.f,  750.f, 0x000066FF); 
+
+
+  // top left room
+  lit_push_sensor(m, 050.f,  450.f, 0x666666FF); 
+  lit_push_sensor(m, 050.f,  750.f, 0x666666FF); 
+  lit_push_sensor(m, 250.f,  450.f, 0x666666FF); 
+  lit_push_sensor(m, 250.f,  750.f, 0x666666FF); 
+
+
+
+  lit_push_double_edge(m, 000.f, 400.f, 300.f, 400.f);
+  lit_push_double_edge(m, 300.f, 250.f, 300.f, 550.f);
+  lit_push_double_edge(m, 300.f, 650.f, 300.f, 800.f);
+  lit_push_double_edge(m, 300.f, 000.f, 300.f, 150.f);
+
+  lit_push_double_edge(m, 500.f, 400.f, 800.f, 400.f); 
+  lit_push_double_edge(m, 500.f, 250.f, 500.f, 550.f);
+  lit_push_double_edge(m, 500.f, 650.f, 500.f, 800.f);
+  lit_push_double_edge(m, 500.f, 000.f, 500.f, 150.f);
+  //lit_push_sensor(m, 200.f, 400.f, 0x008888FF); 
+  //lit_push_sensor(m, 600.f, 400.f, 0x008800FF); 
+
+ //lit_push_sensor(m, 400.f, 200.f, 0x880000FF); 
+  //lit_push_sensor(m, 400.f, 600.f, 0x880088FF); 
+
+  lit_push_light(m, 400.f, 400.f, 0x660000FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x006600FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x000066FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x666666FF, 360.f, 0.f);
+}
+
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
   //lit_level_0_0, 
@@ -210,7 +248,8 @@ static Lit_Level lit_levels[] = {
   //lit_level_0_3,
   //lit_level_0_4,
   //lit_level_0_5,
-  lit_level_0_6,
+  //lit_level_0_6,
+  lit_level_0_7,
 };
 
 
@@ -229,6 +268,9 @@ lit_load_level(Lit* m, U32 level_id) {
   lit_push_edge(m, 800.f, 0.f, 800.f, 800.f);
   lit_push_edge(m, 800.f, 800.f, 0.f, 800.f);
   lit_push_edge(m, 0.f, 800.f, 0.f, 0.f);
+
+  lit_init_player(m, 400.f, 400.f);
+
   lit_levels[level_id](m);
 }
 

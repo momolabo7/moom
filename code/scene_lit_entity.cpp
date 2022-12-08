@@ -45,14 +45,13 @@ lit_update_player(Lit* lit, F32 dt)
   
   // Held light controls
   if (player->held_light != null) {
-    const F32 speed = 5.f;
     if (pf_is_button_down(platform->button_rotate_left)){ 
       player->held_light->dir = 
-        v2_rotate(player->held_light->dir, speed * dt );
+        v2_rotate(player->held_light->dir, LIT_PLAYER_ROTATE_SPEED * dt );
     }
     if (pf_is_button_down(platform->button_rotate_right)){ 
       player->held_light->dir = 
-        v2_rotate(player->held_light->dir, -speed * dt);
+        v2_rotate(player->held_light->dir, -LIT_PLAYER_ROTATE_SPEED * dt);
     }
   }
   

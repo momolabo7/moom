@@ -14,7 +14,6 @@ moe_update_and_render(Platform* pf)
   moe_profile_block(GAME);
 
   if (platform->reloaded) {
-
     //pf->allocate_memory(megabytes(1));
     arn_clear(platform->moe_arena);
     platform->moe = arn_push(Moe, platform->moe_arena);
@@ -52,8 +51,6 @@ moe_update_and_render(Platform* pf)
     
     // Inform platform what our moe's dimensions are
     platform->set_moe_dims(MOE_WIDTH, MOE_HEIGHT);
-
-    // Systems
 
     // set up view for moe
     gfx_push_view(platform->gfx, 0.f, MOE_WIDTH, 0.f, MOE_HEIGHT, 0.f, 0.f);
