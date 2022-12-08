@@ -18,6 +18,7 @@ lit_update_player(Lit* lit, F32 dt)
   
 
   // Get world mouse position
+#if 0
   V2 world_mouse_pos = {0};
   {
     world_mouse_pos.x = platform->mouse_pos.x;
@@ -25,7 +26,8 @@ lit_update_player(Lit* lit, F32 dt)
   }
 
   player->pos = world_mouse_pos;
-#if 0
+#endif
+#if 1
   // Get movement direction
   V2 direction = {0};
   if (pf_is_button_down(platform->button_up)) {
@@ -53,9 +55,6 @@ lit_update_player(Lit* lit, F32 dt)
         v2_rotate(player->held_light->dir, -speed * dt);
     }
   }
-
-
-  
   
   // Do Movement
   if (v2_len_sq(direction) > 0.f) {
@@ -68,7 +67,7 @@ lit_update_player(Lit* lit, F32 dt)
   // 'Pick up'  button
   if (pf_is_button_poked(platform->button_use)) {
     if (player->held_light == null) {
-      F32 shortest_dist = 512.f; // limit
+      F32 shortest_dist = LIT_PLAYER_PICKUP_DIST; // limit
       Lit_Light* nearest_light = null;
       al_foreach(light_index, lights) {
         Lit_Light* l = al_at(lights, light_index);
@@ -85,10 +84,11 @@ lit_update_player(Lit* lit, F32 dt)
         player->light_retrival_time = 0.f;
       }
     }
+    else {
+      player->held_light = null;
+    }
   }
-  if (pf_is_button_released(platform->button_use)) {
-    player->held_light = null;
-  }
+
 
   // Move the held light to player's position
   if (player->held_light) {
@@ -119,7 +119,8 @@ lit_update_player(Lit* lit, F32 dt)
 }
 
 static void
-lit_draw_player(Lit* lit){
+lit_draw_player(Lit* lit)
+{
   Lit_Player* player = &lit->player;
   paint_sprite(lit->circle_sprite, 
                player->pos, 

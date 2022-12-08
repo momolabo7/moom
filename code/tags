@@ -3249,6 +3249,7 @@ LIT_PLAYER_LIGHT_RETRIEVE_DURATION	C:\Users\geral\work\txt\code\moe_mode_lit_ent
 LIT_PLAYER_LIGHT_RETRIEVE_DURATION	D:/work/git/moom/code/scene_lit_entity.h	/^#define LIT_PLAYER_LIGHT_RETRIEVE_DURATION /;"	d	language:C++
 LIT_PLAYER_LIGHT_RETRIEVE_DURATION	D:/work/git/txt/code/moe_mode_lit_entity.h	/^#define LIT_PLAYER_LIGHT_RETRIEVE_DURATION /;"	d	language:C++
 LIT_PLAYER_LIGHT_RETRIEVE_DURATION	D:/work/git/txt/code/scene_lit_entity.h	/^#define LIT_PLAYER_LIGHT_RETRIEVE_DURATION /;"	d	language:C++
+LIT_PLAYER_PICKUP_DIST	D:/work/git/moom/code/scene_lit_entity.cpp	/^#define LIT_PLAYER_PICKUP_DIST /;"	d	language:C++	file:
 LIT_PLAYER_RADIUS	C:\Users\geral\work\txt\code\moe_mode_lit_entity.h	41;"	d	language:C++
 LIT_PLAYER_RADIUS	D:/work/git/moom/code/scene_lit_entity.h	/^#define LIT_PLAYER_RADIUS /;"	d	language:C++
 LIT_PLAYER_RADIUS	D:/work/git/txt/code/moe_mode_lit_entity.h	/^#define LIT_PLAYER_RADIUS /;"	d	language:C++

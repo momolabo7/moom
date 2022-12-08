@@ -1,6 +1,7 @@
 # Journal
 
-### Day 0 (2022-12-03)
+
+### 2022-12-03
 
 Start of journal. 
 It's been solid 2 years working on this engine, with the first year  and I think it's good to start documenting logging rants and thoughts as I go back and forth about ideas within the context of this engine.

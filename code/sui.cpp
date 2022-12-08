@@ -8,7 +8,7 @@
 
 
 int main() {
-  UMI memory_size = MB(100);
+  UMI memory_size = megabytes(100);
 
   void* memory = malloc(memory_size);
   defer { free(memory); };

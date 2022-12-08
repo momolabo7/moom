@@ -41,6 +41,7 @@ struct Lit_Sensor_List {
 #define LIT_PLAYER_RADIUS 16.f
 #define LIT_PLAYER_LIGHT_RETRIEVE_DURATION 0.05f
 #define LIT_PLAYER_BREATH_DURATION 2.f
+#define LIT_PLAYER_PICKUP_DIST 512.f
 
 struct Lit_Player {
   V2 pos;

@@ -16,9 +16,9 @@
 #ifdef INTERNAL
 static struct Profiler* profiler;
 #define moe_log(...) platform->debug_log(__VA_ARGS__)
-#define moe_profile_block(name) prf_block(profiler, name)
-#define moe_profile_begin(name) prf_begin_block(profiler, name)
-#define moe_profile_end(name) prf_end_block(profiler, name)
+#define moe_profile_block(name) prf_block(platform->profiler, name)
+#define moe_profile_begin(name) prf_begin_block(platform->profiler, name)
+#define moe_profile_end(name) prf_end_block(platform->profiler, name)
 #else
 #define moe_log(...)
 #define moe_profiler_block(...)
@@ -27,8 +27,6 @@ static struct Profiler* profiler;
 #endif 
 
 static Platform* platform;
-//static Gfx* gfx;
-
 
 
 #include "moe_profiler.h"
@@ -50,7 +48,6 @@ enum Moe_Show_Debug_Type {
   
   MOE_SHOW_DEBUG_MAX
 };
-
 
 typedef void (*Scene_Tick)(struct Moe*);
 

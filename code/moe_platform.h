@@ -6,6 +6,7 @@
 #define MOE_PLATFORM_H
 
 // TODO: remove this and make this file as standalone as possible?
+//
 #include "momo.h"
 
 /////////////////////////////////////////////////////////////////////
@@ -69,9 +70,9 @@ typedef void  Platform_Set_Moe_Dims(F32 width, F32 height);
 // Platform Audio API
 //
 typedef struct {
-    S16* sample_buffer;
-    U32 sample_count;
-    U32 channels; //TODO: remove this?
+  S16* sample_buffer;
+  U32 sample_count;
+  U32 channels; //TODO: remove this?
 }Platform_Audio;
 
 /////////////////////////////////////////////////////////////////////////
@@ -116,9 +117,8 @@ typedef struct {
       Platform_Button button_editor1;
       Platform_Button button_editor2;
       Platform_Button button_editor3;
-      
     };  
-    Platform_Button buttons[13];
+    Platform_Button buttons[15];
   };
   U8 chars[32];
   U32 char_count;
