@@ -9,13 +9,16 @@ moe_update_and_render(Platform* pf)
 { 
   // Set globals from platform
   platform = pf;
-
-
   moe_profile_block(GAME);
 
   if (platform->reloaded) {
-    //pf->allocate_memory(megabytes(1));
-    arn_clear(platform->moe_arena);
+    if(pf->moe) {
+      pf->free_memory((Platform_Memory_Block*)pf->moe);
+    }
+   
+    // Allocate memory
+    Platform_Memory_Block* moe_memory = pf->allocate_memory(megabytes(32));
+    arn_init(platform->moe_arena, moe_memory->data, moe_memory->size); 
     platform->moe = arn_push(Moe, platform->moe_arena);
     Moe* moe = (Moe*)platform->moe;
 

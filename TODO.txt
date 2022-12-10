@@ -1,16 +1,13 @@
 Moe
-  sensor should take into account all sides of circle
-  sensor should remove particles and just be 'glowing'
+  Arena Profiler
 
+Lit Scene
+  Level selection (after we make 10 levels I guess)
+  Improve game end transitions
+  Each level should have a title before showing the level
 
 Assets 
   9 Slice 
   Audio/Sound
 
-
-Engine
-  Shapes should not use V2
-  PNG/TTF should not use Arena and use their own? A bit tricky
-	Debugger
-		Arena Profiler
 

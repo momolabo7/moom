@@ -1,5 +1,13 @@
 # Journal
 
+### 2022-12-11
+The state management system should probably have a 'init' and 'exit' function.
+This is because we are allowing the Scenes to allocate memory. 
+When we do a hot reload, we should let the scenes a chance to deallocate memory they use.
+
+Maybe even make a function to restart a scene.
+
+
 ### 2022-12-08
 I have been looking into the platform input system recently and felt that I need to re-evaluate what's going on there.
 
