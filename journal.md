@@ -2,10 +2,16 @@
 
 ### 2022-12-11
 The state management system should probably have a 'init' and 'exit' function.
-This is because we are allowing the Scenes to allocate memory. 
-When we do a hot reload, we should let the scenes a chance to deallocate memory they use.
+This is because we are allowing the Scenes to allocate memory from the platform. 
+When we do a hot reload, we should let the scenes a chance to deallocate memory they use before we do any hot reloading.
 
 Maybe even make a function to restart a scene.
+
+Then again, I don't even have a use case for this yet. Hmm.
+
+Maybe the Moe layer should keep track of allocated memories too and free them upon reload?
+
+Man, I really need a use case. It's surprising hard to come with a good decision with this.
 
 
 ### 2022-12-08
