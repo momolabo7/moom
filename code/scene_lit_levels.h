@@ -273,15 +273,29 @@ lit_level_0_8(Lit* m) {
 
 
 
-  lit_push_double_edge(m, 150.f, 150.f, 150.f, 650.f);
-  lit_push_double_edge(m, 150.f, 650.f, 650.f, 650.f);
-  lit_push_double_edge(m, 650.f, 650.f, 150.f, 650.f);
-  lit_push_double_edge(m, 150.f, 650.f, 150.f, 150.f);
+  lit_push_double_edge(m, 100.f, 100.f, 100.f, 700.f);
+  lit_push_double_edge(m, 100.f, 700.f, 700.f, 700.f);
+  lit_push_double_edge(m, 700.f, 700.f, 700.f, 100.f);
+  lit_push_double_edge(m, 700.f, 100.f, 100.f, 100.f);
 
+  
+  lit_push_double_edge(m, 200.f, 200.f, 200.f, 600.f);
+  lit_push_double_edge(m, 200.f, 600.f, 600.f, 600.f);
+  lit_push_double_edge(m, 600.f, 600.f, 600.f, 200.f);
+  lit_push_double_edge(m, 600.f, 200.f, 200.f, 200.f);
+
+  lit_push_double_edge(m, 300.f, 300.f, 300.f, 500.f);
+  lit_push_double_edge(m, 300.f, 500.f, 500.f, 500.f);
+  lit_push_double_edge(m, 500.f, 500.f, 500.f, 300.f);
+  lit_push_double_edge(m, 500.f, 300.f, 300.f, 300.f);
+
+
+#if 0
   lit_push_double_edge(m, 500.f, 400.f, 800.f, 400.f); 
   lit_push_double_edge(m, 500.f, 250.f, 500.f, 550.f);
   lit_push_double_edge(m, 500.f, 650.f, 500.f, 800.f);
   lit_push_double_edge(m, 500.f, 000.f, 500.f, 150.f);
+#endif
   //lit_push_sensor(m, 200.f, 400.f, 0x008888FF); 
   //lit_push_sensor(m, 600.f, 400.f, 0x008800FF); 
 
@@ -296,14 +310,16 @@ lit_level_0_8(Lit* m) {
 
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
-  //lit_level_0_0, 
-  //lit_level_0_1, 
-  //lit_level_0_2,
-  //lit_level_0_3,
-  //lit_level_0_4,
-  //lit_level_0_5,
-  //lit_level_0_6,
+#if 0
+  lit_level_0_0, 
+  lit_level_0_1, 
+  lit_level_0_2,
+  lit_level_0_3,
+  lit_level_0_4,
+  lit_level_0_5,
+  lit_level_0_6,
   lit_level_0_7,
+#endif
   lit_level_0_8,
 };
 
