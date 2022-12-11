@@ -31,7 +31,7 @@ moe_update_and_render(Platform* pf)
       return false;
     if (!arn_partition(platform->moe_arena, &moe->frame_arena, megabytes(1), 16)) 
       return false;
-    
+   
     if(!moe_init_assets(moe, "test_pack.sui"))
       return false;
    

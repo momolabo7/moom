@@ -192,7 +192,6 @@ lit_fade_out_next_tutorial_text(Lit_Tutorial_Text_List* texts) {
 #include "scene_lit_levels.h"
 
 
-
 static void 
 lit_tick(Moe* moe) 
 {
