@@ -1,4 +1,3 @@
-/* date = March 11th 2022 6:38 pm */
 
 #ifndef MOE_H
 #define MOE_H

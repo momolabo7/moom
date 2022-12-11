@@ -554,6 +554,8 @@ w32_setup_platform_functions(Platform* pf)
   pf->add_task = w32_add_task;
   pf->complete_all_tasks = w32_complete_all_tasks;
   pf->debug_log = w32_log_proc;
+  pf->allocate_memory = w32_allocate_memory;
+  pf->free_memory = w32_free_memory;
 }
 
 //~ Main functions
