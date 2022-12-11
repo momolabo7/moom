@@ -16,20 +16,25 @@ moe_update_and_render(Platform* pf)
       pf->free_memory((Platform_Memory_Block*)pf->moe);
     }
    
-    // Allocate memory
+    // Allocate and initialize Moe engine
     Platform_Memory_Block* moe_memory = pf->allocate_memory(megabytes(32));
-    arn_init(platform->moe_arena, moe_memory->data, moe_memory->size); 
-    platform->moe = arn_push(Moe, platform->moe_arena);
-    Moe* moe = (Moe*)platform->moe;
+    pf->moe = moe_memory;
+
+    Moe* moe = (Moe*)moe_memory->data;
+    
+    // TODO: we should shift moe_arena into moe itself
+    // TODO: we should make a function out of this
+    arn_init(&moe->main_arena, (U8*)moe_memory->data + sizeof(Moe), moe_memory->size - sizeof(Moe)); 
+    //platform->moe = arn_push(Moe, &moe_main_arena);
 
     // around 32MB worth
-    if (!arn_partition(platform->moe_arena, &moe->asset_arena, megabytes(20), 16)) 
+    if (!arn_partition(&moe->main_arena, &moe->asset_arena, megabytes(20), 16)) 
       return false;
-    if (!arn_partition(platform->moe_arena, &moe->scene_arena, megabytes(5), 16)) 
+    if (!arn_partition(&moe->main_arena, &moe->scene_arena, megabytes(5), 16)) 
       return false; 
-    if (!arn_partition(platform->moe_arena, &moe->debug_arena, megabytes(1), 16)) 
+    if (!arn_partition(&moe->main_arena, &moe->debug_arena, megabytes(1), 16)) 
       return false;
-    if (!arn_partition(platform->moe_arena, &moe->frame_arena, megabytes(1), 16)) 
+    if (!arn_partition(&moe->main_arena, &moe->frame_arena, megabytes(1), 16)) 
       return false;
    
     if(!moe_init_assets(moe, "test_pack.sui"))
@@ -63,7 +68,7 @@ moe_update_and_render(Platform* pf)
   }
  
   // Set globals from moe
-  Moe* moe = (Moe*)platform->moe;
+  Moe* moe = (Moe*)((Platform_Memory_Block*)platform->moe)->data;
   assets = &moe->assets;
   inspector = &moe->inspector;
   Console* console = &moe->console;

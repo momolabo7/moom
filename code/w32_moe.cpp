@@ -763,14 +763,10 @@ WinMain(HINSTANCE instance,
   make(Platform, pf);
  
   // Moe memory set up
-  make(Arena, moe_arena);
-  if (!w32_allocate_memory_into_arena(moe_arena, megabytes(32))) return false;
-  defer { w32_free_memory_from_arena(moe_arena); };
   
   w32_setup_platform_functions(pf);
   pf->gfx = gfx;
   pf->profiler = profiler;
-  pf->moe_arena = moe_arena;
   pf->audio = audio;
   
   

@@ -91,7 +91,8 @@ struct Profiler;
 
 // These could really all be functions on the platform side
 typedef struct {
-  Arena* moe_arena; // Require 32MB
+
+  //Arena* moe_arena; // Require 32MB
   Gfx* gfx;
   Profiler* profiler; 
   Platform_Audio* audio;
@@ -152,14 +153,16 @@ typedef struct {
   // Logging
   Platform_Debug_Log* debug_log;
 
+  // set window dimensions
+  // TODO: change name
   Platform_Set_Moe_Dims* set_moe_dims;
-
-  // For moe to use
-  void* moe;
 
   // Misc
   F32 seconds_since_last_frame; //aka dt
   B32 reloaded;
+
+  // For moe to use
+  void* moe;
 
 } Platform;
 

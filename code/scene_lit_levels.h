@@ -187,8 +187,8 @@ lit_level_0_6(Lit* m) {
 }
 
 ///////////////////////////////////////
-// More point lights but with colors
-// 
+// More point lights but with more colors
+//  
 static void
 lit_level_0_7(Lit* m) {
 
@@ -240,6 +240,60 @@ lit_level_0_7(Lit* m) {
   lit_push_light(m, 400.f, 400.f, 0x666666FF, 360.f, 0.f);
 }
 
+///////////////////////////////////////
+// Onion 
+//  
+static void
+lit_level_0_8(Lit* m) {
+
+  // bottom left room
+  lit_push_sensor(m, 050.f,  350.f, 0x660000FF); 
+  lit_push_sensor(m, 050.f,  050.f, 0x660000FF); 
+  lit_push_sensor(m, 250.f,  350.f, 0x660000FF); 
+  lit_push_sensor(m, 250.f,  050.f, 0x660000FF); 
+
+  // bottom right room
+  lit_push_sensor(m, 550.f,  350.f, 0x006600FF); 
+  lit_push_sensor(m, 550.f,  050.f, 0x006600FF); 
+  lit_push_sensor(m, 750.f,  350.f, 0x006600FF); 
+  lit_push_sensor(m, 750.f,  050.f, 0x006600FF); 
+
+  // top right room
+  lit_push_sensor(m, 550.f,  450.f, 0x000066FF); 
+  lit_push_sensor(m, 550.f,  750.f, 0x000066FF); 
+  lit_push_sensor(m, 750.f,  450.f, 0x000066FF); 
+  lit_push_sensor(m, 750.f,  750.f, 0x000066FF); 
+
+
+  // top left room
+  lit_push_sensor(m, 050.f,  450.f, 0x666666FF); 
+  lit_push_sensor(m, 050.f,  750.f, 0x666666FF); 
+  lit_push_sensor(m, 250.f,  450.f, 0x666666FF); 
+  lit_push_sensor(m, 250.f,  750.f, 0x666666FF); 
+
+
+
+  lit_push_double_edge(m, 150.f, 150.f, 150.f, 650.f);
+  lit_push_double_edge(m, 150.f, 650.f, 650.f, 650.f);
+  lit_push_double_edge(m, 650.f, 650.f, 150.f, 650.f);
+  lit_push_double_edge(m, 150.f, 650.f, 150.f, 150.f);
+
+  lit_push_double_edge(m, 500.f, 400.f, 800.f, 400.f); 
+  lit_push_double_edge(m, 500.f, 250.f, 500.f, 550.f);
+  lit_push_double_edge(m, 500.f, 650.f, 500.f, 800.f);
+  lit_push_double_edge(m, 500.f, 000.f, 500.f, 150.f);
+  //lit_push_sensor(m, 200.f, 400.f, 0x008888FF); 
+  //lit_push_sensor(m, 600.f, 400.f, 0x008800FF); 
+
+ //lit_push_sensor(m, 400.f, 200.f, 0x880000FF); 
+  //lit_push_sensor(m, 400.f, 600.f, 0x880088FF); 
+
+  lit_push_light(m, 400.f, 400.f, 0x660000FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x006600FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x000066FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x666666FF, 360.f, 0.f);
+}
+
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
   //lit_level_0_0, 
@@ -250,6 +304,7 @@ static Lit_Level lit_levels[] = {
   //lit_level_0_5,
   //lit_level_0_6,
   lit_level_0_7,
+  lit_level_0_8,
 };
 
 

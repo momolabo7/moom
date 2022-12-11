@@ -52,12 +52,14 @@ typedef void (*Scene_Tick)(struct Moe*);
 
 typedef struct Moe {
   Moe_Show_Debug_Type show_debug_type;
-
   
   F32 design_width;
   F32 design_height;
     
   // Arenas
+  Arena main_arena;
+
+  // Sub arenas
   Arena asset_arena;
   Arena frame_arena;
   Arena debug_arena;
