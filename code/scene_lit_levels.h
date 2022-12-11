@@ -245,24 +245,17 @@ lit_level_0_7(Lit* m) {
 //  
 static void
 lit_level_0_8(Lit* m) {
+  // layer 1
+  lit_push_sensor(m, 550.f,  250.f, 0x006600FF); 
+  lit_push_sensor(m, 250.f,  550.f, 0x660000FF); 
+  lit_push_sensor(m, 250.f,  250.f, 0x666600FF); 
+  lit_push_sensor(m, 550.f,  550.f, 0x666600FF); 
 
-  // bottom left room
-  lit_push_sensor(m, 050.f,  350.f, 0x660000FF); 
-  lit_push_sensor(m, 050.f,  050.f, 0x660000FF); 
-  lit_push_sensor(m, 250.f,  350.f, 0x660000FF); 
-  lit_push_sensor(m, 250.f,  050.f, 0x660000FF); 
-
-  // bottom right room
-  lit_push_sensor(m, 550.f,  350.f, 0x006600FF); 
-  lit_push_sensor(m, 550.f,  050.f, 0x006600FF); 
-  lit_push_sensor(m, 750.f,  350.f, 0x006600FF); 
-  lit_push_sensor(m, 750.f,  050.f, 0x006600FF); 
-
-  // top right room
-  lit_push_sensor(m, 550.f,  450.f, 0x000066FF); 
-  lit_push_sensor(m, 550.f,  750.f, 0x000066FF); 
-  lit_push_sensor(m, 750.f,  450.f, 0x000066FF); 
-  lit_push_sensor(m, 750.f,  750.f, 0x000066FF); 
+  // layer 2
+  lit_push_sensor(m, 150.f,  150.f, 0x660066FF); 
+  lit_push_sensor(m, 650.f,  150.f, 0x660066FF); 
+  lit_push_sensor(m, 150.f,  650.f, 0x660000FF); 
+  lit_push_sensor(m, 650.f,  650.f, 0x000066FF); 
 
 
   // top left room
