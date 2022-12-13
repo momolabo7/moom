@@ -43,7 +43,7 @@ moe_update_and_render(Platform* pf)
     moe->blank_sprite = find_first_sprite(&moe->assets, asset_group(BLANK_SPRITE));
     // Debug font
     {
-      make(Moe_Asset_Match, match);
+      make(Asset_Match, match);
       set_match_entry(match, asset_tag(FONT), 1.f, 1.f);
       moe->debug_font = find_best_font(&moe->assets, asset_group(FONTS), match);
     }

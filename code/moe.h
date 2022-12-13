@@ -32,7 +32,7 @@ static Platform* platform;
 #include "moe_assets.h"
 #include "moe_inspector.h"
 
-static Moe_Assets* assets;
+static Assets* assets;
 static Inspector* inspector;
 
 #include "moe_console.h"
@@ -74,7 +74,7 @@ typedef struct Moe {
   //Moe_Mode_Type current_moe_scene;
 
   // Other stuff
-  Moe_Assets assets;
+  Assets assets;
   Console console;
   Inspector inspector;
   Profiler* profiler;

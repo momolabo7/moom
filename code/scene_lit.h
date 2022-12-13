@@ -205,7 +205,7 @@ lit_tick(Moe* moe)
     m->stage_fade = 1.f;
 
     {
-      make(Moe_Asset_Match, match);
+      make(Asset_Match, match);
       set_match_entry(match, asset_tag(FONT), 0.f, 1.f);
 
       m->tutorial_font = find_best_font(assets, asset_group(FONTS), match);

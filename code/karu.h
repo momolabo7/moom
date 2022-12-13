@@ -3,28 +3,28 @@
 
 
 // moe_asset_types.h
-#define asset_tag(name) MOE_ASSET_TAG_TYPE_##name
-enum Moe_Asset_Tag_Type : U32 {
+#define asset_tag(name) ASSET_TAG_TYPE_##name
+enum Asset_Tag_Type : U32 {
   asset_tag(FONT),
 
-  MOE_ASSET_TAG_TYPE_COUNT,
+  ASSET_TAG_TYPE_COUNT,
 };
 
-#define asset_group(name) MOE_ASSET_GROUP_TYPE_##name
-enum Moe_Asset_Group_Type : U32 {
+#define asset_group(name) ASSET_GROUP_TYPE_##name
+enum Asset_Group_Type : U32 {
   asset_group(BLANK_SPRITE),
   asset_group(CIRCLE_SPRITE),
   asset_group(FILLED_CIRCLE_SPRITE),
   asset_group(ATLAS),
   asset_group(FONTS),
 
-  MOE_ASSET_GROUP_TYPE_COUNT,
+  ASSET_GROUP_TYPE_COUNT,
 };
 
-enum Moe_Asset_Type : U32 {
-  MOE_ASSET_TYPE_SPRITE,
-  MOE_ASSET_TYPE_FONT,
-  MOE_ASSET_TYPE_BITMAP,
+enum Asset_Type : U32 {
+  ASSET_TYPE_SPRITE,
+  ASSET_TYPE_FONT,
+  ASSET_TYPE_BITMAP,
 };
 
 // karu.h
@@ -92,7 +92,7 @@ struct Karu_Sprite {
 };
 
 struct Karu_Asset {
-  Moe_Asset_Type type; 
+  Asset_Type type; 
 
   U32 offset_to_data;
 
@@ -113,7 +113,7 @@ struct Karu_Group {
 };
 
 struct Karu_Tag {
-  Moe_Asset_Tag_Type type; 
+  Asset_Tag_Type type; 
   F32 value;
 };
 
