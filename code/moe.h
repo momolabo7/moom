@@ -30,9 +30,6 @@ static Platform* platform;
 #include "moe_profiler.h"
 #include "moe_assets.h"
 #include "moe_inspector.h"
-
-static Inspector* inspector;
-
 #include "moe_console.h"
 
 

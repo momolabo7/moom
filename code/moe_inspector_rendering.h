@@ -7,6 +7,7 @@
 static void 
 update_and_render_inspector(Moe* moe) 
 {
+  Inspector* inspector = &moe->inspector;
   Assets* assets = &moe->assets;
 
   paint_sprite(moe, moe->blank_sprite, 
