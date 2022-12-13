@@ -2,39 +2,39 @@
 #define ASSETS_H
 
 
-struct Moe_Bitmap_ID { U32 value; };
-struct Moe_Font_ID { U32 value; };
-struct Moe_Sprite_ID { U32 value; };
+struct Asset_Bitmap_ID { U32 value; };
+struct Asset_Font_ID { U32 value; };
+struct Asset_Sprite_ID { U32 value; };
 
-struct Moe_Bitmap {
+struct Asset_Bitmap {
   U32 renderer_texture_handle;
   U32 width;
   U32 height;
 };
 
-struct Moe_Sprite {
+struct Asset_Sprite {
   U32 texel_x0;
   U32 texel_y0;
   U32 texel_x1;
   U32 texel_y1;
 
-  Moe_Bitmap_ID bitmap_asset_id;
+  Asset_Bitmap_ID bitmap_asset_id;
 };
 
-struct Moe_Font_Glyph{
+struct Asset_Font_Glyph{
   U32 texel_x0, texel_y0;
   U32 texel_x1, texel_y1;
   Rect2 box;
-  Moe_Bitmap_ID bitmap_asset_id;
+  Asset_Bitmap_ID bitmap_asset_id;
   F32 horizontal_advance;
 };
 
-struct Moe_Font {
+struct Asset_Font {
   U32 highest_codepoint;
   U16* codepoint_map;
   
   U32 glyph_count;
-  Moe_Font_Glyph* glyphs;
+  Asset_Font_Glyph* glyphs;
   F32* kernings;
 };
 
@@ -63,16 +63,6 @@ struct Asset_Match {
   } e[ASSET_TAG_TYPE_COUNT];
 };
 
-static void
-set_match_entry(Asset_Match* vec, 
-                Asset_Tag_Type tag,
-                F32 tag_value_to_match, 
-                F32 tag_weight) 
-{
-  vec->e[tag].tag_value_to_match = tag_value_to_match; // debug font
-  vec->e[tag].tag_weight = tag_weight;
-}
-
 struct Asset_Slot {
   Asset_State state;
   
@@ -84,9 +74,9 @@ struct Asset_Slot {
   
   Asset_Type type;
   union {
-    Moe_Bitmap bitmap;
-    Moe_Sprite sprite;
-    Moe_Font font;
+    Asset_Bitmap bitmap;
+    Asset_Sprite sprite;
+    Asset_Font font;
   };
 };
 

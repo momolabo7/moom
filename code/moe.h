@@ -13,7 +13,6 @@
 #define MOE_HEIGHT 800.f
 
 #ifdef INTERNAL
-static struct Profiler* profiler;
 #define moe_log(...) platform->debug_log(__VA_ARGS__)
 #define moe_profile_block(name) prf_block(platform->profiler, name)
 #define moe_profile_begin(name) prf_begin_block(platform->profiler, name)
@@ -53,9 +52,7 @@ typedef void (*Scene_Tick)(struct Moe*);
 typedef struct Moe {
   Moe_Show_Debug_Type show_debug_type;
   
-  F32 design_width;
-  F32 design_height;
-    
+   
   // Arenas
   Arena main_arena;
 
@@ -71,7 +68,6 @@ typedef struct Moe {
   B32 is_scene_changed;
   void* scene_context;
   Scene_Tick scene_tick;
-  //Moe_Mode_Type current_moe_scene;
 
   // Other stuff
   Assets assets;
@@ -80,8 +76,8 @@ typedef struct Moe {
   Profiler* profiler;
 
   // Interested moe assets
-  Moe_Sprite_ID blank_sprite;
-  Moe_Font_ID debug_font;
+  Asset_Sprite_ID blank_sprite;
+  Asset_Font_ID debug_font;
 } Moe;
 
 
@@ -101,12 +97,6 @@ moe_goto_scene(Moe* moe, Scene_Tick scene_tick) {
 static B32
 moe_is_scene_initialized(Moe* moe) {
   return moe->scene_context != null;
-}
-
-static void 
-moe_set_design_dims(Moe* moe, F32 design_width, F32 design_height) {
-  moe->design_width = design_width;
-  moe->design_height = design_height;
 }
 
 static void*

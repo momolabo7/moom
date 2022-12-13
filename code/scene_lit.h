@@ -130,10 +130,10 @@ typedef struct Lit {
   Lit_Tutorial_Trigger_List tutorial_triggers;
 
   // Assets that we are interested in
-  Moe_Font_ID tutorial_font;
-  Moe_Sprite_ID blank_sprite;
-  Moe_Sprite_ID circle_sprite;
-  Moe_Sprite_ID filled_circle_sprite;
+  Asset_Font_ID tutorial_font;
+  Asset_Sprite_ID blank_sprite;
+  Asset_Sprite_ID circle_sprite;
+  Asset_Sprite_ID filled_circle_sprite;
 
 } Lit;
 
@@ -206,14 +206,14 @@ lit_tick(Moe* moe)
 
     {
       make(Asset_Match, match);
-      set_match_entry(match, asset_tag(FONT), 0.f, 1.f);
+      set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
 
-      m->tutorial_font = find_best_font(assets, asset_group(FONTS), match);
+      m->tutorial_font = find_best_font(assets, ASSET_GROUP_TYPE_FONTS, match);
     }
   
-    m->blank_sprite = find_first_sprite(assets, asset_group(BLANK_SPRITE));
-    m->circle_sprite = find_first_sprite(assets, asset_group(CIRCLE_SPRITE));
-    m->filled_circle_sprite = find_first_sprite(assets, asset_group(FILLED_CIRCLE_SPRITE));
+    m->blank_sprite = find_first_sprite(assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
+    m->circle_sprite = find_first_sprite(assets, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
+    m->filled_circle_sprite = find_first_sprite(assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
 
     platform->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
     gfx_push_view(platform->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);

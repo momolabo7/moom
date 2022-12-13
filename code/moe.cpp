@@ -40,12 +40,12 @@ moe_update_and_render(Platform* pf)
     if(!moe_init_assets(moe, "test_pack.sui"))
       return false;
    
-    moe->blank_sprite = find_first_sprite(&moe->assets, asset_group(BLANK_SPRITE));
+    moe->blank_sprite = find_first_sprite(&moe->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
     // Debug font
     {
       make(Asset_Match, match);
-      set_match_entry(match, asset_tag(FONT), 1.f, 1.f);
-      moe->debug_font = find_best_font(&moe->assets, asset_group(FONTS), match);
+      set_match_entry(match, ASSET_TAG_TYPE_FONT, 1.f, 1.f);
+      moe->debug_font = find_best_font(&moe->assets, ASSET_GROUP_TYPE_FONTS, match);
     }
 
     moe_goto_scene(moe, moe_entry_scene);
@@ -104,8 +104,7 @@ moe_update_and_render(Platform* pf)
                                 moe->debug_font); 
     }break;
     case MOE_SHOW_DEBUG_PROFILER: {
-      update_and_render_profiler(moe->blank_sprite, 
-                                 moe->debug_font); 
+      update_and_render_profiler(moe); 
     }break;
     case MOE_SHOW_DEBUG_INSPECTOR: {
       update_and_render_inspector(moe->blank_sprite, 

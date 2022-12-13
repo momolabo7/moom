@@ -414,8 +414,8 @@ assert_callback	D:/work/git/txt/code/momo_common.h	/^# define assert_callback(/;
 assert_callback	D:/work/git/txt/code/momo_types.h	/^# define assert_callback(/;"	d	language:C++
 assert_callback	D:/work/git/txt/code/sui.h	/^#define assert_callback(/;"	d	language:C++
 assert_callback	D:/work/git/txt/code/test.h	/^#define assert_callback(/;"	d	language:C++
-assets	C:\Users\geral\work\moom\code\moe.h	/^  Moe_Assets assets;$/;"	m	language:C++	struct:Moe
-assets	C:\Users\geral\work\moom\code\moe.h	/^static Moe_Assets* assets;$/;"	v	language:C++
+assets	C:\Users\geral\work\moom\code\moe.h	/^  Assets assets;$/;"	m	language:C++	struct:Moe
+assets	C:\Users\geral\work\moom\code\moe.h	/^static Assets* assets;$/;"	v	language:C++
 Assets	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Assets {$/;"	s	language:C++
 assets	C:\Users\geral\work\moom\code\sui_pack.h	/^  Karu_Asset assets[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:Sui_Packer
 assets	C:\Users\geral\work\txt\code\moe.h	/^  Moe_Assets assets;$/;"	m	language:C++	struct:Moe
@@ -435,6 +435,8 @@ asset_arena	C:\Users\geral\work\moom\code\moe.h	/^  Arena asset_arena;$/;"	m	lan
 asset_arena	C:\Users\geral\work\txt\code\moe.h	/^  Arena asset_arena;$/;"	m	language:C++	struct:Moe
 asset_arena	D:/work/git/moom/code/moe.h	/^  Arena asset_arena;$/;"	m	language:C++	struct:Moe	typeref:typename:Arena
 asset_arena	D:/work/git/txt/code/moe.h	/^  Arena asset_arena;$/;"	m	language:C++	struct:Moe	typeref:typename:Arena
+Asset_Bitmap	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Bitmap {$/;"	s	language:C++
+Asset_Bitmap_ID	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Bitmap_ID { U32 value; };$/;"	s	language:C++
 asset_count	C:\Users\geral\work\moom\code\karu.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Karu_Header
 asset_count	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Assets
 asset_count	C:\Users\geral\work\moom\code\sui_pack.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Sui_Packer
@@ -447,12 +449,9 @@ asset_count	D:/work/git/moom/code/sui_pack.h	/^  U32 asset_count;$/;"	m	language
 asset_count	D:/work/git/txt/code/karu.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Karu_Header	typeref:typename:U32
 asset_count	D:/work/git/txt/code/moe_assets.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Moe_Assets	typeref:typename:U32
 asset_count	D:/work/git/txt/code/sui_pack.h	/^  U32 asset_count;$/;"	m	language:C++	struct:Sui_Packer	typeref:typename:U32
-asset_group	C:\Users\geral\work\moom\code\karu.h	/^  asset_group(ATLAS),$/;"	e	language:C++	enum:U32
-asset_group	C:\Users\geral\work\moom\code\karu.h	/^  asset_group(BLANK_SPRITE),$/;"	e	language:C++	enum:U32
-asset_group	C:\Users\geral\work\moom\code\karu.h	/^  asset_group(CIRCLE_SPRITE),$/;"	e	language:C++	enum:U32
-asset_group	C:\Users\geral\work\moom\code\karu.h	/^  asset_group(FILLED_CIRCLE_SPRITE),$/;"	e	language:C++	enum:U32
-asset_group	C:\Users\geral\work\moom\code\karu.h	/^  asset_group(FONTS),$/;"	e	language:C++	enum:U32
-asset_group	C:\Users\geral\work\moom\code\karu.h	13;"	d	language:C++
+Asset_Font	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Font {$/;"	s	language:C++
+Asset_Font_Glyph	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Font_Glyph{$/;"	s	language:C++
+Asset_Font_ID	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Font_ID { U32 value; };$/;"	s	language:C++
 Asset_Group	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Group {$/;"	s	language:C++
 asset_group	C:\Users\geral\work\txt\code\karu.h	/^  asset_group(ATLAS),$/;"	e	language:C++	enum:U32
 asset_group	C:\Users\geral\work\txt\code\karu.h	/^  asset_group(BLANK_SPRITE),$/;"	e	language:C++	enum:U32
@@ -472,15 +471,22 @@ asset_group	D:/work/git/txt/code/karu.h	/^  asset_group(CIRCLE_SPRITE),$/;"	e	la
 asset_group	D:/work/git/txt/code/karu.h	/^  asset_group(FILLED_CIRCLE_SPRITE),$/;"	e	language:C++	enum:Moe_Asset_Group_Type
 asset_group	D:/work/git/txt/code/karu.h	/^  asset_group(FONTS),$/;"	e	language:C++	enum:Moe_Asset_Group_Type
 asset_group	D:/work/git/txt/code/karu.h	/^#define asset_group(/;"	d	language:C++
+ASSET_GROUP_TYPE_ATLAS	C:\Users\geral\work\moom\code\moe_asset_types.h	/^  ASSET_GROUP_TYPE_ATLAS,$/;"	e	language:C++	enum:U32
+ASSET_GROUP_TYPE_BLANK_SPRITE	C:\Users\geral\work\moom\code\moe_asset_types.h	/^  ASSET_GROUP_TYPE_BLANK_SPRITE,$/;"	e	language:C++	enum:U32
+ASSET_GROUP_TYPE_CIRCLE_SPRITE	C:\Users\geral\work\moom\code\moe_asset_types.h	/^  ASSET_GROUP_TYPE_CIRCLE_SPRITE,$/;"	e	language:C++	enum:U32
+ASSET_GROUP_TYPE_COUNT	C:\Users\geral\work\moom\code\moe_asset_types.h	/^  ASSET_GROUP_TYPE_COUNT,$/;"	e	language:C++	enum:U32
+ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE	C:\Users\geral\work\moom\code\moe_asset_types.h	/^  ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE,$/;"	e	language:C++	enum:U32
+ASSET_GROUP_TYPE_FONTS	C:\Users\geral\work\moom\code\moe_asset_types.h	/^  ASSET_GROUP_TYPE_FONTS,$/;"	e	language:C++	enum:U32
 Asset_Match	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Match {$/;"	s	language:C++
+asset_set_match_entry	C:\Users\geral\work\moom\code\moe_assets.h	/^asset_set_match_entry(Asset_Match* vec, $/;"	f	language:C++
 Asset_Slot	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Slot {$/;"	s	language:C++
 asset_slots	C:\Users\geral\work\moom\code\moe_assets.h	/^  Asset_Slot* asset_slots;$/;"	m	language:C++	struct:Assets
+Asset_Sprite	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Sprite {$/;"	s	language:C++
+Asset_Sprite_ID	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Sprite_ID { U32 value; };$/;"	s	language:C++
 Asset_State	C:\Users\geral\work\moom\code\moe_assets.h	/^enum Asset_State {$/;"	g	language:C++
 ASSET_STATE_LOADED	C:\Users\geral\work\moom\code\moe_assets.h	/^  ASSET_STATE_LOADED,$/;"	e	language:C++	enum:Asset_State
 ASSET_STATE_LOADING	C:\Users\geral\work\moom\code\moe_assets.h	/^  ASSET_STATE_LOADING,$/;"	e	language:C++	enum:Asset_State
 ASSET_STATE_UNLOADED	C:\Users\geral\work\moom\code\moe_assets.h	/^  ASSET_STATE_UNLOADED,$/;"	e	language:C++	enum:Asset_State
-asset_tag	C:\Users\geral\work\moom\code\karu.h	/^  asset_tag(FONT),$/;"	e	language:C++	enum:U32
-asset_tag	C:\Users\geral\work\moom\code\karu.h	6;"	d	language:C++
 Asset_Tag	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Tag {$/;"	s	language:C++
 asset_tag	C:\Users\geral\work\txt\code\karu.h	/^  asset_tag(FONT),$/;"	e	language:C++	enum:U32
 asset_tag	C:\Users\geral\work\txt\code\karu.h	6;"	d	language:C++
@@ -488,6 +494,11 @@ asset_tag	D:/work/git/moom/code/karu.h	/^  asset_tag(FONT),$/;"	e	language:C++	e
 asset_tag	D:/work/git/moom/code/karu.h	/^#define asset_tag(/;"	d	language:C++
 asset_tag	D:/work/git/txt/code/karu.h	/^  asset_tag(FONT),$/;"	e	language:C++	enum:Moe_Asset_Tag_Type
 asset_tag	D:/work/git/txt/code/karu.h	/^#define asset_tag(/;"	d	language:C++
+ASSET_TAG_TYPE_COUNT	C:\Users\geral\work\moom\code\moe_asset_types.h	/^  ASSET_TAG_TYPE_COUNT,$/;"	e	language:C++	enum:U32
+ASSET_TAG_TYPE_FONT	C:\Users\geral\work\moom\code\moe_asset_types.h	/^  ASSET_TAG_TYPE_FONT,$/;"	e	language:C++	enum:U32
+ASSET_TYPE_BITMAP	C:\Users\geral\work\moom\code\moe_asset_types.h	/^  ASSET_TYPE_BITMAP,$/;"	e	language:C++	enum:U32
+ASSET_TYPE_FONT	C:\Users\geral\work\moom\code\moe_asset_types.h	/^  ASSET_TYPE_FONT,$/;"	e	language:C++	enum:U32
+ASSET_TYPE_SPRITE	C:\Users\geral\work\moom\code\moe_asset_types.h	/^  ASSET_TYPE_SPRITE,$/;"	e	language:C++	enum:U32
 at	C:\Users\geral\work\moom\code\meta.cpp	/^  U32 at;$/;"	m	language:C++	struct:Meta_Tokenizer	file:
 at	C:\Users\geral\work\moom\code\momo_json.h	/^  U32 at;$/;"	m	language:C++	struct:__anon37
 at	C:\Users\geral\work\txt\code\meta.cpp	/^  U32 at;$/;"	m	language:C++	struct:Meta_Tokenizer	file:
@@ -619,7 +630,7 @@ begin_stat	C:\Users\geral\work\txt\code\moe_profiler_rendering.h	/^begin_stat(St
 begin_stat	D:/work/git/moom/code/moe_profiler_rendering.h	/^begin_stat(Stat* stat) {$/;"	f	language:C++	typeref:typename:void
 begin_stat	D:/work/git/txt/code/moe_profiler_rendering.h	/^begin_stat(Stat* stat) {$/;"	f	language:C++	typeref:typename:void
 bitmap	C:\Users\geral\work\moom\code\karu.h	/^    Karu_Bitmap bitmap;$/;"	m	language:C++	union:Karu_Asset::__anon1
-bitmap	C:\Users\geral\work\moom\code\moe_assets.h	/^    Moe_Bitmap bitmap;$/;"	m	language:C++	union:Asset_Slot::__anon3
+bitmap	C:\Users\geral\work\moom\code\moe_assets.h	/^    Asset_Bitmap bitmap;$/;"	m	language:C++	union:Asset_Slot::__anon3
 bitmap	C:\Users\geral\work\moom\code\sui_atlas.h	/^  Sui_Atlas_Bitmap bitmap;$/;"	m	language:C++	struct:Sui_Atlas
 bitmap	C:\Users\geral\work\moom\code\sui_pack.h	/^    Sui_Packer_Source_Bitmap bitmap; $/;"	m	language:C++	union:Sui_Packer_Source::__anon81
 bitmap	C:\Users\geral\work\txt\code\karu.h	/^    Karu_Bitmap bitmap;$/;"	m	language:C++	union:Karu_Asset::__anon26
@@ -637,8 +648,8 @@ bitmap	D:/work/git/txt/code/sui_pack.h	/^    Sui_Packer_Source_Bitmap bitmap; $/
 bitmap_asset_id	C:\Users\geral\work\moom\code\karu.h	/^  U32 bitmap_asset_id; $/;"	m	language:C++	struct:Karu_Font_Glyph
 bitmap_asset_id	C:\Users\geral\work\moom\code\karu.h	/^  U32 bitmap_asset_id; $/;"	m	language:C++	struct:Karu_Sprite
 bitmap_asset_id	C:\Users\geral\work\moom\code\karu.h	/^  U32 bitmap_asset_id;$/;"	m	language:C++	struct:Karu_Font
-bitmap_asset_id	C:\Users\geral\work\moom\code\moe_assets.h	/^  Moe_Bitmap_ID bitmap_asset_id;$/;"	m	language:C++	struct:Moe_Font_Glyph
-bitmap_asset_id	C:\Users\geral\work\moom\code\moe_assets.h	/^  Moe_Bitmap_ID bitmap_asset_id;$/;"	m	language:C++	struct:Moe_Sprite
+bitmap_asset_id	C:\Users\geral\work\moom\code\moe_assets.h	/^  Asset_Bitmap_ID bitmap_asset_id;$/;"	m	language:C++	struct:Asset_Font_Glyph
+bitmap_asset_id	C:\Users\geral\work\moom\code\moe_assets.h	/^  Asset_Bitmap_ID bitmap_asset_id;$/;"	m	language:C++	struct:Asset_Sprite
 bitmap_asset_id	C:\Users\geral\work\moom\code\sui_pack.h	/^  U32 bitmap_asset_id;$/;"	m	language:C++	struct:Sui_Packer_Source_Font
 bitmap_asset_id	C:\Users\geral\work\moom\code\sui_pack.h	/^  U32 bitmap_asset_id;$/;"	m	language:C++	struct:Sui_Packer_Source_Sprite
 bitmap_asset_id	C:\Users\geral\work\txt\code\karu.h	/^  U32 bitmap_asset_id; $/;"	m	language:C++	struct:Karu_Font_Glyph
@@ -735,7 +746,7 @@ bonk_tri2_pt2	D:/work/git/moom/code/momo_bonk.h	/^bonk_tri2_pt2(V2 tp0, V2 tp1, 
 bonk_tri2_pt2	D:/work/git/txt/code/momo_bonk.h	/^bonk_tri2_pt2(V2 tp0, V2 tp1, V2 tp2, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
 bonk_tri2_pt2	D:/work/git/txt/code/momo_shapes.h	/^bonk_tri2_pt2(V2 tp0, V2 tp1, V2 tp2, V2 pt) {$/;"	f	language:C++	typeref:typename:B32
 box	C:\Users\geral\work\moom\code\karu.h	/^  Rect2 box;$/;"	m	language:C++	struct:Karu_Font_Glyph
-box	C:\Users\geral\work\moom\code\moe_assets.h	/^  Rect2 box;$/;"	m	language:C++	struct:Moe_Font_Glyph
+box	C:\Users\geral\work\moom\code\moe_assets.h	/^  Rect2 box;$/;"	m	language:C++	struct:Asset_Font_Glyph
 box	C:\Users\geral\work\txt\code\karu.h	/^  Rect2 box;$/;"	m	language:C++	struct:Karu_Font_Glyph
 box	C:\Users\geral\work\txt\code\moe_assets.h	/^  Rect2 box;$/;"	m	language:C++	struct:Moe_Font_Glyph
 box	D:/work/git/moom/code/karu.h	/^  Rect2 box;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:Rect2
@@ -964,7 +975,7 @@ codepoint_count	C:\Users\geral\work\moom\code\sui_atlas.h	/^  U32 codepoint_coun
 codepoint_count	C:\Users\geral\work\txt\code\sui_atlas.h	/^  U32 codepoint_count;$/;"	m	language:C++	struct:Sui_Atlas_Font
 codepoint_count	D:/work/git/moom/code/sui_atlas.h	/^  U32 codepoint_count;$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:U32
 codepoint_count	D:/work/git/txt/code/sui_atlas.h	/^  U32 codepoint_count;$/;"	m	language:C++	struct:Sui_Atlas_Font	typeref:typename:U32
-codepoint_map	C:\Users\geral\work\moom\code\moe_assets.h	/^  U16* codepoint_map;$/;"	m	language:C++	struct:Moe_Font
+codepoint_map	C:\Users\geral\work\moom\code\moe_assets.h	/^  U16* codepoint_map;$/;"	m	language:C++	struct:Asset_Font
 codepoint_map	C:\Users\geral\work\txt\code\moe_assets.h	/^  U16* codepoint_map;$/;"	m	language:C++	struct:Moe_Font
 codepoint_map	D:/work/git/moom/code/moe_assets.h	/^  U16* codepoint_map;$/;"	m	language:C++	struct:Moe_Font	typeref:typename:U16 *
 codepoint_map	D:/work/git/txt/code/moe_assets.h	/^  U16* codepoint_map;$/;"	m	language:C++	struct:Moe_Font	typeref:typename:U16 *
@@ -1507,11 +1518,9 @@ deg_to_rad_f64	C:\Users\geral\work\txt\code\momo_types.h	/^deg_to_rad_f64(F64 de
 deg_to_rad_f64	D:/work/git/moom/code/momo_types.h	/^deg_to_rad_f64(F64 degrees) {$/;"	f	language:C++	typeref:typename:F64
 deg_to_rad_f64	D:/work/git/txt/code/momo_common.h	/^deg_to_rad_f64(F64 degrees) {$/;"	f	language:C++	typeref:typename:F64
 deg_to_rad_f64	D:/work/git/txt/code/momo_types.h	/^deg_to_rad_f64(F64 degrees) {$/;"	f	language:C++	typeref:typename:F64
-design_height	C:\Users\geral\work\moom\code\moe.h	/^  F32 design_height;$/;"	m	language:C++	struct:Moe
 design_height	C:\Users\geral\work\txt\code\moe.h	/^  F32 design_height;$/;"	m	language:C++	struct:Moe
 design_height	D:/work/git/moom/code/moe.h	/^  F32 design_height;$/;"	m	language:C++	struct:Moe	typeref:typename:F32
 design_height	D:/work/git/txt/code/moe.h	/^  F32 design_height;$/;"	m	language:C++	struct:Moe	typeref:typename:F32
-design_width	C:\Users\geral\work\moom\code\moe.h	/^  F32 design_width;$/;"	m	language:C++	struct:Moe
 design_width	C:\Users\geral\work\txt\code\moe.h	/^  F32 design_width;$/;"	m	language:C++	struct:Moe
 design_width	D:/work/git/moom/code/moe.h	/^  F32 design_width;$/;"	m	language:C++	struct:Moe	typeref:typename:F32
 design_width	D:/work/git/txt/code/moe.h	/^  F32 design_width;$/;"	m	language:C++	struct:Moe	typeref:typename:F32
@@ -2396,7 +2405,7 @@ fmt_chunk	C:\Users\geral\work\txt\code\momo_wav.h	/^  WAV_Fmt_Chunk fmt_chunk;$/
 fmt_chunk	D:/work/git/moom/code/momo_wav.h	/^  WAV_Fmt_Chunk fmt_chunk;$/;"	m	language:C++	struct:__anonc02f72570408	typeref:typename:WAV_Fmt_Chunk
 fmt_chunk	D:/work/git/txt/code/momo_wav.h	/^  WAV_Fmt_Chunk fmt_chunk;$/;"	m	language:C++	struct:__anon690e9bbf0408	typeref:typename:WAV_Fmt_Chunk
 font	C:\Users\geral\work\moom\code\karu.h	/^    Karu_Font font;$/;"	m	language:C++	union:Karu_Asset::__anon1
-font	C:\Users\geral\work\moom\code\moe_assets.h	/^    Moe_Font font;$/;"	m	language:C++	union:Asset_Slot::__anon3
+font	C:\Users\geral\work\moom\code\moe_assets.h	/^    Asset_Font font;$/;"	m	language:C++	union:Asset_Slot::__anon3
 font	C:\Users\geral\work\moom\code\sui_atlas.h	/^  Sui_Atlas_Font* font;$/;"	m	language:C++	struct:Sui_Atlas_Font_Glyph_Context
 font	C:\Users\geral\work\moom\code\sui_pack.h	/^    Sui_Packer_Source_Font font;$/;"	m	language:C++	union:Sui_Packer_Source::__anon81
 font	C:\Users\geral\work\txt\code\karu.h	/^    Karu_Font font;$/;"	m	language:C++	union:Karu_Asset::__anon26
@@ -3147,12 +3156,12 @@ glyf	C:\Users\geral\work\moom\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cm
 glyf	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon62
 glyf	D:/work/git/moom/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
 glyf	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
-glyphs	C:\Users\geral\work\moom\code\moe_assets.h	/^  Moe_Font_Glyph* glyphs;$/;"	m	language:C++	struct:Moe_Font
+glyphs	C:\Users\geral\work\moom\code\moe_assets.h	/^  Asset_Font_Glyph* glyphs;$/;"	m	language:C++	struct:Asset_Font
 glyphs	C:\Users\geral\work\txt\code\moe_assets.h	/^  Moe_Font_Glyph* glyphs;$/;"	m	language:C++	struct:Moe_Font
 glyphs	D:/work/git/moom/code/moe_assets.h	/^  Moe_Font_Glyph* glyphs;$/;"	m	language:C++	struct:Moe_Font	typeref:typename:Moe_Font_Glyph *
 glyphs	D:/work/git/txt/code/moe_assets.h	/^  Moe_Font_Glyph* glyphs;$/;"	m	language:C++	struct:Moe_Font	typeref:typename:Moe_Font_Glyph *
 glyph_count	C:\Users\geral\work\moom\code\karu.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Karu_Font
-glyph_count	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Moe_Font
+glyph_count	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Asset_Font
 glyph_count	C:\Users\geral\work\moom\code\momo_ttf.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:TTF
 glyph_count	C:\Users\geral\work\txt\code\karu.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Karu_Font
 glyph_count	C:\Users\geral\work\txt\code\moe_assets.h	/^  U32 glyph_count;$/;"	m	language:C++	struct:Moe_Font
@@ -3448,7 +3457,7 @@ head	D:/work/git/moom/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea
 head	D:/work/git/txt/code/momo_json.h	/^  struct _JSON_Array_Node* head;  $/;"	m	language:C++	struct:__anon6dd1ef0b0208	typeref:struct:_JSON_Array_Node *
 head	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
 height	C:\Users\geral\work\moom\code\karu.h	/^  U32 height;$/;"	m	language:C++	struct:Karu_Bitmap
-height	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 height;$/;"	m	language:C++	struct:Moe_Bitmap
+height	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 height;$/;"	m	language:C++	struct:Asset_Bitmap
 height	C:\Users\geral\work\moom\code\moe_gfx_opengl.h	/^  U32 height;$/;"	m	language:C++	struct:__anon10
 height	C:\Users\geral\work\moom\code\momo_png.h	/^  U32 height;$/;"	m	language:C++	struct:PNG
 height	C:\Users\geral\work\moom\code\momo_png.h	/^  U32 height;$/;"	m	language:C++	struct:__anon44
@@ -3485,7 +3494,7 @@ hhea	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cma
 hhea	D:/work/git/moom/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
 hhea	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
 highest_codepoint	C:\Users\geral\work\moom\code\karu.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Karu_Font
-highest_codepoint	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Moe_Font
+highest_codepoint	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Asset_Font
 highest_codepoint	C:\Users\geral\work\txt\code\karu.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Karu_Font
 highest_codepoint	C:\Users\geral\work\txt\code\moe_assets.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Moe_Font
 highest_codepoint	D:/work/git/moom/code/karu.h	/^  U32 highest_codepoint;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:U32
@@ -3505,7 +3514,7 @@ hmtx	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cma
 hmtx	D:/work/git/moom/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
 hmtx	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
 horizontal_advance	C:\Users\geral\work\moom\code\karu.h	/^  F32 horizontal_advance;$/;"	m	language:C++	struct:Karu_Font_Glyph
-horizontal_advance	C:\Users\geral\work\moom\code\moe_assets.h	/^  F32 horizontal_advance;$/;"	m	language:C++	struct:Moe_Font_Glyph
+horizontal_advance	C:\Users\geral\work\moom\code\moe_assets.h	/^  F32 horizontal_advance;$/;"	m	language:C++	struct:Asset_Font_Glyph
 horizontal_advance	C:\Users\geral\work\txt\code\karu.h	/^  F32 horizontal_advance;$/;"	m	language:C++	struct:Karu_Font_Glyph
 horizontal_advance	C:\Users\geral\work\txt\code\moe_assets.h	/^  F32 horizontal_advance;$/;"	m	language:C++	struct:Moe_Font_Glyph
 horizontal_advance	D:/work/git/moom/code/karu.h	/^  F32 horizontal_advance;$/;"	m	language:C++	struct:Karu_Font_Glyph	typeref:typename:F32
@@ -3869,7 +3878,7 @@ Karu_Bitmap	C:\Users\geral\work\moom\code\karu.h	/^struct Karu_Bitmap {$/;"	s	la
 Karu_Bitmap	C:\Users\geral\work\txt\code\karu.h	/^struct Karu_Bitmap {$/;"	s	language:C++
 Karu_Bitmap	D:/work/git/moom/code/karu.h	/^struct Karu_Bitmap {$/;"	s	language:C++
 Karu_Bitmap	D:/work/git/txt/code/karu.h	/^struct Karu_Bitmap {$/;"	s	language:C++
-KARU_CODE	C:\Users\geral\work\moom\code\karu.h	31;"	d	language:C++
+KARU_CODE	C:\Users\geral\work\moom\code\karu.h	9;"	d	language:C++
 KARU_CODE	C:\Users\geral\work\txt\code\karu.h	31;"	d	language:C++
 KARU_CODE	D:/work/git/moom/code/karu.h	/^#define KARU_CODE(/;"	d	language:C++
 KARU_CODE	D:/work/git/txt/code/karu.h	/^#define KARU_CODE(/;"	d	language:C++
@@ -3893,7 +3902,7 @@ Karu_Header	C:\Users\geral\work\moom\code\karu.h	/^struct Karu_Header {$/;"	s	la
 Karu_Header	C:\Users\geral\work\txt\code\karu.h	/^struct Karu_Header {$/;"	s	language:C++
 Karu_Header	D:/work/git/moom/code/karu.h	/^struct Karu_Header {$/;"	s	language:C++
 Karu_Header	D:/work/git/txt/code/karu.h	/^struct Karu_Header {$/;"	s	language:C++
-KARU_SIGNATURE	C:\Users\geral\work\moom\code\karu.h	32;"	d	language:C++
+KARU_SIGNATURE	C:\Users\geral\work\moom\code\karu.h	10;"	d	language:C++
 KARU_SIGNATURE	C:\Users\geral\work\txt\code\karu.h	32;"	d	language:C++
 KARU_SIGNATURE	D:/work/git/moom/code/karu.h	/^#define KARU_SIGNATURE /;"	d	language:C++
 KARU_SIGNATURE	D:/work/git/txt/code/karu.h	/^#define KARU_SIGNATURE /;"	d	language:C++
@@ -3912,7 +3921,7 @@ kern	C:\Users\geral\work\moom\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cm
 kern	C:\Users\geral\work\txt\code\momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:__anon62
 kern	D:/work/git/moom/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
 kern	D:/work/git/txt/code/momo_ttf.h	/^  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:TTF	typeref:typename:U32
-kernings	C:\Users\geral\work\moom\code\moe_assets.h	/^  F32* kernings;$/;"	m	language:C++	struct:Moe_Font
+kernings	C:\Users\geral\work\moom\code\moe_assets.h	/^  F32* kernings;$/;"	m	language:C++	struct:Asset_Font
 kernings	C:\Users\geral\work\txt\code\moe_assets.h	/^  F32* kernings;$/;"	m	language:C++	struct:Moe_Font
 kernings	D:/work/git/moom/code/moe_assets.h	/^  F32* kernings;$/;"	m	language:C++	struct:Moe_Font	typeref:typename:F32 *
 kernings	D:/work/git/txt/code/moe_assets.h	/^  F32* kernings;$/;"	m	language:C++	struct:Moe_Font	typeref:typename:F32 *
@@ -4771,7 +4780,7 @@ Moe	D:/work/git/txt/code/moe.h	/^} Moe;$/;"	t	language:C++	typeref:struct:Moe
 moe	D:/work/git/txt/code/moe_platform.h	/^  void* moe;$/;"	m	language:C++	struct:__anon91c45abf0708	typeref:typename:void *
 moe_allocate_mode	C:\Users\geral\work\txt\code\moe.h	120;"	d	language:C++
 moe_allocate_mode_size	C:\Users\geral\work\txt\code\moe.h	/^moe_allocate_mode_size(Moe* moe, UMI size) {$/;"	f	language:C++
-moe_allocate_scene	C:\Users\geral\work\moom\code\moe.h	121;"	d	language:C++
+moe_allocate_scene	C:\Users\geral\work\moom\code\moe.h	111;"	d	language:C++
 moe_allocate_scene	D:/work/git/moom/code/moe.h	/^#define moe_allocate_scene(/;"	d	language:C++
 moe_allocate_scene	D:/work/git/txt/code/moe.h	/^#define moe_allocate_scene(/;"	d	language:C++
 moe_allocate_scene_size	D:/work/git/txt/code/moe.h	/^moe_allocate_scene_size(Moe* moe, UMI size) {$/;"	f	language:C++	typeref:typename:void *
@@ -4793,7 +4802,6 @@ Moe_Asset_Group	D:/work/git/moom/code/moe_assets.h	/^struct Moe_Asset_Group {$/;
 Moe_Asset_Group	D:/work/git/txt/code/moe_assets.h	/^struct Moe_Asset_Group {$/;"	s	language:C++
 Moe_Asset_Group_Type	D:/work/git/moom/code/karu.h	/^enum Moe_Asset_Group_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
 Moe_Asset_Group_Type	D:/work/git/txt/code/karu.h	/^enum Moe_Asset_Group_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
-MOE_ASSET_GROUP_TYPE_COUNT	C:\Users\geral\work\moom\code\karu.h	/^  MOE_ASSET_GROUP_TYPE_COUNT,$/;"	e	language:C++	enum:U32
 MOE_ASSET_GROUP_TYPE_COUNT	C:\Users\geral\work\txt\code\karu.h	/^  MOE_ASSET_GROUP_TYPE_COUNT,$/;"	e	language:C++	enum:U32
 MOE_ASSET_GROUP_TYPE_COUNT	D:/work/git/moom/code/karu.h	/^  MOE_ASSET_GROUP_TYPE_COUNT,$/;"	e	language:C++	enum:Moe_Asset_Group_Type
 MOE_ASSET_GROUP_TYPE_COUNT	D:/work/git/txt/code/karu.h	/^  MOE_ASSET_GROUP_TYPE_COUNT,$/;"	e	language:C++	enum:Moe_Asset_Group_Type
@@ -4817,29 +4825,23 @@ Moe_Asset_Tag	D:/work/git/moom/code/moe_assets.h	/^struct Moe_Asset_Tag {$/;"	s	
 Moe_Asset_Tag	D:/work/git/txt/code/moe_assets.h	/^struct Moe_Asset_Tag {$/;"	s	language:C++
 Moe_Asset_Tag_Type	D:/work/git/moom/code/karu.h	/^enum Moe_Asset_Tag_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
 Moe_Asset_Tag_Type	D:/work/git/txt/code/karu.h	/^enum Moe_Asset_Tag_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
-MOE_ASSET_TAG_TYPE_COUNT	C:\Users\geral\work\moom\code\karu.h	/^  MOE_ASSET_TAG_TYPE_COUNT,$/;"	e	language:C++	enum:U32
 MOE_ASSET_TAG_TYPE_COUNT	C:\Users\geral\work\txt\code\karu.h	/^  MOE_ASSET_TAG_TYPE_COUNT,$/;"	e	language:C++	enum:U32
 MOE_ASSET_TAG_TYPE_COUNT	D:/work/git/moom/code/karu.h	/^  MOE_ASSET_TAG_TYPE_COUNT,$/;"	e	language:C++	enum:Moe_Asset_Tag_Type
 MOE_ASSET_TAG_TYPE_COUNT	D:/work/git/txt/code/karu.h	/^  MOE_ASSET_TAG_TYPE_COUNT,$/;"	e	language:C++	enum:Moe_Asset_Tag_Type
 Moe_Asset_Type	D:/work/git/moom/code/karu.h	/^enum Moe_Asset_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
 Moe_Asset_Type	D:/work/git/txt/code/karu.h	/^enum Moe_Asset_Type : U32 {$/;"	g	language:C++	typeref:typename:U32
-MOE_ASSET_TYPE_BITMAP	C:\Users\geral\work\moom\code\karu.h	/^  MOE_ASSET_TYPE_BITMAP,$/;"	e	language:C++	enum:U32
 MOE_ASSET_TYPE_BITMAP	C:\Users\geral\work\txt\code\karu.h	/^  MOE_ASSET_TYPE_BITMAP,$/;"	e	language:C++	enum:U32
 MOE_ASSET_TYPE_BITMAP	D:/work/git/moom/code/karu.h	/^  MOE_ASSET_TYPE_BITMAP,$/;"	e	language:C++	enum:Moe_Asset_Type
 MOE_ASSET_TYPE_BITMAP	D:/work/git/txt/code/karu.h	/^  MOE_ASSET_TYPE_BITMAP,$/;"	e	language:C++	enum:Moe_Asset_Type
-MOE_ASSET_TYPE_FONT	C:\Users\geral\work\moom\code\karu.h	/^  MOE_ASSET_TYPE_FONT,$/;"	e	language:C++	enum:U32
 MOE_ASSET_TYPE_FONT	C:\Users\geral\work\txt\code\karu.h	/^  MOE_ASSET_TYPE_FONT,$/;"	e	language:C++	enum:U32
 MOE_ASSET_TYPE_FONT	D:/work/git/moom/code/karu.h	/^  MOE_ASSET_TYPE_FONT,$/;"	e	language:C++	enum:Moe_Asset_Type
 MOE_ASSET_TYPE_FONT	D:/work/git/txt/code/karu.h	/^  MOE_ASSET_TYPE_FONT,$/;"	e	language:C++	enum:Moe_Asset_Type
-MOE_ASSET_TYPE_SPRITE	C:\Users\geral\work\moom\code\karu.h	/^  MOE_ASSET_TYPE_SPRITE,$/;"	e	language:C++	enum:U32
 MOE_ASSET_TYPE_SPRITE	C:\Users\geral\work\txt\code\karu.h	/^  MOE_ASSET_TYPE_SPRITE,$/;"	e	language:C++	enum:U32
 MOE_ASSET_TYPE_SPRITE	D:/work/git/moom/code/karu.h	/^  MOE_ASSET_TYPE_SPRITE,$/;"	e	language:C++	enum:Moe_Asset_Type
 MOE_ASSET_TYPE_SPRITE	D:/work/git/txt/code/karu.h	/^  MOE_ASSET_TYPE_SPRITE,$/;"	e	language:C++	enum:Moe_Asset_Type
-Moe_Bitmap	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Moe_Bitmap {$/;"	s	language:C++
 Moe_Bitmap	C:\Users\geral\work\txt\code\moe_assets.h	/^struct Moe_Bitmap {$/;"	s	language:C++
 Moe_Bitmap	D:/work/git/moom/code/moe_assets.h	/^struct Moe_Bitmap {$/;"	s	language:C++
 Moe_Bitmap	D:/work/git/txt/code/moe_assets.h	/^struct Moe_Bitmap {$/;"	s	language:C++
-Moe_Bitmap_ID	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Moe_Bitmap_ID { U32 value; };$/;"	s	language:C++
 Moe_Bitmap_ID	C:\Users\geral\work\txt\code\moe_assets.h	/^struct Moe_Bitmap_ID { U32 value; };$/;"	s	language:C++
 Moe_Bitmap_ID	D:/work/git/moom/code/moe_assets.h	/^struct Moe_Bitmap_ID { U32 value; };$/;"	s	language:C++
 Moe_Bitmap_ID	D:/work/git/txt/code/moe_assets.h	/^struct Moe_Bitmap_ID { U32 value; };$/;"	s	language:C++
@@ -4849,15 +4851,12 @@ MOE_CONSOLE_H	D:/work/git/moom/code/moe_console.h	/^#define MOE_CONSOLE_H$/;"	d	
 MOE_CONSOLE_H	D:/work/git/txt/code/moe_console.h	/^#define MOE_CONSOLE_H$/;"	d	language:C++
 MOE_DEBUG_H	C:\Users\geral\work\txt\code\moe_debug.h	4;"	d	language:C++
 MOE_DEBUG_H	D:/work/git/txt/code/moe_debug.h	/^#define MOE_DEBUG_H$/;"	d	language:C++
-Moe_Font	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Moe_Font {$/;"	s	language:C++
 Moe_Font	C:\Users\geral\work\txt\code\moe_assets.h	/^struct Moe_Font {$/;"	s	language:C++
 Moe_Font	D:/work/git/moom/code/moe_assets.h	/^struct Moe_Font {$/;"	s	language:C++
 Moe_Font	D:/work/git/txt/code/moe_assets.h	/^struct Moe_Font {$/;"	s	language:C++
-Moe_Font_Glyph	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Moe_Font_Glyph{$/;"	s	language:C++
 Moe_Font_Glyph	C:\Users\geral\work\txt\code\moe_assets.h	/^struct Moe_Font_Glyph{$/;"	s	language:C++
 Moe_Font_Glyph	D:/work/git/moom/code/moe_assets.h	/^struct Moe_Font_Glyph{$/;"	s	language:C++
 Moe_Font_Glyph	D:/work/git/txt/code/moe_assets.h	/^struct Moe_Font_Glyph{$/;"	s	language:C++
-Moe_Font_ID	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Moe_Font_ID { U32 value; };$/;"	s	language:C++
 Moe_Font_ID	C:\Users\geral\work\txt\code\moe_assets.h	/^struct Moe_Font_ID { U32 value; };$/;"	s	language:C++
 Moe_Font_ID	D:/work/git/moom/code/moe_assets.h	/^struct Moe_Font_ID { U32 value; };$/;"	s	language:C++
 Moe_Font_ID	D:/work/git/txt/code/moe_assets.h	/^struct Moe_Font_ID { U32 value; };$/;"	s	language:C++
@@ -4905,8 +4904,8 @@ MOE_INSPECTOR_RENDERING_H	D:/work/git/txt/code/moe_inspector_rendering.h	/^#defi
 moe_is_scene_initialized	C:\Users\geral\work\moom\code\moe.h	/^moe_is_scene_initialized(Moe* moe) {$/;"	f	language:C++
 moe_is_scene_initialized	D:/work/git/moom/code/moe.h	/^moe_is_scene_initialized(Moe* moe) {$/;"	f	language:C++	typeref:typename:B32
 moe_is_scene_initialized	D:/work/git/txt/code/moe.h	/^moe_is_scene_initialized(Moe* moe) {$/;"	f	language:C++	typeref:typename:B32
-moe_log	C:\Users\geral\work\moom\code\moe.h	17;"	d	language:C++
-moe_log	C:\Users\geral\work\moom\code\moe.h	22;"	d	language:C++
+moe_log	C:\Users\geral\work\moom\code\moe.h	16;"	d	language:C++
+moe_log	C:\Users\geral\work\moom\code\moe.h	21;"	d	language:C++
 moe_log	C:\Users\geral\work\txt\code\moe.h	17;"	d	language:C++
 moe_log	C:\Users\geral\work\txt\code\moe.h	22;"	d	language:C++
 moe_log	D:/work/git/moom/code/moe.h	/^#define moe_log(/;"	d	language:C++
@@ -4944,7 +4943,7 @@ MOE_PLATFORM_H	C:\Users\geral\work\moom\code\moe_platform.h	6;"	d	language:C++
 MOE_PLATFORM_H	C:\Users\geral\work\txt\code\moe_platform.h	6;"	d	language:C++
 MOE_PLATFORM_H	D:/work/git/moom/code/moe_platform.h	/^#define MOE_PLATFORM_H$/;"	d	language:C++
 MOE_PLATFORM_H	D:/work/git/txt/code/moe_platform.h	/^#define MOE_PLATFORM_H$/;"	d	language:C++
-moe_profiler_block	C:\Users\geral\work\moom\code\moe.h	23;"	d	language:C++
+moe_profiler_block	C:\Users\geral\work\moom\code\moe.h	22;"	d	language:C++
 moe_profiler_block	C:\Users\geral\work\txt\code\moe.h	23;"	d	language:C++
 moe_profiler_block	D:/work/git/moom/code/moe.h	/^#define moe_profiler_block(/;"	d	language:C++
 moe_profiler_block	D:/work/git/txt/code/moe.h	/^#define moe_profiler_block(/;"	d	language:C++
@@ -4956,27 +4955,26 @@ MOE_PROFILER_RENDERING_H	C:\Users\geral\work\moom\code\moe_profiler_rendering.h	
 MOE_PROFILER_RENDERING_H	C:\Users\geral\work\txt\code\moe_profiler_rendering.h	3;"	d	language:C++
 MOE_PROFILER_RENDERING_H	D:/work/git/moom/code/moe_profiler_rendering.h	/^#define MOE_PROFILER_RENDERING_H$/;"	d	language:C++
 MOE_PROFILER_RENDERING_H	D:/work/git/txt/code/moe_profiler_rendering.h	/^#define MOE_PROFILER_RENDERING_H$/;"	d	language:C++
-moe_profile_begin	C:\Users\geral\work\moom\code\moe.h	19;"	d	language:C++
-moe_profile_begin	C:\Users\geral\work\moom\code\moe.h	24;"	d	language:C++
+moe_profile_begin	C:\Users\geral\work\moom\code\moe.h	18;"	d	language:C++
+moe_profile_begin	C:\Users\geral\work\moom\code\moe.h	23;"	d	language:C++
 moe_profile_begin	C:\Users\geral\work\txt\code\moe.h	19;"	d	language:C++
 moe_profile_begin	C:\Users\geral\work\txt\code\moe.h	24;"	d	language:C++
 moe_profile_begin	D:/work/git/moom/code/moe.h	/^#define moe_profile_begin(/;"	d	language:C++
 moe_profile_begin	D:/work/git/moom/code/moe.h	/^#define moe_profile_begin(/;"	d	language:C++
 moe_profile_begin	D:/work/git/txt/code/moe.h	/^#define moe_profile_begin(/;"	d	language:C++
 moe_profile_begin	D:/work/git/txt/code/moe.h	/^#define moe_profile_begin(/;"	d	language:C++
-moe_profile_block	C:\Users\geral\work\moom\code\moe.h	18;"	d	language:C++
+moe_profile_block	C:\Users\geral\work\moom\code\moe.h	17;"	d	language:C++
 moe_profile_block	C:\Users\geral\work\txt\code\moe.h	18;"	d	language:C++
 moe_profile_block	D:/work/git/moom/code/moe.h	/^#define moe_profile_block(/;"	d	language:C++
 moe_profile_block	D:/work/git/txt/code/moe.h	/^#define moe_profile_block(/;"	d	language:C++
-moe_profile_end	C:\Users\geral\work\moom\code\moe.h	20;"	d	language:C++
-moe_profile_end	C:\Users\geral\work\moom\code\moe.h	25;"	d	language:C++
+moe_profile_end	C:\Users\geral\work\moom\code\moe.h	19;"	d	language:C++
+moe_profile_end	C:\Users\geral\work\moom\code\moe.h	24;"	d	language:C++
 moe_profile_end	C:\Users\geral\work\txt\code\moe.h	20;"	d	language:C++
 moe_profile_end	C:\Users\geral\work\txt\code\moe.h	25;"	d	language:C++
 moe_profile_end	D:/work/git/moom/code/moe.h	/^#define moe_profile_end(/;"	d	language:C++
 moe_profile_end	D:/work/git/moom/code/moe.h	/^#define moe_profile_end(/;"	d	language:C++
 moe_profile_end	D:/work/git/txt/code/moe.h	/^#define moe_profile_end(/;"	d	language:C++
 moe_profile_end	D:/work/git/txt/code/moe.h	/^#define moe_profile_end(/;"	d	language:C++
-moe_set_design_dims	C:\Users\geral\work\moom\code\moe.h	/^moe_set_design_dims(Moe* moe, F32 design_width, F32 design_height) {$/;"	f	language:C++
 moe_set_design_dims	C:\Users\geral\work\txt\code\moe.h	/^moe_set_design_dims(Moe* moe, F32 design_width, F32 design_height) {$/;"	f	language:C++
 moe_set_design_dims	D:/work/git/moom/code/moe.h	/^moe_set_design_dims(Moe* moe, F32 design_width, F32 design_height) {$/;"	f	language:C++	typeref:typename:void
 moe_set_design_dims	D:/work/git/txt/code/moe.h	/^moe_set_design_dims(Moe* moe, F32 design_width, F32 design_height) {$/;"	f	language:C++	typeref:typename:void
@@ -5004,11 +5002,9 @@ Moe_Show_Debug_Type	C:\Users\geral\work\moom\code\moe.h	/^enum Moe_Show_Debug_Ty
 Moe_Show_Debug_Type	C:\Users\geral\work\txt\code\moe.h	/^enum Moe_Show_Debug_Type {$/;"	g	language:C++
 Moe_Show_Debug_Type	D:/work/git/moom/code/moe.h	/^enum Moe_Show_Debug_Type {$/;"	g	language:C++
 Moe_Show_Debug_Type	D:/work/git/txt/code/moe.h	/^enum Moe_Show_Debug_Type {$/;"	g	language:C++
-Moe_Sprite	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Moe_Sprite {$/;"	s	language:C++
 Moe_Sprite	C:\Users\geral\work\txt\code\moe_assets.h	/^struct Moe_Sprite {$/;"	s	language:C++
 Moe_Sprite	D:/work/git/moom/code/moe_assets.h	/^struct Moe_Sprite {$/;"	s	language:C++
 Moe_Sprite	D:/work/git/txt/code/moe_assets.h	/^struct Moe_Sprite {$/;"	s	language:C++
-Moe_Sprite_ID	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Moe_Sprite_ID { U32 value; };$/;"	s	language:C++
 Moe_Sprite_ID	C:\Users\geral\work\txt\code\moe_assets.h	/^struct Moe_Sprite_ID { U32 value; };$/;"	s	language:C++
 Moe_Sprite_ID	D:/work/git/moom/code/moe_assets.h	/^struct Moe_Sprite_ID { U32 value; };$/;"	s	language:C++
 Moe_Sprite_ID	D:/work/git/txt/code/moe_assets.h	/^struct Moe_Sprite_ID { U32 value; };$/;"	s	language:C++
@@ -6274,7 +6270,6 @@ prf_update_entries	D:/work/git/moom/code/moe_profiler.h	/^static void prf_update
 prf_update_entries	D:/work/git/txt/code/moe_profiler.h	/^prf_update_entries(Profiler* p) {$/;"	f	language:C++	typeref:typename:void
 prf_update_entries	D:/work/git/txt/code/moe_profiler.h	/^static void prf_update_entries(Profiler* p);$/;"	p	language:C++	typeref:typename:void
 profiler	C:\Users\geral\work\moom\code\moe.h	/^  Profiler* profiler;$/;"	m	language:C++	struct:Moe
-profiler	C:\Users\geral\work\moom\code\moe.h	/^static struct Profiler* profiler;$/;"	v	language:C++	typeref:struct:Profiler
 profiler	C:\Users\geral\work\moom\code\moe_platform.h	/^  Profiler* profiler; $/;"	m	language:C++	struct:__anon23
 Profiler	C:\Users\geral\work\moom\code\moe_profiler.h	/^typedef struct Profiler {$/;"	s	language:C++
 Profiler	C:\Users\geral\work\moom\code\moe_profiler.h	/^} Profiler;$/;"	t	language:C++	typeref:struct:Profiler
@@ -6441,7 +6436,7 @@ remainders	D:/work/git/moom/code/momo_crc.h	/^  U8 remainders[256];$/;"	m	langua
 remainders	D:/work/git/txt/code/momo_crc.h	/^  U16 remainders[256];$/;"	m	language:C++	struct:__anon67adb3490208	typeref:typename:U16[256]
 remainders	D:/work/git/txt/code/momo_crc.h	/^  U32 remainders[256];$/;"	m	language:C++	struct:__anon67adb3490108	typeref:typename:U32[256]
 remainders	D:/work/git/txt/code/momo_crc.h	/^  U8 remainders[256];$/;"	m	language:C++	struct:__anon67adb3490308	typeref:typename:U8[256]
-renderer_texture_handle	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 renderer_texture_handle;$/;"	m	language:C++	struct:Moe_Bitmap
+renderer_texture_handle	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 renderer_texture_handle;$/;"	m	language:C++	struct:Asset_Bitmap
 renderer_texture_handle	C:\Users\geral\work\txt\code\moe_assets.h	/^  U32 renderer_texture_handle;$/;"	m	language:C++	struct:Moe_Bitmap
 renderer_texture_handle	D:/work/git/moom/code/moe_assets.h	/^  U32 renderer_texture_handle;$/;"	m	language:C++	struct:Moe_Bitmap	typeref:typename:U32
 renderer_texture_handle	D:/work/git/txt/code/moe_assets.h	/^  U32 renderer_texture_handle;$/;"	m	language:C++	struct:Moe_Bitmap	typeref:typename:U32
@@ -6833,7 +6828,7 @@ scene_context	D:/work/git/txt/code/moe.h	/^  void* scene_context;$/;"	m	language
 SCENE_H	C:\Users\geral\work\moom\code\scene.h	2;"	d	language:C++
 SCENE_H	D:/work/git/moom/code/scene.h	/^#define SCENE_H$/;"	d	language:C++
 SCENE_H	D:/work/git/txt/code/scene.h	/^#define SCENE_H$/;"	d	language:C++
-scene_set_entry	C:\Users\geral\work\moom\code\moe.h	124;"	d	language:C++
+scene_set_entry	C:\Users\geral\work\moom\code\moe.h	114;"	d	language:C++
 scene_set_entry	D:/work/git/moom/code/moe.h	/^#define scene_set_entry(/;"	d	language:C++
 scene_set_entry	D:/work/git/moom/code/scene.h	/^scene_set_entry(lit_tick);$/;"	p	language:C++
 scene_set_entry	D:/work/git/txt/code/moe.h	/^#define scene_set_entry(/;"	d	language:C++
@@ -6871,7 +6866,6 @@ sensors	C:\Users\geral\work\txt\code\moe_mode_lit.h	/^  Lit_Sensor_List sensors;
 sensors	D:/work/git/moom/code/scene_lit.h	/^  Lit_Sensor_List sensors;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Sensor_List
 sensors	D:/work/git/txt/code/moe_mode_lit.h	/^  Lit_Sensor_List sensors;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Sensor_List
 sensors	D:/work/git/txt/code/scene_lit.h	/^  Lit_Sensor_List sensors;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Sensor_List
-set_match_entry	C:\Users\geral\work\moom\code\moe_assets.h	/^set_match_entry(Asset_Match* vec, $/;"	f	language:C++
 set_match_entry	C:\Users\geral\work\txt\code\moe_assets.h	/^set_match_entry(Moe_Asset_Match* vec, $/;"	f	language:C++
 set_match_entry	D:/work/git/moom/code/moe_assets.h	/^set_match_entry(Moe_Asset_Match* vec, $/;"	f	language:C++	typeref:typename:void
 set_match_entry	D:/work/git/txt/code/moe_assets.h	/^set_match_entry(Moe_Asset_Match* vec, $/;"	f	language:C++	typeref:typename:void
@@ -7034,7 +7028,7 @@ splash_tick	D:/work/git/txt/code/moe_mode_splash.h	/^splash_tick(Moe* moe)$/;"	f
 splash_tick	D:/work/git/txt/code/scene_splash.cpp	/^splash_tick(Moe* moe)$/;"	f	language:C++	typeref:typename:void	file:
 splash_tick	D:/work/git/txt/code/scene_splash.h	/^static void splash_tick(Moe* moe);$/;"	p	language:C++	typeref:typename:void
 sprite	C:\Users\geral\work\moom\code\karu.h	/^    Karu_Sprite sprite;$/;"	m	language:C++	union:Karu_Asset::__anon1
-sprite	C:\Users\geral\work\moom\code\moe_assets.h	/^    Moe_Sprite sprite;$/;"	m	language:C++	union:Asset_Slot::__anon3
+sprite	C:\Users\geral\work\moom\code\moe_assets.h	/^    Asset_Sprite sprite;$/;"	m	language:C++	union:Asset_Slot::__anon3
 sprite	C:\Users\geral\work\moom\code\sui_atlas.h	/^    Sui_Atlas_Sprite_Context sprite;$/;"	m	language:C++	union:Sui_Atlas_Context::__anon80
 sprite	C:\Users\geral\work\moom\code\sui_atlas.h	/^  Sui_Atlas_Sprite* sprite;$/;"	m	language:C++	struct:Sui_Atlas_Sprite_Context
 sprite	C:\Users\geral\work\moom\code\sui_pack.h	/^    Sui_Packer_Source_Sprite sprite; $/;"	m	language:C++	union:Sui_Packer_Source::__anon81
@@ -7665,8 +7659,8 @@ test_write_memory_to_file	D:/work/git/moom/code/test.h	/^test_write_memory_to_fi
 test_write_memory_to_file	D:/work/git/txt/code/test.h	/^test_write_memory_to_file(Block block, const char* filename) {$/;"	f	language:C++	typeref:typename:B32
 texel_x0	C:\Users\geral\work\moom\code\karu.h	/^  U32 texel_x0;$/;"	m	language:C++	struct:Karu_Font_Glyph
 texel_x0	C:\Users\geral\work\moom\code\karu.h	/^  U32 texel_x0;$/;"	m	language:C++	struct:Karu_Sprite
-texel_x0	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_x0, texel_y0;$/;"	m	language:C++	struct:Moe_Font_Glyph
-texel_x0	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_x0;$/;"	m	language:C++	struct:Moe_Sprite
+texel_x0	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_x0, texel_y0;$/;"	m	language:C++	struct:Asset_Font_Glyph
+texel_x0	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_x0;$/;"	m	language:C++	struct:Asset_Sprite
 texel_x0	C:\Users\geral\work\moom\code\moe_gfx.h	/^  U32 texel_x0, texel_y0;$/;"	m	language:C++	struct:Gfx_Command_Sprite
 texel_x0	C:\Users\geral\work\moom\code\sui_pack.h	/^  U32 texel_x0;$/;"	m	language:C++	struct:Sui_Packer_Source_Sprite
 texel_x0	C:\Users\geral\work\txt\code\karu.h	/^  U32 texel_x0;$/;"	m	language:C++	struct:Karu_Font_Glyph
@@ -7689,8 +7683,8 @@ texel_x0	D:/work/git/txt/code/moe_gfx.h	/^  U32 texel_x0, texel_y0;$/;"	m	langua
 texel_x0	D:/work/git/txt/code/sui_pack.h	/^  U32 texel_x0;$/;"	m	language:C++	struct:Sui_Packer_Source_Sprite	typeref:typename:U32
 texel_x1	C:\Users\geral\work\moom\code\karu.h	/^  U32 texel_x1;$/;"	m	language:C++	struct:Karu_Font_Glyph
 texel_x1	C:\Users\geral\work\moom\code\karu.h	/^  U32 texel_x1;$/;"	m	language:C++	struct:Karu_Sprite
-texel_x1	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_x1, texel_y1;$/;"	m	language:C++	struct:Moe_Font_Glyph
-texel_x1	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_x1;$/;"	m	language:C++	struct:Moe_Sprite
+texel_x1	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_x1, texel_y1;$/;"	m	language:C++	struct:Asset_Font_Glyph
+texel_x1	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_x1;$/;"	m	language:C++	struct:Asset_Sprite
 texel_x1	C:\Users\geral\work\moom\code\moe_gfx.h	/^  U32 texel_x1, texel_y1;$/;"	m	language:C++	struct:Gfx_Command_Sprite
 texel_x1	C:\Users\geral\work\moom\code\sui_pack.h	/^  U32 texel_x1;$/;"	m	language:C++	struct:Sui_Packer_Source_Sprite
 texel_x1	C:\Users\geral\work\txt\code\karu.h	/^  U32 texel_x1;$/;"	m	language:C++	struct:Karu_Font_Glyph
@@ -7713,8 +7707,8 @@ texel_x1	D:/work/git/txt/code/moe_gfx.h	/^  U32 texel_x1, texel_y1;$/;"	m	langua
 texel_x1	D:/work/git/txt/code/sui_pack.h	/^  U32 texel_x1;$/;"	m	language:C++	struct:Sui_Packer_Source_Sprite	typeref:typename:U32
 texel_y0	C:\Users\geral\work\moom\code\karu.h	/^  U32 texel_y0;$/;"	m	language:C++	struct:Karu_Font_Glyph
 texel_y0	C:\Users\geral\work\moom\code\karu.h	/^  U32 texel_y0;$/;"	m	language:C++	struct:Karu_Sprite
-texel_y0	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_x0, texel_y0;$/;"	m	language:C++	struct:Moe_Font_Glyph
-texel_y0	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_y0;$/;"	m	language:C++	struct:Moe_Sprite
+texel_y0	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_x0, texel_y0;$/;"	m	language:C++	struct:Asset_Font_Glyph
+texel_y0	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_y0;$/;"	m	language:C++	struct:Asset_Sprite
 texel_y0	C:\Users\geral\work\moom\code\moe_gfx.h	/^  U32 texel_x0, texel_y0;$/;"	m	language:C++	struct:Gfx_Command_Sprite
 texel_y0	C:\Users\geral\work\moom\code\sui_pack.h	/^  U32 texel_y0;$/;"	m	language:C++	struct:Sui_Packer_Source_Sprite
 texel_y0	C:\Users\geral\work\txt\code\karu.h	/^  U32 texel_y0;$/;"	m	language:C++	struct:Karu_Font_Glyph
@@ -7737,8 +7731,8 @@ texel_y0	D:/work/git/txt/code/moe_gfx.h	/^  U32 texel_x0, texel_y0;$/;"	m	langua
 texel_y0	D:/work/git/txt/code/sui_pack.h	/^  U32 texel_y0;$/;"	m	language:C++	struct:Sui_Packer_Source_Sprite	typeref:typename:U32
 texel_y1	C:\Users\geral\work\moom\code\karu.h	/^  U32 texel_y1;$/;"	m	language:C++	struct:Karu_Font_Glyph
 texel_y1	C:\Users\geral\work\moom\code\karu.h	/^  U32 texel_y1;$/;"	m	language:C++	struct:Karu_Sprite
-texel_y1	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_x1, texel_y1;$/;"	m	language:C++	struct:Moe_Font_Glyph
-texel_y1	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_y1;$/;"	m	language:C++	struct:Moe_Sprite
+texel_y1	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_x1, texel_y1;$/;"	m	language:C++	struct:Asset_Font_Glyph
+texel_y1	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 texel_y1;$/;"	m	language:C++	struct:Asset_Sprite
 texel_y1	C:\Users\geral\work\moom\code\moe_gfx.h	/^  U32 texel_x1, texel_y1;$/;"	m	language:C++	struct:Gfx_Command_Sprite
 texel_y1	C:\Users\geral\work\moom\code\sui_pack.h	/^  U32 texel_y1;$/;"	m	language:C++	struct:Sui_Packer_Source_Sprite
 texel_y1	C:\Users\geral\work\txt\code\karu.h	/^  U32 texel_y1;$/;"	m	language:C++	struct:Karu_Font_Glyph
@@ -7963,8 +7957,8 @@ tutorial_triggers	C:\Users\geral\work\txt\code\moe_mode_lit.h	/^  Lit_Tutorial_T
 tutorial_triggers	D:/work/git/moom/code/scene_lit.h	/^  Lit_Tutorial_Trigger_List tutorial_triggers;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Tutorial_Trigger_List
 tutorial_triggers	D:/work/git/txt/code/moe_mode_lit.h	/^  Lit_Tutorial_Trigger_List tutorial_triggers;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Tutorial_Trigger_List
 tutorial_triggers	D:/work/git/txt/code/scene_lit.h	/^  Lit_Tutorial_Trigger_List tutorial_triggers;$/;"	m	language:C++	struct:Lit	typeref:typename:Lit_Tutorial_Trigger_List
-type	C:\Users\geral\work\moom\code\karu.h	/^  Moe_Asset_Tag_Type type; $/;"	m	language:C++	struct:Karu_Tag
-type	C:\Users\geral\work\moom\code\karu.h	/^  Moe_Asset_Type type; $/;"	m	language:C++	struct:Karu_Asset
+type	C:\Users\geral\work\moom\code\karu.h	/^  Asset_Tag_Type type; $/;"	m	language:C++	struct:Karu_Tag
+type	C:\Users\geral\work\moom\code\karu.h	/^  Asset_Type type; $/;"	m	language:C++	struct:Karu_Asset
 type	C:\Users\geral\work\moom\code\meta.cpp	/^  Meta_Token_Type type;$/;"	m	language:C++	struct:Meta_Token	file:
 type	C:\Users\geral\work\moom\code\moe_assets.h	/^  Asset_Tag_Type type; $/;"	m	language:C++	struct:Asset_Tag
 type	C:\Users\geral\work\moom\code\moe_assets.h	/^  Asset_Type type;$/;"	m	language:C++	struct:Asset_Slot
@@ -8059,9 +8053,9 @@ U16_MAX	C:\Users\geral\work\txt\code\momo_types.h	214;"	d	language:C++
 U16_MAX	D:/work/git/moom/code/momo_types.h	/^#define U16_MAX /;"	d	language:C++
 U16_MAX	D:/work/git/txt/code/momo_common.h	/^#define U16_MAX /;"	d	language:C++
 U16_MAX	D:/work/git/txt/code/momo_types.h	/^#define U16_MAX /;"	d	language:C++
-U32	C:\Users\geral\work\moom\code\karu.h	/^enum Moe_Asset_Group_Type : U32 {$/;"	g	language:C++
-U32	C:\Users\geral\work\moom\code\karu.h	/^enum Moe_Asset_Tag_Type : U32 {$/;"	g	language:C++
-U32	C:\Users\geral\work\moom\code\karu.h	/^enum Moe_Asset_Type : U32 {$/;"	g	language:C++
+U32	C:\Users\geral\work\moom\code\moe_asset_types.h	/^enum Asset_Group_Type : U32 {$/;"	g	language:C++
+U32	C:\Users\geral\work\moom\code\moe_asset_types.h	/^enum Asset_Tag_Type : U32 {$/;"	g	language:C++
+U32	C:\Users\geral\work\moom\code\moe_asset_types.h	/^enum Asset_Type : U32 {$/;"	g	language:C++
 u32	C:\Users\geral\work\moom\code\momo_json.h	/^    U32 u32;$/;"	m	language:C++	union:__anon38::__anon39
 U32	C:\Users\geral\work\moom\code\momo_types.h	/^typedef uint32_t U32;$/;"	t	language:C++
 U32	C:\Users\geral\work\txt\code\karu.h	/^enum Moe_Asset_Group_Type : U32 {$/;"	g	language:C++
@@ -8124,7 +8118,7 @@ update_and_render_inspector	C:\Users\geral\work\moom\code\moe_inspector_renderin
 update_and_render_inspector	C:\Users\geral\work\txt\code\moe_inspector_rendering.h	/^update_and_render_inspector(Moe_Sprite_ID rect_sprite, Moe_Font_ID font) $/;"	f	language:C++
 update_and_render_inspector	D:/work/git/moom/code/moe_inspector_rendering.h	/^update_and_render_inspector(Moe_Sprite_ID rect_sprite, Moe_Font_ID font) $/;"	f	language:C++	typeref:typename:void
 update_and_render_inspector	D:/work/git/txt/code/moe_inspector_rendering.h	/^update_and_render_inspector(Moe_Sprite_ID rect_sprite, Moe_Font_ID font) $/;"	f	language:C++	typeref:typename:void
-update_and_render_profiler	C:\Users\geral\work\moom\code\moe_profiler_rendering.h	/^update_and_render_profiler(Moe_Sprite_ID blank_sprite, Moe_Font_ID font) $/;"	f	language:C++
+update_and_render_profiler	C:\Users\geral\work\moom\code\moe_profiler_rendering.h	/^update_and_render_profiler(Moe* moe) $/;"	f	language:C++
 update_and_render_profiler	C:\Users\geral\work\txt\code\moe_profiler_rendering.h	/^update_and_render_profiler(Moe_Sprite_ID blank_sprite, Moe_Font_ID font) $/;"	f	language:C++
 update_and_render_profiler	D:/work/git/moom/code/moe_profiler_rendering.h	/^update_and_render_profiler(Moe_Sprite_ID blank_sprite, Moe_Font_ID font) $/;"	f	language:C++	typeref:typename:void
 update_and_render_profiler	D:/work/git/txt/code/moe_profiler_rendering.h	/^update_and_render_profiler(Moe_Sprite_ID blank_sprite, Moe_Font_ID font) $/;"	f	language:C++	typeref:typename:void
@@ -8468,9 +8462,9 @@ V4	D:/work/git/moom/code/momo_vectors.h	/^union V4 {$/;"	u	language:C++
 V4	D:/work/git/txt/code/momo_vectors.h	/^union V4 {$/;"	u	language:C++
 value	C:\Users\geral\work\moom\code\karu.h	/^  F32 value;$/;"	m	language:C++	struct:Karu_Tag
 value	C:\Users\geral\work\moom\code\moe_assets.h	/^  F32 value;$/;"	m	language:C++	struct:Asset_Tag
-value	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Moe_Bitmap_ID { U32 value; };$/;"	m	language:C++	struct:Moe_Bitmap_ID
-value	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Moe_Font_ID { U32 value; };$/;"	m	language:C++	struct:Moe_Font_ID
-value	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Moe_Sprite_ID { U32 value; };$/;"	m	language:C++	struct:Moe_Sprite_ID
+value	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Bitmap_ID { U32 value; };$/;"	m	language:C++	struct:Asset_Bitmap_ID
+value	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Font_ID { U32 value; };$/;"	m	language:C++	struct:Asset_Font_ID
+value	C:\Users\geral\work\moom\code\moe_assets.h	/^struct Asset_Sprite_ID { U32 value; };$/;"	m	language:C++	struct:Asset_Sprite_ID
 value	C:\Users\geral\work\moom\code\momo_json.h	/^  _JSON_Value value;$/;"	m	language:C++	struct:_JSON_Array_Node
 value	C:\Users\geral\work\moom\code\momo_json.h	/^  _JSON_Value value;$/;"	m	language:C++	struct:_JSON_Object_Node
 value	C:\Users\geral\work\txt\code\karu.h	/^  F32 value;$/;"	m	language:C++	struct:Karu_Tag
@@ -8981,7 +8975,7 @@ WGL_TYPE_RGBA_ARB	C:\Users\geral\work\txt\code\w32_gfx_opengl.h	21;"	d	language:
 WGL_TYPE_RGBA_ARB	D:/work/git/moom/code/w32_gfx_opengl.h	/^#define WGL_TYPE_RGBA_ARB /;"	d	language:C++
 WGL_TYPE_RGBA_ARB	D:/work/git/txt/code/w32_gfx_opengl.h	/^#define WGL_TYPE_RGBA_ARB /;"	d	language:C++
 width	C:\Users\geral\work\moom\code\karu.h	/^  U32 width;$/;"	m	language:C++	struct:Karu_Bitmap
-width	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 width;$/;"	m	language:C++	struct:Moe_Bitmap
+width	C:\Users\geral\work\moom\code\moe_assets.h	/^  U32 width;$/;"	m	language:C++	struct:Asset_Bitmap
 width	C:\Users\geral\work\moom\code\moe_gfx_opengl.h	/^  U32 width; $/;"	m	language:C++	struct:__anon10
 width	C:\Users\geral\work\moom\code\momo_png.h	/^  U32 width;$/;"	m	language:C++	struct:PNG
 width	C:\Users\geral\work\moom\code\momo_png.h	/^  U32 width;$/;"	m	language:C++	struct:__anon44

@@ -5,13 +5,13 @@
 
 
 static void
-paint_sprite(Moe_Sprite_ID sprite_id,
+paint_sprite(Asset_Sprite_ID sprite_id,
              V2 pos,
              V2 size,
              RGBA color = rgba_set(1.f,1.f,1.f,1.f))
 {
-  Moe_Sprite* sprite = get_sprite(assets, sprite_id);
-  Moe_Bitmap* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);
+  Asset_Sprite* sprite = get_sprite(assets, sprite_id);
+  Asset_Bitmap* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);
   V2 anchor = {0.5f, 0.5f}; 
   
   gfx_push_sprite(platform->gfx, 
@@ -26,13 +26,13 @@ paint_sprite(Moe_Sprite_ID sprite_id,
 
 
 static void
-paint_text(Moe_Font_ID font_id,
+paint_text(Asset_Font_ID font_id,
            String8 str,
            RGBA color,
            F32 px, F32 py,
            F32 font_height) 
 {
-  Moe_Font* font = get_font(assets, font_id);
+  Asset_Font* font = get_font(assets, font_id);
   for(U32 char_index = 0; 
       char_index < str.count;
       ++char_index) 
@@ -41,15 +41,15 @@ paint_text(Moe_Font_ID font_id,
 
     if (char_index > 0) {
       U32 prev_cp = str.e[char_index-1];
-      Moe_Font_Glyph *prev_glyph = get_glyph(font, prev_cp);
+      Asset_Font_Glyph *prev_glyph = get_glyph(font, prev_cp);
 
       F32 kerning = get_kerning(font, prev_cp, curr_cp);
       F32 advance = prev_glyph->horizontal_advance;
       px += (kerning + advance) * font_height;
     }
 
-    Moe_Font_Glyph *glyph = get_glyph(font, curr_cp);
-    Moe_Bitmap* bitmap = get_bitmap(assets, glyph->bitmap_asset_id);
+    Asset_Font_Glyph *glyph = get_glyph(font, curr_cp);
+    Asset_Bitmap* bitmap = get_bitmap(assets, glyph->bitmap_asset_id);
     F32 width = (glyph->box.max.x - glyph->box.min.x)*font_height;
     F32 height = (glyph->box.max.y - glyph->box.min.y)*font_height;
     
@@ -69,13 +69,13 @@ paint_text(Moe_Font_ID font_id,
 }
 
 static void
-paint_text_center_aligned(Moe_Font_ID font_id,
+paint_text_center_aligned(Asset_Font_ID font_id,
                           String8 str,
                           RGBA color,
                           F32 px, F32 py,
                           F32 font_height) 
 {
-  Moe_Font* font = get_font(assets, font_id);
+  Asset_Font* font = get_font(assets, font_id);
 
   
   // Calculate the total width of the text
@@ -103,8 +103,8 @@ paint_text_center_aligned(Moe_Font_ID font_id,
       F32 advance = get_kerning(font, prev_cp, curr_cp);
       px += advance * font_height;
     }
-    Moe_Font_Glyph *glyph = get_glyph(font, curr_cp);
-    Moe_Bitmap* bitmap = get_bitmap(assets, glyph->bitmap_asset_id);
+    Asset_Font_Glyph *glyph = get_glyph(font, curr_cp);
+    Asset_Bitmap* bitmap = get_bitmap(assets, glyph->bitmap_asset_id);
 
     F32 width = (glyph->box.max.x - glyph->box.min.x)*font_height;
     F32 height = (glyph->box.max.y - glyph->box.min.y)*font_height;

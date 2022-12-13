@@ -5,7 +5,7 @@
 
 
 static void 
-update_and_render_inspector(Moe_Sprite_ID rect_sprite, Moe_Font_ID font) 
+update_and_render_inspector(Asset_Sprite_ID rect_sprite, Asset_Font_ID font) 
 {
 
   paint_sprite(rect_sprite, 

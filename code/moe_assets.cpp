@@ -1,3 +1,13 @@
+static void
+set_match_entry(Asset_Match* vec, 
+                Asset_Tag_Type tag,
+                F32 tag_value_to_match, 
+                F32 tag_weight) 
+{
+  vec->e[tag].tag_value_to_match = tag_value_to_match; // debug font
+  vec->e[tag].tag_weight = tag_weight;
+}
+
 
 static U32
 get_next_texture_handle() {
@@ -128,7 +138,7 @@ moe_init_assets(Moe* moe, const char* filename)
           
           U16* codepoint_map = arn_push_arr(U16, arena, highest_codepoint);
           if(!codepoint_map) return false;
-          Moe_Font_Glyph* glyphs = arn_push_arr(Moe_Font_Glyph, arena, glyph_count);
+          Asset_Font_Glyph* glyphs = arn_push_arr(Asset_Font_Glyph, arena, glyph_count);
           if(!glyphs) return false;
           F32* kernings = arn_push_arr(F32, arena, glyph_count*glyph_count);
           if (!kernings) return false;
@@ -148,13 +158,13 @@ moe_init_assets(Moe* moe, const char* filename)
                           glyph_data_offset,
                           &karu_glyph); 
             
-            Moe_Font_Glyph* glyph = glyphs + glyph_index;
+            Asset_Font_Glyph* glyph = glyphs + glyph_index;
             glyph->texel_x0 = karu_glyph.texel_x0;
             glyph->texel_y0 = karu_glyph.texel_y0;
             glyph->texel_x1 = karu_glyph.texel_x1;
             glyph->texel_y1 = karu_glyph.texel_y1;
 
-            glyph->bitmap_asset_id = Moe_Bitmap_ID{ karu_glyph.bitmap_asset_id };
+            glyph->bitmap_asset_id = Asset_Bitmap_ID{ karu_glyph.bitmap_asset_id };
             glyph->box = karu_glyph.box;
             glyph->horizontal_advance = karu_glyph.horizontal_advance;
             codepoint_map[karu_glyph.codepoint] = glyph_index;
@@ -259,7 +269,7 @@ find_best_asset_of_type(Assets* ma,
 
 
 static F32
-get_kerning(Moe_Font* font,
+get_kerning(Asset_Font* font,
             U32 left_codepoint, 
             U32 right_codepoint) 
 {
@@ -272,11 +282,11 @@ get_kerning(Moe_Font* font,
   return font->kernings[advance_index];
 }
 
-static Moe_Font_Glyph*
-get_glyph(Moe_Font* font, U32 codepoint) {
+static Asset_Font_Glyph*
+get_glyph(Asset_Font* font, U32 codepoint) {
   U32 glyph_index_plus_one = font->codepoint_map[codepoint] + 1;
   if (glyph_index_plus_one == 0) return null;
-  Moe_Font_Glyph *glyph = font->glyphs + glyph_index_plus_one - 1;
+  Asset_Font_Glyph *glyph = font->glyphs + glyph_index_plus_one - 1;
   return glyph;
 }
 
@@ -285,42 +295,42 @@ get_asset_slot(Assets* ma, U32 asset_index){
   return ma->asset_slots + asset_index;
 }
 
-static Moe_Bitmap*
-get_bitmap(Assets* ma, Moe_Bitmap_ID bitmap_id) {
+static Asset_Bitmap*
+get_bitmap(Assets* ma, Asset_Bitmap_ID bitmap_id) {
   Asset_Slot* asset = get_asset_slot(ma, bitmap_id.value);
   if(asset->type != ASSET_TYPE_BITMAP) return null;
   return &asset->bitmap;
 }
 
-static Moe_Sprite*
-get_sprite(Assets* ma, Moe_Sprite_ID sprite_id) {
+static Asset_Sprite*
+get_sprite(Assets* ma, Asset_Sprite_ID sprite_id) {
   Asset_Slot* asset = get_asset_slot(ma, sprite_id.value);
   if(asset->type != ASSET_TYPE_SPRITE) return null;
   return &asset->sprite;
 }
 
-static Moe_Font*
-get_font(Assets* ma, Moe_Font_ID font_id) {
+static Asset_Font*
+get_font(Assets* ma, Asset_Font_ID font_id) {
   Asset_Slot* asset = get_asset_slot(ma, font_id.value);
   if(asset->type != ASSET_TYPE_FONT) return null;
   return &asset->font;
 }
-static Moe_Bitmap_ID
+static Asset_Bitmap_ID
 find_first_bitmap(Assets* ma, Asset_Group_Type group_type) {
   return { find_first_asset_of_type(ma, group_type, ASSET_TYPE_BITMAP) };
 }
 
-static Moe_Font_ID
+static Asset_Font_ID
 find_first_font(Assets* ma, Asset_Group_Type group_type) {
   return { find_first_asset_of_type(ma, group_type, ASSET_TYPE_FONT) };
 }
 
-static Moe_Sprite_ID
+static Asset_Sprite_ID
 find_first_sprite(Assets* ma, Asset_Group_Type group_type) {
   return { find_first_asset_of_type(ma, group_type, ASSET_TYPE_SPRITE) };
 }
 
-static Moe_Sprite_ID
+static Asset_Sprite_ID
 find_best_sprite(Assets* ma, 
                  Asset_Group_Type group_type, 
                  Asset_Match* match_vector)
@@ -329,7 +339,7 @@ find_best_sprite(Assets* ma,
   
 }
 
-static Moe_Font_ID
+static Asset_Font_ID
 find_best_font(Assets* ma, 
                Asset_Group_Type group_type, 
                Asset_Match* match_vector)

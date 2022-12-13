@@ -2,30 +2,8 @@
 #define KARU_H
 
 
-// moe_asset_types.h
-#define asset_tag(name) ASSET_TAG_TYPE_##name
-enum Asset_Tag_Type : U32 {
-  asset_tag(FONT),
+#include "moe_asset_types.h"
 
-  ASSET_TAG_TYPE_COUNT,
-};
-
-#define asset_group(name) ASSET_GROUP_TYPE_##name
-enum Asset_Group_Type : U32 {
-  asset_group(BLANK_SPRITE),
-  asset_group(CIRCLE_SPRITE),
-  asset_group(FILLED_CIRCLE_SPRITE),
-  asset_group(ATLAS),
-  asset_group(FONTS),
-
-  ASSET_GROUP_TYPE_COUNT,
-};
-
-enum Asset_Type : U32 {
-  ASSET_TYPE_SPRITE,
-  ASSET_TYPE_FONT,
-  ASSET_TYPE_BITMAP,
-};
 
 // karu.h
 #define KARU_CODE(a, b, c, d) (((U32)(a) << 0) | ((U32)(b) << 8) | ((U32)(c) << 16) | ((U32)(d) << 24))

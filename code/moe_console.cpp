@@ -66,7 +66,7 @@ _execute(Console* dc) {
 }
 
 static void
-update_and_render_console(Console* dc, Moe_Sprite_ID blank_sprite, Moe_Font_ID font) 
+update_and_render_console(Console* dc, Asset_Sprite_ID blank_sprite, Asset_Font_ID font) 
 {
   for (U32 char_index = 0; 
        char_index < platform->char_count;
