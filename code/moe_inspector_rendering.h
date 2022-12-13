@@ -7,8 +7,9 @@
 static void 
 update_and_render_inspector(Moe* moe) 
 {
+  Assets* assets = &moe->assets;
 
-  paint_sprite(moe->blank_sprite, 
+  paint_sprite(moe, moe->blank_sprite, 
                v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
                v2_set(MOE_WIDTH, MOE_HEIGHT),
                {0.f, 0.f, 0.f, 0.5f});
@@ -37,7 +38,7 @@ update_and_render_inspector(Moe* moe)
     
     F32 y = MOE_HEIGHT - line_height * (entry_index+1);
     
-    paint_text(moe->debug_font, 
+    paint_text(moe, moe->debug_font, 
                sb->str,
                rgba_hex(0xFFFFFFFF),
                0.f, 

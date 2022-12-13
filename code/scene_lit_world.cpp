@@ -286,13 +286,13 @@ lit_gen_lights(Lit_Light_List* lights,
 }
 
 static void
-lit_draw_lights(Lit* lit) {
+lit_draw_lights(Moe* moe, Lit* lit) {
   Lit_Light_List* lights = &lit->lights;
   // Emitters
   al_foreach(light_index, lights)
   {
     Lit_Light* light = al_at(lights, light_index);
-    paint_sprite(lit->blank_sprite, 
+    paint_sprite(moe, lit->blank_sprite, 
                  light->pos,
                  {16.f, 16.f},
                  {0.8f, 0.8f, 0.8f, 1.f});
@@ -367,7 +367,7 @@ lit_draw_debug_light_rays(Lit* lit, Moe* moe) {
       V2 line_max = al_at(&l->intersections, sorted_its[its_id].index)->pt;
       
       sb8_push_fmt(sb, str8_from_lit("[%u]"), its_id);
-      paint_text(lit->tutorial_font, 
+      paint_text(moe, lit->tutorial_font, 
                  sb->str,
                  hex_to_rgba(0xFF0000FF),
                  line_max.x,

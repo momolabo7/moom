@@ -50,7 +50,7 @@ update_and_render_profiler(Moe* moe)
   const F32 font_height = 20.f;
 
   // Overlay
-  paint_sprite(moe->blank_sprite, 
+  paint_sprite(moe, moe->blank_sprite, 
                v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
                v2_set(MOE_WIDTH, MOE_HEIGHT),
                rgba_set(0.f, 0.f, 0.f, 0.5f));
@@ -98,7 +98,7 @@ update_and_render_profiler(Moe* moe)
                  (U32)hits.average,
                  (U32)cycles_per_hit.average);
     
-    paint_text(moe->debug_font, 
+    paint_text(moe, moe->debug_font, 
                sb->str,
                rgba_hex(0xFFFFFFFF),
                0.f, 
@@ -127,7 +127,7 @@ update_and_render_profiler(Moe* moe)
       V2 size = {snapshot_bar_width, snapshot_bar_height};
       
       
-      paint_sprite(moe->blank_sprite, 
+      paint_sprite(moe, moe->blank_sprite, 
                    pos,
                    size,
                    rgba_hex(0x00FF00FF));

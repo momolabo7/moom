@@ -69,8 +69,6 @@ moe_update_and_render(Platform* pf)
  
   // Set globals from moe
   Moe* moe = (Moe*)((Platform_Memory_Block*)platform->moe)->data;
-  assets = &moe->assets;
-  inspector = &moe->inspector;
   Console* console = &moe->console;
 
  

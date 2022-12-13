@@ -31,7 +31,6 @@ static Platform* platform;
 #include "moe_assets.h"
 #include "moe_inspector.h"
 
-static Assets* assets;
 static Inspector* inspector;
 
 #include "moe_console.h"

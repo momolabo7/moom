@@ -5,11 +5,14 @@
 
 
 static void
-paint_sprite(Asset_Sprite_ID sprite_id,
+paint_sprite(Moe* moe,
+             Asset_Sprite_ID sprite_id,
              V2 pos,
              V2 size,
              RGBA color = rgba_set(1.f,1.f,1.f,1.f))
 {
+  Assets* assets = &moe->assets;
+
   Asset_Sprite* sprite = get_sprite(assets, sprite_id);
   Asset_Bitmap* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);
   V2 anchor = {0.5f, 0.5f}; 
@@ -26,12 +29,14 @@ paint_sprite(Asset_Sprite_ID sprite_id,
 
 
 static void
-paint_text(Asset_Font_ID font_id,
+paint_text(Moe* moe,
+           Asset_Font_ID font_id,
            String8 str,
            RGBA color,
            F32 px, F32 py,
            F32 font_height) 
 {
+  Assets* assets = &moe->assets;
   Asset_Font* font = get_font(assets, font_id);
   for(U32 char_index = 0; 
       char_index < str.count;
@@ -69,12 +74,14 @@ paint_text(Asset_Font_ID font_id,
 }
 
 static void
-paint_text_center_aligned(Asset_Font_ID font_id,
+paint_text_center_aligned(Moe* moe,
+                          Asset_Font_ID font_id,
                           String8 str,
                           RGBA color,
                           F32 px, F32 py,
                           F32 font_height) 
 {
+  Assets* assets = &moe->assets;
   Asset_Font* font = get_font(assets, font_id);
 
   

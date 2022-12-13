@@ -196,8 +196,10 @@ static void
 lit_tick(Moe* moe) 
 {
   Lit* m = (Lit*)moe->scene_context;
+  Assets* assets = &moe->assets;
   if (!moe_is_scene_initialized(moe)) 
   {
+
     m = moe_allocate_scene(Lit, moe);
     lit_load_level(m, 0); 
     m->rng = rng_create(65535); // don't really need to be strict 
@@ -298,14 +300,14 @@ lit_tick(Moe* moe)
                  GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
   //lit_draw_edges(m); 
-  lit_draw_debug_light_rays(m, moe);
-  lit_draw_player(m);
-  lit_draw_lights(m);
+  //lit_draw_debug_light_rays(m, moe);
+  lit_draw_player(moe, m);
+  lit_draw_lights(moe, m);
   
   gfx_push_blend(platform->gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
-  lit_render_sensors(m); 
-  lit_render_particles(m);
+  lit_render_sensors(moe, m); 
+  lit_render_particles(moe, m);
 #if LIT_DEBUG_COORDINATES 
   // Debug coordinates
   {
@@ -313,7 +315,7 @@ lit_tick(Moe* moe)
     sb8_push_fmt(sb, str8_from_lit("[%f %f]"), 
         platform->mouse_pos.x,
         LIT_HEIGHT - platform->mouse_pos.y);
-    paint_text(m->tutorial_font, sb->str, RGBA_WHITE, 0.f, 0.f, 32.f);
+    paint_text(moe, m->tutorial_font, sb->str, RGBA_WHITE, 0.f, 0.f, 32.f);
   }
 #endif
 
@@ -365,21 +367,21 @@ lit_tick(Moe* moe)
     Lit_Tutorial_Text* text = al_at(&m->tutorial_texts, tutorial_text_id);
     switch(text->state) {
       case LIT_TUTORIAL_TEXT_STATE_VISIBLE: {
-        paint_text(m->tutorial_font, text->str, RGBA_WHITE, text->pos_x, text->pos_y, 32.f);
+        paint_text(moe, m->tutorial_font, text->str, RGBA_WHITE, text->pos_x, text->pos_y, 32.f);
         gfx_advance_depth(platform->gfx);
       } break;
       case LIT_TUTORIAL_TEXT_STATE_FADE_IN: {
         F32 a = ease_out_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
         F32 y = text->pos_y + (1.f-a) * 32.f;
         RGBA color = rgba_set(1.f, 1.f, 1.f, text->alpha);
-        paint_text(m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
+        paint_text(moe, m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
         gfx_advance_depth(platform->gfx);
       } break;
       case LIT_TUTORIAL_TEXT_STATE_FADE_OUT: {
         F32 a = ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
         F32 y = text->pos_y + a * 32.f;
         RGBA color = rgba_set(1.f, 1.f, 1.f, text->alpha);
-        paint_text(m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
+        paint_text(moe, m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
         gfx_advance_depth(platform->gfx);
       } break;
     }
@@ -388,7 +390,7 @@ lit_tick(Moe* moe)
   // Draw the overlay for fade in/out
   {
     RGBA color = rgba_set(0.f, 0.f, 0.f, m->stage_fade);
-    paint_sprite(m->blank_sprite, v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), v2_set(MOE_WIDTH, MOE_HEIGHT), color);
+    paint_sprite(moe, m->blank_sprite, v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), v2_set(MOE_WIDTH, MOE_HEIGHT), color);
     gfx_advance_depth(platform->gfx);
   }
 }

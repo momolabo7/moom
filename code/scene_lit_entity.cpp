@@ -118,10 +118,10 @@ lit_update_player(Lit* lit, F32 dt)
 }
 
 static void
-lit_draw_player(Lit* lit)
+lit_draw_player(Moe* moe, Lit* lit)
 {
   Lit_Player* player = &lit->player;
-  paint_sprite(lit->circle_sprite, 
+  paint_sprite(moe, lit->circle_sprite, 
                player->pos, 
                v2_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
   gfx_advance_depth(platform->gfx);
@@ -176,7 +176,7 @@ lit_update_particles(Lit* lit, F32 dt) {
 }
 
 static void
-lit_render_particles(Lit* lit) {
+lit_render_particles(Moe* moe, Lit* lit) {
   Lit_Particle_Pool* ps = &lit->particles;
   // Render particles
   for(U32 particle_id = 0; 
@@ -197,7 +197,7 @@ lit_render_particles(Lit* lit) {
     size.w = lerp_f32(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = lerp_f32(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    paint_sprite(lit->filled_circle_sprite, p->pos, size, color);
+    paint_sprite(moe, lit->filled_circle_sprite, p->pos, size, color);
     gfx_advance_depth(platform->gfx);
   }
 }
@@ -297,7 +297,7 @@ lit_are_all_sensors_activated(Lit* lit) {
 }
 
 static void 
-lit_render_sensors(Lit* lit) {
+lit_render_sensors(Moe* moe, Lit* lit) {
   Lit_Sensor_List* sensors = &lit->sensors;
   al_foreach(sensor_index, sensors)
   {
