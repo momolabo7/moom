@@ -99,16 +99,13 @@ moe_update_and_render(Platform* pf)
   moe_profile_begin(DEBUG);
   switch (moe->show_debug_type) {
     case MOE_SHOW_DEBUG_CONSOLE: {
-      update_and_render_console(console,
-                                moe->blank_sprite, 
-                                moe->debug_font); 
+      update_and_render_console(moe); 
     }break;
     case MOE_SHOW_DEBUG_PROFILER: {
       update_and_render_profiler(moe); 
     }break;
     case MOE_SHOW_DEBUG_INSPECTOR: {
-      update_and_render_inspector(moe->blank_sprite, 
-                                  moe->debug_font);
+      update_and_render_inspector(moe);
     }break;
     default: {}
   }

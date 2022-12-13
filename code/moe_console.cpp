@@ -66,8 +66,9 @@ _execute(Console* dc) {
 }
 
 static void
-update_and_render_console(Console* dc, Asset_Sprite_ID blank_sprite, Asset_Font_ID font) 
+update_and_render_console(Moe* moe) 
 {
+  Console* dc = &moe->console;
   for (U32 char_index = 0; 
        char_index < platform->char_count;
        ++char_index) 
@@ -105,15 +106,15 @@ update_and_render_console(Console* dc, Asset_Sprite_ID blank_sprite, Asset_Font_
   V2 input_area_size = { console_width, line_height };
   V2 input_area_pos = { console_width/2, line_height/2 };
   
-  paint_sprite(blank_sprite, 
+  paint_sprite(moe->blank_sprite, 
                v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
                v2_set(MOE_WIDTH, MOE_HEIGHT),
                rgba_set(0.f, 0.f, 0.f, 0.8f));
   gfx_advance_depth(platform->gfx);
   
-  paint_sprite(blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
+  paint_sprite(moe->blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
   gfx_advance_depth(platform->gfx);
-  paint_sprite(blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
+  paint_sprite(moe->blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
   gfx_advance_depth(platform->gfx);
   
   
@@ -124,7 +125,7 @@ update_and_render_console(Console* dc, Asset_Sprite_ID blank_sprite, Asset_Font_
   {
     String8_Builder* line = dc->info_lines + line_index;
     
-    paint_text(font,
+    paint_text(moe->debug_font,
                line->str,
                rgba_hex(0xFFFFFFFF),
                left_pad, 
@@ -133,7 +134,7 @@ update_and_render_console(Console* dc, Asset_Sprite_ID blank_sprite, Asset_Font_
     
   }
   gfx_advance_depth(platform->gfx);
-  paint_text(font,
+  paint_text(moe->debug_font,
              dc->input_line.str,
              rgba_hex(0xFFFFFFFF),
              left_pad, 
