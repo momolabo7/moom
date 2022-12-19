@@ -5,8 +5,6 @@
 #ifndef MOE_PLATFORM_H
 #define MOE_PLATFORM_H
 
-// TODO: remove this and make this file as standalone as possible?
-//
 #include "momo.h"
 
 /////////////////////////////////////////////////////////////////////

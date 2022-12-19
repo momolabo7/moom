@@ -25,7 +25,7 @@ int main() {
   fclose(fp);
 
   Arena ba = {0}; 
-  arn_init(&ba, malloc(MB(1)), MB(1)); 
+  arn_init(&ba, malloc(megabytes(1)), megabytes(1)); 
 
   make(JSON_Object, json);
   json_read(json, mem, len, &ba);

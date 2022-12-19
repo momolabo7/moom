@@ -678,8 +678,6 @@ json_read(JSON_Object* j, void* memory, UMI size, Arena* ba)
 }
 
 
-static B32 
-
 
 static S32* 
 json_get_s32(JSON_Object* j, String8 key) {

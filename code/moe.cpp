@@ -7,11 +7,7 @@
 exported B32 
 moe_update_and_render(Platform* pf)
 { 
-  // Set globals from platform
-  platform = pf;
-  moe_profile_block(GAME);
-
-  if (platform->reloaded) {
+  if (pf->reloaded) {
     if(pf->moe) {
       pf->free_memory((Platform_Memory_Block*)pf->moe);
     }
@@ -19,10 +15,10 @@ moe_update_and_render(Platform* pf)
     // Allocate and initialize Moe engine
     Platform_Memory_Block* moe_memory = pf->allocate_memory(megabytes(32));
     pf->moe = moe_memory;
-
-    Moe* moe = (Moe*)moe_memory->data;
     
-    // TODO: we should shift moe_arena into moe itself
+    Moe* moe = (Moe*)moe_memory->data;
+    moe->platform = pf;
+    
     // TODO: we should make a function out of this
     arn_init(&moe->main_arena, (U8*)moe_memory->data + sizeof(Moe), moe_memory->size - sizeof(Moe)); 
     //platform->moe = arn_push(Moe, &moe_main_arena);
@@ -58,17 +54,17 @@ moe_update_and_render(Platform* pf)
     moe->is_done = false;
     
     // Inform platform what our moe's dimensions are
-    platform->set_moe_dims(MOE_WIDTH, MOE_HEIGHT);
+    pf->set_moe_dims(MOE_WIDTH, MOE_HEIGHT);
 
     // set up view for moe
-    gfx_push_view(platform->gfx, 0.f, MOE_WIDTH, 0.f, MOE_HEIGHT, 0.f, 0.f);
+    gfx_push_view(pf->gfx, 0.f, MOE_WIDTH, 0.f, MOE_HEIGHT, 0.f, 0.f);
 
     moe_log("Initialized!");
    
   }
  
-  // Set globals from moe
-  Moe* moe = (Moe*)((Platform_Memory_Block*)platform->moe)->data;
+  Moe* moe = (Moe*)((Platform_Memory_Block*)pf->moe)->data;
+  moe_profile_block(GAME);
   Console* console = &moe->console;
 
  
@@ -89,7 +85,7 @@ moe_update_and_render(Platform* pf)
   moe->scene_tick(moe);
 
   // Debug Rendering Stuff
-  if (pf_is_button_poked(platform->button_console)) {
+  if (pf_is_button_poked(pf->button_console)) {
     moe->show_debug_type = 
       (Moe_Show_Debug_Type)((moe->show_debug_type + 1)%MOE_SHOW_DEBUG_MAX);
   }

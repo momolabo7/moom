@@ -197,6 +197,8 @@ lit_tick(Moe* moe)
 {
   Lit* m = (Lit*)moe->scene_context;
   Assets* assets = &moe->assets;
+  Platform* platform = moe->platform;
+
   if (!moe_is_scene_initialized(moe)) 
   {
 
@@ -252,7 +254,7 @@ lit_tick(Moe* moe)
   // Transition in logic
   if (m->state == LIT_STATE_TYPE_NORMAL || m->state == LIT_STATE_TYPE_TRANSITION_OUT) 
   {
-    lit_update_player(m, dt);
+    lit_update_player(moe, m, dt);
   }
 
   al_foreach(light_index, &m->lights)

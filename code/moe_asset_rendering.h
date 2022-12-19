@@ -12,6 +12,7 @@ paint_sprite(Moe* moe,
              RGBA color = rgba_set(1.f,1.f,1.f,1.f))
 {
   Assets* assets = &moe->assets;
+  Platform* platform = moe->platform;
 
   Asset_Sprite* sprite = get_sprite(assets, sprite_id);
   Asset_Bitmap* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);
@@ -37,6 +38,8 @@ paint_text(Moe* moe,
            F32 font_height) 
 {
   Assets* assets = &moe->assets;
+  Platform* platform = moe->platform;
+
   Asset_Font* font = get_font(assets, font_id);
   for(U32 char_index = 0; 
       char_index < str.count;
@@ -82,6 +85,7 @@ paint_text_center_aligned(Moe* moe,
                           F32 font_height) 
 {
   Assets* assets = &moe->assets;
+  Platform* platform = moe->platform;
   Asset_Font* font = get_font(assets, font_id);
 
   

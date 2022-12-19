@@ -13,18 +13,16 @@
 #define MOE_HEIGHT 800.f
 
 #ifdef INTERNAL
-#define moe_log(...) platform->debug_log(__VA_ARGS__)
-#define moe_profile_block(name) prf_block(platform->profiler, name)
-#define moe_profile_begin(name) prf_begin_block(platform->profiler, name)
-#define moe_profile_end(name) prf_end_block(platform->profiler, name)
+#define moe_log(...) moe->platform->debug_log(__VA_ARGS__)
+#define moe_profile_block(name) prf_block(moe->platform->profiler, name)
+#define moe_profile_begin(name) prf_begin_block(moe->platform->profiler, name)
+#define moe_profile_end(name) prf_end_block(moe->platform->profiler, name)
 #else
 #define moe_log(...)
 #define moe_profiler_block(...)
 #define moe_profile_begin(...) 
 #define moe_profile_end(...) 
 #endif 
-
-static Platform* platform;
 
 
 #include "moe_profiler.h"
@@ -69,7 +67,7 @@ typedef struct Moe {
   Assets assets;
   Console console;
   Inspector inspector;
-  Profiler* profiler;
+  Platform* platform;
 
   // Interested moe assets
   Asset_Sprite_ID blank_sprite;

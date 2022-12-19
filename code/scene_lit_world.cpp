@@ -106,7 +106,7 @@ lit_gen_light_intersections(Lit_Light* l,
                             Lit_Edge_List* edges,
                             Arena* tmp_arena)
 {
-  moe_profile_block(light_generation);
+  //moe_profile_block(light_generation);
   arn_set_revert_point(tmp_arena);
 
   Lit_Light_Type light_type = Lit_LIGHT_TYPE_POINT;
@@ -288,6 +288,7 @@ lit_gen_lights(Lit_Light_List* lights,
 static void
 lit_draw_lights(Moe* moe, Lit* lit) {
   Lit_Light_List* lights = &lit->lights;
+  Platform* platform = moe->platform;
   // Emitters
   al_foreach(light_index, lights)
   {
@@ -322,6 +323,7 @@ lit_draw_lights(Moe* moe, Lit* lit) {
 static void 
 lit_draw_debug_light_rays(Lit* lit, Moe* moe) {
  
+  Platform* platform = moe->platform;
 
 #if LIT_DEBUG_LIGHT
   Lit_Player* player = &lit->player;
@@ -386,7 +388,9 @@ lit_draw_debug_light_rays(Lit* lit, Moe* moe) {
 
 
 static void
-lit_draw_edges(Lit* lit) {
+lit_draw_edges(Moe* moe, Lit* lit) {
+
+  Platform* platform = moe->platform;
   Lit_Edge_List* edges = &lit->edges;
   al_foreach(edge_index, edges) 
   {

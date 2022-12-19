@@ -21,6 +21,7 @@ moe_init_assets(Moe* moe, const char* filename)
 
   Arena* arena = &moe->asset_arena;
   Assets* ma = &moe->assets;
+  Platform* platform = moe->platform;
 
   make(Platform_File, file);
   B32 ok = platform->open_file(file,

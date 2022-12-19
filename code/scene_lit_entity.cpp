@@ -11,10 +11,11 @@ lit_init_player(Lit* lit, F32 x, F32 y) {
 }
 
 static void 
-lit_update_player(Lit* lit, F32 dt) 
+lit_update_player(Moe* moe, Lit* lit, F32 dt) 
 {
   Lit_Player* player = &lit->player; 
   Lit_Light_List* lights = &lit->lights;
+  Platform* platform = moe->platform;
   
 
   // Get world mouse position
@@ -121,6 +122,7 @@ static void
 lit_draw_player(Moe* moe, Lit* lit)
 {
   Lit_Player* player = &lit->player;
+  Platform* platform = moe->platform;
   paint_sprite(moe, lit->circle_sprite, 
                player->pos, 
                v2_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
@@ -178,6 +180,8 @@ lit_update_particles(Lit* lit, F32 dt) {
 static void
 lit_render_particles(Moe* moe, Lit* lit) {
   Lit_Particle_Pool* ps = &lit->particles;
+  Platform* platform = moe->platform;
+
   // Render particles
   for(U32 particle_id = 0; 
       particle_id < ps->particle_count;
@@ -299,6 +303,8 @@ lit_are_all_sensors_activated(Lit* lit) {
 static void 
 lit_render_sensors(Moe* moe, Lit* lit) {
   Lit_Sensor_List* sensors = &lit->sensors;
+  Platform* platform = moe->platform;
+
   al_foreach(sensor_index, sensors)
   {
     Lit_Sensor* sensor = al_at(sensors, sensor_index);

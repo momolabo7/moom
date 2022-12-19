@@ -1,45 +1,6 @@
-static B32
-lit_trigger_fade_next_text_on_move(Lit* m) {
-  if (pf_is_button_down(platform->button_up) || 
-      pf_is_button_down(platform->button_down) || 
-      pf_is_button_down(platform->button_right) ||
-      pf_is_button_down(platform->button_left)) 
-  {
-    lit_fade_out_next_tutorial_text(&m->tutorial_texts);
-    return true;
-  }
 
-  return false;
-}
 /////////////////////////////////////////////////////////
 // LEVEL 0
-static B32
-lit_level_0_tutorial_trigger_0(Lit* m) {
-  if (pf_is_button_down(platform->button_up) || 
-      pf_is_button_down(platform->button_down) || 
-      pf_is_button_down(platform->button_right) ||
-      pf_is_button_down(platform->button_left)) 
-  {
-    lit_fade_out_next_tutorial_text(&m->tutorial_texts);
-    lit_fade_in_next_tutorial_text(&m->tutorial_texts);
-    return true;
-  }
-  return false;
-}
-
-static B32
-lit_level_0_tutorial_trigger_1(Lit* m) {
-  if (m->player.held_light != null) 
-  {
-    lit_fade_out_next_tutorial_text(&m->tutorial_texts);
-    lit_fade_in_next_tutorial_text(&m->tutorial_texts);
-    lit_fade_in_next_tutorial_text(&m->tutorial_texts);
-    lit_fade_in_next_tutorial_text(&m->tutorial_texts);
-    return true;
-  }
-  return false;
-}
-
 ////////////////////////////////////////////
 // Tutorial level
 // - Learn to move
