@@ -4,7 +4,6 @@
 #include "w32_gfx.h"
 #include "moe_gfx_opengl.h"
 
-
 //~WGL stuff
 
 #define WGL_CONTEXT_MAJOR_VERSION_ARB           0x2091
