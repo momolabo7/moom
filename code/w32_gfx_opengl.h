@@ -170,8 +170,10 @@ _w32_load_wgl_extentions() {
 
 //~API implementation
 static void
-w32_gfx_unload(Gfx* r) {
-  // Unused?
+w32_gfx_unload(Gfx* gfx) {
+  Opengl* ogl = (Opengl*)gfx;
+  Platform_Memory_Block* block = (Platform_Memory_Block*)(ogl->user_data);
+  w32_free_memory(block);
 }
 
 static Gfx*
@@ -182,19 +184,8 @@ w32_gfx_load(HWND window,
 {
   HDC dc = GetDC(window); 
   if (!dc) return 0;
-
-  Opengl* opengl = arn_push(Opengl, allocator);
-  if (!opengl) return 0; 
-
-  // Allocate memory for render commands
-  void* command_queue_memory =  arn_push_size(allocator, command_queue_size, 16);
-  if (!command_queue_memory) return 0;
-
-  void* texture_queue_memory = arn_push_size(allocator, texture_queue_size, 16);
-  if (!texture_queue_memory) return 0; 
- 
   if (!_w32_load_wgl_extentions()) return 0;
-  
+
   _w32_set_pixel_format(dc);
   
   S32 opengl_attribs[] {
@@ -214,6 +205,34 @@ w32_gfx_load(HWND window,
   if (!opengl_ctx) {
     return null;
   }
+
+
+  // NOTE(momo): We keep these blocks seperate in case we want to dynamically
+  // expand these so that we can prototype faster.
+  Platform_Memory_Block* ogl_block = w32_allocate_memory(sizeof(Opengl));
+  Platform_Memory_Block* command_queue_block = w32_allocate_memory(command_queue_size);
+  Platform_Memory_Block* texture_queue_block = w32_allocate_memory(texture_queue_size);
+
+  if (!ogl_block || !command_queue_block || !texture_queue_block) {
+    return null;
+  }
+
+  Opengl* opengl = (Opengl*)ogl_block->data;
+  opengl->user_data = ogl_block;
+
+#if 0
+  Opengl* opengl = arn_push(Opengl, allocator);
+  if (!opengl) return 0; 
+
+  // Allocate memory for render commands
+  void* command_queue_memory =  arn_push_size(allocator, command_queue_size, 16);
+  if (!command_queue_memory) return 0;
+
+  void* texture_queue_memory = arn_push_size(allocator, texture_queue_size, 16);
+  if (!texture_queue_memory) return 0; 
+#endif
+ 
+  
   
   
   if(wglMakeCurrent(dc, opengl_ctx)) {
@@ -267,10 +286,10 @@ if (!opengl->name) { return null; }
 #undef WGL_SetOpenglFunction
   
   if (!ogl_init(opengl, 
-                command_queue_memory, 
-                command_queue_size,
-                texture_queue_memory,
-                texture_queue_size)) 
+                command_queue_block->data, 
+                command_queue_block->size,
+                texture_queue_block->data,
+                texture_queue_block->size)) 
   {
     return 0;
   }

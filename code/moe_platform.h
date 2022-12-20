@@ -9,13 +9,14 @@
 
 /////////////////////////////////////////////////////////////////////
 // Platform Memory API
+//
 typedef struct {
   void* data;
   UMI size;
 } Platform_Memory_Block;
 
-typedef Platform_Memory_Block* Platform_Allocate_Memory(UMI size); // allocate memory
-typedef void  Platform_Free_Memory(Platform_Memory_Block* ptr);     // frees memory
+typedef Platform_Memory_Block* Platform_Allocate_Memory(UMI size);
+typedef void  Platform_Free_Memory(Platform_Memory_Block* ptr);
 
 //////////////////////////////////////////////////////////////////////
 // Platform File API

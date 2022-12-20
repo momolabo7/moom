@@ -225,7 +225,7 @@ struct Opengl {
   Sprite_Batch sprite_batch;
   Triangle_Batch triangle_batch;
   
-  OGL_Texture textures[256];
+  OGL_Texture textures[GFX_MAX_TEXTURES];
   
   OGL_Texture dummy_texture;
   OGL_Texture blank_texture;
@@ -273,13 +273,15 @@ struct Opengl {
   OGL_glNamedBufferSubData* glNamedBufferSubData;
   OGL_glUseProgram* glUseProgram;  
   OGL_glDrawArrays* glDrawArrays;
+
+  void* user_data;
 };
 
 static B32 ogl_init(Opengl* ogl, 
                     void* command_queue_memory, 
-                    U32 command_queue_size, 
+                    UMI command_queue_size, 
                     void* texture_queue_memory,
-                    U32 texture_queue_size);
+                    UMI texture_queue_size);
 static void ogl_begin_frame(Opengl* ogl, V2U render_wh, U32 region_x0, U32 region_y0, U32 region_x1, U32 region_y1);
 static void ogl_end_frame(Opengl* ogl);
 
@@ -1014,9 +1016,9 @@ void main(void) {
 static B32
 ogl_init(Opengl* ogl,
          void* command_queue_memory, 
-         U32 command_queue_size, 
+         UMI command_queue_size, 
          void* texture_queue_memory,
-         U32 texture_queue_size)
+         UMI texture_queue_size)
 {	
   gfx_init_command_queue(&ogl->gfx, 
                          command_queue_memory, 
