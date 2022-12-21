@@ -1,6 +1,7 @@
 #ifndef MOMO_EASING_H
 #define MOMO_EASING_H
 
+static F32 ease_linear_f32(F32 t);
 static F32 ease_in_sine_f32(F32 t);
 static F32 ease_out_sine_f32(F32 t);
 static F32 ease_inout_sine_f32(F32 t);
@@ -32,6 +33,7 @@ static F32 ease_in_expo_f32(F32 t);
 static F32 ease_out_expo_f32(F32 t);
 static F32 ease_inout_expo_f32(F32 t);
 
+static F64 ease_linear_f64(F64 t);
 static F64 ease_in_sine_f64(F64 t);
 static F64 ease_out_sine_f64(F64 t);
 static F64 ease_inout_sine_f64(F64 t);
@@ -65,6 +67,13 @@ static F64 ease_inout_expo_f64(F64 t);
 
 /////////////////////////////////////////////////////////
 // IMPLEMENTATION
+//
+static F32 
+ease_linear_f32(F32 t) 
+{
+  return t;
+}
+
 static F32 
 ease_in_sine_f32(F32 t)  {
   return sin_f32(PI_32 * 0.5f * t);
@@ -278,7 +287,11 @@ ease_inout_expo_f32(F32 t)  {
   }
 }
 
-
+static F64 
+ease_linear_f64(F64 t) 
+{
+  return t;
+}
 
 static F64 
 ease_in_sine_f64(F64 t)  {

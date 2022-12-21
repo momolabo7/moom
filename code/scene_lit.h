@@ -13,14 +13,31 @@
 #define LIT_SENSOR_PARTICLE_SIZE 16.f
 #define LIT_SENSOR_PARTICLE_SPEED 20.f
 
+#define LIT_EXIT_FLASH_DURATION 0.1f
+#define LIT_EXIT_FLASH_BRIGHTNESS 0.6f
+
+#define LIT_ENTER_DURATION 3.f
+
+struct Lit_Title_Waypoint {
+  F32 x;
+  F32 arrival_time;
+};
+
+static Lit_Title_Waypoint lit_title_wps[] = {
+  { -800.0f,  0.0f },
+  { 300.0f,   1.0f },
+  { 500.0f,   2.0f },
+  { 1600.0f,  3.0f },
+};
+
 #define LIT_PLAYER_RADIUS 16.f
 #define LIT_PLAYER_LIGHT_RETRIEVE_DURATION 0.05f
 #define LIT_PLAYER_BREATH_DURATION 2.f
 #define LIT_PLAYER_PICKUP_DIST 512.f
 #define LIT_PLAYER_ROTATE_SPEED 3.5f
 
-#define LIT_TUTORIAL_TEXT_FADE_DURATION 1.f
 
+#if 0
 enum Lit_Tutorial_Text_State{
   LIT_TUTORIAL_TEXT_STATE_INVISIBLE,
   LIT_TUTORIAL_TEXT_STATE_FADE_IN,
@@ -55,6 +72,7 @@ struct Lit_Tutorial_Text_List {
   U32 next_id_to_fade_out;
 };
 
+#endif
 
 
 #if 0 
@@ -103,14 +121,17 @@ circle_to_finite_line_resp(V2 circle_center, F32 circle_radius, V2 line_min, V2 
 #include "scene_lit_world.h"
 #include "scene_lit_entity.h"
 
-typedef enum {
+enum Lit_State_Type {
   LIT_STATE_TYPE_TRANSITION_IN,
-  LIT_STATE_TYPE_TRANSITION_OUT,
   LIT_STATE_TYPE_NORMAL,
-} Lit_State_Type;
 
+  // exiting states are after NORMAL
+  LIT_STATE_TYPE_SOLVED_IN,
+  LIT_STATE_TYPE_SOLVED_OUT,
+  LIT_STATE_TYPE_TRANSITION_OUT,
+};
 
-typedef struct Lit {
+struct Lit {
   Lit_State_Type state;
   U32 current_level_id;
   Lit_Player player;
@@ -120,14 +141,24 @@ typedef struct Lit {
   Lit_Sensor_List sensors;
   Lit_Particle_Pool particles;
 
-  F32 stage_fade;
+  F32 stage_fade_timer;
+  F32 stage_flash_timer;
 
   B32 is_win_reached;
   RNG rng;
 
+  String8 title;
+  F32 title_timer;
+  U32 title_wp_index;
+    
+
+#if 0
   // Tutorial system
   Lit_Tutorial_Text_List tutorial_texts;
   Lit_Tutorial_Trigger_List tutorial_triggers;
+#endif
+
+
 
   // Assets that we are interested in
   Asset_Font_ID tutorial_font;
@@ -135,12 +166,26 @@ typedef struct Lit {
   Asset_Sprite_ID circle_sprite;
   Asset_Sprite_ID filled_circle_sprite;
 
-} Lit;
+};
 
 // TODO: combine world and light to one file?
 #include "scene_lit_world.cpp"
 #include "scene_lit_entity.cpp"
 
+static B32 
+lit_is_state_exiting(Lit* m) {
+  return m->state > LIT_STATE_TYPE_NORMAL; 
+}
+
+static void
+lit_set_title(Lit* m, String8 str) {
+  m->title = str;
+  m->title_timer = 0.f;
+  m->title_wp_index = 0;
+}
+
+
+#if 0
 static Lit_Tutorial_Text*
 lit_push_tutorial_text(Lit_Tutorial_Text_List* texts, String8 str, F32 x, F32 y) {
   Lit_Tutorial_Text* text = al_append(texts); 
@@ -188,6 +233,7 @@ lit_fade_out_next_tutorial_text(Lit_Tutorial_Text_List* texts) {
   texts->next_id_to_fade_out++;
  
 }
+#endif
 
 #include "scene_lit_levels.h"
 
@@ -206,7 +252,7 @@ lit_tick(Moe* moe)
     lit_load_level(m, 0); 
     m->rng = rng_create(65535); // don't really need to be strict 
     m->state = LIT_STATE_TYPE_TRANSITION_IN;
-    m->stage_fade = 1.f;
+    m->stage_fade_timer = LIT_ENTER_DURATION;
 
     {
       make(Asset_Match, match);
@@ -225,34 +271,63 @@ lit_tick(Moe* moe)
 
   }
 
+
+  //
   // Update
+  //
   Lit_Player* player = &m->player;
   F32 dt = platform->seconds_since_last_frame;
 
-  // Transition Logic
-  if (m->state == LIT_STATE_TYPE_TRANSITION_IN || m->state == LIT_STATE_TYPE_NORMAL) {
-    if (m->stage_fade >= 0.f) {
-      m->stage_fade -= dt;
+  // Title 
+  if (m->title_wp_index < array_count(lit_title_wps)-1) 
+  {
+    m->title_timer += dt;
+    Lit_Title_Waypoint* next_wp = lit_title_wps + m->title_wp_index+1;
+    if (m->title_timer >= next_wp->arrival_time) 
+    {
+      //m->title_timer = lit_title_times[m->title_wp_index];
+      m->title_wp_index++;
     }
-    else {
-      m->stage_fade = 0.f;
+  }
+
+  // Transition Logic
+  if (m->state == LIT_STATE_TYPE_TRANSITION_IN) 
+  {
+    if (m->stage_fade_timer >= 0.f) 
+    {
+      m->stage_fade_timer -= dt;
+    }
+    else 
+    {
+      m->stage_fade_timer = 0.f;
       m->state = LIT_STATE_TYPE_NORMAL;
     }
   }
 
-  else if(m->state == LIT_STATE_TYPE_TRANSITION_OUT) {
-    if (m->stage_fade <= 1.f) {
-      m->stage_fade += dt;
+  else if (m->state == LIT_STATE_TYPE_SOLVED_IN) {
+    m->stage_flash_timer += dt;
+    if (m->stage_flash_timer >= LIT_EXIT_FLASH_DURATION) {
+      m->stage_flash_timer = LIT_EXIT_FLASH_DURATION;
+      m->state = LIT_STATE_TYPE_SOLVED_OUT;
+    }
+  }
+  else if (m->state == LIT_STATE_TYPE_SOLVED_OUT) {
+    m->stage_flash_timer -= dt;
+    if (m->stage_flash_timer <= 0.f) {
+      m->stage_flash_timer = 0.f;
+      m->state = LIT_STATE_TYPE_TRANSITION_OUT;
+    }
+  }
+  else if (m->state == LIT_STATE_TYPE_TRANSITION_OUT) {
+    if (m->stage_fade_timer <= 1.f) {
+      m->stage_fade_timer += dt;
     }
     else {
-      m->stage_fade = 1.f;
       lit_load_next_level(m);
-      m->state = LIT_STATE_TYPE_TRANSITION_IN;
     }
   }
 
-  // Transition in logic
-  if (m->state == LIT_STATE_TYPE_NORMAL || m->state == LIT_STATE_TYPE_TRANSITION_OUT) 
+  if (m->state == LIT_STATE_TYPE_NORMAL) 
   {
     lit_update_player(moe, m, dt);
   }
@@ -262,16 +337,20 @@ lit_tick(Moe* moe)
     Lit_Light* light = al_at(&m->lights, light_index);
     lit_gen_light_intersections(light, &m->edges, &moe->frame_arena);
   }
-  lit_update_sensors(m, dt);
 
-  // win condition
-  if (lit_are_all_sensors_activated(m)) {
-    m->state = LIT_STATE_TYPE_TRANSITION_OUT;
+
+  if (!lit_is_state_exiting(m)) 
+  {
+    lit_update_sensors(m, dt);
+
+    // win condition
+    if (lit_are_all_sensors_activated(m)) 
+    {
+      m->state = LIT_STATE_TYPE_SOLVED_IN;
+    }
+    lit_update_particles(m, dt);
   }
-  else {
-    m->state = LIT_STATE_TYPE_NORMAL;
-  }
-  lit_update_particles(m, dt);
+
 
 
 #if 0
@@ -308,8 +387,11 @@ lit_tick(Moe* moe)
   
   gfx_push_blend(platform->gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
-  lit_render_sensors(moe, m); 
-  lit_render_particles(moe, m);
+  if (!lit_is_state_exiting(m)) 
+  {
+    lit_render_sensors(moe, m); 
+    lit_render_particles(moe, m);
+  }
 #if LIT_DEBUG_COORDINATES 
   // Debug coordinates
   {
@@ -321,7 +403,7 @@ lit_tick(Moe* moe)
   }
 #endif
 
-
+#if 0
   // Update tutorial texts
   al_foreach(tutorial_text_id, &m->tutorial_texts)
   {
@@ -362,7 +444,9 @@ lit_tick(Moe* moe)
       m->tutorial_triggers.current_id++;
     }
   }
+#endif
 
+#if 0
   // Render all the tutorial texts
   al_foreach(tutorial_text_id, &m->tutorial_texts)
   {
@@ -388,12 +472,38 @@ lit_tick(Moe* moe)
       } break;
     }
   }
+#endif
 
   // Draw the overlay for fade in/out
   {
-    RGBA color = rgba_set(0.f, 0.f, 0.f, m->stage_fade);
-    paint_sprite(moe, m->blank_sprite, v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), v2_set(MOE_WIDTH, MOE_HEIGHT), color);
+    RGBA color = rgba_set(0.f, 0.f, 0.f, m->stage_fade_timer);
+    paint_sprite(moe, m->blank_sprite, v2_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2_set(LIT_WIDTH, LIT_HEIGHT), color);
     gfx_advance_depth(platform->gfx);
+  }
+
+  // Draw the overlay for white flash
+  {
+    F32 alpha = m->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
+    RGBA color = rgba_set(1.f, 1.f, 1.f, alpha);
+    paint_sprite(moe, m->blank_sprite, v2_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2_set(LIT_WIDTH, LIT_HEIGHT), color);
+    gfx_advance_depth(platform->gfx);
+  }
+
+  // Draw title
+  if (m->title_wp_index < array_count(lit_title_wps)-1) 
+  { 
+    Lit_Title_Waypoint* cur_wp = lit_title_wps + m->title_wp_index;
+    Lit_Title_Waypoint* next_wp = lit_title_wps + m->title_wp_index+1;
+
+    F32 duration = next_wp->arrival_time - cur_wp->arrival_time;
+    F32 timer = m->title_timer - cur_wp->arrival_time;
+    F32 a = ease_linear_f32(timer/duration); 
+    F32 title_x = cur_wp->x + a * (next_wp->x - cur_wp->x); 
+    RGBA color = rgba_set(1.f, 1.f, 1.f, 1.f);
+
+    paint_text_center_aligned(moe, m->tutorial_font, m->title, color, title_x, LIT_HEIGHT/2, 128.f);
+    gfx_advance_depth(platform->gfx);
+
   }
 }
 

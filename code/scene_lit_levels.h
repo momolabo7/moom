@@ -8,27 +8,16 @@
 // - Learn that light need to shine on sensors 
 static void
 lit_level_0_0(Lit* m) {
+  lit_set_title(m, str8_from_lit("MOVE"));
   lit_push_sensor(m, 400.f, 600.f, 0x880000FF); 
   lit_push_light(m, 400.f, 400, 0x880000FF, 45.f, 0.75f);
-  
-  // tutorial text
-#if 0
-  lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("WASD to move"), 100.f, 480.f);
-  lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("SPACE to pick up"), 680.f, 480.f);
-  lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("Q/R to rotate light"), 680.f, 480.f);
-  lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("Shine same colored"), 1100.f, 510.f);
-  lit_push_tutorial_text(&m->tutorial_texts, str8_from_lit("light on this"), 1100.f, 480.f);
-  lit_fade_in_next_tutorial_text(&m->tutorial_texts);
-
-  lit_push_tutorial_trigger(&m->tutorial_triggers, lit_level_0_tutorial_trigger_0);
-  lit_push_tutorial_trigger(&m->tutorial_triggers, lit_level_0_tutorial_trigger_1);
-#endif
 }
 
 ////////////////////////////////////////////
 // - Learn about obstacles
 static void
 lit_level_0_1(Lit* m) {
+  lit_set_title(m, str8_from_lit("OBSTRUCT"));
   lit_push_sensor(m, 400.f, 600.f, 0x008800FF); 
   lit_push_light(m, 400.f, 200, 0x008800FF, 45.f, 0.75f);
   
@@ -41,6 +30,7 @@ lit_level_0_1(Lit* m) {
 static void
 lit_level_0_2(Lit* m) { 
   // Need to 'enclose' the shape
+  lit_set_title(m, str8_from_lit("ADD"));
   lit_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
 
   lit_push_sensor(m, 400.f, 600.f, 0x444488FF); 
@@ -55,6 +45,7 @@ lit_level_0_2(Lit* m) {
 static void
 lit_level_0_3(Lit* m) { 
   // Need to 'enclose' the shape
+  lit_set_title(m, str8_from_lit("BOX"));
   lit_push_double_edge(m, 500.f, 200.f, 600.f, 300.f);
   lit_push_double_edge(m, 300.f, 200.f, 200.f, 300.f);
   lit_push_double_edge(m, 200.f, 500.f, 300.f, 600.f);
@@ -264,7 +255,8 @@ lit_level_0_8(Lit* m) {
 
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
-#if 0
+
+#if 1
   lit_level_0_0, 
   lit_level_0_1, 
   lit_level_0_2,
@@ -280,14 +272,20 @@ static Lit_Level lit_levels[] = {
 
 static void
 lit_load_level(Lit* m, U32 level_id) {
+  m->stage_flash_timer = 0.f;
+  m->stage_fade_timer = 1.f;
+  m->state = LIT_STATE_TYPE_TRANSITION_IN;
+
   al_clear(&m->sensors);
   al_clear(&m->lights);
   al_clear(&m->edges);
+#if 0
   al_clear(&m->tutorial_texts);
   al_clear(&m->tutorial_triggers);
   m->tutorial_texts.next_id_to_fade_in = 0;
   m->tutorial_texts.next_id_to_fade_out = 0;
   m->tutorial_triggers.current_id = 0;
+#endif
 
   lit_push_edge(m, 0.f, 0.f, 800.f, 0.f);
   lit_push_edge(m, 800.f, 0.f, 800.f, 800.f);
@@ -297,6 +295,7 @@ lit_load_level(Lit* m, U32 level_id) {
   lit_init_player(m, 400.f, 400.f);
 
   lit_levels[level_id](m);
+
 }
 
 static void

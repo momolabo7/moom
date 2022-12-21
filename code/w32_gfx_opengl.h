@@ -1,4 +1,4 @@
-// NOTE(Momo): Gfx code for Win w/ Openg
+// NOTE(Momo): Gfx code for Win w/ Opengl
 
 
 #include "w32_gfx.h"
