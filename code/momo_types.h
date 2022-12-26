@@ -33,15 +33,6 @@
 #include <stdarg.h>
 
 //
-// Language specs
-//
-#if defined(__cplusplus)
-# define IS_CPP 1
-#else
-# define IS_CPP 0
-#endif // __cplusplus
-
-//
 // Compiler contexts
 //
 #if defined(_MSC_VER) 
@@ -185,16 +176,8 @@ typedef char C8;
 typedef uintptr_t UMI; // aka 'unsigned memory index'
 typedef intptr_t  SMI; // aka 'signed memory index'
 
-#if !defined(true)
-# define true 1
-#endif 
-
-#if !defined(false)
-# define false 0
-#endif 
-
 #if !defined(null)
-# define null 0 
+# define null nullptr 
 #endif 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1544,10 +1527,6 @@ djb2(const C8* str)
   return hash;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// CPP Only!
-#if IS_CPP
-
 // Namespace helpers
 # define ns_begin(name) namespace name {
 # define ns_end(name) }
@@ -1563,7 +1542,6 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
   return { f };
 }
 # define defer auto glue(_defer, __LINE__) = _defer_dummy{} + [&]()
-#endif // IS_CPP
 
 
 #endif //MOMO_COMMON_H

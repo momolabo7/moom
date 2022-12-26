@@ -63,13 +63,11 @@ static Arena_Marker arn_mark(Arena* a);
 static void arn_revert(Arena_Marker marker);
 
 
-#if IS_CPP
 # define __arn_set_revert_point(a,l) \
   auto _arn_marker_##l = arn_mark(a); \
   defer{arn_revert(_arn_marker_##l);};
 # define _arn_set_revert_point(a,l) __arn_set_revert_point(a,l)
 # define arn_set_revert_point(arena) _arn_set_revert_point(arena, __LINE__) 
-#endif // IS_CPP
 
 static void
 arn_init(Arena* a, void* mem, UMI cap) {

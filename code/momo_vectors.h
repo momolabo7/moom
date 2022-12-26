@@ -89,7 +89,6 @@ static V3    v3_norm(V3 v);
 static V3    v3_proj(V3 v, V3 onto);
 static F32 	 v3_angle(V3 lhs, V3 rhs);
 
-#if IS_CPP
 static V2  operator+(V2 lhs, V2 rhs);
 static V2  operator-(V2 lhs, V2 rhs);
 static V2  operator*(V2 lhs, F32 rhs); // scale
@@ -111,7 +110,6 @@ static V3  operator-(V3 v);
 static V3& operator+=(V3& lhs, V3 rhs);
 static V3& operator-=(V3& lhs, V3 rhs);
 static V3& operator*=(V3& lhs, V3 rhs);
-#endif // IS_CPP
 
 ////////////////////////////////////////////////////////
 // IMPLEMENTATION
@@ -380,8 +378,7 @@ v2_set(F32 x, F32 y){
   return { x, y };
 }
 
-#if IS_CPP
-//~Operator Overloading
+// Operator Overloading
 static V2  operator+(V2 lhs, V2 rhs) { return v2_add(lhs, rhs); }
 static V2  operator-(V2 lhs, V2 rhs) { return v2_sub(lhs, rhs); }
 static V2  operator*(V2 lhs, F32 rhs) { return v2_scale(lhs, rhs); }
@@ -406,7 +403,6 @@ static V3  operator-(V3 v) { return v3_negate(v); }
 static V3& operator+=(V3& lhs, V3 rhs) { return lhs = v3_add(lhs, rhs); } 
 static V3& operator-=(V3& lhs, V3 rhs) { return lhs = v3_sub(lhs, rhs); } 
 static V3& operator*=(V3& lhs, F32 rhs) { return lhs = v3_scale(lhs, rhs); }
-#endif // IS_CPP
 
 
 #endif //MOMO_VECTOR_H

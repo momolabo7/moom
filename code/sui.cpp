@@ -3,10 +3,6 @@
 
 #include "sui.h"
 
-
-
-
-
 int main() {
   UMI memory_size = megabytes(100);
 
@@ -58,31 +54,31 @@ int main() {
   make(Sui_Packer, packer);
   sui_pack_begin(packer);
 
-  sui_pack_begin_group(packer, asset_group(ATLAS));
+  sui_pack_begin_group(packer, ASSET_GROUP_TYPE_ATLAS);
   U32 bitmap_id = sui_pack_push_bitmap(packer, atlas);
   sui_pack_end_group(packer);
   
-  sui_pack_begin_group(packer, asset_group(BLANK_SPRITE));
+  sui_pack_begin_group(packer, ASSET_GROUP_TYPE_BLANK_SPRITE);
   //U32 atlas_id = sui_pack_push_atlas(...)
   //sui_pack_push_atlas_sprite(packer, atlas_id, sui_asset_dir("blank.png"));
   sui_pack_push_sprite(packer, blank_sprite, bitmap_id);
   sui_pack_end_group(packer);
 
-  sui_pack_begin_group(packer, asset_group(CIRCLE_SPRITE));
+  sui_pack_begin_group(packer, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
   sui_pack_push_sprite(packer, circle_sprite, bitmap_id);
   sui_pack_end_group(packer);
 
-  sui_pack_begin_group(packer, asset_group(FILLED_CIRCLE_SPRITE));
+  sui_pack_begin_group(packer, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
   sui_pack_push_sprite(packer, filled_circle_sprite, bitmap_id);
   sui_pack_end_group(packer);
 
-  sui_pack_begin_group(packer, asset_group(FONTS));
+  sui_pack_begin_group(packer, ASSET_GROUP_TYPE_FONTS);
   {
     sui_pack_push_font(packer, font_a, bitmap_id);
-    sui_pack_push_tag(packer, asset_tag(FONT), 0.f);
+    sui_pack_push_tag(packer, ASSET_TAG_TYPE_FONT, 0.f);
 
     sui_pack_push_font(packer, font_b, bitmap_id);
-    sui_pack_push_tag(packer, asset_tag(FONT), 1.f);
+    sui_pack_push_tag(packer, ASSET_TAG_TYPE_FONT, 1.f);
   }
   sui_pack_end_group(packer);
 

@@ -31,9 +31,7 @@ static M44 m44_orthographic(F32 left, F32 right, F32 bottom, F32 top, F32 near, 
 static M44 m44_frustum(F32 left, F32 right, F32 bottom, F32 top, F32 near, F32 far);
 static M44 m44_perspective(F32 fov, F32 aspect, F32 near, F32 far);
 
-#if IS_CPP
 static M44 operator*(M44 lhs, M44 rhs);
-#endif // IS_CPP
 
 //////////////////////////////////////////////////////////////////
 // IMPLEMENTATION
@@ -192,11 +190,9 @@ m44_perspective(F32 fov, F32 aspect, F32 near, F32 far){
                      near, far);
 }
 
-#if IS_CPP
 static M44 operator*(M44 lhs, M44 rhs) {
   return m44_concat(lhs, rhs);
 }
-#endif // IS_CPP
 
 
 #endif //MOMO_MATRIX_H

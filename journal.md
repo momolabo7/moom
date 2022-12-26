@@ -1,5 +1,11 @@
 # Journal
 
+### 2022-12-26
+I feel like I have reached the limit of using C in my (momo) layer. 
+It has reached the point where I am spending too much time trying to play around the lack of C++ features, like using goto instead of the defer keyword I have. 
+Elevating a system from (moe) layer to (momo) layer is already very tedious because of this.
+As such, I am now allowing (momo) layer to be C++ compatible. 
+It's not like I tested otherwise anyway.
 
 ### 2022-12-08
 I have been looking into the platform input system recently and felt that I need to re-evaluate what's going on there.

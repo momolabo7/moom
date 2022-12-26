@@ -739,15 +739,15 @@ png_rasterize(PNG* png, U32* out_w, U32* out_h, Arena* arena)
   
   U32 image_size = png->width * png->height * _PNG_CHANNELS;
   U8* image_stream_memory =  arn_push_arr(U8, arena, image_size);
-  if (!image_stream_memory) goto fail;
+  if (!image_stream_memory) return null;
   srm_init(&ctx.image_stream, image_stream_memory, image_size);
  
-  Arena_Marker mark = arn_mark(arena);
-  //arn_set_revert_point(arena);
+  //Arena_Marker mark = arn_mark(arena);
+  arn_set_revert_point(arena);
   
   U32 unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
   U8* unfiltered_image_stream_memory = arn_push_arr(U8, arena, unfiltered_size);
-  if (!unfiltered_image_stream_memory) goto fail;
+  if (!unfiltered_image_stream_memory) return null;
   srm_init(&ctx.unfiltered_image_stream, unfiltered_image_stream_memory, unfiltered_size);
   
   srm_consume(_PNG_Header, &ctx.stream);
@@ -760,7 +760,7 @@ png_rasterize(PNG* png, U32* out_w, U32* out_h, Arena* arena)
     Stream stream = ctx.stream;
     while(!srm_is_eos(&stream)) {
       _PNG_Chunk_Header* chunk_header = srm_consume(_PNG_Chunk_Header, &stream);
-      if (!chunk_header) goto fail_and_cleanup;
+      if (!chunk_header) return null;
       U32 chunk_length = endian_swap_u32(chunk_header->length);
       U32 chunk_type = endian_swap_u32(chunk_header->type_U32);
       if (chunk_type == 'IDAT') {
@@ -772,14 +772,14 @@ png_rasterize(PNG* png, U32* out_w, U32* out_h, Arena* arena)
   }
   
   U8* zlib_data = arn_push_arr(U8, arena, zlib_size);
-  if (!zlib_data) goto fail;
+  if (!zlib_data) return null;
 
   srm_init(zlib_stream, zlib_data, zlib_size);
   
   // Second pass to allocate memory
   while(!srm_is_eos(&ctx.stream)) {
     _PNG_Chunk_Header* chunk_header = srm_consume(_PNG_Chunk_Header, &ctx.stream);
-    if (!chunk_header) goto fail_and_cleanup;
+    if (!chunk_header) return null;
     U32 chunk_length = endian_swap_u32(chunk_header->length);
     U32 chunk_type = endian_swap_u32(chunk_header->type_U32);
     if (chunk_type == 'IDAT') {
@@ -793,21 +793,17 @@ png_rasterize(PNG* png, U32* out_w, U32* out_h, Arena* arena)
   srm_reset(zlib_stream);
   
   if (!_png_decompress_zlib(&ctx, zlib_stream)) {
-    goto fail_and_cleanup;
+    return null;
   }
   
   if(!_png_filter(&ctx)) {					
-    goto fail_and_cleanup;
+    return null;
   }
 
   if (out_w) (*out_w) = ctx.image_width;
   if (out_h) (*out_h) = ctx.image_height;
   return (U32*)ctx.image_stream.data;
 
-fail_and_cleanup:
-  arn_revert(mark);
-fail:
-  return null;
 
 }
 // NOTE(Momo): Really dumb way to write.

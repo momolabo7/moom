@@ -2,9 +2,9 @@
 #define MOMO_RANDOM_H
 
 
-typedef struct {
+struct RNG {
   U32 index;
-} RNG;
+};
 
 static RNG
 rng_create(U32 seed)
