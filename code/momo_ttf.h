@@ -28,7 +28,7 @@
 # define ttf_log(...)
 #endif 
 
-typedef struct TTF {
+struct TTF {
   U8* data;
   U32 glyph_count;
   
@@ -37,7 +37,7 @@ typedef struct TTF {
   U32 cmap_mappings;
   
   U16 loca_format;
-} TTF;
+};
 
 static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);
 
@@ -60,39 +60,39 @@ static void ttf_get_glyph_bitmap_box(const TTF* ttf, U32 glyph_index, F32 scale,
 
 ///////////////////////////////////////////////////////////////
 // IMPLEMENTATION
-typedef struct {
+struct _TTF_Glyph_Point{
   S16 x, y; 
   U8 flags;
-}_TTF_Glyph_Point;
+};
 
-typedef struct {
+struct _TTF_Glyph_Outline{
   _TTF_Glyph_Point* points;
   U32 point_count;
   
   U16* end_point_indices; // as many as contour_counts
   U32 contour_count;
-}_TTF_Glyph_Outline;
+};
 
-typedef struct {
+struct _TTF_Glyph_Paths{
   V2* vertices;
   U32 vertex_count;
   
   U32* path_lengths;
   U32 path_count;
-}_TTF_Glyph_Paths;
+};
 
 
-typedef struct {
+struct _TTF_Edge{
   V2 p0, p1;
   B32 is_inverted;
   F32 x_intersect;
-}_TTF_Edge;
+};
 
-typedef struct {
+struct _TTF_Edge_List{
   U32 cap;
   U32 count;
   _TTF_Edge** e;
-}_TTF_Edge_List;
+};
 
 enum {
   _TTF_CMAP_PLATFORM_ID_UNICODE = 0,
@@ -725,32 +725,32 @@ ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32*
 
   if (width == 0 || height == 0) {
     ttf_log("[ttf] Glyph dimension are bad\nj");
-    goto cleanup_pre_restore_point;
+    return null;
   }
   
   pixels = arn_push_arr(U32, allocator, size);
   if (!pixels) {
     ttf_log("[ttf] Unable to allocate bitmap pixel\n");
-    goto cleanup_pre_restore_point;
+    return null;
   }
   zero_memory(pixels, size);
  
-  Arena_Marker restore_point = arn_mark(allocator);
+  arn_set_revert_point(allocator);
 
   if(!_ttf_get_glyph_outline(ttf, outline, glyph_index, allocator)) {
     ttf_log("[ttf] Unable to get glyph outline\n");
-    goto cleanup_post_restore_point;
+    return null;
   }
   if (!_ttf_get_paths_from_glyph_outline(outline, paths, allocator)) {
     ttf_log("[ttf] Unable glyph paths\n");
-    goto cleanup_post_restore_point;
+    return null;
   }
   
   // generate scaled edges based on points
   _TTF_Edge* edges = arn_push_arr(_TTF_Edge, allocator, paths->vertex_count);
   if (!edges) {
     ttf_log("[ttf] Unable to allocate edges\n");
-    goto cleanup_post_restore_point;
+    return null;
   }
   zero_range(edges, paths->vertex_count);
   
@@ -797,7 +797,7 @@ ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32*
   Sort_Entry* y_edges = arn_push_arr(Sort_Entry, allocator, edge_count);
   if (!y_edges) { 
     ttf_log("[ttf] Unable to allocate sort entries for edges\n");
-    goto cleanup_post_restore_point;
+    return null;
   }
 
   for (U32 i = 0; i < edge_count; ++i) {
@@ -809,7 +809,7 @@ ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32*
   Sort_Entry* active_edges = arn_push_arr(Sort_Entry, allocator, edge_count);
   if (!active_edges) {
     ttf_log("[ttf] Unable to allocate sort entries for active edges\n");
-    goto cleanup_post_restore_point;
+    return null;
   }
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
@@ -911,13 +911,8 @@ ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32*
   
   if (out_w) *out_w = width;
   if (out_h) *out_h = height;
- 
-cleanup_post_restore_point: 
-  arn_revert(restore_point);
 
-cleanup_pre_restore_point:
   return pixels;
-  
 }
 
 
