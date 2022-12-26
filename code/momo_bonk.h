@@ -2,9 +2,9 @@
 #define MOMO_SHAPES_H
 
 
-typedef struct Rect2 {
+struct Rect2 {
   V2 min, max;
-}Rect2;
+};
 
 
 

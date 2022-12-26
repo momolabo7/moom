@@ -2,11 +2,11 @@
 #define MOMO_STRING_H
 
 
-//~ NOTE(Momo): 'Immutable' String8s
-typedef struct {
+//~ NOTE(Momo): 'Immutable' strings
+struct String8{
 	U8* e;
 	UMI count;
-} String8;
+};
 
 static String8 str8_substr(String8 str, UMI start, UMI ope);
 static B32 str8_match(String8 lhs, String8 rhs);
@@ -20,14 +20,11 @@ static String8 str8_from_cstr(const char* cstr);
 B32 str8_to_u32(U32* out);
 B32 str8_range_to(U32* out);
 
-
-#if IS_CPP
 static B32 operator==(String8 lhs, String8 rhs);
 static B32 operator!=(String8 lhs, String8 rhs);
-#endif // IS_CPP
        
 //~ String8 builders
-typedef struct {
+struct String8_Builder{
 	union {
 		String8 str;
 		struct {
@@ -36,7 +33,7 @@ typedef struct {
 		};
 	};
 	UMI cap;
-} String8_Builder;
+};
 
 static UMI      sb8_remaining(String8_Builder* b);
 static void     sb8_clear(String8_Builder* b);
@@ -271,7 +268,7 @@ sb8_push_u32(String8_Builder* b, U32 num) {
   // Reverse starting from start point to count
   UMI sub_str_len_half = (b->count - start_pt)/2;
   for(UMI i = 0; i < sub_str_len_half; ++i) {
-    swap(C8, b->e[start_pt + i], b->e[ b->count - 1 - i]);
+    swap(b->e[start_pt + i], b->e[ b->count - 1 - i]);
   }
 }
 static void     
@@ -290,7 +287,7 @@ sb8_push_u64(String8_Builder* b, U64 num) {
   // Reverse starting from start point to count
   UMI sub_str_len_half = (b->count - start_pt)/2;
   for(UMI i = 0; i < sub_str_len_half; ++i) {
-    swap(C8, b->e[start_pt + i], b->e[b->count - 1 - i]);
+    swap(b->e[start_pt + i], b->e[b->count - 1 - i]);
   }
 }
 static void     
@@ -317,7 +314,7 @@ sb8_push_s32(String8_Builder* b, S32 num) {
   // Reverse starting from start point to count
   UMI sub_str_len_half = (b->count - start_pt)/2;
   for(UMI i = 0; i < sub_str_len_half; ++i) {
-    swap(C8, b->e[start_pt+i], b->e[b->count-1-i]);
+    swap(b->e[start_pt+i], b->e[b->count-1-i]);
     
   }
   
@@ -347,7 +344,7 @@ sb8_push_s64(String8_Builder* b, S64 num) {
   // Reverse starting from start point to count
   UMI sub_str_len_half = (b->count - start_pt)/2;
   for(UMI i = 0; i < sub_str_len_half; ++i) {
-    swap(C8, b->e[start_pt+i], b->e[b->count-1-i]);
+    swap(b->e[start_pt+i], b->e[b->count-1-i]);
     
   }
   
@@ -370,7 +367,7 @@ sb8_push_f32(String8_Builder* b, F32 value, U32 precision) {
 	for (U32 i = 0; i < precision; ++i) {
 		value *= 10.f;
 	}
-	
+
 	U32 decimal_part = (U32)value;
 	sb8_push_u32(b, decimal_part);
 }

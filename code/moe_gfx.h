@@ -422,7 +422,7 @@ gfx_push_line(Gfx* g,
   // NOTE(Momo): Min.Y needs to be lower than Max.y
   
   if (p0.y > p1.y) {
-    swap(F32, p0.x, p1.x);
+    swap(p0.x, p1.x);
   }
   
   V2 line_vector = p1 - p0;

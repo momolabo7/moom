@@ -15,17 +15,17 @@
 #define MOMO_CRC_H
 
 
-typedef struct {
+struct CRC32_Table {
   U32 remainders[256];
-}CRC32_Table;
+};
 
-typedef struct{
+struct CRC16_Table {
   U16 remainders[256];
-}CRC16_Table;
+};
 
-typedef struct {
+struct CRC8_Table {
   U8 remainders[256];
-}CRC8_Table;
+};
 
 static void crc32_init_table(CRC32_Table* table, U32 polynomial);
 static void crc16_init_table(CRC16_Table* table, U16 polynomial);

@@ -341,7 +341,10 @@ _F64_NEG_INFINITY() {
 #define align_down_pow2(v,a) ((v) & ~((a)-1))
 #define align_up_pow2(v,a) ((v) + ((a)-1) & ~((a)-1))
 #define is_pow2(v) ((v) & ((v)-1) == 0)
-#define swap(t,l,r) { t tmp = (l); (l) = (r); (r) = tmp; } 
+
+
+// TODO: I'm not sure if the template version of swap is better or worse than this macro version
+#define swap(l,r) { auto tmp = (l); (l) = (r); (r) = tmp; } 
 
 //////////////////////////////////////////////////////////////////////////////
 // Integer to pointer conversions
@@ -1442,7 +1445,7 @@ cstr_reverse(C8* dest) {
   C8* back_ptr = dest;
   for (; *(back_ptr+1) != 0; ++back_ptr);
   for (;dest < back_ptr; ++dest, --back_ptr) {
-    swap(C8, *dest, *back_ptr);
+    swap(*dest, *back_ptr);
   }
 }
 

@@ -783,7 +783,7 @@ ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32*
         // NOTE(Momo): It's easier for the rasterization algorithm to have the edges'
         // p0 be on top of p1. If we flip, we will indicate it within the edge.
         if (edge.p0.y > edge.p1.y) {
-          swap(V2, edge.p0, edge.p1);
+          swap(edge.p0, edge.p1);
           edge.is_inverted = true;
         }
         edges[edge_count++] = edge;

@@ -4,19 +4,19 @@
 #define MOMO_RECT_PACK_H
 
 
-typedef enum {
+enum RP_Sort_Type{
   RP_SORT_TYPE_WIDTH,
   RP_SORT_TYPE_HEIGHT,
   RP_SORT_TYPE_AREA,
   RP_SORT_TYPE_PERIMETER,
   RP_SORT_TYPE_BIGGER_SIDE,
   RP_SORT_TYPE_PATHOLOGICAL,
-}RP_Sort_Type;
+};
 
-typedef struct{
+struct RP_Rect{
 	U32 x, y, w, h;
   void* user_data;
-} RP_Rect;
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // This is the procedure that will pack the rects. 
@@ -56,9 +56,9 @@ rp_pack(RP_Rect* rects,
 /////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 
-typedef struct {
+struct _RP_Node{
 	U32 x, y, w, h;
-}_RP_Node;
+};
 
 static void
 _rp_sort(RP_Rect* rects,

@@ -28,17 +28,17 @@
 #ifndef MOMO_ARENA_H
 #define MOMO_ARENA_H
 
-typedef struct Arena {
+struct Arena {
 	U8* memory;
 	UMI pos;
 	UMI cap;
-} Arena;
+};
 
 // Temporary memory API used to arn_revert an arena to an original state;
-typedef struct Arena_Marker {
+struct Arena_Marker {
   Arena* arena;
   UMI old_pos;
-} Arena_Marker;
+};
 
 static void   arn_init(Arena* a, void* mem, UMI cap);
 static void   arn_clear(Arena* a);

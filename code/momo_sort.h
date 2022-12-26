@@ -4,10 +4,10 @@
 
 // Chances are that we won't be sorting 
 // more than 32-bits worth of indices?
-typedef struct{
+struct Sort_Entry {
   F32 key;
   U32 index;
-} Sort_Entry;
+};
 
 static void
 _sort_swap_entries(Sort_Entry* a, Sort_Entry* b) {

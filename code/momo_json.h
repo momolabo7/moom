@@ -2,15 +2,15 @@
 #define MOMO_JSON
 
 
-typedef struct {
+struct JSON_Object{
   struct _JSON_Object_Node* node;
-} JSON_Object;
+};
 
 
-typedef struct {
+struct JSON_Array{
   struct _JSON_Array_Node* head;  
   struct _JSON_Array_Node* tail;
-} JSON_Array;
+};
 
 static B32 json_read(JSON_Object* j, void* memory, UMI size) ;
 static S32* json_get_s32(JSON_Object* j, String8 key); 
@@ -25,7 +25,7 @@ static JSON_Array* json_get_array(JSON_Object* j, String8 key);
 //
 // IMPLEMENTATION
 
-typedef enum  {
+enum _JSON_Token_Type {
   _JSON_TOKEN_TYPE_UNKNOWN,
   _JSON_TOKEN_TYPE_COLON,
   _JSON_TOKEN_TYPE_OPEN_BRACKET,
@@ -44,9 +44,9 @@ typedef enum  {
   _JSON_TOKEN_TYPE_FALSE,
   
   _JSON_TOKEN_TYPE_EOF
-} _JSON_Token_Type;
+};
 
-typedef enum  {
+enum  _JSON_Value_Type {
   _JSON_VALUE_TYPE_U32,
   _JSON_VALUE_TYPE_S32,
   _JSON_VALUE_TYPE_F32,
@@ -55,28 +55,28 @@ typedef enum  {
   _JSON_VALUE_TYPE_ARRAY,
   _JSON_VALUE_TYPE_OBJECT,
   _JSON_VALUE_TYPE_NULL
-} _JSON_Value_Type;
+};
 
-typedef enum {
+enum  _JSON_Object_Expect_Type {
   _JSON_OBJECT_EXPECT_TYPE_OPEN,
   _JSON_OBJECT_EXPECT_TYPE_KEY_OR_CLOSE,
   _JSON_OBJECT_EXPECT_TYPE_VALUE,
   _JSON_OBJECT_EXPECT_TYPE_COMMA_OR_CLOSE,
   _JSON_OBJECT_EXPECT_TYPE_COLON,
-} _JSON_Object_Expect_Type;
+};
 
-typedef struct {
+struct _JSON_Token{
   _JSON_Token_Type type;
   U32 begin;
   U32 ope;
-}_JSON_Token;
+};
 
-typedef struct  {
+struct _JSON_Tokenizer{
   String8 text;
   U32 at;
-} _JSON_Tokenizer;
+};
 
-typedef struct {
+struct _JSON_Value{
   _JSON_Value_Type type;
   union {
     B32 b32;
@@ -87,19 +87,19 @@ typedef struct {
     JSON_Object obj;
     JSON_Array arr;
   };
-} _JSON_Value;
+};
 
-typedef struct _JSON_Object_Node {
+struct _JSON_Object_Node {
   String8 key;
   _JSON_Value value;
   struct _JSON_Object_Node* left;
   struct _JSON_Object_Node* right;
-} _JSON_Object_Node;
+};
 
-typedef struct _JSON_Array_Node{
+struct _JSON_Array_Node{
   _JSON_Value value;
   struct _JSON_Array_Node* next;
-} _JSON_Array_Node;
+};
 
 
 static void
