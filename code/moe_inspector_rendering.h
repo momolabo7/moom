@@ -20,9 +20,9 @@ update_and_render_inspector(Moe* moe)
   F32 line_height = 32.f;
   sb8_make(sb, 256);
   
-  al_foreach(entry_index, &inspector->entries)
+  for(U32 entry_index = 0; entry_index < inspector->entry_count; ++entry_index)
   {
-    Inspector_Entry* entry = al_at(&inspector->entries, entry_index);
+    Inspector_Entry* entry = inspector->entries + entry_index;
     switch(entry->type){
       case INSPECTOR_ENTRY_TYPE_U32: {
         U32 item = *(U32*)entry->item;

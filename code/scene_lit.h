@@ -18,6 +18,12 @@
 
 #define LIT_ENTER_DURATION 3.f
 
+#define LIT_PLAYER_RADIUS 16.f
+#define LIT_PLAYER_LIGHT_RETRIEVE_DURATION 0.05f
+#define LIT_PLAYER_BREATH_DURATION 2.f
+#define LIT_PLAYER_PICKUP_DIST 512.f
+#define LIT_PLAYER_ROTATE_SPEED 3.5f
+
 struct Lit_Title_Waypoint {
   F32 x;
   F32 arrival_time;
@@ -29,93 +35,6 @@ static Lit_Title_Waypoint lit_title_wps[] = {
   { 500.0f,   2.0f },
   { 1600.0f,  3.0f },
 };
-
-#define LIT_PLAYER_RADIUS 16.f
-#define LIT_PLAYER_LIGHT_RETRIEVE_DURATION 0.05f
-#define LIT_PLAYER_BREATH_DURATION 2.f
-#define LIT_PLAYER_PICKUP_DIST 512.f
-#define LIT_PLAYER_ROTATE_SPEED 3.5f
-
-
-#if 0
-enum Lit_Tutorial_Text_State{
-  LIT_TUTORIAL_TEXT_STATE_INVISIBLE,
-  LIT_TUTORIAL_TEXT_STATE_FADE_IN,
-  LIT_TUTORIAL_TEXT_STATE_VISIBLE,
-  LIT_TUTORIAL_TEXT_STATE_FADE_OUT,
-};
-
-
-typedef B32 (*Lit_Tutorial_Trigger)(struct Lit* m);
-struct Lit_Tutorial_Trigger_List {
-  U32 current_id;
-  U32 count;
-  Lit_Tutorial_Trigger e[10];
-};
-
-struct Lit_Tutorial_Text
-{
-  String8 str;
-  F32 alpha;
-  Lit_Tutorial_Text_State state; 
-  F32 pos_x;
-  F32 pos_y;
-  F32 timer;
-
-};
-
-
-struct Lit_Tutorial_Text_List {
-  U32 count;
-  Lit_Tutorial_Text e[10];
-  U32 next_id_to_fade_in;
-  U32 next_id_to_fade_out;
-};
-
-#endif
-
-
-#if 0 
-static V2
-circle_to_finite_line_resp(V2 circle_center, F32 circle_radius, V2 line_min, V2 line_max) {
-  // extend lines
-  V2 v = v2_sub(line_max, line_min);
-  V2 unit_v = v2_norm(v);
-  V2 unit_v_scaled_by_circle_radius = v2_scale(unit_v, circle_radius); 
-  line_min = v2_sub(line_min, unit_v_scaled_by_circle_radius);
-  line_max = v2_add(line_max, unit_v_scaled_by_circle_radius);
-  v = v2_sub(line_max, line_min);
-
-  // get point on line that's the shortest distance
-  V2 line_min_to_circle = v2_sub(circle_center, line_min);
-  V2 line_min_to_circle_proj_onto_unit_v = v2_proj(line_min_to_circle, unit_v);
-  V2 s = v2_add(line_min_to_circle_proj_onto_unit_v, line_min); 
-
-  F32 t = 0.f;
-  if (v.x != 0.f) {
-    t = (s.x - line_min.x)/v.x;
-  }
-  else if (v.y != 0.f) {
-    t = (s.y - line_min.y)/v.y;
-  }
-  else return {0};
-
-  if (t <= 0.f || t >= 1.f) {
-    return {0};
-  }
-  
-  F32 r_2 = circle_radius * circle_radius;
-  V2 cs = v2_sub(circle_center, s);
-  F32 d_2 = cs.x * cs.x + cs.y * cs.y; 
-
-  if (d_2 >= r_2) return {0};
-
-  // end point of circle that is along the line formed by circle_center to s
-  V2 e = v2_add(v2_scale(v2_norm(v2_sub(s, circle_center)), circle_radius), circle_center);
-  return v2_sub(s, e);
-}
-#endif
-
 
 
 #include "scene_lit_world.h"
@@ -135,10 +54,16 @@ struct Lit {
   Lit_State_Type state;
   U32 current_level_id;
   Lit_Player player;
-  
-  Lit_Edge_List edges;
-  Lit_Light_List lights;
-  Lit_Sensor_List sensors;
+ 
+  U32 edge_count;
+  Lit_Edge edges[256];
+
+  U32 light_count;
+  Lit_Light lights[32];
+
+  U32 sensor_count;
+  Lit_Sensor sensors[32];
+
   Lit_Particle_Pool particles;
 
   F32 stage_fade_timer;
@@ -151,12 +76,7 @@ struct Lit {
   F32 title_timer;
   U32 title_wp_index;
     
-
-#if 0
-  // Tutorial system
-  Lit_Tutorial_Text_List tutorial_texts;
-  Lit_Tutorial_Trigger_List tutorial_triggers;
-#endif
+  U32 sensors_activated;
 
 
 
@@ -168,7 +88,6 @@ struct Lit {
 
 };
 
-// TODO: combine world and light to one file?
 #include "scene_lit_world.cpp"
 #include "scene_lit_entity.cpp"
 
@@ -185,56 +104,6 @@ lit_set_title(Lit* m, String8 str) {
 }
 
 
-#if 0
-static Lit_Tutorial_Text*
-lit_push_tutorial_text(Lit_Tutorial_Text_List* texts, String8 str, F32 x, F32 y) {
-  Lit_Tutorial_Text* text = al_append(texts); 
-  if (text) {
-    text->pos_x = x;
-    text->pos_y = y;
-    text->str = str;
-    text->alpha = 0.f;
-    text->state = LIT_TUTORIAL_TEXT_STATE_INVISIBLE;
-  }
-  return text;
-}
-
-static Lit_Tutorial_Trigger*
-lit_push_tutorial_trigger(Lit_Tutorial_Trigger_List* triggers, Lit_Tutorial_Trigger fn) {
-  Lit_Tutorial_Trigger* trigger = al_append(triggers); 
-  if (trigger) {
-    (*trigger) = fn;
-  }
-  return trigger;
-}
-
-static void
-lit_fade_out_tutorial_text(Lit_Tutorial_Text* text) {
-  text->state = LIT_TUTORIAL_TEXT_STATE_FADE_OUT;
-  text->timer = 0.f;
-}
-
-static void
-lit_fade_in_tutorial_text(Lit_Tutorial_Text* text) {
-  text->state = LIT_TUTORIAL_TEXT_STATE_FADE_IN;
-  text->timer = 0.f;
-}
-static void 
-lit_fade_in_next_tutorial_text(Lit_Tutorial_Text_List* texts) {
-  assert(texts->next_id_to_fade_in != al_cap(texts));
-  lit_fade_in_tutorial_text(al_at(texts, texts->next_id_to_fade_in));
-  texts->next_id_to_fade_in++;
-}
-
-static void 
-lit_fade_out_next_tutorial_text(Lit_Tutorial_Text_List* texts) {
-  assert(texts->next_id_to_fade_out != al_cap(texts));
-  lit_fade_out_tutorial_text(al_at(texts, texts->next_id_to_fade_out));
-  texts->next_id_to_fade_out++;
- 
-}
-#endif
-
 #include "scene_lit_levels.h"
 
 
@@ -250,7 +119,7 @@ lit_tick(Moe* moe)
 
     m = moe_allocate_scene(Lit, moe);
     lit_load_level(m, 0); 
-    m->rng = rng_create(65535); // don't really need to be strict 
+    rng_init(&m->rng, 65535); // don't really need to be strict 
     m->state = LIT_STATE_TYPE_TRANSITION_IN;
     m->stage_fade_timer = LIT_ENTER_DURATION;
 
@@ -332,10 +201,10 @@ lit_tick(Moe* moe)
     lit_update_player(moe, m, dt);
   }
 
-  al_foreach(light_index, &m->lights)
+  for(U32 light_index = 0; light_index < m->light_count; ++light_index)
   {
-    Lit_Light* light = al_at(&m->lights, light_index);
-    lit_gen_light_intersections(light, &m->edges, &moe->frame_arena);
+    Lit_Light* light = m->lights + light_index;
+    lit_gen_light_intersections(light, m->edges, m->edge_count, &moe->frame_arena);
   }
 
 

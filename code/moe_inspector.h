@@ -14,13 +14,9 @@ typedef struct  {
   void* item;
 } Inspector_Entry;
 
-typedef struct  {
-  U32 count;
-  Inspector_Entry e[64];
-} Inspector_Entry_List;
-
 typedef struct {
-  Inspector_Entry_List entries;
+  U32 entry_count;
+  Inspector_Entry entries[64];
 } Inspector;
 
 
@@ -29,13 +25,13 @@ typedef struct {
 //
 static void 
 insp_clear(Inspector* in) {
-  al_clear(&in->entries);
+  in->entry_count = 0;
 }
 
 static void
 insp_add_u32(Inspector* in, String8 name, U32* item) {
-  Inspector_Entry* entry = al_append(&in->entries);
-  assert(entry);
+  assert(in->entry_count < array_count(in->entries));
+  Inspector_Entry* entry = in->entries + in->entry_count++;
   entry->item = item;
   entry->type = INSPECTOR_ENTRY_TYPE_U32;
   entry->name = name;
@@ -44,8 +40,8 @@ insp_add_u32(Inspector* in, String8 name, U32* item) {
 
 static void
 insp_add_f32(Inspector* in, String8 name, F32* item) {
-  Inspector_Entry* entry = al_append(&in->entries);
-  assert(entry);
+  assert(in->entry_count < array_count(in->entries));
+  Inspector_Entry* entry = in->entries + in->entry_count++;
   entry->item = item;
   entry->type = INSPECTOR_ENTRY_TYPE_F32;
   entry->name = name;

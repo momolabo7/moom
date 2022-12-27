@@ -1,5 +1,30 @@
 # Journal
 
+### 2022-12-27
+I'm having second thoughts about using macros for data structures. 
+The main issue with macros is that it severely restricts the API design and that it forces me to design my code a certain way, which isn't neccesarily good.
+
+One would argue that having a generic data structure will help in prototyping and iteration. 
+This is...true, but the issue is that the amount of work to refactor away from it takes time too, and I'm not certain that those times add up enough to have a negative impact.  
+
+Another issue is readability. 
+Writing 'al_append' ensures that I'm pushing back to some sort of array list. 
+It is worth sacrificing the readability?
+
+Maybe it's better to just remove it all and just write data structures that are performant anyways.
+
+...
+
+Just done refactoring. 
+Struct declarations seems 'cleaner' without all the intemediary stuff.
+Implementation seems a little messier.
+Should've probably not been lazy and wrote helper functions.
+
+Either way, it's comfortaing to see that I only used lists in the (game) layer.
+I had thought that I would use it in more critical places but turns out that's not the case.
+Maybe generic data structures are really overhyped after all?
+
+
 ### 2022-12-26
 I feel like I have reached the limit of using C in my (momo) layer. 
 It has reached the point where I am spending too much time trying to play around the lack of C++ features, like using goto instead of the defer keyword I have. 

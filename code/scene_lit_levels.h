@@ -276,9 +276,9 @@ lit_load_level(Lit* m, U32 level_id) {
   m->stage_fade_timer = 1.f;
   m->state = LIT_STATE_TYPE_TRANSITION_IN;
 
-  al_clear(&m->sensors);
-  al_clear(&m->lights);
-  al_clear(&m->edges);
+  m->sensor_count = 0;;
+  m->light_count = 0;
+  m->edge_count = 0;;
 #if 0
   al_clear(&m->tutorial_texts);
   al_clear(&m->tutorial_triggers);

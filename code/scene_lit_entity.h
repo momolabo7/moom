@@ -31,11 +31,6 @@ struct Lit_Sensor {
   F32 particle_cd;
 };
 
-struct Lit_Sensor_List {
-  U32 count;
-  Lit_Sensor e[32];
-  U32 activated;
-};
 
 
 struct Lit_Player {

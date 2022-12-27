@@ -3,25 +3,23 @@
 
 
 struct RNG {
-  U32 index;
+  U32 seed;
 };
 
-static RNG
-rng_create(U32 seed)
+static void
+rng_init(RNG* r, U32 seed)
 {
-  RNG series = {};
-  series.index = seed;
-  return series;
+  r->seed = seed;
 }
 
 static U32 
 rng_next(RNG* r)
 {
-  U32 result = r->index;
+  U32 result = r->seed;
 	result ^= result << 13;
 	result ^= result >> 17;
 	result ^= result << 5;
-	r->index = result;
+	r->seed = result;
   return result;
 }
 

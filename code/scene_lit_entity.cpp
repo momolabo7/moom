@@ -14,7 +14,6 @@ static void
 lit_update_player(Moe* moe, Lit* lit, F32 dt) 
 {
   Lit_Player* player = &lit->player; 
-  Lit_Light_List* lights = &lit->lights;
   Platform* platform = moe->platform;
   
 
@@ -69,8 +68,9 @@ lit_update_player(Moe* moe, Lit* lit, F32 dt)
     if (player->held_light == null) {
       F32 shortest_dist = LIT_PLAYER_PICKUP_DIST; // limit
       Lit_Light* nearest_light = null;
-      al_foreach(light_index, lights) {
-        Lit_Light* l = al_at(lights, light_index);
+
+      for(U32 light_index = 0; light_index < lit->light_count; ++light_index) {
+        Lit_Light* l = lit->lights +light_index;
         F32 dist = v2_dist_sq(l->pos, player->pos);
         if (shortest_dist > dist) {
           nearest_light = l;
@@ -212,10 +212,8 @@ lit_render_particles(Moe* moe, Lit* lit) {
 static void 
 lit_push_sensor(Lit* lit, F32 pos_x, F32 pos_y, U32 target_color) 
 {
-  Lit_Sensor_List* sensors = &lit->sensors;
-
-  assert(!al_is_full(sensors));
-  Lit_Sensor* s = al_append(sensors);
+  assert(lit->sensor_count < array_count(lit->sensors));
+  Lit_Sensor* s = lit->sensors + lit->sensor_count++;
   s->pos.x = pos_x;
   s->pos.y = pos_y;
   s->target_color = target_color;
@@ -226,25 +224,23 @@ static void
 lit_update_sensors(Lit* lit,
                    F32 dt) 
 {
-  Lit_Sensor_List* sensors = &lit->sensors; 
   Lit_Particle_Pool* particles = &lit->particles;
-  Lit_Light_List* lights = &lit->lights; 
   RNG* rng = &lit->rng; 
 
   U32 activated = 0;
-  al_foreach(sensor_index, sensors)
+  for(U32 sensor_index = 0; sensor_index < lit->sensor_count; ++sensor_index)
   {
-    Lit_Sensor* sensor = al_at(sensors, sensor_index);
+    Lit_Sensor* sensor = lit->sensors + sensor_index;
     U32 current_color = 0x0000000;
     
     // For each light, for each triangle, add light
-    al_foreach(light_index, lights)
+    for(U32 light_index = 0; light_index < lit->light_count; ++light_index)
     {
-      Lit_Light* light = al_at(lights, light_index);
+      Lit_Light* light = lit->lights +light_index;
       
-      al_foreach(tri_index, &light->triangles)
+      for(U32 tri_index = 0; tri_index < light->triangle_count; ++tri_index)
       {
-        Lit_Light_Triangle* tri = al_at(&light->triangles, tri_index);
+        Lit_Light_Triangle* tri = light->triangles +tri_index;
         if (bonk_tri2_pt2(tri->p0, tri->p1, tri->p2, sensor->pos)) 
         {
           // TODO(Momo): Probably not the right way do sensor
@@ -262,7 +258,7 @@ lit_update_sensors(Lit* lit,
     {
       ++activated;
     }
-    sensors->activated = activated;
+    lit->sensors_activated = activated;
 
     // Particle emission check
     sensor->particle_cd -= dt;
@@ -296,18 +292,16 @@ lit_update_sensors(Lit* lit,
 
 static B32
 lit_are_all_sensors_activated(Lit* lit) {
-  Lit_Sensor_List* sensors = &lit->sensors;
-  return sensors->activated == sensors->count;
+  return lit->sensors_activated == lit->sensor_count;
 }
 
 static void 
 lit_render_sensors(Moe* moe, Lit* lit) {
-  Lit_Sensor_List* sensors = &lit->sensors;
   Platform* platform = moe->platform;
 
-  al_foreach(sensor_index, sensors)
+  for(U32 sensor_index = 0; sensor_index < lit->sensor_count; ++sensor_index)
   {
-    Lit_Sensor* sensor = al_at(sensors, sensor_index);
+    Lit_Sensor* sensor = lit->sensors + sensor_index;
     gfx_push_filled_circle(platform->gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, rgba_hex(sensor->target_color)); 
 
     // only for debugging

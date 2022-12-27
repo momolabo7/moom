@@ -1025,7 +1025,6 @@ image_stream	code/momo_png.h	/^  Stream image_stream;$/;"	m	language:C++	struct:
 image_width	code/momo_png.h	/^  U32 image_width;$/;"	m	language:C++	struct:__anon548615c10108	typeref:typename:U32
 imm_notifs	code/w32_audio_wasapi.h	/^  IMMNotificationClient imm_notifs;$/;"	m	language:C++	struct:Win_Wasapi_Notif_Client	typeref:typename:IMMNotificationClient
 in	code/test_png.h	/^    const char* in;$/;"	m	language:C++	struct:test_png::__anonee61d0a90108	typeref:typename:const char *
-index	code/momo_rng.h	/^  U32 index;$/;"	m	language:C++	struct:RNG	typeref:typename:U32
 index	code/momo_sort.h	/^  U32 index;$/;"	m	language:C++	struct:__anonec618b240108	typeref:typename:U32
 info	build/a.out.js	/^  var info = {$/;"	c	language:JavaScript	class:createWasm
 info_lines	code/moe_console.h	/^  String8_Builder info_lines[9];$/;"	m	language:C++	struct:Console	typeref:typename:String8_Builder[9]
@@ -1375,7 +1374,7 @@ MOMO_JSON	code/momo_json.h	/^#define MOMO_JSON$/;"	d	language:C++
 MOMO_LISTS_H	code/momo_ds.h	/^#define MOMO_LISTS_H$/;"	d	language:C++
 MOMO_MATRIX_H	code/momo_matrix.h	/^#define MOMO_MATRIX_H$/;"	d	language:C++
 MOMO_PNG	code/momo_png.h	/^#define MOMO_PNG$/;"	d	language:C++
-MOMO_RANDOM_H	code/momo_rng.h	/^#define MOMO_RANDOM_H$/;"	d	language:C++
+MOMO_RANDOM_H	D:/work/git/moom/code/momo_rng.h	/^#define MOMO_RANDOM_H$/;"	d	language:C++
 MOMO_RECT_PACK_H	code/momo_rect_pack.h	/^#define MOMO_RECT_PACK_H$/;"	d	language:C++
 MOMO_SHAPES_H	code/momo_bonk.h	/^#define MOMO_SHAPES_H$/;"	d	language:C++
 MOMO_SORT_H	code/momo_sort.h	/^#define MOMO_SORT_H$/;"	d	language:C++
@@ -1783,17 +1782,17 @@ rgba_set	code/momo_colors.h	/^static RGBA rgba_set(F32 r, F32 g, F32 b, F32 a);$
 RGBA_WHITE	code/momo_colors.h	/^#define RGBA_WHITE /;"	d	language:C++
 riff_chunk	code/momo_wav.h	/^  WAV_Riff_Chunk riff_chunk;$/;"	m	language:C++	struct:__anon54fde02a0408	typeref:typename:WAV_Riff_Chunk
 right	code/momo_json.h	/^  struct _JSON_Object_Node* right;$/;"	m	language:C++	struct:_JSON_Object_Node	typeref:struct:_JSON_Object_Node *
-RNG	code/momo_rng.h	/^struct RNG {$/;"	s	language:C++
 rng	code/scene_lit.h	/^  RNG rng;$/;"	m	language:C++	struct:Lit	typeref:typename:RNG
-rng_bilateral	code/momo_rng.h	/^rng_bilateral(RNG* r)$/;"	f	language:C++	typeref:typename:F32
-rng_choice	code/momo_rng.h	/^rng_choice(RNG* r, U32 choice_count) {$/;"	f	language:C++	typeref:typename:U32
-rng_create	code/momo_rng.h	/^rng_create(U32 seed)$/;"	f	language:C++	typeref:typename:RNG
-rng_next	code/momo_rng.h	/^rng_next(RNG* r)$/;"	f	language:C++	typeref:typename:U32
-rng_range_F32	code/momo_rng.h	/^rng_range_F32(RNG* r, F32 min, F32 max)$/;"	f	language:C++	typeref:typename:F32
-rng_range_S32	code/momo_rng.h	/^rng_range_S32(RNG* r, S32 min, S32 max)$/;"	f	language:C++	typeref:typename:S32
-rng_range_U32	code/momo_rng.h	/^rng_range_U32(RNG* r, U32 min, U32 max)$/;"	f	language:C++	typeref:typename:U32
-rng_unilateral	code/momo_rng.h	/^rng_unilateral(RNG* r)$/;"	f	language:C++	typeref:typename:F32
-rng_unit_circle	code/momo_rng.h	/^rng_unit_circle(RNG* r) {$/;"	f	language:C++	typeref:typename:V2
+RNG	D:/work/git/moom/code/momo_rng.h	/^struct RNG {$/;"	s	language:C++
+rng_bilateral	D:/work/git/moom/code/momo_rng.h	/^rng_bilateral(RNG* r)$/;"	f	language:C++	typeref:typename:F32
+rng_choice	D:/work/git/moom/code/momo_rng.h	/^rng_choice(RNG* r, U32 choice_count) {$/;"	f	language:C++	typeref:typename:U32
+rng_init	D:/work/git/moom/code/momo_rng.h	/^rng_init(RNG* r, U32 seed)$/;"	f	language:C++	typeref:typename:RNG
+rng_next	D:/work/git/moom/code/momo_rng.h	/^rng_next(RNG* r)$/;"	f	language:C++	typeref:typename:U32
+rng_range_F32	D:/work/git/moom/code/momo_rng.h	/^rng_range_F32(RNG* r, F32 min, F32 max)$/;"	f	language:C++	typeref:typename:F32
+rng_range_S32	D:/work/git/moom/code/momo_rng.h	/^rng_range_S32(RNG* r, S32 min, S32 max)$/;"	f	language:C++	typeref:typename:S32
+rng_range_U32	D:/work/git/moom/code/momo_rng.h	/^rng_range_U32(RNG* r, U32 min, U32 max)$/;"	f	language:C++	typeref:typename:U32
+rng_unilateral	D:/work/git/moom/code/momo_rng.h	/^rng_unilateral(RNG* r)$/;"	f	language:C++	typeref:typename:F32
+rng_unit_circle	D:/work/git/moom/code/momo_rng.h	/^rng_unit_circle(RNG* r) {$/;"	f	language:C++	typeref:typename:V2
 rot	code/moe_gfx.h	/^  F32 rot;$/;"	m	language:C++	struct:Gfx_Command_Rect	typeref:typename:F32
 round_f32	code/momo_intrinsics.h	/^static F32 round_f32(F32 value) {$/;"	f	language:C++	typeref:typename:F32
 round_f32	code/momo_intrinsics.h	/^static F32 round_f32(F32 value);$/;"	p	language:C++	typeref:typename:F32
@@ -1877,6 +1876,7 @@ Scene_Tick	code/moe.h	/^typedef void (*Scene_Tick)(struct Moe*);$/;"	t	language:
 scope	code/momo_json.h	/^static U32 scope = 0;$/;"	v	language:C++	typeref:typename:U32
 scriptDirectory	build/a.out.js	/^var scriptDirectory = '';$/;"	v	language:JavaScript
 seconds_since_last_frame	code/moe_platform.h	/^  F32 seconds_since_last_frame; \/\/aka dt$/;"	m	language:C++	struct:__anonb345dcaa0708	typeref:typename:F32
+seed	D:/work/git/moom/code/momo_rng.h	/^  U32 seed;$/;"	m	language:C++	struct:RNG	typeref:typename:U32
 selected_id	code/scene_computer.h	/^  U32 selected_id;$/;"	m	language:C++	struct:Computer	typeref:typename:U32
 selection_list	code/scene_computer.h	/^  Computer_Selection_List selection_list;$/;"	m	language:C++	struct:Computer	typeref:typename:Computer_Selection_List
 semaphore	code/w32_moe.h	/^  HANDLE semaphore; $/;"	m	language:C++	struct:W32_Work_Queue	typeref:typename:HANDLE

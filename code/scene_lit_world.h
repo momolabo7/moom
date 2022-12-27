@@ -6,35 +6,15 @@ struct Lit_Edge {
 };
 
 
-struct Lit_Edge_List {
-  U32 count;
-  Lit_Edge e[256];
-};
 
 struct Lit_Light_Intersection {
   B32 is_shell;
   V2 pt;
 };
 
-struct Lit_Light_Intersection_List {
-  U32 count;
-  Lit_Light_Intersection e[256];
-};
-
 struct Lit_Light_Triangle {
   V2 p0, p1, p2;
 };
-struct Lit_Light_Triangle_List {
-  U32 count;
-  Lit_Light_Triangle e[256];
-};
-
-#if LIT_DEBUG_LIGHT
-struct Lit_Light_Debug_Ray_List {
-  U32 count;
-  Ray2 e[256];
-};
-#endif //LIT_DEBUG_LIGHT
 
 struct Lit_Light {
   V2 dir;
@@ -43,18 +23,14 @@ struct Lit_Light {
   V2 pos;  
   U32 color;
 
-  Lit_Light_Triangle_List triangles;
-  Lit_Light_Intersection_List intersections;
+  U32 triangle_count;
+  Lit_Light_Triangle triangles[256];
 
-#if LIT_DEBUG_LIGHT
-  Lit_Light_Debug_Ray_List debug_rays;
-#endif
+  U32 intersection_count;
+  Lit_Light_Intersection intersections[256];
+
 };
 
-struct Lit_Light_List {
-  U32 count;
-  Lit_Light e[32];
-};
 
 
 enum Lit_Light_Type {
