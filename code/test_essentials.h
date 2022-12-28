@@ -8,9 +8,9 @@ void test_essentials() {
   test_eval_d(max_of(5, 10));
   test_eval_d(clamp(11, 0, 10));
   test_eval_d(clamp(-1, 0, 10));
-  test_eval_d(abs_of(-1));    // invokes S32 version
-  test_eval_f(abs_of(-12.f)); // invokes F32 version
-  test_eval_f(abs_of(-12.0)); // involes F64 version
+  test_eval_d(abs_of(-1));    // invokes s32_t version
+  test_eval_f(abs_of(-12.f)); // invokes f32_t version
+  test_eval_f(abs_of(-12.0)); // involes f64_t version
   test_eval_d(lerp(10, 20, 0.5f));
   test_eval_d(align_down_pow2(15, 4));
   test_eval_d(align_up_pow2(15, 4));
@@ -56,7 +56,7 @@ void test_essentials() {
   // Test endian swap 16
   {
     union {
-      U16 u;
+      u16_t u;
       char c[2];
     } val;
     
@@ -77,7 +77,7 @@ void test_essentials() {
   // Test endian swap 32
   {
     union {
-      U32 u;
+      u32_t u;
       char c[4];
     } val;
     

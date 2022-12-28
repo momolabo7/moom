@@ -4,7 +4,7 @@
 #define MOMO_RECT_PACK_H
 
 
-enum RP_Sort_Type{
+enum rp_sort_type_t{
   RP_SORT_TYPE_WIDTH,
   RP_SORT_TYPE_HEIGHT,
   RP_SORT_TYPE_AREA,
@@ -13,8 +13,8 @@ enum RP_Sort_Type{
   RP_SORT_TYPE_PATHOLOGICAL,
 };
 
-struct RP_Rect{
-	U32 x, y, w, h;
+struct rp_rect_t{
+	u32_t x, y, w, h;
   void* user_data;
 };
 
@@ -42,14 +42,14 @@ struct RP_Rect{
 //   will be cleared.
 //   
 
-static B32 
-rp_pack(RP_Rect* rects, 
-        U32 rect_count, 
-        U32 padding,
-        U32 total_width,
-        U32 total_height,
-        RP_Sort_Type sort_type,
-        Arena* allocator);
+static b32_t 
+rp_pack(rp_rect_t* rects, 
+        u32_t rect_count, 
+        u32_t padding,
+        u32_t total_width,
+        u32_t total_height,
+        rp_sort_type_t sort_type,
+        arena_t* allocator);
 
 
 
@@ -57,52 +57,52 @@ rp_pack(RP_Rect* rects,
 // IMPLEMENTATION
 
 struct _RP_Node{
-	U32 x, y, w, h;
+	u32_t x, y, w, h;
 };
 
 static void
-_rp_sort(RP_Rect* rects,
-         Sort_Entry* entries,
-         U32 count,
-         RP_Sort_Type sort_type) 
+_rp_sort(rp_rect_t* rects,
+         sort_entry_t* entries,
+         u32_t count,
+         rp_sort_type_t sort_type) 
 {
   switch(sort_type) {
     case RP_SORT_TYPE_HEIGHT: {
-      for (U32 i = 0; i < count; ++i) {
-        entries[i].key = -(F32)rects[i].h;
+      for (u32_t i = 0; i < count; ++i) {
+        entries[i].key = -(f32_t)rects[i].h;
         entries[i].index = i;
       }
     } break;
     case RP_SORT_TYPE_WIDTH: {
-      for (U32 i = 0; i < count; ++i) {
-        entries[i].key = -(F32)rects[i].w;
+      for (u32_t i = 0; i < count; ++i) {
+        entries[i].key = -(f32_t)rects[i].w;
         entries[i].index = i;
       }
     } break;
     case RP_SORT_TYPE_AREA: {
-      for (U32 i = 0; i < count; ++i) {
-        entries[i].key = -((F32)rects[i].h * (F32)rects[i].w);
+      for (u32_t i = 0; i < count; ++i) {
+        entries[i].key = -((f32_t)rects[i].h * (f32_t)rects[i].w);
         entries[i].index = i;
       }
     } break;
     case RP_SORT_TYPE_PERIMETER: {
-      for (U32 i = 0; i < count; ++i) {
-        entries[i].key = -((F32)rects[i].h + (F32)rects[i].w);
+      for (u32_t i = 0; i < count; ++i) {
+        entries[i].key = -((f32_t)rects[i].h + (f32_t)rects[i].w);
         entries[i].index = i;
       }
     } break;
     case RP_SORT_TYPE_BIGGER_SIDE: {
-      for (U32 i = 0; i < count; ++i) {
-        F32 key = -(F32)(max_of(rects[i].w, rects[i].h));
+      for (u32_t i = 0; i < count; ++i) {
+        f32_t key = -(f32_t)(max_of(rects[i].w, rects[i].h));
         entries[i].key = key;
         entries[i].index = i;
       }
     } break;
     case RP_SORT_TYPE_PATHOLOGICAL: {
-      for (U32 i = 0; i < count; ++i) {
-        U32 wh_max = max_of(rects[i].w, rects[i].h);
-        U32 wh_min = min_of(rects[i].w, rects[i].h);
-        F32 key = -(F32)(wh_max/wh_min * rects[i].w * rects[i].h);
+      for (u32_t i = 0; i < count; ++i) {
+        u32_t wh_max = max_of(rects[i].w, rects[i].h);
+        u32_t wh_min = min_of(rects[i].w, rects[i].h);
+        f32_t key = -(f32_t)(wh_max/wh_min * rects[i].w * rects[i].h);
         entries[i].key = key;
         entries[i].index = i;
       }
@@ -112,41 +112,41 @@ _rp_sort(RP_Rect* rects,
   quicksort(entries, count);
 }
 
-static B32
-rp_pack(RP_Rect* rects, 
-        U32 rect_count, 
-        U32 padding,
-        U32 total_width,
-        U32 total_height,
-        RP_Sort_Type sort_type,
-        Arena* allocator) 
+static b32_t
+rp_pack(rp_rect_t* rects, 
+        u32_t rect_count, 
+        u32_t padding,
+        u32_t total_width,
+        u32_t total_height,
+        rp_sort_type_t sort_type,
+        arena_t* allocator) 
 {
-  Arena_Marker restore_point = arn_mark(allocator);
+  arena_marker_t restore_point = arena_mark(allocator);
  
-  Sort_Entry* sort_entries = arn_push_arr(Sort_Entry, allocator, rect_count);
+  sort_entry_t* sort_entries = arena_push_arr(sort_entry_t, allocator, rect_count);
   _rp_sort(rects, sort_entries, rect_count, sort_type);
-  _RP_Node* nodes = arn_push_arr(_RP_Node, allocator, rect_count+1);
+  _RP_Node* nodes = arena_push_arr(_RP_Node, allocator, rect_count+1);
 
-  U32 current_node_count = 1;
+  u32_t current_node_count = 1;
   nodes[0].x = 0;
   nodes[0].y = 0;
   nodes[0].w = total_width;
   nodes[0].h = total_height;
   
-  for (U32 i = 0; i < rect_count; ++i) {
-    RP_Rect* rect = rects + sort_entries[i].index;
+  for (u32_t i = 0; i < rect_count; ++i) {
+    rp_rect_t* rect = rects + sort_entries[i].index;
     
     // ignore rects with 0 width or height
     if(rect->w == 0 || rect->h == 0) continue;
     
     // padding*2 because there are 2 sides
-    U32 rect_width = rect->w + padding*2;
-    U32 rect_height = rect->h + padding*2;
+    u32_t rect_width = rect->w + padding*2;
+    u32_t rect_height = rect->h + padding*2;
     
     // NOTE(Momo): Iterate the empty spaces backwards to find the best fit index
-    U32 chosen_space_index = current_node_count;
-    for (U32  j = 0; j < chosen_space_index ; ++j ) {
-      U32 index = chosen_space_index - j - 1;
+    u32_t chosen_space_index = current_node_count;
+    for (u32_t  j = 0; j < chosen_space_index ; ++j ) {
+      u32_t index = chosen_space_index - j - 1;
       _RP_Node space = nodes[index];
       
       // NOTE(Momo): Check if the image fits
@@ -160,7 +160,7 @@ rp_pack(RP_Rect* rects,
     // NOTE(Momo): If an empty space that can fit is found, 
     // we remove that space and split.
     if(chosen_space_index == current_node_count) { 
-      arn_revert(restore_point);
+      arena_revert(restore_point);
       return false;
     }
     
@@ -208,8 +208,8 @@ rp_pack(RP_Rect* rects,
       split_space_down.h = chosen_space.h - rect_height;
       
       // Choose to insert the bigger one first before the smaller one
-      U32 right_area = split_space_right.w * split_space_right.h;
-      U32 down_area = split_space_down.w * split_space_down.h;
+      u32_t right_area = split_space_right.w * split_space_right.h;
+      u32_t down_area = split_space_down.w * split_space_down.h;
       
       if (right_area > down_area) {
         nodes[current_node_count++] = split_space_right;
@@ -227,7 +227,7 @@ rp_pack(RP_Rect* rects,
     rect->y = chosen_space.y + padding;
   }
  
-  arn_revert(restore_point);
+  arena_revert(restore_point);
   return true;
 }
 

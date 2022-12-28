@@ -63,7 +63,7 @@ Right now, I'm trying to see if I can clearly seperate all my code into 3 parts:
 
 * Momo - The part that is 'platform agnostic', which I will prefix with my personal alias 'momo'. This is equivalent of my 'std' library.
 
-* Moe - The part that is the meat of the engine code that runs 'scenes'. This is prefixed with 'moe' which stands for 'My Own Engine'.
+* moe_t - The part that is the meat of the engine code that runs 'scenes'. This is prefixed with 'moe' which stands for 'My Own Engine'.
 
 Before, 'scene' and 'engine' was one thing, which works, but it would be nice to identify what are game-specific code and what are engine-specific code so that I can have the right mindset when I'm working with either.
 

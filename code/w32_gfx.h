@@ -11,22 +11,22 @@
 #include "moe_gfx.h"
 
 // win32 gfx api that must be defined
-static Gfx*
+static gfx_t*
 w32_gfx_load(HWND window, 
-             U32 command_queue_size, 
-             U32 texture_queue_size,
-             Arena* allocator);
+             u32_t command_queue_size, 
+             u32_t texture_queue_size,
+             arena_t* allocator);
 
 static void 
-w32_gfx_unload(Gfx* renderer);
+w32_gfx_unload(gfx_t* renderer);
 
 static void
-w32_gfx_begin_frame(Gfx* renderer, 
-                    V2U render_wh, 
-                    U32 region_x0, U32 region_y0, 
-                    U32 region_x1, U32 region_y1);
+w32_gfx_begin_frame(gfx_t* renderer, 
+                    v2u_t render_wh, 
+                    u32_t region_x0, u32_t region_y0, 
+                    u32_t region_x1, u32_t region_y1);
 static void 
-w32_gfx_end_frame(Gfx* renderer);
+w32_gfx_end_frame(gfx_t* renderer);
 
 
 

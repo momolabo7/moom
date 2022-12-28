@@ -9,8 +9,8 @@ static void
 test_list() {
 #if 0
   struct {
-    U32 count;
-    U32 e[10];
+    u32_t count;
+    u32_t e[10];
   } _a = {};
   auto* a = &_a;
   
@@ -21,14 +21,14 @@ test_list() {
   test_log("adding numbers list...\n");
   {
     test_create_log_section_until_scope;
-    for (U32 i = 0; i < 20; ++i) {
+    for (u32_t i = 0; i < 20; ++i) {
       if (als_has_space(a)) {
         als_push_item(a,i);
       }
     }
     
     test_log("a is now: ");
-    for (U32 i = 0; i < a->count; ++i) {
+    for (u32_t i = 0; i < a->count; ++i) {
       printf("%d ", a->e[i]);
     }
     test_log("\n");
@@ -44,7 +44,7 @@ test_list() {
     als_pop(a);
     als_pop(a);
     test_log("a is now: ");
-    for (U32 i = 0; i < a->count; ++i) {
+    for (u32_t i = 0; i < a->count; ++i) {
       printf("%d ", a->e[i]);
     }
     test_log("\n");
@@ -60,7 +60,7 @@ test_list() {
     test_create_log_section_until_scope;
     als_remove(a, 3);
     test_log("a is now: ");
-    for (U32 i = 0; i < a->count; ++i) {
+    for (u32_t i = 0; i < a->count; ++i) {
       printf("%d ", als_get_copy(a,i));
     }
     test_log("\n");
@@ -71,7 +71,7 @@ test_list() {
     test_create_log_section_until_scope;
     als_slear(a, 3);
     test_log("a is now: ");
-    for (U32 i = 0; i < a->count; ++i) {
+    for (u32_t i = 0; i < a->count; ++i) {
       printf("%d ", *als_get(a,i));
     }
     test_log("\n");

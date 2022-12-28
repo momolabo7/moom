@@ -11,9 +11,9 @@
 #define sui_code_dir(filename) "../code/" filename
 #define sui_asset_dir(filename) "../assets/" filename
 
-static U32 sui_log_paces = 0;
+static u32_t sui_log_paces = 0;
 #define sui_log(...) { \
-  for(U32 sui_log_paces_index = 0; \
+  for(u32_t sui_log_paces_index = 0; \
       sui_log_paces_index < sui_log_paces; \
       ++sui_log_paces_index) \
   { \
@@ -30,19 +30,19 @@ static U32 sui_log_paces = 0;
 
 // Utility files for ass
 static void* 
-sui_read_file(const char* filename, UMI* out_size, Arena* allocator) {
+sui_read_file(const char* filename, umi_t* out_size, arena_t* allocator) {
   FILE *file = fopen(filename, "rb");
   if (!file) return false;
   defer { fclose(file); };
 
   fseek(file, 0, SEEK_END);
-  UMI file_size = ftell(file);
+  umi_t file_size = ftell(file);
   fseek(file, 0, SEEK_SET);
  
   //sui_log("%s, %lld\n", filename, file_size);
-  void* file_blk = arn_push_size(allocator, file_size, 16); 
+  void* file_blk = arena_push_size(allocator, file_size, 16); 
   if (!file_blk) return false;
-  UMI read_amount = fread(file_blk, 1, file_size, file);
+  umi_t read_amount = fread(file_blk, 1, file_size, file);
   if(read_amount != file_size) return false;
   
   if (out_size) *out_size = file_size;
@@ -51,8 +51,8 @@ sui_read_file(const char* filename, UMI* out_size, Arena* allocator) {
   
 }
 
-static B32
-sui_write_file(const char* filename, void* memory, UMI memory_size) {
+static b32_t
+sui_write_file(const char* filename, void* memory, umi_t memory_size) {
   FILE *file = fopen(filename, "wb");
   if (!file) return false;
   defer { fclose(file); };
@@ -61,10 +61,10 @@ sui_write_file(const char* filename, void* memory, UMI memory_size) {
   return true;
 }
 
-static B32 
-sui_read_font_from_file(TTF* ttf, const char* filename, Arena* allocator) {
+static b32_t 
+sui_read_font_from_file(ttf_t* ttf, const char* filename, arena_t* allocator) {
 
-  UMI size;
+  umi_t size;
   void* mem = sui_read_file(filename, &size, allocator); 
 
   if (!sui_read_file(filename, &size, allocator)) 
@@ -72,10 +72,10 @@ sui_read_font_from_file(TTF* ttf, const char* filename, Arena* allocator) {
   return ttf_read(ttf, mem, size);
 }
 
-static B32 
-sui_read_wav_from_file(WAV* wav, const char* filename, Arena* allocator) {
+static b32_t 
+sui_read_wav_from_file(wav_t* wav, const char* filename, arena_t* allocator) {
 
-  UMI size;
+  umi_t size;
   void* mem = sui_read_file(filename, &size, allocator); 
   if(!mem)
     return false;

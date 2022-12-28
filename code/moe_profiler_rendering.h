@@ -3,15 +3,15 @@
 #define MOE_PROFILER_RENDERING_H
 
 
-struct Stat {
-  F64 min;
-  F64 max;
-  F64 average;
-  U32 count;
+struct profiler_stat_t {
+  f64_t min;
+  f64_t max;
+  f64_t average;
+  u32_t count;
 };
 
 static void
-begin_stat(Stat* stat) {
+profiler_begin_stat(profiler_stat_t* stat) {
   stat->min = F64_INFINITY;
   stat->max = F64_NEG_INFINITY;
   stat->average = 0.0;
@@ -19,7 +19,7 @@ begin_stat(Stat* stat) {
 }
 
 static void
-accumulate_stat(Stat* stat, F64 value) {
+profiler_accumulate_stat(profiler_stat_t* stat, f64_t value) {
   ++stat->count;
   if (stat->min > value) {
     stat->min = value;
@@ -31,9 +31,9 @@ accumulate_stat(Stat* stat, F64 value) {
 }
 
 static void
-end_stat(Stat* stat) {
+profiler_end_stat(profiler_stat_t* stat) {
   if(stat->count) {
-    stat->average /= (F64)stat->count;
+    stat->average /= (f64_t)stat->count;
   }
   else {
     stat->min = 0.0;
@@ -42,62 +42,62 @@ end_stat(Stat* stat) {
 }
 
 static void
-update_and_render_profiler(Moe* moe) 
+update_and_render_profiler(moe_t* moe) 
 {
-  Profiler* profiler = moe->platform->profiler;
+  profiler_t* profiler = moe->platform->profiler;
   Platform* platform = moe->platform;
-  const F32 render_width = MOE_WIDTH;
-  const F32 render_height = MOE_HEIGHT;
-  const F32 font_height = 20.f;
+  const f32_t render_width = MOE_WIDTH;
+  const f32_t render_height = MOE_HEIGHT;
+  const f32_t font_height = 20.f;
 
   // Overlay
   paint_sprite(moe, moe->blank_sprite, 
-               v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
-               v2_set(MOE_WIDTH, MOE_HEIGHT),
+               v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
+               v2f_set(MOE_WIDTH, MOE_HEIGHT),
                rgba_set(0.f, 0.f, 0.f, 0.5f));
   gfx_advance_depth(platform->gfx);
   
-  U32 line_num = 1;
+  u32_t line_num = 1;
   
-  for(U32 entry_id = 0; entry_id < profiler->entry_count; ++entry_id)
+  for(u32_t entry_id = 0; entry_id < profiler->entry_count; ++entry_id)
   {
-    Profiler_Entry* itr = profiler->entries + entry_id;
+    profiler_entry_t* itr = profiler->entries + entry_id;
 
-    Stat cycles;
-    Stat hits;
-    Stat cycles_per_hit;
+    profiler_stat_t cycles;
+    profiler_stat_t hits;
+    profiler_stat_t cycles_per_hit;
     
-    begin_stat(&cycles);
-    begin_stat(&hits);
-    begin_stat(&cycles_per_hit);
+    profiler_begin_stat(&cycles);
+    profiler_begin_stat(&hits);
+    profiler_begin_stat(&cycles_per_hit);
     
-    for (U32 snapshot_index = 0;
+    for (u32_t snapshot_index = 0;
          snapshot_index < array_count(itr->snapshots);
          ++snapshot_index)
     {
       
-      Profiler_Snapshot * snapshot = itr->snapshots + snapshot_index;
+      profiler_snapshot_t * snapshot = itr->snapshots + snapshot_index;
       
-      accumulate_stat(&cycles, (F64)snapshot->cycles);
-      accumulate_stat(&hits, (F64)snapshot->hits);
+      profiler_accumulate_stat(&cycles, (f64_t)snapshot->cycles);
+      profiler_accumulate_stat(&hits, (f64_t)snapshot->hits);
       
-      F64 cph = 0.0;
+      f64_t cph = 0.0;
       if (snapshot->hits) {
-        cph = (F64)snapshot->cycles/(F64)snapshot->hits;
+        cph = (f64_t)snapshot->cycles/(f64_t)snapshot->hits;
       }
-      accumulate_stat(&cycles_per_hit, cph);
+      profiler_accumulate_stat(&cycles_per_hit, cph);
     }
-    end_stat(&cycles);
-    end_stat(&hits);
-    end_stat(&cycles_per_hit);
+    profiler_end_stat(&cycles);
+    profiler_end_stat(&hits);
+    profiler_end_stat(&cycles_per_hit);
     
     sb8_make(sb, 256);
     sb8_push_fmt(sb, 
                  str8_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
                  itr->block_name,
-                 (U32)cycles.average,
-                 (U32)hits.average,
-                 (U32)cycles_per_hit.average);
+                 (u32_t)cycles.average,
+                 (u32_t)hits.average,
+                 (u32_t)cycles_per_hit.average);
     
     paint_text(moe, moe->debug_font, 
                sb->str,
@@ -109,23 +109,23 @@ update_and_render_profiler(Moe* moe)
     
     
     // Draw graph
-    for (U32 snapshot_index = 0;
+    for (u32_t snapshot_index = 0;
          snapshot_index < array_count(itr->snapshots);
          ++snapshot_index)
     {
-      Profiler_Snapshot * snapshot = itr->snapshots + snapshot_index;
+      profiler_snapshot_t * snapshot = itr->snapshots + snapshot_index;
       
-      const F32 snapshot_bar_width = 1.5f;
-      F32 height_scale = 1.0f / (F32)cycles.max;
-      F32 snapshot_bar_height = 
-        height_scale * font_height * (F32)snapshot->cycles * 0.95f;
+      const f32_t snapshot_bar_width = 1.5f;
+      f32_t height_scale = 1.0f / (f32_t)cycles.max;
+      f32_t snapshot_bar_height = 
+        height_scale * font_height * (f32_t)snapshot->cycles * 0.95f;
      
       // TODO: Need a better way to decide x-position
-      V2 pos = {
+      v2f_t pos = {
         560.f + snapshot_bar_width * (snapshot_index), 
         render_height - font_height * (line_num) + font_height/4
       };
-      V2 size = {snapshot_bar_width, snapshot_bar_height};
+      v2f_t size = {snapshot_bar_width, snapshot_bar_height};
       
       
       paint_sprite(moe, moe->blank_sprite, 

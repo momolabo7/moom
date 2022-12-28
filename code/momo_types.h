@@ -151,21 +151,19 @@
 # include <stddef.h>
 #endif
 
-typedef uint8_t U8;
-typedef uint16_t U16;
-typedef uint32_t U32;
-typedef uint64_t U64;
-typedef int8_t S8;
-typedef int16_t S16;
-typedef int32_t S32;
-typedef int64_t S64;
-typedef float F32;
-typedef double F64;
-typedef U8 B8;
-typedef U16 B16;
-typedef U32 B32;
-typedef U64 B64;
-typedef char C8;
+typedef uint8_t  u8_t;
+typedef uint16_t u16_t;
+typedef uint32_t u32_t;
+typedef uint64_t u64_t;
+typedef int8_t   s8_t;
+typedef int16_t  s16_t;
+typedef int32_t  s32_t;
+typedef int64_t  s64_t;
+typedef float    f32_t;
+typedef double   f64_t;
+typedef u8_t     b8_t;
+typedef u32_t    b32_t;
+typedef char     c8_t;
 
 // Memory indices. Integer values for storing memory addresses.
 // X32 when in 32-bit, X64 when in 64-bit, etc 
@@ -173,12 +171,9 @@ typedef char C8;
 // We might want to have uintptr_t be it's own variable and size_t be another variable.
 // Might need to research on the theory behind it and blog it down.
 //
-typedef uintptr_t UMI; // aka 'unsigned memory index'
-typedef intptr_t  SMI; // aka 'signed memory index'
+typedef uintptr_t umi_t; // aka 'unsigned memory index'
+typedef intptr_t  smi_t; // aka 'signed memory index'
 
-#if !defined(null)
-# define null nullptr 
-#endif 
 
 //////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -217,66 +212,66 @@ typedef intptr_t  SMI; // aka 'signed memory index'
 #define GOLD_64 (1.61803398875)
 
 
-static F32 
+static f32_t 
 _F32_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-8 are on
-  union { F32 f; U32 u; } ret = {};
+  union { f32_t f; u32_t u; } ret = {};
   ret.u = 0x7f800000;
   
   return ret.f;
   
 }
 
-static F32 
+static f32_t 
 _F32_NEG_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-8 are on
   // Negative is when bit 0 is on
-  union { F32 f; U32 u; } ret = {};
+  union { f32_t f; u32_t u; } ret = {};
   ret.u = 0xff800000;
   
   return ret.f;	
 }
 
-static F32
+static f32_t
 _F32_NAN() {
   // NOTE(Momo): Use 'type pruning'
   // NAN is when bits 1-11 and 1 other bit is on
   // In this case, we will just turn on all bits
-  union { F32 f; U32 u; } ret = {};
+  union { f32_t f; u32_t u; } ret = {};
   ret.u = 0xFFFFFFFF;
   return ret.f;
 }
 
-static F64
+static f64_t
 _F64_NAN() {
   // NOTE(Momo): Use 'type pruning'
   // NAN is when bits 1-11 and 1 other bit is on
   // In this case, we will just turn on all bits
-  union { F64 f; U64 u; } ret = {};
+  union { f64_t f; u64_t u; } ret = {};
   ret.u = 0xFFFFFFFFFFFFFFFF;
   return ret.f;
 }
 
 
-static F64 
+static f64_t 
 _F64_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-11 are on
-  union { F64 f; U64 u; } ret = {};
+  union { f64_t f; u64_t u; } ret = {};
   ret.u = 0x7FF0000000000000;
   
   return ret.f;
   
 }
 
-static F64 
+static f64_t 
 _F64_NEG_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-11 are on
   // Negative is when bit 0 is on
-  union { F64 f; U64 u; } ret = {};
+  union { f64_t f; u64_t u; } ret = {};
   ret.u = 0xFFF0000000000000;
   
   return ret.f;	
@@ -304,7 +299,7 @@ _F64_NEG_INFINITY() {
 //
 #define stmt(s) do { s } while(0)
 #define array_count(A) (sizeof(A)/sizeof(*A))
-#define offset_of(type, member) (UMI)&(((type*)0)->member)
+#define offset_of(type, member) (umi_t)&(((type*)0)->member)
 #define make(t, name) \
   t glue(name##_,__LINE__) = {0}; \
   t* name = &(glue(name##_,__LINE__))
@@ -323,9 +318,9 @@ _F64_NEG_INFINITY() {
 #define thousands(x) ((x) * 1000)
 
 // bit manipulation
-#define bit_is_set(mask,bit) ((mask) & ((U64)1 << (bit)))
-#define bit_set(mask, bit) ((mask) |= ((U64)1 << (bit)))
-#define bit_unset(mask, bit) ((mask) &= ~((U64)1 << (bit)))
+#define bit_is_set(mask,bit) ((mask) & ((u64_t)1 << (bit)))
+#define bit_set(mask, bit) ((mask) |= ((u64_t)1 << (bit)))
+#define bit_unset(mask, bit) ((mask) &= ~((u64_t)1 << (bit)))
 
 //  
 // NOTE(Momo): It's ridiculous how much goes into the implementation of 
@@ -348,14 +343,14 @@ _F64_NEG_INFINITY() {
 
 //////////////////////////////////////////////////////////////////////////////
 // Integer to pointer conversions
-static UMI 
+static umi_t 
 ptr_to_int(void* p) { 
-  return (UMI)((C8*)p - (C8*)0); 
+  return (umi_t)((c8_t*)p - (c8_t*)0); 
 }
 
-static U8* 
-int_to_ptr(UMI u) { 
-  return (U8*)((C8*)0 + u);
+static u8_t* 
+int_to_ptr(umi_t u) { 
+  return (u8_t*)((c8_t*)0 + u);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -363,18 +358,18 @@ int_to_ptr(UMI u) {
 #define digit_to_ascii(d) ((d) + '0')
 #define ascii_to_digit(a) ((a) - '0')
 
-static B32
-is_whitespace(C8 c) {
+static b32_t
+is_whitespace(c8_t c) {
   return c == ' ' || c == '\n' || c == '\r' || c == '\t';
 }
 
-static B32
-is_alpha(C8 c) {
+static b32_t
+is_alpha(c8_t c) {
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
-static B32
-is_digit(C8 c) {
+static b32_t
+is_digit(c8_t c) {
   return (c >= '0' && c <= '9');
   // this gets compiled to (uint8_t)(c - '0') <= 9 on all decent compilers
 }
@@ -385,17 +380,17 @@ is_digit(C8 c) {
 // Turns out we don't need a generic abs() function! 
 //#define abs_of(x) ((x) < 0 ? -(x) : (x))
 
-static F32 
-abs_f32(F32 x) {
-  union { F32 f; U32 u; } val = {};
+static f32_t 
+abs_f32(f32_t x) {
+  union { f32_t f; u32_t u; } val = {};
   val.f = x;
   val.u &= 0x7fffffff;  
   return val.f;
 }
 
-static F64
-abs_f64(F64 x) {
-  union { F64 f; U64 u; } val = {};
+static f64_t
+abs_f64(f64_t x) {
+  union { f64_t f; u64_t u; } val = {};
   val.f = x;
   val.u &= 0x7fffffffffffffff;
   
@@ -403,25 +398,25 @@ abs_f64(F64 x) {
 }
 
 
-static S8   
-abs_s8(S8 x) {
-  S8 y = x >> 7;
+static s8_t   
+abs_s8(s8_t x) {
+  s8_t y = x >> 7;
   return (x ^ y)-y;
 }
 
-static S16  
-abs_s16(S16 x) {
-  S16 y = x >> 15;
+static s16_t  
+abs_s16(s16_t x) {
+  s16_t y = x >> 15;
   return (x ^ y)-y;
 }
-static S32  
-abs_s32(S32 x) {
-  S32 y = x >> 31;
+static s32_t  
+abs_s32(s32_t x) {
+  s32_t y = x >> 31;
   return (x ^ y)-y;
 }
-static S64  
-abs_s64(S64 x) {
-  S64 y = x >> 63;
+static s64_t  
+abs_s64(s64_t x) {
+  s64_t y = x >> 63;
   return (x ^ y)-y;
 }
 
@@ -433,61 +428,61 @@ abs_s64(S64 x) {
 // the hellhole of checking if 'f' is a floating point via TMP. Seems overkill
 // since there are only 2 floating point types I generally care about.
 //
-static F32
-lerp_f32(F32 s, F32 e, F32 f) { 
-  return (F32)(s + (e-s) * f); 
+static f32_t
+lerp_f32(f32_t s, f32_t e, f32_t f) { 
+  return (f32_t)(s + (e-s) * f); 
 }
 
-static F64 
-lerp_f64(F64 s, F64 e, F64 f) { 
-  return (F64)(s + (e-s) * f); 
+static f64_t 
+lerp_f64(f64_t s, f64_t e, f64_t f) { 
+  return (f64_t)(s + (e-s) * f); 
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Percentage
 //
-static F32 
-percent_f32(F32 v, F32 min, F32 max) { 
+static f32_t 
+percent_f32(f32_t v, f32_t min, f32_t max) { 
   return (v - min)/(max - min); 
 }
 
-static F64 
-percent_f64(F64 v, F64 min, F64 max) { 
+static f64_t 
+percent_f64(f64_t v, f64_t min, f64_t max) { 
   return (v - min)/(max - min); 
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Degrees to Radians
 //
-static F32 
-deg_to_rad_f32(F32 degrees) {
+static f32_t 
+deg_to_rad_f32(f32_t degrees) {
   return degrees * PI_32 / 180.f;
 }
-static F32 
-rad_to_deg_f32(F32 radians) {
+static f32_t 
+rad_to_deg_f32(f32_t radians) {
   return radians * 180.f / PI_32;	
 }
 
-static F64
-deg_to_rad_f64(F64 degrees) {
+static f64_t
+deg_to_rad_f64(f64_t degrees) {
   return degrees * PI_32 / 180.0;
   
 }
-static F64 
-rad_to_deg_f64(F64 radians) {
+static f64_t 
+rad_to_deg_f64(f64_t radians) {
   return radians * 180.0 / PI_64;
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Beats Per Minute to Seconds Per Beat
 //
-static F32
-bpm_to_spb_f32(F32 bpm) {
+static f32_t
+bpm_to_spb_f32(f32_t bpm) {
   return 60.f/bpm;
 }
 
-static F64
-bpm_to_spb_f64(F64 bpm) {
+static f64_t
+bpm_to_spb_f64(f64_t bpm) {
   return 60.0/bpm;
 }
 
@@ -500,21 +495,21 @@ bpm_to_spb_f64(F64 bpm) {
 //   template<typename T> endian_swap_16(T value);
 //   template<typename T> endian_swap_32(T value); 
 // Or we COULD just ignore the concept of type:
-//   void _EndianSwap16(U8* ptr)
-//   #define endian_swap_16(value) _EndianSwap16((U8*)&value)
+//   void _EndianSwap16(u8_t* ptr)
+//   #define endian_swap_16(value) _EndianSwap16((u8_t*)&value)
 //
-static U16
-endian_swap_u16(U16 value) {
+static u16_t
+endian_swap_u16(u16_t value) {
   return (value << 8) | (value >> 8);
 }
 
-static S16
-endian_swap_s16(S16 value) {
+static s16_t
+endian_swap_s16(s16_t value) {
   return (value << 8) | (value >> 8);
 }
 
-static U32
-endian_swap_u32(U32 value) {
+static u32_t
+endian_swap_u32(u32_t value) {
   return  ((value << 24) |
            ((value & 0xFF00) << 8) |
            ((value >> 8) & 0xFF00) |
@@ -546,41 +541,41 @@ endian_swap_u32(U32 value) {
 #if 1
 #include <string.h>
 static void 
-copy_memory(void* dest, const void* src, UMI size) {
+copy_memory(void* dest, const void* src, umi_t size) {
   memmove(dest, src, size);
 }
 
 static void 
-zero_memory(void* dest, UMI size) {
+zero_memory(void* dest, umi_t size) {
   memset(dest, 0, size);
 }
-static B32
-is_memory_same(const void* lhs, const void* rhs, UMI size) {
+static b32_t
+is_memory_same(const void* lhs, const void* rhs, umi_t size) {
   return memcmp(lhs, rhs, size) == 0; 
 }
 
 #else
 static void
-copy_memory(void* dest, const void* src, UMI size) {
-  U8 *p = (U8*)dest;
-  const U8 *q = (const U8*)src;
+copy_memory(void* dest, const void* src, umi_t size) {
+  u8_t *p = (u8_t*)dest;
+  const u8_t *q = (const u8_t*)src;
   while(size--) {
     *p++ = *q++;
   }
 }
 
 static void 
-zero_memory(void* dest, UMI size) {
-  U8 *p = (U8*)dest;
+zero_memory(void* dest, umi_t size) {
+  u8_t *p = (u8_t*)dest;
   while(size--){
     *p++ = 0;
   }
 }
 
-static B32
-is_memory_same(const void* lhs, const void* rhs, UMI size) {
-  const U8 *p = (const U8*)lhs;
-  const U8 *q = (const U8*)rhs;
+static b32_t
+is_memory_same(const void* lhs, const void* rhs, umi_t size) {
+  const u8_t *p = (const u8_t*)lhs;
+  const u8_t *q = (const u8_t*)rhs;
   while(size--) {
     if (*p != *q) {
       return false;
@@ -592,12 +587,12 @@ is_memory_same(const void* lhs, const void* rhs, UMI size) {
 #endif
 
 static void 
-swap_memory(void* lhs, void* rhs, UMI size) {
-  U8* l = (U8*)lhs;
-  U8* r = (U8*)rhs;
+swap_memory(void* lhs, void* rhs, umi_t size) {
+  u8_t* l = (u8_t*)lhs;
+  u8_t* r = (u8_t*)rhs;
   
   while(size--) {
-    U8 tmp = (*l);
+    u8_t tmp = (*l);
     *l++ = *r;
     *r++ = tmp;
   }
@@ -613,23 +608,23 @@ swap_memory(void* lhs, void* rhs, UMI size) {
 
 //////////////////////////////////////////////////////////////////////////////
 // C-string
-static UMI
-cstr_len(const C8* str) {
-  UMI count = 0;
+static umi_t
+cstr_len(const c8_t* str) {
+  umi_t count = 0;
   for(; (*str) != 0 ; ++count, ++str);
   return count;
 }
 
 static void
-cstr_copy(C8 * dest, const C8* src) {
+cstr_copy(c8_t * dest, const c8_t* src) {
   for(; (*src) != 0 ; ++src, ++dest) {
     (*dest) = (*src);
   }
   (*dest) = 0;
 }
 
-static B32
-cstr_compare(const C8* lhs, const C8* rhs) {
+static b32_t
+cstr_compare(const c8_t* lhs, const c8_t* rhs) {
   for(; (*rhs) != 0 ; ++rhs, ++lhs) {
     if ((*lhs) != (*rhs)) {
       return false;
@@ -638,8 +633,8 @@ cstr_compare(const C8* lhs, const C8* rhs) {
   return true;
 }
 
-static B32
-cstr_compare_n(const C8* lhs, const C8* rhs, UMI n) {
+static b32_t
+cstr_compare_n(const c8_t* lhs, const c8_t* rhs, umi_t n) {
   while(n--) {
     if ((*lhs++) != (*rhs++)) {
       return false;
@@ -648,7 +643,7 @@ cstr_compare_n(const C8* lhs, const C8* rhs, UMI n) {
   return true;
 }
 static void
-cstr_concat(C8* dest, const C8* Src) {
+cstr_concat(c8_t* dest, const c8_t* Src) {
   // Go to the end of dest
   for (; (*dest) != 0; ++dest);
   for (; (*Src) != 0; ++Src, ++dest) {
@@ -657,14 +652,14 @@ cstr_concat(C8* dest, const C8* Src) {
   (*dest) = 0;
 }
 
-static F64
-_compute_f64(S64 power, U64 i, B32 negative) 
+static f64_t
+_compute_f64(s64_t power, u64_t i, b32_t negative) 
 {
-  static const F64 power_of_ten[] = {
+  static const f64_t power_of_ten[] = {
     1e0,  1e1,  1e2,  1e3,  1e4,  1e5,  1e6,  1e7,  1e8,  1e9,  1e10, 1e11,
     1e12, 1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19, 1e20, 1e21, 1e22};
   
-  static const U64 mantissa_64[] = {
+  static const u64_t mantissa_64[] = {
     0xa5ced43b7e3e9188, 0xcf42894a5dce35ea,
     0x818995ce7aa0e1b2, 0xa1ebfb4219491a1f,
     0xca66fa129f9b60a6, 0xfd00b897478238d0,
@@ -982,7 +977,7 @@ _compute_f64(S64 power, U64 i, B32 negative)
     0xbaa718e68396cffd, 0xe950df20247c83fd,
     0x91d28b7416cdd27e, 0xb6472e511c81471d,
     0xe3d8f9e563a198e5, 0x8e679c2f5e44ff8f};
-  static const U64 mantissa_128[] = {
+  static const u64_t mantissa_128[] = {
     0x419ea3bd35385e2d, 0x52064cac828675b9,
     0x7343efebd1940993, 0x1014ebe6c5f90bf8,
     0xd41a26e077774ef6, 0x8920b098955522b4,
@@ -1302,7 +1297,7 @@ _compute_f64(S64 power, U64 i, B32 negative)
     0x58180fddd97723a6, 0x570f09eaa7ea7648,};
   
   if (-22 <= power && power <= 22 && i <= 9007199254740991) {
-    F64 d = F64(i);
+    f64_t d = f64_t(i);
     if (power < 0) {
       d = d / power_of_ten[-power];
     }
@@ -1324,11 +1319,11 @@ _compute_f64(S64 power, U64 i, B32 negative)
   return F64_INFINITY;
 }
 
-static F64
-cstr_to_f64(const C8* p) {
-  const C8* pinit = p;
-  B32 found_minus = (*p == '-');
-  B32 negative = false;
+static f64_t
+cstr_to_f64(const c8_t* p) {
+  const c8_t* pinit = p;
+  b32_t found_minus = (*p == '-');
+  b32_t negative = false;
   if (found_minus) {
     ++p;
     negative = true;
@@ -1336,9 +1331,9 @@ cstr_to_f64(const C8* p) {
       return 0.0;
     }
   }
-  const C8 *const start_digits = p;
+  const c8_t *const start_digits = p;
   
-  U64 i;      // an unsigned int avoids signed overflows (which are bad)
+  u64_t i;      // an unsigned int avoids signed overflows (which are bad)
   if (*p == '0') { // 0 cannot be followed by an integer
     ++p;
     if (is_digit(*p)) {
@@ -1350,7 +1345,7 @@ cstr_to_f64(const C8* p) {
     if (!(is_digit(*p))) { // must start with an integer
       return 0.0;
     }
-    U8 digit = *p - '0';
+    u8_t digit = *p - '0';
     i = digit;
     p++;
     // the is_made_of_eight_digits_fast routine is unlikely to help here because
@@ -1363,13 +1358,13 @@ cstr_to_f64(const C8* p) {
       ++p;
     }
   }
-  S64 exponent = 0;
-  const C8 *first_after_period = NULL;
+  s64_t exponent = 0;
+  const c8_t *first_after_period = NULL;
   if (*p == '.') {
     ++p;
     first_after_period = p;
     if (is_digit(*p)) {
-      U8 digit = *p - '0';
+      u8_t digit = *p - '0';
       ++p;
       i = i * 10 + digit; // might overflow + multiplication by 10 is likely
       // cheaper than arbitrary mult.
@@ -1378,7 +1373,7 @@ cstr_to_f64(const C8* p) {
       return 0.0;
     }
     while (is_digit(*p)) {
-      U8 digit = *p - '0';
+      u8_t digit = *p - '0';
       ++p;
       i = i * 10 + digit; // in rare cases, this will overflow, but that's ok
       // because we have parse_highprecision_float later.
@@ -1398,7 +1393,7 @@ cstr_to_f64(const C8* p) {
     if (!is_digit(*p)) {
       return 0.0;
     }
-    U8 digit = *p - '0';
+    u8_t digit = *p - '0';
     int64_t exp_number = digit;
     p++;
     if (is_digit(*p)) {
@@ -1436,13 +1431,13 @@ cstr_to_f64(const C8* p) {
 }
 
 static void 
-cstr_clear(C8* dest) {
+cstr_clear(c8_t* dest) {
   (*dest) = 0;
 }
 
 static void
-cstr_reverse(C8* dest) {
-  C8* back_ptr = dest;
+cstr_reverse(c8_t* dest) {
+  c8_t* back_ptr = dest;
   for (; *(back_ptr+1) != 0; ++back_ptr);
   for (;dest < back_ptr; ++dest, --back_ptr) {
     swap(*dest, *back_ptr);
@@ -1452,7 +1447,7 @@ cstr_reverse(C8* dest) {
 
 
 static void 
-cstr_itoa(C8* dest, S32 num) {
+cstr_itoa(c8_t* dest, s32_t num) {
   // Naive method. 
   // Extract each number starting from the back and fill the buffer. 
   // Then reverse it.
@@ -1464,13 +1459,13 @@ cstr_itoa(C8* dest, S32 num) {
     return;
   }
   
-  B32 negative = num < 0;
+  b32_t negative = num < 0;
   num = abs_s32(num);
   
-  C8* it = dest;
+  c8_t* it = dest;
   for(; num != 0; num /= 10) {
-    S32 digit_to_convert = num % 10;
-    *(it++) = (C8)(digit_to_convert + '0');
+    s32_t digit_to_convert = num % 10;
+    *(it++) = (c8_t)(digit_to_convert + '0');
   }
   
   if (negative) {
@@ -1483,26 +1478,26 @@ cstr_itoa(C8* dest, S32 num) {
 
 
 //IEEE floating point functions 
-static B32 
-is_close_f32(F32 lhs, F32 rhs) {
+static b32_t 
+is_close_f32(f32_t lhs, f32_t rhs) {
   return abs_f32(lhs - rhs) <= F32_EPSILON;
 }
 
-static B32 
-is_close_f64(F64 lhs, F64 rhs) {
+static b32_t 
+is_close_f64(f64_t lhs, f64_t rhs) {
   return abs_f64(lhs - rhs) <= F64_EPSILON;
 }
 
-static B32 
-is_nan_f32(F32 f) {
-  union { F32 f; U64 u; } ret = {};
+static b32_t 
+is_nan_f32(f32_t f) {
+  union { f32_t f; u64_t u; } ret = {};
   ret.f = f;
   return (ret.u & 0xFFFFFFFF) == 0xFFFFFFFF;
 }
 
-static B32 
-is_nan_f64(F64 f) {
-  union { F64 f; U64 u; } ret = {};
+static b32_t 
+is_nan_f64(f64_t f) {
+  union { f64_t f; u64_t u; } ret = {};
   ret.f = f;
   return (ret.u & 0xFFFFFFFFFFFFFFFF) == 0xFFFFFFFFFFFFFFFF;
 }
@@ -1511,8 +1506,8 @@ is_nan_f64(F64 f) {
 //////////////////////////////////////////////////////////////////////////////
 // Hash functions
 //
-static U32 
-djb2(const C8* str)
+static u32_t 
+djb2(const c8_t* str)
 {
   // DJB2
   //
@@ -1522,8 +1517,8 @@ djb2(const C8* str)
   // the magic of number 33 (why it works better than many other constants, prime or not) 
   // has never been adequately explained.
 
-  U32 hash = 5381;
-  S32 c;
+  u32_t hash = 5381;
+  s32_t c;
   while (c = *str++) {
     hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
   }

@@ -1,32 +1,32 @@
 
 struct Lit_Edge {
-  B32 is_disabled;
-  V2 start_pt;
-  V2 end_pt;
+  b32_t is_disabled;
+  v2f_t start_pt;
+  v2f_t end_pt;
 };
 
 
 
 struct Lit_Light_Intersection {
-  B32 is_shell;
-  V2 pt;
+  b32_t is_shell;
+  v2f_t pt;
 };
 
 struct Lit_Light_Triangle {
-  V2 p0, p1, p2;
+  v2f_t p0, p1, p2;
 };
 
 struct Lit_Light {
-  V2 dir;
-  F32 half_angle;
+  v2f_t dir;
+  f32_t half_angle;
   
-  V2 pos;  
-  U32 color;
+  v2f_t pos;  
+  u32_t color;
 
-  U32 triangle_count;
+  u32_t triangle_count;
   Lit_Light_Triangle triangles[256];
 
-  U32 intersection_count;
+  u32_t intersection_count;
   Lit_Light_Intersection intersections[256];
 
 };

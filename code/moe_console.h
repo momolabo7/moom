@@ -3,23 +3,23 @@
 #define MOE_CONSOLE_H
 
 
-struct Console_Command {
-  String8 key;
+struct console_command_t {
+  str8_t key;
   void* ctx;
   void (*func)(void*);
 };
 
-struct Console_Line {
-  U8 buffer[256];
-  String8 str;
+struct console_line_t {
+  u8_t buffer[256];
+  str8_t str;
 };
 
-struct Console {
-  U32 command_count;
-  Console_Command commands[10];
+struct console_t {
+  u32_t command_count;
+  console_command_t commands[10];
   
-  String8_Builder info_lines[9];
-  String8_Builder input_line;
+  sb8_t info_lines[9];
+  sb8_t input_line;
 };
 
 

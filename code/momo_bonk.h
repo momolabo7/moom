@@ -3,7 +3,7 @@
 
 
 struct Rect2 {
-  V2 min, max;
+  v2f_t min, max;
 };
 
 
@@ -18,67 +18,67 @@ struct Rect2 {
 // https://totologic.blogspot.com/2014/01/accurate-point-in-triangle-test.html
 // NOTE(Momo): We should really profile to see which is the best but I'm assuming
 // it's the dot product one
-static B32
-_bonk_tri2_pt2_parametric(V2 tp0, V2 tp1, V2 tp2, V2 pt) {
-  F32 denominator = (tp0.x*(tp1.y - tp2.y) + 
+static b32_t
+_bonk_tri2_pt2_parametric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
+  f32_t denominator = (tp0.x*(tp1.y - tp2.y) + 
                      tp0.y*(tp2.x - tp1.x) + 
                      tp1.x*tp2.y - tp1.y*tp2.x);
   
-  F32 t1 = (pt.x*(tp2.y - tp0.y) + 
+  f32_t t1 = (pt.x*(tp2.y - tp0.y) + 
             pt.y*(tp0.x - tp2.x) - 
             tp0.x*tp2.y + tp0.y*tp2.x) / denominator;
   
-  F32 t2 = (pt.x*(tp1.y - tp0.y) + 
+  f32_t t2 = (pt.x*(tp1.y - tp0.y) + 
             pt.y*(tp0.x - tp1.x) - 
             tp0.x*tp1.y + tp0.y*tp1.x) / -denominator;
   
-  F32 s = t1 + t2;
+  f32_t s = t1 + t2;
   
   return 0 <= t1 && t1 <= 1 && 0 <= t2 && t2 <= 1 && s <= 1;
 }
 
-static B32
-_bonk_tri2_pt2_barycentric(V2 tp0, V2 tp1, V2 tp2, V2 pt) {
+static b32_t
+_bonk_tri2_pt2_barycentric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
   
-  F32 denominator = ((tp1.y - tp2.y)*
+  f32_t denominator = ((tp1.y - tp2.y)*
                      (tp0.x - tp2.x) + (tp2.x - tp1.x)*
                      (tp0.y - tp2.y));
   
-  F32 a = ((tp1.y - tp2.y)*
+  f32_t a = ((tp1.y - tp2.y)*
            (pt.x - tp2.x) + (tp2.x - tp1.x)*
            (pt.y - tp2.y)) / denominator;
   
-  F32 b = ((tp2.y - tp0.y)*
+  f32_t b = ((tp2.y - tp0.y)*
            (pt.x - tp2.x) + (tp0.x - tp2.x)*
            (pt.y - tp2.y)) / denominator;
   
-  F32 c = 1.f - a - b;
+  f32_t c = 1.f - a - b;
   
   return 0.f <= a && a <= 1.f && 0.f <= b && b <= 1.f && 0.f <= c && c <= 1.f;
   
 }
 
 
-static B32
-_bonk_tri2_pt2_dot_product(V2 tp0, V2 tp1, V2 tp2, V2 pt) {
-  V2 vec0 = v2_set(pt.x - tp0.x, pt.y - tp0.y);      
-  V2 vec1 = v2_set(pt.x - tp1.x, pt.y - tp1.y);      
-  V2 vec2 = v2_set(pt.x - tp2.x, pt.y - tp2.y);      
+static b32_t
+_bonk_tri2_pt2_dot_product(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
+  v2f_t vec0 = v2f_set(pt.x - tp0.x, pt.y - tp0.y);      
+  v2f_t vec1 = v2f_set(pt.x - tp1.x, pt.y - tp1.y);      
+  v2f_t vec2 = v2f_set(pt.x - tp2.x, pt.y - tp2.y);      
   
-  V2 n0 = v2_set(tp1.y - tp0.y, -tp1.x + tp0.x);
-  V2 n1 = v2_set(tp2.y - tp1.y, -tp2.x + tp1.x);
-  V2 n2 = v2_set(tp0.y - tp2.y, -tp0.x + tp2.x);
+  v2f_t n0 = v2f_set(tp1.y - tp0.y, -tp1.x + tp0.x);
+  v2f_t n1 = v2f_set(tp2.y - tp1.y, -tp2.x + tp1.x);
+  v2f_t n2 = v2f_set(tp0.y - tp2.y, -tp0.x + tp2.x);
   
-  B32 side0 = v2_dot(n0,vec0) < 0.f;
-  B32 side1 = v2_dot(n1,vec1) < 0.f;
-  B32 side2 = v2_dot(n2,vec2) < 0.f;
+  b32_t side0 = v2f_dot(n0,vec0) < 0.f;
+  b32_t side1 = v2f_dot(n1,vec1) < 0.f;
+  b32_t side2 = v2f_dot(n2,vec2) < 0.f;
   
   return side0 == side1 && side0 == side2;
 }
 
 
-static B32
-bonk_tri2_pt2(V2 tp0, V2 tp1, V2 tp2, V2 pt) {
+static b32_t
+bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
   return _bonk_tri2_pt2_dot_product(tp0, tp1, tp2, pt);
 }
 

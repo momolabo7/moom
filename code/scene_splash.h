@@ -7,10 +7,10 @@
 // SPLASH MODE
 //
 struct Splash {
-  F32 timer;
+  f32_t timer;
 };
 
-static void splash_tick(Moe* moe);
+static void splash_tick(moe_t* moe);
 
 #endif // MOE_MODE_SPLASH_H
 

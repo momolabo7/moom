@@ -12,10 +12,10 @@
 //
 typedef struct {
   void* data;
-  UMI size;
+  umi_t size;
 } Platform_Memory_Block;
 
-typedef Platform_Memory_Block* Platform_Allocate_Memory(UMI size);
+typedef Platform_Memory_Block* Platform_Allocate_Memory(umi_t size);
 typedef void  Platform_Free_Memory(Platform_Memory_Block* ptr);
 
 //////////////////////////////////////////////////////////////////////
@@ -38,15 +38,15 @@ typedef struct {
   void* platform_data; // pointer for platform's usage
 } Platform_File;
 
-typedef B32  
+typedef b32_t  
 Platform_Open_File(Platform_File* file,
                    const char* filename,
                    Platform_File_Access file_access,
                    Platform_File_Path file_path);
 
 typedef void Platform_Close_File(Platform_File* file);
-typedef B32 Platform_Read_File(Platform_File* file, UMI size, UMI offset, void* dest);
-typedef B32 Platform_Write_File(Platform_File* file, UMI size, UMI offset, void* src);
+typedef b32_t Platform_Read_File(Platform_File* file, umi_t size, umi_t offset, void* dest);
+typedef b32_t Platform_Write_File(Platform_File* file, umi_t size, umi_t offset, void* src);
 
 //////////////////////////////////////////////////////////////////////////
 // Platform multithreaded work API
@@ -61,39 +61,39 @@ typedef void  Platform_Shutdown(); // trigger shutdown of application
                                    //
 #endif
 typedef void  Platform_Debug_Log(const char* fmt, ...);
-typedef U64   Platform_Get_Performance_Counter();
-typedef void  Platform_Set_Moe_Dims(F32 width, F32 height);
+typedef u64_t   Platform_Get_Performance_Counter();
+typedef void  Platform_Set_Moe_Dims(f32_t width, f32_t height);
 
 
 //////////////////////////////////////////////////////////////////////////
 // Platform Audio API
 //
 typedef struct {
-  S16* sample_buffer;
-  U32 sample_count;
-  U32 channels; //TODO: remove this?
+  s16_t* sample_buffer;
+  u32_t sample_count;
+  u32_t channels; //TODO: remove this?
 }Platform_Audio;
 
 /////////////////////////////////////////////////////////////////////////
 // Input related API
 //
 typedef struct {
-  B32 before;
-  B32 now; 
+  b32_t before;
+  b32_t now; 
 }Platform_Button;
 
 
-struct Gfx;
-struct Profiler;
+struct gfx_t;
+struct profiler_t;
 
 
 
 // These could really all be functions on the platform side
 typedef struct {
 
-  //Arena* moe_arena; // Require 32MB
-  Gfx* gfx;
-  Profiler* profiler; 
+  //arena_t* moe_arena; // Require 32MB
+  gfx_t* gfx;
+  profiler_t* profiler; 
   Platform_Audio* audio;
 
   // Input API
@@ -120,17 +120,17 @@ typedef struct {
     };  
     Platform_Button buttons[15];
   };
-  U8 chars[32];
-  U32 char_count;
+  u8_t chars[32];
+  u32_t char_count;
 
   
-  //V2U screen_mouse_pos;
-  //V2U render_mouse_pos;
+  //v2u_t screen_mouse_pos;
+  //v2u_t render_mouse_pos;
 
   // NOTE(Momo): The mouse position is relative to the moe's dimensions given
   // via set_moe_dims(). It is possible to get back the normalized dimensions
   // by dividing the x/y by the width/height of the moe.
-  V2 mouse_pos;
+  v2f_t mouse_pos;
  
   /////////////////////////////////////////////////////////
   // Functions
@@ -157,8 +157,8 @@ typedef struct {
   Platform_Set_Moe_Dims* set_moe_dims;
 
   // Misc
-  F32 seconds_since_last_frame; //aka dt
-  B32 reloaded;
+  f32_t seconds_since_last_frame; //aka dt
+  b32_t reloaded;
 
   // For moe to use
   void* moe;
@@ -176,10 +176,10 @@ static const char* moe_function_names[] {
   "moe_update_and_render",
 };
 
-static B32 pf_is_button_poked(Platform_Button) ;
-static B32 pf_is_button_released(Platform_Button);
-static B32 pf_is_button_down(Platform_Button);
-static B32 pf_is_button_held(Platform_Button);
+static b32_t pf_is_button_poked(Platform_Button) ;
+static b32_t pf_is_button_released(Platform_Button);
+static b32_t pf_is_button_down(Platform_Button);
+static b32_t pf_is_button_held(Platform_Button);
 static void pf_update_input(Platform_Button);
 
 
@@ -187,33 +187,33 @@ static void pf_update_input(Platform_Button);
 // Implementation
 static void 
 pf_update_input(Platform* pf) {
-  for (U32 i = 0; i < array_count(pf->buttons); ++i) {
+  for (u32_t i = 0; i < array_count(pf->buttons); ++i) {
     pf->buttons[i].before = pf->buttons[i].now;
   }
   pf->char_count = 0;
 }
 
 // before: 0, now: 1
-static B32 
+static b32_t 
 pf_is_button_poked(Platform_Button btn) {
   return !btn.before && btn.now;
 }
 
 // before: 1, now: 0
-static B32
+static b32_t
 pf_is_button_released(Platform_Button btn) {
   return btn.before && !btn.now;
 }
 
 
 // before: X, now: 1
-static B32
+static b32_t
 pf_is_button_down(Platform_Button btn){
   return btn.now;
 }
 
 // before: 1, now: 1
-static B32
+static b32_t
 pf_is_button_held(Platform_Button btn) {
   return btn.before && btn.now;
 }

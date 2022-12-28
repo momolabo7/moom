@@ -2,95 +2,95 @@
 #define ASSETS_H
 
 
-struct Asset_Bitmap_ID { U32 value; };
-struct Asset_Font_ID { U32 value; };
-struct Asset_Sprite_ID { U32 value; };
+struct asset_bitmap_id_t { u32_t value; };
+struct asset_font_id_t { u32_t value; };
+struct asset_sprite_id_t { u32_t value; };
 
-struct Asset_Bitmap {
-  U32 renderer_texture_handle;
-  U32 width;
-  U32 height;
+struct asset_bitmap_t {
+  u32_t renderer_texture_handle;
+  u32_t width;
+  u32_t height;
 };
 
-struct Asset_Sprite {
-  U32 texel_x0;
-  U32 texel_y0;
-  U32 texel_x1;
-  U32 texel_y1;
+struct asset_sprite_t {
+  u32_t texel_x0;
+  u32_t texel_y0;
+  u32_t texel_x1;
+  u32_t texel_y1;
 
-  Asset_Bitmap_ID bitmap_asset_id;
+  asset_bitmap_id_t bitmap_asset_id;
 };
 
-struct Asset_Font_Glyph{
-  U32 texel_x0, texel_y0;
-  U32 texel_x1, texel_y1;
+struct asset_font_glyph_t {
+  u32_t texel_x0, texel_y0;
+  u32_t texel_x1, texel_y1;
   Rect2 box;
-  Asset_Bitmap_ID bitmap_asset_id;
-  F32 horizontal_advance;
+  asset_bitmap_id_t bitmap_asset_id;
+  f32_t horizontal_advance;
 };
 
-struct Asset_Font {
-  U32 highest_codepoint;
-  U16* codepoint_map;
+struct asset_font_t {
+  u32_t highest_codepoint;
+  u16_t* codepoint_map;
   
-  U32 glyph_count;
-  Asset_Font_Glyph* glyphs;
-  F32* kernings;
+  u32_t glyph_count;
+  asset_font_glyph_t* glyphs;
+  f32_t* kernings;
 };
 
 
-struct Asset_Tag {
+struct asset_tag_t {
   Asset_Tag_Type type; 
-  F32 value;
+  f32_t value;
 };
 
 
-enum Asset_State {
+enum asset_state_t {
   ASSET_STATE_UNLOADED,
   ASSET_STATE_LOADING,
   ASSET_STATE_LOADED,
 };
 
-struct Asset_Group {
-  U32 first_asset_index;
-  U32 one_past_last_asset_index;
+struct asset_group_t {
+  u32_t first_asset_index;
+  u32_t one_past_last_asset_index;
 };
 
-struct Asset_Match {
+struct asset_match_t {
   struct {
-    F32 tag_value_to_match;
-    F32 tag_weight;
+    f32_t tag_value_to_match;
+    f32_t tag_weight;
   } e[ASSET_TAG_TYPE_COUNT];
 };
 
-struct Asset_Slot {
-  Asset_State state;
+struct asset_slot_t {
+  asset_state_t state;
   
-  U32 first_tag_index;
-  U32 one_past_last_tag_index;
+  u32_t first_tag_index;
+  u32_t one_past_last_tag_index;
   
   //add file index?
-  U32 offset_to_data;
+  u32_t offset_to_data;
   
   Asset_Type type;
   union {
-    Asset_Bitmap bitmap;
-    Asset_Sprite sprite;
-    Asset_Font font;
+    asset_bitmap_t bitmap;
+    asset_sprite_t sprite;
+    asset_font_t font;
   };
 };
 
-struct Assets {
-  Gfx_Texture_Queue* texture_queue;
+struct assets_t {
+  gfx_texture_queue_t* texture_queue;
   
-  U32 asset_count;
-  Asset_Slot* asset_slots;
+  u32_t asset_count;
+  asset_slot_t* asset_slots;
   
-  U32 tag_count;
-  Asset_Tag* tags;
-  Asset_Group groups[ASSET_GROUP_TYPE_COUNT];
+  u32_t tag_count;
+  asset_tag_t* tags;
+  asset_group_t groups[ASSET_GROUP_TYPE_COUNT];
   
   // TODO(Momo): We should remove this?
-  U32 bitmap_counter;
+  u32_t bitmap_counter;
 };
 #endif

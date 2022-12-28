@@ -69,17 +69,17 @@
 
 
 //- Opengl Types
-typedef S32  GLenum;
-typedef S32  GLint; 
-typedef S32  GLsizei;
-typedef U32  GLuint;
-typedef C8   GLchar;
-typedef U32  GLbitfield;
-typedef F32  GLclampf;
-typedef SMI  GLsizeiptr; 
-typedef SMI  GLintptr;
-typedef B8   GLboolean;
-typedef F32  GLfloat;
+typedef s32_t  GLenum;
+typedef s32_t  GLint; 
+typedef s32_t  GLsizei;
+typedef u32_t  GLuint;
+typedef c8_t   GLchar;
+typedef u32_t  GLbitfield;
+typedef f32_t  GLclampf;
+typedef smi_t  GLsizeiptr; 
+typedef smi_t  GLintptr;
+typedef b8_t   GLboolean;
+typedef f32_t  GLfloat;
 typedef void (GLDEBUGPROC)(GLenum source,
                            GLenum type,
                            GLuint id,
@@ -185,8 +185,8 @@ enum {
 
 typedef struct {
   GLuint handle;
-  U32 width; 
-  U32 height;
+  u32_t width; 
+  u32_t height;
 } OGL_Texture;
 
 typedef struct {
@@ -213,14 +213,14 @@ typedef struct {
 } Triangle_Batch;
 
 struct Opengl {
-  Gfx gfx; // Must be first member
+  gfx_t gfx; // Must be first member
 
-  V2U render_wh;
+  v2u_t render_wh;
 
-  U32 region_x0; 
-  U32 region_y0; 
-  U32 region_x1;
-  U32 region_y1;
+  u32_t region_x0; 
+  u32_t region_y0; 
+  u32_t region_x1;
+  u32_t region_y1;
 
   Sprite_Batch sprite_batch;
   Triangle_Batch triangle_batch;
@@ -230,7 +230,7 @@ struct Opengl {
   OGL_Texture dummy_texture;
   OGL_Texture blank_texture;
   
-  F32 current_layer;
+  f32_t current_layer;
   
   OGL_glEnable* glEnable;
   OGL_glDisable* glDisable;
@@ -277,12 +277,12 @@ struct Opengl {
   void* user_data;
 };
 
-static B32 ogl_init(Opengl* ogl, 
+static b32_t ogl_init(Opengl* ogl, 
                     void* command_queue_memory, 
-                    UMI command_queue_size, 
+                    umi_t command_queue_size, 
                     void* texture_queue_memory,
-                    UMI texture_queue_size);
-static void ogl_begin_frame(Opengl* ogl, V2U render_wh, U32 region_x0, U32 region_y0, U32 region_x1, U32 region_y1);
+                    umi_t texture_queue_size);
+static void ogl_begin_frame(Opengl* ogl, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1);
 static void ogl_end_frame(Opengl* ogl);
 
 ////////////////////////////////////////////////////////////////////
@@ -307,7 +307,7 @@ _ogl_flush_sprites(Opengl* ogl) {
     ogl->glDrawElementsInstancedBaseInstance(GL_TRIANGLES, 
                                              6, 
                                              GL_UNSIGNED_BYTE, 
-                                             null, 
+                                             nullptr, 
                                              sb->instances_to_draw,
                                              sb->last_drawn_instance_index);
     
@@ -318,21 +318,21 @@ _ogl_flush_sprites(Opengl* ogl) {
 
 static void 
 _ogl_push_triangle(Opengl* ogl, 
-                   M44 transform,
-                   RGBA colors)
+                   m44f_t transform,
+                   rgba_t colors)
 {
   Triangle_Batch* tb = &ogl->triangle_batch;
   
   ogl->glNamedBufferSubData(tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS], 
-                            tb->current_instance_index * sizeof(V4),
-                            sizeof(V4), 
+                            tb->current_instance_index * sizeof(v4f_t),
+                            sizeof(v4f_t), 
                             &colors);
    
-  // NOTE(Momo): m44_transpose; moe is row-major
-  M44 ogl_transform = m44_transpose(transform);
+  // NOTE(Momo): m44f_transpose; moe is row-major
+  m44f_t ogl_transform = m44f_transpose(transform);
   ogl->glNamedBufferSubData(tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
-                            tb->current_instance_index* sizeof(M44), 
-                            sizeof(M44), 
+                            tb->current_instance_index* sizeof(m44f_t), 
+                            sizeof(m44f_t), 
                             &ogl_transform);
   
   // NOTE(Momo): Update Bookkeeping
@@ -353,7 +353,7 @@ _ogl_flush_triangles(Opengl* ogl) {
     ogl->glDrawElementsInstancedBaseInstance(GL_TRIANGLES, 
                                              3, 
                                              GL_UNSIGNED_BYTE, 
-                                             null, 
+                                             nullptr, 
                                              tb->instances_to_draw,
                                              tb->last_drawn_instance_index);
     
@@ -366,8 +366,8 @@ _ogl_flush_triangles(Opengl* ogl) {
 
 static void 
 _ogl_push_sprite(Opengl* ogl, 
-                 M44 transform,
-                 RGBA colors,
+                 m44f_t transform,
+                 rgba_t colors,
                  Rect2 uv,
                  GLuint texture) 
 {
@@ -378,11 +378,11 @@ _ogl_push_sprite(Opengl* ogl,
   }
   
   ogl->glNamedBufferSubData(sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS], 
-                            sb->current_instance_index * sizeof(V4),
-                            sizeof(V4), 
+                            sb->current_instance_index * sizeof(v4f_t),
+                            sizeof(v4f_t), 
                             &colors);
   
-  F32 uv_per_vertex[] = {
+  f32_t uv_per_vertex[] = {
     uv.min.x, uv.max.y,
     uv.max.x, uv.max.y,
     uv.max.x, uv.min.y,
@@ -393,11 +393,11 @@ _ogl_push_sprite(Opengl* ogl,
                             sizeof(uv_per_vertex),
                             &uv_per_vertex);
   
-  // NOTE(Momo): m44_transpose; moe is row-major
-  M44 ogl_transform = m44_transpose(transform);
+  // NOTE(Momo): m44f_transpose; moe is row-major
+  m44f_t ogl_transform = m44f_transpose(transform);
   ogl->glNamedBufferSubData(sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
-                            sb->current_instance_index* sizeof(M44), 
-                            sizeof(M44), 
+                            sb->current_instance_index* sizeof(m44f_t), 
+                            sizeof(m44f_t), 
                             &ogl_transform);
   
   // NOTE(Momo): Update Bookkeeping
@@ -437,8 +437,8 @@ _ogl_end_sprites(Opengl* ogl) {
 
 static void 
 _ogl_attach_shader(Opengl* ogl,
-                   U32 program, 
-                   U32 type, 
+                   u32_t program, 
+                   u32_t type, 
                    char* Code) 
 {
   GLuint shader_handle = ogl->glCreateShader(type);
@@ -452,7 +452,7 @@ static void
 _ogl_align_viewport(Opengl* ogl) 
 {
   
-  U32 x, y, w, h;
+  u32_t x, y, w, h;
   x = ogl->region_x0;
   y = ogl->region_y0;
   w = ogl->region_x1 - ogl->region_x0;
@@ -468,10 +468,10 @@ _ogl_align_viewport(Opengl* ogl)
 
 static void
 _ogl_set_texture(Opengl* ogl,
-                 UMI index,
-                 U32 width,
-                 U32 height,
-                 U8* pixels) 
+                 umi_t index,
+                 u32_t width,
+                 u32_t height,
+                 u8_t* pixels) 
 {
   
   assert(index < array_count(ogl->textures));
@@ -503,7 +503,7 @@ _ogl_set_texture(Opengl* ogl,
 }
 
 static void 
-_ogl_delete_texture(Opengl* ogl, UMI texture_index) {
+_ogl_delete_texture(Opengl* ogl, umi_t texture_index) {
   assert(texture_index < array_count(ogl->textures));
   OGL_Texture* texture = ogl->textures + texture_index;
   ogl->glDeleteTextures(1, &texture->handle);
@@ -512,7 +512,7 @@ _ogl_delete_texture(Opengl* ogl, UMI texture_index) {
 
 static void
 _ogl_delete_all_textures(Opengl* ogl) {
-  for (UMI i = 0; i < array_count(ogl->textures); ++i ){
+  for (umi_t i = 0; i < array_count(ogl->textures); ++i ){
     if (ogl->textures[i].handle != 0) {
       _ogl_delete_texture(ogl, i);
     }
@@ -523,7 +523,7 @@ void
 _ogl_add_predefined_textures(Opengl* ogl) {
   // NOTE(Momo): Dummy texture setup
   {
-    U8 pixels[4][4] {
+    u8_t pixels[4][4] {
       { 125, 125, 125, 255 },
       { 255, 255, 255, 255 },
       { 255, 255, 255, 255 },
@@ -550,7 +550,7 @@ _ogl_add_predefined_textures(Opengl* ogl) {
   
   // NOTE(Momo): Blank texture setup
   {
-    U8 pixels[4] = { 255, 255, 255, 255 };
+    u8_t pixels[4] = { 255, 255, 255, 255 };
     GLuint blank_texture;
     ogl->glCreateTextures(GL_TEXTURE_2D, 1, &blank_texture);
     ogl->glTextureStorage2D(blank_texture, 1, GL_RGBA8, 1, 1);
@@ -570,19 +570,19 @@ _ogl_add_predefined_textures(Opengl* ogl) {
   
 }
 
-static B32
+static b32_t
 _ogl_init_triangle_batch(Opengl* ogl) {
   Triangle_Batch* tb = &ogl->triangle_batch;
   
   // Triangle model
   // TODO(Momo): shift this somewhere else
-  const F32 triangle_model[] = {
+  const f32_t triangle_model[] = {
     0.f, 0.f, 0.f,
     0.f, 1.f, 0.f,
     1.f, 0.f, 0.f,
   };
 
-  const U8 triangle_indices[] = {
+  const u8_t triangle_indices[] = {
     0, 2, 1
   };
 
@@ -625,13 +625,13 @@ void main(void)
                             0);
   
   ogl->glNamedBufferStorage(tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS], 
-                            sizeof(V4) * OGL_MAX_TRIANGLES, 
-                            null, 
+                            sizeof(v4f_t) * OGL_MAX_TRIANGLES, 
+                            nullptr, 
                             GL_DYNAMIC_STORAGE_BIT);
   
   ogl->glNamedBufferStorage(tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
-                            sizeof(M44) * OGL_MAX_TRIANGLES, 
-                            null, 
+                            sizeof(m44f_t) * OGL_MAX_TRIANGLES, 
+                            nullptr, 
                             GL_DYNAMIC_STORAGE_BIT);
 
    
@@ -641,19 +641,19 @@ void main(void)
                                  OGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL, 
                                  tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL], 
                                  0, 
-                                 sizeof(V3));
+                                 sizeof(v3f_t));
    
   ogl->glVertexArrayVertexBuffer(tb->model, 
                                  OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 
                                  tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS],  
                                  0, 
-                                 sizeof(V4));
+                                 sizeof(v4f_t));
   
   ogl->glVertexArrayVertexBuffer(tb->model, 
                                  OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
                                  tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
                                  0, 
-                                 sizeof(M44));
+                                 sizeof(m44f_t));
 
 
   // Attributes
@@ -691,28 +691,28 @@ void main(void)
                                  4, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(F32) * 0 * 4);
+                                 sizeof(f32_t) * 0 * 4);
   ogl->glEnableVertexArrayAttrib(tb->model, OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2);
   ogl->glVertexArrayAttribFormat(tb->model, 
                                  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, 
                                  4, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(F32) * 1 * 4);
+                                 sizeof(f32_t) * 1 * 4);
   ogl->glEnableVertexArrayAttrib(tb->model, OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3); 
   ogl->glVertexArrayAttribFormat(tb->model, 
                                  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, 
                                  4, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(F32) * 2 * 4);
+                                 sizeof(f32_t) * 2 * 4);
   ogl->glEnableVertexArrayAttrib(tb->model, OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4); 
   ogl->glVertexArrayAttribFormat(tb->model, 
                                  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4,
                                  4, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(F32) * 3 * 4);
+                                 sizeof(f32_t) * 3 * 4);
   
   ogl->glVertexArrayAttribBinding(tb->model, 
                                   OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, 
@@ -750,13 +750,13 @@ void main(void)
   ogl->glGetProgramiv(tb->shader, GL_LINK_STATUS, &result);
   if (result != GL_TRUE) {
     char msg[kilobytes(1)] = {};
-    ogl->glGetProgramInfoLog(tb->shader, sizeof(msg), null, msg);
+    ogl->glGetProgramInfoLog(tb->shader, sizeof(msg), nullptr, msg);
     return false;
   }
   return true;
 }
 
-static B32 
+static b32_t 
 _ogl_init_sprite_batch(Opengl* ogl) {
   Sprite_Batch* sb = &ogl->sprite_batch;
   
@@ -790,14 +790,14 @@ void main(void) {
    fragColor = texture(uTexture, mTexCoord) * mColor; 
 })###";
   
-  const F32 sprite_model[] = {
+  const f32_t sprite_model[] = {
     -0.5f, -0.5f, 0.0f,  // bottom left
     0.5f, -0.5f, 0.0f,  // bottom right
     0.5f,  0.5f, 0.0f,  // top right
     -0.5f,  0.5f, 0.0f,   // top left 
   };
   
-  const U8 sprite_indices[] = {
+  const u8_t sprite_indices[] = {
     0, 1, 2,
     0, 2, 3,
   };
@@ -815,18 +815,18 @@ void main(void) {
                             0);
   
   ogl->glNamedBufferStorage(sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE], 
-                            sizeof(V2) * 4 * OGL_MAX_SPRITES, 
-                            null, 
+                            sizeof(v2f_t) * 4 * OGL_MAX_SPRITES, 
+                            nullptr, 
                             GL_DYNAMIC_STORAGE_BIT);
   
   ogl->glNamedBufferStorage(sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS], 
-                            sizeof(V4) * OGL_MAX_SPRITES, 
-                            null, 
+                            sizeof(v4f_t) * OGL_MAX_SPRITES, 
+                            nullptr, 
                             GL_DYNAMIC_STORAGE_BIT);
   
   ogl->glNamedBufferStorage(sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
-                            sizeof(M44) * OGL_MAX_SPRITES, 
-                            null, 
+                            sizeof(m44f_t) * OGL_MAX_SPRITES, 
+                            nullptr, 
                             GL_DYNAMIC_STORAGE_BIT);
   
   // NOTE(Momo): Setup VAO
@@ -835,25 +835,25 @@ void main(void) {
                                  OGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL, 
                                  sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL], 
                                  0, 
-                                 sizeof(V3));
+                                 sizeof(v3f_t));
   
   ogl->glVertexArrayVertexBuffer(sb->model, 
                                  OGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
                                  sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE], 
                                  0, 
-                                 sizeof(F32) * 8);
+                                 sizeof(f32_t) * 8);
   
   ogl->glVertexArrayVertexBuffer(sb->model, 
                                  OGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 
                                  sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS],  
                                  0, 
-                                 sizeof(V4));
+                                 sizeof(v4f_t));
   
   ogl->glVertexArrayVertexBuffer(sb->model, 
                                  OGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
                                  sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
                                  0, 
-                                 sizeof(M44));
+                                 sizeof(m44f_t));
   
   // NOTE(Momo): Setup Attributes
   // aModelVtx
@@ -888,7 +888,7 @@ void main(void) {
                                  2, 
                                  GL_FLOAT, 
                                  GL_FALSE,
-                                 sizeof(V2) * 0);
+                                 sizeof(v2f_t) * 0);
   
   ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2); 
   ogl->glVertexArrayAttribFormat(sb->model, 
@@ -896,7 +896,7 @@ void main(void) {
                                  2, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(V2) * 1);
+                                 sizeof(v2f_t) * 1);
   
   ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3); 
   ogl->glVertexArrayAttribFormat(sb->model, 
@@ -904,7 +904,7 @@ void main(void) {
                                  2, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(V2) * 2);
+                                 sizeof(v2f_t) * 2);
   
   ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4); 
   ogl->glVertexArrayAttribFormat(sb->model, 
@@ -912,7 +912,7 @@ void main(void) {
                                  2, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(V2) * 3);
+                                 sizeof(v2f_t) * 3);
   
   ogl->glVertexArrayAttribBinding(sb->model, 
                                   OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1, 
@@ -942,28 +942,28 @@ void main(void) {
                                  4, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(F32) * 0 * 4);
+                                 sizeof(f32_t) * 0 * 4);
   ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2);
   ogl->glVertexArrayAttribFormat(sb->model, 
                                  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, 
                                  4, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(F32) * 1 * 4);
+                                 sizeof(f32_t) * 1 * 4);
   ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3); 
   ogl->glVertexArrayAttribFormat(sb->model, 
                                  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, 
                                  4, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(F32) * 2 * 4);
+                                 sizeof(f32_t) * 2 * 4);
   ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4); 
   ogl->glVertexArrayAttribFormat(sb->model, 
                                  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4,
                                  4, 
                                  GL_FLOAT, 
                                  GL_FALSE, 
-                                 sizeof(F32) * 3 * 4);
+                                 sizeof(f32_t) * 3 * 4);
   
   ogl->glVertexArrayAttribBinding(sb->model, 
                                   OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, 
@@ -1006,19 +1006,19 @@ void main(void) {
   ogl->glGetProgramiv(sb->shader, GL_LINK_STATUS, &Result);
   if (Result != GL_TRUE) {
     char msg[kilobytes(1)];
-    ogl->glGetProgramInfoLog(sb->shader, sizeof(msg), null, msg);
+    ogl->glGetProgramInfoLog(sb->shader, sizeof(msg), nullptr, msg);
     return false;
   }
   return true;
 }
 
 
-static B32
+static b32_t
 ogl_init(Opengl* ogl,
          void* command_queue_memory, 
-         UMI command_queue_size, 
+         umi_t command_queue_size, 
          void* texture_queue_memory,
-         UMI texture_queue_size)
+         umi_t texture_queue_size)
 {	
   gfx_init_command_queue(&ogl->gfx, 
                          command_queue_memory, 
@@ -1040,7 +1040,7 @@ ogl_init(Opengl* ogl,
 }
 
 static GLenum
-_ogl_get_blend_mode_from_gfx_blend_type(Gfx_Blend_Type type) {
+_ogl_get_blend_mode_from_gfx_blend_type(gfx_blend_type_t type) {
   GLenum  ret = {0};
   switch(type) {
     case GFX_BLEND_TYPE_ZERO: 
@@ -1080,7 +1080,7 @@ _ogl_get_blend_mode_from_gfx_blend_type(Gfx_Blend_Type type) {
 
 
 static void 
-_ogl_set_blend_mode(Opengl* ogl, Gfx_Blend_Type src, Gfx_Blend_Type dst) {
+_ogl_set_blend_mode(Opengl* ogl, gfx_blend_type_t src, gfx_blend_type_t dst) {
   GLenum src_e = _ogl_get_blend_mode_from_gfx_blend_type(src);
   GLenum dst_e = _ogl_get_blend_mode_from_gfx_blend_type(dst);
   ogl->glBlendFunc(src_e, dst_e);
@@ -1108,27 +1108,27 @@ _ogl_process_texture_queue(Opengl* ogl) {
   // is loading forever, the rest of the payloads will never be processed.
   // This is fine and intentional. A payload should never be loading forever.
   // 
-  Gfx_Texture_Queue* textures = &ogl->gfx.texture_queue;
+  gfx_texture_queue_t* textures = &ogl->gfx.texture_queue;
   while(textures->payload_count) {
-    Gfx_Texture_Payload* payload = textures->payloads + textures->first_payload_index;
+    gfx_texture_payload_t* payload = textures->payloads + textures->first_payload_index;
     
-    B32 stop_loop = false;
+    b32_t stop_loop = false;
     switch(payload->state) {
       case GFX_TEXTURE_PAYLOAD_STATE_LOADING: {
         stop_loop = true;
       } break;
       case GFX_TEXTURE_PAYLOAD_STATE_READY: {
-        if(payload->texture_width < (U32)S32_MAX &&
-           payload->texture_height < (U32)S32_MAX &&
+        if(payload->texture_width < (u32_t)S32_MAX &&
+           payload->texture_height < (u32_t)S32_MAX &&
            payload->texture_width > 0 &&
            payload->texture_height > 0)
         {
         
           _ogl_set_texture(ogl, 
                            payload->texture_index, 
-                           (S32)payload->texture_width, 
-                           (S32)payload->texture_height, 
-                           (U8*)payload->texture_data);
+                           (s32_t)payload->texture_width, 
+                           (s32_t)payload->texture_height, 
+                           (u8_t*)payload->texture_data);
         }
         else {
           // Do nothing
@@ -1157,9 +1157,9 @@ _ogl_process_texture_queue(Opengl* ogl) {
 }
 
 static void
-ogl_begin_frame(Opengl* ogl, V2U render_wh,
-                U32 region_x0, U32 region_y0, 
-                U32 region_x1, U32 region_y1) 
+ogl_begin_frame(Opengl* ogl, v2u_t render_wh,
+                u32_t region_x0, u32_t region_y0, 
+                u32_t region_x1, u32_t region_y1) 
 {
   gfx_clear_commands(&ogl->gfx);  
 
@@ -1176,32 +1176,32 @@ ogl_begin_frame(Opengl* ogl, V2U render_wh,
 // Only call opengl functions when we end frame
 static void
 ogl_end_frame(Opengl* ogl) {
-  Gfx* gfx = &ogl->gfx;
+  gfx_t* gfx = &ogl->gfx;
   
   _ogl_align_viewport(ogl);
   _ogl_process_texture_queue(ogl);
   _ogl_begin_sprites(ogl);
   _ogl_begin_triangles(ogl);
 
-  //for (U32 cmd_index = 0; cmd_index < cmds->entry_count; ++cmd_index) {
+  //for (u32_t cmd_index = 0; cmd_index < cmds->entry_count; ++cmd_index) {
   gfx_foreach_command(gfx, cmd_index) {
-    Gfx_Command* entry = gfx_get_command(gfx, cmd_index);
+    gfx_command_t* entry = gfx_get_command(gfx, cmd_index);
     switch(entry->id) {
       case GFX_COMMAND_TYPE_VIEW: {
         _ogl_flush_sprites(ogl);
         _ogl_flush_triangles(ogl);
         
-        Gfx_Command_View* data = (Gfx_Command_View*)entry->data;
+        gfx_command_view_t* data = (gfx_command_view_t*)entry->data;
         
-        F32 depth = (F32)(ogl->current_layer + 1);
+        f32_t depth = (f32_t)(ogl->current_layer + 1);
         // TODO: Avoid computation of matrices
-        M44 p = m44_orthographic(data->min_x, data->max_x,
+        m44f_t p = m44f_orthographic(data->min_x, data->max_x,
                                  data->min_y, data->max_y, 
                                  0.f, depth);
-        M44 v = m44_translation(-data->pos_x, -data->pos_y);
+        m44f_t v = m44f_translation(-data->pos_x, -data->pos_y);
         
         // TODO: Do we share shaders? Or just have a 'view' shader?
-        M44 result = m44_transpose(p*v);
+        m44f_t result = m44f_transpose(p*v);
         {
           Sprite_Batch* sb = &ogl->sprite_batch;
           GLint uProjectionLoc = ogl->glGetUniformLocation(sb->shader,
@@ -1226,7 +1226,7 @@ ogl_end_frame(Opengl* ogl) {
         
       } break;
       case GFX_COMMAND_TYPE_CLEAR: {
-        Gfx_Command_Clear* data = (Gfx_Command_Clear*)entry->data;
+        gfx_command_clear_t* data = (gfx_command_clear_t*)entry->data;
         
         ogl->glClearColor(data->colors.r, 
                           data->colors.g, 
@@ -1239,8 +1239,8 @@ ogl_end_frame(Opengl* ogl) {
       case GFX_COMMAND_TYPE_TRIANGLE: {
         _ogl_flush_sprites(ogl);
         
-        Gfx_Command_Triangle* data = (Gfx_Command_Triangle*)entry->data;
-        M44 inverse_of_model = m44_identity();
+        gfx_command_triangle_t* data = (gfx_command_triangle_t*)entry->data;
+        m44f_t inverse_of_model = m44f_identity();
         inverse_of_model.e[0][0] = -1.f;
         inverse_of_model.e[1][0] = 0.f;
         inverse_of_model.e[2][0] = 1.f;
@@ -1262,7 +1262,7 @@ ogl_end_frame(Opengl* ogl) {
         inverse_of_model.e[3][3] = 0.f;
         
         
-        M44 target_vertices = m44_identity();
+        m44f_t target_vertices = m44f_identity();
         target_vertices.e[0][0] = data->p0.x;
         target_vertices.e[1][0] = data->p0.y;
         target_vertices.e[2][0] = ogl->current_layer;
@@ -1283,7 +1283,7 @@ ogl_end_frame(Opengl* ogl) {
         target_vertices.e[2][3] = 1.f;
         target_vertices.e[3][3] = 1.f;
         
-        M44 transform = target_vertices * inverse_of_model;
+        m44f_t transform = target_vertices * inverse_of_model;
 
         _ogl_push_triangle(ogl, transform, data->colors); 
 
@@ -1296,7 +1296,7 @@ ogl_end_frame(Opengl* ogl) {
         {
           GLint transform_loc = ogl->glGetUniformLocation(tb->shader,
                                                           "uTransform");
-          M44 res = m44_transpose(transform);
+          m44f_t res = m44f_transpose(transform);
           ogl->glProgramUniformMatrix4fv(tb->shader, 
                                          transform_loc, 
                                          1, 
@@ -1322,10 +1322,10 @@ ogl_end_frame(Opengl* ogl) {
           { 1.f, 1.f },
         };
         
-        Gfx_Command_Rect* data = (Gfx_Command_Rect*)entry->data;
-        M44 T = m44_translation(data->pos.x, data->pos.y, ogl->current_layer);
-        M44 R = m44_rotation_z(data->rot);
-        M44 S = m44_scale(data->size.w, data->size.h, 1.f) ;
+        gfx_command_rect_t* data = (gfx_command_rect_t*)entry->data;
+        m44f_t T = m44f_translation(data->pos.x, data->pos.y, ogl->current_layer);
+        m44f_t R = m44f_rotation_z(data->rot);
+        m44f_t S = m44f_scale(data->size.w, data->size.h, 1.f) ;
         
         _ogl_push_sprite(ogl, 
                          T*R*S,
@@ -1336,29 +1336,29 @@ ogl_end_frame(Opengl* ogl) {
       
       case GFX_COMMAND_TYPE_SPRITE: {
         _ogl_flush_triangles(ogl);
-        Gfx_Command_Sprite* data = (Gfx_Command_Sprite*)entry->data;
+        gfx_command_sprite_t* data = (gfx_command_sprite_t*)entry->data;
         assert(array_count(ogl->textures) > data->texture_index);
         
         OGL_Texture* texture = ogl->textures + data->texture_index; 
         if (texture->handle == 0) {
           texture->handle = ogl->dummy_texture.handle;
         }
-        M44 transform = m44_identity();
+        m44f_t transform = m44f_identity();
         transform.e[0][0] = data->size.w;
         transform.e[1][1] = data->size.h;
         transform.e[0][3] = data->pos.x;
         transform.e[1][3] = data->pos.y;
         transform.e[2][3] = ogl->current_layer;
         
-        F32 lerped_x = lerp_f32(0.5f, -0.5f, data->anchor.x);
-        F32 lerped_y = lerp_f32(0.5f, -0.5f, data->anchor.y);
-        M44 a = m44_translation(lerped_x, lerped_y);
+        f32_t lerped_x = lerp_f32(0.5f, -0.5f, data->anchor.x);
+        f32_t lerped_y = lerp_f32(0.5f, -0.5f, data->anchor.y);
+        m44f_t a = m44f_translation(lerped_x, lerped_y);
         
         Rect2 uv = {0};
-        uv.min.x = (F32)data->texel_x0 / texture->width;
-        uv.min.y = (F32)data->texel_y0 / texture->height;
-        uv.max.x = (F32)data->texel_x1 / texture->width;
-        uv.max.y = (F32)data->texel_y1 / texture->height;
+        uv.min.x = (f32_t)data->texel_x0 / texture->width;
+        uv.min.y = (f32_t)data->texel_y0 / texture->height;
+        uv.max.x = (f32_t)data->texel_x1 / texture->width;
+        uv.max.y = (f32_t)data->texel_y1 / texture->height;
         
         _ogl_push_sprite(ogl, 
                          transform*a,
@@ -1370,11 +1370,11 @@ ogl_end_frame(Opengl* ogl) {
       case GFX_COMMAND_TYPE_BLEND: {
         _ogl_flush_sprites(ogl);
         _ogl_flush_triangles(ogl);
-        Gfx_Command_Blend* data = (Gfx_Command_Blend*)entry->data;
+        gfx_command_blend_t* data = (gfx_command_blend_t*)entry->data;
         _ogl_set_blend_mode(ogl, data->src, data->dst);
       } break;
       case GFX_COMMAND_TYPE_DELETE_TEXTURE: {
-        Gfx_Command_Delete_Texture* data = (Gfx_Command_Delete_Texture*)entry->data;
+        gfx_command_delete_texture_t* data = (gfx_command_delete_texture_t*)entry->data;
         _ogl_delete_texture(ogl, data->texture_index);
       } break;
       case GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES: {

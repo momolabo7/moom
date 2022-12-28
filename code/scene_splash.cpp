@@ -1,6 +1,6 @@
 
 static void 
-splash_tick(Moe* moe)
+splash_tick(moe_t* moe)
 {
   if (!moe_is_scene_initialized(moe)) {
     Splash* splash = moe_allocate_scene(Splash, moe);
@@ -9,7 +9,7 @@ splash_tick(Moe* moe)
   
   Splash* splash = (Splash*)moe->scene_context;
   
-  F32 dt = platform->seconds_since_last_frame;
+  f32_t dt = platform->seconds_since_last_frame;
   splash->timer -= dt;
   
   if (splash->timer < 0.f) {
@@ -22,7 +22,7 @@ splash_tick(Moe* moe)
   set_match_entry(match, asset_tag(FONT), 1.f, 1.f); 
   Moe_Font_ID font_id = find_best_font(assets, MOE_ASSET_GROUP_TYPE_FONTS, match);
 
-  RGBA color = rgba_set(splash->timer, splash->timer, splash->timer, splash->timer);
+  rgba_t color = rgba_set(splash->timer, splash->timer, splash->timer, splash->timer);
   paint_text(font_id, 
              str8_from_lit("momo"),
              color,

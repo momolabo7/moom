@@ -14,9 +14,9 @@
 
 #ifdef INTERNAL
 #define moe_log(...) moe->platform->debug_log(__VA_ARGS__)
-#define moe_profile_block(name) prf_block(moe->platform->profiler, name)
-#define moe_profile_begin(name) prf_begin_block(moe->platform->profiler, name)
-#define moe_profile_end(name) prf_end_block(moe->platform->profiler, name)
+#define moe_profile_block(name) profiler_block(moe->platform->profiler, name)
+#define moe_profile_begin(name) profiler_begin_block(moe->platform->profiler, name)
+#define moe_profile_end(name) profiler_end_block(moe->platform->profiler, name)
 #else
 #define moe_log(...)
 #define moe_profiler_block(...)
@@ -32,7 +32,7 @@
 
 
 
-enum Moe_Show_Debug_Type {
+enum moe_show_debug_type_t {
   MOE_SHOW_DEBUG_NONE,
   MOE_SHOW_DEBUG_PROFILER,
   MOE_SHOW_DEBUG_CONSOLE,
@@ -41,38 +41,38 @@ enum Moe_Show_Debug_Type {
   MOE_SHOW_DEBUG_MAX
 };
 
-typedef void (*Scene_Tick)(struct Moe*);
+typedef void (*Scene_Tick)(struct moe_t*);
 
-typedef struct Moe {
-  Moe_Show_Debug_Type show_debug_type;
+typedef struct moe_t {
+  moe_show_debug_type_t show_debug_type;
   
    
   // Arenas
-  Arena main_arena;
+  arena_t main_arena;
 
   // Sub arenas
-  Arena asset_arena;
-  Arena frame_arena;
-  Arena debug_arena;
-  Arena scene_arena;
+  arena_t asset_arena;
+  arena_t frame_arena;
+  arena_t debug_arena;
+  arena_t scene_arena;
   
 
   // Mode Management 
-  B32 is_done;
-  B32 is_scene_changed;
+  b32_t is_done;
+  b32_t is_scene_changed;
   void* scene_context;
   Scene_Tick scene_tick;
 
   // Other stuff
-  Assets assets;
-  Console console;
-  Inspector inspector;
+  assets_t assets;
+  console_t console;
+  inspector_t inspector;
   Platform* platform;
 
   // Interested moe assets
-  Asset_Sprite_ID blank_sprite;
-  Asset_Font_ID debug_font;
-} Moe;
+  asset_sprite_id_t blank_sprite;
+  asset_font_id_t debug_font;
+} moe_t;
 
 
 #include "moe_assets.cpp"
@@ -83,20 +83,20 @@ typedef struct Moe {
 
 
 static void 
-moe_goto_scene(Moe* moe, Scene_Tick scene_tick) {
+moe_goto_scene(moe_t* moe, Scene_Tick scene_tick) {
   moe->scene_tick = scene_tick;
   moe->is_scene_changed = true;
 }
 
-static B32
-moe_is_scene_initialized(Moe* moe) {
-  return moe->scene_context != null;
+static b32_t
+moe_is_scene_initialized(moe_t* moe) {
+  return moe->scene_context != nullptr;
 }
 
 static void*
-_moe_allocate_scene_size(Moe* moe, UMI size) {
-  arn_clear(&moe->scene_arena);
-  moe->scene_context = arn_push_size(&moe->scene_arena, size, 16);
+_moe_allocate_scene_size(moe_t* moe, umi_t size) {
+  arena_clear(&moe->scene_arena);
+  moe->scene_context = arena_push_size(&moe->scene_arena, size, 16);
   return moe->scene_context;
 }
 

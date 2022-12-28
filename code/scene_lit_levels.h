@@ -271,7 +271,7 @@ static Lit_Level lit_levels[] = {
 
 
 static void
-lit_load_level(Lit* m, U32 level_id) {
+lit_load_level(Lit* m, u32_t level_id) {
   m->stage_flash_timer = 0.f;
   m->stage_fade_timer = 1.f;
   m->state = LIT_STATE_TYPE_TRANSITION_IN;

@@ -1,4 +1,4 @@
-// NOTE(Momo): Gfx code for Win w/ Opengl
+// NOTE(Momo): gfx_t code for Win w/ Opengl
 
 
 #include "w32_gfx.h"
@@ -69,11 +69,11 @@ _w32_try_get_wgl_function(const char* name, HMODULE fallback_module)
 
 static void
 _w32_set_pixel_format(HDC dc) {
-  S32 suggested_pixel_format_index = 0;
-  U32 extended_pick = 0;
+  s32_t suggested_pixel_format_index = 0;
+  u32_t extended_pick = 0;
   
   if (wglChoosePixelFormatARB) {
-    S32 attrib_list[] = {
+    s32_t attrib_list[] = {
       WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
       WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
       WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
@@ -113,7 +113,7 @@ _w32_set_pixel_format(HDC dc) {
                  suggested_pixel_format_index, 
                  &suggested_pixel_format);
 }
-static B32
+static b32_t
 _w32_load_wgl_extentions() {
   WNDCLASSA window_class = {};
   // Er yeah...we have to create a 'fake' Opengl context 
@@ -141,7 +141,7 @@ _w32_load_wgl_extentions() {
     _w32_set_pixel_format(dc);
     HGLRC opengl_context = wglCreateContext(dc);
     
-    B32 success = true;
+    b32_t success = true;
     
     if (wglMakeCurrent(dc, opengl_context)) {
       wglChoosePixelFormatARB = (wglChoosePixelFormatARBFn*)wglGetProcAddress("wglChoosePixelFormatARB");
@@ -170,17 +170,17 @@ _w32_load_wgl_extentions() {
 
 //~API implementation
 static void
-w32_gfx_unload(Gfx* gfx) {
+w32_gfx_unload(gfx_t* gfx) {
   Opengl* ogl = (Opengl*)gfx;
   Platform_Memory_Block* block = (Platform_Memory_Block*)(ogl->user_data);
   w32_free_memory(block);
 }
 
-static Gfx*
+static gfx_t*
 w32_gfx_load(HWND window, 
-             U32 command_queue_size,
-             U32 texture_queue_size, 
-             Arena* allocator) 
+             u32_t command_queue_size,
+             u32_t texture_queue_size, 
+             arena_t* allocator) 
 {
   HDC dc = GetDC(window); 
   if (!dc) return 0;
@@ -188,7 +188,7 @@ w32_gfx_load(HWND window,
 
   _w32_set_pixel_format(dc);
   
-  S32 opengl_attribs[] {
+  s32_t opengl_attribs[] {
     WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
     WGL_CONTEXT_MINOR_VERSION_ARB, 5,
     WGL_CONTEXT_FLAG_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
@@ -203,7 +203,7 @@ w32_gfx_load(HWND window,
                                                 opengl_attribs); 
   
   if (!opengl_ctx) {
-    return null;
+    return nullptr;
   }
 
 
@@ -214,21 +214,21 @@ w32_gfx_load(HWND window,
   Platform_Memory_Block* texture_queue_block = w32_allocate_memory(texture_queue_size);
 
   if (!ogl_block || !command_queue_block || !texture_queue_block) {
-    return null;
+    return nullptr;
   }
 
   Opengl* opengl = (Opengl*)ogl_block->data;
   opengl->user_data = ogl_block;
 
 #if 0
-  Opengl* opengl = arn_push(Opengl, allocator);
+  Opengl* opengl = arena_push(Opengl, allocator);
   if (!opengl) return 0; 
 
   // Allocate memory for render commands
-  void* command_queue_memory =  arn_push_size(allocator, command_queue_size, 16);
+  void* command_queue_memory =  arena_push_size(allocator, command_queue_size, 16);
   if (!command_queue_memory) return 0;
 
-  void* texture_queue_memory = arn_push_size(allocator, texture_queue_size, 16);
+  void* texture_queue_memory = arena_push_size(allocator, texture_queue_size, 16);
   if (!texture_queue_memory) return 0; 
 #endif
  
@@ -239,7 +239,7 @@ w32_gfx_load(HWND window,
     HMODULE module = LoadLibraryA("opengl32.dll");
 #define WGL_SetOpenglFunction(name) \
 opengl->name = (OGL_##name*)_w32_try_get_wgl_function(#name, module); \
-if (!opengl->name) { return null; } 
+if (!opengl->name) { return nullptr; } 
     
     WGL_SetOpenglFunction(glEnable);
     WGL_SetOpenglFunction(glDisable); 
@@ -315,13 +315,13 @@ if (!opengl->name) { return null; }
 
 
 static void
-w32_gfx_begin_frame(Gfx* renderer,  V2U render_wh, U32 region_x0, U32 region_y0, U32 region_x1, U32 region_y1) 
+w32_gfx_begin_frame(gfx_t* renderer,  v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1) 
 {
   return ogl_begin_frame((Opengl*)renderer, render_wh, region_x0, region_y0, region_x1, region_y1);
 }
 
 static void
-w32_gfx_end_frame(Gfx* renderer) {
+w32_gfx_end_frame(gfx_t* renderer) {
   ogl_end_frame((Opengl*)renderer);
   SwapBuffers(wglGetCurrentDC());
 }

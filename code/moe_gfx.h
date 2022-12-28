@@ -6,7 +6,7 @@
 // moe views 'rendering'. The moe simply adds commands
 // to a command queue, which will be dispatched to the 
 // appropriate graphics API, which details will be implemented
-// on top of the Gfx class (through inheritance or composition). 
+// on top of the gfx_t class (through inheritance or composition). 
 //
 //
 // Most importantly, other than the commands, the moe
@@ -33,55 +33,55 @@
 #define GFX_MAX_TEXTURES 256
 
 //-Texture Queue API
-typedef enum Gfx_Texture_Payload_State {
+typedef enum gfx_texture_payload_state_t {
   GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
   GFX_TEXTURE_PAYLOAD_STATE_LOADING,
   GFX_TEXTURE_PAYLOAD_STATE_READY,
-} Gfx_Texture_Payload_State;
+} gfx_texture_payload_state_t;
 
-typedef struct Gfx_Texture_Payload {
-  volatile Gfx_Texture_Payload_State state;
-  UMI transfer_memory_start;
-  UMI transfer_memory_end;
+typedef struct gfx_texture_payload_t {
+  volatile gfx_texture_payload_state_t state;
+  umi_t transfer_memory_start;
+  umi_t transfer_memory_end;
   
   // For moe to input
-  U32 texture_index;
-  U32 texture_width;
-  U32 texture_height;
+  u32_t texture_index;
+  u32_t texture_width;
+  u32_t texture_height;
   void* texture_data;
-} Gfx_Texture_Payload;
+} gfx_texture_payload_t;
 
-typedef struct Gfx_Texture_Queue {
-  U8* transfer_memory;
-  UMI transfer_memory_size;
-  UMI transfer_memory_start;
-  UMI transfer_memory_end;
+typedef struct gfx_texture_queue_t {
+  u8_t* transfer_memory;
+  umi_t transfer_memory_size;
+  umi_t transfer_memory_start;
+  umi_t transfer_memory_end;
   
-  Gfx_Texture_Payload payloads[GFX_MAX_TEXTURES];
-  UMI first_payload_index;
-  UMI payload_count;
+  gfx_texture_payload_t payloads[GFX_MAX_TEXTURES];
+  umi_t first_payload_index;
+  umi_t payload_count;
   
-} Gfx_Texture_Queue;
+} gfx_texture_queue_t;
 
 ////////////////////////////////////////////////
 // Command API
 
-typedef struct Gfx_Command {
-  U32 id; // type id from user
+typedef struct gfx_command_t {
+  u32_t id; // type id from user
   void* data;
-} Gfx_Command;
+} gfx_command_t;
 
-typedef struct Gfx_Command_Queue {
+typedef struct gfx_command_queue_t {
   // Push buffer
-	U8* memory;
-  UMI memory_size;
-	UMI data_pos;
-	UMI entry_pos;
-	UMI entry_start;
-	UMI entry_count;
-} Gfx_Command_Queue;
+	u8_t* memory;
+  umi_t memory_size;
+	umi_t data_pos;
+	umi_t entry_pos;
+	umi_t entry_start;
+	umi_t entry_count;
+} gfx_command_queue_t;
 
-typedef enum Gfx_Blend_Type {
+typedef enum gfx_blend_type_t {
   GFX_BLEND_TYPE_ZERO,
   GFX_BLEND_TYPE_ONE,
   GFX_BLEND_TYPE_SRC_COLOR,
@@ -92,9 +92,9 @@ typedef enum Gfx_Blend_Type {
   GFX_BLEND_TYPE_INV_DST_ALPHA,
   GFX_BLEND_TYPE_DST_COLOR,
   GFX_BLEND_TYPE_INV_DST_COLOR,
-} Gfx_Blend_Type;
+} gfx_blend_type_t;
 
-typedef enum Gfx_Command_Type {
+typedef enum gfx_command_type_t {
   GFX_COMMAND_TYPE_CLEAR,
   GFX_COMMAND_TYPE_TRIANGLE,
   GFX_COMMAND_TYPE_RECT,
@@ -105,141 +105,141 @@ typedef enum Gfx_Command_Type {
   GFX_COMMAND_TYPE_BLEND,
   GFX_COMMAND_TYPE_VIEW,
   GFX_COMMAND_TYPE_ADVANCE_DEPTH,
-}Gfx_Command_Type;
+}gfx_command_type_t;
 
 
-typedef struct Gfx_Command_Clear {
-  RGBA colors;
-}Gfx_Command_Clear;
+typedef struct gfx_command_clear_t {
+  rgba_t colors;
+}gfx_command_clear_t;
 
 
-typedef struct Gfx_Command_View {
-  F32 pos_x, pos_y;
-  F32 min_x, max_x;
-  F32 min_y, max_y;
-} Gfx_Command_View;
+typedef struct gfx_command_view_t {
+  f32_t pos_x, pos_y;
+  f32_t min_x, max_x;
+  f32_t min_y, max_y;
+} gfx_command_view_t;
 
-typedef struct Gfx_Command_Sprite {
-  V2 pos;
-  V2 size;
+typedef struct gfx_command_sprite_t {
+  v2f_t pos;
+  v2f_t size;
 
-  U32 texel_x0, texel_y0;
-  U32 texel_x1, texel_y1;
+  u32_t texel_x0, texel_y0;
+  u32_t texel_x1, texel_y1;
 
 
-  RGBA colors;
-  U32 texture_index;
-  V2 anchor;
-} Gfx_Command_Sprite;
+  rgba_t colors;
+  u32_t texture_index;
+  v2f_t anchor;
+} gfx_command_sprite_t;
 
-typedef struct Gfx_Command_Delete_Texture {
-  U32 texture_index;
-} Gfx_Command_Delete_Texture;
+typedef struct gfx_command_delete_texture_t {
+  u32_t texture_index;
+} gfx_command_delete_texture_t;
 
-typedef struct Gfx_Command_Delete_All_Textures {
-} Gfx_Command_Delete_All_Textures;
+typedef struct gfx_command_delete_all_textures_t {
+} gfx_command_delete_all_textures_t;
 
-typedef struct Gfx_Command_Advance_Depth {
-} Gfx_Command_Advance_Depth;
+typedef struct gfx_command_advance_depth_t {
+} gfx_command_advance_depth_t;
 
-typedef struct Gfx_Command_Rect {
-  RGBA colors;
-  V2 pos;
-  F32 rot;
-  V2 size;
-} Gfx_Command_Rect;
+typedef struct gfx_command_rect_t {
+  rgba_t colors;
+  v2f_t pos;
+  f32_t rot;
+  v2f_t size;
+} gfx_command_rect_t;
 
-typedef struct Gfx_Command_Triangle {
-  RGBA colors;
-  V2 p0, p1, p2;
-} Gfx_Command_Triangle;
+typedef struct gfx_command_triangle_t {
+  rgba_t colors;
+  v2f_t p0, p1, p2;
+} gfx_command_triangle_t;
 
-typedef struct Gfx_Command_Blend {
-  Gfx_Blend_Type src;
-  Gfx_Blend_Type dst;
-} Gfx_Command_Blend;
+typedef struct gfx_command_blend_t {
+  gfx_blend_type_t src;
+  gfx_blend_type_t dst;
+} gfx_command_blend_t;
 
 
 //- Renderer API
-typedef struct Gfx {
-  Gfx_Command_Queue command_queue;
-  Gfx_Texture_Queue texture_queue;
-} Gfx;
+typedef struct gfx_t {
+  gfx_command_queue_t command_queue;
+  gfx_texture_queue_t texture_queue;
+} gfx_t;
 
 
 // 
-static void gfx_init_command_queue(Gfx* g, void* data, UMI size);
-static void gfx_init_texture_queue(Gfx* g, void* data, UMI size);
+static void gfx_init_command_queue(gfx_t* g, void* data, umi_t size);
+static void gfx_init_texture_queue(gfx_t* g, void* data, umi_t size);
 
-static void gfx_clear_commands(Gfx* g);
-static Gfx_Command* gfx_get_command(Gfx* g, U32 index);
+static void gfx_clear_commands(gfx_t* g);
+static gfx_command_t* gfx_get_command(gfx_t* g, u32_t index);
 
 static void gfx_next_texture_handle();
 
-static Gfx_Texture_Payload* gfx_begin_texture_transfer(Gfx* g, U32 required_space);
-static void gfx_complete_texture_transfer(Gfx_Texture_Payload* entry);
-static void gfx_cancel_texture_transfer(Gfx_Texture_Payload* entry);
-static void gfx_push_view(Gfx* g, V2 pos, F32 width, F32 height, U32 layers);
-static void gfx_push_colors(Gfx* g, RGBA colors); 
-static void gfx_push_sprite(Gfx* g, RGBA colors, V2 pos, V2 size, V2 anchor, U32 texture_index, U32 texel_x0, U32 texel_y0, U32 texel_x1, U32 texel_y1);
-static void gfx_push_filled_rect(Gfx* g, RGBA colors, V2 pos, F32 rot, V2 size);
-static void gfx_push_filled_triangle(Gfx* g, RGBA colors, V2 p0, V2 p1, V2 p2);
-static void gfx_push_advance_depth(Gfx* g); 
-static void gfx_push_line(Gfx* g, V2 p0, V2 p1, F32 thickness, RGBA colors);
-static void gfx_push_circle_outline(Gfx* g, V2 center, F32 radius, F32 thickness, U32 line_count, RGBA color); 
-static void gfx_push_rect_outline(Gfx* g, Rect2 rect, F32 thickness, RGBA colors, F32 pos_z);
-static void gfx_push_delete_all_textures(Gfx* g);
-static void gfx_push_delete_texture(Gfx* g, U32 texture_index);
-static void gfx_push_blend(Gfx* g, Gfx_Blend_Type blend_type);
-static void gfx_advance_depth(Gfx* g);
+static gfx_texture_payload_t* gfx_begin_texture_transfer(gfx_t* g, u32_t required_space);
+static void gfx_complete_texture_transfer(gfx_texture_payload_t* entry);
+static void gfx_cancel_texture_transfer(gfx_texture_payload_t* entry);
+static void gfx_push_view(gfx_t* g, v2f_t pos, f32_t width, f32_t height, u32_t layers);
+static void gfx_push_colors(gfx_t* g, rgba_t colors); 
+static void gfx_push_sprite(gfx_t* g, rgba_t colors, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1);
+static void gfx_push_filled_rect(gfx_t* g, rgba_t colors, v2f_t pos, f32_t rot, v2f_t size);
+static void gfx_push_filled_triangle(gfx_t* g, rgba_t colors, v2f_t p0, v2f_t p1, v2f_t p2);
+static void gfx_push_advance_depth(gfx_t* g); 
+static void gfx_push_line(gfx_t* g, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors);
+static void gfx_push_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color); 
+static void gfx_push_rect_outline(gfx_t* g, Rect2 rect, f32_t thickness, rgba_t colors, f32_t pos_z);
+static void gfx_push_delete_all_textures(gfx_t* g);
+static void gfx_push_delete_texture(gfx_t* g, u32_t texture_index);
+static void gfx_push_blend(gfx_t* g, gfx_blend_type_t blend_type);
+static void gfx_advance_depth(gfx_t* g);
 
 #define gfx_foreach_command(g,i) \
-  for(U32 (i) = 0; (i) < (g)->command_queue.entry_count; ++(i))
+  for(u32_t (i) = 0; (i) < (g)->command_queue.entry_count; ++(i))
  
 //////////////////////////////////////////////////////
 // IMPLEMENTATION
 static void
-gfx_clear_commands(Gfx* g) {
-  Gfx_Command_Queue* q = &g->command_queue;
+gfx_clear_commands(gfx_t* g) {
+  gfx_command_queue_t* q = &g->command_queue;
   q->data_pos = 0;	
 	q->entry_count = 0;
 	
-	UMI imem = ptr_to_int(q->memory);
-	UMI adjusted_entry_start = align_down_pow2(imem + q->memory_size, 4) - imem;
+	umi_t imem = ptr_to_int(q->memory);
+	umi_t adjusted_entry_start = align_down_pow2(imem + q->memory_size, 4) - imem;
 	
-	q->entry_start = q->entry_pos = (U32)adjusted_entry_start;
+	q->entry_start = q->entry_pos = (u32_t)adjusted_entry_start;
 }
 
 static void 
-gfx_init_command_queue(Gfx* g, void* data, UMI size) {
-  Gfx_Command_Queue* q = &g->command_queue;
-  q->memory = (U8*)data;
+gfx_init_command_queue(gfx_t* g, void* data, umi_t size) {
+  gfx_command_queue_t* q = &g->command_queue;
+  q->memory = (u8_t*)data;
   q->memory_size = size;
   gfx_clear_commands(g);
 }
 
-static Gfx_Command*
-gfx_get_command(Gfx* g, U32 index) {
-  Gfx_Command_Queue* q = &g->command_queue;
+static gfx_command_t*
+gfx_get_command(gfx_t* g, u32_t index) {
+  gfx_command_queue_t* q = &g->command_queue;
   assert(index < q->entry_count);
-	UMI stride = align_up_pow2(sizeof(Gfx_Command), 4);
-	return (Gfx_Command*)(q->memory + q->entry_start - ((index+1) * stride));
+	umi_t stride = align_up_pow2(sizeof(gfx_command_t), 4);
+	return (gfx_command_t*)(q->memory + q->entry_start - ((index+1) * stride));
 }
 
 static void*
-_gfx_push_command_block(Gfx_Command_Queue* q, U32 size, U32 id, U32 align = 4) {
+_gfx_push_command_block(gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4) {
 
-	UMI imem = ptr_to_int(q->memory);
+	umi_t imem = ptr_to_int(q->memory);
 	
-	UMI adjusted_data_pos = align_up_pow2(imem + q->data_pos, (UMI)align) - imem;
-	UMI adjusted_entry_pos = align_down_pow2(imem + q->entry_pos, 4) - imem; 
+	umi_t adjusted_data_pos = align_up_pow2(imem + q->data_pos, (umi_t)align) - imem;
+	umi_t adjusted_entry_pos = align_down_pow2(imem + q->entry_pos, 4) - imem; 
 	
-	assert(adjusted_data_pos + size + sizeof(Gfx_Command) < adjusted_entry_pos);
+	assert(adjusted_data_pos + size + sizeof(gfx_command_t) < adjusted_entry_pos);
 	
-	q->data_pos = (U32)adjusted_data_pos + size;
-	q->entry_pos = (U32)adjusted_entry_pos - sizeof(Gfx_Command);
+	q->data_pos = (u32_t)adjusted_data_pos + size;
+	q->entry_pos = (u32_t)adjusted_entry_pos - sizeof(gfx_command_t);
 	
-	auto* entry = (Gfx_Command*)int_to_ptr(imem + q->entry_pos);
+	auto* entry = (gfx_command_t*)int_to_ptr(imem + q->entry_pos);
 	entry->id = id;
 	entry->data = int_to_ptr(imem + adjusted_data_pos);
 	
@@ -250,10 +250,10 @@ _gfx_push_command_block(Gfx_Command_Queue* q, U32 size, U32 id, U32 align = 4) {
 }
 
 static void 
-gfx_init_texture_queue(Gfx* g, void* data, UMI size) {
-  Gfx_Texture_Queue* q = &g->texture_queue;
+gfx_init_texture_queue(gfx_t* g, void* data, umi_t size) {
+  gfx_texture_queue_t* q = &g->texture_queue;
 
-  q->transfer_memory = (U8*)data;
+  q->transfer_memory = (u8_t*)data;
   q->transfer_memory_size = size;
   q->transfer_memory_start = 0;
   q->transfer_memory_end = 0;
@@ -263,19 +263,19 @@ gfx_init_texture_queue(Gfx* g, void* data, UMI size) {
 
 // TODO: maybe we should change this to a macro to support C users
 template<typename T> static T*
-_gfx_push_command(Gfx_Command_Queue* q, U32 id, U32 align = 4) {
+_gfx_push_command(gfx_command_queue_t* q, u32_t id, u32_t align = 4) {
   return (T*)_gfx_push_command_block(q, sizeof(T), id, align);
 }
 
 
-static Gfx_Texture_Payload*
-gfx_begin_texture_transfer(Gfx* g, U32 required_space) {
-  Gfx_Texture_Queue* q = &g->texture_queue;
-  Gfx_Texture_Payload* ret = 0;
+static gfx_texture_payload_t*
+gfx_begin_texture_transfer(gfx_t* g, u32_t required_space) {
+  gfx_texture_queue_t* q = &g->texture_queue;
+  gfx_texture_payload_t* ret = 0;
   
   if (q->payload_count < array_count(q->payloads)) {
-    UMI avaliable_space = 0;
-    UMI memory_at = q->transfer_memory_end;
+    umi_t avaliable_space = 0;
+    umi_t memory_at = q->transfer_memory_end;
     // Memory is being used like a ring buffer
     if (q->transfer_memory_start == q->transfer_memory_end) {
       // This is either ALL the space or NONE of the space. 
@@ -306,7 +306,7 @@ gfx_begin_texture_transfer(Gfx* g, U32 required_space) {
     
     if(avaliable_space >= required_space) {
       // We found enough space
-      UMI payload_index = q->first_payload_index + q->payload_count++;
+      umi_t payload_index = q->first_payload_index + q->payload_count++;
       ret = q->payloads + (payload_index % array_count(q->payloads));
       ret->texture_data = q->transfer_memory + memory_at;
       ret->transfer_memory_start = memory_at;
@@ -323,21 +323,21 @@ gfx_begin_texture_transfer(Gfx* g, U32 required_space) {
 
 
 static void
-gfx_complete_texture_transfer(Gfx_Texture_Payload* entry) {
+gfx_complete_texture_transfer(gfx_texture_payload_t* entry) {
   entry->state = GFX_TEXTURE_PAYLOAD_STATE_READY;
 }
 
 static void
-gfx_cancel_texture_transfer(Gfx_Texture_Payload* entry) {
+gfx_cancel_texture_transfer(gfx_texture_payload_t* entry) {
   entry->state = GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
 }
 
 
 static void 
-gfx_push_view(Gfx* g, F32 min_x, F32 max_x, F32 min_y, F32 max_y, F32 pos_x, F32 pos_y) {
-  Gfx_Command_Queue* c = &g->command_queue; 
+gfx_push_view(gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y) {
+  gfx_command_queue_t* c = &g->command_queue; 
     
-  Gfx_Command_View* data = _gfx_push_command<Gfx_Command_View>(c, GFX_COMMAND_TYPE_VIEW);
+  gfx_command_view_t* data = _gfx_push_command<gfx_command_view_t>(c, GFX_COMMAND_TYPE_VIEW);
   data->min_x = min_x;
   data->min_y = min_y;
   data->max_x = max_x;
@@ -347,24 +347,24 @@ gfx_push_view(Gfx* g, F32 min_x, F32 max_x, F32 min_y, F32 max_y, F32 pos_x, F32
 }
 
 static void
-gfx_push_colors(Gfx* g, RGBA colors) {
-  Gfx_Command_Queue* c = &g->command_queue; 
-  Gfx_Command_Clear* data = _gfx_push_command<Gfx_Command_Clear>(c, GFX_COMMAND_TYPE_CLEAR);
+gfx_push_colors(gfx_t* g, rgba_t colors) {
+  gfx_command_queue_t* c = &g->command_queue; 
+  gfx_command_clear_t* data = _gfx_push_command<gfx_command_clear_t>(c, GFX_COMMAND_TYPE_CLEAR);
   data->colors = colors;
 }
 
 static void
-gfx_push_sprite(Gfx* g, 
-                RGBA colors, 
-                V2 pos, 
-                V2 size,
-                V2 anchor,
-                U32 texture_index,
-                U32 texel_x0, U32 texel_y0, 
-                U32 texel_x1, U32 texel_y1)
+gfx_push_sprite(gfx_t* g, 
+                rgba_t colors, 
+                v2f_t pos, 
+                v2f_t size,
+                v2f_t anchor,
+                u32_t texture_index,
+                u32_t texel_x0, u32_t texel_y0, 
+                u32_t texel_x1, u32_t texel_y1)
 {
-  Gfx_Command_Queue* c = &g->command_queue; 
-  auto* data = _gfx_push_command<Gfx_Command_Sprite>(c, GFX_COMMAND_TYPE_SPRITE);
+  gfx_command_queue_t* c = &g->command_queue; 
+  auto* data = _gfx_push_command<gfx_command_sprite_t>(c, GFX_COMMAND_TYPE_SPRITE);
   data->colors = colors;
   data->texture_index = texture_index;
 
@@ -379,13 +379,13 @@ gfx_push_sprite(Gfx* g,
 }
 
 static void
-gfx_push_filled_rect(Gfx* g, 
-                     RGBA colors, 
-                     V2 pos, F32 rot, V2 size)
+gfx_push_filled_rect(gfx_t* g, 
+                     rgba_t colors, 
+                     v2f_t pos, f32_t rot, v2f_t size)
 {
-  Gfx_Command_Queue* c = &g->command_queue; 
+  gfx_command_queue_t* c = &g->command_queue; 
 
-  auto* data = _gfx_push_command<Gfx_Command_Rect>(c, GFX_COMMAND_TYPE_RECT);
+  auto* data = _gfx_push_command<gfx_command_rect_t>(c, GFX_COMMAND_TYPE_RECT);
   data->colors = colors;
   data->pos = pos;
   data->rot = rot;
@@ -394,12 +394,12 @@ gfx_push_filled_rect(Gfx* g,
 
 
 static void
-gfx_push_filled_triangle(Gfx* g,
-                         RGBA colors,
-                         V2 p0, V2 p1, V2 p2)
+gfx_push_filled_triangle(gfx_t* g,
+                         rgba_t colors,
+                         v2f_t p0, v2f_t p1, v2f_t p2)
 {
-  Gfx_Command_Queue* c = &g->command_queue; 
-  auto* data = _gfx_push_command<Gfx_Command_Triangle>(c, GFX_COMMAND_TYPE_TRIANGLE);
+  gfx_command_queue_t* c = &g->command_queue; 
+  auto* data = _gfx_push_command<gfx_command_triangle_t>(c, GFX_COMMAND_TYPE_TRIANGLE);
   data->colors = colors;
   data->p0 = p0;
   data->p1 = p1;
@@ -407,30 +407,30 @@ gfx_push_filled_triangle(Gfx* g,
 }
 
 static void
-gfx_push_advance_depth(Gfx* g) {
-  Gfx_Command_Queue* c = &g->command_queue; 
-  _gfx_push_command<Gfx_Command_Advance_Depth>(c, GFX_COMMAND_TYPE_ADVANCE_DEPTH);
+gfx_push_advance_depth(gfx_t* g) {
+  gfx_command_queue_t* c = &g->command_queue; 
+  _gfx_push_command<gfx_command_advance_depth_t>(c, GFX_COMMAND_TYPE_ADVANCE_DEPTH);
 }
 
 static void 
-gfx_push_line(Gfx* g, 
-              V2 p0, V2 p1,
-              F32 thickness,
-              RGBA colors) 
+gfx_push_line(gfx_t* g, 
+              v2f_t p0, v2f_t p1,
+              f32_t thickness,
+              rgba_t colors) 
 { 
-  Gfx_Command_Queue* q = &g->command_queue; 
+  gfx_command_queue_t* q = &g->command_queue; 
   // NOTE(Momo): Min.Y needs to be lower than Max.y
   
   if (p0.y > p1.y) {
     swap(p0.x, p1.x);
   }
   
-  V2 line_vector = p1 - p0;
-  F32 line_length = v2_len(line_vector);
-  V2 line_mid = v2_mid(p1, p0);
+  v2f_t line_vector = p1 - p0;
+  f32_t line_length = v2f_len(line_vector);
+  v2f_t line_mid = v2f_mid(p1, p0);
   
-  V2 x_axis = v2_set(1.f, 0.f);
-  F32 angle = v2_angle(line_vector, x_axis);
+  v2f_t x_axis = v2f_set(1.f, 0.f);
+  f32_t angle = v2f_angle(line_vector, x_axis);
   
   gfx_push_filled_rect(g, colors, 
                        {line_mid.x, line_mid.y},
@@ -439,9 +439,9 @@ gfx_push_line(Gfx* g,
 }
 
 static void
-gfx_push_filled_circle(Gfx* g, V2 center, F32 radius,
-                       U32 sections,
-                       RGBA color)
+gfx_push_filled_circle(gfx_t* g, v2f_t center, f32_t radius,
+                       u32_t sections,
+                       rgba_t color)
 {
   // We must have at least 3 sections
   // which would form a triangle
@@ -449,20 +449,20 @@ gfx_push_filled_circle(Gfx* g, V2 center, F32 radius,
     assert(sections >= 3);
     return;
   }
-  Gfx_Command_Queue* q = &g->command_queue; 
-  F32 section_angle = TAU_32/sections;
-  F32 current_angle = 0.f;
+  gfx_command_queue_t* q = &g->command_queue; 
+  f32_t section_angle = TAU_32/sections;
+  f32_t current_angle = 0.f;
 
   // Basically it's just a bunch of triangles
-  for(U32 section_id = 0;
+  for(u32_t section_id = 0;
       section_id < sections;
       ++section_id)
   {
-    F32 next_angle = current_angle + section_angle; 
+    f32_t next_angle = current_angle + section_angle; 
 
-    V2 p0 = center;
-    V2 p1 = p0 + v2_set(cos_f32(current_angle), sin_f32(current_angle)) * radius;
-    V2 p2 = p0 + v2_set(cos_f32(next_angle), sin_f32(next_angle)) * radius; 
+    v2f_t p0 = center;
+    v2f_t p1 = p0 + v2f_set(cos_f32(current_angle), sin_f32(current_angle)) * radius;
+    v2f_t p2 = p0 + v2f_set(cos_f32(next_angle), sin_f32(next_angle)) * radius; 
 
     gfx_push_filled_triangle(g, color, p0, p1, p2); 
     current_angle += section_angle;
@@ -471,9 +471,9 @@ gfx_push_filled_circle(Gfx* g, V2 center, F32 radius,
 
 
 static  void
-gfx_push_circle_outline(Gfx* g, V2 center, F32 radius, F32 thickness, U32 line_count, RGBA color) 
+gfx_push_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
 {
-  Gfx_Command_Queue* q = &g->command_queue; 
+  gfx_command_queue_t* q = &g->command_queue; 
 
   // NOTE(Momo): Essentially a bunch of lines
   // We can't really have a surface with less than 3 lines
@@ -481,17 +481,17 @@ gfx_push_circle_outline(Gfx* g, V2 center, F32 radius, F32 thickness, U32 line_c
     assert(line_count >= 3);
     return;
   }
-  F32 angle_increment = TAU_32 / line_count;
-  V2 pt1 = v2_set( 0.f, radius); 
-  V2 pt2 = v2_rotate(pt1, angle_increment);
+  f32_t angle_increment = TAU_32 / line_count;
+  v2f_t pt1 = v2f_set( 0.f, radius); 
+  v2f_t pt2 = v2f_rotate(pt1, angle_increment);
   
-  for (U32 i = 0; i < line_count; ++i) {
-    V2 p0 = v2_add(pt1, center);
-    V2 p1 = v2_add(pt2, center);
+  for (u32_t i = 0; i < line_count; ++i) {
+    v2f_t p0 = v2f_add(pt1, center);
+    v2f_t p1 = v2f_add(pt2, center);
     gfx_push_line(g, p0, p1, thickness, color);
     
     pt1 = pt2;
-    pt2 = v2_rotate(pt1, angle_increment);
+    pt2 = v2f_rotate(pt1, angle_increment);
     
   }
 }
@@ -499,13 +499,13 @@ gfx_push_circle_outline(Gfx* g, V2 center, F32 radius, F32 thickness, U32 line_c
 #if 0
 //TODO: Buggy? Or change to AABB? Instead of Rect?
 static void 
-gfx_push_rect_outline(Gfx* g, 
+gfx_push_rect_outline(gfx_t* g, 
                       Rect2 rect,
-                      F32 thickness,
-                      RGBA colors,
-                      F32 pos_z) 
+                      f32_t thickness,
+                      rgba_t colors,
+                      f32_t pos_z) 
 {
-  Gfx_Command_Queue* c = &g->command_queue; 
+  gfx_command_queue_t* c = &g->command_queue; 
   //Bottom
   {
     Line2 line;
@@ -554,31 +554,31 @@ gfx_push_rect_outline(Gfx* g,
 #endif
 
 static void 
-gfx_push_delete_all_textures(Gfx* g) {
-  Gfx_Command_Queue* c = &g->command_queue; 
-  _gfx_push_command<Gfx_Command_Delete_All_Textures>(c, GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES);
+gfx_push_delete_all_textures(gfx_t* g) {
+  gfx_command_queue_t* c = &g->command_queue; 
+  _gfx_push_command<gfx_command_delete_all_textures_t>(c, GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES);
 }
 
 static void 
-gfx_push_delete_texture(Gfx* g, U32 texture_index) {
-  Gfx_Command_Queue* c = &g->command_queue; 
-  auto* data= _gfx_push_command<Gfx_Command_Delete_Texture>(c, GFX_COMMAND_TYPE_DELETE_TEXTURE);
+gfx_push_delete_texture(gfx_t* g, u32_t texture_index) {
+  gfx_command_queue_t* c = &g->command_queue; 
+  auto* data= _gfx_push_command<gfx_command_delete_texture_t>(c, GFX_COMMAND_TYPE_DELETE_TEXTURE);
   data->texture_index = texture_index;
   
 }
 
 static void 
-gfx_push_blend(Gfx* g, Gfx_Blend_Type src, Gfx_Blend_Type dst) {
-  Gfx_Command_Queue* c = &g->command_queue; 
-  auto* data= _gfx_push_command<Gfx_Command_Blend>(c, GFX_COMMAND_TYPE_BLEND);
+gfx_push_blend(gfx_t* g, gfx_blend_type_t src, gfx_blend_type_t dst) {
+  gfx_command_queue_t* c = &g->command_queue; 
+  auto* data= _gfx_push_command<gfx_command_blend_t>(c, GFX_COMMAND_TYPE_BLEND);
   data->src = src;
   data->dst = dst;
 }
 
 static void
-gfx_advance_depth(Gfx* g) {
-  Gfx_Command_Queue* c = &g->command_queue; 
-  _gfx_push_command<Gfx_Command_Advance_Depth>(c, GFX_COMMAND_TYPE_ADVANCE_DEPTH);
+gfx_advance_depth(gfx_t* g) {
+  gfx_command_queue_t* c = &g->command_queue; 
+  _gfx_push_command<gfx_command_advance_depth_t>(c, GFX_COMMAND_TYPE_ADVANCE_DEPTH);
 }
 
 

@@ -26,7 +26,7 @@ test_log(">> " #unit_name " end\n\n"); \
 #include "momo.h"
 
 static inline Block
-test_read_file_to_memory(Arena* allocator, const char* filename) {
+test_read_file_to_memory(arena_t* allocator, const char* filename) {
   Block result = {0};
   FILE* file = fopen(filename, "rb");
   if (!file) { 
@@ -35,10 +35,10 @@ test_read_file_to_memory(Arena* allocator, const char* filename) {
   }
   
   fseek(file, 0, SEEK_END);
-  S32 file_size = ftell(file);
+  s32_t file_size = ftell(file);
   fseek(file, 0, SEEK_SET);
   
-  void* file_memory = arn_push_size(allocator, file_size, 4);
+  void* file_memory = arena_push_size(allocator, file_size, 4);
   fread(file_memory, 1, file_size, file); 
   
   result.data = file_memory;
@@ -50,7 +50,7 @@ test_read_file_to_memory(Arena* allocator, const char* filename) {
 }
 
 
-static inline B32
+static inline b32_t
 test_write_memory_to_file(Block block, const char* filename) {
   FILE* file = fopen(filename, "wb");
   if (!file) {

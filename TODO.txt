@@ -1,12 +1,12 @@
-Moe
-  Arena Profiler
+moe_t
+  arena_t profiler_t
 
 Lit Scene
   Level selection (after we make 10 levels I guess)
   Improve game end transitions
   Each level should have a title before showing the level
 
-Assets 
+assets_t 
   9 Slice 
   Audio/Sound
 

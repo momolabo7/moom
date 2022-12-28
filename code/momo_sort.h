@@ -4,14 +4,14 @@
 
 // Chances are that we won't be sorting 
 // more than 32-bits worth of indices?
-struct Sort_Entry {
-  F32 key;
-  U32 index;
+struct sort_entry_t {
+  f32_t key;
+  u32_t index;
 };
 
 static void
-_sort_swap_entries(Sort_Entry* a, Sort_Entry* b) {
-  Sort_Entry temp = *b;
+_sort_swap_entries(sort_entry_t* a, sort_entry_t* b) {
+  sort_entry_t temp = *b;
   *b = *a;
   *a = temp;
 }
@@ -19,21 +19,21 @@ _sort_swap_entries(Sort_Entry* a, Sort_Entry* b) {
 ///////////////////////////////////////////////////////////////////
 // Quick sort
 //
-static U32
-_quicksort_partition(Sort_Entry* a,
-                     U32 start, 
-                     U32 ope) 
+static u32_t
+_quicksort_partition(sort_entry_t* a,
+                     u32_t start, 
+                     u32_t ope) 
 {
   // Save the rightmost index as pivot
   // This frees up the right most index as a slot
-  U32 pivot_idx = ope-1;
-  U32 eventual_pivot_idx = start;
+  u32_t pivot_idx = ope-1;
+  u32_t eventual_pivot_idx = start;
   
-  for (U32 i = start; i < ope-1; ++i) {
-    Sort_Entry* i_ptr = a + i;
-    Sort_Entry* pivot_ptr = a + pivot_idx;
+  for (u32_t i = start; i < ope-1; ++i) {
+    sort_entry_t* i_ptr = a + i;
+    sort_entry_t* pivot_ptr = a + pivot_idx;
     if (i_ptr->key < pivot_ptr->key) {
-      Sort_Entry* eventual_pivot_ptr = a + eventual_pivot_idx;
+      sort_entry_t* eventual_pivot_ptr = a + eventual_pivot_idx;
       _sort_swap_entries(i_ptr, eventual_pivot_ptr);
       ++eventual_pivot_idx;
     }
@@ -47,20 +47,20 @@ _quicksort_partition(Sort_Entry* a,
 
 // NOTE(Momo): This is done inplace
 static void
-_quicksort_range(Sort_Entry* a, 
-                 U32 start, 
-                 U32 ope) 
+_quicksort_range(sort_entry_t* a, 
+                 u32_t start, 
+                 u32_t ope) 
 {
   if (ope - start <= 1) {
     return;
   }
-  U32 pivot = _quicksort_partition(a, start, ope);
+  u32_t pivot = _quicksort_partition(a, start, ope);
   _quicksort_range(a, start, pivot);
   _quicksort_range(a, pivot+1, ope);
 }
 
 static void
-quicksort(Sort_Entry* entries, U32 entry_count) {
+quicksort(sort_entry_t* entries, u32_t entry_count) {
   _quicksort_range(entries, 0, entry_count);
 
 }

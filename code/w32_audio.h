@@ -3,12 +3,12 @@
 
 
 static Platform_Audio*
-w32_audio_load(U32 samples_per_second, 
-               U16 bits_per_sample,
-               U16 channels,
-               U32 latency_frames,
-               U32 refresh_rate,
-               Arena* allocator);
+w32_audio_load(u32_t samples_per_second, 
+               u16_t bits_per_sample,
+               u16_t channels,
+               u32_t latency_frames,
+               u32_t refresh_rate,
+               arena_t* allocator);
 
 
 static void

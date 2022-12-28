@@ -1,34 +1,34 @@
 #ifndef MOMO_STREAM_H
 #define MOMO_STREAM_H
 
-struct Stream {
-  U8* data;
-  UMI size;
-  UMI pos;
+struct stream_t {
+  u8_t* data;
+  umi_t size;
+  umi_t pos;
 	
   // For bit reading
-  U32 bit_buffer;
-  U32 bit_count;
+  u32_t bit_buffer;
+  u32_t bit_count;
 };
 
 
-static void   srm_init(Stream* s, void* memory, UMI memory_size);
-static void   srm_reset(Stream* s);
-static B32    srm_is_eos(Stream* s);
-static U8*    srm_consume_block(Stream* s, UMI amount);
-static void   srm_write_block(Stream* s, void* src, UMI size);
-static void   srm_flush_bits(Stream* s);
-static U32		srm_consume_bits(Stream* s, U32 amount);
+static void   stream_init(stream_t* s, void* memory, umi_t memory_size);
+static void   stream_reset(stream_t* s);
+static b32_t    stream_is_eos(stream_t* s);
+static u8_t*    stream_consume_block(stream_t* s, umi_t amount);
+static void   stream_write_block(stream_t* s, void* src, umi_t size);
+static void   stream_flush_bits(stream_t* s);
+static u32_t		stream_consume_bits(stream_t* s, u32_t amount);
 
-#define srm_consume(t,s) (t*)srm_consume_block((s), sizeof(t))
-#define srm_write(s,item) srm_write_block((s), &(item), sizeof(item));
+#define stream_consume(t,s) (t*)stream_consume_block((s), sizeof(t))
+#define stream_write(s,item) stream_write_block((s), &(item), sizeof(item));
 
 
 ///////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 static void
-srm_init(Stream* s, void* memory, UMI memory_size) {
-	s->data = (U8*)memory;
+stream_init(stream_t* s, void* memory, umi_t memory_size) {
+	s->data = (u8_t*)memory;
 	s->size = memory_size;
   s->pos = 0;
   s->bit_buffer = 0;
@@ -36,50 +36,50 @@ srm_init(Stream* s, void* memory, UMI memory_size) {
 }
 
 static void
-srm_reset(Stream* s) {
+stream_reset(stream_t* s) {
   s->pos = 0;
 }
 
-static B32
-srm_is_eos(Stream* s) {
+static b32_t
+stream_is_eos(stream_t* s) {
   return s->pos >= s->size;
 }
 
-static U8*
-srm_consume_block(Stream* s, UMI amount) {
+static u8_t*
+stream_consume_block(stream_t* s, umi_t amount) {
 	if(s->pos + amount <= s->size) {
-    U8* ret = s->data + s->pos;
+    u8_t* ret = s->data + s->pos;
     s->pos += amount;
     return ret;
   }
-  return null;
+  return nullptr;
 }
 
 static void
-srm_write_block(Stream* s, void* src, UMI src_size) {
+stream_write_block(stream_t* s, void* src, umi_t src_size) {
 	assert(s->pos + src_size <= s->size);
   copy_memory(s->data + s->pos, src, src_size);
   s->pos += src_size; 
 }
 
 static void
-srm_flush_bits(Stream* s){
+stream_flush_bits(stream_t* s){
 	s->bit_buffer = 0;
 	s->bit_count = 0;
 }
 
 // Bits are consumed from LSB to MSB
-static U32
-srm_consume_bits(Stream* s, U32 amount){
+static u32_t
+stream_consume_bits(stream_t* s, u32_t amount){
   assert(amount <= 32);
   
   while(s->bit_count < amount) {
-    U32 byte = *srm_consume(U8, s);
+    u32_t byte = *stream_consume(u8_t, s);
     s->bit_buffer |= (byte << s->bit_count);
     s->bit_count += 8;
   }
   
-  U32 result = s->bit_buffer & ((1 << amount) - 1); 
+  u32_t result = s->bit_buffer & ((1 << amount) - 1); 
   
   s->bit_count -= amount;
   s->bit_buffer >>= amount;

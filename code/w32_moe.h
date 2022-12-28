@@ -41,18 +41,18 @@ struct W32_Work {
 // TODO(momo): Is it possible to use a vector?
 struct W32_Work_Queue {
   W32_Work entries[256];
-  U32 volatile next_entry_to_read;
-  U32 volatile next_entry_to_write;
+  u32_t volatile next_entry_to_read;
+  u32_t volatile next_entry_to_write;
   
-  U32 volatile completion_count;
-  U32 volatile completion_goal;
+  u32_t volatile completion_count;
+  u32_t volatile completion_goal;
   HANDLE semaphore; 
   
 };
 
 struct W32_Loaded_Code {
   // Need to fill these up
-  U32 function_count;
+  u32_t function_count;
   const char** function_names;
   const char* module_path;
   void** functions;
@@ -62,27 +62,27 @@ struct W32_Loaded_Code {
   const char* tmp_path;
 #endif  
   
-  B32 is_valid;
+  b32_t is_valid;
   HMODULE dll; 
 };
 
 struct W32_File {
   HANDLE handle;
-  U32 cabinet_index;
+  u32_t cabinet_index;
 };
 
 // TODO(momo): is it possible to use a vector? 
 struct W32_File_Cabinet {
   W32_File files[32]; 
-  U32 free_files[32];
-  U32 free_file_count;
+  u32_t free_files[32];
+  u32_t free_file_count;
 };
 
 struct W32_State {
-  B32 is_running;
+  b32_t is_running;
   
-  F32 moe_width;
-  F32 moe_height;
+  f32_t moe_width;
+  f32_t moe_height;
   
   W32_Work_Queue work_queue;
   W32_File_Cabinet file_cabinet;
@@ -105,11 +105,11 @@ w32_log_proc(const char* fmt, ...) {
   OutputDebugStringA(buffer);
 }
 
-Profiler _profiler = {0};
-Profiler* profiler = &_profiler;
+profiler_t _profiler = {0};
+profiler_t* profiler = &_profiler;
 
 #define w32_log(...) w32_log_proc(__VA_ARGS__)
-#define w32_profile_block(...) prf_block(profiler, __VA_ARGS__)
+#define w32_profile_block(...) profiler_block(profiler, __VA_ARGS__)
 #else
 #define w32_log(...)
 #define w32_profiler_block(...)
@@ -118,53 +118,53 @@ Profiler* profiler = &_profiler;
 static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }
 static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }
 
-static inline V2U
+static inline v2u_t
 w32_get_window_dims(HWND window) {
 	RECT rect;
 	GetWindowRect(window, &rect);
   
-  V2U ret;
-  ret.w = U32(rect.right - rect.left);
-  ret.h = U32(rect.bottom - rect.top);
+  v2u_t ret;
+  ret.w = u32_t(rect.right - rect.left);
+  ret.h = u32_t(rect.bottom - rect.top);
   
   return ret;
 	
 }
 
-static V2U
+static v2u_t
 w32_get_client_dims(HWND window) {
 	RECT rect;
 	GetClientRect(window, &rect);
   
-  V2U ret;
-  ret.w = U32(rect.right - rect.left);
-  ret.h = U32(rect.bottom - rect.top);
+  v2u_t ret;
+  ret.w = u32_t(rect.right - rect.left);
+  ret.h = u32_t(rect.bottom - rect.top);
   
   return ret;
 	
 }
 
 static RECT 
-w32_calc_render_region(U32 window_w, 
-                       U32 window_h, 
-                       F32 aspect_ratio)
+w32_calc_render_region(u32_t window_w, 
+                       u32_t window_h, 
+                       f32_t aspect_ratio)
 {
 	assert(aspect_ratio > 0.f && window_w > 0 && window_h > 0);
   
 	RECT ret;
 	
-	F32 optimal_window_w = (F32)window_h * aspect_ratio;
-	F32 optimal_window_h = (F32)window_w * 1.f/aspect_ratio;
+	f32_t optimal_window_w = (f32_t)window_h * aspect_ratio;
+	f32_t optimal_window_h = (f32_t)window_w * 1.f/aspect_ratio;
 	
-	if (optimal_window_w > (F32)window_w) {
+	if (optimal_window_w > (f32_t)window_w) {
 		// NOTE(Momo): width has priority - top and bottom bars
 		ret.left = 0;
 		ret.right = window_w;
 		
-		F32 empty_height = (F32)window_h - optimal_window_h;
+		f32_t empty_height = (f32_t)window_h - optimal_window_h;
 		
-		ret.bottom = (U32)(empty_height * 0.5f);
-		ret.top = ret.bottom + (U32)optimal_window_h;
+		ret.bottom = (u32_t)(empty_height * 0.5f);
+		ret.top = ret.bottom + (u32_t)optimal_window_h;
 	}
 	else {
 		// NOTE(Momo): height has priority - left and right bars
@@ -172,10 +172,10 @@ w32_calc_render_region(U32 window_w,
 		ret.top = window_h;
 		
 		
-		F32 empty_width = (F32)window_w - optimal_window_w;
+		f32_t empty_width = (f32_t)window_w - optimal_window_w;
 		
-		ret.left = (U32)(empty_width * 0.5f);
-		ret.right = ret.left + (U32)optimal_window_w;
+		ret.left = (u32_t)(empty_width * 0.5f);
+		ret.right = ret.left + (u32_t)optimal_window_w;
 	}
 	
 	return ret;
@@ -188,18 +188,18 @@ w32_get_performance_counter(void) {
   return result;
 }
 
-static U64
+static u64_t
 w32_get_performance_counter_u64(void) {
   LARGE_INTEGER counter = w32_get_performance_counter();
-  U64 ret = (U64)counter.QuadPart;
+  u64_t ret = (u64_t)counter.QuadPart;
   return ret;
 }
-static F32
+static f32_t
 w32_get_secs_elapsed(LARGE_INTEGER start,
                      LARGE_INTEGER end,
                      LARGE_INTEGER performance_frequency) 
 {
-  return (F32(end.QuadPart - start.QuadPart)) / performance_frequency.QuadPart;
+  return (f32_t(end.QuadPart - start.QuadPart)) / performance_frequency.QuadPart;
 }
 
 static inline LARGE_INTEGER
@@ -223,9 +223,9 @@ w32_get_file_last_write_time(const char* filename) {
 }
 
 // NOTE(Momo): This function is accessed by multiple threads!
-static B32
+static b32_t
 w32_do_next_work_entry(W32_Work_Queue* wq) {
-  B32 should_sleep = false;
+  b32_t should_sleep = false;
   
   // NOTE(Momo): Generally, we want to do: 
   // 1. Get index of next work to do
@@ -241,8 +241,8 @@ w32_do_next_work_entry(W32_Work_Queue* wq) {
   // queue's next-work index to the value that this thread
   // THINKS it should be updated to, THEN we do the work.
   
-  U32 old_next_entry_to_read = wq->next_entry_to_read;
-  U32 new_next_entry_to_read = (old_next_entry_to_read + 1) % array_count(wq->entries);
+  u32_t old_next_entry_to_read = wq->next_entry_to_read;
+  u32_t new_next_entry_to_read = (old_next_entry_to_read + 1) % array_count(wq->entries);
   
   if (old_next_entry_to_read != wq->next_entry_to_write) {
     DWORD initial_value = 
@@ -293,8 +293,8 @@ w32_worker_func(LPVOID ctx) {
 }
 
 
-static B32
-w32_init_work_queue(W32_Work_Queue* wq, U32 thread_count) {
+static b32_t
+w32_init_work_queue(W32_Work_Queue* wq, u32_t thread_count) {
   wq->semaphore = CreateSemaphoreEx(0,
                                     0,                                
                                     thread_count,
@@ -302,7 +302,7 @@ w32_init_work_queue(W32_Work_Queue* wq, U32 thread_count) {
   
   if (wq->semaphore == NULL) return false;
   
-  for (U32 i = 0; i < thread_count; ++i) {
+  for (u32_t i = 0; i < thread_count; ++i) {
     DWORD thread_id;
     HANDLE thread = CreateThread(NULL, 0, 
                                  w32_worker_func, 
@@ -321,8 +321,8 @@ w32_init_work_queue(W32_Work_Queue* wq, U32 thread_count) {
 // NOTE(Momo): This is not very thread safe. Other threads shouldn't call this.
 static void
 w32_add_task_entry(W32_Work_Queue* wq, void (*callback)(void* ctx), void *data) {
-  U32 old_next_entry_to_write = wq->next_entry_to_write;
-  U32 new_next_entry_to_write = (old_next_entry_to_write + 1) % array_count(wq->entries);
+  u32_t old_next_entry_to_write = wq->next_entry_to_write;
+  u32_t new_next_entry_to_write = (old_next_entry_to_write + 1) % array_count(wq->entries);
   assert(wq->next_entry_to_read != new_next_entry_to_write);  
   
   W32_Work* entry = wq->entries + old_next_entry_to_write;
@@ -339,7 +339,7 @@ w32_add_task_entry(W32_Work_Queue* wq, void (*callback)(void* ctx), void *data) 
 
 static void
 w32_init_file_cabinet(W32_File_Cabinet* c) {
-  for(U32 i = 0; i < array_count(c->files); ++i) {
+  for(u32_t i = 0; i < array_count(c->files); ++i) {
     c->files[i].cabinet_index = i;
     c->free_files[i] = i;
   }
@@ -351,7 +351,7 @@ w32_get_next_free_file(W32_File_Cabinet* c) {
   if (c->free_file_count == 0) {
     return nullptr;
   }
-  U32 free_file_index = c->free_files[c->free_file_count--];
+  u32_t free_file_index = c->free_files[c->free_file_count--];
   return c->files + free_file_index; 
   
 }
@@ -362,10 +362,10 @@ w32_return_file(W32_File_Cabinet* c, W32_File* f) {
 }
 
 static Platform_Memory_Block*
-w32_allocate_memory(UMI size)
+w32_allocate_memory(umi_t size)
 {
-  UMI total_size = size + sizeof(W32_Memory_Block);
-  UMI base_offset = sizeof(W32_Memory_Block);
+  umi_t total_size = size + sizeof(W32_Memory_Block);
+  umi_t base_offset = sizeof(W32_Memory_Block);
 
 
   W32_Memory_Block* block = (W32_Memory_Block*)
@@ -374,10 +374,10 @@ w32_allocate_memory(UMI size)
                    total_size,
                    MEM_RESERVE | MEM_COMMIT, 
                    PAGE_READWRITE);
-  if (!block) return null;
+  if (!block) return nullptr;
 
 
-  block->platform_block.data = (U8*)block + base_offset; 
+  block->platform_block.data = (u8_t*)block + base_offset; 
   block->platform_block.size = size;
 
   W32_Memory_Block* sentinel = &w32_state.memory_sentinel;
@@ -432,8 +432,8 @@ w32_load_code(W32_Loaded_Code* code) {
   code->is_valid = false;
   
 #if INTERNAL
-  B32 copy_success = false;
-  for (U32 attempt = 0; attempt < 100; ++attempt) {
+  b32_t copy_success = false;
+  for (u32_t attempt = 0; attempt < 100; ++attempt) {
     if(CopyFile(code->module_path, code->tmp_path, false)) {
       copy_success = true;
       break;
@@ -449,7 +449,7 @@ w32_load_code(W32_Loaded_Code* code) {
   
   if (code->dll) {
     code->is_valid = true;
-    for (U32 function_index = 0; 
+    for (u32_t function_index = 0; 
          function_index < code->function_count; 
          ++function_index) 
     {
@@ -472,14 +472,14 @@ w32_load_code(W32_Loaded_Code* code) {
 }
 
 #if INTERNAL
-static B32
+static b32_t
 w32_reload_code_if_outdated(W32_Loaded_Code* code) {
-  B32 reloaded = false;
+  b32_t reloaded = false;
   // Check last modified date
   LARGE_INTEGER last_write_time = w32_get_file_last_write_time(code->module_path);
   if(last_write_time.QuadPart > code->module_write_time.QuadPart) { 
     w32_unload_code(code); 
-    for (U32 i = 0; i < 100; ++i ){
+    for (u32_t i = 0; i < 100; ++i ){
       w32_load_code(code);
       if (code->is_valid) {
         w32_log("[%s] reloaded successfully\n", code->module_path);

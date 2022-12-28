@@ -17,39 +17,39 @@
 #define MOMO_COLORS_H
 
 
-// Each component of RGBA are in the range [0 - 1].
-typedef struct RGB {
-  F32 r, g, b;   
-} RGB;
+// Each component of rgba_t are in the range [0 - 1].
+typedef struct rgb_t {
+  f32_t r, g, b;   
+} rgb_t;
 
 // Each component are in the range of [0 - 1].
 // For hue, normally it is a number between [0 - 360], but
 // it will be mapped linearly to [0 - 1] in this case.
 // i.e. hue 0 is 0 degrees, hue 1 is 360 degrees.
-typedef struct HSL {
-  F32 h, s, l;  
-} HSL;
+typedef struct hsl_t {
+  f32_t h, s, l;  
+} hsl_t;
 
-typedef struct RGBA {
+typedef struct rgba_t {
   union {
-    struct { F32 r, g, b; };  
-    RGB rgb;
+    struct { f32_t r, g, b; };  
+    rgb_t rgb;
   };
-  F32 a;
-} RGBA;
+  f32_t a;
+} rgba_t;
 
-static RGBA rgba_set(F32 r, F32 g, F32 b, F32 a);
-static RGBA rgba_hex(U32 hex);  
-static HSL  hsl_set(F32 h, F32 s, F32 l);
-static HSL  rbg_to_hsl(RGB c);
-static RGB  hsl_to_rgb(HSL c);
+static rgba_t rgba_set(f32_t r, f32_t g, f32_t b, f32_t a);
+static rgba_t rgba_hex(u32_t hex);  
+static hsl_t  hsl_set(f32_t h, f32_t s, f32_t l);
+static hsl_t  rbg_to_hsl(rgb_t c);
+static rgb_t  hsl_to_rgb(hsl_t c);
 
 #define RGBA_WHITE rgba_set(1.f, 1.f, 1.f, 1.f)
 ////////////////////////////////////////////////////////////
 // IMPLEMENTATION
-static RGBA 
-rgba_set(F32 r, F32 g, F32 b, F32 a){
-	RGBA ret;
+static rgba_t 
+rgba_set(f32_t r, f32_t g, f32_t b, f32_t a){
+	rgba_t ret;
 	ret.r = r;
 	ret.g = g;
 	ret.b = b;
@@ -58,21 +58,21 @@ rgba_set(F32 r, F32 g, F32 b, F32 a){
 	return ret;
 }
 
-static RGBA
-rgba_hex(U32 hex) {
-  RGBA ret;
+static rgba_t
+rgba_hex(u32_t hex) {
+  rgba_t ret;
   
-  ret.r = (F32)((hex & 0xFF000000) >> 24)/255.f;
-  ret.g = (F32)((hex & 0x00FF0000) >> 16)/255.f;
-  ret.b = (F32)((hex & 0x0000FF00) >> 8)/255.f;
-  ret.a = (F32)(hex & 0x000000FF)/255.f;
+  ret.r = (f32_t)((hex & 0xFF000000) >> 24)/255.f;
+  ret.g = (f32_t)((hex & 0x00FF0000) >> 16)/255.f;
+  ret.b = (f32_t)((hex & 0x0000FF00) >> 8)/255.f;
+  ret.a = (f32_t)(hex & 0x000000FF)/255.f;
   
   return ret;
 }
 
-static HSL
-hsl_set(F32 h, F32 s, F32 l) {
-  HSL ret;
+static hsl_t
+hsl_set(f32_t h, f32_t s, f32_t l) {
+  hsl_t ret;
   ret.h = h;
   ret.s = s;
   ret.l = l;
@@ -80,24 +80,24 @@ hsl_set(F32 h, F32 s, F32 l) {
   return ret;     
 }
 
-static HSL 
-rbg_to_hsl(RGB c) {
+static hsl_t 
+rbg_to_hsl(rgb_t c) {
   assert(c.r >= 0.f &&
          c.r <= 1.f &&
          c.g >= 0.f &&
          c.g <= 1.f &&
          c.b >= 0.f &&
          c.b <= 1.f);
-  HSL ret;
-  F32 max = max_of(max_of(c.r, c.g), c.b);
-  F32 min = min_of(min_of(c.r, c.g), c.b);
+  hsl_t ret;
+  f32_t max = max_of(max_of(c.r, c.g), c.b);
+  f32_t min = min_of(min_of(c.r, c.g), c.b);
   
-  F32 delta = max - min; // aka chroma
+  f32_t delta = max - min; // aka chroma
   
   
   if (is_close_f32(max, c.r)) {
-    F32 segment = (c.g - c.b)/delta;
-    F32 shift = 0.f / 60;
+    f32_t segment = (c.g - c.b)/delta;
+    f32_t shift = 0.f / 60;
     if (segment < 0) {
       shift = 360 / 60;
     }
@@ -108,14 +108,14 @@ rbg_to_hsl(RGB c) {
   }
   
   else if (is_close_f32(max, c.g)) {
-    F32 segment = (c.b - c.r)/delta;
-    F32 shift = 120.f / 60.f;
+    f32_t segment = (c.b - c.r)/delta;
+    f32_t shift = 120.f / 60.f;
     ret.h = (segment + shift) * 60.f;
   }
   
   else if (is_close_f32(max, c.b)) {
-    F32 segment = (c.r - c.g)/delta;
-    F32 shift = 240.f / 60.f;
+    f32_t segment = (c.r - c.g)/delta;
+    f32_t shift = 240.f / 60.f;
     ret.h = ((segment + shift) * 60.f);
   }
   else {
@@ -136,8 +136,8 @@ rbg_to_hsl(RGB c) {
   return ret;
 }
 
-static F32 
-_hue_to_color(F32 p, F32 q, F32 t) {
+static f32_t 
+_hue_to_color(f32_t p, f32_t q, f32_t t) {
   
   if (t < 0) 
     t += 1.f;
@@ -156,21 +156,21 @@ _hue_to_color(F32 p, F32 q, F32 t) {
 
 
 
-static RGB 
-hsl_to_rgb(HSL c) {
+static rgb_t 
+hsl_to_rgb(hsl_t c) {
   assert(c.h >= 0.f &&
          c.h <= 360.f &&
          c.s >= 0.f &&
          c.s <= 1.f &&
          c.l >= 0.f &&
          c.l <= 1.f);
-  RGB ret;
+  rgb_t ret;
   if(is_close_f32(c.s, 0.f)) {
     ret.r = ret.g = ret.b = c.l; // achromatic
   }
   else {
-    F32 q = c.l < 0.5f ? c.l * (1 + c.s) : c.l + c.s - c.l * c.s;
-    F32 p = 2.f * c.l - q;
+    f32_t q = c.l < 0.5f ? c.l * (1 + c.s) : c.l + c.s - c.l * c.s;
+    f32_t p = 2.f * c.l - q;
     ret.r = _hue_to_color(p, q, c.h + 1.f/3.f);
     ret.g = _hue_to_color(p, q, c.h);
     ret.b = _hue_to_color(p, q, c.h - 1.f/3.f);

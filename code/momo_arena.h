@@ -3,75 +3,70 @@
 // USAGE:
 //   
 //   Default Allocation API
-//     arn_push_size()            -- Allocates raw memory based on size
-//     arn_push_size_zero()       -- Same as arn_push_size but memory is initialized to zero 
+//     arena_push_size()            -- Allocates raw memory based on size
+//     arena_push_size_zero()       -- Same as arena_push_size but memory is initialized to zero 
 //
 //   Helper Allocation API
-//     arn_push()                 -- Allocates memory based on type. 
-//     arn_push_align()           -- arn_push() with alignment specificaion
-//     arn_push_zero()            -- arn_push() but memory is zero'ed.
-//     arn_push_align_zero        -- arn_push_align() but memory is zero'ed.
+//     arena_push()                 -- Allocates memory based on type. 
+//     arena_push_align()           -- arena_push() with alignment specificaion
+//     arena_push_zero()            -- arena_push() but memory is zero'ed.
+//     arena_push_align_zero        -- arena_push_align() but memory is zero'ed.
 //
-//     arn_push_arr()             -- Allocates an array of a type. 
-//     arn_push_arr_align()       -- arn_push_arr() with alignment specification.
-//     arn_push_arr_zero()        -- arn_push_arr() but memory is zero'ed.
-//     arn_push_arr_align_zero()  -- arn_push_arr_align() but memory is zero'ed.
+//     arena_push_arr()             -- Allocates an array of a type. 
+//     arena_push_arr_align()       -- arena_push_arr() with alignment specification.
+//     arena_push_arr_zero()        -- arena_push_arr() but memory is zero'ed.
+//     arena_push_arr_align_zero()  -- arena_push_arr_align() but memory is zero'ed.
 //
 //
-// TODO:
-//   - Rethink 'Temporary Memory API'. 
-//       Maybe remove the whole thing? 
-//       We can just  do a 'get_current_pos' and 'pop to pos'.
-//       It feels janky to have a Arena_Marker store an arena like this. 
-//
+
 
 #ifndef MOMO_ARENA_H
 #define MOMO_ARENA_H
 
-struct Arena {
-	U8* memory;
-	UMI pos;
-	UMI cap;
+struct arena_t {
+	u8_t* memory;
+	umi_t pos;
+	umi_t cap;
 };
 
-// Temporary memory API used to arn_revert an arena to an original state;
-struct Arena_Marker {
-  Arena* arena;
-  UMI old_pos;
+// Temporary memory API used to arena_revert an arena to an original state;
+struct arena_marker_t {
+  arena_t* arena;
+  umi_t old_pos;
 };
 
-static void   arn_init(Arena* a, void* mem, UMI cap);
-static void   arn_clear(Arena* a);
-static void*  arn_push_size(Arena* a, UMI size, UMI align);
-static void*  arn_push_size_zero(Arena* a, UMI size, UMI align); 
-static B32    arn_partition(Arena* a, Arena* partition, UMI size, UMI align);
-static B32    arn_partition_with_remaining(Arena* a, Arena* partition, UMI align);
-static UMI    arn_remaining(Arena* a);
+static void   arena_init(arena_t* a, void* mem, umi_t cap);
+static void   arena_clear(arena_t* a);
+static void*  arena_push_size(arena_t* a, umi_t size, umi_t align);
+static void*  arena_push_size_zero(arena_t* a, umi_t size, umi_t align); 
+static b32_t    arena_partition(arena_t* a, arena_t* partition, umi_t size, umi_t align);
+static b32_t    arena_partition_with_remaining(arena_t* a, arena_t* partition, umi_t align);
+static umi_t    arena_remaining(arena_t* a);
 
-#define arn_push_arr_align(t,b,n,a) (t*)arn_push_size(b, sizeof(t)*(n), a)
-#define arn_push_arr(t,b,n)         (t*)arn_push_size(b, sizeof(t)*(n),alignof(t))
-#define arn_push_align(t,b,a)       (t*)arn_push_size(b, sizeof(t), a)
-#define arn_push(t,b)               (t*)arn_push_size(b, sizeof(t), alignof(t))
+#define arena_push_arr_align(t,b,n,a) (t*)arena_push_size(b, sizeof(t)*(n), a)
+#define arena_push_arr(t,b,n)         (t*)arena_push_size(b, sizeof(t)*(n),alignof(t))
+#define arena_push_align(t,b,a)       (t*)arena_push_size(b, sizeof(t), a)
+#define arena_push(t,b)               (t*)arena_push_size(b, sizeof(t), alignof(t))
 
-#define arn_push_arr_zero_align(t,b,n,a) (t*)arn_push_size_zero(b, sizeof(t)*(n), a)
-#define arn_push_arr_zero(t,b,n)         (t*)arn_push_size_zero(b, sizeof(t)*(n),alignof(t))
-#define arn_push_zero_align(t,b,a)       (t*)arn_push_size_zero(b, sizeof(t), a)
-#define arn_push_zero(t,b)               (t*)arn_push_size_zero(b, sizeof(t), alignof(t))
-
-
-static Arena_Marker arn_mark(Arena* a);
-static void arn_revert(Arena_Marker marker);
+#define arena_push_arr_zero_align(t,b,n,a) (t*)arena_push_size_zero(b, sizeof(t)*(n), a)
+#define arena_push_arr_zero(t,b,n)         (t*)arena_push_size_zero(b, sizeof(t)*(n),alignof(t))
+#define arena_push_zero_align(t,b,a)       (t*)arena_push_size_zero(b, sizeof(t), a)
+#define arena_push_zero(t,b)               (t*)arena_push_size_zero(b, sizeof(t), alignof(t))
 
 
-# define __arn_set_revert_point(a,l) \
-  auto _arn_marker_##l = arn_mark(a); \
-  defer{arn_revert(_arn_marker_##l);};
-# define _arn_set_revert_point(a,l) __arn_set_revert_point(a,l)
-# define arn_set_revert_point(arena) _arn_set_revert_point(arena, __LINE__) 
+static arena_marker_t arena_mark(arena_t* a);
+static void arena_revert(arena_marker_t marker);
+
+
+# define __arena_set_revert_point(a,l) \
+  auto _arena_marker_##l = arena_mark(a); \
+  defer{arena_revert(_arena_marker_##l);};
+# define _arena_set_revert_point(a,l) __arena_set_revert_point(a,l)
+# define arena_set_revert_point(arena) _arena_set_revert_point(arena, __LINE__) 
 
 static void
-arn_init(Arena* a, void* mem, UMI cap) {
-  a->memory = (U8*)mem;
+arena_init(arena_t* a, void* mem, umi_t cap) {
+  a->memory = (u8_t*)mem;
   a->pos = 0; 
   a->cap = cap;
 }
@@ -79,26 +74,26 @@ arn_init(Arena* a, void* mem, UMI cap) {
 
 
 static void
-arn_clear(Arena* a) {
+arena_clear(arena_t* a) {
   a->pos = 0;
 }
 
 
-static UMI 
-arn_remaining(Arena* a) {
+static umi_t 
+arena_remaining(arena_t* a) {
   return a->cap - a->pos;
 }
 
 static void* 
-arn_push_size(Arena* a, UMI size, UMI align) {
-  if (size == 0) return null;
+arena_push_size(arena_t* a, umi_t size, umi_t align) {
+  if (size == 0) return nullptr;
 	
-	UMI imem = ptr_to_int(a->memory);
-	UMI adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
+	umi_t imem = ptr_to_int(a->memory);
+	umi_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
 	
-  if (imem + adjusted_pos + size >= imem + a->cap) return null;
+  if (imem + adjusted_pos + size >= imem + a->cap) return nullptr;
 	
-	U8* ret = int_to_ptr(imem + adjusted_pos);
+	u8_t* ret = int_to_ptr(imem + adjusted_pos);
 	a->pos = adjusted_pos + size;
 	
 	return ret;
@@ -106,69 +101,69 @@ arn_push_size(Arena* a, UMI size, UMI align) {
 }
 
 static void*
-arn_push_size_zero(Arena* a, UMI size, UMI align) 
+arena_push_size_zero(arena_t* a, umi_t size, umi_t align) 
 {
-  void* mem = arn_push_size(a, size, align);
-  if (!mem) return null;
+  void* mem = arena_push_size(a, size, align);
+  if (!mem) return nullptr;
   zero_memory(mem, size);
   return mem;
 }
 
 
-static B32
-arn_partition(Arena* a, Arena* partition, UMI size, UMI align) {	
-	void* mem = arn_push_size(a, size, align);
+static b32_t
+arena_partition(arena_t* a, arena_t* partition, umi_t size, umi_t align) {	
+	void* mem = arena_push_size(a, size, align);
   if (!mem) return false; 
-  arn_init(partition, mem, size);
+  arena_init(partition, mem, size);
   return true;
   
 }
 
 
-static B32    
-arn_partition_with_remaining(Arena* a, Arena* partition, UMI align){
-	UMI imem = ptr_to_int(a->memory);
-	UMI adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
+static b32_t    
+arena_partition_with_remaining(arena_t* a, arena_t* partition, umi_t align){
+	umi_t imem = ptr_to_int(a->memory);
+	umi_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
 	
   if (imem + adjusted_pos >= imem + a->cap) return false;
-  UMI size = a->cap - adjusted_pos;	
+  umi_t size = a->cap - adjusted_pos;	
 	void* mem = int_to_ptr(imem + adjusted_pos);
 	a->pos = a->cap;
 
-  arn_init(partition, mem, size);
+  arena_init(partition, mem, size);
 	return true;
 
 }
 /*
 static inline void* 
-Arena_BootBlock(UMI struct_size,
-                UMI offset_to_arena,
+Arena_BootBlock(umi_t struct_size,
+                umi_t offset_to_arena,
                 void* memory,
-                UMI memory_size)
+                umi_t memory_size)
 {
   assert(struct_size < memory_size);
-	UMI imem = ptr_to_int(memory);
+	umi_t imem = ptr_to_int(memory);
 	imem = align_up_pow2(imem, 16);
 	
-	void* arena_memory = (U8*)memory + struct_size; 
-	UMI arena_memory_size = memory_size - struct_size;
-	Arena* arena_ptr = (Arena*)((U8*)memory + offset_to_arena);
+	void* arena_memory = (u8_t*)memory + struct_size; 
+	umi_t arena_memory_size = memory_size - struct_size;
+	arena_t* arena_ptr = (arena_t*)((u8_t*)memory + offset_to_arena);
 	(*arena_ptr) = Arena_Create(arena_memory, arena_memory_size);
 	
 	return int_to_ptr(imem);
 }
 //*/
 
-static Arena_Marker
-arn_mark(Arena* a) {
-  Arena_Marker ret;
+static arena_marker_t
+arena_mark(arena_t* a) {
+  arena_marker_t ret;
   ret.arena = a;
   ret.old_pos = a->pos;
   return ret;
 }
 
 static void
-arn_revert(Arena_Marker marker) {
+arena_revert(arena_marker_t marker) {
   marker.arena->pos = marker.old_pos;
 }
 

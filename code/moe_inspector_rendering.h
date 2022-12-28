@@ -5,32 +5,32 @@
 
 
 static void 
-update_and_render_inspector(Moe* moe) 
+inspector_update_and_render(moe_t* moe) 
 {
-  Inspector* inspector = &moe->inspector;
-  Assets* assets = &moe->assets;
+  inspector_t* inspector = &moe->inspector;
+  assets_t* assets = &moe->assets;
   Platform* platform = moe->platform;
 
   paint_sprite(moe, moe->blank_sprite, 
-               v2_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
-               v2_set(MOE_WIDTH, MOE_HEIGHT),
+               v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
+               v2f_set(MOE_WIDTH, MOE_HEIGHT),
                {0.f, 0.f, 0.f, 0.5f});
   gfx_advance_depth(platform->gfx);
   
-  F32 line_height = 32.f;
+  f32_t line_height = 32.f;
   sb8_make(sb, 256);
   
-  for(U32 entry_index = 0; entry_index < inspector->entry_count; ++entry_index)
+  for(u32_t entry_index = 0; entry_index < inspector->entry_count; ++entry_index)
   {
-    Inspector_Entry* entry = inspector->entries + entry_index;
+    inspector_entry_t* entry = inspector->entries + entry_index;
     switch(entry->type){
       case INSPECTOR_ENTRY_TYPE_U32: {
-        U32 item = *(U32*)entry->item;
+        u32_t item = *(u32_t*)entry->item;
         sb8_push_fmt(sb, str8_from_lit("[%10S] %7u"),
                      entry->name, item);
       } break;
       case INSPECTOR_ENTRY_TYPE_F32: {
-        F32 item = *(F32*)entry->item;
+        f32_t item = *(f32_t*)entry->item;
         sb8_push_fmt(sb, str8_from_lit("[%10S] %7f"),
                      entry->name, item);
       } break;
@@ -38,7 +38,7 @@ update_and_render_inspector(Moe* moe)
     
     
     
-    F32 y = MOE_HEIGHT - line_height * (entry_index+1);
+    f32_t y = MOE_HEIGHT - line_height * (entry_index+1);
     
     paint_text(moe, moe->debug_font, 
                sb->str,

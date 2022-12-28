@@ -1,12 +1,12 @@
 // Authors: Gerald Wong
 // 
-// This file processes TTF files:
+// This file processes ttf_t files:
 // - Extracts font and glyph information
 // - Performs rasterization
 //
 // NOTES:
 // - Only works in little-endian OS
-// - Only reads and writes into 32-bit RGBA format
+// - Only reads and writes into 32-bit rgba_t format
 // - Prioritizes formats recognized by Windows first.
 // 
 // TODO:
@@ -28,70 +28,70 @@
 # define ttf_log(...)
 #endif 
 
-struct TTF {
-  U8* data;
-  U32 glyph_count;
+struct ttf_t {
+  u8_t* data;
+  u32_t glyph_count;
   
   // these are positions from data
-  U32 loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;
-  U32 cmap_mappings;
+  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;
+  u32_t cmap_mappings;
   
-  U16 loca_format;
+  u16_t loca_format;
 };
 
-static B32 ttf_read(TTF* ttf, void* memory, UMI memory_size);
+static b32_t ttf_read(ttf_t* ttf, void* memory, umi_t memory_size);
 
-static U32 ttf_get_glyph_index(const TTF* ttf, U32 codepoint);
+static u32_t ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint);
 // returns 0 for invalid codepoints
 
-static void ttf_get_glyph_horizontal_metrics(const TTF* ttf, U32 glyph_index, S16* advance_width, S16* left_side_bearing);
+static void ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, u32_t glyph_index, s16_t* advance_width, s16_t* left_side_bearing);
 
-static F32 ttf_get_scale_for_pixel_height(const TTF* ttf, F32 pixel_height);
+static f32_t ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height);
 // This returns the 'scale factor' you need to apply to the font's coordinates
 // (box, glyphs, etc) to scale it to a font height equals to pixel_height
 
 
-static U32* ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32* out_h, Arena* allocator);
-// Returns array of U32 that represents 4 byte RGBA pixels where the glyph is white and the background is transparent
+static u32_t* ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w, u32_t* out_h, arena_t* allocator);
+// Returns array of u32_t that represents 4 byte rgba_t pixels where the glyph is white and the background is transparent
 
-static S32 ttf_get_glyph_kerning(const TTF* ttf, U32 glyph_index_1, U32 glyph_index_2);
-static B32 ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, S32* x0, S32* y0, S32* x1, S32* y1);
-static void ttf_get_glyph_bitmap_box(const TTF* ttf, U32 glyph_index, F32 scale, S32* x0, S32* y0, S32* x1, S32* y1);
+static s32_t ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2);
+static b32_t ttf_get_glyph_box(const ttf_t* ttf, u32_t glyph_index, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y1);
+static void ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y1);
 
 ///////////////////////////////////////////////////////////////
 // IMPLEMENTATION
-struct _TTF_Glyph_Point{
-  S16 x, y; 
-  U8 flags;
+struct _ttf_glyph_point_t{
+  s16_t x, y; 
+  u8_t flags;
 };
 
-struct _TTF_Glyph_Outline{
-  _TTF_Glyph_Point* points;
-  U32 point_count;
+struct _ttf_glyph_outline_t{
+  _ttf_glyph_point_t* points;
+  u32_t point_count;
   
-  U16* end_point_indices; // as many as contour_counts
-  U32 contour_count;
+  u16_t* end_point_indices; // as many as contour_counts
+  u32_t contour_count;
 };
 
-struct _TTF_Glyph_Paths{
-  V2* vertices;
-  U32 vertex_count;
+struct _ttf_glyph_paths_t{
+  v2f_t* vertices;
+  u32_t vertex_count;
   
-  U32* path_lengths;
-  U32 path_count;
+  u32_t* path_lengths;
+  u32_t path_count;
 };
 
 
-struct _TTF_Edge{
-  V2 p0, p1;
-  B32 is_inverted;
-  F32 x_intersect;
+struct _ttf_edge_t{
+  v2f_t p0, p1;
+  b32_t is_inverted;
+  f32_t x_intersect;
 };
 
-struct _TTF_Edge_List{
-  U32 cap;
-  U32 count;
-  _TTF_Edge** e;
+struct _ttf_edge_list_t{
+  u32_t cap;
+  u32_t count;
+  _ttf_edge_t** e;
 };
 
 enum {
@@ -112,27 +112,27 @@ enum {
   _TTF_CMAP_MS_ID_UNICODE_FULL = 10,
 };
 
-static U16
-_ttf_read_u16(U8* location) {
-  return endian_swap_u16(*(U16*)location);
+static u16_t
+_ttf_read_u16(u8_t* location) {
+  return endian_swap_u16(*(u16_t*)location);
 };
 
-static S16
-_ttf_read_s16(U8* location) {
-  return endian_swap_u16(*(U16*)location);
+static s16_t
+_ttf_read_s16(u8_t* location) {
+  return endian_swap_u16(*(u16_t*)location);
 };
-static U32
-_ttf_read_u32(U8* location) {
-  return endian_swap_u32(*(U32*)location);
+static u32_t
+_ttf_read_u32(u8_t* location) {
+  return endian_swap_u32(*(u32_t*)location);
 };
 
 // returns 0 is failure
-static U32
-_ttf_get_offset_to_glyph(const TTF* ttf, U32 glyph_index) {
+static u32_t
+_ttf_get_offset_to_glyph(const ttf_t* ttf, u32_t glyph_index) {
   
   if(glyph_index >= ttf->glyph_count) return 0;
   
-  U32 g1 = 0, g2 = 0;
+  u32_t g1 = 0, g2 = 0;
   switch(ttf->loca_format) {
     case 0: { // short format
       g1 = ttf->glyf + _ttf_read_u16(ttf->data + ttf->loca + glyph_index * 2) * 2;
@@ -152,10 +152,10 @@ _ttf_get_offset_to_glyph(const TTF* ttf, U32 glyph_index) {
 }
 
 
-static B32 
-ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, S32* x0, S32* y0, S32* x1, S32* y1) {
+static b32_t 
+ttf_get_glyph_box(const ttf_t* ttf, u32_t glyph_index, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y1) {
   
-  U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
+  u32_t g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   if (g <= 0) return false;
   
   if (x0) (*x0) = _ttf_read_s16(ttf->data + g + 2);
@@ -167,13 +167,13 @@ ttf_get_glyph_box(const TTF* ttf, U32 glyph_index, S32* x0, S32* y0, S32* x1, S3
 }
 
 static void
-ttf_get_glyph_bitmap_box(const TTF* ttf, U32 glyph_index, F32 scale, S32* x0, S32* y0, S32* x1, S32* y1) {
-  S32 bx0, by0, bx1, by1;
+ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y1) {
+  s32_t bx0, by0, bx1, by1;
   if (ttf_get_glyph_box(ttf, glyph_index, &bx0, &by0, &bx1, &by1)) {
-    if(x0) (*x0) = (S32)(floor_f32((F32)bx0 * scale));
-    if(y0) (*y0) = (S32)(floor_f32((F32)by0 * scale));
-    if(x1) (*x1) = (S32)(ceil_f32((F32)bx1 * scale));
-    if(y1) (*y1) = (S32)(ceil_f32((F32)by1 * scale));
+    if(x0) (*x0) = (s32_t)(floor_f32((f32_t)bx0 * scale));
+    if(y0) (*y0) = (s32_t)(floor_f32((f32_t)by0 * scale));
+    if(x1) (*x1) = (s32_t)(ceil_f32((f32_t)bx1 * scale));
+    if(y1) (*y1) = (s32_t)(ceil_f32((f32_t)by1 * scale));
   }
   else {
     if(x0) (*x0) = 0;
@@ -183,8 +183,8 @@ ttf_get_glyph_bitmap_box(const TTF* ttf, U32 glyph_index, F32 scale, S32* x0, S3
   }
 }
 
-static S32
-_ttf_get_kern_advance(const TTF* ttf, S32 g1, S32 g2) 
+static s32_t
+_ttf_get_kern_advance(const ttf_t* ttf, s32_t g1, s32_t g2) 
 {
   // NOTE(Momo): We only care about format 0, which Windows cares
   // For now, OSX has too many things to handle for this table 
@@ -192,7 +192,7 @@ _ttf_get_kern_advance(const TTF* ttf, S32 g1, S32 g2)
   //
   if (!ttf->kern) return 0;
   
-  U8* data = ttf->data + ttf->kern;
+  u8_t* data = ttf->data + ttf->kern;
   
   // number of tables must be 1 or more
   if (_ttf_read_u16(data+2) < 1) return 0;
@@ -204,16 +204,16 @@ _ttf_get_kern_advance(const TTF* ttf, S32 g1, S32 g2)
   //if ((_ttf_read_u16(data+8) & 0x0F) != 0) return 0;
   
   // We will be performing some kind of binary search
-  S32 l = 0;
-  S32 r = _ttf_read_u16(data+10) -1;
+  s32_t l = 0;
+  s32_t r = _ttf_read_u16(data+10) -1;
   
   // the value we are looking for
-  U32 needle = g1 << 16 | g2;   
+  u32_t needle = g1 << 16 | g2;   
   while(l <= r) {
-    S32 m = (l + r) >> 1; // half
+    s32_t m = (l + r) >> 1; // half
     
     // 18 is where the kerning table is
-    U32 straw = _ttf_read_u32(data+18+(m*6));
+    u32_t straw = _ttf_read_u32(data+18+(m*6));
     if (needle < straw) {
       r = m - 1;
     }
@@ -238,37 +238,37 @@ _ttf_get_kern_advance(const TTF* ttf, S32 g1, S32 g2)
 // | 
 // ----x
 //
-static B32 
-_ttf_get_glyph_outline(const TTF* ttf, 
-                       _TTF_Glyph_Outline* outline,
-                       U32 glyph_index, 
-                       Arena* allocator) 
+static b32_t 
+_ttf_get_glyph_outline(const ttf_t* ttf, 
+                       _ttf_glyph_outline_t* outline,
+                       u32_t glyph_index, 
+                       arena_t* allocator) 
 {
-  U32 g = _ttf_get_offset_to_glyph(ttf, glyph_index);
-  S16 number_of_contours = _ttf_read_s16(ttf->data + g + 0);
+  u32_t g = _ttf_get_offset_to_glyph(ttf, glyph_index);
+  s16_t number_of_contours = _ttf_read_s16(ttf->data + g + 0);
   
   
   if (number_of_contours > 0) { // single glyph case
-    U16 point_count = _ttf_read_u16(ttf->data + g + 10 + number_of_contours*2-2) + 1;
-    U16 instruction_length = _ttf_read_u16(ttf->data + g + 10 + number_of_contours*2);
+    u16_t point_count = _ttf_read_u16(ttf->data + g + 10 + number_of_contours*2-2) + 1;
+    u16_t instruction_length = _ttf_read_u16(ttf->data + g + 10 + number_of_contours*2);
     
-    U32 flags = g + 10 + number_of_contours*2 + 2 + instruction_length*2;
+    u32_t flags = g + 10 + number_of_contours*2 + 2 + instruction_length*2;
     
     // output end pts of contours
     //test_eval_d(number_of_contours);
     //test_eval_d(point_count);
    
-    _TTF_Glyph_Point* points = arn_push_arr(_TTF_Glyph_Point, allocator, point_count);
+    _ttf_glyph_point_t* points = arena_push_arr(_ttf_glyph_point_t, allocator, point_count);
     if (!points) return false;
     zero_range(points, point_count);
-    U8* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
+    u8_t* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
     
     // Load the flags
     // flag info: https://docs.microsoft.com/en-us/typography/opentype/spec/glyf    
     {
-      U8 current_flags = 0;
-      U8 flag_count = 0;
-      for (U32 i = 0; i < point_count; ++i) {
+      u8_t current_flags = 0;
+      u8_t flag_count = 0;
+      for (u32_t i = 0; i < point_count; ++i) {
         if (flag_count == 0) {
           current_flags = *point_itr++;
           if (current_flags & 0x8) {
@@ -285,13 +285,13 @@ _ttf_get_glyph_outline(const TTF* ttf,
     
     // Load the x coordinates
     {
-      S16 x = 0;
-      for (U32 i = 0; i < point_count; ++i ){
+      s16_t x = 0;
+      for (u32_t i = 0; i < point_count; ++i ){
         flags = points[i].flags;
         if (flags & 0x2) {
           // if this is set, corresponding x-coordinate is 1 byte long
           // and the sign is determined by 0x10
-          S16 dx = (S16)*point_itr++;
+          s16_t dx = (s16_t)*point_itr++;
           x += (flags & 0x10) ? dx : -dx;            
         }
         else {
@@ -301,7 +301,7 @@ _ttf_get_glyph_outline(const TTF* ttf,
             // i.e. we do nothing
           }
           else {
-            // otherwise, this is 2 bytes long and intepreted as S16
+            // otherwise, this is 2 bytes long and intepreted as s16_t
             x += _ttf_read_s16(point_itr);
             point_itr += 2;
           }
@@ -313,13 +313,13 @@ _ttf_get_glyph_outline(const TTF* ttf,
     
     // Load the y coordinates
     {
-      S16 y = 0;
-      for (U32 i = 0; i < point_count; ++i ){
+      s16_t y = 0;
+      for (u32_t i = 0; i < point_count; ++i ){
         flags = points[i].flags;
         if (flags & 0x4) {
           // if this is set, corresponding y-coordinate is 1 byte long
           // and the sign is determined by 0x10
-          S16 dy = (S16)*point_itr++;
+          s16_t dy = (s16_t)*point_itr++;
           y += (flags & 0x20) ? dy : -dy;            
         }
         else {
@@ -329,7 +329,7 @@ _ttf_get_glyph_outline(const TTF* ttf,
             // i.e. we do nothing
           }
           else {
-            // otherwise, this is 2 bytes long and intepreted as S16
+            // otherwise, this is 2 bytes long and intepreted as s16_t
             y += _ttf_read_s16(point_itr);
             point_itr += 2;
           }
@@ -340,12 +340,12 @@ _ttf_get_glyph_outline(const TTF* ttf,
     }
     
     // mark the points that are contour endpoints
-    U16* end_pt_indices = arn_push_arr(U16, allocator, number_of_contours);
+    u16_t* end_pt_indices = arena_push_arr(u16_t, allocator, number_of_contours);
     if (!end_pt_indices) return false;
     zero_range(end_pt_indices, number_of_contours); 
     {
-      U32 contour_end_pts = g + 10; 
-      for (S16 i = 0; i < number_of_contours; ++i) {
+      u32_t contour_end_pts = g + 10; 
+      for (s16_t i = 0; i < number_of_contours; ++i) {
         end_pt_indices[i] =_ttf_read_u16(ttf->data + contour_end_pts + i*2) ;
       }
     }
@@ -369,30 +369,30 @@ _ttf_get_glyph_outline(const TTF* ttf,
 ///////////////////////////////////////////////////////
 //~Glyph path generation
 static void
-_ttf_add_vertex(V2* vertices, U32 n, F32 x, F32 y) {
+_ttf_add_vertex(v2f_t* vertices, u32_t n, f32_t x, f32_t y) {
   if (!vertices) return;
   vertices[n].x = x;
   vertices[n].y = y;
 }
 
 static void
-_ttf_add_vertex(V2* vertices, U32 n, V2 v) {
+_ttf_add_vertex(v2f_t* vertices, u32_t n, v2f_t v) {
   if (!vertices) return;
   vertices[n] = v;
 }
 
 
 static void
-_ttf_tessellate_bezier(V2* vertices,
-                       U32* vertex_count,
-                       V2 p0, 
-                       V2 p1,
-                       V2 p2,
-                       F32 flatness_squared,
-                       U32 n) 
+_ttf_tessellate_bezier(v2f_t* vertices,
+                       u32_t* vertex_count,
+                       v2f_t p0, 
+                       v2f_t p1,
+                       v2f_t p2,
+                       f32_t flatness_squared,
+                       u32_t n) 
 {
-  V2 mid = (p0 + p1*2.f + p2) * 0.25f;
-  V2 d = v2_mid(p0, p2) - mid;
+  v2f_t mid = (p0 + p1*2.f + p2) * 0.25f;
+  v2f_t d = v2f_mid(p0, p2) - mid;
   
   // if n == 16, that's 65535 segments which should be
   // more than enough. Increase this number if we are 
@@ -401,10 +401,10 @@ _ttf_tessellate_bezier(V2* vertices,
   
   if (d.x*d.x + d.y*d.y > flatness_squared) {
     _ttf_tessellate_bezier(vertices, vertex_count, p0,
-                           v2_mid(p0, p1), 
+                           v2f_mid(p0, p1), 
                            mid, flatness_squared, n+1 );
     _ttf_tessellate_bezier(vertices, vertex_count, mid,
-                           v2_mid(p1, p2), 
+                           v2f_mid(p1, p2), 
                            p2, flatness_squared, n+1 );
   }
   else {
@@ -415,29 +415,29 @@ _ttf_tessellate_bezier(V2* vertices,
   
 }
 
-static B32 
-_ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,
-                                  _TTF_Glyph_Paths* paths,
-                                  Arena* allocator) 
+static b32_t 
+_ttf_get_paths_from_glyph_outline(_ttf_glyph_outline_t* outline,
+                                  _ttf_glyph_paths_t* paths,
+                                  arena_t* allocator) 
 {
   // Count the amount of points generated
-  V2* vertices = 0;
-  U32 vertex_count = 0;
-  F32 flatness = 0.35f;
-  F32 flatness_squared = flatness*flatness;
+  v2f_t* vertices = 0;
+  u32_t vertex_count = 0;
+  f32_t flatness = 0.35f;
+  f32_t flatness_squared = flatness*flatness;
  
-  U32* path_lengths = arn_push_arr(U32, allocator, outline->contour_count);
+  u32_t* path_lengths = arena_push_arr(u32_t, allocator, outline->contour_count);
   if (!path_lengths) return false;
   zero_range(path_lengths, outline->contour_count);
-  U32 path_count = 0;
+  u32_t path_count = 0;
   
   // On the first pass, we count the number of points we will generate.
   // On the second pass, we will allocate the list and actually fill 
   // the list with generated points.
-  for (U32 pass = 0; pass < 2; ++pass)
+  for (u32_t pass = 0; pass < 2; ++pass)
   {
     if (pass == 1) {
-      vertices = arn_push_arr(V2, allocator, vertex_count);
+      vertices = arena_push_arr(v2f_t, allocator, vertex_count);
       if (!vertices) return false;
       zero_range(vertices, vertex_count);
       vertex_count = 0;
@@ -446,30 +446,30 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,
     
     // NOTE(Momo): For now, we assume that the first point is 
     // always on curve, which is not always the case.
-    V2 anchor_pt = {};
-    U32 j = 0;
-    for (U32 i = 0; i < outline->contour_count; ++i) {
-      U32 contour_start_index = j;
-      U32 start_vertex_count = vertex_count;
+    v2f_t anchor_pt = {};
+    u32_t j = 0;
+    for (u32_t i = 0; i < outline->contour_count; ++i) {
+      u32_t contour_start_index = j;
+      u32_t start_vertex_count = vertex_count;
       
       for(; j <= outline->end_point_indices[i]; ++j) {
-        U8 flags = outline->points[j].flags;
+        u8_t flags = outline->points[j].flags;
         
         if (flags & 0x1) { // on curve 
-          anchor_pt.x = (F32)outline->points[j].x;
-          anchor_pt.y = (F32)outline->points[j].y;
+          anchor_pt.x = (f32_t)outline->points[j].x;
+          anchor_pt.y = (f32_t)outline->points[j].y;
           
           _ttf_add_vertex(vertices, vertex_count++, anchor_pt);
         }
         else{ // not on curve
-          U32 next_index = (j == outline->end_point_indices[i]) ? contour_start_index : j+1;
+          u32_t next_index = (j == outline->end_point_indices[i]) ? contour_start_index : j+1;
           
           // Check if next point is on curve
-          V2 p0 = anchor_pt;
-          V2 p1 = { (F32)outline->points[j].x, (F32)outline->points[j].y };
-          V2 p2 = { (F32)outline->points[next_index].x, (F32)outline->points[next_index].y } ;
+          v2f_t p0 = anchor_pt;
+          v2f_t p1 = { (f32_t)outline->points[j].x, (f32_t)outline->points[j].y };
+          v2f_t p2 = { (f32_t)outline->points[next_index].x, (f32_t)outline->points[next_index].y } ;
           
-          U8 next_flags = outline->points[next_index].flags;
+          u8_t next_flags = outline->points[next_index].flags;
           if (!(next_flags & 0x1)) {
             // not on curve, thus it's a cubic curve, 
             // so we have to generate midpoint
@@ -501,23 +501,23 @@ _ttf_get_paths_from_glyph_outline(_TTF_Glyph_Outline* outline,
 
 //////////////////////////////////////////////////////////
 //~Public interface implementation
-static U32
-ttf_get_glyph_index(const TTF* ttf, U32 codepoint) {
+static u32_t
+ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint) {
   
-  U16 format = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 0);
+  u16_t format = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 0);
   
   switch(format) {
     case 4: { // 
-      U16 seg_count = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 6) >> 1;
-      U16 search_range = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 8) >> 1;
-      U16 entry_selector = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 10);
-      U16 range_shift = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 12) >> 1;
+      u16_t seg_count = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 6) >> 1;
+      u16_t search_range = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 8) >> 1;
+      u16_t entry_selector = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 10);
+      u16_t range_shift = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 12) >> 1;
       
-      U32 end_codes = ttf->cmap_mappings + 14;
-      U32 start_codes = end_codes + 2 + (2*seg_count);
-      U32 id_deltas = start_codes + (2*seg_count);
-      U32 id_range_offsets = id_deltas + (2*seg_count);
-      U32 glyph_index_array = id_range_offsets + (2*seg_count);
+      u32_t end_codes = ttf->cmap_mappings + 14;
+      u32_t start_codes = end_codes + 2 + (2*seg_count);
+      u32_t id_deltas = start_codes + (2*seg_count);
+      u32_t id_range_offsets = id_deltas + (2*seg_count);
+      u32_t glyph_index_array = id_range_offsets + (2*seg_count);
       
       if (codepoint == 0xffff) return 0;
       
@@ -527,9 +527,9 @@ ttf_get_glyph_index(const TTF* ttf, U32 codepoint) {
       // on the data given but there are some documentations that seem
       // to suggest against this...
       // 
-      U16 seg_id = 0;
-      U16 end_code = 0;
-      for(U16 i = 0; i < seg_count; ++i) {
+      u16_t seg_id = 0;
+      u16_t end_code = 0;
+      for(u16_t i = 0; i < seg_count; ++i) {
         end_code = _ttf_read_u16(ttf->data + end_codes + (2 * i));
         if( end_code >= codepoint ){
           seg_id = i;
@@ -537,12 +537,12 @@ ttf_get_glyph_index(const TTF* ttf, U32 codepoint) {
         }
       }
       
-      U16 start_code = _ttf_read_u16(ttf->data + start_codes + 2*seg_id);
+      u16_t start_code = _ttf_read_u16(ttf->data + start_codes + 2*seg_id);
       
       if (start_code > codepoint) return 0;
       
-      U16 offset = _ttf_read_u16(ttf->data + id_range_offsets + 2*seg_id);
-      S16 delta = _ttf_read_s16(ttf->data + id_deltas + 2*seg_id);
+      u16_t offset = _ttf_read_u16(ttf->data + id_range_offsets + 2*seg_id);
+      s16_t delta = _ttf_read_s16(ttf->data + id_deltas + 2*seg_id);
       
       if (offset == 0 ){
         return codepoint + delta;
@@ -563,20 +563,20 @@ ttf_get_glyph_index(const TTF* ttf, U32 codepoint) {
 }
 
 
-static F32
-ttf_get_scale_for_pixel_height(const TTF* ttf, F32 pixel_height) {
-  S32 font_height = _ttf_read_s16(ttf->data + ttf->hhea + 4) - _ttf_read_s16(ttf->data + ttf->hhea + 6);
-  return (F32)pixel_height/font_height;
+static f32_t
+ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height) {
+  s32_t font_height = _ttf_read_s16(ttf->data + ttf->hhea + 4) - _ttf_read_s16(ttf->data + ttf->hhea + 6);
+  return (f32_t)pixel_height/font_height;
 }
 
 
 static void 
-ttf_get_glyph_horizontal_metrics(const TTF* ttf, 
-                                 U32 glyph_index, 
-                                 S16* advance_width, 
-                                 S16* left_side_bearing)
+ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, 
+                                 u32_t glyph_index, 
+                                 s16_t* advance_width, 
+                                 s16_t* left_side_bearing)
 {
-  U16 num_of_long_horizontal_metrices = _ttf_read_u16(ttf->data + ttf->hhea + 34);
+  u16_t num_of_long_horizontal_metrices = _ttf_read_u16(ttf->data + ttf->hhea + 34);
 
   if (glyph_index < num_of_long_horizontal_metrices) {
     if (advance_width) (*advance_width) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index);
@@ -590,15 +590,15 @@ ttf_get_glyph_horizontal_metrics(const TTF* ttf,
 }
 
 
-static B32
-ttf_read(TTF* ttf, void* memory, UMI memory_size) {
-  ttf->data = (U8*)memory;
+static b32_t
+ttf_read(ttf_t* ttf, void* memory, umi_t memory_size) {
+  ttf->data = (u8_t*)memory;
   
-  U32 num_tables = _ttf_read_u16(ttf->data + 4);
+  u32_t num_tables = _ttf_read_u16(ttf->data + 4);
   
-  for (U32 i= 0 ; i < num_tables; ++i ) {
-    U32 directory = 12 + (16 * i);
-    U32 tag = _ttf_read_u32(ttf->data + directory + 0);
+  for (u32_t i= 0 ; i < num_tables; ++i ) {
+    u32_t directory = 12 + (16 * i);
+    u32_t tag = _ttf_read_u32(ttf->data + directory + 0);
     
     
     switch(tag) {
@@ -654,20 +654,20 @@ ttf_read(TTF* ttf, void* memory, UMI memory_size) {
   
   // Get index map
   {
-    U32 subtable_count = _ttf_read_u16(ttf->data + ttf->cmap + 2);
+    u32_t subtable_count = _ttf_read_u16(ttf->data + ttf->cmap + 2);
     
-    B32 found_index_table = false;
+    b32_t found_index_table = false;
     
-    for( U32 i = 0; i < subtable_count; ++i) {
-      U32 subtable = ttf->cmap + 4 + (8 * i);
+    for( u32_t i = 0; i < subtable_count; ++i) {
+      u32_t subtable = ttf->cmap + 4 + (8 * i);
       
       
       // We only support unicode encoding...
       // NOTE(Momo): They say mac is discouraged, so we won't care about it.
-      U32 platform_id = _ttf_read_u16(ttf->data + subtable + 0);
+      u32_t platform_id = _ttf_read_u16(ttf->data + subtable + 0);
       switch(platform_id) {
         case _TTF_CMAP_PLATFORM_ID_MICROSOFT: {
-          U32 platform_specific_id = _ttf_read_u16(ttf->data + subtable + 2);
+          u32_t platform_specific_id = _ttf_read_u16(ttf->data + subtable + 2);
           switch(platform_specific_id) {
             case _TTF_CMAP_MS_ID_UNICODE_BMP:
             case _TTF_CMAP_MS_ID_UNICODE_FULL: {
@@ -696,8 +696,8 @@ ttf_read(TTF* ttf, void* memory, UMI memory_size) {
   return true;
 }
 
-static S32 
-ttf_get_glyph_kerning(const TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
+static s32_t 
+ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2) {
   
   if (ttf->gpos) {
     assert(false);
@@ -709,63 +709,63 @@ ttf_get_glyph_kerning(const TTF* ttf, U32 glyph_index_1, U32 glyph_index_2) {
   return 0;
 }
 
-static U32* 
-ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32* out_h, Arena* allocator) 
+static u32_t* 
+ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w, u32_t* out_h, arena_t* allocator) 
 {
-  U32* pixels = 0;
-  make(_TTF_Glyph_Outline, outline);
-  make(_TTF_Glyph_Paths, paths);
+  u32_t* pixels = 0;
+  make(_ttf_glyph_outline_t, outline);
+  make(_ttf_glyph_paths_t, paths);
 
-  S32 x0, y0, x1, y1;
+  s32_t x0, y0, x1, y1;
   ttf_get_glyph_bitmap_box(ttf, glyph_index, scale, &x0, &y0, &x1, &y1);
 
-  U32 width = x1 - x0;
-  U32 height = y1 - y0;
-  U32 size = width * height * 4;
+  u32_t width = x1 - x0;
+  u32_t height = y1 - y0;
+  u32_t size = width * height * 4;
 
   if (width == 0 || height == 0) {
     ttf_log("[ttf] Glyph dimension are bad\nj");
-    return null;
+    return nullptr;
   }
   
-  pixels = arn_push_arr(U32, allocator, size);
+  pixels = arena_push_arr(u32_t, allocator, size);
   if (!pixels) {
     ttf_log("[ttf] Unable to allocate bitmap pixel\n");
-    return null;
+    return nullptr;
   }
   zero_memory(pixels, size);
  
-  arn_set_revert_point(allocator);
+  arena_set_revert_point(allocator);
 
   if(!_ttf_get_glyph_outline(ttf, outline, glyph_index, allocator)) {
     ttf_log("[ttf] Unable to get glyph outline\n");
-    return null;
+    return nullptr;
   }
   if (!_ttf_get_paths_from_glyph_outline(outline, paths, allocator)) {
     ttf_log("[ttf] Unable glyph paths\n");
-    return null;
+    return nullptr;
   }
   
   // generate scaled edges based on points
-  _TTF_Edge* edges = arn_push_arr(_TTF_Edge, allocator, paths->vertex_count);
+  _ttf_edge_t* edges = arena_push_arr(_ttf_edge_t, allocator, paths->vertex_count);
   if (!edges) {
     ttf_log("[ttf] Unable to allocate edges\n");
-    return null;
+    return nullptr;
   }
   zero_range(edges, paths->vertex_count);
   
-  U32 edge_count = 0;
+  u32_t edge_count = 0;
   {
-    U32 vertex_index = 0;
-    for (U32 path_index = 0; 
+    u32_t vertex_index = 0;
+    for (u32_t path_index = 0; 
          path_index < paths->path_count; 
          ++path_index)
     {
-      U32 path_length = paths->path_lengths[path_index];
-      for (U32 i = 0; i < path_length; ++i) {
-        _TTF_Edge edge = {};
-        V2 v0 = paths->vertices[vertex_index];
-        V2 v1 = (i == path_length-1) ? paths->vertices[vertex_index-i] : paths->vertices[vertex_index+1];
+      u32_t path_length = paths->path_lengths[path_index];
+      for (u32_t i = 0; i < path_length; ++i) {
+        _ttf_edge_t edge = {};
+        v2f_t v0 = paths->vertices[vertex_index];
+        v2f_t v1 = (i == path_length-1) ? paths->vertices[vertex_index-i] : paths->vertices[vertex_index+1];
         ++vertex_index;
         
         // Skip if edge is going to be completely horizontal
@@ -794,45 +794,45 @@ ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32*
   
   // Rasterazation algorithm starts here
   // Sort edges by top most edge
-  Sort_Entry* y_edges = arn_push_arr(Sort_Entry, allocator, edge_count);
+  sort_entry_t* y_edges = arena_push_arr(sort_entry_t, allocator, edge_count);
   if (!y_edges) { 
     ttf_log("[ttf] Unable to allocate sort entries for edges\n");
-    return null;
+    return nullptr;
   }
 
-  for (U32 i = 0; i < edge_count; ++i) {
+  for (u32_t i = 0; i < edge_count; ++i) {
     y_edges[i].index = i;
-    y_edges[i].key = -(F32)max_of(edges[i].p0.y, edges[i].p1.y);
+    y_edges[i].key = -(f32_t)max_of(edges[i].p0.y, edges[i].p1.y);
   }
   quicksort(y_edges, edge_count);
 
-  Sort_Entry* active_edges = arn_push_arr(Sort_Entry, allocator, edge_count);
+  sort_entry_t* active_edges = arena_push_arr(sort_entry_t, allocator, edge_count);
   if (!active_edges) {
     ttf_log("[ttf] Unable to allocate sort entries for active edges\n");
-    return null;
+    return nullptr;
   }
   
   // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
   // clearing and refilling the active_edges list per scan line
-  for(U32 y = 0; y <= height; ++y) {
-    U32 act_edge_count = 0; 
-    F32 yf = (F32)y; // 'center' of pixel
+  for(u32_t y = 0; y <= height; ++y) {
+    u32_t act_edge_count = 0; 
+    f32_t yf = (f32_t)y; // 'center' of pixel
     
     // Add to 'active edge list' any edges which have an 
     // uppermost vertex (p0) before y and lowermost vertex (p1) after this y.
     // Also, ignore p1 that ends EXACTLY on this y.
-    for (U32 y_edge_id = 0; y_edge_id < edge_count; ++y_edge_id){
-      _TTF_Edge* edge = edges + y_edges[y_edge_id].index;
+    for (u32_t y_edge_id = 0; y_edge_id < edge_count; ++y_edge_id){
+      _ttf_edge_t* edge = edges + y_edges[y_edge_id].index;
       
       if (edge->p0.y <= yf && edge->p1.y > yf) {
         // calculate the x intersection
-        F32 dx = edge->p1.x - edge->p0.x;
-        F32 dy = edge->p1.y - edge->p0.y;
+        f32_t dx = edge->p1.x - edge->p0.x;
+        f32_t dy = edge->p1.y - edge->p0.y;
         if (dy != 0.f) {
-          F32 t = (yf - edge->p0.y) / dy;
+          f32_t t = (yf - edge->p0.y) / dy;
           edge->x_intersect = edge->p0.x + (t * dx);
          
-          // prepare Sort_Entry for active_edges
+          // prepare sort_entry_t for active_edges
           active_edges[act_edge_count].index = y_edges[y_edge_id].index;
           active_edges[act_edge_count].key = edge->x_intersect;
 
@@ -843,20 +843,20 @@ ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32*
     quicksort(active_edges, act_edge_count);
  
     if (act_edge_count >= 2) {
-      U32 crossings = 0;
-      for (U32 act_edge_id = 0; 
+      u32_t crossings = 0;
+      for (u32_t act_edge_id = 0; 
            act_edge_id < act_edge_count-1;
            ++act_edge_id) 
       {
-        _TTF_Edge* start_edge = edges + active_edges[act_edge_id].index; 
-        _TTF_Edge* end_edge = edges + active_edges[act_edge_id+1].index; 
+        _ttf_edge_t* start_edge = edges + active_edges[act_edge_id].index; 
+        _ttf_edge_t* end_edge = edges + active_edges[act_edge_id+1].index; 
         
         start_edge->is_inverted ? ++crossings : --crossings;
         
         if (crossings > 0) {
-          U32 start_x = (U32)start_edge->x_intersect;
-          U32 end_x = (U32)end_edge->x_intersect;
-          for(U32 x = start_x; x < end_x; ++x) {
+          u32_t start_x = (u32_t)start_edge->x_intersect;
+          u32_t end_x = (u32_t)end_edge->x_intersect;
+          for(u32_t x = start_x; x < end_x; ++x) {
             pixels[x + y * width] = 0xFFFFFFFF;
           }
         }
@@ -865,24 +865,24 @@ ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32*
     
 #if 0 
     // Draw edges in green
-    for (U32 i =0 ; i < edge_count; ++i) 
+    for (u32_t i =0 ; i < edge_count; ++i) 
     {
-      _TTF_Edge* edge = edges + i;
-      F32 ex0 = edge->p0.x;
-      F32 ey0 = edge->p0.y;
+      _ttf_edge_t* edge = edges + i;
+      f32_t ex0 = edge->p0.x;
+      f32_t ey0 = edge->p0.y;
       
-      F32 ex1 = edge->p1.x;
-      F32 ey1 = edge->p1.y;
+      f32_t ex1 = edge->p1.x;
+      f32_t ey1 = edge->p1.y;
       
-      F32 dx = (ex1 - ex0)/100;
-      F32 dy = (ey1 - ey0)/100;
+      f32_t dx = (ex1 - ex0)/100;
+      f32_t dy = (ey1 - ey0)/100;
       
-      F32 xx = ex0;
-      F32 yy = ey0;
-      for (U32 z = 0; z < 100; ++z) {
+      f32_t xx = ex0;
+      f32_t yy = ey0;
+      for (u32_t z = 0; z < 100; ++z) {
         xx += dx;
         yy += dy;
-        pixels[(U32)xx + (U32)yy * width] = 0xFF00FF00;      
+        pixels[(u32_t)xx + (u32_t)yy * width] = 0xFF00FF00;      
       }
     }
 #endif
@@ -894,16 +894,16 @@ ttf_rasterize_glyph(const TTF* ttf, U32 glyph_index, F32 scale, U32* out_w, U32*
 #if 0
   // Draw vertices in red
   
-  for (U32 i =0 ; i < edge_count; ++i) 
+  for (u32_t i =0 ; i < edge_count; ++i) 
   {
     auto* edge = edges + i;
-    U32 x0 = (U32)edge->p0.x;
-    U32 y0 = (U32)edge->p0.y;
+    u32_t x0 = (u32_t)edge->p0.x;
+    u32_t y0 = (u32_t)edge->p0.y;
     pixels[x0 + y0 * bitmap_dims.w] = 0xFF0000FF;
     
     
-    U32 x1 = (U32)edge->p1.x;
-    U32 y1 = (U32)edge->p1.y;
+    u32_t x1 = (u32_t)edge->p1.x;
+    u32_t y1 = (u32_t)edge->p1.y;
     pixels[x1 + y1 * bitmap_dims.w] = 0xFF0000FF;
     
   }

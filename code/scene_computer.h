@@ -3,20 +3,20 @@
 
 
 struct Computer_Selection{
-  String8 text;
+  str8_t text;
   Moe_Mode_Type mode_type;
 };
 
 struct Computer_Selection_List{
-  U32 count;
+  u32_t count;
   Computer_Selection e[10];
 };
 
 struct Computer{
-  U32 selected_id;
+  u32_t selected_id;
   Computer_Selection_List selection_list;
 };
 
-static void computer_tick(Moe* moe);
+static void computer_tick(moe_t* moe);
 
 #endif // MOE_MODE_COMPUTER

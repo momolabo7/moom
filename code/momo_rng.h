@@ -2,20 +2,20 @@
 #define MOMO_RANDOM_H
 
 
-struct RNG {
-  U32 seed;
+struct rng_t {
+  u32_t seed;
 };
 
 static void
-rng_init(RNG* r, U32 seed)
+rng_init(rng_t* r, u32_t seed)
 {
   r->seed = seed;
 }
 
-static U32 
-rng_next(RNG* r)
+static u32_t 
+rng_next(rng_t* r)
 {
-  U32 result = r->seed;
+  u32_t result = r->seed;
 	result ^= result << 13;
 	result ^= result >> 17;
 	result ^= result << 5;
@@ -23,55 +23,55 @@ rng_next(RNG* r)
   return result;
 }
 
-static U32 
-rng_choice(RNG* r, U32 choice_count) {
+static u32_t 
+rng_choice(rng_t* r, u32_t choice_count) {
   return rng_next(r) % choice_count;
 }
 
 // Get number within [0, 1]
-static F32 
-rng_unilateral(RNG* r)
+static f32_t 
+rng_unilateral(rng_t* r)
 {
-  F32 divisor = 1.0f / (F32)U32_MAX;
-  F32 result = divisor*(F32)rng_next(r);
+  f32_t divisor = 1.0f / (f32_t)U32_MAX;
+  f32_t result = divisor*(f32_t)rng_next(r);
   
   return result;
 }
 
 
 // Get number within [-1, 1]
-static F32 
-rng_bilateral(RNG* r)
+static f32_t 
+rng_bilateral(rng_t* r)
 {
-  F32 result = 2.0f * rng_unilateral(r) - 1.0f;  
+  f32_t result = 2.0f * rng_unilateral(r) - 1.0f;  
   return(result);
 }
 
-static F32 
-rng_range_F32(RNG* r, F32 min, F32 max)
+static f32_t 
+rng_range_F32(rng_t* r, f32_t min, f32_t max)
 {
-  F32 result = lerp_f32(min, rng_unilateral(r), max);
+  f32_t result = lerp_f32(min, rng_unilateral(r), max);
   return(result);
 }
 
-static S32 
-rng_range_S32(RNG* r, S32 min, S32 max)
+static s32_t 
+rng_range_S32(rng_t* r, s32_t min, s32_t max)
 {
-  S32 result = min + (S32)(rng_next(r)%((max + 1) - min));
+  s32_t result = min + (s32_t)(rng_next(r)%((max + 1) - min));
   return(result);
 }
 
-static U32
-rng_range_U32(RNG* r, U32 min, U32 max)
+static u32_t
+rng_range_U32(rng_t* r, u32_t min, u32_t max)
 {
-  U32 result = min + (U32)(rng_next(r)%((max + 1) - min));
+  u32_t result = min + (u32_t)(rng_next(r)%((max + 1) - min));
   return(result);
 }
 
-static V2 
-rng_unit_circle(RNG* r) {
-  F32 rand_angle = 2.f * PI_32 * rng_unilateral(r);
-  V2 ret = {0};
+static v2f_t 
+rng_unit_circle(rng_t* r) {
+  f32_t rand_angle = 2.f * PI_32 * rng_unilateral(r);
+  v2f_t ret = {0};
   ret.x = cos_f32(rand_angle);
   ret.y = sin_f32(rand_angle);
 

@@ -16,8 +16,8 @@
 
 #if 0
 static void*
-w32_allocate(UMI memory_size) {
-  return (U8*)VirtualAllocEx(GetCurrentProcess(),
+w32_allocate(umi_t memory_size) {
+  return (u8_t*)VirtualAllocEx(GetCurrentProcess(),
                              0, 
                              memory_size,
                              MEM_RESERVE | MEM_COMMIT, 
@@ -35,15 +35,15 @@ w32_free(void* memory) {
 
 #endif
 
-static B32
-w32_allocate_memory_into_arena(Arena* a, UMI memory_size) {
+static b32_t
+w32_allocate_memory_into_arena(arena_t* a, umi_t memory_size) {
   void* data = VirtualAllocEx(GetCurrentProcess(),
                               0, 
                               memory_size,
                               MEM_RESERVE | MEM_COMMIT, 
                               PAGE_READWRITE);
-  if(data == null) return false;
-  arn_init(a, data, memory_size);
+  if(data == nullptr) return false;
+  arena_init(a, data, memory_size);
   return true;
 }
 
@@ -51,7 +51,7 @@ w32_allocate_memory_into_arena(Arena* a, UMI memory_size) {
 
 
 static void
-w32_free_memory_from_arena(Arena* a) {
+w32_free_memory_from_arena(arena_t* a) {
   VirtualFreeEx(GetCurrentProcess(), 
                 a->memory,    
                 0, 
@@ -59,7 +59,7 @@ w32_free_memory_from_arena(Arena* a) {
 }
 
 
-static B32
+static b32_t
 w32_open_file(Platform_File* file,
               const char* filename, 
               Platform_File_Access access,
@@ -117,15 +117,15 @@ w32_close_file(Platform_File* file) {
   file->platform_data = nullptr;
 }
 
-static B32
-w32_read_file(Platform_File* file, UMI size, UMI offset, void* dest) 
+static b32_t
+w32_read_file(Platform_File* file, umi_t size, umi_t offset, void* dest) 
 { 
   W32_File* w32_file = (W32_File*)file->platform_data;
   
   // Reading the file
   OVERLAPPED overlapped = {};
-  overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
-  overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
+  overlapped.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
+  overlapped.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
   
   DWORD bytes_read;
   
@@ -139,14 +139,14 @@ w32_read_file(Platform_File* file, UMI size, UMI offset, void* dest)
   }
 }
 
-static B32 
-w32_write_file(Platform_File* file, UMI size, UMI offset, void* src)
+static b32_t 
+w32_write_file(Platform_File* file, umi_t size, umi_t offset, void* src)
 {
   W32_File* w32_file = (W32_File*)file->platform_data;
   
   OVERLAPPED overlapped = {};
-  overlapped.Offset = (U32)((offset >> 0) & 0xFFFFFFFF);
-  overlapped.OffsetHigh = (U32)((offset >> 32) & 0xFFFFFFFF);
+  overlapped.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
+  overlapped.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
   
   DWORD bytes_wrote;
   if(WriteFile(w32_file->handle, src, (DWORD)size, &bytes_wrote, &overlapped) &&
@@ -178,7 +178,7 @@ w32_process_input(HWND window, Platform* pf)
     switch(msg.message) {
       case WM_CHAR: {
         assert(pf->char_count < array_count(pf->chars));
-        pf->chars[pf->char_count++] = (U8)msg.wParam;
+        pf->chars[pf->char_count++] = (u8_t)msg.wParam;
       } break;
       case WM_QUIT:
       case WM_DESTROY:
@@ -187,14 +187,14 @@ w32_process_input(HWND window, Platform* pf)
       } break;
       case WM_LBUTTONUP:
       case WM_LBUTTONDOWN: {
-        U32 code = (U32)msg.wParam;
-        B32 is_key_down = msg.message == WM_LBUTTONDOWN;
+        u32_t code = (u32_t)msg.wParam;
+        b32_t is_key_down = msg.message == WM_LBUTTONDOWN;
         pf->button_editor0.now = is_key_down;
       } break;
       case WM_RBUTTONUP:
       case WM_RBUTTONDOWN: {
-        U32 code = (U32)msg.wParam;
-        B32 is_key_down = msg.message == WM_RBUTTONDOWN;
+        u32_t code = (u32_t)msg.wParam;
+        b32_t is_key_down = msg.message == WM_RBUTTONDOWN;
         pf->button_editor1.now = is_key_down;
       } break;
       
@@ -203,8 +203,8 @@ w32_process_input(HWND window, Platform* pf)
       case WM_SYSKEYDOWN:
       case WM_SYSKEYUP:
       {
-        U32 code = (U32)msg.wParam;
-        B32 is_key_down = msg.message == WM_KEYDOWN;
+        u32_t code = (u32_t)msg.wParam;
+        b32_t is_key_down = msg.message == WM_KEYDOWN;
         switch(code) {
           case 0x51: /* Q */ {
             pf->button_rotate_left.now = is_key_down;
@@ -255,7 +255,7 @@ w32_process_input(HWND window, Platform* pf)
 }
 
 static void
-w32_set_moe_dims(F32 width, F32 height) {
+w32_set_moe_dims(f32_t width, f32_t height) {
   assert(width > 0.f && height > 0.f);
 
   // Ignore if there is no change
@@ -283,11 +283,11 @@ w32_set_moe_dims(F32 width, F32 height) {
   LONG monitor_w = w32_rect_width(monitor_info.rcMonitor);
   LONG monitor_h = w32_rect_height(monitor_info.rcMonitor);
  
-  LONG left = monitor_w/2 - (U32)width/2;
-  LONG top = monitor_h/2 - (U32)height/2;
+  LONG left = monitor_w/2 - (u32_t)width/2;
+  LONG top = monitor_h/2 - (u32_t)height/2;
 
   // Make it right at the center!
-  MoveWindow(w32_state.window, left, top, (S32)width + diff.x, (S32)height + diff.y, TRUE);
+  MoveWindow(w32_state.window, left, top, (s32_t)width + diff.x, (s32_t)height + diff.y, TRUE);
 
   }
 
@@ -445,16 +445,16 @@ WinMain(HINSTANCE instance,
   //-Determine refresh rate
   // NOTE(Momo): For now we will adjust according to user's monitor...?
   // We might want to fuck care and just stick to 60 though.
-  U32 monitor_refresh_rate = 60;
+  u32_t monitor_refresh_rate = 60;
   {
     HDC dc = GetDC(window);
     int w32_refresh_rate = GetDeviceCaps(dc, VREFRESH);
     ReleaseDC(window, dc);
     if (w32_refresh_rate > 1) {
-      monitor_refresh_rate = (U32)w32_refresh_rate;
+      monitor_refresh_rate = (u32_t)w32_refresh_rate;
     }
   }
-  F32 target_secs_per_frame = 1.f/(F32)monitor_refresh_rate;
+  f32_t target_secs_per_frame = 1.f/(f32_t)monitor_refresh_rate;
   w32_log("Monitor Refresh Rate: %d Hz\n", monitor_refresh_rate);
   w32_log("Target Secs per Frame: %.2f\n", target_secs_per_frame);
   
@@ -475,7 +475,7 @@ WinMain(HINSTANCE instance,
   defer { w32_unload_code(&gfx_code); };
 #endif  
 
-  //-Load Moe Functions
+  //-Load moe_t Functions
   Moe_Functions moe_functions = {};
   W32_Loaded_Code moe_code = {};
   moe_code.function_count = array_count(moe_function_names);
@@ -491,17 +491,17 @@ WinMain(HINSTANCE instance,
   
   
   //-Init gfx
-  make(Arena, gfx_arena);
+  make(arena_t, gfx_arena);
   if (!w32_allocate_memory_into_arena(gfx_arena, megabytes(256))) return false;
   defer { w32_free_memory_from_arena(gfx_arena); };
  
     
-  Gfx* gfx = w32_gfx_load(window, megabytes(100), megabytes(100), gfx_arena);
+  gfx_t* gfx = w32_gfx_load(window, megabytes(100), megabytes(100), gfx_arena);
   if (!gfx) { return 1; }
   defer { w32_gfx_unload(gfx); };
  
   // Init Audio
-  make(Arena, audio_arena);
+  make(arena_t, audio_arena);
   if (!w32_allocate_memory_into_arena(audio_arena, megabytes(256))) return false;
   defer { w32_free_memory_from_arena(audio_arena); };
 
@@ -511,12 +511,12 @@ WinMain(HINSTANCE instance,
 
 
   // Init profiler
-  prf_init(profiler, w32_get_performance_counter_u64);
+  profiler_init(profiler, w32_get_performance_counter_u64);
   
   // Platform setup
   make(Platform, pf);
  
-  // Moe memory set up
+  // moe_t memory set up
   
   w32_setup_platform_functions(pf);
   pf->gfx = gfx;
@@ -525,7 +525,7 @@ WinMain(HINSTANCE instance,
   
   
   //- Begin moe loop
-  B32 is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
+  b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   
   //- Send this to global state
   LARGE_INTEGER performance_frequency;
@@ -538,7 +538,7 @@ WinMain(HINSTANCE instance,
     // Hot reload moe.dll functions
     pf->reloaded = w32_reload_code_if_outdated(&moe_code);
     if (pf->reloaded) {
-      prf_reset(profiler);
+      profiler_reset(profiler);
     }
 #endif
    
@@ -546,10 +546,10 @@ WinMain(HINSTANCE instance,
 
     // Begin frame
     w32_audio_begin_frame(audio);
-    V2U client_wh = w32_get_client_dims(window);
+    v2u_t client_wh = w32_get_client_dims(window);
 
 
-    F32 moe_aspect = w32_state.moe_width / w32_state.moe_height;
+    f32_t moe_aspect = w32_state.moe_width / w32_state.moe_height;
     RECT rr = w32_calc_render_region(client_wh.w,
                                      client_wh.h,
                                      moe_aspect);
@@ -567,14 +567,14 @@ WinMain(HINSTANCE instance,
       ScreenToClient(window, &cursor_pos);
       
       
-      F32 render_mouse_pos_x = (F32)(cursor_pos.x - rr.left);
-      F32 render_mouse_pos_y = (F32)(cursor_pos.y - rr.bottom);
+      f32_t render_mouse_pos_x = (f32_t)(cursor_pos.x - rr.left);
+      f32_t render_mouse_pos_y = (f32_t)(cursor_pos.y - rr.bottom);
 
-      F32 region_width = (F32)(rr.right - rr.left);
-      F32 region_height = (F32)(rr.top - rr.bottom);
+      f32_t region_width = (f32_t)(rr.right - rr.left);
+      f32_t region_height = (f32_t)(rr.top - rr.bottom);
 
-      F32 moe_to_render_w = w32_state.moe_width / region_width;
-      F32 moe_to_render_h = w32_state.moe_height / region_height;
+      f32_t moe_to_render_w = w32_state.moe_width / region_width;
+      f32_t moe_to_render_h = w32_state.moe_height / region_height;
       
       pf->mouse_pos.x = render_mouse_pos_x * moe_to_render_w;
       pf->mouse_pos.y = render_mouse_pos_y * moe_to_render_h;
@@ -587,13 +587,13 @@ WinMain(HINSTANCE instance,
     }
     
     
-    //-Moe logic
+    //-moe_t logic
     if(moe_code.is_valid) { 
       moe_functions.update_and_render(pf);
     }
 
     // End  frame
-    prf_update_entries(profiler);
+    profiler_update_entries(profiler);
     w32_gfx_end_frame(gfx);
     w32_audio_end_frame(audio);
 
@@ -605,7 +605,7 @@ WinMain(HINSTANCE instance,
     //
     // NOTE: We might want to think about VSYNC or getting VBLANK
     // value so that we can figure out how long we *should* sleep
-    F32 secs_elapsed_after_update = 
+    f32_t secs_elapsed_after_update = 
       w32_get_secs_elapsed(last_frame_count,
                            w32_get_performance_counter(),
                            performance_frequency);
@@ -622,7 +622,7 @@ WinMain(HINSTANCE instance,
       }
       
       // Spin lock
-      F32 secs_elapsed_after_sleep = 
+      f32_t secs_elapsed_after_sleep = 
         w32_get_secs_elapsed(last_frame_count,
                              w32_get_performance_counter(),
                              performance_frequency);
@@ -646,7 +646,7 @@ WinMain(HINSTANCE instance,
     
         
     LARGE_INTEGER end_frame_count = w32_get_performance_counter();
-    F32 secs_this_frame =  w32_get_secs_elapsed(last_frame_count,
+    f32_t secs_this_frame =  w32_get_secs_elapsed(last_frame_count,
                                                 end_frame_count,
                                                 performance_frequency);
     

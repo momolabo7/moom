@@ -24,14 +24,14 @@ enum Meta_Token_Type {
 struct Meta_Token {
   Meta_Token_Type type;
   
-  U32 begin;
-  U32 ope;
+  u32_t begin;
+  u32_t ope;
 };
 
 struct Meta_Tokenizer {
-  C8* text;
-  U32 at;
-  U32 text_length;
+  c8_t* text;
+  u32_t at;
+  u32_t text_length;
 };
 
 static void
@@ -57,7 +57,7 @@ meta_eat_ignorables(Meta_Tokenizer* t) {
   
 }
 
-static B32
+static b32_t
 meta_tokenizer_init(Meta_Tokenizer* t, const char* filename) {
   FILE* fp = fopen(filename, "r");
   if (fp) {
@@ -68,10 +68,10 @@ meta_tokenizer_init(Meta_Tokenizer* t, const char* filename) {
     fread(ptr, size, 1, fp);
     fclose(fp);
     
-    t->text = (C8*)ptr;
+    t->text = (c8_t*)ptr;
     t->text_length = size + 1;
     
-    // null terminate
+    // nullptr terminate
     t->text[size] = 0;
     
     return true;
@@ -219,18 +219,18 @@ meta_print_token(Meta_Tokenizer* t, Meta_Token token)  {
     } break;
     
   }
-  for(U32 i = token.begin; i < token.ope; ++i) {
+  for(u32_t i = token.begin; i < token.ope; ++i) {
     printf("%c", t->text[i]);
   }
 }
 
-static B32
+static b32_t
 meta_compare_token_with_string(Meta_Tokenizer* t, Meta_Token token, String str) {
   if( str.count != (token.ope - token.begin)) {
     return false;
   }
   
-  for(U32 i = 0; i < str.count; ++i) {
+  for(u32_t i = 0; i < str.count; ++i) {
     if (str.e[i] != t->text[token.begin+i]) {
       return false;
     }
@@ -240,8 +240,8 @@ meta_compare_token_with_string(Meta_Tokenizer* t, Meta_Token token, String str) 
 }
 
 struct Profiler_Codegen {
-  U32 state; // 
-  U32 units;
+  u32_t state; // 
+  u32_t units;
 };
 
 static void

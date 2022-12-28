@@ -5,18 +5,18 @@
 
 
 static void
-paint_sprite(Moe* moe,
-             Asset_Sprite_ID sprite_id,
-             V2 pos,
-             V2 size,
-             RGBA color = rgba_set(1.f,1.f,1.f,1.f))
+paint_sprite(moe_t* moe,
+             asset_sprite_id_t sprite_id,
+             v2f_t pos,
+             v2f_t size,
+             rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
 {
-  Assets* assets = &moe->assets;
+  assets_t* assets = &moe->assets;
   Platform* platform = moe->platform;
 
-  Asset_Sprite* sprite = get_sprite(assets, sprite_id);
-  Asset_Bitmap* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);
-  V2 anchor = {0.5f, 0.5f}; 
+  asset_sprite_t* sprite = get_sprite(assets, sprite_id);
+  asset_bitmap_t* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);
+  v2f_t anchor = {0.5f, 0.5f}; 
   
   gfx_push_sprite(platform->gfx, 
                   color,
@@ -30,40 +30,40 @@ paint_sprite(Moe* moe,
 
 
 static void
-paint_text(Moe* moe,
-           Asset_Font_ID font_id,
-           String8 str,
-           RGBA color,
-           F32 px, F32 py,
-           F32 font_height) 
+paint_text(moe_t* moe,
+           asset_font_id_t font_id,
+           str8_t str,
+           rgba_t color,
+           f32_t px, f32_t py,
+           f32_t font_height) 
 {
-  Assets* assets = &moe->assets;
+  assets_t* assets = &moe->assets;
   Platform* platform = moe->platform;
 
-  Asset_Font* font = get_font(assets, font_id);
-  for(U32 char_index = 0; 
+  asset_font_t* font = get_font(assets, font_id);
+  for(u32_t char_index = 0; 
       char_index < str.count;
       ++char_index) 
   {
-    U32 curr_cp = str.e[char_index];
+    u32_t curr_cp = str.e[char_index];
 
     if (char_index > 0) {
-      U32 prev_cp = str.e[char_index-1];
-      Asset_Font_Glyph *prev_glyph = get_glyph(font, prev_cp);
+      u32_t prev_cp = str.e[char_index-1];
+      asset_font_glyph_t *prev_glyph = get_glyph(font, prev_cp);
 
-      F32 kerning = get_kerning(font, prev_cp, curr_cp);
-      F32 advance = prev_glyph->horizontal_advance;
+      f32_t kerning = get_kerning(font, prev_cp, curr_cp);
+      f32_t advance = prev_glyph->horizontal_advance;
       px += (kerning + advance) * font_height;
     }
 
-    Asset_Font_Glyph *glyph = get_glyph(font, curr_cp);
-    Asset_Bitmap* bitmap = get_bitmap(assets, glyph->bitmap_asset_id);
-    F32 width = (glyph->box.max.x - glyph->box.min.x)*font_height;
-    F32 height = (glyph->box.max.y - glyph->box.min.y)*font_height;
+    asset_font_glyph_t *glyph = get_glyph(font, curr_cp);
+    asset_bitmap_t* bitmap = get_bitmap(assets, glyph->bitmap_asset_id);
+    f32_t width = (glyph->box.max.x - glyph->box.min.x)*font_height;
+    f32_t height = (glyph->box.max.y - glyph->box.min.y)*font_height;
     
-    V2 pos = { px + (glyph->box.min.x*font_height), py + (glyph->box.min.y*font_height)};
-    V2 size = { width, height };
-    V2 anchor = {0.f, 0.f}; // bottom left
+    v2f_t pos = { px + (glyph->box.min.x*font_height), py + (glyph->box.min.y*font_height)};
+    v2f_t size = { width, height };
+    v2f_t anchor = {0.f, 0.f}; // bottom left
     gfx_push_sprite(platform->gfx, 
                     color,
                     pos, size, anchor,
@@ -77,59 +77,59 @@ paint_text(Moe* moe,
 }
 
 static void
-paint_text_center_aligned(Moe* moe,
-                          Asset_Font_ID font_id,
-                          String8 str,
-                          RGBA color,
-                          F32 px, F32 py,
-                          F32 font_height) 
+paint_text_center_aligned(moe_t* moe,
+                          asset_font_id_t font_id,
+                          str8_t str,
+                          rgba_t color,
+                          f32_t px, f32_t py,
+                          f32_t font_height) 
 {
-  Assets* assets = &moe->assets;
+  assets_t* assets = &moe->assets;
   Platform* platform = moe->platform;
-  Asset_Font* font = get_font(assets, font_id);
+  asset_font_t* font = get_font(assets, font_id);
 
   
   // Calculate the total width of the text
-  F32 offset = 0.f;
-  for(U32 char_index = 1; 
+  f32_t offset = 0.f;
+  for(u32_t char_index = 1; 
       char_index < str.count;
       ++char_index)
   {
 
-    U32 curr_cp = str.e[char_index];
-    U32 prev_cp = str.e[char_index-1];
+    u32_t curr_cp = str.e[char_index];
+    u32_t prev_cp = str.e[char_index-1];
 
-    Asset_Font_Glyph *prev_glyph = get_glyph(font, prev_cp);
+    asset_font_glyph_t *prev_glyph = get_glyph(font, prev_cp);
 
-    F32 kerning = get_kerning(font, prev_cp, curr_cp);
-    F32 advance = prev_glyph->horizontal_advance;
+    f32_t kerning = get_kerning(font, prev_cp, curr_cp);
+    f32_t advance = prev_glyph->horizontal_advance;
     offset += (kerning + advance) * font_height;
   }
   px -= offset/2 ;
 
-  for(U32 char_index = 0; 
+  for(u32_t char_index = 0; 
       char_index < str.count;
       ++char_index) 
   {
-    U32 curr_cp = str.e[char_index];
+    u32_t curr_cp = str.e[char_index];
 
     if (char_index > 0) {
-      U32 prev_cp = str.e[char_index-1];
-      Asset_Font_Glyph *prev_glyph = get_glyph(font, prev_cp);
+      u32_t prev_cp = str.e[char_index-1];
+      asset_font_glyph_t *prev_glyph = get_glyph(font, prev_cp);
 
-      F32 kerning = get_kerning(font, prev_cp, curr_cp);
-      F32 advance = prev_glyph->horizontal_advance;
+      f32_t kerning = get_kerning(font, prev_cp, curr_cp);
+      f32_t advance = prev_glyph->horizontal_advance;
       px += (kerning + advance) * font_height;
     }
 
-    Asset_Font_Glyph *glyph = get_glyph(font, curr_cp);
-    Asset_Bitmap* bitmap = get_bitmap(assets, glyph->bitmap_asset_id);
-    F32 width = (glyph->box.max.x - glyph->box.min.x)*font_height;
-    F32 height = (glyph->box.max.y - glyph->box.min.y)*font_height;
+    asset_font_glyph_t *glyph = get_glyph(font, curr_cp);
+    asset_bitmap_t* bitmap = get_bitmap(assets, glyph->bitmap_asset_id);
+    f32_t width = (glyph->box.max.x - glyph->box.min.x)*font_height;
+    f32_t height = (glyph->box.max.y - glyph->box.min.y)*font_height;
     
-    V2 pos = { px + (glyph->box.min.x*font_height), py + (glyph->box.min.y*font_height)};
-    V2 size = { width, height };
-    V2 anchor = {0.f, 0.f}; // bottom left
+    v2f_t pos = { px + (glyph->box.min.x*font_height), py + (glyph->box.min.y*font_height)};
+    v2f_t size = { width, height };
+    v2f_t anchor = {0.f, 0.f}; // bottom left
     gfx_push_sprite(platform->gfx, 
                     color,
                     pos, size, anchor,

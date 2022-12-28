@@ -2,22 +2,22 @@
 
 
 struct Lit_Particle {
-  V2 pos, vel;
-  V2 size_start, size_end;
-  RGBA color_start, color_end;
-  Asset_Sprite_ID sprite_id;
-  F32 lifespan;
-  F32 lifespan_now;
+  v2f_t pos, vel;
+  v2f_t size_start, size_end;
+  rgba_t color_start, color_end;
+  asset_sprite_id_t sprite_id;
+  f32_t lifespan;
+  f32_t lifespan_now;
 };
 
 struct Lit_Particle_Pool {
-  F32 particle_lifespan_min;
-  F32 particle_lifespan_max;
+  f32_t particle_lifespan_min;
+  f32_t particle_lifespan_max;
 
-  F32 particle_color_start;
-  F32 particle_color_end;
+  f32_t particle_color_start;
+  f32_t particle_color_end;
 
-  U32 particle_count;
+  u32_t particle_count;
   Lit_Particle particles[256];
 };
 
@@ -25,21 +25,21 @@ struct Lit_Particle_Pool {
 
 
 struct Lit_Sensor {
-  V2 pos;
-  U32 target_color;
-  U32 current_color;
-  F32 particle_cd;
+  v2f_t pos;
+  u32_t target_color;
+  u32_t current_color;
+  f32_t particle_cd;
 };
 
 
 
 struct Lit_Player {
-  V2 pos;
+  v2f_t pos;
   Lit_Light* held_light;
-  B32 is_holding_light;
+  b32_t is_holding_light;
 
   // For animating getting the light
-  F32 light_retrival_time;
-  V2 old_light_pos;
+  f32_t light_retrival_time;
+  v2f_t old_light_pos;
 };
 

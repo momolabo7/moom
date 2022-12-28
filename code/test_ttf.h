@@ -9,7 +9,7 @@
 void test_ttf() {
   test_create_log_section_until_scope;
   
-  U32 memory_size = MB(2);
+  u32_t memory_size = MB(2);
   void * memory = malloc(memory_size);
   if (!memory) { 
     test_log("Cannot allocate memory");
@@ -17,8 +17,8 @@ void test_ttf() {
   }
   defer { free(memory); };
   
-  make(Arena, allocator);
-  arn_init(allocator, memory, memory_size);
+  make(arena_t, allocator);
+  arena_init(allocator, memory, memory_size);
   Block ttf_memory = 
     test_read_file_to_memory(allocator, 
 #if 0 
@@ -30,19 +30,19 @@ void test_ttf() {
   
   
   assert(blk_ok(ttf_memory));
-  make(TTF, ttf);
+  make(ttf_t, ttf);
   ttf_read(ttf, ttf_memory.data, ttf_memory.size);
   
   test_log("Testing rasterization\n");
   {
     test_create_log_section_until_scope;
-    F32 scale_factor = ttf_get_scale_for_pixel_height(ttf, 512.f);
-    for (U32 codepoint = 65; codepoint <= 65+26; ++codepoint) {
-      //for (U32 codepoint = 87; codepoint <= 87; ++codepoint) {
+    f32_t scale_factor = ttf_get_scale_for_pixel_height(ttf, 512.f);
+    for (u32_t codepoint = 65; codepoint <= 65+26; ++codepoint) {
+      //for (u32_t codepoint = 87; codepoint <= 87; ++codepoint) {
       test_log("rasterizing codepoint %X\n", codepoint);
-      arn_set_revert_point(allocator);
+      arena_set_revert_point(allocator);
       
-      U32 glyph_index = ttf_get_glyph_index(ttf, codepoint);
+      u32_t glyph_index = ttf_get_glyph_index(ttf, codepoint);
       Image32 codepoint_image = ttf_rasterize_glyph(ttf, glyph_index, scale_factor, allocator);
       {
         sb8_make(strbld, 256);
@@ -59,10 +59,10 @@ void test_ttf() {
   test_log("Testing kerning\n");
   {
     test_create_log_section_until_scope;
-    U32 s = 65;
-    U32 e = 65+26;
-    for (U32 cp1 = s; cp1 <= e; ++cp1) {
-      for (U32 cp2 = s; cp2 <= e; ++cp2) {
+    u32_t s = 65;
+    u32_t e = 65+26;
+    for (u32_t cp1 = s; cp1 <= e; ++cp1) {
+      for (u32_t cp2 = s; cp2 <= e; ++cp2) {
         test_log("(%d, %d) = %d\n", cp1, cp2, ttf_get_glyph_kerning(ttf, cp1, cp2));
       }
     }

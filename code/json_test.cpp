@@ -24,14 +24,14 @@ int main() {
   fread(mem, len, 1, fp);
   fclose(fp);
 
-  Arena ba = {0}; 
-  arn_init(&ba, malloc(megabytes(1)), megabytes(1)); 
+  arena_t ba = {0}; 
+  arena_init(&ba, malloc(megabytes(1)), megabytes(1)); 
 
-  make(JSON_Object, json);
+  make(json_object_t, json);
   json_read(json, mem, len, &ba);
 
-  JSON_Object* one = json_get_object(json, str8_from_lit("obj"));
-  U32* two = json_get_u32(one, str8_from_lit("item3"));
+  json_object_t* one = json_get_object(json, str8_from_lit("obj"));
+  u32_t* two = json_get_u32(one, str8_from_lit("item3"));
 
   printf("hello: %d", *two);
 

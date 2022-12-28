@@ -26,8 +26,8 @@ void test_png() {
     test_assets_dir("paint.png"), "paint_out.png",
   }; 
   
-  U32 memory_size = MB(100);
-  U8* memory = (U8*)malloc(memory_size);
+  u32_t memory_size = MB(100);
+  u8_t* memory = (u8_t*)malloc(memory_size);
   if (!memory) { 
     test_log("Cannot allocate memory\n");
     return;
@@ -38,8 +38,8 @@ void test_png() {
     test_log("Test Case: %d\n", i);
     test_create_log_section_until_scope;
     
-    Arena app_arena = {};
-    arn_init(&app_arena, memory, memory_size);
+    arena_t app_arena = {};
+    arena_init(&app_arena, memory, memory_size);
     Memory png_file = test_read_file_to_memory(&app_arena, test_cases[i].in);
     
     if (!is_ok(png_file)){
@@ -47,9 +47,9 @@ void test_png() {
       continue;
     }
     
-    PNG png = {};
+    png_t png = {};
     if (!png_read(&png, png_file.data, png_file.size)) {
-      test_log("Create PNG failed: %d\n", i);
+      test_log("Create png_t failed: %d\n", i);
       continue;
     }
     else {
@@ -58,7 +58,7 @@ void test_png() {
     }
     Bitmap bitmap = png_to_bitmap(&png, &app_arena);
     if (!is_ok(bitmap)) {
-      test_log("Read PNG failed: %d\n", i);
+      test_log("Read png_t failed: %d\n", i);
       continue;
     }
     test_log("Read success: %d\n", i);

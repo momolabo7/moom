@@ -25,8 +25,8 @@
 #define LIT_PLAYER_ROTATE_SPEED 3.5f
 
 struct Lit_Title_Waypoint {
-  F32 x;
-  F32 arrival_time;
+  f32_t x;
+  f32_t arrival_time;
 };
 
 static Lit_Title_Waypoint lit_title_wps[] = {
@@ -52,52 +52,52 @@ enum Lit_State_Type {
 
 struct Lit {
   Lit_State_Type state;
-  U32 current_level_id;
+  u32_t current_level_id;
   Lit_Player player;
  
-  U32 edge_count;
+  u32_t edge_count;
   Lit_Edge edges[256];
 
-  U32 light_count;
+  u32_t light_count;
   Lit_Light lights[32];
 
-  U32 sensor_count;
+  u32_t sensor_count;
   Lit_Sensor sensors[32];
 
   Lit_Particle_Pool particles;
 
-  F32 stage_fade_timer;
-  F32 stage_flash_timer;
+  f32_t stage_fade_timer;
+  f32_t stage_flash_timer;
 
-  B32 is_win_reached;
-  RNG rng;
+  b32_t is_win_reached;
+  rng_t rng;
 
-  String8 title;
-  F32 title_timer;
-  U32 title_wp_index;
+  str8_t title;
+  f32_t title_timer;
+  u32_t title_wp_index;
     
-  U32 sensors_activated;
+  u32_t sensors_activated;
 
 
 
-  // Assets that we are interested in
-  Asset_Font_ID tutorial_font;
-  Asset_Sprite_ID blank_sprite;
-  Asset_Sprite_ID circle_sprite;
-  Asset_Sprite_ID filled_circle_sprite;
+  // assets_t that we are interested in
+  asset_font_id_t tutorial_font;
+  asset_sprite_id_t blank_sprite;
+  asset_sprite_id_t circle_sprite;
+  asset_sprite_id_t filled_circle_sprite;
 
 };
 
 #include "scene_lit_world.cpp"
 #include "scene_lit_entity.cpp"
 
-static B32 
+static b32_t 
 lit_is_state_exiting(Lit* m) {
   return m->state > LIT_STATE_TYPE_NORMAL; 
 }
 
 static void
-lit_set_title(Lit* m, String8 str) {
+lit_set_title(Lit* m, str8_t str) {
   m->title = str;
   m->title_timer = 0.f;
   m->title_wp_index = 0;
@@ -108,10 +108,10 @@ lit_set_title(Lit* m, String8 str) {
 
 
 static void 
-lit_tick(Moe* moe) 
+lit_tick(moe_t* moe) 
 {
   Lit* m = (Lit*)moe->scene_context;
-  Assets* assets = &moe->assets;
+  assets_t* assets = &moe->assets;
   Platform* platform = moe->platform;
 
   if (!moe_is_scene_initialized(moe)) 
@@ -124,7 +124,7 @@ lit_tick(Moe* moe)
     m->stage_fade_timer = LIT_ENTER_DURATION;
 
     {
-      make(Asset_Match, match);
+      make(asset_match_t, match);
       set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
 
       m->tutorial_font = find_best_font(assets, ASSET_GROUP_TYPE_FONTS, match);
@@ -145,7 +145,7 @@ lit_tick(Moe* moe)
   // Update
   //
   Lit_Player* player = &m->player;
-  F32 dt = platform->seconds_since_last_frame;
+  f32_t dt = platform->seconds_since_last_frame;
 
   // Title 
   if (m->title_wp_index < array_count(lit_title_wps)-1) 
@@ -201,7 +201,7 @@ lit_tick(Moe* moe)
     lit_update_player(moe, m, dt);
   }
 
-  for(U32 light_index = 0; light_index < m->light_count; ++light_index)
+  for(u32_t light_index = 0; light_index < m->light_count; ++light_index)
   {
     Lit_Light* light = m->lights + light_index;
     lit_gen_light_intersections(light, m->edges, m->edge_count, &moe->frame_arena);
@@ -224,7 +224,7 @@ lit_tick(Moe* moe)
 
 #if 0
   // Collision
-  V2 deepest_penetration = {0};
+  v2f_t deepest_penetration = {0};
   al_foreach(edge_index, &m->edges) 
   {
     Lit_Edge* edge = al_at(&m->edges, edge_index);
@@ -234,13 +234,13 @@ lit_tick(Moe* moe)
       *al_at(&m->points, edge->max_pt_id),
     };
 
-    V2 resp = circle_to_finite_line_resp(player->pos, LIT_PLAYER_RADIUS, line.min, line.max);
-    if (v2_len_sq(resp) > v2_len_sq(deepest_penetration)) {
+    v2f_t resp = circle_to_finite_line_resp(player->pos, LIT_PLAYER_RADIUS, line.min, line.max);
+    if (v2f_len_sq(resp) > v2f_len_sq(deepest_penetration)) {
       deepest_penetration = resp;
     }
   }
 
-  player->pos = v2_add(player->pos, deepest_penetration);
+  player->pos = v2f_add(player->pos, deepest_penetration);
 #endif
   //////////////////////////////////////////////////////////
   // Rendering
@@ -326,16 +326,16 @@ lit_tick(Moe* moe)
         gfx_advance_depth(platform->gfx);
       } break;
       case LIT_TUTORIAL_TEXT_STATE_FADE_IN: {
-        F32 a = ease_out_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
-        F32 y = text->pos_y + (1.f-a) * 32.f;
-        RGBA color = rgba_set(1.f, 1.f, 1.f, text->alpha);
+        f32_t a = ease_out_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
+        f32_t y = text->pos_y + (1.f-a) * 32.f;
+        rgba_t color = rgba_set(1.f, 1.f, 1.f, text->alpha);
         paint_text(moe, m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
         gfx_advance_depth(platform->gfx);
       } break;
       case LIT_TUTORIAL_TEXT_STATE_FADE_OUT: {
-        F32 a = ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
-        F32 y = text->pos_y + a * 32.f;
-        RGBA color = rgba_set(1.f, 1.f, 1.f, text->alpha);
+        f32_t a = ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
+        f32_t y = text->pos_y + a * 32.f;
+        rgba_t color = rgba_set(1.f, 1.f, 1.f, text->alpha);
         paint_text(moe, m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
         gfx_advance_depth(platform->gfx);
       } break;
@@ -345,16 +345,16 @@ lit_tick(Moe* moe)
 
   // Draw the overlay for fade in/out
   {
-    RGBA color = rgba_set(0.f, 0.f, 0.f, m->stage_fade_timer);
-    paint_sprite(moe, m->blank_sprite, v2_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2_set(LIT_WIDTH, LIT_HEIGHT), color);
+    rgba_t color = rgba_set(0.f, 0.f, 0.f, m->stage_fade_timer);
+    paint_sprite(moe, m->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
     gfx_advance_depth(platform->gfx);
   }
 
   // Draw the overlay for white flash
   {
-    F32 alpha = m->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
-    RGBA color = rgba_set(1.f, 1.f, 1.f, alpha);
-    paint_sprite(moe, m->blank_sprite, v2_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2_set(LIT_WIDTH, LIT_HEIGHT), color);
+    f32_t alpha = m->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
+    rgba_t color = rgba_set(1.f, 1.f, 1.f, alpha);
+    paint_sprite(moe, m->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
     gfx_advance_depth(platform->gfx);
   }
 
@@ -364,11 +364,11 @@ lit_tick(Moe* moe)
     Lit_Title_Waypoint* cur_wp = lit_title_wps + m->title_wp_index;
     Lit_Title_Waypoint* next_wp = lit_title_wps + m->title_wp_index+1;
 
-    F32 duration = next_wp->arrival_time - cur_wp->arrival_time;
-    F32 timer = m->title_timer - cur_wp->arrival_time;
-    F32 a = ease_linear_f32(timer/duration); 
-    F32 title_x = cur_wp->x + a * (next_wp->x - cur_wp->x); 
-    RGBA color = rgba_set(1.f, 1.f, 1.f, 1.f);
+    f32_t duration = next_wp->arrival_time - cur_wp->arrival_time;
+    f32_t timer = m->title_timer - cur_wp->arrival_time;
+    f32_t a = ease_linear_f32(timer/duration); 
+    f32_t title_x = cur_wp->x + a * (next_wp->x - cur_wp->x); 
+    rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
 
     paint_text_center_aligned(moe, m->tutorial_font, m->title, color, title_x, LIT_HEIGHT/2, 128.f);
     gfx_advance_depth(platform->gfx);
