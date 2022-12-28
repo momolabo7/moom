@@ -1,5 +1,9 @@
 # Journal
 
+### 2022-12-28
+I have added gists, which are snippets of code that we can reuse. 
+I think that's the best way I can get around writing data structures that are meaningful to a project, as opposed to using 'generic' data structures that I might be forced to think around them for the sake of ease.
+
 ### 2022-12-27
 I'm having second thoughts about using macros for data structures. 
 The main issue with macros is that it severely restricts the API design and that it forces me to design my code a certain way, which isn't neccesarily good.

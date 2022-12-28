@@ -151,7 +151,7 @@ lit_gen_light_intersections(Lit_Light* l,
 
            
       v2f_t light_ray_dir = v2f_rotate(ep - l->pos, offset_angle);
-      f32_t t = lit_get_ray_intersection_time_wrt_edges(l->pos, light_ray_dir, edges, offset_index == 0);
+      f32_t t = lit_get_ray_intersection_time_wrt_edges(l->pos, light_ray_dir, edges, edge_count, offset_index == 0);
       
       assert(l->intersection_count < array_count(l->intersections));
       Lit_Light_Intersection* intersection = l->intersections + l->intersection_count++;

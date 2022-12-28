@@ -120,8 +120,6 @@ lit_tick(moe_t* moe)
     m = moe_allocate_scene(Lit, moe);
     lit_load_level(m, 0); 
     rng_init(&m->rng, 65535); // don't really need to be strict 
-    m->state = LIT_STATE_TYPE_TRANSITION_IN;
-    m->stage_fade_timer = LIT_ENTER_DURATION;
 
     {
       make(asset_match_t, match);
@@ -272,76 +270,6 @@ lit_tick(moe_t* moe)
   }
 #endif
 
-#if 0
-  // Update tutorial texts
-  al_foreach(tutorial_text_id, &m->tutorial_texts)
-  {
-    Lit_Tutorial_Text* text = al_at(&m->tutorial_texts, tutorial_text_id);
-    switch(text->state){
-      case LIT_TUTORIAL_TEXT_STATE_FADE_IN: {
-        text->timer += dt;
-        if (text->timer > LIT_TUTORIAL_TEXT_FADE_DURATION) {
-          text->alpha = 1.f;
-          text->state = LIT_TUTORIAL_TEXT_STATE_VISIBLE;
-        }
-        else {
-          text->alpha = ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION);
-        }
-         
-      } break;
-      case LIT_TUTORIAL_TEXT_STATE_FADE_OUT: {
-        text->timer += dt;
-        if (text->timer > LIT_TUTORIAL_TEXT_FADE_DURATION) {
-          text->alpha = 0.f;
-          text->state = LIT_TUTORIAL_TEXT_STATE_INVISIBLE;
-        }
-        else {
-          text->alpha = 1.f - ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION);
-        }
-      } break;
-      default: {
-        // Do nothing
-      }
-    }
-  }
-
-
-  if (!al_is_empty(&m->tutorial_triggers))
-  {
-    Lit_Tutorial_Trigger* trigger = al_at(&m->tutorial_triggers, m->tutorial_triggers.current_id);
-    if(trigger && (*trigger)(m)) {
-      m->tutorial_triggers.current_id++;
-    }
-  }
-#endif
-
-#if 0
-  // Render all the tutorial texts
-  al_foreach(tutorial_text_id, &m->tutorial_texts)
-  {
-    Lit_Tutorial_Text* text = al_at(&m->tutorial_texts, tutorial_text_id);
-    switch(text->state) {
-      case LIT_TUTORIAL_TEXT_STATE_VISIBLE: {
-        paint_text(moe, m->tutorial_font, text->str, RGBA_WHITE, text->pos_x, text->pos_y, 32.f);
-        gfx_advance_depth(platform->gfx);
-      } break;
-      case LIT_TUTORIAL_TEXT_STATE_FADE_IN: {
-        f32_t a = ease_out_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
-        f32_t y = text->pos_y + (1.f-a) * 32.f;
-        rgba_t color = rgba_set(1.f, 1.f, 1.f, text->alpha);
-        paint_text(moe, m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
-        gfx_advance_depth(platform->gfx);
-      } break;
-      case LIT_TUTORIAL_TEXT_STATE_FADE_OUT: {
-        f32_t a = ease_in_cubic_f32(text->timer/LIT_TUTORIAL_TEXT_FADE_DURATION); 
-        f32_t y = text->pos_y + a * 32.f;
-        rgba_t color = rgba_set(1.f, 1.f, 1.f, text->alpha);
-        paint_text(moe, m->tutorial_font, text->str, color, text->pos_x, y, 32.f);
-        gfx_advance_depth(platform->gfx);
-      } break;
-    }
-  }
-#endif
 
   // Draw the overlay for fade in/out
   {

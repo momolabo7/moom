@@ -256,7 +256,8 @@ lit_level_0_8(Lit* m) {
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
 
-#if 1
+  lit_level_0_1, 
+#if 0 
   lit_level_0_0, 
   lit_level_0_1, 
   lit_level_0_2,
@@ -265,15 +266,15 @@ static Lit_Level lit_levels[] = {
   lit_level_0_5,
   lit_level_0_6,
   lit_level_0_7,
-#endif
   lit_level_0_8,
+#endif
 };
 
 
 static void
 lit_load_level(Lit* m, u32_t level_id) {
   m->stage_flash_timer = 0.f;
-  m->stage_fade_timer = 1.f;
+  m->stage_fade_timer = LIT_ENTER_DURATION;
   m->state = LIT_STATE_TYPE_TRANSITION_IN;
 
   m->sensor_count = 0;;
