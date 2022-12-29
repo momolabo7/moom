@@ -197,6 +197,7 @@ lit_level_0_7(Lit* m) {
 //  
 static void
 lit_level_0_8(Lit* m) {
+  lit_set_title(m, str8_from_lit("ONION"));
   // layer 1
   lit_push_sensor(m, 550.f,  250.f, 0x006600FF); 
   lit_push_sensor(m, 250.f,  550.f, 0x660000FF); 
@@ -209,13 +210,9 @@ lit_level_0_8(Lit* m) {
   lit_push_sensor(m, 150.f,  650.f, 0x660000FF); 
   lit_push_sensor(m, 650.f,  650.f, 0x000066FF); 
 
-
-  // top left room
-  lit_push_sensor(m, 050.f,  450.f, 0x666666FF); 
-  lit_push_sensor(m, 050.f,  750.f, 0x666666FF); 
-  lit_push_sensor(m, 250.f,  450.f, 0x666666FF); 
-  lit_push_sensor(m, 250.f,  750.f, 0x666666FF); 
-
+  // layer 3
+  lit_push_sensor(m, 050.f,  050.f, 0x666666FF); 
+  lit_push_sensor(m, 750.f,  750.f, 0x666666FF); 
 
 
   lit_push_double_edge(m, 100.f, 100.f, 100.f, 700.f);
@@ -248,15 +245,16 @@ lit_level_0_8(Lit* m) {
   //lit_push_sensor(m, 400.f, 600.f, 0x880088FF); 
 
   lit_push_light(m, 400.f, 400.f, 0x660000FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x660000FF, 360.f, 0.f);
   lit_push_light(m, 400.f, 400.f, 0x006600FF, 360.f, 0.f);
   lit_push_light(m, 400.f, 400.f, 0x000066FF, 360.f, 0.f);
-  lit_push_light(m, 400.f, 400.f, 0x666666FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x333333FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x333333FF, 360.f, 0.f);
 }
 
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
 
-  lit_level_0_1, 
 #if 0 
   lit_level_0_0, 
   lit_level_0_1, 
@@ -267,7 +265,10 @@ static Lit_Level lit_levels[] = {
   lit_level_0_6,
   lit_level_0_7,
   lit_level_0_8,
+
 #endif
+
+  lit_level_0_8,
 };
 
 
