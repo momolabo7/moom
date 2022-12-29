@@ -44,8 +44,10 @@ lit_level_0_2(Lit* m) {
 // - Sensor is in a box 
 static void
 lit_level_0_3(Lit* m) { 
-  // Need to 'enclose' the shape
+
   lit_set_title(m, str8_from_lit("BOX"));
+
+  // Need to 'enclose' the shape
   lit_push_double_edge(m, 500.f, 200.f, 600.f, 300.f);
   lit_push_double_edge(m, 300.f, 200.f, 200.f, 300.f);
   lit_push_double_edge(m, 200.f, 500.f, 300.f, 600.f);
@@ -67,6 +69,7 @@ lit_level_0_3(Lit* m) {
 static void
 lit_level_0_4(Lit* m) {
 
+  lit_set_title(m, str8_from_lit("MIX"));
 
   lit_push_sensor(m, 400.f, 400.f, 0x888800FF); 
   
@@ -88,7 +91,8 @@ lit_level_0_4(Lit* m) {
 // - R + G + B = W
 static void
 lit_level_0_5(Lit* m) {
-  // middle
+  lit_set_title(m, str8_from_lit("BLEND"));
+
   lit_push_sensor(m, 400.f,  400.f, 0x888888FF); 
 
   lit_push_sensor(m, 200.f, 400.f, 0x008888FF); 
@@ -109,6 +113,8 @@ lit_level_0_5(Lit* m) {
 // - Point lights
 static void
 lit_level_0_6(Lit* m) {
+
+  lit_set_title(m, str8_from_lit("4 ROOM"));
 
   // middle
   lit_push_sensor(m, 050.f,  450.f, 0x666666FF); 
@@ -143,6 +149,7 @@ lit_level_0_6(Lit* m) {
 //  
 static void
 lit_level_0_7(Lit* m) {
+  lit_set_title(m, str8_from_lit("DISCO"));
 
   // bottom left room
   lit_push_sensor(m, 050.f,  350.f, 0x660000FF); 
@@ -255,7 +262,6 @@ lit_level_0_8(Lit* m) {
 typedef void (*Lit_Level)(Lit* mode); 
 static Lit_Level lit_levels[] = {
 
-#if 0 
   lit_level_0_0, 
   lit_level_0_1, 
   lit_level_0_2,
@@ -266,9 +272,6 @@ static Lit_Level lit_levels[] = {
   lit_level_0_7,
   lit_level_0_8,
 
-#endif
-
-  lit_level_0_8,
 };
 
 
