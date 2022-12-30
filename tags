@@ -6,6 +6,7 @@
 2022-12-08	journal.md	/^### 2022-12-08$/;"	S	language:Markdown	chapter:Journal
 2022-12-26	journal.md	/^### 2022-12-26$/;"	S	language:Markdown	chapter:Journal
 2022-12-27	journal.md	/^### 2022-12-27$/;"	S	language:Markdown	chapter:Journal
+2022-12-28	journal.md	/^### 2022-12-28$/;"	S	language:Markdown	chapter:Journal
 a	code/momo_colors.h	/^  f32_t a;$/;"	m	language:C++	struct:rgba_t	typeref:typename:f32_t
 abort	build/a.out.js	/^function abort(what) {$/;"	f	language:JavaScript
 ABORT	build/a.out.js	/^var ABORT = false;$/;"	v	language:JavaScript
@@ -812,9 +813,17 @@ gfx_texture_payload_t	code/moe_gfx.h	/^} gfx_texture_payload_t;$/;"	t	language:C
 gfx_texture_queue_t	code/moe_gfx.h	/^typedef struct gfx_texture_queue_t {$/;"	s	language:C++
 gfx_texture_queue_t	code/moe_gfx.h	/^} gfx_texture_queue_t;$/;"	t	language:C++	typeref:struct:gfx_texture_queue_t
 gigabytes	code/momo_types.h	/^#define gigabytes(/;"	d	language:C++
+gist_cdl_init	code/gist_linked_list.cpp	/^gist_cdl_init(gist_cdl_node* sentinel) {$/;"	f	language:C++	typeref:typename:void	file:
+gist_cdl_new_node	code/gist_linked_list.cpp	/^gist_cdl_new_node(int value) {$/;"	f	language:C++	typeref:typename:gist_cdl_node *	file:
+gist_cdl_node	code/gist_linked_list.cpp	/^struct gist_cdl_node {$/;"	s	language:C++	file:
 gist_cdl_node	D:/work/git/moom/code/gist_singly_linked_list.cpp	/^struct gist_cdl_node {$/;"	s	language:C++	file:
+gist_cdl_print_backwards	code/gist_linked_list.cpp	/^gist_cdl_print_backwards(gist_cdl_node* sentinel) {$/;"	f	language:C++	typeref:typename:void	file:
+gist_cdl_print_forward	code/gist_linked_list.cpp	/^gist_cdl_print_forward(gist_cdl_node* sentinel) {$/;"	f	language:C++	typeref:typename:void	file:
+gist_cdl_push_back	code/gist_linked_list.cpp	/^gist_cdl_push_back(gist_cdl_node* sentinel, int value) {$/;"	f	language:C++	typeref:typename:void	file:
 gist_cdl_push_back	D:/work/git/moom/code/gist_singly_linked_list.cpp	/^gist_cdl_push_back(gist_cdl_node* sentinel, gist_cdl_node* node) {$/;"	f	language:C++	typeref:typename:void	file:
+gist_cdl_push_front	code/gist_linked_list.cpp	/^gist_cdl_push_front(gist_cdl_node* sentinel, int value) {$/;"	f	language:C++	typeref:typename:void	file:
 gist_cdl_push_front	D:/work/git/moom/code/gist_singly_linked_list.cpp	/^gist_cdl_push_front(gist_cdl_node* sentinel, gist_cdl_node* node) {$/;"	f	language:C++	typeref:typename:void	file:
+gist_ring_buffer	code/gist_ring_buffer.cpp	/^struct gist_ring_buffer {$/;"	s	language:C++	file:
 glAttachShader	code/moe_gfx_opengl.h	/^  OGL_glAttachShader* glAttachShader;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glAttachShader *
 glBindTexture	code/moe_gfx_opengl.h	/^  OGL_glBindTexture* glBindTexture ;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glBindTexture *
 glBindVertexArray	code/moe_gfx_opengl.h	/^  OGL_glBindVertexArray* glBindVertexArray;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glBindVertexArray *
@@ -1234,6 +1243,7 @@ m44f_translation	code/momo_matrix.h	/^m44f_translation(f32_t x, f32_t y, f32_t z
 m44f_translation	code/momo_matrix.h	/^static m44f_t m44f_translation(f32_t x, f32_t y, f32_t z);$/;"	p	language:C++	typeref:typename:m44f_t
 m44f_transpose	code/momo_matrix.h	/^m44f_transpose(m44f_t m) {$/;"	f	language:C++	typeref:typename:m44f_t
 m44f_transpose	code/momo_matrix.h	/^static m44f_t m44f_transpose(m44f_t m);$/;"	p	language:C++	typeref:typename:m44f_t
+main	code/gist_linked_list.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/json_test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/meta.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/sui.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
@@ -1361,6 +1371,7 @@ mouse_pos	code/moe_platform.h	/^  v2f_t mouse_pos;$/;"	m	language:C++	struct:__a
 name	build/test_json.json	/^  "name":"John", $/;"	s	language:JSON
 name	code/moe_inspector.h	/^  str8_t name;$/;"	m	language:C++	struct:__anon95747d9c0208	typeref:typename:str8_t
 namedview341	build/web.html	/^   id="namedview341"$/;"	I	language:HTML
+next	code/gist_linked_list.cpp	/^  gist_cdl_node* next;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
 next	code/momo_json.h	/^  struct _json_array_node_t* next;$/;"	m	language:C++	struct:_json_array_node_t	typeref:struct:_json_array_node_t *
 next	code/w32_moe.h	/^  W32_Memory_Block* next;$/;"	m	language:C++	struct:W32_Memory_Block	typeref:typename:W32_Memory_Block *
 next	D:/work/git/moom/code/gist_singly_linked_list.cpp	/^  gist_cdl_node* next;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
@@ -1370,6 +1381,8 @@ next_obj	build/test_json.json	/^  "next_obj": {$/;"	o	language:JSON
 node	code/momo_json.h	/^  struct _json_object_node_t* node;$/;"	m	language:C++	struct:json_object_t	typeref:struct:_json_object_node_t *
 NODEFS	build/a.out.js	/^var NODEFS = 'NODEFS is no longer included by default; build with -lnodefs.js';$/;"	v	language:JavaScript
 nodePath	build/a.out.js	/^var fs, nodePath;$/;"	v	language:JavaScript
+nodes	code/gist_linked_list.cpp	/^static gist_cdl_node nodes[128];$/;"	v	language:C++	typeref:typename:gist_cdl_node[128]	file:
+node_count	code/gist_linked_list.cpp	/^static u32_t node_count = 0;$/;"	v	language:C++	typeref:typename:u32_t	file:
 NOMINMAX	code/w32_moe.h	/^#define NOMINMAX$/;"	d	language:C++
 notifs	code/w32_audio_wasapi.h	/^  Win_Wasapi_Notif_Client notifs;$/;"	m	language:C++	struct:Win_Wasapi	typeref:typename:Win_Wasapi_Notif_Client
 now	code/moe_platform.h	/^  b32_t now; $/;"	m	language:C++	struct:__anonb345dcaa0608	typeref:typename:b32_t
@@ -1671,6 +1684,7 @@ pow_f64	code/momo_intrinsics.h	/^pow_f64(f64_t b, f64_t e){$/;"	f	language:C++	t
 pow_f64	code/momo_intrinsics.h	/^static f64_t pow_f64(f64_t , f64_t e);$/;"	p	language:C++	typeref:typename:f64_t
 preMain	build/a.out.js	/^function preMain() {$/;"	f	language:JavaScript
 preRun	build/a.out.js	/^function preRun() {$/;"	f	language:JavaScript
+prev	code/gist_linked_list.cpp	/^  gist_cdl_node* prev;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
 prev	code/w32_moe.h	/^  W32_Memory_Block* prev;$/;"	m	language:C++	struct:W32_Memory_Block	typeref:typename:W32_Memory_Block *
 prev	D:/work/git/moom/code/gist_singly_linked_list.cpp	/^  gist cdl_node* prev;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist cdl_node *	file:
 printChar	build/a.out.js	/^  function printChar(stream, curr) {$/;"	f	language:JavaScript
@@ -2373,6 +2387,7 @@ v3f_sub	code/momo_vectors.h	/^static v3f_t    v3f_sub(v3f_t lhs, v3f_t rhs);$/;"
 v3f_sub	code/momo_vectors.h	/^v3f_sub(v3f_t lhs, v3f_t rhs) {$/;"	f	language:C++	typeref:typename:v3f_t
 v3f_t	code/momo_vectors.h	/^union v3f_t {$/;"	u	language:C++
 v4f_t	code/momo_vectors.h	/^union v4f_t {$/;"	u	language:C++
+value	code/gist_linked_list.cpp	/^  int value;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:int	file:
 value	code/karu.h	/^  f32_t value;$/;"	m	language:C++	struct:karu_tag_t	typeref:typename:f32_t
 value	code/moe_assets.h	/^  f32_t value;$/;"	m	language:C++	struct:asset_tag_t	typeref:typename:f32_t
 value	code/moe_assets.h	/^struct asset_bitmap_id_t { u32_t value; };$/;"	m	language:C++	struct:asset_bitmap_id_t	typeref:typename:u32_t
