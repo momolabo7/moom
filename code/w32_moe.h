@@ -26,21 +26,21 @@
 #include "moe_platform.h"
 #include "moe_profiler.h"
 
-struct W32_Memory_Block {
-  Platform_Memory_Block platform_block;
+struct w32_memory_block_t {
+  platform_memory_block_t platform_block;
 
-  W32_Memory_Block* prev;
-  W32_Memory_Block* next;
+  w32_memory_block_t* prev;
+  w32_memory_block_t* next;
 };
 
-struct W32_Work {
+struct w32_work_t {
   void* data;
-  Platform_Task_Callback* callback;
+  platform_task_callback_f* callback;
 };
 
 // TODO(momo): Is it possible to use a vector?
-struct W32_Work_Queue {
-  W32_Work entries[256];
+struct w32_work_queue_t {
+  w32_work_t entries[256];
   u32_t volatile next_entry_to_read;
   u32_t volatile next_entry_to_write;
   
@@ -50,7 +50,7 @@ struct W32_Work_Queue {
   
 };
 
-struct W32_Loaded_Code {
+struct w32_loaded_code_t {
   // Need to fill these up
   u32_t function_count;
   const char** function_names;
@@ -66,32 +66,32 @@ struct W32_Loaded_Code {
   HMODULE dll; 
 };
 
-struct W32_File {
+struct w32_file_t {
   HANDLE handle;
   u32_t cabinet_index;
 };
 
 // TODO(momo): is it possible to use a vector? 
-struct W32_File_Cabinet {
-  W32_File files[32]; 
+struct w32_file_cabinet_t {
+  w32_file_t files[32]; 
   u32_t free_files[32];
   u32_t free_file_count;
 };
 
-struct W32_State {
+struct w32_state_t {
   b32_t is_running;
   
   f32_t moe_width;
   f32_t moe_height;
   
-  W32_Work_Queue work_queue;
-  W32_File_Cabinet file_cabinet;
+  w32_work_queue_t work_queue;
+  w32_file_cabinet_t file_cabinet;
   
   HWND window;
 
-  W32_Memory_Block memory_sentinel;
+  w32_memory_block_t memory_sentinel;
 };
-static W32_State w32_state;
+static w32_state_t w32_state;
 
 #if INTERNAL
 #include <stdio.h>
@@ -224,7 +224,7 @@ w32_get_file_last_write_time(const char* filename) {
 
 // NOTE(Momo): This function is accessed by multiple threads!
 static b32_t
-w32_do_next_work_entry(W32_Work_Queue* wq) {
+w32_do_next_work_entry(w32_work_queue_t* wq) {
   b32_t should_sleep = false;
   
   // NOTE(Momo): Generally, we want to do: 
@@ -250,7 +250,7 @@ w32_do_next_work_entry(W32_Work_Queue* wq) {
                                  new_next_entry_to_read,
                                  old_next_entry_to_read);
     if (initial_value == old_next_entry_to_read) {
-      W32_Work work = wq->entries[old_next_entry_to_read];
+      w32_work_t work = wq->entries[old_next_entry_to_read];
       work.callback(work.data);
       InterlockedIncrement((LONG volatile*)&wq->completion_count);
     }
@@ -270,7 +270,7 @@ w32_do_next_work_entry(W32_Work_Queue* wq) {
 // work in the work queue is done!
 //
 static void
-w32_complete_all_tasks_entries(W32_Work_Queue* wq) {
+w32_complete_all_tasks_entries(w32_work_queue_t* wq) {
   while(wq->completion_goal != wq->completion_count) {
     w32_do_next_work_entry(wq);
   }
@@ -282,7 +282,7 @@ w32_complete_all_tasks_entries(W32_Work_Queue* wq) {
 
 static DWORD WINAPI 
 w32_worker_func(LPVOID ctx) {
-  W32_Work_Queue* wq = (W32_Work_Queue*)ctx;
+  w32_work_queue_t* wq = (w32_work_queue_t*)ctx;
   
   while(true) {
     if (w32_do_next_work_entry(wq)){
@@ -294,7 +294,7 @@ w32_worker_func(LPVOID ctx) {
 
 
 static b32_t
-w32_init_work_queue(W32_Work_Queue* wq, u32_t thread_count) {
+w32_init_work_queue(w32_work_queue_t* wq, u32_t thread_count) {
   wq->semaphore = CreateSemaphoreEx(0,
                                     0,                                
                                     thread_count,
@@ -320,12 +320,12 @@ w32_init_work_queue(W32_Work_Queue* wq, u32_t thread_count) {
 
 // NOTE(Momo): This is not very thread safe. Other threads shouldn't call this.
 static void
-w32_add_task_entry(W32_Work_Queue* wq, void (*callback)(void* ctx), void *data) {
+w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data) {
   u32_t old_next_entry_to_write = wq->next_entry_to_write;
   u32_t new_next_entry_to_write = (old_next_entry_to_write + 1) % array_count(wq->entries);
   assert(wq->next_entry_to_read != new_next_entry_to_write);  
   
-  W32_Work* entry = wq->entries + old_next_entry_to_write;
+  w32_work_t* entry = wq->entries + old_next_entry_to_write;
   entry->callback = callback;
   entry->data = data;
   ++wq->completion_goal;
@@ -338,7 +338,7 @@ w32_add_task_entry(W32_Work_Queue* wq, void (*callback)(void* ctx), void *data) 
 
 
 static void
-w32_init_file_cabinet(W32_File_Cabinet* c) {
+w32_init_file_cabinet(w32_file_cabinet_t* c) {
   for(u32_t i = 0; i < array_count(c->files); ++i) {
     c->files[i].cabinet_index = i;
     c->free_files[i] = i;
@@ -346,8 +346,8 @@ w32_init_file_cabinet(W32_File_Cabinet* c) {
   c->free_file_count = array_count(c->files);
 }
 
-static W32_File*
-w32_get_next_free_file(W32_File_Cabinet* c) {
+static w32_file_t*
+w32_get_next_free_file(w32_file_cabinet_t* c) {
   if (c->free_file_count == 0) {
     return nullptr;
   }
@@ -357,18 +357,18 @@ w32_get_next_free_file(W32_File_Cabinet* c) {
 }
 
 static void
-w32_return_file(W32_File_Cabinet* c, W32_File* f) {
+w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {
   c->free_files[c->free_file_count++] = f->cabinet_index;
 }
 
-static Platform_Memory_Block*
+static platform_memory_block_t*
 w32_allocate_memory(umi_t size)
 {
-  umi_t total_size = size + sizeof(W32_Memory_Block);
-  umi_t base_offset = sizeof(W32_Memory_Block);
+  umi_t total_size = size + sizeof(w32_memory_block_t);
+  umi_t base_offset = sizeof(w32_memory_block_t);
 
 
-  W32_Memory_Block* block = (W32_Memory_Block*)
+  w32_memory_block_t* block = (w32_memory_block_t*)
     VirtualAllocEx(GetCurrentProcess(),
                    0, 
                    total_size,
@@ -380,7 +380,7 @@ w32_allocate_memory(umi_t size)
   block->platform_block.data = (u8_t*)block + base_offset; 
   block->platform_block.size = size;
 
-  W32_Memory_Block* sentinel = &w32_state.memory_sentinel;
+  w32_memory_block_t* sentinel = &w32_state.memory_sentinel;
 
   cll_append(sentinel, block);
 
@@ -389,9 +389,9 @@ w32_allocate_memory(umi_t size)
 }
 
 static void
-w32_free_memory(Platform_Memory_Block* platform_block) {
+w32_free_memory(platform_memory_block_t* platform_block) {
   if (platform_block) {
-    W32_Memory_Block* block = (W32_Memory_Block*)platform_block;
+    w32_memory_block_t* block = (w32_memory_block_t*)platform_block;
     cll_remove(block);
     VirtualFree(block, 0, MEM_RELEASE);
   }
@@ -399,11 +399,13 @@ w32_free_memory(Platform_Memory_Block* platform_block) {
 
 static void
 w32_free_all_memory() {
-  W32_Memory_Block* sentinel = &w32_state.memory_sentinel; 
-  W32_Memory_Block* itr = sentinel->next;
+  w32_memory_block_t* sentinel = &w32_state.memory_sentinel; 
+  w32_memory_block_t* itr = sentinel->next;
   while(itr != sentinel) {
+    w32_memory_block_t* next = itr->next;
+    cll_remove(itr);
     VirtualFree(itr, 0, MEM_RELEASE);
-    itr = itr->next;
+    itr = next;
   }
 }
 
@@ -418,7 +420,7 @@ w32_shutdown() {
 
 
 static void
-w32_unload_code(W32_Loaded_Code* code) {
+w32_unload_code(w32_loaded_code_t* code) {
   if(code->dll) {
     FreeLibrary(code->dll);
     code->dll = 0;
@@ -428,7 +430,7 @@ w32_unload_code(W32_Loaded_Code* code) {
 }
 
 static void
-w32_load_code(W32_Loaded_Code* code) {
+w32_load_code(w32_loaded_code_t* code) {
   code->is_valid = false;
   
 #if INTERNAL
@@ -473,7 +475,7 @@ w32_load_code(W32_Loaded_Code* code) {
 
 #if INTERNAL
 static b32_t
-w32_reload_code_if_outdated(W32_Loaded_Code* code) {
+w32_reload_code_if_outdated(w32_loaded_code_t* code) {
   b32_t reloaded = false;
   // Check last modified date
   LARGE_INTEGER last_write_time = w32_get_file_last_write_time(code->module_path);

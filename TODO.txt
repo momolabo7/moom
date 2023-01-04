@@ -1,7 +1,7 @@
 moe_t
   arena_t profiler_t
 
-Lit Scene
+lit_t Scene
   Level selection (after we make 10 levels I guess)
   Improve game end transitions
   Each level should have a title before showing the level

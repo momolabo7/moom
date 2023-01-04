@@ -172,7 +172,7 @@ _w32_load_wgl_extentions() {
 static void
 w32_gfx_unload(gfx_t* gfx) {
   Opengl* ogl = (Opengl*)gfx;
-  Platform_Memory_Block* block = (Platform_Memory_Block*)(ogl->user_data);
+  platform_memory_block_t* block = (platform_memory_block_t*)(ogl->user_data);
   w32_free_memory(block);
 }
 
@@ -209,9 +209,9 @@ w32_gfx_load(HWND window,
 
   // NOTE(momo): We keep these blocks seperate in case we want to dynamically
   // expand these so that we can prototype faster.
-  Platform_Memory_Block* ogl_block = w32_allocate_memory(sizeof(Opengl));
-  Platform_Memory_Block* command_queue_block = w32_allocate_memory(command_queue_size);
-  Platform_Memory_Block* texture_queue_block = w32_allocate_memory(texture_queue_size);
+  platform_memory_block_t* ogl_block = w32_allocate_memory(sizeof(Opengl));
+  platform_memory_block_t* command_queue_block = w32_allocate_memory(command_queue_size);
+  platform_memory_block_t* texture_queue_block = w32_allocate_memory(texture_queue_size);
 
   if (!ogl_block || !command_queue_block || !texture_queue_block) {
     return nullptr;

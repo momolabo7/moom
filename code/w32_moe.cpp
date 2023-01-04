@@ -60,10 +60,10 @@ w32_free_memory_from_arena(arena_t* a) {
 
 
 static b32_t
-w32_open_file(Platform_File* file,
+w32_open_file(platform_file_t* file,
               const char* filename, 
-              Platform_File_Access access,
-              Platform_File_Path path) 
+              platform_file_access_t access,
+              platform_file_path_t path) 
 {
   // Opening the file
   DWORD access_flag = {};
@@ -99,7 +99,7 @@ w32_open_file(Platform_File* file,
   }
   else {
     
-    W32_File* w32_file = w32_get_next_free_file(&w32_state.file_cabinet);
+    w32_file_t* w32_file = w32_get_next_free_file(&w32_state.file_cabinet);
     assert(w32_file);
     w32_file->handle = handle;
     
@@ -109,8 +109,8 @@ w32_open_file(Platform_File* file,
 }
 
 static void
-w32_close_file(Platform_File* file) {
-  W32_File* w32_file = (W32_File*)file->platform_data;
+w32_close_file(platform_file_t* file) {
+  w32_file_t* w32_file = (w32_file_t*)file->platform_data;
   CloseHandle(w32_file->handle);
   
   w32_return_file(&w32_state.file_cabinet, w32_file);
@@ -118,9 +118,9 @@ w32_close_file(Platform_File* file) {
 }
 
 static b32_t
-w32_read_file(Platform_File* file, umi_t size, umi_t offset, void* dest) 
+w32_read_file(platform_file_t* file, umi_t size, umi_t offset, void* dest) 
 { 
-  W32_File* w32_file = (W32_File*)file->platform_data;
+  w32_file_t* w32_file = (w32_file_t*)file->platform_data;
   
   // Reading the file
   OVERLAPPED overlapped = {};
@@ -140,9 +140,9 @@ w32_read_file(Platform_File* file, umi_t size, umi_t offset, void* dest)
 }
 
 static b32_t 
-w32_write_file(Platform_File* file, umi_t size, umi_t offset, void* src)
+w32_write_file(platform_file_t* file, umi_t size, umi_t offset, void* src)
 {
-  W32_File* w32_file = (W32_File*)file->platform_data;
+  w32_file_t* w32_file = (w32_file_t*)file->platform_data;
   
   OVERLAPPED overlapped = {};
   overlapped.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
@@ -160,7 +160,7 @@ w32_write_file(Platform_File* file, umi_t size, umi_t offset, void* src)
 }
 
 static void
-w32_add_task(Platform_Task_Callback callback, void* data) {
+w32_add_task(platform_task_callback_f callback, void* data) {
   w32_add_task_entry(&w32_state.work_queue, callback, data);
 }
 
@@ -171,7 +171,7 @@ w32_complete_all_tasks() {
 
 
 static void
-w32_process_input(HWND window, Platform* pf) 
+w32_process_input(HWND window, platform_t* pf) 
 {
   MSG msg = {};
   while(PeekMessage(&msg, window, 0, 0, PM_REMOVE)) {
@@ -292,7 +292,7 @@ w32_set_moe_dims(f32_t width, f32_t height) {
   }
 
 static void
-w32_setup_platform_functions(Platform* pf)
+w32_setup_platform_functions(platform_t* pf)
 {
   //pf->hot_reload = w32_hot_reload;
   //pf->shutdown = w32_shutdown;
@@ -462,7 +462,7 @@ WinMain(HINSTANCE instance,
   //-Load Renderer functions
 #if 0
   W32_Gfx_Functions gfx_functions = {};
-  W32_Loaded_Code gfx_code = {};
+  w32_loaded_code_t gfx_code = {};
   gfx_code.function_count = array_count(w32_gfx_function_names);
   gfx_code.function_names = w32_gfx_function_names;
   gfx_code.module_path = "gfx.dll";
@@ -476,8 +476,8 @@ WinMain(HINSTANCE instance,
 #endif  
 
   //-Load moe_t Functions
-  Moe_Functions moe_functions = {};
-  W32_Loaded_Code moe_code = {};
+  moe_functions_t moe_functions = {};
+  w32_loaded_code_t moe_code = {};
   moe_code.function_count = array_count(moe_function_names);
   moe_code.function_names = moe_function_names;
   moe_code.module_path = "moe.dll";
@@ -505,7 +505,7 @@ WinMain(HINSTANCE instance,
   if (!w32_allocate_memory_into_arena(audio_arena, megabytes(256))) return false;
   defer { w32_free_memory_from_arena(audio_arena); };
 
-  Platform_Audio* audio = w32_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
+  platform_audio_t* audio = w32_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
   if (!audio) return false;
   defer{ w32_audio_unload(audio); };
 
@@ -513,8 +513,8 @@ WinMain(HINSTANCE instance,
   // Init profiler
   profiler_init(profiler, w32_get_performance_counter_u64);
   
-  // Platform setup
-  make(Platform, pf);
+  // platform_t setup
+  make(platform_t, pf);
  
   // moe_t memory set up
   
@@ -557,7 +557,7 @@ WinMain(HINSTANCE instance,
        
     //-Process messages and input
     pf->seconds_since_last_frame = target_secs_per_frame;
-    pf_update_input(pf);
+    platform_update_input(pf);
     w32_process_input(window, pf); 
     
     //- Mouse input 

@@ -5,15 +5,15 @@
 // 
 
 exported b32_t 
-moe_update_and_render(Platform* pf)
+moe_update_and_render(platform_t* pf)
 { 
   if (pf->reloaded) {
     if(pf->moe) {
-      pf->free_memory((Platform_Memory_Block*)pf->moe);
+      pf->free_memory((platform_memory_block_t*)pf->moe);
     }
    
     // Allocate and initialize moe_t engine
-    Platform_Memory_Block* moe_memory = pf->allocate_memory(megabytes(32));
+    platform_memory_block_t* moe_memory = pf->allocate_memory(megabytes(32));
     pf->moe = moe_memory;
     
     moe_t* moe = (moe_t*)moe_memory->data;
@@ -63,7 +63,7 @@ moe_update_and_render(Platform* pf)
    
   }
  
-  moe_t* moe = (moe_t*)((Platform_Memory_Block*)pf->moe)->data;
+  moe_t* moe = (moe_t*)((platform_memory_block_t*)pf->moe)->data;
   moe_profile_block(GAME);
   console_t* console = &moe->console;
 
@@ -85,7 +85,7 @@ moe_update_and_render(Platform* pf)
   moe->scene_tick(moe);
 
   // Debug Rendering Stuff
-  if (pf_is_button_poked(pf->button_console)) {
+  if (platform_is_button_poked(pf->button_console)) {
     moe->show_debug_type = 
       (moe_show_debug_type_t)((moe->show_debug_type + 1)%MOE_SHOW_DEBUG_MAX);
   }
@@ -107,7 +107,7 @@ moe_update_and_render(Platform* pf)
 
 #if 0
   static f32_t sine = 0.f;
-  Platform_Audio* audio = platform->audio;
+  platform_audio_t* audio = platform->audio;
   s16_t* sample_out = audio->sample_buffer;
   s16_t volume = 3000;
   for(u32_t sample_index = 0; sample_index < audio->sample_count; ++sample_index) {

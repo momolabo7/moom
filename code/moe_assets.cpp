@@ -21,9 +21,9 @@ moe_init_assets(moe_t* moe, const char* filename)
 
   arena_t* arena = &moe->asset_arena;
   assets_t* ma = &moe->assets;
-  Platform* platform = moe->platform;
+  platform_t* platform = moe->platform;
 
-  make(Platform_File, file);
+  make(platform_file_t, file);
   b32_t ok = platform->open_file(file,
                                filename,
                                PLATFORM_FILE_ACCESS_READ, 

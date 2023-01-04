@@ -1,5 +1,3 @@
-struct Sandbox {
-};
 
 
 static void
@@ -10,19 +8,19 @@ sandbox_tick(moe_t* moe)
 
   v2f_t dir = v2f_set(0.f, 0.f);
 
-  if(pf_is_button_down(platform->button_up)) {
+  if(platform_is_button_down(platform->button_up)) {
     dir.y += 1.f;
   }
 
-  if(pf_is_button_down(platform->button_down)) {
+  if(platform_is_button_down(platform->button_down)) {
     dir.y -= 1.f;
   }
 
-  if(pf_is_button_down(platform->button_left)) {
+  if(platform_is_button_down(platform->button_left)) {
     dir.x -= 1.f;
   }
 
-  if(pf_is_button_down(platform->button_right)) {
+  if(platform_is_button_down(platform->button_right)) {
     dir.x += 1.f;
   } 
 

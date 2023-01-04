@@ -40,7 +40,7 @@ It's not like I tested otherwise anyway.
 I have been looking into the platform input system recently and felt that I need to re-evaluate what's going on there.
 
 Right now, my understanding of the workflow for platform input is:
-- Platform API states what kind of input the engine accepts
+- platform_t API states what kind of input the engine accepts
 - Concrete platform layer will then implement the API
 
 This creates inflexibility on the 'Scene' layer.

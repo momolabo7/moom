@@ -9,7 +9,7 @@ inspector_update_and_render(moe_t* moe)
 {
   inspector_t* inspector = &moe->inspector;
   assets_t* assets = &moe->assets;
-  Platform* platform = moe->platform;
+  platform_t* platform = moe->platform;
 
   paint_sprite(moe, moe->blank_sprite, 
                v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 

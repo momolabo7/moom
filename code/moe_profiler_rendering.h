@@ -45,7 +45,7 @@ static void
 update_and_render_profiler(moe_t* moe) 
 {
   profiler_t* profiler = moe->platform->profiler;
-  Platform* platform = moe->platform;
+  platform_t* platform = moe->platform;
   const f32_t render_width = MOE_WIDTH;
   const f32_t render_height = MOE_HEIGHT;
   const f32_t font_height = 20.f;

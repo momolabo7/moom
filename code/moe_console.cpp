@@ -68,7 +68,7 @@ _execute(console_t* dc) {
 static void
 console_update_and_render(moe_t* moe) 
 {
-  Platform* platform = moe->platform;
+  platform_t* platform = moe->platform;
   console_t* dc = &moe->console;
   for (u32_t char_index = 0; 
        char_index < platform->char_count;

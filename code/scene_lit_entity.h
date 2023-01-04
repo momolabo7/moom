@@ -1,7 +1,7 @@
 
 
 
-struct Lit_Particle {
+struct lit_particle_t {
   v2f_t pos, vel;
   v2f_t size_start, size_end;
   rgba_t color_start, color_end;
@@ -10,7 +10,7 @@ struct Lit_Particle {
   f32_t lifespan_now;
 };
 
-struct Lit_Particle_Pool {
+struct lit_particle_pool_t {
   f32_t particle_lifespan_min;
   f32_t particle_lifespan_max;
 
@@ -18,13 +18,13 @@ struct Lit_Particle_Pool {
   f32_t particle_color_end;
 
   u32_t particle_count;
-  Lit_Particle particles[256];
+  lit_particle_t particles[256];
 };
 
 
 
 
-struct Lit_Sensor {
+struct lit_sensor_t {
   v2f_t pos;
   u32_t target_color;
   u32_t current_color;
@@ -33,9 +33,9 @@ struct Lit_Sensor {
 
 
 
-struct Lit_Player {
+struct lit_player_t {
   v2f_t pos;
-  Lit_Light* held_light;
+  lit_light_t* held_light;
   b32_t is_holding_light;
 
   // For animating getting the light

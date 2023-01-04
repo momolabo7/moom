@@ -3,18 +3,18 @@
 //
 
 static void
-lit_init_player(Lit* lit, f32_t x, f32_t y) {
-  Lit_Player* player = &lit->player; 
+lit_init_player(lit_t* lit, f32_t x, f32_t y) {
+  lit_player_t* player = &lit->player; 
   player->held_light = nullptr;
   player->pos.x = x;
   player->pos.y = y;
 }
 
 static void 
-lit_update_player(moe_t* moe, Lit* lit, f32_t dt) 
+lit_update_player(moe_t* moe, lit_t* lit, f32_t dt) 
 {
-  Lit_Player* player = &lit->player; 
-  Platform* platform = moe->platform;
+  lit_player_t* player = &lit->player; 
+  platform_t* platform = moe->platform;
   
 
   // Get world mouse position
@@ -30,26 +30,26 @@ lit_update_player(moe_t* moe, Lit* lit, f32_t dt)
 #if 1
   // Get movement direction
   v2f_t direction = {0};
-  if (pf_is_button_down(platform->button_up)) {
+  if (platform_is_button_down(platform->button_up)) {
     direction.y += 1.f;
   }
-  if (pf_is_button_down(platform->button_down)) {
+  if (platform_is_button_down(platform->button_down)) {
     direction.y -= 1.f;
   }
-  if (pf_is_button_down(platform->button_right)) {
+  if (platform_is_button_down(platform->button_right)) {
     direction.x += 1.f;
   }
-  if (pf_is_button_down(platform->button_left)) {
+  if (platform_is_button_down(platform->button_left)) {
     direction.x -= 1.f;
   }
   
   // Held light controls
   if (player->held_light != nullptr) {
-    if (pf_is_button_down(platform->button_rotate_left)){ 
+    if (platform_is_button_down(platform->button_rotate_left)){ 
       player->held_light->dir = 
         v2f_rotate(player->held_light->dir, LIT_PLAYER_ROTATE_SPEED * dt );
     }
-    if (pf_is_button_down(platform->button_rotate_right)){ 
+    if (platform_is_button_down(platform->button_rotate_right)){ 
       player->held_light->dir = 
         v2f_rotate(player->held_light->dir, -LIT_PLAYER_ROTATE_SPEED * dt);
     }
@@ -64,13 +64,13 @@ lit_update_player(moe_t* moe, Lit* lit, f32_t dt)
   }
 #endif 
   // 'Pick up'  button
-  if (pf_is_button_poked(platform->button_use)) {
+  if (platform_is_button_poked(platform->button_use)) {
     if (player->held_light == nullptr) {
       f32_t shortest_dist = LIT_PLAYER_PICKUP_DIST; // limit
-      Lit_Light* nearest_light = nullptr;
+      lit_light_t* nearest_light = nullptr;
 
       for(u32_t light_index = 0; light_index < lit->light_count; ++light_index) {
-        Lit_Light* l = lit->lights +light_index;
+        lit_light_t* l = lit->lights +light_index;
         f32_t dist = v2f_dist_sq(l->pos, player->pos);
         if (shortest_dist > dist) {
           nearest_light = l;
@@ -119,10 +119,10 @@ lit_update_player(moe_t* moe, Lit* lit, f32_t dt)
 }
 
 static void
-lit_draw_player(moe_t* moe, Lit* lit)
+lit_draw_player(moe_t* moe, lit_t* lit)
 {
-  Lit_Player* player = &lit->player;
-  Platform* platform = moe->platform;
+  lit_player_t* player = &lit->player;
+  platform_t* platform = moe->platform;
   paint_sprite(moe, lit->circle_sprite, 
                player->pos, 
                v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
@@ -135,7 +135,7 @@ lit_draw_player(moe_t* moe, Lit* lit)
 // Particles
 //
 static void
-lit_spawn_particle(Lit* lit,
+lit_spawn_particle(lit_t* lit,
                    f32_t lifespan,
                    v2f_t pos, v2f_t vel,
                    rgba_t color_start,
@@ -143,9 +143,9 @@ lit_spawn_particle(Lit* lit,
                    v2f_t size_start,
                    v2f_t size_end) 
 {
-  Lit_Particle_Pool* ps = &lit->particles;
+  lit_particle_pool_t* ps = &lit->particles;
   if (ps->particle_count < array_count(ps->particles)) {
-    Lit_Particle* p = ps->particles + ps->particle_count++; 
+    lit_particle_t* p = ps->particles + ps->particle_count++; 
     p->pos = pos;
     p->vel = vel;
     p->color_start = color_start;
@@ -157,12 +157,12 @@ lit_spawn_particle(Lit* lit,
 }
 
 static void
-lit_update_particles(Lit* lit, f32_t dt) {
-  Lit_Particle_Pool* ps = &lit->particles;
+lit_update_particles(lit_t* lit, f32_t dt) {
+  lit_particle_pool_t* ps = &lit->particles;
   for(u32_t particle_id = 0; 
       particle_id < ps->particle_count; ) 
   {
-    Lit_Particle* p = ps->particles + particle_id;
+    lit_particle_t* p = ps->particles + particle_id;
     if (p->lifespan_now <= 0.f) {
       // Copy last item to current item
       (*p) = ps->particles[ps->particle_count-- - 1]; 
@@ -178,16 +178,16 @@ lit_update_particles(Lit* lit, f32_t dt) {
 }
 
 static void
-lit_render_particles(moe_t* moe, Lit* lit) {
-  Lit_Particle_Pool* ps = &lit->particles;
-  Platform* platform = moe->platform;
+lit_render_particles(moe_t* moe, lit_t* lit) {
+  lit_particle_pool_t* ps = &lit->particles;
+  platform_t* platform = moe->platform;
 
   // Render particles
   for(u32_t particle_id = 0; 
       particle_id < ps->particle_count;
       ++particle_id) 
   {
-    Lit_Particle* p = ps->particles + particle_id;
+    lit_particle_t* p = ps->particles + particle_id;
 
     f32_t lifespan_ratio = 1.f -  p->lifespan_now / p->lifespan;
 
@@ -210,10 +210,10 @@ lit_render_particles(moe_t* moe, Lit* lit) {
 //////////////////////////////////////////////////////////////////////
 // Sensors
 static void 
-lit_push_sensor(Lit* lit, f32_t pos_x, f32_t pos_y, u32_t target_color) 
+lit_push_sensor(lit_t* lit, f32_t pos_x, f32_t pos_y, u32_t target_color) 
 {
   assert(lit->sensor_count < array_count(lit->sensors));
-  Lit_Sensor* s = lit->sensors + lit->sensor_count++;
+  lit_sensor_t* s = lit->sensors + lit->sensor_count++;
   s->pos.x = pos_x;
   s->pos.y = pos_y;
   s->target_color = target_color;
@@ -221,26 +221,26 @@ lit_push_sensor(Lit* lit, f32_t pos_x, f32_t pos_y, u32_t target_color)
 }
 
 static void 
-lit_update_sensors(Lit* lit,
+lit_update_sensors(lit_t* lit,
                    f32_t dt) 
 {
-  Lit_Particle_Pool* particles = &lit->particles;
+  lit_particle_pool_t* particles = &lit->particles;
   rng_t* rng = &lit->rng; 
 
   u32_t activated = 0;
   for(u32_t sensor_index = 0; sensor_index < lit->sensor_count; ++sensor_index)
   {
-    Lit_Sensor* sensor = lit->sensors + sensor_index;
+    lit_sensor_t* sensor = lit->sensors + sensor_index;
     u32_t current_color = 0x0000000;
     
     // For each light, for each triangle, add light
     for(u32_t light_index = 0; light_index < lit->light_count; ++light_index)
     {
-      Lit_Light* light = lit->lights +light_index;
+      lit_light_t* light = lit->lights +light_index;
       
       for(u32_t tri_index = 0; tri_index < light->triangle_count; ++tri_index)
       {
-        Lit_Light_Triangle* tri = light->triangles +tri_index;
+        lit_light_triangle_t* tri = light->triangles +tri_index;
         if (bonk_tri2_pt2(tri->p0, tri->p1, tri->p2, sensor->pos)) 
         {
           // TODO(Momo): Probably not the right way do sensor
@@ -291,17 +291,17 @@ lit_update_sensors(Lit* lit,
 }
 
 static b32_t
-lit_are_all_sensors_activated(Lit* lit) {
+lit_are_all_sensors_activated(lit_t* lit) {
   return lit->sensors_activated == lit->sensor_count;
 }
 
 static void 
-lit_render_sensors(moe_t* moe, Lit* lit) {
-  Platform* platform = moe->platform;
+lit_render_sensors(moe_t* moe, lit_t* lit) {
+  platform_t* platform = moe->platform;
 
   for(u32_t sensor_index = 0; sensor_index < lit->sensor_count; ++sensor_index)
   {
-    Lit_Sensor* sensor = lit->sensors + sensor_index;
+    lit_sensor_t* sensor = lit->sensors + sensor_index;
     gfx_push_filled_circle(platform->gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, rgba_hex(sensor->target_color)); 
 
     // only for debugging

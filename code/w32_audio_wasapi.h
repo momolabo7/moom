@@ -1,17 +1,17 @@
 #ifndef WIN_WASAPI
 #define WIN_WASAPI
 
-struct Win_Wasapi;
-struct Win_Wasapi_Notif_Client {
+struct w32_wasapi_t;
+struct w32_wasapi_notif_client_t {
   IMMNotificationClient imm_notifs;
-  Win_Wasapi* wasapi;
+  w32_wasapi_t* wasapi;
   LONG ref;
 };
 
-struct Win_Wasapi {
-  Platform_Audio platform_audio; // Must be first member
+struct w32_wasapi_t {
+  platform_audio_t platform_audio; // Must be first member
   
-  Win_Wasapi_Notif_Client notifs;
+  w32_wasapi_notif_client_t notifs;
   IMMDeviceEnumerator * mm_device_enum;
   IAudioClient2* audio_client;
   IAudioRenderClient* audio_render_client;
@@ -47,12 +47,12 @@ DEFINE_GUID(IID_IMMNotificationClient, 0x7991eec9, 0x7e89, 0x4d85, 0x83, 0x90, 0
 // Win Audio Notifs implementation
 static STDMETHODIMP_(ULONG)  
 _w32_wasapi_notif_client_AddRef(IMMNotificationClient* mm_notif) {
-  Win_Wasapi_Notif_Client* w32_notif = (Win_Wasapi_Notif_Client*)mm_notif;
+  w32_wasapi_notif_client_t* w32_notif = (w32_wasapi_notif_client_t*)mm_notif;
   return InterlockedIncrement(&w32_notif->ref);
 }
 static STDMETHODIMP_(ULONG)  
 _w32_wasapi_notif_client_Release(IMMNotificationClient* mm_notif) {
-  Win_Wasapi_Notif_Client* w32_notif = (Win_Wasapi_Notif_Client*)mm_notif;
+  w32_wasapi_notif_client_t* w32_notif = (w32_wasapi_notif_client_t*)mm_notif;
   return InterlockedDecrement(&w32_notif->ref);
 }
 static STDMETHODIMP_(HRESULT)  
@@ -83,7 +83,7 @@ _w32_wasapi_notif_client_OnDefaultDeviceChange(IMMNotificationClient* mm_notif,
                                               ERole role,
                                               LPCWSTR pwstr_device_id)
 {
-  Win_Wasapi_Notif_Client* w32_notif = (Win_Wasapi_Notif_Client*)mm_notif;
+  w32_wasapi_notif_client_t* w32_notif = (w32_wasapi_notif_client_t*)mm_notif;
   w32_notif->wasapi->is_device_changed = true;
   return S_OK;
 }
@@ -130,7 +130,7 @@ static IMMNotificationClientVtbl _w32_wasapi_notifs_vtable {
 };
 
 static b32_t 
-_w32_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
+_w32_wasapi_set_default_device_as_current_device(w32_wasapi_t* wasapi) {
   IMMDevice* device;
   HRESULT hr = IMMDeviceEnumerator_GetDefaultAudioEndpoint(wasapi->mm_device_enum, 
                                                            eRender, 
@@ -210,7 +210,7 @@ _w32_wasapi_set_default_device_as_current_device(Win_Wasapi* wasapi) {
 }
 
 static b32_t
-w32_wasapi_init(Win_Wasapi* wasapi,
+w32_wasapi_init(w32_wasapi_t* wasapi,
                 u32_t samples_per_second, 
                 u16_t bits_per_sample,
                 u16_t channels,
@@ -283,7 +283,7 @@ w32_wasapi_init(Win_Wasapi* wasapi,
 }
 
 static inline void 
-_w32_wasapi_release_current_device(Win_Wasapi* wasapi) {
+_w32_wasapi_release_current_device(w32_wasapi_t* wasapi) {
 	if (wasapi->audio_client) {
 		IAudioClient2_Stop(wasapi->audio_client);
 		IAudioClient2_Release(wasapi->audio_client);
@@ -298,7 +298,7 @@ _w32_wasapi_release_current_device(Win_Wasapi* wasapi) {
 }
 
 static void
-w32_wasapi_free(Win_Wasapi* wasapi) {
+w32_wasapi_free(w32_wasapi_t* wasapi) {
   _w32_wasapi_release_current_device(wasapi);
 	IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
 	IMMDeviceEnumerator_Release(wasapi->mm_device_enum);
@@ -306,7 +306,7 @@ w32_wasapi_free(Win_Wasapi* wasapi) {
 }
 
 static void 
-w32_wasapi_begin_frame(Win_Wasapi* wasapi) {
+w32_wasapi_begin_frame(w32_wasapi_t* wasapi) {
 	if (wasapi->is_device_changed) {
 		w32_log("[w32_wasapi] Resetting wasapi device\n");
 		// Attempt to change device
@@ -338,17 +338,17 @@ w32_wasapi_begin_frame(Win_Wasapi* wasapi) {
 		samples_to_write = wasapi->buffer_size;
 	}
 
-  // Get Platform_Audio
+  // Get platform_audio_t
   wasapi->platform_audio.sample_buffer = wasapi->buffer;
   wasapi->platform_audio.sample_count = samples_to_write; 
   wasapi->platform_audio.channels = wasapi->channels;
 
 }
 static void
-w32_wasapi_end_frame(Win_Wasapi* wasapi) 
+w32_wasapi_end_frame(w32_wasapi_t* wasapi) 
 {
 	if (!wasapi->is_device_ready) return;
-  Platform_Audio* output = &wasapi->platform_audio;
+  platform_audio_t* output = &wasapi->platform_audio;
 
   // NOTE(Momo): Kinda assumes 16-bit Sound
   BYTE* sound_buffer_data;
@@ -373,7 +373,7 @@ w32_wasapi_end_frame(Win_Wasapi* wasapi)
 /////////////////////////////////////////////////////////
 // API Correspondence
 //
-static Platform_Audio*
+static platform_audio_t*
 w32_audio_load(u32_t samples_per_second, 
                u16_t bits_per_sample,
                u16_t channels,
@@ -382,7 +382,7 @@ w32_audio_load(u32_t samples_per_second,
                arena_t* allocator) 
 {
   // TODO: Ideally, we should give WASAPI a seperate arena 
-  Win_Wasapi* wasapi = arena_push(Win_Wasapi, allocator);
+  w32_wasapi_t* wasapi = arena_push(w32_wasapi_t, allocator);
   if (!wasapi) return 0;
 
   b32_t success = w32_wasapi_init(wasapi, samples_per_second, bits_per_sample, channels, latency_frames, refresh_rate, allocator);
@@ -392,17 +392,17 @@ w32_audio_load(u32_t samples_per_second,
 }
 
 static void
-w32_audio_begin_frame(Platform_Audio* audio) {
-  w32_wasapi_begin_frame((Win_Wasapi*)audio);
+w32_audio_begin_frame(platform_audio_t* audio) {
+  w32_wasapi_begin_frame((w32_wasapi_t*)audio);
 }
 
 static void 
-w32_audio_end_frame(Platform_Audio* audio) {
-  w32_wasapi_end_frame((Win_Wasapi*)audio);
+w32_audio_end_frame(platform_audio_t* audio) {
+  w32_wasapi_end_frame((w32_wasapi_t*)audio);
 }
 
 static void
-w32_audio_unload(Platform_Audio* audio) {
+w32_audio_unload(platform_audio_t* audio) {
   // Unused
 }
 

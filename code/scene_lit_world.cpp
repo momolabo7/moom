@@ -1,15 +1,15 @@
 static void 
-lit_calc_ghost_edge_line(Lit_Edge* e, v2f_t* min, v2f_t* max) {
+lit_calc_ghost_edge_line(lit_edge_t* e, v2f_t* min, v2f_t* max) {
   v2f_t dir = v2f_norm(e->end_pt - e->start_pt) * 0.0001f;
   
   *min = v2f_sub(e->start_pt, dir);
   *max = v2f_add(e->end_pt, dir);
 }
 
-static Lit_Edge*
-lit_push_edge(Lit* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
+static lit_edge_t*
+lit_push_edge(lit_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
   assert(m->edge_count < array_count(m->edges));
-  Lit_Edge* edge = m->edges + m->edge_count++;
+  lit_edge_t* edge = m->edges + m->edge_count++;
   edge->start_pt = v2f_set(min_x, min_y);
   edge->end_pt = v2f_set(max_x, max_y);;
 
@@ -19,15 +19,15 @@ lit_push_edge(Lit* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
 }
 
 static void 
-lit_push_double_edge(Lit* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
+lit_push_double_edge(lit_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
   lit_push_edge(m, min_x, min_y, max_x, max_y);
   lit_push_edge(m, max_x, max_y, min_x, min_y);
 }
 
-static Lit_Light*
-lit_push_light(Lit* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle, f32_t turn) {
+static lit_light_t*
+lit_push_light(lit_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle, f32_t turn) {
   assert(m->light_count < array_count(m->lights));
-  Lit_Light* light = m->lights + m->light_count++;
+  lit_light_t* light = m->lights + m->light_count++;
   light->pos.x = pos_x;
   light->pos.y = pos_y;
   light->color = color;
@@ -43,7 +43,7 @@ lit_push_light(Lit* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle, f32_t
 static f32_t
 lit_get_ray_intersection_time_wrt_edges(v2f_t ray_origin, 
                                         v2f_t ray_dir,
-                                        Lit_Edge* edges,
+                                        lit_edge_t* edges,
                                         u32_t edge_count,
                                         b32_t clamp_to_ray_max = false)
 {
@@ -51,7 +51,7 @@ lit_get_ray_intersection_time_wrt_edges(v2f_t ray_origin,
  
   for(u32_t edge_index = 0; edge_index < edge_count; ++edge_index)
   {
-    Lit_Edge* edge = edges + edge_index;
+    lit_edge_t* edge = edges + edge_index;
 
     if (edge->is_disabled) continue;
 
@@ -92,9 +92,9 @@ lit_get_ray_intersection_time_wrt_edges(v2f_t ray_origin,
   return lowest_t1;
 }
 static void
-lit_push_triangle(Lit_Light* l, v2f_t p0, v2f_t p1, v2f_t p2, u32_t color) {
+lit_push_triangle(lit_light_t* l, v2f_t p0, v2f_t p1, v2f_t p2, u32_t color) {
   assert(l->triangle_count < array_count(l->triangles));
-  Lit_Light_Triangle* tri = l->triangles + l->triangle_count++;
+  lit_light_triangle_t* tri = l->triangles + l->triangle_count++;
   tri->p0 = p0;
   tri->p1 = p1;
   tri->p2 = p2;
@@ -102,15 +102,15 @@ lit_push_triangle(Lit_Light* l, v2f_t p0, v2f_t p1, v2f_t p2, u32_t color) {
 
 
 static void
-lit_gen_light_intersections(Lit_Light* l,
-                            Lit_Edge* edges,
+lit_gen_light_intersections(lit_light_t* l,
+                            lit_edge_t* edges,
                             u32_t edge_count,
                             arena_t* tmp_arena)
 {
   //moe_profile_block(light_generation);
   arena_set_revert_point(tmp_arena);
 
-  Lit_Light_Type light_type = Lit_LIGHT_TYPE_POINT;
+  lit_light_type_t light_type = Lit_LIGHT_TYPE_POINT;
   if (l->half_angle < PI_32/2) {
     light_type = Lit_LIGHT_TYPE_DIRECTIONAL; 
   }
@@ -131,7 +131,7 @@ lit_gen_light_intersections(Lit_Light* l,
     // For each endpoint
     for(u32_t edge_index = 0; edge_index < edge_count; ++edge_index) 
     {
-      Lit_Edge* edge = edges + edge_index;
+      lit_edge_t* edge = edges + edge_index;
       
       if (edge->is_disabled) continue;
 
@@ -154,7 +154,7 @@ lit_gen_light_intersections(Lit_Light* l,
       f32_t t = lit_get_ray_intersection_time_wrt_edges(l->pos, light_ray_dir, edges, edge_count, offset_index == 0);
       
       assert(l->intersection_count < array_count(l->intersections));
-      Lit_Light_Intersection* intersection = l->intersections + l->intersection_count++;
+      lit_light_intersection_t* intersection = l->intersections + l->intersection_count++;
       intersection->pt = (t == F32_INFINITY) ? ep : l->pos + t*light_ray_dir;
       intersection->is_shell = false;
 
@@ -181,7 +181,7 @@ lit_gen_light_intersections(Lit_Light* l,
         f32_t t = lit_get_ray_intersection_time_wrt_edges(l->pos, dirs[i], edges, edge_count);
 
         assert(l->intersection_count < array_count(l->intersections));
-        Lit_Light_Intersection* intersection = l->intersections + l->intersection_count++;
+        lit_light_intersection_t* intersection = l->intersections + l->intersection_count++;
         intersection->pt = l->pos + t*dirs[i];
         intersection->is_shell = true;
       }
@@ -195,7 +195,7 @@ lit_gen_light_intersections(Lit_Light* l,
          its_id < l->intersection_count; 
          ++its_id) 
     {
-      Lit_Light_Intersection* its = l->intersections + its_id;
+      lit_light_intersection_t* its = l->intersections + its_id;
       v2f_t basis_vec = v2f_t{1.f, 0.f};
       v2f_t intersection_vec = its->pt - l->pos;
       f32_t key = v2f_angle(basis_vec, intersection_vec);
@@ -211,8 +211,8 @@ lit_gen_light_intersections(Lit_Light* l,
          sorted_its_id < l->intersection_count - 1;
          sorted_its_id++)
     {
-      Lit_Light_Intersection* its0 = l->intersections + sorted_its[sorted_its_id].index;
-      Lit_Light_Intersection* its1 = l->intersections + sorted_its[sorted_its_id+1].index;
+      lit_light_intersection_t* its0 = l->intersections + sorted_its[sorted_its_id].index;
+      lit_light_intersection_t* its1 = l->intersections + sorted_its[sorted_its_id+1].index;
 
       b32_t ignore = false;
 
@@ -236,8 +236,8 @@ lit_gen_light_intersections(Lit_Light* l,
       }
     }
 
-    Lit_Light_Intersection* its0 = l->intersections + sorted_its[l->intersection_count-1].index;
-    Lit_Light_Intersection* its1 = l->intersections + sorted_its[0].index;
+    lit_light_intersection_t* its0 = l->intersections + sorted_its[l->intersection_count-1].index;
+    lit_light_intersection_t* its1 = l->intersections + sorted_its[0].index;
 
     // In the case of 'wierd' lights,
     // shell ray should not have a triangle to another shell ray 
@@ -264,30 +264,30 @@ lit_gen_light_intersections(Lit_Light* l,
 
 
 static void
-lit_gen_lights(Lit_Light* lights, 
+lit_gen_lights(lit_light_t* lights, 
                u32_t light_count,
-               Lit_Edge* edges,
+               lit_edge_t* edges,
                u32_t edge_count,
                arena_t* tmp_arena) 
 {
   // Update all lights
   for(u32_t light_index = 0; light_index < light_count; ++light_index)
   {
-    Lit_Light* light = lights + light_index;
+    lit_light_t* light = lights + light_index;
     lit_gen_light_intersections(light, edges, edge_count, tmp_arena);
   }
 
 }
 
 static void
-lit_draw_lights(moe_t* moe, Lit* lit) {
-  Platform* platform = moe->platform;
+lit_draw_lights(moe_t* moe, lit_t* lit) {
+  platform_t* platform = moe->platform;
 
   // Emitters
   for(u32_t light_index = 0; light_index < lit->light_count; ++light_index)
   {
-    Lit_Light* light = lit->lights + light_index;
-    paint_sprite(moe, lit->blank_sprite, 
+    lit_light_t* light = lit->lights + light_index;
+    paint_sprite(moe, lit->filled_circle_sprite, 
                  light->pos,
                  {16.f, 16.f},
                  {0.8f, 0.8f, 0.8f, 1.f});
@@ -300,10 +300,10 @@ lit_draw_lights(moe_t* moe, Lit* lit) {
 
   for(u32_t light_index = 0; light_index < lit->light_count; ++light_index)
   {
-    Lit_Light* l = lit->lights + light_index;
+    lit_light_t* l = lit->lights + light_index;
     for(u32_t tri_index = 0; tri_index < l->triangle_count; ++tri_index)
     {
-      Lit_Light_Triangle* lt = l->triangles + tri_index;
+      lit_light_triangle_t* lt = l->triangles + tri_index;
       gfx_push_filled_triangle(platform->gfx, 
                                rgba_hex(l->color),
                                lt->p0,
@@ -318,12 +318,12 @@ lit_draw_lights(moe_t* moe, Lit* lit) {
 
 
 static void
-lit_draw_edges(moe_t* moe, Lit* lit) {
+lit_draw_edges(moe_t* moe, lit_t* lit) {
 
-  Platform* platform = moe->platform;
+  platform_t* platform = moe->platform;
   for(u32_t edge_index = 0; edge_index < lit->edge_count; ++edge_index) 
   {
-    Lit_Edge* edge = lit->edges + edge_index;
+    lit_edge_t* edge = lit->edges + edge_index;
     if (edge->is_disabled) continue;
 
     gfx_push_line(platform->gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));

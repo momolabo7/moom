@@ -8,71 +8,67 @@
 #include "momo.h"
 
 /////////////////////////////////////////////////////////////////////
-// Platform Memory API
+// platform_t Memory API
 //
 typedef struct {
   void* data;
   umi_t size;
-} Platform_Memory_Block;
+} platform_memory_block_t;
 
-typedef Platform_Memory_Block* Platform_Allocate_Memory(umi_t size);
-typedef void  Platform_Free_Memory(Platform_Memory_Block* ptr);
+typedef platform_memory_block_t* platform_allocate_memory_f(umi_t size);
+typedef void  platform_free_memory_f(platform_memory_block_t* ptr);
 
 //////////////////////////////////////////////////////////////////////
-// Platform File API
+// platform_t File API
 typedef enum {
   PLATFORM_FILE_PATH_EXE,
   PLATFORM_FILE_PATH_USER,
   PLATFORM_FILE_PATH_CACHE,
   
-}Platform_File_Path;
+} platform_file_path_t;
 
 // Maybe for 'overwrite' or creating a new file, we 
 // use a compl
 typedef enum {
   PLATFORM_FILE_ACCESS_READ,
   PLATFORM_FILE_ACCESS_OVERWRITE,
-}Platform_File_Access;
+} platform_file_access_t;
 
 typedef struct {
   void* platform_data; // pointer for platform's usage
-} Platform_File;
+} platform_file_t;
 
 typedef b32_t  
-Platform_Open_File(Platform_File* file,
-                   const char* filename,
-                   Platform_File_Access file_access,
-                   Platform_File_Path file_path);
+platform_open_file_f(platform_file_t* file,
+                     const char* filename,
+                     platform_file_access_t file_access,
+                     platform_file_path_t file_path);
 
-typedef void Platform_Close_File(Platform_File* file);
-typedef b32_t Platform_Read_File(Platform_File* file, umi_t size, umi_t offset, void* dest);
-typedef b32_t Platform_Write_File(Platform_File* file, umi_t size, umi_t offset, void* src);
+typedef void  platform_close_file_f(platform_file_t* file);
+typedef b32_t platform_read_file_f(platform_file_t* file, umi_t size, umi_t offset, void* dest);
+typedef b32_t platform_write_file_f(platform_file_t* file, umi_t size, umi_t offset, void* src);
 
-//////////////////////////////////////////////////////////////////////////
-// Platform multithreaded work API
-typedef void Platform_Task_Callback(void* data);
-typedef void Platform_Add_Task(Platform_Task_Callback callback, void* data);
-typedef void Platform_Complete_All_Tasks();
+//
+// platform_t multithreaded work API
+typedef void platform_task_callback_f(void* data);
+typedef void platform_add_task_f(platform_task_callback_f callback, void* data);
+typedef void platform_complete_all_tasks_f();
 
 /////////////////////////////////////////////////////////////////////////
-//~Other platform API
-#if 0
-typedef void  Platform_Shutdown(); // trigger shutdown of application
-                                   //
-#endif
-typedef void  Platform_Debug_Log(const char* fmt, ...);
-typedef u64_t   Platform_Get_Performance_Counter();
-typedef void  Platform_Set_Moe_Dims(f32_t width, f32_t height);
+// Other platform API
+typedef void  platform_debug_log_f(const char* fmt, ...);
+typedef u64_t platform_get_perforance_counter_f();
+typedef void  platform_set_moe_dims_f(f32_t width, f32_t height);
 
 
 //////////////////////////////////////////////////////////////////////////
-// Platform Audio API
+// platform_t Audio API
 //
 typedef struct {
   s16_t* sample_buffer;
   u32_t sample_count;
   u32_t channels; //TODO: remove this?
-}Platform_Audio;
+} platform_audio_t;
 
 /////////////////////////////////////////////////////////////////////////
 // Input related API
@@ -80,7 +76,7 @@ typedef struct {
 typedef struct {
   b32_t before;
   b32_t now; 
-}Platform_Button;
+} platform_button_t;
 
 
 struct gfx_t;
@@ -94,31 +90,31 @@ typedef struct {
   //arena_t* moe_arena; // Require 32MB
   gfx_t* gfx;
   profiler_t* profiler; 
-  Platform_Audio* audio;
+  platform_audio_t* audio;
 
   // Input API
   // TODO Maybe this should be a seperate struct
   // Or maybe this should be handled on the platform side.
   union {
     struct {
-      Platform_Button button_up;
-      Platform_Button button_down;
-      Platform_Button button_left;
-      Platform_Button button_right;
-      Platform_Button button_console;
+      platform_button_t button_up;
+      platform_button_t button_down;
+      platform_button_t button_left;
+      platform_button_t button_right;
+      platform_button_t button_console;
       
-      Platform_Button button_rotate_left;
-      Platform_Button button_rotate_right;
+      platform_button_t button_rotate_left;
+      platform_button_t button_rotate_right;
       
-      Platform_Button button_use;
+      platform_button_t button_use;
       
-      Platform_Button button_editor_on;
-      Platform_Button button_editor0;
-      Platform_Button button_editor1;
-      Platform_Button button_editor2;
-      Platform_Button button_editor3;
+      platform_button_t button_editor_on;
+      platform_button_t button_editor0;
+      platform_button_t button_editor1;
+      platform_button_t button_editor2;
+      platform_button_t button_editor3;
     };  
-    Platform_Button buttons[15];
+    platform_button_t buttons[15];
   };
   u8_t chars[32];
   u32_t char_count;
@@ -136,25 +132,25 @@ typedef struct {
   // Functions
 
   // File IO
-  Platform_Open_File* open_file;
-  Platform_Read_File* read_file;
-  Platform_Write_File* write_file;
-  Platform_Close_File* close_file;
+  platform_open_file_f* open_file;
+  platform_read_file_f* read_file;
+  platform_write_file_f* write_file;
+  platform_close_file_f* close_file;
   
   // Multithreading API
-  Platform_Add_Task* add_task;
-  Platform_Complete_All_Tasks* complete_all_tasks;
+  platform_add_task_f* add_task;
+  platform_complete_all_tasks_f* complete_all_tasks;
 
   // Memory allocation
-  Platform_Allocate_Memory* allocate_memory;
-  Platform_Free_Memory* free_memory;
+  platform_allocate_memory_f* allocate_memory;
+  platform_free_memory_f* free_memory;
 
   // Logging
-  Platform_Debug_Log* debug_log;
+  platform_debug_log_f* debug_log;
 
   // set window dimensions
   // TODO: change name
-  Platform_Set_Moe_Dims* set_moe_dims;
+  platform_set_moe_dims_f* set_moe_dims;
 
   // Misc
   f32_t seconds_since_last_frame; //aka dt
@@ -163,30 +159,30 @@ typedef struct {
   // For moe to use
   void* moe;
 
-} Platform;
+} platform_t;
 
-typedef void Moe_Update_And_Render(Platform* pf);
+typedef void moe_update_and_render_f(platform_t* pf);
 
 // To be called by platform
-typedef struct Moe_Functions {
-  Moe_Update_And_Render* update_and_render;
-} Moe_Functions;
+typedef struct moe_functions_t {
+  moe_update_and_render_f* update_and_render;
+} moe_functions_t;
 
 static const char* moe_function_names[] {
   "moe_update_and_render",
 };
 
-static b32_t pf_is_button_poked(Platform_Button) ;
-static b32_t pf_is_button_released(Platform_Button);
-static b32_t pf_is_button_down(Platform_Button);
-static b32_t pf_is_button_held(Platform_Button);
-static void pf_update_input(Platform_Button);
+static b32_t platform_is_button_poked(platform_button_t) ;
+static b32_t platform_is_button_released(platform_button_t);
+static b32_t platform_is_button_down(platform_button_t);
+static b32_t platform_is_button_held(platform_button_t);
+static void  platform_update_input(platform_button_t);
 
 
 /////////////////////////////////////////////////////////////
 // Implementation
 static void 
-pf_update_input(Platform* pf) {
+platform_update_input(platform_t* pf) {
   for (u32_t i = 0; i < array_count(pf->buttons); ++i) {
     pf->buttons[i].before = pf->buttons[i].now;
   }
@@ -195,26 +191,26 @@ pf_update_input(Platform* pf) {
 
 // before: 0, now: 1
 static b32_t 
-pf_is_button_poked(Platform_Button btn) {
+platform_is_button_poked(platform_button_t btn) {
   return !btn.before && btn.now;
 }
 
 // before: 1, now: 0
 static b32_t
-pf_is_button_released(Platform_Button btn) {
+platform_is_button_released(platform_button_t btn) {
   return btn.before && !btn.now;
 }
 
 
 // before: X, now: 1
 static b32_t
-pf_is_button_down(Platform_Button btn){
+platform_is_button_down(platform_button_t btn){
   return btn.now;
 }
 
 // before: 1, now: 1
 static b32_t
-pf_is_button_held(Platform_Button btn) {
+platform_is_button_held(platform_button_t btn) {
   return btn.before && btn.now;
 }
 
