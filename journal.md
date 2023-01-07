@@ -1,5 +1,13 @@
 # Journal
 
+### 2023-01-07
+Today, I wanted to start thinking about menus and transitions between 'scenes'.
+I quickly realized that the 'scene manager' in my moe layer is...useless, even though I wrote it just for this purpose. 
+Yes, it shifts between two standalone states well, but I realized that the common use case is to have non-standalone states.
+
+Maybe we should look into refactoring the scene management issue.
+
+
 ### 2022-12-28
 I have added gists, which are snippets of code that we can reuse. 
 I think that's the best way I can get around writing data structures that are meaningful to a project, as opposed to using 'generic' data structures that I might be forced to think around them for the sake of ease.

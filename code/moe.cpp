@@ -44,8 +44,7 @@ moe_update_and_render(platform_t* pf)
       moe->debug_font = find_best_font(&moe->assets, ASSET_GROUP_TYPE_FONTS, match);
     }
 
-    moe_goto_scene(moe, moe_entry_scene);
-    
+
     // Initialize Debug console_t
     console_t* console = &moe->console;
     console_init(console, &moe->debug_arena);
@@ -58,6 +57,8 @@ moe_update_and_render(platform_t* pf)
 
     // set up view for moe
     gfx_push_view(pf->gfx, 0.f, MOE_WIDTH, 0.f, MOE_HEIGHT, 0.f, 0.f);
+
+    game_init(moe);
 
     moe_log("Initialized!");
    
@@ -77,12 +78,15 @@ moe_update_and_render(platform_t* pf)
 
   
   // moe_t state management
+#if 0
   if (moe->is_scene_changed) {
     arena_clear(&moe->scene_arena);
     moe->scene_context = nullptr;
     moe->is_scene_changed = false;
   }
-  moe->scene_tick(moe);
+#endif
+
+  game_tick(moe);
 
   // Debug Rendering Stuff
   if (platform_is_button_poked(pf->button_console)) {
@@ -119,6 +123,10 @@ moe_update_and_render(platform_t* pf)
     sine += 2.0f;
   }
 #endif
+
+  if (moe->is_done) {
+    game_exit(moe);
+  }
 
   return moe->is_done;
   

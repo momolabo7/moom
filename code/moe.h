@@ -41,12 +41,13 @@ enum moe_show_debug_type_t {
   MOE_SHOW_DEBUG_MAX
 };
 
+typedef void (*Scene_Init)(struct moe_t*);
 typedef void (*Scene_Tick)(struct moe_t*);
+typedef void (*Scene_Exit)(struct moe_t*);
 
 typedef struct moe_t {
   moe_show_debug_type_t show_debug_type;
   
-   
   // Arenas
   arena_t main_arena;
 
@@ -59,9 +60,8 @@ typedef struct moe_t {
 
   // Mode Management 
   b32_t is_done;
-  b32_t is_scene_changed;
+  //b32_t is_scene_changed;
   void* scene_context;
-  Scene_Tick scene_tick;
 
   // Other stuff
   assets_t assets;
@@ -81,33 +81,15 @@ typedef struct moe_t {
 #include "moe_profiler_rendering.h"
 #include "moe_console.cpp"
 
-
-static void 
-moe_goto_scene(moe_t* moe, Scene_Tick scene_tick) {
-  moe->scene_tick = scene_tick;
-  moe->is_scene_changed = true;
-}
-
-static b32_t
-moe_is_scene_initialized(moe_t* moe) {
-  return moe->scene_context != nullptr;
-}
-
 static void*
 _moe_allocate_scene_size(moe_t* moe, umi_t size) {
   arena_clear(&moe->scene_arena);
   moe->scene_context = arena_push_size(&moe->scene_arena, size, 16);
   return moe->scene_context;
 }
-
-
-
 #define moe_allocate_scene(t,g) (t*)_moe_allocate_scene_size(g,sizeof(t))
 
-// some scene apis
-#define scene_set_entry(entry) static Scene_Tick moe_entry_scene = (entry)
+
 #include "scene.h"
-
-
 
 #endif //MOE_H
