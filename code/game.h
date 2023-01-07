@@ -1,7 +1,7 @@
-#ifndef SCENE_H
-#define SCENE_H
+#ifndef GAME_H
+#define GAME_H
 
-#include "scene_lit.h"
+#include "game_lit.h"
 
 
 static void 

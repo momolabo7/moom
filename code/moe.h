@@ -41,9 +41,9 @@ enum moe_show_debug_type_t {
   MOE_SHOW_DEBUG_MAX
 };
 
-typedef void (*Scene_Init)(struct moe_t*);
-typedef void (*Scene_Tick)(struct moe_t*);
-typedef void (*Scene_Exit)(struct moe_t*);
+typedef void (*game_init_f)(struct moe_t*);
+typedef void (*game_tick_f)(struct moe_t*);
+typedef void (*game_exit_f)(struct moe_t*);
 
 typedef struct moe_t {
   moe_show_debug_type_t show_debug_type;
@@ -90,6 +90,6 @@ _moe_allocate_scene_size(moe_t* moe, umi_t size) {
 #define moe_allocate_scene(t,g) (t*)_moe_allocate_scene_size(g,sizeof(t))
 
 
-#include "scene.h"
+#include "game.h"
 
 #endif //MOE_H

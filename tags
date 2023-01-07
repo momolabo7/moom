@@ -1867,10 +1867,10 @@ sb8_remaining	D:/work/git/moom/code/momo_strings.h	/^static umi_t    sb8_remaini
 sb8_t	D:/work/git/moom/code/momo_strings.h	/^struct sb8_t{$/;"	s	language:C++
 scene_arena	D:/work/git/moom/code/moe.h	/^  arena_t scene_arena;$/;"	m	language:C++	struct:moe_t	typeref:typename:arena_t
 scene_context	D:/work/git/moom/code/moe.h	/^  void* scene_context;$/;"	m	language:C++	struct:moe_t	typeref:typename:void *
-Scene_Exit	D:/work/git/moom/code/moe.h	/^typedef void (*Scene_Exit)(struct moe_t*);$/;"	t	language:C++	typeref:typename:void (*)(struct moe_t *)
+game_exit_f	D:/work/git/moom/code/moe.h	/^typedef void (*game_exit_f)(struct moe_t*);$/;"	t	language:C++	typeref:typename:void (*)(struct moe_t *)
 SCENE_H	D:/work/git/moom/code/scene.h	/^#define SCENE_H$/;"	d	language:C++
-Scene_Init	D:/work/git/moom/code/moe.h	/^typedef void (*Scene_Init)(struct moe_t*);$/;"	t	language:C++	typeref:typename:void (*)(struct moe_t *)
-Scene_Tick	D:/work/git/moom/code/moe.h	/^typedef void (*Scene_Tick)(struct moe_t*);$/;"	t	language:C++	typeref:typename:void (*)(struct moe_t *)
+game_init_f	D:/work/git/moom/code/moe.h	/^typedef void (*game_init_f)(struct moe_t*);$/;"	t	language:C++	typeref:typename:void (*)(struct moe_t *)
+game_tick_f	D:/work/git/moom/code/moe.h	/^typedef void (*game_tick_f)(struct moe_t*);$/;"	t	language:C++	typeref:typename:void (*)(struct moe_t *)
 scope	D:/work/git/moom/code/momo_json.h	/^static u32_t scope = 0;$/;"	v	language:C++	typeref:typename:u32_t
 scriptDirectory	build/a.out.js	/^var scriptDirectory = '';$/;"	v	language:JavaScript
 seconds_since_last_frame	D:/work/git/moom/code/moe_platform.h	/^  f32_t seconds_since_last_frame; \/\/aka dt$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:f32_t
