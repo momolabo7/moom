@@ -7,7 +7,7 @@ lit_calc_ghost_edge_line(lit_edge_t* e, v2f_t* min, v2f_t* max) {
 }
 
 static lit_edge_t*
-lit_push_edge(lit_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
+lit_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
   assert(m->edge_count < array_count(m->edges));
   lit_edge_t* edge = m->edges + m->edge_count++;
   edge->start_pt = v2f_set(min_x, min_y);
@@ -19,13 +19,13 @@ lit_push_edge(lit_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
 }
 
 static void 
-lit_push_double_edge(lit_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
+lit_push_double_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
   lit_push_edge(m, min_x, min_y, max_x, max_y);
   lit_push_edge(m, max_x, max_y, min_x, min_y);
 }
 
 static lit_light_t*
-lit_push_light(lit_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle, f32_t turn) {
+lit_push_light(lit_game_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle, f32_t turn) {
   assert(m->light_count < array_count(m->lights));
   lit_light_t* light = m->lights + m->light_count++;
   light->pos.x = pos_x;
@@ -280,14 +280,14 @@ lit_gen_lights(lit_light_t* lights,
 }
 
 static void
-lit_draw_lights(moe_t* moe, lit_t* lit) {
+lit_draw_lights(moe_t* moe, lit_game_t* game) {
   platform_t* platform = moe->platform;
 
   // Emitters
-  for(u32_t light_index = 0; light_index < lit->light_count; ++light_index)
+  for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
   {
-    lit_light_t* light = lit->lights + light_index;
-    paint_sprite(moe, lit->filled_circle_sprite, 
+    lit_light_t* light = game->lights + light_index;
+    paint_sprite(moe, game->filled_circle_sprite, 
                  light->pos,
                  {16.f, 16.f},
                  {0.8f, 0.8f, 0.8f, 1.f});
@@ -298,9 +298,9 @@ lit_draw_lights(moe_t* moe, lit_t* lit) {
   gfx_push_blend(platform->gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_ONE); 
   
 
-  for(u32_t light_index = 0; light_index < lit->light_count; ++light_index)
+  for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
   {
-    lit_light_t* l = lit->lights + light_index;
+    lit_light_t* l = game->lights + light_index;
     for(u32_t tri_index = 0; tri_index < l->triangle_count; ++tri_index)
     {
       lit_light_triangle_t* lt = l->triangles + tri_index;
@@ -318,12 +318,12 @@ lit_draw_lights(moe_t* moe, lit_t* lit) {
 
 
 static void
-lit_draw_edges(moe_t* moe, lit_t* lit) {
+lit_draw_edges(moe_t* moe, lit_game_t* game) {
 
   platform_t* platform = moe->platform;
-  for(u32_t edge_index = 0; edge_index < lit->edge_count; ++edge_index) 
+  for(u32_t edge_index = 0; edge_index < game->edge_count; ++edge_index) 
   {
-    lit_edge_t* edge = lit->edges + edge_index;
+    lit_edge_t* edge = game->edges + edge_index;
     if (edge->is_disabled) continue;
 
     gfx_push_line(platform->gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));

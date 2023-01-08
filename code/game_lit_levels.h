@@ -8,7 +8,7 @@
 // - Learn to rotate
 // - Learn that light need to shine on sensors 
 static void
-lit_level_0_0(lit_t* m) {
+lit_level_0_0(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("MOVE"));
   lit_push_sensor(m, 400.f, 600.f, 0x880000FF); 
   lit_push_light(m, 400.f, 400, 0x880000FF, 45.f, 0.75f);
@@ -17,7 +17,7 @@ lit_level_0_0(lit_t* m) {
 ////////////////////////////////////////////
 // - Learn about obstacles
 static void
-lit_level_0_1(lit_t* m) {
+lit_level_0_1(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("OBSTRUCT"));
   lit_push_sensor(m, 400.f, 600.f, 0x008800FF); 
   lit_push_light(m, 400.f, 200, 0x008800FF, 45.f, 0.75f);
@@ -29,7 +29,7 @@ lit_level_0_1(lit_t* m) {
 //////////////////////////////////////////
 // - Learn about light saturation 
 static void
-lit_level_0_2(lit_t* m) { 
+lit_level_0_2(lit_game_t* m) { 
   // Need to 'enclose' the shape
   lit_set_title(m, str8_from_lit("ADD"));
   lit_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
@@ -44,7 +44,7 @@ lit_level_0_2(lit_t* m) {
 // - Learn about light saturation 2
 // - Sensor is in a box 
 static void
-lit_level_0_3(lit_t* m) { 
+lit_level_0_3(lit_game_t* m) { 
 
   lit_set_title(m, str8_from_lit("BOX"));
 
@@ -68,7 +68,7 @@ lit_level_0_3(lit_t* m) {
 // - Learn about color combinations
 // - R + G = Y
 static void
-lit_level_0_4(lit_t* m) {
+lit_level_0_4(lit_game_t* m) {
 
   lit_set_title(m, str8_from_lit("MIX"));
 
@@ -91,7 +91,7 @@ lit_level_0_4(lit_t* m) {
 // - G + B = P
 // - R + G + B = W
 static void
-lit_level_0_5(lit_t* m) {
+lit_level_0_5(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("BLEND"));
 
   lit_push_sensor(m, 400.f,  400.f, 0x888888FF); 
@@ -113,7 +113,7 @@ lit_level_0_5(lit_t* m) {
 // - Sensors on inside room and outside room
 // - Point lights
 static void
-lit_level_0_6(lit_t* m) {
+lit_level_0_6(lit_game_t* m) {
 
   lit_set_title(m, str8_from_lit("4 ROOM"));
 
@@ -149,7 +149,7 @@ lit_level_0_6(lit_t* m) {
 // More point lights but with more colors
 //  
 static void
-lit_level_0_7(lit_t* m) {
+lit_level_0_7(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("DISCO"));
 
   // bottom left room
@@ -204,7 +204,7 @@ lit_level_0_7(lit_t* m) {
 // Onion 
 //  
 static void
-lit_level_0_8(lit_t* m) {
+lit_level_0_8(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("ONION"));
   // layer 1
   lit_push_sensor(m, 550.f,  250.f, 0x006600FF); 
@@ -248,7 +248,7 @@ lit_level_0_8(lit_t* m) {
   lit_push_light(m, 400.f, 400.f, 0x333333FF, 360.f, 0.f);
 }
 
-typedef void (*Lit_Level)(lit_t* mode); 
+typedef void (*Lit_Level)(lit_game_t* mode); 
 static Lit_Level lit_levels[] = {
 
   lit_level_0_0, 
@@ -265,7 +265,7 @@ static Lit_Level lit_levels[] = {
 
 
 static void
-lit_load_level(lit_t* m, u32_t level_id) {
+lit_load_level(lit_game_t* m, u32_t level_id) {
   m->stage_flash_timer = 0.f;
   m->stage_fade_timer = LIT_ENTER_DURATION;
   m->state = LIT_STATE_TYPE_TRANSITION_IN;
@@ -286,7 +286,7 @@ lit_load_level(lit_t* m, u32_t level_id) {
 }
 
 static void
-lit_load_next_level(lit_t* m){
+lit_load_next_level(lit_game_t* m){
   m->current_level_id = (m->current_level_id + 1)%array_count(lit_levels);
   lit_load_level(m, m->current_level_id);  
 }

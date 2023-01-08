@@ -3,30 +3,20 @@
 //
 
 static void
-lit_init_player(lit_t* lit, f32_t x, f32_t y) {
-  lit_player_t* player = &lit->player; 
+lit_init_player(lit_game_t* game, f32_t x, f32_t y) {
+  lit_player_t* player = &game->player; 
   player->held_light = nullptr;
   player->pos.x = x;
   player->pos.y = y;
 }
 
 static void 
-lit_update_player(moe_t* moe, lit_t* lit, f32_t dt) 
+lit_update_player(moe_t* moe, lit_game_t* game, f32_t dt) 
 {
-  lit_player_t* player = &lit->player; 
+  lit_player_t* player = &game->player; 
   platform_t* platform = moe->platform;
   
 
-  // Get world mouse position
-#if 0
-  v2f_t world_mouse_pos = {0};
-  {
-    world_mouse_pos.x = platform->mouse_pos.x;
-    world_mouse_pos.y = MOE_HEIGHT - platform->mouse_pos.y;
-  }
-
-  player->pos = world_mouse_pos;
-#endif
 #if 1
   // Get movement direction
   v2f_t direction = {0};
@@ -69,8 +59,8 @@ lit_update_player(moe_t* moe, lit_t* lit, f32_t dt)
       f32_t shortest_dist = LIT_PLAYER_PICKUP_DIST; // limit
       lit_light_t* nearest_light = nullptr;
 
-      for(u32_t light_index = 0; light_index < lit->light_count; ++light_index) {
-        lit_light_t* l = lit->lights +light_index;
+      for(u32_t light_index = 0; light_index < game->light_count; ++light_index) {
+        lit_light_t* l = game->lights +light_index;
         f32_t dist = v2f_dist_sq(l->pos, player->pos);
         if (shortest_dist > dist) {
           nearest_light = l;
@@ -119,11 +109,11 @@ lit_update_player(moe_t* moe, lit_t* lit, f32_t dt)
 }
 
 static void
-lit_draw_player(moe_t* moe, lit_t* lit)
+lit_draw_player(moe_t* moe, lit_game_t* game)
 {
-  lit_player_t* player = &lit->player;
+  lit_player_t* player = &game->player;
   platform_t* platform = moe->platform;
-  paint_sprite(moe, lit->circle_sprite, 
+  paint_sprite(moe, game->circle_sprite, 
                player->pos, 
                v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
   gfx_advance_depth(platform->gfx);
@@ -135,7 +125,7 @@ lit_draw_player(moe_t* moe, lit_t* lit)
 // Particles
 //
 static void
-lit_spawn_particle(lit_t* lit,
+lit_spawn_particle(lit_game_t* game,
                    f32_t lifespan,
                    v2f_t pos, v2f_t vel,
                    rgba_t color_start,
@@ -143,7 +133,7 @@ lit_spawn_particle(lit_t* lit,
                    v2f_t size_start,
                    v2f_t size_end) 
 {
-  lit_particle_pool_t* ps = &lit->particles;
+  lit_particle_pool_t* ps = &game->particles;
   if (ps->particle_count < array_count(ps->particles)) {
     lit_particle_t* p = ps->particles + ps->particle_count++; 
     p->pos = pos;
@@ -157,8 +147,8 @@ lit_spawn_particle(lit_t* lit,
 }
 
 static void
-lit_update_particles(lit_t* lit, f32_t dt) {
-  lit_particle_pool_t* ps = &lit->particles;
+lit_update_particles(lit_game_t* game, f32_t dt) {
+  lit_particle_pool_t* ps = &game->particles;
   for(u32_t particle_id = 0; 
       particle_id < ps->particle_count; ) 
   {
@@ -178,8 +168,8 @@ lit_update_particles(lit_t* lit, f32_t dt) {
 }
 
 static void
-lit_render_particles(moe_t* moe, lit_t* lit) {
-  lit_particle_pool_t* ps = &lit->particles;
+lit_render_particles(moe_t* moe, lit_game_t* game) {
+  lit_particle_pool_t* ps = &game->particles;
   platform_t* platform = moe->platform;
 
   // Render particles
@@ -201,7 +191,7 @@ lit_render_particles(moe_t* moe, lit_t* lit) {
     size.w = lerp_f32(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = lerp_f32(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    paint_sprite(moe, lit->filled_circle_sprite, p->pos, size, color);
+    paint_sprite(moe, game->filled_circle_sprite, p->pos, size, color);
     gfx_advance_depth(platform->gfx);
   }
 }
@@ -210,10 +200,10 @@ lit_render_particles(moe_t* moe, lit_t* lit) {
 //////////////////////////////////////////////////////////////////////
 // Sensors
 static void 
-lit_push_sensor(lit_t* lit, f32_t pos_x, f32_t pos_y, u32_t target_color) 
+lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color) 
 {
-  assert(lit->sensor_count < array_count(lit->sensors));
-  lit_sensor_t* s = lit->sensors + lit->sensor_count++;
+  assert(game->sensor_count < array_count(game->sensors));
+  lit_sensor_t* s = game->sensors + game->sensor_count++;
   s->pos.x = pos_x;
   s->pos.y = pos_y;
   s->target_color = target_color;
@@ -221,22 +211,21 @@ lit_push_sensor(lit_t* lit, f32_t pos_x, f32_t pos_y, u32_t target_color)
 }
 
 static void 
-lit_update_sensors(lit_t* lit,
-                   f32_t dt) 
+lit_update_sensors(lit_game_t* game, f32_t dt) 
 {
-  lit_particle_pool_t* particles = &lit->particles;
-  rng_t* rng = &lit->rng; 
+  lit_particle_pool_t* particles = &game->particles;
+  rng_t* rng = &game->rng; 
 
   u32_t activated = 0;
-  for(u32_t sensor_index = 0; sensor_index < lit->sensor_count; ++sensor_index)
+  for(u32_t sensor_index = 0; sensor_index < game->sensor_count; ++sensor_index)
   {
-    lit_sensor_t* sensor = lit->sensors + sensor_index;
+    lit_sensor_t* sensor = game->sensors + sensor_index;
     u32_t current_color = 0x0000000;
     
     // For each light, for each triangle, add light
-    for(u32_t light_index = 0; light_index < lit->light_count; ++light_index)
+    for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
     {
-      lit_light_t* light = lit->lights +light_index;
+      lit_light_t* light = game->lights +light_index;
       
       for(u32_t tri_index = 0; tri_index < light->triangle_count; ++tri_index)
       {
@@ -258,7 +247,7 @@ lit_update_sensors(lit_t* lit,
     {
       ++activated;
     }
-    lit->sensors_activated = activated;
+    game->sensors_activated = activated;
 
     // Particle emission check
     sensor->particle_cd -= dt;
@@ -278,7 +267,7 @@ lit_update_sensors(lit_t* lit,
       v2f_t size_start = v2f_set(LIT_SENSOR_PARTICLE_SIZE, LIT_SENSOR_PARTICLE_SIZE);
       v2f_t size_end = v2f_zero();
 
-      lit_spawn_particle(lit, 
+      lit_spawn_particle(game, 
                          1.f,
                          sensor->pos,
                          particle_vel,
@@ -291,17 +280,17 @@ lit_update_sensors(lit_t* lit,
 }
 
 static b32_t
-lit_are_all_sensors_activated(lit_t* lit) {
-  return lit->sensors_activated == lit->sensor_count;
+lit_are_all_sensors_activated(lit_game_t* game) {
+  return game->sensors_activated == game->sensor_count;
 }
 
 static void 
-lit_render_sensors(moe_t* moe, lit_t* lit) {
+lit_render_sensors(moe_t* moe, lit_game_t* game) {
   platform_t* platform = moe->platform;
 
-  for(u32_t sensor_index = 0; sensor_index < lit->sensor_count; ++sensor_index)
+  for(u32_t sensor_index = 0; sensor_index < game->sensor_count; ++sensor_index)
   {
-    lit_sensor_t* sensor = lit->sensors + sensor_index;
+    lit_sensor_t* sensor = game->sensors + sensor_index;
     gfx_push_filled_circle(platform->gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, rgba_hex(sensor->target_color)); 
 
     // only for debugging
