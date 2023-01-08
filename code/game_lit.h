@@ -37,8 +37,7 @@ static lit_title_waypoint_t lit_title_wps[] = {
 };
 
 
-#include "game_lit_world.h"
-#include "game_lit_entity.h"
+#include "game_lit_game.h"
 
 enum lit_state_type_t {
   LIT_STATE_TYPE_TRANSITION_IN,
@@ -112,8 +111,7 @@ struct lit_t {
 
 };
 
-#include "game_lit_world.cpp"
-#include "game_lit_entity.cpp"
+#include "game_lit_game.cpp"
 
 
 
