@@ -12,6 +12,7 @@
 //
 typedef struct {
   void* data;
+  umi_t size;
 } platform_memory_block_t;
 
 typedef platform_memory_block_t* platform_allocate_memory_f(umi_t size);
