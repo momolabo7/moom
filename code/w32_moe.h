@@ -378,7 +378,7 @@ w32_allocate_memory(umi_t size)
 
 
   block->platform_block.data = (u8_t*)block + base_offset; 
-  block->platform_block.size = size;
+  // block->platform_block.size = size;
 
   w32_memory_block_t* sentinel = &w32_state.memory_sentinel;
 

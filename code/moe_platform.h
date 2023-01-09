@@ -8,18 +8,17 @@
 #include "momo.h"
 
 /////////////////////////////////////////////////////////////////////
-// platform_t Memory API
+// Platform Memory API
 //
 typedef struct {
   void* data;
-  umi_t size;
 } platform_memory_block_t;
 
 typedef platform_memory_block_t* platform_allocate_memory_f(umi_t size);
 typedef void  platform_free_memory_f(platform_memory_block_t* ptr);
 
 //////////////////////////////////////////////////////////////////////
-// platform_t File API
+// Platform File API
 typedef enum {
   PLATFORM_FILE_PATH_EXE,
   PLATFORM_FILE_PATH_USER,
@@ -27,8 +26,6 @@ typedef enum {
   
 } platform_file_path_t;
 
-// Maybe for 'overwrite' or creating a new file, we 
-// use a compl
 typedef enum {
   PLATFORM_FILE_ACCESS_READ,
   PLATFORM_FILE_ACCESS_OVERWRITE,
@@ -62,7 +59,7 @@ typedef void  platform_set_moe_dims_f(f32_t width, f32_t height);
 
 
 //////////////////////////////////////////////////////////////////////////
-// platform_t Audio API
+// Platform Audio API
 //
 typedef struct {
   s16_t* sample_buffer;

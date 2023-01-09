@@ -287,9 +287,9 @@ if (!opengl->name) { return nullptr; }
   
   if (!ogl_init(opengl, 
                 command_queue_block->data, 
-                command_queue_block->size,
+                command_queue_size,
                 texture_queue_block->data,
-                texture_queue_block->size)) 
+                texture_queue_size)) 
   {
     return 0;
   }
