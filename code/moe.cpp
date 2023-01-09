@@ -89,18 +89,19 @@ moe_update_and_render(platform_t* pf)
   }
   moe_profile_end(DEBUG);
 
-#if 0
+#if 0 
   static f32_t sine = 0.f;
-  platform_audio_t* audio = platform->audio;
+  platform_audio_t* audio = pf->audio;
   s16_t* sample_out = audio->sample_buffer;
   s16_t volume = 3000;
   for(u32_t sample_index = 0; sample_index < audio->sample_count; ++sample_index) {
     for (u32_t channel_index = 0; channel_index < audio->channels; ++channel_index) {
-      f32_t sine_value = sin(sine);
+      f32_t sine_value = sin_f32(sine);
       sample_out[channel_index] = s16_t(sine_value * volume);
     }
     sample_out += audio->channels;
-    sine += 2.0f;
+    sine += 0.05f;
+    if (sine >= PI_32) sine = 0.f;
   }
 #endif
 
