@@ -10,12 +10,8 @@
 /////////////////////////////////////////////////////////////////////
 // Platform Memory API
 //
-typedef struct {
-  void* data;
-} platform_memory_block_t;
-
-typedef platform_memory_block_t* platform_allocate_memory_f(umi_t size);
-typedef void  platform_free_memory_f(platform_memory_block_t* ptr);
+typedef void* platform_allocate_memory_f(umi_t size);
+typedef void  platform_free_memory_f(void* ptr);
 
 //////////////////////////////////////////////////////////////////////
 // Platform File API

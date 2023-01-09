@@ -27,7 +27,8 @@
 #include "moe_profiler.h"
 
 struct w32_memory_block_t {
-  platform_memory_block_t platform_block;
+  void* data;
+  umi_t size; // not sure if we need this but just in case
 
   w32_memory_block_t* prev;
   w32_memory_block_t* next;
@@ -361,7 +362,7 @@ w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {
   c->free_files[c->free_file_count++] = f->cabinet_index;
 }
 
-static platform_memory_block_t*
+static void*
 w32_allocate_memory(umi_t size)
 {
   umi_t total_size = size + sizeof(w32_memory_block_t);
@@ -377,19 +378,19 @@ w32_allocate_memory(umi_t size)
   if (!block) return nullptr;
 
 
-  block->platform_block.data = (u8_t*)block + base_offset; 
-  // block->platform_block.size = size;
+  block->data = (u8_t*)block + base_offset; 
+  block->size = size;
 
   w32_memory_block_t* sentinel = &w32_state.memory_sentinel;
 
   cll_append(sentinel, block);
 
-  return &block->platform_block;
+  return block->data;
 
 }
 
 static void
-w32_free_memory(platform_memory_block_t* platform_block) {
+w32_free_memory(void* platform_block) {
   if (platform_block) {
     w32_memory_block_t* block = (w32_memory_block_t*)platform_block;
     cll_remove(block);
