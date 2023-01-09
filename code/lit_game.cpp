@@ -642,3 +642,16 @@ lit_render_sensors(moe_t* moe, lit_game_t* game) {
     gfx_advance_depth(platform->gfx);
   }
 }
+
+
+static b32_t 
+lit_is_state_exiting(lit_game_t* game) {
+  return game->state > LIT_STATE_TYPE_NORMAL; 
+}
+
+static void
+lit_set_title(lit_game_t* game, str8_t str) {
+  game->title = str;
+  game->title_timer = 0.f;
+  game->title_wp_index = 0;
+}

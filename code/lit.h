@@ -37,7 +37,7 @@ static lit_title_waypoint_t lit_title_wps[] = {
 };
 
 
-#include "game_lit_game.h"
+#include "lit_game.h"
 
 enum lit_state_type_t {
   LIT_STATE_TYPE_TRANSITION_IN,
@@ -93,7 +93,7 @@ struct lit_t {
   // Shared data
   //
 
-
+  
   union {
     lit_game_t game;
     lit_menu_t menu;
@@ -111,24 +111,8 @@ struct lit_t {
 
 };
 
-#include "game_lit_game.cpp"
-
-
-
-static b32_t 
-lit_is_state_exiting(lit_game_t* game) {
-  return game->state > LIT_STATE_TYPE_NORMAL; 
-}
-
-static void
-lit_set_title(lit_game_t* game, str8_t str) {
-  game->title = str;
-  game->title_timer = 0.f;
-  game->title_wp_index = 0;
-}
-
-
-#include "game_lit_levels.h"
+#include "lit_game.cpp"
+#include "lit_levels.h"
 
 
 static void
