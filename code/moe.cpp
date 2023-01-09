@@ -69,23 +69,6 @@ moe_update_and_render(platform_t* pf)
   console_t* console = &moe->console;
 
  
-#if 0
-  // TODO: should probably be in scenes instead
-  inspector_clear(inspector);
-  static u32_t test_value = 32;
-  inspector_add_u32(in, str8_from_lit("Test"), &test_value);
-#endif
-
-  
-  // moe_t state management
-#if 0
-  if (moe->is_scene_changed) {
-    arena_clear(&moe->scene_arena);
-    moe->scene_context = nullptr;
-    moe->is_scene_changed = false;
-  }
-#endif
-
   game_tick(moe);
 
   // Debug Rendering Stuff
