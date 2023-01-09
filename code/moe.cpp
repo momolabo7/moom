@@ -13,14 +13,15 @@ moe_update_and_render(platform_t* pf)
     }
    
     // Allocate and initialize moe_t engine
-    platform_memory_block_t* moe_memory = pf->allocate_memory(megabytes(32));
+    size_t moe_memory_size = megabytes(32); 
+    platform_memory_block_t* moe_memory = pf->allocate_memory(moe_memory_size);
     pf->moe = moe_memory;
     
     moe_t* moe = (moe_t*)moe_memory->data;
     moe->platform = pf;
     
     // TODO: we should make a function out of this
-    arena_init(&moe->main_arena, (u8_t*)moe_memory->data + sizeof(moe_t), moe_memory->size - sizeof(moe_t)); 
+    arena_init(&moe->main_arena, (u8_t*)moe_memory->data + sizeof(moe_t), moe_memory_size - sizeof(moe_t)); 
     //platform->moe = arena_push(moe_t, &moe_main_arena);
 
     // around 32MB worth
