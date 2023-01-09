@@ -42,7 +42,7 @@ profiler_end_stat(profiler_stat_t* stat) {
 }
 
 static void
-update_and_render_profiler(moe_t* moe) 
+profiler_update_and_render(moe_t* moe) 
 {
   profiler_t* profiler = moe->platform->profiler;
   platform_t* platform = moe->platform;

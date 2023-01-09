@@ -55,10 +55,13 @@ typedef struct moe_t {
 
   // Sub arenas
   arena_t asset_arena;
-  arena_t frame_arena;
   arena_t debug_arena;
+
+  arena_t frame_arena;
+
+#if 0
   arena_t scene_arena;
-  
+#endif
 
   // Mode Management 
   b32_t is_done;
@@ -83,6 +86,7 @@ typedef struct moe_t {
 #include "moe_profiler_rendering.h"
 #include "moe_console.cpp"
 
+#if 0
 static void*
 _moe_allocate_game_size(moe_t* moe, umi_t size) {
   arena_clear(&moe->scene_arena);
@@ -90,6 +94,7 @@ _moe_allocate_game_size(moe_t* moe, umi_t size) {
   return moe->game_context;
 }
 #define moe_allocate_game(t,g) (t*)_moe_allocate_game_size(g,sizeof(t))
+#endif
 
 
 #include "game.h"

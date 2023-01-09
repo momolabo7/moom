@@ -26,8 +26,6 @@ moe_update_and_render(platform_t* pf)
     // around 32MB worth
     if (!arena_partition(&moe->main_arena, &moe->asset_arena, megabytes(20), 16)) 
       return false;
-    if (!arena_partition(&moe->main_arena, &moe->scene_arena, megabytes(5), 16)) 
-      return false; 
     if (!arena_partition(&moe->main_arena, &moe->debug_arena, megabytes(1), 16)) 
       return false;
     if (!arena_partition(&moe->main_arena, &moe->frame_arena, megabytes(1), 16)) 
@@ -81,7 +79,7 @@ moe_update_and_render(platform_t* pf)
       console_update_and_render(moe); 
     }break;
     case MOE_SHOW_DEBUG_PROFILER: {
-      update_and_render_profiler(moe); 
+      profiler_update_and_render(moe); 
     }break;
     case MOE_SHOW_DEBUG_INSPECTOR: {
       inspector_update_and_render(moe);

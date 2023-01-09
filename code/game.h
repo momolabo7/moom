@@ -3,23 +3,19 @@
 
 #include "lit.h"
 
-// Must be defined
-static void 
-game_init(moe_t* moe) {
 
-
-
-}
 
 static void 
 game_tick(moe_t* moe) 
 {
-  lit_t* lit = (lit_t*)moe->game_context;
   assets_t* assets = &moe->assets;
   platform_t* platform = moe->platform;
 
-  if(lit == nullptr) {
-    lit = moe_allocate_game(lit_t, moe);
+  if(moe->game_context == nullptr) {
+    platform_memory_block_t* memory_block = platform->allocate_memory(sizeof(lit_t));
+    moe->game_context = memory_block;
+    lit_t* lit = (lit_t*)memory_block->data;
+    
 
     //
     // init game
@@ -41,6 +37,10 @@ game_tick(moe_t* moe)
     platform->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
     gfx_push_view(platform->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
   }
+
+  auto* memory_block = (platform_memory_block_t*)moe->game_context;
+  moe->game_context = memory_block;
+  lit_t* lit = (lit_t*)memory_block->data;
 
   lit_game_t* game = &lit->game;
   lit_update_game(moe, game, platform);
