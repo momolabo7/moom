@@ -9,19 +9,19 @@ moe_update_and_render(platform_t* pf)
 { 
   if (pf->reloaded) {
     if(pf->moe) {
-      pf->free_memory((platform_memory_block_t*)pf->moe);
+      pf->free_memory(pf->moe);
     }
    
     // Allocate and initialize moe_t engine
     size_t moe_memory_size = megabytes(32); 
-    platform_memory_block_t* moe_memory = pf->allocate_memory(moe_memory_size);
-    pf->moe = moe_memory;
+    moe_t* moe = (moe_t*)pf->allocate_memory(moe_memory_size);
+    pf->moe = moe;
     
-    moe_t* moe = (moe_t*)moe_memory->data;
     moe->platform = pf;
     
-    // TODO: we should make a function out of this
-    arena_init(&moe->main_arena, (u8_t*)moe_memory->data + sizeof(moe_t), moe_memory_size - sizeof(moe_t)); 
+    // TOOD(momo): We should totally ask platform to do a free list...? of sorts?
+    // Or some kind of expandable arena. Then I don't have to do this strange memory-foo!
+    arena_init(&moe->main_arena, (u8_t*)moe + sizeof(moe_t), moe_memory_size - sizeof(moe_t)); 
     //platform->moe = arena_push(moe_t, &moe_main_arena);
 
     // around 32MB worth
@@ -61,7 +61,7 @@ moe_update_and_render(platform_t* pf)
    
   }
  
-  moe_t* moe = (moe_t*)((platform_memory_block_t*)pf->moe)->data;
+  moe_t* moe = (moe_t*)(pf->moe);
   moe_profile_block(GAME);
   console_t* console = &moe->console;
 

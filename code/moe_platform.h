@@ -150,6 +150,7 @@ typedef struct {
   b32_t reloaded;
 
   // For moe to use
+  // TODO(momo): should just be of type moe_t
   void* moe;
 
 } platform_t;

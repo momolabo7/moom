@@ -172,7 +172,7 @@ _w32_load_wgl_extentions() {
 static void
 w32_gfx_unload(gfx_t* gfx) {
   Opengl* ogl = (Opengl*)gfx;
-  w32_free_memory(ogl->user_data);
+  w32_free_memory(ogl);
 }
 
 static gfx_t*
@@ -212,25 +212,11 @@ w32_gfx_load(HWND window,
   void* command_queue_block = w32_allocate_memory(command_queue_size);
   void* texture_queue_block = w32_allocate_memory(texture_queue_size);
 
-  if (!ogl_block || !command_queue_block || !texture_queue_block) {
+  if (!opengl || !command_queue_block || !texture_queue_block) {
     return nullptr;
   }
 
-  opengl->user_data = ogl_block;
-
-#if 0
-  Opengl* opengl = arena_push(Opengl, allocator);
-  if (!opengl) return 0; 
-
-  // Allocate memory for render commands
-  void* command_queue_memory =  arena_push_size(allocator, command_queue_size, 16);
-  if (!command_queue_memory) return 0;
-
-  void* texture_queue_memory = arena_push_size(allocator, texture_queue_size, 16);
-  if (!texture_queue_memory) return 0; 
-#endif
- 
-  
+  //opengl->user_data = opengl;
   
   
   if(wglMakeCurrent(dc, opengl_ctx)) {
@@ -284,9 +270,9 @@ if (!opengl->name) { return nullptr; }
 #undef WGL_SetOpenglFunction
   
   if (!ogl_init(opengl, 
-                command_queue_block->data, 
+                command_queue_block, 
                 command_queue_size,
-                texture_queue_block->data,
+                texture_queue_block,
                 texture_queue_size)) 
   {
     return 0;
