@@ -58,8 +58,6 @@ moe_update_and_render(platform_t* pf)
     // set up view for moe
     gfx_push_view(pf->gfx, 0.f, MOE_WIDTH, 0.f, MOE_HEIGHT, 0.f, 0.f);
 
-    game_init(moe);
-
     moe_log("Initialized!");
    
   }
@@ -106,10 +104,6 @@ moe_update_and_render(platform_t* pf)
     sine += 2.0f;
   }
 #endif
-
-  if (moe->is_done) {
-    game_exit(moe);
-  }
 
   return moe->is_done;
   

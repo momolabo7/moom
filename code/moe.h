@@ -45,6 +45,8 @@ typedef void (*game_init_f)(struct moe_t*);
 typedef void (*game_tick_f)(struct moe_t*);
 typedef void (*game_exit_f)(struct moe_t*);
 
+#define set_game(game_struc)
+
 typedef struct moe_t {
   moe_show_debug_type_t show_debug_type;
   
@@ -61,7 +63,7 @@ typedef struct moe_t {
   // Mode Management 
   b32_t is_done;
   //b32_t is_scene_changed;
-  void* scene_context;
+  void* game_context;
 
   // Other stuff
   assets_t assets;
@@ -82,12 +84,12 @@ typedef struct moe_t {
 #include "moe_console.cpp"
 
 static void*
-_moe_allocate_scene_size(moe_t* moe, umi_t size) {
+_moe_allocate_game_size(moe_t* moe, umi_t size) {
   arena_clear(&moe->scene_arena);
-  moe->scene_context = arena_push_size(&moe->scene_arena, size, 16);
-  return moe->scene_context;
+  moe->game_context = arena_push_size(&moe->scene_arena, size, 16);
+  return moe->game_context;
 }
-#define moe_allocate_scene(t,g) (t*)_moe_allocate_scene_size(g,sizeof(t))
+#define moe_allocate_game(t,g) (t*)_moe_allocate_game_size(g,sizeof(t))
 
 
 #include "game.h"
