@@ -1,5 +1,5 @@
 moe_t
-  arena_t profiler_t
+  Expandable arena for platform, instead of just calling VirtualAlloc every time
 
 lit_t Scene
   Level selection (after we make 10 levels I guess)

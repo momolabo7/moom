@@ -3,7 +3,6 @@
 /////////////////////////////////////////////////////////
 // GAME
 // 
-
 exported b32_t 
 moe_update_and_render(platform_t* pf)
 { 
