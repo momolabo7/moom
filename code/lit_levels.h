@@ -248,8 +248,57 @@ lit_level_0_8(lit_game_t* m) {
   lit_push_light(m, 400.f, 400.f, 0x333333FF, 360.f, 0.f);
 }
 
+///////////////////////////////////////
+// Onion 
+//  
+static void
+lit_level_0_9(lit_game_t* m) {
+  lit_set_title(m, str8_from_lit("ONION"));
+  // layer 1
+  lit_push_sensor(m, 550.f,  250.f, 0x006600FF); 
+  lit_push_sensor(m, 250.f,  550.f, 0x660000FF); 
+  lit_push_sensor(m, 250.f,  250.f, 0x666600FF); 
+  lit_push_sensor(m, 550.f,  550.f, 0x666600FF); 
+
+  // layer 2
+  lit_push_sensor(m, 150.f,  150.f, 0x660066FF); 
+  lit_push_sensor(m, 650.f,  150.f, 0x660066FF); 
+  lit_push_sensor(m, 150.f,  650.f, 0x660000FF); 
+  lit_push_sensor(m, 650.f,  650.f, 0x000066FF); 
+
+  // layer 3
+  lit_push_sensor(m, 050.f,  050.f, 0x666666FF); 
+  lit_push_sensor(m, 750.f,  750.f, 0x666666FF); 
+
+
+  lit_push_double_edge(m, 100.f, 100.f, 100.f, 700.f);
+  lit_push_double_edge(m, 100.f, 700.f, 700.f, 700.f);
+  lit_push_double_edge(m, 700.f, 700.f, 700.f, 100.f);
+  lit_push_double_edge(m, 700.f, 100.f, 100.f, 100.f);
+
+  
+  lit_push_double_edge(m, 200.f, 200.f, 200.f, 600.f);
+  lit_push_double_edge(m, 200.f, 600.f, 600.f, 600.f);
+  lit_push_double_edge(m, 600.f, 600.f, 600.f, 200.f);
+  lit_push_double_edge(m, 600.f, 200.f, 200.f, 200.f);
+
+  lit_push_double_edge(m, 300.f, 300.f, 300.f, 500.f);
+  lit_push_double_edge(m, 300.f, 500.f, 500.f, 500.f);
+  lit_push_double_edge(m, 500.f, 500.f, 500.f, 300.f);
+  lit_push_double_edge(m, 500.f, 300.f, 300.f, 300.f);
+
+
+  lit_push_light(m, 400.f, 400.f, 0x660000FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x660000FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x006600FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x000066FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x333333FF, 360.f, 0.f);
+  lit_push_light(m, 400.f, 400.f, 0x333333FF, 360.f, 0.f);
+}
+
 typedef void (*Lit_Level)(lit_game_t* mode); 
 static Lit_Level lit_levels[] = {
+#if 0
   lit_level_0_0, 
   lit_level_0_1, 
   lit_level_0_2,
@@ -259,6 +308,8 @@ static Lit_Level lit_levels[] = {
   lit_level_0_6,
   lit_level_0_7,
   lit_level_0_8,
+#endif
+  lit_level_0_9,
 };
 
 

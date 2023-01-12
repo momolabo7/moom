@@ -6,11 +6,8 @@
 exported b32_t 
 moe_update_and_render(platform_t* pf)
 { 
-  if (pf->reloaded) {
-    if(pf->moe) {
-      pf->free_memory(pf->moe);
-    }
-   
+  if (pf->moe == nullptr) {
+  
     // Allocate and initialize moe_t engine
     size_t moe_memory_size = megabytes(32); 
     moe_t* moe = (moe_t*)pf->allocate_memory(moe_memory_size);
@@ -21,7 +18,6 @@ moe_update_and_render(platform_t* pf)
     // TOOD(momo): We should totally ask platform to do a free list...? of sorts?
     // Or some kind of expandable arena. Then I don't have to do this strange memory-foo!
     arena_init(&moe->main_arena, (u8_t*)moe + sizeof(moe_t), moe_memory_size - sizeof(moe_t)); 
-    //platform->moe = arena_push(moe_t, &moe_main_arena);
 
     // around 32MB worth
     if (!arena_partition(&moe->main_arena, &moe->asset_arena, megabytes(20), 16)) 
