@@ -41,11 +41,8 @@ enum moe_show_debug_type_t {
   MOE_SHOW_DEBUG_MAX
 };
 
-typedef void (*game_init_f)(struct moe_t*);
 typedef void (*game_tick_f)(struct moe_t*);
-typedef void (*game_exit_f)(struct moe_t*);
 
-#define set_game(game_struc)
 
 typedef struct moe_t {
   moe_show_debug_type_t show_debug_type;
@@ -56,12 +53,7 @@ typedef struct moe_t {
   // Sub arenas
   arena_t asset_arena;
   arena_t debug_arena;
-
   arena_t frame_arena;
-
-#if 0
-  arena_t scene_arena;
-#endif
 
   // Mode Management 
   b32_t is_done;
@@ -85,16 +77,6 @@ typedef struct moe_t {
 #include "moe_inspector_rendering.h"
 #include "moe_profiler_rendering.h"
 #include "moe_console.cpp"
-
-#if 0
-static void*
-_moe_allocate_game_size(moe_t* moe, umi_t size) {
-  arena_clear(&moe->scene_arena);
-  moe->game_context = arena_push_size(&moe->scene_arena, size, 16);
-  return moe->game_context;
-}
-#define moe_allocate_game(t,g) (t*)_moe_allocate_game_size(g,sizeof(t))
-#endif
 
 
 #include "game.h"

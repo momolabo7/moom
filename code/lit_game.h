@@ -1,3 +1,12 @@
+enum lit_state_type_t {
+  LIT_STATE_TYPE_TRANSITION_IN,
+  LIT_STATE_TYPE_NORMAL,
+
+  // exiting states are after NORMAL
+  LIT_STATE_TYPE_SOLVED_IN,
+  LIT_STATE_TYPE_SOLVED_OUT,
+  LIT_STATE_TYPE_TRANSITION_OUT,
+};
 
 struct lit_edge_t {
   b32_t is_disabled;
@@ -85,4 +94,50 @@ struct lit_player_t {
 };
 
 
+struct lit_game_t {
+  
+  asset_font_id_t tutorial_font;
+  asset_sprite_id_t blank_sprite;
+  asset_sprite_id_t circle_sprite;
+  asset_sprite_id_t filled_circle_sprite;
 
+  lit_state_type_t state;
+
+  u32_t current_level_id;
+  lit_player_t player;
+ 
+  u32_t edge_count;
+  lit_edge_t edges[256];
+
+  u32_t light_count;
+  lit_light_t lights[32];
+
+  u32_t sensor_count;
+  lit_sensor_t sensors[32];
+
+  lit_particle_pool_t particles;
+
+  f32_t stage_fade_timer;
+  f32_t stage_flash_timer;
+
+  b32_t is_win_reached;
+  rng_t rng;
+
+  str8_t title;
+  f32_t title_timer;
+  u32_t title_wp_index;
+    
+  u32_t sensors_activated;
+};
+
+struct lit_title_waypoint_t {
+  f32_t x;
+  f32_t arrival_time;
+};
+
+static lit_title_waypoint_t lit_title_wps[] = {
+  { -800.0f,  0.0f },
+  { 300.0f,   1.0f },
+  { 500.0f,   2.0f },
+  { 1600.0f,  3.0f },
+};
