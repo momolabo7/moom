@@ -46,7 +46,7 @@ addOnPreMain	build/a.out.js	/^function addOnPreMain(cb) {$/;"	f	language:JavaScr
 addOnPreRun	build/a.out.js	/^function addOnPreRun(cb) {$/;"	f	language:JavaScript
 addRunDependency	build/a.out.js	/^function addRunDependency(id) {$/;"	f	language:JavaScript
 add_task	C:/users/geral/work/moom/code/moe_platform.h	/^  platform_add_task_f* add_task;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:platform_add_task_f *
-add_task	D:/work/git/moom/code/moe_platform.h	/^  platform_add_task_f* add_task;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:platform_add_task_f *
+add_task	D:/work/git/moom/code/moe_platform.h	/^  platform_add_task_f* add_task;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:platform_add_task_f *
 Adobe_OpacityMaskFilter	build/web.html	/^   id="Adobe_OpacityMaskFilter"$/;"	I	language:HTML
 Adobe_OpacityMaskFilter_1_	build/web.html	/^   id="Adobe_OpacityMaskFilter_1_"$/;"	I	language:HTML
 age	build/test_json.json	/^  "age":30, $/;"	n	language:JSON
@@ -55,7 +55,7 @@ align_down_pow2	D:/work/git/moom/code/momo_types.h	/^#define align_down_pow2(/;"
 align_up_pow2	C:/users/geral/work/moom/code/momo_types.h	/^#define align_up_pow2(/;"	d	language:C++
 align_up_pow2	D:/work/git/moom/code/momo_types.h	/^#define align_up_pow2(/;"	d	language:C++
 allocate_memory	C:/users/geral/work/moom/code/moe_platform.h	/^  platform_allocate_memory_f* allocate_memory;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:platform_allocate_memory_f *
-allocate_memory	D:/work/git/moom/code/moe_platform.h	/^  platform_allocate_memory_f* allocate_memory;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:platform_allocate_memory_f *
+allocate_memory	D:/work/git/moom/code/moe_platform.h	/^  platform_allocate_memory_f* allocate_memory;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:platform_allocate_memory_f *
 allocator	C:/users/geral/work/moom/code/w32_audio_wasapi.h	/^  arena_t allocator;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:arena_t
 allocator	D:/work/git/moom/code/w32_audio_wasapi.h	/^  arena_t allocator;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:arena_t
 analyzePath	build/a.out.js	/^  analyzePath: function() { FS.error() },$/;"	m	language:JavaScript	class:FS
@@ -166,7 +166,7 @@ arr	D:/work/git/moom/code/momo_json.h	/^    json_array_t arr;$/;"	m	language:C++
 array_count	C:/users/geral/work/moom/code/momo_types.h	/^#define array_count(/;"	d	language:C++
 array_count	D:/work/git/moom/code/momo_types.h	/^#define array_count(/;"	d	language:C++
 arrival_time	C:/users/geral/work/moom/code/lit_game.h	/^  f32_t arrival_time;$/;"	m	language:C++	struct:lit_title_waypoint_t	typeref:typename:f32_t
-arrival_time	D:/work/git/moom/code/lit.h	/^  f32_t arrival_time;$/;"	m	language:C++	struct:lit_title_waypoint_t	typeref:typename:f32_t
+arrival_time	D:/work/git/moom/code/lit_game.h	/^  f32_t arrival_time;$/;"	m	language:C++	struct:lit_title_waypoint_t	typeref:typename:f32_t
 arrival_time	D:/work/git/moom/code/scene_lit.h	/^  f32_t arrival_time;$/;"	m	language:C++	struct:lit_title_waypoint_t	typeref:typename:f32_t
 ascii_to_digit	C:/users/geral/work/moom/code/momo_types.h	/^#define ascii_to_digit(/;"	d	language:C++
 ascii_to_digit	D:/work/git/moom/code/momo_types.h	/^#define ascii_to_digit(/;"	d	language:C++
@@ -301,7 +301,7 @@ atomic_compare_assign_u32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^stat
 atomic_compare_assign_u32	D:/work/git/moom/code/momo_intrinsics.h	/^atomic_compare_assign_u32(u32_t volatile* value,$/;"	f	language:C++	typeref:typename:u32_t
 atomic_compare_assign_u32	D:/work/git/moom/code/momo_intrinsics.h	/^static u32_t atomic_compare_assign_u32(u32_t volatile* value, u32_t new_value, u32_t expected_va/;"	p	language:C++	typeref:typename:u32_t
 audio	C:/users/geral/work/moom/code/moe_platform.h	/^  platform_audio_t* audio;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:platform_audio_t *
-audio	D:/work/git/moom/code/moe_platform.h	/^  platform_audio_t* audio;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:platform_audio_t *
+audio	D:/work/git/moom/code/moe_platform.h	/^  platform_audio_t* audio;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:platform_audio_t *
 audio_client	C:/users/geral/work/moom/code/w32_audio_wasapi.h	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient2 *
 audio_client	D:/work/git/moom/code/w32_audio_wasapi.h	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient2 *
 audio_format	C:/users/geral/work/moom/code/momo_wav.h	/^  u16_t audio_format;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
@@ -323,7 +323,7 @@ b32_t	D:/work/git/moom/code/momo_types.h	/^typedef u32_t    b32_t;$/;"	t	languag
 b8_t	C:/users/geral/work/moom/code/momo_types.h	/^typedef u8_t     b8_t;$/;"	t	language:C++	typeref:typename:u8_t
 b8_t	D:/work/git/moom/code/momo_types.h	/^typedef u8_t     b8_t;$/;"	t	language:C++	typeref:typename:u8_t
 before	C:/users/geral/work/moom/code/moe_platform.h	/^  b32_t before;$/;"	m	language:C++	struct:__anon9b2058cb0508	typeref:typename:b32_t
-before	D:/work/git/moom/code/moe_platform.h	/^  b32_t before;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:b32_t
+before	D:/work/git/moom/code/moe_platform.h	/^  b32_t before;$/;"	m	language:C++	struct:__anona41ebd570508	typeref:typename:b32_t
 begin	C:/users/geral/work/moom/code/meta.cpp	/^  u32_t begin;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:u32_t	file:
 begin	C:/users/geral/work/moom/code/momo_json.h	/^  u32_t begin;$/;"	m	language:C++	struct:_json_token_t	typeref:typename:u32_t
 begin	D:/work/git/moom/code/meta.cpp	/^  u32_t begin;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:u32_t	file:
@@ -377,7 +377,7 @@ bit_unset	C:/users/geral/work/moom/code/momo_types.h	/^#define bit_unset(/;"	d	l
 bit_unset	D:/work/git/moom/code/momo_types.h	/^#define bit_unset(/;"	d	language:C++
 blank_sprite	C:/users/geral/work/moom/code/lit_game.h	/^  asset_sprite_id_t blank_sprite;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_sprite_id_t
 blank_sprite	C:/users/geral/work/moom/code/moe.h	/^  asset_sprite_id_t blank_sprite;$/;"	m	language:C++	struct:moe_t	typeref:typename:asset_sprite_id_t
-blank_sprite	D:/work/git/moom/code/lit.h	/^  asset_sprite_id_t blank_sprite;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_sprite_id_t
+blank_sprite	D:/work/git/moom/code/lit_game.h	/^  asset_sprite_id_t blank_sprite;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_sprite_id_t
 blank_sprite	D:/work/git/moom/code/moe.h	/^  asset_sprite_id_t blank_sprite;$/;"	m	language:C++	struct:moe_t	typeref:typename:asset_sprite_id_t
 blank_sprite	D:/work/git/moom/code/scene_lit.h	/^  asset_sprite_id_t blank_sprite;$/;"	m	language:C++	struct:lit_t	typeref:typename:asset_sprite_id_t
 blank_texture	C:/users/geral/work/moom/code/moe_gfx_opengl.h	/^  OGL_Texture blank_texture;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_Texture
@@ -410,33 +410,33 @@ buffers	D:/work/git/moom/code/moe_gfx_opengl.h	/^  GLuint buffers[OGL_TRIANGLE_V
 buffer_size	C:/users/geral/work/moom/code/w32_audio_wasapi.h	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t
 buffer_size	D:/work/git/moom/code/w32_audio_wasapi.h	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t
 buttons	C:/users/geral/work/moom/code/moe_platform.h	/^    platform_button_t buttons[15];$/;"	m	language:C++	union:__anon9b2058cb0608::__anon9b2058cb070a	typeref:typename:platform_button_t[15]
-buttons	D:/work/git/moom/code/moe_platform.h	/^    platform_button_t buttons[15];$/;"	m	language:C++	union:__anona41ebd570708::__anona41ebd57080a	typeref:typename:platform_button_t[15]
+buttons	D:/work/git/moom/code/moe_platform.h	/^    platform_button_t buttons[15];$/;"	m	language:C++	union:__anona41ebd570608::__anona41ebd57070a	typeref:typename:platform_button_t[15]
 button_console	C:/users/geral/work/moom/code/moe_platform.h	/^      platform_button_t button_console;$/;"	m	language:C++	struct:__anon9b2058cb0608::__anon9b2058cb070a::__anon9b2058cb0808	typeref:typename:platform_button_t
-button_console	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_console;$/;"	m	language:C++	struct:__anona41ebd570708::__anona41ebd57080a::__anona41ebd570908	typeref:typename:platform_button_t
+button_console	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_console;$/;"	m	language:C++	struct:__anona41ebd570608::__anona41ebd57070a::__anona41ebd570808	typeref:typename:platform_button_t
 button_down	C:/users/geral/work/moom/code/moe_platform.h	/^      platform_button_t button_down;$/;"	m	language:C++	struct:__anon9b2058cb0608::__anon9b2058cb070a::__anon9b2058cb0808	typeref:typename:platform_button_t
-button_down	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_down;$/;"	m	language:C++	struct:__anona41ebd570708::__anona41ebd57080a::__anona41ebd570908	typeref:typename:platform_button_t
+button_down	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_down;$/;"	m	language:C++	struct:__anona41ebd570608::__anona41ebd57070a::__anona41ebd570808	typeref:typename:platform_button_t
 button_editor0	C:/users/geral/work/moom/code/moe_platform.h	/^      platform_button_t button_editor0;$/;"	m	language:C++	struct:__anon9b2058cb0608::__anon9b2058cb070a::__anon9b2058cb0808	typeref:typename:platform_button_t
-button_editor0	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_editor0;$/;"	m	language:C++	struct:__anona41ebd570708::__anona41ebd57080a::__anona41ebd570908	typeref:typename:platform_button_t
+button_editor0	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_editor0;$/;"	m	language:C++	struct:__anona41ebd570608::__anona41ebd57070a::__anona41ebd570808	typeref:typename:platform_button_t
 button_editor1	C:/users/geral/work/moom/code/moe_platform.h	/^      platform_button_t button_editor1;$/;"	m	language:C++	struct:__anon9b2058cb0608::__anon9b2058cb070a::__anon9b2058cb0808	typeref:typename:platform_button_t
-button_editor1	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_editor1;$/;"	m	language:C++	struct:__anona41ebd570708::__anona41ebd57080a::__anona41ebd570908	typeref:typename:platform_button_t
+button_editor1	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_editor1;$/;"	m	language:C++	struct:__anona41ebd570608::__anona41ebd57070a::__anona41ebd570808	typeref:typename:platform_button_t
 button_editor2	C:/users/geral/work/moom/code/moe_platform.h	/^      platform_button_t button_editor2;$/;"	m	language:C++	struct:__anon9b2058cb0608::__anon9b2058cb070a::__anon9b2058cb0808	typeref:typename:platform_button_t
-button_editor2	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_editor2;$/;"	m	language:C++	struct:__anona41ebd570708::__anona41ebd57080a::__anona41ebd570908	typeref:typename:platform_button_t
+button_editor2	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_editor2;$/;"	m	language:C++	struct:__anona41ebd570608::__anona41ebd57070a::__anona41ebd570808	typeref:typename:platform_button_t
 button_editor3	C:/users/geral/work/moom/code/moe_platform.h	/^      platform_button_t button_editor3;$/;"	m	language:C++	struct:__anon9b2058cb0608::__anon9b2058cb070a::__anon9b2058cb0808	typeref:typename:platform_button_t
-button_editor3	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_editor3;$/;"	m	language:C++	struct:__anona41ebd570708::__anona41ebd57080a::__anona41ebd570908	typeref:typename:platform_button_t
+button_editor3	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_editor3;$/;"	m	language:C++	struct:__anona41ebd570608::__anona41ebd57070a::__anona41ebd570808	typeref:typename:platform_button_t
 button_editor_on	C:/users/geral/work/moom/code/moe_platform.h	/^      platform_button_t button_editor_on;$/;"	m	language:C++	struct:__anon9b2058cb0608::__anon9b2058cb070a::__anon9b2058cb0808	typeref:typename:platform_button_t
-button_editor_on	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_editor_on;$/;"	m	language:C++	struct:__anona41ebd570708::__anona41ebd57080a::__anona41ebd570908	typeref:typename:platform_button_t
+button_editor_on	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_editor_on;$/;"	m	language:C++	struct:__anona41ebd570608::__anona41ebd57070a::__anona41ebd570808	typeref:typename:platform_button_t
 button_left	C:/users/geral/work/moom/code/moe_platform.h	/^      platform_button_t button_left;$/;"	m	language:C++	struct:__anon9b2058cb0608::__anon9b2058cb070a::__anon9b2058cb0808	typeref:typename:platform_button_t
-button_left	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_left;$/;"	m	language:C++	struct:__anona41ebd570708::__anona41ebd57080a::__anona41ebd570908	typeref:typename:platform_button_t
+button_left	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_left;$/;"	m	language:C++	struct:__anona41ebd570608::__anona41ebd57070a::__anona41ebd570808	typeref:typename:platform_button_t
 button_right	C:/users/geral/work/moom/code/moe_platform.h	/^      platform_button_t button_right;$/;"	m	language:C++	struct:__anon9b2058cb0608::__anon9b2058cb070a::__anon9b2058cb0808	typeref:typename:platform_button_t
-button_right	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_right;$/;"	m	language:C++	struct:__anona41ebd570708::__anona41ebd57080a::__anona41ebd570908	typeref:typename:platform_button_t
+button_right	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_right;$/;"	m	language:C++	struct:__anona41ebd570608::__anona41ebd57070a::__anona41ebd570808	typeref:typename:platform_button_t
 button_rotate_left	C:/users/geral/work/moom/code/moe_platform.h	/^      platform_button_t button_rotate_left;$/;"	m	language:C++	struct:__anon9b2058cb0608::__anon9b2058cb070a::__anon9b2058cb0808	typeref:typename:platform_button_t
-button_rotate_left	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_rotate_left;$/;"	m	language:C++	struct:__anona41ebd570708::__anona41ebd57080a::__anona41ebd570908	typeref:typename:platform_button_t
+button_rotate_left	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_rotate_left;$/;"	m	language:C++	struct:__anona41ebd570608::__anona41ebd57070a::__anona41ebd570808	typeref:typename:platform_button_t
 button_rotate_right	C:/users/geral/work/moom/code/moe_platform.h	/^      platform_button_t button_rotate_right;$/;"	m	language:C++	struct:__anon9b2058cb0608::__anon9b2058cb070a::__anon9b2058cb0808	typeref:typename:platform_button_t
-button_rotate_right	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_rotate_right;$/;"	m	language:C++	struct:__anona41ebd570708::__anona41ebd57080a::__anona41ebd570908	typeref:typename:platform_button_t
+button_rotate_right	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_rotate_right;$/;"	m	language:C++	struct:__anona41ebd570608::__anona41ebd57070a::__anona41ebd570808	typeref:typename:platform_button_t
 button_up	C:/users/geral/work/moom/code/moe_platform.h	/^      platform_button_t button_up;$/;"	m	language:C++	struct:__anon9b2058cb0608::__anon9b2058cb070a::__anon9b2058cb0808	typeref:typename:platform_button_t
-button_up	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_up;$/;"	m	language:C++	struct:__anona41ebd570708::__anona41ebd57080a::__anona41ebd570908	typeref:typename:platform_button_t
+button_up	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_up;$/;"	m	language:C++	struct:__anona41ebd570608::__anona41ebd57070a::__anona41ebd570808	typeref:typename:platform_button_t
 button_use	C:/users/geral/work/moom/code/moe_platform.h	/^      platform_button_t button_use;$/;"	m	language:C++	struct:__anon9b2058cb0608::__anon9b2058cb070a::__anon9b2058cb0808	typeref:typename:platform_button_t
-button_use	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_use;$/;"	m	language:C++	struct:__anona41ebd570708::__anona41ebd57080a::__anona41ebd570908	typeref:typename:platform_button_t
+button_use	D:/work/git/moom/code/moe_platform.h	/^      platform_button_t button_use;$/;"	m	language:C++	struct:__anona41ebd570608::__anona41ebd57070a::__anona41ebd570808	typeref:typename:platform_button_t
 byte_rate	C:/users/geral/work/moom/code/momo_wav.h	/^  u32_t byte_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 byte_rate	D:/work/git/moom/code/momo_wav.h	/^  u32_t byte_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 c	C:/users/geral/work/moom/code/test_essentials.h	/^      char c[2];$/;"	m	language:C++	union:test_essentials::__anonbfe2a900010a	typeref:typename:char[2]
@@ -469,12 +469,12 @@ ceil_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t ceil_f64(f64_t v
 ceil_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t ceil_f64(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
 channels	C:/users/geral/work/moom/code/moe_platform.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:__anon9b2058cb0408	typeref:typename:u32_t
 channels	C:/users/geral/work/moom/code/w32_audio_wasapi.h	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t
-channels	D:/work/git/moom/code/moe_platform.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:__anona41ebd570508	typeref:typename:u32_t
+channels	D:/work/git/moom/code/moe_platform.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:__anona41ebd570408	typeref:typename:u32_t
 channels	D:/work/git/moom/code/w32_audio_wasapi.h	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t
 chars	C:/users/geral/work/moom/code/moe_platform.h	/^  u8_t chars[32];$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:u8_t[32]
-chars	D:/work/git/moom/code/moe_platform.h	/^  u8_t chars[32];$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:u8_t[32]
+chars	D:/work/git/moom/code/moe_platform.h	/^  u8_t chars[32];$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:u8_t[32]
 char_count	C:/users/geral/work/moom/code/moe_platform.h	/^  u32_t char_count;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:u32_t
-char_count	D:/work/git/moom/code/moe_platform.h	/^  u32_t char_count;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:u32_t
+char_count	D:/work/git/moom/code/moe_platform.h	/^  u32_t char_count;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:u32_t
 checkIncomingModuleAPI	build/a.out.js	/^function checkIncomingModuleAPI() {$/;"	f	language:JavaScript
 checkStackCookie	build/a.out.js	/^function checkStackCookie() {$/;"	f	language:JavaScript
 checkUnflushedContent	build/a.out.js	/^function checkUnflushedContent() {$/;"	f	language:JavaScript
@@ -489,7 +489,7 @@ circle211	build/web.html	/^   id="circle211" \/><\/g><\/g><g$/;"	I	language:HTML
 circle226	build/web.html	/^   id="circle226" \/><\/g><\/g><g$/;"	I	language:HTML
 circle241	build/web.html	/^   id="circle241" \/><\/g><\/g><\/g><\/g><path$/;"	I	language:HTML
 circle_sprite	C:/users/geral/work/moom/code/lit_game.h	/^  asset_sprite_id_t circle_sprite;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_sprite_id_t
-circle_sprite	D:/work/git/moom/code/lit.h	/^  asset_sprite_id_t circle_sprite;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_sprite_id_t
+circle_sprite	D:/work/git/moom/code/lit_game.h	/^  asset_sprite_id_t circle_sprite;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_sprite_id_t
 circle_sprite	D:/work/git/moom/code/scene_lit.h	/^  asset_sprite_id_t circle_sprite;$/;"	m	language:C++	struct:lit_t	typeref:typename:asset_sprite_id_t
 clamp_of	C:/users/geral/work/moom/code/momo_types.h	/^#define clamp_of(/;"	d	language:C++
 clamp_of	D:/work/git/moom/code/momo_types.h	/^#define clamp_of(/;"	d	language:C++
@@ -500,7 +500,7 @@ cll_init	D:/work/git/moom/code/momo_ds.h	/^#define cll_init(/;"	d	language:C++
 cll_remove	C:/users/geral/work/moom/code/momo_ds.h	/^#define cll_remove(/;"	d	language:C++
 cll_remove	D:/work/git/moom/code/momo_ds.h	/^#define cll_remove(/;"	d	language:C++
 close_file	C:/users/geral/work/moom/code/moe_platform.h	/^  platform_close_file_f* close_file;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:platform_close_file_f *
-close_file	D:/work/git/moom/code/moe_platform.h	/^  platform_close_file_f* close_file;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:platform_close_file_f *
+close_file	D:/work/git/moom/code/moe_platform.h	/^  platform_close_file_f* close_file;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:platform_close_file_f *
 cmap	C:/users/geral/work/moom/code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 cmap	D:/work/git/moom/code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 cmap_mappings	C:/users/geral/work/moom/code/momo_ttf.h	/^  u32_t cmap_mappings;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
@@ -559,7 +559,7 @@ COMPILER_MSVC	C:/users/geral/work/moom/code/momo_types.h	/^# define COMPILER_MSV
 COMPILER_MSVC	D:/work/git/moom/code/momo_types.h	/^# define COMPILER_MSVC /;"	d	language:C++
 COMPILER_MSVC	D:/work/git/moom/code/momo_types.h	/^# define COMPILER_MSVC /;"	d	language:C++
 complete_all_tasks	C:/users/geral/work/moom/code/moe_platform.h	/^  platform_complete_all_tasks_f* complete_all_tasks;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:platform_complete_all_tasks_f *
-complete_all_tasks	D:/work/git/moom/code/moe_platform.h	/^  platform_complete_all_tasks_f* complete_all_tasks;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:platform_complete_all_tasks_f *
+complete_all_tasks	D:/work/git/moom/code/moe_platform.h	/^  platform_complete_all_tasks_f* complete_all_tasks;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:platform_complete_all_tasks_f *
 completion_count	C:/users/geral/work/moom/code/w32_moe.h	/^  u32_t volatile completion_count;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile
 completion_count	D:/work/git/moom/code/w32_moe.h	/^  u32_t volatile completion_count;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile
 completion_goal	C:/users/geral/work/moom/code/w32_moe.h	/^  u32_t volatile completion_goal;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile
@@ -705,7 +705,7 @@ current_instance_index	D:/work/git/moom/code/moe_gfx_opengl.h	/^  GLuint current
 current_layer	C:/users/geral/work/moom/code/moe_gfx_opengl.h	/^  f32_t current_layer;$/;"	m	language:C++	struct:Opengl	typeref:typename:f32_t
 current_layer	D:/work/git/moom/code/moe_gfx_opengl.h	/^  f32_t current_layer;$/;"	m	language:C++	struct:Opengl	typeref:typename:f32_t
 current_level_id	C:/users/geral/work/moom/code/lit_game.h	/^  u32_t current_level_id;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
-current_level_id	D:/work/git/moom/code/lit.h	/^  u32_t current_level_id;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
+current_level_id	D:/work/git/moom/code/lit_game.h	/^  u32_t current_level_id;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
 current_level_id	D:/work/git/moom/code/scene_lit.h	/^  u32_t current_level_id;$/;"	m	language:C++	struct:lit_t	typeref:typename:u32_t
 current_texture	C:/users/geral/work/moom/code/moe_gfx_opengl.h	/^  GLuint current_texture;$/;"	m	language:C++	struct:__anon57c60e6f0808	typeref:typename:GLuint
 current_texture	D:/work/git/moom/code/moe_gfx_opengl.h	/^  GLuint current_texture;$/;"	m	language:C++	struct:__anon99efc5fb0808	typeref:typename:GLuint
@@ -727,11 +727,11 @@ data	C:/users/geral/work/moom/code/momo_wav.h	/^  void* data;$/;"	m	language:C++
 data	C:/users/geral/work/moom/code/w32_moe.h	/^  void* data;$/;"	m	language:C++	struct:w32_memory_block_t	typeref:typename:void *
 data	C:/users/geral/work/moom/code/w32_moe.h	/^  void* data;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:void *
 data	D:/work/git/moom/code/moe_gfx.h	/^  void* data;$/;"	m	language:C++	struct:gfx_command_t	typeref:typename:void *
-data	D:/work/git/moom/code/moe_platform.h	/^  void* data;$/;"	m	language:C++	struct:__anona41ebd570108	typeref:typename:void *
 data	D:/work/git/moom/code/momo_png.h	/^  u8_t* data;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t *
 data	D:/work/git/moom/code/momo_streams.h	/^  u8_t* data;$/;"	m	language:C++	struct:stream_t	typeref:typename:u8_t *
 data	D:/work/git/moom/code/momo_ttf.h	/^  u8_t* data;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u8_t *
 data	D:/work/git/moom/code/momo_wav.h	/^  void* data;$/;"	m	language:C++	struct:wav_t	typeref:typename:void *
+data	D:/work/git/moom/code/w32_moe.h	/^  void* data;$/;"	m	language:C++	struct:w32_memory_block_t	typeref:typename:void *
 data	D:/work/git/moom/code/w32_moe.h	/^  void* data;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:void *
 dataURIPrefix	build/a.out.js	/^var dataURIPrefix = 'data:application\/octet-stream;base64,';$/;"	v	language:JavaScript
 data_chunk	C:/users/geral/work/moom/code/momo_wav.h	/^  wav_data_chunk_t data_chunk;$/;"	m	language:C++	struct:wav_t	typeref:typename:wav_data_chunk_t
@@ -745,7 +745,7 @@ debug_arena	D:/work/git/moom/code/moe.h	/^  arena_t debug_arena;$/;"	m	language:
 debug_font	C:/users/geral/work/moom/code/moe.h	/^  asset_font_id_t debug_font;$/;"	m	language:C++	struct:moe_t	typeref:typename:asset_font_id_t
 debug_font	D:/work/git/moom/code/moe.h	/^  asset_font_id_t debug_font;$/;"	m	language:C++	struct:moe_t	typeref:typename:asset_font_id_t
 debug_log	C:/users/geral/work/moom/code/moe_platform.h	/^  platform_debug_log_f* debug_log;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:platform_debug_log_f *
-debug_log	D:/work/git/moom/code/moe_platform.h	/^  platform_debug_log_f* debug_log;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:platform_debug_log_f *
+debug_log	D:/work/git/moom/code/moe_platform.h	/^  platform_debug_log_f* debug_log;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:platform_debug_log_f *
 defer	C:/users/geral/work/moom/code/momo_types.h	/^# define defer /;"	d	language:C++
 defer	D:/work/git/moom/code/momo_types.h	/^# define defer /;"	d	language:C++
 defs17	build/web.html	/^   id="defs17"><filter$/;"	I	language:HTML
@@ -1042,10 +1042,10 @@ ease_out_sine_f64	C:/users/geral/work/moom/code/momo_easing.h	/^static f64_t eas
 ease_out_sine_f64	D:/work/git/moom/code/momo_easing.h	/^ease_out_sine_f64(f64_t t) {$/;"	f	language:C++	typeref:typename:f64_t
 ease_out_sine_f64	D:/work/git/moom/code/momo_easing.h	/^static f64_t ease_out_sine_f64(f64_t t);$/;"	p	language:C++	typeref:typename:f64_t
 edges	C:/users/geral/work/moom/code/lit_game.h	/^  lit_edge_t edges[256];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_edge_t[256]
-edges	D:/work/git/moom/code/lit.h	/^  lit_edge_t edges[256];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_edge_t[256]
+edges	D:/work/git/moom/code/lit_game.h	/^  lit_edge_t edges[256];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_edge_t[256]
 edges	D:/work/git/moom/code/scene_lit.h	/^  lit_edge_t edges[256];$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_edge_t[256]
 edge_count	C:/users/geral/work/moom/code/lit_game.h	/^  u32_t edge_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
-edge_count	D:/work/git/moom/code/lit.h	/^  u32_t edge_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
+edge_count	D:/work/git/moom/code/lit_game.h	/^  u32_t edge_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
 edge_count	D:/work/git/moom/code/scene_lit.h	/^  u32_t edge_count;$/;"	m	language:C++	struct:lit_t	typeref:typename:u32_t
 emscripten_memcpy_big	build/a.out.js	/^  "emscripten_memcpy_big": _emscripten_memcpy_big,$/;"	p	language:JavaScript	class:asmLibraryArg
 ENABLE_ASSERT	C:/users/geral/work/moom/code/momo_types.h	/^# define ENABLE_ASSERT /;"	d	language:C++
@@ -1148,7 +1148,7 @@ files	D:/work/git/moom/code/w32_moe.h	/^  w32_file_t files[32]; $/;"	m	language:
 file_cabinet	C:/users/geral/work/moom/code/w32_moe.h	/^  w32_file_cabinet_t file_cabinet;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_file_cabinet_t
 file_cabinet	D:/work/git/moom/code/w32_moe.h	/^  w32_file_cabinet_t file_cabinet;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_file_cabinet_t
 filled_circle_sprite	C:/users/geral/work/moom/code/lit_game.h	/^  asset_sprite_id_t filled_circle_sprite;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_sprite_id_t
-filled_circle_sprite	D:/work/git/moom/code/lit.h	/^  asset_sprite_id_t filled_circle_sprite;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_sprite_id_t
+filled_circle_sprite	D:/work/git/moom/code/lit_game.h	/^  asset_sprite_id_t filled_circle_sprite;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_sprite_id_t
 filled_circle_sprite	D:/work/git/moom/code/scene_lit.h	/^  asset_sprite_id_t filled_circle_sprite;$/;"	m	language:C++	struct:lit_t	typeref:typename:asset_sprite_id_t
 filter5126	build/web.html	/^     id="filter5126"><feGaussianBlur$/;"	I	language:HTML
 filter_method	C:/users/geral/work/moom/code/momo_png.h	/^  u8_t filter_method;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t
@@ -1217,7 +1217,7 @@ free_files	D:/work/git/moom/code/w32_moe.h	/^  u32_t free_files[32];$/;"	m	langu
 free_file_count	C:/users/geral/work/moom/code/w32_moe.h	/^  u32_t free_file_count;$/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:u32_t
 free_file_count	D:/work/git/moom/code/w32_moe.h	/^  u32_t free_file_count;$/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:u32_t
 free_memory	C:/users/geral/work/moom/code/moe_platform.h	/^  platform_free_memory_f* free_memory;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:platform_free_memory_f *
-free_memory	D:/work/git/moom/code/moe_platform.h	/^  platform_free_memory_f* free_memory;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:platform_free_memory_f *
+free_memory	D:/work/git/moom/code/moe_platform.h	/^  platform_free_memory_f* free_memory;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:platform_free_memory_f *
 front	C:/users/geral/work/moom/code/gist_ring_buffer.cpp	/^  u32_t front;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
 front	D:/work/git/moom/code/gist_ring_buffer.cpp	/^  u32_t front;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
 FS	build/a.out.js	/^var FS = {$/;"	c	language:JavaScript
@@ -1275,12 +1275,9 @@ game	D:/work/git/moom/code/lit.h	/^    lit_game_t game;$/;"	m	language:C++	union
 game_context	C:/users/geral/work/moom/code/moe.h	/^  void* game_context;$/;"	m	language:C++	struct:moe_t	typeref:typename:void *
 game_context	D:/work/git/moom/code/moe.h	/^  void* game_context;$/;"	m	language:C++	struct:moe_t	typeref:typename:void *
 game_exit	D:/work/git/moom/code/scene.h	/^game_exit(moe_t* moe) {$/;"	f	language:C++	typeref:typename:void
-game_exit_f	D:/work/git/moom/code/moe.h	/^typedef void (*game_exit_f)(struct moe_t*);$/;"	t	language:C++	typeref:typename:void (*)(struct moe_t *)
 GAME_H	C:/users/geral/work/moom/code/game.h	/^#define GAME_H$/;"	d	language:C++
 GAME_H	D:/work/git/moom/code/game.h	/^#define GAME_H$/;"	d	language:C++
-game_init	D:/work/git/moom/code/game.h	/^game_init(moe_t* moe) {$/;"	f	language:C++	typeref:typename:void
 game_init	D:/work/git/moom/code/scene.h	/^game_init(moe_t* moe) {$/;"	f	language:C++	typeref:typename:void
-game_init_f	D:/work/git/moom/code/moe.h	/^typedef void (*game_init_f)(struct moe_t*);$/;"	t	language:C++	typeref:typename:void (*)(struct moe_t *)
 game_tick	C:/users/geral/work/moom/code/game.h	/^game_tick(moe_t* moe) $/;"	f	language:C++	typeref:typename:void
 game_tick	D:/work/git/moom/code/game.h	/^game_tick(moe_t* moe) $/;"	f	language:C++	typeref:typename:void
 game_tick	D:/work/git/moom/code/scene.h	/^game_tick(moe_t* moe) $/;"	f	language:C++	typeref:typename:void
@@ -1310,7 +1307,7 @@ get_sprite	D:/work/git/moom/code/moe_assets.cpp	/^get_sprite(assets_t* ma, asset
 gfx	C:/users/geral/work/moom/code/moe_gfx_opengl.h	/^  gfx_t gfx; \/\/ Must be first member$/;"	m	language:C++	struct:Opengl	typeref:typename:gfx_t
 gfx	C:/users/geral/work/moom/code/moe_platform.h	/^  gfx_t* gfx;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:gfx_t *
 gfx	D:/work/git/moom/code/moe_gfx_opengl.h	/^  gfx_t gfx; \/\/ Must be first member$/;"	m	language:C++	struct:Opengl	typeref:typename:gfx_t
-gfx	D:/work/git/moom/code/moe_platform.h	/^  gfx_t* gfx;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:gfx_t *
+gfx	D:/work/git/moom/code/moe_platform.h	/^  gfx_t* gfx;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:gfx_t *
 gfx_advance_depth	C:/users/geral/work/moom/code/moe_gfx.h	/^gfx_advance_depth(gfx_t* g) {$/;"	f	language:C++	typeref:typename:void
 gfx_advance_depth	C:/users/geral/work/moom/code/moe_gfx.h	/^static void gfx_advance_depth(gfx_t* g);$/;"	p	language:C++	typeref:typename:void
 gfx_advance_depth	D:/work/git/moom/code/moe_gfx.h	/^gfx_advance_depth(gfx_t* g) {$/;"	f	language:C++	typeref:typename:void
@@ -1985,7 +1982,7 @@ is_valid	D:/work/git/moom/code/w32_moe.h	/^  b32_t is_valid;$/;"	m	language:C++	
 is_whitespace	C:/users/geral/work/moom/code/momo_types.h	/^is_whitespace(c8_t c) {$/;"	f	language:C++	typeref:typename:b32_t
 is_whitespace	D:/work/git/moom/code/momo_types.h	/^is_whitespace(c8_t c) {$/;"	f	language:C++	typeref:typename:b32_t
 is_win_reached	C:/users/geral/work/moom/code/lit_game.h	/^  b32_t is_win_reached;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:b32_t
-is_win_reached	D:/work/git/moom/code/lit.h	/^  b32_t is_win_reached;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:b32_t
+is_win_reached	D:/work/git/moom/code/lit_game.h	/^  b32_t is_win_reached;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:b32_t
 is_win_reached	D:/work/git/moom/code/scene_lit.h	/^  b32_t is_win_reached;$/;"	m	language:C++	struct:lit_t	typeref:typename:b32_t
 item	C:/users/geral/work/moom/code/moe_inspector.h	/^  void* item;$/;"	m	language:C++	struct:__anon789e7ddd0208	typeref:typename:void *
 item	D:/work/git/moom/code/moe_inspector.h	/^  void* item;$/;"	m	language:C++	struct:__anona16973e90208	typeref:typename:void *
@@ -2101,10 +2098,10 @@ lifespan_now	C:/users/geral/work/moom/code/lit_game.h	/^  f32_t lifespan_now;$/;
 lifespan_now	D:/work/git/moom/code/lit_game.h	/^  f32_t lifespan_now;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:f32_t
 lifespan_now	D:/work/git/moom/code/scene_lit_entity.h	/^  f32_t lifespan_now;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:f32_t
 lights	C:/users/geral/work/moom/code/lit_game.h	/^  lit_light_t lights[32];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_light_t[32]
-lights	D:/work/git/moom/code/lit.h	/^  lit_light_t lights[32];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_light_t[32]
+lights	D:/work/git/moom/code/lit_game.h	/^  lit_light_t lights[32];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_light_t[32]
 lights	D:/work/git/moom/code/scene_lit.h	/^  lit_light_t lights[32];$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_light_t[32]
 light_count	C:/users/geral/work/moom/code/lit_game.h	/^  u32_t light_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
-light_count	D:/work/git/moom/code/lit.h	/^  u32_t light_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
+light_count	D:/work/git/moom/code/lit_game.h	/^  u32_t light_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
 light_count	D:/work/git/moom/code/scene_lit.h	/^  u32_t light_count;$/;"	m	language:C++	struct:lit_t	typeref:typename:u32_t
 light_retrival_time	C:/users/geral/work/moom/code/lit_game.h	/^  f32_t light_retrival_time;$/;"	m	language:C++	struct:lit_player_t	typeref:typename:f32_t
 light_retrival_time	D:/work/git/moom/code/lit_game.h	/^  f32_t light_retrival_time;$/;"	m	language:C++	struct:lit_player_t	typeref:typename:f32_t
@@ -2159,7 +2156,7 @@ LIT_EXIT_FLASH_DURATION	C:/users/geral/work/moom/code/lit.h	/^#define LIT_EXIT_F
 LIT_EXIT_FLASH_DURATION	D:/work/git/moom/code/lit.h	/^#define LIT_EXIT_FLASH_DURATION /;"	d	language:C++
 LIT_EXIT_FLASH_DURATION	D:/work/git/moom/code/scene_lit.h	/^#define LIT_EXIT_FLASH_DURATION /;"	d	language:C++
 lit_game_t	C:/users/geral/work/moom/code/lit_game.h	/^struct lit_game_t {$/;"	s	language:C++
-lit_game_t	D:/work/git/moom/code/lit.h	/^struct lit_game_t {$/;"	s	language:C++
+lit_game_t	D:/work/git/moom/code/lit_game.h	/^struct lit_game_t {$/;"	s	language:C++
 lit_gen_lights	C:/users/geral/work/moom/code/lit_game.cpp	/^lit_gen_lights(lit_light_t* lights, $/;"	f	language:C++	typeref:typename:void	file:
 lit_gen_lights	D:/work/git/moom/code/lit_game.cpp	/^lit_gen_lights(lit_light_t* lights, $/;"	f	language:C++	typeref:typename:void	file:
 lit_gen_lights	D:/work/git/moom/code/scene_lit_world.cpp	/^lit_gen_lights(lit_light_t* lights, $/;"	f	language:C++	typeref:typename:void	file:
@@ -2172,10 +2169,13 @@ lit_get_ray_intersection_time_wrt_edges	D:/work/git/moom/code/scene_lit_world.cp
 LIT_HEIGHT	C:/users/geral/work/moom/code/lit.h	/^#define LIT_HEIGHT /;"	d	language:C++
 LIT_HEIGHT	D:/work/git/moom/code/lit.h	/^#define LIT_HEIGHT /;"	d	language:C++
 LIT_HEIGHT	D:/work/git/moom/code/scene_lit.h	/^#define LIT_HEIGHT /;"	d	language:C++
+lit_init	D:/work/git/moom/code/lit.h	/^lit_init(moe_t* moe, lit_t* lit, platform_t* platform)$/;"	f	language:C++	typeref:typename:void
 lit_init	D:/work/git/moom/code/scene_lit.h	/^lit_init(moe_t* moe) {$/;"	f	language:C++	typeref:typename:void
+lit_init_game	D:/work/git/moom/code/lit_game.cpp	/^lit_init_game(moe_t* moe, lit_game_t* game, platform_t* platform) $/;"	f	language:C++	typeref:typename:void	file:
 lit_init_player	C:/users/geral/work/moom/code/lit_game.cpp	/^lit_init_player(lit_game_t* game, f32_t x, f32_t y) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_init_player	D:/work/git/moom/code/lit_game.cpp	/^lit_init_player(lit_game_t* game, f32_t x, f32_t y) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_init_player	D:/work/git/moom/code/scene_lit_entity.cpp	/^lit_init_player(lit_t* lit, f32_t x, f32_t y) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_init_splash	D:/work/git/moom/code/lit.h	/^lit_init_splash(moe_t* moe, lit_t* lit, platform_t* platform) {$/;"	f	language:C++	typeref:typename:void
 lit_is_state_exiting	C:/users/geral/work/moom/code/lit_game.cpp	/^lit_is_state_exiting(lit_game_t* game) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 lit_is_state_exiting	D:/work/git/moom/code/lit_game.cpp	/^lit_is_state_exiting(lit_game_t* game) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 lit_is_state_exiting	D:/work/git/moom/code/scene_lit.h	/^lit_is_state_exiting(lit_t* lit) {$/;"	f	language:C++	typeref:typename:b32_t
@@ -2212,6 +2212,7 @@ lit_level_0_7	D:/work/git/moom/code/scene_lit_levels.h	/^lit_level_0_7(lit_t* m)
 lit_level_0_8	C:/users/geral/work/moom/code/lit_levels.h	/^lit_level_0_8(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_0_8	D:/work/git/moom/code/lit_levels.h	/^lit_level_0_8(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_0_8	D:/work/git/moom/code/scene_lit_levels.h	/^lit_level_0_8(lit_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_0_9	D:/work/git/moom/code/lit_levels.h	/^lit_level_0_9(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
 lit_light_intersection_t	C:/users/geral/work/moom/code/lit_game.h	/^struct lit_light_intersection_t {$/;"	s	language:C++
 lit_light_intersection_t	D:/work/git/moom/code/lit_game.h	/^struct lit_light_intersection_t {$/;"	s	language:C++
 lit_light_intersection_t	D:/work/git/moom/code/scene_lit_world.h	/^struct lit_light_intersection_t {$/;"	s	language:C++
@@ -2234,16 +2235,22 @@ Lit_LIGHT_TYPE_WEIRD	C:/users/geral/work/moom/code/lit_game.h	/^  Lit_LIGHT_TYPE
 Lit_LIGHT_TYPE_WEIRD	D:/work/git/moom/code/lit_game.h	/^  Lit_LIGHT_TYPE_WEIRD$/;"	e	language:C++	enum:lit_light_type_t
 Lit_LIGHT_TYPE_WEIRD	D:/work/git/moom/code/scene_lit_world.h	/^  Lit_LIGHT_TYPE_WEIRD$/;"	e	language:C++	enum:lit_light_type_t
 lit_load_level	C:/users/geral/work/moom/code/lit_levels.h	/^lit_load_level(lit_game_t* m, u32_t level_id) {$/;"	f	language:C++	typeref:typename:void
+lit_load_level	D:/work/git/moom/code/lit_game.cpp	/^static void lit_load_level(lit_game_t* m, u32_t level_id);$/;"	p	language:C++	typeref:typename:void	file:
 lit_load_level	D:/work/git/moom/code/lit_levels.h	/^lit_load_level(lit_game_t* m, u32_t level_id) {$/;"	f	language:C++	typeref:typename:void
 lit_load_level	D:/work/git/moom/code/scene_lit_levels.h	/^lit_load_level(lit_t* m, u32_t level_id) {$/;"	f	language:C++	typeref:typename:void
 lit_load_next_level	C:/users/geral/work/moom/code/lit_levels.h	/^lit_load_next_level(lit_game_t* m){$/;"	f	language:C++	typeref:typename:void
+lit_load_next_level	D:/work/git/moom/code/lit_game.cpp	/^static void lit_load_next_level(lit_game_t* m);$/;"	p	language:C++	typeref:typename:void	file:
 lit_load_next_level	D:/work/git/moom/code/lit_levels.h	/^lit_load_next_level(lit_game_t* m){$/;"	f	language:C++	typeref:typename:void
 lit_load_next_level	D:/work/git/moom/code/scene_lit_levels.h	/^lit_load_next_level(lit_t* m){$/;"	f	language:C++	typeref:typename:void
 lit_menu_t	C:/users/geral/work/moom/code/lit.h	/^struct lit_menu_t {$/;"	s	language:C++
 lit_menu_t	D:/work/git/moom/code/lit.h	/^struct lit_menu_t {$/;"	s	language:C++
 LIT_MODE_GAME	C:/users/geral/work/moom/code/lit.h	/^  LIT_MODE_GAME,$/;"	e	language:C++	enum:lit_mode_t
+LIT_MODE_GAME	D:/work/git/moom/code/lit.h	/^  LIT_MODE_GAME,$/;"	e	language:C++	enum:lit_mode_t
 LIT_MODE_MENU	C:/users/geral/work/moom/code/lit.h	/^  LIT_MODE_MENU,$/;"	e	language:C++	enum:lit_mode_t
+LIT_MODE_MENU	D:/work/git/moom/code/lit.h	/^  LIT_MODE_MENU,$/;"	e	language:C++	enum:lit_mode_t
+LIT_MODE_SPLASH	D:/work/git/moom/code/lit.h	/^  LIT_MODE_SPLASH,$/;"	e	language:C++	enum:lit_mode_t
 lit_mode_t	C:/users/geral/work/moom/code/lit.h	/^enum lit_mode_t {$/;"	g	language:C++
+lit_mode_t	D:/work/git/moom/code/lit.h	/^enum lit_mode_t {$/;"	g	language:C++
 lit_particle_pool_t	C:/users/geral/work/moom/code/lit_game.h	/^struct lit_particle_pool_t {$/;"	s	language:C++
 lit_particle_pool_t	D:/work/git/moom/code/lit_game.h	/^struct lit_particle_pool_t {$/;"	s	language:C++
 lit_particle_pool_t	D:/work/git/moom/code/scene_lit_entity.h	/^struct lit_particle_pool_t {$/;"	s	language:C++
@@ -2268,6 +2275,7 @@ LIT_PLAYER_ROTATE_SPEED	D:/work/git/moom/code/scene_lit.h	/^#define LIT_PLAYER_R
 lit_player_t	C:/users/geral/work/moom/code/lit_game.h	/^struct lit_player_t {$/;"	s	language:C++
 lit_player_t	D:/work/git/moom/code/lit_game.h	/^struct lit_player_t {$/;"	s	language:C++
 lit_player_t	D:/work/git/moom/code/scene_lit_entity.h	/^struct lit_player_t {$/;"	s	language:C++
+lit_push_box	D:/work/git/moom/code/lit_game.cpp	/^lit_push_box(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) $/;"	f	language:C++	typeref:typename:void	file:
 lit_push_double_edge	C:/users/geral/work/moom/code/lit_game.cpp	/^lit_push_double_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_push_double_edge	D:/work/git/moom/code/lit_game.cpp	/^lit_push_double_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_push_double_edge	D:/work/git/moom/code/scene_lit_world.cpp	/^lit_push_double_edge(lit_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -2284,7 +2292,7 @@ lit_push_triangle	C:/users/geral/work/moom/code/lit_game.cpp	/^lit_push_triangle
 lit_push_triangle	D:/work/git/moom/code/lit_game.cpp	/^lit_push_triangle(lit_light_t* l, v2f_t p0, v2f_t p1, v2f_t p2, u32_t color) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_push_triangle	D:/work/git/moom/code/scene_lit_world.cpp	/^lit_push_triangle(lit_light_t* l, v2f_t p0, v2f_t p1, v2f_t p2, u32_t color) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_render_game	C:/users/geral/work/moom/code/lit_game.cpp	/^lit_render_game(moe_t* moe, lit_game_t* game, platform_t* platform) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_render_game	D:/work/git/moom/code/lit.h	/^lit_render_game(moe_t* moe, lit_game_t* game, platform_t* platform) {$/;"	f	language:C++	typeref:typename:void
+lit_render_game	D:/work/git/moom/code/lit_game.cpp	/^lit_render_game(moe_t* moe, lit_game_t* game, platform_t* platform) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_render_game	D:/work/git/moom/code/scene_lit.h	/^lit_render_game(moe_t* moe, lit_t* lit, platform_t* platform) {$/;"	f	language:C++	typeref:typename:void
 lit_render_particles	C:/users/geral/work/moom/code/lit_game.cpp	/^lit_render_particles(moe_t* moe, lit_game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_render_particles	D:/work/git/moom/code/lit_game.cpp	/^lit_render_particles(moe_t* moe, lit_game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -2316,36 +2324,38 @@ lit_set_title	D:/work/git/moom/code/scene_lit.h	/^lit_set_title(lit_t* lit, str8
 lit_spawn_particle	C:/users/geral/work/moom/code/lit_game.cpp	/^lit_spawn_particle(lit_game_t* game,$/;"	f	language:C++	typeref:typename:void	file:
 lit_spawn_particle	D:/work/git/moom/code/lit_game.cpp	/^lit_spawn_particle(lit_game_t* game,$/;"	f	language:C++	typeref:typename:void	file:
 lit_spawn_particle	D:/work/git/moom/code/scene_lit_entity.cpp	/^lit_spawn_particle(lit_t* lit,$/;"	f	language:C++	typeref:typename:void	file:
+lit_splash_t	D:/work/git/moom/code/lit.h	/^struct lit_splash_t {$/;"	s	language:C++
 LIT_STATE_TYPE_NORMAL	C:/users/geral/work/moom/code/lit_game.h	/^  LIT_STATE_TYPE_NORMAL,$/;"	e	language:C++	enum:lit_state_type_t
-LIT_STATE_TYPE_NORMAL	D:/work/git/moom/code/lit.h	/^  LIT_STATE_TYPE_NORMAL,$/;"	e	language:C++	enum:lit_state_type_t
+LIT_STATE_TYPE_NORMAL	D:/work/git/moom/code/lit_game.h	/^  LIT_STATE_TYPE_NORMAL,$/;"	e	language:C++	enum:lit_state_type_t
 LIT_STATE_TYPE_NORMAL	D:/work/git/moom/code/scene_lit.h	/^  LIT_STATE_TYPE_NORMAL,$/;"	e	language:C++	enum:lit_state_type_t
 LIT_STATE_TYPE_SOLVED_IN	C:/users/geral/work/moom/code/lit_game.h	/^  LIT_STATE_TYPE_SOLVED_IN,$/;"	e	language:C++	enum:lit_state_type_t
-LIT_STATE_TYPE_SOLVED_IN	D:/work/git/moom/code/lit.h	/^  LIT_STATE_TYPE_SOLVED_IN,$/;"	e	language:C++	enum:lit_state_type_t
+LIT_STATE_TYPE_SOLVED_IN	D:/work/git/moom/code/lit_game.h	/^  LIT_STATE_TYPE_SOLVED_IN,$/;"	e	language:C++	enum:lit_state_type_t
 LIT_STATE_TYPE_SOLVED_IN	D:/work/git/moom/code/scene_lit.h	/^  LIT_STATE_TYPE_SOLVED_IN,$/;"	e	language:C++	enum:lit_state_type_t
 LIT_STATE_TYPE_SOLVED_OUT	C:/users/geral/work/moom/code/lit_game.h	/^  LIT_STATE_TYPE_SOLVED_OUT,$/;"	e	language:C++	enum:lit_state_type_t
-LIT_STATE_TYPE_SOLVED_OUT	D:/work/git/moom/code/lit.h	/^  LIT_STATE_TYPE_SOLVED_OUT,$/;"	e	language:C++	enum:lit_state_type_t
+LIT_STATE_TYPE_SOLVED_OUT	D:/work/git/moom/code/lit_game.h	/^  LIT_STATE_TYPE_SOLVED_OUT,$/;"	e	language:C++	enum:lit_state_type_t
 LIT_STATE_TYPE_SOLVED_OUT	D:/work/git/moom/code/scene_lit.h	/^  LIT_STATE_TYPE_SOLVED_OUT,$/;"	e	language:C++	enum:lit_state_type_t
 lit_state_type_t	C:/users/geral/work/moom/code/lit_game.h	/^enum lit_state_type_t {$/;"	g	language:C++
-lit_state_type_t	D:/work/git/moom/code/lit.h	/^enum lit_state_type_t {$/;"	g	language:C++
+lit_state_type_t	D:/work/git/moom/code/lit_game.h	/^enum lit_state_type_t {$/;"	g	language:C++
 lit_state_type_t	D:/work/git/moom/code/scene_lit.h	/^enum lit_state_type_t {$/;"	g	language:C++
 LIT_STATE_TYPE_TRANSITION_IN	C:/users/geral/work/moom/code/lit_game.h	/^  LIT_STATE_TYPE_TRANSITION_IN,$/;"	e	language:C++	enum:lit_state_type_t
-LIT_STATE_TYPE_TRANSITION_IN	D:/work/git/moom/code/lit.h	/^  LIT_STATE_TYPE_TRANSITION_IN,$/;"	e	language:C++	enum:lit_state_type_t
+LIT_STATE_TYPE_TRANSITION_IN	D:/work/git/moom/code/lit_game.h	/^  LIT_STATE_TYPE_TRANSITION_IN,$/;"	e	language:C++	enum:lit_state_type_t
 LIT_STATE_TYPE_TRANSITION_IN	D:/work/git/moom/code/scene_lit.h	/^  LIT_STATE_TYPE_TRANSITION_IN,$/;"	e	language:C++	enum:lit_state_type_t
 LIT_STATE_TYPE_TRANSITION_OUT	C:/users/geral/work/moom/code/lit_game.h	/^  LIT_STATE_TYPE_TRANSITION_OUT,$/;"	e	language:C++	enum:lit_state_type_t
-LIT_STATE_TYPE_TRANSITION_OUT	D:/work/git/moom/code/lit.h	/^  LIT_STATE_TYPE_TRANSITION_OUT,$/;"	e	language:C++	enum:lit_state_type_t
+LIT_STATE_TYPE_TRANSITION_OUT	D:/work/git/moom/code/lit_game.h	/^  LIT_STATE_TYPE_TRANSITION_OUT,$/;"	e	language:C++	enum:lit_state_type_t
 LIT_STATE_TYPE_TRANSITION_OUT	D:/work/git/moom/code/scene_lit.h	/^  LIT_STATE_TYPE_TRANSITION_OUT,$/;"	e	language:C++	enum:lit_state_type_t
 lit_t	C:/users/geral/work/moom/code/lit.h	/^struct lit_t {$/;"	s	language:C++
 lit_t	D:/work/git/moom/code/lit.h	/^struct lit_t {$/;"	s	language:C++
 lit_t	D:/work/git/moom/code/scene_lit.h	/^struct lit_t {$/;"	s	language:C++
+lit_tick	D:/work/git/moom/code/lit.h	/^lit_tick(moe_t* moe, lit_t* lit, platform_t* platform) {$/;"	f	language:C++	typeref:typename:void
 lit_tick	D:/work/git/moom/code/scene_lit.h	/^lit_tick(moe_t* moe) $/;"	f	language:C++	typeref:typename:void
 lit_title_waypoint_t	C:/users/geral/work/moom/code/lit_game.h	/^struct lit_title_waypoint_t {$/;"	s	language:C++
-lit_title_waypoint_t	D:/work/git/moom/code/lit.h	/^struct lit_title_waypoint_t {$/;"	s	language:C++
+lit_title_waypoint_t	D:/work/git/moom/code/lit_game.h	/^struct lit_title_waypoint_t {$/;"	s	language:C++
 lit_title_waypoint_t	D:/work/git/moom/code/scene_lit.h	/^struct lit_title_waypoint_t {$/;"	s	language:C++
 lit_title_wps	C:/users/geral/work/moom/code/lit_game.h	/^static lit_title_waypoint_t lit_title_wps[] = {$/;"	v	language:C++	typeref:typename:lit_title_waypoint_t[]
-lit_title_wps	D:/work/git/moom/code/lit.h	/^static lit_title_waypoint_t lit_title_wps[] = {$/;"	v	language:C++	typeref:typename:lit_title_waypoint_t[]
+lit_title_wps	D:/work/git/moom/code/lit_game.h	/^static lit_title_waypoint_t lit_title_wps[] = {$/;"	v	language:C++	typeref:typename:lit_title_waypoint_t[]
 lit_title_wps	D:/work/git/moom/code/scene_lit.h	/^static lit_title_waypoint_t lit_title_wps[] = {$/;"	v	language:C++	typeref:typename:lit_title_waypoint_t[]
 lit_update_game	C:/users/geral/work/moom/code/lit_game.cpp	/^lit_update_game(moe_t* moe, lit_game_t* game, platform_t* platform) $/;"	f	language:C++	typeref:typename:void	file:
-lit_update_game	D:/work/git/moom/code/lit.h	/^lit_update_game(moe_t* moe, lit_game_t* game, platform_t* platform) $/;"	f	language:C++	typeref:typename:void
+lit_update_game	D:/work/git/moom/code/lit_game.cpp	/^lit_update_game(moe_t* moe, lit_game_t* game, platform_t* platform) $/;"	f	language:C++	typeref:typename:void	file:
 lit_update_game	D:/work/git/moom/code/scene_lit.h	/^lit_update_game(moe_t* moe, lit_t* lit, platform_t* platform) $/;"	f	language:C++	typeref:typename:void
 lit_update_particles	C:/users/geral/work/moom/code/lit_game.cpp	/^lit_update_particles(lit_game_t* game, f32_t dt) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_update_particles	D:/work/git/moom/code/lit_game.cpp	/^lit_update_particles(lit_game_t* game, f32_t dt) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -2356,6 +2366,7 @@ lit_update_player	D:/work/git/moom/code/scene_lit_entity.cpp	/^lit_update_player
 lit_update_sensors	C:/users/geral/work/moom/code/lit_game.cpp	/^lit_update_sensors(lit_game_t* game, f32_t dt) $/;"	f	language:C++	typeref:typename:void	file:
 lit_update_sensors	D:/work/git/moom/code/lit_game.cpp	/^lit_update_sensors(lit_game_t* game, f32_t dt) $/;"	f	language:C++	typeref:typename:void	file:
 lit_update_sensors	D:/work/git/moom/code/scene_lit_entity.cpp	/^lit_update_sensors(lit_t* lit,$/;"	f	language:C++	typeref:typename:void	file:
+lit_update_splash	D:/work/git/moom/code/lit.h	/^lit_update_splash(moe_t* moe, lit_t* lit, platform_t* platform) {$/;"	f	language:C++	typeref:typename:void
 LIT_WIDTH	C:/users/geral/work/moom/code/lit.h	/^#define LIT_WIDTH /;"	d	language:C++
 LIT_WIDTH	D:/work/git/moom/code/lit.h	/^#define LIT_WIDTH /;"	d	language:C++
 LIT_WIDTH	D:/work/git/moom/code/scene_lit.h	/^#define LIT_WIDTH /;"	d	language:C++
@@ -2519,6 +2530,7 @@ missingLibrarySymbols	build/a.out.js	/^var missingLibrarySymbols = [$/;"	v	langu
 mkdev	build/a.out.js	/^  mkdev: function() { FS.error() },$/;"	m	language:JavaScript	class:FS
 mm_device_enum	C:/users/geral/work/moom/code/w32_audio_wasapi.h	/^  IMMDeviceEnumerator * mm_device_enum;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IMMDeviceEnumerator *
 mm_device_enum	D:/work/git/moom/code/w32_audio_wasapi.h	/^  IMMDeviceEnumerator * mm_device_enum;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IMMDeviceEnumerator *
+mode	D:/work/git/moom/code/lit.h	/^  lit_mode_t mode;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_mode_t
 model	C:/users/geral/work/moom/code/moe_gfx_opengl.h	/^  GLuint model; $/;"	m	language:C++	struct:__anon57c60e6f0808	typeref:typename:GLuint
 model	C:/users/geral/work/moom/code/moe_gfx_opengl.h	/^  GLuint model;$/;"	m	language:C++	struct:__anon57c60e6f0908	typeref:typename:GLuint
 model	D:/work/git/moom/code/moe_gfx_opengl.h	/^  GLuint model; $/;"	m	language:C++	struct:__anon99efc5fb0808	typeref:typename:GLuint
@@ -2531,8 +2543,7 @@ module_path	D:/work/git/moom/code/w32_moe.h	/^  const char* module_path;$/;"	m	l
 module_write_time	C:/users/geral/work/moom/code/w32_moe.h	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:LARGE_INTEGER
 module_write_time	D:/work/git/moom/code/w32_moe.h	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:LARGE_INTEGER
 moe	C:/users/geral/work/moom/code/moe_platform.h	/^  void* moe;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:void *
-moe	D:/work/git/moom/code/moe_platform.h	/^  void* moe;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:void *
-moe_allocate_game	D:/work/git/moom/code/moe.h	/^#define moe_allocate_game(/;"	d	language:C++
+moe	D:/work/git/moom/code/moe_platform.h	/^  void* moe;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:void *
 MOE_CONSOLE_H	C:/users/geral/work/moom/code/moe_console.h	/^#define MOE_CONSOLE_H$/;"	d	language:C++
 MOE_CONSOLE_H	D:/work/git/moom/code/moe_console.h	/^#define MOE_CONSOLE_H$/;"	d	language:C++
 moe_functions_t	C:/users/geral/work/moom/code/moe_platform.h	/^typedef struct moe_functions_t {$/;"	s	language:C++
@@ -2650,7 +2661,7 @@ MOMO_WAV_H	C:/users/geral/work/moom/code/momo_wav.h	/^#define MOMO_WAV_H$/;"	d	l
 MOMO_WAV_H	D:/work/git/moom/code/momo_wav.h	/^#define MOMO_WAV_H$/;"	d	language:C++
 more_obj	build/test_json.json	/^    "more_obj": {$/;"	o	language:JSON	object:obj
 mouse_pos	C:/users/geral/work/moom/code/moe_platform.h	/^  v2f_t mouse_pos;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:v2f_t
-mouse_pos	D:/work/git/moom/code/moe_platform.h	/^  v2f_t mouse_pos;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:v2f_t
+mouse_pos	D:/work/git/moom/code/moe_platform.h	/^  v2f_t mouse_pos;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:v2f_t
 name	build/test_json.json	/^  "name":"John", $/;"	s	language:JSON
 name	C:/users/geral/work/moom/code/moe_inspector.h	/^  str8_t name;$/;"	m	language:C++	struct:__anon789e7ddd0208	typeref:typename:str8_t
 name	D:/work/git/moom/code/moe_inspector.h	/^  str8_t name;$/;"	m	language:C++	struct:__anona16973e90208	typeref:typename:str8_t
@@ -2666,6 +2677,7 @@ next_entry_to_read	C:/users/geral/work/moom/code/w32_moe.h	/^  u32_t volatile ne
 next_entry_to_read	D:/work/git/moom/code/w32_moe.h	/^  u32_t volatile next_entry_to_read;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile
 next_entry_to_write	C:/users/geral/work/moom/code/w32_moe.h	/^  u32_t volatile next_entry_to_write;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile
 next_entry_to_write	D:/work/git/moom/code/w32_moe.h	/^  u32_t volatile next_entry_to_write;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile
+next_mode	D:/work/git/moom/code/lit.h	/^  lit_mode_t next_mode;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_mode_t
 next_obj	build/test_json.json	/^  "next_obj": {$/;"	o	language:JSON
 node	C:/users/geral/work/moom/code/momo_json.h	/^  struct _json_object_node_t* node;$/;"	m	language:C++	struct:json_object_t	typeref:struct:_json_object_node_t *
 node	D:/work/git/moom/code/momo_json.h	/^  struct _json_object_node_t* node;$/;"	m	language:C++	struct:json_object_t	typeref:struct:_json_object_node_t *
@@ -2680,7 +2692,7 @@ NOMINMAX	D:/work/git/moom/code/w32_moe.h	/^#define NOMINMAX$/;"	d	language:C++
 notifs	C:/users/geral/work/moom/code/w32_audio_wasapi.h	/^  w32_wasapi_notif_client_t notifs;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:w32_wasapi_notif_client_t
 notifs	D:/work/git/moom/code/w32_audio_wasapi.h	/^  w32_wasapi_notif_client_t notifs;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:w32_wasapi_notif_client_t
 now	C:/users/geral/work/moom/code/moe_platform.h	/^  b32_t now; $/;"	m	language:C++	struct:__anon9b2058cb0508	typeref:typename:b32_t
-now	D:/work/git/moom/code/moe_platform.h	/^  b32_t now; $/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:b32_t
+now	D:/work/git/moom/code/moe_platform.h	/^  b32_t now; $/;"	m	language:C++	struct:__anona41ebd570508	typeref:typename:b32_t
 ns_begin	C:/users/geral/work/moom/code/momo_types.h	/^# define ns_begin(/;"	d	language:C++
 ns_begin	D:/work/git/moom/code/momo_types.h	/^# define ns_begin(/;"	d	language:C++
 ns_end	C:/users/geral/work/moom/code/momo_types.h	/^# define ns_end(/;"	d	language:C++
@@ -2893,7 +2905,7 @@ open	build/a.out.js	/^  open: function() { FS.error() },$/;"	m	language:JavaScri
 Opengl	C:/users/geral/work/moom/code/moe_gfx_opengl.h	/^struct Opengl {$/;"	s	language:C++
 Opengl	D:/work/git/moom/code/moe_gfx_opengl.h	/^struct Opengl {$/;"	s	language:C++
 open_file	C:/users/geral/work/moom/code/moe_platform.h	/^  platform_open_file_f* open_file;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:platform_open_file_f *
-open_file	D:/work/git/moom/code/moe_platform.h	/^  platform_open_file_f* open_file;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:platform_open_file_f *
+open_file	D:/work/git/moom/code/moe_platform.h	/^  platform_open_file_f* open_file;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:platform_open_file_f *
 operator !=	C:/users/geral/work/moom/code/momo_strings.h	/^static b32_t operator!=(str8_t lhs, str8_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t
 operator !=	C:/users/geral/work/moom/code/momo_strings.h	/^static b32_t operator!=(str8_t lhs, str8_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
 operator !=	C:/users/geral/work/moom/code/momo_vectors.h	/^static b32_t operator!=(v2f_t lhs, v2f_t rhs) { return !v2f_is_close(lhs, rhs); }$/;"	f	language:C++	typeref:typename:b32_t
@@ -3034,7 +3046,7 @@ paint_text_center_aligned	C:/users/geral/work/moom/code/moe_asset_rendering.h	/^
 paint_text_center_aligned	D:/work/git/moom/code/moe_asset_rendering.h	/^paint_text_center_aligned(moe_t* moe,$/;"	f	language:C++	typeref:typename:void
 particles	C:/users/geral/work/moom/code/lit_game.h	/^  lit_particle_pool_t particles;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_particle_pool_t
 particles	C:/users/geral/work/moom/code/lit_game.h	/^  lit_particle_t particles[256];$/;"	m	language:C++	struct:lit_particle_pool_t	typeref:typename:lit_particle_t[256]
-particles	D:/work/git/moom/code/lit.h	/^  lit_particle_pool_t particles;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_particle_pool_t
+particles	D:/work/git/moom/code/lit_game.h	/^  lit_particle_pool_t particles;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_particle_pool_t
 particles	D:/work/git/moom/code/lit_game.h	/^  lit_particle_t particles[256];$/;"	m	language:C++	struct:lit_particle_pool_t	typeref:typename:lit_particle_t[256]
 particles	D:/work/git/moom/code/scene_lit.h	/^  lit_particle_pool_t particles;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_particle_pool_t
 particles	D:/work/git/moom/code/scene_lit_entity.h	/^  lit_particle_t particles[256];$/;"	m	language:C++	struct:lit_particle_pool_t	typeref:typename:lit_particle_t[256]
@@ -3117,40 +3129,39 @@ platform	D:/work/git/moom/code/moe.h	/^  platform_t* platform;$/;"	m	language:C+
 platform_add_task_f	C:/users/geral/work/moom/code/moe_platform.h	/^typedef void platform_add_task_f(platform_task_callback_f callback, void* data);$/;"	t	language:C++	typeref:typename:void ()(platform_task_callback_f callback,void * data)
 platform_add_task_f	D:/work/git/moom/code/moe_platform.h	/^typedef void platform_add_task_f(platform_task_callback_f callback, void* data);$/;"	t	language:C++	typeref:typename:void ()(platform_task_callback_f callback,void * data)
 platform_allocate_memory_f	C:/users/geral/work/moom/code/moe_platform.h	/^typedef void* platform_allocate_memory_f(umi_t size);$/;"	t	language:C++	typeref:typename:void * ()(umi_t size)
-platform_allocate_memory_f	D:/work/git/moom/code/moe_platform.h	/^typedef platform_memory_block_t* platform_allocate_memory_f(umi_t size);$/;"	t	language:C++	typeref:typename:platform_memory_block_t * ()(umi_t size)
+platform_allocate_memory_f	D:/work/git/moom/code/moe_platform.h	/^typedef void* platform_allocate_memory_f(umi_t size);$/;"	t	language:C++	typeref:typename:void * ()(umi_t size)
 platform_audio	C:/users/geral/work/moom/code/w32_audio_wasapi.h	/^  platform_audio_t platform_audio; \/\/ Must be first member$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:platform_audio_t
 platform_audio	D:/work/git/moom/code/w32_audio_wasapi.h	/^  platform_audio_t platform_audio; \/\/ Must be first member$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:platform_audio_t
 platform_audio_t	C:/users/geral/work/moom/code/moe_platform.h	/^} platform_audio_t;$/;"	t	language:C++	typeref:struct:__anon9b2058cb0408
-platform_audio_t	D:/work/git/moom/code/moe_platform.h	/^} platform_audio_t;$/;"	t	language:C++	typeref:struct:__anona41ebd570508
-platform_block	D:/work/git/moom/code/w32_moe.h	/^  platform_memory_block_t platform_block;$/;"	m	language:C++	struct:w32_memory_block_t	typeref:typename:platform_memory_block_t
+platform_audio_t	D:/work/git/moom/code/moe_platform.h	/^} platform_audio_t;$/;"	t	language:C++	typeref:struct:__anona41ebd570408
 platform_button_t	C:/users/geral/work/moom/code/moe_platform.h	/^} platform_button_t;$/;"	t	language:C++	typeref:struct:__anon9b2058cb0508
-platform_button_t	D:/work/git/moom/code/moe_platform.h	/^} platform_button_t;$/;"	t	language:C++	typeref:struct:__anona41ebd570608
+platform_button_t	D:/work/git/moom/code/moe_platform.h	/^} platform_button_t;$/;"	t	language:C++	typeref:struct:__anona41ebd570508
 platform_close_file_f	C:/users/geral/work/moom/code/moe_platform.h	/^typedef void  platform_close_file_f(platform_file_t* file);$/;"	t	language:C++	typeref:typename:void ()(platform_file_t * file)
 platform_close_file_f	D:/work/git/moom/code/moe_platform.h	/^typedef void  platform_close_file_f(platform_file_t* file);$/;"	t	language:C++	typeref:typename:void ()(platform_file_t * file)
 platform_complete_all_tasks_f	C:/users/geral/work/moom/code/moe_platform.h	/^typedef void platform_complete_all_tasks_f();$/;"	t	language:C++	typeref:typename:void ()()
 platform_complete_all_tasks_f	D:/work/git/moom/code/moe_platform.h	/^typedef void platform_complete_all_tasks_f();$/;"	t	language:C++	typeref:typename:void ()()
 platform_data	C:/users/geral/work/moom/code/moe_platform.h	/^  void* platform_data; \/\/ pointer for platform's usage$/;"	m	language:C++	struct:__anon9b2058cb0308	typeref:typename:void *
-platform_data	D:/work/git/moom/code/moe_platform.h	/^  void* platform_data; \/\/ pointer for platform's usage$/;"	m	language:C++	struct:__anona41ebd570408	typeref:typename:void *
+platform_data	D:/work/git/moom/code/moe_platform.h	/^  void* platform_data; \/\/ pointer for platform's usage$/;"	m	language:C++	struct:__anona41ebd570308	typeref:typename:void *
 platform_debug_log_f	C:/users/geral/work/moom/code/moe_platform.h	/^typedef void  platform_debug_log_f(const char* fmt, ...);$/;"	t	language:C++	typeref:typename:void ()(const char * fmt,...)
 platform_debug_log_f	D:/work/git/moom/code/moe_platform.h	/^typedef void  platform_debug_log_f(const char* fmt, ...);$/;"	t	language:C++	typeref:typename:void ()(const char * fmt,...)
 PLATFORM_FILE_ACCESS_OVERWRITE	C:/users/geral/work/moom/code/moe_platform.h	/^  PLATFORM_FILE_ACCESS_OVERWRITE,$/;"	e	language:C++	enum:__anon9b2058cb0203
-PLATFORM_FILE_ACCESS_OVERWRITE	D:/work/git/moom/code/moe_platform.h	/^  PLATFORM_FILE_ACCESS_OVERWRITE,$/;"	e	language:C++	enum:__anona41ebd570303
+PLATFORM_FILE_ACCESS_OVERWRITE	D:/work/git/moom/code/moe_platform.h	/^  PLATFORM_FILE_ACCESS_OVERWRITE,$/;"	e	language:C++	enum:__anona41ebd570203
 PLATFORM_FILE_ACCESS_READ	C:/users/geral/work/moom/code/moe_platform.h	/^  PLATFORM_FILE_ACCESS_READ,$/;"	e	language:C++	enum:__anon9b2058cb0203
-PLATFORM_FILE_ACCESS_READ	D:/work/git/moom/code/moe_platform.h	/^  PLATFORM_FILE_ACCESS_READ,$/;"	e	language:C++	enum:__anona41ebd570303
+PLATFORM_FILE_ACCESS_READ	D:/work/git/moom/code/moe_platform.h	/^  PLATFORM_FILE_ACCESS_READ,$/;"	e	language:C++	enum:__anona41ebd570203
 platform_file_access_t	C:/users/geral/work/moom/code/moe_platform.h	/^} platform_file_access_t;$/;"	t	language:C++	typeref:enum:__anon9b2058cb0203
-platform_file_access_t	D:/work/git/moom/code/moe_platform.h	/^} platform_file_access_t;$/;"	t	language:C++	typeref:enum:__anona41ebd570303
+platform_file_access_t	D:/work/git/moom/code/moe_platform.h	/^} platform_file_access_t;$/;"	t	language:C++	typeref:enum:__anona41ebd570203
 PLATFORM_FILE_PATH_CACHE	C:/users/geral/work/moom/code/moe_platform.h	/^  PLATFORM_FILE_PATH_CACHE,$/;"	e	language:C++	enum:__anon9b2058cb0103
-PLATFORM_FILE_PATH_CACHE	D:/work/git/moom/code/moe_platform.h	/^  PLATFORM_FILE_PATH_CACHE,$/;"	e	language:C++	enum:__anona41ebd570203
+PLATFORM_FILE_PATH_CACHE	D:/work/git/moom/code/moe_platform.h	/^  PLATFORM_FILE_PATH_CACHE,$/;"	e	language:C++	enum:__anona41ebd570103
 PLATFORM_FILE_PATH_EXE	C:/users/geral/work/moom/code/moe_platform.h	/^  PLATFORM_FILE_PATH_EXE,$/;"	e	language:C++	enum:__anon9b2058cb0103
-PLATFORM_FILE_PATH_EXE	D:/work/git/moom/code/moe_platform.h	/^  PLATFORM_FILE_PATH_EXE,$/;"	e	language:C++	enum:__anona41ebd570203
+PLATFORM_FILE_PATH_EXE	D:/work/git/moom/code/moe_platform.h	/^  PLATFORM_FILE_PATH_EXE,$/;"	e	language:C++	enum:__anona41ebd570103
 platform_file_path_t	C:/users/geral/work/moom/code/moe_platform.h	/^} platform_file_path_t;$/;"	t	language:C++	typeref:enum:__anon9b2058cb0103
-platform_file_path_t	D:/work/git/moom/code/moe_platform.h	/^} platform_file_path_t;$/;"	t	language:C++	typeref:enum:__anona41ebd570203
+platform_file_path_t	D:/work/git/moom/code/moe_platform.h	/^} platform_file_path_t;$/;"	t	language:C++	typeref:enum:__anona41ebd570103
 PLATFORM_FILE_PATH_USER	C:/users/geral/work/moom/code/moe_platform.h	/^  PLATFORM_FILE_PATH_USER,$/;"	e	language:C++	enum:__anon9b2058cb0103
-PLATFORM_FILE_PATH_USER	D:/work/git/moom/code/moe_platform.h	/^  PLATFORM_FILE_PATH_USER,$/;"	e	language:C++	enum:__anona41ebd570203
+PLATFORM_FILE_PATH_USER	D:/work/git/moom/code/moe_platform.h	/^  PLATFORM_FILE_PATH_USER,$/;"	e	language:C++	enum:__anona41ebd570103
 platform_file_t	C:/users/geral/work/moom/code/moe_platform.h	/^} platform_file_t;$/;"	t	language:C++	typeref:struct:__anon9b2058cb0308
-platform_file_t	D:/work/git/moom/code/moe_platform.h	/^} platform_file_t;$/;"	t	language:C++	typeref:struct:__anona41ebd570408
+platform_file_t	D:/work/git/moom/code/moe_platform.h	/^} platform_file_t;$/;"	t	language:C++	typeref:struct:__anona41ebd570308
 platform_free_memory_f	C:/users/geral/work/moom/code/moe_platform.h	/^typedef void  platform_free_memory_f(void* ptr);$/;"	t	language:C++	typeref:typename:void ()(void * ptr)
-platform_free_memory_f	D:/work/git/moom/code/moe_platform.h	/^typedef void  platform_free_memory_f(platform_memory_block_t* ptr);$/;"	t	language:C++	typeref:typename:void ()(platform_memory_block_t * ptr)
+platform_free_memory_f	D:/work/git/moom/code/moe_platform.h	/^typedef void  platform_free_memory_f(void* ptr);$/;"	t	language:C++	typeref:typename:void ()(void * ptr)
 platform_get_perforance_counter_f	C:/users/geral/work/moom/code/moe_platform.h	/^typedef u64_t platform_get_perforance_counter_f();$/;"	t	language:C++	typeref:typename:u64_t ()()
 platform_get_perforance_counter_f	D:/work/git/moom/code/moe_platform.h	/^typedef u64_t platform_get_perforance_counter_f();$/;"	t	language:C++	typeref:typename:u64_t ()()
 platform_is_button_down	C:/users/geral/work/moom/code/moe_platform.h	/^platform_is_button_down(platform_button_t btn){$/;"	f	language:C++	typeref:typename:b32_t
@@ -3169,7 +3180,6 @@ platform_is_button_released	C:/users/geral/work/moom/code/moe_platform.h	/^platf
 platform_is_button_released	C:/users/geral/work/moom/code/moe_platform.h	/^static b32_t platform_is_button_released(platform_button_t);$/;"	p	language:C++	typeref:typename:b32_t
 platform_is_button_released	D:/work/git/moom/code/moe_platform.h	/^platform_is_button_released(platform_button_t btn) {$/;"	f	language:C++	typeref:typename:b32_t
 platform_is_button_released	D:/work/git/moom/code/moe_platform.h	/^static b32_t platform_is_button_released(platform_button_t);$/;"	p	language:C++	typeref:typename:b32_t
-platform_memory_block_t	D:/work/git/moom/code/moe_platform.h	/^} platform_memory_block_t;$/;"	t	language:C++	typeref:struct:__anona41ebd570108
 platform_open_file_f	C:/users/geral/work/moom/code/moe_platform.h	/^platform_open_file_f(platform_file_t* file,$/;"	t	language:C++	typeref:typename:b32_t ()(platform_file_t * file,const char * filename,platform_file_access_t file_access,platform_file_path_t file_path)
 platform_open_file_f	D:/work/git/moom/code/moe_platform.h	/^platform_open_file_f(platform_file_t* file,$/;"	t	language:C++	typeref:typename:b32_t ()(platform_file_t * file,const char * filename,platform_file_access_t file_access,platform_file_path_t file_path)
 platform_read_file_f	C:/users/geral/work/moom/code/moe_platform.h	/^typedef b32_t platform_read_file_f(platform_file_t* file, umi_t size, umi_t offset, void* dest);$/;"	t	language:C++	typeref:typename:b32_t ()(platform_file_t * file,umi_t size,umi_t offset,void * dest)
@@ -3177,7 +3187,7 @@ platform_read_file_f	D:/work/git/moom/code/moe_platform.h	/^typedef b32_t platfo
 platform_set_moe_dims_f	C:/users/geral/work/moom/code/moe_platform.h	/^typedef void  platform_set_moe_dims_f(f32_t width, f32_t height);$/;"	t	language:C++	typeref:typename:void ()(f32_t width,f32_t height)
 platform_set_moe_dims_f	D:/work/git/moom/code/moe_platform.h	/^typedef void  platform_set_moe_dims_f(f32_t width, f32_t height);$/;"	t	language:C++	typeref:typename:void ()(f32_t width,f32_t height)
 platform_t	C:/users/geral/work/moom/code/moe_platform.h	/^} platform_t;$/;"	t	language:C++	typeref:struct:__anon9b2058cb0608
-platform_t	D:/work/git/moom/code/moe_platform.h	/^} platform_t;$/;"	t	language:C++	typeref:struct:__anona41ebd570708
+platform_t	D:/work/git/moom/code/moe_platform.h	/^} platform_t;$/;"	t	language:C++	typeref:struct:__anona41ebd570608
 platform_task_callback_f	C:/users/geral/work/moom/code/moe_platform.h	/^typedef void platform_task_callback_f(void* data);$/;"	t	language:C++	typeref:typename:void ()(void * data)
 platform_task_callback_f	D:/work/git/moom/code/moe_platform.h	/^typedef void platform_task_callback_f(void* data);$/;"	t	language:C++	typeref:typename:void ()(void * data)
 platform_update_input	C:/users/geral/work/moom/code/moe_platform.h	/^platform_update_input(platform_t* pf) {$/;"	f	language:C++	typeref:typename:void
@@ -3187,7 +3197,7 @@ platform_update_input	D:/work/git/moom/code/moe_platform.h	/^static void  platfo
 platform_write_file_f	C:/users/geral/work/moom/code/moe_platform.h	/^typedef b32_t platform_write_file_f(platform_file_t* file, umi_t size, umi_t offset, void* src);$/;"	t	language:C++	typeref:typename:b32_t ()(platform_file_t * file,umi_t size,umi_t offset,void * src)
 platform_write_file_f	D:/work/git/moom/code/moe_platform.h	/^typedef b32_t platform_write_file_f(platform_file_t* file, umi_t size, umi_t offset, void* src);$/;"	t	language:C++	typeref:typename:b32_t ()(platform_file_t * file,umi_t size,umi_t offset,void * src)
 player	C:/users/geral/work/moom/code/lit_game.h	/^  lit_player_t player;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_player_t
-player	D:/work/git/moom/code/lit.h	/^  lit_player_t player;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_player_t
+player	D:/work/git/moom/code/lit_game.h	/^  lit_player_t player;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_player_t
 player	D:/work/git/moom/code/scene_lit.h	/^  lit_player_t player;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_player_t
 png_rasterize	C:/users/geral/work/moom/code/momo_png.h	/^png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena) $/;"	f	language:C++	typeref:typename:u32_t *
 png_rasterize	C:/users/geral/work/moom/code/momo_png.h	/^static u32_t*    png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena); $/;"	p	language:C++	typeref:typename:u32_t *
@@ -3255,7 +3265,7 @@ printChar	build/a.out.js	/^  function printChar(stream, curr) {$/;"	f	language:J
 printCharBuffers	build/a.out.js	/^  var printCharBuffers = [null,[],[]];$/;"	v	language:JavaScript
 profiler	C:/users/geral/work/moom/code/moe_platform.h	/^  profiler_t* profiler; $/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:profiler_t *
 profiler	C:/users/geral/work/moom/code/w32_moe.h	/^profiler_t* profiler = &_profiler;$/;"	v	language:C++	typeref:typename:profiler_t *
-profiler	D:/work/git/moom/code/moe_platform.h	/^  profiler_t* profiler; $/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:profiler_t *
+profiler	D:/work/git/moom/code/moe_platform.h	/^  profiler_t* profiler; $/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:profiler_t *
 profiler	D:/work/git/moom/code/w32_moe.h	/^profiler_t* profiler = &_profiler;$/;"	v	language:C++	typeref:typename:profiler_t *
 profiler_accumulate_stat	C:/users/geral/work/moom/code/moe_profiler_rendering.h	/^profiler_accumulate_stat(profiler_stat_t* stat, f64_t value) {$/;"	f	language:C++	typeref:typename:void
 profiler_accumulate_stat	D:/work/git/moom/code/moe_profiler_rendering.h	/^profiler_accumulate_stat(profiler_stat_t* stat, f64_t value) {$/;"	f	language:C++	typeref:typename:void
@@ -3337,7 +3347,7 @@ readBinary	build/a.out.js	/^  readBinary = function readBinary(f) {$/;"	f	langua
 read_	build/a.out.js	/^    read_ = function shell_read(f) {$/;"	f	language:JavaScript
 read_	build/a.out.js	/^var read_,$/;"	v	language:JavaScript
 read_file	C:/users/geral/work/moom/code/moe_platform.h	/^  platform_read_file_f* read_file;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:platform_read_file_f *
-read_file	D:/work/git/moom/code/moe_platform.h	/^  platform_read_file_f* read_file;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:platform_read_file_f *
+read_file	D:/work/git/moom/code/moe_platform.h	/^  platform_read_file_f* read_file;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:platform_read_file_f *
 rear	C:/users/geral/work/moom/code/gist_ring_buffer.cpp	/^  u32_t rear;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
 rear	D:/work/git/moom/code/gist_ring_buffer.cpp	/^  u32_t rear;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
 receiveInstance	build/a.out.js	/^  function receiveInstance(instance, module) {$/;"	f	language:JavaScript	function:createWasm
@@ -3362,7 +3372,7 @@ region_y1	C:/users/geral/work/moom/code/moe_gfx_opengl.h	/^  u32_t region_y1;$/;
 region_y1	D:/work/git/moom/code/moe_gfx_opengl.h	/^  u32_t region_y1;$/;"	m	language:C++	struct:Opengl	typeref:typename:u32_t
 registerDevice	build/a.out.js	/^  registerDevice: function() { FS.error() },$/;"	m	language:JavaScript	class:FS
 reloaded	C:/users/geral/work/moom/code/moe_platform.h	/^  b32_t reloaded;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:b32_t
-reloaded	D:/work/git/moom/code/moe_platform.h	/^  b32_t reloaded;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:b32_t
+reloaded	D:/work/git/moom/code/moe_platform.h	/^  b32_t reloaded;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:b32_t
 remainders	C:/users/geral/work/moom/code/momo_crc.h	/^  u16_t remainders[256];$/;"	m	language:C++	struct:crc16_table_t	typeref:typename:u16_t[256]
 remainders	C:/users/geral/work/moom/code/momo_crc.h	/^  u32_t remainders[256];$/;"	m	language:C++	struct:crc32_table_t	typeref:typename:u32_t[256]
 remainders	C:/users/geral/work/moom/code/momo_crc.h	/^  u8_t remainders[256];$/;"	m	language:C++	struct:crc8_table_t	typeref:typename:u8_t[256]
@@ -3404,7 +3414,7 @@ riff_chunk	D:/work/git/moom/code/momo_wav.h	/^  wav_riff_chunk_t riff_chunk;$/;"
 right	C:/users/geral/work/moom/code/momo_json.h	/^  struct _json_object_node_t* right;$/;"	m	language:C++	struct:_json_object_node_t	typeref:struct:_json_object_node_t *
 right	D:/work/git/moom/code/momo_json.h	/^  struct _json_object_node_t* right;$/;"	m	language:C++	struct:_json_object_node_t	typeref:struct:_json_object_node_t *
 rng	C:/users/geral/work/moom/code/lit_game.h	/^  rng_t rng;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:rng_t
-rng	D:/work/git/moom/code/lit.h	/^  rng_t rng;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:rng_t
+rng	D:/work/git/moom/code/lit_game.h	/^  rng_t rng;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:rng_t
 rng	D:/work/git/moom/code/scene_lit.h	/^  rng_t rng;$/;"	m	language:C++	struct:lit_t	typeref:typename:rng_t
 rng_bilateral	C:/users/geral/work/moom/code/momo_rng.h	/^rng_bilateral(rng_t* r)$/;"	f	language:C++	typeref:typename:f32_t
 rng_bilateral	D:/work/git/moom/code/momo_rng.h	/^rng_bilateral(rng_t* r)$/;"	f	language:C++	typeref:typename:f32_t
@@ -3493,9 +3503,9 @@ s8_t	D:/work/git/moom/code/momo_types.h	/^typedef int8_t   s8_t;$/;"	t	language:
 samples_per_second	C:/users/geral/work/moom/code/w32_audio_wasapi.h	/^  u32_t samples_per_second;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t
 samples_per_second	D:/work/git/moom/code/w32_audio_wasapi.h	/^  u32_t samples_per_second;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t
 sample_buffer	C:/users/geral/work/moom/code/moe_platform.h	/^  s16_t* sample_buffer;$/;"	m	language:C++	struct:__anon9b2058cb0408	typeref:typename:s16_t *
-sample_buffer	D:/work/git/moom/code/moe_platform.h	/^  s16_t* sample_buffer;$/;"	m	language:C++	struct:__anona41ebd570508	typeref:typename:s16_t *
+sample_buffer	D:/work/git/moom/code/moe_platform.h	/^  s16_t* sample_buffer;$/;"	m	language:C++	struct:__anona41ebd570408	typeref:typename:s16_t *
 sample_count	C:/users/geral/work/moom/code/moe_platform.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:__anon9b2058cb0408	typeref:typename:u32_t
-sample_count	D:/work/git/moom/code/moe_platform.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:__anona41ebd570508	typeref:typename:u32_t
+sample_count	D:/work/git/moom/code/moe_platform.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:__anona41ebd570408	typeref:typename:u32_t
 sample_rate	C:/users/geral/work/moom/code/momo_wav.h	/^  u32_t sample_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 sample_rate	D:/work/git/moom/code/momo_wav.h	/^  u32_t sample_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 sandbox_tick	D:/work/git/moom/code/scene_sandbox.h	/^sandbox_tick(moe_t* moe) $/;"	f	language:C++	typeref:typename:void
@@ -3565,13 +3575,12 @@ sb8_remaining	D:/work/git/moom/code/momo_strings.h	/^sb8_remaining(sb8_t* b) {$/
 sb8_remaining	D:/work/git/moom/code/momo_strings.h	/^static umi_t    sb8_remaining(sb8_t* b);$/;"	p	language:C++	typeref:typename:umi_t
 sb8_t	C:/users/geral/work/moom/code/momo_strings.h	/^struct sb8_t{$/;"	s	language:C++
 sb8_t	D:/work/git/moom/code/momo_strings.h	/^struct sb8_t{$/;"	s	language:C++
-scene_arena	D:/work/git/moom/code/moe.h	/^  arena_t scene_arena;$/;"	m	language:C++	struct:moe_t	typeref:typename:arena_t
 SCENE_H	D:/work/git/moom/code/scene.h	/^#define SCENE_H$/;"	d	language:C++
 scope	C:/users/geral/work/moom/code/momo_json.h	/^static u32_t scope = 0;$/;"	v	language:C++	typeref:typename:u32_t
 scope	D:/work/git/moom/code/momo_json.h	/^static u32_t scope = 0;$/;"	v	language:C++	typeref:typename:u32_t
 scriptDirectory	build/a.out.js	/^var scriptDirectory = '';$/;"	v	language:JavaScript
 seconds_since_last_frame	C:/users/geral/work/moom/code/moe_platform.h	/^  f32_t seconds_since_last_frame; \/\/aka dt$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:f32_t
-seconds_since_last_frame	D:/work/git/moom/code/moe_platform.h	/^  f32_t seconds_since_last_frame; \/\/aka dt$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:f32_t
+seconds_since_last_frame	D:/work/git/moom/code/moe_platform.h	/^  f32_t seconds_since_last_frame; \/\/aka dt$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:f32_t
 seed	C:/users/geral/work/moom/code/momo_rng.h	/^  u32_t seed;$/;"	m	language:C++	struct:rng_t	typeref:typename:u32_t
 seed	D:/work/git/moom/code/momo_rng.h	/^  u32_t seed;$/;"	m	language:C++	struct:rng_t	typeref:typename:u32_t
 selected_id	code/scene_computer.h	/^  u32_t selected_id;$/;"	m	language:C++	struct:Computer	typeref:typename:u32_t
@@ -3579,21 +3588,20 @@ selection_list	code/scene_computer.h	/^  Computer_Selection_List selection_list;
 semaphore	C:/users/geral/work/moom/code/w32_moe.h	/^  HANDLE semaphore; $/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:HANDLE
 semaphore	D:/work/git/moom/code/w32_moe.h	/^  HANDLE semaphore; $/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:HANDLE
 sensors	C:/users/geral/work/moom/code/lit_game.h	/^  lit_sensor_t sensors[32];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_sensor_t[32]
-sensors	D:/work/git/moom/code/lit.h	/^  lit_sensor_t sensors[32];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_sensor_t[32]
+sensors	D:/work/git/moom/code/lit_game.h	/^  lit_sensor_t sensors[32];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_sensor_t[32]
 sensors	D:/work/git/moom/code/scene_lit.h	/^  lit_sensor_t sensors[32];$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_sensor_t[32]
 sensors_activated	C:/users/geral/work/moom/code/lit_game.h	/^  u32_t sensors_activated;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
-sensors_activated	D:/work/git/moom/code/lit.h	/^  u32_t sensors_activated;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
+sensors_activated	D:/work/git/moom/code/lit_game.h	/^  u32_t sensors_activated;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
 sensors_activated	D:/work/git/moom/code/scene_lit.h	/^  u32_t sensors_activated;$/;"	m	language:C++	struct:lit_t	typeref:typename:u32_t
 sensor_count	C:/users/geral/work/moom/code/lit_game.h	/^  u32_t sensor_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
-sensor_count	D:/work/git/moom/code/lit.h	/^  u32_t sensor_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
+sensor_count	D:/work/git/moom/code/lit_game.h	/^  u32_t sensor_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
 sensor_count	D:/work/git/moom/code/scene_lit.h	/^  u32_t sensor_count;$/;"	m	language:C++	struct:lit_t	typeref:typename:u32_t
 setValue	build/a.out.js	/^  function setValue(ptr, value, type = 'i8') {$/;"	f	language:JavaScript
 setWindowTitle	build/a.out.js	/^    setWindowTitle;$/;"	v	language:JavaScript
-set_game	D:/work/git/moom/code/moe.h	/^#define set_game(/;"	d	language:C++
 set_match_entry	C:/users/geral/work/moom/code/moe_assets.cpp	/^set_match_entry(asset_match_t* vec, $/;"	f	language:C++	typeref:typename:void	file:
 set_match_entry	D:/work/git/moom/code/moe_assets.cpp	/^set_match_entry(asset_match_t* vec, $/;"	f	language:C++	typeref:typename:void	file:
 set_moe_dims	C:/users/geral/work/moom/code/moe_platform.h	/^  platform_set_moe_dims_f* set_moe_dims;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:platform_set_moe_dims_f *
-set_moe_dims	D:/work/git/moom/code/moe_platform.h	/^  platform_set_moe_dims_f* set_moe_dims;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:platform_set_moe_dims_f *
+set_moe_dims	D:/work/git/moom/code/moe_platform.h	/^  platform_set_moe_dims_f* set_moe_dims;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:platform_set_moe_dims_f *
 shader	C:/users/geral/work/moom/code/moe_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon57c60e6f0808	typeref:typename:GLuint
 shader	C:/users/geral/work/moom/code/moe_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon57c60e6f0908	typeref:typename:GLuint
 shader	D:/work/git/moom/code/moe_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:__anon99efc5fb0808	typeref:typename:GLuint
@@ -3624,11 +3632,11 @@ size	C:/users/geral/work/moom/code/momo_wav.h	/^  u32_t size;$/;"	m	language:C++
 size	C:/users/geral/work/moom/code/w32_moe.h	/^  umi_t size; \/\/ not sure if we need this but just in case$/;"	m	language:C++	struct:w32_memory_block_t	typeref:typename:umi_t
 size	D:/work/git/moom/code/moe_gfx.h	/^  v2f_t size;$/;"	m	language:C++	struct:gfx_command_rect_t	typeref:typename:v2f_t
 size	D:/work/git/moom/code/moe_gfx.h	/^  v2f_t size;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:v2f_t
-size	D:/work/git/moom/code/moe_platform.h	/^  umi_t size;$/;"	m	language:C++	struct:__anona41ebd570108	typeref:typename:umi_t
 size	D:/work/git/moom/code/momo_streams.h	/^  umi_t size;$/;"	m	language:C++	struct:stream_t	typeref:typename:umi_t
 size	D:/work/git/moom/code/momo_wav.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_data_chunk_t	typeref:typename:u32_t
 size	D:/work/git/moom/code/momo_wav.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 size	D:/work/git/moom/code/momo_wav.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_riff_chunk_t	typeref:typename:u32_t
+size	D:/work/git/moom/code/w32_moe.h	/^  umi_t size; \/\/ not sure if we need this but just in case$/;"	m	language:C++	struct:w32_memory_block_t	typeref:typename:umi_t
 size_end	C:/users/geral/work/moom/code/lit_game.h	/^  v2f_t size_start, size_end;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t
 size_end	D:/work/git/moom/code/lit_game.h	/^  v2f_t size_start, size_end;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t
 size_end	D:/work/git/moom/code/scene_lit_entity.h	/^  v2f_t size_start, size_end;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t
@@ -3650,6 +3658,7 @@ sort_entry_t	D:/work/git/moom/code/momo_sort.h	/^struct sort_entry_t {$/;"	s	lan
 sources	C:/users/geral/work/moom/code/sui_pack.h	/^  sui_packer_source_t sources[1024]; \/\/ additional data for assets$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:sui_packer_source_t[1024]
 sources	D:/work/git/moom/code/sui_pack.h	/^  sui_packer_source_t sources[1024]; \/\/ additional data for assets$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:sui_packer_source_t[1024]
 spinner	build/web.html	/^    <div class="spinner" id='spinner'><\/div>$/;"	I	language:HTML
+splash	D:/work/git/moom/code/lit.h	/^    lit_splash_t splash;$/;"	m	language:C++	union:lit_t::__anonaaefb41b010a	typeref:typename:lit_splash_t
 Splash	D:/work/git/moom/code/scene_splash.h	/^struct Splash {$/;"	s	language:C++
 splash_tick	D:/work/git/moom/code/scene_splash.cpp	/^splash_tick(moe_t* moe)$/;"	f	language:C++	typeref:typename:void	file:
 splash_tick	D:/work/git/moom/code/scene_splash.h	/^static void splash_tick(moe_t* moe);$/;"	p	language:C++	typeref:typename:void
@@ -3687,10 +3696,10 @@ src	D:/work/git/moom/code/moe_gfx.h	/^  gfx_blend_type_t src;$/;"	m	language:C++
 stackCheckInit	build/a.out.js	/^function stackCheckInit() {$/;"	f	language:JavaScript
 STACK_ALIGN	build/a.out.js	/^var STACK_ALIGN = 16;$/;"	v	language:JavaScript
 stage_fade_timer	C:/users/geral/work/moom/code/lit_game.h	/^  f32_t stage_fade_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t
-stage_fade_timer	D:/work/git/moom/code/lit.h	/^  f32_t stage_fade_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t
+stage_fade_timer	D:/work/git/moom/code/lit_game.h	/^  f32_t stage_fade_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t
 stage_fade_timer	D:/work/git/moom/code/scene_lit.h	/^  f32_t stage_fade_timer;$/;"	m	language:C++	struct:lit_t	typeref:typename:f32_t
 stage_flash_timer	C:/users/geral/work/moom/code/lit_game.h	/^  f32_t stage_flash_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t
-stage_flash_timer	D:/work/git/moom/code/lit.h	/^  f32_t stage_flash_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t
+stage_flash_timer	D:/work/git/moom/code/lit_game.h	/^  f32_t stage_flash_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t
 stage_flash_timer	D:/work/git/moom/code/scene_lit.h	/^  f32_t stage_flash_timer;$/;"	m	language:C++	struct:lit_t	typeref:typename:f32_t
 start_cycles	C:/users/geral/work/moom/code/moe_profiler.h	/^  u32_t start_cycles;$/;"	m	language:C++	struct:profiler_entry_t	typeref:typename:u32_t
 start_cycles	D:/work/git/moom/code/moe_profiler.h	/^  u32_t start_cycles;$/;"	m	language:C++	struct:profiler_entry_t	typeref:typename:u32_t
@@ -3703,7 +3712,7 @@ state	C:/users/geral/work/moom/code/lit_game.h	/^  lit_state_type_t state;$/;"	m
 state	C:/users/geral/work/moom/code/meta.cpp	/^  u32_t state; \/\/ $/;"	m	language:C++	struct:Profiler_Codegen	typeref:typename:u32_t	file:
 state	C:/users/geral/work/moom/code/moe_assets.h	/^  asset_state_t state;$/;"	m	language:C++	struct:asset_slot_t	typeref:typename:asset_state_t
 state	C:/users/geral/work/moom/code/moe_gfx.h	/^  volatile gfx_texture_payload_state_t state;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:volatile gfx_texture_payload_state_t
-state	D:/work/git/moom/code/lit.h	/^  lit_state_type_t state;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_state_type_t
+state	D:/work/git/moom/code/lit_game.h	/^  lit_state_type_t state;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_state_type_t
 state	D:/work/git/moom/code/meta.cpp	/^  u32_t state; \/\/ $/;"	m	language:C++	struct:Profiler_Codegen	typeref:typename:u32_t	file:
 state	D:/work/git/moom/code/moe_assets.h	/^  asset_state_t state;$/;"	m	language:C++	struct:asset_slot_t	typeref:typename:asset_state_t
 state	D:/work/git/moom/code/moe_gfx.h	/^  volatile gfx_texture_payload_state_t state;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:volatile gfx_texture_payload_state_t
@@ -4161,13 +4170,13 @@ thousands	C:/users/geral/work/moom/code/momo_types.h	/^#define thousands(/;"	d	l
 thousands	D:/work/git/moom/code/momo_types.h	/^#define thousands(/;"	d	language:C++
 timer	D:/work/git/moom/code/scene_splash.h	/^  f32_t timer;$/;"	m	language:C++	struct:Splash	typeref:typename:f32_t
 title	C:/users/geral/work/moom/code/lit_game.h	/^  str8_t title;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:str8_t
-title	D:/work/git/moom/code/lit.h	/^  str8_t title;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:str8_t
+title	D:/work/git/moom/code/lit_game.h	/^  str8_t title;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:str8_t
 title	D:/work/git/moom/code/scene_lit.h	/^  str8_t title;$/;"	m	language:C++	struct:lit_t	typeref:typename:str8_t
 title_timer	C:/users/geral/work/moom/code/lit_game.h	/^  f32_t title_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t
-title_timer	D:/work/git/moom/code/lit.h	/^  f32_t title_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t
+title_timer	D:/work/git/moom/code/lit_game.h	/^  f32_t title_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t
 title_timer	D:/work/git/moom/code/scene_lit.h	/^  f32_t title_timer;$/;"	m	language:C++	struct:lit_t	typeref:typename:f32_t
 title_wp_index	C:/users/geral/work/moom/code/lit_game.h	/^  u32_t title_wp_index;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
-title_wp_index	D:/work/git/moom/code/lit.h	/^  u32_t title_wp_index;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
+title_wp_index	D:/work/git/moom/code/lit_game.h	/^  u32_t title_wp_index;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
 title_wp_index	D:/work/git/moom/code/scene_lit.h	/^  u32_t title_wp_index;$/;"	m	language:C++	struct:lit_t	typeref:typename:u32_t
 tmp_path	C:/users/geral/work/moom/code/w32_moe.h	/^  const char* tmp_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *
 tmp_path	D:/work/git/moom/code/w32_moe.h	/^  const char* tmp_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *
@@ -4231,7 +4240,7 @@ ttf_read	D:/work/git/moom/code/momo_ttf.h	/^ttf_read(ttf_t* ttf, void* memory, u
 ttf_t	C:/users/geral/work/moom/code/momo_ttf.h	/^struct ttf_t {$/;"	s	language:C++
 ttf_t	D:/work/git/moom/code/momo_ttf.h	/^struct ttf_t {$/;"	s	language:C++
 tutorial_font	C:/users/geral/work/moom/code/lit_game.h	/^  asset_font_id_t tutorial_font;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_font_id_t
-tutorial_font	D:/work/git/moom/code/lit.h	/^  asset_font_id_t tutorial_font;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_font_id_t
+tutorial_font	D:/work/git/moom/code/lit_game.h	/^  asset_font_id_t tutorial_font;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_font_id_t
 tutorial_font	D:/work/git/moom/code/scene_lit.h	/^  asset_font_id_t tutorial_font;$/;"	m	language:C++	struct:lit_t	typeref:typename:asset_font_id_t
 type	C:/users/geral/work/moom/code/karu.h	/^  Asset_Tag_Type type; $/;"	m	language:C++	struct:karu_tag_t	typeref:typename:Asset_Tag_Type
 type	C:/users/geral/work/moom/code/karu.h	/^  Asset_Type type; $/;"	m	language:C++	struct:karu_asset_t	typeref:typename:Asset_Type
@@ -4533,7 +4542,7 @@ w32_add_task	D:/work/git/moom/code/w32_moe.cpp	/^w32_add_task(platform_task_call
 w32_add_task_entry	C:/users/geral/work/moom/code/w32_moe.h	/^w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void
 w32_add_task_entry	D:/work/git/moom/code/w32_moe.h	/^w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void
 w32_allocate_memory	C:/users/geral/work/moom/code/w32_moe.h	/^w32_allocate_memory(umi_t size)$/;"	f	language:C++	typeref:typename:void *
-w32_allocate_memory	D:/work/git/moom/code/w32_moe.h	/^w32_allocate_memory(umi_t size)$/;"	f	language:C++	typeref:typename:platform_memory_block_t *
+w32_allocate_memory	D:/work/git/moom/code/w32_moe.h	/^w32_allocate_memory(umi_t size)$/;"	f	language:C++	typeref:typename:void *
 w32_allocate_memory_into_arena	C:/users/geral/work/moom/code/w32_moe.cpp	/^w32_allocate_memory_into_arena(arena_t* a, umi_t memory_size) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 w32_allocate_memory_into_arena	D:/work/git/moom/code/w32_moe.cpp	/^w32_allocate_memory_into_arena(arena_t* a, umi_t memory_size) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 w32_audio_begin_frame	C:/users/geral/work/moom/code/w32_audio.h	/^w32_audio_begin_frame(platform_audio_t* audio);$/;"	p	language:C++	typeref:typename:void
@@ -4571,7 +4580,7 @@ w32_file_time_to_large_integer	D:/work/git/moom/code/w32_moe.h	/^w32_file_time_t
 w32_free_all_memory	C:/users/geral/work/moom/code/w32_moe.h	/^w32_free_all_memory() {$/;"	f	language:C++	typeref:typename:void
 w32_free_all_memory	D:/work/git/moom/code/w32_moe.h	/^w32_free_all_memory() {$/;"	f	language:C++	typeref:typename:void
 w32_free_memory	C:/users/geral/work/moom/code/w32_moe.h	/^w32_free_memory(void* platform_block) {$/;"	f	language:C++	typeref:typename:void
-w32_free_memory	D:/work/git/moom/code/w32_moe.h	/^w32_free_memory(platform_memory_block_t* platform_block) {$/;"	f	language:C++	typeref:typename:void
+w32_free_memory	D:/work/git/moom/code/w32_moe.h	/^w32_free_memory(void* platform_block) {$/;"	f	language:C++	typeref:typename:void
 w32_free_memory_from_arena	C:/users/geral/work/moom/code/w32_moe.cpp	/^w32_free_memory_from_arena(arena_t* a) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_free_memory_from_arena	D:/work/git/moom/code/w32_moe.cpp	/^w32_free_memory_from_arena(arena_t* a) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_get_client_dims	C:/users/geral/work/moom/code/w32_moe.h	/^w32_get_client_dims(HWND window) {$/;"	f	language:C++	typeref:typename:v2u_t
@@ -4777,7 +4786,7 @@ work_queue	C:/users/geral/work/moom/code/w32_moe.h	/^  w32_work_queue_t work_que
 work_queue	D:/work/git/moom/code/w32_moe.h	/^  w32_work_queue_t work_queue;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_work_queue_t
 writeStackCookie	build/a.out.js	/^function writeStackCookie() {$/;"	f	language:JavaScript
 write_file	C:/users/geral/work/moom/code/moe_platform.h	/^  platform_write_file_f* write_file;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:platform_write_file_f *
-write_file	D:/work/git/moom/code/moe_platform.h	/^  platform_write_file_f* write_file;$/;"	m	language:C++	struct:__anona41ebd570708	typeref:typename:platform_write_file_f *
+write_file	D:/work/git/moom/code/moe_platform.h	/^  platform_write_file_f* write_file;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:platform_write_file_f *
 x	C:/users/geral/work/moom/code/lit_game.h	/^  f32_t x;$/;"	m	language:C++	struct:lit_title_waypoint_t	typeref:typename:f32_t
 x	C:/users/geral/work/moom/code/momo_rect_pack.h	/^	u32_t x, y, w, h;$/;"	m	language:C++	struct:rp_rect_t	typeref:typename:u32_t
 x	C:/users/geral/work/moom/code/momo_rect_pack.h	/^	u32_t x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:u32_t
@@ -4787,7 +4796,7 @@ x	C:/users/geral/work/moom/code/momo_vectors.h	/^	struct { f32_t x, y, z; };$/;"
 x	C:/users/geral/work/moom/code/momo_vectors.h	/^	struct { f32_t x, y; };$/;"	m	language:C++	struct:v2f_t::__anon75c0fbc30508	typeref:typename:f32_t
 x	C:/users/geral/work/moom/code/momo_vectors.h	/^	struct { s32_t x, y; };$/;"	m	language:C++	struct:v2s_t::__anon75c0fbc30308	typeref:typename:s32_t
 x	C:/users/geral/work/moom/code/momo_vectors.h	/^	struct { u32_t x, y; };$/;"	m	language:C++	struct:v2u_t::__anon75c0fbc30108	typeref:typename:u32_t
-x	D:/work/git/moom/code/lit.h	/^  f32_t x;$/;"	m	language:C++	struct:lit_title_waypoint_t	typeref:typename:f32_t
+x	D:/work/git/moom/code/lit_game.h	/^  f32_t x;$/;"	m	language:C++	struct:lit_title_waypoint_t	typeref:typename:f32_t
 x	D:/work/git/moom/code/momo_rect_pack.h	/^	u32_t x, y, w, h;$/;"	m	language:C++	struct:rp_rect_t	typeref:typename:u32_t
 x	D:/work/git/moom/code/momo_rect_pack.h	/^	u32_t x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:u32_t
 x	D:/work/git/moom/code/momo_ttf.h	/^  s16_t x, y; $/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:s16_t
@@ -4978,7 +4987,6 @@ _json_value_type_t	D:/work/git/moom/code/momo_json.h	/^enum  _json_value_type_t 
 _JSON_VALUE_TYPE_U32	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_VALUE_TYPE_U32,$/;"	e	language:C++	enum:_json_value_type_t
 _JSON_VALUE_TYPE_U32	D:/work/git/moom/code/momo_json.h	/^  _JSON_VALUE_TYPE_U32,$/;"	e	language:C++	enum:_json_value_type_t
 _malloc	build/a.out.js	/^function _malloc() {$/;"	f	language:JavaScript
-_moe_allocate_game_size	D:/work/git/moom/code/moe.h	/^_moe_allocate_game_size(moe_t* moe, umi_t size) {$/;"	f	language:C++	typeref:typename:void *
 _ogl_add_predefined_textures	C:/users/geral/work/moom/code/moe_gfx_opengl.h	/^_ogl_add_predefined_textures(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
 _ogl_add_predefined_textures	D:/work/git/moom/code/moe_gfx_opengl.h	/^_ogl_add_predefined_textures(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
 _ogl_align_viewport	C:/users/geral/work/moom/code/moe_gfx_opengl.h	/^_ogl_align_viewport(Opengl* ogl) $/;"	f	language:C++	typeref:typename:void
@@ -5246,15 +5254,14 @@ __anon9b2058cb0808	C:/users/geral/work/moom/code/moe_platform.h	/^    struct {$/
 __anona16973e90103	D:/work/git/moom/code/moe_inspector.h	/^typedef enum  {$/;"	g	language:C++
 __anona16973e90208	D:/work/git/moom/code/moe_inspector.h	/^typedef struct  {$/;"	s	language:C++
 __anona16973e90308	D:/work/git/moom/code/moe_inspector.h	/^typedef struct {$/;"	s	language:C++
-__anona41ebd570108	D:/work/git/moom/code/moe_platform.h	/^typedef struct {$/;"	s	language:C++
+__anona41ebd570103	D:/work/git/moom/code/moe_platform.h	/^typedef enum {$/;"	g	language:C++
 __anona41ebd570203	D:/work/git/moom/code/moe_platform.h	/^typedef enum {$/;"	g	language:C++
-__anona41ebd570303	D:/work/git/moom/code/moe_platform.h	/^typedef enum {$/;"	g	language:C++
+__anona41ebd570308	D:/work/git/moom/code/moe_platform.h	/^typedef struct {$/;"	s	language:C++
 __anona41ebd570408	D:/work/git/moom/code/moe_platform.h	/^typedef struct {$/;"	s	language:C++
 __anona41ebd570508	D:/work/git/moom/code/moe_platform.h	/^typedef struct {$/;"	s	language:C++
 __anona41ebd570608	D:/work/git/moom/code/moe_platform.h	/^typedef struct {$/;"	s	language:C++
-__anona41ebd570708	D:/work/git/moom/code/moe_platform.h	/^typedef struct {$/;"	s	language:C++
-__anona41ebd57080a	D:/work/git/moom/code/moe_platform.h	/^  union {$/;"	u	language:C++	struct:__anona41ebd570708
-__anona41ebd570908	D:/work/git/moom/code/moe_platform.h	/^    struct {$/;"	s	language:C++	union:__anona41ebd570708::__anona41ebd57080a
+__anona41ebd57070a	D:/work/git/moom/code/moe_platform.h	/^  union {$/;"	u	language:C++	struct:__anona41ebd570608
+__anona41ebd570808	D:/work/git/moom/code/moe_platform.h	/^    struct {$/;"	s	language:C++	union:__anona41ebd570608::__anona41ebd57070a
 __anona90d98a3010a	D:/work/git/moom/code/momo_json.h	/^  union {$/;"	u	language:C++	struct:_json_value_t
 __anonaaefb41b010a	D:/work/git/moom/code/lit.h	/^  union {$/;"	u	language:C++	struct:lit_t
 __anonb16da962010a	C:/users/geral/work/moom/code/momo_png.h	/^  union {$/;"	u	language:C++	struct:_png_chunk_header_t

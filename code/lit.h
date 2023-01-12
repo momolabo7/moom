@@ -30,8 +30,12 @@
 #include "lit_game.h"
 
 enum lit_mode_t {
+  LIT_MODE_SPLASH,
   LIT_MODE_MENU,
   LIT_MODE_GAME,
+};
+
+struct lit_splash_t {
 };
 
 struct lit_menu_t {
@@ -39,12 +43,24 @@ struct lit_menu_t {
 };
 
 struct lit_t {
+  lit_mode_t next_mode;
   lit_mode_t mode;
   union {
+    lit_splash_t splash;
     lit_game_t game;
     lit_menu_t menu;
   };
 };
+
+static void
+lit_init_splash(moe_t* moe, lit_splash_t* splash, platform_t* platform) {
+
+}
+
+static void
+lit_update_splash(moe_t* moe, lit_splash_t* splash, platform_t* platform) {
+
+}
 
 #include "lit_game.cpp"
 #include "lit_levels.h"
@@ -52,15 +68,38 @@ struct lit_t {
 static void
 lit_init(moe_t* moe, lit_t* lit, platform_t* platform)
 {
-  lit_init_game(moe, &lit->game, platform);
+  lit->next_mode = LIT_MODE_GAME; 
 }
 
 static void
 lit_tick(moe_t* moe, lit_t* lit, platform_t* platform) {
-  lit_game_t* game = &lit->game;
-  lit_update_game(moe, game, platform);
-  lit_render_game(moe, game, platform);
+  if (lit->next_mode != lit->mode || platform->reloaded) {
+    lit->mode = lit->next_mode;
+    
+    switch(lit->mode) {
+      case LIT_MODE_SPLASH: {
+        lit_init_splash(moe, &lit->splash, platform);
+      } break;
+      case LIT_MODE_GAME: {
+        lit_init_game(moe, &lit->game, platform);
+      } break;
+      case LIT_MODE_MENU: {
+      } break;
 
+    }
+  }
+  switch(lit->mode) {
+    case LIT_MODE_SPLASH: {
+      lit_update_splash(moe, &lit->splash, platform);
+    } break;
+    case LIT_MODE_GAME: {
+      lit_update_game(moe, &lit->game, platform);
+      lit_render_game(moe, &lit->game, platform);
+    } break;
+    case LIT_MODE_MENU: {
+    } break;
+
+  }
 }
 
 
