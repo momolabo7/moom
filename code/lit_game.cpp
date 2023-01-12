@@ -24,6 +24,15 @@ lit_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y)
 }
 
 static void 
+lit_push_box(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) 
+{
+  lit_push_edge(m, min_x, min_y, max_x, min_y);
+  lit_push_edge(m, max_x, min_y, max_x, max_y);
+  lit_push_edge(m, max_x, max_y, min_x, max_y);
+  lit_push_edge(m, min_x, max_y, min_x, min_y);
+}
+
+static void 
 lit_push_double_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
   lit_push_edge(m, min_x, min_y, max_x, max_y);
   lit_push_edge(m, max_x, max_y, min_x, min_y);
