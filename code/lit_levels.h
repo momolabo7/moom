@@ -222,22 +222,10 @@ lit_level_0_8(lit_game_t* m) {
   lit_push_sensor(m, 050.f,  050.f, 0x666666FF); 
   lit_push_sensor(m, 750.f,  750.f, 0x666666FF); 
 
+  lit_push_box(m, 100.f, 100.f, 700.f, 700.f);
+  lit_push_box(m, 200.f, 200.f, 600.f, 600.f);
+  lit_push_box(m, 300.f, 300.f, 500.f, 500.f);
 
-  lit_push_double_edge(m, 100.f, 100.f, 100.f, 700.f);
-  lit_push_double_edge(m, 100.f, 700.f, 700.f, 700.f);
-  lit_push_double_edge(m, 700.f, 700.f, 700.f, 100.f);
-  lit_push_double_edge(m, 700.f, 100.f, 100.f, 100.f);
-
-  
-  lit_push_double_edge(m, 200.f, 200.f, 200.f, 600.f);
-  lit_push_double_edge(m, 200.f, 600.f, 600.f, 600.f);
-  lit_push_double_edge(m, 600.f, 600.f, 600.f, 200.f);
-  lit_push_double_edge(m, 600.f, 200.f, 200.f, 200.f);
-
-  lit_push_double_edge(m, 300.f, 300.f, 300.f, 500.f);
-  lit_push_double_edge(m, 300.f, 500.f, 500.f, 500.f);
-  lit_push_double_edge(m, 500.f, 500.f, 500.f, 300.f);
-  lit_push_double_edge(m, 500.f, 300.f, 300.f, 300.f);
 
 
   lit_push_light(m, 400.f, 400.f, 0x660000FF, 360.f, 0.f);
@@ -295,8 +283,9 @@ static Lit_Level lit_levels[] = {
   lit_level_0_5,
   lit_level_0_6,
   lit_level_0_7,
-  lit_level_0_8,
+
 #endif
+  lit_level_0_8,
   lit_level_0_9,
 };
 
