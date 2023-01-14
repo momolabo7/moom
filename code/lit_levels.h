@@ -241,21 +241,45 @@ lit_level_0_8(lit_game_t* m) {
 //  
 static void
 lit_level_0_9(lit_game_t* m) {
-  lit_set_title(m, str8_from_lit("FACE"));
+  lit_set_title(m, str8_from_lit("HOLES"));
 
-  // layer 1
-  lit_push_sensor(m, 550.f,  250.f, 0x006600FF); 
-  lit_push_sensor(m, 250.f,  550.f, 0x660000FF); 
-  lit_push_sensor(m, 250.f,  250.f, 0x666600FF); 
-  lit_push_sensor(m, 550.f,  550.f, 0x666600FF); 
+  // cyans
+  lit_push_sensor(m, 050.f,   750.f, 0x008888FF); 
+  lit_push_sensor(m, 050.f,   50.f,  0x008888FF); 
 
- 
-  lit_push_box(m, 100.f, 700.f, 200.f, 600.f);
-  lit_push_box(m, 600.f, 700.f, 700.f, 600.f);
-  lit_push_box(m, 100.f, 300.f, 700.f, 200.f);
+  // magentas
+  lit_push_sensor(m, 750.f,   750.f, 0x880088FF); 
+  lit_push_sensor(m, 750.f,   50.f,  0x880088FF); 
   
-  lit_push_light(m, 400.f, 400.f, 0xF1C27DFF, 360.f, 0.f);
-  lit_push_light(m, 400.f, 400.f, 0xF1C27DFF, 360.f, 0.f);
+
+  // whites
+  lit_push_sensor(m, 400.f,   750.f, 0x888888FF); 
+  lit_push_sensor(m, 400.f,   50.f,  0x888888FF); 
+
+  // yellows
+  lit_push_sensor(m, 250.f,   750.f, 0x888800FF); 
+  lit_push_sensor(m, 550.f,   750.f, 0x888800FF); 
+  lit_push_sensor(m, 250.f,   050.f, 0x888800FF); 
+  lit_push_sensor(m, 550.f,   50.f, 0x888800FF); 
+
+  //lit_push_sensor(m, 0.f,   0.f, 0xFFFFFFFF); 
+
+  //lit_push_double_edge(m, 300.f, 300.f, 500.f, 300.f);
+  lit_push_double_edge(m, 340.f, 300.f, 380.f, 300.f);
+  lit_push_double_edge(m, 420.f, 300.f, 460.f, 300.f);
+
+  lit_push_double_edge(m, 340.f, 500.f, 380.f, 500.f);
+  lit_push_double_edge(m, 420.f, 500.f, 460.f, 500.f);
+
+  lit_push_double_edge(m, 500.f, 340.f, 500.f, 380.f);
+  lit_push_double_edge(m, 500.f, 420.f, 500.f, 460.f);
+
+  lit_push_double_edge(m, 300.f, 340.f, 300.f, 380.f);
+  lit_push_double_edge(m, 300.f, 420.f, 300.f, 460.f);
+
+  lit_push_light(m, 400.f, 410.f, 0x880000FF, 360.f, 0.f);
+  lit_push_light(m, 390.f, 390.f, 0x008800FF, 360.f, 0.f);
+  lit_push_light(m, 410.f, 390.f, 0x000088FF, 360.f, 0.f);
 }
 
 typedef void (*Lit_Level)(lit_game_t* mode); 
@@ -269,7 +293,6 @@ static Lit_Level lit_levels[] = {
   lit_level_0_5,
   lit_level_0_6,
   lit_level_0_7,
-
   lit_level_0_8,
 #endif
   lit_level_0_9,

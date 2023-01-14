@@ -14,12 +14,10 @@ game_tick(moe_t* moe)
   if(moe->game_context == nullptr) {
     auto* lit = (lit_t*)platform->allocate_memory(sizeof(lit_t));
     moe->game_context = lit;
+    lit_init(moe, lit, platform);
   }
 
   lit_t* lit = (lit_t*)moe->game_context;
-  if (platform->reloaded) {
-    lit_init(moe, lit, platform);
-  }
   lit_tick(moe, lit, platform);
 }
 
