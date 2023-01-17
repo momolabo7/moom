@@ -33,54 +33,55 @@ union v4f_t {
   f32_t e[4];
 };
 
-static v2f_t    v2f_zero(void);
-static v2f_t    v2f_set(f32_t x, f32_t y); 
-static v2f_t    v2f_add(v2f_t lhs, v2f_t rhs);
-static v2f_t    v2f_sub(v2f_t lhs, v2f_t rhs);
-static v2f_t    v2f_scale(v2f_t lhs, f32_t rhs);
-static v2f_t		 v2f_inv(v2f_t v);
-static v2f_t		 v2f_ratio(v2f_t lhs, v2f_t rhs);
-static v2f_t    v2f_div(v2f_t lhs, f32_t rhs);
+static v2f_t   v2f_zero(void);
+static v2f_t   v2f_set(f32_t x, f32_t y); 
+static v2f_t   v2f_add(v2f_t lhs, v2f_t rhs);
+static v2f_t   v2f_sub(v2f_t lhs, v2f_t rhs);
+static v2f_t   v2f_scale(v2f_t lhs, f32_t rhs);
+static v2f_t	 v2f_inv(v2f_t v);
+static v2f_t	 v2f_ratio(v2f_t lhs, v2f_t rhs);
+static v2f_t   v2f_div(v2f_t lhs, f32_t rhs);
 static f32_t   v2f_dot(v2f_t lhs, v2f_t rhs);
 static f32_t   v2f_dist_sq(v2f_t lhs, v2f_t rhs);
 static f32_t   v2f_len_sq(v2f_t v);
-static v2f_t    v2f_negate(v2f_t v);
+static v2f_t   v2f_negate(v2f_t v);
 static b32_t   v2f_is_close(v2f_t lhs, v2f_t rhs);
-static v2f_t    v2f_mid(v2f_t lhs, v2f_t rhs);
+static v2f_t   v2f_mid(v2f_t lhs, v2f_t rhs);
 static f32_t   v2f_dist(v2f_t lhs, v2f_t rhs);
 static f32_t   v2f_len(v2f_t v);
-static v2f_t    v2f_norm(v2f_t v);
-static v2f_t    v2f_proj(v2f_t v, v2f_t onto);
-static v2f_t    v2f_rotate(v2f_t v, f32_t rad);
+static v2f_t   v2f_norm(v2f_t v);
+static v2f_t   v2f_proj(v2f_t v, v2f_t onto);
+static v2f_t   v2f_rotate(v2f_t v, f32_t rad);
 static f32_t   v2f_angle(v2f_t lhs, v2f_t rhs);
 static f32_t   v2f_cross(v2f_t lhs, v2f_t rhs);
+static v2f_t   v2f_lerp(v2f_t s, v2f_t e, f32_t a);
 
 static v2u_t   v2u_add(v2u_t lhs, v2u_t rhs);
 static v2u_t   v2u_sub(v2u_t lhs, v2u_t rhs);
 
-static v3f_t    v3f_add(v3f_t lhs, v3f_t rhs);
-static v3f_t    v3f_sub(v3f_t lhs, v3f_t rhs);
-static v3f_t    v3f_scale(v3f_t lhs, f32_t rhs);
-static v3f_t    v3f_div(v3f_t lhs, f32_t rhs);
+static v3f_t   v3f_add(v3f_t lhs, v3f_t rhs);
+static v3f_t   v3f_sub(v3f_t lhs, v3f_t rhs);
+static v3f_t   v3f_scale(v3f_t lhs, f32_t rhs);
+static v3f_t   v3f_div(v3f_t lhs, f32_t rhs);
 static f32_t   v3f_dot(v3f_t lhs, v3f_t rhs);
 static f32_t   v3f_dist_sq(v3f_t lhs, v3f_t rhs);
 static f32_t   v3f_len_sq(v3f_t v);
 static b32_t   v3f_is_close(v3f_t lhs, v3f_t rhs);
-static v3f_t    v3f_negate(v3f_t v);
-static v3f_t    v3f_mid(v3f_t lhs, v3f_t rhs);
-static v3f_t    v3f_cross(v3f_t lhs, v3f_t rhs);
+static v3f_t   v3f_negate(v3f_t v);
+static v3f_t   v3f_mid(v3f_t lhs, v3f_t rhs);
+static v3f_t   v3f_cross(v3f_t lhs, v3f_t rhs);
 static f32_t   v3f_dist(v3f_t lhs, v3f_t rhs);
 static f32_t   v3f_len(v3f_t v);
-static v3f_t    v3f_norm(v3f_t v);
-static v3f_t    v3f_proj(v3f_t v, v3f_t onto);
+static v3f_t   v3f_norm(v3f_t v);
+static v3f_t   v3f_proj(v3f_t v, v3f_t onto);
 static f32_t 	 v3f_angle(v3f_t lhs, v3f_t rhs);
 
 static v2f_t  operator+(v2f_t lhs, v2f_t rhs);
 static v2f_t  operator-(v2f_t lhs, v2f_t rhs);
 static v2f_t  operator*(v2f_t lhs, f32_t rhs); // scale
 static v2f_t  operator*(f32_t lhs, v2f_t rhs); // scale
-static b32_t operator==(v2f_t lhs, v2f_t rhs);
-static b32_t operator!=(v2f_t lhs, v2f_t rhs);
+static b32_t  operator==(v2f_t lhs, v2f_t rhs);
+static b32_t  operator!=(v2f_t lhs, v2f_t rhs);
 static v2f_t  operator-(v2f_t v);
 static v2f_t& operator+=(v2f_t& lhs, v2f_t rhs);
 static v2f_t& operator-=(v2f_t& lhs, v2f_t rhs);
@@ -228,6 +229,15 @@ v2f_rotate(v2f_t v, f32_t rad) {
 static f32_t
 v2f_cross(v2f_t lhs, v2f_t rhs) {
   return  lhs.x * rhs.y - lhs.y * rhs.x;
+}
+
+static v2f_t  
+v2f_lerp(v2f_t s, v2f_t e, f32_t a) 
+{
+  v2f_t ret = {0};
+  ret.x = lerp_f32(s.x,e.x,a);
+  ret.y = lerp_f32(s.y,e.y,a);
+  return ret;
 }
 
 //~ NOTE(Momo): v3f_t

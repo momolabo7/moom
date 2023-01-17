@@ -1,3 +1,6 @@
+//
+// Game states
+//
 enum lit_state_type_t {
   LIT_STATE_TYPE_TRANSITION_IN,
   LIT_STATE_TYPE_NORMAL,
@@ -8,6 +11,10 @@ enum lit_state_type_t {
   LIT_STATE_TYPE_TRANSITION_OUT,
 };
 
+
+//
+// Edge
+//
 struct lit_edge_t {
   b32_t is_disabled;
   v2f_t start_pt;
@@ -16,6 +23,9 @@ struct lit_edge_t {
 
 
 
+// 
+// Light
+//
 struct lit_light_intersection_t {
   b32_t is_shell;
   v2f_t pt;
@@ -47,10 +57,11 @@ enum lit_light_type_t {
   Lit_LIGHT_TYPE_DIRECTIONAL,
   Lit_LIGHT_TYPE_WEIRD
 };
-\
 
 
-
+//
+// Particles
+//
 struct lit_particle_t {
   v2f_t pos, vel;
   v2f_t size_start, size_end;
@@ -73,7 +84,9 @@ struct lit_particle_pool_t {
 
 
 
-
+//
+// Sensors
+//
 struct lit_sensor_t {
   v2f_t pos;
   u32_t target_color;
@@ -82,7 +95,9 @@ struct lit_sensor_t {
 };
 
 
-
+//
+// Player
+//
 struct lit_player_t {
   v2f_t pos;
   lit_light_t* held_light;
@@ -93,7 +108,47 @@ struct lit_player_t {
   v2f_t old_light_pos;
 };
 
+//
+// Animators
+// 
+enum lit_animator_type_t {
+  LIT_ANIMATOR_TYPE_PATROL_SENSOR
+};
 
+struct lit_animator_patrol_sensor_t {
+  lit_sensor_t* sensor;
+  f32_t timer;
+  f32_t duration;
+  v2f_t start;
+  v2f_t end;
+};
+
+struct lit_animator_t {
+  lit_animator_type_t type;
+  union {
+    lit_animator_patrol_sensor_t patrol_sensor;
+  };
+};
+
+
+
+static void 
+lit_animate(lit_animator_t* animator) {
+  // TODO
+  switch(animator->type) {
+    case LIT_ANIMATOR_TYPE_PATROL_SENSOR: 
+    {
+      auto* a = &animator->patrol_sensor;
+      f32_t alpha = sin_f32(a->timer/a->duration/PI_32);
+      a->sensor->pos = v2f_lerp(a->start, a->end, alpha);
+    } break;
+
+  }
+}
+
+//
+// Main game struct
+//
 struct lit_game_t {
   
   asset_font_id_t tutorial_font;
@@ -115,6 +170,9 @@ struct lit_game_t {
   u32_t sensor_count;
   lit_sensor_t sensors[32];
 
+  u32_t animator_count;
+  lit_animator_t animators[64];
+
   lit_particle_pool_t particles;
 
   f32_t stage_fade_timer;
@@ -129,6 +187,14 @@ struct lit_game_t {
     
   u32_t sensors_activated;
 };
+
+static void
+lit_update_animators(lit_game_t* game) {
+  for(u32_t animator_index = 0; animator_index < game->animator_count; ++animator_index)
+  {
+    lit_animate(game->animators + animator_index);
+  }
+}
 
 struct lit_title_waypoint_t {
   f32_t x;

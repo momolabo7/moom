@@ -546,7 +546,7 @@ lit_render_particles(moe_t* moe, lit_game_t* game) {
 
 //////////////////////////////////////////////////////////////////////
 // Sensors
-static void 
+static lit_sensor_t* 
 lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color) 
 {
   assert(game->sensor_count < array_count(game->sensors));
@@ -555,6 +555,9 @@ lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color)
   s->pos.y = pos_y;
   s->target_color = target_color;
   s->current_color = 0;
+
+  return s;
+
 }
 
 static void 
