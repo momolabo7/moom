@@ -160,7 +160,7 @@ v2f_dist_sq(v2f_t lhs, v2f_t rhs) {
 }
 static f32_t  
 v2f_dist(v2f_t lhs, v2f_t rhs) {
-  return sqrt_f32(v2f_dist_sq(lhs, rhs));
+  return f32_sqrt(v2f_dist_sq(lhs, rhs));
 }
 
 static f32_t  
@@ -170,7 +170,7 @@ v2f_len_sq(v2f_t v) {
 
 static f32_t   
 v2f_len(v2f_t v) {
-  return sqrt_f32(v2f_len_sq(v));
+  return f32_sqrt(v2f_len_sq(v));
 }
 
 static v2f_t 
@@ -208,7 +208,7 @@ v2f_angle(v2f_t lhs, v2f_t rhs) {
   f32_t l_len = v2f_len(lhs);
   f32_t r_len = v2f_len(rhs);
   f32_t lr_dot = v2f_dot(lhs, rhs);
-  f32_t ret = acos_f32(lr_dot/(l_len * r_len));
+  f32_t ret = f32_acos(lr_dot/(l_len * r_len));
   return ret;
 }
 
@@ -217,8 +217,8 @@ v2f_rotate(v2f_t v, f32_t rad) {
   // Technically, we can use matrices but
   // meh, it's easy to code this out without it.
   // Removes dependencies too
-  f32_t c = cos_f32(rad);
-  f32_t s = sin_f32(rad);
+  f32_t c = f32_cos(rad);
+  f32_t s = f32_sin(rad);
   
   v2f_t ret = {};
   ret.x = (c * v.x) - (s * v.y);
@@ -293,7 +293,7 @@ v3f_dist_sq(v3f_t lhs, v3f_t rhs) {
 
 static f32_t  
 v3f_dist(v3f_t lhs, v3f_t rhs) {
-  return sqrt_f32(v3f_dist_sq(lhs, rhs));
+  return f32_sqrt(v3f_dist_sq(lhs, rhs));
 }
 
 static f32_t  
@@ -303,7 +303,7 @@ v3f_len_sq(v3f_t v) {
 
 static f32_t   
 v3f_len(v3f_t v) {
-  return sqrt_f32(v3f_len_sq(v));
+  return f32_sqrt(v3f_len_sq(v));
 }
 
 static v3f_t 
@@ -340,7 +340,7 @@ v3f_angle(v3f_t lhs, v3f_t rhs) {
   f32_t l_len = v3f_len(lhs);
   f32_t r_len = v3f_len(rhs);
   f32_t lr_dot = v3f_dot(lhs, rhs);
-  f32_t ret = acos_f32(lr_dot/(l_len * r_len));
+  f32_t ret = f32_acos(lr_dot/(l_len * r_len));
   return ret;
 }
 

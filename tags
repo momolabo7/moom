@@ -23,14 +23,14 @@ abs_s64	C:/users/geral/work/moom/code/momo_types.h	/^abs_s64(s64_t x) {$/;"	f	la
 abs_s64	D:/work/git/moom/code/momo_types.h	/^abs_s64(s64_t x) {$/;"	f	language:C++	typeref:typename:s64_t
 abs_s8	C:/users/geral/work/moom/code/momo_types.h	/^abs_s8(s8_t x) {$/;"	f	language:C++	typeref:typename:s8_t
 abs_s8	D:/work/git/moom/code/momo_types.h	/^abs_s8(s8_t x) {$/;"	f	language:C++	typeref:typename:s8_t
-acos_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^acos_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-acos_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t acos_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-acos_f32	D:/work/git/moom/code/momo_intrinsics.h	/^acos_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-acos_f32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t acos_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-acos_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^acos_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
-acos_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t acos_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
-acos_f64	D:/work/git/moom/code/momo_intrinsics.h	/^acos_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
-acos_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t acos_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f32_acos	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f32_acos(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_acos	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_acos(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f32_acos	D:/work/git/moom/code/momo_intrinsics.h	/^f32_acos(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_acos	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_acos(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f64_acos	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f64_acos(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_acos	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_acos(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f64_acos	D:/work/git/moom/code/momo_intrinsics.h	/^f64_acos(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_acos	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_acos(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
 active_asset_index	C:/users/geral/work/moom/code/sui_pack.h	/^  u32_t active_asset_index;$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:u32_t
 active_asset_index	D:/work/git/moom/code/sui_pack.h	/^  u32_t active_asset_index;$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:u32_t
 active_font	C:/users/geral/work/moom/code/sui_atlas.h	/^  sui_atlas_font_t* active_font;$/;"	m	language:C++	struct:sui_atlas_t	typeref:typename:sui_atlas_font_t *
@@ -174,14 +174,14 @@ ascii_to_digit	C:/users/geral/work/moom/code/momo_types.h	/^#define ascii_to_dig
 ascii_to_digit	D:/work/git/moom/code/momo_types.h	/^#define ascii_to_digit(/;"	d	language:C++
 asdf	C:/users/geral/work/moom/code/meta.cpp	/^#define asdf(/;"	d	language:C++	file:
 asdf	D:/work/git/moom/code/meta.cpp	/^#define asdf(/;"	d	language:C++	file:
-asin_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^asin_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-asin_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t asin_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-asin_f32	D:/work/git/moom/code/momo_intrinsics.h	/^asin_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-asin_f32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t asin_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-asin_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^asin_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
-asin_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t asin_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
-asin_f64	D:/work/git/moom/code/momo_intrinsics.h	/^asin_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
-asin_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t asin_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f32_asin	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f32_asin(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_asin	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_asin(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f32_asin	D:/work/git/moom/code/momo_intrinsics.h	/^f32_asin(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_asin	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_asin(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f64_asin	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f64_asin(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_asin	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_asin(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f64_asin	D:/work/git/moom/code/momo_intrinsics.h	/^f64_asin(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_asin	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_asin(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
 asmLibraryArg	build/a.out.js	/^var asmLibraryArg = {$/;"	c	language:JavaScript
 ASM_CONSTS	build/a.out.js	/^var ASM_CONSTS = {$/;"	v	language:JavaScript
 assert	build/a.out.js	/^function assert(condition, text) {$/;"	f	language:JavaScript
@@ -276,32 +276,32 @@ at	C:/users/geral/work/moom/code/meta.cpp	/^  u32_t at;$/;"	m	language:C++	struc
 at	C:/users/geral/work/moom/code/momo_json.h	/^  u32_t at;$/;"	m	language:C++	struct:_json_tokenizer_t	typeref:typename:u32_t
 at	D:/work/git/moom/code/meta.cpp	/^  u32_t at;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:u32_t	file:
 at	D:/work/git/moom/code/momo_json.h	/^  u32_t at;$/;"	m	language:C++	struct:_json_tokenizer_t	typeref:typename:u32_t
-atan_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^atan_f32(f32_t x){$/;"	f	language:C++	typeref:typename:f32_t
-atan_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t atan_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-atan_f32	D:/work/git/moom/code/momo_intrinsics.h	/^atan_f32(f32_t x){$/;"	f	language:C++	typeref:typename:f32_t
-atan_f32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t atan_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-atan_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^atan_f64(f64_t x){$/;"	f	language:C++	typeref:typename:f64_t
-atan_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t atan_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
-atan_f64	D:/work/git/moom/code/momo_intrinsics.h	/^atan_f64(f64_t x){$/;"	f	language:C++	typeref:typename:f64_t
-atan_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t atan_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f32_atan	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f32_atan(f32_t x){$/;"	f	language:C++	typeref:typename:f32_t
+f32_atan	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_atan(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f32_atan	D:/work/git/moom/code/momo_intrinsics.h	/^f32_atan(f32_t x){$/;"	f	language:C++	typeref:typename:f32_t
+f32_atan	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_atan(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f64_atan	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f64_atan(f64_t x){$/;"	f	language:C++	typeref:typename:f64_t
+f64_atan	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_atan(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f64_atan	D:/work/git/moom/code/momo_intrinsics.h	/^f64_atan(f64_t x){$/;"	f	language:C++	typeref:typename:f64_t
+f64_atan	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_atan(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
 atlas_font	C:/users/geral/work/moom/code/sui_pack.h	/^  sui_atlas_font_t* atlas_font;$/;"	m	language:C++	struct:sui_packer_source_font_t	typeref:typename:sui_atlas_font_t *
 atlas_font	D:/work/git/moom/code/sui_pack.h	/^  sui_atlas_font_t* atlas_font;$/;"	m	language:C++	struct:sui_packer_source_font_t	typeref:typename:sui_atlas_font_t *
-atomic_add_u32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^atomic_add_u32(u32_t volatile* value, u32_t to_add) {$/;"	f	language:C++	typeref:typename:u32_t
-atomic_add_u32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static u32_t atomic_add_u32(u32_t volatile* value, u32_t to_add);$/;"	p	language:C++	typeref:typename:u32_t
-atomic_add_u32	D:/work/git/moom/code/momo_intrinsics.h	/^atomic_add_u32(u32_t volatile* value, u32_t to_add) {$/;"	f	language:C++	typeref:typename:u32_t
-atomic_add_u32	D:/work/git/moom/code/momo_intrinsics.h	/^static u32_t atomic_add_u32(u32_t volatile* value, u32_t to_add);$/;"	p	language:C++	typeref:typename:u32_t
-atomic_add_u64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^atomic_add_u64(u64_t volatile* value, u64_t to_add) {$/;"	f	language:C++	typeref:typename:u64_t
-atomic_add_u64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static u64_t atomic_add_u64(u64_t volatile* value, u64_t to_add);$/;"	p	language:C++	typeref:typename:u64_t
-atomic_add_u64	D:/work/git/moom/code/momo_intrinsics.h	/^atomic_add_u64(u64_t volatile* value, u64_t to_add) {$/;"	f	language:C++	typeref:typename:u64_t
-atomic_add_u64	D:/work/git/moom/code/momo_intrinsics.h	/^static u64_t atomic_add_u64(u64_t volatile* value, u64_t to_add);$/;"	p	language:C++	typeref:typename:u64_t
-atomic_assign_u64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^atomic_assign_u64(u64_t volatile* value,$/;"	f	language:C++	typeref:typename:u64_t
-atomic_assign_u64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static u64_t atomic_assign_u64(u64_t volatile* value, u64_t new_value);$/;"	p	language:C++	typeref:typename:u64_t
-atomic_assign_u64	D:/work/git/moom/code/momo_intrinsics.h	/^atomic_assign_u64(u64_t volatile* value,$/;"	f	language:C++	typeref:typename:u64_t
-atomic_assign_u64	D:/work/git/moom/code/momo_intrinsics.h	/^static u64_t atomic_assign_u64(u64_t volatile* value, u64_t new_value);$/;"	p	language:C++	typeref:typename:u64_t
-atomic_compare_assign_u32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^atomic_compare_assign_u32(u32_t volatile* value,$/;"	f	language:C++	typeref:typename:u32_t
-atomic_compare_assign_u32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static u32_t atomic_compare_assign_u32(u32_t volatile* value, u32_t new_value, u32_t expected_va/;"	p	language:C++	typeref:typename:u32_t
-atomic_compare_assign_u32	D:/work/git/moom/code/momo_intrinsics.h	/^atomic_compare_assign_u32(u32_t volatile* value,$/;"	f	language:C++	typeref:typename:u32_t
-atomic_compare_assign_u32	D:/work/git/moom/code/momo_intrinsics.h	/^static u32_t atomic_compare_assign_u32(u32_t volatile* value, u32_t new_value, u32_t expected_va/;"	p	language:C++	typeref:typename:u32_t
+u32_atomic_add	C:/users/geral/work/moom/code/momo_intrinsics.h	/^u32_atomic_add(u32_t volatile* value, u32_t to_add) {$/;"	f	language:C++	typeref:typename:u32_t
+u32_atomic_add	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static u32_t u32_atomic_add(u32_t volatile* value, u32_t to_add);$/;"	p	language:C++	typeref:typename:u32_t
+u32_atomic_add	D:/work/git/moom/code/momo_intrinsics.h	/^u32_atomic_add(u32_t volatile* value, u32_t to_add) {$/;"	f	language:C++	typeref:typename:u32_t
+u32_atomic_add	D:/work/git/moom/code/momo_intrinsics.h	/^static u32_t u32_atomic_add(u32_t volatile* value, u32_t to_add);$/;"	p	language:C++	typeref:typename:u32_t
+u64_atomic_add	C:/users/geral/work/moom/code/momo_intrinsics.h	/^u64_atomic_add(u64_t volatile* value, u64_t to_add) {$/;"	f	language:C++	typeref:typename:u64_t
+u64_atomic_add	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static u64_t u64_atomic_add(u64_t volatile* value, u64_t to_add);$/;"	p	language:C++	typeref:typename:u64_t
+u64_atomic_add	D:/work/git/moom/code/momo_intrinsics.h	/^u64_atomic_add(u64_t volatile* value, u64_t to_add) {$/;"	f	language:C++	typeref:typename:u64_t
+u64_atomic_add	D:/work/git/moom/code/momo_intrinsics.h	/^static u64_t u64_atomic_add(u64_t volatile* value, u64_t to_add);$/;"	p	language:C++	typeref:typename:u64_t
+u64_atomic_assign	C:/users/geral/work/moom/code/momo_intrinsics.h	/^u64_atomic_assign(u64_t volatile* value,$/;"	f	language:C++	typeref:typename:u64_t
+u64_atomic_assign	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static u64_t u64_atomic_assign(u64_t volatile* value, u64_t new_value);$/;"	p	language:C++	typeref:typename:u64_t
+u64_atomic_assign	D:/work/git/moom/code/momo_intrinsics.h	/^u64_atomic_assign(u64_t volatile* value,$/;"	f	language:C++	typeref:typename:u64_t
+u64_atomic_assign	D:/work/git/moom/code/momo_intrinsics.h	/^static u64_t u64_atomic_assign(u64_t volatile* value, u64_t new_value);$/;"	p	language:C++	typeref:typename:u64_t
+u32_atomic_compare_assign	C:/users/geral/work/moom/code/momo_intrinsics.h	/^u32_atomic_compare_assign(u32_t volatile* value,$/;"	f	language:C++	typeref:typename:u32_t
+u32_atomic_compare_assign	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static u32_t u32_atomic_compare_assign(u32_t volatile* value, u32_t new_value, u32_t expected_va/;"	p	language:C++	typeref:typename:u32_t
+u32_atomic_compare_assign	D:/work/git/moom/code/momo_intrinsics.h	/^u32_atomic_compare_assign(u32_t volatile* value,$/;"	f	language:C++	typeref:typename:u32_t
+u32_atomic_compare_assign	D:/work/git/moom/code/momo_intrinsics.h	/^static u32_t u32_atomic_compare_assign(u32_t volatile* value, u32_t new_value, u32_t expected_va/;"	p	language:C++	typeref:typename:u32_t
 audio	C:/users/geral/work/moom/code/moe_platform.h	/^  platform_audio_t* audio;$/;"	m	language:C++	struct:__anon9b2058cb0608	typeref:typename:platform_audio_t *
 audio	D:/work/git/moom/code/moe_platform.h	/^  platform_audio_t* audio;$/;"	m	language:C++	struct:__anona41ebd570608	typeref:typename:platform_audio_t *
 audio_client	C:/users/geral/work/moom/code/w32_audio_wasapi.h	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient2 *
@@ -461,14 +461,14 @@ cap	D:/work/git/moom/code/momo_arena.h	/^	umi_t cap;$/;"	m	language:C++	struct:a
 cap	D:/work/git/moom/code/momo_strings.h	/^	umi_t cap;$/;"	m	language:C++	struct:sb8_t	typeref:typename:umi_t
 cap	D:/work/git/moom/code/momo_ttf.h	/^  u32_t cap;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:u32_t
 car	build/test_json.json	/^  "car":null, $/;"	z	language:JSON
-ceil_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t ceil_f32(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
-ceil_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t ceil_f32(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
-ceil_f32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t ceil_f32(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
-ceil_f32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t ceil_f32(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
-ceil_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t ceil_f64(f64_t value) {$/;"	f	language:C++	typeref:typename:f64_t
-ceil_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t ceil_f64(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
-ceil_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t ceil_f64(f64_t value) {$/;"	f	language:C++	typeref:typename:f64_t
-ceil_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t ceil_f64(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
+f32_ceil	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_ceil(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_ceil	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_ceil(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
+f32_ceil	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_ceil(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_ceil	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_ceil(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
+f64_ceil	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_ceil(f64_t value) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_ceil	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_ceil(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
+f64_ceil	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_ceil(f64_t value) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_ceil	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_ceil(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
 channels	C:/users/geral/work/moom/code/moe_platform.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:__anon9b2058cb0408	typeref:typename:u32_t
 channels	C:/users/geral/work/moom/code/w32_audio_wasapi.h	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t
 channels	D:/work/git/moom/code/moe_platform.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:__anona41ebd570408	typeref:typename:u32_t
@@ -609,14 +609,14 @@ copy_range	C:/users/geral/work/moom/code/momo_types.h	/^#define copy_range(/;"	d
 copy_range	D:/work/git/moom/code/momo_types.h	/^#define copy_range(/;"	d	language:C++
 copy_struct	C:/users/geral/work/moom/code/momo_types.h	/^#define copy_struct(/;"	d	language:C++
 copy_struct	D:/work/git/moom/code/momo_types.h	/^#define copy_struct(/;"	d	language:C++
-cos_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^cos_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-cos_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t cos_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-cos_f32	D:/work/git/moom/code/momo_intrinsics.h	/^cos_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-cos_f32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t cos_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-cos_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^cos_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
-cos_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t cos_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
-cos_f64	D:/work/git/moom/code/momo_intrinsics.h	/^cos_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
-cos_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t cos_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f32_cos	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f32_cos(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_cos	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_cos(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f32_cos	D:/work/git/moom/code/momo_intrinsics.h	/^f32_cos(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_cos	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_cos(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f64_cos	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f64_cos(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_cos	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_cos(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f64_cos	D:/work/git/moom/code/momo_intrinsics.h	/^f64_cos(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_cos	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_cos(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
 count	C:/users/geral/work/moom/code/gist_ring_buffer.cpp	/^  u32_t count;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
 count	C:/users/geral/work/moom/code/moe_profiler_rendering.h	/^  u32_t count;$/;"	m	language:C++	struct:profiler_stat_t	typeref:typename:u32_t
 count	C:/users/geral/work/moom/code/momo_strings.h	/^			umi_t count;$/;"	m	language:C++	struct:sb8_t::__anon590fd1a7010a::__anon590fd1a70208	typeref:typename:umi_t
@@ -1187,14 +1187,14 @@ flags	C:/users/geral/work/moom/code/momo_ttf.h	/^  u8_t flags;$/;"	m	language:C+
 flags	D:/work/git/moom/code/momo_ttf.h	/^  u8_t flags;$/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:u8_t
 flag_for_reset	C:/users/geral/work/moom/code/moe_profiler.h	/^  b32_t flag_for_reset;$/;"	m	language:C++	struct:profiler_entry_t	typeref:typename:b32_t
 flag_for_reset	D:/work/git/moom/code/moe_profiler.h	/^  b32_t flag_for_reset;$/;"	m	language:C++	struct:profiler_entry_t	typeref:typename:b32_t
-floor_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t floor_f32(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
-floor_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t floor_f32(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
-floor_f32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t floor_f32(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
-floor_f32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t floor_f32(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
-floor_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t floor_f64(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
-floor_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t floor_f64(f64_t value){$/;"	f	language:C++	typeref:typename:f64_t
-floor_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t floor_f64(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
-floor_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t floor_f64(f64_t value){$/;"	f	language:C++	typeref:typename:f64_t
+f32_floor	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_floor(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_floor	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_floor(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
+f32_floor	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_floor(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_floor	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_floor(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
+f64_floor	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_floor(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
+f64_floor	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_floor(f64_t value){$/;"	f	language:C++	typeref:typename:f64_t
+f64_floor	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_floor(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
+f64_floor	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_floor(f64_t value){$/;"	f	language:C++	typeref:typename:f64_t
 flush_NO_FILESYSTEM	build/a.out.js	/^  function flush_NO_FILESYSTEM() {$/;"	f	language:JavaScript
 fmt_chunk	C:/users/geral/work/moom/code/momo_wav.h	/^  wav_fmt_chunk_t fmt_chunk;$/;"	m	language:C++	struct:wav_t	typeref:typename:wav_fmt_chunk_t
 fmt_chunk	D:/work/git/moom/code/momo_wav.h	/^  wav_fmt_chunk_t fmt_chunk;$/;"	m	language:C++	struct:wav_t	typeref:typename:wav_fmt_chunk_t
@@ -3257,14 +3257,14 @@ pos_x	C:/users/geral/work/moom/code/moe_gfx.h	/^  f32_t pos_x, pos_y;$/;"	m	lang
 pos_x	D:/work/git/moom/code/moe_gfx.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
 pos_y	C:/users/geral/work/moom/code/moe_gfx.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
 pos_y	D:/work/git/moom/code/moe_gfx.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
-pow_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^pow_f32(f32_t b, f32_t e){$/;"	f	language:C++	typeref:typename:f32_t
-pow_F32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t pow_F32(f32_t v, f32_t e);$/;"	p	language:C++	typeref:typename:f32_t
-pow_f32	D:/work/git/moom/code/momo_intrinsics.h	/^pow_f32(f32_t b, f32_t e){$/;"	f	language:C++	typeref:typename:f32_t
-pow_F32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t pow_F32(f32_t v, f32_t e);$/;"	p	language:C++	typeref:typename:f32_t
-pow_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^pow_f64(f64_t b, f64_t e){$/;"	f	language:C++	typeref:typename:f64_t
-pow_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t pow_f64(f64_t , f64_t e);$/;"	p	language:C++	typeref:typename:f64_t
-pow_f64	D:/work/git/moom/code/momo_intrinsics.h	/^pow_f64(f64_t b, f64_t e){$/;"	f	language:C++	typeref:typename:f64_t
-pow_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t pow_f64(f64_t , f64_t e);$/;"	p	language:C++	typeref:typename:f64_t
+f32_pow	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f32_pow(f32_t b, f32_t e){$/;"	f	language:C++	typeref:typename:f32_t
+f32_pow	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_pow(f32_t v, f32_t e);$/;"	p	language:C++	typeref:typename:f32_t
+f32_pow	D:/work/git/moom/code/momo_intrinsics.h	/^f32_pow(f32_t b, f32_t e){$/;"	f	language:C++	typeref:typename:f32_t
+f32_pow	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_pow(f32_t v, f32_t e);$/;"	p	language:C++	typeref:typename:f32_t
+f64_pow	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f64_pow(f64_t b, f64_t e){$/;"	f	language:C++	typeref:typename:f64_t
+f64_pow	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_pow(f64_t , f64_t e);$/;"	p	language:C++	typeref:typename:f64_t
+f64_pow	D:/work/git/moom/code/momo_intrinsics.h	/^f64_pow(f64_t b, f64_t e){$/;"	f	language:C++	typeref:typename:f64_t
+f64_pow	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_pow(f64_t , f64_t e);$/;"	p	language:C++	typeref:typename:f64_t
 preMain	build/a.out.js	/^function preMain() {$/;"	f	language:JavaScript
 preRun	build/a.out.js	/^function preRun() {$/;"	f	language:JavaScript
 prev	C:/users/geral/work/moom/code/gist_linked_list.cpp	/^  gist_cdl_node* prev;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
@@ -3449,14 +3449,14 @@ rng_unit_circle	C:/users/geral/work/moom/code/momo_rng.h	/^rng_unit_circle(rng_t
 rng_unit_circle	D:/work/git/moom/code/momo_rng.h	/^rng_unit_circle(rng_t* r) {$/;"	f	language:C++	typeref:typename:v2f_t
 rot	C:/users/geral/work/moom/code/moe_gfx.h	/^  f32_t rot;$/;"	m	language:C++	struct:gfx_command_rect_t	typeref:typename:f32_t
 rot	D:/work/git/moom/code/moe_gfx.h	/^  f32_t rot;$/;"	m	language:C++	struct:gfx_command_rect_t	typeref:typename:f32_t
-round_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t round_f32(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
-round_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t round_f32(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
-round_f32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t round_f32(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
-round_f32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t round_f32(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
-round_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t round_f64(f64_t value) {$/;"	f	language:C++	typeref:typename:f64_t
-round_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t round_f64(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
-round_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t round_f64(f64_t value) {$/;"	f	language:C++	typeref:typename:f64_t
-round_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t round_f64(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
+f32_round	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_round(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_round	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_round(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
+f32_round	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_round(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_round	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_round(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
+f64_round	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_round(f64_t value) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_round	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_round(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
+f64_round	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_round(f64_t value) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_round	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_round(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
 rp_pack	C:/users/geral/work/moom/code/momo_rect_pack.h	/^rp_pack(rp_rect_t* rects, $/;"	f	language:C++	typeref:typename:b32_t
 rp_pack	C:/users/geral/work/moom/code/momo_rect_pack.h	/^rp_pack(rp_rect_t* rects, $/;"	p	language:C++	typeref:typename:b32_t
 rp_pack	D:/work/git/moom/code/momo_rect_pack.h	/^rp_pack(rp_rect_t* rects, $/;"	f	language:C++	typeref:typename:b32_t
@@ -3627,14 +3627,14 @@ signature	C:/users/geral/work/moom/code/momo_png.h	/^  u8_t signature[8];$/;"	m	
 signature	D:/work/git/moom/code/karu.h	/^  u32_t signature;$/;"	m	language:C++	struct:karu_header_t	typeref:typename:u32_t
 signature	D:/work/git/moom/code/momo_png.h	/^  u8_t signature[8];$/;"	m	language:C++	struct:_png_chunk_t	typeref:typename:u8_t[8]
 signed_item3	build/test_json.json	/^    "signed_item3":-123$/;"	n	language:JSON	object:next_obj
-sin_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^sin_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-sin_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t sin_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-sin_f32	D:/work/git/moom/code/momo_intrinsics.h	/^sin_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-sin_f32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t sin_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-sin_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^sin_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
-sin_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t sin_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
-sin_f64	D:/work/git/moom/code/momo_intrinsics.h	/^sin_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
-sin_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t sin_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f32_sin	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f32_sin(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_sin	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_sin(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f32_sin	D:/work/git/moom/code/momo_intrinsics.h	/^f32_sin(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_sin	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_sin(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f64_sin	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f64_sin(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_sin	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_sin(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f64_sin	D:/work/git/moom/code/momo_intrinsics.h	/^f64_sin(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_sin	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_sin(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
 size	C:/users/geral/work/moom/code/moe_gfx.h	/^  v2f_t size;$/;"	m	language:C++	struct:gfx_command_rect_t	typeref:typename:v2f_t
 size	C:/users/geral/work/moom/code/moe_gfx.h	/^  v2f_t size;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:v2f_t
 size	C:/users/geral/work/moom/code/momo_streams.h	/^  umi_t size;$/;"	m	language:C++	struct:stream_t	typeref:typename:umi_t
@@ -3695,14 +3695,14 @@ sprite_count	D:/work/git/moom/code/sui_atlas.h	/^  u32_t sprite_count;$/;"	m	lan
 sprite_id	C:/users/geral/work/moom/code/lit_game.h	/^  asset_sprite_id_t sprite_id;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:asset_sprite_id_t
 sprite_id	D:/work/git/moom/code/lit_game.h	/^  asset_sprite_id_t sprite_id;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:asset_sprite_id_t
 sprite_id	D:/work/git/moom/code/scene_lit_entity.h	/^  asset_sprite_id_t sprite_id;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:asset_sprite_id_t
-sqrt_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^sqrt_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-sqrt_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t sqrt_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-sqrt_f32	D:/work/git/moom/code/momo_intrinsics.h	/^sqrt_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-sqrt_f32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t sqrt_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-sqrt_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^sqrt_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
-sqrt_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t sqrt_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
-sqrt_f64	D:/work/git/moom/code/momo_intrinsics.h	/^sqrt_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
-sqrt_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t sqrt_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f32_sqrt	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f32_sqrt(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_sqrt	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_sqrt(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f32_sqrt	D:/work/git/moom/code/momo_intrinsics.h	/^f32_sqrt(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_sqrt	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_sqrt(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f64_sqrt	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f64_sqrt(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_sqrt	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_sqrt(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f64_sqrt	D:/work/git/moom/code/momo_intrinsics.h	/^f64_sqrt(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_sqrt	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_sqrt(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
 src	C:/users/geral/work/moom/code/moe_gfx.h	/^  gfx_blend_type_t src;$/;"	m	language:C++	struct:gfx_command_blend_t	typeref:typename:gfx_blend_type_t
 src	D:/work/git/moom/code/moe_gfx.h	/^  gfx_blend_type_t src;$/;"	m	language:C++	struct:gfx_command_blend_t	typeref:typename:gfx_blend_type_t
 stackCheckInit	build/a.out.js	/^function stackCheckInit() {$/;"	f	language:JavaScript
@@ -4046,14 +4046,14 @@ tag_weight	C:/users/geral/work/moom/code/moe_assets.h	/^    f32_t tag_weight;$/;
 tag_weight	D:/work/git/moom/code/moe_assets.h	/^    f32_t tag_weight;$/;"	m	language:C++	struct:asset_match_t::__anonef4454250108	typeref:typename:f32_t
 tail	C:/users/geral/work/moom/code/momo_json.h	/^  struct _json_array_node_t* tail;$/;"	m	language:C++	struct:json_array_t	typeref:struct:_json_array_node_t *
 tail	D:/work/git/moom/code/momo_json.h	/^  struct _json_array_node_t* tail;$/;"	m	language:C++	struct:json_array_t	typeref:struct:_json_array_node_t *
-tan_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t tan_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-tan_f32	C:/users/geral/work/moom/code/momo_intrinsics.h	/^tan_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-tan_f32	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t tan_f32(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-tan_f32	D:/work/git/moom/code/momo_intrinsics.h	/^tan_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-tan_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t tan_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
-tan_f64	C:/users/geral/work/moom/code/momo_intrinsics.h	/^tan_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
-tan_f64	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t tan_f64(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
-tan_f64	D:/work/git/moom/code/momo_intrinsics.h	/^tan_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f32_tan	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_tan(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f32_tan	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f32_tan(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_tan	D:/work/git/moom/code/momo_intrinsics.h	/^static f32_t f32_tan(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f32_tan	D:/work/git/moom/code/momo_intrinsics.h	/^f32_tan(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f64_tan	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f64_t f64_tan(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f64_tan	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f64_tan(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_tan	D:/work/git/moom/code/momo_intrinsics.h	/^static f64_t f64_tan(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
+f64_tan	D:/work/git/moom/code/momo_intrinsics.h	/^f64_tan(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
 target_color	C:/users/geral/work/moom/code/lit_game.h	/^  u32_t target_color;$/;"	m	language:C++	struct:lit_sensor_t	typeref:typename:u32_t
 target_color	D:/work/git/moom/code/lit_game.h	/^  u32_t target_color;$/;"	m	language:C++	struct:lit_sensor_t	typeref:typename:u32_t
 target_color	D:/work/git/moom/code/scene_lit_entity.h	/^  u32_t target_color;$/;"	m	language:C++	struct:lit_sensor_t	typeref:typename:u32_t

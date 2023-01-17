@@ -84,8 +84,8 @@ m44f_rotation_x(f32_t rad) {
 	// 0  c -s  0
 	// 0  s  c  0
 	// 0  0  0  1
-	f32_t c = cos_f32(rad);
-	f32_t s = sin_f32(rad);
+	f32_t c = f32_cos(rad);
+	f32_t s = f32_sin(rad);
 	m44f_t ret = {};
 	ret.e[0][0] = 1.f;
 	ret.e[3][3] = 1.f;
@@ -103,8 +103,8 @@ static m44f_t m44f_rotation_y(f32_t rad) {
 	//  0  1  0  0
 	// -s  0  c  0
 	//  0  0  0  1
-	f32_t c = cos_f32(rad);
-	f32_t s = sin_f32(rad);
+	f32_t c = f32_cos(rad);
+	f32_t s = f32_sin(rad);
 	m44f_t ret = {};
 	ret.e[0][0] = c;
 	ret.e[0][2] = s;
@@ -124,8 +124,8 @@ m44f_rotation_z(f32_t rad) {
 	//  0  0  1  0
 	//  0  0  0  1
 	
-	f32_t c = cos_f32(rad);
-	f32_t s = sin_f32(rad);
+	f32_t c = f32_cos(rad);
+	f32_t s = f32_sin(rad);
 	m44f_t ret = {};
 	ret.e[0][0] = c;
 	ret.e[0][1] = -s;
@@ -169,7 +169,7 @@ m44f_frustum(f32_t left, f32_t right, f32_t bottom, f32_t top, f32_t near, f32_t
 
 static m44f_t 
 m44f_perspective(f32_t fov, f32_t aspect, f32_t near, f32_t far){
-	f32_t top = near * tan_f32(fov*0.5f);
+	f32_t top = near * f32_tan(fov*0.5f);
 	f32_t right = top * aspect;
 	return m44f_frustum(-right, right,
                      -top, top,

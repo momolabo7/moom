@@ -72,8 +72,8 @@ static v2f_t
 rng_unit_circle(rng_t* r) {
   f32_t rand_angle = 2.f * PI_32 * rng_unilateral(r);
   v2f_t ret = {0};
-  ret.x = cos_f32(rand_angle);
-  ret.y = sin_f32(rand_angle);
+  ret.x = f32_cos(rand_angle);
+  ret.y = f32_sin(rand_angle);
 
   return ret;
 }

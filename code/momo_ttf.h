@@ -170,10 +170,10 @@ static void
 ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y1) {
   s32_t bx0, by0, bx1, by1;
   if (ttf_get_glyph_box(ttf, glyph_index, &bx0, &by0, &bx1, &by1)) {
-    if(x0) (*x0) = (s32_t)(floor_f32((f32_t)bx0 * scale));
-    if(y0) (*y0) = (s32_t)(floor_f32((f32_t)by0 * scale));
-    if(x1) (*x1) = (s32_t)(ceil_f32((f32_t)bx1 * scale));
-    if(y1) (*y1) = (s32_t)(ceil_f32((f32_t)by1 * scale));
+    if(x0) (*x0) = (s32_t)(f32_floor((f32_t)bx0 * scale));
+    if(y0) (*y0) = (s32_t)(f32_floor((f32_t)by0 * scale));
+    if(x1) (*x1) = (s32_t)(f32_ceil((f32_t)bx1 * scale));
+    if(y1) (*y1) = (s32_t)(f32_ceil((f32_t)by1 * scale));
   }
   else {
     if(x0) (*x0) = 0;

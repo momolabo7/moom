@@ -91,7 +91,7 @@ moe_update_and_render(platform_t* pf)
   s16_t volume = 3000;
   for(u32_t sample_index = 0; sample_index < audio->sample_count; ++sample_index) {
     for (u32_t channel_index = 0; channel_index < audio->channels; ++channel_index) {
-      f32_t sine_value = sin_f32(sine);
+      f32_t sine_value = f32_sin(sine);
       sample_out[channel_index] = s16_t(sine_value * volume);
     }
     sample_out += audio->channels;

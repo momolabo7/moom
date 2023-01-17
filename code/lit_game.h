@@ -139,7 +139,7 @@ lit_animate(lit_animator_t* animator) {
     case LIT_ANIMATOR_TYPE_PATROL_SENSOR: 
     {
       auto* a = &animator->patrol_sensor;
-      f32_t alpha = sin_f32(a->timer/a->duration/PI_32);
+      f32_t alpha = f32_sin(a->timer/a->duration/PI_32);
       a->sensor->pos = v2f_lerp(a->start, a->end, alpha);
     } break;
 

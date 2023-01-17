@@ -87,7 +87,7 @@ _profiler_begin_block(profiler_t* p, profiler_entry_t* entry)
 static void
 _profiler_end_block(profiler_t* p, profiler_entry_t* entry) {
   u64_t delta = ((u32_t)p->get_performance_counter() - entry->start_cycles) | ((u64_t)(entry->start_hits)) << 32;
-  atomic_add_u64(&entry->hits_and_cycles, delta);
+  u64_atomic_add(&entry->hits_and_cycles, delta);
 }
 
 
@@ -104,7 +104,7 @@ profiler_update_entries(profiler_t* p) {
   for(u32_t entry_id = 0; entry_id < p->entry_count; ++entry_id)
   {
     profiler_entry_t* itr = p->entries + entry_id;
-    u64_t hits_and_cycles = atomic_assign_u64(&itr->hits_and_cycles, 0);
+    u64_t hits_and_cycles = u64_atomic_assign(&itr->hits_and_cycles, 0);
     u32_t hits = (u32_t)(hits_and_cycles >> 32);
     u32_t cycles = (u32_t)(hits_and_cycles & 0xFFFFFFFF);
     
