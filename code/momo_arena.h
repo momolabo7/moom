@@ -88,12 +88,12 @@ static void*
 arena_push_size(arena_t* a, umi_t size, umi_t align) {
   if (size == 0) return nullptr;
 	
-	umi_t imem = ptr_to_int(a->memory);
+	umi_t imem = ptr_to_umi(a->memory);
 	umi_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
 	
   if (imem + adjusted_pos + size >= imem + a->cap) return nullptr;
 	
-	u8_t* ret = int_to_ptr(imem + adjusted_pos);
+	u8_t* ret = umi_to_ptr(imem + adjusted_pos);
 	a->pos = adjusted_pos + size;
 	
 	return ret;
@@ -122,12 +122,12 @@ arena_partition(arena_t* a, arena_t* partition, umi_t size, umi_t align) {
 
 static b32_t    
 arena_partition_with_remaining(arena_t* a, arena_t* partition, umi_t align){
-	umi_t imem = ptr_to_int(a->memory);
+	umi_t imem = ptr_to_umi(a->memory);
 	umi_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
 	
   if (imem + adjusted_pos >= imem + a->cap) return false;
   umi_t size = a->cap - adjusted_pos;	
-	void* mem = int_to_ptr(imem + adjusted_pos);
+	void* mem = umi_to_ptr(imem + adjusted_pos);
 	a->pos = a->cap;
 
   arena_init(partition, mem, size);
@@ -142,7 +142,7 @@ Arena_BootBlock(umi_t struct_size,
                 umi_t memory_size)
 {
   assert(struct_size < memory_size);
-	umi_t imem = ptr_to_int(memory);
+	umi_t imem = ptr_to_umi(memory);
 	imem = align_up_pow2(imem, 16);
 	
 	void* arena_memory = (u8_t*)memory + struct_size; 
@@ -150,7 +150,7 @@ Arena_BootBlock(umi_t struct_size,
 	arena_t* arena_ptr = (arena_t*)((u8_t*)memory + offset_to_arena);
 	(*arena_ptr) = Arena_Create(arena_memory, arena_memory_size);
 	
-	return int_to_ptr(imem);
+	return umi_to_ptr(imem);
 }
 //*/
 

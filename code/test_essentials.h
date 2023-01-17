@@ -46,11 +46,11 @@ void test_essentials() {
     test_log("After swap: i = %d, j = %d\n", i, j);
   }
   
-  // Test ptr_to_int() and int_to_ptr()
+  // Test ptr_to_umi() and umi_to_ptr()
   {
     int i = 5;
-    test_log("ptr_to_int(%p) = %llX\n", &i, ptr_to_int(&i));
-    test_log("int_to_ptr(%X) = %p\n", 0x1234, int_to_ptr(0x1234));
+    test_log("ptr_to_umi(%p) = %llX\n", &i, ptr_to_umi(&i));
+    test_log("umi_to_ptr(%X) = %p\n", 0x1234, umi_to_ptr(0x1234));
   } 
   
   // Test endian swap 16

@@ -344,12 +344,12 @@ _F64_NEG_INFINITY() {
 //////////////////////////////////////////////////////////////////////////////
 // Integer to pointer conversions
 static umi_t 
-ptr_to_int(void* p) { 
+ptr_to_umi(void* p) { 
   return (umi_t)((c8_t*)p - (c8_t*)0); 
 }
 
 static u8_t* 
-int_to_ptr(umi_t u) { 
+umi_to_ptr(umi_t u) { 
   return (u8_t*)((c8_t*)0 + u);
 }
 

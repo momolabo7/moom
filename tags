@@ -1939,8 +1939,8 @@ intersections	D:/work/git/moom/code/scene_lit_world.h	/^  lit_light_intersection
 intersection_count	C:/users/geral/work/moom/code/lit_game.h	/^  u32_t intersection_count;$/;"	m	language:C++	struct:lit_light_t	typeref:typename:u32_t
 intersection_count	D:/work/git/moom/code/lit_game.h	/^  u32_t intersection_count;$/;"	m	language:C++	struct:lit_light_t	typeref:typename:u32_t
 intersection_count	D:/work/git/moom/code/scene_lit_world.h	/^  u32_t intersection_count;$/;"	m	language:C++	struct:lit_light_t	typeref:typename:u32_t
-int_to_ptr	C:/users/geral/work/moom/code/momo_types.h	/^int_to_ptr(umi_t u) { $/;"	f	language:C++	typeref:typename:u8_t *
-int_to_ptr	D:/work/git/moom/code/momo_types.h	/^int_to_ptr(umi_t u) { $/;"	f	language:C++	typeref:typename:u8_t *
+umi_to_ptr	C:/users/geral/work/moom/code/momo_types.h	/^umi_to_ptr(umi_t u) { $/;"	f	language:C++	typeref:typename:u8_t *
+umi_to_ptr	D:/work/git/moom/code/momo_types.h	/^umi_to_ptr(umi_t u) { $/;"	f	language:C++	typeref:typename:u8_t *
 isDataURI	build/a.out.js	/^function isDataURI(filename) {$/;"	f	language:JavaScript
 isExportedByForceFilesystem	build/a.out.js	/^function isExportedByForceFilesystem(name) {$/;"	f	language:JavaScript
 isFileURI	build/a.out.js	/^function isFileURI(filename) {$/;"	f	language:JavaScript
@@ -3332,8 +3332,8 @@ PROXYFS	build/a.out.js	/^var PROXYFS = 'PROXYFS is no longer included by default
 pt	C:/users/geral/work/moom/code/lit_game.h	/^  v2f_t pt;$/;"	m	language:C++	struct:lit_light_intersection_t	typeref:typename:v2f_t
 pt	D:/work/git/moom/code/lit_game.h	/^  v2f_t pt;$/;"	m	language:C++	struct:lit_light_intersection_t	typeref:typename:v2f_t
 pt	D:/work/git/moom/code/scene_lit_world.h	/^  v2f_t pt;$/;"	m	language:C++	struct:lit_light_intersection_t	typeref:typename:v2f_t
-ptr_to_int	C:/users/geral/work/moom/code/momo_types.h	/^ptr_to_int(void* p) { $/;"	f	language:C++	typeref:typename:umi_t
-ptr_to_int	D:/work/git/moom/code/momo_types.h	/^ptr_to_int(void* p) { $/;"	f	language:C++	typeref:typename:umi_t
+ptr_to_umi	C:/users/geral/work/moom/code/momo_types.h	/^ptr_to_umi(void* p) { $/;"	f	language:C++	typeref:typename:umi_t
+ptr_to_umi	D:/work/git/moom/code/momo_types.h	/^ptr_to_umi(void* p) { $/;"	f	language:C++	typeref:typename:umi_t
 quicksort	C:/users/geral/work/moom/code/momo_sort.h	/^quicksort(sort_entry_t* entries, u32_t entry_count) {$/;"	f	language:C++	typeref:typename:void
 quicksort	D:/work/git/moom/code/momo_sort.h	/^quicksort(sort_entry_t* entries, u32_t entry_count) {$/;"	f	language:C++	typeref:typename:void
 quit_	build/a.out.js	/^var quit_ = (status, toThrow) => {$/;"	v	language:JavaScript
