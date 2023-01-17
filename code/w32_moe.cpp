@@ -582,7 +582,7 @@ WinMain(HINSTANCE instance,
       
       // NOTE(Momo): Flip y
       // TODO(Momo): should this really be here?
-      //pf->design_mouse_pos.y = lerp_f32(MOE_HEIGHT, 0.f, pf->design_mouse_pos.y/MOE_HEIGHT);	
+      //pf->design_mouse_pos.y = f32_lerp(MOE_HEIGHT, 0.f, pf->design_mouse_pos.y/MOE_HEIGHT);	
 
     }
     

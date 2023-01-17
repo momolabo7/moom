@@ -50,7 +50,7 @@ rng_bilateral(rng_t* r)
 static f32_t 
 rng_range_F32(rng_t* r, f32_t min, f32_t max)
 {
-  f32_t result = lerp_f32(min, rng_unilateral(r), max);
+  f32_t result = f32_lerp(min, rng_unilateral(r), max);
   return(result);
 }
 

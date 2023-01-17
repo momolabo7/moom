@@ -48,7 +48,7 @@ lit_push_light(lit_game_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle
 
   light->dir.x = f32_cos(turn*TAU_32);
   light->dir.y = f32_sin(turn*TAU_32);
-  light->half_angle = deg_to_rad_f32(angle/2.f);
+  light->half_angle = f32_deg_to_rad(angle/2.f);
   
   return light;
 }
@@ -436,8 +436,8 @@ lit_update_player(moe_t* moe, lit_game_t* game, f32_t dt)
       player->light_retrival_time = LIT_PLAYER_LIGHT_RETRIEVE_DURATION;
     }
     f32_t ratio = player->light_retrival_time / LIT_PLAYER_LIGHT_RETRIEVE_DURATION; 
-    player->held_light->pos.x = lerp_f32(player->old_light_pos.x, player->pos.x, ratio) ;
-    player->held_light->pos.y = lerp_f32(player->old_light_pos.y, player->pos.y,  ratio) ;
+    player->held_light->pos.x = f32_lerp(player->old_light_pos.x, player->pos.x, ratio) ;
+    player->held_light->pos.y = f32_lerp(player->old_light_pos.y, player->pos.y,  ratio) ;
   }
 
   // Restrict movement
@@ -529,14 +529,14 @@ lit_render_particles(moe_t* moe, lit_game_t* game) {
     f32_t lifespan_ratio = 1.f -  p->lifespan_now / p->lifespan;
 
     rgba_t color = {0};
-    color.r = lerp_f32(p->color_start.r, p->color_end.r, lifespan_ratio);  
-    color.g = lerp_f32(p->color_start.g, p->color_end.g, lifespan_ratio);  
-    color.b = lerp_f32(p->color_start.b, p->color_end.b, lifespan_ratio);  
-    color.a = lerp_f32(p->color_start.a, p->color_end.a, lifespan_ratio);  
+    color.r = f32_lerp(p->color_start.r, p->color_end.r, lifespan_ratio);  
+    color.g = f32_lerp(p->color_start.g, p->color_end.g, lifespan_ratio);  
+    color.b = f32_lerp(p->color_start.b, p->color_end.b, lifespan_ratio);  
+    color.a = f32_lerp(p->color_start.a, p->color_end.a, lifespan_ratio);  
   
     v2f_t size = {0};
-    size.w = lerp_f32(p->size_start.w , p->size_end.w, lifespan_ratio);
-    size.h = lerp_f32(p->size_start.h , p->size_end.h, lifespan_ratio);
+    size.w = f32_lerp(p->size_start.w , p->size_end.w, lifespan_ratio);
+    size.h = f32_lerp(p->size_start.h , p->size_end.h, lifespan_ratio);
 
     paint_sprite(moe, game->filled_circle_sprite, p->pos, size, color);
     gfx_advance_depth(platform->gfx);
@@ -825,7 +825,7 @@ lit_render_game(moe_t* moe, lit_game_t* game, platform_t* platform) {
 
     f32_t duration = next_wp->arrival_time - cur_wp->arrival_time;
     f32_t timer = game->title_timer - cur_wp->arrival_time;
-    f32_t a = ease_linear_f32(timer/duration); 
+    f32_t a = f32_ease_linear(timer/duration); 
     f32_t title_x = cur_wp->x + a * (next_wp->x - cur_wp->x); 
     rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
 

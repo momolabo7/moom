@@ -600,9 +600,9 @@ _png_filter_paeth(_png_context_t* cx) {
       c = (i < bpp || current_index < bpl) ? 0 : (s32_t)(cx->image_stream.data[current_index - bpl - bpp]); // Prior(x)
       
       s32_t p = a + b - c; //initial estimate
-      s32_t pa = abs_s32(p - a);
-      s32_t pb = abs_s32(p - b);
-      s32_t pc = abs_s32(p - c);
+      s32_t pa = s32_abs(p - a);
+      s32_t pb = s32_abs(p - b);
+      s32_t pc = s32_abs(p - c);
       // Return nearest of a,b,c
       // breaking ties in order a, b,c
       if (pa <= pb && pa <= pc) {
@@ -748,8 +748,8 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
     while(!stream_is_eos(&stream)) {
       _png_chunk_header_t* chunk_header = stream_consume(_png_chunk_header_t, &stream);
       if (!chunk_header) return nullptr;
-      u32_t chunk_length = endian_swap_u32(chunk_header->length);
-      u32_t chunk_type = endian_swap_u32(chunk_header->type_U32);
+      u32_t chunk_length = u32_endian_swap(chunk_header->length);
+      u32_t chunk_type = u32_endian_swap(chunk_header->type_U32);
       if (chunk_type == 'IDAT') {
         zlib_size += chunk_length;
       }
@@ -767,8 +767,8 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   while(!stream_is_eos(&ctx.stream)) {
     _png_chunk_header_t* chunk_header = stream_consume(_png_chunk_header_t, &ctx.stream);
     if (!chunk_header) return nullptr;
-    u32_t chunk_length = endian_swap_u32(chunk_header->length);
-    u32_t chunk_type = endian_swap_u32(chunk_header->type_U32);
+    u32_t chunk_length = u32_endian_swap(chunk_header->length);
+    u32_t chunk_type = u32_endian_swap(chunk_header->type_U32);
     if (chunk_type == 'IDAT') {
       stream_write_block(zlib_stream, 
                       ctx.stream.data + ctx.stream.pos,
@@ -844,15 +844,15 @@ png_write(u32_t* pixels, u32_t width, u32_t height, umi_t* out_size, arena_t* ar
     u8_t* crc_start = nullptr;
     
     _png_chunk_header_t header = {};
-    header.type_U32 = endian_swap_u32('IHDR');
+    header.type_U32 = u32_endian_swap('IHDR');
     header.length = sizeof(_png_ihdr_t);
-    header.length = endian_swap_u32(header.length);
+    header.length = u32_endian_swap(header.length);
     stream_write(stream, header);
     crc_start = stream->data + stream->pos - sizeof(header.type_U32);
     
     _png_ihdr_t IHDR = {};
-    IHDR.width = endian_swap_u32(width);
-    IHDR.height = endian_swap_u32(height);
+    IHDR.width = u32_endian_swap(width);
+    IHDR.height = u32_endian_swap(height);
     IHDR.bit_depth = 8; // ??
     IHDR.colour_type = 6;
     IHDR.compression_method = 0;
@@ -863,7 +863,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, umi_t* out_size, arena_t* ar
     _png_chunk_footer_t footer = {};
     u32_t crc_size = (u32_t)(stream->data + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
-    footer.crc = endian_swap_u32(footer.crc);
+    footer.crc = u32_endian_swap(footer.crc);
     stream_write(stream, footer);
     
   }
@@ -878,9 +878,9 @@ png_write(u32_t* pixels, u32_t width, u32_t height, umi_t* out_size, arena_t* ar
     u8_t* crc_start = nullptr;
     
     _png_chunk_header_t header = {};
-    header.type_U32 = endian_swap_u32('IDAT');
+    header.type_U32 = u32_endian_swap('IDAT');
     header.length = sizeof(_png_idat_header_t) + (chunk_overhead*chunk_count) + data_size; 
-    header.length = endian_swap_u32(header.length);    
+    header.length = u32_endian_swap(header.length);    
     stream_write(stream, header);
     crc_start = stream->data + stream->pos - sizeof(header.type_U32);
     
@@ -939,7 +939,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, umi_t* out_size, arena_t* ar
     _png_chunk_footer_t footer = {};
     u32_t crc_size = (u32_t)(stream->data + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
-    footer.crc = endian_swap_u32(footer.crc);
+    footer.crc = u32_endian_swap(footer.crc);
     stream_write(stream, footer);
   }
   
@@ -948,7 +948,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, umi_t* out_size, arena_t* ar
     u8_t* crc_start = nullptr;
     
     _png_chunk_header_t header = {};
-    header.type_U32 = endian_swap_u32('IEND');
+    header.type_U32 = u32_endian_swap('IEND');
     header.length = 0;
     stream_write(stream, header);
     crc_start = stream->data + stream->pos - sizeof(header.type_U32);
@@ -957,7 +957,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, umi_t* out_size, arena_t* ar
     _png_chunk_footer_t footer = {};
     u32_t crc_size = (u32_t)(stream->data + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
-    footer.crc = endian_swap_u32(footer.crc);
+    footer.crc = u32_endian_swap(footer.crc);
     stream_write(stream, footer);
   }
   
@@ -978,8 +978,8 @@ png_read(png_t* p, void* png_memory, umi_t png_size) {
   
   // Read Chunk Header
   _png_chunk_header_t* chunk_header = stream_consume(_png_chunk_header_t, stream);
-  u32_t chunk_length = endian_swap_u32(chunk_header->length);
-  u32_t chunk_type = endian_swap_u32(chunk_header->type_U32);
+  u32_t chunk_length = u32_endian_swap(chunk_header->length);
+  u32_t chunk_type = u32_endian_swap(chunk_header->type_U32);
   
   
   if(chunk_type != 'IHDR') { return false; }
@@ -988,8 +988,8 @@ png_read(png_t* p, void* png_memory, umi_t png_size) {
   
   // NOTE(Momo): Width and height is in Big Endian
   // We assume that we are currently in a Little Endian system
-  u32_t width = endian_swap_u32(IHDR->width);
-  u32_t height = endian_swap_u32(IHDR->height);
+  u32_t width = u32_endian_swap(IHDR->width);
+  u32_t height = u32_endian_swap(IHDR->height);
   
   if (!_png_is_format_supported(IHDR)) { return false; }
   

@@ -11,18 +11,18 @@ a	C:/users/geral/work/moom/code/momo_colors.h	/^  f32_t a;$/;"	m	language:C++	st
 a	D:/work/git/moom/code/momo_colors.h	/^  f32_t a;$/;"	m	language:C++	struct:rgba_t	typeref:typename:f32_t
 abort	build/a.out.js	/^function abort(what) {$/;"	f	language:JavaScript
 ABORT	build/a.out.js	/^var ABORT = false;$/;"	v	language:JavaScript
-abs_f32	C:/users/geral/work/moom/code/momo_types.h	/^abs_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-abs_f32	D:/work/git/moom/code/momo_types.h	/^abs_f32(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
-abs_f64	C:/users/geral/work/moom/code/momo_types.h	/^abs_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
-abs_f64	D:/work/git/moom/code/momo_types.h	/^abs_f64(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
-abs_s16	C:/users/geral/work/moom/code/momo_types.h	/^abs_s16(s16_t x) {$/;"	f	language:C++	typeref:typename:s16_t
-abs_s16	D:/work/git/moom/code/momo_types.h	/^abs_s16(s16_t x) {$/;"	f	language:C++	typeref:typename:s16_t
-abs_s32	C:/users/geral/work/moom/code/momo_types.h	/^abs_s32(s32_t x) {$/;"	f	language:C++	typeref:typename:s32_t
-abs_s32	D:/work/git/moom/code/momo_types.h	/^abs_s32(s32_t x) {$/;"	f	language:C++	typeref:typename:s32_t
-abs_s64	C:/users/geral/work/moom/code/momo_types.h	/^abs_s64(s64_t x) {$/;"	f	language:C++	typeref:typename:s64_t
-abs_s64	D:/work/git/moom/code/momo_types.h	/^abs_s64(s64_t x) {$/;"	f	language:C++	typeref:typename:s64_t
-abs_s8	C:/users/geral/work/moom/code/momo_types.h	/^abs_s8(s8_t x) {$/;"	f	language:C++	typeref:typename:s8_t
-abs_s8	D:/work/git/moom/code/momo_types.h	/^abs_s8(s8_t x) {$/;"	f	language:C++	typeref:typename:s8_t
+f32_abs	C:/users/geral/work/moom/code/momo_types.h	/^f32_abs(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_abs	D:/work/git/moom/code/momo_types.h	/^f32_abs(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f64_abs	C:/users/geral/work/moom/code/momo_types.h	/^f64_abs(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_abs	D:/work/git/moom/code/momo_types.h	/^f64_abs(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+s16_abs	C:/users/geral/work/moom/code/momo_types.h	/^s16_abs(s16_t x) {$/;"	f	language:C++	typeref:typename:s16_t
+s16_abs	D:/work/git/moom/code/momo_types.h	/^s16_abs(s16_t x) {$/;"	f	language:C++	typeref:typename:s16_t
+s32_abs	C:/users/geral/work/moom/code/momo_types.h	/^s32_abs(s32_t x) {$/;"	f	language:C++	typeref:typename:s32_t
+s32_abs	D:/work/git/moom/code/momo_types.h	/^s32_abs(s32_t x) {$/;"	f	language:C++	typeref:typename:s32_t
+s64_abs	C:/users/geral/work/moom/code/momo_types.h	/^s64_abs(s64_t x) {$/;"	f	language:C++	typeref:typename:s64_t
+s64_abs	D:/work/git/moom/code/momo_types.h	/^s64_abs(s64_t x) {$/;"	f	language:C++	typeref:typename:s64_t
+s8_abs	C:/users/geral/work/moom/code/momo_types.h	/^s8_abs(s8_t x) {$/;"	f	language:C++	typeref:typename:s8_t
+s8_abs	D:/work/git/moom/code/momo_types.h	/^s8_abs(s8_t x) {$/;"	f	language:C++	typeref:typename:s8_t
 f32_acos	C:/users/geral/work/moom/code/momo_intrinsics.h	/^f32_acos(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
 f32_acos	C:/users/geral/work/moom/code/momo_intrinsics.h	/^static f32_t f32_acos(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
 f32_acos	D:/work/git/moom/code/momo_intrinsics.h	/^f32_acos(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
@@ -753,10 +753,10 @@ defer	D:/work/git/moom/code/momo_types.h	/^# define defer /;"	d	language:C++
 defs17	build/web.html	/^   id="defs17"><filter$/;"	I	language:HTML
 defs343	build/web.html	/^   id="defs343"><linearGradient$/;"	I	language:HTML
 defs48	build/web.html	/^   id="defs48"><filter$/;"	I	language:HTML
-deg_to_rad_f32	C:/users/geral/work/moom/code/momo_types.h	/^deg_to_rad_f32(f32_t degrees) {$/;"	f	language:C++	typeref:typename:f32_t
-deg_to_rad_f32	D:/work/git/moom/code/momo_types.h	/^deg_to_rad_f32(f32_t degrees) {$/;"	f	language:C++	typeref:typename:f32_t
-deg_to_rad_f64	C:/users/geral/work/moom/code/momo_types.h	/^deg_to_rad_f64(f64_t degrees) {$/;"	f	language:C++	typeref:typename:f64_t
-deg_to_rad_f64	D:/work/git/moom/code/momo_types.h	/^deg_to_rad_f64(f64_t degrees) {$/;"	f	language:C++	typeref:typename:f64_t
+f32_deg_to_rad	C:/users/geral/work/moom/code/momo_types.h	/^f32_deg_to_rad(f32_t degrees) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_deg_to_rad	D:/work/git/moom/code/momo_types.h	/^f32_deg_to_rad(f32_t degrees) {$/;"	f	language:C++	typeref:typename:f32_t
+f64_deg_to_rad	C:/users/geral/work/moom/code/momo_types.h	/^f64_deg_to_rad(f64_t degrees) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_deg_to_rad	D:/work/git/moom/code/momo_types.h	/^f64_deg_to_rad(f64_t degrees) {$/;"	f	language:C++	typeref:typename:f64_t
 dependenciesFulfilled	build/a.out.js	/^dependenciesFulfilled = function runCaller() {$/;"	f	language:JavaScript
 dependenciesFulfilled	build/a.out.js	/^var dependenciesFulfilled = null; \/\/ overridden to take different actions when all run depende/;"	v	language:JavaScript
 digit_to_ascii	C:/users/geral/work/moom/code/momo_types.h	/^#define digit_to_ascii(/;"	d	language:C++
@@ -956,10 +956,10 @@ ease_in_sine_f64	C:/users/geral/work/moom/code/momo_easing.h	/^ease_in_sine_f64(
 ease_in_sine_f64	C:/users/geral/work/moom/code/momo_easing.h	/^static f64_t ease_in_sine_f64(f64_t t);$/;"	p	language:C++	typeref:typename:f64_t
 ease_in_sine_f64	D:/work/git/moom/code/momo_easing.h	/^ease_in_sine_f64(f64_t t)  {$/;"	f	language:C++	typeref:typename:f64_t
 ease_in_sine_f64	D:/work/git/moom/code/momo_easing.h	/^static f64_t ease_in_sine_f64(f64_t t);$/;"	p	language:C++	typeref:typename:f64_t
-ease_linear_f32	C:/users/geral/work/moom/code/momo_easing.h	/^ease_linear_f32(f32_t t) $/;"	f	language:C++	typeref:typename:f32_t
-ease_linear_f32	C:/users/geral/work/moom/code/momo_easing.h	/^static f32_t ease_linear_f32(f32_t t);$/;"	p	language:C++	typeref:typename:f32_t
-ease_linear_f32	D:/work/git/moom/code/momo_easing.h	/^ease_linear_f32(f32_t t) $/;"	f	language:C++	typeref:typename:f32_t
-ease_linear_f32	D:/work/git/moom/code/momo_easing.h	/^static f32_t ease_linear_f32(f32_t t);$/;"	p	language:C++	typeref:typename:f32_t
+f32_ease_linear	C:/users/geral/work/moom/code/momo_easing.h	/^f32_ease_linear(f32_t t) $/;"	f	language:C++	typeref:typename:f32_t
+f32_ease_linear	C:/users/geral/work/moom/code/momo_easing.h	/^static f32_t f32_ease_linear(f32_t t);$/;"	p	language:C++	typeref:typename:f32_t
+f32_ease_linear	D:/work/git/moom/code/momo_easing.h	/^f32_ease_linear(f32_t t) $/;"	f	language:C++	typeref:typename:f32_t
+f32_ease_linear	D:/work/git/moom/code/momo_easing.h	/^static f32_t f32_ease_linear(f32_t t);$/;"	p	language:C++	typeref:typename:f32_t
 ease_linear_f64	C:/users/geral/work/moom/code/momo_easing.h	/^ease_linear_f64(f64_t t) $/;"	f	language:C++	typeref:typename:f64_t
 ease_linear_f64	C:/users/geral/work/moom/code/momo_easing.h	/^static f64_t ease_linear_f64(f64_t t);$/;"	p	language:C++	typeref:typename:f64_t
 ease_linear_f64	D:/work/git/moom/code/momo_easing.h	/^ease_linear_f64(f64_t t) $/;"	f	language:C++	typeref:typename:f64_t
@@ -1054,12 +1054,12 @@ emscripten_memcpy_big	build/a.out.js	/^  "emscripten_memcpy_big": _emscripten_me
 ENABLE_ASSERT	C:/users/geral/work/moom/code/momo_types.h	/^# define ENABLE_ASSERT /;"	d	language:C++
 ENABLE_ASSERT	D:/work/git/moom/code/momo_types.h	/^# define ENABLE_ASSERT /;"	d	language:C++
 end	D:/work/git/moom/code/lit_game.h	/^  v2f_t end;$/;"	m	language:C++	struct:lit_animator_patrol_sensor_t	typeref:typename:v2f_t
-endian_swap_s16	C:/users/geral/work/moom/code/momo_types.h	/^endian_swap_s16(s16_t value) {$/;"	f	language:C++	typeref:typename:s16_t
-endian_swap_s16	D:/work/git/moom/code/momo_types.h	/^endian_swap_s16(s16_t value) {$/;"	f	language:C++	typeref:typename:s16_t
-endian_swap_u16	C:/users/geral/work/moom/code/momo_types.h	/^endian_swap_u16(u16_t value) {$/;"	f	language:C++	typeref:typename:u16_t
-endian_swap_u16	D:/work/git/moom/code/momo_types.h	/^endian_swap_u16(u16_t value) {$/;"	f	language:C++	typeref:typename:u16_t
-endian_swap_u32	C:/users/geral/work/moom/code/momo_types.h	/^endian_swap_u32(u32_t value) {$/;"	f	language:C++	typeref:typename:u32_t
-endian_swap_u32	D:/work/git/moom/code/momo_types.h	/^endian_swap_u32(u32_t value) {$/;"	f	language:C++	typeref:typename:u32_t
+s16_endian_swap	C:/users/geral/work/moom/code/momo_types.h	/^s16_endian_swap(s16_t value) {$/;"	f	language:C++	typeref:typename:s16_t
+s16_endian_swap	D:/work/git/moom/code/momo_types.h	/^s16_endian_swap(s16_t value) {$/;"	f	language:C++	typeref:typename:s16_t
+u16_endian_swap	C:/users/geral/work/moom/code/momo_types.h	/^u16_endian_swap(u16_t value) {$/;"	f	language:C++	typeref:typename:u16_t
+u16_endian_swap	D:/work/git/moom/code/momo_types.h	/^u16_endian_swap(u16_t value) {$/;"	f	language:C++	typeref:typename:u16_t
+u32_endian_swap	C:/users/geral/work/moom/code/momo_types.h	/^u32_endian_swap(u32_t value) {$/;"	f	language:C++	typeref:typename:u32_t
+u32_endian_swap	D:/work/git/moom/code/momo_types.h	/^u32_endian_swap(u32_t value) {$/;"	f	language:C++	typeref:typename:u32_t
 end_clone_emsdk	bin/setup_emsdk.bat	/^:end_clone_emsdk$/;"	l	language:DosBatch
 end_point_indices	C:/users/geral/work/moom/code/momo_ttf.h	/^  u16_t* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u16_t *
 end_point_indices	D:/work/git/moom/code/momo_ttf.h	/^  u16_t* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u16_t *
@@ -1097,24 +1097,24 @@ f	C:/users/geral/work/moom/code/momo_types.h	/^  F f;$/;"	m	language:C++	struct:
 f	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_INFINITY::__anon11d07652010a	typeref:typename:f32_t
 f	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_NAN::__anon11d07652030a	typeref:typename:f32_t
 f	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_NEG_INFINITY::__anon11d07652020a	typeref:typename:f32_t
-f	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	m	language:C++	union:abs_f32::__anon11d07652070a	typeref:typename:f32_t
+f	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	m	language:C++	union:f32_abs::__anon11d07652070a	typeref:typename:f32_t
 f	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:is_nan_f32::__anon11d07652090a	typeref:typename:f32_t
 f	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:is_nan_f64::__anon11d076520a0a	typeref:typename:f64_t
 f	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_INFINITY::__anon11d07652050a	typeref:typename:f64_t
 f	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_NAN::__anon11d07652040a	typeref:typename:f64_t
 f	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_NEG_INFINITY::__anon11d07652060a	typeref:typename:f64_t
-f	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	m	language:C++	union:abs_f64::__anon11d07652080a	typeref:typename:f64_t
+f	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	m	language:C++	union:f64_abs::__anon11d07652080a	typeref:typename:f64_t
 f	D:/work/git/moom/code/momo_types.h	/^  F f;$/;"	m	language:C++	struct:_defer_scope_guard	typeref:typename:F
 f	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_INFINITY::__anonda9447de010a	typeref:typename:f32_t
 f	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_NAN::__anonda9447de030a	typeref:typename:f32_t
 f	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_NEG_INFINITY::__anonda9447de020a	typeref:typename:f32_t
-f	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	m	language:C++	union:abs_f32::__anonda9447de070a	typeref:typename:f32_t
+f	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	m	language:C++	union:f32_abs::__anonda9447de070a	typeref:typename:f32_t
 f	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:is_nan_f32::__anonda9447de090a	typeref:typename:f32_t
 f	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:is_nan_f64::__anonda9447de0a0a	typeref:typename:f64_t
 f	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_INFINITY::__anonda9447de050a	typeref:typename:f64_t
 f	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_NAN::__anonda9447de040a	typeref:typename:f64_t
 f	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_NEG_INFINITY::__anonda9447de060a	typeref:typename:f64_t
-f	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	m	language:C++	union:abs_f64::__anonda9447de080a	typeref:typename:f64_t
+f	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	m	language:C++	union:f64_abs::__anonda9447de080a	typeref:typename:f64_t
 F32_EPSILON	C:/users/geral/work/moom/code/momo_types.h	/^#define F32_EPSILON /;"	d	language:C++
 F32_EPSILON	D:/work/git/moom/code/momo_types.h	/^#define F32_EPSILON /;"	d	language:C++
 F32_INFINITY	C:/users/geral/work/moom/code/momo_types.h	/^#define F32_INFINITY /;"	d	language:C++
@@ -2091,10 +2091,10 @@ lengths	C:/users/geral/work/moom/code/momo_png.h	/^  u16_t* lengths;$/;"	m	langu
 lengths	D:/work/git/moom/code/momo_png.h	/^  u16_t* lengths;$/;"	m	language:C++	struct:_png_huffman_t	typeref:typename:u16_t *
 length_count	C:/users/geral/work/moom/code/momo_png.h	/^  u32_t length_count;$/;"	m	language:C++	struct:_png_huffman_t	typeref:typename:u32_t
 length_count	D:/work/git/moom/code/momo_png.h	/^  u32_t length_count;$/;"	m	language:C++	struct:_png_huffman_t	typeref:typename:u32_t
-lerp_f32	C:/users/geral/work/moom/code/momo_types.h	/^lerp_f32(f32_t s, f32_t e, f32_t f) { $/;"	f	language:C++	typeref:typename:f32_t
-lerp_f32	D:/work/git/moom/code/momo_types.h	/^lerp_f32(f32_t s, f32_t e, f32_t f) { $/;"	f	language:C++	typeref:typename:f32_t
-lerp_f64	C:/users/geral/work/moom/code/momo_types.h	/^lerp_f64(f64_t s, f64_t e, f64_t f) { $/;"	f	language:C++	typeref:typename:f64_t
-lerp_f64	D:/work/git/moom/code/momo_types.h	/^lerp_f64(f64_t s, f64_t e, f64_t f) { $/;"	f	language:C++	typeref:typename:f64_t
+f32_lerp	C:/users/geral/work/moom/code/momo_types.h	/^f32_lerp(f32_t s, f32_t e, f32_t f) { $/;"	f	language:C++	typeref:typename:f32_t
+f32_lerp	D:/work/git/moom/code/momo_types.h	/^f32_lerp(f32_t s, f32_t e, f32_t f) { $/;"	f	language:C++	typeref:typename:f32_t
+f64_lerp	C:/users/geral/work/moom/code/momo_types.h	/^f64_lerp(f64_t s, f64_t e, f64_t f) { $/;"	f	language:C++	typeref:typename:f64_t
+f64_lerp	D:/work/git/moom/code/momo_types.h	/^f64_lerp(f64_t s, f64_t e, f64_t f) { $/;"	f	language:C++	typeref:typename:f64_t
 lifespan	C:/users/geral/work/moom/code/lit_game.h	/^  f32_t lifespan;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:f32_t
 lifespan	D:/work/git/moom/code/lit_game.h	/^  f32_t lifespan;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:f32_t
 lifespan	D:/work/git/moom/code/scene_lit_entity.h	/^  f32_t lifespan;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:f32_t
@@ -3123,10 +3123,10 @@ payloads	C:/users/geral/work/moom/code/moe_gfx.h	/^  gfx_texture_payload_t paylo
 payloads	D:/work/git/moom/code/moe_gfx.h	/^  gfx_texture_payload_t payloads[GFX_MAX_TEXTURES];$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:gfx_texture_payload_t[]
 payload_count	C:/users/geral/work/moom/code/moe_gfx.h	/^  umi_t payload_count;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
 payload_count	D:/work/git/moom/code/moe_gfx.h	/^  umi_t payload_count;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
-percent_f32	C:/users/geral/work/moom/code/momo_types.h	/^percent_f32(f32_t v, f32_t min, f32_t max) { $/;"	f	language:C++	typeref:typename:f32_t
-percent_f32	D:/work/git/moom/code/momo_types.h	/^percent_f32(f32_t v, f32_t min, f32_t max) { $/;"	f	language:C++	typeref:typename:f32_t
-percent_f64	C:/users/geral/work/moom/code/momo_types.h	/^percent_f64(f64_t v, f64_t min, f64_t max) { $/;"	f	language:C++	typeref:typename:f64_t
-percent_f64	D:/work/git/moom/code/momo_types.h	/^percent_f64(f64_t v, f64_t min, f64_t max) { $/;"	f	language:C++	typeref:typename:f64_t
+f32_weight	C:/users/geral/work/moom/code/momo_types.h	/^f32_weight(f32_t v, f32_t min, f32_t max) { $/;"	f	language:C++	typeref:typename:f32_t
+f32_weight	D:/work/git/moom/code/momo_types.h	/^f32_weight(f32_t v, f32_t min, f32_t max) { $/;"	f	language:C++	typeref:typename:f32_t
+f64_weight	C:/users/geral/work/moom/code/momo_types.h	/^f64_weight(f64_t v, f64_t min, f64_t max) { $/;"	f	language:C++	typeref:typename:f64_t
+f64_weight	D:/work/git/moom/code/momo_types.h	/^f64_weight(f64_t v, f64_t min, f64_t max) { $/;"	f	language:C++	typeref:typename:f64_t
 pixels	C:/users/geral/work/moom/code/sui_atlas.h	/^  u32_t* pixels;$/;"	m	language:C++	struct:sui_atlas_bitmap_t	typeref:typename:u32_t *
 pixels	C:/users/geral/work/moom/code/sui_pack.h	/^  u32_t* pixels;$/;"	m	language:C++	struct:sui_packer_source_bitmap_t	typeref:typename:u32_t *
 pixels	D:/work/git/moom/code/sui_atlas.h	/^  u32_t* pixels;$/;"	m	language:C++	struct:sui_atlas_bitmap_t	typeref:typename:u32_t *
@@ -3341,10 +3341,10 @@ r	C:/users/geral/work/moom/code/momo_colors.h	/^    struct { f32_t r, g, b; };  
 r	C:/users/geral/work/moom/code/momo_colors.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
 r	D:/work/git/moom/code/momo_colors.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon7258a5bb010a::__anon7258a5bb0208	typeref:typename:f32_t
 r	D:/work/git/moom/code/momo_colors.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
-rad_to_deg_f32	C:/users/geral/work/moom/code/momo_types.h	/^rad_to_deg_f32(f32_t radians) {$/;"	f	language:C++	typeref:typename:f32_t
-rad_to_deg_f32	D:/work/git/moom/code/momo_types.h	/^rad_to_deg_f32(f32_t radians) {$/;"	f	language:C++	typeref:typename:f32_t
-rad_to_deg_f64	C:/users/geral/work/moom/code/momo_types.h	/^rad_to_deg_f64(f64_t radians) {$/;"	f	language:C++	typeref:typename:f64_t
-rad_to_deg_f64	D:/work/git/moom/code/momo_types.h	/^rad_to_deg_f64(f64_t radians) {$/;"	f	language:C++	typeref:typename:f64_t
+f32_rad_to_deg	C:/users/geral/work/moom/code/momo_types.h	/^f32_rad_to_deg(f32_t radians) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_rad_to_deg	D:/work/git/moom/code/momo_types.h	/^f32_rad_to_deg(f32_t radians) {$/;"	f	language:C++	typeref:typename:f32_t
+f64_rad_to_deg	C:/users/geral/work/moom/code/momo_types.h	/^f64_rad_to_deg(f64_t radians) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_rad_to_deg	D:/work/git/moom/code/momo_types.h	/^f64_rad_to_deg(f64_t radians) {$/;"	f	language:C++	typeref:typename:f64_t
 raster_font_height	C:/users/geral/work/moom/code/sui_atlas.h	/^  f32_t raster_font_height;$/;"	m	language:C++	struct:sui_atlas_font_t	typeref:typename:f32_t
 raster_font_height	D:/work/git/moom/code/sui_atlas.h	/^  f32_t raster_font_height;$/;"	m	language:C++	struct:sui_atlas_font_t	typeref:typename:f32_t
 rbg_to_hsl	C:/users/geral/work/moom/code/momo_colors.h	/^rbg_to_hsl(rgb_t c) {$/;"	f	language:C++	typeref:typename:hsl_t
@@ -4284,26 +4284,26 @@ type_U32	D:/work/git/moom/code/momo_png.h	/^    u32_t type_U32;$/;"	m	language:C
 u	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_INFINITY::__anon11d07652010a	typeref:typename:u32_t
 u	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_NAN::__anon11d07652030a	typeref:typename:u32_t
 u	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_NEG_INFINITY::__anon11d07652020a	typeref:typename:u32_t
-u	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	m	language:C++	union:abs_f32::__anon11d07652070a	typeref:typename:u32_t
+u	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	m	language:C++	union:f32_abs::__anon11d07652070a	typeref:typename:u32_t
 u	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:is_nan_f32::__anon11d07652090a	typeref:typename:u64_t
 u	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:is_nan_f64::__anon11d076520a0a	typeref:typename:u64_t
 u	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_INFINITY::__anon11d07652050a	typeref:typename:u64_t
 u	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_NAN::__anon11d07652040a	typeref:typename:u64_t
 u	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_NEG_INFINITY::__anon11d07652060a	typeref:typename:u64_t
-u	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	m	language:C++	union:abs_f64::__anon11d07652080a	typeref:typename:u64_t
+u	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	m	language:C++	union:f64_abs::__anon11d07652080a	typeref:typename:u64_t
 u	C:/users/geral/work/moom/code/momo_vectors.h	/^	struct { f32_t u, v; };$/;"	m	language:C++	struct:v2f_t::__anon75c0fbc30708	typeref:typename:f32_t
 u	C:/users/geral/work/moom/code/test_essentials.h	/^      u16_t u;$/;"	m	language:C++	union:test_essentials::__anonbfe2a900010a	typeref:typename:u16_t
 u	C:/users/geral/work/moom/code/test_essentials.h	/^      u32_t u;$/;"	m	language:C++	union:test_essentials::__anonbfe2a900020a	typeref:typename:u32_t
 u	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_INFINITY::__anonda9447de010a	typeref:typename:u32_t
 u	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_NAN::__anonda9447de030a	typeref:typename:u32_t
 u	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_NEG_INFINITY::__anonda9447de020a	typeref:typename:u32_t
-u	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	m	language:C++	union:abs_f32::__anonda9447de070a	typeref:typename:u32_t
+u	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	m	language:C++	union:f32_abs::__anonda9447de070a	typeref:typename:u32_t
 u	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:is_nan_f32::__anonda9447de090a	typeref:typename:u64_t
 u	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:is_nan_f64::__anonda9447de0a0a	typeref:typename:u64_t
 u	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_INFINITY::__anonda9447de050a	typeref:typename:u64_t
 u	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_NAN::__anonda9447de040a	typeref:typename:u64_t
 u	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_NEG_INFINITY::__anonda9447de060a	typeref:typename:u64_t
-u	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	m	language:C++	union:abs_f64::__anonda9447de080a	typeref:typename:u64_t
+u	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	m	language:C++	union:f64_abs::__anonda9447de080a	typeref:typename:u64_t
 u	D:/work/git/moom/code/momo_vectors.h	/^	struct { f32_t u, v; };$/;"	m	language:C++	struct:v2f_t::__anon7ebf604f0708	typeref:typename:f32_t
 u	D:/work/git/moom/code/test_essentials.h	/^      u16_t u;$/;"	m	language:C++	union:test_essentials::__anon4743520c010a	typeref:typename:u16_t
 u	D:/work/git/moom/code/test_essentials.h	/^      u32_t u;$/;"	m	language:C++	union:test_essentials::__anon4743520c020a	typeref:typename:u32_t
@@ -5194,8 +5194,8 @@ __anon11d07652030a	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t 
 __anon11d07652040a	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:_F64_NAN
 __anon11d07652050a	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:_F64_INFINITY
 __anon11d07652060a	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:_F64_NEG_INFINITY
-__anon11d07652070a	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	u	language:C++	function:abs_f32
-__anon11d07652080a	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	u	language:C++	function:abs_f64
+__anon11d07652070a	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	u	language:C++	function:f32_abs
+__anon11d07652080a	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	u	language:C++	function:f64_abs
 __anon11d07652090a	C:/users/geral/work/moom/code/momo_types.h	/^  union { f32_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:is_nan_f32
 __anon11d076520a0a	C:/users/geral/work/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:is_nan_f64
 __anon24a2290b010a	C:/users/geral/work/moom/code/sui_atlas.h	/^  union {$/;"	u	language:C++	struct:sui_atlas_context_t
@@ -5298,8 +5298,8 @@ __anonda9447de030a	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u32_t
 __anonda9447de040a	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:_F64_NAN
 __anonda9447de050a	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:_F64_INFINITY
 __anonda9447de060a	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:_F64_NEG_INFINITY
-__anonda9447de070a	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	u	language:C++	function:abs_f32
-__anonda9447de080a	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	u	language:C++	function:abs_f64
+__anonda9447de070a	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	u	language:C++	function:f32_abs
+__anonda9447de080a	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	u	language:C++	function:f64_abs
 __anonda9447de090a	D:/work/git/moom/code/momo_types.h	/^  union { f32_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:is_nan_f32
 __anonda9447de0a0a	D:/work/git/moom/code/momo_types.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:is_nan_f64
 __anonec27c079010a	C:/users/geral/work/moom/code/karu.h	/^  union {$/;"	u	language:C++	struct:karu_asset_t

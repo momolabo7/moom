@@ -300,7 +300,7 @@ sb8_push_s32(sb8_t* b, s32_t num) {
   umi_t start_pt = b->count; 
   
   b32_t negate = num < 0;
-  num = abs_s32(num);
+  num = s32_abs(num);
   
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
@@ -330,7 +330,7 @@ sb8_push_s64(sb8_t* b, s64_t num) {
   umi_t start_pt = b->count; 
   
   b32_t negate = num < 0;
-  num = abs_s64(num);
+  num = s64_abs(num);
   
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);

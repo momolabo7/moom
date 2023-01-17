@@ -1350,8 +1350,8 @@ ogl_end_frame(Opengl* ogl) {
         transform.e[1][3] = data->pos.y;
         transform.e[2][3] = ogl->current_layer;
         
-        f32_t lerped_x = lerp_f32(0.5f, -0.5f, data->anchor.x);
-        f32_t lerped_y = lerp_f32(0.5f, -0.5f, data->anchor.y);
+        f32_t lerped_x = f32_lerp(0.5f, -0.5f, data->anchor.x);
+        f32_t lerped_y = f32_lerp(0.5f, -0.5f, data->anchor.y);
         m44f_t a = m44f_translation(lerped_x, lerped_y);
         
         Rect2 uv = {0};

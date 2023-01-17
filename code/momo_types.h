@@ -381,7 +381,7 @@ is_digit(c8_t c) {
 //#define abs_of(x) ((x) < 0 ? -(x) : (x))
 
 static f32_t 
-abs_f32(f32_t x) {
+f32_abs(f32_t x) {
   union { f32_t f; u32_t u; } val = {};
   val.f = x;
   val.u &= 0x7fffffff;  
@@ -389,7 +389,7 @@ abs_f32(f32_t x) {
 }
 
 static f64_t
-abs_f64(f64_t x) {
+f64_abs(f64_t x) {
   union { f64_t f; u64_t u; } val = {};
   val.f = x;
   val.u &= 0x7fffffffffffffff;
@@ -399,23 +399,23 @@ abs_f64(f64_t x) {
 
 
 static s8_t   
-abs_s8(s8_t x) {
+s8_abs(s8_t x) {
   s8_t y = x >> 7;
   return (x ^ y)-y;
 }
 
 static s16_t  
-abs_s16(s16_t x) {
+s16_abs(s16_t x) {
   s16_t y = x >> 15;
   return (x ^ y)-y;
 }
 static s32_t  
-abs_s32(s32_t x) {
+s32_abs(s32_t x) {
   s32_t y = x >> 31;
   return (x ^ y)-y;
 }
 static s64_t  
-abs_s64(s64_t x) {
+s64_abs(s64_t x) {
   s64_t y = x >> 63;
   return (x ^ y)-y;
 }
@@ -429,25 +429,25 @@ abs_s64(s64_t x) {
 // since there are only 2 floating point types I generally care about.
 //
 static f32_t
-lerp_f32(f32_t s, f32_t e, f32_t f) { 
+f32_lerp(f32_t s, f32_t e, f32_t f) { 
   return (f32_t)(s + (e-s) * f); 
 }
 
 static f64_t 
-lerp_f64(f64_t s, f64_t e, f64_t f) { 
+f64_lerp(f64_t s, f64_t e, f64_t f) { 
   return (f64_t)(s + (e-s) * f); 
 }
 
 //////////////////////////////////////////////////////////////////////////////
-// Percentage
+// Weights
 //
 static f32_t 
-percent_f32(f32_t v, f32_t min, f32_t max) { 
+f32_weight(f32_t v, f32_t min, f32_t max) { 
   return (v - min)/(max - min); 
 }
 
 static f64_t 
-percent_f64(f64_t v, f64_t min, f64_t max) { 
+f64_weight(f64_t v, f64_t min, f64_t max) { 
   return (v - min)/(max - min); 
 }
 
@@ -455,21 +455,21 @@ percent_f64(f64_t v, f64_t min, f64_t max) {
 // Degrees to Radians
 //
 static f32_t 
-deg_to_rad_f32(f32_t degrees) {
+f32_deg_to_rad(f32_t degrees) {
   return degrees * PI_32 / 180.f;
 }
 static f32_t 
-rad_to_deg_f32(f32_t radians) {
+f32_rad_to_deg(f32_t radians) {
   return radians * 180.f / PI_32;	
 }
 
 static f64_t
-deg_to_rad_f64(f64_t degrees) {
+f64_deg_to_rad(f64_t degrees) {
   return degrees * PI_32 / 180.0;
   
 }
 static f64_t 
-rad_to_deg_f64(f64_t radians) {
+f64_rad_to_deg(f64_t radians) {
   return radians * 180.0 / PI_64;
 }
 
@@ -499,17 +499,17 @@ bpm_to_spb_f64(f64_t bpm) {
 //   #define endian_swap_16(value) _EndianSwap16((u8_t*)&value)
 //
 static u16_t
-endian_swap_u16(u16_t value) {
+u16_endian_swap(u16_t value) {
   return (value << 8) | (value >> 8);
 }
 
 static s16_t
-endian_swap_s16(s16_t value) {
+s16_endian_swap(s16_t value) {
   return (value << 8) | (value >> 8);
 }
 
 static u32_t
-endian_swap_u32(u32_t value) {
+u32_endian_swap(u32_t value) {
   return  ((value << 24) |
            ((value & 0xFF00) << 8) |
            ((value >> 8) & 0xFF00) |
@@ -1460,7 +1460,7 @@ cstr_itoa(c8_t* dest, s32_t num) {
   }
   
   b32_t negative = num < 0;
-  num = abs_s32(num);
+  num = s32_abs(num);
   
   c8_t* it = dest;
   for(; num != 0; num /= 10) {
@@ -1480,12 +1480,12 @@ cstr_itoa(c8_t* dest, s32_t num) {
 //IEEE floating point functions 
 static b32_t 
 is_close_f32(f32_t lhs, f32_t rhs) {
-  return abs_f32(lhs - rhs) <= F32_EPSILON;
+  return f32_abs(lhs - rhs) <= F32_EPSILON;
 }
 
 static b32_t 
 is_close_f64(f64_t lhs, f64_t rhs) {
-  return abs_f64(lhs - rhs) <= F64_EPSILON;
+  return f64_abs(lhs - rhs) <= F64_EPSILON;
 }
 
 static b32_t 

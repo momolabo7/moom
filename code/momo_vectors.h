@@ -235,8 +235,8 @@ static v2f_t
 v2f_lerp(v2f_t s, v2f_t e, f32_t a) 
 {
   v2f_t ret = {0};
-  ret.x = lerp_f32(s.x,e.x,a);
-  ret.y = lerp_f32(s.y,e.y,a);
+  ret.x = f32_lerp(s.x,e.x,a);
+  ret.y = f32_lerp(s.y,e.y,a);
   return ret;
 }
 

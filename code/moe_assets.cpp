@@ -243,14 +243,14 @@ find_best_asset_of_type(assets_t* ma,
     {
       asset_tag_t* tag = ma->tags + tag_index;
       f32_t difference = vector->e[tag->type].tag_value_to_match - tag->value;
-      f32_t weighted = vector->e[tag->type].tag_weight*abs_f32(difference);
+      f32_t weighted = vector->e[tag->type].tag_weight*f32_abs(difference);
       total_weighted_diff = weighted;
       
 #if 0      
       // Uncomment if we want to do periodic match (values that wrap around)
       f32_t a = match_vector->e[tag->type];
       f32_t b = tag->value;
-      f32_t diff0 = abs_f32(a-b);
+      f32_t diff0 = f32_abs(a-b);
       f32_t diff1 = abs_f32a - 10000000.f*sign_of(a) - b);
       f32_t diff = min_of(diff0, diff1);
       

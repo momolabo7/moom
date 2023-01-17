@@ -114,16 +114,16 @@ enum {
 
 static u16_t
 _ttf_read_u16(u8_t* location) {
-  return endian_swap_u16(*(u16_t*)location);
+  return u16_endian_swap(*(u16_t*)location);
 };
 
 static s16_t
 _ttf_read_s16(u8_t* location) {
-  return endian_swap_u16(*(u16_t*)location);
+  return u16_endian_swap(*(u16_t*)location);
 };
 static u32_t
 _ttf_read_u32(u8_t* location) {
-  return endian_swap_u32(*(u32_t*)location);
+  return u32_endian_swap(*(u32_t*)location);
 };
 
 // returns 0 is failure
