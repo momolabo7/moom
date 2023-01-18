@@ -306,10 +306,8 @@ lit_level_1_0(lit_game_t* m) {
 typedef void (*Lit_Level)(lit_game_t* mode); 
 static Lit_Level lit_levels[] = {
 
-#if 0
   lit_level_0_0, 
   lit_level_0_1, 
-#endif
   lit_level_0_2,
   lit_level_0_3,
   lit_level_0_4,
