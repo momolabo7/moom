@@ -2,6 +2,47 @@
 static void lit_load_level(lit_game_t* m, u32_t level_id);
 static void lit_load_next_level(lit_game_t* m);
 
+// 
+// Animator
+//
+static void
+lit_push_patrol_sensor_animator(lit_game_t* game, lit_sensor_t* sensor,  f32_t duration, v2f_t start, v2f_t end) 
+{
+  auto* a = &(game->animators + game->animator_count++)->patrol_sensor;
+
+  a->timer = 0.f;
+  a->duration = duration;
+  a->start = start;
+  a->end = end;
+  a->sensor = sensor;
+}
+
+static void 
+lit_animate(lit_animator_t* animator, f32_t dt) {
+  // TODO
+  switch(animator->type) {
+    case LIT_ANIMATOR_TYPE_PATROL_SENSOR: 
+    {
+      auto* a = &animator->patrol_sensor;
+      a->timer += dt;
+      f32_t alpha = f32_sin(a->timer/a->duration/PI_32);
+      a->sensor->pos = v2f_lerp(a->start, a->end, alpha);
+    } break;
+
+  }
+}
+
+static void
+lit_update_animators(lit_game_t* game, f32_t dt) {
+  for(u32_t animator_index = 0; animator_index < game->animator_count; ++animator_index)
+  {
+    lit_animate(game->animators + animator_index, dt);
+  }
+}
+
+//
+// Edge
+//
 
 static void 
 lit_calc_ghost_edge_line(lit_edge_t* e, v2f_t* min, v2f_t* max) {
@@ -560,6 +601,10 @@ lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color)
 
 }
 
+static void
+lit_push_patrolling_sensor(lit_game_t* game) {
+}
+
 static void 
 lit_update_sensors(lit_game_t* game, f32_t dt) 
 {
@@ -728,6 +773,7 @@ lit_update_game(moe_t* moe, lit_game_t* game, platform_t* platform)
 
   if (game->state == LIT_STATE_TYPE_NORMAL) 
   {
+    lit_update_animators(game, dt);
     lit_update_player(moe, game, dt);
   }
 

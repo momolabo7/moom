@@ -132,20 +132,6 @@ struct lit_animator_t {
 
 
 
-static void 
-lit_animate(lit_animator_t* animator) {
-  // TODO
-  switch(animator->type) {
-    case LIT_ANIMATOR_TYPE_PATROL_SENSOR: 
-    {
-      auto* a = &animator->patrol_sensor;
-      f32_t alpha = f32_sin(a->timer/a->duration/PI_32);
-      a->sensor->pos = v2f_lerp(a->start, a->end, alpha);
-    } break;
-
-  }
-}
-
 //
 // Main game struct
 //
@@ -188,13 +174,7 @@ struct lit_game_t {
   u32_t sensors_activated;
 };
 
-static void
-lit_update_animators(lit_game_t* game) {
-  for(u32_t animator_index = 0; animator_index < game->animator_count; ++animator_index)
-  {
-    lit_animate(game->animators + animator_index);
-  }
-}
+
 
 struct lit_title_waypoint_t {
   f32_t x;
