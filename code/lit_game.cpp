@@ -17,15 +17,22 @@ lit_push_patrol_sensor_animator(lit_game_t* game, lit_sensor_t* sensor,  f32_t d
   a->sensor = sensor;
 }
 
+
+
 static void 
 lit_animate(lit_animator_t* animator, f32_t dt) {
-  // TODO
   switch(animator->type) {
     case LIT_ANIMATOR_TYPE_PATROL_SENSOR: 
     {
       auto* a = &animator->patrol_sensor;
+
+
       a->timer += dt;
-      f32_t alpha = f32_sin(a->timer/a->duration/PI_32);
+
+      // NOTE(momo): sin() takes in a value from [0, PI_32]
+      //
+      // TODO: this is probably wrong. The alpha goes to -1.
+      f32_t alpha = (f32_sin(a->timer/a->duration/PI_32) + 1.f) / 2.f;
       a->sensor->pos = v2f_lerp(a->start, a->end, alpha);
     } break;
 
@@ -602,7 +609,10 @@ lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color)
 }
 
 static void
-lit_push_patrolling_sensor(lit_game_t* game) {
+lit_push_patrolling_sensor(lit_game_t* game, f32_t duration, v2f_t start, v2f_t end, u32_t target_color) 
+{
+  auto* s = lit_push_sensor(game, start.x, start.y, target_color); 
+  lit_push_patrol_sensor_animator(game, s, duration, start, end);
 }
 
 static void 

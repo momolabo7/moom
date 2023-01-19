@@ -286,7 +286,6 @@ static void
 lit_level_1_0(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("HOLES"));
 
-  auto* s1 = lit_push_sensor(m, 050.f,   750.f, 0x008888FF); 
 
   lit_push_double_edge(m, 340.f, 300.f, 380.f, 300.f);
   lit_push_double_edge(m, 420.f, 300.f, 460.f, 300.f);
@@ -301,11 +300,15 @@ lit_level_1_0(lit_game_t* m) {
   lit_push_double_edge(m, 300.f, 420.f, 300.f, 460.f);
 
   lit_push_light(m, 400.f, 410.f, 0x880000FF, 360.f, 0.f);
-  lit_push_patrol_sensor_animator(m, s1, 1.f, v2f_set(200.f, 200.f), v2f_set(300.f, 300.f));  
+
+  lit_push_patrolling_sensor(m, 1.f, 
+                             v2f_set(200.f, 200.f), 
+                             v2f_set(300.f, 300.f), 
+                             0x008888FF);
 }
 typedef void (*Lit_Level)(lit_game_t* mode); 
 static Lit_Level lit_levels[] = {
-
+#if 0
   lit_level_0_0, 
   lit_level_0_1, 
   lit_level_0_2,
@@ -316,6 +319,7 @@ static Lit_Level lit_levels[] = {
   lit_level_0_7,
   lit_level_0_8,
   lit_level_0_9,
+#endif
   lit_level_1_0,
 };
 
