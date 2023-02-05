@@ -171,7 +171,10 @@ _w32_load_wgl_extentions() {
 //~API implementation
 static void
 w32_gfx_unload(gfx_t* gfx) {
-  w32_free_memory(gfx);
+#if 0
+  Opengl* ogl = (Opengl*)gfx;
+  w32_free_memory((platform_memory_t*)ogl->user_data);
+#endif
 }
 
 static gfx_t*
@@ -203,18 +206,21 @@ w32_gfx_load(HWND window,
     return nullptr;
   }
 
+  umi_t total_size = sizeof(Opengl) + command_queue_size + texture_queue_size;
 
-  // NOTE(momo): We keep these blocks seperate in case we want to dynamically
-  // expand these so that we can prototype faster.
-  Opengl* opengl = (Opengl*)w32_allocate_memory(sizeof(Opengl));
-  void* command_queue_block = w32_allocate_memory(command_queue_size);
-  void* texture_queue_block = w32_allocate_memory(texture_queue_size);
+  platform_memory_t* memory = w32_allocate_memory(total_size);
+
+
+  Opengl* opengl = (Opengl*)(memory->data);
+  void* command_queue_block = (u8_t*)opengl + sizeof(Opengl); 
+  void* texture_queue_block = (u8_t*)command_queue_block + command_queue_size;
+
 
   if (!opengl || !command_queue_block || !texture_queue_block) {
     return nullptr;
   }
 
-  //opengl->user_data = opengl;
+  opengl->user_data = memory;
   
   
   if(wglMakeCurrent(dc, opengl_ctx)) {

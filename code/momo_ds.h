@@ -15,7 +15,7 @@
 // n - node
 #define cll_init(s)     (s)->prev = (s), (s)->next = (s) 
 #define cll_append(s,n) (n)->next = (s), (n)->prev = (s)->prev, (n)->prev->next = (n), (n)->next->prev = (n)
-#define cll_remove(n)   (n)->prev->next = (n)->next, (n)->next->prev = (n)->prev;
+#define cll_remove(n)   (n)->prev->next = (n)->next, (n)->next->prev = (n)->prev, (n)->next = 0, (n)->prev = 0;
 
 
 

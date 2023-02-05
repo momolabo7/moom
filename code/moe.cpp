@@ -6,12 +6,15 @@
 exported b32_t 
 moe_update_and_render(platform_t* pf)
 { 
-  if (pf->moe == nullptr) {
+  if (pf->moe_data == nullptr) {
   
     // Allocate and initialize moe_t engine
-    size_t moe_memory_size = megabytes(32); 
-    moe_t* moe = (moe_t*)pf->allocate_memory(moe_memory_size);
-    pf->moe = moe;
+    umi_t moe_memory_size = megabytes(32); 
+    platform_memory_t* memory = pf->allocate_memory(moe_memory_size);
+    pf->moe_data = memory;
+
+    // This is how we are going to get the data
+    moe_t* moe = (moe_t*)((platform_memory_t*)pf->moe_data)->data;
     
     moe->platform = pf;
     
@@ -56,7 +59,7 @@ moe_update_and_render(platform_t* pf)
    
   }
  
-  moe_t* moe = (moe_t*)(pf->moe);
+  moe_t* moe = (moe_t*)((platform_memory_t*)pf->moe_data)->data;
   moe_profile_block(GAME);
   console_t* console = &moe->console;
 

@@ -10,8 +10,12 @@
 /////////////////////////////////////////////////////////////////////
 // Platform Memory API
 //
-typedef void* platform_allocate_memory_f(umi_t size);
-typedef void  platform_free_memory_f(void* ptr);
+typedef struct {
+  void* data;
+  umi_t size;
+} platform_memory_t;
+typedef platform_memory_t* platform_allocate_memory_f(umi_t size);
+typedef void  platform_free_memory_f(platform_memory_t* ptr);
 
 //////////////////////////////////////////////////////////////////////
 // Platform File API
@@ -63,7 +67,7 @@ typedef struct {
   u32_t channels; //TODO: remove this?
 } platform_audio_t;
 
-/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////platform
 // Input related API
 //
 typedef struct {
@@ -150,8 +154,7 @@ typedef struct {
   b32_t reloaded;
 
   // For moe to use
-  // TODO(momo): should just be of type moe_t
-  void* moe;
+  void* moe_data;
 
 } platform_t;
 
