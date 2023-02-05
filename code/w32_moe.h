@@ -365,11 +365,12 @@ w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {
 static void*
 w32_allocate_memory(umi_t size)
 {
+  // TODO: alignment?
   umi_t total_size = size + sizeof(w32_memory_block_t);
   umi_t base_offset = sizeof(w32_memory_block_t);
 
 
-  w32_memory_block_t* block = (w32_memory_block_t*)
+  auto* block = (w32_memory_block_t*)
     VirtualAllocEx(GetCurrentProcess(),
                    0, 
                    total_size,
@@ -390,11 +391,11 @@ w32_allocate_memory(umi_t size)
 }
 
 static void
-w32_free_memory(void* platform_block) {
-  if (platform_block) {
-    w32_memory_block_t* block = (w32_memory_block_t*)platform_block;
-    cll_remove(block);
-    VirtualFree(block, 0, MEM_RELEASE);
+w32_free_memory(void* block) {
+  if (block) {
+    auto* memory_block = (w32_memory_block_t*)((u8_t*)block - sizeof(w32_memory_block_t));
+    cll_remove(memory_block);
+    VirtualFree(memory_block, 0, MEM_RELEASE);
   }
 }
 

@@ -302,9 +302,14 @@ lit_level_1_0(lit_game_t* m) {
   lit_push_light(m, 400.f, 410.f, 0x880000FF, 360.f, 0.f);
 
   lit_push_patrolling_sensor(m, 1.f, 
-                             v2f_set(200.f, 200.f), 
-                             v2f_set(300.f, 300.f), 
-                             0x008888FF);
+                             v2f_set(100.f, 100.f), 
+                             v2f_set(200.f, 200.f),
+                             0x008888FF); 
+#if 0
+  lit_push_patrolling_edge(m, 1.f, 
+                           0.0f, 0.0f, 100.f, 100.f,
+                           100.f, 100.f, 200.f, 200.f);
+#endif
 }
 typedef void (*Lit_Level)(lit_game_t* mode); 
 static Lit_Level lit_levels[] = {

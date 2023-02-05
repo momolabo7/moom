@@ -171,15 +171,13 @@ _w32_load_wgl_extentions() {
 //~API implementation
 static void
 w32_gfx_unload(gfx_t* gfx) {
-  Opengl* ogl = (Opengl*)gfx;
-  w32_free_memory(ogl);
+  w32_free_memory(gfx);
 }
 
 static gfx_t*
 w32_gfx_load(HWND window, 
              u32_t command_queue_size,
-             u32_t texture_queue_size, 
-             arena_t* allocator) 
+             u32_t texture_queue_size) 
 {
   HDC dc = GetDC(window); 
   if (!dc) return 0;

@@ -16,7 +16,7 @@ enum lit_state_type_t {
 // Edge
 //
 struct lit_edge_t {
-  b32_t is_disabled;
+  //b32_t is_disabled;
   v2f_t start_pt;
   v2f_t end_pt;
 };
@@ -112,7 +112,9 @@ struct lit_player_t {
 // Animators
 // 
 enum lit_animator_type_t {
-  LIT_ANIMATOR_TYPE_PATROL_SENSOR
+  LIT_ANIMATOR_TYPE_PATROL_SENSOR,
+  LIT_ANIMATOR_TYPE_PATROL_EDGE,
+  LIT_ANIMATOR_TYPE_ROTATE_EDGE,
 };
 
 struct lit_animator_patrol_sensor_t {
@@ -123,10 +125,25 @@ struct lit_animator_patrol_sensor_t {
   v2f_t end;
 };
 
+struct lit_animator_rotate_edge_t {
+  //TODO
+};
+
+struct lit_animator_patrol_edge_t {
+  lit_edge_t* edge;
+  f32_t timer;
+  f32_t duration;
+  lit_edge_t start_edge;
+  lit_edge_t end_edge;
+
+};
+
 struct lit_animator_t {
   lit_animator_type_t type;
   union {
     lit_animator_patrol_sensor_t patrol_sensor;
+    lit_animator_patrol_edge_t patrol_edge;
+    lit_animator_rotate_edge_t rotate_edge;
   };
 };
 

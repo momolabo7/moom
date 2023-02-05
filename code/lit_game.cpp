@@ -17,7 +17,17 @@ lit_push_patrol_sensor_animator(lit_game_t* game, lit_sensor_t* sensor,  f32_t d
   a->sensor = sensor;
 }
 
+static void
+lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duration, lit_edge_t  start, lit_edge_t end) 
+{
+  auto* a = &(game->animators + game->animator_count++)->patrol_edge;
 
+  a->timer = 0.f;
+  a->duration = duration;
+  a->start_edge = start;
+  a->end_edge = end;
+  a->edge = edge;
+}
 
 static void 
 lit_animate(lit_animator_t* animator, f32_t dt) {
@@ -32,8 +42,25 @@ lit_animate(lit_animator_t* animator, f32_t dt) {
       // NOTE(momo): sin() takes in a value from [0, PI_32]
       //
       // TODO: this is probably wrong. The alpha goes to -1.
-      f32_t alpha = (f32_sin(a->timer/a->duration/PI_32) + 1.f) / 2.f;
+      f32_t angle = ((a->timer/a->duration)-1.f) * PI_32;
+      f32_t alpha = (f32_cos(angle) + 1.f) / 2.f;// / 2.f + 1.f;
       a->sensor->pos = v2f_lerp(a->start, a->end, alpha);
+    } break;
+    case LIT_ANIMATOR_TYPE_ROTATE_EDGE: {
+    } break;
+    case LIT_ANIMATOR_TYPE_PATROL_EDGE: {
+      auto* a = &animator->patrol_edge;
+      a->timer += dt;
+
+      // NOTE(momo): sin() takes in a value from [0, PI_32]
+      //
+      // TODO: this is probably wrong. The alpha goes to -1.
+#if 0
+      f32_t alpha = (f32_sin(a->timer/a->duration/PI_32) + 1.f) / 2.f;
+      a->edge->start_pt = v2f_lerp(a->start_edge.start_pt, a->end_edge.start_pt, alpha);
+      a->edge->end_pt = v2f_lerp(a->start_edge.end_pt, a->end_edge.end_pt, alpha);
+#endif
+
     } break;
 
   }
@@ -66,10 +93,31 @@ lit_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y)
   edge->start_pt = v2f_set(min_x, min_y);
   edge->end_pt = v2f_set(max_x, max_y);;
 
-  edge->is_disabled = false;
+  //edge->is_disabled = false;
 
   return edge;
 }
+
+static lit_edge_t*
+lit_push_patrolling_edge(lit_game_t* m, f32_t duration, 
+                         f32_t start_min_x, f32_t start_min_y, f32_t start_max_x, f32_t start_max_y,
+                         f32_t end_min_x, f32_t end_min_y, f32_t end_max_x, f32_t end_max_y) 
+{
+  lit_edge_t* edge = lit_push_edge(m, start_min_x, start_min_y, start_max_x, start_max_y);
+
+  lit_edge_t start = {0};
+  start.start_pt = edge->start_pt;
+  start.end_pt = edge->end_pt;
+
+  lit_edge_t end = {0};
+  start.start_pt = v2f_set(end_min_x, end_min_y);
+  start.end_pt = v2f_set(end_max_x, end_max_y);
+
+  lit_push_patrol_edge_animator(m, edge, duration, start, end); 
+
+  return edge;
+}
+
 
 static void 
 lit_push_box(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) 
@@ -115,7 +163,7 @@ lit_get_ray_intersection_time_wrt_edges(v2f_t ray_origin,
   {
     lit_edge_t* edge = edges + edge_index;
 
-    if (edge->is_disabled) continue;
+    //if (edge->is_disabled) continue;
 
     v2f_t edge_ray_origin;
     v2f_t edge_ray_dir;
@@ -195,7 +243,7 @@ lit_gen_light_intersections(lit_light_t* l,
     {
       lit_edge_t* edge = edges + edge_index;
       
-      if (edge->is_disabled) continue;
+      //if (edge->is_disabled) continue;
 
       v2f_t ep = edge->end_pt;      
 
@@ -386,7 +434,7 @@ lit_draw_edges(moe_t* moe, lit_game_t* game) {
   for(u32_t edge_index = 0; edge_index < game->edge_count; ++edge_index) 
   {
     lit_edge_t* edge = game->edges + edge_index;
-    if (edge->is_disabled) continue;
+    //if (edge->is_disabled) continue;
 
     gfx_push_line(platform->gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
   }
@@ -779,6 +827,7 @@ lit_update_game(moe_t* moe, lit_game_t* game, platform_t* platform)
     else {
       lit_load_next_level(game);
     }
+
   }
 
   if (game->state == LIT_STATE_TYPE_NORMAL) 

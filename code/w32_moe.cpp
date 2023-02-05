@@ -3,17 +3,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 #if 0
 static void*
 w32_allocate(umi_t memory_size) {
@@ -491,12 +480,14 @@ WinMain(HINSTANCE instance,
   
   
   //-Init gfx
+#if 0
   make(arena_t, gfx_arena);
   if (!w32_allocate_memory_into_arena(gfx_arena, megabytes(256))) return false;
   defer { w32_free_memory_from_arena(gfx_arena); };
+#endif
  
     
-  gfx_t* gfx = w32_gfx_load(window, megabytes(100), megabytes(100), gfx_arena);
+  gfx_t* gfx = w32_gfx_load(window, megabytes(100), megabytes(100));
   if (!gfx) { return 1; }
   defer { w32_gfx_unload(gfx); };
  
