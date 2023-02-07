@@ -285,7 +285,7 @@ lit_level_0_9(lit_game_t* m) {
 static void
 lit_level_1_0(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("HOLES"));
-
+#if 0
 
   lit_push_double_edge(m, 340.f, 300.f, 380.f, 300.f);
   lit_push_double_edge(m, 420.f, 300.f, 460.f, 300.f);
@@ -299,16 +299,18 @@ lit_level_1_0(lit_game_t* m) {
   lit_push_double_edge(m, 300.f, 340.f, 300.f, 380.f);
   lit_push_double_edge(m, 300.f, 420.f, 300.f, 460.f);
 
+#endif
   lit_push_light(m, 400.f, 410.f, 0x880000FF, 360.f, 0.f);
 
   lit_push_patrolling_sensor(m, 1.f, 
-                             v2f_set(100.f, 100.f), 
-                             v2f_set(200.f, 200.f),
+                             v2f_set(400.f, 100.f), 
+                             v2f_set(400.f, 200.f),
                              0x008888FF); 
-#if 0
-  lit_push_patrolling_edge(m, 1.f, 
-                           0.0f, 0.0f, 100.f, 100.f,
-                           100.f, 100.f, 200.f, 200.f);
+
+#if 1 
+  lit_push_patrolling_double_edge(m, 5.f, 
+                                 100.f, 100.0f, 200.f, 100.f,
+                                 100.f, 200.0f, 200.f, 200.f);
 #endif
 }
 typedef void (*Lit_Level)(lit_game_t* mode); 
@@ -335,9 +337,10 @@ lit_load_level(lit_game_t* m, u32_t level_id) {
   m->stage_fade_timer = LIT_ENTER_DURATION;
   m->state = LIT_STATE_TYPE_TRANSITION_IN;
 
-  m->sensor_count = 0;;
+  m->sensor_count = 0;
   m->light_count = 0;
-  m->edge_count = 0;;
+  m->edge_count = 0;
+  m->animator_count = 0;
 
   lit_push_edge(m, 0.f, 0.f, 800.f, 0.f);
   lit_push_edge(m, 800.f, 0.f, 800.f, 800.f);
