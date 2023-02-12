@@ -73,6 +73,9 @@ typedef struct moe_t {
 
 
 #include "moe_assets.cpp"
+
+#include "moe_game_api.h"
+
 #include "moe_asset_rendering.h"
 #include "moe_inspector_rendering.h"
 #include "moe_profiler_rendering.h"

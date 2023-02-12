@@ -107,16 +107,16 @@ console_update_and_render(moe_t* moe)
   v2f_t input_area_size = { console_width, line_height };
   v2f_t input_area_pos = { console_width/2, line_height/2 };
   
-  paint_sprite(moe, moe->blank_sprite, 
-               v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
-               v2f_set(MOE_WIDTH, MOE_HEIGHT),
-               rgba_set(0.f, 0.f, 0.f, 0.8f));
-  gfx_advance_depth(platform->gfx);
+  moe_painter_draw_sprite(moe, moe->blank_sprite, 
+                          v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
+                          v2f_set(MOE_WIDTH, MOE_HEIGHT),
+                          rgba_set(0.f, 0.f, 0.f, 0.8f));
+  moe_painter_advance_depth(moe);
   
-  paint_sprite(moe, moe->blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
-  gfx_advance_depth(platform->gfx);
-  paint_sprite(moe, moe->blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
-  gfx_advance_depth(platform->gfx);
+  moe_painter_draw_sprite(moe, moe->blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
+  moe_painter_advance_depth(moe);
+  moe_painter_draw_sprite(moe, moe->blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
+  moe_painter_advance_depth(moe);
   
   
   // Draw info text
@@ -126,22 +126,22 @@ console_update_and_render(moe_t* moe)
   {
     sb8_t* line = dc->info_lines + line_index;
     
-    paint_text(moe, moe->debug_font,
-               line->str,
-               rgba_hex(0xFFFFFFFF),
-               left_pad, 
-               line_height * (line_index+1) + font_bottom_pad,
-               font_height);
+    moe_painter_draw_text(moe, moe->debug_font,
+                          line->str,
+                          rgba_hex(0xFFFFFFFF),
+                          left_pad, 
+                          line_height * (line_index+1) + font_bottom_pad,
+                          font_height);
     
   }
-  gfx_advance_depth(platform->gfx);
-  paint_text(moe, moe->debug_font,
-             dc->input_line.str,
-             rgba_hex(0xFFFFFFFF),
-             left_pad, 
-             font_bottom_pad,
-             font_height);
-  gfx_advance_depth(platform->gfx);
+  moe_painter_advance_depth(moe);
+  moe_painter_draw_text(moe, moe->debug_font,
+                        dc->input_line.str,
+                        rgba_hex(0xFFFFFFFF),
+                        left_pad, 
+                        font_bottom_pad,
+                        font_height);
+  moe_painter_advance_depth(moe);
 }
 
 

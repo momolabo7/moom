@@ -11,11 +11,11 @@ inspector_update_and_render(moe_t* moe)
   assets_t* assets = &moe->assets;
   platform_t* platform = moe->platform;
 
-  paint_sprite(moe, moe->blank_sprite, 
-               v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
-               v2f_set(MOE_WIDTH, MOE_HEIGHT),
-               {0.f, 0.f, 0.f, 0.5f});
-  gfx_advance_depth(platform->gfx);
+  moe_painter_draw_sprite(moe, moe->blank_sprite, 
+                          v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
+                          v2f_set(MOE_WIDTH, MOE_HEIGHT),
+                          {0.f, 0.f, 0.f, 0.5f});
+  moe_painter_advance_depth(moe);
   
   f32_t line_height = 32.f;
   sb8_make(sb, 256);
@@ -40,13 +40,8 @@ inspector_update_and_render(moe_t* moe)
     
     f32_t y = MOE_HEIGHT - line_height * (entry_index+1);
     
-    paint_text(moe, moe->debug_font, 
-               sb->str,
-               rgba_hex(0xFFFFFFFF),
-               0.f, 
-               y, 
-               line_height);
-    gfx_advance_depth(platform->gfx);
+    moe_painter_draw_text(moe, moe->debug_font, sb->str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
+    moe_painter_advance_depth(moe);
     
     
   }

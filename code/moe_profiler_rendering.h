@@ -51,11 +51,11 @@ profiler_update_and_render(moe_t* moe)
   const f32_t font_height = 20.f;
 
   // Overlay
-  paint_sprite(moe, moe->blank_sprite, 
-               v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
-               v2f_set(MOE_WIDTH, MOE_HEIGHT),
-               rgba_set(0.f, 0.f, 0.f, 0.5f));
-  gfx_advance_depth(platform->gfx);
+  moe_painter_draw_sprite(moe, moe->blank_sprite, 
+                          v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
+                          v2f_set(MOE_WIDTH, MOE_HEIGHT),
+                          rgba_set(0.f, 0.f, 0.f, 0.5f));
+  moe_painter_advance_depth(moe);
   
   u32_t line_num = 1;
   
@@ -99,13 +99,13 @@ profiler_update_and_render(moe_t* moe)
                  (u32_t)hits.average,
                  (u32_t)cycles_per_hit.average);
     
-    paint_text(moe, moe->debug_font, 
-               sb->str,
-               rgba_hex(0xFFFFFFFF),
-               0.f, 
-               render_height - font_height * (line_num), 
-               font_height);
-    gfx_advance_depth(platform->gfx);
+    moe_painter_draw_text(moe, moe->debug_font, 
+                          sb->str,
+                          rgba_hex(0xFFFFFFFF),
+                          0.f, 
+                          render_height - font_height * (line_num), 
+                          font_height);
+    moe_painter_advance_depth(moe);
     
     
     // Draw graph
@@ -128,14 +128,10 @@ profiler_update_and_render(moe_t* moe)
       v2f_t size = {snapshot_bar_width, snapshot_bar_height};
       
       
-      paint_sprite(moe, moe->blank_sprite, 
-                   pos,
-                   size,
-                   rgba_hex(0x00FF00FF));
+      moe_painter_draw_sprite(moe, moe->blank_sprite, pos, size, rgba_hex(0x00FF00FF));
     }
-    gfx_advance_depth(platform->gfx);
+    moe_painter_advance_depth(moe);
     ++line_num;
-    
   }
 }
 #endif //MOE_PROFILER_RENDERING_H

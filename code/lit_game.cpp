@@ -40,10 +40,8 @@ lit_animate(lit_animator_t* animator, f32_t dt) {
       a->timer += dt;
 
       // NOTE(momo): sin() takes in a value from [0, PI_32]
-      //
-      // TODO: this is probably wrong. The alpha goes to -1.
       f32_t angle = ((a->timer/a->duration)-1.f) * PI_32;
-      f32_t alpha = (f32_cos(angle) + 1.f) / 2.f;// / 2.f + 1.f;
+      f32_t alpha = (f32_cos(angle) + 1.f) / 2.f;
       a->sensor->pos = v2f_lerp(a->start, a->end, alpha);
     } break;
     case LIT_ANIMATOR_TYPE_ROTATE_EDGE: {
@@ -55,11 +53,10 @@ lit_animate(lit_animator_t* animator, f32_t dt) {
       // NOTE(momo): sin() takes in a value from [0, PI_32]
       //
       // TODO: this is probably wrong. The alpha goes to -1.
-#if 0
-      f32_t alpha = (f32_sin(a->timer/a->duration/PI_32) + 1.f) / 2.f;
+      f32_t angle = ((a->timer/a->duration)-1.f) * PI_32;
+      f32_t alpha = (f32_cos(angle) + 1.f) / 2.f;
       a->edge->start_pt = v2f_lerp(a->start_edge.start_pt, a->end_edge.start_pt, alpha);
       a->edge->end_pt = v2f_lerp(a->start_edge.end_pt, a->end_edge.end_pt, alpha);
-#endif
 
     } break;
 
@@ -397,15 +394,15 @@ lit_draw_lights(moe_t* moe, lit_game_t* game) {
   for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
   {
     lit_light_t* light = game->lights + light_index;
-    paint_sprite(moe, game->filled_circle_sprite, 
-                 light->pos,
-                 {16.f, 16.f},
-                 {0.8f, 0.8f, 0.8f, 1.f});
-    gfx_advance_depth(platform->gfx);
+    moe_painter_draw_sprite(moe, game->filled_circle_sprite, 
+                            light->pos,
+                            v2f_set(16.f, 16.f),
+                            rgba_set(0.8f, 0.8f, 0.8f, 1.f));
+    moe_painter_advance_depth(moe);
   }
  
   // Lights
-  gfx_push_blend(platform->gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_ONE); 
+  moe_painter_set_blend(moe, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_ONE); 
   
 
   for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
@@ -420,7 +417,7 @@ lit_draw_lights(moe_t* moe, lit_game_t* game) {
                                lt->p1,
                                lt->p2);
     } 
-    gfx_advance_depth(platform->gfx);
+    moe_painter_advance_depth(moe);
   }
 
 }
@@ -555,11 +552,10 @@ static void
 lit_draw_player(moe_t* moe, lit_game_t* game)
 {
   lit_player_t* player = &game->player;
-  platform_t* platform = moe->platform;
-  paint_sprite(moe, game->circle_sprite, 
-               player->pos, 
-               v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-  gfx_advance_depth(platform->gfx);
+  moe_painter_draw_sprite(moe, game->circle_sprite, 
+                          player->pos, 
+                          v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
+  moe_painter_advance_depth(moe);
 
 }
 
@@ -634,8 +630,8 @@ lit_render_particles(moe_t* moe, lit_game_t* game) {
     size.w = f32_lerp(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = f32_lerp(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    paint_sprite(moe, game->filled_circle_sprite, p->pos, size, color);
-    gfx_advance_depth(platform->gfx);
+    moe_painter_draw_sprite(moe, game->filled_circle_sprite, p->pos, size, color);
+    moe_painter_advance_depth(moe);
   }
 }
 
@@ -902,7 +898,7 @@ lit_render_game(moe_t* moe, lit_game_t* game, platform_t* platform) {
     sb8_push_fmt(sb, str8_from_lit("[%f %f]"), 
         platform->mouse_pos.x,
         LIT_HEIGHT - platform->mouse_pos.y);
-    paint_text(moe, game->tutorial_font, sb->str, RGBA_WHITE, 0.f, 0.f, 32.f);
+    moe_painter_draw_text(moe, game->tutorial_font, sb->str, RGBA_WHITE, 0.f, 0.f, 32.f);
   }
 #endif
 
@@ -910,16 +906,16 @@ lit_render_game(moe_t* moe, lit_game_t* game, platform_t* platform) {
   // Draw the overlay for fade in/out
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, game->stage_fade_timer);
-    paint_sprite(moe, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    gfx_advance_depth(platform->gfx);
+    moe_painter_draw_sprite(moe, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    moe_painter_advance_depth(moe);
   }
 
   // Draw the overlay for white flash
   {
     f32_t alpha = game->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
     rgba_t color = rgba_set(1.f, 1.f, 1.f, alpha);
-    paint_sprite(moe, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    gfx_advance_depth(platform->gfx);
+    moe_painter_draw_sprite(moe, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    moe_painter_advance_depth(moe);
   }
 
   // Draw title
@@ -934,8 +930,8 @@ lit_render_game(moe_t* moe, lit_game_t* game, platform_t* platform) {
     f32_t title_x = cur_wp->x + a * (next_wp->x - cur_wp->x); 
     rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
 
-    paint_text_center_aligned(moe, game->tutorial_font, game->title, color, title_x, LIT_HEIGHT/2, 128.f);
-    gfx_advance_depth(platform->gfx);
+    moe_painter_draw_text_center_aligned(moe, game->tutorial_font, game->title, color, title_x, LIT_HEIGHT/2, 128.f);
+    moe_painter_advance_depth(moe);
 
   }
 }

@@ -174,8 +174,6 @@ static void gfx_init_texture_queue(gfx_t* g, void* data, umi_t size);
 static void gfx_clear_commands(gfx_t* g);
 static gfx_command_t* gfx_get_command(gfx_t* g, u32_t index);
 
-static void gfx_next_texture_handle();
-
 static gfx_texture_payload_t* gfx_begin_texture_transfer(gfx_t* g, u32_t required_space);
 static void gfx_complete_texture_transfer(gfx_texture_payload_t* entry);
 static void gfx_cancel_texture_transfer(gfx_texture_payload_t* entry);
@@ -187,7 +185,7 @@ static void gfx_push_filled_triangle(gfx_t* g, rgba_t colors, v2f_t p0, v2f_t p1
 static void gfx_push_advance_depth(gfx_t* g); 
 static void gfx_push_line(gfx_t* g, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors);
 static void gfx_push_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color); 
-static void gfx_push_rect_outline(gfx_t* g, Rect2 rect, f32_t thickness, rgba_t colors, f32_t pos_z);
+//static void gfx_push_rect_outline(gfx_t* g, v2f_t rect_min, v2f_t rect_max, f32_t thickness, rgba_t colors, f32_t pos_z);
 static void gfx_push_delete_all_textures(gfx_t* g);
 static void gfx_push_delete_texture(gfx_t* g, u32_t texture_index);
 static void gfx_push_blend(gfx_t* g, gfx_blend_type_t blend_type);

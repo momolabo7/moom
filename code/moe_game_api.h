@@ -1,18 +1,22 @@
-#if 0
-#ifndef MOE_DRAW_H
-#define MOE_DRAW_H
+#ifndef MOE_GAME_API
+#define MOE_GAME_API
+
+//
+// moe's API for the game layer
+//
 
 static void
-moe_gfx_advance_depth(moe_t* moe) {
+moe_painter_advance_depth(moe_t* moe) {
   gfx_advance_depth(moe->platform->gfx);
 }
 
 static void
-moe_gfx_draw_sprite(moe_t* moe,
-                    asset_sprite_id_t sprite_id,
-                    v2f_t pos,
-                    v2f_t size,
-                    rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
+moe_painter_set_blend(moe_t* moe, gfx_blend_type_t src, gfx_blend_type_t dst) {
+  gfx_push_blend(moe->platform->gfx, src, dst);
+}
+
+static void
+moe_painter_draw_sprite(moe_t* moe, asset_sprite_id_t sprite_id, v2f_t pos, v2f_t size, rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
 {
   assets_t* assets = &moe->assets;
   platform_t* platform = moe->platform;
@@ -33,12 +37,7 @@ moe_gfx_draw_sprite(moe_t* moe,
 
 
 static void
-moe_draw_text(moe_t* moe,
-              asset_font_id_t font_id,
-              str8_t str,
-              rgba_t color,
-              f32_t px, f32_t py,
-              f32_t font_height) 
+moe_painter_draw_text(moe_t* moe, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
   assets_t* assets = &moe->assets;
   platform_t* platform = moe->platform;
@@ -80,12 +79,7 @@ moe_draw_text(moe_t* moe,
 }
 
 static void
-moe_draw_text_center_aligned(moe_t* moe,
-                             asset_font_id_t font_id,
-                             str8_t str,
-                             rgba_t color,
-                             f32_t px, f32_t py,
-                             f32_t font_height) 
+moe_painter_draw_text_center_aligned(moe_t* moe, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
   assets_t* assets = &moe->assets;
   platform_t* platform = moe->platform;
@@ -146,10 +140,4 @@ moe_draw_text_center_aligned(moe_t* moe,
 }
 
 
-
-
-
-
-
-#endif //MOE_PAINTER_H
-#endif
+#endif // MOE_GAME_API
