@@ -39,7 +39,11 @@ struct karu_font_glyph_t {
   u32_t texel_x1;
   u32_t texel_y1;
 
-  Rect2 box;
+  f32_t box_x0;
+  f32_t box_y0;
+  f32_t box_x1;
+  f32_t box_y1;
+
   u32_t codepoint;
   f32_t horizontal_advance;
 };

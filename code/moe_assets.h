@@ -24,7 +24,10 @@ struct asset_sprite_t {
 struct asset_font_glyph_t {
   u32_t texel_x0, texel_y0;
   u32_t texel_x1, texel_y1;
-  Rect2 box;
+
+  f32_t box_x0, box_y0;
+  f32_t box_x1, box_y1;
+
   asset_bitmap_id_t bitmap_asset_id;
   f32_t horizontal_advance;
 };

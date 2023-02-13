@@ -166,7 +166,12 @@ moe_init_assets(moe_t* moe, const char* filename)
             glyph->texel_y1 = karu_glyph.texel_y1;
 
             glyph->bitmap_asset_id = asset_bitmap_id_t{ karu_glyph.bitmap_asset_id };
-            glyph->box = karu_glyph.box;
+
+            glyph->box_x0 = karu_glyph.box_x0;
+            glyph->box_y0 = karu_glyph.box_y0;
+            glyph->box_x1 = karu_glyph.box_x1;
+            glyph->box_y1 = karu_glyph.box_y1;
+
             glyph->horizontal_advance = karu_glyph.horizontal_advance;
             codepoint_map[karu_glyph.codepoint] = glyph_index;
           }

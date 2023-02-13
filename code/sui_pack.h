@@ -272,10 +272,10 @@ sui_pack_end(sui_packer_t* p, const char* filename, arena_t* arena)
             s32_t x0, y0, x1, y1;
             f32_t s = ttf_get_scale_for_pixel_height(ttf, 1.f);
             if (ttf_get_glyph_box(ttf, ttf_glyph_index, &x0, &y0, &x1, &y1)){
-              glyph.box.min.x = (f32_t)x0 * s;
-              glyph.box.min.y = (f32_t)y0 * s;
-              glyph.box.max.x = (f32_t)x1 * s;
-              glyph.box.max.y = (f32_t)y1 * s;
+              glyph.box_x0 = (f32_t)x0 * s;
+              glyph.box_y0 = (f32_t)y0 * s;
+              glyph.box_x1 = (f32_t)x1 * s;
+              glyph.box_y1 = (f32_t)y1 * s;
             }
           }
 

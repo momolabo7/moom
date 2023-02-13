@@ -1,7 +1,7 @@
 #ifndef MOMO_SHAPES_H
 #define MOMO_SHAPES_H
 
-#if 1
+#if 0
 struct Rect2 {
   v2f_t min, max;
 };
