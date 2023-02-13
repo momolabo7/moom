@@ -51,7 +51,6 @@ struct lit_light_t {
 };
 
 
-
 enum lit_light_type_t {
   Lit_LIGHT_TYPE_POINT,
   Lit_LIGHT_TYPE_DIRECTIONAL,

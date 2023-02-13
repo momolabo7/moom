@@ -8,8 +8,10 @@ static void lit_load_next_level(lit_game_t* m);
 static void
 lit_push_patrol_sensor_animator(lit_game_t* game, lit_sensor_t* sensor,  f32_t duration, v2f_t start, v2f_t end) 
 {
-  auto* a = &(game->animators + game->animator_count++)->patrol_sensor;
-
+  auto* anim = game->animators + game->animator_count++;
+  anim->type = LIT_ANIMATOR_TYPE_PATROL_SENSOR;
+  
+  auto* a = &anim->patrol_sensor;
   a->timer = 0.f;
   a->duration = duration;
   a->start = start;
@@ -20,13 +22,17 @@ lit_push_patrol_sensor_animator(lit_game_t* game, lit_sensor_t* sensor,  f32_t d
 static void
 lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duration, lit_edge_t  start, lit_edge_t end) 
 {
-  auto* a = &(game->animators + game->animator_count++)->patrol_edge;
+  auto* anim = game->animators + game->animator_count++;
+  anim->type = LIT_ANIMATOR_TYPE_PATROL_EDGE; 
+
+  auto* a = &anim->patrol_edge;
 
   a->timer = 0.f;
   a->duration = duration;
   a->start_edge = start;
   a->end_edge = end;
   a->edge = edge;
+
 }
 
 static void 
@@ -95,7 +101,7 @@ lit_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y)
   return edge;
 }
 
-static lit_edge_t*
+static void
 lit_push_patrolling_edge(lit_game_t* m, f32_t duration, 
                          f32_t start_min_x, f32_t start_min_y, f32_t start_max_x, f32_t start_max_y,
                          f32_t end_min_x, f32_t end_min_y, f32_t end_max_x, f32_t end_max_y) 
@@ -107,12 +113,22 @@ lit_push_patrolling_edge(lit_game_t* m, f32_t duration,
   start.end_pt = edge->end_pt;
 
   lit_edge_t end = {0};
-  start.start_pt = v2f_set(end_min_x, end_min_y);
-  start.end_pt = v2f_set(end_max_x, end_max_y);
+  end.start_pt = v2f_set(end_min_x, end_min_y);
+  end.end_pt = v2f_set(end_max_x, end_max_y);
 
   lit_push_patrol_edge_animator(m, edge, duration, start, end); 
+}
 
-  return edge;
+static void
+lit_push_patrolling_double_edge(lit_game_t* m, f32_t duration, 
+                                f32_t start_min_x, f32_t start_min_y, f32_t start_max_x, f32_t start_max_y,
+                                f32_t end_min_x, f32_t end_min_y, f32_t end_max_x, f32_t end_max_y) 
+{
+  lit_push_patrolling_edge(m, duration, start_min_x, start_min_y, start_max_x, start_max_y, 
+                           end_min_x, end_min_y, end_max_x, end_max_y);
+  lit_push_patrolling_edge(m, duration, start_max_x, start_max_y, start_min_x, start_min_y, 
+                           end_max_x, end_max_y, end_min_x, end_min_y);
+
 }
 
 
@@ -228,7 +244,7 @@ lit_gen_light_intersections(lit_light_t* l,
   l->intersection_count = 0;
   l->triangle_count = 0;
 
-  f32_t offset_angles[] = {0.0f, 0.01f, -0.01f};
+  f32_t offset_angles[] = {0.0f, 0.001f, -0.001f};
   //f32_t offset_angles[] = {0.0f};
   for (u32_t offset_index = 0;
        offset_index < array_count(offset_angles);
@@ -836,6 +852,23 @@ lit_update_game(moe_t* moe, lit_game_t* game, platform_t* platform)
   {
     lit_light_t* light = game->lights + light_index;
     lit_gen_light_intersections(light, game->edges, game->edge_count, &moe->frame_arena);
+    // Generate debug lines
+#if 1
+    {
+      for (u32_t intersection_index = 0;
+           intersection_index < light->intersection_count;
+           ++intersection_index)
+      {
+        v2f_t p0 = light->pos;
+        v2f_t p1 = light->intersections[intersection_index].pt;
+        gfx_push_line(platform->gfx, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
+
+      }
+    }
+#endif
+
+
+
   }
 
   if (!lit_is_state_exiting(game)) 

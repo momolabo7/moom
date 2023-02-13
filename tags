@@ -194,8 +194,14 @@ block_name	code/moe_profiler.h	/^  const char* block_name;$/;"	m	language:C++	st
 bonk_tri2_pt2	code/momo_bonk.h	/^bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {$/;"	f	language:C++	typeref:typename:b32_t
 boolean	build/test_json.json	/^  "boolean": true,$/;"	b	language:JSON
 boolean2	build/test_json.json	/^  "boolean2": false,$/;"	b	language:JSON
-box	code/karu.h	/^  Rect2 box;$/;"	m	language:C++	struct:karu_font_glyph_t	typeref:typename:Rect2
-box	code/moe_assets.h	/^  Rect2 box;$/;"	m	language:C++	struct:asset_font_glyph_t	typeref:typename:Rect2
+box_x0	code/karu.h	/^  f32_t box_x0;$/;"	m	language:C++	struct:karu_font_glyph_t	typeref:typename:f32_t
+box_x0	code/moe_assets.h	/^  f32_t box_x0, box_y0;$/;"	m	language:C++	struct:asset_font_glyph_t	typeref:typename:f32_t
+box_x1	code/karu.h	/^  f32_t box_x1;$/;"	m	language:C++	struct:karu_font_glyph_t	typeref:typename:f32_t
+box_x1	code/moe_assets.h	/^  f32_t box_x1, box_y1;$/;"	m	language:C++	struct:asset_font_glyph_t	typeref:typename:f32_t
+box_y0	code/karu.h	/^  f32_t box_y0;$/;"	m	language:C++	struct:karu_font_glyph_t	typeref:typename:f32_t
+box_y0	code/moe_assets.h	/^  f32_t box_x0, box_y0;$/;"	m	language:C++	struct:asset_font_glyph_t	typeref:typename:f32_t
+box_y1	code/karu.h	/^  f32_t box_y1;$/;"	m	language:C++	struct:karu_font_glyph_t	typeref:typename:f32_t
+box_y1	code/moe_assets.h	/^  f32_t box_x1, box_y1;$/;"	m	language:C++	struct:asset_font_glyph_t	typeref:typename:f32_t
 bpm_to_spb_f32	code/momo_types.h	/^bpm_to_spb_f32(f32_t bpm) {$/;"	f	language:C++	typeref:typename:f32_t
 bpm_to_spb_f64	code/momo_types.h	/^bpm_to_spb_f64(f64_t bpm) {$/;"	f	language:C++	typeref:typename:f64_t
 buffer	build/a.out.js	/^  buffer,$/;"	v	language:JavaScript
@@ -813,7 +819,6 @@ gfx_push_filled_triangle	code/moe_gfx.h	/^gfx_push_filled_triangle(gfx_t* g,$/;"
 gfx_push_filled_triangle	code/moe_gfx.h	/^static void gfx_push_filled_triangle(gfx_t* g, rgba_t colors, v2f_t p0, v2f_t p1, v2f_t p2);$/;"	p	language:C++	typeref:typename:void
 gfx_push_line	code/moe_gfx.h	/^gfx_push_line(gfx_t* g, $/;"	f	language:C++	typeref:typename:void
 gfx_push_line	code/moe_gfx.h	/^static void gfx_push_line(gfx_t* g, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors);$/;"	p	language:C++	typeref:typename:void
-gfx_push_rect_outline	code/moe_gfx.h	/^static void gfx_push_rect_outline(gfx_t* g, Rect2 rect, f32_t thickness, rgba_t colors, f32_t po/;"	p	language:C++	typeref:typename:void
 gfx_push_sprite	code/moe_gfx.h	/^gfx_push_sprite(gfx_t* g, $/;"	f	language:C++	typeref:typename:void
 gfx_push_sprite	code/moe_gfx.h	/^static void gfx_push_sprite(gfx_t* g, rgba_t colors, v2f_t pos, v2f_t size, v2f_t anchor, u32_t /;"	p	language:C++	typeref:typename:void
 gfx_push_view	code/moe_gfx.h	/^gfx_push_view(gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t p/;"	f	language:C++	typeref:typename:void
@@ -1223,7 +1228,8 @@ lit_push_box	code/lit_game.cpp	/^lit_push_box(lit_game_t* m, f32_t min_x, f32_t 
 lit_push_double_edge	code/lit_game.cpp	/^lit_push_double_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_push_edge	code/lit_game.cpp	/^lit_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {$/;"	f	language:C++	typeref:typename:lit_edge_t *	file:
 lit_push_light	code/lit_game.cpp	/^lit_push_light(lit_game_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle, f32_t turn) {$/;"	f	language:C++	typeref:typename:lit_light_t *	file:
-lit_push_patrolling_edge	code/lit_game.cpp	/^lit_push_patrolling_edge(lit_game_t* m, f32_t duration, $/;"	f	language:C++	typeref:typename:lit_edge_t *	file:
+lit_push_patrolling_double_edge	code/lit_game.cpp	/^lit_push_patrolling_double_edge(lit_game_t* m, f32_t duration, $/;"	f	language:C++	typeref:typename:void	file:
+lit_push_patrolling_edge	code/lit_game.cpp	/^lit_push_patrolling_edge(lit_game_t* m, f32_t duration, $/;"	f	language:C++	typeref:typename:void	file:
 lit_push_patrolling_sensor	code/lit_game.cpp	/^lit_push_patrolling_sensor(lit_game_t* game, f32_t duration, v2f_t start, v2f_t end, u32_t targe/;"	f	language:C++	typeref:typename:void	file:
 lit_push_patrol_edge_animator	code/lit_game.cpp	/^lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duration, lit_edge_t  s/;"	f	language:C++	typeref:typename:void	file:
 lit_push_patrol_sensor_animator	code/lit_game.cpp	/^lit_push_patrol_sensor_animator(lit_game_t* game, lit_sensor_t* sensor,  f32_t duration, v2f_t s/;"	f	language:C++	typeref:typename:void	file:
@@ -1296,7 +1302,6 @@ main	code/web.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main_arena	code/moe.h	/^  arena_t main_arena;$/;"	m	language:C++	struct:moe_t	typeref:typename:arena_t
 make	code/momo_types.h	/^#define make(/;"	d	language:C++
 max	code/moe_profiler_rendering.h	/^  f64_t max;$/;"	m	language:C++	struct:profiler_stat_t	typeref:typename:f64_t
-max	code/momo_bonk.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:Rect2	typeref:typename:v2f_t
 maxp	code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 max_of	code/momo_types.h	/^#define max_of(/;"	d	language:C++
 max_x	code/moe_gfx.h	/^  f32_t min_x, max_x;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
@@ -1333,7 +1338,6 @@ META_TOKEN_TYPE_STRING	code/meta.cpp	/^  META_TOKEN_TYPE_STRING,$/;"	e	language:
 META_TOKEN_TYPE_UNKNOWN	code/meta.cpp	/^  META_TOKEN_TYPE_UNKNOWN,$/;"	e	language:C++	enum:Meta_Token_Type	file:
 meta_update_profiler_codegen	code/meta.cpp	/^meta_update_profiler_codegen(Profiler_Codegen* p, Meta_Tokenizer* t, Meta_Token token) {$/;"	f	language:C++	typeref:typename:void	file:
 min	code/moe_profiler_rendering.h	/^  f64_t min;$/;"	m	language:C++	struct:profiler_stat_t	typeref:typename:f64_t
-min	code/momo_bonk.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:Rect2	typeref:typename:v2f_t
 min_of	code/momo_types.h	/^#define min_of(/;"	d	language:C++
 min_x	code/moe_gfx.h	/^  f32_t min_x, max_x;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
 min_y	code/moe_gfx.h	/^  f32_t min_y, max_y;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
@@ -1774,7 +1778,6 @@ rear	code/gist_ring_buffer.cpp	/^  u32_t rear;$/;"	m	language:C++	struct:gist_rb
 receiveInstance	build/a.out.js	/^  function receiveInstance(instance, module) {$/;"	f	language:JavaScript	function:createWasm
 receiveInstantiationResult	build/a.out.js	/^  function receiveInstantiationResult(result) {$/;"	f	language:JavaScript	function:createWasm
 rect	code/sui_atlas.h	/^  rp_rect_t* rect;$/;"	m	language:C++	struct:sui_atlas_sprite_t	typeref:typename:rp_rect_t *
-Rect2	code/momo_bonk.h	/^struct Rect2 {$/;"	s	language:C++
 rect_context	code/sui_atlas.h	/^  sui_atlas_context_t* rect_context;$/;"	m	language:C++	struct:sui_atlas_sprite_t	typeref:typename:sui_atlas_context_t *
 rect_count	code/sui_atlas.h	/^  u32_t rect_count;$/;"	m	language:C++	struct:sui_atlas_font_t	typeref:typename:u32_t
 ref	code/w32_audio_wasapi.h	/^  LONG ref;$/;"	m	language:C++	struct:w32_wasapi_notif_client_t	typeref:typename:LONG
