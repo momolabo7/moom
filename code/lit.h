@@ -1,7 +1,7 @@
 #ifndef MOE_MODE_LIT_H
 #define MOE_MODE_LIT_H
 
-#define LIT_DEBUG_LIGHT 0
+#define LIT_DEBUG_INTERSECTIONS 0
 #define LIT_DEBUG_COORDINATES 1
 
 #define LIT_WIDTH  800.f
@@ -103,5 +103,22 @@ lit_tick(moe_t* moe, lit_t* lit, platform_t* platform) {
 }
 
 
+static void
+lit_tick_v2(moe_t* moe) {
+  assets_t* assets = &moe->assets;
+  platform_t* platform = moe->platform;
+
+  if(moe->game_context == nullptr) {
+    auto* lit_memory = platform->allocate_memory(sizeof(lit_t));
+    moe->game_context = lit_memory;
+
+    auto* lit = (lit_t*)((platform_memory_t*)moe->game_context)->data;
+    lit_init(moe, lit, platform);
+  }
+
+  auto* lit = (lit_t*)((platform_memory_t*)moe->game_context)->data;
+  lit_tick(moe, lit, platform);
+
+}
 
 #endif 

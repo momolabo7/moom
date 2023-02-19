@@ -1,8 +1,5 @@
 #include "moe.h"
 
-/////////////////////////////////////////////////////////
-// GAME
-// 
 exported b32_t 
 moe_update_and_render(platform_t* pf)
 { 
@@ -42,7 +39,7 @@ moe_update_and_render(platform_t* pf)
     }
 
 
-    // Initialize Debug console_t
+    // Initialize Debug Console
     console_t* console = &moe->console;
     console_init(console, &moe->debug_arena);
     
@@ -64,7 +61,8 @@ moe_update_and_render(platform_t* pf)
   console_t* console = &moe->console;
 
  
-  game_tick(moe);
+  //game_tick(moe);
+  lit_tick_v2(moe);
 
   // Debug Rendering Stuff
   if (platform_is_button_poked(pf->button_console)) {

@@ -447,8 +447,6 @@ lit_draw_edges(moe_t* moe, lit_game_t* game) {
   for(u32_t edge_index = 0; edge_index < game->edge_count; ++edge_index) 
   {
     lit_edge_t* edge = game->edges + edge_index;
-    //if (edge->is_disabled) continue;
-
     gfx_push_line(platform->gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
   }
   gfx_advance_depth(platform->gfx);
@@ -848,26 +846,24 @@ lit_update_game(moe_t* moe, lit_game_t* game, platform_t* platform)
     lit_update_player(moe, game, dt);
   }
 
+
   for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
   {
     lit_light_t* light = game->lights + light_index;
     lit_gen_light_intersections(light, game->edges, game->edge_count, &moe->frame_arena);
+
+#if LIT_DEBUG_INTERSECTIONS
     // Generate debug lines
-#if 1
+    for (u32_t intersection_index = 0;
+         intersection_index < light->intersection_count;
+         ++intersection_index)
     {
-      for (u32_t intersection_index = 0;
-           intersection_index < light->intersection_count;
-           ++intersection_index)
-      {
-        v2f_t p0 = light->pos;
-        v2f_t p1 = light->intersections[intersection_index].pt;
-        gfx_push_line(platform->gfx, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
-
-      }
+      v2f_t p0 = light->pos;
+      v2f_t p1 = light->intersections[intersection_index].pt;
+      gfx_push_line(platform->gfx, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
     }
+
 #endif
-
-
 
   }
 

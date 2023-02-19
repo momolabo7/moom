@@ -8,6 +8,8 @@
 static void 
 game_tick(moe_t* moe) 
 {
+  
+
   assets_t* assets = &moe->assets;
   platform_t* platform = moe->platform;
 

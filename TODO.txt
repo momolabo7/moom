@@ -1,12 +1,14 @@
-moe_t
+Moe
   Expandable arena for platform, instead of just calling VirtualAlloc every time
 
-lit_t Scene
+Lit
   Level selection (after we make 10 levels I guess)
   Improve game end transitions
   Each level should have a title before showing the level
+  Remove game.h. 
 
-assets_t 
+
+Assets 
   9 Slice 
   Audio/Sound
 
