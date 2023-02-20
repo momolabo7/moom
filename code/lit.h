@@ -29,6 +29,15 @@
 
 #include "lit_game.h"
 
+enum lit_show_debug_type_t {
+  LIT_SHOW_DEBUG_NONE,
+  LIT_SHOW_DEBUG_PROFILER,
+  LIT_SHOW_DEBUG_CONSOLE,
+  LIT_SHOW_DEBUG_INSPECTOR,
+  
+  LIT_SHOW_DEBUG_MAX
+};
+
 enum lit_mode_t {
   LIT_MODE_SPLASH,
   LIT_MODE_MENU,
@@ -43,6 +52,7 @@ struct lit_menu_t {
 };
 
 struct lit_t {
+  lit_show_debug_type_t show_debug_type;
   lit_mode_t next_mode;
   lit_mode_t mode;
   union {
@@ -50,6 +60,10 @@ struct lit_t {
     lit_game_t game;
     lit_menu_t menu;
   };
+
+  asset_sprite_id_t blank_sprite;
+  asset_font_id_t debug_font;
+
 };
 
 static void
@@ -114,10 +128,38 @@ lit_tick_v2(moe_t* moe) {
 
     auto* lit = (lit_t*)((platform_memory_t*)moe->game_context)->data;
     lit_init(moe, lit, platform);
+
+    lit->blank_sprite = find_first_sprite(&moe->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
+    // Debug font
+    {
+      make(asset_match_t, match);
+      set_match_entry(match, ASSET_TAG_TYPE_FONT, 1.f, 1.f);
+      lit->debug_font = find_best_font(&moe->assets, ASSET_GROUP_TYPE_FONTS, match);
+    }
+
+
   }
 
   auto* lit = (lit_t*)((platform_memory_t*)moe->game_context)->data;
   lit_tick(moe, lit, platform);
+
+  // Debug
+  if (platform_is_button_poked(platform->button_console)) {
+    lit->show_debug_type = 
+      (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
+  }
+  switch (lit->show_debug_type) {
+    case MOE_SHOW_DEBUG_CONSOLE: {
+      moe_console_update_and_render(moe, lit->blank_sprite, lit->debug_font); 
+    }break;
+    case MOE_SHOW_DEBUG_PROFILER: {
+      profiler_update_and_render(moe, lit->blank_sprite, lit->debug_font); 
+    }break;
+    case MOE_SHOW_DEBUG_INSPECTOR: {
+      inspector_update_and_render(moe, lit->blank_sprite, lit->debug_font);
+    }break;
+    default: {}
+  }
 
 }
 

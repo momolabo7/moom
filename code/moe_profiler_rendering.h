@@ -42,7 +42,7 @@ profiler_end_stat(profiler_stat_t* stat) {
 }
 
 static void
-profiler_update_and_render(moe_t* moe) 
+profiler_update_and_render(moe_t* moe, asset_sprite_id_t blank_sprite, asset_font_id_t font) 
 {
   profiler_t* profiler = moe->platform->profiler;
   platform_t* platform = moe->platform;
@@ -51,7 +51,7 @@ profiler_update_and_render(moe_t* moe)
   const f32_t font_height = 20.f;
 
   // Overlay
-  moe_painter_draw_sprite(moe, moe->blank_sprite, 
+  moe_painter_draw_sprite(moe, blank_sprite, 
                           v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
                           v2f_set(MOE_WIDTH, MOE_HEIGHT),
                           rgba_set(0.f, 0.f, 0.f, 0.5f));
@@ -99,7 +99,7 @@ profiler_update_and_render(moe_t* moe)
                  (u32_t)hits.average,
                  (u32_t)cycles_per_hit.average);
     
-    moe_painter_draw_text(moe, moe->debug_font, 
+    moe_painter_draw_text(moe, font, 
                           sb->str,
                           rgba_hex(0xFFFFFFFF),
                           0.f, 
@@ -128,7 +128,7 @@ profiler_update_and_render(moe_t* moe)
       v2f_t size = {snapshot_bar_width, snapshot_bar_height};
       
       
-      moe_painter_draw_sprite(moe, moe->blank_sprite, pos, size, rgba_hex(0x00FF00FF));
+      moe_painter_draw_sprite(moe, blank_sprite, pos, size, rgba_hex(0x00FF00FF));
     }
     moe_painter_advance_depth(moe);
     ++line_num;

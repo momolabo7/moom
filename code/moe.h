@@ -66,9 +66,6 @@ typedef struct moe_t {
   inspector_t inspector;
   platform_t* platform;
 
-  // Interested moe assets
-  asset_sprite_id_t blank_sprite;
-  asset_font_id_t debug_font;
 } moe_t;
 
 

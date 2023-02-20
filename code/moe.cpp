@@ -30,14 +30,6 @@ moe_update_and_render(platform_t* pf)
     if(!moe_init_assets(moe, "test_pack.sui"))
       return false;
    
-    moe->blank_sprite = find_first_sprite(&moe->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
-    // Debug font
-    {
-      make(asset_match_t, match);
-      set_match_entry(match, ASSET_TAG_TYPE_FONT, 1.f, 1.f);
-      moe->debug_font = find_best_font(&moe->assets, ASSET_GROUP_TYPE_FONTS, match);
-    }
-
 
     // Initialize Debug Console
     moe_console_t* console = &moe->console;
@@ -65,25 +57,10 @@ moe_update_and_render(platform_t* pf)
   lit_tick_v2(moe);
 
   // Debug Rendering Stuff
-  if (platform_is_button_poked(pf->button_console)) {
-    moe->show_debug_type = 
-      (moe_show_debug_type_t)((moe->show_debug_type + 1)%MOE_SHOW_DEBUG_MAX);
-  }
+  
 
-  moe_profile_begin(DEBUG);
-  switch (moe->show_debug_type) {
-    case MOE_SHOW_DEBUG_CONSOLE: {
-      moe_console_update_and_render(moe, moe->blank_sprite, moe->debug_font); 
-    }break;
-    case MOE_SHOW_DEBUG_PROFILER: {
-      profiler_update_and_render(moe); 
-    }break;
-    case MOE_SHOW_DEBUG_INSPECTOR: {
-      inspector_update_and_render(moe);
-    }break;
-    default: {}
-  }
-  moe_profile_end(DEBUG);
+  //moe_profile_begin(DEBUG);
+  //moe_profile_end(DEBUG);
 
 #if 0 
   static f32_t sine = 0.f;
