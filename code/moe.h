@@ -62,7 +62,7 @@ typedef struct moe_t {
 
   // Other stuff
   assets_t assets;
-  console_t console;
+  moe_console_t console;
   inspector_t inspector;
   platform_t* platform;
 

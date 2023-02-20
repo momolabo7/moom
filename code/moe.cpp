@@ -40,8 +40,8 @@ moe_update_and_render(platform_t* pf)
 
 
     // Initialize Debug Console
-    console_t* console = &moe->console;
-    console_init(console, &moe->debug_arena);
+    moe_console_t* console = &moe->console;
+    moe_console_init(console, 256, &moe->debug_arena);
     
     moe->show_debug_type = MOE_SHOW_DEBUG_NONE;
     moe->is_done = false;
@@ -58,7 +58,7 @@ moe_update_and_render(platform_t* pf)
  
   moe_t* moe = (moe_t*)((platform_memory_t*)pf->moe_data)->data;
   moe_profile_block(GAME);
-  console_t* console = &moe->console;
+  moe_console_t* console = &moe->console;
 
  
   //game_tick(moe);
@@ -73,7 +73,7 @@ moe_update_and_render(platform_t* pf)
   moe_profile_begin(DEBUG);
   switch (moe->show_debug_type) {
     case MOE_SHOW_DEBUG_CONSOLE: {
-      console_update_and_render(moe); 
+      moe_console_update_and_render(moe, moe->blank_sprite, moe->debug_font); 
     }break;
     case MOE_SHOW_DEBUG_PROFILER: {
       profiler_update_and_render(moe); 
