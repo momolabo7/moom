@@ -61,6 +61,8 @@ struct lit_t {
     lit_menu_t menu;
   };
 
+
+  assets_t assets;
   asset_sprite_id_t blank_sprite;
   asset_font_id_t debug_font;
 
@@ -130,6 +132,7 @@ lit_tick_v2(moe_t* moe) {
     lit_init(moe, lit, platform);
 
     lit->blank_sprite = find_first_sprite(&moe->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
+
     // Debug font
     {
       make(asset_match_t, match);
