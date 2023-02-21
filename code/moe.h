@@ -32,21 +32,11 @@
 
 
 
-enum moe_show_debug_type_t {
-  MOE_SHOW_DEBUG_NONE,
-  MOE_SHOW_DEBUG_PROFILER,
-  MOE_SHOW_DEBUG_CONSOLE,
-  MOE_SHOW_DEBUG_INSPECTOR,
-  
-  MOE_SHOW_DEBUG_MAX
-};
 
 typedef void (*game_tick_f)(struct moe_t*);
 
 
 typedef struct moe_t {
-  moe_show_debug_type_t show_debug_type;
-  
   // Arenas
   arena_t main_arena;
 
@@ -62,7 +52,7 @@ typedef struct moe_t {
 
   // Other stuff
   assets_t assets;
-  moe_console_t console;
+  console_t console;
   inspector_t inspector;
   platform_t* platform;
 

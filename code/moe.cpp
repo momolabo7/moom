@@ -32,10 +32,9 @@ moe_update_and_render(platform_t* pf)
    
 
     // Initialize Debug Console
-    moe_console_t* console = &moe->console;
-    moe_console_init(console, 256, &moe->debug_arena);
+    console_t* console = &moe->console;
+    console_init(console, 256, &moe->debug_arena);
     
-    moe->show_debug_type = MOE_SHOW_DEBUG_NONE;
     moe->is_done = false;
     
     // Inform platform what our moe's dimensions are
@@ -50,7 +49,7 @@ moe_update_and_render(platform_t* pf)
  
   moe_t* moe = (moe_t*)((platform_memory_t*)pf->moe_data)->data;
   moe_profile_block(GAME);
-  moe_console_t* console = &moe->console;
+  console_t* console = &moe->console;
 
  
   //game_tick(moe);

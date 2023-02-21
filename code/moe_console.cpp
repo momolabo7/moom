@@ -1,5 +1,5 @@
 static void
-moe_console_init(moe_console_t* dc, u32_t characters_per_line, arena_t* allocator) 
+console_init(console_t* dc, u32_t characters_per_line, arena_t* allocator) 
 {
   u32_t line_size = characters_per_line;
   sb8_init(&dc->input_line,
@@ -18,17 +18,17 @@ moe_console_init(moe_console_t* dc, u32_t characters_per_line, arena_t* allocato
 }
 
 static void
-moe_console_add_command(moe_console_t* dc, str8_t key, void* ctx, void(*func)(void*)) 
+console_add_command(console_t* dc, str8_t key, void* ctx, void(*func)(void*)) 
 {
   // simulate adding commands
-  moe_console_command_t* cmd = dc->commands + dc->command_count++;
+  console_command_t* cmd = dc->commands + dc->command_count++;
   cmd->key = key;
   cmd->ctx = ctx;
   cmd->func = func;
 }
 
 static void
-_moe_console_push_info(moe_console_t* dc, str8_t str) {
+_console_push_info(console_t* dc, str8_t str) {
   // NOTE(Momo): There's probably a better to do with via some
   // crazy indexing scheme, but this is debug so we don't care for now
   
@@ -48,26 +48,26 @@ _moe_console_push_info(moe_console_t* dc, str8_t str) {
 }
 
 static void
-_moe_console_execute(moe_console_t* dc) {
+_console_execute(console_t* dc) {
   for(u32_t command_index = 0; 
       command_index < dc->command_count; 
       ++command_index) 
   {
-    moe_console_command_t* cmd = dc->commands + command_index;
+    console_command_t* cmd = dc->commands + command_index;
     if (str8_match(cmd->key, dc->input_line.str)) {
       cmd->func(cmd->ctx);
     }
   }
   
-  _moe_console_push_info(dc, dc->input_line.str);
+  _console_push_info(dc, dc->input_line.str);
   sb8_clear(&dc->input_line);
 }
 
 static void
-moe_console_update_and_render(moe_t* moe, asset_sprite_id_t blank_sprite, asset_font_id_t font) 
+console_update_and_render(moe_t* moe, asset_sprite_id_t blank_sprite, asset_font_id_t font) 
 {
   platform_t* platform = moe->platform;
-  moe_console_t* dc = &moe->console;
+  console_t* dc = &moe->console;
   for (u32_t char_index = 0; 
        char_index < platform->char_count;
        ++char_index) 
@@ -84,7 +84,7 @@ moe_console_update_and_render(moe_t* moe, asset_sprite_id_t blank_sprite, asset_
     }    
     
     if (c == '\r') {
-      _moe_console_execute(dc);
+      _console_execute(dc);
       break;
     }
   }

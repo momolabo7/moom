@@ -65,7 +65,7 @@ moe_painter_draw_text(moe_t* moe, asset_font_id_t font_id, str8_t str, rgba_t co
     
     v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py + (glyph->box_y0*font_height));
     v2f_t size = v2f_set(width, height);
-    v2f_t anchor = {0.f, 0.f}; // bottom left
+    v2f_t anchor = v2f_set(0.f, 0.f); // bottom left
     gfx_push_sprite(platform->gfx, 
                     color,
                     pos, size, anchor,

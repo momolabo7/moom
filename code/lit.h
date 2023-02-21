@@ -149,13 +149,13 @@ lit_tick_v2(moe_t* moe) {
       (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
   }
   switch (lit->show_debug_type) {
-    case MOE_SHOW_DEBUG_CONSOLE: {
-      moe_console_update_and_render(moe, lit->blank_sprite, lit->debug_font); 
+    case LIT_SHOW_DEBUG_CONSOLE: {
+      console_update_and_render(moe, lit->blank_sprite, lit->debug_font); 
     }break;
-    case MOE_SHOW_DEBUG_PROFILER: {
+    case LIT_SHOW_DEBUG_PROFILER: {
       profiler_update_and_render(moe, lit->blank_sprite, lit->debug_font); 
     }break;
-    case MOE_SHOW_DEBUG_INSPECTOR: {
+    case LIT_SHOW_DEBUG_INSPECTOR: {
       inspector_update_and_render(moe, lit->blank_sprite, lit->debug_font);
     }break;
     default: {}
