@@ -45,8 +45,8 @@ typedef struct moe_t {
   arena_t debug_arena;
   arena_t frame_arena;
 
-  // Mode Management 
   b32_t is_done;
+
   //b32_t is_scene_changed;
   void* game_context;
 
@@ -63,7 +63,6 @@ typedef struct moe_t {
 
 #include "moe_game_api.h"
 
-#include "moe_asset_rendering.h"
 #include "moe_inspector_rendering.h"
 #include "moe_profiler_rendering.h"
 #include "moe_console.cpp"
