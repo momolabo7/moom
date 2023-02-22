@@ -27,8 +27,8 @@ moe_update_and_render(platform_t* pf)
     if (!arena_partition(&moe->main_arena, &moe->frame_arena, megabytes(1), 16)) 
       return false;
    
-    if(!moe_init_assets(moe, "test_pack.sui"))
-      return false;
+    //if(!moe_init_assets(moe, "test_pack.sui"))
+    //  return false;
    
 
     // Initialize Debug Console

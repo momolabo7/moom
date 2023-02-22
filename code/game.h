@@ -3,7 +3,7 @@
 
 #include "lit.h"
 
-
+#if 0
 
 static void 
 game_tick(moe_t* moe) 
@@ -25,6 +25,6 @@ game_tick(moe_t* moe)
   lit_tick(moe, lit, platform);
 }
 
-
+#endif
 
 #endif

@@ -31,8 +31,6 @@
 #include "moe_console.h"
 
 
-
-
 typedef void (*game_tick_f)(struct moe_t*);
 
 

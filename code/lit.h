@@ -48,7 +48,6 @@ struct lit_splash_t {
 };
 
 struct lit_menu_t {
-
 };
 
 struct lit_t {
@@ -60,7 +59,13 @@ struct lit_t {
     lit_game_t game;
     lit_menu_t menu;
   };
+  // Arenas
+  arena_t main_arena;
 
+  // Sub arenas
+  arena_t asset_arena;
+  arena_t debug_arena;
+  arena_t frame_arena;
 
   assets_t assets;
   asset_sprite_id_t blank_sprite;
@@ -68,54 +73,15 @@ struct lit_t {
 
 };
 
-static void
-lit_init_splash(moe_t* moe, lit_splash_t* splash, platform_t* platform) {
 
-}
-
-static void
-lit_update_splash(moe_t* moe, lit_splash_t* splash, platform_t* platform) {
-
-}
 
 #include "lit_game.cpp"
 #include "lit_levels.h"
 
-static void
-lit_init(moe_t* moe, lit_t* lit, platform_t* platform)
-{
-  lit->next_mode = LIT_MODE_GAME; 
-}
+
 
 static void
 lit_tick(moe_t* moe, lit_t* lit, platform_t* platform) {
-  if (lit->next_mode != lit->mode || platform->reloaded) {
-    lit->mode = lit->next_mode;
-    
-    switch(lit->mode) {
-      case LIT_MODE_SPLASH: {
-        lit_init_splash(moe, &lit->splash, platform);
-      } break;
-      case LIT_MODE_GAME: {
-        lit_init_game(moe, &lit->game, platform);
-      } break;
-      case LIT_MODE_MENU: {
-      } break;
-
-    }
-  }
-  switch(lit->mode) {
-    case LIT_MODE_SPLASH: {
-      lit_update_splash(moe, &lit->splash, platform);
-    } break;
-    case LIT_MODE_GAME: {
-      lit_update_game(moe, &lit->game, platform);
-      lit_render_game(moe, &lit->game, platform);
-    } break;
-    case LIT_MODE_MENU: {
-    } break;
-
-  }
 }
 
 
@@ -129,7 +95,14 @@ lit_tick_v2(moe_t* moe) {
     moe->game_context = lit_memory;
 
     auto* lit = (lit_t*)((platform_memory_t*)moe->game_context)->data;
-    lit_init(moe, lit, platform);
+    lit->next_mode = LIT_MODE_GAME; 
+
+
+    // TODO:Error checking
+    // TODO: Better memory management
+    auto* asset_memory = platform->allocate_memory(megabytes(20));
+    arena_init(&lit->asset_arena, asset_memory->data, asset_memory->size);
+    assets_init(assets, platform, "test_pack.sui", &lit->asset_arena);
 
     lit->blank_sprite = find_first_sprite(&moe->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
 
@@ -140,11 +113,37 @@ lit_tick_v2(moe_t* moe) {
       lit->debug_font = find_best_font(&moe->assets, ASSET_GROUP_TYPE_FONTS, match);
     }
 
-
   }
 
+  // Update lit
   auto* lit = (lit_t*)((platform_memory_t*)moe->game_context)->data;
-  lit_tick(moe, lit, platform);
+  if (lit->next_mode != lit->mode || platform->reloaded) {
+    lit->mode = lit->next_mode;
+    
+    switch(lit->mode) {
+      case LIT_MODE_SPLASH: {
+        //lit_init_splash(moe, &lit->splash, platform);
+      } break;
+      case LIT_MODE_GAME: {
+        lit_init_game(moe, &lit->game, platform);
+      } break;
+      case LIT_MODE_MENU: {
+      } break;
+
+    }
+  }
+  switch(lit->mode) {
+    case LIT_MODE_SPLASH: {
+      //lit_update_splash(moe, &lit->splash, platform);
+    } break;
+    case LIT_MODE_GAME: {
+      lit_update_game(moe, &lit->game, platform);
+      lit_render_game(moe, &lit->game, platform);
+    } break;
+    case LIT_MODE_MENU: {
+    } break;
+
+  }
 
   // Debug
   if (platform_is_button_poked(platform->button_console)) {

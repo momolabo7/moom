@@ -16,19 +16,16 @@ get_next_texture_handle() {
 }
 
 static b32_t 
-moe_init_assets(moe_t* moe, const char* filename) 
+assets_init(assets_t* assets, platform_t* platform, const char* filename, arena_t* arena) 
 {
-
-  arena_t* arena = &moe->asset_arena;
-  assets_t* ma = &moe->assets;
-  platform_t* platform = moe->platform;
-
   make(platform_file_t, file);
   b32_t ok = platform->open_file(file,
-                               filename,
-                               PLATFORM_FILE_ACCESS_READ, 
-                               PLATFORM_FILE_PATH_EXE);
-  if (!ok) return false;
+                                 filename,
+                                 PLATFORM_FILE_ACCESS_READ, 
+                                 PLATFORM_FILE_PATH_EXE);
+  if (!ok) {
+    return false;
+  }
 
   // Read header
   karu_header_t karu_header;
@@ -36,20 +33,20 @@ moe_init_assets(moe_t* moe, const char* filename)
   if (karu_header.signature != KARU_SIGNATURE) return false;
 
   // Allocation for asset components (asset slots and tags)
-  ma->asset_slots = arena_push_arr(asset_slot_t, arena, karu_header.asset_count);
-  if (!ma->asset_slots) return false;
-  ma->asset_count = karu_header.asset_count;
+  assets->asset_slots = arena_push_arr(asset_slot_t, arena, karu_header.asset_count);
+  if (!assets->asset_slots) return false;
+  assets->asset_count = karu_header.asset_count;
   
-  ma->tags = arena_push_arr(asset_tag_t, arena, karu_header.tag_count);
-  if (!ma->tags) return false;
-  ma->tag_count = karu_header.tag_count;
+  assets->tags = arena_push_arr(asset_tag_t, arena, karu_header.tag_count);
+  if (!assets->tags) return false;
+  assets->tag_count = karu_header.tag_count;
 
   // Fill data for tags
   for (u32_t tag_index = 0;
-       tag_index < ma->tag_count; 
+       tag_index < assets->tag_count; 
        ++tag_index) 
   {
-    asset_tag_t* tag = ma->tags + tag_index;
+    asset_tag_t* tag = assets->tags + tag_index;
     umi_t offset_to_tag = karu_header.offset_to_tags + sizeof(karu_tag_t)*tag_index;
 
     karu_tag_t karu_tag;
@@ -64,7 +61,7 @@ moe_init_assets(moe_t* moe, const char* filename)
       group_index < karu_header.group_count;
       ++group_index) 
   {
-    asset_group_t* group = ma->groups + group_index;
+    asset_group_t* group = assets->groups + group_index;
     {
       // Look for corresponding Sui_Asset_Group in file
       karu_group_t karu_group;
@@ -87,7 +84,7 @@ moe_init_assets(moe_t* moe, const char* filename)
          asset_index < group->one_past_last_asset_index;
          ++asset_index) 
     {
-      asset_slot_t* asset = ma->asset_slots + asset_index;
+      asset_slot_t* asset = assets->asset_slots + asset_index;
        
       karu_asset_t karu_asset;
       umi_t offset_to_karu_asset = 
@@ -206,16 +203,16 @@ moe_init_assets(moe_t* moe, const char* filename)
 }
 
 static u32_t
-find_first_asset_of_type(assets_t* ma, 
+find_first_asset_of_type(assets_t* assets, 
                         Asset_Group_Type group_type, 
                         Asset_Type type) 
 {
-  asset_group_t* group = ma->groups + group_type;
+  asset_group_t* group = assets->groups + group_type;
   for (u32_t asset_index = group->first_asset_index;
        asset_index != group->one_past_last_asset_index;
        ++asset_index ) 
   {
-    asset_slot_t* asset = ma->asset_slots + asset_index;
+    asset_slot_t* asset = assets->asset_slots + asset_index;
     if (asset->type == type) {
       return asset_index;      
     }
@@ -224,19 +221,19 @@ find_first_asset_of_type(assets_t* ma,
 }
 
 static u32_t 
-find_best_asset_of_type(assets_t* ma, 
+find_best_asset_of_type(assets_t* assets, 
                         Asset_Group_Type group_type, 
                         Asset_Type asset_type,
                         asset_match_t* vector)
 {
   u32_t ret = 0;
   f32_t best_diff = F32_INFINITY;
-  asset_group_t* group = ma->groups + group_type;
+  asset_group_t* group = assets->groups + group_type;
   for (u32_t asset_index = group->first_asset_index;
        asset_index != group->one_past_last_asset_index;
        ++asset_index ) 
   {
-    asset_slot_t* asset = ma->asset_slots + asset_index;
+    asset_slot_t* asset = assets->asset_slots + asset_index;
     if (asset->type != asset_type) {
       continue;
     }
@@ -246,7 +243,7 @@ find_best_asset_of_type(assets_t* ma,
         tag_index < asset->one_past_last_tag_index;
         ++tag_index) 
     {
-      asset_tag_t* tag = ma->tags + tag_index;
+      asset_tag_t* tag = assets->tags + tag_index;
       f32_t difference = vector->e[tag->type].tag_value_to_match - tag->value;
       f32_t weighted = vector->e[tag->type].tag_weight*f32_abs(difference);
       total_weighted_diff = weighted;
@@ -297,60 +294,60 @@ get_glyph(asset_font_t* font, u32_t codepoint) {
 }
 
 static asset_slot_t*
-get_asset_slot(assets_t* ma, u32_t asset_index){
-  return ma->asset_slots + asset_index;
+get_asset_slot(assets_t* assets, u32_t asset_index){
+  return assets->asset_slots + asset_index;
 }
 
 static asset_bitmap_t*
-get_bitmap(assets_t* ma, asset_bitmap_id_t bitmap_id) {
-  asset_slot_t* asset = get_asset_slot(ma, bitmap_id.value);
+get_bitmap(assets_t* assets, asset_bitmap_id_t bitmap_id) {
+  asset_slot_t* asset = get_asset_slot(assets, bitmap_id.value);
   if(asset->type != ASSET_TYPE_BITMAP) return nullptr;
   return &asset->bitmap;
 }
 
 static asset_sprite_t*
-get_sprite(assets_t* ma, asset_sprite_id_t sprite_id) {
-  asset_slot_t* asset = get_asset_slot(ma, sprite_id.value);
+get_sprite(assets_t* assets, asset_sprite_id_t sprite_id) {
+  asset_slot_t* asset = get_asset_slot(assets, sprite_id.value);
   if(asset->type != ASSET_TYPE_SPRITE) return nullptr;
   return &asset->sprite;
 }
 
 static asset_font_t*
-get_font(assets_t* ma, asset_font_id_t font_id) {
-  asset_slot_t* asset = get_asset_slot(ma, font_id.value);
+get_font(assets_t* assets, asset_font_id_t font_id) {
+  asset_slot_t* asset = get_asset_slot(assets, font_id.value);
   if(asset->type != ASSET_TYPE_FONT) return nullptr;
   return &asset->font;
 }
 static asset_bitmap_id_t
-find_first_bitmap(assets_t* ma, Asset_Group_Type group_type) {
-  return { find_first_asset_of_type(ma, group_type, ASSET_TYPE_BITMAP) };
+find_first_bitmap(assets_t* assets, Asset_Group_Type group_type) {
+  return { find_first_asset_of_type(assets, group_type, ASSET_TYPE_BITMAP) };
 }
 
 static asset_font_id_t
-find_first_font(assets_t* ma, Asset_Group_Type group_type) {
-  return { find_first_asset_of_type(ma, group_type, ASSET_TYPE_FONT) };
+find_first_font(assets_t* assets, Asset_Group_Type group_type) {
+  return { find_first_asset_of_type(assets, group_type, ASSET_TYPE_FONT) };
 }
 
 static asset_sprite_id_t
-find_first_sprite(assets_t* ma, Asset_Group_Type group_type) {
-  return { find_first_asset_of_type(ma, group_type, ASSET_TYPE_SPRITE) };
+find_first_sprite(assets_t* assets, Asset_Group_Type group_type) {
+  return { find_first_asset_of_type(assets, group_type, ASSET_TYPE_SPRITE) };
 }
 
 static asset_sprite_id_t
-find_best_sprite(assets_t* ma, 
+find_best_sprite(assets_t* assets, 
                  Asset_Group_Type group_type, 
                  asset_match_t* match_vector)
 {
-  return { find_best_asset_of_type(ma, group_type, ASSET_TYPE_SPRITE, match_vector) };
+  return { find_best_asset_of_type(assets, group_type, ASSET_TYPE_SPRITE, match_vector) };
   
 }
 
 static asset_font_id_t
-find_best_font(assets_t* ma, 
+find_best_font(assets_t* assets, 
                Asset_Group_Type group_type, 
                asset_match_t* match_vector)
 {
-  return { find_best_asset_of_type(ma, group_type, ASSET_TYPE_FONT, match_vector) };
+  return { find_best_asset_of_type(assets, group_type, ASSET_TYPE_FONT, match_vector) };
   
 }
 
