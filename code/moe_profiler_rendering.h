@@ -42,20 +42,18 @@ profiler_end_stat(profiler_stat_t* stat) {
 }
 
 static void
-profiler_update_and_render(moe_t* moe, asset_sprite_id_t blank_sprite, asset_font_id_t font) 
+profiler_update_and_render(profiler_t* profiler, gfx_t* gfx, assets_t* assets,  asset_sprite_id_t blank_sprite, asset_font_id_t font) 
 {
-  profiler_t* profiler = moe->platform->profiler;
-  platform_t* platform = moe->platform;
   const f32_t render_width = MOE_WIDTH;
   const f32_t render_height = MOE_HEIGHT;
   const f32_t font_height = 20.f;
 
   // Overlay
-  moe_painter_draw_sprite(moe, blank_sprite, 
+  moe_painter_draw_sprite(gfx, assets, blank_sprite, 
                           v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
                           v2f_set(MOE_WIDTH, MOE_HEIGHT),
                           rgba_set(0.f, 0.f, 0.f, 0.5f));
-  moe_painter_advance_depth(moe);
+  gfx_advance_depth(gfx);
   
   u32_t line_num = 1;
   
@@ -99,13 +97,13 @@ profiler_update_and_render(moe_t* moe, asset_sprite_id_t blank_sprite, asset_fon
                  (u32_t)hits.average,
                  (u32_t)cycles_per_hit.average);
     
-    moe_painter_draw_text(moe, font, 
+    moe_painter_draw_text(gfx, assets, font, 
                           sb->str,
                           rgba_hex(0xFFFFFFFF),
                           0.f, 
                           render_height - font_height * (line_num), 
                           font_height);
-    moe_painter_advance_depth(moe);
+    gfx_advance_depth(gfx);
     
     
     // Draw graph
@@ -121,16 +119,16 @@ profiler_update_and_render(moe_t* moe, asset_sprite_id_t blank_sprite, asset_fon
         height_scale * font_height * (f32_t)snapshot->cycles * 0.95f;
      
       // TODO: Need a better way to decide x-position
-      v2f_t pos = {
+      v2f_t pos = v2f_set(
         560.f + snapshot_bar_width * (snapshot_index), 
-        render_height - font_height * (line_num) + font_height/4
-      };
-      v2f_t size = {snapshot_bar_width, snapshot_bar_height};
+        render_height - font_height * (line_num) + font_height/4);
+
+      v2f_t size = v2f_set(snapshot_bar_width, snapshot_bar_height);
       
       
-      moe_painter_draw_sprite(moe, blank_sprite, pos, size, rgba_hex(0x00FF00FF));
+      moe_painter_draw_sprite(gfx, assets, blank_sprite, pos, size, rgba_hex(0x00FF00FF));
     }
-    moe_painter_advance_depth(moe);
+    gfx_advance_depth(gfx);
     ++line_num;
   }
 }

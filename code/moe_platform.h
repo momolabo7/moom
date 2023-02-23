@@ -90,7 +90,7 @@ typedef struct {
   platform_audio_t* audio;
 
   // Input API
-  // TODO Maybe this should be a seperate struct
+  // TODO: Maybe this should be a seperate struct
   // Or maybe this should be handled on the platform side.
   union {
     struct {
@@ -154,7 +154,7 @@ typedef struct {
   b32_t reloaded;
 
   // For moe to use
-  void* moe_data;
+  void* game_context;
 
 } platform_t;
 

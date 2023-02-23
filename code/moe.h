@@ -35,13 +35,6 @@ typedef void (*game_tick_f)(struct moe_t*);
 
 
 typedef struct moe_t {
-  // Arenas
-  arena_t main_arena;
-
-  // Sub arenas
-  arena_t asset_arena;
-  arena_t debug_arena;
-  arena_t frame_arena;
 
   b32_t is_done;
 
@@ -49,7 +42,6 @@ typedef struct moe_t {
   void* game_context;
 
   // Other stuff
-  assets_t assets;
   console_t console;
   inspector_t inspector;
   platform_t* platform;

@@ -5,17 +5,13 @@
 
 
 static void 
-inspector_update_and_render(moe_t* moe, asset_sprite_id_t blank_sprite, asset_font_id_t font) 
+inspector_update_and_render(inspector_t* inspector, gfx_t* gfx, assets_t* assets,  asset_sprite_id_t blank_sprite, asset_font_id_t font) 
 {
-  inspector_t* inspector = &moe->inspector;
-  assets_t* assets = &moe->assets;
-  platform_t* platform = moe->platform;
-
-  moe_painter_draw_sprite(moe, blank_sprite, 
+  moe_painter_draw_sprite(gfx, assets, blank_sprite, 
                           v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
                           v2f_set(MOE_WIDTH, MOE_HEIGHT),
                           {0.f, 0.f, 0.f, 0.5f});
-  moe_painter_advance_depth(moe);
+  gfx_advance_depth(gfx);
   
   f32_t line_height = 32.f;
   sb8_make(sb, 256);
@@ -40,8 +36,8 @@ inspector_update_and_render(moe_t* moe, asset_sprite_id_t blank_sprite, asset_fo
     
     f32_t y = MOE_HEIGHT - line_height * (entry_index+1);
     
-    moe_painter_draw_text(moe, font, sb->str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
-    moe_painter_advance_depth(moe);
+    moe_painter_draw_text(gfx, assets,font, sb->str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
+    gfx_advance_depth(gfx);
     
     
   }

@@ -3,6 +3,7 @@
 exported b32_t 
 moe_update_and_render(platform_t* pf)
 { 
+#if 0
   if (pf->moe_data == nullptr) {
   
     // Allocate and initialize moe_t engine
@@ -17,24 +18,13 @@ moe_update_and_render(platform_t* pf)
     
     // TOOD(momo): We should totally ask platform to do a free list...? of sorts?
     // Or some kind of expandable arena. Then I don't have to do this strange memory-foo!
-    arena_init(&moe->main_arena, (u8_t*)moe + sizeof(moe_t), moe_memory_size - sizeof(moe_t)); 
-
-    // around 32MB worth
-    if (!arena_partition(&moe->main_arena, &moe->asset_arena, megabytes(20), 16)) 
-      return false;
-    if (!arena_partition(&moe->main_arena, &moe->debug_arena, megabytes(1), 16)) 
-      return false;
-    if (!arena_partition(&moe->main_arena, &moe->frame_arena, megabytes(1), 16)) 
-      return false;
-   
+  
     //if(!moe_init_assets(moe, "test_pack.sui"))
     //  return false;
    
 
     // Initialize Debug Console
-    console_t* console = &moe->console;
-    console_init(console, 256, &moe->debug_arena);
-    
+        
     moe->is_done = false;
     
     // Inform platform what our moe's dimensions are
@@ -43,18 +33,16 @@ moe_update_and_render(platform_t* pf)
     // set up view for moe
     gfx_push_view(pf->gfx, 0.f, MOE_WIDTH, 0.f, MOE_HEIGHT, 0.f, 0.f);
 
-    moe_log("Initialized!");
    
   }
+#endif
  
-  moe_t* moe = (moe_t*)((platform_memory_t*)pf->moe_data)->data;
-  moe_profile_block(GAME);
-  console_t* console = &moe->console;
+  //moe_t* moe = (moe_t*)((platform_memory_t*)pf->moe_data)->data;
+  //moe_profile_block(GAME);
 
  
   //game_tick(moe);
-  lit_tick_v2(moe);
-
+  return lit_tick(pf);
   // Debug Rendering Stuff
   
 
@@ -77,6 +65,5 @@ moe_update_and_render(platform_t* pf)
   }
 #endif
 
-  return moe->is_done;
   
 }

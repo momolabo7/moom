@@ -16,16 +16,13 @@ moe_painter_set_blend(moe_t* moe, gfx_blend_type_t src, gfx_blend_type_t dst) {
 }
 
 static void
-moe_painter_draw_sprite(moe_t* moe, asset_sprite_id_t sprite_id, v2f_t pos, v2f_t size, rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
+moe_painter_draw_sprite(gfx_t* gfx, assets_t* assets, asset_sprite_id_t sprite_id, v2f_t pos, v2f_t size, rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
 {
-  assets_t* assets = &moe->assets;
-  platform_t* platform = moe->platform;
-
   asset_sprite_t* sprite = get_sprite(assets, sprite_id);
   asset_bitmap_t* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);
   v2f_t anchor = v2f_set(0.5f, 0.5f); 
   
-  gfx_push_sprite(platform->gfx, 
+  gfx_push_sprite(gfx, 
                   color,
                   pos, size, anchor,
                   bitmap->renderer_texture_handle, 
@@ -37,10 +34,8 @@ moe_painter_draw_sprite(moe_t* moe, asset_sprite_id_t sprite_id, v2f_t pos, v2f_
 
 
 static void
-moe_painter_draw_text(moe_t* moe, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+moe_painter_draw_text(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
-  assets_t* assets = &moe->assets;
-  platform_t* platform = moe->platform;
 
   asset_font_t* font = get_font(assets, font_id);
   for(u32_t char_index = 0; 
@@ -66,7 +61,7 @@ moe_painter_draw_text(moe_t* moe, asset_font_id_t font_id, str8_t str, rgba_t co
     v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py + (glyph->box_y0*font_height));
     v2f_t size = v2f_set(width, height);
     v2f_t anchor = v2f_set(0.f, 0.f); // bottom left
-    gfx_push_sprite(platform->gfx, 
+    gfx_push_sprite(gfx, 
                     color,
                     pos, size, anchor,
                     bitmap->renderer_texture_handle, 
@@ -79,10 +74,8 @@ moe_painter_draw_text(moe_t* moe, asset_font_id_t font_id, str8_t str, rgba_t co
 }
 
 static void
-moe_painter_draw_text_center_aligned(moe_t* moe, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+moe_painter_draw_text_center_aligned(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
-  assets_t* assets = &moe->assets;
-  platform_t* platform = moe->platform;
   asset_font_t* font = get_font(assets, font_id);
 
   
@@ -127,7 +120,7 @@ moe_painter_draw_text_center_aligned(moe_t* moe, asset_font_id_t font_id, str8_t
     v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py + (glyph->box_y0*font_height));
     v2f_t size = v2f_set(width, height);
     v2f_t anchor = v2f_set(0.f, 0.f); // bottom left
-    gfx_push_sprite(platform->gfx, 
+    gfx_push_sprite(gfx, 
                     color,
                     pos, size, anchor,
                     bitmap->renderer_texture_handle, 

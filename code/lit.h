@@ -51,6 +51,9 @@ struct lit_menu_t {
 };
 
 struct lit_t {
+  platform_t* platform;
+  gfx_t* gfx; 
+
   lit_show_debug_type_t show_debug_type;
   lit_mode_t next_mode;
   lit_mode_t mode;
@@ -59,13 +62,20 @@ struct lit_t {
     lit_game_t game;
     lit_menu_t menu;
   };
-  // Arenas
-  arena_t main_arena;
 
-  // Sub arenas
+  //
+  // Arenas
+  //
+  arena_t main_arena;
   arena_t asset_arena;
   arena_t debug_arena;
   arena_t frame_arena;
+
+  // 
+  // Debug Tools
+  //
+  inspector_t inspector;
+  console_t console;
 
   assets_t assets;
   asset_sprite_id_t blank_sprite;
@@ -80,43 +90,57 @@ struct lit_t {
 
 
 
-static void
-lit_tick(moe_t* moe, lit_t* lit, platform_t* platform) {
-}
 
 
-static void
-lit_tick_v2(moe_t* moe) {
-  assets_t* assets = &moe->assets;
-  platform_t* platform = moe->platform;
 
-  if(moe->game_context == nullptr) {
+static b32_t
+lit_tick(platform_t* platform) {
+
+  if(platform->game_context == nullptr) {
     auto* lit_memory = platform->allocate_memory(sizeof(lit_t));
-    moe->game_context = lit_memory;
+    platform->game_context = lit_memory;
 
-    auto* lit = (lit_t*)((platform_memory_t*)moe->game_context)->data;
+    auto* lit = (lit_t*)((platform_memory_t*)platform->game_context)->data;
+    lit->platform = platform;
+    lit->gfx = platform->gfx;
+
     lit->next_mode = LIT_MODE_GAME; 
 
-
-    // TODO:Error checking
+    // TODO: Error checking
     // TODO: Better memory management
+    // Initialize assets
     auto* asset_memory = platform->allocate_memory(megabytes(20));
     arena_init(&lit->asset_arena, asset_memory->data, asset_memory->size);
-    assets_init(assets, platform, "test_pack.sui", &lit->asset_arena);
+    assets_init(&lit->assets, platform, "test_pack.sui", &lit->asset_arena);
 
-    lit->blank_sprite = find_first_sprite(&moe->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
+    //
+    // Initialize important assets stuf
+    //
+    lit->blank_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
+    make(asset_match_t, match);
+    set_match_entry(match, ASSET_TAG_TYPE_FONT, 1.f, 1.f);
+    lit->debug_font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
 
-    // Debug font
-    {
-      make(asset_match_t, match);
-      set_match_entry(match, ASSET_TAG_TYPE_FONT, 1.f, 1.f);
-      lit->debug_font = find_best_font(&moe->assets, ASSET_GROUP_TYPE_FONTS, match);
-    }
+
+
+    //
+    // Initialize debug stuff
+    //
+    auto* debug_memory = platform->allocate_memory(megabytes(1));
+    arena_init(&lit->debug_arena, debug_memory->data, debug_memory->size);
+    console_init(&lit->console, 256, &lit->debug_arena);
+
+    auto* frame_memory = platform->allocate_memory(megabytes(1));
+    arena_init(&lit->frame_arena, frame_memory->data, frame_memory->size);
+
 
   }
 
-  // Update lit
-  auto* lit = (lit_t*)((platform_memory_t*)moe->game_context)->data;
+  auto* lit = (lit_t*)((platform_memory_t*)platform->game_context)->data;
+
+  // NOTE(momo): Frame arena needs to be cleared each frame.
+  arena_clear(&lit->frame_arena);
+
   if (lit->next_mode != lit->mode || platform->reloaded) {
     lit->mode = lit->next_mode;
     
@@ -125,7 +149,7 @@ lit_tick_v2(moe_t* moe) {
         //lit_init_splash(moe, &lit->splash, platform);
       } break;
       case LIT_MODE_GAME: {
-        lit_init_game(moe, &lit->game, platform);
+        lit_init_game(lit, &lit->game);
       } break;
       case LIT_MODE_MENU: {
       } break;
@@ -137,8 +161,8 @@ lit_tick_v2(moe_t* moe) {
       //lit_update_splash(moe, &lit->splash, platform);
     } break;
     case LIT_MODE_GAME: {
-      lit_update_game(moe, &lit->game, platform);
-      lit_render_game(moe, &lit->game, platform);
+      lit_update_game(lit, &lit->game);
+      lit_render_game(lit, &lit->game);
     } break;
     case LIT_MODE_MENU: {
     } break;
@@ -150,9 +174,11 @@ lit_tick_v2(moe_t* moe) {
     lit->show_debug_type = 
       (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
   }
+
+#if 0
   switch (lit->show_debug_type) {
     case LIT_SHOW_DEBUG_CONSOLE: {
-      console_update_and_render(moe, lit->blank_sprite, lit->debug_font); 
+      console_update_and_render(&lit->console, lit->platform, lit->gfx, lit->blank_sprite, lit->debug_font); 
     }break;
     case LIT_SHOW_DEBUG_PROFILER: {
       profiler_update_and_render(moe, lit->blank_sprite, lit->debug_font); 
@@ -162,7 +188,9 @@ lit_tick_v2(moe_t* moe) {
     }break;
     default: {}
   }
+#endif
 
+  return false;
 }
 
 #endif 

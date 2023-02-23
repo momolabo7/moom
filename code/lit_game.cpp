@@ -403,22 +403,25 @@ lit_gen_lights(lit_light_t* lights,
 }
 
 static void
-lit_draw_lights(moe_t* moe, lit_game_t* game) {
-  platform_t* platform = moe->platform;
-
+lit_draw_lights(lit_t* lit, lit_game_t* game) {
+  //
   // Emitters
+  //
   for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
   {
     lit_light_t* light = game->lights + light_index;
-    moe_painter_draw_sprite(moe, game->filled_circle_sprite, 
+    moe_painter_draw_sprite(lit->gfx, &lit->assets, 
+                            game->filled_circle_sprite, 
                             light->pos,
                             v2f_set(16.f, 16.f),
                             rgba_set(0.8f, 0.8f, 0.8f, 1.f));
-    moe_painter_advance_depth(moe);
+    gfx_advance_depth(lit->gfx);
   }
  
+  //
   // Lights
-  moe_painter_set_blend(moe, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_ONE); 
+  //
+  gfx_push_blend(lit->gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_ONE); 
   
 
   for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
@@ -427,13 +430,13 @@ lit_draw_lights(moe_t* moe, lit_game_t* game) {
     for(u32_t tri_index = 0; tri_index < l->triangle_count; ++tri_index)
     {
       lit_light_triangle_t* lt = l->triangles + tri_index;
-      gfx_push_filled_triangle(platform->gfx, 
+      gfx_push_filled_triangle(lit->gfx, 
                                rgba_hex(l->color),
                                lt->p0,
                                lt->p1,
                                lt->p2);
     } 
-    moe_painter_advance_depth(moe);
+    gfx_advance_depth(lit->gfx);
   }
 
 }
@@ -441,15 +444,14 @@ lit_draw_lights(moe_t* moe, lit_game_t* game) {
 
 
 static void
-lit_draw_edges(moe_t* moe, lit_game_t* game) {
+lit_draw_edges(lit_t* lit, lit_game_t* game) {
 
-  platform_t* platform = moe->platform;
   for(u32_t edge_index = 0; edge_index < game->edge_count; ++edge_index) 
   {
     lit_edge_t* edge = game->edges + edge_index;
-    gfx_push_line(platform->gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
+    gfx_push_line(lit->gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
   }
-  gfx_advance_depth(platform->gfx);
+  gfx_advance_depth(lit->gfx);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -465,10 +467,10 @@ lit_init_player(lit_game_t* game, f32_t x, f32_t y) {
 }
 
 static void 
-lit_update_player(moe_t* moe, lit_game_t* game, f32_t dt) 
+lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt) 
 {
   lit_player_t* player = &game->player; 
-  platform_t* platform = moe->platform;
+  platform_t* platform = lit->platform;
   
 
 #if 1
@@ -563,13 +565,14 @@ lit_update_player(moe_t* moe, lit_game_t* game, f32_t dt)
 }
 
 static void
-lit_draw_player(moe_t* moe, lit_game_t* game)
+lit_draw_player(lit_t* lit, lit_game_t* game)
 {
   lit_player_t* player = &game->player;
-  moe_painter_draw_sprite(moe, game->circle_sprite, 
+  moe_painter_draw_sprite(lit->gfx, &lit->assets,
+                          game->circle_sprite, 
                           player->pos, 
                           v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-  moe_painter_advance_depth(moe);
+  gfx_advance_depth(lit->gfx);
 
 }
 
@@ -621,9 +624,8 @@ lit_update_particles(lit_game_t* game, f32_t dt) {
 }
 
 static void
-lit_render_particles(moe_t* moe, lit_game_t* game) {
+lit_render_particles(lit_t* lit, lit_game_t* game) {
   lit_particle_pool_t* ps = &game->particles;
-  platform_t* platform = moe->platform;
 
   // Render particles
   for(u32_t particle_id = 0; 
@@ -644,8 +646,8 @@ lit_render_particles(moe_t* moe, lit_game_t* game) {
     size.w = f32_lerp(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = f32_lerp(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    moe_painter_draw_sprite(moe, game->filled_circle_sprite, p->pos, size, color);
-    moe_painter_advance_depth(moe);
+    moe_painter_draw_sprite(lit->gfx, &lit->assets, game->filled_circle_sprite, p->pos, size, color);
+    gfx_advance_depth(lit->gfx);
   }
 }
 
@@ -748,13 +750,12 @@ lit_are_all_sensors_activated(lit_game_t* game) {
 }
 
 static void 
-lit_render_sensors(moe_t* moe, lit_game_t* game) {
-  platform_t* platform = moe->platform;
+lit_render_sensors(lit_t* lit, lit_game_t* game) {
 
   for(u32_t sensor_index = 0; sensor_index < game->sensor_count; ++sensor_index)
   {
     lit_sensor_t* sensor = game->sensors + sensor_index;
-    gfx_push_filled_circle(platform->gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, rgba_hex(sensor->target_color)); 
+    gfx_push_filled_circle(lit->gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, rgba_hex(sensor->target_color)); 
 
     // only for debugging
 #if 0
@@ -769,7 +770,7 @@ lit_render_sensors(moe_t* moe, lit_game_t* game) {
                32.f);
 #endif
 
-    gfx_advance_depth(platform->gfx);
+    gfx_advance_depth(lit->gfx);
   }
 }
 
@@ -787,10 +788,10 @@ lit_set_title(lit_game_t* game, str8_t str) {
 }
 
 static void
-lit_update_game(moe_t* moe, lit_game_t* game, platform_t* platform) 
+lit_update_game(lit_t* lit, lit_game_t* game) 
 {
   lit_player_t* player = &game->player;
-  f32_t dt = platform->seconds_since_last_frame;
+  f32_t dt = lit->platform->seconds_since_last_frame;
 
   // Transition Logic
   if (game->state == LIT_STATE_TYPE_TRANSITION_IN) 
@@ -843,14 +844,14 @@ lit_update_game(moe_t* moe, lit_game_t* game, platform_t* platform)
   if (game->state == LIT_STATE_TYPE_NORMAL) 
   {
     lit_update_animators(game, dt);
-    lit_update_player(moe, game, dt);
+    lit_update_player(lit, game, dt);
   }
 
 
   for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
   {
     lit_light_t* light = game->lights + light_index;
-    lit_gen_light_intersections(light, game->edges, game->edge_count, &moe->frame_arena);
+    lit_gen_light_intersections(light, game->edges, game->edge_count, &lit->frame_arena);
 
 #if LIT_DEBUG_INTERSECTIONS
     // Generate debug lines
@@ -883,51 +884,49 @@ lit_update_game(moe_t* moe, lit_game_t* game, platform_t* platform)
 }
 
 static void
-lit_init_game(moe_t* moe, lit_game_t* game, platform_t* platform) 
+lit_init_game(lit_t* lit, lit_game_t* game) 
 {
-  assets_t* assets = &moe->assets;
   lit_load_level(game, 0); 
   rng_init(&game->rng, 65535); // don't really need to be strict 
 
   {
     make(asset_match_t, match);
     set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
-    game->tutorial_font = find_best_font(assets, ASSET_GROUP_TYPE_FONTS, match);
+    game->tutorial_font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
   }
 
-  game->blank_sprite = find_first_sprite(assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
-  game->circle_sprite = find_first_sprite(assets, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
-  game->filled_circle_sprite = find_first_sprite(assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
+  game->blank_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
+  game->circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
+  game->filled_circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
 
-  platform->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
-  gfx_push_view(platform->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
+  lit->platform->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
+  gfx_push_view(lit->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
 }
 
 static void 
-lit_render_game(moe_t* moe, lit_game_t* game, platform_t* platform) {
-  gfx_push_blend(platform->gfx, 
+lit_render_game(lit_t* lit, lit_game_t* game) 
+{
+  gfx_push_blend(lit->gfx, 
                  GFX_BLEND_TYPE_SRC_ALPHA,
                  GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
   //lit_draw_edges(game); 
   //lit_draw_debug_light_rays(game, moe);
-  lit_draw_player(moe, game);
-  lit_draw_lights(moe, game);
+  lit_draw_player(lit, game);
+  lit_draw_lights(lit, game);
   
-  gfx_push_blend(platform->gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_INV_SRC_ALPHA); 
+  gfx_push_blend(lit->gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 
-  lit_render_sensors(moe, game); 
-  lit_render_particles(moe, game);
+  lit_render_sensors(lit, game); 
+  lit_render_particles(lit, game);
 
 #if LIT_DEBUG_COORDINATES 
   // Debug coordinates
   {
     sb8_make(sb, 64);
-    sb8_push_fmt(sb, str8_from_lit("[%f %f]"), 
-        platform->mouse_pos.x,
-        LIT_HEIGHT - platform->mouse_pos.y);
-    moe_painter_draw_text(moe, game->tutorial_font, sb->str, RGBA_WHITE, 0.f, 0.f, 32.f);
+    sb8_push_fmt(sb, str8_from_lit("[%f %f]"), lit->platform->mouse_pos.x,LIT_HEIGHT - lit->platform->mouse_pos.y);
+    moe_painter_draw_text(lit->gfx, &lit->assets, game->tutorial_font, sb->str, RGBA_WHITE, 0.f, 0.f, 32.f);
   }
 #endif
 
@@ -935,16 +934,16 @@ lit_render_game(moe_t* moe, lit_game_t* game, platform_t* platform) {
   // Draw the overlay for fade in/out
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, game->stage_fade_timer);
-    moe_painter_draw_sprite(moe, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    moe_painter_advance_depth(moe);
+    moe_painter_draw_sprite(lit->gfx, &lit->assets, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    gfx_advance_depth(lit->gfx);
   }
 
   // Draw the overlay for white flash
   {
     f32_t alpha = game->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
     rgba_t color = rgba_set(1.f, 1.f, 1.f, alpha);
-    moe_painter_draw_sprite(moe, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    moe_painter_advance_depth(moe);
+    moe_painter_draw_sprite(lit->gfx, &lit->assets, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    gfx_advance_depth(lit->gfx);
   }
 
   // Draw title
@@ -959,8 +958,8 @@ lit_render_game(moe_t* moe, lit_game_t* game, platform_t* platform) {
     f32_t title_x = cur_wp->x + a * (next_wp->x - cur_wp->x); 
     rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
 
-    moe_painter_draw_text_center_aligned(moe, game->tutorial_font, game->title, color, title_x, LIT_HEIGHT/2, 128.f);
-    moe_painter_advance_depth(moe);
+    moe_painter_draw_text_center_aligned(lit->gfx, &lit->assets, game->tutorial_font, game->title, color, title_x, LIT_HEIGHT/2, 128.f);
+    gfx_advance_depth(lit->gfx);
 
   }
 }
