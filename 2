@@ -274,7 +274,7 @@ _json_next_token(_json_tokenizer_t* t) {
 _json_set_node_key(_json_object_node_t* node, _json_tokenizer_t* j, _json_token_t key, arena_t* ba)
 {
   u32_t key_len = key.ope - key.begin;
-  u8_t* key_mem = arena_push_arr(u8_t, ba, key_len);
+  u8_t* key_mem = (u8_t*)arena_push_size(ba, key_len, 16);
   for(u32_t i = 0; i < key_len; ++i) {
     key_mem[i] = j->text.e[key.begin + i];
   }
@@ -334,7 +334,7 @@ _json_parse_array(json_array_t* arr, _json_tokenizer_t* t, arena_t* ba) {
       _json_value_t v = {0};
       if(_json_set_value_based_on_token(&v, t, token, ba)) {
         _json_array_node_t* array_node = arena_push(_json_array_node_t, ba); 
-        if (array_node) {
+        if (!array_node) {
           array_node->value = v;
           _json_append_array(arr, array_node);
 
@@ -412,7 +412,7 @@ _json_set_value_based_on_token(_json_value_t* value,
   {
     u32_t token_len = token.ope - token.begin;
     u8_t* val_mem = arena_push_arr(u8_t, ba, token_len);     
-    if (val_mem) {
+    if (!val_mem) {
       for(u32_t token_i = 0; token_i < token_len; ++token_i) {
         val_mem[token_i] = t->text.e[token.begin + token_i];
       }
