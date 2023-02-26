@@ -9,8 +9,6 @@
 #include "moe_platform.h"
 #include "moe_gfx.h"
 
-#define MOE_WIDTH 800.f
-#define MOE_HEIGHT 800.f
 
 #ifdef INTERNAL
 #define moe_log(...) moe->platform->debug_log(__VA_ARGS__)
@@ -38,7 +36,7 @@
 
 #include "moe_inspector_rendering.h"
 #include "moe_profiler_rendering.h"
-#include "moe_console_rendering.h"
+//#include "moe_console_rendering.h"
 
 
 #include "game.h"
