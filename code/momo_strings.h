@@ -398,8 +398,8 @@ static void
 sb8_push_hex_u8(sb8_t* b, u8_t value) {
   
   c8_t parts[2] = {
-    value >> 4,
-    value & 0xF,
+    (c8_t)(value >> 4),
+    (c8_t)(value & 0xF),
     
   };
   

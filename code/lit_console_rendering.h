@@ -45,8 +45,8 @@ lit_update_and_render_console(lit_t* lit)
   v2f_t input_area_pos = v2f_set(console_width/2, line_height/2);
   
   moe_painter_draw_sprite(gfx, assets, lit->blank_sprite, 
-                          v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
-                          v2f_set(MOE_WIDTH, MOE_HEIGHT),
+                          v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
+                          v2f_set(LIT_WIDTH, LIT_HEIGHT),
                           rgba_set(0.f, 0.f, 0.f, 0.8f));
   gfx_advance_depth(gfx);
   

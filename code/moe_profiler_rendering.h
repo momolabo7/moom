@@ -41,6 +41,7 @@ profiler_end_stat(profiler_stat_t* stat) {
   }
 }
 
+#if 0
 static void
 profiler_update_and_render(profiler_t* profiler, gfx_t* gfx, assets_t* assets,  asset_sprite_id_t blank_sprite, asset_font_id_t font) 
 {
@@ -132,4 +133,5 @@ profiler_update_and_render(profiler_t* profiler, gfx_t* gfx, assets_t* assets,  
     ++line_num;
   }
 }
+#endif
 #endif //MOE_PROFILER_RENDERING_H

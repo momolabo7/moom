@@ -3,6 +3,7 @@
 #ifndef MOE_INSPECTOR_RENDERING_H
 #define MOE_INSPECTOR_RENDERING_H
 
+#if 0
 
 static void 
 inspector_update_and_render(inspector_t* inspector, gfx_t* gfx, assets_t* assets,  asset_sprite_id_t blank_sprite, asset_font_id_t font) 
@@ -42,6 +43,6 @@ inspector_update_and_render(inspector_t* inspector, gfx_t* gfx, assets_t* assets
     
   }
 }
-
+#endif
 
 #endif //MOE_INSPECTOR_RENDERING_H

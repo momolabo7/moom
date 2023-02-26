@@ -124,6 +124,8 @@
 
 #if COMPILER_MSVC
 # define exported c_link __declspec(dllexport)
+#elif COMPILER_GCC
+# define exported __attribute__((visibility("default")))  
 #else
 # error exported not defined for this compiler
 #endif

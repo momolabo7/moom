@@ -83,8 +83,8 @@ lit_level_0_4(lit_game_t* m) {
   lit_push_sensor(m, 400.f, 200.f, 0x880000FF); 
   lit_push_sensor(m, 400.f, 600.f, 0x880000FF); 
 
-  lit_push_light(m, 200.f, MOE_HEIGHT * 0.25f, 0x008800FF, 30.f, 0.5f);
-  lit_push_light(m, 600.f, MOE_HEIGHT * 0.75f, 0x880000FF, 30.f, 0.0f);
+  lit_push_light(m, 200.f, LIT_HEIGHT * 0.25f, 0x008800FF, 30.f, 0.5f);
+  lit_push_light(m, 600.f, LIT_HEIGHT * 0.75f, 0x880000FF, 30.f, 0.0f);
 }
 
 

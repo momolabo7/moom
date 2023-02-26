@@ -550,14 +550,14 @@ lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt)
   }
 
   // Restrict movement
-  if (player->pos.x > MOE_WIDTH - LIT_PLAYER_RADIUS) {
-    player->pos.x = MOE_WIDTH - LIT_PLAYER_RADIUS;
+  if (player->pos.x > LIT_WIDTH - LIT_PLAYER_RADIUS) {
+    player->pos.x = LIT_WIDTH - LIT_PLAYER_RADIUS;
   }
   if (player->pos.x < LIT_PLAYER_RADIUS) {
     player->pos.x = LIT_PLAYER_RADIUS;
   }
-  if (player->pos.y > MOE_HEIGHT - LIT_PLAYER_RADIUS) {
-    player->pos.y = MOE_HEIGHT - LIT_PLAYER_RADIUS;
+  if (player->pos.y > LIT_HEIGHT - LIT_PLAYER_RADIUS) {
+    player->pos.y = LIT_HEIGHT - LIT_PLAYER_RADIUS;
   }
   if (player->pos.y < LIT_PLAYER_RADIUS) {
     player->pos.y = LIT_PLAYER_RADIUS;
