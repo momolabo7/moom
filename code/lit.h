@@ -128,7 +128,7 @@ lit_tick(platform_t* platform) {
     //
     auto* debug_memory = platform->allocate_memory(megabytes(1));
     arena_init(&lit->debug_arena, debug_memory->data, debug_memory->size);
-    console_init(&lit->console, 256, &lit->debug_arena);
+    console_init(&lit->console, 32, 256, &lit->debug_arena);
 
     auto* frame_memory = platform->allocate_memory(megabytes(1));
     arena_init(&lit->frame_arena, frame_memory->data, frame_memory->size);
@@ -175,20 +175,18 @@ lit_tick(platform_t* platform) {
       (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
   }
 
-#if 0
   switch (lit->show_debug_type) {
     case LIT_SHOW_DEBUG_CONSOLE: {
-      console_update_and_render(&lit->console, lit->platform, lit->gfx, lit->blank_sprite, lit->debug_font); 
+      console_update_and_render(&lit->console, lit->platform, lit->gfx, &lit->assets, lit->blank_sprite, lit->debug_font); 
     }break;
     case LIT_SHOW_DEBUG_PROFILER: {
-      profiler_update_and_render(moe, lit->blank_sprite, lit->debug_font); 
+      //profiler_update_and_render(moe, lit->blank_sprite, lit->debug_font); 
     }break;
     case LIT_SHOW_DEBUG_INSPECTOR: {
-      inspector_update_and_render(moe, lit->blank_sprite, lit->debug_font);
+      //inspector_update_and_render(moe, lit->blank_sprite, lit->debug_font);
     }break;
     default: {}
   }
-#endif
 
   return false;
 }

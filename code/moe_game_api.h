@@ -6,16 +6,6 @@
 //
 
 static void
-moe_painter_advance_depth(moe_t* moe) {
-  gfx_advance_depth(moe->platform->gfx);
-}
-
-static void
-moe_painter_set_blend(moe_t* moe, gfx_blend_type_t src, gfx_blend_type_t dst) {
-  gfx_push_blend(moe->platform->gfx, src, dst);
-}
-
-static void
 moe_painter_draw_sprite(gfx_t* gfx, assets_t* assets, asset_sprite_id_t sprite_id, v2f_t pos, v2f_t size, rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
 {
   asset_sprite_t* sprite = get_sprite(assets, sprite_id);

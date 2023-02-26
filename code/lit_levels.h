@@ -284,18 +284,49 @@ lit_level_0_9(lit_game_t* m) {
 
 static void
 lit_level_1_0(lit_game_t* m) {
-  lit_set_title(m, str8_from_lit("PATIENCE"));
-  lit_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
+  lit_set_title(m, str8_from_lit("MOVEMENT"));
+
+//  lit_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
   lit_push_light(m, 400.f, 700.f, 0x008800FF, 15.f, 0.75f);
-  lit_push_sensor(m, 400.f, 400.f, 0x888800FF); 
-  lit_push_patrolling_sensor(m, 5.f, 
-                             v2f_set(650.f, 150.f), 
+  lit_push_light(m, 150.f, 700.f, 0x880000FF, 15.f, 0.75f);
+  lit_push_light(m, 600.f, 700.f, 0x000088FF, 15.f, 0.75f);
+
+  f32_t duration = 5.25f;
+  lit_push_patrolling_sensor(m, duration, 
+                             v2f_set(150.f, 150.f), 
                              v2f_set(650.f, 650.f),
-                             0x008800FF); 
-  lit_push_patrolling_sensor(m, 5.25f, 
-                             v2f_set(150.f, 650.f), 
+                             0x880088FF); 
+  lit_push_patrolling_sensor(m, duration, 
+                             v2f_set(650.f, 650.f), 
                              v2f_set(150.f, 150.f),
-                             0x880000FF); 
+                             0x880088FF); 
+
+  lit_push_patrolling_sensor(m, duration, 
+                             v2f_set(150.f, 400.f), 
+                             v2f_set(650.f, 400.f),
+                             0x880088FF); 
+  lit_push_patrolling_sensor(m, duration, 
+                             v2f_set(650.f, 400.f), 
+                             v2f_set(150.f, 400.f),
+                             0x880088FF); 
+
+  lit_push_patrolling_sensor(m, duration, 
+                             v2f_set(150.f, 650.f), 
+                             v2f_set(650.f, 150.f),
+                             0x880088FF); 
+  lit_push_patrolling_sensor(m, duration, 
+                             v2f_set(650.f, 150.f),
+                             v2f_set(150.f, 650.f), 
+                             0x880088FF); 
+
+  lit_push_patrolling_sensor(m, duration, 
+                             v2f_set(400.f, 650.f), 
+                             v2f_set(400.f, 150.f),
+                             0x880088FF); 
+  lit_push_patrolling_sensor(m, duration, 
+                             v2f_set(400.f, 150.f),
+                             v2f_set(400.f, 650.f), 
+                             0x880088FF); 
 
 
 }
@@ -303,44 +334,8 @@ lit_level_1_0(lit_game_t* m) {
 static void
 lit_level_1_1(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("PATIENCE"));
-#if 0
-  lit_push_patrolling_double_edge(m, 2.f,
-                                  300.f, 300.f, 500.f, 300.f,
-                                  300.f, 250.f, 500.f, 250.f);
-
-  lit_push_double_edge(m, 500.f, 300.f, 500.f, 500.f);
-
-  lit_push_patrolling_double_edge(m, 2.f,
-                                  500.f, 500.f, 300.f, 500.f,
-                                  500.f, 550.f, 300.f, 550.f);
-
-  lit_push_double_edge(m, 300.f, 500.f, 300.f, 300.f);
-
-
-  lit_push_patrolling_double_edge(m, 2.f,
-                                  300.f, 300.f, 500.f, 300.f,
-                                  300.f, 250.f, 500.f, 250.f);
-
-  lit_push_double_edge(m, 500.f, 300.f, 500.f, 500.f);
-
-  lit_push_patrolling_double_edge(m, 2.f,
-                                  500.f, 500.f, 300.f, 500.f,
-                                  500.f, 550.f, 300.f, 550.f);
-
-  lit_push_double_edge(m, 300.f, 500.f, 300.f, 300.f);
-
-
-  lit_push_light(m, 400.f, 100.f, 0x880000FF, 30.f, 0.25f);
-  lit_push_light(m, 400.f, 700.f, 0x008800FF, 30.f, 0.75f);
-
-
-  lit_push_sensor(m, 150.f, 700.f, 0x880000FF);
-
-#endif
-
   lit_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
   lit_push_light(m, 400.f, 700.f, 0x008800FF, 15.f, 0.75f);
-  //lit_push_light(m, 400.f, 410.f, 0x880000FF, 360.f, 0.f);
   lit_push_sensor(m, 400.f, 400.f, 0x888800FF); 
   lit_push_patrolling_sensor(m, 5.f, 
                              v2f_set(650.f, 150.f), 

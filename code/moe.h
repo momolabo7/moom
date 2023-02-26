@@ -31,23 +31,6 @@
 #include "moe_console.h"
 
 
-typedef void (*game_tick_f)(struct moe_t*);
-
-
-typedef struct moe_t {
-
-  b32_t is_done;
-
-  //b32_t is_scene_changed;
-  void* game_context;
-
-  // Other stuff
-  console_t console;
-  inspector_t inspector;
-  platform_t* platform;
-
-} moe_t;
-
 
 #include "moe_assets.cpp"
 
@@ -55,7 +38,7 @@ typedef struct moe_t {
 
 #include "moe_inspector_rendering.h"
 #include "moe_profiler_rendering.h"
-#include "moe_console.cpp"
+#include "moe_console_rendering.h"
 
 
 #include "game.h"

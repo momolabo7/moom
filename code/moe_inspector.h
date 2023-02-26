@@ -3,33 +3,35 @@
 #ifndef MOE_INSPECTOR_H
 #define MOE_INSPECTOR_H
 
-typedef enum  {
+enum inspector_entry_type_t {
   INSPECTOR_ENTRY_TYPE_F32,
   INSPECTOR_ENTRY_TYPE_U32,
-} inspector_entry_type_t;
+};
 
-typedef struct  {
+struct inspector_entry_t {
   str8_t name;
   inspector_entry_type_t type;
   void* item;
-} inspector_entry_t;
+};
 
-typedef struct {
+struct inspector_t {
   u32_t entry_count;
   inspector_entry_t entries[64];
-} inspector_t;
+};
 
 
 /////////////////////////////////////////////////////////////
 // IMPLEMENTATION
 //
 static void 
-inspector_clear(inspector_t* in) {
+inspector_clear(inspector_t* in) 
+{
   in->entry_count = 0;
 }
 
 static void
-inspector_add_u32(inspector_t* in, str8_t name, u32_t* item) {
+inspector_add_u32(inspector_t* in, str8_t name, u32_t* item) 
+{
   assert(in->entry_count < array_count(in->entries));
   inspector_entry_t* entry = in->entries + in->entry_count++;
   entry->item = item;
