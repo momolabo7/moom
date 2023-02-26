@@ -83,9 +83,9 @@ struct lit_t {
 
 };
 
-
-
 #include "lit_game.cpp"
+
+#include "lit_console_rendering.h"
 #include "lit_levels.h"
 
 
@@ -177,13 +177,13 @@ lit_tick(platform_t* platform) {
 
   switch (lit->show_debug_type) {
     case LIT_SHOW_DEBUG_CONSOLE: {
-      console_update_and_render(&lit->console, lit->platform, lit->gfx, &lit->assets, lit->blank_sprite, lit->debug_font); 
+      lit_update_and_render_console(lit); 
     }break;
     case LIT_SHOW_DEBUG_PROFILER: {
-      //profiler_update_and_render(moe, lit->blank_sprite, lit->debug_font); 
+      //profiler_update_and_render(&lit->profiler, lit->blank_sprite, lit->debug_font); 
     }break;
     case LIT_SHOW_DEBUG_INSPECTOR: {
-      //inspector_update_and_render(moe, lit->blank_sprite, lit->debug_font);
+      //inspector_update_and_render(&lit->inspector, lit->platform, lit->gfx, &lit->assets, lit->blank_sprite, lit->debug_font);
     }break;
     default: {}
   }

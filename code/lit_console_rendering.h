@@ -1,6 +1,6 @@
-#if 0
+
 static void
-lit_update_and_render_console(lit_t* lit,  asset_sprite_id_t blank_sprite, asset_font_id_t font) 
+lit_update_and_render_console(lit_t* lit) 
 {
 
   console_t* console = &lit->console;
@@ -44,15 +44,15 @@ lit_update_and_render_console(lit_t* lit,  asset_sprite_id_t blank_sprite, asset
   v2f_t input_area_size = v2f_set(console_width, line_height);
   v2f_t input_area_pos = v2f_set(console_width/2, line_height/2);
   
-  moe_painter_draw_sprite(gfx, assets, blank_sprite, 
+  moe_painter_draw_sprite(gfx, assets, lit->blank_sprite, 
                           v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
                           v2f_set(MOE_WIDTH, MOE_HEIGHT),
                           rgba_set(0.f, 0.f, 0.f, 0.8f));
   gfx_advance_depth(gfx);
   
-  moe_painter_draw_sprite(gfx, assets, blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
+  moe_painter_draw_sprite(gfx, assets, lit->blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
   gfx_advance_depth(gfx);
-  moe_painter_draw_sprite(gfx, assets, blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
+  moe_painter_draw_sprite(gfx, assets, lit->blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
   gfx_advance_depth(gfx);
   
   
@@ -63,7 +63,7 @@ lit_update_and_render_console(lit_t* lit,  asset_sprite_id_t blank_sprite, asset
   {
     sb8_t* line = console->info_lines + line_index;
     
-    moe_painter_draw_text(gfx, assets, font,
+    moe_painter_draw_text(gfx, assets, lit->debug_font,
                           line->str,
                           rgba_hex(0xFFFFFFFF),
                           left_pad, 
@@ -71,8 +71,9 @@ lit_update_and_render_console(lit_t* lit,  asset_sprite_id_t blank_sprite, asset
                           font_height);
     
   }
+
   gfx_advance_depth(gfx);
-  moe_painter_draw_text(gfx, assets, font,
+  moe_painter_draw_text(gfx, assets, lit->debug_font,
                         console->input_line.str,
                         rgba_hex(0xFFFFFFFF),
                         left_pad, 
@@ -80,4 +81,3 @@ lit_update_and_render_console(lit_t* lit,  asset_sprite_id_t blank_sprite, asset
                         font_height);
   gfx_advance_depth(gfx);
 }
-#endif
