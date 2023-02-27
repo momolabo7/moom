@@ -1,7 +1,5 @@
-
-#ifndef MOE_PROFILER_RENDERING_H
-#define MOE_PROFILER_RENDERING_H
-
+#ifndef LIT_PROFILER_RENDERING_H
+#define LIT_PROFILER_RENDERING_H
 
 struct profiler_stat_t {
   f64_t min;
@@ -41,18 +39,21 @@ profiler_end_stat(profiler_stat_t* stat) {
   }
 }
 
-#if 0
 static void
-profiler_update_and_render(profiler_t* profiler, gfx_t* gfx, assets_t* assets,  asset_sprite_id_t blank_sprite, asset_font_id_t font) 
+profiler_update_and_render(lit_t* lit) 
 {
-  const f32_t render_width = MOE_WIDTH;
-  const f32_t render_height = MOE_HEIGHT;
+  profiler_t* profiler = lit->profiler;
+  gfx_t* gfx = lit->gfx;
+  assets_t* assets = &lit->assets;
+
+  const f32_t render_width = LIT_WIDTH;
+  const f32_t render_height = LIT_HEIGHT;
   const f32_t font_height = 20.f;
 
   // Overlay
-  moe_painter_draw_sprite(gfx, assets, blank_sprite, 
-                          v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
-                          v2f_set(MOE_WIDTH, MOE_HEIGHT),
+  moe_painter_draw_sprite(gfx, assets, lit->blank_sprite, 
+                          v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
+                          v2f_set(LIT_WIDTH, LIT_HEIGHT),
                           rgba_set(0.f, 0.f, 0.f, 0.5f));
   gfx_advance_depth(gfx);
   
@@ -98,7 +99,7 @@ profiler_update_and_render(profiler_t* profiler, gfx_t* gfx, assets_t* assets,  
                  (u32_t)hits.average,
                  (u32_t)cycles_per_hit.average);
     
-    moe_painter_draw_text(gfx, assets, font, 
+    moe_painter_draw_text(gfx, assets, lit->debug_font, 
                           sb->str,
                           rgba_hex(0xFFFFFFFF),
                           0.f, 
@@ -125,13 +126,10 @@ profiler_update_and_render(profiler_t* profiler, gfx_t* gfx, assets_t* assets,  
         render_height - font_height * (line_num) + font_height/4);
 
       v2f_t size = v2f_set(snapshot_bar_width, snapshot_bar_height);
-      
-      
-      moe_painter_draw_sprite(gfx, assets, blank_sprite, pos, size, rgba_hex(0x00FF00FF));
+      moe_painter_draw_sprite(gfx, assets, lit->blank_sprite, pos, size, rgba_hex(0x00FF00FF));
     }
     gfx_advance_depth(gfx);
     ++line_num;
   }
 }
-#endif
 #endif //MOE_PROFILER_RENDERING_H

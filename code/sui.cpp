@@ -21,7 +21,7 @@ int main() {
     
   sui_atlas_begin_font(atlas, sui_asset_dir("nokiafc22.ttf"), 72.f);
 #if 1 
-  for (u32_t i = 32; i <= 126; ++i){
+  for (u32_t i = 32; i <= 126; ++i) {
     sui_atlas_push_font_codepoint(atlas, i);
   }
 #else 

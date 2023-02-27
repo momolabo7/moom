@@ -9,6 +9,7 @@
 #define KARU_CODE(a, b, c, d) (((u32_t)(a) << 0) | ((u32_t)(b) << 8) | ((u32_t)(c) << 16) | ((u32_t)(d) << 24))
 #define KARU_SIGNATURE KARU_CODE('k', 'a', 'r', 'u')
 
+
 struct karu_header_t {
   u32_t signature;
 

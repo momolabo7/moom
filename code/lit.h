@@ -10,7 +10,7 @@
 #define LIT_SENSOR_PARTICLE_CD 0.1f
 #define LIT_SENSOR_COLOR_MASK 0xFFFFFF00
 #define LIT_SENSOR_RADIUS 8.f
-#define LIT_SENSOR_PARTICLE_SIZE 16.f
+#define LIT_SENSOR_PARTICLE_SIZE 14.f
 #define LIT_SENSOR_PARTICLE_SPEED 20.f
 
 #define LIT_EXIT_FLASH_DURATION 0.1f
@@ -53,6 +53,7 @@ struct lit_menu_t {
 struct lit_t {
   platform_t* platform;
   gfx_t* gfx; 
+  profiler_t* profiler;
 
   lit_show_debug_type_t show_debug_type;
   lit_mode_t next_mode;
@@ -86,6 +87,7 @@ struct lit_t {
 #include "lit_game.cpp"
 
 #include "lit_console_rendering.h"
+#include "lit_profiler_rendering.h"
 #include "lit_levels.h"
 
 
@@ -103,6 +105,7 @@ lit_tick(platform_t* platform) {
     auto* lit = (lit_t*)((platform_memory_t*)platform->game_context)->data;
     lit->platform = platform;
     lit->gfx = platform->gfx;
+    lit->profiler = platform->profiler;
 
     lit->next_mode = LIT_MODE_GAME; 
 
@@ -180,7 +183,7 @@ lit_tick(platform_t* platform) {
       lit_update_and_render_console(lit); 
     }break;
     case LIT_SHOW_DEBUG_PROFILER: {
-      //profiler_update_and_render(&lit->profiler, lit->blank_sprite, lit->debug_font); 
+      profiler_update_and_render(lit); 
     }break;
     case LIT_SHOW_DEBUG_INSPECTOR: {
       //inspector_update_and_render(&lit->inspector, lit->platform, lit->gfx, &lit->assets, lit->blank_sprite, lit->debug_font);

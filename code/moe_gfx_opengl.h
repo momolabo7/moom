@@ -189,6 +189,7 @@ typedef struct {
   u32_t height;
 } OGL_Texture;
 
+
 typedef struct {
   GLuint buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; // Opengl__VBO_Count
   GLuint shader;
@@ -285,10 +286,16 @@ static b32_t ogl_init(Opengl* ogl,
 static void ogl_begin_frame(Opengl* ogl, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1);
 static void ogl_end_frame(Opengl* ogl);
 
-////////////////////////////////////////////////////////////////////
+//
 // IMPLEMENTATION
+// 
+
+struct ogl_uv_t {
+  v2f_t min, max;
+};
+
 static void 
-_ogl_flush_sprites(Opengl* ogl) {
+ogl_flush_sprites(Opengl* ogl) {
   Sprite_Batch* sb = &ogl->sprite_batch;
   assert(sb->instances_to_draw + sb->last_drawn_instance_index < OGL_MAX_SPRITES);
   
@@ -317,7 +324,7 @@ _ogl_flush_sprites(Opengl* ogl) {
 }
 
 static void 
-_ogl_push_triangle(Opengl* ogl, 
+ogl_push_triangle(Opengl* ogl, 
                    m44f_t transform,
                    rgba_t colors)
 {
@@ -342,7 +349,7 @@ _ogl_push_triangle(Opengl* ogl,
 }
 
 static void 
-_ogl_flush_triangles(Opengl* ogl) {
+ogl_flush_triangles(Opengl* ogl) {
   Triangle_Batch* tb = &ogl->triangle_batch;
   assert(tb->instances_to_draw + tb->last_drawn_instance_index < OGL_MAX_TRIANGLES);
   
@@ -365,15 +372,15 @@ _ogl_flush_triangles(Opengl* ogl) {
 
 
 static void 
-_ogl_push_sprite(Opengl* ogl, 
+ogl_push_sprite(Opengl* ogl, 
                  m44f_t transform,
                  rgba_t colors,
-                 Rect2 uv,
+                 ogl_uv_t uv,
                  GLuint texture) 
 {
   Sprite_Batch* sb = &ogl->sprite_batch;
   if (sb->current_texture != texture) {
-    _ogl_flush_sprites(ogl);
+    ogl_flush_sprites(ogl);
     sb->current_texture = texture;
   }
   
@@ -407,7 +414,7 @@ _ogl_push_sprite(Opengl* ogl,
 }
 
 static void 
-_ogl_begin_sprites(Opengl* ogl) {
+ogl_begin_sprites(Opengl* ogl) {
   Sprite_Batch* sb = &ogl->sprite_batch;
   
   sb->current_texture = 0;
@@ -417,7 +424,7 @@ _ogl_begin_sprites(Opengl* ogl) {
 }
 
 static void 
-_ogl_begin_triangles(Opengl* ogl) {
+ogl_begin_triangles(Opengl* ogl) {
   Triangle_Batch* tb = &ogl->triangle_batch;
   
   tb->instances_to_draw = 0;
@@ -426,17 +433,17 @@ _ogl_begin_triangles(Opengl* ogl) {
 }
 
 static void 
-_ogl_end_triangles(Opengl* ogl) {
-  _ogl_flush_triangles(ogl);
+ogl_end_triangles(Opengl* ogl) {
+  ogl_flush_triangles(ogl);
 }
 
 static void 
-_ogl_end_sprites(Opengl* ogl) {
-  _ogl_flush_sprites(ogl);
+ogl_end_sprites(Opengl* ogl) {
+  ogl_flush_sprites(ogl);
 }
 
 static void 
-_ogl_attach_shader(Opengl* ogl,
+ogl_attach_shader(Opengl* ogl,
                    u32_t program, 
                    u32_t type, 
                    char* Code) 
@@ -449,7 +456,7 @@ _ogl_attach_shader(Opengl* ogl,
 }
 
 static void 
-_ogl_align_viewport(Opengl* ogl) 
+ogl_align_viewport(Opengl* ogl) 
 {
   
   u32_t x, y, w, h;
@@ -467,7 +474,7 @@ _ogl_align_viewport(Opengl* ogl)
 }
 
 static void
-_ogl_set_texture(Opengl* ogl,
+ogl_set_texture(Opengl* ogl,
                  umi_t index,
                  u32_t width,
                  u32_t height,
@@ -503,7 +510,7 @@ _ogl_set_texture(Opengl* ogl,
 }
 
 static void 
-_ogl_delete_texture(Opengl* ogl, umi_t texture_index) {
+ogl_delete_texture(Opengl* ogl, umi_t texture_index) {
   assert(texture_index < array_count(ogl->textures));
   OGL_Texture* texture = ogl->textures + texture_index;
   ogl->glDeleteTextures(1, &texture->handle);
@@ -511,16 +518,16 @@ _ogl_delete_texture(Opengl* ogl, umi_t texture_index) {
 }
 
 static void
-_ogl_delete_all_textures(Opengl* ogl) {
+ogl_delete_all_textures(Opengl* ogl) {
   for (umi_t i = 0; i < array_count(ogl->textures); ++i ){
     if (ogl->textures[i].handle != 0) {
-      _ogl_delete_texture(ogl, i);
+      ogl_delete_texture(ogl, i);
     }
   }
 }
 
 void 
-_ogl_add_predefined_textures(Opengl* ogl) {
+ogl_add_predefined_textures(Opengl* ogl) {
   // NOTE(Momo): Dummy texture setup
   {
     u8_t pixels[4][4] {
@@ -571,7 +578,7 @@ _ogl_add_predefined_textures(Opengl* ogl) {
 }
 
 static b32_t
-_ogl_init_triangle_batch(Opengl* ogl) {
+ogl_init_triangle_batch(Opengl* ogl) {
   Triangle_Batch* tb = &ogl->triangle_batch;
   
   // Triangle model
@@ -738,10 +745,10 @@ void main(void)
 
   // TODO(Momo): //BeginShader/EndShader?
   tb->shader = ogl->glCreateProgram();
-  _ogl_attach_shader(ogl, tb->shader,
+  ogl_attach_shader(ogl, tb->shader,
                      GL_VERTEX_SHADER,
                      vertex_shader_src);
-  _ogl_attach_shader(ogl, tb->shader,
+  ogl_attach_shader(ogl, tb->shader,
                      GL_FRAGMENT_SHADER,
                      fragment_shader_src);
   
@@ -757,7 +764,7 @@ void main(void)
 }
 
 static b32_t 
-_ogl_init_sprite_batch(Opengl* ogl) {
+ogl_init_sprite_batch(Opengl* ogl) {
   Sprite_Batch* sb = &ogl->sprite_batch;
   
   const char* vertex_shader = R"###(
@@ -991,11 +998,11 @@ void main(void) {
   
   // NOTE(Momo): Setup shader Program
   sb->shader = ogl->glCreateProgram();
-  _ogl_attach_shader(ogl,
+  ogl_attach_shader(ogl,
                      sb->shader, 
                      GL_VERTEX_SHADER, 
                      (char*)vertex_shader);
-  _ogl_attach_shader(ogl,
+  ogl_attach_shader(ogl,
                      sb->shader, 
                      GL_FRAGMENT_SHADER, 
                      (char*)fragment_shader);
@@ -1031,16 +1038,16 @@ ogl_init(Opengl* ogl,
   ogl->glEnable(GL_SCISSOR_TEST);
   ogl->glEnable(GL_BLEND);
   
-  if (!_ogl_init_sprite_batch(ogl)) return false;
-  if (!_ogl_init_triangle_batch(ogl)) return false;
-  _ogl_add_predefined_textures(ogl);
-  _ogl_delete_all_textures(ogl);
+  if (!ogl_init_sprite_batch(ogl)) return false;
+  if (!ogl_init_triangle_batch(ogl)) return false;
+  ogl_add_predefined_textures(ogl);
+  ogl_delete_all_textures(ogl);
   
   return true;
 }
 
 static GLenum
-_ogl_get_blend_mode_from_gfx_blend_type(gfx_blend_type_t type) {
+ogl_get_blend_mode_from_gfx_blend_type(gfx_blend_type_t type) {
   GLenum  ret = {0};
   switch(type) {
     case GFX_BLEND_TYPE_ZERO: 
@@ -1080,9 +1087,9 @@ _ogl_get_blend_mode_from_gfx_blend_type(gfx_blend_type_t type) {
 
 
 static void 
-_ogl_set_blend_mode(Opengl* ogl, gfx_blend_type_t src, gfx_blend_type_t dst) {
-  GLenum src_e = _ogl_get_blend_mode_from_gfx_blend_type(src);
-  GLenum dst_e = _ogl_get_blend_mode_from_gfx_blend_type(dst);
+ogl_set_blend_mode(Opengl* ogl, gfx_blend_type_t src, gfx_blend_type_t dst) {
+  GLenum src_e = ogl_get_blend_mode_from_gfx_blend_type(src);
+  GLenum dst_e = ogl_get_blend_mode_from_gfx_blend_type(dst);
   ogl->glBlendFunc(src_e, dst_e);
 
 #if 0
@@ -1102,7 +1109,7 @@ _ogl_set_blend_mode(Opengl* ogl, gfx_blend_type_t src, gfx_blend_type_t dst) {
 }
 
 static void
-_ogl_process_texture_queue(Opengl* ogl) {
+ogl_process_texture_queue(Opengl* ogl) {
   // NOTE(Momo): In this algorithm of processing the texture queue,
   // it is entirely possible that if the first payload in the queue
   // is loading forever, the rest of the payloads will never be processed.
@@ -1124,7 +1131,7 @@ _ogl_process_texture_queue(Opengl* ogl) {
            payload->texture_height > 0)
         {
         
-          _ogl_set_texture(ogl, 
+          ogl_set_texture(ogl, 
                            payload->texture_index, 
                            (s32_t)payload->texture_width, 
                            (s32_t)payload->texture_height, 
@@ -1178,18 +1185,18 @@ static void
 ogl_end_frame(Opengl* ogl) {
   gfx_t* gfx = &ogl->gfx;
   
-  _ogl_align_viewport(ogl);
-  _ogl_process_texture_queue(ogl);
-  _ogl_begin_sprites(ogl);
-  _ogl_begin_triangles(ogl);
+  ogl_align_viewport(ogl);
+  ogl_process_texture_queue(ogl);
+  ogl_begin_sprites(ogl);
+  ogl_begin_triangles(ogl);
 
   //for (u32_t cmd_index = 0; cmd_index < cmds->entry_count; ++cmd_index) {
   gfx_foreach_command(gfx, cmd_index) {
     gfx_command_t* entry = gfx_get_command(gfx, cmd_index);
     switch(entry->id) {
       case GFX_COMMAND_TYPE_VIEW: {
-        _ogl_flush_sprites(ogl);
-        _ogl_flush_triangles(ogl);
+        ogl_flush_sprites(ogl);
+        ogl_flush_triangles(ogl);
         
         gfx_command_view_t* data = (gfx_command_view_t*)entry->data;
         
@@ -1237,7 +1244,7 @@ ogl_end_frame(Opengl* ogl) {
       } break;
       
       case GFX_COMMAND_TYPE_TRIANGLE: {
-        _ogl_flush_sprites(ogl);
+        ogl_flush_sprites(ogl);
         
         gfx_command_triangle_t* data = (gfx_command_triangle_t*)entry->data;
         m44f_t inverse_of_model = m44f_identity();
@@ -1285,7 +1292,7 @@ ogl_end_frame(Opengl* ogl) {
         
         m44f_t transform = target_vertices * inverse_of_model;
 
-        _ogl_push_triangle(ogl, transform, data->colors); 
+        ogl_push_triangle(ogl, transform, data->colors); 
 
 
 #if 0
@@ -1317,7 +1324,7 @@ ogl_end_frame(Opengl* ogl) {
         
       } break;
       case GFX_COMMAND_TYPE_RECT: {
-        Rect2 uv = {
+        ogl_uv_t uv = {
           { 0.f, 0.f },
           { 1.f, 1.f },
         };
@@ -1327,7 +1334,7 @@ ogl_end_frame(Opengl* ogl) {
         m44f_t R = m44f_rotation_z(data->rot);
         m44f_t S = m44f_scale(data->size.w, data->size.h, 1.f) ;
         
-        _ogl_push_sprite(ogl, 
+        ogl_push_sprite(ogl, 
                          T*R*S,
                          data->colors,
                          uv,
@@ -1335,7 +1342,7 @@ ogl_end_frame(Opengl* ogl) {
       } break;
       
       case GFX_COMMAND_TYPE_SPRITE: {
-        _ogl_flush_triangles(ogl);
+        ogl_flush_triangles(ogl);
         gfx_command_sprite_t* data = (gfx_command_sprite_t*)entry->data;
         assert(array_count(ogl->textures) > data->texture_index);
         
@@ -1354,13 +1361,13 @@ ogl_end_frame(Opengl* ogl) {
         f32_t lerped_y = f32_lerp(0.5f, -0.5f, data->anchor.y);
         m44f_t a = m44f_translation(lerped_x, lerped_y);
         
-        Rect2 uv = {0};
+        ogl_uv_t uv = {0};
         uv.min.x = (f32_t)data->texel_x0 / texture->width;
         uv.min.y = (f32_t)data->texel_y0 / texture->height;
         uv.max.x = (f32_t)data->texel_x1 / texture->width;
         uv.max.y = (f32_t)data->texel_y1 / texture->height;
         
-        _ogl_push_sprite(ogl, 
+        ogl_push_sprite(ogl, 
                          transform*a,
                          data->colors,
                          uv,
@@ -1368,25 +1375,25 @@ ogl_end_frame(Opengl* ogl) {
         
       } break;
       case GFX_COMMAND_TYPE_BLEND: {
-        _ogl_flush_sprites(ogl);
-        _ogl_flush_triangles(ogl);
+        ogl_flush_sprites(ogl);
+        ogl_flush_triangles(ogl);
         gfx_command_blend_t* data = (gfx_command_blend_t*)entry->data;
-        _ogl_set_blend_mode(ogl, data->src, data->dst);
+        ogl_set_blend_mode(ogl, data->src, data->dst);
       } break;
       case GFX_COMMAND_TYPE_DELETE_TEXTURE: {
         gfx_command_delete_texture_t* data = (gfx_command_delete_texture_t*)entry->data;
-        _ogl_delete_texture(ogl, data->texture_index);
+        ogl_delete_texture(ogl, data->texture_index);
       } break;
       case GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
-        _ogl_delete_all_textures(ogl);
+        ogl_delete_all_textures(ogl);
       } break;
       case GFX_COMMAND_TYPE_ADVANCE_DEPTH: {
         ogl->current_layer -= 1.f;
       } break;
     }
   }
-  _ogl_end_sprites(ogl);
-  _ogl_end_triangles(ogl);
+  ogl_end_sprites(ogl);
+  ogl_end_triangles(ogl);
 }
 
 #endif //GFX_OGL_H
