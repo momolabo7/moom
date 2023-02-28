@@ -88,6 +88,7 @@ struct lit_t {
 
 #include "lit_console_rendering.h"
 #include "lit_profiler_rendering.h"
+#include "lit_inspector_rendering.h"
 #include "lit_levels.h"
 
 
@@ -186,7 +187,7 @@ lit_tick(platform_t* platform) {
       profiler_update_and_render(lit); 
     }break;
     case LIT_SHOW_DEBUG_INSPECTOR: {
-      //inspector_update_and_render(&lit->inspector, lit->platform, lit->gfx, &lit->assets, lit->blank_sprite, lit->debug_font);
+      inspector_update_and_render(lit);
     }break;
     default: {}
   }

@@ -1,17 +1,19 @@
 /* date = June 16th 2022 6:54 pm */
 
-#ifndef MOE_INSPECTOR_RENDERING_H
-#define MOE_INSPECTOR_RENDERING_H
+#ifndef LIT_INSPECTOR_RENDERING_H
+#define LIT_INSPECTOR_RENDERING_H
 
-#if 0
 
 static void 
-inspector_update_and_render(inspector_t* inspector, gfx_t* gfx, assets_t* assets,  asset_sprite_id_t blank_sprite, asset_font_id_t font) 
+inspector_update_and_render(lit_t* lit) 
 {
-  moe_painter_draw_sprite(gfx, assets, blank_sprite, 
-                          v2f_set(MOE_WIDTH/2, MOE_HEIGHT/2), 
-                          v2f_set(MOE_WIDTH, MOE_HEIGHT),
-                          {0.f, 0.f, 0.f, 0.5f});
+  inspector_t* inspector = &lit->inspector;
+  gfx_t* gfx = lit->gfx;
+  assets_t* assets = &lit->assets;
+  moe_painter_draw_sprite(gfx, assets, lit->blank_sprite, 
+                          v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
+                          v2f_set(LIT_WIDTH, LIT_HEIGHT),
+                          rgba_set(0.f, 0.f, 0.f, 0.5f));
   gfx_advance_depth(gfx);
   
   f32_t line_height = 32.f;
@@ -35,14 +37,13 @@ inspector_update_and_render(inspector_t* inspector, gfx_t* gfx, assets_t* assets
     
     
     
-    f32_t y = MOE_HEIGHT - line_height * (entry_index+1);
+    f32_t y = LIT_HEIGHT - line_height * (entry_index+1);
     
-    moe_painter_draw_text(gfx, assets,font, sb->str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
+    moe_painter_draw_text(gfx, assets, lit->debug_font, sb->str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
     gfx_advance_depth(gfx);
     
     
   }
 }
-#endif
 
-#endif //MOE_INSPECTOR_RENDERING_H
+#endif //LIT_INSPECTOR_RENDERING_H

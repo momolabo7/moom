@@ -34,7 +34,7 @@
 
 #include "moe_game_api.h"
 
-#include "moe_inspector_rendering.h"
+//#include "moe_inspector_rendering.h"
 //#include "moe_profiler_rendering.h"
 //#include "moe_console_rendering.h"
 
