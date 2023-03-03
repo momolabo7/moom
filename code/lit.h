@@ -27,6 +27,7 @@
 
 
 
+
 #include "lit_game.h"
 
 enum lit_show_debug_type_t {
@@ -45,6 +46,8 @@ enum lit_mode_t {
 };
 
 struct lit_splash_t {
+  f32_t timer;
+  asset_font_id_t font;
 };
 
 struct lit_menu_t {
@@ -84,16 +87,47 @@ struct lit_t {
 
 };
 
+
+static void
+lit_init_splash(lit_t* lit, lit_splash_t* splash) {
+  make(asset_match_t, match);
+  set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
+  splash->font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
+  splash->timer = 1.5f;
+}
+
+static void
+lit_update_splash(lit_t* lit, lit_splash_t* splash) {
+  splash->timer -= lit->platform->seconds_since_last_frame;
+ 
+  moe_painter_draw_text_center_aligned(lit->gfx, &lit->assets, splash->font, str8_from_lit("moom"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT/2, 128.f);
+
+  if (splash->timer <= -1.f) {
+    //lit->next_mode = LIT_MODE_GAME; 
+  }
+
+}
+
+static void
+lit_init_menu(lit_t* lit, lit_menu_t* menu) {
+  // TODO
+}
+
+static void
+lit_update_menu(lit_t* lit, lit_menu_t* menu) {
+  // TODO
+
+}
+
+
+
+
 #include "lit_game.cpp"
 
 #include "lit_console_rendering.h"
 #include "lit_profiler_rendering.h"
 #include "lit_inspector_rendering.h"
 #include "lit_levels.h"
-
-
-
-
 
 
 static b32_t
@@ -108,7 +142,7 @@ lit_tick(platform_t* platform) {
     lit->gfx = platform->gfx;
     lit->profiler = platform->profiler;
 
-    lit->next_mode = LIT_MODE_GAME; 
+    lit->next_mode = LIT_MODE_SPLASH; 
 
     // TODO: Error checking
     // TODO: Better memory management
@@ -137,6 +171,8 @@ lit_tick(platform_t* platform) {
     auto* frame_memory = platform->allocate_memory(megabytes(1));
     arena_init(&lit->frame_arena, frame_memory->data, frame_memory->size);
 
+    lit->platform->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
+    gfx_push_view(lit->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
   }
 
@@ -150,7 +186,7 @@ lit_tick(platform_t* platform) {
     
     switch(lit->mode) {
       case LIT_MODE_SPLASH: {
-        //lit_init_splash(moe, &lit->splash, platform);
+        lit_init_splash(lit, &lit->splash);
       } break;
       case LIT_MODE_GAME: {
         lit_init_game(lit, &lit->game);
@@ -162,7 +198,7 @@ lit_tick(platform_t* platform) {
   }
   switch(lit->mode) {
     case LIT_MODE_SPLASH: {
-      //lit_update_splash(moe, &lit->splash, platform);
+      lit_update_splash(lit, &lit->splash);
     } break;
     case LIT_MODE_GAME: {
       lit_update_game(lit, &lit->game);

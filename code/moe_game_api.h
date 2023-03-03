@@ -67,7 +67,6 @@ static void
 moe_painter_draw_text_center_aligned(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
   asset_font_t* font = get_font(assets, font_id);
-
   
   // Calculate the total width of the text
   f32_t offset = 0.f;
@@ -80,10 +79,14 @@ moe_painter_draw_text_center_aligned(gfx_t* gfx, assets_t* assets, asset_font_id
     u32_t prev_cp = str.e[char_index-1];
 
     asset_font_glyph_t *prev_glyph = get_glyph(font, prev_cp);
+    asset_font_glyph_t *curr_glyph = get_glyph(font, curr_cp);
 
     f32_t kerning = get_kerning(font, prev_cp, curr_cp);
     f32_t advance = prev_glyph->horizontal_advance;
     offset += (kerning + advance) * font_height;
+    if (char_index == str.count-1) {
+      offset += advance * font_height;
+    }
   }
   px -= offset/2 ;
 
