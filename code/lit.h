@@ -25,6 +25,17 @@
 #define LIT_PLAYER_ROTATE_SPEED 3.5f
 
 
+#ifdef INTERNAL
+#define lit_log(...) lit->platform->debug_log(__VA_ARGS__)
+#define lit_profile_block(name) profiler_block(moe->platform->profiler, name)
+#define lit_profile_begin(name) profiler_begin_block(moe->platform->profiler, name)
+#define lit_profile_end(name) profiler_end_block(moe->platform->profiler, name)
+#else
+#define lit_log(...)
+#define lit_profiler_block(...)
+#define lit_profile_begin(...) 
+#define lit_profile_end(...) 
+#endif 
 
 
 
@@ -51,6 +62,8 @@ struct lit_splash_t {
 };
 
 struct lit_menu_t {
+  asset_font_id_t font;
+
 };
 
 struct lit_t {
@@ -103,19 +116,22 @@ lit_update_splash(lit_t* lit, lit_splash_t* splash) {
   moe_painter_draw_text_center_aligned(lit->gfx, &lit->assets, splash->font, str8_from_lit("moom"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT/2, 128.f);
 
   if (splash->timer <= -1.f) {
-    //lit->next_mode = LIT_MODE_GAME; 
+    lit->next_mode = LIT_MODE_GAME; 
   }
 
 }
 
 static void
 lit_init_menu(lit_t* lit, lit_menu_t* menu) {
-  // TODO
+  make(asset_match_t, match);
+  set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
+  menu->font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
+
 }
 
 static void
 lit_update_menu(lit_t* lit, lit_menu_t* menu) {
-  // TODO
+  moe_painter_draw_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("menu"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT/2, 128.f);
 
 }
 
@@ -142,7 +158,7 @@ lit_tick(platform_t* platform) {
     lit->gfx = platform->gfx;
     lit->profiler = platform->profiler;
 
-    lit->next_mode = LIT_MODE_SPLASH; 
+    lit->next_mode = LIT_MODE_GAME; 
 
     // TODO: Error checking
     // TODO: Better memory management
@@ -192,6 +208,7 @@ lit_tick(platform_t* platform) {
         lit_init_game(lit, &lit->game);
       } break;
       case LIT_MODE_MENU: {
+        lit_init_menu(lit, &lit->menu);
       } break;
 
     }
@@ -205,6 +222,7 @@ lit_tick(platform_t* platform) {
       lit_render_game(lit, &lit->game);
     } break;
     case LIT_MODE_MENU: {
+      lit_update_menu(lit, &lit->menu);
     } break;
 
   }

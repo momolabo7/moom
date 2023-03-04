@@ -17,6 +17,7 @@ typedef struct {
 typedef platform_memory_t* platform_allocate_memory_f(umi_t size);
 typedef void  platform_free_memory_f(platform_memory_t* ptr);
 
+
 //////////////////////////////////////////////////////////////////////
 // Platform File API
 typedef enum {

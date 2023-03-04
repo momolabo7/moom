@@ -5,8 +5,8 @@ static void lit_load_next_level(lit_game_t* m);
 // 
 // Animator
 //
-static void
-lit_push_patrol_sensor_animator(lit_game_t* game, lit_sensor_t* sensor,  f32_t duration, v2f_t start, v2f_t end) 
+static lit_animator_t*
+lit_push_patrol_sensor_animator(lit_game_t* game, lit_sensor_t* sensor,  f32_t duration) 
 {
   auto* anim = game->animators + game->animator_count++;
   anim->type = LIT_ANIMATOR_TYPE_PATROL_SENSOR;
@@ -14,9 +14,21 @@ lit_push_patrol_sensor_animator(lit_game_t* game, lit_sensor_t* sensor,  f32_t d
   auto* a = &anim->patrol_sensor;
   a->timer = 0.f;
   a->duration = duration;
-  a->start = start;
-  a->end = end;
   a->sensor = sensor;
+  a->waypoint_count = 0;
+
+  return anim;
+}
+
+static void
+lit_push_patrol_sensor_animator_waypoint(lit_animator_t* anim, f32_t pos_x, f32_t pos_y) 
+{
+  assert(anim->type == LIT_ANIMATOR_TYPE_PATROL_SENSOR);
+  auto* a = &anim->patrol_sensor;
+  assert(a->waypoint_count < array_count(a->waypoints));
+  v2f_t* wp = a->waypoints + a->waypoint_count++;
+  wp->x = pos_x;
+  wp->y = pos_y;
 }
 
 static void
@@ -36,19 +48,30 @@ lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duratio
 }
 
 static void 
-lit_animate(lit_animator_t* animator, f32_t dt) {
+lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {
   switch(animator->type) {
     case LIT_ANIMATOR_TYPE_PATROL_SENSOR: 
     {
       auto* a = &animator->patrol_sensor;
-
-
       a->timer += dt;
-
+      if (a->timer > a->duration) {
+        a->timer = 0.f;
+        a->current_waypoint_index = ++a->current_waypoint_index % a->waypoint_count;
+        u32_t next_waypoint_index = (a->current_waypoint_index + 1) % a->waypoint_count;
+        a->start = a->waypoints[a->current_waypoint_index];
+        a->end = a->waypoints[next_waypoint_index];
+      }
       // NOTE(momo): sin() takes in a value from [0, PI_32]
-      f32_t angle = ((a->timer/a->duration)-1.f) * PI_32;
-      f32_t alpha = (f32_cos(angle) + 1.f) / 2.f;
+      //
+      f32_t alpha = f32_ease_inout_sine(a->timer/a->duration);
+//      f32_t angle = ((a->timer/a->duration)-1.f) * PI_32;
+//      f32_t alpha = (f32_cos(angle) + 1.f) / 2.f;
       a->sensor->pos = v2f_lerp(a->start, a->end, alpha);
+      //lit_log("%f\n", alpha);
+
+
+
+
     } break;
     case LIT_ANIMATOR_TYPE_ROTATE_EDGE: {
     } break;
@@ -70,10 +93,10 @@ lit_animate(lit_animator_t* animator, f32_t dt) {
 }
 
 static void
-lit_update_animators(lit_game_t* game, f32_t dt) {
+lit_update_animators(lit_t* lit, lit_game_t* game, f32_t dt) {
   for(u32_t animator_index = 0; animator_index < game->animator_count; ++animator_index)
   {
-    lit_animate(game->animators + animator_index, dt);
+    lit_animate(lit, game->animators + animator_index, dt);
   }
 }
 
@@ -665,15 +688,59 @@ lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color)
   s->current_color = 0;
 
   return s;
+}
+
+static void
+lit_push_patrolling_sensor_waypoint(lit_game_t* game, f32_t pos_x, f32_t pos_y) 
+{
+  assert(game->selected_sensor);
+  assert(game->selected_animator);
+  assert(game->selected_animator->type == LIT_ANIMATOR_TYPE_PATROL_SENSOR);
+  lit_push_patrol_sensor_animator_waypoint(game->selected_animator, pos_x, pos_y);
+}
+
+
+static void
+lit_begin_patrolling_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color, f32_t duration_per_waypoint) 
+{
+  assert(!game->selected_sensor);
+  assert(!game->selected_animator);
+
+  game->selected_sensor = lit_push_sensor(game, pos_x, pos_y, target_color);
+  game->selected_animator = lit_push_patrol_sensor_animator(game, game->selected_sensor, duration_per_waypoint);
+  lit_push_patrolling_sensor_waypoint(game, pos_x, pos_y);
+
+  assert(game->selected_sensor);
+  assert(game->selected_animator);
 
 }
 
+static void
+lit_end_patrolling_sensor(lit_game_t* game) {
+
+  assert(game->selected_sensor);
+  assert(game->selected_animator);
+
+  auto* a = &game->selected_animator->patrol_sensor;
+  a->timer = 0.f;
+  a->current_waypoint_index = 0;
+  u32_t next_waypoint_index = (a->current_waypoint_index + 1) % a->waypoint_count;
+  a->start = a->waypoints[a->current_waypoint_index];
+  a->end = a->waypoints[next_waypoint_index];
+
+
+  game->selected_sensor = nullptr;
+  game->selected_animator = nullptr;
+}
+
+#if 0
 static void
 lit_push_patrolling_sensor(lit_game_t* game, f32_t duration, v2f_t start, v2f_t end, u32_t target_color) 
 {
   auto* s = lit_push_sensor(game, start.x, start.y, target_color); 
   lit_push_patrol_sensor_animator(game, s, duration, start, end);
 }
+#endif
 
 static void 
 lit_update_sensors(lit_game_t* game, f32_t dt) 
@@ -843,7 +910,7 @@ lit_update_game(lit_t* lit, lit_game_t* game)
 
   if (game->state == LIT_STATE_TYPE_NORMAL) 
   {
-    lit_update_animators(game, dt);
+    lit_update_animators(lit, game, dt);
     lit_update_player(lit, game, dt);
   }
 
@@ -889,19 +956,15 @@ lit_init_game(lit_t* lit, lit_game_t* game)
   lit_load_level(game, 0); 
   rng_init(&game->rng, 65535); // don't really need to be strict 
 
-  {
-    make(asset_match_t, match);
-    set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
-    game->tutorial_font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
-  }
+  make(asset_match_t, match);
+  set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
+  game->tutorial_font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
 
   game->blank_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
   game->circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
   game->filled_circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
 
-  lit->platform->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
-  gfx_push_view(lit->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
-
+  
 }
 
 static void 

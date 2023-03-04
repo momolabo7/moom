@@ -120,6 +120,11 @@ struct lit_animator_patrol_sensor_t {
   lit_sensor_t* sensor;
   f32_t timer;
   f32_t duration;
+
+  u32_t current_waypoint_index;
+  u32_t waypoint_count;
+  v2f_t waypoints[8];
+
   v2f_t start;
   v2f_t end;
 };
@@ -175,6 +180,9 @@ struct lit_game_t {
   u32_t animator_count;
   lit_animator_t animators[64];
 
+  lit_sensor_t* selected_sensor; // for animated sensor APIs
+  lit_animator_t* selected_animator;
+
   lit_particle_pool_t particles;
 
   f32_t stage_fade_timer;
@@ -188,6 +196,8 @@ struct lit_game_t {
   u32_t title_wp_index;
     
   u32_t sensors_activated;
+
+
 };
 
 
