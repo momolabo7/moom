@@ -10,17 +10,6 @@
 #include "moe_gfx.h"
 
 
-#ifdef INTERNAL
-#define moe_log(...) moe->platform->debug_log(__VA_ARGS__)
-#define moe_profile_block(name) profiler_block(moe->platform->profiler, name)
-#define moe_profile_begin(name) profiler_begin_block(moe->platform->profiler, name)
-#define moe_profile_end(name) profiler_end_block(moe->platform->profiler, name)
-#else
-#define moe_log(...)
-#define moe_profiler_block(...)
-#define moe_profile_begin(...) 
-#define moe_profile_end(...) 
-#endif 
 
 
 #include "moe_profiler.h"

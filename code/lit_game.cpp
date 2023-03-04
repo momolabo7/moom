@@ -5,32 +5,6 @@ static void lit_load_next_level(lit_game_t* m);
 // 
 // Animator
 //
-static lit_animator_t*
-lit_push_patrol_sensor_animator(lit_game_t* game, lit_sensor_t* sensor,  f32_t duration) 
-{
-  auto* anim = game->animators + game->animator_count++;
-  anim->type = LIT_ANIMATOR_TYPE_PATROL_SENSOR;
-  
-  auto* a = &anim->patrol_sensor;
-  a->timer = 0.f;
-  a->duration = duration;
-  a->sensor = sensor;
-  a->waypoint_count = 0;
-
-  return anim;
-}
-
-static void
-lit_push_patrol_sensor_animator_waypoint(lit_animator_t* anim, f32_t pos_x, f32_t pos_y) 
-{
-  assert(anim->type == LIT_ANIMATOR_TYPE_PATROL_SENSOR);
-  auto* a = &anim->patrol_sensor;
-  assert(a->waypoint_count < array_count(a->waypoints));
-  v2f_t* wp = a->waypoints + a->waypoint_count++;
-  wp->x = pos_x;
-  wp->y = pos_y;
-}
-
 static void
 lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duration, lit_edge_t  start, lit_edge_t end) 
 {
@@ -693,32 +667,45 @@ lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color)
 static void
 lit_push_patrolling_sensor_waypoint(lit_game_t* game, f32_t pos_x, f32_t pos_y) 
 {
-  assert(game->selected_sensor);
   assert(game->selected_animator);
   assert(game->selected_animator->type == LIT_ANIMATOR_TYPE_PATROL_SENSOR);
-  lit_push_patrol_sensor_animator_waypoint(game->selected_animator, pos_x, pos_y);
+
+  auto* a = &game->selected_animator->patrol_sensor;
+  assert(a->waypoint_count < array_count(a->waypoints));
+  v2f_t* wp = a->waypoints + a->waypoint_count++;
+  wp->x = pos_x;
+  wp->y = pos_y;
+
 }
 
 
 static void
 lit_begin_patrolling_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color, f32_t duration_per_waypoint) 
 {
-  assert(!game->selected_sensor);
   assert(!game->selected_animator);
 
-  game->selected_sensor = lit_push_sensor(game, pos_x, pos_y, target_color);
-  game->selected_animator = lit_push_patrol_sensor_animator(game, game->selected_sensor, duration_per_waypoint);
-  lit_push_patrolling_sensor_waypoint(game, pos_x, pos_y);
+  auto* sensor = lit_push_sensor(game, pos_x, pos_y, target_color);
+  //game->selected_animator = lit_push_patrol_sensor_animator(game, sensor, duration_per_waypoint);
 
-  assert(game->selected_sensor);
-  assert(game->selected_animator);
+  assert(game->animator_count < array_count(game->animators));
+  auto* anim = game->animators + game->animator_count++;
+  anim->type = LIT_ANIMATOR_TYPE_PATROL_SENSOR;
+  
+  auto* a = &anim->patrol_sensor;
+  a->timer = 0.f;
+  a->duration = duration_per_waypoint;
+  a->sensor = sensor;
+  a->waypoint_count = 0;
+  a->current_waypoint_index = 0;
+
+  game->selected_animator = anim;
+  lit_push_patrolling_sensor_waypoint(game, pos_x, pos_y);
 
 }
 
 static void
 lit_end_patrolling_sensor(lit_game_t* game) {
 
-  assert(game->selected_sensor);
   assert(game->selected_animator);
 
   auto* a = &game->selected_animator->patrol_sensor;
