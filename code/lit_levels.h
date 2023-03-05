@@ -287,53 +287,42 @@ lit_level_1_0(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("MOVEMENT"));
 
 //  lit_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
-  lit_push_light(m, 400.f, 700.f, 0x008800FF, 15.f, 0.75f);
-  lit_push_light(m, 150.f, 700.f, 0x880000FF, 15.f, 0.75f);
-  lit_push_light(m, 600.f, 700.f, 0x000088FF, 15.f, 0.75f);
+  lit_push_light(m, 400.f, 700.f, 0x008800FF, 15.f, 0.25f);
+  lit_push_light(m, 150.f, 700.f, 0x880000FF, 15.f, 0.25f);
+  lit_push_light(m, 600.f, 700.f, 0x000088FF, 15.f, 0.25f);
 
   f32_t duration = 5.25f;
   lit_begin_patrolling_sensor(m, 150.f, 150.f, 0x880088FF, duration);
   lit_push_patrolling_sensor_waypoint(m, 650.f, 650.f);
   lit_end_patrolling_sensor(m);
 
-#if 0   
+  lit_begin_patrolling_sensor(m, 650.f, 650.f, 0x880088FF, duration);
+  lit_push_patrolling_sensor_waypoint(m, 150.f, 150.f);
+  lit_end_patrolling_sensor(m);
 
-  lit_push_patrolling_sensor(m, duration, 
-                             v2f_set(150.f, 150.f), 
-                             v2f_set(650.f, 650.f),
-                             0x880088FF); 
-  lit_push_patrolling_sensor(m, duration, 
-                             v2f_set(650.f, 650.f), 
-                             v2f_set(150.f, 150.f),
-                             0x880088FF); 
+  lit_begin_patrolling_sensor(m, 150.f, 400.f, 0x880088FF, duration);
+  lit_push_patrolling_sensor_waypoint(m, 650.f, 400.f);
+  lit_end_patrolling_sensor(m);
 
-  lit_push_patrolling_sensor(m, duration, 
-                             v2f_set(150.f, 400.f), 
-                             v2f_set(650.f, 400.f),
-                             0x880088FF); 
-  lit_push_patrolling_sensor(m, duration, 
-                             v2f_set(650.f, 400.f), 
-                             v2f_set(150.f, 400.f),
-                             0x880088FF); 
+  lit_begin_patrolling_sensor(m, 650.f, 400.f, 0x880088FF, duration);
+  lit_push_patrolling_sensor_waypoint(m, 150.f, 400.f);
+  lit_end_patrolling_sensor(m);
 
-  lit_push_patrolling_sensor(m, duration, 
-                             v2f_set(150.f, 650.f), 
-                             v2f_set(650.f, 150.f),
-                             0x880088FF); 
-  lit_push_patrolling_sensor(m, duration, 
-                             v2f_set(650.f, 150.f),
-                             v2f_set(150.f, 650.f), 
-                             0x880088FF); 
+  lit_begin_patrolling_sensor(m, 150.f, 650.f, 0x880088FF, duration);
+  lit_push_patrolling_sensor_waypoint(m, 650.f, 150.f);
+  lit_end_patrolling_sensor(m);
 
-  lit_push_patrolling_sensor(m, duration, 
-                             v2f_set(400.f, 650.f), 
-                             v2f_set(400.f, 150.f),
-                             0x880088FF); 
-  lit_push_patrolling_sensor(m, duration, 
-                             v2f_set(400.f, 150.f),
-                             v2f_set(400.f, 650.f), 
-                             0x880088FF); 
-#endif
+  lit_begin_patrolling_sensor(m, 650.f, 150.f, 0x880088FF, duration);
+  lit_push_patrolling_sensor_waypoint(m, 150.f, 650.f);
+  lit_end_patrolling_sensor(m);
+
+  lit_begin_patrolling_sensor(m, 400.f, 650.f, 0x880088FF, duration);
+  lit_push_patrolling_sensor_waypoint(m, 400.f, 150.f);
+  lit_end_patrolling_sensor(m);
+
+  lit_begin_patrolling_sensor(m, 400.f, 150.f, 0x880088FF, duration);
+  lit_push_patrolling_sensor_waypoint(m, 400.f, 650.f);
+  lit_end_patrolling_sensor(m);
 
 }
 
@@ -344,31 +333,77 @@ lit_level_1_1(lit_game_t* m) {
   lit_push_light(m, 400.f, 700.f, 0x008800FF, 15.f, 0.75f);
   lit_push_sensor(m, 400.f, 400.f, 0x888888FF); 
 
+  lit_begin_patrolling_sensor(m, 650.f, 150.f, 0x880000FF, 5.f);
+  lit_push_patrolling_sensor_waypoint(m, 650.f, 650.f);
+  lit_end_patrolling_sensor(m);
 
-  
-#if 0
-  lit_push_patrolling_sensor(m, 5.f, 
-                             v2f_set(650.f, 150.f), 
-                             v2f_set(650.f, 650.f),
-                             0x008800FF); 
-  lit_push_patrolling_sensor(m, 5.25f, 
-                             v2f_set(150.f, 650.f), 
-                             v2f_set(150.f, 150.f),
-                             0x880000FF); 
-#endif
-
-
+  lit_begin_patrolling_sensor(m, 150.f, 650.f, 0x008800FF, 5.25f);
+  lit_push_patrolling_sensor_waypoint(m, 150.f, 150.f);
+  lit_end_patrolling_sensor(m);
 }
 
 static void
 lit_level_1_2(lit_game_t* m) {
-  lit_set_title(m, str8_from_lit("GRADIENT"));
+  lit_set_title(m, str8_from_lit("BUSY"));
   //lit_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
-  lit_push_light(m, 400.f, 700.f, 0x002200FF, 15.f, 0.75f);
-  lit_push_light(m, 200.f, 700.f, 0x002200FF, 15.f, 0.75f);
-  lit_push_light(m, 200.f, 700.f, 0x002200FF, 15.f, 0.75f);
-  lit_push_light(m, 200.f, 700.f, 0x002200FF, 15.f, 0.75f);
-  lit_push_light(m, 200.f, 700.f, 0x002200FF, 15.f, 0.75f);
+#if LIT_INIT_WITH_SOLUTION
+  lit_push_light(m, 600.f, 700.f, 0x660000FF, 15.f, 0.75f);
+  lit_push_light(m, 600.f, 700.f, 0x660000FF, 15.f, 0.75f);
+  lit_push_light(m, 200.f, 700.f, 0x006600FF, 15.f, 0.75f);
+  lit_push_light(m, 200.f, 700.f, 0x006600FF, 15.f, 0.75f);
+#else
+  lit_push_light(m, 400.f, 750.f, 0x006600FF, 15.f, 0.75f);
+  lit_push_light(m, 050.f, 400.f, 0x006600FF, 15.f, 0.f);
+  lit_push_light(m, 050.f, 750.f, 0x660000FF, 15.f, 0.87f);
+  lit_push_light(m, 750.f, 750.f, 0x660000FF, 15.f, 0.62f);
+#endif
+  //lit_push_light(m, 200.f, 700.f, 0x006600FF, 15.f, 0.75f);
+
+  //lit_push_light(m, 200.f, 700.f, 0x002200FF, 15.f, 0.75f);
+  //lit_push_light(m, 200.f, 700.f, 0x002200FF, 15.f, 0.75f);
+ 
+  // patrols in a square
+  lit_begin_patrolling_sensor(m, 150.f, 650.f, 0x006600FF, 5.f);
+  lit_push_patrolling_sensor_waypoint(m, 150.f, 150.f);
+  lit_push_patrolling_sensor_waypoint(m, 650.f, 150.f);
+  lit_push_patrolling_sensor_waypoint(m, 650.f, 650.f);
+  lit_end_patrolling_sensor(m);
+ 
+  // patrols in a small square
+  lit_begin_patrolling_sensor(m, 550.f, 250.f, 0x006600FF, 5.f);
+  lit_push_patrolling_sensor_waypoint(m, 250.f, 250.f);
+  lit_push_patrolling_sensor_waypoint(m, 250.f, 550.f);
+  lit_push_patrolling_sensor_waypoint(m, 550.f, 550.f);
+  lit_end_patrolling_sensor(m);
+
+  // patrols in an hourglass (1)
+  lit_begin_patrolling_sensor(m, 650.f, 650.f, 0x660000FF, 2.5f);
+  lit_push_patrolling_sensor_waypoint(m, 650.f, 150.f);
+  lit_push_patrolling_sensor_waypoint(m, 150.f, 650.f);
+  lit_push_patrolling_sensor_waypoint(m, 150.f, 150.f);
+  lit_end_patrolling_sensor(m);
+#if 1
+  // patrols in an hourglass (2)
+  lit_begin_patrolling_sensor(m, 150.f, 150.f, 0x660000FF, 2.5f);
+  lit_push_patrolling_sensor_waypoint(m, 150.f, 650.f);
+  lit_push_patrolling_sensor_waypoint(m, 650.f, 150.f);
+  lit_push_patrolling_sensor_waypoint(m, 650.f, 650.f);
+  lit_end_patrolling_sensor(m);
+#endif
+
+
+
+  // Runs across the scene vertially
+  lit_begin_patrolling_sensor(m, 400.f, -100.f, 0xCCCC00FF, 5.f);
+  lit_push_patrolling_sensor_waypoint(m, 400.f, 900.f);
+  lit_end_patrolling_sensor(m);
+ 
+
+  // Runs across the scene horizontally
+  lit_begin_patrolling_sensor(m, -100.f, 400.f, 0xCCCC00FF, 5.f);
+  lit_push_patrolling_sensor_waypoint(m, 900.f, 400.f);
+  lit_end_patrolling_sensor(m);
+
 
 #if 0
   lit_push_patrolling_sensor(m, 5.f, 
@@ -406,9 +441,8 @@ static Lit_Level lit_levels[] = {
   // Here on it's all movement
   lit_level_1_0,
   lit_level_1_1,
-  lit_level_1_2,
 #endif
-  lit_level_1_0,
+  lit_level_1_2,
 };
 
 
