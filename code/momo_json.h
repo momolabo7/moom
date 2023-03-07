@@ -1,7 +1,6 @@
 #ifndef MOMO_JSON
 #define MOMO_JSON
 
-#define KEY_V2 1
 
 struct json_object_t {
   struct _json_object_node_t* node;
@@ -24,7 +23,7 @@ struct json_array_t{
   struct _json_array_node_t* tail;
 };
 
-static b32_t json_read(json_t* j, void* json_string, umi_t json_string_size, arena_t* arena);
+static b32_t json_read(json_t* j, u8_t* json_string, u32_t json_string_size, arena_t* arena);
 
 #if 0
 static b32_t json_read(json_object_t* j, void* json_string, umi_t json_string_size, arena_t* arena);
@@ -101,19 +100,13 @@ struct _json_value_t {
   };
 };
 
-#if KEY_V2
 struct json_key_t {
   u32_t begin;
   u32_t ope;
 };
-#endif
 
 struct _json_object_node_t {
-#if KEY_V2
   json_key_t key;
-#else
-  str8_t key;
-#endif
   _json_value_t value;
   struct _json_object_node_t* left;
   struct _json_object_node_t* right;
@@ -293,23 +286,6 @@ _json_next_token(json_t* t) {
 }
 
 
-
-static void
-_json_set_node_key(_json_object_node_t* node, json_t* j, _json_token_t key, arena_t* ba)
-{
-
-#if KEY_V2
-  node->key.begin = key.begin;
-  node->key.ope = key.ope;
-#else
-  u32_t key_len = key.ope - key.begin;
-  u8_t* key_mem = arena_push_arr(u8_t, ba, key_len);
-  for(u32_t i = 0; i < key_len; ++i) {
-    key_mem[i] = j->text.e[key.begin + i];
-  }
-  node->key = str8(key_mem, key_len);  
-#endif
-}
 
 static s32_t 
 _json_compare_keys(json_t* t, json_key_t lhs, json_key_t rhs) 
@@ -532,7 +508,8 @@ _json_parse_object(json_object_t* obj, json_t* t, arena_t* ba) {
             error = true;
           }
           else {
-            _json_set_node_key(current_node, t, token, ba); 
+            current_node->key.begin = token.begin;
+            current_node->key.ope = token.ope;
             expect_type = _JSON_OBJECT_EXPECT_TYPE_COLON;
           }
         }
@@ -743,7 +720,7 @@ json_read(json_object_t* j, u8_t* json_string, umi_t json_string_size, arena_t* 
 }
 #endif
 static b32_t
-json_read(json_t* j, u8_t* json_string, umi_t json_string_size, arena_t* ba) 
+json_read(json_t* j, u8_t* json_string, u32_t json_string_size, arena_t* ba) 
 {
   j->text = str8(json_string, json_string_size);
   j->at = 0;
