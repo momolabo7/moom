@@ -1100,8 +1100,8 @@ json_array_t	C:/users/geral/work/moom/code/momo_json.h	/^struct json_array_t{$/;
 JSON_DEBUG	code/json_test.cpp	/^#define JSON_DEBUG /;"	d	language:C++	file:
 json_key_t	C:/users/geral/work/moom/code/momo_json.h	/^struct json_key_t {$/;"	s	language:C++
 json_object_t	C:/users/geral/work/moom/code/momo_json.h	/^struct json_object_t {$/;"	s	language:C++
-json_read	C:/users/geral/work/moom/code/momo_json.h	/^json_read(json_t* j, u8_t* json_string, umi_t json_string_size, arena_t* ba) $/;"	f	language:C++	typeref:typename:b32_t
-json_read	C:/users/geral/work/moom/code/momo_json.h	/^static b32_t json_read(json_t* j, void* json_string, umi_t json_string_size, arena_t* arena);$/;"	p	language:C++	typeref:typename:b32_t
+json_read	C:/users/geral/work/moom/code/momo_json.h	/^json_read(json_t* j, u8_t* json_string, u32_t json_string_size, arena_t* ba) $/;"	f	language:C++	typeref:typename:b32_t
+json_read	C:/users/geral/work/moom/code/momo_json.h	/^static b32_t json_read(json_t* j, u8_t* json_string, u32_t json_string_size, arena_t* arena);$/;"	p	language:C++	typeref:typename:b32_t
 json_t	C:/users/geral/work/moom/code/momo_json.h	/^struct json_t {$/;"	s	language:C++
 karu_asset_t	code/karu.h	/^struct karu_asset_t {$/;"	s	language:C++
 karu_bitmap_t	code/karu.h	/^struct karu_bitmap_t {$/;"	s	language:C++
@@ -1120,7 +1120,6 @@ kernings	code/moe_assets.h	/^  f32_t* kernings;$/;"	m	language:C++	struct:asset_
 key	C:/users/geral/work/moom/code/momo_json.h	/^  json_key_t key;$/;"	m	language:C++	struct:_json_object_node_t	typeref:typename:json_key_t
 key	code/moe_console.h	/^  str8_t key;$/;"	m	language:C++	struct:console_command_t	typeref:typename:str8_t
 key	code/momo_sort.h	/^  f32_t key;$/;"	m	language:C++	struct:sort_entry_t	typeref:typename:f32_t
-KEY_V2	C:/users/geral/work/moom/code/momo_json.h	/^#define KEY_V2 /;"	d	language:C++
 kilobytes	code/momo_types.h	/^#define kilobytes(/;"	d	language:C++
 l	code/momo_colors.h	/^  f32_t h, s, l;  $/;"	m	language:C++	struct:hsl_t	typeref:typename:f32_t
 last_drawn_instance_index	code/moe_gfx_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:__anon0f5c060e0808	typeref:typename:GLsizei
@@ -1848,7 +1847,7 @@ rng_range_U32	code/momo_rng.h	/^rng_range_U32(rng_t* r, u32_t min, u32_t max)$/;
 rng_t	code/momo_rng.h	/^struct rng_t {$/;"	s	language:C++
 rng_unilateral	code/momo_rng.h	/^rng_unilateral(rng_t* r)$/;"	f	language:C++	typeref:typename:f32_t
 rng_unit_circle	code/momo_rng.h	/^rng_unit_circle(rng_t* r) {$/;"	f	language:C++	typeref:typename:v2f_t
-root	C:/users/geral/work/moom/code/momo_json.h	/^  struct json_object_node_t* root;$/;"	m	language:C++	struct:json_t	typeref:struct:json_object_node_t *
+root	C:/users/geral/work/moom/code/momo_json.h	/^  json_object_t root;$/;"	m	language:C++	struct:json_t	typeref:typename:json_object_t
 rot	code/moe_gfx.h	/^  f32_t rot;$/;"	m	language:C++	struct:gfx_command_rect_t	typeref:typename:f32_t
 rotate_edge	code/lit_game.h	/^    lit_animator_rotate_edge_t rotate_edge;$/;"	m	language:C++	union:lit_animator_t::__anon4d532547010a	typeref:typename:lit_animator_rotate_edge_t
 rp_pack	code/momo_rect_pack.h	/^rp_pack(rp_rect_t* rects, $/;"	f	language:C++	typeref:typename:b32_t
@@ -2668,7 +2667,6 @@ _json_print_nodes_in_order	C:/users/geral/work/moom/code/momo_json.h	/^static vo
 _json_print_nodes_in_order	C:/users/geral/work/moom/code/momo_json.h	/^_json_print_nodes_in_order(json_t* t, _json_object_node_t* node) $/;"	f	language:C++	typeref:typename:void
 _json_print_token	C:/users/geral/work/moom/code/momo_json.h	/^_json_print_token(json_t* t, _json_token_t token)  {$/;"	f	language:C++	typeref:typename:void
 _json_print_value	C:/users/geral/work/moom/code/momo_json.h	/^_json_print_value(json_t* t, _json_value_t* value) {$/;"	f	language:C++	typeref:typename:void
-_json_set_node_key	C:/users/geral/work/moom/code/momo_json.h	/^_json_set_node_key(_json_object_node_t* node, json_t* j, _json_token_t key, arena_t* ba)$/;"	f	language:C++	typeref:typename:void
 _json_set_value_based_on_token	C:/users/geral/work/moom/code/momo_json.h	/^static b32_t _json_set_value_based_on_token(_json_value_t* value, json_t* t, _json_token_t token/;"	p	language:C++	typeref:typename:b32_t
 _json_set_value_based_on_token	C:/users/geral/work/moom/code/momo_json.h	/^_json_set_value_based_on_token(_json_value_t* value, $/;"	f	language:C++	typeref:typename:b32_t
 _json_token_t	C:/users/geral/work/moom/code/momo_json.h	/^struct _json_token_t{$/;"	s	language:C++
@@ -2678,27 +2676,23 @@ _JSON_TOKEN_TYPE_COLON	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN
 _JSON_TOKEN_TYPE_COMMA	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_COMMA,$/;"	e	language:C++	enum:_json_token_type_t
 _JSON_TOKEN_TYPE_EOF	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_EOF$/;"	e	language:C++	enum:_json_token_type_t
 _JSON_TOKEN_TYPE_FALSE	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_FALSE,$/;"	e	language:C++	enum:_json_token_type_t
-_JSON_TOKEN_TYPE_FLOATING_POINT	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_FLOATING_POINT,$/;"	e	language:C++	enum:_json_token_type_t
 _JSON_TOKEN_TYPE_IDENTIFIER	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_IDENTIFIER,$/;"	e	language:C++	enum:_json_token_type_t
 _JSON_TOKEN_TYPE_NULL	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_NULL,$/;"	e	language:C++	enum:_json_token_type_t
+_JSON_TOKEN_TYPE_NUMBER	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_NUMBER,$/;"	e	language:C++	enum:_json_token_type_t
 _JSON_TOKEN_TYPE_OPEN_BRACE	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_OPEN_BRACE,$/;"	e	language:C++	enum:_json_token_type_t
 _JSON_TOKEN_TYPE_OPEN_BRACKET	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_OPEN_BRACKET,$/;"	e	language:C++	enum:_json_token_type_t
-_JSON_TOKEN_TYPE_SIGNED_INTEGER	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_SIGNED_INTEGER,$/;"	e	language:C++	enum:_json_token_type_t
 _JSON_TOKEN_TYPE_STRING	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_STRING,$/;"	e	language:C++	enum:_json_token_type_t
 _json_token_type_t	C:/users/geral/work/moom/code/momo_json.h	/^enum _json_token_type_t {$/;"	g	language:C++
 _JSON_TOKEN_TYPE_TRUE	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_TRUE,$/;"	e	language:C++	enum:_json_token_type_t
 _JSON_TOKEN_TYPE_UNKNOWN	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_UNKNOWN,$/;"	e	language:C++	enum:_json_token_type_t
-_JSON_TOKEN_TYPE_UNSIGNED_INTEGER	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_TOKEN_TYPE_UNSIGNED_INTEGER,$/;"	e	language:C++	enum:_json_token_type_t
 _json_value_t	C:/users/geral/work/moom/code/momo_json.h	/^struct _json_value_t {$/;"	s	language:C++
 _JSON_VALUE_TYPE_ARRAY	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_VALUE_TYPE_ARRAY,$/;"	e	language:C++	enum:_json_value_type_t
-_JSON_VALUE_TYPE_B32	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_VALUE_TYPE_B32,$/;"	e	language:C++	enum:_json_value_type_t
-_JSON_VALUE_TYPE_F32	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_VALUE_TYPE_F32,$/;"	e	language:C++	enum:_json_value_type_t
+_JSON_VALUE_TYPE_BOOLEAN	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_VALUE_TYPE_BOOLEAN,$/;"	e	language:C++	enum:_json_value_type_t
 _JSON_VALUE_TYPE_NULL	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_VALUE_TYPE_NULL$/;"	e	language:C++	enum:_json_value_type_t
+_JSON_VALUE_TYPE_NUMBER	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_VALUE_TYPE_NUMBER,$/;"	e	language:C++	enum:_json_value_type_t
 _JSON_VALUE_TYPE_OBJECT	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_VALUE_TYPE_OBJECT,$/;"	e	language:C++	enum:_json_value_type_t
-_JSON_VALUE_TYPE_S32	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_VALUE_TYPE_S32,$/;"	e	language:C++	enum:_json_value_type_t
-_JSON_VALUE_TYPE_STR8	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_VALUE_TYPE_STR8,$/;"	e	language:C++	enum:_json_value_type_t
+_JSON_VALUE_TYPE_STRING	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_VALUE_TYPE_STRING,$/;"	e	language:C++	enum:_json_value_type_t
 _json_value_type_t	C:/users/geral/work/moom/code/momo_json.h	/^enum  _json_value_type_t {$/;"	g	language:C++
-_JSON_VALUE_TYPE_U32	C:/users/geral/work/moom/code/momo_json.h	/^  _JSON_VALUE_TYPE_U32,$/;"	e	language:C++	enum:_json_value_type_t
 _malloc	build/a.out.js	/^function _malloc() {$/;"	f	language:JavaScript
 _png_calculate_crc32	code/momo_png.h	/^_png_calculate_crc32(u8_t* data, u32_t data_size) {$/;"	f	language:C++	typeref:typename:u32_t
 _PNG_CHANNELS	code/momo_png.h	/^#define _PNG_CHANNELS /;"	d	language:C++
