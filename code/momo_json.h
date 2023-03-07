@@ -1,6 +1,27 @@
 #ifndef MOMO_JSON
 #define MOMO_JSON
 
+#if TEST
+// Every entry is a key/value pair
+// Root json's entry's key is nothing, of course.
+struct json_entry_t {
+  json_key_t key;
+  json_value_t value;
+
+  json_entry_t* left;
+  json_entry_t* right;
+};
+
+struct json_value_t {
+  json_value_type_t type;
+  union {
+    // object
+    // array
+    // others
+  }
+};
+
+#endif
 
 struct json_object_t {
   struct _json_object_node_t* node;
@@ -11,9 +32,7 @@ struct json_t {
   str8_t text;
   u32_t at;
 
-
-
-  // for use
+  // for user's use
   json_object_t root;
 };
 
@@ -80,7 +99,7 @@ enum  _json_object_expect_type_t {
   _JSON_OBJECT_EXPECT_TYPE_COLON,
 };
 
-struct _json_token_t{
+struct _json_token_t {
   _json_token_type_t type;
   u32_t begin;
   u32_t ope;
