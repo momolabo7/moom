@@ -16,7 +16,7 @@ int main() {
   long len = ftell(fp);
   fseek(fp, 0, SEEK_SET);
 
-  void* mem = malloc(len);
+  u8_t* mem = (u8_t*)malloc(len);
   if (!mem) {
     printf("Cannot allocate memory\n");
     return {0};
@@ -27,13 +27,13 @@ int main() {
   arena_t ba = {0}; 
   arena_init(&ba, malloc(megabytes(1)), megabytes(1)); 
 
-  make(json_object_t, json);
+  make(json_t, json);
   json_read(json, mem, len, &ba);
 
-  json_object_t* one = json_get_object(json, str8_from_lit("obj"));
-  u32_t* two = json_get_u32(one, str8_from_lit("item3"));
+  //json_object_t* one = json_get_object(json, str8_from_lit("obj"));
+  //u32_t* two = json_get_u32(one, str8_from_lit("item3"));
 
-  printf("hello: %d", *two);
+  //printf("hello: %d", *two);
 
 }
 
