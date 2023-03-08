@@ -144,6 +144,8 @@ lit_push_double_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t
   lit_push_edge(m, max_x, max_y, min_x, min_y);
 }
 
+
+
 static lit_light_t*
 lit_push_light(lit_game_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle, f32_t turn) {
   assert(m->light_count < array_count(m->lights));
@@ -925,7 +927,6 @@ lit_update_game(lit_t* lit, lit_game_t* game)
   if (!lit_is_state_exiting(game)) 
   {
     lit_update_sensors(game, dt);
-
     // win condition
     if (lit_are_all_sensors_activated(game)) 
     {
@@ -950,6 +951,7 @@ lit_init_game(lit_t* lit, lit_game_t* game)
   game->blank_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
   game->circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
   game->filled_circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
+  game->current_level_id = 0;
 
   
 }
