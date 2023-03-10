@@ -28,6 +28,13 @@ int main() {
 
   make(json_t, json);
   json_read(json, mem, len, &ba);
+  auto* val = json_get_value(json, str8_from_lit("boolean"));
+  if(val) {
+    printf("debug: %d\n", val->element.begin);
+    printf("debug: %d\n", json_is_value_true(json, val));
+  }
+
+
 
   //json_object_t* one = json_get_object(json, str8_from_lit("obj"));
   //u32_t* two = json_get_u32(one, str8_from_lit("item3"));
