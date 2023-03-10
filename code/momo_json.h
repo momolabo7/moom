@@ -10,8 +10,8 @@
 
 // The "key" of a JSON entry, which can only be a string.
 struct json_key_t {
-  u32_t begin;
-  u32_t ope;
+  u8_t* at;
+  umi_t count;
 };
 
 
@@ -25,8 +25,8 @@ struct json_array_t {
 
 // Represents a JSON element, which is a string.
 struct json_element_t {
-  u32_t begin;
-  u32_t ope;
+  u8_t* at;
+  umi_t count;
 };
 
 enum json_value_type_t {
@@ -67,7 +67,7 @@ struct json_array_node_t {
 struct json_t {
   // for tokenizing
   str8_t text;
-  u32_t at;
+  umi_t at;
 
   // The 'root' item in a JSON file is an object type.
   json_object_t root;
@@ -119,8 +119,8 @@ enum  _json_expect_type_t {
 
 struct _json_token_t {
   _json_token_type_t type;
-  u32_t begin;
-  u32_t ope;
+  u8_t* at;
+  umi_t count;
 };
 
 
@@ -159,8 +159,8 @@ _json_next_token(json_t* t) {
   _json_eat_ignorables(t);
   
   _json_token_t ret = {0};
-  ret.begin = t->at;
-  ret.ope = t->at + 1;
+  ret.at = t->text.e + t->at;
+  ret.count = 1;
   ret.type = _JSON_TOKEN_TYPE_UNKNOWN;
   
   switch(t->text.e[t->at]) {
@@ -200,7 +200,7 @@ _json_next_token(json_t* t) {
       {
         ret.type = _JSON_TOKEN_TYPE_TRUE;
         t->at += 4;
-        ret.ope = t->at;
+        ret.count = 4;
       }
       else {
         ++t->at;
@@ -215,7 +215,7 @@ _json_next_token(json_t* t) {
       {
         ret.type = _JSON_TOKEN_TYPE_FALSE;
         t->at += 5;
-        ret.ope = t->at;
+        ret.count = 5;
       }
       else {
         ++t->at;
@@ -230,7 +230,7 @@ _json_next_token(json_t* t) {
       {
         ret.type = _JSON_TOKEN_TYPE_NULL;
         t->at += 4;
-        ret.ope = t->at;
+        ret.count = 4;
       }
       else {
         ++t->at;
@@ -240,8 +240,8 @@ _json_next_token(json_t* t) {
 
     case '"': // strings
     {
-      ++t->at;
-      ret.begin = t->at;
+      ++t->at; // move past the initial double quote
+      ret.at = t->text.e + t->at;
       while(t->text.e[t->at] &&
             t->text.e[t->at] != '"') 
       {
@@ -249,11 +249,12 @@ _json_next_token(json_t* t) {
            t->text.e[t->at+1]) 
         {
           ++t->at;
+          ++ret.count;
         }
         ++t->at;
+        ++ret.count;
       }
       ret.type = _JSON_TOKEN_TYPE_STRING;
-      ret.ope = t->at;
       ++t->at;
     } break;
     
@@ -270,9 +271,9 @@ _json_next_token(json_t* t) {
           else if (!is_digit(t->text.e[t->at])) {
             break;
           }
+          ++ret.count;
           ++t->at;
         }
-        ret.ope = t->at;
       }
       // Signed integer
       else if (t->text.e[t->at] == '-' && is_digit(t->text.e[t->at+1])) {
@@ -282,9 +283,9 @@ _json_next_token(json_t* t) {
         while(is_digit(t->text.e[t->at]))
         {
           ++t->at;
+          ++ret.count;
         }
         ret.type = _JSON_TOKEN_TYPE_SIGNED_INTEGER;
-        ret.ope = t->at;
       }      
       else {
         ++t->at;
@@ -296,64 +297,6 @@ _json_next_token(json_t* t) {
 
 
 
-static s32_t 
-_json_compare_keys(json_t* t, json_key_t lhs, json_key_t rhs) 
-{
-  for (u32_t i = lhs.begin, j = rhs.begin;
-       i < lhs.ope && j < rhs.ope; ++i, ++j) 
-  {
-    if (t->text.e[i] == t->text.e[j]) 
-      continue;
-    else {
-      return t->text.e[i] - t->text.e[j];
-    }
-  }
-
-  // Edge case for strings like:
-  // lhs == "asd" and rhs == "asdfg"
-  u32_t lhs_count = lhs.ope - lhs.begin;
-  u32_t rhs_count = rhs.ope - rhs.begin;
-
-  if (lhs_count == rhs_count) 
-  {
-    return 0;
-  }
-  else 
-  {
-    return lhs_count - rhs_count;
-  }
- 
-}
-
-static smi_t 
-_json_compare_key_with_str8(json_t* t, json_key_t lhs, str8_t rhs) 
-{
-
-  for (u32_t i = lhs.begin, j = 0;
-       i < lhs.ope && j < rhs.count; ++i, ++j) 
-  {
-    if (t->text.e[i] == rhs.e[j]) 
-      continue;
-    else {
-      return t->text.e[i] - rhs.e[j];
-    }
-  }
-
-  // Edge case for strings like:
-  // lhs == "asd" and rhs == "asdfg"
-  u32_t lhs_count = lhs.ope - lhs.begin;
-
-  if (lhs_count == rhs.count) 
-  {
-    return 0;
-  }
-  else 
-  {
-    return lhs_count - rhs.count;
-  }
- 
-}
-
 static b32_t
 _json_insert_entry(json_t* t, _json_entry_t** entry, _json_entry_t* new_entry) {
   if ((*entry) == nullptr) {
@@ -363,7 +306,10 @@ _json_insert_entry(json_t* t, _json_entry_t** entry, _json_entry_t* new_entry) {
   else {
     _json_entry_t* itr = (*entry);
     while(itr != nullptr) {
-      s32_t cmp = _json_compare_keys(t, itr->key, new_entry->key);
+      str8_t lhs = str8(itr->key.at, itr->key.count);
+      str8_t rhs = str8(new_entry->key.at, new_entry->key.count);
+
+      smi_t cmp = str8_compare_lexographically(lhs, rhs);
       if (cmp > 0) {
         if (itr->left == nullptr) {
           itr->left = new_entry;
@@ -448,39 +394,39 @@ _json_set_value_based_on_token(json_t* t, json_value_t* value, _json_token_t tok
   b32_t error = false;
   if (token.type == _JSON_TOKEN_TYPE_UNSIGNED_INTEGER) {
     value->type = JSON_VALUE_TYPE_ELEMENT;
-    value->element.begin = token.begin;
-    value->element.ope = token.ope;
+    value->element.at = token.at;
+    value->element.count = token.count;
   }
   else if(token.type == _JSON_TOKEN_TYPE_SIGNED_INTEGER) {
     value->type = JSON_VALUE_TYPE_ELEMENT;
-    value->element.begin = token.begin;
-    value->element.ope = token.ope;
+    value->element.at = token.at;
+    value->element.count = token.count;
   }
   else if(token.type == _JSON_TOKEN_TYPE_FLOATING_POINT) {
     value->type = JSON_VALUE_TYPE_ELEMENT;
-    value->element.begin = token.begin;
-    value->element.ope = token.ope;
+    value->element.at = token.at;
+    value->element.count = token.count;
   }
   else if(token.type == _JSON_TOKEN_TYPE_STRING) 
   {
     value->type = JSON_VALUE_TYPE_ELEMENT;
-    value->element.begin = token.begin;
-    value->element.ope = token.ope;
+    value->element.at = token.at;
+    value->element.count = token.count;
   }
   else if (token.type == _JSON_TOKEN_TYPE_NULL) {
     value->type = JSON_VALUE_TYPE_ELEMENT;
-    value->element.begin = token.begin;
-    value->element.ope = token.ope;
+    value->element.at = token.at;
+    value->element.count = token.count;
   }
   else if (token.type == _JSON_TOKEN_TYPE_TRUE) {
     value->type = JSON_VALUE_TYPE_ELEMENT;
-    value->element.begin = token.begin;
-    value->element.ope = token.ope;
+    value->element.at = token.at;
+    value->element.count = token.count;
   }
   else if (token.type == _JSON_TOKEN_TYPE_FALSE) {
     value->type = JSON_VALUE_TYPE_ELEMENT;
-    value->element.begin = token.begin;
-    value->element.ope = token.ope;
+    value->element.at = token.at;
+    value->element.count = token.count;
   }
   else if (token.type == _JSON_TOKEN_TYPE_OPEN_BRACE) {
     // Parse json object
@@ -522,8 +468,8 @@ _json_parse_object(json_object_t* obj, json_t* t, arena_t* ba) {
             error = true;
           }
           else {
-            current_entry->key.begin = token.begin;
-            current_entry->key.ope = token.ope;
+            current_entry->key.at = token.at;
+            current_entry->key.count = token.count;
             expect_type = _JSON_EXPECT_TYPE_COLON;
           }
         }
@@ -574,7 +520,7 @@ _json_parse_object(json_object_t* obj, json_t* t, arena_t* ba) {
 #if JSON_DEBUG 
 #include <stdio.h>
 
-static u32_t scope = 0;
+static u32_t sccount = 0;
 static void _json_print_entries_in_order(json_t* t,  _json_entry_t* entry);
 
 static void
@@ -607,8 +553,8 @@ _json_print_token(json_t* t, _json_token_t token)  {
     
   }
 #endif 
-  for(u32_t i = token.begin; i < token.ope; ++i) {
-    printf("%c", t->text.e[i]);
+  for(umi_t i = 0; i < token.count; ++i) {
+    printf("%c", token.at[i]);
   }
 }
 
@@ -617,21 +563,21 @@ _json_print_value(json_t* t, json_value_t* value) {
   switch(value->type) {
     case JSON_VALUE_TYPE_ELEMENT: 
     {
-      for(u32_t _i = value->element.begin;
-          _i < value->element.ope;
+      for(u32_t _i = 0;
+          _i < value->element.count;
           ++_i)
       {
-        printf("%c", t->text.e[_i]);
+        printf("%c", value->element.at[_i]);
       }
     } break;
 
     case JSON_VALUE_TYPE_OBJECT: 
     {
-      scope++;
+      sccount++;
       printf("{\n");
       _json_print_entries_in_order(t, value->object.head);
-      scope--;
-      for(u32_t _i = 0; _i < scope; ++_i) 
+      sccount--;
+      for(u32_t _i = 0; _i < sccount; ++_i) 
         printf(" ");
       printf("}");
     } break;
@@ -664,14 +610,14 @@ _json_print_entries_in_order(json_t* t, _json_entry_t* entry)
   {
     _json_print_entries_in_order(t, entry->left);
 
-    for(u32_t i = 0; i < scope; ++i) 
+    for(u32_t i = 0; i < sccount; ++i) 
     {
       printf(" ");
     }
 
-    for (u32_t i = entry->key.begin; i < entry->key.ope; ++i) 
+    for (u32_t i = 0; i < entry->key.count; ++i) 
     {
-      printf("%c", t->text.e[i]);
+      printf("%c", entry->key.at[i]);
     }
     printf(":");
 
@@ -688,8 +634,9 @@ static _json_entry_t*
 _json_get(json_t* j, str8_t key) {
   _json_entry_t* node = j->root.head;
   while(node) {
-    str8_t s = str8(j->text.e + node->key.begin, node->key.ope - node->key.begin);
-    smi_t cmp = _json_compare_key_with_str8(j, node->key, key); 
+    str8_t lhs = str8(node->key.at, node->key.count);
+    str8_t rhs = str8(key.e, key.count);
+    smi_t cmp = str8_compare_lexographically(lhs, rhs); 
     if (cmp > 0) {
       node = node->left;
     }
@@ -732,7 +679,7 @@ json_get_value(json_t* j, str8_t key) {
 static b32_t
 json_is_value_true(json_t* j, json_value_t* v) 
 {
-  return v->type == JSON_VALUE_TYPE_ELEMENT && j->text.e[v->element.begin] == 't';
+  return v->type == JSON_VALUE_TYPE_ELEMENT && v->element.at[0] == 't';
 
 }
 
