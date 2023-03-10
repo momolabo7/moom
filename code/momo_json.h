@@ -1,11 +1,6 @@
 #ifndef MOMO_JSON
 #define MOMO_JSON
 
-//
-// TODO:
-// - change token ranges to str8? 
-//
-
 
 
 // The "key" of a JSON entry, which can only be a string.
@@ -30,7 +25,10 @@ struct json_element_t {
 };
 
 enum json_value_type_t {
-  JSON_VALUE_TYPE_ELEMENT, 
+  JSON_VALUE_TYPE_BOOLEAN,
+  JSON_VALUE_TYPE_STRING,
+  JSON_VALUE_TYPE_NUMBER,
+  JSON_VALUE_TYPE_NULL,
   JSON_VALUE_TYPE_ARRAY,
   JSON_VALUE_TYPE_OBJECT,
 };
@@ -96,15 +94,16 @@ enum _json_token_type_t {
   _JSON_TOKEN_TYPE_OPEN_BRACE,
   _JSON_TOKEN_TYPE_CLOSE_BRACE,
   _JSON_TOKEN_TYPE_COMMA,
-  _JSON_TOKEN_TYPE_NULL,
   
-  _JSON_TOKEN_TYPE_IDENTIFIER,
   _JSON_TOKEN_TYPE_STRING,
+  _JSON_TOKEN_TYPE_NULL,
+#if 0
   _JSON_TOKEN_TYPE_UNSIGNED_INTEGER,
   _JSON_TOKEN_TYPE_FLOATING_POINT,
   _JSON_TOKEN_TYPE_SIGNED_INTEGER,
-  _JSON_TOKEN_TYPE_TRUE,
-  _JSON_TOKEN_TYPE_FALSE,
+#endif
+  _JSON_TOKEN_TYPE_NUMBER,
+  _JSON_TOKEN_TYPE_BOOLEAN,
   
   _JSON_TOKEN_TYPE_EOF
 };
@@ -154,42 +153,50 @@ _json_eat_ignorables(json_t* t) {
     }
   }
 }
+
 static _json_token_t
 _json_next_token(json_t* t) {
   _json_eat_ignorables(t);
   
   _json_token_t ret = {0};
+
   ret.at = t->text.e + t->at;
-  ret.count = 1;
   ret.type = _JSON_TOKEN_TYPE_UNKNOWN;
   
   switch(t->text.e[t->at]) {
     case '\0': {
       ret.type = _JSON_TOKEN_TYPE_EOF; 
+      ret.count = 1;
       ++t->at;
     } break;
     case '[': {
       ret.type = _JSON_TOKEN_TYPE_OPEN_BRACKET; 
+      ret.count = 1;
       ++t->at;
     } break;
     case ']': {
       ret.type = _JSON_TOKEN_TYPE_CLOSE_BRACKET; 
+      ret.count = 1;
       ++t->at;
     } break;
     case '{': {
       ret.type = _JSON_TOKEN_TYPE_OPEN_BRACE; 
+      ret.count = 1;
       ++t->at;
     } break;
     case '}': {
       ret.type = _JSON_TOKEN_TYPE_CLOSE_BRACE; 
+      ret.count = 1;
       ++t->at;
     } break;
     case ',': {
       ret.type = _JSON_TOKEN_TYPE_COMMA;
+      ret.count = 1;
       ++t->at;
     } break;
     case ':': { 
       ret.type = _JSON_TOKEN_TYPE_COLON; 
+      ret.count = 1;
       ++t->at;
     } break;
     case 't':{
@@ -198,9 +205,9 @@ _json_next_token(json_t* t) {
          t->text.e[t->at+2] == 'u' && 
          t->text.e[t->at+3] == 'e')
       {
-        ret.type = _JSON_TOKEN_TYPE_TRUE;
-        t->at += 4;
+        ret.type = _JSON_TOKEN_TYPE_BOOLEAN;
         ret.count = 4;
+        t->at += 4;
       }
       else {
         ++t->at;
@@ -213,9 +220,9 @@ _json_next_token(json_t* t) {
          t->text.e[t->at+3] == 's' &&
          t->text.e[t->at+4] == 'e')
       {
-        ret.type = _JSON_TOKEN_TYPE_FALSE;
-        t->at += 5;
+        ret.type = _JSON_TOKEN_TYPE_BOOLEAN;
         ret.count = 5;
+        t->at += 5;
       }
       else {
         ++t->at;
@@ -261,12 +268,10 @@ _json_next_token(json_t* t) {
     default: {
       // Unsigned integer
       if (is_digit(t->text.e[t->at])) {
-        ret.type = _JSON_TOKEN_TYPE_UNSIGNED_INTEGER;
         while(true)
         {
           // TODO check for double dots?
           if (t->text.e[t->at] == '.') {
-            ret.type = _JSON_TOKEN_TYPE_FLOATING_POINT;
           }
           else if (!is_digit(t->text.e[t->at])) {
             break;
@@ -274,18 +279,27 @@ _json_next_token(json_t* t) {
           ++ret.count;
           ++t->at;
         }
+        ret.type = _JSON_TOKEN_TYPE_NUMBER;
       }
+      
       // Signed integer
-      else if (t->text.e[t->at] == '-' && is_digit(t->text.e[t->at+1])) {
+      else if ((t->text.count - t->at) >= 2 && 
+                t->text.e[t->at] == '-' && 
+                is_digit(t->text.e[t->at+1])) 
+      {
         ++t->at; // keeps the negative sign
-
-        // TODO: floating point
-        while(is_digit(t->text.e[t->at]))
+        while(true)
         {
-          ++t->at;
+          // TODO check for double dots?
+          if (t->text.e[t->at] == '.') {
+          }
+          else if (!is_digit(t->text.e[t->at])) {
+            break;
+          }
           ++ret.count;
+          ++t->at;
         }
-        ret.type = _JSON_TOKEN_TYPE_SIGNED_INTEGER;
+        ret.type = _JSON_TOKEN_TYPE_NUMBER;
       }      
       else {
         ++t->at;
@@ -392,39 +406,24 @@ static b32_t
 _json_set_value_based_on_token(json_t* t, json_value_t* value, _json_token_t token, arena_t* ba) 
 {
   b32_t error = false;
-  if (token.type == _JSON_TOKEN_TYPE_UNSIGNED_INTEGER) {
-    value->type = JSON_VALUE_TYPE_ELEMENT;
-    value->element.at = token.at;
-    value->element.count = token.count;
-  }
-  else if(token.type == _JSON_TOKEN_TYPE_SIGNED_INTEGER) {
-    value->type = JSON_VALUE_TYPE_ELEMENT;
-    value->element.at = token.at;
-    value->element.count = token.count;
-  }
-  else if(token.type == _JSON_TOKEN_TYPE_FLOATING_POINT) {
-    value->type = JSON_VALUE_TYPE_ELEMENT;
+  if (token.type == _JSON_TOKEN_TYPE_NUMBER) {
+    value->type = JSON_VALUE_TYPE_NUMBER;
     value->element.at = token.at;
     value->element.count = token.count;
   }
   else if(token.type == _JSON_TOKEN_TYPE_STRING) 
   {
-    value->type = JSON_VALUE_TYPE_ELEMENT;
+    value->type = JSON_VALUE_TYPE_STRING;
     value->element.at = token.at;
     value->element.count = token.count;
   }
   else if (token.type == _JSON_TOKEN_TYPE_NULL) {
-    value->type = JSON_VALUE_TYPE_ELEMENT;
+    value->type = JSON_VALUE_TYPE_NULL;
     value->element.at = token.at;
     value->element.count = token.count;
   }
-  else if (token.type == _JSON_TOKEN_TYPE_TRUE) {
-    value->type = JSON_VALUE_TYPE_ELEMENT;
-    value->element.at = token.at;
-    value->element.count = token.count;
-  }
-  else if (token.type == _JSON_TOKEN_TYPE_FALSE) {
-    value->type = JSON_VALUE_TYPE_ELEMENT;
+  else if (token.type == _JSON_TOKEN_TYPE_BOOLEAN) {
+    value->type = JSON_VALUE_TYPE_BOOLEAN;
     value->element.at = token.at;
     value->element.count = token.count;
   }
@@ -453,19 +452,19 @@ _json_parse_object(json_object_t* obj, json_t* t, arena_t* ba) {
   _json_entry_t* entry = nullptr;
   _json_expect_type_t expect_type = _JSON_EXPECT_TYPE_KEY_OR_CLOSE; 
   b32_t is_done = false;
-  b32_t error = false;
 
   _json_entry_t* current_entry = nullptr;
 
   while(!is_done) {
     _json_token_t token = _json_next_token(t);
+    if (token.type == _JSON_TOKEN_TYPE_UNKNOWN) return false;
+
     switch(expect_type) {
       case _JSON_EXPECT_TYPE_KEY_OR_CLOSE: {
         if (token.type == _JSON_TOKEN_TYPE_STRING) {
           current_entry = arena_push(_json_entry_t, ba);
           if (!current_entry) {
             is_done = true;
-            error = true;
           }
           else {
             current_entry->key.at = token.at;
@@ -477,8 +476,7 @@ _json_parse_object(json_object_t* obj, json_t* t, arena_t* ba) {
           is_done = true;
         }
         else {
-          is_done = true;
-          error = true;
+          return false;
         }
       } break;
       case _JSON_EXPECT_TYPE_COLON: {
@@ -486,8 +484,7 @@ _json_parse_object(json_object_t* obj, json_t* t, arena_t* ba) {
           expect_type = _JSON_EXPECT_TYPE_VALUE; 
         }
         else {
-          is_done = true;
-          error = true;
+          return false;
         }
       } break;
       case _JSON_EXPECT_TYPE_VALUE: {
@@ -495,8 +492,7 @@ _json_parse_object(json_object_t* obj, json_t* t, arena_t* ba) {
           _json_insert_entry(t, &entry, current_entry);
         }
         else {
-          is_done = true;
-          error = true;
+          return false;
         }
 
         expect_type = _JSON_EXPECT_TYPE_COMMA_OR_CLOSE;
@@ -515,7 +511,7 @@ _json_parse_object(json_object_t* obj, json_t* t, arena_t* ba) {
   }
   
   obj->head = entry; 
-  return !error;
+  return true;
 }
 #if JSON_DEBUG 
 #include <stdio.h>
@@ -561,7 +557,10 @@ _json_print_token(json_t* t, _json_token_t token)  {
 static void
 _json_print_value(json_t* t, json_value_t* value) {
   switch(value->type) {
-    case JSON_VALUE_TYPE_ELEMENT: 
+    case JSON_VALUE_TYPE_BOOLEAN: 
+    case JSON_VALUE_TYPE_STRING: 
+    case JSON_VALUE_TYPE_NUMBER: 
+    case JSON_VALUE_TYPE_NULL: 
     {
       for(u32_t _i = 0;
           _i < value->element.count;
@@ -679,7 +678,7 @@ json_get_value(json_t* j, str8_t key) {
 static b32_t
 json_is_value_true(json_t* j, json_value_t* v) 
 {
-  return v->type == JSON_VALUE_TYPE_ELEMENT && v->element.at[0] == 't';
+  return v->type == JSON_VALUE_TYPE_BOOLEAN && v->element.at[0] == 't';
 
 }
 
