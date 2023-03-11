@@ -2,7 +2,7 @@
 #define MOE_MODE_LIT_H
 
 #define LIT_DEBUG_INTERSECTIONS 0
-#define LIT_DEBUG_COORDINATES 1
+#define LIT_DEBUG_COORDINATES 0
 
 #define LIT_WIDTH  800.f
 #define LIT_HEIGHT 800.f
@@ -39,6 +39,8 @@
 
 
 
+#include "lit_splash.h"
+#include "lit_menu.h"
 #include "lit_game.h"
 
 enum lit_show_debug_type_t {
@@ -56,15 +58,7 @@ enum lit_mode_t {
   LIT_MODE_GAME,
 };
 
-struct lit_splash_t {
-  f32_t timer;
-  asset_font_id_t font;
-};
 
-struct lit_menu_t {
-  asset_font_id_t font;
-
-};
 
 struct lit_t {
   platform_t* platform;
@@ -100,44 +94,8 @@ struct lit_t {
 
 };
 
-
-static void
-lit_init_splash(lit_t* lit, lit_splash_t* splash) {
-  make(asset_match_t, match);
-  set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
-  splash->font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
-  splash->timer = 1.5f;
-}
-
-static void
-lit_update_splash(lit_t* lit, lit_splash_t* splash) {
-  splash->timer -= lit->platform->seconds_since_last_frame;
- 
-  moe_painter_draw_text_center_aligned(lit->gfx, &lit->assets, splash->font, str8_from_lit("moom"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT/2, 128.f);
-
-  if (splash->timer <= -1.f) {
-    lit->next_mode = LIT_MODE_GAME; 
-  }
-
-}
-
-static void
-lit_init_menu(lit_t* lit, lit_menu_t* menu) {
-  make(asset_match_t, match);
-  set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
-  menu->font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
-
-}
-
-static void
-lit_update_menu(lit_t* lit, lit_menu_t* menu) {
-  moe_painter_draw_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("menu"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT/2, 128.f);
-
-}
-
-
-
-
+#include "lit_splash.cpp"
+#include "lit_menu.cpp"
 #include "lit_game.cpp"
 
 #include "lit_console_rendering.h"
@@ -158,8 +116,7 @@ lit_tick(platform_t* platform) {
     lit->gfx = platform->gfx;
     lit->profiler = platform->profiler;
 
-    lit->next_mode = LIT_MODE_GAME; 
-
+    lit->next_mode = LIT_MODE_MENU;
     // TODO: Error checking
     // TODO: Better memory management
     // Initialize assets
@@ -174,7 +131,6 @@ lit_tick(platform_t* platform) {
     make(asset_match_t, match);
     set_match_entry(match, ASSET_TAG_TYPE_FONT, 1.f, 1.f);
     lit->debug_font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
-
 
 
     //
@@ -196,6 +152,9 @@ lit_tick(platform_t* platform) {
 
   // NOTE(momo): Frame arena needs to be cleared each frame.
   arena_clear(&lit->frame_arena);
+
+  // NOTE(momo): inspector need to clear each frame
+  inspector_clear(&lit->inspector);
 
   if (lit->next_mode != lit->mode || platform->reloaded) {
     lit->mode = lit->next_mode;

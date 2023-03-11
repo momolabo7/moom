@@ -522,8 +522,9 @@ static Lit_Level lit_levels[] = {
   lit_level_1_0,
   lit_level_1_1,
   lit_level_1_2,
-#endif
   lit_level_0_11,
+#endif
+  lit_level_0_9,
 };
 
 

@@ -167,7 +167,6 @@ _json_next_token(json_t* t) {
   _json_eat_ignorables(t);
   
   _json_token_t ret = {0};
-
   ret.at = t->text.e + t->at;
   ret.type = _JSON_TOKEN_TYPE_UNKNOWN;
   
@@ -314,7 +313,9 @@ _json_next_token(json_t* t) {
       }
     }
   }
+
   return ret;
+
 }
 
 
@@ -525,6 +526,7 @@ _json_parse_object(json_object_t* obj, json_t* t, arena_t* ba) {
   obj->head = entry; 
   return true;
 }
+
 #if JSON_DEBUG 
 #include <stdio.h>
 
@@ -567,7 +569,7 @@ _json_print_token(json_t* t, _json_token_t token)  {
 }
 
 static void
-_json_print_value(json_t* t, json_value_t* value) {
+json_print_value(json_t* t, json_value_t* value) {
   switch(value->type) {
     case JSON_VALUE_TYPE_TRUE: 
     case JSON_VALUE_TYPE_FALSE:
@@ -668,30 +670,6 @@ json_get_value(json_t* j, str8_t key) {
   _json_entry_t* entry = _json_get(j, key);
   if (!entry) return nullptr;
   return &entry->value;
-}
-
-static b32_t
-json_is_value_true(json_t* j, json_value_t* v) 
-{
-  return v->type == JSON_VALUE_TYPE_BOOLEAN && v->element.at[0] == 't';
-}
-
-static b32_t
-json_is_value_false(json_t* j, json_value_t* v) 
-{
-  return v->type == JSON_VALUE_TYPE_BOOLEAN && v->element.at[0] == 'f';
-}
-
-static b32_t
-json_is_value_null(json_t* j, json_value_t* v) 
-{
-  return v->type == JSON_VALUE_TYPE_NULL;
-}
-
-static b32_t
-json_is_value_number(json_t* j, json_value_t* v) 
-{
-  return v->type == JSON_VALUE_TYPE_NUMBER;
 }
 
 static json_object_t*

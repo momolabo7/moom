@@ -5,6 +5,8 @@
 
 #include "momo.h"
 
+
+
 int main() {
  FILE* fp = fopen("test_json.json", "r");
   if (!fp) { 
@@ -32,6 +34,7 @@ int main() {
 #if 1
   auto* val = json_get_value(json, str8_from_lit("boolean"));
   if(val) {
+    if (val->type == JSON_VALUE_TYPE_TRUE)
     printf("debug: %d\n", json_is_value_true(json, val));
   }
 #endif
