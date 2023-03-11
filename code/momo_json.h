@@ -25,7 +25,11 @@ struct json_element_t {
 };
 
 enum json_value_type_t {
-  JSON_VALUE_TYPE_BOOLEAN,
+  //JSON_VALUE_TYPE_BOOLEAN,
+
+  JSON_VALUE_TYPE_TRUE,
+  JSON_VALUE_TYPE_FALSE,
+
   JSON_VALUE_TYPE_STRING,
   JSON_VALUE_TYPE_NUMBER,
   JSON_VALUE_TYPE_NULL,
@@ -103,9 +107,13 @@ enum _json_token_type_t {
   _JSON_TOKEN_TYPE_SIGNED_INTEGER,
 #endif
   _JSON_TOKEN_TYPE_NUMBER,
+#if 0
   _JSON_TOKEN_TYPE_BOOLEAN,
+#endif
+  _JSON_TOKEN_TYPE_TRUE,
+  _JSON_TOKEN_TYPE_FALSE,
   
-  _JSON_TOKEN_TYPE_EOF
+  _JSON_TOKEN_TYPE_EOF,
 };
 
 enum  _json_expect_type_t {
@@ -205,7 +213,7 @@ _json_next_token(json_t* t) {
          t->text.e[t->at+2] == 'u' && 
          t->text.e[t->at+3] == 'e')
       {
-        ret.type = _JSON_TOKEN_TYPE_BOOLEAN;
+        ret.type = _JSON_TOKEN_TYPE_TRUE;
         ret.count = 4;
         t->at += 4;
       }
@@ -220,7 +228,7 @@ _json_next_token(json_t* t) {
          t->text.e[t->at+3] == 's' &&
          t->text.e[t->at+4] == 'e')
       {
-        ret.type = _JSON_TOKEN_TYPE_BOOLEAN;
+        ret.type = _JSON_TOKEN_TYPE_FALSE;
         ret.count = 5;
         t->at += 5;
       }
@@ -422,13 +430,17 @@ _json_set_value_based_on_token(json_t* t, json_value_t* value, _json_token_t tok
     value->element.at = token.at;
     value->element.count = token.count;
   }
-  else if (token.type == _JSON_TOKEN_TYPE_BOOLEAN) {
-    value->type = JSON_VALUE_TYPE_BOOLEAN;
+  else if (token.type == _JSON_TOKEN_TYPE_FALSE) {
+    value->type = JSON_VALUE_TYPE_FALSE;
     value->element.at = token.at;
     value->element.count = token.count;
   }
-  else if (token.type == _JSON_TOKEN_TYPE_OPEN_BRACE) {
-    // Parse json object
+  else if (token.type == _JSON_TOKEN_TYPE_TRUE) {
+    value->type = JSON_VALUE_TYPE_TRUE;
+    value->element.at = token.at;
+    value->element.count = token.count;
+  }
+  else if (token.type == _JSON_TOKEN_TYPE_OPEN_BRACE) { // Parse json object
     if (_json_parse_object(&value->object, t, ba)) {
       value->type = JSON_VALUE_TYPE_OBJECT;
     }
@@ -557,7 +569,8 @@ _json_print_token(json_t* t, _json_token_t token)  {
 static void
 _json_print_value(json_t* t, json_value_t* value) {
   switch(value->type) {
-    case JSON_VALUE_TYPE_BOOLEAN: 
+    case JSON_VALUE_TYPE_TRUE: 
+    case JSON_VALUE_TYPE_FALSE:
     case JSON_VALUE_TYPE_STRING: 
     case JSON_VALUE_TYPE_NUMBER: 
     case JSON_VALUE_TYPE_NULL: 
@@ -650,6 +663,37 @@ _json_get(json_t* j, str8_t key) {
   return node;
 }
 
+static json_value_t* 
+json_get_value(json_t* j, str8_t key) {
+  _json_entry_t* entry = _json_get(j, key);
+  if (!entry) return nullptr;
+  return &entry->value;
+}
+
+static b32_t
+json_is_value_true(json_t* j, json_value_t* v) 
+{
+  return v->type == JSON_VALUE_TYPE_BOOLEAN && v->element.at[0] == 't';
+}
+
+static b32_t
+json_is_value_false(json_t* j, json_value_t* v) 
+{
+  return v->type == JSON_VALUE_TYPE_BOOLEAN && v->element.at[0] == 'f';
+}
+
+static b32_t
+json_is_value_null(json_t* j, json_value_t* v) 
+{
+  return v->type == JSON_VALUE_TYPE_NULL;
+}
+
+static b32_t
+json_is_value_number(json_t* j, json_value_t* v) 
+{
+  return v->type == JSON_VALUE_TYPE_NUMBER;
+}
+
 static json_object_t*
 json_read(json_t* j, u8_t* json_string, u32_t json_string_size, arena_t* ba) 
 {
@@ -668,19 +712,6 @@ json_read(json_t* j, u8_t* json_string, u32_t json_string_size, arena_t* ba)
 }
 
 
-static json_value_t* 
-json_get_value(json_t* j, str8_t key) {
-  _json_entry_t* entry = _json_get(j, key);
-  if (!entry) return nullptr;
-  return &entry->value;
-}
-
-static b32_t
-json_is_value_true(json_t* j, json_value_t* v) 
-{
-  return v->type == JSON_VALUE_TYPE_BOOLEAN && v->element.at[0] == 't';
-
-}
 
 
 #if 0
