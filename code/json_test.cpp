@@ -1,10 +1,11 @@
 #include <stdlib.h>
-
 #include <stdio.h>
 
 #define JSON_DEBUG 1
 
 #include "momo.h"
+
+
 
 int main() {
  FILE* fp = fopen("test_json.json", "r");
@@ -29,6 +30,16 @@ int main() {
 
   make(json_t, json);
   json_read(json, mem, len, &ba);
+
+#if 1
+  auto* val = json_get_value(json, str8_from_lit("boolean"));
+  if(val) {
+    if (val->type == JSON_VALUE_TYPE_TRUE)
+    printf("debug: %d\n", json_is_value_true(json, val));
+  }
+#endif
+
+
 
   //json_object_t* one = json_get_object(json, str8_from_lit("obj"));
   //u32_t* two = json_get_u32(one, str8_from_lit("item3"));

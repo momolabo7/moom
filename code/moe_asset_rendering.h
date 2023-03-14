@@ -31,7 +31,6 @@ moe_gfx_draw_sprite(moe_t* moe,
                   sprite->texel_y1);
 }
 
-
 static void
 moe_draw_text(moe_t* moe,
               asset_font_id_t font_id,
