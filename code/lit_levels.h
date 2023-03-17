@@ -324,35 +324,75 @@ lit_level_0_11(lit_game_t* m) {
 
   const u32_t sections = 20;
   f32_t offset = LIT_WIDTH/20; 
-  f32_t cur_offset = 0.f;
-  for (u32_t i = 0; i < sections-1; ++i) {
-    lit_push_double_edge(m, cur_offset, 0.f, cur_offset, LIT_HEIGHT);
-    cur_offset += offset; 
+  {
+    f32_t cur_offset = 0.f;
+    for (u32_t i = 0; i < sections; ++i) {
+      lit_push_double_edge(m, cur_offset, 0.f, cur_offset, LIT_HEIGHT);
+      cur_offset += offset; 
+    }
   }
 
 
 
-  lit_push_light(m, 50.f,  50.f, 0x880000FF, 360.f, 0.25f);
-  lit_push_light(m, 150.f, 50.f, 0x880000FF, 360.f, 0.25f);
-  lit_push_light(m, 250.f, 50.f, 0x880000FF, 360.f, 0.25f);
-  lit_push_light(m, 350.f, 50.f, 0x880000FF, 360.f, 0.25f);
-  lit_push_light(m, 450.f, 50.f, 0x880000FF, 360.f, 0.25f);
+  u32_t color = 0x444488FF;
+  {
+    f32_t cur_offset = offset/2+ offset;
+    lit_push_light(m, cur_offset, 50.f, color, 360.f, 0.25f);
+    lit_push_light(m, cur_offset += offset*2, 50.f, color, 360.f, 0.25f);
+    lit_push_light(m, cur_offset += offset*2, 50.f, color, 360.f, 0.25f);
+    lit_push_light(m, cur_offset += offset*2, 50.f, color, 360.f, 0.25f);
+    lit_push_light(m, cur_offset += offset*2, 50.f, color, 360.f, 0.25f);
+    lit_push_light(m, cur_offset += offset*2, 50.f, color, 360.f, 0.25f);
+    lit_push_light(m, cur_offset += offset*2, 50.f, color, 360.f, 0.25f);
+    lit_push_light(m, cur_offset += offset*2, 50.f, color, 360.f, 0.25f);
+    lit_push_light(m, cur_offset += offset*2, 50.f, color, 360.f, 0.25f);
+    lit_push_light(m, cur_offset += offset*2, 50.f, color, 360.f, 0.25f);
+ }
 
-  f32_t duration = 5.f;
+  f32_t duration = 10.f;
   f32_t start_x = -LIT_WIDTH;
   f32_t end_x = LIT_WIDTH;
 
-  lit_begin_patrolling_sensor(m, start_x + offset, 400.f, 0x888888FF, duration);
+  lit_begin_patrolling_sensor(m, start_x + offset, 400.f, color, duration);
   lit_push_patrolling_sensor_waypoint(m, end_x + offset, 400.f); 
   lit_end_patrolling_sensor(m);
 
-  lit_begin_patrolling_sensor(m, start_x + offset*2, 400.f, 0x888888FF, duration);
+  lit_begin_patrolling_sensor(m, start_x + offset*2, 400.f, color, duration);
   lit_push_patrolling_sensor_waypoint(m, end_x + offset*2, 400.f); 
   lit_end_patrolling_sensor(m);
 
+  lit_begin_patrolling_sensor(m, start_x + offset*4, 400.f, color, duration);
+  lit_push_patrolling_sensor_waypoint(m, end_x + offset*4, 400.f); 
+  lit_end_patrolling_sensor(m);
 
-  lit_push_sensor(m, 050.f,   750.f, 0x008888FF); 
-  lit_push_sensor(m, 050.f,   50.f,  0x008888FF); 
+
+  lit_begin_patrolling_sensor(m, start_x + offset*5, 400.f, color, duration);
+  lit_push_patrolling_sensor_waypoint(m, end_x + offset*5, 400.f); 
+  lit_end_patrolling_sensor(m);
+
+  lit_begin_patrolling_sensor(m, start_x + offset*8, 400.f, color, duration);
+  lit_push_patrolling_sensor_waypoint(m, end_x + offset*8, 400.f); 
+  lit_end_patrolling_sensor(m);
+
+  lit_begin_patrolling_sensor(m, start_x + offset*9, 400.f, color, duration);
+  lit_push_patrolling_sensor_waypoint(m, end_x + offset*9, 400.f); 
+  lit_end_patrolling_sensor(m);
+
+  lit_begin_patrolling_sensor(m, start_x + offset*11, 400.f, color, duration);
+  lit_push_patrolling_sensor_waypoint(m, end_x + offset*11, 400.f); 
+  lit_end_patrolling_sensor(m);
+
+  lit_begin_patrolling_sensor(m, start_x + offset*13, 400.f, color, duration);
+  lit_push_patrolling_sensor_waypoint(m, end_x + offset*13, 400.f); 
+  lit_end_patrolling_sensor(m);
+
+  lit_begin_patrolling_sensor(m, start_x + offset*15, 400.f, color, duration);
+  lit_push_patrolling_sensor_waypoint(m, end_x + offset*15, 400.f); 
+  lit_end_patrolling_sensor(m);
+
+  lit_begin_patrolling_sensor(m, start_x + offset*18, 400.f, color, duration);
+  lit_push_patrolling_sensor_waypoint(m, end_x + offset*18, 400.f); 
+  lit_end_patrolling_sensor(m);
 
   //lit_push_sensor(m, 0.f,   0.f, 0xFFFFFFFF); 
   //lit_push_box(m, 300, 300, 500, 500);
@@ -522,9 +562,8 @@ static Lit_Level lit_levels[] = {
   lit_level_1_0,
   lit_level_1_1,
   lit_level_1_2,
-  lit_level_0_11,
 #endif
-  lit_level_0_9,
+  lit_level_0_11,
 };
 
 

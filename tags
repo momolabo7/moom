@@ -234,8 +234,15 @@ button_use	code/moe_platform.h	/^      platform_button_t button_use;$/;"	m	langu
 byte_rate	code/momo_wav.h	/^  u32_t byte_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 c	code/test_essentials.h	/^      char c[2];$/;"	m	language:C++	union:test_essentials::__anon6a37947f010a	typeref:typename:char[2]
 c	code/test_essentials.h	/^      char c[4];$/;"	m	language:C++	union:test_essentials::__anon6a37947f020a	typeref:typename:char[4]
+c	D:/work/git/moom/code/gist_type_erasure.cpp	/^  Concept* c;$/;"	m	language:C++	class:Food	typeref:typename:Concept *	file:
 c8_t	code/momo_types.h	/^typedef char     c8_t;$/;"	t	language:C++	typeref:typename:char
 cabinet_index	code/w32_moe.h	/^  u32_t cabinet_index;$/;"	m	language:C++	struct:w32_file_t	typeref:typename:u32_t
+call	D:/work/git/moom/code/gist_type_erasure.cpp	/^    void call() const {                           \/\/ (4)$/;"	f	language:C++	class:Object	typeref:typename:void	file:
+call	D:/work/git/moom/code/gist_type_erasure.cpp	/^  virtual void call() const = 0;$/;"	p	language:C++	class:Concept	typeref:typename:void	file:
+call	D:/work/git/moom/code/gist_type_erasure.cpp	/^  void call() const $/;"	f	language:C++	class:Food	typeref:typename:void	file:
+call	D:/work/git/moom/code/gist_type_erasure.cpp	/^  void call() const override $/;"	f	language:C++	class:Model	typeref:typename:void	file:
+call	D:/work/git/moom/code/gist_type_erasure.cpp	/^  void call() const {$/;"	f	language:C++	class:Fish	typeref:typename:void	file:
+call	D:/work/git/moom/code/gist_type_erasure.cpp	/^  void call() const {$/;"	f	language:C++	class:Rice	typeref:typename:void	file:
 callback	code/w32_moe.h	/^  platform_task_callback_f* callback;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:platform_task_callback_f *
 callMain	build/a.out.js	/^function callMain(args) {$/;"	f	language:JavaScript
 callRuntimeCallbacks	build/a.out.js	/^  function callRuntimeCallbacks(callbacks) {$/;"	f	language:JavaScript
@@ -301,6 +308,7 @@ compressed_image_stream	code/momo_png.h	/^  stream_t compressed_image_stream;$/;
 compression_flags	code/momo_png.h	/^  u8_t compression_flags;$/;"	m	language:C++	struct:_png_idat_header_t	typeref:typename:u8_t
 compression_method	code/momo_png.h	/^  u8_t compression_method;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t
 compression_method	code/momo_png.h	/^  u8_t compression_method;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:typename:u8_t
+Concept	D:/work/git/moom/code/gist_type_erasure.cpp	/^class Concept {$/;"	c	language:C++	file:
 console	code/lit.h	/^  console_t console;$/;"	m	language:C++	struct:lit_t	typeref:typename:console_t
 console_add_command	code/moe_console.h	/^console_add_command(console_t* console, str8_t key, void* ctx, void(*func)(void*)) $/;"	f	language:C++	typeref:typename:void
 console_command_t	code/moe_console.h	/^struct console_command_t {$/;"	s	language:C++
@@ -669,6 +677,7 @@ first_asset_index	code/moe_assets.h	/^  u32_t first_asset_index;$/;"	m	language:
 first_payload_index	code/moe_gfx.h	/^  umi_t first_payload_index;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
 first_tag_index	code/karu.h	/^  u32_t first_tag_index;$/;"	m	language:C++	struct:karu_asset_t	typeref:typename:u32_t
 first_tag_index	code/moe_assets.h	/^  u32_t first_tag_index;$/;"	m	language:C++	struct:asset_slot_t	typeref:typename:u32_t
+Fish	D:/work/git/moom/code/gist_type_erasure.cpp	/^class Fish {$/;"	c	language:C++	file:
 flags	code/momo_ttf.h	/^  u8_t flags;$/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:u8_t
 flag_for_reset	code/moe_profiler.h	/^  b32_t flag_for_reset;$/;"	m	language:C++	struct:profiler_entry_t	typeref:typename:b32_t
 flush_NO_FILESYSTEM	build/a.out.js	/^  function flush_NO_FILESYSTEM() {$/;"	f	language:JavaScript
@@ -682,6 +691,8 @@ font	code/sui_pack.h	/^    sui_packer_source_font_t font;$/;"	m	language:C++	uni
 fonts	code/sui_atlas.h	/^  sui_atlas_font_t fonts[128];$/;"	m	language:C++	struct:sui_atlas_t	typeref:typename:sui_atlas_font_t[128]
 font_count	code/sui_atlas.h	/^  u32_t font_count;$/;"	m	language:C++	struct:sui_atlas_t	typeref:typename:u32_t
 font_glyph	code/sui_atlas.h	/^    sui_atlas_font_glyph_context_t font_glyph;$/;"	m	language:C++	union:sui_atlas_context_t::__anon2ac8214a010a	typeref:typename:sui_atlas_font_glyph_context_t
+Food	D:/work/git/moom/code/gist_type_erasure.cpp	/^  Food(T&& user_object)$/;"	f	language:C++	class:Food	file:
+Food	D:/work/git/moom/code/gist_type_erasure.cpp	/^class Food {$/;"	c	language:C++	file:
 format	code/momo_wav.h	/^  u32_t format; \/\/ big endian$/;"	m	language:C++	struct:wav_riff_chunk_t	typeref:typename:u32_t
 frame_arena	code/lit.h	/^  arena_t frame_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t
 free_files	code/w32_moe.h	/^  u32_t free_files[32];$/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:u32_t[32]
@@ -1221,6 +1232,8 @@ Lit_Level	D:/work/git/moom/code/lit_levels.h	/^typedef void (*Lit_Level)(lit_gam
 lit_levels	D:/work/git/moom/code/lit_levels.h	/^static Lit_Level lit_levels[] = {$/;"	v	language:C++	typeref:typename:Lit_Level[]
 lit_level_0_0	D:/work/git/moom/code/lit_levels.h	/^lit_level_0_0(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_0_1	D:/work/git/moom/code/lit_levels.h	/^lit_level_0_1(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_0_10	D:/work/git/moom/code/lit_levels.h	/^lit_level_0_10(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_0_11	D:/work/git/moom/code/lit_levels.h	/^lit_level_0_11(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_0_2	D:/work/git/moom/code/lit_levels.h	/^lit_level_0_2(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void
 lit_level_0_3	D:/work/git/moom/code/lit_levels.h	/^lit_level_0_3(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void
 lit_level_0_4	D:/work/git/moom/code/lit_levels.h	/^lit_level_0_4(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
@@ -1342,6 +1355,7 @@ main	code/meta.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/sui.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/web.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
+main	D:/work/git/moom/code/gist_type_erasure.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	D:/work/git/moom/code/json_test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main_arena	code/lit.h	/^  arena_t main_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t
 make	code/momo_types.h	/^#define make(/;"	d	language:C++
@@ -1396,6 +1410,8 @@ mm_device_enum	code/w32_audio_wasapi.h	/^  IMMDeviceEnumerator * mm_device_enum;
 mode	code/lit.h	/^  lit_mode_t mode;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_mode_t
 model	code/moe_gfx_opengl.h	/^  GLuint model; $/;"	m	language:C++	struct:__anon0f5c060e0808	typeref:typename:GLuint
 model	code/moe_gfx_opengl.h	/^  GLuint model;$/;"	m	language:C++	struct:__anon0f5c060e0908	typeref:typename:GLuint
+Model	D:/work/git/moom/code/gist_type_erasure.cpp	/^  Model(const T& user_object) :$/;"	f	language:C++	class:Model	file:
+Model	D:/work/git/moom/code/gist_type_erasure.cpp	/^class Model : public  Concept {$/;"	c	language:C++	file:
 Module	build/a.out.js	/^  Module['inspect'] = function () { return '[Emscripten Module object]'; };$/;"	f	language:JavaScript
 Module	build/a.out.js	/^var Module = typeof Module != 'undefined' ? Module : {};$/;"	v	language:JavaScript
 module_path	code/w32_moe.h	/^  const char* module_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *
@@ -1474,6 +1490,9 @@ ns_end	code/momo_types.h	/^# define ns_end(/;"	d	language:C++
 num_channels	code/momo_wav.h	/^  u16_t num_channels;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 obj	build/test_json.json	/^  "obj": { $/;"	o	language:JSON
 obj	C:/users/geral/work/moom/code/momo_json.h	/^    json_object_t obj;$/;"	m	language:C++	union:_json_value_t::__anon6c4b32a4010a	typeref:typename:json_object_t
+Object	D:/work/git/moom/code/gist_type_erasure.cpp	/^    Object(T&& obj): object(std::make_shared<Model<T>>(std::forward<T>(obj))){$/;"	f	language:C++	class:Object	file:
+object	D:/work/git/moom/code/gist_type_erasure.cpp	/^   std::shared_ptr<const Concept> object;$/;"	m	language:C++	class:Object	typeref:typename:std::shared_ptr<const Concept>	file:
+Object	D:/work/git/moom/code/gist_type_erasure.cpp	/^class Object {                                              \/\/ (2)$/;"	c	language:C++	file:
 object	D:/work/git/moom/code/momo_json.h	/^    json_object_t object;$/;"	m	language:C++	union:json_value_t::__anon43d502b0010a	typeref:typename:json_object_t
 offset_of	code/momo_types.h	/^#define offset_of(/;"	d	language:C++
 offset_to_assets	code/karu.h	/^  u32_t offset_to_assets;$/;"	m	language:C++	struct:karu_header_t	typeref:typename:u32_t
@@ -1786,6 +1805,7 @@ prev	code/gist_linked_list.cpp	/^  gist_cdl_node* prev;$/;"	m	language:C++	struc
 prev	code/w32_moe.h	/^  w32_memory_t* prev;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *
 printChar	build/a.out.js	/^  function printChar(stream, curr) {$/;"	f	language:JavaScript
 printCharBuffers	build/a.out.js	/^  var printCharBuffers = [null,[],[]];$/;"	v	language:JavaScript
+printName	D:/work/git/moom/code/gist_type_erasure.cpp	/^void printName(std::vector<Object> vec){                    \/\/ (7)$/;"	f	language:C++	typeref:typename:void
 profiler	code/lit.h	/^  profiler_t* profiler;$/;"	m	language:C++	struct:lit_t	typeref:typename:profiler_t *
 profiler	code/moe_platform.h	/^  profiler_t* profiler; $/;"	m	language:C++	struct:__anonb345dcaa0708	typeref:typename:profiler_t *
 profiler	code/w32_moe.h	/^profiler_t* profiler = &_profiler;$/;"	v	language:C++	typeref:typename:profiler_t *
@@ -1871,6 +1891,7 @@ rgba_t	code/momo_colors.h	/^} rgba_t;$/;"	t	language:C++	typeref:struct:rgba_t
 RGBA_WHITE	code/momo_colors.h	/^#define RGBA_WHITE /;"	d	language:C++
 rgb_t	code/momo_colors.h	/^typedef struct rgb_t {$/;"	s	language:C++
 rgb_t	code/momo_colors.h	/^} rgb_t;$/;"	t	language:C++	typeref:struct:rgb_t
+Rice	D:/work/git/moom/code/gist_type_erasure.cpp	/^class Rice {$/;"	c	language:C++	file:
 riff_chunk	code/momo_wav.h	/^  wav_riff_chunk_t riff_chunk;$/;"	m	language:C++	struct:wav_t	typeref:typename:wav_riff_chunk_t
 right	C:/users/geral/work/moom/code/momo_json.h	/^  struct _json_object_node_t* right;$/;"	m	language:C++	struct:_json_object_node_t	typeref:struct:_json_object_node_t *
 right	D:/work/git/moom/code/momo_json.h	/^  _json_entry_t* right;$/;"	m	language:C++	struct:_json_entry_t	typeref:typename:_json_entry_t *
@@ -2403,6 +2424,7 @@ updateGlobalBufferAndViews	build/a.out.js	/^function updateGlobalBufferAndViews(
 update_and_render	code/moe_platform.h	/^  moe_update_and_render_f* update_and_render;$/;"	m	language:C++	struct:moe_functions_t	typeref:typename:moe_update_and_render_f *
 user_data	code/moe_gfx_opengl.h	/^  void* user_data;$/;"	m	language:C++	struct:Opengl	typeref:typename:void *
 user_data	code/momo_rect_pack.h	/^  void* user_data;$/;"	m	language:C++	struct:rp_rect_t	typeref:typename:void *
+user_object	D:/work/git/moom/code/gist_type_erasure.cpp	/^  T user_object;$/;"	m	language:C++	class:Model	typeref:typename:T	file:
 UTF8ArrayToString	build/a.out.js	/^function UTF8ArrayToString(heapOrArray, idx, maxBytesToRead) {$/;"	f	language:JavaScript
 UTF8Decoder	build/a.out.js	/^var UTF8Decoder = typeof TextDecoder != 'undefined' ? new TextDecoder('utf8') : undefined;$/;"	v	language:JavaScript
 UTF8ToString	build/a.out.js	/^function UTF8ToString(ptr, maxBytesToRead) {$/;"	f	language:JavaScript
@@ -2914,4 +2936,6 @@ __ATINIT__	build/a.out.js	/^var __ATINIT__    = []; \/\/ functions called during
 __ATMAIN__	build/a.out.js	/^var __ATMAIN__    = []; \/\/ functions called when main() is to be run$/;"	v	language:JavaScript
 __ATPOSTRUN__	build/a.out.js	/^var __ATPOSTRUN__ = []; \/\/ functions called after the main() is called$/;"	v	language:JavaScript
 __ATPRERUN__	build/a.out.js	/^var __ATPRERUN__  = []; \/\/ functions called before the runtime is initialized$/;"	v	language:JavaScript
+~Concept	D:/work/git/moom/code/gist_type_erasure.cpp	/^  virtual ~Concept() {}$/;"	f	language:C++	class:Concept	file:
+~Food	D:/work/git/moom/code/gist_type_erasure.cpp	/^  ~Food() $/;"	f	language:C++	class:Food	file:
 ~_defer_scope_guard	code/momo_types.h	/^  ~_defer_scope_guard() { f(); }$/;"	f	language:C++	struct:_defer_scope_guard

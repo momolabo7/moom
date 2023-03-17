@@ -116,7 +116,7 @@ lit_tick(platform_t* platform) {
     lit->gfx = platform->gfx;
     lit->profiler = platform->profiler;
 
-    lit->next_mode = LIT_MODE_MENU;
+    lit->next_mode = LIT_MODE_GAME;
     // TODO: Error checking
     // TODO: Better memory management
     // Initialize assets
