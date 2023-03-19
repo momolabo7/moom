@@ -58,7 +58,9 @@ enum lit_mode_t {
   LIT_MODE_GAME,
 };
 
+struct lit_save_data_t {
 
+};
 
 struct lit_t {
   platform_t* platform;
@@ -73,6 +75,7 @@ struct lit_t {
     lit_game_t game;
     lit_menu_t menu;
   };
+  u32_t level_to_start;
 
   //
   // Arenas
@@ -91,8 +94,14 @@ struct lit_t {
   assets_t assets;
   asset_sprite_id_t blank_sprite;
   asset_font_id_t debug_font;
-
 };
+
+static void 
+lit_goto_specific_level(lit_t* lit, u32_t level) {
+  //assert(level < array_count(g_lit_levels));
+  lit->next_mode = LIT_MODE_GAME;
+  lit->level_to_start = level;
+}
 
 #include "lit_splash.cpp"
 #include "lit_menu.cpp"
@@ -109,18 +118,22 @@ lit_tick(platform_t* platform) {
 
   if(platform->game_context == nullptr) {
     auto* lit_memory = platform->allocate_memory(sizeof(lit_t));
+    if (!lit_memory) return false;
     platform->game_context = lit_memory;
 
     auto* lit = (lit_t*)((platform_memory_t*)platform->game_context)->data;
     lit->platform = platform;
     lit->gfx = platform->gfx;
     lit->profiler = platform->profiler;
+    lit->level_to_start = 0;
 
-    lit->next_mode = LIT_MODE_GAME;
-    // TODO: Error checking
-    // TODO: Better memory management
+    lit->next_mode = LIT_MODE_MENU;
+
+    //
     // Initialize assets
+    //
     auto* asset_memory = platform->allocate_memory(megabytes(20));
+    if (asset_memory == nullptr) return false;
     arena_init(&lit->asset_arena, asset_memory->data, asset_memory->size);
     assets_init(&lit->assets, platform, "test_pack.sui", &lit->asset_arena);
 
@@ -145,6 +158,14 @@ lit_tick(platform_t* platform) {
 
     lit->platform->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
     gfx_push_view(lit->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
+
+#if 0
+    // TODO: test write file
+    platform_file_t file = {};
+    platform->open_file(&file, "hello.txt", PLATFORM_FILE_ACCESS_OVERWRITE, PLATFORM_FILE_PATH_USER);
+    const char hey[] = "hey";
+    platform->write_file(&file, 3, 0, (void*)hey);
+#endif
 
   }
 
@@ -205,7 +226,7 @@ lit_tick(platform_t* platform) {
     default: {}
   }
 
-  return false;
+  return true;
 }
 
 #endif 

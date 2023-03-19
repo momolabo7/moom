@@ -159,7 +159,7 @@ typedef struct {
 
 } platform_t;
 
-typedef void moe_update_and_render_f(platform_t* pf);
+typedef b32_t moe_update_and_render_f(platform_t* pf);
 
 // To be called by platform
 typedef struct moe_functions_t {

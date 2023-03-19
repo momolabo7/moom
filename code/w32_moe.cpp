@@ -522,8 +522,10 @@ WinMain(HINSTANCE instance,
   LARGE_INTEGER performance_frequency;
   QueryPerformanceFrequency(&performance_frequency);
   LARGE_INTEGER last_frame_count = w32_get_performance_counter();
- 
-  while (w32_state.is_running) {
+
+  b32_t game_is_running = true;
+  while (w32_state.is_running && game_is_running) 
+  {
   
 #if 1
     // Hot reload moe.dll functions
@@ -580,7 +582,7 @@ WinMain(HINSTANCE instance,
     
     //-moe_t logic
     if(moe_code.is_valid) { 
-      moe_functions.update_and_render(pf);
+      game_is_running = moe_functions.update_and_render(pf);
     }
 
     // End  frame

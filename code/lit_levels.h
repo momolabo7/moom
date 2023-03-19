@@ -543,8 +543,8 @@ lit_level_1_2(lit_game_t* m) {
 }
 
 typedef void (*Lit_Level)(lit_game_t* mode); 
-static Lit_Level lit_levels[] = {
-#if 0
+static Lit_Level g_lit_levels[] = {
+#if 1 
   // Basics
   lit_level_0_0, 
   lit_level_0_1, 
@@ -586,13 +586,13 @@ lit_load_level(lit_game_t* m, u32_t level_id) {
 
   lit_init_player(m, 400.f, 400.f);
 
-  lit_levels[level_id](m);
+  g_lit_levels[level_id](m);
 
 }
 
 static void
 lit_load_next_level(lit_game_t* m){
-  m->current_level_id = (m->current_level_id + 1)%array_count(lit_levels);
+  m->current_level_id = (m->current_level_id + 1)%array_count(g_lit_levels);
   lit_load_level(m, m->current_level_id);  
 }
 

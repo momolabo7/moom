@@ -941,7 +941,7 @@ lit_update_game(lit_t* lit, lit_game_t* game)
 static void
 lit_init_game(lit_t* lit, lit_game_t* game) 
 {
-  lit_load_level(game, 0); 
+  lit_load_level(game, lit->level_to_start); 
   rng_init(&game->rng, 65535); // don't really need to be strict 
 
   make(asset_match_t, match);
