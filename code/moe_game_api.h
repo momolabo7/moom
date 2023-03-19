@@ -6,7 +6,7 @@
 //
 
 static void
-moe_painter_draw_sprite(gfx_t* gfx, assets_t* assets, asset_sprite_id_t sprite_id, v2f_t pos, v2f_t size, rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
+gfx_push_sprite(gfx_t* gfx, assets_t* assets, asset_sprite_id_t sprite_id, v2f_t pos, v2f_t size, rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
 {
   asset_sprite_t* sprite = get_sprite(assets, sprite_id);
   asset_bitmap_t* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);
@@ -24,7 +24,7 @@ moe_painter_draw_sprite(gfx_t* gfx, assets_t* assets, asset_sprite_id_t sprite_i
 
 
 static void
-moe_painter_draw_text(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+gfx_push_text(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
 
   asset_font_t* font = get_font(assets, font_id);
@@ -64,7 +64,7 @@ moe_painter_draw_text(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str
 }
 
 static void
-moe_painter_draw_text_center_aligned(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+gfx_push_text_center_aligned(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
   asset_font_t* font = get_font(assets, font_id);
   

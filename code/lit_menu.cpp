@@ -15,16 +15,16 @@ lit_draw_menu_button_frame(lit_t* lit, lit_menu_t* menu, v2f_t pos, v2f_t size, 
   const f32_t half_h = size.h/2.f;
 
   // left
-  moe_painter_draw_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x - half_w, pos.y), v2f_set(thickness, size.y), color); 
+  gfx_push_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x - half_w, pos.y), v2f_set(thickness, size.y), color); 
 
   // right
-  moe_painter_draw_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x + half_w, pos.y), v2f_set(thickness, size.y), color); 
+  gfx_push_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x + half_w, pos.y), v2f_set(thickness, size.y), color); 
 
   // top
-  moe_painter_draw_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x, pos.y + half_h), v2f_set(size.x, thickness), color); 
+  gfx_push_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x, pos.y + half_h), v2f_set(size.x, thickness), color); 
 
   // bottom
-  moe_painter_draw_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x, pos.y - half_h), v2f_set(size.x, thickness), color); 
+  gfx_push_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x, pos.y - half_h), v2f_set(size.x, thickness), color); 
 }
 
 static void
@@ -34,16 +34,16 @@ lit_draw_menu_cursor(lit_t* lit, lit_menu_t* menu, v2f_t pos, v2f_t size, f32_t 
   const f32_t half_h = size.h/2.f;
 
   // left
-  moe_painter_draw_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x - half_w, pos.y), v2f_set(thickness, size.y), color); 
+  gfx_push_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x - half_w, pos.y), v2f_set(thickness, size.y), color); 
 
   // right
-  moe_painter_draw_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x + half_w, pos.y), v2f_set(thickness, size.y), color); 
+  gfx_push_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x + half_w, pos.y), v2f_set(thickness, size.y), color); 
 
   // top
-  moe_painter_draw_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x, pos.y + half_h), v2f_set(size.x, thickness), color); 
+  gfx_push_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x, pos.y + half_h), v2f_set(size.x, thickness), color); 
 
   // bottom
-  moe_painter_draw_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x, pos.y - half_h), v2f_set(size.x, thickness), color); 
+  gfx_push_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x, pos.y - half_h), v2f_set(size.x, thickness), color); 
 }
 
 
@@ -96,7 +96,7 @@ lit_update_menu(lit_t* lit, lit_menu_t* menu) {
   //
 
   // Title
-  moe_painter_draw_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("LEVEL SELECTION"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT - 125.f, 72.f);
+  gfx_push_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("LEVEL SELECTION"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT - 125.f, 72.f);
 
 
   // 'Buttons'
@@ -141,7 +141,7 @@ lit_update_menu(lit_t* lit, lit_menu_t* menu) {
                       glyph->texel_y1);
 
     }
-    //moe_painter_draw_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("2"), RGBA_WHITE, cur_xy.x + 5.f, cur_xy.y - 25.f, 72.f);
+    //gfx_push_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("2"), RGBA_WHITE, cur_xy.x + 5.f, cur_xy.y - 25.f, 72.f);
 
     cur_xy.x += offset_x;
 
@@ -163,7 +163,7 @@ lit_update_menu(lit_t* lit, lit_menu_t* menu) {
     v2f_t cursor_wh = v2f_set(150.f, 150.f);
 
     lit_draw_menu_cursor(lit, menu, cursor_xy, cursor_wh, 16.f, selector_color); 
-    //moe_painter_draw_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("menu"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT/2, 128.f);
+    //gfx_push_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("menu"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT/2, 128.f);
 
     //inspector_add_u32(&lit->inspector, str8_from_lit("num"), &menu->current_level_selection);
   }
