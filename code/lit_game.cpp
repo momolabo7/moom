@@ -409,7 +409,7 @@ lit_draw_lights(lit_t* lit, lit_game_t* game) {
   for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
   {
     lit_light_t* light = game->lights + light_index;
-    gfx_push_sprite(lit->gfx, &lit->assets, 
+    gfx_push_asset_sprite(lit->gfx, &lit->assets, 
                             game->filled_circle_sprite, 
                             light->pos,
                             v2f_set(16.f, 16.f),
@@ -567,7 +567,7 @@ static void
 lit_draw_player(lit_t* lit, lit_game_t* game)
 {
   lit_player_t* player = &game->player;
-  gfx_push_sprite(lit->gfx, &lit->assets,
+  gfx_push_asset_sprite(lit->gfx, &lit->assets,
                           game->circle_sprite, 
                           player->pos, 
                           v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
@@ -645,7 +645,7 @@ lit_render_particles(lit_t* lit, lit_game_t* game) {
     size.w = f32_lerp(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = f32_lerp(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    gfx_push_sprite(lit->gfx, &lit->assets, game->filled_circle_sprite, p->pos, size, color);
+    gfx_push_asset_sprite(lit->gfx, &lit->assets, game->filled_circle_sprite, p->pos, size, color);
     gfx_advance_depth(lit->gfx);
   }
 }
@@ -959,6 +959,7 @@ lit_init_game(lit_t* lit, lit_game_t* game)
 static void 
 lit_render_game(lit_t* lit, lit_game_t* game) 
 {
+  // This is the default and happier blend mode
   gfx_push_blend(lit->gfx, 
                  GFX_BLEND_TYPE_SRC_ALPHA,
                  GFX_BLEND_TYPE_INV_SRC_ALPHA); 
@@ -986,7 +987,7 @@ lit_render_game(lit_t* lit, lit_game_t* game)
   // Draw the overlay for fade in/out
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, game->stage_fade_timer);
-    gfx_push_sprite(lit->gfx, &lit->assets, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    gfx_push_asset_sprite(lit->gfx, &lit->assets, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
     gfx_advance_depth(lit->gfx);
   }
 
@@ -994,7 +995,7 @@ lit_render_game(lit_t* lit, lit_game_t* game)
   {
     f32_t alpha = game->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
     rgba_t color = rgba_set(1.f, 1.f, 1.f, alpha);
-    gfx_push_sprite(lit->gfx, &lit->assets, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    gfx_push_asset_sprite(lit->gfx, &lit->assets, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
     gfx_advance_depth(lit->gfx);
   }
 

@@ -10,7 +10,7 @@ inspector_update_and_render(lit_t* lit)
   inspector_t* inspector = &lit->inspector;
   gfx_t* gfx = lit->gfx;
   assets_t* assets = &lit->assets;
-  gfx_push_sprite(gfx, assets, lit->blank_sprite, 
+  gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, 
                           v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
                           v2f_set(LIT_WIDTH, LIT_HEIGHT),
                           rgba_set(0.f, 0.f, 0.f, 0.5f));

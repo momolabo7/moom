@@ -44,15 +44,15 @@ lit_update_and_render_console(lit_t* lit)
   v2f_t input_area_size = v2f_set(console_width, line_height);
   v2f_t input_area_pos = v2f_set(console_width/2, line_height/2);
   
-  gfx_push_sprite(gfx, assets, lit->blank_sprite, 
+  gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, 
                           v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
                           v2f_set(LIT_WIDTH, LIT_HEIGHT),
                           rgba_set(0.f, 0.f, 0.f, 0.8f));
   gfx_advance_depth(gfx);
   
-  gfx_push_sprite(gfx, assets, lit->blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
+  gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
   gfx_advance_depth(gfx);
-  gfx_push_sprite(gfx, assets, lit->blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
+  gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
   gfx_advance_depth(gfx);
   
   

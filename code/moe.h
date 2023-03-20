@@ -26,8 +26,6 @@
 //#include "moe_inspector_rendering.h"
 //#include "moe_profiler_rendering.h"
 //#include "moe_console_rendering.h"
-
-
-#include "game.h"
+//#include "game.h"
 
 #endif //MOE_H

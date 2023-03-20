@@ -29,15 +29,27 @@ int main() {
   arena_init(&ba, malloc(megabytes(1)), megabytes(1)); 
 
   make(json_t, json);
-  json_read(json, mem, len, &ba);
+  auto* obj =  json_read(json, mem, len, &ba);
 
-#if 1
-  auto* val = json_get_value(json, str8_from_lit("boolean"));
+  auto* val = json_get_value(obj, str8_from_lit("arr"));
   if(val) {
-    if (val->type == JSON_VALUE_TYPE_TRUE)
-    printf("debug: %d\n", json_is_value_true(json, val));
+    json_array_t* arr = json_get_array(val);
+    if (arr) {
+      for(json_array_node_t* itr = arr->head;
+          itr != 0; 
+          itr = itr->next) 
+      {
+        json_value_t* val2 = &itr->value; 
+        if (json_is_number(val2)) {
+          json_element_t* element = json_get_element(val2);
+          s32_t out = 0;
+          str8_t s = str8(element->at, element->count);
+          b32_t test = str8_to_s32(s, &out);
+          printf("%d\n", out);
+        }
+      }
+    }
   }
-#endif
 
 
 

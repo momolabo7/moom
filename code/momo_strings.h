@@ -8,8 +8,9 @@ struct str8_t{
 	umi_t count;
 };
 
+static str8_t str8(u8_t* str, umi_t size);
 static str8_t str8_substr(str8_t str, umi_t start, umi_t ope);
-static b32_t str8_match(str8_t lhs, str8_t rhs);
+static b32_t  str8_match(str8_t lhs, str8_t rhs);
 
 static str8_t str8(u8_t* str, umi_t size);
 static str8_t str8_from_cstr(const char* cstr);
@@ -17,8 +18,10 @@ static str8_t str8_from_cstr(const char* cstr);
 #define str8_from_lit(s) str8((u8_t*)(s), sizeof(s)-1)
 
 // parsing strings to other types
-b32_t str8_to_u32(u32_t* out);
-b32_t str8_range_to(u32_t* out);
+static b32_t str8_to_u32(str8_t s, u32_t* out);
+static b32_t str8_to_f32(str8_t s, f32_t* out);
+static b32_t str8_to_s32(str8_t s, s32_t* out);
+static b32_t str8_range_to(u32_t* out);
 
 static b32_t operator==(str8_t lhs, str8_t rhs);
 static b32_t operator!=(str8_t lhs, str8_t rhs);
@@ -125,7 +128,7 @@ str8_compare_lexographically(str8_t lhs, str8_t rhs) {
 }
 static b32_t 
 str8_to_u32_range(str8_t s, umi_t begin, umi_t ope, u32_t* out) {
-  if (ope >= s.count) return false;
+  if (ope > s.count) return false;
 
   u32_t number = 0;
   for (umi_t i = begin; i < ope; ++i) {
@@ -143,7 +146,8 @@ str8_to_u32_range(str8_t s, umi_t begin, umi_t ope, u32_t* out) {
 
 static b32_t 
 str8_to_s32_range(str8_t s, umi_t begin, umi_t ope, s32_t* out) {
-  if (ope >= s.count) return false;
+
+  if (ope > s.count) return false;
 
   b32_t is_negative = false;
   if (s.e[begin] == '-') {
@@ -160,12 +164,13 @@ str8_to_s32_range(str8_t s, umi_t begin, umi_t ope, s32_t* out) {
     number += ascii_to_digit(s.e[i]);
   }
   (*out) = is_negative ? -number : number;
+
   return true;
 }
 
 static b32_t 
 str8_to_f32_range(str8_t s, umi_t begin, umi_t ope, f32_t* out) {
-  if (ope >= s.count) return false;
+  if (ope > s.count) return false;
   u32_t place = 0;
 
   // Really lousy algorithm
@@ -200,6 +205,7 @@ static b32_t
 str8_to_u32(str8_t s, u32_t* out) {
   return str8_to_u32_range(s, 0, s.count, out);
 }
+
 // Parsing functions
 static b32_t 
 str8_to_s32(str8_t s, s32_t* out) {

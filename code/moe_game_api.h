@@ -6,7 +6,13 @@
 //
 
 static void
-gfx_push_sprite(gfx_t* gfx, assets_t* assets, asset_sprite_id_t sprite_id, v2f_t pos, v2f_t size, rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
+gfx_push_asset_sprite(
+    gfx_t* gfx, 
+    assets_t* assets, 
+    asset_sprite_id_t sprite_id, 
+    v2f_t pos, 
+    v2f_t size, 
+    rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
 {
   asset_sprite_t* sprite = get_sprite(assets, sprite_id);
   asset_bitmap_t* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);

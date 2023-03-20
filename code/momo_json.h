@@ -18,6 +18,8 @@ struct json_array_t {
   json_array_node_t* tail;
 };
 
+
+
 // Represents a JSON element, which is a string.
 struct json_element_t {
   u8_t* at;
@@ -51,6 +53,40 @@ struct json_value_t {
   };
 };
 
+struct json_array_node_t {
+  json_array_node_t* next;
+  json_value_t value;
+};
+struct json_t {
+  // for tokenizing
+  str8_t text;
+  umi_t at;
+
+  // The 'root' item in a JSON file is an object type.
+  json_object_t root;
+};
+
+static json_object_t* json_read(json_t* j, const u8_t* json_string, u32_t json_string_size, arena_t* ba);
+static json_value_t* json_get_value(json_object_t* j, str8_t key);
+static b32_t json_is_true(json_value_t* val);
+static b32_t json_is_false(json_value_t* val);
+static b32_t json_is_null(json_value_t* val);
+static b32_t json_is_string(json_value_t* val);
+static b32_t json_is_number(json_value_t* val);
+static b32_t json_is_array(json_value_t* val);
+static b32_t json_is_object(json_value_t* val);
+static b32_t json_is_element(json_value_t* val);
+static json_element_t* json_get_element(json_value_t* val);
+static json_array_t* json_get_array(json_value_t* val);
+static json_object_t* json_get_object(json_value_t* val);
+
+
+//
+//
+// IMPLEMENTATINON
+//
+//
+
 // Every json 'entry' is a key/value pair.
 struct _json_entry_t {
   json_key_t key;
@@ -61,19 +97,8 @@ struct _json_entry_t {
   _json_entry_t* right;
 };
 
-struct json_array_node_t {
-  json_array_node_t* next;
-  json_value_t value;
-};
 
-struct json_t {
-  // for tokenizing
-  str8_t text;
-  umi_t at;
 
-  // The 'root' item in a JSON file is an object type.
-  json_object_t root;
-};
 
 #if 0
 static b32_t json_read(json_object_t* j, void* json_string, umi_t json_string_size, arena_t* arena);
@@ -408,7 +433,6 @@ _json_parse_array(json_array_t* arr, json_t* t, arena_t* ba) {
   }
  
   return !error;
-
 }
 
 static b32_t 
@@ -569,7 +593,7 @@ _json_print_token(json_t* t, _json_token_t token)  {
 }
 
 static void
-json_print_value(json_t* t, json_value_t* value) {
+_json_print_value(json_t* t, json_value_t* value) {
   switch(value->type) {
     case JSON_VALUE_TYPE_TRUE: 
     case JSON_VALUE_TYPE_FALSE:
@@ -645,8 +669,8 @@ _json_print_entries_in_order(json_t* t, _json_entry_t* entry)
 
 
 static _json_entry_t* 
-_json_get(json_t* j, str8_t key) {
-  _json_entry_t* node = j->root.head;
+_json_get(json_object_t* json_object, str8_t key) {
+  _json_entry_t* node = json_object->head;
   while(node) {
     str8_t lhs = str8(node->key.at, node->key.count);
     str8_t rhs = str8(key.e, key.count);
@@ -666,14 +690,67 @@ _json_get(json_t* j, str8_t key) {
 }
 
 static json_value_t* 
-json_get_value(json_t* j, str8_t key) {
-  _json_entry_t* entry = _json_get(j, key);
+json_get_value(json_object_t* json_object, str8_t key) {
+  _json_entry_t* entry = _json_get(json_object, key);
   if (!entry) return nullptr;
   return &entry->value;
 }
 
+static b32_t 
+json_is_true(json_value_t* val) 
+{
+  return val->type == JSON_VALUE_TYPE_TRUE;
+}
+
+static b32_t 
+json_is_false(json_value_t* val) 
+{
+  return val->type == JSON_VALUE_TYPE_FALSE;
+}
+
+static b32_t 
+json_is_null(json_value_t* val) {
+  return val->type == JSON_VALUE_TYPE_NULL;
+}
+
+static b32_t 
+json_is_string(json_value_t* val) {
+  return val->type == JSON_VALUE_TYPE_STRING;
+}
+
+static b32_t 
+json_is_number(json_value_t* val) {
+  return val->type == JSON_VALUE_TYPE_NUMBER;
+}
+
+
+static b32_t json_is_array(json_value_t* val) {
+  return val->type == JSON_VALUE_TYPE_ARRAY;
+}
+static b32_t json_is_object(json_value_t* val) {
+  return val->type == JSON_VALUE_TYPE_OBJECT;
+}
+static b32_t json_is_element(json_value_t* val) {
+  return !json_is_object(val) && !json_is_array(val);
+}
+
+static json_element_t* json_get_element(json_value_t* val) {
+  return json_is_element(val) ? &val->element : nullptr;
+}
+static json_array_t* json_get_array(json_value_t* val) {
+  return json_is_array(val) ? &val->array : nullptr;
+}
+static json_object_t* json_get_object(json_value_t* val) {
+  return json_is_object(val) ? &val->object : nullptr;
+}
+
+
 static json_object_t*
-json_read(json_t* j, u8_t* json_string, u32_t json_string_size, arena_t* ba) 
+json_read(
+    json_t* j, 
+  u8_t* json_string, 
+    u32_t json_string_size, 
+    arena_t* ba) 
 {
   j->text = str8(json_string, json_string_size);
   j->at = 0;

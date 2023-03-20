@@ -51,7 +51,7 @@ profiler_update_and_render(lit_t* lit)
   const f32_t font_height = 20.f;
 
   // Overlay
-  gfx_push_sprite(gfx, assets, lit->blank_sprite, 
+  gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, 
                           v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
                           v2f_set(LIT_WIDTH, LIT_HEIGHT),
                           rgba_set(0.f, 0.f, 0.f, 0.5f));
@@ -126,7 +126,7 @@ profiler_update_and_render(lit_t* lit)
         render_height - font_height * (line_num) + font_height/4);
 
       v2f_t size = v2f_set(snapshot_bar_width, snapshot_bar_height);
-      gfx_push_sprite(gfx, assets, lit->blank_sprite, pos, size, rgba_hex(0x00FF00FF));
+      gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, pos, size, rgba_hex(0x00FF00FF));
     }
     gfx_advance_depth(gfx);
     ++line_num;
