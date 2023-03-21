@@ -120,7 +120,6 @@ profiler_update_and_render(lit_t* lit)
       f32_t snapshot_bar_height = 
         height_scale * font_height * (f32_t)snapshot->cycles * 0.95f;
      
-      // TODO: Need a better way to decide x-position
       v2f_t pos = v2f_set(
         560.f + snapshot_bar_width * (snapshot_index), 
         render_height - font_height * (line_num) + font_height/4);

@@ -138,7 +138,6 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
     lit_draw_menu_rect(lit, menu, cur_xy, button_wh, 16.f, frame_color); 
 
     // Draw level number or icon depending on whether it's unlocked
-    // TODO: terribly hardcoded
     // TODO: locked/unlocked
     {
       // NOTE(Momo): I'm too lazy.

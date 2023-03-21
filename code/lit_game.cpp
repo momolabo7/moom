@@ -54,8 +54,6 @@ lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {
       a->timer += dt;
 
       // NOTE(momo): sin() takes in a value from [0, PI_32]
-      //
-      // TODO: this is probably wrong. The alpha goes to -1.
       f32_t angle = ((a->timer/a->duration)-1.f) * PI_32;
       f32_t alpha = (f32_cos(angle) + 1.f) / 2.f;
       a->edge->start_pt = v2f_lerp(a->start_edge.start_pt, a->end_edge.start_pt, alpha);
@@ -753,7 +751,6 @@ lit_update_sensors(lit_game_t* game, f32_t dt)
         lit_light_triangle_t* tri = light->triangles +tri_index;
         if (bonk_tri2_pt2(tri->p0, tri->p1, tri->p2, sensor->pos)) 
         {
-          // TODO(Momo): Probably not the right way do sensor
           current_color += light->color >> 8 << 8; // ignore alpha
           break; // ignore the rest of the triangles
         }

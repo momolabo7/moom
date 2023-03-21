@@ -47,7 +47,6 @@ lit_tick(platform_t* platform) {
     gfx_push_view(lit->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
 #if 0
-    // TODO: test write file
     platform_file_t file = {};
     platform->open_file(&file, "hello.txt", PLATFORM_FILE_ACCESS_OVERWRITE, PLATFORM_FILE_PATH_USER);
     const char hey[] = "hey";

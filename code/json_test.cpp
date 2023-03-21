@@ -31,6 +31,9 @@ int main() {
   make(json_t, json);
   auto* obj =  json_read(json, mem, len, &ba);
 
+#define json_array_foreach(arr) 
+
+
   auto* val = json_get_value(obj, str8_from_lit("arr"));
   if(val) {
     json_array_t* arr = json_get_array(val);

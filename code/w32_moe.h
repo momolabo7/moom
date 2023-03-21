@@ -364,7 +364,6 @@ w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {
 static platform_memory_t*
 w32_allocate_memory(umi_t size)
 {
-  // TODO: alignment?
   const auto alignment = 16;
   umi_t aligned_size = align_up_pow2(size, alignment);
   umi_t padding_for_alignment = aligned_size - size;

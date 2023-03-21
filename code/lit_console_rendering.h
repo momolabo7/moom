@@ -29,9 +29,7 @@ lit_update_and_render_console(lit_t* lit)
   }
   
   // Render
-  // TODO(Momo): These should be percentages
-  // but we'll work with this for now
-  static const f32_t console_width = 1600.f;
+  static const f32_t console_width = LIT_WIDTH;
   static const f32_t console_height = 400.f;
   static const u32_t line_count = array_count(console->info_lines)+1;
   static const f32_t line_height = console_height/line_count;

@@ -93,7 +93,5 @@ struct assets_t {
   asset_tag_t* tags;
   asset_group_t groups[ASSET_GROUP_TYPE_COUNT];
   
-  // TODO(Momo): We should remove this?
-  u32_t bitmap_counter;
 };
 #endif

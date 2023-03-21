@@ -130,7 +130,6 @@ struct lit_animator_patrol_sensor_t {
 };
 
 struct lit_animator_rotate_edge_t {
-  //TODO
 };
 
 struct lit_animator_patrol_edge_t {

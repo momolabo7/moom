@@ -494,69 +494,6 @@ gfx_push_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u
   }
 }
 
-#if 0
-//TODO: Buggy? Or change to AABB? Instead of Rect?
-static void 
-gfx_push_rect_outline(gfx_t* g, 
-                      Rect2 rect,
-                      f32_t thickness,
-                      rgba_t colors,
-                      f32_t pos_z) 
-{
-  gfx_command_queue_t* c = &g->command_queue; 
-  //Bottom
-  {
-    Line2 line;
-    p0.x = rect.min.x;
-    p0.y = rect.min.y;
-    p1.x = rect.max.x;
-    p0.y = rect.min.y; 
-    
-    gfx_push_line(g, line, thickness, colors);
-  }
-  
-  // Left
-  {
-    Line2 line;
-    p0.x = rect.min.x;
-    p0.y = rect.min.y;
-    p1.x = rect.min.x;
-    p0.y = rect.max.y; 
-    
-    gfx_push_line(g, line, thickness, colors);
-  }
-  
-  //Top
-  {
-    Line2 line;
-    p0.x = rect.min.x;
-    p0.y = rect.max.y;
-    p1.x = rect.max.x;
-    p0.y = rect.max.y; 
-    
-    gfx_push_line(g, line, thickness, colors);
-    
-  }
-  
-  //Right 
-  {
-    Line2 line;
-    p0.x = rect.max.x;
-    p0.y = rect.min.y;
-    p1.x = rect.max.x;
-    p0.y = rect.max.y; 
-    
-    gfx_push_line(g, line, thickness, colors);
-  }
-}
-#endif
-
-static void 
-gfx_push_delete_all_textures(gfx_t* g) {
-  gfx_command_queue_t* c = &g->command_queue; 
-  _gfx_push_command<gfx_command_delete_all_textures_t>(c, GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES);
-}
-
 static void 
 gfx_push_delete_texture(gfx_t* g, u32_t texture_index) {
   gfx_command_queue_t* c = &g->command_queue; 
