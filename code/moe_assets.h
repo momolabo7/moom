@@ -30,6 +30,7 @@ struct asset_font_glyph_t {
 
   asset_bitmap_id_t bitmap_asset_id;
   f32_t horizontal_advance;
+  f32_t vertical_advance;
 };
 
 struct asset_font_t {
@@ -93,5 +94,4 @@ struct assets_t {
   asset_tag_t* tags;
   asset_group_t groups[ASSET_GROUP_TYPE_COUNT];
   
-};
 #endif

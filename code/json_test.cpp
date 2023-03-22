@@ -46,8 +46,7 @@ int main() {
         if (json_is_number(val2)) {
           json_element_t* element = json_get_element(val2);
           s32_t out = 0;
-          str8_t s = str8(element->at, element->count);
-          b32_t test = str8_to_s32(s, &out);
+          b32_t test = str8_to_s32(element->str, &out);
           printf("%d\n", out);
         }
       }

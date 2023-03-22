@@ -113,9 +113,7 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
   // 
   // Rendering
   //
-  gfx_push_blend(lit->gfx, 
-                 GFX_BLEND_TYPE_SRC_ALPHA,
-                 GFX_BLEND_TYPE_INV_SRC_ALPHA); 
+  gfx_set_blend_alpha(lit->gfx);
 
   // Title
   gfx_push_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("LEVEL SELECTION"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT - 125.f, 72.f);

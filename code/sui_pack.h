@@ -232,7 +232,7 @@ sui_pack_end(sui_packer_t* p, const char* filename, arena_t* arena)
         if (highest_codepoint == 0) 
           continue;
 
-        Karu_Font* font = &asset->font;
+        karu_font_t* font = &asset->font;
         font->highest_codepoint = highest_codepoint;
         font->glyph_count = atlas_font->codepoint_count;
         font->bitmap_asset_id = source->font.bitmap_asset_id;
@@ -261,13 +261,28 @@ sui_pack_end(sui_packer_t* p, const char* filename, arena_t* arena)
 
           u32_t ttf_glyph_index = ttf_get_glyph_index(ttf, glyph.codepoint);
 
-          // advance width
+          // horizontal advance 
           {
             s16_t advance_width = 0;
-            ttf_get_glyph_horizontal_metrics(ttf, ttf_glyph_index, &advance_width, nullptr);
+            ttf_get_glyph_horizontal_metrics(ttf, ttf_glyph_index, 
+                &advance_width, nullptr);
             glyph.horizontal_advance = (f32_t)advance_width * pixel_scale;
           }
 
+          // vertical advance
+          {
+            s16_t ascent = 0;
+            s16_t descent = 0;
+            s16_t line_gap = 0;
+
+            ttf_get_glyph_vertical_metrics(ttf, ttf_glyph_index, 
+                &ascent, &descent, &line_gap);
+            s16_t vertical_advance = ascent - descent + line_gap;
+            glyph.vertical_advance = (f32_t)veritcal_advance * pixel_scale;
+
+          }
+
+          // glyph box
           {
             s32_t x0, y0, x1, y1;
             f32_t s = ttf_get_scale_for_pixel_height(ttf, 1.f);

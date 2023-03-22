@@ -170,6 +170,7 @@ assets_init(assets_t* assets, platform_t* platform, const char* filename, arena_
             glyph->box_y1 = karu_glyph.box_y1;
 
             glyph->horizontal_advance = karu_glyph.horizontal_advance;
+            glyph->vertical_advance = karu_glyph.vertical_advance;
             codepoint_map[karu_glyph.codepoint] = glyph_index;
           }
 

@@ -873,6 +873,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, umi_t* out_size, arena_t* ar
   {
     
     u32_t chunk_overhead = sizeof(u16_t)*2 + sizeof(u8_t)*1;
+
     u8_t* crc_start = nullptr;
     
     _png_chunk_header_t header = {};

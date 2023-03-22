@@ -44,7 +44,7 @@ lit_tick(platform_t* platform) {
     arena_init(&lit->frame_arena, frame_memory->data, frame_memory->size);
 
     lit->platform->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
-    gfx_push_view(lit->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
+    gfx_set_view(lit->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
 #if 0
     platform_file_t file = {};

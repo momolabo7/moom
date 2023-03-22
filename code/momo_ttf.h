@@ -10,7 +10,6 @@
 // - Prioritizes formats recognized by Windows first.
 // 
 // TODO:
-// - Remove reliance on Image32
 // - Cater for glyphs which start from an off-curve point.
 // - Anti-aliasing
 // - Complex glyphs.
@@ -45,6 +44,9 @@ static u32_t ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint);
 // returns 0 for invalid codepoints
 
 static void ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, u32_t glyph_index, s16_t* advance_width, s16_t* left_side_bearing);
+
+static void ttf_get_glyph_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_t* line_gap);
+//you should advance the vertical position by "*ascent - *descent + *lineGap"
 
 static f32_t ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height);
 // This returns the 'scale factor' you need to apply to the font's coordinates
@@ -366,8 +368,9 @@ _ttf_get_glyph_outline(const ttf_t* ttf,
   } 
 }
 
-///////////////////////////////////////////////////////
-//~Glyph path generation
+//
+// Glyph path generation
+//
 static void
 _ttf_add_vertex(v2f_t* vertices, u32_t n, f32_t x, f32_t y) {
   if (!vertices) return;
@@ -569,6 +572,14 @@ ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height) {
   return (f32_t)pixel_height/font_height;
 }
 
+
+static void 
+ttf_get_glyph_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_t* line_gap) 
+{
+  if (ascent) *ascent = _ttf_read_s16(ttf->data + ttf->hhea + 4);
+  if (descent) *descent = _ttf_read_s16(ttf->data + ttf->hhea + 6);
+  if (line_gap) *line_gap = _ttf_read_s16(ttf->data + ttf->hhea + 8);
+}
 
 static void 
 ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, 

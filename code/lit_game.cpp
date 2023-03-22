@@ -418,16 +418,14 @@ lit_draw_lights(lit_t* lit, lit_game_t* game) {
   //
   // Lights
   //
-  gfx_push_blend(lit->gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_ONE); 
-  
-
+  gfx_set_blend_additive(lit->gfx);
   for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
   {
     lit_light_t* l = game->lights + light_index;
     for(u32_t tri_index = 0; tri_index < l->triangle_count; ++tri_index)
     {
       lit_light_triangle_t* lt = l->triangles + tri_index;
-      gfx_push_filled_triangle(lit->gfx, 
+      gfx_draw_filled_triangle(lit->gfx, 
                                rgba_hex(l->color),
                                lt->p0,
                                lt->p1,
@@ -435,7 +433,7 @@ lit_draw_lights(lit_t* lit, lit_game_t* game) {
     } 
     gfx_advance_depth(lit->gfx);
   }
-
+  gfx_set_blend_alpha(lit->gfx);
 }
 
 
@@ -446,7 +444,7 @@ lit_draw_edges(lit_t* lit, lit_game_t* game) {
   for(u32_t edge_index = 0; edge_index < game->edge_count; ++edge_index) 
   {
     lit_edge_t* edge = game->edges + edge_index;
-    gfx_push_line(lit->gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
+    gfx_draw_line(lit->gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
   }
   gfx_advance_depth(lit->gfx);
 }
@@ -808,7 +806,7 @@ lit_render_sensors(lit_t* lit, lit_game_t* game) {
   for(u32_t sensor_index = 0; sensor_index < game->sensor_count; ++sensor_index)
   {
     lit_sensor_t* sensor = game->sensors + sensor_index;
-    gfx_push_filled_circle(lit->gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, rgba_hex(sensor->target_color)); 
+    gfx_draw_filled_circle(lit->gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, rgba_hex(sensor->target_color)); 
 
     // only for debugging
 #if 0
@@ -957,16 +955,14 @@ static void
 lit_render_game(lit_t* lit, lit_game_t* game) 
 {
   // This is the default and happier blend mode
-  gfx_push_blend(lit->gfx, 
-                 GFX_BLEND_TYPE_SRC_ALPHA,
-                 GFX_BLEND_TYPE_INV_SRC_ALPHA); 
+  gfx_set_blend_alpha(lit->gfx);
 
   //lit_draw_edges(game); 
   //lit_draw_debug_light_rays(game, moe);
   lit_draw_player(lit, game);
   lit_draw_lights(lit, game);
   
-  gfx_push_blend(lit->gfx, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_INV_SRC_ALPHA); 
+  gfx_set_blend_alpha(lit->gfx);
 
   lit_render_sensors(lit, game); 
   lit_render_particles(lit, game);

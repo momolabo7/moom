@@ -22,8 +22,13 @@ struct json_array_t {
 
 // Represents a JSON element, which is a string.
 struct json_element_t {
-  u8_t* at;
-  umi_t count;
+  union {
+    struct {
+      u8_t* at;
+      umi_t count;
+    };
+    str8_t str;
+  };
 };
 
 enum json_value_type_t {

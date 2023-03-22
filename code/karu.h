@@ -47,9 +47,10 @@ struct karu_font_glyph_t {
 
   u32_t codepoint;
   f32_t horizontal_advance;
+  f32_t vertical_advance;
 };
 
-struct Karu_Font {
+struct karu_font_t {
   u32_t offset_to_data;
   
   // TODO: Maybe add 'lowest codepoint'?
@@ -85,7 +86,7 @@ struct karu_asset_t {
 
   union {
     karu_bitmap_t bitmap;
-    Karu_Font font;
+    karu_font_t font;
     karu_sprite_t sprite;
   };
 };
