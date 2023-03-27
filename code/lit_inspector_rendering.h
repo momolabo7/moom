@@ -24,14 +24,12 @@ inspector_update_and_render(lit_t* lit)
     inspector_entry_t* entry = inspector->entries + entry_index;
     switch(entry->type){
       case INSPECTOR_ENTRY_TYPE_U32: {
-        u32_t item = *(u32_t*)entry->item;
         sb8_push_fmt(sb, str8_from_lit("[%10S] %7u"),
-                     entry->name, item);
+                     entry->name, entry->item_u32);
       } break;
       case INSPECTOR_ENTRY_TYPE_F32: {
-        f32_t item = *(f32_t*)entry->item;
         sb8_push_fmt(sb, str8_from_lit("[%10S] %7f"),
-                     entry->name, item);
+                     entry->name, entry->item_f32);
       } break;
     }
     

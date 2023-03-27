@@ -275,10 +275,10 @@ sui_pack_end(sui_packer_t* p, const char* filename, arena_t* arena)
             s16_t descent = 0;
             s16_t line_gap = 0;
 
-            ttf_get_glyph_vertical_metrics(ttf, ttf_glyph_index, 
+            ttf_get_glyph_vertical_metrics(ttf, 
                 &ascent, &descent, &line_gap);
             s16_t vertical_advance = ascent - descent + line_gap;
-            glyph.vertical_advance = (f32_t)veritcal_advance * pixel_scale;
+            glyph.vertical_advance = (f32_t)vertical_advance * pixel_scale;
 
           }
 

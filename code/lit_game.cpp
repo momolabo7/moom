@@ -52,7 +52,7 @@ lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {
     case LIT_ANIMATOR_TYPE_ROTATE_SENSOR: {
       auto* a = &animator->rotate_sensor;
       v2f_t vec = a->sensor->pos - a->point_of_rotation;
-      v2f_t new_vec = v2f_rotate(vec, 10.f*dt);
+      v2f_t new_vec = v2f_rotate(vec, a->speed * dt);
       a->sensor->pos = a->point_of_rotation + new_vec;
     } break;
     case LIT_ANIMATOR_TYPE_PATROL_EDGE: {
@@ -150,7 +150,6 @@ lit_push_double_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t
 }
 
 
-
 static lit_light_t*
 lit_push_light(lit_game_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle, f32_t turn) {
   assert(m->light_count < array_count(m->lights));
@@ -159,8 +158,9 @@ lit_push_light(lit_game_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle
   light->pos.y = pos_y;
   light->color = color;
 
-  light->dir.x = f32_cos(turn*TAU_32);
-  light->dir.y = f32_sin(turn*TAU_32);
+  f32_t rad = f32_turns_to_radians(turn);
+  light->dir.x = f32_cos(rad);
+  light->dir.y = f32_sin(rad);
   light->half_angle = f32_deg_to_rad(angle/2.f);
   
   return light;
@@ -579,7 +579,7 @@ lit_draw_player(lit_t* lit, lit_game_t* game)
 }
 
 
-/////////////////////////////////////////////////////////////////////
+//
 // Particles
 //
 static void

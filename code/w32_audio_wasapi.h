@@ -223,9 +223,10 @@ w32_wasapi_init(w32_wasapi_t* wasapi,
   wasapi->samples_per_second = samples_per_second;
   wasapi->latency_sample_count = (samples_per_second / refresh_rate) * latency_frames;
 
-  if (!arena_partition_with_remaining(allocator, 
-                                   &wasapi->allocator, 
-                                   16)) 
+  if (!arena_push_partition_with_remaining(
+        allocator, 
+        &wasapi->allocator, 
+        16)) 
   {
     w32_log("[w32_wasapi] Failed to partition memory\n");
     return false;

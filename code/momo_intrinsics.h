@@ -35,8 +35,12 @@ static f64_t f64_ceil(f64_t value);
 static f64_t f64_floor(f64_t value);
 static f64_t f64_round(f64_t value);
 
-////////////////////////////////////////////////////////////////////////
+static f32_t f32_turns_to_radians(f32_t turns);
+static f64_t f64_turns_to_radians(f64_t turns);
+
+//
 // IMPLEMENTATION
+// 
 #if COMPILER_MSVC
 #include <intrin.h>
 static u32_t 
@@ -114,6 +118,9 @@ f32_pow(f32_t b, f32_t e){
   return powf(b,e);
 }
 
+static f32_t f32_turns_to_radians(f32_t turns) {
+  return turns * TAU_32;
+}
 
 static f64_t 
 f64_sin(f64_t x) {
@@ -180,5 +187,8 @@ static f64_t f64_round(f64_t value) {
   return round(value);
 }
 
+static f64_t f64_turns_to_radians(f64_t turns) {
+  return turns * TAU_32;
+}
 
 #endif //MOMO_INTRINSICS_H
