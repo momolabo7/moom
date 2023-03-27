@@ -1,4 +1,5 @@
-/* date = May 11th 2022 7:15 pm */
+// 
+// 
 
 #ifndef MOE_INSPECTOR_H
 #define MOE_INSPECTOR_H
@@ -20,7 +21,7 @@ struct inspector_t {
 };
 
 
-/////////////////////////////////////////////////////////////
+//
 // IMPLEMENTATION
 //
 static void 
