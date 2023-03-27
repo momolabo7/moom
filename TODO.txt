@@ -1,12 +1,13 @@
-Moe
-  Consider removeing moe_asset_types from karu.h and maybe even moe_assets
-  Expandable arena for platform, instead of just calling VirtualAlloc every time
+engine
+  - Inspector really shouldn't hold a pointer. We should copy the value we want to inspect because we want to inspect the value THERE AND THEN. 
+  - Consider removeing moe_asset_types from karu.h and maybe even moe_assets
+  - Expandable arena for platform, instead of just calling VirtualAlloc every time
 
-Lit
-  Level selection (after we make 10 levels I guess)
+game
+  - Level selection (after we make 10 levels I guess)
 
-Assets 
-  9 Slice 
-  Audio/Sound
+assets 
+  - 9 Slice 
+  - Audio/Sound
 
 

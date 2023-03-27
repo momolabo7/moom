@@ -17,7 +17,6 @@
 //     arena_push_arr_zero()        -- arena_push_arr() but memory is zero'ed.
 //     arena_push_arr_align_zero()  -- arena_push_arr_align() but memory is zero'ed.
 //
-//
 
 
 #ifndef MOMO_ARENA_H
@@ -29,6 +28,7 @@ struct arena_t {
 	umi_t cap;
 };
 
+
 // Temporary memory API used to arena_revert an arena to an original state;
 struct arena_marker_t {
   arena_t* arena;
@@ -39,9 +39,9 @@ static void   arena_init(arena_t* a, void* mem, umi_t cap);
 static void   arena_clear(arena_t* a);
 static void*  arena_push_size(arena_t* a, umi_t size, umi_t align);
 static void*  arena_push_size_zero(arena_t* a, umi_t size, umi_t align); 
-static b32_t    arena_partition(arena_t* a, arena_t* partition, umi_t size, umi_t align);
-static b32_t    arena_partition_with_remaining(arena_t* a, arena_t* partition, umi_t align);
-static umi_t    arena_remaining(arena_t* a);
+static b32_t  arena_push_partition(arena_t* a, arena_t* partition, umi_t size, umi_t align);
+static b32_t  arena_push_partition_with_remaining(arena_t* a, arena_t* partition, umi_t align);
+static umi_t  arena_remaining(arena_t* a);
 
 #define arena_push_arr_align(t,b,n,a) (t*)arena_push_size(b, sizeof(t)*(n), a)
 #define arena_push_arr(t,b,n)         (t*)arena_push_size(b, sizeof(t)*(n),alignof(t))
@@ -111,7 +111,7 @@ arena_push_size_zero(arena_t* a, umi_t size, umi_t align)
 
 
 static b32_t
-arena_partition(arena_t* a, arena_t* partition, umi_t size, umi_t align) {	
+arena_push_partition(arena_t* a, arena_t* partition, umi_t size, umi_t align) {	
 	void* mem = arena_push_size(a, size, align);
   if (!mem) return false; 
   arena_init(partition, mem, size);
@@ -121,7 +121,7 @@ arena_partition(arena_t* a, arena_t* partition, umi_t size, umi_t align) {
 
 
 static b32_t    
-arena_partition_with_remaining(arena_t* a, arena_t* partition, umi_t align){
+arena_push_partition_with_remaining(arena_t* a, arena_t* partition, umi_t align){
 	umi_t imem = ptr_to_umi(a->memory);
 	umi_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
 	

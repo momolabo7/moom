@@ -671,7 +671,7 @@ _json_print_entries_in_order(json_t* t, _json_entry_t* entry)
     _json_print_entries_in_order(t, entry->right);
   }
 }
-
+#endif // JSON_DEBUG
 
 static _json_entry_t* 
 _json_get(json_object_t* json_object, str8_t key) {
@@ -770,61 +770,5 @@ json_read(
 #endif //JSON_DEBUG
   return &j->root;
 }
-
-
-
-
-#if 0
-static u32_t* 
-json_get_u32(json_object_t* j, str8_t key) {
-  _json_object_node_t* node = _json_get(j, key);
-  if (!node) return nullptr;
-  if (node->value.type != _JSON_VALUE_TYPE_U32) return nullptr;
-  return &node->value.u32_t;
-}
-
-static f32_t* 
-json_get_f32(json_object_t* j, str8_t key) {
-  _json_object_node_t* node = _json_get(j, key);
-  if (!node) return nullptr;
-  if (node->value.type != _JSON_VALUE_TYPE_F32) return nullptr;
-  return &node->value.f32_t;
-}
-
-static b32_t* 
-json_get_b32(json_object_t* j, str8_t key) {
-  _json_object_node_t* node = _json_get(j, key);
-  if (!node) return nullptr;
-  if (node->value.type != _JSON_VALUE_TYPE_B32) return nullptr;
-  return &node->value.b32;
-}
-
-static str8_t* 
-json_get_str8(json_object_t* j, str8_t key) {
-  _json_object_node_t* node = _json_get(j, key);
-  if (!node) return nullptr;
-  if (node->value.type != _JSON_VALUE_TYPE_STR8) return nullptr;
-  return &node->value.string;
-}
-
-static json_object_t*
-json_get_object(json_object_t* j, str8_t key) {
-  _json_object_node_t* node = _json_get(j, key);
-  if (!node) return nullptr;
-  if (node->value.type != _JSON_VALUE_TYPE_OBJECT) return nullptr;
-  return &node->value.obj;
-}
-
-static json_array_t*
-json_get_array(json_object_t* j, str8_t key) {
-  _json_object_node_t* node = _json_get(j, key);
-  if (!node) return nullptr;
-  if (node->value.type != _JSON_VALUE_TYPE_ARRAY) return nullptr;
-  return &node->value.arr;
-}
-#endif
-#endif // JSON_DEBUG
-
-
 
 #endif //MOMO_JSON

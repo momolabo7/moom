@@ -113,6 +113,8 @@ struct lit_player_t {
 enum lit_animator_type_t {
   LIT_ANIMATOR_TYPE_PATROL_SENSOR,
   LIT_ANIMATOR_TYPE_PATROL_EDGE,
+
+  LIT_ANIMATOR_TYPE_ROTATE_SENSOR,
   LIT_ANIMATOR_TYPE_ROTATE_EDGE,
 };
 
@@ -130,6 +132,13 @@ struct lit_animator_patrol_sensor_t {
 };
 
 struct lit_animator_rotate_edge_t {
+  // NOT IMPLEMENTED
+};
+
+struct lit_animator_rotate_sensor_t {
+  lit_sensor_t* sensor; 
+  f32_t speed;
+  v2f_t point_of_rotation;
 };
 
 struct lit_animator_patrol_edge_t {
@@ -147,6 +156,7 @@ struct lit_animator_t {
     lit_animator_patrol_sensor_t patrol_sensor;
     lit_animator_patrol_edge_t patrol_edge;
     lit_animator_rotate_edge_t rotate_edge;
+    lit_animator_rotate_sensor_t rotate_sensor;
   };
 };
 

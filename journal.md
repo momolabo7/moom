@@ -1,5 +1,11 @@
 # Journal
 
+### 2023-03-26
+It's been awhile, but right now, I'm trying to push for completion of this project before adding more features to the engine. 
+The framework for the main menu is already done.
+Now I'm just praying that the sound system actually works.
+
+
 ### 2023-01-07
 Today, I wanted to start thinking about menus and transitions between 'scenes'.
 I quickly realized that the 'scene manager' in my moe layer is...useless, even though I wrote it just for this purpose. 

@@ -49,6 +49,12 @@ lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {
     } break;
     case LIT_ANIMATOR_TYPE_ROTATE_EDGE: {
     } break;
+    case LIT_ANIMATOR_TYPE_ROTATE_SENSOR: {
+      auto* a = &animator->rotate_sensor;
+      v2f_t vec = a->sensor->pos - a->point_of_rotation;
+      v2f_t new_vec = v2f_rotate(vec, 10.f*dt);
+      a->sensor->pos = a->point_of_rotation + new_vec;
+    } break;
     case LIT_ANIMATOR_TYPE_PATROL_EDGE: {
       auto* a = &animator->patrol_edge;
       a->timer += dt;
@@ -95,6 +101,7 @@ lit_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y)
 
   return edge;
 }
+
 
 static void
 lit_push_patrolling_edge(lit_game_t* m, f32_t duration, 
@@ -660,6 +667,29 @@ lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color)
   s->current_color = 0;
 
   return s;
+}
+
+static void
+lit_push_rotating_sensor(
+    lit_game_t* game, 
+    f32_t pos_x, 
+    f32_t pos_y, 
+    f32_t origin_x, 
+    f32_t origin_y, 
+    f32_t speed, 
+    u32_t target_color)
+{
+  auto* sensor = lit_push_sensor(game, pos_x, pos_y, target_color);
+
+  assert(game->animator_count < array_count(game->animators));
+  auto* anim = game->animators + game->animator_count++;
+  anim->type = LIT_ANIMATOR_TYPE_ROTATE_SENSOR;
+ 
+  auto* a = &anim->rotate_sensor;
+  a->speed = speed;
+  a->point_of_rotation = v2f_set(origin_x, origin_y);
+  a->sensor = sensor;
+
 }
 
 static void

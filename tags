@@ -8,6 +8,7 @@
 2022-12-27	journal.md	/^### 2022-12-27$/;"	S	language:Markdown	chapter:Journal
 2022-12-28	journal.md	/^### 2022-12-28$/;"	S	language:Markdown	chapter:Journal
 2023-01-07	journal.md	/^### 2023-01-07$/;"	S	language:Markdown	chapter:Journal
+2023-03-26	journal.md	/^### 2023-03-26$/;"	S	language:Markdown	chapter:Journal
 a	code/momo_colors.h	/^  f32_t a;$/;"	m	language:C++	struct:rgba_t	typeref:typename:f32_t
 abort	build/a.out.js	/^function abort(what) {$/;"	f	language:JavaScript
 ABORT	build/a.out.js	/^var ABORT = false;$/;"	v	language:JavaScript
@@ -30,7 +31,7 @@ align_up_pow2	code/momo_types.h	/^#define align_up_pow2(/;"	d	language:C++
 allocate_memory	code/moe_platform.h	/^  platform_allocate_memory_f* allocate_memory;$/;"	m	language:C++	struct:__anonb345dcaa0708	typeref:typename:platform_allocate_memory_f *
 allocator	code/w32_audio_wasapi.h	/^  arena_t allocator;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:arena_t
 analyzePath	build/a.out.js	/^  analyzePath: function() { FS.error() },$/;"	m	language:JavaScript	class:FS
-anchor	D:/work/git/moom/code/moe_gfx.h	/^  v2f_t anchor;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:v2f_t
+anchor	code/moe_gfx.h	/^  v2f_t anchor;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:v2f_t
 animators	code/lit_game.h	/^  lit_animator_t animators[64];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_animator_t[64]
 animator_count	code/lit_game.h	/^  u32_t animator_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
 AnonymousFunctionb4ad68160100	build/a.out.js	/^  fs.readFile(filename, function(err, data) {$/;"	f	language:JavaScript
@@ -69,16 +70,16 @@ arena_init	code/momo_arena.h	/^static void   arena_init(arena_t* a, void* mem, u
 arena_mark	code/momo_arena.h	/^arena_mark(arena_t* a) {$/;"	f	language:C++	typeref:typename:arena_marker_t
 arena_mark	code/momo_arena.h	/^static arena_marker_t arena_mark(arena_t* a);$/;"	p	language:C++	typeref:typename:arena_marker_t
 arena_marker_t	code/momo_arena.h	/^struct arena_marker_t {$/;"	s	language:C++
-arena_partition	code/momo_arena.h	/^arena_partition(arena_t* a, arena_t* partition, umi_t size, umi_t align) {	$/;"	f	language:C++	typeref:typename:b32_t
-arena_partition	code/momo_arena.h	/^static b32_t    arena_partition(arena_t* a, arena_t* partition, umi_t size, umi_t align);$/;"	p	language:C++	typeref:typename:b32_t
-arena_partition_with_remaining	code/momo_arena.h	/^arena_partition_with_remaining(arena_t* a, arena_t* partition, umi_t align){$/;"	f	language:C++	typeref:typename:b32_t
-arena_partition_with_remaining	code/momo_arena.h	/^static b32_t    arena_partition_with_remaining(arena_t* a, arena_t* partition, umi_t align);$/;"	p	language:C++	typeref:typename:b32_t
 arena_push	code/momo_arena.h	/^#define arena_push(/;"	d	language:C++
 arena_push_align	code/momo_arena.h	/^#define arena_push_align(/;"	d	language:C++
 arena_push_arr	code/momo_arena.h	/^#define arena_push_arr(/;"	d	language:C++
 arena_push_arr_align	code/momo_arena.h	/^#define arena_push_arr_align(/;"	d	language:C++
 arena_push_arr_zero	code/momo_arena.h	/^#define arena_push_arr_zero(/;"	d	language:C++
 arena_push_arr_zero_align	code/momo_arena.h	/^#define arena_push_arr_zero_align(/;"	d	language:C++
+arena_push_partition	code/momo_arena.h	/^arena_push_partition(arena_t* a, arena_t* partition, umi_t size, umi_t align) {	$/;"	f	language:C++	typeref:typename:b32_t
+arena_push_partition	code/momo_arena.h	/^static b32_t  arena_push_partition(arena_t* a, arena_t* partition, umi_t size, umi_t align);$/;"	p	language:C++	typeref:typename:b32_t
+arena_push_partition_with_remaining	code/momo_arena.h	/^arena_push_partition_with_remaining(arena_t* a, arena_t* partition, umi_t align){$/;"	f	language:C++	typeref:typename:b32_t
+arena_push_partition_with_remaining	code/momo_arena.h	/^static b32_t  arena_push_partition_with_remaining(arena_t* a, arena_t* partition, umi_t align);$/;"	p	language:C++	typeref:typename:b32_t
 arena_push_size	code/momo_arena.h	/^arena_push_size(arena_t* a, umi_t size, umi_t align) {$/;"	f	language:C++	typeref:typename:void *
 arena_push_size	code/momo_arena.h	/^static void*  arena_push_size(arena_t* a, umi_t size, umi_t align);$/;"	p	language:C++	typeref:typename:void *
 arena_push_size_zero	code/momo_arena.h	/^arena_push_size_zero(arena_t* a, umi_t size, umi_t align) $/;"	f	language:C++	typeref:typename:void *
@@ -86,7 +87,7 @@ arena_push_size_zero	code/momo_arena.h	/^static void*  arena_push_size_zero(aren
 arena_push_zero	code/momo_arena.h	/^#define arena_push_zero(/;"	d	language:C++
 arena_push_zero_align	code/momo_arena.h	/^#define arena_push_zero_align(/;"	d	language:C++
 arena_remaining	code/momo_arena.h	/^arena_remaining(arena_t* a) {$/;"	f	language:C++	typeref:typename:umi_t
-arena_remaining	code/momo_arena.h	/^static umi_t    arena_remaining(arena_t* a);$/;"	p	language:C++	typeref:typename:umi_t
+arena_remaining	code/momo_arena.h	/^static umi_t  arena_remaining(arena_t* a);$/;"	p	language:C++	typeref:typename:umi_t
 arena_revert	code/momo_arena.h	/^arena_revert(arena_marker_t marker) {$/;"	f	language:C++	typeref:typename:void
 arena_revert	code/momo_arena.h	/^static void arena_revert(arena_marker_t marker);$/;"	p	language:C++	typeref:typename:void
 arena_set_revert_point	code/momo_arena.h	/^# define arena_set_revert_point(/;"	d	language:C++
@@ -94,7 +95,7 @@ arena_t	code/momo_arena.h	/^struct arena_t {$/;"	s	language:C++
 arguments_	build/a.out.js	/^var arguments_ = [];$/;"	v	language:JavaScript
 arr	build/test_json.json	/^  "arr": [1,2,3],$/;"	a	language:JSON
 arr	C:/users/geral/work/moom/code/momo_json.h	/^    json_array_t arr;$/;"	m	language:C++	union:_json_value_t::__anon6c4b32a4010a	typeref:typename:json_array_t
-array	code/momo_json.h	/^    json_array_t array;$/;"	m	language:C++	union:json_value_t::__anond7a9c0d6010a	typeref:typename:json_array_t
+array	code/momo_json.h	/^    json_array_t array;$/;"	m	language:C++	union:json_value_t::__anond7a9c0d6030a	typeref:typename:json_array_t
 array_count	code/momo_types.h	/^#define array_count(/;"	d	language:C++
 arrival_time	code/lit_game.h	/^  f32_t arrival_time;$/;"	m	language:C++	struct:lit_title_waypoint_t	typeref:typename:f32_t
 ascii_to_digit	code/momo_types.h	/^#define ascii_to_digit(/;"	d	language:C++
@@ -149,7 +150,7 @@ ASSET_TYPE_FONT	code/moe_asset_types.h	/^  ASSET_TYPE_FONT,$/;"	e	language:C++	e
 ASSET_TYPE_SPRITE	code/moe_asset_types.h	/^  ASSET_TYPE_SPRITE,$/;"	e	language:C++	enum:Asset_Type
 at	C:/users/geral/work/moom/code/momo_json.h	/^  u32_t at;$/;"	m	language:C++	struct:json_t	typeref:typename:u32_t
 at	code/meta.cpp	/^  u32_t at;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:u32_t	file:
-at	code/momo_json.h	/^  u8_t* at;$/;"	m	language:C++	struct:json_element_t	typeref:typename:u8_t *
+at	code/momo_json.h	/^      u8_t* at;$/;"	m	language:C++	struct:json_element_t::__anond7a9c0d6010a::__anond7a9c0d60208	typeref:typename:u8_t *
 at	code/momo_json.h	/^  u8_t* at;$/;"	m	language:C++	struct:json_key_t	typeref:typename:u8_t *
 at	code/momo_json.h	/^  u8_t* at;$/;"	m	language:C++	struct:_json_token_t	typeref:typename:u8_t *
 at	code/momo_json.h	/^  umi_t at;$/;"	m	language:C++	struct:json_t	typeref:typename:umi_t
@@ -162,7 +163,7 @@ average	code/lit_profiler_rendering.h	/^  f64_t average;$/;"	m	language:C++	stru
 average	code/moe_profiler_rendering.h	/^  f64_t average;$/;"	m	language:C++	struct:profiler_stat_t	typeref:typename:f64_t
 b	code/momo_colors.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anonb89fa6ae010a::__anonb89fa6ae0208	typeref:typename:f32_t
 b	code/momo_colors.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
-b	D:/work/git/moom/code/momo_strings.h	/^  union { u32_t v; u8_t b[4]; } combine;$/;"	m	language:C++	union:sb8_push_hex_u32::__anon159c8120030a	typeref:typename:u8_t[4]
+b	code/momo_strings.h	/^  union { u32_t v; u8_t b[4]; } combine;$/;"	m	language:C++	union:sb8_push_hex_u32::__anon71355586030a	typeref:typename:u8_t[4]
 b32	C:/users/geral/work/moom/code/momo_json.h	/^    b32_t b32;$/;"	m	language:C++	union:_json_value_t::__anon6c4b32a4010a	typeref:typename:b32_t
 b32_t	code/momo_types.h	/^typedef u32_t    b32_t;$/;"	t	language:C++	typeref:typename:u32_t
 b8_t	code/momo_types.h	/^typedef u8_t     b8_t;$/;"	t	language:C++	typeref:typename:u8_t
@@ -177,12 +178,11 @@ bitmap	code/sui_atlas.h	/^  sui_atlas_bitmap_t bitmap;$/;"	m	language:C++	struct
 bitmap	code/sui_pack.h	/^    sui_packer_source_bitmap_t bitmap; $/;"	m	language:C++	union:sui_packer_source_t::__anoncd974ef4010a	typeref:typename:sui_packer_source_bitmap_t
 bitmap_asset_id	code/karu.h	/^  u32_t bitmap_asset_id; $/;"	m	language:C++	struct:karu_font_glyph_t	typeref:typename:u32_t
 bitmap_asset_id	code/karu.h	/^  u32_t bitmap_asset_id; $/;"	m	language:C++	struct:karu_sprite_t	typeref:typename:u32_t
-bitmap_asset_id	code/karu.h	/^  u32_t bitmap_asset_id;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:u32_t
+bitmap_asset_id	code/karu.h	/^  u32_t bitmap_asset_id;$/;"	m	language:C++	struct:karu_font_t	typeref:typename:u32_t
 bitmap_asset_id	code/moe_assets.h	/^  asset_bitmap_id_t bitmap_asset_id;$/;"	m	language:C++	struct:asset_font_glyph_t	typeref:typename:asset_bitmap_id_t
 bitmap_asset_id	code/moe_assets.h	/^  asset_bitmap_id_t bitmap_asset_id;$/;"	m	language:C++	struct:asset_sprite_t	typeref:typename:asset_bitmap_id_t
 bitmap_asset_id	code/sui_pack.h	/^  u32_t bitmap_asset_id;$/;"	m	language:C++	struct:sui_packer_source_font_t	typeref:typename:u32_t
 bitmap_asset_id	code/sui_pack.h	/^  u32_t bitmap_asset_id;$/;"	m	language:C++	struct:sui_packer_source_sprite_t	typeref:typename:u32_t
-bitmap_counter	code/moe_assets.h	/^  u32_t bitmap_counter;$/;"	m	language:C++	struct:assets_t	typeref:typename:u32_t
 bitmap_id_name	code/sui_atlas.h	/^  const char* bitmap_id_name;$/;"	m	language:C++	struct:sui_atlas_t	typeref:typename:const char *
 bits_per_sample	code/momo_wav.h	/^  u16_t bits_per_sample;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 bits_per_sample	code/w32_audio_wasapi.h	/^  u16_t bits_per_sample;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t
@@ -249,8 +249,8 @@ callMain	build/a.out.js	/^function callMain(args) {$/;"	f	language:JavaScript
 callRuntimeCallbacks	build/a.out.js	/^  function callRuntimeCallbacks(callbacks) {$/;"	f	language:JavaScript
 canvas	build/web.html	/^      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1>/;"	I	language:HTML
 cap	code/momo_arena.h	/^	umi_t cap;$/;"	m	language:C++	struct:arena_t	typeref:typename:umi_t
-cap	D:/work/git/moom/code/momo_strings.h	/^	umi_t cap;$/;"	m	language:C++	struct:sb8_t	typeref:typename:umi_t
-cap	D:/work/git/moom/code/momo_ttf.h	/^  u32_t cap;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:u32_t
+cap	code/momo_strings.h	/^	umi_t cap;$/;"	m	language:C++	struct:sb8_t	typeref:typename:umi_t
+cap	code/momo_ttf.h	/^  u32_t cap;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:u32_t
 car	build/test_json.json	/^  "car":null, $/;"	z	language:JSON
 channels	code/moe_platform.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:__anonb345dcaa0508	typeref:typename:u32_t
 channels	code/w32_audio_wasapi.h	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t
@@ -270,12 +270,12 @@ circle226	build/web.html	/^   id="circle226" \/><\/g><\/g><g$/;"	I	language:HTML
 circle241	build/web.html	/^   id="circle241" \/><\/g><\/g><\/g><\/g><path$/;"	I	language:HTML
 circle_sprite	code/lit_game.h	/^  asset_sprite_id_t circle_sprite;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_sprite_id_t
 clamp_of	code/momo_types.h	/^#define clamp_of(/;"	d	language:C++
-cll_append	code/momo_ds.h	/^#define cll_append(/;"	d	language:C++
-cll_init	code/momo_ds.h	/^#define cll_init(/;"	d	language:C++
-cll_remove	code/momo_ds.h	/^#define cll_remove(/;"	d	language:C++
+cll_append	code/momo_types.h	/^#define cll_append(/;"	d	language:C++
+cll_init	code/momo_types.h	/^#define cll_init(/;"	d	language:C++
+cll_remove	code/momo_types.h	/^#define cll_remove(/;"	d	language:C++
 close_file	code/moe_platform.h	/^  platform_close_file_f* close_file;$/;"	m	language:C++	struct:__anonb345dcaa0708	typeref:typename:platform_close_file_f *
-cmap	D:/work/git/moom/code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
-cmap_mappings	D:/work/git/moom/code/momo_ttf.h	/^  u32_t cmap_mappings;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+cmap	code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+cmap_mappings	code/momo_ttf.h	/^  u32_t cmap_mappings;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 COBJMACROS	code/w32_moe.h	/^#define COBJMACROS$/;"	d	language:C++
 COBJMACROS	code/w32_moe.h	/^#define COBJMACROS$/;"	d	language:C++
 codepoint	code/karu.h	/^  u32_t codepoint;$/;"	m	language:C++	struct:karu_font_glyph_t	typeref:typename:u32_t
@@ -284,10 +284,10 @@ codepoints	code/sui_atlas.h	/^  u32_t codepoints[1024];$/;"	m	language:C++	struc
 codepoint_count	code/sui_atlas.h	/^  u32_t codepoint_count;$/;"	m	language:C++	struct:sui_atlas_font_t	typeref:typename:u32_t
 codepoint_map	code/moe_assets.h	/^  u16_t* codepoint_map;$/;"	m	language:C++	struct:asset_font_t	typeref:typename:u16_t *
 color	code/lit_game.h	/^  u32_t color;$/;"	m	language:C++	struct:lit_light_t	typeref:typename:u32_t
-colors	D:/work/git/moom/code/moe_gfx.h	/^  rgba_t colors;$/;"	m	language:C++	struct:gfx_command_clear_t	typeref:typename:rgba_t
-colors	D:/work/git/moom/code/moe_gfx.h	/^  rgba_t colors;$/;"	m	language:C++	struct:gfx_command_rect_t	typeref:typename:rgba_t
-colors	D:/work/git/moom/code/moe_gfx.h	/^  rgba_t colors;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:rgba_t
-colors	D:/work/git/moom/code/moe_gfx.h	/^  rgba_t colors;$/;"	m	language:C++	struct:gfx_command_triangle_t	typeref:typename:rgba_t
+colors	code/moe_gfx.h	/^  rgba_t colors;$/;"	m	language:C++	struct:gfx_command_clear_t	typeref:typename:rgba_t
+colors	code/moe_gfx.h	/^  rgba_t colors;$/;"	m	language:C++	struct:gfx_command_rect_t	typeref:typename:rgba_t
+colors	code/moe_gfx.h	/^  rgba_t colors;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:rgba_t
+colors	code/moe_gfx.h	/^  rgba_t colors;$/;"	m	language:C++	struct:gfx_command_triangle_t	typeref:typename:rgba_t
 color_end	code/lit_game.h	/^  rgba_t color_start, color_end;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:rgba_t
 color_start	code/lit_game.h	/^  rgba_t color_start, color_end;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:rgba_t
 colour_type	code/momo_png.h	/^  u8_t colour_type;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t
@@ -295,7 +295,7 @@ colour_type	code/momo_png.h	/^  u8_t colour_type;$/;"	m	language:C++	struct:_png
 commands	code/moe_console.h	/^  console_command_t* commands;$/;"	m	language:C++	struct:console_t	typeref:typename:console_command_t *
 command_cap	code/moe_console.h	/^  u32_t command_cap;$/;"	m	language:C++	struct:console_t	typeref:typename:u32_t
 command_count	code/moe_console.h	/^  u32_t command_count;$/;"	m	language:C++	struct:console_t	typeref:typename:u32_t
-command_queue	D:/work/git/moom/code/moe_gfx.h	/^  gfx_command_queue_t command_queue;$/;"	m	language:C++	struct:gfx_t	typeref:typename:gfx_command_queue_t
+command_queue	code/moe_gfx.h	/^  gfx_command_queue_t command_queue;$/;"	m	language:C++	struct:gfx_t	typeref:typename:gfx_command_queue_t
 COMPILER_CLANG	code/momo_types.h	/^# define COMPILER_CLANG /;"	d	language:C++
 COMPILER_CLANG	code/momo_types.h	/^# define COMPILER_CLANG /;"	d	language:C++
 COMPILER_GCC	code/momo_types.h	/^# define COMPILER_GCC /;"	d	language:C++
@@ -318,7 +318,7 @@ console_init	code/moe_console.h	/^console_init(console_t* console, u32_t charact
 console_push_info	code/moe_console.h	/^console_push_info(console_t* console, str8_t str) {$/;"	f	language:C++	typeref:typename:void
 console_t	code/moe_console.h	/^struct console_t {$/;"	s	language:C++
 CONST_VTABLE	code/w32_moe.h	/^#define CONST_VTABLE$/;"	d	language:C++
-contour_count	D:/work/git/moom/code/momo_ttf.h	/^  u32_t contour_count;$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u32_t
+contour_count	code/momo_ttf.h	/^  u32_t contour_count;$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u32_t
 controls	build/web.html	/^<span id='controls'>$/;"	I	language:HTML
 copy_array	code/momo_types.h	/^#define copy_array(/;"	d	language:C++
 copy_memory	code/momo_types.h	/^copy_memory(void* dest, const void* src, umi_t size) {$/;"	f	language:C++	typeref:typename:void
@@ -328,12 +328,12 @@ copy_struct	code/momo_types.h	/^#define copy_struct(/;"	d	language:C++
 count	code/gist_ring_buffer.cpp	/^  u32_t count;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
 count	code/lit_profiler_rendering.h	/^  u32_t count;$/;"	m	language:C++	struct:profiler_stat_t	typeref:typename:u32_t
 count	code/moe_profiler_rendering.h	/^  u32_t count;$/;"	m	language:C++	struct:profiler_stat_t	typeref:typename:u32_t
-count	code/momo_json.h	/^  umi_t count;$/;"	m	language:C++	struct:json_element_t	typeref:typename:umi_t
+count	code/momo_json.h	/^      umi_t count;$/;"	m	language:C++	struct:json_element_t::__anond7a9c0d6010a::__anond7a9c0d60208	typeref:typename:umi_t
 count	code/momo_json.h	/^  umi_t count;$/;"	m	language:C++	struct:json_key_t	typeref:typename:umi_t
 count	code/momo_json.h	/^  umi_t count;$/;"	m	language:C++	struct:_json_token_t	typeref:typename:umi_t
-count	D:/work/git/moom/code/momo_strings.h	/^			umi_t count;$/;"	m	language:C++	struct:sb8_t::__anon159c8120010a::__anon159c81200208	typeref:typename:umi_t
-count	D:/work/git/moom/code/momo_strings.h	/^	umi_t count;$/;"	m	language:C++	struct:str8_t	typeref:typename:umi_t
-count	D:/work/git/moom/code/momo_ttf.h	/^  u32_t count;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:u32_t
+count	code/momo_strings.h	/^			umi_t count;$/;"	m	language:C++	struct:sb8_t::__anon71355586010a::__anon713555860208	typeref:typename:umi_t
+count	code/momo_strings.h	/^	umi_t count;$/;"	m	language:C++	struct:str8_t	typeref:typename:umi_t
+count	code/momo_ttf.h	/^  u32_t count;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:u32_t
 crc	code/momo_png.h	/^  u32_t crc; $/;"	m	language:C++	struct:_png_chunk_footer_t	typeref:typename:u32_t
 crc16	code/momo_crc.h	/^crc16(u8_t* data, u32_t data_size, u16_t start_register, crc16_table_t* table) {$/;"	f	language:C++	typeref:typename:u32_t
 crc16	code/momo_crc.h	/^static u32_t crc16(u8_t* data, u32_t data_size, u16_t start_register, crc16_table_t* table);$/;"	p	language:C++	typeref:typename:u32_t
@@ -384,16 +384,16 @@ c_link	code/momo_types.h	/^#define c_link /;"	d	language:C++
 c_link_begin	code/momo_types.h	/^#define c_link_begin /;"	d	language:C++
 c_link_end	code/momo_types.h	/^#define c_link_end /;"	d	language:C++
 d	code/momo_vectors.h	/^	struct { f32_t w, h, d; };$/;"	m	language:C++	struct:v3f_t::__anon8de67fa20908	typeref:typename:f32_t
+data	code/moe_gfx.h	/^  void* data;$/;"	m	language:C++	struct:gfx_command_t	typeref:typename:void *
 data	code/moe_platform.h	/^  void* data;$/;"	m	language:C++	struct:__anonb345dcaa0108	typeref:typename:void *
 data	code/momo_png.h	/^  u8_t* data;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t *
 data	code/momo_streams.h	/^  u8_t* data;$/;"	m	language:C++	struct:stream_t	typeref:typename:u8_t *
+data	code/momo_ttf.h	/^  u8_t* data;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u8_t *
 data	code/momo_wav.h	/^  void* data;$/;"	m	language:C++	struct:wav_t	typeref:typename:void *
 data	code/w32_moe.h	/^  void* data;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:void *
-data	D:/work/git/moom/code/moe_gfx.h	/^  void* data;$/;"	m	language:C++	struct:gfx_command_t	typeref:typename:void *
-data	D:/work/git/moom/code/momo_ttf.h	/^  u8_t* data;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u8_t *
 dataURIPrefix	build/a.out.js	/^var dataURIPrefix = 'data:application\/octet-stream;base64,';$/;"	v	language:JavaScript
 data_chunk	code/momo_wav.h	/^  wav_data_chunk_t data_chunk;$/;"	m	language:C++	struct:wav_t	typeref:typename:wav_data_chunk_t
-data_pos	D:/work/git/moom/code/moe_gfx.h	/^	umi_t data_pos;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:umi_t
+data_pos	code/moe_gfx.h	/^	umi_t data_pos;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:umi_t
 data_size	code/momo_png.h	/^  umi_t data_size;$/;"	m	language:C++	struct:png_t	typeref:typename:umi_t
 debug_arena	code/lit.h	/^  arena_t debug_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t
 debug_font	code/lit.h	/^  asset_font_id_t debug_font;$/;"	m	language:C++	struct:lit_t	typeref:typename:asset_font_id_t
@@ -410,39 +410,39 @@ djb2	code/momo_types.h	/^djb2(const c8_t* str)$/;"	f	language:C++	typeref:typena
 dll	code/w32_moe.h	/^  HMODULE dll; $/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:HMODULE
 done	bin/setup_emsdk.bat	/^:done$/;"	l	language:DosBatch
 doRun	build/a.out.js	/^  function doRun() {$/;"	f	language:JavaScript	function:run
-dst	D:/work/git/moom/code/moe_gfx.h	/^  gfx_blend_type_t dst;$/;"	m	language:C++	struct:gfx_command_blend_t	typeref:typename:gfx_blend_type_t
+dst	code/moe_gfx.h	/^  gfx_blend_type_t dst;$/;"	m	language:C++	struct:gfx_command_blend_t	typeref:typename:gfx_blend_type_t
 dummy_texture	code/moe_gfx_opengl.h	/^  OGL_Texture dummy_texture;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_Texture
 duration	code/lit_game.h	/^  f32_t duration;$/;"	m	language:C++	struct:lit_animator_patrol_edge_t	typeref:typename:f32_t
 duration	code/lit_game.h	/^  f32_t duration;$/;"	m	language:C++	struct:lit_animator_patrol_sensor_t	typeref:typename:f32_t
 e	code/moe_assets.h	/^  } e[ASSET_TAG_TYPE_COUNT];$/;"	m	language:C++	struct:asset_match_t	typeref:struct:asset_match_t::__anonf16582b80108[]
 e	code/momo_matrix.h	/^	f32_t e[4][4];$/;"	m	language:C++	struct:m44f_t	typeref:typename:f32_t[4][4]
+e	code/momo_strings.h	/^			u8_t* e;$/;"	m	language:C++	struct:sb8_t::__anon71355586010a::__anon713555860208	typeref:typename:u8_t *
+e	code/momo_strings.h	/^	u8_t* e;$/;"	m	language:C++	struct:str8_t	typeref:typename:u8_t *
+e	code/momo_ttf.h	/^  _ttf_edge_t** e;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:_ttf_edge_t **
 e	code/momo_vectors.h	/^	f32_t e[2];$/;"	m	language:C++	union:v2f_t	typeref:typename:f32_t[2]
 e	code/momo_vectors.h	/^	s32_t e[2];$/;"	m	language:C++	union:v2s_t	typeref:typename:s32_t[2]
 e	code/momo_vectors.h	/^	u32_t e[2];$/;"	m	language:C++	union:v2u_t	typeref:typename:u32_t[2]
 e	code/momo_vectors.h	/^  f32_t e[3];$/;"	m	language:C++	union:v3f_t	typeref:typename:f32_t[3]
 e	code/momo_vectors.h	/^  f32_t e[4];$/;"	m	language:C++	union:v4f_t	typeref:typename:f32_t[4]
-e	D:/work/git/moom/code/momo_strings.h	/^			u8_t* e;$/;"	m	language:C++	struct:sb8_t::__anon159c8120010a::__anon159c81200208	typeref:typename:u8_t *
-e	D:/work/git/moom/code/momo_strings.h	/^	u8_t* e;$/;"	m	language:C++	struct:str8_t	typeref:typename:u8_t *
-e	D:/work/git/moom/code/momo_ttf.h	/^  _ttf_edge_t** e;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:_ttf_edge_t **
 edge	code/lit_game.h	/^  lit_edge_t* edge;$/;"	m	language:C++	struct:lit_animator_patrol_edge_t	typeref:typename:lit_edge_t *
 edges	code/lit_game.h	/^  lit_edge_t edges[256];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_edge_t[256]
 edge_count	code/lit_game.h	/^  u32_t edge_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
-element	code/momo_json.h	/^    json_element_t element;$/;"	m	language:C++	union:json_value_t::__anond7a9c0d6010a	typeref:typename:json_element_t
+element	code/momo_json.h	/^    json_element_t element;$/;"	m	language:C++	union:json_value_t::__anond7a9c0d6030a	typeref:typename:json_element_t
 emscripten_memcpy_big	build/a.out.js	/^  "emscripten_memcpy_big": _emscripten_memcpy_big,$/;"	p	language:JavaScript	class:asmLibraryArg
 ENABLE_ASSERT	code/momo_types.h	/^# define ENABLE_ASSERT /;"	d	language:C++
 end	code/lit_game.h	/^  v2f_t end;$/;"	m	language:C++	struct:lit_animator_patrol_sensor_t	typeref:typename:v2f_t
 end_clone_emsdk	bin/setup_emsdk.bat	/^:end_clone_emsdk$/;"	l	language:DosBatch
 end_edge	code/lit_game.h	/^  lit_edge_t end_edge;$/;"	m	language:C++	struct:lit_animator_patrol_edge_t	typeref:typename:lit_edge_t
-end_point_indices	D:/work/git/moom/code/momo_ttf.h	/^  u16_t* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u16_t *
+end_point_indices	code/momo_ttf.h	/^  u16_t* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u16_t *
 end_pt	code/lit_game.h	/^  v2f_t end_pt;$/;"	m	language:C++	struct:lit_edge_t	typeref:typename:v2f_t
 entries	code/moe_inspector.h	/^  inspector_entry_t entries[64];$/;"	m	language:C++	struct:inspector_t	typeref:typename:inspector_entry_t[64]
 entries	code/moe_profiler.h	/^  profiler_entry_t entries[PROFILER_MAX_ENTRIES];$/;"	m	language:C++	struct:profiler_t	typeref:typename:profiler_entry_t[]
 entries	code/w32_moe.h	/^  w32_work_t entries[256];$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:w32_work_t[256]
+entry_count	code/moe_gfx.h	/^	umi_t entry_count;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:umi_t
 entry_count	code/moe_inspector.h	/^  u32_t entry_count;$/;"	m	language:C++	struct:inspector_t	typeref:typename:u32_t
 entry_count	code/moe_profiler.h	/^  u32_t entry_count;$/;"	m	language:C++	struct:profiler_t	typeref:typename:u32_t
-entry_count	D:/work/git/moom/code/moe_gfx.h	/^	umi_t entry_count;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:umi_t
-entry_pos	D:/work/git/moom/code/moe_gfx.h	/^	umi_t entry_pos;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:umi_t
-entry_start	D:/work/git/moom/code/moe_gfx.h	/^	umi_t entry_start;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:umi_t
+entry_pos	code/moe_gfx.h	/^	umi_t entry_pos;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:umi_t
+entry_start	code/moe_gfx.h	/^	umi_t entry_start;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:umi_t
 env	build/a.out.js	/^    'env': asmLibraryArg,$/;"	p	language:JavaScript	class:createWasm.info
 ENVIRONMENT_IS_NODE	build/a.out.js	/^var ENVIRONMENT_IS_NODE = typeof process == 'object' && typeof process.versions == 'object' && t/;"	v	language:JavaScript
 ENVIRONMENT_IS_SHELL	build/a.out.js	/^var ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIRONMENT_IS_WORKER/;"	v	language:JavaScript
@@ -676,15 +676,15 @@ find_first_font	code/moe_assets.cpp	/^find_first_font(assets_t* assets, Asset_Gr
 find_first_sprite	code/moe_assets.cpp	/^find_first_sprite(assets_t* assets, Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:asset_sprite_id_t	file:
 first_asset_index	code/karu.h	/^  u32_t first_asset_index;$/;"	m	language:C++	struct:karu_group_t	typeref:typename:u32_t
 first_asset_index	code/moe_assets.h	/^  u32_t first_asset_index;$/;"	m	language:C++	struct:asset_group_t	typeref:typename:u32_t
-first_payload_index	D:/work/git/moom/code/moe_gfx.h	/^  umi_t first_payload_index;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
+first_payload_index	code/moe_gfx.h	/^  umi_t first_payload_index;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
 first_tag_index	code/karu.h	/^  u32_t first_tag_index;$/;"	m	language:C++	struct:karu_asset_t	typeref:typename:u32_t
 first_tag_index	code/moe_assets.h	/^  u32_t first_tag_index;$/;"	m	language:C++	struct:asset_slot_t	typeref:typename:u32_t
 Fish	D:/work/git/moom/code/gist_type_erasure.cpp	/^class Fish {$/;"	c	language:C++	file:
-flags	D:/work/git/moom/code/momo_ttf.h	/^  u8_t flags;$/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:u8_t
+flags	code/momo_ttf.h	/^  u8_t flags;$/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:u8_t
 flag_for_reset	code/moe_profiler.h	/^  b32_t flag_for_reset;$/;"	m	language:C++	struct:profiler_entry_t	typeref:typename:b32_t
 flush_NO_FILESYSTEM	build/a.out.js	/^  function flush_NO_FILESYSTEM() {$/;"	f	language:JavaScript
 fmt_chunk	code/momo_wav.h	/^  wav_fmt_chunk_t fmt_chunk;$/;"	m	language:C++	struct:wav_t	typeref:typename:wav_fmt_chunk_t
-font	code/karu.h	/^    Karu_Font font;$/;"	m	language:C++	union:karu_asset_t::__anon1812d558010a	typeref:typename:Karu_Font
+font	code/karu.h	/^    karu_font_t font;$/;"	m	language:C++	union:karu_asset_t::__anon1812d558010a	typeref:typename:karu_font_t
 font	code/lit_menu.h	/^  asset_font_id_t font;$/;"	m	language:C++	struct:lit_menu_t	typeref:typename:asset_font_id_t
 font	code/lit_splash.h	/^  asset_font_id_t font;$/;"	m	language:C++	struct:lit_splash_t	typeref:typename:asset_font_id_t
 font	code/moe_assets.h	/^    asset_font_t font;$/;"	m	language:C++	union:asset_slot_t::__anonf16582b8020a	typeref:typename:asset_font_t
@@ -764,104 +764,104 @@ get_sprite	code/moe_assets.cpp	/^get_sprite(assets_t* assets, asset_sprite_id_t 
 gfx	code/lit.h	/^  gfx_t* gfx; $/;"	m	language:C++	struct:lit_t	typeref:typename:gfx_t *
 gfx	code/moe_gfx_opengl.h	/^  gfx_t gfx; \/\/ Must be first member$/;"	m	language:C++	struct:Opengl	typeref:typename:gfx_t
 gfx	code/moe_platform.h	/^  gfx_t* gfx;$/;"	m	language:C++	struct:__anonb345dcaa0708	typeref:typename:gfx_t *
-gfx_advance_depth	D:/work/git/moom/code/moe_gfx.h	/^gfx_advance_depth(gfx_t* g) {$/;"	f	language:C++	typeref:typename:void
-gfx_advance_depth	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_advance_depth(gfx_t* g); $/;"	p	language:C++	typeref:typename:void
-gfx_begin_texture_transfer	D:/work/git/moom/code/moe_gfx.h	/^gfx_begin_texture_transfer(gfx_t* g, u32_t required_space) {$/;"	f	language:C++	typeref:typename:gfx_texture_payload_t *
-gfx_begin_texture_transfer	D:/work/git/moom/code/moe_gfx.h	/^static gfx_texture_payload_t* gfx_begin_texture_transfer(gfx_t* g, u32_t required_space);$/;"	p	language:C++	typeref:typename:gfx_texture_payload_t *
-GFX_BLEND_TYPE_DST_ALPHA	D:/work/git/moom/code/moe_gfx.h	/^  GFX_BLEND_TYPE_DST_ALPHA,$/;"	e	language:C++	enum:gfx_blend_type_t
-GFX_BLEND_TYPE_DST_COLOR	D:/work/git/moom/code/moe_gfx.h	/^  GFX_BLEND_TYPE_DST_COLOR,$/;"	e	language:C++	enum:gfx_blend_type_t
-GFX_BLEND_TYPE_INV_DST_ALPHA	D:/work/git/moom/code/moe_gfx.h	/^  GFX_BLEND_TYPE_INV_DST_ALPHA,$/;"	e	language:C++	enum:gfx_blend_type_t
-GFX_BLEND_TYPE_INV_DST_COLOR	D:/work/git/moom/code/moe_gfx.h	/^  GFX_BLEND_TYPE_INV_DST_COLOR,$/;"	e	language:C++	enum:gfx_blend_type_t
-GFX_BLEND_TYPE_INV_SRC_ALPHA	D:/work/git/moom/code/moe_gfx.h	/^  GFX_BLEND_TYPE_INV_SRC_ALPHA,$/;"	e	language:C++	enum:gfx_blend_type_t
-GFX_BLEND_TYPE_INV_SRC_COLOR	D:/work/git/moom/code/moe_gfx.h	/^  GFX_BLEND_TYPE_INV_SRC_COLOR,$/;"	e	language:C++	enum:gfx_blend_type_t
-GFX_BLEND_TYPE_ONE	D:/work/git/moom/code/moe_gfx.h	/^  GFX_BLEND_TYPE_ONE,$/;"	e	language:C++	enum:gfx_blend_type_t
-GFX_BLEND_TYPE_SRC_ALPHA	D:/work/git/moom/code/moe_gfx.h	/^  GFX_BLEND_TYPE_SRC_ALPHA,$/;"	e	language:C++	enum:gfx_blend_type_t
-GFX_BLEND_TYPE_SRC_COLOR	D:/work/git/moom/code/moe_gfx.h	/^  GFX_BLEND_TYPE_SRC_COLOR,$/;"	e	language:C++	enum:gfx_blend_type_t
-gfx_blend_type_t	D:/work/git/moom/code/moe_gfx.h	/^enum gfx_blend_type_t {$/;"	g	language:C++
-GFX_BLEND_TYPE_ZERO	D:/work/git/moom/code/moe_gfx.h	/^  GFX_BLEND_TYPE_ZERO,$/;"	e	language:C++	enum:gfx_blend_type_t
-gfx_cancel_texture_transfer	D:/work/git/moom/code/moe_gfx.h	/^gfx_cancel_texture_transfer(gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
-gfx_cancel_texture_transfer	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_cancel_texture_transfer(gfx_texture_payload_t* entry);$/;"	p	language:C++	typeref:typename:void
-gfx_clear_commands	D:/work/git/moom/code/moe_gfx.h	/^gfx_clear_commands(gfx_t* g) {$/;"	f	language:C++	typeref:typename:void
-gfx_clear_commands	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_clear_commands(gfx_t* g);$/;"	p	language:C++	typeref:typename:void
-gfx_command_advance_depth_t	D:/work/git/moom/code/moe_gfx.h	/^typedef struct gfx_command_advance_depth_t {$/;"	s	language:C++
-gfx_command_advance_depth_t	D:/work/git/moom/code/moe_gfx.h	/^} gfx_command_advance_depth_t;$/;"	t	language:C++	typeref:struct:gfx_command_advance_depth_t
-gfx_command_blend_t	D:/work/git/moom/code/moe_gfx.h	/^typedef struct gfx_command_blend_t {$/;"	s	language:C++
-gfx_command_blend_t	D:/work/git/moom/code/moe_gfx.h	/^} gfx_command_blend_t;$/;"	t	language:C++	typeref:struct:gfx_command_blend_t
-gfx_command_clear_t	D:/work/git/moom/code/moe_gfx.h	/^typedef struct gfx_command_clear_t {$/;"	s	language:C++
-gfx_command_clear_t	D:/work/git/moom/code/moe_gfx.h	/^}gfx_command_clear_t;$/;"	t	language:C++	typeref:struct:gfx_command_clear_t
-gfx_command_delete_all_textures_t	D:/work/git/moom/code/moe_gfx.h	/^typedef struct gfx_command_delete_all_textures_t {$/;"	s	language:C++
-gfx_command_delete_all_textures_t	D:/work/git/moom/code/moe_gfx.h	/^} gfx_command_delete_all_textures_t;$/;"	t	language:C++	typeref:struct:gfx_command_delete_all_textures_t
-gfx_command_delete_texture_t	D:/work/git/moom/code/moe_gfx.h	/^typedef struct gfx_command_delete_texture_t {$/;"	s	language:C++
-gfx_command_delete_texture_t	D:/work/git/moom/code/moe_gfx.h	/^} gfx_command_delete_texture_t;$/;"	t	language:C++	typeref:struct:gfx_command_delete_texture_t
-gfx_command_queue_t	D:/work/git/moom/code/moe_gfx.h	/^struct gfx_command_queue_t {$/;"	s	language:C++
-gfx_command_rect_t	D:/work/git/moom/code/moe_gfx.h	/^typedef struct gfx_command_rect_t {$/;"	s	language:C++
-gfx_command_rect_t	D:/work/git/moom/code/moe_gfx.h	/^} gfx_command_rect_t;$/;"	t	language:C++	typeref:struct:gfx_command_rect_t
-gfx_command_sprite_t	D:/work/git/moom/code/moe_gfx.h	/^typedef struct gfx_command_sprite_t {$/;"	s	language:C++
-gfx_command_sprite_t	D:/work/git/moom/code/moe_gfx.h	/^} gfx_command_sprite_t;$/;"	t	language:C++	typeref:struct:gfx_command_sprite_t
-gfx_command_t	D:/work/git/moom/code/moe_gfx.h	/^typedef struct gfx_command_t {$/;"	s	language:C++
-gfx_command_t	D:/work/git/moom/code/moe_gfx.h	/^} gfx_command_t;$/;"	t	language:C++	typeref:struct:gfx_command_t
-gfx_command_triangle_t	D:/work/git/moom/code/moe_gfx.h	/^typedef struct gfx_command_triangle_t {$/;"	s	language:C++
-gfx_command_triangle_t	D:/work/git/moom/code/moe_gfx.h	/^} gfx_command_triangle_t;$/;"	t	language:C++	typeref:struct:gfx_command_triangle_t
-GFX_COMMAND_TYPE_ADVANCE_DEPTH	D:/work/git/moom/code/moe_gfx.h	/^  GFX_COMMAND_TYPE_ADVANCE_DEPTH,$/;"	e	language:C++	enum:gfx_command_type_t
-GFX_COMMAND_TYPE_BLEND	D:/work/git/moom/code/moe_gfx.h	/^  GFX_COMMAND_TYPE_BLEND,$/;"	e	language:C++	enum:gfx_command_type_t
-GFX_COMMAND_TYPE_CLEAR	D:/work/git/moom/code/moe_gfx.h	/^  GFX_COMMAND_TYPE_CLEAR,$/;"	e	language:C++	enum:gfx_command_type_t
-GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES	D:/work/git/moom/code/moe_gfx.h	/^  GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,$/;"	e	language:C++	enum:gfx_command_type_t
-GFX_COMMAND_TYPE_DELETE_TEXTURE	D:/work/git/moom/code/moe_gfx.h	/^  GFX_COMMAND_TYPE_DELETE_TEXTURE,$/;"	e	language:C++	enum:gfx_command_type_t
-GFX_COMMAND_TYPE_LINE	D:/work/git/moom/code/moe_gfx.h	/^  GFX_COMMAND_TYPE_LINE,$/;"	e	language:C++	enum:gfx_command_type_t
-GFX_COMMAND_TYPE_RECT	D:/work/git/moom/code/moe_gfx.h	/^  GFX_COMMAND_TYPE_RECT,$/;"	e	language:C++	enum:gfx_command_type_t
-GFX_COMMAND_TYPE_SPRITE	D:/work/git/moom/code/moe_gfx.h	/^  GFX_COMMAND_TYPE_SPRITE,$/;"	e	language:C++	enum:gfx_command_type_t
-gfx_command_type_t	D:/work/git/moom/code/moe_gfx.h	/^enum gfx_command_type_t {$/;"	g	language:C++
-GFX_COMMAND_TYPE_TRIANGLE	D:/work/git/moom/code/moe_gfx.h	/^  GFX_COMMAND_TYPE_TRIANGLE,$/;"	e	language:C++	enum:gfx_command_type_t
-GFX_COMMAND_TYPE_VIEW	D:/work/git/moom/code/moe_gfx.h	/^  GFX_COMMAND_TYPE_VIEW,$/;"	e	language:C++	enum:gfx_command_type_t
-gfx_command_view_t	D:/work/git/moom/code/moe_gfx.h	/^typedef struct gfx_command_view_t {$/;"	s	language:C++
-gfx_command_view_t	D:/work/git/moom/code/moe_gfx.h	/^} gfx_command_view_t;$/;"	t	language:C++	typeref:struct:gfx_command_view_t
-gfx_complete_texture_transfer	D:/work/git/moom/code/moe_gfx.h	/^gfx_complete_texture_transfer(gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
-gfx_complete_texture_transfer	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_complete_texture_transfer(gfx_texture_payload_t* entry);$/;"	p	language:C++	typeref:typename:void
-gfx_delete_all_textures	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_delete_all_textures(gfx_t* g);$/;"	p	language:C++	typeref:typename:void
-gfx_delete_texture	D:/work/git/moom/code/moe_gfx.h	/^gfx_delete_texture(gfx_t* g, u32_t texture_index) {$/;"	f	language:C++	typeref:typename:void
-gfx_delete_texture	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_delete_texture(gfx_t* g, u32_t texture_index);$/;"	p	language:C++	typeref:typename:void
-gfx_draw_circle_outline	D:/work/git/moom/code/moe_gfx.h	/^gfx_draw_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count,/;"	f	language:C++	typeref:typename:void
-gfx_draw_circle_outline	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_draw_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t/;"	p	language:C++	typeref:typename:void
-gfx_draw_filled_circle	D:/work/git/moom/code/moe_gfx.h	/^gfx_draw_filled_circle(gfx_t* g, v2f_t center, f32_t radius,$/;"	f	language:C++	typeref:typename:void
-gfx_draw_filled_circle	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_draw_filled_circle(gfx_t* g, v2f_t center, f32_t radius, u32_t sections, rgba_t /;"	p	language:C++	typeref:typename:void
-gfx_draw_filled_rect	D:/work/git/moom/code/moe_gfx.h	/^gfx_draw_filled_rect(gfx_t* g, $/;"	f	language:C++	typeref:typename:void
-gfx_draw_filled_rect	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_draw_filled_rect(gfx_t* g, rgba_t colors, v2f_t pos, f32_t rot, v2f_t size);$/;"	p	language:C++	typeref:typename:void
-gfx_draw_filled_triangle	D:/work/git/moom/code/moe_gfx.h	/^gfx_draw_filled_triangle(gfx_t* g,$/;"	f	language:C++	typeref:typename:void
-gfx_draw_filled_triangle	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_draw_filled_triangle(gfx_t* g, rgba_t colors, v2f_t p0, v2f_t p1, v2f_t p2);$/;"	p	language:C++	typeref:typename:void
-gfx_draw_line	D:/work/git/moom/code/moe_gfx.h	/^gfx_draw_line(gfx_t* g, $/;"	f	language:C++	typeref:typename:void
-gfx_draw_line	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_draw_line(gfx_t* g, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors);$/;"	p	language:C++	typeref:typename:void
-gfx_foreach_command	D:/work/git/moom/code/moe_gfx.h	/^#define gfx_foreach_command(/;"	d	language:C++
-gfx_get_command	D:/work/git/moom/code/moe_gfx.h	/^gfx_get_command(gfx_t* g, u32_t index) {$/;"	f	language:C++	typeref:typename:gfx_command_t *
-gfx_get_command	D:/work/git/moom/code/moe_gfx.h	/^static gfx_command_t* gfx_get_command(gfx_t* g, u32_t index);$/;"	p	language:C++	typeref:typename:gfx_command_t *
-gfx_init_command_queue	D:/work/git/moom/code/moe_gfx.h	/^gfx_init_command_queue(gfx_t* g, void* data, umi_t size) {$/;"	f	language:C++	typeref:typename:void
-gfx_init_command_queue	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_init_command_queue(gfx_t* g, void* data, umi_t size);$/;"	p	language:C++	typeref:typename:void
-gfx_init_texture_queue	D:/work/git/moom/code/moe_gfx.h	/^gfx_init_texture_queue(gfx_t* g, void* data, umi_t size) {$/;"	f	language:C++	typeref:typename:void
-gfx_init_texture_queue	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_init_texture_queue(gfx_t* g, void* data, umi_t size);$/;"	p	language:C++	typeref:typename:void
-GFX_MAX_TEXTURES	D:/work/git/moom/code/moe_gfx.h	/^#define GFX_MAX_TEXTURES /;"	d	language:C++
+gfx_advance_depth	code/moe_gfx.h	/^gfx_advance_depth(gfx_t* g) {$/;"	f	language:C++	typeref:typename:void
+gfx_advance_depth	code/moe_gfx.h	/^static void gfx_advance_depth(gfx_t* g); $/;"	p	language:C++	typeref:typename:void
+gfx_begin_texture_transfer	code/moe_gfx.h	/^gfx_begin_texture_transfer(gfx_t* g, u32_t required_space) {$/;"	f	language:C++	typeref:typename:gfx_texture_payload_t *
+gfx_begin_texture_transfer	code/moe_gfx.h	/^static gfx_texture_payload_t* gfx_begin_texture_transfer(gfx_t* g, u32_t required_space);$/;"	p	language:C++	typeref:typename:gfx_texture_payload_t *
+GFX_BLEND_TYPE_DST_ALPHA	code/moe_gfx.h	/^  GFX_BLEND_TYPE_DST_ALPHA,$/;"	e	language:C++	enum:gfx_blend_type_t
+GFX_BLEND_TYPE_DST_COLOR	code/moe_gfx.h	/^  GFX_BLEND_TYPE_DST_COLOR,$/;"	e	language:C++	enum:gfx_blend_type_t
+GFX_BLEND_TYPE_INV_DST_ALPHA	code/moe_gfx.h	/^  GFX_BLEND_TYPE_INV_DST_ALPHA,$/;"	e	language:C++	enum:gfx_blend_type_t
+GFX_BLEND_TYPE_INV_DST_COLOR	code/moe_gfx.h	/^  GFX_BLEND_TYPE_INV_DST_COLOR,$/;"	e	language:C++	enum:gfx_blend_type_t
+GFX_BLEND_TYPE_INV_SRC_ALPHA	code/moe_gfx.h	/^  GFX_BLEND_TYPE_INV_SRC_ALPHA,$/;"	e	language:C++	enum:gfx_blend_type_t
+GFX_BLEND_TYPE_INV_SRC_COLOR	code/moe_gfx.h	/^  GFX_BLEND_TYPE_INV_SRC_COLOR,$/;"	e	language:C++	enum:gfx_blend_type_t
+GFX_BLEND_TYPE_ONE	code/moe_gfx.h	/^  GFX_BLEND_TYPE_ONE,$/;"	e	language:C++	enum:gfx_blend_type_t
+GFX_BLEND_TYPE_SRC_ALPHA	code/moe_gfx.h	/^  GFX_BLEND_TYPE_SRC_ALPHA,$/;"	e	language:C++	enum:gfx_blend_type_t
+GFX_BLEND_TYPE_SRC_COLOR	code/moe_gfx.h	/^  GFX_BLEND_TYPE_SRC_COLOR,$/;"	e	language:C++	enum:gfx_blend_type_t
+gfx_blend_type_t	code/moe_gfx.h	/^enum gfx_blend_type_t {$/;"	g	language:C++
+GFX_BLEND_TYPE_ZERO	code/moe_gfx.h	/^  GFX_BLEND_TYPE_ZERO,$/;"	e	language:C++	enum:gfx_blend_type_t
+gfx_cancel_texture_transfer	code/moe_gfx.h	/^gfx_cancel_texture_transfer(gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
+gfx_cancel_texture_transfer	code/moe_gfx.h	/^static void gfx_cancel_texture_transfer(gfx_texture_payload_t* entry);$/;"	p	language:C++	typeref:typename:void
+gfx_clear_commands	code/moe_gfx.h	/^gfx_clear_commands(gfx_t* g) {$/;"	f	language:C++	typeref:typename:void
+gfx_clear_commands	code/moe_gfx.h	/^static void gfx_clear_commands(gfx_t* g);$/;"	p	language:C++	typeref:typename:void
+gfx_command_advance_depth_t	code/moe_gfx.h	/^typedef struct gfx_command_advance_depth_t {$/;"	s	language:C++
+gfx_command_advance_depth_t	code/moe_gfx.h	/^} gfx_command_advance_depth_t;$/;"	t	language:C++	typeref:struct:gfx_command_advance_depth_t
+gfx_command_blend_t	code/moe_gfx.h	/^typedef struct gfx_command_blend_t {$/;"	s	language:C++
+gfx_command_blend_t	code/moe_gfx.h	/^} gfx_command_blend_t;$/;"	t	language:C++	typeref:struct:gfx_command_blend_t
+gfx_command_clear_t	code/moe_gfx.h	/^typedef struct gfx_command_clear_t {$/;"	s	language:C++
+gfx_command_clear_t	code/moe_gfx.h	/^}gfx_command_clear_t;$/;"	t	language:C++	typeref:struct:gfx_command_clear_t
+gfx_command_delete_all_textures_t	code/moe_gfx.h	/^typedef struct gfx_command_delete_all_textures_t {$/;"	s	language:C++
+gfx_command_delete_all_textures_t	code/moe_gfx.h	/^} gfx_command_delete_all_textures_t;$/;"	t	language:C++	typeref:struct:gfx_command_delete_all_textures_t
+gfx_command_delete_texture_t	code/moe_gfx.h	/^typedef struct gfx_command_delete_texture_t {$/;"	s	language:C++
+gfx_command_delete_texture_t	code/moe_gfx.h	/^} gfx_command_delete_texture_t;$/;"	t	language:C++	typeref:struct:gfx_command_delete_texture_t
+gfx_command_queue_t	code/moe_gfx.h	/^struct gfx_command_queue_t {$/;"	s	language:C++
+gfx_command_rect_t	code/moe_gfx.h	/^typedef struct gfx_command_rect_t {$/;"	s	language:C++
+gfx_command_rect_t	code/moe_gfx.h	/^} gfx_command_rect_t;$/;"	t	language:C++	typeref:struct:gfx_command_rect_t
+gfx_command_sprite_t	code/moe_gfx.h	/^typedef struct gfx_command_sprite_t {$/;"	s	language:C++
+gfx_command_sprite_t	code/moe_gfx.h	/^} gfx_command_sprite_t;$/;"	t	language:C++	typeref:struct:gfx_command_sprite_t
+gfx_command_t	code/moe_gfx.h	/^typedef struct gfx_command_t {$/;"	s	language:C++
+gfx_command_t	code/moe_gfx.h	/^} gfx_command_t;$/;"	t	language:C++	typeref:struct:gfx_command_t
+gfx_command_triangle_t	code/moe_gfx.h	/^typedef struct gfx_command_triangle_t {$/;"	s	language:C++
+gfx_command_triangle_t	code/moe_gfx.h	/^} gfx_command_triangle_t;$/;"	t	language:C++	typeref:struct:gfx_command_triangle_t
+GFX_COMMAND_TYPE_ADVANCE_DEPTH	code/moe_gfx.h	/^  GFX_COMMAND_TYPE_ADVANCE_DEPTH,$/;"	e	language:C++	enum:gfx_command_type_t
+GFX_COMMAND_TYPE_BLEND	code/moe_gfx.h	/^  GFX_COMMAND_TYPE_BLEND,$/;"	e	language:C++	enum:gfx_command_type_t
+GFX_COMMAND_TYPE_CLEAR	code/moe_gfx.h	/^  GFX_COMMAND_TYPE_CLEAR,$/;"	e	language:C++	enum:gfx_command_type_t
+GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES	code/moe_gfx.h	/^  GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,$/;"	e	language:C++	enum:gfx_command_type_t
+GFX_COMMAND_TYPE_DELETE_TEXTURE	code/moe_gfx.h	/^  GFX_COMMAND_TYPE_DELETE_TEXTURE,$/;"	e	language:C++	enum:gfx_command_type_t
+GFX_COMMAND_TYPE_LINE	code/moe_gfx.h	/^  GFX_COMMAND_TYPE_LINE,$/;"	e	language:C++	enum:gfx_command_type_t
+GFX_COMMAND_TYPE_RECT	code/moe_gfx.h	/^  GFX_COMMAND_TYPE_RECT,$/;"	e	language:C++	enum:gfx_command_type_t
+GFX_COMMAND_TYPE_SPRITE	code/moe_gfx.h	/^  GFX_COMMAND_TYPE_SPRITE,$/;"	e	language:C++	enum:gfx_command_type_t
+gfx_command_type_t	code/moe_gfx.h	/^enum gfx_command_type_t {$/;"	g	language:C++
+GFX_COMMAND_TYPE_TRIANGLE	code/moe_gfx.h	/^  GFX_COMMAND_TYPE_TRIANGLE,$/;"	e	language:C++	enum:gfx_command_type_t
+GFX_COMMAND_TYPE_VIEW	code/moe_gfx.h	/^  GFX_COMMAND_TYPE_VIEW,$/;"	e	language:C++	enum:gfx_command_type_t
+gfx_command_view_t	code/moe_gfx.h	/^typedef struct gfx_command_view_t {$/;"	s	language:C++
+gfx_command_view_t	code/moe_gfx.h	/^} gfx_command_view_t;$/;"	t	language:C++	typeref:struct:gfx_command_view_t
+gfx_complete_texture_transfer	code/moe_gfx.h	/^gfx_complete_texture_transfer(gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
+gfx_complete_texture_transfer	code/moe_gfx.h	/^static void gfx_complete_texture_transfer(gfx_texture_payload_t* entry);$/;"	p	language:C++	typeref:typename:void
+gfx_delete_all_textures	code/moe_gfx.h	/^static void gfx_delete_all_textures(gfx_t* g);$/;"	p	language:C++	typeref:typename:void
+gfx_delete_texture	code/moe_gfx.h	/^gfx_delete_texture(gfx_t* g, u32_t texture_index) {$/;"	f	language:C++	typeref:typename:void
+gfx_delete_texture	code/moe_gfx.h	/^static void gfx_delete_texture(gfx_t* g, u32_t texture_index);$/;"	p	language:C++	typeref:typename:void
+gfx_draw_circle_outline	code/moe_gfx.h	/^gfx_draw_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count,/;"	f	language:C++	typeref:typename:void
+gfx_draw_circle_outline	code/moe_gfx.h	/^static void gfx_draw_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t/;"	p	language:C++	typeref:typename:void
+gfx_draw_filled_circle	code/moe_gfx.h	/^gfx_draw_filled_circle(gfx_t* g, v2f_t center, f32_t radius,$/;"	f	language:C++	typeref:typename:void
+gfx_draw_filled_circle	code/moe_gfx.h	/^static void gfx_draw_filled_circle(gfx_t* g, v2f_t center, f32_t radius, u32_t sections, rgba_t /;"	p	language:C++	typeref:typename:void
+gfx_draw_filled_rect	code/moe_gfx.h	/^gfx_draw_filled_rect(gfx_t* g, $/;"	f	language:C++	typeref:typename:void
+gfx_draw_filled_rect	code/moe_gfx.h	/^static void gfx_draw_filled_rect(gfx_t* g, rgba_t colors, v2f_t pos, f32_t rot, v2f_t size);$/;"	p	language:C++	typeref:typename:void
+gfx_draw_filled_triangle	code/moe_gfx.h	/^gfx_draw_filled_triangle(gfx_t* g,$/;"	f	language:C++	typeref:typename:void
+gfx_draw_filled_triangle	code/moe_gfx.h	/^static void gfx_draw_filled_triangle(gfx_t* g, rgba_t colors, v2f_t p0, v2f_t p1, v2f_t p2);$/;"	p	language:C++	typeref:typename:void
+gfx_draw_line	code/moe_gfx.h	/^gfx_draw_line(gfx_t* g, $/;"	f	language:C++	typeref:typename:void
+gfx_draw_line	code/moe_gfx.h	/^static void gfx_draw_line(gfx_t* g, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors);$/;"	p	language:C++	typeref:typename:void
+gfx_foreach_command	code/moe_gfx.h	/^#define gfx_foreach_command(/;"	d	language:C++
+gfx_get_command	code/moe_gfx.h	/^gfx_get_command(gfx_t* g, u32_t index) {$/;"	f	language:C++	typeref:typename:gfx_command_t *
+gfx_get_command	code/moe_gfx.h	/^static gfx_command_t* gfx_get_command(gfx_t* g, u32_t index);$/;"	p	language:C++	typeref:typename:gfx_command_t *
+gfx_init_command_queue	code/moe_gfx.h	/^gfx_init_command_queue(gfx_t* g, void* data, umi_t size) {$/;"	f	language:C++	typeref:typename:void
+gfx_init_command_queue	code/moe_gfx.h	/^static void gfx_init_command_queue(gfx_t* g, void* data, umi_t size);$/;"	p	language:C++	typeref:typename:void
+gfx_init_texture_queue	code/moe_gfx.h	/^gfx_init_texture_queue(gfx_t* g, void* data, umi_t size) {$/;"	f	language:C++	typeref:typename:void
+gfx_init_texture_queue	code/moe_gfx.h	/^static void gfx_init_texture_queue(gfx_t* g, void* data, umi_t size);$/;"	p	language:C++	typeref:typename:void
+GFX_MAX_TEXTURES	code/moe_gfx.h	/^#define GFX_MAX_TEXTURES /;"	d	language:C++
 GFX_OGL_H	code/moe_gfx_opengl.h	/^#define GFX_OGL_H$/;"	d	language:C++
 gfx_push_asset_sprite	code/moe_game_api.h	/^gfx_push_asset_sprite($/;"	f	language:C++	typeref:typename:void
-gfx_push_colors	D:/work/git/moom/code/moe_gfx.h	/^gfx_push_colors(gfx_t* g, rgba_t colors) {$/;"	f	language:C++	typeref:typename:void
-gfx_push_colors	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_push_colors(gfx_t* g, rgba_t colors); $/;"	p	language:C++	typeref:typename:void
-gfx_push_sprite	D:/work/git/moom/code/moe_gfx.h	/^gfx_push_sprite(gfx_t* g, $/;"	f	language:C++	typeref:typename:void
-gfx_push_sprite	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_push_sprite(gfx_t* g, rgba_t colors, v2f_t pos, v2f_t size, v2f_t anchor, u32_t /;"	p	language:C++	typeref:typename:void
+gfx_push_colors	code/moe_gfx.h	/^gfx_push_colors(gfx_t* g, rgba_t colors) {$/;"	f	language:C++	typeref:typename:void
+gfx_push_colors	code/moe_gfx.h	/^static void gfx_push_colors(gfx_t* g, rgba_t colors); $/;"	p	language:C++	typeref:typename:void
+gfx_push_sprite	code/moe_gfx.h	/^gfx_push_sprite(gfx_t* g, $/;"	f	language:C++	typeref:typename:void
+gfx_push_sprite	code/moe_gfx.h	/^static void gfx_push_sprite(gfx_t* g, rgba_t colors, v2f_t pos, v2f_t size, v2f_t anchor, u32_t /;"	p	language:C++	typeref:typename:void
 gfx_push_text	code/moe_game_api.h	/^gfx_push_text(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str, rgba_t color, f/;"	f	language:C++	typeref:typename:void
 gfx_push_text_center_aligned	code/moe_game_api.h	/^gfx_push_text_center_aligned(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str, /;"	f	language:C++	typeref:typename:void
-gfx_set_blend	D:/work/git/moom/code/moe_gfx.h	/^gfx_set_blend(gfx_t* g, gfx_blend_type_t src, gfx_blend_type_t dst) {$/;"	f	language:C++	typeref:typename:void
-gfx_set_blend	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_set_blend(gfx_t* g, gfx_blend_type_t src, gfx_blend_type_t dst);$/;"	p	language:C++	typeref:typename:void
-gfx_set_blend_additive	D:/work/git/moom/code/moe_gfx.h	/^gfx_set_blend_additive(gfx_t* g) {$/;"	f	language:C++	typeref:typename:void
-gfx_set_blend_additive	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_set_blend_additive(gfx_t* g);$/;"	p	language:C++	typeref:typename:void
-gfx_set_blend_alpha	D:/work/git/moom/code/moe_gfx.h	/^gfx_set_blend_alpha(gfx_t* g)$/;"	f	language:C++	typeref:typename:void
-gfx_set_blend_alpha	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_set_blend_alpha(gfx_t* g);$/;"	p	language:C++	typeref:typename:void
-gfx_set_view	D:/work/git/moom/code/moe_gfx.h	/^gfx_set_view(gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t po/;"	f	language:C++	typeref:typename:void
-gfx_set_view	D:/work/git/moom/code/moe_gfx.h	/^static void gfx_set_view(gfx_t* g, v2f_t pos, f32_t width, f32_t height, u32_t layers);$/;"	p	language:C++	typeref:typename:void
-gfx_t	D:/work/git/moom/code/moe_gfx.h	/^typedef struct gfx_t {$/;"	s	language:C++
-gfx_t	D:/work/git/moom/code/moe_gfx.h	/^} gfx_t;$/;"	t	language:C++	typeref:struct:gfx_t
-GFX_TEXTURE_PAYLOAD_STATE_EMPTY	D:/work/git/moom/code/moe_gfx.h	/^  GFX_TEXTURE_PAYLOAD_STATE_EMPTY,$/;"	e	language:C++	enum:gfx_texture_payload_state_t
-GFX_TEXTURE_PAYLOAD_STATE_LOADING	D:/work/git/moom/code/moe_gfx.h	/^  GFX_TEXTURE_PAYLOAD_STATE_LOADING,$/;"	e	language:C++	enum:gfx_texture_payload_state_t
-GFX_TEXTURE_PAYLOAD_STATE_READY	D:/work/git/moom/code/moe_gfx.h	/^  GFX_TEXTURE_PAYLOAD_STATE_READY,$/;"	e	language:C++	enum:gfx_texture_payload_state_t
-gfx_texture_payload_state_t	D:/work/git/moom/code/moe_gfx.h	/^enum gfx_texture_payload_state_t {$/;"	g	language:C++
-gfx_texture_payload_t	D:/work/git/moom/code/moe_gfx.h	/^struct gfx_texture_payload_t {$/;"	s	language:C++
-gfx_texture_queue_t	D:/work/git/moom/code/moe_gfx.h	/^struct gfx_texture_queue_t {$/;"	s	language:C++
+gfx_set_blend	code/moe_gfx.h	/^gfx_set_blend(gfx_t* g, gfx_blend_type_t src, gfx_blend_type_t dst) {$/;"	f	language:C++	typeref:typename:void
+gfx_set_blend	code/moe_gfx.h	/^static void gfx_set_blend(gfx_t* g, gfx_blend_type_t src, gfx_blend_type_t dst);$/;"	p	language:C++	typeref:typename:void
+gfx_set_blend_additive	code/moe_gfx.h	/^gfx_set_blend_additive(gfx_t* g) $/;"	f	language:C++	typeref:typename:void
+gfx_set_blend_additive	code/moe_gfx.h	/^static void gfx_set_blend_additive(gfx_t* g);$/;"	p	language:C++	typeref:typename:void
+gfx_set_blend_alpha	code/moe_gfx.h	/^gfx_set_blend_alpha(gfx_t* g)$/;"	f	language:C++	typeref:typename:void
+gfx_set_blend_alpha	code/moe_gfx.h	/^static void gfx_set_blend_alpha(gfx_t* g);$/;"	p	language:C++	typeref:typename:void
+gfx_set_view	code/moe_gfx.h	/^gfx_set_view(gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t po/;"	f	language:C++	typeref:typename:void
+gfx_set_view	code/moe_gfx.h	/^static void gfx_set_view(gfx_t* g, v2f_t pos, f32_t width, f32_t height, u32_t layers);$/;"	p	language:C++	typeref:typename:void
+gfx_t	code/moe_gfx.h	/^typedef struct gfx_t {$/;"	s	language:C++
+gfx_t	code/moe_gfx.h	/^} gfx_t;$/;"	t	language:C++	typeref:struct:gfx_t
+GFX_TEXTURE_PAYLOAD_STATE_EMPTY	code/moe_gfx.h	/^  GFX_TEXTURE_PAYLOAD_STATE_EMPTY,$/;"	e	language:C++	enum:gfx_texture_payload_state_t
+GFX_TEXTURE_PAYLOAD_STATE_LOADING	code/moe_gfx.h	/^  GFX_TEXTURE_PAYLOAD_STATE_LOADING,$/;"	e	language:C++	enum:gfx_texture_payload_state_t
+GFX_TEXTURE_PAYLOAD_STATE_READY	code/moe_gfx.h	/^  GFX_TEXTURE_PAYLOAD_STATE_READY,$/;"	e	language:C++	enum:gfx_texture_payload_state_t
+gfx_texture_payload_state_t	code/moe_gfx.h	/^enum gfx_texture_payload_state_t {$/;"	g	language:C++
+gfx_texture_payload_t	code/moe_gfx.h	/^struct gfx_texture_payload_t {$/;"	s	language:C++
+gfx_texture_queue_t	code/moe_gfx.h	/^struct gfx_texture_queue_t {$/;"	s	language:C++
 gigabytes	code/momo_types.h	/^#define gigabytes(/;"	d	language:C++
 gist_cdl_init	code/gist_linked_list.cpp	/^gist_cdl_init(gist_cdl_node* sentinel) {$/;"	f	language:C++	typeref:typename:void	file:
 gist_cdl_new_node	code/gist_linked_list.cpp	/^gist_cdl_new_node(int value) {$/;"	f	language:C++	typeref:typename:gist_cdl_node *	file:
@@ -928,11 +928,11 @@ glVertexArrayBindingDivisor	code/moe_gfx_opengl.h	/^  OGL_glVertexArrayBindingDi
 glVertexArrayElementBuffer	code/moe_gfx_opengl.h	/^  OGL_glVertexArrayElementBuffer* glVertexArrayElementBuffer;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glVertexArrayElementBuffer *
 glVertexArrayVertexBuffer	code/moe_gfx_opengl.h	/^  OGL_glVertexArrayVertexBuffer* glVertexArrayVertexBuffer;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glVertexArrayVertexBuffer *
 glViewport	code/moe_gfx_opengl.h	/^  OGL_glViewport* glViewport;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glViewport *
-glyf	D:/work/git/moom/code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+glyf	code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 glyphs	code/moe_assets.h	/^  asset_font_glyph_t* glyphs;$/;"	m	language:C++	struct:asset_font_t	typeref:typename:asset_font_glyph_t *
-glyph_count	code/karu.h	/^  u32_t glyph_count;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:u32_t
+glyph_count	code/karu.h	/^  u32_t glyph_count;$/;"	m	language:C++	struct:karu_font_t	typeref:typename:u32_t
 glyph_count	code/moe_assets.h	/^  u32_t glyph_count;$/;"	m	language:C++	struct:asset_font_t	typeref:typename:u32_t
-glyph_count	D:/work/git/moom/code/momo_ttf.h	/^  u32_t glyph_count;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+glyph_count	code/momo_ttf.h	/^  u32_t glyph_count;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 glyph_rects	code/sui_atlas.h	/^  rp_rect_t* glyph_rects;$/;"	m	language:C++	struct:sui_atlas_font_t	typeref:typename:rp_rect_t *
 glyph_rect_contexts	code/sui_atlas.h	/^  sui_atlas_context_t* glyph_rect_contexts;$/;"	m	language:C++	struct:sui_atlas_font_t	typeref:typename:sui_atlas_context_t *
 GL_BLEND	code/moe_gfx_opengl.h	/^#define GL_BLEND /;"	d	language:C++
@@ -987,7 +987,7 @@ GL_VERTEX_SHADER	code/moe_gfx_opengl.h	/^#define GL_VERTEX_SHADER /;"	d	language
 GL_ZERO	code/moe_gfx_opengl.h	/^#define GL_ZERO /;"	d	language:C++
 GOLD_32	code/momo_types.h	/^#define GOLD_32 /;"	d	language:C++
 GOLD_64	code/momo_types.h	/^#define GOLD_64 /;"	d	language:C++
-gpos	D:/work/git/moom/code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+gpos	code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 groups	code/moe_assets.h	/^  asset_group_t groups[ASSET_GROUP_TYPE_COUNT];$/;"	m	language:C++	struct:assets_t	typeref:typename:asset_group_t[]
 groups	code/sui_pack.h	/^  karu_group_t groups[ASSET_GROUP_TYPE_COUNT]; \/\/to be written to file$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:karu_group_t[]
 group_count	code/karu.h	/^  u32_t group_count;$/;"	m	language:C++	struct:karu_header_t	typeref:typename:u32_t
@@ -1008,7 +1008,7 @@ handleException	build/a.out.js	/^  function handleException(e) {$/;"	f	language:
 head	C:/users/geral/work/moom/code/momo_json.h	/^  struct _json_array_node_t* head;  $/;"	m	language:C++	struct:json_array_t	typeref:struct:_json_array_node_t *
 head	code/momo_json.h	/^  json_array_node_t* head;$/;"	m	language:C++	struct:json_array_t	typeref:typename:json_array_node_t *
 head	code/momo_json.h	/^  struct _json_entry_t* head; \/\/ points to the first entry$/;"	m	language:C++	struct:json_object_t	typeref:struct:_json_entry_t *
-head	D:/work/git/moom/code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+head	code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 HEAP	build/a.out.js	/^var HEAP,$/;"	v	language:JavaScript
 HEAP16	build/a.out.js	/^  HEAP16,$/;"	v	language:JavaScript
 HEAP32	build/a.out.js	/^  HEAP32,$/;"	v	language:JavaScript
@@ -1026,12 +1026,12 @@ height	code/momo_png.h	/^  u32_t height;$/;"	m	language:C++	struct:_png_ihdr_t	t
 height	code/sui_atlas.h	/^  u32_t width, height;$/;"	m	language:C++	struct:sui_atlas_bitmap_t	typeref:typename:u32_t
 height	code/sui_pack.h	/^  u32_t height;$/;"	m	language:C++	struct:sui_packer_source_bitmap_t	typeref:typename:u32_t
 held_light	code/lit_game.h	/^  lit_light_t* held_light;$/;"	m	language:C++	struct:lit_player_t	typeref:typename:lit_light_t *
-hhea	D:/work/git/moom/code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
-highest_codepoint	code/karu.h	/^  u32_t highest_codepoint;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:u32_t
+hhea	code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+highest_codepoint	code/karu.h	/^  u32_t highest_codepoint;$/;"	m	language:C++	struct:karu_font_t	typeref:typename:u32_t
 highest_codepoint	code/moe_assets.h	/^  u32_t highest_codepoint;$/;"	m	language:C++	struct:asset_font_t	typeref:typename:u32_t
 hits	code/moe_profiler.h	/^  u32_t hits;$/;"	m	language:C++	struct:profiler_snapshot_t	typeref:typename:u32_t
 hits_and_cycles	code/moe_profiler.h	/^  u64_t hits_and_cycles;$/;"	m	language:C++	struct:profiler_entry_t	typeref:typename:u64_t
-hmtx	D:/work/git/moom/code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+hmtx	code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 horizontal_advance	code/karu.h	/^  f32_t horizontal_advance;$/;"	m	language:C++	struct:karu_font_glyph_t	typeref:typename:f32_t
 horizontal_advance	code/moe_assets.h	/^  f32_t horizontal_advance;$/;"	m	language:C++	struct:asset_font_glyph_t	typeref:typename:f32_t
 hsl_set	code/momo_colors.h	/^hsl_set(f32_t h, f32_t s, f32_t l) {$/;"	f	language:C++	typeref:typename:hsl_t
@@ -1041,10 +1041,10 @@ hsl_t	code/momo_colors.h	/^} hsl_t;$/;"	t	language:C++	typeref:struct:hsl_t
 hsl_to_rgb	code/momo_colors.h	/^hsl_to_rgb(hsl_t c) {$/;"	f	language:C++	typeref:typename:rgb_t
 hsl_to_rgb	code/momo_colors.h	/^static rgb_t  hsl_to_rgb(hsl_t c);$/;"	p	language:C++	typeref:typename:rgb_t
 hundreds	code/momo_types.h	/^#define hundreds(/;"	d	language:C++
+id	code/moe_gfx.h	/^  u32_t id; \/\/ type id from user$/;"	m	language:C++	struct:gfx_command_t	typeref:typename:u32_t
 id	code/momo_wav.h	/^  u32_t id; \/\/ big endian$/;"	m	language:C++	struct:wav_riff_chunk_t	typeref:typename:u32_t
 id	code/momo_wav.h	/^  u32_t id;$/;"	m	language:C++	struct:wav_data_chunk_t	typeref:typename:u32_t
 id	code/momo_wav.h	/^  u32_t id;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
-id	D:/work/git/moom/code/moe_gfx.h	/^  u32_t id; \/\/ type id from user$/;"	m	language:C++	struct:gfx_command_t	typeref:typename:u32_t
 IDBFS	build/a.out.js	/^var IDBFS = 'IDBFS is no longer included by default; build with -lidbfs.js';$/;"	v	language:JavaScript
 ignoredModuleProp	build/a.out.js	/^function ignoredModuleProp(prop) {$/;"	f	language:JavaScript
 image125	build/web.html	/^   id="image125"><\/image><g$/;"	I	language:HTML
@@ -1099,7 +1099,7 @@ is_device_changed	code/w32_audio_wasapi.h	/^	b32_t is_device_changed;$/;"	m	lang
 is_device_ready	code/w32_audio_wasapi.h	/^	b32_t is_device_ready;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:b32_t
 is_digit	code/momo_types.h	/^is_digit(c8_t c) {$/;"	f	language:C++	typeref:typename:b32_t
 is_holding_light	code/lit_game.h	/^  b32_t is_holding_light;$/;"	m	language:C++	struct:lit_player_t	typeref:typename:b32_t
-is_inverted	D:/work/git/moom/code/momo_ttf.h	/^  b32_t is_inverted;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:b32_t
+is_inverted	code/momo_ttf.h	/^  b32_t is_inverted;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:b32_t
 is_memory_same	code/momo_types.h	/^is_memory_same(const void* lhs, const void* rhs, umi_t size) {$/;"	f	language:C++	typeref:typename:b32_t
 is_memory_same	code/momo_types.h	/^is_memory_same(const void* lhs, const void* rhs, umi_t size) {$/;"	f	language:C++	typeref:typename:b32_t
 is_nan_f32	code/momo_types.h	/^is_nan_f32(f32_t f) {$/;"	f	language:C++	typeref:typename:b32_t
@@ -1120,6 +1120,7 @@ item2	build/test_json.json	/^    "item2":"hello",$/;"	s	language:JSON	object:obj
 item3	build/test_json.json	/^      "item3":123$/;"	n	language:JSON	object:obj.more_obj
 item3	build/test_json.json	/^    "item3":123,$/;"	n	language:JSON	object:obj
 Journal	journal.md	/^# Journal$/;"	c	language:Markdown
+json_array_foreach	code/json_test.cpp	/^#define json_array_foreach(/;"	d	language:C++	file:
 json_array_node_t	code/momo_json.h	/^struct json_array_node_t {$/;"	s	language:C++
 json_array_t	C:/users/geral/work/moom/code/momo_json.h	/^struct json_array_t{$/;"	s	language:C++
 json_array_t	code/momo_json.h	/^struct json_array_t {$/;"	s	language:C++
@@ -1171,8 +1172,8 @@ JSON_VALUE_TYPE_TRUE	code/momo_json.h	/^  JSON_VALUE_TYPE_TRUE,$/;"	e	language:C
 karu_asset_t	code/karu.h	/^struct karu_asset_t {$/;"	s	language:C++
 karu_bitmap_t	code/karu.h	/^struct karu_bitmap_t {$/;"	s	language:C++
 KARU_CODE	code/karu.h	/^#define KARU_CODE(/;"	d	language:C++
-Karu_Font	code/karu.h	/^struct Karu_Font {$/;"	s	language:C++
 karu_font_glyph_t	code/karu.h	/^struct karu_font_glyph_t {$/;"	s	language:C++
+karu_font_t	code/karu.h	/^struct karu_font_t {$/;"	s	language:C++
 karu_group_t	code/karu.h	/^struct karu_group_t {$/;"	s	language:C++
 KARU_H	code/karu.h	/^#define KARU_H$/;"	d	language:C++
 karu_header_t	code/karu.h	/^struct karu_header_t {$/;"	s	language:C++
@@ -1180,7 +1181,7 @@ KARU_SIGNATURE	code/karu.h	/^#define KARU_SIGNATURE /;"	d	language:C++
 karu_sprite_t	code/karu.h	/^struct karu_sprite_t {$/;"	s	language:C++
 karu_tag_t	code/karu.h	/^struct karu_tag_t {$/;"	s	language:C++
 keepRuntimeAlive	build/a.out.js	/^function keepRuntimeAlive() {$/;"	f	language:JavaScript
-kern	D:/work/git/moom/code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+kern	code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 kernings	code/moe_assets.h	/^  f32_t* kernings;$/;"	m	language:C++	struct:asset_font_t	typeref:typename:f32_t *
 key	C:/users/geral/work/moom/code/momo_json.h	/^  json_key_t key;$/;"	m	language:C++	struct:_json_object_node_t	typeref:typename:json_key_t
 key	code/moe_console.h	/^  str8_t key;$/;"	m	language:C++	struct:console_command_t	typeref:typename:str8_t
@@ -1219,56 +1220,59 @@ linearGradient4239	build/web.html	/^   id="linearGradient4239"><stop$/;"	I	langu
 linearGradient5104	build/web.html	/^     id="linearGradient5104"><stop$/;"	I	language:HTML
 linearGradient5120	build/web.html	/^     id="linearGradient5120"$/;"	I	language:HTML
 linearGradient5134	build/web.html	/^     id="linearGradient5134"$/;"	I	language:HTML
-lit_animate	code/lit_game.cpp	/^lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_animate	D:/work/git/moom/code/lit_game.cpp	/^lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_animator_patrol_edge_t	code/lit_game.h	/^struct lit_animator_patrol_edge_t {$/;"	s	language:C++
 lit_animator_patrol_sensor_t	code/lit_game.h	/^struct lit_animator_patrol_sensor_t {$/;"	s	language:C++
 lit_animator_rotate_edge_t	code/lit_game.h	/^struct lit_animator_rotate_edge_t {$/;"	s	language:C++
+lit_animator_rotate_sensor_t	code/lit_game.h	/^struct lit_animator_rotate_sensor_t {$/;"	s	language:C++
 lit_animator_t	code/lit_game.h	/^struct lit_animator_t {$/;"	s	language:C++
 LIT_ANIMATOR_TYPE_PATROL_EDGE	code/lit_game.h	/^  LIT_ANIMATOR_TYPE_PATROL_EDGE,$/;"	e	language:C++	enum:lit_animator_type_t
 LIT_ANIMATOR_TYPE_PATROL_SENSOR	code/lit_game.h	/^  LIT_ANIMATOR_TYPE_PATROL_SENSOR,$/;"	e	language:C++	enum:lit_animator_type_t
 LIT_ANIMATOR_TYPE_ROTATE_EDGE	code/lit_game.h	/^  LIT_ANIMATOR_TYPE_ROTATE_EDGE,$/;"	e	language:C++	enum:lit_animator_type_t
+LIT_ANIMATOR_TYPE_ROTATE_SENSOR	code/lit_game.h	/^  LIT_ANIMATOR_TYPE_ROTATE_SENSOR,$/;"	e	language:C++	enum:lit_animator_type_t
 lit_animator_type_t	code/lit_game.h	/^enum lit_animator_type_t {$/;"	g	language:C++
-lit_are_all_sensors_activated	code/lit_game.cpp	/^lit_are_all_sensors_activated(lit_game_t* game) {$/;"	f	language:C++	typeref:typename:b32_t	file:
-lit_begin_patrolling_sensor	code/lit_game.cpp	/^lit_begin_patrolling_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color, f32_/;"	f	language:C++	typeref:typename:void	file:
-lit_calc_ghost_edge_line	code/lit_game.cpp	/^lit_calc_ghost_edge_line(lit_edge_t* e, v2f_t* min, v2f_t* max) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_are_all_sensors_activated	D:/work/git/moom/code/lit_game.cpp	/^lit_are_all_sensors_activated(lit_game_t* game) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+lit_begin_patrolling_sensor	D:/work/git/moom/code/lit_game.cpp	/^lit_begin_patrolling_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color, f32_/;"	f	language:C++	typeref:typename:void	file:
+lit_calc_ghost_edge_line	D:/work/git/moom/code/lit_game.cpp	/^lit_calc_ghost_edge_line(lit_edge_t* e, v2f_t* min, v2f_t* max) {$/;"	f	language:C++	typeref:typename:void	file:
 LIT_DEBUG_COORDINATES	code/lit.h	/^#define LIT_DEBUG_COORDINATES /;"	d	language:C++
 LIT_DEBUG_INTERSECTIONS	code/lit.h	/^#define LIT_DEBUG_INTERSECTIONS /;"	d	language:C++
-lit_draw_edges	code/lit_game.cpp	/^lit_draw_edges(lit_t* lit, lit_game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_draw_lights	code/lit_game.cpp	/^lit_draw_lights(lit_t* lit, lit_game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_draw_edges	D:/work/git/moom/code/lit_game.cpp	/^lit_draw_edges(lit_t* lit, lit_game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_draw_lights	D:/work/git/moom/code/lit_game.cpp	/^lit_draw_lights(lit_t* lit, lit_game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_draw_menu_rect	code/lit_menu.cpp	/^lit_draw_menu_rect($/;"	f	language:C++	typeref:typename:void	file:
-lit_draw_player	code/lit_game.cpp	/^lit_draw_player(lit_t* lit, lit_game_t* game)$/;"	f	language:C++	typeref:typename:void	file:
+lit_draw_player	D:/work/git/moom/code/lit_game.cpp	/^lit_draw_player(lit_t* lit, lit_game_t* game)$/;"	f	language:C++	typeref:typename:void	file:
 lit_edge_t	code/lit_game.h	/^struct lit_edge_t {$/;"	s	language:C++
-lit_end_patrolling_sensor	code/lit_game.cpp	/^lit_end_patrolling_sensor(lit_game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_end_patrolling_sensor	D:/work/git/moom/code/lit_game.cpp	/^lit_end_patrolling_sensor(lit_game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
 LIT_ENTER_DURATION	code/lit.h	/^#define LIT_ENTER_DURATION /;"	d	language:C++
 LIT_EXIT_FLASH_BRIGHTNESS	code/lit.h	/^#define LIT_EXIT_FLASH_BRIGHTNESS /;"	d	language:C++
 LIT_EXIT_FLASH_DURATION	code/lit.h	/^#define LIT_EXIT_FLASH_DURATION /;"	d	language:C++
 lit_game_t	code/lit_game.h	/^struct lit_game_t {$/;"	s	language:C++
-lit_gen_lights	code/lit_game.cpp	/^lit_gen_lights(lit_light_t* lights, $/;"	f	language:C++	typeref:typename:void	file:
-lit_gen_light_intersections	code/lit_game.cpp	/^lit_gen_light_intersections(lit_light_t* l,$/;"	f	language:C++	typeref:typename:void	file:
-lit_get_ray_intersection_time_wrt_edges	code/lit_game.cpp	/^lit_get_ray_intersection_time_wrt_edges(v2f_t ray_origin, $/;"	f	language:C++	typeref:typename:f32_t	file:
+lit_gen_lights	D:/work/git/moom/code/lit_game.cpp	/^lit_gen_lights(lit_light_t* lights, $/;"	f	language:C++	typeref:typename:void	file:
+lit_gen_light_intersections	D:/work/git/moom/code/lit_game.cpp	/^lit_gen_light_intersections(lit_light_t* l,$/;"	f	language:C++	typeref:typename:void	file:
+lit_get_ray_intersection_time_wrt_edges	D:/work/git/moom/code/lit_game.cpp	/^lit_get_ray_intersection_time_wrt_edges(v2f_t ray_origin, $/;"	f	language:C++	typeref:typename:f32_t	file:
 lit_goto_specific_level	code/lit.h	/^lit_goto_specific_level(lit_t* lit, u32_t level) {$/;"	f	language:C++	typeref:typename:void
 LIT_HEIGHT	code/lit.h	/^#define LIT_HEIGHT /;"	d	language:C++
-lit_init_game	code/lit_game.cpp	/^lit_init_game(lit_t* lit, lit_game_t* game) $/;"	f	language:C++	typeref:typename:void	file:
-lit_init_player	code/lit_game.cpp	/^lit_init_player(lit_game_t* game, f32_t x, f32_t y) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_init_game	D:/work/git/moom/code/lit_game.cpp	/^lit_init_game(lit_t* lit, lit_game_t* game) $/;"	f	language:C++	typeref:typename:void	file:
+lit_init_player	D:/work/git/moom/code/lit_game.cpp	/^lit_init_player(lit_game_t* game, f32_t x, f32_t y) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_init_splash	code/lit_splash.cpp	/^lit_init_splash(lit_t* lit, lit_splash_t* splash) {$/;"	f	language:C++	typeref:typename:void	file:
 LIT_INSPECTOR_RENDERING_H	code/lit_inspector_rendering.h	/^#define LIT_INSPECTOR_RENDERING_H$/;"	d	language:C++
-lit_is_state_exiting	code/lit_game.cpp	/^lit_is_state_exiting(lit_game_t* game) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+lit_is_state_exiting	D:/work/git/moom/code/lit_game.cpp	/^lit_is_state_exiting(lit_game_t* game) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 Lit_Level	code/lit_levels.h	/^typedef void (*Lit_Level)(lit_game_t* mode); $/;"	t	language:C++	typeref:typename:void (*)(lit_game_t * mode)
-lit_level_0_0	code/lit_levels.h	/^lit_level_0_0(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_0_1	code/lit_levels.h	/^lit_level_0_1(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_0_10	code/lit_levels.h	/^lit_level_0_10(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_0_11	code/lit_levels.h	/^lit_level_0_11(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_0_2	code/lit_levels.h	/^lit_level_0_2(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void
-lit_level_0_3	code/lit_levels.h	/^lit_level_0_3(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void
-lit_level_0_4	code/lit_levels.h	/^lit_level_0_4(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_0_5	code/lit_levels.h	/^lit_level_0_5(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_0_6	code/lit_levels.h	/^lit_level_0_6(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_0_7	code/lit_levels.h	/^lit_level_0_7(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_0_8	code/lit_levels.h	/^lit_level_0_8(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_0_9	code/lit_levels.h	/^lit_level_0_9(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_1_0	code/lit_levels.h	/^lit_level_1_0(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_1_1	code/lit_levels.h	/^lit_level_1_1(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_1_2	code/lit_levels.h	/^lit_level_1_2(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_add	code/lit_levels.h	/^lit_level_add(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void
+lit_level_blend	code/lit_levels.h	/^lit_level_blend(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_busy	code/lit_levels.h	/^lit_level_busy(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_corners	code/lit_levels.h	/^lit_level_corners(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void
+lit_level_disco	code/lit_levels.h	/^lit_level_disco(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_interval	code/lit_levels.h	/^lit_level_interval(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_mix	code/lit_levels.h	/^lit_level_mix(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_move	code/lit_levels.h	/^lit_level_move(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_movement	code/lit_levels.h	/^lit_level_movement(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_obstruct	code/lit_levels.h	/^lit_level_obstruct(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_onion	code/lit_levels.h	/^lit_level_onion(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_patience	code/lit_levels.h	/^lit_level_patience(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_rooms	code/lit_levels.h	/^lit_level_rooms(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_spectrum	code/lit_levels.h	/^lit_level_spectrum(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_split	code/lit_levels.h	/^lit_level_split(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_test	code/lit_levels.h	/^lit_level_test(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
 lit_light_intersection_t	code/lit_game.h	/^struct lit_light_intersection_t {$/;"	s	language:C++
 lit_light_t	code/lit_game.h	/^struct lit_light_t {$/;"	s	language:C++
 lit_light_triangle_t	code/lit_game.h	/^struct lit_light_triangle_t {$/;"	s	language:C++
@@ -1276,10 +1280,10 @@ Lit_LIGHT_TYPE_DIRECTIONAL	code/lit_game.h	/^  Lit_LIGHT_TYPE_DIRECTIONAL,$/;"	e
 Lit_LIGHT_TYPE_POINT	code/lit_game.h	/^  Lit_LIGHT_TYPE_POINT,$/;"	e	language:C++	enum:lit_light_type_t
 lit_light_type_t	code/lit_game.h	/^enum lit_light_type_t {$/;"	g	language:C++
 Lit_LIGHT_TYPE_WEIRD	code/lit_game.h	/^  Lit_LIGHT_TYPE_WEIRD$/;"	e	language:C++	enum:lit_light_type_t
-lit_load_level	code/lit_game.cpp	/^static void lit_load_level(lit_game_t* m, u32_t level_id);$/;"	p	language:C++	typeref:typename:void	file:
 lit_load_level	code/lit_levels.h	/^lit_load_level(lit_game_t* m, u32_t level_id) {$/;"	f	language:C++	typeref:typename:void
-lit_load_next_level	code/lit_game.cpp	/^static void lit_load_next_level(lit_game_t* m);$/;"	p	language:C++	typeref:typename:void	file:
+lit_load_level	D:/work/git/moom/code/lit_game.cpp	/^static void lit_load_level(lit_game_t* m, u32_t level_id);$/;"	p	language:C++	typeref:typename:void	file:
 lit_load_next_level	code/lit_levels.h	/^lit_load_next_level(lit_game_t* m){$/;"	f	language:C++	typeref:typename:void
+lit_load_next_level	D:/work/git/moom/code/lit_game.cpp	/^static void lit_load_next_level(lit_game_t* m);$/;"	p	language:C++	typeref:typename:void	file:
 lit_log	code/lit.h	/^#define lit_log(/;"	d	language:C++
 lit_log	code/lit.h	/^#define lit_log(/;"	d	language:C++
 lit_menu_init	code/lit_menu.cpp	/^lit_menu_init($/;"	f	language:C++	typeref:typename:void	file:
@@ -1312,19 +1316,20 @@ lit_profile_begin	code/lit.h	/^#define lit_profile_begin(/;"	d	language:C++
 lit_profile_block	code/lit.h	/^#define lit_profile_block(/;"	d	language:C++
 lit_profile_end	code/lit.h	/^#define lit_profile_end(/;"	d	language:C++
 lit_profile_end	code/lit.h	/^#define lit_profile_end(/;"	d	language:C++
-lit_push_box	code/lit_game.cpp	/^lit_push_box(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) $/;"	f	language:C++	typeref:typename:void	file:
-lit_push_double_edge	code/lit_game.cpp	/^lit_push_double_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_push_edge	code/lit_game.cpp	/^lit_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {$/;"	f	language:C++	typeref:typename:lit_edge_t *	file:
-lit_push_light	code/lit_game.cpp	/^lit_push_light(lit_game_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle, f32_t turn) {$/;"	f	language:C++	typeref:typename:lit_light_t *	file:
-lit_push_patrolling_double_edge	code/lit_game.cpp	/^lit_push_patrolling_double_edge(lit_game_t* m, f32_t duration, $/;"	f	language:C++	typeref:typename:void	file:
-lit_push_patrolling_edge	code/lit_game.cpp	/^lit_push_patrolling_edge(lit_game_t* m, f32_t duration, $/;"	f	language:C++	typeref:typename:void	file:
-lit_push_patrolling_sensor_waypoint	code/lit_game.cpp	/^lit_push_patrolling_sensor_waypoint(lit_game_t* game, f32_t pos_x, f32_t pos_y) $/;"	f	language:C++	typeref:typename:void	file:
-lit_push_patrol_edge_animator	code/lit_game.cpp	/^lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duration, lit_edge_t  s/;"	f	language:C++	typeref:typename:void	file:
-lit_push_sensor	code/lit_game.cpp	/^lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color) $/;"	f	language:C++	typeref:typename:lit_sensor_t *	file:
-lit_push_triangle	code/lit_game.cpp	/^lit_push_triangle(lit_light_t* l, v2f_t p0, v2f_t p1, v2f_t p2, u32_t color) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_render_game	code/lit_game.cpp	/^lit_render_game(lit_t* lit, lit_game_t* game) $/;"	f	language:C++	typeref:typename:void	file:
-lit_render_particles	code/lit_game.cpp	/^lit_render_particles(lit_t* lit, lit_game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_render_sensors	code/lit_game.cpp	/^lit_render_sensors(lit_t* lit, lit_game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_push_box	D:/work/git/moom/code/lit_game.cpp	/^lit_push_box(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) $/;"	f	language:C++	typeref:typename:void	file:
+lit_push_double_edge	D:/work/git/moom/code/lit_game.cpp	/^lit_push_double_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_push_edge	D:/work/git/moom/code/lit_game.cpp	/^lit_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {$/;"	f	language:C++	typeref:typename:lit_edge_t *	file:
+lit_push_light	D:/work/git/moom/code/lit_game.cpp	/^lit_push_light(lit_game_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle, f32_t turn) {$/;"	f	language:C++	typeref:typename:lit_light_t *	file:
+lit_push_patrolling_double_edge	D:/work/git/moom/code/lit_game.cpp	/^lit_push_patrolling_double_edge(lit_game_t* m, f32_t duration, $/;"	f	language:C++	typeref:typename:void	file:
+lit_push_patrolling_edge	D:/work/git/moom/code/lit_game.cpp	/^lit_push_patrolling_edge(lit_game_t* m, f32_t duration, $/;"	f	language:C++	typeref:typename:void	file:
+lit_push_patrolling_sensor_waypoint	D:/work/git/moom/code/lit_game.cpp	/^lit_push_patrolling_sensor_waypoint(lit_game_t* game, f32_t pos_x, f32_t pos_y) $/;"	f	language:C++	typeref:typename:void	file:
+lit_push_patrol_edge_animator	D:/work/git/moom/code/lit_game.cpp	/^lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duration, lit_edge_t  s/;"	f	language:C++	typeref:typename:void	file:
+lit_push_rotating_sensor	D:/work/git/moom/code/lit_game.cpp	/^lit_push_rotating_sensor(lit_game_t* m, f32_t pos_x, f32_t, pos_y, f32_t origin_x, f32_t origin_/;"	f	language:C++	typeref:typename:void	file:
+lit_push_sensor	D:/work/git/moom/code/lit_game.cpp	/^lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color) $/;"	f	language:C++	typeref:typename:lit_sensor_t *	file:
+lit_push_triangle	D:/work/git/moom/code/lit_game.cpp	/^lit_push_triangle(lit_light_t* l, v2f_t p0, v2f_t p1, v2f_t p2, u32_t color) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_render_game	D:/work/git/moom/code/lit_game.cpp	/^lit_render_game(lit_t* lit, lit_game_t* game) $/;"	f	language:C++	typeref:typename:void	file:
+lit_render_particles	D:/work/git/moom/code/lit_game.cpp	/^lit_render_particles(lit_t* lit, lit_game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_render_sensors	D:/work/git/moom/code/lit_game.cpp	/^lit_render_sensors(lit_t* lit, lit_game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_save_data_t	code/lit.h	/^struct lit_save_data_t {$/;"	s	language:C++
 LIT_SENSOR_COLOR_MASK	code/lit.h	/^#define LIT_SENSOR_COLOR_MASK /;"	d	language:C++
 LIT_SENSOR_PARTICLE_CD	code/lit.h	/^#define LIT_SENSOR_PARTICLE_CD /;"	d	language:C++
@@ -1332,14 +1337,14 @@ LIT_SENSOR_PARTICLE_SIZE	code/lit.h	/^#define LIT_SENSOR_PARTICLE_SIZE /;"	d	lan
 LIT_SENSOR_PARTICLE_SPEED	code/lit.h	/^#define LIT_SENSOR_PARTICLE_SPEED /;"	d	language:C++
 LIT_SENSOR_RADIUS	code/lit.h	/^#define LIT_SENSOR_RADIUS /;"	d	language:C++
 lit_sensor_t	code/lit_game.h	/^struct lit_sensor_t {$/;"	s	language:C++
-lit_set_title	code/lit_game.cpp	/^lit_set_title(lit_game_t* game, str8_t str) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_set_title	D:/work/git/moom/code/lit_game.cpp	/^lit_set_title(lit_game_t* game, str8_t str) {$/;"	f	language:C++	typeref:typename:void	file:
 LIT_SHOW_DEBUG_CONSOLE	code/lit.h	/^  LIT_SHOW_DEBUG_CONSOLE,$/;"	e	language:C++	enum:lit_show_debug_type_t
 LIT_SHOW_DEBUG_INSPECTOR	code/lit.h	/^  LIT_SHOW_DEBUG_INSPECTOR,$/;"	e	language:C++	enum:lit_show_debug_type_t
 LIT_SHOW_DEBUG_MAX	code/lit.h	/^  LIT_SHOW_DEBUG_MAX$/;"	e	language:C++	enum:lit_show_debug_type_t
 LIT_SHOW_DEBUG_NONE	code/lit.h	/^  LIT_SHOW_DEBUG_NONE,$/;"	e	language:C++	enum:lit_show_debug_type_t
 LIT_SHOW_DEBUG_PROFILER	code/lit.h	/^  LIT_SHOW_DEBUG_PROFILER,$/;"	e	language:C++	enum:lit_show_debug_type_t
 lit_show_debug_type_t	code/lit.h	/^enum lit_show_debug_type_t {$/;"	g	language:C++
-lit_spawn_particle	code/lit_game.cpp	/^lit_spawn_particle(lit_game_t* game,$/;"	f	language:C++	typeref:typename:void	file:
+lit_spawn_particle	D:/work/git/moom/code/lit_game.cpp	/^lit_spawn_particle(lit_game_t* game,$/;"	f	language:C++	typeref:typename:void	file:
 lit_splash_t	code/lit_splash.h	/^struct lit_splash_t {$/;"	s	language:C++
 LIT_STATE_TYPE_NORMAL	code/lit_game.h	/^  LIT_STATE_TYPE_NORMAL,$/;"	e	language:C++	enum:lit_state_type_t
 LIT_STATE_TYPE_SOLVED_IN	code/lit_game.h	/^  LIT_STATE_TYPE_SOLVED_IN,$/;"	e	language:C++	enum:lit_state_type_t
@@ -1352,17 +1357,17 @@ lit_tick	code/lit.cpp	/^lit_tick(platform_t* platform) {$/;"	f	language:C++	type
 lit_title_waypoint_t	code/lit_game.h	/^struct lit_title_waypoint_t {$/;"	s	language:C++
 lit_title_wps	code/lit_game.h	/^static lit_title_waypoint_t lit_title_wps[] = {$/;"	v	language:C++	typeref:typename:lit_title_waypoint_t[]
 lit_update_and_render_console	code/lit_console_rendering.h	/^lit_update_and_render_console(lit_t* lit) $/;"	f	language:C++	typeref:typename:void
-lit_update_animators	code/lit_game.cpp	/^lit_update_animators(lit_t* lit, lit_game_t* game, f32_t dt) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_update_game	code/lit_game.cpp	/^lit_update_game(lit_t* lit, lit_game_t* game) $/;"	f	language:C++	typeref:typename:void	file:
-lit_update_particles	code/lit_game.cpp	/^lit_update_particles(lit_game_t* game, f32_t dt) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_update_player	code/lit_game.cpp	/^lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt) $/;"	f	language:C++	typeref:typename:void	file:
-lit_update_sensors	code/lit_game.cpp	/^lit_update_sensors(lit_game_t* game, f32_t dt) $/;"	f	language:C++	typeref:typename:void	file:
+lit_update_animators	D:/work/git/moom/code/lit_game.cpp	/^lit_update_animators(lit_t* lit, lit_game_t* game, f32_t dt) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_update_game	D:/work/git/moom/code/lit_game.cpp	/^lit_update_game(lit_t* lit, lit_game_t* game) $/;"	f	language:C++	typeref:typename:void	file:
+lit_update_particles	D:/work/git/moom/code/lit_game.cpp	/^lit_update_particles(lit_game_t* game, f32_t dt) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_update_player	D:/work/git/moom/code/lit_game.cpp	/^lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt) $/;"	f	language:C++	typeref:typename:void	file:
+lit_update_sensors	D:/work/git/moom/code/lit_game.cpp	/^lit_update_sensors(lit_game_t* game, f32_t dt) $/;"	f	language:C++	typeref:typename:void	file:
 lit_update_splash	code/lit_splash.cpp	/^lit_update_splash(lit_t* lit, lit_splash_t* splash) {$/;"	f	language:C++	typeref:typename:void	file:
 LIT_WIDTH	code/lit.h	/^#define LIT_WIDTH /;"	d	language:C++
 loadFilesFromDB	build/a.out.js	/^  loadFilesFromDB: function() { FS.error() },$/;"	m	language:JavaScript	class:FS
-loca	D:/work/git/moom/code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+loca	code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 locateFile	build/a.out.js	/^function locateFile(path) {$/;"	f	language:JavaScript
-loca_format	D:/work/git/moom/code/momo_ttf.h	/^  u16_t loca_format;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u16_t
+loca_format	code/momo_ttf.h	/^  u16_t loca_format;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u16_t
 logExceptionOnExit	build/a.out.js	/^function logExceptionOnExit(e) {$/;"	f	language:JavaScript
 m44f_concat	code/momo_matrix.h	/^m44f_concat(m44f_t lhs, m44f_t rhs) {$/;"	f	language:C++	typeref:typename:m44f_t
 m44f_concat	code/momo_matrix.h	/^static m44f_t m44f_concat(m44f_t lhs, m44f_t rhs);$/;"	p	language:C++	typeref:typename:m44f_t
@@ -1400,15 +1405,15 @@ make	code/momo_types.h	/^#define make(/;"	d	language:C++
 max	code/lit_profiler_rendering.h	/^  f64_t max;$/;"	m	language:C++	struct:profiler_stat_t	typeref:typename:f64_t
 max	code/moe_gfx_opengl.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:ogl_uv_t	typeref:typename:v2f_t
 max	code/moe_profiler_rendering.h	/^  f64_t max;$/;"	m	language:C++	struct:profiler_stat_t	typeref:typename:f64_t
-maxp	D:/work/git/moom/code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+maxp	code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 max_of	code/momo_types.h	/^#define max_of(/;"	d	language:C++
-max_x	D:/work/git/moom/code/moe_gfx.h	/^  f32_t min_x, max_x;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
-max_y	D:/work/git/moom/code/moe_gfx.h	/^  f32_t min_y, max_y;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
+max_x	code/moe_gfx.h	/^  f32_t min_x, max_x;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
+max_y	code/moe_gfx.h	/^  f32_t min_y, max_y;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
 megabytes	code/momo_types.h	/^#define megabytes(/;"	d	language:C++
+memory	code/moe_gfx.h	/^	u8_t* memory;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:u8_t *
 memory	code/momo_arena.h	/^	u8_t* memory;$/;"	m	language:C++	struct:arena_t	typeref:typename:u8_t *
-memory	D:/work/git/moom/code/moe_gfx.h	/^	u8_t* memory;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:u8_t *
 memory_sentinel	code/w32_moe.h	/^  w32_memory_t memory_sentinel;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_memory_t
-memory_size	D:/work/git/moom/code/moe_gfx.h	/^  umi_t memory_size;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:umi_t
+memory_size	code/moe_gfx.h	/^  umi_t memory_size;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:umi_t
 menu	code/lit.h	/^    lit_menu_t menu;$/;"	m	language:C++	union:lit_t::__anon65aa720e010a	typeref:typename:lit_menu_t
 metadata345	build/web.html	/^   id="metadata345"><rdf:RDF><cc:Work$/;"	I	language:HTML
 meta_compare_token_with_string	code/meta.cpp	/^meta_compare_token_with_string(Meta_Tokenizer* t, Meta_Token token, String str) {$/;"	f	language:C++	typeref:typename:b32_t	file:
@@ -1439,8 +1444,8 @@ min	code/lit_profiler_rendering.h	/^  f64_t min;$/;"	m	language:C++	struct:profi
 min	code/moe_gfx_opengl.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:ogl_uv_t	typeref:typename:v2f_t
 min	code/moe_profiler_rendering.h	/^  f64_t min;$/;"	m	language:C++	struct:profiler_stat_t	typeref:typename:f64_t
 min_of	code/momo_types.h	/^#define min_of(/;"	d	language:C++
-min_x	D:/work/git/moom/code/moe_gfx.h	/^  f32_t min_x, max_x;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
-min_y	D:/work/git/moom/code/moe_gfx.h	/^  f32_t min_y, max_y;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
+min_x	code/moe_gfx.h	/^  f32_t min_x, max_x;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
+min_y	code/moe_gfx.h	/^  f32_t min_y, max_y;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
 missingLibrarySymbol	build/a.out.js	/^function missingLibrarySymbol(sym) {$/;"	f	language:JavaScript
 missingLibrarySymbols	build/a.out.js	/^var missingLibrarySymbols = [$/;"	v	language:JavaScript
 mkdev	build/a.out.js	/^  mkdev: function() { FS.error() },$/;"	m	language:JavaScript	class:FS
@@ -1460,7 +1465,7 @@ moe_functions_t	code/moe_platform.h	/^typedef struct moe_functions_t {$/;"	s	lan
 moe_functions_t	code/moe_platform.h	/^} moe_functions_t;$/;"	t	language:C++	typeref:struct:moe_functions_t
 moe_function_names	code/moe_platform.h	/^static const char* moe_function_names[] {$/;"	v	language:C++	typeref:typename:const char * []
 MOE_GAME_API	code/moe_game_api.h	/^#define MOE_GAME_API$/;"	d	language:C++
-MOE_GFX_H	D:/work/git/moom/code/moe_gfx.h	/^#define MOE_GFX_H$/;"	d	language:C++
+MOE_GFX_H	code/moe_gfx.h	/^#define MOE_GFX_H$/;"	d	language:C++
 MOE_H	code/moe.h	/^#define MOE_H$/;"	d	language:C++
 moe_height	code/w32_moe.h	/^  f32_t moe_height;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t
 MOE_INSPECTOR_H	code/moe_inspector.h	/^#define MOE_INSPECTOR_H$/;"	d	language:C++
@@ -1488,8 +1493,8 @@ MOMO_RECT_PACK_H	code/momo_rect_pack.h	/^#define MOMO_RECT_PACK_H$/;"	d	language
 MOMO_SHAPES_H	code/momo_bonk.h	/^#define MOMO_SHAPES_H$/;"	d	language:C++
 MOMO_SORT_H	code/momo_sort.h	/^#define MOMO_SORT_H$/;"	d	language:C++
 MOMO_STREAM_H	code/momo_streams.h	/^#define MOMO_STREAM_H$/;"	d	language:C++
-MOMO_STRING_H	D:/work/git/moom/code/momo_strings.h	/^#define MOMO_STRING_H$/;"	d	language:C++
-MOMO_TTF_H	D:/work/git/moom/code/momo_ttf.h	/^#define MOMO_TTF_H$/;"	d	language:C++
+MOMO_STRING_H	code/momo_strings.h	/^#define MOMO_STRING_H$/;"	d	language:C++
+MOMO_TTF_H	code/momo_ttf.h	/^#define MOMO_TTF_H$/;"	d	language:C++
 MOMO_TYPES_H	code/momo_types.h	/^#define MOMO_TYPES_H$/;"	d	language:C++
 MOMO_VECTOR_H	code/momo_vectors.h	/^#define MOMO_VECTOR_H$/;"	d	language:C++
 MOMO_WAV_H	code/momo_wav.h	/^#define MOMO_WAV_H$/;"	d	language:C++
@@ -1519,14 +1524,14 @@ ns_end	code/momo_types.h	/^# define ns_end(/;"	d	language:C++
 num_channels	code/momo_wav.h	/^  u16_t num_channels;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 obj	build/test_json.json	/^  "obj": { $/;"	o	language:JSON
 obj	C:/users/geral/work/moom/code/momo_json.h	/^    json_object_t obj;$/;"	m	language:C++	union:_json_value_t::__anon6c4b32a4010a	typeref:typename:json_object_t
-object	code/momo_json.h	/^    json_object_t object;$/;"	m	language:C++	union:json_value_t::__anond7a9c0d6010a	typeref:typename:json_object_t
+object	code/momo_json.h	/^    json_object_t object;$/;"	m	language:C++	union:json_value_t::__anond7a9c0d6030a	typeref:typename:json_object_t
 Object	D:/work/git/moom/code/gist_type_erasure.cpp	/^    Object(T&& obj): object(std::make_shared<Model<T>>(std::forward<T>(obj))){$/;"	f	language:C++	class:Object	file:
 object	D:/work/git/moom/code/gist_type_erasure.cpp	/^   std::shared_ptr<const Concept> object;$/;"	m	language:C++	class:Object	typeref:typename:std::shared_ptr<const Concept>	file:
 Object	D:/work/git/moom/code/gist_type_erasure.cpp	/^class Object {                                              \/\/ (2)$/;"	c	language:C++	file:
 offset_of	code/momo_types.h	/^#define offset_of(/;"	d	language:C++
 offset_to_assets	code/karu.h	/^  u32_t offset_to_assets;$/;"	m	language:C++	struct:karu_header_t	typeref:typename:u32_t
 offset_to_data	code/karu.h	/^  u32_t offset_to_data;$/;"	m	language:C++	struct:karu_asset_t	typeref:typename:u32_t
-offset_to_data	code/karu.h	/^  u32_t offset_to_data;$/;"	m	language:C++	struct:Karu_Font	typeref:typename:u32_t
+offset_to_data	code/karu.h	/^  u32_t offset_to_data;$/;"	m	language:C++	struct:karu_font_t	typeref:typename:u32_t
 offset_to_data	code/moe_assets.h	/^  u32_t offset_to_data;$/;"	m	language:C++	struct:asset_slot_t	typeref:typename:u32_t
 offset_to_groups	code/karu.h	/^  u32_t offset_to_groups;$/;"	m	language:C++	struct:karu_header_t	typeref:typename:u32_t
 offset_to_tags	code/karu.h	/^  u32_t offset_to_tags;$/;"	m	language:C++	struct:karu_header_t	typeref:typename:u32_t
@@ -1646,12 +1651,12 @@ ope	code/meta.cpp	/^  u32_t ope;$/;"	m	language:C++	struct:Meta_Token	typeref:ty
 open	build/a.out.js	/^  open: function() { FS.error() },$/;"	m	language:JavaScript	class:FS
 Opengl	code/moe_gfx_opengl.h	/^struct Opengl {$/;"	s	language:C++
 open_file	code/moe_platform.h	/^  platform_open_file_f* open_file;$/;"	m	language:C++	struct:__anonb345dcaa0708	typeref:typename:platform_open_file_f *
+operator !=	code/momo_strings.h	/^static b32_t operator!=(str8_t lhs, str8_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t
+operator !=	code/momo_strings.h	/^static b32_t operator!=(str8_t lhs, str8_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
 operator !=	code/momo_vectors.h	/^static b32_t  operator!=(v2f_t lhs, v2f_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
 operator !=	code/momo_vectors.h	/^static b32_t operator!=(v2f_t lhs, v2f_t rhs) { return !v2f_is_close(lhs, rhs); }$/;"	f	language:C++	typeref:typename:b32_t
 operator !=	code/momo_vectors.h	/^static b32_t operator!=(v3f_t lhs, v3f_t rhs) { return !v3f_is_close(lhs, rhs); }$/;"	f	language:C++	typeref:typename:b32_t
 operator !=	code/momo_vectors.h	/^static b32_t operator!=(v3f_t lhs, v3f_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
-operator !=	D:/work/git/moom/code/momo_strings.h	/^static b32_t operator!=(str8_t lhs, str8_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t
-operator !=	D:/work/git/moom/code/momo_strings.h	/^static b32_t operator!=(str8_t lhs, str8_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
 operator *	code/momo_matrix.h	/^static m44f_t operator*(m44f_t lhs, m44f_t rhs) {$/;"	f	language:C++	typeref:typename:m44f_t
 operator *	code/momo_matrix.h	/^static m44f_t operator*(m44f_t lhs, m44f_t rhs);$/;"	p	language:C++	typeref:typename:m44f_t
 operator *	code/momo_vectors.h	/^static v2f_t  operator*(f32_t lhs, v2f_t rhs) { return v2f_scale(rhs, lhs); }$/;"	f	language:C++	typeref:typename:v2f_t
@@ -1689,12 +1694,12 @@ operator -=	code/momo_vectors.h	/^static v2f_t& operator-=(v2f_t& lhs, v2f_t rhs
 operator -=	code/momo_vectors.h	/^static v2f_t& operator-=(v2f_t& lhs, v2f_t rhs);$/;"	p	language:C++	typeref:typename:v2f_t &
 operator -=	code/momo_vectors.h	/^static v3f_t& operator-=(v3f_t& lhs, v3f_t rhs) { return lhs = v3f_sub(lhs, rhs); } $/;"	f	language:C++	typeref:typename:v3f_t &
 operator -=	code/momo_vectors.h	/^static v3f_t& operator-=(v3f_t& lhs, v3f_t rhs);$/;"	p	language:C++	typeref:typename:v3f_t &
+operator ==	code/momo_strings.h	/^static b32_t operator==(str8_t lhs, str8_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t
+operator ==	code/momo_strings.h	/^static b32_t operator==(str8_t lhs, str8_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
 operator ==	code/momo_vectors.h	/^static b32_t  operator==(v2f_t lhs, v2f_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
 operator ==	code/momo_vectors.h	/^static b32_t operator==(v2f_t lhs, v2f_t rhs) { return v2f_is_close(lhs, rhs); }$/;"	f	language:C++	typeref:typename:b32_t
 operator ==	code/momo_vectors.h	/^static b32_t operator==(v3f_t lhs, v3f_t rhs) { return v3f_is_close(lhs, rhs); }$/;"	f	language:C++	typeref:typename:b32_t
 operator ==	code/momo_vectors.h	/^static b32_t operator==(v3f_t lhs, v3f_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
-operator ==	D:/work/git/moom/code/momo_strings.h	/^static b32_t operator==(str8_t lhs, str8_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t
-operator ==	D:/work/git/moom/code/momo_strings.h	/^static b32_t operator==(str8_t lhs, str8_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
 OS_LINUX	code/momo_types.h	/^# define OS_LINUX /;"	d	language:C++
 OS_LINUX	code/momo_types.h	/^# define OS_LINUX /;"	d	language:C++
 OS_MAC	code/momo_types.h	/^# define OS_MAC /;"	d	language:C++
@@ -1705,13 +1710,13 @@ out	code/test_png.h	/^    const char* out;$/;"	m	language:C++	struct:test_png::_
 output	build/web.html	/^    <textarea id="output" rows="8"><\/textarea>$/;"	I	language:HTML
 overlay_timer	code/lit_menu.h	/^  f32_t overlay_timer;$/;"	m	language:C++	struct:lit_menu_t	typeref:typename:f32_t
 p0	code/lit_game.h	/^  v2f_t p0, p1, p2;$/;"	m	language:C++	struct:lit_light_triangle_t	typeref:typename:v2f_t
-p0	D:/work/git/moom/code/moe_gfx.h	/^  v2f_t p0, p1, p2;$/;"	m	language:C++	struct:gfx_command_triangle_t	typeref:typename:v2f_t
-p0	D:/work/git/moom/code/momo_ttf.h	/^  v2f_t p0, p1;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:v2f_t
+p0	code/moe_gfx.h	/^  v2f_t p0, p1, p2;$/;"	m	language:C++	struct:gfx_command_triangle_t	typeref:typename:v2f_t
+p0	code/momo_ttf.h	/^  v2f_t p0, p1;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:v2f_t
 p1	code/lit_game.h	/^  v2f_t p0, p1, p2;$/;"	m	language:C++	struct:lit_light_triangle_t	typeref:typename:v2f_t
-p1	D:/work/git/moom/code/moe_gfx.h	/^  v2f_t p0, p1, p2;$/;"	m	language:C++	struct:gfx_command_triangle_t	typeref:typename:v2f_t
-p1	D:/work/git/moom/code/momo_ttf.h	/^  v2f_t p0, p1;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:v2f_t
+p1	code/moe_gfx.h	/^  v2f_t p0, p1, p2;$/;"	m	language:C++	struct:gfx_command_triangle_t	typeref:typename:v2f_t
+p1	code/momo_ttf.h	/^  v2f_t p0, p1;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:v2f_t
 p2	code/lit_game.h	/^  v2f_t p0, p1, p2;$/;"	m	language:C++	struct:lit_light_triangle_t	typeref:typename:v2f_t
-p2	D:/work/git/moom/code/moe_gfx.h	/^  v2f_t p0, p1, p2;$/;"	m	language:C++	struct:gfx_command_triangle_t	typeref:typename:v2f_t
+p2	code/moe_gfx.h	/^  v2f_t p0, p1, p2;$/;"	m	language:C++	struct:gfx_command_triangle_t	typeref:typename:v2f_t
 particles	code/lit_game.h	/^  lit_particle_pool_t particles;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_particle_pool_t
 particles	code/lit_game.h	/^  lit_particle_t particles[256];$/;"	m	language:C++	struct:lit_particle_pool_t	typeref:typename:lit_particle_t[256]
 particle_cd	code/lit_game.h	/^  f32_t particle_cd;$/;"	m	language:C++	struct:lit_sensor_t	typeref:typename:f32_t
@@ -1756,12 +1761,12 @@ path7	build/web.html	/^   id="path7" \/><g$/;"	I	language:HTML
 path92	build/web.html	/^   id="path92" \/><path$/;"	I	language:HTML
 path94	build/web.html	/^   id="path94" \/><\/g><\/g><path$/;"	I	language:HTML
 path96	build/web.html	/^   id="path96" \/><linearGradient$/;"	I	language:HTML
-path_count	D:/work/git/moom/code/momo_ttf.h	/^  u32_t path_count;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:u32_t
-path_lengths	D:/work/git/moom/code/momo_ttf.h	/^  u32_t* path_lengths;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:u32_t *
+path_count	code/momo_ttf.h	/^  u32_t path_count;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:u32_t
+path_lengths	code/momo_ttf.h	/^  u32_t* path_lengths;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:u32_t *
 patrol_edge	code/lit_game.h	/^    lit_animator_patrol_edge_t patrol_edge;$/;"	m	language:C++	union:lit_animator_t::__anon4d532547010a	typeref:typename:lit_animator_patrol_edge_t
 patrol_sensor	code/lit_game.h	/^    lit_animator_patrol_sensor_t patrol_sensor;$/;"	m	language:C++	union:lit_animator_t::__anon4d532547010a	typeref:typename:lit_animator_patrol_sensor_t
-payloads	D:/work/git/moom/code/moe_gfx.h	/^  gfx_texture_payload_t payloads[GFX_MAX_TEXTURES];$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:gfx_texture_payload_t[]
-payload_count	D:/work/git/moom/code/moe_gfx.h	/^  umi_t payload_count;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
+payloads	code/moe_gfx.h	/^  gfx_texture_payload_t payloads[GFX_MAX_TEXTURES];$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:gfx_texture_payload_t[]
+payload_count	code/moe_gfx.h	/^  umi_t payload_count;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
 pixels	code/sui_atlas.h	/^  u32_t* pixels;$/;"	m	language:C++	struct:sui_atlas_bitmap_t	typeref:typename:u32_t *
 pixels	code/sui_pack.h	/^  u32_t* pixels;$/;"	m	language:C++	struct:sui_packer_source_bitmap_t	typeref:typename:u32_t *
 PI_32	code/momo_types.h	/^#define PI_32 /;"	d	language:C++
@@ -1814,21 +1819,22 @@ png_write	code/momo_png.h	/^png_write(u32_t* pixels, u32_t width, u32_t height, 
 png_write	code/momo_png.h	/^static void*   png_write(png_t* png, umi_t* out_size, arena_t* arena);$/;"	p	language:C++	typeref:typename:void *
 pointerLock	build/web.html	/^  <span><input type="checkbox" id="pointerLock" checked>Lock\/hide mouse pointer &nbsp;&nbsp;&nb/;"	I	language:HTML
 POINTER_SIZE	build/a.out.js	/^var POINTER_SIZE = 4;$/;"	v	language:JavaScript
-points	D:/work/git/moom/code/momo_ttf.h	/^  _ttf_glyph_point_t* points;$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:_ttf_glyph_point_t *
-point_count	D:/work/git/moom/code/momo_ttf.h	/^  u32_t point_count;$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u32_t
+points	code/momo_ttf.h	/^  _ttf_glyph_point_t* points;$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:_ttf_glyph_point_t *
+point_count	code/momo_ttf.h	/^  u32_t point_count;$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u32_t
+point_of_rotation	code/lit_game.h	/^  v2f_t point_of_rotation;$/;"	m	language:C++	struct:lit_animator_rotate_sensor_t	typeref:typename:v2f_t
 polygon69	build/web.html	/^   id="polygon69" \/><g$/;"	I	language:HTML
 pos	code/lit_game.h	/^  v2f_t pos, vel;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t
 pos	code/lit_game.h	/^  v2f_t pos;  $/;"	m	language:C++	struct:lit_light_t	typeref:typename:v2f_t
 pos	code/lit_game.h	/^  v2f_t pos;$/;"	m	language:C++	struct:lit_player_t	typeref:typename:v2f_t
 pos	code/lit_game.h	/^  v2f_t pos;$/;"	m	language:C++	struct:lit_sensor_t	typeref:typename:v2f_t
+pos	code/moe_gfx.h	/^  v2f_t pos;$/;"	m	language:C++	struct:gfx_command_rect_t	typeref:typename:v2f_t
+pos	code/moe_gfx.h	/^  v2f_t pos;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:v2f_t
 pos	code/momo_arena.h	/^	umi_t pos;$/;"	m	language:C++	struct:arena_t	typeref:typename:umi_t
 pos	code/momo_streams.h	/^  umi_t pos;$/;"	m	language:C++	struct:stream_t	typeref:typename:umi_t
-pos	D:/work/git/moom/code/moe_gfx.h	/^  v2f_t pos;$/;"	m	language:C++	struct:gfx_command_rect_t	typeref:typename:v2f_t
-pos	D:/work/git/moom/code/moe_gfx.h	/^  v2f_t pos;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:v2f_t
 positive_float	build/test_json.json	/^  "positive_float": 123.321,$/;"	n	language:JSON
 postRun	build/a.out.js	/^function postRun() {$/;"	f	language:JavaScript
-pos_x	D:/work/git/moom/code/moe_gfx.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
-pos_y	D:/work/git/moom/code/moe_gfx.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
+pos_x	code/moe_gfx.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
+pos_y	code/moe_gfx.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
 preMain	build/a.out.js	/^function preMain() {$/;"	f	language:JavaScript
 preRun	build/a.out.js	/^function preRun() {$/;"	f	language:JavaScript
 prev	code/gist_linked_list.cpp	/^  gist_cdl_node* prev;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
@@ -1938,8 +1944,9 @@ rng_unilateral	code/momo_rng.h	/^rng_unilateral(rng_t* r)$/;"	f	language:C++	typ
 rng_unit_circle	code/momo_rng.h	/^rng_unit_circle(rng_t* r) {$/;"	f	language:C++	typeref:typename:v2f_t
 root	C:/users/geral/work/moom/code/momo_json.h	/^  json_object_t root;$/;"	m	language:C++	struct:json_t	typeref:typename:json_object_t
 root	code/momo_json.h	/^  json_object_t root;$/;"	m	language:C++	struct:json_t	typeref:typename:json_object_t
-rot	D:/work/git/moom/code/moe_gfx.h	/^  f32_t rot;$/;"	m	language:C++	struct:gfx_command_rect_t	typeref:typename:f32_t
+rot	code/moe_gfx.h	/^  f32_t rot;$/;"	m	language:C++	struct:gfx_command_rect_t	typeref:typename:f32_t
 rotate_edge	code/lit_game.h	/^    lit_animator_rotate_edge_t rotate_edge;$/;"	m	language:C++	union:lit_animator_t::__anon4d532547010a	typeref:typename:lit_animator_rotate_edge_t
+rotate_sensor	code/lit_game.h	/^    lit_animator_rotate_sensor_t rotate_sensor;$/;"	m	language:C++	union:lit_animator_t::__anon4d532547010a	typeref:typename:lit_animator_rotate_sensor_t
 rp_pack	code/momo_rect_pack.h	/^rp_pack(rp_rect_t* rects, $/;"	f	language:C++	typeref:typename:b32_t
 rp_pack	code/momo_rect_pack.h	/^rp_pack(rp_rect_t* rects, $/;"	p	language:C++	typeref:typename:b32_t
 rp_rect_t	code/momo_rect_pack.h	/^struct rp_rect_t{$/;"	s	language:C++
@@ -1979,39 +1986,39 @@ samples_per_second	code/w32_audio_wasapi.h	/^  u32_t samples_per_second;$/;"	m	l
 sample_buffer	code/moe_platform.h	/^  s16_t* sample_buffer;$/;"	m	language:C++	struct:__anonb345dcaa0508	typeref:typename:s16_t *
 sample_count	code/moe_platform.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:__anonb345dcaa0508	typeref:typename:u32_t
 sample_rate	code/momo_wav.h	/^  u32_t sample_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
-sb8_clear	D:/work/git/moom/code/momo_strings.h	/^sb8_clear(sb8_t* b) {$/;"	f	language:C++	typeref:typename:void
-sb8_clear	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_clear(sb8_t* b);$/;"	p	language:C++	typeref:typename:void
-sb8_init	D:/work/git/moom/code/momo_strings.h	/^sb8_init(sb8_t* b, u8_t* data, umi_t cap) {$/;"	f	language:C++	typeref:typename:void
-sb8_init	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_init(sb8_t* b, u8_t* data, umi_t cap);$/;"	p	language:C++	typeref:typename:void
-sb8_make	D:/work/git/moom/code/momo_strings.h	/^#define sb8_make(/;"	d	language:C++
-sb8_pop	D:/work/git/moom/code/momo_strings.h	/^sb8_pop(sb8_t* b) {$/;"	f	language:C++	typeref:typename:void
-sb8_pop	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_pop(sb8_t* b);$/;"	p	language:C++	typeref:typename:void
-sb8_push_c8	D:/work/git/moom/code/momo_strings.h	/^sb8_push_c8(sb8_t* b, c8_t num) {$/;"	f	language:C++	typeref:typename:void
-sb8_push_c8	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_push_c8(sb8_t* b, c8_t num);$/;"	p	language:C++	typeref:typename:void
-sb8_push_f32	D:/work/git/moom/code/momo_strings.h	/^sb8_push_f32(sb8_t* b, f32_t value, u32_t precision) {$/;"	f	language:C++	typeref:typename:void
-sb8_push_f32	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_push_f32(sb8_t* b, f32_t value, u32_t precision);$/;"	p	language:C++	typeref:typename:void
-sb8_push_f64	D:/work/git/moom/code/momo_strings.h	/^sb8_push_f64(sb8_t* b, f64_t value, u32_t precision) {$/;"	f	language:C++	typeref:typename:void
-sb8_push_fmt	D:/work/git/moom/code/momo_strings.h	/^sb8_push_fmt(sb8_t* b, str8_t fmt, ...) {$/;"	f	language:C++	typeref:typename:void
-sb8_push_fmt	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_push_fmt(sb8_t* b, str8_t fmt, ...);$/;"	p	language:C++	typeref:typename:void
-sb8_push_hex_u32	D:/work/git/moom/code/momo_strings.h	/^sb8_push_hex_u32(sb8_t* b, u32_t value) {$/;"	f	language:C++	typeref:typename:void
-sb8_push_hex_u32	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_push_hex_u32(sb8_t* b, u32_t num);$/;"	p	language:C++	typeref:typename:void
-sb8_push_hex_u8	D:/work/git/moom/code/momo_strings.h	/^sb8_push_hex_u8(sb8_t* b, u8_t value) {$/;"	f	language:C++	typeref:typename:void
-sb8_push_hex_u8	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_push_hex_u8(sb8_t* b, u8_t num);$/;"	p	language:C++	typeref:typename:void
-sb8_push_s32	D:/work/git/moom/code/momo_strings.h	/^sb8_push_s32(sb8_t* b, s32_t num) {$/;"	f	language:C++	typeref:typename:void
-sb8_push_s32	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_push_s32(sb8_t* b, s32_t num);$/;"	p	language:C++	typeref:typename:void
-sb8_push_s64	D:/work/git/moom/code/momo_strings.h	/^sb8_push_s64(sb8_t* b, s64_t num) {$/;"	f	language:C++	typeref:typename:void
-sb8_push_s64	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_push_s64(sb8_t* b, s64_t num);$/;"	p	language:C++	typeref:typename:void
-sb8_push_str8	D:/work/git/moom/code/momo_strings.h	/^sb8_push_str8(sb8_t* b, str8_t src) {$/;"	f	language:C++	typeref:typename:void
-sb8_push_str8	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_push_str8(sb8_t* b, str8_t num);$/;"	p	language:C++	typeref:typename:void
-sb8_push_u32	D:/work/git/moom/code/momo_strings.h	/^sb8_push_u32(sb8_t* b, u32_t num) {$/;"	f	language:C++	typeref:typename:void
-sb8_push_u32	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_push_u32(sb8_t* b, u32_t num);$/;"	p	language:C++	typeref:typename:void
-sb8_push_u64	D:/work/git/moom/code/momo_strings.h	/^sb8_push_u64(sb8_t* b, u64_t num) {$/;"	f	language:C++	typeref:typename:void
-sb8_push_u64	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_push_u64(sb8_t* b, u64_t num);$/;"	p	language:C++	typeref:typename:void
-sb8_push_u8	D:/work/git/moom/code/momo_strings.h	/^sb8_push_u8(sb8_t* b, u8_t num) {$/;"	f	language:C++	typeref:typename:void
-sb8_push_u8	D:/work/git/moom/code/momo_strings.h	/^static void     sb8_push_u8(sb8_t* b, u8_t num);$/;"	p	language:C++	typeref:typename:void
-sb8_remaining	D:/work/git/moom/code/momo_strings.h	/^sb8_remaining(sb8_t* b) {$/;"	f	language:C++	typeref:typename:umi_t
-sb8_remaining	D:/work/git/moom/code/momo_strings.h	/^static umi_t    sb8_remaining(sb8_t* b);$/;"	p	language:C++	typeref:typename:umi_t
-sb8_t	D:/work/git/moom/code/momo_strings.h	/^struct sb8_t{$/;"	s	language:C++
+sb8_clear	code/momo_strings.h	/^sb8_clear(sb8_t* b) {$/;"	f	language:C++	typeref:typename:void
+sb8_clear	code/momo_strings.h	/^static void     sb8_clear(sb8_t* b);$/;"	p	language:C++	typeref:typename:void
+sb8_init	code/momo_strings.h	/^sb8_init(sb8_t* b, u8_t* data, umi_t cap) {$/;"	f	language:C++	typeref:typename:void
+sb8_init	code/momo_strings.h	/^static void     sb8_init(sb8_t* b, u8_t* data, umi_t cap);$/;"	p	language:C++	typeref:typename:void
+sb8_make	code/momo_strings.h	/^#define sb8_make(/;"	d	language:C++
+sb8_pop	code/momo_strings.h	/^sb8_pop(sb8_t* b) {$/;"	f	language:C++	typeref:typename:void
+sb8_pop	code/momo_strings.h	/^static void     sb8_pop(sb8_t* b);$/;"	p	language:C++	typeref:typename:void
+sb8_push_c8	code/momo_strings.h	/^sb8_push_c8(sb8_t* b, c8_t num) {$/;"	f	language:C++	typeref:typename:void
+sb8_push_c8	code/momo_strings.h	/^static void     sb8_push_c8(sb8_t* b, c8_t num);$/;"	p	language:C++	typeref:typename:void
+sb8_push_f32	code/momo_strings.h	/^sb8_push_f32(sb8_t* b, f32_t value, u32_t precision) {$/;"	f	language:C++	typeref:typename:void
+sb8_push_f32	code/momo_strings.h	/^static void     sb8_push_f32(sb8_t* b, f32_t value, u32_t precision);$/;"	p	language:C++	typeref:typename:void
+sb8_push_f64	code/momo_strings.h	/^sb8_push_f64(sb8_t* b, f64_t value, u32_t precision) {$/;"	f	language:C++	typeref:typename:void
+sb8_push_fmt	code/momo_strings.h	/^sb8_push_fmt(sb8_t* b, str8_t fmt, ...) {$/;"	f	language:C++	typeref:typename:void
+sb8_push_fmt	code/momo_strings.h	/^static void     sb8_push_fmt(sb8_t* b, str8_t fmt, ...);$/;"	p	language:C++	typeref:typename:void
+sb8_push_hex_u32	code/momo_strings.h	/^sb8_push_hex_u32(sb8_t* b, u32_t value) {$/;"	f	language:C++	typeref:typename:void
+sb8_push_hex_u32	code/momo_strings.h	/^static void     sb8_push_hex_u32(sb8_t* b, u32_t num);$/;"	p	language:C++	typeref:typename:void
+sb8_push_hex_u8	code/momo_strings.h	/^sb8_push_hex_u8(sb8_t* b, u8_t value) {$/;"	f	language:C++	typeref:typename:void
+sb8_push_hex_u8	code/momo_strings.h	/^static void     sb8_push_hex_u8(sb8_t* b, u8_t num);$/;"	p	language:C++	typeref:typename:void
+sb8_push_s32	code/momo_strings.h	/^sb8_push_s32(sb8_t* b, s32_t num) {$/;"	f	language:C++	typeref:typename:void
+sb8_push_s32	code/momo_strings.h	/^static void     sb8_push_s32(sb8_t* b, s32_t num);$/;"	p	language:C++	typeref:typename:void
+sb8_push_s64	code/momo_strings.h	/^sb8_push_s64(sb8_t* b, s64_t num) {$/;"	f	language:C++	typeref:typename:void
+sb8_push_s64	code/momo_strings.h	/^static void     sb8_push_s64(sb8_t* b, s64_t num);$/;"	p	language:C++	typeref:typename:void
+sb8_push_str8	code/momo_strings.h	/^sb8_push_str8(sb8_t* b, str8_t src) {$/;"	f	language:C++	typeref:typename:void
+sb8_push_str8	code/momo_strings.h	/^static void     sb8_push_str8(sb8_t* b, str8_t num);$/;"	p	language:C++	typeref:typename:void
+sb8_push_u32	code/momo_strings.h	/^sb8_push_u32(sb8_t* b, u32_t num) {$/;"	f	language:C++	typeref:typename:void
+sb8_push_u32	code/momo_strings.h	/^static void     sb8_push_u32(sb8_t* b, u32_t num);$/;"	p	language:C++	typeref:typename:void
+sb8_push_u64	code/momo_strings.h	/^sb8_push_u64(sb8_t* b, u64_t num) {$/;"	f	language:C++	typeref:typename:void
+sb8_push_u64	code/momo_strings.h	/^static void     sb8_push_u64(sb8_t* b, u64_t num);$/;"	p	language:C++	typeref:typename:void
+sb8_push_u8	code/momo_strings.h	/^sb8_push_u8(sb8_t* b, u8_t num) {$/;"	f	language:C++	typeref:typename:void
+sb8_push_u8	code/momo_strings.h	/^static void     sb8_push_u8(sb8_t* b, u8_t num);$/;"	p	language:C++	typeref:typename:void
+sb8_remaining	code/momo_strings.h	/^sb8_remaining(sb8_t* b) {$/;"	f	language:C++	typeref:typename:umi_t
+sb8_remaining	code/momo_strings.h	/^static umi_t    sb8_remaining(sb8_t* b);$/;"	p	language:C++	typeref:typename:umi_t
+sb8_t	code/momo_strings.h	/^struct sb8_t{$/;"	s	language:C++
 sccount	code/momo_json.h	/^static u32_t sccount = 0;$/;"	v	language:C++	typeref:typename:u32_t
 scope	C:/users/geral/work/moom/code/momo_json.h	/^static u32_t scope = 0;$/;"	v	language:C++	typeref:typename:u32_t
 scriptDirectory	build/a.out.js	/^var scriptDirectory = '';$/;"	v	language:JavaScript
@@ -2021,6 +2028,7 @@ selected_animator	code/lit_game.h	/^  lit_animator_t* selected_animator;$/;"	m	l
 selected_sensor	code/lit_game.h	/^  lit_sensor_t* selected_sensor; \/\/ for animated sensor APIs$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_sensor_t *
 selector_color	code/lit_menu.h	/^  rgba_t selector_color;$/;"	m	language:C++	struct:lit_menu_t	typeref:typename:rgba_t
 semaphore	code/w32_moe.h	/^  HANDLE semaphore; $/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:HANDLE
+sensor	code/lit_game.h	/^  lit_sensor_t* sensor; $/;"	m	language:C++	struct:lit_animator_rotate_sensor_t	typeref:typename:lit_sensor_t *
 sensor	code/lit_game.h	/^  lit_sensor_t* sensor;$/;"	m	language:C++	struct:lit_animator_patrol_sensor_t	typeref:typename:lit_sensor_t *
 sensors	code/lit_game.h	/^  lit_sensor_t sensors[32];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_sensor_t[32]
 sensors_activated	code/lit_game.h	/^  u32_t sensors_activated;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
@@ -2037,22 +2045,23 @@ show_debug_type	code/lit.h	/^  lit_show_debug_type_t show_debug_type;$/;"	m	lang
 signature	code/karu.h	/^  u32_t signature;$/;"	m	language:C++	struct:karu_header_t	typeref:typename:u32_t
 signature	code/momo_png.h	/^  u8_t signature[8];$/;"	m	language:C++	struct:_png_chunk_t	typeref:typename:u8_t[8]
 signed_item3	build/test_json.json	/^    "signed_item3":-123$/;"	n	language:JSON	object:next_obj
+size	code/moe_gfx.h	/^  v2f_t size;$/;"	m	language:C++	struct:gfx_command_rect_t	typeref:typename:v2f_t
+size	code/moe_gfx.h	/^  v2f_t size;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:v2f_t
 size	code/moe_platform.h	/^  umi_t size;$/;"	m	language:C++	struct:__anonb345dcaa0108	typeref:typename:umi_t
 size	code/momo_streams.h	/^  umi_t size;$/;"	m	language:C++	struct:stream_t	typeref:typename:umi_t
 size	code/momo_wav.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_data_chunk_t	typeref:typename:u32_t
 size	code/momo_wav.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 size	code/momo_wav.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_riff_chunk_t	typeref:typename:u32_t
-size	D:/work/git/moom/code/moe_gfx.h	/^  v2f_t size;$/;"	m	language:C++	struct:gfx_command_rect_t	typeref:typename:v2f_t
-size	D:/work/git/moom/code/moe_gfx.h	/^  v2f_t size;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:v2f_t
 size_end	code/lit_game.h	/^  v2f_t size_start, size_end;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t
 size_start	code/lit_game.h	/^  v2f_t size_start, size_end;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t
-sll_append	code/momo_ds.h	/^#define sll_append(/;"	d	language:C++
-sll_prepend	code/momo_ds.h	/^#define sll_prepend(/;"	d	language:C++
+sll_append	code/momo_types.h	/^#define sll_append(/;"	d	language:C++
+sll_prepend	code/momo_types.h	/^#define sll_prepend(/;"	d	language:C++
 smi_t	code/momo_types.h	/^typedef intptr_t  smi_t; \/\/ aka 'signed memory index'$/;"	t	language:C++	typeref:typename:intptr_t
 snapshots	code/moe_profiler.h	/^  profiler_snapshot_t snapshots[PROFILER_MAX_SNAPSHOTS];$/;"	m	language:C++	struct:profiler_entry_t	typeref:typename:profiler_snapshot_t[]
 snapshot_index	code/moe_profiler.h	/^  u32_t snapshot_index;$/;"	m	language:C++	struct:profiler_t	typeref:typename:u32_t
 sort_entry_t	code/momo_sort.h	/^struct sort_entry_t {$/;"	s	language:C++
 sources	code/sui_pack.h	/^  sui_packer_source_t sources[1024]; \/\/ additional data for assets$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:sui_packer_source_t[1024]
+speed	code/lit_game.h	/^  f32_t speed;$/;"	m	language:C++	struct:lit_animator_rotate_sensor_t	typeref:typename:f32_t
 spinner	build/web.html	/^    <div class="spinner" id='spinner'><\/div>$/;"	I	language:HTML
 splash	code/lit.h	/^    lit_splash_t splash;$/;"	m	language:C++	union:lit_t::__anon65aa720e010a	typeref:typename:lit_splash_t
 sprite	code/karu.h	/^    karu_sprite_t sprite;$/;"	m	language:C++	union:karu_asset_t::__anon1812d558010a	typeref:typename:karu_sprite_t
@@ -2065,7 +2074,7 @@ sprite_batch	code/moe_gfx_opengl.h	/^  Sprite_Batch sprite_batch;$/;"	m	language
 Sprite_Batch	code/moe_gfx_opengl.h	/^} Sprite_Batch;$/;"	t	language:C++	typeref:struct:__anon0f5c060e0808
 sprite_count	code/sui_atlas.h	/^  u32_t sprite_count;$/;"	m	language:C++	struct:sui_atlas_t	typeref:typename:u32_t
 sprite_id	code/lit_game.h	/^  asset_sprite_id_t sprite_id;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:asset_sprite_id_t
-src	D:/work/git/moom/code/moe_gfx.h	/^  gfx_blend_type_t src;$/;"	m	language:C++	struct:gfx_command_blend_t	typeref:typename:gfx_blend_type_t
+src	code/moe_gfx.h	/^  gfx_blend_type_t src;$/;"	m	language:C++	struct:gfx_command_blend_t	typeref:typename:gfx_blend_type_t
 stackCheckInit	build/a.out.js	/^function stackCheckInit() {$/;"	f	language:JavaScript
 STACK_ALIGN	build/a.out.js	/^var STACK_ALIGN = 16;$/;"	v	language:JavaScript
 stage_fade_timer	code/lit_game.h	/^  f32_t stage_fade_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t
@@ -2078,7 +2087,7 @@ start_pt	code/lit_game.h	/^  v2f_t start_pt;$/;"	m	language:C++	struct:lit_edge_
 state	code/lit_game.h	/^  lit_state_type_t state;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_state_type_t
 state	code/meta.cpp	/^  u32_t state; \/\/ $/;"	m	language:C++	struct:Profiler_Codegen	typeref:typename:u32_t	file:
 state	code/moe_assets.h	/^  asset_state_t state;$/;"	m	language:C++	struct:asset_slot_t	typeref:typename:asset_state_t
-state	D:/work/git/moom/code/moe_gfx.h	/^  volatile gfx_texture_payload_state_t state;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:volatile gfx_texture_payload_state_t
+state	code/moe_gfx.h	/^  volatile gfx_texture_payload_state_t state;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:volatile gfx_texture_payload_state_t
 status	build/web.html	/^    <div class="emscripten" id="status">Downloading...<\/div>$/;"	I	language:HTML
 stmt	code/momo_types.h	/^#define stmt(/;"	d	language:C++
 stop101	build/web.html	/^   id="stop101" \/><stop$/;"	I	language:HTML
@@ -2171,28 +2180,30 @@ stop86	build/web.html	/^   id="stop86" \/><stop$/;"	I	language:HTML
 stop88	build/web.html	/^   id="stop88" \/><stop$/;"	I	language:HTML
 stop90	build/web.html	/^   id="stop90" \/><a:midPointStop$/;"	I	language:HTML
 stop99	build/web.html	/^   id="stop99" \/><stop$/;"	I	language:HTML
-str	D:/work/git/moom/code/momo_strings.h	/^		str8_t str;$/;"	m	language:C++	union:sb8_t::__anon159c8120010a	typeref:typename:str8_t
-str8	D:/work/git/moom/code/momo_strings.h	/^static str8_t str8(u8_t* str, umi_t size);$/;"	p	language:C++	typeref:typename:str8_t
-str8	D:/work/git/moom/code/momo_strings.h	/^str8(u8_t* str, umi_t size) {$/;"	f	language:C++	typeref:typename:str8_t
-str8_compare_lexographically	D:/work/git/moom/code/momo_strings.h	/^str8_compare_lexographically(str8_t lhs, str8_t rhs) {$/;"	f	language:C++	typeref:typename:smi_t
-str8_from_cstr	D:/work/git/moom/code/momo_strings.h	/^static str8_t str8_from_cstr(const char* cstr);$/;"	p	language:C++	typeref:typename:str8_t
-str8_from_cstr	D:/work/git/moom/code/momo_strings.h	/^str8_from_cstr(const c8_t* cstr) {$/;"	f	language:C++	typeref:typename:str8_t
-str8_from_lit	D:/work/git/moom/code/momo_strings.h	/^#define str8_from_lit(/;"	d	language:C++
-str8_match	D:/work/git/moom/code/momo_strings.h	/^static b32_t str8_match(str8_t lhs, str8_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
-str8_match	D:/work/git/moom/code/momo_strings.h	/^str8_match(str8_t lhs, str8_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t
-str8_range_to	D:/work/git/moom/code/momo_strings.h	/^static b32_t str8_range_to(u32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
-str8_substr	D:/work/git/moom/code/momo_strings.h	/^static str8_t str8_substr(str8_t str, umi_t start, umi_t ope);$/;"	p	language:C++	typeref:typename:str8_t
-str8_substr	D:/work/git/moom/code/momo_strings.h	/^str8_substr(str8_t str, umi_t start, umi_t count) {$/;"	f	language:C++	typeref:typename:str8_t
-str8_t	D:/work/git/moom/code/momo_strings.h	/^struct str8_t{$/;"	s	language:C++
-str8_to_f32	D:/work/git/moom/code/momo_strings.h	/^static b32_t str8_to_f32(str8_t s, f32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
-str8_to_f32	D:/work/git/moom/code/momo_strings.h	/^str8_to_f32(str8_t s, f32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
-str8_to_f32_range	D:/work/git/moom/code/momo_strings.h	/^str8_to_f32_range(str8_t s, umi_t begin, umi_t ope, f32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
-str8_to_s32	D:/work/git/moom/code/momo_strings.h	/^static b32_t str8_to_s32(str8_t s, s32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
-str8_to_s32	D:/work/git/moom/code/momo_strings.h	/^str8_to_s32(str8_t s, s32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
-str8_to_s32_range	D:/work/git/moom/code/momo_strings.h	/^str8_to_s32_range(str8_t s, umi_t begin, umi_t ope, s32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
-str8_to_u32	D:/work/git/moom/code/momo_strings.h	/^static b32_t str8_to_u32(str8_t s, u32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
-str8_to_u32	D:/work/git/moom/code/momo_strings.h	/^str8_to_u32(str8_t s, u32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
-str8_to_u32_range	D:/work/git/moom/code/momo_strings.h	/^str8_to_u32_range(str8_t s, umi_t begin, umi_t ope, u32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
+str	code/momo_json.h	/^    str8_t str;$/;"	m	language:C++	union:json_element_t::__anond7a9c0d6010a	typeref:typename:str8_t
+str	code/momo_strings.h	/^		str8_t str;$/;"	m	language:C++	union:sb8_t::__anon71355586010a	typeref:typename:str8_t
+str8	code/momo_strings.h	/^static str8_t str8(u8_t* str, umi_t size);$/;"	p	language:C++	typeref:typename:str8_t
+str8	code/momo_strings.h	/^static str8_t str8(u8_t* str, umi_t size);$/;"	p	language:C++	typeref:typename:str8_t
+str8	code/momo_strings.h	/^str8(u8_t* str, umi_t size) {$/;"	f	language:C++	typeref:typename:str8_t
+str8_compare_lexographically	code/momo_strings.h	/^str8_compare_lexographically(str8_t lhs, str8_t rhs) {$/;"	f	language:C++	typeref:typename:smi_t
+str8_from_cstr	code/momo_strings.h	/^static str8_t str8_from_cstr(const char* cstr);$/;"	p	language:C++	typeref:typename:str8_t
+str8_from_cstr	code/momo_strings.h	/^str8_from_cstr(const c8_t* cstr) {$/;"	f	language:C++	typeref:typename:str8_t
+str8_from_lit	code/momo_strings.h	/^#define str8_from_lit(/;"	d	language:C++
+str8_match	code/momo_strings.h	/^static b32_t  str8_match(str8_t lhs, str8_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
+str8_match	code/momo_strings.h	/^str8_match(str8_t lhs, str8_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t
+str8_range_to	code/momo_strings.h	/^static b32_t str8_range_to(u32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
+str8_substr	code/momo_strings.h	/^static str8_t str8_substr(str8_t str, umi_t start, umi_t ope);$/;"	p	language:C++	typeref:typename:str8_t
+str8_substr	code/momo_strings.h	/^str8_substr(str8_t str, umi_t start, umi_t count) {$/;"	f	language:C++	typeref:typename:str8_t
+str8_t	code/momo_strings.h	/^struct str8_t{$/;"	s	language:C++
+str8_to_f32	code/momo_strings.h	/^static b32_t str8_to_f32(str8_t s, f32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
+str8_to_f32	code/momo_strings.h	/^str8_to_f32(str8_t s, f32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
+str8_to_f32_range	code/momo_strings.h	/^str8_to_f32_range(str8_t s, umi_t begin, umi_t ope, f32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
+str8_to_s32	code/momo_strings.h	/^static b32_t str8_to_s32(str8_t s, s32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
+str8_to_s32	code/momo_strings.h	/^str8_to_s32(str8_t s, s32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
+str8_to_s32_range	code/momo_strings.h	/^str8_to_s32_range(str8_t s, umi_t begin, umi_t ope, s32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
+str8_to_u32	code/momo_strings.h	/^static b32_t str8_to_u32(str8_t s, u32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
+str8_to_u32	code/momo_strings.h	/^str8_to_u32(str8_t s, u32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
+str8_to_u32_range	code/momo_strings.h	/^str8_to_u32_range(str8_t s, umi_t begin, umi_t ope, u32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
 stream	code/momo_png.h	/^  stream_t stream;$/;"	m	language:C++	struct:_png_context_t	typeref:typename:stream_t
 stream_consume	code/momo_streams.h	/^#define stream_consume(/;"	d	language:C++
 stream_consume_bits	code/momo_streams.h	/^static u32_t		stream_consume_bits(stream_t* s, u32_t amount);$/;"	p	language:C++	typeref:typename:u32_t
@@ -2328,38 +2339,38 @@ texel_x0	code/karu.h	/^  u32_t texel_x0;$/;"	m	language:C++	struct:karu_font_gly
 texel_x0	code/karu.h	/^  u32_t texel_x0;$/;"	m	language:C++	struct:karu_sprite_t	typeref:typename:u32_t
 texel_x0	code/moe_assets.h	/^  u32_t texel_x0, texel_y0;$/;"	m	language:C++	struct:asset_font_glyph_t	typeref:typename:u32_t
 texel_x0	code/moe_assets.h	/^  u32_t texel_x0;$/;"	m	language:C++	struct:asset_sprite_t	typeref:typename:u32_t
+texel_x0	code/moe_gfx.h	/^  u32_t texel_x0, texel_y0;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:u32_t
 texel_x0	code/sui_pack.h	/^  u32_t texel_x0;$/;"	m	language:C++	struct:sui_packer_source_sprite_t	typeref:typename:u32_t
-texel_x0	D:/work/git/moom/code/moe_gfx.h	/^  u32_t texel_x0, texel_y0;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:u32_t
 texel_x1	code/karu.h	/^  u32_t texel_x1;$/;"	m	language:C++	struct:karu_font_glyph_t	typeref:typename:u32_t
 texel_x1	code/karu.h	/^  u32_t texel_x1;$/;"	m	language:C++	struct:karu_sprite_t	typeref:typename:u32_t
 texel_x1	code/moe_assets.h	/^  u32_t texel_x1, texel_y1;$/;"	m	language:C++	struct:asset_font_glyph_t	typeref:typename:u32_t
 texel_x1	code/moe_assets.h	/^  u32_t texel_x1;$/;"	m	language:C++	struct:asset_sprite_t	typeref:typename:u32_t
+texel_x1	code/moe_gfx.h	/^  u32_t texel_x1, texel_y1;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:u32_t
 texel_x1	code/sui_pack.h	/^  u32_t texel_x1;$/;"	m	language:C++	struct:sui_packer_source_sprite_t	typeref:typename:u32_t
-texel_x1	D:/work/git/moom/code/moe_gfx.h	/^  u32_t texel_x1, texel_y1;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:u32_t
 texel_y0	code/karu.h	/^  u32_t texel_y0;$/;"	m	language:C++	struct:karu_font_glyph_t	typeref:typename:u32_t
 texel_y0	code/karu.h	/^  u32_t texel_y0;$/;"	m	language:C++	struct:karu_sprite_t	typeref:typename:u32_t
 texel_y0	code/moe_assets.h	/^  u32_t texel_x0, texel_y0;$/;"	m	language:C++	struct:asset_font_glyph_t	typeref:typename:u32_t
 texel_y0	code/moe_assets.h	/^  u32_t texel_y0;$/;"	m	language:C++	struct:asset_sprite_t	typeref:typename:u32_t
+texel_y0	code/moe_gfx.h	/^  u32_t texel_x0, texel_y0;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:u32_t
 texel_y0	code/sui_pack.h	/^  u32_t texel_y0;$/;"	m	language:C++	struct:sui_packer_source_sprite_t	typeref:typename:u32_t
-texel_y0	D:/work/git/moom/code/moe_gfx.h	/^  u32_t texel_x0, texel_y0;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:u32_t
 texel_y1	code/karu.h	/^  u32_t texel_y1;$/;"	m	language:C++	struct:karu_font_glyph_t	typeref:typename:u32_t
 texel_y1	code/karu.h	/^  u32_t texel_y1;$/;"	m	language:C++	struct:karu_sprite_t	typeref:typename:u32_t
 texel_y1	code/moe_assets.h	/^  u32_t texel_x1, texel_y1;$/;"	m	language:C++	struct:asset_font_glyph_t	typeref:typename:u32_t
 texel_y1	code/moe_assets.h	/^  u32_t texel_y1;$/;"	m	language:C++	struct:asset_sprite_t	typeref:typename:u32_t
+texel_y1	code/moe_gfx.h	/^  u32_t texel_x1, texel_y1;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:u32_t
 texel_y1	code/sui_pack.h	/^  u32_t texel_y1;$/;"	m	language:C++	struct:sui_packer_source_sprite_t	typeref:typename:u32_t
-texel_y1	D:/work/git/moom/code/moe_gfx.h	/^  u32_t texel_x1, texel_y1;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:u32_t
 text	C:/users/geral/work/moom/code/momo_json.h	/^  str8_t text;$/;"	m	language:C++	struct:json_t	typeref:typename:str8_t
 text	code/meta.cpp	/^  c8_t* text;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:c8_t *	file:
 text	code/momo_json.h	/^  str8_t text;$/;"	m	language:C++	struct:json_t	typeref:typename:str8_t
 textures	code/moe_gfx_opengl.h	/^  OGL_Texture textures[GFX_MAX_TEXTURES];$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_Texture[]
-texture_data	D:/work/git/moom/code/moe_gfx.h	/^  void* texture_data;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:void *
-texture_height	D:/work/git/moom/code/moe_gfx.h	/^  u32_t texture_height;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:u32_t
-texture_index	D:/work/git/moom/code/moe_gfx.h	/^  u32_t texture_index;$/;"	m	language:C++	struct:gfx_command_delete_texture_t	typeref:typename:u32_t
-texture_index	D:/work/git/moom/code/moe_gfx.h	/^  u32_t texture_index;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:u32_t
-texture_index	D:/work/git/moom/code/moe_gfx.h	/^  u32_t texture_index;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:u32_t
+texture_data	code/moe_gfx.h	/^  void* texture_data;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:void *
+texture_height	code/moe_gfx.h	/^  u32_t texture_height;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:u32_t
+texture_index	code/moe_gfx.h	/^  u32_t texture_index;$/;"	m	language:C++	struct:gfx_command_delete_texture_t	typeref:typename:u32_t
+texture_index	code/moe_gfx.h	/^  u32_t texture_index;$/;"	m	language:C++	struct:gfx_command_sprite_t	typeref:typename:u32_t
+texture_index	code/moe_gfx.h	/^  u32_t texture_index;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:u32_t
 texture_queue	code/moe_assets.h	/^  gfx_texture_queue_t* texture_queue;$/;"	m	language:C++	struct:assets_t	typeref:typename:gfx_texture_queue_t *
-texture_queue	D:/work/git/moom/code/moe_gfx.h	/^  gfx_texture_queue_t texture_queue;$/;"	m	language:C++	struct:gfx_t	typeref:typename:gfx_texture_queue_t
-texture_width	D:/work/git/moom/code/moe_gfx.h	/^  u32_t texture_width;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:u32_t
+texture_queue	code/moe_gfx.h	/^  gfx_texture_queue_t texture_queue;$/;"	m	language:C++	struct:gfx_t	typeref:typename:gfx_texture_queue_t
+texture_width	code/moe_gfx.h	/^  u32_t texture_width;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:u32_t
 text_length	code/meta.cpp	/^  u32_t text_length;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:u32_t	file:
 thisProgram	build/a.out.js	/^var thisProgram = '.\/this.program';$/;"	v	language:JavaScript
 thousands	code/momo_types.h	/^#define thousands(/;"	d	language:C++
@@ -2372,36 +2383,36 @@ title_wp_index	code/lit_game.h	/^  u32_t title_wp_index;$/;"	m	language:C++	stru
 tmp_path	code/w32_moe.h	/^  const char* tmp_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *
 total_levels	code/lit_menu.cpp	/^const u32_t total_levels = 20;$/;"	v	language:C++	typeref:typename:const u32_t
 TOTAL_STACK	build/a.out.js	/^var TOTAL_STACK = 5242880;$/;"	v	language:JavaScript
-transfer_memory	D:/work/git/moom/code/moe_gfx.h	/^  u8_t* transfer_memory;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:u8_t *
-transfer_memory_end	D:/work/git/moom/code/moe_gfx.h	/^  umi_t transfer_memory_end;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:umi_t
-transfer_memory_end	D:/work/git/moom/code/moe_gfx.h	/^  umi_t transfer_memory_end;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
-transfer_memory_size	D:/work/git/moom/code/moe_gfx.h	/^  umi_t transfer_memory_size;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
-transfer_memory_start	D:/work/git/moom/code/moe_gfx.h	/^  umi_t transfer_memory_start;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:umi_t
-transfer_memory_start	D:/work/git/moom/code/moe_gfx.h	/^  umi_t transfer_memory_start;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
+transfer_memory	code/moe_gfx.h	/^  u8_t* transfer_memory;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:u8_t *
+transfer_memory_end	code/moe_gfx.h	/^  umi_t transfer_memory_end;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:umi_t
+transfer_memory_end	code/moe_gfx.h	/^  umi_t transfer_memory_end;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
+transfer_memory_size	code/moe_gfx.h	/^  umi_t transfer_memory_size;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
+transfer_memory_start	code/moe_gfx.h	/^  umi_t transfer_memory_start;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:umi_t
+transfer_memory_start	code/moe_gfx.h	/^  umi_t transfer_memory_start;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
 triangles	code/lit_game.h	/^  lit_light_triangle_t triangles[256];$/;"	m	language:C++	struct:lit_light_t	typeref:typename:lit_light_triangle_t[256]
 triangle_batch	code/moe_gfx_opengl.h	/^  Triangle_Batch triangle_batch;$/;"	m	language:C++	struct:Opengl	typeref:typename:Triangle_Batch
 Triangle_Batch	code/moe_gfx_opengl.h	/^} Triangle_Batch;$/;"	t	language:C++	typeref:struct:__anon0f5c060e0908
 triangle_count	code/lit_game.h	/^  u32_t triangle_count;$/;"	m	language:C++	struct:lit_light_t	typeref:typename:u32_t
-ttf_get_glyph_bitmap_box	D:/work/git/moom/code/momo_ttf.h	/^static void ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t* x0/;"	p	language:C++	typeref:typename:void
-ttf_get_glyph_bitmap_box	D:/work/git/moom/code/momo_ttf.h	/^ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t* x0, s32_t* y0,/;"	f	language:C++	typeref:typename:void
-ttf_get_glyph_box	D:/work/git/moom/code/momo_ttf.h	/^static b32_t ttf_get_glyph_box(const ttf_t* ttf, u32_t glyph_index, s32_t* x0, s32_t* y0, s32_t*/;"	p	language:C++	typeref:typename:b32_t
-ttf_get_glyph_box	D:/work/git/moom/code/momo_ttf.h	/^ttf_get_glyph_box(const ttf_t* ttf, u32_t glyph_index, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y/;"	f	language:C++	typeref:typename:b32_t
-ttf_get_glyph_horizontal_metrics	D:/work/git/moom/code/momo_ttf.h	/^static void ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, u32_t glyph_index, s16_t* advance/;"	p	language:C++	typeref:typename:void
-ttf_get_glyph_horizontal_metrics	D:/work/git/moom/code/momo_ttf.h	/^ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, $/;"	f	language:C++	typeref:typename:void
-ttf_get_glyph_index	D:/work/git/moom/code/momo_ttf.h	/^static u32_t ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint);$/;"	p	language:C++	typeref:typename:u32_t
-ttf_get_glyph_index	D:/work/git/moom/code/momo_ttf.h	/^ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint) {$/;"	f	language:C++	typeref:typename:u32_t
-ttf_get_glyph_kerning	D:/work/git/moom/code/momo_ttf.h	/^static s32_t ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2);$/;"	p	language:C++	typeref:typename:s32_t
-ttf_get_glyph_kerning	D:/work/git/moom/code/momo_ttf.h	/^ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2) {$/;"	f	language:C++	typeref:typename:s32_t
-ttf_get_glyph_vertical_metrics	D:/work/git/moom/code/momo_ttf.h	/^static void ttf_get_glyph_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_/;"	p	language:C++	typeref:typename:void
-ttf_get_glyph_vertical_metrics	D:/work/git/moom/code/momo_ttf.h	/^ttf_get_glyph_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_t* line_gap)/;"	f	language:C++	typeref:typename:void
-ttf_get_scale_for_pixel_height	D:/work/git/moom/code/momo_ttf.h	/^static f32_t ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height);$/;"	p	language:C++	typeref:typename:f32_t
-ttf_get_scale_for_pixel_height	D:/work/git/moom/code/momo_ttf.h	/^ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height) {$/;"	f	language:C++	typeref:typename:f32_t
-ttf_log	D:/work/git/moom/code/momo_ttf.h	/^# define ttf_log(/;"	d	language:C++
-ttf_rasterize_glyph	D:/work/git/moom/code/momo_ttf.h	/^static u32_t* ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w/;"	p	language:C++	typeref:typename:u32_t *
-ttf_rasterize_glyph	D:/work/git/moom/code/momo_ttf.h	/^ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w, u32_t* out_h/;"	f	language:C++	typeref:typename:u32_t *
-ttf_read	D:/work/git/moom/code/momo_ttf.h	/^static b32_t ttf_read(ttf_t* ttf, void* memory, umi_t memory_size);$/;"	p	language:C++	typeref:typename:b32_t
-ttf_read	D:/work/git/moom/code/momo_ttf.h	/^ttf_read(ttf_t* ttf, void* memory, umi_t memory_size) {$/;"	f	language:C++	typeref:typename:b32_t
-ttf_t	D:/work/git/moom/code/momo_ttf.h	/^struct ttf_t {$/;"	s	language:C++
+ttf_get_glyph_bitmap_box	code/momo_ttf.h	/^static void ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t* x0/;"	p	language:C++	typeref:typename:void
+ttf_get_glyph_bitmap_box	code/momo_ttf.h	/^ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t* x0, s32_t* y0,/;"	f	language:C++	typeref:typename:void
+ttf_get_glyph_box	code/momo_ttf.h	/^static b32_t ttf_get_glyph_box(const ttf_t* ttf, u32_t glyph_index, s32_t* x0, s32_t* y0, s32_t*/;"	p	language:C++	typeref:typename:b32_t
+ttf_get_glyph_box	code/momo_ttf.h	/^ttf_get_glyph_box(const ttf_t* ttf, u32_t glyph_index, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y/;"	f	language:C++	typeref:typename:b32_t
+ttf_get_glyph_horizontal_metrics	code/momo_ttf.h	/^static void ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, u32_t glyph_index, s16_t* advance/;"	p	language:C++	typeref:typename:void
+ttf_get_glyph_horizontal_metrics	code/momo_ttf.h	/^ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, $/;"	f	language:C++	typeref:typename:void
+ttf_get_glyph_index	code/momo_ttf.h	/^static u32_t ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint);$/;"	p	language:C++	typeref:typename:u32_t
+ttf_get_glyph_index	code/momo_ttf.h	/^ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint) {$/;"	f	language:C++	typeref:typename:u32_t
+ttf_get_glyph_kerning	code/momo_ttf.h	/^static s32_t ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2);$/;"	p	language:C++	typeref:typename:s32_t
+ttf_get_glyph_kerning	code/momo_ttf.h	/^ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2) {$/;"	f	language:C++	typeref:typename:s32_t
+ttf_get_glyph_vertical_metrics	code/momo_ttf.h	/^static void ttf_get_glyph_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_/;"	p	language:C++	typeref:typename:void
+ttf_get_glyph_vertical_metrics	code/momo_ttf.h	/^ttf_get_glyph_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_t* line_gap)/;"	f	language:C++	typeref:typename:void
+ttf_get_scale_for_pixel_height	code/momo_ttf.h	/^static f32_t ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height);$/;"	p	language:C++	typeref:typename:f32_t
+ttf_get_scale_for_pixel_height	code/momo_ttf.h	/^ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height) {$/;"	f	language:C++	typeref:typename:f32_t
+ttf_log	code/momo_ttf.h	/^# define ttf_log(/;"	d	language:C++
+ttf_rasterize_glyph	code/momo_ttf.h	/^static u32_t* ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w/;"	p	language:C++	typeref:typename:u32_t *
+ttf_rasterize_glyph	code/momo_ttf.h	/^ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w, u32_t* out_h/;"	f	language:C++	typeref:typename:u32_t *
+ttf_read	code/momo_ttf.h	/^static b32_t ttf_read(ttf_t* ttf, void* memory, umi_t memory_size);$/;"	p	language:C++	typeref:typename:b32_t
+ttf_read	code/momo_ttf.h	/^ttf_read(ttf_t* ttf, void* memory, umi_t memory_size) {$/;"	f	language:C++	typeref:typename:b32_t
+ttf_t	code/momo_ttf.h	/^struct ttf_t {$/;"	s	language:C++
 tutorial_font	code/lit_game.h	/^  asset_font_id_t tutorial_font;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_font_id_t
 type	C:/users/geral/work/moom/code/momo_json.h	/^  _json_token_type_t type;$/;"	m	language:C++	struct:_json_token_t	typeref:typename:_json_token_type_t
 type	C:/users/geral/work/moom/code/momo_json.h	/^  _json_value_type_t type;$/;"	m	language:C++	struct:_json_value_t	typeref:typename:_json_value_type_t
@@ -2464,8 +2475,8 @@ user_object	D:/work/git/moom/code/gist_type_erasure.cpp	/^  T user_object;$/;"	m
 UTF8ArrayToString	build/a.out.js	/^function UTF8ArrayToString(heapOrArray, idx, maxBytesToRead) {$/;"	f	language:JavaScript
 UTF8Decoder	build/a.out.js	/^var UTF8Decoder = typeof TextDecoder != 'undefined' ? new TextDecoder('utf8') : undefined;$/;"	v	language:JavaScript
 UTF8ToString	build/a.out.js	/^function UTF8ToString(ptr, maxBytesToRead) {$/;"	f	language:JavaScript
+v	code/momo_strings.h	/^  union { u32_t v; u8_t b[4]; } combine;$/;"	m	language:C++	union:sb8_push_hex_u32::__anon71355586030a	typeref:typename:u32_t
 v	code/momo_vectors.h	/^	struct { f32_t u, v; };$/;"	m	language:C++	struct:v2f_t::__anon8de67fa20708	typeref:typename:f32_t
-v	D:/work/git/moom/code/momo_strings.h	/^  union { u32_t v; u8_t b[4]; } combine;$/;"	m	language:C++	union:sb8_push_hex_u32::__anon159c8120030a	typeref:typename:u32_t
 v2f_add	code/momo_vectors.h	/^static v2f_t   v2f_add(v2f_t lhs, v2f_t rhs);$/;"	p	language:C++	typeref:typename:v2f_t
 v2f_add	code/momo_vectors.h	/^v2f_add(v2f_t lhs, v2f_t rhs) {$/;"	f	language:C++	typeref:typename:v2f_t
 v2f_angle	code/momo_vectors.h	/^static f32_t   v2f_angle(v2f_t lhs, v2f_t rhs);$/;"	p	language:C++	typeref:typename:f32_t
@@ -2563,8 +2574,10 @@ value	code/momo_json.h	/^  json_value_t value;$/;"	m	language:C++	struct:_json_e
 values	code/gist_ring_buffer.cpp	/^  int values[4];$/;"	m	language:C++	struct:gist_rb	typeref:typename:int[4]	file:
 varargs	build/a.out.js	/^  var SYSCALLS = {varargs:undefined,get:function() {$/;"	p	language:JavaScript	class:SYSCALLS
 vel	code/lit_game.h	/^  v2f_t pos, vel;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t
-vertex_count	D:/work/git/moom/code/momo_ttf.h	/^  u32_t vertex_count;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:u32_t
-vertices	D:/work/git/moom/code/momo_ttf.h	/^  v2f_t* vertices;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:v2f_t *
+vertex_count	code/momo_ttf.h	/^  u32_t vertex_count;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:u32_t
+vertical_advance	code/karu.h	/^  f32_t vertical_advance;$/;"	m	language:C++	struct:karu_font_glyph_t	typeref:typename:f32_t
+vertical_advance	code/moe_assets.h	/^  f32_t vertical_advance;$/;"	m	language:C++	struct:asset_font_glyph_t	typeref:typename:f32_t
+vertices	code/momo_ttf.h	/^  v2f_t* vertices;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:v2f_t *
 w	code/momo_rect_pack.h	/^	u32_t x, y, w, h;$/;"	m	language:C++	struct:rp_rect_t	typeref:typename:u32_t
 w	code/momo_rect_pack.h	/^	u32_t x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:u32_t
 w	code/momo_vectors.h	/^	struct { f32_t w, h, d; };$/;"	m	language:C++	struct:v3f_t::__anon8de67fa20908	typeref:typename:f32_t
@@ -2706,24 +2719,24 @@ write_file	code/moe_platform.h	/^  platform_write_file_f* write_file;$/;"	m	lang
 x	code/lit_game.h	/^  f32_t x;$/;"	m	language:C++	struct:lit_title_waypoint_t	typeref:typename:f32_t
 x	code/momo_rect_pack.h	/^	u32_t x, y, w, h;$/;"	m	language:C++	struct:rp_rect_t	typeref:typename:u32_t
 x	code/momo_rect_pack.h	/^	u32_t x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:u32_t
+x	code/momo_ttf.h	/^  s16_t x, y; $/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:s16_t
 x	code/momo_vectors.h	/^	struct { f32_t x, y, z, w; };$/;"	m	language:C++	struct:v4f_t::__anon8de67fa20a08	typeref:typename:f32_t
 x	code/momo_vectors.h	/^	struct { f32_t x, y, z; };$/;"	m	language:C++	struct:v3f_t::__anon8de67fa20808	typeref:typename:f32_t
 x	code/momo_vectors.h	/^	struct { f32_t x, y; };$/;"	m	language:C++	struct:v2f_t::__anon8de67fa20508	typeref:typename:f32_t
 x	code/momo_vectors.h	/^	struct { s32_t x, y; };$/;"	m	language:C++	struct:v2s_t::__anon8de67fa20308	typeref:typename:s32_t
 x	code/momo_vectors.h	/^	struct { u32_t x, y; };$/;"	m	language:C++	struct:v2u_t::__anon8de67fa20108	typeref:typename:u32_t
-x	D:/work/git/moom/code/momo_ttf.h	/^  s16_t x, y; $/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:s16_t
 xhr	build/a.out.js	/^        var xhr = new XMLHttpRequest();$/;"	v	language:JavaScript
 xhr	build/a.out.js	/^      var xhr = new XMLHttpRequest();$/;"	v	language:JavaScript
 xhr	build/a.out.js	/^    var xhr = new XMLHttpRequest();$/;"	v	language:JavaScript
-x_intersect	D:/work/git/moom/code/momo_ttf.h	/^  f32_t x_intersect;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:f32_t
+x_intersect	code/momo_ttf.h	/^  f32_t x_intersect;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:f32_t
 y	code/momo_rect_pack.h	/^	u32_t x, y, w, h;$/;"	m	language:C++	struct:rp_rect_t	typeref:typename:u32_t
 y	code/momo_rect_pack.h	/^	u32_t x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:u32_t
+y	code/momo_ttf.h	/^  s16_t x, y; $/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:s16_t
 y	code/momo_vectors.h	/^	struct { f32_t x, y, z, w; };$/;"	m	language:C++	struct:v4f_t::__anon8de67fa20a08	typeref:typename:f32_t
 y	code/momo_vectors.h	/^	struct { f32_t x, y, z; };$/;"	m	language:C++	struct:v3f_t::__anon8de67fa20808	typeref:typename:f32_t
 y	code/momo_vectors.h	/^	struct { f32_t x, y; };$/;"	m	language:C++	struct:v2f_t::__anon8de67fa20508	typeref:typename:f32_t
 y	code/momo_vectors.h	/^	struct { s32_t x, y; };$/;"	m	language:C++	struct:v2s_t::__anon8de67fa20308	typeref:typename:s32_t
 y	code/momo_vectors.h	/^	struct { u32_t x, y; };$/;"	m	language:C++	struct:v2u_t::__anon8de67fa20108	typeref:typename:u32_t
-y	D:/work/git/moom/code/momo_ttf.h	/^  s16_t x, y; $/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:s16_t
 z	code/momo_vectors.h	/^	struct { f32_t x, y, z, w; };$/;"	m	language:C++	struct:v4f_t::__anon8de67fa20a08	typeref:typename:f32_t
 z	code/momo_vectors.h	/^	struct { f32_t x, y, z; };$/;"	m	language:C++	struct:v3f_t::__anon8de67fa20808	typeref:typename:f32_t
 zero_array	code/momo_types.h	/^#define zero_array(/;"	d	language:C++
@@ -2747,8 +2760,8 @@ _F64_NAN	code/momo_types.h	/^_F64_NAN() {$/;"	f	language:C++	typeref:typename:f6
 _F64_NEG_INFINITY	code/momo_types.h	/^_F64_NEG_INFINITY() {$/;"	f	language:C++	typeref:typename:f64_t
 _fd_write	build/a.out.js	/^  function _fd_write(fd, iov, iovcnt, pnum) {$/;"	f	language:JavaScript
 _free	build/a.out.js	/^function _free() {$/;"	f	language:JavaScript
-_gfx_push_command	D:/work/git/moom/code/moe_gfx.h	/^_gfx_push_command(gfx_command_queue_t* q, u32_t id, u32_t align = 4) {$/;"	f	language:C++	typeref:typename:T *
-_gfx_push_command_block	D:/work/git/moom/code/moe_gfx.h	/^_gfx_push_command_block(gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4) {$/;"	f	language:C++	typeref:typename:void *
+_gfx_push_command	code/moe_gfx.h	/^_gfx_push_command(gfx_command_queue_t* q, u32_t id, u32_t align = 4) {$/;"	f	language:C++	typeref:typename:T *
+_gfx_push_command_block	code/moe_gfx.h	/^_gfx_push_command_block(gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4) {$/;"	f	language:C++	typeref:typename:void *
 _hue_to_color	code/momo_colors.h	/^_hue_to_color(f32_t p, f32_t q, f32_t t) {$/;"	f	language:C++	typeref:typename:f32_t
 _json_append_array	C:/users/geral/work/moom/code/momo_json.h	/^_json_append_array(json_array_t* arr, _json_array_node_t* node) {$/;"	f	language:C++	typeref:typename:void
 _json_append_array	code/momo_json.h	/^_json_append_array(json_array_t* arr, json_array_node_t* node) {$/;"	f	language:C++	typeref:typename:void
@@ -2865,34 +2878,34 @@ _quicksort_partition	code/momo_sort.h	/^_quicksort_partition(sort_entry_t* a,$/;
 _quicksort_range	code/momo_sort.h	/^_quicksort_range(sort_entry_t* a, $/;"	f	language:C++	typeref:typename:void
 _RP_Node	code/momo_rect_pack.h	/^struct _RP_Node{$/;"	s	language:C++
 _rp_sort	code/momo_rect_pack.h	/^_rp_sort(rp_rect_t* rects,$/;"	f	language:C++	typeref:typename:void
-_sb8_push_fmt_list	D:/work/git/moom/code/momo_strings.h	/^_sb8_push_fmt_list(sb8_t* b, str8_t format, va_list args) {$/;"	f	language:C++	typeref:typename:void
+_sb8_push_fmt_list	code/momo_strings.h	/^_sb8_push_fmt_list(sb8_t* b, str8_t format, va_list args) {$/;"	f	language:C++	typeref:typename:void
 _sort_swap_entries	code/momo_sort.h	/^_sort_swap_entries(sort_entry_t* a, sort_entry_t* b) {$/;"	f	language:C++	typeref:typename:void
-_ttf_add_vertex	D:/work/git/moom/code/momo_ttf.h	/^_ttf_add_vertex(v2f_t* vertices, u32_t n, f32_t x, f32_t y) {$/;"	f	language:C++	typeref:typename:void
-_ttf_add_vertex	D:/work/git/moom/code/momo_ttf.h	/^_ttf_add_vertex(v2f_t* vertices, u32_t n, v2f_t v) {$/;"	f	language:C++	typeref:typename:void
-_TTF_CMAP_MS_ID_BIG_FIVE	D:/work/git/moom/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_BIG_FIVE = 4,$/;"	e	language:C++	enum:__anon314f2c640203
-_TTF_CMAP_MS_ID_JOHAB	D:/work/git/moom/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_JOHAB = 5,$/;"	e	language:C++	enum:__anon314f2c640203
-_TTF_CMAP_MS_ID_PRC	D:/work/git/moom/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_PRC = 3,$/;"	e	language:C++	enum:__anon314f2c640203
-_TTF_CMAP_MS_ID_SHIFT_JIS	D:/work/git/moom/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_SHIFT_JIS = 2,$/;"	e	language:C++	enum:__anon314f2c640203
-_TTF_CMAP_MS_ID_SYMBOL	D:/work/git/moom/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_SYMBOL = 0,$/;"	e	language:C++	enum:__anon314f2c640203
-_TTF_CMAP_MS_ID_UNICODE_BMP	D:/work/git/moom/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_BMP = 1,$/;"	e	language:C++	enum:__anon314f2c640203
-_TTF_CMAP_MS_ID_UNICODE_FULL	D:/work/git/moom/code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_FULL = 10,$/;"	e	language:C++	enum:__anon314f2c640203
-_TTF_CMAP_PLATFORM_ID_MACINTOSH	D:/work/git/moom/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MACINTOSH = 1,$/;"	e	language:C++	enum:__anon314f2c640103
-_TTF_CMAP_PLATFORM_ID_MICROSOFT	D:/work/git/moom/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MICROSOFT = 3,$/;"	e	language:C++	enum:__anon314f2c640103
-_TTF_CMAP_PLATFORM_ID_RESERVED	D:/work/git/moom/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_RESERVED = 2,$/;"	e	language:C++	enum:__anon314f2c640103
-_TTF_CMAP_PLATFORM_ID_UNICODE	D:/work/git/moom/code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_UNICODE = 0,$/;"	e	language:C++	enum:__anon314f2c640103
-_ttf_edge_list_t	D:/work/git/moom/code/momo_ttf.h	/^struct _ttf_edge_list_t{$/;"	s	language:C++
-_ttf_edge_t	D:/work/git/moom/code/momo_ttf.h	/^struct _ttf_edge_t{$/;"	s	language:C++
-_ttf_get_glyph_outline	D:/work/git/moom/code/momo_ttf.h	/^_ttf_get_glyph_outline(const ttf_t* ttf, $/;"	f	language:C++	typeref:typename:b32_t
-_ttf_get_kern_advance	D:/work/git/moom/code/momo_ttf.h	/^_ttf_get_kern_advance(const ttf_t* ttf, s32_t g1, s32_t g2) $/;"	f	language:C++	typeref:typename:s32_t
-_ttf_get_offset_to_glyph	D:/work/git/moom/code/momo_ttf.h	/^_ttf_get_offset_to_glyph(const ttf_t* ttf, u32_t glyph_index) {$/;"	f	language:C++	typeref:typename:u32_t
-_ttf_get_paths_from_glyph_outline	D:/work/git/moom/code/momo_ttf.h	/^_ttf_get_paths_from_glyph_outline(_ttf_glyph_outline_t* outline,$/;"	f	language:C++	typeref:typename:b32_t
-_ttf_glyph_outline_t	D:/work/git/moom/code/momo_ttf.h	/^struct _ttf_glyph_outline_t{$/;"	s	language:C++
-_ttf_glyph_paths_t	D:/work/git/moom/code/momo_ttf.h	/^struct _ttf_glyph_paths_t{$/;"	s	language:C++
-_ttf_glyph_point_t	D:/work/git/moom/code/momo_ttf.h	/^struct _ttf_glyph_point_t{$/;"	s	language:C++
-_ttf_read_s16	D:/work/git/moom/code/momo_ttf.h	/^_ttf_read_s16(u8_t* location) {$/;"	f	language:C++	typeref:typename:s16_t
-_ttf_read_u16	D:/work/git/moom/code/momo_ttf.h	/^_ttf_read_u16(u8_t* location) {$/;"	f	language:C++	typeref:typename:u16_t
-_ttf_read_u32	D:/work/git/moom/code/momo_ttf.h	/^_ttf_read_u32(u8_t* location) {$/;"	f	language:C++	typeref:typename:u32_t
-_ttf_tessellate_bezier	D:/work/git/moom/code/momo_ttf.h	/^_ttf_tessellate_bezier(v2f_t* vertices,$/;"	f	language:C++	typeref:typename:void
+_ttf_add_vertex	code/momo_ttf.h	/^_ttf_add_vertex(v2f_t* vertices, u32_t n, f32_t x, f32_t y) {$/;"	f	language:C++	typeref:typename:void
+_ttf_add_vertex	code/momo_ttf.h	/^_ttf_add_vertex(v2f_t* vertices, u32_t n, v2f_t v) {$/;"	f	language:C++	typeref:typename:void
+_TTF_CMAP_MS_ID_BIG_FIVE	code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_BIG_FIVE = 4,$/;"	e	language:C++	enum:__anon54d1bdca0203
+_TTF_CMAP_MS_ID_JOHAB	code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_JOHAB = 5,$/;"	e	language:C++	enum:__anon54d1bdca0203
+_TTF_CMAP_MS_ID_PRC	code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_PRC = 3,$/;"	e	language:C++	enum:__anon54d1bdca0203
+_TTF_CMAP_MS_ID_SHIFT_JIS	code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_SHIFT_JIS = 2,$/;"	e	language:C++	enum:__anon54d1bdca0203
+_TTF_CMAP_MS_ID_SYMBOL	code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_SYMBOL = 0,$/;"	e	language:C++	enum:__anon54d1bdca0203
+_TTF_CMAP_MS_ID_UNICODE_BMP	code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_BMP = 1,$/;"	e	language:C++	enum:__anon54d1bdca0203
+_TTF_CMAP_MS_ID_UNICODE_FULL	code/momo_ttf.h	/^  _TTF_CMAP_MS_ID_UNICODE_FULL = 10,$/;"	e	language:C++	enum:__anon54d1bdca0203
+_TTF_CMAP_PLATFORM_ID_MACINTOSH	code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MACINTOSH = 1,$/;"	e	language:C++	enum:__anon54d1bdca0103
+_TTF_CMAP_PLATFORM_ID_MICROSOFT	code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_MICROSOFT = 3,$/;"	e	language:C++	enum:__anon54d1bdca0103
+_TTF_CMAP_PLATFORM_ID_RESERVED	code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_RESERVED = 2,$/;"	e	language:C++	enum:__anon54d1bdca0103
+_TTF_CMAP_PLATFORM_ID_UNICODE	code/momo_ttf.h	/^  _TTF_CMAP_PLATFORM_ID_UNICODE = 0,$/;"	e	language:C++	enum:__anon54d1bdca0103
+_ttf_edge_list_t	code/momo_ttf.h	/^struct _ttf_edge_list_t{$/;"	s	language:C++
+_ttf_edge_t	code/momo_ttf.h	/^struct _ttf_edge_t{$/;"	s	language:C++
+_ttf_get_glyph_outline	code/momo_ttf.h	/^_ttf_get_glyph_outline(const ttf_t* ttf, $/;"	f	language:C++	typeref:typename:b32_t
+_ttf_get_kern_advance	code/momo_ttf.h	/^_ttf_get_kern_advance(const ttf_t* ttf, s32_t g1, s32_t g2) $/;"	f	language:C++	typeref:typename:s32_t
+_ttf_get_offset_to_glyph	code/momo_ttf.h	/^_ttf_get_offset_to_glyph(const ttf_t* ttf, u32_t glyph_index) {$/;"	f	language:C++	typeref:typename:u32_t
+_ttf_get_paths_from_glyph_outline	code/momo_ttf.h	/^_ttf_get_paths_from_glyph_outline(_ttf_glyph_outline_t* outline,$/;"	f	language:C++	typeref:typename:b32_t
+_ttf_glyph_outline_t	code/momo_ttf.h	/^struct _ttf_glyph_outline_t{$/;"	s	language:C++
+_ttf_glyph_paths_t	code/momo_ttf.h	/^struct _ttf_glyph_paths_t{$/;"	s	language:C++
+_ttf_glyph_point_t	code/momo_ttf.h	/^struct _ttf_glyph_point_t{$/;"	s	language:C++
+_ttf_read_s16	code/momo_ttf.h	/^_ttf_read_s16(u8_t* location) {$/;"	f	language:C++	typeref:typename:s16_t
+_ttf_read_u16	code/momo_ttf.h	/^_ttf_read_u16(u8_t* location) {$/;"	f	language:C++	typeref:typename:u16_t
+_ttf_read_u32	code/momo_ttf.h	/^_ttf_read_u32(u8_t* location) {$/;"	f	language:C++	typeref:typename:u32_t
+_ttf_tessellate_bezier	code/momo_ttf.h	/^_ttf_tessellate_bezier(v2f_t* vertices,$/;"	f	language:C++	typeref:typename:void
 _w32_load_wgl_extentions	code/w32_gfx_opengl.h	/^_w32_load_wgl_extentions() {$/;"	f	language:C++	typeref:typename:b32_t
 _w32_set_pixel_format	code/w32_gfx_opengl.h	/^_w32_set_pixel_format(HDC dc) {$/;"	f	language:C++	typeref:typename:void
 _w32_try_get_wgl_function	code/w32_gfx_opengl.h	/^_w32_try_get_wgl_function(const char* name, HMODULE fallback_module)$/;"	f	language:C++	typeref:typename:void *
@@ -2916,19 +2929,19 @@ __anon0f5c060e0603	code/moe_gfx_opengl.h	/^enum {$/;"	g	language:C++
 __anon0f5c060e0708	code/moe_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
 __anon0f5c060e0808	code/moe_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
 __anon0f5c060e0908	code/moe_gfx_opengl.h	/^typedef struct {$/;"	s	language:C++
-__anon159c8120010a	D:/work/git/moom/code/momo_strings.h	/^	union {$/;"	u	language:C++	struct:sb8_t
-__anon159c81200208	D:/work/git/moom/code/momo_strings.h	/^		struct {$/;"	s	language:C++	union:sb8_t::__anon159c8120010a
-__anon159c8120030a	D:/work/git/moom/code/momo_strings.h	/^  union { u32_t v; u8_t b[4]; } combine;$/;"	u	language:C++	function:sb8_push_hex_u32
 __anon1812d558010a	code/karu.h	/^  union {$/;"	u	language:C++	struct:karu_asset_t
 __anon2ac8214a010a	code/sui_atlas.h	/^  union {$/;"	u	language:C++	struct:sui_atlas_context_t
-__anon314f2c640103	D:/work/git/moom/code/momo_ttf.h	/^enum {$/;"	g	language:C++
-__anon314f2c640203	D:/work/git/moom/code/momo_ttf.h	/^enum {$/;"	g	language:C++
 __anon4d532547010a	code/lit_game.h	/^  union {$/;"	u	language:C++	struct:lit_animator_t
 __anon548615c1010a	code/momo_png.h	/^  union {$/;"	u	language:C++	struct:_png_chunk_header_t
+__anon54d1bdca0103	code/momo_ttf.h	/^enum {$/;"	g	language:C++
+__anon54d1bdca0203	code/momo_ttf.h	/^enum {$/;"	g	language:C++
 __anon65aa720e010a	code/lit.h	/^  union {$/;"	u	language:C++	struct:lit_t
 __anon6a37947f010a	code/test_essentials.h	/^    union {$/;"	u	language:C++	function:test_essentials
 __anon6a37947f020a	code/test_essentials.h	/^    union {$/;"	u	language:C++	function:test_essentials
 __anon6c4b32a4010a	C:/users/geral/work/moom/code/momo_json.h	/^  union {$/;"	u	language:C++	struct:_json_value_t
+__anon71355586010a	code/momo_strings.h	/^	union {$/;"	u	language:C++	struct:sb8_t
+__anon713555860208	code/momo_strings.h	/^		struct {$/;"	s	language:C++	union:sb8_t::__anon71355586010a
+__anon71355586030a	code/momo_strings.h	/^  union { u32_t v; u8_t b[4]; } combine;$/;"	u	language:C++	function:sb8_push_hex_u32
 __anon8de67fa20108	code/momo_vectors.h	/^	struct { u32_t x, y; };$/;"	s	language:C++	union:v2u_t
 __anon8de67fa20208	code/momo_vectors.h	/^	struct { u32_t w, h; };$/;"	s	language:C++	union:v2u_t
 __anon8de67fa20308	code/momo_vectors.h	/^	struct { s32_t x, y; };$/;"	s	language:C++	union:v2s_t
@@ -2952,7 +2965,9 @@ __anonb89fa6ae010a	code/momo_colors.h	/^  union {$/;"	u	language:C++	struct:rgba
 __anonb89fa6ae0208	code/momo_colors.h	/^    struct { f32_t r, g, b; };  $/;"	s	language:C++	union:rgba_t::__anonb89fa6ae010a
 __anonc1b4a30c0102	code/test_sort.h	/^            [](int* lhs, int* rhs) { return (*lhs) < (*rhs); } );$/;"	f	language:C++	function:test_sort	file:
 __anoncd974ef4010a	code/sui_pack.h	/^  union {$/;"	u	language:C++	struct:sui_packer_source_t
-__anond7a9c0d6010a	code/momo_json.h	/^  union {$/;"	u	language:C++	struct:json_value_t
+__anond7a9c0d6010a	code/momo_json.h	/^  union {$/;"	u	language:C++	struct:json_element_t
+__anond7a9c0d60208	code/momo_json.h	/^    struct {$/;"	s	language:C++	union:json_element_t::__anond7a9c0d6010a
+__anond7a9c0d6030a	code/momo_json.h	/^  union {$/;"	u	language:C++	struct:json_value_t
 __anondcb57671010a	code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	u	language:C++	function:_F32_INFINITY
 __anondcb57671020a	code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	u	language:C++	function:_F32_NEG_INFINITY
 __anondcb57671030a	code/momo_types.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	u	language:C++	function:_F32_NAN
