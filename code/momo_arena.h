@@ -19,6 +19,9 @@
 //     arena_push_arr_align()       -- arena_push_arr() with alignment specification.
 //     arena_push_arr_zero()        -- arena_push_arr() but memory is zero'ed.
 //     arena_push_arr_align_zero()  -- arena_push_arr_align() but memory is zero'ed.
+//
+//     arena_push_partition()                -- Fills another arena with memory of an arena
+//     arena_push_partition_with_remaining() -- Fills another arena with remaining memory of an arena 
 //     
 //   Checkpoint API
 //     arena_mark()                 -- Returns a arena_marker_t that represents a checkpoint on the allocator
