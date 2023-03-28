@@ -544,11 +544,12 @@ lit_level_busy(lit_game_t* m) {
 
 static void
 lit_level_test(lit_game_t* m) {
-  lit_set_title(m, str8_from_lit("TEST"));
+  lit_set_title(m, str8_from_lit("SPIN"));
 
   lit_push_light(m, 400.f, 400, 0x880088FF, 45.f, 0.75f);
 
   lit_push_rotating_sensor(m, 400.f, 600.f, 400.f, 400.f, 0.1f, 0x880000FF); 
+  lit_push_rotating_sensor(m, 400.f, 600.f, 400.f, 400.f, -0.1f, 0x880000FF); 
 
 }
 

@@ -1,12 +1,15 @@
-// Authors: Gerald Wong
+// Authors: Gerald Wong 
+//
+// This file contains the implementations and declarations of a bump allocator
+// that is able to fallback to a given checkpoint.
 //
 // USAGE:
 //   
-//   Default Allocation API
+//   Raw Allocation API
 //     arena_push_size()            -- Allocates raw memory based on size
 //     arena_push_size_zero()       -- Same as arena_push_size but memory is initialized to zero 
 //
-//   Helper Allocation API
+//   Useful Allocation API
 //     arena_push()                 -- Allocates memory based on type. 
 //     arena_push_align()           -- arena_push() with alignment specificaion
 //     arena_push_zero()            -- arena_push() but memory is zero'ed.
@@ -16,8 +19,16 @@
 //     arena_push_arr_align()       -- arena_push_arr() with alignment specification.
 //     arena_push_arr_zero()        -- arena_push_arr() but memory is zero'ed.
 //     arena_push_arr_align_zero()  -- arena_push_arr_align() but memory is zero'ed.
+//     
+//   Checkpoint API
+//     arena_mark()                 -- Returns a arena_marker_t that represents a checkpoint on the allocator
+//     arena_revert()               -- Reverts the allocator to a state at given checkpoint. 
+//     
 //
-
+// NOTES:
+// 
+//   None.
+//
 
 #ifndef MOMO_ARENA_H
 #define MOMO_ARENA_H
@@ -63,6 +74,11 @@ static void arena_revert(arena_marker_t marker);
   defer{arena_revert(_arena_marker_##l);};
 # define _arena_set_revert_point(a,l) __arena_set_revert_point(a,l)
 # define arena_set_revert_point(arena) _arena_set_revert_point(arena, __LINE__) 
+
+
+//
+// Implementation
+//
 
 static void
 arena_init(arena_t* a, void* mem, umi_t cap) {
