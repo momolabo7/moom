@@ -478,26 +478,26 @@ lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt)
 #if 1
   // Get movement direction
   v2f_t direction = {0};
-  if (platform_is_button_down(platform->button_up)) {
+  if (platform_is_button_down(platform->buttons[PLATFORM_BUTTON_CODE_W])) {
     direction.y += 1.f;
   }
-  if (platform_is_button_down(platform->button_down)) {
+  if (platform_is_button_down(platform->buttons[PLATFORM_BUTTON_CODE_S])) {
     direction.y -= 1.f;
   }
-  if (platform_is_button_down(platform->button_right)) {
+  if (platform_is_button_down(platform->buttons[PLATFORM_BUTTON_CODE_D])) {
     direction.x += 1.f;
   }
-  if (platform_is_button_down(platform->button_left)) {
+  if (platform_is_button_down(platform->buttons[PLATFORM_BUTTON_CODE_A])) {
     direction.x -= 1.f;
   }
   
   // Held light controls
   if (player->held_light != nullptr) {
-    if (platform_is_button_down(platform->button_rotate_left)){ 
+    if (platform_is_button_down(platform->buttons[PLATFORM_BUTTON_CODE_Q])){ 
       player->held_light->dir = 
         v2f_rotate(player->held_light->dir, LIT_PLAYER_ROTATE_SPEED * dt );
     }
-    if (platform_is_button_down(platform->button_rotate_right)){ 
+    if (platform_is_button_down(platform->buttons[PLATFORM_BUTTON_CODE_E])) { 
       player->held_light->dir = 
         v2f_rotate(player->held_light->dir, -LIT_PLAYER_ROTATE_SPEED * dt);
     }
@@ -512,7 +512,7 @@ lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt)
   }
 #endif 
   // 'Pick up'  button
-  if (platform_is_button_poked(platform->button_use)) {
+  if (platform_is_button_poked(platform->buttons[PLATFORM_BUTTON_CODE_SPACE])) {
     if (player->held_light == nullptr) {
       f32_t shortest_dist = LIT_PLAYER_PICKUP_DIST; // limit
       lit_light_t* nearest_light = nullptr;
@@ -869,15 +869,38 @@ lit_set_title(lit_game_t* game, str8_t str) {
 }
 
 static void
+lit_generate_light(lit_t* lit, lit_game_t* game) {
+  for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
+  {
+    lit_light_t* light = game->lights + light_index;
+    lit_gen_light_intersections(light, game->edges, game->edge_count, &lit->frame_arena);
+
+#if LIT_DEBUG_INTERSECTIONS
+    // Generate debug lines
+    for (u32_t intersection_index = 0;
+         intersection_index < light->intersection_count;
+         ++intersection_index)
+    {
+      v2f_t p0 = light->pos;
+      v2f_t p1 = light->intersections[intersection_index].pt;
+      gfx_push_line(platform->gfx, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
+    }
+#endif
+  }
+}
+
+static void
 lit_update_game(lit_t* lit, lit_game_t* game) 
 {
   lit_player_t* player = &game->player;
   f32_t dt = lit->platform->seconds_since_last_frame;
 
+  //
   // Transition Logic
+  //
   if (game->state == LIT_STATE_TYPE_TRANSITION_IN) 
   {
-      // Title 
+    // Title 
     if (game->title_wp_index < array_count(lit_title_wps)-1) 
     {
       game->title_timer += dt;
@@ -919,7 +942,6 @@ lit_update_game(lit_t* lit, lit_game_t* game)
     else {
       lit_load_next_level(game);
     }
-
   }
 
   if (game->state == LIT_STATE_TYPE_NORMAL) 
@@ -928,26 +950,8 @@ lit_update_game(lit_t* lit, lit_game_t* game)
     lit_update_player(lit, game, dt);
   }
 
-
-  for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
-  {
-    lit_light_t* light = game->lights + light_index;
-    lit_gen_light_intersections(light, game->edges, game->edge_count, &lit->frame_arena);
-
-#if LIT_DEBUG_INTERSECTIONS
-    // Generate debug lines
-    for (u32_t intersection_index = 0;
-         intersection_index < light->intersection_count;
-         ++intersection_index)
-    {
-      v2f_t p0 = light->pos;
-      v2f_t p1 = light->intersections[intersection_index].pt;
-      gfx_push_line(platform->gfx, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
-    }
-
-#endif
-
-  }
+  lit_generate_light(lit, game);
+  
 
   if (!lit_is_state_exiting(game)) 
   {

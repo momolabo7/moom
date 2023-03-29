@@ -68,7 +68,7 @@ typedef struct {
   u32_t channels; //TODO: remove this?
 } platform_audio_t;
 
-/////////////////////////////////////////////////////////////////////////platform
+//
 // Input related API
 //
 typedef struct {
@@ -76,13 +76,75 @@ typedef struct {
   b32_t now; 
 } platform_button_t;
 
+// my god
+typedef enum {
+  // Keyboard keys
+  PLATFORM_BUTTON_CODE_UNKNOWN,
+  PLATFORM_BUTTON_CODE_0,
+  PLATFORM_BUTTON_CODE_1,
+  PLATFORM_BUTTON_CODE_2,
+  PLATFORM_BUTTON_CODE_3,
+  PLATFORM_BUTTON_CODE_4,
+  PLATFORM_BUTTON_CODE_5,
+  PLATFORM_BUTTON_CODE_6,
+  PLATFORM_BUTTON_CODE_7,
+  PLATFORM_BUTTON_CODE_8,
+  PLATFORM_BUTTON_CODE_9,
+  PLATFORM_BUTTON_CODE_F1,
+  PLATFORM_BUTTON_CODE_F2,
+  PLATFORM_BUTTON_CODE_F3,
+  PLATFORM_BUTTON_CODE_F4,
+  PLATFORM_BUTTON_CODE_F5,
+  PLATFORM_BUTTON_CODE_F6,
+  PLATFORM_BUTTON_CODE_F7,
+  PLATFORM_BUTTON_CODE_F8,
+  PLATFORM_BUTTON_CODE_F9,
+  PLATFORM_BUTTON_CODE_F10,
+  PLATFORM_BUTTON_CODE_F11,
+  PLATFORM_BUTTON_CODE_F12,
+  PLATFORM_BUTTON_CODE_BACKSPACE,
+  PLATFORM_BUTTON_CODE_A,
+  PLATFORM_BUTTON_CODE_B,
+  PLATFORM_BUTTON_CODE_C,
+  PLATFORM_BUTTON_CODE_D,
+  PLATFORM_BUTTON_CODE_E,
+  PLATFORM_BUTTON_CODE_F,
+  PLATFORM_BUTTON_CODE_G,
+  PLATFORM_BUTTON_CODE_H,
+  PLATFORM_BUTTON_CODE_I,
+  PLATFORM_BUTTON_CODE_J,
+  PLATFORM_BUTTON_CODE_K,
+  PLATFORM_BUTTON_CODE_L,
+  PLATFORM_BUTTON_CODE_M,
+  PLATFORM_BUTTON_CODE_N,
+  PLATFORM_BUTTON_CODE_O,
+  PLATFORM_BUTTON_CODE_P,
+  PLATFORM_BUTTON_CODE_Q,
+  PLATFORM_BUTTON_CODE_R,
+  PLATFORM_BUTTON_CODE_S,
+  PLATFORM_BUTTON_CODE_T,
+  PLATFORM_BUTTON_CODE_U,
+  PLATFORM_BUTTON_CODE_V,
+  PLATFORM_BUTTON_CODE_W,
+  PLATFORM_BUTTON_CODE_X,
+  PLATFORM_BUTTON_CODE_Y,
+  PLATFORM_BUTTON_CODE_Z,
+  PLATFORM_BUTTON_CODE_SPACE,
+  PLATFORM_BUTTON_CODE_RMB,
+  PLATFORM_BUTTON_CODE_LMB,
+  PLATFORM_BUTTON_CODE_MMB,
 
+
+  PLATFORM_BUTTON_CODE_MAX,
+
+} platform_button_code_t;
+
+// 
+// Platform API
+//
 struct gfx_t;
 struct profiler_t;
 
-
-
-// These could really all be functions on the platform side
 typedef struct {
 
   //arena_t* moe_arena; // Require 32MB
@@ -93,27 +155,7 @@ typedef struct {
   // Input API
   // TODO: Maybe this should be a seperate struct
   // Or maybe this should be handled on the platform side.
-  union {
-    struct {
-      platform_button_t button_up;
-      platform_button_t button_down;
-      platform_button_t button_left;
-      platform_button_t button_right;
-      platform_button_t button_console;
-      
-      platform_button_t button_rotate_left;
-      platform_button_t button_rotate_right;
-      
-      platform_button_t button_use;
-      
-      platform_button_t button_editor_on;
-      platform_button_t button_editor0;
-      platform_button_t button_editor1;
-      platform_button_t button_editor2;
-      platform_button_t button_editor3;
-    };  
-    platform_button_t buttons[15];
-  };
+  platform_button_t buttons[PLATFORM_BUTTON_CODE_MAX];
   u8_t chars[32];
   u32_t char_count;
 
@@ -126,8 +168,9 @@ typedef struct {
   // by dividing the x/y by the width/height of the moe.
   v2f_t mouse_pos;
  
-  /////////////////////////////////////////////////////////
+  //
   // Functions
+  //
 
   // File IO
   platform_open_file_f* open_file;

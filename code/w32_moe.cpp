@@ -159,6 +159,35 @@ w32_complete_all_tasks() {
 }
 
 
+
+static platform_button_code_t
+w32_vkeys_to_platform_button_code(u32_t code) {
+
+  // A to Z
+  if (code >= 0x41 && code <= 0x5A) {
+    return platform_button_code_t(PLATFORM_BUTTON_CODE_A + code - 0x41);
+  }
+  
+  // 0 to 9
+  else if (code >= 0x30 && code <= 0x39) {
+    return platform_button_code_t(PLATFORM_BUTTON_CODE_0 + code - 0x30);
+  }
+
+  // F1 to F12
+  // NOTE(momo): there are actually more F-keys??
+  else if (code >= 0x70 && code <= 0x7B) {
+    return platform_button_code_t(PLATFORM_BUTTON_CODE_F1 + code - 0x70);
+  }
+  else {
+    switch(code) {
+      case VK_SPACE: return PLATFORM_BUTTON_CODE_SPACE;
+    }
+
+  }
+  
+  return PLATFORM_BUTTON_CODE_UNKNOWN;
+}
+
 static void
 w32_process_input(HWND window, platform_t* pf) 
 {
@@ -174,17 +203,23 @@ w32_process_input(HWND window, platform_t* pf)
       case WM_CLOSE: {
         w32_state.is_running = false;
       } break;
+
       case WM_LBUTTONUP:
       case WM_LBUTTONDOWN: {
-        u32_t code = (u32_t)msg.wParam;
         b32_t is_key_down = msg.message == WM_LBUTTONDOWN;
-        pf->button_editor0.now = is_key_down;
+        pf->buttons[PLATFORM_BUTTON_CODE_LMB].now = is_key_down;
       } break;
+
+      case WM_MBUTTONUP:
+      case WM_MBUTTONDOWN: {
+        b32_t is_key_down = msg.message == WM_MBUTTONDOWN;
+        pf->buttons[PLATFORM_BUTTON_CODE_MMB].now = is_key_down;
+      } break;
+
       case WM_RBUTTONUP:
       case WM_RBUTTONDOWN: {
-        u32_t code = (u32_t)msg.wParam;
         b32_t is_key_down = msg.message == WM_RBUTTONDOWN;
-        pf->button_editor1.now = is_key_down;
+        pf->buttons[PLATFORM_BUTTON_CODE_RMB].now = is_key_down;
       } break;
       
       case WM_KEYUP:
@@ -194,42 +229,8 @@ w32_process_input(HWND window, platform_t* pf)
       {
         u32_t code = (u32_t)msg.wParam;
         b32_t is_key_down = msg.message == WM_KEYDOWN;
-        switch(code) {
-          case 0x51: /* Q */ {
-            pf->button_rotate_left.now = is_key_down;
-          } break;
-          case 0x45: /* E */ {
-            pf->button_rotate_right.now = is_key_down;
-          } break;
-          //case 0x46: /* F */ {
-          case 0x20: /* space */ { 
-            pf->button_use.now = is_key_down;
-          } break;
-          case 0x57: /* W */ {
-            pf->button_up.now = is_key_down;
-          } break;
-          case 0x41: /* A */ {
-            pf->button_left.now = is_key_down;
-          } break;
-          case 0x53: /* S */ {
-            pf->button_down.now = is_key_down;
-          } break;
-          case 0x44: /* D */ {
-            pf->button_right.now = is_key_down;
-          } break;
-          case 0x70: /* F1 */{
-            pf->button_console.now = is_key_down;
-          } break;
-          case 0x71: /* F2 */{
-            pf->button_editor_on.now = is_key_down;
-          } break;
-          case 0xDB: /* [ */{
-            pf->button_editor2.now = is_key_down;
-          } break;
-          case 0xDD: /* ] */{
-            pf->button_editor3.now = is_key_down;
-          } break;
-        }
+        pf->buttons[w32_vkeys_to_platform_button_code(code)].now = is_key_down;
+
         TranslateMessage(&msg);
       } break;
       

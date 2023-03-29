@@ -189,8 +189,9 @@ struct lit_game_t {
   u32_t animator_count;
   lit_animator_t animators[64];
 
-  lit_sensor_t* selected_sensor; // for animated sensor APIs
-  lit_animator_t* selected_animator;
+  // for animated sensor APIs
+  lit_sensor_t* selected_sensor; 
+  lit_animator_t* selected_animator; 
 
   lit_particle_pool_t particles;
 

@@ -94,7 +94,7 @@ lit_tick(platform_t* platform) {
   }
 
   // Debug
-  if (platform_is_button_poked(platform->button_console)) {
+  if (platform_is_button_poked(platform->buttons[PLATFORM_BUTTON_CODE_F1])) {
     lit->show_debug_type = 
       (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
   }

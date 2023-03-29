@@ -48,23 +48,23 @@ lit_draw_menu_rect(
 
 static void 
 lit_menu_process_input(lit_t* lit, lit_menu_t* menu) {
-  if (platform_is_button_poked(lit->platform->button_up)) {
+  if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_W])) {
     if (menu->current_level_selection > LIT_MENU_LEVELS_PER_ROW) {
       menu->current_level_selection -= LIT_MENU_LEVELS_PER_ROW;
     }
   }
-  if (platform_is_button_poked(lit->platform->button_down)) {
+  if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_S])) {
     if (menu->current_level_selection < total_levels - LIT_MENU_LEVELS_PER_ROW)
       menu->current_level_selection += LIT_MENU_LEVELS_PER_ROW;
   }
-  if (platform_is_button_poked(lit->platform->button_left)) 
+  if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_A])) 
   {
     if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != 0)
     {
       menu->current_level_selection -= 1;
     }
   }
-  if (platform_is_button_poked(lit->platform->button_right))
+  if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_D]))
   {
     if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != LIT_MENU_LEVELS_PER_ROW-1)
     {
@@ -72,10 +72,11 @@ lit_menu_process_input(lit_t* lit, lit_menu_t* menu) {
     }
   }
 
-  if (platform_is_button_down(lit->platform->button_use)) {
+  if (platform_is_button_down(lit->platform->buttons[PLATFORM_BUTTON_CODE_SPACE])) 
+  {
     menu->selector_color = rgba_set(1.f, 0.f, 0.f, 1.f);
   }
-  if (platform_is_button_released(lit->platform->button_use))
+  if (platform_is_button_released(lit->platform->buttons[PLATFORM_BUTTON_CODE_SPACE]))
   {
     menu->mode = LIT_MENU_MODE_TRANSITION_OUT;
   }
