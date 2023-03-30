@@ -7,7 +7,7 @@
 
 #include "momo.h"
 
-/////////////////////////////////////////////////////////////////////
+//
 // Platform Memory API
 //
 typedef struct {
@@ -18,8 +18,9 @@ typedef platform_memory_t* platform_allocate_memory_f(umi_t size);
 typedef void  platform_free_memory_f(platform_memory_t* ptr);
 
 
-//////////////////////////////////////////////////////////////////////
+//
 // Platform File API
+//
 typedef enum {
   PLATFORM_FILE_PATH_EXE,
   PLATFORM_FILE_PATH_USER,
@@ -47,19 +48,20 @@ typedef b32_t platform_read_file_f(platform_file_t* file, umi_t size, umi_t offs
 typedef b32_t platform_write_file_f(platform_file_t* file, umi_t size, umi_t offset, void* src);
 
 //
-// platform_t multithreaded work API
+// Platform multithreaded work API
 typedef void platform_task_callback_f(void* data);
 typedef void platform_add_task_f(platform_task_callback_f callback, void* data);
 typedef void platform_complete_all_tasks_f();
 
-/////////////////////////////////////////////////////////////////////////
-// Other platform API
+//
+// Other Platform API
+// 
 typedef void  platform_debug_log_f(const char* fmt, ...);
 typedef u64_t platform_get_perforance_counter_f();
 typedef void  platform_set_moe_dims_f(f32_t width, f32_t height);
 
 
-//////////////////////////////////////////////////////////////////////////
+//
 // Platform Audio API
 //
 typedef struct {
@@ -146,8 +148,6 @@ struct gfx_t;
 struct profiler_t;
 
 typedef struct {
-
-  //arena_t* moe_arena; // Require 32MB
   gfx_t* gfx;
   profiler_t* profiler; 
   platform_audio_t* audio;
