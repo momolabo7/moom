@@ -1,4 +1,6 @@
-/* date = November 30th 2021 10:22 pm */
+//
+//
+//
 
 #ifndef MOMO_WAV_H
 #define MOMO_WAV_H
@@ -34,8 +36,9 @@ struct wav_t {
 
 static b32_t wav_read(wav_t* wav, void* memory, umi_t size);
 
-//////////////////////////////////////////////////////////
+//
 // IMPLEMENTATION
+//
 
 // http://soundfile.sapp.org/doc/Waveformat/
 static b32_t 

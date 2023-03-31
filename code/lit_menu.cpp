@@ -1,7 +1,3 @@
-const u32_t total_levels = 20;
-
-#define LIT_MENU_LEVELS_PER_ROW 5
-#define LIT_MENU_TRANSITION_DURATION 0.5f
 
 
 
@@ -19,10 +15,34 @@ lit_menu_init(
   menu->mode = LIT_MENU_MODE_TRANSITION_IN;
   menu->overlay_timer = LIT_MENU_TRANSITION_DURATION;
   menu->selector_color = RGBA_WHITE;
+
+
+  // 'Buttons'
+  {
+    v2f_t start = v2f_set(LIT_MENU_BUTTON_START_X, LIT_MENU_BUTTON_START_Y);
+    v2f_t cur = start; 
+
+    for (u32_t button_id = 0; 
+        button_id < array_count(menu->buttons); 
+        ++button_id)
+    {
+      lit_menu_button_t* btn = menu->buttons + button_id;
+      btn->xy = cur;
+      btn->wh = v2f_set(100.f, 100.f);
+      btn->cp = digit_to_ascii(button_id < 10 ? button_id : button_id + 7);
+      btn->scale = 1.f;
+
+      cur.x += LIT_MENU_BUTTON_OFFSET_X;
+      if (button_id % LIT_MENU_LEVELS_PER_ROW == LIT_MENU_LEVELS_PER_ROW-1) {
+        cur.x = start.x;
+        cur.y -= LIT_MENU_BUTTON_OFFSET_Y; 
+      }
+    }
+  }
 }
 
 static void
-lit_draw_menu_rect(
+lit_menu_draw_rect(
     lit_t* lit, 
     lit_menu_t* menu,
     v2f_t pos,
@@ -47,47 +67,94 @@ lit_draw_menu_rect(
 }
 
 static void 
-lit_menu_process_input(lit_t* lit, lit_menu_t* menu) {
+lit_menu_process_input(
+    lit_t* lit, 
+    lit_menu_t* menu, 
+    f32_t dt)
+{
   if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_W])) {
-    if (menu->current_level_selection > LIT_MENU_LEVELS_PER_ROW) {
+    if (menu->current_level_selection >= LIT_MENU_LEVELS_PER_ROW) {
       menu->current_level_selection -= LIT_MENU_LEVELS_PER_ROW;
     }
   }
   if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_S])) {
-    if (menu->current_level_selection < total_levels - LIT_MENU_LEVELS_PER_ROW)
+    if (menu->current_level_selection < LIT_MENU_TOTAL_LEVELS - LIT_MENU_LEVELS_PER_ROW)
       menu->current_level_selection += LIT_MENU_LEVELS_PER_ROW;
   }
-  if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_A])) 
-  {
-    if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != 0)
-    {
-      menu->current_level_selection -= 1;
-    }
-  }
-  if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_D]))
+  if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_D])) 
   {
     if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != LIT_MENU_LEVELS_PER_ROW-1)
     {
-      menu->current_level_selection += 1;
+      menu->current_level_selection++;
+    }
+  }
+  if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_A]))
+  {
+    if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != 0) 
+    {
+      menu->current_level_selection--;
     }
   }
 
   if (platform_is_button_down(lit->platform->buttons[PLATFORM_BUTTON_CODE_SPACE])) 
   {
     menu->selector_color = rgba_set(1.f, 0.f, 0.f, 1.f);
+    menu->selection_held_timer += dt;
   }
-  if (platform_is_button_released(lit->platform->buttons[PLATFORM_BUTTON_CODE_SPACE]))
+  
+  else if (platform_is_button_released(lit->platform->buttons[PLATFORM_BUTTON_CODE_SPACE]))
   {
-    menu->mode = LIT_MENU_MODE_TRANSITION_OUT;
+    // menu->mode = LIT_MENU_MODE_TRANSITION_OUT;
+    menu->selection_held_timer = 0.f;
   }
-  menu->current_level_selection %= total_levels;
+  menu->current_level_selection %= LIT_MENU_TOTAL_LEVELS;
+
+}
+
+static void 
+lit_menu_button_render(
+    lit_t* lit, 
+    lit_menu_t* menu, 
+    lit_menu_button_t* btn) 
+{
+  // Frame
+  rgba_t frame_color = rgba_set(0.5f, 0.5f, 0.5f, 1.f);
+  lit_menu_draw_rect(
+      lit, 
+      menu, 
+      btn->xy, 
+      btn->wh * btn->scale, 
+      16.f * btn->scale, 
+      frame_color); 
+
+  // Draw level number or icon depending on whether it's unlocked
+  // TODO: locked/unlocked
+  {
+    // NOTE(Momo): This is bad and hacky.
+    asset_font_t* font = get_font(&lit->assets, menu->font);
+    asset_font_glyph_t *glyph = get_glyph(font, btn->cp);
+    asset_bitmap_t* bitmap = get_bitmap(&lit->assets, glyph->bitmap_asset_id);
+    f32_t font_height = 72.f * btn->scale; 
+    v2f_t font_wh = v2f_set(
+        (glyph->box_x1 - glyph->box_x0) * font_height,
+        (glyph->box_y1 - glyph->box_y0) * font_height);
+    v2f_t anchor = v2f_set(0.5f, 0.5f);
+    gfx_push_sprite(lit->gfx, 
+        RGBA_WHITE,
+        btn->xy, font_wh, anchor,
+        bitmap->renderer_texture_handle, 
+        glyph->texel_x0,
+        glyph->texel_y0,
+        glyph->texel_x1,
+        glyph->texel_y1);
+
+  }
+  gfx_advance_depth(lit->gfx);
 
 }
 
 static void
 lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
-  
-
   f32_t dt = lit->platform->seconds_since_last_frame;
 
   if (menu->mode == LIT_MENU_MODE_TRANSITION_IN) {
@@ -105,12 +172,19 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
     }
   }
 
+  if (menu->mode == LIT_MENU_MODE_NORMAL) {
+    lit_menu_process_input(lit, menu, dt);
+  }
 
-  if (menu->mode == LIT_MENU_MODE_NORMAL)
+  // animate held button
   {
-    lit_menu_process_input(lit, menu);
+    lit_menu_button_t* btn = menu->buttons + menu->current_level_selection;
+    btn->scale += 0.1f;
   }
   
+  
+  
+
   // 
   // Rendering
   //
@@ -119,60 +193,12 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
   // Title
   gfx_push_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("LEVEL SELECTION"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT - 125.f, 72.f);
 
-
-  // 'Buttons'
-  f32_t start_x = 100.f;
-  f32_t start_y = LIT_HEIGHT - 250.f;
-  f32_t offset_x = 150.f;
-  f32_t offset_y = 150.f;
-  v2f_t cur_xy = v2f_set(start_x, start_y); 
-  v2f_t button_wh = v2f_set(100.f, 100.f);
-  rgba_t frame_color = rgba_set(0.5f, 0.5f, 0.5f, 1.f);
-
-  // Levels
-  for (u32_t level_index = 0; level_index < total_levels; ++level_index) 
+  for_arr(button_id, menu->buttons)
   {
-    
-    // Frame
-    lit_draw_menu_rect(lit, menu, cur_xy, button_wh, 16.f, frame_color); 
-
-    // Draw level number or icon depending on whether it's unlocked
-    // TODO: locked/unlocked
-    {
-      // NOTE(Momo): I'm too lazy.
-      f32_t font_height = 72.f;
-      u32_t cp = digit_to_ascii(level_index < 10 ? level_index : level_index + 7);
-
-      asset_font_t* font = get_font(&lit->assets, menu->font);
-      asset_font_glyph_t *glyph = get_glyph(font, cp);
-      asset_bitmap_t* bitmap = get_bitmap(&lit->assets, glyph->bitmap_asset_id);
-      f32_t w = (glyph->box_x1 - glyph->box_x0)*font_height;
-      f32_t h = (glyph->box_y1 - glyph->box_y0)*font_height;
-      v2f_t pos = cur_xy;
-      v2f_t size = v2f_set(w,h);
-      v2f_t anchor = v2f_set(0.5f, 0.5f);
-      gfx_push_sprite(lit->gfx, 
-                      RGBA_WHITE,
-                      pos, size, anchor,
-                      bitmap->renderer_texture_handle, 
-                      glyph->texel_x0,
-                      glyph->texel_y0,
-                      glyph->texel_x1,
-                      glyph->texel_y1);
-
-    }
-    gfx_advance_depth(lit->gfx);
-    //gfx_push_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("2"), RGBA_WHITE, cur_xy.x + 5.f, cur_xy.y - 25.f, 72.f);
-
-    cur_xy.x += offset_x;
-
-    if (level_index % LIT_MENU_LEVELS_PER_ROW == LIT_MENU_LEVELS_PER_ROW-1) {
-      cur_xy.x = start_x;
-      cur_xy.y -= offset_y; 
-    }
-
-
+    lit_menu_button_render(lit, menu, menu->buttons + button_id);
   }
+
+  
 
   // "Cursor"
   // Well this is not really a cursor in a classic sense, but it
@@ -180,10 +206,15 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
   {
     u32_t cursor_x_index = menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW;
     u32_t cursor_y_index = menu->current_level_selection / LIT_MENU_LEVELS_PER_ROW; 
-    v2f_t cursor_xy = v2f_set(start_x + cursor_x_index * offset_x, start_y - cursor_y_index * offset_y);
+
+    v2f_t start = v2f_set(LIT_MENU_BUTTON_START_X, LIT_MENU_BUTTON_START_Y);
+    v2f_t cursor_xy = v2f_set(
+        start.x + cursor_x_index * LIT_MENU_BUTTON_OFFSET_X, 
+        start.y - cursor_y_index * LIT_MENU_BUTTON_OFFSET_Y);
+
     v2f_t cursor_wh = v2f_set(150.f, 150.f);
 
-    lit_draw_menu_rect(lit, menu, cursor_xy, cursor_wh, 16.f, menu->selector_color); 
+    lit_menu_draw_rect(lit, menu, cursor_xy, cursor_wh, 16.f, menu->selector_color); 
     //gfx_push_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("menu"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT/2, 128.f);
 
     //inspector_add_u32(&lit->inspector, str8_from_lit("num"), &menu->current_level_selection);

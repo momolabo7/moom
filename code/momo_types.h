@@ -5,23 +5,29 @@
 //   This file contains common functions, defines and macros. 
 //   
 //   This includes:
+//   - Glue and Stringify macros
+//   - Export macros (different for each architecture)
 //   - Defines of compilers, OS, CPU archetecture
-//   - Assert mechanism 
+//   - Assert construct 
 //   - Primitive type redefines and their features such as their maximum and minimum value.
 //   - KB, MB, GB defines
 //   - Endian swapping helpers
 //   - C-String helpers and hashing functions. 
 //   - ASCII-related helpers 
 //   - Common math-like operations like: abs, clamp, lerp, max, min, etc.
-//   - Power of 2 functions (is this math-like?)
+//   - degrees to radians, bpm conversion
+//   - Power of 2 functions (is this considered math-like?)
 //   - Integer to pointer conversions
-//   - Memory manipulation like memcpy, memmove, etc. 
-
+//   - Memory manipulation like memcpy, memcmp, etc. 
+//   - Defer construct
+//   - Memory block  
+//
 //   
 // TODO
 // - Runtime Assert support? Or some kind of panic system (without throw).
 // - Might want to split between uintptr, size_t and intptr and all that stuff
 // - Might want to move math-like operations to a math/intrinsics header.
+// - Endianness detection
 //
 
 #ifndef MOMO_TYPES_H
@@ -137,7 +143,6 @@
 # define ENABLE_ASSERT 1
 #endif // ENABLE_ASSERT
 
-
 //
 // Internal
 //    
@@ -175,10 +180,22 @@ typedef char     c8_t;
 //
 typedef uintptr_t umi_t; // aka 'unsigned memory index'
 typedef intptr_t  smi_t; // aka 'signed memory index'
+typedef size_t    usz_t; // Can contain up to the highest indexable value 
+
+//
+// Memory block
+//
+struct memory_t {
+  union {
+    void* data;
+    u8_t* data_u8;
+  };
+  usz_t size;
+};
 
 
-//////////////////////////////////////////////////////////////////////////////
-// Constants
+//
+// Primitive Constants
 //
 #define S8_MIN  (-0x80)
 #define S16_MIN (-0x8000)
@@ -279,8 +296,9 @@ _F64_NEG_INFINITY() {
   return ret.f;	
 }
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // Helper Macros
+//
 #define stringify_(s) #s
 #define stringify(s) stringify_(s)
 #define glue_(a,b) a##b
@@ -340,8 +358,9 @@ _F64_NEG_INFINITY() {
 #define is_pow2(v) ((v) & ((v)-1) == 0)
 #define swap(l,r) { auto tmp = (l); (l) = (r); (r) = tmp; } 
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // Integer to pointer conversions
+//
 static umi_t 
 ptr_to_umi(void* p) { 
   return (umi_t)((c8_t*)p - (c8_t*)0); 
@@ -352,8 +371,9 @@ umi_to_ptr(umi_t u) {
   return (u8_t*)((c8_t*)0 + u);
 }
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // Ascii helpers
+//
 #define digit_to_ascii(d) ((d) + '0')
 #define ascii_to_digit(a) ((a) - '0')
 
@@ -373,9 +393,9 @@ is_digit(c8_t c) {
   // this gets compiled to (uint8_t)(c - '0') <= 9 on all decent compilers
 }
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // Absolutes
-
+//
 // Turns out we don't need a generic abs() function! 
 //#define abs_of(x) ((x) < 0 ? -(x) : (x))
 
@@ -419,7 +439,7 @@ s64_abs(s64_t x) {
   return (x ^ y)-y;
 }
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // Basic lerps
 //
 // NOTE(Momo): Lerp is tricky because the 'f' variable the 'percentage'.
@@ -437,7 +457,7 @@ f64_lerp(f64_t s, f64_t e, f64_t f) {
   return (f64_t)(s + (e-s) * f); 
 }
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // Weights
 //
 static f32_t 
@@ -450,7 +470,7 @@ f64_weight(f64_t v, f64_t min, f64_t max) {
   return (v - min)/(max - min); 
 }
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // Degrees to Radians
 //
 static f32_t 
@@ -472,7 +492,7 @@ f64_rad_to_deg(f64_t radians) {
   return radians * 180.0 / PI_64;
 }
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // Beats Per Minute to Seconds Per Beat
 //
 static f32_t
@@ -1539,6 +1559,10 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
   return { f };
 }
 # define defer auto glue(_defer, __LINE__) = _defer_dummy{} + [&]()
+
+// For each
+#define for_arr(id, arr) for(umi_t id = 0; id < array_count(arr); ++id)
+#define for_cnt(id, cnt) for(decltype(cnt) id = 0; id < cnt; ++id)
 
 // Singly Linked Lists
 // f - first node
