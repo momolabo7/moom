@@ -18,41 +18,64 @@
 
 
 // Each component of rgba_t are in the range [0 - 1].
-typedef struct rgb_t {
+struct rgb_t {
   f32_t r, g, b;   
-} rgb_t;
+};
 
 // Each component are in the range of [0 - 1].
 // For hue, normally it is a number between [0 - 360], but
 // it will be mapped linearly to [0 - 1] in this case.
 // i.e. hue 0 is 0 degrees, hue 1 is 360 degrees.
-typedef struct hsl_t {
+struct hsl_t {
   f32_t h, s, l;  
-} hsl_t;
+};
 
-typedef struct rgba_t {
+struct hsla_t {
+  union {
+    struct { f32_t h,s,l; };  
+    hsl_t hsl;
+  };
+  f32_t a;
+};
+
+
+struct rgba_t {
   union {
     struct { f32_t r, g, b; };  
     rgb_t rgb;
   };
   f32_t a;
-} rgba_t;
+};
 
+static hsl_t  hsl_set(f32_t h, f32_t s, f32_t l);
+static hsla_t hsla_set(f32_t h, f32_t s, f32_t l, f32_t a);
 static rgba_t rgba_set(f32_t r, f32_t g, f32_t b, f32_t a);
 static rgba_t rgba_hex(u32_t hex);  
-static hsl_t  hsl_set(f32_t h, f32_t s, f32_t l);
+static rgba_t hsla_to_rgba(hsla_t c);
 static hsl_t  rbg_to_hsl(rgb_t c);
 static rgb_t  hsl_to_rgb(hsl_t c);
 
 #define RGBA_WHITE rgba_set(1.f, 1.f, 1.f, 1.f)
 ////////////////////////////////////////////////////////////
 // IMPLEMENTATION
+//
 static rgba_t 
 rgba_set(f32_t r, f32_t g, f32_t b, f32_t a){
 	rgba_t ret;
 	ret.r = r;
 	ret.g = g;
 	ret.b = b;
+	ret.a = a;
+	
+	return ret;
+}
+
+static hsla_t 
+hsla_set(f32_t h, f32_t s, f32_t l, f32_t a){
+	hsla_t ret;
+	ret.h = h;
+	ret.s = s;
+	ret.l = l;
 	ret.a = a;
 	
 	return ret;
@@ -181,6 +204,15 @@ hsl_to_rgb(hsl_t c) {
   
 }
 
+
+static rgba_t hsla_to_rgba(hsla_t c) {
+  rgba_t ret = {};
+  ret.rgb = hsl_to_rgb(c.hsl);
+  ret.a = c.a;
+
+  return ret;
+
+}
 
 #endif //MOMO_COLORS_H
 

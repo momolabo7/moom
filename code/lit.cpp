@@ -14,7 +14,7 @@ lit_tick(platform_t* platform) {
     lit->profiler = platform->profiler;
     lit->level_to_start = 0;
 
-    lit->next_mode = LIT_MODE_MENU;
+    lit->next_mode = LIT_MODE_GAME;
 
     //
     // Initialize assets

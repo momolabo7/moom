@@ -1,5 +1,19 @@
+// Authors: Gerald Wong 
+//
+// This file contains the implementations of easing functions
+// 
+// USAGE:
+//   The typical use case is as follows. 
+//   Assuming you want to interpolate from x1 to x2 over time within a duration:
+//
+//   a = f32_ease_xxx(time/duration)
+//   x = x1 + a * (x2 - x1)
+//
+
 #ifndef MOMO_EASING_H
 #define MOMO_EASING_H
+
+
 
 static f32_t f32_ease_linear(f32_t t);
 static f32_t f32_ease_in_sine(f32_t t);

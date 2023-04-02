@@ -9,7 +9,10 @@
 #define LIT_MENU_BUTTON_OFFSET_Y 150.f
 #define LIT_MENU_BUTTON_START_X 100.f 
 #define LIT_MENU_BUTTON_START_Y (LIT_HEIGHT - 250.f)
-
+#define LIT_MENU_BUTTON_W 100.f
+#define LIT_MENU_BUTTON_H LIT_MENU_BUTTON_W
+#define LIT_MENU_BUTTON_SCALE_TARGET (LIT_WIDTH/LIT_MENU_BUTTON_W)
+#define LIT_MENU_SELECT_DURATION 0.5f
 
 enum lit_menu_mode_t {
   LIT_MENU_MODE_TRANSITION_IN,
@@ -18,7 +21,9 @@ enum lit_menu_mode_t {
 };
 
 struct lit_menu_button_t {
-  v2f_t xy;
+  v2f_t oxy;
+
+  v2f_t xy; 
   v2f_t wh;
   u32_t cp; // codepoint
   f32_t scale;

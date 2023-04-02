@@ -27,8 +27,8 @@ lit_menu_init(
         ++button_id)
     {
       lit_menu_button_t* btn = menu->buttons + button_id;
-      btn->xy = cur;
-      btn->wh = v2f_set(100.f, 100.f);
+      btn->oxy = btn->xy = cur;
+      btn->wh = v2f_set(LIT_MENU_BUTTON_W, LIT_MENU_BUTTON_H);
       btn->cp = digit_to_ascii(button_id < 10 ? button_id : button_id + 7);
       btn->scale = 1.f;
 
@@ -54,59 +54,133 @@ lit_menu_draw_rect(
   const f32_t half_h = size.h/2.f;
 
   // left
-  gfx_push_asset_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x - half_w, pos.y), v2f_set(thickness, size.y), color); 
+  gfx_push_asset_sprite(
+      lit->gfx, 
+      &lit->assets, 
+      menu->blank_sprite, 
+      v2f_set(pos.x - half_w, pos.y), 
+      v2f_set(thickness, size.y), 
+      color); 
+  gfx_advance_depth(lit->gfx);
 
   // right
-  gfx_push_asset_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x + half_w, pos.y), v2f_set(thickness, size.y), color); 
+  gfx_push_asset_sprite(
+      lit->gfx, 
+      &lit->assets, 
+      menu->blank_sprite, 
+      v2f_set(pos.x + half_w, pos.y), 
+      v2f_set(thickness, size.y), 
+      color); 
+  gfx_advance_depth(lit->gfx);
 
   // top
-  gfx_push_asset_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x, pos.y + half_h), v2f_set(size.x, thickness), color); 
+  gfx_push_asset_sprite(
+      lit->gfx, 
+      &lit->assets, 
+      menu->blank_sprite,
+      v2f_set(pos.x, pos.y + half_h), 
+      v2f_set(size.x, thickness), 
+      color); 
+  gfx_advance_depth(lit->gfx);
 
   // bottom
-  gfx_push_asset_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(pos.x, pos.y - half_h), v2f_set(size.x, thickness), color); 
+  gfx_push_asset_sprite(
+      lit->gfx, 
+      &lit->assets, 
+      menu->blank_sprite, 
+      v2f_set(pos.x, pos.y - half_h), 
+      v2f_set(size.x, thickness), 
+      color); 
+  gfx_advance_depth(lit->gfx);
 }
 
-static void 
-lit_menu_process_input(
+static void
+lit_menu_tick_transition_in(
     lit_t* lit, 
     lit_menu_t* menu, 
     f32_t dt)
 {
-  if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_W])) {
-    if (menu->current_level_selection >= LIT_MENU_LEVELS_PER_ROW) {
-      menu->current_level_selection -= LIT_MENU_LEVELS_PER_ROW;
-    }
+  menu->overlay_timer-= dt; 
+  if (menu->overlay_timer <= 0.f) {
+    menu->overlay_timer = 0.f;
+    menu->mode = LIT_MENU_MODE_NORMAL;
   }
-  if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_S])) {
-    if (menu->current_level_selection < LIT_MENU_TOTAL_LEVELS - LIT_MENU_LEVELS_PER_ROW)
-      menu->current_level_selection += LIT_MENU_LEVELS_PER_ROW;
+}
+
+static void
+lit_menu_tick_transition_out(
+    lit_t* lit, 
+    lit_menu_t* menu, 
+    f32_t dt)
+{
+  menu->overlay_timer += dt; 
+  if (menu->overlay_timer >= LIT_MENU_TRANSITION_DURATION) {
+    menu->overlay_timer = LIT_MENU_TRANSITION_DURATION;
+
+    lit_goto_specific_level(lit, 0); // TODO: change to appropriate level
   }
-  if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_D])) 
+}
+
+static void 
+lit_menu_tick_normal(
+    lit_t* lit, 
+    lit_menu_t* menu, 
+    f32_t dt)
+{
+  if (platform_is_button_down(lit->platform->buttons[PLATFORM_BUTTON_CODE_SPACE])) 
   {
-    if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != LIT_MENU_LEVELS_PER_ROW-1)
-    {
-      menu->current_level_selection++;
-    }
-  }
-  if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_A]))
-  {
-    if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != 0) 
-    {
-      menu->current_level_selection--;
+    // animate held button
+    menu->selection_held_timer += dt;
+    if (menu->selection_held_timer >= LIT_MENU_SELECT_DURATION) {
+      menu->selection_held_timer = LIT_MENU_SELECT_DURATION;
+      menu->mode = LIT_MENU_MODE_TRANSITION_OUT;
     }
   }
 
-  if (platform_is_button_down(lit->platform->buttons[PLATFORM_BUTTON_CODE_SPACE])) 
-  {
-    menu->selector_color = rgba_set(1.f, 0.f, 0.f, 1.f);
-    menu->selection_held_timer += dt;
-  }
-  
   else if (platform_is_button_released(lit->platform->buttons[PLATFORM_BUTTON_CODE_SPACE]))
   {
     // menu->mode = LIT_MENU_MODE_TRANSITION_OUT;
-    menu->selection_held_timer = 0.f;
+    //menu->selection_held_timer = 0.f;
   }
+
+  else {
+    if (menu->selection_held_timer <= 0.f) {
+      if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_W])) {
+        if (menu->current_level_selection >= LIT_MENU_LEVELS_PER_ROW) {
+          menu->current_level_selection -= LIT_MENU_LEVELS_PER_ROW;
+        }
+      }
+      if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_S])) {
+        if (menu->current_level_selection < LIT_MENU_TOTAL_LEVELS - LIT_MENU_LEVELS_PER_ROW)
+          menu->current_level_selection += LIT_MENU_LEVELS_PER_ROW;
+      }
+      if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_D])) 
+      {
+        if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != LIT_MENU_LEVELS_PER_ROW-1)
+        {
+          menu->current_level_selection++;
+        }
+      }
+      if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_A]))
+      {
+        if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != 0) 
+        {
+          menu->current_level_selection--;
+        }
+      }
+    }
+   
+    // un-animate held button
+    menu->selection_held_timer -= dt;
+    menu->selection_held_timer = max_of(menu->selection_held_timer, 0.f);
+
+  }
+ 
+  lit_menu_button_t* btn = menu->buttons + menu->current_level_selection;
+  f32_t a = f32_ease_out_quad(menu->selection_held_timer/LIT_MENU_SELECT_DURATION);
+  btn->scale = 1.f + a * (LIT_MENU_BUTTON_SCALE_TARGET-1.f);
+  btn->xy = btn->oxy + a*(v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2) - btn->oxy);
+
   menu->current_level_selection %= LIT_MENU_TOTAL_LEVELS;
 
 }
@@ -158,28 +232,14 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
   f32_t dt = lit->platform->seconds_since_last_frame;
 
   if (menu->mode == LIT_MENU_MODE_TRANSITION_IN) {
-    menu->overlay_timer-= dt; 
-    if (menu->overlay_timer <= 0.f) {
-      menu->overlay_timer = 0.f;
-      menu->mode = LIT_MENU_MODE_NORMAL;
-    }
+    lit_menu_tick_transition_in(lit, menu, dt);
   }
   else if (menu->mode == LIT_MENU_MODE_TRANSITION_OUT) {
-    menu->overlay_timer += dt; 
-    if (menu->overlay_timer >= LIT_MENU_TRANSITION_DURATION) {
-      menu->overlay_timer = LIT_MENU_TRANSITION_DURATION;
-      lit_goto_specific_level(lit, 0);
-    }
+    lit_menu_tick_transition_out(lit, menu, dt);
+    
   }
-
-  if (menu->mode == LIT_MENU_MODE_NORMAL) {
-    lit_menu_process_input(lit, menu, dt);
-  }
-
-  // animate held button
-  {
-    lit_menu_button_t* btn = menu->buttons + menu->current_level_selection;
-    btn->scale += 0.1f;
+  else if (menu->mode == LIT_MENU_MODE_NORMAL) {
+    lit_menu_tick_normal(lit, menu, dt);
   }
   
   
@@ -195,9 +255,19 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
 
   for_arr(button_id, menu->buttons)
   {
+    if (button_id == menu->current_level_selection) continue; 
     lit_menu_button_render(lit, menu, menu->buttons + button_id);
   }
 
+  // Overlay to emphasize selected button
+  {
+    f32_t alpha = menu->selection_held_timer/(LIT_MENU_TRANSITION_DURATION/2);
+    gfx_push_asset_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), rgba_set(0.f, 0.f, 0.f, alpha));
+    gfx_advance_depth(lit->gfx);
+  }
+
+
+  lit_menu_button_render(lit, menu, menu->buttons + menu->current_level_selection);
   
 
   // "Cursor"
@@ -222,7 +292,9 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
 
   }
 
-  // Overlay
+  //
+  // Front Overlay
+  //
 #if 1
   {
     f32_t alpha = menu->overlay_timer/LIT_MENU_TRANSITION_DURATION;

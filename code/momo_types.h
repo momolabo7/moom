@@ -1561,7 +1561,7 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 # define defer auto glue(_defer, __LINE__) = _defer_dummy{} + [&]()
 
 // For each
-#define for_arr(id, arr) for(umi_t id = 0; id < array_count(arr); ++id)
+#define for_arr(id, arr) for(umi_t id = 0, cnt = array_count(arr); id < cnt; ++id)
 #define for_cnt(id, cnt) for(decltype(cnt) id = 0; id < cnt; ++id)
 
 // Singly Linked Lists
