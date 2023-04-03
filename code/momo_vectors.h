@@ -91,16 +91,21 @@ static v3f_t  operator+(v3f_t lhs, v3f_t rhs);
 static v3f_t  operator-(v3f_t lhs, v3f_t rhs);
 static v3f_t  operator*(v3f_t lhs, f32_t rhs); // scale
 static v3f_t  operator*(f32_t lhs, v3f_t rhs); // scale
-static b32_t operator==(v3f_t lhs, v3f_t rhs);
-static b32_t operator!=(v3f_t lhs, v3f_t rhs);
+static b32_t  operator==(v3f_t lhs, v3f_t rhs);
+static b32_t  operator!=(v3f_t lhs, v3f_t rhs);
 static v3f_t  operator-(v3f_t v);
 static v3f_t& operator+=(v3f_t& lhs, v3f_t rhs);
 static v3f_t& operator-=(v3f_t& lhs, v3f_t rhs);
 static v3f_t& operator*=(v3f_t& lhs, v3f_t rhs);
 
-////////////////////////////////////////////////////////
+//
 // IMPLEMENTATION
+// 
+
+
+//
 // NOTE(Momo): v2f_t
+//
 static v2f_t
 v2f_zero(void) {
   v2f_t ret = { 0.f, 0.f };

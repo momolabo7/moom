@@ -4,7 +4,7 @@
 #define MOMO_RECT_PACK_H
 
 
-enum rp_sort_type_t{
+enum rp_sort_type_t {
   RP_SORT_TYPE_WIDTH,
   RP_SORT_TYPE_HEIGHT,
   RP_SORT_TYPE_AREA,
@@ -106,7 +106,6 @@ _rp_sort(rp_rect_t* rects,
         entries[i].key = key;
         entries[i].index = i;
       }
-
     } break;
   }
   quicksort(entries, count);

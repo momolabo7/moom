@@ -1,19 +1,12 @@
 #ifndef MOMO_SHAPES_H
 #define MOMO_SHAPES_H
 
-#if 0
-struct Rect2 {
-  v2f_t min, max;
-};
-#endif
 
+static b32_t bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt); 
 
-
-
-
-///////////////////////////////////////////////////////////////////
+//
 // IMPLEMENTATION
-
+//
 
 
 // https://totologic.blogspot.com/2014/01/accurate-point-in-triangle-test.html

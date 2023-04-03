@@ -7,8 +7,15 @@
 struct sort_entry_t {
   f32_t key;
   u32_t index;
-};
+}
+static void quicksort(sort_entry_t* entries, u32_t entry_count);
 
+
+
+
+//
+//IMPLEMENTATION
+//
 static void
 _sort_swap_entries(sort_entry_t* a, sort_entry_t* b) {
   sort_entry_t temp = *b;
@@ -16,7 +23,7 @@ _sort_swap_entries(sort_entry_t* a, sort_entry_t* b) {
   *a = temp;
 }
 
-///////////////////////////////////////////////////////////////////
+//
 // Quick sort
 //
 static u32_t

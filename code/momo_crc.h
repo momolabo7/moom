@@ -3,11 +3,9 @@
 // This file contains CRC calculation functions.
 //
 // Notes:
-// - calc_crcXX() functions require you to generate CRC tables
-//   first with gen_crc_table() series of functions.
+// - crcXX() functions require you to generate CRC tables
+//   first with crcXX_init_table() series of functions.
 // 
-// Todo:
-// - 
 // 
 
 
@@ -31,7 +29,7 @@ static void crc32_init_table(crc32_table_t* table, u32_t polynomial);
 static void crc16_init_table(crc16_table_t* table, u16_t polynomial);
 static void crc8_init_table(crc8_table_t* table, u8_t polynomial); 
 
-// These require the CRCXX_Tables
+// These require the crcXX_init_table
 static u32_t crc32(u8_t* data, u32_t data_size, u16_t start_register, crc32_table_t* table);
 static u32_t crc16(u8_t* data, u32_t data_size, u16_t start_register, crc16_table_t* table);
 static u32_t crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t* table);
@@ -40,10 +38,16 @@ static u32_t crc32_slow(u8_t* data, u32_t data_size, u32_t start_register, u32_t
 static u32_t crc16_slow(u8_t* data, u32_t data_size, u16_t start_register, u16_t polynomial);
 static u32_t crc8_slow(u8_t* data, u32_t data_size, u16_t start_register, u16_t polynomial);
 
-//////////////////////////////////////////////////////
+//
 // IMPLEMENTATION
-//~ NOTE(Momo): 'Slow' series
-// These are for quick and easy 
+//
+
+//
+// Slow versions
+//
+// These are for quick and easy use. 
+// Try not to use this for production
+//
 static u32_t
 crc32_slow(u8_t* data, u32_t data_size, u32_t start_register, u32_t polynomial) {
   u32_t r = start_register;
@@ -96,9 +100,11 @@ crc8_slow(u8_t* data, u32_t data_size, u16_t start_register, u16_t polynomial) {
   return r;
 }
 
-//~ NOTE(Momo): Table generation 
+//
+// Table generation
+//
 static void 
-crc32_init_table(crc32_table_t* table,u32_t polynomial) {
+crc32_init_table(crc32_table_t* table, u32_t polynomial) {
   for (u32_t divident = 0; divident < 256; ++divident) {
     u32_t remainder = divident <<  24;
     for (u32_t j = 0; j < 8; ++j) {
@@ -145,7 +151,9 @@ crc8_init_table(crc8_table_t* table, u8_t polynomial) {
   }
 }
 
-//~ NOTE(Momo): Fast series. Uses a table
+//
+// Faster version
+//
 static u32_t
 crc32(u8_t* data, u32_t data_size, u16_t start_register, crc32_table_t* table) {
   u32_t crc = start_register;
