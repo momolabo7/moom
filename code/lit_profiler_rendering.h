@@ -52,8 +52,8 @@ profiler_update_and_render(lit_t* lit)
 
   // Overlay
   gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, 
-                          v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
-                          v2f_set(LIT_WIDTH, LIT_HEIGHT),
+                          v2f(LIT_WIDTH/2, LIT_HEIGHT/2), 
+                          v2f(LIT_WIDTH, LIT_HEIGHT),
                           rgba_set(0.f, 0.f, 0.f, 0.5f));
   gfx_advance_depth(gfx);
   
@@ -120,11 +120,11 @@ profiler_update_and_render(lit_t* lit)
       f32_t snapshot_bar_height = 
         height_scale * font_height * (f32_t)snapshot->cycles * 0.95f;
      
-      v2f_t pos = v2f_set(
+      v2f_t pos = v2f(
         560.f + snapshot_bar_width * (snapshot_index), 
         render_height - font_height * (line_num) + font_height/4);
 
-      v2f_t size = v2f_set(snapshot_bar_width, snapshot_bar_height);
+      v2f_t size = v2f(snapshot_bar_width, snapshot_bar_height);
       gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, pos, size, rgba_hex(0x00FF00FF));
     }
     gfx_advance_depth(gfx);

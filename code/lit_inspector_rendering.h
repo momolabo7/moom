@@ -11,8 +11,8 @@ inspector_update_and_render(lit_t* lit)
   gfx_t* gfx = lit->gfx;
   assets_t* assets = &lit->assets;
   gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, 
-                          v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
-                          v2f_set(LIT_WIDTH, LIT_HEIGHT),
+                          v2f(LIT_WIDTH/2, LIT_HEIGHT/2), 
+                          v2f(LIT_WIDTH, LIT_HEIGHT),
                           rgba_set(0.f, 0.f, 0.f, 0.5f));
   gfx_advance_depth(gfx);
   

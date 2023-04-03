@@ -29,30 +29,28 @@ static u32_t sui_log_paces = 0;
 
 
 // Utility files for ass
-static void* 
-sui_read_file(const char* filename, umi_t* out_size, arena_t* allocator) {
+static buffer_t  
+sui_read_file(const char* filename, arena_t* allocator) {
   FILE *file = fopen(filename, "rb");
-  if (!file) return false;
+  if (!file) return buffer();
   defer { fclose(file); };
 
   fseek(file, 0, SEEK_END);
-  umi_t file_size = ftell(file);
+  usz_t file_size = ftell(file);
   fseek(file, 0, SEEK_SET);
  
   //sui_log("%s, %lld\n", filename, file_size);
-  void* file_blk = arena_push_size(allocator, file_size, 16); 
-  if (!file_blk) return false;
-  umi_t read_amount = fread(file_blk, 1, file_size, file);
-  if(read_amount != file_size) return false;
+  buffer_t file_contents = arena_push_buffer(allocator, file_size, 16);
+  if (!file_contents) return buffer();
+  usz_t read_amount = fread(file_contents.data, 1, file_size, file);
+  if(read_amount != file_size) return buffer();
   
-  if (out_size) *out_size = file_size;
-  
-  return file_blk;;
+  return file_contents;
   
 }
 
 static b32_t
-sui_write_file(const char* filename, void* memory, umi_t memory_size) {
+sui_write_file(const char* filename, void* memory, usz_t memory_size) {
   FILE *file = fopen(filename, "wb");
   if (!file) return false;
   defer { fclose(file); };
@@ -64,22 +62,17 @@ sui_write_file(const char* filename, void* memory, umi_t memory_size) {
 static b32_t 
 sui_read_font_from_file(ttf_t* ttf, const char* filename, arena_t* allocator) {
 
-  umi_t size;
-  void* mem = sui_read_file(filename, &size, allocator); 
-
-  if (!sui_read_file(filename, &size, allocator)) 
-    return false;
-  return ttf_read(ttf, mem, size);
+  buffer_t file_contents = sui_read_file(filename, allocator); 
+  if (!file_contents) return false;
+  return ttf_read(ttf, file_contents);
 }
 
 static b32_t 
 sui_read_wav_from_file(wav_t* wav, const char* filename, arena_t* allocator) {
 
-  umi_t size;
-  void* mem = sui_read_file(filename, &size, allocator); 
-  if(!mem)
-    return false;
-  return wav_read(wav, mem, size);
+  buffer_t file_contents = sui_read_file(filename, allocator); 
+  if(!file_contents) return false;
+  return wav_read(wav, file_contents);
 }
 
 #include "karu.h"

@@ -183,15 +183,27 @@ typedef intptr_t  smi_t; // aka 'signed memory index'
 typedef size_t    usz_t; // Can contain up to the highest indexable value 
 
 //
-// Memory block
+// Buffer: a piece of memory
 //
-struct memory_t {
+struct buffer_t {
   union {
     void* data;
     u8_t* data_u8;
   };
   usz_t size;
+
+  operator bool() {
+    return data != nullptr;
+  }
 };
+static b32_t 
+buffer_is_ok(buffer_t buffer) {
+  return buffer.data != nullptr;
+}
+static buffer_t buffer(void* mem = 0, usz_t size = 0) {
+  return buffer_t{mem, size};
+}
+
 
 
 //

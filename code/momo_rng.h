@@ -12,7 +12,7 @@ static u32_t rng_choice(rng_t* r, u32_t choice_count);
 static f32_t rng_unilateral(rng_t* r);
 static f32_t rng_bilateral(rng_t* r);
 static f32_t rng_range_F32(rng_t* r, f32_t min, f32_t max);
-static s32_t rng_range_S32(rng_t* r, s32_t min, s32_t max)
+static s32_t rng_range_S32(rng_t* r, s32_t min, s32_t max);
 static v2f_t rng_unit_circle(rng_t* r);
 
 //

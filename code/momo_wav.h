@@ -34,7 +34,7 @@ struct wav_t {
   void* data;
 };
 
-static b32_t wav_read(wav_t* wav, void* memory, umi_t size);
+static b32_t wav_read(wav_t* wav, buffer_t contents);
 
 //
 // IMPLEMENTATION
@@ -42,7 +42,7 @@ static b32_t wav_read(wav_t* wav, void* memory, umi_t size);
 
 // http://soundfile.sapp.org/doc/Waveformat/
 static b32_t 
-wav_read(wav_t* w, void* memory, umi_t memory_size) 
+wav_read(wav_t* w, buffer_t contents) 
 {
   const static u32_t riff_id_signature = 0x52494646;
   const static u32_t riff_format_signature = 0x57415645;
@@ -50,7 +50,7 @@ wav_read(wav_t* w, void* memory, umi_t memory_size)
   const static u32_t data_id_signature = 0x64617461;
   
   make(stream_t, stream);
-  stream_init(stream, (u8_t*)memory, memory_size);
+  stream_init(stream, contents);
   
   // NOTE(Momo): Load Riff Chunk
   wav_riff_chunk_t* riff_chunk = stream_consume(wav_riff_chunk_t, stream);

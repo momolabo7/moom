@@ -424,7 +424,7 @@ gfx_draw_line(gfx_t* g,
   f32_t line_length = v2f_len(line_vector);
   v2f_t line_mid = v2f_mid(p1, p0);
   
-  v2f_t x_axis = v2f_set(1.f, 0.f);
+  v2f_t x_axis = v2f(1.f, 0.f);
   f32_t angle = v2f_angle(line_vector, x_axis);
   
   gfx_draw_filled_rect(g, colors, 
@@ -456,8 +456,8 @@ gfx_draw_filled_circle(gfx_t* g, v2f_t center, f32_t radius,
     f32_t next_angle = current_angle + section_angle; 
 
     v2f_t p0 = center;
-    v2f_t p1 = p0 + v2f_set(f32_cos(current_angle), f32_sin(current_angle)) * radius;
-    v2f_t p2 = p0 + v2f_set(f32_cos(next_angle), f32_sin(next_angle)) * radius; 
+    v2f_t p1 = p0 + v2f(f32_cos(current_angle), f32_sin(current_angle)) * radius;
+    v2f_t p2 = p0 + v2f(f32_cos(next_angle), f32_sin(next_angle)) * radius; 
 
     gfx_draw_filled_triangle(g, color, p0, p1, p2); 
     current_angle += section_angle;
@@ -477,7 +477,7 @@ gfx_draw_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u
     return;
   }
   f32_t angle_increment = TAU_32 / line_count;
-  v2f_t pt1 = v2f_set( 0.f, radius); 
+  v2f_t pt1 = v2f( 0.f, radius); 
   v2f_t pt2 = v2f_rotate(pt1, angle_increment);
   
   for (u32_t i = 0; i < line_count; ++i) {

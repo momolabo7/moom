@@ -37,14 +37,14 @@ lit_update_and_render_console(lit_t* lit)
   static const f32_t font_bottom_pad = (line_height - font_height);
   static const f32_t left_pad = 10.f;
   
-  v2f_t console_size = v2f_set(console_width, console_height);
-  v2f_t console_pos = v2f_set(console_width/2, console_height/2);
-  v2f_t input_area_size = v2f_set(console_width, line_height);
-  v2f_t input_area_pos = v2f_set(console_width/2, line_height/2);
+  v2f_t console_size = v2f(console_width, console_height);
+  v2f_t console_pos = v2f(console_width/2, console_height/2);
+  v2f_t input_area_size = v2f(console_width, line_height);
+  v2f_t input_area_pos = v2f(console_width/2, line_height/2);
   
   gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, 
-                          v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
-                          v2f_set(LIT_WIDTH, LIT_HEIGHT),
+                          v2f(LIT_WIDTH/2, LIT_HEIGHT/2), 
+                          v2f(LIT_WIDTH, LIT_HEIGHT),
                           rgba_set(0.f, 0.f, 0.f, 0.8f));
   gfx_advance_depth(gfx);
   

@@ -48,13 +48,14 @@ struct arena_marker_t {
   usz_t old_pos;
 };
 
-static void   arena_init(arena_t* a, void* mem, usz_t cap);
-static void   arena_clear(arena_t* a);
-static void*  arena_push_size(arena_t* a, usz_t size, usz_t align);
-static void*  arena_push_size_zero(arena_t* a, usz_t size, usz_t align); 
-static b32_t  arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align);
-static b32_t  arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align);
-static usz_t  arena_remaining(arena_t* a);
+static void     arena_init(arena_t* a, void* mem, usz_t cap);
+static void     arena_clear(arena_t* a);
+static void*    arena_push_size(arena_t* a, usz_t size, usz_t align);
+static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align); 
+static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align);
+static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align);
+static buffer_t arena_push_buffer(arena_t* a, usz_t size, usz_t align);
+static usz_t    arena_remaining(arena_t* a);
 
 #define arena_push_arr_align(t,b,n,a) (t*)arena_push_size(b, sizeof(t)*(n), a)
 #define arena_push_arr(t,b,n)         (t*)arena_push_size(b, sizeof(t)*(n),alignof(t))
@@ -135,6 +136,15 @@ arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align) {
   arena_init(partition, mem, size);
   return true;
   
+}
+
+static buffer_t
+arena_push_buffer(arena_t* a, usz_t size, usz_t align) {
+  buffer_t buffer = {};
+  buffer.data = arena_push_size(a, size, align);
+  buffer.size = size;
+
+  return buffer;
 }
 
 

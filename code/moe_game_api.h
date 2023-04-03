@@ -16,7 +16,7 @@ gfx_push_asset_sprite(
 {
   asset_sprite_t* sprite = get_sprite(assets, sprite_id);
   asset_bitmap_t* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);
-  v2f_t anchor = v2f_set(0.5f, 0.5f); 
+  v2f_t anchor = v2f(0.5f, 0.5f); 
   
   gfx_push_sprite(gfx, 
                   color,
@@ -54,9 +54,9 @@ gfx_push_text(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str,
     f32_t width = (glyph->box_x1 - glyph->box_x0)*font_height;
     f32_t height = (glyph->box_y1 - glyph->box_y0)*font_height;
     
-    v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py + (glyph->box_y0*font_height));
-    v2f_t size = v2f_set(width, height);
-    v2f_t anchor = v2f_set(0.f, 0.f); // bottom left
+    v2f_t pos = v2f(px + (glyph->box_x0*font_height), py + (glyph->box_y0*font_height));
+    v2f_t size = v2f(width, height);
+    v2f_t anchor = v2f(0.f, 0.f); // bottom left
     gfx_push_sprite(gfx, 
                     color,
                     pos, size, anchor,
@@ -121,9 +121,9 @@ gfx_push_text_center_aligned(gfx_t* gfx, assets_t* assets, asset_font_id_t font_
     f32_t width = (glyph->box_x1 - glyph->box_x0)*font_height;
     f32_t height = (glyph->box_y1 - glyph->box_y0)*font_height;
     
-    v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py + (glyph->box_y0*font_height));
-    v2f_t size = v2f_set(width, height);
-    v2f_t anchor = v2f_set(0.f, 0.f); // bottom left
+    v2f_t pos = v2f(px + (glyph->box_x0*font_height), py + (glyph->box_y0*font_height));
+    v2f_t size = v2f(width, height);
+    v2f_t anchor = v2f(0.f, 0.f); // bottom left
     gfx_push_sprite(gfx, 
                     color,
                     pos, size, anchor,

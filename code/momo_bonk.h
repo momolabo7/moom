@@ -55,13 +55,13 @@ _bonk_tri2_pt2_barycentric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
 
 static b32_t
 _bonk_tri2_pt2_dot_product(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
-  v2f_t vec0 = v2f_set(pt.x - tp0.x, pt.y - tp0.y);      
-  v2f_t vec1 = v2f_set(pt.x - tp1.x, pt.y - tp1.y);      
-  v2f_t vec2 = v2f_set(pt.x - tp2.x, pt.y - tp2.y);      
+  v2f_t vec0 = v2f(pt.x - tp0.x, pt.y - tp0.y);      
+  v2f_t vec1 = v2f(pt.x - tp1.x, pt.y - tp1.y);      
+  v2f_t vec2 = v2f(pt.x - tp2.x, pt.y - tp2.y);      
   
-  v2f_t n0 = v2f_set(tp1.y - tp0.y, -tp1.x + tp0.x);
-  v2f_t n1 = v2f_set(tp2.y - tp1.y, -tp2.x + tp1.x);
-  v2f_t n2 = v2f_set(tp0.y - tp2.y, -tp0.x + tp2.x);
+  v2f_t n0 = v2f(tp1.y - tp0.y, -tp1.x + tp0.x);
+  v2f_t n1 = v2f(tp2.y - tp1.y, -tp2.x + tp1.x);
+  v2f_t n2 = v2f(tp0.y - tp2.y, -tp0.x + tp2.x);
   
   b32_t side0 = v2f_dot(n0,vec0) < 0.f;
   b32_t side1 = v2f_dot(n1,vec1) < 0.f;

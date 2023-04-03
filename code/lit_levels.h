@@ -526,16 +526,16 @@ lit_level_busy(lit_game_t* m) {
 
 #if 0
   lit_push_patrolling_sensor(m, 5.f, 
-                             v2f_set(150.f, 150.f), 
-                             v2f_set(650.f, 150.f),
+                             v2f(150.f, 150.f), 
+                             v2f(650.f, 150.f),
                              0x008800FF); 
   lit_push_patrolling_sensor(m, 5.25f, 
-                             v2f_set(150.f, 250.f), 
-                             v2f_set(650.f, 250.f),
+                             v2f(150.f, 250.f), 
+                             v2f(650.f, 250.f),
                              0x880000FF); 
   lit_push_patrolling_sensor(m, 5.25f, 
-                             v2f_set(150.f, 350.f), 
-                             v2f_set(650.f, 350.f),
+                             v2f(150.f, 350.f), 
+                             v2f(650.f, 350.f),
                              0x880000FF); 
 
 #endif
@@ -543,9 +543,8 @@ lit_level_busy(lit_game_t* m) {
 }
 
 static void
-lit_level_test(lit_game_t* m) {
+lit_level_spin(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("SPIN"));
-
 
   f32_t speed = 1.f;
 
@@ -560,8 +559,8 @@ lit_level_test(lit_game_t* m) {
   f32_t angle_per_color = TAU_32/array_count(colors);
 
   {
-    v2f_t dir = v2f_set(0.f, 25.f);
-    v2f_t opos = v2f_set(400.f, 400.f);
+    v2f_t dir = v2f(0.f, 25.f);
+    v2f_t opos = v2f(400.f, 400.f);
     for_arr(i, colors) {
       f32_t turn = i * (1.f/array_count(colors)) + 0.25f; 
 
@@ -575,8 +574,8 @@ lit_level_test(lit_game_t* m) {
 
   // Inner circle
   {
-    v2f_t opos = v2f_set(400.f, 400.f);
-    v2f_t dir = v2f_set(0.f, 100.f);
+    v2f_t opos = v2f(400.f, 400.f);
+    v2f_t dir = v2f(0.f, 100.f);
     for_arr(i, colors) {
       dir = v2f_rotate(dir, angle_per_color);
       lit_push_rotating_sensor(m, opos.x + dir.x, opos.y + dir.y , 400.f, 400.f, speed, colors[i]); 
@@ -585,8 +584,8 @@ lit_level_test(lit_game_t* m) {
 
   // Outer circle
   {
-    v2f_t opos = v2f_set(400.f, 400.f);
-    v2f_t dir = v2f_set(0.f, -200.f);
+    v2f_t opos = v2f(400.f, 400.f);
+    v2f_t dir = v2f(0.f, -200.f);
     for_arr(i, colors) {
       dir = v2f_rotate(dir, angle_per_color);
       lit_push_rotating_sensor(m, opos.x + dir.x, opos.y + dir.y , 400.f, 400.f, -speed, colors[i]); 
@@ -594,30 +593,77 @@ lit_level_test(lit_game_t* m) {
   }
 
 }
+static void
+lit_level_test(lit_game_t* m) {
+  lit_set_title(m, str8_from_lit("TEST"));
 
+  f32_t speed = 1.f;
+
+  u32_t colors[] = {
+    0x880000FF,
+    0x008800FF,
+    0x000088FF,
+    0x888800FF,
+    0x008888FF,
+    0x880088FF,
+  };
+  f32_t angle_per_color = TAU_32/array_count(colors);
+
+  {
+    v2f_t dir = v2f(0.f, 25.f);
+    v2f_t opos = v2f(400.f, 400.f);
+    for_arr(i, colors) {
+      f32_t turn = i * (1.f/array_count(colors)) + 0.25f; 
+
+      lit_push_light(m, opos.x + dir.x, opos.y + dir.y, 
+          colors[array_count(colors)-i-1], 
+          f32_rad_to_deg(angle_per_color/2), turn);
+
+      dir = v2f_rotate(dir, angle_per_color);
+    }
+  }
+
+  // Inner circle
+  {
+    v2f_t opos = v2f(400.f, 400.f);
+    v2f_t dir = v2f(0.f, 100.f);
+    for_arr(i, colors) {
+      dir = v2f_rotate(dir, angle_per_color);
+      lit_push_rotating_sensor(m, opos.x + dir.x, opos.y + dir.y , 400.f, 400.f, speed, colors[i]); 
+    }
+  }
+
+  // Outer circle
+  {
+    v2f_t opos = v2f(400.f, 400.f);
+    v2f_t dir = v2f(0.f, -200.f);
+    for_arr(i, colors) {
+      dir = v2f_rotate(dir, angle_per_color);
+      lit_push_rotating_sensor(m, opos.x + dir.x, opos.y + dir.y , 400.f, 400.f, -speed, colors[i]); 
+    }
+  }
+
+}
 typedef void (*Lit_Level)(lit_game_t* mode); 
 static Lit_Level g_lit_levels[] = {
 #if 0 
   // Basics
-  lit_level_move, 
+  lit_level_move,   
   lit_level_obstruct, 
   lit_level_add,
   lit_level_corners,
   lit_level_mix,
-
   lit_level_blend,
   lit_level_rooms,
   lit_level_disco,
   lit_level_onion,
   lit_level_spectrum,
-
   lit_level_split,
-
-  // Here on it's all movement
   lit_level_movement,
   lit_level_patience,
   lit_level_busy,
   lit_level_interval,
+  lit_level_spin,
 #endif
   lit_level_test,
 

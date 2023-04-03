@@ -16,7 +16,6 @@ static m44f_t m44f_rotation_z(f32_t radians);
 static m44f_t m44f_orthographic(f32_t left, f32_t right, f32_t bottom, f32_t top, f32_t near, f32_t far);
 static m44f_t m44f_frustum(f32_t left, f32_t right, f32_t bottom, f32_t top, f32_t near, f32_t far);
 static m44f_t m44f_perspective(f32_t fov, f32_t aspect, f32_t near, f32_t far);
-
 static m44f_t operator*(m44f_t lhs, m44f_t rhs);
 
 //////////////////////////////////////////////////////////////////

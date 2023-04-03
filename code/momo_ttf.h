@@ -38,7 +38,7 @@ struct ttf_t {
   u16_t loca_format;
 };
 
-static b32_t ttf_read(ttf_t* ttf, void* memory, umi_t memory_size);
+static b32_t ttf_read(ttf_t* ttf, buffer_t ttf_contents);
 
 static u32_t ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint);
 // returns 0 for invalid codepoints
@@ -602,8 +602,8 @@ ttf_get_glyph_horizontal_metrics(const ttf_t* ttf,
 
 
 static b32_t
-ttf_read(ttf_t* ttf, void* memory, umi_t memory_size) {
-  ttf->data = (u8_t*)memory;
+ttf_read(ttf_t* ttf, buffer_t ttf_contents) {
+  ttf->data = ttf_contents.data_u8;
   
   u32_t num_tables = _ttf_read_u16(ttf->data + 4);
   

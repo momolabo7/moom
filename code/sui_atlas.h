@@ -172,12 +172,11 @@ sui_atlas_end(sui_atlas_t* a, arena_t* arena) {
     sui_atlas_sprite_t* sprite = a->sprites + sprite_index;
 
 
-    umi_t file_size;
-    void* file_data = sui_read_file(sprite->filename, &file_size, arena);
+    buffer_t file_data = sui_read_file(sprite->filename, arena);
     assert(file_data);
     
     make(png_t, png);
-    b32_t ok = png_read(png, file_data, file_size);
+    b32_t ok = png_read(png, file_data);
     assert(ok);
     assert(png->width && png->height);
     
@@ -267,19 +266,17 @@ sui_atlas_end(sui_atlas_t* a, arena_t* arena) {
         arena_set_revert_point(arena);
         sui_atlas_sprite_t* related_entry = context->sprite.sprite;
        
-      
-        umi_t file_size;
-        void* file_data = sui_read_file(related_entry->filename, &file_size, arena);
+        buffer_t file_data = sui_read_file(related_entry->filename, arena);
         
         make(png_t, png);
-        b32_t ok = png_read(png, file_data, file_size);
+        b32_t ok = png_read(png, file_data);
         assert(ok);
         
         u32_t* pixels = png_rasterize(png, nullptr, nullptr, arena);
         
-        for (umi_t y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
-          for (umi_t x = rect->x; x < rect->x + rect->w; ++x) {
-            umi_t index = (x + y * a->bitmap.width);
+        for (usz_t y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
+          for (usz_t x = rect->x; x < rect->x + rect->w; ++x) {
+            usz_t index = (x + y * a->bitmap.width);
             ((u32_t*)(a->bitmap.pixels))[index] = ((u32_t*)(pixels))[j++];
           }
         }
@@ -300,9 +297,9 @@ sui_atlas_end(sui_atlas_t* a, arena_t* arena) {
         u32_t* pixels = ttf_rasterize_glyph(ttf, glyph_index, s, nullptr, nullptr, arena);
         if (!pixels) continue;
         
-        for (umi_t y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
-          for (umi_t x = rect->x; x < rect->x + rect->w; ++x) {
-            umi_t index = (x + y * a->bitmap.width);
+        for (usz_t y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
+          for (usz_t x = rect->x; x < rect->x + rect->w; ++x) {
+            usz_t index = (x + y * a->bitmap.width);
             ((u32_t*)(a->bitmap.pixels))[index] = (pixels)[j++];
           }
         }
