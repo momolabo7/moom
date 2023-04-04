@@ -186,7 +186,7 @@ typedef size_t    usz_t; // Can contain up to the highest indexable value
 // Buffer: a piece of memory
 //
 // USAGE: 
-//   Create an invalid buffer_t with buffer()
+//   Create an invalid buffer_t with buffer_invalid()
 //   Check for invalid buffer with if(!buffer_variable)
 //
 struct buffer_t {
@@ -201,8 +201,14 @@ struct buffer_t {
   }
 };
 
-static buffer_t buffer(void* mem = 0, usz_t size = 0) {
-  return buffer_t{mem, size};
+static buffer_t 
+buffer_set(void* mem , usz_t size) {
+  return buffer_t{ mem, size };
+}
+
+static buffer_t
+buffer_invalid(void) {
+  return buffer_t { 0, 0 };
 }
 
 

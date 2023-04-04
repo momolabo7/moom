@@ -32,7 +32,7 @@ static u32_t sui_log_paces = 0;
 static buffer_t  
 sui_read_file(const char* filename, arena_t* allocator) {
   FILE *file = fopen(filename, "rb");
-  if (!file) return buffer();
+  if (!file) return buffer_invalid();
   defer { fclose(file); };
 
   fseek(file, 0, SEEK_END);
@@ -41,9 +41,9 @@ sui_read_file(const char* filename, arena_t* allocator) {
  
   //sui_log("%s, %lld\n", filename, file_size);
   buffer_t file_contents = arena_push_buffer(allocator, file_size, 16);
-  if (!file_contents) return buffer();
+  if (!file_contents) return buffer_invalid();
   usz_t read_amount = fread(file_contents.data, 1, file_size, file);
-  if(read_amount != file_size) return buffer();
+  if(read_amount != file_size) return buffer_invalid();
   
   return file_contents;
   

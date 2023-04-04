@@ -824,7 +824,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
                                   IDAT_chunk_size);
   
   buffer_t stream_memory = arena_push_buffer(arena, expected_memory_required, 16);
-  if (!stream_memory) return buffer();
+  if (!stream_memory) return buffer_invalid();
 
   make(stream_t, stream);
   stream_init(stream, stream_memory);
@@ -954,7 +954,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
   
   
   
-  return buffer(stream->contents.data, stream->pos);
+  return buffer_set(stream->contents.data, stream->pos);
 }
 
 

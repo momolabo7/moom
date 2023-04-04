@@ -19,7 +19,7 @@ lit_menu_init(
 
   // 'Buttons'
   {
-    v2f_t start = v2f(LIT_MENU_BUTTON_START_X, LIT_MENU_BUTTON_START_Y);
+    v2f_t start = v2f_set(LIT_MENU_BUTTON_START_X, LIT_MENU_BUTTON_START_Y);
     v2f_t cur = start; 
 
     for (u32_t button_id = 0; 
@@ -28,7 +28,7 @@ lit_menu_init(
     {
       lit_menu_button_t* btn = menu->buttons + button_id;
       btn->oxy = btn->xy = cur;
-      btn->wh = v2f(LIT_MENU_BUTTON_W, LIT_MENU_BUTTON_H);
+      btn->wh = v2f_set(LIT_MENU_BUTTON_W, LIT_MENU_BUTTON_H);
       btn->cp = digit_to_ascii(button_id < 10 ? button_id : button_id + 7);
       btn->scale = 1.f;
 
@@ -58,8 +58,8 @@ lit_menu_draw_rect(
       lit->gfx, 
       &lit->assets, 
       menu->blank_sprite, 
-      v2f(pos.x - half_w, pos.y), 
-      v2f(thickness, size.y), 
+      v2f_set(pos.x - half_w, pos.y), 
+      v2f_set(thickness, size.y), 
       color); 
   gfx_advance_depth(lit->gfx);
 
@@ -68,8 +68,8 @@ lit_menu_draw_rect(
       lit->gfx, 
       &lit->assets, 
       menu->blank_sprite, 
-      v2f(pos.x + half_w, pos.y), 
-      v2f(thickness, size.y), 
+      v2f_set(pos.x + half_w, pos.y), 
+      v2f_set(thickness, size.y), 
       color); 
   gfx_advance_depth(lit->gfx);
 
@@ -78,8 +78,8 @@ lit_menu_draw_rect(
       lit->gfx, 
       &lit->assets, 
       menu->blank_sprite,
-      v2f(pos.x, pos.y + half_h), 
-      v2f(size.x, thickness), 
+      v2f_set(pos.x, pos.y + half_h), 
+      v2f_set(size.x, thickness), 
       color); 
   gfx_advance_depth(lit->gfx);
 
@@ -88,8 +88,8 @@ lit_menu_draw_rect(
       lit->gfx, 
       &lit->assets, 
       menu->blank_sprite, 
-      v2f(pos.x, pos.y - half_h), 
-      v2f(size.x, thickness), 
+      v2f_set(pos.x, pos.y - half_h), 
+      v2f_set(size.x, thickness), 
       color); 
   gfx_advance_depth(lit->gfx);
 }
@@ -179,7 +179,7 @@ lit_menu_tick_normal(
   lit_menu_button_t* btn = menu->buttons + menu->current_level_selection;
   f32_t a = f32_ease_out_quad(menu->selection_held_timer/LIT_MENU_SELECT_DURATION);
   btn->scale = 1.f + a * (LIT_MENU_BUTTON_SCALE_TARGET-1.f);
-  btn->xy = btn->oxy + a*(v2f(LIT_WIDTH/2, LIT_HEIGHT/2) - btn->oxy);
+  btn->xy = btn->oxy + a*(v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2) - btn->oxy);
 
   menu->current_level_selection %= LIT_MENU_TOTAL_LEVELS;
 
@@ -209,10 +209,10 @@ lit_menu_button_render(
     asset_font_glyph_t *glyph = get_glyph(font, btn->cp);
     asset_bitmap_t* bitmap = get_bitmap(&lit->assets, glyph->bitmap_asset_id);
     f32_t font_height = 72.f * btn->scale; 
-    v2f_t font_wh = v2f(
+    v2f_t font_wh = v2f_set(
         (glyph->box_x1 - glyph->box_x0) * font_height,
         (glyph->box_y1 - glyph->box_y0) * font_height);
-    v2f_t anchor = v2f(0.5f, 0.5f);
+    v2f_t anchor = v2f_set(0.5f, 0.5f);
     gfx_push_sprite(lit->gfx, 
         RGBA_WHITE,
         btn->xy, font_wh, anchor,
@@ -262,7 +262,7 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
   // Overlay to emphasize selected button
   {
     f32_t alpha = menu->selection_held_timer/(LIT_MENU_TRANSITION_DURATION/2);
-    gfx_push_asset_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f(LIT_WIDTH/2, LIT_HEIGHT/2), v2f(LIT_WIDTH, LIT_HEIGHT), rgba_set(0.f, 0.f, 0.f, alpha));
+    gfx_push_asset_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), rgba_set(0.f, 0.f, 0.f, alpha));
     gfx_advance_depth(lit->gfx);
   }
 
@@ -277,12 +277,12 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
     u32_t cursor_x_index = menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW;
     u32_t cursor_y_index = menu->current_level_selection / LIT_MENU_LEVELS_PER_ROW; 
 
-    v2f_t start = v2f(LIT_MENU_BUTTON_START_X, LIT_MENU_BUTTON_START_Y);
-    v2f_t cursor_xy = v2f(
+    v2f_t start = v2f_set(LIT_MENU_BUTTON_START_X, LIT_MENU_BUTTON_START_Y);
+    v2f_t cursor_xy = v2f_set(
         start.x + cursor_x_index * LIT_MENU_BUTTON_OFFSET_X, 
         start.y - cursor_y_index * LIT_MENU_BUTTON_OFFSET_Y);
 
-    v2f_t cursor_wh = v2f(150.f, 150.f);
+    v2f_t cursor_wh = v2f_set(150.f, 150.f);
 
     lit_menu_draw_rect(lit, menu, cursor_xy, cursor_wh, 16.f, menu->selector_color); 
     //gfx_push_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("menu"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT/2, 128.f);
@@ -298,7 +298,7 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
 #if 1
   {
     f32_t alpha = menu->overlay_timer/LIT_MENU_TRANSITION_DURATION;
-    gfx_push_asset_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f(LIT_WIDTH/2, LIT_HEIGHT/2), v2f(LIT_WIDTH, LIT_HEIGHT), rgba_set(0.f, 0.f, 0.f, alpha));
+    gfx_push_asset_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), rgba_set(0.f, 0.f, 0.f, alpha));
     gfx_advance_depth(lit->gfx);
   }
 #endif

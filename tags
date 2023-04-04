@@ -237,10 +237,11 @@ bpm_to_spb_f32	code/momo_types.h	/^bpm_to_spb_f32(f32_t bpm) {$/;"	f	language:C+
 bpm_to_spb_f64	C:/users/geral/work/moom/code/momo_types.h	/^bpm_to_spb_f64(f64_t bpm) {$/;"	f	language:C++	typeref:typename:f64_t
 bpm_to_spb_f64	code/momo_types.h	/^bpm_to_spb_f64(f64_t bpm) {$/;"	f	language:C++	typeref:typename:f64_t
 buffer	build/a.out.js	/^  buffer,$/;"	v	language:JavaScript
-buffer	code/momo_types.h	/^static buffer_t buffer(void* mem = 0, usz_t size = 0) {$/;"	f	language:C++	typeref:typename:buffer_t
 buffer	code/w32_audio_wasapi.h	/^  s16_t* buffer;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:s16_t *
 buffers	code/moe_gfx_opengl.h	/^  GLuint buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; \/\/ Opengl__VBO_Count$/;"	m	language:C++	struct:__anon0f5c060e0808	typeref:typename:GLuint[]
 buffers	code/moe_gfx_opengl.h	/^  GLuint buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT];$/;"	m	language:C++	struct:__anon0f5c060e0908	typeref:typename:GLuint[]
+buffer_invalid	code/momo_types.h	/^buffer_invalid(void) {$/;"	f	language:C++	typeref:typename:buffer_t
+buffer_set	code/momo_types.h	/^buffer_set(void* mem , usz_t size) {$/;"	f	language:C++	typeref:typename:buffer_t
 buffer_size	code/w32_audio_wasapi.h	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t
 buffer_t	code/momo_types.h	/^struct buffer_t {$/;"	s	language:C++
 buttons	code/lit_menu.h	/^  lit_menu_button_t buttons[LIT_MENU_TOTAL_LEVELS];$/;"	m	language:C++	struct:lit_menu_t	typeref:typename:lit_menu_button_t[]
@@ -2695,8 +2696,6 @@ UTF8Decoder	build/a.out.js	/^var UTF8Decoder = typeof TextDecoder != 'undefined'
 UTF8ToString	build/a.out.js	/^function UTF8ToString(ptr, maxBytesToRead) {$/;"	f	language:JavaScript
 v	code/momo_strings.h	/^  union { u32_t v; u8_t b[4]; } combine;$/;"	m	language:C++	union:sb8_push_hex_u32::__anon71355586030a	typeref:typename:u32_t
 v	code/momo_vectors.h	/^	struct { f32_t u, v; };$/;"	m	language:C++	struct:v2f_t::__anon8de67fa20708	typeref:typename:f32_t
-v2f	code/momo_vectors.h	/^static v2f_t   v2f(f32_t x = 0.f, f32_t y = 0.f); $/;"	p	language:C++	typeref:typename:v2f_t
-v2f	code/momo_vectors.h	/^v2f(f32_t x, f32_t y){$/;"	f	language:C++	typeref:typename:v2f_t
 v2f_add	code/momo_vectors.h	/^static v2f_t   v2f_add(v2f_t lhs, v2f_t rhs);$/;"	p	language:C++	typeref:typename:v2f_t
 v2f_add	code/momo_vectors.h	/^v2f_add(v2f_t lhs, v2f_t rhs) {$/;"	f	language:C++	typeref:typename:v2f_t
 v2f_angle	code/momo_vectors.h	/^static f32_t   v2f_angle(v2f_t lhs, v2f_t rhs);$/;"	p	language:C++	typeref:typename:f32_t
@@ -2734,9 +2733,13 @@ v2f_rotate	code/momo_vectors.h	/^static v2f_t   v2f_rotate(v2f_t v, f32_t rad);$
 v2f_rotate	code/momo_vectors.h	/^v2f_rotate(v2f_t v, f32_t rad) {$/;"	f	language:C++	typeref:typename:v2f_t
 v2f_scale	code/momo_vectors.h	/^static v2f_t   v2f_scale(v2f_t lhs, f32_t rhs);$/;"	p	language:C++	typeref:typename:v2f_t
 v2f_scale	code/momo_vectors.h	/^v2f_scale(v2f_t lhs, f32_t rhs) {$/;"	f	language:C++	typeref:typename:v2f_t
+v2f_set	code/momo_vectors.h	/^static v2f_t   v2f_set(f32_t, f32_t y); $/;"	p	language:C++	typeref:typename:v2f_t
+v2f_set	code/momo_vectors.h	/^v2f_set(f32_t x, f32_t y){$/;"	f	language:C++	typeref:typename:v2f_t
 v2f_sub	code/momo_vectors.h	/^static v2f_t   v2f_sub(v2f_t lhs, v2f_t rhs);$/;"	p	language:C++	typeref:typename:v2f_t
 v2f_sub	code/momo_vectors.h	/^v2f_sub(v2f_t lhs, v2f_t rhs) {$/;"	f	language:C++	typeref:typename:v2f_t
 v2f_t	code/momo_vectors.h	/^union v2f_t {$/;"	u	language:C++
+v2f_zero	code/momo_vectors.h	/^static v2f_t   v2f_zero(void);$/;"	p	language:C++	typeref:typename:v2f_t
+v2f_zero	code/momo_vectors.h	/^v2f_zero(void){$/;"	f	language:C++	typeref:typename:v2f_t
 v2s_t	code/momo_vectors.h	/^union v2s_t {$/;"	u	language:C++
 v2u_add	code/momo_vectors.h	/^static v2u_t   v2u_add(v2u_t lhs, v2u_t rhs);$/;"	p	language:C++	typeref:typename:v2u_t
 v2u_add	code/momo_vectors.h	/^v2u_add(v2u_t lhs, v2u_t rhs) {$/;"	f	language:C++	typeref:typename:v2u_t

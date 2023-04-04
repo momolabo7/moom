@@ -33,7 +33,8 @@ union v4f_t {
   f32_t e[4];
 };
 
-static v2f_t   v2f(f32_t x = 0.f, f32_t y = 0.f); 
+static v2f_t   v2f_zero(void);
+static v2f_t   v2f_set(f32_t, f32_t y); 
 static v2f_t   v2f_add(v2f_t lhs, v2f_t rhs);
 static v2f_t   v2f_sub(v2f_t lhs, v2f_t rhs);
 static v2f_t   v2f_scale(v2f_t lhs, f32_t rhs);
@@ -370,10 +371,14 @@ v2u_sub(v2u_t lhs, v2u_t rhs){
 }
 
 static v2f_t    
-v2f(f32_t x, f32_t y){
+v2f_set(f32_t x, f32_t y){
   return { x, y };
 }
 
+static v2f_t    
+v2f_zero(void){
+  return { 0, 0 };
+}
 // Operator Overloading
 static v2f_t  operator+(v2f_t lhs, v2f_t rhs) { return v2f_add(lhs, rhs); }
 static v2f_t  operator-(v2f_t lhs, v2f_t rhs) { return v2f_sub(lhs, rhs); }

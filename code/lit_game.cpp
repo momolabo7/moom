@@ -94,8 +94,8 @@ static lit_edge_t*
 lit_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
   assert(m->edge_count < array_count(m->edges));
   lit_edge_t* edge = m->edges + m->edge_count++;
-  edge->start_pt = v2f(min_x, min_y);
-  edge->end_pt = v2f(max_x, max_y);;
+  edge->start_pt = v2f_set(min_x, min_y);
+  edge->end_pt = v2f_set(max_x, max_y);;
 
   //edge->is_disabled = false;
 
@@ -115,8 +115,8 @@ lit_push_patrolling_edge(lit_game_t* m, f32_t duration,
   start.end_pt = edge->end_pt;
 
   lit_edge_t end = {0};
-  end.start_pt = v2f(end_min_x, end_min_y);
-  end.end_pt = v2f(end_max_x, end_max_y);
+  end.start_pt = v2f_set(end_min_x, end_min_y);
+  end.end_pt = v2f_set(end_max_x, end_max_y);
 
   lit_push_patrol_edge_animator(m, edge, duration, start, end); 
 }
@@ -417,7 +417,7 @@ lit_draw_lights(lit_t* lit, lit_game_t* game) {
     gfx_push_asset_sprite(lit->gfx, &lit->assets, 
                             game->filled_circle_sprite, 
                             light->pos,
-                            v2f(16.f, 16.f),
+                            v2f_set(16.f, 16.f),
                             rgba_set(0.8f, 0.8f, 0.8f, 1.f));
     gfx_advance_depth(lit->gfx);
   }
@@ -573,7 +573,7 @@ lit_draw_player(lit_t* lit, lit_game_t* game)
   gfx_push_asset_sprite(lit->gfx, &lit->assets,
                           game->circle_sprite, 
                           player->pos, 
-                          v2f(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
+                          v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
   gfx_advance_depth(lit->gfx);
 
 }
@@ -688,7 +688,7 @@ lit_push_rotating_sensor(
  
   auto* a = &anim->rotate_sensor;
   a->speed = speed;
-  a->point_of_rotation = v2f(origin_x, origin_y);
+  a->point_of_rotation = v2f_set(origin_x, origin_y);
   a->sensor = sensor;
 
 }
@@ -811,8 +811,8 @@ lit_update_sensors(lit_game_t* game, f32_t dt)
       rgba_t end_color = target_color;
       end_color.a = 0.f;
 
-      v2f_t size_start = v2f(LIT_SENSOR_PARTICLE_SIZE, LIT_SENSOR_PARTICLE_SIZE);
-      v2f_t size_end = v2f();
+      v2f_t size_start = v2f_set(LIT_SENSOR_PARTICLE_SIZE, LIT_SENSOR_PARTICLE_SIZE);
+      v2f_t size_end = v2f_zero();
 
       lit_spawn_particle(game, 
                          1.f,
@@ -1015,7 +1015,7 @@ lit_render_game(lit_t* lit, lit_game_t* game)
   // Draw the overlay for fade in/out
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, game->stage_fade_timer);
-    gfx_push_asset_sprite(lit->gfx, &lit->assets, game->blank_sprite, v2f(LIT_WIDTH/2, LIT_HEIGHT/2), v2f(LIT_WIDTH, LIT_HEIGHT), color);
+    gfx_push_asset_sprite(lit->gfx, &lit->assets, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
     gfx_advance_depth(lit->gfx);
   }
 
@@ -1023,7 +1023,7 @@ lit_render_game(lit_t* lit, lit_game_t* game)
   {
     f32_t alpha = game->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
     rgba_t color = rgba_set(1.f, 1.f, 1.f, alpha);
-    gfx_push_asset_sprite(lit->gfx, &lit->assets, game->blank_sprite, v2f(LIT_WIDTH/2, LIT_HEIGHT/2), v2f(LIT_WIDTH, LIT_HEIGHT), color);
+    gfx_push_asset_sprite(lit->gfx, &lit->assets, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
     gfx_advance_depth(lit->gfx);
   }
 

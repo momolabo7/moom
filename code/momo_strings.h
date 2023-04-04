@@ -5,14 +5,14 @@
 //~ NOTE(Momo): 'Immutable' strings
 struct str8_t{
 	u8_t* e;
-	umi_t count;
+	usz_t count;
 };
 
-static str8_t str8(u8_t* str, umi_t size);
-static str8_t str8_substr(str8_t str, umi_t start, umi_t ope);
+static str8_t str8(u8_t* str, usz_t size);
+static str8_t str8_substr(str8_t str, usz_t start, usz_t ope);
 static b32_t  str8_match(str8_t lhs, str8_t rhs);
 
-static str8_t str8(u8_t* str, umi_t size);
+static str8_t str8(u8_t* str, usz_t size);
 static str8_t str8_from_cstr(const char* cstr);
 
 #define str8_from_lit(s) str8((u8_t*)(s), sizeof(s)-1)
@@ -32,13 +32,13 @@ struct sb8_t{
 		str8_t str;
 		struct {
 			u8_t* e;
-			umi_t count;
+			usz_t count;
 		};
 	};
-	umi_t cap;
+	usz_t cap;
 };
 
-static umi_t    sb8_remaining(sb8_t* b);
+static usz_t    sb8_remaining(sb8_t* b);
 static void     sb8_clear(sb8_t* b);
 static void     sb8_pop(sb8_t* b);
 static void     sb8_push_c8(sb8_t* b, c8_t num);
@@ -52,7 +52,7 @@ static void     sb8_push_str8(sb8_t* b, str8_t num);
 static void     sb8_push_hex_u8(sb8_t* b, u8_t num);
 static void     sb8_push_hex_u32(sb8_t* b, u32_t num);
 static void     sb8_push_fmt(sb8_t* b, str8_t fmt, ...);
-static void     sb8_init(sb8_t* b, u8_t* data, umi_t cap);
+static void     sb8_init(sb8_t* b, u8_t* data, usz_t cap);
 
 #define sb8_make(name, cap) \
   u8_t temp_buffer_##__LINE__[cap] = {0}; \
@@ -67,7 +67,7 @@ static void     sb8_init(sb8_t* b, u8_t* data, umi_t cap);
 //~ NOTE(Momo): str8_t
 
 static str8_t
-str8(u8_t* str, umi_t size) {
+str8(u8_t* str, usz_t size) {
 	str8_t ret;
 	ret.e = str;
 	ret.count = size;
@@ -81,7 +81,7 @@ str8_from_cstr(const c8_t* cstr) {
 }
 
 static str8_t 
-str8_substr(str8_t str, umi_t start, umi_t count) {
+str8_substr(str8_t str, usz_t start, usz_t count) {
 	str8_t ret;
 	ret.e = str.e + start;
 	ret.count = count;
@@ -94,7 +94,7 @@ str8_match(str8_t lhs, str8_t rhs) {
   if(lhs.count != rhs.count) {
     return false;
   }
-  for (umi_t i = 0; i < lhs.count; ++i) {
+  for (usz_t i = 0; i < lhs.count; ++i) {
     if (lhs.e[i] != rhs.e[i]) {
       return false;
     }
@@ -109,7 +109,7 @@ str8_match(str8_t lhs, str8_t rhs) {
 // If no unmatched character is found at an index, it will return the size different between the strings 
 static smi_t 
 str8_compare_lexographically(str8_t lhs, str8_t rhs) {
-  for (umi_t i = 0; i < lhs.count && i < rhs.count; ++i) {
+  for (usz_t i = 0; i < lhs.count && i < rhs.count; ++i) {
     if (lhs.e[i] == rhs.e[i]) continue;
     else {
       return lhs.e[i] - rhs.e[i];
@@ -127,11 +127,11 @@ str8_compare_lexographically(str8_t lhs, str8_t rhs) {
   
 }
 static b32_t 
-str8_to_u32_range(str8_t s, umi_t begin, umi_t ope, u32_t* out) {
+str8_to_u32_range(str8_t s, usz_t begin, usz_t ope, u32_t* out) {
   if (ope > s.count) return false;
 
   u32_t number = 0;
-  for (umi_t i = begin; i < ope; ++i) {
+  for (usz_t i = begin; i < ope; ++i) {
     if (!is_digit(s.e[i]))
         return false;
     number *= 10;
@@ -145,7 +145,7 @@ str8_to_u32_range(str8_t s, umi_t begin, umi_t ope, u32_t* out) {
 
 
 static b32_t 
-str8_to_s32_range(str8_t s, umi_t begin, umi_t ope, s32_t* out) {
+str8_to_s32_range(str8_t s, usz_t begin, usz_t ope, s32_t* out) {
 
   if (ope > s.count) return false;
 
@@ -157,7 +157,7 @@ str8_to_s32_range(str8_t s, umi_t begin, umi_t ope, s32_t* out) {
 
 
   s32_t number = 0;
-  for (umi_t i = begin; i < ope; ++i) {
+  for (usz_t i = begin; i < ope; ++i) {
     if (!is_digit(s.e[i]))
         return false;
     number *= 10;
@@ -169,14 +169,14 @@ str8_to_s32_range(str8_t s, umi_t begin, umi_t ope, s32_t* out) {
 }
 
 static b32_t 
-str8_to_f32_range(str8_t s, umi_t begin, umi_t ope, f32_t* out) {
+str8_to_f32_range(str8_t s, usz_t begin, usz_t ope, f32_t* out) {
   if (ope > s.count) return false;
   u32_t place = 0;
 
   // Really lousy algorithm
   f32_t number = 0.f;
 
-  for(umi_t i = begin; i < ope; ++i) {
+  for(usz_t i = begin; i < ope; ++i) {
     if (s.e[i] == '.') {
       place = 1;
       continue;
@@ -225,13 +225,13 @@ static b32_t operator!=(str8_t lhs, str8_t rhs) {
 
 //~ NOTE(Momo): str8_tBld
 static void  
-sb8_init(sb8_t* b, u8_t* data, umi_t cap) {
+sb8_init(sb8_t* b, u8_t* data, usz_t cap) {
 	b->e = data;
 	b->count = 0;
 	b->cap = cap;
 }
 
-static umi_t
+static usz_t
 sb8_remaining(sb8_t* b) {
 	return b->cap - b->count; 
 }
@@ -264,7 +264,7 @@ sb8_push_u32(sb8_t* b, u32_t num) {
     sb8_push_c8(b, '0');
 		return;
   }
-  umi_t start_pt = b->count; 
+  usz_t start_pt = b->count; 
   
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
@@ -272,8 +272,8 @@ sb8_push_u32(sb8_t* b, u32_t num) {
   }
   
   // Reverse starting from start point to count
-  umi_t sub_str_len_half = (b->count - start_pt)/2;
-  for(umi_t i = 0; i < sub_str_len_half; ++i) {
+  usz_t sub_str_len_half = (b->count - start_pt)/2;
+  for(usz_t i = 0; i < sub_str_len_half; ++i) {
     swap(b->e[start_pt + i], b->e[ b->count - 1 - i]);
   }
 }
@@ -283,7 +283,7 @@ sb8_push_u64(sb8_t* b, u64_t num) {
     sb8_push_c8(b, '0');
 		return;
   }
-  umi_t start_pt = b->count; 
+  usz_t start_pt = b->count; 
   
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
@@ -291,8 +291,8 @@ sb8_push_u64(sb8_t* b, u64_t num) {
   }
   
   // Reverse starting from start point to count
-  umi_t sub_str_len_half = (b->count - start_pt)/2;
-  for(umi_t i = 0; i < sub_str_len_half; ++i) {
+  usz_t sub_str_len_half = (b->count - start_pt)/2;
+  for(usz_t i = 0; i < sub_str_len_half; ++i) {
     swap(b->e[start_pt + i], b->e[b->count - 1 - i]);
   }
 }
@@ -303,7 +303,7 @@ sb8_push_s32(sb8_t* b, s32_t num) {
     return;
   }
   
-  umi_t start_pt = b->count; 
+  usz_t start_pt = b->count; 
   
   b32_t negate = num < 0;
   num = s32_abs(num);
@@ -318,8 +318,8 @@ sb8_push_s32(sb8_t* b, s32_t num) {
   }
   
   // Reverse starting from start point to count
-  umi_t sub_str_len_half = (b->count - start_pt)/2;
-  for(umi_t i = 0; i < sub_str_len_half; ++i) {
+  usz_t sub_str_len_half = (b->count - start_pt)/2;
+  for(usz_t i = 0; i < sub_str_len_half; ++i) {
     swap(b->e[start_pt+i], b->e[b->count-1-i]);
     
   }
@@ -333,7 +333,7 @@ sb8_push_s64(sb8_t* b, s64_t num) {
     return;
   }
   
-  umi_t start_pt = b->count; 
+  usz_t start_pt = b->count; 
   
   b32_t negate = num < 0;
   num = s64_abs(num);
@@ -348,8 +348,8 @@ sb8_push_s64(sb8_t* b, s64_t num) {
   }
   
   // Reverse starting from start point to count
-  umi_t sub_str_len_half = (b->count - start_pt)/2;
-  for(umi_t i = 0; i < sub_str_len_half; ++i) {
+  usz_t sub_str_len_half = (b->count - start_pt)/2;
+  for(usz_t i = 0; i < sub_str_len_half; ++i) {
     swap(b->e[start_pt+i], b->e[b->count-1-i]);
     
   }
@@ -436,7 +436,7 @@ sb8_push_hex_u32(sb8_t* b, u32_t value) {
 
 static void
 _sb8_push_fmt_list(sb8_t* b, str8_t format, va_list args) {
-  umi_t at = 0;
+  usz_t at = 0;
   while(at < format.count) {
     
     if (format.e[at] == '%') {
@@ -505,7 +505,7 @@ _sb8_push_fmt_list(sb8_t* b, str8_t format, va_list args) {
       ++at;
       
       if (width > 0 && tb->str.count < width) {
-        umi_t spaces_to_pad = width - tb->str.count;
+        usz_t spaces_to_pad = width - tb->str.count;
         while(spaces_to_pad--) {
           sb8_push_c8(b, ' ');
         }
@@ -536,7 +536,7 @@ sb8_push_fmt(sb8_t* b, str8_t fmt, ...) {
 static void     
 sb8_push_str8(sb8_t* b, str8_t src) {
   assert(b->count + src.count <= b->cap);
-  for (umi_t i = 0; i < src.count; ++i ) {
+  for (usz_t i = 0; i < src.count; ++i ) {
     b->e[b->count++] = src.e[i];
   }
 }
