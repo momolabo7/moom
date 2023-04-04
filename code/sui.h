@@ -50,18 +50,17 @@ sui_read_file(const char* filename, arena_t* allocator) {
 }
 
 static b32_t
-sui_write_file(const char* filename, void* memory, usz_t memory_size) {
+sui_write_file(const char* filename, buffer_t buffer) {
   FILE *file = fopen(filename, "wb");
   if (!file) return false;
   defer { fclose(file); };
   
-  fwrite(memory, 1, memory_size, file);
+  fwrite(buffer.data, 1, buffer.size, file);
   return true;
 }
 
 static b32_t 
 sui_read_font_from_file(ttf_t* ttf, const char* filename, arena_t* allocator) {
-
   buffer_t file_contents = sui_read_file(filename, allocator); 
   if (!file_contents) return false;
   return ttf_read(ttf, file_contents);
@@ -69,7 +68,6 @@ sui_read_font_from_file(ttf_t* ttf, const char* filename, arena_t* allocator) {
 
 static b32_t 
 sui_read_wav_from_file(wav_t* wav, const char* filename, arena_t* allocator) {
-
   buffer_t file_contents = sui_read_file(filename, allocator); 
   if(!file_contents) return false;
   return wav_read(wav, file_contents);

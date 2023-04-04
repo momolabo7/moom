@@ -16,9 +16,9 @@ struct png_t {
 
 static b32_t     png_read(png_t* png, buffer_t png_contents);
 static u32_t*    png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena); 
-static void*     png_write(png_t* png, umi_t* out_size, arena_t* arena);
+static buffer_t  png_write(png_t* png, u32_t width, u32_t height, arena_t* arena);
 
-//static void*   png_write(umi_t* out_size);
+//static void*   png_write(usz_t* out_size);
 
 ///////////////////////////////////////////////////////////////
 // IMPLEMENTATION
@@ -429,7 +429,7 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
             
             // test_log("%d\n", len);
             while(len--) {
-              umi_t target_index = dest_stream->pos - dist;
+              usz_t target_index = dest_stream->pos - dist;
               u8_t byte_to_write = dest_stream->contents.data_u8[target_index];
               stream_write(dest_stream, byte_to_write);
             }
@@ -536,7 +536,7 @@ _png_filter_sub(_png_context_t* c) {
       stream_write(&c->image_stream, pixel_byte);
     }
     else {
-      umi_t current_index = c->image_stream.pos;
+      usz_t current_index = c->image_stream.pos;
       u8_t left_reference = c->image_stream.contents.data_u8[current_index - bpp]; // Raw(x-bpp)
       u8_t pixel_byte_to_write = (pixel_byte + left_reference) % 256;  
       
@@ -560,7 +560,7 @@ _png_filter_average(_png_context_t* c) {
     
     u8_t pixel_byte = (*pixel_byte_p); // sub(x)
     
-    umi_t current_index = c->image_stream.pos;
+    usz_t current_index = c->image_stream.pos;
     u8_t left = (i < bpp) ? 0 :  c->image_stream.contents.data_u8[current_index - bpp]; // Raw(x-bpp)
     u8_t top = (current_index < bpl) ? 0 : c->image_stream.contents.data_u8[current_index - bpl]; // Prior(x)
     
@@ -589,7 +589,7 @@ _png_filter_paeth(_png_context_t* cx) {
     // https://www.w3.org/TR/png_t-Filters.html
     u8_t paeth_predictor; 
     {
-      umi_t current_index = cx->image_stream.pos;
+      usz_t current_index = cx->image_stream.pos;
       
       // respectively: left, top, top left
       s32_t a, b, c;
@@ -637,7 +637,7 @@ _png_filter_up(_png_context_t* c) {
       stream_write(&c->image_stream, pixel_byte);
     }
     else {
-      umi_t current_index = c->image_stream.pos;
+      usz_t current_index = c->image_stream.pos;
       u8_t top = c->image_stream.contents.data_u8[current_index - bpl]; 
       u8_t pixel_byte_to_write = (pixel_byte + top) % 256;  
       
@@ -708,8 +708,8 @@ _png_decompress_zlib(_png_context_t* c, stream_t* zlib_stream) {
 
 
 // NOTE(Momo): For the code here, we are going to assume that 
-// the png_t file we are reading is correct. i.e. we don't emphasize on 
-// checking correctness of the png_t outside of the most basic of checks (e.g. sig)
+// the PNG file we are reading is correct. i.e. we don't emphasize on 
+// checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
 static u32_t* 
 png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena) 
@@ -725,7 +725,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   
   u32_t image_size = png->width * png->height * _PNG_CHANNELS;
   buffer_t image_buffer =  arena_push_buffer(arena, image_size, 16);
-  if (!buffer_is_ok(image_buffer)) return nullptr;
+  if (!image_buffer) return nullptr;
   stream_init(&ctx.image_stream, image_buffer);
  
   //arena_marker_t mark = arena_mark(arena);
@@ -733,7 +733,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   
   u32_t unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
   buffer_t unfiltered_image_buffer = arena_push_buffer(arena, unfiltered_size, 16);
-  if (!buffer_is_ok(unfiltered_image_buffer)) return nullptr;
+  if (!unfiltered_image_buffer) return nullptr;
   stream_init(&ctx.unfiltered_image_stream, unfiltered_image_buffer);
   
   stream_consume(_png_chunk_t, &ctx.stream);
@@ -741,7 +741,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   // NOTE(Momo): This is really lousy method.
   // We will go through all the IDATs and allocate a giant contiguous 
   // chunk of memory to DEFLATE.
-  umi_t zlib_size = 0;
+  usz_t zlib_size = 0;
   {
     stream_t stream = ctx.stream;
     while(!stream_is_eos(&stream)) {
@@ -758,7 +758,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   }
   
   buffer_t zlib_data = arena_push_buffer(arena, zlib_size, 16);
-  if (!buffer_is_ok(zlib_data)) return nullptr;
+  if (!zlib_data) return nullptr;
 
   stream_init(zlib_stream, zlib_data);
   
@@ -794,13 +794,8 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
 }
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
-static void*
-png_write(u32_t* pixels, u32_t width, u32_t height, umi_t* out_size, arena_t* arena) {
-  if (!pixels || !width || !height) 
-  {
-    return nullptr;
-  }
-  
+static buffer_t
+png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
   static const u8_t signature[] = { 
     137, 80, 78, 71, 13, 10, 26, 10 
   };
@@ -829,9 +824,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, umi_t* out_size, arena_t* ar
                                   IDAT_chunk_size);
   
   buffer_t stream_memory = arena_push_buffer(arena, expected_memory_required, 16);
-  if (!buffer_is_ok(stream_memory)) {
-    return nullptr;
-  }
+  if (!stream_memory) return buffer();
 
   make(stream_t, stream);
   stream_init(stream, stream_memory);
@@ -959,9 +952,9 @@ png_write(u32_t* pixels, u32_t width, u32_t height, umi_t* out_size, arena_t* ar
     stream_write(stream, footer);
   }
   
-  if (out_size) *out_size = stream->pos;
   
-  return stream->contents.data;
+  
+  return buffer(stream->contents.data, stream->pos);
 }
 
 

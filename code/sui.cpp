@@ -40,14 +40,12 @@ int main() {
 #if 1
   {
     sui_log("Writing test png file...\n");
-    umi_t size;
-    void* png_to_write_mem  = 
+    buffer_t png_to_write_mem  = 
       png_write(atlas->bitmap.pixels, 
                 atlas->bitmap.width, 
                 atlas->bitmap.height, 
-                &size,
                 allocator);
-    sui_write_file("test.png", png_to_write_mem, size);
+    sui_write_file("test.png", png_to_write_mem);
   }
 #endif
 

@@ -185,6 +185,10 @@ typedef size_t    usz_t; // Can contain up to the highest indexable value
 //
 // Buffer: a piece of memory
 //
+// USAGE: 
+//   Create an invalid buffer_t with buffer()
+//   Check for invalid buffer with if(!buffer_variable)
+//
 struct buffer_t {
   union {
     void* data;
@@ -196,10 +200,7 @@ struct buffer_t {
     return data != nullptr;
   }
 };
-static b32_t 
-buffer_is_ok(buffer_t buffer) {
-  return buffer.data != nullptr;
-}
+
 static buffer_t buffer(void* mem = 0, usz_t size = 0) {
   return buffer_t{mem, size};
 }
