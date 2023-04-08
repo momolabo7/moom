@@ -665,6 +665,7 @@ static Lit_Level g_lit_levels[] = {
   lit_level_interval,
   lit_level_spin,
 #endif
+
   lit_level_test,
 
 };

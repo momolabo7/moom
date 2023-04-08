@@ -5,8 +5,23 @@ static void lit_load_next_level(lit_game_t* m);
 // 
 // Animator
 //
+
+static void 
+lit_animator_push_patrol_point_waypoint(
+    lit_animator_t* animator, 
+    f32_t pos_x, 
+    f32_t pos_y)
+{
+  assert(animator->type == LIT_ANIMATOR_TYPE_PATROL_POINT);
+  auto* a = &animator->move_point;
+  assert(a->waypoint_count < array_count(a->waypoints));
+  v2f_t* wp = a->waypoints + a->waypoint_count++;
+  wp->x = pos_x;
+  wp->y = pos_y;
+}
+
 static void
-lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duration, lit_edge_t  start, lit_edge_t end) 
+lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duration, lit_edge_t start, lit_edge_t end) 
 {
   auto* anim = game->animators + game->animator_count++;
   anim->type = LIT_ANIMATOR_TYPE_PATROL_EDGE; 
@@ -24,9 +39,8 @@ lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duratio
 static void 
 lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {
   switch(animator->type) {
-    case LIT_ANIMATOR_TYPE_PATROL_SENSOR: 
-    {
-      auto* a = &animator->patrol_sensor;
+    case LIT_ANIMATOR_TYPE_PATROL_POINT:{
+      auto* a = &animator->move_point;
       a->timer += dt;
       if (a->timer > a->duration) {
         a->timer = 0.f;
@@ -35,26 +49,26 @@ lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {
         a->start = a->waypoints[a->current_waypoint_index];
         a->end = a->waypoints[next_waypoint_index];
       }
-      // NOTE(momo): sin() takes in a value from [0, PI_32]
-      //
+
       f32_t alpha = f32_ease_inout_sine(a->timer/a->duration);
-//      f32_t angle = ((a->timer/a->duration)-1.f) * PI_32;
-//      f32_t alpha = (f32_cos(angle) + 1.f) / 2.f;
-      a->sensor->pos = v2f_lerp(a->start, a->end, alpha);
-      //lit_log("%f\n", alpha);
-
-
-
-
+      *a->point = v2f_lerp(a->start, a->end, alpha);
     } break;
     case LIT_ANIMATOR_TYPE_ROTATE_EDGE: {
     } break;
+    case LIT_ANIMATOR_TYPE_ROTATE_POINT: {
+      auto* a = &animator->rotate_point;
+      v2f_t vec = dref(a->point) - a->point_of_rotation;
+      v2f_t new_vec = v2f_rotate(vec, a->speed * dt);
+      dref(a->point) = a->point_of_rotation + new_vec;
+    } break;
+#if 0
     case LIT_ANIMATOR_TYPE_ROTATE_SENSOR: {
       auto* a = &animator->rotate_sensor;
       v2f_t vec = a->sensor->pos - a->point_of_rotation;
       v2f_t new_vec = v2f_rotate(vec, a->speed * dt);
       a->sensor->pos = a->point_of_rotation + new_vec;
     } break;
+#endif
     case LIT_ANIMATOR_TYPE_PATROL_EDGE: {
       auto* a = &animator->patrol_edge;
       a->timer += dt;
@@ -684,27 +698,23 @@ lit_push_rotating_sensor(
 
   assert(game->animator_count < array_count(game->animators));
   auto* anim = game->animators + game->animator_count++;
-  anim->type = LIT_ANIMATOR_TYPE_ROTATE_SENSOR;
+  anim->type = LIT_ANIMATOR_TYPE_ROTATE_POINT;
  
-  auto* a = &anim->rotate_sensor;
+  auto* a = &anim->rotate_point;
   a->speed = speed;
   a->point_of_rotation = v2f_set(origin_x, origin_y);
-  a->sensor = sensor;
+  a->point = &sensor->pos;
 
 }
 
 static void
-lit_push_patrolling_sensor_waypoint(lit_game_t* game, f32_t pos_x, f32_t pos_y) 
+lit_push_patrolling_sensor_waypoint(
+    lit_game_t* game, 
+    f32_t pos_x, 
+    f32_t pos_y) 
 {
   assert(game->selected_animator);
-  assert(game->selected_animator->type == LIT_ANIMATOR_TYPE_PATROL_SENSOR);
-
-  auto* a = &game->selected_animator->patrol_sensor;
-  assert(a->waypoint_count < array_count(a->waypoints));
-  v2f_t* wp = a->waypoints + a->waypoint_count++;
-  wp->x = pos_x;
-  wp->y = pos_y;
-
+  lit_animator_push_patrol_point_waypoint(game->selected_animator, pos_x, pos_y);
 }
 
 
@@ -718,12 +728,12 @@ lit_begin_patrolling_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t ta
 
   assert(game->animator_count < array_count(game->animators));
   auto* anim = game->animators + game->animator_count++;
-  anim->type = LIT_ANIMATOR_TYPE_PATROL_SENSOR;
+  anim->type = LIT_ANIMATOR_TYPE_PATROL_POINT;
   
-  auto* a = &anim->patrol_sensor;
+  auto* a = &anim->move_point;
   a->timer = 0.f;
   a->duration = duration_per_waypoint;
-  a->sensor = sensor;
+  a->point = &sensor->pos;
   a->waypoint_count = 0;
   a->current_waypoint_index = 0;
 
@@ -737,7 +747,7 @@ lit_end_patrolling_sensor(lit_game_t* game) {
 
   assert(game->selected_animator);
 
-  auto* a = &game->selected_animator->patrol_sensor;
+  auto* a = &game->selected_animator->move_point;
   a->timer = 0.f;
   a->current_waypoint_index = 0;
   u32_t next_waypoint_index = (a->current_waypoint_index + 1) % a->waypoint_count;

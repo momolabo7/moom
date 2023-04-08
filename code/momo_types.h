@@ -318,6 +318,7 @@ _F64_NEG_INFINITY() {
 //
 // Helper Macros
 //
+#define dref(expr) (*(expr))
 #define stringify_(s) #s
 #define stringify(s) stringify_(s)
 #define glue_(a,b) a##b

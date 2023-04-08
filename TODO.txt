@@ -4,7 +4,8 @@ engine
   - Expandable arena for platform, instead of just calling VirtualAlloc every time
 
 game
-  - Level selection (after we make 10 levels I guess)
+  - lit_animator should be more robust, manipulating down to the v2f instead of an object.
+  - Extract the whole lighting thing into a system of it's own with callbacks
 
 assets 
   - 9 Slice 

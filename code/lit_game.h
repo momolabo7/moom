@@ -22,7 +22,6 @@ struct lit_edge_t {
 };
 
 
-
 // 
 // Light
 //
@@ -111,35 +110,42 @@ struct lit_player_t {
 // Animators
 // 
 enum lit_animator_type_t {
-  LIT_ANIMATOR_TYPE_PATROL_SENSOR,
   LIT_ANIMATOR_TYPE_PATROL_EDGE,
 
-  LIT_ANIMATOR_TYPE_ROTATE_SENSOR,
+  //LIT_ANIMATOR_TYPE_ROTATE_SENSOR,
+
   LIT_ANIMATOR_TYPE_ROTATE_EDGE,
+
+  LIT_ANIMATOR_TYPE_PATROL_POINT,
+  LIT_ANIMATOR_TYPE_ROTATE_POINT,
 };
 
-struct lit_animator_patrol_sensor_t {
-  lit_sensor_t* sensor;
+struct lit_animator_rotate_point_t {
+  v2f_t* point; 
+  f32_t speed;
+  v2f_t point_of_rotation;
+};
+
+struct lit_animator_patrol_point_t {
+  v2f_t* point;
+
   f32_t timer;
   f32_t duration;
 
   u32_t current_waypoint_index;
+  u32_t next_waypoint_index;
   u32_t waypoint_count;
   v2f_t waypoints[8];
 
   v2f_t start;
   v2f_t end;
+
 };
 
 struct lit_animator_rotate_edge_t {
   // NOT IMPLEMENTED
 };
 
-struct lit_animator_rotate_sensor_t {
-  lit_sensor_t* sensor; 
-  f32_t speed;
-  v2f_t point_of_rotation;
-};
 
 struct lit_animator_patrol_edge_t {
   lit_edge_t* edge;
@@ -153,10 +159,10 @@ struct lit_animator_patrol_edge_t {
 struct lit_animator_t {
   lit_animator_type_t type;
   union {
-    lit_animator_patrol_sensor_t patrol_sensor;
     lit_animator_patrol_edge_t patrol_edge;
     lit_animator_rotate_edge_t rotate_edge;
-    lit_animator_rotate_sensor_t rotate_sensor;
+    lit_animator_rotate_point_t rotate_point;
+    lit_animator_patrol_point_t move_point;
   };
 };
 
