@@ -1326,6 +1326,7 @@ lit_animate	D:/work/git/moom/code/lit_game.cpp	/^lit_animate(lit_t* lit, lit_ani
 lit_animator_patrol_edge_t	D:/work/git/moom/code/lit_game.h	/^struct lit_animator_patrol_edge_t {$/;"	s	language:C++
 lit_animator_patrol_point_t	D:/work/git/moom/code/lit_game.h	/^struct lit_animator_patrol_point_t {$/;"	s	language:C++
 lit_animator_push_patrol_point_waypoint	D:/work/git/moom/code/lit_game.cpp	/^lit_animator_push_patrol_point_waypoint($/;"	f	language:C++	typeref:typename:void	file:
+lit_animator_push_rotate_point	D:/work/git/moom/code/lit_game.cpp	/^lit_animator_push_rotate_point($/;"	f	language:C++	typeref:typename:void	file:
 lit_animator_rotate_edge_t	D:/work/git/moom/code/lit_game.h	/^struct lit_animator_rotate_edge_t {$/;"	s	language:C++
 lit_animator_rotate_point_t	D:/work/git/moom/code/lit_game.h	/^struct lit_animator_rotate_point_t {$/;"	s	language:C++
 lit_animator_rotate_sensor_t	D:/work/git/moom/code/lit_game.h	/^struct lit_animator_rotate_sensor_t {$/;"	s	language:C++

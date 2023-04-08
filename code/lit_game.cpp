@@ -5,7 +5,6 @@ static void lit_load_next_level(lit_game_t* m);
 // 
 // Animator
 //
-
 static void 
 lit_animator_push_patrol_point_waypoint(
     lit_animator_t* animator, 
@@ -21,6 +20,25 @@ lit_animator_push_patrol_point_waypoint(
 }
 
 static void
+lit_animator_push_rotate_point(
+    lit_game_t* game,
+    v2f_t* pt_to_rotate,
+    v2f_t pt_of_rotation,
+    f32_t speed) 
+{
+
+  assert(game->animator_count < array_count(game->animators));
+  auto* anim = game->animators + game->animator_count++;
+  anim->type = LIT_ANIMATOR_TYPE_ROTATE_POINT;
+ 
+  auto* a = &anim->rotate_point;
+  a->speed = speed;
+  a->point_of_rotation = pt_of_rotation;
+  a->point = pt_to_rotate;
+}
+
+#if 1 
+static void
 lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duration, lit_edge_t start, lit_edge_t end) 
 {
   auto* anim = game->animators + game->animator_count++;
@@ -35,6 +53,7 @@ lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duratio
   a->edge = edge;
 
 }
+#endif
 
 static void 
 lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {
@@ -61,14 +80,6 @@ lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {
       v2f_t new_vec = v2f_rotate(vec, a->speed * dt);
       dref(a->point) = a->point_of_rotation + new_vec;
     } break;
-#if 0
-    case LIT_ANIMATOR_TYPE_ROTATE_SENSOR: {
-      auto* a = &animator->rotate_sensor;
-      v2f_t vec = a->sensor->pos - a->point_of_rotation;
-      v2f_t new_vec = v2f_rotate(vec, a->speed * dt);
-      a->sensor->pos = a->point_of_rotation + new_vec;
-    } break;
-#endif
     case LIT_ANIMATOR_TYPE_PATROL_EDGE: {
       auto* a = &animator->patrol_edge;
       a->timer += dt;
@@ -695,15 +706,7 @@ lit_push_rotating_sensor(
     u32_t target_color)
 {
   auto* sensor = lit_push_sensor(game, pos_x, pos_y, target_color);
-
-  assert(game->animator_count < array_count(game->animators));
-  auto* anim = game->animators + game->animator_count++;
-  anim->type = LIT_ANIMATOR_TYPE_ROTATE_POINT;
- 
-  auto* a = &anim->rotate_point;
-  a->speed = speed;
-  a->point_of_rotation = v2f_set(origin_x, origin_y);
-  a->point = &sensor->pos;
+  lit_animator_push_rotate_point(game, &sensor->pos, v2f_set(origin_x, origin_y), speed);
 
 }
 
