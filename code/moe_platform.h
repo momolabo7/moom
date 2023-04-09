@@ -12,9 +12,9 @@
 //
 typedef struct {
   void* data;
-  umi_t size;
+  usz_t size;
 } platform_memory_t;
-typedef platform_memory_t* platform_allocate_memory_f(umi_t size);
+typedef platform_memory_t* platform_allocate_memory_f(usz_t size);
 typedef void  platform_free_memory_f(platform_memory_t* ptr);
 
 
@@ -44,8 +44,8 @@ platform_open_file_f(platform_file_t* file,
                      platform_file_path_t file_path);
 
 typedef void  platform_close_file_f(platform_file_t* file);
-typedef b32_t platform_read_file_f(platform_file_t* file, umi_t size, umi_t offset, void* dest);
-typedef b32_t platform_write_file_f(platform_file_t* file, umi_t size, umi_t offset, void* src);
+typedef b32_t platform_read_file_f(platform_file_t* file, usz_t size, usz_t offset, void* dest);
+typedef b32_t platform_write_file_f(platform_file_t* file, usz_t size, usz_t offset, void* src);
 
 //
 // Platform multithreaded work API

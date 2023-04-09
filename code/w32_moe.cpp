@@ -5,7 +5,7 @@
 
 #if 0
 static void*
-w32_allocate(umi_t memory_size) {
+w32_allocate(usz_t memory_size) {
   return (u8_t*)VirtualAllocEx(GetCurrentProcess(),
                              0, 
                              memory_size,
@@ -25,7 +25,7 @@ w32_free(void* memory) {
 #endif
 
 static b32_t
-w32_allocate_memory_into_arena(arena_t* a, umi_t memory_size) {
+w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {
   void* data = VirtualAllocEx(GetCurrentProcess(),
                               0, 
                               memory_size,
@@ -107,7 +107,7 @@ w32_close_file(platform_file_t* file) {
 }
 
 static b32_t
-w32_read_file(platform_file_t* file, umi_t size, umi_t offset, void* dest) 
+w32_read_file(platform_file_t* file, usz_t size, usz_t offset, void* dest) 
 { 
   w32_file_t* w32_file = (w32_file_t*)file->platform_data;
   
@@ -129,7 +129,7 @@ w32_read_file(platform_file_t* file, umi_t size, umi_t offset, void* dest)
 }
 
 static b32_t 
-w32_write_file(platform_file_t* file, umi_t size, umi_t offset, void* src)
+w32_write_file(platform_file_t* file, usz_t size, usz_t offset, void* src)
 {
   w32_file_t* w32_file = (w32_file_t*)file->platform_data;
   
