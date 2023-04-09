@@ -1326,7 +1326,7 @@ lit_animate	D:/work/git/moom/code/lit_game.cpp	/^lit_animate(lit_t* lit, lit_ani
 lit_animator_patrol_edge_t	D:/work/git/moom/code/lit_game.h	/^struct lit_animator_patrol_edge_t {$/;"	s	language:C++
 lit_animator_patrol_point_t	D:/work/git/moom/code/lit_game.h	/^struct lit_animator_patrol_point_t {$/;"	s	language:C++
 lit_animator_push_patrol_point_waypoint	D:/work/git/moom/code/lit_game.cpp	/^lit_animator_push_patrol_point_waypoint($/;"	f	language:C++	typeref:typename:void	file:
-lit_animator_push_rotate_point	D:/work/git/moom/code/lit_game.cpp	/^lit_animator_push_rotate_point($/;"	f	language:C++	typeref:typename:void	file:
+lit_animator_push_rotate_point	D:/work/git/moom/code/lit_game.cpp	/^lit_animator_push_rotate_point($/;"	f	language:C++	typeref:typename:lit_animator_rotate_point_t *	file:
 lit_animator_rotate_edge_t	D:/work/git/moom/code/lit_game.h	/^struct lit_animator_rotate_edge_t {$/;"	s	language:C++
 lit_animator_rotate_point_t	D:/work/git/moom/code/lit_game.h	/^struct lit_animator_rotate_point_t {$/;"	s	language:C++
 lit_animator_rotate_sensor_t	D:/work/git/moom/code/lit_game.h	/^struct lit_animator_rotate_sensor_t {$/;"	s	language:C++
@@ -1443,6 +1443,7 @@ lit_push_patrolling_double_edge	D:/work/git/moom/code/lit_game.cpp	/^lit_push_pa
 lit_push_patrolling_edge	D:/work/git/moom/code/lit_game.cpp	/^lit_push_patrolling_edge(lit_game_t* m, f32_t duration, $/;"	f	language:C++	typeref:typename:void	file:
 lit_push_patrolling_sensor_waypoint	D:/work/git/moom/code/lit_game.cpp	/^lit_push_patrolling_sensor_waypoint($/;"	f	language:C++	typeref:typename:void	file:
 lit_push_patrol_edge_animator	D:/work/git/moom/code/lit_game.cpp	/^lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duration, lit_edge_t st/;"	f	language:C++	typeref:typename:void	file:
+lit_push_rotating_rotating_sensor	D:/work/git/moom/code/lit_game.cpp	/^lit_push_rotating_rotating_sensor($/;"	f	language:C++	typeref:typename:void	file:
 lit_push_rotating_sensor	D:/work/git/moom/code/lit_game.cpp	/^lit_push_rotating_sensor($/;"	f	language:C++	typeref:typename:void	file:
 lit_push_sensor	D:/work/git/moom/code/lit_game.cpp	/^lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color) $/;"	f	language:C++	typeref:typename:lit_sensor_t *	file:
 lit_push_triangle	D:/work/git/moom/code/lit_game.cpp	/^lit_push_triangle(lit_light_t* l, v2f_t p0, v2f_t p1, v2f_t p2, u32_t color) {$/;"	f	language:C++	typeref:typename:void	file:

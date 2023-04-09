@@ -19,7 +19,7 @@ lit_animator_push_patrol_point_waypoint(
   wp->y = pos_y;
 }
 
-static void
+static lit_animator_rotate_point_t* 
 lit_animator_push_rotate_point(
     lit_game_t* game,
     v2f_t* pt_to_rotate,
@@ -35,6 +35,8 @@ lit_animator_push_rotate_point(
   a->speed = speed;
   a->point_of_rotation = pt_of_rotation;
   a->point = pt_to_rotate;
+
+  return a;
 }
 
 #if 1 
@@ -695,6 +697,24 @@ lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color)
   return s;
 }
 
+static void
+lit_push_rotating_rotating_sensor(
+    lit_game_t* game, 
+    f32_t pos_x, 
+    f32_t pos_y, 
+    f32_t origin_ax, 
+    f32_t origin_ay, 
+    f32_t speed_a, 
+    f32_t origin_bx, 
+    f32_t origin_by, 
+    f32_t speed_b, 
+    u32_t target_color)
+{
+  auto* sensor = lit_push_sensor(game, pos_x, pos_y, target_color);
+  auto* rp = lit_animator_push_rotate_point(game, &sensor->pos, v2f_set(origin_ax, origin_ay), speed_a);
+  auto* rrp = lit_animator_push_rotate_point(game, &rp->point_of_rotation, v2f_set(origin_bx, origin_by), speed_b);
+
+}
 static void
 lit_push_rotating_sensor(
     lit_game_t* game, 

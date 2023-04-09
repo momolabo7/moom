@@ -560,11 +560,11 @@ lit_level_spin(lit_game_t* m) {
 
   {
     v2f_t dir = v2f_set(0.f, 25.f);
-    v2f_t opos = v2f_set(400.f, 400.f);
+    v2f_t origin = v2f_set(400.f, 400.f);
     for_arr(i, colors) {
       f32_t turn = i * (1.f/array_count(colors)) + 0.25f; 
 
-      lit_push_light(m, opos.x + dir.x, opos.y + dir.y, 
+      lit_push_light(m, origin.x + dir.x, origin.y + dir.y, 
           colors[array_count(colors)-i-1], 
           f32_rad_to_deg(angle_per_color/2), turn);
 
@@ -574,21 +574,21 @@ lit_level_spin(lit_game_t* m) {
 
   // Inner circle
   {
-    v2f_t opos = v2f_set(400.f, 400.f);
+    v2f_t origin = v2f_set(400.f, 400.f);
     v2f_t dir = v2f_set(0.f, 100.f);
     for_arr(i, colors) {
       dir = v2f_rotate(dir, angle_per_color);
-      lit_push_rotating_sensor(m, opos.x + dir.x, opos.y + dir.y , 400.f, 400.f, speed, colors[i]); 
+      lit_push_rotating_sensor(m, origin.x + dir.x, origin.y + dir.y , 400.f, 400.f, speed, colors[i]); 
     }
   }
 
   // Outer circle
   {
-    v2f_t opos = v2f_set(400.f, 400.f);
+    v2f_t origin = v2f_set(400.f, 400.f);
     v2f_t dir = v2f_set(0.f, -200.f);
     for_arr(i, colors) {
       dir = v2f_rotate(dir, angle_per_color);
-      lit_push_rotating_sensor(m, opos.x + dir.x, opos.y + dir.y , 400.f, 400.f, -speed, colors[i]); 
+      lit_push_rotating_sensor(m, origin.x + dir.x, origin.y + dir.y , 400.f, 400.f, -speed, colors[i]); 
     }
   }
 
@@ -608,14 +608,15 @@ lit_level_test(lit_game_t* m) {
     0x880088FF,
   };
   f32_t angle_per_color = TAU_32/array_count(colors);
+  v2f_t origin = v2f_set(400.f, 400.f);
 
+  // Lights
   {
     v2f_t dir = v2f_set(0.f, 25.f);
-    v2f_t opos = v2f_set(400.f, 400.f);
     for_arr(i, colors) {
       f32_t turn = i * (1.f/array_count(colors)) + 0.25f; 
 
-      lit_push_light(m, opos.x + dir.x, opos.y + dir.y, 
+      lit_push_light(m, origin.x + dir.x, origin.y + dir.y, 
           colors[array_count(colors)-i-1], 
           f32_rad_to_deg(angle_per_color/2), turn);
 
@@ -625,21 +626,19 @@ lit_level_test(lit_game_t* m) {
 
   // Inner circle
   {
-    v2f_t opos = v2f_set(400.f, 400.f);
     v2f_t dir = v2f_set(0.f, 100.f);
     for_arr(i, colors) {
       dir = v2f_rotate(dir, angle_per_color);
-      lit_push_rotating_sensor(m, opos.x + dir.x, opos.y + dir.y , 400.f, 400.f, speed, colors[i]); 
+      lit_push_rotating_sensor(m, origin.x + dir.x, origin.y + dir.y, origin.x, origin.y, speed, colors[i]); 
     }
   }
 
   // Outer circle
   {
-    v2f_t opos = v2f_set(400.f, 400.f);
     v2f_t dir = v2f_set(0.f, -200.f);
     for_arr(i, colors) {
       dir = v2f_rotate(dir, angle_per_color);
-      lit_push_rotating_sensor(m, opos.x + dir.x, opos.y + dir.y , 400.f, 400.f, -speed, colors[i]); 
+      lit_push_rotating_sensor(m, origin.x + dir.x, origin.y + dir.y, origin.x, origin.y, -speed, colors[i]); 
     }
   }
 
