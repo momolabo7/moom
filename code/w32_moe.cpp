@@ -49,20 +49,20 @@ w32_free_memory_from_arena(arena_t* a) {
 
 
 static b32_t
-w32_open_file(platform_file_t* file,
+w32_open_file(pf_file_t* file,
               const char* filename, 
-              platform_file_access_t access,
-              platform_file_path_t path) 
+              pf_file_access_t access,
+              pf_file_path_t path) 
 {
   // Opening the file
   DWORD access_flag = {};
   DWORD creation_disposition = {};
   switch (access) {
-    case PLATFORM_FILE_ACCESS_READ: {
+    case PF_FILE_ACCESS_READ: {
       access_flag = GENERIC_READ;
       creation_disposition = OPEN_EXISTING;
     } break;
-    case PLATFORM_FILE_ACCESS_OVERWRITE: {
+    case PF_FILE_ACCESS_OVERWRITE: {
       access_flag = GENERIC_WRITE;
       creation_disposition = CREATE_ALWAYS;
     } break;
@@ -83,7 +83,7 @@ w32_open_file(platform_file_t* file,
                               0,
                               0) ;
   if (handle == INVALID_HANDLE_VALUE) {
-    file->platform_data = nullptr;
+    file->pf_data = nullptr;
     return false;
   }
   else {
@@ -92,24 +92,24 @@ w32_open_file(platform_file_t* file,
     assert(w32_file);
     w32_file->handle = handle;
     
-    file->platform_data = w32_file;
+    file->pf_data = w32_file;
     return true;
   }
 }
 
 static void
-w32_close_file(platform_file_t* file) {
-  w32_file_t* w32_file = (w32_file_t*)file->platform_data;
+w32_close_file(pf_file_t* file) {
+  w32_file_t* w32_file = (w32_file_t*)file->pf_data;
   CloseHandle(w32_file->handle);
   
   w32_return_file(&w32_state.file_cabinet, w32_file);
-  file->platform_data = nullptr;
+  file->pf_data = nullptr;
 }
 
 static b32_t
-w32_read_file(platform_file_t* file, usz_t size, usz_t offset, void* dest) 
+w32_read_file(pf_file_t* file, usz_t size, usz_t offset, void* dest) 
 { 
-  w32_file_t* w32_file = (w32_file_t*)file->platform_data;
+  w32_file_t* w32_file = (w32_file_t*)file->pf_data;
   
   // Reading the file
   OVERLAPPED overlapped = {};
@@ -129,9 +129,9 @@ w32_read_file(platform_file_t* file, usz_t size, usz_t offset, void* dest)
 }
 
 static b32_t 
-w32_write_file(platform_file_t* file, usz_t size, usz_t offset, void* src)
+w32_write_file(pf_file_t* file, usz_t size, usz_t offset, void* src)
 {
-  w32_file_t* w32_file = (w32_file_t*)file->platform_data;
+  w32_file_t* w32_file = (w32_file_t*)file->pf_data;
   
   OVERLAPPED overlapped = {};
   overlapped.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
@@ -149,7 +149,7 @@ w32_write_file(platform_file_t* file, usz_t size, usz_t offset, void* src)
 }
 
 static void
-w32_add_task(platform_task_callback_f callback, void* data) {
+w32_add_task(pf_task_callback_f callback, void* data) {
   w32_add_task_entry(&w32_state.work_queue, callback, data);
 }
 
@@ -160,43 +160,43 @@ w32_complete_all_tasks() {
 
 
 
-static platform_button_code_t
-w32_vkeys_to_platform_button_code(u32_t code) {
+static pf_button_code_t
+w32_vkeys_to_input_button_code(u32_t code) {
 
   // A to Z
   if (code >= 0x41 && code <= 0x5A) {
-    return platform_button_code_t(PLATFORM_BUTTON_CODE_A + code - 0x41);
+    return pf_button_code_t(PF_BUTTON_CODE_A + code - 0x41);
   }
   
   // 0 to 9
   else if (code >= 0x30 && code <= 0x39) {
-    return platform_button_code_t(PLATFORM_BUTTON_CODE_0 + code - 0x30);
+    return pf_button_code_t(PF_BUTTON_CODE_0 + code - 0x30);
   }
 
   // F1 to F12
   // NOTE(momo): there are actually more F-keys??
   else if (code >= 0x70 && code <= 0x7B) {
-    return platform_button_code_t(PLATFORM_BUTTON_CODE_F1 + code - 0x70);
+    return pf_button_code_t(PF_BUTTON_CODE_F1 + code - 0x70);
   }
   else {
     switch(code) {
-      case VK_SPACE: return PLATFORM_BUTTON_CODE_SPACE;
+      case VK_SPACE: return PF_BUTTON_CODE_SPACE;
     }
 
   }
   
-  return PLATFORM_BUTTON_CODE_UNKNOWN;
+  return PF_BUTTON_CODE_UNKNOWN;
 }
 
 static void
-w32_process_input(HWND window, platform_t* pf) 
+w32_process_input(HWND window, input_t* input) 
 {
   MSG msg = {};
   while(PeekMessage(&msg, window, 0, 0, PM_REMOVE)) {
     switch(msg.message) {
       case WM_CHAR: {
-        assert(pf->char_count < array_count(pf->chars));
-        pf->chars[pf->char_count++] = (u8_t)msg.wParam;
+        assert(input->char_count < array_count(input->chars));
+        input->chars[input->char_count++] = (u8_t)msg.wParam;
       } break;
       case WM_QUIT:
       case WM_DESTROY:
@@ -207,19 +207,19 @@ w32_process_input(HWND window, platform_t* pf)
       case WM_LBUTTONUP:
       case WM_LBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_LBUTTONDOWN;
-        pf->buttons[PLATFORM_BUTTON_CODE_LMB].now = is_key_down;
+        input->buttons[PF_BUTTON_CODE_LMB].now = is_key_down;
       } break;
 
       case WM_MBUTTONUP:
       case WM_MBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_MBUTTONDOWN;
-        pf->buttons[PLATFORM_BUTTON_CODE_MMB].now = is_key_down;
+        input->buttons[PF_BUTTON_CODE_MMB].now = is_key_down;
       } break;
 
       case WM_RBUTTONUP:
       case WM_RBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_RBUTTONDOWN;
-        pf->buttons[PLATFORM_BUTTON_CODE_RMB].now = is_key_down;
+        input->buttons[PF_BUTTON_CODE_RMB].now = is_key_down;
       } break;
       
       case WM_KEYUP:
@@ -229,7 +229,7 @@ w32_process_input(HWND window, platform_t* pf)
       {
         u32_t code = (u32_t)msg.wParam;
         b32_t is_key_down = msg.message == WM_KEYDOWN;
-        pf->buttons[w32_vkeys_to_platform_button_code(code)].now = is_key_down;
+        input->buttons[w32_vkeys_to_input_button_code(code)].now = is_key_down;
 
         TranslateMessage(&msg);
       } break;
@@ -282,24 +282,24 @@ w32_set_moe_dims(f32_t width, f32_t height) {
   }
 
 static void
-w32_setup_platform_functions(platform_t* pf)
+w32_set_platform_api(moe_t* moe)
 {
-  //pf->hot_reload = w32_hot_reload;
-  //pf->shutdown = w32_shutdown;
+  //moe->hot_reload = w32_hot_reload;
+  //moe->shutdown = w32_shutdown;
   //
-  //pf->set_render_region = w32_set_render_region;
-  //pf->set_window_size = w32_set_window_size;
-  //pf->get_window_size = w32_get_window_size;
-  pf->set_moe_dims = w32_set_moe_dims;
-  pf->open_file = w32_open_file;
-  pf->read_file = w32_read_file;
-  pf->write_file = w32_write_file;
-  pf->close_file = w32_close_file;
-  pf->add_task = w32_add_task;
-  pf->complete_all_tasks = w32_complete_all_tasks;
-  pf->debug_log = w32_log_proc;
-  pf->allocate_memory = w32_allocate_memory;
-  pf->free_memory = w32_free_memory;
+  //moe->set_render_region = w32_set_render_region;
+  //moe->set_window_size = w32_set_window_size;
+  //moe->get_window_size = w32_get_window_size;
+  moe->set_moe_dims = w32_set_moe_dims;
+  moe->open_file = w32_open_file;
+  moe->read_file = w32_read_file;
+  moe->write_file = w32_write_file;
+  moe->close_file = w32_close_file;
+  moe->add_task = w32_add_task;
+  moe->complete_all_tasks = w32_complete_all_tasks;
+  moe->debug_log = w32_log_proc;
+  moe->allocate_memory = w32_allocate_memory;
+  moe->free_memory = w32_free_memory;
 }
 
 //~ Main functions
@@ -323,6 +323,13 @@ w32_window_callback(HWND window,
   return result;
 }
 
+static void 
+w32_update_input(input_t* input) {
+  for (u32_t i = 0; i < array_count(input->buttons); ++i) {
+    input->buttons[i].before = input->buttons[i].now;
+  }
+  input->char_count = 0;
+}
 
 
 int CALLBACK
@@ -449,23 +456,8 @@ WinMain(HINSTANCE instance,
   w32_log("Target Secs per Frame: %.2f\n", target_secs_per_frame);
   
   
-  //-Load Renderer functions
-#if 0
-  W32_Gfx_Functions gfx_functions = {};
-  w32_loaded_code_t gfx_code = {};
-  gfx_code.function_count = array_count(w32_gfx_function_names);
-  gfx_code.function_names = w32_gfx_function_names;
-  gfx_code.module_path = "gfx.dll";
-  gfx_code.functions = (void**)&gfx_functions;
-#if INTERNAL
-  gfx_code.tmp_path = "tmp_gfx.dll";
-#endif // INTERNAL
-  w32_load_code(&gfx_code);
-  if (!gfx_code.is_valid) return 1;
-  defer { w32_unload_code(&gfx_code); };
-#endif  
 
-  //-Load moe_t Functions
+  // Load moe Functions
   moe_functions_t moe_functions = {};
   w32_loaded_code_t moe_code = {};
   moe_code.function_count = array_count(moe_function_names);
@@ -480,14 +472,10 @@ WinMain(HINSTANCE instance,
   defer { w32_unload_code(&moe_code); };
   
   
-  //-Init gfx
-#if 0
-  make(arena_t, gfx_arena);
-  if (!w32_allocate_memory_into_arena(gfx_arena, megabytes(256))) return false;
-  defer { w32_free_memory_from_arena(gfx_arena); };
-#endif
- 
-    
+  //
+  // Gfx
+  // 
+
   gfx_t* gfx = w32_gfx_load(window, megabytes(100), megabytes(100));
   if (!gfx) { return 1; }
   defer { w32_gfx_unload(gfx); };
@@ -497,23 +485,30 @@ WinMain(HINSTANCE instance,
   if (!w32_allocate_memory_into_arena(audio_arena, megabytes(256))) return false;
   defer { w32_free_memory_from_arena(audio_arena); };
 
-  platform_audio_t* audio = w32_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
+  pf_audio_t* audio = w32_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
   if (!audio) return false;
   defer{ w32_audio_unload(audio); };
 
 
+  //
   // Init profiler
+  //
   profiler_init(profiler, w32_get_performance_counter_u64);
-  
-  // platform_t setup
-  make(platform_t, pf);
- 
-  // moe_t memory set up
-  
-  w32_setup_platform_functions(pf);
-  pf->gfx = gfx;
-  pf->profiler = profiler;
-  pf->audio = audio;
+
+  //
+  // Init input
+  // 
+  input_t input = {};
+
+  //
+  // MOE setup
+  //
+  make(moe_t, moe);
+  w32_set_platform_api(moe);
+  moe->gfx = gfx;
+  moe->profiler = profiler;
+  moe->audio = audio;
+  moe->input = &input;
   
   
   //- Begin moe loop
@@ -530,8 +525,8 @@ WinMain(HINSTANCE instance,
   
 #if 1
     // Hot reload moe.dll functions
-    pf->reloaded = w32_reload_code_if_outdated(&moe_code);
-    if (pf->reloaded) {
+    moe->reloaded = w32_reload_code_if_outdated(&moe_code);
+    if (moe->reloaded) {
       profiler_reset(profiler);
     }
 #endif
@@ -550,9 +545,9 @@ WinMain(HINSTANCE instance,
     w32_gfx_begin_frame(gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
        
     //-Process messages and input
-    pf->seconds_since_last_frame = target_secs_per_frame;
-    platform_update_input(pf);
-    w32_process_input(window, pf); 
+    moe->seconds_since_last_frame = target_secs_per_frame;
+    w32_update_input(&input);
+    w32_process_input(window, &input); 
     
     //- Mouse input 
     {
@@ -570,19 +565,19 @@ WinMain(HINSTANCE instance,
       f32_t moe_to_render_w = w32_state.moe_width / region_width;
       f32_t moe_to_render_h = w32_state.moe_height / region_height;
       
-      pf->mouse_pos.x = render_mouse_pos_x * moe_to_render_w;
-      pf->mouse_pos.y = render_mouse_pos_y * moe_to_render_h;
+      input.mouse_pos.x = render_mouse_pos_x * moe_to_render_w;
+      input.mouse_pos.y = render_mouse_pos_y * moe_to_render_h;
       
       
       // NOTE(Momo): Flip y
-      //pf->design_mouse_pos.y = f32_lerp(MOE_HEIGHT, 0.f, pf->design_mouse_pos.y/MOE_HEIGHT);	
+      //moe->design_mouse_pos.y = f32_lerp(MOE_HEIGHT, 0.f, moe->design_mouse_pos.y/MOE_HEIGHT);	
 
     }
     
     
     //-moe_t logic
     if(moe_code.is_valid) { 
-      game_is_running = moe_functions.update_and_render(pf);
+      game_is_running = moe_functions.update_and_render(moe);
     }
 
     // End  frame

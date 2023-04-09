@@ -9,7 +9,7 @@ struct w32_wasapi_notif_client_t {
 };
 
 struct w32_wasapi_t {
-  platform_audio_t platform_audio; // Must be first member
+  pf_audio_t pf_audio; // Must be first member
   
   w32_wasapi_notif_client_t notifs;
   IMMDeviceEnumerator * mm_device_enum;
@@ -339,17 +339,17 @@ w32_wasapi_begin_frame(w32_wasapi_t* wasapi) {
 		samples_to_write = wasapi->buffer_size;
 	}
 
-  // Get platform_audio_t
-  wasapi->platform_audio.sample_buffer = wasapi->buffer;
-  wasapi->platform_audio.sample_count = samples_to_write; 
-  wasapi->platform_audio.channels = wasapi->channels;
+  // Get pf_audio_t
+  wasapi->pf_audio.sample_buffer = wasapi->buffer;
+  wasapi->pf_audio.sample_count = samples_to_write; 
+  wasapi->pf_audio.channels = wasapi->channels;
 
 }
 static void
 w32_wasapi_end_frame(w32_wasapi_t* wasapi) 
 {
 	if (!wasapi->is_device_ready) return;
-  platform_audio_t* output = &wasapi->platform_audio;
+  pf_audio_t* output = &wasapi->pf_audio;
 
   // NOTE(Momo): Kinda assumes 16-bit Sound
   BYTE* sound_buffer_data;
@@ -374,7 +374,7 @@ w32_wasapi_end_frame(w32_wasapi_t* wasapi)
 /////////////////////////////////////////////////////////
 // API Correspondence
 //
-static platform_audio_t*
+static pf_audio_t*
 w32_audio_load(u32_t samples_per_second, 
                u16_t bits_per_sample,
                u16_t channels,
@@ -389,21 +389,21 @@ w32_audio_load(u32_t samples_per_second,
   b32_t success = w32_wasapi_init(wasapi, samples_per_second, bits_per_sample, channels, latency_frames, refresh_rate, allocator);
   if (!success) return 0;
 
-  return &wasapi->platform_audio;
+  return &wasapi->pf_audio;
 }
 
 static void
-w32_audio_begin_frame(platform_audio_t* audio) {
+w32_audio_begin_frame(pf_audio_t* audio) {
   w32_wasapi_begin_frame((w32_wasapi_t*)audio);
 }
 
 static void 
-w32_audio_end_frame(platform_audio_t* audio) {
+w32_audio_end_frame(pf_audio_t* audio) {
   w32_wasapi_end_frame((w32_wasapi_t*)audio);
 }
 
 static void
-w32_audio_unload(platform_audio_t* audio) {
+w32_audio_unload(pf_audio_t* audio) {
   // Unused
 }
 

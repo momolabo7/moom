@@ -2,7 +2,7 @@
 #define WIN_AUDIO
 
 
-static platform_audio_t*
+static pf_audio_t*
 w32_audio_load(u32_t samples_per_second, 
                u16_t bits_per_sample,
                u16_t channels,
@@ -12,14 +12,14 @@ w32_audio_load(u32_t samples_per_second,
 
 
 static void
-w32_audio_unload(platform_audio_t* audio);
+w32_audio_unload(pf_audio_t* audio);
 
 
 static void
-w32_audio_begin_frame(platform_audio_t* audio);
+w32_audio_begin_frame(pf_audio_t* audio);
 
 static void 
-w32_audio_end_frame(platform_audio_t* audio);
+w32_audio_end_frame(pf_audio_t* audio);
 
 
 #endif

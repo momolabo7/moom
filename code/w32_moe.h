@@ -27,7 +27,7 @@
 #include "moe_profiler.h"
 
 struct w32_memory_t {
-  platform_memory_t platform_memory;
+  pf_memory_t pf_memory;
   
   w32_memory_t* prev;
   w32_memory_t* next;
@@ -35,7 +35,7 @@ struct w32_memory_t {
 
 struct w32_work_t {
   void* data;
-  platform_task_callback_f* callback;
+  pf_task_callback_f* callback;
 };
 
 // TODO(momo): Is it possible to use a vector?
@@ -361,7 +361,7 @@ w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {
   c->free_files[c->free_file_count++] = f->cabinet_index;
 }
 
-static platform_memory_t*
+static pf_memory_t*
 w32_allocate_memory(umi_t size)
 {
   const auto alignment = 16;
@@ -379,18 +379,18 @@ w32_allocate_memory(umi_t size)
   if (!block) return nullptr;
 
 
-  block->platform_memory.data = (u8_t*)block + base_offset; 
-  block->platform_memory.size = size;
+  block->pf_memory.data = (u8_t*)block + base_offset; 
+  block->pf_memory.size = size;
 
   w32_memory_t* sentinel = &w32_state.memory_sentinel;
   cll_append(sentinel, block);
 
-  return &block->platform_memory;
+  return &block->pf_memory;
 
 }
 
 static void
-w32_free_memory(platform_memory_t* block) {
+w32_free_memory(pf_memory_t* block) {
   if (block) {
     auto* memory_block = (w32_memory_t*)(block);
     cll_remove(memory_block);

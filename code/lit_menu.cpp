@@ -127,7 +127,9 @@ lit_menu_tick_normal(
     lit_menu_t* menu, 
     f32_t dt)
 {
-  if (platform_is_button_down(lit->platform->buttons[PLATFORM_BUTTON_CODE_SPACE])) 
+  input_t* input = lit->input;
+
+  if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_SPACE])) 
   {
     // animate held button
     menu->selection_held_timer += dt;
@@ -137,7 +139,7 @@ lit_menu_tick_normal(
     }
   }
 
-  else if (platform_is_button_released(lit->platform->buttons[PLATFORM_BUTTON_CODE_SPACE]))
+  else if (pf_is_button_released(input->buttons[PF_BUTTON_CODE_SPACE]))
   {
     // menu->mode = LIT_MENU_MODE_TRANSITION_OUT;
     //menu->selection_held_timer = 0.f;
@@ -145,23 +147,23 @@ lit_menu_tick_normal(
 
   else {
     if (menu->selection_held_timer <= 0.f) {
-      if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_W])) {
+      if (pf_is_button_poked(input->buttons[PF_BUTTON_CODE_W])) {
         if (menu->current_level_selection >= LIT_MENU_LEVELS_PER_ROW) {
           menu->current_level_selection -= LIT_MENU_LEVELS_PER_ROW;
         }
       }
-      if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_S])) {
+      if (pf_is_button_poked(input->buttons[PF_BUTTON_CODE_S])) {
         if (menu->current_level_selection < LIT_MENU_TOTAL_LEVELS - LIT_MENU_LEVELS_PER_ROW)
           menu->current_level_selection += LIT_MENU_LEVELS_PER_ROW;
       }
-      if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_D])) 
+      if (pf_is_button_poked(input->buttons[PF_BUTTON_CODE_D])) 
       {
         if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != LIT_MENU_LEVELS_PER_ROW-1)
         {
           menu->current_level_selection++;
         }
       }
-      if (platform_is_button_poked(lit->platform->buttons[PLATFORM_BUTTON_CODE_A]))
+      if (pf_is_button_poked(input->buttons[PF_BUTTON_CODE_A]))
       {
         if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != 0) 
         {
@@ -229,7 +231,7 @@ lit_menu_button_render(
 
 static void
 lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
-  f32_t dt = lit->platform->seconds_since_last_frame;
+  f32_t dt = lit->moe->seconds_since_last_frame;
 
   if (menu->mode == LIT_MENU_MODE_TRANSITION_IN) {
     lit_menu_tick_transition_in(lit, menu, dt);

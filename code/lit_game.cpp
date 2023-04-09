@@ -499,32 +499,33 @@ static void
 lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt) 
 {
   lit_player_t* player = &game->player; 
-  platform_t* platform = lit->platform;
+  moe_t* moe = lit->moe;
+  input_t* input = lit->input;
   
 
 #if 1
   // Get movement direction
-  v2f_t direction = {0};
-  if (platform_is_button_down(platform->buttons[PLATFORM_BUTTON_CODE_W])) {
+  v2f_t direction = {};
+  if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_W])) {
     direction.y += 1.f;
   }
-  if (platform_is_button_down(platform->buttons[PLATFORM_BUTTON_CODE_S])) {
+  if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_S])) {
     direction.y -= 1.f;
   }
-  if (platform_is_button_down(platform->buttons[PLATFORM_BUTTON_CODE_D])) {
+  if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_D])) {
     direction.x += 1.f;
   }
-  if (platform_is_button_down(platform->buttons[PLATFORM_BUTTON_CODE_A])) {
+  if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_A])) {
     direction.x -= 1.f;
   }
   
   // Held light controls
   if (player->held_light != nullptr) {
-    if (platform_is_button_down(platform->buttons[PLATFORM_BUTTON_CODE_Q])){ 
+    if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_Q])){ 
       player->held_light->dir = 
         v2f_rotate(player->held_light->dir, LIT_PLAYER_ROTATE_SPEED * dt );
     }
-    if (platform_is_button_down(platform->buttons[PLATFORM_BUTTON_CODE_E])) { 
+    if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_E])) { 
       player->held_light->dir = 
         v2f_rotate(player->held_light->dir, -LIT_PLAYER_ROTATE_SPEED * dt);
     }
@@ -539,7 +540,7 @@ lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt)
   }
 #endif 
   // 'Pick up'  button
-  if (platform_is_button_poked(platform->buttons[PLATFORM_BUTTON_CODE_SPACE])) {
+  if (pf_is_button_poked(input->buttons[PF_BUTTON_CODE_SPACE])) {
     if (player->held_light == nullptr) {
       f32_t shortest_dist = LIT_PLAYER_PICKUP_DIST; // limit
       lit_light_t* nearest_light = nullptr;
@@ -917,7 +918,7 @@ lit_generate_light(lit_t* lit, lit_game_t* game) {
     {
       v2f_t p0 = light->pos;
       v2f_t p1 = light->intersections[intersection_index].pt;
-      gfx_push_line(platform->gfx, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
+      gfx_push_line(lit->gfx, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
     }
 #endif
   }
@@ -927,7 +928,7 @@ static void
 lit_update_game(lit_t* lit, lit_game_t* game) 
 {
   lit_player_t* player = &game->player;
-  f32_t dt = lit->platform->seconds_since_last_frame;
+  f32_t dt = lit->moe->seconds_since_last_frame;
 
   //
   // Transition Logic

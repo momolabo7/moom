@@ -66,9 +66,10 @@ struct lit_save_data_t {
 };
 
 struct lit_t {
-  platform_t* platform;
+  moe_t* moe;
   gfx_t* gfx; 
   profiler_t* profiler;
+  input_t* input;
 
   lit_show_debug_type_t show_debug_type;
   lit_mode_t next_mode;

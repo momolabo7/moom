@@ -97,10 +97,10 @@ struct _ttf_edge_list_t{
 };
 
 enum {
-  _TTF_CMAP_PLATFORM_ID_UNICODE = 0,
-  _TTF_CMAP_PLATFORM_ID_MACINTOSH = 1,
-  _TTF_CMAP_PLATFORM_ID_RESERVED = 2,
-  _TTF_CMAP_PLATFORM_ID_MICROSOFT = 3,
+  _TTF_CMAP_PF_ID_UNICODE = 0,
+  _TTF_CMAP_PF_ID_MACINTOSH = 1,
+  _TTF_CMAP_PF_ID_RESERVED = 2,
+  _TTF_CMAP_PF_ID_MICROSOFT = 3,
   
 };
 
@@ -675,11 +675,11 @@ ttf_read(ttf_t* ttf, buffer_t ttf_contents) {
       
       // We only support unicode encoding...
       // NOTE(Momo): They say mac is discouraged, so we won't care about it.
-      u32_t platform_id = _ttf_read_u16(ttf->data + subtable + 0);
-      switch(platform_id) {
-        case _TTF_CMAP_PLATFORM_ID_MICROSOFT: {
-          u32_t platform_specific_id = _ttf_read_u16(ttf->data + subtable + 2);
-          switch(platform_specific_id) {
+      u32_t pf_id = _ttf_read_u16(ttf->data + subtable + 0);
+      switch(pf_id) {
+        case _TTF_CMAP_PF_ID_MICROSOFT: {
+          u32_t pf_specific_id = _ttf_read_u16(ttf->data + subtable + 2);
+          switch(pf_specific_id) {
             case _TTF_CMAP_MS_ID_UNICODE_BMP:
             case _TTF_CMAP_MS_ID_UNICODE_FULL: {
               ttf->cmap_mappings = ttf->cmap + _ttf_read_u32(ttf->data + subtable + 4);
@@ -688,7 +688,7 @@ ttf_read(ttf_t* ttf, buffer_t ttf_contents) {
             
           }
         }
-        case _TTF_CMAP_PLATFORM_ID_UNICODE: {
+        case _TTF_CMAP_PF_ID_UNICODE: {
           ttf->cmap_mappings = ttf->cmap + _ttf_read_u32(ttf->data + subtable + 4);
           found_index_table = true;
         } break;

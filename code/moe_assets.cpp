@@ -16,13 +16,13 @@ get_next_texture_handle() {
 }
 
 static b32_t 
-assets_init(assets_t* assets, platform_t* platform, const char* filename, arena_t* arena) 
+assets_init(assets_t* assets, moe_t* platform, const char* filename, arena_t* arena) 
 {
-  make(platform_file_t, file);
+  make(pf_file_t, file);
   b32_t ok = platform->open_file(file,
                                  filename,
-                                 PLATFORM_FILE_ACCESS_READ, 
-                                 PLATFORM_FILE_PATH_EXE);
+                                 PF_FILE_ACCESS_READ, 
+                                 PF_FILE_PATH_EXE);
   if (!ok) {
     return false;
   }

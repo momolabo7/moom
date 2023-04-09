@@ -15,7 +15,7 @@ moe_gfx_draw_sprite(moe_t* moe,
                     rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
 {
   assets_t* assets = &moe->assets;
-  platform_t* platform = moe->platform;
+  pf_t* platform = moe->platform;
 
   asset_sprite_t* sprite = get_sprite(assets, sprite_id);
   asset_bitmap_t* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);
@@ -40,7 +40,7 @@ moe_draw_text(moe_t* moe,
               f32_t font_height) 
 {
   assets_t* assets = &moe->assets;
-  platform_t* platform = moe->platform;
+  pf_t* platform = moe->platform;
 
   asset_font_t* font = get_font(assets, font_id);
   for(u32_t char_index = 0; 
@@ -87,7 +87,7 @@ moe_draw_text_center_aligned(moe_t* moe,
                              f32_t font_height) 
 {
   assets_t* assets = &moe->assets;
-  platform_t* platform = moe->platform;
+  pf_t* platform = moe->platform;
   asset_font_t* font = get_font(assets, font_id);
 
   

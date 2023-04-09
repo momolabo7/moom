@@ -1,17 +1,18 @@
 #include "lit.h"
 
 static b32_t
-lit_tick(platform_t* platform) {
+lit_tick(moe_t* moe) {
 
-  if(platform->game_context == nullptr) {
-    auto* lit_memory = platform->allocate_memory(sizeof(lit_t));
+  if(moe->game_context == nullptr) {
+    auto* lit_memory = moe->allocate_memory(sizeof(lit_t));
     if (!lit_memory) return false;
-    platform->game_context = lit_memory;
+    moe->game_context = lit_memory;
 
-    auto* lit = (lit_t*)((platform_memory_t*)platform->game_context)->data;
-    lit->platform = platform;
-    lit->gfx = platform->gfx;
-    lit->profiler = platform->profiler;
+    auto* lit = (lit_t*)((pf_memory_t*)moe->game_context)->data;
+    lit->moe = moe;
+    lit->gfx = moe->gfx;
+    lit->input = moe->input;
+    lit->profiler = moe->profiler;
     lit->level_to_start = 0;
 
     lit->next_mode = LIT_MODE_GAME;
@@ -19,10 +20,10 @@ lit_tick(platform_t* platform) {
     //
     // Initialize assets
     //
-    auto* asset_memory = platform->allocate_memory(megabytes(20));
+    auto* asset_memory = moe->allocate_memory(megabytes(20));
     if (asset_memory == nullptr) return false;
     arena_init(&lit->asset_arena, asset_memory->data, asset_memory->size);
-    assets_init(&lit->assets, platform, "test_pack.sui", &lit->asset_arena);
+    assets_init(&lit->assets, moe, "test_pack.sui", &lit->asset_arena);
 
     //
     // Initialize important assets stuf
@@ -36,26 +37,26 @@ lit_tick(platform_t* platform) {
     //
     // Initialize debug stuff
     //
-    auto* debug_memory = platform->allocate_memory(megabytes(1));
+    auto* debug_memory = moe->allocate_memory(megabytes(1));
     arena_init(&lit->debug_arena, debug_memory->data, debug_memory->size);
     console_init(&lit->console, 32, 256, &lit->debug_arena);
 
-    auto* frame_memory = platform->allocate_memory(megabytes(1));
+    auto* frame_memory = moe->allocate_memory(megabytes(1));
     arena_init(&lit->frame_arena, frame_memory->data, frame_memory->size);
 
-    lit->platform->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
+    lit->moe->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
     gfx_set_view(lit->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
 #if 0
-    platform_file_t file = {};
-    platform->open_file(&file, "hello.txt", PLATFORM_FILE_ACCESS_OVERWRITE, PLATFORM_FILE_PATH_USER);
+    pf_file_t file = {};
+    moe->open_file(&file, "hello.txt", PF_FILE_ACCESS_OVERWRITE, PF_FILE_PATH_USER);
     const char hey[] = "hey";
-    platform->write_file(&file, 3, 0, (void*)hey);
+    moe->write_file(&file, 3, 0, (void*)hey);
 #endif
 
   }
 
-  auto* lit = (lit_t*)((platform_memory_t*)platform->game_context)->data;
+  auto* lit = (lit_t*)((pf_memory_t*)moe->game_context)->data;
 
   // NOTE(momo): Frame arena needs to be cleared each frame.
   arena_clear(&lit->frame_arena);
@@ -63,7 +64,7 @@ lit_tick(platform_t* platform) {
   // NOTE(momo): inspector need to clear each frame
   inspector_clear(&lit->inspector);
 
-  if (lit->next_mode != lit->mode || platform->reloaded) {
+  if (lit->next_mode != lit->mode || moe->reloaded) {
     lit->mode = lit->next_mode;
     
     switch(lit->mode) {
@@ -94,7 +95,7 @@ lit_tick(platform_t* platform) {
   }
 
   // Debug
-  if (platform_is_button_poked(platform->buttons[PLATFORM_BUTTON_CODE_F1])) {
+  if (pf_is_button_poked(lit->input->buttons[PF_BUTTON_CODE_F1])) {
     lit->show_debug_type = 
       (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
   }
@@ -115,7 +116,7 @@ lit_tick(platform_t* platform) {
   return true;
 }
 exported b32_t 
-moe_update_and_render(platform_t* pf)
+moe_update_and_render(moe_t* moe)
 { 
-  return lit_tick(pf);
+  return lit_tick(moe);
 }

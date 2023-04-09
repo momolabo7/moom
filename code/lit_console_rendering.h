@@ -4,15 +4,17 @@ lit_update_and_render_console(lit_t* lit)
 {
 
   console_t* console = &lit->console;
-  platform_t* platform = lit->platform;
+  moe_t* moe = lit->moe;
   gfx_t* gfx = lit->gfx;
+  input_t* input = lit->input;
   assets_t* assets = &lit->assets;
+
   for (u32_t char_index = 0; 
-       char_index < platform->char_count;
+       char_index < input->char_count;
        ++char_index) 
   {
     // NOTE(Momo): Not very portable to other platforms....
-    u8_t c = platform->chars[char_index];
+    u8_t c = input->chars[char_index];
     if (c >= 32 && c <= 126) {
       sb8_push_u8(&console->input_line, c);
     }

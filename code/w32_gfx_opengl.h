@@ -173,7 +173,7 @@ static void
 w32_gfx_unload(gfx_t* gfx) {
 #if 0
   Opengl* ogl = (Opengl*)gfx;
-  w32_free_memory((platform_memory_t*)ogl->user_data);
+  w32_free_memory((pf_memory_t*)ogl->user_data);
 #endif
 }
 
@@ -208,7 +208,7 @@ w32_gfx_load(HWND window,
 
   umi_t total_size = sizeof(Opengl) + command_queue_size + texture_queue_size;
 
-  platform_memory_t* memory = w32_allocate_memory(total_size);
+  pf_memory_t* memory = w32_allocate_memory(total_size);
 
 
   Opengl* opengl = (Opengl*)(memory->data);
