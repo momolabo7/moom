@@ -129,7 +129,7 @@ lit_menu_tick_normal(
 {
   input_t* input = lit->input;
 
-  if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_SPACE])) 
+  if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_SPACE])) 
   {
     // animate held button
     menu->selection_held_timer += dt;
@@ -139,7 +139,7 @@ lit_menu_tick_normal(
     }
   }
 
-  else if (pf_is_button_released(input->buttons[PF_BUTTON_CODE_SPACE]))
+  else if (input_is_button_released(input->buttons[INPUT_BUTTON_CODE_SPACE]))
   {
     // menu->mode = LIT_MENU_MODE_TRANSITION_OUT;
     //menu->selection_held_timer = 0.f;
@@ -147,23 +147,23 @@ lit_menu_tick_normal(
 
   else {
     if (menu->selection_held_timer <= 0.f) {
-      if (pf_is_button_poked(input->buttons[PF_BUTTON_CODE_W])) {
+      if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_W])) {
         if (menu->current_level_selection >= LIT_MENU_LEVELS_PER_ROW) {
           menu->current_level_selection -= LIT_MENU_LEVELS_PER_ROW;
         }
       }
-      if (pf_is_button_poked(input->buttons[PF_BUTTON_CODE_S])) {
+      if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_S])) {
         if (menu->current_level_selection < LIT_MENU_TOTAL_LEVELS - LIT_MENU_LEVELS_PER_ROW)
           menu->current_level_selection += LIT_MENU_LEVELS_PER_ROW;
       }
-      if (pf_is_button_poked(input->buttons[PF_BUTTON_CODE_D])) 
+      if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_D])) 
       {
         if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != LIT_MENU_LEVELS_PER_ROW-1)
         {
           menu->current_level_selection++;
         }
       }
-      if (pf_is_button_poked(input->buttons[PF_BUTTON_CODE_A]))
+      if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_A]))
       {
         if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != 0) 
         {
@@ -231,7 +231,7 @@ lit_menu_button_render(
 
 static void
 lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
-  f32_t dt = lit->moe->seconds_since_last_frame;
+  f32_t dt = lit->moe->delta_time;
 
   if (menu->mode == LIT_MENU_MODE_TRANSITION_IN) {
     lit_menu_tick_transition_in(lit, menu, dt);

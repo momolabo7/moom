@@ -2,6 +2,16 @@
 static void lit_load_level(lit_game_t* m, u32_t level_id);
 static void lit_load_next_level(lit_game_t* m);
 
+//
+// Points
+//
+static v2f_t*
+lit_push_point(lit_game_t* lit, v2f_t point) {
+  assert(lit->point_count < array_count(lit->points));
+  lit->points[lit->point_count] = point;
+  return lit->points + lit->point_count++;
+}
+
 // 
 // Animator
 //
@@ -23,7 +33,7 @@ static lit_animator_rotate_point_t*
 lit_animator_push_rotate_point(
     lit_game_t* game,
     v2f_t* pt_to_rotate,
-    v2f_t pt_of_rotation,
+    v2f_t* pt_of_rotation,
     f32_t speed) 
 {
 
@@ -35,6 +45,7 @@ lit_animator_push_rotate_point(
   a->speed = speed;
   a->point_of_rotation = pt_of_rotation;
   a->point = pt_to_rotate;
+  a->delta = dref(pt_to_rotate) - dref(pt_of_rotation);
 
   return a;
 }
@@ -78,9 +89,8 @@ lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {
     } break;
     case LIT_ANIMATOR_TYPE_ROTATE_POINT: {
       auto* a = &animator->rotate_point;
-      v2f_t vec = dref(a->point) - a->point_of_rotation;
-      v2f_t new_vec = v2f_rotate(vec, a->speed * dt);
-      dref(a->point) = a->point_of_rotation + new_vec;
+      a->delta = v2f_rotate(a->delta, a->speed * dt);
+      dref(a->point) = dref(a->point_of_rotation) + a->delta;
     } break;
     case LIT_ANIMATOR_TYPE_PATROL_EDGE: {
       auto* a = &animator->patrol_edge;
@@ -506,26 +516,26 @@ lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt)
 #if 1
   // Get movement direction
   v2f_t direction = {};
-  if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_W])) {
+  if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_W])) {
     direction.y += 1.f;
   }
-  if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_S])) {
+  if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_S])) {
     direction.y -= 1.f;
   }
-  if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_D])) {
+  if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_D])) {
     direction.x += 1.f;
   }
-  if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_A])) {
+  if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_A])) {
     direction.x -= 1.f;
   }
   
   // Held light controls
   if (player->held_light != nullptr) {
-    if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_Q])){ 
+    if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_Q])){ 
       player->held_light->dir = 
         v2f_rotate(player->held_light->dir, LIT_PLAYER_ROTATE_SPEED * dt );
     }
-    if (pf_is_button_down(input->buttons[PF_BUTTON_CODE_E])) { 
+    if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_E])) { 
       player->held_light->dir = 
         v2f_rotate(player->held_light->dir, -LIT_PLAYER_ROTATE_SPEED * dt);
     }
@@ -540,7 +550,7 @@ lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt)
   }
 #endif 
   // 'Pick up'  button
-  if (pf_is_button_poked(input->buttons[PF_BUTTON_CODE_SPACE])) {
+  if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_SPACE])) {
     if (player->held_light == nullptr) {
       f32_t shortest_dist = LIT_PLAYER_PICKUP_DIST; // limit
       lit_light_t* nearest_light = nullptr;
@@ -698,13 +708,14 @@ lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color)
   return s;
 }
 
+#if 0
+// NOTE(momo): yeah the API here is TERRIBLE at this point
 static void
 lit_push_rotating_rotating_sensor(
     lit_game_t* game, 
     f32_t pos_x, 
     f32_t pos_y, 
-    f32_t origin_ax, 
-    f32_t origin_ay, 
+    v2f_t* origin
     f32_t speed_a, 
     f32_t origin_bx, 
     f32_t origin_by, 
@@ -716,18 +727,19 @@ lit_push_rotating_rotating_sensor(
   auto* rrp = lit_animator_push_rotate_point(game, &rp->point_of_rotation, v2f_set(origin_bx, origin_by), speed_b);
 
 }
+#endif
+
 static void
 lit_push_rotating_sensor(
     lit_game_t* game, 
     f32_t pos_x, 
     f32_t pos_y, 
-    f32_t origin_x, 
-    f32_t origin_y, 
+    v2f_t* origin,
     f32_t speed, 
     u32_t target_color)
 {
   auto* sensor = lit_push_sensor(game, pos_x, pos_y, target_color);
-  lit_animator_push_rotate_point(game, &sensor->pos, v2f_set(origin_x, origin_y), speed);
+  lit_animator_push_rotate_point(game, &sensor->pos, origin, speed);
 
 }
 
@@ -928,7 +940,7 @@ static void
 lit_update_game(lit_t* lit, lit_game_t* game) 
 {
   lit_player_t* player = &game->player;
-  f32_t dt = lit->moe->seconds_since_last_frame;
+  f32_t dt = lit->moe->delta_time;
 
   //
   // Transition Logic

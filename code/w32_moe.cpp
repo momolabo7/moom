@@ -160,32 +160,32 @@ w32_complete_all_tasks() {
 
 
 
-static pf_button_code_t
+static input_button_code_t
 w32_vkeys_to_input_button_code(u32_t code) {
 
   // A to Z
   if (code >= 0x41 && code <= 0x5A) {
-    return pf_button_code_t(PF_BUTTON_CODE_A + code - 0x41);
+    return input_button_code_t(INPUT_BUTTON_CODE_A + code - 0x41);
   }
   
   // 0 to 9
   else if (code >= 0x30 && code <= 0x39) {
-    return pf_button_code_t(PF_BUTTON_CODE_0 + code - 0x30);
+    return input_button_code_t(INPUT_BUTTON_CODE_0 + code - 0x30);
   }
 
   // F1 to F12
   // NOTE(momo): there are actually more F-keys??
   else if (code >= 0x70 && code <= 0x7B) {
-    return pf_button_code_t(PF_BUTTON_CODE_F1 + code - 0x70);
+    return input_button_code_t(INPUT_BUTTON_CODE_F1 + code - 0x70);
   }
   else {
     switch(code) {
-      case VK_SPACE: return PF_BUTTON_CODE_SPACE;
+      case VK_SPACE: return INPUT_BUTTON_CODE_SPACE;
     }
 
   }
   
-  return PF_BUTTON_CODE_UNKNOWN;
+  return INPUT_BUTTON_CODE_UNKNOWN;
 }
 
 static void
@@ -207,19 +207,19 @@ w32_process_input(HWND window, input_t* input)
       case WM_LBUTTONUP:
       case WM_LBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_LBUTTONDOWN;
-        input->buttons[PF_BUTTON_CODE_LMB].now = is_key_down;
+        input->buttons[INPUT_BUTTON_CODE_LMB].now = is_key_down;
       } break;
 
       case WM_MBUTTONUP:
       case WM_MBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_MBUTTONDOWN;
-        input->buttons[PF_BUTTON_CODE_MMB].now = is_key_down;
+        input->buttons[INPUT_BUTTON_CODE_MMB].now = is_key_down;
       } break;
 
       case WM_RBUTTONUP:
       case WM_RBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_RBUTTONDOWN;
-        input->buttons[PF_BUTTON_CODE_RMB].now = is_key_down;
+        input->buttons[INPUT_BUTTON_CODE_RMB].now = is_key_down;
       } break;
       
       case WM_KEYUP:
@@ -290,16 +290,16 @@ w32_set_platform_api(moe_t* moe)
   //moe->set_render_region = w32_set_render_region;
   //moe->set_window_size = w32_set_window_size;
   //moe->get_window_size = w32_get_window_size;
-  moe->set_moe_dims = w32_set_moe_dims;
-  moe->open_file = w32_open_file;
-  moe->read_file = w32_read_file;
-  moe->write_file = w32_write_file;
-  moe->close_file = w32_close_file;
-  moe->add_task = w32_add_task;
-  moe->complete_all_tasks = w32_complete_all_tasks;
-  moe->debug_log = w32_log_proc;
-  moe->allocate_memory = w32_allocate_memory;
-  moe->free_memory = w32_free_memory;
+  moe->pf.set_moe_dims = w32_set_moe_dims;
+  moe->pf.open_file = w32_open_file;
+  moe->pf.read_file = w32_read_file;
+  moe->pf.write_file = w32_write_file;
+  moe->pf.close_file = w32_close_file;
+  moe->pf.add_task = w32_add_task;
+  moe->pf.complete_all_tasks = w32_complete_all_tasks;
+  moe->pf.debug_log = w32_log_proc;
+  moe->pf.allocate_memory = w32_allocate_memory;
+  moe->pf.free_memory = w32_free_memory;
 }
 
 //~ Main functions
@@ -545,7 +545,7 @@ WinMain(HINSTANCE instance,
     w32_gfx_begin_frame(gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
        
     //-Process messages and input
-    moe->seconds_since_last_frame = target_secs_per_frame;
+    moe->delta_time = target_secs_per_frame;
     w32_update_input(&input);
     w32_process_input(window, &input); 
     

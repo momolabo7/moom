@@ -8,7 +8,7 @@ lit_init_splash(lit_t* lit, lit_splash_t* splash) {
 
 static void
 lit_update_splash(lit_t* lit, lit_splash_t* splash) {
-  splash->timer -= lit->moe->seconds_since_last_frame;
+  splash->timer -= lit->moe->delta_time;
  
   gfx_push_text_center_aligned(
       lit->gfx, 

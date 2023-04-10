@@ -4,7 +4,7 @@ static b32_t
 lit_tick(moe_t* moe) {
 
   if(moe->game_context == nullptr) {
-    auto* lit_memory = moe->allocate_memory(sizeof(lit_t));
+    auto* lit_memory = moe->pf.allocate_memory(sizeof(lit_t));
     if (!lit_memory) return false;
     moe->game_context = lit_memory;
 
@@ -12,6 +12,7 @@ lit_tick(moe_t* moe) {
     lit->moe = moe;
     lit->gfx = moe->gfx;
     lit->input = moe->input;
+    lit->pf = &moe->pf;
     lit->profiler = moe->profiler;
     lit->level_to_start = 0;
 
@@ -20,7 +21,7 @@ lit_tick(moe_t* moe) {
     //
     // Initialize assets
     //
-    auto* asset_memory = moe->allocate_memory(megabytes(20));
+    auto* asset_memory = moe->pf.allocate_memory(megabytes(20));
     if (asset_memory == nullptr) return false;
     arena_init(&lit->asset_arena, asset_memory->data, asset_memory->size);
     assets_init(&lit->assets, moe, "test_pack.sui", &lit->asset_arena);
@@ -37,14 +38,14 @@ lit_tick(moe_t* moe) {
     //
     // Initialize debug stuff
     //
-    auto* debug_memory = moe->allocate_memory(megabytes(1));
+    auto* debug_memory = moe->pf.allocate_memory(megabytes(1));
     arena_init(&lit->debug_arena, debug_memory->data, debug_memory->size);
     console_init(&lit->console, 32, 256, &lit->debug_arena);
 
-    auto* frame_memory = moe->allocate_memory(megabytes(1));
+    auto* frame_memory = moe->pf.allocate_memory(megabytes(1));
     arena_init(&lit->frame_arena, frame_memory->data, frame_memory->size);
 
-    lit->moe->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
+    moe->pf.set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
     gfx_set_view(lit->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
 #if 0
@@ -95,7 +96,7 @@ lit_tick(moe_t* moe) {
   }
 
   // Debug
-  if (pf_is_button_poked(lit->input->buttons[PF_BUTTON_CODE_F1])) {
+  if (input_is_button_poked(lit->input->buttons[INPUT_BUTTON_CODE_F1])) {
     lit->show_debug_type = 
       (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
   }

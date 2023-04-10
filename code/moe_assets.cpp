@@ -16,8 +16,11 @@ get_next_texture_handle() {
 }
 
 static b32_t 
-assets_init(assets_t* assets, moe_t* platform, const char* filename, arena_t* arena) 
+assets_init(assets_t* assets, moe_t* moe, const char* filename, arena_t* arena) 
 {
+  pf_api_t* platform = &moe->pf;
+  gfx_t* gfx = moe->gfx;
+
   make(pf_file_t, file);
   b32_t ok = platform->open_file(file,
                                  filename,
@@ -107,7 +110,7 @@ assets_init(assets_t* assets, moe_t* platform, const char* filename, arena_t* ar
           asset->bitmap.height = karu_asset.bitmap.height;
             
           u32_t bitmap_size = asset->bitmap.width * asset->bitmap.height * 4;
-          gfx_texture_payload_t* payload = gfx_begin_texture_transfer(platform->gfx, bitmap_size);
+          gfx_texture_payload_t* payload = gfx_begin_texture_transfer(moe->gfx, bitmap_size);
           if (!payload) return false;
           payload->texture_index = asset->bitmap.renderer_texture_handle;
           payload->texture_width = karu_asset.bitmap.width;

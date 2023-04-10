@@ -1,5 +1,12 @@
 # Journal
 
+### 2023-04-10
+Did a huge refactoring on names again, mostly to get my headspace around the platform layer.
+Input is slowly becoming an issue.
+I'm not exactly sure how to deal with mouse. 
+I kind of need the ability to set the mouse position and my input API currently doesn't allow that.
+Might need a function to set and get window's mouse position. 
+
 ### 2023-03-26
 It's been awhile, but right now, I'm trying to push for completion of this project before adding more features to the engine. 
 The framework for the main menu is already done.

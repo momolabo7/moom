@@ -70,6 +70,7 @@ struct lit_t {
   gfx_t* gfx; 
   profiler_t* profiler;
   input_t* input;
+  pf_api_t* pf;
 
   lit_show_debug_type_t show_debug_type;
   lit_mode_t next_mode;

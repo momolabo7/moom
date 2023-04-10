@@ -123,7 +123,8 @@ enum lit_animator_type_t {
 struct lit_animator_rotate_point_t {
   v2f_t* point; 
   f32_t speed;
-  v2f_t point_of_rotation;
+  v2f_t* point_of_rotation;
+  v2f_t delta;
 };
 
 struct lit_animator_patrol_point_t {
@@ -194,6 +195,9 @@ struct lit_game_t {
 
   u32_t animator_count;
   lit_animator_t animators[64];
+
+  u32_t point_count;
+  v2f_t points[32];
 
   // for animated sensor APIs
   lit_sensor_t* selected_sensor; 

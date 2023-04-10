@@ -80,72 +80,72 @@ typedef struct {
 typedef struct {
   b32_t before;
   b32_t now; 
-} pf_button_t;
+} input_button_t;
 
 // my god
 typedef enum {
   // Keyboard keys
-  PF_BUTTON_CODE_UNKNOWN,
-  PF_BUTTON_CODE_0,
-  PF_BUTTON_CODE_1,
-  PF_BUTTON_CODE_2,
-  PF_BUTTON_CODE_3,
-  PF_BUTTON_CODE_4,
-  PF_BUTTON_CODE_5,
-  PF_BUTTON_CODE_6,
-  PF_BUTTON_CODE_7,
-  PF_BUTTON_CODE_8,
-  PF_BUTTON_CODE_9,
-  PF_BUTTON_CODE_F1,
-  PF_BUTTON_CODE_F2,
-  PF_BUTTON_CODE_F3,
-  PF_BUTTON_CODE_F4,
-  PF_BUTTON_CODE_F5,
-  PF_BUTTON_CODE_F6,
-  PF_BUTTON_CODE_F7,
-  PF_BUTTON_CODE_F8,
-  PF_BUTTON_CODE_F9,
-  PF_BUTTON_CODE_F10,
-  PF_BUTTON_CODE_F11,
-  PF_BUTTON_CODE_F12,
-  PF_BUTTON_CODE_BACKSPACE,
-  PF_BUTTON_CODE_A,
-  PF_BUTTON_CODE_B,
-  PF_BUTTON_CODE_C,
-  PF_BUTTON_CODE_D,
-  PF_BUTTON_CODE_E,
-  PF_BUTTON_CODE_F,
-  PF_BUTTON_CODE_G,
-  PF_BUTTON_CODE_H,
-  PF_BUTTON_CODE_I,
-  PF_BUTTON_CODE_J,
-  PF_BUTTON_CODE_K,
-  PF_BUTTON_CODE_L,
-  PF_BUTTON_CODE_M,
-  PF_BUTTON_CODE_N,
-  PF_BUTTON_CODE_O,
-  PF_BUTTON_CODE_P,
-  PF_BUTTON_CODE_Q,
-  PF_BUTTON_CODE_R,
-  PF_BUTTON_CODE_S,
-  PF_BUTTON_CODE_T,
-  PF_BUTTON_CODE_U,
-  PF_BUTTON_CODE_V,
-  PF_BUTTON_CODE_W,
-  PF_BUTTON_CODE_X,
-  PF_BUTTON_CODE_Y,
-  PF_BUTTON_CODE_Z,
-  PF_BUTTON_CODE_SPACE,
-  PF_BUTTON_CODE_RMB,
-  PF_BUTTON_CODE_LMB,
-  PF_BUTTON_CODE_MMB,
+  INPUT_BUTTON_CODE_UNKNOWN,
+  INPUT_BUTTON_CODE_0,
+  INPUT_BUTTON_CODE_1,
+  INPUT_BUTTON_CODE_2,
+  INPUT_BUTTON_CODE_3,
+  INPUT_BUTTON_CODE_4,
+  INPUT_BUTTON_CODE_5,
+  INPUT_BUTTON_CODE_6,
+  INPUT_BUTTON_CODE_7,
+  INPUT_BUTTON_CODE_8,
+  INPUT_BUTTON_CODE_9,
+  INPUT_BUTTON_CODE_F1,
+  INPUT_BUTTON_CODE_F2,
+  INPUT_BUTTON_CODE_F3,
+  INPUT_BUTTON_CODE_F4,
+  INPUT_BUTTON_CODE_F5,
+  INPUT_BUTTON_CODE_F6,
+  INPUT_BUTTON_CODE_F7,
+  INPUT_BUTTON_CODE_F8,
+  INPUT_BUTTON_CODE_F9,
+  INPUT_BUTTON_CODE_F10,
+  INPUT_BUTTON_CODE_F11,
+  INPUT_BUTTON_CODE_F12,
+  INPUT_BUTTON_CODE_BACKSPACE,
+  INPUT_BUTTON_CODE_A,
+  INPUT_BUTTON_CODE_B,
+  INPUT_BUTTON_CODE_C,
+  INPUT_BUTTON_CODE_D,
+  INPUT_BUTTON_CODE_E,
+  INPUT_BUTTON_CODE_F,
+  INPUT_BUTTON_CODE_G,
+  INPUT_BUTTON_CODE_H,
+  INPUT_BUTTON_CODE_I,
+  INPUT_BUTTON_CODE_J,
+  INPUT_BUTTON_CODE_K,
+  INPUT_BUTTON_CODE_L,
+  INPUT_BUTTON_CODE_M,
+  INPUT_BUTTON_CODE_N,
+  INPUT_BUTTON_CODE_O,
+  INPUT_BUTTON_CODE_P,
+  INPUT_BUTTON_CODE_Q,
+  INPUT_BUTTON_CODE_R,
+  INPUT_BUTTON_CODE_S,
+  INPUT_BUTTON_CODE_T,
+  INPUT_BUTTON_CODE_U,
+  INPUT_BUTTON_CODE_V,
+  INPUT_BUTTON_CODE_W,
+  INPUT_BUTTON_CODE_X,
+  INPUT_BUTTON_CODE_Y,
+  INPUT_BUTTON_CODE_Z,
+  INPUT_BUTTON_CODE_SPACE,
+  INPUT_BUTTON_CODE_RMB,
+  INPUT_BUTTON_CODE_LMB,
+  INPUT_BUTTON_CODE_MMB,
 
-  PF_BUTTON_CODE_MAX,
+  INPUT_BUTTON_CODE_MAX,
 
-} pf_button_code_t;
+} input_button_code_t;
 
 typedef struct {
-  pf_button_t buttons[PF_BUTTON_CODE_MAX];
+  input_button_t buttons[INPUT_BUTTON_CODE_MAX];
   u8_t chars[32];
   u32_t char_count;
 
@@ -163,11 +163,6 @@ struct gfx_t;
 struct profiler_t;
 
 typedef struct {
-  gfx_t* gfx;
-  profiler_t* profiler; 
-  pf_audio_t* audio;
-  input_t* input;
-
   // File IO
   pf_open_file_f* open_file;
   pf_read_file_f* read_file;
@@ -189,16 +184,29 @@ typedef struct {
   // TODO: change name
   pf_set_moe_dims_f* set_moe_dims;
 
-  // Misc
-  f32_t seconds_since_last_frame; //aka dt
-  b32_t reloaded;
+} pf_api_t;
 
+
+
+typedef struct {
+  gfx_t* gfx;
+  profiler_t* profiler; 
+  pf_audio_t* audio;
+  input_t* input;
+  pf_api_t pf;
+
+  
   // For moe to use
   void* game_context;
 
+  // Misc
+  f32_t delta_time; //aka dt
+  b32_t reloaded;
+
+
 } moe_t;
 
-typedef b32_t moe_update_and_render_f(moe_t* pf);
+typedef b32_t moe_update_and_render_f(moe_t*);
 
 // To be called by platform
 typedef struct moe_functions_t {
@@ -209,33 +217,28 @@ static const char* moe_function_names[] {
   "moe_update_and_render",
 };
 
-//
-// Implementation
-//
-
 
 // before: 0, now: 1
 static b32_t 
-pf_is_button_poked(pf_button_t btn) {
+input_is_button_poked(input_button_t btn) {
   return !btn.before && btn.now;
 }
 
 // before: 1, now: 0
 static b32_t
-pf_is_button_released(pf_button_t btn) {
+input_is_button_released(input_button_t btn) {
   return btn.before && !btn.now;
 }
 
-
 // before: X, now: 1
 static b32_t
-pf_is_button_down(pf_button_t btn){
+input_is_button_down(input_button_t btn){
   return btn.now;
 }
 
 // before: 1, now: 1
 static b32_t
-pf_is_button_held(pf_button_t btn) {
+input_is_button_held(input_button_t btn) {
   return btn.before && btn.now;
 }
 
