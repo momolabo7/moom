@@ -14,6 +14,7 @@
 #define COBJMACROS
 #define CONST_VTABLE
 #include <windows.h>
+#include <windowsx.h>
 #include <timeapi.h>
 #include <imm.h>
 #include <initguid.h>
@@ -80,6 +81,10 @@ struct w32_file_cabinet_t {
 
 struct w32_state_t {
   b32_t is_running;
+
+  // cursor locking system
+  b32_t is_cursor_locked;
+  POINT cursor_pt_to_lock_to;
   
   f32_t moe_width;
   f32_t moe_height;

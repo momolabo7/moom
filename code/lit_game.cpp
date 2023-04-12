@@ -503,8 +503,38 @@ lit_init_player(lit_game_t* game, f32_t x, f32_t y) {
   player->held_light = nullptr;
   player->pos.x = x;
   player->pos.y = y;
+  player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
 }
 
+static void
+lit_player_release_light(lit_game_t* game) {
+  lit_player_t* player = &game->player;
+  player->held_light = nullptr;
+}
+
+static void
+lit_player_hold_nearest_light(lit_game_t* game) {
+  lit_player_t* player = &game->player;
+  if (player->held_light == nullptr) {
+    f32_t shortest_dist = LIT_PLAYER_PICKUP_DIST; // limit
+    lit_light_t* nearest_light = nullptr;
+
+    for(u32_t light_index = 0; light_index < game->light_count; ++light_index) {
+      lit_light_t* l = game->lights +light_index;
+      f32_t dist = v2f_dist_sq(l->pos, player->pos);
+      if (shortest_dist > dist) {
+        nearest_light = l;
+        shortest_dist = dist;
+      }
+    }
+
+    if (nearest_light) {          
+      player->held_light = nearest_light;
+      player->old_light_pos = nearest_light->pos;
+      player->light_retrival_time = 0.f;
+    }
+  }
+}
 static void 
 lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt) 
 {
@@ -512,83 +542,47 @@ lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt)
   moe_t* moe = lit->moe;
   input_t* input = lit->input;
   
+  player->pos.x = input->mouse_pos.x;
+  player->pos.y = LIT_HEIGHT - input->mouse_pos.y;
 
-#if 1
-  // Get movement direction
-  v2f_t direction = {};
-  if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_W])) {
-    direction.y += 1.f;
-  }
-  if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_S])) {
-    direction.y -= 1.f;
-  }
-  if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_D])) {
-    direction.x += 1.f;
-  }
-  if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_A])) {
-    direction.x -= 1.f;
-  }
-  
-  // Held light controls
-  if (player->held_light != nullptr) {
-    if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_Q])){ 
-      player->held_light->dir = 
-        v2f_rotate(player->held_light->dir, LIT_PLAYER_ROTATE_SPEED * dt );
-    }
-    if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_E])) { 
-      player->held_light->dir = 
-        v2f_rotate(player->held_light->dir, -LIT_PLAYER_ROTATE_SPEED * dt);
-    }
-  }
-  
-  // Do Movement
-  if (v2f_len_sq(direction) > 0.f) {
-    f32_t speed = 300.f;
-    v2f_t velocity = v2f_norm(direction);
-    velocity *= speed * dt;
-    player->pos += velocity;
-  }
-#endif 
-  // 'Pick up'  button
-  if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_SPACE])) {
-    if (player->held_light == nullptr) {
-      f32_t shortest_dist = LIT_PLAYER_PICKUP_DIST; // limit
-      lit_light_t* nearest_light = nullptr;
-
-      for(u32_t light_index = 0; light_index < game->light_count; ++light_index) {
-        lit_light_t* l = game->lights +light_index;
-        f32_t dist = v2f_dist_sq(l->pos, player->pos);
-        if (shortest_dist > dist) {
-          nearest_light = l;
-          shortest_dist = dist;
-        }
-      }
-      
-      if (nearest_light) {          
-        player->held_light = nearest_light;
-        player->old_light_pos = nearest_light->pos;
-        player->light_retrival_time = 0.f;
-      }
-    }
-    else {
-      player->held_light = nullptr;
-    }
+  //
+  // Move light logic
+  //
+  if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_LMB])) {
+    lit_player_hold_nearest_light(game);
+    player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_MOVE;
+    moe->pf.hide_cursor();
   }
 
-
-  // Move the held light to player's position
-  if (player->held_light) {
-    if (player->light_retrival_time < LIT_PLAYER_LIGHT_RETRIEVE_DURATION) {
-      player->light_retrival_time += dt;
-    }
-    else {
-      player->light_retrival_time = LIT_PLAYER_LIGHT_RETRIEVE_DURATION;
-    }
-    f32_t ratio = player->light_retrival_time / LIT_PLAYER_LIGHT_RETRIEVE_DURATION; 
-    player->held_light->pos.x = f32_lerp(player->old_light_pos.x, player->pos.x, ratio) ;
-    player->held_light->pos.y = f32_lerp(player->old_light_pos.y, player->pos.y,  ratio) ;
+  else if (input_is_button_released(input->buttons[INPUT_BUTTON_CODE_LMB]))
+  {
+    lit_player_release_light(game);
+    player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
+    moe->pf.show_cursor();
   }
 
+  //
+  // Rotate light logic
+  //
+  if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_RMB]))
+  {
+    
+    lit_player_hold_nearest_light(game);
+    player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE;
+    moe->pf.hide_cursor();
+    moe->pf.lock_cursor();
+    player->locked_pos_x = player->pos.x;
+
+  }
+  else if (input_is_button_released(input->buttons[INPUT_BUTTON_CODE_RMB])) 
+  {
+    moe->pf.show_cursor();
+    lit_player_release_light(game);
+    player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
+    moe->pf.unlock_cursor();
+  }
+
+  // TODO: do this for held sensors
   // Restrict movement
   if (player->pos.x > LIT_WIDTH - LIT_PLAYER_RADIUS) {
     player->pos.x = LIT_WIDTH - LIT_PLAYER_RADIUS;
@@ -602,17 +596,50 @@ lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt)
   if (player->pos.y < LIT_PLAYER_RADIUS) {
     player->pos.y = LIT_PLAYER_RADIUS;
   }
+
+  //
+  // Actual player control logic
+  //
+  switch(player->light_hold_mode) {
+    case LIT_PLAYER_LIGHT_HOLD_MODE_NONE: {
+      // do nothing
+    } break;
+    case LIT_PLAYER_LIGHT_HOLD_MODE_MOVE: {
+      // Move the held light to player's position
+      if (player->held_light) {
+        if (player->light_retrival_time < LIT_PLAYER_LIGHT_RETRIEVE_DURATION) {
+          player->light_retrival_time += dt;
+        }
+        else {
+          player->light_retrival_time = LIT_PLAYER_LIGHT_RETRIEVE_DURATION;
+        }
+        f32_t ratio = player->light_retrival_time / LIT_PLAYER_LIGHT_RETRIEVE_DURATION; 
+        player->held_light->pos.x = f32_lerp(player->old_light_pos.x, player->pos.x, ratio) ;
+        player->held_light->pos.y = f32_lerp(player->old_light_pos.y, player->pos.y,  ratio) ;
+      }
+    } break;
+    case LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE: {
+      if (player->held_light != nullptr) {
+        f32_t mouse_delta = player->pos.x - player->locked_pos_x;
+        player->held_light->dir = 
+          v2f_rotate(player->held_light->dir, LIT_PLAYER_ROTATE_SPEED * dt * mouse_delta );
+      }
+
+    } break;
+  }
 }
 
 static void
 lit_draw_player(lit_t* lit, lit_game_t* game)
 {
+#if 0
   lit_player_t* player = &game->player;
   gfx_push_asset_sprite(lit->gfx, &lit->assets,
                           game->circle_sprite, 
                           player->pos, 
                           v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
   gfx_advance_depth(lit->gfx);
+#endif
 
 }
 
@@ -1003,9 +1030,13 @@ lit_update_game(lit_t* lit, lit_game_t* game)
   if (!lit_is_state_exiting(game)) 
   {
     lit_update_sensors(game, dt);
+    //
     // win condition
+    //
     if (lit_are_all_sensors_activated(game)) 
     {
+      lit->moe->pf.show_cursor();
+      lit->moe->pf.unlock_cursor();
       game->state = LIT_STATE_TYPE_SOLVED_IN;
     }
     lit_update_particles(game, dt);

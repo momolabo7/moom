@@ -594,7 +594,7 @@ lit_level_spin(lit_game_t* m) {
 }
 static void
 lit_level_test(lit_game_t* m) {
-  lit_set_title(m, str8_from_lit("TEST"));
+  lit_set_title(m, str8_from_lit("SPINEROONI"));
 
   f32_t speed = 1.f;
 
@@ -642,31 +642,36 @@ lit_level_test(lit_game_t* m) {
     }
   }
 
-  lit_animator_push_rotate_point(m, origin, origin_2, 3.f); 
+  lit_animator_push_rotate_point(m, origin, origin_2, 1.f); 
 }
 typedef void (*Lit_Level)(lit_game_t* mode); 
 static Lit_Level g_lit_levels[] = {
-#if 0 
+#if 1
   // Basics
   lit_level_move,   
   lit_level_obstruct, 
   lit_level_add,
   lit_level_corners,
   lit_level_mix,
+
   lit_level_blend,
   lit_level_rooms,
   lit_level_disco,
   lit_level_onion,
   lit_level_spectrum,
+
   lit_level_split,
   lit_level_movement,
   lit_level_patience,
   lit_level_busy,
   lit_level_interval,
+
   lit_level_spin,
-#endif
+#else 
 
   lit_level_test,
+
+#endif
 
 };
 

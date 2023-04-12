@@ -96,8 +96,20 @@ struct lit_sensor_t {
 //
 // Player
 //
+
+enum lit_player_light_hold_mode_t {
+  LIT_PLAYER_LIGHT_HOLD_MODE_NONE,
+  LIT_PLAYER_LIGHT_HOLD_MODE_MOVE,
+  LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE,
+};
+
 struct lit_player_t {
   v2f_t pos;
+
+  // TODO: temp
+  f32_t locked_pos_x;
+
+  lit_player_light_hold_mode_t light_hold_mode;
   lit_light_t* held_light;
   b32_t is_holding_light;
 

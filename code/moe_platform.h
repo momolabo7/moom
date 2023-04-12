@@ -72,8 +72,6 @@ typedef struct {
 } pf_audio_t;
 
 
-
-
 //
 // Input related API
 //
@@ -81,6 +79,11 @@ typedef struct {
   b32_t before;
   b32_t now; 
 } input_button_t;
+
+typedef void pf_show_cursor();
+typedef void pf_hide_cursor();
+typedef void pf_lock_cursor();
+typedef void pf_unlock_cursor();
 
 // my god
 typedef enum {
@@ -154,6 +157,11 @@ typedef struct {
   // by dividing the x/y by the width/height of the moe.
   v2f_t mouse_pos;
 
+  // NOTE(Momo): Mouse wheels values are not normally analog!
+  // +ve is forwards
+  // -ve is backwards
+  s32_t mouse_scroll_delta;
+
 } input_t;
 
 // 
@@ -176,6 +184,13 @@ typedef struct {
   // Memory allocation
   pf_allocate_memory_f* allocate_memory;
   pf_free_memory_f* free_memory;
+
+  // Mouse 
+  pf_show_cursor* show_cursor;
+  pf_hide_cursor* hide_cursor;
+  pf_lock_cursor* lock_cursor;
+  pf_unlock_cursor* unlock_cursor;
+
 
   // Logging
   pf_debug_log_f* debug_log;

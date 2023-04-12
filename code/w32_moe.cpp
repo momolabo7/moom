@@ -194,6 +194,12 @@ w32_process_input(HWND window, input_t* input)
   MSG msg = {};
   while(PeekMessage(&msg, window, 0, 0, PM_REMOVE)) {
     switch(msg.message) {
+      case WM_MOUSEWHEEL: {
+        s16_t delta = GET_WHEEL_DELTA_WPARAM(msg.wParam)/WHEEL_DELTA;
+        //s16_t x_pos = GET_X_LPARAM(msg.lParam); 
+        //s16_t y_pos = GET_Y_LPARAM(msg.lParam); 
+        input->mouse_scroll_delta = delta;
+      } break;
       case WM_CHAR: {
         assert(input->char_count < array_count(input->chars));
         input->chars[input->char_count++] = (u8_t)msg.wParam;
@@ -279,7 +285,28 @@ w32_set_moe_dims(f32_t width, f32_t height) {
   // Make it right at the center!
   MoveWindow(w32_state.window, left, top, (s32_t)width + diff.x, (s32_t)height + diff.y, TRUE);
 
-  }
+}
+
+static void 
+w32_show_cursor() {
+  while(ShowCursor(1) < 0);
+}
+
+static void 
+w32_hide_cursor() {
+  while(ShowCursor(0) >= 0);
+}
+
+static void
+w32_lock_cursor() {
+  w32_state.is_cursor_locked = true;
+  GetCursorPos(&w32_state.cursor_pt_to_lock_to);
+}
+
+static void
+w32_unlock_cursor() {
+  w32_state.is_cursor_locked = false;
+}
 
 static void
 w32_set_platform_api(moe_t* moe)
@@ -300,6 +327,10 @@ w32_set_platform_api(moe_t* moe)
   moe->pf.debug_log = w32_log_proc;
   moe->pf.allocate_memory = w32_allocate_memory;
   moe->pf.free_memory = w32_free_memory;
+  moe->pf.show_cursor = w32_show_cursor;
+  moe->pf.hide_cursor = w32_hide_cursor;
+  moe->pf.lock_cursor = w32_lock_cursor;
+  moe->pf.unlock_cursor = w32_unlock_cursor;
 }
 
 //~ Main functions
@@ -329,8 +360,8 @@ w32_update_input(input_t* input) {
     input->buttons[i].before = input->buttons[i].now;
   }
   input->char_count = 0;
+  input->mouse_scroll_delta = 0;
 }
-
 
 int CALLBACK
 WinMain(HINSTANCE instance, 
@@ -338,8 +369,7 @@ WinMain(HINSTANCE instance,
         LPSTR command_line, 
         int show_code) 
 {
-  
-  
+
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
   
@@ -522,7 +552,6 @@ WinMain(HINSTANCE instance,
   b32_t game_is_running = true;
   while (w32_state.is_running && game_is_running) 
   {
-  
 #if 1
     // Hot reload moe.dll functions
     moe->reloaded = w32_reload_code_if_outdated(&moe_code);
@@ -571,7 +600,11 @@ WinMain(HINSTANCE instance,
       
       // NOTE(Momo): Flip y
       //moe->design_mouse_pos.y = f32_lerp(MOE_HEIGHT, 0.f, moe->design_mouse_pos.y/MOE_HEIGHT);	
-
+      if (w32_state.is_cursor_locked) {
+        SetCursorPos(
+            w32_state.cursor_pt_to_lock_to.x,
+            w32_state.cursor_pt_to_lock_to.y);
+      }
     }
     
     
@@ -584,6 +617,13 @@ WinMain(HINSTANCE instance,
     profiler_update_entries(profiler);
     w32_gfx_end_frame(gfx);
     w32_audio_end_frame(audio);
+#if 0
+    if (w32_state.is_cursor_locked) {
+      SetCursorPos(
+          w32_state.cursor_pt_to_lock_to.x,
+          w32_state.cursor_pt_to_lock_to.y);
+    }
+#endif
 
     // Frame-rate control
     //

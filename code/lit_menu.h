@@ -1,10 +1,9 @@
 
-#define LIT_MENU_LEVELS_PER_ROW 5
-#define LIT_MENU_TRANSITION_DURATION 0.5f
-
 // TODO: use actual total levels?
 // Or check levels with allowed total levels? Idk
 #define LIT_MENU_TOTAL_LEVELS 20
+#define LIT_MENU_LEVELS_PER_ROW 4
+#define LIT_MENU_TRANSITION_DURATION 0.5f
 #define LIT_MENU_BUTTON_OFFSET_X 150.f
 #define LIT_MENU_BUTTON_OFFSET_Y 150.f
 #define LIT_MENU_BUTTON_START_X 100.f 
