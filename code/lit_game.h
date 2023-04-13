@@ -105,11 +105,10 @@ enum lit_player_light_hold_mode_t {
 
 struct lit_player_t {
   v2f_t pos;
-
-  // TODO: temp
   f32_t locked_pos_x;
 
   lit_player_light_hold_mode_t light_hold_mode;
+  lit_light_t* nearest_light;
   lit_light_t* held_light;
   b32_t is_holding_light;
 
@@ -228,8 +227,6 @@ struct lit_game_t {
   u32_t title_wp_index;
     
   u32_t sensors_activated;
-
-
 };
 
 

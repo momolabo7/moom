@@ -108,7 +108,7 @@ lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {
 }
 
 static void
-lit_update_animators(lit_t* lit, lit_game_t* game, f32_t dt) {
+lit_animator_update_all(lit_t* lit, lit_game_t* game, f32_t dt) {
   for(u32_t animator_index = 0; animator_index < game->animator_count; ++animator_index)
   {
     lit_animate(lit, game->animators + animator_index, dt);
@@ -493,10 +493,9 @@ lit_draw_edges(lit_t* lit, lit_game_t* game) {
   gfx_advance_depth(lit->gfx);
 }
 
-/////////////////////////////////////////////////////////////////////
+//
 // Player
 //
-
 static void
 lit_init_player(lit_game_t* game, f32_t x, f32_t y) {
   lit_player_t* player = &game->player; 
@@ -513,30 +512,37 @@ lit_player_release_light(lit_game_t* game) {
 }
 
 static void
+lit_player_find_nearest_light(lit_game_t* game) {
+  lit_player_t* player = &game->player;
+  f32_t shortest_dist = LIT_PLAYER_PICKUP_DIST; // limit
+  player->nearest_light = nullptr;
+
+  for(u32_t light_index = 0; light_index < game->light_count; ++light_index) {
+    lit_light_t* l = game->lights +light_index;
+    f32_t dist = v2f_dist_sq(l->pos, player->pos);
+    if (shortest_dist > dist) {
+      player->nearest_light = l;
+      shortest_dist = dist;
+    }
+  }
+}
+
+
+static void
 lit_player_hold_nearest_light(lit_game_t* game) {
   lit_player_t* player = &game->player;
+
   if (player->held_light == nullptr) {
-    f32_t shortest_dist = LIT_PLAYER_PICKUP_DIST; // limit
-    lit_light_t* nearest_light = nullptr;
-
-    for(u32_t light_index = 0; light_index < game->light_count; ++light_index) {
-      lit_light_t* l = game->lights +light_index;
-      f32_t dist = v2f_dist_sq(l->pos, player->pos);
-      if (shortest_dist > dist) {
-        nearest_light = l;
-        shortest_dist = dist;
-      }
-    }
-
-    if (nearest_light) {          
-      player->held_light = nearest_light;
-      player->old_light_pos = nearest_light->pos;
+    if (player->nearest_light) {          
+      player->held_light = player->nearest_light;
+      player->old_light_pos = player->nearest_light->pos;
       player->light_retrival_time = 0.f;
     }
   }
 }
+
 static void 
-lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt) 
+lit_player_update(lit_t* lit, lit_game_t* game, f32_t dt) 
 {
   lit_player_t* player = &game->player; 
   moe_t* moe = lit->moe;
@@ -544,6 +550,8 @@ lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt)
   
   player->pos.x = input->mouse_pos.x;
   player->pos.y = LIT_HEIGHT - input->mouse_pos.y;
+
+  lit_player_find_nearest_light(game);
 
   //
   // Move light logic
@@ -632,15 +640,14 @@ lit_update_player(lit_t* lit, lit_game_t* game, f32_t dt)
 static void
 lit_draw_player(lit_t* lit, lit_game_t* game)
 {
-#if 0
   lit_player_t* player = &game->player;
-  gfx_push_asset_sprite(lit->gfx, &lit->assets,
-                          game->circle_sprite, 
-                          player->pos, 
-                          v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-  gfx_advance_depth(lit->gfx);
-#endif
-
+  if (player->nearest_light) {
+    gfx_push_asset_sprite(lit->gfx, &lit->assets,
+        game->circle_sprite, 
+        player->nearest_light->pos, 
+        v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
+    gfx_advance_depth(lit->gfx);
+  }
 }
 
 
@@ -1020,16 +1027,16 @@ lit_update_game(lit_t* lit, lit_game_t* game)
 
   if (game->state == LIT_STATE_TYPE_NORMAL) 
   {
-    lit_update_animators(lit, game, dt);
-    lit_update_player(lit, game, dt);
+    lit_animator_update_all(lit, game, dt);
+    lit_player_update(lit, game, dt);
   }
 
   lit_generate_light(lit, game);
-  
 
   if (!lit_is_state_exiting(game)) 
   {
     lit_update_sensors(game, dt);
+
     //
     // win condition
     //
@@ -1071,7 +1078,9 @@ lit_render_game(lit_t* lit, lit_game_t* game)
 
   //lit_draw_edges(game); 
   //lit_draw_debug_light_rays(game, moe);
-  lit_draw_player(lit, game);
+  if (game->state == LIT_STATE_TYPE_NORMAL) {
+    lit_draw_player(lit, game);
+  }
   lit_draw_lights(lit, game);
   
   gfx_set_blend_alpha(lit->gfx);
