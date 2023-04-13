@@ -162,6 +162,11 @@ typedef struct {
   // -ve is backwards
   s32_t mouse_scroll_delta;
 
+  // Misc
+  f32_t delta_time; //aka dt
+  b32_t reloaded;
+
+
 } input_t;
 
 // 
@@ -199,29 +204,23 @@ typedef struct {
   // TODO: change name
   pf_set_moe_dims_f* set_moe_dims;
 
-} pf_api_t;
+} pf_t;
 
 
 
 typedef struct {
-  gfx_t* gfx;
-  profiler_t* profiler; 
-  pf_audio_t* audio;
-  input_t* input;
-  pf_api_t pf;
-
-  
   // For moe to use
   void* game_context;
 
-  // Misc
-  f32_t delta_time; //aka dt
-  b32_t reloaded;
-
-
 } moe_t;
 
-typedef b32_t moe_update_and_render_f(moe_t*);
+typedef b32_t moe_update_and_render_f(
+    moe_t*, 
+    pf_t*, 
+    gfx_t*, 
+    pf_audio_t*, 
+    profiler_t*, 
+    input_t*);
 
 // To be called by platform
 typedef struct moe_functions_t {

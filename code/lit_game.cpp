@@ -451,33 +451,33 @@ lit_draw_lights(lit_t* lit, lit_game_t* game) {
   for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
   {
     lit_light_t* light = game->lights + light_index;
-    gfx_push_asset_sprite(lit->gfx, &lit->assets, 
+    gfx_push_asset_sprite(gfx, &lit->assets, 
                             game->filled_circle_sprite, 
                             light->pos,
                             v2f_set(16.f, 16.f),
                             rgba_set(0.8f, 0.8f, 0.8f, 1.f));
-    gfx_advance_depth(lit->gfx);
+    gfx_advance_depth(gfx);
   }
  
   //
   // Lights
   //
-  gfx_set_blend_additive(lit->gfx);
+  gfx_set_blend_additive(gfx);
   for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
   {
     lit_light_t* l = game->lights + light_index;
     for(u32_t tri_index = 0; tri_index < l->triangle_count; ++tri_index)
     {
       lit_light_triangle_t* lt = l->triangles + tri_index;
-      gfx_draw_filled_triangle(lit->gfx, 
+      gfx_draw_filled_triangle(gfx, 
                                rgba_hex(l->color),
                                lt->p0,
                                lt->p1,
                                lt->p2);
     } 
-    gfx_advance_depth(lit->gfx);
+    gfx_advance_depth(gfx);
   }
-  gfx_set_blend_alpha(lit->gfx);
+  gfx_set_blend_alpha(gfx);
 }
 
 
@@ -488,9 +488,9 @@ lit_draw_edges(lit_t* lit, lit_game_t* game) {
   for(u32_t edge_index = 0; edge_index < game->edge_count; ++edge_index) 
   {
     lit_edge_t* edge = game->edges + edge_index;
-    gfx_draw_line(lit->gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
+    gfx_draw_line(gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
   }
-  gfx_advance_depth(lit->gfx);
+  gfx_advance_depth(gfx);
 }
 
 //
@@ -545,8 +545,6 @@ static void
 lit_player_update(lit_t* lit, lit_game_t* game, f32_t dt) 
 {
   lit_player_t* player = &game->player; 
-  moe_t* moe = lit->moe;
-  input_t* input = lit->input;
   
   player->pos.x = input->mouse_pos.x;
   player->pos.y = LIT_HEIGHT - input->mouse_pos.y;
@@ -559,14 +557,14 @@ lit_player_update(lit_t* lit, lit_game_t* game, f32_t dt)
   if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_LMB])) {
     lit_player_hold_nearest_light(game);
     player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_MOVE;
-    moe->pf.hide_cursor();
+    pf->hide_cursor();
   }
 
   else if (input_is_button_released(input->buttons[INPUT_BUTTON_CODE_LMB]))
   {
     lit_player_release_light(game);
     player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
-    moe->pf.show_cursor();
+    pf->show_cursor();
   }
 
   //
@@ -577,17 +575,17 @@ lit_player_update(lit_t* lit, lit_game_t* game, f32_t dt)
     
     lit_player_hold_nearest_light(game);
     player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE;
-    moe->pf.hide_cursor();
-    moe->pf.lock_cursor();
+    pf->hide_cursor();
+    pf->lock_cursor();
     player->locked_pos_x = player->pos.x;
 
   }
   else if (input_is_button_released(input->buttons[INPUT_BUTTON_CODE_RMB])) 
   {
-    moe->pf.show_cursor();
+    pf->show_cursor();
     lit_player_release_light(game);
     player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
-    moe->pf.unlock_cursor();
+    pf->unlock_cursor();
   }
 
   // TODO: do this for held sensors
@@ -642,11 +640,11 @@ lit_draw_player(lit_t* lit, lit_game_t* game)
 {
   lit_player_t* player = &game->player;
   if (player->nearest_light) {
-    gfx_push_asset_sprite(lit->gfx, &lit->assets,
+    gfx_push_asset_sprite(gfx, &lit->assets,
         game->circle_sprite, 
         player->nearest_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-    gfx_advance_depth(lit->gfx);
+    gfx_advance_depth(gfx);
   }
 }
 
@@ -720,8 +718,8 @@ lit_render_particles(lit_t* lit, lit_game_t* game) {
     size.w = f32_lerp(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = f32_lerp(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    gfx_push_asset_sprite(lit->gfx, &lit->assets, game->filled_circle_sprite, p->pos, size, color);
-    gfx_advance_depth(lit->gfx);
+    gfx_push_asset_sprite(gfx, &lit->assets, game->filled_circle_sprite, p->pos, size, color);
+    gfx_advance_depth(gfx);
   }
 }
 
@@ -917,7 +915,7 @@ lit_render_sensors(lit_t* lit, lit_game_t* game) {
   for(u32_t sensor_index = 0; sensor_index < game->sensor_count; ++sensor_index)
   {
     lit_sensor_t* sensor = game->sensors + sensor_index;
-    gfx_draw_filled_circle(lit->gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, rgba_hex(sensor->target_color)); 
+    gfx_draw_filled_circle(gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, rgba_hex(sensor->target_color)); 
 
     // only for debugging
 #if 0
@@ -932,7 +930,7 @@ lit_render_sensors(lit_t* lit, lit_game_t* game) {
                32.f);
 #endif
 
-    gfx_advance_depth(lit->gfx);
+    gfx_advance_depth(gfx);
   }
 }
 
@@ -964,7 +962,7 @@ lit_generate_light(lit_t* lit, lit_game_t* game) {
     {
       v2f_t p0 = light->pos;
       v2f_t p1 = light->intersections[intersection_index].pt;
-      gfx_push_line(lit->gfx, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
+      gfx_push_line(gfx, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
     }
 #endif
   }
@@ -974,7 +972,7 @@ static void
 lit_update_game(lit_t* lit, lit_game_t* game) 
 {
   lit_player_t* player = &game->player;
-  f32_t dt = lit->moe->delta_time;
+  f32_t dt = input->delta_time;
 
   //
   // Transition Logic
@@ -1042,8 +1040,8 @@ lit_update_game(lit_t* lit, lit_game_t* game)
     //
     if (lit_are_all_sensors_activated(game)) 
     {
-      lit->moe->pf.show_cursor();
-      lit->moe->pf.unlock_cursor();
+      pf->show_cursor();
+      pf->unlock_cursor();
       game->state = LIT_STATE_TYPE_SOLVED_IN;
     }
     lit_update_particles(game, dt);
@@ -1074,7 +1072,7 @@ static void
 lit_render_game(lit_t* lit, lit_game_t* game) 
 {
   // This is the default and happier blend mode
-  gfx_set_blend_alpha(lit->gfx);
+  gfx_set_blend_alpha(gfx);
 
   //lit_draw_edges(game); 
   //lit_draw_debug_light_rays(game, moe);
@@ -1083,7 +1081,7 @@ lit_render_game(lit_t* lit, lit_game_t* game)
   }
   lit_draw_lights(lit, game);
   
-  gfx_set_blend_alpha(lit->gfx);
+  gfx_set_blend_alpha(gfx);
 
   lit_render_sensors(lit, game); 
   lit_render_particles(lit, game);
@@ -1093,7 +1091,7 @@ lit_render_game(lit_t* lit, lit_game_t* game)
   {
     sb8_make(sb, 64);
     sb8_push_fmt(sb, str8_from_lit("[%f %f]"), lit->platform->mouse_pos.x,LIT_HEIGHT - lit->platform->mouse_pos.y);
-    gfx_push_text(lit->gfx, &lit->assets, game->tutorial_font, sb->str, RGBA_WHITE, 0.f, 0.f, 32.f);
+    gfx_push_text(gfx, &lit->assets, game->tutorial_font, sb->str, RGBA_WHITE, 0.f, 0.f, 32.f);
   }
 #endif
 
@@ -1101,16 +1099,16 @@ lit_render_game(lit_t* lit, lit_game_t* game)
   // Draw the overlay for fade in/out
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, game->stage_fade_timer);
-    gfx_push_asset_sprite(lit->gfx, &lit->assets, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    gfx_advance_depth(lit->gfx);
+    gfx_push_asset_sprite(gfx, &lit->assets, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    gfx_advance_depth(gfx);
   }
 
   // Draw the overlay for white flash
   {
     f32_t alpha = game->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
     rgba_t color = rgba_set(1.f, 1.f, 1.f, alpha);
-    gfx_push_asset_sprite(lit->gfx, &lit->assets, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    gfx_advance_depth(lit->gfx);
+    gfx_push_asset_sprite(gfx, &lit->assets, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    gfx_advance_depth(gfx);
   }
 
   // Draw title
@@ -1125,8 +1123,8 @@ lit_render_game(lit_t* lit, lit_game_t* game)
     f32_t title_x = cur_wp->x + a * (next_wp->x - cur_wp->x); 
     rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
 
-    gfx_push_text_center_aligned(lit->gfx, &lit->assets, game->tutorial_font, game->title, color, title_x, LIT_HEIGHT/2, 128.f);
-    gfx_advance_depth(lit->gfx);
+    gfx_push_text_center_aligned(gfx, &lit->assets, game->tutorial_font, game->title, color, title_x, LIT_HEIGHT/2, 128.f);
+    gfx_advance_depth(gfx);
 
   }
 }

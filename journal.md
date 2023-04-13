@@ -1,5 +1,9 @@
 # Journal
 
+### 2023-4-14
+Man, moe_t is reduced to nothing but a single void pointer.
+Casey is right. What is the point of even trying to seperate into so many layers of code?
+
 ### 2023-04-10
 Did a huge refactoring on names again, mostly to get my headspace around the platform layer.
 Input is slowly becoming an issue.

@@ -42,8 +42,6 @@ profiler_end_stat(profiler_stat_t* stat) {
 static void
 profiler_update_and_render(lit_t* lit) 
 {
-  profiler_t* profiler = lit->profiler;
-  gfx_t* gfx = lit->gfx;
   assets_t* assets = &lit->assets;
 
   const f32_t render_width = LIT_WIDTH;

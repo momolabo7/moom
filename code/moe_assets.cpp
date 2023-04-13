@@ -1,8 +1,8 @@
 static void
 set_match_entry(asset_match_t* vec, 
-                Asset_Tag_Type tag,
-                f32_t tag_value_to_match, 
-                f32_t tag_weight) 
+    Asset_Tag_Type tag,
+    f32_t tag_value_to_match, 
+    f32_t tag_weight) 
 {
   vec->e[tag].tag_value_to_match = tag_value_to_match; // debug font
   vec->e[tag].tag_weight = tag_weight;
@@ -15,46 +15,45 @@ get_next_texture_handle() {
   return id++ % GFX_MAX_TEXTURES;
 }
 
-static b32_t 
-assets_init(assets_t* assets, moe_t* moe, const char* filename, arena_t* arena) 
-{
-  pf_api_t* platform = &moe->pf;
-  gfx_t* gfx = moe->gfx;
 
+// TODO: Is there a way not to pass pf and gfx?
+static b32_t 
+assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_t* arena) 
+{
   make(pf_file_t, file);
-  b32_t ok = platform->open_file(file,
-                                 filename,
-                                 PF_FILE_ACCESS_READ, 
-                                 PF_FILE_PATH_EXE);
+  b32_t ok = pf->open_file(file,
+      filename,
+      PF_FILE_ACCESS_READ, 
+      PF_FILE_PATH_EXE);
   if (!ok) {
     return false;
   }
 
   // Read header
   karu_header_t karu_header;
-  platform->read_file(file, sizeof(karu_header_t), 0, &karu_header);
+  pf->read_file(file, sizeof(karu_header_t), 0, &karu_header);
   if (karu_header.signature != KARU_SIGNATURE) return false;
 
   // Allocation for asset components (asset slots and tags)
   assets->asset_slots = arena_push_arr(asset_slot_t, arena, karu_header.asset_count);
   if (!assets->asset_slots) return false;
   assets->asset_count = karu_header.asset_count;
-  
+
   assets->tags = arena_push_arr(asset_tag_t, arena, karu_header.tag_count);
   if (!assets->tags) return false;
   assets->tag_count = karu_header.tag_count;
 
   // Fill data for tags
   for (u32_t tag_index = 0;
-       tag_index < assets->tag_count; 
-       ++tag_index) 
+      tag_index < assets->tag_count; 
+      ++tag_index) 
   {
     asset_tag_t* tag = assets->tags + tag_index;
     umi_t offset_to_tag = karu_header.offset_to_tags + sizeof(karu_tag_t)*tag_index;
 
     karu_tag_t karu_tag;
-    platform->read_file(file, sizeof(karu_tag_t), offset_to_tag, &karu_tag);
-    
+    pf->read_file(file, sizeof(karu_tag_t), offset_to_tag, &karu_tag);
+
     tag->type = karu_tag.type;
     tag->value = karu_tag.value;
   }
@@ -70,32 +69,32 @@ assets_init(assets_t* assets, moe_t* moe, const char* filename, arena_t* arena)
       karu_group_t karu_group;
       umi_t offset_to_karu_group = 
         karu_header.offset_to_groups + sizeof(karu_group_t)*group_index;
-      
-      platform->read_file(file, 
-                          sizeof(karu_group_t), 
-                          offset_to_karu_group, 
-                          &karu_group);
-      
+
+      pf->read_file(file, 
+          sizeof(karu_group_t), 
+          offset_to_karu_group, 
+          &karu_group);
+
       group->first_asset_index = karu_group.first_asset_index;
       group->one_past_last_asset_index = karu_group.one_past_last_asset_index;
     }
-    
 
-  
+
+
     // Go through each asset in the group
     for (u32_t asset_index = group->first_asset_index;
-         asset_index < group->one_past_last_asset_index;
-         ++asset_index) 
+        asset_index < group->one_past_last_asset_index;
+        ++asset_index) 
     {
       asset_slot_t* asset = assets->asset_slots + asset_index;
-       
+
       karu_asset_t karu_asset;
       umi_t offset_to_karu_asset = 
         karu_header.offset_to_assets + sizeof(karu_asset_t)*asset_index;
 
-      platform->read_file(file, sizeof(karu_asset_t), 
-                          offset_to_karu_asset, 
-                          &karu_asset);
+      pf->read_file(file, sizeof(karu_asset_t), 
+          offset_to_karu_asset, 
+          &karu_asset);
 
       // Process the asset_slots
       asset->type = (Asset_Type)karu_asset.type;
@@ -108,17 +107,17 @@ assets_init(assets_t* assets, moe_t* moe, const char* filename, arena_t* arena)
           asset->bitmap.renderer_texture_handle = get_next_texture_handle();
           asset->bitmap.width = karu_asset.bitmap.width;
           asset->bitmap.height = karu_asset.bitmap.height;
-            
+
           u32_t bitmap_size = asset->bitmap.width * asset->bitmap.height * 4;
-          gfx_texture_payload_t* payload = gfx_begin_texture_transfer(moe->gfx, bitmap_size);
-          if (!payload) return false;
+          gfx_texture_payload_t* payload = gfx_begin_texture_transfer(gfx, bitmap_size);
+          if (!payload) false;
           payload->texture_index = asset->bitmap.renderer_texture_handle;
           payload->texture_width = karu_asset.bitmap.width;
           payload->texture_height = karu_asset.bitmap.height;
-          platform->read_file(file, 
-                              bitmap_size, 
-                              karu_asset.offset_to_data, 
-                              payload->texture_data);
+          pf->read_file(file, 
+              bitmap_size, 
+              karu_asset.offset_to_data, 
+              payload->texture_data);
           gfx_complete_texture_transfer(payload);
           asset->state = ASSET_STATE_LOADED;
 
@@ -136,14 +135,14 @@ assets_init(assets_t* assets, moe_t* moe, const char* filename, arena_t* arena)
         case ASSET_TYPE_FONT: {
           u32_t glyph_count = karu_asset.font.glyph_count;
           u32_t highest_codepoint = karu_asset.font.highest_codepoint;
-          
+
           u16_t* codepoint_map = arena_push_arr(u16_t, arena, highest_codepoint);
           if(!codepoint_map) return false;
           asset_font_glyph_t* glyphs = arena_push_arr(asset_font_glyph_t, arena, glyph_count);
           if(!glyphs) return false;
           f32_t* kernings = arena_push_arr(f32_t, arena, glyph_count*glyph_count);
           if (!kernings) return false;
-          
+
           u32_t current_data_offset = karu_asset.offset_to_data;
           for(u16_t glyph_index = 0; 
               glyph_index < glyph_count;
@@ -152,13 +151,13 @@ assets_init(assets_t* assets, moe_t* moe, const char* filename, arena_t* arena)
             umi_t glyph_data_offset = 
               karu_asset.offset_to_data + 
               sizeof(karu_font_glyph_t)*glyph_index;
-            
+
             karu_font_glyph_t karu_glyph = {};
-            platform->read_file(file, 
-                          sizeof(karu_font_glyph_t), 
-                          glyph_data_offset,
-                          &karu_glyph); 
-            
+            pf->read_file(file, 
+                sizeof(karu_font_glyph_t), 
+                glyph_data_offset,
+                &karu_glyph); 
+
             asset_font_glyph_t* glyph = glyphs + glyph_index;
             glyph->texel_x0 = karu_glyph.texel_x0;
             glyph->texel_y0 = karu_glyph.texel_y0;
@@ -180,14 +179,14 @@ assets_init(assets_t* assets, moe_t* moe, const char* filename, arena_t* arena)
           // Horizontal advances
           {
             umi_t kernings_data_offset = 
-                  karu_asset.offset_to_data + 
-                  sizeof(karu_font_glyph_t)*glyph_count;
+              karu_asset.offset_to_data + 
+              sizeof(karu_font_glyph_t)*glyph_count;
 
-            platform->read_file(file, 
-                                sizeof(f32_t)*glyph_count*glyph_count, 
-                                kernings_data_offset, 
-                                kernings);
-             
+            pf->read_file(file, 
+                sizeof(f32_t)*glyph_count*glyph_count, 
+                kernings_data_offset, 
+                kernings);
+
             asset->font.glyphs = glyphs;
             asset->font.codepoint_map = codepoint_map;
             asset->font.kernings = kernings;
@@ -201,20 +200,20 @@ assets_init(assets_t* assets, moe_t* moe, const char* filename, arena_t* arena)
     }
 
   }
-    
+
   return true;
 
 }
 
-static u32_t
+  static u32_t
 find_first_asset_of_type(assets_t* assets, 
-                        Asset_Group_Type group_type, 
-                        Asset_Type type) 
+    Asset_Group_Type group_type, 
+    Asset_Type type) 
 {
   asset_group_t* group = assets->groups + group_type;
   for (u32_t asset_index = group->first_asset_index;
-       asset_index != group->one_past_last_asset_index;
-       ++asset_index ) 
+      asset_index != group->one_past_last_asset_index;
+      ++asset_index ) 
   {
     asset_slot_t* asset = assets->asset_slots + asset_index;
     if (asset->type == type) {
@@ -224,24 +223,24 @@ find_first_asset_of_type(assets_t* assets,
   return 0;
 }
 
-static u32_t 
+  static u32_t 
 find_best_asset_of_type(assets_t* assets, 
-                        Asset_Group_Type group_type, 
-                        Asset_Type asset_type,
-                        asset_match_t* vector)
+    Asset_Group_Type group_type, 
+    Asset_Type asset_type,
+    asset_match_t* vector)
 {
   u32_t ret = 0;
   f32_t best_diff = F32_INFINITY;
   asset_group_t* group = assets->groups + group_type;
   for (u32_t asset_index = group->first_asset_index;
-       asset_index != group->one_past_last_asset_index;
-       ++asset_index ) 
+      asset_index != group->one_past_last_asset_index;
+      ++asset_index ) 
   {
     asset_slot_t* asset = assets->asset_slots + asset_index;
     if (asset->type != asset_type) {
       continue;
     }
-    
+
     f32_t total_weighted_diff = 0.f;
     for(u32_t tag_index = asset->first_tag_index; 
         tag_index < asset->one_past_last_tag_index;
@@ -251,7 +250,7 @@ find_best_asset_of_type(assets_t* assets,
       f32_t difference = vector->e[tag->type].tag_value_to_match - tag->value;
       f32_t weighted = vector->e[tag->type].tag_weight*f32_abs(difference);
       total_weighted_diff = weighted;
-      
+
 #if 0      
       // Uncomment if we want to do periodic match (values that wrap around)
       f32_t a = match_vector->e[tag->type];
@@ -259,12 +258,12 @@ find_best_asset_of_type(assets_t* assets,
       f32_t diff0 = f32_abs(a-b);
       f32_t diff1 = abs_f32a - 10000000.f*sign_of(a) - b);
       f32_t diff = min_of(diff0, diff1);
-      
+
       f32_t weight = weight_vector->e[tag->type]*diff;
       total_weighted_diff = weight;
 #endif
     }
-    
+
     // Looking for the smallest total weighted diff
     if (total_weighted_diff < best_diff) {
       best_diff = total_weighted_diff;
@@ -275,10 +274,10 @@ find_best_asset_of_type(assets_t* assets,
 }
 
 
-static f32_t
+  static f32_t
 get_kerning(asset_font_t* font,
-            u32_t left_codepoint, 
-            u32_t right_codepoint) 
+    u32_t left_codepoint, 
+    u32_t right_codepoint) 
 {
   if (left_codepoint > font->highest_codepoint) return 0.f;
   if (right_codepoint > font->highest_codepoint) return 0.f;
@@ -337,21 +336,21 @@ find_first_sprite(assets_t* assets, Asset_Group_Type group_type) {
   return { find_first_asset_of_type(assets, group_type, ASSET_TYPE_SPRITE) };
 }
 
-static asset_sprite_id_t
+  static asset_sprite_id_t
 find_best_sprite(assets_t* assets, 
-                 Asset_Group_Type group_type, 
-                 asset_match_t* match_vector)
+    Asset_Group_Type group_type, 
+    asset_match_t* match_vector)
 {
   return { find_best_asset_of_type(assets, group_type, ASSET_TYPE_SPRITE, match_vector) };
-  
+
 }
 
-static asset_font_id_t
+  static asset_font_id_t
 find_best_font(assets_t* assets, 
-               Asset_Group_Type group_type, 
-               asset_match_t* match_vector)
+    Asset_Group_Type group_type, 
+    asset_match_t* match_vector)
 {
   return { find_best_asset_of_type(assets, group_type, ASSET_TYPE_FONT, match_vector) };
-  
+
 }
 

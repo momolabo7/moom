@@ -1,30 +1,24 @@
 #include "lit.h"
 
 static b32_t
-lit_tick(moe_t* moe) {
+lit_tick() {
 
   if(moe->game_context == nullptr) {
-    auto* lit_memory = moe->pf.allocate_memory(sizeof(lit_t));
+    auto* lit_memory = pf->allocate_memory(sizeof(lit_t));
     if (!lit_memory) return false;
     moe->game_context = lit_memory;
 
     auto* lit = (lit_t*)((pf_memory_t*)moe->game_context)->data;
-    lit->moe = moe;
-    lit->gfx = moe->gfx;
-    lit->input = moe->input;
-    lit->pf = &moe->pf;
-    lit->profiler = moe->profiler;
     lit->level_to_start = 0;
-
     lit->next_mode = LIT_MODE_GAME;
 
     //
     // Initialize assets
     //
-    auto* asset_memory = moe->pf.allocate_memory(megabytes(20));
+    auto* asset_memory = pf->allocate_memory(megabytes(20));
     if (asset_memory == nullptr) return false;
     arena_init(&lit->asset_arena, asset_memory->data, asset_memory->size);
-    assets_init(&lit->assets, moe, "test_pack.sui", &lit->asset_arena);
+    assets_init(&lit->assets, pf, gfx, "test_pack.sui", &lit->asset_arena);
 
     //
     // Initialize important assets stuf
@@ -38,15 +32,15 @@ lit_tick(moe_t* moe) {
     //
     // Initialize debug stuff
     //
-    auto* debug_memory = moe->pf.allocate_memory(megabytes(1));
+    auto* debug_memory = pf->allocate_memory(megabytes(1));
     arena_init(&lit->debug_arena, debug_memory->data, debug_memory->size);
     console_init(&lit->console, 32, 256, &lit->debug_arena);
 
-    auto* frame_memory = moe->pf.allocate_memory(megabytes(1));
+    auto* frame_memory = pf->allocate_memory(megabytes(1));
     arena_init(&lit->frame_arena, frame_memory->data, frame_memory->size);
 
-    moe->pf.set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
-    gfx_set_view(lit->gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
+    pf->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
+    gfx_set_view(gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
 #if 0
     pf_file_t file = {};
@@ -65,7 +59,7 @@ lit_tick(moe_t* moe) {
   // NOTE(momo): inspector need to clear each frame
   inspector_clear(&lit->inspector);
 
-  if (lit->next_mode != lit->mode || moe->reloaded) {
+  if (lit->next_mode != lit->mode || input->reloaded) {
     lit->mode = lit->next_mode;
     
     switch(lit->mode) {
@@ -96,7 +90,7 @@ lit_tick(moe_t* moe) {
   }
 
   // Debug
-  if (input_is_button_poked(lit->input->buttons[INPUT_BUTTON_CODE_F1])) {
+  if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_F1])) {
     lit->show_debug_type = 
       (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
   }
@@ -117,7 +111,20 @@ lit_tick(moe_t* moe) {
   return true;
 }
 exported b32_t 
-moe_update_and_render(moe_t* moe)
+moe_update_and_render(
+    moe_t* in_moe, 
+    pf_t* in_pf, 
+    gfx_t* in_gfx, 
+    pf_audio_t* in_audio, 
+    profiler_t* in_profiler, 
+    input_t* in_input)
 { 
-  return lit_tick(moe);
+  moe = in_moe;
+  pf = in_pf;
+  gfx = in_gfx;
+  audio = in_audio;
+  profiler = in_profiler;
+  input = in_input;
+
+  return lit_tick();
 }

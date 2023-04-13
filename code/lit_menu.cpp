@@ -55,43 +55,43 @@ lit_menu_draw_rect(
 
   // left
   gfx_push_asset_sprite(
-      lit->gfx, 
+      gfx, 
       &lit->assets, 
       menu->blank_sprite, 
       v2f_set(pos.x - half_w, pos.y), 
       v2f_set(thickness, size.y), 
       color); 
-  gfx_advance_depth(lit->gfx);
+  gfx_advance_depth(gfx);
 
   // right
   gfx_push_asset_sprite(
-      lit->gfx, 
+      gfx, 
       &lit->assets, 
       menu->blank_sprite, 
       v2f_set(pos.x + half_w, pos.y), 
       v2f_set(thickness, size.y), 
       color); 
-  gfx_advance_depth(lit->gfx);
+  gfx_advance_depth(gfx);
 
   // top
   gfx_push_asset_sprite(
-      lit->gfx, 
+      gfx, 
       &lit->assets, 
       menu->blank_sprite,
       v2f_set(pos.x, pos.y + half_h), 
       v2f_set(size.x, thickness), 
       color); 
-  gfx_advance_depth(lit->gfx);
+  gfx_advance_depth(gfx);
 
   // bottom
   gfx_push_asset_sprite(
-      lit->gfx, 
+      gfx, 
       &lit->assets, 
       menu->blank_sprite, 
       v2f_set(pos.x, pos.y - half_h), 
       v2f_set(size.x, thickness), 
       color); 
-  gfx_advance_depth(lit->gfx);
+  gfx_advance_depth(gfx);
 }
 
 static void
@@ -127,8 +127,6 @@ lit_menu_tick_normal(
     lit_menu_t* menu, 
     f32_t dt)
 {
-  input_t* input = lit->input;
-
   if (input_is_button_down(input->buttons[INPUT_BUTTON_CODE_SPACE])) 
   {
     // animate held button
@@ -215,7 +213,7 @@ lit_menu_button_render(
         (glyph->box_x1 - glyph->box_x0) * font_height,
         (glyph->box_y1 - glyph->box_y0) * font_height);
     v2f_t anchor = v2f_set(0.5f, 0.5f);
-    gfx_push_sprite(lit->gfx, 
+    gfx_push_sprite(gfx, 
         RGBA_WHITE,
         btn->xy, font_wh, anchor,
         bitmap->renderer_texture_handle, 
@@ -225,13 +223,13 @@ lit_menu_button_render(
         glyph->texel_y1);
 
   }
-  gfx_advance_depth(lit->gfx);
+  gfx_advance_depth(gfx);
 
 }
 
 static void
 lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
-  f32_t dt = lit->moe->delta_time;
+  f32_t dt = input->delta_time;
 
   if (menu->mode == LIT_MENU_MODE_TRANSITION_IN) {
     lit_menu_tick_transition_in(lit, menu, dt);
@@ -250,10 +248,10 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
   // 
   // Rendering
   //
-  gfx_set_blend_alpha(lit->gfx);
+  gfx_set_blend_alpha(gfx);
 
   // Title
-  gfx_push_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("LEVEL SELECTION"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT - 125.f, 72.f);
+  gfx_push_text_center_aligned(gfx, &lit->assets, menu->font, str8_from_lit("LEVEL SELECTION"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT - 125.f, 72.f);
 
   for_arr(button_id, menu->buttons)
   {
@@ -264,8 +262,8 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
   // Overlay to emphasize selected button
   {
     f32_t alpha = menu->selection_held_timer/(LIT_MENU_TRANSITION_DURATION/2);
-    gfx_push_asset_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), rgba_set(0.f, 0.f, 0.f, alpha));
-    gfx_advance_depth(lit->gfx);
+    gfx_push_asset_sprite(gfx, &lit->assets, menu->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), rgba_set(0.f, 0.f, 0.f, alpha));
+    gfx_advance_depth(gfx);
   }
 
 
@@ -287,10 +285,10 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
     v2f_t cursor_wh = v2f_set(150.f, 150.f);
 
     lit_menu_draw_rect(lit, menu, cursor_xy, cursor_wh, 16.f, menu->selector_color); 
-    //gfx_push_text_center_aligned(lit->gfx, &lit->assets, menu->font, str8_from_lit("menu"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT/2, 128.f);
+    //gfx_push_text_center_aligned(gfx, &lit->assets, menu->font, str8_from_lit("menu"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT/2, 128.f);
 
     //inspector_add_u32(&lit->inspector, str8_from_lit("num"), &menu->current_level_selection);
-    gfx_advance_depth(lit->gfx);
+    gfx_advance_depth(gfx);
 
   }
 
@@ -300,8 +298,8 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
 #if 1
   {
     f32_t alpha = menu->overlay_timer/LIT_MENU_TRANSITION_DURATION;
-    gfx_push_asset_sprite(lit->gfx, &lit->assets, menu->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), rgba_set(0.f, 0.f, 0.f, alpha));
-    gfx_advance_depth(lit->gfx);
+    gfx_push_asset_sprite(gfx, &lit->assets, menu->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), rgba_set(0.f, 0.f, 0.f, alpha));
+    gfx_advance_depth(gfx);
   }
 #endif
 

@@ -2,11 +2,7 @@
 static void
 lit_update_and_render_console(lit_t* lit) 
 {
-
   console_t* console = &lit->console;
-  moe_t* moe = lit->moe;
-  gfx_t* gfx = lit->gfx;
-  input_t* input = lit->input;
   assets_t* assets = &lit->assets;
 
   for (u32_t char_index = 0; 

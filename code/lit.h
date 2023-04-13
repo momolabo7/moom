@@ -29,10 +29,10 @@
 
 
 #ifdef INTERNAL
-#define lit_log(...) lit->platform->debug_log(__VA_ARGS__)
-#define lit_profile_block(name) profiler_block(moe->platform->profiler, name)
-#define lit_profile_begin(name) profiler_begin_block(moe->platform->profiler, name)
-#define lit_profile_end(name) profiler_end_block(moe->platform->profiler, name)
+#define lit_log(...) pf->debug_log(__VA_ARGS__)
+#define lit_profile_block(name) profiler_block(profiler, name)
+#define lit_profile_begin(name) profiler_begin_block(profiler, name)
+#define lit_profile_end(name) profiler_end_block(profiler, name)
 #else
 #define lit_log(...)
 #define lit_profiler_block(...)
@@ -40,7 +40,13 @@
 #define lit_profile_end(...) 
 #endif 
 
-
+// Globals!!!
+static moe_t* moe; 
+static pf_t* pf; 
+static gfx_t* gfx; 
+static pf_audio_t* audio;
+static profiler_t* profiler;
+static input_t* input;
 
 #include "lit_splash.h"
 #include "lit_menu.h"
@@ -65,13 +71,9 @@ struct lit_save_data_t {
   // TODO
 };
 
-struct lit_t {
-  moe_t* moe;
-  gfx_t* gfx; 
-  profiler_t* profiler;
-  input_t* input;
-  pf_api_t* pf;
 
+
+struct lit_t {
   lit_show_debug_type_t show_debug_type;
   lit_mode_t next_mode;
   lit_mode_t mode;

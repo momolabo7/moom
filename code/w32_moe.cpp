@@ -308,31 +308,6 @@ w32_unlock_cursor() {
   w32_state.is_cursor_locked = false;
 }
 
-static void
-w32_set_platform_api(moe_t* moe)
-{
-  //moe->hot_reload = w32_hot_reload;
-  //moe->shutdown = w32_shutdown;
-  //
-  //moe->set_render_region = w32_set_render_region;
-  //moe->set_window_size = w32_set_window_size;
-  //moe->get_window_size = w32_get_window_size;
-  moe->pf.set_moe_dims = w32_set_moe_dims;
-  moe->pf.open_file = w32_open_file;
-  moe->pf.read_file = w32_read_file;
-  moe->pf.write_file = w32_write_file;
-  moe->pf.close_file = w32_close_file;
-  moe->pf.add_task = w32_add_task;
-  moe->pf.complete_all_tasks = w32_complete_all_tasks;
-  moe->pf.debug_log = w32_log_proc;
-  moe->pf.allocate_memory = w32_allocate_memory;
-  moe->pf.free_memory = w32_free_memory;
-  moe->pf.show_cursor = w32_show_cursor;
-  moe->pf.hide_cursor = w32_hide_cursor;
-  moe->pf.lock_cursor = w32_lock_cursor;
-  moe->pf.unlock_cursor = w32_unlock_cursor;
-}
-
 //~ Main functions
 LRESULT CALLBACK
 w32_window_callback(HWND window, 
@@ -505,7 +480,6 @@ WinMain(HINSTANCE instance,
   //
   // Gfx
   // 
-
   gfx_t* gfx = w32_gfx_load(window, megabytes(100), megabytes(100));
   if (!gfx) { return 1; }
   defer { w32_gfx_unload(gfx); };
@@ -533,14 +507,29 @@ WinMain(HINSTANCE instance,
   //
   // MOE setup
   //
-  make(moe_t, moe);
-  w32_set_platform_api(moe);
-  moe->gfx = gfx;
-  moe->profiler = profiler;
-  moe->audio = audio;
-  moe->input = &input;
+  moe_t moe = {};
   
-  
+ 
+  //
+  // Platform API setup
+  //
+  pf_t pf = {};
+  pf.set_moe_dims = w32_set_moe_dims;
+  pf.open_file = w32_open_file;
+  pf.read_file = w32_read_file;
+  pf.write_file = w32_write_file;
+  pf.close_file = w32_close_file;
+  pf.add_task = w32_add_task;
+  pf.complete_all_tasks = w32_complete_all_tasks;
+  pf.debug_log = w32_log_proc;
+  pf.allocate_memory = w32_allocate_memory;
+  pf.free_memory = w32_free_memory;
+  pf.show_cursor = w32_show_cursor;
+  pf.hide_cursor = w32_hide_cursor;
+  pf.lock_cursor = w32_lock_cursor;
+  pf.unlock_cursor = w32_unlock_cursor;
+
+
   //- Begin moe loop
   b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   
@@ -554,8 +543,8 @@ WinMain(HINSTANCE instance,
   {
 #if 1
     // Hot reload moe.dll functions
-    moe->reloaded = w32_reload_code_if_outdated(&moe_code);
-    if (moe->reloaded) {
+    input.reloaded = w32_reload_code_if_outdated(&moe_code);
+    if (input.reloaded) {
       profiler_reset(profiler);
     }
 #endif
@@ -574,7 +563,7 @@ WinMain(HINSTANCE instance,
     w32_gfx_begin_frame(gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
        
     //-Process messages and input
-    moe->delta_time = target_secs_per_frame;
+    input.delta_time = target_secs_per_frame;
     w32_update_input(&input);
     w32_process_input(window, &input); 
     
@@ -599,7 +588,7 @@ WinMain(HINSTANCE instance,
       
       
       // NOTE(Momo): Flip y
-      //moe->design_mouse_pos.y = f32_lerp(MOE_HEIGHT, 0.f, moe->design_mouse_pos.y/MOE_HEIGHT);	
+      //moe.design_mouse_pos.y = f32_lerp(MOE_HEIGHT, 0.f, moe.design_mouse_pos.y/MOE_HEIGHT);	
       if (w32_state.is_cursor_locked) {
         SetCursorPos(
             w32_state.cursor_pt_to_lock_to.x,
@@ -610,7 +599,7 @@ WinMain(HINSTANCE instance,
     
     //-moe_t logic
     if(moe_code.is_valid) { 
-      game_is_running = moe_functions.update_and_render(moe);
+      game_is_running = moe_functions.update_and_render(&moe, &pf, gfx, audio, profiler, &input);
     }
 
     // End  frame

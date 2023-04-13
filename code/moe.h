@@ -16,16 +16,7 @@
 #include "moe_assets.h"
 #include "moe_inspector.h"
 #include "moe_console.h"
-
-
-
 #include "moe_assets.cpp"
-
 #include "moe_game_api.h"
-
-//#include "moe_inspector_rendering.h"
-//#include "moe_profiler_rendering.h"
-//#include "moe_console_rendering.h"
-//#include "game.h"
 
 #endif //MOE_H
