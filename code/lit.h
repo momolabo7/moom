@@ -40,13 +40,6 @@
 #define lit_profile_end(...) 
 #endif 
 
-// Globals!!!
-static moe_t* moe; 
-static pf_t* pf; 
-static gfx_t* gfx; 
-static pf_audio_t* audio;
-static profiler_t* profiler;
-static input_t* input;
 
 #include "lit_splash.h"
 #include "lit_menu.h"

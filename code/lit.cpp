@@ -119,12 +119,6 @@ moe_update_and_render(
     profiler_t* in_profiler, 
     input_t* in_input)
 { 
-  moe = in_moe;
-  pf = in_pf;
-  gfx = in_gfx;
-  audio = in_audio;
-  profiler = in_profiler;
-  input = in_input;
-
+  moe_begin_frame;
   return lit_tick();
 }

@@ -1660,13 +1660,14 @@ Module	build/a.out.js	/^var Module = typeof Module != 'undefined' ? Module : {};
 module_path	code/w32_moe.h	/^  const char* module_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *
 module_write_time	code/w32_moe.h	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:LARGE_INTEGER
 moe	code/lit.h	/^  moe_t* moe;$/;"	m	language:C++	struct:lit_t	typeref:typename:moe_t *
+moe_begin_frame	D:/work/git/moom/code/moe.h	/^#define moe_begin_frame /;"	d	language:C++
 MOE_CONSOLE_H	code/moe_console.h	/^#define MOE_CONSOLE_H$/;"	d	language:C++
 moe_functions_t	code/moe_platform.h	/^typedef struct moe_functions_t {$/;"	s	language:C++
 moe_functions_t	code/moe_platform.h	/^} moe_functions_t;$/;"	t	language:C++	typeref:struct:moe_functions_t
 moe_function_names	code/moe_platform.h	/^static const char* moe_function_names[] {$/;"	v	language:C++	typeref:typename:const char * []
 MOE_GAME_API	code/moe_game_api.h	/^#define MOE_GAME_API$/;"	d	language:C++
 MOE_GFX_H	code/moe_gfx.h	/^#define MOE_GFX_H$/;"	d	language:C++
-MOE_H	code/moe.h	/^#define MOE_H$/;"	d	language:C++
+MOE_H	D:/work/git/moom/code/moe.h	/^#define MOE_H$/;"	d	language:C++
 moe_height	code/w32_moe.h	/^  f32_t moe_height;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t
 MOE_INSPECTOR_H	code/moe_inspector.h	/^#define MOE_INSPECTOR_H$/;"	d	language:C++
 MOE_MODE_LIT_H	code/lit.h	/^#define MOE_MODE_LIT_H$/;"	d	language:C++
@@ -2832,10 +2833,10 @@ w	code/momo_vectors.h	/^	struct { f32_t w, h; };$/;"	m	language:C++	struct:v2f_t
 w	code/momo_vectors.h	/^	struct { f32_t x, y, z, w; };$/;"	m	language:C++	struct:v4f_t::__anon8de67fa20a08	typeref:typename:f32_t
 w	code/momo_vectors.h	/^	struct { s32_t w, h; };$/;"	m	language:C++	struct:v2s_t::__anon8de67fa20408	typeref:typename:s32_t
 w	code/momo_vectors.h	/^	struct { u32_t w, h; };$/;"	m	language:C++	struct:v2u_t::__anon8de67fa20208	typeref:typename:u32_t
-w32_add_task	code/w32_moe.cpp	/^w32_add_task(pf_task_callback_f callback, void* data) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_add_task	D:/work/git/moom/code/w32_moe.cpp	/^w32_add_task(pf_task_callback_f callback, void* data) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_add_task_entry	code/w32_moe.h	/^w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void
 w32_allocate_memory	code/w32_moe.h	/^w32_allocate_memory(umi_t size)$/;"	f	language:C++	typeref:typename:pf_memory_t *
-w32_allocate_memory_into_arena	code/w32_moe.cpp	/^w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+w32_allocate_memory_into_arena	D:/work/git/moom/code/w32_moe.cpp	/^w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 w32_audio_begin_frame	code/w32_audio.h	/^w32_audio_begin_frame(pf_audio_t* audio);$/;"	p	language:C++	typeref:typename:void
 w32_audio_begin_frame	code/w32_audio_wasapi.h	/^w32_audio_begin_frame(pf_audio_t* audio) {$/;"	f	language:C++	typeref:typename:void
 w32_audio_end_frame	code/w32_audio.h	/^w32_audio_end_frame(pf_audio_t* audio);$/;"	p	language:C++	typeref:typename:void
@@ -2845,8 +2846,8 @@ w32_audio_load	code/w32_audio_wasapi.h	/^w32_audio_load(u32_t samples_per_second
 w32_audio_unload	code/w32_audio.h	/^w32_audio_unload(pf_audio_t* audio);$/;"	p	language:C++	typeref:typename:void
 w32_audio_unload	code/w32_audio_wasapi.h	/^w32_audio_unload(pf_audio_t* audio) {$/;"	f	language:C++	typeref:typename:void
 w32_calc_render_region	code/w32_moe.h	/^w32_calc_render_region(u32_t window_w, $/;"	f	language:C++	typeref:typename:RECT
-w32_close_file	code/w32_moe.cpp	/^w32_close_file(pf_file_t* file) {$/;"	f	language:C++	typeref:typename:void	file:
-w32_complete_all_tasks	code/w32_moe.cpp	/^w32_complete_all_tasks() {$/;"	f	language:C++	typeref:typename:void	file:
+w32_close_file	D:/work/git/moom/code/w32_moe.cpp	/^w32_close_file(pf_file_t* file) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_complete_all_tasks	D:/work/git/moom/code/w32_moe.cpp	/^w32_complete_all_tasks() {$/;"	f	language:C++	typeref:typename:void	file:
 w32_complete_all_tasks_entries	code/w32_moe.h	/^w32_complete_all_tasks_entries(w32_work_queue_t* wq) {$/;"	f	language:C++	typeref:typename:void
 w32_do_next_work_entry	code/w32_moe.h	/^w32_do_next_work_entry(w32_work_queue_t* wq) {$/;"	f	language:C++	typeref:typename:b32_t
 w32_file_cabinet_t	code/w32_moe.h	/^struct w32_file_cabinet_t {$/;"	s	language:C++
@@ -2854,7 +2855,7 @@ w32_file_t	code/w32_moe.h	/^struct w32_file_t {$/;"	s	language:C++
 w32_file_time_to_large_integer	code/w32_moe.h	/^w32_file_time_to_large_integer(FILETIME file_time) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER
 w32_free_all_memory	code/w32_moe.h	/^w32_free_all_memory() {$/;"	f	language:C++	typeref:typename:void
 w32_free_memory	code/w32_moe.h	/^w32_free_memory(pf_memory_t* block) {$/;"	f	language:C++	typeref:typename:void
-w32_free_memory_from_arena	code/w32_moe.cpp	/^w32_free_memory_from_arena(arena_t* a) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_free_memory_from_arena	D:/work/git/moom/code/w32_moe.cpp	/^w32_free_memory_from_arena(arena_t* a) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_get_client_dims	code/w32_moe.h	/^w32_get_client_dims(HWND window) {$/;"	f	language:C++	typeref:typename:v2u_t
 w32_get_file_last_write_time	code/w32_moe.h	/^w32_get_file_last_write_time(const char* filename) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER
 w32_get_next_free_file	code/w32_moe.h	/^w32_get_next_free_file(w32_file_cabinet_t* c) {$/;"	f	language:C++	typeref:typename:w32_file_t *
@@ -2870,46 +2871,45 @@ w32_gfx_load	code/w32_gfx.h	/^w32_gfx_load(HWND window, $/;"	p	language:C++	type
 w32_gfx_load	code/w32_gfx_opengl.h	/^w32_gfx_load(HWND window, $/;"	f	language:C++	typeref:typename:gfx_t *
 w32_gfx_unload	code/w32_gfx.h	/^w32_gfx_unload(gfx_t* renderer);$/;"	p	language:C++	typeref:typename:void
 w32_gfx_unload	code/w32_gfx_opengl.h	/^w32_gfx_unload(gfx_t* gfx) {$/;"	f	language:C++	typeref:typename:void
-w32_hide_cursor	code/w32_moe.cpp	/^w32_hide_cursor() {$/;"	f	language:C++	typeref:typename:void	file:
+w32_hide_cursor	D:/work/git/moom/code/w32_moe.cpp	/^w32_hide_cursor() {$/;"	f	language:C++	typeref:typename:void	file:
 w32_init_file_cabinet	code/w32_moe.h	/^w32_init_file_cabinet(w32_file_cabinet_t* c) {$/;"	f	language:C++	typeref:typename:void
 w32_init_work_queue	code/w32_moe.h	/^w32_init_work_queue(w32_work_queue_t* wq, u32_t thread_count) {$/;"	f	language:C++	typeref:typename:b32_t
 w32_loaded_code_t	code/w32_moe.h	/^struct w32_loaded_code_t {$/;"	s	language:C++
 w32_load_code	code/w32_moe.h	/^w32_load_code(w32_loaded_code_t* code) {$/;"	f	language:C++	typeref:typename:void
-w32_lock_cursor	code/w32_moe.cpp	/^w32_lock_cursor() {$/;"	f	language:C++	typeref:typename:void	file:
+w32_lock_cursor	D:/work/git/moom/code/w32_moe.cpp	/^w32_lock_cursor() {$/;"	f	language:C++	typeref:typename:void	file:
 w32_log	code/w32_moe.h	/^#define w32_log(/;"	d	language:C++
 w32_log	code/w32_moe.h	/^#define w32_log(/;"	d	language:C++
 w32_log_proc	code/w32_moe.h	/^w32_log_proc(const char* fmt, ...) {$/;"	f	language:C++	typeref:typename:void
 w32_memory_t	code/w32_moe.h	/^struct w32_memory_t {$/;"	s	language:C++
-w32_open_file	code/w32_moe.cpp	/^w32_open_file(pf_file_t* file,$/;"	f	language:C++	typeref:typename:b32_t	file:
-w32_process_input	code/w32_moe.cpp	/^w32_process_input(HWND window, input_t* input) $/;"	f	language:C++	typeref:typename:void	file:
+w32_open_file	D:/work/git/moom/code/w32_moe.cpp	/^w32_open_file(pf_file_t* file,$/;"	f	language:C++	typeref:typename:b32_t	file:
+w32_process_input	D:/work/git/moom/code/w32_moe.cpp	/^w32_process_input(HWND window, input_t* input) $/;"	f	language:C++	typeref:typename:void	file:
 w32_profiler_block	code/w32_moe.h	/^#define w32_profiler_block(/;"	d	language:C++
 w32_profile_block	code/w32_moe.h	/^#define w32_profile_block(/;"	d	language:C++
-w32_read_file	code/w32_moe.cpp	/^w32_read_file(pf_file_t* file, usz_t size, usz_t offset, void* dest) $/;"	f	language:C++	typeref:typename:b32_t	file:
+w32_read_file	D:/work/git/moom/code/w32_moe.cpp	/^w32_read_file(pf_file_t* file, usz_t size, usz_t offset, void* dest) $/;"	f	language:C++	typeref:typename:b32_t	file:
 w32_rect_height	code/w32_moe.h	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG
 w32_rect_width	code/w32_moe.h	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG
 w32_reload_code_if_outdated	code/w32_moe.h	/^w32_reload_code_if_outdated(w32_loaded_code_t* code) {$/;"	f	language:C++	typeref:typename:b32_t
 w32_return_file	code/w32_moe.h	/^w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {$/;"	f	language:C++	typeref:typename:void
-w32_set_moe_dims	code/w32_moe.cpp	/^w32_set_moe_dims(f32_t width, f32_t height) {$/;"	f	language:C++	typeref:typename:void	file:
-w32_set_platform_api	code/w32_moe.cpp	/^w32_set_platform_api(pf* moe)$/;"	f	language:C++	typeref:typename:void	file:
-w32_show_cursor	code/w32_moe.cpp	/^w32_show_cursor() {$/;"	f	language:C++	typeref:typename:void	file:
+w32_set_moe_dims	D:/work/git/moom/code/w32_moe.cpp	/^w32_set_moe_dims(f32_t width, f32_t height) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_show_cursor	D:/work/git/moom/code/w32_moe.cpp	/^w32_show_cursor() {$/;"	f	language:C++	typeref:typename:void	file:
 w32_shutdown	code/w32_moe.h	/^w32_shutdown() {$/;"	f	language:C++	typeref:typename:void
 w32_state	code/w32_moe.h	/^static w32_state_t w32_state;$/;"	v	language:C++	typeref:typename:w32_state_t
 w32_state_t	code/w32_moe.h	/^struct w32_state_t {$/;"	s	language:C++
 w32_unload_code	code/w32_moe.h	/^w32_unload_code(w32_loaded_code_t* code) {$/;"	f	language:C++	typeref:typename:void
-w32_unlock_cursor	code/w32_moe.cpp	/^w32_unlock_cursor() {$/;"	f	language:C++	typeref:typename:void	file:
-w32_update_input	code/w32_moe.cpp	/^w32_update_input(input_t* input) {$/;"	f	language:C++	typeref:typename:void	file:
-w32_vkeys_to_input_button_code	code/w32_moe.cpp	/^w32_vkeys_to_input_button_code(u32_t code) {$/;"	f	language:C++	typeref:typename:input_button_code_t	file:
+w32_unlock_cursor	D:/work/git/moom/code/w32_moe.cpp	/^w32_unlock_cursor() {$/;"	f	language:C++	typeref:typename:void	file:
+w32_update_input	D:/work/git/moom/code/w32_moe.cpp	/^w32_update_input(input_t* input) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_vkeys_to_input_button_code	D:/work/git/moom/code/w32_moe.cpp	/^w32_vkeys_to_input_button_code(u32_t code) {$/;"	f	language:C++	typeref:typename:input_button_code_t	file:
 w32_wasapi_begin_frame	code/w32_audio_wasapi.h	/^w32_wasapi_begin_frame(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:void
 w32_wasapi_end_frame	code/w32_audio_wasapi.h	/^w32_wasapi_end_frame(w32_wasapi_t* wasapi) $/;"	f	language:C++	typeref:typename:void
 w32_wasapi_free	code/w32_audio_wasapi.h	/^w32_wasapi_free(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:void
 w32_wasapi_init	code/w32_audio_wasapi.h	/^w32_wasapi_init(w32_wasapi_t* wasapi,$/;"	f	language:C++	typeref:typename:b32_t
 w32_wasapi_notif_client_t	code/w32_audio_wasapi.h	/^struct w32_wasapi_notif_client_t {$/;"	s	language:C++
 w32_wasapi_t	code/w32_audio_wasapi.h	/^struct w32_wasapi_t {$/;"	s	language:C++
-w32_window_callback	code/w32_moe.cpp	/^w32_window_callback(HWND window, $/;"	f	language:C++	typeref:typename:LRESULT CALLBACK
+w32_window_callback	D:/work/git/moom/code/w32_moe.cpp	/^w32_window_callback(HWND window, $/;"	f	language:C++	typeref:typename:LRESULT CALLBACK
 w32_worker_func	code/w32_moe.h	/^w32_worker_func(LPVOID ctx) {$/;"	f	language:C++	typeref:typename:DWORD WINAPI
 w32_work_queue_t	code/w32_moe.h	/^struct w32_work_queue_t {$/;"	s	language:C++
 w32_work_t	code/w32_moe.h	/^struct w32_work_t {$/;"	s	language:C++
-w32_write_file	code/w32_moe.cpp	/^w32_write_file(pf_file_t* file, usz_t size, usz_t offset, void* src)$/;"	f	language:C++	typeref:typename:b32_t	file:
+w32_write_file	D:/work/git/moom/code/w32_moe.cpp	/^w32_write_file(pf_file_t* file, usz_t size, usz_t offset, void* src)$/;"	f	language:C++	typeref:typename:b32_t	file:
 warnOnce	build/a.out.js	/^  function warnOnce(text) {$/;"	f	language:JavaScript
 wasapi	code/w32_audio_wasapi.h	/^  w32_wasapi_t* wasapi;$/;"	m	language:C++	struct:w32_wasapi_notif_client_t	typeref:typename:w32_wasapi_t *
 wasi_snapshot_preview1	build/a.out.js	/^    'wasi_snapshot_preview1': asmLibraryArg,$/;"	p	language:JavaScript	class:createWasm.info
@@ -2961,7 +2961,7 @@ width	code/sui_atlas.h	/^  u32_t width, height;$/;"	m	language:C++	struct:sui_at
 width	code/sui_pack.h	/^  u32_t width;$/;"	m	language:C++	struct:sui_packer_source_bitmap_t	typeref:typename:u32_t
 WIN32_LEAN_AND_MEAN	code/w32_moe.h	/^#define WIN32_LEAN_AND_MEAN$/;"	d	language:C++
 window	code/w32_moe.h	/^  HWND window;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:HWND
-WinMain	code/w32_moe.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
+WinMain	D:/work/git/moom/code/w32_moe.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 WIN_AUDIO	code/w32_audio.h	/^#define WIN_AUDIO$/;"	d	language:C++
 WIN_H	code/w32_moe.h	/^#define WIN_H$/;"	d	language:C++
 WIN_RENDERER_H	code/w32_gfx.h	/^#define WIN_RENDERER_H$/;"	d	language:C++
