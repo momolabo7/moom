@@ -80,6 +80,9 @@ struct lit_particle_pool_t {
   lit_particle_t particles[256];
 };
 
+struct lit_confetti_t {
+};
+
 
 
 //
@@ -189,7 +192,8 @@ struct lit_game_t {
   asset_sprite_id_t blank_sprite;
   asset_sprite_id_t circle_sprite;
   asset_sprite_id_t filled_circle_sprite;
-
+  asset_sprite_id_t move_sprite;
+  asset_sprite_id_t rotate_sprite;
   lit_state_type_t state;
 
   u32_t current_level_id;

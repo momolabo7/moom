@@ -15,7 +15,7 @@ lit_push_point(lit_game_t* lit, v2f_t point) {
 // 
 // Animator
 //
-static void 
+  static void 
 lit_animator_push_patrol_point_waypoint(
     lit_animator_t* animator, 
     f32_t pos_x, 
@@ -29,7 +29,7 @@ lit_animator_push_patrol_point_waypoint(
   wp->y = pos_y;
 }
 
-static lit_animator_rotate_point_t* 
+  static lit_animator_rotate_point_t* 
 lit_animator_push_rotate_point(
     lit_game_t* game,
     v2f_t* pt_to_rotate,
@@ -40,7 +40,7 @@ lit_animator_push_rotate_point(
   assert(game->animator_count < array_count(game->animators));
   auto* anim = game->animators + game->animator_count++;
   anim->type = LIT_ANIMATOR_TYPE_ROTATE_POINT;
- 
+
   auto* a = &anim->rotate_point;
   a->speed = speed;
   a->point_of_rotation = pt_of_rotation;
@@ -51,7 +51,7 @@ lit_animator_push_rotate_point(
 }
 
 #if 1 
-static void
+  static void
 lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duration, lit_edge_t start, lit_edge_t end) 
 {
   auto* anim = game->animators + game->animator_count++;
@@ -122,7 +122,7 @@ lit_animator_update_all(lit_t* lit, lit_game_t* game, f32_t dt) {
 static void 
 lit_calc_ghost_edge_line(lit_edge_t* e, v2f_t* min, v2f_t* max) {
   v2f_t dir = v2f_norm(e->end_pt - e->start_pt) * 0.0001f;
-  
+
   *min = v2f_sub(e->start_pt, dir);
   *max = v2f_add(e->end_pt, dir);
 }
@@ -140,10 +140,10 @@ lit_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y)
 }
 
 
-static void
+  static void
 lit_push_patrolling_edge(lit_game_t* m, f32_t duration, 
-                         f32_t start_min_x, f32_t start_min_y, f32_t start_max_x, f32_t start_max_y,
-                         f32_t end_min_x, f32_t end_min_y, f32_t end_max_x, f32_t end_max_y) 
+    f32_t start_min_x, f32_t start_min_y, f32_t start_max_x, f32_t start_max_y,
+    f32_t end_min_x, f32_t end_min_y, f32_t end_max_x, f32_t end_max_y) 
 {
   lit_edge_t* edge = lit_push_edge(m, start_min_x, start_min_y, start_max_x, start_max_y);
 
@@ -158,20 +158,20 @@ lit_push_patrolling_edge(lit_game_t* m, f32_t duration,
   lit_push_patrol_edge_animator(m, edge, duration, start, end); 
 }
 
-static void
+  static void
 lit_push_patrolling_double_edge(lit_game_t* m, f32_t duration, 
-                                f32_t start_min_x, f32_t start_min_y, f32_t start_max_x, f32_t start_max_y,
-                                f32_t end_min_x, f32_t end_min_y, f32_t end_max_x, f32_t end_max_y) 
+    f32_t start_min_x, f32_t start_min_y, f32_t start_max_x, f32_t start_max_y,
+    f32_t end_min_x, f32_t end_min_y, f32_t end_max_x, f32_t end_max_y) 
 {
   lit_push_patrolling_edge(m, duration, start_min_x, start_min_y, start_max_x, start_max_y, 
-                           end_min_x, end_min_y, end_max_x, end_max_y);
+      end_min_x, end_min_y, end_max_x, end_max_y);
   lit_push_patrolling_edge(m, duration, start_max_x, start_max_y, start_min_x, start_min_y, 
-                           end_max_x, end_max_y, end_min_x, end_min_y);
+      end_max_x, end_max_y, end_min_x, end_min_y);
 
 }
 
 
-static void 
+  static void 
 lit_push_box(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) 
 {
   lit_push_edge(m, min_x, min_y, max_x, min_y);
@@ -199,20 +199,20 @@ lit_push_light(lit_game_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle
   light->dir.x = f32_cos(rad);
   light->dir.y = f32_sin(rad);
   light->half_angle = f32_deg_to_rad(angle/2.f);
-  
+
   return light;
 }
 
 // Returns F32_INFINITY() if cannot find
-static f32_t
+  static f32_t
 lit_get_ray_intersection_time_wrt_edges(v2f_t ray_origin, 
-                                        v2f_t ray_dir,
-                                        lit_edge_t* edges,
-                                        u32_t edge_count,
-                                        b32_t clamp_to_ray_max = false)
+    v2f_t ray_dir,
+    lit_edge_t* edges,
+    u32_t edge_count,
+    b32_t clamp_to_ray_max = false)
 {
   f32_t lowest_t1 = clamp_to_ray_max ? 1.f : F32_INFINITY;
- 
+
   for(u32_t edge_index = 0; edge_index < edge_count; ++edge_index)
   {
     lit_edge_t* edge = edges + edge_index;
@@ -227,26 +227,26 @@ lit_get_ray_intersection_time_wrt_edges(v2f_t ray_origin,
       edge_ray_origin = p0;
       edge_ray_dir = p1 - p0; 
     }
-    
+
     // Check for parallel
     v2f_t ray_normal = {};
     ray_normal.x = ray_dir.y;
     ray_normal.y = -ray_dir.x;
-    
-    
+
+
     if (!is_close_f32(v2f_dot(ray_normal, edge_ray_dir), 0.f)) {
       f32_t t2 = 
-      (ray_dir.x*(edge_ray_origin.y - ray_origin.y) + 
-       ray_dir.y*(ray_origin.x - edge_ray_origin.x))/
-      (edge_ray_dir.x*ray_dir.y - edge_ray_dir.y*ray_dir.x);
-      
+        (ray_dir.x*(edge_ray_origin.y - ray_origin.y) + 
+         ray_dir.y*(ray_origin.x - edge_ray_origin.x))/
+        (edge_ray_dir.x*ray_dir.y - edge_ray_dir.y*ray_dir.x);
+
       f32_t t1 = (edge_ray_origin.x + edge_ray_dir.x * t2 - ray_origin.x)/ray_dir.x;
-      
+
       if (0.f < t1 && 
           0.f < t2 && 
           t2 < 1.f)
       {
-        
+
         if (t1 < lowest_t1) {
           lowest_t1 = t1;
         }
@@ -265,11 +265,11 @@ lit_push_triangle(lit_light_t* l, v2f_t p0, v2f_t p1, v2f_t p2, u32_t color) {
 }
 
 
-static void
+  static void
 lit_gen_light_intersections(lit_light_t* l,
-                            lit_edge_t* edges,
-                            u32_t edge_count,
-                            arena_t* tmp_arena)
+    lit_edge_t* edges,
+    u32_t edge_count,
+    arena_t* tmp_arena)
 {
   //moe_profile_block(light_generation);
   arena_set_revert_point(tmp_arena);
@@ -288,15 +288,15 @@ lit_gen_light_intersections(lit_light_t* l,
   f32_t offset_angles[] = {0.0f, 0.001f, -0.001f};
   //f32_t offset_angles[] = {0.0f};
   for (u32_t offset_index = 0;
-       offset_index < array_count(offset_angles);
-       ++offset_index) 
+      offset_index < array_count(offset_angles);
+      ++offset_index) 
   {
     f32_t offset_angle = offset_angles[offset_index];
     // For each endpoint
     for(u32_t edge_index = 0; edge_index < edge_count; ++edge_index) 
     {
       lit_edge_t* edge = edges + edge_index;
-      
+
       //if (edge->is_disabled) continue;
 
       v2f_t ep = edge->end_pt;      
@@ -313,10 +313,10 @@ lit_gen_light_intersections(lit_light_t* l,
         // if it's a point light, we don't do anything here.
       }
 
-           
+
       v2f_t light_ray_dir = v2f_rotate(ep - l->pos, offset_angle);
       f32_t t = lit_get_ray_intersection_time_wrt_edges(l->pos, light_ray_dir, edges, edge_count, offset_index == 0);
-      
+
       assert(l->intersection_count < array_count(l->intersections));
       lit_light_intersection_t* intersection = l->intersections + l->intersection_count++;
       intersection->pt = (t == F32_INFINITY) ? ep : l->pos + t*light_ray_dir;
@@ -324,8 +324,8 @@ lit_gen_light_intersections(lit_light_t* l,
 
 
     }
-    
-    
+
+
   }
 
   // Consider 'shell rays', which are rays that are at the 
@@ -333,11 +333,11 @@ lit_gen_light_intersections(lit_light_t* l,
   if (light_type != Lit_LIGHT_TYPE_POINT)
   {
     for (u32_t offset_index = 0;
-         offset_index < array_count(offset_angles);
-         ++offset_index) 
+        offset_index < array_count(offset_angles);
+        ++offset_index) 
     { 
       f32_t offset_angle = offset_angles[offset_index];
-       
+
       v2f_t dirs[2]; 
       dirs[0] = v2f_rotate(l->dir, l->half_angle + offset_angle);
       dirs[1] = v2f_rotate(l->dir, -l->half_angle + offset_angle);
@@ -356,8 +356,8 @@ lit_gen_light_intersections(lit_light_t* l,
     sort_entry_t* sorted_its = arena_push_arr(sort_entry_t, tmp_arena, l->intersection_count);
     assert(sorted_its);
     for (u32_t its_id = 0; 
-         its_id < l->intersection_count; 
-         ++its_id) 
+        its_id < l->intersection_count; 
+        ++its_id) 
     {
       lit_light_intersection_t* its = l->intersections + its_id;
       v2f_t basis_vec = v2f_t{1.f, 0.f};
@@ -372,8 +372,8 @@ lit_gen_light_intersections(lit_light_t* l,
     quicksort(sorted_its, l->intersection_count);
 
     for (u32_t sorted_its_id = 0;
-         sorted_its_id < l->intersection_count - 1;
-         sorted_its_id++)
+        sorted_its_id < l->intersection_count - 1;
+        sorted_its_id++)
     {
       lit_light_intersection_t* its0 = l->intersections + sorted_its[sorted_its_id].index;
       lit_light_intersection_t* its1 = l->intersections + sorted_its[sorted_its_id+1].index;
@@ -387,12 +387,12 @@ lit_gen_light_intersections(lit_light_t* l,
           ignore = true;
         }
       }
-      
+
       if (!ignore) {
         v2f_t p0 = its0->pt;
         v2f_t p1 = l->pos;
         v2f_t p2 = its1->pt;
-  
+
         // Make sure we are going CCW
         if (v2f_cross(p0-p1, p2-p1) > 0.f) {
           lit_push_triangle(l, p0, p1, p2, l->color);
@@ -412,7 +412,7 @@ lit_gen_light_intersections(lit_light_t* l,
         ignore = true;
       }
     }
-    
+
     if (!ignore) {
       v2f_t p0 = its0->pt;
       v2f_t p1 = l->pos;
@@ -427,12 +427,12 @@ lit_gen_light_intersections(lit_light_t* l,
 }
 
 
-static void
+  static void
 lit_gen_lights(lit_light_t* lights, 
-               u32_t light_count,
-               lit_edge_t* edges,
-               u32_t edge_count,
-               arena_t* tmp_arena) 
+    u32_t light_count,
+    lit_edge_t* edges,
+    u32_t edge_count,
+    arena_t* tmp_arena) 
 {
   // Update all lights
   for(u32_t light_index = 0; light_index < light_count; ++light_index)
@@ -452,13 +452,13 @@ lit_draw_lights(lit_t* lit, lit_game_t* game) {
   {
     lit_light_t* light = game->lights + light_index;
     gfx_push_asset_sprite(gfx, &lit->assets, 
-                            game->filled_circle_sprite, 
-                            light->pos,
-                            v2f_set(16.f, 16.f),
-                            rgba_set(0.8f, 0.8f, 0.8f, 1.f));
+        game->filled_circle_sprite, 
+        light->pos,
+        v2f_set(16.f, 16.f),
+        rgba_set(0.8f, 0.8f, 0.8f, 1.f));
     gfx_advance_depth(gfx);
   }
- 
+
   //
   // Lights
   //
@@ -470,10 +470,10 @@ lit_draw_lights(lit_t* lit, lit_game_t* game) {
     {
       lit_light_triangle_t* lt = l->triangles + tri_index;
       gfx_draw_filled_triangle(gfx, 
-                               rgba_hex(l->color),
-                               lt->p0,
-                               lt->p1,
-                               lt->p2);
+          rgba_hex(l->color),
+          lt->p0,
+          lt->p1,
+          lt->p2);
     } 
     gfx_advance_depth(gfx);
   }
@@ -541,11 +541,11 @@ lit_player_hold_nearest_light(lit_game_t* game) {
   }
 }
 
-static void 
+  static void 
 lit_player_update(lit_t* lit, lit_game_t* game, f32_t dt) 
 {
   lit_player_t* player = &game->player; 
-  
+
   player->pos.x = input->mouse_pos.x;
   player->pos.y = LIT_HEIGHT - input->mouse_pos.y;
 
@@ -572,7 +572,7 @@ lit_player_update(lit_t* lit, lit_game_t* game, f32_t dt)
   //
   if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_RMB]))
   {
-    
+
     lit_player_hold_nearest_light(game);
     player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE;
     pf->hide_cursor();
@@ -635,16 +635,37 @@ lit_player_update(lit_t* lit, lit_game_t* game, f32_t dt)
   }
 }
 
-static void
+  static void
 lit_draw_player(lit_t* lit, lit_game_t* game)
 {
   lit_player_t* player = &game->player;
-  if (player->nearest_light) {
+
+
+  if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_NONE) { 
+    if (player->nearest_light) {
+      gfx_push_asset_sprite(gfx, &lit->assets,
+          game->circle_sprite, 
+          player->nearest_light->pos, 
+          v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
+      gfx_advance_depth(gfx);
+    }
+  }
+  else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE) {
     gfx_push_asset_sprite(gfx, &lit->assets,
-        game->circle_sprite, 
-        player->nearest_light->pos, 
+        game->rotate_sprite, 
+        player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
     gfx_advance_depth(gfx);
+
+  }
+  else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_MOVE) {
+    gfx_push_asset_sprite(gfx, &lit->assets,
+        game->move_sprite, 
+        player->held_light->pos, 
+        v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
+    gfx_advance_depth(gfx);
+
+
   }
 }
 
@@ -652,14 +673,14 @@ lit_draw_player(lit_t* lit, lit_game_t* game)
 //
 // Particles
 //
-static void
+  static void
 lit_spawn_particle(lit_game_t* game,
-                   f32_t lifespan,
-                   v2f_t pos, v2f_t vel,
-                   rgba_t color_start,
-                   rgba_t color_end,
-                   v2f_t size_start,
-                   v2f_t size_end) 
+    f32_t lifespan,
+    v2f_t pos, v2f_t vel,
+    rgba_t color_start,
+    rgba_t color_end,
+    v2f_t size_start,
+    v2f_t size_end) 
 {
   lit_particle_pool_t* ps = &game->particles;
   if (ps->particle_count < array_count(ps->particles)) {
@@ -691,7 +712,7 @@ lit_update_particles(lit_game_t* game, f32_t dt) {
       p->pos += p->vel * dt;
       ++particle_id;
     }
-    
+
   }
 }
 
@@ -713,7 +734,7 @@ lit_render_particles(lit_t* lit, lit_game_t* game) {
     color.g = f32_lerp(p->color_start.g, p->color_end.g, lifespan_ratio);  
     color.b = f32_lerp(p->color_start.b, p->color_end.b, lifespan_ratio);  
     color.a = f32_lerp(p->color_start.a, p->color_end.a, lifespan_ratio);  
-  
+
     v2f_t size = {0};
     size.w = f32_lerp(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = f32_lerp(p->size_start.h , p->size_end.h, lifespan_ratio);
@@ -727,7 +748,7 @@ lit_render_particles(lit_t* lit, lit_game_t* game) {
 //
 // Sensors
 //
-static lit_sensor_t* 
+  static lit_sensor_t* 
 lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color) 
 {
   assert(game->sensor_count < array_count(game->sensors));
@@ -761,7 +782,7 @@ lit_push_rotating_rotating_sensor(
 }
 #endif
 
-static void
+  static void
 lit_push_rotating_sensor(
     lit_game_t* game, 
     f32_t pos_x, 
@@ -775,7 +796,7 @@ lit_push_rotating_sensor(
 
 }
 
-static void
+  static void
 lit_push_patrolling_sensor_waypoint(
     lit_game_t* game, 
     f32_t pos_x, 
@@ -786,7 +807,7 @@ lit_push_patrolling_sensor_waypoint(
 }
 
 
-static void
+  static void
 lit_begin_patrolling_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color, f32_t duration_per_waypoint) 
 {
   assert(!game->selected_animator);
@@ -797,7 +818,7 @@ lit_begin_patrolling_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t ta
   assert(game->animator_count < array_count(game->animators));
   auto* anim = game->animators + game->animator_count++;
   anim->type = LIT_ANIMATOR_TYPE_PATROL_POINT;
-  
+
   auto* a = &anim->move_point;
   a->timer = 0.f;
   a->duration = duration_per_waypoint;
@@ -828,7 +849,7 @@ lit_end_patrolling_sensor(lit_game_t* game) {
 }
 
 #if 0
-static void
+  static void
 lit_push_patrolling_sensor(lit_game_t* game, f32_t duration, v2f_t start, v2f_t end, u32_t target_color) 
 {
   auto* s = lit_push_sensor(game, start.x, start.y, target_color); 
@@ -836,7 +857,7 @@ lit_push_patrolling_sensor(lit_game_t* game, f32_t duration, v2f_t start, v2f_t 
 }
 #endif
 
-static void 
+  static void 
 lit_update_sensors(lit_game_t* game, f32_t dt) 
 {
   lit_particle_pool_t* particles = &game->particles;
@@ -847,12 +868,12 @@ lit_update_sensors(lit_game_t* game, f32_t dt)
   {
     lit_sensor_t* sensor = game->sensors + sensor_index;
     u32_t current_color = 0x0000000;
-    
+
     // For each light, for each triangle, add light
     for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
     {
       lit_light_t* light = game->lights +light_index;
-      
+
       for(u32_t tri_index = 0; tri_index < light->triangle_count; ++tri_index)
       {
         lit_light_triangle_t* tri = light->triangles +tri_index;
@@ -862,7 +883,7 @@ lit_update_sensors(lit_game_t* game, f32_t dt)
           break; // ignore the rest of the triangles
         }
       }
-    
+
     }
 
     // Sensor color check
@@ -893,13 +914,13 @@ lit_update_sensors(lit_game_t* game, f32_t dt)
       v2f_t size_end = v2f_zero();
 
       lit_spawn_particle(game, 
-                         1.f,
-                         sensor->pos,
-                         particle_vel,
-                         start_color,
-                         end_color,
-                         size_start,
-                         size_end);
+          1.f,
+          sensor->pos,
+          particle_vel,
+          start_color,
+          end_color,
+          size_start,
+          size_end);
     }
   }
 }
@@ -922,12 +943,12 @@ lit_render_sensors(lit_t* lit, lit_game_t* game) {
     sb8_make(sb, 128);
     sb8_push_fmt(sb, str8_from_lit("[%X]"), sensor->current_color);
     paint_text(painter,
-               FONT_DEFAULT, 
-               sb->str,
-               rgba_hex(0xFFFFFFFF),
-               sensor->pos.x - 100.f,
-               sensor->pos.y + 10.f,
-               32.f);
+        FONT_DEFAULT, 
+        sb->str,
+        rgba_hex(0xFFFFFFFF),
+        sensor->pos.x - 100.f,
+        sensor->pos.y + 10.f,
+        32.f);
 #endif
 
     gfx_advance_depth(gfx);
@@ -957,8 +978,8 @@ lit_generate_light(lit_t* lit, lit_game_t* game) {
 #if LIT_DEBUG_INTERSECTIONS
     // Generate debug lines
     for (u32_t intersection_index = 0;
-         intersection_index < light->intersection_count;
-         ++intersection_index)
+        intersection_index < light->intersection_count;
+        ++intersection_index)
     {
       v2f_t p0 = light->pos;
       v2f_t p1 = light->intersections[intersection_index].pt;
@@ -968,7 +989,7 @@ lit_generate_light(lit_t* lit, lit_game_t* game) {
   }
 }
 
-static void
+  static void
 lit_update_game(lit_t* lit, lit_game_t* game) 
 {
   lit_player_t* player = &game->player;
@@ -1050,7 +1071,7 @@ lit_update_game(lit_t* lit, lit_game_t* game)
 
 }
 
-static void
+  static void
 lit_init_game(lit_t* lit, lit_game_t* game) 
 {
   lit_load_level(game, lit->level_to_start); 
@@ -1062,13 +1083,15 @@ lit_init_game(lit_t* lit, lit_game_t* game)
 
   game->blank_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
   game->circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
+  game->move_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_MOVE_SPRITE);
+  game->rotate_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_ROTATE_SPRITE);
   game->filled_circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
   game->current_level_id = 0;
 
-  
+
 }
 
-static void 
+  static void 
 lit_render_game(lit_t* lit, lit_game_t* game) 
 {
   // This is the default and happier blend mode
@@ -1080,11 +1103,14 @@ lit_render_game(lit_t* lit, lit_game_t* game)
     lit_draw_player(lit, game);
   }
   lit_draw_lights(lit, game);
-  
+
   gfx_set_blend_alpha(gfx);
 
   lit_render_sensors(lit, game); 
-  lit_render_particles(lit, game);
+
+  if (!lit_is_state_exiting(game)) {
+    lit_render_particles(lit, game);
+  }
 
 #if LIT_DEBUG_COORDINATES 
   // Debug coordinates
