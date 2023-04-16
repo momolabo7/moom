@@ -196,28 +196,25 @@ typedef struct {
 } OGL_Texture;
 
 
-typedef struct {
+struct ogl_sprite_batch_t{
   GLuint buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; // Opengl__VBO_Count
   GLuint shader;
   GLuint model; 
-
   GLuint current_texture;
   GLsizei instances_to_draw;
   GLsizei last_drawn_instance_index;
   GLuint current_instance_index;
-} Sprite_Batch;
+};
 
 
-typedef struct {
+struct ogl_triangle_batch_t{
   GLuint buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT];
   GLuint shader;
   GLuint model;
-
   GLsizei instances_to_draw;
   GLsizei last_drawn_instance_index;
   GLuint current_instance_index;
-
-} Triangle_Batch;
+};
 
 struct Opengl {
   gfx_t gfx; // Must be first member
@@ -229,8 +226,8 @@ struct Opengl {
   u32_t region_x1;
   u32_t region_y1;
 
-  Sprite_Batch sprite_batch;
-  Triangle_Batch triangle_batch;
+  ogl_sprite_batch_t sprite_batch;
+  ogl_triangle_batch_t triangle_batch;
 
   OGL_Texture textures[GFX_MAX_TEXTURES];
 
@@ -302,7 +299,7 @@ struct ogl_uv_t {
 
 static void 
 ogl_flush_sprites(Opengl* ogl) {
-  Sprite_Batch* sb = &ogl->sprite_batch;
+  ogl_sprite_batch_t* sb = &ogl->sprite_batch;
   assert(sb->instances_to_draw + sb->last_drawn_instance_index < OGL_MAX_SPRITES);
 
   if (sb->instances_to_draw > 0) {
@@ -334,7 +331,7 @@ ogl_push_triangle(Opengl* ogl,
     m44f_t transform,
     rgba_t colors)
 {
-  Triangle_Batch* tb = &ogl->triangle_batch;
+  ogl_triangle_batch_t* tb = &ogl->triangle_batch;
 
   ogl->glNamedBufferSubData(
       tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS], 
@@ -358,7 +355,7 @@ ogl_push_triangle(Opengl* ogl,
 
 static void 
 ogl_flush_triangles(Opengl* ogl) {
-  Triangle_Batch* tb = &ogl->triangle_batch;
+  ogl_triangle_batch_t* tb = &ogl->triangle_batch;
   assert(tb->instances_to_draw + tb->last_drawn_instance_index < OGL_MAX_TRIANGLES);
 
   if (tb->instances_to_draw > 0) {
@@ -387,13 +384,13 @@ ogl_push_sprite(
     ogl_uv_t uv,
     GLuint texture) 
 {
-  Sprite_Batch* sb = &ogl->sprite_batch;
+  ogl_sprite_batch_t* sb = &ogl->sprite_batch;
   if (sb->current_texture != texture) {
     ogl_flush_sprites(ogl);
     sb->current_texture = texture;
   }
 
-  
+
   // TODO: Take in an array of 4 colors
   rgba_t color_per_vertex[] = {
     color, color, color, color
@@ -432,7 +429,7 @@ ogl_push_sprite(
 
 static void 
 ogl_begin_sprites(Opengl* ogl) {
-  Sprite_Batch* sb = &ogl->sprite_batch;
+  ogl_sprite_batch_t* sb = &ogl->sprite_batch;
 
   sb->current_texture = 0;
   sb->instances_to_draw = 0;
@@ -442,7 +439,7 @@ ogl_begin_sprites(Opengl* ogl) {
 
 static void 
 ogl_begin_triangles(Opengl* ogl) {
-  Triangle_Batch* tb = &ogl->triangle_batch;
+  ogl_triangle_batch_t* tb = &ogl->triangle_batch;
 
   tb->instances_to_draw = 0;
   tb->last_drawn_instance_index = 0;
@@ -594,9 +591,29 @@ ogl_add_predefined_textures(Opengl* ogl) {
 
 }
 
+#define OGL_TRIANGLE_VSHADER "\
+#version 450 core \n\
+layout(location=0) in vec3 aModelVtx; \n\
+layout(location=1) in vec4 aColor; \n\
+layout(location=2) in mat4 aTransform; \n\
+out vec4 mColor; \n\
+uniform mat4 uProjection; \n\
+void main(void) { \n\
+  gl_Position = uProjection * aTransform *  vec4(aModelVtx, 1.0); \n\
+  mColor = aColor;\n\
+}"
+
+#define OGL_TRIANGLE_FSHADER "\
+#version 450 core \n\
+in vec4 mColor;\n\
+out vec4 FragColor;\n\
+void main(void) {\n\
+  FragColor = mColor;\n\
+}"
+
 static b32_t
 ogl_init_triangle_batch(Opengl* ogl) {
-  Triangle_Batch* tb = &ogl->triangle_batch;
+  ogl_triangle_batch_t* tb = &ogl->triangle_batch;
 
   // Triangle model
   // TODO(Momo): shift this somewhere else
@@ -610,31 +627,8 @@ ogl_init_triangle_batch(Opengl* ogl) {
     0, 2, 1
   };
 
-  char *vertex_shader_src = R"###(
-#version 450 core
-layout(location=0) in vec3 aModelVtx; 
-layout(location=1) in vec4 aColor;
-layout(location=2) in mat4 aTransform;
-out vec4 mColor;
-uniform mat4 uProjection;
 
-void main(void) {
-   gl_Position = uProjection * aTransform *  vec4(aModelVtx, 1.0);
-   mColor = aColor;
-
-})###";
-
-  char *fragment_shader_src = R"###(
-#version 450 core
-in vec4 mColor;
-out vec4 FragColor;
-
-void main(void)
-{
-  //FragColor = vec4(1.f, 0.f, 0.f, 1.f);
-  FragColor = mColor;
-})###";
-
+  const u32_t vertex_count = array_count(triangle_model)/3;
 
   // VBOs
   ogl->glCreateBuffers(OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT, tb->buffers);
@@ -643,176 +637,145 @@ void main(void)
       triangle_model, 
       0);
 
-ogl->glNamedBufferStorage(tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES], 
-    sizeof(triangle_indices), 
-    triangle_indices, 
-    0);
+  ogl->glNamedBufferStorage(tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES], 
+      sizeof(triangle_indices), 
+      triangle_indices, 
+      0);
 
-ogl->glNamedBufferStorage(tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS], 
-    sizeof(v4f_t) * OGL_MAX_TRIANGLES, 
-    nullptr, 
-    GL_DYNAMIC_STORAGE_BIT);
+  ogl->glNamedBufferStorage(tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS], 
+      sizeof(v4f_t) * OGL_MAX_TRIANGLES, 
+      nullptr, 
+      GL_DYNAMIC_STORAGE_BIT);
 
-ogl->glNamedBufferStorage(tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
-    sizeof(m44f_t) * OGL_MAX_TRIANGLES, 
-    nullptr, 
-    GL_DYNAMIC_STORAGE_BIT);
-
-
-//VAOs
-ogl->glCreateVertexArrays(1, &tb->model);
-ogl->glVertexArrayVertexBuffer(tb->model, 
-    OGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL, 
-    tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL], 
-    0, 
-    sizeof(v3f_t));
-
-ogl->glVertexArrayVertexBuffer(tb->model, 
-    OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 
-    tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS],  
-    0, 
-    sizeof(v4f_t));
-
-ogl->glVertexArrayVertexBuffer(tb->model, 
-    OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
-    tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
-    0, 
-    sizeof(m44f_t));
+  ogl->glNamedBufferStorage(tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
+      sizeof(m44f_t) * OGL_MAX_TRIANGLES, 
+      nullptr, 
+      GL_DYNAMIC_STORAGE_BIT);
 
 
-// Attributes
-// aModelVtx
-ogl->glEnableVertexArrayAttrib(tb->model, OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
-ogl->glVertexArrayAttribFormat(tb->model, 
-    OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
-    3, 
-    GL_FLOAT, 
-    GL_FALSE, 
-    0);
+  //VAOs
+  ogl->glCreateVertexArrays(1, &tb->model);
+  ogl->glVertexArrayVertexBuffer(tb->model, 
+      OGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL, 
+      tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL], 
+      0, 
+      sizeof(v3f_t));
 
-ogl->glVertexArrayAttribBinding(tb->model, 
-    OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
-    OGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL);
+  ogl->glVertexArrayVertexBuffer(tb->model, 
+      OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 
+      tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS],  
+      0, 
+      sizeof(v4f_t));
 
-// aColor
-ogl->glEnableVertexArrayAttrib(tb->model, OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS); 
-ogl->glVertexArrayAttribFormat(tb->model, 
-    OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
-    4, 
-    GL_FLOAT, GL_FALSE, 0);
-ogl->glVertexArrayAttribBinding(tb->model, 
-    OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
-    OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
-
-ogl->glVertexArrayBindingDivisor(tb->model, OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 1); 
+  ogl->glVertexArrayVertexBuffer(tb->model, 
+      OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
+      tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
+      0, 
+      sizeof(m44f_t));
 
 
+  // Attributes
+  // aModelVtx
+  ogl->glEnableVertexArrayAttrib(tb->model, OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
+  ogl->glVertexArrayAttribFormat(tb->model, 
+      OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
+      3, 
+      GL_FLOAT, 
+      GL_FALSE, 
+      0);
 
-// aTransform
-ogl->glEnableVertexArrayAttrib(tb->model, OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1); 
-ogl->glVertexArrayAttribFormat(tb->model, 
-    OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, 
-    4, 
-    GL_FLOAT, 
-    GL_FALSE, 
-    sizeof(f32_t) * 0 * 4);
-ogl->glEnableVertexArrayAttrib(tb->model, OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2);
-ogl->glVertexArrayAttribFormat(tb->model, 
-    OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, 
-    4, 
-    GL_FLOAT, 
-    GL_FALSE, 
-    sizeof(f32_t) * 1 * 4);
-ogl->glEnableVertexArrayAttrib(tb->model, OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3); 
-ogl->glVertexArrayAttribFormat(tb->model, 
-    OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, 
-    4, 
-    GL_FLOAT, 
-    GL_FALSE, 
-    sizeof(f32_t) * 2 * 4);
-ogl->glEnableVertexArrayAttrib(tb->model, OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4); 
-ogl->glVertexArrayAttribFormat(tb->model, 
-    OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4,
-    4, 
-    GL_FLOAT, 
-    GL_FALSE, 
-    sizeof(f32_t) * 3 * 4);
+  ogl->glVertexArrayAttribBinding(tb->model, 
+      OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
+      OGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL);
 
-ogl->glVertexArrayAttribBinding(tb->model, 
-    OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, 
-    OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM);
-ogl->glVertexArrayAttribBinding(tb->model, 
-    OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, 
-    OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM);
-ogl->glVertexArrayAttribBinding(tb->model, 
-    OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, 
-    OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM);
-ogl->glVertexArrayAttribBinding(tb->model, 
-    OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4, 
-    OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM);
+  // aColor
+  ogl->glEnableVertexArrayAttrib(tb->model, OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS); 
+  ogl->glVertexArrayAttribFormat(tb->model, 
+      OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
+      4, 
+      GL_FLOAT, GL_FALSE, 0);
+  ogl->glVertexArrayAttribBinding(tb->model, 
+      OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
+      OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
 
-ogl->glVertexArrayBindingDivisor(tb->model, 
-    OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
-    1); 
-
-// NOTE(Momo): Setup indices
-ogl->glVertexArrayElementBuffer(tb->model, 
-    tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES]);
+  ogl->glVertexArrayBindingDivisor(tb->model, OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 1); 
 
 
-// TODO(Momo): //BeginShader/EndShader?
-tb->shader = ogl->glCreateProgram();
-ogl_attach_shader(ogl, tb->shader,
-    GL_VERTEX_SHADER,
-    vertex_shader_src);
-ogl_attach_shader(ogl, tb->shader,
-    GL_FRAGMENT_SHADER,
-    fragment_shader_src);
 
-ogl->glLinkProgram(tb->shader);
-GLint result;
-ogl->glGetProgramiv(tb->shader, GL_LINK_STATUS, &result);
-if (result != GL_TRUE) {
-  char msg[kilobytes(1)] = {};
-  ogl->glGetProgramInfoLog(tb->shader, sizeof(msg), nullptr, msg);
-  return false;
+  // aTransform
+  for (u32_t cols = 0; cols < 4; ++cols) {
+    u32_t attrib_type = OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1 + cols;
+    ogl->glEnableVertexArrayAttrib(tb->model, attrib_type); 
+    ogl->glVertexArrayAttribFormat(tb->model, 
+        attrib_type, 
+        4, 
+        GL_FLOAT, 
+        GL_FALSE, 
+        sizeof(v4f_t) * cols);
+
+    ogl->glVertexArrayAttribBinding(tb->model, 
+        attrib_type, 
+        OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM);
+  }
+
+  ogl->glVertexArrayBindingDivisor(tb->model, 
+      OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
+      1); 
+
+  // NOTE(Momo): Setup indices
+  ogl->glVertexArrayElementBuffer(tb->model, 
+      tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES]);
+
+
+  // TODO(Momo): //BeginShader/EndShader?
+  tb->shader = ogl->glCreateProgram();
+  ogl_attach_shader(ogl, tb->shader,
+      GL_VERTEX_SHADER,
+      OGL_TRIANGLE_VSHADER);
+  ogl_attach_shader(ogl, tb->shader,
+      GL_FRAGMENT_SHADER,
+      OGL_TRIANGLE_FSHADER);
+
+  ogl->glLinkProgram(tb->shader);
+  GLint result;
+  ogl->glGetProgramiv(tb->shader, GL_LINK_STATUS, &result);
+  if (result != GL_TRUE) {
+    char msg[kilobytes(1)] = {};
+    ogl->glGetProgramInfoLog(tb->shader, sizeof(msg), nullptr, msg);
+    return false;
+  }
+  return true;
 }
-return true;
-}
+
+#define OGL_SPRITE_VSHADER "\
+#version 450 core \n\
+layout(location=0) in vec3 aModelVtx;  \n\
+layout(location=1) in vec4 aColor[4]; \n\
+layout(location=5) in vec2 aTexCoord[4]; \n\
+layout(location=9) in mat4 aTransform; \n\
+out vec4 mColor;\n\
+out vec2 mTexCoord; \n\
+uniform mat4 uProjection; \n\
+void main(void) { \n\
+  gl_Position = uProjection * aTransform *  vec4(aModelVtx, 1.0); \n\
+  mColor = aColor[gl_VertexID]; \n\
+  mTexCoord = aTexCoord[gl_VertexID]; \n\
+}"
+
+#define OGL_SPRITE_FSHADER "\
+#version 450 core \n\
+out vec4 fragColor; \n\
+in vec4 mColor; \n\
+in vec2 mTexCoord; \n\
+uniform sampler2D uTexture; \n\
+void main(void) { \n\
+  fragColor = texture(uTexture, mTexCoord) * mColor;  \n\
+}"
 
 static b32_t 
 ogl_init_sprite_batch(Opengl* ogl) {
-  Sprite_Batch* sb = &ogl->sprite_batch;
+  ogl_sprite_batch_t* sb = &ogl->sprite_batch;
 
-  const char* vertex_shader = R"###(
-#version 450 core
-layout(location=0) in vec3 aModelVtx; 
-layout(location=1) in vec4 aColor[4];
-layout(location=5) in vec2 aTexCoord[4];
-layout(location=9) in mat4 aTransform;
-out vec4 mColor;
-out vec2 mTexCoord;
-uniform mat4 uProjection;
-
-void main(void) {
-   gl_Position = uProjection * aTransform *  vec4(aModelVtx, 1.0);
-   mColor = aColor[gl_VertexID];
-   mTexCoord = aTexCoord[gl_VertexID];
-   //mTexCoord.y = 1.0 - mTexCoord.y;
-
-
-})###";
-
-  const char* fragment_shader = R"###(
-#version 450 core
-out vec4 fragColor;
-in vec4 mColor;
-in vec2 mTexCoord;
-uniform sampler2D uTexture;
-
-void main(void) {
-   fragColor = texture(uTexture, mTexCoord) * mColor; 
-})###";
 
   const f32_t sprite_model[] = {
     -0.5f, -0.5f, 0.0f,  // bottom left
@@ -821,244 +784,186 @@ void main(void) {
     -0.5f,  0.5f, 0.0f,   // top left 
   };
 
-const u8_t sprite_indices[] = {
-  0, 1, 2,
-  0, 2, 3,
-};
+  const u8_t sprite_indices[] = {
+    0, 1, 2,
+    0, 2, 3,
+  };
 
-// NOTE(Momo): Setup VBO
-ogl->glCreateBuffers(OGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT, sb->buffers);
-ogl->glNamedBufferStorage(sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL], 
-    sizeof(sprite_model), 
-    sprite_model, 
-    0);
+  const u32_t vertex_count = array_count(sprite_model)/3;
 
-ogl->glNamedBufferStorage(
-    sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES], 
-    sizeof(sprite_indices), 
-    sprite_indices, 
-    0);
+  // NOTE(Momo): Setup VBO
+  ogl->glCreateBuffers(OGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT, sb->buffers);
+  ogl->glNamedBufferStorage(sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL], 
+      sizeof(sprite_model), 
+      sprite_model, 
+      0);
 
-ogl->glNamedBufferStorage(
-    sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE], 
-    sizeof(v2f_t) * 4 * OGL_MAX_SPRITES, 
-    nullptr, 
-    GL_DYNAMIC_STORAGE_BIT);
+  ogl->glNamedBufferStorage(
+      sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES], 
+      sizeof(sprite_indices), 
+      sprite_indices, 
+      0);
 
-ogl->glNamedBufferStorage(
-    sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS], 
-    sizeof(rgba_t) * 4 * OGL_MAX_SPRITES, 
-    nullptr, 
-    GL_DYNAMIC_STORAGE_BIT);
+  ogl->glNamedBufferStorage(
+      sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE], 
+      sizeof(v2f_t) * vertex_count * OGL_MAX_SPRITES, 
+      nullptr, 
+      GL_DYNAMIC_STORAGE_BIT);
 
-ogl->glNamedBufferStorage(
-    sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
-    sizeof(m44f_t) * OGL_MAX_SPRITES, 
-    nullptr, 
-    GL_DYNAMIC_STORAGE_BIT);
+  ogl->glNamedBufferStorage(
+      sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS], 
+      sizeof(rgba_t) * vertex_count * OGL_MAX_SPRITES, 
+      nullptr, 
+      GL_DYNAMIC_STORAGE_BIT);
 
-// NOTE(Momo): Setup VAO
-ogl->glCreateVertexArrays(1, &sb->model);
-ogl->glVertexArrayVertexBuffer(
-    sb->model, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL, 
-    sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL], 
-    0, 
-    sizeof(v3f_t));
+  ogl->glNamedBufferStorage(
+      sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
+      sizeof(m44f_t) * OGL_MAX_SPRITES, 
+      nullptr, 
+      GL_DYNAMIC_STORAGE_BIT);
 
-ogl->glVertexArrayVertexBuffer(
-    sb->model, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
-    sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE], 
-    0, 
-    sizeof(v2f_t) * 4);
-
-ogl->glVertexArrayVertexBuffer(
-    sb->model, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 
-    sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS],  
-    0, 
-    sizeof(rgba_t) * 4);
-
-ogl->glVertexArrayVertexBuffer(sb->model, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
-    sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
-    0, 
-    sizeof(m44f_t));
-
-// NOTE(Momo): Setup Attributes
-// aModelVtx
-ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
-ogl->glVertexArrayAttribFormat(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
-    3, 
-    GL_FLOAT, 
-    GL_FALSE, 
-    0);
-
-ogl->glVertexArrayAttribBinding(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL);
-
-// aColor
-for (u32_t i = 0; i < 4; ++i) {
-  u32_t attrib_type = OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1 + i;
-  ogl->glEnableVertexArrayAttrib(
+  // NOTE(Momo): Setup VAO
+  ogl->glCreateVertexArrays(1, &sb->model);
+  ogl->glVertexArrayVertexBuffer(
       sb->model, 
-      attrib_type); 
+      OGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL, 
+      sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL], 
+      0, 
+      sizeof(v3f_t));
 
-  ogl->glVertexArrayAttribFormat(
+  ogl->glVertexArrayVertexBuffer(
       sb->model, 
-      attrib_type,
-      4, 
+      OGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
+      sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE], 
+      0, 
+      sizeof(v2f_t) * vertex_count);
+
+  ogl->glVertexArrayVertexBuffer(
+      sb->model, 
+      OGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 
+      sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS],  
+      0, 
+      sizeof(rgba_t) * vertex_count);
+
+  ogl->glVertexArrayVertexBuffer(sb->model, 
+      OGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
+      sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
+      0, 
+      sizeof(m44f_t));
+
+  // NOTE(Momo): Setup Attributes
+  // aModelVtx
+  ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
+  ogl->glVertexArrayAttribFormat(sb->model, 
+      OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
+      3, 
       GL_FLOAT, 
       GL_FALSE, 
-      sizeof(rgba_t) * i);
-  
-  ogl->glVertexArrayAttribBinding(
+      0);
+
+  ogl->glVertexArrayAttribBinding(sb->model, 
+      OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
+      OGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL);
+
+  // aColor
+  for (u32_t vertex_index = 0; vertex_index < vertex_count; ++vertex_index) {
+    u32_t attrib_type = OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1 + vertex_index;
+    ogl->glEnableVertexArrayAttrib(
+        sb->model, 
+        attrib_type); 
+
+    ogl->glVertexArrayAttribFormat(
+        sb->model, 
+        attrib_type,
+        4, 
+        GL_FLOAT, 
+        GL_FALSE, 
+        sizeof(rgba_t) * vertex_index);
+
+    ogl->glVertexArrayAttribBinding(
+        sb->model, 
+        attrib_type,
+        OGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS);
+
+  }
+
+  ogl->glVertexArrayBindingDivisor(sb->model, OGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 1); 
+
+  // aTexCoord
+  for (u32_t vertex_index = 0; vertex_index < vertex_count; ++vertex_index) {
+    u32_t attrib_type = OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1 + vertex_index;
+    ogl->glEnableVertexArrayAttrib(sb->model, attrib_type); 
+    ogl->glVertexArrayAttribFormat(
+        sb->model, 
+        attrib_type, 
+        2, 
+        GL_FLOAT, 
+        GL_FALSE,
+        sizeof(v2f_t) * vertex_index);
+
+
+    ogl->glVertexArrayAttribBinding(
+        sb->model, 
+        attrib_type,
+        OGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE);
+  }
+
+  ogl->glVertexArrayBindingDivisor(sb->model, 
+      OGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
+      1); 
+
+
+  // aTransform
+  // NOTE(momo): this actually has nothing to do with vertex count.
+  for (u32_t cols = 0; cols < 4; ++cols) {
+
+    u32_t attrib_type = OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1 + cols;
+
+    ogl->glEnableVertexArrayAttrib(sb->model, attrib_type); 
+    ogl->glVertexArrayAttribFormat(sb->model, 
+        attrib_type, 
+        4, 
+        GL_FLOAT, 
+        GL_FALSE, 
+        sizeof(f32_t) * cols * 4);
+
+    ogl->glVertexArrayAttribBinding(
+        sb->model, 
+        attrib_type, 
+        OGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM);
+  }
+
+  ogl->glVertexArrayBindingDivisor(
       sb->model, 
-      attrib_type,
-      OGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS);
-
-}
-  
-ogl->glVertexArrayBindingDivisor(sb->model, OGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 1); 
-
-// aTexCoord
-// TODO: Please put this in a loop
-ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1); 
-ogl->glVertexArrayAttribFormat(
-    sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1, 
-    2, 
-    GL_FLOAT, 
-    GL_FALSE,
-    sizeof(v2f_t) * 0);
-
-ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2); 
-ogl->glVertexArrayAttribFormat(
-    sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2, 
-    2, 
-    GL_FLOAT, 
-    GL_FALSE, 
-    sizeof(v2f_t) * 1);
-
-ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3); 
-ogl->glVertexArrayAttribFormat(
-    sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3, 
-    2, 
-    GL_FLOAT, 
-    GL_FALSE, 
-    sizeof(v2f_t) * 2);
-
-ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4); 
-ogl->glVertexArrayAttribFormat(
-    sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4, 
-    2, 
-    GL_FLOAT, 
-    GL_FALSE, 
-    sizeof(v2f_t) * 3);
-
-ogl->glVertexArrayAttribBinding(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE);
-
-ogl->glVertexArrayAttribBinding(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE);
-
-ogl->glVertexArrayAttribBinding(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE);
-
-ogl->glVertexArrayAttribBinding(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE);
-
-ogl->glVertexArrayBindingDivisor(sb->model, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
-    1); 
+      OGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
+      1); 
 
 
-// aTransform
-// TODO: Please put this in a loop
-ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1); 
-ogl->glVertexArrayAttribFormat(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, 
-    4, 
-    GL_FLOAT, 
-    GL_FALSE, 
-    sizeof(f32_t) * 0 * 4);
-ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2);
-ogl->glVertexArrayAttribFormat(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, 
-    4, 
-    GL_FLOAT, 
-    GL_FALSE, 
-    sizeof(f32_t) * 1 * 4);
-ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3); 
-ogl->glVertexArrayAttribFormat(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, 
-    4, 
-    GL_FLOAT, 
-    GL_FALSE, 
-    sizeof(f32_t) * 2 * 4);
-ogl->glEnableVertexArrayAttrib(sb->model, OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4); 
-ogl->glVertexArrayAttribFormat(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4,
-    4, 
-    GL_FLOAT, 
-    GL_FALSE, 
-    sizeof(f32_t) * 3 * 4);
+  // NOTE(Momo): Setup indices
+  ogl->glVertexArrayElementBuffer(sb->model, 
+      sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES]);
 
-ogl->glVertexArrayAttribBinding(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM);
-ogl->glVertexArrayAttribBinding(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM);
-ogl->glVertexArrayAttribBinding(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM);
-ogl->glVertexArrayAttribBinding(sb->model, 
-    OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM);
+  // NOTE(Momo): Setup shader Program
+  sb->shader = ogl->glCreateProgram();
+  ogl_attach_shader(ogl,
+      sb->shader, 
+      GL_VERTEX_SHADER, 
+      (char*)OGL_SPRITE_VSHADER);
+  ogl_attach_shader(ogl,
+      sb->shader, 
+      GL_FRAGMENT_SHADER, 
+      (char*)OGL_SPRITE_FSHADER);
 
-ogl->glVertexArrayBindingDivisor(sb->model, 
-    OGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
-    1); 
+  ogl->glLinkProgram(sb->shader);
 
-
-// NOTE(Momo): Setup indices
-ogl->glVertexArrayElementBuffer(sb->model, 
-    sb->buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES]);
-
-
-
-// NOTE(Momo): Setup shader Program
-sb->shader = ogl->glCreateProgram();
-ogl_attach_shader(ogl,
-    sb->shader, 
-    GL_VERTEX_SHADER, 
-    (char*)vertex_shader);
-ogl_attach_shader(ogl,
-    sb->shader, 
-    GL_FRAGMENT_SHADER, 
-    (char*)fragment_shader);
-
-ogl->glLinkProgram(sb->shader);
-
-GLint Result;
-ogl->glGetProgramiv(sb->shader, GL_LINK_STATUS, &Result);
-if (Result != GL_TRUE) {
-  char msg[kilobytes(1)];
-  ogl->glGetProgramInfoLog(sb->shader, sizeof(msg), nullptr, msg);
-  return false;
-}
-return true;
+  GLint Result;
+  ogl->glGetProgramiv(sb->shader, GL_LINK_STATUS, &Result);
+  if (Result != GL_TRUE) {
+    char msg[kilobytes(1)];
+    ogl->glGetProgramInfoLog(sb->shader, sizeof(msg), nullptr, msg);
+    return false;
+  }
+  return true;
 }
 
 
@@ -1252,7 +1157,7 @@ ogl_end_frame(Opengl* ogl) {
         // TODO: Do we share shaders? Or just have a 'view' shader?
         m44f_t result = m44f_transpose(p*v);
         {
-          Sprite_Batch* sb = &ogl->sprite_batch;
+          ogl_sprite_batch_t* sb = &ogl->sprite_batch;
           GLint uProjectionLoc = ogl->glGetUniformLocation(sb->shader,
               "uProjection");
           ogl->glProgramUniformMatrix4fv(sb->shader, 
@@ -1263,7 +1168,7 @@ ogl_end_frame(Opengl* ogl) {
         }
 
         {
-          Triangle_Batch* tb = &ogl->triangle_batch;
+          ogl_triangle_batch_t* tb = &ogl->triangle_batch;
           GLint uProjectionLoc = ogl->glGetUniformLocation(tb->shader,
               "uProjection");
           ogl->glProgramUniformMatrix4fv(tb->shader, 
@@ -1338,7 +1243,7 @@ ogl_end_frame(Opengl* ogl) {
 
 
 #if 0
-        Triangle_Batch* tb = &ogl->triangle_batch;
+        ogl_triangle_batch_t* tb = &ogl->triangle_batch;
 
         ogl->glBindVertexArray(tb->model);
         ogl->glUseProgram(tb->shader);
