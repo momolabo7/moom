@@ -168,11 +168,13 @@ enum {
 
 enum{ 
   OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL,    // 0 
-  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS,   // 1
-  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 6
-  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 7
-  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 8
-  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 9
+  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,   // 1
+  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,   // 2
+  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,   // 3
+  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 4
+  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 5
+  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 6
+  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 7
 };
 
 enum {
@@ -326,18 +328,33 @@ ogl_flush_sprites(Opengl* ogl) {
   }
 }
 
-  static void 
+static void 
 ogl_push_triangle(Opengl* ogl, 
     m44f_t transform,
-    rgba_t colors)
+    rgba_t color)
 {
   ogl_triangle_batch_t* tb = &ogl->triangle_batch;
 
+  // TODO: Take in an array of 3 colors
+#if 1 
+  rgba_t color_per_vertex[] = {
+    color, 
+    color, 
+    color,
+  };
+#else
+  rgba_t color_per_vertex[] = {
+    rgba_set(1,0,0,1), 
+    rgba_set(0,1,0,1), 
+    rgba_set(0,0,1,1),
+  };
+#endif
+
   ogl->glNamedBufferSubData(
       tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS], 
-      tb->current_instance_index * sizeof(v4f_t),
-      sizeof(v4f_t), 
-      &colors);
+      tb->current_instance_index * sizeof(color_per_vertex),
+      sizeof(color_per_vertex), 
+      &color_per_vertex);
 
   // NOTE(Momo): m44f_transpose; moe is row-major
   m44f_t ogl_transform = m44f_transpose(transform);
@@ -594,13 +611,13 @@ ogl_add_predefined_textures(Opengl* ogl) {
 #define OGL_TRIANGLE_VSHADER "\
 #version 450 core \n\
 layout(location=0) in vec3 aModelVtx; \n\
-layout(location=1) in vec4 aColor; \n\
-layout(location=2) in mat4 aTransform; \n\
+layout(location=1) in vec4 aColor[3]; \n\
+layout(location=4) in mat4 aTransform; \n\
 out vec4 mColor; \n\
 uniform mat4 uProjection; \n\
 void main(void) { \n\
   gl_Position = uProjection * aTransform *  vec4(aModelVtx, 1.0); \n\
-  mColor = aColor;\n\
+  mColor = aColor[gl_VertexID];\n\
 }"
 
 #define OGL_TRIANGLE_FSHADER "\
@@ -689,6 +706,27 @@ ogl_init_triangle_batch(Opengl* ogl) {
       OGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL);
 
   // aColor
+  for (u32_t vertex_index = 0; vertex_index < vertex_count; ++vertex_index) {
+    u32_t attrib_type = OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1 + vertex_index;
+    ogl->glEnableVertexArrayAttrib(
+        tb->model, 
+        attrib_type); 
+
+    ogl->glVertexArrayAttribFormat(
+        tb->model, 
+        attrib_type,
+        4, 
+        GL_FLOAT, 
+        GL_FALSE, 
+        sizeof(rgba_t) * vertex_index);
+
+    ogl->glVertexArrayAttribBinding(
+        tb->model, 
+        attrib_type,
+        OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
+
+  }
+#if 0
   ogl->glEnableVertexArrayAttrib(tb->model, OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS); 
   ogl->glVertexArrayAttribFormat(tb->model, 
       OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
@@ -697,6 +735,7 @@ ogl_init_triangle_batch(Opengl* ogl) {
   ogl->glVertexArrayAttribBinding(tb->model, 
       OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
       OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
+#endif
 
   ogl->glVertexArrayBindingDivisor(tb->model, OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 1); 
 

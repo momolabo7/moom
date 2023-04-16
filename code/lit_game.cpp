@@ -509,6 +509,8 @@ static void
 lit_player_release_light(lit_game_t* game) {
   lit_player_t* player = &game->player;
   player->held_light = nullptr;
+  player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
+  pf->show_cursor();
 }
 
 static void
@@ -529,14 +531,19 @@ lit_player_find_nearest_light(lit_game_t* game) {
 
 
 static void
-lit_player_hold_nearest_light(lit_game_t* game) {
+lit_player_hold_nearest_light_if_empty_handed(
+    lit_game_t* game, 
+    lit_player_light_hold_mode_t light_hold_mode) 
+{
   lit_player_t* player = &game->player;
 
-  if (player->held_light == nullptr) {
+  if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_NONE) {
     if (player->nearest_light) {          
       player->held_light = player->nearest_light;
       player->old_light_pos = player->nearest_light->pos;
       player->light_retrival_time = 0.f;
+      player->light_hold_mode = light_hold_mode;
+      pf->hide_cursor();
     }
   }
 }
@@ -555,16 +562,12 @@ lit_player_update(lit_t* lit, lit_game_t* game, f32_t dt)
   // Move light logic
   //
   if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_LMB])) {
-    lit_player_hold_nearest_light(game);
-    player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_MOVE;
-    pf->hide_cursor();
+    lit_player_hold_nearest_light_if_empty_handed(game, LIT_PLAYER_LIGHT_HOLD_MODE_MOVE);
   }
 
   else if (input_is_button_released(input->buttons[INPUT_BUTTON_CODE_LMB]))
   {
     lit_player_release_light(game);
-    player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
-    pf->show_cursor();
   }
 
   //
@@ -572,19 +575,14 @@ lit_player_update(lit_t* lit, lit_game_t* game, f32_t dt)
   //
   if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_RMB]))
   {
-
-    lit_player_hold_nearest_light(game);
-    player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE;
-    pf->hide_cursor();
+    lit_player_hold_nearest_light_if_empty_handed(game, LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE);
     pf->lock_cursor();
     player->locked_pos_x = player->pos.x;
 
   }
   else if (input_is_button_released(input->buttons[INPUT_BUTTON_CODE_RMB])) 
   {
-    pf->show_cursor();
     lit_player_release_light(game);
-    player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
     pf->unlock_cursor();
   }
 
