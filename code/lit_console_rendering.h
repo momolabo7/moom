@@ -1,6 +1,6 @@
 
 static void
-lit_update_and_render_console(lit_t* lit) 
+lit_update_and_render_console() 
 {
   console_t* console = &lit->console;
   assets_t* assets = &lit->assets;

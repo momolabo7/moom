@@ -5,7 +5,7 @@
 
 
 static void 
-inspector_update_and_render(lit_t* lit) 
+inspector_update_and_render() 
 {
   inspector_t* inspector = &lit->inspector;
   assets_t* assets = &lit->assets;

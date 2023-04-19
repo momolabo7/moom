@@ -2,9 +2,7 @@
 
 
 static void
-lit_menu_init(
-    lit_t* lit, 
-    lit_menu_t* menu) 
+lit_menu_init(lit_menu_t* menu) 
 {
   make(asset_match_t, match);
   set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
@@ -43,7 +41,6 @@ lit_menu_init(
 
 static void
 lit_menu_draw_rect(
-    lit_t* lit, 
     lit_menu_t* menu,
     v2f_t pos,
     v2f_t size, 
@@ -96,7 +93,6 @@ lit_menu_draw_rect(
 
 static void
 lit_menu_tick_transition_in(
-    lit_t* lit, 
     lit_menu_t* menu, 
     f32_t dt)
 {
@@ -109,7 +105,6 @@ lit_menu_tick_transition_in(
 
 static void
 lit_menu_tick_transition_out(
-    lit_t* lit, 
     lit_menu_t* menu, 
     f32_t dt)
 {
@@ -117,13 +112,12 @@ lit_menu_tick_transition_out(
   if (menu->overlay_timer >= LIT_MENU_TRANSITION_DURATION) {
     menu->overlay_timer = LIT_MENU_TRANSITION_DURATION;
 
-    lit_goto_specific_level(lit, 0); // TODO: change to appropriate level
+    lit_goto_specific_level(0); // TODO: change to appropriate level
   }
 }
 
 static void 
 lit_menu_tick_normal(
-    lit_t* lit, 
     lit_menu_t* menu, 
     f32_t dt)
 {
@@ -187,14 +181,12 @@ lit_menu_tick_normal(
 
 static void 
 lit_menu_button_render(
-    lit_t* lit, 
     lit_menu_t* menu, 
     lit_menu_button_t* btn) 
 {
   // Frame
   rgba_t frame_color = rgba_set(0.5f, 0.5f, 0.5f, 1.f);
   lit_menu_draw_rect(
-      lit, 
       menu, 
       btn->xy, 
       btn->wh * btn->scale, 
@@ -228,18 +220,18 @@ lit_menu_button_render(
 }
 
 static void
-lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
+lit_menu_tick(lit_menu_t* menu) {
   f32_t dt = input->delta_time;
 
   if (menu->mode == LIT_MENU_MODE_TRANSITION_IN) {
-    lit_menu_tick_transition_in(lit, menu, dt);
+    lit_menu_tick_transition_in(menu, dt);
   }
   else if (menu->mode == LIT_MENU_MODE_TRANSITION_OUT) {
-    lit_menu_tick_transition_out(lit, menu, dt);
+    lit_menu_tick_transition_out(menu, dt);
     
   }
   else if (menu->mode == LIT_MENU_MODE_NORMAL) {
-    lit_menu_tick_normal(lit, menu, dt);
+    lit_menu_tick_normal(menu, dt);
   }
   
   
@@ -256,7 +248,7 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
   for_arr(button_id, menu->buttons)
   {
     if (button_id == menu->current_level_selection) continue; 
-    lit_menu_button_render(lit, menu, menu->buttons + button_id);
+    lit_menu_button_render(menu, menu->buttons + button_id);
   }
 
   // Overlay to emphasize selected button
@@ -267,7 +259,7 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
   }
 
 
-  lit_menu_button_render(lit, menu, menu->buttons + menu->current_level_selection);
+  lit_menu_button_render(menu, menu->buttons + menu->current_level_selection);
   
 
   // "Cursor"
@@ -284,7 +276,7 @@ lit_menu_tick(lit_t* lit, lit_menu_t* menu) {
 
     v2f_t cursor_wh = v2f_set(150.f, 150.f);
 
-    lit_menu_draw_rect(lit, menu, cursor_xy, cursor_wh, 16.f, menu->selector_color); 
+    lit_menu_draw_rect(menu, cursor_xy, cursor_wh, 16.f, menu->selector_color); 
     //gfx_push_text_center_aligned(gfx, &lit->assets, menu->font, str8_from_lit("menu"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT/2, 128.f);
 
     //inspector_add_u32(&lit->inspector, str8_from_lit("num"), &menu->current_level_selection);

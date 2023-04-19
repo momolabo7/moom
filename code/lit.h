@@ -80,7 +80,7 @@ struct lit_t {
   //
   // Arenas
   //
-  arena_t main_arena;
+  arena_t mode_arena;
   arena_t asset_arena;
   arena_t debug_arena;
   arena_t frame_arena;
@@ -96,8 +96,13 @@ struct lit_t {
   asset_font_id_t debug_font;
 };
 
+static lit_t* lit;
+
+
+
+
 static void 
-lit_goto_specific_level(lit_t* lit, u32_t level) {
+lit_goto_specific_level(u32_t level) {
   //assert(level < array_count(g_lit_levels));
   lit->next_mode = LIT_MODE_GAME;
   lit->level_to_start = level;

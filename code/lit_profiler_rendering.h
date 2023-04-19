@@ -40,7 +40,7 @@ profiler_end_stat(profiler_stat_t* stat) {
 }
 
 static void
-profiler_update_and_render(lit_t* lit) 
+profiler_update_and_render() 
 {
   assets_t* assets = &lit->assets;
 

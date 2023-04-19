@@ -6,10 +6,10 @@ static void lit_load_next_level(lit_game_t* m);
 // Points
 //
 static v2f_t*
-lit_push_point(lit_game_t* lit, v2f_t point) {
-  assert(lit->point_count < array_count(lit->points));
-  lit->points[lit->point_count] = point;
-  return lit->points + lit->point_count++;
+lit_push_point(lit_game_t* game, v2f_t point) {
+  assert(game->point_count < array_count(game->points));
+  game->points[game->point_count] = point;
+return game->points + game->point_count++;
 }
 
 // 
@@ -69,7 +69,7 @@ lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duratio
 #endif
 
 static void 
-lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {
+lit_animate(lit_animator_t* animator, f32_t dt) {
   switch(animator->type) {
     case LIT_ANIMATOR_TYPE_PATROL_POINT:{
       auto* a = &animator->move_point;
@@ -84,8 +84,6 @@ lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {
 
       f32_t alpha = f32_ease_inout_sine(a->timer/a->duration);
       *a->point = v2f_lerp(a->start, a->end, alpha);
-    } break;
-    case LIT_ANIMATOR_TYPE_ROTATE_EDGE: {
     } break;
     case LIT_ANIMATOR_TYPE_ROTATE_POINT: {
       auto* a = &animator->rotate_point;
@@ -108,10 +106,10 @@ lit_animate(lit_t* lit, lit_animator_t* animator, f32_t dt) {
 }
 
 static void
-lit_animator_update_all(lit_t* lit, lit_game_t* game, f32_t dt) {
+lit_animator_update_all(lit_game_t* game, f32_t dt) {
   for(u32_t animator_index = 0; animator_index < game->animator_count; ++animator_index)
   {
-    lit_animate(lit, game->animators + animator_index, dt);
+    lit_animate(game->animators + animator_index, dt);
   }
 }
 
@@ -444,7 +442,7 @@ lit_gen_lights(lit_light_t* lights,
 }
 
 static void
-lit_draw_lights(lit_t* lit, lit_game_t* game) {
+lit_draw_lights(lit_game_t* game) {
   //
   // Emitters
   //
@@ -483,7 +481,7 @@ lit_draw_lights(lit_t* lit, lit_game_t* game) {
 
 
 static void
-lit_draw_edges(lit_t* lit, lit_game_t* game) {
+lit_draw_edges(lit_game_t* game) {
 
   for(u32_t edge_index = 0; edge_index < game->edge_count; ++edge_index) 
   {
@@ -549,7 +547,7 @@ lit_player_hold_nearest_light_if_empty_handed(
 }
 
   static void 
-lit_player_update(lit_t* lit, lit_game_t* game, f32_t dt) 
+lit_player_update(lit_game_t* game, f32_t dt) 
 {
   lit_player_t* player = &game->player; 
 
@@ -634,7 +632,7 @@ lit_player_update(lit_t* lit, lit_game_t* game, f32_t dt)
 }
 
   static void
-lit_draw_player(lit_t* lit, lit_game_t* game)
+lit_draw_player(lit_game_t* game)
 {
   lit_player_t* player = &game->player;
 
@@ -715,7 +713,7 @@ lit_update_particles(lit_game_t* game, f32_t dt) {
 }
 
 static void
-lit_render_particles(lit_t* lit, lit_game_t* game) {
+lit_render_particles(lit_game_t* game) {
   lit_particle_pool_t* ps = &game->particles;
 
   // Render particles
@@ -855,7 +853,7 @@ lit_push_patrolling_sensor(lit_game_t* game, f32_t duration, v2f_t start, v2f_t 
 }
 #endif
 
-  static void 
+static void 
 lit_update_sensors(lit_game_t* game, f32_t dt) 
 {
   lit_particle_pool_t* particles = &game->particles;
@@ -891,6 +889,7 @@ lit_update_sensors(lit_game_t* game, f32_t dt)
     {
       ++activated;
     }
+
     game->sensors_activated = activated;
 
     // Particle emission check
@@ -929,7 +928,7 @@ lit_are_all_sensors_activated(lit_game_t* game) {
 }
 
 static void 
-lit_render_sensors(lit_t* lit, lit_game_t* game) {
+lit_render_sensors(lit_game_t* game) {
 
   for(u32_t sensor_index = 0; sensor_index < game->sensor_count; ++sensor_index)
   {
@@ -967,7 +966,7 @@ lit_set_title(lit_game_t* game, str8_t str) {
 }
 
 static void
-lit_generate_light(lit_t* lit, lit_game_t* game) {
+lit_generate_light(lit_game_t* game) {
   for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
   {
     lit_light_t* light = game->lights + light_index;
@@ -988,7 +987,7 @@ lit_generate_light(lit_t* lit, lit_game_t* game) {
 }
 
   static void
-lit_update_game(lit_t* lit, lit_game_t* game) 
+lit_update_game(lit_game_t* game) 
 {
   lit_player_t* player = &game->player;
   f32_t dt = input->delta_time;
@@ -1044,11 +1043,11 @@ lit_update_game(lit_t* lit, lit_game_t* game)
 
   if (game->state == LIT_STATE_TYPE_NORMAL) 
   {
-    lit_animator_update_all(lit, game, dt);
-    lit_player_update(lit, game, dt);
+    lit_animator_update_all(game, dt);
+    lit_player_update(game, dt);
   }
 
-  lit_generate_light(lit, game);
+  lit_generate_light(game);
 
   if (!lit_is_state_exiting(game)) 
   {
@@ -1067,54 +1066,32 @@ lit_update_game(lit_t* lit, lit_game_t* game)
   }
 
 
-}
-
-  static void
-lit_init_game(lit_t* lit, lit_game_t* game) 
-{
-  lit_load_level(game, lit->level_to_start); 
-  rng_init(&game->rng, 65535); // don't really need to be strict 
-
-  make(asset_match_t, match);
-  set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
-  game->tutorial_font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
-
-  game->blank_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
-  game->circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
-  game->move_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_MOVE_SPRITE);
-  game->rotate_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_ROTATE_SPRITE);
-  game->filled_circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
-  game->current_level_id = 0;
-
-
-}
-
-  static void 
-lit_render_game(lit_t* lit, lit_game_t* game) 
-{
-  // This is the default and happier blend mode
+  //
+  // RENDERING
+  //
+// This is the default and happier blend mode
   gfx_set_blend_alpha(gfx);
 
   //lit_draw_edges(game); 
   //lit_draw_debug_light_rays(game, moe);
   if (game->state == LIT_STATE_TYPE_NORMAL) {
-    lit_draw_player(lit, game);
+    lit_draw_player(game);
   }
-  lit_draw_lights(lit, game);
+  lit_draw_lights(game);
 
   gfx_set_blend_alpha(gfx);
 
-  lit_render_sensors(lit, game); 
+  lit_render_sensors(game); 
 
   if (!lit_is_state_exiting(game)) {
-    lit_render_particles(lit, game);
+    lit_render_particles(game);
   }
 
 #if LIT_DEBUG_COORDINATES 
   // Debug coordinates
   {
     sb8_make(sb, 64);
-    sb8_push_fmt(sb, str8_from_lit("[%f %f]"), lit->platform->mouse_pos.x,LIT_HEIGHT - lit->platform->mouse_pos.y);
+    sb8_push_fmt(sb, str8_from_lit("[%f %f]"), pf->mouse_pos.x,LIT_HEIGHT - pf->mouse_pos.y);
     gfx_push_text(gfx, &lit->assets, game->tutorial_font, sb->str, RGBA_WHITE, 0.f, 0.f, 32.f);
   }
 #endif
@@ -1152,3 +1129,24 @@ lit_render_game(lit_t* lit, lit_game_t* game)
 
   }
 }
+
+  static void
+lit_init_game(lit_game_t* game) 
+{
+  lit_load_level(game, lit->level_to_start); 
+  rng_init(&game->rng, 65535); // don't really need to be strict 
+
+  make(asset_match_t, match);
+  set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
+  game->tutorial_font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
+
+  game->blank_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
+  game->circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
+  game->move_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_MOVE_SPRITE);
+  game->rotate_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_ROTATE_SPRITE);
+  game->filled_circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
+  game->current_level_id = 0;
+
+
+}
+

@@ -34,6 +34,10 @@ struct lit_light_triangle_t {
   v2f_t p0, p1, p2;
 };
 
+
+// NOTE(momo): Probably better to put all the triangles together
+// so that stuff is more data oriented, instead of having 
+// a bunch of triangles per light
 struct lit_light_t {
   v2f_t dir;
   f32_t half_angle;
@@ -81,6 +85,7 @@ struct lit_particle_pool_t {
 };
 
 struct lit_confetti_t {
+  // TODO
 };
 
 
@@ -88,13 +93,21 @@ struct lit_confetti_t {
 //
 // Sensors
 //
+typedef void (*lit_sensor_group_callback_t)();
+
 struct lit_sensor_t {
   v2f_t pos;
   u32_t target_color;
   u32_t current_color;
   f32_t particle_cd;
+
+  lit_sensor_t* next;
 };
 
+struct lit_sensor_group_t {
+  lit_sensor_t* head; 
+  lit_sensor_group_callback_t callback;
+};
 
 //
 // Player
@@ -128,7 +141,6 @@ enum lit_animator_type_t {
 
   //LIT_ANIMATOR_TYPE_ROTATE_SENSOR,
 
-  LIT_ANIMATOR_TYPE_ROTATE_EDGE,
 
   LIT_ANIMATOR_TYPE_PATROL_POINT,
   LIT_ANIMATOR_TYPE_ROTATE_POINT,
@@ -188,12 +200,14 @@ struct lit_animator_t {
 //
 struct lit_game_t {
   
+  // Assets
   asset_font_id_t tutorial_font;
   asset_sprite_id_t blank_sprite;
   asset_sprite_id_t circle_sprite;
   asset_sprite_id_t filled_circle_sprite;
   asset_sprite_id_t move_sprite;
   asset_sprite_id_t rotate_sprite;
+
   lit_state_type_t state;
 
   u32_t current_level_id;
@@ -213,6 +227,8 @@ struct lit_game_t {
 
   u32_t point_count;
   v2f_t points[32];
+
+  lit_sensor_group_t sensor_groups[16];
 
   // for animated sensor APIs
   lit_sensor_t* selected_sensor; 

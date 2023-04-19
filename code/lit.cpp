@@ -2,13 +2,12 @@
 
 static b32_t
 lit_tick() {
-
   if(moe->game_context == nullptr) {
     auto* lit_memory = pf->allocate_memory(sizeof(lit_t));
     if (!lit_memory) return false;
     moe->game_context = lit_memory;
 
-    auto* lit = (lit_t*)((pf_memory_t*)moe->game_context)->data;
+    lit = (lit_t*)((pf_memory_t*)moe->game_context)->data;
     lit->level_to_start = 0;
     lit->next_mode = LIT_MODE_GAME;
 
@@ -39,6 +38,9 @@ lit_tick() {
     auto* frame_memory = pf->allocate_memory(megabytes(1));
     arena_init(&lit->frame_arena, frame_memory->data, frame_memory->size);
 
+    auto* mode_memory = pf->allocate_memory(megabytes(1));
+    arena_init(&lit->mode_arena, mode_memory->data, mode_memory->size);
+
     pf->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
     gfx_set_view(gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
@@ -51,7 +53,7 @@ lit_tick() {
 
   }
 
-  auto* lit = (lit_t*)((pf_memory_t*)moe->game_context)->data;
+  lit = (lit_t*)((pf_memory_t*)moe->game_context)->data;
 
   // NOTE(momo): Frame arena needs to be cleared each frame.
   arena_clear(&lit->frame_arena);
@@ -64,27 +66,26 @@ lit_tick() {
     
     switch(lit->mode) {
       case LIT_MODE_SPLASH: {
-        lit_init_splash(lit, &lit->splash);
+        lit_init_splash(&lit->splash);
       } break;
       case LIT_MODE_GAME: {
-        lit_init_game(lit, &lit->game);
+        lit_init_game(&lit->game);
       } break;
       case LIT_MODE_MENU: {
-        lit_menu_init(lit, &lit->menu);
+        lit_menu_init(&lit->menu);
       } break;
 
     }
   }
   switch(lit->mode) {
     case LIT_MODE_SPLASH: {
-      lit_update_splash(lit, &lit->splash);
+      lit_update_splash(&lit->splash);
     } break;
     case LIT_MODE_GAME: {
-      lit_update_game(lit, &lit->game);
-      lit_render_game(lit, &lit->game);
+      lit_update_game(&lit->game);
     } break;
     case LIT_MODE_MENU: {
-      lit_menu_tick(lit, &lit->menu);
+      lit_menu_tick(&lit->menu);
     } break;
 
   }
@@ -97,13 +98,13 @@ lit_tick() {
 
   switch (lit->show_debug_type) {
     case LIT_SHOW_DEBUG_CONSOLE: {
-      lit_update_and_render_console(lit); 
+      lit_update_and_render_console(); 
     }break;
     case LIT_SHOW_DEBUG_PROFILER: {
-      profiler_update_and_render(lit); 
+      profiler_update_and_render(); 
     }break;
     case LIT_SHOW_DEBUG_INSPECTOR: {
-      inspector_update_and_render(lit);
+      inspector_update_and_render();
     }break;
     default: {}
   }

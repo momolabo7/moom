@@ -1,5 +1,5 @@
 static void
-lit_init_splash(lit_t* lit, lit_splash_t* splash) {
+lit_init_splash(lit_splash_t* splash) {
   make(asset_match_t, match);
   set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
   splash->font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
@@ -7,7 +7,7 @@ lit_init_splash(lit_t* lit, lit_splash_t* splash) {
 }
 
 static void
-lit_update_splash(lit_t* lit, lit_splash_t* splash) {
+lit_update_splash(lit_splash_t* splash) {
   splash->timer -= input->delta_time;
  
   gfx_push_text_center_aligned(

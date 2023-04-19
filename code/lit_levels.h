@@ -22,8 +22,11 @@ lit_level_move(lit_game_t* m) {
 static void
 lit_level_obstruct(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("OBSTRUCT"));
+  
+  //lit_begin_sensor_set(m);
   lit_push_sensor(m, 400.f, 600.f, 0x008800FF); 
-  lit_push_light(m, 400.f, 200, 0x008800FF, 45.f, 0.75f);
+  lit_push_light(m, 400.f, 200.f, 0x008800FF, 45.f, 0.75f);
+  //lit_end_sensor_set(m);
   
   // Need to 'enclose' the shape
   lit_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
