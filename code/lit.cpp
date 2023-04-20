@@ -9,7 +9,7 @@ lit_tick() {
 
     lit = (lit_t*)((pf_memory_t*)moe->game_context)->data;
     lit->level_to_start = 0;
-    lit->next_mode = LIT_MODE_GAME;
+    lit->next_mode = LIT_MODE_SPLASH;
 
     //
     // Initialize assets
@@ -66,26 +66,27 @@ lit_tick() {
     
     switch(lit->mode) {
       case LIT_MODE_SPLASH: {
-        lit_init_splash(&lit->splash);
+        lit_init_splash();
       } break;
       case LIT_MODE_GAME: {
-        lit_init_game(&lit->game);
+        lit_init_game();
       } break;
       case LIT_MODE_MENU: {
-        lit_menu_init(&lit->menu);
+        lit_menu_init();
       } break;
 
     }
   }
+
   switch(lit->mode) {
     case LIT_MODE_SPLASH: {
-      lit_update_splash(&lit->splash);
+      lit_update_splash();
     } break;
     case LIT_MODE_GAME: {
-      lit_update_game(&lit->game);
+      lit_update_game();
     } break;
     case LIT_MODE_MENU: {
-      lit_menu_tick(&lit->menu);
+      lit_update_menu();
     } break;
 
   }
@@ -111,6 +112,7 @@ lit_tick() {
 
   return true;
 }
+
 exported b32_t 
 moe_update_and_render(
     moe_t* in_moe, 

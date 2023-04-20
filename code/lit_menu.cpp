@@ -2,8 +2,9 @@
 
 
 static void
-lit_menu_init(lit_menu_t* menu) 
+lit_menu_init() 
 {
+  lit_menu_t* menu = &lit->menu;
   make(asset_match_t, match);
   set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
   menu->font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
@@ -220,7 +221,8 @@ lit_menu_button_render(
 }
 
 static void
-lit_menu_tick(lit_menu_t* menu) {
+lit_update_menu() {
+  lit_menu_t* menu = &lit->menu;
   f32_t dt = input->delta_time;
 
   if (menu->mode == LIT_MENU_MODE_TRANSITION_IN) {

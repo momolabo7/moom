@@ -93,21 +93,21 @@ struct lit_confetti_t {
 //
 // Sensors
 //
-typedef void (*lit_sensor_group_callback_t)();
+typedef void lit_sensor_callback_t(struct lit_game_t*);
+
+struct lit_sensor_group_t {
+  lit_sensor_callback_t* callback;
+  u32_t sensor_count; // how many sensors there are
+};
 
 struct lit_sensor_t {
   v2f_t pos;
   u32_t target_color;
   u32_t current_color;
   f32_t particle_cd;
-
-  lit_sensor_t* next;
+  u32_t group_id;
 };
 
-struct lit_sensor_group_t {
-  lit_sensor_t* head; 
-  lit_sensor_group_callback_t callback;
-};
 
 //
 // Player
@@ -169,10 +169,6 @@ struct lit_animator_patrol_point_t {
 
 };
 
-struct lit_animator_rotate_edge_t {
-  // NOT IMPLEMENTED
-};
-
 
 struct lit_animator_patrol_edge_t {
   lit_edge_t* edge;
@@ -187,7 +183,6 @@ struct lit_animator_t {
   lit_animator_type_t type;
   union {
     lit_animator_patrol_edge_t patrol_edge;
-    lit_animator_rotate_edge_t rotate_edge;
     lit_animator_rotate_point_t rotate_point;
     lit_animator_patrol_point_t move_point;
   };
@@ -228,6 +223,10 @@ struct lit_game_t {
   u32_t point_count;
   v2f_t points[32];
 
+  // for sensor group API
+  u32_t selected_sensor_group_id;
+
+  u32_t sensor_group_count;
   lit_sensor_group_t sensor_groups[16];
 
   // for animated sensor APIs
@@ -246,7 +245,9 @@ struct lit_game_t {
   f32_t title_timer;
   u32_t title_wp_index;
     
-  u32_t sensors_activated;
+  // The callback to activate upon exiting the level
+  lit_sensor_callback_t* exit_callback;
+
 };
 
 

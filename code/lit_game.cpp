@@ -9,13 +9,13 @@ static v2f_t*
 lit_push_point(lit_game_t* game, v2f_t point) {
   assert(game->point_count < array_count(game->points));
   game->points[game->point_count] = point;
-return game->points + game->point_count++;
+  return game->points + game->point_count++;
 }
 
 // 
 // Animator
 //
-  static void 
+static void 
 lit_animator_push_patrol_point_waypoint(
     lit_animator_t* animator, 
     f32_t pos_x, 
@@ -29,7 +29,7 @@ lit_animator_push_patrol_point_waypoint(
   wp->y = pos_y;
 }
 
-  static lit_animator_rotate_point_t* 
+static lit_animator_rotate_point_t* 
 lit_animator_push_rotate_point(
     lit_game_t* game,
     v2f_t* pt_to_rotate,
@@ -50,8 +50,7 @@ lit_animator_push_rotate_point(
   return a;
 }
 
-#if 1 
-  static void
+static void
 lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duration, lit_edge_t start, lit_edge_t end) 
 {
   auto* anim = game->animators + game->animator_count++;
@@ -66,7 +65,6 @@ lit_push_patrol_edge_animator(lit_game_t* game, lit_edge_t* edge,  f32_t duratio
   a->edge = edge;
 
 }
-#endif
 
 static void 
 lit_animate(lit_animator_t* animator, f32_t dt) {
@@ -138,7 +136,7 @@ lit_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y)
 }
 
 
-  static void
+static void
 lit_push_patrolling_edge(lit_game_t* m, f32_t duration, 
     f32_t start_min_x, f32_t start_min_y, f32_t start_max_x, f32_t start_max_y,
     f32_t end_min_x, f32_t end_min_y, f32_t end_max_x, f32_t end_max_y) 
@@ -156,7 +154,7 @@ lit_push_patrolling_edge(lit_game_t* m, f32_t duration,
   lit_push_patrol_edge_animator(m, edge, duration, start, end); 
 }
 
-  static void
+static void
 lit_push_patrolling_double_edge(lit_game_t* m, f32_t duration, 
     f32_t start_min_x, f32_t start_min_y, f32_t start_max_x, f32_t start_max_y,
     f32_t end_min_x, f32_t end_min_y, f32_t end_max_x, f32_t end_max_y) 
@@ -169,7 +167,7 @@ lit_push_patrolling_double_edge(lit_game_t* m, f32_t duration,
 }
 
 
-  static void 
+static void 
 lit_push_box(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) 
 {
   lit_push_edge(m, min_x, min_y, max_x, min_y);
@@ -546,7 +544,7 @@ lit_player_hold_nearest_light_if_empty_handed(
   }
 }
 
-  static void 
+static void 
 lit_player_update(lit_game_t* game, f32_t dt) 
 {
   lit_player_t* player = &game->player; 
@@ -669,7 +667,7 @@ lit_draw_player(lit_game_t* game)
 //
 // Particles
 //
-  static void
+static void
 lit_spawn_particle(lit_game_t* game,
     f32_t lifespan,
     v2f_t pos, v2f_t vel,
@@ -744,41 +742,25 @@ lit_render_particles(lit_game_t* game) {
 //
 // Sensors
 //
-  static lit_sensor_t* 
+static lit_sensor_t* 
 lit_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color) 
 {
+  assert(game->selected_sensor_group_id != array_count(game->sensor_groups));
   assert(game->sensor_count < array_count(game->sensors));
   lit_sensor_t* s = game->sensors + game->sensor_count++;
   s->pos.x = pos_x;
   s->pos.y = pos_y;
   s->target_color = target_color;
   s->current_color = 0;
+  s->group_id = game->selected_sensor_group_id;
+
+  game->sensor_groups[s->group_id].sensor_count++;
 
   return s;
 }
 
-#if 0
-// NOTE(momo): yeah the API here is TERRIBLE at this point
+
 static void
-lit_push_rotating_rotating_sensor(
-    lit_game_t* game, 
-    f32_t pos_x, 
-    f32_t pos_y, 
-    v2f_t* origin
-    f32_t speed_a, 
-    f32_t origin_bx, 
-    f32_t origin_by, 
-    f32_t speed_b, 
-    u32_t target_color)
-{
-  auto* sensor = lit_push_sensor(game, pos_x, pos_y, target_color);
-  auto* rp = lit_animator_push_rotate_point(game, &sensor->pos, v2f_set(origin_ax, origin_ay), speed_a);
-  auto* rrp = lit_animator_push_rotate_point(game, &rp->point_of_rotation, v2f_set(origin_bx, origin_by), speed_b);
-
-}
-#endif
-
-  static void
 lit_push_rotating_sensor(
     lit_game_t* game, 
     f32_t pos_x, 
@@ -792,7 +774,7 @@ lit_push_rotating_sensor(
 
 }
 
-  static void
+static void
 lit_push_patrolling_sensor_waypoint(
     lit_game_t* game, 
     f32_t pos_x, 
@@ -803,7 +785,7 @@ lit_push_patrolling_sensor_waypoint(
 }
 
 
-  static void
+static void
 lit_begin_patrolling_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color, f32_t duration_per_waypoint) 
 {
   assert(!game->selected_animator);
@@ -844,14 +826,21 @@ lit_end_patrolling_sensor(lit_game_t* game) {
   game->selected_animator = nullptr;
 }
 
-#if 0
-  static void
-lit_push_patrolling_sensor(lit_game_t* game, f32_t duration, v2f_t start, v2f_t end, u32_t target_color) 
+static void 
+lit_begin_sensor_group(lit_game_t* m, lit_sensor_callback_t* callback)
 {
-  auto* s = lit_push_sensor(game, start.x, start.y, target_color); 
-  lit_push_patrol_sensor_animator(game, s, duration, start, end);
+  assert(m->sensor_group_count < array_count(m->sensor_groups));
+  m->selected_sensor_group_id = m->sensor_group_count++;
+
+  lit_sensor_group_t* group = m->sensor_groups + m->selected_sensor_group_id;
+  group->callback = callback;
+  group->sensor_count = 0;
 }
-#endif
+
+static void 
+lit_end_sensor_group(lit_game_t* m) {
+  m->selected_sensor_group_id = array_count(m->sensor_groups);
+}
 
 static void 
 lit_update_sensors(lit_game_t* game, f32_t dt) 
@@ -859,7 +848,11 @@ lit_update_sensors(lit_game_t* game, f32_t dt)
   lit_particle_pool_t* particles = &game->particles;
   rng_t* rng = &game->rng; 
 
-  u32_t activated = 0;
+  // This is an array of activated sensors per sensor_group
+  u32_t* activated = arena_push_arr_zero(u32_t, &lit->frame_arena, game->sensor_group_count);
+
+
+  // Go through each sensor and update what lights are on it
   for(u32_t sensor_index = 0; sensor_index < game->sensor_count; ++sensor_index)
   {
     lit_sensor_t* sensor = game->sensors + sensor_index;
@@ -887,10 +880,8 @@ lit_update_sensors(lit_game_t* game, f32_t dt)
     if ((sensor->current_color & LIT_SENSOR_COLOR_MASK) == 
         (sensor->target_color & LIT_SENSOR_COLOR_MASK)) 
     {
-      ++activated;
+      ++activated[sensor->group_id];
     }
-
-    game->sensors_activated = activated;
 
     // Particle emission check
     sensor->particle_cd -= dt;
@@ -920,12 +911,19 @@ lit_update_sensors(lit_game_t* game, f32_t dt)
           size_end);
     }
   }
+
+  // For each sensor group, we find which one is actually activated
+  for_cnt(group_index, game->sensor_group_count) {
+    lit_sensor_group_t* group = game->sensor_groups + group_index;
+    if (group->sensor_count == activated[group_index]) {
+      // We found a group that can activate the callback
+      game->exit_callback = group->callback; 
+      break;
+    }
+  }
+
 }
 
-static b32_t
-lit_are_all_sensors_activated(lit_game_t* game) {
-  return game->sensors_activated == game->sensor_count;
-}
 
 static void 
 lit_render_sensors(lit_game_t* game) {
@@ -986,9 +984,10 @@ lit_generate_light(lit_game_t* game) {
   }
 }
 
-  static void
-lit_update_game(lit_game_t* game) 
+static void
+lit_update_game() 
 {
+  lit_game_t* game = &lit->game;
   lit_player_t* player = &game->player;
   f32_t dt = input->delta_time;
 
@@ -1037,7 +1036,11 @@ lit_update_game(lit_game_t* game)
       game->stage_fade_timer += dt;
     }
     else {
-      lit_load_next_level(game);
+      //lit_load_next_level(game);
+      if (game->exit_callback) {
+        game->exit_callback(game);
+      }
+      
     }
   }
 
@@ -1056,7 +1059,7 @@ lit_update_game(lit_game_t* game)
     //
     // win condition
     //
-    if (lit_are_all_sensors_activated(game)) 
+    if (game->exit_callback) 
     {
       pf->show_cursor();
       pf->unlock_cursor();
@@ -1081,9 +1084,8 @@ lit_update_game(lit_game_t* game)
 
   gfx_set_blend_alpha(gfx);
 
-  lit_render_sensors(game); 
-
   if (!lit_is_state_exiting(game)) {
+    lit_render_sensors(game); 
     lit_render_particles(game);
   }
 
@@ -1130,23 +1132,22 @@ lit_update_game(lit_game_t* game)
   }
 }
 
-  static void
-lit_init_game(lit_game_t* game) 
+static void 
+lit_init_game() 
 {
+  lit_game_t* game = &lit->game;
   lit_load_level(game, lit->level_to_start); 
   rng_init(&game->rng, 65535); // don't really need to be strict 
 
   make(asset_match_t, match);
   set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
   game->tutorial_font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
-
   game->blank_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
   game->circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
   game->move_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_MOVE_SPRITE);
   game->rotate_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_ROTATE_SPRITE);
   game->filled_circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
+
   game->current_level_id = 0;
-
-
 }
 

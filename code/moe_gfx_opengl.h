@@ -340,13 +340,13 @@ ogl_push_triangle(Opengl* ogl,
   rgba_t color_per_vertex[] = {
     color, 
     color, 
-    color,
+    color, 
   };
 #else
   rgba_t color_per_vertex[] = {
-    rgba_set(1,0,0,1), 
-    rgba_set(0,1,0,1), 
-    rgba_set(0,0,1,1),
+    rgba_set(1,1,1,1), 
+    rgba_set(1,1,1,1), 
+    rgba_set(1,1,1,1),
   };
 #endif
 
@@ -682,7 +682,7 @@ ogl_init_triangle_batch(Opengl* ogl) {
       OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 
       tb->buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS],  
       0, 
-      sizeof(v4f_t));
+      sizeof(rgba_t) * vertex_count);
 
   ogl->glVertexArrayVertexBuffer(tb->model, 
       OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 

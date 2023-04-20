@@ -7,13 +7,15 @@
 // - Learn to rotate
 // - Learn that light need to shine on sensors 
 //
+
 static void
 lit_level_move(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("MOVE"));
   lit_push_light(m, 400.f, 400, 0x880000FF, 45.f, 0.75f);
 
+  lit_begin_sensor_group(m, lit_load_next_level);
   lit_push_sensor(m, 400.f, 600.f, 0x880000FF); 
-
+  lit_end_sensor_group(m);
 }
 
 //
@@ -23,10 +25,11 @@ static void
 lit_level_obstruct(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("OBSTRUCT"));
   
-  //lit_begin_sensor_set(m);
+  lit_begin_sensor_group(m, lit_load_next_level);
   lit_push_sensor(m, 400.f, 600.f, 0x008800FF); 
+  lit_end_sensor_group(m);
+
   lit_push_light(m, 400.f, 200.f, 0x008800FF, 45.f, 0.75f);
-  //lit_end_sensor_set(m);
   
   // Need to 'enclose' the shape
   lit_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
@@ -41,7 +44,10 @@ lit_level_add(lit_game_t* m) {
   lit_set_title(m, str8_from_lit("ADD"));
   lit_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
 
+  lit_begin_sensor_group(m, lit_load_next_level);
   lit_push_sensor(m, 400.f, 600.f, 0x444488FF); 
+  lit_end_sensor_group(m);
+
   lit_push_light(m, 300.f, 200.f, 0x222244FF, 45.f, 0.75f);
   lit_push_light(m, 500.f, 200.f, 0x222244FF, 45.f, 0.75f);
  
@@ -414,6 +420,9 @@ lit_level_movement(lit_game_t* m) {
   lit_push_light(m, 600.f, 700.f, 0x000088FF, 15.f, 0.25f);
 
   f32_t duration = 5.25f;
+
+  lit_begin_sensor_group(m, lit_load_next_level);
+
   lit_begin_patrolling_sensor(m, 150.f, 150.f, 0x880088FF, duration);
   lit_push_patrolling_sensor_waypoint(m, 650.f, 650.f);
   lit_end_patrolling_sensor(m);
@@ -445,6 +454,8 @@ lit_level_movement(lit_game_t* m) {
   lit_begin_patrolling_sensor(m, 400.f, 150.f, 0x880088FF, duration);
   lit_push_patrolling_sensor_waypoint(m, 400.f, 650.f);
   lit_end_patrolling_sensor(m);
+
+  lit_end_sensor_group(m);
 
 }
 
@@ -649,7 +660,7 @@ lit_level_test(lit_game_t* m) {
 }
 typedef void (*Lit_Level)(lit_game_t* mode); 
 static Lit_Level g_lit_levels[] = {
-#if 1
+#if 0
   // Basics
   lit_level_move,   
   lit_level_obstruct, 
@@ -672,7 +683,8 @@ static Lit_Level g_lit_levels[] = {
   lit_level_spin,
 #else 
 
-  lit_level_test,
+  lit_level_movement,
+//  lit_level_test,
 
 #endif
 
@@ -691,6 +703,12 @@ lit_load_level(lit_game_t* m, u32_t level_id) {
   m->edge_count = 0;
   m->animator_count = 0;
   m->point_count = 0;
+  m->sensor_group_count = 0;
+
+  m->selected_sensor_group_id = array_count(m->sensor_groups);
+  m->selected_sensor = nullptr;
+  m->selected_animator = nullptr; 
+  m->exit_callback = nullptr;
 
   lit_push_edge(m, 0.f, 0.f, 800.f, 0.f);
   lit_push_edge(m, 800.f, 0.f, 800.f, 800.f);
