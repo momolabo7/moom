@@ -45,6 +45,7 @@
 #include "lit_menu.h"
 #include "lit_game.h"
 
+
 enum lit_show_debug_type_t {
   LIT_SHOW_DEBUG_NONE,
   LIT_SHOW_DEBUG_PROFILER,
@@ -99,8 +100,7 @@ struct lit_t {
 static lit_t* lit;
 
 
-
-
+// TODO: remove
 static void 
 lit_goto_specific_level(u32_t level) {
   //assert(level < array_count(g_lit_levels));
@@ -108,15 +108,14 @@ lit_goto_specific_level(u32_t level) {
   lit->level_to_start = level;
 }
 
-#include "lit_splash.cpp"
-#include "lit_menu.cpp"
-#include "lit_game.cpp"
-
 #include "lit_console_rendering.h"
 #include "lit_profiler_rendering.h"
 #include "lit_inspector_rendering.h"
-#include "lit_levels.h"
 
+
+#include "lit_splash.cpp"
+#include "lit_menu.cpp"
+#include "lit_game.cpp"
 
 
 #endif 

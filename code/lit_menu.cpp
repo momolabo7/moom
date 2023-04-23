@@ -1,6 +1,4 @@
 
-
-
 static void
 lit_menu_init() 
 {

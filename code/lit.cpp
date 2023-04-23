@@ -9,7 +9,7 @@ lit_tick() {
 
     lit = (lit_t*)((pf_memory_t*)moe->game_context)->data;
     lit->level_to_start = 0;
-    lit->next_mode = LIT_MODE_SPLASH;
+    lit->next_mode = LIT_MODE_GAME;
 
     //
     // Initialize assets
@@ -69,7 +69,7 @@ lit_tick() {
         lit_init_splash();
       } break;
       case LIT_MODE_GAME: {
-        lit_init_game();
+        lit_game_init();
       } break;
       case LIT_MODE_MENU: {
         lit_menu_init();
@@ -83,7 +83,7 @@ lit_tick() {
       lit_update_splash();
     } break;
     case LIT_MODE_GAME: {
-      lit_update_game();
+      lit_game_update();
     } break;
     case LIT_MODE_MENU: {
       lit_update_menu();

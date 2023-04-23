@@ -176,7 +176,7 @@ static gfx_texture_payload_t* gfx_begin_texture_transfer(gfx_t* g, u32_t require
 static void gfx_complete_texture_transfer(gfx_texture_payload_t* entry);
 static void gfx_cancel_texture_transfer(gfx_texture_payload_t* entry);
 static void gfx_set_view(gfx_t* g, v2f_t pos, f32_t width, f32_t height, u32_t layers);
-static void gfx_push_colors(gfx_t* g, rgba_t colors); 
+static void gfx_clear_colors(gfx_t* g, rgba_t colors); 
 static void gfx_push_sprite(gfx_t* g, rgba_t colors, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1);
 static void gfx_draw_filled_rect(gfx_t* g, rgba_t colors, v2f_t pos, f32_t rot, v2f_t size);
 static void gfx_draw_filled_triangle(gfx_t* g, rgba_t colors, v2f_t p0, v2f_t p1, v2f_t p2);
@@ -348,7 +348,7 @@ gfx_set_view(gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t
 }
 
 static void
-gfx_push_colors(gfx_t* g, rgba_t colors) {
+gfx_clear_colors(gfx_t* g, rgba_t colors) {
   gfx_command_queue_t* c = &g->command_queue; 
   gfx_command_clear_t* data = _gfx_push_command<gfx_command_clear_t>(c, GFX_COMMAND_TYPE_CLEAR);
   data->colors = colors;
