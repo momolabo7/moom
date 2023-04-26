@@ -176,6 +176,19 @@ lit_game_push_box(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t ma
 }
 
 static void 
+lit_game_push_aabb(lit_game_t* m, f32_t cx, f32_t cy, f32_t hw, f32_t hh) {
+  f32_t min_x = cx - hw;
+  f32_t max_x = cx + hw;
+  f32_t min_y = cy - hh;
+  f32_t max_y = cy + hh;
+
+  lit_game_push_edge(m, min_x, min_y, max_x, min_y);
+  lit_game_push_edge(m, max_x, min_y, max_x, max_y);
+  lit_game_push_edge(m, max_x, max_y, min_x, max_y);
+  lit_game_push_edge(m, min_x, max_y, min_x, min_y);
+}
+
+static void 
 lit_game_push_double_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
   lit_game_push_edge(m, min_x, min_y, max_x, max_y);
   lit_game_push_edge(m, max_x, max_y, min_x, min_y);

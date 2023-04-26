@@ -1,5 +1,8 @@
+typedef void lit_game_level_t(lit_game_t*);
+
 
 static void lit_level_menu(lit_game_t* m);
+
 
 static void 
 lit_game_sensor_trigger_solved(lit_game_t* game, void* context) {
@@ -54,20 +57,20 @@ lit_level_move(lit_game_t* m) {
 
   lit_game_push_light(m, 400.f, 400, 0x880000FF, 45.f, 0.75f);
 
+  // If 'tutorial' completed, to go menu, else go to 'obstruct'
   lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
   lit_game_push_sensor(m, 400.f, 600.f, 0x880000FF); 
   lit_game_end_sensor_group(m);
 }
 
-#if 0
 //
 // - Learn about obstacles
 //
 static void
 lit_level_obstruct(lit_game_t* m) {
-  lit_game_set_title(m, str8_from_lit("OBSTRUCT"));
+  lit_game_init_level(m, str8_from_lit("OBSTRUCT"));
   
-  lit_game_begin_sensor_group(m, lit_game_load_next_level);
+  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
   lit_game_push_sensor(m, 400.f, 600.f, 0x008800FF); 
   lit_game_end_sensor_group(m);
 
@@ -83,10 +86,10 @@ lit_level_obstruct(lit_game_t* m) {
 static void
 lit_level_add(lit_game_t* m) { 
   // Need to 'enclose' the shape
-  lit_game_set_title(m, str8_from_lit("ADD"));
+  lit_game_init_level(m, str8_from_lit("ADD"));
   lit_game_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
 
-  lit_game_begin_sensor_group(m, lit_game_load_next_level);
+  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
   lit_game_push_sensor(m, 400.f, 600.f, 0x444488FF); 
   lit_game_end_sensor_group(m);
 
@@ -101,8 +104,7 @@ lit_level_add(lit_game_t* m) {
 //
 static void
 lit_level_corners(lit_game_t* m) { 
-
-  lit_game_set_title(m, str8_from_lit("CORNERS"));
+  lit_game_init_level(m, str8_from_lit("CORNERS"));
 
   // Need to 'enclose' the shape
   lit_game_push_double_edge(m, 500.f, 200.f, 600.f, 300.f);
@@ -110,7 +112,7 @@ lit_level_corners(lit_game_t* m) {
   lit_game_push_double_edge(m, 200.f, 500.f, 300.f, 600.f);
   lit_game_push_double_edge(m, 500.f, 600.f, 600.f, 500.f);
 
-  lit_game_begin_sensor_group(m, lit_game_load_next_level);
+  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
   lit_game_push_sensor(m, 400.f, 400.f, 0xCCCC00FF); 
   lit_game_end_sensor_group(m);
 
@@ -122,6 +124,7 @@ lit_level_corners(lit_game_t* m) {
   
 }
 
+#if 0
 //
 // - Learn about color combinations
 // - R + G = Y
@@ -736,36 +739,7 @@ lit_level_test(lit_game_t* m) {
 #endif 
 
 
-#if 0
-static lit_game_level_t g_lit_levels[] = {
-  // Basics
-  lit_level_move,   
-  lit_level_obstruct, 
-  lit_level_add,
-  lit_level_corners,
-  lit_level_mix,
 
-  lit_level_blend,
-  lit_level_rooms,
-  lit_level_disco,
-  lit_level_onion,
-  lit_level_spectrum,
-
-  lit_level_split,
-  lit_level_movement,
-  lit_level_patience,
-  lit_level_busy,
-  lit_level_interval,
-
-  lit_level_spin,
-
-  //lit_level_test,
-  lit_level_move
-
-
-};
-
-#endif
 
 #if 0
 
@@ -806,17 +780,101 @@ lit_game_load_next_level(lit_game_t* m){
   m->current_level_id = (m->current_level_id + 1)%array_count(g_lit_levels);
   lit_game_load_level(m, m->current_level_id);  
 }
+lit_game_level_t lit_levels[] = {
+    // Basics
+    lit_level_move,   
+    lit_level_obstruct, 
+    lit_level_add,
 
+    lit_level_corners,
+    lit_level_mix,
+    lit_level_blend,
+    lit_level_rooms,
+    lit_level_disco,
+
+    lit_level_onion,
+    lit_level_spectrum,
+    lit_level_split,
+    lit_level_movement,
+    lit_level_patience,
+
+    lit_level_busy,
+    lit_level_interval,
+
+    lit_level_spin,
+    lit_level_move
+    //lit_level_test,
+  };
 #endif
+
+
 //
 // Menu Level
 //
-static void lit_level_menu(lit_game_t* m) {
-  lit_game_init_level(m, str8_from_lit("LEVEL SELECT"));
 
+static void 
+lit_level_menu(lit_game_t* m) {
+  const f32_t box_hw = 50.f;
+  const f32_t box_hh = 50.f;
+
+  lit_game_init_level(m, str8_from_lit("HOME"));
+
+  lit_game_push_aabb(m, 200, 600, box_hw, box_hh);
   lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_move);
-  lit_game_push_sensor(m, 400.f, 600.f, 0x880000FF); 
+  lit_game_push_sensor(m, 200, 600, 0x888888FF); 
   lit_game_end_sensor_group(m);
- 
-  lit_game_push_light(m, 400.f, 400, 0x880000FF, 45.f, 0.75f);
+
+
+
+
+  lit_game_push_aabb(m, 400, 600, box_hw, box_hh);
+  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_obstruct);
+  lit_game_push_sensor(m, 400+25, 600, 0x888888FF); 
+  lit_game_push_sensor(m, 400-25, 600, 0x888888FF); 
+  lit_game_end_sensor_group(m);
+
+  lit_game_push_aabb(m, 600, 600, box_hw, box_hh);
+  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_add);
+  lit_game_push_sensor(m, 600+25, 600, 0x888888FF); 
+  lit_game_push_sensor(m, 600, 600, 0x888888FF); 
+  lit_game_push_sensor(m, 600-25, 600, 0x888888FF); 
+  lit_game_end_sensor_group(m);
+
+  lit_game_push_aabb(m, 100, 450, box_hw, box_hh);
+  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_corners);
+  lit_game_push_sensor(m, 100-25, 450-25, 0x888888FF); 
+  lit_game_push_sensor(m, 100-25, 450+25, 0x888888FF); 
+  lit_game_push_sensor(m, 100+25, 450-25, 0x888888FF); 
+  lit_game_push_sensor(m, 100+25, 450+25, 0x888888FF); 
+  lit_game_end_sensor_group(m);
+
+
+#if 0
+  lit_level_menu_begin_selection_box(m, 600.f, 600.f, lit_level_add);
+  lit_level_menu_end_selection_box(m);
+
+  {
+    f32_t center_x = 400.f;
+    f32_t center_y = 600.f;
+
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_obstruct);
+    lit_game_push_sensor(m, center_x, center_y, light_color); 
+    lit_game_end_sensor_group(m);
+
+    lit_game_push_box(m, center_x-box_hw, center_y-box_hh, center_x+box_hw, center_y + box_hh); 
+  }
+  {
+    f32_t center_x = 600.f;
+    f32_t center_y = 600.f;
+
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_move);
+    lit_game_push_sensor(m, center_x, center_y, light_color); 
+    lit_game_end_sensor_group(m);
+
+    lit_game_push_box(m, center_x-box_hw, center_y-box_hh, center_x+box_hw, center_y + box_hh); 
+  }
+#endif
+
+  lit_game_push_light(m, 50.f, 750.f, 0x444444FF, 360.f, 0.f);
+  lit_game_push_light(m, 750.f, 50.f, 0x444444FF, 360.f, 0.f);
 }

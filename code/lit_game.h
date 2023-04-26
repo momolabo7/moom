@@ -84,10 +84,6 @@ struct lit_particle_pool_t {
   lit_particle_t particles[256];
 };
 
-struct lit_confetti_t {
-  // TODO
-};
-
 
 
 //
@@ -99,7 +95,6 @@ struct lit_game_sensor_group_t {
   void* context;
   lit_game_sensor_callback_t* callback;
   u32_t sensor_count; // how many sensors there are
-
 };
 
 struct lit_game_sensor_t {
@@ -194,9 +189,14 @@ struct lit_game_animator_t {
 // Main game struct
 //
 
+struct lit_game_player_data_t {
+  u32_t completed_levels;
+};
+
 typedef void lit_game_load_level_t(struct lit_game_t*);
 
 struct lit_game_t {
+  lit_game_player_data_t player_data;
   
   // Assets
   asset_font_id_t tutorial_font;
@@ -250,6 +250,7 @@ struct lit_game_t {
   // for exiting the level
   b32_t solved;
   lit_game_load_level_t* level_to_load;
+
 };
 
 

@@ -5,18 +5,16 @@ lit_game_is_exiting(lit_game_t* game) {
 }
 
 static void
-lit_game_set_title(lit_game_t* game, str8_t str) {
+lit_game_set_title(lit_game_t* game, str8_t str = str8_t{}) {
   game->title = str;
   game->title_timer = 0.f;
   game->title_wp_index = 0;
 }
 
-
 #include "lit_game_objects.cpp"
 #include "lit_game_levels.cpp"
 
 static void lit_game_load_level(lit_game_t* m, u32_t level_id);
-
 
 static void
 lit_game_update() 
