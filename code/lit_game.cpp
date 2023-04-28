@@ -172,7 +172,7 @@ static void
 lit_game_init() 
 {
   lit_game_t* game = &lit->game;
-  lit_level_move(game);
+  lit_level_menu(game);
   //lit_game_load_level(game, lit->level_to_start); 
   rng_init(&game->rng, 65535); // don't really need to be strict 
 

@@ -27,6 +27,8 @@
 #define LIT_PLAYER_PICKUP_DIST 512.f
 #define LIT_PLAYER_ROTATE_SPEED 1.f
 
+#define LIT_SKIP_TRANSITIONS true
+
 
 #ifdef INTERNAL
 #define lit_log(...) pf->debug_log(__VA_ARGS__)

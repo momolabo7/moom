@@ -81,7 +81,7 @@ struct lit_particle_pool_t {
   f32_t particle_color_end;
 
   u32_t particle_count;
-  lit_particle_t particles[256];
+  lit_particle_t particles[512];
 };
 
 
@@ -218,7 +218,7 @@ struct lit_game_t {
   lit_game_light_t lights[32];
 
   u32_t sensor_count;
-  lit_game_sensor_t sensors[32];
+  lit_game_sensor_t sensors[64];
 
   u32_t animator_count;
   lit_game_animator_t animators[64];

@@ -16,7 +16,13 @@ static void
 lit_game_init_level(lit_game_t* m, str8_t str) {
   m->stage_flash_timer = 0.f;
   m->stage_fade_timer = LIT_ENTER_DURATION;
+
+#if LIT_SKIP_TRANSITIONS
+  m->stage_fade_timer = 0.f;
+  m->state = LIT_GAME_STATE_TYPE_NORMAL;
+#else
   m->state = LIT_GAME_STATE_TYPE_TRANSITION_IN;
+#endif
 
   m->sensor_count = 0;
   m->light_count = 0;
@@ -124,7 +130,6 @@ lit_level_corners(lit_game_t* m) {
   
 }
 
-#if 0
 //
 // - Learn about color combinations
 // - R + G = Y
@@ -132,9 +137,9 @@ lit_level_corners(lit_game_t* m) {
 static void
 lit_level_mix(lit_game_t* m) {
 
-  lit_game_set_title(m, str8_from_lit("MIX"));
+  lit_game_init_level(m, str8_from_lit("MIX"));
 
-  lit_game_begin_sensor_group(m, lit_game_load_next_level);
+  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
   lit_game_push_sensor(m, 400.f, 400.f, 0x888800FF); 
   
   lit_game_push_sensor(m, 200.f, 400.f, 0x008800FF); 
@@ -150,6 +155,7 @@ lit_level_mix(lit_game_t* m) {
 
 
 
+#if 0
 //
 // - Learn about more color combinations
 // - G + B = P
@@ -814,67 +820,262 @@ lit_game_level_t lit_levels[] = {
 
 static void 
 lit_level_menu(lit_game_t* m) {
+  m->player_data.completed_levels = 100;
   const f32_t box_hw = 50.f;
   const f32_t box_hh = 50.f;
+  f32_t cx, cy;
+  u32_t grey = 0x888888FF;
 
   lit_game_init_level(m, str8_from_lit("HOME"));
 
-  lit_game_push_aabb(m, 200, 600, box_hw, box_hh);
+  //
+  // 1st row
+  //
+  cy = 600;
+  cx = 100;
+  lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
   lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_move);
-  lit_game_push_sensor(m, 200, 600, 0x888888FF); 
+  lit_game_push_sensor(m, cx, cy, grey); 
   lit_game_end_sensor_group(m);
 
-
-
-
-  lit_game_push_aabb(m, 400, 600, box_hw, box_hh);
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_obstruct);
-  lit_game_push_sensor(m, 400+25, 600, 0x888888FF); 
-  lit_game_push_sensor(m, 400-25, 600, 0x888888FF); 
-  lit_game_end_sensor_group(m);
-
-  lit_game_push_aabb(m, 600, 600, box_hw, box_hh);
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_add);
-  lit_game_push_sensor(m, 600+25, 600, 0x888888FF); 
-  lit_game_push_sensor(m, 600, 600, 0x888888FF); 
-  lit_game_push_sensor(m, 600-25, 600, 0x888888FF); 
-  lit_game_end_sensor_group(m);
-
-  lit_game_push_aabb(m, 100, 450, box_hw, box_hh);
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_corners);
-  lit_game_push_sensor(m, 100-25, 450-25, 0x888888FF); 
-  lit_game_push_sensor(m, 100-25, 450+25, 0x888888FF); 
-  lit_game_push_sensor(m, 100+25, 450-25, 0x888888FF); 
-  lit_game_push_sensor(m, 100+25, 450+25, 0x888888FF); 
-  lit_game_end_sensor_group(m);
-
-
-#if 0
-  lit_level_menu_begin_selection_box(m, 600.f, 600.f, lit_level_add);
-  lit_level_menu_end_selection_box(m);
-
-  {
-    f32_t center_x = 400.f;
-    f32_t center_y = 600.f;
-
+  if (m->player_data.completed_levels >= 2) {
+    cx = 250;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
     lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_obstruct);
-    lit_game_push_sensor(m, center_x, center_y, light_color); 
+    lit_game_push_sensor(m, cx+25, cy, grey); 
+    lit_game_push_sensor(m, cx-25, cy, grey); 
     lit_game_end_sensor_group(m);
-
-    lit_game_push_box(m, center_x-box_hw, center_y-box_hh, center_x+box_hw, center_y + box_hh); 
   }
-  {
-    f32_t center_x = 600.f;
-    f32_t center_y = 600.f;
 
+
+  if (m->player_data.completed_levels >= 3) {
+    cx = 400;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_add);
+    lit_game_push_sensor(m, cx+25, cy, grey); 
+    lit_game_push_sensor(m, cx,    cy, grey); 
+    lit_game_push_sensor(m, cx-25, cy, grey); 
+    lit_game_end_sensor_group(m);
+  }
+
+  if (m->player_data.completed_levels >= 4) {
+    cx = 550;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_corners);
+    lit_game_push_sensor(m, cx-25, cy-25, grey); 
+    lit_game_push_sensor(m, cx-25, cy+25, grey); 
+    lit_game_push_sensor(m, cx+25, cy-25, grey); 
+    lit_game_push_sensor(m, cx+25, cy+25, grey); 
+    lit_game_end_sensor_group(m);
+  }
+
+  // 5
+  if (m->player_data.completed_levels >= 5) {
+    cx = 700;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_mix);
+    lit_game_push_sensor(m, cx-25, cy-25, grey); 
+    lit_game_push_sensor(m, cx-25, cy+25, grey); 
+    lit_game_push_sensor(m, cx,    cy,    grey); 
+    lit_game_push_sensor(m, cx+25, cy-25, grey); 
+    lit_game_push_sensor(m, cx+25, cy+25, grey); 
+    lit_game_end_sensor_group(m);
+  }
+
+  //
+  // 2nd row
+  //
+  u32_t red = 0x884444FF;
+  cy = 450;
+  if (m->player_data.completed_levels >= 6) {
+    cx = 100;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
     lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_move);
-    lit_game_push_sensor(m, center_x, center_y, light_color); 
+
+    lit_game_push_sensor(m, cx, cy, red); 
+
     lit_game_end_sensor_group(m);
-
-    lit_game_push_box(m, center_x-box_hw, center_y-box_hh, center_x+box_hw, center_y + box_hh); 
   }
-#endif
 
-  lit_game_push_light(m, 50.f, 750.f, 0x444444FF, 360.f, 0.f);
-  lit_game_push_light(m, 750.f, 50.f, 0x444444FF, 360.f, 0.f);
+  if (m->player_data.completed_levels >= 7) {
+    cx = 250;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_obstruct);
+    lit_game_push_sensor(m, cx+25, cy+25, red); 
+    lit_game_push_sensor(m, cx-25, cy-25, red); 
+    lit_game_end_sensor_group(m);
+  }
+
+  if (m->player_data.completed_levels >= 8 ) {
+    cx = 400;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_add);
+    lit_game_push_sensor(m, cx-25, cy+25, red); 
+    lit_game_push_sensor(m, cx, cy, red); 
+    lit_game_push_sensor(m, cx+25, cy-25, red); 
+    lit_game_end_sensor_group(m);
+  }
+
+
+  if (m->player_data.completed_levels >= 9) {
+    cx = 550;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_corners);
+    lit_game_push_sensor(m, cx, cy+35, red); 
+    lit_game_push_sensor(m, cx-35, cy, red); 
+    lit_game_push_sensor(m, cx, cy-35, red); 
+    lit_game_push_sensor(m, cx+35, cy, red); 
+    lit_game_end_sensor_group(m);
+  }
+
+  if (m->player_data.completed_levels >= 10) {
+    cx = 700;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_mix);
+    lit_game_push_sensor(m, cx-25, cy+15, red); 
+    lit_game_push_sensor(m, cx+25, cy+15, red); 
+    lit_game_push_sensor(m, cx, cy+30, red); 
+    lit_game_push_sensor(m, cx+20, cy-15, red); 
+    lit_game_push_sensor(m, cx-20, cy-15, red); 
+    lit_game_end_sensor_group(m);
+  }
+
+  //
+  // 3rd row
+  //
+  u32_t yellow = 0x888800FF;
+  cy = 300;
+  if (m->player_data.completed_levels >= 11) {
+    cx = 100;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_move);
+    lit_game_begin_patrolling_sensor(m, cx-25, cy, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx+25, cy);
+    lit_game_end_patrolling_sensor(m);
+    lit_game_end_sensor_group(m);
+  }
+
+  if (m->player_data.completed_levels >= 12) {
+    cx = 250;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_move);
+
+    lit_game_begin_patrolling_sensor(m, cx-25, cy+25, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx+25, cy-25);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, cx+25, cy-25, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx-25, cy+25);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_end_sensor_group(m);
+  }
+
+  if (m->player_data.completed_levels >= 13) {
+    cx = 400;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_move);
+
+    lit_game_begin_patrolling_sensor(m, cx, cy+25, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx+25, cy-25);
+    lit_game_push_patrolling_sensor_waypoint(m, cx-25, cy-25);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, cx+25, cy-25, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx-25, cy-25);
+    lit_game_push_patrolling_sensor_waypoint(m, cx, cy+25);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, cx-25, cy-25, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx, cy+25);
+    lit_game_push_patrolling_sensor_waypoint(m, cx+25, cy-25);
+    lit_game_end_patrolling_sensor(m);
+
+
+    lit_game_end_sensor_group(m);
+  }
+
+  if (m->player_data.completed_levels >= 14) {
+    cx = 550;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_move);
+
+    lit_game_begin_patrolling_sensor(m, cx-30, cy, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx+30, cy);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, cx+30, cy, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx-30, cy);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, cx, cy-30, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx, cy+30);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, cx, cy+30, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx, cy-30);
+    lit_game_end_patrolling_sensor(m);
+
+
+    lit_game_end_sensor_group(m);
+  }
+
+  if (m->player_data.completed_levels >= 14) {
+    cx = 550;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_move);
+
+    lit_game_begin_patrolling_sensor(m, cx-30, cy, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx+30, cy);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, cx+30, cy, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx-30, cy);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, cx, cy-30, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx, cy+30);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, cx, cy+30, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx, cy-30);
+    lit_game_end_patrolling_sensor(m);
+
+
+    lit_game_end_sensor_group(m);
+  }
+
+  if (m->player_data.completed_levels >= 15) {
+    cx = 700;
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_move);
+
+    lit_game_begin_patrolling_sensor(m, cx-30, cy+30, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx+30, cy+30);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, cx+30, cy, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx-30, cy);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, cx, cy-30, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx, cy+30);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, cx, cy+30, yellow, 2.f); 
+    lit_game_push_patrolling_sensor_waypoint(m, cx, cy-30);
+    lit_game_end_patrolling_sensor(m);
+
+
+    lit_game_end_sensor_group(m);
+  }
+
+  lit_game_push_light(m, 25.f, 775.f, 0x444444FF, 360.f, 0.f);
+  lit_game_push_light(m, 775.f, 25.f, 0x444444FF, 360.f, 0.f);
+  if (m->player_data.completed_levels >= 5) {
+    lit_game_push_light(m, 775.f, 775.f, 0x440000FF, 360.f, 0.f);
+  }
+  if (m->player_data.completed_levels >= 10) {
+    lit_game_push_light(m, 25.f, 25.f, 0x004400FF, 360.f, 0.f);
+  }
 }
