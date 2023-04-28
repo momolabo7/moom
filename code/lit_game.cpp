@@ -26,6 +26,8 @@ lit_game_update()
   //
   // Transition Logic
   //
+  
+  lit_profile_begin(transition);
   if (game->state == LIT_GAME_STATE_TYPE_TRANSITION_IN) 
   {
     // Title 
@@ -72,23 +74,33 @@ lit_game_update()
       return;
     }
   }
-
+  lit_profile_end(transition);
 
   //
   // What to update based on state
   //
   if (game->state == LIT_GAME_STATE_TYPE_NORMAL) 
   {
+    lit_profile_begin(animate);
     lit_game_animate_everything(game, dt);
+    lit_profile_end(animate);
+
     lit_game_update_player(game, dt);
   }
 
+  lit_profile_begin(light);
   lit_game_generate_light(game);
+  lit_profile_end(light);
 
   if (!lit_game_is_exiting(game)) 
   {
+    lit_profile_begin(sensors);
     lit_game_update_sensors(game, dt);
+    lit_profile_end(sensors);
+
+    lit_profile_begin(particles);
     lit_game_update_particles(game, dt);
+    lit_profile_end(particles);
 
     //
     // win condition
@@ -108,6 +120,8 @@ lit_game_update()
   // This is the default and happier blend mode
   gfx_set_blend_alpha(gfx);
 
+
+  lit_profile_begin(rendering);
   //lit_draw_edges(game); 
   //lit_draw_debug_light_rays(game, moe);
   if (game->state == LIT_GAME_STATE_TYPE_NORMAL) {
@@ -163,6 +177,7 @@ lit_game_update()
     gfx_advance_depth(gfx);
 
   }
+  lit_profile_end(rendering);
 }
 
 // TODO: remove
