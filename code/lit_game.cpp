@@ -70,6 +70,7 @@ lit_game_update()
       game->stage_fade_timer += dt;
     }
     else {
+      lit_unlock_next_level(game->current_level_id);
       game->level_to_load(game);
       return;
     }
@@ -88,9 +89,9 @@ lit_game_update()
     lit_game_update_player(game, dt);
   }
 
-  lit_profile_begin(light);
+  lit_profile_begin(lights);
   lit_game_generate_light(game);
-  lit_profile_end(light);
+  lit_profile_end(lights);
 
   if (!lit_game_is_exiting(game)) 
   {
@@ -117,6 +118,7 @@ lit_game_update()
   //
   // RENDERING
   //
+
   // This is the default and happier blend mode
   gfx_set_blend_alpha(gfx);
 
@@ -179,9 +181,6 @@ lit_game_update()
   }
   lit_profile_end(rendering);
 }
-
-// TODO: remove
-static void lit_level_move(lit_game_t*);
 
 static void 
 lit_game_init() 

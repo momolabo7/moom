@@ -126,10 +126,16 @@ static lit_game_edge_t*
 lit_game_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
   assert(m->edge_count < array_count(m->edges));
   lit_game_edge_t* edge = m->edges + m->edge_count++;
-  edge->start_pt = v2f_set(min_x, min_y);
-  edge->end_pt = v2f_set(max_x, max_y);;
 
-  //edge->is_disabled = false;
+  edge->start_pt = v2f_set(min_x, min_y);
+  edge->end_pt = v2f_set(max_x, max_y);
+
+  // TODO: compress
+  
+  v2f_t p0, p1;
+  lit_game_calc_ghost_edge_line(edge, &p0, &p1);
+  edge->start_pt = p0;
+  edge->end_pt = p1;
 
   return edge;
 }
@@ -212,8 +218,9 @@ lit_game_push_light(lit_game_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t 
 }
 
 // Returns F32_INFINITY() if cannot find
-  static f32_t
-lit_game_get_ray_intersection_time_wrt_edges(v2f_t ray_origin, 
+static f32_t
+lit_game_get_ray_intersection_time_wrt_edges(
+    v2f_t ray_origin, 
     v2f_t ray_dir,
     lit_game_edge_t* edges,
     u32_t edge_count,
@@ -225,17 +232,12 @@ lit_game_get_ray_intersection_time_wrt_edges(v2f_t ray_origin,
   {
     lit_game_edge_t* edge = edges + edge_index;
 
+
     //if (edge->is_disabled) continue;
 
-    v2f_t edge_ray_origin;
-    v2f_t edge_ray_dir;
-    {
-      v2f_t p0, p1;
-      lit_game_calc_ghost_edge_line(edge, &p0, &p1);
-      edge_ray_origin = p0;
-      edge_ray_dir = p1 - p0; 
-    }
-
+    v2f_t edge_ray_origin = edge->start_pt;
+    v2f_t edge_ray_dir = edge->end_pt - edge->start_pt;
+    
     // Check for parallel
     v2f_t ray_normal = {};
     ray_normal.x = ray_dir.y;
@@ -273,7 +275,7 @@ lit_game_push_triangle(lit_game_light_t* l, v2f_t p0, v2f_t p1, v2f_t p2, u32_t 
 }
 
 
-  static void
+static void
 lit_gen_light_intersections(lit_game_light_t* l,
     lit_game_edge_t* edges,
     u32_t edge_count,
@@ -293,6 +295,8 @@ lit_gen_light_intersections(lit_game_light_t* l,
   l->intersection_count = 0;
   l->triangle_count = 0;
 
+
+  
   f32_t offset_angles[] = {0.0f, 0.001f, -0.001f};
   //f32_t offset_angles[] = {0.0f};
   for (u32_t offset_index = 0;
@@ -304,8 +308,6 @@ lit_gen_light_intersections(lit_game_light_t* l,
     for(u32_t edge_index = 0; edge_index < edge_count; ++edge_index) 
     {
       lit_game_edge_t* edge = edges + edge_index;
-
-      //if (edge->is_disabled) continue;
 
       v2f_t ep = edge->end_pt;      
 
@@ -323,17 +325,14 @@ lit_gen_light_intersections(lit_game_light_t* l,
 
 
       v2f_t light_ray_dir = v2f_rotate(ep - l->pos, offset_angle);
+
       f32_t t = lit_game_get_ray_intersection_time_wrt_edges(l->pos, light_ray_dir, edges, edge_count, offset_index == 0);
 
       assert(l->intersection_count < array_count(l->intersections));
       lit_light_intersection_t* intersection = l->intersections + l->intersection_count++;
       intersection->pt = (t == F32_INFINITY) ? ep : l->pos + t*light_ray_dir;
       intersection->is_shell = false;
-
-
     }
-
-
   }
 
   // Consider 'shell rays', which are rays that are at the 
@@ -377,6 +376,7 @@ lit_gen_light_intersections(lit_game_light_t* l,
       sorted_its[its_id].index = its_id;
       sorted_its[its_id].key = key; 
     }
+
     quicksort(sorted_its, l->intersection_count);
 
     for (u32_t sorted_its_id = 0;
@@ -432,6 +432,7 @@ lit_gen_light_intersections(lit_game_light_t* l,
       }
     }
   }
+
 }
 
 
@@ -866,6 +867,7 @@ lit_game_update_sensors(lit_game_t* game, f32_t dt)
   // This is an array of activated sensors per sensor_group
   u32_t* activated = arena_push_arr_zero(u32_t, &lit->frame_arena, game->sensor_group_count);
 
+  u32_t total_triangles = 0;
 
   // Go through each sensor and update what lights are on it
   for(u32_t sensor_index = 0; sensor_index < game->sensor_count; ++sensor_index)
@@ -878,6 +880,7 @@ lit_game_update_sensors(lit_game_t* game, f32_t dt)
     {
       lit_game_light_t* light = game->lights +light_index;
 
+      lit_profile_begin(sensor_light_overlap);
       for(u32_t tri_index = 0; tri_index < light->triangle_count; ++tri_index)
       {
         lit_game_light_triangle_t* tri = light->triangles +tri_index;
@@ -887,7 +890,9 @@ lit_game_update_sensors(lit_game_t* game, f32_t dt)
           break; // ignore the rest of the triangles
         }
       }
+      lit_profile_end(sensor_light_overlap);
 
+      total_triangles += light->triangle_count;
     }
 
     // Sensor color check
@@ -936,30 +941,18 @@ lit_game_update_sensors(lit_game_t* game, f32_t dt)
     }
   }
 
+  inspector_add_u32(&lit->inspector, str8_from_lit("total_triangles"), total_triangles);
 }
 
 
 static void 
 lit_game_render_sensors(lit_game_t* game) {
 
+  v2f_t size = v2f_set(LIT_SENSOR_RADIUS,LIT_SENSOR_RADIUS)*2;
   for(u32_t sensor_index = 0; sensor_index < game->sensor_count; ++sensor_index)
   {
     lit_game_sensor_t* sensor = game->sensors + sensor_index;
-    gfx_draw_filled_circle(gfx, sensor->pos, LIT_SENSOR_RADIUS, 8, rgba_hex(sensor->target_color)); 
-
-    // only for debugging
-#if 0
-    sb8_make(sb, 128);
-    sb8_push_fmt(sb, str8_from_lit("[%X]"), sensor->current_color);
-    paint_text(painter,
-        FONT_DEFAULT, 
-        sb->str,
-        rgba_hex(0xFFFFFFFF),
-        sensor->pos.x - 100.f,
-        sensor->pos.y + 10.f,
-        32.f);
-#endif
-
+    gfx_push_asset_sprite(gfx, &lit->assets, game->filled_circle_sprite, sensor->pos, size, rgba_hex(sensor->target_color));
     gfx_advance_depth(gfx);
   }
 }

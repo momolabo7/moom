@@ -1,5 +1,8 @@
 #include "lit.h"
 
+
+
+
 static b32_t
 lit_tick() {
   if(moe->game_context == nullptr) {
@@ -44,13 +47,12 @@ lit_tick() {
     pf->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
     gfx_set_view(gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
-#if 0
-    pf_file_t file = {};
-    moe->open_file(&file, "hello.txt", PF_FILE_ACCESS_OVERWRITE, PF_FILE_PATH_USER);
-    const char hey[] = "hey";
-    moe->write_file(&file, 3, 0, (void*)hey);
-#endif
+    //
+    // Check save data
+    //
+    lit_init_save_file(); 
 
+    
   }
 
   lit = (lit_t*)((pf_memory_t*)moe->game_context)->data;
@@ -122,6 +124,6 @@ moe_update_and_render(
     profiler_t* in_profiler, 
     input_t* in_input)
 { 
-  moe_begin_frame;
+  moe_begin;
   return lit_tick();
 }

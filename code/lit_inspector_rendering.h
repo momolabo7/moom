@@ -18,11 +18,12 @@ inspector_update_and_render()
       rgba_set(0.f, 0.f, 0.f, 0.5f));
   gfx_advance_depth(gfx);
 
-  f32_t line_height = 32.f;
-  sb8_make(sb, 256);
-
   for(u32_t entry_index = 0; entry_index < inspector->entry_count; ++entry_index)
   {
+    f32_t line_height = 32.f;
+    sb8_make(sb, 256);
+
+
     inspector_entry_t* entry = inspector->entries + entry_index;
     switch(entry->type){
       case INSPECTOR_ENTRY_TYPE_U32: {

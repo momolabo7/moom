@@ -4,7 +4,7 @@ engine
   - Expandable arena for platform, instead of just calling VirtualAlloc every time
 
 game
-  - lit_animator should be more robust, manipulating down to the v2f instead of an object.
+  - lit_game_get_ray_intersection_time_wrt_edges() is SLOW
   - Extract the whole lighting thing into a system of it's own with callbacks
 
 assets 

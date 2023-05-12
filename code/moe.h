@@ -5,7 +5,7 @@
 #include "momo.h"
 #include "karu.h"
 
-#define moe_begin_frame { \
+#define moe_begin { \
   moe = in_moe; \
   pf = in_pf; \
   gfx = in_gfx; \

@@ -3,6 +3,8 @@
 
 #include "moe.h"
 
+#define LIT_SAVE_FILE "hello.sav"
+
 #define LIT_DEBUG_INTERSECTIONS 0
 #define LIT_DEBUG_COORDINATES 0
 
@@ -64,12 +66,13 @@ enum lit_mode_t {
 };
 
 struct lit_save_data_t {
-  // TODO
+  u32_t unlocked_levels;
 };
 
 
 
 struct lit_t {
+  lit_save_data_t save_data;
   lit_show_debug_type_t show_debug_type;
   lit_mode_t next_mode;
   lit_mode_t mode;
@@ -100,6 +103,63 @@ struct lit_t {
 };
 
 static lit_t* lit;
+
+static b32_t
+lit_init_save_file() {
+  pf_file_t file = {};
+
+  // save data actually found
+  if (pf->open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_READ, PF_FILE_PATH_USER)) {
+    if(pf->read_file(&file, sizeof(lit_save_data_t), 0, &lit->save_data)) {
+      // happy! :3
+      pf->close_file(&file);
+      return true;
+    }
+    else { // data is somehow corrupted?
+      return false;
+    }
+
+  }
+  else { // save data not found
+
+    if (pf->open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_OVERWRITE, PF_FILE_PATH_USER)) {
+      u32_t num = 0;
+      pf->write_file(&file, sizeof(num), 0, (void*)&num);
+      return true;
+    }
+    else {
+      // if we reach here, something is wrong with the file system
+      return false;
+    }
+  }
+
+}
+
+static b32_t 
+lit_unlock_next_level(u32_t current_level_id) {
+
+  if (current_level_id <= lit->save_data.unlocked_levels) {
+  pf_file_t file = {};
+
+    ++lit->save_data.unlocked_levels;
+
+    if (pf->open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_OVERWRITE, PF_FILE_PATH_USER)) {
+      pf->write_file(&file, sizeof(lit->save_data), 0, (void*)&lit->save_data);
+      return true;
+    }
+    else {
+      // if we reach here, something is wrong with the file system
+      return false;
+    }
+  }
+
+  return true;
+}
+
+static u32_t
+lit_get_unlocked_levels() {
+  return lit->save_data.unlocked_levels;
+}
 
 
 // TODO: remove

@@ -436,7 +436,9 @@ gfx_draw_line(gfx_t* g,
 }
 
 static void
-gfx_draw_filled_circle(gfx_t* g, v2f_t center, f32_t radius,
+gfx_draw_filled_circle(gfx_t* g, 
+                       v2f_t center, 
+                       f32_t radius,
                        u32_t sections,
                        rgba_t color)
 {

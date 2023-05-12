@@ -73,7 +73,7 @@ _bonk_tri2_pt2_dot_product(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
 
 static b32_t
 bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
-  return _bonk_tri2_pt2_dot_product(tp0, tp1, tp2, pt);
+  return _bonk_tri2_pt2_parametric(tp0, tp1, tp2, pt);
 }
 
 

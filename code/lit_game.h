@@ -49,7 +49,7 @@ struct lit_game_light_t {
   lit_game_light_triangle_t triangles[256];
 
   u32_t intersection_count;
-  lit_light_intersection_t intersections[256];
+  lit_light_intersection_t intersections[512];
 
 };
 
@@ -189,14 +189,9 @@ struct lit_game_animator_t {
 // Main game struct
 //
 
-struct lit_game_player_data_t {
-  u32_t completed_levels;
-};
-
 typedef void lit_game_load_level_t(struct lit_game_t*);
 
 struct lit_game_t {
-  lit_game_player_data_t player_data;
   
   // Assets
   asset_font_id_t tutorial_font;
@@ -218,7 +213,7 @@ struct lit_game_t {
   lit_game_light_t lights[32];
 
   u32_t sensor_count;
-  lit_game_sensor_t sensors[64];
+  lit_game_sensor_t sensors[128];
 
   u32_t animator_count;
   lit_game_animator_t animators[64];
@@ -230,7 +225,7 @@ struct lit_game_t {
   u32_t selected_sensor_group_id;
 
   u32_t sensor_group_count;
-  lit_game_sensor_group_t sensor_groups[16];
+  lit_game_sensor_group_t sensor_groups[32];
 
   // for animated sensor APIs
   lit_game_sensor_t* selected_sensor; 
