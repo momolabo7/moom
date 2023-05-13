@@ -13,6 +13,7 @@ lit_tick() {
     lit = (lit_t*)((pf_memory_t*)moe->game_context)->data;
     lit->level_to_start = 0;
     lit->next_mode = LIT_MODE_GAME;
+    
 
     //
     // Initialize assets
@@ -50,7 +51,7 @@ lit_tick() {
     //
     // Check save data
     //
-    lit_init_save_file(); 
+    lit_init_save_data(); 
 
     
   }

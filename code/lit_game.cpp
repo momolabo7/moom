@@ -186,8 +186,6 @@ static void
 lit_game_init() 
 {
   lit_game_t* game = &lit->game;
-  lit_level_menu(game);
-  //lit_game_load_level(game, lit->level_to_start); 
   rng_init(&game->rng, 65535); // don't really need to be strict 
 
   make(asset_match_t, match);
@@ -200,5 +198,13 @@ lit_game_init()
   game->filled_circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
 
   game->current_level_id = 0;
+
+  // Go to level based on user's progress
+  if (lit_get_levels_unlocked_count() == 1) {
+    lit_level_move(game);
+  }
+  else {
+    lit_level_menu(game);
+  }
 }
 

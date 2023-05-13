@@ -104,8 +104,34 @@ struct lit_t {
 
 static lit_t* lit;
 
+// Save data related
+
+static b32_t 
+lit_unlock_next_level(u32_t current_level_id) {
+
+  if (current_level_id > lit->save_data.unlocked_levels) {
+    pf_file_t file = {};
+
+    lit->save_data.unlocked_levels = current_level_id;
+
+    if (pf->open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_OVERWRITE, PF_FILE_PATH_USER)) {
+      pf->write_file(&file, sizeof(lit->save_data), 0, (void*)&lit->save_data);
+      pf->close_file(&file);
+      return true;
+    }
+    else {
+      // if we reach here, something is wrong with the file system
+      return false;
+    }
+  }
+
+  return true;
+}
+
+
 static b32_t
-lit_init_save_file() {
+lit_init_save_data() {
+  lit->save_data.unlocked_levels = 0;
   pf_file_t file = {};
 
   // save data actually found
@@ -121,43 +147,13 @@ lit_init_save_file() {
 
   }
   else { // save data not found
-
-    if (pf->open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_OVERWRITE, PF_FILE_PATH_USER)) {
-      u32_t num = 0;
-      pf->write_file(&file, sizeof(num), 0, (void*)&num);
-      return true;
-    }
-    else {
-      // if we reach here, something is wrong with the file system
-      return false;
-    }
+    return lit_unlock_next_level(1);
   }
 
-}
-
-static b32_t 
-lit_unlock_next_level(u32_t current_level_id) {
-
-  if (current_level_id <= lit->save_data.unlocked_levels) {
-  pf_file_t file = {};
-
-    ++lit->save_data.unlocked_levels;
-
-    if (pf->open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_OVERWRITE, PF_FILE_PATH_USER)) {
-      pf->write_file(&file, sizeof(lit->save_data), 0, (void*)&lit->save_data);
-      return true;
-    }
-    else {
-      // if we reach here, something is wrong with the file system
-      return false;
-    }
-  }
-
-  return true;
 }
 
 static u32_t
-lit_get_unlocked_levels() {
+lit_get_levels_unlocked_count() {
   return lit->save_data.unlocked_levels;
 }
 
