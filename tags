@@ -1350,11 +1350,11 @@ lit_game_end_sensor_group	code/lit_game_objects.cpp	/^lit_game_end_sensor_group(
 lit_game_generate_light	code/lit_game_objects.cpp	/^lit_game_generate_light(lit_game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_get_ray_intersection_time_wrt_edges	code/lit_game_objects.cpp	/^lit_game_get_ray_intersection_time_wrt_edges($/;"	f	language:C++	typeref:typename:f32_t	file:
 lit_game_init	code/lit_game.cpp	/^lit_game_init() $/;"	f	language:C++	typeref:typename:void	file:
-lit_game_init_level	code/lit_game_levels.cpp	/^lit_game_init_level(lit_game_t* m, str8_t str, u32_t level_id) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_game_init_level	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_game_init_level(lit_game_t* m, str8_t str, u32_t level_id) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_init_level	D:/work/git/moom/code/lit_game_levels.cpp	/^lit_game_init_level(lit_game_t* m, str8_t str) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_init_level	D:/work/git/moom/code/lit_levels.h	/^lit_game_init_level(lit_game_t* m, str8_t str) {$/;"	f	language:C++	typeref:typename:void
 lit_game_is_exiting	code/lit_game.cpp	/^lit_game_is_exiting(lit_game_t* game) {$/;"	f	language:C++	typeref:typename:b32_t	file:
-lit_game_level_t	code/lit_game_levels.cpp	/^typedef void lit_game_level_t(lit_game_t*);$/;"	t	language:C++	typeref:typename:void ()(lit_game_t *)	file:
+lit_game_level_t	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^typedef void lit_game_level_t(lit_game_t*);$/;"	t	language:C++	typeref:typename:void ()(lit_game_t *)	file:
 lit_game_level_t	D:/work/git/moom/code/lit_game_levels.cpp	/^typedef void lit_game_level_t(lit_game_t*);$/;"	t	language:C++	typeref:typename:void ()(lit_game_t *)	file:
 lit_game_level_t	D:/work/git/moom/code/lit_levels.h	/^typedef void (*lit_game_level_t)(lit_game_t* mode); $/;"	t	language:C++	typeref:typename:void (*)(lit_game_t * mode)
 lit_game_light_t	code/lit_game.h	/^struct lit_game_light_t {$/;"	s	language:C++
@@ -1399,7 +1399,7 @@ lit_game_sensor_group_t	code/lit_game.h	/^struct lit_game_sensor_group_t {$/;"	s
 lit_game_sensor_group_t	D:/work/git/moom/code/lit_game.h	/^struct lit_game_sensor_group_t {$/;"	s	language:C++
 lit_game_sensor_t	code/lit_game.h	/^struct lit_game_sensor_t {$/;"	s	language:C++
 lit_game_sensor_t	D:/work/git/moom/code/lit_game.h	/^struct lit_game_sensor_t {$/;"	s	language:C++
-lit_game_sensor_trigger_solved	code/lit_game_levels.cpp	/^lit_game_sensor_trigger_solved(lit_game_t* game, void* context) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_game_sensor_trigger_solved	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_game_sensor_trigger_solved(lit_game_t* game, void* context) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_sensor_trigger_solved	D:/work/git/moom/code/lit_game_levels.cpp	/^lit_game_sensor_trigger_solved(lit_game_t* game, void* context) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_sensor_trigger_solved	D:/work/git/moom/code/lit_levels.h	/^lit_game_sensor_trigger_solved(lit_game_t* game, void* context) {$/;"	f	language:C++	typeref:typename:void
 lit_game_set_title	code/lit_game.cpp	/^lit_game_set_title(lit_game_t* game, str8_t str = str8_t{}) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1429,37 +1429,53 @@ lit_get_levels_unlocked_count	C:/users/geral/work/moom/code/lit.h	/^lit_get_leve
 lit_goto_specific_level	C:/users/geral/work/moom/code/lit.h	/^lit_goto_specific_level(u32_t level) {$/;"	f	language:C++	typeref:typename:void
 LIT_HEIGHT	C:/users/geral/work/moom/code/lit.h	/^#define LIT_HEIGHT /;"	d	language:C++
 lit_init_player	code/lit_game_objects.cpp	/^lit_init_player(lit_game_t* game, f32_t x, f32_t y) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_init_save_file	C:/users/geral/work/moom/code/lit.h	/^lit_init_save_file() {$/;"	f	language:C++	typeref:typename:b32_t
+lit_init_save_data	C:/users/geral/work/moom/code/lit.h	/^lit_init_save_data() {$/;"	f	language:C++	typeref:typename:b32_t
 lit_init_splash	code/lit_splash.cpp	/^lit_init_splash() {$/;"	f	language:C++	typeref:typename:void	file:
 LIT_INSPECTOR_RENDERING_H	code/lit_inspector_rendering.h	/^#define LIT_INSPECTOR_RENDERING_H$/;"	d	language:C++
-lit_level_add	code/lit_game_levels.cpp	/^lit_level_add(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void	file:
+lit_is_in_tutorial	C:/users/geral/work/moom/code/lit.h	/^lit_is_in_tutorial() {$/;"	f	language:C++	typeref:typename:b32_t
+LIT_LAST_TUTORIAL_LEVEL_ID	C:/users/geral/work/moom/code/lit.h	/^#define LIT_LAST_TUTORIAL_LEVEL_ID /;"	d	language:C++
+lit_level_add	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_add(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void	file:
+lit_level_add	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^static void lit_level_add(lit_game_t* m);$/;"	p	language:C++	typeref:typename:void	file:
 lit_level_add	D:/work/git/moom/code/lit_game_levels.cpp	/^lit_level_add(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void	file:
 lit_level_add	D:/work/git/moom/code/lit_levels.h	/^lit_level_add(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void
+lit_level_blend	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_blend(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_blend	D:/work/git/moom/code/lit_levels.h	/^lit_level_blend(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_busy	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_busy(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_busy	D:/work/git/moom/code/lit_levels.h	/^lit_level_busy(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_corners	code/lit_game_levels.cpp	/^lit_level_corners(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void	file:
+lit_level_corners	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_corners(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void	file:
 lit_level_corners	D:/work/git/moom/code/lit_game_levels.cpp	/^lit_level_corners(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void	file:
 lit_level_corners	D:/work/git/moom/code/lit_levels.h	/^lit_level_corners(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void
+lit_level_disco	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_disco(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_disco	D:/work/git/moom/code/lit_levels.h	/^lit_level_disco(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_interval	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_interval(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_interval	D:/work/git/moom/code/lit_levels.h	/^lit_level_interval(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_menu	code/lit_game_levels.cpp	/^lit_level_menu(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_menu	code/lit_game_levels.cpp	/^static void lit_level_menu(lit_game_t* m);$/;"	p	language:C++	typeref:typename:void	file:
+lit_level_menu	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_menu(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_menu	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^static void lit_level_menu(lit_game_t* m);$/;"	p	language:C++	typeref:typename:void	file:
 lit_level_menu	D:/work/git/moom/code/lit_game_levels.cpp	/^lit_level_menu(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_menu	D:/work/git/moom/code/lit_game_levels.cpp	/^static void lit_level_menu(lit_game_t* m);$/;"	p	language:C++	typeref:typename:void	file:
-lit_level_mix	code/lit_game_levels.cpp	/^lit_level_mix(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_mix	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_mix(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_mix	D:/work/git/moom/code/lit_levels.h	/^lit_level_mix(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_move	code/lit_game_levels.cpp	/^lit_level_move(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_move	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_move(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_move	D:/work/git/moom/code/lit_game_levels.cpp	/^lit_level_move(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_move	D:/work/git/moom/code/lit_levels.h	/^lit_level_move(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_movement	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_movement(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_movement	D:/work/git/moom/code/lit_levels.h	/^lit_level_movement(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
-lit_level_obstruct	code/lit_game_levels.cpp	/^lit_level_obstruct(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_obstruct	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_obstruct(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_obstruct	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^static void lit_level_obstruct(lit_game_t* m);$/;"	p	language:C++	typeref:typename:void	file:
 lit_level_obstruct	D:/work/git/moom/code/lit_game_levels.cpp	/^lit_level_obstruct(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_obstruct	D:/work/git/moom/code/lit_levels.h	/^lit_level_obstruct(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_onion	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_onion(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_onion	D:/work/git/moom/code/lit_levels.h	/^lit_level_onion(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_orbit	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_orbit(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_patience	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_patience(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_patience	D:/work/git/moom/code/lit_levels.h	/^lit_level_patience(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_rooms	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_rooms(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_rooms	D:/work/git/moom/code/lit_levels.h	/^lit_level_rooms(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_spectrum	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_spectrum(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_spectrum	D:/work/git/moom/code/lit_levels.h	/^lit_level_spectrum(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_spin	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_spin(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_spin	D:/work/git/moom/code/lit_levels.h	/^lit_level_spin(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
+lit_level_split	C:/users/geral/work/moom/code/lit_game_levels.cpp	/^lit_level_split(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_split	D:/work/git/moom/code/lit_levels.h	/^lit_level_split(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
 lit_level_test	D:/work/git/moom/code/lit_levels.h	/^lit_level_test(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void
 lit_light_intersection_t	code/lit_game.h	/^struct lit_light_intersection_t {$/;"	s	language:C++

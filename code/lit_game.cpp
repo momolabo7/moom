@@ -197,14 +197,14 @@ lit_game_init()
   game->rotate_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_ROTATE_SPRITE);
   game->filled_circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
 
-  game->current_level_id = 0;
-
   // Go to level based on user's progress
-  if (lit_get_levels_unlocked_count() == 1) {
-    lit_level_move(game);
+  switch(lit_get_levels_unlocked_count())
+  {
+    case 1: lit_level_move(game); break;
+    case 2: lit_level_obstruct(game); break;
+    case 3: lit_level_add(game); break;
+    default: lit_level_menu(game);
   }
-  else {
-    lit_level_menu(game);
-  }
+  
 }
 

@@ -31,6 +31,8 @@
 
 #define LIT_SKIP_TRANSITIONS true
 
+#define LIT_LAST_TUTORIAL_LEVEL_ID 3
+
 
 #ifdef INTERNAL
 #define lit_log(...) pf->debug_log(__VA_ARGS__)
@@ -106,13 +108,18 @@ static lit_t* lit;
 
 // Save data related
 
+static b32_t
+lit_is_in_tutorial() {
+  return lit->save_data.unlocked_levels <= LIT_LAST_TUTORIAL_LEVEL_ID;
+}
+
 static b32_t 
 lit_unlock_next_level(u32_t current_level_id) {
 
-  if (current_level_id > lit->save_data.unlocked_levels) {
+  if (current_level_id >= lit->save_data.unlocked_levels) {
     pf_file_t file = {};
 
-    lit->save_data.unlocked_levels = current_level_id;
+    lit->save_data.unlocked_levels = current_level_id + 1;
 
     if (pf->open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_OVERWRITE, PF_FILE_PATH_USER)) {
       pf->write_file(&file, sizeof(lit->save_data), 0, (void*)&lit->save_data);
@@ -147,7 +154,7 @@ lit_init_save_data() {
 
   }
   else { // save data not found
-    return lit_unlock_next_level(1);
+    return lit_unlock_next_level(0);
   }
 
 }
