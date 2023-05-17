@@ -14,6 +14,8 @@ lit_game_push_point(lit_game_t* game, v2f_t point) {
 // 
 // Animator
 //
+
+
 static void 
 lit_game_animator_push_patrol_point_waypoint(
     lit_game_animator_t* animator, 
@@ -22,11 +24,46 @@ lit_game_animator_push_patrol_point_waypoint(
 {
   assert(animator->type == LIT_ANIMATOR_TYPE_PATROL_POINT);
   auto* a = &animator->move_point;
+
+  // Add the waypoint
   assert(a->waypoint_count < array_count(a->waypoints));
   v2f_t* wp = a->waypoints + a->waypoint_count++;
   wp->x = pos_x;
   wp->y = pos_y;
+
+
 }
+
+static lit_game_animator_t*
+lit_game_animator_begin_patrol_point(lit_game_t* game, f32_t duration_per_waypoint, v2f_t* point) 
+{
+  assert(game->animator_count < array_count(game->animators));
+  auto* anim = game->animators + game->animator_count++;
+  anim->type = LIT_ANIMATOR_TYPE_PATROL_POINT;
+
+  auto* a = &anim->move_point;
+  a->timer = 0.f;
+  a->duration = duration_per_waypoint;
+  a->point = point;
+  a->waypoint_count = 0;
+  a->current_waypoint_index = 0;
+
+  lit_game_animator_push_patrol_point_waypoint(anim, point->x, point->y);
+
+  return anim;
+}
+
+static void 
+lit_game_animator_end_patrol_point(lit_game_animator_t* anim)
+{
+  auto* a = &anim->move_point;
+  a->timer = 0.f;
+  a->current_waypoint_index = 0;
+  u32_t next_waypoint_index = (a->current_waypoint_index + 1) % a->waypoint_count;
+  a->start = a->waypoints[a->current_waypoint_index];
+  a->end = a->waypoints[next_waypoint_index];
+}
+
 
 static lit_game_animator_rotate_point_t* 
 lit_game_animator_push_rotate_point(
@@ -49,6 +86,7 @@ lit_game_animator_push_rotate_point(
   return a;
 }
 
+#if 0
 static void
 lit_game_push_patrol_edge_animator(lit_game_t* game, lit_game_edge_t* edge,  f32_t duration, lit_game_edge_t start, lit_game_edge_t end) 
 {
@@ -64,6 +102,7 @@ lit_game_push_patrol_edge_animator(lit_game_t* game, lit_game_edge_t* edge,  f32
   a->edge = edge;
 
 }
+#endif
 
 static void 
 lit_game_animate(lit_game_animator_t* animator, f32_t dt) {
@@ -87,6 +126,7 @@ lit_game_animate(lit_game_animator_t* animator, f32_t dt) {
       a->delta = v2f_rotate(a->delta, a->speed * dt);
       dref(a->point) = dref(a->point_of_rotation) + a->delta;
     } break;
+#if 0
     case LIT_ANIMATOR_TYPE_PATROL_EDGE: {
       auto* a = &animator->patrol_edge;
       a->timer += dt;
@@ -98,6 +138,7 @@ lit_game_animate(lit_game_animator_t* animator, f32_t dt) {
       a->edge->end_pt = v2f_lerp(a->start_edge.end_pt, a->end_edge.end_pt, alpha);
 
     } break;
+#endif
 
   }
 }
@@ -111,7 +152,7 @@ lit_game_animate_everything(lit_game_t* game, f32_t dt) {
 }
 
 //
-// Edge
+// Edges
 //
 
 static void 
@@ -130,8 +171,7 @@ lit_game_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t m
   edge->start_pt = v2f_set(min_x, min_y);
   edge->end_pt = v2f_set(max_x, max_y);
 
-  // TODO: compress
-  
+  // TODO: can we remove this part?
   v2f_t p0, p1;
   lit_game_calc_ghost_edge_line(edge, &p0, &p1);
   edge->start_pt = p0;
@@ -141,35 +181,6 @@ lit_game_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t m
 }
 
 
-static void
-lit_game_push_patrolling_edge(lit_game_t* m, f32_t duration, 
-    f32_t start_min_x, f32_t start_min_y, f32_t start_max_x, f32_t start_max_y,
-    f32_t end_min_x, f32_t end_min_y, f32_t end_max_x, f32_t end_max_y) 
-{
-  lit_game_edge_t* edge = lit_game_push_edge(m, start_min_x, start_min_y, start_max_x, start_max_y);
-
-  lit_game_edge_t start = {0};
-  start.start_pt = edge->start_pt;
-  start.end_pt = edge->end_pt;
-
-  lit_game_edge_t end = {0};
-  end.start_pt = v2f_set(end_min_x, end_min_y);
-  end.end_pt = v2f_set(end_max_x, end_max_y);
-
-  lit_game_push_patrol_edge_animator(m, edge, duration, start, end); 
-}
-
-static void
-lit_game_push_patrolling_double_edge(lit_game_t* m, f32_t duration, 
-    f32_t start_min_x, f32_t start_min_y, f32_t start_max_x, f32_t start_max_y,
-    f32_t end_min_x, f32_t end_min_y, f32_t end_max_x, f32_t end_max_y) 
-{
-  lit_game_push_patrolling_edge(m, duration, start_min_x, start_min_y, start_max_x, start_max_y, 
-      end_min_x, end_min_y, end_max_x, end_max_y);
-  lit_game_push_patrolling_edge(m, duration, start_max_x, start_max_y, start_min_x, start_min_y, 
-      end_max_x, end_max_y, end_min_x, end_min_y);
-
-}
 
 
 static void 
@@ -194,13 +205,78 @@ lit_game_push_aabb(lit_game_t* m, f32_t cx, f32_t cy, f32_t hw, f32_t hh) {
   lit_game_push_edge(m, min_x, max_y, min_x, min_y);
 }
 
-static void 
+static lit_game_double_edge_t 
 lit_game_push_double_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) {
-  lit_game_push_edge(m, min_x, min_y, max_x, max_y);
-  lit_game_push_edge(m, max_x, max_y, min_x, min_y);
+  auto* e1 = lit_game_push_edge(m, min_x, min_y, max_x, max_y);
+  auto* e2 = lit_game_push_edge(m, max_x, max_y, min_x, min_y);
+  return { e1, e2 };
+}
+
+static void
+lit_game_begin_patrolling_double_edge(lit_game_t* game, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y, f32_t duration_per_waypoint)
+{
+  assert(!game->selected_animator_for_double_edge_min[0]);
+  assert(!game->selected_animator_for_double_edge_min[1]);
+  assert(!game->selected_animator_for_double_edge_max[0]);
+  assert(!game->selected_animator_for_double_edge_max[1]);
+
+  //
+  // NOTE(momo): this is kind of disgusting because it is possible that not all points need to be patrolling,
+  // so we are potentially wasting space, but whatevers....
+  //
+  auto edges = lit_game_push_double_edge(game, min_x, min_y, max_x, max_y);
+  game->selected_animator_for_double_edge_min[0] = 
+    lit_game_animator_begin_patrol_point(game, duration_per_waypoint, &edges.e1->start_pt);
+  game->selected_animator_for_double_edge_min[1] = 
+    lit_game_animator_begin_patrol_point(game, duration_per_waypoint, &edges.e2->end_pt);
+  game->selected_animator_for_double_edge_max[0] = 
+    lit_game_animator_begin_patrol_point(game, duration_per_waypoint, &edges.e1->end_pt);
+  game->selected_animator_for_double_edge_max[1] = 
+    lit_game_animator_begin_patrol_point(game, duration_per_waypoint, &edges.e2->start_pt);
+}
+
+static void
+lit_game_push_patrolling_double_edge_waypoint_for_min(lit_game_t* game, f32_t x, f32_t y){
+
+  assert(game->selected_animator_for_double_edge_min[0]);
+  assert(game->selected_animator_for_double_edge_min[1]);
+
+  lit_game_animator_push_patrol_point_waypoint(game->selected_animator_for_double_edge_min[0], x, y);
+  lit_game_animator_push_patrol_point_waypoint(game->selected_animator_for_double_edge_min[1], x, y);
+}
+static void
+lit_game_push_patrolling_double_edge_waypoint_for_max(lit_game_t* game, f32_t x, f32_t y){
+
+  assert(game->selected_animator_for_double_edge_max[0]);
+  assert(game->selected_animator_for_double_edge_max[1]);
+
+  lit_game_animator_push_patrol_point_waypoint(game->selected_animator_for_double_edge_max[0], x, y);
+  lit_game_animator_push_patrol_point_waypoint(game->selected_animator_for_double_edge_max[1], x, y);
+}
+
+static void
+lit_game_end_patrolling_double_edge(lit_game_t* game) {
+
+  assert(game->selected_animator_for_double_edge_min[0]);
+  assert(game->selected_animator_for_double_edge_min[1]);
+  assert(game->selected_animator_for_double_edge_max[0]);
+  assert(game->selected_animator_for_double_edge_max[1]);
+
+  lit_game_animator_end_patrol_point(game->selected_animator_for_double_edge_min[0]);
+  lit_game_animator_end_patrol_point(game->selected_animator_for_double_edge_min[1]);
+  lit_game_animator_end_patrol_point(game->selected_animator_for_double_edge_max[0]);
+  lit_game_animator_end_patrol_point(game->selected_animator_for_double_edge_max[1]);
+
+  game->selected_animator_for_double_edge_min[0] = nullptr; 
+  game->selected_animator_for_double_edge_min[1] = nullptr;
+  game->selected_animator_for_double_edge_max[0] = nullptr; 
+  game->selected_animator_for_double_edge_max[1] = nullptr;
 }
 
 
+//
+// LIGHT
+//
 static lit_game_light_t*
 lit_game_push_light(lit_game_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t angle, f32_t turn) {
   assert(m->light_count < array_count(m->lights));
@@ -595,7 +671,6 @@ lit_game_update_player(lit_game_t* game, f32_t dt)
     pf->unlock_cursor();
   }
 
-  // TODO: do this for held sensors
   // Restrict movement
   if (player->pos.x > LIT_WIDTH - LIT_PLAYER_RADIUS) {
     player->pos.x = LIT_WIDTH - LIT_PLAYER_RADIUS;
@@ -786,56 +861,39 @@ lit_game_push_rotating_sensor(
 
 }
 
+
+
 static void
 lit_game_push_patrolling_sensor_waypoint(
     lit_game_t* game, 
     f32_t pos_x, 
     f32_t pos_y) 
 {
-  assert(game->selected_animator);
-  lit_game_animator_push_patrol_point_waypoint(game->selected_animator, pos_x, pos_y);
+  assert(game->selected_animator_for_sensor);
+  lit_game_animator_push_patrol_point_waypoint(game->selected_animator_for_sensor, pos_x, pos_y);
 }
 
 
 static void
 lit_game_begin_patrolling_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color, f32_t duration_per_waypoint) 
 {
-  assert(!game->selected_animator);
+  assert(!game->selected_animator_for_sensor);
 
   auto* sensor = lit_game_push_sensor(game, pos_x, pos_y, target_color);
-  //game->selected_animator = lit_game_push_patrol_sensor_animator(game, sensor, duration_per_waypoint);
+  game->selected_animator_for_sensor = 
+    lit_game_animator_begin_patrol_point(game, duration_per_waypoint, &sensor->pos);
 
-  assert(game->animator_count < array_count(game->animators));
-  auto* anim = game->animators + game->animator_count++;
-  anim->type = LIT_ANIMATOR_TYPE_PATROL_POINT;
-
-  auto* a = &anim->move_point;
-  a->timer = 0.f;
-  a->duration = duration_per_waypoint;
-  a->point = &sensor->pos;
-  a->waypoint_count = 0;
-  a->current_waypoint_index = 0;
-
-  game->selected_animator = anim;
-  lit_game_push_patrolling_sensor_waypoint(game, pos_x, pos_y);
+  //lit_game_push_patrolling_sensor_waypoint(game, pos_x, pos_y);
 
 }
 
 static void
 lit_game_end_patrolling_sensor(lit_game_t* game) {
 
-  assert(game->selected_animator);
+  assert(game->selected_animator_for_sensor);
+  lit_game_animator_end_patrol_point(game->selected_animator_for_sensor);
 
-  auto* a = &game->selected_animator->move_point;
-  a->timer = 0.f;
-  a->current_waypoint_index = 0;
-  u32_t next_waypoint_index = (a->current_waypoint_index + 1) % a->waypoint_count;
-  a->start = a->waypoints[a->current_waypoint_index];
-  a->end = a->waypoints[next_waypoint_index];
-
-
-  game->selected_sensor = nullptr;
-  game->selected_animator = nullptr;
+  game->selected_animator_for_sensor = nullptr;
 }
 
 static void 
@@ -921,7 +979,8 @@ lit_game_update_sensors(lit_game_t* game, f32_t dt)
       v2f_t size_start = v2f_set(LIT_SENSOR_PARTICLE_SIZE, LIT_SENSOR_PARTICLE_SIZE);
       v2f_t size_end = v2f_zero();
 
-      lit_spawn_particle(game, 
+      lit_spawn_particle(
+          game, 
           1.f,
           sensor->pos,
           particle_vel,

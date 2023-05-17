@@ -36,16 +36,19 @@ lit_game_init_level(lit_game_t* m, str8_t str, u32_t level_id) {
   m->current_level_id = level_id;
 
   m->selected_sensor_group_id = array_count(m->sensor_groups);
-  m->selected_sensor = nullptr;
-  m->selected_animator = nullptr; 
+  m->selected_animator_for_sensor = nullptr; 
+  m->selected_animator_for_double_edge_min[0] = nullptr; 
+  m->selected_animator_for_double_edge_min[1] = nullptr;
+  m->selected_animator_for_double_edge_max[0] = nullptr; 
+  m->selected_animator_for_double_edge_max[1] = nullptr;
   m->level_to_load = nullptr;
   m->solved = false;
 
-  lit_game_push_edge(m, 0.f, 0.f, 800.f, 0.f);
-  lit_game_push_edge(m, 800.f, 0.f, 800.f, 800.f);
-  lit_game_push_edge(m, 800.f, 800.f, 0.f, 800.f);
-  lit_game_push_edge(m, 0.f, 800.f, 0.f, 0.f);
-  lit_init_player(m, 400.f, 400.f);
+  lit_game_push_edge(m, 0.f, 0.f, LIT_WIDTH, 0.f);
+  lit_game_push_edge(m, LIT_WIDTH, 0.f, LIT_WIDTH, LIT_HEIGHT);
+  lit_game_push_edge(m, LIT_WIDTH, LIT_HEIGHT, 0.f, LIT_HEIGHT);
+  lit_game_push_edge(m, 0.f, LIT_HEIGHT, 0.f, 0.f);
+  lit_init_player(m, 400.f, 400.f); // TODO: any point to this?
 
   lit_game_set_title(m, str);
 }
@@ -397,12 +400,6 @@ lit_level_split(lit_game_t* m) {
   lit_game_push_light(m, 400.f, 410.f, 0x880000FF, 360.f, 0.f);
   lit_game_push_light(m, 390.f, 390.f, 0x008800FF, 360.f, 0.f);
   lit_game_push_light(m, 410.f, 390.f, 0x000088FF, 360.f, 0.f);
-
-#if 0
-  lit_game_push_light(m, 400.f, 410.f, 0x660000FF, 360.f, 0.f);
-  lit_game_push_light(m, 390.f, 390.f, 0x006600FF, 360.f, 0.f);
-  lit_game_push_light(m, 410.f, 390.f, 0x000066FF, 360.f, 0.f);
-#endif
 
   lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
 
@@ -781,7 +778,30 @@ lit_level_orbit(lit_game_t* m) {
 // TODO LEVEL 18
 // TODO LEVEL 19
 // TODO LEVEL 20
+static void
+lit_level_test(lit_game_t* m) {
+  lit_game_init_level(m, str8_from_lit("MOVE"), 1);
 
+  lit_game_push_light(m, 100.f, 600, 0x880000FF, 45.f, 0.75f);
+
+  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_push_sensor(m, 400.f, 600.f, 0x880000FF); 
+  lit_game_end_sensor_group(m);
+
+  // one edge
+#if 1
+  {
+    lit_game_begin_patrolling_double_edge(m, 100.f, 400.f, 700.f, 400.f, 1.f);
+    lit_game_push_patrolling_double_edge_waypoint_for_min(m, 100.f, 100.f);
+    lit_game_push_patrolling_double_edge_waypoint_for_max(m, 200.f, 200.f);
+    lit_game_end_patrolling_double_edge(m);
+
+
+
+    
+  }
+#endif
+}
 
 //
 // Menu Level
@@ -909,7 +929,7 @@ lit_level_menu(lit_game_t* m) {
   //
   // 3rd row
   //
-  u32_t yellow = 0x888800FF;
+  u32_t yellow = 0x888844FF;
   cy = 300;
   if (lit_get_levels_unlocked_count() >= 11) {
     cx = 100;
@@ -1040,14 +1060,14 @@ lit_level_menu(lit_game_t* m) {
   }
 
   // row 4
-  u32_t green = 0x008800FF;
+  u32_t green = 0x448844FF;
   f32_t rotating_speed = 2.f;
   cy = 200;
   if (lit_get_levels_unlocked_count() >= 16) {
     cx = 100;
     v2f_t* o = lit_game_push_point(m, v2f_set(cx, cy));
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_orbit);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_spin);
     lit_game_push_rotating_sensor(m, cx,  cy-25, o, -rotating_speed, green); 
     lit_game_end_sensor_group(m);
   }
@@ -1057,7 +1077,7 @@ lit_level_menu(lit_game_t* m) {
     cx = 250;
     v2f_t* o = lit_game_push_point(m, v2f_set(cx, cy));
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_move);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_orbit);
     
     lit_game_push_rotating_sensor(m, cx,  cy+25, o, rotating_speed, green); 
     lit_game_push_rotating_sensor(m, cx,  cy-25, o, rotating_speed, green); 
@@ -1069,7 +1089,7 @@ lit_level_menu(lit_game_t* m) {
     cx = 400;
     v2f_t* o = lit_game_push_point(m, v2f_set(cx, cy));
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_move);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_test);
  
     lit_game_push_rotating_sensor(m, cx,  cy+25, o,    -rotating_speed, green); 
     lit_game_push_rotating_sensor(m, cx+25,  cy-25, o, -rotating_speed, green); 

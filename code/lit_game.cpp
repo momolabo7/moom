@@ -70,7 +70,9 @@ lit_game_update()
       game->stage_fade_timer += dt;
     }
     else {
+#if LIT_SAVE_FILE_ENABLE
       lit_unlock_next_level(game->current_level_id);
+#endif
       game->level_to_load(game);
       return;
     }
@@ -203,7 +205,8 @@ lit_game_init()
     case 1: lit_level_move(game); break;
     case 2: lit_level_obstruct(game); break;
     case 3: lit_level_add(game); break;
-    default: lit_level_menu(game);
+    //default: lit_level_menu(game);
+    default: lit_level_test(game);
   }
   
 }

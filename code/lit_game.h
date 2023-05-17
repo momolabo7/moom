@@ -21,6 +21,11 @@ struct lit_game_edge_t {
   v2f_t end_pt;
 };
 
+struct lit_game_double_edge_t {
+  lit_game_edge_t* e1;
+  lit_game_edge_t* e2;
+
+};
 
 // 
 // Light
@@ -134,11 +139,6 @@ struct lit_game_player_t {
 // Animators
 // 
 enum lit_game_animator_type_t {
-  LIT_ANIMATOR_TYPE_PATROL_EDGE,
-
-  //LIT_ANIMATOR_TYPE_ROTATE_SENSOR,
-
-
   LIT_ANIMATOR_TYPE_PATROL_POINT,
   LIT_ANIMATOR_TYPE_ROTATE_POINT,
 };
@@ -167,19 +167,9 @@ struct lit_game_animator_patrol_point_t {
 };
 
 
-struct lit_game_animator_patrol_edge_t {
-  lit_game_edge_t* edge;
-  f32_t timer;
-  f32_t duration;
-  lit_game_edge_t start_edge;
-  lit_game_edge_t end_edge;
-
-};
-
 struct lit_game_animator_t {
   lit_game_animator_type_t type;
   union {
-    lit_game_animator_patrol_edge_t patrol_edge;
     lit_game_animator_rotate_point_t rotate_point;
     lit_game_animator_patrol_point_t move_point;
   };
@@ -227,9 +217,11 @@ struct lit_game_t {
   u32_t sensor_group_count;
   lit_game_sensor_group_t sensor_groups[32];
 
-  // for animated sensor APIs
-  lit_game_sensor_t* selected_sensor; 
-  lit_game_animator_t* selected_animator; 
+  // for animated objects APIs
+  lit_game_animator_t* selected_animator_for_sensor; 
+  lit_game_animator_t* selected_animator_for_double_edge_min[2]; 
+  lit_game_animator_t* selected_animator_for_double_edge_max[2]; 
+
 
   lit_particle_pool_t particles;
 

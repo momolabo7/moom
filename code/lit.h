@@ -3,6 +3,7 @@
 
 #include "moe.h"
 
+#define LIT_SAVE_FILE_ENABLE false
 #define LIT_SAVE_FILE "hello.sav"
 
 #define LIT_DEBUG_INTERSECTIONS 0
@@ -30,7 +31,6 @@
 #define LIT_PLAYER_ROTATE_SPEED 1.f
 
 #define LIT_SKIP_TRANSITIONS true
-
 #define LIT_LAST_TUTORIAL_LEVEL_ID 3
 
 

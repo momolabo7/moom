@@ -51,7 +51,11 @@ lit_tick() {
     //
     // Check save data
     //
+#if LIT_SAVE_FILE_ENABLE
     lit_init_save_data(); 
+#else
+    lit->save_data.unlocked_levels = 100;
+#endif
 
     
   }
