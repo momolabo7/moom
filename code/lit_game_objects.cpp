@@ -86,24 +86,6 @@ lit_game_animator_push_rotate_point(
   return a;
 }
 
-#if 0
-static void
-lit_game_push_patrol_edge_animator(lit_game_t* game, lit_game_edge_t* edge,  f32_t duration, lit_game_edge_t start, lit_game_edge_t end) 
-{
-  auto* anim = game->animators + game->animator_count++;
-  anim->type = LIT_ANIMATOR_TYPE_PATROL_EDGE; 
-
-  auto* a = &anim->patrol_edge;
-
-  a->timer = 0.f;
-  a->duration = duration;
-  a->start_edge = start;
-  a->end_edge = end;
-  a->edge = edge;
-
-}
-#endif
-
 static void 
 lit_game_animate(lit_game_animator_t* animator, f32_t dt) {
   switch(animator->type) {
@@ -126,19 +108,6 @@ lit_game_animate(lit_game_animator_t* animator, f32_t dt) {
       a->delta = v2f_rotate(a->delta, a->speed * dt);
       dref(a->point) = dref(a->point_of_rotation) + a->delta;
     } break;
-#if 0
-    case LIT_ANIMATOR_TYPE_PATROL_EDGE: {
-      auto* a = &animator->patrol_edge;
-      a->timer += dt;
-
-      // NOTE(momo): sin() takes in a value from [0, PI_32]
-      f32_t angle = ((a->timer/a->duration)-1.f) * PI_32;
-      f32_t alpha = (f32_cos(angle) + 1.f) / 2.f;
-      a->edge->start_pt = v2f_lerp(a->start_edge.start_pt, a->end_edge.start_pt, alpha);
-      a->edge->end_pt = v2f_lerp(a->start_edge.end_pt, a->end_edge.end_pt, alpha);
-
-    } break;
-#endif
 
   }
 }

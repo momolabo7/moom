@@ -12,6 +12,10 @@ static b32_t bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt);
 // https://totologic.blogspot.com/2014/01/accurate-point-in-triangle-test.html
 // NOTE(Momo): We should really profile to see which is the best but I'm assuming
 // it's the dot product one
+//
+
+// Unoptimized: ~100 cycles/hit
+// -O2: ~37 cycles/hit
 static b32_t
 _bonk_tri2_pt2_parametric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
   f32_t denominator = (tp0.x*(tp1.y - tp2.y) + 
@@ -31,6 +35,8 @@ _bonk_tri2_pt2_parametric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
   return 0 <= t1 && t1 <= 1 && 0 <= t2 && t2 <= 1 && s <= 1;
 }
 
+// Unoptimized: ~72 cycles/hit
+// -O2: ~27 cycles/hit 
 static b32_t
 _bonk_tri2_pt2_barycentric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
   
@@ -52,7 +58,8 @@ _bonk_tri2_pt2_barycentric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
   
 }
 
-
+// Unoptimized: ~262 cycles/hit
+// -O2: ~27 cycles/hit 
 static b32_t
 _bonk_tri2_pt2_dot_product(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
   v2f_t vec0 = v2f_set(pt.x - tp0.x, pt.y - tp0.y);      
@@ -73,7 +80,8 @@ _bonk_tri2_pt2_dot_product(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
 
 static b32_t
 bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
-  return _bonk_tri2_pt2_parametric(tp0, tp1, tp2, pt);
+  // NOTE(momo): this is the fastest of the 3 apparently
+  return _bonk_tri2_pt2_barycentric(tp0, tp1, tp2, pt);
 }
 
 

@@ -6,9 +6,6 @@
 #define LIT_SAVE_FILE_ENABLE false
 #define LIT_SAVE_FILE "hello.sav"
 
-#define LIT_DEBUG_INTERSECTIONS 0
-#define LIT_DEBUG_COORDINATES 0
-
 #define LIT_WIDTH  800.f
 #define LIT_HEIGHT 800.f
 
