@@ -237,6 +237,9 @@ struct lit_game_t {
   // for exiting the level
   b32_t solved;
   lit_game_load_level_t* level_to_load;
+  
+  // stop time
+  b32_t freeze;
 
 };
 

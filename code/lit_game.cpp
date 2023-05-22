@@ -16,12 +16,22 @@ lit_game_set_title(lit_game_t* game, str8_t str = str8_t{}) {
 
 static void lit_game_load_level(lit_game_t* m, u32_t level_id);
 
+
 static void
 lit_game_update() 
 {
   lit_game_t* game = &lit->game;
   lit_game_player_t* player = &game->player;
+
+  if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_SPACE])) {
+    game->freeze = !game->freeze;
+  }
+
+  
   f32_t dt = input->delta_time;
+  if (game->freeze) {
+    dt = 0;
+  }
 
   //
   // Transition Logic
@@ -198,6 +208,8 @@ lit_game_init()
   game->move_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_MOVE_SPRITE);
   game->rotate_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_ROTATE_SPRITE);
   game->filled_circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
+
+  game->freeze = false;
 
   // Go to level based on user's progress
   switch(lit_get_levels_unlocked_count())

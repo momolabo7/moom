@@ -25,7 +25,7 @@ lit_game_init_level(lit_game_t* m, str8_t str, u32_t level_id) {
   m->state = LIT_GAME_STATE_TYPE_NORMAL;
 #else
   m->state = LIT_GAME_STATE_TYPE_TRANSITION_IN;
-#endif
+#endif // LIT_SKIP_TRANSITIONS
 
   m->sensor_count = 0;
   m->light_count = 0;
@@ -782,10 +782,16 @@ static void
 lit_level_test(lit_game_t* m) {
   lit_game_init_level(m, str8_from_lit("MOVE"), 1);
 
-  lit_game_push_light(m, 100.f, 600, 0x888888FF, 360.f, 0.75f);
+  lit_game_push_light(m, 250, 400, 0x880000FF, 360.f, 0.75f);
+  lit_game_push_light(m, 550, 400, 0x008800FF, 360.f, 0.75f);
+  lit_game_push_light(m, 400, 250, 0x000088FF, 360.f, 0.75f);
+  lit_game_push_light(m, 400, 550, 0x444444FF, 360.f, 0.75f);
 
   lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
-  lit_game_push_sensor(m, 400.f, 600.f, 0x880000FF); 
+  lit_game_push_sensor(m, 100.f, 100.f, 0x888800FF); 
+  lit_game_push_sensor(m, 400.f, 700.f, 0x008888FF); 
+  lit_game_push_sensor(m, 700.f, 100.f, 0x880088FF); 
+  lit_game_push_sensor(m, 400.f, 400.f, 0x444444FF); 
   lit_game_end_sensor_group(m);
 
   lit_game_begin_patrolling_double_edge(m, 100.f, 100.f, 200.f, 100.f, 2.f);
