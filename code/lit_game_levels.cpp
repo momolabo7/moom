@@ -857,51 +857,50 @@ lit_level_test(lit_game_t* m) {
   lit_game_push_sensor(m, 400.f, 400.f, 0x444444FF); 
   lit_game_end_sensor_group(m);
 
-  lit_game_begin_patrolling_double_edge(m, 100.f, 100.f, 200.f, 100.f, 2.f);
-  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 600.f, 100.f);
+  // Square #1
+  lit_game_begin_patrolling_double_edge(m, 350.f, 350.f, 450.f, 350.f, 2.f);
+  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 100.f, 100.f);
   lit_game_push_patrolling_double_edge_waypoint_for_max(m, 700.f, 100.f);
-
-  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 100.f, 600.f);
-  lit_game_push_patrolling_double_edge_waypoint_for_max(m, 200.f, 600.f);
-
-  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 600.f, 600.f);
-  lit_game_push_patrolling_double_edge_waypoint_for_max(m, 700.f, 600.f);
   lit_game_end_patrolling_double_edge(m);
 
-  lit_game_begin_patrolling_double_edge(m, 100.f, 200.f, 200.f, 200.f, 2.f);
-  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 600.f, 200.f);
-  lit_game_push_patrolling_double_edge_waypoint_for_max(m, 700.f, 200.f);
-
+  lit_game_begin_patrolling_double_edge(m, 350.f, 450.f, 450.f, 450.f, 2.f);
   lit_game_push_patrolling_double_edge_waypoint_for_min(m, 100.f, 700.f);
-  lit_game_push_patrolling_double_edge_waypoint_for_max(m, 200.f, 700.f);
-
-  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 600.f, 700.f);
   lit_game_push_patrolling_double_edge_waypoint_for_max(m, 700.f, 700.f);
   lit_game_end_patrolling_double_edge(m);
 
 
-  lit_game_begin_patrolling_double_edge(m, 100.f, 100.f, 100.f, 200.f, 2.f);
-  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 600.f, 100.f);
-  lit_game_push_patrolling_double_edge_waypoint_for_max(m, 600.f, 200.f);
-
-  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 100.f, 600.f);
+  lit_game_begin_patrolling_double_edge(m, 350.f, 350.f, 350.f, 450.f, 2.f);
+  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 100.f, 100.f);
   lit_game_push_patrolling_double_edge_waypoint_for_max(m, 100.f, 700.f);
-
-  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 600.f, 600.f);
-  lit_game_push_patrolling_double_edge_waypoint_for_max(m, 600.f, 700.f);
   lit_game_end_patrolling_double_edge(m);
 
-
-  lit_game_begin_patrolling_double_edge(m, 200.f, 100.f, 200.f, 200.f, 2.f);
+  lit_game_begin_patrolling_double_edge(m, 450.f, 350.f, 450.f, 450.f, 2.f);
   lit_game_push_patrolling_double_edge_waypoint_for_min(m, 700.f, 100.f);
-  lit_game_push_patrolling_double_edge_waypoint_for_max(m, 700.f, 200.f);
-
-  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 200.f, 600.f);
-  lit_game_push_patrolling_double_edge_waypoint_for_max(m, 200.f, 700.f);
-
-  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 700.f, 600.f);
   lit_game_push_patrolling_double_edge_waypoint_for_max(m, 700.f, 700.f);
   lit_game_end_patrolling_double_edge(m);
+
+  // Square #2
+  lit_game_begin_patrolling_double_edge(m, 100.f, 400.f, 400.f, 700.f, 2.f);
+  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 300.f, 400.f);
+  lit_game_push_patrolling_double_edge_waypoint_for_max(m, 400.f, 500.f);
+  lit_game_end_patrolling_double_edge(m);
+
+  lit_game_begin_patrolling_double_edge(m, 400.f, 700.f, 700.f, 400.f, 2.f);
+  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 400.f, 500.f);
+  lit_game_push_patrolling_double_edge_waypoint_for_max(m, 500.f, 400.f);
+  lit_game_end_patrolling_double_edge(m);
+
+  lit_game_begin_patrolling_double_edge(m, 700, 400, 400, 100, 2.f);
+  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 500, 400);
+  lit_game_push_patrolling_double_edge_waypoint_for_max(m, 400, 300);
+  lit_game_end_patrolling_double_edge(m);
+
+  lit_game_begin_patrolling_double_edge(m, 400, 100, 100, 400, 2.f);
+  lit_game_push_patrolling_double_edge_waypoint_for_min(m, 400, 300);
+  lit_game_push_patrolling_double_edge_waypoint_for_max(m, 300, 400);
+  lit_game_end_patrolling_double_edge(m);
+
+
 }
 //
 // Menu Level

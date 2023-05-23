@@ -1,10 +1,8 @@
 engine
-  - Inspector really shouldn't hold a pointer. We should copy the value we want to inspect because we want to inspect the value THERE AND THEN. 
   - Consider removeing moe_asset_types from karu.h and maybe even moe_assets
   - Expandable arena for platform, instead of just calling VirtualAlloc every time
 
 game
-  - lit_game_get_ray_intersection_time_wrt_edges() is SLOW
   - Extract the whole lighting thing into a system of it's own with callbacks
 
 assets 
