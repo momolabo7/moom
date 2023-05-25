@@ -29,6 +29,7 @@
 
 #define LIT_SKIP_TRANSITIONS true
 #define LIT_LAST_TUTORIAL_LEVEL_ID 3
+#define LIT_DEBUG_LINES 1
 
 
 #ifdef INTERNAL

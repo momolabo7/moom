@@ -136,8 +136,11 @@ lit_game_update()
 
 
   lit_profile_begin(rendering);
-  //lit_draw_edges(game); 
-  //lit_draw_debug_light_rays(game, moe);
+
+#if 0
+  lit_draw_edges(game); 
+  lit_draw_light_rays(game);
+#endif // LIT_DEBUG_LINES
   if (game->state == LIT_GAME_STATE_TYPE_NORMAL) {
     lit_game_render_player(game);
   }
@@ -149,16 +152,6 @@ lit_game_update()
     lit_game_render_sensors(game); 
     lit_game_render_particles(game);
   }
-
-#if LIT_DEBUG_COORDINATES 
-  // Debug coordinates
-  {
-    sb8_make(sb, 64);
-    sb8_push_fmt(sb, str8_from_lit("[%f %f]"), pf->mouse_pos.x,LIT_HEIGHT - pf->mouse_pos.y);
-    gfx_push_text(gfx, &lit->assets, game->tutorial_font, sb->str, RGBA_WHITE, 0.f, 0.f, 32.f);
-  }
-#endif
-
 
   // Draw the overlay for fade in/out
   {
@@ -174,6 +167,7 @@ lit_game_update()
     gfx_push_asset_sprite(gfx, &lit->assets, game->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
     gfx_advance_depth(gfx);
   }
+
 
   // Draw title
   if (game->title_wp_index < array_count(lit_title_wps)-1) 

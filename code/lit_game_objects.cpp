@@ -537,6 +537,22 @@ lit_game_render_lights(lit_game_t* game) {
 
 
 static void
+lit_draw_light_rays(lit_game_t* game) {
+
+  for(u32_t light_index = 0; light_index < game->light_count; ++light_index) 
+  {
+    lit_game_light_t* light = game->lights + light_index;
+    for_cnt(intersection_index, light->intersection_count){
+      lit_light_intersection_t* intersection = light->intersections + intersection_index;
+      gfx_draw_line(gfx, light->pos, intersection->pt, 2.f, rgba_hex(0xFF0000FF));
+
+    }
+
+  }
+  gfx_advance_depth(gfx);
+}
+
+static void
 lit_draw_edges(lit_game_t* game) {
 
   for(u32_t edge_index = 0; edge_index < game->edge_count; ++edge_index) 
