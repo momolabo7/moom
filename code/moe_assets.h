@@ -96,10 +96,7 @@ struct assets_t {
   
   u32_t tag_count;
   asset_tag_t* tags;
-
-  u32_t group_count;
-  asset_group_t* groups;
-
+  asset_group_t groups[ASSET_GROUP_TYPE_COUNT];
 };
   
 #endif

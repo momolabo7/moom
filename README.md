@@ -1,7 +1,7 @@
-# The MOOM game engine
+# Project MOOM 
 
-This is my personal hobby project, which is a game engine written in C/C++.
+(project name is WIP)
 
+This is my personal hobby project, which is a moe engine written in C/C++.
 
-
-
+As such, note that git comments might be lacking since I'm the only one working on the project.

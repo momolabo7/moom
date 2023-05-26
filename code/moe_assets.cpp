@@ -43,10 +43,6 @@ assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_
   if (!assets->tags) return false;
   assets->tag_count = karu_header.tag_count;
 
-  assets->groups = arena_push_arr(asset_group_t, arena, karu_header.group_count);
-  if (!assets->groups) return false;
-  assets->group_count = karu_header.group_count;
-
   // Fill data for tags
   for (u32_t tag_index = 0;
       tag_index < assets->tag_count; 
@@ -209,7 +205,7 @@ assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_
 
 }
 
-static u32_t
+  static u32_t
 find_first_asset_of_type(assets_t* assets, 
     Asset_Group_Type group_type, 
     Asset_Type type) 
@@ -227,9 +223,8 @@ find_first_asset_of_type(assets_t* assets,
   return 0;
 }
 
-static u32_t 
-find_best_asset_of_type(
-    assets_t* assets, 
+  static u32_t 
+find_best_asset_of_type(assets_t* assets, 
     Asset_Group_Type group_type, 
     Asset_Type asset_type,
     asset_match_t* vector)
@@ -279,9 +274,8 @@ find_best_asset_of_type(
 }
 
 
-static f32_t
-get_kerning(
-    asset_font_t* font,
+  static f32_t
+get_kerning(asset_font_t* font,
     u32_t left_codepoint, 
     u32_t right_codepoint) 
 {
