@@ -1,9 +1,3 @@
-// moe_asset_types.h
-enum Asset_Tag_Type {
-  ASSET_TAG_TYPE_FONT,
-
-  ASSET_TAG_TYPE_COUNT,
-};
 
 enum Asset_Group_Type {
   ASSET_GROUP_TYPE_BLANK_SPRITE,

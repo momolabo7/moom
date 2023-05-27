@@ -97,7 +97,7 @@ struct karu_group_t {
 };
 
 struct karu_tag_t {
-  Asset_Tag_Type type; 
+  u32_t type; 
   f32_t value;
 };
 

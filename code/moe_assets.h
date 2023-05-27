@@ -48,7 +48,7 @@ struct asset_font_t {
 
 
 struct asset_tag_t {
-  Asset_Tag_Type type; 
+  u32_t type; 
   f32_t value;
 };
 

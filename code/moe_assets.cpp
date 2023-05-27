@@ -210,7 +210,8 @@ assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_
 }
 
 static u32_t
-find_first_asset_of_type(assets_t* assets, 
+find_first_asset_of_type(
+    assets_t* assets, 
     Asset_Group_Type group_type, 
     Asset_Type type) 
 {

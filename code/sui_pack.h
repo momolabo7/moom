@@ -42,7 +42,7 @@ struct sui_packer_t {
   karu_asset_t assets[1024]; // to be written to file
   
   u32_t group_count;
-  karu_group_t groups[1024]; //to be written to file
+  karu_group_t* groups; //to be written to file
   
   // Required context for API
   karu_group_t* active_group;
@@ -50,13 +50,20 @@ struct sui_packer_t {
 };
 
 static void
-sui_pack_begin(sui_packer_t* p) {
+sui_pack_begin(
+    sui_packer_t* p, 
+    arena_t* arena,
+    u32_t group_count) 
+{
   p->asset_count = 1; // reserve for nullptr asset
   p->tag_count = 1;   // reserve for nullptr tag
+ 
+  p->group_count = group_count;
+  p->groups = arena_push_arr(karu_group_t, arena, group_count);
 }
 
 static void
-sui_pack_push_tag(sui_packer_t* p, Asset_Tag_Type tag_type, f32_t value) {
+sui_pack_push_tag(sui_packer_t* p, u32_t tag_type, f32_t value) {
   u32_t tag_index = p->tag_count++;
   
   karu_asset_t* asset = p->assets + p->active_asset_index;
@@ -68,9 +75,10 @@ sui_pack_push_tag(sui_packer_t* p, Asset_Tag_Type tag_type, f32_t value) {
 }
 
 static void
-sui_pack_begin_group(sui_packer_t* p, Asset_Group_Type group) 
+sui_pack_begin_group(sui_packer_t* p, u32_t group_index) 
 {
-  p->active_group = p->groups + group;
+  assert(group_index < p->group_count);
+  p->active_group = p->groups + group_index;
   p->active_group->first_asset_index = p->asset_count;
   p->active_group->one_past_last_asset_index = p->active_group->first_asset_index;
 }
@@ -79,7 +87,6 @@ static void
 sui_pack_end_group(sui_packer_t* p) 
 {
   p->active_group = nullptr;
-  p->group_count++;
 }
 
 static void

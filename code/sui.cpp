@@ -8,8 +8,8 @@ int main() {
 
   void* memory = malloc(memory_size);
   defer { free(memory); };
-  make(arena_t, allocator);
-  arena_init(allocator, memory, memory_size);
+  make(arena_t, arena);
+  arena_init(arena, memory, memory_size);
 
   sui_log("Building atlas...\n");
   make(sui_atlas_t, atlas);
@@ -45,7 +45,7 @@ int main() {
     sui_atlas_push_font_codepoint(atlas, i);
   }
   auto* font_b = sui_atlas_end_font(atlas);
-  sui_atlas_end(atlas, allocator);
+  sui_atlas_end(atlas, arena);
   sui_log("Finished atlas...\n");
 
 #if 1
@@ -55,13 +55,13 @@ int main() {
       png_write(atlas->bitmap.pixels, 
                 atlas->bitmap.width, 
                 atlas->bitmap.height, 
-                allocator);
+                arena);
     sui_write_file("test.png", png_to_write_mem);
   }
 #endif
 
   make(sui_packer_t, packer);
-  sui_pack_begin(packer);
+  sui_pack_begin(packer, arena, ASSET_GROUP_TYPE_COUNT);
 
   sui_pack_begin_group(packer, ASSET_GROUP_TYPE_ATLAS);
   u32_t bitmap_id = sui_pack_push_bitmap(packer, atlas);
@@ -100,7 +100,7 @@ int main() {
   }
   sui_pack_end_group(packer);
 
-  sui_pack_end(packer, "test_pack.sui", allocator);
+  sui_pack_end(packer, "test_pack.sui", arena);
 }
 
 

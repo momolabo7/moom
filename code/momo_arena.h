@@ -60,7 +60,7 @@ static usz_t    arena_remaining(arena_t* a);
 #define arena_push_arr_align(t,b,n,a) (t*)arena_push_size(b, sizeof(t)*(n), a)
 #define arena_push_arr(t,b,n)         (t*)arena_push_size(b, sizeof(t)*(n),alignof(t))
 #define arena_push_align(t,b,a)       (t*)arena_push_size(b, sizeof(t), a)
-#define arena_push(t,b)               (t*)arena_push_size(b, sizeof(t), alignof(t))
+#define arena_push(t,b)               (t*)arena_push_size((b), sizeof(t), alignof(t))
 
 #define arena_push_arr_zero_align(t,b,n,a) (t*)arena_push_size_zero(b, sizeof(t)*(n), a)
 #define arena_push_arr_zero(t,b,n)         (t*)arena_push_size_zero(b, sizeof(t)*(n),alignof(t))
