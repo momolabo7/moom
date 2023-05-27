@@ -41,9 +41,10 @@ struct sui_packer_t {
   sui_packer_source_t sources[1024]; // additional data for assets
   karu_asset_t assets[1024]; // to be written to file
   
-  karu_group_t groups[ASSET_GROUP_TYPE_COUNT]; //to be written to file
+  u32_t group_count;
+  karu_group_t groups[1024]; //to be written to file
   
-  // Required context for interface
+  // Required context for API
   karu_group_t* active_group;
   u32_t active_asset_index;
 };
@@ -78,6 +79,7 @@ static void
 sui_pack_end_group(sui_packer_t* p) 
 {
   p->active_group = nullptr;
+  p->group_count++;
 }
 
 static void
@@ -161,11 +163,11 @@ sui_pack_end(sui_packer_t* p, const char* filename, arena_t* arena)
  
   u32_t asset_tag_array_size = sizeof(karu_tag_t)*p->tag_count;
   u32_t asset_array_size = sizeof(karu_asset_t)*p->asset_count;
-  u32_t group_array_size = sizeof(karu_group_t)*ASSET_GROUP_TYPE_COUNT;
+  u32_t group_array_size = sizeof(karu_group_t)*p->group_count; //ASSET_GROUP_TYPE_COUNT;
 
   karu_header_t header = {0};
   header.signature = KARU_SIGNATURE;
-  header.group_count = ASSET_GROUP_TYPE_COUNT;
+  header.group_count = p->group_count;
   header.asset_count = p->asset_count;
   header.tag_count = p->tag_count;
   header.offset_to_assets = sizeof(karu_header_t);
