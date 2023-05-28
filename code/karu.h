@@ -2,8 +2,13 @@
 #define KARU_H
 
 
-#include "moe_asset_types.h"
+//#include "moe_asset_types.h"
 
+enum asset_type_t  {
+  ASSET_TYPE_SPRITE,
+  ASSET_TYPE_FONT,
+  ASSET_TYPE_BITMAP,
+};
 
 // karu.h
 #define KARU_CODE(a, b, c, d) (((u32_t)(a) << 0) | ((u32_t)(b) << 8) | ((u32_t)(c) << 16) | ((u32_t)(d) << 24))
@@ -76,7 +81,7 @@ struct karu_sprite_t {
 };
 
 struct karu_asset_t {
-  Asset_Type type; 
+  asset_type_t type; 
 
   u32_t offset_to_data;
 

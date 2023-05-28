@@ -1,10 +1,7 @@
 #ifndef ASSETS_H
 #define ASSETS_H
 
-//
-// TODO: converge font, sprite and bitmap into one "texture page"
-//
-
+#include "lit_asset_types.h"
 
 struct asset_bitmap_id_t { u32_t value; };
 struct asset_font_id_t { u32_t value; };
@@ -80,7 +77,7 @@ struct asset_slot_t {
   //add file index?
   u32_t offset_to_data;
   
-  Asset_Type type;
+  asset_type_t type;
   union {
     asset_bitmap_t bitmap;
     asset_sprite_t sprite;

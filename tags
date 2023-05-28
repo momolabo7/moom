@@ -120,7 +120,7 @@ assert_callback	code/sui.h	/^#define assert_callback(/;"	d	language:C++
 assert_callback	code/test.h	/^#define assert_callback(/;"	d	language:C++
 assets	C:/users/geral/work/moom/code/lit.h	/^  assets_t assets;$/;"	m	language:C++	struct:lit_t	typeref:typename:assets_t
 assets	code/lit.h	/^  assets_t assets;$/;"	m	language:C++	struct:lit_t	typeref:typename:assets_t
-assets	code/sui_pack.h	/^  karu_asset_t assets[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:karu_asset_t[1024]
+assets	code/sui_pack.h	/^  karu_asset_t* assets; \/\/ to be written to file$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:karu_asset_t *
 ASSETS_H	code/moe_assets.h	/^#define ASSETS_H$/;"	d	language:C++
 assets_init	code/moe_assets.cpp	/^assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:b32_t	file:
 assets_t	code/moe_assets.h	/^struct assets_t {$/;"	s	language:C++
@@ -128,6 +128,7 @@ asset_arena	C:/users/geral/work/moom/code/lit.h	/^  arena_t asset_arena;$/;"	m	l
 asset_arena	code/lit.h	/^  arena_t asset_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t
 asset_bitmap_id_t	code/moe_assets.h	/^struct asset_bitmap_id_t { u32_t value; };$/;"	s	language:C++
 asset_bitmap_t	code/moe_assets.h	/^struct asset_bitmap_t {$/;"	s	language:C++
+asset_cap	code/sui_pack.h	/^  u32_t asset_cap;$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:u32_t
 asset_count	code/karu.h	/^  u32_t asset_count;$/;"	m	language:C++	struct:karu_header_t	typeref:typename:u32_t
 asset_count	code/moe_assets.h	/^  u32_t asset_count;$/;"	m	language:C++	struct:assets_t	typeref:typename:u32_t
 asset_count	code/sui_pack.h	/^  u32_t asset_count;$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:u32_t
@@ -136,23 +137,14 @@ asset_font_id_t	code/moe_assets.h	/^struct asset_font_id_t { u32_t value; };$/;"
 asset_font_t	code/moe_assets.h	/^struct asset_font_t {$/;"	s	language:C++
 asset_group_t	code/moe_assets.h	/^struct asset_group_t {$/;"	s	language:C++
 Asset_Group_Type	code/lit_asset_types.h	/^enum Asset_Group_Type {$/;"	g	language:C++
-Asset_Group_Type	code/moe_asset_types.h	/^enum Asset_Group_Type : u32_t {$/;"	g	language:C++	typeref:typename:u32_t
 ASSET_GROUP_TYPE_ATLAS	code/lit_asset_types.h	/^  ASSET_GROUP_TYPE_ATLAS,$/;"	e	language:C++	enum:Asset_Group_Type
-ASSET_GROUP_TYPE_ATLAS	code/moe_asset_types.h	/^  ASSET_GROUP_TYPE_ATLAS,$/;"	e	language:C++	enum:Asset_Group_Type
 ASSET_GROUP_TYPE_BLANK_SPRITE	code/lit_asset_types.h	/^  ASSET_GROUP_TYPE_BLANK_SPRITE,$/;"	e	language:C++	enum:Asset_Group_Type
-ASSET_GROUP_TYPE_BLANK_SPRITE	code/moe_asset_types.h	/^  ASSET_GROUP_TYPE_BLANK_SPRITE,$/;"	e	language:C++	enum:Asset_Group_Type
 ASSET_GROUP_TYPE_CIRCLE_SPRITE	code/lit_asset_types.h	/^  ASSET_GROUP_TYPE_CIRCLE_SPRITE,$/;"	e	language:C++	enum:Asset_Group_Type
-ASSET_GROUP_TYPE_CIRCLE_SPRITE	code/moe_asset_types.h	/^  ASSET_GROUP_TYPE_CIRCLE_SPRITE,$/;"	e	language:C++	enum:Asset_Group_Type
 ASSET_GROUP_TYPE_COUNT	code/lit_asset_types.h	/^  ASSET_GROUP_TYPE_COUNT,$/;"	e	language:C++	enum:Asset_Group_Type
-ASSET_GROUP_TYPE_COUNT	code/moe_asset_types.h	/^  ASSET_GROUP_TYPE_COUNT,$/;"	e	language:C++	enum:Asset_Group_Type
 ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE	code/lit_asset_types.h	/^  ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE,$/;"	e	language:C++	enum:Asset_Group_Type
-ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE	code/moe_asset_types.h	/^  ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE,$/;"	e	language:C++	enum:Asset_Group_Type
 ASSET_GROUP_TYPE_FONTS	code/lit_asset_types.h	/^  ASSET_GROUP_TYPE_FONTS,$/;"	e	language:C++	enum:Asset_Group_Type
-ASSET_GROUP_TYPE_FONTS	code/moe_asset_types.h	/^  ASSET_GROUP_TYPE_FONTS,$/;"	e	language:C++	enum:Asset_Group_Type
 ASSET_GROUP_TYPE_MOVE_SPRITE	code/lit_asset_types.h	/^  ASSET_GROUP_TYPE_MOVE_SPRITE,$/;"	e	language:C++	enum:Asset_Group_Type
-ASSET_GROUP_TYPE_MOVE_SPRITE	code/moe_asset_types.h	/^  ASSET_GROUP_TYPE_MOVE_SPRITE,$/;"	e	language:C++	enum:Asset_Group_Type
 ASSET_GROUP_TYPE_ROTATE_SPRITE	code/lit_asset_types.h	/^  ASSET_GROUP_TYPE_ROTATE_SPRITE,$/;"	e	language:C++	enum:Asset_Group_Type
-ASSET_GROUP_TYPE_ROTATE_SPRITE	code/moe_asset_types.h	/^  ASSET_GROUP_TYPE_ROTATE_SPRITE,$/;"	e	language:C++	enum:Asset_Group_Type
 asset_match_t	code/moe_assets.h	/^struct asset_match_t {$/;"	s	language:C++
 asset_slots	code/moe_assets.h	/^  asset_slot_t* asset_slots;$/;"	m	language:C++	struct:assets_t	typeref:typename:asset_slot_t *
 asset_slot_t	code/moe_assets.h	/^struct asset_slot_t {$/;"	s	language:C++
@@ -163,17 +155,17 @@ ASSET_STATE_LOADING	code/moe_assets.h	/^  ASSET_STATE_LOADING,$/;"	e	language:C+
 asset_state_t	code/moe_assets.h	/^enum asset_state_t {$/;"	g	language:C++
 ASSET_STATE_UNLOADED	code/moe_assets.h	/^  ASSET_STATE_UNLOADED,$/;"	e	language:C++	enum:asset_state_t
 asset_tag_t	code/moe_assets.h	/^struct asset_tag_t {$/;"	s	language:C++
-Asset_Tag_Type	code/moe_asset_types.h	/^enum Asset_Tag_Type : u32_t {$/;"	g	language:C++	typeref:typename:u32_t
-ASSET_TAG_TYPE_COUNT	code/moe_asset_types.h	/^  ASSET_TAG_TYPE_COUNT,$/;"	e	language:C++	enum:Asset_Tag_Type
-ASSET_TAG_TYPE_FONT	code/moe_asset_types.h	/^  ASSET_TAG_TYPE_FONT,$/;"	e	language:C++	enum:Asset_Tag_Type
-Asset_Type	code/lit_asset_types.h	/^enum Asset_Type  {$/;"	g	language:C++
-Asset_Type	code/moe_asset_types.h	/^enum Asset_Type : u32_t {$/;"	g	language:C++	typeref:typename:u32_t
-ASSET_TYPE_BITMAP	code/lit_asset_types.h	/^  ASSET_TYPE_BITMAP,$/;"	e	language:C++	enum:Asset_Type
+Asset_Tag_Type	code/lit_asset_types.h	/^enum Asset_Tag_Type {$/;"	g	language:C++
+ASSET_TAG_TYPE_COUNT	code/lit_asset_types.h	/^  ASSET_TAG_TYPE_COUNT,$/;"	e	language:C++	enum:Asset_Tag_Type
+ASSET_TAG_TYPE_FONT	code/lit_asset_types.h	/^  ASSET_TAG_TYPE_FONT,$/;"	e	language:C++	enum:Asset_Tag_Type
+Asset_Type	code/moe_asset_types.h	/^enum Asset_Type  {$/;"	g	language:C++
+ASSET_TYPE_BITMAP	code/karu.h	/^  ASSET_TYPE_BITMAP,$/;"	e	language:C++	enum:asset_type_t
 ASSET_TYPE_BITMAP	code/moe_asset_types.h	/^  ASSET_TYPE_BITMAP,$/;"	e	language:C++	enum:Asset_Type
-ASSET_TYPE_FONT	code/lit_asset_types.h	/^  ASSET_TYPE_FONT,$/;"	e	language:C++	enum:Asset_Type
+ASSET_TYPE_FONT	code/karu.h	/^  ASSET_TYPE_FONT,$/;"	e	language:C++	enum:asset_type_t
 ASSET_TYPE_FONT	code/moe_asset_types.h	/^  ASSET_TYPE_FONT,$/;"	e	language:C++	enum:Asset_Type
-ASSET_TYPE_SPRITE	code/lit_asset_types.h	/^  ASSET_TYPE_SPRITE,$/;"	e	language:C++	enum:Asset_Type
+ASSET_TYPE_SPRITE	code/karu.h	/^  ASSET_TYPE_SPRITE,$/;"	e	language:C++	enum:asset_type_t
 ASSET_TYPE_SPRITE	code/moe_asset_types.h	/^  ASSET_TYPE_SPRITE,$/;"	e	language:C++	enum:Asset_Type
+asset_type_t	code/karu.h	/^enum asset_type_t  {$/;"	g	language:C++
 at	code/meta.cpp	/^  u32_t at;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:u32_t	file:
 at	code/momo_json.h	/^      u8_t* at;$/;"	m	language:C++	struct:json_element_t::__anond7a9c0d6010a::__anond7a9c0d60208	typeref:typename:u8_t *
 at	code/momo_json.h	/^  u8_t* at;$/;"	m	language:C++	struct:json_key_t	typeref:typename:u8_t *
@@ -2484,7 +2476,7 @@ snapshot_index	code/moe_profiler.h	/^  u32_t snapshot_index;$/;"	m	language:C++	
 solved	C:/users/geral/work/moom/code/lit_game.h	/^  b32_t solved;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:b32_t
 solved	code/lit_game.h	/^  b32_t solved;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:b32_t
 sort_entry_t	code/momo_sort.h	/^struct sort_entry_t {$/;"	s	language:C++
-sources	code/sui_pack.h	/^  sui_packer_source_t sources[1024]; \/\/ additional data for assets$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:sui_packer_source_t[1024]
+sources	code/sui_pack.h	/^  sui_packer_source_t* sources; \/\/ additional data for assets$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:sui_packer_source_t *
 speed	C:/users/geral/work/moom/code/lit_game.h	/^  f32_t speed;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:f32_t
 speed	code/lit_game.h	/^  f32_t speed;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:f32_t
 spinner	build/web.html	/^    <div class="spinner" id='spinner'><\/div>$/;"	I	language:HTML
@@ -2731,7 +2723,8 @@ symbols	code/momo_png.h	/^  u16_t* symbols; $/;"	m	language:C++	struct:_png_huff
 symbol_count	code/momo_png.h	/^  u32_t symbol_count;$/;"	m	language:C++	struct:_png_huffman_t	typeref:typename:u32_t
 SYSCALLS	build/a.out.js	/^  var SYSCALLS = {varargs:undefined,get:function() {$/;"	c	language:JavaScript
 tags	code/moe_assets.h	/^  asset_tag_t* tags;$/;"	m	language:C++	struct:assets_t	typeref:typename:asset_tag_t *
-tags	code/sui_pack.h	/^  karu_tag_t tags[1024]; \/\/ to be written to file$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:karu_tag_t[1024]
+tags	code/sui_pack.h	/^  karu_tag_t* tags; \/\/ to be written to file$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:karu_tag_t *
+tag_cap	code/sui_pack.h	/^  u32_t tag_cap;$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:u32_t
 tag_count	code/karu.h	/^  u32_t tag_count;$/;"	m	language:C++	struct:karu_header_t	typeref:typename:u32_t
 tag_count	code/moe_assets.h	/^  u32_t tag_count;$/;"	m	language:C++	struct:assets_t	typeref:typename:u32_t
 tag_count	code/sui_pack.h	/^  u32_t tag_count;$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:u32_t
@@ -2851,12 +2844,12 @@ tutorial_font	C:/users/geral/work/moom/code/lit_game.h	/^  asset_font_id_t tutor
 tutorial_font	code/lit_game.h	/^  asset_font_id_t tutorial_font;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_font_id_t
 type	C:/users/geral/work/moom/code/lit_game.h	/^  lit_game_animator_type_t type;$/;"	m	language:C++	struct:lit_game_animator_t	typeref:typename:lit_game_animator_type_t
 type	C:/users/geral/work/moom/code/moe_debug.h	/^  dbg_pipe_entry_type_t type;$/;"	m	language:C++	struct:dbg_pipe_entry_t	typeref:typename:dbg_pipe_entry_type_t
-type	code/karu.h	/^  Asset_Type type; $/;"	m	language:C++	struct:karu_asset_t	typeref:typename:Asset_Type
+type	code/karu.h	/^  asset_type_t type; $/;"	m	language:C++	struct:karu_asset_t	typeref:typename:asset_type_t
 type	code/karu.h	/^  u32_t type; $/;"	m	language:C++	struct:karu_tag_t	typeref:typename:u32_t
 type	code/lit_game.h	/^  lit_game_animator_type_t type;$/;"	m	language:C++	struct:lit_game_animator_t	typeref:typename:lit_game_animator_type_t
 type	code/meta.cpp	/^  Meta_Token_Type type;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:Meta_Token_Type	file:
-type	code/moe_assets.h	/^  Asset_Tag_Type type; $/;"	m	language:C++	struct:asset_tag_t	typeref:typename:Asset_Tag_Type
-type	code/moe_assets.h	/^  Asset_Type type;$/;"	m	language:C++	struct:asset_slot_t	typeref:typename:Asset_Type
+type	code/moe_assets.h	/^  asset_type_t type;$/;"	m	language:C++	struct:asset_slot_t	typeref:typename:asset_type_t
+type	code/moe_assets.h	/^  u32_t type; $/;"	m	language:C++	struct:asset_tag_t	typeref:typename:u32_t
 type	code/moe_debug.h	/^  dbg_pipe_entry_type_t type;$/;"	m	language:C++	struct:dbg_pipe_entry_t	typeref:typename:dbg_pipe_entry_type_t
 type	code/moe_inspector.h	/^  inspector_entry_type_t type;$/;"	m	language:C++	struct:inspector_entry_t	typeref:typename:inspector_entry_type_t
 type	code/momo_json.h	/^  json_value_type_t type;$/;"	m	language:C++	struct:json_value_t	typeref:typename:json_value_type_t

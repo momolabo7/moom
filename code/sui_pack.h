@@ -34,15 +34,18 @@ struct sui_packer_source_t {
 };
 
 struct sui_packer_t {
+  u32_t tag_cap;
   u32_t tag_count;
-  karu_tag_t tags[1024]; // to be written to file
-  
+  karu_tag_t* tags; // to be written to file
+ 
+  u32_t asset_cap;
   u32_t asset_count;
-  sui_packer_source_t sources[1024]; // additional data for assets
-  karu_asset_t assets[1024]; // to be written to file
+  sui_packer_source_t* sources; // additional data for assets
+  karu_asset_t* assets; // to be written to file
   
   u32_t group_count;
   karu_group_t* groups; //to be written to file
+                        
   
   // Required context for API
   karu_group_t* active_group;
@@ -53,10 +56,18 @@ static void
 sui_pack_begin(
     sui_packer_t* p, 
     arena_t* arena,
-    u32_t group_count) 
+    u32_t group_count,
+    u32_t max_tags = 1024,
+    u32_t max_assets = 1024) 
 {
   p->asset_count = 1; // reserve for nullptr asset
+  p->asset_cap = max_assets + 1;
+  p->sources = arena_push_arr(sui_packer_source_t, arena, p->asset_cap);
+  p->assets = arena_push_arr(karu_asset_t, arena, p->asset_cap);
+
   p->tag_count = 1;   // reserve for nullptr tag
+  p->tag_cap = max_tags + 1;
+  p->tags = arena_push_arr(karu_tag_t, arena, p->tag_cap);
  
   p->group_count = group_count;
   p->groups = arena_push_arr(karu_group_t, arena, group_count);
@@ -64,6 +75,7 @@ sui_pack_begin(
 
 static void
 sui_pack_push_tag(sui_packer_t* p, u32_t tag_type, f32_t value) {
+  assert(p->tag_count < p->tag_cap);
   u32_t tag_index = p->tag_count++;
   
   karu_asset_t* asset = p->assets + p->active_asset_index;
@@ -92,7 +104,7 @@ sui_pack_end_group(sui_packer_t* p)
 static void
 sui_pack_push_sprite(sui_packer_t* p, sui_atlas_sprite_t* sprite, u32_t bitmap_asset_id) {
   assert(p->active_group);
-  assert(p->asset_count < array_count(p->assets));
+  assert(p->asset_count < p->asset_cap);
 
   u32_t asset_index = p->asset_count++;
   ++p->active_group->one_past_last_asset_index;
@@ -119,7 +131,7 @@ sui_pack_push_sprite(sui_packer_t* p, sui_atlas_sprite_t* sprite, u32_t bitmap_a
 static u32_t
 sui_pack_push_bitmap(sui_packer_t* p, sui_atlas_t* atlas) {
   assert(p->active_group);
-  assert(p->asset_count < array_count(p->assets));
+  assert(p->asset_count < p->asset_cap);
 
   u32_t asset_index = p->asset_count++;
   ++p->active_group->one_past_last_asset_index;
@@ -143,7 +155,7 @@ sui_pack_push_bitmap(sui_packer_t* p, sui_atlas_t* atlas) {
 static u32_t
 sui_pack_push_font(sui_packer_t* p, sui_atlas_font_t* font, u32_t bitmap_asset_id) {
   assert(p->active_group);
-  assert(p->asset_count < array_count(p->assets));
+  assert(p->asset_count < p->asset_cap);
 
   u32_t asset_index = p->asset_count++;
   ++p->active_group->one_past_last_asset_index;

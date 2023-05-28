@@ -101,7 +101,7 @@ assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_
           &karu_asset);
 
       // Process the asset_slots
-      asset->type = (Asset_Type)karu_asset.type;
+      asset->type = (asset_type_t)karu_asset.type;
       asset->first_tag_index = karu_asset.first_tag_index;
       asset->one_past_last_tag_index = karu_asset.one_past_last_tag_index;
       asset->offset_to_data = karu_asset.offset_to_data;
@@ -213,7 +213,7 @@ static u32_t
 find_first_asset_of_type(
     assets_t* assets, 
     Asset_Group_Type group_type, 
-    Asset_Type type) 
+    asset_type_t type) 
 {
   asset_group_t* group = assets->groups + group_type;
   for (u32_t asset_index = group->first_asset_index;
@@ -232,7 +232,7 @@ static u32_t
 find_best_asset_of_type(
     assets_t* assets, 
     Asset_Group_Type group_type, 
-    Asset_Type asset_type,
+    asset_type_t asset_type,
     asset_match_t* vector)
 {
   u32_t ret = 0;

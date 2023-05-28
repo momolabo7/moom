@@ -12,8 +12,8 @@ enum Asset_Group_Type {
   ASSET_GROUP_TYPE_COUNT,
 };
 
-enum Asset_Type  {
-  ASSET_TYPE_SPRITE,
-  ASSET_TYPE_FONT,
-  ASSET_TYPE_BITMAP,
+enum Asset_Tag_Type {
+  ASSET_TAG_TYPE_FONT,
+
+  ASSET_TAG_TYPE_COUNT,
 };

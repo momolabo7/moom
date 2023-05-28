@@ -1,7 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
 #include "sui.h"
+#include "lit_asset_types.h"
 
 int main() {
   umi_t memory_size = megabytes(100);
