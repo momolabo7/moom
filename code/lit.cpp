@@ -37,7 +37,8 @@ lit_tick() {
     //
     auto* debug_memory = pf->allocate_memory(megabytes(1));
     arena_init(&lit->debug_arena, debug_memory->data, debug_memory->size);
-    console_init(&lit->console, 32, 256, &lit->debug_arena);
+    inspector_init(&lit->inspector, &lit->debug_arena, 64);
+    console_init(&lit->console, &lit->debug_arena, 32, 256);
 
     auto* frame_memory = pf->allocate_memory(megabytes(1));
     arena_init(&lit->frame_arena, frame_memory->data, frame_memory->size);

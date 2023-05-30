@@ -80,10 +80,10 @@ typedef struct {
   b32_t now; 
 } input_button_t;
 
-typedef void pf_show_cursor();
-typedef void pf_hide_cursor();
-typedef void pf_lock_cursor();
-typedef void pf_unlock_cursor();
+typedef void pf_show_cursor_f();
+typedef void pf_hide_cursor_f();
+typedef void pf_lock_cursor_f();
+typedef void pf_unlock_cursor_f();
 
 // my god
 typedef enum {
@@ -191,10 +191,10 @@ typedef struct {
   pf_free_memory_f* free_memory;
 
   // Mouse 
-  pf_show_cursor* show_cursor;
-  pf_hide_cursor* hide_cursor;
-  pf_lock_cursor* lock_cursor;
-  pf_unlock_cursor* unlock_cursor;
+  pf_show_cursor_f* show_cursor;
+  pf_hide_cursor_f* hide_cursor;
+  pf_lock_cursor_f* lock_cursor;
+  pf_unlock_cursor_f* unlock_cursor;
 
 
   // Logging

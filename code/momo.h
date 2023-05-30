@@ -22,7 +22,7 @@
 #include "momo_rng.h"
 #include "momo_sort.h" 
 #include "momo_crc.h"
-#include "momo_bonk.h"
+#include "momo_collision.h"
 #include "momo_strings.h"
 #include "momo_streams.h"
 #include "momo_wav.h"     
@@ -32,6 +32,9 @@
 #include "momo_rect_pack.h"
 #include "momo_json.h"
 
+#include "momo_profiler.h"
+#include "momo_inspector.h"
+#include "momo_console.h"
 //
 // Platform/OS?
 //

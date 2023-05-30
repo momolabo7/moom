@@ -1,5 +1,6 @@
 static void
-set_match_entry(asset_match_t* vec, 
+set_match_entry(
+    asset_match_t* vec, 
     Asset_Tag_Type tag,
     f32_t tag_value_to_match, 
     f32_t tag_weight) 

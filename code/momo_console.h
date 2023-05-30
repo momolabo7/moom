@@ -19,7 +19,7 @@ struct console_t {
 };
 
 static void
-console_init(console_t* console, u32_t characters_per_line, u32_t max_commands, arena_t* allocator) 
+console_init(console_t* console, arena_t* allocator, u32_t characters_per_line, u32_t max_commands) 
 {
   console->command_count = 0;
   console->command_cap = max_commands;

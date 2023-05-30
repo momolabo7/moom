@@ -1,21 +1,22 @@
 
-#ifndef MOE_PROFILER_H
-#define MOE_PROFILER_H
+#ifndef MOMO_PROFILER_H
+#define MOMO_PROFILER_H
 
 #define PROFILER_MAX_SNAPSHOTS 120
 #define PROFILER_MAX_ENTRIES 256
 
-typedef struct profiler_snapshot_t {
+struct profiler_snapshot_t {
   u32_t hits;
   u32_t cycles;
-} profiler_snapshot_t;
+};
 
-typedef struct profiler_entry_t {
+struct profiler_entry_t {
   u32_t line;
   const char* filename;
   const char* block_name;
   u64_t hits_and_cycles;
   
+  //u32_t snapshot_count;
   profiler_snapshot_t snapshots[PROFILER_MAX_SNAPSHOTS];
   
   // NOTE(Momo): For initialization of entry. 
@@ -25,17 +26,18 @@ typedef struct profiler_entry_t {
   u32_t start_cycles;
   u32_t start_hits;
   b32_t flag_for_reset;
-} profiler_entry_t;
+};
 
 
 typedef u64_t profiler_get_performance_counter_t(void);
 
-typedef struct profiler_t {
+struct profiler_t {
   profiler_get_performance_counter_t* get_performance_counter;
   u32_t entry_count;
+  //u32_t entry_cap;
   profiler_entry_t entries[PROFILER_MAX_ENTRIES];
   u32_t snapshot_index;
-} profiler_t;
+};
 
 #define profiler_begin_block(p, name) \
   static profiler_entry_t* _profiler_block_##name = 0; \
@@ -130,4 +132,4 @@ profiler_reset(profiler_t* p) {
 }
 
 
-#endif //MOE_PROFILER_H
+#endif //MOMO_PROFILER_H

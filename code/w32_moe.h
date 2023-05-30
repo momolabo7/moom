@@ -25,7 +25,6 @@
 
 #include "momo.h"
 #include "moe_platform.h"
-#include "moe_profiler.h"
 
 struct w32_memory_t {
   pf_memory_t pf_memory;
