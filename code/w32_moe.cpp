@@ -1,8 +1,6 @@
 #include "w32_moe.h"
 
 
-
-
 #if 0
 static void*
 w32_allocate(usz_t memory_size) {
@@ -497,7 +495,10 @@ WinMain(HINSTANCE instance,
   //
   // Init profiler
   //
-  profiler_init(profiler, w32_get_performance_counter_u64);
+  make(arena_t, profiler_arena);
+  if (!w32_allocate_memory_into_arena(profiler_arena, megabytes(256))) return false;
+  defer { w32_free_memory_from_arena(profiler_arena); };
+  profiler_init(profiler, profiler_arena, w32_get_performance_counter_u64, 256, 120);
 
   //
   // Init input
@@ -549,7 +550,6 @@ WinMain(HINSTANCE instance,
     }
 #endif
    
-    w32_profile_block(moe_loop);
 
     // Begin frame
     w32_audio_begin_frame(audio);

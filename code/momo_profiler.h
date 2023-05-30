@@ -2,9 +2,6 @@
 #ifndef MOMO_PROFILER_H
 #define MOMO_PROFILER_H
 
-#define PROFILER_MAX_SNAPSHOTS 120
-#define PROFILER_MAX_ENTRIES 256
-
 struct profiler_snapshot_t {
   u32_t hits;
   u32_t cycles;
@@ -16,8 +13,7 @@ struct profiler_entry_t {
   const char* block_name;
   u64_t hits_and_cycles;
   
-  //u32_t snapshot_count;
-  profiler_snapshot_t snapshots[PROFILER_MAX_SNAPSHOTS];
+  profiler_snapshot_t* snapshots;
   
   // NOTE(Momo): For initialization of entry. 
   // Maybe it shouldn't be stored here
@@ -33,9 +29,10 @@ typedef u64_t profiler_get_performance_counter_t(void);
 
 struct profiler_t {
   profiler_get_performance_counter_t* get_performance_counter;
+  u32_t entry_snapshot_count;
   u32_t entry_count;
-  //u32_t entry_cap;
-  profiler_entry_t entries[PROFILER_MAX_ENTRIES];
+  u32_t entry_cap;
+  profiler_entry_t* entries;
   u32_t snapshot_index;
 };
 
@@ -51,21 +48,29 @@ struct profiler_t {
 
 #define profiler_block(p, name) profiler_begin_block(p, name); defer {profiler_end_block(p,name);}
 
-static void profiler_init(profiler_t* p, profiler_get_performance_counter_t get_performance_counter_fp);
+static void profiler_init(
+    profiler_t* p, 
+    arena_t* arena,
+    profiler_get_performance_counter_t get_performance_counter_fp,
+    u32_t max_entries,
+    u32_t max_snapshots_per_entry);
 static void profiler_update_entries(profiler_t* p);
 static void profiler_reset(profiler_t* p);
 
-///////////////////////////////////////////////////////////////////
+//
 // IMPLEMENTATION
 //
+
+
 static profiler_entry_t*
-_profiler_init_block(profiler_t* p,
-                const char* filename, 
-                u32_t line,
-                const char* function_name,
-                const char* block_name = 0) 
+_profiler_init_block(
+    profiler_t* p,
+    const char* filename, 
+    u32_t line,
+    const char* function_name,
+    const char* block_name = 0) 
 {
-  if (p->entry_count < array_count(p->entries)) {
+  if (p->entry_count < p->entry_cap) {
     profiler_entry_t* entry = p->entries + p->entry_count++;
     entry->filename = filename;
     entry->block_name = block_name ? block_name : function_name;
@@ -93,10 +98,23 @@ _profiler_end_block(profiler_t* p, profiler_entry_t* entry) {
 }
 
 
-
-static void
-profiler_init(profiler_t* p, profiler_get_performance_counter_t get_performance_counter_fp) {
+static void profiler_init(
+    profiler_t* p, 
+    arena_t* arena,
+    profiler_get_performance_counter_t get_performance_counter_fp,
+    u32_t max_entries,
+    u32_t max_snapshots_per_entry)
+{
+  p->entry_cap = max_entries;
   p->get_performance_counter = get_performance_counter_fp;
+  p->entry_snapshot_count = max_snapshots_per_entry;
+  p->entries = arena_push_arr(profiler_entry_t, arena, p->entry_cap);
+  assert(p->entries);
+
+  for (u32_t i = 0; i < p->entry_cap; ++i) {
+    p->entries[i].snapshots = arena_push_arr(profiler_snapshot_t, arena, max_snapshots_per_entry);
+    assert(p->entries[i].snapshots);
+  }
   profiler_reset(p);
 }
 
@@ -114,7 +132,7 @@ profiler_update_entries(profiler_t* p) {
     itr->snapshots[p->snapshot_index].cycles = cycles;
   }
   ++p->snapshot_index;
-  if(p->snapshot_index >= PROFILER_MAX_SNAPSHOTS) {
+  if(p->snapshot_index >= p->entry_snapshot_count) {
     p->snapshot_index = 0;
   }
 }

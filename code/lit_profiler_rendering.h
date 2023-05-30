@@ -49,17 +49,18 @@ profiler_update_and_render()
   const f32_t font_height = 20.f;
 
   // Overlay
-  gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, 
-                          v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
-                          v2f_set(LIT_WIDTH, LIT_HEIGHT),
-                          rgba_set(0.f, 0.f, 0.f, 0.5f));
+  gfx_push_asset_sprite(
+      gfx, assets, lit->blank_sprite, 
+      v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
+      v2f_set(LIT_WIDTH, LIT_HEIGHT),
+      rgba_set(0.f, 0.f, 0.f, 0.5f));
   gfx_advance_depth(gfx);
   
   u32_t line_num = 1;
   
   for(u32_t entry_id = 0; entry_id < profiler->entry_count; ++entry_id)
   {
-    profiler_entry_t* itr = profiler->entries + entry_id;
+    profiler_entry_t* entry = profiler->entries + entry_id;
 
     profiler_stat_t cycles;
     profiler_stat_t hits;
@@ -70,11 +71,11 @@ profiler_update_and_render()
     profiler_begin_stat(&cycles_per_hit);
     
     for (u32_t snapshot_index = 0;
-         snapshot_index < array_count(itr->snapshots);
+         snapshot_index < profiler->entry_snapshot_count;
          ++snapshot_index)
     {
       
-      profiler_snapshot_t * snapshot = itr->snapshots + snapshot_index;
+      profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
       
       profiler_accumulate_stat(&cycles, (f64_t)snapshot->cycles);
       profiler_accumulate_stat(&hits, (f64_t)snapshot->hits);
@@ -92,7 +93,7 @@ profiler_update_and_render()
     sb8_make(sb, 256);
     sb8_push_fmt(sb, 
                  str8_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
-                 itr->block_name,
+                 entry->block_name,
                  (u32_t)cycles.average,
                  (u32_t)hits.average,
                  (u32_t)cycles_per_hit.average);
@@ -108,10 +109,10 @@ profiler_update_and_render()
     
     // Draw graph
     for (u32_t snapshot_index = 0;
-         snapshot_index < array_count(itr->snapshots);
+         snapshot_index < profiler->entry_snapshot_count;
          ++snapshot_index)
     {
-      profiler_snapshot_t * snapshot = itr->snapshots + snapshot_index;
+      profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
       
       const f32_t snapshot_bar_width = 1.5f;
       f32_t height_scale = 1.0f / (f32_t)cycles.max;
