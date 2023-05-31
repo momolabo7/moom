@@ -147,6 +147,8 @@ typedef enum {
 
 } input_button_code_t;
 
+// NOTE(momo): Input is SPECIFICALLY stuff that can be recorded and
+// replayed by some kind of system. Other things go to moe_t
 typedef struct {
   input_button_t buttons[INPUT_BUTTON_CODE_MAX];
   u8_t chars[32];
@@ -162,10 +164,9 @@ typedef struct {
   // -ve is backwards
   s32_t mouse_scroll_delta;
 
-  // Misc
-  f32_t delta_time; //aka dt
-  b32_t reloaded;
 
+  // TODO(Momo): not sure if this should even be here
+  f32_t delta_time; //aka dt
 
 } input_t;
 
@@ -212,9 +213,12 @@ typedef struct {
   // For moe to use
   void* game_context;
 
+          
+  b32_t is_dll_reloaded;
+  b32_t is_running;
 } moe_t;
 
-typedef b32_t moe_update_and_render_f(
+typedef void moe_update_and_render_f(
     moe_t*, 
     pf_t*, 
     gfx_t*, 

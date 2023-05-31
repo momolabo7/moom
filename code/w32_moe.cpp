@@ -543,13 +543,13 @@ WinMain(HINSTANCE instance,
   QueryPerformanceFrequency(&performance_frequency);
   LARGE_INTEGER last_frame_count = w32_get_performance_counter();
 
-  b32_t game_is_running = true;
-  while (w32_state.is_running && game_is_running) 
+  moe.is_running = true;
+  while (w32_state.is_running && moe.is_running) 
   {
 #if 1
     // Hot reload moe.dll functions
-    input.reloaded = w32_reload_code_if_outdated(&moe_code);
-    if (input.reloaded) {
+    moe.is_dll_reloaded = w32_reload_code_if_outdated(&moe_code);
+    if (moe.is_dll_reloaded) {
       profiler_reset(profiler);
     }
 #endif
@@ -603,8 +603,9 @@ WinMain(HINSTANCE instance,
     
     //-moe_t logic
     if(moe_code.is_valid) { 
-      game_is_running = moe_functions.update_and_render(&moe, &pf, gfx, audio, profiler, &input);
+      moe_functions.update_and_render(&moe, &pf, gfx, audio, profiler, &input);
     }
+
 
     // End  frame
     profiler_update_entries(profiler);

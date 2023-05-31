@@ -69,7 +69,7 @@ lit_tick() {
   // NOTE(momo): inspector need to clear each frame
   inspector_clear(&lit->inspector);
 
-  if (lit->next_mode != lit->mode || input->reloaded) {
+  if (lit->next_mode != lit->mode || moe->is_dll_reloaded) {
     lit->mode = lit->next_mode;
     
     switch(lit->mode) {
