@@ -478,7 +478,11 @@ WinMain(HINSTANCE instance,
   //
   // Gfx
   // 
-  gfx_t* gfx = w32_gfx_load(window, megabytes(100), megabytes(100));
+  make(arena_t, gfx_arena);
+  if (!w32_allocate_memory_into_arena(gfx_arena, megabytes(256))) return false;
+  defer { w32_free_memory_from_arena(gfx_arena); };
+
+  gfx_t* gfx = w32_gfx_load(window, megabytes(100), megabytes(100), gfx_arena);
   if (!gfx) { return 1; }
   defer { w32_gfx_unload(gfx); };
  

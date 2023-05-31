@@ -180,7 +180,8 @@ w32_gfx_unload(gfx_t* gfx) {
 static gfx_t*
 w32_gfx_load(HWND window, 
              u32_t command_queue_size,
-             u32_t texture_queue_size) 
+             u32_t texture_queue_size,
+             arena_t* arena) 
 {
   HDC dc = GetDC(window); 
   if (!dc) return 0;
@@ -206,21 +207,17 @@ w32_gfx_load(HWND window,
     return nullptr;
   }
 
-  umi_t total_size = sizeof(Opengl) + command_queue_size + texture_queue_size;
 
-  pf_memory_t* memory = w32_allocate_memory(total_size);
-
-
-  Opengl* opengl = (Opengl*)(memory->data);
-  void* command_queue_block = (u8_t*)opengl + sizeof(Opengl); 
-  void* texture_queue_block = (u8_t*)command_queue_block + command_queue_size;
+  Opengl* opengl = arena_push(Opengl, arena);
+  void* command_queue_block = arena_push_size(arena, command_queue_size, 16); 
+  void* texture_queue_block = arena_push_size(arena, texture_queue_size, 16); 
 
 
   if (!opengl || !command_queue_block || !texture_queue_block) {
     return nullptr;
   }
 
-  opengl->user_data = memory;
+  //opengl->huser_data = opengl;
   
   
   if(wglMakeCurrent(dc, opengl_ctx)) {
