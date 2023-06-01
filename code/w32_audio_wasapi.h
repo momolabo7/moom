@@ -9,7 +9,7 @@ struct w32_wasapi_notif_client_t {
 };
 
 struct w32_wasapi_t {
-  pf_audio_t pf_audio; // Must be first member
+  audio_buffer_t pf_audio; // Must be first member
   
   w32_wasapi_notif_client_t notifs;
   IMMDeviceEnumerator * mm_device_enum;
@@ -339,7 +339,7 @@ w32_wasapi_begin_frame(w32_wasapi_t* wasapi) {
 		samples_to_write = wasapi->buffer_size;
 	}
 
-  // Get pf_audio_t
+  // Get audio_buffer_t
   wasapi->pf_audio.sample_buffer = wasapi->buffer;
   wasapi->pf_audio.sample_count = samples_to_write; 
   wasapi->pf_audio.channels = wasapi->channels;
@@ -349,7 +349,7 @@ static void
 w32_wasapi_end_frame(w32_wasapi_t* wasapi) 
 {
 	if (!wasapi->is_device_ready) return;
-  pf_audio_t* output = &wasapi->pf_audio;
+  audio_buffer_t* output = &wasapi->pf_audio;
 
   // NOTE(Momo): Kinda assumes 16-bit Sound
   BYTE* sound_buffer_data;
@@ -374,7 +374,7 @@ w32_wasapi_end_frame(w32_wasapi_t* wasapi)
 /////////////////////////////////////////////////////////
 // API Correspondence
 //
-static pf_audio_t*
+static audio_buffer_t*
 w32_audio_load(u32_t samples_per_second, 
                u16_t bits_per_sample,
                u16_t channels,
@@ -393,17 +393,17 @@ w32_audio_load(u32_t samples_per_second,
 }
 
 static void
-w32_audio_begin_frame(pf_audio_t* audio) {
+w32_audio_begin_frame(audio_buffer_t* audio) {
   w32_wasapi_begin_frame((w32_wasapi_t*)audio);
 }
 
 static void 
-w32_audio_end_frame(pf_audio_t* audio) {
+w32_audio_end_frame(audio_buffer_t* audio) {
   w32_wasapi_end_frame((w32_wasapi_t*)audio);
 }
 
 static void
-w32_audio_unload(pf_audio_t* audio) {
+w32_audio_unload(audio_buffer_t* audio) {
   // Unused
 }
 

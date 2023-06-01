@@ -27,8 +27,8 @@
 //  |/|
 //  ---
 // 
-#ifndef MOE_GFX_H
-#define MOE_GFX_H
+#ifndef MOMO_GFX_H
+#define MOMO_GFX_H
 
 #define GFX_MAX_TEXTURES 256
 
@@ -531,4 +531,4 @@ gfx_advance_depth(gfx_t* g) {
 }
 
 
-#endif //MOE_RENDERER_H
+#endif //MOMO_RENDERER_H

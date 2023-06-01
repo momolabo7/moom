@@ -5,10 +5,10 @@
 // Points
 //
 static v2f_t*
-lit_game_push_point(lit_game_t* game, v2f_t point) {
-  assert(game->point_count < array_count(game->points));
-  game->points[game->point_count] = point;
-  return game->points + game->point_count++;
+lit_game_push_point(lit_game_t* m, v2f_t point) {
+  assert(m->point_count < array_count(m->points));
+  m->points[m->point_count] = point;
+  return m->points + m->point_count++;
 }
 
 // 
@@ -35,10 +35,10 @@ lit_game_animator_push_patrol_point_waypoint(
 }
 
 static lit_game_animator_t*
-lit_game_animator_begin_patrol_point(lit_game_t* game, f32_t duration_per_waypoint, v2f_t* point) 
+lit_game_animator_begin_patrol_point(lit_game_t* m, f32_t duration_per_waypoint, v2f_t* point) 
 {
-  assert(game->animator_count < array_count(game->animators));
-  auto* anim = game->animators + game->animator_count++;
+  assert(m->animator_count < array_count(m->animators));
+  auto* anim = m->animators + m->animator_count++;
   anim->type = LIT_ANIMATOR_TYPE_PATROL_POINT;
 
   auto* a = &anim->move_point;
@@ -67,14 +67,14 @@ lit_game_animator_end_patrol_point(lit_game_animator_t* anim)
 
 static lit_game_animator_rotate_point_t* 
 lit_game_animator_push_rotate_point(
-    lit_game_t* game,
+    lit_game_t* m,
     v2f_t* pt_to_rotate,
     v2f_t* pt_of_rotation,
     f32_t speed) 
 {
 
-  assert(game->animator_count < array_count(game->animators));
-  auto* anim = game->animators + game->animator_count++;
+  assert(m->animator_count < array_count(m->animators));
+  auto* anim = m->animators + m->animator_count++;
   anim->type = LIT_ANIMATOR_TYPE_ROTATE_POINT;
 
   auto* a = &anim->rotate_point;
@@ -113,10 +113,10 @@ lit_game_animate(lit_game_animator_t* animator, f32_t dt) {
 }
 
 static void
-lit_game_animate_everything(lit_game_t* game, f32_t dt) {
-  for(u32_t animator_index = 0; animator_index < game->animator_count; ++animator_index)
+lit_game_animate_everything(lit_game_t* m, f32_t dt) {
+  for(u32_t animator_index = 0; animator_index < m->animator_count; ++animator_index)
   {
-    lit_game_animate(game->animators + animator_index, dt);
+    lit_game_animate(m->animators + animator_index, dt);
   }
 }
 
@@ -182,64 +182,64 @@ lit_game_push_double_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, 
 }
 
 static void
-lit_game_begin_patrolling_double_edge(lit_game_t* game, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y, f32_t duration_per_waypoint)
+lit_game_begin_patrolling_double_edge(lit_game_t* g, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y, f32_t duration_per_waypoint)
 {
-  assert(!game->selected_animator_for_double_edge_min[0]);
-  assert(!game->selected_animator_for_double_edge_min[1]);
-  assert(!game->selected_animator_for_double_edge_max[0]);
-  assert(!game->selected_animator_for_double_edge_max[1]);
+  assert(!g->selected_animator_for_double_edge_min[0]);
+  assert(!g->selected_animator_for_double_edge_min[1]);
+  assert(!g->selected_animator_for_double_edge_max[0]);
+  assert(!g->selected_animator_for_double_edge_max[1]);
 
   //
   // NOTE(momo): this is kind of disgusting because it is possible that not all points need to be patrolling,
   // so we are potentially wasting space, but whatevers....
   //
-  auto edges = lit_game_push_double_edge(game, min_x, min_y, max_x, max_y);
-  game->selected_animator_for_double_edge_min[0] = 
-    lit_game_animator_begin_patrol_point(game, duration_per_waypoint, &edges.e1->start_pt);
-  game->selected_animator_for_double_edge_min[1] = 
-    lit_game_animator_begin_patrol_point(game, duration_per_waypoint, &edges.e2->end_pt);
-  game->selected_animator_for_double_edge_max[0] = 
-    lit_game_animator_begin_patrol_point(game, duration_per_waypoint, &edges.e1->end_pt);
-  game->selected_animator_for_double_edge_max[1] = 
-    lit_game_animator_begin_patrol_point(game, duration_per_waypoint, &edges.e2->start_pt);
+  auto edges = lit_game_push_double_edge(g, min_x, min_y, max_x, max_y);
+  g->selected_animator_for_double_edge_min[0] = 
+    lit_game_animator_begin_patrol_point(g, duration_per_waypoint, &edges.e1->start_pt);
+  g->selected_animator_for_double_edge_min[1] = 
+    lit_game_animator_begin_patrol_point(g, duration_per_waypoint, &edges.e2->end_pt);
+  g->selected_animator_for_double_edge_max[0] = 
+    lit_game_animator_begin_patrol_point(g, duration_per_waypoint, &edges.e1->end_pt);
+  g->selected_animator_for_double_edge_max[1] = 
+    lit_game_animator_begin_patrol_point(g, duration_per_waypoint, &edges.e2->start_pt);
 }
 
 static void
-lit_game_push_patrolling_double_edge_waypoint_for_min(lit_game_t* game, f32_t x, f32_t y){
+lit_game_push_patrolling_double_edge_waypoint_for_min(lit_game_t* g, f32_t x, f32_t y){
 
-  assert(game->selected_animator_for_double_edge_min[0]);
-  assert(game->selected_animator_for_double_edge_min[1]);
+  assert(g->selected_animator_for_double_edge_min[0]);
+  assert(g->selected_animator_for_double_edge_min[1]);
 
-  lit_game_animator_push_patrol_point_waypoint(game->selected_animator_for_double_edge_min[0], x, y);
-  lit_game_animator_push_patrol_point_waypoint(game->selected_animator_for_double_edge_min[1], x, y);
+  lit_game_animator_push_patrol_point_waypoint(g->selected_animator_for_double_edge_min[0], x, y);
+  lit_game_animator_push_patrol_point_waypoint(g->selected_animator_for_double_edge_min[1], x, y);
 }
 static void
-lit_game_push_patrolling_double_edge_waypoint_for_max(lit_game_t* game, f32_t x, f32_t y){
+lit_game_push_patrolling_double_edge_waypoint_for_max(lit_game_t* g, f32_t x, f32_t y){
 
-  assert(game->selected_animator_for_double_edge_max[0]);
-  assert(game->selected_animator_for_double_edge_max[1]);
+  assert(g->selected_animator_for_double_edge_max[0]);
+  assert(g->selected_animator_for_double_edge_max[1]);
 
-  lit_game_animator_push_patrol_point_waypoint(game->selected_animator_for_double_edge_max[0], x, y);
-  lit_game_animator_push_patrol_point_waypoint(game->selected_animator_for_double_edge_max[1], x, y);
+  lit_game_animator_push_patrol_point_waypoint(g->selected_animator_for_double_edge_max[0], x, y);
+  lit_game_animator_push_patrol_point_waypoint(g->selected_animator_for_double_edge_max[1], x, y);
 }
 
 static void
-lit_game_end_patrolling_double_edge(lit_game_t* game) {
+lit_game_end_patrolling_double_edge(lit_game_t* g) {
 
-  assert(game->selected_animator_for_double_edge_min[0]);
-  assert(game->selected_animator_for_double_edge_min[1]);
-  assert(game->selected_animator_for_double_edge_max[0]);
-  assert(game->selected_animator_for_double_edge_max[1]);
+  assert(g->selected_animator_for_double_edge_min[0]);
+  assert(g->selected_animator_for_double_edge_min[1]);
+  assert(g->selected_animator_for_double_edge_max[0]);
+  assert(g->selected_animator_for_double_edge_max[1]);
 
-  lit_game_animator_end_patrol_point(game->selected_animator_for_double_edge_min[0]);
-  lit_game_animator_end_patrol_point(game->selected_animator_for_double_edge_min[1]);
-  lit_game_animator_end_patrol_point(game->selected_animator_for_double_edge_max[0]);
-  lit_game_animator_end_patrol_point(game->selected_animator_for_double_edge_max[1]);
+  lit_game_animator_end_patrol_point(g->selected_animator_for_double_edge_min[0]);
+  lit_game_animator_end_patrol_point(g->selected_animator_for_double_edge_min[1]);
+  lit_game_animator_end_patrol_point(g->selected_animator_for_double_edge_max[0]);
+  lit_game_animator_end_patrol_point(g->selected_animator_for_double_edge_max[1]);
 
-  game->selected_animator_for_double_edge_min[0] = nullptr; 
-  game->selected_animator_for_double_edge_min[1] = nullptr;
-  game->selected_animator_for_double_edge_max[0] = nullptr; 
-  game->selected_animator_for_double_edge_max[1] = nullptr;
+  g->selected_animator_for_double_edge_min[0] = nullptr; 
+  g->selected_animator_for_double_edge_min[1] = nullptr;
+  g->selected_animator_for_double_edge_max[0] = nullptr; 
+  g->selected_animator_for_double_edge_max[1] = nullptr;
 }
 
 
@@ -498,15 +498,15 @@ lit_gen_lights(
 }
 
 static void
-lit_game_render_lights(lit_game_t* game) {
+lit_game_render_lights(lit_game_t* g) {
   //
   // Emitters
   //
-  for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
+  for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
   {
-    lit_game_light_t* light = game->lights + light_index;
+    lit_game_light_t* light = g->lights + light_index;
     gfx_push_asset_sprite(gfx, &lit->assets, 
-        game->filled_circle_sprite, 
+        g->filled_circle_sprite, 
         light->pos,
         v2f_set(16.f, 16.f),
         rgba_set(0.8f, 0.8f, 0.8f, 1.f));
@@ -517,9 +517,9 @@ lit_game_render_lights(lit_game_t* game) {
   // Lights
   //
   gfx_set_blend_additive(gfx);
-  for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
+  for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
   {
-    lit_game_light_t* l = game->lights + light_index;
+    lit_game_light_t* l = g->lights + light_index;
     for(u32_t tri_index = 0; tri_index < l->triangle_count; ++tri_index)
     {
       lit_game_light_triangle_t* lt = l->triangles + tri_index;
@@ -537,11 +537,11 @@ lit_game_render_lights(lit_game_t* game) {
 
 
 static void
-lit_draw_light_rays(lit_game_t* game) {
+lit_draw_light_rays(lit_game_t* g) {
 
-  for(u32_t light_index = 0; light_index < game->light_count; ++light_index) 
+  for(u32_t light_index = 0; light_index < g->light_count; ++light_index) 
   {
-    lit_game_light_t* light = game->lights + light_index;
+    lit_game_light_t* light = g->lights + light_index;
     for_cnt(intersection_index, light->intersection_count){
       lit_light_intersection_t* intersection = light->intersections + intersection_index;
       gfx_draw_line(gfx, light->pos, intersection->pt, 2.f, rgba_hex(0xFF0000FF));
@@ -553,11 +553,11 @@ lit_draw_light_rays(lit_game_t* game) {
 }
 
 static void
-lit_draw_edges(lit_game_t* game) {
+lit_draw_edges(lit_game_t* g) {
 
-  for(u32_t edge_index = 0; edge_index < game->edge_count; ++edge_index) 
+  for(u32_t edge_index = 0; edge_index < g->edge_count; ++edge_index) 
   {
-    lit_game_edge_t* edge = game->edges + edge_index;
+    lit_game_edge_t* edge = g->edges + edge_index;
     gfx_draw_line(gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
   }
   gfx_advance_depth(gfx);
@@ -567,8 +567,8 @@ lit_draw_edges(lit_game_t* game) {
 // Player
 //
 static void
-lit_init_player(lit_game_t* game, f32_t x, f32_t y) {
-  lit_game_player_t* player = &game->player; 
+lit_init_player(lit_game_t* g, f32_t x, f32_t y) {
+  lit_game_player_t* player = &g->player; 
   player->held_light = nullptr;
   player->pos.x = x;
   player->pos.y = y;
@@ -576,21 +576,21 @@ lit_init_player(lit_game_t* game, f32_t x, f32_t y) {
 }
 
 static void
-lit_game_player_release_light(lit_game_t* game) {
-  lit_game_player_t* player = &game->player;
+lit_game_player_release_light(lit_game_t* g) {
+  lit_game_player_t* player = &g->player;
   player->held_light = nullptr;
   player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
   pf->show_cursor();
 }
 
 static void
-lit_game_player_find_nearest_light(lit_game_t* game) {
-  lit_game_player_t* player = &game->player;
+lit_game_player_find_nearest_light(lit_game_t* g) {
+  lit_game_player_t* player = &g->player;
   f32_t shortest_dist = LIT_PLAYER_PICKUP_DIST; // limit
   player->nearest_light = nullptr;
 
-  for(u32_t light_index = 0; light_index < game->light_count; ++light_index) {
-    lit_game_light_t* l = game->lights +light_index;
+  for(u32_t light_index = 0; light_index < g->light_count; ++light_index) {
+    lit_game_light_t* l = g->lights +light_index;
     f32_t dist = v2f_dist_sq(l->pos, player->pos);
     if (shortest_dist > dist) {
       player->nearest_light = l;
@@ -602,10 +602,10 @@ lit_game_player_find_nearest_light(lit_game_t* game) {
 
 static void
 lit_game_player_hold_nearest_light_if_empty_handed(
-    lit_game_t* game, 
+    lit_game_t* g, 
     lit_game_player_light_hold_mode_t light_hold_mode) 
 {
-  lit_game_player_t* player = &game->player;
+  lit_game_player_t* player = &g->player;
 
   if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_NONE) {
     if (player->nearest_light) {          
@@ -619,25 +619,25 @@ lit_game_player_hold_nearest_light_if_empty_handed(
 }
 
 static void 
-lit_game_update_player(lit_game_t* game, f32_t dt) 
+lit_game_update_player(lit_game_t* g, f32_t dt) 
 {
-  lit_game_player_t* player = &game->player; 
+  lit_game_player_t* player = &g->player; 
 
   player->pos.x = input->mouse_pos.x;
   player->pos.y = LIT_HEIGHT - input->mouse_pos.y;
 
-  lit_game_player_find_nearest_light(game);
+  lit_game_player_find_nearest_light(g);
 
   //
   // Move light logic
   //
   if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_LMB])) {
-    lit_game_player_hold_nearest_light_if_empty_handed(game, LIT_PLAYER_LIGHT_HOLD_MODE_MOVE);
+    lit_game_player_hold_nearest_light_if_empty_handed(g, LIT_PLAYER_LIGHT_HOLD_MODE_MOVE);
   }
 
   else if (input_is_button_released(input->buttons[INPUT_BUTTON_CODE_LMB]))
   {
-    lit_game_player_release_light(game);
+    lit_game_player_release_light(g);
   }
 
   //
@@ -645,14 +645,14 @@ lit_game_update_player(lit_game_t* game, f32_t dt)
   //
   if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_RMB]))
   {
-    lit_game_player_hold_nearest_light_if_empty_handed(game, LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE);
+    lit_game_player_hold_nearest_light_if_empty_handed(g, LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE);
     pf->lock_cursor();
     player->locked_pos_x = player->pos.x;
 
   }
   else if (input_is_button_released(input->buttons[INPUT_BUTTON_CODE_RMB])) 
   {
-    lit_game_player_release_light(game);
+    lit_game_player_release_light(g);
     pf->unlock_cursor();
   }
 
@@ -703,14 +703,14 @@ lit_game_update_player(lit_game_t* game, f32_t dt)
 }
 
 static void
-lit_game_render_player(lit_game_t* game){
-  lit_game_player_t* player = &game->player;
+lit_game_render_player(lit_game_t* g){
+  lit_game_player_t* player = &g->player;
 
 
   if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_NONE) { 
     if (player->nearest_light) {
       gfx_push_asset_sprite(gfx, &lit->assets,
-          game->circle_sprite, 
+          g->circle_sprite, 
           player->nearest_light->pos, 
           v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
       gfx_advance_depth(gfx);
@@ -718,7 +718,7 @@ lit_game_render_player(lit_game_t* game){
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE) {
     gfx_push_asset_sprite(gfx, &lit->assets,
-        game->rotate_sprite, 
+        g->rotate_sprite, 
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
     gfx_advance_depth(gfx);
@@ -726,7 +726,7 @@ lit_game_render_player(lit_game_t* game){
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_MOVE) {
     gfx_push_asset_sprite(gfx, &lit->assets,
-        game->move_sprite, 
+        g->move_sprite, 
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
     gfx_advance_depth(gfx);
@@ -741,7 +741,7 @@ lit_game_render_player(lit_game_t* game){
 //
 static void
 lit_spawn_particle(
-    lit_game_t* game,
+    lit_game_t* g,
     f32_t lifespan,
     v2f_t pos, v2f_t vel,
     rgba_t color_start,
@@ -749,7 +749,7 @@ lit_spawn_particle(
     v2f_t size_start,
     v2f_t size_end) 
 {
-  lit_particle_pool_t* ps = &game->particles;
+  lit_particle_pool_t* ps = &g->particles;
   if (ps->particle_count < array_count(ps->particles)) {
     lit_particle_t* p = ps->particles + ps->particle_count++; 
     p->pos = pos;
@@ -763,8 +763,8 @@ lit_spawn_particle(
 }
 
 static void
-lit_game_update_particles(lit_game_t* game, f32_t dt) {
-  lit_particle_pool_t* ps = &game->particles;
+lit_game_update_particles(lit_game_t* g, f32_t dt) {
+  lit_particle_pool_t* ps = &g->particles;
   for(u32_t particle_id = 0; 
       particle_id < ps->particle_count; ) 
   {
@@ -783,8 +783,8 @@ lit_game_update_particles(lit_game_t* game, f32_t dt) {
   }
 }
 static void
-lit_game_render_particles(lit_game_t* game) {
-  lit_particle_pool_t* ps = &game->particles;
+lit_game_render_particles(lit_game_t* g) {
+  lit_particle_pool_t* ps = &g->particles;
 
   // Render particles
   for(u32_t particle_id = 0; 
@@ -805,7 +805,7 @@ lit_game_render_particles(lit_game_t* game) {
     size.w = f32_lerp(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = f32_lerp(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    gfx_push_asset_sprite(gfx, &lit->assets, game->filled_circle_sprite, p->pos, size, color);
+    gfx_push_asset_sprite(gfx, &lit->assets, g->filled_circle_sprite, p->pos, size, color);
     gfx_advance_depth(gfx);
   }
 }
@@ -815,18 +815,18 @@ lit_game_render_particles(lit_game_t* game) {
 // Sensors
 //
 static lit_game_sensor_t* 
-lit_game_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color) 
+lit_game_push_sensor(lit_game_t* g, f32_t pos_x, f32_t pos_y, u32_t target_color) 
 {
-  assert(game->selected_sensor_group_id != array_count(game->sensor_groups));
-  assert(game->sensor_count < array_count(game->sensors));
-  lit_game_sensor_t* s = game->sensors + game->sensor_count++;
+  assert(g->selected_sensor_group_id != array_count(g->sensor_groups));
+  assert(g->sensor_count < array_count(g->sensors));
+  lit_game_sensor_t* s = g->sensors + g->sensor_count++;
   s->pos.x = pos_x;
   s->pos.y = pos_y;
   s->target_color = target_color;
   s->current_color = 0;
-  s->group_id = game->selected_sensor_group_id;
+  s->group_id = g->selected_sensor_group_id;
 
-  game->sensor_groups[s->group_id].sensor_count++;
+  g->sensor_groups[s->group_id].sensor_count++;
 
   return s;
 }
@@ -834,15 +834,15 @@ lit_game_push_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_co
 
 static void
 lit_game_push_rotating_sensor(
-    lit_game_t* game, 
+    lit_game_t* g, 
     f32_t pos_x, 
     f32_t pos_y, 
     v2f_t* origin,
     f32_t speed, 
     u32_t target_color)
 {
-  auto* sensor = lit_game_push_sensor(game, pos_x, pos_y, target_color);
-  lit_game_animator_push_rotate_point(game, &sensor->pos, origin, speed);
+  auto* sensor = lit_game_push_sensor(g, pos_x, pos_y, target_color);
+  lit_game_animator_push_rotate_point(g, &sensor->pos, origin, speed);
 
 }
 
@@ -850,35 +850,35 @@ lit_game_push_rotating_sensor(
 
 static void
 lit_game_push_patrolling_sensor_waypoint(
-    lit_game_t* game, 
+    lit_game_t* g, 
     f32_t pos_x, 
     f32_t pos_y) 
 {
-  assert(game->selected_animator_for_sensor);
-  lit_game_animator_push_patrol_point_waypoint(game->selected_animator_for_sensor, pos_x, pos_y);
+  assert(g->selected_animator_for_sensor);
+  lit_game_animator_push_patrol_point_waypoint(g->selected_animator_for_sensor, pos_x, pos_y);
 }
 
 
 static void
-lit_game_begin_patrolling_sensor(lit_game_t* game, f32_t pos_x, f32_t pos_y, u32_t target_color, f32_t duration_per_waypoint) 
+lit_game_begin_patrolling_sensor(lit_game_t* g, f32_t pos_x, f32_t pos_y, u32_t target_color, f32_t duration_per_waypoint) 
 {
-  assert(!game->selected_animator_for_sensor);
+  assert(!g->selected_animator_for_sensor);
 
-  auto* sensor = lit_game_push_sensor(game, pos_x, pos_y, target_color);
-  game->selected_animator_for_sensor = 
-    lit_game_animator_begin_patrol_point(game, duration_per_waypoint, &sensor->pos);
+  auto* sensor = lit_game_push_sensor(g, pos_x, pos_y, target_color);
+  g->selected_animator_for_sensor = 
+    lit_game_animator_begin_patrol_point(g, duration_per_waypoint, &sensor->pos);
 
-  //lit_game_push_patrolling_sensor_waypoint(game, pos_x, pos_y);
+  //lit_game_push_patrolling_sensor_waypoint(g, pos_x, pos_y);
 
 }
 
 static void
-lit_game_end_patrolling_sensor(lit_game_t* game) {
+lit_game_end_patrolling_sensor(lit_game_t* g) {
 
-  assert(game->selected_animator_for_sensor);
-  lit_game_animator_end_patrol_point(game->selected_animator_for_sensor);
+  assert(g->selected_animator_for_sensor);
+  lit_game_animator_end_patrol_point(g->selected_animator_for_sensor);
 
-  game->selected_animator_for_sensor = nullptr;
+  g->selected_animator_for_sensor = nullptr;
 }
 
 static void 
@@ -902,26 +902,26 @@ lit_game_end_sensor_group(lit_game_t* m) {
 }
 
 static void 
-lit_game_update_sensors(lit_game_t* game, f32_t dt) 
+lit_game_update_sensors(lit_game_t* g, f32_t dt) 
 {
-  lit_particle_pool_t* particles = &game->particles;
-  rng_t* rng = &game->rng; 
+  lit_particle_pool_t* particles = &g->particles;
+  rng_t* rng = &g->rng; 
 
   // This is an array of activated sensors per sensor_group
-  u32_t* activated = arena_push_arr_zero(u32_t, &lit->frame_arena, game->sensor_group_count);
+  u32_t* activated = arena_push_arr_zero(u32_t, &lit->frame_arena, g->sensor_group_count);
 
   u32_t total_triangles = 0;
 
   // Go through each sensor and update what lights are on it
-  for(u32_t sensor_index = 0; sensor_index < game->sensor_count; ++sensor_index)
+  for(u32_t sensor_index = 0; sensor_index < g->sensor_count; ++sensor_index)
   {
-    lit_game_sensor_t* sensor = game->sensors + sensor_index;
+    lit_game_sensor_t* sensor = g->sensors + sensor_index;
     u32_t current_color = 0x0000000;
 
     // For each light, for each triangle, add light
-    for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
+    for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
     {
-      lit_game_light_t* light = game->lights +light_index;
+      lit_game_light_t* light = g->lights +light_index;
 
       lit_profile_begin(sensor_light_overlap);
       for(u32_t tri_index = 0; tri_index < light->triangle_count; ++tri_index)
@@ -965,7 +965,7 @@ lit_game_update_sensors(lit_game_t* game, f32_t dt)
       v2f_t size_end = v2f_zero();
 
       lit_spawn_particle(
-          game, 
+          g, 
           1.f,
           sensor->pos,
           particle_vel,
@@ -977,11 +977,11 @@ lit_game_update_sensors(lit_game_t* game, f32_t dt)
   }
 
   // For each sensor group, we find which one is actually activated
-  for_cnt(group_index, game->sensor_group_count) {
-    lit_game_sensor_group_t* group = game->sensor_groups + group_index;
+  for_cnt(group_index, g->sensor_group_count) {
+    lit_game_sensor_group_t* group = g->sensor_groups + group_index;
     if (group->sensor_count == activated[group_index]) {
       // We found a group that can activate the callback
-      group->callback(game, group->context);
+      group->callback(g, group->context);
     }
   }
 
@@ -990,23 +990,23 @@ lit_game_update_sensors(lit_game_t* game, f32_t dt)
 
 
 static void 
-lit_game_render_sensors(lit_game_t* game) {
+lit_game_render_sensors(lit_game_t* g) {
 
   v2f_t size = v2f_set(LIT_SENSOR_RADIUS,LIT_SENSOR_RADIUS)*2;
-  for(u32_t sensor_index = 0; sensor_index < game->sensor_count; ++sensor_index)
+  for(u32_t sensor_index = 0; sensor_index < g->sensor_count; ++sensor_index)
   {
-    lit_game_sensor_t* sensor = game->sensors + sensor_index;
-    gfx_push_asset_sprite(gfx, &lit->assets, game->filled_circle_sprite, sensor->pos, size, rgba_hex(sensor->target_color));
+    lit_game_sensor_t* sensor = g->sensors + sensor_index;
+    gfx_push_asset_sprite(gfx, &lit->assets, g->filled_circle_sprite, sensor->pos, size, rgba_hex(sensor->target_color));
     gfx_advance_depth(gfx);
   }
 }
 
 static void
-lit_game_generate_light(lit_game_t* game) {
-  for(u32_t light_index = 0; light_index < game->light_count; ++light_index)
+lit_game_generate_light(lit_game_t* g) {
+  for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
   {
-    lit_game_light_t* light = game->lights + light_index;
-    lit_gen_light_intersections(light, game->edges, game->edge_count, &lit->frame_arena);
+    lit_game_light_t* light = g->lights + light_index;
+    lit_gen_light_intersections(light, g->edges, g->edge_count, &lit->frame_arena);
 
 #if LIT_DEBUG_INTERSECTIONS
     // Generate debug lines

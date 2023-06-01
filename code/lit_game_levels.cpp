@@ -8,10 +8,10 @@ static void lit_level_add(lit_game_t* m);
 
 
 static void 
-lit_game_sensor_trigger_solved(lit_game_t* game, void* context) {
+lit_game_sensor_trigger_solved(lit_game_t* g, void* context) {
   lit_game_load_level_t* level_to_load = (lit_game_load_level_t*)context;
-  game->solved = true;
-  game->level_to_load = level_to_load;
+  g->solved = true;
+  g->level_to_load = level_to_load;
 }
 
 

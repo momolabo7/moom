@@ -253,10 +253,10 @@ w32_set_moe_dims(f32_t width, f32_t height) {
   assert(width > 0.f && height > 0.f);
 
   // Ignore if there is no change
-  if (width == w32_state.moe_width && height == w32_state.moe_height) return;
+  if (width == w32_state.game_width && height == w32_state.game_height) return;
 
-  w32_state.moe_width = width;
-  w32_state.moe_height = height;
+  w32_state.game_width = width;
+  w32_state.game_height = height;
 
   // Get monitor info
   HMONITOR monitor = MonitorFromWindow(0, MONITOR_DEFAULTTONEAREST);
@@ -350,8 +350,8 @@ WinMain(HINSTANCE instance,
   {
     w32_state.is_running = true;
 
-    w32_state.moe_width = 1.f;
-    w32_state.moe_height = 1.f;  
+    w32_state.game_width = 1.f;
+    w32_state.game_height = 1.f;  
 
     // initialize the circular linked list
     w32_state.memory_sentinel.next = &w32_state.memory_sentinel;    
@@ -461,10 +461,10 @@ WinMain(HINSTANCE instance,
   
 
   // Load moe Functions
-  moe_functions_t moe_functions = {};
+  game_functions_t moe_functions = {};
   w32_loaded_code_t moe_code = {};
-  moe_code.function_count = array_count(moe_function_names);
-  moe_code.function_names = moe_function_names;
+  moe_code.function_count = array_count(game_function_names);
+  moe_code.function_names = game_function_names;
   moe_code.module_path = "moe.dll";
   moe_code.functions = (void**)&moe_functions;
 #if INTERNAL
@@ -491,7 +491,7 @@ WinMain(HINSTANCE instance,
   if (!w32_allocate_memory_into_arena(audio_arena, megabytes(256))) return false;
   defer { w32_free_memory_from_arena(audio_arena); };
 
-  pf_audio_t* audio = w32_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
+  audio_buffer_t* audio = w32_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
   if (!audio) return false;
   defer{ w32_audio_unload(audio); };
 
@@ -510,9 +510,9 @@ WinMain(HINSTANCE instance,
   input_t input = {};
 
   //
-  // MOE setup
+  // MOMO setup
   //
-  moe_t moe = {};
+  game_t moe = {};
   moe.is_running = true;
   
  
@@ -560,7 +560,7 @@ WinMain(HINSTANCE instance,
     v2u_t client_wh = w32_get_client_dims(window);
 
 
-    f32_t moe_aspect = w32_state.moe_width / w32_state.moe_height;
+    f32_t moe_aspect = w32_state.game_width / w32_state.game_height;
     RECT rr = w32_calc_render_region(client_wh.w,
                                      client_wh.h,
                                      moe_aspect);
@@ -584,15 +584,15 @@ WinMain(HINSTANCE instance,
       f32_t region_width = (f32_t)(rr.right - rr.left);
       f32_t region_height = (f32_t)(rr.top - rr.bottom);
 
-      f32_t moe_to_render_w = w32_state.moe_width / region_width;
-      f32_t moe_to_render_h = w32_state.moe_height / region_height;
+      f32_t game_to_render_w = w32_state.game_width / region_width;
+      f32_t game_to_render_h = w32_state.game_height / region_height;
       
-      input.mouse_pos.x = render_mouse_pos_x * moe_to_render_w;
-      input.mouse_pos.y = render_mouse_pos_y * moe_to_render_h;
+      input.mouse_pos.x = render_mouse_pos_x * game_to_render_w;
+      input.mouse_pos.y = render_mouse_pos_y * game_to_render_h;
       
       
       // NOTE(Momo): Flip y
-      //moe.design_mouse_pos.y = f32_lerp(MOE_HEIGHT, 0.f, moe.design_mouse_pos.y/MOE_HEIGHT);	
+      //moe.design_mouse_pos.y = f32_lerp(MOMO_HEIGHT, 0.f, moe.design_mouse_pos.y/MOMO_HEIGHT);	
       if (w32_state.is_cursor_locked) {
         SetCursorPos(
             w32_state.cursor_pt_to_lock_to.x,
@@ -601,7 +601,7 @@ WinMain(HINSTANCE instance,
     }
     
     
-    //-moe_t logic
+    //-game_t logic
     if(moe_code.is_valid) { 
       moe_functions.update_and_render(&moe, &pf, gfx, audio, profiler, &input);
     }

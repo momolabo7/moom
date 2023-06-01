@@ -2,8 +2,8 @@
 // Because it is just the API, it is written in pure C so that it can be used
 // in other languages.
 //
-#ifndef MOE_PF_H
-#define MOE_PF_H
+#ifndef MOMO_PF_H
+#define MOMO_PF_H
 
 #include "momo.h"
 
@@ -69,7 +69,7 @@ typedef struct {
   s16_t* sample_buffer;
   u32_t sample_count;
   u32_t channels; //TODO: remove this?
-} pf_audio_t;
+} audio_buffer_t;
 
 
 //
@@ -148,7 +148,7 @@ typedef enum {
 } input_button_code_t;
 
 // NOTE(momo): Input is SPECIFICALLY stuff that can be recorded and
-// replayed by some kind of system. Other things go to moe_t
+// replayed by some kind of system. Other things go to game_t
 typedef struct {
   input_button_t buttons[INPUT_BUTTON_CODE_MAX];
   u8_t chars[32];
@@ -209,30 +209,30 @@ typedef struct {
 
 
 
-typedef struct {
+struct game_t {
   // For moe to use
-  void* game_context;
+  void* context;
 
           
   b32_t is_dll_reloaded;
   b32_t is_running;
-} moe_t;
+};
 
-typedef void moe_update_and_render_f(
-    moe_t*, 
+typedef void game_update_and_render_f(
+    game_t*, 
     pf_t*, 
     gfx_t*, 
-    pf_audio_t*, 
+    audio_buffer_t*, 
     profiler_t*, 
     input_t*);
 
 // To be called by platform
-typedef struct moe_functions_t {
-  moe_update_and_render_f* update_and_render;
-} moe_functions_t;
+typedef struct game_functions_t {
+  game_update_and_render_f* update_and_render;
+} game_functions_t;
 
-static const char* moe_function_names[] {
-  "moe_update_and_render",
+static const char* game_function_names[] {
+  "game_update_and_render",
 };
 
 
@@ -260,4 +260,4 @@ input_is_button_held(input_button_t btn) {
   return btn.before && btn.now;
 }
 
-#endif //MOE_PF_H
+#endif //MOMO_PF_H

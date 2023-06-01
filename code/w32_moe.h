@@ -24,7 +24,7 @@
 #undef far
 
 #include "momo.h"
-#include "moe_platform.h"
+#include "game_platform.h"
 
 struct w32_memory_t {
   pf_memory_t pf_memory;
@@ -85,8 +85,8 @@ struct w32_state_t {
   b32_t is_cursor_locked;
   POINT cursor_pt_to_lock_to;
   
-  f32_t moe_width;
-  f32_t moe_height;
+  f32_t game_width;
+  f32_t game_height;
   
   w32_work_queue_t work_queue;
   w32_file_cabinet_t file_cabinet;

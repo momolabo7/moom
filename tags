@@ -172,7 +172,7 @@ at	code/momo_json.h	/^  u8_t* at;$/;"	m	language:C++	struct:json_key_t	typeref:t
 at	code/momo_json.h	/^  u8_t* at;$/;"	m	language:C++	struct:_json_token_t	typeref:typename:u8_t *
 at	code/momo_json.h	/^  umi_t at;$/;"	m	language:C++	struct:json_t	typeref:typename:umi_t
 atlas_font	code/sui_pack.h	/^  sui_atlas_font_t* atlas_font;$/;"	m	language:C++	struct:sui_packer_source_font_t	typeref:typename:sui_atlas_font_t *
-audio	code/moe.h	/^static pf_audio_t* audio;$/;"	v	language:C++	typeref:typename:pf_audio_t *
+audio	code/moe.h	/^static audio_buffer_t* audio;$/;"	v	language:C++	typeref:typename:audio_buffer_t *
 audio_client	code/w32_audio_wasapi.h	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient2 *
 audio_format	code/momo_wav.h	/^  u16_t audio_format;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 audio_render_client	code/w32_audio_wasapi.h	/^  IAudioRenderClient* audio_render_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioRenderClient *
@@ -212,7 +212,7 @@ blank_sprite	C:/users/geral/work/moom/code/lit_game.h	/^  asset_sprite_id_t blan
 blank_sprite	code/lit.h	/^  asset_sprite_id_t blank_sprite;$/;"	m	language:C++	struct:lit_t	typeref:typename:asset_sprite_id_t
 blank_sprite	code/lit_game.h	/^  asset_sprite_id_t blank_sprite;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_sprite_id_t
 blank_sprite	code/lit_menu.h	/^  asset_sprite_id_t blank_sprite;$/;"	m	language:C++	struct:lit_menu_t	typeref:typename:asset_sprite_id_t
-blank_texture	code/moe_gfx_opengl.h	/^  OGL_Texture blank_texture;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_Texture
+blank_texture	code/moe_gfx_opengl.h	/^  opengl_texture_t blank_texture;$/;"	m	language:C++	struct:opengl_t	typeref:typename:opengl_texture_t
 block_align	code/momo_wav.h	/^  u16_t block_align;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 block_name	code/moe_profiler.h	/^  const char* block_name;$/;"	m	language:C++	struct:profiler_entry_t	typeref:typename:const char *
 block_name	code/momo_profiler.h	/^  const char* block_name;$/;"	m	language:C++	struct:profiler_entry_t	typeref:typename:const char *
@@ -234,8 +234,8 @@ bpm_to_spb_f32	code/momo_types.h	/^bpm_to_spb_f32(f32_t bpm) {$/;"	f	language:C+
 bpm_to_spb_f64	code/momo_types.h	/^bpm_to_spb_f64(f64_t bpm) {$/;"	f	language:C++	typeref:typename:f64_t
 buffer	build/a.out.js	/^  buffer,$/;"	v	language:JavaScript
 buffer	code/w32_audio_wasapi.h	/^  s16_t* buffer;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:s16_t *
-buffers	code/moe_gfx_opengl.h	/^  GLuint buffers[OGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; \/\/ Opengl__VBO_Count$/;"	m	language:C++	struct:ogl_sprite_batch_t	typeref:typename:GLuint[]
-buffers	code/moe_gfx_opengl.h	/^  GLuint buffers[OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT];$/;"	m	language:C++	struct:ogl_triangle_batch_t	typeref:typename:GLuint[]
+buffers	code/moe_gfx_opengl.h	/^  GLuint buffers[OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; \/\/ opengl_t__VBO_Count$/;"	m	language:C++	struct:opengl_sprite_batch_t	typeref:typename:GLuint[]
+buffers	code/moe_gfx_opengl.h	/^  GLuint buffers[OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT];$/;"	m	language:C++	struct:opengl_triangle_batch_t	typeref:typename:GLuint[]
 buffer_invalid	code/momo_types.h	/^buffer_invalid(void) {$/;"	f	language:C++	typeref:typename:buffer_t
 buffer_set	code/momo_types.h	/^buffer_set(void* mem , usz_t size) {$/;"	f	language:C++	typeref:typename:buffer_t
 buffer_size	code/w32_audio_wasapi.h	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t
@@ -396,13 +396,13 @@ ctx	code/moe_console.h	/^  void* ctx;$/;"	m	language:C++	struct:console_command_
 ctx	code/momo_console.h	/^  void* ctx;$/;"	m	language:C++	struct:console_command_t	typeref:typename:void *
 current_color	C:/users/geral/work/moom/code/lit_game.h	/^  u32_t current_color;$/;"	m	language:C++	struct:lit_game_sensor_t	typeref:typename:u32_t
 current_color	code/lit_game.h	/^  u32_t current_color;$/;"	m	language:C++	struct:lit_game_sensor_t	typeref:typename:u32_t
-current_instance_index	code/moe_gfx_opengl.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:ogl_sprite_batch_t	typeref:typename:GLuint
-current_instance_index	code/moe_gfx_opengl.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:ogl_triangle_batch_t	typeref:typename:GLuint
-current_layer	code/moe_gfx_opengl.h	/^  f32_t current_layer;$/;"	m	language:C++	struct:Opengl	typeref:typename:f32_t
+current_instance_index	code/moe_gfx_opengl.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:opengl_sprite_batch_t	typeref:typename:GLuint
+current_instance_index	code/moe_gfx_opengl.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:opengl_triangle_batch_t	typeref:typename:GLuint
+current_layer	code/moe_gfx_opengl.h	/^  f32_t current_layer;$/;"	m	language:C++	struct:opengl_t	typeref:typename:f32_t
 current_level_id	C:/users/geral/work/moom/code/lit_game.h	/^  u32_t current_level_id;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
 current_level_id	code/lit_game.h	/^  u32_t current_level_id;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
 current_level_selection	code/lit_menu.h	/^  u32_t current_level_selection;$/;"	m	language:C++	struct:lit_menu_t	typeref:typename:u32_t
-current_texture	code/moe_gfx_opengl.h	/^  GLuint current_texture;$/;"	m	language:C++	struct:ogl_sprite_batch_t	typeref:typename:GLuint
+current_texture	code/moe_gfx_opengl.h	/^  GLuint current_texture;$/;"	m	language:C++	struct:opengl_sprite_batch_t	typeref:typename:GLuint
 current_waypoint_index	C:/users/geral/work/moom/code/lit_game.h	/^  u32_t current_waypoint_index;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:u32_t
 current_waypoint_index	code/lit_game.h	/^  u32_t current_waypoint_index;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:u32_t
 cursor_pt_to_lock_to	code/w32_moe.h	/^  POINT cursor_pt_to_lock_to;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:POINT
@@ -465,7 +465,7 @@ done	bin/setup_emsdk.bat	/^:done$/;"	l	language:DosBatch
 doRun	build/a.out.js	/^  function doRun() {$/;"	f	language:JavaScript	function:run
 dref	code/momo_types.h	/^#define dref(/;"	d	language:C++
 dst	code/moe_gfx.h	/^  gfx_blend_type_t dst;$/;"	m	language:C++	struct:gfx_command_blend_t	typeref:typename:gfx_blend_type_t
-dummy_texture	code/moe_gfx_opengl.h	/^  OGL_Texture dummy_texture;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_Texture
+dummy_texture	code/moe_gfx_opengl.h	/^  opengl_texture_t dummy_texture;$/;"	m	language:C++	struct:opengl_t	typeref:typename:opengl_texture_t
 duration	C:/users/geral/work/moom/code/lit_game.h	/^  f32_t duration;$/;"	m	language:C++	struct:lit_game_animator_patrol_edge_t	typeref:typename:f32_t
 duration	C:/users/geral/work/moom/code/lit_game.h	/^  f32_t duration;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:f32_t
 duration	code/lit_game.h	/^  f32_t duration;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:f32_t
@@ -830,7 +830,7 @@ g79	build/web.html	/^   id="g79"><radialGradient$/;"	I	language:HTML
 g9	build/web.html	/^   id="g9"><g$/;"	I	language:HTML
 game	C:/users/geral/work/moom/code/lit.h	/^    lit_game_t game;$/;"	m	language:C++	union:lit_t::__anonae46215c010a	typeref:typename:lit_game_t
 game	code/lit.h	/^    lit_game_t game;$/;"	m	language:C++	union:lit_t::__anon65aa720e010a	typeref:typename:lit_game_t
-game_context	code/moe_platform.h	/^  void* game_context;$/;"	m	language:C++	struct:__anonb345dcaa0a08	typeref:typename:void *
+context	code/moe_platform.h	/^  void* context;$/;"	m	language:C++	struct:__anonb345dcaa0a08	typeref:typename:void *
 GAME_H	code/game.h	/^#define GAME_H$/;"	d	language:C++
 getBinary	build/a.out.js	/^function getBinary(file) {$/;"	f	language:JavaScript
 getBinaryPromise	build/a.out.js	/^function getBinaryPromise() {$/;"	f	language:JavaScript
@@ -847,7 +847,7 @@ get_performance_counter	code/moe_profiler.h	/^  profiler_get_performance_counter
 get_performance_counter	code/momo_profiler.h	/^  profiler_get_performance_counter_t* get_performance_counter;$/;"	m	language:C++	struct:profiler_t	typeref:typename:profiler_get_performance_counter_t *
 get_sprite	code/moe_assets.cpp	/^get_sprite(assets_t* assets, asset_sprite_id_t sprite_id) {$/;"	f	language:C++	typeref:typename:asset_sprite_t *	file:
 gfx	code/moe.h	/^static gfx_t* gfx; $/;"	v	language:C++	typeref:typename:gfx_t *
-gfx	code/moe_gfx_opengl.h	/^  gfx_t gfx; \/\/ Must be first member$/;"	m	language:C++	struct:Opengl	typeref:typename:gfx_t
+gfx	code/moe_gfx_opengl.h	/^  gfx_t gfx; \/\/ Must be first member$/;"	m	language:C++	struct:opengl_t	typeref:typename:gfx_t
 gfx_advance_depth	code/moe_gfx.h	/^gfx_advance_depth(gfx_t* g) {$/;"	f	language:C++	typeref:typename:void
 gfx_advance_depth	code/moe_gfx.h	/^static void gfx_advance_depth(gfx_t* g); $/;"	p	language:C++	typeref:typename:void
 gfx_begin_texture_transfer	code/moe_gfx.h	/^gfx_begin_texture_transfer(gfx_t* g, u32_t required_space) {$/;"	f	language:C++	typeref:typename:gfx_texture_payload_t *
@@ -924,7 +924,7 @@ gfx_init_command_queue	code/moe_gfx.h	/^static void gfx_init_command_queue(gfx_t
 gfx_init_texture_queue	code/moe_gfx.h	/^gfx_init_texture_queue(gfx_t* g, void* data, umi_t size) {$/;"	f	language:C++	typeref:typename:void
 gfx_init_texture_queue	code/moe_gfx.h	/^static void gfx_init_texture_queue(gfx_t* g, void* data, umi_t size);$/;"	p	language:C++	typeref:typename:void
 GFX_MAX_TEXTURES	code/moe_gfx.h	/^#define GFX_MAX_TEXTURES /;"	d	language:C++
-GFX_OGL_H	code/moe_gfx_opengl.h	/^#define GFX_OGL_H$/;"	d	language:C++
+GFX_OPENGL_H	code/moe_gfx_opengl.h	/^#define GFX_OPENGL_H$/;"	d	language:C++
 gfx_push_asset_sprite	code/moe_game_api.h	/^gfx_push_asset_sprite($/;"	f	language:C++	typeref:typename:void
 gfx_push_sprite	code/moe_gfx.h	/^gfx_push_sprite(gfx_t* g, $/;"	f	language:C++	typeref:typename:void
 gfx_push_sprite	code/moe_gfx.h	/^static void gfx_push_sprite(gfx_t* g, rgba_t colors, v2f_t pos, v2f_t size, v2f_t anchor, u32_t /;"	p	language:C++	typeref:typename:void
@@ -957,61 +957,61 @@ gist_cdl_push_front	code/gist_linked_list.cpp	/^gist_cdl_push_front(gist_cdl_nod
 gist_rb	code/gist_ring_buffer.cpp	/^struct gist_rb {$/;"	s	language:C++	file:
 gist_rb_dequeue	code/gist_ring_buffer.cpp	/^gist_rb_dequeue(gist_rb* rb) $/;"	f	language:C++	typeref:typename:int *	file:
 gist_rb_enqueue	code/gist_ring_buffer.cpp	/^gist_rb_enqueue(gist_rb* rb) $/;"	f	language:C++	typeref:typename:int *	file:
-glAttachShader	code/moe_gfx_opengl.h	/^  OGL_glAttachShader* glAttachShader;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glAttachShader *
-glBindTexture	code/moe_gfx_opengl.h	/^  OGL_glBindTexture* glBindTexture ;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glBindTexture *
-glBindVertexArray	code/moe_gfx_opengl.h	/^  OGL_glBindVertexArray* glBindVertexArray;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glBindVertexArray *
+glAttachShader	code/moe_gfx_opengl.h	/^  OPENGL_glAttachShader* glAttachShader;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glAttachShader *
+glBindTexture	code/moe_gfx_opengl.h	/^  OPENGL_glBindTexture* glBindTexture ;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glBindTexture *
+glBindVertexArray	code/moe_gfx_opengl.h	/^  OPENGL_glBindVertexArray* glBindVertexArray;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glBindVertexArray *
 GLbitfield	code/moe_gfx_opengl.h	/^typedef u32_t  GLbitfield;$/;"	t	language:C++	typeref:typename:u32_t
-glBlendFunc	code/moe_gfx_opengl.h	/^  OGL_glBlendFunc* glBlendFunc;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glBlendFunc *
-glBlendFuncSeparate	code/moe_gfx_opengl.h	/^  OGL_glBlendFuncSeparate* glBlendFuncSeparate;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glBlendFuncSeparate *
+glBlendFunc	code/moe_gfx_opengl.h	/^  OPENGL_glBlendFunc* glBlendFunc;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glBlendFunc *
+glBlendFuncSeparate	code/moe_gfx_opengl.h	/^  OPENGL_glBlendFuncSeparate* glBlendFuncSeparate;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glBlendFuncSeparate *
 GLboolean	code/moe_gfx_opengl.h	/^typedef b8_t   GLboolean;$/;"	t	language:C++	typeref:typename:b8_t
 GLchar	code/moe_gfx_opengl.h	/^typedef c8_t   GLchar;$/;"	t	language:C++	typeref:typename:c8_t
 GLclampf	code/moe_gfx_opengl.h	/^typedef f32_t  GLclampf;$/;"	t	language:C++	typeref:typename:f32_t
-glClear	code/moe_gfx_opengl.h	/^  OGL_glClear* glClear;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glClear *
-glClearColor	code/moe_gfx_opengl.h	/^  OGL_glClearColor* glClearColor;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glClearColor *
-glCompileShader	code/moe_gfx_opengl.h	/^  OGL_glCompileShader* glCompileShader;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glCompileShader *
-glCreateBuffers	code/moe_gfx_opengl.h	/^  OGL_glCreateBuffers* glCreateBuffers;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glCreateBuffers *
-glCreateProgram	code/moe_gfx_opengl.h	/^  OGL_glCreateProgram* glCreateProgram;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glCreateProgram *
-glCreateShader	code/moe_gfx_opengl.h	/^  OGL_glCreateShader* glCreateShader;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glCreateShader *
-glCreateTextures	code/moe_gfx_opengl.h	/^  OGL_glCreateTextures* glCreateTextures;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glCreateTextures *
-glCreateVertexArrays	code/moe_gfx_opengl.h	/^  OGL_glCreateVertexArrays* glCreateVertexArrays;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glCreateVertexArrays *
-glDebugMessageCallbackARB	code/moe_gfx_opengl.h	/^  OGL_glDebugMessageCallbackARB* glDebugMessageCallbackARB;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glDebugMessageCallbackARB *
+glClear	code/moe_gfx_opengl.h	/^  OPENGL_glClear* glClear;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glClear *
+glClearColor	code/moe_gfx_opengl.h	/^  OPENGL_glClearColor* glClearColor;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glClearColor *
+glCompileShader	code/moe_gfx_opengl.h	/^  OPENGL_glCompileShader* glCompileShader;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glCompileShader *
+glCreateBuffers	code/moe_gfx_opengl.h	/^  OPENGL_glCreateBuffers* glCreateBuffers;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glCreateBuffers *
+glCreateProgram	code/moe_gfx_opengl.h	/^  OPENGL_glCreateProgram* glCreateProgram;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glCreateProgram *
+glCreateShader	code/moe_gfx_opengl.h	/^  OPENGL_glCreateShader* glCreateShader;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glCreateShader *
+glCreateTextures	code/moe_gfx_opengl.h	/^  OPENGL_glCreateTextures* glCreateTextures;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glCreateTextures *
+glCreateVertexArrays	code/moe_gfx_opengl.h	/^  OPENGL_glCreateVertexArrays* glCreateVertexArrays;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glCreateVertexArrays *
+glDebugMessageCallbackARB	code/moe_gfx_opengl.h	/^  OPENGL_glDebugMessageCallbackARB* glDebugMessageCallbackARB;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glDebugMessageCallbackARB *
 GLDEBUGPROC	code/moe_gfx_opengl.h	/^typedef void (GLDEBUGPROC)(GLenum source,$/;"	t	language:C++	typeref:typename:void ()(GLenum source,GLenum type,GLuint id,GLenum severity,GLsizei length,GLchar * msg,const void * userParam)
-glDeleteShader	code/moe_gfx_opengl.h	/^  OGL_glDeleteShader* glDeleteShader;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glDeleteShader *
-glDeleteTextures	code/moe_gfx_opengl.h	/^  OGL_glDeleteTextures* glDeleteTextures;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glDeleteTextures *
-glDisable	code/moe_gfx_opengl.h	/^  OGL_glDisable* glDisable;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glDisable *
-glDrawArrays	code/moe_gfx_opengl.h	/^  OGL_glDrawArrays* glDrawArrays;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glDrawArrays *
-glDrawElementsInstancedBaseInstance	code/moe_gfx_opengl.h	/^  OGL_glDrawElementsInstancedBaseInstance* glDrawElementsInstancedBaseInstance;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glDrawElementsInstancedBaseInstance *
-glEnable	code/moe_gfx_opengl.h	/^  OGL_glEnable* glEnable;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glEnable *
-glEnableVertexArrayAttrib	code/moe_gfx_opengl.h	/^  OGL_glEnableVertexArrayAttrib* glEnableVertexArrayAttrib;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glEnableVertexArrayAttrib *
+glDeleteShader	code/moe_gfx_opengl.h	/^  OPENGL_glDeleteShader* glDeleteShader;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glDeleteShader *
+glDeleteTextures	code/moe_gfx_opengl.h	/^  OPENGL_glDeleteTextures* glDeleteTextures;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glDeleteTextures *
+glDisable	code/moe_gfx_opengl.h	/^  OPENGL_glDisable* glDisable;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glDisable *
+glDrawArrays	code/moe_gfx_opengl.h	/^  OPENGL_glDrawArrays* glDrawArrays;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glDrawArrays *
+glDrawElementsInstancedBaseInstance	code/moe_gfx_opengl.h	/^  OPENGL_glDrawElementsInstancedBaseInstance* glDrawElementsInstancedBaseInstance;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glDrawElementsInstancedBaseInstance *
+glEnable	code/moe_gfx_opengl.h	/^  OPENGL_glEnable* glEnable;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glEnable *
+glEnableVertexArrayAttrib	code/moe_gfx_opengl.h	/^  OPENGL_glEnableVertexArrayAttrib* glEnableVertexArrayAttrib;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glEnableVertexArrayAttrib *
 GLenum	code/moe_gfx_opengl.h	/^typedef s32_t  GLenum;$/;"	t	language:C++	typeref:typename:s32_t
 GLfloat	code/moe_gfx_opengl.h	/^typedef f32_t  GLfloat;$/;"	t	language:C++	typeref:typename:f32_t
-glGetProgramInfoLog	code/moe_gfx_opengl.h	/^  OGL_glGetProgramInfoLog* glGetProgramInfoLog;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glGetProgramInfoLog *
-glGetProgramiv	code/moe_gfx_opengl.h	/^  OGL_glGetProgramiv* glGetProgramiv;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glGetProgramiv *
-glGetUniformLocation	code/moe_gfx_opengl.h	/^  OGL_glGetUniformLocation* glGetUniformLocation;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glGetUniformLocation *
+glGetProgramInfoLog	code/moe_gfx_opengl.h	/^  OPENGL_glGetProgramInfoLog* glGetProgramInfoLog;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glGetProgramInfoLog *
+glGetProgramiv	code/moe_gfx_opengl.h	/^  OPENGL_glGetProgramiv* glGetProgramiv;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glGetProgramiv *
+glGetUniformLocation	code/moe_gfx_opengl.h	/^  OPENGL_glGetUniformLocation* glGetUniformLocation;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glGetUniformLocation *
 GLint	code/moe_gfx_opengl.h	/^typedef s32_t  GLint; $/;"	t	language:C++	typeref:typename:s32_t
 GLintptr	code/moe_gfx_opengl.h	/^typedef smi_t  GLintptr;$/;"	t	language:C++	typeref:typename:smi_t
-glLinkProgram	code/moe_gfx_opengl.h	/^  OGL_glLinkProgram* glLinkProgram;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glLinkProgram *
-glNamedBufferStorage	code/moe_gfx_opengl.h	/^  OGL_glNamedBufferStorage* glNamedBufferStorage;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glNamedBufferStorage *
-glNamedBufferSubData	code/moe_gfx_opengl.h	/^  OGL_glNamedBufferSubData* glNamedBufferSubData;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glNamedBufferSubData *
-glProgramUniform4fv	code/moe_gfx_opengl.h	/^  OGL_glProgramUniform4fv* glProgramUniform4fv;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glProgramUniform4fv *
-glProgramUniformMatrix4fv	code/moe_gfx_opengl.h	/^  OGL_glProgramUniformMatrix4fv* glProgramUniformMatrix4fv;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glProgramUniformMatrix4fv *
-glScissor	code/moe_gfx_opengl.h	/^  OGL_glScissor* glScissor ;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glScissor *
-glShaderSource	code/moe_gfx_opengl.h	/^  OGL_glShaderSource* glShaderSource;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glShaderSource *
+glLinkProgram	code/moe_gfx_opengl.h	/^  OPENGL_glLinkProgram* glLinkProgram;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glLinkProgram *
+glNamedBufferStorage	code/moe_gfx_opengl.h	/^  OPENGL_glNamedBufferStorage* glNamedBufferStorage;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glNamedBufferStorage *
+glNamedBufferSubData	code/moe_gfx_opengl.h	/^  OPENGL_glNamedBufferSubData* glNamedBufferSubData;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glNamedBufferSubData *
+glProgramUniform4fv	code/moe_gfx_opengl.h	/^  OPENGL_glProgramUniform4fv* glProgramUniform4fv;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glProgramUniform4fv *
+glProgramUniformMatrix4fv	code/moe_gfx_opengl.h	/^  OPENGL_glProgramUniformMatrix4fv* glProgramUniformMatrix4fv;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glProgramUniformMatrix4fv *
+glScissor	code/moe_gfx_opengl.h	/^  OPENGL_glScissor* glScissor ;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glScissor *
+glShaderSource	code/moe_gfx_opengl.h	/^  OPENGL_glShaderSource* glShaderSource;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glShaderSource *
 GLsizei	code/moe_gfx_opengl.h	/^typedef s32_t  GLsizei;$/;"	t	language:C++	typeref:typename:s32_t
 GLsizeiptr	code/moe_gfx_opengl.h	/^typedef smi_t  GLsizeiptr; $/;"	t	language:C++	typeref:typename:smi_t
-glTexParameteri	code/moe_gfx_opengl.h	/^  OGL_glTexParameteri*  glTexParameteri ;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glTexParameteri *
-glTextureStorage2D	code/moe_gfx_opengl.h	/^  OGL_glTextureStorage2D* glTextureStorage2D ;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glTextureStorage2D *
-glTextureSubImage2D	code/moe_gfx_opengl.h	/^  OGL_glTextureSubImage2D*  glTextureSubImage2D;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glTextureSubImage2D *
+glTexParameteri	code/moe_gfx_opengl.h	/^  OPENGL_glTexParameteri*  glTexParameteri ;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glTexParameteri *
+glTextureStorage2D	code/moe_gfx_opengl.h	/^  OPENGL_glTextureStorage2D* glTextureStorage2D ;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glTextureStorage2D *
+glTextureSubImage2D	code/moe_gfx_opengl.h	/^  OPENGL_glTextureSubImage2D*  glTextureSubImage2D;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glTextureSubImage2D *
 glue	code/momo_types.h	/^#define glue(/;"	d	language:C++
 glue_	code/momo_types.h	/^#define glue_(/;"	d	language:C++
 GLuint	code/moe_gfx_opengl.h	/^typedef u32_t  GLuint;$/;"	t	language:C++	typeref:typename:u32_t
-glUseProgram	code/moe_gfx_opengl.h	/^  OGL_glUseProgram* glUseProgram;  $/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glUseProgram *
-glVertexArrayAttribBinding	code/moe_gfx_opengl.h	/^  OGL_glVertexArrayAttribBinding* glVertexArrayAttribBinding;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glVertexArrayAttribBinding *
-glVertexArrayAttribFormat	code/moe_gfx_opengl.h	/^  OGL_glVertexArrayAttribFormat* glVertexArrayAttribFormat;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glVertexArrayAttribFormat *
-glVertexArrayBindingDivisor	code/moe_gfx_opengl.h	/^  OGL_glVertexArrayBindingDivisor* glVertexArrayBindingDivisor;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glVertexArrayBindingDivisor *
-glVertexArrayElementBuffer	code/moe_gfx_opengl.h	/^  OGL_glVertexArrayElementBuffer* glVertexArrayElementBuffer;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glVertexArrayElementBuffer *
-glVertexArrayVertexBuffer	code/moe_gfx_opengl.h	/^  OGL_glVertexArrayVertexBuffer* glVertexArrayVertexBuffer;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glVertexArrayVertexBuffer *
-glViewport	code/moe_gfx_opengl.h	/^  OGL_glViewport* glViewport;$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_glViewport *
+glUseProgram	code/moe_gfx_opengl.h	/^  OPENGL_glUseProgram* glUseProgram;  $/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glUseProgram *
+glVertexArrayAttribBinding	code/moe_gfx_opengl.h	/^  OPENGL_glVertexArrayAttribBinding* glVertexArrayAttribBinding;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glVertexArrayAttribBinding *
+glVertexArrayAttribFormat	code/moe_gfx_opengl.h	/^  OPENGL_glVertexArrayAttribFormat* glVertexArrayAttribFormat;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glVertexArrayAttribFormat *
+glVertexArrayBindingDivisor	code/moe_gfx_opengl.h	/^  OPENGL_glVertexArrayBindingDivisor* glVertexArrayBindingDivisor;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glVertexArrayBindingDivisor *
+glVertexArrayElementBuffer	code/moe_gfx_opengl.h	/^  OPENGL_glVertexArrayElementBuffer* glVertexArrayElementBuffer;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glVertexArrayElementBuffer *
+glVertexArrayVertexBuffer	code/moe_gfx_opengl.h	/^  OPENGL_glVertexArrayVertexBuffer* glVertexArrayVertexBuffer;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glVertexArrayVertexBuffer *
+glViewport	code/moe_gfx_opengl.h	/^  OPENGL_glViewport* glViewport;$/;"	m	language:C++	struct:opengl_t	typeref:typename:OPENGL_glViewport *
 glyf	code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 glyphs	code/moe_assets.h	/^  asset_font_glyph_t* glyphs;$/;"	m	language:C++	struct:asset_font_t	typeref:typename:asset_font_glyph_t *
 glyph_count	code/karu.h	/^  u32_t glyph_count;$/;"	m	language:C++	struct:karu_font_t	typeref:typename:u32_t
@@ -1263,8 +1263,8 @@ INSPECTOR_MAX_ENTRIES	code/moe_inspector.h	/^#define INSPECTOR_MAX_ENTRIES /;"	d
 inspector_t	code/moe_inspector.h	/^struct inspector_t {$/;"	s	language:C++
 inspector_t	code/momo_inspector.h	/^struct inspector_t {$/;"	s	language:C++
 inspector_update_and_render	code/lit_inspector_rendering.h	/^inspector_update_and_render() $/;"	f	language:C++	typeref:typename:void
-instances_to_draw	code/moe_gfx_opengl.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:ogl_sprite_batch_t	typeref:typename:GLsizei
-instances_to_draw	code/moe_gfx_opengl.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:ogl_triangle_batch_t	typeref:typename:GLsizei
+instances_to_draw	code/moe_gfx_opengl.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:opengl_sprite_batch_t	typeref:typename:GLsizei
+instances_to_draw	code/moe_gfx_opengl.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:opengl_triangle_batch_t	typeref:typename:GLsizei
 instantiateArrayBuffer	build/a.out.js	/^  function instantiateArrayBuffer(receiver) {$/;"	f	language:JavaScript	function:createWasm
 instantiateAsync	build/a.out.js	/^  function instantiateAsync() {$/;"	f	language:JavaScript	function:createWasm
 interlace_method	code/momo_png.h	/^  u8_t interlace_method;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t
@@ -1374,8 +1374,8 @@ key	code/momo_sort.h	/^  f32_t key;$/;"	m	language:C++	struct:sort_entry_t	typer
 kilobytes	code/momo_types.h	/^#define kilobytes(/;"	d	language:C++
 l	code/momo_colors.h	/^    struct { f32_t h,s,l; };  $/;"	m	language:C++	struct:hsla_t::__anonb89fa6ae010a::__anonb89fa6ae0208	typeref:typename:f32_t
 l	code/momo_colors.h	/^  f32_t h, s, l;  $/;"	m	language:C++	struct:hsl_t	typeref:typename:f32_t
-last_drawn_instance_index	code/moe_gfx_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:ogl_sprite_batch_t	typeref:typename:GLsizei
-last_drawn_instance_index	code/moe_gfx_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:ogl_triangle_batch_t	typeref:typename:GLsizei
+last_drawn_instance_index	code/moe_gfx_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:opengl_sprite_batch_t	typeref:typename:GLsizei
+last_drawn_instance_index	code/moe_gfx_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:opengl_triangle_batch_t	typeref:typename:GLsizei
 latency_sample_count	code/w32_audio_wasapi.h	/^  u32_t latency_sample_count;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t
 Layer_1	build/web.html	/^   id="Layer_1"$/;"	I	language:HTML
 left	code/momo_json.h	/^  _json_entry_t* left;$/;"	m	language:C++	struct:_json_entry_t	typeref:typename:_json_entry_t *
@@ -1813,7 +1813,7 @@ main	code/test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/web.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 make	code/momo_types.h	/^#define make(/;"	d	language:C++
 max	code/lit_profiler_rendering.h	/^  f64_t max;$/;"	m	language:C++	struct:profiler_stat_t	typeref:typename:f64_t
-max	code/moe_gfx_opengl.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:ogl_uv_t	typeref:typename:v2f_t
+max	code/moe_gfx_opengl.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:opengl_uv_t	typeref:typename:v2f_t
 maxp	code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 max_of	code/momo_types.h	/^#define max_of(/;"	d	language:C++
 max_x	code/moe_gfx.h	/^  f32_t min_x, max_x;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
@@ -1851,7 +1851,7 @@ META_TOKEN_TYPE_STRING	code/meta.cpp	/^  META_TOKEN_TYPE_STRING,$/;"	e	language:
 META_TOKEN_TYPE_UNKNOWN	code/meta.cpp	/^  META_TOKEN_TYPE_UNKNOWN,$/;"	e	language:C++	enum:Meta_Token_Type	file:
 meta_update_profiler_codegen	code/meta.cpp	/^meta_update_profiler_codegen(Profiler_Codegen* p, Meta_Tokenizer* t, Meta_Token token) {$/;"	f	language:C++	typeref:typename:void	file:
 min	code/lit_profiler_rendering.h	/^  f64_t min;$/;"	m	language:C++	struct:profiler_stat_t	typeref:typename:f64_t
-min	code/moe_gfx_opengl.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:ogl_uv_t	typeref:typename:v2f_t
+min	code/moe_gfx_opengl.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:opengl_uv_t	typeref:typename:v2f_t
 min_of	code/momo_types.h	/^#define min_of(/;"	d	language:C++
 min_x	code/moe_gfx.h	/^  f32_t min_x, max_x;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
 min_y	code/moe_gfx.h	/^  f32_t min_y, max_y;$/;"	m	language:C++	struct:gfx_command_view_t	typeref:typename:f32_t
@@ -1862,34 +1862,34 @@ mm_device_enum	code/w32_audio_wasapi.h	/^  IMMDeviceEnumerator * mm_device_enum;
 mode	C:/users/geral/work/moom/code/lit.h	/^  lit_mode_t mode;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_mode_t
 mode	code/lit.h	/^  lit_mode_t mode;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_mode_t
 mode	code/lit_menu.h	/^  lit_menu_mode_t mode;$/;"	m	language:C++	struct:lit_menu_t	typeref:typename:lit_menu_mode_t
-model	code/moe_gfx_opengl.h	/^  GLuint model; $/;"	m	language:C++	struct:ogl_sprite_batch_t	typeref:typename:GLuint
-model	code/moe_gfx_opengl.h	/^  GLuint model;$/;"	m	language:C++	struct:ogl_triangle_batch_t	typeref:typename:GLuint
+model	code/moe_gfx_opengl.h	/^  GLuint model; $/;"	m	language:C++	struct:opengl_sprite_batch_t	typeref:typename:GLuint
+model	code/moe_gfx_opengl.h	/^  GLuint model;$/;"	m	language:C++	struct:opengl_triangle_batch_t	typeref:typename:GLuint
 mode_arena	C:/users/geral/work/moom/code/lit.h	/^  arena_t mode_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t
 mode_arena	code/lit.h	/^  arena_t mode_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t
 Module	build/a.out.js	/^  Module['inspect'] = function () { return '[Emscripten Module object]'; };$/;"	f	language:JavaScript
 Module	build/a.out.js	/^var Module = typeof Module != 'undefined' ? Module : {};$/;"	v	language:JavaScript
 module_path	code/w32_moe.h	/^  const char* module_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *
 module_write_time	code/w32_moe.h	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:LARGE_INTEGER
-moe	code/moe.h	/^static moe_t* moe; $/;"	v	language:C++	typeref:typename:moe_t *
+moe	code/moe.h	/^static game_t* moe; $/;"	v	language:C++	typeref:typename:game_t *
 moe_begin	code/moe.h	/^#define moe_begin /;"	d	language:C++
-MOE_CONSOLE_H	code/moe_console.h	/^#define MOE_CONSOLE_H$/;"	d	language:C++
-MOE_CONSOLE_H	code/momo_console.h	/^#define MOE_CONSOLE_H$/;"	d	language:C++
-moe_functions_t	code/moe_platform.h	/^typedef struct moe_functions_t {$/;"	s	language:C++
-moe_functions_t	code/moe_platform.h	/^} moe_functions_t;$/;"	t	language:C++	typeref:struct:moe_functions_t
-moe_function_names	code/moe_platform.h	/^static const char* moe_function_names[] {$/;"	v	language:C++	typeref:typename:const char * []
-MOE_GAME_API	code/moe_game_api.h	/^#define MOE_GAME_API$/;"	d	language:C++
-MOE_GFX_H	code/moe_gfx.h	/^#define MOE_GFX_H$/;"	d	language:C++
-MOE_H	code/moe.h	/^#define MOE_H$/;"	d	language:C++
-moe_height	code/w32_moe.h	/^  f32_t moe_height;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t
-MOE_INSPECTOR_H	code/moe_inspector.h	/^#define MOE_INSPECTOR_H$/;"	d	language:C++
-MOE_MODE_LIT_H	C:/users/geral/work/moom/code/lit.h	/^#define MOE_MODE_LIT_H$/;"	d	language:C++
-MOE_MODE_LIT_H	code/lit.h	/^#define MOE_MODE_LIT_H$/;"	d	language:C++
-MOE_PF_H	code/moe_platform.h	/^#define MOE_PF_H$/;"	d	language:C++
-MOE_PROFILER_H	code/moe_profiler.h	/^#define MOE_PROFILER_H$/;"	d	language:C++
-moe_t	code/moe_platform.h	/^} moe_t;$/;"	t	language:C++	typeref:struct:__anonb345dcaa0a08
-moe_update_and_render	code/lit.cpp	/^moe_update_and_render($/;"	f	language:C++	typeref:typename:exported b32_t
-moe_update_and_render_f	code/moe_platform.h	/^typedef b32_t moe_update_and_render_f($/;"	t	language:C++	typeref:typename:b32_t ()(moe_t *,pf_t *,gfx_t *,pf_audio_t *,profiler_t *,input_t *)
-moe_width	code/w32_moe.h	/^  f32_t moe_width;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t
+MOMO_CONSOLE_H	code/moe_console.h	/^#define MOMO_CONSOLE_H$/;"	d	language:C++
+MOMO_CONSOLE_H	code/momo_console.h	/^#define MOMO_CONSOLE_H$/;"	d	language:C++
+game_functions_t	code/moe_platform.h	/^typedef struct game_functions_t {$/;"	s	language:C++
+game_functions_t	code/moe_platform.h	/^} game_functions_t;$/;"	t	language:C++	typeref:struct:game_functions_t
+game_function_names	code/moe_platform.h	/^static const char* game_function_names[] {$/;"	v	language:C++	typeref:typename:const char * []
+MOMO_GAME_API	code/moe_game_api.h	/^#define MOMO_GAME_API$/;"	d	language:C++
+MOMO_GFX_H	code/moe_gfx.h	/^#define MOMO_GFX_H$/;"	d	language:C++
+MOMO_H	code/moe.h	/^#define MOMO_H$/;"	d	language:C++
+game_height	code/w32_moe.h	/^  f32_t game_height;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t
+MOMO_INSPECTOR_H	code/moe_inspector.h	/^#define MOMO_INSPECTOR_H$/;"	d	language:C++
+MOMO_MODE_LIT_H	C:/users/geral/work/moom/code/lit.h	/^#define MOMO_MODE_LIT_H$/;"	d	language:C++
+MOMO_MODE_LIT_H	code/lit.h	/^#define MOMO_MODE_LIT_H$/;"	d	language:C++
+MOMO_PF_H	code/moe_platform.h	/^#define MOMO_PF_H$/;"	d	language:C++
+MOMO_PROFILER_H	code/moe_profiler.h	/^#define MOMO_PROFILER_H$/;"	d	language:C++
+game_t	code/moe_platform.h	/^} game_t;$/;"	t	language:C++	typeref:struct:__anonb345dcaa0a08
+game_update_and_render	code/lit.cpp	/^game_update_and_render($/;"	f	language:C++	typeref:typename:exported b32_t
+game_update_and_render_f	code/moe_platform.h	/^typedef b32_t game_update_and_render_f($/;"	t	language:C++	typeref:typename:b32_t ()(game_t *,pf_t *,gfx_t *,audio_buffer_t *,profiler_t *,input_t *)
+game_width	code/w32_moe.h	/^  f32_t game_width;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t
 MOMO_ARENA_H	code/momo_arena.h	/^#define MOMO_ARENA_H$/;"	d	language:C++
 MOMO_COLORS_H	code/momo_colors.h	/^#define MOMO_COLORS_H$/;"	d	language:C++
 MOMO_CRC_H	code/momo_crc.h	/^#define MOMO_CRC_H$/;"	d	language:C++
@@ -1955,121 +1955,121 @@ offset_to_data	code/karu.h	/^  u32_t offset_to_data;$/;"	m	language:C++	struct:k
 offset_to_data	code/moe_assets.h	/^  u32_t offset_to_data;$/;"	m	language:C++	struct:asset_slot_t	typeref:typename:u32_t
 offset_to_groups	code/karu.h	/^  u32_t offset_to_groups;$/;"	m	language:C++	struct:karu_header_t	typeref:typename:u32_t
 offset_to_tags	code/karu.h	/^  u32_t offset_to_tags;$/;"	m	language:C++	struct:karu_header_t	typeref:typename:u32_t
-ogl_add_predefined_textures	code/moe_gfx_opengl.h	/^ogl_add_predefined_textures(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
-ogl_align_viewport	code/moe_gfx_opengl.h	/^ogl_align_viewport(Opengl* ogl) $/;"	f	language:C++	typeref:typename:void
-ogl_attach_shader	code/moe_gfx_opengl.h	/^ogl_attach_shader(Opengl* ogl,$/;"	f	language:C++	typeref:typename:void
-ogl_begin_frame	code/moe_gfx_opengl.h	/^ogl_begin_frame(Opengl* ogl, v2u_t render_wh,$/;"	f	language:C++	typeref:typename:void
-ogl_begin_frame	code/moe_gfx_opengl.h	/^static void ogl_begin_frame(Opengl* ogl, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_/;"	p	language:C++	typeref:typename:void
-ogl_begin_sprites	code/moe_gfx_opengl.h	/^ogl_begin_sprites(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
-ogl_begin_triangles	code/moe_gfx_opengl.h	/^ogl_begin_triangles(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
-ogl_delete_all_textures	code/moe_gfx_opengl.h	/^ogl_delete_all_textures(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
-ogl_delete_texture	code/moe_gfx_opengl.h	/^ogl_delete_texture(Opengl* ogl, umi_t texture_index) {$/;"	f	language:C++	typeref:typename:void
-ogl_end_frame	code/moe_gfx_opengl.h	/^ogl_end_frame(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
-ogl_end_frame	code/moe_gfx_opengl.h	/^static void ogl_end_frame(Opengl* ogl);$/;"	p	language:C++	typeref:typename:void
-ogl_end_sprites	code/moe_gfx_opengl.h	/^ogl_end_sprites(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
-ogl_end_triangles	code/moe_gfx_opengl.h	/^ogl_end_triangles(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
-ogl_flush_sprites	code/moe_gfx_opengl.h	/^ogl_flush_sprites(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
-ogl_flush_triangles	code/moe_gfx_opengl.h	/^ogl_flush_triangles(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
-ogl_get_blend_mode_from_gfx_blend_type	code/moe_gfx_opengl.h	/^ogl_get_blend_mode_from_gfx_blend_type(gfx_blend_type_t type) {$/;"	f	language:C++	typeref:typename:GLenum
-OGL_glAttachShader	code/moe_gfx_opengl.h	/^typedef void    OGL_glAttachShader(GLuint program, GLuint shader);$/;"	t	language:C++	typeref:typename:void ()(GLuint program,GLuint shader)
-OGL_glBindTexture	code/moe_gfx_opengl.h	/^typedef void    OGL_glBindTexture(GLenum target, GLuint texture);$/;"	t	language:C++	typeref:typename:void ()(GLenum target,GLuint texture)
-OGL_glBindVertexArray	code/moe_gfx_opengl.h	/^typedef void    OGL_glBindVertexArray(GLuint array);$/;"	t	language:C++	typeref:typename:void ()(GLuint array)
-OGL_glBlendFunc	code/moe_gfx_opengl.h	/^typedef void    OGL_glBlendFunc(GLenum sfactor, GLenum dfactor);$/;"	t	language:C++	typeref:typename:void ()(GLenum sfactor,GLenum dfactor)
-OGL_glBlendFuncSeparate	code/moe_gfx_opengl.h	/^typedef void    OGL_glBlendFuncSeparate(GLenum srcRGB, GLenum destRGB, GLenum srcAlpha, GLenum d/;"	t	language:C++	typeref:typename:void ()(GLenum srcRGB,GLenum destRGB,GLenum srcAlpha,GLenum destAlpha)
-OGL_glClear	code/moe_gfx_opengl.h	/^typedef void    OGL_glClear(GLbitfield mask);$/;"	t	language:C++	typeref:typename:void ()(GLbitfield mask)
-OGL_glClearColor	code/moe_gfx_opengl.h	/^typedef void    OGL_glClearColor(GLclampf r, GLclampf g, GLclampf b, GLclampf a);$/;"	t	language:C++	typeref:typename:void ()(GLclampf r,GLclampf g,GLclampf b,GLclampf a)
-OGL_glCompileShader	code/moe_gfx_opengl.h	/^typedef void    OGL_glCompileShader(GLuint program);$/;"	t	language:C++	typeref:typename:void ()(GLuint program)
-OGL_glCreateBuffers	code/moe_gfx_opengl.h	/^typedef void    OGL_glCreateBuffers(GLsizei n, GLuint* buffers);$/;"	t	language:C++	typeref:typename:void ()(GLsizei n,GLuint * buffers)
-OGL_glCreateProgram	code/moe_gfx_opengl.h	/^typedef GLuint  OGL_glCreateProgram();$/;"	t	language:C++	typeref:typename:GLuint ()()
-OGL_glCreateShader	code/moe_gfx_opengl.h	/^typedef GLuint  OGL_glCreateShader(GLenum type);$/;"	t	language:C++	typeref:typename:GLuint ()(GLenum type)
-OGL_glCreateTextures	code/moe_gfx_opengl.h	/^typedef void    OGL_glCreateTextures(GLenum target, GLsizei n, GLuint* textures);$/;"	t	language:C++	typeref:typename:void ()(GLenum target,GLsizei n,GLuint * textures)
-OGL_glCreateVertexArrays	code/moe_gfx_opengl.h	/^typedef void    OGL_glCreateVertexArrays(GLsizei n, GLuint* arrays);$/;"	t	language:C++	typeref:typename:void ()(GLsizei n,GLuint * arrays)
-OGL_glDebugMessageCallbackARB	code/moe_gfx_opengl.h	/^typedef void    OGL_glDebugMessageCallbackARB(GLDEBUGPROC *callback, const void* userParams);$/;"	t	language:C++	typeref:typename:void ()(GLDEBUGPROC * callback,const void * userParams)
-OGL_glDeleteShader	code/moe_gfx_opengl.h	/^typedef void    OGL_glDeleteShader(GLuint program);$/;"	t	language:C++	typeref:typename:void ()(GLuint program)
-OGL_glDeleteTextures	code/moe_gfx_opengl.h	/^typedef void    OGL_glDeleteTextures(GLsizei n, const GLuint* textures);$/;"	t	language:C++	typeref:typename:void ()(GLsizei n,const GLuint * textures)
-OGL_glDisable	code/moe_gfx_opengl.h	/^typedef void    OGL_glDisable(GLenum cap);$/;"	t	language:C++	typeref:typename:void ()(GLenum cap)
-OGL_glDrawArrays	code/moe_gfx_opengl.h	/^typedef void    OGL_glDrawArrays(GLenum mode, GLint first, GLsizei count);$/;"	t	language:C++	typeref:typename:void ()(GLenum mode,GLint first,GLsizei count)
-OGL_glDrawElementsInstancedBaseInstance	code/moe_gfx_opengl.h	/^typedef void    OGL_glDrawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type,/;"	t	language:C++	typeref:typename:void ()(GLenum mode,GLsizei count,GLenum type,const void * indices,GLsizei instancecount,GLuint baseinstance)
-OGL_glEnable	code/moe_gfx_opengl.h	/^typedef void    OGL_glEnable(GLenum cap);$/;"	t	language:C++	typeref:typename:void ()(GLenum cap)
-OGL_glEnableVertexArrayAttrib	code/moe_gfx_opengl.h	/^typedef void    OGL_glEnableVertexArrayAttrib(GLuint vaobj, GLuint index);$/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint index)
-OGL_glGetProgramInfoLog	code/moe_gfx_opengl.h	/^typedef void    OGL_glGetProgramInfoLog(GLuint program, GLsizei maxLength, GLsizei* length,GLcha/;"	t	language:C++	typeref:typename:void ()(GLuint program,GLsizei maxLength,GLsizei * length,GLchar * infoLog)
-OGL_glGetProgramiv	code/moe_gfx_opengl.h	/^typedef void    OGL_glGetProgramiv(GLuint program, GLenum pname, GLint* params);$/;"	t	language:C++	typeref:typename:void ()(GLuint program,GLenum pname,GLint * params)
-OGL_glGetUniformLocation	code/moe_gfx_opengl.h	/^typedef GLint   OGL_glGetUniformLocation(GLuint program, const GLchar* name);$/;"	t	language:C++	typeref:typename:GLint ()(GLuint program,const GLchar * name)
-OGL_glLinkProgram	code/moe_gfx_opengl.h	/^typedef void    OGL_glLinkProgram(GLuint program);$/;"	t	language:C++	typeref:typename:void ()(GLuint program)
-OGL_glNamedBufferStorage	code/moe_gfx_opengl.h	/^typedef void    OGL_glNamedBufferStorage(GLuint buffer, GLsizeiptr size, const void* data, GLbit/;"	t	language:C++	typeref:typename:void ()(GLuint buffer,GLsizeiptr size,const void * data,GLbitfield flags)
-OGL_glNamedBufferSubData	code/moe_gfx_opengl.h	/^typedef void    OGL_glNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, const /;"	t	language:C++	typeref:typename:void ()(GLuint buffer,GLintptr offset,GLsizeiptr size,const void * data)
-OGL_glProgramUniform4fv	code/moe_gfx_opengl.h	/^typedef void    OGL_glProgramUniform4fv(GLuint program, GLint location, GLsizei count, const GLf/;"	t	language:C++	typeref:typename:void ()(GLuint program,GLint location,GLsizei count,const GLfloat * value)
-OGL_glProgramUniformMatrix4fv	code/moe_gfx_opengl.h	/^typedef void    OGL_glProgramUniformMatrix4fv(GLuint program, GLint location, GLsizei count, GLb/;"	t	language:C++	typeref:typename:void ()(GLuint program,GLint location,GLsizei count,GLboolean transpose,const GLfloat * value)
-OGL_glScissor	code/moe_gfx_opengl.h	/^typedef void    OGL_glScissor(GLint x, GLint y, GLsizei width, GLsizei height); $/;"	t	language:C++	typeref:typename:void ()(GLint x,GLint y,GLsizei width,GLsizei height)
-OGL_glShaderSource	code/moe_gfx_opengl.h	/^typedef void    OGL_glShaderSource(GLuint shader, GLsizei count, GLchar** string, GLint* length)/;"	t	language:C++	typeref:typename:void ()(GLuint shader,GLsizei count,GLchar ** string,GLint * length)
-OGL_glTexParameteri	code/moe_gfx_opengl.h	/^typedef void    OGL_glTexParameteri(GLenum target, GLenum pname, GLint param);$/;"	t	language:C++	typeref:typename:void ()(GLenum target,GLenum pname,GLint param)
-OGL_glTextureStorage2D	code/moe_gfx_opengl.h	/^typedef void    OGL_glTextureStorage2D(GLuint texture, GLsizei levels, GLenum internalformat,GLs/;"	t	language:C++	typeref:typename:void ()(GLuint texture,GLsizei levels,GLenum internalformat,GLsizei width,GLsizei height)
-OGL_glTextureSubImage2D	code/moe_gfx_opengl.h	/^typedef void    OGL_glTextureSubImage2D(GLuint texture,GLint level,GLint xoffset,GLint yoffset,G/;"	t	language:C++	typeref:typename:void ()(GLuint texture,GLint level,GLint xoffset,GLint yoffset,GLsizei width,GLsizei height,GLenum format,GLenum type,const void * pixels)
-OGL_glUseProgram	code/moe_gfx_opengl.h	/^typedef void    OGL_glUseProgram(GLuint program);$/;"	t	language:C++	typeref:typename:void ()(GLuint program)
-OGL_glVertexArrayAttribBinding	code/moe_gfx_opengl.h	/^typedef void    OGL_glVertexArrayAttribBinding(GLuint vaobj,GLuint attribindex,GLuint bindingind/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint attribindex,GLuint bindingindex)
-OGL_glVertexArrayAttribFormat	code/moe_gfx_opengl.h	/^typedef void    OGL_glVertexArrayAttribFormat(GLuint vaobj, GLuint attribindex, GLint size, GLen/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint attribindex,GLint size,GLenum type,GLboolean normalized,GLuint relativeoffset)
-OGL_glVertexArrayBindingDivisor	code/moe_gfx_opengl.h	/^typedef void    OGL_glVertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint diviso/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint bindingindex,GLuint divisor)
-OGL_glVertexArrayElementBuffer	code/moe_gfx_opengl.h	/^typedef void    OGL_glVertexArrayElementBuffer(GLuint vaobj, GLuint buffer);$/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint buffer)
-OGL_glVertexArrayVertexBuffer	code/moe_gfx_opengl.h	/^typedef void    OGL_glVertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, GLuint buffer, /;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint bindingindex,GLuint buffer,GLintptr offset,GLsizei stride)
-OGL_glViewport	code/moe_gfx_opengl.h	/^typedef void    OGL_glViewport(GLint x, GLint y, GLsizei width, GLsizei height);$/;"	t	language:C++	typeref:typename:void ()(GLint x,GLint y,GLsizei width,GLsizei height)
-ogl_init	code/moe_gfx_opengl.h	/^ogl_init(Opengl* ogl,$/;"	f	language:C++	typeref:typename:b32_t
-ogl_init	code/moe_gfx_opengl.h	/^static b32_t ogl_init(Opengl* ogl, $/;"	p	language:C++	typeref:typename:b32_t
-ogl_init_sprite_batch	code/moe_gfx_opengl.h	/^ogl_init_sprite_batch(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:b32_t
-ogl_init_triangle_batch	code/moe_gfx_opengl.h	/^ogl_init_triangle_batch(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:b32_t
-OGL_MAX_SPRITES	code/moe_gfx_opengl.h	/^# define OGL_MAX_SPRITES /;"	d	language:C++
-OGL_MAX_TRIANGLES	code/moe_gfx_opengl.h	/^# define OGL_MAX_TRIANGLES /;"	d	language:C++
-ogl_process_texture_queue	code/moe_gfx_opengl.h	/^ogl_process_texture_queue(Opengl* ogl) {$/;"	f	language:C++	typeref:typename:void
-ogl_push_sprite	code/moe_gfx_opengl.h	/^ogl_push_sprite($/;"	f	language:C++	typeref:typename:void
-ogl_push_triangle	code/moe_gfx_opengl.h	/^ogl_push_triangle(Opengl* ogl, $/;"	f	language:C++	typeref:typename:void
-ogl_set_blend_mode	code/moe_gfx_opengl.h	/^ogl_set_blend_mode(Opengl* ogl, gfx_blend_type_t src, gfx_blend_type_t dst) {$/;"	f	language:C++	typeref:typename:void
-ogl_set_texture	code/moe_gfx_opengl.h	/^ogl_set_texture(Opengl* ogl,$/;"	f	language:C++	typeref:typename:void
-ogl_sprite_batch_t	code/moe_gfx_opengl.h	/^struct ogl_sprite_batch_t{$/;"	s	language:C++
-OGL_SPRITE_FSHADER	code/moe_gfx_opengl.h	/^#define OGL_SPRITE_FSHADER /;"	d	language:C++
-OGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:__anon0f5c060e0203
-OGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL,$/;"	e	language:C++	enum:__anon0f5c060e0203
-OGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE,$/;"	e	language:C++	enum:__anon0f5c060e0203
-OGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM$/;"	e	language:C++	enum:__anon0f5c060e0203
-OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,     \/\/ 1 $/;"	e	language:C++	enum:__anon0f5c060e0103
-OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,     \/\/ 2$/;"	e	language:C++	enum:__anon0f5c060e0103
-OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,     \/\/ 3$/;"	e	language:C++	enum:__anon0f5c060e0103
-OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4,     \/\/ 4$/;"	e	language:C++	enum:__anon0f5c060e0103
-OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL,       \/\/ 0 $/;"	e	language:C++	enum:__anon0f5c060e0103
-OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1,   \/\/ 5$/;"	e	language:C++	enum:__anon0f5c060e0103
-OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2,   \/\/ 6$/;"	e	language:C++	enum:__anon0f5c060e0103
-OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3,   \/\/ 7$/;"	e	language:C++	enum:__anon0f5c060e0103
-OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4,   \/\/ 8$/;"	e	language:C++	enum:__anon0f5c060e0103
-OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, \/\/ 9$/;"	e	language:C++	enum:__anon0f5c060e0103
-OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, \/\/ 10$/;"	e	language:C++	enum:__anon0f5c060e0103
-OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, \/\/ 11$/;"	e	language:C++	enum:__anon0f5c060e0103
-OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  \/\/ 12$/;"	e	language:C++	enum:__anon0f5c060e0103
-OGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS,$/;"	e	language:C++	enum:__anon0f5c060e0303
-OGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT \/\/ 5$/;"	e	language:C++	enum:__anon0f5c060e0303
-OGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES,$/;"	e	language:C++	enum:__anon0f5c060e0303
-OGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL,$/;"	e	language:C++	enum:__anon0f5c060e0303
-OGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE,$/;"	e	language:C++	enum:__anon0f5c060e0303
-OGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM	code/moe_gfx_opengl.h	/^  OGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM,$/;"	e	language:C++	enum:__anon0f5c060e0303
-OGL_SPRITE_VSHADER	code/moe_gfx_opengl.h	/^#define OGL_SPRITE_VSHADER /;"	d	language:C++
-OGL_Texture	code/moe_gfx_opengl.h	/^} OGL_Texture;$/;"	t	language:C++	typeref:struct:__anon0f5c060e0708
-ogl_triangle_batch_t	code/moe_gfx_opengl.h	/^struct ogl_triangle_batch_t{$/;"	s	language:C++
-OGL_TRIANGLE_FSHADER	code/moe_gfx_opengl.h	/^#define OGL_TRIANGLE_FSHADER /;"	d	language:C++
-OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:__anon0f5c060e0503
-OGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL,$/;"	e	language:C++	enum:__anon0f5c060e0503
-OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM$/;"	e	language:C++	enum:__anon0f5c060e0503
-OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,   \/\/ 1$/;"	e	language:C++	enum:__anon0f5c060e0403
-OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,   \/\/ 2$/;"	e	language:C++	enum:__anon0f5c060e0403
-OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,   \/\/ 3$/;"	e	language:C++	enum:__anon0f5c060e0403
-OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL,    \/\/ 0 $/;"	e	language:C++	enum:__anon0f5c060e0403
-OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, \/\/ 4$/;"	e	language:C++	enum:__anon0f5c060e0403
-OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, \/\/ 5$/;"	e	language:C++	enum:__anon0f5c060e0403
-OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, \/\/ 6$/;"	e	language:C++	enum:__anon0f5c060e0403
-OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  \/\/ 7$/;"	e	language:C++	enum:__anon0f5c060e0403
-OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS,$/;"	e	language:C++	enum:__anon0f5c060e0603
-OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT \/\/ 5$/;"	e	language:C++	enum:__anon0f5c060e0603
-OGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES,$/;"	e	language:C++	enum:__anon0f5c060e0603
-OGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL,$/;"	e	language:C++	enum:__anon0f5c060e0603
-OGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM	code/moe_gfx_opengl.h	/^  OGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM,$/;"	e	language:C++	enum:__anon0f5c060e0603
-OGL_TRIANGLE_VSHADER	code/moe_gfx_opengl.h	/^#define OGL_TRIANGLE_VSHADER /;"	d	language:C++
-ogl_uv_t	code/moe_gfx_opengl.h	/^struct ogl_uv_t {$/;"	s	language:C++
+opengl_add_predefined_textures	code/moe_gfx_opengl.h	/^opengl_add_predefined_textures(opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
+opengl_align_viewport	code/moe_gfx_opengl.h	/^opengl_align_viewport(opengl_t* ogl) $/;"	f	language:C++	typeref:typename:void
+opengl_attach_shader	code/moe_gfx_opengl.h	/^opengl_attach_shader(opengl_t* ogl,$/;"	f	language:C++	typeref:typename:void
+opengl_begin_frame	code/moe_gfx_opengl.h	/^opengl_begin_frame(opengl_t* ogl, v2u_t render_wh,$/;"	f	language:C++	typeref:typename:void
+opengl_begin_frame	code/moe_gfx_opengl.h	/^static void opengl_begin_frame(opengl_t* ogl, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_/;"	p	language:C++	typeref:typename:void
+opengl_begin_sprites	code/moe_gfx_opengl.h	/^opengl_begin_sprites(opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
+opengl_begin_triangles	code/moe_gfx_opengl.h	/^opengl_begin_triangles(opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
+opengl_delete_all_textures	code/moe_gfx_opengl.h	/^opengl_delete_all_textures(opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
+opengl_delete_texture	code/moe_gfx_opengl.h	/^opengl_delete_texture(opengl_t* ogl, umi_t texture_index) {$/;"	f	language:C++	typeref:typename:void
+opengl_end_frame	code/moe_gfx_opengl.h	/^opengl_end_frame(opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
+opengl_end_frame	code/moe_gfx_opengl.h	/^static void opengl_end_frame(opengl_t* ogl);$/;"	p	language:C++	typeref:typename:void
+opengl_end_sprites	code/moe_gfx_opengl.h	/^opengl_end_sprites(opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
+opengl_end_triangles	code/moe_gfx_opengl.h	/^opengl_end_triangles(opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
+opengl_flush_sprites	code/moe_gfx_opengl.h	/^opengl_flush_sprites(opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
+opengl_flush_triangles	code/moe_gfx_opengl.h	/^opengl_flush_triangles(opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
+opengl_get_blend_mode_from_gfx_blend_type	code/moe_gfx_opengl.h	/^opengl_get_blend_mode_from_gfx_blend_type(gfx_blend_type_t type) {$/;"	f	language:C++	typeref:typename:GLenum
+OPENGL_glAttachShader	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glAttachShader(GLuint program, GLuint shader);$/;"	t	language:C++	typeref:typename:void ()(GLuint program,GLuint shader)
+OPENGL_glBindTexture	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glBindTexture(GLenum target, GLuint texture);$/;"	t	language:C++	typeref:typename:void ()(GLenum target,GLuint texture)
+OPENGL_glBindVertexArray	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glBindVertexArray(GLuint array);$/;"	t	language:C++	typeref:typename:void ()(GLuint array)
+OPENGL_glBlendFunc	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glBlendFunc(GLenum sfactor, GLenum dfactor);$/;"	t	language:C++	typeref:typename:void ()(GLenum sfactor,GLenum dfactor)
+OPENGL_glBlendFuncSeparate	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glBlendFuncSeparate(GLenum srcRGB, GLenum destRGB, GLenum srcAlpha, GLenum d/;"	t	language:C++	typeref:typename:void ()(GLenum srcRGB,GLenum destRGB,GLenum srcAlpha,GLenum destAlpha)
+OPENGL_glClear	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glClear(GLbitfield mask);$/;"	t	language:C++	typeref:typename:void ()(GLbitfield mask)
+OPENGL_glClearColor	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glClearColor(GLclampf r, GLclampf g, GLclampf b, GLclampf a);$/;"	t	language:C++	typeref:typename:void ()(GLclampf r,GLclampf g,GLclampf b,GLclampf a)
+OPENGL_glCompileShader	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glCompileShader(GLuint program);$/;"	t	language:C++	typeref:typename:void ()(GLuint program)
+OPENGL_glCreateBuffers	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glCreateBuffers(GLsizei n, GLuint* buffers);$/;"	t	language:C++	typeref:typename:void ()(GLsizei n,GLuint * buffers)
+OPENGL_glCreateProgram	code/moe_gfx_opengl.h	/^typedef GLuint  OPENGL_glCreateProgram();$/;"	t	language:C++	typeref:typename:GLuint ()()
+OPENGL_glCreateShader	code/moe_gfx_opengl.h	/^typedef GLuint  OPENGL_glCreateShader(GLenum type);$/;"	t	language:C++	typeref:typename:GLuint ()(GLenum type)
+OPENGL_glCreateTextures	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glCreateTextures(GLenum target, GLsizei n, GLuint* textures);$/;"	t	language:C++	typeref:typename:void ()(GLenum target,GLsizei n,GLuint * textures)
+OPENGL_glCreateVertexArrays	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glCreateVertexArrays(GLsizei n, GLuint* arrays);$/;"	t	language:C++	typeref:typename:void ()(GLsizei n,GLuint * arrays)
+OPENGL_glDebugMessageCallbackARB	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glDebugMessageCallbackARB(GLDEBUGPROC *callback, const void* userParams);$/;"	t	language:C++	typeref:typename:void ()(GLDEBUGPROC * callback,const void * userParams)
+OPENGL_glDeleteShader	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glDeleteShader(GLuint program);$/;"	t	language:C++	typeref:typename:void ()(GLuint program)
+OPENGL_glDeleteTextures	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glDeleteTextures(GLsizei n, const GLuint* textures);$/;"	t	language:C++	typeref:typename:void ()(GLsizei n,const GLuint * textures)
+OPENGL_glDisable	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glDisable(GLenum cap);$/;"	t	language:C++	typeref:typename:void ()(GLenum cap)
+OPENGL_glDrawArrays	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glDrawArrays(GLenum mode, GLint first, GLsizei count);$/;"	t	language:C++	typeref:typename:void ()(GLenum mode,GLint first,GLsizei count)
+OPENGL_glDrawElementsInstancedBaseInstance	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glDrawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type,/;"	t	language:C++	typeref:typename:void ()(GLenum mode,GLsizei count,GLenum type,const void * indices,GLsizei instancecount,GLuint baseinstance)
+OPENGL_glEnable	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glEnable(GLenum cap);$/;"	t	language:C++	typeref:typename:void ()(GLenum cap)
+OPENGL_glEnableVertexArrayAttrib	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glEnableVertexArrayAttrib(GLuint vaobj, GLuint index);$/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint index)
+OPENGL_glGetProgramInfoLog	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glGetProgramInfoLog(GLuint program, GLsizei maxLength, GLsizei* length,GLcha/;"	t	language:C++	typeref:typename:void ()(GLuint program,GLsizei maxLength,GLsizei * length,GLchar * infoLog)
+OPENGL_glGetProgramiv	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glGetProgramiv(GLuint program, GLenum pname, GLint* params);$/;"	t	language:C++	typeref:typename:void ()(GLuint program,GLenum pname,GLint * params)
+OPENGL_glGetUniformLocation	code/moe_gfx_opengl.h	/^typedef GLint   OPENGL_glGetUniformLocation(GLuint program, const GLchar* name);$/;"	t	language:C++	typeref:typename:GLint ()(GLuint program,const GLchar * name)
+OPENGL_glLinkProgram	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glLinkProgram(GLuint program);$/;"	t	language:C++	typeref:typename:void ()(GLuint program)
+OPENGL_glNamedBufferStorage	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glNamedBufferStorage(GLuint buffer, GLsizeiptr size, const void* data, GLbit/;"	t	language:C++	typeref:typename:void ()(GLuint buffer,GLsizeiptr size,const void * data,GLbitfield flags)
+OPENGL_glNamedBufferSubData	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, const /;"	t	language:C++	typeref:typename:void ()(GLuint buffer,GLintptr offset,GLsizeiptr size,const void * data)
+OPENGL_glProgramUniform4fv	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glProgramUniform4fv(GLuint program, GLint location, GLsizei count, const GLf/;"	t	language:C++	typeref:typename:void ()(GLuint program,GLint location,GLsizei count,const GLfloat * value)
+OPENGL_glProgramUniformMatrix4fv	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glProgramUniformMatrix4fv(GLuint program, GLint location, GLsizei count, GLb/;"	t	language:C++	typeref:typename:void ()(GLuint program,GLint location,GLsizei count,GLboolean transpose,const GLfloat * value)
+OPENGL_glScissor	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glScissor(GLint x, GLint y, GLsizei width, GLsizei height); $/;"	t	language:C++	typeref:typename:void ()(GLint x,GLint y,GLsizei width,GLsizei height)
+OPENGL_glShaderSource	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glShaderSource(GLuint shader, GLsizei count, GLchar** string, GLint* length)/;"	t	language:C++	typeref:typename:void ()(GLuint shader,GLsizei count,GLchar ** string,GLint * length)
+OPENGL_glTexParameteri	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glTexParameteri(GLenum target, GLenum pname, GLint param);$/;"	t	language:C++	typeref:typename:void ()(GLenum target,GLenum pname,GLint param)
+OPENGL_glTextureStorage2D	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glTextureStorage2D(GLuint texture, GLsizei levels, GLenum internalformat,GLs/;"	t	language:C++	typeref:typename:void ()(GLuint texture,GLsizei levels,GLenum internalformat,GLsizei width,GLsizei height)
+OPENGL_glTextureSubImage2D	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glTextureSubImage2D(GLuint texture,GLint level,GLint xoffset,GLint yoffset,G/;"	t	language:C++	typeref:typename:void ()(GLuint texture,GLint level,GLint xoffset,GLint yoffset,GLsizei width,GLsizei height,GLenum format,GLenum type,const void * pixels)
+OPENGL_glUseProgram	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glUseProgram(GLuint program);$/;"	t	language:C++	typeref:typename:void ()(GLuint program)
+OPENGL_glVertexArrayAttribBinding	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glVertexArrayAttribBinding(GLuint vaobj,GLuint attribindex,GLuint bindingind/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint attribindex,GLuint bindingindex)
+OPENGL_glVertexArrayAttribFormat	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glVertexArrayAttribFormat(GLuint vaobj, GLuint attribindex, GLint size, GLen/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint attribindex,GLint size,GLenum type,GLboolean normalized,GLuint relativeoffset)
+OPENGL_glVertexArrayBindingDivisor	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glVertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint diviso/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint bindingindex,GLuint divisor)
+OPENGL_glVertexArrayElementBuffer	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glVertexArrayElementBuffer(GLuint vaobj, GLuint buffer);$/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint buffer)
+OPENGL_glVertexArrayVertexBuffer	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glVertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, GLuint buffer, /;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint bindingindex,GLuint buffer,GLintptr offset,GLsizei stride)
+OPENGL_glViewport	code/moe_gfx_opengl.h	/^typedef void    OPENGL_glViewport(GLint x, GLint y, GLsizei width, GLsizei height);$/;"	t	language:C++	typeref:typename:void ()(GLint x,GLint y,GLsizei width,GLsizei height)
+opengl_init	code/moe_gfx_opengl.h	/^opengl_init(opengl_t* ogl,$/;"	f	language:C++	typeref:typename:b32_t
+opengl_init	code/moe_gfx_opengl.h	/^static b32_t opengl_init(opengl_t* ogl, $/;"	p	language:C++	typeref:typename:b32_t
+opengl_init_sprite_batch	code/moe_gfx_opengl.h	/^opengl_init_sprite_batch(opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:b32_t
+opengl_init_triangle_batch	code/moe_gfx_opengl.h	/^opengl_init_triangle_batch(opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:b32_t
+OPENGL_MAX_SPRITES	code/moe_gfx_opengl.h	/^# define OPENGL_MAX_SPRITES /;"	d	language:C++
+OPENGL_MAX_TRIANGLES	code/moe_gfx_opengl.h	/^# define OPENGL_MAX_TRIANGLES /;"	d	language:C++
+opengl_process_texture_queue	code/moe_gfx_opengl.h	/^opengl_process_texture_queue(opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
+opengl_push_sprite	code/moe_gfx_opengl.h	/^opengl_push_sprite($/;"	f	language:C++	typeref:typename:void
+opengl_push_triangle	code/moe_gfx_opengl.h	/^opengl_push_triangle(opengl_t* ogl, $/;"	f	language:C++	typeref:typename:void
+opengl_set_blend_mode	code/moe_gfx_opengl.h	/^opengl_set_blend_mode(opengl_t* ogl, gfx_blend_type_t src, gfx_blend_type_t dst) {$/;"	f	language:C++	typeref:typename:void
+opengl_set_texture	code/moe_gfx_opengl.h	/^opengl_set_texture(opengl_t* ogl,$/;"	f	language:C++	typeref:typename:void
+opengl_sprite_batch_t	code/moe_gfx_opengl.h	/^struct opengl_sprite_batch_t{$/;"	s	language:C++
+OPENGL_SPRITE_FSHADER	code/moe_gfx_opengl.h	/^#define OPENGL_SPRITE_FSHADER /;"	d	language:C++
+OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:__anon0f5c060e0203
+OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL,$/;"	e	language:C++	enum:__anon0f5c060e0203
+OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE,$/;"	e	language:C++	enum:__anon0f5c060e0203
+OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM$/;"	e	language:C++	enum:__anon0f5c060e0203
+OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,     \/\/ 1 $/;"	e	language:C++	enum:__anon0f5c060e0103
+OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,     \/\/ 2$/;"	e	language:C++	enum:__anon0f5c060e0103
+OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,     \/\/ 3$/;"	e	language:C++	enum:__anon0f5c060e0103
+OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4,     \/\/ 4$/;"	e	language:C++	enum:__anon0f5c060e0103
+OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL,       \/\/ 0 $/;"	e	language:C++	enum:__anon0f5c060e0103
+OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1,   \/\/ 5$/;"	e	language:C++	enum:__anon0f5c060e0103
+OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2,   \/\/ 6$/;"	e	language:C++	enum:__anon0f5c060e0103
+OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3,   \/\/ 7$/;"	e	language:C++	enum:__anon0f5c060e0103
+OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4,   \/\/ 8$/;"	e	language:C++	enum:__anon0f5c060e0103
+OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, \/\/ 9$/;"	e	language:C++	enum:__anon0f5c060e0103
+OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, \/\/ 10$/;"	e	language:C++	enum:__anon0f5c060e0103
+OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, \/\/ 11$/;"	e	language:C++	enum:__anon0f5c060e0103
+OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  \/\/ 12$/;"	e	language:C++	enum:__anon0f5c060e0103
+OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS,$/;"	e	language:C++	enum:__anon0f5c060e0303
+OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT \/\/ 5$/;"	e	language:C++	enum:__anon0f5c060e0303
+OPENGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES,$/;"	e	language:C++	enum:__anon0f5c060e0303
+OPENGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL,$/;"	e	language:C++	enum:__anon0f5c060e0303
+OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE,$/;"	e	language:C++	enum:__anon0f5c060e0303
+OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM	code/moe_gfx_opengl.h	/^  OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM,$/;"	e	language:C++	enum:__anon0f5c060e0303
+OPENGL_SPRITE_VSHADER	code/moe_gfx_opengl.h	/^#define OPENGL_SPRITE_VSHADER /;"	d	language:C++
+opengl_texture_t	code/moe_gfx_opengl.h	/^} opengl_texture_t;$/;"	t	language:C++	typeref:struct:__anon0f5c060e0708
+opengl_triangle_batch_t	code/moe_gfx_opengl.h	/^struct opengl_triangle_batch_t{$/;"	s	language:C++
+OPENGL_TRIANGLE_FSHADER	code/moe_gfx_opengl.h	/^#define OPENGL_TRIANGLE_FSHADER /;"	d	language:C++
+OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:__anon0f5c060e0503
+OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL,$/;"	e	language:C++	enum:__anon0f5c060e0503
+OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM$/;"	e	language:C++	enum:__anon0f5c060e0503
+OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,   \/\/ 1$/;"	e	language:C++	enum:__anon0f5c060e0403
+OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,   \/\/ 2$/;"	e	language:C++	enum:__anon0f5c060e0403
+OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,   \/\/ 3$/;"	e	language:C++	enum:__anon0f5c060e0403
+OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL,    \/\/ 0 $/;"	e	language:C++	enum:__anon0f5c060e0403
+OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, \/\/ 4$/;"	e	language:C++	enum:__anon0f5c060e0403
+OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, \/\/ 5$/;"	e	language:C++	enum:__anon0f5c060e0403
+OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, \/\/ 6$/;"	e	language:C++	enum:__anon0f5c060e0403
+OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  \/\/ 7$/;"	e	language:C++	enum:__anon0f5c060e0403
+OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS,$/;"	e	language:C++	enum:__anon0f5c060e0603
+OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT \/\/ 5$/;"	e	language:C++	enum:__anon0f5c060e0603
+OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES,$/;"	e	language:C++	enum:__anon0f5c060e0603
+OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL,$/;"	e	language:C++	enum:__anon0f5c060e0603
+OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM	code/moe_gfx_opengl.h	/^  OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM,$/;"	e	language:C++	enum:__anon0f5c060e0603
+OPENGL_TRIANGLE_VSHADER	code/moe_gfx_opengl.h	/^#define OPENGL_TRIANGLE_VSHADER /;"	d	language:C++
+opengl_uv_t	code/moe_gfx_opengl.h	/^struct opengl_uv_t {$/;"	s	language:C++
 old_light_pos	C:/users/geral/work/moom/code/lit_game.h	/^  v2f_t old_light_pos;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:v2f_t
 old_light_pos	code/lit_game.h	/^  v2f_t old_light_pos;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:v2f_t
 old_pos	code/momo_arena.h	/^  usz_t old_pos;$/;"	m	language:C++	struct:arena_marker_t	typeref:typename:usz_t
@@ -2079,7 +2079,7 @@ one_past_last_tag_index	code/karu.h	/^  u32_t one_past_last_tag_index;$/;"	m	lan
 one_past_last_tag_index	code/moe_assets.h	/^  u32_t one_past_last_tag_index;$/;"	m	language:C++	struct:asset_slot_t	typeref:typename:u32_t
 ope	code/meta.cpp	/^  u32_t ope;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:u32_t	file:
 open	build/a.out.js	/^  open: function() { FS.error() },$/;"	m	language:JavaScript	class:FS
-Opengl	code/moe_gfx_opengl.h	/^struct Opengl {$/;"	s	language:C++
+opengl_t	code/moe_gfx_opengl.h	/^struct opengl_t {$/;"	s	language:C++
 open_file	code/moe_platform.h	/^  pf_open_file_f* open_file;$/;"	m	language:C++	struct:__anonb345dcaa0908	typeref:typename:pf_open_file_f *
 operator !=	code/momo_strings.h	/^static b32_t operator!=(str8_t lhs, str8_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t
 operator !=	code/momo_strings.h	/^static b32_t operator!=(str8_t lhs, str8_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
@@ -2212,8 +2212,8 @@ payload_count	code/moe_gfx.h	/^  umi_t payload_count;$/;"	m	language:C++	struct:
 pf	code/moe.h	/^static pf_t* pf; $/;"	v	language:C++	typeref:typename:pf_t *
 pf_add_task_f	code/moe_platform.h	/^typedef void pf_add_task_f(pf_task_callback_f callback, void* data);$/;"	t	language:C++	typeref:typename:void ()(pf_task_callback_f callback,void * data)
 pf_allocate_memory_f	code/moe_platform.h	/^typedef pf_memory_t* pf_allocate_memory_f(usz_t size);$/;"	t	language:C++	typeref:typename:pf_memory_t * ()(usz_t size)
-pf_audio	code/w32_audio_wasapi.h	/^  pf_audio_t pf_audio; \/\/ Must be first member$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:pf_audio_t
-pf_audio_t	code/moe_platform.h	/^} pf_audio_t;$/;"	t	language:C++	typeref:struct:__anonb345dcaa0508
+pf_audio	code/w32_audio_wasapi.h	/^  audio_buffer_t pf_audio; \/\/ Must be first member$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:audio_buffer_t
+audio_buffer_t	code/moe_platform.h	/^} audio_buffer_t;$/;"	t	language:C++	typeref:struct:__anonb345dcaa0508
 pf_close_file_f	code/moe_platform.h	/^typedef void  pf_close_file_f(pf_file_t* file);$/;"	t	language:C++	typeref:typename:void ()(pf_file_t * file)
 pf_complete_all_tasks_f	code/moe_platform.h	/^typedef void pf_complete_all_tasks_f();$/;"	t	language:C++	typeref:typename:void ()()
 pf_data	code/moe_platform.h	/^  void* pf_data; \/\/ pointer for platform's usage$/;"	m	language:C++	struct:__anonb345dcaa0408	typeref:typename:void *
@@ -2356,10 +2356,10 @@ rect	code/sui_atlas.h	/^  rp_rect_t* rect;$/;"	m	language:C++	struct:sui_atlas_s
 rect_context	code/sui_atlas.h	/^  sui_atlas_context_t* rect_context;$/;"	m	language:C++	struct:sui_atlas_sprite_t	typeref:typename:sui_atlas_context_t *
 rect_count	code/sui_atlas.h	/^  u32_t rect_count;$/;"	m	language:C++	struct:sui_atlas_font_t	typeref:typename:u32_t
 ref	code/w32_audio_wasapi.h	/^  LONG ref;$/;"	m	language:C++	struct:w32_wasapi_notif_client_t	typeref:typename:LONG
-region_x0	code/moe_gfx_opengl.h	/^  u32_t region_x0; $/;"	m	language:C++	struct:Opengl	typeref:typename:u32_t
-region_x1	code/moe_gfx_opengl.h	/^  u32_t region_x1;$/;"	m	language:C++	struct:Opengl	typeref:typename:u32_t
-region_y0	code/moe_gfx_opengl.h	/^  u32_t region_y0; $/;"	m	language:C++	struct:Opengl	typeref:typename:u32_t
-region_y1	code/moe_gfx_opengl.h	/^  u32_t region_y1;$/;"	m	language:C++	struct:Opengl	typeref:typename:u32_t
+region_x0	code/moe_gfx_opengl.h	/^  u32_t region_x0; $/;"	m	language:C++	struct:opengl_t	typeref:typename:u32_t
+region_x1	code/moe_gfx_opengl.h	/^  u32_t region_x1;$/;"	m	language:C++	struct:opengl_t	typeref:typename:u32_t
+region_y0	code/moe_gfx_opengl.h	/^  u32_t region_y0; $/;"	m	language:C++	struct:opengl_t	typeref:typename:u32_t
+region_y1	code/moe_gfx_opengl.h	/^  u32_t region_y1;$/;"	m	language:C++	struct:opengl_t	typeref:typename:u32_t
 registerDevice	build/a.out.js	/^  registerDevice: function() { FS.error() },$/;"	m	language:JavaScript	class:FS
 reloaded	code/moe_platform.h	/^  b32_t reloaded;$/;"	m	language:C++	struct:__anonb345dcaa0808	typeref:typename:b32_t
 remainders	code/momo_crc.h	/^  u16_t remainders[256];$/;"	m	language:C++	struct:crc16_table_t	typeref:typename:u16_t[256]
@@ -2367,7 +2367,7 @@ remainders	code/momo_crc.h	/^  u32_t remainders[256];$/;"	m	language:C++	struct:
 remainders	code/momo_crc.h	/^  u8_t remainders[256];$/;"	m	language:C++	struct:crc8_table_t	typeref:typename:u8_t[256]
 removeRunDependency	build/a.out.js	/^function removeRunDependency(id) {$/;"	f	language:JavaScript
 renderer_texture_handle	code/moe_assets.h	/^  u32_t renderer_texture_handle;$/;"	m	language:C++	struct:asset_bitmap_t	typeref:typename:u32_t
-render_wh	code/moe_gfx_opengl.h	/^  v2u_t render_wh;$/;"	m	language:C++	struct:Opengl	typeref:typename:v2u_t
+render_wh	code/moe_gfx_opengl.h	/^  v2u_t render_wh;$/;"	m	language:C++	struct:opengl_t	typeref:typename:v2u_t
 resize	build/web.html	/^  <span><input type="checkbox" id="resize">Resize canvas<\/span>$/;"	I	language:HTML
 ret	build/a.out.js	/^        var ret = HEAP32[(((SYSCALLS.varargs)-(4))>>2)];$/;"	v	language:JavaScript	class:SYSCALLS
 ret	build/a.out.js	/^        var ret = UTF8ToString(ptr);$/;"	v	language:JavaScript	class:SYSCALLS
@@ -2511,8 +2511,8 @@ setValue	build/a.out.js	/^  function setValue(ptr, value, type = 'i8') {$/;"	f	l
 setWindowTitle	build/a.out.js	/^    setWindowTitle;$/;"	v	language:JavaScript
 set_match_entry	code/moe_assets.cpp	/^set_match_entry($/;"	f	language:C++	typeref:typename:void	file:
 set_design_dims	code/moe_platform.h	/^  pf_set_moe_dims_f* set_design_dims;$/;"	m	language:C++	struct:__anonb345dcaa0908	typeref:typename:pf_set_moe_dims_f *
-shader	code/moe_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:ogl_sprite_batch_t	typeref:typename:GLuint
-shader	code/moe_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:ogl_triangle_batch_t	typeref:typename:GLuint
+shader	code/moe_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:opengl_sprite_batch_t	typeref:typename:GLuint
+shader	code/moe_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:opengl_triangle_batch_t	typeref:typename:GLuint
 shell_read	build/a.out.js	/^    read_ = function shell_read(f) {$/;"	f	language:JavaScript
 shouldRunNow	build/a.out.js	/^var shouldRunNow = true;$/;"	v	language:JavaScript
 show_cursor	code/moe_platform.h	/^  pf_show_cursor_f* show_cursor;$/;"	m	language:C++	struct:__anonb345dcaa0908	typeref:typename:pf_show_cursor_f *
@@ -2554,7 +2554,7 @@ sprite	code/sui_atlas.h	/^    sui_atlas_sprite_context_t sprite;$/;"	m	language:
 sprite	code/sui_atlas.h	/^  sui_atlas_sprite_t* sprite;$/;"	m	language:C++	struct:sui_atlas_sprite_context_t	typeref:typename:sui_atlas_sprite_t *
 sprite	code/sui_pack.h	/^    sui_packer_source_sprite_t sprite; $/;"	m	language:C++	union:sui_packer_source_t::__anoncd974ef4010a	typeref:typename:sui_packer_source_sprite_t
 sprites	code/sui_atlas.h	/^  sui_atlas_sprite_t sprites[128];$/;"	m	language:C++	struct:sui_atlas_t	typeref:typename:sui_atlas_sprite_t[128]
-sprite_batch	code/moe_gfx_opengl.h	/^  ogl_sprite_batch_t sprite_batch;$/;"	m	language:C++	struct:Opengl	typeref:typename:ogl_sprite_batch_t
+sprite_batch	code/moe_gfx_opengl.h	/^  opengl_sprite_batch_t sprite_batch;$/;"	m	language:C++	struct:opengl_t	typeref:typename:opengl_sprite_batch_t
 sprite_count	code/sui_atlas.h	/^  u32_t sprite_count;$/;"	m	language:C++	struct:sui_atlas_t	typeref:typename:u32_t
 sprite_id	C:/users/geral/work/moom/code/lit_game.h	/^  asset_sprite_id_t sprite_id;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:asset_sprite_id_t
 sprite_id	code/lit_game.h	/^  asset_sprite_id_t sprite_id;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:asset_sprite_id_t
@@ -2852,7 +2852,7 @@ texel_y1	code/moe_gfx.h	/^  u32_t texel_x1, texel_y1;$/;"	m	language:C++	struct:
 texel_y1	code/sui_pack.h	/^  u32_t texel_y1;$/;"	m	language:C++	struct:sui_packer_source_sprite_t	typeref:typename:u32_t
 text	code/meta.cpp	/^  c8_t* text;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:c8_t *	file:
 text	code/momo_json.h	/^  str8_t text;$/;"	m	language:C++	struct:json_t	typeref:typename:str8_t
-textures	code/moe_gfx_opengl.h	/^  OGL_Texture textures[GFX_MAX_TEXTURES];$/;"	m	language:C++	struct:Opengl	typeref:typename:OGL_Texture[]
+textures	code/moe_gfx_opengl.h	/^  opengl_texture_t textures[GFX_MAX_TEXTURES];$/;"	m	language:C++	struct:opengl_t	typeref:typename:opengl_texture_t[]
 texture_data	code/moe_gfx.h	/^  void* texture_data;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:void *
 texture_height	code/moe_gfx.h	/^  u32_t texture_height;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:u32_t
 texture_index	code/moe_gfx.h	/^  u32_t texture_index;$/;"	m	language:C++	struct:gfx_command_delete_texture_t	typeref:typename:u32_t
@@ -2885,7 +2885,7 @@ transfer_memory_start	code/moe_gfx.h	/^  umi_t transfer_memory_start;$/;"	m	lang
 transfer_memory_start	code/moe_gfx.h	/^  umi_t transfer_memory_start;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:umi_t
 triangles	C:/users/geral/work/moom/code/lit_game.h	/^  lit_game_light_triangle_t triangles[256];$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:lit_game_light_triangle_t[256]
 triangles	code/lit_game.h	/^  lit_game_light_triangle_t triangles[256];$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:lit_game_light_triangle_t[256]
-triangle_batch	code/moe_gfx_opengl.h	/^  ogl_triangle_batch_t triangle_batch;$/;"	m	language:C++	struct:Opengl	typeref:typename:ogl_triangle_batch_t
+triangle_batch	code/moe_gfx_opengl.h	/^  opengl_triangle_batch_t triangle_batch;$/;"	m	language:C++	struct:opengl_t	typeref:typename:opengl_triangle_batch_t
 triangle_count	C:/users/geral/work/moom/code/lit_game.h	/^  u32_t triangle_count;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:u32_t
 triangle_count	code/lit_game.h	/^  u32_t triangle_count;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:u32_t
 ttf_get_glyph_bitmap_box	code/momo_ttf.h	/^static void ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t* x0/;"	p	language:C++	typeref:typename:void
@@ -2969,8 +2969,8 @@ unlocked_levels	C:/users/geral/work/moom/code/lit.h	/^  u32_t unlocked_levels;$/
 unlocked_levels	code/lit.h	/^  u32_t unlocked_levels;$/;"	m	language:C++	struct:lit_save_data_t	typeref:typename:u32_t
 unlock_cursor	code/moe_platform.h	/^  pf_unlock_cursor_f* unlock_cursor;$/;"	m	language:C++	struct:__anonb345dcaa0908	typeref:typename:pf_unlock_cursor_f *
 updateGlobalBufferAndViews	build/a.out.js	/^function updateGlobalBufferAndViews(buf) {$/;"	f	language:JavaScript
-update_and_render	code/moe_platform.h	/^  moe_update_and_render_f* update_and_render;$/;"	m	language:C++	struct:moe_functions_t	typeref:typename:moe_update_and_render_f *
-user_data	code/moe_gfx_opengl.h	/^  void* user_data;$/;"	m	language:C++	struct:Opengl	typeref:typename:void *
+update_and_render	code/moe_platform.h	/^  game_update_and_render_f* update_and_render;$/;"	m	language:C++	struct:game_functions_t	typeref:typename:game_update_and_render_f *
+user_data	code/moe_gfx_opengl.h	/^  void* user_data;$/;"	m	language:C++	struct:opengl_t	typeref:typename:void *
 user_data	code/momo_rect_pack.h	/^  void* user_data;$/;"	m	language:C++	struct:rp_rect_t	typeref:typename:void *
 usz_t	code/momo_types.h	/^typedef size_t    usz_t; \/\/ Can contain up to the highest indexable value $/;"	t	language:C++	typeref:typename:size_t
 UTF8ArrayToString	build/a.out.js	/^function UTF8ArrayToString(heapOrArray, idx, maxBytesToRead) {$/;"	f	language:JavaScript
@@ -3089,14 +3089,14 @@ w32_add_task	code/w32_moe.cpp	/^w32_add_task(pf_task_callback_f callback, void* 
 w32_add_task_entry	code/w32_moe.h	/^w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void
 w32_allocate_memory	code/w32_moe.h	/^w32_allocate_memory(umi_t size)$/;"	f	language:C++	typeref:typename:pf_memory_t *
 w32_allocate_memory_into_arena	code/w32_moe.cpp	/^w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {$/;"	f	language:C++	typeref:typename:b32_t	file:
-w32_audio_begin_frame	code/w32_audio.h	/^w32_audio_begin_frame(pf_audio_t* audio);$/;"	p	language:C++	typeref:typename:void
-w32_audio_begin_frame	code/w32_audio_wasapi.h	/^w32_audio_begin_frame(pf_audio_t* audio) {$/;"	f	language:C++	typeref:typename:void
-w32_audio_end_frame	code/w32_audio.h	/^w32_audio_end_frame(pf_audio_t* audio);$/;"	p	language:C++	typeref:typename:void
-w32_audio_end_frame	code/w32_audio_wasapi.h	/^w32_audio_end_frame(pf_audio_t* audio) {$/;"	f	language:C++	typeref:typename:void
-w32_audio_load	code/w32_audio.h	/^w32_audio_load(u32_t samples_per_second, $/;"	p	language:C++	typeref:typename:pf_audio_t *
-w32_audio_load	code/w32_audio_wasapi.h	/^w32_audio_load(u32_t samples_per_second, $/;"	f	language:C++	typeref:typename:pf_audio_t *
-w32_audio_unload	code/w32_audio.h	/^w32_audio_unload(pf_audio_t* audio);$/;"	p	language:C++	typeref:typename:void
-w32_audio_unload	code/w32_audio_wasapi.h	/^w32_audio_unload(pf_audio_t* audio) {$/;"	f	language:C++	typeref:typename:void
+w32_audio_begin_frame	code/w32_audio.h	/^w32_audio_begin_frame(audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
+w32_audio_begin_frame	code/w32_audio_wasapi.h	/^w32_audio_begin_frame(audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
+w32_audio_end_frame	code/w32_audio.h	/^w32_audio_end_frame(audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
+w32_audio_end_frame	code/w32_audio_wasapi.h	/^w32_audio_end_frame(audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
+w32_audio_load	code/w32_audio.h	/^w32_audio_load(u32_t samples_per_second, $/;"	p	language:C++	typeref:typename:audio_buffer_t *
+w32_audio_load	code/w32_audio_wasapi.h	/^w32_audio_load(u32_t samples_per_second, $/;"	f	language:C++	typeref:typename:audio_buffer_t *
+w32_audio_unload	code/w32_audio.h	/^w32_audio_unload(audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
+w32_audio_unload	code/w32_audio_wasapi.h	/^w32_audio_unload(audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
 w32_calc_render_region	code/w32_moe.h	/^w32_calc_render_region(u32_t window_w, $/;"	f	language:C++	typeref:typename:RECT
 w32_close_file	code/w32_moe.cpp	/^w32_close_file(pf_file_t* file) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_complete_all_tasks	code/w32_moe.cpp	/^w32_complete_all_tasks() {$/;"	f	language:C++	typeref:typename:void	file:
@@ -3202,7 +3202,7 @@ WGL_DRAW_TO_WINDOW_ARB	code/w32_gfx_opengl.h	/^#define WGL_DRAW_TO_WINDOW_ARB /;
 WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB	code/w32_gfx_opengl.h	/^#define WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB /;"	d	language:C++
 WGL_FULL_ACCELERATION_ARB	code/w32_gfx_opengl.h	/^#define WGL_FULL_ACCELERATION_ARB /;"	d	language:C++
 WGL_PIXEL_TYPE_ARB	code/w32_gfx_opengl.h	/^#define WGL_PIXEL_TYPE_ARB /;"	d	language:C++
-WGL_SetOpenglFunction	code/w32_gfx_opengl.h	/^#define WGL_SetOpenglFunction(/;"	d	language:C++
+WGL_Setopengl_tFunction	code/w32_gfx_opengl.h	/^#define WGL_Setopengl_tFunction(/;"	d	language:C++
 WGL_SUPPORT_OPENGL_ARB	code/w32_gfx_opengl.h	/^#define WGL_SUPPORT_OPENGL_ARB /;"	d	language:C++
 WGL_TYPE_RGBA_ARB	code/w32_gfx_opengl.h	/^#define WGL_TYPE_RGBA_ARB /;"	d	language:C++
 wh	code/lit_menu.h	/^  v2f_t wh;$/;"	m	language:C++	struct:lit_menu_button_t	typeref:typename:v2f_t
@@ -3313,8 +3313,8 @@ _json_token_type_t	code/momo_json.h	/^enum _json_token_type_t {$/;"	g	language:C
 _JSON_TOKEN_TYPE_TRUE	code/momo_json.h	/^  _JSON_TOKEN_TYPE_TRUE,$/;"	e	language:C++	enum:_json_token_type_t
 _JSON_TOKEN_TYPE_UNKNOWN	code/momo_json.h	/^  _JSON_TOKEN_TYPE_UNKNOWN,$/;"	e	language:C++	enum:_json_token_type_t
 _malloc	build/a.out.js	/^function _malloc() {$/;"	f	language:JavaScript
-_MOE_DEBUG_	C:/users/geral/work/moom/code/moe_debug.h	/^#define _MOE_DEBUG_$/;"	d	language:C++
-_MOE_DEBUG_	code/moe_debug.h	/^#define _MOE_DEBUG_$/;"	d	language:C++
+_MOMO_DEBUG_	C:/users/geral/work/moom/code/moe_debug.h	/^#define _MOMO_DEBUG_$/;"	d	language:C++
+_MOMO_DEBUG_	code/moe_debug.h	/^#define _MOMO_DEBUG_$/;"	d	language:C++
 _png_calculate_crc32	code/momo_png.h	/^_png_calculate_crc32(u8_t* data, u32_t data_size) {$/;"	f	language:C++	typeref:typename:u32_t
 _PNG_CHANNELS	code/momo_png.h	/^#define _PNG_CHANNELS /;"	d	language:C++
 _png_chunk_footer_t	code/momo_png.h	/^struct _png_chunk_footer_t {$/;"	s	language:C++

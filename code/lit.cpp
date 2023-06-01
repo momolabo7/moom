@@ -5,12 +5,12 @@
 
 static b32_t
 lit_tick() {
-  if(moe->game_context == nullptr) {
+  if(game->context == nullptr) {
     auto* lit_memory = pf->allocate_memory(sizeof(lit_t));
     if (!lit_memory) return false;
-    moe->game_context = lit_memory;
+    game->context = lit_memory;
 
-    lit = (lit_t*)((pf_memory_t*)moe->game_context)->data;
+    lit = (lit_t*)((pf_memory_t*)game->context)->data;
     lit->level_to_start = 0;
     lit->next_mode = LIT_MODE_GAME;
     
@@ -61,7 +61,7 @@ lit_tick() {
     
   }
 
-  lit = (lit_t*)((pf_memory_t*)moe->game_context)->data;
+  lit = (lit_t*)((pf_memory_t*)game->context)->data;
 
   // NOTE(momo): Frame arena needs to be cleared each frame.
   arena_clear(&lit->frame_arena);
@@ -69,7 +69,7 @@ lit_tick() {
   // NOTE(momo): inspector need to clear each frame
   inspector_clear(&lit->inspector);
 
-  if (lit->next_mode != lit->mode || moe->is_dll_reloaded) {
+  if (lit->next_mode != lit->mode || game->is_dll_reloaded) {
     lit->mode = lit->next_mode;
     
     switch(lit->mode) {
@@ -122,14 +122,19 @@ lit_tick() {
 }
 
 exported b32_t 
-moe_update_and_render(
-    moe_t* in_moe, 
+game_update_and_render(
+    game_t* in_game, 
     pf_t* in_pf, 
     gfx_t* in_gfx, 
-    pf_audio_t* in_audio, 
+    audio_buffer_t* in_audio, 
     profiler_t* in_profiler, 
     input_t* in_input)
 { 
-  moe_begin;
+  game = in_game;
+  pf = in_pf;
+  gfx = in_gfx;
+  audio = in_audio;
+  profiler = in_profiler;
+  input = in_input;
   return lit_tick();
 }

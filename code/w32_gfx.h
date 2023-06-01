@@ -8,7 +8,7 @@
 #undef far
 
 #include "momo.h"
-#include "moe_gfx.h"
+#include "game_gfx.h"
 
 // win32 gfx api that must be defined
 static gfx_t*

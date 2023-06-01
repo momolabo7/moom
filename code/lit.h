@@ -1,7 +1,9 @@
-#ifndef MOE_MODE_LIT_H
-#define MOE_MODE_LIT_H
+#ifndef LIT_H
+#define LIT_H
 
-#include "moe.h"
+
+#include "game.h"
+
 
 #define LIT_SAVE_FILE_ENABLE false
 #define LIT_SAVE_FILE "hello.sav"
@@ -43,6 +45,13 @@
 #define lit_profile_begin(...) 
 #define lit_profile_end(...) 
 #endif 
+
+static game_t* game; 
+static pf_t* pf; 
+static gfx_t* gfx; 
+static audio_buffer_t* audio;
+static profiler_t* profiler;
+static input_t* input;
 
 
 #include "lit_splash.h"

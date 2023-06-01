@@ -11,8 +11,8 @@
 // - variable snapshot/inspection
 //
 
-#ifndef _MOE_DEBUG_
-#define _MOE_DEBUG_
+#ifndef _MOMO_DEBUG_
+#define _MOMO_DEBUG_
 
 #define DBG_MAX_ENTRIES 128
 
@@ -53,4 +53,4 @@ static void dbg_push_u32(dbg_pipe_t* pipe, f32_t value) {
   entry->u32 = value;
 }
 
-#endif //_MOE_DEBUG_
+#endif //_MOMO_DEBUG_

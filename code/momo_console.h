@@ -1,6 +1,6 @@
 
-#ifndef MOE_CONSOLE_H
-#define MOE_CONSOLE_H
+#ifndef MOMO_CONSOLE_H
+#define MOMO_CONSOLE_H
 
 
 struct console_command_t {
@@ -14,7 +14,7 @@ struct console_t {
   u32_t command_count;
   console_command_t* commands;
   
-  sb8_t info_lines[9];
+  sb8_t info_lines[9]; // TODO: this should be allocated as well
   sb8_t input_line;
 };
 
@@ -89,4 +89,4 @@ console_execute(console_t* console) {
 }
 
 
-#endif //MOE_CONSOLE_H
+#endif //MOMO_CONSOLE_H

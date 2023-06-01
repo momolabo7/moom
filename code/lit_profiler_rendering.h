@@ -130,4 +130,4 @@ profiler_update_and_render()
     ++line_num;
   }
 }
-#endif //MOE_PROFILER_RENDERING_H
+#endif //MOMO_PROFILER_RENDERING_H

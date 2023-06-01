@@ -1,5 +1,5 @@
-#ifndef MOE_GAME_API
-#define MOE_GAME_API
+#ifndef MOMO_GAME_API
+#define MOMO_GAME_API
 
 //
 // moe's API for the game layer
@@ -137,4 +137,4 @@ gfx_push_text_center_aligned(gfx_t* gfx, assets_t* assets, asset_font_id_t font_
 }
 
 
-#endif // MOE_GAME_API
+#endif // MOMO_GAME_API
