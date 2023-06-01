@@ -513,13 +513,14 @@ WinMain(HINSTANCE instance,
   // MOE setup
   //
   moe_t moe = {};
+  moe.is_running = true;
   
  
   //
   // Platform API setup
   //
   pf_t pf = {};
-  pf.set_moe_dims = w32_set_moe_dims;
+  pf.set_design_dims = w32_set_moe_dims;
   pf.open_file = w32_open_file;
   pf.read_file = w32_read_file;
   pf.write_file = w32_write_file;
@@ -543,7 +544,6 @@ WinMain(HINSTANCE instance,
   QueryPerformanceFrequency(&performance_frequency);
   LARGE_INTEGER last_frame_count = w32_get_performance_counter();
 
-  moe.is_running = true;
   while (w32_state.is_running && moe.is_running) 
   {
 #if 1

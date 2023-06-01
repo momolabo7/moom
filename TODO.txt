@@ -1,9 +1,12 @@
 engine
+  - Think of changing names
+  - 
   - Consider removeing moe_asset_types from karu.h and maybe even moe_assets
   - Expandable arena for platform, instead of just calling VirtualAlloc every time
 
-game
+lit
   - Extract the whole lighting thing into a system of it's own with callbacks
+
 
 assets 
   - 9 Slice 

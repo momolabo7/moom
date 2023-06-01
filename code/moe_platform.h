@@ -155,7 +155,7 @@ typedef struct {
   u32_t char_count;
 
   // NOTE(Momo): The mouse position is relative to the moe's dimensions given
-  // via set_moe_dims(). It is possible to get back the normalized dimensions
+  // via set_design_dims(). It is possible to get back the normalized dimensions
   // by dividing the x/y by the width/height of the moe.
   v2f_t mouse_pos;
 
@@ -203,7 +203,7 @@ typedef struct {
 
   // set window dimensions
   // TODO: change name
-  pf_set_moe_dims_f* set_moe_dims;
+  pf_set_moe_dims_f* set_design_dims;
 
 } pf_t;
 

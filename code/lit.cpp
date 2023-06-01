@@ -46,7 +46,7 @@ lit_tick() {
     auto* mode_memory = pf->allocate_memory(megabytes(1));
     arena_init(&lit->mode_arena, mode_memory->data, mode_memory->size);
 
-    pf->set_moe_dims(LIT_WIDTH, LIT_HEIGHT);
+    pf->set_design_dims(LIT_WIDTH, LIT_HEIGHT);
     gfx_set_view(gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
     //

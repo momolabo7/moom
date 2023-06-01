@@ -9,8 +9,11 @@ It is a 2D game engine with the following idea, directions and features:
 
 Features that I want:
 
+* Input recording + replay
 * Asset hot reloading
 * Animation asset
+
+
 
 
 

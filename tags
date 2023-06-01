@@ -2510,7 +2510,7 @@ sensor_group_count	code/lit_game.h	/^  u32_t sensor_group_count;$/;"	m	language:
 setValue	build/a.out.js	/^  function setValue(ptr, value, type = 'i8') {$/;"	f	language:JavaScript
 setWindowTitle	build/a.out.js	/^    setWindowTitle;$/;"	v	language:JavaScript
 set_match_entry	code/moe_assets.cpp	/^set_match_entry($/;"	f	language:C++	typeref:typename:void	file:
-set_moe_dims	code/moe_platform.h	/^  pf_set_moe_dims_f* set_moe_dims;$/;"	m	language:C++	struct:__anonb345dcaa0908	typeref:typename:pf_set_moe_dims_f *
+set_design_dims	code/moe_platform.h	/^  pf_set_moe_dims_f* set_design_dims;$/;"	m	language:C++	struct:__anonb345dcaa0908	typeref:typename:pf_set_moe_dims_f *
 shader	code/moe_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:ogl_sprite_batch_t	typeref:typename:GLuint
 shader	code/moe_gfx_opengl.h	/^  GLuint shader;$/;"	m	language:C++	struct:ogl_triangle_batch_t	typeref:typename:GLuint
 shell_read	build/a.out.js	/^    read_ = function shell_read(f) {$/;"	f	language:JavaScript
