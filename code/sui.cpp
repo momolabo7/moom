@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
 #include "sui.h"
 #include "lit_asset_types.h"
 

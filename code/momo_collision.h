@@ -1,8 +1,22 @@
-#ifndef MOMO_SHAPES_H
-#define MOMO_SHAPES_H
+#ifndef MOMO_GEOMETRY_H
+#define MOMO_GEOMETRY_H
 
+struct tri2_t {
+  // TODO
+};
+
+struct rect2_t {
+  // TODO
+};
+
+struct aabb2_t {
+  // TODO
+};
+
+struct circ2_t
 
 static b32_t bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt); 
+
 
 //
 // IMPLEMENTATION

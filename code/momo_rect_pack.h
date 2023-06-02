@@ -18,7 +18,7 @@ struct rp_rect_t{
   void* user_data;
 };
 
-/////////////////////////////////////////////////////////////////////////////
+//
 // This is the procedure that will pack the rects. 
 // Note that the rects WILL NOT be sorted after packing.
 //

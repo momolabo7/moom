@@ -20,8 +20,11 @@ static buffer_t  png_write(png_t* png, u32_t width, u32_t height, arena_t* arena
 
 //static void*   png_write(usz_t* out_size);
 
-///////////////////////////////////////////////////////////////
+//
 // IMPLEMENTATION
+//
+
+
 // We are only interested in 4-channel images in rgba_t format
 #define _PNG_CHANNELS 4 
 
