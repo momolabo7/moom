@@ -179,8 +179,8 @@ w32_gfx_unload(gfx_t* gfx) {
 
 static gfx_t*
 w32_gfx_load(HWND window, 
-             u32_t command_queue_size,
-             u32_t texture_queue_size,
+             usz_t command_queue_size,
+             usz_t texture_queue_size,
              arena_t* arena) 
 {
   HDC dc = GetDC(window); 

@@ -1,4 +1,4 @@
-#include "w32_moe.h"
+#include "w32_game.h"
 
 
 #if 0
@@ -249,7 +249,7 @@ w32_process_input(HWND window, input_t* input)
 }
 
 static void
-w32_set_moe_dims(f32_t width, f32_t height) {
+w32_set_game_dims(f32_t width, f32_t height) {
   assert(width > 0.f && height > 0.f);
 
   // Ignore if there is no change
@@ -460,29 +460,35 @@ WinMain(HINSTANCE instance,
   
   
 
-  // Load moe Functions
-  game_functions_t moe_functions = {};
-  w32_loaded_code_t moe_code = {};
-  moe_code.function_count = array_count(game_function_names);
-  moe_code.function_names = game_function_names;
-  moe_code.module_path = "moe.dll";
-  moe_code.functions = (void**)&moe_functions;
+  // Load game Functions
+  game_functions_t game_functions = {};
+  w32_loaded_code_t game_code = {};
+  game_code.function_count = array_count(game_function_names);
+  game_code.function_names = game_function_names;
+  game_code.module_path = "game.dll";
+  game_code.functions = (void**)&game_functions;
 #if INTERNAL
-  moe_code.tmp_path = "tmp_moe.dll";
+  game_code.tmp_path = "tmp_game.dll";
 #endif // INTERNAL
-  w32_load_code(&moe_code);
-  if (!moe_code.is_valid) return 1;
-  defer { w32_unload_code(&moe_code); };
+
+  w32_load_code(&game_code);
+  if (!game_code.is_valid) return 1;
+  defer { w32_unload_code(&game_code); };
   
   
+  game_platform_config_t config = game_functions.get_platform_config();
   //
   // Gfx
   // 
   make(arena_t, gfx_arena);
-  if (!w32_allocate_memory_into_arena(gfx_arena, megabytes(256))) return false;
+  if (!w32_allocate_memory_into_arena(gfx_arena, megabytes(512))) return false;
   defer { w32_free_memory_from_arena(gfx_arena); };
 
-  gfx_t* gfx = w32_gfx_load(window, megabytes(100), megabytes(100), gfx_arena);
+  gfx_t* gfx = w32_gfx_load(
+      window, 
+      config.render_command_size, 
+      config.texture_queue_size, 
+      gfx_arena);
   if (!gfx) { return 1; }
   defer { w32_gfx_unload(gfx); };
  
@@ -512,15 +518,15 @@ WinMain(HINSTANCE instance,
   //
   // MOMO setup
   //
-  game_t moe = {};
-  moe.is_running = true;
+  game_t game = {};
+  game.is_running = true;
   
  
   //
   // Platform API setup
   //
   pf_t pf = {};
-  pf.set_design_dims = w32_set_moe_dims;
+  pf.set_design_dims = w32_set_game_dims;
   pf.open_file = w32_open_file;
   pf.read_file = w32_read_file;
   pf.write_file = w32_write_file;
@@ -536,7 +542,7 @@ WinMain(HINSTANCE instance,
   pf.unlock_cursor = w32_unlock_cursor;
 
 
-  //- Begin moe loop
+  //- Begin game loop
   b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   
   //- Send this to global state
@@ -544,12 +550,12 @@ WinMain(HINSTANCE instance,
   QueryPerformanceFrequency(&performance_frequency);
   LARGE_INTEGER last_frame_count = w32_get_performance_counter();
 
-  while (w32_state.is_running && moe.is_running) 
+  while (w32_state.is_running && game.is_running) 
   {
 #if 1
-    // Hot reload moe.dll functions
-    moe.is_dll_reloaded = w32_reload_code_if_outdated(&moe_code);
-    if (moe.is_dll_reloaded) {
+    // Hot reload game.dll functions
+    game.is_dll_reloaded = w32_reload_code_if_outdated(&game_code);
+    if (game.is_dll_reloaded) {
       profiler_reset(profiler);
     }
 #endif
@@ -560,10 +566,10 @@ WinMain(HINSTANCE instance,
     v2u_t client_wh = w32_get_client_dims(window);
 
 
-    f32_t moe_aspect = w32_state.game_width / w32_state.game_height;
+    f32_t game_aspect = w32_state.game_width / w32_state.game_height;
     RECT rr = w32_calc_render_region(client_wh.w,
                                      client_wh.h,
-                                     moe_aspect);
+                                     game_aspect);
     w32_gfx_begin_frame(gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
        
     //-Process messages and input
@@ -592,7 +598,7 @@ WinMain(HINSTANCE instance,
       
       
       // NOTE(Momo): Flip y
-      //moe.design_mouse_pos.y = f32_lerp(MOMO_HEIGHT, 0.f, moe.design_mouse_pos.y/MOMO_HEIGHT);	
+      //game.design_mouse_pos.y = f32_lerp(MOMO_HEIGHT, 0.f, game.design_mouse_pos.y/MOMO_HEIGHT);	
       if (w32_state.is_cursor_locked) {
         SetCursorPos(
             w32_state.cursor_pt_to_lock_to.x,
@@ -602,8 +608,8 @@ WinMain(HINSTANCE instance,
     
     
     //-game_t logic
-    if(moe_code.is_valid) { 
-      moe_functions.update_and_render(&moe, &pf, gfx, audio, profiler, &input);
+    if(game_code.is_valid) { 
+      game_functions.update_and_render(&game, &pf, gfx, audio, profiler, &input);
     }
 
 

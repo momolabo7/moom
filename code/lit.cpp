@@ -121,7 +121,17 @@ lit_tick() {
   return true;
 }
 
-exported b32_t 
+exported game_platform_config_t
+game_get_platform_config(void) 
+{
+  game_platform_config_t ret;
+  ret.texture_queue_size = megabytes(100);
+  ret.render_command_size = megabytes(100);
+
+  return ret;
+}
+
+exported void 
 game_update_and_render(
     game_t* in_game, 
     pf_t* in_pf, 
@@ -136,5 +146,6 @@ game_update_and_render(
   audio = in_audio;
   profiler = in_profiler;
   input = in_input;
-  return lit_tick();
+  
+  lit_tick();
 }

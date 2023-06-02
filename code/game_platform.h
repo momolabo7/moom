@@ -208,9 +208,13 @@ typedef struct {
 } pf_t;
 
 
+struct game_platform_config_t {
+  usz_t texture_queue_size;
+  usz_t render_command_size;
+};
 
 struct game_t {
-  // For moe to use
+  // Game data
   void* context;
 
           
@@ -218,6 +222,7 @@ struct game_t {
   b32_t is_running;
 };
 
+typedef game_platform_config_t game_get_platform_config_f(void); 
 typedef void game_update_and_render_f(
     game_t*, 
     pf_t*, 
@@ -227,11 +232,13 @@ typedef void game_update_and_render_f(
     input_t*);
 
 // To be called by platform
-typedef struct game_functions_t {
+struct game_functions_t {
+  game_get_platform_config_f* get_platform_config;
   game_update_and_render_f* update_and_render;
-} game_functions_t;
+};
 
 static const char* game_function_names[] {
+  "game_get_platform_config",
   "game_update_and_render",
 };
 
