@@ -491,7 +491,7 @@ f64_weight(f64_t v, f64_t min, f64_t max) {
 }
 
 //
-// Degrees to Radians
+// Degrees, Radians, turns
 //
 static f32_t 
 f32_deg_to_rad(f32_t degrees) {
@@ -500,6 +500,11 @@ f32_deg_to_rad(f32_t degrees) {
 static f32_t 
 f32_rad_to_deg(f32_t radians) {
   return radians * 180.f / PI_32;	
+}
+
+static f32_t 
+f32_turns_to_radians(f32_t turns) {
+  return turns * TAU_32;
 }
 
 static f64_t
@@ -512,6 +517,11 @@ f64_rad_to_deg(f64_t radians) {
   return radians * 180.0 / PI_64;
 }
 
+
+static f64_t 
+f64_turns_to_radians(f64_t turns) {
+  return turns * TAU_64;
+}
 //
 // Beats Per Minute to Seconds Per Beat
 //
