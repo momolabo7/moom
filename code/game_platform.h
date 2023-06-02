@@ -10,12 +10,8 @@
 //
 // Platform Memory API
 //
-typedef struct {
-  void* data;
-  usz_t size;
-} pf_memory_t;
-typedef pf_memory_t* pf_allocate_memory_f(usz_t size);
-typedef void  pf_free_memory_f(pf_memory_t* ptr);
+typedef void* pf_allocate_memory_f(usz_t size);
+typedef void  pf_free_memory_f(void* ptr);
 
 
 //

@@ -28,7 +28,8 @@
 
 
 struct w32_memory_t {
-  pf_memory_t pf_memory;
+  void* memory;
+  usz_t size;
   
   w32_memory_t* prev;
   w32_memory_t* next;
@@ -366,14 +367,14 @@ w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {
   c->free_files[c->free_file_count++] = f->cabinet_index;
 }
 
-static pf_memory_t*
+static void*
 w32_allocate_memory(umi_t size)
 {
   const auto alignment = 16;
-  umi_t aligned_size = align_up_pow2(size, alignment);
-  umi_t padding_for_alignment = aligned_size - size;
-  umi_t total_size = size + padding_for_alignment + sizeof(w32_memory_t);
-  umi_t base_offset = sizeof(w32_memory_t);
+  usz_t aligned_size = align_up_pow2(size, alignment);
+  usz_t padding_for_alignment = aligned_size - size;
+  usz_t total_size = size + padding_for_alignment + sizeof(w32_memory_t);
+  usz_t base_offset = sizeof(w32_memory_t);
 
   auto* block = (w32_memory_t*)
     VirtualAllocEx(GetCurrentProcess(),
@@ -383,19 +384,18 @@ w32_allocate_memory(umi_t size)
                    PAGE_READWRITE);
   if (!block) return nullptr;
 
-
-  block->pf_memory.data = (u8_t*)block + base_offset; 
-  block->pf_memory.size = size;
+  block->memory = (u8_t*)block + base_offset; 
+  block->size = size;
 
   w32_memory_t* sentinel = &w32_state.memory_sentinel;
   cll_append(sentinel, block);
 
-  return &block->pf_memory;
+  return block->memory;
 
 }
 
 static void
-w32_free_memory(pf_memory_t* block) {
+w32_free_memory(void* block) {
   if (block) {
     auto* memory_block = (w32_memory_t*)(block);
     cll_remove(memory_block);

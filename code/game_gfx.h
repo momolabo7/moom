@@ -41,8 +41,8 @@ enum gfx_texture_payload_state_t {
 
 struct gfx_texture_payload_t {
   volatile gfx_texture_payload_state_t state;
-  umi_t transfer_memory_start;
-  umi_t transfer_memory_end;
+  usz_t transfer_memory_start;
+  usz_t transfer_memory_end;
   
   // For moe to input
   u32_t texture_index;
@@ -53,13 +53,13 @@ struct gfx_texture_payload_t {
 
 struct gfx_texture_queue_t {
   u8_t* transfer_memory;
-  umi_t transfer_memory_size;
-  umi_t transfer_memory_start;
-  umi_t transfer_memory_end;
+  usz_t transfer_memory_size;
+  usz_t transfer_memory_start;
+  usz_t transfer_memory_end;
   
   gfx_texture_payload_t payloads[GFX_MAX_TEXTURES];
-  umi_t first_payload_index;
-  umi_t payload_count;
+  usz_t first_payload_index;
+  usz_t payload_count;
   
 };
 
@@ -72,13 +72,12 @@ typedef struct gfx_command_t {
 } gfx_command_t;
 
 struct gfx_command_queue_t {
-  // Push buffer
 	u8_t* memory;
-  umi_t memory_size;
-	umi_t data_pos;
-	umi_t entry_pos;
-	umi_t entry_start;
-	umi_t entry_count;
+  usz_t memory_size;
+	usz_t data_pos;
+	usz_t entry_pos;
+	usz_t entry_start;
+	usz_t entry_count;
 };
 
 enum gfx_blend_type_t {
@@ -167,21 +166,20 @@ typedef struct gfx_t {
 } gfx_t;
 
 
-// 
-static void gfx_init_command_queue(gfx_t* g, void* data, umi_t size);
-static void gfx_init_texture_queue(gfx_t* g, void* data, umi_t size);
+static void gfx_init_command_queue(gfx_t* g, void* data, usz_t size);
+static void gfx_init_texture_queue(gfx_t* g, void* data, usz_t size);
+
 static void gfx_clear_commands(gfx_t* g);
 static gfx_command_t* gfx_get_command(gfx_t* g, u32_t index);
 static gfx_texture_payload_t* gfx_begin_texture_transfer(gfx_t* g, u32_t required_space);
 static void gfx_complete_texture_transfer(gfx_texture_payload_t* entry);
 static void gfx_cancel_texture_transfer(gfx_texture_payload_t* entry);
+
 static void gfx_set_view(gfx_t* g, v2f_t pos, f32_t width, f32_t height, u32_t layers);
 static void gfx_clear_colors(gfx_t* g, rgba_t colors); 
 static void gfx_push_sprite(gfx_t* g, rgba_t colors, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1);
 static void gfx_draw_filled_rect(gfx_t* g, rgba_t colors, v2f_t pos, f32_t rot, v2f_t size);
 static void gfx_draw_filled_triangle(gfx_t* g, rgba_t colors, v2f_t p0, v2f_t p1, v2f_t p2);
-
-
 static void gfx_advance_depth(gfx_t* g); 
 static void gfx_draw_line(gfx_t* g, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors);
 static void gfx_draw_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color); 
@@ -205,14 +203,14 @@ gfx_clear_commands(gfx_t* g) {
   q->data_pos = 0;	
 	q->entry_count = 0;
 	
-	umi_t imem = ptr_to_umi(q->memory);
-	umi_t adjusted_entry_start = align_down_pow2(imem + q->memory_size, 4) - imem;
+	usz_t imem = ptr_to_usz(q->memory);
+	usz_t adjusted_entry_start = align_down_pow2(imem + q->memory_size, 4) - imem;
 	
 	q->entry_start = q->entry_pos = (u32_t)adjusted_entry_start;
 }
 
 static void 
-gfx_init_command_queue(gfx_t* g, void* data, umi_t size) {
+gfx_init_command_queue(gfx_t* g, void* data, usz_t size) {
   gfx_command_queue_t* q = &g->command_queue;
   q->memory = (u8_t*)data;
   q->memory_size = size;
@@ -223,26 +221,26 @@ static gfx_command_t*
 gfx_get_command(gfx_t* g, u32_t index) {
   gfx_command_queue_t* q = &g->command_queue;
   assert(index < q->entry_count);
-	umi_t stride = align_up_pow2(sizeof(gfx_command_t), 4);
+	usz_t stride = align_up_pow2(sizeof(gfx_command_t), 4);
 	return (gfx_command_t*)(q->memory + q->entry_start - ((index+1) * stride));
 }
 
 static void*
 _gfx_push_command_block(gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4) {
 
-	umi_t imem = ptr_to_umi(q->memory);
+	usz_t imem = ptr_to_usz(q->memory);
 	
-	umi_t adjusted_data_pos = align_up_pow2(imem + q->data_pos, (umi_t)align) - imem;
-	umi_t adjusted_entry_pos = align_down_pow2(imem + q->entry_pos, 4) - imem; 
+	usz_t adjusted_data_pos = align_up_pow2(imem + q->data_pos, (usz_t)align) - imem;
+	usz_t adjusted_entry_pos = align_down_pow2(imem + q->entry_pos, 4) - imem; 
 	
 	assert(adjusted_data_pos + size + sizeof(gfx_command_t) < adjusted_entry_pos);
 	
 	q->data_pos = (u32_t)adjusted_data_pos + size;
 	q->entry_pos = (u32_t)adjusted_entry_pos - sizeof(gfx_command_t);
 	
-	auto* entry = (gfx_command_t*)umi_to_ptr(imem + q->entry_pos);
+	auto* entry = (gfx_command_t*)usz_to_ptr(imem + q->entry_pos);
 	entry->id = id;
-	entry->data = umi_to_ptr(imem + adjusted_data_pos);
+	entry->data = usz_to_ptr(imem + adjusted_data_pos);
 	
 	
 	++q->entry_count;
@@ -251,7 +249,7 @@ _gfx_push_command_block(gfx_command_queue_t* q, u32_t size, u32_t id, u32_t alig
 }
 
 static void 
-gfx_init_texture_queue(gfx_t* g, void* data, umi_t size) {
+gfx_init_texture_queue(gfx_t* g, void* data, usz_t size) {
   gfx_texture_queue_t* q = &g->texture_queue;
 
   q->transfer_memory = (u8_t*)data;
@@ -275,8 +273,8 @@ gfx_begin_texture_transfer(gfx_t* g, u32_t required_space) {
   gfx_texture_payload_t* ret = 0;
   
   if (q->payload_count < array_count(q->payloads)) {
-    umi_t avaliable_space = 0;
-    umi_t memory_at = q->transfer_memory_end;
+    usz_t avaliable_space = 0;
+    usz_t memory_at = q->transfer_memory_end;
     // Memory is being used like a ring buffer
     if (q->transfer_memory_start == q->transfer_memory_end) {
       // This is either ALL the space or NONE of the space. 
@@ -307,7 +305,7 @@ gfx_begin_texture_transfer(gfx_t* g, u32_t required_space) {
     
     if(avaliable_space >= required_space) {
       // We found enough space
-      umi_t payload_index = q->first_payload_index + q->payload_count++;
+      usz_t payload_index = q->first_payload_index + q->payload_count++;
       ret = q->payloads + (payload_index % array_count(q->payloads));
       ret->texture_data = q->transfer_memory + memory_at;
       ret->transfer_memory_start = memory_at;

@@ -171,10 +171,9 @@ _w32_load_wgl_extentions() {
 //~API implementation
 static void
 w32_gfx_unload(gfx_t* gfx) {
-#if 0
   opengl_t* ogl = (opengl_t*)gfx;
-  w32_free_memory((pf_memory_t*)ogl->user_data);
-#endif
+  w32_free_memory(ogl);
+  w32_free_memory(gfx->command_queue->data
 }
 
 static gfx_t*
@@ -208,16 +207,14 @@ w32_gfx_load(HWND window,
   }
 
 
-  opengl_t* opengl = arena_push(opengl_t, arena);
-  void* command_queue_block = arena_push_size(arena, command_queue_size, 16); 
-  void* texture_queue_block = arena_push_size(arena, texture_queue_size, 16); 
+  opengl_t* opengl = (opengl_t*)w32_allocate_memory(sizeof(opengl));
+  void* command_queue_block = w32_allocate_memory(command_queue_size); 
+  void* texture_queue_block = w32_allocate_memory(texture_queue_size); 
 
 
   if (!opengl || !command_queue_block || !texture_queue_block) {
     return nullptr;
   }
-
-  //opengl->huser_data = opengl;
   
   
   if(wglMakeCurrent(dc, opengl_ctx)) {

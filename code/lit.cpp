@@ -6,11 +6,11 @@
 static b32_t
 lit_tick() {
   if(game->context == nullptr) {
-    auto* lit_memory = pf->allocate_memory(sizeof(lit_t));
+    void* lit_memory = pf->allocate_memory(sizeof(lit_t));
     if (!lit_memory) return false;
     game->context = lit_memory;
 
-    lit = (lit_t*)((pf_memory_t*)game->context)->data;
+    lit = (lit_t*)(game->context);
     lit->level_to_start = 0;
     lit->next_mode = LIT_MODE_GAME;
     
@@ -18,9 +18,10 @@ lit_tick() {
     //
     // Initialize assets
     //
-    auto* asset_memory = pf->allocate_memory(megabytes(20));
+    usz_t asset_memory_size = megabytes(20);
+    void* asset_memory = pf->allocate_memory(asset_memory_size);
     if (asset_memory == nullptr) return false;
-    arena_init(&lit->asset_arena, asset_memory->data, asset_memory->size);
+    arena_init(&lit->asset_arena, asset_memory, asset_memory_size);
     assets_init(&lit->assets, pf, gfx, "test_pack.sui", &lit->asset_arena);
 
     //
@@ -35,16 +36,20 @@ lit_tick() {
     //
     // Initialize debug stuff
     //
-    auto* debug_memory = pf->allocate_memory(megabytes(1));
-    arena_init(&lit->debug_arena, debug_memory->data, debug_memory->size);
+    usz_t debug_memory_size = megabytes(1);
+    void* debug_memory = pf->allocate_memory(debug_memory_size);
+    arena_init(&lit->debug_arena, debug_memory, debug_memory_size);
     inspector_init(&lit->inspector, &lit->debug_arena, 64);
     console_init(&lit->console, &lit->debug_arena, 32, 256);
 
-    auto* frame_memory = pf->allocate_memory(megabytes(1));
-    arena_init(&lit->frame_arena, frame_memory->data, frame_memory->size);
+    usz_t frame_memory_size = megabytes(1);
+    void* frame_memory = pf->allocate_memory(frame_memory_size);
+    arena_init(&lit->frame_arena, frame_memory, frame_memory_size);
 
-    auto* mode_memory = pf->allocate_memory(megabytes(1));
-    arena_init(&lit->mode_arena, mode_memory->data, mode_memory->size);
+
+    usz_t mode_memory_size = megabytes(1);
+    auto* mode_memory = pf->allocate_memory(mode_memory_size);
+    arena_init(&lit->mode_arena, mode_memory, mode_memory_size);
 
     pf->set_design_dims(LIT_WIDTH, LIT_HEIGHT);
     gfx_set_view(gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
@@ -61,7 +66,7 @@ lit_tick() {
     
   }
 
-  lit = (lit_t*)((pf_memory_t*)game->context)->data;
+  lit = (lit_t*)(game->context);
 
   // NOTE(momo): Frame arena needs to be cleared each frame.
   arena_clear(&lit->frame_arena);
