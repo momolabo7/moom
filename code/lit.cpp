@@ -1,12 +1,9 @@
 #include "lit.h"
 
-
-
-
 static b32_t
 lit_tick() {
   if(game->context == nullptr) {
-    void* lit_memory = pf->allocate_memory(sizeof(lit_t));
+    void* lit_memory = pf.allocate_memory(sizeof(lit_t));
     if (!lit_memory) return false;
     game->context = lit_memory;
 
@@ -19,10 +16,10 @@ lit_tick() {
     // Initialize assets
     //
     usz_t asset_memory_size = megabytes(20);
-    void* asset_memory = pf->allocate_memory(asset_memory_size);
+    void* asset_memory = pf.allocate_memory(asset_memory_size);
     if (asset_memory == nullptr) return false;
     arena_init(&lit->asset_arena, asset_memory, asset_memory_size);
-    assets_init(&lit->assets, pf, gfx, "test_pack.sui", &lit->asset_arena);
+    assets_init(&lit->assets, gfx, "test_pack.sui", &lit->asset_arena);
 
     //
     // Initialize important assets stuf
@@ -37,21 +34,21 @@ lit_tick() {
     // Initialize debug stuff
     //
     usz_t debug_memory_size = megabytes(1);
-    void* debug_memory = pf->allocate_memory(debug_memory_size);
+    void* debug_memory = pf.allocate_memory(debug_memory_size);
     arena_init(&lit->debug_arena, debug_memory, debug_memory_size);
     inspector_init(&lit->inspector, &lit->debug_arena, 64);
     console_init(&lit->console, &lit->debug_arena, 32, 256);
 
     usz_t frame_memory_size = megabytes(1);
-    void* frame_memory = pf->allocate_memory(frame_memory_size);
+    void* frame_memory = pf.allocate_memory(frame_memory_size);
     arena_init(&lit->frame_arena, frame_memory, frame_memory_size);
 
 
     usz_t mode_memory_size = megabytes(1);
-    auto* mode_memory = pf->allocate_memory(mode_memory_size);
+    auto* mode_memory = pf.allocate_memory(mode_memory_size);
     arena_init(&lit->mode_arena, mode_memory, mode_memory_size);
 
-    pf->set_design_dims(LIT_WIDTH, LIT_HEIGHT);
+    pf.set_design_dims(LIT_WIDTH, LIT_HEIGHT);
     gfx_set_view(gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
     //
@@ -105,7 +102,7 @@ lit_tick() {
   }
 
   // Debug
-  if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_F1])) {
+  if (is_poked(input->buttons[INPUT_BUTTON_CODE_F1])) {
     lit->show_debug_type = 
       (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
   }
@@ -139,14 +136,13 @@ game_get_platform_config(void)
 exported void 
 game_update_and_render(
     game_t* in_game, 
-    pf_t* in_pf, 
     gfx_t* in_gfx, 
     audio_buffer_t* in_audio, 
     profiler_t* in_profiler, 
     input_t* in_input)
 { 
+  pf = in_game->platform;  
   game = in_game;
-  pf = in_pf;
   gfx = in_gfx;
   audio = in_audio;
   profiler = in_profiler;

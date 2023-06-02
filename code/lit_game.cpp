@@ -23,7 +23,7 @@ lit_game_update()
   lit_game_t* g = &lit->game;
   lit_game_player_t* player = &g->player;
 
-  if (input_is_button_poked(input->buttons[INPUT_BUTTON_CODE_SPACE])) {
+  if (is_poked(input->buttons[INPUT_BUTTON_CODE_SPACE])) {
     g->freeze = !g->freeze;
   }
 
@@ -120,8 +120,8 @@ lit_game_update()
     //
     if (g->solved) 
     {
-      pf->show_cursor();
-      pf->unlock_cursor();
+      pf.show_cursor();
+      pf.unlock_cursor();
       g->state = LIT_GAME_STATE_TYPE_SOLVED_IN;
     }
   }

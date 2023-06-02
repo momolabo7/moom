@@ -2,7 +2,29 @@
 #define LIT_H
 
 
-#include "game.h"
+#include "momo_types.h"
+#include "momo_platform.h"
+#include "momo_intrinsics.h"
+#include "momo_vectors.h"
+#include "momo_strings.h"
+#include "momo_colors.h"
+#include "momo_easing.h"
+#include "momo_geometry.h"
+#include "momo_arena.h"
+#include "momo_rng.h"
+#include "momo_sort.h"
+
+#include "karu.h"
+
+#include "momo_game.h"
+#include "momo_gfx.h"
+#include "momo_inspector.h"
+#include "momo_profiler.h"
+#include "momo_game_console.h"
+
+#include "momo_assets.h"
+#include "momo_asset_rendering.h"
+
 
 
 #define LIT_SAVE_FILE_ENABLE false
@@ -35,7 +57,7 @@
 
 
 #ifdef INTERNAL
-#define lit_log(...) pf->debug_log(__VA_ARGS__)
+#define lit_log(...) pf.debug_log(__VA_ARGS__)
 #define lit_profile_block(name) profiler_block(profiler, name)
 #define lit_profile_begin(name) profiler_begin_block(profiler, name)
 #define lit_profile_end(name) profiler_end_block(profiler, name)
@@ -47,7 +69,6 @@
 #endif 
 
 static game_t* game; 
-static pf_t* pf; 
 static gfx_t* gfx; 
 static audio_buffer_t* audio;
 static profiler_t* profiler;
@@ -114,7 +135,6 @@ struct lit_t {
 static lit_t* lit;
 
 // Save data related
-
 static b32_t
 lit_is_in_tutorial() {
   return lit->save_data.unlocked_levels <= LIT_LAST_TUTORIAL_LEVEL_ID;
@@ -128,9 +148,9 @@ lit_unlock_next_level(u32_t current_level_id) {
 
     lit->save_data.unlocked_levels = current_level_id + 1;
 
-    if (pf->open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_OVERWRITE, PF_FILE_PATH_USER)) {
-      pf->write_file(&file, sizeof(lit->save_data), 0, (void*)&lit->save_data);
-      pf->close_file(&file);
+    if (pf.open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_OVERWRITE, PF_FILE_PATH_USER)) {
+      pf.write_file(&file, sizeof(lit->save_data), 0, (void*)&lit->save_data);
+      pf.close_file(&file);
       return true;
     }
     else {
@@ -149,10 +169,10 @@ lit_init_save_data() {
   pf_file_t file = {};
 
   // save data actually found
-  if (pf->open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_READ, PF_FILE_PATH_USER)) {
-    if(pf->read_file(&file, sizeof(lit_save_data_t), 0, &lit->save_data)) {
+  if (pf.open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_READ, PF_FILE_PATH_USER)) {
+    if(pf.read_file(&file, sizeof(lit_save_data_t), 0, &lit->save_data)) {
       // happy! :3
-      pf->close_file(&file);
+      pf.close_file(&file);
       return true;
     }
     else { // data is somehow corrupted?

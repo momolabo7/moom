@@ -1,88 +1,27 @@
-// This file contain the API through which the engine/moe interface with.
-// Because it is just the API, it is written in pure C so that it can be used
-// in other languages.
-//
-#ifndef MOMO_PF_H
-#define MOMO_PF_H
 
-#include "momo.h"
-
-//
-// Platform Memory API
-//
-typedef void* pf_allocate_memory_f(usz_t size);
-typedef void  pf_free_memory_f(void* ptr);
+#ifndef MOMO_GAME_H
+#define MOMO_GAME_H
 
 
 //
-// Platform File API
-//
-typedef enum {
-  PF_FILE_PATH_EXE,
-  PF_FILE_PATH_USER,
-  PF_FILE_PATH_CACHE,
-
-} pf_file_path_t;
-
-typedef enum {
-  PF_FILE_ACCESS_READ,
-  PF_FILE_ACCESS_OVERWRITE,
-} pf_file_access_t;
-
-typedef struct {
-  void* pf_data; // pointer for platform's usage
-} pf_file_t;
-
-typedef b32_t  
-pf_open_file_f(
-    pf_file_t* file,
-    const char* filename,
-    pf_file_access_t file_access,
-    pf_file_path_t file_path);
-
-typedef void  pf_close_file_f(pf_file_t* file);
-typedef b32_t pf_read_file_f(pf_file_t* file, usz_t size, usz_t offset, void* dest);
-typedef b32_t pf_write_file_f(pf_file_t* file, usz_t size, usz_t offset, void* src);
-
-//
-// Platform multithreaded work API
-typedef void pf_task_callback_f(void* data);
-typedef void pf_add_task_f(pf_task_callback_f callback, void* data);
-typedef void pf_complete_all_tasks_f();
-
-//
-// Other Platform API
-// 
-typedef void  pf_debug_log_f(const char* fmt, ...);
-typedef u64_t pf_get_perforance_counter_f();
-typedef void  pf_set_moe_dims_f(f32_t width, f32_t height);
-
-
-//
-// Platform Audio API
-//
-typedef struct {
+struct audio_buffer_t {
   s16_t* sample_buffer;
   u32_t sample_count;
   u32_t channels; //TODO: remove this?
-} audio_buffer_t;
+};
 
 
 //
 // Input related API
 //
-typedef struct {
+struct game_button_t {
   b32_t before;
   b32_t now; 
-} input_button_t;
+};
 
-typedef void pf_show_cursor_f();
-typedef void pf_hide_cursor_f();
-typedef void pf_lock_cursor_f();
-typedef void pf_unlock_cursor_f();
 
 // my god
-typedef enum {
+enum input_button_code_t {
   // Keyboard keys
   INPUT_BUTTON_CODE_UNKNOWN,
   INPUT_BUTTON_CODE_0,
@@ -141,12 +80,12 @@ typedef enum {
 
   INPUT_BUTTON_CODE_MAX,
 
-} input_button_code_t;
+};
 
 // NOTE(momo): Input is SPECIFICALLY stuff that can be recorded and
 // replayed by some kind of system. Other things go to game_t
-typedef struct {
-  input_button_t buttons[INPUT_BUTTON_CODE_MAX];
+struct input_t{
+  game_button_t buttons[INPUT_BUTTON_CODE_MAX];
   u8_t chars[32];
   u32_t char_count;
 
@@ -164,7 +103,7 @@ typedef struct {
   // TODO(Momo): not sure if this should even be here
   f32_t delta_time; //aka dt
 
-} input_t;
+};
 
 // 
 // Platform API
@@ -172,47 +111,15 @@ typedef struct {
 struct gfx_t;
 struct profiler_t;
 
-typedef struct {
-  // File IO
-  pf_open_file_f* open_file;
-  pf_read_file_f* read_file;
-  pf_write_file_f* write_file;
-  pf_close_file_f* close_file;
-
-  // Multithreading API
-  pf_add_task_f* add_task;
-  pf_complete_all_tasks_f* complete_all_tasks;
-
-  // Memory allocation
-  pf_allocate_memory_f* allocate_memory;
-  pf_free_memory_f* free_memory;
-
-  // Mouse 
-  pf_show_cursor_f* show_cursor;
-  pf_hide_cursor_f* hide_cursor;
-  pf_lock_cursor_f* lock_cursor;
-  pf_unlock_cursor_f* unlock_cursor;
-
-
-  // Logging
-  pf_debug_log_f* debug_log;
-
-  // set window dimensions
-  // TODO: change name
-  pf_set_moe_dims_f* set_design_dims;
-
-} pf_t;
-
-
 struct game_platform_config_t {
   usz_t texture_queue_size;
   usz_t render_command_size;
 };
 
 struct game_t {
-  // Game data
-  void* context;
+  pf_t platform;
 
+  void* context;
           
   b32_t is_dll_reloaded;
   b32_t is_running;
@@ -221,7 +128,6 @@ struct game_t {
 typedef game_platform_config_t game_get_platform_config_f(void); 
 typedef void game_update_and_render_f(
     game_t*, 
-    pf_t*, 
     gfx_t*, 
     audio_buffer_t*, 
     profiler_t*, 
@@ -241,26 +147,29 @@ static const char* game_function_names[] {
 
 // before: 0, now: 1
 static b32_t 
-input_is_button_poked(input_button_t btn) {
+is_poked(game_button_t btn) {
   return !btn.before && btn.now;
 }
 
 // before: 1, now: 0
 static b32_t
-input_is_button_released(input_button_t btn) {
+is_released(game_button_t btn) {
   return btn.before && !btn.now;
 }
 
 // before: X, now: 1
 static b32_t
-input_is_button_down(input_button_t btn){
+is_down(game_button_t btn){
   return btn.now;
 }
 
 // before: 1, now: 1
 static b32_t
-input_is_button_held(input_button_t btn) {
+is_held(game_button_t btn) {
   return btn.before && btn.now;
 }
 
-#endif //MOMO_PF_H
+
+
+
+#endif //GAME_H

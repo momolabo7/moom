@@ -120,10 +120,10 @@ get_next_texture_handle() {
 
 // TODO: Is there a way not to pass pf and gfx?
 static b32_t 
-assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_t* arena) 
+assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena) 
 {
   make(pf_file_t, file);
-  b32_t ok = pf->open_file(file,
+  b32_t ok = pf.open_file(file,
       filename,
       PF_FILE_ACCESS_READ, 
       PF_FILE_PATH_EXE);
@@ -133,7 +133,7 @@ assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_
 
   // Read header
   karu_header_t karu_header;
-  pf->read_file(file, sizeof(karu_header_t), 0, &karu_header);
+  pf.read_file(file, sizeof(karu_header_t), 0, &karu_header);
   if (karu_header.signature != KARU_SIGNATURE) return false;
 
   // Allocation for asset components (asset slots and tags)
@@ -158,7 +158,7 @@ assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_
     umi_t offset_to_tag = karu_header.offset_to_tags + sizeof(karu_tag_t)*tag_index;
 
     karu_tag_t karu_tag;
-    pf->read_file(file, sizeof(karu_tag_t), offset_to_tag, &karu_tag);
+    pf.read_file(file, sizeof(karu_tag_t), offset_to_tag, &karu_tag);
 
     tag->type = karu_tag.type;
     tag->value = karu_tag.value;
@@ -176,7 +176,7 @@ assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_
       umi_t offset_to_karu_group = 
         karu_header.offset_to_groups + sizeof(karu_group_t)*group_index;
 
-      pf->read_file(file, 
+      pf.read_file(file, 
           sizeof(karu_group_t), 
           offset_to_karu_group, 
           &karu_group);
@@ -198,7 +198,7 @@ assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_
       umi_t offset_to_karu_asset = 
         karu_header.offset_to_assets + sizeof(karu_asset_t)*asset_index;
 
-      pf->read_file(file, sizeof(karu_asset_t), 
+      pf.read_file(file, sizeof(karu_asset_t), 
           offset_to_karu_asset, 
           &karu_asset);
 
@@ -220,7 +220,7 @@ assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_
           payload->texture_index = asset->bitmap.renderer_texture_handle;
           payload->texture_width = karu_asset.bitmap.width;
           payload->texture_height = karu_asset.bitmap.height;
-          pf->read_file(file, 
+          pf.read_file(file, 
               bitmap_size, 
               karu_asset.offset_to_data, 
               payload->texture_data);
@@ -259,7 +259,7 @@ assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_
               sizeof(karu_font_glyph_t)*glyph_index;
 
             karu_font_glyph_t karu_glyph = {};
-            pf->read_file(file, 
+            pf.read_file(file, 
                 sizeof(karu_font_glyph_t), 
                 glyph_data_offset,
                 &karu_glyph); 
@@ -288,7 +288,7 @@ assets_init(assets_t* assets, pf_t* pf, gfx_t* gfx, const char* filename, arena_
               karu_asset.offset_to_data + 
               sizeof(karu_font_glyph_t)*glyph_count;
 
-            pf->read_file(file, 
+            pf.read_file(file, 
                 sizeof(f32_t)*glyph_count*glyph_count, 
                 kernings_data_offset, 
                 kernings);

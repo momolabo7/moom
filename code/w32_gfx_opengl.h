@@ -1,8 +1,5 @@
 // NOTE(Momo): gfx_t code for Win w/ opengl_t
 
-#include "w32_gfx.h"
-#include "game_gfx_opengl.h"
-
 
 //~WGL stuff
 

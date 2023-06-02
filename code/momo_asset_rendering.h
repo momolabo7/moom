@@ -1,9 +1,5 @@
-#ifndef MOMO_GAME_API
-#define MOMO_GAME_API
-
-//
-// moe's API for the game layer
-//
+#ifndef MOMO_ASSET_RENDERING_H
+#define MOMO_ASSET_RENDERING_H
 
 static void
 gfx_push_asset_sprite(
@@ -137,4 +133,4 @@ gfx_push_text_center_aligned(gfx_t* gfx, assets_t* assets, asset_font_id_t font_
 }
 
 
-#endif // MOMO_GAME_API
+#endif

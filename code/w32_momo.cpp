@@ -1,4 +1,4 @@
-#include "w32_game.h"
+#include "w32_momo.h"
 
 
 #if 0
@@ -510,7 +510,7 @@ WinMain(HINSTANCE instance,
   input_t input = {};
 
   //
-  // MOMO setup
+  // Game setup
   //
   game_t game = {};
   game.is_running = true;
@@ -519,7 +519,6 @@ WinMain(HINSTANCE instance,
   //
   // Platform API setup
   //
-  pf_t pf = {};
   pf.set_design_dims = w32_set_game_dims;
   pf.open_file = w32_open_file;
   pf.read_file = w32_read_file;
@@ -535,6 +534,7 @@ WinMain(HINSTANCE instance,
   pf.lock_cursor = w32_lock_cursor;
   pf.unlock_cursor = w32_unlock_cursor;
 
+  game.platform = pf;
 
   //- Begin game loop
   b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
@@ -601,13 +601,10 @@ WinMain(HINSTANCE instance,
     }
     
     
-    //-game_t logic
-    if(game_code.is_valid) { 
-      game_functions.update_and_render(&game, &pf, gfx, audio, profiler, &input);
-    }
+    game_functions.update_and_render(&game, gfx, audio, profiler, &input);
 
 
-    // End  frame
+    // End frame
     profiler_update_entries(profiler);
     w32_gfx_end_frame(gfx);
     w32_audio_end_frame(audio);

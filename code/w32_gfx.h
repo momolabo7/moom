@@ -3,12 +3,7 @@
 #ifndef WIN_RENDERER_H
 #define WIN_RENDERER_H
 
-#include <windows.h>
-#undef near
-#undef far
 
-#include "momo.h"
-#include "game_gfx.h"
 
 // win32 gfx api that must be defined
 static gfx_t*

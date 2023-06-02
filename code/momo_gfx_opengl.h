@@ -1,8 +1,6 @@
 #ifndef GFX_OPENGL_H
 #define GFX_OPENGL_H
 
-#include "momo.h"
-
 #ifndef OPENGL_MAX_SPRITES
 # define OPENGL_MAX_SPRITES 4096
 #endif

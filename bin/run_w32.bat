@@ -7,6 +7,6 @@ SET Opt=%1%
 
 pushd %BuildDir%
 
-call w32_game.exe
+call w32_momo.exe
 
 popd

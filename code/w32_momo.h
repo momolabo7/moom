@@ -23,8 +23,19 @@
 #undef near
 #undef far
 
-#include "momo.h"
-#include "game.h"
+#include "momo_types.h"
+#include "momo_platform.h"
+#include "momo_intrinsics.h"
+#include "momo_easing.h"
+#include "momo_vectors.h"
+#include "momo_colors.h"
+#include "momo_matrix.h"
+#include "momo_arena.h"
+#include "momo_profiler.h"
+#include "momo_game.h"
+#include "momo_gfx.h"
+
+
 
 
 struct w32_memory_t {
@@ -475,7 +486,7 @@ w32_load_code(w32_loaded_code_t* code) {
   
 }
 
-#if INTERNAL
+#ifdef INTERNAL
 static b32_t
 w32_reload_code_if_outdated(w32_loaded_code_t* code) {
   b32_t reloaded = false;
@@ -494,20 +505,16 @@ w32_reload_code_if_outdated(w32_loaded_code_t* code) {
       Sleep(100);
     }
   }
-  
-  
   return reloaded;
 }
 #endif // INTERNAL 
 
 
-
-
-#if 1 // OPENGL
+#include "w32_gfx.h"
+#include "momo_gfx_opengl.h"
 #include "w32_gfx_opengl.h"
-#else // DX etc 
-#endif 
 
+#include "w32_audio.h"
 #include "w32_audio_wasapi.h"
 
 #endif //WIN_H
