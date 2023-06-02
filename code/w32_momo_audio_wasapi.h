@@ -137,7 +137,7 @@ _w32_wasapi_set_default_device_as_current_device(w32_wasapi_t* wasapi) {
                                                            eConsole, 
                                                            &device);
   if (FAILED(hr)) {
-    w32_log("[w32_wasapi] Failed to get wasapi endpoint\n");
+    //w32_log("[w32_wasapi] Failed to get wasapi endpoint\n");
     return false;
   }
   defer { IMMDevice_Release(device); };
@@ -148,7 +148,7 @@ _w32_wasapi_set_default_device_as_current_device(w32_wasapi_t* wasapi) {
                           0, 
                           (LPVOID*)&wasapi->audio_client);
   if(FAILED(hr)) {
-    w32_log("[w32_wasapi] Failed to create IAudioClient\n");
+    //w32_log("[w32_wasapi] Failed to create IAudioClient\n");
     return false;
   }
   
@@ -176,7 +176,7 @@ _w32_wasapi_set_default_device_as_current_device(w32_wasapi_t* wasapi) {
                                 0);
   if (FAILED(hr))
   {
-    w32_log("[w32_wasapi] Failed to initialize wasapi client\n");
+    //w32_log("[w32_wasapi] Failed to initialize wasapi client\n");
     return false;
   }
   
@@ -185,7 +185,7 @@ _w32_wasapi_set_default_device_as_current_device(w32_wasapi_t* wasapi) {
                                (LPVOID*)&wasapi->audio_render_client);
   if (FAILED(hr))
   {
-    w32_log("[w32_wasapi] Failed to create IAudioClient\n");
+    //w32_log("[w32_wasapi] Failed to create IAudioClient\n");
     return false;
   }
   
@@ -193,7 +193,7 @@ _w32_wasapi_set_default_device_as_current_device(w32_wasapi_t* wasapi) {
   hr = IAudioClient2_GetBufferSize(wasapi->audio_client, &sound_frame_count);
   if (FAILED(hr))
   {
-    w32_log("[w32_wasapi] Failed to get buffer size\n");
+    //w32_log("[w32_wasapi] Failed to get buffer size\n");
     return false;
   }
 
@@ -201,7 +201,7 @@ _w32_wasapi_set_default_device_as_current_device(w32_wasapi_t* wasapi) {
   wasapi->buffer_size = sound_frame_count;
   wasapi->buffer = arena_push_arr(s16_t, &wasapi->allocator, wasapi->buffer_size);
   if (!wasapi->buffer) {
-    w32_log("[w32_wasapi] Failed to allocate secondary buffer\n");
+    //w32_log("[w32_wasapi] Failed to allocate secondary buffer\n");
     return false;
   }
   IAudioClient2_Start(wasapi->audio_client);
@@ -228,13 +228,13 @@ w32_wasapi_init(w32_wasapi_t* wasapi,
         &wasapi->allocator, 
         16)) 
   {
-    w32_log("[w32_wasapi] Failed to partition memory\n");
+    //w32_log("[w32_wasapi] Failed to partition memory\n");
     return false;
   }
   
   HRESULT hr = CoInitializeEx(0, COINIT_SPEED_OVER_MEMORY);
   if (FAILED(hr)) {
-    w32_log("[w32_wasapi] Failed CoInitializeEx\n");
+    //w32_log("[w32_wasapi] Failed CoInitializeEx\n");
     return false;
   }
   
@@ -244,7 +244,7 @@ w32_wasapi_init(w32_wasapi_t* wasapi,
                         IID_IMMDeviceEnumerator,
                         (LPVOID*)(&wasapi->mm_device_enum));
   if (FAILED(hr)) {
-    w32_log("[w32_wasapi] Failed to create IMMDeviceEnumerator\n");
+    //w32_log("[w32_wasapi] Failed to create IMMDeviceEnumerator\n");
     goto cleanup_1;
   }
    
@@ -254,7 +254,7 @@ w32_wasapi_init(w32_wasapi_t* wasapi,
   hr = IMMDeviceEnumerator_RegisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
 
 	if(FAILED(hr)) {
-		w32_log("[w32_wasapi] Failed to register notification callback\n");
+		//w32_log("[w32_wasapi] Failed to register notification callback\n");
 		goto cleanup_2;
 	}
 	
@@ -262,7 +262,7 @@ w32_wasapi_init(w32_wasapi_t* wasapi,
 	wasapi->buffer_size = wasapi->latency_sample_count * sizeof(s16_t);
   wasapi->buffer = arena_push_arr(s16_t, &wasapi->allocator, wasapi->buffer_size);
   if (!wasapi->buffer) {
-    w32_log("[w32_wasapi] Failed to allocate memory\n");
+    //w32_log("[w32_wasapi] Failed to allocate memory\n");
     goto cleanup_3;
   }
 
@@ -309,7 +309,7 @@ w32_wasapi_free(w32_wasapi_t* wasapi) {
 static void 
 w32_wasapi_begin_frame(w32_wasapi_t* wasapi) {
 	if (wasapi->is_device_changed) {
-		w32_log("[w32_wasapi] Resetting wasapi device\n");
+		//w32_log("[w32_wasapi] Resetting wasapi device\n");
 		// Attempt to change device
 		_w32_wasapi_release_current_device(wasapi);
 		_w32_wasapi_set_default_device_as_current_device(wasapi);

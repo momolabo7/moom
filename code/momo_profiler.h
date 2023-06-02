@@ -25,10 +25,7 @@ struct profiler_entry_t {
 };
 
 
-typedef u64_t profiler_get_performance_counter_t(void);
-
 struct profiler_t {
-  profiler_get_performance_counter_t* get_performance_counter;
   u32_t entry_snapshot_count;
   u32_t entry_count;
   u32_t entry_cap;
@@ -51,7 +48,6 @@ struct profiler_t {
 static void profiler_init(
     profiler_t* p, 
     arena_t* arena,
-    profiler_get_performance_counter_t get_performance_counter_fp,
     u32_t max_entries,
     u32_t max_snapshots_per_entry);
 static void profiler_update_entries(profiler_t* p);
@@ -75,7 +71,7 @@ _profiler_init_block(
     entry->filename = filename;
     entry->block_name = block_name ? block_name : function_name;
     entry->line = line;
-    entry->start_cycles = (u32_t)p->get_performance_counter();
+    entry->start_cycles = (u32_t)pf.get_performance_counter();
     entry->start_hits = 1;
     entry->flag_for_reset = false;
     return entry;
@@ -87,13 +83,13 @@ _profiler_init_block(
 static void
 _profiler_begin_block(profiler_t* p, profiler_entry_t* entry) 
 {
-  entry->start_cycles = (u32_t)p->get_performance_counter();
+  entry->start_cycles = (u32_t)pf.get_performance_counter();
   entry->start_hits = 1;
 }
 
 static void
 _profiler_end_block(profiler_t* p, profiler_entry_t* entry) {
-  u64_t delta = ((u32_t)p->get_performance_counter() - entry->start_cycles) | ((u64_t)(entry->start_hits)) << 32;
+  u64_t delta = ((u32_t)pf.get_performance_counter() - entry->start_cycles) | ((u64_t)(entry->start_hits)) << 32;
   u64_atomic_add(&entry->hits_and_cycles, delta);
 }
 
@@ -101,12 +97,10 @@ _profiler_end_block(profiler_t* p, profiler_entry_t* entry) {
 static void profiler_init(
     profiler_t* p, 
     arena_t* arena,
-    profiler_get_performance_counter_t get_performance_counter_fp,
     u32_t max_entries,
     u32_t max_snapshots_per_entry)
 {
   p->entry_cap = max_entries;
-  p->get_performance_counter = get_performance_counter_fp;
   p->entry_snapshot_count = max_snapshots_per_entry;
   p->entries = arena_push_arr(profiler_entry_t, arena, p->entry_cap);
   assert(p->entries);

@@ -83,7 +83,7 @@ typedef void pf_complete_all_tasks_f();
 // Other Platform API
 // 
 typedef void  pf_debug_log_f(const char* fmt, ...);
-typedef u64_t pf_get_perforance_counter_f();
+typedef u64_t pf_get_performance_counter_f();
 
 // TODO: remove this?
 typedef void  pf_set_moe_dims_f(f32_t width, f32_t height);
@@ -110,6 +110,8 @@ struct pf_t {
   pf_lock_cursor_f* lock_cursor;
   pf_unlock_cursor_f* unlock_cursor;
 
+  // Performance Counter
+  pf_get_performance_counter_f* get_performance_counter;
 
   // Logging
   pf_debug_log_f* debug_log;

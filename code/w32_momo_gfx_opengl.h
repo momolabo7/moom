@@ -195,9 +195,9 @@ w32_gfx_load(HWND window,
     return nullptr;
   }
 
-  opengl_t* opengl = (opengl_t*)w32_allocate_memory(sizeof(opengl_t));
-  void* command_queue_block = w32_allocate_memory(command_queue_size); 
-  void* texture_queue_block = w32_allocate_memory(texture_queue_size); 
+  opengl_t* opengl = (opengl_t*)pf.allocate_memory(sizeof(opengl_t));
+  void* command_queue_block = pf.allocate_memory(command_queue_size); 
+  void* texture_queue_block = pf.allocate_memory(texture_queue_size); 
 
   if (!opengl || !command_queue_block || !texture_queue_block) {
     return nullptr;
