@@ -182,6 +182,28 @@ lit_game_push_double_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, 
 }
 
 static void
+lit_game_push_rotating_double_edge(
+    lit_game_t* g, 
+    f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y,
+    v2f_t* pt_of_rotation_for_min,
+    v2f_t* pt_of_rotation_for_max,
+    f32_t speed_for_min,
+    f32_t speed_for_max)
+{
+  auto edges = lit_game_push_double_edge(g, min_x, min_y, max_x, max_y);
+
+  if (pt_of_rotation_for_min) {
+    lit_game_animator_push_rotate_point(g, &edges.e1->start_pt, pt_of_rotation_for_min, speed_for_min);
+    lit_game_animator_push_rotate_point(g, &edges.e2->end_pt, pt_of_rotation_for_min, speed_for_min);
+  }
+
+  if (pt_of_rotation_for_max) {
+    lit_game_animator_push_rotate_point(g, &edges.e1->end_pt, pt_of_rotation_for_max, speed_for_max);
+    lit_game_animator_push_rotate_point(g, &edges.e2->start_pt, pt_of_rotation_for_max, speed_for_max);
+  }
+}
+
+static void
 lit_game_begin_patrolling_double_edge(lit_game_t* g, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y, f32_t duration_per_waypoint)
 {
   assert(!g->selected_animator_for_double_edge_min[0]);

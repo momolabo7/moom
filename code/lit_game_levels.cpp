@@ -995,15 +995,9 @@ lit_level_triforce(lit_game_t* m) {
 
 static void
 lit_level_test(lit_game_t* m) {
-  lit_game_init_level(m, str8_from_lit("TEST"), 1);
+  lit_game_init_level(m, str8_from_lit("CLOCK"), 1);
 
   lit_game_push_light(m, 400, 427, 0x880000FF, 360.f, 0.75f);
-  lit_game_push_light(m, 380, 380, 0x008800FF, 360.f, 0.75f);
-  lit_game_push_light(m, 420, 380, 0x000088FF, 360.f, 0.75f);
-
-  lit_game_push_light(m, 400, 427, 0x880000FF, 360.f, 0.75f);
-  lit_game_push_light(m, 380, 380, 0x008800FF, 360.f, 0.75f);
-  lit_game_push_light(m, 420, 380, 0x000088FF, 360.f, 0.75f);
 
   lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
   lit_game_push_sensor(m, 400.f, 600.f, 0x000088FF); 
@@ -1015,68 +1009,16 @@ lit_level_test(lit_game_t* m) {
   lit_game_push_sensor(m, 400.f, 100.f, 0x880088FF); 
   lit_game_end_sensor_group(m);
 
+  v2f_t* rotate_pt = lit_game_push_point(m, {400.f, 400.f});
+  lit_game_push_rotating_double_edge(
+      m, 
+      400.f, 400.f, 400.f, 700.f,
+      nullptr,
+      rotate_pt, 
+      0.f,
+      1.f);
 
 
-  // Triangle #1
-  {
-    v2f_t a = v2f_set(0.f, 1.f);
-    v2f_t b = v2f_rotate(a, f32_deg_to_rad(120.f));
-    v2f_t c = v2f_rotate(a, f32_deg_to_rad(-120.f));
-
-    v2f_t a_max = a * 350.f + v2f_set(400.f, 400.f);
-    v2f_t b_max = b * 350.f + v2f_set(400.f, 400.f);
-    v2f_t c_max = c * 350.f + v2f_set(400.f, 400.f);
-
-    v2f_t a_min = a * 100.f + v2f_set(400.f, 400.f);
-    v2f_t b_min = b * 100.f + v2f_set(400.f, 400.f);
-    v2f_t c_min = c * 100.f + v2f_set(400.f, 400.f);
-
-    lit_game_begin_patrolling_double_edge(m, a_max.x, a_max.y, b_max.x, b_max.y,  2.f);
-    lit_game_push_patrolling_double_edge_waypoint_for_min(m, a_min.x, a_min.y);
-    lit_game_push_patrolling_double_edge_waypoint_for_max(m, b_min.x, b_min.y);
-    lit_game_end_patrolling_double_edge(m);
-
-    lit_game_begin_patrolling_double_edge(m, b_max.x, b_max.y, c_max.x, c_max.y,  2.f);
-    lit_game_push_patrolling_double_edge_waypoint_for_min(m, b_min.x, b_min.y);
-    lit_game_push_patrolling_double_edge_waypoint_for_max(m, c_min.x, c_min.y);
-    lit_game_end_patrolling_double_edge(m);
-
-    lit_game_begin_patrolling_double_edge(m, c_max.x, c_max.y, a_max.x, a_max.y,  2.f);
-    lit_game_push_patrolling_double_edge_waypoint_for_min(m, c_min.x, c_min.y);
-    lit_game_push_patrolling_double_edge_waypoint_for_max(m, a_min.x, a_min.y);
-    lit_game_end_patrolling_double_edge(m);
-  }
-
-  // Triangle #2
-  {
-
-    v2f_t a = v2f_set(0.f, -1.f);
-    v2f_t b = v2f_rotate(a, f32_deg_to_rad(120.f));
-    v2f_t c = v2f_rotate(a, f32_deg_to_rad(-120.f));
-
-    v2f_t a_max = a * 175.f + v2f_set(400.f, 400.f);
-    v2f_t b_max = b * 175.f + v2f_set(400.f, 400.f);
-    v2f_t c_max = c * 175.f + v2f_set(400.f, 400.f);
-
-    v2f_t a_min = a * 50.f + v2f_set(400.f, 400.f);
-    v2f_t b_min = b * 50.f + v2f_set(400.f, 400.f);
-    v2f_t c_min = c * 50.f + v2f_set(400.f, 400.f);
-
-    lit_game_begin_patrolling_double_edge(m, a_max.x, a_max.y, b_max.x, b_max.y,  2.f);
-    lit_game_push_patrolling_double_edge_waypoint_for_min(m, a_min.x, a_min.y);
-    lit_game_push_patrolling_double_edge_waypoint_for_max(m, b_min.x, b_min.y);
-    lit_game_end_patrolling_double_edge(m);
-
-    lit_game_begin_patrolling_double_edge(m, b_max.x, b_max.y, c_max.x, c_max.y,  2.f);
-    lit_game_push_patrolling_double_edge_waypoint_for_min(m, b_min.x, b_min.y);
-    lit_game_push_patrolling_double_edge_waypoint_for_max(m, c_min.x, c_min.y);
-    lit_game_end_patrolling_double_edge(m);
-
-    lit_game_begin_patrolling_double_edge(m, c_max.x, c_max.y, a_max.x, a_max.y,  2.f);
-    lit_game_push_patrolling_double_edge_waypoint_for_min(m, c_min.x, c_min.y);
-    lit_game_push_patrolling_double_edge_waypoint_for_max(m, a_min.x, a_min.y);
-    lit_game_end_patrolling_double_edge(m);
-  }
 
 }
 //

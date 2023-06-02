@@ -203,7 +203,7 @@ gfx_clear_commands(gfx_t* g) {
   q->data_pos = 0;	
 	q->entry_count = 0;
 	
-	usz_t imem = ptr_to_usz(q->memory);
+	umi_t imem = ptr_to_umi(q->memory);
 	usz_t adjusted_entry_start = align_down_pow2(imem + q->memory_size, 4) - imem;
 	
 	q->entry_start = q->entry_pos = (u32_t)adjusted_entry_start;
@@ -228,19 +228,19 @@ gfx_get_command(gfx_t* g, u32_t index) {
 static void*
 _gfx_push_command_block(gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4) {
 
-	usz_t imem = ptr_to_usz(q->memory);
+	umi_t imem = ptr_to_umi(q->memory);
 	
-	usz_t adjusted_data_pos = align_up_pow2(imem + q->data_pos, (usz_t)align) - imem;
-	usz_t adjusted_entry_pos = align_down_pow2(imem + q->entry_pos, 4) - imem; 
+	umi_t adjusted_data_pos = align_up_pow2(imem + q->data_pos, (usz_t)align) - imem;
+	umi_t adjusted_entry_pos = align_down_pow2(imem + q->entry_pos, 4) - imem; 
 	
 	assert(adjusted_data_pos + size + sizeof(gfx_command_t) < adjusted_entry_pos);
 	
 	q->data_pos = (u32_t)adjusted_data_pos + size;
 	q->entry_pos = (u32_t)adjusted_entry_pos - sizeof(gfx_command_t);
 	
-	auto* entry = (gfx_command_t*)usz_to_ptr(imem + q->entry_pos);
+	auto* entry = (gfx_command_t*)umi_to_ptr(imem + q->entry_pos);
 	entry->id = id;
-	entry->data = usz_to_ptr(imem + adjusted_data_pos);
+	entry->data = umi_to_ptr(imem + adjusted_data_pos);
 	
 	
 	++q->entry_count;

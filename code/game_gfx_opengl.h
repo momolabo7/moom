@@ -89,47 +89,47 @@ typedef void (GLDEBUGPROC)(GLenum source,
     const void *userParam);
 
 //- OpenGL Functions
-typedef void    OPENGL_glEnable(GLenum cap);
-typedef void    OPENGL_glDisable(GLenum cap);
-typedef void    OPENGL_glViewport(GLint x, GLint y, GLsizei width, GLsizei height);
-typedef void    OPENGL_glScissor(GLint x, GLint y, GLsizei width, GLsizei height); 
-typedef GLuint  OPENGL_glCreateShader(GLenum type);
-typedef void    OPENGL_glCompileShader(GLuint program);
-typedef void    OPENGL_glShaderSource(GLuint shader, GLsizei count, GLchar** string, GLint* length);
-typedef void    OPENGL_glAttachShader(GLuint program, GLuint shader);
-typedef void    OPENGL_glDeleteShader(GLuint program);
-typedef void    OPENGL_glClear(GLbitfield mask);
-typedef void    OPENGL_glClearColor(GLclampf r, GLclampf g, GLclampf b, GLclampf a);
-typedef void    OPENGL_glCreateBuffers(GLsizei n, GLuint* buffers);
-typedef void    OPENGL_glNamedBufferStorage(GLuint buffer, GLsizeiptr size, const void* data, GLbitfield flags);
-typedef void    OPENGL_glCreateVertexArrays(GLsizei n, GLuint* arrays);
-typedef void    OPENGL_glVertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride);
-typedef void    OPENGL_glEnableVertexArrayAttrib(GLuint vaobj, GLuint index);
-typedef void    OPENGL_glVertexArrayAttribFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLboolean normalized, GLuint relativeoffset);
-typedef void    OPENGL_glVertexArrayAttribBinding(GLuint vaobj,GLuint attribindex,GLuint bindingindex);
-typedef void    OPENGL_glVertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint divisor);
-typedef void    OPENGL_glBlendFunc(GLenum sfactor, GLenum dfactor);
-typedef void    OPENGL_glBlendFuncSeparate(GLenum srcRGB, GLenum destRGB, GLenum srcAlpha, GLenum destAlpha);
-typedef void    OPENGL_glVertexArrayElementBuffer(GLuint vaobj, GLuint buffer);
-typedef GLuint  OPENGL_glCreateProgram();
-typedef void    OPENGL_glLinkProgram(GLuint program);
-typedef void    OPENGL_glGetProgramiv(GLuint program, GLenum pname, GLint* params);
-typedef void    OPENGL_glGetProgramInfoLog(GLuint program, GLsizei maxLength, GLsizei* length,GLchar* infoLog);
-typedef void    OPENGL_glCreateTextures(GLenum target, GLsizei n, GLuint* textures);
-typedef void    OPENGL_glTextureStorage2D(GLuint texture, GLsizei levels, GLenum internalformat,GLsizei width, GLsizei height);
-typedef void    OPENGL_glTextureSubImage2D(GLuint texture,GLint level,GLint xoffset,GLint yoffset,GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels);
-typedef void    OPENGL_glBindTexture(GLenum target, GLuint texture);
-typedef void    OPENGL_glTexParameteri(GLenum target, GLenum pname, GLint param);
-typedef void    OPENGL_glBindVertexArray(GLuint array);
-typedef void    OPENGL_glDrawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type, const void* indices, GLsizei instancecount, GLuint baseinstance);
-typedef void    OPENGL_glUseProgram(GLuint program);
-typedef void    OPENGL_glNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, const void* data);
-typedef GLint   OPENGL_glGetUniformLocation(GLuint program, const GLchar* name);
-typedef void    OPENGL_glProgramUniformMatrix4fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
-typedef void    OPENGL_glProgramUniform4fv(GLuint program, GLint location, GLsizei count, const GLfloat* value);
-typedef void    OPENGL_glDeleteTextures(GLsizei n, const GLuint* textures);
-typedef void    OPENGL_glDrawArrays(GLenum mode, GLint first, GLsizei count);
-typedef void    OPENGL_glDebugMessageCallbackARB(GLDEBUGPROC *callback, const void* userParams);
+typedef void    opengl_glEnable(GLenum cap);
+typedef void    opengl_glDisable(GLenum cap);
+typedef void    opengl_glViewport(GLint x, GLint y, GLsizei width, GLsizei height);
+typedef void    opengl_glScissor(GLint x, GLint y, GLsizei width, GLsizei height); 
+typedef GLuint  opengl_glCreateShader(GLenum type);
+typedef void    opengl_glCompileShader(GLuint program);
+typedef void    opengl_glShaderSource(GLuint shader, GLsizei count, GLchar** string, GLint* length);
+typedef void    opengl_glAttachShader(GLuint program, GLuint shader);
+typedef void    opengl_glDeleteShader(GLuint program);
+typedef void    opengl_glClear(GLbitfield mask);
+typedef void    opengl_glClearColor(GLclampf r, GLclampf g, GLclampf b, GLclampf a);
+typedef void    opengl_glCreateBuffers(GLsizei n, GLuint* buffers);
+typedef void    opengl_glNamedBufferStorage(GLuint buffer, GLsizeiptr size, const void* data, GLbitfield flags);
+typedef void    opengl_glCreateVertexArrays(GLsizei n, GLuint* arrays);
+typedef void    opengl_glVertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride);
+typedef void    opengl_glEnableVertexArrayAttrib(GLuint vaobj, GLuint index);
+typedef void    opengl_glVertexArrayAttribFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLboolean normalized, GLuint relativeoffset);
+typedef void    opengl_glVertexArrayAttribBinding(GLuint vaobj,GLuint attribindex,GLuint bindingindex);
+typedef void    opengl_glVertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint divisor);
+typedef void    opengl_glBlendFunc(GLenum sfactor, GLenum dfactor);
+typedef void    opengl_glBlendFuncSeparate(GLenum srcRGB, GLenum destRGB, GLenum srcAlpha, GLenum destAlpha);
+typedef void    opengl_glVertexArrayElementBuffer(GLuint vaobj, GLuint buffer);
+typedef GLuint  opengl_glCreateProgram();
+typedef void    opengl_glLinkProgram(GLuint program);
+typedef void    opengl_glGetProgramiv(GLuint program, GLenum pname, GLint* params);
+typedef void    opengl_glGetProgramInfoLog(GLuint program, GLsizei maxLength, GLsizei* length,GLchar* infoLog);
+typedef void    opengl_glCreateTextures(GLenum target, GLsizei n, GLuint* textures);
+typedef void    opengl_glTextureStorage2D(GLuint texture, GLsizei levels, GLenum internalformat,GLsizei width, GLsizei height);
+typedef void    opengl_glTextureSubImage2D(GLuint texture,GLint level,GLint xoffset,GLint yoffset,GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels);
+typedef void    opengl_glBindTexture(GLenum target, GLuint texture);
+typedef void    opengl_glTexParameteri(GLenum target, GLenum pname, GLint param);
+typedef void    opengl_glBindVertexArray(GLuint array);
+typedef void    opengl_glDrawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type, const void* indices, GLsizei instancecount, GLuint baseinstance);
+typedef void    opengl_glUseProgram(GLuint program);
+typedef void    opengl_glNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, const void* data);
+typedef GLint   opengl_glGetUniformLocation(GLuint program, const GLchar* name);
+typedef void    opengl_glProgramUniformMatrix4fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
+typedef void    opengl_glProgramUniform4fv(GLuint program, GLint location, GLsizei count, const GLfloat* value);
+typedef void    opengl_glDeleteTextures(GLsizei n, const GLuint* textures);
+typedef void    opengl_glDrawArrays(GLenum mode, GLint first, GLsizei count);
+typedef void    opengl_glDebugMessageCallbackARB(GLDEBUGPROC *callback, const void* userParams);
 
 enum{ 
   OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL,       // 0 
@@ -238,49 +238,49 @@ struct opengl_t {
 
   f32_t current_layer;
 
-  OPENGL_glEnable* glEnable;
-  OPENGL_glDisable* glDisable;
-  OPENGL_glViewport* glViewport;
-  OPENGL_glScissor* glScissor ;
-  OPENGL_glCreateShader* glCreateShader;
-  OPENGL_glCompileShader* glCompileShader;
-  OPENGL_glShaderSource* glShaderSource;
-  OPENGL_glAttachShader* glAttachShader;
-  OPENGL_glDeleteShader* glDeleteShader;
-  OPENGL_glClear* glClear;
-  OPENGL_glClearColor* glClearColor;
-  OPENGL_glCreateBuffers* glCreateBuffers;
-  OPENGL_glNamedBufferStorage* glNamedBufferStorage;
-  OPENGL_glCreateVertexArrays* glCreateVertexArrays;
-  OPENGL_glVertexArrayVertexBuffer* glVertexArrayVertexBuffer;
-  OPENGL_glEnableVertexArrayAttrib* glEnableVertexArrayAttrib;
-  OPENGL_glVertexArrayAttribFormat* glVertexArrayAttribFormat;
-  OPENGL_glVertexArrayAttribBinding* glVertexArrayAttribBinding;
-  OPENGL_glVertexArrayBindingDivisor* glVertexArrayBindingDivisor;
-  OPENGL_glBlendFunc* glBlendFunc;
-  OPENGL_glBlendFuncSeparate* glBlendFuncSeparate;
-  OPENGL_glVertexArrayElementBuffer* glVertexArrayElementBuffer;
-  OPENGL_glLinkProgram* glLinkProgram;
-  OPENGL_glCreateProgram* glCreateProgram;
-  OPENGL_glGetProgramiv* glGetProgramiv;
-  OPENGL_glGetProgramInfoLog* glGetProgramInfoLog;
-  OPENGL_glCreateTextures* glCreateTextures;
-  OPENGL_glTextureStorage2D* glTextureStorage2D ;
-  OPENGL_glTextureSubImage2D*  glTextureSubImage2D;
-  OPENGL_glBindTexture* glBindTexture ;
-  OPENGL_glTexParameteri*  glTexParameteri ;
-  OPENGL_glBindVertexArray* glBindVertexArray;
-  OPENGL_glDrawElementsInstancedBaseInstance* glDrawElementsInstancedBaseInstance;
-  OPENGL_glGetUniformLocation* glGetUniformLocation;
-  OPENGL_glProgramUniform4fv* glProgramUniform4fv;
-  OPENGL_glProgramUniformMatrix4fv* glProgramUniformMatrix4fv;
-  OPENGL_glDeleteTextures* glDeleteTextures;
-  OPENGL_glDebugMessageCallbackARB* glDebugMessageCallbackARB;
-  OPENGL_glNamedBufferSubData* glNamedBufferSubData;
-  OPENGL_glUseProgram* glUseProgram;  
-  OPENGL_glDrawArrays* glDrawArrays;
+  opengl_glEnable* glEnable;
+  opengl_glDisable* glDisable;
+  opengl_glViewport* glViewport;
+  opengl_glScissor* glScissor ;
+  opengl_glCreateShader* glCreateShader;
+  opengl_glCompileShader* glCompileShader;
+  opengl_glShaderSource* glShaderSource;
+  opengl_glAttachShader* glAttachShader;
+  opengl_glDeleteShader* glDeleteShader;
+  opengl_glClear* glClear;
+  opengl_glClearColor* glClearColor;
+  opengl_glCreateBuffers* glCreateBuffers;
+  opengl_glNamedBufferStorage* glNamedBufferStorage;
+  opengl_glCreateVertexArrays* glCreateVertexArrays;
+  opengl_glVertexArrayVertexBuffer* glVertexArrayVertexBuffer;
+  opengl_glEnableVertexArrayAttrib* glEnableVertexArrayAttrib;
+  opengl_glVertexArrayAttribFormat* glVertexArrayAttribFormat;
+  opengl_glVertexArrayAttribBinding* glVertexArrayAttribBinding;
+  opengl_glVertexArrayBindingDivisor* glVertexArrayBindingDivisor;
+  opengl_glBlendFunc* glBlendFunc;
+  opengl_glBlendFuncSeparate* glBlendFuncSeparate;
+  opengl_glVertexArrayElementBuffer* glVertexArrayElementBuffer;
+  opengl_glLinkProgram* glLinkProgram;
+  opengl_glCreateProgram* glCreateProgram;
+  opengl_glGetProgramiv* glGetProgramiv;
+  opengl_glGetProgramInfoLog* glGetProgramInfoLog;
+  opengl_glCreateTextures* glCreateTextures;
+  opengl_glTextureStorage2D* glTextureStorage2D ;
+  opengl_glTextureSubImage2D*  glTextureSubImage2D;
+  opengl_glBindTexture* glBindTexture ;
+  opengl_glTexParameteri*  glTexParameteri ;
+  opengl_glBindVertexArray* glBindVertexArray;
+  opengl_glDrawElementsInstancedBaseInstance* glDrawElementsInstancedBaseInstance;
+  opengl_glGetUniformLocation* glGetUniformLocation;
+  opengl_glProgramUniform4fv* glProgramUniform4fv;
+  opengl_glProgramUniformMatrix4fv* glProgramUniformMatrix4fv;
+  opengl_glDeleteTextures* glDeleteTextures;
+  opengl_glDebugMessageCallbackARB* glDebugMessageCallbackARB;
+  opengl_glNamedBufferSubData* glNamedBufferSubData;
+  opengl_glUseProgram* glUseProgram;  
+  opengl_glDrawArrays* glDrawArrays;
 
-  void* user_data;
+  void* platform_data;
 };
 
 static b32_t opengl_init(opengl_t* ogl, 
@@ -1006,7 +1006,7 @@ opengl_init_sprite_batch(opengl_t* ogl) {
 }
 
 
-  static b32_t
+static b32_t
 opengl_init(opengl_t* ogl,
     void* command_queue_memory, 
     umi_t command_queue_size, 
@@ -1149,7 +1149,7 @@ opengl_process_texture_queue(opengl_t* ogl) {
 
 }
 
-  static void
+static void
 opengl_begin_frame(opengl_t* ogl, v2u_t render_wh,
     u32_t region_x0, u32_t region_y0, 
     u32_t region_x1, u32_t region_y1) 

@@ -1,8 +1,8 @@
 // NOTE(Momo): gfx_t code for Win w/ opengl_t
 
-
 #include "w32_gfx.h"
 #include "game_gfx_opengl.h"
+
 
 //~WGL stuff
 
@@ -168,19 +168,11 @@ _w32_load_wgl_extentions() {
   }
 }
 
-//~API implementation
-static void
-w32_gfx_unload(gfx_t* gfx) {
-  opengl_t* ogl = (opengl_t*)gfx;
-  w32_free_memory(ogl);
-  w32_free_memory(gfx->command_queue->data
-}
 
 static gfx_t*
 w32_gfx_load(HWND window, 
              usz_t command_queue_size,
-             usz_t texture_queue_size,
-             arena_t* arena) 
+             usz_t texture_queue_size) 
 {
   HDC dc = GetDC(window); 
   if (!dc) return 0;
@@ -206,11 +198,9 @@ w32_gfx_load(HWND window,
     return nullptr;
   }
 
-
-  opengl_t* opengl = (opengl_t*)w32_allocate_memory(sizeof(opengl));
+  opengl_t* opengl = (opengl_t*)w32_allocate_memory(sizeof(opengl_t));
   void* command_queue_block = w32_allocate_memory(command_queue_size); 
   void* texture_queue_block = w32_allocate_memory(texture_queue_size); 
-
 
   if (!opengl || !command_queue_block || !texture_queue_block) {
     return nullptr;
@@ -219,53 +209,53 @@ w32_gfx_load(HWND window,
   
   if(wglMakeCurrent(dc, opengl_ctx)) {
     HMODULE module = LoadLibraryA("opengl32.dll");
-#define WGL_Setopengl_tFunction(name) \
-opengl->name = (OPENGL_##name*)_w32_try_get_wgl_function(#name, module); \
+#define wgl_set_opengl_function(name) \
+opengl->name = (opengl_##name*)_w32_try_get_wgl_function(#name, module); \
 if (!opengl->name) { return nullptr; } 
     
-    WGL_Setopengl_tFunction(glEnable);
-    WGL_Setopengl_tFunction(glDisable); 
-    WGL_Setopengl_tFunction(glViewport);
-    WGL_Setopengl_tFunction(glScissor);
-    WGL_Setopengl_tFunction(glCreateShader);
-    WGL_Setopengl_tFunction(glCompileShader);
-    WGL_Setopengl_tFunction(glShaderSource);
-    WGL_Setopengl_tFunction(glAttachShader);
-    WGL_Setopengl_tFunction(glDeleteShader);
-    WGL_Setopengl_tFunction(glClear);
-    WGL_Setopengl_tFunction(glClearColor);
-    WGL_Setopengl_tFunction(glCreateBuffers);
-    WGL_Setopengl_tFunction(glNamedBufferStorage);
-    WGL_Setopengl_tFunction(glCreateVertexArrays);
-    WGL_Setopengl_tFunction(glVertexArrayVertexBuffer);
-    WGL_Setopengl_tFunction(glEnableVertexArrayAttrib);
-    WGL_Setopengl_tFunction(glVertexArrayAttribFormat);
-    WGL_Setopengl_tFunction(glVertexArrayAttribBinding);
-    WGL_Setopengl_tFunction(glVertexArrayBindingDivisor);
-    WGL_Setopengl_tFunction(glBlendFunc);
-    WGL_Setopengl_tFunction(glBlendFuncSeparate);
-    WGL_Setopengl_tFunction(glCreateProgram);
-    WGL_Setopengl_tFunction(glLinkProgram);
-    WGL_Setopengl_tFunction(glGetProgramiv);
-    WGL_Setopengl_tFunction(glGetProgramInfoLog);
-    WGL_Setopengl_tFunction(glVertexArrayElementBuffer);
-    WGL_Setopengl_tFunction(glCreateTextures);
-    WGL_Setopengl_tFunction(glTextureStorage2D);
-    WGL_Setopengl_tFunction(glTextureSubImage2D);
-    WGL_Setopengl_tFunction(glBindTexture);
-    WGL_Setopengl_tFunction(glTexParameteri);
-    WGL_Setopengl_tFunction(glBindVertexArray);
-    WGL_Setopengl_tFunction(glDrawElementsInstancedBaseInstance);
-    WGL_Setopengl_tFunction(glGetUniformLocation);
-    WGL_Setopengl_tFunction(glNamedBufferSubData);
-    WGL_Setopengl_tFunction(glProgramUniform4fv);
-    WGL_Setopengl_tFunction(glProgramUniformMatrix4fv);
-    WGL_Setopengl_tFunction(glUseProgram);
-    WGL_Setopengl_tFunction(glDeleteTextures);
-    WGL_Setopengl_tFunction(glDebugMessageCallbackARB);
-    WGL_Setopengl_tFunction(glDrawArrays);
+    wgl_set_opengl_function(glEnable);
+    wgl_set_opengl_function(glDisable); 
+    wgl_set_opengl_function(glViewport);
+    wgl_set_opengl_function(glScissor);
+    wgl_set_opengl_function(glCreateShader);
+    wgl_set_opengl_function(glCompileShader);
+    wgl_set_opengl_function(glShaderSource);
+    wgl_set_opengl_function(glAttachShader);
+    wgl_set_opengl_function(glDeleteShader);
+    wgl_set_opengl_function(glClear);
+    wgl_set_opengl_function(glClearColor);
+    wgl_set_opengl_function(glCreateBuffers);
+    wgl_set_opengl_function(glNamedBufferStorage);
+    wgl_set_opengl_function(glCreateVertexArrays);
+    wgl_set_opengl_function(glVertexArrayVertexBuffer);
+    wgl_set_opengl_function(glEnableVertexArrayAttrib);
+    wgl_set_opengl_function(glVertexArrayAttribFormat);
+    wgl_set_opengl_function(glVertexArrayAttribBinding);
+    wgl_set_opengl_function(glVertexArrayBindingDivisor);
+    wgl_set_opengl_function(glBlendFunc);
+    wgl_set_opengl_function(glBlendFuncSeparate);
+    wgl_set_opengl_function(glCreateProgram);
+    wgl_set_opengl_function(glLinkProgram);
+    wgl_set_opengl_function(glGetProgramiv);
+    wgl_set_opengl_function(glGetProgramInfoLog);
+    wgl_set_opengl_function(glVertexArrayElementBuffer);
+    wgl_set_opengl_function(glCreateTextures);
+    wgl_set_opengl_function(glTextureStorage2D);
+    wgl_set_opengl_function(glTextureSubImage2D);
+    wgl_set_opengl_function(glBindTexture);
+    wgl_set_opengl_function(glTexParameteri);
+    wgl_set_opengl_function(glBindVertexArray);
+    wgl_set_opengl_function(glDrawElementsInstancedBaseInstance);
+    wgl_set_opengl_function(glGetUniformLocation);
+    wgl_set_opengl_function(glNamedBufferSubData);
+    wgl_set_opengl_function(glProgramUniform4fv);
+    wgl_set_opengl_function(glProgramUniformMatrix4fv);
+    wgl_set_opengl_function(glUseProgram);
+    wgl_set_opengl_function(glDeleteTextures);
+    wgl_set_opengl_function(glDebugMessageCallbackARB);
+    wgl_set_opengl_function(glDrawArrays);
   }
-#undef WGL_Setopengl_tFunction
+#undef wgl_set_opengl_function
   
   if (!opengl_init(opengl, 
                 command_queue_block, 
@@ -283,7 +273,6 @@ if (!opengl->name) { return nullptr; }
 #endif
   
   
-#if 1
   // VSync. 
   if (!wglSwapIntervalEXT) {
     wglSwapIntervalEXT = (wglSwapIntervalEXTFn*)wglGetProcAddress("wglSwapIntervalEXT");
@@ -291,7 +280,6 @@ if (!opengl->name) { return nullptr; }
   if (wglSwapIntervalEXT) {
     wglSwapIntervalEXT(1);
   }
-#endif
   return &opengl->gfx;
 }
 
@@ -299,7 +287,7 @@ if (!opengl->name) { return nullptr; }
 static void
 w32_gfx_begin_frame(gfx_t* renderer,  v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1) 
 {
-  return opengl_begin_frame((opengl_t*)renderer, render_wh, region_x0, region_y0, region_x1, region_y1);
+  opengl_begin_frame((opengl_t*)renderer, render_wh, region_x0, region_y0, region_x1, region_y1);
 }
 
 static void

@@ -14,11 +14,8 @@
 static gfx_t*
 w32_gfx_load(HWND window, 
              usz_t command_queue_size, 
-             usz_t texture_queue_size,
-             arena_t* allocator);
+             usz_t texture_queue_size);
 
-static void 
-w32_gfx_unload(gfx_t* renderer);
 
 static void
 w32_gfx_begin_frame(gfx_t* renderer, 

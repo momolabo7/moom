@@ -421,10 +421,6 @@ w32_shutdown() {
   w32_state.is_running = false;
 }
 
-
-
-
-
 static void
 w32_unload_code(w32_loaded_code_t* code) {
   if(code->dll) {

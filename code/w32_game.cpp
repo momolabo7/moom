@@ -480,17 +480,11 @@ WinMain(HINSTANCE instance,
   //
   // Gfx
   // 
-  make(arena_t, gfx_arena);
-  if (!w32_allocate_memory_into_arena(gfx_arena, megabytes(512))) return false;
-  defer { w32_free_memory_from_arena(gfx_arena); };
-
   gfx_t* gfx = w32_gfx_load(
       window, 
       config.render_command_size, 
-      config.texture_queue_size, 
-      gfx_arena);
+      config.texture_queue_size);
   if (!gfx) { return 1; }
-  defer { w32_gfx_unload(gfx); };
  
   // Init Audio
   make(arena_t, audio_arena);
