@@ -32,9 +32,6 @@
 #include "momo_rect_pack.h"
 #include "momo_json.h"
 
-#include "momo_profiler.h"
-#include "momo_inspector.h"
-#include "momo_console.h"
 //
 // Platform/OS?
 //

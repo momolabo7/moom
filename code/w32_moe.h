@@ -24,7 +24,8 @@
 #undef far
 
 #include "momo.h"
-#include "game_platform.h"
+#include "game.h"
+
 
 struct w32_memory_t {
   pf_memory_t pf_memory;

@@ -8,6 +8,11 @@
 
 #include "game_platform.h"
 #include "game_gfx.h"
+
+#include "game_profiler.h"
+#include "game_inspector.h"
+#include "game_console.h"
+
 #include "game_assets.h"
 #include "game_asset_rendering.h"
 
