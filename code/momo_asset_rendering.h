@@ -10,8 +10,8 @@ gfx_push_asset_sprite(
     v2f_t size, 
     rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
 {
-  asset_sprite_t* sprite = get_sprite(assets, sprite_id);
-  asset_bitmap_t* bitmap = get_bitmap(assets, sprite->bitmap_asset_id);
+  asset_sprite_t* sprite = assets_get_sprite(assets, sprite_id);
+  asset_bitmap_t* bitmap = assets_get_bitmap(assets, sprite->bitmap_asset_id);
   v2f_t anchor = v2f_set(0.5f, 0.5f); 
   
   gfx_push_sprite(gfx, 
@@ -29,7 +29,7 @@ static void
 gfx_push_text(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
 
-  asset_font_t* font = get_font(assets, font_id);
+  asset_font_t* font = assets_get_font(assets, font_id);
   for(u32_t char_index = 0; 
       char_index < str.count;
       ++char_index) 
@@ -38,15 +38,15 @@ gfx_push_text(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str,
 
     if (char_index > 0) {
       u32_t prev_cp = str.e[char_index-1];
-      asset_font_glyph_t *prev_glyph = get_glyph(font, prev_cp);
+      asset_font_glyph_t *prev_glyph = assets_get_glyph(font, prev_cp);
 
-      f32_t kerning = get_kerning(font, prev_cp, curr_cp);
+      f32_t kerning = assets_get_kerning(font, prev_cp, curr_cp);
       f32_t advance = prev_glyph->horizontal_advance;
       px += (kerning + advance) * font_height;
     }
 
-    asset_font_glyph_t *glyph = get_glyph(font, curr_cp);
-    asset_bitmap_t* bitmap = get_bitmap(assets, glyph->bitmap_asset_id);
+    asset_font_glyph_t *glyph = assets_get_glyph(font, curr_cp);
+    asset_bitmap_t* bitmap = assets_get_bitmap(assets, glyph->bitmap_asset_id);
     f32_t width = (glyph->box_x1 - glyph->box_x0)*font_height;
     f32_t height = (glyph->box_y1 - glyph->box_y0)*font_height;
     
@@ -68,7 +68,7 @@ gfx_push_text(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str,
 static void
 gfx_push_text_center_aligned(gfx_t* gfx, assets_t* assets, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
-  asset_font_t* font = get_font(assets, font_id);
+  asset_font_t* font = assets_get_font(assets, font_id);
   
   // Calculate the total width of the text
   f32_t offset = 0.f;
@@ -80,10 +80,10 @@ gfx_push_text_center_aligned(gfx_t* gfx, assets_t* assets, asset_font_id_t font_
     u32_t curr_cp = str.e[char_index];
     u32_t prev_cp = str.e[char_index-1];
 
-    asset_font_glyph_t *prev_glyph = get_glyph(font, prev_cp);
-    asset_font_glyph_t *curr_glyph = get_glyph(font, curr_cp);
+    asset_font_glyph_t *prev_glyph = assets_get_glyph(font, prev_cp);
+    asset_font_glyph_t *curr_glyph = assets_get_glyph(font, curr_cp);
 
-    f32_t kerning = get_kerning(font, prev_cp, curr_cp);
+    f32_t kerning = assets_get_kerning(font, prev_cp, curr_cp);
     f32_t advance = prev_glyph->horizontal_advance;
     offset += (kerning + advance) * font_height;
   }
@@ -91,7 +91,7 @@ gfx_push_text_center_aligned(gfx_t* gfx, assets_t* assets, asset_font_id_t font_
   // Add the width of the last glyph
   {    
     u32_t cp = str.e[str.count-1];
-    asset_font_glyph_t* glyph = get_glyph(font, cp);
+    asset_font_glyph_t* glyph = assets_get_glyph(font, cp);
     f32_t advance = glyph->horizontal_advance;
     offset += advance * font_height;
   }
@@ -105,15 +105,15 @@ gfx_push_text_center_aligned(gfx_t* gfx, assets_t* assets, asset_font_id_t font_
 
     if (char_index > 0) {
       u32_t prev_cp = str.e[char_index-1];
-      asset_font_glyph_t *prev_glyph = get_glyph(font, prev_cp);
+      asset_font_glyph_t *prev_glyph = assets_get_glyph(font, prev_cp);
 
-      f32_t kerning = get_kerning(font, prev_cp, curr_cp);
+      f32_t kerning = assets_get_kerning(font, prev_cp, curr_cp);
       f32_t advance = prev_glyph->horizontal_advance;
       px += (kerning + advance) * font_height;
     }
 
-    asset_font_glyph_t *glyph = get_glyph(font, curr_cp);
-    asset_bitmap_t* bitmap = get_bitmap(assets, glyph->bitmap_asset_id);
+    asset_font_glyph_t *glyph = assets_get_glyph(font, curr_cp);
+    asset_bitmap_t* bitmap = assets_get_bitmap(assets, glyph->bitmap_asset_id);
     f32_t width = (glyph->box_x1 - glyph->box_x0)*font_height;
     f32_t height = (glyph->box_y1 - glyph->box_y0)*font_height;
     

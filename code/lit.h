@@ -76,7 +76,6 @@ static input_t* input;
 
 
 #include "lit_splash.h"
-#include "lit_menu.h"
 #include "lit_game.h"
 
 
@@ -91,7 +90,7 @@ enum lit_show_debug_type_t {
 
 enum lit_mode_t {
   LIT_MODE_SPLASH,
-  LIT_MODE_MENU,
+//  LIT_MODE_MENU,
   LIT_MODE_GAME,
 };
 
@@ -109,7 +108,6 @@ struct lit_t {
   union {
     lit_splash_t splash;
     lit_game_t game;
-    lit_menu_t menu;
   };
   u32_t level_to_start;
 
@@ -206,7 +204,6 @@ lit_goto_specific_level(u32_t level) {
 
 
 #include "lit_splash.cpp"
-#include "lit_menu.cpp"
 #include "lit_game.cpp"
 
 

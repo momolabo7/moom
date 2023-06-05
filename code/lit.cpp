@@ -24,10 +24,10 @@ lit_tick() {
     //
     // Initialize important assets stuf
     //
-    lit->blank_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
+    lit->blank_sprite = assets_find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
     make(asset_match_t, match);
     set_match_entry(match, ASSET_TAG_TYPE_FONT, 1.f, 1.f);
-    lit->debug_font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
+    lit->debug_font = assets_find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
 
 
     //
@@ -81,9 +81,6 @@ lit_tick() {
       case LIT_MODE_GAME: {
         lit_game_init();
       } break;
-      case LIT_MODE_MENU: {
-        lit_menu_init();
-      } break;
 
     }
   }
@@ -94,9 +91,6 @@ lit_tick() {
     } break;
     case LIT_MODE_GAME: {
       lit_game_update();
-    } break;
-    case LIT_MODE_MENU: {
-      lit_update_menu();
     } break;
 
   }

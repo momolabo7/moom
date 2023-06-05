@@ -19,7 +19,7 @@ abort	build/a.out.js	/^function abort(what) {$/;"	f	language:JavaScript
 ABORT	build/a.out.js	/^var ABORT = false;$/;"	v	language:JavaScript
 active_asset_index	code/sui_pack.h	/^  u32_t active_asset_index;$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:u32_t
 active_font	code/sui_atlas.h	/^  sui_atlas_font_t* active_font;$/;"	m	language:C++	struct:sui_atlas_t	typeref:typename:sui_atlas_font_t *
-active_group	code/sui_pack.h	/^  karu_group_t* active_group;$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:karu_group_t *
+active_group	code/sui_pack.h	/^  asset_file_group_t* active_group;$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:asset_file_group_t *
 additional_flags	code/momo_png.h	/^  u8_t additional_flags;$/;"	m	language:C++	struct:_png_idat_header_t	typeref:typename:u8_t
 addOnExit	build/a.out.js	/^function addOnExit(cb) {$/;"	f	language:JavaScript
 addOnInit	build/a.out.js	/^function addOnInit(cb) {$/;"	f	language:JavaScript
@@ -126,7 +126,21 @@ assert_callback	code/sui.h	/^#define assert_callback(/;"	d	language:C++
 assert_callback	code/test.h	/^#define assert_callback(/;"	d	language:C++
 assets	C:/users/geral/work/moom/code/lit.h	/^  assets_t assets;$/;"	m	language:C++	struct:lit_t	typeref:typename:assets_t
 assets	code/lit.h	/^  assets_t assets;$/;"	m	language:C++	struct:lit_t	typeref:typename:assets_t
-assets	code/sui_pack.h	/^  karu_asset_t* assets; \/\/ to be written to file$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:karu_asset_t *
+assets	code/sui_pack.h	/^  asset_file_asset_t* assets; \/\/ to be written to file$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:asset_file_asset_t *
+assets_find_best_asset_of_type	code/momo_assets.h	/^assets_find_best_asset_of_type($/;"	f	language:C++	typeref:typename:u32_t
+assets_find_best_font	code/momo_assets.h	/^assets_find_best_font(assets_t* assets, $/;"	f	language:C++	typeref:typename:asset_font_id_t
+assets_find_best_sprite	code/momo_assets.h	/^assets_find_best_sprite(assets_t* assets, $/;"	f	language:C++	typeref:typename:asset_sprite_id_t
+assets_find_first_asset_of_type	code/momo_assets.h	/^assets_find_first_asset_of_type($/;"	f	language:C++	typeref:typename:u32_t
+assets_find_first_bitmap	code/momo_assets.h	/^assets_find_first_bitmap(assets_t* assets, Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:asset_bitmap_id_t
+assets_find_first_font	code/momo_assets.h	/^assets_find_first_font(assets_t* assets, Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:asset_font_id_t
+assets_find_first_sprite	code/momo_assets.h	/^assets_find_first_sprite(assets_t* assets, Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:asset_sprite_id_t
+assets_get_asset_slot	code/momo_assets.h	/^assets_get_asset_slot(assets_t* assets, u32_t asset_index){$/;"	f	language:C++	typeref:typename:asset_slot_t *
+assets_get_bitmap	code/momo_assets.h	/^assets_get_bitmap(assets_t* assets, asset_bitmap_id_t bitmap_id) {$/;"	f	language:C++	typeref:typename:asset_bitmap_t *
+assets_get_font	code/momo_assets.h	/^assets_get_font(assets_t* assets, asset_font_id_t font_id) {$/;"	f	language:C++	typeref:typename:asset_font_t *
+assets_get_glyph	code/momo_assets.h	/^assets_get_glyph(asset_font_t* font, u32_t codepoint) {$/;"	f	language:C++	typeref:typename:asset_font_glyph_t *
+assets_get_kerning	code/momo_assets.h	/^assets_get_kerning($/;"	f	language:C++	typeref:typename:f32_t
+assets_get_next_texture_handle	code/momo_assets.h	/^assets_get_next_texture_handle() {$/;"	f	language:C++	typeref:typename:u32_t
+assets_get_sprite	code/momo_assets.h	/^assets_get_sprite(assets_t* assets, asset_sprite_id_t sprite_id) {$/;"	f	language:C++	typeref:typename:asset_sprite_t *
 ASSETS_H	.\code\game_assets.h	2;"	d	language:C++
 ASSETS_H	code/moe_assets.h	/^#define ASSETS_H$/;"	d	language:C++
 ASSETS_H	code/momo_assets.h	/^#define ASSETS_H$/;"	d	language:C++
@@ -1013,25 +1027,18 @@ filter_method	code/momo_png.h	/^  u8_t filter_method;$/;"	m	language:C++	struct:
 filter_method	code/momo_png.h	/^  u8_t filter_method;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:typename:u8_t
 find_best_asset_of_type	.\code\game_assets.h	/^find_best_asset_of_type($/;"	f	language:C++
 find_best_asset_of_type	code/moe_assets.cpp	/^find_best_asset_of_type($/;"	f	language:C++	typeref:typename:u32_t	file:
-find_best_asset_of_type	code/momo_assets.h	/^find_best_asset_of_type($/;"	f	language:C++	typeref:typename:u32_t
 find_best_font	.\code\game_assets.h	/^find_best_font(assets_t* assets, $/;"	f	language:C++
 find_best_font	code/moe_assets.cpp	/^find_best_font(assets_t* assets, $/;"	f	language:C++	typeref:typename:asset_font_id_t	file:
-find_best_font	code/momo_assets.h	/^find_best_font(assets_t* assets, $/;"	f	language:C++	typeref:typename:asset_font_id_t
 find_best_sprite	.\code\game_assets.h	/^find_best_sprite(assets_t* assets, $/;"	f	language:C++
 find_best_sprite	code/moe_assets.cpp	/^find_best_sprite(assets_t* assets, $/;"	f	language:C++	typeref:typename:asset_sprite_id_t	file:
-find_best_sprite	code/momo_assets.h	/^find_best_sprite(assets_t* assets, $/;"	f	language:C++	typeref:typename:asset_sprite_id_t
 find_first_asset_of_type	.\code\game_assets.h	/^find_first_asset_of_type($/;"	f	language:C++
 find_first_asset_of_type	code/moe_assets.cpp	/^find_first_asset_of_type($/;"	f	language:C++	typeref:typename:u32_t	file:
-find_first_asset_of_type	code/momo_assets.h	/^find_first_asset_of_type($/;"	f	language:C++	typeref:typename:u32_t
 find_first_bitmap	.\code\game_assets.h	/^find_first_bitmap(assets_t* assets, Asset_Group_Type group_type) {$/;"	f	language:C++
 find_first_bitmap	code/moe_assets.cpp	/^find_first_bitmap(assets_t* assets, Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:asset_bitmap_id_t	file:
-find_first_bitmap	code/momo_assets.h	/^find_first_bitmap(assets_t* assets, Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:asset_bitmap_id_t
 find_first_font	.\code\game_assets.h	/^find_first_font(assets_t* assets, Asset_Group_Type group_type) {$/;"	f	language:C++
 find_first_font	code/moe_assets.cpp	/^find_first_font(assets_t* assets, Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:asset_font_id_t	file:
-find_first_font	code/momo_assets.h	/^find_first_font(assets_t* assets, Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:asset_font_id_t
 find_first_sprite	.\code\game_assets.h	/^find_first_sprite(assets_t* assets, Asset_Group_Type group_type) {$/;"	f	language:C++
 find_first_sprite	code/moe_assets.cpp	/^find_first_sprite(assets_t* assets, Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:asset_sprite_id_t	file:
-find_first_sprite	code/momo_assets.h	/^find_first_sprite(assets_t* assets, Asset_Group_Type group_type) {$/;"	f	language:C++	typeref:typename:asset_sprite_id_t
 first_asset_index	.\code\game_assets.h	/^  u32_t first_asset_index;$/;"	m	language:C++	struct:asset_group_t
 first_asset_index	code/karu.h	/^  u32_t first_asset_index;$/;"	m	language:C++	struct:asset_file_group_t	typeref:typename:u32_t
 first_asset_index	code/moe_assets.h	/^  u32_t first_asset_index;$/;"	m	language:C++	struct:asset_group_t	typeref:typename:u32_t
@@ -1168,22 +1175,16 @@ getUniqueRunDependency	build/a.out.js	/^function getUniqueRunDependency(id) {$/;
 getValue	build/a.out.js	/^  function getValue(ptr, type = 'i8') {$/;"	f	language:JavaScript
 get_asset_slot	.\code\game_assets.h	/^get_asset_slot(assets_t* assets, u32_t asset_index){$/;"	f	language:C++
 get_asset_slot	code/moe_assets.cpp	/^get_asset_slot(assets_t* assets, u32_t asset_index){$/;"	f	language:C++	typeref:typename:asset_slot_t *	file:
-get_asset_slot	code/momo_assets.h	/^get_asset_slot(assets_t* assets, u32_t asset_index){$/;"	f	language:C++	typeref:typename:asset_slot_t *
 get_bitmap	.\code\game_assets.h	/^get_bitmap(assets_t* assets, asset_bitmap_id_t bitmap_id) {$/;"	f	language:C++
 get_bitmap	code/moe_assets.cpp	/^get_bitmap(assets_t* assets, asset_bitmap_id_t bitmap_id) {$/;"	f	language:C++	typeref:typename:asset_bitmap_t *	file:
-get_bitmap	code/momo_assets.h	/^get_bitmap(assets_t* assets, asset_bitmap_id_t bitmap_id) {$/;"	f	language:C++	typeref:typename:asset_bitmap_t *
 get_font	.\code\game_assets.h	/^get_font(assets_t* assets, asset_font_id_t font_id) {$/;"	f	language:C++
 get_font	code/moe_assets.cpp	/^get_font(assets_t* assets, asset_font_id_t font_id) {$/;"	f	language:C++	typeref:typename:asset_font_t *	file:
-get_font	code/momo_assets.h	/^get_font(assets_t* assets, asset_font_id_t font_id) {$/;"	f	language:C++	typeref:typename:asset_font_t *
 get_glyph	.\code\game_assets.h	/^get_glyph(asset_font_t* font, u32_t codepoint) {$/;"	f	language:C++
 get_glyph	code/moe_assets.cpp	/^get_glyph(asset_font_t* font, u32_t codepoint) {$/;"	f	language:C++	typeref:typename:asset_font_glyph_t *	file:
-get_glyph	code/momo_assets.h	/^get_glyph(asset_font_t* font, u32_t codepoint) {$/;"	f	language:C++	typeref:typename:asset_font_glyph_t *
 get_kerning	.\code\game_assets.h	/^get_kerning($/;"	f	language:C++
 get_kerning	code/moe_assets.cpp	/^get_kerning($/;"	f	language:C++	typeref:typename:f32_t	file:
-get_kerning	code/momo_assets.h	/^get_kerning($/;"	f	language:C++	typeref:typename:f32_t
 get_next_texture_handle	.\code\game_assets.h	/^get_next_texture_handle() {$/;"	f	language:C++
 get_next_texture_handle	code/moe_assets.cpp	/^get_next_texture_handle() {$/;"	f	language:C++	typeref:typename:u32_t	file:
-get_next_texture_handle	code/momo_assets.h	/^get_next_texture_handle() {$/;"	f	language:C++	typeref:typename:u32_t
 get_performance_counter	.\code\game_profiler.h	/^  profiler_get_performance_counter_t* get_performance_counter;$/;"	m	language:C++	struct:profiler_t
 get_performance_counter	code/moe_profiler.h	/^  profiler_get_performance_counter_t* get_performance_counter;$/;"	m	language:C++	struct:profiler_t	typeref:typename:profiler_get_performance_counter_t *
 get_performance_counter	code/momo_platform.h	/^  pf_get_performance_counter_f* get_performance_counter;$/;"	m	language:C++	struct:pf_t	typeref:typename:pf_get_performance_counter_f *
@@ -1191,7 +1192,6 @@ get_platform_config	.\code\game_platform.h	/^  game_get_platform_config_f* get_p
 get_platform_config	code/momo_game.h	/^  game_get_platform_config_f* get_platform_config;$/;"	m	language:C++	struct:game_functions_t	typeref:typename:game_get_platform_config_f *
 get_sprite	.\code\game_assets.h	/^get_sprite(assets_t* assets, asset_sprite_id_t sprite_id) {$/;"	f	language:C++
 get_sprite	code/moe_assets.cpp	/^get_sprite(assets_t* assets, asset_sprite_id_t sprite_id) {$/;"	f	language:C++	typeref:typename:asset_sprite_t *	file:
-get_sprite	code/momo_assets.h	/^get_sprite(assets_t* assets, asset_sprite_id_t sprite_id) {$/;"	f	language:C++	typeref:typename:asset_sprite_t *
 gfx	.\code\game_gfx_opengl.h	/^  gfx_t gfx; \/\/ Must be first member$/;"	m	language:C++	struct:opengl_t
 gfx	code/lit.h	/^static gfx_t* gfx; $/;"	v	language:C++	typeref:typename:gfx_t *
 gfx	code/moe.h	/^static gfx_t* gfx; $/;"	v	language:C++	typeref:typename:gfx_t *
@@ -1831,7 +1831,7 @@ gpos	code/momo_ttf.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, g
 groups	.\code\game_assets.h	/^  asset_group_t* groups;$/;"	m	language:C++	struct:assets_t
 groups	code/moe_assets.h	/^  asset_group_t* groups;$/;"	m	language:C++	struct:assets_t	typeref:typename:asset_group_t *
 groups	code/momo_assets.h	/^  asset_group_t* groups;$/;"	m	language:C++	struct:assets_t	typeref:typename:asset_group_t *
-groups	code/sui_pack.h	/^  karu_group_t* groups; \/\/to be written to file$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:karu_group_t *
+groups	code/sui_pack.h	/^  asset_file_group_t* groups; \/\/to be written to file$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:asset_file_group_t *
 group_count	.\code\game_assets.h	/^  u32_t group_count;$/;"	m	language:C++	struct:assets_t
 group_count	code/karu.h	/^  u32_t group_count;$/;"	m	language:C++	struct:asset_file_header_t	typeref:typename:u32_t
 group_count	code/moe_assets.h	/^  u32_t group_count;$/;"	m	language:C++	struct:assets_t	typeref:typename:u32_t
@@ -4176,7 +4176,7 @@ SYSCALLS	build/a.out.js	/^  var SYSCALLS = {varargs:undefined,get:function() {$/
 tags	.\code\game_assets.h	/^  asset_tag_t* tags;$/;"	m	language:C++	struct:assets_t
 tags	code/moe_assets.h	/^  asset_tag_t* tags;$/;"	m	language:C++	struct:assets_t	typeref:typename:asset_tag_t *
 tags	code/momo_assets.h	/^  asset_tag_t* tags;$/;"	m	language:C++	struct:assets_t	typeref:typename:asset_tag_t *
-tags	code/sui_pack.h	/^  karu_tag_t* tags; \/\/ to be written to file$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:karu_tag_t *
+tags	code/sui_pack.h	/^  asset_file_tag_t* tags; \/\/ to be written to file$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:asset_file_tag_t *
 tag_cap	code/sui_pack.h	/^  u32_t tag_cap;$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:u32_t
 tag_count	.\code\game_assets.h	/^  u32_t tag_count;$/;"	m	language:C++	struct:assets_t
 tag_count	code/karu.h	/^  u32_t tag_count;$/;"	m	language:C++	struct:asset_file_header_t	typeref:typename:u32_t

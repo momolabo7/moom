@@ -1,4 +1,4 @@
-
+#if 0
 static void
 lit_menu_init() 
 {
@@ -296,3 +296,4 @@ lit_update_menu() {
 #endif
 
 }
+#endif

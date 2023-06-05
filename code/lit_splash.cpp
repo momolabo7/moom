@@ -4,7 +4,7 @@ lit_init_splash() {
 
   make(asset_match_t, match);
   set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
-  splash->font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
+  splash->font = assets_find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
   splash->timer = 1.5f;
 }
 

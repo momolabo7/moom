@@ -196,12 +196,12 @@ lit_game_init()
 
   make(asset_match_t, match);
   set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
-  g->tutorial_font = find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
-  g->blank_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
-  g->circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
-  g->move_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_MOVE_SPRITE);
-  g->rotate_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_ROTATE_SPRITE);
-  g->filled_circle_sprite = find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
+  g->tutorial_font = assets_find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
+  g->blank_sprite = assets_find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
+  g->circle_sprite = assets_find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
+  g->move_sprite = assets_find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_MOVE_SPRITE);
+  g->rotate_sprite = assets_find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_ROTATE_SPRITE);
+  g->filled_circle_sprite = assets_find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
 
   g->freeze = false;
 

@@ -112,7 +112,7 @@ set_match_entry(
 
 
 static u32_t
-get_next_texture_handle() {
+assets_get_next_texture_handle() {
   static u32_t id = 0;
   return id++ % GFX_MAX_TEXTURES;
 }
@@ -210,7 +210,7 @@ assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena)
 
       switch(asset->type) {
         case ASSET_TYPE_BITMAP: {
-          asset->bitmap.renderer_texture_handle = get_next_texture_handle();
+          asset->bitmap.renderer_texture_handle = assets_get_next_texture_handle();
           asset->bitmap.width = asset_file_asset.bitmap.width;
           asset->bitmap.height = asset_file_asset.bitmap.height;
 
@@ -312,7 +312,7 @@ assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena)
 }
 
 static u32_t
-find_first_asset_of_type(
+assets_find_first_asset_of_type(
     assets_t* assets, 
     Asset_Group_Type group_type, 
     asset_type_t type) 
@@ -331,7 +331,7 @@ find_first_asset_of_type(
 }
 
 static u32_t 
-find_best_asset_of_type(
+assets_find_best_asset_of_type(
     assets_t* assets, 
     Asset_Group_Type group_type, 
     asset_type_t asset_type,
@@ -383,7 +383,7 @@ find_best_asset_of_type(
 
 
 static f32_t
-get_kerning(
+assets_get_kerning(
     asset_font_t* font,
     u32_t left_codepoint, 
     u32_t right_codepoint) 
@@ -398,7 +398,7 @@ get_kerning(
 }
 
 static asset_font_glyph_t*
-get_glyph(asset_font_t* font, u32_t codepoint) {
+assets_get_glyph(asset_font_t* font, u32_t codepoint) {
   u32_t glyph_index_plus_one = font->codepoint_map[codepoint] + 1;
   if (glyph_index_plus_one == 0) return nullptr;
   asset_font_glyph_t *glyph = font->glyphs + glyph_index_plus_one - 1;
@@ -406,60 +406,60 @@ get_glyph(asset_font_t* font, u32_t codepoint) {
 }
 
 static asset_slot_t*
-get_asset_slot(assets_t* assets, u32_t asset_index){
+assets_get_asset_slot(assets_t* assets, u32_t asset_index){
   return assets->asset_slots + asset_index;
 }
 
 static asset_bitmap_t*
-get_bitmap(assets_t* assets, asset_bitmap_id_t bitmap_id) {
-  asset_slot_t* asset = get_asset_slot(assets, bitmap_id.value);
+assets_get_bitmap(assets_t* assets, asset_bitmap_id_t bitmap_id) {
+  asset_slot_t* asset = assets_get_asset_slot(assets, bitmap_id.value);
   if(asset->type != ASSET_TYPE_BITMAP) return nullptr;
   return &asset->bitmap;
 }
 
 static asset_sprite_t*
-get_sprite(assets_t* assets, asset_sprite_id_t sprite_id) {
-  asset_slot_t* asset = get_asset_slot(assets, sprite_id.value);
+assets_get_sprite(assets_t* assets, asset_sprite_id_t sprite_id) {
+  asset_slot_t* asset = assets_get_asset_slot(assets, sprite_id.value);
   if(asset->type != ASSET_TYPE_SPRITE) return nullptr;
   return &asset->sprite;
 }
 
 static asset_font_t*
-get_font(assets_t* assets, asset_font_id_t font_id) {
-  asset_slot_t* asset = get_asset_slot(assets, font_id.value);
+assets_get_font(assets_t* assets, asset_font_id_t font_id) {
+  asset_slot_t* asset = assets_get_asset_slot(assets, font_id.value);
   if(asset->type != ASSET_TYPE_FONT) return nullptr;
   return &asset->font;
 }
 static asset_bitmap_id_t
-find_first_bitmap(assets_t* assets, Asset_Group_Type group_type) {
-  return { find_first_asset_of_type(assets, group_type, ASSET_TYPE_BITMAP) };
+assets_find_first_bitmap(assets_t* assets, Asset_Group_Type group_type) {
+  return { assets_find_first_asset_of_type(assets, group_type, ASSET_TYPE_BITMAP) };
 }
 
 static asset_font_id_t
-find_first_font(assets_t* assets, Asset_Group_Type group_type) {
-  return { find_first_asset_of_type(assets, group_type, ASSET_TYPE_FONT) };
+assets_find_first_font(assets_t* assets, Asset_Group_Type group_type) {
+  return { assets_find_first_asset_of_type(assets, group_type, ASSET_TYPE_FONT) };
 }
 
 static asset_sprite_id_t
-find_first_sprite(assets_t* assets, Asset_Group_Type group_type) {
-  return { find_first_asset_of_type(assets, group_type, ASSET_TYPE_SPRITE) };
+assets_find_first_sprite(assets_t* assets, Asset_Group_Type group_type) {
+  return { assets_find_first_asset_of_type(assets, group_type, ASSET_TYPE_SPRITE) };
 }
 
 static asset_sprite_id_t
-find_best_sprite(assets_t* assets, 
+assets_find_best_sprite(assets_t* assets, 
     Asset_Group_Type group_type, 
     asset_match_t* match_vector)
 {
-  return { find_best_asset_of_type(assets, group_type, ASSET_TYPE_SPRITE, match_vector) };
+  return { assets_find_best_asset_of_type(assets, group_type, ASSET_TYPE_SPRITE, match_vector) };
 
 }
 
 static asset_font_id_t
-find_best_font(assets_t* assets, 
+assets_find_best_font(assets_t* assets, 
     Asset_Group_Type group_type, 
     asset_match_t* match_vector)
 {
-  return { find_best_asset_of_type(assets, group_type, ASSET_TYPE_FONT, match_vector) };
+  return { assets_find_best_asset_of_type(assets, group_type, ASSET_TYPE_FONT, match_vector) };
 
 }
 
