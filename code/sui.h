@@ -7,9 +7,9 @@
 #define assert_callback(s) printf("[sui][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
 
 #include "momo.h"
+#include "momo_asset_file.h"
 
 #define sui_code_dir(filename) "../code/" filename
-#define sui_asset_dir(filename) "../assets/" filename
 
 static u32_t sui_log_paces = 0;
 #define sui_log(...) { \
@@ -73,7 +73,6 @@ sui_read_wav_from_file(wav_t* wav, const char* filename, arena_t* allocator) {
   return wav_read(wav, file_contents);
 }
 
-#include "karu.h"
 #include "sui_atlas.h"
 #include "sui_pack.h"
 

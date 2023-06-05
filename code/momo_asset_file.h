@@ -1,5 +1,5 @@
-#ifndef KARU_H
-#define KARU_H
+#ifndef ASSET_FILE_H
+#define ASSET_FILE_H
 
 
 //#include "moe_asset_types.h"
@@ -10,12 +10,12 @@ enum asset_type_t  {
   ASSET_TYPE_BITMAP,
 };
 
-// karu.h
-#define KARU_CODE(a, b, c, d) (((u32_t)(a) << 0) | ((u32_t)(b) << 8) | ((u32_t)(c) << 16) | ((u32_t)(d) << 24))
-#define KARU_SIGNATURE KARU_CODE('k', 'a', 'r', 'u')
+// asset_file.h
+#define ASSET_FILE_CODE(a, b, c, d) (((u32_t)(a) << 0) | ((u32_t)(b) << 8) | ((u32_t)(c) << 16) | ((u32_t)(d) << 24))
+#define ASSET_FILE_SIGNATURE ASSET_FILE_CODE('m', 'o', 'm', 'o')
 
 
-struct karu_header_t {
+struct asset_file_header_t {
   u32_t signature;
 
   u32_t group_count;
@@ -28,7 +28,7 @@ struct karu_header_t {
 };
 
 
-struct karu_bitmap_t {
+struct asset_file_bitmap_t {
   u32_t width;
   u32_t height;
   
@@ -37,7 +37,7 @@ struct karu_bitmap_t {
   // u32_t pixels[width*height]
 };
 
-struct karu_font_glyph_t {
+struct asset_file_font_glyph_t {
   u32_t bitmap_asset_id; 
   
   u32_t texel_x0;
@@ -55,7 +55,7 @@ struct karu_font_glyph_t {
   f32_t vertical_advance;
 };
 
-struct karu_font_t {
+struct asset_file_font_t {
   u32_t offset_to_data;
   
   // TODO: Maybe add 'lowest codepoint'?
@@ -65,13 +65,13 @@ struct karu_font_t {
   
   // Data is: 
   // 
-  // karu_font_glyph_t glyphs[glyph_count]
+  // asset_file_font_glyph_t glyphs[glyph_count]
   // f32_t kerning[glyph_count][glyph_count]
   //
 
 };
 
-struct karu_sprite_t {
+struct asset_file_sprite_t {
   u32_t bitmap_asset_id; 
   u32_t texel_x0;
   u32_t texel_y0;
@@ -80,7 +80,7 @@ struct karu_sprite_t {
 
 };
 
-struct karu_asset_t {
+struct asset_file_asset_t {
   asset_type_t type; 
 
   u32_t offset_to_data;
@@ -90,18 +90,18 @@ struct karu_asset_t {
   u32_t one_past_last_tag_index;
 
   union {
-    karu_bitmap_t bitmap;
-    karu_font_t font;
-    karu_sprite_t sprite;
+    asset_file_bitmap_t bitmap;
+    asset_file_font_t font;
+    asset_file_sprite_t sprite;
   };
 };
 
-struct karu_group_t {
+struct asset_file_group_t {
   u32_t first_asset_index;
   u32_t one_past_last_asset_index;
 };
 
-struct karu_tag_t {
+struct asset_file_tag_t {
   u32_t type; 
   f32_t value;
 };

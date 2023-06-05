@@ -36,19 +36,19 @@ struct sui_packer_source_t {
 struct sui_packer_t {
   u32_t tag_cap;
   u32_t tag_count;
-  karu_tag_t* tags; // to be written to file
+  asset_file_tag_t* tags; // to be written to file
  
   u32_t asset_cap;
   u32_t asset_count;
   sui_packer_source_t* sources; // additional data for assets
-  karu_asset_t* assets; // to be written to file
+  asset_file_asset_t* assets; // to be written to file
   
   u32_t group_count;
-  karu_group_t* groups; //to be written to file
+  asset_file_group_t* groups; //to be written to file
                         
   
   // Required context for API
-  karu_group_t* active_group;
+  asset_file_group_t* active_group;
   u32_t active_asset_index;
 };
 
@@ -63,14 +63,14 @@ sui_pack_begin(
   p->asset_count = 1; // reserve for nullptr asset
   p->asset_cap = max_assets + 1;
   p->sources = arena_push_arr(sui_packer_source_t, arena, p->asset_cap);
-  p->assets = arena_push_arr(karu_asset_t, arena, p->asset_cap);
+  p->assets = arena_push_arr(asset_file_asset_t, arena, p->asset_cap);
 
   p->tag_count = 1;   // reserve for nullptr tag
   p->tag_cap = max_tags + 1;
-  p->tags = arena_push_arr(karu_tag_t, arena, p->tag_cap);
+  p->tags = arena_push_arr(asset_file_tag_t, arena, p->tag_cap);
  
   p->group_count = group_count;
-  p->groups = arena_push_arr(karu_group_t, arena, group_count);
+  p->groups = arena_push_arr(asset_file_group_t, arena, group_count);
 }
 
 static void
@@ -78,10 +78,10 @@ sui_pack_push_tag(sui_packer_t* p, u32_t tag_type, f32_t value) {
   assert(p->tag_count < p->tag_cap);
   u32_t tag_index = p->tag_count++;
   
-  karu_asset_t* asset = p->assets + p->active_asset_index;
+  asset_file_asset_t* asset = p->assets + p->active_asset_index;
   asset->one_past_last_tag_index = p->tag_count;
   
-  karu_tag_t* tag = p->tags + tag_index;
+  asset_file_tag_t* tag = p->tags + tag_index;
   tag->type = tag_type;
   tag->value = value;
 }
@@ -110,7 +110,7 @@ sui_pack_push_sprite(sui_packer_t* p, sui_atlas_sprite_t* sprite, u32_t bitmap_a
   ++p->active_group->one_past_last_asset_index;
   p->active_asset_index = asset_index;
 
-  karu_asset_t* asset = p->assets + asset_index;
+  asset_file_asset_t* asset = p->assets + asset_index;
   asset->first_tag_index = p->tag_count;
   asset->one_past_last_tag_index = asset->first_tag_index;
 
@@ -123,7 +123,7 @@ sui_pack_push_sprite(sui_packer_t* p, sui_atlas_sprite_t* sprite, u32_t bitmap_a
   source->sprite.texel_x1 = sprite->rect->x + sprite->rect->w;
   source->sprite.texel_y1 = sprite->rect->y + sprite->rect->h;
 
-  //karu_sprite_t* sprite = &asset->sprite;
+  //asset_file_sprite_t* sprite = &asset->sprite;
   
 }
 
@@ -137,7 +137,7 @@ sui_pack_push_bitmap(sui_packer_t* p, sui_atlas_t* atlas) {
   ++p->active_group->one_past_last_asset_index;
   p->active_asset_index = asset_index;
 
-  karu_asset_t* asset = p->assets + asset_index;
+  asset_file_asset_t* asset = p->assets + asset_index;
   asset->first_tag_index = p->tag_count;
   asset->one_past_last_tag_index = asset->first_tag_index;
 
@@ -161,7 +161,7 @@ sui_pack_push_font(sui_packer_t* p, sui_atlas_font_t* font, u32_t bitmap_asset_i
   ++p->active_group->one_past_last_asset_index;
   p->active_asset_index = asset_index;
 
-  karu_asset_t* asset = p->assets + asset_index;
+  asset_file_asset_t* asset = p->assets + asset_index;
   asset->first_tag_index = p->tag_count;
   asset->one_past_last_tag_index = asset->first_tag_index;
 
@@ -180,16 +180,16 @@ sui_pack_end(sui_packer_t* p, const char* filename, arena_t* arena)
   FILE* file = fopen(filename, "wb");
   defer { fclose (file); };
  
-  u32_t asset_tag_array_size = sizeof(karu_tag_t)*p->tag_count;
-  u32_t asset_array_size = sizeof(karu_asset_t)*p->asset_count;
-  u32_t group_array_size = sizeof(karu_group_t)*p->group_count; //ASSET_GROUP_TYPE_COUNT;
+  u32_t asset_tag_array_size = sizeof(asset_file_tag_t)*p->tag_count;
+  u32_t asset_array_size = sizeof(asset_file_asset_t)*p->asset_count;
+  u32_t group_array_size = sizeof(asset_file_group_t)*p->group_count; //ASSET_GROUP_TYPE_COUNT;
 
-  karu_header_t header = {0};
-  header.signature = KARU_SIGNATURE;
+  asset_file_header_t header = {0};
+  header.signature = ASSET_FILE_SIGNATURE;
   header.group_count = p->group_count;
   header.asset_count = p->asset_count;
   header.tag_count = p->tag_count;
-  header.offset_to_assets = sizeof(karu_header_t);
+  header.offset_to_assets = sizeof(asset_file_header_t);
   header.offset_to_tags = header.offset_to_assets + asset_array_size;
   header.offset_to_groups = header.offset_to_tags + asset_tag_array_size;
   fwrite(&header, sizeof(header), 1, file);
@@ -198,7 +198,7 @@ sui_pack_end(sui_packer_t* p, const char* filename, arena_t* arena)
 
   fseek(file, offset_to_asset_data, SEEK_CUR);
   for (u32_t asset_index = 1; asset_index < header.asset_count; ++asset_index) {
-    karu_asset_t* asset = p->assets + asset_index;
+    asset_file_asset_t* asset = p->assets + asset_index;
     sui_packer_source_t* source = p->sources + asset_index;
 
     // Write all 'extra' data of the assets
@@ -208,7 +208,7 @@ sui_pack_end(sui_packer_t* p, const char* filename, arena_t* arena)
         sui_log("Writing bitmap\n");
         asset->type = ASSET_TYPE_BITMAP;
 
-        karu_bitmap_t* bitmap = &asset->bitmap;
+        asset_file_bitmap_t* bitmap = &asset->bitmap;
         bitmap->width = source->bitmap.width;
         bitmap->height = source->bitmap.height;
         
@@ -221,7 +221,7 @@ sui_pack_end(sui_packer_t* p, const char* filename, arena_t* arena)
 
         asset->type = ASSET_TYPE_SPRITE;
 
-        karu_sprite_t* sprite = &asset->sprite;
+        asset_file_sprite_t* sprite = &asset->sprite;
         sprite->bitmap_asset_id = source->sprite.bitmap_asset_id;
         sprite->texel_x0 = source->sprite.texel_x0;
         sprite->texel_y0 = source->sprite.texel_y0;
@@ -253,7 +253,7 @@ sui_pack_end(sui_packer_t* p, const char* filename, arena_t* arena)
         if (highest_codepoint == 0) 
           continue;
 
-        karu_font_t* font = &asset->font;
+        asset_file_font_t* font = &asset->font;
         font->highest_codepoint = highest_codepoint;
         font->glyph_count = atlas_font->codepoint_count;
         font->bitmap_asset_id = source->font.bitmap_asset_id;
@@ -270,7 +270,7 @@ sui_pack_end(sui_packer_t* p, const char* filename, arena_t* arena)
           auto* glyph_rect = atlas_font->glyph_rects + rect_index;
           auto* glyph_rect_context = atlas_font->glyph_rect_contexts + rect_index;
           
-          karu_font_glyph_t glyph = {0};
+          asset_file_font_glyph_t glyph = {0};
           glyph.bitmap_asset_id = source->font.bitmap_asset_id;
           glyph.codepoint = glyph_rect_context->font_glyph.codepoint;
 

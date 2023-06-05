@@ -14,7 +14,6 @@
 #include "momo_rng.h"
 #include "momo_sort.h"
 
-#include "karu.h"
 
 #include "momo_game.h"
 #include "momo_gfx.h"
@@ -22,6 +21,7 @@
 #include "momo_profiler.h"
 #include "momo_game_console.h"
 
+#include "momo_asset_file.h"
 #include "momo_assets.h"
 #include "momo_asset_rendering.h"
 

@@ -132,22 +132,22 @@ assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena)
   }
 
   // Read header
-  karu_header_t karu_header;
-  pf.read_file(file, sizeof(karu_header_t), 0, &karu_header);
-  if (karu_header.signature != KARU_SIGNATURE) return false;
+  asset_file_header_t asset_file_header;
+  pf.read_file(file, sizeof(asset_file_header_t), 0, &asset_file_header);
+  if (asset_file_header.signature != ASSET_FILE_SIGNATURE) return false;
 
   // Allocation for asset components (asset slots and tags)
-  assets->asset_slots = arena_push_arr(asset_slot_t, arena, karu_header.asset_count);
+  assets->asset_slots = arena_push_arr(asset_slot_t, arena, asset_file_header.asset_count);
   if (!assets->asset_slots) return false;
-  assets->asset_count = karu_header.asset_count;
+  assets->asset_count = asset_file_header.asset_count;
 
-  assets->tags = arena_push_arr(asset_tag_t, arena, karu_header.tag_count);
+  assets->tags = arena_push_arr(asset_tag_t, arena, asset_file_header.tag_count);
   if (!assets->tags) return false;
-  assets->tag_count = karu_header.tag_count;
+  assets->tag_count = asset_file_header.tag_count;
 
-  assets->groups = arena_push_arr(asset_group_t, arena, karu_header.group_count);
+  assets->groups = arena_push_arr(asset_group_t, arena, asset_file_header.group_count);
   if (!assets->groups) return false;
-  assets->group_count = karu_header.group_count;
+  assets->group_count = asset_file_header.group_count;
 
   // Fill data for tags
   for (u32_t tag_index = 0;
@@ -155,34 +155,34 @@ assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena)
       ++tag_index) 
   {
     asset_tag_t* tag = assets->tags + tag_index;
-    umi_t offset_to_tag = karu_header.offset_to_tags + sizeof(karu_tag_t)*tag_index;
+    umi_t offset_to_tag = asset_file_header.offset_to_tags + sizeof(asset_file_tag_t)*tag_index;
 
-    karu_tag_t karu_tag;
-    pf.read_file(file, sizeof(karu_tag_t), offset_to_tag, &karu_tag);
+    asset_file_tag_t asset_file_tag;
+    pf.read_file(file, sizeof(asset_file_tag_t), offset_to_tag, &asset_file_tag);
 
-    tag->type = karu_tag.type;
-    tag->value = karu_tag.value;
+    tag->type = asset_file_tag.type;
+    tag->value = asset_file_tag.value;
   }
 
   // Fill data for asset groups and individual asset_slots
   for(u32_t group_index = 0; 
-      group_index < karu_header.group_count;
+      group_index < asset_file_header.group_count;
       ++group_index) 
   {
     asset_group_t* group = assets->groups + group_index;
     {
       // Look for corresponding Sui_Asset_Group in file
-      karu_group_t karu_group;
-      umi_t offset_to_karu_group = 
-        karu_header.offset_to_groups + sizeof(karu_group_t)*group_index;
+      asset_file_group_t asset_file_group;
+      umi_t offset_to_asset_file_group = 
+        asset_file_header.offset_to_groups + sizeof(asset_file_group_t)*group_index;
 
       pf.read_file(file, 
-          sizeof(karu_group_t), 
-          offset_to_karu_group, 
-          &karu_group);
+          sizeof(asset_file_group_t), 
+          offset_to_asset_file_group, 
+          &asset_file_group);
 
-      group->first_asset_index = karu_group.first_asset_index;
-      group->one_past_last_asset_index = karu_group.one_past_last_asset_index;
+      group->first_asset_index = asset_file_group.first_asset_index;
+      group->one_past_last_asset_index = asset_file_group.one_past_last_asset_index;
     }
 
 
@@ -194,53 +194,53 @@ assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena)
     {
       asset_slot_t* asset = assets->asset_slots + asset_index;
 
-      karu_asset_t karu_asset;
-      umi_t offset_to_karu_asset = 
-        karu_header.offset_to_assets + sizeof(karu_asset_t)*asset_index;
+      asset_file_asset_t asset_file_asset;
+      umi_t offset_to_asset_file_asset = 
+        asset_file_header.offset_to_assets + sizeof(asset_file_asset_t)*asset_index;
 
-      pf.read_file(file, sizeof(karu_asset_t), 
-          offset_to_karu_asset, 
-          &karu_asset);
+      pf.read_file(file, sizeof(asset_file_asset_t), 
+          offset_to_asset_file_asset, 
+          &asset_file_asset);
 
       // Process the asset_slots
-      asset->type = (asset_type_t)karu_asset.type;
-      asset->first_tag_index = karu_asset.first_tag_index;
-      asset->one_past_last_tag_index = karu_asset.one_past_last_tag_index;
-      asset->offset_to_data = karu_asset.offset_to_data;
+      asset->type = (asset_type_t)asset_file_asset.type;
+      asset->first_tag_index = asset_file_asset.first_tag_index;
+      asset->one_past_last_tag_index = asset_file_asset.one_past_last_tag_index;
+      asset->offset_to_data = asset_file_asset.offset_to_data;
 
       switch(asset->type) {
         case ASSET_TYPE_BITMAP: {
           asset->bitmap.renderer_texture_handle = get_next_texture_handle();
-          asset->bitmap.width = karu_asset.bitmap.width;
-          asset->bitmap.height = karu_asset.bitmap.height;
+          asset->bitmap.width = asset_file_asset.bitmap.width;
+          asset->bitmap.height = asset_file_asset.bitmap.height;
 
           u32_t bitmap_size = asset->bitmap.width * asset->bitmap.height * 4;
           gfx_texture_payload_t* payload = gfx_begin_texture_transfer(gfx, bitmap_size);
           if (!payload) false;
           payload->texture_index = asset->bitmap.renderer_texture_handle;
-          payload->texture_width = karu_asset.bitmap.width;
-          payload->texture_height = karu_asset.bitmap.height;
+          payload->texture_width = asset_file_asset.bitmap.width;
+          payload->texture_height = asset_file_asset.bitmap.height;
           pf.read_file(file, 
               bitmap_size, 
-              karu_asset.offset_to_data, 
+              asset_file_asset.offset_to_data, 
               payload->texture_data);
           gfx_complete_texture_transfer(payload);
           asset->state = ASSET_STATE_LOADED;
 
         } break;
         case ASSET_TYPE_SPRITE: {
-          asset->sprite.bitmap_asset_id.value = karu_asset.sprite.bitmap_asset_id;
+          asset->sprite.bitmap_asset_id.value = asset_file_asset.sprite.bitmap_asset_id;
 
-          asset->sprite.texel_x0 = karu_asset.sprite.texel_x0;
-          asset->sprite.texel_y0 = karu_asset.sprite.texel_y0;
-          asset->sprite.texel_x1 = karu_asset.sprite.texel_x1;
-          asset->sprite.texel_y1 = karu_asset.sprite.texel_y1;
+          asset->sprite.texel_x0 = asset_file_asset.sprite.texel_x0;
+          asset->sprite.texel_y0 = asset_file_asset.sprite.texel_y0;
+          asset->sprite.texel_x1 = asset_file_asset.sprite.texel_x1;
+          asset->sprite.texel_y1 = asset_file_asset.sprite.texel_y1;
 
           asset->state = ASSET_STATE_LOADED;
         } break;
         case ASSET_TYPE_FONT: {
-          u32_t glyph_count = karu_asset.font.glyph_count;
-          u32_t highest_codepoint = karu_asset.font.highest_codepoint;
+          u32_t glyph_count = asset_file_asset.font.glyph_count;
+          u32_t highest_codepoint = asset_file_asset.font.highest_codepoint;
 
           u16_t* codepoint_map = arena_push_arr(u16_t, arena, highest_codepoint);
           if(!codepoint_map) return false;
@@ -249,44 +249,44 @@ assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena)
           f32_t* kernings = arena_push_arr(f32_t, arena, glyph_count*glyph_count);
           if (!kernings) return false;
 
-          u32_t current_data_offset = karu_asset.offset_to_data;
+          u32_t current_data_offset = asset_file_asset.offset_to_data;
           for(u16_t glyph_index = 0; 
               glyph_index < glyph_count;
               ++glyph_index)
           {
             umi_t glyph_data_offset = 
-              karu_asset.offset_to_data + 
-              sizeof(karu_font_glyph_t)*glyph_index;
+              asset_file_asset.offset_to_data + 
+              sizeof(asset_file_font_glyph_t)*glyph_index;
 
-            karu_font_glyph_t karu_glyph = {};
+            asset_file_font_glyph_t asset_file_glyph = {};
             pf.read_file(file, 
-                sizeof(karu_font_glyph_t), 
+                sizeof(asset_file_font_glyph_t), 
                 glyph_data_offset,
-                &karu_glyph); 
+                &asset_file_glyph); 
 
             asset_font_glyph_t* glyph = glyphs + glyph_index;
-            glyph->texel_x0 = karu_glyph.texel_x0;
-            glyph->texel_y0 = karu_glyph.texel_y0;
-            glyph->texel_x1 = karu_glyph.texel_x1;
-            glyph->texel_y1 = karu_glyph.texel_y1;
+            glyph->texel_x0 = asset_file_glyph.texel_x0;
+            glyph->texel_y0 = asset_file_glyph.texel_y0;
+            glyph->texel_x1 = asset_file_glyph.texel_x1;
+            glyph->texel_y1 = asset_file_glyph.texel_y1;
 
-            glyph->bitmap_asset_id = asset_bitmap_id_t{ karu_glyph.bitmap_asset_id };
+            glyph->bitmap_asset_id = asset_bitmap_id_t{ asset_file_glyph.bitmap_asset_id };
 
-            glyph->box_x0 = karu_glyph.box_x0;
-            glyph->box_y0 = karu_glyph.box_y0;
-            glyph->box_x1 = karu_glyph.box_x1;
-            glyph->box_y1 = karu_glyph.box_y1;
+            glyph->box_x0 = asset_file_glyph.box_x0;
+            glyph->box_y0 = asset_file_glyph.box_y0;
+            glyph->box_x1 = asset_file_glyph.box_x1;
+            glyph->box_y1 = asset_file_glyph.box_y1;
 
-            glyph->horizontal_advance = karu_glyph.horizontal_advance;
-            glyph->vertical_advance = karu_glyph.vertical_advance;
-            codepoint_map[karu_glyph.codepoint] = glyph_index;
+            glyph->horizontal_advance = asset_file_glyph.horizontal_advance;
+            glyph->vertical_advance = asset_file_glyph.vertical_advance;
+            codepoint_map[asset_file_glyph.codepoint] = glyph_index;
           }
 
           // Horizontal advances
           {
             umi_t kernings_data_offset = 
-              karu_asset.offset_to_data + 
-              sizeof(karu_font_glyph_t)*glyph_count;
+              asset_file_asset.offset_to_data + 
+              sizeof(asset_file_font_glyph_t)*glyph_count;
 
             pf.read_file(file, 
                 sizeof(f32_t)*glyph_count*glyph_count, 

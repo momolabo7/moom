@@ -4,8 +4,10 @@
 #include "sui.h"
 #include "lit_asset_types.h"
 
+#define lit_res_dir(filename) "../res/lit/" filename
+
 int main() {
-  umi_t memory_size = megabytes(100);
+  usz_t memory_size = megabytes(100);
 
   void* memory = malloc(memory_size);
   defer { free(memory); };
@@ -17,21 +19,21 @@ int main() {
 
   sui_atlas_begin(atlas, 1024, 1024);
   sui_atlas_sprite_t* blank_sprite = 
-    sui_atlas_push_sprite(atlas, sui_asset_dir("blank.png"));
+    sui_atlas_push_sprite(atlas, lit_res_dir("blank.png"));
 
   sui_atlas_sprite_t* circle_sprite = 
-    sui_atlas_push_sprite(atlas, sui_asset_dir("circle.png"));
+    sui_atlas_push_sprite(atlas, lit_res_dir("circle.png"));
 
   sui_atlas_sprite_t* filled_circle_sprite =
-    sui_atlas_push_sprite(atlas, sui_asset_dir("filled_circle.png"));
+    sui_atlas_push_sprite(atlas, lit_res_dir("filled_circle.png"));
     
   sui_atlas_sprite_t* move_sprite =
-    sui_atlas_push_sprite(atlas, sui_asset_dir("move.png"));
+    sui_atlas_push_sprite(atlas, lit_res_dir("move.png"));
 
   sui_atlas_sprite_t* rotate_sprite =
-    sui_atlas_push_sprite(atlas, sui_asset_dir("rotate.png"));
+    sui_atlas_push_sprite(atlas, lit_res_dir("rotate.png"));
 
-  sui_atlas_begin_font(atlas, sui_asset_dir("nokiafc22.ttf"), 72.f);
+  sui_atlas_begin_font(atlas, lit_res_dir("nokiafc22.ttf"), 72.f);
 #if 1 
   for (u32_t i = 32; i <= 126; ++i) {
     sui_atlas_push_font_codepoint(atlas, i);
@@ -41,7 +43,7 @@ int main() {
 #endif
   auto* font_a = sui_atlas_end_font(atlas);
 
-  sui_atlas_begin_font(atlas, sui_asset_dir("liberation-mono.ttf"), 72.f);
+  sui_atlas_begin_font(atlas, lit_res_dir("liberation-mono.ttf"), 72.f);
   for (u32_t i = 32; i <= 126; ++i){
     sui_atlas_push_font_codepoint(atlas, i);
   }
@@ -70,7 +72,7 @@ int main() {
   
   sui_pack_begin_group(packer, ASSET_GROUP_TYPE_BLANK_SPRITE);
   //u32_t atlas_id = sui_pack_push_atlas(...)
-  //sui_pack_push_atlas_sprite(packer, atlas_id, sui_asset_dir("blank.png"));
+  //sui_pack_push_atlas_sprite(packer, atlas_id, lit_res_dir("blank.png"));
   sui_pack_push_sprite(packer, blank_sprite, bitmap_id);
   sui_pack_end_group(packer);
 
