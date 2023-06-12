@@ -29,9 +29,7 @@ lit_game_update()
 
   
   f32_t dt = input->delta_time;
-  if (g->freeze) {
-    dt = 0;
-  }
+  
 
   //
   // Transition Logic
@@ -95,7 +93,10 @@ lit_game_update()
   if (g->state == LIT_GAME_STATE_TYPE_NORMAL) 
   {
     lit_profile_begin(animate);
-    lit_game_animate_everything(g, dt);
+
+    if (!g->freeze) {
+      lit_game_animate_everything(g, dt);
+    }
     lit_profile_end(animate);
 
     lit_game_update_player(g, dt);
@@ -137,7 +138,7 @@ lit_game_update()
 
   lit_profile_begin(rendering);
 
-#if 0
+#if LIT_DEBUG_LINES
   lit_draw_edges(g); 
   lit_draw_light_rays(g);
 #endif // LIT_DEBUG_LINES
@@ -211,8 +212,8 @@ lit_game_init()
     case 1: lit_level_move(g); break;
     case 2: lit_level_obstruct(g); break;
     case 3: lit_level_add(g); break;
-    //default: lit_level_menu(g);
-    default: lit_level_test(g);
+    default: lit_level_menu(g);
+    //default: lit_level_test(g);
   }
   
 }

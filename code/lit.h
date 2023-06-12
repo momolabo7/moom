@@ -25,8 +25,6 @@
 #include "momo_assets.h"
 #include "momo_asset_rendering.h"
 
-
-
 #define LIT_SAVE_FILE_ENABLE false
 #define LIT_SAVE_FILE "hello.sav"
 
@@ -51,9 +49,9 @@
 #define LIT_PLAYER_PICKUP_DIST 512.f
 #define LIT_PLAYER_ROTATE_SPEED 1.f
 
-#define LIT_SKIP_TRANSITIONS true
+#define LIT_SKIP_TRANSITIONS false
 #define LIT_LAST_TUTORIAL_LEVEL_ID 3
-#define LIT_DEBUG_LINES 1
+#define LIT_DEBUG_LINES false
 
 
 #ifdef INTERNAL

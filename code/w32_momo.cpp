@@ -805,14 +805,35 @@ WinMain(HINSTANCE instance,
   }
   defer { w32_free_all_memory(); };
   
+
+  //
+  // Load game Functions
+  //
+  game_functions_t game_functions = {};
+  w32_loaded_code_t game_code = {};
+  game_code.function_count = array_count(game_function_names);
+  game_code.function_names = game_function_names;
+  game_code.module_path = "game.dll";
+  game_code.functions = (void**)&game_functions;
+#if INTERNAL
+  game_code.tmp_path = "tmp_game.dll";
+#endif // INTERNAL
+
+  w32_load_code(&game_code);
+  if (!game_code.is_valid) return 1;
+  defer { w32_unload_code(&game_code); };
   
   
+  game_platform_config_t config = game_functions.get_platform_config();
+
+  //
   //- Create window in the middle of the screen
+  //
   HWND window;
   {
     const int window_w = (int)800;
     const int window_h = (int)800;
-    const char* title = "Momodevelop: TXT";
+    const char* title = config.window_title;
     const char* icon_path = "window.ico";
     const int icon_w = 256;
     const int icon_h = 256;
@@ -901,23 +922,6 @@ WinMain(HINSTANCE instance,
   
   
 
-  // Load game Functions
-  game_functions_t game_functions = {};
-  w32_loaded_code_t game_code = {};
-  game_code.function_count = array_count(game_function_names);
-  game_code.function_names = game_function_names;
-  game_code.module_path = "game.dll";
-  game_code.functions = (void**)&game_functions;
-#if INTERNAL
-  game_code.tmp_path = "tmp_game.dll";
-#endif // INTERNAL
-
-  w32_load_code(&game_code);
-  if (!game_code.is_valid) return 1;
-  defer { w32_unload_code(&game_code); };
-  
-  
-  game_platform_config_t config = game_functions.get_platform_config();
   //
   // Gfx
   // 

@@ -30,7 +30,7 @@
 #ifndef MOMO_GFX_H
 #define MOMO_GFX_H
 
-#define GFX_MAX_TEXTURES 256
+#define GFX_TEXTURE_PAYLOAD_CAP 256
 
 //-Texture Queue API
 enum gfx_texture_payload_state_t {
@@ -57,7 +57,7 @@ struct gfx_texture_queue_t {
   usz_t transfer_memory_start;
   usz_t transfer_memory_end;
   
-  gfx_texture_payload_t payloads[GFX_MAX_TEXTURES];
+  gfx_texture_payload_t payloads[GFX_TEXTURE_PAYLOAD_CAP];
   usz_t first_payload_index;
   usz_t payload_count;
   
@@ -66,10 +66,10 @@ struct gfx_texture_queue_t {
 ////////////////////////////////////////////////
 // Command API
 
-typedef struct gfx_command_t {
+struct gfx_command_t {
   u32_t id; // type id from user
   void* data;
-} gfx_command_t;
+};
 
 struct gfx_command_queue_t {
 	u8_t* memory;
@@ -107,9 +107,9 @@ enum gfx_command_type_t {
 };
 
 
-typedef struct gfx_command_clear_t {
+struct gfx_command_clear_t {
   rgba_t colors;
-}gfx_command_clear_t;
+};
 
 
 typedef struct gfx_command_view_t {
@@ -118,7 +118,7 @@ typedef struct gfx_command_view_t {
   f32_t min_y, max_y;
 } gfx_command_view_t;
 
-typedef struct gfx_command_sprite_t {
+struct gfx_command_sprite_t {
   v2f_t pos;
   v2f_t size;
 
@@ -129,46 +129,42 @@ typedef struct gfx_command_sprite_t {
   rgba_t colors;
   u32_t texture_index;
   v2f_t anchor;
-} gfx_command_sprite_t;
+};
 
-typedef struct gfx_command_delete_texture_t {
+struct gfx_command_delete_texture_t {
   u32_t texture_index;
-} gfx_command_delete_texture_t;
+};
 
-typedef struct gfx_command_delete_all_textures_t {
-} gfx_command_delete_all_textures_t;
+struct gfx_command_delete_all_textures_t {};
 
-typedef struct gfx_command_advance_depth_t {
-} gfx_command_advance_depth_t;
+struct gfx_command_advance_depth_t {
+};
 
-typedef struct gfx_command_rect_t {
+struct gfx_command_rect_t {
   rgba_t colors;
   v2f_t pos;
   f32_t rot;
   v2f_t size;
-} gfx_command_rect_t;
+};
 
-typedef struct gfx_command_triangle_t {
+struct gfx_command_triangle_t {
   rgba_t colors;
   v2f_t p0, p1, p2;
-} gfx_command_triangle_t;
+};
 
-typedef struct gfx_command_blend_t {
+struct gfx_command_blend_t {
   gfx_blend_type_t src;
   gfx_blend_type_t dst;
-} gfx_command_blend_t;
+};
 
 
-//- Renderer API
-typedef struct gfx_t {
+struct gfx_t {
   gfx_command_queue_t command_queue;
   gfx_texture_queue_t texture_queue;
-} gfx_t;
+};
 
 
-static void gfx_init_command_queue(gfx_t* g, void* data, usz_t size);
-static void gfx_init_texture_queue(gfx_t* g, void* data, usz_t size);
-
+static void gfx_init(gfx_t* g, void* texture_queue_data, usz_t texture_queue_size, void* command_queue_data, usz_t command_queue_size);
 static void gfx_clear_commands(gfx_t* g);
 static gfx_command_t* gfx_get_command(gfx_t* g, u32_t index);
 static gfx_texture_payload_t* gfx_begin_texture_transfer(gfx_t* g, u32_t required_space);
@@ -195,8 +191,10 @@ static void gfx_set_blend_alpha(gfx_t* g);
 #define gfx_foreach_command(g,i) \
   for(u32_t (i) = 0; (i) < (g)->command_queue.entry_count; ++(i))
  
-//////////////////////////////////////////////////////
+//
 // IMPLEMENTATION
+//
+
 static void
 gfx_clear_commands(gfx_t* g) {
   gfx_command_queue_t* q = &g->command_queue;
@@ -210,11 +208,30 @@ gfx_clear_commands(gfx_t* g) {
 }
 
 static void 
-gfx_init_command_queue(gfx_t* g, void* data, usz_t size) {
-  gfx_command_queue_t* q = &g->command_queue;
-  q->memory = (u8_t*)data;
-  q->memory_size = size;
-  gfx_clear_commands(g);
+gfx_init(
+    gfx_t* g, 
+    void* texture_queue_data, 
+    usz_t texture_queue_size, 
+    void* command_queue_data, 
+    usz_t command_queue_size)
+{
+
+  {
+    gfx_command_queue_t* q = &g->command_queue;
+    q->memory = (u8_t*)command_queue_data;
+    q->memory_size = command_queue_size;
+    gfx_clear_commands(g);
+  }
+
+  {
+    gfx_texture_queue_t* q = &g->texture_queue;
+    q->transfer_memory = (u8_t*)texture_queue_data;
+    q->transfer_memory_size = texture_queue_size;
+    q->transfer_memory_start = 0;
+    q->transfer_memory_end = 0;
+    q->first_payload_index = 0;
+    q->payload_count = 0;
+  }
 }
 
 static gfx_command_t*
@@ -246,18 +263,6 @@ _gfx_push_command_block(gfx_command_queue_t* q, u32_t size, u32_t id, u32_t alig
 	++q->entry_count;
 	
 	return entry->data;
-}
-
-static void 
-gfx_init_texture_queue(gfx_t* g, void* data, usz_t size) {
-  gfx_texture_queue_t* q = &g->texture_queue;
-
-  q->transfer_memory = (u8_t*)data;
-  q->transfer_memory_size = size;
-  q->transfer_memory_start = 0;
-  q->transfer_memory_end = 0;
-  q->first_payload_index = 0;
-  q->payload_count = 0;
 }
 
 // TODO: maybe we should change this to a macro to support C users

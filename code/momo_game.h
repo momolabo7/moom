@@ -114,6 +114,9 @@ struct profiler_t;
 struct game_platform_config_t {
   usz_t texture_queue_size;
   usz_t render_command_size;
+
+  // must be null terminated
+  const char* window_title; // TODO: change to str8_t?
 };
 
 struct game_t {

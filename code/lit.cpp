@@ -9,7 +9,7 @@ lit_tick() {
 
     lit = (lit_t*)(game->context);
     lit->level_to_start = 0;
-    lit->next_mode = LIT_MODE_GAME;
+    lit->next_mode = LIT_MODE_SPLASH;
     
 
     //
@@ -123,6 +123,7 @@ game_get_platform_config(void)
   game_platform_config_t ret;
   ret.texture_queue_size = megabytes(100);
   ret.render_command_size = megabytes(100);
+  ret.window_title = "Darklight v1.0";
 
   return ret;
 }

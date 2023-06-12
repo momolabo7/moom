@@ -229,7 +229,7 @@ struct opengl_t {
   opengl_sprite_batch_t sprite_batch;
   opengl_triangle_batch_t triangle_batch;
 
-  opengl_texture_t textures[GFX_MAX_TEXTURES];
+  opengl_texture_t textures[GFX_TEXTURE_PAYLOAD_CAP];
 
   opengl_texture_t dummy_texture;
   opengl_texture_t blank_texture;
@@ -1007,14 +1007,14 @@ opengl_init_sprite_batch(opengl_t* ogl) {
 static b32_t
 opengl_init(opengl_t* ogl,
     void* command_queue_memory, 
-    umi_t command_queue_size, 
+    usz_t command_queue_size, 
     void* texture_queue_memory,
-    umi_t texture_queue_size)
+    usz_t texture_queue_size)
 {	
-  gfx_init_command_queue(&ogl->gfx, 
+
+  gfx_init(&ogl->gfx, 
       command_queue_memory, 
-      command_queue_size);
-  gfx_init_texture_queue(&ogl->gfx, 
+      command_queue_size,
       texture_queue_memory,
       texture_queue_size);
 
