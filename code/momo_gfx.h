@@ -30,6 +30,7 @@
 #ifndef MOMO_GFX_H
 #define MOMO_GFX_H
 
+#define GFX_MAX_TEXTURES 256
 #define GFX_TEXTURE_PAYLOAD_CAP 256
 
 //-Texture Queue API
