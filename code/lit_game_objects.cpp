@@ -653,11 +653,11 @@ lit_game_update_player(lit_game_t* g, f32_t dt)
   //
   // Move light logic
   //
-  if (is_poked(input->buttons[INPUT_BUTTON_CODE_LMB])) {
+  if (is_poked(input->buttons[GAME_BUTTON_CODE_LMB])) {
     lit_game_player_hold_nearest_light_if_empty_handed(g, LIT_PLAYER_LIGHT_HOLD_MODE_MOVE);
   }
 
-  else if (is_released(input->buttons[INPUT_BUTTON_CODE_LMB]))
+  else if (is_released(input->buttons[GAME_BUTTON_CODE_LMB]))
   {
     lit_game_player_release_light(g);
   }
@@ -665,14 +665,14 @@ lit_game_update_player(lit_game_t* g, f32_t dt)
   //
   // Rotate light logic
   //
-  if (is_poked(input->buttons[INPUT_BUTTON_CODE_RMB]))
+  if (is_poked(input->buttons[GAME_BUTTON_CODE_RMB]))
   {
     lit_game_player_hold_nearest_light_if_empty_handed(g, LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE);
     pf.lock_cursor();
     player->locked_pos_x = player->pos.x;
 
   }
-  else if (is_released(input->buttons[INPUT_BUTTON_CODE_RMB])) 
+  else if (is_released(input->buttons[GAME_BUTTON_CODE_RMB])) 
   {
     lit_game_player_release_light(g);
     pf.unlock_cursor();

@@ -19,7 +19,7 @@ lit_tick() {
     void* asset_memory = pf.allocate_memory(asset_memory_size);
     if (asset_memory == nullptr) return false;
     arena_init(&lit->asset_arena, asset_memory, asset_memory_size);
-    assets_init(&lit->assets, gfx, "test_pack.sui", &lit->asset_arena);
+    assets_init(&lit->assets, gfx, LIT_ASSET_FILE, &lit->asset_arena);
 
     //
     // Initialize important assets stuf
@@ -96,7 +96,7 @@ lit_tick() {
   }
 
   // Debug
-  if (is_poked(input->buttons[INPUT_BUTTON_CODE_F1])) {
+  if (is_poked(input->buttons[GAME_BUTTON_CODE_F1])) {
     lit->show_debug_type = 
       (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
   }
@@ -123,7 +123,7 @@ game_get_platform_config(void)
   game_platform_config_t ret;
   ret.texture_queue_size = megabytes(100);
   ret.render_command_size = megabytes(100);
-  ret.window_title = "Darklight v1.0";
+  ret.window_title = "PRISMIX v1.0";
 
   return ret;
 }
@@ -132,7 +132,7 @@ exported void
 game_update_and_render(
     game_t* in_game, 
     gfx_t* in_gfx, 
-    audio_buffer_t* in_audio, 
+    game_audio_buffer_t* in_audio, 
     profiler_t* in_profiler, 
     input_t* in_input)
 { 

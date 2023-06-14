@@ -21,7 +21,7 @@ lit_update_splash() {
   splash->scroll_in_timer -= input->delta_time;
 
 
-  if (is_poked(input->buttons[INPUT_BUTTON_CODE_LMB])) {
+  if (is_poked(input->buttons[GAME_BUTTON_CODE_LMB])) {
     if (splash->scroll_in_timer > 0.f)  {
       splash->scroll_in_timer = 0.f;
     }
@@ -45,7 +45,7 @@ lit_update_splash() {
       gfx, 
       &lit->assets, 
       splash->font, 
-      str8_from_lit("DARKLIGHT"), 
+      str8_from_lit("PRIMIX"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);

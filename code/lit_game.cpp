@@ -23,7 +23,7 @@ lit_game_update()
   lit_game_t* g = &lit->game;
   lit_game_player_t* player = &g->player;
 
-  if (is_poked(input->buttons[INPUT_BUTTON_CODE_SPACE])) {
+  if (is_poked(input->buttons[GAME_BUTTON_CODE_SPACE])) {
     g->freeze = !g->freeze;
   }
 

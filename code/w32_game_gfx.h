@@ -9,7 +9,8 @@
 static gfx_t*
 w32_gfx_load(HWND window, 
              usz_t command_queue_size, 
-             usz_t texture_queue_size);
+             usz_t texture_queue_size,
+             arena_t* arena);
 
 
 static void

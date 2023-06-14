@@ -103,7 +103,7 @@ int main() {
   }
   sui_pack_end_group(packer);
 
-  sui_pack_end(packer, "test_pack.sui", arena);
+  sui_pack_end(packer, LIT_ASSET_FILE, arena);
 }
 
 

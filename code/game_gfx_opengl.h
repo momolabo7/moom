@@ -195,6 +195,9 @@ struct opengl_texture_t {
   u32_t height;
 } ;
 
+struct opengl_uv_t {
+  v2f_t min, max;
+};
 
 struct opengl_sprite_batch_t{
   GLuint buffers[OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; // opengl_t__VBO_Count
@@ -281,21 +284,11 @@ struct opengl_t {
   void* platform_data;
 };
 
-static b32_t opengl_init(opengl_t* ogl, 
-    void* command_queue_memory, 
-    umi_t command_queue_size, 
-    void* texture_queue_memory,
-    umi_t texture_queue_size);
-static void opengl_begin_frame(opengl_t* ogl, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1);
-static void opengl_end_frame(opengl_t* ogl);
 
 //
 // IMPLEMENTATION
 // 
 
-struct opengl_uv_t {
-  v2f_t min, max;
-};
 
 static void 
 opengl_flush_sprites(opengl_t* ogl) {
@@ -1005,18 +998,20 @@ opengl_init_sprite_batch(opengl_t* ogl) {
 
 
 static b32_t
-opengl_init(opengl_t* ogl,
-    void* command_queue_memory, 
+opengl_init(
+    opengl_t* ogl,
+    arena_t* arena,
     usz_t command_queue_size, 
-    void* texture_queue_memory,
-    usz_t texture_queue_size)
+    usz_t texture_queue_size,
+    usz_t max_payloads)
 {	
 
-  gfx_init(&ogl->gfx, 
-      command_queue_memory, 
+  gfx_init(
+      &ogl->gfx, 
+      arena, 
       command_queue_size,
-      texture_queue_memory,
-      texture_queue_size);
+      texture_queue_size,
+      max_payloads
 
   ogl->glEnable(GL_DEPTH_TEST);
   ogl->glEnable(GL_SCISSOR_TEST);

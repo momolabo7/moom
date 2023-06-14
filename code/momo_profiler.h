@@ -1,6 +1,7 @@
-
 #ifndef MOMO_PROFILER_H
 #define MOMO_PROFILER_H
+
+typedef u64_t profiler_get_performance_counter_f();
 
 struct profiler_snapshot_t {
   u32_t hits;
@@ -31,6 +32,8 @@ struct profiler_t {
   u32_t entry_cap;
   profiler_entry_t* entries;
   u32_t snapshot_index;
+
+  profiler_get_performance_counter_f* get_performance_counter;
 };
 
 #define profiler_begin_block(p, name) \
@@ -45,13 +48,6 @@ struct profiler_t {
 
 #define profiler_block(p, name) profiler_begin_block(p, name); defer {profiler_end_block(p,name);}
 
-static void profiler_init(
-    profiler_t* p, 
-    arena_t* arena,
-    u32_t max_entries,
-    u32_t max_snapshots_per_entry);
-static void profiler_update_entries(profiler_t* p);
-static void profiler_reset(profiler_t* p);
 
 //
 // IMPLEMENTATION
@@ -71,7 +67,7 @@ _profiler_init_block(
     entry->filename = filename;
     entry->block_name = block_name ? block_name : function_name;
     entry->line = line;
-    entry->start_cycles = (u32_t)pf.get_performance_counter();
+    entry->start_cycles = (u32_t)p->get_performance_counter();
     entry->start_hits = 1;
     entry->flag_for_reset = false;
     return entry;
@@ -83,19 +79,33 @@ _profiler_init_block(
 static void
 _profiler_begin_block(profiler_t* p, profiler_entry_t* entry) 
 {
-  entry->start_cycles = (u32_t)pf.get_performance_counter();
+  entry->start_cycles = (u32_t)p->get_performance_counter();
   entry->start_hits = 1;
 }
 
 static void
 _profiler_end_block(profiler_t* p, profiler_entry_t* entry) {
-  u64_t delta = ((u32_t)pf.get_performance_counter() - entry->start_cycles) | ((u64_t)(entry->start_hits)) << 32;
+  u64_t delta = ((u32_t)p->get_performance_counter() - entry->start_cycles) | ((u64_t)(entry->start_hits)) << 32;
   u64_atomic_add(&entry->hits_and_cycles, delta);
 }
 
 
-static void profiler_init(
+static void 
+profiler_reset(profiler_t* p) {
+
+  for(u32_t entry_id = 0; entry_id < p->entry_count; ++entry_id)
+  {
+    profiler_entry_t* itr = p->entries + entry_id;
+    itr->flag_for_reset = true;
+  }
+
+  p->entry_count = 0;
+}
+
+static void 
+profiler_init(
     profiler_t* p, 
+    profiler_get_performance_counter_f* get_performance_counter,
     arena_t* arena,
     u32_t max_entries,
     u32_t max_snapshots_per_entry)
@@ -104,6 +114,7 @@ static void profiler_init(
   p->entry_snapshot_count = max_snapshots_per_entry;
   p->entries = arena_push_arr(profiler_entry_t, arena, p->entry_cap);
   assert(p->entries);
+  p->get_performance_counter = get_performance_counter;
 
   for (u32_t i = 0; i < p->entry_cap; ++i) {
     p->entries[i].snapshots = arena_push_arr(profiler_snapshot_t, arena, max_snapshots_per_entry);
@@ -131,17 +142,6 @@ profiler_update_entries(profiler_t* p) {
   }
 }
 
-static void 
-profiler_reset(profiler_t* p) {
-
-  for(u32_t entry_id = 0; entry_id < p->entry_count; ++entry_id)
-  {
-    profiler_entry_t* itr = p->entries + entry_id;
-    itr->flag_for_reset = true;
-  }
-
-  p->entry_count = 0;
-}
 
 
 #endif //MOMO_PROFILER_H

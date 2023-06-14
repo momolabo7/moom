@@ -1,37 +1,5 @@
-// 
-// DESCRIPTION:
-//
-//  This file contains a global instance of pf_t, 
-//  which is a table of all possible OS/Platform related 
-//  functions used by the entirety of this codebase.
-//
-//  All code in this engine MAY assume that the functions
-//  in the global struct are avaliable. Each compilable unit 
-//  that includes this file is therefore responsible for filling
-//  each function in the instance until things do not crash.
-//
-//  For example:
-//    void* w32_allocate_memory(sz) { 
-//      // implementation here 
-//    };
-//    
-//    int main() {
-//      pf.allocate_memory = w32_allocate_memory; 
-//    }
-//
-// THOUGHTS:
-//
-//  This is essentially the most flexible and convinient
-//  system to share OS functionality I could think of.
-//
-//  One big advantage of having an instance, as opposed to,
-//  doing it like stdlib, is that we can pass a single version 
-//  of platform code around for other DLLs to use.
-//
-
-
-#ifndef MOMO_PLATFORM
-#define MOMO_PLATFORM
+#ifndef GAME_PLATFORM
+#define GAME_PLATFORM
 
 //
 // Platform Memory API

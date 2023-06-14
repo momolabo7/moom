@@ -211,10 +211,10 @@ gfx_clear_commands(gfx_t* g) {
 static void 
 gfx_init(
     gfx_t* g, 
-    void* texture_queue_data, 
+    arena_t* arena,
     usz_t texture_queue_size, 
-    void* command_queue_data, 
-    usz_t command_queue_size)
+    usz_t command_queue_size,
+    usz_t max_payloads)
 {
 
   {

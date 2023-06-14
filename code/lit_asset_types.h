@@ -17,3 +17,5 @@ enum Asset_Tag_Type {
 
   ASSET_TAG_TYPE_COUNT,
 };
+
+#define LIT_ASSET_FILE "lit.dat"

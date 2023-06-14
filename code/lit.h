@@ -1,29 +1,11 @@
 #ifndef LIT_H
 #define LIT_H
 
-
-#include "momo_types.h"
-#include "momo_platform.h"
-#include "momo_intrinsics.h"
-#include "momo_vectors.h"
-#include "momo_strings.h"
-#include "momo_colors.h"
-#include "momo_easing.h"
-#include "momo_geometry.h"
-#include "momo_arena.h"
-#include "momo_rng.h"
-#include "momo_sort.h"
+#include "momo.h"
 
 
-#include "momo_game.h"
-#include "momo_gfx.h"
-#include "momo_inspector.h"
-#include "momo_profiler.h"
-#include "momo_game_console.h"
+#include "game.h"
 
-#include "momo_asset_file.h"
-#include "momo_assets.h"
-#include "momo_asset_rendering.h"
 
 #define LIT_SAVE_FILE_ENABLE false
 #define LIT_SAVE_FILE "hello.sav"
@@ -68,7 +50,7 @@
 
 static game_t* game; 
 static gfx_t* gfx; 
-static audio_buffer_t* audio;
+static game_audio_buffer_t* audio;
 static profiler_t* profiler;
 static input_t* input;
 

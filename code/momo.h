@@ -2,11 +2,7 @@
 #ifndef MOMO_H
 #define MOMO_H
 
-// Core
 #include "momo_types.h"
-#include "momo_platform.h"
-
-// Standalones
 #include "momo_intrinsics.h"
 #include "momo_easing.h"
 #include "momo_vectors.h"
@@ -24,7 +20,8 @@
 #include "momo_png.h"
 #include "momo_rect_pack.h"
 #include "momo_json.h"
-
+#include "momo_inspector.h"
+#include "momo_profiler.h"
 
 
 

@@ -19,29 +19,19 @@
 #undef near
 #undef far
 
-#include "momo_types.h"
-#include "momo_platform.h"
-#include "momo_intrinsics.h"
-#include "momo_easing.h"
-#include "momo_vectors.h"
-#include "momo_colors.h"
-#include "momo_matrix.h"
-#include "momo_arena.h"
-#include "momo_profiler.h"
-#include "momo_game.h"
-#include "momo_gfx.h"
+#include "momo.h"
+#include "game.h"
 
-
-#include "w32_momo.h"
+#include "w32_game.h"
 
 // Graphics
-#include "w32_momo_gfx.h"
-#include "momo_gfx_opengl.h"
-#include "w32_momo_gfx_opengl.h"
+#include "w32_game_gfx.h"
+#include "game_gfx_opengl.h"
+#include "w32_game_gfx_opengl.h"
 
 // Audio
-#include "w32_momo_audio.h"
-#include "w32_momo_audio_wasapi.h"
+#include "w32_game_audio.h"
+#include "w32_game_audio_wasapi.h"
 
 #if INTERNAL
 #include <stdio.h>
@@ -579,32 +569,32 @@ w32_complete_all_tasks() {
 
 
 
-static input_button_code_t
+static game_button_code_t
 w32_vkeys_to_input_button_code(u32_t code) {
 
   // A to Z
   if (code >= 0x41 && code <= 0x5A) {
-    return input_button_code_t(INPUT_BUTTON_CODE_A + code - 0x41);
+    return game_button_code_t(GAME_BUTTON_CODE_A + code - 0x41);
   }
   
   // 0 to 9
   else if (code >= 0x30 && code <= 0x39) {
-    return input_button_code_t(INPUT_BUTTON_CODE_0 + code - 0x30);
+    return game_button_code_t(GAME_BUTTON_CODE_0 + code - 0x30);
   }
 
   // F1 to F12
   // NOTE(momo): there are actually more F-keys??
   else if (code >= 0x70 && code <= 0x7B) {
-    return input_button_code_t(INPUT_BUTTON_CODE_F1 + code - 0x70);
+    return game_button_code_t(GAME_BUTTON_CODE_F1 + code - 0x70);
   }
   else {
     switch(code) {
-      case VK_SPACE: return INPUT_BUTTON_CODE_SPACE;
+      case VK_SPACE: return GAME_BUTTON_CODE_SPACE;
     }
 
   }
   
-  return INPUT_BUTTON_CODE_UNKNOWN;
+  return GAME_BUTTON_CODE_UNKNOWN;
 }
 
 static void
@@ -632,19 +622,19 @@ w32_process_input(HWND window, input_t* input)
       case WM_LBUTTONUP:
       case WM_LBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_LBUTTONDOWN;
-        input->buttons[INPUT_BUTTON_CODE_LMB].now = is_key_down;
+        input->buttons[GAME_BUTTON_CODE_LMB].now = is_key_down;
       } break;
 
       case WM_MBUTTONUP:
       case WM_MBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_MBUTTONDOWN;
-        input->buttons[INPUT_BUTTON_CODE_MMB].now = is_key_down;
+        input->buttons[GAME_BUTTON_CODE_MMB].now = is_key_down;
       } break;
 
       case WM_RBUTTONUP:
       case WM_RBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_RBUTTONDOWN;
-        input->buttons[INPUT_BUTTON_CODE_RMB].now = is_key_down;
+        input->buttons[GAME_BUTTON_CODE_RMB].now = is_key_down;
       } break;
       
       case WM_KEYUP:
@@ -936,7 +926,7 @@ WinMain(HINSTANCE instance,
   if (!w32_allocate_memory_into_arena(audio_arena, megabytes(256))) return false;
   defer { w32_free_memory_from_arena(audio_arena); };
 
-  audio_buffer_t* audio = w32_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
+  game_audio_buffer_t* audio = w32_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
   if (!audio) return false;
   defer{ w32_audio_unload(audio); };
 
@@ -947,7 +937,7 @@ WinMain(HINSTANCE instance,
   make(arena_t, profiler_arena);
   if (!w32_allocate_memory_into_arena(profiler_arena, megabytes(256))) return false;
   defer { w32_free_memory_from_arena(profiler_arena); };
-  profiler_init(profiler, profiler_arena, 256, 120);
+  profiler_init(profiler, w32_get_performance_counter_u64, profiler_arena, 256, 120);
 
   //
   // Init input

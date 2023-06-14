@@ -7,7 +7,7 @@
 #define assert_callback(s) printf("[sui][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
 
 #include "momo.h"
-#include "momo_asset_file.h"
+#include "game_asset_file.h"
 
 #define sui_code_dir(filename) "../code/" filename
 
