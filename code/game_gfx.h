@@ -219,14 +219,14 @@ gfx_init(
 
   {
     gfx_command_queue_t* q = &g->command_queue;
-    q->memory = (u8_t*)command_queue_data;
+    q->memory = arena_push_arr(u8_t, arena, command_queue_size);
     q->memory_size = command_queue_size;
     gfx_clear_commands(g);
   }
 
   {
     gfx_texture_queue_t* q = &g->texture_queue;
-    q->transfer_memory = (u8_t*)texture_queue_data;
+    q->transfer_memory = arena_push_arr(u8_t, arena, texture_queue_size);
     q->transfer_memory_size = texture_queue_size;
     q->transfer_memory_start = 0;
     q->transfer_memory_end = 0;

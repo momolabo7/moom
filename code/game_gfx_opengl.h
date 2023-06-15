@@ -1011,7 +1011,7 @@ opengl_init(
       arena, 
       command_queue_size,
       texture_queue_size,
-      max_payloads
+      max_payloads);
 
   ogl->glEnable(GL_DEPTH_TEST);
   ogl->glEnable(GL_SCISSOR_TEST);

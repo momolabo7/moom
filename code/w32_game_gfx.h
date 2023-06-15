@@ -8,9 +8,10 @@
 // win32 gfx api that must be defined
 static gfx_t*
 w32_gfx_load(HWND window, 
+             arena_t* arena,
              usz_t command_queue_size, 
              usz_t texture_queue_size,
-             arena_t* arena);
+             usz_t max_payloads);
 
 
 static void

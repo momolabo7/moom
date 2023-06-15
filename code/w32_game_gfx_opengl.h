@@ -167,9 +167,12 @@ _w32_load_wgl_extentions() {
 
 
 static gfx_t*
-w32_gfx_load(HWND window, 
-             usz_t command_queue_size,
-             usz_t texture_queue_size) 
+w32_gfx_load(
+    HWND window, 
+    arena_t* arena,
+    usz_t command_queue_size,
+    usz_t texture_queue_size,
+    usz_t max_payloads) 
 {
   HDC dc = GetDC(window); 
   if (!dc) return 0;
@@ -195,11 +198,9 @@ w32_gfx_load(HWND window,
     return nullptr;
   }
 
-  opengl_t* opengl = (opengl_t*)pf.allocate_memory(sizeof(opengl_t));
-  void* command_queue_block = pf.allocate_memory(command_queue_size); 
-  void* texture_queue_block = pf.allocate_memory(texture_queue_size); 
+  opengl_t* opengl = arena_push(opengl_t, arena);
 
-  if (!opengl || !command_queue_block || !texture_queue_block) {
+  if (!opengl) {
     return nullptr;
   }
   
@@ -254,11 +255,12 @@ if (!opengl->name) { return nullptr; }
   }
 #undef wgl_set_opengl_function
   
-  if (!opengl_init(opengl, 
-                command_queue_block, 
-                command_queue_size,
-                texture_queue_block,
-                texture_queue_size)) 
+  if (!opengl_init(
+        opengl, 
+        arena,
+        command_queue_size,
+        texture_queue_size,
+        max_payloads)) 
   {
     return 0;
   }
