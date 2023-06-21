@@ -51,7 +51,7 @@
 
 static game_t* game; 
 static gfx_t* gfx; 
-static game_audio_buffer_t* audio;
+static audio_buffer_t* audio;
 static profiler_t* profiler;
 static input_t* input;
 

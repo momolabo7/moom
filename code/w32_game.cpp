@@ -931,7 +931,7 @@ WinMain(HINSTANCE instance,
   if (!w32_allocate_memory_into_arena(audio_arena, megabytes(256))) return false;
   defer { w32_free_memory_from_arena(audio_arena); };
 
-  game_audio_buffer_t* audio = w32_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
+  audio_buffer_t* audio = w32_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
   if (!audio) return false;
   defer{ w32_audio_unload(audio); };
 

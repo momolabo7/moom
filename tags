@@ -193,7 +193,7 @@ at	code/momo_json.h	/^  u8_t* at;$/;"	m	language:C++	struct:json_key_t	typeref:t
 at	code/momo_json.h	/^  u8_t* at;$/;"	m	language:C++	struct:_json_token_t	typeref:typename:u8_t *
 at	code/momo_json.h	/^  umi_t at;$/;"	m	language:C++	struct:json_t	typeref:typename:umi_t
 atlas_font	code/sui_pack.h	/^  sui_atlas_font_t* atlas_font;$/;"	m	language:C++	struct:sui_packer_source_font_t	typeref:typename:sui_atlas_font_t *
-audio	code/lit.h	/^static game_audio_buffer_t* audio;$/;"	v	language:C++	typeref:typename:game_audio_buffer_t *
+audio	code/lit.h	/^static audio_buffer_t* audio;$/;"	v	language:C++	typeref:typename:audio_buffer_t *
 audio_client	code/w32_game_audio_wasapi.h	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient2 *
 audio_client	code/w32_momo_audio_wasapi.h	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient2 *
 audio_format	code/momo_wav.h	/^  u16_t audio_format;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
@@ -294,8 +294,8 @@ callback	code/w32_momo.h	/^  pf_task_callback_f* callback;$/;"	m	language:C++	st
 cap	code/momo_arena.h	/^	usz_t cap;$/;"	m	language:C++	struct:arena_t	typeref:typename:usz_t
 cap	code/momo_strings.h	/^	usz_t cap;$/;"	m	language:C++	struct:sb8_t	typeref:typename:usz_t
 cap	code/momo_ttf.h	/^  u32_t cap;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:u32_t
-channels	code/game.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:game_audio_buffer_t	typeref:typename:u32_t
-channels	code/momo_game.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:game_audio_buffer_t	typeref:typename:u32_t
+channels	code/game.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:audio_buffer_t	typeref:typename:u32_t
+channels	code/momo_game.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:audio_buffer_t	typeref:typename:u32_t
 channels	code/w32_game_audio_wasapi.h	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t
 channels	code/w32_momo_audio_wasapi.h	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t
 chars	code/game.h	/^  u8_t chars[32];$/;"	m	language:C++	struct:input_t	typeref:typename:u8_t[32]
@@ -797,8 +797,8 @@ g	code/momo_colors.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struc
 g	code/momo_colors.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
 game	code/lit.h	/^    lit_game_t game;$/;"	m	language:C++	union:lit_t::__anon65aa720e010a	typeref:typename:lit_game_t
 game	code/lit.h	/^static game_t* game; $/;"	v	language:C++	typeref:typename:game_t *
-game_audio_buffer_t	code/game.h	/^struct game_audio_buffer_t {$/;"	s	language:C++
-game_audio_buffer_t	code/momo_game.h	/^struct game_audio_buffer_t {$/;"	s	language:C++
+audio_buffer_t	code/game.h	/^struct audio_buffer_t {$/;"	s	language:C++
+audio_buffer_t	code/momo_game.h	/^struct audio_buffer_t {$/;"	s	language:C++
 INPUT_BUTTON_CODE_0	code/game.h	/^  INPUT_BUTTON_CODE_0,$/;"	e	language:C++	enum:input_button_code_t
 INPUT_BUTTON_CODE_0	code/momo_game.h	/^  INPUT_BUTTON_CODE_0,$/;"	e	language:C++	enum:input_button_code_t
 INPUT_BUTTON_CODE_1	code/game.h	/^  INPUT_BUTTON_CODE_1,$/;"	e	language:C++	enum:input_button_code_t
@@ -928,8 +928,8 @@ game_platform_config_t	code/momo_game.h	/^struct game_platform_config_t {$/;"	s	
 game_t	code/game.h	/^struct game_t {$/;"	s	language:C++
 game_t	code/momo_game.h	/^struct game_t {$/;"	s	language:C++
 game_update_and_render	code/lit.cpp	/^game_update_and_render($/;"	f	language:C++	typeref:typename:exported void
-game_update_and_render_f	code/game.h	/^typedef void game_update_and_render_f($/;"	t	language:C++	typeref:typename:void ()(game_t *,gfx_t *,game_audio_buffer_t *,profiler_t *,input_t *)
-game_update_and_render_f	code/momo_game.h	/^typedef void game_update_and_render_f($/;"	t	language:C++	typeref:typename:void ()(game_t *,gfx_t *,game_audio_buffer_t *,profiler_t *,input_t *)
+game_update_and_render_f	code/game.h	/^typedef void game_update_and_render_f($/;"	t	language:C++	typeref:typename:void ()(game_t *,gfx_t *,audio_buffer_t *,profiler_t *,input_t *)
+game_update_and_render_f	code/momo_game.h	/^typedef void game_update_and_render_f($/;"	t	language:C++	typeref:typename:void ()(game_t *,gfx_t *,audio_buffer_t *,profiler_t *,input_t *)
 game_width	code/w32_game.h	/^  f32_t game_width;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t
 game_width	code/w32_momo.h	/^  f32_t game_width;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t
 get_performance_counter	code/game_platform.h	/^  pf_get_performance_counter_f* get_performance_counter;$/;"	m	language:C++	struct:pf_t	typeref:typename:pf_get_performance_counter_f *
@@ -2270,8 +2270,8 @@ pf_add_task_f	code/game_platform.h	/^typedef void pf_add_task_f(pf_task_callback
 pf_add_task_f	code/momo_platform.h	/^typedef void pf_add_task_f(pf_task_callback_f callback, void* data);$/;"	t	language:C++	typeref:typename:void ()(pf_task_callback_f callback,void * data)
 pf_allocate_memory_f	code/game_platform.h	/^typedef void* pf_allocate_memory_f(usz_t size);$/;"	t	language:C++	typeref:typename:void * ()(usz_t size)
 pf_allocate_memory_f	code/momo_platform.h	/^typedef void* pf_allocate_memory_f(usz_t size);$/;"	t	language:C++	typeref:typename:void * ()(usz_t size)
-pf_audio	code/w32_game_audio_wasapi.h	/^  game_audio_buffer_t pf_audio; \/\/ Must be first member$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:game_audio_buffer_t
-pf_audio	code/w32_momo_audio_wasapi.h	/^  game_audio_buffer_t pf_audio; \/\/ Must be first member$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:game_audio_buffer_t
+pf_audio	code/w32_game_audio_wasapi.h	/^  audio_buffer_t pf_audio; \/\/ Must be first member$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:audio_buffer_t
+pf_audio	code/w32_momo_audio_wasapi.h	/^  audio_buffer_t pf_audio; \/\/ Must be first member$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:audio_buffer_t
 pf_close_file_f	code/game_platform.h	/^typedef void  pf_close_file_f(pf_file_t* file);$/;"	t	language:C++	typeref:typename:void ()(pf_file_t * file)
 pf_close_file_f	code/momo_platform.h	/^typedef void  pf_close_file_f(pf_file_t* file);$/;"	t	language:C++	typeref:typename:void ()(pf_file_t * file)
 pf_complete_all_tasks_f	code/game_platform.h	/^typedef void pf_complete_all_tasks_f();$/;"	t	language:C++	typeref:typename:void ()()
@@ -2479,10 +2479,10 @@ S8_MIN	code/momo_types.h	/^#define S8_MIN /;"	d	language:C++
 s8_t	code/momo_types.h	/^typedef int8_t   s8_t;$/;"	t	language:C++	typeref:typename:int8_t
 samples_per_second	code/w32_game_audio_wasapi.h	/^  u32_t samples_per_second;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t
 samples_per_second	code/w32_momo_audio_wasapi.h	/^  u32_t samples_per_second;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t
-sample_buffer	code/game.h	/^  s16_t* sample_buffer;$/;"	m	language:C++	struct:game_audio_buffer_t	typeref:typename:s16_t *
-sample_buffer	code/momo_game.h	/^  s16_t* sample_buffer;$/;"	m	language:C++	struct:game_audio_buffer_t	typeref:typename:s16_t *
-sample_count	code/game.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:game_audio_buffer_t	typeref:typename:u32_t
-sample_count	code/momo_game.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:game_audio_buffer_t	typeref:typename:u32_t
+sample_buffer	code/game.h	/^  s16_t* sample_buffer;$/;"	m	language:C++	struct:audio_buffer_t	typeref:typename:s16_t *
+sample_buffer	code/momo_game.h	/^  s16_t* sample_buffer;$/;"	m	language:C++	struct:audio_buffer_t	typeref:typename:s16_t *
+sample_count	code/game.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:audio_buffer_t	typeref:typename:u32_t
+sample_count	code/momo_game.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:audio_buffer_t	typeref:typename:u32_t
 sample_rate	code/momo_wav.h	/^  u32_t sample_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 save_data	code/lit.h	/^  lit_save_data_t save_data;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_save_data_t
 sb8_clear	code/momo_strings.h	/^sb8_clear(sb8_t* b) {$/;"	f	language:C++	typeref:typename:void
@@ -3025,22 +3025,22 @@ w32_allocate_memory	code/w32_game.cpp	/^w32_allocate_memory(umi_t size)$/;"	f	la
 w32_allocate_memory	code/w32_momo.cpp	/^w32_allocate_memory(umi_t size)$/;"	f	language:C++	typeref:typename:void *	file:
 w32_allocate_memory_into_arena	code/w32_game.cpp	/^w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 w32_allocate_memory_into_arena	code/w32_momo.cpp	/^w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {$/;"	f	language:C++	typeref:typename:b32_t	file:
-w32_audio_begin_frame	code/w32_game_audio.h	/^w32_audio_begin_frame(game_audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
-w32_audio_begin_frame	code/w32_game_audio_wasapi.h	/^w32_audio_begin_frame(game_audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
-w32_audio_begin_frame	code/w32_momo_audio.h	/^w32_audio_begin_frame(game_audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
-w32_audio_begin_frame	code/w32_momo_audio_wasapi.h	/^w32_audio_begin_frame(game_audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
-w32_audio_end_frame	code/w32_game_audio.h	/^w32_audio_end_frame(game_audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
-w32_audio_end_frame	code/w32_game_audio_wasapi.h	/^w32_audio_end_frame(game_audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
-w32_audio_end_frame	code/w32_momo_audio.h	/^w32_audio_end_frame(game_audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
-w32_audio_end_frame	code/w32_momo_audio_wasapi.h	/^w32_audio_end_frame(game_audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
-w32_audio_load	code/w32_game_audio.h	/^w32_audio_load(u32_t samples_per_second, $/;"	p	language:C++	typeref:typename:game_audio_buffer_t *
-w32_audio_load	code/w32_game_audio_wasapi.h	/^w32_audio_load(u32_t samples_per_second, $/;"	f	language:C++	typeref:typename:game_audio_buffer_t *
-w32_audio_load	code/w32_momo_audio.h	/^w32_audio_load(u32_t samples_per_second, $/;"	p	language:C++	typeref:typename:game_audio_buffer_t *
-w32_audio_load	code/w32_momo_audio_wasapi.h	/^w32_audio_load(u32_t samples_per_second, $/;"	f	language:C++	typeref:typename:game_audio_buffer_t *
-w32_audio_unload	code/w32_game_audio.h	/^w32_audio_unload(game_audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
-w32_audio_unload	code/w32_game_audio_wasapi.h	/^w32_audio_unload(game_audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
-w32_audio_unload	code/w32_momo_audio.h	/^w32_audio_unload(game_audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
-w32_audio_unload	code/w32_momo_audio_wasapi.h	/^w32_audio_unload(game_audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
+w32_audio_begin_frame	code/w32_game_audio.h	/^w32_audio_begin_frame(audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
+w32_audio_begin_frame	code/w32_game_audio_wasapi.h	/^w32_audio_begin_frame(audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
+w32_audio_begin_frame	code/w32_momo_audio.h	/^w32_audio_begin_frame(audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
+w32_audio_begin_frame	code/w32_momo_audio_wasapi.h	/^w32_audio_begin_frame(audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
+w32_audio_end_frame	code/w32_game_audio.h	/^w32_audio_end_frame(audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
+w32_audio_end_frame	code/w32_game_audio_wasapi.h	/^w32_audio_end_frame(audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
+w32_audio_end_frame	code/w32_momo_audio.h	/^w32_audio_end_frame(audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
+w32_audio_end_frame	code/w32_momo_audio_wasapi.h	/^w32_audio_end_frame(audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
+w32_audio_load	code/w32_game_audio.h	/^w32_audio_load(u32_t samples_per_second, $/;"	p	language:C++	typeref:typename:audio_buffer_t *
+w32_audio_load	code/w32_game_audio_wasapi.h	/^w32_audio_load(u32_t samples_per_second, $/;"	f	language:C++	typeref:typename:audio_buffer_t *
+w32_audio_load	code/w32_momo_audio.h	/^w32_audio_load(u32_t samples_per_second, $/;"	p	language:C++	typeref:typename:audio_buffer_t *
+w32_audio_load	code/w32_momo_audio_wasapi.h	/^w32_audio_load(u32_t samples_per_second, $/;"	f	language:C++	typeref:typename:audio_buffer_t *
+w32_audio_unload	code/w32_game_audio.h	/^w32_audio_unload(audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
+w32_audio_unload	code/w32_game_audio_wasapi.h	/^w32_audio_unload(audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
+w32_audio_unload	code/w32_momo_audio.h	/^w32_audio_unload(audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
+w32_audio_unload	code/w32_momo_audio_wasapi.h	/^w32_audio_unload(audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
 w32_calc_render_region	code/w32_game.cpp	/^w32_calc_render_region(u32_t window_w, $/;"	f	language:C++	typeref:typename:RECT	file:
 w32_calc_render_region	code/w32_momo.cpp	/^w32_calc_render_region(u32_t window_w, $/;"	f	language:C++	typeref:typename:RECT	file:
 w32_close_file	code/w32_game.cpp	/^w32_close_file(pf_file_t* file) {$/;"	f	language:C++	typeref:typename:void	file:

@@ -132,7 +132,7 @@ exported void
 game_update_and_render(
     game_t* in_game, 
     gfx_t* in_gfx, 
-    game_audio_buffer_t* in_audio, 
+    audio_buffer_t* in_audio, 
     profiler_t* in_profiler, 
     input_t* in_input)
 { 

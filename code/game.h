@@ -11,7 +11,7 @@
 #include "game_asset_rendering.h"
 
 //
-struct game_audio_buffer_t {
+struct audio_buffer_t {
   s16_t* sample_buffer;
   u32_t sample_count;
   u32_t channels; //TODO: remove this?
@@ -38,7 +38,7 @@ typedef game_platform_config_t game_get_platform_config_f(void);
 typedef void game_update_and_render_f(
     game_t*, 
     gfx_t*, 
-    game_audio_buffer_t*, 
+    audio_buffer_t*, 
     profiler_t*, 
     input_t*);
 
