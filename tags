@@ -194,6 +194,8 @@ at	code/momo_json.h	/^  u8_t* at;$/;"	m	language:C++	struct:_json_token_t	typere
 at	code/momo_json.h	/^  umi_t at;$/;"	m	language:C++	struct:json_t	typeref:typename:umi_t
 atlas_font	code/sui_pack.h	/^  sui_atlas_font_t* atlas_font;$/;"	m	language:C++	struct:sui_packer_source_font_t	typeref:typename:sui_atlas_font_t *
 audio	code/lit.h	/^static audio_buffer_t* audio;$/;"	v	language:C++	typeref:typename:audio_buffer_t *
+audio_buffer_t	code/game.h	/^struct audio_buffer_t {$/;"	s	language:C++
+audio_buffer_t	code/momo_game.h	/^struct audio_buffer_t {$/;"	s	language:C++
 audio_client	code/w32_game_audio_wasapi.h	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient2 *
 audio_client	code/w32_momo_audio_wasapi.h	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient2 *
 audio_format	code/momo_wav.h	/^  u16_t audio_format;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
@@ -205,7 +207,7 @@ b	code/momo_colors.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typer
 b	code/momo_strings.h	/^  union { u32_t v; u8_t b[4]; } combine;$/;"	m	language:C++	union:sb8_push_hex_u32::__anon71355586030a	typeref:typename:u8_t[4]
 b32_t	code/momo_types.h	/^typedef u32_t    b32_t;$/;"	t	language:C++	typeref:typename:u32_t
 b8_t	code/momo_types.h	/^typedef u8_t     b8_t;$/;"	t	language:C++	typeref:typename:u8_t
-before	code/game.h	/^  b32_t before;$/;"	m	language:C++	struct:input_button_t	typeref:typename:b32_t
+before	code/game_input.h	/^  b32_t before;$/;"	m	language:C++	struct:input_button_t	typeref:typename:b32_t
 before	code/momo_game.h	/^  b32_t before;$/;"	m	language:C++	struct:input_button_t	typeref:typename:b32_t
 begin	code/meta.cpp	/^  u32_t begin;$/;"	m	language:C++	struct:Meta_Token	typeref:typename:u32_t	file:
 begin_clone_emsdk	bin/setup_emsdk.bat	/^:begin_clone_emsdk$/;"	l	language:DosBatch
@@ -279,7 +281,7 @@ buffer_set	code/momo_types.h	/^buffer_set(void* mem , usz_t size) {$/;"	f	langua
 buffer_size	code/w32_game_audio_wasapi.h	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t
 buffer_size	code/w32_momo_audio_wasapi.h	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t
 buffer_t	code/momo_types.h	/^struct buffer_t {$/;"	s	language:C++
-buttons	code/game.h	/^  input_button_t buttons[INPUT_BUTTON_CODE_MAX];$/;"	m	language:C++	struct:input_t	typeref:typename:input_button_t[]
+buttons	code/game_input.h	/^  input_button_t buttons[INPUT_BUTTON_CODE_MAX];$/;"	m	language:C++	struct:input_t	typeref:typename:input_button_t[]
 buttons	code/lit_menu.h	/^  lit_menu_button_t buttons[LIT_MENU_TOTAL_LEVELS];$/;"	m	language:C++	struct:lit_menu_t	typeref:typename:lit_menu_button_t[]
 buttons	code/momo_game.h	/^  input_button_t buttons[INPUT_BUTTON_CODE_MAX];$/;"	m	language:C++	struct:input_t	typeref:typename:input_button_t[]
 byte_rate	code/momo_wav.h	/^  u32_t byte_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
@@ -298,9 +300,9 @@ channels	code/game.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C
 channels	code/momo_game.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:audio_buffer_t	typeref:typename:u32_t
 channels	code/w32_game_audio_wasapi.h	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t
 channels	code/w32_momo_audio_wasapi.h	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t
-chars	code/game.h	/^  u8_t chars[32];$/;"	m	language:C++	struct:input_t	typeref:typename:u8_t[32]
+chars	code/game_input.h	/^  u8_t chars[32];$/;"	m	language:C++	struct:input_t	typeref:typename:u8_t[32]
 chars	code/momo_game.h	/^  u8_t chars[32];$/;"	m	language:C++	struct:input_t	typeref:typename:u8_t[32]
-char_count	code/game.h	/^  u32_t char_count;$/;"	m	language:C++	struct:input_t	typeref:typename:u32_t
+char_count	code/game_input.h	/^  u32_t char_count;$/;"	m	language:C++	struct:input_t	typeref:typename:u32_t
 char_count	code/momo_game.h	/^  u32_t char_count;$/;"	m	language:C++	struct:input_t	typeref:typename:u32_t
 CINTERFACE	code/w32_game.cpp	/^#define CINTERFACE$/;"	d	language:C++	file:
 CINTERFACE	code/w32_momo.cpp	/^#define CINTERFACE$/;"	d	language:C++	file:
@@ -480,7 +482,7 @@ debug_log	code/game_platform.h	/^  pf_debug_log_f* debug_log;$/;"	m	language:C++
 debug_log	code/momo_platform.h	/^  pf_debug_log_f* debug_log;$/;"	m	language:C++	struct:pf_t	typeref:typename:pf_debug_log_f *
 defer	code/momo_types.h	/^# define defer /;"	d	language:C++
 delta	code/lit_game.h	/^  v2f_t delta;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:v2f_t
-delta_time	code/game.h	/^  f32_t delta_time; \/\/aka dt$/;"	m	language:C++	struct:input_t	typeref:typename:f32_t
+delta_time	code/game_input.h	/^  f32_t delta_time; \/\/aka dt$/;"	m	language:C++	struct:input_t	typeref:typename:f32_t
 delta_time	code/momo_game.h	/^  f32_t delta_time; \/\/aka dt$/;"	m	language:C++	struct:input_t	typeref:typename:f32_t
 digit_to_ascii	code/momo_types.h	/^#define digit_to_ascii(/;"	d	language:C++
 dir	code/lit_game.h	/^  v2f_t dir;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:v2f_t
@@ -797,122 +799,6 @@ g	code/momo_colors.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struc
 g	code/momo_colors.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
 game	code/lit.h	/^    lit_game_t game;$/;"	m	language:C++	union:lit_t::__anon65aa720e010a	typeref:typename:lit_game_t
 game	code/lit.h	/^static game_t* game; $/;"	v	language:C++	typeref:typename:game_t *
-audio_buffer_t	code/game.h	/^struct audio_buffer_t {$/;"	s	language:C++
-audio_buffer_t	code/momo_game.h	/^struct audio_buffer_t {$/;"	s	language:C++
-INPUT_BUTTON_CODE_0	code/game.h	/^  INPUT_BUTTON_CODE_0,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_0	code/momo_game.h	/^  INPUT_BUTTON_CODE_0,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_1	code/game.h	/^  INPUT_BUTTON_CODE_1,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_1	code/momo_game.h	/^  INPUT_BUTTON_CODE_1,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_2	code/game.h	/^  INPUT_BUTTON_CODE_2,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_2	code/momo_game.h	/^  INPUT_BUTTON_CODE_2,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_3	code/game.h	/^  INPUT_BUTTON_CODE_3,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_3	code/momo_game.h	/^  INPUT_BUTTON_CODE_3,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_4	code/game.h	/^  INPUT_BUTTON_CODE_4,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_4	code/momo_game.h	/^  INPUT_BUTTON_CODE_4,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_5	code/game.h	/^  INPUT_BUTTON_CODE_5,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_5	code/momo_game.h	/^  INPUT_BUTTON_CODE_5,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_6	code/game.h	/^  INPUT_BUTTON_CODE_6,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_6	code/momo_game.h	/^  INPUT_BUTTON_CODE_6,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_7	code/game.h	/^  INPUT_BUTTON_CODE_7,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_7	code/momo_game.h	/^  INPUT_BUTTON_CODE_7,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_8	code/game.h	/^  INPUT_BUTTON_CODE_8,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_8	code/momo_game.h	/^  INPUT_BUTTON_CODE_8,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_9	code/game.h	/^  INPUT_BUTTON_CODE_9,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_9	code/momo_game.h	/^  INPUT_BUTTON_CODE_9,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_A	code/game.h	/^  INPUT_BUTTON_CODE_A,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_A	code/momo_game.h	/^  INPUT_BUTTON_CODE_A,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_B	code/game.h	/^  INPUT_BUTTON_CODE_B,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_B	code/momo_game.h	/^  INPUT_BUTTON_CODE_B,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_BACKSPACE	code/game.h	/^  INPUT_BUTTON_CODE_BACKSPACE,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_BACKSPACE	code/momo_game.h	/^  INPUT_BUTTON_CODE_BACKSPACE,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_C	code/game.h	/^  INPUT_BUTTON_CODE_C,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_C	code/momo_game.h	/^  INPUT_BUTTON_CODE_C,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_D	code/game.h	/^  INPUT_BUTTON_CODE_D,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_D	code/momo_game.h	/^  INPUT_BUTTON_CODE_D,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_E	code/game.h	/^  INPUT_BUTTON_CODE_E,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_E	code/momo_game.h	/^  INPUT_BUTTON_CODE_E,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F	code/game.h	/^  INPUT_BUTTON_CODE_F,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F	code/momo_game.h	/^  INPUT_BUTTON_CODE_F,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F1	code/game.h	/^  INPUT_BUTTON_CODE_F1,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F1	code/momo_game.h	/^  INPUT_BUTTON_CODE_F1,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F10	code/game.h	/^  INPUT_BUTTON_CODE_F10,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F10	code/momo_game.h	/^  INPUT_BUTTON_CODE_F10,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F11	code/game.h	/^  INPUT_BUTTON_CODE_F11,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F11	code/momo_game.h	/^  INPUT_BUTTON_CODE_F11,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F12	code/game.h	/^  INPUT_BUTTON_CODE_F12,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F12	code/momo_game.h	/^  INPUT_BUTTON_CODE_F12,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F2	code/game.h	/^  INPUT_BUTTON_CODE_F2,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F2	code/momo_game.h	/^  INPUT_BUTTON_CODE_F2,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F3	code/game.h	/^  INPUT_BUTTON_CODE_F3,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F3	code/momo_game.h	/^  INPUT_BUTTON_CODE_F3,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F4	code/game.h	/^  INPUT_BUTTON_CODE_F4,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F4	code/momo_game.h	/^  INPUT_BUTTON_CODE_F4,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F5	code/game.h	/^  INPUT_BUTTON_CODE_F5,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F5	code/momo_game.h	/^  INPUT_BUTTON_CODE_F5,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F6	code/game.h	/^  INPUT_BUTTON_CODE_F6,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F6	code/momo_game.h	/^  INPUT_BUTTON_CODE_F6,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F7	code/game.h	/^  INPUT_BUTTON_CODE_F7,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F7	code/momo_game.h	/^  INPUT_BUTTON_CODE_F7,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F8	code/game.h	/^  INPUT_BUTTON_CODE_F8,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F8	code/momo_game.h	/^  INPUT_BUTTON_CODE_F8,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F9	code/game.h	/^  INPUT_BUTTON_CODE_F9,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_F9	code/momo_game.h	/^  INPUT_BUTTON_CODE_F9,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_G	code/game.h	/^  INPUT_BUTTON_CODE_G,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_G	code/momo_game.h	/^  INPUT_BUTTON_CODE_G,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_H	code/game.h	/^  INPUT_BUTTON_CODE_H,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_H	code/momo_game.h	/^  INPUT_BUTTON_CODE_H,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_I	code/game.h	/^  INPUT_BUTTON_CODE_I,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_I	code/momo_game.h	/^  INPUT_BUTTON_CODE_I,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_J	code/game.h	/^  INPUT_BUTTON_CODE_J,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_J	code/momo_game.h	/^  INPUT_BUTTON_CODE_J,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_K	code/game.h	/^  INPUT_BUTTON_CODE_K,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_K	code/momo_game.h	/^  INPUT_BUTTON_CODE_K,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_L	code/game.h	/^  INPUT_BUTTON_CODE_L,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_L	code/momo_game.h	/^  INPUT_BUTTON_CODE_L,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_LMB	code/game.h	/^  INPUT_BUTTON_CODE_LMB,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_LMB	code/momo_game.h	/^  INPUT_BUTTON_CODE_LMB,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_M	code/game.h	/^  INPUT_BUTTON_CODE_M,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_M	code/momo_game.h	/^  INPUT_BUTTON_CODE_M,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_MAX	code/game.h	/^  INPUT_BUTTON_CODE_MAX,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_MAX	code/momo_game.h	/^  INPUT_BUTTON_CODE_MAX,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_MMB	code/game.h	/^  INPUT_BUTTON_CODE_MMB,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_MMB	code/momo_game.h	/^  INPUT_BUTTON_CODE_MMB,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_N	code/game.h	/^  INPUT_BUTTON_CODE_N,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_N	code/momo_game.h	/^  INPUT_BUTTON_CODE_N,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_O	code/game.h	/^  INPUT_BUTTON_CODE_O,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_O	code/momo_game.h	/^  INPUT_BUTTON_CODE_O,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_P	code/game.h	/^  INPUT_BUTTON_CODE_P,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_P	code/momo_game.h	/^  INPUT_BUTTON_CODE_P,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_Q	code/game.h	/^  INPUT_BUTTON_CODE_Q,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_Q	code/momo_game.h	/^  INPUT_BUTTON_CODE_Q,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_R	code/game.h	/^  INPUT_BUTTON_CODE_R,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_R	code/momo_game.h	/^  INPUT_BUTTON_CODE_R,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_RMB	code/game.h	/^  INPUT_BUTTON_CODE_RMB,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_RMB	code/momo_game.h	/^  INPUT_BUTTON_CODE_RMB,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_S	code/game.h	/^  INPUT_BUTTON_CODE_S,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_S	code/momo_game.h	/^  INPUT_BUTTON_CODE_S,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_SPACE	code/game.h	/^  INPUT_BUTTON_CODE_SPACE,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_SPACE	code/momo_game.h	/^  INPUT_BUTTON_CODE_SPACE,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_T	code/game.h	/^  INPUT_BUTTON_CODE_T,$/;"	e	language:C++	enum:input_button_code_t
-input_button_code_t	code/game.h	/^enum input_button_code_t {$/;"	g	language:C++
-INPUT_BUTTON_CODE_T	code/momo_game.h	/^  INPUT_BUTTON_CODE_T,$/;"	e	language:C++	enum:input_button_code_t
-input_button_code_t	code/momo_game.h	/^enum input_button_code_t {$/;"	g	language:C++
-INPUT_BUTTON_CODE_U	code/game.h	/^  INPUT_BUTTON_CODE_U,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_U	code/momo_game.h	/^  INPUT_BUTTON_CODE_U,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_UNKNOWN	code/game.h	/^  INPUT_BUTTON_CODE_UNKNOWN,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_UNKNOWN	code/momo_game.h	/^  INPUT_BUTTON_CODE_UNKNOWN,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_V	code/game.h	/^  INPUT_BUTTON_CODE_V,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_V	code/momo_game.h	/^  INPUT_BUTTON_CODE_V,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_W	code/game.h	/^  INPUT_BUTTON_CODE_W,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_W	code/momo_game.h	/^  INPUT_BUTTON_CODE_W,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_X	code/game.h	/^  INPUT_BUTTON_CODE_X,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_X	code/momo_game.h	/^  INPUT_BUTTON_CODE_X,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_Y	code/game.h	/^  INPUT_BUTTON_CODE_Y,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_Y	code/momo_game.h	/^  INPUT_BUTTON_CODE_Y,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_Z	code/game.h	/^  INPUT_BUTTON_CODE_Z,$/;"	e	language:C++	enum:input_button_code_t
-INPUT_BUTTON_CODE_Z	code/momo_game.h	/^  INPUT_BUTTON_CODE_Z,$/;"	e	language:C++	enum:input_button_code_t
-input_button_t	code/game.h	/^struct input_button_t {$/;"	s	language:C++
-input_button_t	code/momo_game.h	/^struct input_button_t {$/;"	s	language:C++
 game_functions_t	code/game.h	/^struct game_functions_t {$/;"	s	language:C++
 game_functions_t	code/momo_game.h	/^struct game_functions_t {$/;"	s	language:C++
 game_function_names	code/game.h	/^static const char* game_function_names[] {$/;"	v	language:C++	typeref:typename:const char * []
@@ -922,6 +808,7 @@ game_get_platform_config_f	code/game.h	/^typedef game_platform_config_t game_get
 game_get_platform_config_f	code/momo_game.h	/^typedef game_platform_config_t game_get_platform_config_f(void); $/;"	t	language:C++	typeref:typename:game_platform_config_t ()(void)
 game_height	code/w32_game.h	/^  f32_t game_height;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t
 game_height	code/w32_momo.h	/^  f32_t game_height;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t
+GAME_INPUT_H	code/game_input.h	/^#define GAME_INPUT_H$/;"	d	language:C++
 GAME_PLATFORM	code/game_platform.h	/^#define GAME_PLATFORM$/;"	d	language:C++
 game_platform_config_t	code/game.h	/^struct game_platform_config_t {$/;"	s	language:C++
 game_platform_config_t	code/momo_game.h	/^struct game_platform_config_t {$/;"	s	language:C++
@@ -982,7 +869,7 @@ gfx_clear_commands	code/game_gfx.h	/^gfx_clear_commands(gfx_t* g) {$/;"	f	langua
 gfx_clear_commands	code/game_gfx.h	/^static void gfx_clear_commands(gfx_t* g);$/;"	p	language:C++	typeref:typename:void
 gfx_clear_commands	D:/work/git/moom/code/momo_gfx.h	/^gfx_clear_commands(gfx_t* g) {$/;"	f	language:C++	typeref:typename:void
 gfx_clear_commands	D:/work/git/moom/code/momo_gfx.h	/^static void gfx_clear_commands(gfx_t* g);$/;"	p	language:C++	typeref:typename:void
-gfx_command_advance_depth_t	code/game_gfx.h	/^struct gfx_command_advance_depth_t {$/;"	s	language:C++
+gfx_command_advance_depth_t	code/game_gfx.h	/^struct gfx_command_advance_depth_t {};$/;"	s	language:C++
 gfx_command_advance_depth_t	D:/work/git/moom/code/momo_gfx.h	/^typedef struct gfx_command_advance_depth_t {$/;"	s	language:C++
 gfx_command_advance_depth_t	D:/work/git/moom/code/momo_gfx.h	/^} gfx_command_advance_depth_t;$/;"	t	language:C++	typeref:struct:gfx_command_advance_depth_t
 gfx_command_blend_t	code/game_gfx.h	/^struct gfx_command_blend_t {$/;"	s	language:C++
@@ -1033,8 +920,7 @@ GFX_COMMAND_TYPE_TRIANGLE	code/game_gfx.h	/^  GFX_COMMAND_TYPE_TRIANGLE,$/;"	e	l
 GFX_COMMAND_TYPE_TRIANGLE	D:/work/git/moom/code/momo_gfx.h	/^  GFX_COMMAND_TYPE_TRIANGLE,$/;"	e	language:C++	enum:gfx_command_type_t
 GFX_COMMAND_TYPE_VIEW	code/game_gfx.h	/^  GFX_COMMAND_TYPE_VIEW,$/;"	e	language:C++	enum:gfx_command_type_t
 GFX_COMMAND_TYPE_VIEW	D:/work/git/moom/code/momo_gfx.h	/^  GFX_COMMAND_TYPE_VIEW,$/;"	e	language:C++	enum:gfx_command_type_t
-gfx_command_view_t	code/game_gfx.h	/^typedef struct gfx_command_view_t {$/;"	s	language:C++
-gfx_command_view_t	code/game_gfx.h	/^} gfx_command_view_t;$/;"	t	language:C++	typeref:struct:gfx_command_view_t
+gfx_command_view_t	code/game_gfx.h	/^struct gfx_command_view_t {$/;"	s	language:C++
 gfx_command_view_t	D:/work/git/moom/code/momo_gfx.h	/^typedef struct gfx_command_view_t {$/;"	s	language:C++
 gfx_command_view_t	D:/work/git/moom/code/momo_gfx.h	/^} gfx_command_view_t;$/;"	t	language:C++	typeref:struct:gfx_command_view_t
 gfx_complete_texture_transfer	code/game_gfx.h	/^gfx_complete_texture_transfer(gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
@@ -1436,9 +1322,123 @@ info_lines	code/momo_game_console.h	/^  sb8_t info_lines[9]; \/\/ TODO: this sho
 INITGUID	code/w32_game.cpp	/^#define INITGUID$/;"	d	language:C++	file:
 INITGUID	code/w32_momo.cpp	/^#define INITGUID$/;"	d	language:C++	file:
 input	code/lit.h	/^static input_t* input;$/;"	v	language:C++	typeref:typename:input_t *
+INPUT_BUTTON_CODE_0	code/game_input.h	/^  INPUT_BUTTON_CODE_0,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_0	code/momo_game.h	/^  INPUT_BUTTON_CODE_0,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_1	code/game_input.h	/^  INPUT_BUTTON_CODE_1,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_1	code/momo_game.h	/^  INPUT_BUTTON_CODE_1,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_2	code/game_input.h	/^  INPUT_BUTTON_CODE_2,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_2	code/momo_game.h	/^  INPUT_BUTTON_CODE_2,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_3	code/game_input.h	/^  INPUT_BUTTON_CODE_3,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_3	code/momo_game.h	/^  INPUT_BUTTON_CODE_3,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_4	code/game_input.h	/^  INPUT_BUTTON_CODE_4,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_4	code/momo_game.h	/^  INPUT_BUTTON_CODE_4,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_5	code/game_input.h	/^  INPUT_BUTTON_CODE_5,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_5	code/momo_game.h	/^  INPUT_BUTTON_CODE_5,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_6	code/game_input.h	/^  INPUT_BUTTON_CODE_6,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_6	code/momo_game.h	/^  INPUT_BUTTON_CODE_6,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_7	code/game_input.h	/^  INPUT_BUTTON_CODE_7,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_7	code/momo_game.h	/^  INPUT_BUTTON_CODE_7,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_8	code/game_input.h	/^  INPUT_BUTTON_CODE_8,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_8	code/momo_game.h	/^  INPUT_BUTTON_CODE_8,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_9	code/game_input.h	/^  INPUT_BUTTON_CODE_9,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_9	code/momo_game.h	/^  INPUT_BUTTON_CODE_9,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_A	code/game_input.h	/^  INPUT_BUTTON_CODE_A,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_A	code/momo_game.h	/^  INPUT_BUTTON_CODE_A,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_B	code/game_input.h	/^  INPUT_BUTTON_CODE_B,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_B	code/momo_game.h	/^  INPUT_BUTTON_CODE_B,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_BACKSPACE	code/game_input.h	/^  INPUT_BUTTON_CODE_BACKSPACE,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_BACKSPACE	code/momo_game.h	/^  INPUT_BUTTON_CODE_BACKSPACE,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_C	code/game_input.h	/^  INPUT_BUTTON_CODE_C,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_C	code/momo_game.h	/^  INPUT_BUTTON_CODE_C,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_D	code/game_input.h	/^  INPUT_BUTTON_CODE_D,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_D	code/momo_game.h	/^  INPUT_BUTTON_CODE_D,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_E	code/game_input.h	/^  INPUT_BUTTON_CODE_E,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_E	code/momo_game.h	/^  INPUT_BUTTON_CODE_E,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F	code/game_input.h	/^  INPUT_BUTTON_CODE_F,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F	code/momo_game.h	/^  INPUT_BUTTON_CODE_F,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F1	code/game_input.h	/^  INPUT_BUTTON_CODE_F1,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F1	code/momo_game.h	/^  INPUT_BUTTON_CODE_F1,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F10	code/game_input.h	/^  INPUT_BUTTON_CODE_F10,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F10	code/momo_game.h	/^  INPUT_BUTTON_CODE_F10,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F11	code/game_input.h	/^  INPUT_BUTTON_CODE_F11,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F11	code/momo_game.h	/^  INPUT_BUTTON_CODE_F11,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F12	code/game_input.h	/^  INPUT_BUTTON_CODE_F12,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F12	code/momo_game.h	/^  INPUT_BUTTON_CODE_F12,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F2	code/game_input.h	/^  INPUT_BUTTON_CODE_F2,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F2	code/momo_game.h	/^  INPUT_BUTTON_CODE_F2,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F3	code/game_input.h	/^  INPUT_BUTTON_CODE_F3,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F3	code/momo_game.h	/^  INPUT_BUTTON_CODE_F3,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F4	code/game_input.h	/^  INPUT_BUTTON_CODE_F4,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F4	code/momo_game.h	/^  INPUT_BUTTON_CODE_F4,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F5	code/game_input.h	/^  INPUT_BUTTON_CODE_F5,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F5	code/momo_game.h	/^  INPUT_BUTTON_CODE_F5,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F6	code/game_input.h	/^  INPUT_BUTTON_CODE_F6,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F6	code/momo_game.h	/^  INPUT_BUTTON_CODE_F6,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F7	code/game_input.h	/^  INPUT_BUTTON_CODE_F7,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F7	code/momo_game.h	/^  INPUT_BUTTON_CODE_F7,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F8	code/game_input.h	/^  INPUT_BUTTON_CODE_F8,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F8	code/momo_game.h	/^  INPUT_BUTTON_CODE_F8,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F9	code/game_input.h	/^  INPUT_BUTTON_CODE_F9,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_F9	code/momo_game.h	/^  INPUT_BUTTON_CODE_F9,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_G	code/game_input.h	/^  INPUT_BUTTON_CODE_G,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_G	code/momo_game.h	/^  INPUT_BUTTON_CODE_G,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_H	code/game_input.h	/^  INPUT_BUTTON_CODE_H,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_H	code/momo_game.h	/^  INPUT_BUTTON_CODE_H,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_I	code/game_input.h	/^  INPUT_BUTTON_CODE_I,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_I	code/momo_game.h	/^  INPUT_BUTTON_CODE_I,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_J	code/game_input.h	/^  INPUT_BUTTON_CODE_J,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_J	code/momo_game.h	/^  INPUT_BUTTON_CODE_J,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_K	code/game_input.h	/^  INPUT_BUTTON_CODE_K,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_K	code/momo_game.h	/^  INPUT_BUTTON_CODE_K,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_L	code/game_input.h	/^  INPUT_BUTTON_CODE_L,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_L	code/momo_game.h	/^  INPUT_BUTTON_CODE_L,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_LMB	code/game_input.h	/^  INPUT_BUTTON_CODE_LMB,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_LMB	code/momo_game.h	/^  INPUT_BUTTON_CODE_LMB,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_M	code/game_input.h	/^  INPUT_BUTTON_CODE_M,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_M	code/momo_game.h	/^  INPUT_BUTTON_CODE_M,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_MAX	code/game_input.h	/^  INPUT_BUTTON_CODE_MAX,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_MAX	code/momo_game.h	/^  INPUT_BUTTON_CODE_MAX,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_MMB	code/game_input.h	/^  INPUT_BUTTON_CODE_MMB,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_MMB	code/momo_game.h	/^  INPUT_BUTTON_CODE_MMB,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_N	code/game_input.h	/^  INPUT_BUTTON_CODE_N,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_N	code/momo_game.h	/^  INPUT_BUTTON_CODE_N,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_O	code/game_input.h	/^  INPUT_BUTTON_CODE_O,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_O	code/momo_game.h	/^  INPUT_BUTTON_CODE_O,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_P	code/game_input.h	/^  INPUT_BUTTON_CODE_P,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_P	code/momo_game.h	/^  INPUT_BUTTON_CODE_P,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_Q	code/game_input.h	/^  INPUT_BUTTON_CODE_Q,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_Q	code/momo_game.h	/^  INPUT_BUTTON_CODE_Q,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_R	code/game_input.h	/^  INPUT_BUTTON_CODE_R,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_R	code/momo_game.h	/^  INPUT_BUTTON_CODE_R,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_RMB	code/game_input.h	/^  INPUT_BUTTON_CODE_RMB,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_RMB	code/momo_game.h	/^  INPUT_BUTTON_CODE_RMB,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_S	code/game_input.h	/^  INPUT_BUTTON_CODE_S,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_S	code/momo_game.h	/^  INPUT_BUTTON_CODE_S,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_SPACE	code/game_input.h	/^  INPUT_BUTTON_CODE_SPACE,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_SPACE	code/momo_game.h	/^  INPUT_BUTTON_CODE_SPACE,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_T	code/game_input.h	/^  INPUT_BUTTON_CODE_T,$/;"	e	language:C++	enum:input_button_code_t
+input_button_code_t	code/game_input.h	/^enum input_button_code_t {$/;"	g	language:C++
+INPUT_BUTTON_CODE_T	code/momo_game.h	/^  INPUT_BUTTON_CODE_T,$/;"	e	language:C++	enum:input_button_code_t
+input_button_code_t	code/momo_game.h	/^enum input_button_code_t {$/;"	g	language:C++
+INPUT_BUTTON_CODE_U	code/game_input.h	/^  INPUT_BUTTON_CODE_U,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_U	code/momo_game.h	/^  INPUT_BUTTON_CODE_U,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_UNKNOWN	code/game_input.h	/^  INPUT_BUTTON_CODE_UNKNOWN,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_UNKNOWN	code/momo_game.h	/^  INPUT_BUTTON_CODE_UNKNOWN,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_V	code/game_input.h	/^  INPUT_BUTTON_CODE_V,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_V	code/momo_game.h	/^  INPUT_BUTTON_CODE_V,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_W	code/game_input.h	/^  INPUT_BUTTON_CODE_W,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_W	code/momo_game.h	/^  INPUT_BUTTON_CODE_W,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_X	code/game_input.h	/^  INPUT_BUTTON_CODE_X,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_X	code/momo_game.h	/^  INPUT_BUTTON_CODE_X,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_Y	code/game_input.h	/^  INPUT_BUTTON_CODE_Y,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_Y	code/momo_game.h	/^  INPUT_BUTTON_CODE_Y,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_Z	code/game_input.h	/^  INPUT_BUTTON_CODE_Z,$/;"	e	language:C++	enum:input_button_code_t
+INPUT_BUTTON_CODE_Z	code/momo_game.h	/^  INPUT_BUTTON_CODE_Z,$/;"	e	language:C++	enum:input_button_code_t
+input_button_t	code/game_input.h	/^struct input_button_t {$/;"	s	language:C++
+input_button_t	code/momo_game.h	/^struct input_button_t {$/;"	s	language:C++
 input_line	code/game_console.h	/^  sb8_t input_line;$/;"	m	language:C++	struct:console_t	typeref:typename:sb8_t
 input_line	code/momo_game_console.h	/^  sb8_t input_line;$/;"	m	language:C++	struct:console_t	typeref:typename:sb8_t
-input_t	code/game.h	/^struct input_t {$/;"	s	language:C++
+input_t	code/game_input.h	/^struct input_t {$/;"	s	language:C++
 input_t	code/momo_game.h	/^struct input_t{$/;"	s	language:C++
 inspector	code/lit.h	/^  inspector_t inspector;$/;"	m	language:C++	struct:lit_t	typeref:typename:inspector_t
 inspector_add_f32	code/momo_inspector.h	/^inspector_add_f32(inspector_t* in, str8_t name, f32_t item) {$/;"	f	language:C++	typeref:typename:void
@@ -1478,9 +1478,9 @@ is_device_ready	code/w32_momo_audio_wasapi.h	/^	b32_t is_device_ready;$/;"	m	lan
 is_digit	code/momo_types.h	/^is_digit(c8_t c) {$/;"	f	language:C++	typeref:typename:b32_t
 is_dll_reloaded	code/game.h	/^  b32_t is_dll_reloaded;$/;"	m	language:C++	struct:game_t	typeref:typename:b32_t
 is_dll_reloaded	code/momo_game.h	/^  b32_t is_dll_reloaded;$/;"	m	language:C++	struct:game_t	typeref:typename:b32_t
-is_down	code/game.h	/^is_down(input_button_t btn){$/;"	f	language:C++	typeref:typename:b32_t
+is_down	code/game_input.h	/^is_down(input_button_t btn){$/;"	f	language:C++	typeref:typename:b32_t
 is_down	code/momo_game.h	/^is_down(input_button_t btn){$/;"	f	language:C++	typeref:typename:b32_t
-is_held	code/game.h	/^is_held(input_button_t btn) {$/;"	f	language:C++	typeref:typename:b32_t
+is_held	code/game_input.h	/^is_held(input_button_t btn) {$/;"	f	language:C++	typeref:typename:b32_t
 is_held	code/momo_game.h	/^is_held(input_button_t btn) {$/;"	f	language:C++	typeref:typename:b32_t
 is_holding_light	code/lit_game.h	/^  b32_t is_holding_light;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:b32_t
 is_inverted	code/momo_ttf.h	/^  b32_t is_inverted;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:b32_t
@@ -1488,10 +1488,10 @@ is_memory_same	code/momo_types.h	/^is_memory_same(const void* lhs, const void* r
 is_memory_same	code/momo_types.h	/^is_memory_same(const void* lhs, const void* rhs, umi_t size) {$/;"	f	language:C++	typeref:typename:b32_t
 is_nan_f32	code/momo_types.h	/^is_nan_f32(f32_t f) {$/;"	f	language:C++	typeref:typename:b32_t
 is_nan_f64	code/momo_types.h	/^is_nan_f64(f64_t f) {$/;"	f	language:C++	typeref:typename:b32_t
-is_poked	code/game.h	/^is_poked(input_button_t btn) {$/;"	f	language:C++	typeref:typename:b32_t
+is_poked	code/game_input.h	/^is_poked(input_button_t btn) {$/;"	f	language:C++	typeref:typename:b32_t
 is_poked	code/momo_game.h	/^is_poked(input_button_t btn) {$/;"	f	language:C++	typeref:typename:b32_t
 is_pow2	code/momo_types.h	/^#define is_pow2(/;"	d	language:C++
-is_released	code/game.h	/^is_released(input_button_t btn) {$/;"	f	language:C++	typeref:typename:b32_t
+is_released	code/game_input.h	/^is_released(input_button_t btn) {$/;"	f	language:C++	typeref:typename:b32_t
 is_released	code/momo_game.h	/^is_released(input_button_t btn) {$/;"	f	language:C++	typeref:typename:b32_t
 is_running	code/game.h	/^  b32_t is_running;$/;"	m	language:C++	struct:game_t	typeref:typename:b32_t
 is_running	code/momo_game.h	/^  b32_t is_running;$/;"	m	language:C++	struct:game_t	typeref:typename:b32_t
@@ -1894,9 +1894,9 @@ MOMO_TTF_H	code/momo_ttf.h	/^#define MOMO_TTF_H$/;"	d	language:C++
 MOMO_TYPES_H	code/momo_types.h	/^#define MOMO_TYPES_H$/;"	d	language:C++
 MOMO_VECTOR_H	code/momo_vectors.h	/^#define MOMO_VECTOR_H$/;"	d	language:C++
 MOMO_WAV_H	code/momo_wav.h	/^#define MOMO_WAV_H$/;"	d	language:C++
-mouse_pos	code/game.h	/^  v2f_t mouse_pos;$/;"	m	language:C++	struct:input_t	typeref:typename:v2f_t
+mouse_pos	code/game_input.h	/^  v2f_t mouse_pos;$/;"	m	language:C++	struct:input_t	typeref:typename:v2f_t
 mouse_pos	code/momo_game.h	/^  v2f_t mouse_pos;$/;"	m	language:C++	struct:input_t	typeref:typename:v2f_t
-mouse_scroll_delta	code/game.h	/^  s32_t mouse_scroll_delta;$/;"	m	language:C++	struct:input_t	typeref:typename:s32_t
+mouse_scroll_delta	code/game_input.h	/^  s32_t mouse_scroll_delta;$/;"	m	language:C++	struct:input_t	typeref:typename:s32_t
 mouse_scroll_delta	code/momo_game.h	/^  s32_t mouse_scroll_delta;$/;"	m	language:C++	struct:input_t	typeref:typename:s32_t
 move_point	code/lit_game.h	/^    lit_game_animator_patrol_point_t move_point;$/;"	m	language:C++	union:lit_game_animator_t::__anon4d532547010a	typeref:typename:lit_game_animator_patrol_point_t
 move_sprite	code/lit_game.h	/^  asset_sprite_id_t move_sprite;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:asset_sprite_id_t
@@ -1919,7 +1919,7 @@ NOMINMAX	code/w32_game.cpp	/^#define NOMINMAX$/;"	d	language:C++	file:
 NOMINMAX	code/w32_momo.cpp	/^#define NOMINMAX$/;"	d	language:C++	file:
 notifs	code/w32_game_audio_wasapi.h	/^  w32_wasapi_notif_client_t notifs;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:w32_wasapi_notif_client_t
 notifs	code/w32_momo_audio_wasapi.h	/^  w32_wasapi_notif_client_t notifs;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:w32_wasapi_notif_client_t
-now	code/game.h	/^  b32_t now; $/;"	m	language:C++	struct:input_button_t	typeref:typename:b32_t
+now	code/game_input.h	/^  b32_t now; $/;"	m	language:C++	struct:input_button_t	typeref:typename:b32_t
 now	code/momo_game.h	/^  b32_t now; $/;"	m	language:C++	struct:input_button_t	typeref:typename:b32_t
 ns_begin	code/momo_types.h	/^# define ns_begin(/;"	d	language:C++
 ns_end	code/momo_types.h	/^# define ns_end(/;"	d	language:C++
@@ -2284,13 +2284,13 @@ PF_FILE_ACCESS_OVERWRITE	code/game_platform.h	/^  PF_FILE_ACCESS_OVERWRITE,$/;"	
 PF_FILE_ACCESS_OVERWRITE	code/momo_platform.h	/^  PF_FILE_ACCESS_OVERWRITE,$/;"	e	language:C++	enum:pf_file_access_t
 PF_FILE_ACCESS_READ	code/game_platform.h	/^  PF_FILE_ACCESS_READ,$/;"	e	language:C++	enum:pf_file_access_t
 PF_FILE_ACCESS_READ	code/momo_platform.h	/^  PF_FILE_ACCESS_READ,$/;"	e	language:C++	enum:pf_file_access_t
-pf_file_access_t	code/game_platform.h	/^enum pf_file_access_t{$/;"	g	language:C++
+pf_file_access_t	code/game_platform.h	/^enum pf_file_access_t {$/;"	g	language:C++
 pf_file_access_t	code/momo_platform.h	/^enum pf_file_access_t{$/;"	g	language:C++
 PF_FILE_PATH_CACHE	code/game_platform.h	/^  PF_FILE_PATH_CACHE,$/;"	e	language:C++	enum:pf_file_path_t
 PF_FILE_PATH_CACHE	code/momo_platform.h	/^  PF_FILE_PATH_CACHE,$/;"	e	language:C++	enum:pf_file_path_t
 PF_FILE_PATH_EXE	code/game_platform.h	/^  PF_FILE_PATH_EXE,$/;"	e	language:C++	enum:pf_file_path_t
 PF_FILE_PATH_EXE	code/momo_platform.h	/^  PF_FILE_PATH_EXE,$/;"	e	language:C++	enum:pf_file_path_t
-pf_file_path_t	code/game_platform.h	/^enum pf_file_path_t{$/;"	g	language:C++
+pf_file_path_t	code/game_platform.h	/^enum pf_file_path_t {$/;"	g	language:C++
 pf_file_path_t	code/momo_platform.h	/^enum pf_file_path_t{$/;"	g	language:C++
 PF_FILE_PATH_USER	code/game_platform.h	/^  PF_FILE_PATH_USER,$/;"	e	language:C++	enum:pf_file_path_t
 PF_FILE_PATH_USER	code/momo_platform.h	/^  PF_FILE_PATH_USER,$/;"	e	language:C++	enum:pf_file_path_t

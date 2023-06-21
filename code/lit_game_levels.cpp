@@ -1415,7 +1415,7 @@ lit_level_menu(lit_game_t* m) {
   }
 
   // green light
-  if (lit_get_levels_unlocked_count() >= 10) {
+  if (lit_get_levels_unlocked_count() > 10) {
     lit_game_push_light(m, 25.f, 25.f, 0x004400FF, 360.f, 0.f);
   }
 }
