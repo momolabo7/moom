@@ -21,7 +21,7 @@ lit_update_splash() {
   splash->scroll_in_timer -= input->delta_time;
 
 
-  if (is_poked(input->buttons[INPUT_BUTTON_CODE_LMB])) {
+  if (is_poked(input, INPUT_BUTTON_CODE_LMB)) {
     if (splash->scroll_in_timer > 0.f)  {
       splash->scroll_in_timer = 0.f;
     }

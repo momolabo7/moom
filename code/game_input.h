@@ -98,27 +98,31 @@ struct input_t {
 
 
 // before: 0, now: 1
-static b32_t 
-is_poked(input_button_t btn) {
+static b32_t
+is_poked(input_t* in, input_button_code_t code) {
+  auto btn = in->buttons[code];
   return !btn.before && btn.now;
 }
 
 // before: 1, now: 0
 static b32_t
-is_released(input_button_t btn) {
+is_released(input_t* in, input_button_code_t code) {
+  auto btn = in->buttons[code];
   return btn.before && !btn.now;
 }
 
 // before: X, now: 1
 static b32_t
-is_down(input_button_t btn){
-  return btn.now;
+is_down(input_t* in, input_button_code_t code){
+  return in->buttons[code].now;
 }
+
 
 // before: 1, now: 1
+
 static b32_t
-is_held(input_button_t btn) {
+is_held(input_t* in, input_button_code_t code) {
+  auto btn = in->buttons[code];
   return btn.before && btn.now;
 }
-
 #endif

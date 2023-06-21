@@ -138,23 +138,23 @@ lit_menu_tick_normal(
 
   else {
     if (menu->selection_held_timer <= 0.f) {
-      if (is_poked(input->buttons[INPUT_BUTTON_CODE_W])) {
+      if (is_poked(input, INPUT_BUTTON_CODE_W)) {
         if (menu->current_level_selection >= LIT_MENU_LEVELS_PER_ROW) {
           menu->current_level_selection -= LIT_MENU_LEVELS_PER_ROW;
         }
       }
-      if (is_poked(input->buttons[INPUT_BUTTON_CODE_S])) {
+      if (is_poked(input, INPUT_BUTTON_CODE_S)) {
         if (menu->current_level_selection < LIT_MENU_TOTAL_LEVELS - LIT_MENU_LEVELS_PER_ROW)
           menu->current_level_selection += LIT_MENU_LEVELS_PER_ROW;
       }
-      if (is_poked(input->buttons[INPUT_BUTTON_CODE_D])) 
+      if (is_poked(input, INPUT_BUTTON_CODE_D)) 
       {
         if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != LIT_MENU_LEVELS_PER_ROW-1)
         {
           menu->current_level_selection++;
         }
       }
-      if (is_poked(input->buttons[INPUT_BUTTON_CODE_A]))
+      if (is_poked(input, INPUT_BUTTON_CODE_A))
       {
         if (menu->current_level_selection % LIT_MENU_LEVELS_PER_ROW != 0) 
         {
