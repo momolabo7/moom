@@ -7,7 +7,7 @@
 #include "game.h"
 
 
-#define LIT_SAVE_FILE_ENABLE false
+#define LIT_SAVE_FILE_ENABLE true
 #define LIT_SAVE_FILE "hello.sav"
 
 #define LIT_WIDTH  800.f
@@ -32,9 +32,10 @@
 #define LIT_PLAYER_ROTATE_SPEED 1.f
 
 #define LIT_SKIP_TRANSITIONS false
-#define LIT_LAST_TUTORIAL_LEVEL_ID 3
 #define LIT_DEBUG_LINES false
 
+#define LIT_LEARNT_BASICS_LEVEL_ID (3)
+#define LIT_LEARNT_POINT_LIGHT_LEVEL_ID (7)
 
 #ifdef INTERNAL
 #define lit_log(...) pf.debug_log(__VA_ARGS__)
@@ -115,7 +116,7 @@ static lit_t* lit;
 // Save data related
 static b32_t
 lit_is_in_tutorial() {
-  return lit->save_data.unlocked_levels <= LIT_LAST_TUTORIAL_LEVEL_ID;
+  return lit->save_data.unlocked_levels <= LIT_LEARNT_BASICS_LEVEL_ID;
 }
 
 static b32_t 

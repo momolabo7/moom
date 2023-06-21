@@ -34,6 +34,7 @@ lit_game_init_level(lit_game_t* m, str8_t str, u32_t level_id) {
   m->point_count = 0;
   m->sensor_group_count = 0;
   m->current_level_id = level_id;
+  m->exit_fade = 0.f;
 
   m->selected_sensor_group_id = array_count(m->sensor_groups);
   m->selected_animator_for_sensor = nullptr; 
@@ -1392,7 +1393,7 @@ lit_level_menu(lit_game_t* m) {
 
 
   // white lights
-  if (lit_get_levels_unlocked_count() >= 7)  {
+  if (lit_get_levels_unlocked_count() > LIT_LEARNT_POINT_LIGHT_LEVEL_ID)  {
     lit_game_push_light(m, 25.f, 775.f, 0x444444FF, 360.f, 0.f);
     lit_game_push_light(m, 775.f, 25.f, 0x444444FF, 360.f, 0.f);
   }
@@ -1405,7 +1406,7 @@ lit_level_menu(lit_game_t* m) {
   // red light
   if (lit_get_levels_unlocked_count() >= 6) {
     // if player has learnt about point lights
-    if (lit_get_levels_unlocked_count() >= 7) {
+    if (lit_get_levels_unlocked_count() > LIT_LEARNT_POINT_LIGHT_LEVEL_ID) {
       lit_game_push_light(m, 775.f, 775.f, 0x440000FF, 360.f, 0.f);
     }
     else { // player has not learnt about point lights

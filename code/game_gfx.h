@@ -113,11 +113,11 @@ struct gfx_command_clear_t {
 };
 
 
-typedef struct gfx_command_view_t {
+struct gfx_command_view_t {
   f32_t pos_x, pos_y;
   f32_t min_x, max_x;
   f32_t min_y, max_y;
-} gfx_command_view_t;
+};
 
 struct gfx_command_sprite_t {
   v2f_t pos;
@@ -137,9 +137,7 @@ struct gfx_command_delete_texture_t {
 };
 
 struct gfx_command_delete_all_textures_t {};
-
-struct gfx_command_advance_depth_t {
-};
+struct gfx_command_advance_depth_t {};
 
 struct gfx_command_rect_t {
   rgba_t colors;

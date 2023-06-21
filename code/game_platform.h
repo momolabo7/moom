@@ -11,14 +11,14 @@ typedef void  pf_free_memory_f(void* ptr);
 //
 // Platform File API
 //
-enum pf_file_path_t{
+enum pf_file_path_t {
   PF_FILE_PATH_EXE,
   PF_FILE_PATH_USER,
   PF_FILE_PATH_CACHE,
 
 };
 
-enum pf_file_access_t{
+enum pf_file_access_t {
   PF_FILE_ACCESS_READ,
   PF_FILE_ACCESS_OVERWRITE,
 };
@@ -54,7 +54,7 @@ typedef void  pf_debug_log_f(const char* fmt, ...);
 typedef u64_t pf_get_performance_counter_f();
 
 // TODO: remove this?
-typedef void  pf_set_moe_dims_f(f32_t width, f32_t height);
+typedef void  pf_set_dims_f(f32_t width, f32_t height);
 
 
 struct pf_t {
@@ -86,7 +86,7 @@ struct pf_t {
 
   // set window dimensions
   // TODO: change name
-  pf_set_moe_dims_f* set_design_dims;
+  pf_set_dims_f* set_design_dims;
 
 };
 static pf_t pf;

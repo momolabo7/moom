@@ -23,18 +23,16 @@ lit_game_update()
   lit_game_t* g = &lit->game;
   lit_game_player_t* player = &g->player;
 
-  if (is_poked(input->buttons[GAME_BUTTON_CODE_SPACE])) {
+  if (is_poked(input->buttons[INPUT_BUTTON_CODE_SPACE])) {
     g->freeze = !g->freeze;
   }
 
   
   f32_t dt = input->delta_time;
   
-
   //
   // Transition Logic
   //
-  
   lit_profile_begin(transition);
   if (g->state == LIT_GAME_STATE_TYPE_TRANSITION_IN) 
   {
@@ -93,11 +91,24 @@ lit_game_update()
   if (g->state == LIT_GAME_STATE_TYPE_NORMAL) 
   {
     lit_profile_begin(animate);
-
     if (!g->freeze) {
       lit_game_animate_everything(g, dt);
     }
     lit_profile_end(animate);
+
+    // Do input for exiting to HOME if not HOME
+    if (g->current_level_id > 0) {
+      if (input->mouse_scroll_delta < 0)
+        g->exit_fade = min_of(1.f, g->exit_fade + 0.1f);
+      else if (input->mouse_scroll_delta > 0) 
+        g->exit_fade = max_of(0.f, g->exit_fade - 0.1f);
+      if (g->exit_fade >= 1.f) {
+        // go back to HOME
+        lit_level_menu(g);
+        return;
+      }
+    }
+
 
     lit_game_update_player(g, dt);
   }
@@ -157,6 +168,13 @@ lit_game_update()
   // Draw the overlay for fade in/out
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->stage_fade_timer);
+    gfx_push_asset_sprite(gfx, &lit->assets, g->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    gfx_advance_depth(gfx);
+  }
+
+  // Overlay for pause fade
+  {
+    rgba_t color = rgba_set(0.f, 0.f, 0.f, g->exit_fade);
     gfx_push_asset_sprite(gfx, &lit->assets, g->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
     gfx_advance_depth(gfx);
   }

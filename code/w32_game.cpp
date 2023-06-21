@@ -569,32 +569,32 @@ w32_complete_all_tasks() {
 
 
 
-static game_button_code_t
+static input_button_code_t
 w32_vkeys_to_input_button_code(u32_t code) {
 
   // A to Z
   if (code >= 0x41 && code <= 0x5A) {
-    return game_button_code_t(GAME_BUTTON_CODE_A + code - 0x41);
+    return input_button_code_t(INPUT_BUTTON_CODE_A + code - 0x41);
   }
   
   // 0 to 9
   else if (code >= 0x30 && code <= 0x39) {
-    return game_button_code_t(GAME_BUTTON_CODE_0 + code - 0x30);
+    return input_button_code_t(INPUT_BUTTON_CODE_0 + code - 0x30);
   }
 
   // F1 to F12
   // NOTE(momo): there are actually more F-keys??
   else if (code >= 0x70 && code <= 0x7B) {
-    return game_button_code_t(GAME_BUTTON_CODE_F1 + code - 0x70);
+    return input_button_code_t(INPUT_BUTTON_CODE_F1 + code - 0x70);
   }
   else {
     switch(code) {
-      case VK_SPACE: return GAME_BUTTON_CODE_SPACE;
+      case VK_SPACE: return INPUT_BUTTON_CODE_SPACE;
     }
 
   }
   
-  return GAME_BUTTON_CODE_UNKNOWN;
+  return INPUT_BUTTON_CODE_UNKNOWN;
 }
 
 static void
@@ -622,19 +622,19 @@ w32_process_input(HWND window, input_t* input)
       case WM_LBUTTONUP:
       case WM_LBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_LBUTTONDOWN;
-        input->buttons[GAME_BUTTON_CODE_LMB].now = is_key_down;
+        input->buttons[INPUT_BUTTON_CODE_LMB].now = is_key_down;
       } break;
 
       case WM_MBUTTONUP:
       case WM_MBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_MBUTTONDOWN;
-        input->buttons[GAME_BUTTON_CODE_MMB].now = is_key_down;
+        input->buttons[INPUT_BUTTON_CODE_MMB].now = is_key_down;
       } break;
 
       case WM_RBUTTONUP:
       case WM_RBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_RBUTTONDOWN;
-        input->buttons[GAME_BUTTON_CODE_RMB].now = is_key_down;
+        input->buttons[INPUT_BUTTON_CODE_RMB].now = is_key_down;
       } break;
       
       case WM_KEYUP:

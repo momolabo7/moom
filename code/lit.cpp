@@ -96,7 +96,7 @@ lit_tick() {
   }
 
   // Debug
-  if (is_poked(input->buttons[GAME_BUTTON_CODE_F1])) {
+  if (is_poked(input->buttons[INPUT_BUTTON_CODE_F1])) {
     lit->show_debug_type = 
       (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
   }

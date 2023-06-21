@@ -5,10 +5,11 @@ enum lit_game_state_type_t {
   LIT_GAME_STATE_TYPE_TRANSITION_IN,
   LIT_GAME_STATE_TYPE_NORMAL,
 
-  // exiting states are after NORMAL
   LIT_GAME_STATE_TYPE_SOLVED_IN,
   LIT_GAME_STATE_TYPE_SOLVED_OUT,
   LIT_GAME_STATE_TYPE_TRANSITION_OUT,
+
+  LIT_GAME_STATE_TYPE_EXIT,
 };
 
 
@@ -227,6 +228,7 @@ struct lit_game_t {
 
   f32_t stage_fade_timer;
   f32_t stage_flash_timer;
+  f32_t exit_fade;
 
   rng_t rng;
 
