@@ -157,7 +157,7 @@ f64_pow(f64_t b, f64_t e){
 }
 
 
-// TODO(Momo): IEEE version of these?
+// TODO(momo): IEEE version of these?
 static f32_t f32_floor(f32_t value) {
   return floorf(value);
   

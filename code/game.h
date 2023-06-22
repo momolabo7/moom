@@ -22,7 +22,7 @@ struct game_platform_config_t {
   usz_t render_command_size;
 
   // must be null terminated
-  const char* window_title; // TODO: change to str8_t?
+  const char* window_title; // TODO(game): change to str8_t?
 };
 
 struct game_t {
@@ -33,6 +33,7 @@ struct game_t {
   b32_t is_dll_reloaded;
   b32_t is_running;
 };
+
 
 typedef game_platform_config_t game_get_platform_config_f(void); 
 typedef void game_update_and_render_f(

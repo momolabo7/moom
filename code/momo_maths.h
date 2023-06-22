@@ -1,7 +1,11 @@
 
-#ifndef MOMO_VECTOR_H
-#define MOMO_VECTOR_H
+#ifndef MOMO_MATH_H
+#define MOMO_MATH_H
 
+
+struct m44f_t {
+	f32_t e[4][4];
+};
 
 union v2u_t {
 	struct { u32_t x, y; };
@@ -33,80 +37,11 @@ union v4f_t {
   f32_t e[4];
 };
 
-static v2f_t   v2f_zero(void);
-static v2f_t   v2f_set(f32_t, f32_t y); 
-static v2f_t   v2f_add(v2f_t lhs, v2f_t rhs);
-static v2f_t   v2f_sub(v2f_t lhs, v2f_t rhs);
-static v2f_t   v2f_scale(v2f_t lhs, f32_t rhs);
-static v2f_t	 v2f_inv(v2f_t v);
-static v2f_t	 v2f_ratio(v2f_t lhs, v2f_t rhs);
-static v2f_t   v2f_div(v2f_t lhs, f32_t rhs);
-static f32_t   v2f_dot(v2f_t lhs, v2f_t rhs);
-static f32_t   v2f_dist_sq(v2f_t lhs, v2f_t rhs);
-static f32_t   v2f_len_sq(v2f_t v);
-static v2f_t   v2f_negate(v2f_t v);
-static b32_t   v2f_is_close(v2f_t lhs, v2f_t rhs);
-static v2f_t   v2f_mid(v2f_t lhs, v2f_t rhs);
-static f32_t   v2f_dist(v2f_t lhs, v2f_t rhs);
-static f32_t   v2f_len(v2f_t v);
-static v2f_t   v2f_norm(v2f_t v);
-static v2f_t   v2f_proj(v2f_t v, v2f_t onto);
-static v2f_t   v2f_rotate(v2f_t v, f32_t rad);
-static f32_t   v2f_angle(v2f_t lhs, v2f_t rhs);
-static f32_t   v2f_cross(v2f_t lhs, v2f_t rhs);
-static v2f_t   v2f_lerp(v2f_t s, v2f_t e, f32_t a);
-
-static v2u_t   v2u_add(v2u_t lhs, v2u_t rhs);
-static v2u_t   v2u_sub(v2u_t lhs, v2u_t rhs);
-
-static v3f_t   v3f_add(v3f_t lhs, v3f_t rhs);
-static v3f_t   v3f_sub(v3f_t lhs, v3f_t rhs);
-static v3f_t   v3f_scale(v3f_t lhs, f32_t rhs);
-static v3f_t   v3f_div(v3f_t lhs, f32_t rhs);
-static f32_t   v3f_dot(v3f_t lhs, v3f_t rhs);
-static f32_t   v3f_dist_sq(v3f_t lhs, v3f_t rhs);
-static f32_t   v3f_len_sq(v3f_t v);
-static b32_t   v3f_is_close(v3f_t lhs, v3f_t rhs);
-static v3f_t   v3f_negate(v3f_t v);
-static v3f_t   v3f_mid(v3f_t lhs, v3f_t rhs);
-static v3f_t   v3f_cross(v3f_t lhs, v3f_t rhs);
-static f32_t   v3f_dist(v3f_t lhs, v3f_t rhs);
-static f32_t   v3f_len(v3f_t v);
-static v3f_t   v3f_norm(v3f_t v);
-static v3f_t   v3f_proj(v3f_t v, v3f_t onto);
-static f32_t 	 v3f_angle(v3f_t lhs, v3f_t rhs);
-
-static v2f_t  operator+(v2f_t lhs, v2f_t rhs);
-static v2f_t  operator-(v2f_t lhs, v2f_t rhs);
-static v2f_t  operator*(v2f_t lhs, f32_t rhs); // scale
-static v2f_t  operator*(f32_t lhs, v2f_t rhs); // scale
-static b32_t  operator==(v2f_t lhs, v2f_t rhs);
-static b32_t  operator!=(v2f_t lhs, v2f_t rhs);
-static v2f_t  operator-(v2f_t v);
-static v2f_t& operator+=(v2f_t& lhs, v2f_t rhs);
-static v2f_t& operator-=(v2f_t& lhs, v2f_t rhs);
-static v2f_t& operator*=(v2f_t& lhs, v2f_t rhs);
-
-static v3f_t  operator+(v3f_t lhs, v3f_t rhs);
-static v3f_t  operator-(v3f_t lhs, v3f_t rhs);
-static v3f_t  operator*(v3f_t lhs, f32_t rhs); // scale
-static v3f_t  operator*(f32_t lhs, v3f_t rhs); // scale
-static b32_t  operator==(v3f_t lhs, v3f_t rhs);
-static b32_t  operator!=(v3f_t lhs, v3f_t rhs);
-static v3f_t  operator-(v3f_t v);
-static v3f_t& operator+=(v3f_t& lhs, v3f_t rhs);
-static v3f_t& operator-=(v3f_t& lhs, v3f_t rhs);
-static v3f_t& operator*=(v3f_t& lhs, v3f_t rhs);
-
-//
-// IMPLEMENTATION
-// 
 
 
 //
 // NOTE(Momo): v2f_t
 //
-
 static v2f_t 
 v2f_add(v2f_t lhs, v2f_t rhs) {
 	lhs.x += rhs.x;
@@ -156,15 +91,6 @@ v2f_dot(v2f_t lhs, v2f_t rhs) {
 }
 
 static f32_t  
-v2f_dist_sq(v2f_t lhs, v2f_t rhs) {
-  return v2f_len_sq(v2f_sub(lhs, rhs));
-}
-static f32_t  
-v2f_dist(v2f_t lhs, v2f_t rhs) {
-  return f32_sqrt(v2f_dist_sq(lhs, rhs));
-}
-
-static f32_t  
 v2f_len_sq(v2f_t v) {
   return v2f_dot(v, v);
 }
@@ -173,6 +99,15 @@ static f32_t
 v2f_len(v2f_t v) {
   return f32_sqrt(v2f_len_sq(v));
 }
+static f32_t  
+v2f_dist_sq(v2f_t lhs, v2f_t rhs) {
+  return v2f_len_sq(v2f_sub(lhs, rhs));
+}
+static f32_t  
+v2f_dist(v2f_t lhs, v2f_t rhs) {
+  return f32_sqrt(v2f_dist_sq(lhs, rhs));
+}
+
 
 static v2f_t 
 v2f_norm(v2f_t v) {
@@ -241,7 +176,9 @@ v2f_lerp(v2f_t s, v2f_t e, f32_t a)
   return ret;
 }
 
-//~ NOTE(Momo): v3f_t
+//
+// NOTE(Momo): v3f_t
+//
 static v3f_t 
 v3f_add(v3f_t lhs, v3f_t rhs) {
   lhs.x += rhs.x;
@@ -288,6 +225,16 @@ v3f_dot(v3f_t lhs, v3f_t rhs) {
 }
 
 static f32_t  
+v3f_len_sq(v3f_t v) {
+  return v3f_dot(v, v);
+}
+
+static f32_t   
+v3f_len(v3f_t v) {
+  return f32_sqrt(v3f_len_sq(v));
+}
+
+static f32_t  
 v3f_dist_sq(v3f_t lhs, v3f_t rhs) {
   return v3f_len_sq(v3f_sub(lhs, rhs));
 }
@@ -297,15 +244,6 @@ v3f_dist(v3f_t lhs, v3f_t rhs) {
   return f32_sqrt(v3f_dist_sq(lhs, rhs));
 }
 
-static f32_t  
-v3f_len_sq(v3f_t v) {
-  return v3f_dot(v, v);
-}
-
-static f32_t   
-v3f_len(v3f_t v) {
-  return f32_sqrt(v3f_len_sq(v));
-}
 
 static v3f_t 
 v3f_norm(v3f_t v) {
@@ -379,13 +317,174 @@ static v2f_t
 v2f_zero(void){
   return { 0, 0 };
 }
-// Operator Overloading
+
+
+//
+// m44f
+//
+static m44f_t
+m44f_concat(m44f_t lhs, m44f_t rhs) {
+	m44f_t ret = {};
+  for (u32_t r = 0; r < 4; r++) { 
+    for (u32_t c = 0; c < 4; c++) { 
+      for (u32_t i = 0; i < 4; i++) {
+				ret.e[r][c] += lhs.e[r][i] *  rhs.e[i][c]; 
+			}
+		} 
+	} 
+	return ret;
+}
+
+static m44f_t 
+m44f_transpose(m44f_t m) {
+	m44f_t ret = {};
+	for (u32_t i = 0; i < 4; ++i ) {
+		for (u32_t j = 0; j < 4; ++j) {
+			ret.e[i][j] = m.e[j][i];
+		}
+	}
+	return ret;
+}
+static m44f_t m44f_scale(f32_t x, f32_t y, f32_t z) {
+	m44f_t ret = {};
+	ret.e[0][0] = x;
+	ret.e[1][1] = y;
+	ret.e[2][2] = z;
+	ret.e[3][3] = 1.f;
+	
+	return ret;
+}
+
+static m44f_t 
+m44f_identity() {
+	m44f_t ret = {};
+	ret.e[0][0] = 1.f;
+	ret.e[1][1] = 1.f;
+	ret.e[2][2] = 1.f;
+	ret.e[3][3] = 1.f;
+	
+	return ret;
+}
+
+static m44f_t 
+m44f_translation(f32_t x, f32_t y, f32_t z = 0.f) {
+	m44f_t ret = m44f_identity();
+	ret.e[0][3] = x;
+	ret.e[1][3] = y;
+	ret.e[2][3] = z;
+	ret.e[3][3] = 1.f;
+	
+	return ret;
+}
+
+static m44f_t 
+m44f_rotation_x(f32_t rad) {
+	// NOTE(Momo): 
+	// 1  0  0  0
+	// 0  c -s  0
+	// 0  s  c  0
+	// 0  0  0  1
+	f32_t c = f32_cos(rad);
+	f32_t s = f32_sin(rad);
+	m44f_t ret = {};
+	ret.e[0][0] = 1.f;
+	ret.e[3][3] = 1.f;
+	ret.e[1][1] = c;
+	ret.e[1][2] = -s;
+	ret.e[2][1] = s;
+	ret.e[2][2] = c;
+	
+	return ret;
+}
+static m44f_t m44f_rotation_y(f32_t rad) {
+	
+	// NOTE(Momo): 
+	//  c  0  s  0
+	//  0  1  0  0
+	// -s  0  c  0
+	//  0  0  0  1
+	f32_t c = f32_cos(rad);
+	f32_t s = f32_sin(rad);
+	m44f_t ret = {};
+	ret.e[0][0] = c;
+	ret.e[0][2] = s;
+	ret.e[1][1] = 1.f;
+	ret.e[2][0] = -s;
+	ret.e[2][2] = c;
+	ret.e[3][3] = 1.f;
+	
+	return ret;
+}
+
+static m44f_t 
+m44f_rotation_z(f32_t rad) {
+	// NOTE(Momo): 
+	//  c -s  0  0
+	//  s  c  0  0
+	//  0  0  1  0
+	//  0  0  0  1
+	
+	f32_t c = f32_cos(rad);
+	f32_t s = f32_sin(rad);
+	m44f_t ret = {};
+	ret.e[0][0] = c;
+	ret.e[0][1] = -s;
+	ret.e[1][0] = s;
+	ret.e[1][1] = c;
+	ret.e[2][2] = 1.f;
+	ret.e[3][3] = 1.f;
+	
+	return ret;
+}
+
+static m44f_t 
+m44f_orthographic(f32_t left, f32_t right, f32_t bottom, f32_t top, f32_t near, f32_t far) {
+	
+	m44f_t ret = {0};
+	ret.e[0][0] = 2.f/(right-left);
+	ret.e[1][1] = 2.f/(top-bottom);
+	ret.e[2][2] = 2.f/(far-near);
+	ret.e[3][3] = 1.f;
+	ret.e[0][3] = -(right+left)/(right-left);
+	ret.e[1][3] = -(top+bottom)/(top-bottom);
+	ret.e[2][3] = -(far+near)/(far-near);
+	
+	return ret;
+}
+
+static m44f_t 
+m44f_frustum(f32_t left, f32_t right, f32_t bottom, f32_t top, f32_t near, f32_t far) {
+	m44f_t ret = {};
+	ret.e[0][0] = (2.f*near)/(right-left);
+	ret.e[1][1] = (2.f*near)/(top-bottom);
+	ret.e[2][2] = -(far+near)/(far-near);
+	ret.e[3][2] = 1;  
+	ret.e[0][2] = (right+left)/(right-left);
+	ret.e[1][2] = (top+bottom)/(top-bottom);
+	ret.e[1][3] = -near*(top+bottom)/(top-bottom);
+	ret.e[2][3] = 2.f*far*near/(far-near);
+	
+	return ret;
+}
+
+static m44f_t 
+m44f_perspective(f32_t fov, f32_t aspect, f32_t near, f32_t far){
+	f32_t top = near * f32_tan(fov*0.5f);
+	f32_t right = top * aspect;
+	return m44f_frustum(-right, right,
+                     -top, top,
+                     near, far);
+}
+
+//
+// Operator overloading
+//
 static v2f_t  operator+(v2f_t lhs, v2f_t rhs) { return v2f_add(lhs, rhs); }
 static v2f_t  operator-(v2f_t lhs, v2f_t rhs) { return v2f_sub(lhs, rhs); }
 static v2f_t  operator*(v2f_t lhs, f32_t rhs) { return v2f_scale(lhs, rhs); }
 static v2f_t  operator*(f32_t lhs, v2f_t rhs) { return v2f_scale(rhs, lhs); }
-static b32_t operator==(v2f_t lhs, v2f_t rhs) { return v2f_is_close(lhs, rhs); }
-static b32_t operator!=(v2f_t lhs, v2f_t rhs) { return !v2f_is_close(lhs, rhs); }
+static b32_t  operator==(v2f_t lhs, v2f_t rhs) { return v2f_is_close(lhs, rhs); }
+static b32_t  operator!=(v2f_t lhs, v2f_t rhs) { return !v2f_is_close(lhs, rhs); }
 static v2f_t  operator-(v2f_t v) { return v2f_negate(v); }
 static v2f_t& operator+=(v2f_t& lhs, v2f_t rhs) { return lhs = v2f_add(lhs, rhs); } 
 static v2f_t& operator-=(v2f_t& lhs, v2f_t rhs) { return lhs = v2f_sub(lhs, rhs); } 
@@ -398,12 +497,14 @@ static v3f_t  operator+(v3f_t lhs, v3f_t rhs) { return v3f_add(lhs, rhs); }
 static v3f_t  operator-(v3f_t lhs, v3f_t rhs) { return v3f_sub(lhs, rhs); }
 static v3f_t  operator*(v3f_t lhs, f32_t rhs) { return v3f_scale(lhs, rhs); }
 static v3f_t  operator*(f32_t lhs, v3f_t rhs) { return v3f_scale(rhs, lhs); }
-static b32_t operator==(v3f_t lhs, v3f_t rhs) { return v3f_is_close(lhs, rhs); }
-static b32_t operator!=(v3f_t lhs, v3f_t rhs) { return !v3f_is_close(lhs, rhs); }
+static b32_t  operator==(v3f_t lhs, v3f_t rhs) { return v3f_is_close(lhs, rhs); }
+static b32_t  operator!=(v3f_t lhs, v3f_t rhs) { return !v3f_is_close(lhs, rhs); }
 static v3f_t  operator-(v3f_t v) { return v3f_negate(v); }
 static v3f_t& operator+=(v3f_t& lhs, v3f_t rhs) { return lhs = v3f_add(lhs, rhs); } 
 static v3f_t& operator-=(v3f_t& lhs, v3f_t rhs) { return lhs = v3f_sub(lhs, rhs); } 
 static v3f_t& operator*=(v3f_t& lhs, f32_t rhs) { return lhs = v3f_scale(lhs, rhs); }
 
-
-#endif //MOMO_VECTOR_H
+static m44f_t operator*(m44f_t lhs, m44f_t rhs) {
+  return m44f_concat(lhs, rhs);
+}
+#endif //MOMO_MATH_H

@@ -127,7 +127,6 @@ sui_pack_push_sprite(sui_packer_t* p, sui_atlas_sprite_t* sprite, u32_t bitmap_a
   
 }
 
-// TODO: return something else?
 static u32_t
 sui_pack_push_bitmap(sui_packer_t* p, sui_atlas_t* atlas) {
   assert(p->active_group);

@@ -13,7 +13,6 @@ struct aabb2_t {
   // TODO
 };
 
-struct circ2_t
 
 static b32_t bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt); 
 
