@@ -426,8 +426,58 @@ lit_level_split(lit_game_t* m) {
 
 //LEVEL 12
 static void
+lit_level_movement(lit_game_t* m) {
+  lit_game_init_level(m, str8_from_lit("MOVEMENT"), 13);
+
+//  lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
+  lit_game_push_light(m, 400.f, 700.f, 0x008800FF, 15.f, 0.25f);
+  lit_game_push_light(m, 150.f, 700.f, 0x880000FF, 15.f, 0.25f);
+  lit_game_push_light(m, 600.f, 700.f, 0x000088FF, 15.f, 0.25f);
+
+  f32_t duration = 5.25f;
+
+  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  {
+    lit_game_begin_patrolling_sensor(m, 150.f, 150.f, 0x880088FF, duration);
+    lit_game_push_patrolling_sensor_waypoint(m, 650.f, 650.f);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, 650.f, 650.f, 0x880088FF, duration);
+    lit_game_push_patrolling_sensor_waypoint(m, 150.f, 150.f);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, 150.f, 400.f, 0x880088FF, duration);
+    lit_game_push_patrolling_sensor_waypoint(m, 650.f, 400.f);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, 650.f, 400.f, 0x880088FF, duration);
+    lit_game_push_patrolling_sensor_waypoint(m, 150.f, 400.f);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, 150.f, 650.f, 0x880088FF, duration);
+    lit_game_push_patrolling_sensor_waypoint(m, 650.f, 150.f);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, 650.f, 150.f, 0x880088FF, duration);
+    lit_game_push_patrolling_sensor_waypoint(m, 150.f, 650.f);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, 400.f, 650.f, 0x880088FF, duration);
+    lit_game_push_patrolling_sensor_waypoint(m, 400.f, 150.f);
+    lit_game_end_patrolling_sensor(m);
+
+    lit_game_begin_patrolling_sensor(m, 400.f, 150.f, 0x880088FF, duration);
+    lit_game_push_patrolling_sensor_waypoint(m, 400.f, 650.f);
+    lit_game_end_patrolling_sensor(m);
+  }
+  lit_game_end_sensor_group(m);
+
+}
+
+// LEVEL 13
+static void
 lit_level_interval(lit_game_t* m) {
-  lit_game_init_level(m, str8_from_lit("INTERVAL"), 12);
+  lit_game_init_level(m, str8_from_lit("INTERVAL"), 13);
 
   const u32_t sections = 20;
   f32_t offset = LIT_WIDTH/20; 
@@ -512,55 +562,6 @@ lit_level_interval(lit_game_t* m) {
 }
 
 
-// LEVEL 13
-static void
-lit_level_movement(lit_game_t* m) {
-  lit_game_init_level(m, str8_from_lit("MOVEMENT"), 13);
-
-//  lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
-  lit_game_push_light(m, 400.f, 700.f, 0x008800FF, 15.f, 0.25f);
-  lit_game_push_light(m, 150.f, 700.f, 0x880000FF, 15.f, 0.25f);
-  lit_game_push_light(m, 600.f, 700.f, 0x000088FF, 15.f, 0.25f);
-
-  f32_t duration = 5.25f;
-
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
-  {
-    lit_game_begin_patrolling_sensor(m, 150.f, 150.f, 0x880088FF, duration);
-    lit_game_push_patrolling_sensor_waypoint(m, 650.f, 650.f);
-    lit_game_end_patrolling_sensor(m);
-
-    lit_game_begin_patrolling_sensor(m, 650.f, 650.f, 0x880088FF, duration);
-    lit_game_push_patrolling_sensor_waypoint(m, 150.f, 150.f);
-    lit_game_end_patrolling_sensor(m);
-
-    lit_game_begin_patrolling_sensor(m, 150.f, 400.f, 0x880088FF, duration);
-    lit_game_push_patrolling_sensor_waypoint(m, 650.f, 400.f);
-    lit_game_end_patrolling_sensor(m);
-
-    lit_game_begin_patrolling_sensor(m, 650.f, 400.f, 0x880088FF, duration);
-    lit_game_push_patrolling_sensor_waypoint(m, 150.f, 400.f);
-    lit_game_end_patrolling_sensor(m);
-
-    lit_game_begin_patrolling_sensor(m, 150.f, 650.f, 0x880088FF, duration);
-    lit_game_push_patrolling_sensor_waypoint(m, 650.f, 150.f);
-    lit_game_end_patrolling_sensor(m);
-
-    lit_game_begin_patrolling_sensor(m, 650.f, 150.f, 0x880088FF, duration);
-    lit_game_push_patrolling_sensor_waypoint(m, 150.f, 650.f);
-    lit_game_end_patrolling_sensor(m);
-
-    lit_game_begin_patrolling_sensor(m, 400.f, 650.f, 0x880088FF, duration);
-    lit_game_push_patrolling_sensor_waypoint(m, 400.f, 150.f);
-    lit_game_end_patrolling_sensor(m);
-
-    lit_game_begin_patrolling_sensor(m, 400.f, 150.f, 0x880088FF, duration);
-    lit_game_push_patrolling_sensor_waypoint(m, 400.f, 650.f);
-    lit_game_end_patrolling_sensor(m);
-  }
-  lit_game_end_sensor_group(m);
-
-}
 
 static void
 lit_level_patience(lit_game_t* m) {
@@ -585,7 +586,7 @@ lit_level_patience(lit_game_t* m) {
 
 static void
 lit_level_busy(lit_game_t* m) {
-  lit_game_init_level(m, str8_from_lit("BUSY"), 15);
+  lit_game_init_level(m, str8_from_lit("SCRAMBLE"), 15);
   //lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
 #if 1
   lit_game_push_light(m, 600.f, 700.f, 0x660000FF, 15.f, 0.75f);
@@ -1201,7 +1202,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 12) {
     cx = 250;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_interval);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_movement);
 
     lit_game_begin_patrolling_sensor(m, cx-25, cy+25, row3_color, 2.f); 
     lit_game_push_patrolling_sensor_waypoint(m, cx+25, cy-25);
@@ -1217,7 +1218,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 13) {
     cx = 400;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_movement);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_interval);
 
     lit_game_begin_patrolling_sensor(m, cx, cy+25, row3_color, 2.f); 
     lit_game_push_patrolling_sensor_waypoint(m, cx+25, cy-25);
