@@ -780,7 +780,7 @@ lit_level_orbit(lit_game_t* m) {
 // TODO LEVEL 18
 static void
 lit_level_hourglass(lit_game_t* m) {
-  lit_game_init_level(m, str8_from_lit("HOURGLASS"), 1);
+  lit_game_init_level(m, str8_from_lit("HOURGLASS"), 18);
 
   lit_game_push_light(m, 250, 400, 0x880000FF, 360.f, 0.75f);
   lit_game_push_light(m, 550, 400, 0x008800FF, 360.f, 0.75f);
