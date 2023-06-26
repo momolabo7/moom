@@ -908,7 +908,7 @@ lit_level_test(lit_game_t* m) {
 
 static void
 lit_level_triforce(lit_game_t* m) {
-  lit_game_init_level(m, str8_from_lit("TRIFORCE"), 1);
+  lit_game_init_level(m, str8_from_lit("TRIFORCE"), 19);
 
   lit_game_push_light(m, 400, 427, 0x880000FF, 360.f, 0.75f);
   lit_game_push_light(m, 380, 380, 0x008800FF, 360.f, 0.75f);
@@ -995,7 +995,7 @@ lit_level_triforce(lit_game_t* m) {
 
 static void
 lit_level_hands(lit_game_t* m) {
-  lit_game_init_level(m, str8_from_lit("HANDS"), 1);
+  lit_game_init_level(m, str8_from_lit("HANDS"), 20);
 
   lit_game_push_light(m, 100, 100, 0x880000FF, 360.f, 0.75f);
   lit_game_push_light(m, 100, 400, 0x008800FF, 360.f, 0.75f);
@@ -1372,8 +1372,25 @@ lit_level_menu(lit_game_t* m) {
     lit_game_end_sensor_group(m);
   }
 
+  if (lit_get_levels_unlocked_count() >= 20) {
+    cx = 400;
+ 
+    v2f_t* o = lit_game_push_point(m, v2f_set(cx, cy));
+    
+    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_triforce);
+    lit_game_push_rotating_sensor(m, cx+25,  cy-25, o, rotating_speed, row4_color); 
+    lit_game_push_rotating_sensor(m, cx-25,  cy+25, o, rotating_speed, row4_color); 
+    lit_game_push_rotating_sensor(m, cx+25,  cy+25, o, rotating_speed, row4_color); 
+    lit_game_push_rotating_sensor(m, cx-25,  cy-25, o, rotating_speed, row4_color); 
+
+
+    lit_game_end_sensor_group(m);
+  }
  
 
+  // 5th row
+  cy -= 150;
   if (lit_get_levels_unlocked_count() >= 20) {
     cx = 700;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);

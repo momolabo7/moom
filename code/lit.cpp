@@ -76,10 +76,13 @@ lit_tick() {
     
     switch(lit->mode) {
       case LIT_MODE_SPLASH: {
-        lit_init_splash();
+        lit_splash_init();
       } break;
       case LIT_MODE_GAME: {
         lit_game_init();
+      } break;
+      case LIT_MODE_CREDITS: {
+        lit_credits_init();
       } break;
 
     }
@@ -87,12 +90,14 @@ lit_tick() {
 
   switch(lit->mode) {
     case LIT_MODE_SPLASH: {
-      lit_update_splash();
+      lit_splash_update();
     } break;
     case LIT_MODE_GAME: {
       lit_game_update();
     } break;
-
+    case LIT_MODE_CREDITS: {
+      lit_credits_update();
+    } break;
   }
 
   // Debug

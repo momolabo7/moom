@@ -3,7 +3,7 @@
 #define LIT_SPLASH_SCROLL_DURATION 1.5f
 
 static void
-lit_init_splash() {
+lit_splash_init() {
   lit_splash_t* splash = &lit->splash;
 
   make(asset_match_t, match);
@@ -14,7 +14,7 @@ lit_init_splash() {
 }
 
 static void
-lit_update_splash() {
+lit_splash_update() {
   lit_splash_t* splash = &lit->splash;
 
   splash->timer -= input->delta_time;
