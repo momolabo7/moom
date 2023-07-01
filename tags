@@ -290,7 +290,7 @@ c	code/test_essentials.h	/^      char c[4];$/;"	m	language:C++	union:test_essent
 c8_t	code/momo_types.h	/^typedef char     c8_t;$/;"	t	language:C++	typeref:typename:char
 cabinet_index	code/w32_game.h	/^  u32_t cabinet_index;$/;"	m	language:C++	struct:w32_file_t	typeref:typename:u32_t
 cabinet_index	code/w32_momo.h	/^  u32_t cabinet_index;$/;"	m	language:C++	struct:w32_file_t	typeref:typename:u32_t
-callback	code/lit_game.h	/^  lit_game_sensor_callback_t* callback;$/;"	m	language:C++	struct:lit_game_sensor_group_t	typeref:typename:lit_game_sensor_callback_t *
+callback	code/lit_game.h	/^  lit_game_exit_callback_f* callback;$/;"	m	language:C++	struct:lit_game_sensor_group_t	typeref:typename:lit_game_exit_callback_f *
 callback	code/w32_game.h	/^  pf_task_callback_f* callback;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:pf_task_callback_f *
 callback	code/w32_momo.h	/^  pf_task_callback_f* callback;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:pf_task_callback_f *
 cap	code/momo_arena.h	/^	usz_t cap;$/;"	m	language:C++	struct:arena_t	typeref:typename:usz_t
@@ -381,7 +381,6 @@ CONST_VTABLE	code/w32_momo.cpp	/^#define CONST_VTABLE$/;"	d	language:C++	file:
 contents	code/momo_png.h	/^  buffer_t contents;$/;"	m	language:C++	struct:png_t	typeref:typename:buffer_t
 contents	code/momo_streams.h	/^  buffer_t contents;$/;"	m	language:C++	struct:stream_t	typeref:typename:buffer_t
 context	code/game.h	/^  void* context;$/;"	m	language:C++	struct:game_t	typeref:typename:void *
-context	code/lit_game.h	/^  void* context;$/;"	m	language:C++	struct:lit_game_sensor_group_t	typeref:typename:void *
 context	code/momo_game.h	/^  void* context;$/;"	m	language:C++	struct:game_t	typeref:typename:void *
 contour_count	code/momo_ttf.h	/^  u32_t contour_count;$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u32_t
 copy_array	code/momo_types.h	/^#define copy_array(/;"	d	language:C++
@@ -420,6 +419,7 @@ crc8_init_table	code/momo_crc.h	/^static void crc8_init_table(crc8_table_t* tabl
 crc8_slow	code/momo_crc.h	/^crc8_slow(u8_t* data, u32_t data_size, u16_t start_register, u16_t polynomial) {$/;"	f	language:C++	typeref:typename:u32_t
 crc8_slow	code/momo_crc.h	/^static u32_t crc8_slow(u8_t* data, u32_t data_size, u16_t start_register, u16_t polynomial);$/;"	p	language:C++	typeref:typename:u32_t
 crc8_table_t	code/momo_crc.h	/^struct crc8_table_t {$/;"	s	language:C++
+credits	code/lit.h	/^    lit_credits_t credits;$/;"	m	language:C++	union:lit_t::__anon65aa720e010a	typeref:typename:lit_credits_t
 cstr_clear	code/momo_types.h	/^cstr_clear(c8_t* dest) {$/;"	f	language:C++	typeref:typename:void
 cstr_compare	code/momo_types.h	/^cstr_compare(const c8_t* lhs, const c8_t* rhs) {$/;"	f	language:C++	typeref:typename:b32_t
 cstr_compare_n	code/momo_types.h	/^cstr_compare_n(const c8_t* lhs, const c8_t* rhs, umi_t n) {$/;"	f	language:C++	typeref:typename:b32_t
@@ -543,6 +543,7 @@ entry_start	code/game_gfx.h	/^	usz_t entry_start;$/;"	m	language:C++	struct:gfx_
 entry_start	D:/work/git/moom/code/momo_gfx.h	/^	usz_t entry_start;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:usz_t
 events	code/momo_debug.h	/^  dbg_event_t events[DBG_MAX_EVENTS];$/;"	m	language:C++	struct:dbg_t	typeref:typename:dbg_event_t[]
 event_count	code/momo_debug.h	/^  u32_t event_count;$/;"	m	language:C++	struct:dbg_t	typeref:typename:u32_t
+exit_callback	code/lit_game.h	/^  lit_game_exit_callback_f* exit_callback;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_exit_callback_f *
 exit_fade	code/lit_game.h	/^  f32_t exit_fade;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t
 exported	code/momo_types.h	/^# define exported /;"	d	language:C++
 exported	code/momo_types.h	/^# define exported /;"	d	language:C++
@@ -773,6 +774,7 @@ flag_for_reset	code/momo_profiler.h	/^  b32_t flag_for_reset;$/;"	m	language:C++
 fmt_chunk	code/momo_wav.h	/^  wav_fmt_chunk_t fmt_chunk;$/;"	m	language:C++	struct:wav_t	typeref:typename:wav_fmt_chunk_t
 font	code/game_assets.h	/^    asset_font_t font;$/;"	m	language:C++	union:asset_slot_t::__anon71b23071020a	typeref:typename:asset_font_t
 font	code/game_asset_file.h	/^    asset_file_font_t font;$/;"	m	language:C++	union:asset_file_asset_t::__anone6aa2a7d010a	typeref:typename:asset_file_font_t
+font	code/lit_credits.h	/^  asset_font_id_t font;$/;"	m	language:C++	struct:lit_credits_t	typeref:typename:asset_font_id_t
 font	code/lit_menu.h	/^  asset_font_id_t font;$/;"	m	language:C++	struct:lit_menu_t	typeref:typename:asset_font_id_t
 font	code/lit_splash.h	/^  asset_font_id_t font;$/;"	m	language:C++	struct:lit_splash_t	typeref:typename:asset_font_id_t
 font	code/momo_assets.h	/^    asset_font_t font;$/;"	m	language:C++	union:asset_slot_t::__anon23a5300f020a	typeref:typename:asset_font_t
@@ -1577,7 +1579,6 @@ left	code/momo_json.h	/^  _json_entry_t* left;$/;"	m	language:C++	struct:_json_e
 length	code/momo_png.h	/^  u32_t length;$/;"	m	language:C++	struct:_png_chunk_header_t	typeref:typename:u32_t
 lengths	code/momo_png.h	/^  u16_t* lengths;$/;"	m	language:C++	struct:_png_huffman_t	typeref:typename:u16_t *
 length_count	code/momo_png.h	/^  u32_t length_count;$/;"	m	language:C++	struct:_png_huffman_t	typeref:typename:u32_t
-level_to_load	code/lit_game.h	/^  lit_game_load_level_t* level_to_load;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_load_level_t *
 level_to_start	code/lit.h	/^  u32_t level_to_start;$/;"	m	language:C++	struct:lit_t	typeref:typename:u32_t
 lifespan	code/lit_game.h	/^  f32_t lifespan;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:f32_t
 lifespan_now	code/lit_game.h	/^  f32_t lifespan_now;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:f32_t
@@ -1591,9 +1592,12 @@ lit	code/lit.h	/^static lit_t* lit;$/;"	v	language:C++	typeref:typename:lit_t *
 LIT_ANIMATOR_TYPE_PATROL_POINT	code/lit_game.h	/^  LIT_ANIMATOR_TYPE_PATROL_POINT,$/;"	e	language:C++	enum:lit_game_animator_type_t
 LIT_ANIMATOR_TYPE_ROTATE_POINT	code/lit_game.h	/^  LIT_ANIMATOR_TYPE_ROTATE_POINT,$/;"	e	language:C++	enum:lit_game_animator_type_t
 LIT_ASSET_FILE	code/lit_asset_types.h	/^#define LIT_ASSET_FILE /;"	d	language:C++
-lit_credits_init	code/lit_credits.cpp	/^static void lit_credits_init() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_credits_init	code/lit_credits.cpp	/^lit_credits_init() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_credits_push_subtitle_and_name	code/lit_credits.cpp	/^lit_credits_push_subtitle_and_name($/;"	f	language:C++	typeref:typename:f32_t	file:
+LIT_CREDITS_SCROLL_SPEED	code/lit.h	/^#define LIT_CREDITS_SCROLL_SPEED /;"	d	language:C++
+LIT_CREDITS_START_COOLDOWN_DURATION	code/lit.h	/^#define LIT_CREDITS_START_COOLDOWN_DURATION /;"	d	language:C++
 lit_credits_t	code/lit_credits.h	/^struct lit_credits_t {$/;"	s	language:C++
-lit_credits_update	code/lit_credits.cpp	/^static void lit_credits_update() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_credits_update	code/lit_credits.cpp	/^lit_credits_update() {$/;"	f	language:C++	typeref:typename:void	file:
 LIT_DEBUG_LINES	code/lit.h	/^#define LIT_DEBUG_LINES /;"	d	language:C++
 lit_draw_edges	code/lit_game_objects.cpp	/^lit_draw_edges(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_draw_light_rays	code/lit_game_objects.cpp	/^lit_draw_light_rays(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1619,17 +1623,16 @@ lit_game_edge_t	code/lit_game.h	/^struct lit_game_edge_t {$/;"	s	language:C++
 lit_game_end_patrolling_double_edge	code/lit_game_objects.cpp	/^lit_game_end_patrolling_double_edge(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_end_patrolling_sensor	code/lit_game_objects.cpp	/^lit_game_end_patrolling_sensor(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_end_sensor_group	code/lit_game_objects.cpp	/^lit_game_end_sensor_group(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_game_exit_callback_f	code/lit_game.h	/^typedef void lit_game_exit_callback_f();$/;"	t	language:C++	typeref:typename:void ()()
 lit_game_generate_light	code/lit_game_objects.cpp	/^lit_game_generate_light(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_get_ray_intersection_time_wrt_edges	code/lit_game_objects.cpp	/^lit_game_get_ray_intersection_time_wrt_edges($/;"	f	language:C++	typeref:typename:f32_t	file:
 lit_game_init	code/lit_game.cpp	/^lit_game_init() $/;"	f	language:C++	typeref:typename:void	file:
 lit_game_init_level	code/lit_game_levels.cpp	/^lit_game_init_level(lit_game_t* m, str8_t str, u32_t level_id) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_is_exiting	code/lit_game.cpp	/^lit_game_is_exiting(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:b32_t	file:
-lit_game_level_t	code/lit_game_levels.cpp	/^typedef void lit_game_level_t(lit_game_t*);$/;"	t	language:C++	typeref:typename:void ()(lit_game_t *)	file:
 lit_game_light_t	code/lit_game.h	/^struct lit_game_light_t {$/;"	s	language:C++
 lit_game_light_triangle_t	code/lit_game.h	/^struct lit_game_light_triangle_t {$/;"	s	language:C++
 lit_game_light_type_t	code/lit_game.h	/^enum lit_game_light_type_t {$/;"	g	language:C++
 lit_game_load_level	code/lit_game.cpp	/^static void lit_game_load_level(lit_game_t* m, u32_t level_id);$/;"	p	language:C++	typeref:typename:void	file:
-lit_game_load_level_t	code/lit_game.h	/^typedef void lit_game_load_level_t(struct lit_game_t*);$/;"	t	language:C++	typeref:typename:void ()(struct lit_game_t *)
 lit_game_player_find_nearest_light	code/lit_game_objects.cpp	/^lit_game_player_find_nearest_light(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_player_hold_nearest_light_if_empty_handed	code/lit_game_objects.cpp	/^lit_game_player_hold_nearest_light_if_empty_handed($/;"	f	language:C++	typeref:typename:void	file:
 lit_game_player_light_hold_mode_t	code/lit_game.h	/^enum lit_game_player_light_hold_mode_t {$/;"	g	language:C++
@@ -1652,10 +1655,8 @@ lit_game_render_lights	code/lit_game_objects.cpp	/^lit_game_render_lights(lit_ga
 lit_game_render_particles	code/lit_game_objects.cpp	/^lit_game_render_particles(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_render_player	code/lit_game_objects.cpp	/^lit_game_render_player(lit_game_t* g){$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_render_sensors	code/lit_game_objects.cpp	/^lit_game_render_sensors(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_game_sensor_callback_t	code/lit_game.h	/^typedef void lit_game_sensor_callback_t(struct lit_game_t*, void*);$/;"	t	language:C++	typeref:typename:void ()(struct lit_game_t *,void *)
 lit_game_sensor_group_t	code/lit_game.h	/^struct lit_game_sensor_group_t {$/;"	s	language:C++
 lit_game_sensor_t	code/lit_game.h	/^struct lit_game_sensor_t {$/;"	s	language:C++
-lit_game_sensor_trigger_solved	code/lit_game_levels.cpp	/^lit_game_sensor_trigger_solved(lit_game_t* g, void* context) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_set_title	code/lit_game.cpp	/^lit_game_set_title(lit_game_t* g, str8_t str = str8_t{}) {$/;"	f	language:C++	typeref:typename:void	file:
 LIT_GAME_STATE_TYPE_EXIT	code/lit_game.h	/^  LIT_GAME_STATE_TYPE_EXIT,$/;"	e	language:C++	enum:lit_game_state_type_t
 LIT_GAME_STATE_TYPE_NORMAL	code/lit_game.h	/^  LIT_GAME_STATE_TYPE_NORMAL,$/;"	e	language:C++	enum:lit_game_state_type_t
@@ -1673,7 +1674,7 @@ lit_game_update_sensors	code/lit_game_objects.cpp	/^lit_game_update_sensors(lit_
 lit_gen_lights	code/lit_game_objects.cpp	/^lit_gen_lights($/;"	f	language:C++	typeref:typename:void	file:
 lit_gen_light_intersections	code/lit_game_objects.cpp	/^lit_gen_light_intersections(lit_game_light_t* l,$/;"	f	language:C++	typeref:typename:void	file:
 lit_get_levels_unlocked_count	code/lit.h	/^lit_get_levels_unlocked_count() {$/;"	f	language:C++	typeref:typename:u32_t
-lit_goto_specific_level	code/lit.h	/^lit_goto_specific_level(u32_t level) {$/;"	f	language:C++	typeref:typename:void
+lit_goto_mode	code/lit.h	/^lit_goto_mode(lit_mode_t mode) {$/;"	f	language:C++	typeref:typename:void
 LIT_H	code/lit.h	/^#define LIT_H$/;"	d	language:C++
 LIT_HEIGHT	code/lit.h	/^#define LIT_HEIGHT /;"	d	language:C++
 lit_init_player	code/lit_game_objects.cpp	/^lit_init_player(lit_game_t* g, f32_t x, f32_t y) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1682,30 +1683,32 @@ LIT_INSPECTOR_RENDERING_H	code/lit_inspector_rendering.h	/^#define LIT_INSPECTOR
 lit_is_in_tutorial	code/lit.h	/^lit_is_in_tutorial() {$/;"	f	language:C++	typeref:typename:b32_t
 LIT_LEARNT_BASICS_LEVEL_ID	code/lit.h	/^#define LIT_LEARNT_BASICS_LEVEL_ID /;"	d	language:C++
 LIT_LEARNT_POINT_LIGHT_LEVEL_ID	code/lit.h	/^#define LIT_LEARNT_POINT_LIGHT_LEVEL_ID /;"	d	language:C++
-lit_level_add	code/lit_game_levels.cpp	/^lit_level_add(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void	file:
-lit_level_add	code/lit_game_levels.cpp	/^static void lit_level_add(lit_game_t* m);$/;"	p	language:C++	typeref:typename:void	file:
-lit_level_blend	code/lit_game_levels.cpp	/^lit_level_blend(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_busy	code/lit_game_levels.cpp	/^lit_level_busy(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_corners	code/lit_game_levels.cpp	/^lit_level_corners(lit_game_t* m) { $/;"	f	language:C++	typeref:typename:void	file:
-lit_level_disco	code/lit_game_levels.cpp	/^lit_level_disco(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_hands	code/lit_game_levels.cpp	/^lit_level_hands(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_hourglass	code/lit_game_levels.cpp	/^lit_level_hourglass(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_interval	code/lit_game_levels.cpp	/^lit_level_interval(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_menu	code/lit_game_levels.cpp	/^lit_level_menu(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_menu	code/lit_game_levels.cpp	/^static void lit_level_menu(lit_game_t* m);$/;"	p	language:C++	typeref:typename:void	file:
-lit_level_mix	code/lit_game_levels.cpp	/^lit_level_mix(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_move	code/lit_game_levels.cpp	/^lit_level_move(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_movement	code/lit_game_levels.cpp	/^lit_level_movement(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_obstruct	code/lit_game_levels.cpp	/^lit_level_obstruct(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_obstruct	code/lit_game_levels.cpp	/^static void lit_level_obstruct(lit_game_t* m);$/;"	p	language:C++	typeref:typename:void	file:
-lit_level_onion	code/lit_game_levels.cpp	/^lit_level_onion(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_orbit	code/lit_game_levels.cpp	/^lit_level_orbit(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_patience	code/lit_game_levels.cpp	/^lit_level_patience(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_rooms	code/lit_game_levels.cpp	/^lit_level_rooms(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_spectrum	code/lit_game_levels.cpp	/^lit_level_spectrum(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_spin	code/lit_game_levels.cpp	/^lit_level_spin(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_split	code/lit_game_levels.cpp	/^lit_level_split(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_triforce	code/lit_game_levels.cpp	/^lit_level_triforce(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_add	code/lit_game_levels.cpp	/^lit_level_add() { $/;"	f	language:C++	typeref:typename:void	file:
+lit_level_add	code/lit_game_levels.cpp	/^static void lit_level_add();$/;"	p	language:C++	typeref:typename:void	file:
+lit_level_blend	code/lit_game_levels.cpp	/^lit_level_blend() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_busy	code/lit_game_levels.cpp	/^lit_level_busy() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_corners	code/lit_game_levels.cpp	/^lit_level_corners() { $/;"	f	language:C++	typeref:typename:void	file:
+lit_level_disco	code/lit_game_levels.cpp	/^lit_level_disco() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_exit_with	code/lit_game_levels.cpp	/^#define lit_level_exit_with(/;"	d	language:C++	file:
+lit_level_hands	code/lit_game_levels.cpp	/^lit_level_hands() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_hourglass	code/lit_game_levels.cpp	/^lit_level_hourglass() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_interval	code/lit_game_levels.cpp	/^lit_level_interval() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_menu	code/lit_game_levels.cpp	/^lit_level_menu() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_menu	code/lit_game_levels.cpp	/^static void lit_level_menu();$/;"	p	language:C++	typeref:typename:void	file:
+lit_level_mix	code/lit_game_levels.cpp	/^lit_level_mix() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_move	code/lit_game_levels.cpp	/^lit_level_move() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_movement	code/lit_game_levels.cpp	/^lit_level_movement() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_obstruct	code/lit_game_levels.cpp	/^lit_level_obstruct() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_obstruct	code/lit_game_levels.cpp	/^static void lit_level_obstruct();$/;"	p	language:C++	typeref:typename:void	file:
+lit_level_onion	code/lit_game_levels.cpp	/^lit_level_onion() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_orbit	code/lit_game_levels.cpp	/^lit_level_orbit() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_patience	code/lit_game_levels.cpp	/^lit_level_patience() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_rooms	code/lit_game_levels.cpp	/^lit_level_rooms() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_spectrum	code/lit_game_levels.cpp	/^lit_level_spectrum() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_spin	code/lit_game_levels.cpp	/^lit_level_spin() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_split	code/lit_game_levels.cpp	/^lit_level_split() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_test	code/lit_game_levels.cpp	/^lit_level_test(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_triforce	code/lit_game_levels.cpp	/^lit_level_triforce() {$/;"	f	language:C++	typeref:typename:void	file:
 lit_light_intersection_t	code/lit_game.h	/^struct lit_light_intersection_t {$/;"	s	language:C++
 Lit_LIGHT_TYPE_DIRECTIONAL	code/lit_game.h	/^  Lit_LIGHT_TYPE_DIRECTIONAL,$/;"	e	language:C++	enum:lit_game_light_type_t
 Lit_LIGHT_TYPE_POINT	code/lit_game.h	/^  Lit_LIGHT_TYPE_POINT,$/;"	e	language:C++	enum:lit_game_light_type_t
@@ -2617,7 +2620,6 @@ sll_prepend	code/momo_types.h	/^#define sll_prepend(/;"	d	language:C++
 smi_t	code/momo_types.h	/^typedef intptr_t  smi_t; \/\/ aka 'signed memory index'$/;"	t	language:C++	typeref:typename:intptr_t
 snapshots	code/momo_profiler.h	/^  profiler_snapshot_t* snapshots;$/;"	m	language:C++	struct:profiler_entry_t	typeref:typename:profiler_snapshot_t *
 snapshot_index	code/momo_profiler.h	/^  u32_t snapshot_index;$/;"	m	language:C++	struct:profiler_t	typeref:typename:u32_t
-solved	code/lit_game.h	/^  b32_t solved;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:b32_t
 sort_entry_t	code/momo_sort.h	/^struct sort_entry_t {$/;"	s	language:C++
 sources	code/sui_pack.h	/^  sui_packer_source_t* sources; \/\/ additional data for assets$/;"	m	language:C++	struct:sui_packer_t	typeref:typename:sui_packer_source_t *
 speed	code/lit_game.h	/^  f32_t speed;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:f32_t
@@ -2660,6 +2662,7 @@ str8_compare_lexographically	code/momo_strings.h	/^str8_compare_lexographically(
 str8_from_cstr	code/momo_strings.h	/^static str8_t str8_from_cstr(const char* cstr);$/;"	p	language:C++	typeref:typename:str8_t
 str8_from_cstr	code/momo_strings.h	/^str8_from_cstr(const c8_t* cstr) {$/;"	f	language:C++	typeref:typename:str8_t
 str8_from_lit	code/momo_strings.h	/^#define str8_from_lit(/;"	d	language:C++
+str8_lit	code/momo_strings.h	/^#define str8_lit(/;"	d	language:C++
 str8_match	code/momo_strings.h	/^static b32_t  str8_match(str8_t lhs, str8_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
 str8_match	code/momo_strings.h	/^str8_match(str8_t lhs, str8_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t
 str8_range_to	code/momo_strings.h	/^static b32_t str8_range_to(u32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
@@ -2849,6 +2852,7 @@ texture_width	D:/work/git/moom/code/momo_gfx.h	/^  u32_t texture_width;$/;"	m	la
 text_length	code/meta.cpp	/^  u32_t text_length;$/;"	m	language:C++	struct:Meta_Tokenizer	typeref:typename:u32_t	file:
 The MOMO (name pending) game engine	README.md	/^# The MOMO (name pending) game engine$/;"	c	language:Markdown
 thousands	code/momo_types.h	/^#define thousands(/;"	d	language:C++
+timer	code/lit_credits.h	/^  f32_t timer;$/;"	m	language:C++	struct:lit_credits_t	typeref:typename:f32_t
 timer	code/lit_game.h	/^  f32_t timer;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:f32_t
 timer	code/lit_splash.h	/^  f32_t timer;$/;"	m	language:C++	struct:lit_splash_t	typeref:typename:f32_t
 title	code/lit_game.h	/^  str8_t title;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:str8_t
@@ -2869,7 +2873,7 @@ transfer_memory_start	code/game_gfx.h	/^  usz_t transfer_memory_start;$/;"	m	lan
 transfer_memory_start	D:/work/git/moom/code/momo_gfx.h	/^  usz_t transfer_memory_start;$/;"	m	language:C++	struct:gfx_texture_payload_t	typeref:typename:usz_t
 transfer_memory_start	D:/work/git/moom/code/momo_gfx.h	/^  usz_t transfer_memory_start;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:usz_t
 tri2_t	code/momo_collision.h	/^struct tri2_t {$/;"	s	language:C++
-triangles	code/lit_game.h	/^  lit_game_light_triangle_t triangles[256];$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:lit_game_light_triangle_t[256]
+triangles	code/lit_game.h	/^  lit_game_light_triangle_t triangles[512];$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:lit_game_light_triangle_t[512]
 triangle_batch	code/game_gfx_opengl.h	/^  opengl_triangle_batch_t triangle_batch;$/;"	m	language:C++	struct:opengl_t	typeref:typename:opengl_triangle_batch_t
 triangle_batch	D:/work/git/moom/code/momo_gfx_opengl.h	/^  opengl_triangle_batch_t triangle_batch;$/;"	m	language:C++	struct:opengl_t	typeref:typename:opengl_triangle_batch_t
 triangle_count	code/lit_game.h	/^  u32_t triangle_count;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:u32_t

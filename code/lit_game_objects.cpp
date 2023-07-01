@@ -906,8 +906,7 @@ lit_game_end_patrolling_sensor(lit_game_t* g) {
 static void 
 lit_game_begin_sensor_group(
     lit_game_t* m, 
-    lit_game_sensor_callback_t* callback,
-    void* context = nullptr)
+    lit_game_exit_callback_f* callback)
 {
   assert(m->sensor_group_count < array_count(m->sensor_groups));
   m->selected_sensor_group_id = m->sensor_group_count++;
@@ -915,7 +914,6 @@ lit_game_begin_sensor_group(
   lit_game_sensor_group_t* group = m->sensor_groups + m->selected_sensor_group_id;
   group->callback = callback;
   group->sensor_count = 0;
-  group->context = context;
 }
 
 static void 
@@ -1002,8 +1000,8 @@ lit_game_update_sensors(lit_game_t* g, f32_t dt)
   for_cnt(group_index, g->sensor_group_count) {
     lit_game_sensor_group_t* group = g->sensor_groups + group_index;
     if (group->sensor_count == activated[group_index]) {
-      // We found a group that can activate the callback
-      group->callback(g, group->context);
+      // We found a group that can activate the exit callback
+      group->callback();
     }
   }
 

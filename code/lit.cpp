@@ -65,11 +65,9 @@ lit_tick() {
 
   lit = (lit_t*)(game->context);
 
-  // NOTE(momo): Frame arena needs to be cleared each frame.
   arena_clear(&lit->frame_arena);
-
-  // NOTE(momo): inspector need to clear each frame
   inspector_clear(&lit->inspector);
+
 
   if (lit->next_mode != lit->mode || game->is_dll_reloaded) {
     lit->mode = lit->next_mode;

@@ -31,7 +31,6 @@ lit_splash_update() {
   }
 
   f32_t y = LIT_HEIGHT/2 + 100.f;
- 
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 

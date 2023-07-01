@@ -371,7 +371,7 @@ _F64_NEG_INFINITY() {
 //
 #define min_of(l,r) ((l) < (r) ? (l) : (r))
 #define max_of(l,r) ((l) > (r) ? (l) : (r))
-#define clamp_of(x,t,b) (max_of(min_of(x,t),b))
+#define clamp_of(x,b,t) (max_of(min_of(x,t),b))
 
 #define align_down_pow2(v,a) ((v) & ~((a)-1))
 #define align_up_pow2(v,a) ((v) + ((a)-1) & ~((a)-1))

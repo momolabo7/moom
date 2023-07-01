@@ -79,7 +79,7 @@ lit_game_update()
 #if LIT_SAVE_FILE_ENABLE
       lit_unlock_next_level(g->current_level_id);
 #endif
-      g->level_to_load(g);
+      g->exit_callback();
       return;
     }
   }
@@ -104,7 +104,7 @@ lit_game_update()
         g->exit_fade = max_of(0.f, g->exit_fade - 0.1f);
       if (g->exit_fade >= 1.f) {
         // go back to HOME
-        lit_level_menu(g);
+        lit_level_menu();
         return;
       }
     }
@@ -130,7 +130,7 @@ lit_game_update()
     //
     // win condition
     //
-    if (g->solved) 
+    if (g->exit_callback != nullptr) 
     {
       pf.show_cursor();
       pf.unlock_cursor();
@@ -227,10 +227,10 @@ lit_game_init()
   // Go to level based on user's progress
   switch(lit_get_levels_unlocked_count())
   {
-    case 1: lit_level_move(g); break;
-    case 2: lit_level_obstruct(g); break;
-    case 3: lit_level_add(g); break;
-    default: lit_level_menu(g);
+    case 1: lit_level_move(); break;
+    case 2: lit_level_obstruct(); break;
+    case 3: lit_level_add(); break;
+    default: lit_level_menu();
     //default: lit_level_test(g);
   }
   

@@ -1,19 +1,10 @@
-typedef void lit_game_level_t(lit_game_t*);
+
+static void lit_level_menu();
+static void lit_level_obstruct();
+static void lit_level_add();
 
 
-static void lit_level_menu(lit_game_t* m);
-static void lit_level_obstruct(lit_game_t* m);
-static void lit_level_add(lit_game_t* m);
-
-
-
-static void 
-lit_game_sensor_trigger_solved(lit_game_t* g, void* context) {
-  lit_game_load_level_t* level_to_load = (lit_game_load_level_t*)context;
-  g->solved = true;
-  g->level_to_load = level_to_load;
-}
-
+#define lit_level_exit_with(where) [](){ lit->game.exit_callback = where; }
 
 static void
 lit_game_init_level(lit_game_t* m, str8_t str, u32_t level_id) {
@@ -42,8 +33,8 @@ lit_game_init_level(lit_game_t* m, str8_t str, u32_t level_id) {
   m->selected_animator_for_double_edge_min[1] = nullptr;
   m->selected_animator_for_double_edge_max[0] = nullptr; 
   m->selected_animator_for_double_edge_max[1] = nullptr;
-  m->level_to_load = nullptr;
-  m->solved = false;
+
+  m->exit_callback = nullptr;
 
   lit_game_push_edge(m, 0.f, 0.f, LIT_WIDTH, 0.f);
   lit_game_push_edge(m, LIT_WIDTH, 0.f, LIT_WIDTH, LIT_HEIGHT);
@@ -66,17 +57,18 @@ lit_game_init_level(lit_game_t* m, str8_t str, u32_t level_id) {
 // - Learn that light need to shine on sensors 
 //
 static void
-lit_level_move(lit_game_t* m) {
+lit_level_move() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("MOVE"), 1);
 
   lit_game_push_light(m, 400.f, 400, 0x880000FF, 45.f, 0.75f);
 
   // If 'tutorial' completed, to go menu, else go to 'obstruct'
   if (lit_is_in_tutorial()) {
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_obstruct);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_move));
   }
   else {
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   }
   lit_game_push_sensor(m, 400.f, 600.f, 0x880000FF); 
   lit_game_end_sensor_group(m);
@@ -88,14 +80,15 @@ lit_level_move(lit_game_t* m) {
 // - Learn about obstacles
 //
 static void
-lit_level_obstruct(lit_game_t* m) {
+lit_level_obstruct() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("OBSTRUCT"), 2);
   
   if (lit_is_in_tutorial()) {
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_add);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_add));
   }
   else {
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   }
   lit_game_push_sensor(m, 400.f, 600.f, 0x008800FF); 
   lit_game_end_sensor_group(m);
@@ -112,12 +105,13 @@ lit_level_obstruct(lit_game_t* m) {
 // - Learn about light saturation 
 //
 static void
-lit_level_add(lit_game_t* m) { 
+lit_level_add() { 
+  lit_game_t* m = &lit->game;
   // Need to 'enclose' the shape
   lit_game_init_level(m, str8_from_lit("ADD"), 3);
   lit_game_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   lit_game_push_sensor(m, 400.f, 600.f, 0x444488FF); 
   lit_game_end_sensor_group(m);
 
@@ -133,7 +127,8 @@ lit_level_add(lit_game_t* m) {
 // - Sensor is in a box 
 //
 static void
-lit_level_corners(lit_game_t* m) { 
+lit_level_corners() { 
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("CORNERS"), 4);
 
   // Need to 'enclose' the shape
@@ -142,7 +137,7 @@ lit_level_corners(lit_game_t* m) {
   lit_game_push_double_edge(m, 200.f, 500.f, 300.f, 600.f);
   lit_game_push_double_edge(m, 500.f, 600.f, 600.f, 500.f);
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   lit_game_push_sensor(m, 400.f, 400.f, 0xCCCC00FF); 
   lit_game_end_sensor_group(m);
 
@@ -162,11 +157,12 @@ lit_level_corners(lit_game_t* m) {
 // - R + G = Y
 //
 static void
-lit_level_mix(lit_game_t* m) {
+lit_level_mix() {
+  lit_game_t* m = &lit->game;
 
   lit_game_init_level(m, str8_from_lit("MIX"), 5);
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   lit_game_push_sensor(m, 400.f, 400.f, 0x888800FF); 
   
   lit_game_push_sensor(m, 200.f, 400.f, 0x008800FF); 
@@ -189,10 +185,11 @@ lit_level_mix(lit_game_t* m) {
 // - R + G + B = W
 //
 static void
-lit_level_blend(lit_game_t* m) {
+lit_level_blend() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("BLEND"), 6);
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   lit_game_push_sensor(m, 400.f,  400.f, 0x888888FF); 
 
   lit_game_push_sensor(m, 200.f, 400.f, 0x008888FF); 
@@ -216,12 +213,13 @@ lit_level_blend(lit_game_t* m) {
 // - Point lights
 //
 static void
-lit_level_rooms(lit_game_t* m) {
+lit_level_rooms() {
+  lit_game_t* m = &lit->game;
 
   lit_game_init_level(m, str8_from_lit("ROOMS"), 7);
 
   // middle
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   lit_game_push_sensor(m, 050.f,  450.f, 0x666666FF); 
   lit_game_push_sensor(m, 750.f,  450.f, 0x666666FF); 
   lit_game_push_sensor(m, 050.f,  350.f, 0x666666FF); 
@@ -253,10 +251,11 @@ lit_level_rooms(lit_game_t* m) {
  
 // LEVEL 8
 static void
-lit_level_disco(lit_game_t* m) {
+lit_level_disco() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("DISCO"), 8);
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   // bottom left room
   lit_game_push_sensor(m, 050.f,  350.f, 0x660000FF); 
   lit_game_push_sensor(m, 050.f,  050.f, 0x660000FF); 
@@ -312,10 +311,11 @@ lit_level_disco(lit_game_t* m) {
 // Onion 
 //  
 static void
-lit_level_onion(lit_game_t* m) {
+lit_level_onion() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("ONION"), 9);
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   // layer 1
   lit_game_push_sensor(m, 550.f,  250.f, 0x006600FF); 
   lit_game_push_sensor(m, 250.f,  550.f, 0x660000FF); 
@@ -349,10 +349,11 @@ lit_level_onion(lit_game_t* m) {
 
 // LEVEL 10
 static void
-lit_level_spectrum(lit_game_t* m) {
+lit_level_spectrum() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("SPECTRUM"), 10);
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   // cyans
   lit_game_push_sensor(m, 050.f,   750.f, 0x008888FF); 
   lit_game_push_sensor(m, 050.f,   50.f,  0x008888FF); 
@@ -395,14 +396,15 @@ lit_level_spectrum(lit_game_t* m) {
 
 // LEVEL 11
 static void
-lit_level_split(lit_game_t* m) {
+lit_level_split() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("SPLIT"), 11);
 
   lit_game_push_light(m, 400.f, 410.f, 0x880000FF, 360.f, 0.f);
   lit_game_push_light(m, 390.f, 390.f, 0x008800FF, 360.f, 0.f);
   lit_game_push_light(m, 410.f, 390.f, 0x000088FF, 360.f, 0.f);
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
 
   lit_game_push_sensor(m, 400.f,   750.f, 0x888888FF); 
   lit_game_push_sensor(m, 50.f,   50.f, 0x888888FF); 
@@ -426,7 +428,8 @@ lit_level_split(lit_game_t* m) {
 
 //LEVEL 12
 static void
-lit_level_movement(lit_game_t* m) {
+lit_level_movement() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("MOVEMENT"), 13);
 
 //  lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
@@ -436,7 +439,7 @@ lit_level_movement(lit_game_t* m) {
 
   f32_t duration = 5.25f;
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   {
     lit_game_begin_patrolling_sensor(m, 150.f, 150.f, 0x880088FF, duration);
     lit_game_push_patrolling_sensor_waypoint(m, 650.f, 650.f);
@@ -476,7 +479,8 @@ lit_level_movement(lit_game_t* m) {
 
 // LEVEL 13
 static void
-lit_level_interval(lit_game_t* m) {
+lit_level_interval() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("INTERVAL"), 13);
 
   const u32_t sections = 20;
@@ -510,7 +514,7 @@ lit_level_interval(lit_game_t* m) {
   f32_t start_x = -LIT_WIDTH;
   f32_t end_x = LIT_WIDTH;
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   {
     lit_game_begin_patrolling_sensor(m, start_x + offset, 400.f, color, duration);
     lit_game_push_patrolling_sensor_waypoint(m, end_x + offset, 400.f); 
@@ -564,12 +568,13 @@ lit_level_interval(lit_game_t* m) {
 
 
 static void
-lit_level_patience(lit_game_t* m) {
+lit_level_patience() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("PATIENCE"), 14);
   lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
   lit_game_push_light(m, 400.f, 700.f, 0x008800FF, 15.f, 0.75f);
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   {
     lit_game_push_sensor(m, 400.f, 400.f, 0x888888FF); 
 
@@ -585,7 +590,8 @@ lit_level_patience(lit_game_t* m) {
 }
 
 static void
-lit_level_busy(lit_game_t* m) {
+lit_level_busy() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("SCRAMBLE"), 15);
   //lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
 #if 1
@@ -604,7 +610,7 @@ lit_level_busy(lit_game_t* m) {
   //lit_game_push_light(m, 200.f, 700.f, 0x002200FF, 15.f, 0.75f);
   //lit_game_push_light(m, 200.f, 700.f, 0x002200FF, 15.f, 0.75f);
  
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   {
     // patrols in a square
     lit_game_begin_patrolling_sensor(m, 150.f, 650.f, 0x006600FF, 5.f);
@@ -670,7 +676,8 @@ lit_level_busy(lit_game_t* m) {
 
 // LEVEL 16
 static void
-lit_level_spin(lit_game_t* m) {
+lit_level_spin() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("SPIN"), 16);
 
   f32_t speed = 1.f;
@@ -699,7 +706,7 @@ lit_level_spin(lit_game_t* m) {
     }
   }
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   // Inner circle
   {
     v2f_t dir = v2f_set(0.f, 100.f);
@@ -723,7 +730,8 @@ lit_level_spin(lit_game_t* m) {
 
 // LEVEL 17
 static void
-lit_level_orbit(lit_game_t* m) {
+lit_level_orbit() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("ORBIT"), 17);
 
   f32_t speed = 1.f;
@@ -741,7 +749,7 @@ lit_level_orbit(lit_game_t* m) {
   v2f_t* origin = lit_game_push_point(m, v2f_set(400.f, 600.f));
   v2f_t* origin_2 = lit_game_push_point(m, v2f_set(400.f, 400.f));
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   {
     v2f_t dir = v2f_set(0.f, 25.f);
     for_arr(i, colors) {
@@ -779,7 +787,8 @@ lit_level_orbit(lit_game_t* m) {
 
 // TODO LEVEL 18
 static void
-lit_level_hourglass(lit_game_t* m) {
+lit_level_hourglass() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("HOURGLASS"), 18);
 
   lit_game_push_light(m, 250, 400, 0x880000FF, 360.f, 0.75f);
@@ -787,7 +796,7 @@ lit_level_hourglass(lit_game_t* m) {
   lit_game_push_light(m, 400, 250, 0x000088FF, 360.f, 0.75f);
   lit_game_push_light(m, 400, 550, 0x444444FF, 360.f, 0.75f);
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   lit_game_push_sensor(m, 100.f, 100.f, 0x888800FF); 
   lit_game_push_sensor(m, 400.f, 700.f, 0x008888FF); 
   lit_game_push_sensor(m, 700.f, 100.f, 0x880088FF); 
@@ -851,7 +860,7 @@ lit_level_test(lit_game_t* m) {
   //lit_game_push_light(m, 400, 250, 0x000088FF, 360.f, 0.75f);
   lit_game_push_light(m, 400, 550, 0x444444FF, 360.f, 0.75f);
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_menu);
   lit_game_push_sensor(m, 100.f, 100.f, 0x888800FF); 
   lit_game_push_sensor(m, 400.f, 700.f, 0x008888FF); 
   lit_game_push_sensor(m, 700.f, 100.f, 0x880088FF); 
@@ -907,7 +916,8 @@ lit_level_test(lit_game_t* m) {
 #endif
 
 static void
-lit_level_triforce(lit_game_t* m) {
+lit_level_triforce() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("TRIFORCE"), 19);
 
   lit_game_push_light(m, 400, 427, 0x880000FF, 360.f, 0.75f);
@@ -918,7 +928,7 @@ lit_level_triforce(lit_game_t* m) {
   lit_game_push_light(m, 380, 380, 0x008800FF, 360.f, 0.75f);
   lit_game_push_light(m, 420, 380, 0x000088FF, 360.f, 0.75f);
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   lit_game_push_sensor(m, 400.f, 600.f, 0x000088FF); 
   lit_game_push_sensor(m, 250.f, 350.f, 0x880000FF); 
   lit_game_push_sensor(m, 550.f, 350.f, 0x008800FF); 
@@ -994,7 +1004,8 @@ lit_level_triforce(lit_game_t* m) {
 }
 
 static void
-lit_level_hands(lit_game_t* m) {
+lit_level_hands() {
+  lit_game_t* m = &lit->game;
   lit_game_init_level(m, str8_from_lit("HANDS"), 20);
 
   lit_game_push_light(m, 100, 100, 0x880000FF, 360.f, 0.75f);
@@ -1004,7 +1015,8 @@ lit_level_hands(lit_game_t* m) {
   lit_game_push_light(m, 700, 400, 0x008800FF, 360.f, 0.75f);
   lit_game_push_light(m, 700, 700, 0x000088FF, 360.f, 0.75f);
 
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_menu);
+
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   lit_game_push_sensor(m, 750.f, 750.f, 0x880088FF); 
   lit_game_push_sensor(m, 50.f, 50.f, 0x880088FF); 
   lit_game_push_sensor(m, 750.f, 400.f, 0x888800FF); 
@@ -1066,28 +1078,31 @@ lit_level_hands(lit_game_t* m) {
 //
 
 static void 
-lit_level_menu(lit_game_t* m) {
+lit_level_menu() {
+  lit_game_t* m = &lit->game;
+
   const f32_t box_hw = 50.f;
   const f32_t box_hh = 50.f;
   f32_t cx, cy;
   u32_t grey = 0x888888FF;
+  f32_t row_y_offset = 150.f;
 
   lit_game_init_level(m, str8_from_lit("HOME"), 0);
 
   //
   // 1st row
   //
-  cy = 650;
+  cy = 700;
   cx = 100;
   lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-  lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_move);
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_move));
   lit_game_push_sensor(m, cx, cy, grey); 
   lit_game_end_sensor_group(m);
 
   if (lit_get_levels_unlocked_count() >= 2) {
     cx = 250;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_obstruct);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_obstruct));
     lit_game_push_sensor(m, cx+25, cy, grey); 
     lit_game_push_sensor(m, cx-25, cy, grey); 
     lit_game_end_sensor_group(m);
@@ -1097,7 +1112,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 3) {
     cx = 400;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_add);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_add));
     lit_game_push_sensor(m, cx+25, cy, grey); 
     lit_game_push_sensor(m, cx,    cy, grey); 
     lit_game_push_sensor(m, cx-25, cy, grey); 
@@ -1107,7 +1122,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 4) {
     cx = 550;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_corners);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_corners));
     lit_game_push_sensor(m, cx-25, cy-25, grey); 
     lit_game_push_sensor(m, cx-25, cy+25, grey); 
     lit_game_push_sensor(m, cx+25, cy-25, grey); 
@@ -1119,7 +1134,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 5) {
     cx = 700;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_mix);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_mix));
     lit_game_push_sensor(m, cx-25, cy-25, grey); 
     lit_game_push_sensor(m, cx-25, cy+25, grey); 
     lit_game_push_sensor(m, cx,    cy,    grey); 
@@ -1132,11 +1147,11 @@ lit_level_menu(lit_game_t* m) {
   // 2nd row
   //
   u32_t row2_color = 0x884444FF;
-  cy -= 150;
+  cy -= row_y_offset;
   if (lit_get_levels_unlocked_count() >= 6) {
     cx = 100;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_blend);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_blend));
     lit_game_push_sensor(m, cx, cy, row2_color); 
     lit_game_end_sensor_group(m);
   }
@@ -1144,7 +1159,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 7) {
     cx = 250;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_rooms);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_rooms));
     lit_game_push_sensor(m, cx+25, cy+25, row2_color); 
     lit_game_push_sensor(m, cx-25, cy-25, row2_color); 
     lit_game_end_sensor_group(m);
@@ -1153,7 +1168,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 8 ) {
     cx = 400;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_disco);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_disco));
     lit_game_push_sensor(m, cx-25, cy+25, row2_color); 
     lit_game_push_sensor(m, cx, cy, row2_color); 
     lit_game_push_sensor(m, cx+25, cy-25, row2_color); 
@@ -1164,7 +1179,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 9) {
     cx = 550;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_onion);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_onion));
     lit_game_push_sensor(m, cx, cy+35, row2_color); 
     lit_game_push_sensor(m, cx-35, cy, row2_color); 
     lit_game_push_sensor(m, cx, cy-35, row2_color); 
@@ -1175,7 +1190,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 10) {
     cx = 700;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_spectrum);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_spectrum));
     lit_game_push_sensor(m, cx-25, cy+15, row2_color); 
     lit_game_push_sensor(m, cx+25, cy+15, row2_color); 
     lit_game_push_sensor(m, cx, cy+30, row2_color); 
@@ -1188,11 +1203,11 @@ lit_level_menu(lit_game_t* m) {
   // 3rd row
   //
   u32_t row3_color = 0x448844FF;
-  cy -= 150;
+  cy -= row_y_offset;
   if (lit_get_levels_unlocked_count() >= 11) {
     cx = 100;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_split);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_split));
     lit_game_begin_patrolling_sensor(m, cx-25, cy, row3_color, 2.f); 
     lit_game_push_patrolling_sensor_waypoint(m, cx+25, cy);
     lit_game_end_patrolling_sensor(m);
@@ -1202,7 +1217,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 12) {
     cx = 250;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_movement);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_movement));
 
     lit_game_begin_patrolling_sensor(m, cx-25, cy+25, row3_color, 2.f); 
     lit_game_push_patrolling_sensor_waypoint(m, cx+25, cy-25);
@@ -1218,7 +1233,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 13) {
     cx = 400;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_interval);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_interval));
 
     lit_game_begin_patrolling_sensor(m, cx, cy+25, row3_color, 2.f); 
     lit_game_push_patrolling_sensor_waypoint(m, cx+25, cy-25);
@@ -1242,7 +1257,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 14) {
     cx = 550;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_patience);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_patience));
 
     lit_game_begin_patrolling_sensor(m, cx-30, cy, row3_color, 2.f); 
     lit_game_push_patrolling_sensor_waypoint(m, cx+30, cy);
@@ -1267,7 +1282,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 14) {
     cx = 550;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_busy);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_busy));
 
     lit_game_begin_patrolling_sensor(m, cx-30, cy, row3_color, 2.f); 
     lit_game_push_patrolling_sensor_waypoint(m, cx+30, cy);
@@ -1292,7 +1307,7 @@ lit_level_menu(lit_game_t* m) {
   if (lit_get_levels_unlocked_count() >= 15) {
     cx = 700;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_busy);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_busy));
 
     lit_game_begin_patrolling_sensor(m, cx-30, cy+30, row3_color, 2.f); 
     lit_game_push_patrolling_sensor_waypoint(m, cx+30, cy-30);
@@ -1320,12 +1335,12 @@ lit_level_menu(lit_game_t* m) {
   // row 4
   u32_t row4_color = 0x888844FF;
   f32_t rotating_speed = 2.f;
-  cy -= 150;
+  cy -= row_y_offset;
   if (lit_get_levels_unlocked_count() >= 16) {
     cx = 100;
     v2f_t* o = lit_game_push_point(m, v2f_set(cx, cy));
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_spin);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_spin));
     lit_game_push_rotating_sensor(m, cx,  cy-25, o, -rotating_speed, row4_color); 
     lit_game_end_sensor_group(m);
   }
@@ -1335,7 +1350,7 @@ lit_level_menu(lit_game_t* m) {
     cx = 250;
     v2f_t* o = lit_game_push_point(m, v2f_set(cx, cy));
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_orbit);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_orbit));
     
     lit_game_push_rotating_sensor(m, cx,  cy+25, o, rotating_speed, row4_color); 
     lit_game_push_rotating_sensor(m, cx,  cy-25, o, rotating_speed, row4_color); 
@@ -1347,7 +1362,7 @@ lit_level_menu(lit_game_t* m) {
     cx = 400;
     v2f_t* o = lit_game_push_point(m, v2f_set(cx, cy));
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_hourglass);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_hourglass));
  
     lit_game_push_rotating_sensor(m, cx,  cy+25, o,    -rotating_speed, row4_color); 
     lit_game_push_rotating_sensor(m, cx+25,  cy-25, o, -rotating_speed, row4_color); 
@@ -1362,7 +1377,7 @@ lit_level_menu(lit_game_t* m) {
     v2f_t* o = lit_game_push_point(m, v2f_set(cx, cy));
     
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_triforce);
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_triforce));
     lit_game_push_rotating_sensor(m, cx+25,  cy-25, o, rotating_speed, row4_color); 
     lit_game_push_rotating_sensor(m, cx-25,  cy+25, o, rotating_speed, row4_color); 
     lit_game_push_rotating_sensor(m, cx+25,  cy+25, o, rotating_speed, row4_color); 
@@ -1373,39 +1388,34 @@ lit_level_menu(lit_game_t* m) {
   }
 
   if (lit_get_levels_unlocked_count() >= 20) {
-    cx = 400;
+    cx = 700;
  
     v2f_t* o = lit_game_push_point(m, v2f_set(cx, cy));
     
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_triforce);
+
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_hands));
     lit_game_push_rotating_sensor(m, cx+25,  cy-25, o, rotating_speed, row4_color); 
     lit_game_push_rotating_sensor(m, cx-25,  cy+25, o, rotating_speed, row4_color); 
+
+    lit_game_push_sensor(m, cx,  cy,  row4_color); 
     lit_game_push_rotating_sensor(m, cx+25,  cy+25, o, rotating_speed, row4_color); 
     lit_game_push_rotating_sensor(m, cx-25,  cy-25, o, rotating_speed, row4_color); 
 
 
     lit_game_end_sensor_group(m);
   }
- 
+  cy -= row_y_offset;
 
   // 5th row
-  cy -= 150;
-  if (lit_get_levels_unlocked_count() >= 20) {
-    cx = 700;
-    lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
+  u32_t row5_color = 0xCCCC88FF;
+  if (lit_get_levels_unlocked_count() >= 21) {
+    cx = 400;
+    lit_game_push_aabb(m, cx, cy, 350.f, box_hh);
     v2f_t* o = lit_game_push_point(m, v2f_set(cx, cy));
 
-    lit_game_begin_sensor_group(m, lit_game_sensor_trigger_solved, lit_level_hands);
-
-    lit_game_push_rotating_sensor(m, cx+25,  cy-25, o, -rotating_speed, row4_color); 
-    lit_game_push_rotating_sensor(m, cx-25,  cy+25, o, -rotating_speed, row4_color); 
-    lit_game_push_sensor(m, cx,  cy,  row4_color); 
-    lit_game_push_rotating_sensor(m, cx+25,  cy+25, o, -rotating_speed, row4_color); 
-    lit_game_push_rotating_sensor(m, cx-25,  cy-25, o, -rotating_speed, row4_color); 
-
-   
-
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_goto_credits));
+    lit_game_push_sensor(m, cx,  cy,  row5_color); 
     lit_game_end_sensor_group(m);
   }
 

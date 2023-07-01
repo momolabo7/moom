@@ -1,3 +1,6 @@
+
+typedef void lit_game_exit_callback_f();
+
 //
 // Game states
 //
@@ -52,7 +55,7 @@ struct lit_game_light_t {
   u32_t color;
 
   u32_t triangle_count;
-  lit_game_light_triangle_t triangles[256];
+  lit_game_light_triangle_t triangles[512];
 
   u32_t intersection_count;
   lit_light_intersection_t intersections[512];
@@ -95,11 +98,9 @@ struct lit_particle_pool_t {
 //
 // Sensors
 //
-typedef void lit_game_sensor_callback_t(struct lit_game_t*, void*);
 
 struct lit_game_sensor_group_t {
-  void* context;
-  lit_game_sensor_callback_t* callback;
+  lit_game_exit_callback_f* callback;
   u32_t sensor_count; // how many sensors there are
 };
 
@@ -180,7 +181,6 @@ struct lit_game_animator_t {
 // Main game struct
 //
 
-typedef void lit_game_load_level_t(struct lit_game_t*);
 
 struct lit_game_t {
   
@@ -237,8 +237,7 @@ struct lit_game_t {
   u32_t title_wp_index;
     
   // for exiting the level
-  b32_t solved;
-  lit_game_load_level_t* level_to_load;
+  lit_game_exit_callback_f* exit_callback;
   
   // stop time
   b32_t freeze;

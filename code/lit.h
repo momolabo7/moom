@@ -1,39 +1,38 @@
 #ifndef LIT_H
 #define LIT_H
 
-#include "momo.h"
+// Main
+#define LIT_WIDTH  800.f
+#define LIT_HEIGHT 800.f
+#define LIT_EXIT_FLASH_DURATION 0.1f
+#define LIT_EXIT_FLASH_BRIGHTNESS 0.6f
+#define LIT_ENTER_DURATION 3.f
+#define LIT_SKIP_TRANSITIONS false
+#define LIT_DEBUG_LINES false
 
+// Credits
+#define LIT_CREDITS_START_COOLDOWN_DURATION (2.f)
+#define LIT_CREDITS_SCROLL_SPEED (200.f)
 
-#include "game.h"
-
-
+// Save file
 #define LIT_SAVE_FILE_ENABLE true
 #define LIT_SAVE_FILE "hello.sav"
 
-#define LIT_WIDTH  800.f
-#define LIT_HEIGHT 800.f
-
+// Sensor
 #define LIT_SENSOR_COLOR_MASK 0xFFFFFF00
 #define LIT_SENSOR_RADIUS 8.f
-
 #define LIT_SENSOR_PARTICLE_CD 0.1f
 #define LIT_SENSOR_PARTICLE_SIZE 14.f
 #define LIT_SENSOR_PARTICLE_SPEED 20.f
 
-#define LIT_EXIT_FLASH_DURATION 0.1f
-#define LIT_EXIT_FLASH_BRIGHTNESS 0.6f
-
-#define LIT_ENTER_DURATION 3.f
-
+// Player
 #define LIT_PLAYER_RADIUS 16.f
 #define LIT_PLAYER_LIGHT_RETRIEVE_DURATION 0.05f
 #define LIT_PLAYER_BREATH_DURATION 2.f
 #define LIT_PLAYER_PICKUP_DIST 512.f
 #define LIT_PLAYER_ROTATE_SPEED 1.f
 
-#define LIT_SKIP_TRANSITIONS false
-#define LIT_DEBUG_LINES false
-
+// Tutorial
 #define LIT_LEARNT_BASICS_LEVEL_ID (3)
 #define LIT_LEARNT_POINT_LIGHT_LEVEL_ID (7)
 
@@ -48,6 +47,9 @@
 #define lit_profile_begin(...) 
 #define lit_profile_end(...) 
 #endif 
+
+#include "momo.h"
+#include "game.h"
 
 static game_t* game; 
 static gfx_t* gfx; 
@@ -72,7 +74,6 @@ enum lit_show_debug_type_t {
 
 enum lit_mode_t {
   LIT_MODE_SPLASH,
-//  LIT_MODE_MENU,
   LIT_MODE_GAME,
   LIT_MODE_CREDITS,
 };
@@ -91,6 +92,7 @@ struct lit_t {
   union {
     lit_splash_t splash;
     lit_game_t game;
+    lit_credits_t credits;
   };
   u32_t level_to_start;
 
@@ -173,12 +175,9 @@ lit_get_levels_unlocked_count() {
 }
 
 
-// TODO: remove
-static void 
-lit_goto_specific_level(u32_t level) {
-  //assert(level < array_count(g_lit_levels));
-  lit->next_mode = LIT_MODE_GAME;
-  lit->level_to_start = level;
+static void
+lit_goto_credits() {
+  lit->next_mode = LIT_MODE_CREDITS;
 }
 
 #include "lit_console_rendering.h"

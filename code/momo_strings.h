@@ -16,6 +16,7 @@ static str8_t str8(u8_t* str, usz_t size);
 static str8_t str8_from_cstr(const char* cstr);
 
 #define str8_from_lit(s) str8((u8_t*)(s), sizeof(s)-1)
+#define str8_lit(s) str8((u8_t*)(s), sizeof(s)-1)
 
 // parsing strings to other types
 static b32_t str8_to_u32(str8_t s, u32_t* out);
