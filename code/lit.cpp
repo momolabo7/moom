@@ -10,6 +10,7 @@ lit_tick() {
     lit = (lit_t*)(game->context);
     lit->level_to_start = 0;
     lit->next_mode = LIT_MODE_SPLASH;
+    lit->mode = LIT_MODE_NONE;
     
 
     //
@@ -69,7 +70,8 @@ lit_tick() {
   inspector_clear(&lit->inspector);
 
 
-  if (lit->next_mode != lit->mode || game->is_dll_reloaded) {
+  if (lit->next_mode != lit->mode || game->is_dll_reloaded) 
+  {
     lit->mode = lit->next_mode;
     
     switch(lit->mode) {
@@ -99,6 +101,7 @@ lit_tick() {
   }
 
   // Debug
+#if LIT_DEBUG
   if (is_poked(input, INPUT_BUTTON_CODE_F1)) {
     lit->show_debug_type = 
       (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
@@ -116,6 +119,7 @@ lit_tick() {
     }break;
     default: {}
   }
+#endif
 
   return true;
 }

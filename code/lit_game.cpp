@@ -23,9 +23,11 @@ lit_game_update()
   lit_game_t* g = &lit->game;
   lit_game_player_t* player = &g->player;
 
+#if LIT_DEBUG
   if (is_poked(input, INPUT_BUTTON_CODE_SPACE)) {
     g->freeze = !g->freeze;
   }
+#endif 
 
   
   f32_t dt = input->delta_time;
@@ -76,9 +78,6 @@ lit_game_update()
       g->stage_fade_timer += dt;
     }
     else {
-#if LIT_SAVE_FILE_ENABLE
-      lit_unlock_next_level(g->current_level_id);
-#endif
       g->exit_callback();
       return;
     }

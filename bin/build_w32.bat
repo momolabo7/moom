@@ -6,7 +6,6 @@ SET me=%~dp0
 SET RootDir=%me%..
 SET CodeDir=%RootDir%\code
 SET BuildDir=%RootDir%\build
-SET Opt=%1
 
 if not exist %BuildDir% mkdir %BuildDir%
 
@@ -17,10 +16,10 @@ SET CompilerFlags=-MT -WX -W4 -wd4706 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -w
 
 if defined args[/r] (
   echo /release
-  SET CompilerFlags=-O2 -DASSERTIVE=0 %CompilerFlags%
+  SET CompilerFlags=-O2 -DASSERTIVE=0 -DHOT_RELOADABLE=0 %CompilerFlags%
 ) else  (
   echo /internal
-  SET CompilerFlags=-O2 -DASSERTIVE=1 %CompilerFlags%
+  SET CompilerFlags=-DASSERTIVE=1 -DHOT_RELOADABLE=1 %CompilerFlags%
 )
 
 SET LinkerFlags=-incremental:no -opt:ref

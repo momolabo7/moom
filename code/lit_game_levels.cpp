@@ -4,7 +4,10 @@ static void lit_level_obstruct();
 static void lit_level_add();
 
 
-#define lit_level_exit_with(where) [](){ lit->game.exit_callback = where; }
+#define lit_level_exit_with(where) [](){ \
+  lit_unlock_next_level(lit->game.current_level_id); \
+  lit->game.exit_callback = where;  \
+} 
 
 static void
 lit_game_init_level(lit_game_t* m, str8_t str, u32_t level_id) {
@@ -65,7 +68,7 @@ lit_level_move() {
 
   // If 'tutorial' completed, to go menu, else go to 'obstruct'
   if (lit_is_in_tutorial()) {
-    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_move));
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_obstruct));
   }
   else {
     lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));

@@ -2,6 +2,9 @@
 # define WIN32_LEAN_AND_MEAN
 #endif
 
+#ifndef HOT_RELOADABLE
+# define HOT_RELOADABLE 1
+#endif
 
 #define NOMINMAX
 #define CINTERFACE
@@ -296,10 +299,9 @@ w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {
 }
 
 static void*
-w32_allocate_memory(umi_t size)
+w32_allocate_memory(usz_t size)
 {
-  const auto alignment = 16;
-  usz_t aligned_size = align_up_pow2(size, alignment);
+  usz_t aligned_size = align_up_pow2(size, 16);
   usz_t padding_for_alignment = aligned_size - size;
   usz_t total_size = size + padding_for_alignment + sizeof(w32_memory_t);
   usz_t base_offset = sizeof(w32_memory_t);
@@ -362,6 +364,7 @@ w32_unload_code(w32_loaded_code_t* code) {
 static void
 w32_load_code(w32_loaded_code_t* code) {
   code->is_valid = false;
+#if HOT_RELOADABLE 
   b32_t copy_success = false;
   for (u32_t attempt = 0; attempt < 100; ++attempt) {
     if(CopyFile(code->module_path, code->tmp_path, false)) {
@@ -371,6 +374,9 @@ w32_load_code(w32_loaded_code_t* code) {
     Sleep(100);
   }
   code->dll = LoadLibraryA(code->tmp_path);
+#else // HOT_RELOADABLE
+  code->dll = LoadLibraryA(code->module_path);
+#endif // HOT_RELOADABLE
   if (code->dll) {
     code->is_valid = true;
     for (u32_t function_index = 0; 
@@ -949,11 +955,15 @@ WinMain(HINSTANCE instance,
 
   while (w32_state.is_running && game.is_running) 
   {
+#if HOT_RELOADABLE
     // Hot reload game.dll functions
     game.is_dll_reloaded = w32_reload_code_if_outdated(&game_code);
     if (game.is_dll_reloaded) {
       profiler_reset(profiler);
     }
+#else 
+    profiler_reset(profiler);
+#endif
 
     // Begin frame
     w32_audio_begin_frame(audio);

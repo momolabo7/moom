@@ -7,7 +7,6 @@ SET me=%~dp0
 SET RootDir=%me%..
 SET CodeDir=%RootDir%\code
 SET BuildDir=%RootDir%\build
-SET Opt=%1
 
 if not exist %BuildDir% mkdir %BuildDir%
 
@@ -23,7 +22,7 @@ if defined args[/r] (
   SET CompilerFlags=-O2 -DASSERTIVE=0 %CompilerFlags%
 ) else (
   echo /internal
-  SET CompilerFlags=-O2 -DASSERTIVE=1 %CompilerFlags%
+  SET CompilerFlags=-DASSERTIVE=1 %CompilerFlags%
 )
 
 pushd %BuildDir%
@@ -31,5 +30,5 @@ call cl %CompilerFlags% %CodeDir%\lit.cpp -LD -link -out:game.dll
 
 rem We do this because for some reason, compiling will result in the DLL being modified twice and cus our hot reloading feature to be loaded twice. This *should* prevent it.
 
-
 popd
+

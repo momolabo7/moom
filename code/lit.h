@@ -8,7 +8,10 @@
 #define LIT_EXIT_FLASH_BRIGHTNESS 0.6f
 #define LIT_ENTER_DURATION 3.f
 #define LIT_SKIP_TRANSITIONS false
-#define LIT_DEBUG_LINES false
+
+// Debug
+#define LIT_DEBUG_LINES 0
+#define LIT_DEBUG 0
 
 // Credits
 #define LIT_CREDITS_START_COOLDOWN_DURATION (2.f)
@@ -16,7 +19,7 @@
 
 // Save file
 #define LIT_SAVE_FILE_ENABLE true
-#define LIT_SAVE_FILE "hello.sav"
+#define LIT_SAVE_FILE "lit.sav"
 
 // Sensor
 #define LIT_SENSOR_COLOR_MASK 0xFFFFFF00
@@ -66,6 +69,7 @@ enum lit_show_debug_type_t {
 };
 
 enum lit_mode_t {
+  LIT_MODE_NONE,
   LIT_MODE_SPLASH,
   LIT_MODE_GAME,
   LIT_MODE_CREDITS,
@@ -74,8 +78,6 @@ enum lit_mode_t {
 struct lit_save_data_t {
   u32_t unlocked_levels;
 };
-
-
 
 struct lit_t {
   lit_save_data_t save_data;
