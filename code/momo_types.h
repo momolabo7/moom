@@ -1,26 +1,25 @@
-// momo_common.h
 // authored by Gerald Wong (momohoudai)
 //
 // WHAT 
-//   This file contains common functions, defines and macros. 
+//   This file contains common functions, defines,  macros and types.
 //   
 //   This includes:
 //   - Glue and Stringify macros
 //   - Export macros (different for each architecture)
 //   - Defines of compilers, OS, CPU archetecture
-//   - Assert construct 
-//   - Primitive type redefines and their features such as their maximum and minimum value.
+//   - Asserts 
+//   - Primitive types
 //   - KB, MB, GB defines
 //   - Endian swapping helpers
-//   - C-String helpers and hashing functions. 
+//   - C-String manipulation 
 //   - ASCII-related helpers 
-//   - Common math-like operations like: abs, clamp, lerp, max, min, etc.
+//   - Common math-like operations like: abs, clamp, lerp, max, min, etc
 //   - degrees to radians, bpm conversion
 //   - Power of 2 functions (is this considered math-like?)
 //   - Integer to pointer conversions
 //   - Memory manipulation like memcpy, memcmp, etc. 
 //   - Defer construct
-//   - Memory block  
+//   - Memory block (buffer) 
 //
 //   
 // TODO
@@ -139,16 +138,19 @@
 //
 // Asserts
 //
-#if !defined(ENABLE_ASSERT)
-# define ENABLE_ASSERT 1
-#endif // ENABLE_ASSERT
+#if !defined(ASSERTIVE)
+# define ASSERTIVE 1
+#endif 
 
-//
-// Internal
-//    
-#if !defined(INTERNAL)
-# define INTERNAL 0
-#endif // INTERNAL
+# if !defined(assert_callback)
+#  define assert_callback(s) (*(volatile int*)0 = 0)
+# endif 
+
+#if ASSERTIVE
+# define assert(s) stmt(if(!(s)) { assert_callback(s); })
+#else 
+# define assert(s)
+#endif 
 
 //
 // Primitive types
@@ -416,8 +418,9 @@ is_digit(c8_t c) {
 //
 // Absolutes
 //
-// Turns out we don't need a generic abs() function! 
-//#define abs_of(x) ((x) < 0 ? -(x) : (x))
+// Turns out we don't need a generic abs() function?
+// #define abs_of(x) ((x) < 0 ? -(x) : (x))
+//
 
 static f32_t 
 f32_abs(f32_t x) {
@@ -535,7 +538,7 @@ bpm_to_spb_f64(f64_t bpm) {
   return 60.0/bpm;
 }
 
-//////////////////////////////////////////////////////////////////////////////
+//
 // Endian Swap
 // 
 // NOTE(Momo): I'm not entirely sure if this prototype makes sense.
@@ -567,24 +570,10 @@ u32_endian_swap(u32_t value) {
 }
 
 
-//////////////////////////////////////////////////////////////////////////////
-// Assert
+
+
+
 //
-// NOTE(Momo): Others can provide their own 'assert_callback' 
-//
-#if !defined(assert_callback)
-# define assert_callback(s) (*(volatile int*)0 = 0)
-#endif // AssertBreak
-
-#if ENABLE_ASSERT
-# define assert(s) stmt(if(!(s)) { assert_callback(s); })
-#else // !ENABLE_ASSERT
-# define assert(s)
-#endif // ENABLE_ASSERT
-
-
-
-//////////////////////////////////////////////////////////////////////////////
 // Raw memory manipulation
 //
 #if 1
@@ -655,8 +644,9 @@ swap_memory(void* lhs, void* rhs, umi_t size) {
 #define copy_array(p)     copy_memory((p), sizeof(p))
 #define copy_range(p,s)   copy_memory((p), sizeof(*(p)) * (s))
 
-//////////////////////////////////////////////////////////////////////////////
-// C-string
+//
+// C-string manipulation
+//
 static umi_t
 cstr_len(const c8_t* str) {
   umi_t count = 0;

@@ -1,5 +1,5 @@
 #ifndef WIN32_LEAN_AND_MEAN
-# define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
 #endif
 
 
@@ -36,6 +36,7 @@
 profiler_t _profiler = {0};
 profiler_t* profiler = &_profiler;
 
+#if INTERNAL
 #include <stdio.h>
 static void
 w32_log_proc(const char* fmt, ...) {
@@ -47,6 +48,10 @@ w32_log_proc(const char* fmt, ...) {
   OutputDebugStringA(buffer);
 }
 #define w32_log(...) w32_log_proc(__VA_ARGS__)
+#else
+#define w32_log(...)
+#endif // INTERNAL
+
 #define w32_profile_block(...) profiler_block(profiler, __VA_ARGS__)
 
 static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }
@@ -362,6 +367,8 @@ w32_unload_code(w32_loaded_code_t* code) {
 static void
 w32_load_code(w32_loaded_code_t* code) {
   code->is_valid = false;
+  
+#if INTERNAL
   b32_t copy_success = false;
   for (u32_t attempt = 0; attempt < 100; ++attempt) {
     if(CopyFile(code->module_path, code->tmp_path, false)) {
@@ -371,6 +378,12 @@ w32_load_code(w32_loaded_code_t* code) {
     Sleep(100);
   }
   code->dll = LoadLibraryA(code->tmp_path);
+#else //INTERNAL
+  code->dll = LoadLibraryA(code->module_path);
+#endif //INTERNAL
+  
+  
+  
   if (code->dll) {
     code->is_valid = true;
     for (u32_t function_index = 0; 
@@ -395,6 +408,7 @@ w32_load_code(w32_loaded_code_t* code) {
   
 }
 
+#if 1
 static b32_t
 w32_reload_code_if_outdated(w32_loaded_code_t* code) {
   b32_t reloaded = false;
@@ -415,6 +429,7 @@ w32_reload_code_if_outdated(w32_loaded_code_t* code) {
   }
   return reloaded;
 }
+#endif // INTERNAL 
 
 
 static b32_t
@@ -757,7 +772,9 @@ WinMain(HINSTANCE instance,
   pf.lock_cursor = w32_lock_cursor;
   pf.unlock_cursor = w32_unlock_cursor;
   pf.get_performance_counter = w32_get_performance_counter_u64;
+#if INTERNAL
   pf.debug_log = w32_log_proc;
+#endif
   
   //
   // Initialize w32 state
@@ -789,11 +806,12 @@ WinMain(HINSTANCE instance,
   game_code.function_names = game_function_names;
   game_code.module_path = "game.dll";
   game_code.functions = (void**)&game_functions;
+#if INTERNAL
   game_code.tmp_path = "tmp_game.dll";
+#endif // INTERNAL
 
   w32_load_code(&game_code);
   if (!game_code.is_valid) return 1;
-  w32_log("Hello");
   defer { w32_unload_code(&game_code); };
   
   
@@ -937,6 +955,10 @@ WinMain(HINSTANCE instance,
   //
   game_t game = {};
   game.is_running = true;
+  
+ 
+
+  
   game.platform = pf;
 
   //- Begin game loop
@@ -949,11 +971,14 @@ WinMain(HINSTANCE instance,
 
   while (w32_state.is_running && game.is_running) 
   {
+#if 1
     // Hot reload game.dll functions
     game.is_dll_reloaded = w32_reload_code_if_outdated(&game_code);
     if (game.is_dll_reloaded) {
       profiler_reset(profiler);
     }
+#endif
+   
 
     // Begin frame
     w32_audio_begin_frame(audio);

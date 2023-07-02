@@ -36,17 +36,10 @@
 #define LIT_LEARNT_BASICS_LEVEL_ID (3)
 #define LIT_LEARNT_POINT_LIGHT_LEVEL_ID (7)
 
-#ifdef INTERNAL
 #define lit_log(...) pf.debug_log(__VA_ARGS__)
 #define lit_profile_block(name) profiler_block(profiler, name)
 #define lit_profile_begin(name) profiler_begin_block(profiler, name)
 #define lit_profile_end(name) profiler_end_block(profiler, name)
-#else
-#define lit_log(...)
-#define lit_profiler_block(...)
-#define lit_profile_begin(...) 
-#define lit_profile_end(...) 
-#endif 
 
 #include "momo.h"
 #include "game.h"
@@ -54,8 +47,8 @@
 static game_t* game; 
 static gfx_t* gfx; 
 static audio_buffer_t* audio;
-static profiler_t* profiler;
 static input_t* input;
+static profiler_t* profiler;
 
 
 #include "lit_splash.h"

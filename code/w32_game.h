@@ -33,10 +33,8 @@ struct w32_loaded_code_t {
   const char* module_path;
   void** functions;
   
-#if INTERNAL
   LARGE_INTEGER module_write_time;
   const char* tmp_path;
-#endif  
   
   b32_t is_valid;
   HMODULE dll; 
