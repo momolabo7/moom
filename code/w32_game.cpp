@@ -24,7 +24,6 @@
 
 #include "momo.h"
 #include "game.h"
-
 #include "w32_game.h"
 
 // Graphics

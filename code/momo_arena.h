@@ -1,4 +1,3 @@
-// Authors: Gerald Wong 
 //
 // This file contains the implementations and declarations of a bump allocator
 // that is able to fallback to a given checkpoint.
