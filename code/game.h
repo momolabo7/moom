@@ -11,6 +11,25 @@
 #include "game_asset_rendering.h"
 
 //
+// Cursor API
+//
+#define game_show_cursor_i(name) void name()
+typedef game_show_cursor_i(game_show_cursor_f);
+
+
+#define game_hide_cursor_i(name) void name()
+typedef game_hide_cursor_i(game_hide_cursor_f);
+
+#define game_lock_cursor_i(name) void name()
+typedef game_lock_cursor_i(game_lock_cursor_f);
+
+#define game_unlock_cursor_i(name) void name()
+typedef game_unlock_cursor_i(game_unlock_cursor_f);
+
+
+
+
+//
 struct audio_buffer_t {
   s16_t* sample_buffer;
   u32_t sample_count;
@@ -26,6 +45,14 @@ struct game_platform_config_t {
 };
 
 struct game_t {
+  game_show_cursor_f* show_cursor;
+  game_hide_cursor_f* hide_cursor;
+  game_lock_cursor_f* lock_cursor;
+  game_unlock_cursor_f* unlock_cursor;
+
+
+
+
   pf_t pf;
   gfx_t* gfx;
   audio_buffer_t* audio; 
@@ -38,10 +65,10 @@ struct game_t {
   void* context;
 };
 
-#define game_decl_update_and_render_function(name) void name(game_t* g)
-typedef game_decl_update_and_render_function(game_update_and_render_f);
+#define game_update_and_render_i(name) void name(game_t* g)
+typedef game_update_and_render_i(game_update_and_render_f);
 
-
+// TODO(Momo): change to interface
 typedef game_platform_config_t game_get_platform_config_f(void); 
 
 // To be called by platform

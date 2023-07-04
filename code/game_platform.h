@@ -32,10 +32,7 @@ typedef void  pf_close_file_f(pf_file_t* file);
 typedef b32_t pf_read_file_f(pf_file_t* file, usz_t size, usz_t offset, void* dest);
 typedef b32_t pf_write_file_f(pf_file_t* file, usz_t size, usz_t offset, void* src);
 
-//
-// Cursor API
-//
-typedef void pf_show_cursor_f();
+
 typedef void pf_hide_cursor_f();
 typedef void pf_lock_cursor_f();
 typedef void pf_unlock_cursor_f();
@@ -72,11 +69,6 @@ struct pf_t {
   pf_allocate_memory_f* allocate_memory;
   pf_free_memory_f* free_memory;
 
-  // Mouse 
-  pf_show_cursor_f* show_cursor;
-  pf_hide_cursor_f* hide_cursor;
-  pf_lock_cursor_f* lock_cursor;
-  pf_unlock_cursor_f* unlock_cursor;
 
   // Performance Counter
   pf_get_performance_counter_f* get_performance_counter;

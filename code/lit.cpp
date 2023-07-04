@@ -135,7 +135,8 @@ game_get_platform_config(void)
   return ret;
 }
 
-exported game_decl_update_and_render_function(game_update_and_render) 
+exported 
+game_update_and_render_i(game_update_and_render) 
 { 
   game = g;
   pf = game->pf;  

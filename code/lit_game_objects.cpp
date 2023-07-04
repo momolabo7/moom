@@ -602,7 +602,7 @@ lit_game_player_release_light(lit_game_t* g) {
   lit_game_player_t* player = &g->player;
   player->held_light = nullptr;
   player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
-  pf.show_cursor();
+  game->show_cursor();
 }
 
 static void
@@ -635,7 +635,7 @@ lit_game_player_hold_nearest_light_if_empty_handed(
       player->old_light_pos = player->nearest_light->pos;
       player->light_retrival_time = 0.f;
       player->light_hold_mode = light_hold_mode;
-      pf.hide_cursor();
+      game->hide_cursor();
     }
   }
 }
@@ -668,14 +668,14 @@ lit_game_update_player(lit_game_t* g, f32_t dt)
   if (is_poked(input, INPUT_BUTTON_CODE_RMB))
   {
     lit_game_player_hold_nearest_light_if_empty_handed(g, LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE);
-    pf.lock_cursor();
+    game->lock_cursor();
     player->locked_pos_x = player->pos.x;
 
   }
   else if (is_released(input, INPUT_BUTTON_CODE_RMB)) 
   {
     lit_game_player_release_light(g);
-    pf.unlock_cursor();
+    game->unlock_cursor();
   }
 
   // Restrict movement

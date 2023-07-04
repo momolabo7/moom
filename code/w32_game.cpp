@@ -685,28 +685,31 @@ w32_set_game_dims(f32_t width, f32_t height) {
 
 }
 
-static void 
-w32_show_cursor() {
+static 
+game_show_cursor_i(w32_show_cursor)
+{
   while(ShowCursor(1) < 0);
 }
 
-static void 
-w32_hide_cursor() {
+static  
+game_hide_cursor_i(w32_hide_cursor) {
   while(ShowCursor(0) >= 0);
 }
 
-static void
-w32_lock_cursor() {
+static 
+game_lock_cursor_i(w32_lock_cursor) {
   w32_state.is_cursor_locked = true;
   GetCursorPos(&w32_state.cursor_pt_to_lock_to);
 }
 
-static void
-w32_unlock_cursor() {
+static 
+game_unlock_cursor_i(w32_unlock_cursor) {
   w32_state.is_cursor_locked = false;
 }
 
-//~ Main functions
+//
+// Main functions
+//
 LRESULT CALLBACK
 w32_window_callback(HWND window, 
                     UINT message, 
@@ -745,6 +748,12 @@ WinMain(HINSTANCE instance,
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
 
+  game_t game = {};
+
+  game.show_cursor = w32_show_cursor;
+  game.lock_cursor = w32_lock_cursor;
+  game.hide_cursor = w32_hide_cursor;
+  game.unlock_cursor = w32_unlock_cursor;
   //
   // Platform API setup
   //
@@ -757,10 +766,6 @@ WinMain(HINSTANCE instance,
   pf.complete_all_tasks = w32_complete_all_tasks;
   pf.allocate_memory = w32_allocate_memory;
   pf.free_memory = w32_free_memory;
-  pf.show_cursor = w32_show_cursor;
-  pf.hide_cursor = w32_hide_cursor;
-  pf.lock_cursor = w32_lock_cursor;
-  pf.unlock_cursor = w32_unlock_cursor;
   pf.get_performance_counter = w32_get_performance_counter_u64;
   pf.debug_log = w32_log_proc;
   
@@ -940,7 +945,6 @@ WinMain(HINSTANCE instance,
   //
   // Game setup
   //
-  game_t game = {};
   game.is_running = true;
   game.pf = pf;
   game.gfx = gfx;
