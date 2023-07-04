@@ -26,22 +26,23 @@ struct game_platform_config_t {
 };
 
 struct game_t {
-  pf_t platform;
-
-  void* context;
+  pf_t pf;
+  gfx_t* gfx;
+  audio_buffer_t* audio; 
+  profiler_t* profiler;
+  input_t* input;
           
   b32_t is_dll_reloaded;
   b32_t is_running;
+
+  void* context;
 };
+
+#define game_decl_update_and_render_function(name) void name(game_t* g)
+typedef game_decl_update_and_render_function(game_update_and_render_f);
 
 
 typedef game_platform_config_t game_get_platform_config_f(void); 
-typedef void game_update_and_render_f(
-    game_t*, 
-    gfx_t*, 
-    audio_buffer_t*, 
-    profiler_t*, 
-    input_t*);
 
 // To be called by platform
 struct game_functions_t {

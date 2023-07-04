@@ -942,7 +942,11 @@ WinMain(HINSTANCE instance,
   //
   game_t game = {};
   game.is_running = true;
-  game.platform = pf;
+  game.pf = pf;
+  game.gfx = gfx;
+  game.audio = audio;
+  game.profiler = profiler;
+  game.input = &input;
 
   //- Begin game loop
   b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
@@ -1010,7 +1014,7 @@ WinMain(HINSTANCE instance,
     }
     
     
-    game_functions.update_and_render(&game, gfx, audio, profiler, &input);
+    game_functions.update_and_render(&game);
 
 
     // End frame

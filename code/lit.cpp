@@ -135,20 +135,14 @@ game_get_platform_config(void)
   return ret;
 }
 
-exported void 
-game_update_and_render(
-    game_t* in_game, 
-    gfx_t* in_gfx, 
-    audio_buffer_t* in_audio, 
-    profiler_t* in_profiler, 
-    input_t* in_input)
+exported game_decl_update_and_render_function(game_update_and_render) 
 { 
-  pf = in_game->platform;  
-  game = in_game;
-  gfx = in_gfx;
-  audio = in_audio;
-  profiler = in_profiler;
-  input = in_input;
+  game = g;
+  pf = game->pf;  
+  gfx = game->gfx;
+  audio = game->audio;
+  profiler = game->profiler;
+  input = game->input;
   
   lit_tick();
 }
