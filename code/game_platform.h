@@ -1,11 +1,6 @@
 #ifndef GAME_PLATFORM
 #define GAME_PLATFORM
 
-//
-// Platform Memory API
-//
-typedef void* pf_allocate_memory_f(usz_t size);
-typedef void  pf_free_memory_f(void* ptr);
 
 
 //
@@ -33,10 +28,6 @@ typedef b32_t pf_read_file_f(pf_file_t* file, usz_t size, usz_t offset, void* de
 typedef b32_t pf_write_file_f(pf_file_t* file, usz_t size, usz_t offset, void* src);
 
 
-typedef void pf_hide_cursor_f();
-typedef void pf_lock_cursor_f();
-typedef void pf_unlock_cursor_f();
-
 //
 // Platform multithreaded work API
 //
@@ -48,7 +39,6 @@ typedef void pf_complete_all_tasks_f();
 // Other Platform API
 // 
 typedef void  pf_debug_log_f(const char* fmt, ...);
-typedef u64_t pf_get_performance_counter_f();
 
 // TODO: remove this?
 typedef void  pf_set_dims_f(f32_t width, f32_t height);
@@ -64,14 +54,6 @@ struct pf_t {
   // Multithreading API
   pf_add_task_f* add_task;
   pf_complete_all_tasks_f* complete_all_tasks;
-
-  // Memory allocation
-  pf_allocate_memory_f* allocate_memory;
-  pf_free_memory_f* free_memory;
-
-
-  // Performance Counter
-  pf_get_performance_counter_f* get_performance_counter;
 
   // Logging
   pf_debug_log_f* debug_log;

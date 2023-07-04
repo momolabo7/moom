@@ -27,6 +27,14 @@ typedef game_lock_cursor_i(game_lock_cursor_f);
 typedef game_unlock_cursor_i(game_unlock_cursor_f);
 
 
+//
+// Memory Allocation API
+//
+#define game_allocate_memory_i(name) void* name(usz_t size)
+typedef game_allocate_memory_i(game_allocate_memory_f);
+
+#define game_free_memory_i(name) void name(void* ptr)
+typedef game_free_memory_i(game_free_memory_f);
 
 
 //
@@ -50,6 +58,8 @@ struct game_t {
   game_lock_cursor_f* lock_cursor;
   game_unlock_cursor_f* unlock_cursor;
 
+  game_allocate_memory_f* allocate_memory;
+  game_free_memory_f* free_memory;
 
 
 

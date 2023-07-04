@@ -297,8 +297,8 @@ w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {
   c->free_files[c->free_file_count++] = f->cabinet_index;
 }
 
-static void*
-w32_allocate_memory(usz_t size)
+static 
+game_allocate_memory_i(w32_allocate_memory)
 {
   usz_t aligned_size = align_up_pow2(size, 16);
   usz_t padding_for_alignment = aligned_size - size;
@@ -323,10 +323,10 @@ w32_allocate_memory(usz_t size)
 
 }
 
-static void
-w32_free_memory(void* block) {
-  if (block) {
-    auto* memory_block = (w32_memory_t*)(block);
+static
+game_free_memory_i(w32_free_memory) {
+  if (ptr) {
+    auto* memory_block = (w32_memory_t*)(ptr);
     cll_remove(memory_block);
     VirtualFree(memory_block, 0, MEM_RELEASE);
   }
@@ -754,6 +754,8 @@ WinMain(HINSTANCE instance,
   game.lock_cursor = w32_lock_cursor;
   game.hide_cursor = w32_hide_cursor;
   game.unlock_cursor = w32_unlock_cursor;
+  game.allocate_memory = w32_allocate_memory;
+  game.free_memory = w32_free_memory;
   //
   // Platform API setup
   //
@@ -764,9 +766,6 @@ WinMain(HINSTANCE instance,
   pf.close_file = w32_close_file;
   pf.add_task = w32_add_task;
   pf.complete_all_tasks = w32_complete_all_tasks;
-  pf.allocate_memory = w32_allocate_memory;
-  pf.free_memory = w32_free_memory;
-  pf.get_performance_counter = w32_get_performance_counter_u64;
   pf.debug_log = w32_log_proc;
   
   //
