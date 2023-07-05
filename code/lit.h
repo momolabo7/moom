@@ -122,11 +122,11 @@ static b32_t
 lit_unlock_next_level(u32_t current_level_id) {
 
   if (current_level_id >= lit->save_data.unlocked_levels) {
-    pf_file_t file = {};
+    app_file_t file = {};
 
     lit->save_data.unlocked_levels = current_level_id + 1;
 
-    if (app->open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_OVERWRITE, PF_FILE_PATH_USER)) 
+    if (app->open_file(&file, LIT_SAVE_FILE, APP_FILE_ACCESS_OVERWRITE, APP_FILE_PATH_USER)) 
     {
       app->write_file(&file, sizeof(lit->save_data), 0, (void*)&lit->save_data);
       app->close_file(&file);
@@ -145,10 +145,10 @@ lit_unlock_next_level(u32_t current_level_id) {
 static b32_t
 lit_init_save_data() {
   lit->save_data.unlocked_levels = 0;
-  pf_file_t file = {};
+  app_file_t file = {};
 
   // save data actually found
-  if (app->open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_READ, PF_FILE_PATH_USER)) {
+  if (app->open_file(&file, LIT_SAVE_FILE, APP_FILE_ACCESS_READ, APP_FILE_PATH_USER)) {
     if(app->read_file(&file, sizeof(lit_save_data_t), 0, &lit->save_data)) {
       // happy! :3
       app->close_file(&file);

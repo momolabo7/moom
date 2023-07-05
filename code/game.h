@@ -1,8 +1,7 @@
 
-#ifndef MOMO_GAME_H
-#define MOMO_GAME_H
+#ifndef APP_H
+#define APP_H
 
-#include "game_platform.h"
 #include "game_gfx.h"
 #include "game_input.h"
 #include "game_console.h"
@@ -11,32 +10,32 @@
 //
 // File IO API
 // 
-enum pf_file_path_t {
-  PF_FILE_PATH_EXE,
-  PF_FILE_PATH_USER,
-  PF_FILE_PATH_CACHE,
+enum app_file_path_t {
+  APP_FILE_PATH_EXE,
+  APP_FILE_PATH_USER,
+  APP_FILE_PATH_CACHE,
 
 };
 
-enum pf_file_access_t {
-  PF_FILE_ACCESS_READ,
-  PF_FILE_ACCESS_OVERWRITE,
+enum app_file_access_t {
+  APP_FILE_ACCESS_READ,
+  APP_FILE_ACCESS_OVERWRITE,
 };
 
-struct pf_file_t {
+struct app_file_t {
   void* pf_data; // pointer for platform's usage
 };
 
-#define app_open_file_i(name) b32_t name(pf_file_t* file, const char* filename, pf_file_access_t file_access, pf_file_path_t file_path)
+#define app_open_file_i(name) b32_t name(app_file_t* file, const char* filename, app_file_access_t file_access, app_file_path_t file_path)
 typedef app_open_file_i(app_open_file_f);
 
-#define app_close_file_i(name) void  name(pf_file_t* file)
+#define app_close_file_i(name) void  name(app_file_t* file)
 typedef app_close_file_i(app_close_file_f);
 
-#define app_read_file_i(name) b32_t name(pf_file_t* file, usz_t size, usz_t offset, void* dest)
+#define app_read_file_i(name) b32_t name(app_file_t* file, usz_t size, usz_t offset, void* dest)
 typedef app_read_file_i(app_read_file_f);
 
-#define app_write_file_i(name) b32_t name(pf_file_t* file, usz_t size, usz_t offset, void* src)
+#define app_write_file_i(name) b32_t name(app_file_t* file, usz_t size, usz_t offset, void* src)
 typedef app_write_file_i(app_write_file_f);
 
 //
@@ -121,7 +120,6 @@ struct app_t {
   app_read_file_f* read_file;
 
 
-
   gfx_t* gfx;
   audio_buffer_t* audio; 
   profiler_t* profiler;
@@ -130,7 +128,7 @@ struct app_t {
   b32_t is_dll_reloaded;
   b32_t is_running;
 
-  void* context;
+  void* game;
 };
 
 #define game_update_and_render_i(name) void name(app_t* a)

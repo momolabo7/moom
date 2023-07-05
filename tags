@@ -30,9 +30,18 @@ app_complete_all_tasks_i	code/w32_game.cpp	/^app_complete_all_tasks_i(w32_comple
 app_debug_log_i	code/game.h	/^#define app_debug_log_i(/;"	d	language:C++
 app_debug_log_i	code/game.h	/^typedef app_debug_log_i(app_debug_log_f);$/;"	t	language:C++
 app_debug_log_i	code/w32_game.cpp	/^app_debug_log_i(w32_log_proc) $/;"	f	language:C++	file:
+APP_FILE_ACCESS_OVERWRITE	code/game.h	/^  APP_FILE_ACCESS_OVERWRITE,$/;"	e	language:C++	enum:app_file_access_t
+APP_FILE_ACCESS_READ	code/game.h	/^  APP_FILE_ACCESS_READ,$/;"	e	language:C++	enum:app_file_access_t
+app_file_access_t	code/game.h	/^enum app_file_access_t {$/;"	g	language:C++
+APP_FILE_PATH_CACHE	code/game.h	/^  APP_FILE_PATH_CACHE,$/;"	e	language:C++	enum:app_file_path_t
+APP_FILE_PATH_EXE	code/game.h	/^  APP_FILE_PATH_EXE,$/;"	e	language:C++	enum:app_file_path_t
+app_file_path_t	code/game.h	/^enum app_file_path_t {$/;"	g	language:C++
+APP_FILE_PATH_USER	code/game.h	/^  APP_FILE_PATH_USER,$/;"	e	language:C++	enum:app_file_path_t
+app_file_t	code/game.h	/^struct app_file_t {$/;"	s	language:C++
 app_free_memory_i	code/game.h	/^#define app_free_memory_i(/;"	d	language:C++
 app_free_memory_i	code/game.h	/^typedef app_free_memory_i(app_free_memory_f);$/;"	t	language:C++
 app_free_memory_i	code/w32_game.cpp	/^app_free_memory_i(w32_free_memory) {$/;"	f	language:C++	file:
+APP_H	code/game.h	/^#define APP_H$/;"	d	language:C++
 app_hide_cursor_i	code/game.h	/^#define app_hide_cursor_i(/;"	d	language:C++
 app_hide_cursor_i	code/game.h	/^typedef app_hide_cursor_i(app_hide_cursor_f);$/;"	t	language:C++
 app_hide_cursor_i	code/w32_game.cpp	/^app_hide_cursor_i(w32_hide_cursor) {$/;"	f	language:C++	file:
@@ -1436,7 +1445,6 @@ MOMO_COLORS_H	code/momo_colors.h	/^#define MOMO_COLORS_H$/;"	d	language:C++
 MOMO_CONSOLE_H	code/game_console.h	/^#define MOMO_CONSOLE_H$/;"	d	language:C++
 MOMO_CRC_H	code/momo_crc.h	/^#define MOMO_CRC_H$/;"	d	language:C++
 MOMO_EASING_H	code/momo_easing.h	/^#define MOMO_EASING_H$/;"	d	language:C++
-MOMO_GAME_H	code/game.h	/^#define MOMO_GAME_H$/;"	d	language:C++
 MOMO_GEOMETRY_H	code/momo_collision.h	/^#define MOMO_GEOMETRY_H$/;"	d	language:C++
 MOMO_GEOMETRY_H	code/momo_geometry.h	/^#define MOMO_GEOMETRY_H$/;"	d	language:C++
 MOMO_GFX_H	code/game_gfx.h	/^#define MOMO_GFX_H$/;"	d	language:C++
@@ -1665,15 +1673,7 @@ path_lengths	code/momo_ttf.h	/^  u32_t* path_lengths;$/;"	m	language:C++	struct:
 payloads	code/game_gfx.h	/^  gfx_texture_payload_t payloads[GFX_TEXTURE_PAYLOAD_CAP];$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:gfx_texture_payload_t[]
 payload_count	code/game_gfx.h	/^  usz_t payload_count;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:usz_t
 pf_audio	code/w32_game_audio_wasapi.h	/^  audio_buffer_t pf_audio; \/\/ Must be first member$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:audio_buffer_t
-pf_data	code/game.h	/^  void* pf_data; \/\/ pointer for platform's usage$/;"	m	language:C++	struct:pf_file_t	typeref:typename:void *
-PF_FILE_ACCESS_OVERWRITE	code/game.h	/^  PF_FILE_ACCESS_OVERWRITE,$/;"	e	language:C++	enum:pf_file_access_t
-PF_FILE_ACCESS_READ	code/game.h	/^  PF_FILE_ACCESS_READ,$/;"	e	language:C++	enum:pf_file_access_t
-pf_file_access_t	code/game.h	/^enum pf_file_access_t {$/;"	g	language:C++
-PF_FILE_PATH_CACHE	code/game.h	/^  PF_FILE_PATH_CACHE,$/;"	e	language:C++	enum:pf_file_path_t
-PF_FILE_PATH_EXE	code/game.h	/^  PF_FILE_PATH_EXE,$/;"	e	language:C++	enum:pf_file_path_t
-pf_file_path_t	code/game.h	/^enum pf_file_path_t {$/;"	g	language:C++
-PF_FILE_PATH_USER	code/game.h	/^  PF_FILE_PATH_USER,$/;"	e	language:C++	enum:pf_file_path_t
-pf_file_t	code/game.h	/^struct pf_file_t {$/;"	s	language:C++
+pf_data	code/game.h	/^  void* pf_data; \/\/ pointer for platform's usage$/;"	m	language:C++	struct:app_file_t	typeref:typename:void *
 pixels	code/sui_atlas.h	/^  u32_t* pixels;$/;"	m	language:C++	struct:sui_atlas_bitmap_t	typeref:typename:u32_t *
 pixels	code/sui_pack.h	/^  u32_t* pixels;$/;"	m	language:C++	struct:sui_packer_source_bitmap_t	typeref:typename:u32_t *
 PI_32	code/momo_types.h	/^#define PI_32 /;"	d	language:C++

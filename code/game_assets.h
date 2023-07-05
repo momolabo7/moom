@@ -122,12 +122,12 @@ assets_get_next_texture_handle() {
 static b32_t 
 assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, arena_t* arena) 
 {
-  make(pf_file_t, file);
+  make(app_file_t, file);
   b32_t ok = app->open_file(
       file,
       filename,
-      PF_FILE_ACCESS_READ, 
-      PF_FILE_PATH_EXE);
+      APP_FILE_ACCESS_READ, 
+      APP_FILE_PATH_EXE);
   if (!ok) {
     return false;
   }

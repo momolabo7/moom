@@ -455,11 +455,11 @@ app_open_file_i(w32_open_file)
   DWORD access_flag = {};
   DWORD creation_disposition = {};
   switch (file_access) {
-    case PF_FILE_ACCESS_READ: {
+    case APP_FILE_ACCESS_READ: {
       access_flag = GENERIC_READ;
       creation_disposition = OPEN_EXISTING;
     } break;
-    case PF_FILE_ACCESS_OVERWRITE: {
+    case APP_FILE_ACCESS_OVERWRITE: {
       access_flag = GENERIC_WRITE;
       creation_disposition = CREATE_ALWAYS;
     } break;

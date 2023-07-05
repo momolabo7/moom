@@ -2,12 +2,12 @@
 
 static b32_t
 lit_tick() {
-  if(app->context == nullptr) {
+  if(app->game == nullptr) {
     void* lit_memory = app->allocate_memory(sizeof(lit_t));
     if (!lit_memory) return false;
-    app->context = lit_memory;
+    app->game = lit_memory;
 
-    lit = (lit_t*)(app->context);
+    lit = (lit_t*)(app->game);
     lit->level_to_start = 0;
     lit->next_mode = LIT_MODE_SPLASH;
     lit->mode = LIT_MODE_NONE;
@@ -64,7 +64,7 @@ lit_tick() {
     
   }
 
-  lit = (lit_t*)(app->context);
+  lit = (lit_t*)(app->game);
 
   arena_clear(&lit->frame_arena);
   inspector_clear(&lit->inspector);
