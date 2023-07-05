@@ -131,8 +131,8 @@ lit_game_update()
     //
     if (g->exit_callback != nullptr) 
     {
-      game->show_cursor();
-      game->unlock_cursor();
+      app->show_cursor();
+      app->unlock_cursor();
       g->state = LIT_GAME_STATE_TYPE_SOLVED_IN;
     }
   }

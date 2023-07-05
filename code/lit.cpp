@@ -2,12 +2,12 @@
 
 static b32_t
 lit_tick() {
-  if(game->context == nullptr) {
-    void* lit_memory = game->allocate_memory(sizeof(lit_t));
+  if(app->context == nullptr) {
+    void* lit_memory = app->allocate_memory(sizeof(lit_t));
     if (!lit_memory) return false;
-    game->context = lit_memory;
+    app->context = lit_memory;
 
-    lit = (lit_t*)(game->context);
+    lit = (lit_t*)(app->context);
     lit->level_to_start = 0;
     lit->next_mode = LIT_MODE_SPLASH;
     lit->mode = LIT_MODE_NONE;
@@ -17,10 +17,10 @@ lit_tick() {
     // Initialize assets
     //
     usz_t asset_memory_size = megabytes(20);
-    void* asset_memory = game->allocate_memory(asset_memory_size);
+    void* asset_memory = app->allocate_memory(asset_memory_size);
     if (asset_memory == nullptr) return false;
     arena_init(&lit->asset_arena, asset_memory, asset_memory_size);
-    assets_init(&lit->assets, gfx, LIT_ASSET_FILE, &lit->asset_arena);
+    assets_init(&lit->assets, app, gfx, LIT_ASSET_FILE, &lit->asset_arena);
 
     //
     // Initialize important assets stuf
@@ -35,21 +35,21 @@ lit_tick() {
     // Initialize debug stuff
     //
     usz_t debug_memory_size = megabytes(1);
-    void* debug_memory = game->allocate_memory(debug_memory_size);
+    void* debug_memory = app->allocate_memory(debug_memory_size);
     arena_init(&lit->debug_arena, debug_memory, debug_memory_size);
     inspector_init(&lit->inspector, &lit->debug_arena, 64);
     console_init(&lit->console, &lit->debug_arena, 32, 256);
 
     usz_t frame_memory_size = megabytes(1);
-    void* frame_memory = game->allocate_memory(frame_memory_size);
+    void* frame_memory = app->allocate_memory(frame_memory_size);
     arena_init(&lit->frame_arena, frame_memory, frame_memory_size);
 
 
     usz_t mode_memory_size = megabytes(1);
-    auto* mode_memory = game->allocate_memory(mode_memory_size);
+    auto* mode_memory = app->allocate_memory(mode_memory_size);
     arena_init(&lit->mode_arena, mode_memory, mode_memory_size);
 
-    pf.set_design_dims(LIT_WIDTH, LIT_HEIGHT);
+    app->set_design_dimensions(LIT_WIDTH, LIT_HEIGHT);
     gfx_set_view(gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
     //
@@ -64,13 +64,13 @@ lit_tick() {
     
   }
 
-  lit = (lit_t*)(game->context);
+  lit = (lit_t*)(app->context);
 
   arena_clear(&lit->frame_arena);
   inspector_clear(&lit->inspector);
 
 
-  if (lit->next_mode != lit->mode || game->is_dll_reloaded) 
+  if (lit->next_mode != lit->mode || app->is_dll_reloaded) 
   {
     lit->mode = lit->next_mode;
     
@@ -138,12 +138,11 @@ game_get_platform_config(void)
 exported 
 game_update_and_render_i(game_update_and_render) 
 { 
-  game = g;
-  pf = game->pf;  
-  gfx = game->gfx;
-  audio = game->audio;
-  profiler = game->profiler;
-  input = game->input;
+  app = a;
+  gfx = app->gfx;
+  audio = app->audio;
+  profiler = app->profiler;
+  input = app->input;
   
   lit_tick();
 }

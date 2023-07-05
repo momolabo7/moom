@@ -11,7 +11,7 @@ struct w32_memory_t {
 
 struct w32_work_t {
   void* data;
-  pf_task_callback_f* callback;
+  app_task_callback_f* callback;
 };
 
 // TODO(momo): Is it possible to use a vector?

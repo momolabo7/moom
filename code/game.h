@@ -7,34 +7,86 @@
 #include "game_input.h"
 #include "game_console.h"
 #include "game_asset_file.h"
-#include "game_assets.h"
-#include "game_asset_rendering.h"
+
+//
+// File IO API
+// 
+enum pf_file_path_t {
+  PF_FILE_PATH_EXE,
+  PF_FILE_PATH_USER,
+  PF_FILE_PATH_CACHE,
+
+};
+
+enum pf_file_access_t {
+  PF_FILE_ACCESS_READ,
+  PF_FILE_ACCESS_OVERWRITE,
+};
+
+struct pf_file_t {
+  void* pf_data; // pointer for platform's usage
+};
+
+#define app_open_file_i(name) b32_t name(pf_file_t* file, const char* filename, pf_file_access_t file_access, pf_file_path_t file_path)
+typedef app_open_file_i(app_open_file_f);
+
+#define app_close_file_i(name) void  name(pf_file_t* file)
+typedef app_close_file_i(app_close_file_f);
+
+#define app_read_file_i(name) b32_t name(pf_file_t* file, usz_t size, usz_t offset, void* dest)
+typedef app_read_file_i(app_read_file_f);
+
+#define app_write_file_i(name) b32_t name(pf_file_t* file, usz_t size, usz_t offset, void* src)
+typedef app_write_file_i(app_write_file_f);
+
+//
+// Logging API
+// 
+#define app_debug_log_i(name) void name(const char* fmt, ...)
+typedef app_debug_log_i(app_debug_log_f);
 
 //
 // Cursor API
 //
-#define game_show_cursor_i(name) void name()
-typedef game_show_cursor_i(game_show_cursor_f);
+#define app_show_cursor_i(name) void name()
+typedef app_show_cursor_i(app_show_cursor_f);
 
 
-#define game_hide_cursor_i(name) void name()
-typedef game_hide_cursor_i(game_hide_cursor_f);
+#define app_hide_cursor_i(name) void name()
+typedef app_hide_cursor_i(app_hide_cursor_f);
 
-#define game_lock_cursor_i(name) void name()
-typedef game_lock_cursor_i(game_lock_cursor_f);
+#define app_lock_cursor_i(name) void name()
+typedef app_lock_cursor_i(app_lock_cursor_f);
 
-#define game_unlock_cursor_i(name) void name()
-typedef game_unlock_cursor_i(game_unlock_cursor_f);
+#define app_unlock_cursor_i(name) void name()
+typedef app_unlock_cursor_i(app_unlock_cursor_f);
 
 
 //
 // Memory Allocation API
 //
-#define game_allocate_memory_i(name) void* name(usz_t size)
-typedef game_allocate_memory_i(game_allocate_memory_f);
+#define app_allocate_memory_i(name) void* name(usz_t size)
+typedef app_allocate_memory_i(app_allocate_memory_f);
 
-#define game_free_memory_i(name) void name(void* ptr)
-typedef game_free_memory_i(game_free_memory_f);
+#define app_free_memory_i(name) void name(void* ptr)
+typedef app_free_memory_i(app_free_memory_f);
+
+//
+// Multithreaded work API
+//
+typedef void app_task_callback_f(void* data);
+
+#define app_add_task_i(name) void name(app_task_callback_f callback, void* data)
+typedef app_add_task_i(app_add_task_f);
+
+#define app_complete_all_tasks_i(name) void name()
+typedef app_complete_all_tasks_i(app_complete_all_tasks_f);
+
+// 
+// Window/Graphics related
+//
+#define app_set_design_dimensions_i(name) void name(f32_t width, f32_t height);
+typedef app_set_design_dimensions_i(app_set_design_dimensions_f);
 
 
 //
@@ -52,18 +104,24 @@ struct game_platform_config_t {
   const char* window_title; // TODO(game): change to str8_t?
 };
 
-struct game_t {
-  game_show_cursor_f* show_cursor;
-  game_hide_cursor_f* hide_cursor;
-  game_lock_cursor_f* lock_cursor;
-  game_unlock_cursor_f* unlock_cursor;
+struct app_t {
+  app_show_cursor_f* show_cursor;
+  app_hide_cursor_f* hide_cursor;
+  app_lock_cursor_f* lock_cursor;
+  app_unlock_cursor_f* unlock_cursor;
+  app_allocate_memory_f* allocate_memory;
+  app_free_memory_f* free_memory;
+  app_debug_log_f* debug_log;
+  app_add_task_f* add_task;
+  app_complete_all_tasks_f* complete_all_tasks;
+  app_set_design_dimensions_f* set_design_dimensions;
+  app_open_file_f* open_file;
+  app_close_file_f* close_file;
+  app_write_file_f* write_file;
+  app_read_file_f* read_file;
 
-  game_allocate_memory_f* allocate_memory;
-  game_free_memory_f* free_memory;
 
 
-
-  pf_t pf;
   gfx_t* gfx;
   audio_buffer_t* audio; 
   profiler_t* profiler;
@@ -75,7 +133,7 @@ struct game_t {
   void* context;
 };
 
-#define game_update_and_render_i(name) void name(game_t* g)
+#define game_update_and_render_i(name) void name(app_t* a)
 typedef game_update_and_render_i(game_update_and_render_f);
 
 // TODO(Momo): change to interface
@@ -93,6 +151,7 @@ static const char* game_function_names[] {
 };
 
 
-
+#include "game_assets.h"
+#include "game_asset_rendering.h"
 
 #endif //GAME_H

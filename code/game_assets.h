@@ -120,10 +120,11 @@ assets_get_next_texture_handle() {
 
 // TODO: Is there a way not to pass pf and gfx?
 static b32_t 
-assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena) 
+assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, arena_t* arena) 
 {
   make(pf_file_t, file);
-  b32_t ok = pf.open_file(file,
+  b32_t ok = app->open_file(
+      file,
       filename,
       PF_FILE_ACCESS_READ, 
       PF_FILE_PATH_EXE);
@@ -133,7 +134,7 @@ assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena)
 
   // Read header
   asset_file_header_t asset_file_header;
-  pf.read_file(file, sizeof(asset_file_header_t), 0, &asset_file_header);
+  app->read_file(file, sizeof(asset_file_header_t), 0, &asset_file_header);
   if (asset_file_header.signature != ASSET_FILE_SIGNATURE) return false;
 
   // Allocation for asset components (asset slots and tags)
@@ -158,7 +159,7 @@ assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena)
     umi_t offset_to_tag = asset_file_header.offset_to_tags + sizeof(asset_file_tag_t)*tag_index;
 
     asset_file_tag_t asset_file_tag;
-    pf.read_file(file, sizeof(asset_file_tag_t), offset_to_tag, &asset_file_tag);
+    app->read_file(file, sizeof(asset_file_tag_t), offset_to_tag, &asset_file_tag);
 
     tag->type = asset_file_tag.type;
     tag->value = asset_file_tag.value;
@@ -176,7 +177,8 @@ assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena)
       umi_t offset_to_asset_file_group = 
         asset_file_header.offset_to_groups + sizeof(asset_file_group_t)*group_index;
 
-      pf.read_file(file, 
+      app->read_file(
+          file, 
           sizeof(asset_file_group_t), 
           offset_to_asset_file_group, 
           &asset_file_group);
@@ -198,7 +200,9 @@ assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena)
       umi_t offset_to_asset_file_asset = 
         asset_file_header.offset_to_assets + sizeof(asset_file_asset_t)*asset_index;
 
-      pf.read_file(file, sizeof(asset_file_asset_t), 
+      app->read_file(
+          file, 
+          sizeof(asset_file_asset_t), 
           offset_to_asset_file_asset, 
           &asset_file_asset);
 
@@ -220,7 +224,8 @@ assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena)
           payload->texture_index = asset->bitmap.renderer_texture_handle;
           payload->texture_width = asset_file_asset.bitmap.width;
           payload->texture_height = asset_file_asset.bitmap.height;
-          pf.read_file(file, 
+          app->read_file(
+              file, 
               bitmap_size, 
               asset_file_asset.offset_to_data, 
               payload->texture_data);
@@ -259,7 +264,7 @@ assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena)
               sizeof(asset_file_font_glyph_t)*glyph_index;
 
             asset_file_font_glyph_t asset_file_glyph = {};
-            pf.read_file(file, 
+            app->read_file(file, 
                 sizeof(asset_file_font_glyph_t), 
                 glyph_data_offset,
                 &asset_file_glyph); 
@@ -288,7 +293,7 @@ assets_init(assets_t* assets, gfx_t* gfx, const char* filename, arena_t* arena)
               asset_file_asset.offset_to_data + 
               sizeof(asset_file_font_glyph_t)*glyph_count;
 
-            pf.read_file(file, 
+            app->read_file(file, 
                 sizeof(f32_t)*glyph_count*glyph_count, 
                 kernings_data_offset, 
                 kernings);

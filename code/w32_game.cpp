@@ -39,8 +39,10 @@ profiler_t _profiler = {0};
 profiler_t* profiler = &_profiler;
 
 #include <stdio.h>
-static void
-w32_log_proc(const char* fmt, ...) {
+
+static 
+app_debug_log_i(w32_log_proc) 
+{
   char buffer[256] = {0};
   va_list args;
   va_start(args, fmt);
@@ -298,7 +300,7 @@ w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {
 }
 
 static 
-game_allocate_memory_i(w32_allocate_memory)
+app_allocate_memory_i(w32_allocate_memory)
 {
   usz_t aligned_size = align_up_pow2(size, 16);
   usz_t padding_for_alignment = aligned_size - size;
@@ -324,7 +326,7 @@ game_allocate_memory_i(w32_allocate_memory)
 }
 
 static
-game_free_memory_i(w32_free_memory) {
+app_free_memory_i(w32_free_memory) {
   if (ptr) {
     auto* memory_block = (w32_memory_t*)(ptr);
     cll_remove(memory_block);
@@ -446,16 +448,13 @@ w32_free_memory_from_arena(arena_t* a) {
 }
 
 
-static b32_t
-w32_open_file(pf_file_t* file,
-              const char* filename, 
-              pf_file_access_t access,
-              pf_file_path_t path) 
+static 
+app_open_file_i(w32_open_file)
 {
   // Opening the file
   DWORD access_flag = {};
   DWORD creation_disposition = {};
-  switch (access) {
+  switch (file_access) {
     case PF_FILE_ACCESS_READ: {
       access_flag = GENERIC_READ;
       creation_disposition = OPEN_EXISTING;
@@ -495,8 +494,9 @@ w32_open_file(pf_file_t* file,
   }
 }
 
-static void
-w32_close_file(pf_file_t* file) {
+static 
+app_close_file_i(w32_close_file)
+{
   w32_file_t* w32_file = (w32_file_t*)file->pf_data;
   CloseHandle(w32_file->handle);
   
@@ -504,8 +504,8 @@ w32_close_file(pf_file_t* file) {
   file->pf_data = nullptr;
 }
 
-static b32_t
-w32_read_file(pf_file_t* file, usz_t size, usz_t offset, void* dest) 
+static 
+app_read_file_i(w32_read_file)
 { 
   w32_file_t* w32_file = (w32_file_t*)file->pf_data;
   
@@ -526,8 +526,8 @@ w32_read_file(pf_file_t* file, usz_t size, usz_t offset, void* dest)
   }
 }
 
-static b32_t 
-w32_write_file(pf_file_t* file, usz_t size, usz_t offset, void* src)
+static  
+app_write_file_i(w32_write_file)
 {
   w32_file_t* w32_file = (w32_file_t*)file->pf_data;
   
@@ -546,13 +546,15 @@ w32_write_file(pf_file_t* file, usz_t size, usz_t offset, void* src)
   }
 }
 
-static void
-w32_add_task(pf_task_callback_f callback, void* data) {
+static 
+app_add_task_i(w32_add_task)
+{
   w32_add_task_entry(&w32_state.work_queue, callback, data);
 }
 
-static void
-w32_complete_all_tasks() {
+static 
+app_complete_all_tasks_i(w32_complete_all_tasks) 
+{
   w32_complete_all_tasks_entries(&w32_state.work_queue);
 }
 
@@ -686,24 +688,24 @@ w32_set_game_dims(f32_t width, f32_t height) {
 }
 
 static 
-game_show_cursor_i(w32_show_cursor)
+app_show_cursor_i(w32_show_cursor)
 {
   while(ShowCursor(1) < 0);
 }
 
 static  
-game_hide_cursor_i(w32_hide_cursor) {
+app_hide_cursor_i(w32_hide_cursor) {
   while(ShowCursor(0) >= 0);
 }
 
 static 
-game_lock_cursor_i(w32_lock_cursor) {
+app_lock_cursor_i(w32_lock_cursor) {
   w32_state.is_cursor_locked = true;
   GetCursorPos(&w32_state.cursor_pt_to_lock_to);
 }
 
 static 
-game_unlock_cursor_i(w32_unlock_cursor) {
+app_unlock_cursor_i(w32_unlock_cursor) {
   w32_state.is_cursor_locked = false;
 }
 
@@ -748,25 +750,22 @@ WinMain(HINSTANCE instance,
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
 
-  game_t game = {};
+  app_t app = {};
 
-  game.show_cursor = w32_show_cursor;
-  game.lock_cursor = w32_lock_cursor;
-  game.hide_cursor = w32_hide_cursor;
-  game.unlock_cursor = w32_unlock_cursor;
-  game.allocate_memory = w32_allocate_memory;
-  game.free_memory = w32_free_memory;
-  //
-  // Platform API setup
-  //
-  pf.set_design_dims = w32_set_game_dims;
-  pf.open_file = w32_open_file;
-  pf.read_file = w32_read_file;
-  pf.write_file = w32_write_file;
-  pf.close_file = w32_close_file;
-  pf.add_task = w32_add_task;
-  pf.complete_all_tasks = w32_complete_all_tasks;
-  pf.debug_log = w32_log_proc;
+  app.show_cursor = w32_show_cursor;
+  app.lock_cursor = w32_lock_cursor;
+  app.hide_cursor = w32_hide_cursor;
+  app.unlock_cursor = w32_unlock_cursor;
+  app.allocate_memory = w32_allocate_memory;
+  app.free_memory = w32_free_memory;
+  app.debug_log = w32_log_proc;
+  app.add_task = w32_add_task;
+  app.complete_all_tasks = w32_complete_all_tasks;
+  app.set_design_dimensions = w32_set_game_dims;
+  app.open_file = w32_open_file;
+  app.read_file = w32_read_file;
+  app.write_file = w32_write_file;
+  app.close_file = w32_close_file;
   
   //
   // Initialize w32 state
@@ -944,27 +943,26 @@ WinMain(HINSTANCE instance,
   //
   // Game setup
   //
-  game.is_running = true;
-  game.pf = pf;
-  game.gfx = gfx;
-  game.audio = audio;
-  game.profiler = profiler;
-  game.input = &input;
+  app.is_running = true;
+  app.gfx = gfx;
+  app.audio = audio;
+  app.profiler = profiler;
+  app.input = &input;
 
-  //- Begin game loop
+  // Begin game loop
   b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   
-  //- Send this to global state
+  // Send this to global state
   LARGE_INTEGER performance_frequency;
   QueryPerformanceFrequency(&performance_frequency);
   LARGE_INTEGER last_frame_count = w32_get_performance_counter();
 
-  while (w32_state.is_running && game.is_running) 
+  while (w32_state.is_running && app.is_running) 
   {
 #if HOT_RELOADABLE
     // Hot reload game.dll functions
-    game.is_dll_reloaded = w32_reload_code_if_outdated(&game_code);
-    if (game.is_dll_reloaded) {
+    app.is_dll_reloaded = w32_reload_code_if_outdated(&game_code);
+    if (app.is_dll_reloaded) {
       profiler_reset(profiler);
     }
 #else 
@@ -1017,7 +1015,7 @@ WinMain(HINSTANCE instance,
     }
     
     
-    game_functions.update_and_render(&game);
+    game_functions.update_and_render(&app);
 
 
     // End frame

@@ -39,7 +39,7 @@
 #define LIT_LEARNT_BASICS_LEVEL_ID (3)
 #define LIT_LEARNT_POINT_LIGHT_LEVEL_ID (7)
 
-#define lit_log(...) pf.debug_log(__VA_ARGS__)
+#define lit_log(...) app->debug_log(__VA_ARGS__)
 #define lit_profile_block(name) profiler_block(profiler, name)
 #define lit_profile_begin(name) profiler_begin_block(profiler, name)
 #define lit_profile_end(name) profiler_end_block(profiler, name)
@@ -47,7 +47,7 @@
 #include "momo.h"
 #include "game.h"
 
-static game_t* game; 
+static app_t* app; 
 static gfx_t* gfx; 
 static audio_buffer_t* audio;
 static input_t* input;
@@ -126,9 +126,10 @@ lit_unlock_next_level(u32_t current_level_id) {
 
     lit->save_data.unlocked_levels = current_level_id + 1;
 
-    if (pf.open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_OVERWRITE, PF_FILE_PATH_USER)) {
-      pf.write_file(&file, sizeof(lit->save_data), 0, (void*)&lit->save_data);
-      pf.close_file(&file);
+    if (app->open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_OVERWRITE, PF_FILE_PATH_USER)) 
+    {
+      app->write_file(&file, sizeof(lit->save_data), 0, (void*)&lit->save_data);
+      app->close_file(&file);
       return true;
     }
     else {
@@ -147,10 +148,10 @@ lit_init_save_data() {
   pf_file_t file = {};
 
   // save data actually found
-  if (pf.open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_READ, PF_FILE_PATH_USER)) {
-    if(pf.read_file(&file, sizeof(lit_save_data_t), 0, &lit->save_data)) {
+  if (app->open_file(&file, LIT_SAVE_FILE, PF_FILE_ACCESS_READ, PF_FILE_PATH_USER)) {
+    if(app->read_file(&file, sizeof(lit_save_data_t), 0, &lit->save_data)) {
       // happy! :3
-      pf.close_file(&file);
+      app->close_file(&file);
       return true;
     }
     else { // data is somehow corrupted?
