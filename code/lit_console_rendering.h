@@ -6,11 +6,11 @@ lit_update_and_render_console()
   assets_t* assets = &lit->assets;
 
   for (u32_t char_index = 0; 
-       char_index < input->char_count;
+       char_index < app->input.char_count;
        ++char_index) 
   {
     // NOTE(Momo): Not very portable to other platforms....
-    u8_t c = input->chars[char_index];
+    u8_t c = app->input.chars[char_index];
     if (c >= 32 && c <= 126) {
       sb8_push_u8(&console->input_line, c);
     }

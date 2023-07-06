@@ -17,11 +17,10 @@ static void
 lit_splash_update() {
   lit_splash_t* splash = &lit->splash;
 
-  splash->timer -= input->delta_time;
-  splash->scroll_in_timer -= input->delta_time;
+  splash->timer -= app->input.delta_time;
+  splash->scroll_in_timer -= app->input.delta_time;
 
-
-  if (is_poked(input, INPUT_BUTTON_CODE_LMB)) {
+  if (app_is_button_poked(app, APP_BUTTON_CODE_LMB)) {
     if (splash->scroll_in_timer > 0.f)  {
       splash->scroll_in_timer = 0.f;
     }

@@ -50,7 +50,6 @@
 static app_t* app; 
 static gfx_t* gfx; 
 static audio_buffer_t* audio;
-static input_t* input;
 static profiler_t* profiler;
 
 

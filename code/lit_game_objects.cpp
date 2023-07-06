@@ -645,19 +645,19 @@ lit_game_update_player(lit_game_t* g, f32_t dt)
 {
   lit_game_player_t* player = &g->player; 
 
-  player->pos.x = input->mouse_pos.x;
-  player->pos.y = LIT_HEIGHT - input->mouse_pos.y;
+  player->pos.x = app->input.mouse_pos.x;
+  player->pos.y = LIT_HEIGHT - app->input.mouse_pos.y;
 
   lit_game_player_find_nearest_light(g);
 
   //
   // Move light logic
   //
-  if (is_poked(input, INPUT_BUTTON_CODE_LMB)) {
+  if (app_is_button_poked(app, APP_BUTTON_CODE_LMB)) {
     lit_game_player_hold_nearest_light_if_empty_handed(g, LIT_PLAYER_LIGHT_HOLD_MODE_MOVE);
   }
 
-  else if (is_released(input, INPUT_BUTTON_CODE_LMB))
+  else if (app_is_button_released(app, APP_BUTTON_CODE_LMB))
   {
     lit_game_player_release_light(g);
   }
@@ -665,14 +665,14 @@ lit_game_update_player(lit_game_t* g, f32_t dt)
   //
   // Rotate light logic
   //
-  if (is_poked(input, INPUT_BUTTON_CODE_RMB))
+  if (app_is_button_poked(app, APP_BUTTON_CODE_RMB))
   {
     lit_game_player_hold_nearest_light_if_empty_handed(g, LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE);
     app->lock_cursor();
     player->locked_pos_x = player->pos.x;
 
   }
-  else if (is_released(input, INPUT_BUTTON_CODE_RMB)) 
+  else if (app_is_button_released(app, APP_BUTTON_CODE_RMB)) 
   {
     lit_game_player_release_light(g);
     app->unlock_cursor();
@@ -719,7 +719,6 @@ lit_game_update_player(lit_game_t* g, f32_t dt)
         player->held_light->dir = 
           v2f_rotate(player->held_light->dir, LIT_PLAYER_ROTATE_SPEED * dt * mouse_delta );
       }
-
     } break;
   }
 }

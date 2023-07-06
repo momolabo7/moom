@@ -30,7 +30,7 @@ lit_game_update()
 #endif 
 
   
-  f32_t dt = input->delta_time;
+  f32_t dt = app->input.delta_time;
   
   //
   // Transition Logic
@@ -97,9 +97,9 @@ lit_game_update()
 
     // Do input for exiting to HOME if not HOME
     if (g->current_level_id > 0) {
-      if (input->mouse_scroll_delta < 0)
+      if (app->input.mouse_scroll_delta < 0)
         g->exit_fade = min_of(1.f, g->exit_fade + 0.1f);
-      else if (input->mouse_scroll_delta > 0) 
+      else if (app->input.mouse_scroll_delta > 0) 
         g->exit_fade = max_of(0.f, g->exit_fade - 0.1f);
       if (g->exit_fade >= 1.f) {
         // go back to HOME

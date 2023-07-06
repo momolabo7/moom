@@ -124,10 +124,10 @@ lit_tick() {
   return true;
 }
 
-exported game_platform_config_t
-game_get_platform_config(void) 
+exported 
+game_init_i(game_init) 
 {
-  game_platform_config_t ret;
+  game_init_config_t ret;
   ret.texture_queue_size = megabytes(100);
   ret.render_command_size = megabytes(100);
   ret.window_title = "PRISMIX v1.0";
@@ -142,7 +142,6 @@ game_update_and_render_i(game_update_and_render)
   gfx = app->gfx;
   audio = app->audio;
   profiler = app->profiler;
-  input = app->input;
   
   lit_tick();
 }

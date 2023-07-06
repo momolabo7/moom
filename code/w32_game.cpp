@@ -480,7 +480,7 @@ app_open_file_i(w32_open_file)
                               0,
                               0) ;
   if (handle == INVALID_HANDLE_VALUE) {
-    file->pf_data = nullptr;
+    file->data = nullptr;
     return false;
   }
   else {
@@ -489,7 +489,7 @@ app_open_file_i(w32_open_file)
     assert(w32_file);
     w32_file->handle = handle;
     
-    file->pf_data = w32_file;
+    file->data = w32_file;
     return true;
   }
 }
@@ -497,17 +497,17 @@ app_open_file_i(w32_open_file)
 static 
 app_close_file_i(w32_close_file)
 {
-  w32_file_t* w32_file = (w32_file_t*)file->pf_data;
+  w32_file_t* w32_file = (w32_file_t*)file->data;
   CloseHandle(w32_file->handle);
   
   w32_return_file(&w32_state.file_cabinet, w32_file);
-  file->pf_data = nullptr;
+  file->data = nullptr;
 }
 
 static 
 app_read_file_i(w32_read_file)
 { 
-  w32_file_t* w32_file = (w32_file_t*)file->pf_data;
+  w32_file_t* w32_file = (w32_file_t*)file->data;
   
   // Reading the file
   OVERLAPPED overlapped = {};
@@ -529,7 +529,7 @@ app_read_file_i(w32_read_file)
 static  
 app_write_file_i(w32_write_file)
 {
-  w32_file_t* w32_file = (w32_file_t*)file->pf_data;
+  w32_file_t* w32_file = (w32_file_t*)file->data;
   
   OVERLAPPED overlapped = {};
   overlapped.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
@@ -560,37 +560,50 @@ app_complete_all_tasks_i(w32_complete_all_tasks)
 
 
 
-static input_button_code_t
-w32_vkeys_to_input_button_code(u32_t code) {
+static app_button_code_t
+w32_vkeys_to_app_button_code(u32_t code) {
 
   // A to Z
   if (code >= 0x41 && code <= 0x5A) {
-    return input_button_code_t(INPUT_BUTTON_CODE_A + code - 0x41);
+    return app_button_code_t(APP_BUTTON_CODE_A + code - 0x41);
   }
   
   // 0 to 9
   else if (code >= 0x30 && code <= 0x39) {
-    return input_button_code_t(INPUT_BUTTON_CODE_0 + code - 0x30);
+    return app_button_code_t(APP_BUTTON_CODE_0 + code - 0x30);
   }
 
   // F1 to F12
   // NOTE(momo): there are actually more F-keys??
   else if (code >= 0x70 && code <= 0x7B) {
-    return input_button_code_t(INPUT_BUTTON_CODE_F1 + code - 0x70);
+    return app_button_code_t(APP_BUTTON_CODE_F1 + code - 0x70);
   }
   else {
     switch(code) {
-      case VK_SPACE: return INPUT_BUTTON_CODE_SPACE;
+      case VK_SPACE: return APP_BUTTON_CODE_SPACE;
     }
 
   }
   
-  return INPUT_BUTTON_CODE_UNKNOWN;
+  return APP_BUTTON_CODE_UNKNOWN;
 }
 
+// TODO: change 'rr' to 'render_region'
 static void
-w32_process_input(HWND window, input_t* input) 
+w32_update_input(app_input_t* input, HWND window, f32_t delta_time, RECT rr) 
 {
+  // Update input
+  for (u32_t i = 0; i < array_count(input->buttons); ++i) 
+  {
+    input->buttons[i].before = input->buttons[i].now;
+  }
+  input->char_count = 0;
+  input->mouse_scroll_delta = 0;
+  input->delta_time = delta_time;
+
+  //
+  // Process messages
+  //
   MSG msg = {};
   while(PeekMessage(&msg, window, 0, 0, PM_REMOVE)) {
     switch(msg.message) {
@@ -613,19 +626,19 @@ w32_process_input(HWND window, input_t* input)
       case WM_LBUTTONUP:
       case WM_LBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_LBUTTONDOWN;
-        input->buttons[INPUT_BUTTON_CODE_LMB].now = is_key_down;
+        input->buttons[APP_BUTTON_CODE_LMB].now = is_key_down;
       } break;
 
       case WM_MBUTTONUP:
       case WM_MBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_MBUTTONDOWN;
-        input->buttons[INPUT_BUTTON_CODE_MMB].now = is_key_down;
+        input->buttons[APP_BUTTON_CODE_MMB].now = is_key_down;
       } break;
 
       case WM_RBUTTONUP:
       case WM_RBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_RBUTTONDOWN;
-        input->buttons[INPUT_BUTTON_CODE_RMB].now = is_key_down;
+        input->buttons[APP_BUTTON_CODE_RMB].now = is_key_down;
       } break;
       
       case WM_KEYUP:
@@ -635,7 +648,7 @@ w32_process_input(HWND window, input_t* input)
       {
         u32_t code = (u32_t)msg.wParam;
         b32_t is_key_down = msg.message == WM_KEYDOWN;
-        input->buttons[w32_vkeys_to_input_button_code(code)].now = is_key_down;
+        input->buttons[w32_vkeys_to_app_button_code(code)].now = is_key_down;
 
         TranslateMessage(&msg);
       } break;
@@ -647,7 +660,37 @@ w32_process_input(HWND window, input_t* input)
     }
     
   }
+
+  //
+  // Mouse Input
+  //
   
+  POINT cursor_pos = {0};
+  GetCursorPos(&cursor_pos);
+  ScreenToClient(window, &cursor_pos);
+  
+  
+  f32_t render_mouse_pos_x = (f32_t)(cursor_pos.x - rr.left);
+  f32_t render_mouse_pos_y = (f32_t)(cursor_pos.y - rr.bottom);
+
+  f32_t region_width = (f32_t)(rr.right - rr.left);
+  f32_t region_height = (f32_t)(rr.top - rr.bottom);
+
+  f32_t game_to_render_w = w32_state.game_width / region_width;
+  f32_t game_to_render_h = w32_state.game_height / region_height;
+  
+  input->mouse_pos.x = render_mouse_pos_x * game_to_render_w;
+  input->mouse_pos.y = render_mouse_pos_y * game_to_render_h;
+  
+  
+  // NOTE(Momo): Flip y
+  //game.design_mouse_pos.y = f32_lerp(MOMO_HEIGHT, 0.f, game.design_mouse_pos.y/MOMO_HEIGHT);	
+  if (w32_state.is_cursor_locked) {
+    SetCursorPos(
+        w32_state.cursor_pt_to_lock_to.x,
+        w32_state.cursor_pt_to_lock_to.y);
+  }
+    
 }
 
 static void
@@ -732,14 +775,6 @@ w32_window_callback(HWND window,
   return result;
 }
 
-static void 
-w32_update_input(input_t* input) {
-  for (u32_t i = 0; i < array_count(input->buttons); ++i) {
-    input->buttons[i].before = input->buttons[i].now;
-  }
-  input->char_count = 0;
-  input->mouse_scroll_delta = 0;
-}
 
 int CALLBACK
 WinMain(HINSTANCE instance, 
@@ -803,9 +838,7 @@ WinMain(HINSTANCE instance,
   if (!game_code.is_valid) return 1;
   w32_log("Hello");
   defer { w32_unload_code(&game_code); };
-  
-  
-  game_platform_config_t config = game_functions.get_platform_config();
+  game_init_config_t config = game_functions.init();
 
   //
   //- Create window in the middle of the screen
@@ -936,18 +969,12 @@ WinMain(HINSTANCE instance,
   profiler_init(profiler, w32_get_performance_counter_u64, profiler_arena, 256, 120);
 
   //
-  // Init input
-  // 
-  input_t input = {};
-
-  //
   // Game setup
   //
   app.is_running = true;
   app.gfx = gfx;
   app.audio = audio;
   app.profiler = profiler;
-  app.input = &input;
 
   // Begin game loop
   b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
@@ -978,41 +1005,11 @@ WinMain(HINSTANCE instance,
     RECT rr = w32_calc_render_region(client_wh.w,
                                      client_wh.h,
                                      game_aspect);
+
     w32_gfx_begin_frame(gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
        
-    //-Process messages and input
-    input.delta_time = target_secs_per_frame;
-    w32_update_input(&input);
-    w32_process_input(window, &input); 
-    
-    //- Mouse input 
-    {
-      POINT cursor_pos = {0};
-      GetCursorPos(&cursor_pos);
-      ScreenToClient(window, &cursor_pos);
-      
-      
-      f32_t render_mouse_pos_x = (f32_t)(cursor_pos.x - rr.left);
-      f32_t render_mouse_pos_y = (f32_t)(cursor_pos.y - rr.bottom);
-
-      f32_t region_width = (f32_t)(rr.right - rr.left);
-      f32_t region_height = (f32_t)(rr.top - rr.bottom);
-
-      f32_t game_to_render_w = w32_state.game_width / region_width;
-      f32_t game_to_render_h = w32_state.game_height / region_height;
-      
-      input.mouse_pos.x = render_mouse_pos_x * game_to_render_w;
-      input.mouse_pos.y = render_mouse_pos_y * game_to_render_h;
-      
-      
-      // NOTE(Momo): Flip y
-      //game.design_mouse_pos.y = f32_lerp(MOMO_HEIGHT, 0.f, game.design_mouse_pos.y/MOMO_HEIGHT);	
-      if (w32_state.is_cursor_locked) {
-        SetCursorPos(
-            w32_state.cursor_pt_to_lock_to.x,
-            w32_state.cursor_pt_to_lock_to.y);
-      }
-    }
+    //Process messages and input
+    w32_update_input(&app.input, window, target_secs_per_frame, rr);
     
     
     game_functions.update_and_render(&app);
