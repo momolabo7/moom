@@ -123,7 +123,8 @@ static b32_t
 assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, arena_t* arena) 
 {
   make(app_file_t, file);
-  b32_t ok = app->open_file(
+  b32_t ok = app_open_file(
+      app,
       file,
       filename,
       APP_FILE_ACCESS_READ, 
@@ -134,7 +135,7 @@ assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, aren
 
   // Read header
   asset_file_header_t asset_file_header;
-  app->read_file(file, sizeof(asset_file_header_t), 0, &asset_file_header);
+  app_read_file(app, file, sizeof(asset_file_header_t), 0, &asset_file_header);
   if (asset_file_header.signature != ASSET_FILE_SIGNATURE) return false;
 
   // Allocation for asset components (asset slots and tags)
@@ -159,7 +160,7 @@ assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, aren
     umi_t offset_to_tag = asset_file_header.offset_to_tags + sizeof(asset_file_tag_t)*tag_index;
 
     asset_file_tag_t asset_file_tag;
-    app->read_file(file, sizeof(asset_file_tag_t), offset_to_tag, &asset_file_tag);
+    app_read_file(app, file, sizeof(asset_file_tag_t), offset_to_tag, &asset_file_tag);
 
     tag->type = asset_file_tag.type;
     tag->value = asset_file_tag.value;
@@ -177,7 +178,8 @@ assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, aren
       umi_t offset_to_asset_file_group = 
         asset_file_header.offset_to_groups + sizeof(asset_file_group_t)*group_index;
 
-      app->read_file(
+      app_read_file(
+          app,
           file, 
           sizeof(asset_file_group_t), 
           offset_to_asset_file_group, 
@@ -200,7 +202,8 @@ assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, aren
       umi_t offset_to_asset_file_asset = 
         asset_file_header.offset_to_assets + sizeof(asset_file_asset_t)*asset_index;
 
-      app->read_file(
+      app_read_file(
+          app,
           file, 
           sizeof(asset_file_asset_t), 
           offset_to_asset_file_asset, 
@@ -224,7 +227,8 @@ assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, aren
           payload->texture_index = asset->bitmap.renderer_texture_handle;
           payload->texture_width = asset_file_asset.bitmap.width;
           payload->texture_height = asset_file_asset.bitmap.height;
-          app->read_file(
+          app_read_file(
+              app,
               file, 
               bitmap_size, 
               asset_file_asset.offset_to_data, 
@@ -264,7 +268,9 @@ assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, aren
               sizeof(asset_file_font_glyph_t)*glyph_index;
 
             asset_file_font_glyph_t asset_file_glyph = {};
-            app->read_file(file, 
+            app_read_file(
+                app,
+                file, 
                 sizeof(asset_file_font_glyph_t), 
                 glyph_data_offset,
                 &asset_file_glyph); 
@@ -293,7 +299,9 @@ assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, aren
               asset_file_asset.offset_to_data + 
               sizeof(asset_file_font_glyph_t)*glyph_count;
 
-            app->read_file(file, 
+            app_read_file(
+                app,
+                file, 
                 sizeof(f32_t)*glyph_count*glyph_count, 
                 kernings_data_offset, 
                 kernings);

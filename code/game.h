@@ -123,37 +123,45 @@ struct app_file_t {
 
 #define app_open_file_i(name) b32_t name(app_file_t* file, const char* filename, app_file_access_t file_access, app_file_path_t file_path)
 typedef app_open_file_i(app_open_file_f);
+#define app_open_file(app, ...) (app->open_file(__VA_ARGS__))
 
 #define app_close_file_i(name) void  name(app_file_t* file)
 typedef app_close_file_i(app_close_file_f);
+#define app_close_file(app, ...) (app->close_file(__VA_ARGS__))
 
 #define app_read_file_i(name) b32_t name(app_file_t* file, usz_t size, usz_t offset, void* dest)
 typedef app_read_file_i(app_read_file_f);
+#define app_read_file(app, ...) (app->read_file(__VA_ARGS__))
 
 #define app_write_file_i(name) b32_t name(app_file_t* file, usz_t size, usz_t offset, void* src)
 typedef app_write_file_i(app_write_file_f);
+#define app_write_file(app, ...) (app->write_file(__VA_ARGS__))
 
 //
 // Logging API
 // 
 #define app_debug_log_i(name) void name(const char* fmt, ...)
 typedef app_debug_log_i(app_debug_log_f);
+#define app_debug_log(app, ...) (app->debug_log(__VA_ARGS__))
 
 //
 // Cursor API
 //
 #define app_show_cursor_i(name) void name()
 typedef app_show_cursor_i(app_show_cursor_f);
-
+#define app_show_cursor(app, ...) (app->show_cursor(__VA_ARGS__))
 
 #define app_hide_cursor_i(name) void name()
 typedef app_hide_cursor_i(app_hide_cursor_f);
+#define app_hide_cursor(app, ...) (app->hide_cursor(__VA_ARGS__))
 
 #define app_lock_cursor_i(name) void name()
 typedef app_lock_cursor_i(app_lock_cursor_f);
+#define app_lock_cursor(app, ...) (app->lock_cursor(__VA_ARGS__))
 
 #define app_unlock_cursor_i(name) void name()
 typedef app_unlock_cursor_i(app_unlock_cursor_f);
+#define app_unlock_cursor(app, ...) (app->unlock_cursor(__VA_ARGS__))
 
 
 //
@@ -161,9 +169,11 @@ typedef app_unlock_cursor_i(app_unlock_cursor_f);
 //
 #define app_allocate_memory_i(name) void* name(usz_t size)
 typedef app_allocate_memory_i(app_allocate_memory_f);
+#define app_allocate_memory(app, ...) (app->allocate_memory(__VA_ARGS__))
 
 #define app_free_memory_i(name) void name(void* ptr)
 typedef app_free_memory_i(app_free_memory_f);
+#define app_free_memory(app, ...) (app->free_memory(__VA_ARGS__))
 
 //
 // Multithreaded work API
@@ -172,26 +182,26 @@ typedef void app_task_callback_f(void* data);
 
 #define app_add_task_i(name) void name(app_task_callback_f callback, void* data)
 typedef app_add_task_i(app_add_task_f);
+#define app_add_task(app, ...) (app->add_task(__VA_ARGS__))
 
 #define app_complete_all_tasks_i(name) void name(void)
 typedef app_complete_all_tasks_i(app_complete_all_tasks_f);
+#define app_complete_all_tasks(app, ...) (app->complete_all_tasks(__VA_ARGS__))
 
 // 
 // Window/Graphics related
 //
-#define app_set_design_dimensions_i(name) void name(f32_t width, f32_t height);
+#define app_set_design_dimensions_i(name) void name(f32_t width, f32_t height)
 typedef app_set_design_dimensions_i(app_set_design_dimensions_f);
+#define app_set_design_dimensions(app, ...) (app->set_design_dimensions(__VA_ARGS__))
 
 
-//
-// Input API
-//
-
-
-struct audio_buffer_t {
+struct app_audio_t {
   s16_t* sample_buffer;
   u32_t sample_count;
   u32_t channels; //TODO: remove this?
+  
+  void* app_data;
 };
 
 struct game_init_config_t {
@@ -219,9 +229,9 @@ struct app_t {
   app_read_file_f* read_file;
 
   app_input_t input;
+  app_audio_t audio; 
 
   gfx_t* gfx;
-  audio_buffer_t* audio; 
   profiler_t* profiler;
   
           
@@ -284,6 +294,16 @@ app_is_button_held(app_t* app, app_button_code_t code) {
   app_input_t* in = &app->input;
   auto btn = in->buttons[code];
   return btn.before && btn.now;
+}
+
+static b32_t
+app_is_dll_reloaded(app_t* app) {
+  return app->is_dll_reloaded;
+}
+
+static f32_t 
+app_get_dt(app_t* app) {
+  return app->input.delta_time;
 }
 
 

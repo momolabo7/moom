@@ -58,9 +58,9 @@ profiler_update_and_render()
   
   u32_t line_num = 1;
   
-  for(u32_t entry_id = 0; entry_id < profiler->entry_count; ++entry_id)
+  for(u32_t entry_id = 0; entry_id < app->profiler->entry_count; ++entry_id)
   {
-    profiler_entry_t* entry = profiler->entries + entry_id;
+    profiler_entry_t* entry = app->profiler->entries + entry_id;
 
     profiler_stat_t cycles;
     profiler_stat_t hits;
@@ -71,7 +71,7 @@ profiler_update_and_render()
     profiler_begin_stat(&cycles_per_hit);
     
     for (u32_t snapshot_index = 0;
-         snapshot_index < profiler->entry_snapshot_count;
+         snapshot_index < app->profiler->entry_snapshot_count;
          ++snapshot_index)
     {
       
@@ -109,7 +109,7 @@ profiler_update_and_render()
     
     // Draw graph
     for (u32_t snapshot_index = 0;
-         snapshot_index < profiler->entry_snapshot_count;
+         snapshot_index < app->profiler->entry_snapshot_count;
          ++snapshot_index)
     {
       profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;

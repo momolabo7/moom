@@ -30,7 +30,7 @@ lit_game_update()
 #endif 
 
   
-  f32_t dt = app->input.delta_time;
+  f32_t dt = app_get_dt(app);
   
   //
   // Transition Logic
@@ -131,8 +131,8 @@ lit_game_update()
     //
     if (g->exit_callback != nullptr) 
     {
-      app->show_cursor();
-      app->unlock_cursor();
+      app_show_cursor(app);
+      app_unlock_cursor(app);
       g->state = LIT_GAME_STATE_TYPE_SOLVED_IN;
     }
   }

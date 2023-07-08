@@ -955,9 +955,8 @@ WinMain(HINSTANCE instance,
   if (!w32_allocate_memory_into_arena(audio_arena, megabytes(256))) return false;
   defer { w32_free_memory_from_arena(audio_arena); };
 
-  audio_buffer_t* audio = w32_audio_load(48000, 16, 2, 1, monitor_refresh_rate, audio_arena);
-  if (!audio) return false;
-  defer{ w32_audio_unload(audio); };
+  if (w32_audio_load(&app.audio, 48000, 16, 2, 1, monitor_refresh_rate, audio_arena)) return false;
+  defer{ w32_audio_unload(&app.audio); };
 
 
   //
@@ -973,7 +972,6 @@ WinMain(HINSTANCE instance,
   //
   app.is_running = true;
   app.gfx = gfx;
-  app.audio = audio;
   app.profiler = profiler;
 
   // Begin game loop
@@ -997,7 +995,7 @@ WinMain(HINSTANCE instance,
 #endif
 
     // Begin frame
-    w32_audio_begin_frame(audio);
+    w32_audio_begin_frame(&app.audio);
     v2u_t client_wh = w32_get_client_dims(window);
 
 
@@ -1018,7 +1016,7 @@ WinMain(HINSTANCE instance,
     // End frame
     profiler_update_entries(profiler);
     w32_gfx_end_frame(gfx);
-    w32_audio_end_frame(audio);
+    w32_audio_end_frame(&app.audio);
 #if 0
     if (w32_state.is_cursor_locked) {
       SetCursorPos(
@@ -1076,9 +1074,12 @@ WinMain(HINSTANCE instance,
     
         
     LARGE_INTEGER end_frame_count = w32_get_performance_counter();
-    f32_t secs_this_frame =  w32_get_secs_elapsed(last_frame_count,
-                                                end_frame_count,
-                                                performance_frequency);
+
+    f32_t secs_this_frame =  
+      w32_get_secs_elapsed(
+          last_frame_count,
+          end_frame_count,
+          performance_frequency);
     
     // only do this when VSYNC is enabled
     //target_secs_per_frame = secs_this_frame;

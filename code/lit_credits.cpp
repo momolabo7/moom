@@ -38,7 +38,7 @@ static void
 lit_credits_update() {
   lit_credits_t* credits = &lit->credits;
 
-  credits->timer += app->input.delta_time;
+  credits->timer += app_get_dt(app);
   if (app_is_button_poked(app, APP_BUTTON_CODE_LMB)) {
     lit->next_mode = LIT_MODE_GAME;
     return;

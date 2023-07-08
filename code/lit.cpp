@@ -3,7 +3,7 @@
 static b32_t
 lit_tick() {
   if(app->game == nullptr) {
-    void* lit_memory = app->allocate_memory(sizeof(lit_t));
+    void* lit_memory = app_allocate_memory(app, sizeof(lit_t));
     if (!lit_memory) return false;
     app->game = lit_memory;
 
@@ -17,7 +17,7 @@ lit_tick() {
     // Initialize assets
     //
     usz_t asset_memory_size = megabytes(20);
-    void* asset_memory = app->allocate_memory(asset_memory_size);
+    void* asset_memory = app_allocate_memory(app, asset_memory_size);
     if (asset_memory == nullptr) return false;
     arena_init(&lit->asset_arena, asset_memory, asset_memory_size);
     assets_init(&lit->assets, app, gfx, LIT_ASSET_FILE, &lit->asset_arena);
@@ -35,21 +35,21 @@ lit_tick() {
     // Initialize debug stuff
     //
     usz_t debug_memory_size = megabytes(1);
-    void* debug_memory = app->allocate_memory(debug_memory_size);
+    void* debug_memory = app_allocate_memory(app, debug_memory_size);
     arena_init(&lit->debug_arena, debug_memory, debug_memory_size);
     inspector_init(&lit->inspector, &lit->debug_arena, 64);
     console_init(&lit->console, &lit->debug_arena, 32, 256);
 
     usz_t frame_memory_size = megabytes(1);
-    void* frame_memory = app->allocate_memory(frame_memory_size);
+    void* frame_memory = app_allocate_memory(app, frame_memory_size);
     arena_init(&lit->frame_arena, frame_memory, frame_memory_size);
 
 
     usz_t mode_memory_size = megabytes(1);
-    auto* mode_memory = app->allocate_memory(mode_memory_size);
+    auto* mode_memory = app_allocate_memory(app, mode_memory_size);
     arena_init(&lit->mode_arena, mode_memory, mode_memory_size);
 
-    app->set_design_dimensions(LIT_WIDTH, LIT_HEIGHT);
+    app_set_design_dimensions(app, LIT_WIDTH, LIT_HEIGHT);
     gfx_set_view(gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
     //
@@ -70,7 +70,7 @@ lit_tick() {
   inspector_clear(&lit->inspector);
 
 
-  if (lit->next_mode != lit->mode || app->is_dll_reloaded) 
+  if (lit->next_mode != lit->mode || app_is_dll_reloaded(app)) 
   {
     lit->mode = lit->next_mode;
     
@@ -140,8 +140,6 @@ game_update_and_render_i(game_update_and_render)
 { 
   app = a;
   gfx = app->gfx;
-  audio = app->audio;
-  profiler = app->profiler;
   
   lit_tick();
 }

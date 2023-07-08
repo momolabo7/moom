@@ -15,12 +15,15 @@ anchor	code/game_gfx.h	/^  v2f_t anchor;$/;"	m	language:C++	struct:gfx_command_s
 animators	code/lit_game.h	/^  lit_game_animator_t animators[64];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_animator_t[64]
 animator_count	code/lit_game.h	/^  u32_t animator_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t
 app	code/lit.h	/^static app_t* app; $/;"	v	language:C++	typeref:typename:app_t *
+app_add_task	code/game.h	/^#define app_add_task(/;"	d	language:C++
 app_add_task_i	code/game.h	/^#define app_add_task_i(/;"	d	language:C++
 app_add_task_i	code/game.h	/^typedef app_add_task_i(app_add_task_f);$/;"	t	language:C++
 app_add_task_i	code/w32_game.cpp	/^app_add_task_i(w32_add_task)$/;"	f	language:C++	file:
+app_allocate_memory	code/game.h	/^#define app_allocate_memory(/;"	d	language:C++
 app_allocate_memory_i	code/game.h	/^#define app_allocate_memory_i(/;"	d	language:C++
 app_allocate_memory_i	code/game.h	/^typedef app_allocate_memory_i(app_allocate_memory_f);$/;"	t	language:C++
 app_allocate_memory_i	code/w32_game.cpp	/^app_allocate_memory_i(w32_allocate_memory)$/;"	f	language:C++	file:
+app_audio_t	code/game.h	/^struct app_audio_t {$/;"	s	language:C++
 APP_BUTTON_CODE_0	code/game.h	/^  APP_BUTTON_CODE_0,$/;"	e	language:C++	enum:app_button_code_t
 APP_BUTTON_CODE_1	code/game.h	/^  APP_BUTTON_CODE_1,$/;"	e	language:C++	enum:app_button_code_t
 APP_BUTTON_CODE_2	code/game.h	/^  APP_BUTTON_CODE_2,$/;"	e	language:C++	enum:app_button_code_t
@@ -78,12 +81,16 @@ APP_BUTTON_CODE_X	code/game.h	/^  APP_BUTTON_CODE_X,$/;"	e	language:C++	enum:app
 APP_BUTTON_CODE_Y	code/game.h	/^  APP_BUTTON_CODE_Y,$/;"	e	language:C++	enum:app_button_code_t
 APP_BUTTON_CODE_Z	code/game.h	/^  APP_BUTTON_CODE_Z,$/;"	e	language:C++	enum:app_button_code_t
 app_button_t	code/game.h	/^struct app_button_t {$/;"	s	language:C++
+app_close_file	code/game.h	/^#define app_close_file(/;"	d	language:C++
 app_close_file_i	code/game.h	/^#define app_close_file_i(/;"	d	language:C++
 app_close_file_i	code/game.h	/^typedef app_close_file_i(app_close_file_f);$/;"	t	language:C++
 app_close_file_i	code/w32_game.cpp	/^app_close_file_i(w32_close_file)$/;"	f	language:C++	file:
+app_complete_all_tasks	code/game.h	/^#define app_complete_all_tasks(/;"	d	language:C++
 app_complete_all_tasks_i	code/game.h	/^#define app_complete_all_tasks_i(/;"	d	language:C++
 app_complete_all_tasks_i	code/game.h	/^typedef app_complete_all_tasks_i(app_complete_all_tasks_f);$/;"	t	language:C++
 app_complete_all_tasks_i	code/w32_game.cpp	/^app_complete_all_tasks_i(w32_complete_all_tasks) $/;"	f	language:C++	file:
+app_data	code/game.h	/^  void* app_data;$/;"	m	language:C++	struct:app_audio_t	typeref:typename:void *
+app_debug_log	code/game.h	/^#define app_debug_log(/;"	d	language:C++
 app_debug_log_i	code/game.h	/^#define app_debug_log_i(/;"	d	language:C++
 app_debug_log_i	code/game.h	/^typedef app_debug_log_i(app_debug_log_f);$/;"	t	language:C++
 app_debug_log_i	code/w32_game.cpp	/^app_debug_log_i(w32_log_proc) $/;"	f	language:C++	file:
@@ -95,10 +102,13 @@ APP_FILE_PATH_EXE	code/game.h	/^  APP_FILE_PATH_EXE,$/;"	e	language:C++	enum:app
 app_file_path_t	code/game.h	/^enum app_file_path_t {$/;"	g	language:C++
 APP_FILE_PATH_USER	code/game.h	/^  APP_FILE_PATH_USER,$/;"	e	language:C++	enum:app_file_path_t
 app_file_t	code/game.h	/^struct app_file_t {$/;"	s	language:C++
+app_free_memory	code/game.h	/^#define app_free_memory(/;"	d	language:C++
 app_free_memory_i	code/game.h	/^#define app_free_memory_i(/;"	d	language:C++
 app_free_memory_i	code/game.h	/^typedef app_free_memory_i(app_free_memory_f);$/;"	t	language:C++
 app_free_memory_i	code/w32_game.cpp	/^app_free_memory_i(w32_free_memory) {$/;"	f	language:C++	file:
+app_get_dt	code/game.h	/^app_get_dt(app_t* app) {$/;"	f	language:C++	typeref:typename:f32_t
 APP_H	code/game.h	/^#define APP_H$/;"	d	language:C++
+app_hide_cursor	code/game.h	/^#define app_hide_cursor(/;"	d	language:C++
 app_hide_cursor_i	code/game.h	/^#define app_hide_cursor_i(/;"	d	language:C++
 app_hide_cursor_i	code/game.h	/^typedef app_hide_cursor_i(app_hide_cursor_f);$/;"	t	language:C++
 app_hide_cursor_i	code/w32_game.cpp	/^app_hide_cursor_i(w32_hide_cursor) {$/;"	f	language:C++	file:
@@ -107,25 +117,33 @@ app_is_button_down	code/game.h	/^app_is_button_down(app_t* app, app_button_code_
 app_is_button_held	code/game.h	/^app_is_button_held(app_t* app, app_button_code_t code) {$/;"	f	language:C++	typeref:typename:b32_t
 app_is_button_poked	code/game.h	/^app_is_button_poked(app_t* app, app_button_code_t code) {$/;"	f	language:C++	typeref:typename:b32_t
 app_is_button_released	code/game.h	/^app_is_button_released(app_t* app, app_button_code_t code) {$/;"	f	language:C++	typeref:typename:b32_t
+app_is_dll_reloaded	code/game.h	/^app_is_dll_reloaded(app_t* app) {$/;"	f	language:C++	typeref:typename:b32_t
+app_lock_cursor	code/game.h	/^#define app_lock_cursor(/;"	d	language:C++
 app_lock_cursor_i	code/game.h	/^#define app_lock_cursor_i(/;"	d	language:C++
 app_lock_cursor_i	code/game.h	/^typedef app_lock_cursor_i(app_lock_cursor_f);$/;"	t	language:C++
 app_lock_cursor_i	code/w32_game.cpp	/^app_lock_cursor_i(w32_lock_cursor) {$/;"	f	language:C++	file:
+app_open_file	code/game.h	/^#define app_open_file(/;"	d	language:C++
 app_open_file_i	code/game.h	/^#define app_open_file_i(/;"	d	language:C++
 app_open_file_i	code/game.h	/^typedef app_open_file_i(app_open_file_f);$/;"	t	language:C++
 app_open_file_i	code/w32_game.cpp	/^app_open_file_i(w32_open_file)$/;"	f	language:C++	file:
+app_read_file	code/game.h	/^#define app_read_file(/;"	d	language:C++
 app_read_file_i	code/game.h	/^#define app_read_file_i(/;"	d	language:C++
 app_read_file_i	code/game.h	/^typedef app_read_file_i(app_read_file_f);$/;"	t	language:C++
 app_read_file_i	code/w32_game.cpp	/^app_read_file_i(w32_read_file)$/;"	f	language:C++	file:
+app_set_design_dimensions	code/game.h	/^#define app_set_design_dimensions(/;"	d	language:C++
 app_set_design_dimensions_i	code/game.h	/^#define app_set_design_dimensions_i(/;"	d	language:C++
 app_set_design_dimensions_i	code/game.h	/^typedef app_set_design_dimensions_i(app_set_design_dimensions_f);$/;"	t	language:C++
+app_show_cursor	code/game.h	/^#define app_show_cursor(/;"	d	language:C++
 app_show_cursor_i	code/game.h	/^#define app_show_cursor_i(/;"	d	language:C++
 app_show_cursor_i	code/game.h	/^typedef app_show_cursor_i(app_show_cursor_f);$/;"	t	language:C++
 app_show_cursor_i	code/w32_game.cpp	/^app_show_cursor_i(w32_show_cursor)$/;"	f	language:C++	file:
 app_t	code/game.h	/^struct app_t {$/;"	s	language:C++
 app_task_callback_f	code/game.h	/^typedef void app_task_callback_f(void* data);$/;"	t	language:C++	typeref:typename:void ()(void * data)
+app_unlock_cursor	code/game.h	/^#define app_unlock_cursor(/;"	d	language:C++
 app_unlock_cursor_i	code/game.h	/^#define app_unlock_cursor_i(/;"	d	language:C++
 app_unlock_cursor_i	code/game.h	/^typedef app_unlock_cursor_i(app_unlock_cursor_f);$/;"	t	language:C++
 app_unlock_cursor_i	code/w32_game.cpp	/^app_unlock_cursor_i(w32_unlock_cursor) {$/;"	f	language:C++	file:
+app_write_file	code/game.h	/^#define app_write_file(/;"	d	language:C++
 app_write_file_i	code/game.h	/^#define app_write_file_i(/;"	d	language:C++
 app_write_file_i	code/game.h	/^typedef app_write_file_i(app_write_file_f);$/;"	t	language:C++
 app_write_file_i	code/w32_game.cpp	/^app_write_file_i(w32_write_file)$/;"	f	language:C++	file:
@@ -255,9 +273,7 @@ at	code/momo_json.h	/^  u8_t* at;$/;"	m	language:C++	struct:json_key_t	typeref:t
 at	code/momo_json.h	/^  u8_t* at;$/;"	m	language:C++	struct:_json_token_t	typeref:typename:u8_t *
 at	code/momo_json.h	/^  umi_t at;$/;"	m	language:C++	struct:json_t	typeref:typename:umi_t
 atlas_font	code/sui_pack.h	/^  sui_atlas_font_t* atlas_font;$/;"	m	language:C++	struct:sui_packer_source_font_t	typeref:typename:sui_atlas_font_t *
-audio	code/game.h	/^  audio_buffer_t* audio; $/;"	m	language:C++	struct:app_t	typeref:typename:audio_buffer_t *
-audio	code/lit.h	/^static audio_buffer_t* audio;$/;"	v	language:C++	typeref:typename:audio_buffer_t *
-audio_buffer_t	code/game.h	/^struct audio_buffer_t {$/;"	s	language:C++
+audio	code/game.h	/^  app_audio_t audio; $/;"	m	language:C++	struct:app_t	typeref:typename:app_audio_t
 audio_client	code/w32_game_audio_wasapi.h	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient2 *
 audio_format	code/momo_wav.h	/^  u16_t audio_format;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 audio_render_client	code/w32_game_audio_wasapi.h	/^  IAudioRenderClient* audio_render_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioRenderClient *
@@ -332,7 +348,7 @@ callback	code/w32_game.h	/^  app_task_callback_f* callback;$/;"	m	language:C++	s
 cap	code/momo_arena.h	/^	usz_t cap;$/;"	m	language:C++	struct:arena_t	typeref:typename:usz_t
 cap	code/momo_strings.h	/^	usz_t cap;$/;"	m	language:C++	struct:sb8_t	typeref:typename:usz_t
 cap	code/momo_ttf.h	/^  u32_t cap;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:u32_t
-channels	code/game.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:audio_buffer_t	typeref:typename:u32_t
+channels	code/game.h	/^  u32_t channels; \/\/TODO: remove this?$/;"	m	language:C++	struct:app_audio_t	typeref:typename:u32_t
 channels	code/w32_game_audio_wasapi.h	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t
 chars	code/game.h	/^  u8_t chars[32];$/;"	m	language:C++	struct:app_input_t	typeref:typename:u8_t[32]
 chars	code/game_input.h	/^  u8_t chars[32];$/;"	m	language:C++	struct:input_t	typeref:typename:u8_t[32]
@@ -782,7 +798,6 @@ game_init_i	code/game.h	/^#define game_init_i(/;"	d	language:C++
 game_init_i	code/game.h	/^typedef game_init_i(game_init_f);$/;"	t	language:C++
 game_init_i	code/lit.cpp	/^game_init_i(game_init) $/;"	f	language:C++	typeref:typename:exported
 GAME_INPUT_H	code/game_input.h	/^#define GAME_INPUT_H$/;"	d	language:C++
-GAME_PLATFORM	code/game_platform.h	/^#define GAME_PLATFORM$/;"	d	language:C++
 game_update_and_render_i	code/game.h	/^#define game_update_and_render_i(/;"	d	language:C++
 game_update_and_render_i	code/game.h	/^typedef game_update_and_render_i(game_update_and_render_f);$/;"	t	language:C++
 game_update_and_render_i	code/lit.cpp	/^game_update_and_render_i(game_update_and_render) $/;"	f	language:C++	typeref:typename:exported
@@ -1743,7 +1758,6 @@ path_count	code/momo_ttf.h	/^  u32_t path_count;$/;"	m	language:C++	struct:_ttf_
 path_lengths	code/momo_ttf.h	/^  u32_t* path_lengths;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:u32_t *
 payloads	code/game_gfx.h	/^  gfx_texture_payload_t payloads[GFX_TEXTURE_PAYLOAD_CAP];$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:gfx_texture_payload_t[]
 payload_count	code/game_gfx.h	/^  usz_t payload_count;$/;"	m	language:C++	struct:gfx_texture_queue_t	typeref:typename:usz_t
-pf_audio	code/w32_game_audio_wasapi.h	/^  audio_buffer_t pf_audio; \/\/ Must be first member$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:audio_buffer_t
 pixels	code/sui_atlas.h	/^  u32_t* pixels;$/;"	m	language:C++	struct:sui_atlas_bitmap_t	typeref:typename:u32_t *
 pixels	code/sui_pack.h	/^  u32_t* pixels;$/;"	m	language:C++	struct:sui_packer_source_bitmap_t	typeref:typename:u32_t *
 PI_32	code/momo_types.h	/^#define PI_32 /;"	d	language:C++
@@ -1777,7 +1791,6 @@ pos_y	code/game_gfx.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:gfx_comm
 prev	code/gist_linked_list.cpp	/^  gist_cdl_node* prev;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
 prev	code/w32_game.h	/^  w32_memory_t* prev;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *
 profiler	code/game.h	/^  profiler_t* profiler;$/;"	m	language:C++	struct:app_t	typeref:typename:profiler_t *
-profiler	code/lit.h	/^static profiler_t* profiler;$/;"	v	language:C++	typeref:typename:profiler_t *
 profiler	code/w32_game.cpp	/^profiler_t* profiler = &_profiler;$/;"	v	language:C++	typeref:typename:profiler_t *
 profiler_accumulate_stat	code/lit_profiler_rendering.h	/^profiler_accumulate_stat(profiler_stat_t* stat, f64_t value) {$/;"	f	language:C++	typeref:typename:void
 profiler_begin_block	code/momo_profiler.h	/^#define profiler_begin_block(/;"	d	language:C++
@@ -1884,8 +1897,8 @@ S8_MAX	code/momo_types.h	/^#define S8_MAX /;"	d	language:C++
 S8_MIN	code/momo_types.h	/^#define S8_MIN /;"	d	language:C++
 s8_t	code/momo_types.h	/^typedef int8_t   s8_t;$/;"	t	language:C++	typeref:typename:int8_t
 samples_per_second	code/w32_game_audio_wasapi.h	/^  u32_t samples_per_second;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t
-sample_buffer	code/game.h	/^  s16_t* sample_buffer;$/;"	m	language:C++	struct:audio_buffer_t	typeref:typename:s16_t *
-sample_count	code/game.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:audio_buffer_t	typeref:typename:u32_t
+sample_buffer	code/game.h	/^  s16_t* sample_buffer;$/;"	m	language:C++	struct:app_audio_t	typeref:typename:s16_t *
+sample_count	code/game.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:app_audio_t	typeref:typename:u32_t
 sample_rate	code/momo_wav.h	/^  u32_t sample_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 save_data	code/lit.h	/^  lit_save_data_t save_data;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_save_data_t
 sb8_clear	code/momo_strings.h	/^sb8_clear(sb8_t* b) {$/;"	f	language:C++	typeref:typename:void
@@ -2311,14 +2324,19 @@ w	code/momo_rect_pack.h	/^	u32_t x, y, w, h;$/;"	m	language:C++	struct:rp_rect_t
 w	code/momo_rect_pack.h	/^	u32_t x, y, w, h;$/;"	m	language:C++	struct:_RP_Node	typeref:typename:u32_t
 w32_add_task_entry	code/w32_game.cpp	/^w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_allocate_memory_into_arena	code/w32_game.cpp	/^w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {$/;"	f	language:C++	typeref:typename:b32_t	file:
-w32_audio_begin_frame	code/w32_game_audio.h	/^w32_audio_begin_frame(audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
-w32_audio_begin_frame	code/w32_game_audio_wasapi.h	/^w32_audio_begin_frame(audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
-w32_audio_end_frame	code/w32_game_audio.h	/^w32_audio_end_frame(audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
-w32_audio_end_frame	code/w32_game_audio_wasapi.h	/^w32_audio_end_frame(audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
-w32_audio_load	code/w32_game_audio.h	/^w32_audio_load(u32_t samples_per_second, $/;"	p	language:C++	typeref:typename:audio_buffer_t *
-w32_audio_load	code/w32_game_audio_wasapi.h	/^w32_audio_load(u32_t samples_per_second, $/;"	f	language:C++	typeref:typename:audio_buffer_t *
-w32_audio_unload	code/w32_game_audio.h	/^w32_audio_unload(audio_buffer_t* audio);$/;"	p	language:C++	typeref:typename:void
-w32_audio_unload	code/w32_game_audio_wasapi.h	/^w32_audio_unload(audio_buffer_t* audio) {$/;"	f	language:C++	typeref:typename:void
+W32_AUDIO	code/w32_game_audio.h	/^#define W32_AUDIO$/;"	d	language:C++
+w32_audio_begin_frame_i	code/w32_game_audio.h	/^#define w32_audio_begin_frame_i(/;"	d	language:C++
+w32_audio_begin_frame_i	code/w32_game_audio.h	/^static w32_audio_begin_frame_i(w32_audio_begin_frame);$/;"	p	language:C++
+w32_audio_begin_frame_i	code/w32_game_audio_wasapi.h	/^w32_audio_begin_frame_i(w32_audio_begin_frame) $/;"	f	language:C++
+w32_audio_end_frame_i	code/w32_game_audio.h	/^#define w32_audio_end_frame_i(/;"	d	language:C++
+w32_audio_end_frame_i	code/w32_game_audio.h	/^static w32_audio_end_frame_i(w32_audio_end_frame);$/;"	p	language:C++
+w32_audio_end_frame_i	code/w32_game_audio_wasapi.h	/^w32_audio_end_frame_i(w32_audio_end_frame) $/;"	f	language:C++
+w32_audio_load_i	code/w32_game_audio.h	/^#define w32_audio_load_i(/;"	d	language:C++
+w32_audio_load_i	code/w32_game_audio.h	/^static w32_audio_load_i(w32_audio_load);$/;"	p	language:C++
+w32_audio_load_i	code/w32_game_audio_wasapi.h	/^w32_audio_load_i(w32_audio_load)$/;"	f	language:C++
+w32_audio_unload_i	code/w32_game_audio.h	/^#define w32_audio_unload_i(/;"	d	language:C++
+w32_audio_unload_i	code/w32_game_audio.h	/^static w32_audio_unload_i(w32_audio_unload);$/;"	p	language:C++
+w32_audio_unload_i	code/w32_game_audio_wasapi.h	/^w32_audio_unload_i(w32_audio_unload) {$/;"	f	language:C++
 w32_calc_render_region	code/w32_game.cpp	/^w32_calc_render_region(u32_t window_w, $/;"	f	language:C++	typeref:typename:RECT	file:
 w32_complete_all_tasks_entries	code/w32_game.cpp	/^w32_complete_all_tasks_entries(w32_work_queue_t* wq) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_do_next_work_entry	code/w32_game.cpp	/^w32_do_next_work_entry(w32_work_queue_t* wq) {$/;"	f	language:C++	typeref:typename:b32_t	file:
@@ -2358,10 +2376,6 @@ w32_state_t	code/w32_game.h	/^struct w32_state_t {$/;"	s	language:C++
 w32_unload_code	code/w32_game.cpp	/^w32_unload_code(w32_loaded_code_t* code) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_update_input	code/w32_game.cpp	/^w32_update_input(app_input_t* input, HWND window, f32_t delta_time, RECT rr) $/;"	f	language:C++	typeref:typename:void	file:
 w32_vkeys_to_app_button_code	code/w32_game.cpp	/^w32_vkeys_to_app_button_code(u32_t code) {$/;"	f	language:C++	typeref:typename:app_button_code_t	file:
-w32_wasapi_begin_frame	code/w32_game_audio_wasapi.h	/^w32_wasapi_begin_frame(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:void
-w32_wasapi_end_frame	code/w32_game_audio_wasapi.h	/^w32_wasapi_end_frame(w32_wasapi_t* wasapi) $/;"	f	language:C++	typeref:typename:void
-w32_wasapi_free	code/w32_game_audio_wasapi.h	/^w32_wasapi_free(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:void
-w32_wasapi_init	code/w32_game_audio_wasapi.h	/^w32_wasapi_init(w32_wasapi_t* wasapi,$/;"	f	language:C++	typeref:typename:b32_t
 w32_wasapi_notif_client_t	code/w32_game_audio_wasapi.h	/^struct w32_wasapi_notif_client_t {$/;"	s	language:C++
 w32_wasapi_t	code/w32_game_audio_wasapi.h	/^struct w32_wasapi_t {$/;"	s	language:C++
 w32_window_callback	code/w32_game.cpp	/^w32_window_callback(HWND window, $/;"	f	language:C++	typeref:typename:LRESULT CALLBACK
@@ -2415,7 +2429,6 @@ WIN32_LEAN_AND_MEAN	code/w32_game.cpp	/^# define WIN32_LEAN_AND_MEAN$/;"	d	langu
 window	code/w32_game.h	/^  HWND window;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:HWND
 window_title	code/game.h	/^  const char* window_title; \/\/ TODO(game): change to str8_t?$/;"	m	language:C++	struct:game_init_config_t	typeref:typename:const char *
 WinMain	code/w32_game.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
-WIN_AUDIO	code/w32_game_audio.h	/^#define WIN_AUDIO$/;"	d	language:C++
 WIN_H	code/w32_game.h	/^#define WIN_H$/;"	d	language:C++
 WIN_RENDERER_H	code/w32_game_gfx.h	/^#define WIN_RENDERER_H$/;"	d	language:C++
 WIN_WASAPI	code/w32_game_audio_wasapi.h	/^#define WIN_WASAPI$/;"	d	language:C++

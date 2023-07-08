@@ -9,7 +9,6 @@ struct w32_wasapi_notif_client_t {
 };
 
 struct w32_wasapi_t {
-  audio_buffer_t pf_audio; // Must be first member
   
   w32_wasapi_notif_client_t notifs;
   IMMDeviceEnumerator * mm_device_enum;
@@ -32,7 +31,7 @@ struct w32_wasapi_t {
   arena_t allocator;
 };
 
-///////////////////////////////////////////////////////////
+//
 // IMPLEMENTATION
 //
 DEFINE_GUID(CLSID_MMDeviceEnumerator,  0xbcde0395, 0xe52f, 0x467c, 0x8e, 0x3d, 0xc4, 0x57, 0x92, 0x91, 0x69, 0x2e);
@@ -42,9 +41,9 @@ DEFINE_GUID(IID_IAudioClient2,         0x726778cd, 0xf60a, 0x4eda, 0x82, 0xde, 0
 DEFINE_GUID(IID_IMMNotificationClient, 0x7991eec9, 0x7e89, 0x4d85, 0x83, 0x90, 0x6c, 0x70, 0x3c, 0xec, 0x60, 0xc0);
 
 
-
-//////////////////////////////////////////////////////////
+//
 // Win Audio Notifs implementation
+//
 static STDMETHODIMP_(ULONG)  
 _w32_wasapi_notif_client_AddRef(IMMNotificationClient* mm_notif) {
   w32_wasapi_notif_client_t* w32_notif = (w32_wasapi_notif_client_t*)mm_notif;
@@ -209,15 +208,108 @@ _w32_wasapi_set_default_device_as_current_device(w32_wasapi_t* wasapi) {
   return true;
 }
 
-static b32_t
-w32_wasapi_init(w32_wasapi_t* wasapi,
-                u32_t samples_per_second, 
-                u16_t bits_per_sample,
-                u16_t channels,
-                u32_t latency_frames,
-                u32_t refresh_rate,
-                arena_t* allocator)
+
+static inline void 
+_w32_wasapi_release_current_device(w32_wasapi_t* wasapi) {
+	if (wasapi->audio_client) {
+		IAudioClient2_Stop(wasapi->audio_client);
+		IAudioClient2_Release(wasapi->audio_client);
+		wasapi->audio_client = 0;
+	}
+	
+	if (wasapi->audio_render_client) {
+		IAudioRenderClient_Release(wasapi->audio_render_client);
+		wasapi->audio_render_client = 0;
+	}
+	wasapi->is_device_ready = false;
+}
+
+
+//
+// API Correspondence
+//
+static 
+w32_audio_begin_frame_i(w32_audio_begin_frame) 
 {
+  w32_wasapi_t* wasapi = (w32_wasapi_t*)(app_audio->app_data);
+	if (wasapi->is_device_changed) {
+		//w32_log("[w32_wasapi] Resetting wasapi device\n");
+		// Attempt to change device
+		_w32_wasapi_release_current_device(wasapi);
+		_w32_wasapi_set_default_device_as_current_device(wasapi);
+		wasapi->is_device_changed = false;
+	}
+	
+  UINT32 sound_padding_size;
+  UINT32 samples_to_write = 0;
+    
+	if (wasapi->is_device_ready) {
+		// Padding is how much valid data is queued up in the sound buffer
+		// if there's enough padding then we could skip writing more data
+		HRESULT hr = IAudioClient2_GetCurrentPadding(wasapi->audio_client, &sound_padding_size);
+		
+		if (SUCCEEDED(hr)) {
+			samples_to_write = (UINT32)wasapi->buffer_size - sound_padding_size;
+			
+			// Cap the samples to write to how much latency is allowed.
+			if (samples_to_write > wasapi->latency_sample_count) {
+				samples_to_write = wasapi->latency_sample_count;
+			}
+		}
+	}
+	else {
+		// NOTE(Momo): if there is no device avaliable,
+		// just write to the whole 'dummy' buffer.
+		samples_to_write = wasapi->buffer_size;
+	}
+
+  app_audio->sample_buffer = wasapi->buffer;
+  app_audio->sample_count = samples_to_write; 
+  app_audio->channels = wasapi->channels;
+
+}
+
+static 
+w32_audio_end_frame_i(w32_audio_end_frame) 
+{
+  w32_wasapi_t* wasapi = (w32_wasapi_t*)(app_audio->app_data);
+
+	if (!wasapi->is_device_ready) return;
+
+  // NOTE(Momo): Kinda assumes 16-bit Sound
+  BYTE* sound_buffer_data;
+  HRESULT hr = IAudioRenderClient_GetBuffer(wasapi->audio_render_client, 
+                                            (UINT32)app_audio->sample_count, 
+                                            &sound_buffer_data);
+  if (FAILED(hr)) return;
+
+  s16_t* src_sample = app_audio->sample_buffer;
+  s16_t* dest_sample = (s16_t*)sound_buffer_data;
+  // buffer structure for stereo:
+  // s16_t   s16_t    s16_t  s16_t   s16_t  s16_t
+  // [LEFT RIGHT] LEFT RIGHT LEFT RIGHT....
+  for(u32_t sample_index = 0; sample_index < app_audio->sample_count; ++sample_index)
+  {
+    for (u32_t channel_index = 0; channel_index < wasapi->channels; ++channel_index) {
+      *dest_sample++ = *src_sample++;
+    }
+  }
+
+  IAudioRenderClient_ReleaseBuffer(
+      wasapi->audio_render_client, 
+      (UINT32)app_audio->sample_count, 
+      0);
+}
+
+
+static 
+w32_audio_load_i(w32_audio_load)
+{
+  w32_wasapi_t* wasapi = arena_push(w32_wasapi_t, allocator);
+  if (!wasapi) return false;
+
+  app_audio->app_data = wasapi;
+
   wasapi->channels = channels;
   wasapi->bits_per_sample = bits_per_sample;
   wasapi->samples_per_second = samples_per_second;
@@ -283,128 +375,17 @@ w32_wasapi_init(w32_wasapi_t* wasapi,
 	return false;
 }
 
-static inline void 
-_w32_wasapi_release_current_device(w32_wasapi_t* wasapi) {
-	if (wasapi->audio_client) {
-		IAudioClient2_Stop(wasapi->audio_client);
-		IAudioClient2_Release(wasapi->audio_client);
-		wasapi->audio_client = 0;
-	}
-	
-	if (wasapi->audio_render_client) {
-		IAudioRenderClient_Release(wasapi->audio_render_client);
-		wasapi->audio_render_client = 0;
-	}
-	wasapi->is_device_ready = false;
-}
 
-static void
-w32_wasapi_free(w32_wasapi_t* wasapi) {
+
+static 
+w32_audio_unload_i(w32_audio_unload) {
+  w32_wasapi_t* wasapi = (w32_wasapi_t*)(app_audio->app_data);
+
   _w32_wasapi_release_current_device(wasapi);
 	IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
 	IMMDeviceEnumerator_Release(wasapi->mm_device_enum);
   arena_clear(&wasapi->allocator);
 }
 
-static void 
-w32_wasapi_begin_frame(w32_wasapi_t* wasapi) {
-	if (wasapi->is_device_changed) {
-		//w32_log("[w32_wasapi] Resetting wasapi device\n");
-		// Attempt to change device
-		_w32_wasapi_release_current_device(wasapi);
-		_w32_wasapi_set_default_device_as_current_device(wasapi);
-		wasapi->is_device_changed = false;
-	}
-	
-  UINT32 sound_padding_size;
-  UINT32 samples_to_write = 0;
-    
-	if (wasapi->is_device_ready) {
-		// Padding is how much valid data is queued up in the sound buffer
-		// if there's enough padding then we could skip writing more data
-		HRESULT hr = IAudioClient2_GetCurrentPadding(wasapi->audio_client, &sound_padding_size);
-		
-		if (SUCCEEDED(hr)) {
-			samples_to_write = (UINT32)wasapi->buffer_size - sound_padding_size;
-			
-			// Cap the samples to write to how much latency is allowed.
-			if (samples_to_write > wasapi->latency_sample_count) {
-				samples_to_write = wasapi->latency_sample_count;
-			}
-		}
-	}
-	else {
-		// NOTE(Momo): if there is no device avaliable,
-		// just write to the whole 'dummy' buffer.
-		samples_to_write = wasapi->buffer_size;
-	}
-
-  // Get audio_buffer_t
-  wasapi->pf_audio.sample_buffer = wasapi->buffer;
-  wasapi->pf_audio.sample_count = samples_to_write; 
-  wasapi->pf_audio.channels = wasapi->channels;
-
-}
-static void
-w32_wasapi_end_frame(w32_wasapi_t* wasapi) 
-{
-	if (!wasapi->is_device_ready) return;
-  audio_buffer_t* output = &wasapi->pf_audio;
-
-  // NOTE(Momo): Kinda assumes 16-bit Sound
-  BYTE* sound_buffer_data;
-  HRESULT hr = IAudioRenderClient_GetBuffer(wasapi->audio_render_client, 
-                                            (UINT32)output->sample_count, 
-                                            &sound_buffer_data);
-  if (FAILED(hr)) return;
-
-  s16_t* src_sample = output->sample_buffer;
-  s16_t* dest_sample = (s16_t*)sound_buffer_data;
-  // buffer structure for stereo:
-  // s16_t   s16_t    s16_t  s16_t   s16_t  s16_t
-  // [LEFT RIGHT] LEFT RIGHT LEFT RIGHT....
-  for(u32_t sample_index = 0; sample_index < output->sample_count; ++sample_index){
-    for (u32_t channel_index = 0; channel_index < wasapi->channels; ++channel_index) {
-      *dest_sample++ = *src_sample++;
-    }
-  }
-  IAudioRenderClient_ReleaseBuffer(wasapi->audio_render_client, (UINT32)output->sample_count, 0);
-}
-
-/////////////////////////////////////////////////////////
-// API Correspondence
-//
-static audio_buffer_t*
-w32_audio_load(u32_t samples_per_second, 
-               u16_t bits_per_sample,
-               u16_t channels,
-               u32_t latency_frames,
-               u32_t refresh_rate,
-               arena_t* allocator) 
-{
-  // TODO: Ideally, we should give WASAPI a seperate arena 
-  w32_wasapi_t* wasapi = arena_push(w32_wasapi_t, allocator);
-  if (!wasapi) return 0;
-
-  b32_t success = w32_wasapi_init(wasapi, samples_per_second, bits_per_sample, channels, latency_frames, refresh_rate, allocator);
-  if (!success) return 0;
-
-  return &wasapi->pf_audio;
-}
-
-static void
-w32_audio_begin_frame(audio_buffer_t* audio) {
-  w32_wasapi_begin_frame((w32_wasapi_t*)audio);
-}
-
-static void 
-w32_audio_end_frame(audio_buffer_t* audio) {
-  w32_wasapi_end_frame((w32_wasapi_t*)audio);
-}
-
-static void
-w32_audio_unload(audio_buffer_t* audio) {
-  // Unused
-}
 
 #endif 
