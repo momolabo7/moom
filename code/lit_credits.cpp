@@ -1,10 +1,6 @@
 static void 
 lit_credits_init() {
   lit_credits_t* credits = &lit->credits;
-
-  make(asset_match_t, match);
-  set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
-  credits->font = assets_find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
   credits->timer = 0.f;
 }
 
@@ -16,7 +12,7 @@ lit_credits_push_subtitle_and_name(
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 
-      credits->font, 
+      ASSET_FONT_ID_DEFAULT,
       subtitle,
       rgba_set(0.5f, 0.5f, 0.5f, 1.f),
       LIT_WIDTH/2, y, 
@@ -25,7 +21,7 @@ lit_credits_push_subtitle_and_name(
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 
-      credits->font, 
+      ASSET_FONT_ID_DEFAULT,
       name,
       rgba_hex(0xF8C8DCFF),
       LIT_WIDTH/2, y, 
@@ -60,7 +56,7 @@ lit_credits_update() {
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 
-      credits->font, 
+      ASSET_FONT_ID_DEFAULT,
       str8_from_lit("THANKS"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
@@ -69,7 +65,7 @@ lit_credits_update() {
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 
-      credits->font, 
+      ASSET_FONT_ID_DEFAULT,
       str8_from_lit("FOR"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
@@ -78,7 +74,7 @@ lit_credits_update() {
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 
-      credits->font, 
+      ASSET_FONT_ID_DEFAULT,
       str8_from_lit("PLAYING!"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
@@ -89,7 +85,7 @@ lit_credits_update() {
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 
-      credits->font, 
+      ASSET_FONT_ID_DEFAULT,
       str8_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
@@ -99,7 +95,7 @@ lit_credits_update() {
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 
-      credits->font, 
+      ASSET_FONT_ID_DEFAULT,
       str8_from_lit("PRIMIX"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
@@ -109,7 +105,7 @@ lit_credits_update() {
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 
-      credits->font, 
+      ASSET_FONT_ID_DEFAULT,
       str8_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 

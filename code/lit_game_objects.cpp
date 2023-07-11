@@ -528,7 +528,7 @@ lit_game_render_lights(lit_game_t* g) {
   {
     lit_game_light_t* light = g->lights + light_index;
     gfx_push_asset_sprite(gfx, &lit->assets, 
-        g->filled_circle_sprite, 
+        ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE,
         light->pos,
         v2f_set(16.f, 16.f),
         rgba_set(0.8f, 0.8f, 0.8f, 1.f));
@@ -731,7 +731,7 @@ lit_game_render_player(lit_game_t* g){
   if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_NONE) { 
     if (player->nearest_light) {
       gfx_push_asset_sprite(gfx, &lit->assets,
-          g->circle_sprite, 
+          ASSET_SPRITE_ID_CIRCLE_SPRITE,
           player->nearest_light->pos, 
           v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
       gfx_advance_depth(gfx);
@@ -739,7 +739,7 @@ lit_game_render_player(lit_game_t* g){
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE) {
     gfx_push_asset_sprite(gfx, &lit->assets,
-        g->rotate_sprite, 
+        ASSET_SPRITE_ID_ROTATE_SPRITE,
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
     gfx_advance_depth(gfx);
@@ -747,7 +747,7 @@ lit_game_render_player(lit_game_t* g){
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_MOVE) {
     gfx_push_asset_sprite(gfx, &lit->assets,
-        g->move_sprite, 
+        ASSET_SPRITE_ID_MOVE_SPRITE,
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
     gfx_advance_depth(gfx);
@@ -826,7 +826,7 @@ lit_game_render_particles(lit_game_t* g) {
     size.w = f32_lerp(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = f32_lerp(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    gfx_push_asset_sprite(gfx, &lit->assets, g->filled_circle_sprite, p->pos, size, color);
+    gfx_push_asset_sprite(gfx, &lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, p->pos, size, color);
     gfx_advance_depth(gfx);
   }
 }
@@ -1015,7 +1015,7 @@ lit_game_render_sensors(lit_game_t* g) {
   for(u32_t sensor_index = 0; sensor_index < g->sensor_count; ++sensor_index)
   {
     lit_game_sensor_t* sensor = g->sensors + sensor_index;
-    gfx_push_asset_sprite(gfx, &lit->assets, g->filled_circle_sprite, sensor->pos, size, rgba_hex(sensor->target_color));
+    gfx_push_asset_sprite(gfx, &lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, sensor->pos, size, rgba_hex(sensor->target_color));
     gfx_advance_depth(gfx);
   }
 }

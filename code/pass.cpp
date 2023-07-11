@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "sui.h"
+#include "pack.h"
 #include "lit_asset_types.h"
 
 #define lit_res_dir(filename) "../res/lit/" filename
@@ -14,7 +14,7 @@ int main() {
   make(arena_t, arena);
   arena_init(arena, memory, memory_size);
 
-  sui_log("Building atlas...\n");
+  pass_log("Building atlas...\n");
   make(sui_atlas_t, atlas);
 
   sui_atlas_begin(atlas, 1024, 1024);
@@ -49,11 +49,11 @@ int main() {
   }
   auto* font_b = sui_atlas_end_font(atlas);
   sui_atlas_end(atlas, arena);
-  sui_log("Finished atlas...\n");
+  pass_log("Finished atlas...\n");
 
 #if 1
   {
-    sui_log("Writing test png file...\n");
+    pass_log("Writing test png file...\n");
     buffer_t png_to_write_mem  = 
       png_write(atlas->bitmap.pixels, 
                 atlas->bitmap.width, 
@@ -63,52 +63,17 @@ int main() {
   }
 #endif
 
-  make(sui_packer_t, packer);
-#if 0
-  
-#endif
-
-
-  sui_pack_begin(packer, arena, ASSET_GROUP_TYPE_COUNT);
-
-  sui_pack_begin_group(packer, ASSET_GROUP_TYPE_ATLAS);
-  u32_t bitmap_id = sui_pack_push_bitmap(packer, atlas);
-  sui_pack_end_group(packer);
-  
-  sui_pack_begin_group(packer, ASSET_GROUP_TYPE_BLANK_SPRITE);
-  //u32_t atlas_id = sui_pack_push_atlas(...)
-  //sui_pack_push_atlas_sprite(packer, atlas_id, lit_res_dir("blank.png"));
-  sui_pack_push_sprite(packer, blank_sprite, bitmap_id);
-  sui_pack_end_group(packer);
-
-  sui_pack_begin_group(packer, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
-  sui_pack_push_sprite(packer, circle_sprite, bitmap_id);
-  sui_pack_end_group(packer);
-
-  sui_pack_begin_group(packer, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
-  sui_pack_push_sprite(packer, filled_circle_sprite, bitmap_id);
-  sui_pack_end_group(packer);
-
-
-  sui_pack_begin_group(packer, ASSET_GROUP_TYPE_ROTATE_SPRITE);
-  sui_pack_push_sprite(packer, rotate_sprite, bitmap_id);
-  sui_pack_end_group(packer);
-
-  sui_pack_begin_group(packer, ASSET_GROUP_TYPE_MOVE_SPRITE);
-  sui_pack_push_sprite(packer, move_sprite, bitmap_id);
-  sui_pack_end_group(packer);
-
-  sui_pack_begin_group(packer, ASSET_GROUP_TYPE_FONTS);
-  {
-    sui_pack_push_font(packer, font_a, bitmap_id);
-    sui_pack_push_tag(packer, ASSET_TAG_TYPE_FONT, 0.f);
-
-    sui_pack_push_font(packer, font_b, bitmap_id);
-    sui_pack_push_tag(packer, ASSET_TAG_TYPE_FONT, 1.f);
-  }
-  sui_pack_end_group(packer);
-
-  sui_pack_end(packer, LIT_ASSET_FILE, arena);
+  make(pass_pack_t, p);
+  pass_pack_begin(p, arena, ASSET_BITMAP_ID_MAX, ASSET_SPRITE_ID_MAX, ASSET_FONT_ID_MAX);
+  pass_pack_bitmap(p, ASSET_BITMAP_ID_ATLAS, atlas);
+  pass_pack_sprite(p, ASSET_SPRITE_ID_BLANK_SPRITE, blank_sprite, ASSET_BITMAP_ID_ATLAS);
+  pass_pack_sprite(p, ASSET_SPRITE_ID_CIRCLE_SPRITE, circle_sprite, ASSET_BITMAP_ID_ATLAS);
+  pass_pack_sprite(p, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, filled_circle_sprite, ASSET_BITMAP_ID_ATLAS);
+  pass_pack_sprite(p, ASSET_SPRITE_ID_MOVE_SPRITE, move_sprite, ASSET_BITMAP_ID_ATLAS);
+  pass_pack_sprite(p, ASSET_SPRITE_ID_ROTATE_SPRITE, rotate_sprite, ASSET_BITMAP_ID_ATLAS);
+  pass_pack_font(p, ASSET_FONT_ID_DEFAULT, font_a, ASSET_BITMAP_ID_ATLAS);
+  pass_pack_font(p, ASSET_FONT_ID_DEBUG, font_b, ASSET_BITMAP_ID_ATLAS);
+  pass_pack_end(p, LIT_ASSET_FILE, arena);
 }
 
 

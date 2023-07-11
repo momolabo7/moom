@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "momo.h"
 
-enum Meta_Token_Type {
+enum meta_token_type_t {
   META_TOKEN_TYPE_UNKNOWN,
   META_TOKEN_TYPE_OPEN_PAREN,
   META_TOKEN_TYPE_CLOSE_PAREN,
@@ -21,21 +21,21 @@ enum Meta_Token_Type {
   META_TOKEN_TYPE_EOF
 };
 
-struct Meta_Token {
-  Meta_Token_Type type;
+struct meta_token_t {
+  meta_token_type_t type;
   
   u32_t begin;
   u32_t ope;
 };
 
-struct Meta_Tokenizer {
+struct meta_tokenizer_t {
   c8_t* text;
   u32_t at;
   u32_t text_length;
 };
 
 static void
-meta_eat_ignorables(Meta_Tokenizer* t) {
+meta_eat_ignorables(meta_tokenizer_t* t) {
   for (;;) {
     if(is_whitespace(t->text[t->at])) {
       ++t->at;
@@ -58,7 +58,7 @@ meta_eat_ignorables(Meta_Tokenizer* t) {
 }
 
 static b32_t
-meta_tokenizer_init(Meta_Tokenizer* t, const char* filename) {
+meta_tokenizer_init(meta_tokenizer_t* t, const char* filename) {
   FILE* fp = fopen(filename, "r");
   if (fp) {
     fseek(fp, 0, SEEK_END);
@@ -80,16 +80,16 @@ meta_tokenizer_init(Meta_Tokenizer* t, const char* filename) {
 }
 
 static void 
-meta_tokenizer_free(Meta_Tokenizer* t) {
+meta_tokenizer_free(meta_tokenizer_t* t) {
   free(t->text);
 }
 
 
-static Meta_Token
-meta_next_token(Meta_Tokenizer* t) {
+static meta_token_t
+meta_next_token(meta_tokenizer_t* t) {
   meta_eat_ignorables(t);
   
-  Meta_Token ret = {};
+  meta_token_t ret = {};
   ret.begin = t->at;
   ret.ope = t->at + 1;
   
@@ -190,7 +190,7 @@ meta_next_token(Meta_Tokenizer* t) {
 }
 
 static void
-meta_print_token(Meta_Tokenizer* t, Meta_Token token)  {
+meta_print_token(meta_tokenizer_t* t, meta_token_t token)  {
   switch(token.type) {
     case META_TOKEN_TYPE_OPEN_PAREN: 
     case META_TOKEN_TYPE_CLOSE_PAREN:
@@ -225,7 +225,7 @@ meta_print_token(Meta_Tokenizer* t, Meta_Token token)  {
 }
 
 static b32_t
-meta_compare_token_with_string(Meta_Tokenizer* t, Meta_Token token, String str) {
+meta_compare_token_with_string(meta_tokenizer_t* t, meta_token_t token, String str) {
   if( str.count != (token.ope - token.begin)) {
     return false;
   }
@@ -239,13 +239,13 @@ meta_compare_token_with_string(Meta_Tokenizer* t, Meta_Token token, String str) 
   return true;
 }
 
-struct Profiler_Codegen {
+struct profiler_codegen_t {
   u32_t state; // 
   u32_t units;
 };
 
 static void
-meta_update_profiler_codegen(Profiler_Codegen* p, Meta_Tokenizer* t, Meta_Token token) {
+meta_update_profiler_codegen(profiler_codegen_t* p, meta_tokenizer_t* t, meta_token_t token) {
   switch(p->state) {
     case 0: {
       if (meta_compare_token_with_string(t, token, string_from_lit("wtf_sia"))) {
@@ -269,20 +269,19 @@ meta_update_profiler_codegen(Profiler_Codegen* p, Meta_Tokenizer* t, Meta_Token 
 
 #define asdf() glue(glue(test,__LINE__),__FILE__)
 
-// TODO: refactor profiler codegen into it's own unit
 int main() {
   int asdf();
-  make(Meta_Tokenizer, t);
+  make(meta_tokenizer_t, t);
   if (!meta_tokenizer_init(t, "meta_test.cpp")){
     printf("Cannot open file\n");
     return 1;
   }
   defer { meta_tokenizer_free(t); };
   
-  make(Profiler_Codegen, p);
+  make(profiler_codegen_t, p);
   
   for(;;) {
-    Meta_Token token = meta_next_token(t);
+    meta_token_t token = meta_next_token(t);
     meta_print_token(t, token);
     meta_update_profiler_codegen(p, t, token);
     

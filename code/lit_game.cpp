@@ -167,14 +167,14 @@ lit_game_update()
   // Draw the overlay for fade in/out
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->stage_fade_timer);
-    gfx_push_asset_sprite(gfx, &lit->assets, g->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    gfx_push_asset_sprite(gfx, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
     gfx_advance_depth(gfx);
   }
 
   // Overlay for pause fade
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->exit_fade);
-    gfx_push_asset_sprite(gfx, &lit->assets, g->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    gfx_push_asset_sprite(gfx, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
     gfx_advance_depth(gfx);
   }
 
@@ -182,7 +182,7 @@ lit_game_update()
   {
     f32_t alpha = g->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
     rgba_t color = rgba_set(1.f, 1.f, 1.f, alpha);
-    gfx_push_asset_sprite(gfx, &lit->assets, g->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    gfx_push_asset_sprite(gfx, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
     gfx_advance_depth(gfx);
   }
 
@@ -199,7 +199,7 @@ lit_game_update()
     f32_t title_x = cur_wp->x + a * (next_wp->x - cur_wp->x); 
     rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
 
-    gfx_push_text_center_aligned(gfx, &lit->assets, g->tutorial_font, g->title, color, title_x, LIT_HEIGHT/2, 128.f);
+    gfx_push_text_center_aligned(gfx, &lit->assets, ASSET_FONT_ID_DEFAULT, g->title, color, title_x, LIT_HEIGHT/2, 128.f);
     gfx_advance_depth(gfx);
 
   }
@@ -211,15 +211,6 @@ lit_game_init()
 {
   lit_game_t* g = &lit->game;
   rng_init(&g->rng, 65535); // don't really need to be strict 
-
-  make(asset_match_t, match);
-  set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
-  g->tutorial_font = assets_find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
-  g->blank_sprite = assets_find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
-  g->circle_sprite = assets_find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_CIRCLE_SPRITE);
-  g->move_sprite = assets_find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_MOVE_SPRITE);
-  g->rotate_sprite = assets_find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_ROTATE_SPRITE);
-  g->filled_circle_sprite = assets_find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_FILLED_CIRCLE_SPRITE);
 
   g->freeze = false;
 

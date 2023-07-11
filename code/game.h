@@ -6,6 +6,11 @@
 #include "game_console.h"
 #include "game_asset_file.h"
 
+// 
+// Graphics API
+//
+
+
 //
 // Button API
 // 
@@ -83,6 +88,12 @@ enum app_button_code_t {
 //
 // NOTE(momo): Input is SPECIFICALLY stuff that can be recorded and
 // replayed by some kind of system. Other things go to game_t
+// 
+struct app_input_characters_t {
+  u8_t* data;
+  u32_t count;
+};
+
 struct app_input_t {
   app_button_t buttons[APP_BUTTON_CODE_MAX];
   u8_t chars[32];
@@ -260,10 +271,6 @@ static const char* game_function_names[] {
 };
 
 
-//
-// App function implementation
-//
-
 // before: 0, now: 1
 static b32_t
 app_is_button_poked(app_t* app, app_button_code_t code) {
@@ -306,6 +313,15 @@ app_get_dt(app_t* app) {
   return app->input.delta_time;
 }
 
+
+static app_input_characters_t
+app_input_get_characters(app_t* app) {
+  app_input_characters_t ret;
+  ret.data = app->input.chars;
+  ret.count = app->input.char_count; 
+
+  return ret;
+}
 
 #include "game_assets.h"
 #include "game_asset_rendering.h"

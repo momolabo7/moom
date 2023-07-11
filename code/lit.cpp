@@ -22,14 +22,6 @@ lit_tick() {
     arena_init(&lit->asset_arena, asset_memory, asset_memory_size);
     assets_init(&lit->assets, app, gfx, LIT_ASSET_FILE, &lit->asset_arena);
 
-    //
-    // Initialize important assets stuf
-    //
-    lit->blank_sprite = assets_find_first_sprite(&lit->assets, ASSET_GROUP_TYPE_BLANK_SPRITE);
-    make(asset_match_t, match);
-    set_match_entry(match, ASSET_TAG_TYPE_FONT, 1.f, 1.f);
-    lit->debug_font = assets_find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
-
 
     //
     // Initialize debug stuff

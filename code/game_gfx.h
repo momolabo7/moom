@@ -164,6 +164,8 @@ struct gfx_t {
 
 
 static void gfx_init(gfx_t* g, void* texture_queue_data, usz_t texture_queue_size, void* command_queue_data, usz_t command_queue_size);
+
+
 static void gfx_clear_commands(gfx_t* g);
 static gfx_command_t* gfx_get_command(gfx_t* g, u32_t index);
 static gfx_texture_payload_t* gfx_begin_texture_transfer(gfx_t* g, u32_t required_space);

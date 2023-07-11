@@ -184,14 +184,6 @@ struct lit_game_animator_t {
 
 struct lit_game_t {
   
-  // Assets
-  asset_font_id_t tutorial_font;
-  asset_sprite_id_t blank_sprite;
-  asset_sprite_id_t circle_sprite;
-  asset_sprite_id_t filled_circle_sprite;
-  asset_sprite_id_t move_sprite;
-  asset_sprite_id_t rotate_sprite;
-
   lit_game_state_type_t state;
 
   u32_t current_level_id;

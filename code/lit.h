@@ -134,7 +134,6 @@ lit_unlock_next_level(u32_t current_level_id) {
       return false;
     }
   }
-
   return true;
 }
 

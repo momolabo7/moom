@@ -6,9 +6,6 @@ static void
 lit_splash_init() {
   lit_splash_t* splash = &lit->splash;
 
-  make(asset_match_t, match);
-  set_match_entry(match, ASSET_TAG_TYPE_FONT, 0.f, 1.f);
-  splash->font = assets_find_best_font(&lit->assets, ASSET_GROUP_TYPE_FONTS, match);
   splash->timer = 3.f;
   splash->scroll_in_timer = LIT_SPLASH_SCROLL_DURATION;
 }
@@ -16,6 +13,7 @@ lit_splash_init() {
 static void
 lit_splash_update() {
   lit_splash_t* splash = &lit->splash;
+  asset_font_id_t font = ASSET_FONT_ID_DEFAULT;
 
   splash->timer -= app_get_dt(app);
   splash->scroll_in_timer -= app_get_dt(app);
@@ -33,7 +31,15 @@ lit_splash_update() {
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 
-      splash->font, 
+      font, 
+      str8_from_lit("       "), 
+      rgba_set(1.f, 1.f, 1.f, 1.f),
+      LIT_WIDTH/2, y, 
+      128.f);
+  gfx_push_text_center_aligned(
+      gfx, 
+      &lit->assets, 
+      font, 
       str8_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
@@ -42,7 +48,7 @@ lit_splash_update() {
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 
-      splash->font, 
+      font,
       str8_from_lit("PRIMIX"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
@@ -52,7 +58,7 @@ lit_splash_update() {
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 
-      splash->font, 
+      font,
       str8_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
@@ -75,7 +81,7 @@ lit_splash_update() {
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 
-      splash->font, 
+      font,
       str8_from_lit("a silly game by"), 
       grey,
       LIT_WIDTH/2, scroll_y, 
@@ -85,7 +91,7 @@ lit_splash_update() {
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 
-      splash->font, 
+      font,
       str8_from_lit("momohoudai"), 
       grey,
       LIT_WIDTH/2, scroll_y, 

@@ -11,12 +11,12 @@ IF NOT "%PLATFORM%" == "X64" IF NOT "%PLATFORM%" == "x64" (EXIT /b)
 
 
 SET CommonCompilerFlags=-MT -WX -W4 -wd4533 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi -Oi -GR- -EHa -Gm- -std:c++17
-SET CommonCompilerFlags=-DINTERNAL=1  %CommonCompilerFlags%
+SET CommonCompilerFlags=%CommonCompilerFlags%
 
 pushd %BuildDir%
 
-call cl %CommonCompilerFlags% %CodeDir%\sui.cpp -link -OUT:sui.exe
+call cl %CommonCompilerFlags% %CodeDir%\pass.cpp -link -OUT:pass.exe
 
-call sui.exe
+call pass.exe
 
 popd

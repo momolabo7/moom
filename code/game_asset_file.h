@@ -18,19 +18,20 @@ enum asset_type_t  {
 struct asset_file_header_t {
   u32_t signature;
 
-  u32_t group_count;
-  u32_t asset_count;
-  u32_t tag_count;
+  u32_t bitmap_count;
+  u32_t font_count;
+  u32_t sprite_count;
 
-  u32_t offset_to_assets;
-  u32_t offset_to_tags;
-  u32_t offset_to_groups;
+  u32_t offset_to_bitmaps;
+  u32_t offset_to_fonts;
+  u32_t offset_to_sprites;
 };
 
 
 struct asset_file_bitmap_t {
   u32_t width;
   u32_t height;
+  u32_t offset_to_data;
   
   // Data:
   //
@@ -56,13 +57,12 @@ struct asset_file_font_glyph_t {
 };
 
 struct asset_file_font_t {
-  u32_t offset_to_data;
-  
   // TODO: Maybe add 'lowest codepoint'?
   u32_t bitmap_asset_id;
   u32_t highest_codepoint;
   u32_t glyph_count;
-  
+
+  u32_t offset_to_data;
   // Data is: 
   // 
   // asset_file_font_glyph_t glyphs[glyph_count]
@@ -77,33 +77,8 @@ struct asset_file_sprite_t {
   u32_t texel_y0;
   u32_t texel_x1;
   u32_t texel_y1;
-
 };
 
-struct asset_file_asset_t {
-  asset_type_t type; 
 
-  u32_t offset_to_data;
-
-  // Tag info
-  u32_t first_tag_index;
-  u32_t one_past_last_tag_index;
-
-  union {
-    asset_file_bitmap_t bitmap;
-    asset_file_font_t font;
-    asset_file_sprite_t sprite;
-  };
-};
-
-struct asset_file_group_t {
-  u32_t first_asset_index;
-  u32_t one_past_last_asset_index;
-};
-
-struct asset_file_tag_t {
-  u32_t type; 
-  f32_t value;
-};
 
 #endif

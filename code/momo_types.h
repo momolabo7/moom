@@ -1,7 +1,7 @@
 // authored by Gerald Wong (momohoudai)
 //
 // WHAT 
-//   This file contains common functions, defines,  macros and types.
+//   This file contains common functions, defines, macros and types.
 //   
 //   This includes:
 //   - Glue and Stringify macros
