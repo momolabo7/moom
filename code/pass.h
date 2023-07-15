@@ -690,13 +690,15 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   fwrite(p->sprites, sprites_size, 1, file); 
 
   arena_clear(p->arena);
-
-  pass_log("Actullay done!");
-
 }
 
 //
 // JOURNAL
+//
+// = 2023-07-15 =
+//   It took longer than expected but I think this version's API
+//   is pretty clean and I'm quite proud of pushing through to make it
+//   work! :)
 //
 // = 2023-07-10 =
 //   This would be my 1000th time making an asset packer for my engine 

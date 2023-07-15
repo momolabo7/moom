@@ -1,25 +1,17 @@
-#ifndef MOMO_GEOMETRY_H
-#define MOMO_GEOMETRY_H
-
-struct tri2_t {
-  // TODO
-};
-
-struct rect2_t {
-  // TODO
-};
-
-struct aabb2_t {
-  // TODO
-};
-
-
-static b32_t bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt); 
-
-
 //
-// IMPLEMENTATION
+// These are helpful functions for collision
 //
+//
+// bonk_tri2_pt2() // checks if a point is within a triangle
+// 
+// TODO:
+//  bonk_cir2_pt2()
+//  bonk_rct2_pt2()
+//
+
+
+#ifndef MOMO_COLLISION_H
+#define MOMO_COLLISION_H
 
 
 // https://totologic.blogspot.com/2014/01/accurate-point-in-triangle-test.html
