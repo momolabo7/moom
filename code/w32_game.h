@@ -14,7 +14,6 @@ struct w32_work_t {
   app_task_callback_f* callback;
 };
 
-// TODO(momo): Is it possible to use a vector?
 struct w32_work_queue_t {
   w32_work_t entries[256];
   u32_t volatile next_entry_to_read;

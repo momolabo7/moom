@@ -76,6 +76,9 @@ lit_tick() {
       case LIT_MODE_CREDITS: {
         lit_credits_init();
       } break;
+      case LIT_MODE_SANDBOX: {
+        lit_sandbox_init();
+      } break;
 
     }
   }
@@ -89,6 +92,9 @@ lit_tick() {
     } break;
     case LIT_MODE_CREDITS: {
       lit_credits_update();
+    } break;
+    case LIT_MODE_SANDBOX: {
+      lit_sandbox_update();
     } break;
   }
 

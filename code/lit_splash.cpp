@@ -28,14 +28,7 @@ lit_splash_update() {
   }
 
   f32_t y = LIT_HEIGHT/2 + 100.f;
-  gfx_push_text_center_aligned(
-      gfx, 
-      &lit->assets, 
-      font, 
-      str8_from_lit("       "), 
-      rgba_set(1.f, 1.f, 1.f, 1.f),
-      LIT_WIDTH/2, y, 
-      128.f);
+
   gfx_push_text_center_aligned(
       gfx, 
       &lit->assets, 

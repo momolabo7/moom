@@ -70,6 +70,7 @@ enum lit_mode_t {
   LIT_MODE_SPLASH,
   LIT_MODE_GAME,
   LIT_MODE_CREDITS,
+  LIT_MODE_SANDBOX,
 };
 
 struct lit_save_data_t {
@@ -180,6 +181,7 @@ lit_goto_credits() {
 #include "lit_splash.cpp"
 #include "lit_game.cpp"
 #include "lit_credits.cpp"
+#include "lit_sandbox.cpp"
 
 
 #endif 

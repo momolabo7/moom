@@ -176,10 +176,6 @@ typedef char     c8_t;
 
 // Memory indices. Integer values for storing memory addresses.
 // X32 when in 32-bit, X64 when in 64-bit, etc 
-// TODO: This might be a bad idea.
-// We might want to have uintptr_t be it's own variable and size_t be another variable.
-// Might need to research on the theory behind it and blog it down.
-//
 typedef uintptr_t umi_t; // aka 'unsigned memory index'
 typedef intptr_t  smi_t; // aka 'signed memory index'
 typedef size_t    usz_t; // Can contain up to the highest indexable value 
@@ -1582,7 +1578,8 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 
 // For each
 #define for_arr(id, arr) for(umi_t id = 0, cnt = array_count(arr); (id) < (cnt); ++id)
-#define for_cnt(id, cnt) for(decltype(cnt) id = 0; id < cnt; ++id)
+#define for_cnt(id, cnt) for(decltype(cnt) id = 0; id < (cnt); ++id)
+#define for_range(id, beg, end) for(decltype(beg) id = (beg); id <= (end); ++id)
 
 // Singly Linked Lists
 // f - first node
@@ -1591,7 +1588,7 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 #define sll_prepend(f,l,n) (f) ? ((n)->next = (f), (f) = (n)) : ((f) = (l) = (n))
 #define sll_append(f,l,n)  (f) ? ((l)->next = (n), (l) = (n)) : ((f) = (l) = (n), (l)->next = 0)
 
-// TODO: Change name to CDL (circular doubly linked list)
+//
 // Circular Doubly Linked List with sentinel
 // 
 // s - sentinel

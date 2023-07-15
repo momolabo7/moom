@@ -15,8 +15,8 @@ SET CommonCompilerFlags=%CommonCompilerFlags%
 
 pushd %BuildDir%
 
-call cl %CommonCompilerFlags% %CodeDir%\pass.cpp -link -OUT:pass.exe
+call cl %CommonCompilerFlags% %CodeDir%\pass_lit.cpp -link -OUT:pass_lit.exe
 
-call pass.exe
+call pass_lit.exe
 
 popd

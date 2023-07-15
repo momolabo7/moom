@@ -25,9 +25,12 @@ struct asset_font_glyph_t {
   f32_t box_x0, box_y0;
   f32_t box_x1, box_y1;
 
-  asset_bitmap_id_t bitmap_asset_id;
   f32_t horizontal_advance;
   f32_t vertical_advance;
+
+  // TODO: this should be in font
+  asset_bitmap_id_t bitmap_asset_id;
+
 };
 
 struct asset_font_t {
@@ -180,7 +183,7 @@ assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, aren
       glyph->texel_x1 = file_glyph.texel_x1;
       glyph->texel_y1 = file_glyph.texel_y1;
 
-      glyph->bitmap_asset_id = (asset_bitmap_id_t)file_glyph.bitmap_asset_id;
+      glyph->bitmap_asset_id = (asset_bitmap_id_t)file_font.bitmap_asset_id;
 
       glyph->box_x0 = file_glyph.box_x0;
       glyph->box_y0 = file_glyph.box_y0;

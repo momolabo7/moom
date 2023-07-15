@@ -39,8 +39,6 @@ struct asset_file_bitmap_t {
 };
 
 struct asset_file_font_glyph_t {
-  u32_t bitmap_asset_id; 
-  
   u32_t texel_x0;
   u32_t texel_y0;
   u32_t texel_x1;
