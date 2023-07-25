@@ -1,6 +1,7 @@
 #ifndef LIT_ASSET_TYPES_H
 #define LIT_ASSET_TYPES_H
 
+#define ASSET_ID_DEFINED
 
 enum asset_bitmap_id_t : u32_t {
   ASSET_BITMAP_ID_ATLAS,

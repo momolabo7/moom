@@ -2,6 +2,13 @@
 #define ASSETS_H
 
 
+#ifndef ASSET_ID_DEFINED
+enum asset_bitmap_id_t : u32_t {ASSET_BITMAP_ID_MAX};
+enum asset_sprite_id_t : u32_t {ASSET_SPRITE_ID_MAX};
+enum asset_font_id_t : u32_t {ASSET_FONT_ID_MAX};
+#endif
+
+
 struct asset_bitmap_t {
   u32_t renderer_texture_handle;
   u32_t width;
