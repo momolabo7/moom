@@ -527,33 +527,35 @@ lit_game_render_lights(lit_game_t* g) {
   for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
   {
     lit_game_light_t* light = g->lights + light_index;
-    gfx_push_asset_sprite(gfx, &lit->assets, 
+    app_draw_asset_sprite(app, &lit->assets, 
         ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE,
         light->pos,
         v2f_set(16.f, 16.f),
         rgba_set(0.8f, 0.8f, 0.8f, 1.f));
-    gfx_advance_depth(gfx);
+    app_advance_depth(app);
   }
 
   //
   // Lights
   //
-  gfx_set_blend_additive(gfx);
+  app_set_blend_additive(app);
   for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
   {
     lit_game_light_t* l = g->lights + light_index;
     for(u32_t tri_index = 0; tri_index < l->triangle_count; ++tri_index)
     {
       lit_game_light_triangle_t* lt = l->triangles + tri_index;
-      gfx_draw_filled_triangle(gfx, 
-          rgba_hex(l->color),
+      app_draw_tri(
+          app, 
           lt->p0,
           lt->p1,
-          lt->p2);
+          lt->p2, 
+          rgba_hex(l->color));
+
     } 
-    gfx_advance_depth(gfx);
+    app_advance_depth(app);
   }
-  gfx_set_blend_alpha(gfx);
+  app_set_blend_alpha(app);
 }
 
 
@@ -566,12 +568,12 @@ lit_draw_light_rays(lit_game_t* g) {
     lit_game_light_t* light = g->lights + light_index;
     for_cnt(intersection_index, light->intersection_count){
       lit_light_intersection_t* intersection = light->intersections + intersection_index;
-      gfx_draw_line(gfx, light->pos, intersection->pt, 2.f, rgba_hex(0xFF0000FF));
+      app_draw_line(app, light->pos, intersection->pt, 2.f, rgba_hex(0xFF0000FF));
 
     }
 
   }
-  gfx_advance_depth(gfx);
+  app_advance_depth(app);
 }
 
 static void
@@ -580,9 +582,9 @@ lit_draw_edges(lit_game_t* g) {
   for(u32_t edge_index = 0; edge_index < g->edge_count; ++edge_index) 
   {
     lit_game_edge_t* edge = g->edges + edge_index;
-    gfx_draw_line(gfx, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
+    app_draw_line(app, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
   }
-  gfx_advance_depth(gfx);
+  app_advance_depth(app);
 }
 
 //
@@ -730,27 +732,27 @@ lit_game_render_player(lit_game_t* g){
 
   if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_NONE) { 
     if (player->nearest_light) {
-      gfx_push_asset_sprite(gfx, &lit->assets,
+      app_draw_asset_sprite(app, &lit->assets,
           ASSET_SPRITE_ID_CIRCLE_SPRITE,
           player->nearest_light->pos, 
           v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-      gfx_advance_depth(gfx);
+      app_advance_depth(app);
     }
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE) {
-    gfx_push_asset_sprite(gfx, &lit->assets,
+    app_draw_asset_sprite(app, &lit->assets,
         ASSET_SPRITE_ID_ROTATE_SPRITE,
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-    gfx_advance_depth(gfx);
+    app_advance_depth(app);
 
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_MOVE) {
-    gfx_push_asset_sprite(gfx, &lit->assets,
+    app_draw_asset_sprite(app, &lit->assets,
         ASSET_SPRITE_ID_MOVE_SPRITE,
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-    gfx_advance_depth(gfx);
+    app_advance_depth(app);
 
 
   }
@@ -826,8 +828,8 @@ lit_game_render_particles(lit_game_t* g) {
     size.w = f32_lerp(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = f32_lerp(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    gfx_push_asset_sprite(gfx, &lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, p->pos, size, color);
-    gfx_advance_depth(gfx);
+    app_draw_asset_sprite(app, &lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, p->pos, size, color);
+    app_advance_depth(app);
   }
 }
 
@@ -1015,8 +1017,8 @@ lit_game_render_sensors(lit_game_t* g) {
   for(u32_t sensor_index = 0; sensor_index < g->sensor_count; ++sensor_index)
   {
     lit_game_sensor_t* sensor = g->sensors + sensor_index;
-    gfx_push_asset_sprite(gfx, &lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, sensor->pos, size, rgba_hex(sensor->target_color));
-    gfx_advance_depth(gfx);
+    app_draw_asset_sprite(app, &lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, sensor->pos, size, rgba_hex(sensor->target_color));
+    app_advance_depth(app);
   }
 }
 
@@ -1035,7 +1037,7 @@ lit_game_generate_light(lit_game_t* g) {
     {
       v2f_t p0 = light->pos;
       v2f_t p1 = light->intersections[intersection_index].pt;
-      gfx_push_line(gfx, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
+      app_draw_line(app, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
     }
 #endif
   }

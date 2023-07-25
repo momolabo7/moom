@@ -2,8 +2,10 @@
 #define MOMO_STRING_H
 
 
-//~ NOTE(Momo): 'Immutable' strings
-struct str8_t{
+//
+// 
+//
+struct str8_t {
 	u8_t* e;
 	usz_t count;
 };

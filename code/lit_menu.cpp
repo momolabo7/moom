@@ -57,7 +57,7 @@ lit_menu_draw_rect(
       v2f_set(pos.x - half_w, pos.y), 
       v2f_set(thickness, size.y), 
       color); 
-  gfx_advance_depth(gfx);
+  app_advance_depth(app);
 
   // right
   gfx_push_asset_sprite(
@@ -67,7 +67,7 @@ lit_menu_draw_rect(
       v2f_set(pos.x + half_w, pos.y), 
       v2f_set(thickness, size.y), 
       color); 
-  gfx_advance_depth(gfx);
+  app_advance_depth(app);
 
   // top
   gfx_push_asset_sprite(
@@ -77,7 +77,7 @@ lit_menu_draw_rect(
       v2f_set(pos.x, pos.y + half_h), 
       v2f_set(size.x, thickness), 
       color); 
-  gfx_advance_depth(gfx);
+  app_advance_depth(app);
 
   // bottom
   gfx_push_asset_sprite(
@@ -87,7 +87,7 @@ lit_menu_draw_rect(
       v2f_set(pos.x, pos.y - half_h), 
       v2f_set(size.x, thickness), 
       color); 
-  gfx_advance_depth(gfx);
+  app_advance_depth(app);
 }
 
 static void
@@ -204,17 +204,18 @@ lit_menu_button_render(
         (glyph->box_x1 - glyph->box_x0) * font_height,
         (glyph->box_y1 - glyph->box_y0) * font_height);
     v2f_t anchor = v2f_set(0.5f, 0.5f);
-    gfx_push_sprite(gfx, 
-        RGBA_WHITE,
+    app_draw_sprite(
+        app, 
         btn->xy, font_wh, anchor,
         bitmap->renderer_texture_handle, 
         glyph->texel_x0,
         glyph->texel_y0,
         glyph->texel_x1,
-        glyph->texel_y1);
+        glyph->texel_y1,
+        RGBA_WHITE);
 
   }
-  gfx_advance_depth(gfx);
+  app_advance_depth(app);
 
 }
 
@@ -255,7 +256,7 @@ lit_update_menu() {
   {
     f32_t alpha = menu->selection_held_timer/(LIT_MENU_TRANSITION_DURATION/2);
     gfx_push_asset_sprite(gfx, &lit->assets, menu->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), rgba_set(0.f, 0.f, 0.f, alpha));
-    gfx_advance_depth(gfx);
+    app_advance_depth(app);
   }
 
 
@@ -280,7 +281,7 @@ lit_update_menu() {
     //gfx_push_text_center_aligned(gfx, &lit->assets, menu->font, str8_from_lit("menu"), rgba_set(1.f, 1.f, 1.f, 1.f), LIT_WIDTH/2, LIT_HEIGHT/2, 128.f);
 
     //inspector_add_u32(&lit->inspector, str8_from_lit("num"), &menu->current_level_selection);
-    gfx_advance_depth(gfx);
+    app_advance_depth(app);
 
   }
 
@@ -291,7 +292,7 @@ lit_update_menu() {
   {
     f32_t alpha = menu->overlay_timer/LIT_MENU_TRANSITION_DURATION;
     gfx_push_asset_sprite(gfx, &lit->assets, menu->blank_sprite, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), rgba_set(0.f, 0.f, 0.f, alpha));
-    gfx_advance_depth(gfx);
+    app_advance_depth(app);
   }
 #endif
 

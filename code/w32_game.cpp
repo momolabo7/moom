@@ -41,7 +41,7 @@ profiler_t* profiler = &_profiler;
 #include <stdio.h>
 
 static 
-app_debug_log_i(w32_log_proc) 
+app_debug_log_sig(w32_log_proc) 
 {
   char buffer[256] = {0};
   va_list args;
@@ -299,41 +299,6 @@ w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {
   c->free_files[c->free_file_count++] = f->cabinet_index;
 }
 
-static 
-app_allocate_memory_i(w32_allocate_memory)
-{
-  usz_t aligned_size = align_up_pow2(size, 16);
-  usz_t padding_for_alignment = aligned_size - size;
-  usz_t total_size = size + padding_for_alignment + sizeof(w32_memory_t);
-  usz_t base_offset = sizeof(w32_memory_t);
-
-  auto* block = (w32_memory_t*)
-    VirtualAllocEx(GetCurrentProcess(),
-                   0, 
-                   total_size,
-                   MEM_RESERVE | MEM_COMMIT, 
-                   PAGE_READWRITE);
-  if (!block) return nullptr;
-
-  block->memory = (u8_t*)block + base_offset; 
-  block->size = size;
-
-  w32_memory_t* sentinel = &w32_state.memory_sentinel;
-  cll_append(sentinel, block);
-
-  return block->memory;
-
-}
-
-static
-app_free_memory_i(w32_free_memory) {
-  if (ptr) {
-    auto* memory_block = (w32_memory_t*)(ptr);
-    cll_remove(memory_block);
-    VirtualFree(memory_block, 0, MEM_RELEASE);
-  }
-}
-
 static void
 w32_free_all_memory() {
   w32_memory_t* sentinel = &w32_state.memory_sentinel; 
@@ -448,115 +413,6 @@ w32_free_memory_from_arena(arena_t* a) {
 }
 
 
-static 
-app_open_file_i(w32_open_file)
-{
-  // Opening the file
-  DWORD access_flag = {};
-  DWORD creation_disposition = {};
-  switch (file_access) {
-    case APP_FILE_ACCESS_READ: {
-      access_flag = GENERIC_READ;
-      creation_disposition = OPEN_EXISTING;
-    } break;
-    case APP_FILE_ACCESS_OVERWRITE: {
-      access_flag = GENERIC_WRITE;
-      creation_disposition = CREATE_ALWAYS;
-    } break;
-    /*
-    case Platform_File_Access_Modify: {
-      access_flag = GENERIC_READ | GENERIC_WRITE;
-      creation_disposition = OPEN_ALWAYS;
-    } break;
-    */
-    
-  }
-  
-  HANDLE handle = CreateFileA(filename,
-                              access_flag,
-                              FILE_SHARE_READ,
-                              0,
-                              creation_disposition,
-                              0,
-                              0) ;
-  if (handle == INVALID_HANDLE_VALUE) {
-    file->data = nullptr;
-    return false;
-  }
-  else {
-    
-    w32_file_t* w32_file = w32_get_next_free_file(&w32_state.file_cabinet);
-    assert(w32_file);
-    w32_file->handle = handle;
-    
-    file->data = w32_file;
-    return true;
-  }
-}
-
-static 
-app_close_file_i(w32_close_file)
-{
-  w32_file_t* w32_file = (w32_file_t*)file->data;
-  CloseHandle(w32_file->handle);
-  
-  w32_return_file(&w32_state.file_cabinet, w32_file);
-  file->data = nullptr;
-}
-
-static 
-app_read_file_i(w32_read_file)
-{ 
-  w32_file_t* w32_file = (w32_file_t*)file->data;
-  
-  // Reading the file
-  OVERLAPPED overlapped = {};
-  overlapped.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
-  overlapped.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
-  
-  DWORD bytes_read;
-  
-  if(ReadFile(w32_file->handle, dest, (DWORD)size, &bytes_read, &overlapped) &&
-     (DWORD)size == bytes_read) 
-  {
-    return true;
-  }
-  else {
-    return false;
-  }
-}
-
-static  
-app_write_file_i(w32_write_file)
-{
-  w32_file_t* w32_file = (w32_file_t*)file->data;
-  
-  OVERLAPPED overlapped = {};
-  overlapped.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
-  overlapped.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
-  
-  DWORD bytes_wrote;
-  if(WriteFile(w32_file->handle, src, (DWORD)size, &bytes_wrote, &overlapped) &&
-     (DWORD)size == bytes_wrote) 
-  {
-    return true;
-  }
-  else {
-    return false;
-  }
-}
-
-static 
-app_add_task_i(w32_add_task)
-{
-  w32_add_task_entry(&w32_state.work_queue, callback, data);
-}
-
-static 
-app_complete_all_tasks_i(w32_complete_all_tasks) 
-{
-  w32_complete_all_tasks_entries(&w32_state.work_queue);
-}
 
 
 
@@ -584,7 +440,6 @@ w32_vkeys_to_app_button_code(u32_t code) {
     }
 
   }
-  
   return APP_BUTTON_CODE_UNKNOWN;
 }
 
@@ -731,24 +586,24 @@ w32_set_game_dims(f32_t width, f32_t height) {
 }
 
 static 
-app_show_cursor_i(w32_show_cursor)
+app_show_cursor_sig(w32_show_cursor)
 {
   while(ShowCursor(1) < 0);
 }
 
 static  
-app_hide_cursor_i(w32_hide_cursor) {
+app_hide_cursor_sig(w32_hide_cursor) {
   while(ShowCursor(0) >= 0);
 }
 
 static 
-app_lock_cursor_i(w32_lock_cursor) {
+app_lock_cursor_sig(w32_lock_cursor) {
   w32_state.is_cursor_locked = true;
   GetCursorPos(&w32_state.cursor_pt_to_lock_to);
 }
 
 static 
-app_unlock_cursor_i(w32_unlock_cursor) {
+app_unlock_cursor_sig(w32_unlock_cursor) {
   w32_state.is_cursor_locked = false;
 }
 
@@ -775,7 +630,196 @@ w32_window_callback(HWND window,
   return result;
 }
 
+// 
+// App function definitions
+//
 
+static 
+app_open_file_sig(w32_open_file)
+{
+  // Opening the file
+  DWORD access_flag = {};
+  DWORD creation_disposition = {};
+  switch (file_access) {
+    case APP_FILE_ACCESS_READ: {
+      access_flag = GENERIC_READ;
+      creation_disposition = OPEN_EXISTING;
+    } break;
+    case APP_FILE_ACCESS_OVERWRITE: {
+      access_flag = GENERIC_WRITE;
+      creation_disposition = CREATE_ALWAYS;
+    } break;
+    /*
+    case Platform_File_Access_Modify: {
+      access_flag = GENERIC_READ | GENERIC_WRITE;
+      creation_disposition = OPEN_ALWAYS;
+    } break;
+    */
+    
+  }
+  
+  HANDLE handle = CreateFileA(filename,
+                              access_flag,
+                              FILE_SHARE_READ,
+                              0,
+                              creation_disposition,
+                              0,
+                              0) ;
+  if (handle == INVALID_HANDLE_VALUE) {
+    file->data = nullptr;
+    return false;
+  }
+  else {
+    
+    w32_file_t* w32_file = w32_get_next_free_file(&w32_state.file_cabinet);
+    assert(w32_file);
+    w32_file->handle = handle;
+    
+    file->data = w32_file;
+    return true;
+  }
+}
+
+static 
+app_close_file_sig(w32_close_file)
+{
+  w32_file_t* w32_file = (w32_file_t*)file->data;
+  CloseHandle(w32_file->handle);
+  
+  w32_return_file(&w32_state.file_cabinet, w32_file);
+  file->data = nullptr;
+}
+
+static 
+app_read_file_sig(w32_read_file)
+{ 
+  w32_file_t* w32_file = (w32_file_t*)file->data;
+  
+  // Reading the file
+  OVERLAPPED overlapped = {};
+  overlapped.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
+  overlapped.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
+  
+  DWORD bytes_read;
+  
+  if(ReadFile(w32_file->handle, dest, (DWORD)size, &bytes_read, &overlapped) &&
+     (DWORD)size == bytes_read) 
+  {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+static  
+app_write_file_sig(w32_write_file)
+{
+  w32_file_t* w32_file = (w32_file_t*)file->data;
+  
+  OVERLAPPED overlapped = {};
+  overlapped.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
+  overlapped.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
+  
+  DWORD bytes_wrote;
+  if(WriteFile(w32_file->handle, src, (DWORD)size, &bytes_wrote, &overlapped) &&
+     (DWORD)size == bytes_wrote) 
+  {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+static 
+app_add_task_sig(w32_add_task)
+{
+  w32_add_task_entry(&w32_state.work_queue, callback, data);
+}
+
+static 
+app_complete_all_tasks_sig(w32_complete_all_tasks) 
+{
+  w32_complete_all_tasks_entries(&w32_state.work_queue);
+}
+
+static 
+app_allocate_memory_sig(w32_allocate_memory)
+{
+  usz_t aligned_size = align_up_pow2(size, 16);
+  usz_t padding_for_alignment = aligned_size - size;
+  usz_t total_size = size + padding_for_alignment + sizeof(w32_memory_t);
+  usz_t base_offset = sizeof(w32_memory_t);
+
+  auto* block = (w32_memory_t*)
+    VirtualAllocEx(GetCurrentProcess(),
+                   0, 
+                   total_size,
+                   MEM_RESERVE | MEM_COMMIT, 
+                   PAGE_READWRITE);
+  if (!block) return nullptr;
+
+  block->memory = (u8_t*)block + base_offset; 
+  block->size = size;
+
+  w32_memory_t* sentinel = &w32_state.memory_sentinel;
+  cll_append(sentinel, block);
+
+  return block->memory;
+
+}
+
+static
+app_free_memory_sig(w32_free_memory) {
+  if (ptr) {
+    auto* memory_block = (w32_memory_t*)(ptr);
+    cll_remove(memory_block);
+    VirtualFree(memory_block, 0, MEM_RELEASE);
+  }
+}
+
+static
+app_set_view_sig(w32_set_view) {
+  gfx_t* gfx = w32_state.app->gfx;
+  gfx_set_view(gfx, min_x, max_x, min_y, max_y, pos_x, pos_y); 
+}
+
+static
+app_clear_canvas_sig(w32_clear_canvas) {
+  gfx_t* gfx = w32_state.app->gfx;
+  gfx_clear_colors(gfx, color); 
+}
+
+static
+app_draw_sprite_sig(w32_draw_sprite) {
+  gfx_t* gfx = w32_state.app->gfx;
+  gfx_push_sprite(gfx, color, pos, size, anchor, texture_index, texel_x0, texel_y0, texel_x1, texel_y1 ); 
+}
+
+static 
+app_draw_rect_sig(w32_draw_rect) {
+  gfx_t* gfx = w32_state.app->gfx;
+  gfx_draw_filled_rect(gfx,color, pos, rot, scale);
+}
+
+static 
+app_draw_tri_sig(w32_draw_tri) {
+  gfx_t* gfx = w32_state.app->gfx;
+  gfx_draw_filled_triangle(gfx,color, p0, p1, p2);
+}
+
+
+static 
+app_advance_depth_sig(w32_advance_depth) {
+  gfx_t* gfx = w32_state.app->gfx;
+  gfx_advance_depth(gfx);
+}
+
+
+//
+// Entry Point
+//
 int CALLBACK
 WinMain(HINSTANCE instance, 
         HINSTANCE prev_instance, 
@@ -801,7 +845,13 @@ WinMain(HINSTANCE instance,
   app.read_file = w32_read_file;
   app.write_file = w32_write_file;
   app.close_file = w32_close_file;
-  
+  app.set_view = w32_set_view;
+  app.clear_canvas = w32_clear_canvas;
+  app.draw_sprite = w32_draw_sprite;
+  app.draw_rect =  w32_draw_rect;
+  app.draw_tri = w32_draw_tri;
+  app.advance_depth = w32_advance_depth;
+
   //
   // Initialize w32 state
   //
@@ -814,6 +864,8 @@ WinMain(HINSTANCE instance,
     // initialize the circular linked list
     w32_state.memory_sentinel.next = &w32_state.memory_sentinel;    
     w32_state.memory_sentinel.prev = &w32_state.memory_sentinel;    
+
+    w32_state.app = &app;
 
     if (!w32_init_work_queue(&w32_state.work_queue, 8)) {
       return 1;

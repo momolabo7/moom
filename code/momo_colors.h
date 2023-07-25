@@ -1,6 +1,5 @@
 // Authors: Gerald Wong, momodevelop
 // 
-// This file contains implementation of a simple linear memory allocator.
 //
 // Notes:
 // - While there could be several representation of colors,

@@ -1,5 +1,5 @@
-#ifndef WIN_H
-#define WIN_H
+#ifndef W32_GAME_H
+#define W32_GAME_H
 
 struct w32_memory_t {
   void* memory;
@@ -67,7 +67,9 @@ struct w32_state_t {
   HWND window;
 
   w32_memory_t memory_sentinel;
+  app_t* app;
 };
+
 static w32_state_t w32_state;
 
 

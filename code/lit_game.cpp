@@ -143,7 +143,7 @@ lit_game_update()
   //
 
   // This is the default and happier blend mode
-  gfx_set_blend_alpha(gfx);
+  app_set_blend_alpha(app);
 
 
   lit_profile_begin(rendering);
@@ -157,7 +157,7 @@ lit_game_update()
   }
   lit_game_render_lights(g);
 
-  gfx_set_blend_alpha(gfx);
+  app_set_blend_alpha(app);
 
   if (!lit_game_is_exiting(g)) {
     lit_game_render_sensors(g); 
@@ -167,23 +167,23 @@ lit_game_update()
   // Draw the overlay for fade in/out
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->stage_fade_timer);
-    gfx_push_asset_sprite(gfx, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    gfx_advance_depth(gfx);
+    app_draw_asset_sprite(app, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    app_advance_depth(app);
   }
 
   // Overlay for pause fade
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->exit_fade);
-    gfx_push_asset_sprite(gfx, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    gfx_advance_depth(gfx);
+    app_draw_asset_sprite(app, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    app_advance_depth(app);
   }
 
   // Draw the overlay for white flash
   {
     f32_t alpha = g->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
     rgba_t color = rgba_set(1.f, 1.f, 1.f, alpha);
-    gfx_push_asset_sprite(gfx, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    gfx_advance_depth(gfx);
+    app_draw_asset_sprite(app, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    app_advance_depth(app);
   }
 
 
@@ -199,8 +199,8 @@ lit_game_update()
     f32_t title_x = cur_wp->x + a * (next_wp->x - cur_wp->x); 
     rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
 
-    gfx_push_text_center_aligned(gfx, &lit->assets, ASSET_FONT_ID_DEFAULT, g->title, color, title_x, LIT_HEIGHT/2, 128.f);
-    gfx_advance_depth(gfx);
+    app_draw_text_center_aligned(app, &lit->assets, ASSET_FONT_ID_DEFAULT, g->title, color, title_x, LIT_HEIGHT/2, 128.f);
+    app_advance_depth(app);
 
   }
   lit_profile_end(rendering);

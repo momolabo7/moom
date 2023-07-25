@@ -29,8 +29,8 @@ lit_splash_update() {
 
   f32_t y = LIT_HEIGHT/2 + 100.f;
 
-  gfx_push_text_center_aligned(
-      gfx, 
+  app_draw_text_center_aligned(
+      app, 
       &lit->assets, 
       font, 
       str8_from_lit("--------"), 
@@ -38,8 +38,8 @@ lit_splash_update() {
       LIT_WIDTH/2, y, 
       128.f);
   y -= 70;
-  gfx_push_text_center_aligned(
-      gfx, 
+  app_draw_text_center_aligned(
+      app, 
       &lit->assets, 
       font,
       str8_from_lit("PRIMIX"), 
@@ -48,8 +48,8 @@ lit_splash_update() {
       128.f);
 
   y -= 70;
-  gfx_push_text_center_aligned(
-      gfx, 
+  app_draw_text_center_aligned(
+      app, 
       &lit->assets, 
       font,
       str8_from_lit("--------"), 
@@ -71,8 +71,8 @@ lit_splash_update() {
 
   f32_t scroll_y = (alpha)*LIT_SPLASH_SCROLL_POS_Y_END + (1.f-alpha)*LIT_SPLASH_SCROLL_POS_Y_START; 
   rgba_t grey = rgba_set(0.7f, 0.7f, 0.7f, 1.f); 
-  gfx_push_text_center_aligned(
-      gfx, 
+  app_draw_text_center_aligned(
+      app, 
       &lit->assets, 
       font,
       str8_from_lit("a silly game by"), 
@@ -81,15 +81,15 @@ lit_splash_update() {
       36.f);
 
   scroll_y -= 60.f;
-  gfx_push_text_center_aligned(
-      gfx, 
+  app_draw_text_center_aligned(
+      app, 
       &lit->assets, 
       font,
       str8_from_lit("momohoudai"), 
       grey,
       LIT_WIDTH/2, scroll_y, 
       72.f);
-  gfx_advance_depth(gfx);
+  app_advance_depth(app);
 
 
   if (splash->timer <= 0.f) {

@@ -49,12 +49,12 @@ profiler_update_and_render()
   const f32_t font_height = 20.f;
 
   // Overlay
-  gfx_push_asset_sprite(
-      gfx, assets, lit->blank_sprite, 
+  app_draw_asset_sprite(
+      app, assets, lit->blank_sprite, 
       v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(0.f, 0.f, 0.f, 0.5f));
-  gfx_advance_depth(gfx);
+  app_advance_depth(app);
   
   u32_t line_num = 1;
   
@@ -98,14 +98,14 @@ profiler_update_and_render()
                  (u32_t)hits.average,
                  (u32_t)cycles_per_hit.average);
     
-    gfx_push_text(gfx, assets, lit->debug_font, 
-                          sb->str,
-                          rgba_hex(0xFFFFFFFF),
-                          0.f, 
-                          render_height - font_height * (line_num), 
-                          font_height);
-    gfx_advance_depth(gfx);
-    
+    app_draw_text(app, assets, lit->debug_font, 
+        sb->str,
+        rgba_hex(0xFFFFFFFF),
+        0.f, 
+        render_height - font_height * (line_num), 
+        font_height);
+    app_advance_depth(app);
+
     
     // Draw graph
     for (u32_t snapshot_index = 0;
@@ -124,9 +124,9 @@ profiler_update_and_render()
         render_height - font_height * (line_num) + font_height/4);
 
       v2f_t size = v2f_set(snapshot_bar_width, snapshot_bar_height);
-      gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, pos, size, rgba_hex(0x00FF00FF));
+      app_draw_asset_sprite(app, assets, lit->blank_sprite, pos, size, rgba_hex(0x00FF00FF));
     }
-    gfx_advance_depth(gfx);
+    app_advance_depth(app);
     ++line_num;
   }
 }

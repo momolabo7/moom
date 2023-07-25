@@ -9,8 +9,8 @@ lit_credits_push_subtitle_and_name(
     f32_t y, str8_t subtitle, str8_t name)
 {
   lit_credits_t* credits = &lit->credits;
-  gfx_push_text_center_aligned(
-      gfx, 
+  app_draw_text_center_aligned(
+      app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       subtitle,
@@ -18,8 +18,8 @@ lit_credits_push_subtitle_and_name(
       LIT_WIDTH/2, y, 
       48.f);
   y -= 50.f;
-  gfx_push_text_center_aligned(
-      gfx, 
+  app_draw_text_center_aligned(
+      app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       name,
@@ -53,8 +53,8 @@ lit_credits_update() {
   //
   
   // Title
-  gfx_push_text_center_aligned(
-      gfx, 
+  app_draw_text_center_aligned(
+      app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       str8_from_lit("THANKS"), 
@@ -62,8 +62,8 @@ lit_credits_update() {
       LIT_WIDTH/2, y, 
       96.f);
   y -= 96.f;
-  gfx_push_text_center_aligned(
-      gfx, 
+  app_draw_text_center_aligned(
+      app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       str8_from_lit("FOR"), 
@@ -71,8 +71,8 @@ lit_credits_update() {
       LIT_WIDTH/2, y, 
       96.f);
   y-=96.f;
-  gfx_push_text_center_aligned(
-      gfx, 
+  app_draw_text_center_aligned(
+      app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       str8_from_lit("PLAYING!"), 
@@ -82,8 +82,8 @@ lit_credits_update() {
   y -= LIT_HEIGHT - 100.f;
 
 
-  gfx_push_text_center_aligned(
-      gfx, 
+  app_draw_text_center_aligned(
+      app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       str8_from_lit("--------"), 
@@ -92,8 +92,8 @@ lit_credits_update() {
       128.f);
 
   y -= 70;
-  gfx_push_text_center_aligned(
-      gfx, 
+  app_draw_text_center_aligned(
+      app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       str8_from_lit("PRIMIX"), 
@@ -102,8 +102,8 @@ lit_credits_update() {
       128.f);
 
   y -= 70;
-  gfx_push_text_center_aligned(
-      gfx, 
+  app_draw_text_center_aligned(
+      app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       str8_from_lit("--------"), 

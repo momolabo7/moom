@@ -4,7 +4,7 @@ lit_update_and_render_console()
 {
   console_t* console = &lit->console;
   assets_t* assets = &lit->assets;
-  app_input_characters_t characters = app_input_get_characters(app);
+  app_input_characters_t characters = app_get_input_characters(app);
 
   for (u32_t char_index = 0; 
        char_index < characters.count;
@@ -41,16 +41,17 @@ lit_update_and_render_console()
   v2f_t input_area_size = v2f_set(console_width, line_height);
   v2f_t input_area_pos = v2f_set(console_width/2, line_height/2);
   
-  gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, 
-                          v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
-                          v2f_set(LIT_WIDTH, LIT_HEIGHT),
-                          rgba_set(0.f, 0.f, 0.f, 0.8f));
-  gfx_advance_depth(gfx);
+  app_draw_asset_sprite(
+      app, assets, lit->blank_sprite, 
+      v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
+      v2f_set(LIT_WIDTH, LIT_HEIGHT),
+      rgba_set(0.f, 0.f, 0.f, 0.8f));
+  app_advance_depth(app);
   
-  gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
-  gfx_advance_depth(gfx);
-  gfx_push_asset_sprite(gfx, assets, lit->blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
-  gfx_advance_depth(gfx);
+  app_draw_asset_sprite(app, assets, lit->blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
+  app_advance_depth(app);
+  app_draw_asset_sprite(app, assets, lit->blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
+  app_advance_depth(app);
   
   
   // Draw info text
@@ -59,22 +60,23 @@ lit_update_and_render_console()
        ++line_index)
   {
     sb8_t* line = console->info_lines + line_index;
-    
-    gfx_push_text(gfx, assets, lit->debug_font,
-                          line->str,
-                          rgba_hex(0xFFFFFFFF),
-                          left_pad, 
-                          line_height * (line_index+1) + font_bottom_pad,
-                          font_height);
+
+    app_draw_text(
+        app, assets, lit->debug_font,
+        line->str,
+        rgba_hex(0xFFFFFFFF),
+        left_pad, 
+        line_height * (line_index+1) + font_bottom_pad,
+        font_height);
     
   }
 
-  gfx_advance_depth(gfx);
-  gfx_push_text(gfx, assets, lit->debug_font,
-                        console->input_line.str,
-                        rgba_hex(0xFFFFFFFF),
-                        left_pad, 
-                        font_bottom_pad,
-                        font_height);
-  gfx_advance_depth(gfx);
+  app_advance_depth(app);
+  app_draw_text(app, assets, lit->debug_font,
+      console->input_line.str,
+      rgba_hex(0xFFFFFFFF),
+      left_pad, 
+      font_bottom_pad,
+      font_height);
+  app_advance_depth(app);
 }

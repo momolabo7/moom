@@ -183,6 +183,9 @@ typedef size_t    usz_t; // Can contain up to the highest indexable value
 //
 // Buffer: a piece of memory
 //
+// USAGE: 
+//   Check for invalid buffer with if(!buffer_variable)
+//
 struct buffer_t {
   union {
     void* data;
@@ -190,10 +193,19 @@ struct buffer_t {
   };
   usz_t size;
 
-  operator bool() {
-    return data != nullptr;
-  }
+  operator bool(); 
 };
+
+static buffer_t 
+buffer(void* mem, usz_t size) {
+  return buffer_t{ mem, size };
+}
+
+static 
+buffer_t::operator bool() {
+{
+    return data != nullptr;
+}
 
 
 //
@@ -233,22 +245,8 @@ struct buffer_t {
 #define GOLD_64 (1.61803398875)
 
 
-//
-// Buffer 
-//
-static buffer_t 
-buffer(void* mem, usz_t size) {
-  buffer_t ret;
-  ret.data = mem;
-  ret.size = size;
-  return ret;
-}
-
-
-// 
-// F32
-//
-static f32_t _F32_INFINITY() {
+static f32_t 
+_F32_INFINITY() {
   // NOTE(Momo): Use 'type pruning'
   // Infinity is when bits 1-8 are on
   union { f32_t f; u32_t u; } ret = {};
@@ -395,17 +393,17 @@ umi_to_ptr(umi_t u) {
 #define ascii_to_digit(a) ((a) - '0')
 
 static b32_t
-is_whitespace(char c) {
+is_whitespace(c8_t c) {
   return c == ' ' || c == '\n' || c == '\r' || c == '\t';
 }
 
 static b32_t
-is_alpha(char c) {
+is_alpha(c8_t c) {
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
 static b32_t
-is_digit(char c) {
+is_digit(c8_t c) {
   return (c >= '0' && c <= '9');
   // this gets compiled to (uint8_t)(c - '0') <= 9 on all decent compilers
 }
@@ -1510,9 +1508,8 @@ cstr_itoa(c8_t* dest, s32_t num) {
   cstr_reverse(dest);
 }
 
-//
+
 //IEEE floating point functions 
-//
 static b32_t 
 is_close_f32(f32_t lhs, f32_t rhs) {
   return f32_abs(lhs - rhs) <= F32_EPSILON;

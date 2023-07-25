@@ -48,7 +48,6 @@
 #include "game.h"
 
 static app_t* app; 
-static gfx_t* gfx; 
 
 
 #include "lit_splash.h"

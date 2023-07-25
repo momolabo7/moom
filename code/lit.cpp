@@ -20,7 +20,7 @@ lit_tick() {
     void* asset_memory = app_allocate_memory(app, asset_memory_size);
     if (asset_memory == nullptr) return false;
     arena_init(&lit->asset_arena, asset_memory, asset_memory_size);
-    assets_init(&lit->assets, app, gfx, LIT_ASSET_FILE, &lit->asset_arena);
+    assets_init(&lit->assets, app, LIT_ASSET_FILE, &lit->asset_arena);
 
 
     //
@@ -42,7 +42,7 @@ lit_tick() {
     arena_init(&lit->mode_arena, mode_memory, mode_memory_size);
 
     app_set_design_dimensions(app, LIT_WIDTH, LIT_HEIGHT);
-    gfx_set_view(gfx, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
+    app_set_view(app, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
     //
     // Check save data
@@ -123,7 +123,7 @@ lit_tick() {
 }
 
 exported 
-game_init_i(game_init) 
+game_init_sig(game_init) 
 {
   game_init_config_t ret;
   ret.texture_queue_size = megabytes(100);
@@ -134,10 +134,8 @@ game_init_i(game_init)
 }
 
 exported 
-game_update_and_render_i(game_update_and_render) 
+game_update_and_render_sig(game_update_and_render) 
 { 
-  app = a;
-  gfx = app->gfx;
-  
+  app = in_app;
   lit_tick();
 }

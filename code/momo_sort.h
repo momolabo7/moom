@@ -11,8 +11,6 @@ struct sort_entry_t {
 static void quicksort(sort_entry_t* entries, u32_t entry_count);
 
 
-
-
 //
 //IMPLEMENTATION
 //

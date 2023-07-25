@@ -1,10 +1,6 @@
 engine
   - Finish debugger, and create a arena tracker. THEN come up with how to deal with memory allocation in general.  
-  - Consider removeing moe_asset_types from karu.h and maybe even moe_assets
   - Expandable arena for platform, instead of just calling VirtualAlloc every time
-
-lit
-  - Extract the whole lighting thing into a system of it's own with callbacks
 
 
 assets 

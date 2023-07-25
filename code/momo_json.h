@@ -9,7 +9,6 @@ struct json_key_t {
   umi_t count;
 };
 
-
 // Represents a JSON array, which is a linked list
 // of nodes containing more values.
 struct json_array_node_t;
@@ -17,8 +16,6 @@ struct json_array_t {
   json_array_node_t* head;
   json_array_node_t* tail;
 };
-
-
 
 // Represents a JSON element, which is a string.
 struct json_element_t {

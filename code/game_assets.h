@@ -28,12 +28,12 @@ struct asset_font_glyph_t {
   f32_t horizontal_advance;
   f32_t vertical_advance;
 
-  // TODO: this should be in font
-  asset_bitmap_id_t bitmap_asset_id;
-
 };
 
 struct asset_font_t {
+  // TODO: this should be in font
+  asset_bitmap_id_t bitmap_asset_id;
+
   u32_t highest_codepoint;
   u16_t* codepoint_map;
 
@@ -66,9 +66,8 @@ assets_get_next_texture_handle() {
 }
 
 
-// TODO: Is there a way not to pass pf and gfx?
 static b32_t 
-assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, arena_t* arena) 
+assets_init(assets_t* assets, app_t* app, const char* filename, arena_t* arena) 
 {
   make(app_file_t, file);
   if(!app_open_file(
@@ -125,7 +124,7 @@ assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, aren
     b->height = file_bitmap.height;
 
     u32_t bitmap_size = b->width * b->height * 4;
-    gfx_texture_payload_t* payload = gfx_begin_texture_transfer(gfx, bitmap_size);
+    gfx_texture_payload_t* payload = gfx_begin_texture_transfer(app->gfx, bitmap_size);
     if (!payload) false;
     payload->texture_index = b->renderer_texture_handle;
     payload->texture_width = file_bitmap.width;
@@ -160,6 +159,9 @@ assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, aren
     f32_t* kernings = arena_push_arr(f32_t, arena, glyph_count*glyph_count);
     if (!kernings) return false;
 
+    f->bitmap_asset_id = (asset_bitmap_id_t)file_font.bitmap_asset_id;
+
+
     umi_t current_data_offset = file_font.offset_to_data;
     for(u16_t glyph_index = 0; 
         glyph_index < glyph_count;
@@ -183,7 +185,6 @@ assets_init(assets_t* assets, app_t* app, gfx_t* gfx, const char* filename, aren
       glyph->texel_x1 = file_glyph.texel_x1;
       glyph->texel_y1 = file_glyph.texel_y1;
 
-      glyph->bitmap_asset_id = (asset_bitmap_id_t)file_font.bitmap_asset_id;
 
       glyph->box_x0 = file_glyph.box_x0;
       glyph->box_y0 = file_glyph.box_y0;

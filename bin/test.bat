@@ -15,7 +15,7 @@ SET CommonCompilerFlags=-DENABLE_ASSERTS  %CommonCompilerFlags%
 pushd %BuildDir%
 cl %CommonCompilerFlags% %CodeDir%\test.cpp
 
-test.exe
+call test.exe
 
 popd
 
