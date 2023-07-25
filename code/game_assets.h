@@ -1,7 +1,6 @@
 #ifndef ASSETS_H
 #define ASSETS_H
 
-#include "lit_asset_types.h"
 
 struct asset_bitmap_t {
   u32_t renderer_texture_handle;
