@@ -44,7 +44,7 @@
 #define lit_profile_begin(name) profiler_begin_block(app->profiler, name)
 #define lit_profile_end(name) profiler_end_block(app->profiler, name)
 
-#include "momo2.h"
+#include "momo.h"
 #include "lit_asset_types.h"
 #include "game.h"
 

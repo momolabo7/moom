@@ -192,9 +192,10 @@ meta_next_token(meta_tokenizer_t* t) {
   else if (meta_current_char(t) == '#') {
     ret.type = META_TOKEN_TYPE_MACRO;
     // ignore the whole line
-    // TODO: include multi line macros
     b32_t continues_to_next_line = false;
-    while(t->text[t->at] != '\n' && t->text[t->at] != '\r') {
+    for (;;);
+    while(t->text[t->at] != '\n' && t->text[t->at] != '\r') 
+    {
       meta_advance(t);
     }
     ret.ope = t->at;
