@@ -28,17 +28,3 @@
 #endif //MOMO_H
 
 
-//
-// JOURNAL
-//
-// = 2023-07-22 =
-//   I kind of have a brainfart and hated myself for only thinking about this
-//   after 18 whooping years of programming.
-//
-//   It might be a LOT better for organizational purposes to just have a  
-//   single header file with ALL declarations and defines, THEN multiple 
-//   other files that implement function definitions. 
-//
-//   This would avoid ALL problems regarding 'organizing' declarations/definition.
-//   I mean, C isn't meant to be organized that way anyways.
-//   

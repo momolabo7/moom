@@ -22,7 +22,7 @@
 #undef near
 #undef far
 
-#include "momo.h"
+#include "momo2.h"
 #include "game.h"
 #include "w32_game.h"
 

@@ -14,6 +14,7 @@ enum meta_token_type_t {
 
 
   META_TOKEN_TYPE_IDENTIFIER,
+  META_TOKEN_TYPE_KEYWORD,
   META_TOKEN_TYPE_STRING,
   META_TOKEN_TYPE_NUMBER,
   META_TOKEN_TYPE_MACRO,
@@ -89,6 +90,43 @@ meta_tokenizer_init(meta_tokenizer_t* t, const char* filename) {
   return false;
 }
 
+static b32_t
+meta_compare_token_with_string(meta_tokenizer_t* t, meta_token_t token, str8_t str) {
+  if( str.count != (token.ope - token.begin)) {
+    return false;
+  }
+
+  for(u32_t i = 0; i < str.count; ++i) {
+    if (str.e[i] != t->text[token.begin+i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+static b32_t
+meta_is_keyword(meta_tokenizer_t* t, meta_token_t token) {
+  static str8_t keywords[] = {
+    str8_from_lit("if"),
+    str8_from_lit("else"),
+    str8_from_lit("switch"),
+    str8_from_lit("case"),
+    str8_from_lit("default"),
+    str8_from_lit("while"),
+    str8_from_lit("for"),
+    str8_from_lit("if"),
+    str8_from_lit("operator"),
+  };
+  for_arr(i, keywords) {
+    if (meta_compare_token_with_string(t, token, keywords[i]))
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
 static void 
 meta_tokenizer_free(meta_tokenizer_t* t) {
   free(t->text);
@@ -144,14 +182,18 @@ meta_next_token(meta_tokenizer_t* t) {
            meta_current_char(t) == '*' ||
            meta_current_char(t) == '/' ||
            meta_current_char(t) == '%' ||
-           meta_current_char(t) == ',') 
+           meta_current_char(t) == ',' ||
+           meta_current_char(t) == '.')
   {
     ret.type = META_TOKEN_TYPE_OPERATOR; 
     meta_advance(t);
   }
+
   else if (meta_current_char(t) == '#') {
     ret.type = META_TOKEN_TYPE_MACRO;
-    //ignore the whole line
+    // ignore the whole line
+    // TODO: include multi line macros
+    b32_t continues_to_next_line = false;
     while(t->text[t->at] != '\n' && t->text[t->at] != '\r') {
       meta_advance(t);
     }
@@ -185,7 +227,14 @@ meta_next_token(meta_tokenizer_t* t) {
       meta_advance(t);
     }
     ret.ope = t->at;
-    ret.type = META_TOKEN_TYPE_IDENTIFIER;
+    
+    if (meta_is_keyword(t, ret)) {
+      ret.type = META_TOKEN_TYPE_KEYWORD;
+    }
+
+    else {
+      ret.type = META_TOKEN_TYPE_IDENTIFIER;
+    } 
   }
 
   else {
@@ -233,22 +282,40 @@ meta_print_token(meta_tokenizer_t* t, meta_token_t token)  {
   }
 }
 
-static b32_t
-meta_compare_token_with_string(meta_tokenizer_t* t, meta_token_t token, str8_t str) {
-  if( str.count != (token.ope - token.begin)) {
-    return false;
+
+static void 
+meta_is_function_approaching(meta_tokenizer_t* t) {
+  meta_tokenizer_t state = (*t);
+  meta_token_t token_a =  meta_next_token(t);
+  meta_token_t token_b =  meta_next_token(t);
+  meta_token_t token_c =  meta_next_token(t);
+  if (token_a.type == META_TOKEN_TYPE_IDENTIFIER &&
+      token_b.type == META_TOKEN_TYPE_IDENTIFIER &&
+      token_c.type == META_TOKEN_TYPE_OPEN_PAREN)
+  {
+#if 0
+    printf("Maybe we are a function: ");
+    printf("\n  ");
+    meta_print_token(t, token_a);
+    printf("\n  ");
+    meta_print_token(t, token_b);
+    printf("\n  ");
+    meta_print_token(t, token_c);
+    printf("\n");
+#else
+    printf("A function is approaching: ");
+    meta_print_token(t, token_b);
+    printf("\n");
+#endif
+
   }
 
-  for(u32_t i = 0; i < str.count; ++i) {
-    if (str.e[i] != t->text[token.begin+i]) {
-      return false;
-    }
-  }
+  // 
+  (*t) = state;
 
-  return true;
 }
 
-
+// In this program
 int main() {
   make(meta_tokenizer_t, t);
   if (!meta_tokenizer_init(t, "../code/momo2.h")){
@@ -258,9 +325,14 @@ int main() {
   defer { meta_tokenizer_free(t); };
 
   for(;;) {
+    meta_is_function_approaching(t);
+
     meta_token_t token = meta_next_token(t);
+#if 0
     meta_print_token(t, token);
     printf("\n");
+#endif
+
     if (token.type == META_TOKEN_TYPE_EOF) 
       break;
   } 
