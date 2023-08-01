@@ -1006,7 +1006,7 @@ lit_game_update_sensors(lit_game_t* g, f32_t dt)
     }
   }
 
-  inspector_add_u32(&lit->inspector, str8_from_lit("total_triangles"), total_triangles);
+  inspector_add_u32(&lit->inspector, st8_from_lit("total_triangles"), total_triangles);
 }
 
 

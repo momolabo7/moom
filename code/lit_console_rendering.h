@@ -13,12 +13,12 @@ lit_update_and_render_console()
     // NOTE(Momo): Not very portable to other platforms....
     u8_t c = characters.data[char_index];
     if (c >= 32 && c <= 126) {
-      sb8_push_u8(&console->input_line, c);
+      stb8_push_u8(&console->input_line, c);
     }
     // backspace 
     if (c == 8) {
       if (console->input_line.count > 0) 
-        sb8_pop(&console->input_line);
+        stb8_pop(&console->input_line);
     }    
     
     if (c == '\r') {
@@ -59,7 +59,7 @@ lit_update_and_render_console()
        line_index < array_count(console->info_lines);
        ++line_index)
   {
-    sb8_t* line = console->info_lines + line_index;
+    stb8_t* line = console->info_lines + line_index;
 
     app_draw_text(
         app, assets, lit->debug_font,

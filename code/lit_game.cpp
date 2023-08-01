@@ -5,7 +5,7 @@ lit_game_is_exiting(lit_game_t* g) {
 }
 
 static void
-lit_game_set_title(lit_game_t* g, str8_t str = str8_t{}) {
+lit_game_set_title(lit_game_t* g, st8_t str = st8_t{}) {
   g->title = str;
   g->title_timer = 0.f;
   g->title_wp_index = 0;

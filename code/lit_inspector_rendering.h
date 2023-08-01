@@ -21,17 +21,17 @@ inspector_update_and_render()
   for(u32_t entry_index = 0; entry_index < inspector->entry_count; ++entry_index)
   {
     f32_t line_height = 32.f;
-    sb8_make(sb, 256);
+    stb8_make(sb, 256);
 
 
     inspector_entry_t* entry = inspector->entries + entry_index;
     switch(entry->type){
       case INSPECTOR_ENTRY_TYPE_U32: {
-        sb8_push_fmt(sb, str8_from_lit("[%10S] %7u"),
+        stb8_push_fmt(sb, st8_from_lit("[%10S] %7u"),
             entry->name, entry->item_u32);
       } break;
       case INSPECTOR_ENTRY_TYPE_F32: {
-        sb8_push_fmt(sb, str8_from_lit("[%10S] %7f"),
+        stb8_push_fmt(sb, st8_from_lit("[%10S] %7f"),
             entry->name, entry->item_f32);
       } break;
     }

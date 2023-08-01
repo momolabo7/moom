@@ -1,3 +1,11 @@
+// 
+// DESCRIPTION
+//   This file contains the entirety of useful and (hopefully)
+//   portable functions and structures that are very useful for
+//   anything that I do in C/C++
+//
+
+
 #ifndef MOMO_H
 #define MOMO_H
 
@@ -287,14 +295,14 @@ struct arena_marker_t {
 //
 // MARK:(Strings Declarations)
 //
-struct str8_t {
+struct st8_t {
 	u8_t* e;
 	usz_t count;
 };
 
-struct sb8_t{
+struct stb8_t{
 	union {
-		str8_t str;
+		st8_t str;
 		struct {
 			u8_t* e;
 			usz_t count;
@@ -308,7 +316,7 @@ struct sb8_t{
 //
 struct stream_t {
   buffer_t contents;
-  umi_t pos;
+  usz_t pos;
 	
   // For bit reading
   u32_t bit_buffer;
@@ -419,7 +427,7 @@ struct json_element_t {
       u8_t* at;
       umi_t count;
     };
-    str8_t str;
+    st8_t str;
   };
 };
 
@@ -456,7 +464,7 @@ struct json_array_node_t {
 };
 struct json_t {
   // for tokenizing
-  str8_t text;
+  st8_t text;
   umi_t at;
 
   // The 'root' item in a JSON file is an object type.
@@ -967,53 +975,52 @@ static u32_t crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t
 // 
 // MARK:(Strings Signatures)
 //
-#define str8_from_lit(s) str8((u8_t*)(s), sizeof(s)-1)
-#define str8_lit(s) str8((u8_t*)(s), sizeof(s)-1)
-static str8_t str8(u8_t* str, usz_t size);
-static str8_t str8_substr(str8_t str, usz_t start, usz_t ope);
-static b32_t  str8_match(str8_t lhs, str8_t rhs);
-static str8_t str8_from_cstr(const char* cstr);
-static b32_t  str8_to_u32(str8_t s, u32_t* out);
-static b32_t  str8_to_f32(str8_t s, f32_t* out);
-static b32_t  str8_to_s32(str8_t s, s32_t* out);
-static b32_t  str8_range_to(u32_t* out);
-static b32_t  operator==(str8_t lhs, str8_t rhs);
-static b32_t  operator!=(str8_t lhs, str8_t rhs);
+#define st8_from_lit(s) st8((u8_t*)(s), sizeof(s)-1)
+#define st8_lit(s) st8((u8_t*)(s), sizeof(s)-1)
+static st8_t st8(u8_t* str, usz_t size);
+static st8_t st8_substr(st8_t str, usz_t start, usz_t ope);
+static b32_t  st8_match(st8_t lhs, st8_t rhs);
+static st8_t st8_from_cstr(const char* cstr);
+static smi_t  st8_compare_lexographically(st8_t lhs, st8_t rhs);
+static b32_t  st8_to_u32(st8_t s, u32_t* out);
+static b32_t  st8_to_f32(st8_t s, f32_t* out);
+static b32_t  st8_to_s32(st8_t s, s32_t* out);
+static b32_t  st8_range_to(u32_t* out);
 
-#define sb8_make(name, cap) \
+#define stb8_make(name, cap) \
   u8_t temp_buffer_##__LINE__[cap] = {0}; \
-  sb8_t name_; \
-  sb8_t* name = &name_; \
-  sb8_init(name, temp_buffer_##__LINE__, cap);
+  stb8_t name_; \
+  stb8_t* name = &name_; \
+  stb8_init(name, temp_buffer_##__LINE__, cap);
 
-static usz_t    sb8_remaining(sb8_t* b);
-static void     sb8_clear(sb8_t* b);
-static void     sb8_pop(sb8_t* b);
-static void     sb8_push_c8(sb8_t* b, c8_t num);
-static void     sb8_push_u8(sb8_t* b, u8_t num);
-static void     sb8_push_u32(sb8_t* b, u32_t num);
-static void     sb8_push_u64(sb8_t* b, u64_t num);
-static void     sb8_push_f32(sb8_t* b, f32_t value, u32_t precision);
-static void     sb8_push_s32(sb8_t* b, s32_t num);
-static void     sb8_push_s64(sb8_t* b, s64_t num);
-static void     sb8_push_str8(sb8_t* b, str8_t num);
-static void     sb8_push_hex_u8(sb8_t* b, u8_t num);
-static void     sb8_push_hex_u32(sb8_t* b, u32_t num);
-static void     sb8_push_fmt(sb8_t* b, str8_t fmt, ...);
-static void     sb8_init(sb8_t* b, u8_t* data, usz_t cap);
+static usz_t    stb8_remaining(stb8_t* b);
+static void     stb8_clear(stb8_t* b);
+static void     stb8_pop(stb8_t* b);
+static void     stb8_push_c8(stb8_t* b, c8_t num);
+static void     stb8_push_u8(stb8_t* b, u8_t num);
+static void     stb8_push_u32(stb8_t* b, u32_t num);
+static void     stb8_push_u64(stb8_t* b, u64_t num);
+static void     stb8_push_f32(stb8_t* b, f32_t value, u32_t precision);
+static void     stb8_push_s32(stb8_t* b, s32_t num);
+static void     stb8_push_s64(stb8_t* b, s64_t num);
+static void     stb8_push_st8(stb8_t* b, st8_t num);
+static void     stb8_push_hex_u8(stb8_t* b, u8_t num);
+static void     stb8_push_hex_u32(stb8_t* b, u32_t num);
+static void     stb8_push_fmt(stb8_t* b, st8_t fmt, ...);
+static void     stb8_init(stb8_t* b, u8_t* data, usz_t cap);
 
 //
 // MARK:(Stream Signatures)
 //
 #define stream_consume(t,s) (t*) stream_consume_block((s), sizeof(t))
 #define stream_write(s,item) stream_write_block((s), &(item), sizeof(item))
-static void   stream_init(stream_t* s, buffer_t contents);
-static void   stream_reset(stream_t* s);
-static b32_t  stream_is_eos(stream_t* s);
-static u8_t*  stream_consume_block(stream_t* s, umi_t amount);
-static void   stream_write_block(stream_t* s, void* src, umi_t size);
-static void   stream_flush_bits(stream_t* s);
-static u32_t  stream_consume_bits(stream_t* s, u32_t amount);
+static void     stream_init(stream_t* s, buffer_t contents);
+static void     stream_reset(stream_t* s);
+static b32_t    stream_is_eos(stream_t* s);
+static u8_t*    stream_consume_block(stream_t* s, usz_t amount);
+static void     stream_flush_bits(stream_t* s);
+static u32_t    stream_consume_bits(stream_t* s, u32_t amount);
+static void     stream_write_block(stream_t* s, void* src, usz_t size);
 
 //
 // MARK:(Arena Signatures)
@@ -1097,7 +1104,7 @@ static b32_t rp_pack(
 // MARK:(JSON Signatures)
 //
 static json_object_t* json_read(json_t* j, const u8_t* json_string, u32_t json_string_size, arena_t* ba);
-static json_value_t* json_get_value(json_object_t* j, str8_t key);
+static json_value_t* json_get_value(json_object_t* j, st8_t key);
 static b32_t json_is_true(json_value_t* val);
 static b32_t json_is_false(json_value_t* val);
 static b32_t json_is_null(json_value_t* val);
@@ -3870,23 +3877,23 @@ crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t* table) {
 //
 // MARK:(String Implementation)
 //
-static str8_t
-str8(u8_t* str, usz_t size) {
-	str8_t ret;
+static st8_t
+st8(u8_t* str, usz_t size) {
+	st8_t ret;
 	ret.e = str;
 	ret.count = size;
 	return ret;
 }
 
 
-static str8_t
-str8_from_cstr(const c8_t* cstr) {
+static st8_t
+st8_from_cstr(const c8_t* cstr) {
   return {(u8_t*)cstr, cstr_len(cstr)};
 }
 
-static str8_t 
-str8_substr(str8_t str, usz_t start, usz_t count) {
-	str8_t ret;
+static st8_t 
+st8_substr(st8_t str, usz_t start, usz_t count) {
+	st8_t ret;
 	ret.e = str.e + start;
 	ret.count = count;
 	
@@ -3894,7 +3901,7 @@ str8_substr(str8_t str, usz_t start, usz_t count) {
 }
 
 static b32_t
-str8_match(str8_t lhs, str8_t rhs) {
+st8_match(st8_t lhs, st8_t rhs) {
   if(lhs.count != rhs.count) {
     return false;
   }
@@ -3912,7 +3919,7 @@ str8_match(str8_t lhs, str8_t rhs) {
 // If an unmatched character is found at an index, it will return the 'difference' between those characters
 // If no unmatched character is found at an index, it will return the size different between the strings 
 static smi_t 
-str8_compare_lexographically(str8_t lhs, str8_t rhs) {
+st8_compare_lexographically(st8_t lhs, st8_t rhs) {
   for (usz_t i = 0; i < lhs.count && i < rhs.count; ++i) {
     if (lhs.e[i] == rhs.e[i]) continue;
     else {
@@ -3931,7 +3938,7 @@ str8_compare_lexographically(str8_t lhs, str8_t rhs) {
   
 }
 static b32_t 
-str8_to_u32_range(str8_t s, usz_t begin, usz_t ope, u32_t* out) {
+st8_to_u32_range(st8_t s, usz_t begin, usz_t ope, u32_t* out) {
   if (ope > s.count) return false;
 
   u32_t number = 0;
@@ -3949,7 +3956,7 @@ str8_to_u32_range(str8_t s, usz_t begin, usz_t ope, u32_t* out) {
 
 
 static b32_t 
-str8_to_s32_range(str8_t s, usz_t begin, usz_t ope, s32_t* out) {
+st8_to_s32_range(st8_t s, usz_t begin, usz_t ope, s32_t* out) {
 
   if (ope > s.count) return false;
 
@@ -3973,7 +3980,7 @@ str8_to_s32_range(str8_t s, usz_t begin, usz_t ope, s32_t* out) {
 }
 
 static b32_t 
-str8_to_f32_range(str8_t s, usz_t begin, usz_t ope, f32_t* out) {
+st8_to_f32_range(st8_t s, usz_t begin, usz_t ope, f32_t* out) {
   if (ope > s.count) return false;
   u32_t place = 0;
 
@@ -4002,75 +4009,67 @@ str8_to_f32_range(str8_t s, usz_t begin, usz_t ope, f32_t* out) {
 }
 
 static b32_t 
-str8_to_f32(str8_t s, f32_t* out) {
-  return str8_to_f32_range(s, 0, s.count, out);
+st8_to_f32(st8_t s, f32_t* out) {
+  return st8_to_f32_range(s, 0, s.count, out);
 }
 static b32_t 
-str8_to_u32(str8_t s, u32_t* out) {
-  return str8_to_u32_range(s, 0, s.count, out);
+st8_to_u32(st8_t s, u32_t* out) {
+  return st8_to_u32_range(s, 0, s.count, out);
 }
 
 // Parsing functions
 static b32_t 
-str8_to_s32(str8_t s, s32_t* out) {
-  return str8_to_s32_range(s, 0, s.count, out);
-}
-
-static b32_t operator==(str8_t lhs, str8_t rhs) {
-	return str8_match(lhs, rhs);
-}
-
-static b32_t operator!=(str8_t lhs, str8_t rhs) {
-	return !str8_match(lhs, rhs);
+st8_to_s32(st8_t s, s32_t* out) {
+  return st8_to_s32_range(s, 0, s.count, out);
 }
 
 
-//~ NOTE(Momo): str8_tBld
+
 static void  
-sb8_init(sb8_t* b, u8_t* data, usz_t cap) {
+stb8_init(stb8_t* b, u8_t* data, usz_t cap) {
 	b->e = data;
 	b->count = 0;
 	b->cap = cap;
 }
 
 static usz_t
-sb8_remaining(sb8_t* b) {
+stb8_remaining(stb8_t* b) {
 	return b->cap - b->count; 
 }
 
 static void     
-sb8_clear(sb8_t* b) {
+stb8_clear(stb8_t* b) {
 	b->count = 0;
 }
 
 static void     
-sb8_pop(sb8_t* b) {
+stb8_pop(stb8_t* b) {
 	assert(b->count > 0);
 	--b->count;
 }
 
 static void     
-sb8_push_u8(sb8_t* b, u8_t num) {
+stb8_push_u8(stb8_t* b, u8_t num) {
 	assert(b->count < b->cap); b->e[b->count++] = num;
 }
 
 static void     
-sb8_push_c8(sb8_t* b, c8_t num) {
+stb8_push_c8(stb8_t* b, c8_t num) {
 	assert(b->count < b->cap);
 	b->e[b->count++] = num;
 }
 
 static void     
-sb8_push_u32(sb8_t* b, u32_t num) {
+stb8_push_u32(stb8_t* b, u32_t num) {
 	if (num == 0) {
-    sb8_push_c8(b, '0');
+    stb8_push_c8(b, '0');
 		return;
   }
   usz_t start_pt = b->count; 
   
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-		sb8_push_c8(b, digit_to_ascii(digit_to_convert));
+		stb8_push_c8(b, digit_to_ascii(digit_to_convert));
   }
   
   // Reverse starting from start point to count
@@ -4080,16 +4079,16 @@ sb8_push_u32(sb8_t* b, u32_t num) {
   }
 }
 static void     
-sb8_push_u64(sb8_t* b, u64_t num) {
+stb8_push_u64(stb8_t* b, u64_t num) {
 	if (num == 0) {
-    sb8_push_c8(b, '0');
+    stb8_push_c8(b, '0');
 		return;
   }
   usz_t start_pt = b->count; 
   
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-		sb8_push_c8(b, digit_to_ascii(digit_to_convert));
+		stb8_push_c8(b, digit_to_ascii(digit_to_convert));
   }
   
   // Reverse starting from start point to count
@@ -4099,9 +4098,9 @@ sb8_push_u64(sb8_t* b, u64_t num) {
   }
 }
 static void     
-sb8_push_s32(sb8_t* b, s32_t num) {
+stb8_push_s32(stb8_t* b, s32_t num) {
   if (num == 0) {
-    sb8_push_c8(b, '0');
+    stb8_push_c8(b, '0');
     return;
   }
   
@@ -4112,11 +4111,11 @@ sb8_push_s32(sb8_t* b, s32_t num) {
   
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-		sb8_push_c8(b, digit_to_ascii(digit_to_convert));
+		stb8_push_c8(b, digit_to_ascii(digit_to_convert));
   }
   
   if (negate) {
-    sb8_push_c8(b, '-');
+    stb8_push_c8(b, '-');
   }
   
   // Reverse starting from start point to count
@@ -4129,9 +4128,9 @@ sb8_push_s32(sb8_t* b, s32_t num) {
 }
 
 static void     
-sb8_push_s64(sb8_t* b, s64_t num) {
+stb8_push_s64(stb8_t* b, s64_t num) {
   if (num == 0) {
-    sb8_push_c8(b, '0');
+    stb8_push_c8(b, '0');
     return;
   }
   
@@ -4142,11 +4141,11 @@ sb8_push_s64(sb8_t* b, s64_t num) {
   
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-		sb8_push_c8(b, digit_to_ascii(digit_to_convert));
+		stb8_push_c8(b, digit_to_ascii(digit_to_convert));
   }
   
   if (negate) {
-    sb8_push_c8(b, '-');
+    stb8_push_c8(b, '-');
   }
   
   // Reverse starting from start point to count
@@ -4159,16 +4158,16 @@ sb8_push_s64(sb8_t* b, s64_t num) {
 }
 
 static void     
-sb8_push_f32(sb8_t* b, f32_t value, u32_t precision) {
+stb8_push_f32(stb8_t* b, f32_t value, u32_t precision) {
 	if (value < 0.f) {
-		sb8_push_c8(b, '-');	
+		stb8_push_c8(b, '-');	
 		value = -value;
 	}
 
 	// NOTE(Momo): won't work for values that u32_t can't contain
 	u32_t integer_part = (u32_t)value;
-	sb8_push_u32(b, integer_part);
-	sb8_push_c8(b, '.');
+	stb8_push_u32(b, integer_part);
+	stb8_push_c8(b, '.');
 	
 	value -= (f32_t)integer_part;
 	
@@ -4177,19 +4176,19 @@ sb8_push_f32(sb8_t* b, f32_t value, u32_t precision) {
 	}
 
 	u32_t decimal_part = (u32_t)value;
-	sb8_push_u32(b, decimal_part);
+	stb8_push_u32(b, decimal_part);
 }
 
 static void     
-sb8_push_f64(sb8_t* b, f64_t value, u32_t precision) {
+stb8_push_f64(stb8_t* b, f64_t value, u32_t precision) {
 	if (value < 0.0) {
-		sb8_push_c8(b, '-');	
+		stb8_push_c8(b, '-');	
 		value = -value;
 	}
 	// NOTE(Momo): won't work for values that u32_t can't contain
 	u32_t integer_part = (u32_t)value;
-	sb8_push_u32(b, integer_part);
-	sb8_push_c8(b, '.');
+	stb8_push_u32(b, integer_part);
+	stb8_push_c8(b, '.');
 	
 	value -= (f64_t)integer_part;
 	
@@ -4198,12 +4197,12 @@ sb8_push_f64(sb8_t* b, f64_t value, u32_t precision) {
 	}
 	
 	u32_t decimal_part = (u32_t)value;
-	sb8_push_u32(b, decimal_part);
+	stb8_push_u32(b, decimal_part);
 }
 
 
 static void
-sb8_push_hex_u8(sb8_t* b, u8_t value) {
+stb8_push_hex_u8(stb8_t* b, u8_t value) {
   
   c8_t parts[2] = {
     (c8_t)(value >> 4),
@@ -4213,10 +4212,10 @@ sb8_push_hex_u8(sb8_t* b, u8_t value) {
   
   for(u32_t i = 0; i < array_count(parts); ++i) {
     if (parts[i] >= 0 && parts[i] <= 9) {
-      sb8_push_c8(b, parts[i] + '0');
+      stb8_push_c8(b, parts[i] + '0');
     }
     else if (parts[i] >= 10 && parts[i] <= 15) {
-      sb8_push_c8(b, parts[i] - 10 + 'A');
+      stb8_push_c8(b, parts[i] - 10 + 'A');
     }
   }
   
@@ -4226,18 +4225,18 @@ sb8_push_hex_u8(sb8_t* b, u8_t value) {
 }
 
 static void
-sb8_push_hex_u32(sb8_t* b, u32_t value) {
+stb8_push_hex_u32(stb8_t* b, u32_t value) {
   union { u32_t v; u8_t b[4]; } combine;
   combine.v = value;
   for(s32_t i = 3; i >= 0; --i) {
-    sb8_push_hex_u8(b, combine.b[i]);
+    stb8_push_hex_u8(b, combine.b[i]);
   }
   
   
 }
 
 static void
-_sb8_push_fmt_list(sb8_t* b, str8_t format, va_list args) {
+_stb8_push_fmt_list(stb8_t* b, st8_t format, va_list args) {
   usz_t at = 0;
   while(at < format.count) {
     
@@ -4252,51 +4251,51 @@ _sb8_push_fmt_list(sb8_t* b, str8_t format, va_list args) {
         ++at;
       }
       
-      sb8_make(tb, 64);
+      stb8_make(tb, 64);
       
       switch(format.e[at]) {
         case 'i': {
           s32_t value = va_arg(args, s32_t);
-          sb8_push_s32(tb, value);
+          stb8_push_s32(tb, value);
         } break;
         case 'I': {
           s64_t value = va_arg(args, s64_t);
-          sb8_push_s64(tb, value);
+          stb8_push_s64(tb, value);
         } break;
         case 'U': {
           u64_t value = va_arg(args, u64_t);
-          sb8_push_u64(tb, value);
+          stb8_push_u64(tb, value);
         } break;
         case 'u': {
           u32_t value = va_arg(args, u32_t);
-          sb8_push_u32(tb, value);
+          stb8_push_u32(tb, value);
         } break;
         case 'f': {
           f64_t value = va_arg(args, f64_t);
-          sb8_push_f32(tb, (f32_t)value, 5);
+          stb8_push_f32(tb, (f32_t)value, 5);
         } break;
         case 'F': {
           f64_t value = va_arg(args, f64_t);
-          sb8_push_f64(tb, (f64_t)value, 5);
+          stb8_push_f64(tb, (f64_t)value, 5);
         } break;
         case 'x':
         case 'X': {
           u32_t value = va_arg(args, u32_t);
-          sb8_push_hex_u32(tb, value);
+          stb8_push_hex_u32(tb, value);
         } break;
         case 's': {
           // c-string
           const char* cstr = va_arg(args, const char*);
           while(cstr[0] != 0) {
-            sb8_push_c8(tb, (u8_t)cstr[0]);
+            stb8_push_c8(tb, (u8_t)cstr[0]);
             ++cstr;
           }
         } break;
         
         case 'S': {
-          // str8_t, or 'text'.
-          str8_t str = va_arg(args, str8_t);
-          sb8_push_str8(tb, str);
+          // st8_t, or 'text'.
+          st8_t str = va_arg(args, st8_t);
+          stb8_push_st8(tb, str);
         } break;
         
         default: {
@@ -4309,18 +4308,18 @@ _sb8_push_fmt_list(sb8_t* b, str8_t format, va_list args) {
       if (width > 0 && tb->str.count < width) {
         usz_t spaces_to_pad = width - tb->str.count;
         while(spaces_to_pad--) {
-          sb8_push_c8(b, ' ');
+          stb8_push_c8(b, ' ');
         }
-        sb8_push_str8(b, tb->str);
+        stb8_push_st8(b, tb->str);
       }
       else {
-        sb8_push_str8(b, tb->str);
+        stb8_push_st8(b, tb->str);
       }
       
       
     }
     else {
-      sb8_push_c8(b, format.e[at++]);
+      stb8_push_c8(b, format.e[at++]);
     }
     
   }
@@ -4328,15 +4327,15 @@ _sb8_push_fmt_list(sb8_t* b, str8_t format, va_list args) {
 
 
 static void     
-sb8_push_fmt(sb8_t* b, str8_t fmt, ...) {
+stb8_push_fmt(stb8_t* b, st8_t fmt, ...) {
   va_list args;
   va_start(args, fmt);
-  _sb8_push_fmt_list(b, fmt, args);
+  _stb8_push_fmt_list(b, fmt, args);
   va_end(args);
 }
 
 static void     
-sb8_push_str8(sb8_t* b, str8_t src) {
+stb8_push_st8(stb8_t* b, st8_t src) {
   assert(b->count + src.count <= b->cap);
   for (usz_t i = 0; i < src.count; ++i ) {
     b->e[b->count++] = src.e[i];
@@ -4366,7 +4365,7 @@ stream_is_eos(stream_t* s) {
 }
 
 static u8_t*
-stream_consume_block(stream_t* s, umi_t amount) {
+stream_consume_block(stream_t* s, usz_t amount) {
 	if(s->pos + amount <= s->contents.size) {
     u8_t* ret = s->contents.data + s->pos;
     s->pos += amount;
@@ -4376,7 +4375,7 @@ stream_consume_block(stream_t* s, umi_t amount) {
 }
 
 static void
-stream_write_block(stream_t* s, void* src, umi_t src_size) {
+stream_write_block(stream_t* s, void* src, usz_t src_size) {
 	assert(s->pos + src_size <= s->contents.size);
   copy_memory(s->contents.data + s->pos, src, src_size);
   s->pos += src_size; 

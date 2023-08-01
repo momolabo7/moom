@@ -224,7 +224,7 @@ struct lit_game_t {
 
   rng_t rng;
 
-  str8_t title;
+  st8_t title;
   f32_t title_timer;
   u32_t title_wp_index;
     

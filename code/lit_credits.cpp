@@ -6,7 +6,7 @@ lit_credits_init() {
 
 static f32_t 
 lit_credits_push_subtitle_and_name(
-    f32_t y, str8_t subtitle, str8_t name)
+    f32_t y, st8_t subtitle, st8_t name)
 {
   lit_credits_t* credits = &lit->credits;
   app_draw_text_center_aligned(
@@ -57,7 +57,7 @@ lit_credits_update() {
       app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      str8_from_lit("THANKS"), 
+      st8_from_lit("THANKS"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       96.f);
@@ -66,7 +66,7 @@ lit_credits_update() {
       app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      str8_from_lit("FOR"), 
+      st8_from_lit("FOR"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       96.f);
@@ -75,7 +75,7 @@ lit_credits_update() {
       app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      str8_from_lit("PLAYING!"), 
+      st8_from_lit("PLAYING!"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       96.f);
@@ -86,7 +86,7 @@ lit_credits_update() {
       app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      str8_from_lit("--------"), 
+      st8_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -96,7 +96,7 @@ lit_credits_update() {
       app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      str8_from_lit("PRIMIX"), 
+      st8_from_lit("PRIMIX"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -106,7 +106,7 @@ lit_credits_update() {
       app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      str8_from_lit("--------"), 
+      st8_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -115,14 +115,14 @@ lit_credits_update() {
   //
   //  
   //
-  y = lit_credits_push_subtitle_and_name(y, str8_lit("engine"), str8_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, str8_lit("gameplay"), str8_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, str8_lit("art"), str8_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, str8_lit("lighting"), str8_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, str8_lit("particles"), str8_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, str8_lit("sound"), str8_lit("your imagination"));
-  y = lit_credits_push_subtitle_and_name(y, str8_lit("food"), str8_lit("my wife <3"));
-  y = lit_credits_push_subtitle_and_name(y, str8_lit("coffee"), str8_lit("a lot"));
+  y = lit_credits_push_subtitle_and_name(y, st8_lit("engine"), st8_lit("momohoudai"));
+  y = lit_credits_push_subtitle_and_name(y, st8_lit("gameplay"), st8_lit("momohoudai"));
+  y = lit_credits_push_subtitle_and_name(y, st8_lit("art"), st8_lit("momohoudai"));
+  y = lit_credits_push_subtitle_and_name(y, st8_lit("lighting"), st8_lit("momohoudai"));
+  y = lit_credits_push_subtitle_and_name(y, st8_lit("particles"), st8_lit("momohoudai"));
+  y = lit_credits_push_subtitle_and_name(y, st8_lit("sound"), st8_lit("your imagination"));
+  y = lit_credits_push_subtitle_and_name(y, st8_lit("food"), st8_lit("my wife <3"));
+  y = lit_credits_push_subtitle_and_name(y, st8_lit("coffee"), st8_lit("a lot"));
 
   if (y > LIT_HEIGHT) {
     lit->next_mode = LIT_MODE_GAME;

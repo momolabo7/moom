@@ -1,3 +1,7 @@
+//
+// Author 
+
+
 
 #ifndef APP_H
 #define APP_H
@@ -9,7 +13,6 @@
 // 
 // Graphics API
 //
-
 enum app_blend_type_t {
   APP_BLEND_TYPE_ZERO,
   APP_BLEND_TYPE_ONE,
@@ -50,9 +53,6 @@ typedef app_advance_depth_sig(app_advance_depth_f);
 #define app_set_blend_sig(name) void name(app_blend_type_t src, app_blend_type_t dst)
 typedef app_set_blend_sig(app_set_blend_f);
 #define app_set_blend(app, ...) (app->set_blend(__VA_ARGS__))
-
-
-
 
 //
 // Button API
@@ -248,6 +248,10 @@ typedef app_complete_all_tasks_sig(app_complete_all_tasks_f);
 typedef app_set_design_dimensions_sig(app_set_design_dimensions_f);
 #define app_set_design_dimensions(app, ...) (app->set_design_dimensions(__VA_ARGS__))
 
+//
+// Structures
+//
+
 
 struct app_audio_t {
   s16_t* sample_buffer;
@@ -262,7 +266,7 @@ struct game_init_config_t {
   usz_t render_command_size;
 
   // must be null terminated
-  const char* window_title; // TODO(game): change to str8_t?
+  const char* window_title; // TODO(game): change to st8_t?
 };
 
 struct app_t {
@@ -317,7 +321,7 @@ static const char* game_function_names[] {
   "game_update_and_render",
 };
 
-#include "game_assets.h"
+//#include "game_assets.h"
 
 //
 // Input API functions
@@ -430,7 +434,7 @@ app_draw_asset_sprite(
 
 
 static void
-app_draw_text(app_t* app, assets_t* assets, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+app_draw_text(app_t* app, assets_t* assets, asset_font_id_t font_id, st8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
   asset_font_t* font = assets_get_font(assets, font_id);
   for(u32_t char_index = 0; 
@@ -469,7 +473,7 @@ app_draw_text(app_t* app, assets_t* assets, asset_font_id_t font_id, str8_t str,
 }
 
 static void
-app_draw_text_center_aligned(app_t* app, assets_t* assets, asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+app_draw_text_center_aligned(app_t* app, assets_t* assets, asset_font_id_t font_id, st8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
   asset_font_t* font = assets_get_font(assets, font_id);
   
@@ -541,8 +545,16 @@ app_draw_text_center_aligned(app_t* app, assets_t* assets, asset_font_id_t font_
 
 //
 // JOURNAL
+// 
+// = 2023-07-30 = 
+//   I'm not entirely sure where assets should really be.
+//   I feel like they should be shifted *somewhere* but it's hard
+//   to figure out exactly where. The main issue I *feel* is that
+//   the game side shouldn't be the one to initialize the assets;
+//   instead it should be on the app's side. This would make it 
+//   more reasonable to do some kind of 'hot reloading' of assets.
 //
-// (2023-07-18)
+// = 2023-07-18 = 
 //   We probably should start working on either the gfx layer or the
 //   profiler/debug layer next.
 //

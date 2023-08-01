@@ -33,7 +33,7 @@ lit_splash_update() {
       app, 
       &lit->assets, 
       font, 
-      str8_from_lit("--------"), 
+      st8_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -42,7 +42,7 @@ lit_splash_update() {
       app, 
       &lit->assets, 
       font,
-      str8_from_lit("PRIMIX"), 
+      st8_from_lit("PRIMIX"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -52,7 +52,7 @@ lit_splash_update() {
       app, 
       &lit->assets, 
       font,
-      str8_from_lit("--------"), 
+      st8_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -75,7 +75,7 @@ lit_splash_update() {
       app, 
       &lit->assets, 
       font,
-      str8_from_lit("a silly game by"), 
+      st8_from_lit("a silly game by"), 
       grey,
       LIT_WIDTH/2, scroll_y, 
       36.f);
@@ -85,7 +85,7 @@ lit_splash_update() {
       app, 
       &lit->assets, 
       font,
-      str8_from_lit("momohoudai"), 
+      st8_from_lit("momohoudai"), 
       grey,
       LIT_WIDTH/2, scroll_y, 
       72.f);

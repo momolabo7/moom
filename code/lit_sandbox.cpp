@@ -7,7 +7,7 @@ static void lit_sandbox_update() {
       app, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT, 
-      str8_from_lit("A"), 
+      st8_from_lit("A"), 
       color,
       LIT_WIDTH/2, 
       LIT_HEIGHT/2, 

@@ -90,9 +90,9 @@ profiler_update_and_render()
     profiler_end_stat(&hits);
     profiler_end_stat(&cycles_per_hit);
     
-    sb8_make(sb, 256);
-    sb8_push_fmt(sb, 
-                 str8_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
+    stb8_make(sb, 256);
+    stb8_push_fmt(sb, 
+                 st8_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
                  entry->block_name,
                  (u32_t)cycles.average,
                  (u32_t)hits.average,

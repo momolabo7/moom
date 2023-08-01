@@ -9,7 +9,7 @@ enum inspector_entry_type_t {
 };
 
 struct inspector_entry_t {
-  str8_t name;
+  st8_t name;
   inspector_entry_type_t type;
   union {
     f32_t item_f32;
@@ -25,8 +25,8 @@ struct inspector_t {
 
 static void inspector_init(inspector_t* in, arena_t* arena, u32_t max_entries);
 static void inspector_clear(inspector_t* in);
-static void inspector_add_u32(inspector_t* in, str8_t name, u32_t item); 
-static void inspector_add_f32(inspector_t* in, str8_t name, f32_t item);
+static void inspector_add_u32(inspector_t* in, st8_t name, u32_t item); 
+static void inspector_add_f32(inspector_t* in, st8_t name, f32_t item);
 
 
 //
@@ -48,7 +48,7 @@ inspector_clear(inspector_t* in)
 }
 
 static void
-inspector_add_u32(inspector_t* in, str8_t name, u32_t item) 
+inspector_add_u32(inspector_t* in, st8_t name, u32_t item) 
 {
   assert(in->entry_count < in->entry_cap);
   inspector_entry_t* entry = in->entries + in->entry_count++;
@@ -59,7 +59,7 @@ inspector_add_u32(inspector_t* in, str8_t name, u32_t item)
 
 
 static void
-inspector_add_f32(inspector_t* in, str8_t name, f32_t item) {
+inspector_add_f32(inspector_t* in, st8_t name, f32_t item) {
   assert(in->entry_count < in->entry_cap);
   inspector_entry_t* entry = in->entries + in->entry_count++;
   entry->item_f32 = item;

@@ -15,6 +15,6 @@ SET CommonCompilerFlags=-DENABLE_ASSERTS=1 -DINTERNAL=1  %CommonCompilerFlags%
 pushd %BuildDir%
 cl %CommonCompilerFlags% %CodeDir%\meta.cpp 
 
-rem call meta.exe
+call meta.exe
 
 popd
