@@ -977,28 +977,56 @@ entry_pos	code/game_gfx.h	/^	usz_t entry_pos;$/;"	m	language:C++	struct:gfx_comm
 entry_snapshot_count	code/momo_profiler.h	/^  u32_t entry_snapshot_count;$/;"	m	language:C++	struct:profiler_t	typeref:typename:u32_t
 entry_start	code/game_gfx.h	/^	usz_t entry_start;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:usz_t
 eof	bin/pack_lit.bat	/^:eof$/;"	l	language:DosBatch
+euler_q1	code/euler.cpp	/^euler_q1() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q1	euler.cpp	/^euler_q1() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q10	code/euler.cpp	/^euler_q10() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q10	euler.cpp	/^euler_q10() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q10_if_prime_return_itself_else_zero	code/euler.cpp	/^euler_q10_if_prime_return_itself_else_zero(u32_t x) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 euler_q10_if_prime_return_itself_else_zero	euler.cpp	/^euler_q10_if_prime_return_itself_else_zero(u32_t x) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q11	code/euler.cpp	/^static void euler_q11() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q11	euler.cpp	/^static void euler_q11() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q11_check_diag_l	code/euler.cpp	/^static u32_t euler_q11_check_diag_l(u32_t index) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 euler_q11_check_diag_l	euler.cpp	/^static u32_t euler_q11_check_diag_l(u32_t index) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q11_check_diag_r	code/euler.cpp	/^static u32_t euler_q11_check_diag_r(u32_t index) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 euler_q11_check_diag_r	euler.cpp	/^static u32_t euler_q11_check_diag_r(u32_t index) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q11_check_hori	code/euler.cpp	/^static u32_t euler_q11_check_hori(u32_t index) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 euler_q11_check_hori	euler.cpp	/^static u32_t euler_q11_check_hori(u32_t index) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q11_check_vert	code/euler.cpp	/^static u32_t euler_q11_check_vert(u32_t index) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 euler_q11_check_vert	euler.cpp	/^static u32_t euler_q11_check_vert(u32_t index) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q11_grid	code/euler.cpp	/^static u32_t euler_q11_grid[] = {$/;"	v	language:C++	typeref:typename:u32_t[]	file:
 euler_q11_grid	euler.cpp	/^static u32_t euler_q11_grid[] = {$/;"	v	language:C++	typeref:typename:u32_t[]	file:
+euler_q11_grid_cols	code/euler.cpp	/^static u32_t euler_q11_grid_cols = 20; $/;"	v	language:C++	typeref:typename:u32_t	file:
 euler_q11_grid_cols	euler.cpp	/^static u32_t euler_q11_grid_cols = 20; $/;"	v	language:C++	typeref:typename:u32_t	file:
+euler_q11_grid_rows	code/euler.cpp	/^static u32_t euler_q11_grid_rows = array_count(euler_q11_grid)\/euler_q11_grid_cols;$/;"	v	language:C++	typeref:typename:u32_t	file:
 euler_q11_grid_rows	euler.cpp	/^static u32_t euler_q11_grid_rows = array_count(euler_q11_grid)\/euler_q11_grid_cols;$/;"	v	language:C++	typeref:typename:u32_t	file:
+euler_q12	code/euler.cpp	/^euler_q12() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q13	code/euler.cpp	/^euler_q13() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q14	code/euler.cpp	/^euler_q14() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q15	code/euler.cpp	/^euler_q15() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q2	code/euler.cpp	/^euler_q2() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q2	euler.cpp	/^euler_q2() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q3	code/euler.cpp	/^euler_q3() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q3	euler.cpp	/^euler_q3() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q4	code/euler.cpp	/^euler_q4() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q4	euler.cpp	/^euler_q4() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q4_is_palindrome	code/euler.cpp	/^euler_q4_is_palindrome(u32_t x) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 euler_q4_is_palindrome	euler.cpp	/^euler_q4_is_palindrome(u32_t x) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+euler_q5	code/euler.cpp	/^static void euler_q5() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q5_divide_checker	code/euler.cpp	/^euler_q5_divide_checker(u32_t num) {$/;"	f	language:C++	typeref:typename:int	file:
 euler_q5_divide_checker	euler.cpp	/^euler_q5_divide_checker(u32_t num) {$/;"	f	language:C++	typeref:typename:int	file:
+euler_q6	code/euler.cpp	/^euler_q6() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q6	euler.cpp	/^euler_q6() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q7	code/euler.cpp	/^euler_q7() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q7	euler.cpp	/^euler_q7() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q7_is_prime	code/euler.cpp	/^euler_q7_is_prime(u32_t x) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 euler_q7_is_prime	euler.cpp	/^euler_q7_is_prime(u32_t x) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q8	code/euler.cpp	/^euler_q8() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q8	euler.cpp	/^euler_q8() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q9	code/euler.cpp	/^euler_q9() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q9	euler.cpp	/^euler_q9() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q9_is_triplet	code/euler.cpp	/^euler_q9_is_triplet(u32_t a, u32_t b, u32_t c) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 euler_q9_is_triplet	euler.cpp	/^euler_q9_is_triplet(u32_t a, u32_t b, u32_t c) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q9_sq	code/euler.cpp	/^euler_q9_sq(u32_t x) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 euler_q9_sq	euler.cpp	/^euler_q9_sq(u32_t x) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 events	code/momo_debug.h	/^  dbg_event_t events[DBG_MAX_EVENTS];$/;"	m	language:C++	struct:dbg_t	typeref:typename:dbg_event_t[]
 event_count	code/momo_debug.h	/^  u32_t event_count;$/;"	m	language:C++	struct:dbg_t	typeref:typename:u32_t
@@ -1272,6 +1300,8 @@ f32_ease_out_sine	code/momo_easing.h	/^static f32_t f32_ease_out_sine(f32_t t);$
 F32_EPSILON	code/momo.h	/^#define F32_EPSILON /;"	d	language:C++
 F32_EPSILON	code/momo2.h	/^#define F32_EPSILON /;"	d	language:C++
 F32_EPSILON	code/momo_types.h	/^#define F32_EPSILON /;"	d	language:C++
+f32_factorial	code/momo.h	/^f32_factorial(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_factorial	code/momo.h	/^static f32_t f32_factorial(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
 f32_floor	code/momo.h	/^static f32_t f32_floor(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
 f32_floor	code/momo.h	/^static f32_t f32_floor(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
 f32_floor	code/momo2.h	/^static f32_t f32_floor(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
@@ -1569,6 +1599,8 @@ f64_ease_out_sine	code/momo_easing.h	/^static f64_t f64_ease_out_sine(f64_t t);$
 F64_EPSILON	code/momo.h	/^#define F64_EPSILON /;"	d	language:C++
 F64_EPSILON	code/momo2.h	/^#define F64_EPSILON /;"	d	language:C++
 F64_EPSILON	code/momo_types.h	/^#define F64_EPSILON /;"	d	language:C++
+f64_factorial	code/momo.h	/^f64_factorial(f64_t x) {$/;"	f	language:C++	typeref:typename:f64_t
+f64_factorial	code/momo.h	/^static f64_t f64_factorial(f64_t x);$/;"	p	language:C++	typeref:typename:f64_t
 f64_floor	code/momo.h	/^static f64_t f64_floor(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
 f64_floor	code/momo.h	/^static f64_t f64_floor(f64_t value){$/;"	f	language:C++	typeref:typename:f64_t
 f64_floor	code/momo2.h	/^static f64_t f64_floor(f64_t value);$/;"	p	language:C++	typeref:typename:f64_t
@@ -2660,6 +2692,7 @@ m44f_transpose	code/momo2.h	/^m44f_transpose(m44f_t m) {$/;"	f	language:C++	type
 m44f_transpose	code/momo2.h	/^static m44f_t m44f_transpose(m44f_t m);$/;"	p	language:C++	typeref:typename:m44f_t
 m44f_transpose	code/momo_maths.h	/^m44f_transpose(m44f_t m) {$/;"	f	language:C++	typeref:typename:m44f_t
 main	build/test.h	/^int main()$/;"	f	language:C++	typeref:typename:int
+main	code/euler.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/gist_linked_list.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/gist_ring_buffer.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/json_test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
@@ -4151,6 +4184,8 @@ u32_endian_swap	code/momo.h	/^u32_endian_swap(u32_t value) {$/;"	f	language:C++	
 u32_endian_swap	code/momo2.h	/^static u32_t u32_endian_swap(u32_t value);$/;"	p	language:C++	typeref:typename:u32_t
 u32_endian_swap	code/momo2.h	/^u32_endian_swap(u32_t value) {$/;"	f	language:C++	typeref:typename:u32_t
 u32_endian_swap	code/momo_types.h	/^u32_endian_swap(u32_t value) {$/;"	f	language:C++	typeref:typename:u32_t
+u32_factorial	code/momo.h	/^static u32_t u32_factorial(u32_t x);$/;"	p	language:C++	typeref:typename:u32_t
+u32_factorial	code/momo.h	/^u32_factorial(u32_t x) {$/;"	f	language:C++	typeref:typename:u32_t
 U32_MAX	code/momo.h	/^#define U32_MAX /;"	d	language:C++
 U32_MAX	code/momo2.h	/^#define U32_MAX /;"	d	language:C++
 U32_MAX	code/momo_types.h	/^#define U32_MAX /;"	d	language:C++
@@ -4169,6 +4204,8 @@ u64_atomic_assign	code/momo2.h	/^static u64_t u64_atomic_assign(u64_t volatile* 
 u64_atomic_assign	code/momo2.h	/^u64_atomic_assign(u64_t volatile* value,$/;"	f	language:C++	typeref:typename:u64_t
 u64_atomic_assign	code/momo_intrinsics.h	/^static u64_t u64_atomic_assign(u64_t volatile* value, u64_t new_value);$/;"	p	language:C++	typeref:typename:u64_t
 u64_atomic_assign	code/momo_intrinsics.h	/^u64_atomic_assign(u64_t volatile* value,$/;"	f	language:C++	typeref:typename:u64_t
+u64_factorial	code/momo.h	/^static u64_t u64_factorial(u32_t x);$/;"	p	language:C++	typeref:typename:u64_t
+u64_factorial	code/momo.h	/^u64_factorial(u64_t x) {$/;"	f	language:C++	typeref:typename:u64_t
 U64_MAX	code/momo.h	/^#define U64_MAX /;"	d	language:C++
 U64_MAX	code/momo2.h	/^#define U64_MAX /;"	d	language:C++
 U64_MAX	code/momo_types.h	/^#define U64_MAX /;"	d	language:C++

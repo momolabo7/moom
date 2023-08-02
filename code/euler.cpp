@@ -136,7 +136,7 @@ euler_q5_divide_checker(u32_t num) {
   return 1;
 }
 
-static void q5() {
+static void euler_q5() {
   u32_t v = 21;
   while(!euler_q5_divide_checker(v)) { ++v; };
   printf("%d\n", v);
@@ -575,22 +575,103 @@ euler_q13() {
 
 }
 
+//
+// Question 14
+//
+static void
+euler_q14() {
+  u32_t start_n = 1;
+
+  u32_t highest_chain = 1;
+  u32_t highest_n = 1;
+
+  while(start_n < 1000000){
+    u32_t chain = 1;
+    u32_t n = start_n;
+    //printf("n: %u\n", n);
+    while(n != 1){
+      if (n % 2 == 0) {
+        n /= 2;
+      }
+      else {
+        n = 3*n + 1;
+      }
+      ++chain;
+    }
+    //printf("chain: %u\n\n", chain);
+    if (chain > highest_chain) {
+      highest_chain = chain;
+      highest_n = start_n;
+    }
+    ++start_n;
+  }
+  printf("n: %u has the highest chain at %u\n", highest_n, highest_chain);
+
+}
+
+// 
+// Question 15
+//
+// NOTE(momo): 
+//  Feels like a combinatorics question.
+//
+//  Let each direction be represented by a letter:
+//    R = Right
+//    D = Down
+//
+//  The width represents how many R's there are  
+//  while the height represents how D's there are.
+//
+//  All we have to do is then calculate how many
+//  permutations of D's and R's we can get.
+//
+//  For example, 2x2 means 2 D's and 2 Rs.
+//  Permutations are:
+//    RRDD
+//    RDRD
+//    RDDR
+//    DDRR
+//    DRDR
+//    DRRD
+//
+//  = 6 permutations.
+//  
+//  The mathematical formula for this is the "Permutations with Reptition":
+//    n!/(r1! * r2! * ... * rk!)
+//  where 
+//    n = Total number of characters
+//    r1 = Occurances of first letter
+//    r2 = Occurances of second letter
+//    .
+//    .
+//    rk = Occurances of kth letter
+//    
+//
+
+static void
+euler_q15() {
+  f64_t n = f64_factorial(40);
+  f64_t d = f64_factorial(20) * u64_factorial(20);
+  printf("Answer: %0.f\n", n/d);
+}
+
+
 int main() {
-#if 0
-  euler_q1();
-  euler_q2();
-  euler_q3();
-  euler_q4();
-  euler_q5();
-  euler_q6();
-  euler_q7();
-  euler_q8();
-  euler_q9();
-  euler_q10();
-  euler_q11();
-  euler_q12();
-#endif
-  euler_q13();
+  //euler_q1();
+  //euler_q2();
+  //euler_q3();
+  //euler_q4();
+  //euler_q5();
+  //euler_q6();
+  //euler_q7();
+  //euler_q8();
+  //euler_q9();
+  //euler_q10();
+  //euler_q11();
+  //euler_q12();
+  //euler_q13();
+  //euler_q14();
+  euler_q15();
 }
 
 

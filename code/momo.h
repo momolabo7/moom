@@ -658,6 +658,13 @@ static f64_t f64_rad_to_deg(f64_t radians);
 static f64_t f64_turns_to_radians(f64_t turns);
 
 //
+// Combinatorics
+//
+static u32_t u32_factorial(u32_t x);
+static u64_t u64_factorial(u64_t x);
+static f32_t f32_factorial(f32_t x);
+static f64_t f64_factorial(f64_t x);
+//
 // Endian Swap
 // 
 // NOTE(Momo): I'm not entirely sure if this prototype makes sense.
@@ -1340,6 +1347,38 @@ u32_endian_swap(u32_t value) {
            ((value >> 8) & 0xFF00) |
            (value >> 24));
   
+}
+
+
+static u32_t 
+u32_factorial(u32_t x) {
+  u32_t ret = 1;
+  for (u32_t i = 1; i <= x; ++i)
+    ret *= i;
+  return ret;
+}
+
+static u64_t 
+u64_factorial(u64_t x) {
+  u64_t ret = 1;
+  for (u64_t i = 1; i <= x; ++i)
+    ret *= i;
+  return ret;
+}
+static f32_t 
+f32_factorial(f32_t x) {
+  f32_t ret = 1;
+  for (f32_t i = 1; i <= x; ++i)
+    ret *= i;
+  return ret;
+}
+
+static f64_t 
+f64_factorial(f64_t x) {
+  f64_t ret = 1;
+  for (f64_t i = 1; i <= x; ++i)
+    ret *= i;
+  return ret;
 }
 
 #if 1
