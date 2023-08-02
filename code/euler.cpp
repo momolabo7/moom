@@ -655,6 +655,26 @@ euler_q15() {
   printf("Answer: %0.f\n", n/d);
 }
 
+//
+// Question 16
+//
+// NOT DONE
+//
+static void
+euler_q16() {
+  f64_t n = f64_pow(2, 1000);
+  printf("Answer: %f\n", n);
+#if 0
+  u64_t sum = 0;
+  printf("Answer: %llu\n", n);
+  while(n != 0) {
+  printf("Adding: %llu\n", n%10);
+    sum += n%10;
+    n/=10;
+  }
+  printf("Answer: %llu\n", sum);
+#endif
+}
 
 int main() {
   //euler_q1();
@@ -671,7 +691,8 @@ int main() {
   //euler_q12();
   //euler_q13();
   //euler_q14();
-  euler_q15();
+  //euler_q15();
+  euler_q16();
 }
 
 

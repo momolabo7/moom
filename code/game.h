@@ -1,10 +1,8 @@
-//
-// Author 
 
 
 
-#ifndef APP_H
-#define APP_H
+#ifndef GAME_H
+#define GAME_H
 
 #include "game_gfx.h"
 #include "game_console.h"
@@ -321,7 +319,7 @@ static const char* game_function_names[] {
   "game_update_and_render",
 };
 
-//#include "game_assets.h"
+#include "game_assets.h"
 
 //
 // Input API functions
