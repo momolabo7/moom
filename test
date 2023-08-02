@@ -1,0 +1,56 @@
+  META_TOKEN_TYPE_UNKNOWN,
+  META_TOKEN_TYPE_OPEN_PAREN,          // (
+  META_TOKEN_TYPE_CLOSE_PAREN,         // )
+  META_TOKEN_TYPE_SEMICOLON,           // ;
+  META_TOKEN_TYPE_COMMA,               // ,
+  META_TOKEN_TYPE_DOT,                 // ,
+  META_TOKEN_TYPE_COLON,               // : 
+  META_TOKEN_TYPE_SCOPE,               // :: 
+  META_TOKEN_TYPE_OPEN_BRACKET,        // [
+  META_TOKEN_TYPE_CLOSE_BRACKET,       // ]
+  META_TOKEN_TYPE_OPEN_BRACE,          // {
+  META_TOKEN_TYPE_CLOSE_BRACE,         // } 
+  META_TOKEN_TYPE_PLUS,                // +
+  META_TOKEN_TYPE_PLUS_PLUS,           // ++ 
+  META_TOKEN_TYPE_PLUS_EQUAL,          // += 
+  META_TOKEN_TYPE_MINUS,               // -
+  META_TOKEN_TYPE_MINUS_MINUS,         // -- 
+  META_TOKEN_TYPE_MINUS_EQUAL,         // -= 
+  META_TOKEN_TYPE_ARROW,               // ->
+  META_TOKEN_TYPE_EQUAL,               // =
+  META_TOKEN_TYPE_EQUAL_EQUAL,         // ==
+  META_TOKEN_TYPE_GREATER,             // > 
+  META_TOKEN_TYPE_GREATER_EQUAL,       // >= 
+  META_TOKEN_TYPE_GREATER_GREATER,     // >>
+  META_TOKEN_TYPE_LESSER,              // < 
+  META_TOKEN_TYPE_LESSER_EQUAL,        // <= 
+  META_TOKEN_TYPE_LESSER_LESSER,       // <<
+  META_TOKEN_TYPE_OR,                  // |
+  META_TOKEN_TYPE_OR_EQUAL,            // |=
+  META_TOKEN_TYPE_OR_OR,               // ||
+  META_TOKEN_TYPE_AND,                 // & 
+  META_TOKEN_TYPE_AND_AND,             // &&
+  META_TOKEN_TYPE_AND_EQUAL,           // &=
+  META_TOKEN_TYPE_LOGICAL_NOT,         // !
+  META_TOKEN_TYPE_BITWISE_NOT,         // ~
+  META_TOKEN_TYPE_XOR,                 // ^
+  META_TOKEN_TYPE_XOR_EQUAL,           // ^=
+  META_TOKEN_TYPE_QUESTION,            // ?
+  META_TOKEN_TYPE_STAR,                // *
+  META_TOKEN_TYPE_STAR_EQUAL,          // *=
+  META_TOKEN_TYPE_SLASH,               // /
+  META_TOKEN_TYPE_SLASH_EQUAL,         // /=
+  META_TOKEN_TYPE_PERCENT,             // %
+  META_TOKEN_TYPE_PERCENT_EQUAL,       // %=
+  META_TOKEN_TYPE_IDENTIFIER,
+  META_TOKEN_TYPE_KEYWORD,
+  META_TOKEN_TYPE_STRING,
+  META_TOKEN_TYPE_INTEGER,
+  META_TOKEN_TYPE_BINARY,
+  META_TOKEN_TYPE_HEX,
+  META_TOKEN_TYPE_FLOAT,
+  META_TOKEN_TYPE_DOUBLE,
+  META_TOKEN_TYPE_LONG_DOUBLE,
+  META_TOKEN_TYPE_CHAR,
+  META_TOKEN_TYPE_MACRO,
+  META_TOKEN_TYPE_EOF

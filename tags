@@ -977,6 +977,29 @@ entry_pos	code/game_gfx.h	/^	usz_t entry_pos;$/;"	m	language:C++	struct:gfx_comm
 entry_snapshot_count	code/momo_profiler.h	/^  u32_t entry_snapshot_count;$/;"	m	language:C++	struct:profiler_t	typeref:typename:u32_t
 entry_start	code/game_gfx.h	/^	usz_t entry_start;$/;"	m	language:C++	struct:gfx_command_queue_t	typeref:typename:usz_t
 eof	bin/pack_lit.bat	/^:eof$/;"	l	language:DosBatch
+euler_q1	euler.cpp	/^euler_q1() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q10	euler.cpp	/^euler_q10() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q10_if_prime_return_itself_else_zero	euler.cpp	/^euler_q10_if_prime_return_itself_else_zero(u32_t x) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q11	euler.cpp	/^static void euler_q11() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q11_check_diag_l	euler.cpp	/^static u32_t euler_q11_check_diag_l(u32_t index) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q11_check_diag_r	euler.cpp	/^static u32_t euler_q11_check_diag_r(u32_t index) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q11_check_hori	euler.cpp	/^static u32_t euler_q11_check_hori(u32_t index) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q11_check_vert	euler.cpp	/^static u32_t euler_q11_check_vert(u32_t index) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q11_grid	euler.cpp	/^static u32_t euler_q11_grid[] = {$/;"	v	language:C++	typeref:typename:u32_t[]	file:
+euler_q11_grid_cols	euler.cpp	/^static u32_t euler_q11_grid_cols = 20; $/;"	v	language:C++	typeref:typename:u32_t	file:
+euler_q11_grid_rows	euler.cpp	/^static u32_t euler_q11_grid_rows = array_count(euler_q11_grid)\/euler_q11_grid_cols;$/;"	v	language:C++	typeref:typename:u32_t	file:
+euler_q2	euler.cpp	/^euler_q2() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q3	euler.cpp	/^euler_q3() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q4	euler.cpp	/^euler_q4() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q4_is_palindrome	euler.cpp	/^euler_q4_is_palindrome(u32_t x) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+euler_q5_divide_checker	euler.cpp	/^euler_q5_divide_checker(u32_t num) {$/;"	f	language:C++	typeref:typename:int	file:
+euler_q6	euler.cpp	/^euler_q6() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q7	euler.cpp	/^euler_q7() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q7_is_prime	euler.cpp	/^euler_q7_is_prime(u32_t x) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q8	euler.cpp	/^euler_q8() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q9	euler.cpp	/^euler_q9() {$/;"	f	language:C++	typeref:typename:void	file:
+euler_q9_is_triplet	euler.cpp	/^euler_q9_is_triplet(u32_t a, u32_t b, u32_t c) {$/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q9_sq	euler.cpp	/^euler_q9_sq(u32_t x) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 events	code/momo_debug.h	/^  dbg_event_t events[DBG_MAX_EVENTS];$/;"	m	language:C++	struct:dbg_t	typeref:typename:dbg_event_t[]
 event_count	code/momo_debug.h	/^  u32_t event_count;$/;"	m	language:C++	struct:dbg_t	typeref:typename:u32_t
 exit_callback	code/lit_game.h	/^  lit_game_exit_callback_f* exit_callback;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_exit_callback_f *
@@ -2646,6 +2669,7 @@ main	code/pass.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/pass_lit.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/sui.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
+main	euler.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	pass.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 make	code/momo.h	/^#define make(/;"	d	language:C++
 make	code/momo2.h	/^#define make(/;"	d	language:C++
@@ -3261,6 +3285,7 @@ ptr_to_umi	code/momo.h	/^static umi_t ptr_to_umi(void* p);$/;"	p	language:C++	ty
 ptr_to_umi	code/momo2.h	/^ptr_to_umi(void* p) { $/;"	f	language:C++	typeref:typename:umi_t
 ptr_to_umi	code/momo2.h	/^static umi_t ptr_to_umi(void* p);$/;"	p	language:C++	typeref:typename:umi_t
 ptr_to_umi	code/momo_types.h	/^ptr_to_umi(void* p) { $/;"	f	language:C++	typeref:typename:umi_t
+q5	euler.cpp	/^static void q5() {$/;"	f	language:C++	typeref:typename:void	file:
 quicksort	code/momo.h	/^quicksort(sort_entry_t* entries, u32_t entry_count) {$/;"	f	language:C++	typeref:typename:void
 quicksort	code/momo.h	/^static void quicksort(sort_entry_t* entries, u32_t entry_count);$/;"	p	language:C++	typeref:typename:void
 quicksort	code/momo2.h	/^quicksort(sort_entry_t* entries, u32_t entry_count) {$/;"	f	language:C++	typeref:typename:void
