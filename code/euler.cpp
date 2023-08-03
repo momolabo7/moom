@@ -658,22 +658,31 @@ euler_q15() {
 //
 // Question 16
 //
-// NOT DONE
+// 2^1000 gets pretty huge that we can't store it
+// in a u64. Floating points have also proven to be
+// grossly inaccurate. The next easiest way to implement
+// this would be to have a vector of digits and perform
+// operations on it
 //
+// NOT SOLVED
+//
+
+struct euler_16_big_num {
+  // TODO
+};
+
 static void
 euler_q16() {
   f64_t n = f64_pow(2, 1000);
-  printf("Answer: %f\n", n);
-#if 0
-  u64_t sum = 0;
-  printf("Answer: %llu\n", n);
-  while(n != 0) {
-  printf("Adding: %llu\n", n%10);
-    sum += n%10;
-    n/=10;
+
+  u32_t sum = 0;
+  while(!f64_is_close(n, 0.0)) {
+    f64_t m = f64_mod(n, 10);
+    sum += (u32_t)m; 
+    n = trunc(n/10.0);
   }
-  printf("Answer: %llu\n", sum);
-#endif
+
+  printf("Answer: %u\n", sum);
 }
 
 int main() {

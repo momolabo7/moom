@@ -2,7 +2,9 @@
 #ifndef MOMO_INSPECTOR_H
 #define MOMO_INSPECTOR_H
 
-
+//
+// MARK:(Inspector)
+//
 enum inspector_entry_type_t {
   INSPECTOR_ENTRY_TYPE_F32,
   INSPECTOR_ENTRY_TYPE_U32,

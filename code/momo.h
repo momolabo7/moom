@@ -9,10 +9,14 @@
 #ifndef MOMO_H
 #define MOMO_H
 
+//
+// MARK:(Includes)
+//
 #include <stdarg.h> // for varadic arguments
+#include <math.h>
 
 //
-// Compiler contexts
+// MARK:(Contexts)
 //
 #if defined(_MSC_VER) 
 # define COMPILER_MSVC 1
@@ -469,10 +473,9 @@ struct json_t {
 };
 
 
-////
+
 //
-// Primitive Constants
-//
+// MARK:(Constants)
 //
 #define S8_MIN  (-0x80)
 #define S16_MIN (-0x8000)
@@ -507,7 +510,7 @@ struct json_t {
 #define GOLD_64 (1.61803398875)
 
 //
-// Helper Macros
+// MARK:(Common Macros)
 //
 #define dref(expr) (*(expr))
 #define stringify_(s) #s
@@ -538,8 +541,17 @@ struct json_t {
 #define ns_begin(name) namespace name {
 #define ns_end(name) }
 
+#define min_of(l,r) ((l) < (r) ? (l) : (r))
+#define max_of(l,r) ((l) > (r) ? (l) : (r))
+#define clamp_of(x,b,t) (max_of(min_of(x,t),b))
+#define swap(l,r) { auto tmp = (l); (l) = (r); (r) = tmp; } 
+
+#define for_arr(id, arr) for(umi_t id = 0, cnt = array_count(arr); (id) < (cnt); ++id)
+#define for_cnt(id, cnt) for(decltype(cnt) id = 0; id < (cnt); ++id)
+#define for_range(id, beg, end) for(decltype(beg) id = (beg); id <= (end); ++id)
+
 //
-// Defer
+// MARK:(Defer)
 //
 template<typename F> 
 struct _defer_scope_guard {
@@ -552,13 +564,10 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 }
 #define defer auto glue(_defer, __LINE__) = _defer_dummy{} + [&]()
 
-//
-// Foreach
-//
-#define for_arr(id, arr) for(umi_t id = 0, cnt = array_count(arr); (id) < (cnt); ++id)
-#define for_cnt(id, cnt) for(decltype(cnt) id = 0; id < (cnt); ++id)
-#define for_range(id, beg, end) for(decltype(beg) id = (beg); id <= (end); ++id)
 
+//
+// MARK:(SI)
+//
 // These need to be macros instead of function
 // because I don't want these to return or take in to a specific strict type.
 // Returning a strict type almost always end up requiring an explicit
@@ -567,183 +576,53 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 #define kilobytes(n) ((1<<10) * n)
 #define megabytes(n) ((1<<20) * n)
 #define gigabytes(n) ((1<<30) * n)
-
 #define hundreds(x) ((x) * 100) 
 #define thousands(x) ((x) * 1000)
 
 //
-// bit manipulation
-//
-#define bit_is_set(mask,bit) ((mask) & ((u64_t)1 << (bit)))
-#define bit_set(mask, bit) ((mask) |= ((u64_t)1 << (bit)))
-#define bit_unset(mask, bit) ((mask) &= ~((u64_t)1 << (bit)))
-
-#define align_down_pow2(v,a) ((v) & ~((a)-1))
-#define align_up_pow2(v,a) ((v) + ((a)-1) & ~((a)-1))
-#define is_pow2(v) ((v) & ((v)-1) == 0)
-#define swap(l,r) { auto tmp = (l); (l) = (r); (r) = tmp; } 
-
-// Min/Max
-#define min_of(l,r) ((l) < (r) ? (l) : (r))
-#define max_of(l,r) ((l) > (r) ? (l) : (r))
-#define clamp_of(x,b,t) (max_of(min_of(x,t),b))
-
-
-//
-// Pointer to Int conversions 
-//
-static umi_t ptr_to_umi(void* p);
-static u8_t* umi_to_ptr(umi_t u);
-
-//
-// Ascii helpers
+// MARK:(ASCII) 
 //
 #define digit_to_ascii(d) ((d) + '0')
 #define ascii_to_digit(a) ((a) - '0')
-
 static b32_t is_whitespace(char c);
 static b32_t is_alpha(char c);
 static b32_t is_digit(char c);
 
 //
-// Memory helpers
+// MARK:(Memory) 
 //
+#define bit_is_set(mask,bit) ((mask) & ((u64_t)1 << (bit)))
+#define bit_set(mask, bit) ((mask) |= ((u64_t)1 << (bit)))
+#define bit_unset(mask, bit) ((mask) &= ~((u64_t)1 << (bit)))
+#define align_down_pow2(v,a) ((v) & ~((a)-1))
+#define align_up_pow2(v,a) ((v) + ((a)-1) & ~((a)-1))
+#define is_pow2(v) ((v) & ((v)-1) == 0)
 #define zero_struct(p)    zero_memory((p), sizeof(*(p)))
 #define zero_array(p)     zero_memory((p), sizeof(p))
 #define zero_range(p,s)   zero_memory((p), sizeof(*(p)) * (s))
-
 #define copy_struct(p)    copy_memory((p), sizeof(*(p)))
 #define copy_array(p)     copy_memory((p), sizeof(p))
 #define copy_range(p,s)   copy_memory((p), sizeof(*(p)) * (s))
-
 static void copy_memory(void* dest, const void* src, umi_t size);
 static void zero_memory(void* dest, umi_t size);
 static b32_t is_memory_same(const void* lhs, const void* rhs, umi_t size);
 static void swap_memory(void* lhs, void* rhs, umi_t size);
+static umi_t ptr_to_umi(void* p);
+static u8_t* umi_to_ptr(umi_t u);
 
-//
-// Absolutes
-//
+
+// MARK:(F32)
 static f32_t f32_abs(f32_t x);
-static f64_t f64_abs(f64_t x);
-static s8_t  s8_abs(s8_t x);
-static s16_t s16_abs(s16_t x);
-static s32_t s32_abs(s32_t x); 
-static s64_t s64_abs(s64_t x);
-
-//
-// Lerps
-//
 static f32_t f32_lerp(f32_t s, f32_t e, f32_t f);
-static f64_t f64_lerp(f64_t s, f64_t e, f64_t f); 
-
-//
-// Weights
-//
+static f32_t f32_mod(f32_t lhs, f32_t rhs);
 static f32_t f32_weight(f32_t v, f32_t min, f32_t max);
-static f64_t f64_weight(f64_t v, f64_t min, f64_t max) ;
-
-//
-// Degrees, Radians and Turns
-//
-
 static f32_t f32_deg_to_rad(f32_t degrees);
 static f32_t f32_rad_to_deg(f32_t radians);
 static f32_t f32_turns_to_radians(f32_t turns);
-static f64_t f64_deg_to_rad(f64_t degrees);
-static f64_t f64_rad_to_deg(f64_t radians);
-static f64_t f64_turns_to_radians(f64_t turns);
-
-//
-// Combinatorics
-//
-static u32_t u32_factorial(u32_t x);
-static u64_t u64_factorial(u64_t x);
 static f32_t f32_factorial(f32_t x);
-static f64_t f64_factorial(f64_t x);
-//
-// Endian Swap
-// 
-// NOTE(Momo): I'm not entirely sure if this prototype makes sense.
-// It sounds more reasonable to endian swap ANY type. 
-// We COULD use a template approach like so:
-//   template<typename T> endian_swap_16(T value);
-//   template<typename T> endian_swap_32(T value); 
-// Or we COULD just ignore the concept of type:
-//   void _EndianSwap16(u8_t* ptr)
-//   #define endian_swap_16(value) _EndianSwap16((u8_t*)&value)
-//
-static u16_t u16_endian_swap(u16_t value);
-static s16_t s16_endian_swap(s16_t value);
-static u32_t u32_endian_swap(u32_t value);
-
-
-//
-// Beats Per Minute to Seconds Per Beat
-//
-static f32_t bpm_to_spb_f32(f32_t bpm);
-static f64_t bpm_to_spb_f64(f64_t bpm);
-
-
-
-
-//
-// MARK:(CString Signatures)
-//
-static umi_t cstr_len(const c8_t* str); 
-static void  cstr_copy(c8_t * dest, const c8_t* src); 
-static b32_t cstr_compare(const c8_t* lhs, const c8_t* rhs); 
-static b32_t cstr_compare_n(const c8_t* lhs, const c8_t* rhs, umi_t n); 
-static void  cstr_concat(c8_t* dest, const c8_t* Src);
-static f64_t cstr_to_f64(const c8_t* p); 
-static void  cstr_clear(c8_t* dest); 
-static void  cstr_reverse(c8_t* dest); 
-static void  cstr_itoa(c8_t* dest, s32_t num); 
-
-
-
-// F32 functions
-static b32_t is_close_f32(f32_t lhs, f32_t rhs); 
-static b32_t is_close_f64(f64_t lhs, f64_t rhs); 
-static b32_t is_nan_f32(f32_t f); 
-static b32_t is_nan_f64(f64_t f); 
-
-//
-// Hash functions
-// 
-static u32_t djb2(const c8_t* str);
-
-//
-// Singly Linked Lists
-//
-// f - first node
-// l - last node
-// n - node
-#define sll_prepend(f,l,n) (f) ? ((n)->next = (f), (f) = (n)) : ((f) = (l) = (n))
-#define sll_append(f,l,n)  (f) ? ((l)->next = (n), (l) = (n)) : ((f) = (l) = (n), (l)->next = 0)
-
-//
-// Circular Doubly Linked List with sentinel
-// 
-// s - sentinel
-// n - node
-#define cll_init(s)     (s)->prev = (s), (s)->next = (s) 
-#define cll_append(s,n) (n)->next = (s), (n)->prev = (s)->prev, (n)->prev->next = (n), (n)->next->prev = (n)
-#define cll_remove(n)   (n)->prev->next = (n)->next, (n)->next->prev = (n)->prev, (n)->next = 0, (n)->prev = 0;
-
-//
-// Atomic functions
-// 
-
-// Returns the old value before the exchange
-static u32_t u32_atomic_compare_assign(u32_t volatile* value, u32_t new_value, u32_t expected_value);
-static u64_t u64_atomic_assign(u64_t volatile* value, u64_t new_value);
-static u32_t u32_atomic_add(u32_t volatile* value, u32_t to_add);
-static u64_t u64_atomic_add(u64_t volatile* value, u64_t to_add);
-
-//
-// Math functions
-//
+static f32_t f32_bpm_to_spb(f32_t bpm);
+static b32_t f32_is_close(f32_t lhs, f32_t rhs); 
+static b32_t f32_is_nan(f32_t f); 
 static f32_t f32_sin(f32_t x);
 static f32_t f32_cos(f32_t x);
 static f32_t f32_tan(f32_t x);
@@ -752,23 +631,9 @@ static f32_t f32_asin(f32_t x);
 static f32_t f32_acos(f32_t x);
 static f32_t f32_atan(f32_t x);
 static f32_t f32_pow(f32_t v, f32_t e);
-static f64_t f64_sin(f64_t x);
-static f64_t f64_cos(f64_t x);
-static f64_t f64_tan(f64_t x);
-static f64_t f64_sqrt(f64_t x);
-static f64_t f64_asin(f64_t x);
-static f64_t f64_acos(f64_t x);
-static f64_t f64_atan(f64_t x);
-static f64_t f64_pow(f64_t , f64_t e);
 static f32_t f32_ceil(f32_t value);
 static f32_t f32_floor(f32_t value);
 static f32_t f32_round(f32_t value);
-static f64_t f64_ceil(f64_t value);
-static f64_t f64_floor(f64_t value);
-static f64_t f64_round(f64_t value);
-
-// Easing functions
-
 static f32_t f32_ease_linear(f32_t t);
 static f32_t f32_ease_in_sine(f32_t t);
 static f32_t f32_ease_out_sine(f32_t t);
@@ -800,6 +665,30 @@ static f32_t f32_ease_inout_bounce(f32_t t);
 static f32_t f32_ease_in_expo(f32_t t);
 static f32_t f32_ease_out_expo(f32_t t);
 static f32_t f32_ease_inout_expo(f32_t t);
+
+// MARK:(F64)
+static f64_t f64_abs(f64_t x);
+static f64_t f64_lerp(f64_t s, f64_t e, f64_t f); 
+static f64_t f64_mod(f64_t lhs, f64_t rhs); 
+static f64_t f64_weight(f64_t v, f64_t min, f64_t max) ;
+static f64_t f64_deg_to_rad(f64_t degrees);
+static f64_t f64_rad_to_deg(f64_t radians);
+static f64_t f64_turns_to_radians(f64_t turns);
+static f64_t f64_factorial(f64_t x);
+static f64_t f64_bpm_to_spb(f64_t bpm);
+static b32_t f64_is_close(f64_t lhs, f64_t rhs); 
+static b32_t f64_is_nan(f64_t f); 
+static f64_t f64_sin(f64_t x);
+static f64_t f64_cos(f64_t x);
+static f64_t f64_tan(f64_t x);
+static f64_t f64_sqrt(f64_t x);
+static f64_t f64_asin(f64_t x);
+static f64_t f64_acos(f64_t x);
+static f64_t f64_atan(f64_t x);
+static f64_t f64_pow(f64_t , f64_t e);
+static f64_t f64_ceil(f64_t value);
+static f64_t f64_floor(f64_t value);
+static f64_t f64_round(f64_t value);
 static f64_t f64_ease_linear(f64_t t);
 static f64_t f64_ease_in_sine(f64_t t);
 static f64_t f64_ease_out_sine(f64_t t);
@@ -831,6 +720,74 @@ static f64_t f64_ease_inout_bounce(f64_t t);
 static f64_t f64_ease_in_expo(f64_t t);
 static f64_t f64_ease_out_expo(f64_t t);
 static f64_t f64_ease_inout_expo(f64_t t);
+
+// 
+// MARK:(Integer)
+//
+static s8_t  s8_abs(s8_t x);
+static s16_t s16_abs(s16_t x);
+static s16_t s16_endian_swap(s16_t value);
+static s32_t s32_abs(s32_t x); 
+static s64_t s64_abs(s64_t x);
+
+static u16_t u16_endian_swap(u16_t value);
+static u32_t u32_factorial(u32_t x);
+static u32_t u32_endian_swap(u32_t value);
+static u64_t u64_factorial(u64_t x);
+
+//
+// MARK:(CString)
+//
+static umi_t cstr_len(const c8_t* str); 
+static void  cstr_copy(c8_t * dest, const c8_t* src); 
+static b32_t cstr_compare(const c8_t* lhs, const c8_t* rhs); 
+static b32_t cstr_compare_n(const c8_t* lhs, const c8_t* rhs, umi_t n); 
+static void  cstr_concat(c8_t* dest, const c8_t* Src);
+static f64_t cstr_to_f64(const c8_t* p); 
+static void  cstr_clear(c8_t* dest); 
+static void  cstr_reverse(c8_t* dest); 
+static void  cstr_itoa(c8_t* dest, s32_t num); 
+
+
+//
+// MARK:(Hash)
+// 
+static u32_t djb2(const c8_t* str);
+
+//
+// MARK:(Linked List)
+//
+// Singly Linked List
+//
+// f - first node
+// l - last node
+// n - node
+#define sll_prepend(f,l,n) (f) ? ((n)->next = (f), (f) = (n)) : ((f) = (l) = (n))
+#define sll_append(f,l,n)  (f) ? ((l)->next = (n), (l) = (n)) : ((f) = (l) = (n), (l)->next = 0)
+
+//
+// Circular Doubly Linked List with sentinel
+// 
+// s - sentinel
+// n - node
+#define cll_init(s)     (s)->prev = (s), (s)->next = (s) 
+#define cll_append(s,n) (n)->next = (s), (n)->prev = (s)->prev, (n)->prev->next = (n), (n)->next->prev = (n)
+#define cll_remove(n)   (n)->prev->next = (n)->next, (n)->next->prev = (n)->prev, (n)->next = 0, (n)->prev = 0;
+
+//
+// Atomic functions
+// 
+// Returns the old value before the exchange
+static u32_t u32_atomic_compare_assign(u32_t volatile* value, u32_t new_value, u32_t expected_value);
+static u64_t u64_atomic_assign(u64_t volatile* value, u64_t new_value);
+static u32_t u32_atomic_add(u32_t volatile* value, u32_t to_add);
+static u64_t u64_atomic_add(u64_t volatile* value, u64_t to_add);
+
+//
+// Math functions
+//
+
+// Easing functions
 
 //
 // MARK:(Vector Signatures)
@@ -1242,6 +1199,17 @@ f64_abs(f64_t x) {
   return val.f;
 }
 
+static f32_t
+f32_mod(f32_t lhs, f32_t rhs) 
+{
+  return fmodf(lhs, rhs);
+}
+
+static f64_t
+f64_mod(f64_t lhs, f64_t rhs) 
+{
+  return fmod(lhs, rhs);
+}
 
 static s8_t   
 s8_abs(s8_t x) {
@@ -1318,12 +1286,12 @@ f64_turns_to_radians(f64_t turns) {
 }
 
 static f32_t
-bpm_to_spb_f32(f32_t bpm) {
+f32_bpm_to_spb(f32_t bpm) {
   return 60.f/bpm;
 }
 
 static f64_t
-bpm_to_spb_f64(f64_t bpm) {
+f64_bpm_to_spb(f64_t bpm) {
   return 60.0/bpm;
 }
 
@@ -2307,24 +2275,24 @@ cstr_itoa(c8_t* dest, s32_t num) {
 }
 
 static b32_t 
-is_close_f32(f32_t lhs, f32_t rhs) {
+f32_is_close(f32_t lhs, f32_t rhs) {
   return f32_abs(lhs - rhs) <= F32_EPSILON;
 }
 
 static b32_t 
-is_close_f64(f64_t lhs, f64_t rhs) {
+f64_is_close(f64_t lhs, f64_t rhs) {
   return f64_abs(lhs - rhs) <= F64_EPSILON;
 }
 
 static b32_t 
-is_nan_f32(f32_t f) {
+f32_is_nan(f32_t f) {
   union { f32_t f; u64_t u; } ret = {};
   ret.f = f;
   return (ret.u & 0xFFFFFFFF) == 0xFFFFFFFF;
 }
 
 static b32_t 
-is_nan_f64(f64_t f) {
+f64_is_nan(f64_t f) {
   union { f64_t f; u64_t u; } ret = {};
   ret.f = f;
   return (ret.u & 0xFFFFFFFFFFFFFFFF) == 0xFFFFFFFFFFFFFFFF;
@@ -2386,7 +2354,6 @@ u64_atomic_add(u64_t volatile* value, u64_t to_add) {
 # error "Not defined"
 #endif
 
-#include <math.h>
 static f32_t 
 f32_sin(f32_t x) {
   return sinf(x);
@@ -2962,7 +2929,7 @@ v2f_scale(v2f_t lhs, f32_t rhs) {
 
 static v2f_t 
 v2f_div(v2f_t lhs, f32_t rhs) {
-  assert(!is_close_f32(rhs, 0.f));
+  assert(!f32_is_close(rhs, 0.f));
   lhs.x /= rhs;
   lhs.y /= rhs;
   return lhs;
@@ -3014,8 +2981,8 @@ v2f_norm(v2f_t v) {
 
 static b32_t
 v2f_is_close(v2f_t lhs, v2f_t rhs) {
-  return (is_close_f32(lhs.x, rhs.x) &&
-          is_close_f32(lhs.y, rhs.y)); 
+  return (f32_is_close(lhs.x, rhs.x) &&
+          f32_is_close(lhs.y, rhs.y)); 
 }
 
 static v2f_t 
@@ -3027,7 +2994,7 @@ static v2f_t
 v2f_proj(v2f_t v, v2f_t onto) {
   // (to . from)/LenSq(to) * to
   f32_t onto_len_sq = v2f_len_sq(onto);
-  assert(!is_close_f32(onto_len_sq, 0.f));
+  assert(!f32_is_close(onto_len_sq, 0.f));
   f32_t v_dot_onto = v2f_dot(v, onto);
   f32_t scalar = v_dot_onto / onto_len_sq;
   v2f_t ret = v2f_scale(onto, scalar);
@@ -3099,7 +3066,7 @@ v3f_scale(v3f_t lhs, f32_t rhs) {
 
 static v3f_t 
 v3f_div(v3f_t lhs, f32_t rhs) {
-  assert(!is_close_f32(rhs, 0.f));
+  assert(!f32_is_close(rhs, 0.f));
   lhs.x /= rhs;
   lhs.y /= rhs;
   lhs.z /= rhs;
@@ -3148,8 +3115,8 @@ v3f_norm(v3f_t v) {
 
 static b32_t
 v3f_is_close(v3f_t lhs, v3f_t rhs) {
-  return (is_close_f32(lhs.x, rhs.x) &&
-          is_close_f32(lhs.y, rhs.y)); 
+  return (f32_is_close(lhs.x, rhs.x) &&
+          f32_is_close(lhs.y, rhs.y)); 
 }
 
 static v3f_t 
@@ -3161,7 +3128,7 @@ static v3f_t
 v3f_project(v3f_t v, v3f_t onto) {
   // (to . from)/LenSq(to) * to
   f32_t onto_len_sq = v3f_len_sq(onto);
-  assert(!is_close_f32(onto_len_sq, 0.f));
+  assert(!f32_is_close(onto_len_sq, 0.f));
   f32_t v_dot_onto = v3f_dot(v, onto);
   f32_t scalar = v_dot_onto / onto_len_sq;
   v3f_t ret = v3f_scale(onto, scalar);
@@ -3461,7 +3428,7 @@ rbg_to_hsl(rgb_t c) {
   f32_t delta = max - min; // aka chroma
   
   
-  if (is_close_f32(max, c.r)) {
+  if (f32_is_close(max, c.r)) {
     f32_t segment = (c.g - c.b)/delta;
     f32_t shift = 0.f / 60;
     if (segment < 0) {
@@ -3473,13 +3440,13 @@ rbg_to_hsl(rgb_t c) {
     ret.h = (segment + shift) * 60.f;
   }
   
-  else if (is_close_f32(max, c.g)) {
+  else if (f32_is_close(max, c.g)) {
     f32_t segment = (c.b - c.r)/delta;
     f32_t shift = 120.f / 60.f;
     ret.h = (segment + shift) * 60.f;
   }
   
-  else if (is_close_f32(max, c.b)) {
+  else if (f32_is_close(max, c.b)) {
     f32_t segment = (c.r - c.g)/delta;
     f32_t shift = 240.f / 60.f;
     ret.h = ((segment + shift) * 60.f);
@@ -3492,7 +3459,7 @@ rbg_to_hsl(rgb_t c) {
   
   ret.l = (max + min) * 0.5f;
   
-  if (is_close_f32(delta, 0.f)) {
+  if (f32_is_close(delta, 0.f)) {
     ret.s = 0.f;
   }
   else {
@@ -3531,7 +3498,7 @@ hsl_to_rgb(hsl_t c) {
          c.l >= 0.f &&
          c.l <= 1.f);
   rgb_t ret;
-  if(is_close_f32(c.s, 0.f)) {
+  if(f32_is_close(c.s, 0.f)) {
     ret.r = ret.g = ret.b = c.l; // achromatic
   }
   else {
@@ -6666,6 +6633,22 @@ rp_pack(rp_rect_t* rects,
 
 //
 // JOURNAL
+//
+// = 2023-08-03 =
+//   I'm not entirely sure if inspector and profiler should
+//   be under momo.h, which is meant to contain general purpose
+//   bag of useful things. I'm trying to visualize how general
+//   purpose they REALLY are.
+//   
+//   The inspector, I feel, is not general purpose enough to
+//   warrant being placed here. It needs a simpler way to allow
+//   inspection of ANY objects. Right now, to add a new object,
+//   one will need to change the definition of the whole 
+//   structure, which is not ideal.
+//
+//   TECHNICALLY, I could just support types that the framework
+//   supports (like u32, v2f, etc) and call it a day. 
+//
 //
 // = 2023-07-25 =
 //   I have made momo.h a single header file with no .cpp.
