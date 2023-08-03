@@ -9,10 +9,7 @@
 #ifndef MOMO_H
 #define MOMO_H
 
-//
-// Varadic arguments
-//
-#include <stdarg.h>
+#include <stdarg.h> // for varadic arguments
 
 //
 // Compiler contexts
