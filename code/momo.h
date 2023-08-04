@@ -4,6 +4,36 @@
 //   portable functions and structures that are very useful for
 //   anything that I do in C/C++
 //
+// BOOKMARKS
+//   
+//   Includes    - Includes 
+//   Context     - Context Defines
+//   Constants   - Common constant values
+//   Helper      - Common helper macros and functions 
+//   Hash        - Hash functions (using CString) 
+//   Linked List - Linked List macros 
+//   Bonk        - Collision detection 
+//   Buffer      - Type
+//   Vector      - Type
+//   Matrix      - Type
+//   Color       - Type
+//   RNG         - Type
+//   CRC         - Type
+//   Sorting     - Type
+//   Arena       - Type
+//   String      - Type
+//   Stream      - Type
+//   TTF         - Type
+//   WAV         - Type
+//   PNG         - Type
+//   JSON        - Type
+//   RectPack    - Type
+//
+//
+//
+//
+//
+//
 
 
 #ifndef MOMO_H
@@ -176,7 +206,7 @@ struct buffer_t {
 };
 
 //
-// MARK:(Vectors Declarations)
+// MARK:(Vector)
 //
 union v2u_t {
 	struct { u32_t x, y; };
@@ -209,14 +239,14 @@ union v4f_t {
 };
 
 //
-// MARK:(Matrices Declarations)
+// MARK:(Matrix)
 //
 struct m44f_t {
 	f32_t e[4][4];
 };
 
 //
-// MARK:(Colors Declarations)
+// MARK:(Color)
 //
 struct rgb_t {
   f32_t r, g, b;   
@@ -255,7 +285,7 @@ struct rng_t {
 };
 
 //
-// MARK:(Sorting Declarations)
+// MARK:(Sorting)
 //
 struct sort_entry_t {
   f32_t key;
@@ -263,7 +293,7 @@ struct sort_entry_t {
 };
 
 //
-// MARK:(CRC Declarations)
+// MARK:(CRC)
 //
 struct crc32_table_t {
   u32_t remainders[256];
@@ -279,7 +309,7 @@ struct crc8_table_t {
 
 
 //
-// MARK:(Arena Declarations)
+// MARK:(Arena)
 //
 struct arena_t {
 	u8_t* memory;
@@ -294,7 +324,7 @@ struct arena_marker_t {
 };
 
 //
-// MARK:(Strings Declarations)
+// MARK:(Strings)
 //
 struct st8_t {
 	u8_t* e;
@@ -313,7 +343,7 @@ struct stb8_t{
 };
 
 //
-// MARK:(Stream Declarations)
+// MARK:(Stream)
 //
 struct stream_t {
   buffer_t contents;
@@ -326,7 +356,7 @@ struct stream_t {
 
 
 //
-// MARK:(TTF Declaration) 
+// MARK:(TTF) 
 //
 struct ttf_t {
   u8_t* data;
@@ -387,7 +417,7 @@ struct png_t {
 };
 
 // 
-// MARK:(Rect Pack Declarations)
+// MARK:(RectPack)
 //
 enum rp_sort_type_t {
   RP_SORT_TYPE_WIDTH,
@@ -404,7 +434,7 @@ struct rp_rect_t{
 };
 
 //
-// MARK:(JSON Declarations)
+// MARK:(JSON)
 //
 
 // The "key" of a JSON entry, which can only be a string.
@@ -510,7 +540,21 @@ struct json_t {
 #define GOLD_64 (1.61803398875)
 
 //
-// MARK:(Common Macros)
+// SI Units
+//
+// These need to be macros instead of function
+// because I don't want these to return or take in to a specific strict type.
+// Returning a strict type almost always end up requiring an explicit
+// conversion on the user side.
+// 
+#define kilobytes(n) ((1<<10) * n)
+#define megabytes(n) ((1<<20) * n)
+#define gigabytes(n) ((1<<30) * n)
+#define hundreds(x) ((x) * 100) 
+#define thousands(x) ((x) * 1000)
+
+//
+// MARK:(Helpers)
 //
 #define dref(expr) (*(expr))
 #define stringify_(s) #s
@@ -550,9 +594,6 @@ struct json_t {
 #define for_cnt(id, cnt) for(decltype(cnt) id = 0; id < (cnt); ++id)
 #define for_range(id, beg, end) for(decltype(beg) id = (beg); id <= (end); ++id)
 
-//
-// MARK:(Defer)
-//
 template<typename F> 
 struct _defer_scope_guard {
   F f;
@@ -565,22 +606,9 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 #define defer auto glue(_defer, __LINE__) = _defer_dummy{} + [&]()
 
 
-//
-// MARK:(SI)
-//
-// These need to be macros instead of function
-// because I don't want these to return or take in to a specific strict type.
-// Returning a strict type almost always end up requiring an explicit
-// conversion on the user side.
-// 
-#define kilobytes(n) ((1<<10) * n)
-#define megabytes(n) ((1<<20) * n)
-#define gigabytes(n) ((1<<30) * n)
-#define hundreds(x) ((x) * 100) 
-#define thousands(x) ((x) * 1000)
 
 //
-// MARK:(ASCII) 
+// ASCII
 //
 #define digit_to_ascii(d) ((d) + '0')
 #define ascii_to_digit(a) ((a) - '0')
@@ -589,7 +617,7 @@ static b32_t is_alpha(char c);
 static b32_t is_digit(char c);
 
 //
-// MARK:(Memory) 
+// Memory
 //
 #define bit_is_set(mask,bit) ((mask) & ((u64_t)1 << (bit)))
 #define bit_set(mask, bit) ((mask) |= ((u64_t)1 << (bit)))
@@ -610,8 +638,9 @@ static void swap_memory(void* lhs, void* rhs, umi_t size);
 static umi_t ptr_to_umi(void* p);
 static u8_t* umi_to_ptr(umi_t u);
 
-
-// MARK:(F32)
+//
+// F32
+//
 static f32_t f32_abs(f32_t x);
 static f32_t f32_lerp(f32_t s, f32_t e, f32_t f);
 static f32_t f32_mod(f32_t lhs, f32_t rhs);
@@ -666,7 +695,9 @@ static f32_t f32_ease_in_expo(f32_t t);
 static f32_t f32_ease_out_expo(f32_t t);
 static f32_t f32_ease_inout_expo(f32_t t);
 
-// MARK:(F64)
+//
+// F64
+//
 static f64_t f64_abs(f64_t x);
 static f64_t f64_lerp(f64_t s, f64_t e, f64_t f); 
 static f64_t f64_mod(f64_t lhs, f64_t rhs); 
@@ -721,8 +752,8 @@ static f64_t f64_ease_in_expo(f64_t t);
 static f64_t f64_ease_out_expo(f64_t t);
 static f64_t f64_ease_inout_expo(f64_t t);
 
-// 
-// MARK:(Integer)
+//
+// Integers
 //
 static s8_t  s8_abs(s8_t x);
 static s16_t s16_abs(s16_t x);
@@ -731,12 +762,18 @@ static s32_t s32_abs(s32_t x);
 static s64_t s64_abs(s64_t x);
 
 static u16_t u16_endian_swap(u16_t value);
+
 static u32_t u32_factorial(u32_t x);
+static u32_t u32_atomic_compare_assign(u32_t volatile* value, u32_t new_value, u32_t expected_value);
+static u32_t u32_atomic_add(u32_t volatile* value, u32_t to_add);
 static u32_t u32_endian_swap(u32_t value);
+
 static u64_t u64_factorial(u64_t x);
+static u64_t u64_atomic_assign(u64_t volatile* value, u64_t new_value);
+static u64_t u64_atomic_add(u64_t volatile* value, u64_t to_add);
 
 //
-// MARK:(CString)
+// CString
 //
 static umi_t cstr_len(const c8_t* str); 
 static void  cstr_copy(c8_t * dest, const c8_t* src); 
@@ -774,23 +811,9 @@ static u32_t djb2(const c8_t* str);
 #define cll_append(s,n) (n)->next = (s), (n)->prev = (s)->prev, (n)->prev->next = (n), (n)->next->prev = (n)
 #define cll_remove(n)   (n)->prev->next = (n)->next, (n)->next->prev = (n)->prev, (n)->next = 0, (n)->prev = 0;
 
-//
-// Atomic functions
-// 
-// Returns the old value before the exchange
-static u32_t u32_atomic_compare_assign(u32_t volatile* value, u32_t new_value, u32_t expected_value);
-static u64_t u64_atomic_assign(u64_t volatile* value, u64_t new_value);
-static u32_t u32_atomic_add(u32_t volatile* value, u32_t to_add);
-static u64_t u64_atomic_add(u64_t volatile* value, u64_t to_add);
 
 //
-// Math functions
-//
-
-// Easing functions
-
-//
-// MARK:(Vector Signatures)
+// MARK:(Vector)
 //
 static v2f_t v2f_add(v2f_t lhs, v2f_t rhs); 
 static v2f_t v2f_sub(v2f_t lhs, v2f_t rhs); 
@@ -856,7 +879,7 @@ static v3f_t& operator-=(v3f_t& lhs, v3f_t rhs);
 static v3f_t& operator*=(v3f_t& lhs, f32_t rhs); 
 
 //
-// MARK:(Matrices Signatures)
+// MARK:(Matrix)
 //
 static m44f_t m44f_concat(m44f_t lhs, m44f_t rhs);
 static m44f_t m44f_transpose(m44f_t m);
@@ -872,7 +895,7 @@ static m44f_t m44f_perspective(f32_t fov, f32_t aspect, f32_t near, f32_t far);
 static m44f_t operator*(m44f_t lhs, m44f_t rhs);
 
 //
-// MARK:(Colors Signatures)
+// MARK:(Colors)
 //
 // Notes:
 // - While there could be several representation of colors,
@@ -898,14 +921,13 @@ static rgb_t  hsl_to_rgb(hsl_t c);
 
 
 //
-// MARK:(Bonk  Signatures)
+// MARK:(Bonk)
 //
 static b32_t bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt); 
 
 // 
-// MARK:(RNG Signatures)
+// MARK:(RNG)
 //
-
 static void  rng_init(rng_t* r, u32_t seed);
 static u32_t rng_next(rng_t* r);
 static u32_t rng_choice(rng_t* r, u32_t choice_count);
@@ -916,12 +938,12 @@ static s32_t rng_range_S32(rng_t* r, s32_t min, s32_t max);
 static v2f_t rng_unit_circle(rng_t* r);
 
 //
-// MARK:(Sorting Signatures)
+// MARK:(Sorting)
 //
 static void quicksort(sort_entry_t* entries, u32_t entry_count);
 
 //
-// MARK:(CRC Signatures)
+// MARK:(CRC)
 //
 static void  crc32_init_table(crc32_table_t* table, u32_t polynomial);
 static void  crc16_init_table(crc16_table_t* table, u16_t polynomial);
@@ -934,7 +956,7 @@ static u32_t crc16(u8_t* data, u32_t data_size, u16_t start_register, crc16_tabl
 static u32_t crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t* table);
 
 // 
-// MARK:(Strings Signatures)
+// MARK:(Strings)
 //
 #define st8_from_lit(s) st8((u8_t*)(s), sizeof(s)-1)
 #define st8_lit(s) st8((u8_t*)(s), sizeof(s)-1)
@@ -971,7 +993,7 @@ static void     stb8_push_fmt(stb8_t* b, st8_t fmt, ...);
 static void     stb8_init(stb8_t* b, u8_t* data, usz_t cap);
 
 //
-// MARK:(Stream Signatures)
+// MARK:(Stream)
 //
 #define stream_consume(t,s) (t*) stream_consume_block((s), sizeof(t))
 #define stream_write(s,item) stream_write_block((s), &(item), sizeof(item))
@@ -984,7 +1006,7 @@ static u32_t    stream_consume_bits(stream_t* s, u32_t amount);
 static void     stream_write_block(stream_t* s, void* src, usz_t size);
 
 //
-// MARK:(Arena Signatures)
+// MARK:(Arena)
 //
 
 static void     arena_init(arena_t* a, void* mem, usz_t cap);
@@ -1017,7 +1039,7 @@ static void arena_revert(arena_marker_t marker);
 
 
 //
-// MARK:(TTF Signatures)
+// MARK:(TTF)
 //
 
 static b32_t ttf_read(ttf_t* ttf, buffer_t ttf_contents);
@@ -1043,14 +1065,14 @@ static b32_t ttf_get_glyph_box(const ttf_t* ttf, u32_t glyph_index, s32_t* x0, s
 static void ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y1);
 
 //
-// MARK:(PNG Signatures)
+// MARK:(PNG)
 //
 static b32_t     png_read(png_t* png, buffer_t png_contents);
 static u32_t*    png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena); 
 static buffer_t  png_write(png_t* png, u32_t width, u32_t height, arena_t* arena);
 
 // 
-// MARK:(Rect Pack Signatures)
+// MARK:(RectPack)
 //
 static b32_t rp_pack(
     rp_rect_t* rects, 
@@ -1062,7 +1084,7 @@ static b32_t rp_pack(
     arena_t* allocator);
 
 //
-// MARK:(JSON Signatures)
+// MARK:(JSON)
 //
 static json_object_t* json_read(json_t* j, const u8_t* json_string, u32_t json_string_size, arena_t* ba);
 static json_value_t* json_get_value(json_object_t* j, st8_t key);
@@ -2903,7 +2925,7 @@ f64_ease_inout_expo(f64_t t)  {
 
 
 //
-// MARK:(Vector Implementation)
+// MARK:(Vector)
 //
 
 static v2f_t 
@@ -3206,7 +3228,7 @@ static v3f_t& operator-=(v3f_t& lhs, v3f_t rhs) { return lhs = v3f_sub(lhs, rhs)
 static v3f_t& operator*=(v3f_t& lhs, f32_t rhs) { return lhs = v3f_scale(lhs, rhs); }
 
 // 
-// MARK:(Matrices Implementaiton)
+// MARK:(Matrix)
 // 
 
 static m44f_t
@@ -3367,7 +3389,7 @@ static m44f_t operator*(m44f_t lhs, m44f_t rhs) {
   return m44f_concat(lhs, rhs);
 }
 //
-// MARK:(Colors Implementation)
+// MARK:(Colors)
 //
 static rgba_t 
 rgba_set(f32_t r, f32_t g, f32_t b, f32_t a){
@@ -3525,7 +3547,7 @@ static rgba_t hsla_to_rgba(hsla_t c) {
 }
 
 //
-// MARK:(Sort Implementation)
+// MARK:(Sort)
 //
 
 static void
@@ -3586,7 +3608,7 @@ quicksort(sort_entry_t* entries, u32_t entry_count) {
 
 
 //
-// MARK:(Bonk Implementation)
+// MARK:(Bonk)
 //
 static b32_t
 _bonk_tri2_pt2_parametric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
@@ -3657,7 +3679,7 @@ bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
 }
 
 //
-// MARK:(RNG Implementation)
+// MARK:(RNG)
 //
 static void
 rng_init(rng_t* r, u32_t seed)
@@ -3732,7 +3754,7 @@ rng_unit_circle(rng_t* r) {
 }
 
 //
-// MARK:(CRC Implementation)
+// MARK:(CRC)
 //
 
 //
@@ -3878,7 +3900,7 @@ crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t* table) {
 }
 
 //
-// MARK:(String Implementation)
+// MARK:(String)
 //
 static st8_t
 st8(u8_t* str, usz_t size) {
@@ -4347,7 +4369,7 @@ stb8_push_st8(stb8_t* b, st8_t src) {
 
 
 //
-// MARK:(Stream Implementation)
+// MARK:(Stream)
 //
 static void
 stream_init(stream_t* s, buffer_t contents) {
@@ -4410,7 +4432,7 @@ stream_consume_bits(stream_t* s, u32_t amount){
 }
 
 //
-// MARK:(WAV Implementation)
+// MARK:(WAV)
 //
 
 // http://soundfile.sapp.org/doc/Waveformat/
@@ -4488,7 +4510,7 @@ wav_read(wav_t* w, buffer_t contents)
 }
 
 //
-// MARK:(TTF Implementation)
+// MARK:(TTF)
 //
 
 struct _ttf_glyph_point_t{
@@ -5354,7 +5376,7 @@ ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out
 }
 
 // 
-// MARK:(PNG Implementation)
+// MARK:(PNG)
 //
 
 // We are only interested in 4-channel images in rgba_t format
@@ -6333,7 +6355,7 @@ png_read(png_t* png, buffer_t png_contents)
 }
 
 // 
-// MARK:(Arena Implementation)
+// MARK:(Arena)
 //
 
 static void
@@ -6449,7 +6471,7 @@ arena_revert(arena_marker_t marker) {
 }
 
 //
-// MARK:(Rect Pack Implementation)
+// MARK:(RectPack)
 //
 
 struct _RP_Node{
@@ -6626,13 +6648,18 @@ rp_pack(rp_rect_t* rects,
   return true;
 }
 
-#include "momo_profiler.h"
-#include "momo_inspector.h"
 
 #endif
 
 //
 // JOURNAL
+//
+// = 2023-08-04 =
+//   Now that everything is in one file, it might be wise to add and
+//   maintain 'bookmarks' and a 'table of content' section at the top 
+//   of the file for easier navigation. We probably don't care about
+//   bookmarking the implementation section; we treat that section as 
+//   a heap of instructions. 
 //
 // = 2023-08-03 =
 //   I'm not entirely sure if inspector and profiler should

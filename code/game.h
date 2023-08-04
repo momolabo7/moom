@@ -8,8 +8,84 @@
 #include "game_console.h"
 #include "game_asset_file.h"
 
+
+//
+// Profiler 
 // 
-// Graphics API
+typedef u64_t profiler_get_performance_counter_f();
+
+struct profiler_snapshot_t {
+  u32_t hits;
+  u32_t cycles;
+};
+
+struct profiler_entry_t {
+  u32_t line;
+  const char* filename;
+  const char* block_name;
+  u64_t hits_and_cycles;
+  
+  profiler_snapshot_t* snapshots;
+  
+  // NOTE(Momo): For initialization of entry. 
+  // Maybe it shouldn't be stored here
+  // but on where they called it? 
+  // i.e. use a functor that wraps?
+  u32_t start_cycles;
+  u32_t start_hits;
+  b32_t flag_for_reset;
+};
+
+
+struct profiler_t {
+  u32_t entry_snapshot_count;
+  u32_t entry_count;
+  u32_t entry_cap;
+  profiler_entry_t* entries;
+  u32_t snapshot_index;
+
+  profiler_get_performance_counter_f* get_performance_counter;
+};
+
+#define profiler_begin_block(p, name) \
+  static profiler_entry_t* _profiler_block_##name = 0; \
+  if (_profiler_block_##name == 0 || _profiler_block_##name->flag_for_reset) {\
+    _profiler_block_##name = _profiler_init_block(p, __FILE__, __LINE__, __FUNCTION__, #name);  \
+  }\
+  _profiler_begin_block(p, _profiler_block_##name)\
+
+#define profiler_end_block(p, name) \
+  _profiler_end_block(p, _profiler_block_##name) 
+
+#define profiler_block(p, name) profiler_begin_block(p, name); defer {profiler_end_block(p,name);}
+
+
+//
+// Inspector 
+//
+enum inspector_entry_type_t {
+  INSPECTOR_ENTRY_TYPE_F32,
+  INSPECTOR_ENTRY_TYPE_U32,
+};
+
+struct inspector_entry_t {
+  st8_t name;
+  inspector_entry_type_t type;
+  union {
+    f32_t item_f32;
+    u32_t item_u32;
+  };
+};
+
+struct inspector_t {
+  u32_t entry_cap;
+  u32_t entry_count;
+  inspector_entry_t* entries;
+};
+
+
+// 
+// App
 //
 enum app_blend_type_t {
   APP_BLEND_TYPE_ZERO,
@@ -52,17 +128,13 @@ typedef app_advance_depth_sig(app_advance_depth_f);
 typedef app_set_blend_sig(app_set_blend_f);
 #define app_set_blend(app, ...) (app->set_blend(__VA_ARGS__))
 
-//
-// Button API
-// 
 struct app_button_t {
   b32_t before : 1;
   b32_t now: 1; 
 };
 
-
-// my god
 enum app_button_code_t {
+  // my god
   // Keyboard keys
   APP_BUTTON_CODE_UNKNOWN,
   APP_BUTTON_CODE_0,
@@ -124,7 +196,7 @@ enum app_button_code_t {
 };
 
 //
-// Input API
+// App Input API
 //
 // NOTE(momo): Input is SPECIFICALLY stuff that can be recorded and
 // replayed by some kind of system. Other things go to game_t
@@ -189,14 +261,14 @@ typedef app_write_file_sig(app_write_file_f);
 #define app_write_file(app, ...) (app->write_file(__VA_ARGS__))
 
 //
-// Logging API
+// App Logging API
 // 
 #define app_debug_log_sig(name) void name(const char* fmt, ...)
 typedef app_debug_log_sig(app_debug_log_f);
 #define app_debug_log(app, ...) (app->debug_log(__VA_ARGS__))
 
 //
-// Cursor API
+// App Cursor API
 //
 #define app_show_cursor_sig(name) void name()
 typedef app_show_cursor_sig(app_show_cursor_f);
@@ -247,10 +319,8 @@ typedef app_set_design_dimensions_sig(app_set_design_dimensions_f);
 #define app_set_design_dimensions(app, ...) (app->set_design_dimensions(__VA_ARGS__))
 
 //
-// Structures
+// App Audio API
 //
-
-
 struct app_audio_t {
   s16_t* sample_buffer;
   u32_t sample_count;
@@ -259,13 +329,6 @@ struct app_audio_t {
   void* app_data;
 };
 
-struct game_init_config_t {
-  usz_t texture_queue_size;
-  usz_t render_command_size;
-
-  // must be null terminated
-  const char* window_title; // TODO(game): change to st8_t?
-};
 
 struct app_t {
   app_show_cursor_f* show_cursor;
@@ -294,6 +357,7 @@ struct app_t {
 
   gfx_t* gfx;
   profiler_t* profiler;
+  inspector_t* inspector;
           
   b32_t is_dll_reloaded;
   b32_t is_running;
@@ -301,6 +365,24 @@ struct app_t {
   void* game;
 };
 
+
+////////////////////////////////////
+// 
+// Game API
+//
+//
+struct game_init_config_t {
+  u32_t max_inspector_entries;
+
+  u32_t max_profiler_entries;
+  u32_t max_profiler_snapshots; // snapshots per entry
+
+  usz_t texture_queue_size;
+  usz_t render_command_size;
+
+  // must be null terminated
+  const char* window_title; // TODO(game): change to st8_t?
+};
 
 #define game_init_sig(name) game_init_config_t name(void)
 typedef game_init_sig(game_init_f);
@@ -321,9 +403,12 @@ static const char* game_function_names[] {
 
 #include "game_assets.h"
 
+///////////////////////////////
+///
+// IMPLEMENTATIONS
 //
-// Input API functions
 //
+
 // before: 0, now: 1
 static b32_t
 app_is_button_poked(app_t* app, app_button_code_t code) {
@@ -536,6 +621,130 @@ app_draw_text_center_aligned(app_t* app, assets_t* assets, asset_font_id_t font_
                     );
   }
 
+}
+
+static void 
+inspector_init(inspector_t* in, arena_t* arena, u32_t max_entries) 
+{
+  in->entry_cap = max_entries;
+  in->entry_count = 0;
+  in->entries = arena_push_arr(inspector_entry_t, arena, max_entries);
+  assert(in->entries != nullptr);
+}
+
+static void 
+inspector_clear(inspector_t* in) 
+{
+  in->entry_count = 0;
+}
+
+static void
+inspector_add_u32(inspector_t* in, st8_t name, u32_t item) 
+{
+  assert(in->entry_count < in->entry_cap);
+  inspector_entry_t* entry = in->entries + in->entry_count++;
+  entry->item_u32 = item;
+  entry->type = INSPECTOR_ENTRY_TYPE_U32;
+  entry->name = name;
+}
+
+
+static void
+inspector_add_f32(inspector_t* in, st8_t name, f32_t item) {
+  assert(in->entry_count < in->entry_cap);
+  inspector_entry_t* entry = in->entries + in->entry_count++;
+  entry->item_f32 = item;
+  entry->type = INSPECTOR_ENTRY_TYPE_F32;
+  entry->name = name;
+}
+
+
+static profiler_entry_t*
+_profiler_init_block(
+    profiler_t* p,
+    const char* filename, 
+    u32_t line,
+    const char* function_name,
+    const char* block_name = 0) 
+{
+  if (p->entry_count < p->entry_cap) {
+    profiler_entry_t* entry = p->entries + p->entry_count++;
+    entry->filename = filename;
+    entry->block_name = block_name ? block_name : function_name;
+    entry->line = line;
+    entry->start_cycles = (u32_t)p->get_performance_counter();
+    entry->start_hits = 1;
+    entry->flag_for_reset = false;
+    return entry;
+  }
+
+  return nullptr;
+}
+
+static void
+_profiler_begin_block(profiler_t* p, profiler_entry_t* entry) 
+{
+  entry->start_cycles = (u32_t)p->get_performance_counter();
+  entry->start_hits = 1;
+}
+
+static void
+_profiler_end_block(profiler_t* p, profiler_entry_t* entry) {
+  u64_t delta = ((u32_t)p->get_performance_counter() - entry->start_cycles) | ((u64_t)(entry->start_hits)) << 32;
+  u64_atomic_add(&entry->hits_and_cycles, delta);
+}
+
+
+static void 
+profiler_reset(profiler_t* p) {
+
+  for(u32_t entry_id = 0; entry_id < p->entry_count; ++entry_id)
+  {
+    profiler_entry_t* itr = p->entries + entry_id;
+    itr->flag_for_reset = true;
+  }
+
+  p->entry_count = 0;
+}
+
+static void 
+profiler_init(
+    profiler_t* p, 
+    profiler_get_performance_counter_f* get_performance_counter,
+    arena_t* arena,
+    u32_t max_entries,
+    u32_t max_snapshots_per_entry)
+{
+  p->entry_cap = max_entries;
+  p->entry_snapshot_count = max_snapshots_per_entry;
+  p->entries = arena_push_arr(profiler_entry_t, arena, p->entry_cap);
+  assert(p->entries);
+  p->get_performance_counter = get_performance_counter;
+
+  for (u32_t i = 0; i < p->entry_cap; ++i) {
+    p->entries[i].snapshots = arena_push_arr(profiler_snapshot_t, arena, max_snapshots_per_entry);
+    assert(p->entries[i].snapshots);
+  }
+  profiler_reset(p);
+}
+
+
+static void
+profiler_update_entries(profiler_t* p) {
+  for(u32_t entry_id = 0; entry_id < p->entry_count; ++entry_id)
+  {
+    profiler_entry_t* itr = p->entries + entry_id;
+    u64_t hits_and_cycles = u64_atomic_assign(&itr->hits_and_cycles, 0);
+    u32_t hits = (u32_t)(hits_and_cycles >> 32);
+    u32_t cycles = (u32_t)(hits_and_cycles & 0xFFFFFFFF);
+    
+    itr->snapshots[p->snapshot_index].hits = hits;
+    itr->snapshots[p->snapshot_index].cycles = cycles;
+  }
+  ++p->snapshot_index;
+  if(p->snapshot_index >= p->entry_snapshot_count) {
+    p->snapshot_index = 0;
+  }
 }
 
 #endif //GAME_H

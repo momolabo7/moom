@@ -35,8 +35,8 @@
 #include "w32_game_audio.h"
 #include "w32_game_audio_wasapi.h"
 
-profiler_t _profiler = {0};
-profiler_t* profiler = &_profiler;
+make(profiler_t, profiler);
+make(inspector_t, inspector);
 
 #include <stdio.h>
 
@@ -1013,12 +1013,16 @@ WinMain(HINSTANCE instance,
 
 
   //
-  // Init profiler
+  // Init debug stuff
   //
-  make(arena_t, profiler_arena);
-  if (!w32_allocate_memory_into_arena(profiler_arena, megabytes(256))) return false;
-  defer { w32_free_memory_from_arena(profiler_arena); };
-  profiler_init(profiler, w32_get_performance_counter_u64, profiler_arena, 256, 120);
+  make(arena_t, debug_arena);
+  if (!w32_allocate_memory_into_arena(debug_arena, megabytes(256))) return false;
+  defer { w32_free_memory_from_arena(debug_arena); };
+
+  profiler_init(profiler, w32_get_performance_counter_u64, debug_arena, config.max_profiler_entries, config.max_profiler_snapshots);
+
+  inspector_init(inspector, debug_arena, config.max_inspector_entries);
+
 
   //
   // Game setup
@@ -1026,6 +1030,7 @@ WinMain(HINSTANCE instance,
   app.is_running = true;
   app.gfx = gfx;
   app.profiler = profiler;
+  app.inspector = inspector;
 
   // Begin game loop
   b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
