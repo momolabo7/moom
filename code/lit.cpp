@@ -3829,12 +3829,16 @@ game_init_sig(game_init)
 {
   game_init_config_t ret;
 
+  ret.debug_arena_size = megabytes(256);
   ret.max_inspector_entries = 256;
   ret.max_profiler_entries = 256;
   ret.max_profiler_snapshots = 120;
 
+  ret.gfx_arena_size = megabytes(256);
   ret.texture_queue_size = megabytes(100);
   ret.render_command_size = megabytes(100);
+
+  ret.audio_arena_size = megabytes(256);
   
   ret.window_title = "PRISMIX v1.0";
 

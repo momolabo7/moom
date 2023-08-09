@@ -330,6 +330,10 @@ struct app_audio_t {
 };
 
 
+//
+// Arena Stat
+//
+
 struct app_t {
   app_show_cursor_f* show_cursor;
   app_hide_cursor_f* hide_cursor;
@@ -372,13 +376,18 @@ struct app_t {
 //
 //
 struct game_init_config_t {
-  u32_t max_inspector_entries;
 
+  usz_t debug_arena_size;
+  u32_t max_inspector_entries;
   u32_t max_profiler_entries;
   u32_t max_profiler_snapshots; // snapshots per entry
 
+
+  usz_t gfx_arena_size;
   usz_t texture_queue_size;
   usz_t render_command_size;
+
+  usz_t audio_arena_size;
 
   // must be null terminated
   const char* window_title; // TODO(game): change to st8_t?
