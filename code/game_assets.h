@@ -65,11 +65,6 @@ struct assets_t {
 };
 
 
-static u32_t
-assets_get_next_texture_handle() {
-  static u32_t id = 0;
-  return id++ % GFX_MAX_TEXTURES;
-}
 
 
 static b32_t 
@@ -125,7 +120,8 @@ assets_init(assets_t* assets, app_t* app, const char* filename, arena_t* arena)
     app_read_file(app, file, sizeof(asset_file_bitmap_t), offset_to_bitmap, &file_bitmap);
 
     asset_bitmap_t* b = assets->bitmaps + bitmap_index;
-    b->renderer_texture_handle = assets_get_next_texture_handle();
+    // TODO: is there anyway for gfx to assign this instead?
+    b->renderer_texture_handle = gfx_get_next_texture_handle(app->gfx);
     b->width = file_bitmap.width;
     b->height = file_bitmap.height;
 
@@ -266,7 +262,5 @@ static asset_font_t*
 assets_get_font(assets_t* assets, asset_font_id_t font_id) {
   return assets->fonts + font_id;
 }
-
-
 
 #endif

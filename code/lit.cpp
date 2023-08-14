@@ -51,9 +51,9 @@
 #define LIT_LEARNT_POINT_LIGHT_LEVEL_ID (7)
 
 #define lit_log(...) app_debug_log(app, __VA_ARGS__)
-#define lit_profile_block(name) profiler_block(app->profiler, name)
-#define lit_profile_begin(name) profiler_begin_block(app->profiler, name)
-#define lit_profile_end(name) profiler_end_block(app->profiler, name)
+#define lit_profile_block(name) profiler_block(&app->profiler), name)
+#define lit_profile_begin(name) profiler_begin_block(&app->profiler, name)
+#define lit_profile_end(name) profiler_end_block(&app->profiler, name)
 
 
 //
@@ -592,9 +592,9 @@ lit_profiler_update_and_render()
   
   u32_t line_num = 1;
   
-  for(u32_t entry_id = 0; entry_id < app->profiler->entry_count; ++entry_id)
+  for(u32_t entry_id = 0; entry_id < app->profiler.entry_count; ++entry_id)
   {
-    profiler_entry_t* entry = app->profiler->entries + entry_id;
+    profiler_entry_t* entry = app->profiler.entries + entry_id;
 
     lit_profiler_stat_t cycles;
     lit_profiler_stat_t hits;
@@ -605,7 +605,7 @@ lit_profiler_update_and_render()
     lit_profiler_begin_stat(&cycles_per_hit);
     
     for (u32_t snapshot_index = 0;
-         snapshot_index < app->profiler->entry_snapshot_count;
+         snapshot_index < app->profiler.entry_snapshot_count;
          ++snapshot_index)
     {
       
@@ -643,7 +643,7 @@ lit_profiler_update_and_render()
     
     // Draw graph
     for (u32_t snapshot_index = 0;
-         snapshot_index < app->profiler->entry_snapshot_count;
+         snapshot_index < app->profiler.entry_snapshot_count;
          ++snapshot_index)
     {
       profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
@@ -3809,10 +3809,10 @@ lit_tick() {
       lit_update_and_render_console(); 
     }break;
     case LIT_SHOW_DEBUG_PROFILER: {
-      profiler_update_and_render(); 
+      lit_profiler_update_and_render(); 
     }break;
     case LIT_SHOW_DEBUG_INSPECTOR: {
-      inspector_update_and_render();
+      lit_inspector_update_and_render();
     }break;
     default: {}
   }
@@ -3837,6 +3837,7 @@ game_init_sig(game_init)
   ret.gfx_arena_size = megabytes(256);
   ret.texture_queue_size = megabytes(100);
   ret.render_command_size = megabytes(100);
+  ret.max_textures = 256;
 
   ret.audio_arena_size = megabytes(256);
   

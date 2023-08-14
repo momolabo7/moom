@@ -45,7 +45,7 @@ struct gfx_texture_payload_t {
   usz_t transfer_memory_start;
   usz_t transfer_memory_end;
   
-  // For moe to input
+  // input
   u32_t texture_index;
   u32_t texture_width;
   u32_t texture_height;
@@ -160,6 +160,7 @@ struct gfx_command_blend_t {
 struct gfx_t {
   gfx_command_queue_t command_queue;
   gfx_texture_queue_t texture_queue;
+  u32_t max_textures;
 };
 
 //
@@ -167,7 +168,7 @@ struct gfx_t {
 // the command buffer and texture queue to save memory and complexity...
 //
 
-static void gfx_init(gfx_t* g, void* texture_queue_data, usz_t texture_queue_size, void* command_queue_data, usz_t command_queue_size);
+static void gfx_init(gfx_t* g, void* texture_queue_data, usz_t texture_queue_size, void* command_queue_data, usz_t command_queue_size, u32_t max_textures);
 
 
 static void gfx_clear_commands(gfx_t* g);
@@ -217,9 +218,10 @@ gfx_init(
     arena_t* arena,
     usz_t texture_queue_size, 
     usz_t command_queue_size,
-    usz_t max_payloads)
+    u32_t max_textures)
 {
 
+  // commands
   {
     gfx_command_queue_t* q = &g->command_queue;
     q->memory = arena_push_arr(u8_t, arena, command_queue_size);
@@ -227,6 +229,7 @@ gfx_init(
     gfx_clear_commands(g);
   }
 
+  // textures
   {
     gfx_texture_queue_t* q = &g->texture_queue;
     q->transfer_memory = arena_push_arr(u8_t, arena, texture_queue_size);
@@ -236,6 +239,14 @@ gfx_init(
     q->first_payload_index = 0;
     q->payload_count = 0;
   }
+
+  g->max_textures = max_textures;
+}
+
+static u32_t
+gfx_get_next_texture_handle(gfx_t* gfx) {
+  static u32_t id = 0;
+  return id++ % gfx->max_textures;
 }
 
 static gfx_command_t*

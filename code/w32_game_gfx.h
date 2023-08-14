@@ -11,7 +11,7 @@ w32_gfx_load(HWND window,
              arena_t* arena,
              usz_t command_queue_size, 
              usz_t texture_queue_size,
-             usz_t max_payloads);
+             u32_t max_textures);
 
 
 static void

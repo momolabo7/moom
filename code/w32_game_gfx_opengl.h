@@ -172,7 +172,7 @@ w32_gfx_load(
     arena_t* arena,
     usz_t command_queue_size,
     usz_t texture_queue_size,
-    usz_t max_payloads) 
+    u32_t max_textures) 
 {
   HDC dc = GetDC(window); 
   if (!dc) return 0;
@@ -260,7 +260,7 @@ if (!opengl->name) { return nullptr; }
         arena,
         command_queue_size,
         texture_queue_size,
-        max_payloads)) 
+        max_textures)) 
   {
     return 0;
   }

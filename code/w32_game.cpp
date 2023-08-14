@@ -35,7 +35,6 @@
 #include "w32_game_audio.h"
 #include "w32_game_audio_wasapi.h"
 
-make(profiler_t, profiler);
 make(inspector_t, inspector);
 
 #include <stdio.h>
@@ -831,6 +830,7 @@ WinMain(HINSTANCE instance,
 
   app_t app = {};
 
+  app.is_running = true;
   app.show_cursor = w32_show_cursor;
   app.lock_cursor = w32_lock_cursor;
   app.hide_cursor = w32_hide_cursor;
@@ -998,7 +998,7 @@ WinMain(HINSTANCE instance,
       gfx_arena,
       config.render_command_size, 
       config.texture_queue_size,
-      256);
+      config.max_textures);
   if (!gfx) { return 1; }
  
   // Init Audio
@@ -1011,6 +1011,7 @@ WinMain(HINSTANCE instance,
   defer{ w32_audio_unload(&app.audio); };
 
 
+
   //
   // Init debug stuff
   //
@@ -1018,18 +1019,15 @@ WinMain(HINSTANCE instance,
   if (!w32_allocate_memory_into_arena(debug_arena, config.debug_arena_size)) return false;
   defer { w32_free_memory_from_arena(debug_arena); };
 
-  profiler_init(profiler, w32_get_performance_counter_u64, debug_arena, config.max_profiler_entries, config.max_profiler_snapshots);
+  profiler_init(&app.profiler, w32_get_performance_counter_u64, debug_arena, config.max_profiler_entries, config.max_profiler_snapshots);
 
-  inspector_init(inspector, debug_arena, config.max_inspector_entries);
+  inspector_init(&app.inspector, debug_arena, config.max_inspector_entries);
 
 
   //
   // Game setup
   //
-  app.is_running = true;
   app.gfx = gfx;
-  app.profiler = profiler;
-  app.inspector = inspector;
 
   // Begin game loop
   b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
@@ -1045,10 +1043,10 @@ WinMain(HINSTANCE instance,
     // Hot reload game.dll functions
     app.is_dll_reloaded = w32_reload_code_if_outdated(&game_code);
     if (app.is_dll_reloaded) {
-      profiler_reset(profiler);
+      profiler_reset(&app.profiler);
     }
 #else 
-    profiler_reset(profiler);
+    profiler_reset(&app.profiler);
 #endif
 
     // Begin frame
@@ -1071,7 +1069,7 @@ WinMain(HINSTANCE instance,
 
 
     // End frame
-    profiler_update_entries(profiler);
+    profiler_update_entries(&app.profiler);
     w32_gfx_end_frame(gfx);
     w32_audio_end_frame(&app.audio);
 #if 0

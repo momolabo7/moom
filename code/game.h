@@ -318,6 +318,7 @@ typedef app_complete_all_tasks_sig(app_complete_all_tasks_f);
 typedef app_set_design_dimensions_sig(app_set_design_dimensions_f);
 #define app_set_design_dimensions(app, ...) (app->set_design_dimensions(__VA_ARGS__))
 
+
 //
 // App Audio API
 //
@@ -360,8 +361,8 @@ struct app_t {
   app_audio_t audio; 
 
   gfx_t* gfx;
-  profiler_t* profiler;
-  inspector_t* inspector;
+  profiler_t profiler;
+  inspector_t inspector;
           
   b32_t is_dll_reloaded;
   b32_t is_running;
@@ -386,11 +387,12 @@ struct game_init_config_t {
   usz_t gfx_arena_size;
   usz_t texture_queue_size;
   usz_t render_command_size;
+  u32_t max_textures;
 
   usz_t audio_arena_size;
 
   // must be null terminated
-  const char* window_title; // TODO(game): change to st8_t?
+  const char* window_title; 
 };
 
 #define game_init_sig(name) game_init_config_t name(void)
@@ -761,6 +763,21 @@ profiler_update_entries(profiler_t* p) {
 
 //
 // JOURNAL
+//
+// = 2023-08-10 =
+//   I spent an afternoon yesterday thinking how I could remove things
+//   like the config from the game layer because a part of me believes
+//   that the game layer shouldn't know the specifics of the engine layer
+//   like who many bytes should the "graphics arena" have. 
+//
+//   At the same time, if the game layer doesn't specify, the engine because 
+//   too general purpose, and that would require me to write a bunch of general
+//   purpose stuff (like a general purpose allocator) which...could have really
+//   inefficient outcomes if the stars do not align, like higher wastage of memory.
+//   
+//   Thus this is a reminder to myself to spearhead and go with the config idea.
+//   The next thing to do is for the game to somehow retrieve the arena usages 
+//   of the engine so that the game side can manually fine tune their numbers.
 // 
 // = 2023-07-30 = 
 //   I'm not entirely sure where assets should really be.
