@@ -51,9 +51,9 @@
 #define LIT_LEARNT_POINT_LIGHT_LEVEL_ID (7)
 
 #define lit_log(...) app_debug_log(app, __VA_ARGS__)
-#define lit_profile_block(name) profiler_block(&app->profiler), name)
-#define lit_profile_begin(name) profiler_begin_block(&app->profiler, name)
-#define lit_profile_end(name) profiler_end_block(&app->profiler, name)
+#define lit_profile_block(name) app_profile_block(app, name)
+#define lit_profile_begin(name) app_profile_begin(app, name)
+#define lit_profile_end(name) app_profile_end(app, name)
 
 
 //
@@ -3839,6 +3839,7 @@ game_init_sig(game_init)
   ret.render_command_size = megabytes(100);
   ret.max_textures = 256;
 
+  ret.audio_enabled = false;
   ret.audio_arena_size = megabytes(256);
   
   ret.window_title = "PRISMIX v1.0";

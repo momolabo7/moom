@@ -59,6 +59,11 @@ struct profiler_t {
 
 #define profiler_block(p, name) profiler_begin_block(p, name); defer {profiler_end_block(p,name);}
 
+// Correspond with API
+#define app_profile_begin(app, name) profiler_begin_block(&app->profiler, name)
+#define app_profile_end(app, name)   profiler_end_block(&app->profiler, name)
+#define app_profile_block(app, name) profiler_block(&app->profiler, name)
+
 
 //
 // Inspector 
@@ -83,6 +88,9 @@ struct inspector_t {
   inspector_entry_t* entries;
 };
 
+// API correspondence
+#define app_inspect_u32(app, item) inspector_add_u32(&app->inspector, item)
+#define app_inspect_f32(app, item) inspector_add_f32(&app->inspector, item)
 
 // 
 // App
@@ -367,6 +375,11 @@ struct app_t {
   b32_t is_dll_reloaded;
   b32_t is_running;
 
+  // arenas relevant to the app
+  arena_t gfx_arena;
+  arena_t audio_arena;
+  arena_t debug_arena;
+
   void* game;
 };
 
@@ -389,6 +402,7 @@ struct game_init_config_t {
   usz_t render_command_size;
   u32_t max_textures;
 
+  b32_t audio_enabled;
   usz_t audio_arena_size;
 
   // must be null terminated

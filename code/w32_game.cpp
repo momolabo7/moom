@@ -388,28 +388,6 @@ w32_reload_code_if_outdated(w32_loaded_code_t* code) {
 }
 
 
-static b32_t
-w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {
-  void* data = VirtualAllocEx(GetCurrentProcess(),
-                              0, 
-                              memory_size,
-                              MEM_RESERVE | MEM_COMMIT, 
-                              PAGE_READWRITE);
-  if(data == nullptr) return false;
-  arena_init(a, data, memory_size);
-  return true;
-}
-
-
-
-
-static void
-w32_free_memory_from_arena(arena_t* a) {
-  VirtualFreeEx(GetCurrentProcess(), 
-                a->memory,    
-                0, 
-                MEM_RELEASE); 
-}
 
 
 
@@ -816,6 +794,14 @@ app_advance_depth_sig(w32_advance_depth) {
 }
 
 
+static b32_t
+w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {
+  void* data = w32_allocate_memory(memory_size);
+  if(data == nullptr) return false;
+  arena_init(a, data, memory_size);
+  return true;
+}
+
 //
 // Entry Point
 //
@@ -991,8 +977,8 @@ WinMain(HINSTANCE instance,
   // Gfx
   // 
   make(arena_t, gfx_arena);
-  if (!w32_allocate_memory_into_arena(gfx_arena, config.gfx_arena_size)) return false;
-  defer { w32_free_memory_from_arena(gfx_arena); };
+  if (!w32_allocate_memory_into_arena(gfx_arena, config.gfx_arena_size)) 
+    return 1;
   gfx_t* gfx = w32_gfx_load(
       window, 
       gfx_arena,
@@ -1003,12 +989,21 @@ WinMain(HINSTANCE instance,
  
   // Init Audio
   make(arena_t, audio_arena);
-  if (!w32_allocate_memory_into_arena(audio_arena, config.audio_arena_size)) return false;
-  defer { w32_free_memory_from_arena(audio_arena); };
+  if (config.audio_enabled) {
+    if (!w32_allocate_memory_into_arena(audio_arena, config.audio_arena_size)) 
+      return 1;
 
-  if (!w32_audio_load(&app.audio, 48000, 16, 2, 1, monitor_refresh_rate, audio_arena)) 
-    return 1;
-  defer{ w32_audio_unload(&app.audio); };
+    if (!w32_audio_load(
+          &app.audio, 
+          48000, 16, 2, 1, 
+          monitor_refresh_rate, 
+          audio_arena)) 
+      return 1;
+  }
+  defer{ 
+    if (config.audio_enabled) 
+      w32_audio_unload(&app.audio); 
+  };
 
 
 
@@ -1017,7 +1012,6 @@ WinMain(HINSTANCE instance,
   //
   make(arena_t, debug_arena);
   if (!w32_allocate_memory_into_arena(debug_arena, config.debug_arena_size)) return false;
-  defer { w32_free_memory_from_arena(debug_arena); };
 
   profiler_init(&app.profiler, w32_get_performance_counter_u64, debug_arena, config.max_profiler_entries, config.max_profiler_snapshots);
 
@@ -1050,7 +1044,7 @@ WinMain(HINSTANCE instance,
 #endif
 
     // Begin frame
-    w32_audio_begin_frame(&app.audio);
+    if (config.audio_enabled) w32_audio_begin_frame(&app.audio);
     v2u_t client_wh = w32_get_client_dims(window);
 
 
@@ -1071,7 +1065,8 @@ WinMain(HINSTANCE instance,
     // End frame
     profiler_update_entries(&app.profiler);
     w32_gfx_end_frame(gfx);
-    w32_audio_end_frame(&app.audio);
+    
+    if (config.audio_enabled) w32_audio_end_frame(&app.audio);
 #if 0
     if (w32_state.is_cursor_locked) {
       SetCursorPos(
