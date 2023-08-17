@@ -1,3 +1,8 @@
+// 
+// DESCRIPTION
+//   This is my dear 2D game engine on win32 platform.
+//
+
 #ifndef WIN32_LEAN_AND_MEAN
 # define WIN32_LEAN_AND_MEAN
 #endif
@@ -34,8 +39,6 @@
 // Audio
 #include "w32_game_audio.h"
 #include "w32_game_audio_wasapi.h"
-
-make(inspector_t, inspector);
 
 #include <stdio.h>
 

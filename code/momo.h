@@ -10,29 +10,27 @@
 //   Context     - Context Defines
 //   Constants   - Common constant values
 //   Helper      - Common helper macros and functions 
+//   ASCII       - Helper functions for ASCII 
+//   Memory      - Helper functions for Memory manipulation
 //   Hash        - Hash functions (using CString) 
 //   Linked List - Linked List macros 
+//   SI Units    - Helper functions to get SI units
 //   Bonk        - Collision detection 
-//   Buffer      - Type
-//   Vector      - Type
-//   Matrix      - Type
-//   Color       - Type
-//   RNG         - Type
-//   CRC         - Type
-//   Sorting     - Type
-//   Arena       - Type
-//   String      - Type
-//   Stream      - Type
-//   TTF         - Type
-//   WAV         - Type
-//   PNG         - Type
-//   JSON        - Type
-//   RectPack    - Type
-//
-//
-//
-//
-//
+//   Buffer      - Simple type for holding a chunk of memory
+//   Vector      - Math vectors
+//   Matrix      - Math matrices
+//   Color       - Color structs
+//   RNG         - Random Numer Generator
+//   CRC         - CRC generators
+//   Sorting     - Sorting algorithms
+//   Arena       - Memory arena
+//   String      - String manipulation
+//   Stream      - Memory stream
+//   TTF         - TTF font file
+//   WAV         - WAV audio file
+//   PNG         - PNG image file
+//   JSON        - JSON data file
+//   RectPack    - Rectangle packer
 //
 
 
@@ -308,6 +306,8 @@ struct crc8_table_t {
 };
 
 
+
+
 //
 // MARK:(Arena)
 //
@@ -540,7 +540,7 @@ struct json_t {
 #define GOLD_64 (1.61803398875)
 
 //
-// SI Units
+// MARK:(SI Units)
 //
 // These need to be macros instead of function
 // because I don't want these to return or take in to a specific strict type.
@@ -606,9 +606,13 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 #define defer auto glue(_defer, __LINE__) = _defer_dummy{} + [&]()
 
 
+//
+// MARK:(Buffer)
+//
+static void buffer_set(u8_t* mem, usz_t size);
 
 //
-// ASCII
+// MARK:(ASCII)
 //
 #define digit_to_ascii(d) ((d) + '0')
 #define ascii_to_digit(a) ((a) - '0')
@@ -617,7 +621,7 @@ static b32_t is_alpha(char c);
 static b32_t is_digit(char c);
 
 //
-// Memory
+// MARK:(Memory)
 //
 #define bit_is_set(mask,bit) ((mask) & ((u64_t)1 << (bit)))
 #define bit_set(mask, bit) ((mask) |= ((u64_t)1 << (bit)))
@@ -1107,7 +1111,7 @@ static json_object_t* json_get_object(json_value_t* val);
 //
 
 static buffer_t 
-buffer(u8_t* mem, usz_t size) {
+buffer_set(u8_t* mem, usz_t size) {
   buffer_t ret;
   ret.data = mem;
   ret.size = size;
