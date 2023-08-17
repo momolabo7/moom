@@ -60,9 +60,9 @@ struct profiler_t {
 #define profiler_block(p, name) profiler_begin_block(p, name); defer {profiler_end_block(p,name);}
 
 // Correspond with API
-#define app_profile_begin(app, name) profiler_begin_block(&app->profiler, name)
-#define app_profile_end(app, name)   profiler_end_block(&app->profiler, name)
-#define app_profile_block(app, name) profiler_block(&app->profiler, name)
+#define game_profile_begin(game, name) profiler_begin_block(&game->profiler, name)
+#define game_profile_end(game, name)   profiler_end_block(&game->profiler, name)
+#define game_profile_block(game, name) profiler_block(&game->profiler, name)
 
 
 //
@@ -89,13 +89,13 @@ struct inspector_t {
 };
 
 // API correspondence
-#define app_inspect_u32(app, item) inspector_add_u32(&app->inspector, item)
-#define app_inspect_f32(app, item) inspector_add_f32(&app->inspector, item)
+#define game_inspect_u32(game, item) inspector_add_u32(&game->inspector, item)
+#define game_inspect_f32(game, item) inspector_add_f32(&game->inspector, item)
 
 // 
 // App
 //
-enum app_blend_type_t {
+enum game_blend_type_t {
   APP_BLEND_TYPE_ZERO,
   APP_BLEND_TYPE_ONE,
   APP_BLEND_TYPE_SRC_COLOR,
@@ -108,40 +108,40 @@ enum app_blend_type_t {
   APP_BLEND_TYPE_INV_DST_COLOR,
 };
 
-#define app_set_view_sig(name) void name(f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y)
-typedef app_set_view_sig(app_set_view_f);
-#define app_set_view(app, ...) (app->set_view(__VA_ARGS__))
+#define game_set_view_sig(name) void name(f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y)
+typedef game_set_view_sig(game_set_view_f);
+#define game_set_view(game, ...) (game->set_view(__VA_ARGS__))
 
-#define app_clear_canvas_sig(name) void name(rgba_t color)
-typedef app_clear_canvas_sig(app_clear_canvas_f);
-#define app_clear_canvas(app, ...) (app->clear_canvas(__VA_ARGS__))
+#define game_clear_canvas_sig(name) void name(rgba_t color)
+typedef game_clear_canvas_sig(game_clear_canvas_f);
+#define game_clear_canvas(game, ...) (game->clear_canvas(__VA_ARGS__))
 
-#define app_draw_sprite_sig(name) void name(v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1, rgba_t color)
-typedef app_draw_sprite_sig(app_draw_sprite_f);
-#define app_draw_sprite(app, ...) (app->draw_sprite(__VA_ARGS__))
+#define game_draw_sprite_sig(name) void name(v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1, rgba_t color)
+typedef game_draw_sprite_sig(game_draw_sprite_f);
+#define game_draw_sprite(game, ...) (game->draw_sprite(__VA_ARGS__))
 
-#define app_draw_rect_sig(name) void name(v2f_t pos, f32_t rot, v2f_t scale, rgba_t color)
-typedef app_draw_rect_sig(app_draw_rect_f);
-#define app_draw_rect(app, ...) (app->draw_rect(__VA_ARGS__))
+#define game_draw_rect_sig(name) void name(v2f_t pos, f32_t rot, v2f_t scale, rgba_t color)
+typedef game_draw_rect_sig(game_draw_rect_f);
+#define game_draw_rect(game, ...) (game->draw_rect(__VA_ARGS__))
 
-#define app_draw_tri_sig(name) void name(v2f_t p0, v2f_t p1, v2f_t p2, rgba_t color)
-typedef app_draw_tri_sig(app_draw_tri_f);
-#define app_draw_tri(app, ...) (app->draw_tri(__VA_ARGS__))
+#define game_draw_tri_sig(name) void name(v2f_t p0, v2f_t p1, v2f_t p2, rgba_t color)
+typedef game_draw_tri_sig(game_draw_tri_f);
+#define game_draw_tri(game, ...) (game->draw_tri(__VA_ARGS__))
 
-#define app_advance_depth_sig(name) void name(void)
-typedef app_advance_depth_sig(app_advance_depth_f);
-#define app_advance_depth(app, ...) (app->advance_depth(__VA_ARGS__))
+#define game_advance_depth_sig(name) void name(void)
+typedef game_advance_depth_sig(game_advance_depth_f);
+#define game_advance_depth(game, ...) (game->advance_depth(__VA_ARGS__))
 
-#define app_set_blend_sig(name) void name(app_blend_type_t src, app_blend_type_t dst)
-typedef app_set_blend_sig(app_set_blend_f);
-#define app_set_blend(app, ...) (app->set_blend(__VA_ARGS__))
+#define game_set_blend_sig(name) void name(game_blend_type_t src, game_blend_type_t dst)
+typedef game_set_blend_sig(game_set_blend_f);
+#define game_set_blend(game, ...) (game->set_blend(__VA_ARGS__))
 
-struct app_button_t {
+struct game_button_t {
   b32_t before : 1;
   b32_t now: 1; 
 };
 
-enum app_button_code_t {
+enum game_button_code_t {
   // my god
   // Keyboard keys
   APP_BUTTON_CODE_UNKNOWN,
@@ -209,13 +209,13 @@ enum app_button_code_t {
 // NOTE(momo): Input is SPECIFICALLY stuff that can be recorded and
 // replayed by some kind of system. Other things go to game_t
 // 
-struct app_input_characters_t {
+struct game_input_characters_t {
   u8_t* data;
   u32_t count;
 };
 
-struct app_input_t {
-  app_button_t buttons[APP_BUTTON_CODE_MAX];
+struct game_input_t {
+  game_button_t buttons[APP_BUTTON_CODE_MAX];
   u8_t chars[32];
   u32_t char_count;
 
@@ -236,106 +236,106 @@ struct app_input_t {
 //
 // File IO API
 // 
-enum app_file_path_t {
+enum game_file_path_t {
   APP_FILE_PATH_EXE,
   APP_FILE_PATH_USER,
   APP_FILE_PATH_CACHE,
 
 };
 
-enum app_file_access_t {
+enum game_file_access_t {
   APP_FILE_ACCESS_READ,
   APP_FILE_ACCESS_OVERWRITE,
 };
 
-struct app_file_t {
+struct game_file_t {
   void* data; // pointer for platform's usage
 };
 
-#define app_open_file_sig(name) b32_t name(app_file_t* file, const char* filename, app_file_access_t file_access, app_file_path_t file_path)
-typedef app_open_file_sig(app_open_file_f);
-#define app_open_file(app, ...) (app->open_file(__VA_ARGS__))
+#define game_open_file_sig(name) b32_t name(game_file_t* file, const char* filename, game_file_access_t file_access, game_file_path_t file_path)
+typedef game_open_file_sig(game_open_file_f);
+#define game_open_file(game, ...) (game->open_file(__VA_ARGS__))
 
-#define app_close_file_sig(name) void  name(app_file_t* file)
-typedef app_close_file_sig(app_close_file_f);
-#define app_close_file(app, ...) (app->close_file(__VA_ARGS__))
+#define game_close_file_sig(name) void  name(game_file_t* file)
+typedef game_close_file_sig(game_close_file_f);
+#define game_close_file(game, ...) (game->close_file(__VA_ARGS__))
 
-#define app_read_file_sig(name) b32_t name(app_file_t* file, usz_t size, usz_t offset, void* dest)
-typedef app_read_file_sig(app_read_file_f);
-#define app_read_file(app, ...) (app->read_file(__VA_ARGS__))
+#define game_read_file_sig(name) b32_t name(game_file_t* file, usz_t size, usz_t offset, void* dest)
+typedef game_read_file_sig(game_read_file_f);
+#define game_read_file(game, ...) (game->read_file(__VA_ARGS__))
 
-#define app_write_file_sig(name) b32_t name(app_file_t* file, usz_t size, usz_t offset, void* src)
-typedef app_write_file_sig(app_write_file_f);
-#define app_write_file(app, ...) (app->write_file(__VA_ARGS__))
+#define game_write_file_sig(name) b32_t name(game_file_t* file, usz_t size, usz_t offset, void* src)
+typedef game_write_file_sig(game_write_file_f);
+#define game_write_file(game, ...) (game->write_file(__VA_ARGS__))
 
 //
 // App Logging API
 // 
-#define app_debug_log_sig(name) void name(const char* fmt, ...)
-typedef app_debug_log_sig(app_debug_log_f);
-#define app_debug_log(app, ...) (app->debug_log(__VA_ARGS__))
+#define game_debug_log_sig(name) void name(const char* fmt, ...)
+typedef game_debug_log_sig(game_debug_log_f);
+#define game_debug_log(game, ...) (game->debug_log(__VA_ARGS__))
 
 //
 // App Cursor API
 //
-#define app_show_cursor_sig(name) void name()
-typedef app_show_cursor_sig(app_show_cursor_f);
-#define app_show_cursor(app, ...) (app->show_cursor(__VA_ARGS__))
+#define game_show_cursor_sig(name) void name()
+typedef game_show_cursor_sig(game_show_cursor_f);
+#define game_show_cursor(game, ...) (game->show_cursor(__VA_ARGS__))
 
-#define app_hide_cursor_sig(name) void name()
-typedef app_hide_cursor_sig(app_hide_cursor_f);
-#define app_hide_cursor(app, ...) (app->hide_cursor(__VA_ARGS__))
+#define game_hide_cursor_sig(name) void name()
+typedef game_hide_cursor_sig(game_hide_cursor_f);
+#define game_hide_cursor(game, ...) (game->hide_cursor(__VA_ARGS__))
 
-#define app_lock_cursor_sig(name) void name()
-typedef app_lock_cursor_sig(app_lock_cursor_f);
-#define app_lock_cursor(app, ...) (app->lock_cursor(__VA_ARGS__))
+#define game_lock_cursor_sig(name) void name()
+typedef game_lock_cursor_sig(game_lock_cursor_f);
+#define game_lock_cursor(game, ...) (game->lock_cursor(__VA_ARGS__))
 
-#define app_unlock_cursor_sig(name) void name()
-typedef app_unlock_cursor_sig(app_unlock_cursor_f);
-#define app_unlock_cursor(app, ...) (app->unlock_cursor(__VA_ARGS__))
+#define game_unlock_cursor_sig(name) void name()
+typedef game_unlock_cursor_sig(game_unlock_cursor_f);
+#define game_unlock_cursor(game, ...) (game->unlock_cursor(__VA_ARGS__))
 
 
 //
 // Memory Allocation API
 //
-#define app_allocate_memory_sig(name) void* name(usz_t size)
-typedef app_allocate_memory_sig(app_allocate_memory_f);
-#define app_allocate_memory(app, ...) (app->allocate_memory(__VA_ARGS__))
+#define game_allocate_memory_sig(name) void* name(usz_t size)
+typedef game_allocate_memory_sig(game_allocate_memory_f);
+#define game_allocate_memory(game, ...) (game->allocate_memory(__VA_ARGS__))
 
-#define app_free_memory_sig(name) void name(void* ptr)
-typedef app_free_memory_sig(app_free_memory_f);
-#define app_free_memory(app, ...) (app->free_memory(__VA_ARGS__))
+#define game_free_memory_sig(name) void name(void* ptr)
+typedef game_free_memory_sig(game_free_memory_f);
+#define game_free_memory(game, ...) (game->free_memory(__VA_ARGS__))
 
 //
 // Multithreaded work API
 //
-typedef void app_task_callback_f(void* data);
+typedef void game_task_callback_f(void* data);
 
-#define app_add_task_sig(name) void name(app_task_callback_f callback, void* data)
-typedef app_add_task_sig(app_add_task_f);
-#define app_add_task(app, ...) (app->add_task(__VA_ARGS__))
+#define game_add_task_sig(name) void name(game_task_callback_f callback, void* data)
+typedef game_add_task_sig(game_add_task_f);
+#define game_add_task(game, ...) (game->add_task(__VA_ARGS__))
 
-#define app_complete_all_tasks_sig(name) void name(void)
-typedef app_complete_all_tasks_sig(app_complete_all_tasks_f);
-#define app_complete_all_tasks(app, ...) (app->complete_all_tasks(__VA_ARGS__))
+#define game_complete_all_tasks_sig(name) void name(void)
+typedef game_complete_all_tasks_sig(game_complete_all_tasks_f);
+#define game_complete_all_tasks(game, ...) (game->complete_all_tasks(__VA_ARGS__))
 
 // 
 // Window/Graphics related
 //
-#define app_set_design_dimensions_sig(name) void name(f32_t width, f32_t height)
-typedef app_set_design_dimensions_sig(app_set_design_dimensions_f);
-#define app_set_design_dimensions(app, ...) (app->set_design_dimensions(__VA_ARGS__))
+#define game_set_design_dimensions_sig(name) void name(f32_t width, f32_t height)
+typedef game_set_design_dimensions_sig(game_set_design_dimensions_f);
+#define game_set_design_dimensions(game, ...) (game->set_design_dimensions(__VA_ARGS__))
 
 
 //
 // App Audio API
 //
-struct app_audio_t {
+struct game_audio_t {
   s16_t* sample_buffer;
   u32_t sample_count;
   u32_t channels; //TODO: remove this?
   
-  void* app_data;
+  void* platform_data;
 };
 
 
@@ -343,30 +343,30 @@ struct app_audio_t {
 // Arena Stat
 //
 
-struct app_t {
-  app_show_cursor_f* show_cursor;
-  app_hide_cursor_f* hide_cursor;
-  app_lock_cursor_f* lock_cursor;
-  app_unlock_cursor_f* unlock_cursor;
-  app_allocate_memory_f* allocate_memory;
-  app_free_memory_f* free_memory;
-  app_debug_log_f* debug_log;
-  app_add_task_f* add_task;
-  app_complete_all_tasks_f* complete_all_tasks;
-  app_set_design_dimensions_f* set_design_dimensions;
-  app_open_file_f* open_file;
-  app_close_file_f* close_file;
-  app_write_file_f* write_file;
-  app_read_file_f* read_file;
-  app_set_view_f* set_view;
-  app_clear_canvas_f* clear_canvas;
-  app_draw_sprite_f* draw_sprite;
-  app_draw_rect_f* draw_rect;
-  app_draw_tri_f* draw_tri;
-  app_advance_depth_f* advance_depth;
+struct game_t {
+  game_show_cursor_f* show_cursor;
+  game_hide_cursor_f* hide_cursor;
+  game_lock_cursor_f* lock_cursor;
+  game_unlock_cursor_f* unlock_cursor;
+  game_allocate_memory_f* allocate_memory;
+  game_free_memory_f* free_memory;
+  game_debug_log_f* debug_log;
+  game_add_task_f* add_task;
+  game_complete_all_tasks_f* complete_all_tasks;
+  game_set_design_dimensions_f* set_design_dimensions;
+  game_open_file_f* open_file;
+  game_close_file_f* close_file;
+  game_write_file_f* write_file;
+  game_read_file_f* read_file;
+  game_set_view_f* set_view;
+  game_clear_canvas_f* clear_canvas;
+  game_draw_sprite_f* draw_sprite;
+  game_draw_rect_f* draw_rect;
+  game_draw_tri_f* draw_tri;
+  game_advance_depth_f* advance_depth;
 
-  app_input_t input;
-  app_audio_t audio; 
+  game_input_t input;
+  game_audio_t audio; 
 
   gfx_t* gfx;
   profiler_t profiler;
@@ -375,7 +375,7 @@ struct app_t {
   b32_t is_dll_reloaded;
   b32_t is_running;
 
-  // arenas relevant to the app
+  // arenas relevant to the game
   arena_t gfx_arena;
   arena_t audio_arena;
   arena_t debug_arena;
@@ -412,7 +412,7 @@ struct game_init_config_t {
 #define game_init_sig(name) game_init_config_t name(void)
 typedef game_init_sig(game_init_f);
 
-#define game_update_and_render_sig(name) void name(app_t* in_app)
+#define game_update_and_render_sig(name) void name(game_t* in_game)
 typedef game_update_and_render_sig(game_update_and_render_f);
 
 // To be called by platform
@@ -436,52 +436,52 @@ static const char* game_function_names[] {
 
 // before: 0, now: 1
 static b32_t
-app_is_button_poked(app_t* app, app_button_code_t code) {
-  app_input_t* in = &app->input;
+game_is_button_poked(game_t* game, game_button_code_t code) {
+  game_input_t* in = &game->input;
   auto btn = in->buttons[code];
   return !btn.before && btn.now;
 }
 
 // before: 1, now: 0
 static b32_t
-app_is_button_released(app_t* app, app_button_code_t code) {
-  app_input_t* in = &app->input;
+game_is_button_released(game_t* game, game_button_code_t code) {
+  game_input_t* in = &game->input;
   auto btn = in->buttons[code];
   return btn.before && !btn.now;
 }
 
 // before: X, now: 1
 static b32_t
-app_is_button_down(app_t* app, app_button_code_t code){
-  app_input_t* in = &app->input;
+game_is_button_down(game_t* game, game_button_code_t code){
+  game_input_t* in = &game->input;
   return in->buttons[code].now;
 }
 
 
 // before: 1, now: 1
 static b32_t
-app_is_button_held(app_t* app, app_button_code_t code) {
-  app_input_t* in = &app->input;
+game_is_button_held(game_t* game, game_button_code_t code) {
+  game_input_t* in = &game->input;
   auto btn = in->buttons[code];
   return btn.before && btn.now;
 }
 
 static b32_t
-app_is_dll_reloaded(app_t* app) {
-  return app->is_dll_reloaded;
+game_is_dll_reloaded(game_t* game) {
+  return game->is_dll_reloaded;
 }
 
 static f32_t 
-app_get_dt(app_t* app) {
-  return app->input.delta_time;
+game_get_dt(game_t* game) {
+  return game->input.delta_time;
 }
 
 
-static app_input_characters_t
-app_get_input_characters(app_t* app) {
-  app_input_characters_t ret;
-  ret.data = app->input.chars;
-  ret.count = app->input.char_count; 
+static game_input_characters_t
+game_get_input_characters(game_t* game) {
+  game_input_characters_t ret;
+  ret.data = game->input.chars;
+  ret.count = game->input.char_count; 
 
   return ret;
 }
@@ -490,35 +490,35 @@ app_get_input_characters(app_t* app) {
 // Deriviative Graphics API functions
 //
 static void
-app_set_blend_additive(app_t* app) {
-  gfx_set_blend_additive(app->gfx);
+game_set_blend_additive(game_t* game) {
+  gfx_set_blend_additive(game->gfx);
 }
 
 static void
-app_set_blend_alpha(app_t* app) {
-  gfx_set_blend_alpha(app->gfx);
+game_set_blend_alpha(game_t* game) {
+  gfx_set_blend_alpha(game->gfx);
 }
 
 static void
-app_draw_line(app_t* app, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {
-  gfx_draw_line(app->gfx, p0, p1, thickness, colors);
+game_draw_line(game_t* game, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {
+  gfx_draw_line(game->gfx, p0, p1, thickness, colors);
 }
 
 static void
-app_draw_circle(app_t* app, v2f_t center, f32_t radius, u32_t sections, rgba_t color) {
-  gfx_draw_filled_circle(app->gfx, center, radius, sections, color);
+game_draw_circle(game_t* game, v2f_t center, f32_t radius, u32_t sections, rgba_t color) {
+  gfx_draw_filled_circle(game->gfx, center, radius, sections, color);
 }
 
 static void
-app_draw_circ_outline(app_t* app, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
+game_draw_circ_outline(game_t* game, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
 {
-  gfx_draw_circle_outline(app->gfx, center, radius, thickness, line_count, color);
+  gfx_draw_circle_outline(game->gfx, center, radius, thickness, line_count, color);
 }
 
 
 static void
-app_draw_asset_sprite(
-    app_t* app, 
+game_draw_asset_sprite(
+    game_t* game, 
     assets_t* assets, 
     asset_sprite_id_t sprite_id, 
     v2f_t pos, 
@@ -529,8 +529,8 @@ app_draw_asset_sprite(
   asset_bitmap_t* bitmap = assets_get_bitmap(assets, sprite->bitmap_asset_id);
   v2f_t anchor = v2f_set(0.5f, 0.5f); 
   
-  app_draw_sprite(
-      app, 
+  game_draw_sprite(
+      game, 
       pos, size, anchor,
       bitmap->renderer_texture_handle, 
       sprite->texel_x0,
@@ -542,7 +542,7 @@ app_draw_asset_sprite(
 
 
 static void
-app_draw_text(app_t* app, assets_t* assets, asset_font_id_t font_id, st8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+game_draw_text(game_t* game, assets_t* assets, asset_font_id_t font_id, st8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
   asset_font_t* font = assets_get_font(assets, font_id);
   for(u32_t char_index = 0; 
@@ -568,7 +568,7 @@ app_draw_text(app_t* app, assets_t* assets, asset_font_id_t font_id, st8_t str, 
     v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py + (glyph->box_y0*font_height));
     v2f_t size = v2f_set(width, height);
     v2f_t anchor = v2f_set(0.f, 0.f); // bottom left
-    app_draw_sprite(app, 
+    game_draw_sprite(game, 
                     pos, size, anchor,
                     bitmap->renderer_texture_handle, 
                     glyph->texel_x0,
@@ -581,7 +581,7 @@ app_draw_text(app_t* app, assets_t* assets, asset_font_id_t font_id, st8_t str, 
 }
 
 static void
-app_draw_text_center_aligned(app_t* app, assets_t* assets, asset_font_id_t font_id, st8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+game_draw_text_center_aligned(game_t* game, assets_t* assets, asset_font_id_t font_id, st8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
   asset_font_t* font = assets_get_font(assets, font_id);
   
@@ -635,7 +635,7 @@ app_draw_text_center_aligned(app_t* app, assets_t* assets, asset_font_id_t font_
     v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py + (glyph->box_y0*font_height));
     v2f_t size = v2f_set(width, height);
     v2f_t anchor = v2f_set(0.f, 0.f); // bottom left
-    app_draw_sprite(app, 
+    game_draw_sprite(game, 
                     pos, size, anchor,
                     bitmap->renderer_texture_handle, 
                     glyph->texel_x0,
@@ -798,7 +798,7 @@ profiler_update_entries(profiler_t* p) {
 //   I feel like they should be shifted *somewhere* but it's hard
 //   to figure out exactly where. The main issue I *feel* is that
 //   the game side shouldn't be the one to initialize the assets;
-//   instead it should be on the app's side. This would make it 
+//   instead it should be on the game's side. This would make it 
 //   more reasonable to do some kind of 'hot reloading' of assets.
 //
 // = 2023-07-18 = 

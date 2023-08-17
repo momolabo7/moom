@@ -40,7 +40,7 @@ make(inspector_t, inspector);
 #include <stdio.h>
 
 static 
-app_debug_log_sig(w32_log_proc) 
+game_debug_log_sig(w32_log_proc) 
 {
   char buffer[256] = {0};
   va_list args;
@@ -393,23 +393,23 @@ w32_reload_code_if_outdated(w32_loaded_code_t* code) {
 
 
 
-static app_button_code_t
-w32_vkeys_to_app_button_code(u32_t code) {
+static game_button_code_t
+w32_vkeys_to_game_button_code(u32_t code) {
 
   // A to Z
   if (code >= 0x41 && code <= 0x5A) {
-    return app_button_code_t(APP_BUTTON_CODE_A + code - 0x41);
+    return game_button_code_t(APP_BUTTON_CODE_A + code - 0x41);
   }
   
   // 0 to 9
   else if (code >= 0x30 && code <= 0x39) {
-    return app_button_code_t(APP_BUTTON_CODE_0 + code - 0x30);
+    return game_button_code_t(APP_BUTTON_CODE_0 + code - 0x30);
   }
 
   // F1 to F12
   // NOTE(momo): there are actually more F-keys??
   else if (code >= 0x70 && code <= 0x7B) {
-    return app_button_code_t(APP_BUTTON_CODE_F1 + code - 0x70);
+    return game_button_code_t(APP_BUTTON_CODE_F1 + code - 0x70);
   }
   else {
     switch(code) {
@@ -422,7 +422,7 @@ w32_vkeys_to_app_button_code(u32_t code) {
 
 // TODO: change 'rr' to 'render_region'
 static void
-w32_update_input(app_input_t* input, HWND window, f32_t delta_time, RECT rr) 
+w32_update_input(game_input_t* input, HWND window, f32_t delta_time, RECT rr) 
 {
   // Update input
   for (u32_t i = 0; i < array_count(input->buttons); ++i) 
@@ -480,7 +480,7 @@ w32_update_input(app_input_t* input, HWND window, f32_t delta_time, RECT rr)
       {
         u32_t code = (u32_t)msg.wParam;
         b32_t is_key_down = msg.message == WM_KEYDOWN;
-        input->buttons[w32_vkeys_to_app_button_code(code)].now = is_key_down;
+        input->buttons[w32_vkeys_to_game_button_code(code)].now = is_key_down;
 
         TranslateMessage(&msg);
       } break;
@@ -563,24 +563,24 @@ w32_set_game_dims(f32_t width, f32_t height) {
 }
 
 static 
-app_show_cursor_sig(w32_show_cursor)
+game_show_cursor_sig(w32_show_cursor)
 {
   while(ShowCursor(1) < 0);
 }
 
 static  
-app_hide_cursor_sig(w32_hide_cursor) {
+game_hide_cursor_sig(w32_hide_cursor) {
   while(ShowCursor(0) >= 0);
 }
 
 static 
-app_lock_cursor_sig(w32_lock_cursor) {
+game_lock_cursor_sig(w32_lock_cursor) {
   w32_state.is_cursor_locked = true;
   GetCursorPos(&w32_state.cursor_pt_to_lock_to);
 }
 
 static 
-app_unlock_cursor_sig(w32_unlock_cursor) {
+game_unlock_cursor_sig(w32_unlock_cursor) {
   w32_state.is_cursor_locked = false;
 }
 
@@ -612,7 +612,7 @@ w32_window_callback(HWND window,
 //
 
 static 
-app_open_file_sig(w32_open_file)
+game_open_file_sig(w32_open_file)
 {
   // Opening the file
   DWORD access_flag = {};
@@ -658,7 +658,7 @@ app_open_file_sig(w32_open_file)
 }
 
 static 
-app_close_file_sig(w32_close_file)
+game_close_file_sig(w32_close_file)
 {
   w32_file_t* w32_file = (w32_file_t*)file->data;
   CloseHandle(w32_file->handle);
@@ -668,18 +668,18 @@ app_close_file_sig(w32_close_file)
 }
 
 static 
-app_read_file_sig(w32_read_file)
+game_read_file_sig(w32_read_file)
 { 
   w32_file_t* w32_file = (w32_file_t*)file->data;
   
   // Reading the file
-  OVERLAPPED overlapped = {};
-  overlapped.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
-  overlapped.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
+  OVERLAPPED overlgameed = {};
+  overlgameed.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
+  overlgameed.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
   
   DWORD bytes_read;
   
-  if(ReadFile(w32_file->handle, dest, (DWORD)size, &bytes_read, &overlapped) &&
+  if(ReadFile(w32_file->handle, dest, (DWORD)size, &bytes_read, &overlgameed) &&
      (DWORD)size == bytes_read) 
   {
     return true;
@@ -690,16 +690,16 @@ app_read_file_sig(w32_read_file)
 }
 
 static  
-app_write_file_sig(w32_write_file)
+game_write_file_sig(w32_write_file)
 {
   w32_file_t* w32_file = (w32_file_t*)file->data;
   
-  OVERLAPPED overlapped = {};
-  overlapped.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
-  overlapped.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
+  OVERLAPPED overlgameed = {};
+  overlgameed.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
+  overlgameed.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
   
   DWORD bytes_wrote;
-  if(WriteFile(w32_file->handle, src, (DWORD)size, &bytes_wrote, &overlapped) &&
+  if(WriteFile(w32_file->handle, src, (DWORD)size, &bytes_wrote, &overlgameed) &&
      (DWORD)size == bytes_wrote) 
   {
     return true;
@@ -710,19 +710,19 @@ app_write_file_sig(w32_write_file)
 }
 
 static 
-app_add_task_sig(w32_add_task)
+game_add_task_sig(w32_add_task)
 {
   w32_add_task_entry(&w32_state.work_queue, callback, data);
 }
 
 static 
-app_complete_all_tasks_sig(w32_complete_all_tasks) 
+game_complete_all_tasks_sig(w32_complete_all_tasks) 
 {
   w32_complete_all_tasks_entries(&w32_state.work_queue);
 }
 
 static 
-app_allocate_memory_sig(w32_allocate_memory)
+game_allocate_memory_sig(w32_allocate_memory)
 {
   usz_t aligned_size = align_up_pow2(size, 16);
   usz_t padding_for_alignment = aligned_size - size;
@@ -748,7 +748,7 @@ app_allocate_memory_sig(w32_allocate_memory)
 }
 
 static
-app_free_memory_sig(w32_free_memory) {
+game_free_memory_sig(w32_free_memory) {
   if (ptr) {
     auto* memory_block = (w32_memory_t*)(ptr);
     cll_remove(memory_block);
@@ -757,39 +757,39 @@ app_free_memory_sig(w32_free_memory) {
 }
 
 static
-app_set_view_sig(w32_set_view) {
-  gfx_t* gfx = w32_state.app->gfx;
+game_set_view_sig(w32_set_view) {
+  gfx_t* gfx = w32_state.game->gfx;
   gfx_set_view(gfx, min_x, max_x, min_y, max_y, pos_x, pos_y); 
 }
 
 static
-app_clear_canvas_sig(w32_clear_canvas) {
-  gfx_t* gfx = w32_state.app->gfx;
+game_clear_canvas_sig(w32_clear_canvas) {
+  gfx_t* gfx = w32_state.game->gfx;
   gfx_clear_colors(gfx, color); 
 }
 
 static
-app_draw_sprite_sig(w32_draw_sprite) {
-  gfx_t* gfx = w32_state.app->gfx;
+game_draw_sprite_sig(w32_draw_sprite) {
+  gfx_t* gfx = w32_state.game->gfx;
   gfx_push_sprite(gfx, color, pos, size, anchor, texture_index, texel_x0, texel_y0, texel_x1, texel_y1 ); 
 }
 
 static 
-app_draw_rect_sig(w32_draw_rect) {
-  gfx_t* gfx = w32_state.app->gfx;
+game_draw_rect_sig(w32_draw_rect) {
+  gfx_t* gfx = w32_state.game->gfx;
   gfx_draw_filled_rect(gfx,color, pos, rot, scale);
 }
 
 static 
-app_draw_tri_sig(w32_draw_tri) {
-  gfx_t* gfx = w32_state.app->gfx;
+game_draw_tri_sig(w32_draw_tri) {
+  gfx_t* gfx = w32_state.game->gfx;
   gfx_draw_filled_triangle(gfx,color, p0, p1, p2);
 }
 
 
 static 
-app_advance_depth_sig(w32_advance_depth) {
-  gfx_t* gfx = w32_state.app->gfx;
+game_advance_depth_sig(w32_advance_depth) {
+  gfx_t* gfx = w32_state.game->gfx;
   gfx_advance_depth(gfx);
 }
 
@@ -814,29 +814,29 @@ WinMain(HINSTANCE instance,
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
 
-  app_t app = {};
+  game_t game = {};
 
-  app.is_running = true;
-  app.show_cursor = w32_show_cursor;
-  app.lock_cursor = w32_lock_cursor;
-  app.hide_cursor = w32_hide_cursor;
-  app.unlock_cursor = w32_unlock_cursor;
-  app.allocate_memory = w32_allocate_memory;
-  app.free_memory = w32_free_memory;
-  app.debug_log = w32_log_proc;
-  app.add_task = w32_add_task;
-  app.complete_all_tasks = w32_complete_all_tasks;
-  app.set_design_dimensions = w32_set_game_dims;
-  app.open_file = w32_open_file;
-  app.read_file = w32_read_file;
-  app.write_file = w32_write_file;
-  app.close_file = w32_close_file;
-  app.set_view = w32_set_view;
-  app.clear_canvas = w32_clear_canvas;
-  app.draw_sprite = w32_draw_sprite;
-  app.draw_rect =  w32_draw_rect;
-  app.draw_tri = w32_draw_tri;
-  app.advance_depth = w32_advance_depth;
+  game.is_running = true;
+  game.show_cursor = w32_show_cursor;
+  game.lock_cursor = w32_lock_cursor;
+  game.hide_cursor = w32_hide_cursor;
+  game.unlock_cursor = w32_unlock_cursor;
+  game.allocate_memory = w32_allocate_memory;
+  game.free_memory = w32_free_memory;
+  game.debug_log = w32_log_proc;
+  game.add_task = w32_add_task;
+  game.complete_all_tasks = w32_complete_all_tasks;
+  game.set_design_dimensions = w32_set_game_dims;
+  game.open_file = w32_open_file;
+  game.read_file = w32_read_file;
+  game.write_file = w32_write_file;
+  game.close_file = w32_close_file;
+  game.set_view = w32_set_view;
+  game.clear_canvas = w32_clear_canvas;
+  game.draw_sprite = w32_draw_sprite;
+  game.draw_rect =  w32_draw_rect;
+  game.draw_tri = w32_draw_tri;
+  game.advance_depth = w32_advance_depth;
 
   //
   // Initialize w32 state
@@ -851,7 +851,7 @@ WinMain(HINSTANCE instance,
     w32_state.memory_sentinel.next = &w32_state.memory_sentinel;    
     w32_state.memory_sentinel.prev = &w32_state.memory_sentinel;    
 
-    w32_state.app = &app;
+    w32_state.game = &game;
 
     if (!w32_init_work_queue(&w32_state.work_queue, 8)) {
       return 1;
@@ -994,7 +994,7 @@ WinMain(HINSTANCE instance,
       return 1;
 
     if (!w32_audio_load(
-          &app.audio, 
+          &game.audio, 
           48000, 16, 2, 1, 
           monitor_refresh_rate, 
           audio_arena)) 
@@ -1002,7 +1002,7 @@ WinMain(HINSTANCE instance,
   }
   defer{ 
     if (config.audio_enabled) 
-      w32_audio_unload(&app.audio); 
+      w32_audio_unload(&game.audio); 
   };
 
 
@@ -1013,15 +1013,15 @@ WinMain(HINSTANCE instance,
   make(arena_t, debug_arena);
   if (!w32_allocate_memory_into_arena(debug_arena, config.debug_arena_size)) return false;
 
-  profiler_init(&app.profiler, w32_get_performance_counter_u64, debug_arena, config.max_profiler_entries, config.max_profiler_snapshots);
+  profiler_init(&game.profiler, w32_get_performance_counter_u64, debug_arena, config.max_profiler_entries, config.max_profiler_snapshots);
 
-  inspector_init(&app.inspector, debug_arena, config.max_inspector_entries);
+  inspector_init(&game.inspector, debug_arena, config.max_inspector_entries);
 
 
   //
   // Game setup
   //
-  app.gfx = gfx;
+  game.gfx = gfx;
 
   // Begin game loop
   b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
@@ -1031,20 +1031,20 @@ WinMain(HINSTANCE instance,
   QueryPerformanceFrequency(&performance_frequency);
   LARGE_INTEGER last_frame_count = w32_get_performance_counter();
 
-  while (w32_state.is_running && app.is_running) 
+  while (w32_state.is_running && game.is_running) 
   {
 #if HOT_RELOADABLE
     // Hot reload game.dll functions
-    app.is_dll_reloaded = w32_reload_code_if_outdated(&game_code);
-    if (app.is_dll_reloaded) {
-      profiler_reset(&app.profiler);
+    game.is_dll_reloaded = w32_reload_code_if_outdated(&game_code);
+    if (game.is_dll_reloaded) {
+      profiler_reset(&game.profiler);
     }
 #else 
-    profiler_reset(&app.profiler);
+    profiler_reset(&game.profiler);
 #endif
 
     // Begin frame
-    if (config.audio_enabled) w32_audio_begin_frame(&app.audio);
+    if (config.audio_enabled) w32_audio_begin_frame(&game.audio);
     v2u_t client_wh = w32_get_client_dims(window);
 
 
@@ -1056,17 +1056,17 @@ WinMain(HINSTANCE instance,
     w32_gfx_begin_frame(gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
        
     //Process messages and input
-    w32_update_input(&app.input, window, target_secs_per_frame, rr);
+    w32_update_input(&game.input, window, target_secs_per_frame, rr);
     
     
-    game_functions.update_and_render(&app);
+    game_functions.update_and_render(&game);
 
 
     // End frame
-    profiler_update_entries(&app.profiler);
+    profiler_update_entries(&game.profiler);
     w32_gfx_end_frame(gfx);
     
-    if (config.audio_enabled) w32_audio_end_frame(&app.audio);
+    if (config.audio_enabled) w32_audio_end_frame(&game.audio);
 #if 0
     if (w32_state.is_cursor_locked) {
       SetCursorPos(

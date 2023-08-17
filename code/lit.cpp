@@ -50,10 +50,10 @@
 #define LIT_LEARNT_BASICS_LEVEL_ID (3)
 #define LIT_LEARNT_POINT_LIGHT_LEVEL_ID (7)
 
-#define lit_log(...) app_debug_log(app, __VA_ARGS__)
-#define lit_profile_block(name) app_profile_block(app, name)
-#define lit_profile_begin(name) app_profile_begin(app, name)
-#define lit_profile_end(name) app_profile_end(app, name)
+#define lit_log(...) game_debug_log(game, __VA_ARGS__)
+#define lit_profile_block(name) game_profile_block(game, name)
+#define lit_profile_begin(name) game_profile_begin(game, name)
+#define lit_profile_end(name) game_profile_end(game, name)
 
 
 //
@@ -377,7 +377,7 @@ struct lit_t {
 //
 // Globals
 // 
-static app_t* app; 
+static game_t* game; 
 static lit_t* lit;
 static lit_game_title_waypoint_t lit_title_wps[] = {
   { -800.0f,  0.0f },
@@ -398,14 +398,14 @@ static b32_t
 lit_unlock_next_level(u32_t current_level_id) {
 
   if (current_level_id >= lit->save_data.unlocked_levels) {
-    app_file_t file = {};
+    game_file_t file = {};
 
     lit->save_data.unlocked_levels = current_level_id + 1;
 
-    if (app_open_file(app, &file, LIT_SAVE_FILE, APP_FILE_ACCESS_OVERWRITE, APP_FILE_PATH_USER)) 
+    if (game_open_file(game, &file, LIT_SAVE_FILE, APP_FILE_ACCESS_OVERWRITE, APP_FILE_PATH_USER)) 
     {
-      app_write_file(app, &file, sizeof(lit->save_data), 0, (void*)&lit->save_data);
-      app_close_file(app, &file);
+      game_write_file(game, &file, sizeof(lit->save_data), 0, (void*)&lit->save_data);
+      game_close_file(game, &file);
       return true;
     }
     else {
@@ -420,13 +420,13 @@ lit_unlock_next_level(u32_t current_level_id) {
 static b32_t
 lit_init_save_data() {
   lit->save_data.unlocked_levels = 0;
-  app_file_t file = {};
+  game_file_t file = {};
 
   // save data actually found
-  if (app_open_file(app, &file, LIT_SAVE_FILE, APP_FILE_ACCESS_READ, APP_FILE_PATH_USER)) {
-    if(app_read_file(app, &file, sizeof(lit_save_data_t), 0, &lit->save_data)) {
-      // happy! :3
-      app_close_file(app, &file);
+  if (game_open_file(game, &file, LIT_SAVE_FILE, APP_FILE_ACCESS_READ, APP_FILE_PATH_USER)) {
+    if(game_read_file(game, &file, sizeof(lit_save_data_t), 0, &lit->save_data)) {
+      // hgamey! :3
+      game_close_file(game, &file);
       return true;
     }
     else { // data is somehow corrupted?
@@ -462,7 +462,7 @@ lit_update_and_render_console()
 {
   console_t* console = &lit->console;
   assets_t* assets = &lit->assets;
-  app_input_characters_t characters = app_get_input_characters(app);
+  game_input_characters_t characters = game_get_input_characters(game);
 
   for (u32_t char_index = 0; 
        char_index < characters.count;
@@ -499,17 +499,17 @@ lit_update_and_render_console()
   v2f_t input_area_size = v2f_set(console_width, line_height);
   v2f_t input_area_pos = v2f_set(console_width/2, line_height/2);
   
-  app_draw_asset_sprite(
-      app, assets, lit->blank_sprite, 
+  game_draw_asset_sprite(
+      game, assets, lit->blank_sprite, 
       v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(0.f, 0.f, 0.f, 0.8f));
-  app_advance_depth(app);
+  game_advance_depth(game);
   
-  app_draw_asset_sprite(app, assets, lit->blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
-  app_advance_depth(app);
-  app_draw_asset_sprite(app, assets, lit->blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
-  app_advance_depth(app);
+  game_draw_asset_sprite(game, assets, lit->blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
+  game_advance_depth(game);
+  game_draw_asset_sprite(game, assets, lit->blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
+  game_advance_depth(game);
   
   
   // Draw info text
@@ -519,8 +519,8 @@ lit_update_and_render_console()
   {
     stb8_t* line = console->info_lines + line_index;
 
-    app_draw_text(
-        app, assets, lit->debug_font,
+    game_draw_text(
+        game, assets, lit->debug_font,
         line->str,
         rgba_hex(0xFFFFFFFF),
         left_pad, 
@@ -529,14 +529,14 @@ lit_update_and_render_console()
     
   }
 
-  app_advance_depth(app);
-  app_draw_text(app, assets, lit->debug_font,
+  game_advance_depth(game);
+  game_draw_text(game, assets, lit->debug_font,
       console->input_line.str,
       rgba_hex(0xFFFFFFFF),
       left_pad, 
       font_bottom_pad,
       font_height);
-  app_advance_depth(app);
+  game_advance_depth(game);
 }
 
 //
@@ -583,18 +583,18 @@ lit_profiler_update_and_render()
   const f32_t font_height = 20.f;
 
   // Overlay
-  app_draw_asset_sprite(
-      app, assets, lit->blank_sprite, 
+  game_draw_asset_sprite(
+      game, assets, lit->blank_sprite, 
       v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(0.f, 0.f, 0.f, 0.5f));
-  app_advance_depth(app);
+  game_advance_depth(game);
   
   u32_t line_num = 1;
   
-  for(u32_t entry_id = 0; entry_id < app->profiler.entry_count; ++entry_id)
+  for(u32_t entry_id = 0; entry_id < game->profiler.entry_count; ++entry_id)
   {
-    profiler_entry_t* entry = app->profiler.entries + entry_id;
+    profiler_entry_t* entry = game->profiler.entries + entry_id;
 
     lit_profiler_stat_t cycles;
     lit_profiler_stat_t hits;
@@ -605,7 +605,7 @@ lit_profiler_update_and_render()
     lit_profiler_begin_stat(&cycles_per_hit);
     
     for (u32_t snapshot_index = 0;
-         snapshot_index < app->profiler.entry_snapshot_count;
+         snapshot_index < game->profiler.entry_snapshot_count;
          ++snapshot_index)
     {
       
@@ -632,18 +632,18 @@ lit_profiler_update_and_render()
                  (u32_t)hits.average,
                  (u32_t)cycles_per_hit.average);
     
-    app_draw_text(app, assets, lit->debug_font, 
+    game_draw_text(game, assets, lit->debug_font, 
         sb->str,
         rgba_hex(0xFFFFFFFF),
         0.f, 
         render_height - font_height * (line_num), 
         font_height);
-    app_advance_depth(app);
+    game_advance_depth(game);
 
     
     // Draw graph
     for (u32_t snapshot_index = 0;
-         snapshot_index < app->profiler.entry_snapshot_count;
+         snapshot_index < game->profiler.entry_snapshot_count;
          ++snapshot_index)
     {
       profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
@@ -658,9 +658,9 @@ lit_profiler_update_and_render()
         render_height - font_height * (line_num) + font_height/4);
 
       v2f_t size = v2f_set(snapshot_bar_width, snapshot_bar_height);
-      app_draw_asset_sprite(app, assets, lit->blank_sprite, pos, size, rgba_hex(0x00FF00FF));
+      game_draw_asset_sprite(game, assets, lit->blank_sprite, pos, size, rgba_hex(0x00FF00FF));
     }
-    app_advance_depth(app);
+    game_advance_depth(game);
     ++line_num;
   }
 }
@@ -673,14 +673,14 @@ lit_inspector_update_and_render()
 {
   inspector_t* inspector = &lit->inspector;
   assets_t* assets = &lit->assets;
-  app_draw_asset_sprite(
-      app, 
+  game_draw_asset_sprite(
+      game, 
       assets, 
       lit->blank_sprite, 
       v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(0.f, 0.f, 0.f, 0.5f));
-  app_advance_depth(app);
+  game_advance_depth(game);
 
   for(u32_t entry_index = 0; entry_index < inspector->entry_count; ++entry_index)
   {
@@ -701,8 +701,8 @@ lit_inspector_update_and_render()
     }
 
     f32_t y = LIT_HEIGHT - line_height * (entry_index+1);
-    app_draw_text(app, assets, lit->debug_font, sb->str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
-    app_advance_depth(app);
+    game_draw_text(game, assets, lit->debug_font, sb->str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
+    game_advance_depth(game);
   }
 }
 
@@ -723,10 +723,10 @@ lit_splash_update() {
   lit_splash_t* splash = &lit->splash;
   asset_font_id_t font = ASSET_FONT_ID_DEFAULT;
 
-  splash->timer -= app_get_dt(app);
-  splash->scroll_in_timer -= app_get_dt(app);
+  splash->timer -= game_get_dt(game);
+  splash->scroll_in_timer -= game_get_dt(game);
 
-  if (app_is_button_poked(app, APP_BUTTON_CODE_LMB)) {
+  if (game_is_button_poked(game, APP_BUTTON_CODE_LMB)) {
     if (splash->scroll_in_timer > 0.f)  {
       splash->scroll_in_timer = 0.f;
     }
@@ -737,8 +737,8 @@ lit_splash_update() {
 
   f32_t y = LIT_HEIGHT/2 + 100.f;
 
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       font, 
       st8_from_lit("--------"), 
@@ -746,8 +746,8 @@ lit_splash_update() {
       LIT_WIDTH/2, y, 
       128.f);
   y -= 70;
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       font,
       st8_from_lit("PRIMIX"), 
@@ -756,8 +756,8 @@ lit_splash_update() {
       128.f);
 
   y -= 70;
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       font,
       st8_from_lit("--------"), 
@@ -779,8 +779,8 @@ lit_splash_update() {
 
   f32_t scroll_y = (alpha)*LIT_SPLASH_SCROLL_POS_Y_END + (1.f-alpha)*LIT_SPLASH_SCROLL_POS_Y_START; 
   rgba_t grey = rgba_set(0.7f, 0.7f, 0.7f, 1.f); 
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       font,
       st8_from_lit("a silly game by"), 
@@ -789,15 +789,15 @@ lit_splash_update() {
       36.f);
 
   scroll_y -= 60.f;
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       font,
       st8_from_lit("momohoudai"), 
       grey,
       LIT_WIDTH/2, scroll_y, 
       72.f);
-  app_advance_depth(app);
+  game_advance_depth(game);
 
 
   if (splash->timer <= 0.f) {
@@ -1353,35 +1353,35 @@ lit_game_render_lights(lit_game_t* g) {
   for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
   {
     lit_game_light_t* light = g->lights + light_index;
-    app_draw_asset_sprite(app, &lit->assets, 
+    game_draw_asset_sprite(game, &lit->assets, 
         ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE,
         light->pos,
         v2f_set(16.f, 16.f),
         rgba_set(0.8f, 0.8f, 0.8f, 1.f));
-    app_advance_depth(app);
+    game_advance_depth(game);
   }
 
   //
   // Lights
   //
-  app_set_blend_additive(app);
+  game_set_blend_additive(game);
   for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
   {
     lit_game_light_t* l = g->lights + light_index;
     for(u32_t tri_index = 0; tri_index < l->triangle_count; ++tri_index)
     {
       lit_game_light_triangle_t* lt = l->triangles + tri_index;
-      app_draw_tri(
-          app, 
+      game_draw_tri(
+          game, 
           lt->p0,
           lt->p1,
           lt->p2, 
           rgba_hex(l->color));
 
     } 
-    app_advance_depth(app);
+    game_advance_depth(game);
   }
-  app_set_blend_alpha(app);
+  game_set_blend_alpha(game);
 }
 
 
@@ -1394,12 +1394,12 @@ lit_draw_light_rays(lit_game_t* g) {
     lit_game_light_t* light = g->lights + light_index;
     for_cnt(intersection_index, light->intersection_count){
       lit_light_intersection_t* intersection = light->intersections + intersection_index;
-      app_draw_line(app, light->pos, intersection->pt, 2.f, rgba_hex(0xFF0000FF));
+      game_draw_line(game, light->pos, intersection->pt, 2.f, rgba_hex(0xFF0000FF));
 
     }
 
   }
-  app_advance_depth(app);
+  game_advance_depth(game);
 }
 
 static void
@@ -1408,9 +1408,9 @@ lit_draw_edges(lit_game_t* g) {
   for(u32_t edge_index = 0; edge_index < g->edge_count; ++edge_index) 
   {
     lit_game_edge_t* edge = g->edges + edge_index;
-    app_draw_line(app, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
+    game_draw_line(game, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
   }
-  app_advance_depth(app);
+  game_advance_depth(game);
 }
 
 //
@@ -1430,7 +1430,7 @@ lit_game_player_release_light(lit_game_t* g) {
   lit_game_player_t* player = &g->player;
   player->held_light = nullptr;
   player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
-  app_show_cursor(app);
+  game_show_cursor(game);
 }
 
 static void
@@ -1463,7 +1463,7 @@ lit_game_player_hold_nearest_light_if_empty_handed(
       player->old_light_pos = player->nearest_light->pos;
       player->light_retrival_time = 0.f;
       player->light_hold_mode = light_hold_mode;
-      app_hide_cursor(app);
+      game_hide_cursor(game);
     }
   }
 }
@@ -1473,19 +1473,19 @@ lit_game_update_player(lit_game_t* g, f32_t dt)
 {
   lit_game_player_t* player = &g->player; 
 
-  player->pos.x = app->input.mouse_pos.x;
-  player->pos.y = LIT_HEIGHT - app->input.mouse_pos.y;
+  player->pos.x = game->input.mouse_pos.x;
+  player->pos.y = LIT_HEIGHT - game->input.mouse_pos.y;
 
   lit_game_player_find_nearest_light(g);
 
   //
   // Move light logic
   //
-  if (app_is_button_poked(app, APP_BUTTON_CODE_LMB)) {
+  if (game_is_button_poked(game, APP_BUTTON_CODE_LMB)) {
     lit_game_player_hold_nearest_light_if_empty_handed(g, LIT_PLAYER_LIGHT_HOLD_MODE_MOVE);
   }
 
-  else if (app_is_button_released(app, APP_BUTTON_CODE_LMB))
+  else if (game_is_button_released(game, APP_BUTTON_CODE_LMB))
   {
     lit_game_player_release_light(g);
   }
@@ -1493,17 +1493,17 @@ lit_game_update_player(lit_game_t* g, f32_t dt)
   //
   // Rotate light logic
   //
-  if (app_is_button_poked(app, APP_BUTTON_CODE_RMB))
+  if (game_is_button_poked(game, APP_BUTTON_CODE_RMB))
   {
     lit_game_player_hold_nearest_light_if_empty_handed(g, LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE);
-    app_lock_cursor(app);
+    game_lock_cursor(game);
     player->locked_pos_x = player->pos.x;
 
   }
-  else if (app_is_button_released(app, APP_BUTTON_CODE_RMB)) 
+  else if (game_is_button_released(game, APP_BUTTON_CODE_RMB)) 
   {
     lit_game_player_release_light(g);
-    app_unlock_cursor(app);
+    game_unlock_cursor(game);
   }
 
   // Restrict movement
@@ -1558,27 +1558,27 @@ lit_game_render_player(lit_game_t* g){
 
   if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_NONE) { 
     if (player->nearest_light) {
-      app_draw_asset_sprite(app, &lit->assets,
+      game_draw_asset_sprite(game, &lit->assets,
           ASSET_SPRITE_ID_CIRCLE_SPRITE,
           player->nearest_light->pos, 
           v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-      app_advance_depth(app);
+      game_advance_depth(game);
     }
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE) {
-    app_draw_asset_sprite(app, &lit->assets,
+    game_draw_asset_sprite(game, &lit->assets,
         ASSET_SPRITE_ID_ROTATE_SPRITE,
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-    app_advance_depth(app);
+    game_advance_depth(game);
 
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_MOVE) {
-    app_draw_asset_sprite(app, &lit->assets,
+    game_draw_asset_sprite(game, &lit->assets,
         ASSET_SPRITE_ID_MOVE_SPRITE,
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-    app_advance_depth(app);
+    game_advance_depth(game);
 
 
   }
@@ -1654,8 +1654,8 @@ lit_game_render_particles(lit_game_t* g) {
     size.w = f32_lerp(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = f32_lerp(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    app_draw_asset_sprite(app, &lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, p->pos, size, color);
-    app_advance_depth(app);
+    game_draw_asset_sprite(game, &lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, p->pos, size, color);
+    game_advance_depth(game);
   }
 }
 
@@ -1843,8 +1843,8 @@ lit_game_render_sensors(lit_game_t* g) {
   for(u32_t sensor_index = 0; sensor_index < g->sensor_count; ++sensor_index)
   {
     lit_game_sensor_t* sensor = g->sensors + sensor_index;
-    app_draw_asset_sprite(app, &lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, sensor->pos, size, rgba_hex(sensor->target_color));
-    app_advance_depth(app);
+    game_draw_asset_sprite(game, &lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, sensor->pos, size, rgba_hex(sensor->target_color));
+    game_advance_depth(game);
   }
 }
 
@@ -1863,7 +1863,7 @@ lit_game_generate_light(lit_game_t* g) {
     {
       v2f_t p0 = light->pos;
       v2f_t p1 = light->intersections[intersection_index].pt;
-      app_draw_line(app, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
+      game_draw_line(game, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
     }
 #endif
   }
@@ -3343,7 +3343,7 @@ lit_game_update()
 #endif 
 
   
-  f32_t dt = app_get_dt(app);
+  f32_t dt = game_get_dt(game);
   
   //
   // Transition Logic
@@ -3410,9 +3410,9 @@ lit_game_update()
 
     // Do input for exiting to HOME if not HOME
     if (g->current_level_id > 0) {
-      if (app->input.mouse_scroll_delta < 0)
+      if (game->input.mouse_scroll_delta < 0)
         g->exit_fade = min_of(1.f, g->exit_fade + 0.1f);
-      else if (app->input.mouse_scroll_delta > 0) 
+      else if (game->input.mouse_scroll_delta > 0) 
         g->exit_fade = max_of(0.f, g->exit_fade - 0.1f);
       if (g->exit_fade >= 1.f) {
         // go back to HOME
@@ -3444,8 +3444,8 @@ lit_game_update()
     //
     if (g->exit_callback != nullptr) 
     {
-      app_show_cursor(app);
-      app_unlock_cursor(app);
+      game_show_cursor(game);
+      game_unlock_cursor(game);
       g->state = LIT_GAME_STATE_TYPE_SOLVED_IN;
     }
   }
@@ -3455,8 +3455,8 @@ lit_game_update()
   // RENDERING
   //
 
-  // This is the default and happier blend mode
-  app_set_blend_alpha(app);
+  // This is the default and hgameier blend mode
+  game_set_blend_alpha(game);
 
 
   lit_profile_begin(rendering);
@@ -3470,7 +3470,7 @@ lit_game_update()
   }
   lit_game_render_lights(g);
 
-  app_set_blend_alpha(app);
+  game_set_blend_alpha(game);
 
   if (!lit_game_is_exiting(g)) {
     lit_game_render_sensors(g); 
@@ -3480,23 +3480,23 @@ lit_game_update()
   // Draw the overlay for fade in/out
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->stage_fade_timer);
-    app_draw_asset_sprite(app, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    app_advance_depth(app);
+    game_draw_asset_sprite(game, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    game_advance_depth(game);
   }
 
   // Overlay for pause fade
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->exit_fade);
-    app_draw_asset_sprite(app, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    app_advance_depth(app);
+    game_draw_asset_sprite(game, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    game_advance_depth(game);
   }
 
   // Draw the overlay for white flash
   {
     f32_t alpha = g->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
     rgba_t color = rgba_set(1.f, 1.f, 1.f, alpha);
-    app_draw_asset_sprite(app, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    app_advance_depth(app);
+    game_draw_asset_sprite(game, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    game_advance_depth(game);
   }
 
 
@@ -3512,8 +3512,8 @@ lit_game_update()
     f32_t title_x = cur_wp->x + a * (next_wp->x - cur_wp->x); 
     rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
 
-    app_draw_text_center_aligned(app, &lit->assets, ASSET_FONT_ID_DEFAULT, g->title, color, title_x, LIT_HEIGHT/2, 128.f);
-    app_advance_depth(app);
+    game_draw_text_center_aligned(game, &lit->assets, ASSET_FONT_ID_DEFAULT, g->title, color, title_x, LIT_HEIGHT/2, 128.f);
+    game_advance_depth(game);
 
   }
   lit_profile_end(rendering);
@@ -3555,8 +3555,8 @@ lit_credits_push_subtitle_and_name(
     f32_t y, st8_t subtitle, st8_t name)
 {
   lit_credits_t* credits = &lit->credits;
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       subtitle,
@@ -3564,8 +3564,8 @@ lit_credits_push_subtitle_and_name(
       LIT_WIDTH/2, y, 
       48.f);
   y -= 50.f;
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       name,
@@ -3580,8 +3580,8 @@ static void
 lit_credits_update() {
   lit_credits_t* credits = &lit->credits;
 
-  credits->timer += app_get_dt(app);
-  if (app_is_button_poked(app, APP_BUTTON_CODE_LMB)) {
+  credits->timer += game_get_dt(game);
+  if (game_is_button_poked(game, APP_BUTTON_CODE_LMB)) {
     lit->next_mode = LIT_MODE_GAME;
     return;
   }
@@ -3599,8 +3599,8 @@ lit_credits_update() {
   //
   
   // Title
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       st8_from_lit("THANKS"), 
@@ -3608,8 +3608,8 @@ lit_credits_update() {
       LIT_WIDTH/2, y, 
       96.f);
   y -= 96.f;
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       st8_from_lit("FOR"), 
@@ -3617,8 +3617,8 @@ lit_credits_update() {
       LIT_WIDTH/2, y, 
       96.f);
   y-=96.f;
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       st8_from_lit("PLAYING!"), 
@@ -3628,8 +3628,8 @@ lit_credits_update() {
   y -= LIT_HEIGHT - 100.f;
 
 
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       st8_from_lit("--------"), 
@@ -3638,8 +3638,8 @@ lit_credits_update() {
       128.f);
 
   y -= 70;
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       st8_from_lit("PRIMIX"), 
@@ -3648,8 +3648,8 @@ lit_credits_update() {
       128.f);
 
   y -= 70;
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       st8_from_lit("--------"), 
@@ -3683,8 +3683,8 @@ static void lit_sandbox_init() {
 }
 static void lit_sandbox_update() {
   rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
-  app_draw_text_center_aligned(
-      app, 
+  game_draw_text_center_aligned(
+      game, 
       &lit->assets, 
       ASSET_FONT_ID_DEFAULT, 
       st8_from_lit("A"), 
@@ -3701,12 +3701,12 @@ static void lit_sandbox_update() {
 //
 static b32_t
 lit_tick() {
-  if(app->game == nullptr) {
-    void* lit_memory = app_allocate_memory(app, sizeof(lit_t));
+  if(game->game == nullptr) {
+    void* lit_memory = game_allocate_memory(game, sizeof(lit_t));
     if (!lit_memory) return false;
-    app->game = lit_memory;
+    game->game = lit_memory;
 
-    lit = (lit_t*)(app->game);
+    lit = (lit_t*)(game->game);
     lit->level_to_start = 0;
     lit->next_mode = LIT_MODE_SPLASH;
     lit->mode = LIT_MODE_NONE;
@@ -3716,32 +3716,32 @@ lit_tick() {
     // Initialize assets
     //
     usz_t asset_memory_size = megabytes(20);
-    void* asset_memory = app_allocate_memory(app, asset_memory_size);
+    void* asset_memory = game_allocate_memory(game, asset_memory_size);
     if (asset_memory == nullptr) return false;
     arena_init(&lit->asset_arena, asset_memory, asset_memory_size);
-    assets_init(&lit->assets, app, LIT_ASSET_FILE, &lit->asset_arena);
+    assets_init(&lit->assets, game, LIT_ASSET_FILE, &lit->asset_arena);
 
 
     //
     // Initialize debug stuff
     //
     usz_t debug_memory_size = megabytes(1);
-    void* debug_memory = app_allocate_memory(app, debug_memory_size);
+    void* debug_memory = game_allocate_memory(game, debug_memory_size);
     arena_init(&lit->debug_arena, debug_memory, debug_memory_size);
     inspector_init(&lit->inspector, &lit->debug_arena, 64);
     console_init(&lit->console, &lit->debug_arena, 32, 256);
 
     usz_t frame_memory_size = megabytes(1);
-    void* frame_memory = app_allocate_memory(app, frame_memory_size);
+    void* frame_memory = game_allocate_memory(game, frame_memory_size);
     arena_init(&lit->frame_arena, frame_memory, frame_memory_size);
 
 
     usz_t mode_memory_size = megabytes(1);
-    auto* mode_memory = app_allocate_memory(app, mode_memory_size);
+    auto* mode_memory = game_allocate_memory(game, mode_memory_size);
     arena_init(&lit->mode_arena, mode_memory, mode_memory_size);
 
-    app_set_design_dimensions(app, LIT_WIDTH, LIT_HEIGHT);
-    app_set_view(app, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
+    game_set_design_dimensions(game, LIT_WIDTH, LIT_HEIGHT);
+    game_set_view(game, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
     //
     // Check save data
@@ -3755,13 +3755,13 @@ lit_tick() {
     
   }
 
-  lit = (lit_t*)(app->game);
+  lit = (lit_t*)(game->game);
 
   arena_clear(&lit->frame_arena);
   inspector_clear(&lit->inspector);
 
 
-  if (lit->next_mode != lit->mode || app_is_dll_reloaded(app)) 
+  if (lit->next_mode != lit->mode || game_is_dll_reloaded(game)) 
   {
     lit->mode = lit->next_mode;
     
@@ -3850,7 +3850,7 @@ game_init_sig(game_init)
 exported 
 game_update_and_render_sig(game_update_and_render) 
 { 
-  app = in_app;
+  game = in_game;
   lit_tick();
 }
 

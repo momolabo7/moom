@@ -68,11 +68,11 @@ struct assets_t {
 
 
 static b32_t 
-assets_init(assets_t* assets, app_t* app, const char* filename, arena_t* arena) 
+assets_init(assets_t* assets, game_t* game, const char* filename, arena_t* arena) 
 {
-  make(app_file_t, file);
-  if(!app_open_file(
-        app,
+  make(game_file_t, file);
+  if(!game_open_file(
+        game,
         file,
         filename,
         APP_FILE_ACCESS_READ, 
@@ -82,7 +82,7 @@ assets_init(assets_t* assets, app_t* app, const char* filename, arena_t* arena)
 
   // Read header
   asset_file_header_t asset_file_header = {};
-  app_read_file(app, file, sizeof(asset_file_header_t), 0, &asset_file_header);
+  game_read_file(game, file, sizeof(asset_file_header_t), 0, &asset_file_header);
   if (asset_file_header.signature != ASSET_FILE_SIGNATURE) return false;
 
   // Allocation for assets
@@ -104,7 +104,7 @@ assets_init(assets_t* assets, app_t* app, const char* filename, arena_t* arena)
   for_cnt(sprite_index, assets->sprite_count) {
     umi_t offset_to_sprite = asset_file_header.offset_to_sprites + sizeof(asset_file_sprite_t) * sprite_index; 
     asset_file_sprite_t file_sprite = {};
-    app_read_file(app, file, sizeof(asset_file_sprite_t), offset_to_sprite, &file_sprite);
+    game_read_file(game, file, sizeof(asset_file_sprite_t), offset_to_sprite, &file_sprite);
     asset_sprite_t* s = assets->sprites + sprite_index;
 
     s->bitmap_asset_id = (asset_bitmap_id_t)file_sprite.bitmap_asset_id;
@@ -117,22 +117,22 @@ assets_init(assets_t* assets, app_t* app, const char* filename, arena_t* arena)
   for_cnt(bitmap_index, assets->bitmap_count) {
     umi_t offset_to_bitmap = asset_file_header.offset_to_bitmaps + sizeof(asset_file_bitmap_t) * bitmap_index; 
     asset_file_bitmap_t file_bitmap = {};
-    app_read_file(app, file, sizeof(asset_file_bitmap_t), offset_to_bitmap, &file_bitmap);
+    game_read_file(game, file, sizeof(asset_file_bitmap_t), offset_to_bitmap, &file_bitmap);
 
     asset_bitmap_t* b = assets->bitmaps + bitmap_index;
     // TODO: is there anyway for gfx to assign this instead?
-    b->renderer_texture_handle = gfx_get_next_texture_handle(app->gfx);
+    b->renderer_texture_handle = gfx_get_next_texture_handle(game->gfx);
     b->width = file_bitmap.width;
     b->height = file_bitmap.height;
 
     u32_t bitmap_size = b->width * b->height * 4;
-    gfx_texture_payload_t* payload = gfx_begin_texture_transfer(app->gfx, bitmap_size);
+    gfx_texture_payload_t* payload = gfx_begin_texture_transfer(game->gfx, bitmap_size);
     if (!payload) false;
     payload->texture_index = b->renderer_texture_handle;
     payload->texture_width = file_bitmap.width;
     payload->texture_height = file_bitmap.height;
-    app_read_file(
-        app,
+    game_read_file(
+        game,
         file, 
         bitmap_size, 
         file_bitmap.offset_to_data, 
@@ -145,7 +145,7 @@ assets_init(assets_t* assets, app_t* app, const char* filename, arena_t* arena)
   {
     umi_t offset_to_fonts = asset_file_header.offset_to_fonts + sizeof(asset_file_font_t) * font_index; 
     asset_file_font_t file_font = {};
-    app_read_file(app, file, sizeof(asset_file_font_t), offset_to_fonts, &file_font);
+    game_read_file(game, file, sizeof(asset_file_font_t), offset_to_fonts, &file_font);
 
     asset_font_t* f = assets->fonts + font_index;
 
@@ -174,8 +174,8 @@ assets_init(assets_t* assets, app_t* app, const char* filename, arena_t* arena)
         sizeof(asset_file_font_glyph_t)*glyph_index;
 
       asset_file_font_glyph_t file_glyph = {};
-      app_read_file(
-          app,
+      game_read_file(
+          game,
           file, 
           sizeof(asset_file_font_glyph_t), 
           glyph_data_offset,
@@ -204,8 +204,8 @@ assets_init(assets_t* assets, app_t* app, const char* filename, arena_t* arena)
         file_font.offset_to_data + 
         sizeof(asset_file_font_glyph_t)*glyph_count;
 
-      app_read_file(
-          app,
+      game_read_file(
+          game,
           file, 
           sizeof(f32_t)*glyph_count*glyph_count, 
           kernings_data_offset, 

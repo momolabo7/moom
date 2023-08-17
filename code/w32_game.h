@@ -11,7 +11,7 @@ struct w32_memory_t {
 
 struct w32_work_t {
   void* data;
-  app_task_callback_f* callback;
+  game_task_callback_f* callback;
 };
 
 struct w32_work_queue_t {
@@ -67,7 +67,7 @@ struct w32_state_t {
   HWND window;
 
   w32_memory_t memory_sentinel;
-  app_t* app;
+  game_t* game;
 };
 
 static w32_state_t w32_state;

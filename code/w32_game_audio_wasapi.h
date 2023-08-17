@@ -231,7 +231,7 @@ _w32_wasapi_release_current_device(w32_wasapi_t* wasapi) {
 static 
 w32_audio_begin_frame_i(w32_audio_begin_frame) 
 {
-  w32_wasapi_t* wasapi = (w32_wasapi_t*)(app_audio->app_data);
+  w32_wasapi_t* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
 	if (wasapi->is_device_changed) {
 		//w32_log("[w32_wasapi] Resetting wasapi device\n");
 		// Attempt to change device
@@ -263,32 +263,32 @@ w32_audio_begin_frame_i(w32_audio_begin_frame)
 		samples_to_write = wasapi->buffer_size;
 	}
 
-  app_audio->sample_buffer = wasapi->buffer;
-  app_audio->sample_count = samples_to_write; 
-  app_audio->channels = wasapi->channels;
+  game_audio->sample_buffer = wasapi->buffer;
+  game_audio->sample_count = samples_to_write; 
+  game_audio->channels = wasapi->channels;
 
 }
 
 static 
 w32_audio_end_frame_i(w32_audio_end_frame) 
 {
-  w32_wasapi_t* wasapi = (w32_wasapi_t*)(app_audio->app_data);
+  w32_wasapi_t* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
 
 	if (!wasapi->is_device_ready) return;
 
   // NOTE(Momo): Kinda assumes 16-bit Sound
   BYTE* sound_buffer_data;
   HRESULT hr = IAudioRenderClient_GetBuffer(wasapi->audio_render_client, 
-                                            (UINT32)app_audio->sample_count, 
+                                            (UINT32)game_audio->sample_count, 
                                             &sound_buffer_data);
   if (FAILED(hr)) return;
 
-  s16_t* src_sample = app_audio->sample_buffer;
+  s16_t* src_sample = game_audio->sample_buffer;
   s16_t* dest_sample = (s16_t*)sound_buffer_data;
   // buffer structure for stereo:
   // s16_t   s16_t    s16_t  s16_t   s16_t  s16_t
   // [LEFT RIGHT] LEFT RIGHT LEFT RIGHT....
-  for(u32_t sample_index = 0; sample_index < app_audio->sample_count; ++sample_index)
+  for(u32_t sample_index = 0; sample_index < game_audio->sample_count; ++sample_index)
   {
     for (u32_t channel_index = 0; channel_index < wasapi->channels; ++channel_index) {
       *dest_sample++ = *src_sample++;
@@ -297,7 +297,7 @@ w32_audio_end_frame_i(w32_audio_end_frame)
 
   IAudioRenderClient_ReleaseBuffer(
       wasapi->audio_render_client, 
-      (UINT32)app_audio->sample_count, 
+      (UINT32)game_audio->sample_count, 
       0);
 }
 
@@ -308,7 +308,7 @@ w32_audio_load_i(w32_audio_load)
   w32_wasapi_t* wasapi = arena_push(w32_wasapi_t, allocator);
   if (!wasapi) return false;
 
-  app_audio->app_data = wasapi;
+  game_audio->platform_data = wasapi;
 
   wasapi->channels = channels;
   wasapi->bits_per_sample = bits_per_sample;
@@ -379,7 +379,7 @@ w32_audio_load_i(w32_audio_load)
 
 static 
 w32_audio_unload_i(w32_audio_unload) {
-  w32_wasapi_t* wasapi = (w32_wasapi_t*)(app_audio->app_data);
+  w32_wasapi_t* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
 
   _w32_wasapi_release_current_device(wasapi);
 	IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
