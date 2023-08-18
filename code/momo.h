@@ -609,7 +609,7 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 //
 // MARK:(Buffer)
 //
-static void buffer_set(u8_t* mem, usz_t size);
+static buffer_t buffer_set(u8_t* mem, usz_t size);
 
 //
 // MARK:(ASCII)
@@ -6185,7 +6185,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
                                   IDAT_chunk_size);
   
   buffer_t stream_memory = arena_push_buffer(arena, expected_memory_required, 16);
-  if (!stream_memory) return buffer(0,0);
+  if (!stream_memory) return buffer_set(0,0);
 
   make(stream_t, stream);
   stream_init(stream, stream_memory);
@@ -6315,7 +6315,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
   
   
   
-  return buffer(stream->contents.data, stream->pos);
+  return buffer_set(stream->contents.data, stream->pos);
 }
 
 

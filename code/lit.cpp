@@ -366,12 +366,10 @@ struct lit_t {
   arena_t frame_arena;
 
   // Debug Tools
-  inspector_t inspector;
   console_t console;
 
+
   assets_t assets;
-  asset_sprite_id_t blank_sprite;
-  asset_font_id_t debug_font;
 };
 
 //
@@ -500,15 +498,16 @@ lit_update_and_render_console()
   v2f_t input_area_pos = v2f_set(console_width/2, line_height/2);
   
   game_draw_asset_sprite(
-      game, assets, lit->blank_sprite, 
+      game, assets, 
+      ASSET_SPRITE_ID_BLANK_SPRITE,
       v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(0.f, 0.f, 0.f, 0.8f));
   game_advance_depth(game);
   
-  game_draw_asset_sprite(game, assets, lit->blank_sprite, console_pos, console_size, rgba_hex(0x787878FF));
+  game_draw_asset_sprite(game, assets, ASSET_SPRITE_ID_BLANK_SPRITE, console_pos, console_size, rgba_hex(0x787878FF));
   game_advance_depth(game);
-  game_draw_asset_sprite(game, assets, lit->blank_sprite, input_area_pos, input_area_size, rgba_hex(0x505050FF));
+  game_draw_asset_sprite(game, assets, ASSET_SPRITE_ID_BLANK_SPRITE, input_area_pos, input_area_size, rgba_hex(0x505050FF));
   game_advance_depth(game);
   
   
@@ -520,7 +519,8 @@ lit_update_and_render_console()
     stb8_t* line = console->info_lines + line_index;
 
     game_draw_text(
-        game, assets, lit->debug_font,
+        game, assets, 
+        ASSET_FONT_ID_DEBUG,
         line->str,
         rgba_hex(0xFFFFFFFF),
         left_pad, 
@@ -530,7 +530,8 @@ lit_update_and_render_console()
   }
 
   game_advance_depth(game);
-  game_draw_text(game, assets, lit->debug_font,
+  game_draw_text(game, assets, 
+      ASSET_FONT_ID_DEBUG,
       console->input_line.str,
       rgba_hex(0xFFFFFFFF),
       left_pad, 
@@ -584,7 +585,7 @@ lit_profiler_update_and_render()
 
   // Overlay
   game_draw_asset_sprite(
-      game, assets, lit->blank_sprite, 
+      game, assets, ASSET_SPRITE_ID_BLANK_SPRITE, 
       v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(0.f, 0.f, 0.f, 0.5f));
@@ -632,7 +633,8 @@ lit_profiler_update_and_render()
                  (u32_t)hits.average,
                  (u32_t)cycles_per_hit.average);
     
-    game_draw_text(game, assets, lit->debug_font, 
+    game_draw_text(game, assets, 
+        ASSET_FONT_ID_DEBUG, 
         sb->str,
         rgba_hex(0xFFFFFFFF),
         0.f, 
@@ -658,7 +660,7 @@ lit_profiler_update_and_render()
         render_height - font_height * (line_num) + font_height/4);
 
       v2f_t size = v2f_set(snapshot_bar_width, snapshot_bar_height);
-      game_draw_asset_sprite(game, assets, lit->blank_sprite, pos, size, rgba_hex(0x00FF00FF));
+      game_draw_asset_sprite(game, assets, ASSET_SPRITE_ID_BLANK_SPRITE, pos, size, rgba_hex(0x00FF00FF));
     }
     game_advance_depth(game);
     ++line_num;
@@ -671,12 +673,12 @@ lit_profiler_update_and_render()
 static void 
 lit_inspector_update_and_render() 
 {
-  inspector_t* inspector = &lit->inspector;
+  inspector_t* inspector = &game->inspector;
   assets_t* assets = &lit->assets;
   game_draw_asset_sprite(
       game, 
       assets, 
-      lit->blank_sprite, 
+      ASSET_SPRITE_ID_BLANK_SPRITE, 
       v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(0.f, 0.f, 0.f, 0.5f));
@@ -701,7 +703,7 @@ lit_inspector_update_and_render()
     }
 
     f32_t y = LIT_HEIGHT - line_height * (entry_index+1);
-    game_draw_text(game, assets, lit->debug_font, sb->str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
+    game_draw_text(game, assets, ASSET_FONT_ID_DEBUG, sb->str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
     game_advance_depth(game);
   }
 }
@@ -1832,7 +1834,7 @@ lit_game_update_sensors(lit_game_t* g, f32_t dt)
     }
   }
 
-  inspector_add_u32(&lit->inspector, st8_from_lit("total_triangles"), total_triangles);
+  game_inspect_u32(game, st8_from_lit("total_triangles"), total_triangles);
 }
 
 
@@ -3728,7 +3730,6 @@ lit_tick() {
     usz_t debug_memory_size = megabytes(1);
     void* debug_memory = game_allocate_memory(game, debug_memory_size);
     arena_init(&lit->debug_arena, debug_memory, debug_memory_size);
-    inspector_init(&lit->inspector, &lit->debug_arena, 64);
     console_init(&lit->console, &lit->debug_arena, 32, 256);
 
     usz_t frame_memory_size = megabytes(1);
@@ -3758,8 +3759,6 @@ lit_tick() {
   lit = (lit_t*)(game->game);
 
   arena_clear(&lit->frame_arena);
-  inspector_clear(&lit->inspector);
-
 
   if (lit->next_mode != lit->mode || game_is_dll_reloaded(game)) 
   {

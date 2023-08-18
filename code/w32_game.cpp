@@ -1078,7 +1078,7 @@ WinMain(HINSTANCE instance,
   //
   // Gfx
   // 
-  make(arena_t, gfx_arena);
+  arena_t* gfx_arena = &game.gfx_arena;
   if (!w32_allocate_memory_into_arena(gfx_arena, config.gfx_arena_size)) 
     return 1;
   gfx_t* gfx = w32_gfx_load(
@@ -1090,7 +1090,7 @@ WinMain(HINSTANCE instance,
   if (!gfx) { return 1; }
  
   // Init Audio
-  make(arena_t, audio_arena);
+  arena_t* audio_arena = &game.audio_arena;
   if (config.audio_enabled) {
     if (!w32_allocate_memory_into_arena(audio_arena, config.audio_arena_size)) 
       return 1;
@@ -1112,7 +1112,7 @@ WinMain(HINSTANCE instance,
   //
   // Init debug stuff
   //
-  make(arena_t, debug_arena);
+  arena_t* debug_arena = &game.debug_arena;
   if (!w32_allocate_memory_into_arena(debug_arena, config.debug_arena_size)) return false;
 
   profiler_init(&game.profiler, w32_get_performance_counter_u64, debug_arena, config.max_profiler_entries, config.max_profiler_snapshots);
@@ -1166,6 +1166,7 @@ WinMain(HINSTANCE instance,
 
     // End frame
     profiler_update_entries(&game.profiler);
+    inspector_clear(&game.inspector);
     w32_gfx_end_frame(gfx);
     
     if (config.audio_enabled) w32_audio_end_frame(&game.audio);

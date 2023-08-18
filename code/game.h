@@ -89,8 +89,8 @@ struct inspector_t {
 };
 
 // API correspondence
-#define game_inspect_u32(game, item) inspector_add_u32(&game->inspector, item)
-#define game_inspect_f32(game, item) inspector_add_f32(&game->inspector, item)
+#define game_inspect_u32(game, name, item) inspector_add_u32(&game->inspector, name, item)
+#define game_inspect_f32(game, name, item) inspector_add_f32(&game->inspector, name, item)
 
 // 
 // App
