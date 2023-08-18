@@ -2,6 +2,20 @@
 // DESCRIPTION
 //   This is my dear 2D game engine on win32 platform.
 //
+// FLAGS
+//   HOT_RELOADABLE - Enables hot-reload on game.dll when it changes
+// 
+// BOOKMARKS
+//
+//   Memory Management - For managing allocated memory from OS.
+//   Work Queue        - Multithreaded work queue system
+//   Hot Reload        - Hot reloading system 
+//   File              - File system 
+//   State             - Main global state
+//
+//
+//
+//
 
 #ifndef WIN32_LEAN_AND_MEAN
 # define WIN32_LEAN_AND_MEAN
@@ -29,7 +43,98 @@
 
 #include "momo.h"
 #include "game.h"
-#include "w32_game.h"
+
+
+//
+// MARK:(Memory Management)
+//
+struct w32_memory_t {
+  void* memory;
+  usz_t size;
+  
+  w32_memory_t* prev;
+  w32_memory_t* next;
+};
+
+//
+// MARK:(Work Queue)
+//
+struct w32_work_t {
+  void* data;
+  game_task_callback_f* callback;
+};
+
+struct w32_work_queue_t {
+  w32_work_t entries[256];
+  u32_t volatile next_entry_to_read;
+  u32_t volatile next_entry_to_write;
+  
+  u32_t volatile completion_count;
+  u32_t volatile completion_goal;
+  HANDLE semaphore; 
+  
+};
+
+//
+// MARK:(Hot Reload)
+//
+struct w32_loaded_code_t {
+  // Need to fill these up
+  u32_t function_count;
+  const char** function_names;
+  const char* module_path;
+  void** functions;
+  
+  LARGE_INTEGER module_write_time;
+  const char* tmp_path;
+  
+  b32_t is_valid;
+  HMODULE dll; 
+};
+
+//
+// MARK:(File)
+//
+struct w32_file_t {
+  HANDLE handle;
+  u32_t cabinet_index;
+};
+
+// TODO(momo): is it possible to use a vector? 
+struct w32_file_cabinet_t {
+  w32_file_t files[32]; 
+  u32_t free_files[32];
+  u32_t free_file_count;
+};
+
+//
+// MARK:(State)
+//
+struct w32_state_t {
+  b32_t is_running;
+
+  // cursor locking system
+  b32_t is_cursor_locked;
+  POINT cursor_pt_to_lock_to;
+  
+  f32_t game_width;
+  f32_t game_height;
+  
+  w32_work_queue_t work_queue;
+  w32_file_cabinet_t file_cabinet;
+  
+  HWND window;
+
+  w32_memory_t memory_sentinel;
+  game_t* game;
+};
+
+static w32_state_t w32_state;
+
+////////////////////////////////////////////////////////////////////////
+//
+// Implementations
+//
 
 // Graphics
 #include "w32_game_gfx.h"
@@ -389,12 +494,6 @@ w32_reload_code_if_outdated(w32_loaded_code_t* code) {
   }
   return reloaded;
 }
-
-
-
-
-
-
 
 static game_button_code_t
 w32_vkeys_to_game_button_code(u32_t code) {

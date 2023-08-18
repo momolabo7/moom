@@ -19,7 +19,7 @@
 //   Buffer      - Simple type for holding a chunk of memory
 //   Vector      - Math vectors
 //   Matrix      - Math matrices
-//   Color       - Color structs
+//   Color       - Color structs (RGBA, HSL, HSV, ...)
 //   RNG         - Random Numer Generator
 //   CRC         - CRC generators
 //   Sorting     - Sorting algorithms
