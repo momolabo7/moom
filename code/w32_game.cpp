@@ -129,6 +129,41 @@ struct w32_state_t {
   game_t* game;
 };
 
+//
+// Mark:(Wasapi)
+//
+
+struct w32_wasapi_t;
+struct w32_wasapi_notif_client_t {
+  IMMNotificationClient imm_notifs;
+  w32_wasapi_t* wasapi;
+  LONG ref;
+};
+
+struct w32_wasapi_t {
+  
+  w32_wasapi_notif_client_t notifs;
+  IMMDeviceEnumerator * mm_device_enum;
+  IAudioClient2* audio_client;
+  IAudioRenderClient* audio_render_client;
+  
+  // "Secondary" buffer
+  u32_t buffer_size;
+  s16_t* buffer;
+  
+  // Other variables for tracking purposes
+  u32_t latency_sample_count;
+  u32_t samples_per_second;
+  u16_t bits_per_sample;
+  u16_t channels;
+    
+	b32_t is_device_changed;
+	b32_t is_device_ready;
+
+  arena_t allocator;
+};
+
+
 static w32_state_t w32_state;
 
 ////////////////////////////////////////////////////////////////////////
@@ -801,8 +836,8 @@ game_get_file_size_sig(w32_get_file_size)
     assert(false);
   }
   
-  return u64_t(file_size);
-
+  u64_t ret = (u64_t)file_size.QuadPart;
+  return ret;
 
 }
 
