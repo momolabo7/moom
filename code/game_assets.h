@@ -75,8 +75,8 @@ assets_init(assets_t* assets, game_t* game, const char* filename, arena_t* arena
         game,
         file,
         filename,
-        APP_FILE_ACCESS_READ, 
-        APP_FILE_PATH_EXE)) 
+        GAME_FILE_ACCESS_READ, 
+        GAME_FILE_PATH_EXE)) 
     return false;
 
 

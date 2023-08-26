@@ -12,20 +12,20 @@
 //
 // Profiler 
 // 
-typedef u64_t profiler_get_performance_counter_f();
+typedef u64_t game_profiler_get_performance_counter_f();
 
-struct profiler_snapshot_t {
+struct game_profiler_snapshot_t {
   u32_t hits;
   u32_t cycles;
 };
 
-struct profiler_entry_t {
+struct game_profiler_entry_t {
   u32_t line;
   const char* filename;
   const char* block_name;
   u64_t hits_and_cycles;
   
-  profiler_snapshot_t* snapshots;
+  game_profiler_snapshot_t* snapshots;
   
   // NOTE(Momo): For initialization of entry. 
   // Maybe it shouldn't be stored here
@@ -37,75 +37,75 @@ struct profiler_entry_t {
 };
 
 
-struct profiler_t {
+struct game_profiler_t {
   u32_t entry_snapshot_count;
   u32_t entry_count;
   u32_t entry_cap;
-  profiler_entry_t* entries;
+  game_profiler_entry_t* entries;
   u32_t snapshot_index;
 
-  profiler_get_performance_counter_f* get_performance_counter;
+  game_profiler_get_performance_counter_f* get_performance_counter;
 };
 
-#define profiler_begin_block(p, name) \
-  static profiler_entry_t* _profiler_block_##name = 0; \
+#define game_profiler_begin_block(p, name) \
+  static game_profiler_entry_t* _profiler_block_##name = 0; \
   if (_profiler_block_##name == 0 || _profiler_block_##name->flag_for_reset) {\
-    _profiler_block_##name = _profiler_init_block(p, __FILE__, __LINE__, __FUNCTION__, #name);  \
+    _profiler_block_##name = _game_profiler_init_block(p, __FILE__, __LINE__, __FUNCTION__, #name);  \
   }\
-  _profiler_begin_block(p, _profiler_block_##name)\
+  _game_profiler_begin_block(p, _profiler_block_##name)\
 
-#define profiler_end_block(p, name) \
-  _profiler_end_block(p, _profiler_block_##name) 
+#define game_profiler_end_block(p, name) \
+  _game_profiler_end_block(p, _profiler_block_##name) 
 
-#define profiler_block(p, name) profiler_begin_block(p, name); defer {profiler_end_block(p,name);}
+#define game_profiler_block(p, name) game_profiler_begin_block(p, name); defer {game_profiler_end_block(p,name);}
 
 // Correspond with API
-#define game_profile_begin(game, name) profiler_begin_block(&game->profiler, name)
-#define game_profile_end(game, name)   profiler_end_block(&game->profiler, name)
-#define game_profile_block(game, name) profiler_block(&game->profiler, name)
+#define game_profile_begin(game, name) game_profiler_begin_block(&game->profiler, name)
+#define game_profile_end(game, name)   game_profiler_end_block(&game->profiler, name)
+#define game_profile_block(game, name) game_profiler_block(&game->profiler, name)
 
 
 //
 // Inspector 
 //
-enum inspector_entry_type_t {
-  INSPECTOR_ENTRY_TYPE_F32,
-  INSPECTOR_ENTRY_TYPE_U32,
+enum game_inspector_entry_type_t {
+  GAME_INSPECTOR_ENTRY_TYPE_F32,
+  GAME_INSPECTOR_ENTRY_TYPE_U32,
 };
 
-struct inspector_entry_t {
+struct game_inspector_entry_t {
   st8_t name;
-  inspector_entry_type_t type;
+  game_inspector_entry_type_t type;
   union {
     f32_t item_f32;
     u32_t item_u32;
   };
 };
 
-struct inspector_t {
+struct game_inspector_t {
   u32_t entry_cap;
   u32_t entry_count;
-  inspector_entry_t* entries;
+  game_inspector_entry_t* entries;
 };
 
 // API correspondence
-#define game_inspect_u32(game, name, item) inspector_add_u32(&game->inspector, name, item)
-#define game_inspect_f32(game, name, item) inspector_add_f32(&game->inspector, name, item)
+#define game_inspect_u32(game, name, item) game_inspector_add_u32(&game->inspector, name, item)
+#define game_inspect_f32(game, name, item) game_inspector_add_f32(&game->inspector, name, item)
 
 // 
-// App
+// Game
 //
 enum game_blend_type_t {
-  APP_BLEND_TYPE_ZERO,
-  APP_BLEND_TYPE_ONE,
-  APP_BLEND_TYPE_SRC_COLOR,
-  APP_BLEND_TYPE_INV_SRC_COLOR,
-  APP_BLEND_TYPE_SRC_ALPHA,
-  APP_BLEND_TYPE_INV_SRC_ALPHA,
-  APP_BLEND_TYPE_DST_ALPHA,
-  APP_BLEND_TYPE_INV_DST_ALPHA,
-  APP_BLEND_TYPE_DST_COLOR,
-  APP_BLEND_TYPE_INV_DST_COLOR,
+  GAME_BLEND_TYPE_ZERO,
+  GAME_BLEND_TYPE_ONE,
+  GAME_BLEND_TYPE_SRC_COLOR,
+  GAME_BLEND_TYPE_INV_SRC_COLOR,
+  GAME_BLEND_TYPE_SRC_ALPHA,
+  GAME_BLEND_TYPE_INV_SRC_ALPHA,
+  GAME_BLEND_TYPE_DST_ALPHA,
+  GAME_BLEND_TYPE_INV_DST_ALPHA,
+  GAME_BLEND_TYPE_DST_COLOR,
+  GAME_BLEND_TYPE_INV_DST_COLOR,
 };
 
 #define game_set_view_sig(name) void name(f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y)
@@ -136,6 +136,10 @@ typedef game_advance_depth_sig(game_advance_depth_f);
 typedef game_set_blend_sig(game_set_blend_f);
 #define game_set_blend(game, ...) (game->set_blend(__VA_ARGS__))
 
+
+// 
+// Button input
+//
 struct game_button_t {
   b32_t before : 1;
   b32_t now: 1; 
@@ -144,62 +148,62 @@ struct game_button_t {
 enum game_button_code_t {
   // my god
   // Keyboard keys
-  APP_BUTTON_CODE_UNKNOWN,
-  APP_BUTTON_CODE_0,
-  APP_BUTTON_CODE_1,
-  APP_BUTTON_CODE_2,
-  APP_BUTTON_CODE_3,
-  APP_BUTTON_CODE_4,
-  APP_BUTTON_CODE_5,
-  APP_BUTTON_CODE_6,
-  APP_BUTTON_CODE_7,
-  APP_BUTTON_CODE_8,
-  APP_BUTTON_CODE_9,
-  APP_BUTTON_CODE_F1,
-  APP_BUTTON_CODE_F2,
-  APP_BUTTON_CODE_F3,
-  APP_BUTTON_CODE_F4,
-  APP_BUTTON_CODE_F5,
-  APP_BUTTON_CODE_F6,
-  APP_BUTTON_CODE_F7,
-  APP_BUTTON_CODE_F8,
-  APP_BUTTON_CODE_F9,
-  APP_BUTTON_CODE_F10,
-  APP_BUTTON_CODE_F11,
-  APP_BUTTON_CODE_F12,
-  APP_BUTTON_CODE_BACKSPACE,
-  APP_BUTTON_CODE_A,
-  APP_BUTTON_CODE_B,
-  APP_BUTTON_CODE_C,
-  APP_BUTTON_CODE_D,
-  APP_BUTTON_CODE_E,
-  APP_BUTTON_CODE_F,
-  APP_BUTTON_CODE_G,
-  APP_BUTTON_CODE_H,
-  APP_BUTTON_CODE_I,
-  APP_BUTTON_CODE_J,
-  APP_BUTTON_CODE_K,
-  APP_BUTTON_CODE_L,
-  APP_BUTTON_CODE_M,
-  APP_BUTTON_CODE_N,
-  APP_BUTTON_CODE_O,
-  APP_BUTTON_CODE_P,
-  APP_BUTTON_CODE_Q,
-  APP_BUTTON_CODE_R,
-  APP_BUTTON_CODE_S,
-  APP_BUTTON_CODE_T,
-  APP_BUTTON_CODE_U,
-  APP_BUTTON_CODE_V,
-  APP_BUTTON_CODE_W,
-  APP_BUTTON_CODE_X,
-  APP_BUTTON_CODE_Y,
-  APP_BUTTON_CODE_Z,
-  APP_BUTTON_CODE_SPACE,
-  APP_BUTTON_CODE_RMB,
-  APP_BUTTON_CODE_LMB,
-  APP_BUTTON_CODE_MMB,
+  GAME_BUTTON_CODE_UNKNOWN,
+  GAME_BUTTON_CODE_0,
+  GAME_BUTTON_CODE_1,
+  GAME_BUTTON_CODE_2,
+  GAME_BUTTON_CODE_3,
+  GAME_BUTTON_CODE_4,
+  GAME_BUTTON_CODE_5,
+  GAME_BUTTON_CODE_6,
+  GAME_BUTTON_CODE_7,
+  GAME_BUTTON_CODE_8,
+  GAME_BUTTON_CODE_9,
+  GAME_BUTTON_CODE_F1,
+  GAME_BUTTON_CODE_F2,
+  GAME_BUTTON_CODE_F3,
+  GAME_BUTTON_CODE_F4,
+  GAME_BUTTON_CODE_F5,
+  GAME_BUTTON_CODE_F6,
+  GAME_BUTTON_CODE_F7,
+  GAME_BUTTON_CODE_F8,
+  GAME_BUTTON_CODE_F9,
+  GAME_BUTTON_CODE_F10,
+  GAME_BUTTON_CODE_F11,
+  GAME_BUTTON_CODE_F12,
+  GAME_BUTTON_CODE_BACKSPACE,
+  GAME_BUTTON_CODE_A,
+  GAME_BUTTON_CODE_B,
+  GAME_BUTTON_CODE_C,
+  GAME_BUTTON_CODE_D,
+  GAME_BUTTON_CODE_E,
+  GAME_BUTTON_CODE_F,
+  GAME_BUTTON_CODE_G,
+  GAME_BUTTON_CODE_H,
+  GAME_BUTTON_CODE_I,
+  GAME_BUTTON_CODE_J,
+  GAME_BUTTON_CODE_K,
+  GAME_BUTTON_CODE_L,
+  GAME_BUTTON_CODE_M,
+  GAME_BUTTON_CODE_N,
+  GAME_BUTTON_CODE_O,
+  GAME_BUTTON_CODE_P,
+  GAME_BUTTON_CODE_Q,
+  GAME_BUTTON_CODE_R,
+  GAME_BUTTON_CODE_S,
+  GAME_BUTTON_CODE_T,
+  GAME_BUTTON_CODE_U,
+  GAME_BUTTON_CODE_V,
+  GAME_BUTTON_CODE_W,
+  GAME_BUTTON_CODE_X,
+  GAME_BUTTON_CODE_Y,
+  GAME_BUTTON_CODE_Z,
+  GAME_BUTTON_CODE_SPACE,
+  GAME_BUTTON_CODE_RMB,
+  GAME_BUTTON_CODE_LMB,
+  GAME_BUTTON_CODE_MMB,
 
-  APP_BUTTON_CODE_MAX,
+  GAME_BUTTON_CODE_MAX,
 
 };
 
@@ -215,7 +219,7 @@ struct game_input_characters_t {
 };
 
 struct game_input_t {
-  game_button_t buttons[APP_BUTTON_CODE_MAX];
+  game_button_t buttons[GAME_BUTTON_CODE_MAX];
   u8_t chars[32];
   u32_t char_count;
 
@@ -237,15 +241,15 @@ struct game_input_t {
 // File IO API
 // 
 enum game_file_path_t {
-  APP_FILE_PATH_EXE,
-  APP_FILE_PATH_USER,
-  APP_FILE_PATH_CACHE,
+  GAME_FILE_PATH_EXE,
+  GAME_FILE_PATH_USER,
+  GAME_FILE_PATH_CACHE,
 
 };
 
 enum game_file_access_t {
-  APP_FILE_ACCESS_READ,
-  APP_FILE_ACCESS_OVERWRITE,
+  GAME_FILE_ACCESS_READ,
+  GAME_FILE_ACCESS_OVERWRITE,
 };
 
 struct game_file_t {
@@ -267,6 +271,11 @@ typedef game_read_file_sig(game_read_file_f);
 #define game_write_file_sig(name) b32_t name(game_file_t* file, usz_t size, usz_t offset, void* src)
 typedef game_write_file_sig(game_write_file_f);
 #define game_write_file(game, ...) (game->write_file(__VA_ARGS__))
+
+#define game_get_file_size_sig(name) u64_t name(game_file_t* file)
+typedef game_get_file_size_sig(game_get_file_size_f);
+#define game_get_file_size(game, ...) (game->get_file_size(__VA_ARGS__))
+
 
 //
 // App Logging API
@@ -364,13 +373,14 @@ struct game_t {
   game_draw_rect_f* draw_rect;
   game_draw_tri_f* draw_tri;
   game_advance_depth_f* advance_depth;
+  game_get_file_size_f* get_file_size;
 
   game_input_t input;
   game_audio_t audio; 
 
   gfx_t* gfx;
-  profiler_t profiler;
-  inspector_t inspector;
+  game_profiler_t profiler;
+  game_inspector_t inspector;
           
   b32_t is_dll_reloaded;
   b32_t is_running;
@@ -412,7 +422,7 @@ struct game_init_config_t {
 #define game_init_sig(name) game_init_config_t name(void)
 typedef game_init_sig(game_init_f);
 
-#define game_update_and_render_sig(name) void name(game_t* in_game)
+#define game_update_and_render_sig(name) void name(game_t* game)
 typedef game_update_and_render_sig(game_update_and_render_f);
 
 // To be called by platform
@@ -649,51 +659,50 @@ game_draw_text_center_aligned(game_t* game, assets_t* assets, asset_font_id_t fo
 }
 
 static void 
-inspector_init(inspector_t* in, arena_t* arena, u32_t max_entries) 
+game_inspector_init(game_inspector_t* in, arena_t* arena, u32_t max_entries) 
 {
   in->entry_cap = max_entries;
   in->entry_count = 0;
-  in->entries = arena_push_arr(inspector_entry_t, arena, max_entries);
+  in->entries = arena_push_arr(game_inspector_entry_t, arena, max_entries);
   assert(in->entries != nullptr);
 }
 
 static void 
-inspector_clear(inspector_t* in) 
+game_inspector_clear(game_inspector_t* in) 
 {
   in->entry_count = 0;
 }
 
 static void
-inspector_add_u32(inspector_t* in, st8_t name, u32_t item) 
+game_inspector_add_u32(game_inspector_t* in, st8_t name, u32_t item) 
 {
   assert(in->entry_count < in->entry_cap);
-  inspector_entry_t* entry = in->entries + in->entry_count++;
+  game_inspector_entry_t* entry = in->entries + in->entry_count++;
   entry->item_u32 = item;
-  entry->type = INSPECTOR_ENTRY_TYPE_U32;
+  entry->type = GAME_INSPECTOR_ENTRY_TYPE_U32;
   entry->name = name;
 }
 
 
 static void
-inspector_add_f32(inspector_t* in, st8_t name, f32_t item) {
+game_inspector_add_f32(game_inspector_t* in, st8_t name, f32_t item) {
   assert(in->entry_count < in->entry_cap);
-  inspector_entry_t* entry = in->entries + in->entry_count++;
+  game_inspector_entry_t* entry = in->entries + in->entry_count++;
   entry->item_f32 = item;
-  entry->type = INSPECTOR_ENTRY_TYPE_F32;
+  entry->type = GAME_INSPECTOR_ENTRY_TYPE_F32;
   entry->name = name;
 }
 
-
-static profiler_entry_t*
-_profiler_init_block(
-    profiler_t* p,
+static game_profiler_entry_t*
+_game_profiler_init_block(
+    game_profiler_t* p,
     const char* filename, 
     u32_t line,
     const char* function_name,
     const char* block_name = 0) 
 {
   if (p->entry_count < p->entry_cap) {
-    profiler_entry_t* entry = p->entries + p->entry_count++;
+    game_profiler_entry_t* entry = p->entries + p->entry_count++;
     entry->filename = filename;
     entry->block_name = block_name ? block_name : function_name;
     entry->line = line;
@@ -707,25 +716,25 @@ _profiler_init_block(
 }
 
 static void
-_profiler_begin_block(profiler_t* p, profiler_entry_t* entry) 
+_game_profiler_begin_block(game_profiler_t* p, game_profiler_entry_t* entry) 
 {
   entry->start_cycles = (u32_t)p->get_performance_counter();
   entry->start_hits = 1;
 }
 
 static void
-_profiler_end_block(profiler_t* p, profiler_entry_t* entry) {
+_game_profiler_end_block(game_profiler_t* p, game_profiler_entry_t* entry) {
   u64_t delta = ((u32_t)p->get_performance_counter() - entry->start_cycles) | ((u64_t)(entry->start_hits)) << 32;
   u64_atomic_add(&entry->hits_and_cycles, delta);
 }
 
 
 static void 
-profiler_reset(profiler_t* p) {
+game_profiler_reset(game_profiler_t* p) {
 
   for(u32_t entry_id = 0; entry_id < p->entry_count; ++entry_id)
   {
-    profiler_entry_t* itr = p->entries + entry_id;
+    game_profiler_entry_t* itr = p->entries + entry_id;
     itr->flag_for_reset = true;
   }
 
@@ -733,32 +742,32 @@ profiler_reset(profiler_t* p) {
 }
 
 static void 
-profiler_init(
-    profiler_t* p, 
-    profiler_get_performance_counter_f* get_performance_counter,
+game_profiler_init(
+    game_profiler_t* p, 
+    game_profiler_get_performance_counter_f* get_performance_counter,
     arena_t* arena,
     u32_t max_entries,
     u32_t max_snapshots_per_entry)
 {
   p->entry_cap = max_entries;
   p->entry_snapshot_count = max_snapshots_per_entry;
-  p->entries = arena_push_arr(profiler_entry_t, arena, p->entry_cap);
+  p->entries = arena_push_arr(game_profiler_entry_t, arena, p->entry_cap);
   assert(p->entries);
   p->get_performance_counter = get_performance_counter;
 
   for (u32_t i = 0; i < p->entry_cap; ++i) {
-    p->entries[i].snapshots = arena_push_arr(profiler_snapshot_t, arena, max_snapshots_per_entry);
+    p->entries[i].snapshots = arena_push_arr(game_profiler_snapshot_t, arena, max_snapshots_per_entry);
     assert(p->entries[i].snapshots);
   }
-  profiler_reset(p);
+  game_profiler_reset(p);
 }
 
 
 static void
-profiler_update_entries(profiler_t* p) {
+game_profiler_update_entries(game_profiler_t* p) {
   for(u32_t entry_id = 0; entry_id < p->entry_count; ++entry_id)
   {
-    profiler_entry_t* itr = p->entries + entry_id;
+    game_profiler_entry_t* itr = p->entries + entry_id;
     u64_t hits_and_cycles = u64_atomic_assign(&itr->hits_and_cycles, 0);
     u32_t hits = (u32_t)(hits_and_cycles >> 32);
     u32_t cycles = (u32_t)(hits_and_cycles & 0xFFFFFFFF);

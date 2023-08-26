@@ -44,12 +44,14 @@ struct gfx_texture_payload_t {
   volatile gfx_texture_payload_state_t state;
   usz_t transfer_memory_start;
   usz_t transfer_memory_end;
+
   
   // input
   u32_t texture_index;
   u32_t texture_width;
   u32_t texture_height;
   void* texture_data;
+
 };
 
 struct gfx_texture_queue_t {
@@ -57,10 +59,17 @@ struct gfx_texture_queue_t {
   usz_t transfer_memory_size;
   usz_t transfer_memory_start;
   usz_t transfer_memory_end;
+
+  // stats
+  usz_t highest_transfer_memory_usage;
+  usz_t highest_payload_usage;
   
+  // TODO: make this dynamic
   gfx_texture_payload_t payloads[GFX_TEXTURE_PAYLOAD_CAP];
   usz_t first_payload_index;
   usz_t payload_count;
+
+
   
 };
 
@@ -79,6 +88,9 @@ struct gfx_command_queue_t {
 	usz_t entry_pos;
 	usz_t entry_start;
 	usz_t entry_count;
+
+  // stats
+  usz_t peak_memory_usage;
 };
 
 enum gfx_blend_type_t {
@@ -226,6 +238,7 @@ gfx_init(
     gfx_command_queue_t* q = &g->command_queue;
     q->memory = arena_push_arr(u8_t, arena, command_queue_size);
     q->memory_size = command_queue_size;
+    q->peak_memory_usage = 0;
     gfx_clear_commands(g);
   }
 
@@ -238,6 +251,8 @@ gfx_init(
     q->transfer_memory_end = 0;
     q->first_payload_index = 0;
     q->payload_count = 0;
+    q->highest_transfer_memory_usage = 0;
+    q->highest_payload_usage = 0;
   }
 
   g->max_textures = max_textures;
@@ -274,8 +289,11 @@ _gfx_push_command_block(gfx_command_queue_t* q, u32_t size, u32_t id, u32_t alig
 	entry->id = id;
 	entry->data = umi_to_ptr(imem + adjusted_data_pos);
 	
-	
 	++q->entry_count;
+
+  // stats collection
+  usz_t current_usage = q->data_pos + (q->memory_size - q->entry_pos);
+  q->peak_memory_usage = max_of(current_usage, q->peak_memory_usage);
 	
 	return entry->data;
 }
@@ -331,8 +349,17 @@ gfx_begin_texture_transfer(gfx_t* g, u32_t required_space) {
       ret->transfer_memory_start = memory_at;
       ret->transfer_memory_end = memory_at + required_space;
       ret->state = GFX_TEXTURE_PAYLOAD_STATE_LOADING;
-      
+
       q->transfer_memory_end = ret->transfer_memory_end;
+
+      // stats
+      if (q->transfer_memory_start < q->transfer_memory_end) {
+        q->highest_transfer_memory_usage = max_of(q->highest_transfer_memory_usage, q->transfer_memory_end - q->transfer_memory_start);
+      }
+      else {
+        q->highest_transfer_memory_usage = max_of(q->highest_transfer_memory_usage, q->transfer_memory_start - q->transfer_memory_end);
+      }
+      q->highest_payload_usage = max_of(q->highest_payload_usage, q->payload_count);
     }
   }
   

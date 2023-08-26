@@ -30,7 +30,7 @@
 
 // Save file
 #define LIT_SAVE_FILE_ENABLE true
-#define LIT_SAVE_FILE "lit.sav"
+#define LIT_SAVE_FILE "g_lit.sav"
 
 // Sensor
 #define LIT_SENSOR_COLOR_MASK 0xFFFFFF00
@@ -50,10 +50,10 @@
 #define LIT_LEARNT_BASICS_LEVEL_ID (3)
 #define LIT_LEARNT_POINT_LIGHT_LEVEL_ID (7)
 
-#define lit_log(...) game_debug_log(game, __VA_ARGS__)
-#define lit_profile_block(name) game_profile_block(game, name)
-#define lit_profile_begin(name) game_profile_begin(game, name)
-#define lit_profile_end(name) game_profile_end(game, name)
+#define lit_log(...) game_debug_log(g_game, __VA_ARGS__)
+#define lit_profile_block(name) game_profile_block(g_game, name)
+#define lit_profile_begin(name) game_profile_begin(g_game, name)
+#define lit_profile_end(name) game_profile_end(g_game, name)
 
 
 //
@@ -354,7 +354,7 @@ struct lit_t {
   lit_mode_t mode;
   union {
     lit_splash_t splash;
-    lit_game_t game;
+    lit_game_t g_game;
     lit_credits_t credits;
   };
   u32_t level_to_start;
@@ -365,18 +365,18 @@ struct lit_t {
   arena_t debug_arena;
   arena_t frame_arena;
 
-  // Debug Tools
-  console_t console;
-
-
+  // Assets
   assets_t assets;
+
+  // Debug Stuff 
+  console_t console;
 };
 
 //
 // Globals
 // 
-static game_t* game; 
-static lit_t* lit;
+static game_t* g_game; 
+static lit_t* g_lit;
 static lit_game_title_waypoint_t lit_title_wps[] = {
   { -800.0f,  0.0f },
   { 300.0f,   1.0f },
@@ -389,21 +389,21 @@ static lit_game_title_waypoint_t lit_title_wps[] = {
 //
 static b32_t
 lit_is_in_tutorial() {
-  return lit->save_data.unlocked_levels <= LIT_LEARNT_BASICS_LEVEL_ID;
+  return g_lit->save_data.unlocked_levels <= LIT_LEARNT_BASICS_LEVEL_ID;
 }
 
 static b32_t 
 lit_unlock_next_level(u32_t current_level_id) {
 
-  if (current_level_id >= lit->save_data.unlocked_levels) {
+  if (current_level_id >= g_lit->save_data.unlocked_levels) {
     game_file_t file = {};
 
-    lit->save_data.unlocked_levels = current_level_id + 1;
+    g_lit->save_data.unlocked_levels = current_level_id + 1;
 
-    if (game_open_file(game, &file, LIT_SAVE_FILE, APP_FILE_ACCESS_OVERWRITE, APP_FILE_PATH_USER)) 
+    if (game_open_file(g_game, &file, LIT_SAVE_FILE, GAME_FILE_ACCESS_OVERWRITE, GAME_FILE_PATH_USER)) 
     {
-      game_write_file(game, &file, sizeof(lit->save_data), 0, (void*)&lit->save_data);
-      game_close_file(game, &file);
+      game_write_file(g_game, &file, sizeof(g_lit->save_data), 0, (void*)&g_lit->save_data);
+      game_close_file(g_game, &file);
       return true;
     }
     else {
@@ -417,14 +417,14 @@ lit_unlock_next_level(u32_t current_level_id) {
 
 static b32_t
 lit_init_save_data() {
-  lit->save_data.unlocked_levels = 0;
+  g_lit->save_data.unlocked_levels = 0;
   game_file_t file = {};
 
   // save data actually found
-  if (game_open_file(game, &file, LIT_SAVE_FILE, APP_FILE_ACCESS_READ, APP_FILE_PATH_USER)) {
-    if(game_read_file(game, &file, sizeof(lit_save_data_t), 0, &lit->save_data)) {
+  if (game_open_file(g_game, &file, LIT_SAVE_FILE, GAME_FILE_ACCESS_READ, GAME_FILE_PATH_USER)) {
+    if(game_read_file(g_game, &file, sizeof(lit_save_data_t), 0, &g_lit->save_data)) {
       // hgamey! :3
-      game_close_file(game, &file);
+      game_close_file(g_game, &file);
       return true;
     }
     else { // data is somehow corrupted?
@@ -443,13 +443,13 @@ lit_init_save_data() {
 //
 static u32_t
 lit_get_levels_unlocked_count() {
-  return lit->save_data.unlocked_levels;
+  return g_lit->save_data.unlocked_levels;
 }
 
 
 static void
 lit_goto_credits() {
-  lit->next_mode = LIT_MODE_CREDITS;
+  g_lit->next_mode = LIT_MODE_CREDITS;
 }
 
 //
@@ -458,9 +458,9 @@ lit_goto_credits() {
 static void
 lit_update_and_render_console() 
 {
-  console_t* console = &lit->console;
-  assets_t* assets = &lit->assets;
-  game_input_characters_t characters = game_get_input_characters(game);
+  console_t* console = &g_lit->console;
+  assets_t* assets = &g_lit->assets;
+  game_input_characters_t characters = game_get_input_characters(g_game);
 
   for (u32_t char_index = 0; 
        char_index < characters.count;
@@ -498,17 +498,17 @@ lit_update_and_render_console()
   v2f_t input_area_pos = v2f_set(console_width/2, line_height/2);
   
   game_draw_asset_sprite(
-      game, assets, 
+      g_game, assets, 
       ASSET_SPRITE_ID_BLANK_SPRITE,
       v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(0.f, 0.f, 0.f, 0.8f));
-  game_advance_depth(game);
+  game_advance_depth(g_game);
   
-  game_draw_asset_sprite(game, assets, ASSET_SPRITE_ID_BLANK_SPRITE, console_pos, console_size, rgba_hex(0x787878FF));
-  game_advance_depth(game);
-  game_draw_asset_sprite(game, assets, ASSET_SPRITE_ID_BLANK_SPRITE, input_area_pos, input_area_size, rgba_hex(0x505050FF));
-  game_advance_depth(game);
+  game_draw_asset_sprite(g_game, assets, ASSET_SPRITE_ID_BLANK_SPRITE, console_pos, console_size, rgba_hex(0x787878FF));
+  game_advance_depth(g_game);
+  game_draw_asset_sprite(g_game, assets, ASSET_SPRITE_ID_BLANK_SPRITE, input_area_pos, input_area_size, rgba_hex(0x505050FF));
+  game_advance_depth(g_game);
   
   
   // Draw info text
@@ -519,7 +519,7 @@ lit_update_and_render_console()
     stb8_t* line = console->info_lines + line_index;
 
     game_draw_text(
-        game, assets, 
+        g_game, assets, 
         ASSET_FONT_ID_DEBUG,
         line->str,
         rgba_hex(0xFFFFFFFF),
@@ -529,15 +529,15 @@ lit_update_and_render_console()
     
   }
 
-  game_advance_depth(game);
-  game_draw_text(game, assets, 
+  game_advance_depth(g_game);
+  game_draw_text(g_game, assets, 
       ASSET_FONT_ID_DEBUG,
       console->input_line.str,
       rgba_hex(0xFFFFFFFF),
       left_pad, 
       font_bottom_pad,
       font_height);
-  game_advance_depth(game);
+  game_advance_depth(g_game);
 }
 
 //
@@ -577,7 +577,7 @@ lit_profiler_end_stat(lit_profiler_stat_t* stat) {
 static void
 lit_profiler_update_and_render() 
 {
-  assets_t* assets = &lit->assets;
+  assets_t* assets = &g_lit->assets;
 
   const f32_t render_width = LIT_WIDTH;
   const f32_t render_height = LIT_HEIGHT;
@@ -585,17 +585,17 @@ lit_profiler_update_and_render()
 
   // Overlay
   game_draw_asset_sprite(
-      game, assets, ASSET_SPRITE_ID_BLANK_SPRITE, 
+      g_game, assets, ASSET_SPRITE_ID_BLANK_SPRITE, 
       v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(0.f, 0.f, 0.f, 0.5f));
-  game_advance_depth(game);
+  game_advance_depth(g_game);
   
   u32_t line_num = 1;
   
-  for(u32_t entry_id = 0; entry_id < game->profiler.entry_count; ++entry_id)
+  for(u32_t entry_id = 0; entry_id < g_game->profiler.entry_count; ++entry_id)
   {
-    profiler_entry_t* entry = game->profiler.entries + entry_id;
+    game_profiler_entry_t* entry = g_game->profiler.entries + entry_id;
 
     lit_profiler_stat_t cycles;
     lit_profiler_stat_t hits;
@@ -606,11 +606,11 @@ lit_profiler_update_and_render()
     lit_profiler_begin_stat(&cycles_per_hit);
     
     for (u32_t snapshot_index = 0;
-         snapshot_index < game->profiler.entry_snapshot_count;
+         snapshot_index < g_game->profiler.entry_snapshot_count;
          ++snapshot_index)
     {
       
-      profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
+      game_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
       
       lit_profiler_accumulate_stat(&cycles, (f64_t)snapshot->cycles);
       lit_profiler_accumulate_stat(&hits, (f64_t)snapshot->hits);
@@ -633,22 +633,22 @@ lit_profiler_update_and_render()
                  (u32_t)hits.average,
                  (u32_t)cycles_per_hit.average);
     
-    game_draw_text(game, assets, 
+    game_draw_text(g_game, assets, 
         ASSET_FONT_ID_DEBUG, 
         sb->str,
         rgba_hex(0xFFFFFFFF),
         0.f, 
         render_height - font_height * (line_num), 
         font_height);
-    game_advance_depth(game);
+    game_advance_depth(g_game);
 
     
     // Draw graph
     for (u32_t snapshot_index = 0;
-         snapshot_index < game->profiler.entry_snapshot_count;
+         snapshot_index < g_game->profiler.entry_snapshot_count;
          ++snapshot_index)
     {
-      profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
+      game_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
       
       const f32_t snapshot_bar_width = 1.5f;
       f32_t height_scale = 1.0f / (f32_t)cycles.max;
@@ -660,9 +660,9 @@ lit_profiler_update_and_render()
         render_height - font_height * (line_num) + font_height/4);
 
       v2f_t size = v2f_set(snapshot_bar_width, snapshot_bar_height);
-      game_draw_asset_sprite(game, assets, ASSET_SPRITE_ID_BLANK_SPRITE, pos, size, rgba_hex(0x00FF00FF));
+      game_draw_asset_sprite(g_game, assets, ASSET_SPRITE_ID_BLANK_SPRITE, pos, size, rgba_hex(0x00FF00FF));
     }
-    game_advance_depth(game);
+    game_advance_depth(g_game);
     ++line_num;
   }
 }
@@ -673,16 +673,16 @@ lit_profiler_update_and_render()
 static void 
 lit_inspector_update_and_render() 
 {
-  inspector_t* inspector = &game->inspector;
-  assets_t* assets = &lit->assets;
+  game_inspector_t* inspector = &g_game->inspector;
+  assets_t* assets = &g_lit->assets;
   game_draw_asset_sprite(
-      game, 
+      g_game, 
       assets, 
       ASSET_SPRITE_ID_BLANK_SPRITE, 
       v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(0.f, 0.f, 0.f, 0.5f));
-  game_advance_depth(game);
+  game_advance_depth(g_game);
 
   for(u32_t entry_index = 0; entry_index < inspector->entry_count; ++entry_index)
   {
@@ -690,21 +690,21 @@ lit_inspector_update_and_render()
     stb8_make(sb, 256);
 
 
-    inspector_entry_t* entry = inspector->entries + entry_index;
+    game_inspector_entry_t* entry = inspector->entries + entry_index;
     switch(entry->type){
-      case INSPECTOR_ENTRY_TYPE_U32: {
+      case GAME_INSPECTOR_ENTRY_TYPE_U32: {
         stb8_push_fmt(sb, st8_from_lit("[%10S] %7u"),
             entry->name, entry->item_u32);
       } break;
-      case INSPECTOR_ENTRY_TYPE_F32: {
+      case GAME_INSPECTOR_ENTRY_TYPE_F32: {
         stb8_push_fmt(sb, st8_from_lit("[%10S] %7f"),
             entry->name, entry->item_f32);
       } break;
     }
 
     f32_t y = LIT_HEIGHT - line_height * (entry_index+1);
-    game_draw_text(game, assets, ASSET_FONT_ID_DEBUG, sb->str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
-    game_advance_depth(game);
+    game_draw_text(g_game, assets, ASSET_FONT_ID_DEBUG, sb->str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
+    game_advance_depth(g_game);
   }
 }
 
@@ -714,7 +714,7 @@ lit_inspector_update_and_render()
 
 static void
 lit_splash_init() {
-  lit_splash_t* splash = &lit->splash;
+  lit_splash_t* splash = &g_lit->splash;
 
   splash->timer = 3.f;
   splash->scroll_in_timer = LIT_SPLASH_SCROLL_DURATION;
@@ -722,13 +722,13 @@ lit_splash_init() {
 
 static void
 lit_splash_update() {
-  lit_splash_t* splash = &lit->splash;
+  lit_splash_t* splash = &g_lit->splash;
   asset_font_id_t font = ASSET_FONT_ID_DEFAULT;
 
-  splash->timer -= game_get_dt(game);
-  splash->scroll_in_timer -= game_get_dt(game);
+  splash->timer -= game_get_dt(g_game);
+  splash->scroll_in_timer -= game_get_dt(g_game);
 
-  if (game_is_button_poked(game, APP_BUTTON_CODE_LMB)) {
+  if (game_is_button_poked(g_game, GAME_BUTTON_CODE_LMB)) {
     if (splash->scroll_in_timer > 0.f)  {
       splash->scroll_in_timer = 0.f;
     }
@@ -740,8 +740,8 @@ lit_splash_update() {
   f32_t y = LIT_HEIGHT/2 + 100.f;
 
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       font, 
       st8_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -749,8 +749,8 @@ lit_splash_update() {
       128.f);
   y -= 70;
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       font,
       st8_from_lit("PRIMIX"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -759,8 +759,8 @@ lit_splash_update() {
 
   y -= 70;
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       font,
       st8_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -782,28 +782,28 @@ lit_splash_update() {
   f32_t scroll_y = (alpha)*LIT_SPLASH_SCROLL_POS_Y_END + (1.f-alpha)*LIT_SPLASH_SCROLL_POS_Y_START; 
   rgba_t grey = rgba_set(0.7f, 0.7f, 0.7f, 1.f); 
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       font,
-      st8_from_lit("a silly game by"), 
+      st8_from_lit("a silly g_game by"), 
       grey,
       LIT_WIDTH/2, scroll_y, 
       36.f);
 
   scroll_y -= 60.f;
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       font,
       st8_from_lit("momohoudai"), 
       grey,
       LIT_WIDTH/2, scroll_y, 
       72.f);
-  game_advance_depth(game);
+  game_advance_depth(g_game);
 
 
   if (splash->timer <= 0.f) {
-    lit->next_mode = LIT_MODE_GAME; 
+    g_lit->next_mode = LIT_MODE_GAME; 
   }
 
 }
@@ -1355,18 +1355,18 @@ lit_game_render_lights(lit_game_t* g) {
   for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
   {
     lit_game_light_t* light = g->lights + light_index;
-    game_draw_asset_sprite(game, &lit->assets, 
+    game_draw_asset_sprite(g_game, &g_lit->assets, 
         ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE,
         light->pos,
         v2f_set(16.f, 16.f),
         rgba_set(0.8f, 0.8f, 0.8f, 1.f));
-    game_advance_depth(game);
+    game_advance_depth(g_game);
   }
 
   //
   // Lights
   //
-  game_set_blend_additive(game);
+  game_set_blend_additive(g_game);
   for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
   {
     lit_game_light_t* l = g->lights + light_index;
@@ -1374,16 +1374,16 @@ lit_game_render_lights(lit_game_t* g) {
     {
       lit_game_light_triangle_t* lt = l->triangles + tri_index;
       game_draw_tri(
-          game, 
+          g_game, 
           lt->p0,
           lt->p1,
           lt->p2, 
           rgba_hex(l->color));
 
     } 
-    game_advance_depth(game);
+    game_advance_depth(g_game);
   }
-  game_set_blend_alpha(game);
+  game_set_blend_alpha(g_game);
 }
 
 
@@ -1396,12 +1396,12 @@ lit_draw_light_rays(lit_game_t* g) {
     lit_game_light_t* light = g->lights + light_index;
     for_cnt(intersection_index, light->intersection_count){
       lit_light_intersection_t* intersection = light->intersections + intersection_index;
-      game_draw_line(game, light->pos, intersection->pt, 2.f, rgba_hex(0xFF0000FF));
+      game_draw_line(g_game, light->pos, intersection->pt, 2.f, rgba_hex(0xFF0000FF));
 
     }
 
   }
-  game_advance_depth(game);
+  game_advance_depth(g_game);
 }
 
 static void
@@ -1410,9 +1410,9 @@ lit_draw_edges(lit_game_t* g) {
   for(u32_t edge_index = 0; edge_index < g->edge_count; ++edge_index) 
   {
     lit_game_edge_t* edge = g->edges + edge_index;
-    game_draw_line(game, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
+    game_draw_line(g_game, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
   }
-  game_advance_depth(game);
+  game_advance_depth(g_game);
 }
 
 //
@@ -1432,7 +1432,7 @@ lit_game_player_release_light(lit_game_t* g) {
   lit_game_player_t* player = &g->player;
   player->held_light = nullptr;
   player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
-  game_show_cursor(game);
+  game_show_cursor(g_game);
 }
 
 static void
@@ -1465,7 +1465,7 @@ lit_game_player_hold_nearest_light_if_empty_handed(
       player->old_light_pos = player->nearest_light->pos;
       player->light_retrival_time = 0.f;
       player->light_hold_mode = light_hold_mode;
-      game_hide_cursor(game);
+      game_hide_cursor(g_game);
     }
   }
 }
@@ -1475,19 +1475,19 @@ lit_game_update_player(lit_game_t* g, f32_t dt)
 {
   lit_game_player_t* player = &g->player; 
 
-  player->pos.x = game->input.mouse_pos.x;
-  player->pos.y = LIT_HEIGHT - game->input.mouse_pos.y;
+  player->pos.x = g_game->input.mouse_pos.x;
+  player->pos.y = LIT_HEIGHT - g_game->input.mouse_pos.y;
 
   lit_game_player_find_nearest_light(g);
 
   //
   // Move light logic
   //
-  if (game_is_button_poked(game, APP_BUTTON_CODE_LMB)) {
+  if (game_is_button_poked(g_game, GAME_BUTTON_CODE_LMB)) {
     lit_game_player_hold_nearest_light_if_empty_handed(g, LIT_PLAYER_LIGHT_HOLD_MODE_MOVE);
   }
 
-  else if (game_is_button_released(game, APP_BUTTON_CODE_LMB))
+  else if (game_is_button_released(g_game, GAME_BUTTON_CODE_LMB))
   {
     lit_game_player_release_light(g);
   }
@@ -1495,17 +1495,17 @@ lit_game_update_player(lit_game_t* g, f32_t dt)
   //
   // Rotate light logic
   //
-  if (game_is_button_poked(game, APP_BUTTON_CODE_RMB))
+  if (game_is_button_poked(g_game, GAME_BUTTON_CODE_RMB))
   {
     lit_game_player_hold_nearest_light_if_empty_handed(g, LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE);
-    game_lock_cursor(game);
+    game_lock_cursor(g_game);
     player->locked_pos_x = player->pos.x;
 
   }
-  else if (game_is_button_released(game, APP_BUTTON_CODE_RMB)) 
+  else if (game_is_button_released(g_game, GAME_BUTTON_CODE_RMB)) 
   {
     lit_game_player_release_light(g);
-    game_unlock_cursor(game);
+    game_unlock_cursor(g_game);
   }
 
   // Restrict movement
@@ -1560,27 +1560,27 @@ lit_game_render_player(lit_game_t* g){
 
   if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_NONE) { 
     if (player->nearest_light) {
-      game_draw_asset_sprite(game, &lit->assets,
+      game_draw_asset_sprite(g_game, &g_lit->assets,
           ASSET_SPRITE_ID_CIRCLE_SPRITE,
           player->nearest_light->pos, 
           v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-      game_advance_depth(game);
+      game_advance_depth(g_game);
     }
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE) {
-    game_draw_asset_sprite(game, &lit->assets,
+    game_draw_asset_sprite(g_game, &g_lit->assets,
         ASSET_SPRITE_ID_ROTATE_SPRITE,
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-    game_advance_depth(game);
+    game_advance_depth(g_game);
 
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_MOVE) {
-    game_draw_asset_sprite(game, &lit->assets,
+    game_draw_asset_sprite(g_game, &g_lit->assets,
         ASSET_SPRITE_ID_MOVE_SPRITE,
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-    game_advance_depth(game);
+    game_advance_depth(g_game);
 
 
   }
@@ -1656,8 +1656,8 @@ lit_game_render_particles(lit_game_t* g) {
     size.w = f32_lerp(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = f32_lerp(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    game_draw_asset_sprite(game, &lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, p->pos, size, color);
-    game_advance_depth(game);
+    game_draw_asset_sprite(g_game, &g_lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, p->pos, size, color);
+    game_advance_depth(g_game);
   }
 }
 
@@ -1757,7 +1757,7 @@ lit_game_update_sensors(lit_game_t* g, f32_t dt)
   rng_t* rng = &g->rng; 
 
   // This is an array of activated sensors per sensor_group
-  u32_t* activated = arena_push_arr_zero(u32_t, &lit->frame_arena, g->sensor_group_count);
+  u32_t* activated = arena_push_arr_zero(u32_t, &g_lit->frame_arena, g->sensor_group_count);
 
   u32_t total_triangles = 0;
 
@@ -1834,7 +1834,7 @@ lit_game_update_sensors(lit_game_t* g, f32_t dt)
     }
   }
 
-  game_inspect_u32(game, st8_from_lit("total_triangles"), total_triangles);
+  game_inspect_u32(g_game, st8_from_lit("total_triangles"), total_triangles);
 }
 
 
@@ -1845,8 +1845,8 @@ lit_game_render_sensors(lit_game_t* g) {
   for(u32_t sensor_index = 0; sensor_index < g->sensor_count; ++sensor_index)
   {
     lit_game_sensor_t* sensor = g->sensors + sensor_index;
-    game_draw_asset_sprite(game, &lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, sensor->pos, size, rgba_hex(sensor->target_color));
-    game_advance_depth(game);
+    game_draw_asset_sprite(g_game, &g_lit->assets, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, sensor->pos, size, rgba_hex(sensor->target_color));
+    game_advance_depth(g_game);
   }
 }
 
@@ -1855,7 +1855,7 @@ lit_game_generate_light(lit_game_t* g) {
   for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
   {
     lit_game_light_t* light = g->lights + light_index;
-    lit_gen_light_intersections(light, g->edges, g->edge_count, &lit->frame_arena);
+    lit_gen_light_intersections(light, g->edges, g->edge_count, &g_lit->frame_arena);
 
 #if LIT_DEBUG_INTERSECTIONS
     // Generate debug lines
@@ -1865,7 +1865,7 @@ lit_game_generate_light(lit_game_t* g) {
     {
       v2f_t p0 = light->pos;
       v2f_t p1 = light->intersections[intersection_index].pt;
-      game_draw_line(game, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
+      game_draw_line(g_game, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
     }
 #endif
   }
@@ -1882,8 +1882,8 @@ static void lit_level_add();
 
 
 #define lit_level_exit_with(where) [](){ \
-  lit_unlock_next_level(lit->game.current_level_id); \
-  lit->game.exit_callback = where;  \
+  lit_unlock_next_level(g_lit->g_game.current_level_id); \
+  g_lit->g_game.exit_callback = where;  \
 } 
 
 static void
@@ -1938,7 +1938,7 @@ lit_game_init_level(lit_game_t* m, st8_t str, u32_t level_id) {
 //
 static void
 lit_level_move() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("MOVE"), 1);
 
   lit_game_push_light(m, 400.f, 400, 0x880000FF, 45.f, 0.75f);
@@ -1961,7 +1961,7 @@ lit_level_move() {
 //
 static void
 lit_level_obstruct() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("OBSTRUCT"), 2);
   
   if (lit_is_in_tutorial()) {
@@ -1986,7 +1986,7 @@ lit_level_obstruct() {
 //
 static void
 lit_level_add() { 
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   // Need to 'enclose' the shape
   lit_game_init_level(m, st8_from_lit("ADD"), 3);
   lit_game_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
@@ -2008,7 +2008,7 @@ lit_level_add() {
 //
 static void
 lit_level_corners() { 
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("CORNERS"), 4);
 
   // Need to 'enclose' the shape
@@ -2038,7 +2038,7 @@ lit_level_corners() {
 //
 static void
 lit_level_mix() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
 
   lit_game_init_level(m, st8_from_lit("MIX"), 5);
 
@@ -2066,7 +2066,7 @@ lit_level_mix() {
 //
 static void
 lit_level_blend() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("BLEND"), 6);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
@@ -2094,7 +2094,7 @@ lit_level_blend() {
 //
 static void
 lit_level_rooms() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
 
   lit_game_init_level(m, st8_from_lit("ROOMS"), 7);
 
@@ -2132,7 +2132,7 @@ lit_level_rooms() {
 // LEVEL 8
 static void
 lit_level_disco() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("DISCO"), 8);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
@@ -2192,7 +2192,7 @@ lit_level_disco() {
 //  
 static void
 lit_level_onion() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("ONION"), 9);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
@@ -2230,7 +2230,7 @@ lit_level_onion() {
 // LEVEL 10
 static void
 lit_level_spectrum() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("SPECTRUM"), 10);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
@@ -2277,7 +2277,7 @@ lit_level_spectrum() {
 // LEVEL 11
 static void
 lit_level_split() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("SPLIT"), 11);
 
   lit_game_push_light(m, 400.f, 410.f, 0x880000FF, 360.f, 0.f);
@@ -2309,7 +2309,7 @@ lit_level_split() {
 //LEVEL 12
 static void
 lit_level_movement() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("MOVEMENT"), 13);
 
 //  lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
@@ -2360,7 +2360,7 @@ lit_level_movement() {
 // LEVEL 13
 static void
 lit_level_interval() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("INTERVAL"), 13);
 
   const u32_t sections = 20;
@@ -2449,7 +2449,7 @@ lit_level_interval() {
 
 static void
 lit_level_patience() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("PATIENCE"), 14);
   lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
   lit_game_push_light(m, 400.f, 700.f, 0x008800FF, 15.f, 0.75f);
@@ -2471,7 +2471,7 @@ lit_level_patience() {
 
 static void
 lit_level_busy() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("SCRAMBLE"), 15);
   //lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
 #if 1
@@ -2557,7 +2557,7 @@ lit_level_busy() {
 // LEVEL 16
 static void
 lit_level_spin() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("SPIN"), 16);
 
   f32_t speed = 1.f;
@@ -2611,7 +2611,7 @@ lit_level_spin() {
 // LEVEL 17
 static void
 lit_level_orbit() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("ORBIT"), 17);
 
   f32_t speed = 1.f;
@@ -2668,7 +2668,7 @@ lit_level_orbit() {
 // TODO LEVEL 18
 static void
 lit_level_hourglass() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("HOURGLASS"), 18);
 
   lit_game_push_light(m, 250, 400, 0x880000FF, 360.f, 0.75f);
@@ -2797,7 +2797,7 @@ lit_level_test(lit_game_t* m) {
 
 static void
 lit_level_triforce() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("TRIFORCE"), 19);
 
   lit_game_push_light(m, 400, 427, 0x880000FF, 360.f, 0.75f);
@@ -2885,7 +2885,7 @@ lit_level_triforce() {
 
 static void
 lit_level_hands() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
   lit_game_init_level(m, st8_from_lit("HANDS"), 20);
 
   lit_game_push_light(m, 100, 100, 0x880000FF, 360.f, 0.75f);
@@ -2959,7 +2959,7 @@ lit_level_hands() {
 
 static void 
 lit_level_menu() {
-  lit_game_t* m = &lit->game;
+  lit_game_t* m = &g_lit->g_game;
 
   const f32_t box_hw = 50.f;
   const f32_t box_hh = 50.f;
@@ -3330,12 +3330,12 @@ lit_level_menu() {
 
 
 // 
-// Main game functions
+// Main g_game functions
 //
 static void
 lit_game_update() 
 {
-  lit_game_t* g = &lit->game;
+  lit_game_t* g = &g_lit->g_game;
   lit_game_player_t* player = &g->player;
 
 #if LIT_DEBUG
@@ -3345,7 +3345,7 @@ lit_game_update()
 #endif 
 
   
-  f32_t dt = game_get_dt(game);
+  f32_t dt = game_get_dt(g_game);
   
   //
   // Transition Logic
@@ -3412,9 +3412,9 @@ lit_game_update()
 
     // Do input for exiting to HOME if not HOME
     if (g->current_level_id > 0) {
-      if (game->input.mouse_scroll_delta < 0)
+      if (g_game->input.mouse_scroll_delta < 0)
         g->exit_fade = min_of(1.f, g->exit_fade + 0.1f);
-      else if (game->input.mouse_scroll_delta > 0) 
+      else if (g_game->input.mouse_scroll_delta > 0) 
         g->exit_fade = max_of(0.f, g->exit_fade - 0.1f);
       if (g->exit_fade >= 1.f) {
         // go back to HOME
@@ -3446,8 +3446,8 @@ lit_game_update()
     //
     if (g->exit_callback != nullptr) 
     {
-      game_show_cursor(game);
-      game_unlock_cursor(game);
+      game_show_cursor(g_game);
+      game_unlock_cursor(g_game);
       g->state = LIT_GAME_STATE_TYPE_SOLVED_IN;
     }
   }
@@ -3458,7 +3458,7 @@ lit_game_update()
   //
 
   // This is the default and hgameier blend mode
-  game_set_blend_alpha(game);
+  game_set_blend_alpha(g_game);
 
 
   lit_profile_begin(rendering);
@@ -3472,7 +3472,7 @@ lit_game_update()
   }
   lit_game_render_lights(g);
 
-  game_set_blend_alpha(game);
+  game_set_blend_alpha(g_game);
 
   if (!lit_game_is_exiting(g)) {
     lit_game_render_sensors(g); 
@@ -3482,23 +3482,23 @@ lit_game_update()
   // Draw the overlay for fade in/out
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->stage_fade_timer);
-    game_draw_asset_sprite(game, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    game_advance_depth(game);
+    game_draw_asset_sprite(g_game, &g_lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    game_advance_depth(g_game);
   }
 
   // Overlay for pause fade
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->exit_fade);
-    game_draw_asset_sprite(game, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    game_advance_depth(game);
+    game_draw_asset_sprite(g_game, &g_lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    game_advance_depth(g_game);
   }
 
   // Draw the overlay for white flash
   {
     f32_t alpha = g->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
     rgba_t color = rgba_set(1.f, 1.f, 1.f, alpha);
-    game_draw_asset_sprite(game, &lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    game_advance_depth(game);
+    game_draw_asset_sprite(g_game, &g_lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    game_advance_depth(g_game);
   }
 
 
@@ -3514,8 +3514,8 @@ lit_game_update()
     f32_t title_x = cur_wp->x + a * (next_wp->x - cur_wp->x); 
     rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
 
-    game_draw_text_center_aligned(game, &lit->assets, ASSET_FONT_ID_DEFAULT, g->title, color, title_x, LIT_HEIGHT/2, 128.f);
-    game_advance_depth(game);
+    game_draw_text_center_aligned(g_game, &g_lit->assets, ASSET_FONT_ID_DEFAULT, g->title, color, title_x, LIT_HEIGHT/2, 128.f);
+    game_advance_depth(g_game);
 
   }
   lit_profile_end(rendering);
@@ -3524,7 +3524,7 @@ lit_game_update()
 static void 
 lit_game_init() 
 {
-  lit_game_t* g = &lit->game;
+  lit_game_t* g = &g_lit->g_game;
   rng_init(&g->rng, 65535); // don't really need to be strict 
 
   g->freeze = false;
@@ -3548,7 +3548,7 @@ lit_game_init()
 
 static void 
 lit_credits_init() {
-  lit_credits_t* credits = &lit->credits;
+  lit_credits_t* credits = &g_lit->credits;
   credits->timer = 0.f;
 }
 
@@ -3556,10 +3556,10 @@ static f32_t
 lit_credits_push_subtitle_and_name(
     f32_t y, st8_t subtitle, st8_t name)
 {
-  lit_credits_t* credits = &lit->credits;
+  lit_credits_t* credits = &g_lit->credits;
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       subtitle,
       rgba_set(0.5f, 0.5f, 0.5f, 1.f),
@@ -3567,8 +3567,8 @@ lit_credits_push_subtitle_and_name(
       48.f);
   y -= 50.f;
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       name,
       rgba_hex(0xF8C8DCFF),
@@ -3580,11 +3580,11 @@ lit_credits_push_subtitle_and_name(
 
 static void 
 lit_credits_update() {
-  lit_credits_t* credits = &lit->credits;
+  lit_credits_t* credits = &g_lit->credits;
 
-  credits->timer += game_get_dt(game);
-  if (game_is_button_poked(game, APP_BUTTON_CODE_LMB)) {
-    lit->next_mode = LIT_MODE_GAME;
+  credits->timer += game_get_dt(g_game);
+  if (game_is_button_poked(g_game, GAME_BUTTON_CODE_LMB)) {
+    g_lit->next_mode = LIT_MODE_GAME;
     return;
   }
 
@@ -3602,8 +3602,8 @@ lit_credits_update() {
   
   // Title
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       st8_from_lit("THANKS"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -3611,8 +3611,8 @@ lit_credits_update() {
       96.f);
   y -= 96.f;
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       st8_from_lit("FOR"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -3620,8 +3620,8 @@ lit_credits_update() {
       96.f);
   y-=96.f;
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       st8_from_lit("PLAYING!"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -3631,8 +3631,8 @@ lit_credits_update() {
 
 
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       st8_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -3641,8 +3641,8 @@ lit_credits_update() {
 
   y -= 70;
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       st8_from_lit("PRIMIX"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -3651,8 +3651,8 @@ lit_credits_update() {
 
   y -= 70;
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
       st8_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -3673,7 +3673,7 @@ lit_credits_update() {
   y = lit_credits_push_subtitle_and_name(y, st8_lit("coffee"), st8_lit("a lot"));
 
   if (y > LIT_HEIGHT) {
-    lit->next_mode = LIT_MODE_GAME;
+    g_lit->next_mode = LIT_MODE_GAME;
   }
 }
 
@@ -3686,8 +3686,8 @@ static void lit_sandbox_init() {
 static void lit_sandbox_update() {
   rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
   game_draw_text_center_aligned(
-      game, 
-      &lit->assets, 
+      g_game, 
+      &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT, 
       st8_from_lit("A"), 
       color,
@@ -3703,46 +3703,46 @@ static void lit_sandbox_update() {
 //
 static b32_t
 lit_tick() {
-  if(game->game == nullptr) {
-    void* lit_memory = game_allocate_memory(game, sizeof(lit_t));
+  if(g_game->game == nullptr) {
+    void* lit_memory = game_allocate_memory(g_game, sizeof(lit_t));
     if (!lit_memory) return false;
-    game->game = lit_memory;
+    g_game->game = lit_memory;
 
-    lit = (lit_t*)(game->game);
-    lit->level_to_start = 0;
-    lit->next_mode = LIT_MODE_SPLASH;
-    lit->mode = LIT_MODE_NONE;
+    g_lit = (lit_t*)(g_game->game);
+    g_lit->level_to_start = 0;
+    g_lit->next_mode = LIT_MODE_SPLASH;
+    g_lit->mode = LIT_MODE_NONE;
     
 
     //
     // Initialize assets
     //
     usz_t asset_memory_size = megabytes(20);
-    void* asset_memory = game_allocate_memory(game, asset_memory_size);
+    void* asset_memory = game_allocate_memory(g_game, asset_memory_size);
     if (asset_memory == nullptr) return false;
-    arena_init(&lit->asset_arena, asset_memory, asset_memory_size);
-    assets_init(&lit->assets, game, LIT_ASSET_FILE, &lit->asset_arena);
+    arena_init(&g_lit->asset_arena, asset_memory, asset_memory_size);
+    assets_init(&g_lit->assets, g_game, LIT_ASSET_FILE, &g_lit->asset_arena);
 
 
     //
     // Initialize debug stuff
     //
     usz_t debug_memory_size = megabytes(1);
-    void* debug_memory = game_allocate_memory(game, debug_memory_size);
-    arena_init(&lit->debug_arena, debug_memory, debug_memory_size);
-    console_init(&lit->console, &lit->debug_arena, 32, 256);
+    void* debug_memory = game_allocate_memory(g_game, debug_memory_size);
+    arena_init(&g_lit->debug_arena, debug_memory, debug_memory_size);
+    console_init(&g_lit->console, &g_lit->debug_arena, 32, 256);
 
     usz_t frame_memory_size = megabytes(1);
-    void* frame_memory = game_allocate_memory(game, frame_memory_size);
-    arena_init(&lit->frame_arena, frame_memory, frame_memory_size);
+    void* frame_memory = game_allocate_memory(g_game, frame_memory_size);
+    arena_init(&g_lit->frame_arena, frame_memory, frame_memory_size);
 
 
     usz_t mode_memory_size = megabytes(1);
-    auto* mode_memory = game_allocate_memory(game, mode_memory_size);
-    arena_init(&lit->mode_arena, mode_memory, mode_memory_size);
+    auto* mode_memory = game_allocate_memory(g_game, mode_memory_size);
+    arena_init(&g_lit->mode_arena, mode_memory, mode_memory_size);
 
-    game_set_design_dimensions(game, LIT_WIDTH, LIT_HEIGHT);
-    game_set_view(game, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
+    game_set_design_dimensions(g_game, LIT_WIDTH, LIT_HEIGHT);
+    game_set_view(g_game, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
     //
     // Check save data
@@ -3750,21 +3750,21 @@ lit_tick() {
 #if LIT_SAVE_FILE_ENABLE
     lit_init_save_data(); 
 #else
-    lit->save_data.unlocked_levels = 100;
+    g_lit->save_data.unlocked_levels = 100;
 #endif
 
     
   }
 
-  lit = (lit_t*)(game->game);
+  g_lit = (lit_t*)(g_game->game);
 
-  arena_clear(&lit->frame_arena);
+  arena_clear(&g_lit->frame_arena);
 
-  if (lit->next_mode != lit->mode || game_is_dll_reloaded(game)) 
+  if (g_lit->next_mode != g_lit->mode || game_is_dll_reloaded(g_game)) 
   {
-    lit->mode = lit->next_mode;
+    g_lit->mode = g_lit->next_mode;
     
-    switch(lit->mode) {
+    switch(g_lit->mode) {
       case LIT_MODE_SPLASH: {
         lit_splash_init();
       } break;
@@ -3781,7 +3781,7 @@ lit_tick() {
     }
   }
 
-  switch(lit->mode) {
+  switch(g_lit->mode) {
     case LIT_MODE_SPLASH: {
       lit_splash_update();
     } break;
@@ -3799,11 +3799,11 @@ lit_tick() {
   // Debug
 #if LIT_DEBUG
   if (is_poked(input, INPUT_BUTTON_CODE_F1)) {
-    lit->show_debug_type = 
-      (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
+    g_lit->show_debug_type = 
+      (lit_show_debug_type_t)((g_lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
   }
 
-  switch (lit->show_debug_type) {
+  switch (g_lit->show_debug_type) {
     case LIT_SHOW_DEBUG_CONSOLE: {
       lit_update_and_render_console(); 
     }break;
@@ -3828,15 +3828,15 @@ game_init_sig(game_init)
 {
   game_init_config_t ret;
 
-  ret.debug_arena_size = megabytes(256);
+  ret.debug_arena_size = kilobytes(300);
   ret.max_inspector_entries = 256;
   ret.max_profiler_entries = 256;
   ret.max_profiler_snapshots = 120;
 
   ret.gfx_arena_size = megabytes(256);
-  ret.texture_queue_size = megabytes(100);
+  ret.texture_queue_size = megabytes(5);
   ret.render_command_size = megabytes(100);
-  ret.max_textures = 256;
+  ret.max_textures = 1;
 
   ret.audio_enabled = false;
   ret.audio_arena_size = megabytes(256);
@@ -3849,12 +3849,15 @@ game_init_sig(game_init)
 exported 
 game_update_and_render_sig(game_update_and_render) 
 { 
-  game = in_game;
+  g_game = game;
   lit_tick();
 }
 
 //
 // JOURNAL
+//
+// = 2023-08-26 =
+//   Added "g_" prefix to some global variables
 // 
 // = 2023-08-02 = 
 //   It is time to put everything into one file.

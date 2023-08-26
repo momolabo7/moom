@@ -23,7 +23,8 @@
 //   RNG         - Random Numer Generator
 //   CRC         - CRC generators
 //   Sorting     - Sorting algorithms
-//   Arena       - Memory arena
+//   Arena       - Standard Linear Memory Arena
+//   Garena      - General Purpose Heap Arena
 //   String      - String manipulation
 //   Stream      - Memory stream
 //   TTF         - TTF font file
@@ -315,12 +316,55 @@ struct arena_t {
 	u8_t* memory;
 	usz_t pos;
 	usz_t cap;
+
+  usz_t highest_memory_usage;
 };
 
 // Temporary memory API used to arena_revert an arena to an original state;
 struct arena_marker_t {
   arena_t* arena;
   usz_t old_pos;
+};
+
+//
+// MARK:(Garena) 
+//
+// NOTES
+//   Header is always 16 bytes and aligned to 16 bytes.
+//
+//   This helps in getting back the header address whenever
+//   the user frees a block (it's always -16 bytes). 
+//
+//   This also means that the user's block is always aligned to
+//   16 bytes, which, for most use cases is the optimal 
+//   alignment for any optmization operations.
+//
+// 
+union garena_header_t {
+  usz_t size; 
+  struct {
+    u64_t padding_1, padding_2;
+  };
+};
+
+// This should also always be 16 bytes.
+union garena_free_block_t {
+  struct {
+    usz_t size;
+    garena_free_block_t* next;
+  };
+  struct {
+    u64_t padding_1, padding_2;
+  };
+};
+static_assert(sizeof(garena_header_t) == 16);
+static_assert(sizeof(garena_free_block_t) == 16);
+
+struct garena_t {
+  u8_t* memory;
+  usz_t cap;
+
+  garena_free_block_t* free_list;
 };
 
 //
@@ -1041,6 +1085,16 @@ static void arena_revert(arena_marker_t marker);
 # define _arena_set_revert_point(a,l) __arena_set_revert_point(a,l)
 # define arena_set_revert_point(arena) _arena_set_revert_point(arena, __LINE__) 
 
+
+//
+// MARK:(Garena)
+//
+static void  garena_clear(garena_t* ga);
+static void  garena_init(garena_t* ga, u8_t* memory, usz_t cap);
+static void* garena_push_size(garena_t* ga, usz_t size);
+static void  garena_free(garena_t* ga, void* block);
+#define garena_push(t,b) (t*)garena_push_size((b), sizeof(t))
+#define garena_push_arr(t,b,n) (t*)garena_push_size((b), sizeof(t) * n)
 
 //
 // MARK:(TTF)
@@ -4890,7 +4944,7 @@ _ttf_get_paths_from_glyph_outline(_ttf_glyph_outline_t* outline,
   u32_t path_count = 0;
   
   // On the first pass, we count the number of points we will generate.
-  // On the second pass, we will allocate the list and actually fill 
+  // On the second pass, we will push the list and actually fill 
   // the list with generated points.
   for (u32_t pass = 0; pass < 2; ++pass)
   {
@@ -5194,7 +5248,7 @@ ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out
   
   pixels = arena_push_arr(u32_t, allocator, size);
   if (!pixels) {
-    //ttf_log("[ttf] Unable to allocate bitmap pixel\n");
+    //ttf_log("[ttf] Unable to push bitmap pixel\n");
     return nullptr;
   }
   zero_memory(pixels, size);
@@ -5213,7 +5267,7 @@ ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out
   // generate scaled edges based on points
   _ttf_edge_t* edges = arena_push_arr(_ttf_edge_t, allocator, paths->vertex_count);
   if (!edges) {
-    //ttf_log("[ttf] Unable to allocate edges\n");
+    //ttf_log("[ttf] Unable to push edges\n");
     return nullptr;
   }
   zero_range(edges, paths->vertex_count);
@@ -5260,7 +5314,7 @@ ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out
   // Sort edges by top most edge
   sort_entry_t* y_edges = arena_push_arr(sort_entry_t, allocator, edge_count);
   if (!y_edges) { 
-    //ttf_log("[ttf] Unable to allocate sort entries for edges\n");
+    //ttf_log("[ttf] Unable to push sort entries for edges\n");
     return nullptr;
   }
 
@@ -5272,7 +5326,7 @@ ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out
 
   sort_entry_t* active_edges = arena_push_arr(sort_entry_t, allocator, edge_count);
   if (!active_edges) {
-    //ttf_log("[ttf] Unable to allocate sort entries for active edges\n");
+    //ttf_log("[ttf] Unable to push sort entries for active edges\n");
     return nullptr;
   }
   
@@ -6100,7 +6154,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   stream_consume(_png_chunk_t, &ctx.stream);
   
   // NOTE(Momo): This is really lousy method.
-  // We will go through all the IDATs and allocate a giant contiguous 
+  // We will go through all the IDATs and push a giant contiguous 
   // chunk of memory to DEFLATE.
   usz_t zlib_size = 0;
   {
@@ -6123,7 +6177,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
 
   stream_init(zlib_stream, zlib_data);
   
-  // Second pass to allocate memory
+  // Second pass to push memory
   while(!stream_is_eos(&ctx.stream)) {
     _png_chunk_header_t* chunk_header = stream_consume(_png_chunk_header_t, &ctx.stream);
     if (!chunk_header) return nullptr;
@@ -6367,6 +6421,7 @@ arena_init(arena_t* a, void* mem, usz_t cap) {
   a->memory = (u8_t*)mem;
   a->pos = 0; 
   a->cap = cap;
+  a->highest_memory_usage = 0;
 }
 
 
@@ -6387,12 +6442,14 @@ arena_push_size(arena_t* a, usz_t size, usz_t align) {
   if (size == 0) return nullptr;
 	
 	usz_t imem = ptr_to_umi(a->memory);
-	usz_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
+	umi_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
 	
   if (imem + adjusted_pos + size >= imem + a->cap) return nullptr;
 	
 	u8_t* ret = umi_to_ptr(imem + adjusted_pos);
 	a->pos = adjusted_pos + size;
+
+  a->highest_memory_usage = max_of(a->pos, a->highest_memory_usage);
 	
 	return ret;
 	
@@ -6472,6 +6529,160 @@ arena_mark(arena_t* a) {
 static void
 arena_revert(arena_marker_t marker) {
   marker.arena->pos = marker.old_pos;
+}
+
+//
+// MARK:(Garena)
+//
+static void
+garena_clear(garena_t* ga) {
+  ga->free_list = (garena_free_block_t*)ga->memory;
+  ga->free_list->next = nullptr;
+  ga->free_list->size = ga->cap;
+
+}
+
+static void
+garena_init(garena_t* ga, u8_t* memory, usz_t cap) {
+  ga->memory = memory;
+  ga->cap = cap;
+  garena_clear(ga);
+}
+
+static void* 
+garena_push_size(garena_t* ga, usz_t size) {
+  // The total required size is (header size + block size) rounded up to 16
+  usz_t total_required_size = align_up_pow2(size + sizeof(garena_header_t), 16) ;
+  usz_t total_actual_size = total_required_size;
+
+  // TODO: header must be aligned
+  // Right now it's not.
+
+  // First Fit Strategy
+  garena_free_block_t* itr = ga->free_list;
+  garena_free_block_t* prev = nullptr;
+  while (itr != nullptr) 
+  {
+    if (itr->size >= total_required_size) {
+      break;
+    }
+    prev = itr;
+    itr = itr->next;
+  }
+
+  // Cannot find a block that fits.
+  if (itr == nullptr) {
+    return nullptr;
+  }
+
+  // Here, we found a block that fits.
+  // Split if the remaining size is more than the block size
+  garena_free_block_t* new_free_block;
+  usz_t remaining_size = itr->size - total_required_size;
+
+  // Case where future allocation of the 
+  // current free block is impossible.
+  // Thus, the next free block is the new free block
+  if (remaining_size <= sizeof(garena_header_t)) {
+    new_free_block = itr->next;
+    total_actual_size = itr->size;
+  }
+
+  // Case where we split the block 
+  else {
+    u8_t* new_free_block_memory = (u8_t*)(itr) + total_required_size;
+    new_free_block = (garena_free_block_t*)new_free_block_memory;
+    new_free_block->size = remaining_size;
+    new_free_block->next = itr->next;
+  }
+
+  // Update the free list
+  // If there is a previous block, set it's next pointer to the new free block
+  if (prev) {
+    prev->next = new_free_block;
+  }
+
+  // If there isn't a previous block, that means we need to update the head.
+  else {
+    ga->free_list = new_free_block; 
+  }
+
+  // Update header of block to return
+  auto* header = (garena_header_t*)itr;
+  header->size = total_actual_size;
+  
+  // Return the pointer to the user
+  u8_t* ret = (u8_t*)(itr) + sizeof(garena_header_t);
+  return ret;
+}
+
+static void
+garena_free(garena_t* ga, void* block) {
+  if (!block) return;
+  
+  u8_t* block_u8 = (u8_t*)block;
+
+  // NOTE(momo): Header is always 16 bytes behind block.
+  auto* header = (garena_header_t*)(block_u8 - sizeof(garena_header_t));
+  umi_t block_end = ptr_to_umi((u8_t*)header + header->size);
+
+  garena_free_block_t* itr = ga->free_list;
+  garena_free_block_t* prev = nullptr;
+
+  // Search until we are past the current block.
+  // At the end of this, itr should the next free block
+  // AFTER the block we are freeing.
+  while(itr != nullptr) {
+    umi_t itr_location = ptr_to_umi(itr);
+    if (itr_location >= block_end) {
+      break;
+    }
+    prev = itr;
+    itr = itr->next;
+  }
+
+
+  // If there is no previous block, it means itr is the start of the block
+  // Thus we simply set the head of the free list to this
+  if (prev == nullptr) {
+    prev = (garena_free_block_t*)(header);
+    
+    // NOTE(momo): this is a bit dangerous
+    // since prev is overlapping header BUT
+    // it should be okay.
+    prev->size = header->size; 
+    prev->next = ga->free_list;
+    ga->free_list = prev;
+  }
+  
+  // If the previous block is directly next to this block, 
+  // combine both blocks simply by adding to the previous block size
+  else if ( ((u8_t*)(prev) + prev->size) == (u8_t*)header) {
+    prev->size += header->size;
+  }
+
+  // The previous block is not next to the current block, so we turn 
+  // the current block directly into a free block
+  else {
+    auto* temp = (garena_free_block_t*)(header);
+
+    // NOTE(momo): this is a bit dangerous
+    // since prev is over590ping header BUT
+    // it should be okay.
+    temp->size = header->size;
+    temp->next = prev->next;
+    prev->next = temp;
+    prev = temp;
+  }
+
+  // Check if we can combine prev with the next free block
+  if (itr != nullptr && ptr_to_umi(itr) == block_end) {
+    prev->size += itr->size;
+    prev->next = itr->next;
+  }
+
+
+
 }
 
 //

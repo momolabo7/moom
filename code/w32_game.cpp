@@ -500,26 +500,26 @@ w32_vkeys_to_game_button_code(u32_t code) {
 
   // A to Z
   if (code >= 0x41 && code <= 0x5A) {
-    return game_button_code_t(APP_BUTTON_CODE_A + code - 0x41);
+    return game_button_code_t(GAME_BUTTON_CODE_A + code - 0x41);
   }
   
   // 0 to 9
   else if (code >= 0x30 && code <= 0x39) {
-    return game_button_code_t(APP_BUTTON_CODE_0 + code - 0x30);
+    return game_button_code_t(GAME_BUTTON_CODE_0 + code - 0x30);
   }
 
   // F1 to F12
   // NOTE(momo): there are actually more F-keys??
   else if (code >= 0x70 && code <= 0x7B) {
-    return game_button_code_t(APP_BUTTON_CODE_F1 + code - 0x70);
+    return game_button_code_t(GAME_BUTTON_CODE_F1 + code - 0x70);
   }
   else {
     switch(code) {
-      case VK_SPACE: return APP_BUTTON_CODE_SPACE;
+      case VK_SPACE: return GAME_BUTTON_CODE_SPACE;
     }
 
   }
-  return APP_BUTTON_CODE_UNKNOWN;
+  return GAME_BUTTON_CODE_UNKNOWN;
 }
 
 // TODO: change 'rr' to 'render_region'
@@ -560,19 +560,19 @@ w32_update_input(game_input_t* input, HWND window, f32_t delta_time, RECT rr)
       case WM_LBUTTONUP:
       case WM_LBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_LBUTTONDOWN;
-        input->buttons[APP_BUTTON_CODE_LMB].now = is_key_down;
+        input->buttons[GAME_BUTTON_CODE_LMB].now = is_key_down;
       } break;
 
       case WM_MBUTTONUP:
       case WM_MBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_MBUTTONDOWN;
-        input->buttons[APP_BUTTON_CODE_MMB].now = is_key_down;
+        input->buttons[GAME_BUTTON_CODE_MMB].now = is_key_down;
       } break;
 
       case WM_RBUTTONUP:
       case WM_RBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_RBUTTONDOWN;
-        input->buttons[APP_BUTTON_CODE_RMB].now = is_key_down;
+        input->buttons[GAME_BUTTON_CODE_RMB].now = is_key_down;
       } break;
       
       case WM_KEYUP:
@@ -720,11 +720,11 @@ game_open_file_sig(w32_open_file)
   DWORD access_flag = {};
   DWORD creation_disposition = {};
   switch (file_access) {
-    case APP_FILE_ACCESS_READ: {
+    case GAME_FILE_ACCESS_READ: {
       access_flag = GENERIC_READ;
       creation_disposition = OPEN_EXISTING;
     } break;
-    case APP_FILE_ACCESS_OVERWRITE: {
+    case GAME_FILE_ACCESS_OVERWRITE: {
       access_flag = GENERIC_WRITE;
       creation_disposition = CREATE_ALWAYS;
     } break;
@@ -789,6 +789,21 @@ game_read_file_sig(w32_read_file)
   else {
     return false;
   }
+}
+
+static 
+game_get_file_size_sig(w32_get_file_size)
+{ 
+  w32_file_t* w32_file = (w32_file_t*)file->data;
+ 
+  LARGE_INTEGER file_size;
+  if (!GetFileSizeEx(w32_file->handle, &file_size)) {
+    assert(false);
+  }
+  
+  return u64_t(file_size);
+
+
 }
 
 static  
@@ -932,6 +947,7 @@ WinMain(HINSTANCE instance,
   game.open_file = w32_open_file;
   game.read_file = w32_read_file;
   game.write_file = w32_write_file;
+  game.get_file_size = w32_get_file_size;
   game.close_file = w32_close_file;
   game.set_view = w32_set_view;
   game.clear_canvas = w32_clear_canvas;
@@ -1115,9 +1131,9 @@ WinMain(HINSTANCE instance,
   arena_t* debug_arena = &game.debug_arena;
   if (!w32_allocate_memory_into_arena(debug_arena, config.debug_arena_size)) return false;
 
-  profiler_init(&game.profiler, w32_get_performance_counter_u64, debug_arena, config.max_profiler_entries, config.max_profiler_snapshots);
+  game_profiler_init(&game.profiler, w32_get_performance_counter_u64, debug_arena, config.max_profiler_entries, config.max_profiler_snapshots);
 
-  inspector_init(&game.inspector, debug_arena, config.max_inspector_entries);
+  game_inspector_init(&game.inspector, debug_arena, config.max_inspector_entries);
 
 
   //
@@ -1139,7 +1155,7 @@ WinMain(HINSTANCE instance,
     // Hot reload game.dll functions
     game.is_dll_reloaded = w32_reload_code_if_outdated(&game_code);
     if (game.is_dll_reloaded) {
-      profiler_reset(&game.profiler);
+      game_profiler_reset(&game.profiler);
     }
 #else 
     profiler_reset(&game.profiler);
@@ -1165,8 +1181,8 @@ WinMain(HINSTANCE instance,
 
 
     // End frame
-    profiler_update_entries(&game.profiler);
-    inspector_clear(&game.inspector);
+    game_profiler_update_entries(&game.profiler);
+    game_inspector_clear(&game.inspector);
     w32_gfx_end_frame(gfx);
     
     if (config.audio_enabled) w32_audio_end_frame(&game.audio);
