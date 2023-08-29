@@ -664,25 +664,190 @@ euler_q15() {
 // this would be to have a vector of digits and perform
 // operations on it
 //
-// NOT SOLVED
 //
-
-struct euler_16_big_num {
-  // TODO
-};
-
 static void
 euler_q16() {
-  f64_t n = f64_pow(2, 1000);
+  const u32_t exponent = 1000;
+  u8_t num[512] = {};
+  num[0] = 1;
 
-  u32_t sum = 0;
-  while(!f64_is_close(n, 0.0)) {
-    f64_t m = f64_mod(n, 10);
-    sum += (u32_t)m; 
-    n = trunc(n/10.0);
+  // We only need to keep multiplying by 2, for 1000 times
+  u32_t carry = 0;
+  for(u32_t i = 0; i < exponent; ++i) 
+  {
+    for_arr(j, num) {
+      u32_t val = num[j] * 2;
+      num[j] = val%10 + carry%10;
+      carry /= 10;
+      carry += val/10;
+    }
   }
 
-  printf("Answer: %u\n", sum);
+#if 0
+  // print in reverse
+  b32_t start = false;
+  for_arr(i, num) {
+    u32_t value = num[sizeof(num)-i-1];
+    if (value != 0) 
+      start = true;
+    if (start)
+      printf("%d", value );
+  }
+#endif
+
+  u32_t sum = 0;
+  for_arr(i, num) {
+    sum += num[i];
+  }
+
+  printf("Answer: %d", sum);
+
+}
+
+//
+// Question 17
+//
+// Let's see if there is a pattern:
+//  one
+//  two
+//  three
+//  four
+//  five
+//  six
+//  seven
+//  eight
+//  nine
+//  ten
+//
+//  eleven*
+//  twelve*
+//  thirteen*
+//  fourteen
+//  fifteen*
+//  sixteen
+//  seventeen
+//  eighteen
+//  nineteen
+//  twenty
+//
+//  twentyone
+//  twentytwo
+//  ...
+//  thirty
+//
+//  thirtyone
+//  thirtytwo
+//  ...
+//  forty
+//
+//  We can count every number as special cases up to twenty, then
+//  every 10 number onwards
+//
+
+static u32_t
+euler_q17_letters_in_ones(u32_t num) {
+  if (num == 1) return sizeof("one")-1;
+  if (num == 2) return sizeof("two")-1;
+  if (num == 3) return sizeof("three")-1;
+  if (num == 4) return sizeof("four")-1;
+  if (num == 5) return sizeof("five")-1;
+  if (num == 6) return sizeof("six")-1;
+  if (num == 7) return sizeof("seven")-1;
+  if (num == 8) return sizeof("eight")-1;
+  if (num == 9) return sizeof("nine")-1;
+
+  return 0;
+}
+
+static u32_t
+euler_q17_letters_in_teens(u32_t num) {
+  if (num == 1) return sizeof("eleven")-1;
+  if (num == 2) return sizeof("twelve")-1;
+  if (num == 3) return sizeof("thirteen")-1;
+  if (num == 4) return sizeof("fourteen")-1;
+  if (num == 5) return sizeof("fifteen")-1;
+  if (num == 6) return sizeof("sixteen")-1;
+  if (num == 7) return sizeof("seventeen")-1;
+  if (num == 8) return sizeof("eighteen")-1;
+  if (num == 9) return sizeof("nineteen")-1;
+
+  return 0;
+}
+
+static u32_t
+euler_q17_letters_in_tens(u32_t num) {
+  if (num == 1) return sizeof("ten")-1;
+  if (num == 2) return sizeof("twenty")-1;
+  if (num == 3) return sizeof("thirty")-1;
+  if (num == 4) return sizeof("forty")-1;
+  if (num == 5) return sizeof("fifty")-1;
+  if (num == 6) return sizeof("sixty")-1;
+  if (num == 7) return sizeof("seventy")-1;
+  if (num == 8) return sizeof("eighty")-1;
+  if (num == 9) return sizeof("ninety")-1;
+
+  return 0;
+}
+static void
+euler_q17() {
+  // We only do up to one thousand, so 4 places
+  
+  u32_t sum = 0;
+
+  for_range(i, 1, 1000) {
+    //u32_t i = 115;
+    u32_t num = i; 
+    u32_t thous = num/1000;
+    num -= thous*1000;
+
+    u32_t huns = num/100;
+    num -= huns*100;
+
+    u32_t tens = num/10;
+    num -= tens*10;
+
+    u32_t ones = num;
+    //printf("%04d = %d %d %d %d\n", i, thous, huns, tens, ones);
+
+    if (thous) { // technically only one case: "one thousand"
+      sum += euler_q17_letters_in_ones(thous);
+      sum += sizeof("thousand")-1;
+    }
+
+    if (huns) {
+      sum += euler_q17_letters_in_ones(huns);
+      sum += sizeof("hundred")-1;
+      if (tens || ones) {
+        sum += sizeof("and")-1;
+      }
+    }
+
+    if (tens) {
+      // elevent, twelve...
+      if (tens == 1 && ones > 0) {
+        sum += euler_q17_letters_in_teens(ones);
+      }
+      else {
+        // twenty, thirty...
+        sum += euler_q17_letters_in_tens(tens);
+      }
+    }
+    
+    if (ones) {
+      if (tens == 1) {
+        // ignore cases for teens; they are handled in the tens section
+      }
+      else {
+        // Case for twentyone, thirtytwo
+        // 
+        sum += euler_q17_letters_in_ones(ones);
+
+      }
+    }
+  }
+
+  printf("Answer: %d\n", sum);
+
 }
 
 int main() {
@@ -701,7 +866,8 @@ int main() {
   //euler_q13();
   //euler_q14();
   //euler_q15();
-  euler_q16();
+  //euler_q16();
+  euler_q17();
 }
 
 

@@ -37,7 +37,7 @@
 static buffer_t  
 pass_read_file(const char* filename, arena_t* allocator) {
   FILE *file = fopen(filename, "rb");
-  if (!file) return buffer_invalid();
+  if (!file) return buffer_set(0,0);
   defer { fclose(file); };
 
   fseek(file, 0, SEEK_END);
@@ -46,9 +46,9 @@ pass_read_file(const char* filename, arena_t* allocator) {
  
   //pass_log("%s, %lld\n", filename, file_size);
   buffer_t file_contents = arena_push_buffer(allocator, file_size, 16);
-  if (!file_contents) return buffer_invalid();
+  if (!file_contents) return buffer_set(0,0);
   usz_t read_amount = fread(file_contents.data, 1, file_size, file);
-  if(read_amount != file_size) return buffer_invalid();
+  if(read_amount != file_size) return buffer_set(0,0);
   
   return file_contents;
   
@@ -119,7 +119,7 @@ struct pass_pack_atlas_context_t {
 // Atlas asset types
 //
 struct pass_pack_atlas_font_t {
-  asset_font_id_t font_id;
+  game_asset_font_id_t font_id;
   f32_t font_height;
 
   // Will be generated after packing
@@ -130,7 +130,7 @@ struct pass_pack_atlas_font_t {
 
 struct pass_pack_atlas_sprite_t {
   const char* filename;
-  asset_sprite_id_t sprite_id;
+  game_asset_sprite_id_t sprite_id;
 
   // Will be generated after packing
   rp_rect_t* rect;
@@ -191,7 +191,7 @@ struct pass_pack_t {
   // For Atlas Packing API
   //
   arena_marker_t atlas_arena_marker; // used for clearing arena when done generating
-  asset_bitmap_id_t atlas_bitmap_id;
+  game_asset_bitmap_id_t atlas_bitmap_id;
   pass_pack_atlas_font_t* atlas_active_font;
                                     
   pass_pack_atlas_font_t* atlas_fonts;
@@ -207,7 +207,7 @@ struct pass_pack_t {
 static void 
 pass_pack_atlas_sprite(
     pass_pack_t* p, 
-    asset_sprite_id_t sprite_id,
+    game_asset_sprite_id_t sprite_id,
     const char* filename) 
 {
   assert(sprite_id < p->sprite_count);
@@ -223,7 +223,7 @@ pass_pack_atlas_sprite(
 static void
 pass_pack_atlas_font_begin(
     pass_pack_t* p,
-    asset_font_id_t font_id,
+    game_asset_font_id_t font_id,
     const char* filename,
     f32_t font_height)
 {
@@ -273,7 +273,7 @@ pass_pack_atlas_font_end(pass_pack_t* p) {
 static void 
 pass_pack_atlas_begin(
     pass_pack_t* p, 
-    asset_bitmap_id_t bitmap_id,
+    game_asset_bitmap_id_t bitmap_id,
     u32_t bitmap_width,
     u32_t bitmap_height,
     u32_t max_sprites,

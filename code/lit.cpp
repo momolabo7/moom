@@ -72,7 +72,7 @@ struct lit_profiler_stat_t {
 struct lit_splash_t {
   f32_t timer;
   f32_t scroll_in_timer;
-  asset_font_t* font;
+  game_asset_font_t* font;
 };
 
 
@@ -154,7 +154,7 @@ struct lit_particle_t {
   v2f_t pos, vel;
   v2f_t size_start, size_end;
   rgba_t color_start, color_end;
-  asset_sprite_id_t sprite_id;
+  game_asset_sprite_id_t sprite_id;
   f32_t lifespan;
   f32_t lifespan_now;
 };
@@ -366,7 +366,7 @@ struct lit_t {
   arena_t frame_arena;
 
   // Assets
-  assets_t assets;
+  game_assets_t assets;
 
   // Debug Stuff 
   console_t console;
@@ -459,7 +459,7 @@ static void
 lit_update_and_render_console() 
 {
   console_t* console = &g_lit->console;
-  assets_t* assets = &g_lit->assets;
+  game_assets_t* assets = &g_lit->assets;
   game_input_characters_t characters = game_get_input_characters(g_game);
 
   for (u32_t char_index = 0; 
@@ -577,7 +577,7 @@ lit_profiler_end_stat(lit_profiler_stat_t* stat) {
 static void
 lit_profiler_update_and_render() 
 {
-  assets_t* assets = &g_lit->assets;
+  game_assets_t* assets = &g_lit->assets;
 
   const f32_t render_width = LIT_WIDTH;
   const f32_t render_height = LIT_HEIGHT;
@@ -674,7 +674,7 @@ static void
 lit_inspector_update_and_render() 
 {
   game_inspector_t* inspector = &g_game->inspector;
-  assets_t* assets = &g_lit->assets;
+  game_assets_t* assets = &g_lit->assets;
   game_draw_asset_sprite(
       g_game, 
       assets, 
@@ -723,7 +723,7 @@ lit_splash_init() {
 static void
 lit_splash_update() {
   lit_splash_t* splash = &g_lit->splash;
-  asset_font_id_t font = ASSET_FONT_ID_DEFAULT;
+  game_asset_font_id_t font = ASSET_FONT_ID_DEFAULT;
 
   splash->timer -= game_get_dt(g_game);
   splash->scroll_in_timer -= game_get_dt(g_game);
@@ -785,7 +785,7 @@ lit_splash_update() {
       g_game, 
       &g_lit->assets, 
       font,
-      st8_from_lit("a silly g_game by"), 
+      st8_from_lit("a silly game by"), 
       grey,
       LIT_WIDTH/2, scroll_y, 
       36.f);
@@ -3721,7 +3721,7 @@ lit_tick() {
     void* asset_memory = game_allocate_memory(g_game, asset_memory_size);
     if (asset_memory == nullptr) return false;
     arena_init(&g_lit->asset_arena, asset_memory, asset_memory_size);
-    assets_init(&g_lit->assets, g_game, LIT_ASSET_FILE, &g_lit->asset_arena);
+    game_assets_init(&g_lit->assets, g_game, LIT_ASSET_FILE, &g_lit->asset_arena);
 
 
     //

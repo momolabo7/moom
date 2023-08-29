@@ -10,7 +10,7 @@
 
 
 //
-// Profiler 
+// MARK:(Profiler)
 // 
 typedef u64_t game_profiler_get_performance_counter_f();
 
@@ -66,7 +66,7 @@ struct game_profiler_t {
 
 
 //
-// Inspector 
+// MARK:(Inspector)
 //
 enum game_inspector_entry_type_t {
   GAME_INSPECTOR_ENTRY_TYPE_F32,
@@ -93,7 +93,7 @@ struct game_inspector_t {
 #define game_inspect_f32(game, name, item) game_inspector_add_f32(&game->inspector, name, item)
 
 // 
-// Game
+// MARK:(Graphics)
 //
 enum game_blend_type_t {
   GAME_BLEND_TYPE_ZERO,
@@ -108,37 +108,9 @@ enum game_blend_type_t {
   GAME_BLEND_TYPE_INV_DST_COLOR,
 };
 
-#define game_set_view_sig(name) void name(f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y)
-typedef game_set_view_sig(game_set_view_f);
-#define game_set_view(game, ...) (game->set_view(__VA_ARGS__))
-
-#define game_clear_canvas_sig(name) void name(rgba_t color)
-typedef game_clear_canvas_sig(game_clear_canvas_f);
-#define game_clear_canvas(game, ...) (game->clear_canvas(__VA_ARGS__))
-
-#define game_draw_sprite_sig(name) void name(v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1, rgba_t color)
-typedef game_draw_sprite_sig(game_draw_sprite_f);
-#define game_draw_sprite(game, ...) (game->draw_sprite(__VA_ARGS__))
-
-#define game_draw_rect_sig(name) void name(v2f_t pos, f32_t rot, v2f_t scale, rgba_t color)
-typedef game_draw_rect_sig(game_draw_rect_f);
-#define game_draw_rect(game, ...) (game->draw_rect(__VA_ARGS__))
-
-#define game_draw_tri_sig(name) void name(v2f_t p0, v2f_t p1, v2f_t p2, rgba_t color)
-typedef game_draw_tri_sig(game_draw_tri_f);
-#define game_draw_tri(game, ...) (game->draw_tri(__VA_ARGS__))
-
-#define game_advance_depth_sig(name) void name(void)
-typedef game_advance_depth_sig(game_advance_depth_f);
-#define game_advance_depth(game, ...) (game->advance_depth(__VA_ARGS__))
-
-#define game_set_blend_sig(name) void name(game_blend_type_t src, game_blend_type_t dst)
-typedef game_set_blend_sig(game_set_blend_f);
-#define game_set_blend(game, ...) (game->set_blend(__VA_ARGS__))
-
 
 // 
-// Button input
+// MARK:(Button)
 //
 struct game_button_t {
   b32_t before : 1;
@@ -367,12 +339,6 @@ struct game_t {
   game_close_file_f* close_file;
   game_write_file_f* write_file;
   game_read_file_f* read_file;
-  game_set_view_f* set_view;
-  game_clear_canvas_f* clear_canvas;
-  game_draw_sprite_f* draw_sprite;
-  game_draw_rect_f* draw_rect;
-  game_draw_tri_f* draw_tri;
-  game_advance_depth_f* advance_depth;
   game_get_file_size_f* get_file_size;
 
   game_input_t input;
@@ -394,7 +360,7 @@ struct game_t {
 };
 
 
-////////////////////////////////////
+//
 // 
 // Game API
 //
@@ -497,8 +463,52 @@ game_get_input_characters(game_t* game) {
 }
 
 //
-// Deriviative Graphics API functions
+// MARK:(Graphics) 
 //
+static void
+game_clear_canvas(game_t* game, rgba_t color) {
+  gfx_t* gfx = game->gfx;
+  gfx_clear_colors(gfx, color); 
+}
+
+static void 
+game_set_view(game_t* game, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y)
+{
+  gfx_t* gfx = game->gfx;
+  gfx_set_view(gfx, min_x, max_x, min_y, max_y, pos_x, pos_y); 
+}
+
+static void 
+game_draw_sprite(game_t* game, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1, rgba_t color) 
+{
+  gfx_t* gfx = game->gfx;
+  gfx_push_sprite(gfx, color, pos, size, anchor, texture_index, texel_x0, texel_y0, texel_x1, texel_y1 ); 
+}
+
+static void
+game_draw_rect(game_t* game, v2f_t pos, f32_t rot, v2f_t scale, rgba_t color) 
+{
+  gfx_t* gfx = game->gfx;
+  gfx_draw_filled_rect(gfx,color, pos, rot, scale);
+}
+
+static void
+game_draw_tri(game_t* game, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t color)
+{
+  gfx_t* gfx = game->gfx;
+  gfx_draw_filled_triangle(gfx,color, p0, p1, p2);
+}
+
+static void
+game_advance_depth(game_t* game) {
+  gfx_t* gfx = game->gfx;
+  gfx_advance_depth(gfx);
+}
+
+#define game_set_blend_sig(name) void name(game_blend_type_t src, game_blend_type_t dst)
+typedef game_set_blend_sig(game_set_blend_f);
+#define game_set_blend(game, ...) (game->set_blend(__VA_ARGS__))
+
 static void
 game_set_blend_additive(game_t* game) {
   gfx_set_blend_additive(game->gfx);
@@ -529,14 +539,14 @@ game_draw_circ_outline(game_t* game, v2f_t center, f32_t radius, f32_t thickness
 static void
 game_draw_asset_sprite(
     game_t* game, 
-    assets_t* assets, 
-    asset_sprite_id_t sprite_id, 
+    game_assets_t* assets, 
+    game_asset_sprite_id_t sprite_id, 
     v2f_t pos, 
     v2f_t size, 
     rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
 {
-  asset_sprite_t* sprite = assets_get_sprite(assets, sprite_id);
-  asset_bitmap_t* bitmap = assets_get_bitmap(assets, sprite->bitmap_asset_id);
+  game_asset_sprite_t* sprite = game_assets_get_sprite(assets, sprite_id);
+  game_asset_bitmap_t* bitmap = game_assets_get_bitmap(assets, sprite->bitmap_asset_id);
   v2f_t anchor = v2f_set(0.5f, 0.5f); 
   
   game_draw_sprite(
@@ -552,9 +562,9 @@ game_draw_asset_sprite(
 
 
 static void
-game_draw_text(game_t* game, assets_t* assets, asset_font_id_t font_id, st8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+game_draw_text(game_t* game, game_assets_t* assets, game_asset_font_id_t font_id, st8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
-  asset_font_t* font = assets_get_font(assets, font_id);
+  game_asset_font_t* font = game_assets_get_font(assets, font_id);
   for(u32_t char_index = 0; 
       char_index < str.count;
       ++char_index) 
@@ -563,15 +573,15 @@ game_draw_text(game_t* game, assets_t* assets, asset_font_id_t font_id, st8_t st
 
     if (char_index > 0) {
       u32_t prev_cp = str.e[char_index-1];
-      asset_font_glyph_t *prev_glyph = assets_get_glyph(font, prev_cp);
+      game_asset_font_glyph_t *prev_glyph = game_assets_get_glyph(font, prev_cp);
 
-      f32_t kerning = assets_get_kerning(font, prev_cp, curr_cp);
+      f32_t kerning = game_assets_get_kerning(font, prev_cp, curr_cp);
       f32_t advance = prev_glyph->horizontal_advance;
       px += (kerning + advance) * font_height;
     }
 
-    asset_font_glyph_t *glyph = assets_get_glyph(font, curr_cp);
-    asset_bitmap_t* bitmap = assets_get_bitmap(assets, font->bitmap_asset_id);
+    game_asset_font_glyph_t *glyph = game_assets_get_glyph(font, curr_cp);
+    game_asset_bitmap_t* bitmap = game_assets_get_bitmap(assets, font->bitmap_asset_id);
     f32_t width = (glyph->box_x1 - glyph->box_x0)*font_height;
     f32_t height = (glyph->box_y1 - glyph->box_y0)*font_height;
     
@@ -591,9 +601,9 @@ game_draw_text(game_t* game, assets_t* assets, asset_font_id_t font_id, st8_t st
 }
 
 static void
-game_draw_text_center_aligned(game_t* game, assets_t* assets, asset_font_id_t font_id, st8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+game_draw_text_center_aligned(game_t* game, game_assets_t* assets, game_asset_font_id_t font_id, st8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
-  asset_font_t* font = assets_get_font(assets, font_id);
+  game_asset_font_t* font = game_assets_get_font(assets, font_id);
   
   // Calculate the total width of the text
   f32_t offset = 0.f;
@@ -605,10 +615,10 @@ game_draw_text_center_aligned(game_t* game, assets_t* assets, asset_font_id_t fo
     u32_t curr_cp = str.e[char_index];
     u32_t prev_cp = str.e[char_index-1];
 
-    asset_font_glyph_t *prev_glyph = assets_get_glyph(font, prev_cp);
-    asset_font_glyph_t *curr_glyph = assets_get_glyph(font, curr_cp);
+    game_asset_font_glyph_t *prev_glyph = game_assets_get_glyph(font, prev_cp);
+    game_asset_font_glyph_t *curr_glyph = game_assets_get_glyph(font, curr_cp);
 
-    f32_t kerning = assets_get_kerning(font, prev_cp, curr_cp);
+    f32_t kerning = game_assets_get_kerning(font, prev_cp, curr_cp);
     f32_t advance = prev_glyph->horizontal_advance;
     offset += (kerning + advance) * font_height;
   }
@@ -616,7 +626,7 @@ game_draw_text_center_aligned(game_t* game, assets_t* assets, asset_font_id_t fo
   // Add the width of the last glyph
   {    
     u32_t cp = str.e[str.count-1];
-    asset_font_glyph_t* glyph = assets_get_glyph(font, cp);
+    game_asset_font_glyph_t* glyph = game_assets_get_glyph(font, cp);
     f32_t advance = glyph->horizontal_advance;
     offset += advance * font_height;
   }
@@ -630,15 +640,15 @@ game_draw_text_center_aligned(game_t* game, assets_t* assets, asset_font_id_t fo
 
     if (char_index > 0) {
       u32_t prev_cp = str.e[char_index-1];
-      asset_font_glyph_t *prev_glyph = assets_get_glyph(font, prev_cp);
+      game_asset_font_glyph_t *prev_glyph = game_assets_get_glyph(font, prev_cp);
 
-      f32_t kerning = assets_get_kerning(font, prev_cp, curr_cp);
+      f32_t kerning = game_assets_get_kerning(font, prev_cp, curr_cp);
       f32_t advance = prev_glyph->horizontal_advance;
       px += (kerning + advance) * font_height;
     }
 
-    asset_font_glyph_t *glyph = assets_get_glyph(font, curr_cp);
-    asset_bitmap_t* bitmap = assets_get_bitmap(assets, font->bitmap_asset_id);
+    game_asset_font_glyph_t *glyph = game_assets_get_glyph(font, curr_cp);
+    game_asset_bitmap_t* bitmap = game_assets_get_bitmap(assets, font->bitmap_asset_id);
     f32_t width = (glyph->box_x1 - glyph->box_x0)*font_height;
     f32_t height = (glyph->box_y1 - glyph->box_y0)*font_height;
     
@@ -652,8 +662,7 @@ game_draw_text_center_aligned(game_t* game, assets_t* assets, asset_font_id_t fo
                     glyph->texel_y0,
                     glyph->texel_x1,
                     glyph->texel_y1,
-                    color
-                    );
+                    color);
   }
 
 }
