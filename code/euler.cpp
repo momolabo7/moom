@@ -973,6 +973,17 @@ euler_q19() {
 
 }
 
+//
+// Question 20
+//
+// Basically asking for 100!
+static void
+euler_q20() {
+  u64_t answer = u64_factorial(100);
+
+  printf("Answer: %zu\n", answer);
+}
+
 int main() {
   //euler_q1();
   //euler_q2();
@@ -992,7 +1003,7 @@ int main() {
   //euler_q16();
   //euler_q17();
   //euler_q18();
-  euler_q19();
+  //euler_q19();
 }
 
 

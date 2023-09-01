@@ -1,3 +1,6 @@
+// TODO: Introduce time stop mechanic
+//
+
 
 #include "momo.h"
 #include "lit_asset_types.h"
@@ -3338,12 +3341,9 @@ lit_game_update()
   lit_game_t* g = &g_lit->g_game;
   lit_game_player_t* player = &g->player;
 
-#if LIT_DEBUG
   if (is_poked(input, INPUT_BUTTON_CODE_SPACE)) {
     g->freeze = !g->freeze;
   }
-#endif 
-
   
   f32_t dt = game_get_dt(g_game);
   
