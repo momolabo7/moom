@@ -248,7 +248,6 @@ typedef game_write_file_sig(game_write_file_f);
 typedef game_get_file_size_sig(game_get_file_size_f);
 #define game_get_file_size(game, ...) (game->get_file_size(__VA_ARGS__))
 
-
 //
 // App Logging API
 // 
@@ -344,7 +343,7 @@ struct game_t {
   game_input_t input;
   game_audio_t audio; 
 
-  gfx_t* gfx;
+  game_gfx_t* gfx;
   game_profiler_t profiler;
   game_inspector_t inspector;
           
@@ -359,6 +358,68 @@ struct game_t {
   void* game;
 };
 
+
+//
+// MARK:(Assets)
+//
+
+#ifndef GAME_ASSET_ID_DEFINED
+enum game_asset_bitmap_id_t : u32_t {GAME_ASSET_BITMAP_ID_MAX};
+enum game_asset_sprite_id_t : u32_t {GAME_ASSET_SPRITE_ID_MAX};
+enum game_asset_font_id_t : u32_t {GAME_ASSET_FONT_ID_MAX};
+#endif
+
+
+struct game_asset_bitmap_t {
+  u32_t renderer_texture_handle;
+  u32_t width;
+  u32_t height;
+};
+
+struct game_asset_sprite_t {
+  u32_t texel_x0;
+  u32_t texel_y0;
+  u32_t texel_x1;
+  u32_t texel_y1;
+
+  game_asset_bitmap_id_t bitmap_asset_id;
+};
+
+struct game_asset_font_glyph_t {
+  u32_t texel_x0, texel_y0;
+  u32_t texel_x1, texel_y1;
+
+  f32_t box_x0, box_y0;
+  f32_t box_x1, box_y1;
+
+  f32_t horizontal_advance;
+  f32_t vertical_advance;
+
+};
+
+struct game_asset_font_t {
+  game_asset_bitmap_id_t bitmap_asset_id;
+
+  u32_t highest_codepoint;
+  u16_t* codepoint_map;
+
+  u32_t glyph_count;
+  game_asset_font_glyph_t* glyphs;
+  f32_t* kernings;
+};
+
+struct game_assets_t {
+  game_gfx_texture_queue_t* texture_queue;
+
+  u32_t bitmap_count;
+  game_asset_bitmap_t* bitmaps;
+
+  u32_t font_count;
+  game_asset_font_t* fonts;
+
+  u32_t sprite_count;
+  game_asset_sprite_t* sprites;
+};
 
 //
 // 
@@ -402,7 +463,6 @@ static const char* game_function_names[] {
   "game_update_and_render",
 };
 
-#include "game_assets.h"
 
 ///////////////////////////////
 ///
@@ -410,6 +470,208 @@ static const char* game_function_names[] {
 //
 //
 
+//
+// MARK:(Assets)
+//
+static b32_t 
+game_assets_init(game_assets_t* assets, game_t* game, const char* filename, arena_t* arena) 
+{
+  make(game_file_t, file);
+  if(!game_open_file(
+        game,
+        file,
+        filename,
+        GAME_FILE_ACCESS_READ, 
+        GAME_FILE_PATH_EXE)) 
+    return false;
+
+
+  // Read header
+  asset_file_header_t asset_file_header = {};
+  game_read_file(game, file, sizeof(asset_file_header_t), 0, &asset_file_header);
+  if (asset_file_header.signature != ASSET_FILE_SIGNATURE) return false;
+
+  // Allocation for assets
+  assets->bitmap_count = asset_file_header.bitmap_count;
+  assets->bitmaps = arena_push_arr(game_asset_bitmap_t, arena, assets->bitmap_count);
+  if (!assets->bitmaps) return false;
+
+  assets->sprite_count = asset_file_header.sprite_count;
+  assets->sprites = arena_push_arr(game_asset_sprite_t, arena, assets->sprite_count);
+  if (!assets->sprites) return false;
+
+  assets->font_count = asset_file_header.font_count;
+  assets->fonts = arena_push_arr(game_asset_font_t, arena, assets->font_count);
+  if (!assets->fonts) return false;
+
+  // 
+  // Read sprites
+  //
+  for_cnt(sprite_index, assets->sprite_count) {
+    umi_t offset_to_sprite = asset_file_header.offset_to_sprites + sizeof(asset_file_sprite_t) * sprite_index; 
+    asset_file_sprite_t file_sprite = {};
+    game_read_file(game, file, sizeof(asset_file_sprite_t), offset_to_sprite, &file_sprite);
+    game_asset_sprite_t* s = assets->sprites + sprite_index;
+
+    s->bitmap_asset_id = (game_asset_bitmap_id_t)file_sprite.bitmap_asset_id;
+    s->texel_x0 = file_sprite.texel_x0;
+    s->texel_y0 = file_sprite.texel_y0;
+    s->texel_x1 = file_sprite.texel_x1;
+    s->texel_y1 = file_sprite.texel_y1;
+  }
+
+  for_cnt(bitmap_index, assets->bitmap_count) {
+    umi_t offset_to_bitmap = asset_file_header.offset_to_bitmaps + sizeof(asset_file_bitmap_t) * bitmap_index; 
+    asset_file_bitmap_t file_bitmap = {};
+    game_read_file(game, file, sizeof(asset_file_bitmap_t), offset_to_bitmap, &file_bitmap);
+
+    game_asset_bitmap_t* b = assets->bitmaps + bitmap_index;
+    // TODO: is there anyway for gfx to assign this instead?
+    b->renderer_texture_handle = game_gfx_get_next_texture_handle(game->gfx);
+    b->width = file_bitmap.width;
+    b->height = file_bitmap.height;
+
+    u32_t bitmap_size = b->width * b->height * 4;
+    game_gfx_texture_payload_t* payload = game_gfx_begin_texture_transfer(game->gfx, bitmap_size);
+    if (!payload) false;
+    payload->texture_index = b->renderer_texture_handle;
+    payload->texture_width = file_bitmap.width;
+    payload->texture_height = file_bitmap.height;
+    game_read_file(
+        game,
+        file, 
+        bitmap_size, 
+        file_bitmap.offset_to_data, 
+        payload->texture_data);
+
+    game_gfx_complete_texture_transfer(payload);
+  }
+
+  for_cnt(font_index, assets->font_count) 
+  {
+    umi_t offset_to_fonts = asset_file_header.offset_to_fonts + sizeof(asset_file_font_t) * font_index; 
+    asset_file_font_t file_font = {};
+    game_read_file(game, file, sizeof(asset_file_font_t), offset_to_fonts, &file_font);
+
+    game_asset_font_t* f = assets->fonts + font_index;
+
+    u32_t glyph_count = file_font.glyph_count;
+    u32_t highest_codepoint = file_font.highest_codepoint;
+
+    u16_t* codepoint_map = arena_push_arr(u16_t, arena, highest_codepoint);
+    if(!codepoint_map) return false;
+
+    game_asset_font_glyph_t* glyphs = arena_push_arr(game_asset_font_glyph_t, arena, glyph_count);
+    if(!glyphs) return false;
+
+    f32_t* kernings = arena_push_arr(f32_t, arena, glyph_count*glyph_count);
+    if (!kernings) return false;
+
+    f->bitmap_asset_id = (game_asset_bitmap_id_t)file_font.bitmap_asset_id;
+
+
+    umi_t current_data_offset = file_font.offset_to_data;
+    for(u16_t glyph_index = 0; 
+        glyph_index < glyph_count;
+        ++glyph_index)
+    {
+      umi_t glyph_data_offset = 
+        file_font.offset_to_data + 
+        sizeof(asset_file_font_glyph_t)*glyph_index;
+
+      asset_file_font_glyph_t file_glyph = {};
+      game_read_file(
+          game,
+          file, 
+          sizeof(asset_file_font_glyph_t), 
+          glyph_data_offset,
+          &file_glyph); 
+
+      game_asset_font_glyph_t* glyph = glyphs + glyph_index;
+      glyph->texel_x0 = file_glyph.texel_x0;
+      glyph->texel_y0 = file_glyph.texel_y0;
+      glyph->texel_x1 = file_glyph.texel_x1;
+      glyph->texel_y1 = file_glyph.texel_y1;
+
+
+      glyph->box_x0 = file_glyph.box_x0;
+      glyph->box_y0 = file_glyph.box_y0;
+      glyph->box_x1 = file_glyph.box_x1;
+      glyph->box_y1 = file_glyph.box_y1;
+
+      glyph->horizontal_advance = file_glyph.horizontal_advance;
+      glyph->vertical_advance = file_glyph.vertical_advance;
+      codepoint_map[file_glyph.codepoint] = glyph_index;
+    }
+
+    // Horizontal advances
+    {
+      umi_t kernings_data_offset = 
+        file_font.offset_to_data + 
+        sizeof(asset_file_font_glyph_t)*glyph_count;
+
+      game_read_file(
+          game,
+          file, 
+          sizeof(f32_t)*glyph_count*glyph_count, 
+          kernings_data_offset, 
+          kernings);
+
+      f->glyphs = glyphs;
+      f->codepoint_map = codepoint_map;
+      f->kernings = kernings;
+      f->highest_codepoint = highest_codepoint;
+      f->glyph_count = glyph_count;
+    }
+  }
+
+  return true;
+
+}
+
+
+static f32_t
+game_assets_get_kerning(
+    game_asset_font_t* font,
+    u32_t left_codepoint, 
+    u32_t right_codepoint) 
+{
+  if (left_codepoint > font->highest_codepoint) return 0.f;
+  if (right_codepoint > font->highest_codepoint) return 0.f;
+
+  u32_t g1 = font->codepoint_map[left_codepoint];
+  u32_t g2 = font->codepoint_map[right_codepoint];
+  u32_t advance_index = ((g1)*font->glyph_count)+(g2);
+  return font->kernings[advance_index];
+}
+
+static game_asset_font_glyph_t*
+game_assets_get_glyph(game_asset_font_t* font, u32_t codepoint) {
+  u32_t glyph_index_plus_one = font->codepoint_map[codepoint] + 1;
+  if (glyph_index_plus_one == 0) return nullptr;
+  game_asset_font_glyph_t *glyph = font->glyphs + glyph_index_plus_one - 1;
+  return glyph;
+}
+
+
+static game_asset_bitmap_t*
+game_assets_get_bitmap(game_assets_t* assets, game_asset_bitmap_id_t bitmap_id) {
+  return assets->bitmaps + bitmap_id;
+}
+
+static game_asset_sprite_t*
+game_assets_get_sprite(game_assets_t* assets, game_asset_sprite_id_t sprite_id) {
+  return assets->sprites + sprite_id;
+}
+
+static game_asset_font_t*
+game_assets_get_font(game_assets_t* assets, game_asset_font_id_t font_id) {
+  return assets->fonts + font_id;
+}
+
+//
+// MARK:(Input)
+//
 // before: 0, now: 1
 static b32_t
 game_is_button_poked(game_t* game, game_button_code_t code) {
@@ -467,42 +729,42 @@ game_get_input_characters(game_t* game) {
 //
 static void
 game_clear_canvas(game_t* game, rgba_t color) {
-  gfx_t* gfx = game->gfx;
-  gfx_clear_colors(gfx, color); 
+  game_gfx_t* gfx = game->gfx;
+  game_gfx_clear_colors(gfx, color); 
 }
 
 static void 
 game_set_view(game_t* game, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y)
 {
-  gfx_t* gfx = game->gfx;
-  gfx_set_view(gfx, min_x, max_x, min_y, max_y, pos_x, pos_y); 
+  game_gfx_t* gfx = game->gfx;
+  game_gfx_set_view(gfx, min_x, max_x, min_y, max_y, pos_x, pos_y); 
 }
 
 static void 
 game_draw_sprite(game_t* game, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1, rgba_t color) 
 {
-  gfx_t* gfx = game->gfx;
-  gfx_push_sprite(gfx, color, pos, size, anchor, texture_index, texel_x0, texel_y0, texel_x1, texel_y1 ); 
+  game_gfx_t* gfx = game->gfx;
+  game_gfx_push_sprite(gfx, color, pos, size, anchor, texture_index, texel_x0, texel_y0, texel_x1, texel_y1 ); 
 }
 
 static void
 game_draw_rect(game_t* game, v2f_t pos, f32_t rot, v2f_t scale, rgba_t color) 
 {
-  gfx_t* gfx = game->gfx;
-  gfx_draw_filled_rect(gfx,color, pos, rot, scale);
+  game_gfx_t* gfx = game->gfx;
+  game_gfx_draw_filled_rect(gfx,color, pos, rot, scale);
 }
 
 static void
 game_draw_tri(game_t* game, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t color)
 {
-  gfx_t* gfx = game->gfx;
-  gfx_draw_filled_triangle(gfx,color, p0, p1, p2);
+  game_gfx_t* gfx = game->gfx;
+  game_gfx_draw_filled_triangle(gfx,color, p0, p1, p2);
 }
 
 static void
 game_advance_depth(game_t* game) {
-  gfx_t* gfx = game->gfx;
-  gfx_advance_depth(gfx);
+  game_gfx_t* gfx = game->gfx;
+  game_gfx_advance_depth(gfx);
 }
 
 #define game_set_blend_sig(name) void name(game_blend_type_t src, game_blend_type_t dst)
@@ -511,28 +773,28 @@ typedef game_set_blend_sig(game_set_blend_f);
 
 static void
 game_set_blend_additive(game_t* game) {
-  gfx_set_blend_additive(game->gfx);
+  game_gfx_set_blend_additive(game->gfx);
 }
 
 static void
 game_set_blend_alpha(game_t* game) {
-  gfx_set_blend_alpha(game->gfx);
+  game_gfx_set_blend_alpha(game->gfx);
 }
 
 static void
 game_draw_line(game_t* game, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {
-  gfx_draw_line(game->gfx, p0, p1, thickness, colors);
+  game_gfx_draw_line(game->gfx, p0, p1, thickness, colors);
 }
 
 static void
 game_draw_circle(game_t* game, v2f_t center, f32_t radius, u32_t sections, rgba_t color) {
-  gfx_draw_filled_circle(game->gfx, center, radius, sections, color);
+  game_gfx_draw_filled_circle(game->gfx, center, radius, sections, color);
 }
 
 static void
 game_draw_circ_outline(game_t* game, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
 {
-  gfx_draw_circle_outline(game->gfx, center, radius, thickness, line_count, color);
+  game_gfx_draw_circle_outline(game->gfx, center, radius, thickness, line_count, color);
 }
 
 

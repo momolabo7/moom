@@ -6,7 +6,7 @@
 // moe views 'rendering'. The moe simply adds commands
 // to a command queue, which will be dispatched to the 
 // appropriate graphics API, which details will be implemented
-// on top of the gfx_t class (through inheritance or composition). 
+// on top of the game_gfx_t class (through inheritance or composition). 
 //
 //
 // Most importantly, other than the commands, the moe
@@ -27,21 +27,21 @@
 //  |/|
 //  ---
 // 
-#ifndef MOMO_GFX_H
-#define MOMO_GFX_H
+#ifndef MOMO_GAME_GFX_H
+#define MOMO_GAME_GFX_H
 
-#define GFX_MAX_TEXTURES 256
-#define GFX_TEXTURE_PAYLOAD_CAP 256
+#define GAME_GFX_MAX_TEXTURES 256
+#define GAME_GFX_TEXTURE_PAYLOAD_CAP 256
 
 //-Texture Queue API
-enum gfx_texture_payload_state_t {
-  GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
-  GFX_TEXTURE_PAYLOAD_STATE_LOADING,
-  GFX_TEXTURE_PAYLOAD_STATE_READY,
+enum game_gfx_texture_payload_state_t {
+  GAME_GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
+  GAME_GFX_TEXTURE_PAYLOAD_STATE_LOADING,
+  GAME_GFX_TEXTURE_PAYLOAD_STATE_READY,
 };
 
-struct gfx_texture_payload_t {
-  volatile gfx_texture_payload_state_t state;
+struct game_gfx_texture_payload_t {
+  volatile game_gfx_texture_payload_state_t state;
   usz_t transfer_memory_start;
   usz_t transfer_memory_end;
 
@@ -54,7 +54,7 @@ struct gfx_texture_payload_t {
 
 };
 
-struct gfx_texture_queue_t {
+struct game_gfx_texture_queue_t {
   u8_t* transfer_memory;
   usz_t transfer_memory_size;
   usz_t transfer_memory_start;
@@ -65,7 +65,7 @@ struct gfx_texture_queue_t {
   usz_t highest_payload_usage;
   
   // TODO: make this dynamic
-  gfx_texture_payload_t payloads[GFX_TEXTURE_PAYLOAD_CAP];
+  game_gfx_texture_payload_t payloads[GAME_GFX_TEXTURE_PAYLOAD_CAP];
   usz_t first_payload_index;
   usz_t payload_count;
 
@@ -76,12 +76,12 @@ struct gfx_texture_queue_t {
 ////////////////////////////////////////////////
 // Command API
 
-struct gfx_command_t {
+struct game_gfx_command_t {
   u32_t id; // type id from user
   void* data;
 };
 
-struct gfx_command_queue_t {
+struct game_gfx_command_queue_t {
 	u8_t* memory;
   usz_t memory_size;
 	usz_t data_pos;
@@ -93,45 +93,45 @@ struct gfx_command_queue_t {
   usz_t peak_memory_usage;
 };
 
-enum gfx_blend_type_t {
-  GFX_BLEND_TYPE_ZERO,
-  GFX_BLEND_TYPE_ONE,
-  GFX_BLEND_TYPE_SRC_COLOR,
-  GFX_BLEND_TYPE_INV_SRC_COLOR,
-  GFX_BLEND_TYPE_SRC_ALPHA,
-  GFX_BLEND_TYPE_INV_SRC_ALPHA,
-  GFX_BLEND_TYPE_DST_ALPHA,
-  GFX_BLEND_TYPE_INV_DST_ALPHA,
-  GFX_BLEND_TYPE_DST_COLOR,
-  GFX_BLEND_TYPE_INV_DST_COLOR,
+enum game_gfx_blend_type_t {
+  GAME_GFX_BLEND_TYPE_ZERO,
+  GAME_GFX_BLEND_TYPE_ONE,
+  GAME_GFX_BLEND_TYPE_SRC_COLOR,
+  GAME_GFX_BLEND_TYPE_INV_SRC_COLOR,
+  GAME_GFX_BLEND_TYPE_SRC_ALPHA,
+  GAME_GFX_BLEND_TYPE_INV_SRC_ALPHA,
+  GAME_GFX_BLEND_TYPE_DST_ALPHA,
+  GAME_GFX_BLEND_TYPE_INV_DST_ALPHA,
+  GAME_GFX_BLEND_TYPE_DST_COLOR,
+  GAME_GFX_BLEND_TYPE_INV_DST_COLOR,
 };
 
-enum gfx_command_type_t {
-  GFX_COMMAND_TYPE_CLEAR,
-  GFX_COMMAND_TYPE_TRIANGLE,
-  GFX_COMMAND_TYPE_RECT,
-  GFX_COMMAND_TYPE_LINE,
-  GFX_COMMAND_TYPE_SPRITE,
-  GFX_COMMAND_TYPE_DELETE_TEXTURE,
-  GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,
-  GFX_COMMAND_TYPE_BLEND,
-  GFX_COMMAND_TYPE_VIEW,
-  GFX_COMMAND_TYPE_ADVANCE_DEPTH,
+enum game_gfx_command_type_t {
+  GAME_GFX_COMMAND_TYPE_CLEAR,
+  GAME_GFX_COMMAND_TYPE_TRIANGLE,
+  GAME_GFX_COMMAND_TYPE_RECT,
+  GAME_GFX_COMMAND_TYPE_LINE,
+  GAME_GFX_COMMAND_TYPE_SPRITE,
+  GAME_GFX_COMMAND_TYPE_DELETE_TEXTURE,
+  GAME_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,
+  GAME_GFX_COMMAND_TYPE_BLEND,
+  GAME_GFX_COMMAND_TYPE_VIEW,
+  GAME_GFX_COMMAND_TYPE_ADVANCE_DEPTH,
 };
 
 
-struct gfx_command_clear_t {
+struct game_gfx_command_clear_t {
   rgba_t colors;
 };
 
 
-struct gfx_command_view_t {
+struct game_gfx_command_view_t {
   f32_t pos_x, pos_y;
   f32_t min_x, max_x;
   f32_t min_y, max_y;
 };
 
-struct gfx_command_sprite_t {
+struct game_gfx_command_sprite_t {
   v2f_t pos;
   v2f_t size;
 
@@ -144,34 +144,34 @@ struct gfx_command_sprite_t {
   v2f_t anchor;
 };
 
-struct gfx_command_delete_texture_t {
+struct game_gfx_command_delete_texture_t {
   u32_t texture_index;
 };
 
-struct gfx_command_delete_all_textures_t {};
-struct gfx_command_advance_depth_t {};
+struct game_gfx_command_delete_all_textures_t {};
+struct game_gfx_command_advance_depth_t {};
 
-struct gfx_command_rect_t {
+struct game_gfx_command_rect_t {
   rgba_t colors;
   v2f_t pos;
   f32_t rot;
   v2f_t size;
 };
 
-struct gfx_command_triangle_t {
+struct game_gfx_command_triangle_t {
   rgba_t colors;
   v2f_t p0, p1, p2;
 };
 
-struct gfx_command_blend_t {
-  gfx_blend_type_t src;
-  gfx_blend_type_t dst;
+struct game_gfx_command_blend_t {
+  game_gfx_blend_type_t src;
+  game_gfx_blend_type_t dst;
 };
 
 
-struct gfx_t {
-  gfx_command_queue_t command_queue;
-  gfx_texture_queue_t texture_queue;
+struct game_gfx_t {
+  game_gfx_command_queue_t command_queue;
+  game_gfx_texture_queue_t texture_queue;
   u32_t max_textures;
 };
 
@@ -180,32 +180,32 @@ struct gfx_t {
 // the command buffer and texture queue to save memory and complexity...
 //
 
-static void gfx_init(gfx_t* g, void* texture_queue_data, usz_t texture_queue_size, void* command_queue_data, usz_t command_queue_size, u32_t max_textures);
+static void game_gfx_init(game_gfx_t* g, void* texture_queue_data, usz_t texture_queue_size, void* command_queue_data, usz_t command_queue_size, u32_t max_textures);
 
 
-static void gfx_clear_commands(gfx_t* g);
-static gfx_command_t* gfx_get_command(gfx_t* g, u32_t index);
-static gfx_texture_payload_t* gfx_begin_texture_transfer(gfx_t* g, u32_t required_space);
-static void gfx_complete_texture_transfer(gfx_texture_payload_t* entry);
-static void gfx_cancel_texture_transfer(gfx_texture_payload_t* entry);
+static void game_gfx_clear_commands(game_gfx_t* g);
+static game_gfx_command_t* game_gfx_get_command(game_gfx_t* g, u32_t index);
+static game_gfx_texture_payload_t* game_gfx_begin_texture_transfer(game_gfx_t* g, u32_t required_space);
+static void game_gfx_complete_texture_transfer(game_gfx_texture_payload_t* entry);
+static void game_gfx_cancel_texture_transfer(game_gfx_texture_payload_t* entry);
 
-static void gfx_clear_colors(gfx_t* g, rgba_t colors); 
-static void gfx_push_sprite(gfx_t* g, rgba_t colors, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1);
-static void gfx_draw_filled_rect(gfx_t* g, rgba_t colors, v2f_t pos, f32_t rot, v2f_t size);
-static void gfx_draw_filled_triangle(gfx_t* g, rgba_t colors, v2f_t p0, v2f_t p1, v2f_t p2);
-static void gfx_advance_depth(gfx_t* g); 
-static void gfx_draw_line(gfx_t* g, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors);
-static void gfx_draw_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color); 
-static void gfx_draw_filled_circle(gfx_t* g, v2f_t center, f32_t radius, u32_t sections, rgba_t color);
+static void game_gfx_clear_colors(game_gfx_t* g, rgba_t colors); 
+static void game_gfx_push_sprite(game_gfx_t* g, rgba_t colors, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1);
+static void game_gfx_draw_filled_rect(game_gfx_t* g, rgba_t colors, v2f_t pos, f32_t rot, v2f_t size);
+static void game_gfx_draw_filled_triangle(game_gfx_t* g, rgba_t colors, v2f_t p0, v2f_t p1, v2f_t p2);
+static void game_gfx_advance_depth(game_gfx_t* g); 
+static void game_gfx_draw_line(game_gfx_t* g, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors);
+static void game_gfx_draw_circle_outline(game_gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color); 
+static void game_gfx_draw_filled_circle(game_gfx_t* g, v2f_t center, f32_t radius, u32_t sections, rgba_t color);
 
-//static void gfx_push_rect_outline(gfx_t* g, v2f_t rect_min, v2f_t rect_max, f32_t thickness, rgba_t colors, f32_t pos_z);
-static void gfx_delete_all_textures(gfx_t* g);
-static void gfx_delete_texture(gfx_t* g, u32_t texture_index);
-static void gfx_set_blend(gfx_t* g, gfx_blend_type_t src, gfx_blend_type_t dst);
-static void gfx_set_blend_additive(gfx_t* g);
-static void gfx_set_blend_alpha(gfx_t* g);
+//static void game_gfx_push_rect_outline(game_gfx_t* g, v2f_t rect_min, v2f_t rect_max, f32_t thickness, rgba_t colors, f32_t pos_z);
+static void game_gfx_delete_all_textures(game_gfx_t* g);
+static void game_gfx_delete_texture(game_gfx_t* g, u32_t texture_index);
+static void game_gfx_set_blend(game_gfx_t* g, game_gfx_blend_type_t src, game_gfx_blend_type_t dst);
+static void game_gfx_set_blend_additive(game_gfx_t* g);
+static void game_gfx_set_blend_alpha(game_gfx_t* g);
 
-#define gfx_foreach_command(g,i) \
+#define game_gfx_foreach_command(g,i) \
   for(u32_t (i) = 0; (i) < (g)->command_queue.entry_count; ++(i))
  
 //
@@ -213,8 +213,8 @@ static void gfx_set_blend_alpha(gfx_t* g);
 //
 
 static void
-gfx_clear_commands(gfx_t* g) {
-  gfx_command_queue_t* q = &g->command_queue;
+game_gfx_clear_commands(game_gfx_t* g) {
+  game_gfx_command_queue_t* q = &g->command_queue;
   q->data_pos = 0;	
 	q->entry_count = 0;
 	
@@ -225,8 +225,8 @@ gfx_clear_commands(gfx_t* g) {
 }
 
 static void 
-gfx_init(
-    gfx_t* g, 
+game_gfx_init(
+    game_gfx_t* g, 
     arena_t* arena,
     usz_t texture_queue_size, 
     usz_t command_queue_size,
@@ -235,16 +235,16 @@ gfx_init(
 
   // commands
   {
-    gfx_command_queue_t* q = &g->command_queue;
+    game_gfx_command_queue_t* q = &g->command_queue;
     q->memory = arena_push_arr(u8_t, arena, command_queue_size);
     q->memory_size = command_queue_size;
     q->peak_memory_usage = 0;
-    gfx_clear_commands(g);
+    game_gfx_clear_commands(g);
   }
 
   // textures
   {
-    gfx_texture_queue_t* q = &g->texture_queue;
+    game_gfx_texture_queue_t* q = &g->texture_queue;
     q->transfer_memory = arena_push_arr(u8_t, arena, texture_queue_size);
     q->transfer_memory_size = texture_queue_size;
     q->transfer_memory_start = 0;
@@ -259,33 +259,33 @@ gfx_init(
 }
 
 static u32_t
-gfx_get_next_texture_handle(gfx_t* gfx) {
+game_gfx_get_next_texture_handle(game_gfx_t* game_gfx) {
   static u32_t id = 0;
-  return id++ % gfx->max_textures;
+  return id++ % game_gfx->max_textures;
 }
 
-static gfx_command_t*
-gfx_get_command(gfx_t* g, u32_t index) {
-  gfx_command_queue_t* q = &g->command_queue;
+static game_gfx_command_t*
+game_gfx_get_command(game_gfx_t* g, u32_t index) {
+  game_gfx_command_queue_t* q = &g->command_queue;
   assert(index < q->entry_count);
-	usz_t stride = align_up_pow2(sizeof(gfx_command_t), 4);
-	return (gfx_command_t*)(q->memory + q->entry_start - ((index+1) * stride));
+	usz_t stride = align_up_pow2(sizeof(game_gfx_command_t), 4);
+	return (game_gfx_command_t*)(q->memory + q->entry_start - ((index+1) * stride));
 }
 
 static void*
-_gfx_push_command_block(gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4) {
+_game_gfx_push_command_block(game_gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4) {
 
 	umi_t imem = ptr_to_umi(q->memory);
 	
 	umi_t adjusted_data_pos = align_up_pow2(imem + q->data_pos, (usz_t)align) - imem;
 	umi_t adjusted_entry_pos = align_down_pow2(imem + q->entry_pos, 4) - imem; 
 	
-	assert(adjusted_data_pos + size + sizeof(gfx_command_t) < adjusted_entry_pos);
+	assert(adjusted_data_pos + size + sizeof(game_gfx_command_t) < adjusted_entry_pos);
 	
 	q->data_pos = (u32_t)adjusted_data_pos + size;
-	q->entry_pos = (u32_t)adjusted_entry_pos - sizeof(gfx_command_t);
+	q->entry_pos = (u32_t)adjusted_entry_pos - sizeof(game_gfx_command_t);
 	
-	auto* entry = (gfx_command_t*)umi_to_ptr(imem + q->entry_pos);
+	auto* entry = (game_gfx_command_t*)umi_to_ptr(imem + q->entry_pos);
 	entry->id = id;
 	entry->data = umi_to_ptr(imem + adjusted_data_pos);
 	
@@ -300,15 +300,15 @@ _gfx_push_command_block(gfx_command_queue_t* q, u32_t size, u32_t id, u32_t alig
 
 // TODO: maybe we should change this to a macro to support C users
 template<typename T> static T*
-_gfx_push_command(gfx_command_queue_t* q, u32_t id, u32_t align = 4) {
-  return (T*)_gfx_push_command_block(q, sizeof(T), id, align);
+_game_gfx_push_command(game_gfx_command_queue_t* q, u32_t id, u32_t align = 4) {
+  return (T*)_game_gfx_push_command_block(q, sizeof(T), id, align);
 }
 
 
-static gfx_texture_payload_t*
-gfx_begin_texture_transfer(gfx_t* g, u32_t required_space) {
-  gfx_texture_queue_t* q = &g->texture_queue;
-  gfx_texture_payload_t* ret = 0;
+static game_gfx_texture_payload_t*
+game_gfx_begin_texture_transfer(game_gfx_t* g, u32_t required_space) {
+  game_gfx_texture_queue_t* q = &g->texture_queue;
+  game_gfx_texture_payload_t* ret = 0;
   
   if (q->payload_count < array_count(q->payloads)) {
     usz_t avaliable_space = 0;
@@ -348,7 +348,7 @@ gfx_begin_texture_transfer(gfx_t* g, u32_t required_space) {
       ret->texture_data = q->transfer_memory + memory_at;
       ret->transfer_memory_start = memory_at;
       ret->transfer_memory_end = memory_at + required_space;
-      ret->state = GFX_TEXTURE_PAYLOAD_STATE_LOADING;
+      ret->state = GAME_GFX_TEXTURE_PAYLOAD_STATE_LOADING;
 
       q->transfer_memory_end = ret->transfer_memory_end;
 
@@ -369,22 +369,22 @@ gfx_begin_texture_transfer(gfx_t* g, u32_t required_space) {
 
 
 static void
-gfx_complete_texture_transfer(gfx_texture_payload_t* entry) {
-  entry->state = GFX_TEXTURE_PAYLOAD_STATE_READY;
+game_gfx_complete_texture_transfer(game_gfx_texture_payload_t* entry) {
+  entry->state = GAME_GFX_TEXTURE_PAYLOAD_STATE_READY;
 }
 
 static void
-gfx_cancel_texture_transfer(gfx_texture_payload_t* entry) {
-  entry->state = GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
+game_gfx_cancel_texture_transfer(game_gfx_texture_payload_t* entry) {
+  entry->state = GAME_GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
 }
 
 
 static void 
-gfx_set_view(gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y) 
+game_gfx_set_view(game_gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y) 
 {
-  gfx_command_queue_t* c = &g->command_queue; 
+  game_gfx_command_queue_t* c = &g->command_queue; 
     
-  gfx_command_view_t* data = _gfx_push_command<gfx_command_view_t>(c, GFX_COMMAND_TYPE_VIEW);
+  game_gfx_command_view_t* data = _game_gfx_push_command<game_gfx_command_view_t>(c, GAME_GFX_COMMAND_TYPE_VIEW);
   data->min_x = min_x;
   data->min_y = min_y;
   data->max_x = max_x;
@@ -394,14 +394,14 @@ gfx_set_view(gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t
 }
 
 static void
-gfx_clear_colors(gfx_t* g, rgba_t colors) {
-  gfx_command_queue_t* c = &g->command_queue; 
-  gfx_command_clear_t* data = _gfx_push_command<gfx_command_clear_t>(c, GFX_COMMAND_TYPE_CLEAR);
+game_gfx_clear_colors(game_gfx_t* g, rgba_t colors) {
+  game_gfx_command_queue_t* c = &g->command_queue; 
+  game_gfx_command_clear_t* data = _game_gfx_push_command<game_gfx_command_clear_t>(c, GAME_GFX_COMMAND_TYPE_CLEAR);
   data->colors = colors;
 }
 
 static void
-gfx_push_sprite(gfx_t* g, 
+game_gfx_push_sprite(game_gfx_t* g, 
                 rgba_t colors, 
                 v2f_t pos, 
                 v2f_t size,
@@ -410,8 +410,8 @@ gfx_push_sprite(gfx_t* g,
                 u32_t texel_x0, u32_t texel_y0, 
                 u32_t texel_x1, u32_t texel_y1)
 {
-  gfx_command_queue_t* c = &g->command_queue; 
-  auto* data = _gfx_push_command<gfx_command_sprite_t>(c, GFX_COMMAND_TYPE_SPRITE);
+  game_gfx_command_queue_t* c = &g->command_queue; 
+  auto* data = _game_gfx_push_command<game_gfx_command_sprite_t>(c, GAME_GFX_COMMAND_TYPE_SPRITE);
   data->colors = colors;
   data->texture_index = texture_index;
 
@@ -426,13 +426,13 @@ gfx_push_sprite(gfx_t* g,
 }
 
 static void
-gfx_draw_filled_rect(gfx_t* g, 
+game_gfx_draw_filled_rect(game_gfx_t* g, 
                      rgba_t colors, 
                      v2f_t pos, f32_t rot, v2f_t size)
 {
-  gfx_command_queue_t* c = &g->command_queue; 
+  game_gfx_command_queue_t* c = &g->command_queue; 
 
-  auto* data = _gfx_push_command<gfx_command_rect_t>(c, GFX_COMMAND_TYPE_RECT);
+  auto* data = _game_gfx_push_command<game_gfx_command_rect_t>(c, GAME_GFX_COMMAND_TYPE_RECT);
   data->colors = colors;
   data->pos = pos;
   data->rot = rot;
@@ -441,12 +441,12 @@ gfx_draw_filled_rect(gfx_t* g,
 
 
 static void
-gfx_draw_filled_triangle(gfx_t* g,
+game_gfx_draw_filled_triangle(game_gfx_t* g,
                          rgba_t colors,
                          v2f_t p0, v2f_t p1, v2f_t p2)
 {
-  gfx_command_queue_t* c = &g->command_queue; 
-  auto* data = _gfx_push_command<gfx_command_triangle_t>(c, GFX_COMMAND_TYPE_TRIANGLE);
+  game_gfx_command_queue_t* c = &g->command_queue; 
+  auto* data = _game_gfx_push_command<game_gfx_command_triangle_t>(c, GAME_GFX_COMMAND_TYPE_TRIANGLE);
   data->colors = colors;
   data->p0 = p0;
   data->p1 = p1;
@@ -456,12 +456,12 @@ gfx_draw_filled_triangle(gfx_t* g,
 
 
 static void 
-gfx_draw_line(gfx_t* g, 
+game_gfx_draw_line(game_gfx_t* g, 
              v2f_t p0, v2f_t p1,
              f32_t thickness,
              rgba_t colors) 
 { 
-  gfx_command_queue_t* q = &g->command_queue; 
+  game_gfx_command_queue_t* q = &g->command_queue; 
   // NOTE(Momo): Min.Y needs to be lower than Max.y
   
   if (p0.y > p1.y) {
@@ -475,14 +475,14 @@ gfx_draw_line(gfx_t* g,
   v2f_t x_axis = v2f_set(1.f, 0.f);
   f32_t angle = v2f_angle(line_vector, x_axis);
   
-  gfx_draw_filled_rect(g, colors, 
+  game_gfx_draw_filled_rect(g, colors, 
                        {line_mid.x, line_mid.y},
                        angle, 
                        {line_length, thickness});
 }
 
 static void
-gfx_draw_filled_circle(gfx_t* g, 
+game_gfx_draw_filled_circle(game_gfx_t* g, 
                        v2f_t center, 
                        f32_t radius,
                        u32_t sections,
@@ -494,7 +494,7 @@ gfx_draw_filled_circle(gfx_t* g,
     assert(sections >= 3);
     return;
   }
-  gfx_command_queue_t* q = &g->command_queue; 
+  game_gfx_command_queue_t* q = &g->command_queue; 
   f32_t section_angle = TAU_32/sections;
   f32_t current_angle = 0.f;
 
@@ -509,16 +509,16 @@ gfx_draw_filled_circle(gfx_t* g,
     v2f_t p1 = p0 + v2f_set(f32_cos(current_angle), f32_sin(current_angle)) * radius;
     v2f_t p2 = p0 + v2f_set(f32_cos(next_angle), f32_sin(next_angle)) * radius; 
 
-    gfx_draw_filled_triangle(g, color, p0, p1, p2); 
+    game_gfx_draw_filled_triangle(g, color, p0, p1, p2); 
     current_angle += section_angle;
   }
 }
 
 
 static  void
-gfx_draw_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
+game_gfx_draw_circle_outline(game_gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
 {
-  gfx_command_queue_t* q = &g->command_queue; 
+  game_gfx_command_queue_t* q = &g->command_queue; 
 
   // NOTE(Momo): Essentially a bunch of lines
   // We can't really have a surface with less than 3 lines
@@ -533,7 +533,7 @@ gfx_draw_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u
   for (u32_t i = 0; i < line_count; ++i) {
     v2f_t p0 = v2f_add(pt1, center);
     v2f_t p1 = v2f_add(pt2, center);
-    gfx_draw_line(g, p0, p1, thickness, color);
+    game_gfx_draw_line(g, p0, p1, thickness, color);
     
     pt1 = pt2;
     pt2 = v2f_rotate(pt1, angle_increment);
@@ -542,38 +542,38 @@ gfx_draw_circle_outline(gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u
 }
 
 static void 
-gfx_delete_texture(gfx_t* g, u32_t texture_index) {
-  gfx_command_queue_t* c = &g->command_queue; 
-  auto* data= _gfx_push_command<gfx_command_delete_texture_t>(c, GFX_COMMAND_TYPE_DELETE_TEXTURE);
+game_gfx_delete_texture(game_gfx_t* g, u32_t texture_index) {
+  game_gfx_command_queue_t* c = &g->command_queue; 
+  auto* data= _game_gfx_push_command<game_gfx_command_delete_texture_t>(c, GAME_GFX_COMMAND_TYPE_DELETE_TEXTURE);
   data->texture_index = texture_index;
   
 }
 
 static void 
-gfx_set_blend(gfx_t* g, gfx_blend_type_t src, gfx_blend_type_t dst) {
-  gfx_command_queue_t* c = &g->command_queue; 
-  auto* data= _gfx_push_command<gfx_command_blend_t>(c, GFX_COMMAND_TYPE_BLEND);
+game_gfx_set_blend(game_gfx_t* g, game_gfx_blend_type_t src, game_gfx_blend_type_t dst) {
+  game_gfx_command_queue_t* c = &g->command_queue; 
+  auto* data= _game_gfx_push_command<game_gfx_command_blend_t>(c, GAME_GFX_COMMAND_TYPE_BLEND);
   data->src = src;
   data->dst = dst;
 }
 
 static void 
-gfx_set_blend_additive(gfx_t* g) 
+game_gfx_set_blend_additive(game_gfx_t* g) 
 {
-  gfx_set_blend(g, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_ONE); 
+  game_gfx_set_blend(g, GAME_GFX_BLEND_TYPE_SRC_ALPHA, GAME_GFX_BLEND_TYPE_ONE); 
 }
 
 
 static void 
-gfx_set_blend_alpha(gfx_t* g)
+game_gfx_set_blend_alpha(game_gfx_t* g)
 {
-  gfx_set_blend(g, GFX_BLEND_TYPE_SRC_ALPHA, GFX_BLEND_TYPE_INV_SRC_ALPHA); 
+  game_gfx_set_blend(g, GAME_GFX_BLEND_TYPE_SRC_ALPHA, GAME_GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 }
 
 static void
-gfx_advance_depth(gfx_t* g) {
-  gfx_command_queue_t* c = &g->command_queue; 
-  _gfx_push_command<gfx_command_advance_depth_t>(c, GFX_COMMAND_TYPE_ADVANCE_DEPTH);
+game_gfx_advance_depth(game_gfx_t* g) {
+  game_gfx_command_queue_t* c = &g->command_queue; 
+  _game_gfx_push_command<game_gfx_command_advance_depth_t>(c, GAME_GFX_COMMAND_TYPE_ADVANCE_DEPTH);
 }
 
 

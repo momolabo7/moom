@@ -1,5 +1,5 @@
-#ifndef GFX_OPENGL_H
-#define GFX_OPENGL_H
+#ifndef GAME_GFX_OPENGL_H
+#define GAME_GFX_OPENGL_H
 
 #ifndef OPENGL_MAX_SPRITES
 # define OPENGL_MAX_SPRITES 4096
@@ -220,7 +220,7 @@ struct opengl_triangle_batch_t{
 };
 
 struct opengl_t {
-  gfx_t gfx; // Must be first member
+  game_gfx_t gfx; // Must be first member
 
   v2u_t render_wh;
 
@@ -232,7 +232,7 @@ struct opengl_t {
   opengl_sprite_batch_t sprite_batch;
   opengl_triangle_batch_t triangle_batch;
 
-  opengl_texture_t textures[GFX_TEXTURE_PAYLOAD_CAP];
+  opengl_texture_t textures[GAME_GFX_TEXTURE_PAYLOAD_CAP];
 
   opengl_texture_t dummy_texture;
   opengl_texture_t blank_texture;
@@ -1006,7 +1006,7 @@ opengl_init(
     u32_t max_textures)
 {	
 
-  gfx_init(
+  game_gfx_init(
       &ogl->gfx, 
       arena, 
       command_queue_size,
@@ -1026,37 +1026,37 @@ opengl_init(
 }
 
 static GLenum
-opengl_get_blend_mode_from_gfx_blend_type(gfx_blend_type_t type) {
+opengl_get_blend_mode_from_game_gfx_blend_type(game_gfx_blend_type_t type) {
   GLenum  ret = {0};
   switch(type) {
-    case GFX_BLEND_TYPE_ZERO: 
+    case GAME_GFX_BLEND_TYPE_ZERO: 
       ret = GL_ZERO;
       break;
-    case GFX_BLEND_TYPE_ONE:
+    case GAME_GFX_BLEND_TYPE_ONE:
       ret = GL_ONE;
       break;
-    case GFX_BLEND_TYPE_SRC_COLOR:
+    case GAME_GFX_BLEND_TYPE_SRC_COLOR:
       ret = GL_SRC_COLOR;
       break;
-    case GFX_BLEND_TYPE_INV_SRC_COLOR:
+    case GAME_GFX_BLEND_TYPE_INV_SRC_COLOR:
       ret = GL_ONE_MINUS_SRC_COLOR;
       break;
-    case GFX_BLEND_TYPE_SRC_ALPHA:
+    case GAME_GFX_BLEND_TYPE_SRC_ALPHA:
       ret = GL_SRC_ALPHA;
       break;
-    case GFX_BLEND_TYPE_INV_SRC_ALPHA: 
+    case GAME_GFX_BLEND_TYPE_INV_SRC_ALPHA: 
       ret = GL_ONE_MINUS_SRC_ALPHA;
       break;
-    case GFX_BLEND_TYPE_DST_ALPHA:
+    case GAME_GFX_BLEND_TYPE_DST_ALPHA:
       ret = GL_DST_ALPHA;
       break;
-    case GFX_BLEND_TYPE_INV_DST_ALPHA:
+    case GAME_GFX_BLEND_TYPE_INV_DST_ALPHA:
       ret = GL_ONE_MINUS_DST_ALPHA; 
       break;
-    case GFX_BLEND_TYPE_DST_COLOR: 
+    case GAME_GFX_BLEND_TYPE_DST_COLOR: 
       ret = GL_DST_COLOR; 
       break;
-    case GFX_BLEND_TYPE_INV_DST_COLOR:
+    case GAME_GFX_BLEND_TYPE_INV_DST_COLOR:
       ret = GL_ONE_MINUS_DST_COLOR; 
       break;
   }
@@ -1066,20 +1066,20 @@ opengl_get_blend_mode_from_gfx_blend_type(gfx_blend_type_t type) {
 
 
 static void 
-opengl_set_blend_mode(opengl_t* ogl, gfx_blend_type_t src, gfx_blend_type_t dst) {
-  GLenum src_e = opengl_get_blend_mode_from_gfx_blend_type(src);
-  GLenum dst_e = opengl_get_blend_mode_from_gfx_blend_type(dst);
+opengl_set_blend_mode(opengl_t* ogl, game_gfx_blend_type_t src, game_gfx_blend_type_t dst) {
+  GLenum src_e = opengl_get_blend_mode_from_game_gfx_blend_type(src);
+  GLenum dst_e = opengl_get_blend_mode_from_game_gfx_blend_type(dst);
   ogl->glBlendFunc(src_e, dst_e);
 
 #if 0
   switch(type) {
-    case GFX_BLEND_TYPE_ADD: {
+    case GAME_GFX_BLEND_TYPE_ADD: {
       ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
     } break;
-    case GFX_BLEND_TYPE_ALPHA: {
+    case GAME_GFX_BLEND_TYPE_ALPHA: {
       ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     } break;
-    case GFX_BLEND_TYPE_TEST: {
+    case GAME_GFX_BLEND_TYPE_TEST: {
       // TODO
     } break;
     default: {}
@@ -1094,16 +1094,16 @@ opengl_process_texture_queue(opengl_t* ogl) {
   // is loading forever, the rest of the payloads will never be processed.
   // This is fine and intentional. A payload should never be loading forever.
   // 
-  gfx_texture_queue_t* textures = &ogl->gfx.texture_queue;
+  game_gfx_texture_queue_t* textures = &ogl->gfx.texture_queue;
   while(textures->payload_count) {
-    gfx_texture_payload_t* payload = textures->payloads + textures->first_payload_index;
+    game_gfx_texture_payload_t* payload = textures->payloads + textures->first_payload_index;
 
     b32_t stop_loop = false;
     switch(payload->state) {
-      case GFX_TEXTURE_PAYLOAD_STATE_LOADING: {
+      case GAME_GFX_TEXTURE_PAYLOAD_STATE_LOADING: {
         stop_loop = true;
       } break;
-      case GFX_TEXTURE_PAYLOAD_STATE_READY: {
+      case GAME_GFX_TEXTURE_PAYLOAD_STATE_READY: {
         if(payload->texture_width < (u32_t)S32_MAX &&
             payload->texture_height < (u32_t)S32_MAX &&
             payload->texture_width > 0 &&
@@ -1121,7 +1121,7 @@ opengl_process_texture_queue(opengl_t* ogl) {
         }
 
       } break;
-      case GFX_TEXTURE_PAYLOAD_STATE_EMPTY: {
+      case GAME_GFX_TEXTURE_PAYLOAD_STATE_EMPTY: {
         // Possibly 'cancelled'. i.e. Do nothing either way?
       } break;
       default: {
@@ -1147,7 +1147,7 @@ opengl_begin_frame(opengl_t* ogl, v2u_t render_wh,
     u32_t region_x0, u32_t region_y0, 
     u32_t region_x1, u32_t region_y1) 
 {
-  gfx_clear_commands(&ogl->gfx);  
+  game_gfx_clear_commands(&ogl->gfx);  
 
   ogl->render_wh = render_wh;
 
@@ -1162,7 +1162,7 @@ opengl_begin_frame(opengl_t* ogl, v2u_t render_wh,
 // Only call opengl functions when we end frame
 static void
 opengl_end_frame(opengl_t* ogl) {
-  gfx_t* gfx = &ogl->gfx;
+  game_gfx_t* gfx = &ogl->gfx;
 
   opengl_align_viewport(ogl);
   opengl_process_texture_queue(ogl);
@@ -1170,14 +1170,14 @@ opengl_end_frame(opengl_t* ogl) {
   opengl_begin_triangles(ogl);
 
   //for (u32_t cmd_index = 0; cmd_index < cmds->entry_count; ++cmd_index) {
-  gfx_foreach_command(gfx, cmd_index) {
-    gfx_command_t* entry = gfx_get_command(gfx, cmd_index);
+  game_gfx_foreach_command(gfx, cmd_index) {
+    game_gfx_command_t* entry = game_gfx_get_command(gfx, cmd_index);
     switch(entry->id) {
-      case GFX_COMMAND_TYPE_VIEW: {
+      case GAME_GFX_COMMAND_TYPE_VIEW: {
         opengl_flush_sprites(ogl);
         opengl_flush_triangles(ogl);
 
-        gfx_command_view_t* data = (gfx_command_view_t*)entry->data;
+        game_gfx_command_view_t* data = (game_gfx_command_view_t*)entry->data;
 
         f32_t depth = (f32_t)(ogl->current_layer + 1);
         // TODO: Avoid computation of matrices
@@ -1211,8 +1211,8 @@ opengl_end_frame(opengl_t* ogl) {
         }
 
       } break;
-      case GFX_COMMAND_TYPE_CLEAR: {
-        gfx_command_clear_t* data = (gfx_command_clear_t*)entry->data;
+      case GAME_GFX_COMMAND_TYPE_CLEAR: {
+        game_gfx_command_clear_t* data = (game_gfx_command_clear_t*)entry->data;
 
         ogl->glClearColor(data->colors.r, 
             data->colors.g, 
@@ -1222,10 +1222,10 @@ opengl_end_frame(opengl_t* ogl) {
 
       } break;
 
-      case GFX_COMMAND_TYPE_TRIANGLE: {
+      case GAME_GFX_COMMAND_TYPE_TRIANGLE: {
         opengl_flush_sprites(ogl);
 
-        gfx_command_triangle_t* data = (gfx_command_triangle_t*)entry->data;
+        game_gfx_command_triangle_t* data = (game_gfx_command_triangle_t*)entry->data;
         m44f_t inverse_of_model = m44f_identity();
         inverse_of_model.e[0][0] = -1.f;
         inverse_of_model.e[1][0] = 0.f;
@@ -1302,13 +1302,13 @@ opengl_end_frame(opengl_t* ogl) {
 #endif
 
       } break;
-      case GFX_COMMAND_TYPE_RECT: {
+      case GAME_GFX_COMMAND_TYPE_RECT: {
         opengl_uv_t uv = {
           { 0.f, 0.f },
           { 1.f, 1.f },
         };
 
-        gfx_command_rect_t* data = (gfx_command_rect_t*)entry->data;
+        game_gfx_command_rect_t* data = (game_gfx_command_rect_t*)entry->data;
         m44f_t T = m44f_translation(data->pos.x, data->pos.y, ogl->current_layer);
         m44f_t R = m44f_rotation_z(data->rot);
         m44f_t S = m44f_scale(data->size.w, data->size.h, 1.f) ;
@@ -1320,9 +1320,9 @@ opengl_end_frame(opengl_t* ogl) {
             ogl->blank_texture.handle);
       } break;
 
-      case GFX_COMMAND_TYPE_SPRITE: {
+      case GAME_GFX_COMMAND_TYPE_SPRITE: {
         opengl_flush_triangles(ogl);
-        gfx_command_sprite_t* data = (gfx_command_sprite_t*)entry->data;
+        game_gfx_command_sprite_t* data = (game_gfx_command_sprite_t*)entry->data;
         assert(array_count(ogl->textures) > data->texture_index);
 
         opengl_texture_t* texture = ogl->textures + data->texture_index; 
@@ -1353,20 +1353,20 @@ opengl_end_frame(opengl_t* ogl) {
             texture->handle);
 
       } break;
-      case GFX_COMMAND_TYPE_BLEND: {
+      case GAME_GFX_COMMAND_TYPE_BLEND: {
         opengl_flush_sprites(ogl);
         opengl_flush_triangles(ogl);
-        gfx_command_blend_t* data = (gfx_command_blend_t*)entry->data;
+        game_gfx_command_blend_t* data = (game_gfx_command_blend_t*)entry->data;
         opengl_set_blend_mode(ogl, data->src, data->dst);
       } break;
-      case GFX_COMMAND_TYPE_DELETE_TEXTURE: {
-        gfx_command_delete_texture_t* data = (gfx_command_delete_texture_t*)entry->data;
+      case GAME_GFX_COMMAND_TYPE_DELETE_TEXTURE: {
+        game_gfx_command_delete_texture_t* data = (game_gfx_command_delete_texture_t*)entry->data;
         opengl_delete_texture(ogl, data->texture_index);
       } break;
-      case GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
+      case GAME_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
         opengl_delete_all_textures(ogl);
       } break;
-      case GFX_COMMAND_TYPE_ADVANCE_DEPTH: {
+      case GAME_GFX_COMMAND_TYPE_ADVANCE_DEPTH: {
         ogl->current_layer -= 1.f;
       } break;
     }
@@ -1375,4 +1375,4 @@ opengl_end_frame(opengl_t* ogl) {
   opengl_end_triangles(ogl);
 }
 
-#endif //GFX_OPENGL_H
+#endif //GAME_GFX_OPENGL_H

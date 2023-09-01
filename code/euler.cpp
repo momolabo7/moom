@@ -850,6 +850,129 @@ euler_q17() {
 
 }
 
+//
+// Question 18
+// 
+// Pathfinding...?
+//    0
+//   1 2
+//  3 4 5
+// 6 7 8 9
+//
+// 0 -> 1,2 -> +1,+2
+//
+// 1 -> 3,4 -> +2,+3
+// 2 -> 4,5 -> +2,+3
+//
+// 3 -> 6,7 -> +3,+4
+// 4 -> 7,8 -> +3,+4
+// 5 -> 8,9 -> +3,+4
+//
+// 
+static u32_t
+euler_q18_go(u32_t* nodes, u32_t node_count, u32_t index, u32_t layer) {
+  if (index >= node_count) {
+    //printf("\n");
+    return 0;
+  }
+
+  //printf("%d %d %d\n", nodes[index], index, layer);
+
+  // left
+  u32_t left_sum = euler_q18_go(nodes, node_count, index+layer+1, layer+1);
+
+  // right
+  u32_t right_sum = euler_q18_go(nodes, node_count, index+layer+2, layer+1);
+
+  u32_t ret = max_of(left_sum,right_sum) + nodes[index];
+
+  return ret;
+
+}
+
+static void
+euler_q18() {
+  //u32_t nodes[] = {3,7,4,2,4,6,8,5,9,3};
+  u32_t nodes[] = { 75,95,64,17,47,82,18,35,87,10,20,04,82,47,65,19,01,23,75,03,34,88,02,77,73,07,63,67,99,65,04,28,06,16,70,92,41,41,26,56,83,40,80,70,33,41,48,72,33,47,32,37,16,94,29,53,71,44,65,25,43,91,52,97,51,14,70,11,33,28,77,73,17,78,39,68,17,57,91,71,52,38,17,14,91,43,58,50,27,29,48,63,66,04,68,89,53,67,30,73,16,69,87,40,31,04,62,98,27,23,9,70,98,73,93,38,53,60,04,23};
+  printf("Answer: %d", euler_q18_go(nodes, array_count(nodes), 0, 0));
+}
+
+//
+// Question 19
+//
+// - 1 JAN 1900 is Monday
+// - 30 days: 4,6,9,11
+// - 31 days: 1,3,5,7,8,10,12
+// - leap year is any year %4=0 except on %100=0 except when %400=0 
+//
+// How many Sundays fell on the first month from Jan 1901 to Dec 2000
+//
+static b32_t
+euler_q19_is_leap(u32_t year) {
+  b32_t is_4 = (year % 4 == 0);
+  b32_t is_100 = (year % 100 == 0);
+  b32_t is_400 = (year % 400 == 0);
+
+  return is_4 && (!is_100 || is_400);
+}
+
+static void
+euler_q19() {
+  u32_t month = 1;
+  u32_t year = 1901;
+  u32_t date = 1;
+  u32_t day = 2; // 1st Jan 1901 is Tuesday
+
+  u32_t sum = 0;
+  while(true) {
+    if (year == 2001) break;
+    //if (year == 1901 && month == 1) break;
+  
+    if (day == 7 && date == 1)  {
+      //printf("%d %d %d: %d\n", year, month, date, day);
+      ++sum;
+    }
+
+    ++day;
+    ++date;
+
+    if (day > 7) day = 1;
+    
+    // This is so ugly lul
+    if (month == 12 && date > 31) {
+      date = 1;
+      month = 1;
+      ++year;
+    }
+    else {
+  
+      if (month == 4 || month == 6 || month == 9 || month == 11) {
+        if (date > 30) {
+          ++month;
+          date = 1;
+        }
+      }
+      else if (month == 2) {
+        if ((euler_q19_is_leap(year) && date > 29) || 
+            !euler_q19_is_leap(year) && date > 28) 
+        {
+          ++month;
+          date = 1;
+        }
+      }
+      else {
+        if (date > 31) {
+          ++month;
+          date = 1;
+        }
+      }
+    }
+  }
+
+  printf("Answer: %d\n", sum);
+
+}
+
 int main() {
   //euler_q1();
   //euler_q2();
@@ -867,7 +990,9 @@ int main() {
   //euler_q14();
   //euler_q15();
   //euler_q16();
-  euler_q17();
+  //euler_q17();
+  //euler_q18();
+  euler_q19();
 }
 
 
