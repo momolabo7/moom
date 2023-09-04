@@ -3,7 +3,7 @@
 //   This is my dear 2D game engine on win32 platform.
 //
 // FLAGS
-//   HOT_RELOADABLE - Enables hot-reload on game.dll when it changes
+//   HOT_RELOADABLE - Enables hot-reload on game.dll when it changes. Default is 1.
 // 
 // BOOKMARKS
 //
@@ -21,8 +21,15 @@
 // NOTE(momo): For now, we enable these flags
 // These macros are in preparation in case we have
 // multiple ways to do audio or graphics
-#define W32_AUDIO_WASAPI
-#define W32_GFX_OPENGL
+
+
+#ifndef GAME_USE_WASAPI
+# define GAME_USE_WASAPI 1
+#endif
+
+#ifndef GAME_USE_OPENGL
+# define GAME_USE_OPENGL 1
+#endif 
 
 #ifndef WIN32_LEAN_AND_MEAN
 # define WIN32_LEAN_AND_MEAN
@@ -156,7 +163,7 @@ static w32_audio_end_frame_sig(w32_audio_end_frame);
 //
 // Mark:(Wasapi)
 //
-#ifdef W32_AUDIO_WASAPI 
+#ifdef GAME_USE_WASAPI 
 struct w32_wasapi_t;
 struct w32_wasapi_notif_client_t {
   IMMNotificationClient imm_notifs;
@@ -192,20 +199,20 @@ DEFINE_GUID(IID_IMMDeviceEnumerator,   0xa95664d2, 0x9614, 0x4f35, 0xa7, 0x46, 0
 DEFINE_GUID(IID_IAudioRenderClient,    0xf294acfc, 0x3146, 0x4483, 0xa7, 0xbf, 0xad, 0xdc, 0xa7, 0xc2, 0x60, 0xe2);
 DEFINE_GUID(IID_IAudioClient2,         0x726778cd, 0xf60a, 0x4eda, 0x82, 0xde, 0xe4, 0x76, 0x10, 0xcd,0x78, 0xaa);
 DEFINE_GUID(IID_IMMNotificationClient, 0x7991eec9, 0x7e89, 0x4d85, 0x83, 0x90, 0x6c, 0x70, 0x3c, 0xec, 0x60, 0xc0);
-#endif // W32_AUDIO_WASAPI
+#endif // GAME_USE_WASAPI
 
 
 
 //
 // MARK:(Gfx)
 // 
-#define w32_gfx_load_sig(name) game_gfx_t* name(HWND window, arena_t* arena, usz_t command_queue_size, usz_t texture_queue_size, u32_t max_textures)
+#define w32_gfx_load_sig(name) b32_t  name(game_gfx_t* gfx, HWND window, arena_t* arena, usz_t command_queue_size, usz_t texture_queue_size, u32_t max_textures)
 static w32_gfx_load_sig(w32_gfx_load);
 
-#define w32_gfx_begin_frame_sig(name) void name(game_gfx_t* renderer, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1)
+#define w32_gfx_begin_frame_sig(name) void name(game_gfx_t* gfx, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1)
 static w32_gfx_begin_frame_sig(w32_gfx_begin_frame);
 
-#define w32_gfx_end_frame_sig(name) void name(game_gfx_t* renderer)
+#define w32_gfx_end_frame_sig(name) void name(game_gfx_t* gfx)
 static w32_gfx_end_frame_sig(w32_gfx_end_frame);
 
 #include "game_gfx_opengl.h"
@@ -214,7 +221,7 @@ static w32_gfx_end_frame_sig(w32_gfx_end_frame);
 //
 // MARK:(Opengl)
 // 
-#ifdef W32_GFX_OPENGL
+#ifdef GAME_USE_OPENGL
 #define WGL_CONTEXT_MAJOR_VERSION_ARB           0x2091
 #define WGL_CONTEXT_MINOR_VERSION_ARB           0x2092
 #define WGL_CONTEXT_LAYER_PLANE_ARB             0x2093
@@ -391,22 +398,22 @@ w32_gfx_load_sig(w32_gfx_load)
                                                 opengl_attribs); 
   
   if (!opengl_ctx) {
-    return nullptr;
+    return false;
   }
 
-  opengl_t* opengl = arena_push(opengl_t, arena);
+  auto* opengl = arena_push(game_gfx_opengl_t, arena);
+  gfx->platform_data = opengl;
 
   if (!opengl) {
-    return nullptr;
+    return false;
   }
   
   
   if(wglMakeCurrent(dc, opengl_ctx)) {
     HMODULE module = LoadLibraryA("opengl32.dll");
 #define wgl_set_opengl_function(name) \
-opengl->name = (opengl_##name*)_w32_try_get_wgl_function(#name, module); \
-if (!opengl->name) { return nullptr; } 
-    
+opengl->name = (game_gfx_opengl_##name*)_w32_try_get_wgl_function(#name, module); \
+if (!opengl->name) { return false; } 
     wgl_set_opengl_function(glEnable);
     wgl_set_opengl_function(glDisable); 
     wgl_set_opengl_function(glViewport);
@@ -451,20 +458,20 @@ if (!opengl->name) { return nullptr; }
   }
 #undef wgl_set_opengl_function
   
-  if (!opengl_init(
-        opengl, 
+  if (!game_gfx_opengl_init(
+        gfx, 
         arena,
         command_queue_size,
         texture_queue_size,
         max_textures)) 
   {
-    return 0;
+    return false;
   }
   
 #if 0
   opengl->glEnable(GL_DEBUG_OUTPUT);
   opengl->glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-  //    g_opengl.glDebugMessageCallbackARB(Win_opengl_t_DebugCallback, nullptr);
+  opengl->glDebugMessageCallbackARB(Win_opengl_t_DebugCallback, nullptr);
 #endif
   
   
@@ -475,22 +482,23 @@ if (!opengl->name) { return nullptr; }
   if (wglSwapIntervalEXT) {
     wglSwapIntervalEXT(1);
   }
-  return &opengl->gfx;
+
+  return true;
 }
 
 
 static 
 w32_gfx_begin_frame_sig(w32_gfx_begin_frame)
 {
-  opengl_begin_frame((opengl_t*)renderer, render_wh, region_x0, region_y0, region_x1, region_y1);
+  game_gfx_opengl_begin_frame(gfx, render_wh, region_x0, region_y0, region_x1, region_y1);
 }
 
 static
 w32_gfx_end_frame_sig(w32_gfx_end_frame) {
-  opengl_end_frame((opengl_t*)renderer);
+  game_gfx_opengl_end_frame(gfx);
   SwapBuffers(wglGetCurrentDC());
 }
-#endif // W32_GFX_OPENGL
+#endif // GAME_USE_OPENGL
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -1752,13 +1760,15 @@ WinMain(HINSTANCE instance,
   arena_t* gfx_arena = &game.gfx_arena;
   if (!w32_allocate_memory_into_arena(gfx_arena, config.gfx_arena_size)) 
     return 1;
-  game_gfx_t* gfx = w32_gfx_load(
+
+  if(!w32_gfx_load(
+      &game.gfx,
       window, 
       gfx_arena,
       config.render_command_size, 
       config.texture_queue_size,
-      config.max_textures);
-  if (!gfx) { return 1; }
+      config.max_textures))
+    return 1;
  
   // Init Audio
   arena_t* audio_arena = &game.audio_arena;
@@ -1794,7 +1804,6 @@ WinMain(HINSTANCE instance,
   //
   // Game setup
   //
-  game.gfx = gfx;
 
   // Begin game loop
   b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
@@ -1826,7 +1835,7 @@ WinMain(HINSTANCE instance,
                                      client_wh.h,
                                      game_aspect);
 
-    w32_gfx_begin_frame(gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
+    w32_gfx_begin_frame(&game.gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
        
     //Process messages and input
     w32_update_input(&game.input, window, target_secs_per_frame, rr);
@@ -1838,7 +1847,7 @@ WinMain(HINSTANCE instance,
     // End frame
     game_profiler_update_entries(&game.profiler);
     game_inspector_clear(&game.inspector);
-    w32_gfx_end_frame(gfx);
+    w32_gfx_end_frame(&game.gfx);
     
     if (config.audio_enabled) w32_audio_end_frame(&game.audio);
 #if 0

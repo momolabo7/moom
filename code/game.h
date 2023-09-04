@@ -343,7 +343,7 @@ struct game_t {
   game_input_t input;
   game_audio_t audio; 
 
-  game_gfx_t* gfx;
+  game_gfx_t gfx;
   game_profiler_t profiler;
   game_inspector_t inspector;
           
@@ -527,12 +527,12 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
 
     game_asset_bitmap_t* b = assets->bitmaps + bitmap_index;
     // TODO: is there anyway for gfx to assign this instead?
-    b->renderer_texture_handle = game_gfx_get_next_texture_handle(game->gfx);
+    b->renderer_texture_handle = game_gfx_get_next_texture_handle(&game->gfx);
     b->width = file_bitmap.width;
     b->height = file_bitmap.height;
 
     u32_t bitmap_size = b->width * b->height * 4;
-    game_gfx_texture_payload_t* payload = game_gfx_begin_texture_transfer(game->gfx, bitmap_size);
+    game_gfx_texture_payload_t* payload = game_gfx_begin_texture_transfer(&game->gfx, bitmap_size);
     if (!payload) false;
     payload->texture_index = b->renderer_texture_handle;
     payload->texture_width = file_bitmap.width;
@@ -729,41 +729,41 @@ game_get_input_characters(game_t* game) {
 //
 static void
 game_clear_canvas(game_t* game, rgba_t color) {
-  game_gfx_t* gfx = game->gfx;
+  game_gfx_t* gfx = &game->gfx;
   game_gfx_clear_colors(gfx, color); 
 }
 
 static void 
 game_set_view(game_t* game, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y)
 {
-  game_gfx_t* gfx = game->gfx;
+  game_gfx_t* gfx = &game->gfx;
   game_gfx_set_view(gfx, min_x, max_x, min_y, max_y, pos_x, pos_y); 
 }
 
 static void 
 game_draw_sprite(game_t* game, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1, rgba_t color) 
 {
-  game_gfx_t* gfx = game->gfx;
+  game_gfx_t* gfx = &game->gfx;
   game_gfx_push_sprite(gfx, color, pos, size, anchor, texture_index, texel_x0, texel_y0, texel_x1, texel_y1 ); 
 }
 
 static void
 game_draw_rect(game_t* game, v2f_t pos, f32_t rot, v2f_t scale, rgba_t color) 
 {
-  game_gfx_t* gfx = game->gfx;
+  game_gfx_t* gfx = &game->gfx;
   game_gfx_draw_filled_rect(gfx,color, pos, rot, scale);
 }
 
 static void
 game_draw_tri(game_t* game, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t color)
 {
-  game_gfx_t* gfx = game->gfx;
+  game_gfx_t* gfx = &game->gfx;
   game_gfx_draw_filled_triangle(gfx,color, p0, p1, p2);
 }
 
 static void
 game_advance_depth(game_t* game) {
-  game_gfx_t* gfx = game->gfx;
+  game_gfx_t* gfx = &game->gfx;
   game_gfx_advance_depth(gfx);
 }
 
@@ -773,28 +773,28 @@ typedef game_set_blend_sig(game_set_blend_f);
 
 static void
 game_set_blend_additive(game_t* game) {
-  game_gfx_set_blend_additive(game->gfx);
+  game_gfx_set_blend_additive(&game->gfx);
 }
 
 static void
 game_set_blend_alpha(game_t* game) {
-  game_gfx_set_blend_alpha(game->gfx);
+  game_gfx_set_blend_alpha(&game->gfx);
 }
 
 static void
 game_draw_line(game_t* game, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {
-  game_gfx_draw_line(game->gfx, p0, p1, thickness, colors);
+  game_gfx_draw_line(&game->gfx, p0, p1, thickness, colors);
 }
 
 static void
 game_draw_circle(game_t* game, v2f_t center, f32_t radius, u32_t sections, rgba_t color) {
-  game_gfx_draw_filled_circle(game->gfx, center, radius, sections, color);
+  game_gfx_draw_filled_circle(&game->gfx, center, radius, sections, color);
 }
 
 static void
 game_draw_circ_outline(game_t* game, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
 {
-  game_gfx_draw_circle_outline(game->gfx, center, radius, thickness, line_count, color);
+  game_gfx_draw_circle_outline(&game->gfx, center, radius, thickness, line_count, color);
 }
 
 

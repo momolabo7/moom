@@ -1,7 +1,10 @@
 engine
-  - Finish debugger, and create a arena tracker. THEN come up with how to deal with memory allocation in general.  
-  - Expandable arena for platform, instead of just calling VirtualAlloc every time
+  - graphics should initialize game_gfx* instead of returning a pointer
+  - opengl rename to game_opengl
+  - game config should declare how many square/triangles to initialize graphics
 
+
+  
 
 assets 
   - 9 Slice 

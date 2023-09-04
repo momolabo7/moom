@@ -20,7 +20,6 @@
 
 // Debug
 #define LIT_DEBUG_LINES 0
-#define LIT_DEBUG 0
 
 // Splash
 #define LIT_SPLASH_SCROLL_POS_Y_START (-100.f)
@@ -3341,7 +3340,7 @@ lit_game_update()
   lit_game_t* g = &g_lit->g_game;
   lit_game_player_t* player = &g->player;
 
-  if (is_poked(input, INPUT_BUTTON_CODE_SPACE)) {
+  if (game_is_button_poked(g_game, GAME_BUTTON_CODE_SPACE)) {
     g->freeze = !g->freeze;
   }
   

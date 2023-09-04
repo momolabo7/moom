@@ -4,6 +4,10 @@
 //   portable functions and structures that are very useful for
 //   anything that I do in C/C++
 //
+// FLAGS
+//   ASSERTIVE - Enables/Disables asserts. Default is 1. 
+//
+//
 // BOOKMARKS
 //   
 //   Includes    - Includes 
@@ -676,9 +680,9 @@ static b32_t is_digit(char c);
 #define zero_struct(p)    zero_memory((p), sizeof(*(p)))
 #define zero_array(p)     zero_memory((p), sizeof(p))
 #define zero_range(p,s)   zero_memory((p), sizeof(*(p)) * (s))
-#define copy_struct(p)    copy_memory((p), sizeof(*(p)))
-#define copy_array(p)     copy_memory((p), sizeof(p))
-#define copy_range(p,s)   copy_memory((p), sizeof(*(p)) * (s))
+#define copy_struct(d,s)  copy_memory((d), (s), sizeof(*(d)))
+#define copy_array(d,s)   copy_memory((d), (s), sizeof(d))
+#define copy_range(d,s,n) copy_memory((d), (s), sizeof(*(d)) * (n))
 static void copy_memory(void* dest, const void* src, umi_t size);
 static void zero_memory(void* dest, umi_t size);
 static b32_t is_memory_same(const void* lhs, const void* rhs, umi_t size);

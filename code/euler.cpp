@@ -977,11 +977,59 @@ euler_q19() {
 // Question 20
 //
 // Basically asking for 100!
+// So 1x2x3x4x...x100
+//
+// We kinda have to implement big number multiplication
+//
+
 static void
 euler_q20() {
-  u64_t answer = u64_factorial(100);
+  u8_t num[512] = {};
+  u8_t original[array_count(num)] = {};
 
-  printf("Answer: %zu\n", answer);
+  u32_t factorial = 100;
+
+  num[0] = 1; // starting number
+
+  while(factorial > 1)  {
+    u32_t multiply_by = factorial;
+    //printf("%d\n", multiply_by);
+
+    copy_array(original, num);
+    while(multiply_by > 1) {
+      u32_t carry = 0;
+      for_arr(num_index, num) {
+        u32_t val = num[num_index] + original[num_index];
+        num[num_index] = val%10 + carry%10;
+        carry /= 10;
+        carry += val/10;
+      }
+      --multiply_by;
+    }
+    --factorial;
+  }
+
+
+#if 0
+  // print in reverse
+  b32_t start = false;
+  for_arr(i, num) {
+    u32_t value = num[sizeof(num)-i-1];
+    if (value != 0) 
+      start = true;
+    if (start)
+      printf("%d", value );
+  }
+#endif
+
+  u32_t sum = 0;
+
+  for_arr(i, num) {
+    sum += num[i];
+  }
+
+  printf("Answer: %d", sum);
+
 }
 
 int main() {
@@ -1004,6 +1052,7 @@ int main() {
   //euler_q17();
   //euler_q18();
   //euler_q19();
+  euler_q20();
 }
 
 

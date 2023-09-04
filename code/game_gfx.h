@@ -173,6 +173,8 @@ struct game_gfx_t {
   game_gfx_command_queue_t command_queue;
   game_gfx_texture_queue_t texture_queue;
   u32_t max_textures;
+
+  void* platform_data;
 };
 
 //
@@ -224,7 +226,7 @@ game_gfx_clear_commands(game_gfx_t* g) {
 	q->entry_start = q->entry_pos = (u32_t)adjusted_entry_start;
 }
 
-static void 
+static b32_t 
 game_gfx_init(
     game_gfx_t* g, 
     arena_t* arena,
@@ -237,6 +239,7 @@ game_gfx_init(
   {
     game_gfx_command_queue_t* q = &g->command_queue;
     q->memory = arena_push_arr(u8_t, arena, command_queue_size);
+    if (!q->memory) return false;
     q->memory_size = command_queue_size;
     q->peak_memory_usage = 0;
     game_gfx_clear_commands(g);
@@ -246,6 +249,7 @@ game_gfx_init(
   {
     game_gfx_texture_queue_t* q = &g->texture_queue;
     q->transfer_memory = arena_push_arr(u8_t, arena, texture_queue_size);
+    if (!q->transfer_memory) return false;
     q->transfer_memory_size = texture_queue_size;
     q->transfer_memory_start = 0;
     q->transfer_memory_end = 0;
@@ -256,6 +260,7 @@ game_gfx_init(
   }
 
   g->max_textures = max_textures;
+  return true;
 }
 
 static u32_t
