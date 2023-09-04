@@ -1,13 +1,6 @@
 #ifndef GAME_GFX_GAME_GFX_OPENGL_H
 #define GAME_GFX_GAME_GFX_OPENGL_H
 
-#ifndef GAME_GFX_OPENGL_MAX_SPRITES
-# define GAME_GFX_OPENGL_MAX_SPRITES 4096
-#endif
-
-#ifndef GAME_GFX_OPENGL_MAX_TRIANGLES
-# define GAME_GFX_OPENGL_MAX_TRIANGLES 4096
-#endif
 
 // game_gfx_opengl_t typedefs
 #define GL_TRUE                 1
@@ -233,6 +226,9 @@ struct game_gfx_opengl_t {
   game_gfx_opengl_texture_t* textures;
   usz_t texture_cap;
 
+  usz_t max_sprites;
+  usz_t max_triangles;
+
   game_gfx_opengl_texture_t dummy_texture;
   game_gfx_opengl_texture_t blank_texture;
 
@@ -290,7 +286,7 @@ struct game_gfx_opengl_t {
 static void 
 game_gfx_opengl_flush_sprites(game_gfx_opengl_t* ogl) {
   game_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
-  assert(sb->instances_to_draw + sb->last_drawn_instance_index < GAME_GFX_OPENGL_MAX_SPRITES);
+  assert(sb->instances_to_draw + sb->last_drawn_instance_index < ogl->max_sprites);
 
   if (sb->instances_to_draw > 0) {
     ogl->glBindTexture(GL_TEXTURE_2D, sb->current_texture);
@@ -362,7 +358,7 @@ game_gfx_opengl_push_triangle(
 static void 
 game_gfx_opengl_flush_triangles(game_gfx_opengl_t* ogl) {
   game_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
-  assert(tb->instances_to_draw + tb->last_drawn_instance_index < GAME_GFX_OPENGL_MAX_TRIANGLES);
+  assert(tb->instances_to_draw + tb->last_drawn_instance_index < ogl->max_triangles);
 
   if (tb->instances_to_draw > 0) {
     ogl->glBindVertexArray(tb->model);
@@ -619,8 +615,9 @@ void main(void) {\n\
 }"
 
 static b32_t
-game_gfx_opengl_init_triangle_batch(game_gfx_opengl_t* ogl) {
+game_gfx_opengl_init_triangle_batch(game_gfx_opengl_t* ogl, usz_t max_triangles) {
   game_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
+  ogl->max_triangles = max_triangles;
 
   // Triangle model
   // TODO(Momo): shift this somewhere else
@@ -650,12 +647,12 @@ game_gfx_opengl_init_triangle_batch(game_gfx_opengl_t* ogl) {
       0);
 
   ogl->glNamedBufferStorage(tb->buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS], 
-      sizeof(v4f_t) * GAME_GFX_OPENGL_MAX_TRIANGLES, 
+      sizeof(v4f_t) * ogl->max_triangles, 
       nullptr, 
       GL_DYNAMIC_STORAGE_BIT);
 
   ogl->glNamedBufferStorage(tb->buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
-      sizeof(m44f_t) * GAME_GFX_OPENGL_MAX_TRIANGLES, 
+      sizeof(m44f_t) * ogl->max_triangles, 
       nullptr, 
       GL_DYNAMIC_STORAGE_BIT);
 
@@ -802,8 +799,9 @@ void main(void) { \n\
 }"
 
 static b32_t 
-game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl) {
+game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl, usz_t max_sprites) {
   game_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
+  ogl->max_sprites = max_sprites;
 
 
   const f32_t sprite_model[] = {
@@ -835,19 +833,19 @@ game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl) {
 
   ogl->glNamedBufferStorage(
       sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE], 
-      sizeof(v2f_t) * vertex_count * GAME_GFX_OPENGL_MAX_SPRITES, 
+      sizeof(v2f_t) * vertex_count * ogl->max_sprites, 
       nullptr, 
       GL_DYNAMIC_STORAGE_BIT);
 
   ogl->glNamedBufferStorage(
       sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS], 
-      sizeof(rgba_t) * vertex_count * GAME_GFX_OPENGL_MAX_SPRITES, 
+      sizeof(rgba_t) * vertex_count * ogl->max_sprites, 
       nullptr, 
       GL_DYNAMIC_STORAGE_BIT);
 
   ogl->glNamedBufferStorage(
       sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
-      sizeof(m44f_t) * GAME_GFX_OPENGL_MAX_SPRITES, 
+      sizeof(m44f_t) * ogl->max_sprites, 
       nullptr, 
       GL_DYNAMIC_STORAGE_BIT);
 
@@ -1003,7 +1001,9 @@ game_gfx_opengl_init(
     usz_t command_queue_size, 
     usz_t texture_queue_size,
     usz_t max_textures,
-    usz_t max_payloads)
+    usz_t max_payloads,
+    usz_t max_sprites,
+    usz_t max_triangles)
 {	
   auto* ogl = (game_gfx_opengl_t*)gfx->platform_data;
 
@@ -1024,8 +1024,8 @@ game_gfx_opengl_init(
   ogl->glEnable(GL_SCISSOR_TEST);
   ogl->glEnable(GL_BLEND);
 
-  if (!game_gfx_opengl_init_sprite_batch(ogl)) return false;
-  if (!game_gfx_opengl_init_triangle_batch(ogl)) return false;
+  if (!game_gfx_opengl_init_sprite_batch(ogl, max_sprites)) return false;
+  if (!game_gfx_opengl_init_triangle_batch(ogl, max_triangles)) return false;
   game_gfx_opengl_add_predefined_textures(ogl);
   game_gfx_opengl_delete_all_textures(ogl);
 

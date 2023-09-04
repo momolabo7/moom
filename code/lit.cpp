@@ -3823,9 +3823,9 @@ lit_tick() {
 // Game functions
 // 
 exported 
-game_init_sig(game_init) 
+game_get_config_sig(game_get_config) 
 {
-  game_init_config_t ret;
+  game_config_t ret;
 
   ret.debug_arena_size = kilobytes(300);
   ret.max_inspector_entries = 256;
@@ -3837,12 +3837,15 @@ game_init_sig(game_init)
   ret.render_command_size = megabytes(100);
   ret.max_textures = 1;
   ret.max_texture_payloads = 1;
+  ret.max_sprites = 4096;
+  ret.max_triangles = 4096;
 
   ret.audio_enabled = false;
   ret.audio_arena_size = megabytes(256);
   
   ret.window_title = "PRISMIX v1.0";
 
+  ret.max_sprites = 4096;
   return ret;
 }
 

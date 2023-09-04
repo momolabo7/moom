@@ -426,7 +426,7 @@ struct game_assets_t {
 // Game API
 //
 //
-struct game_init_config_t {
+struct game_config_t {
 
   usz_t debug_arena_size;
   u32_t max_inspector_entries;
@@ -439,6 +439,9 @@ struct game_init_config_t {
   usz_t render_command_size;
   u32_t max_textures;
   usz_t max_texture_payloads; 
+  usz_t max_sprites;
+  usz_t max_triangles;
+
 
   b32_t audio_enabled;
   usz_t audio_arena_size;
@@ -447,20 +450,20 @@ struct game_init_config_t {
   const char* window_title; 
 };
 
-#define game_init_sig(name) game_init_config_t name(void)
-typedef game_init_sig(game_init_f);
+#define game_get_config_sig(name) game_config_t name(void)
+typedef game_get_config_sig(game_get_config_f);
 
 #define game_update_and_render_sig(name) void name(game_t* game)
 typedef game_update_and_render_sig(game_update_and_render_f);
 
 // To be called by platform
 struct game_functions_t {
-  game_init_f* init;
+  game_get_config_f* get_config;
   game_update_and_render_f* update_and_render;
 };
 
 static const char* game_function_names[] {
-  "game_init",
+  "game_get_config",
   "game_update_and_render",
 };
 

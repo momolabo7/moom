@@ -113,9 +113,9 @@ atlas_sprite_count	code/pass.h	/^  u32_t atlas_sprite_count;$/;"	m	language:C++	
 atlas_sprite_count	pass.h	/^  u32_t atlas_sprite_count;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:u32_t
 audio	code/game.h	/^  game_audio_t audio; $/;"	m	language:C++	struct:game_t	typeref:typename:game_audio_t
 audio_arena	code/game.h	/^  arena_t audio_arena;$/;"	m	language:C++	struct:game_t	typeref:typename:arena_t
-audio_arena_size	code/game.h	/^  usz_t audio_arena_size;$/;"	m	language:C++	struct:game_init_config_t	typeref:typename:usz_t
+audio_arena_size	code/game.h	/^  usz_t audio_arena_size;$/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
 audio_client	code/w32_game.cpp	/^  IAudioClient2* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient2 *	file:
-audio_enabled	code/game.h	/^  b32_t audio_enabled;$/;"	m	language:C++	struct:game_init_config_t	typeref:typename:b32_t
+audio_enabled	code/game.h	/^  b32_t audio_enabled;$/;"	m	language:C++	struct:game_config_t	typeref:typename:b32_t
 audio_format	code/momo.h	/^  u16_t audio_format;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 audio_render_client	code/w32_game.cpp	/^  IAudioRenderClient* audio_render_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioRenderClient *	file:
 average	code/lit.cpp	/^  f64_t average;$/;"	m	language:C++	struct:lit_profiler_stat_t	typeref:typename:f64_t	file:
@@ -318,7 +318,7 @@ data_chunk	code/momo.h	/^  wav_data_chunk_t data_chunk;$/;"	m	language:C++	struc
 data_pos	code/game_gfx.h	/^	usz_t data_pos;$/;"	m	language:C++	struct:game_gfx_command_queue_t	typeref:typename:usz_t
 debug_arena	code/game.h	/^  arena_t debug_arena;$/;"	m	language:C++	struct:game_t	typeref:typename:arena_t
 debug_arena	code/lit.cpp	/^  arena_t debug_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
-debug_arena_size	code/game.h	/^  usz_t debug_arena_size;$/;"	m	language:C++	struct:game_init_config_t	typeref:typename:usz_t
+debug_arena_size	code/game.h	/^  usz_t debug_arena_size;$/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
 debug_log	code/game.h	/^  game_debug_log_f* debug_log;$/;"	m	language:C++	struct:game_t	typeref:typename:game_debug_log_f *
 defer	code/momo.h	/^#define defer /;"	d	language:C++
 delta	code/lit.cpp	/^  v2f_t delta;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:v2f_t	file:
@@ -800,6 +800,7 @@ game_complete_all_tasks	code/game.h	/^#define game_complete_all_tasks(/;"	d	lang
 game_complete_all_tasks_sig	code/game.h	/^#define game_complete_all_tasks_sig(/;"	d	language:C++
 game_complete_all_tasks_sig	code/game.h	/^typedef game_complete_all_tasks_sig(game_complete_all_tasks_f);$/;"	t	language:C++
 game_complete_all_tasks_sig	code/w32_game.cpp	/^game_complete_all_tasks_sig(w32_complete_all_tasks) $/;"	f	language:C++	file:
+game_config_t	code/game.h	/^struct game_config_t {$/;"	s	language:C++
 game_debug_log	code/game.h	/^#define game_debug_log(/;"	d	language:C++
 game_debug_log_sig	code/game.h	/^#define game_debug_log_sig(/;"	d	language:C++
 game_debug_log_sig	code/game.h	/^typedef game_debug_log_sig(game_debug_log_f);$/;"	t	language:C++
@@ -827,6 +828,9 @@ game_free_memory_sig	code/game.h	/^typedef game_free_memory_sig(game_free_memory
 game_free_memory_sig	code/w32_game.cpp	/^game_free_memory_sig(w32_free_memory) {$/;"	f	language:C++	file:
 game_functions_t	code/game.h	/^struct game_functions_t {$/;"	s	language:C++
 game_function_names	code/game.h	/^static const char* game_function_names[] {$/;"	v	language:C++	typeref:typename:const char * []
+game_get_config_sig	code/game.h	/^#define game_get_config_sig(/;"	d	language:C++
+game_get_config_sig	code/game.h	/^typedef game_get_config_sig(game_get_config_f);$/;"	t	language:C++
+game_get_config_sig	code/lit.cpp	/^game_get_config_sig(game_get_config) $/;"	f	language:C++	typeref:typename:exported
 game_get_dt	code/game.h	/^game_get_dt(game_t* game) {$/;"	f	language:C++	typeref:typename:f32_t
 game_get_file_size	code/game.h	/^#define game_get_file_size(/;"	d	language:C++
 game_get_file_size_sig	code/game.h	/^#define game_get_file_size_sig(/;"	d	language:C++
@@ -898,7 +902,6 @@ game_gfx_get_command	code/game_gfx.h	/^static game_gfx_command_t* game_gfx_get_c
 game_gfx_get_next_texture_handle	code/game_gfx.h	/^game_gfx_get_next_texture_handle(game_gfx_t* game_gfx) {$/;"	f	language:C++	typeref:typename:u32_t
 game_gfx_init	code/game_gfx.h	/^game_gfx_init($/;"	f	language:C++	typeref:typename:b32_t
 game_gfx_init	code/game_gfx.h	/^static void game_gfx_init(game_gfx_t* g, void* texture_queue_data, usz_t texture_queue_size, voi/;"	p	language:C++	typeref:typename:void
-GAME_GFX_MAX_TEXTURES	code/game_gfx.h	/^#define GAME_GFX_MAX_TEXTURES /;"	d	language:C++
 game_gfx_opengl_add_predefined_textures	code/game_gfx_opengl.h	/^game_gfx_opengl_add_predefined_textures(game_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
 game_gfx_opengl_align_viewport	code/game_gfx_opengl.h	/^game_gfx_opengl_align_viewport(game_gfx_opengl_t* ogl) $/;"	f	language:C++	typeref:typename:void
 game_gfx_opengl_attach_shader	code/game_gfx_opengl.h	/^game_gfx_opengl_attach_shader(game_gfx_opengl_t* ogl,$/;"	f	language:C++	typeref:typename:void
@@ -955,10 +958,8 @@ game_gfx_opengl_glVertexArrayElementBuffer	code/game_gfx_opengl.h	/^typedef void
 game_gfx_opengl_glVertexArrayVertexBuffer	code/game_gfx_opengl.h	/^typedef void    game_gfx_opengl_glVertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, GLu/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint bindingindex,GLuint buffer,GLintptr offset,GLsizei stride)
 game_gfx_opengl_glViewport	code/game_gfx_opengl.h	/^typedef void    game_gfx_opengl_glViewport(GLint x, GLint y, GLsizei width, GLsizei height);$/;"	t	language:C++	typeref:typename:void ()(GLint x,GLint y,GLsizei width,GLsizei height)
 game_gfx_opengl_init	code/game_gfx_opengl.h	/^game_gfx_opengl_init($/;"	f	language:C++	typeref:typename:b32_t
-game_gfx_opengl_init_sprite_batch	code/game_gfx_opengl.h	/^game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:b32_t
-game_gfx_opengl_init_triangle_batch	code/game_gfx_opengl.h	/^game_gfx_opengl_init_triangle_batch(game_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:b32_t
-GAME_GFX_OPENGL_MAX_SPRITES	code/game_gfx_opengl.h	/^# define GAME_GFX_OPENGL_MAX_SPRITES /;"	d	language:C++
-GAME_GFX_OPENGL_MAX_TRIANGLES	code/game_gfx_opengl.h	/^# define GAME_GFX_OPENGL_MAX_TRIANGLES /;"	d	language:C++
+game_gfx_opengl_init_sprite_batch	code/game_gfx_opengl.h	/^game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl, usz_t max_sprites) {$/;"	f	language:C++	typeref:typename:b32_t
+game_gfx_opengl_init_triangle_batch	code/game_gfx_opengl.h	/^game_gfx_opengl_init_triangle_batch(game_gfx_opengl_t* ogl, usz_t max_triangles) {$/;"	f	language:C++	typeref:typename:b32_t
 game_gfx_opengl_process_texture_queue	code/game_gfx_opengl.h	/^game_gfx_opengl_process_texture_queue(game_gfx_t* gfx) {$/;"	f	language:C++	typeref:typename:void
 game_gfx_opengl_push_sprite	code/game_gfx_opengl.h	/^game_gfx_opengl_push_sprite($/;"	f	language:C++	typeref:typename:void
 game_gfx_opengl_push_triangle	code/game_gfx_opengl.h	/^game_gfx_opengl_push_triangle($/;"	f	language:C++	typeref:typename:void
@@ -1022,7 +1023,6 @@ game_gfx_set_blend_alpha	code/game_gfx.h	/^game_gfx_set_blend_alpha(game_gfx_t* 
 game_gfx_set_blend_alpha	code/game_gfx.h	/^static void game_gfx_set_blend_alpha(game_gfx_t* g);$/;"	p	language:C++	typeref:typename:void
 game_gfx_set_view	code/game_gfx.h	/^game_gfx_set_view(game_gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x/;"	f	language:C++	typeref:typename:void
 game_gfx_t	code/game_gfx.h	/^struct game_gfx_t {$/;"	s	language:C++
-GAME_GFX_TEXTURE_PAYLOAD_CAP	code/game_gfx.h	/^#define GAME_GFX_TEXTURE_PAYLOAD_CAP /;"	d	language:C++
 GAME_GFX_TEXTURE_PAYLOAD_STATE_EMPTY	code/game_gfx.h	/^  GAME_GFX_TEXTURE_PAYLOAD_STATE_EMPTY,$/;"	e	language:C++	enum:game_gfx_texture_payload_state_t
 GAME_GFX_TEXTURE_PAYLOAD_STATE_LOADING	code/game_gfx.h	/^  GAME_GFX_TEXTURE_PAYLOAD_STATE_LOADING,$/;"	e	language:C++	enum:game_gfx_texture_payload_state_t
 GAME_GFX_TEXTURE_PAYLOAD_STATE_READY	code/game_gfx.h	/^  GAME_GFX_TEXTURE_PAYLOAD_STATE_READY,$/;"	e	language:C++	enum:game_gfx_texture_payload_state_t
@@ -1035,10 +1035,6 @@ game_hide_cursor	code/game.h	/^#define game_hide_cursor(/;"	d	language:C++
 game_hide_cursor_sig	code/game.h	/^#define game_hide_cursor_sig(/;"	d	language:C++
 game_hide_cursor_sig	code/game.h	/^typedef game_hide_cursor_sig(game_hide_cursor_f);$/;"	t	language:C++
 game_hide_cursor_sig	code/w32_game.cpp	/^game_hide_cursor_sig(w32_hide_cursor) {$/;"	f	language:C++	file:
-game_init_config_t	code/game.h	/^struct game_init_config_t {$/;"	s	language:C++
-game_init_sig	code/game.h	/^#define game_init_sig(/;"	d	language:C++
-game_init_sig	code/game.h	/^typedef game_init_sig(game_init_f);$/;"	t	language:C++
-game_init_sig	code/lit.cpp	/^game_init_sig(game_init) $/;"	f	language:C++	typeref:typename:exported
 game_init_sig	code/pngtuber.cpp	/^game_init_sig(game_init) $/;"	f	language:C++	typeref:typename:exported
 game_input_characters_t	code/game.h	/^struct game_input_characters_t {$/;"	s	language:C++
 game_input_t	code/game.h	/^struct game_input_t {$/;"	s	language:C++
@@ -1126,11 +1122,12 @@ garena_push_arr	code/momo.h	/^#define garena_push_arr(/;"	d	language:C++
 garena_push_size	code/momo.h	/^garena_push_size(garena_t* ga, usz_t size) {$/;"	f	language:C++	typeref:typename:void *
 garena_push_size	code/momo.h	/^static void* garena_push_size(garena_t* ga, usz_t size);$/;"	p	language:C++	typeref:typename:void *
 garena_t	code/momo.h	/^struct garena_t {$/;"	s	language:C++
+get_config	code/game.h	/^  game_get_config_f* get_config;$/;"	m	language:C++	struct:game_functions_t	typeref:typename:game_get_config_f *
 get_file_size	code/game.h	/^  game_get_file_size_f* get_file_size;$/;"	m	language:C++	struct:game_t	typeref:typename:game_get_file_size_f *
 get_performance_counter	code/game.h	/^  game_profiler_get_performance_counter_f* get_performance_counter;$/;"	m	language:C++	struct:game_profiler_t	typeref:typename:game_profiler_get_performance_counter_f *
 gfx	code/game.h	/^  game_gfx_t gfx;$/;"	m	language:C++	struct:game_t	typeref:typename:game_gfx_t
 gfx_arena	code/game.h	/^  arena_t gfx_arena;$/;"	m	language:C++	struct:game_t	typeref:typename:arena_t
-gfx_arena_size	code/game.h	/^  usz_t gfx_arena_size;$/;"	m	language:C++	struct:game_init_config_t	typeref:typename:usz_t
+gfx_arena_size	code/game.h	/^  usz_t gfx_arena_size;$/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
 gigabytes	code/momo.h	/^#define gigabytes(/;"	d	language:C++
 gist_cdl_init	code/gist_linked_list.cpp	/^gist_cdl_init(gist_cdl_node* sentinel) {$/;"	f	language:C++	typeref:typename:void	file:
 gist_cdl_new_node	code/gist_linked_list.cpp	/^gist_cdl_new_node(int value) {$/;"	f	language:C++	typeref:typename:gist_cdl_node *	file:
@@ -1333,7 +1330,6 @@ image_width	code/momo.h	/^  u32_t image_width;$/;"	m	language:C++	struct:_png_co
 imm_notifs	code/w32_game.cpp	/^  IMMNotificationClient imm_notifs;$/;"	m	language:C++	struct:w32_wasapi_notif_client_t	typeref:typename:IMMNotificationClient	file:
 index	code/momo.h	/^  u32_t index;$/;"	m	language:C++	struct:sort_entry_t	typeref:typename:u32_t
 info_lines	code/game_console.h	/^  stb8_t info_lines[9]; \/\/ TODO: this should be allocated as well$/;"	m	language:C++	struct:console_t	typeref:typename:stb8_t[9]
-init	code/game.h	/^  game_init_f* init;$/;"	m	language:C++	struct:game_functions_t	typeref:typename:game_init_f *
 INITGUID	code/w32_game.cpp	/^#define INITGUID$/;"	d	language:C++	file:
 input	code/game.h	/^  game_input_t input;$/;"	m	language:C++	struct:game_t	typeref:typename:game_input_t
 input_line	code/game_console.h	/^  stb8_t input_line;$/;"	m	language:C++	struct:console_t	typeref:typename:stb8_t
@@ -1634,12 +1630,17 @@ make	code/momo.h	/^#define make(/;"	d	language:C++
 max	code/game_gfx_opengl.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:game_gfx_opengl_uv_t	typeref:typename:v2f_t
 max	code/lit.cpp	/^  f64_t max;$/;"	m	language:C++	struct:lit_profiler_stat_t	typeref:typename:f64_t	file:
 maxp	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
-max_inspector_entries	code/game.h	/^  u32_t max_inspector_entries;$/;"	m	language:C++	struct:game_init_config_t	typeref:typename:u32_t
+max_inspector_entries	code/game.h	/^  u32_t max_inspector_entries;$/;"	m	language:C++	struct:game_config_t	typeref:typename:u32_t
 max_of	code/momo.h	/^#define max_of(/;"	d	language:C++
-max_profiler_entries	code/game.h	/^  u32_t max_profiler_entries;$/;"	m	language:C++	struct:game_init_config_t	typeref:typename:u32_t
-max_profiler_snapshots	code/game.h	/^  u32_t max_profiler_snapshots; \/\/ snapshots per entry$/;"	m	language:C++	struct:game_init_config_t	typeref:typename:u32_t
-max_textures	code/game.h	/^  u32_t max_textures;$/;"	m	language:C++	struct:game_init_config_t	typeref:typename:u32_t
-max_textures	code/game_gfx.h	/^  u32_t max_textures;$/;"	m	language:C++	struct:game_gfx_t	typeref:typename:u32_t
+max_profiler_entries	code/game.h	/^  u32_t max_profiler_entries;$/;"	m	language:C++	struct:game_config_t	typeref:typename:u32_t
+max_profiler_snapshots	code/game.h	/^  u32_t max_profiler_snapshots; \/\/ snapshots per entry$/;"	m	language:C++	struct:game_config_t	typeref:typename:u32_t
+max_sprites	code/game.h	/^  usz_t max_sprites;$/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
+max_sprites	code/game_gfx_opengl.h	/^  usz_t max_sprites;$/;"	m	language:C++	struct:game_gfx_opengl_t	typeref:typename:usz_t
+max_textures	code/game.h	/^  u32_t max_textures;$/;"	m	language:C++	struct:game_config_t	typeref:typename:u32_t
+max_textures	code/game_gfx.h	/^  usz_t max_textures;$/;"	m	language:C++	struct:game_gfx_t	typeref:typename:usz_t
+max_texture_payloads	code/game.h	/^  usz_t max_texture_payloads; $/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
+max_triangles	code/game.h	/^  usz_t max_triangles;$/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
+max_triangles	code/game_gfx_opengl.h	/^  usz_t max_triangles;$/;"	m	language:C++	struct:game_gfx_opengl_t	typeref:typename:usz_t
 max_x	code/game_gfx.h	/^  f32_t min_x, max_x;$/;"	m	language:C++	struct:game_gfx_command_view_t	typeref:typename:f32_t
 max_y	code/game_gfx.h	/^  f32_t min_y, max_y;$/;"	m	language:C++	struct:game_gfx_command_view_t	typeref:typename:f32_t
 megabytes	code/momo.h	/^#define megabytes(/;"	d	language:C++
@@ -1893,7 +1894,8 @@ pass_write_file	code/pass.h	/^pass_write_file(const char* filename, buffer_t buf
 pass_write_file	pass.h	/^pass_write_file(const char* filename, buffer_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t
 path_count	code/momo.h	/^  u32_t path_count;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:u32_t
 path_lengths	code/momo.h	/^  u32_t* path_lengths;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:u32_t *
-payloads	code/game_gfx.h	/^  game_gfx_texture_payload_t payloads[GAME_GFX_TEXTURE_PAYLOAD_CAP];$/;"	m	language:C++	struct:game_gfx_texture_queue_t	typeref:typename:game_gfx_texture_payload_t[]
+payloads	code/game_gfx.h	/^  game_gfx_texture_payload_t* payloads;$/;"	m	language:C++	struct:game_gfx_texture_queue_t	typeref:typename:game_gfx_texture_payload_t *
+payload_cap	code/game_gfx.h	/^  usz_t payload_cap;$/;"	m	language:C++	struct:game_gfx_texture_queue_t	typeref:typename:usz_t
 payload_count	code/game_gfx.h	/^  usz_t payload_count;$/;"	m	language:C++	struct:game_gfx_texture_queue_t	typeref:typename:usz_t
 peak_memory_usage	code/game_gfx.h	/^  usz_t peak_memory_usage;$/;"	m	language:C++	struct:game_gfx_command_queue_t	typeref:typename:usz_t
 pixels	code/pass.h	/^  u32_t* pixels;$/;"	m	language:C++	struct:pass_pack_bitmap_ext_t	typeref:typename:u32_t *
@@ -1957,7 +1959,7 @@ remainders	code/momo.h	/^  u16_t remainders[256];$/;"	m	language:C++	struct:crc1
 remainders	code/momo.h	/^  u32_t remainders[256];$/;"	m	language:C++	struct:crc32_table_t	typeref:typename:u32_t[256]
 remainders	code/momo.h	/^  u8_t remainders[256];$/;"	m	language:C++	struct:crc8_table_t	typeref:typename:u8_t[256]
 renderer_texture_handle	code/game.h	/^  u32_t renderer_texture_handle;$/;"	m	language:C++	struct:game_asset_bitmap_t	typeref:typename:u32_t
-render_command_size	code/game.h	/^  usz_t render_command_size;$/;"	m	language:C++	struct:game_init_config_t	typeref:typename:usz_t
+render_command_size	code/game.h	/^  usz_t render_command_size;$/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
 render_wh	code/game_gfx_opengl.h	/^  v2u_t render_wh;$/;"	m	language:C++	struct:game_gfx_opengl_t	typeref:typename:v2u_t
 rgb	code/momo.h	/^    rgb_t rgb;$/;"	m	language:C++	union:rgba_t::__anon1db7a63d0d0a	typeref:typename:rgb_t
 rgba_hex	code/momo.h	/^rgba_hex(u32_t hex) {$/;"	f	language:C++	typeref:typename:rgba_t
@@ -2210,7 +2212,8 @@ texel_y1	code/pass.h	/^  u32_t texel_y1;$/;"	m	language:C++	struct:pass_pack_fon
 texel_y1	pass.h	/^  u32_t texel_y1;$/;"	m	language:C++	struct:pass_pack_font_glyph_ext_t	typeref:typename:u32_t
 text	code/meta.cpp	/^  c8_t* text;$/;"	m	language:C++	struct:meta_tokenizer_t	typeref:typename:c8_t *	file:
 text	code/momo.h	/^  st8_t text;$/;"	m	language:C++	struct:json_t	typeref:typename:st8_t
-textures	code/game_gfx_opengl.h	/^  game_gfx_opengl_texture_t textures[GAME_GFX_TEXTURE_PAYLOAD_CAP];$/;"	m	language:C++	struct:game_gfx_opengl_t	typeref:typename:game_gfx_opengl_texture_t[]
+textures	code/game_gfx_opengl.h	/^  game_gfx_opengl_texture_t* textures;$/;"	m	language:C++	struct:game_gfx_opengl_t	typeref:typename:game_gfx_opengl_texture_t *
+texture_cap	code/game_gfx_opengl.h	/^  usz_t texture_cap;$/;"	m	language:C++	struct:game_gfx_opengl_t	typeref:typename:usz_t
 texture_data	code/game_gfx.h	/^  void* texture_data;$/;"	m	language:C++	struct:game_gfx_texture_payload_t	typeref:typename:void *
 texture_height	code/game_gfx.h	/^  u32_t texture_height;$/;"	m	language:C++	struct:game_gfx_texture_payload_t	typeref:typename:u32_t
 texture_index	code/game_gfx.h	/^  u32_t texture_index;$/;"	m	language:C++	struct:game_gfx_command_delete_texture_t	typeref:typename:u32_t
@@ -2218,7 +2221,7 @@ texture_index	code/game_gfx.h	/^  u32_t texture_index;$/;"	m	language:C++	struct
 texture_index	code/game_gfx.h	/^  u32_t texture_index;$/;"	m	language:C++	struct:game_gfx_texture_payload_t	typeref:typename:u32_t
 texture_queue	code/game.h	/^  game_gfx_texture_queue_t* texture_queue;$/;"	m	language:C++	struct:game_assets_t	typeref:typename:game_gfx_texture_queue_t *
 texture_queue	code/game_gfx.h	/^  game_gfx_texture_queue_t texture_queue;$/;"	m	language:C++	struct:game_gfx_t	typeref:typename:game_gfx_texture_queue_t
-texture_queue_size	code/game.h	/^  usz_t texture_queue_size;$/;"	m	language:C++	struct:game_init_config_t	typeref:typename:usz_t
+texture_queue_size	code/game.h	/^  usz_t texture_queue_size;$/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
 texture_width	code/game_gfx.h	/^  u32_t texture_width;$/;"	m	language:C++	struct:game_gfx_texture_payload_t	typeref:typename:u32_t
 text_length	code/meta.cpp	/^  u32_t text_length;$/;"	m	language:C++	struct:meta_tokenizer_t	typeref:typename:u32_t	file:
 The MOMO (name pending) game engine	README.md	/^# The MOMO (name pending) game engine$/;"	c	language:Markdown
@@ -2513,7 +2516,7 @@ width	code/momo.h	/^  u32_t width;$/;"	m	language:C++	struct:_png_ihdr_t	typeref
 width	code/pngtuber.cpp	/^  u32_t width;$/;"	m	language:C++	struct:ptube_image_t	typeref:typename:u32_t	file:
 WIN32_LEAN_AND_MEAN	code/w32_game.cpp	/^# define WIN32_LEAN_AND_MEAN$/;"	d	language:C++	file:
 window	code/w32_game.cpp	/^  HWND window;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:HWND	file:
-window_title	code/game.h	/^  const char* window_title; $/;"	m	language:C++	struct:game_init_config_t	typeref:typename:const char *
+window_title	code/game.h	/^  const char* window_title; $/;"	m	language:C++	struct:game_config_t	typeref:typename:const char *
 WinMain	code/w32_game.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 work_queue	code/w32_game.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_work_queue_t	file:
 write_file	code/game.h	/^  game_write_file_f* write_file;$/;"	m	language:C++	struct:game_t	typeref:typename:game_write_file_f *

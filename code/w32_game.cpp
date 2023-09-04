@@ -206,7 +206,7 @@ DEFINE_GUID(IID_IMMNotificationClient, 0x7991eec9, 0x7e89, 0x4d85, 0x83, 0x90, 0
 //
 // MARK:(Gfx)
 // 
-#define w32_gfx_load_sig(name) b32_t  name(game_gfx_t* gfx, HWND window, arena_t* arena, usz_t command_queue_size, usz_t texture_queue_size, usz_t max_textures, usz_t max_payloads)
+#define w32_gfx_load_sig(name) b32_t  name(game_gfx_t* gfx, HWND window, arena_t* arena, usz_t command_queue_size, usz_t texture_queue_size, usz_t max_textures, usz_t max_payloads, usz_t max_sprites, usz_t max_triangles)
 static w32_gfx_load_sig(w32_gfx_load);
 
 #define w32_gfx_begin_frame_sig(name) void name(game_gfx_t* gfx, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1)
@@ -464,7 +464,9 @@ if (!opengl->name) { return false; }
         command_queue_size,
         texture_queue_size,
         max_textures,
-        max_payloads)) 
+        max_payloads,
+        max_sprites,
+        max_triangles)) 
   {
     return false;
   }
@@ -1657,7 +1659,7 @@ WinMain(HINSTANCE instance,
   w32_load_code(&game_code);
   if (!game_code.is_valid) return 1;
   defer { w32_unload_code(&game_code); };
-  game_init_config_t config = game_functions.init();
+  game_config_t config = game_functions.get_config();
 
   //
   //- Create window in the middle of the screen
@@ -1769,7 +1771,9 @@ WinMain(HINSTANCE instance,
       config.render_command_size, 
       config.texture_queue_size,
       config.max_textures,
-      config.max_texture_payloads))
+      config.max_texture_payloads,
+      config.max_sprites,
+      config.max_triangles))
     return 1;
  
   // Init Audio
