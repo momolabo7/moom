@@ -532,7 +532,7 @@ game_gfx_opengl_set_texture(
 
 static void 
 game_gfx_opengl_delete_texture(game_gfx_opengl_t* ogl, umi_t texture_index) {
-  assert(texture_index < array_count(ogl->textures));
+  assert(texture_index < ogl->texture_cap);
   game_gfx_opengl_texture_t* texture = ogl->textures + texture_index;
   ogl->glDeleteTextures(1, &texture->handle);
   ogl->textures[texture_index].handle = 0;
@@ -1007,6 +1007,10 @@ game_gfx_opengl_init(
 {	
   auto* ogl = (game_gfx_opengl_t*)gfx->platform_data;
 
+  ogl->textures = arena_push_arr(game_gfx_opengl_texture_t, arena, max_textures);
+  ogl->texture_cap = max_payloads;
+  if (!ogl->textures) return false;
+
   if (!game_gfx_init(
         gfx, 
         arena,
@@ -1024,6 +1028,7 @@ game_gfx_opengl_init(
   if (!game_gfx_opengl_init_triangle_batch(ogl)) return false;
   game_gfx_opengl_add_predefined_textures(ogl);
   game_gfx_opengl_delete_all_textures(ogl);
+
 
   return true;
 }
@@ -1139,7 +1144,7 @@ game_gfx_opengl_process_texture_queue(game_gfx_t* gfx) {
     textures->transfer_memory_start = payload->transfer_memory_end;
 
     ++textures->first_payload_index;
-    if (textures->first_payload_index > array_count(textures->payloads)) {
+    if (textures->first_payload_index > textures->payload_cap) {
       textures->first_payload_index = 0;
     }
     --textures->payload_count;
@@ -1331,7 +1336,7 @@ game_gfx_opengl_end_frame(game_gfx_t* gfx) {
       case GAME_GFX_COMMAND_TYPE_SPRITE: {
         game_gfx_opengl_flush_triangles(ogl);
         game_gfx_command_sprite_t* data = (game_gfx_command_sprite_t*)entry->data;
-        assert(array_count(ogl->textures) > data->texture_index);
+        assert(ogl->texture_cap > data->texture_index);
 
         game_gfx_opengl_texture_t* texture = ogl->textures + data->texture_index; 
         if (texture->handle == 0) {

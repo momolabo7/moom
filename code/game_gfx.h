@@ -317,7 +317,7 @@ game_gfx_begin_texture_transfer(game_gfx_t* g, u32_t required_space) {
   game_gfx_texture_queue_t* q = &g->texture_queue;
   game_gfx_texture_payload_t* ret = 0;
   
-  if (q->payload_count < array_count(q->payloads)) {
+  if (q->payload_count < q->payload_cap) {
     usz_t avaliable_space = 0;
     usz_t memory_at = q->transfer_memory_end;
     // Memory is being used like a ring buffer
@@ -351,7 +351,7 @@ game_gfx_begin_texture_transfer(game_gfx_t* g, u32_t required_space) {
     if(avaliable_space >= required_space) {
       // We found enough space
       usz_t payload_index = q->first_payload_index + q->payload_count++;
-      ret = q->payloads + (payload_index % array_count(q->payloads));
+      ret = q->payloads + (payload_index % q->payload_cap);
       ret->texture_data = q->transfer_memory + memory_at;
       ret->transfer_memory_start = memory_at;
       ret->transfer_memory_end = memory_at + required_space;
