@@ -438,6 +438,7 @@ struct game_init_config_t {
   usz_t texture_queue_size;
   usz_t render_command_size;
   u32_t max_textures;
+  usz_t max_texture_payloads; 
 
   b32_t audio_enabled;
   usz_t audio_arena_size;

@@ -230,7 +230,8 @@ struct game_gfx_opengl_t {
   game_gfx_opengl_sprite_batch_t sprite_batch;
   game_gfx_opengl_triangle_batch_t triangle_batch;
 
-  game_gfx_opengl_texture_t textures[GAME_GFX_TEXTURE_PAYLOAD_CAP];
+  game_gfx_opengl_texture_t* textures;
+  usz_t texture_cap;
 
   game_gfx_opengl_texture_t dummy_texture;
   game_gfx_opengl_texture_t blank_texture;
@@ -501,7 +502,7 @@ game_gfx_opengl_set_texture(
     u8_t* pixels) 
 {
 
-  assert(index < array_count(ogl->textures));
+  assert(index < ogl->texture_cap);
 
   game_gfx_opengl_texture_t entry = {0};
   entry.width = width;
@@ -1001,7 +1002,8 @@ game_gfx_opengl_init(
     arena_t* arena,
     usz_t command_queue_size, 
     usz_t texture_queue_size,
-    u32_t max_textures)
+    usz_t max_textures,
+    usz_t max_payloads)
 {	
   auto* ogl = (game_gfx_opengl_t*)gfx->platform_data;
 
@@ -1010,7 +1012,8 @@ game_gfx_opengl_init(
         arena,
         command_queue_size,
         texture_queue_size,
-        max_textures)) 
+        max_textures,
+        max_payloads)) 
     return false;
 
   ogl->glEnable(GL_DEPTH_TEST);

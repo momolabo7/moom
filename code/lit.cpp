@@ -3836,6 +3836,7 @@ game_init_sig(game_init)
   ret.texture_queue_size = megabytes(5);
   ret.render_command_size = megabytes(100);
   ret.max_textures = 1;
+  ret.max_texture_payloads = 1;
 
   ret.audio_enabled = false;
   ret.audio_arena_size = megabytes(256);

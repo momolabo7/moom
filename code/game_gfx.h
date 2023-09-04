@@ -30,8 +30,6 @@
 #ifndef MOMO_GAME_GFX_H
 #define MOMO_GAME_GFX_H
 
-#define GAME_GFX_MAX_TEXTURES 256
-#define GAME_GFX_TEXTURE_PAYLOAD_CAP 256
 
 //-Texture Queue API
 enum game_gfx_texture_payload_state_t {
@@ -64,10 +62,10 @@ struct game_gfx_texture_queue_t {
   usz_t highest_transfer_memory_usage;
   usz_t highest_payload_usage;
   
-  // TODO: make this dynamic
-  game_gfx_texture_payload_t payloads[GAME_GFX_TEXTURE_PAYLOAD_CAP];
+  game_gfx_texture_payload_t* payloads;
   usz_t first_payload_index;
   usz_t payload_count;
+  usz_t payload_cap;
 
 
   
@@ -172,7 +170,7 @@ struct game_gfx_command_blend_t {
 struct game_gfx_t {
   game_gfx_command_queue_t command_queue;
   game_gfx_texture_queue_t texture_queue;
-  u32_t max_textures;
+  usz_t max_textures;
 
   void* platform_data;
 };
@@ -232,7 +230,8 @@ game_gfx_init(
     arena_t* arena,
     usz_t texture_queue_size, 
     usz_t command_queue_size,
-    u32_t max_textures)
+    usz_t max_textures,
+    usz_t max_payloads)
 {
 
   // commands
@@ -250,11 +249,14 @@ game_gfx_init(
     game_gfx_texture_queue_t* q = &g->texture_queue;
     q->transfer_memory = arena_push_arr(u8_t, arena, texture_queue_size);
     if (!q->transfer_memory) return false;
+    q->payloads = arena_push_arr(game_gfx_texture_payload_t, arena, max_payloads);
+    if (!q->payloads) return false;
     q->transfer_memory_size = texture_queue_size;
     q->transfer_memory_start = 0;
     q->transfer_memory_end = 0;
     q->first_payload_index = 0;
     q->payload_count = 0;
+    q->payload_cap = max_payloads;
     q->highest_transfer_memory_usage = 0;
     q->highest_payload_usage = 0;
   }
