@@ -27,9 +27,6 @@
 # define GAME_USE_WASAPI 1
 #endif
 
-#ifndef GAME_USE_OPENGL
-# define GAME_USE_OPENGL 1
-#endif 
 
 #ifndef WIN32_LEAN_AND_MEAN
 # define WIN32_LEAN_AND_MEAN
@@ -215,7 +212,6 @@ static w32_gfx_begin_frame_sig(w32_gfx_begin_frame);
 #define w32_gfx_end_frame_sig(name) void name(game_gfx_t* gfx)
 static w32_gfx_end_frame_sig(w32_gfx_end_frame);
 
-#include "game_gfx_opengl.h"
 
 
 //

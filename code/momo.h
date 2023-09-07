@@ -684,6 +684,7 @@ static b32_t is_digit(char c);
 #define copy_array(d,s)   copy_memory((d), (s), sizeof(d))
 #define copy_range(d,s,n) copy_memory((d), (s), sizeof(*(d)) * (n))
 static void copy_memory(void* dest, const void* src, umi_t size);
+static void copy_memory(void* dest, const void* src, umi_t size);
 static void zero_memory(void* dest, umi_t size);
 static b32_t is_memory_same(const void* lhs, const void* rhs, umi_t size);
 static void swap_memory(void* lhs, void* rhs, umi_t size);
@@ -992,7 +993,15 @@ static v2f_t rng_unit_circle(rng_t* r);
 //
 // MARK:(Sorting)
 //
+
+// These are for sort entries, which we should try to default to.
 static void quicksort(sort_entry_t* entries, u32_t entry_count);
+
+
+// These are for generic quicksort onto an array.
+// Performance depends on size of the element
+#define quicksort_generic_predicate_sig(name) b32_t name(const void* lhs, const void* rhs)
+#define quicksort_generic(arr, count, predicate) _quicksort_generic(arr, count, sizeof(*arr), predicate)
 
 //
 // MARK:(CRC)
@@ -1010,12 +1019,11 @@ static u32_t crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t
 // 
 // MARK:(Strings)
 //
-#define st8_from_lit(s) st8((u8_t*)(s), sizeof(s)-1)
-#define st8_lit(s) st8((u8_t*)(s), sizeof(s)-1)
-static st8_t st8(u8_t* str, usz_t size);
-static st8_t st8_substr(st8_t str, usz_t start, usz_t ope);
+#define st8_from_lit(s) st8_set((u8_t*)(s), sizeof(s)-1)
+static st8_t  st8_set(u8_t* str, usz_t size);
+static st8_t  st8_substr(st8_t str, usz_t start, usz_t ope);
 static b32_t  st8_match(st8_t lhs, st8_t rhs);
-static st8_t st8_from_cstr(const char* cstr);
+static st8_t  st8_from_cstr(const char* cstr);
 static smi_t  st8_compare_lexographically(st8_t lhs, st8_t rhs);
 static b32_t  st8_to_u32(st8_t s, u32_t* out);
 static b32_t  st8_to_f32(st8_t s, f32_t* out);
@@ -1434,7 +1442,7 @@ f64_factorial(f64_t x) {
 #include <string.h>
 static void 
 copy_memory(void* dest, const void* src, umi_t size) {
-  memmove(dest, src, size);
+  memcpy(dest, src, size);
 }
 
 static void 
@@ -1477,6 +1485,8 @@ is_memory_same(const void* lhs, const void* rhs, umi_t size) {
   
 }
 #endif
+
+
 
 static void 
 swap_memory(void* lhs, void* rhs, umi_t size) {
@@ -3609,8 +3619,62 @@ static rgba_t hsla_to_rgba(hsla_t c) {
 }
 
 //
-// MARK:(Sort)
+// MARK:(Sorting)
 //
+
+//
+// Generic version of quicksort
+//
+typedef b32_t _quicksort_generic_cmp_t(const void* lhs, const void* rhs);
+static u32_t
+_quicksort_generic_partition(
+    void* a,
+    u32_t start, 
+    u32_t ope,
+    u32_t element_size,
+    _quicksort_generic_cmp_t cmp) 
+{
+  // Save the rightmost index as pivot
+  // This frees up the right most index as a slot
+  u32_t pivot_idx = ope-1;
+  u32_t eventual_pivot_idx = start;
+  
+  for (u32_t i = start; i < ope-1; ++i) {
+    u8_t* i_ptr = (u8_t*)a + (i * element_size);
+    u8_t* pivot_ptr = (u8_t*)a + (pivot_idx * element_size);
+    //if (st8_compare_lexographically(*i_ptr, *pivot_ptr) < 0) {
+    if (cmp(i_ptr, pivot_ptr)) {
+      u8_t* eventual_pivot_ptr = (u8_t*)a + (eventual_pivot_idx * element_size);
+      swap_memory(i_ptr, eventual_pivot_ptr, element_size);
+      ++eventual_pivot_idx;
+    }
+  }
+  swap_memory((u8_t*)a+(eventual_pivot_idx*element_size), (u8_t*)a+(pivot_idx*element_size), element_size);
+  return eventual_pivot_idx;
+}
+
+// NOTE(Momo): This is done inplace
+static void
+_quicksort_generic_range(
+    void* a, 
+    u32_t start, 
+    u32_t ope,
+    u32_t element_size,
+    _quicksort_generic_cmp_t cmp) 
+{
+  if (ope - start <= 1) {
+    return;
+  }
+  u32_t pivot = _quicksort_generic_partition(a, start, ope, element_size, cmp);
+  _quicksort_generic_range(a, start, pivot, element_size, cmp);
+  _quicksort_generic_range(a, pivot+1, ope, element_size, cmp);
+}
+
+
+static void
+_quicksort_generic(void* entries, u32_t entry_count, u32_t element_size, _quicksort_generic_cmp_t cmp) {
+  _quicksort_generic_range(entries, 0, entry_count, element_size, cmp);
+}
 
 static void
 _sort_swap_entries(sort_entry_t* a, sort_entry_t* b) {
@@ -3965,7 +4029,7 @@ crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t* table) {
 // MARK:(String)
 //
 static st8_t
-st8(u8_t* str, usz_t size) {
+st8_set(u8_t* str, usz_t size) {
 	st8_t ret;
 	ret.e = str;
 	ret.count = size;
@@ -4024,6 +4088,8 @@ st8_compare_lexographically(st8_t lhs, st8_t rhs) {
   }
   
 }
+
+
 static b32_t 
 st8_to_u32_range(st8_t s, usz_t begin, usz_t ope, u32_t* out) {
   if (ope > s.count) return false;
