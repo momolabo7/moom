@@ -6,9 +6,9 @@
 // Game functions
 // 
 exported 
-game_init_sig(game_init) 
+game_get_config_sig(game_get_config) 
 {
-  game_init_config_t ret;
+  game_config_t ret;
 
   ret.debug_arena_size = kilobytes(300);
   ret.max_inspector_entries = 256;
@@ -19,8 +19,11 @@ game_init_sig(game_init)
   ret.texture_queue_size = megabytes(5);
   ret.render_command_size = megabytes(100);
   ret.max_textures = 1;
+  ret.max_texture_payloads = 1;
+  ret.max_sprites = 4096;
+  ret.max_triangles = 4096;
 
-  ret.audio_enabled = false;
+  ret.audio_enabled = true;
   ret.audio_arena_size = megabytes(256);
   
   ret.window_title = "PNGTuber";
@@ -56,7 +59,7 @@ ptube_unload_image(game_t* game, ptube_image_t* img) {
 exported 
 game_update_and_render_sig(game_update_and_render) 
 { 
-  game_t* game = in_game;
+#if 0
   if (game->game == nullptr)
   {
     void* memory = game_allocate_memory(game, sizeof(ptube_t));
@@ -76,7 +79,20 @@ game_update_and_render_sig(game_update_and_render)
     
     ptube_load_image(game, &ptube->images[0], "test.png");
   }
-
+#endif
+#if 1 // For testing only
+  static f32_t sine = 0.f;
+  s16_t* sample_out = game->audio.sample_buffer;
+  s16_t volume = 1000;
+  for(u32_t sample_index = 0; sample_index < game->audio.sample_count; ++sample_index) {
+    for (u32_t channel_index = 0; channel_index < game->audio.channels; ++channel_index) {
+      f32_t sine_value = f32_sin(sine);
+      sample_out[channel_index] = s16_t(sine_value * volume);
+    }
+    sample_out += game->audio.channels;
+    sine += 1.f;
+  }
+#endif
 
 
 

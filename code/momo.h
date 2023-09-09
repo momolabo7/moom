@@ -11,7 +11,7 @@
 // BOOKMARKS
 //   
 //   Includes    - Includes 
-//   Context     - Context Defines
+//   Context     - Context Defines (Arch, OS, compiler, etc)
 //   Constants   - Common constant values
 //   Helper      - Common helper macros and functions 
 //   ASCII       - Helper functions for ASCII 

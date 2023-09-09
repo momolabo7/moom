@@ -894,6 +894,7 @@ struct game_assets_t {
 //
 //
 struct game_config_t {
+  u32_t target_frame_rate;
 
   usz_t debug_arena_size;
   u32_t max_inspector_entries;
@@ -1835,6 +1836,8 @@ uniform sampler2D uTexture; \n\
 void main(void) { \n\
   fragColor = texture(uTexture, mTexCoord) * mColor;  \n\
 }"
+
+
 
 static b32_t 
 game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl, usz_t max_sprites) {
@@ -3016,6 +3019,11 @@ game_profiler_update_entries(game_profiler_t* p) {
 
 //
 // JOURNAL
+// = 2023-09-09 =
+//   Decided to allow the game layer to specify a target
+//   frame rate. I don't think I want to deal with
+//   monitor refresh rate and tying that to the
+//   game's ideal frame rate anymore. 
 //
 // = 2023-09-05 =
 //   Added graphics code in here.

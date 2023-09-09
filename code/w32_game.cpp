@@ -767,7 +767,7 @@ w32_audio_end_frame_sig(w32_audio_end_frame)
 static 
 w32_audio_load_sig(w32_audio_load)
 {
-  w32_wasapi_t* wasapi = arena_push(w32_wasapi_t, allocator);
+  auto* wasapi = arena_push(w32_wasapi_t, allocator);
   if (!wasapi) return false;
 
   game_audio->platform_data = wasapi;
@@ -1735,9 +1735,8 @@ WinMain(HINSTANCE instance,
 
   //  w32_toggle_fullscreen(window);
   
-  //-Determine refresh rate
-  // NOTE(Momo): For now we will adjust according to user's monitor...?
-  // We might want to fuck care and just stick to 60 though.
+  
+#if 0
   u32_t monitor_refresh_rate = 60;
   {
     HDC dc = GetDC(window);
@@ -1747,9 +1746,10 @@ WinMain(HINSTANCE instance,
       monitor_refresh_rate = (u32_t)w32_refresh_rate;
     }
   }
+#endif
+
   f32_t target_secs_per_frame = 1.f/(f32_t)monitor_refresh_rate;
-  w32_log("Monitor Refresh Rate: %d Hz\n", monitor_refresh_rate);
-  w32_log("Target Secs per Frame: %.2f\n", target_secs_per_frame);
+  w32_log("Target Frame Rate: %d Hz\n", config.target_frame_rate);
   
   
 
@@ -1781,7 +1781,7 @@ WinMain(HINSTANCE instance,
     if (!w32_audio_load(
           &game.audio, 
           48000, 16, 2, 1, 
-          monitor_refresh_rate, 
+          60, 
           audio_arena)) 
       return 1;
   }
@@ -1851,6 +1851,8 @@ WinMain(HINSTANCE instance,
     game_inspector_clear(&game.inspector);
     w32_gfx_end_frame(&game.gfx);
     
+    
+
     if (config.audio_enabled) w32_audio_end_frame(&game.audio);
 #if 0
     if (w32_state.is_cursor_locked) {
