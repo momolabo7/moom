@@ -836,6 +836,7 @@ game_function_names	code/game.h	/^static const char* game_function_names[] {$/;"
 game_get_config_sig	code/game.h	/^#define game_get_config_sig(/;"	d	language:C++
 game_get_config_sig	code/game.h	/^typedef game_get_config_sig(game_get_config_f);$/;"	t	language:C++
 game_get_config_sig	code/lit.cpp	/^game_get_config_sig(game_get_config) $/;"	f	language:C++	typeref:typename:exported
+game_get_config_sig	code/pngtuber.cpp	/^game_get_config_sig(game_get_config) $/;"	f	language:C++	typeref:typename:exported
 game_get_dt	code/game.h	/^game_get_dt(game_t* game) {$/;"	f	language:C++	typeref:typename:f32_t
 game_get_file_size	code/game.h	/^#define game_get_file_size(/;"	d	language:C++
 game_get_file_size_sig	code/game.h	/^#define game_get_file_size_sig(/;"	d	language:C++
@@ -1021,7 +1022,6 @@ game_hide_cursor	code/game.h	/^#define game_hide_cursor(/;"	d	language:C++
 game_hide_cursor_sig	code/game.h	/^#define game_hide_cursor_sig(/;"	d	language:C++
 game_hide_cursor_sig	code/game.h	/^typedef game_hide_cursor_sig(game_hide_cursor_f);$/;"	t	language:C++
 game_hide_cursor_sig	code/w32_game.cpp	/^game_hide_cursor_sig(w32_hide_cursor) {$/;"	f	language:C++	file:
-game_init_sig	code/pngtuber.cpp	/^game_init_sig(game_init) $/;"	f	language:C++	typeref:typename:exported
 game_input_characters_t	code/game.h	/^struct game_input_characters_t {$/;"	s	language:C++
 game_input_t	code/game.h	/^struct game_input_t {$/;"	s	language:C++
 game_inspector_add_f32	code/game.h	/^game_inspector_add_f32(game_inspector_t* in, st8_t name, f32_t item) {$/;"	f	language:C++	typeref:typename:void
@@ -1805,6 +1805,7 @@ OS_MAC	code/momo.h	/^# define OS_MAC /;"	d	language:C++
 OS_MAC	code/momo.h	/^# define OS_MAC /;"	d	language:C++
 OS_WINDOWS	code/momo.h	/^# define OS_WINDOWS /;"	d	language:C++
 OS_WINDOWS	code/momo.h	/^# define OS_WINDOWS /;"	d	language:C++
+output_test_sine_wave_f32	code/w32_test.cpp	/^static void output_test_sine_wave_f32(s32_t samples_per_second, s32_t sample_count, f32_t *sampl/;"	f	language:C++	typeref:typename:void	file:
 p0	code/game.h	/^  v2f_t p0, p1, p2;$/;"	m	language:C++	struct:game_gfx_command_triangle_t	typeref:typename:v2f_t
 p0	code/lit.cpp	/^  v2f_t p0, p1, p2;$/;"	m	language:C++	struct:lit_game_light_triangle_t	typeref:typename:v2f_t	file:
 p0	code/momo.h	/^  v2f_t p0, p1;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:v2f_t
@@ -2015,6 +2016,7 @@ s8_abs	code/momo.h	/^static s8_t  s8_abs(s8_t x);$/;"	p	language:C++	typeref:typ
 S8_MAX	code/momo.h	/^#define S8_MAX /;"	d	language:C++
 S8_MIN	code/momo.h	/^#define S8_MIN /;"	d	language:C++
 s8_t	code/momo.h	/^typedef int8_t   s8_t;$/;"	t	language:C++	typeref:typename:int8_t
+SafeRelease	code/w32_test.cpp	/^#define SafeRelease(/;"	d	language:C++	file:
 samples_per_second	code/w32_game.cpp	/^  u32_t samples_per_second;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 sample_buffer	code/game.h	/^  s16_t* sample_buffer;$/;"	m	language:C++	struct:game_audio_t	typeref:typename:s16_t *
 sample_count	code/game.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:game_audio_t	typeref:typename:u32_t
@@ -2165,6 +2167,7 @@ symbols	code/momo.h	/^  u16_t* symbols; $/;"	m	language:C++	struct:_png_huffman_
 symbol_count	code/momo.h	/^  u32_t symbol_count;$/;"	m	language:C++	struct:_png_huffman_t	typeref:typename:u32_t
 tail	code/momo.h	/^  json_array_node_t* tail;$/;"	m	language:C++	struct:json_array_t	typeref:typename:json_array_node_t *
 target_color	code/lit.cpp	/^  u32_t target_color;$/;"	m	language:C++	struct:lit_game_sensor_t	typeref:typename:u32_t	file:
+target_frame_rate	code/game.h	/^  u32_t target_frame_rate;$/;"	m	language:C++	struct:game_config_t	typeref:typename:u32_t
 TAU_32	code/momo.h	/^#define TAU_32 /;"	d	language:C++
 TAU_64	code/momo.h	/^#define TAU_64 /;"	d	language:C++
 test_assert_16	code/test.cpp	/^static void test_assert_16(void* addr) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -2463,6 +2466,7 @@ w32_worker_func	code/w32_game.cpp	/^w32_worker_func(LPVOID ctx) {$/;"	f	language
 w32_work_queue_t	code/w32_game.cpp	/^struct w32_work_queue_t {$/;"	s	language:C++	file:
 w32_work_t	code/w32_game.cpp	/^struct w32_work_t {$/;"	s	language:C++	file:
 wasapi	code/w32_game.cpp	/^  w32_wasapi_t* wasapi;$/;"	m	language:C++	struct:w32_wasapi_notif_client_t	typeref:typename:w32_wasapi_t *	file:
+wasapi__run	code/w32_test.cpp	/^wasapi__run(void* passthrough) {$/;"	f	language:C++	typeref:typename:DWORD	file:
 wav_data_chunk_t	code/momo.h	/^struct wav_data_chunk_t {$/;"	s	language:C++
 wav_fmt_chunk_t	code/momo.h	/^struct wav_fmt_chunk_t {$/;"	s	language:C++
 wav_read	code/momo.h	/^wav_read(wav_t* w, buffer_t contents) $/;"	f	language:C++	typeref:typename:b32_t
@@ -2506,6 +2510,7 @@ WIN32_LEAN_AND_MEAN	code/w32_game.cpp	/^# define WIN32_LEAN_AND_MEAN$/;"	d	langu
 window	code/w32_game.cpp	/^  HWND window;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:HWND	file:
 window_title	code/game.h	/^  const char* window_title; $/;"	m	language:C++	struct:game_config_t	typeref:typename:const char *
 WinMain	code/w32_game.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
+WinMain	code/w32_test.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int APIENTRY CALLBACK
 work_queue	code/w32_game.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_work_queue_t	file:
 write_file	code/game.h	/^  game_write_file_f* write_file;$/;"	m	language:C++	struct:game_t	typeref:typename:game_write_file_f *
 x	code/lit.cpp	/^  f32_t x;$/;"	m	language:C++	struct:lit_game_title_waypoint_t	typeref:typename:f32_t	file:
