@@ -1728,7 +1728,7 @@ main() {
   //euler_q19();
   //euler_q20();
   //euler_q21();
-  euler_q22();
+  //euler_q22();
+  
+
 }
-
-

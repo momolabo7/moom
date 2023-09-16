@@ -55,12 +55,13 @@ wasapi__run(void* passthrough) {
   assert(mix_format->nChannels == 2);
   assert(mix_format->wBitsPerSample == 32);
 
-
   //
   // TODO: Do we need to change this according to what 
   // frame rate our app is on?
   //
   REFERENCE_TIME buffer_duration = 60 * 10000; //  60ms
+  
+  
   DWORD flags = AUDCLNT_STREAMFLAGS_EVENTCALLBACK | AUDCLNT_STREAMFLAGS_NOPERSIST;
   hr = audio_client->Initialize(AUDCLNT_SHAREMODE_SHARED, flags, buffer_duration, 0, mix_format, NULL);
   assert(SUCCEEDED(hr));

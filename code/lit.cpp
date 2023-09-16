@@ -3840,7 +3840,7 @@ game_get_config_sig(game_get_config)
   ret.max_textures = 1;
   ret.max_texture_payloads = 1;
   ret.max_sprites = 4096;
-  ret.max_triangles = 0;
+  ret.max_triangles = 4096;
 
   ret.audio_enabled = false;
   ret.audio_arena_size = megabytes(256);

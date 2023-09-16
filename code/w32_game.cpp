@@ -36,12 +36,6 @@
 # define HOT_RELOADABLE 1
 #endif
 
-#define NOMINMAX
-#define CINTERFACE
-#define COBJMACROS
-#define INITGUID
-#define COBJMACROS
-#define CONST_VTABLE
 #include <windows.h>
 #include <windowsx.h>
 #include <timeapi.h>
@@ -141,10 +135,27 @@ struct w32_state_t {
 };
 static w32_state_t w32_state;
 
+#include <stdio.h>
+
+//
+// MARK:(Logging)
+//
+static 
+game_debug_log_sig(w32_log_proc) 
+{
+  char buffer[256] = {0};
+  va_list args;
+  va_start(args, fmt);
+  vsprintf(buffer, fmt, args);
+  va_end(args);
+  OutputDebugStringA(buffer);
+}
+#define w32_log(...) w32_log_proc(__VA_ARGS__)
+
 //
 // Mark:(Audio)
 //
-#define w32_audio_load_sig(name) b32_t name(game_audio_t* game_audio, u32_t samples_per_second, u16_t bits_per_sample, u16_t channels, u32_t latency_frames, u32_t refresh_rate, arena_t* allocator)
+#define w32_audio_load_sig(name) b32_t name(game_audio_t* game_audio, u32_t samples_per_second, u16_t bits_per_sample, u16_t channels, u32_t latency_frames, u32_t frame_rate, arena_t* allocator)
 static w32_audio_load_sig(w32_audio_load);
 
 #define w32_audio_unload_sig(name) void name(game_audio_t* game_audio)
@@ -162,18 +173,13 @@ static w32_audio_end_frame_sig(w32_audio_end_frame);
 //
 #ifdef GAME_USE_WASAPI 
 struct w32_wasapi_t;
-struct w32_wasapi_notif_client_t {
-  IMMNotificationClient imm_notifs;
-  w32_wasapi_t* wasapi;
-  LONG ref;
-};
 
 struct w32_wasapi_t {
-  
-  w32_wasapi_notif_client_t notifs;
+  //w32_wasapi_notif_client_t notifs;
+  IMMDevice* mm_device;
   IMMDeviceEnumerator * mm_device_enum;
-  IAudioClient2* audio_client;
-  IAudioRenderClient* audio_render_client;
+  IAudioClient* audio_client;
+  IAudioRenderClient* render_client;
   
   // "Secondary" buffer
   u32_t buffer_size;
@@ -191,11 +197,6 @@ struct w32_wasapi_t {
   arena_t allocator;
 };
 
-DEFINE_GUID(CLSID_MMDeviceEnumerator,  0xbcde0395, 0xe52f, 0x467c, 0x8e, 0x3d, 0xc4, 0x57, 0x92, 0x91, 0x69, 0x2e);
-DEFINE_GUID(IID_IMMDeviceEnumerator,   0xa95664d2, 0x9614, 0x4f35, 0xa7, 0x46, 0xde, 0x8d, 0xb6, 0x36, 0x17, 0xe6);
-DEFINE_GUID(IID_IAudioRenderClient,    0xf294acfc, 0x3146, 0x4483, 0xa7, 0xbf, 0xad, 0xdc, 0xa7, 0xc2, 0x60, 0xe2);
-DEFINE_GUID(IID_IAudioClient2,         0x726778cd, 0xf60a, 0x4eda, 0x82, 0xde, 0xe4, 0x76, 0x10, 0xcd,0x78, 0xaa);
-DEFINE_GUID(IID_IMMNotificationClient, 0x7991eec9, 0x7e89, 0x4d85, 0x83, 0x90, 0x6c, 0x70, 0x3c, 0xec, 0x60, 0xc0);
 #endif // GAME_USE_WASAPI
 
 
@@ -503,196 +504,113 @@ w32_gfx_end_frame_sig(w32_gfx_end_frame) {
 //
 // Implementations
 //
+
+
 //
 // MARK:(Wasapi)
 //
 
-// WASAPI audio device changing implementation
-static STDMETHODIMP_(ULONG)  
-_w32_wasapi_notif_client_AddRef(IMMNotificationClient* mm_notif) {
-  w32_wasapi_notif_client_t* w32_notif = (w32_wasapi_notif_client_t*)mm_notif;
-  return InterlockedIncrement(&w32_notif->ref);
-}
-static STDMETHODIMP_(ULONG)  
-_w32_wasapi_notif_client_Release(IMMNotificationClient* mm_notif) {
-  w32_wasapi_notif_client_t* w32_notif = (w32_wasapi_notif_client_t*)mm_notif;
-  return InterlockedDecrement(&w32_notif->ref);
-}
-static STDMETHODIMP_(HRESULT)  
-_w32_wasapi_notif_client_QueryInterface(IMMNotificationClient* mm_notif,
-                                       REFIID riid,
-                                       VOID **ppvInterface) 
-{
-  if (IID_IUnknown == riid)
-  {
-    _w32_wasapi_notif_client_AddRef(mm_notif);
-    *ppvInterface = (IUnknown*)mm_notif;
-  }
-  else if (IID_IMMNotificationClient == riid)
-  {
-    _w32_wasapi_notif_client_AddRef(mm_notif);
-    *ppvInterface = (IMMNotificationClient*)mm_notif;
-  }
-  else
-  {
-    *ppvInterface = 0;
-    return E_NOINTERFACE;
-  }
-  return S_OK;
-}
-static STDMETHODIMP_(HRESULT) 
-_w32_wasapi_notif_client_OnDefaultDeviceChange(IMMNotificationClient* mm_notif,
-                                              EDataFlow flow,
-                                              ERole role,
-                                              LPCWSTR pwstr_device_id)
-{
-  w32_wasapi_notif_client_t* w32_notif = (w32_wasapi_notif_client_t*)mm_notif;
-  w32_notif->wasapi->is_device_changed = true;
-  return S_OK;
-}
-static STDMETHODIMP_(HRESULT) 
-_w32_wasapi_notif_client_OnDeviceAdded(IMMNotificationClient* client, LPCWSTR pwstr_device_id)
-{
-  return S_OK;
-}
-static STDMETHODIMP_(HRESULT) 
-_w32_wasapi_notif_client_OnDeviceRemoved(IMMNotificationClient* client, LPCWSTR pwstr_device_id)
-{
-  return S_OK;
-}
+//
+// This is a thread!
+//
+static DWORD 
+w32_wasapi_run(void* passthrough) {
 
-static STDMETHODIMP_(HRESULT) 
-_w32_wasapi_notif_client_OnDeviceStateChanged(IMMNotificationClient* client,
-                                             LPCWSTR pwstr_device_id, 
-                                             DWORD dwNewState)
-{
-  return S_OK;
-}
-
-static STDMETHODIMP_(HRESULT) 
-_w32_wasapi_notif_client_OnPropertyValueChanged(IMMNotificationClient* client,
-                                               LPCWSTR pwstr_device_id, 
-                                               const PROPERTYKEY key)
-{
-  return S_OK;
-}
-
-
-// WASAPI audio implementation
-static IMMNotificationClientVtbl _w32_wasapi_notifs_vtable {
-  _w32_wasapi_notif_client_QueryInterface,
-  _w32_wasapi_notif_client_AddRef,
-  _w32_wasapi_notif_client_Release,
-  _w32_wasapi_notif_client_OnDeviceStateChanged,
-  _w32_wasapi_notif_client_OnDeviceAdded,
-  _w32_wasapi_notif_client_OnDeviceRemoved,
-  _w32_wasapi_notif_client_OnDefaultDeviceChange,
-  _w32_wasapi_notif_client_OnPropertyValueChanged,
-};
-
-static b32_t 
-_w32_wasapi_set_default_device_as_current_device(w32_wasapi_t* wasapi) {
-  IMMDevice* device;
-  HRESULT hr = IMMDeviceEnumerator_GetDefaultAudioEndpoint(wasapi->mm_device_enum, 
-                                                           eRender, 
-                                                           eConsole, 
-                                                           &device);
-  if (FAILED(hr)) {
-    //w32_log("[w32_wasapi] Failed to get wasapi endpoint\n");
-    return false;
+  while(true) {
+    w32_log("Hello\n"); 
   }
-  defer { IMMDevice_Release(device); };
-  
-  hr = IMMDevice_Activate(device,
-                          IID_IAudioClient2, 
-                          CLSCTX_ALL, 
-                          0, 
-                          (LPVOID*)&wasapi->audio_client);
-  if(FAILED(hr)) {
-    //w32_log("[w32_wasapi] Failed to create IAudioClient\n");
-    return false;
-  }
-  
-  WAVEFORMATEX wave_format = {};
-  wave_format.wFormatTag = WAVE_FORMAT_PCM;
-  wave_format.wBitsPerSample = wasapi->bits_per_sample;
-  wave_format.nChannels = wasapi->channels;
-  wave_format.nSamplesPerSec = wasapi->samples_per_second;
-  wave_format.nBlockAlign = (wave_format.nChannels * wave_format.wBitsPerSample / 8);
-  wave_format.nAvgBytesPerSec = wave_format.nSamplesPerSec * wave_format.nBlockAlign;
-  
-  REFERENCE_TIME buffer_duration = 0;
-  hr = IAudioClient2_GetDevicePeriod(wasapi->audio_client, 0, &buffer_duration);
-  
-  DWORD stream_flags = (AUDCLNT_STREAMFLAGS_RATEADJUST |
-                        AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM |
-                        AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY);
-
-  hr = IAudioClient2_Initialize(wasapi->audio_client,
-                                AUDCLNT_SHAREMODE_SHARED, 
-                                stream_flags, 
-                                buffer_duration,
-                                0, 
-                                &wave_format, 
-                                0);
-  if (FAILED(hr))
-  {
-    //w32_log("[w32_wasapi] Failed to initialize wasapi client\n");
-    return false;
-  }
-  
-  hr = IAudioClient2_GetService(wasapi->audio_client, 
-                               IID_IAudioRenderClient, 
-                               (LPVOID*)&wasapi->audio_render_client);
-  if (FAILED(hr))
-  {
-    //w32_log("[w32_wasapi] Failed to create IAudioClient\n");
-    return false;
-  }
-  
-  UINT32 sound_frame_count;
-  hr = IAudioClient2_GetBufferSize(wasapi->audio_client, &sound_frame_count);
-  if (FAILED(hr))
-  {
-    //w32_log("[w32_wasapi] Failed to get buffer size\n");
-    return false;
-  }
-
-  arena_clear(&wasapi->allocator);
-  wasapi->buffer_size = sound_frame_count;
-  wasapi->buffer = arena_push_arr(s16_t, &wasapi->allocator, wasapi->buffer_size);
-  if (!wasapi->buffer) {
-    //w32_log("[w32_wasapi] Failed to allocate secondary buffer\n");
-    return false;
-  }
-  IAudioClient2_Start(wasapi->audio_client);
-	wasapi->is_device_ready = true;
-  return true;
-}
-
-
-static inline void 
-_w32_wasapi_release_current_device(w32_wasapi_t* wasapi) {
-	if (wasapi->audio_client) {
-		IAudioClient2_Stop(wasapi->audio_client);
-		IAudioClient2_Release(wasapi->audio_client);
-		wasapi->audio_client = 0;
-	}
-	
-	if (wasapi->audio_render_client) {
-		IAudioRenderClient_Release(wasapi->audio_render_client);
-		wasapi->audio_render_client = 0;
-	}
-	wasapi->is_device_ready = false;
+  return 0;
 }
 
 
 //
 // API Correspondence
 //
+static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t tone_hz = 440, f32_t tone_volume = 0.1) {
+  static f32_t t_sine = 0;
+  s32_t wave_period = s32_t(samples_per_second / tone_hz);
+
+  f32_t *sample_out = samples;
+  for (int sample_index = 0; sample_index < sample_count; sample_index++) {
+    f32_t sine_value = f32_sin(t_sine);
+    f32_t sample_value = (f32_t)(sine_value * tone_volume);
+    *sample_out++ = sample_value;
+    *sample_out++ = sample_value;
+
+    t_sine += TAU_32 / (f32_t)wave_period;
+    if (t_sine >= TAU_32) {
+      t_sine -= TAU_32;
+    }
+  }
+}
+
+static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t tone_hz = 440, f32_t tone_volume = 0.1) {
+  static f32_t t_sine = 0;
+  s32_t wave_period = s32_t(samples_per_second / tone_hz);
+
+  f32_t *sample_out = samples;
+  for (int sample_index = 0; sample_index < sample_count; sample_index++) {
+    f32_t sine_value = f32_sin(t_sine);
+    if (sine_value > 0) sine_value = 1.f;
+    else sine_value = -1.f;
+    f32_t sample_value = (f32_t)(sine_value * tone_volume);
+    *sample_out++ = sample_value;
+    *sample_out++ = sample_value;
+
+    t_sine += TAU_32 / (f32_t)wave_period;
+    if (t_sine >= TAU_32) {
+      t_sine -= TAU_32;
+    }
+  }
+}
+
 static 
 w32_audio_begin_frame_sig(w32_audio_begin_frame) 
 {
+  auto* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
+
+  HRESULT hr; 
+
+  // Get the number of audio frames that the buffer can hold.
+  UINT32 buffer_frame_count = 0;
+  hr = wasapi->audio_client->GetBufferSize(&buffer_frame_count);
+  assert(SUCCEEDED(hr));
+
+  // Get the number of frames of padding
+  UINT32 padding_frame_count = 0;
+  hr = wasapi->audio_client->GetCurrentPadding(&padding_frame_count);
+  assert(SUCCEEDED(hr));
+
+
+  //
+  // Thus the total number of frames we can write is:
+  // frames_we_can_write = buffer_frame_count - padding_frame_count
+  //
+  UINT32 sample_count = buffer_frame_count - padding_frame_count; 
+  if (sample_count > 0) {
+    // Ask for the address of the buffer with the size of sample_count.
+    // This could actually fail for a multitude of reasons so it's 
+    // probably good to account for that.
+    BYTE* data = 0;
+
+    // We should expect GetBuffer to fail.
+    // In which we, we should do nothing, but the NEXT time it succees
+    // it should continue playing the sound without breaking continuity.
+    //
+    hr = wasapi->render_client->GetBuffer(sample_count, &data);
+    if (SUCCEEDED(hr)) {
+      f32_t* samples = (f32_t*)data;
+      auto samples_per_second = wasapi->samples_per_second;
+      test_square_wave(samples_per_second, sample_count, samples);
+      wasapi->render_client->ReleaseBuffer(sample_count, 0);
+    }
+
+
+
+  }
+
+
+#if 0
   w32_wasapi_t* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
 	if (wasapi->is_device_changed) {
 		//w32_log("[w32_wasapi] Resetting wasapi device\n");
@@ -728,19 +646,25 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
   game_audio->sample_buffer = wasapi->buffer;
   game_audio->sample_count = samples_to_write; 
   game_audio->channels = wasapi->channels;
+#endif
 
 }
 
 static 
 w32_audio_end_frame_sig(w32_audio_end_frame) 
 {
-  w32_wasapi_t* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
+  // Output sound here
 
+  auto* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
+
+  
+
+#if 0
 	if (!wasapi->is_device_ready) return;
 
   // NOTE(Momo): Kinda assumes 16-bit Sound
   BYTE* sound_buffer_data;
-  HRESULT hr = IAudioRenderClient_GetBuffer(wasapi->audio_render_client, 
+  HRESULT hr = IAudioRenderClient_GetBuffer(wasapi->render_client, 
                                             (UINT32)game_audio->sample_count, 
                                             &sound_buffer_data);
   if (FAILED(hr)) return;
@@ -758,109 +682,176 @@ w32_audio_end_frame_sig(w32_audio_end_frame)
   }
 
   IAudioRenderClient_ReleaseBuffer(
-      wasapi->audio_render_client, 
+      wasapi->render_client, 
       (UINT32)game_audio->sample_count, 
       0);
+#endif
 }
 
 
 static 
 w32_audio_load_sig(w32_audio_load)
 {
+  assert(bits_per_sample == 32 || bits_per_sample == 8 || bits_per_sample == 16);
+  assert(channels == 1 || channels == 2);
+
+#if 0
+  DWORD thread_id = 0;
+  HANDLE handle = CreateThread(0, 0, w32_wasapi_run, 0, 0, &thread_id);
+  SetThreadPriority(handle, THREAD_PRIORITY_TIME_CRITICAL);
+  WaitForSingleObject(handle, INFINITE);
+#endif
+
+#if 1
+
   auto* wasapi = arena_push(w32_wasapi_t, allocator);
-  if (!wasapi) return false;
+  assert(wasapi);
 
   game_audio->platform_data = wasapi;
 
   wasapi->channels = channels;
   wasapi->bits_per_sample = bits_per_sample;
   wasapi->samples_per_second = samples_per_second;
-  wasapi->latency_sample_count = (samples_per_second / refresh_rate) * latency_frames;
+  wasapi->latency_sample_count = (samples_per_second / frame_rate) * latency_frames;
 
-  if (!arena_push_partition_with_remaining(
-        allocator, 
-        &wasapi->allocator, 
-        16)) 
-  {
-    //w32_log("[w32_wasapi] Failed to partition memory\n");
-    return false;
-  }
+
+  HRESULT hr;
+  hr = CoInitializeEx(0, COINIT_SPEED_OVER_MEMORY);
+  assert(SUCCEEDED(hr));
+
   
-  HRESULT hr = CoInitializeEx(0, COINIT_SPEED_OVER_MEMORY);
-  if (FAILED(hr)) {
-    //w32_log("[w32_wasapi] Failed CoInitializeEx\n");
-    return false;
-  }
-  
-  hr = CoCreateInstance(CLSID_MMDeviceEnumerator, 
+  //
+  // Create the device enumerator.
+  //
+  // NOTE(momo): The device enumerator is just a thing to enumerates 
+  // through a list of devices. Note that this includes ALL devices (not just audio!)
+  //
+  hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), 
                         0,
-                        CLSCTX_ALL, 
-                        IID_IMMDeviceEnumerator,
-                        (LPVOID*)(&wasapi->mm_device_enum));
-  if (FAILED(hr)) {
-    //w32_log("[w32_wasapi] Failed to create IMMDeviceEnumerator\n");
-    goto cleanup_1;
-  }
+                        CLSCTX_INPROC_SERVER,
+                        IID_PPV_ARGS(&wasapi->mm_device_enum));
+  assert(SUCCEEDED(hr));
    
-  wasapi->notifs.imm_notifs.lpVtbl = &_w32_wasapi_notifs_vtable;
-	wasapi->notifs.ref = 1;
-	wasapi->notifs.wasapi = wasapi;
-  hr = IMMDeviceEnumerator_RegisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
+  //
+  // Use the device enumerator to find a default audio device.
+  //
+  // 'eRender' is a flag to tell it to find an audio rendering device (which are audio
+  // output devices like speakers, etc). For capture devices (mics), use 'eCapture'.
+  //
+  // Not really sure and don't really care what eConsole is for now.
+  //
+  hr = wasapi->mm_device_enum->GetDefaultAudioEndpoint(eRender, eConsole, &wasapi->mm_device);
+  assert(SUCCEEDED(hr));
 
-	if(FAILED(hr)) {
-		//w32_log("[w32_wasapi] Failed to register notification callback\n");
-		goto cleanup_2;
-	}
-	
-	// NOTE(Momo): Allocate the maximum buffer possible given allowed latency
-	wasapi->buffer_size = wasapi->latency_sample_count * sizeof(s16_t);
-  wasapi->buffer = arena_push_arr(s16_t, &wasapi->allocator, wasapi->buffer_size);
-  if (!wasapi->buffer) {
-    //w32_log("[w32_wasapi] Failed to allocate memory\n");
-    goto cleanup_3;
-  }
+  // Create the audio client
+  hr = wasapi->mm_device->Activate(__uuidof(IAudioClient), CLSCTX_INPROC_SERVER, NULL, (LPVOID*)(&wasapi->audio_client));
+  assert(SUCCEEDED(hr));
+
+                                               
+  //
+  // Initializes the audio client.
+  // 
+  // Explanation of flags:
+  //
+  //   AUDCLNT_STREAMFLAGS_EVENTCALLBACK
+  //     Enable events with audio device. Will use this to register a callback 
+  //     whenever the audio's buffer need to be refilled.
+  //
+  //   AUDCLNT_STREAMFLAG_NOPERSIST
+  //     Ensures that any thing we do to the device (like volume control) does not persist
+  //     upon application restart
+  //     
+  //   AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM
+  //     An audio client typically uses a fixed format (e.g. 32-bit or 16-bit, 48000hz or 44100 hz)
+  //     This is obtainable with IAudioClient::GetMixFormat().
+  //     This flag means that a mixer will be included that will help convert a given wave format
+  //     to the one that the audio client uses. We will use this flag because we will
+  //     let the game layer decide what format to use.
+  // 
+  DWORD flags = 
+    (/*AUDCLNT_STREAMFLAGS_EVENTCALLBACK |*/ 
+     AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM |
+     AUDCLNT_STREAMFLAGS_NOPERSIST);
+  
+
+  WAVEFORMATEX wave_format = {};
+  wave_format.wFormatTag = (bits_per_sample == 32) ? WAVE_FORMAT_IEEE_FLOAT : WAVE_FORMAT_PCM;
+  wave_format.wBitsPerSample = bits_per_sample;
+  wave_format.nChannels = channels;
+  wave_format.nSamplesPerSec = samples_per_second;
+  // this is always correct for WAVE_FORMAT_CPM and WAVE_FORMAT_IEEE_FLOAT
+  wave_format.nBlockAlign = wave_format.nChannels * (wave_format.wBitsPerSample/8);   
+  wave_format.nAvgBytesPerSec = wave_format.nSamplesPerSec * wave_format.nBlockAlign; 
+
+
+
+  // The buffer duration is a time value expressed in 100-nanosecond units
+  // Basically, this is telling the audio engine what buffer size the
+  // audio engine should provide. 
+  //
+  // Note that 1 millisecond = 1,000,000 nanoseconds = 10000 100-nanoseconds
+  REFERENCE_TIME buffer_duration = frame_rate * 10000; 
+  
+  hr = wasapi->audio_client->Initialize(
+      AUDCLNT_SHAREMODE_SHARED, 
+      flags, 
+      buffer_duration, 
+      0, 
+      &wave_format, 
+      NULL);
+
+  assert(SUCCEEDED(hr));
+
+
+  // Retrieves the render client. The render client is specifically the
+  // part of the audio client that plays sound.
+  hr = wasapi->audio_client->GetService(IID_PPV_ARGS(&wasapi->render_client));
+  assert(SUCCEEDED(hr));
+
+  hr = wasapi->audio_client->Start();
+  assert(SUCCEEDED(hr));
+
+  
+
+
+  //
+  // TODO: Enable Refill event here?
+  //
+#if 0 
+  HANDLE hRefillEvent = CreateEventEx(NULL, NULL, 0, EVENT_MODIFY_STATE | SYNCHRONIZE);
+  hr = audio_client->SetEventHandle(hRefillEvent);
+  assert(SUCCEEDED(hr));
+#endif
 
   // Does the success of this matter?
   // Do we even need to return success for this method??
-  _w32_wasapi_set_default_device_as_current_device(wasapi);
+  //_w32_wasapi_set_default_device_as_current_device(wasapi);
 
+#endif
 	return true;
 	
-	// NOTE(Momo): Cleanup
-	cleanup_3: 	
-    arena_clear(&wasapi->allocator);
-	cleanup_2: 
-		IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
-	cleanup_1:
-		IMMDeviceEnumerator_Release(wasapi->mm_device_enum);
-
-	return false;
 }
 
 
 
 static 
 w32_audio_unload_sig(w32_audio_unload) {
-  w32_wasapi_t* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
+  auto* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
+  wasapi->audio_client->Release();
+  wasapi->render_client->Release();
+  wasapi->mm_device->Release();
+  wasapi->mm_device_enum->Release();
+
+
+#if 0
 
   _w32_wasapi_release_current_device(wasapi);
 	IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
 	IMMDeviceEnumerator_Release(wasapi->mm_device_enum);
   arena_clear(&wasapi->allocator);
+#endif
 }
-#include <stdio.h>
 
-static 
-game_debug_log_sig(w32_log_proc) 
-{
-  char buffer[256] = {0};
-  va_list args;
-  va_start(args, fmt);
-  vsprintf(buffer, fmt, args);
-  va_end(args);
-  OutputDebugStringA(buffer);
-}
-#define w32_log(...) w32_log_proc(__VA_ARGS__)
 #define w32_profile_block(...) profiler_block(profiler, __VA_ARGS__)
 
 static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }
@@ -1737,18 +1728,18 @@ WinMain(HINSTANCE instance,
   
   
 #if 0
-  u32_t monitor_refresh_rate = 60;
+  u32_t monitor_frame_rate = 60;
   {
     HDC dc = GetDC(window);
-    int w32_refresh_rate = GetDeviceCaps(dc, VREFRESH);
+    int w32_frame_rate = GetDeviceCaps(dc, VREFRESH);
     ReleaseDC(window, dc);
-    if (w32_refresh_rate > 1) {
-      monitor_refresh_rate = (u32_t)w32_refresh_rate;
+    if (w32_frame_rate > 1) {
+      monitor_frame_rate = (u32_t)w32_frame_rate;
     }
   }
 #endif
 
-  f32_t target_secs_per_frame = 1.f/(f32_t)monitor_refresh_rate;
+  f32_t target_secs_per_frame = 1.f/(f32_t)config.target_frame_rate;
   w32_log("Target Frame Rate: %d Hz\n", config.target_frame_rate);
   
   
@@ -1780,7 +1771,7 @@ WinMain(HINSTANCE instance,
 
     if (!w32_audio_load(
           &game.audio, 
-          48000, 16, 2, 1, 
+          48000, 32, 2, 1, 
           60, 
           audio_arena)) 
       return 1;
