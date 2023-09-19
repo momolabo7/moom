@@ -108,7 +108,7 @@ wasapi__run(void* passthrough) {
           f64_t sec = (f64_t)(position) / (f64_t)(freq);
 
           u64_t total_bytes_written = total_frames_written * mix_format->nBlockAlign;
-          //printf("AudioClock: freq=%lldHz, pos=%10lld, %10.5fsec -- Total Bytes Written: %10lld \n", freq, position, sec, total_bytes_written);
+          printf("AudioClock: freq=%lldHz, pos=%10lld, %10.5fsec -- Total Bytes Written: %10lld \n", freq, position, sec, total_bytes_written);
           //assert(total_bytes_written >= position);
           audio_clock->Release();
         }

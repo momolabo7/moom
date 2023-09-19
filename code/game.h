@@ -3019,10 +3019,14 @@ game_profiler_update_entries(game_profiler_t* p) {
 
 //
 // JOURNAL
+// = 2023-09-19 =
+//   Was trying to refactor how audio works on the win32 layer and pinning down exactly
+//   what I'm doing with WASAPI. I'm not entirely sure how I want to go about it.
+//
+// 
 // = 2023-09-09 =
-//   Decided to allow the game layer to specify a target
-//   frame rate. I don't think I want to deal with
-//   monitor refresh rate and tying that to the
+//   Decided to allow the game layer to specify a target frame rate. 
+//   I don't think I want to deal with monitor refresh rate and tying that to the
 //   game's ideal frame rate anymore. 
 //
 // = 2023-09-05 =

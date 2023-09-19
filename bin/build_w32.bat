@@ -7,31 +7,26 @@ SET root_dir=%me%..
 SET code_dir=%root_dir%\code
 SET build_dir=%root_dir%\build
 SET output_name="w32_game.exe"
-SET is_release_version="0"
+SET optimize=0
+
+:label_parse 
+IF "%~1"=="" GOTO label_end_parse
+IF "%~1"=="-o" SET optimize=1
+SHIFT
+GOTO label_parse
+:label_end_parse
+
+
 
 if not exist %build_dir% mkdir %build_dir%
 
-for %%a in (%*) do (
-  rem Momo: The fact that 'c' set here almost made me want
-  rem       to write my own build script...
-  for /f "tokens=1,2 delims=:" %%b in ("%%a") do (
-    if "%%b" == "/o" (
-      SET is_release_version="1"
-    )
-
-    if "%%b" == "/n" (
-      SET output_name=%%c
-    )
-
-  )
-)
 
 
 SET CompilerFlags=-MT -WX -W4 -wd4706 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa  -std:c++17 
 
 echo ******************* 
 
-if %is_release_version%=="1" (
+if optimize==1 (
   echo Version  : Release
   SET CompilerFlags=-O2 -DASSERTIVE=0 -DHOT_RELOADABLE=0 %CompilerFlags%
 ) else  (

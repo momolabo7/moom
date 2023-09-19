@@ -181,9 +181,9 @@ struct w32_wasapi_t {
   IAudioClient* audio_client;
   IAudioRenderClient* render_client;
   
-  // "Secondary" buffer
+  // Intermediate ring buffer for game to write audio to.
   u32_t buffer_size;
-  s16_t* buffer;
+  void* buffer;
   
   // Other variables for tracking purposes
   u32_t latency_sample_count;
@@ -564,9 +564,42 @@ static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t
   }
 }
 
+#include <stdio.h>
+
+static game_allocate_memory_sig(w32_allocate_memory);
+
+static buffer_t  
+read_file_like_an_idiot(const char* filename) {
+  FILE *file = fopen(filename, "rb");
+  if (!file) return buffer_set(0,0);
+  defer { fclose(file); };
+
+  fseek(file, 0, SEEK_END);
+  usz_t file_size = ftell(file);
+  fseek(file, 0, SEEK_SET);
+
+  buffer_t ret;
+  ret.data = (u8_t*)w32_allocate_memory(file_size);
+  ret.size = file_size;
+
+  usz_t read_amount = fread(ret.data, 1, file_size, file);
+  if(read_amount != file_size) return buffer_set(0,0);
+  
+  return ret;
+  
+}
+
 static 
 w32_audio_begin_frame_sig(w32_audio_begin_frame) 
 {
+  //
+  // This is the math for checking if sample_count from WASAPI is enough
+  // 
+  // If sample rate is 48000 samples per second,
+  // refresh rate is 60 frames per second,
+  // In 1 frame, there SHOULD then be a minimum of 800 samples to push.
+  //
+  //
   auto* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
 
   HRESULT hr; 
@@ -581,13 +614,44 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
   hr = wasapi->audio_client->GetCurrentPadding(&padding_frame_count);
   assert(SUCCEEDED(hr));
 
+  UINT32 samples_to_write = buffer_frame_count - padding_frame_count; 
+
+  static b32_t once = false;
+  static wav_t wav;
+  static s16_t* wave_data;
+  
+  if (!once) {
+    buffer_t contents =  read_file_like_an_idiot("bouken.wav");
+    wav_read(&wav, contents);
+    wave_data = (s16_t*)wav.data;
+    once = true;
+  }
+
+  // TODO: This is just a simluation of game layer.
+
+  //UINT32 death_loop = 48000/60; 
+  s16_t* where = (s16_t*)wasapi->buffer;
+  auto samples_per_second = wasapi->samples_per_second;
+  //test_square_wave(samples_per_second, sample_count, samples);
+
+
+  for (u32_t i = 0; i < samples_to_write; ++i) {
+    *where++ = *wave_data++;
+    *where++ = *wave_data++;
+  }
+
+  //w32_log("sample count: %d\n", sample_count);
+  //w32_log("%d\n",  ptr_to_umi(where) - ptr_to_umi(wasapi->buffer));
+
+
+
 
   //
   // Thus the total number of frames we can write is:
   // frames_we_can_write = buffer_frame_count - padding_frame_count
   //
-  UINT32 sample_count = buffer_frame_count - padding_frame_count; 
-  if (sample_count > 0) {
+  //UINT32 sample_count = buffer_frame_count - padding_frame_count; 
+  if (samples_to_write > 0) {
     // Ask for the address of the buffer with the size of sample_count.
     // This could actually fail for a multitude of reasons so it's 
     // probably good to account for that.
@@ -596,13 +660,12 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
     // We should expect GetBuffer to fail.
     // In which we, we should do nothing, but the NEXT time it succees
     // it should continue playing the sound without breaking continuity.
-    //
-    hr = wasapi->render_client->GetBuffer(sample_count, &data);
+    hr = wasapi->render_client->GetBuffer(samples_to_write, &data);
     if (SUCCEEDED(hr)) {
-      f32_t* samples = (f32_t*)data;
-      auto samples_per_second = wasapi->samples_per_second;
-      test_square_wave(samples_per_second, sample_count, samples);
-      wasapi->render_client->ReleaseBuffer(sample_count, 0);
+      usz_t size = samples_to_write * wasapi->channels * wasapi->bits_per_sample/8;
+      copy_memory(data, wasapi->buffer, size); 
+
+      wasapi->render_client->ReleaseBuffer(samples_to_write, 0);
     }
 
 
@@ -695,6 +758,7 @@ w32_audio_load_sig(w32_audio_load)
   assert(bits_per_sample == 32 || bits_per_sample == 8 || bits_per_sample == 16);
   assert(channels == 1 || channels == 2);
 
+
 #if 0
   DWORD thread_id = 0;
   HANDLE handle = CreateThread(0, 0, w32_wasapi_run, 0, 0, &thread_id);
@@ -702,7 +766,6 @@ w32_audio_load_sig(w32_audio_load)
   WaitForSingleObject(handle, INFINITE);
 #endif
 
-#if 1
 
   auto* wasapi = arena_push(w32_wasapi_t, allocator);
   assert(wasapi);
@@ -713,6 +776,18 @@ w32_audio_load_sig(w32_audio_load)
   wasapi->bits_per_sample = bits_per_sample;
   wasapi->samples_per_second = samples_per_second;
   wasapi->latency_sample_count = (samples_per_second / frame_rate) * latency_frames;
+
+  //
+  // Setup the intermediate ring ring buffer for game to write audio to.
+  // The buffer should be able to hold at least 1 second of audio data + N frame of latency.
+  //
+  // 1 second of audio data is just 1 samples_per_second. 
+  // 1 sample is channels * bits_per_sample/8
+  // Therefore the buffer size is just (samples_per_second * channels * bits_per_sample/8)
+  //
+  wasapi->buffer_size = samples_per_second * channels * bits_per_sample/8;
+  wasapi->buffer = arena_push_size(allocator, wasapi->buffer_size, 16);
+  assert(wasapi->buffer);
 
 
   HRESULT hr;
@@ -767,7 +842,10 @@ w32_audio_load_sig(w32_audio_load)
   //     This flag means that a mixer will be included that will help convert a given wave format
   //     to the one that the audio client uses. We will use this flag because we will
   //     let the game layer decide what format to use.
+  //
+  //  
   // 
+  //
   DWORD flags = 
     (/*AUDCLNT_STREAMFLAGS_EVENTCALLBACK |*/ 
      AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM |
@@ -785,9 +863,11 @@ w32_audio_load_sig(w32_audio_load)
 
 
 
+  //
   // The buffer duration is a time value expressed in 100-nanosecond units
-  // Basically, this is telling the audio engine what buffer size the
-  // audio engine should provide. 
+  // Basically, this is telling the audio engine our refresh rate, which in turns
+  // allows the audio engine to know what is the minimum buffer size to provide
+  // when our engine wants to write to the audio buffer.
   //
   // Note that 1 millisecond = 1,000,000 nanoseconds = 10000 100-nanoseconds
   REFERENCE_TIME buffer_duration = frame_rate * 10000; 
@@ -804,13 +884,39 @@ w32_audio_load_sig(w32_audio_load)
 
 
   // Retrieves the render client. The render client is specifically the
-  // part of the audio client that plays sound.
+  // part of the audio client that plays sound. One render client represents
+  // one audio device (which can be an engine like NVdia Broadcast or a hardware).
   hr = wasapi->audio_client->GetService(IID_PPV_ARGS(&wasapi->render_client));
   assert(SUCCEEDED(hr));
+
+
+
+
+
+  // TODO: Do we just the the real buffer size and just use that value
+  // to initialize our sound buffer size that our game layer will write to?
+
+
+  // Get the number of audio frames that the buffer can hold.
+  // Note that 1 'audio frame' == 1 sample per second
+  UINT32 buffer_frame_count = 0;
+  hr = wasapi->audio_client->GetBufferSize(&buffer_frame_count);
+  assert(SUCCEEDED(hr));
+
+  // Get the number of frames of padding
+  UINT32 padding_frame_count = 0;
+  hr = wasapi->audio_client->GetCurrentPadding(&padding_frame_count);
+  assert(SUCCEEDED(hr));
+
+  // Initialize the secondary buffer.
+  UINT32 writable_frames = buffer_frame_count - padding_frame_count;
+
+
 
   hr = wasapi->audio_client->Start();
   assert(SUCCEEDED(hr));
 
+  
   
 
 
@@ -827,7 +933,6 @@ w32_audio_load_sig(w32_audio_load)
   // Do we even need to return success for this method??
   //_w32_wasapi_set_default_device_as_current_device(wasapi);
 
-#endif
 	return true;
 	
 }
@@ -1771,15 +1876,12 @@ WinMain(HINSTANCE instance,
 
     if (!w32_audio_load(
           &game.audio, 
-          48000, 32, 2, 1, 
-          60, 
+          48000, 16, 2, 1, 
+          config.target_frame_rate, 
           audio_arena)) 
       return 1;
   }
-  defer{ 
-    if (config.audio_enabled) 
-      w32_audio_unload(&game.audio); 
-  };
+  defer{ if (config.audio_enabled) w32_audio_unload(&game.audio); };
 
 
 
@@ -1922,11 +2024,6 @@ WinMain(HINSTANCE instance,
     
     
   }
-  
-  
-  
-  
   return 0;  
-  
   
 }

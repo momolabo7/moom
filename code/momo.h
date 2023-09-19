@@ -199,6 +199,7 @@ typedef size_t    usz_t; // Can contain up to the highest indexable value
 //
 // MARK:(Buffer)
 //
+// TODO: union different data types. Set base data to void* type
 struct buffer_t {
   u8_t* data;
   usz_t size;
@@ -683,11 +684,11 @@ static b32_t is_digit(char c);
 #define copy_struct(d,s)  copy_memory((d), (s), sizeof(*(d)))
 #define copy_array(d,s)   copy_memory((d), (s), sizeof(d))
 #define copy_range(d,s,n) copy_memory((d), (s), sizeof(*(d)) * (n))
-static void copy_memory(void* dest, const void* src, umi_t size);
-static void copy_memory(void* dest, const void* src, umi_t size);
+static void copy_memory(void* dest, const void* src, usz_t size);
+static void copy_memory(void* dest, const void* src, usz_t size);
 static void zero_memory(void* dest, umi_t size);
-static b32_t is_memory_same(const void* lhs, const void* rhs, umi_t size);
-static void swap_memory(void* lhs, void* rhs, umi_t size);
+static b32_t is_memory_same(const void* lhs, const void* rhs, usz_t size);
+static void swap_memory(void* lhs, void* rhs, usz_t size);
 static umi_t ptr_to_umi(void* p);
 static u8_t* umi_to_ptr(umi_t u);
 
@@ -1441,7 +1442,7 @@ f64_factorial(f64_t x) {
 #if 1
 #include <string.h>
 static void 
-copy_memory(void* dest, const void* src, umi_t size) {
+copy_memory(void* dest, const void* src, usz_t size) {
   memcpy(dest, src, size);
 }
 
@@ -1450,7 +1451,7 @@ zero_memory(void* dest, umi_t size) {
   memset(dest, 0, size);
 }
 static b32_t
-is_memory_same(const void* lhs, const void* rhs, umi_t size) {
+is_memory_same(const void* lhs, const void* rhs, usz_t size) {
   return memcmp(lhs, rhs, size) == 0; 
 }
 
@@ -1489,7 +1490,7 @@ is_memory_same(const void* lhs, const void* rhs, umi_t size) {
 
 
 static void 
-swap_memory(void* lhs, void* rhs, umi_t size) {
+swap_memory(void* lhs, void* rhs, usz_t size) {
   u8_t* l = (u8_t*)lhs;
   u8_t* r = (u8_t*)rhs;
   

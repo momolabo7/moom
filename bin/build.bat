@@ -1,8 +1,9 @@
 @echo off
-
 rem Usage: build [cpp filename] [-r]
 rem   -r: if specificed, will run the executable
 
+
+SETLOCAL
 
 SET me=%~dp0
 SET root_dir=%me%..
@@ -23,7 +24,7 @@ GOTO label_parse
 
 
 
-if not exist %build_dir% mkdir %build_dir%
+IF not exist %build_dir% mkdir %build_dir%
 
 SET CommonCompilerFlags=-MT -WX -W4 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa  -std:c++17
 SET CommonCompilerFlags=-DENABLE_ASSERTS=1 -DINTERNAL=1  %CommonCompilerFlags%
@@ -31,6 +32,6 @@ SET CommonCompilerFlags=-DENABLE_ASSERTS=1 -DINTERNAL=1  %CommonCompilerFlags%
 pushd %build_dir%
 cl %CommonCompilerFlags% %code_dir%\%c_file%.cpp 
 
-IF %run%==1 call %c_file%.exe
+IF %run%==1 CALL %c_file%.exe
 
 popd
