@@ -3,8 +3,11 @@
 #include <stdio.h>
 
 
+int main() {
+  printf("Hello World\n");
+}
 
-
+#if 0
 static void
 test_print_free_blocks(garena_t* ga) {
   auto* itr = ga->free_list;
@@ -84,3 +87,4 @@ int main() {
   test_print_free_blocks(ga);
 
 }
+#endif

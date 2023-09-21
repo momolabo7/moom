@@ -5,7 +5,7 @@
 // FLAGS
 //   GAME_USE_OPENGL - Flag to enable opengl
 // 
-// BOOKMARKS
+// BOOKMARKS AND MODULES
 //
 //   Graphics          - Graphics interfaces
 //   Opengl            - Graphics implementation with OGL
@@ -781,10 +781,9 @@ typedef game_set_design_dimensions_sig(game_set_design_dimensions_f);
 // App Audio API
 //
 struct game_audio_t {
-  s16_t* sample_buffer;
+  void* samples;
   u32_t sample_count;
-  u32_t channels; //TODO: remove this?
-  
+
   void* platform_data;
 };
 
@@ -3019,9 +3018,22 @@ game_profiler_update_entries(game_profiler_t* p) {
 
 //
 // JOURNAL
+//
 // = 2023-09-19 =
 //   Was trying to refactor how audio works on the win32 layer and pinning down exactly
-//   what I'm doing with WASAPI. I'm not entirely sure how I want to go about it.
+//   what I'm doing with audio using WASAPI. I finally figured out what's going on
+//   but I'm not sure what's the best way to go about it.
+//   
+//   Right now, I'm just doing the straightforward way of just asking the audio client
+//   for it's own avaliable buffer each frame and then just passing it to the game
+//   layer and let the game dump whatever it can. This feels absolutely terrible 
+//   for games that are extremely dependant on music, like rhythm games. I don't forsee
+//   myself writing a rhythm game at the moment. 
+//
+//   For non-rhythm critical games, the only issue I can think of is what happens when the
+//   game pushes a NET LESS samples than it should. For example, let's say that 10 seconds
+//   has passed for the game but the audio SOMEHOW only manages to only push 5 seconds 
+//   worth of audio. What happens then? How do I even test this?
 //
 // 
 // = 2023-09-09 =

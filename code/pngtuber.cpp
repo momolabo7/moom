@@ -47,6 +47,28 @@ struct ptube_t {
 
 };
 
+#include <stdio.h>
+#include <stdlib.h>
+static buffer_t  
+read_file_like_an_idiot(const char* filename) {
+  FILE *file = fopen(filename, "rb");
+  if (!file) return buffer_set(0,0);
+  defer { fclose(file); };
+
+  fseek(file, 0, SEEK_END);
+  usz_t file_size = ftell(file);
+  fseek(file, 0, SEEK_SET);
+
+  buffer_t ret;
+  ret.data = (u8_t*)malloc(file_size);
+  ret.size = file_size;
+
+  usz_t read_amount = fread(ret.data, 1, file_size, file);
+  if(read_amount != file_size) return buffer_set(0,0);
+  
+  return ret;
+  
+}
 static b32_t 
 ptube_load_image(game_t* game, ptube_image_t* img, const char* filename) {
   return false;
@@ -81,7 +103,7 @@ game_update_and_render_sig(game_update_and_render)
     ptube_load_image(game, &ptube->images[0], "test.png");
   }
 #endif
-#if 1 // For testing only
+#if 0 // For testing only
   static f32_t sine = 0.f;
   s16_t* sample_out = game->audio.sample_buffer;
   s16_t volume = 1000;
@@ -95,6 +117,23 @@ game_update_and_render_sig(game_update_and_render)
   }
 #endif
 
+#if 1
+  static b32_t once = false;
+  static wav_t wav;
+  static s16_t* wave_data;
+  if (!once) {
+    buffer_t contents =  read_file_like_an_idiot("bouken.wav");
+    wav_read(&wav, contents);
+    wave_data = (s16_t*)wav.data;
+    once = true;
+  }
+  s16_t* where = (s16_t*)game->audio.samples;
+
+  for (u32_t i = 0; i < game->audio.sample_count; ++i) {
+    *where++ = *wave_data++;
+    *where++ = *wave_data++;
+  }
+#endif
 
 
 }

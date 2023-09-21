@@ -8,7 +8,7 @@
 //   ASSERTIVE - Enables/Disables asserts. Default is 1. 
 //
 //
-// BOOKMARKS
+// BOOKMARKS AND MODULES
 //   
 //   Includes    - Includes 
 //   Context     - Context Defines (Arch, OS, compiler, etc)
@@ -829,10 +829,10 @@ static u64_t u64_atomic_add(u64_t volatile* value, u64_t to_add);
 //
 // CString
 //
-static umi_t cstr_len(const c8_t* str); 
+static usz_t cstr_len(const c8_t* str); 
 static void  cstr_copy(c8_t * dest, const c8_t* src); 
 static b32_t cstr_compare(const c8_t* lhs, const c8_t* rhs); 
-static b32_t cstr_compare_n(const c8_t* lhs, const c8_t* rhs, umi_t n); 
+static b32_t cstr_compare_n(const c8_t* lhs, const c8_t* rhs, usz_t n); 
 static void  cstr_concat(c8_t* dest, const c8_t* Src);
 static f64_t cstr_to_f64(const c8_t* p); 
 static void  cstr_clear(c8_t* dest); 
@@ -1447,7 +1447,7 @@ copy_memory(void* dest, const void* src, usz_t size) {
 }
 
 static void 
-zero_memory(void* dest, umi_t size) {
+zero_memory(void* dest, usz_t size) {
   memset(dest, 0, size);
 }
 static b32_t
@@ -1457,7 +1457,7 @@ is_memory_same(const void* lhs, const void* rhs, usz_t size) {
 
 #else
 static void
-copy_memory(void* dest, const void* src, umi_t size) {
+copy_memory(void* dest, const void* src, usz_t size) {
   u8_t *p = (u8_t*)dest;
   const u8_t *q = (const u8_t*)src;
   while(size--) {
@@ -1466,7 +1466,7 @@ copy_memory(void* dest, const void* src, umi_t size) {
 }
 
 static void 
-zero_memory(void* dest, umi_t size) {
+zero_memory(void* dest, usz_t size) {
   u8_t *p = (u8_t*)dest;
   while(size--){
     *p++ = 0;
@@ -1474,7 +1474,7 @@ zero_memory(void* dest, umi_t size) {
 }
 
 static b32_t
-is_memory_same(const void* lhs, const void* rhs, umi_t size) {
+is_memory_same(const void* lhs, const void* rhs, usz_t size) {
   const u8_t *p = (const u8_t*)lhs;
   const u8_t *q = (const u8_t*)rhs;
   while(size--) {
@@ -1501,9 +1501,9 @@ swap_memory(void* lhs, void* rhs, usz_t size) {
   }
 }
 
-static umi_t
+static usz_t
 cstr_len(const c8_t* str) {
-  umi_t count = 0;
+  usz_t count = 0;
   for(; (*str) != 0 ; ++count, ++str);
   return count;
 }
@@ -1527,7 +1527,7 @@ cstr_compare(const c8_t* lhs, const c8_t* rhs) {
 }
 
 static b32_t
-cstr_compare_n(const c8_t* lhs, const c8_t* rhs, umi_t n) {
+cstr_compare_n(const c8_t* lhs, const c8_t* rhs, usz_t n) {
   while(n--) {
     if ((*lhs++) != (*rhs++)) {
       return false;
