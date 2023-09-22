@@ -62,33 +62,37 @@ enum meta_token_type_t {
 struct meta_token_t {
   meta_token_type_t type;
 
-  u32_t begin;
-  u32_t ope;
+  usz_t begin;
+  usz_t ope;
 };
 
 struct meta_tokenizer_t {
+  buffer_t text;
+  usz_t at;
+#if 0
   c8_t* text;
   u32_t at;
   u32_t text_length;
+#endif
 };
 
 
 static void
 meta_eat_ignorables(meta_tokenizer_t* t) {
   for (;;) {
-    if(is_whitespace(t->text[t->at])) {
+    if(is_whitespace(t->text.data[t->at])) {
       ++t->at;
     }
-    else if(t->text[t->at] == '/' && t->text[t->at+1] == '/')  // line comments
+    else if(t->text.data[t->at] == '/' && t->text.data[t->at+1] == '/')  // line comments
     {
-      while(t->text[t->at] != '\n') {
+      while(t->text.data[t->at] != '\n') {
         ++t->at;
       }
     }
-    else if(t->text[t->at] == '/' && t->text[t->at+1] == '*')  // block comments
+    else if(t->text.data[t->at] == '/' && t->text.data[t->at+1] == '*')  // block comments
     {
       t->at += 3;
-      while(t->text[t->at] != '*' && t->text[t->at+1] != '/') {
+      while(t->text.data[t->at] != '*' && t->text.data[t->at+1] != '/') {
         ++t->at;
       }
 
@@ -107,27 +111,64 @@ meta_is_accepted_character_for_number(char c) {
     c == 'B' || c == 'X' || c == 'L' || c == 'F' || c == 'P' || c == 'E';
 }
 
+#if 1 // FOOLISH
+
+#include <stdlib.h>
+
+//
+// MARK:(Foolish)
+//
+// These are foolish methods that should ideally not make 
+// it into any SERIOUS projects. They are meant to be dumb
+// but convienient for trying stuff out.
+//
+static void* 
+foolishly_allocate_size(usz_t size) {
+  return malloc(size); 
+}
+
+static void 
+foolishly_free_memory(void* mem) {
+  free(mem);
+}
+#define foolishly_allocate(t)  (t*)foolishly_allocate_size(sizeof(t))
+#define foolishly_allocate_array(t,n) (t*)foolishly_allocate_size(sizeof(t) * (n))
+
+static buffer_t
+foolishly_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {
+  FILE *file = fopen(filename, "rb");
+  if (!file) return buffer_set(0,0);
+  defer { fclose(file); };
+
+  fseek(file, 0, SEEK_END);
+  usz_t file_size = ftell(file);
+  fseek(file, 0, SEEK_SET);
+
+  buffer_t ret;
+  ret.size = file_size + null_terminate; // lol
+  ret.data = (u8_t*)foolishly_allocate_size(ret.size);
+
+  usz_t read_amount = fread(ret.data, 1, file_size, file);
+  if(read_amount != file_size) return buffer_set(0,0);
+
+  if (null_terminate) ret.data[file_size] = 0;  
+
+  return ret;
+}
+
+static buffer_t
+foolishly_free_buffer(buffer_t buffer) {
+  free(buffer.data);
+}
+
+#endif // FOOLISH
+
+
 static b32_t
 meta_tokenizer_init(meta_tokenizer_t* t, const char* filename) {
-  FILE* fp = fopen(filename, "rb");
-  if (fp) {
-    fseek(fp, 0, SEEK_END);
-    int size = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
-    void* ptr = malloc(size+1);
-    fread(ptr, size, 1, fp);
-    fclose(fp);
-
-    t->text = (c8_t*)ptr;
-    t->text_length = size+1;
-
-    // null terminate
-    t->text[size] = 0;
-    
-
-    return true;
-  }
-  return false;
+  t->text = foolishly_read_file_into_buffer(filename, true); 
+  t->at = 0;
+  return !!t->text.size;
 }
 
 static b32_t
@@ -137,7 +178,7 @@ meta_compare_token_with_string(meta_tokenizer_t* t, meta_token_t token, st8_t st
   }
 
   for(u32_t i = 0; i < str.count; ++i) {
-    if (str.e[i] != t->text[token.begin+i]) {
+    if (str.e[i] != t->text.data[token.begin+i]) {
       return false;
     }
   }
@@ -147,8 +188,8 @@ meta_compare_token_with_string(meta_tokenizer_t* t, meta_token_t token, st8_t st
 
 static void
 meta_print_token(meta_tokenizer_t* t, meta_token_t token)  {
-  for(u32_t i = token.begin; i < token.ope; ++i) {
-    printf("%c", t->text[i]);
+  for(usz_t i = token.begin; i < token.ope; ++i) {
+    printf("%c", t->text.data[i]);
   }
 }
 static b32_t
@@ -177,7 +218,7 @@ meta_is_keyword(meta_tokenizer_t* t, meta_token_t token) {
 
 static void 
 meta_tokenizer_free(meta_tokenizer_t* t) {
-  free(t->text);
+  free(t->text.data);
 }
 
 
@@ -189,211 +230,211 @@ meta_next_token(meta_tokenizer_t* t) {
   ret.begin = t->at;
   ret.ope = t->at + 1;
 
-  if (t->text[t->at] == 0) {
+  if (t->text.data[t->at] == 0) {
     ret.type = META_TOKEN_TYPE_EOF; 
     ++t->at;
   }
-  else if (t->text[t->at] == '(') {
+  else if (t->text.data[t->at] == '(') {
     ret.type = META_TOKEN_TYPE_OPEN_PAREN; 
     ++t->at;
   }
-  else if (t->text[t->at] == '?') {
+  else if (t->text.data[t->at] == '?') {
     ret.type = META_TOKEN_TYPE_QUESTION; 
     ++t->at;
   }
-  else if (t->text[t->at] == ')') {
+  else if (t->text.data[t->at] == ')') {
     ret.type = META_TOKEN_TYPE_CLOSE_PAREN; 
     ++t->at;
   }
-  else if (t->text[t->at] == '[') {
+  else if (t->text.data[t->at] == '[') {
     ret.type = META_TOKEN_TYPE_OPEN_BRACKET; 
     ++t->at;
   } 
-  else if (t->text[t->at] == ']') {
+  else if (t->text.data[t->at] == ']') {
     ret.type = META_TOKEN_TYPE_CLOSE_BRACKET; 
     ++t->at;
   }
-  else if (t->text[t->at] == '{') {
+  else if (t->text.data[t->at] == '{') {
     ret.type = META_TOKEN_TYPE_OPEN_BRACE; 
     ++t->at;
   } 
-  else if (t->text[t->at] == '}') {
+  else if (t->text.data[t->at] == '}') {
     ret.type = META_TOKEN_TYPE_CLOSE_BRACE; 
     ++t->at;
   } 
-  else if (t->text[t->at] == ')') { 
+  else if (t->text.data[t->at] == ')') { 
     ret.type = META_TOKEN_TYPE_COLON; 
     ++t->at;
   } 
-  else if (t->text[t->at] == ';') {
+  else if (t->text.data[t->at] == ';') {
     ret.type = META_TOKEN_TYPE_SEMICOLON; 
     ++t->at;
   }
-  else if (t->text[t->at] == '+') {
+  else if (t->text.data[t->at] == '+') {
     ret.type = META_TOKEN_TYPE_PLUS;
     ++t->at;
-    if (t->text[t->at] == '+') { // ++
+    if (t->text.data[t->at] == '+') { // ++
       ret.type = META_TOKEN_TYPE_PLUS_PLUS;
       ret.ope = ++t->at;
     }
-    else if (t->text[t->at] == '=') { // +=
+    else if (t->text.data[t->at] == '=') { // +=
       ret.type = META_TOKEN_TYPE_PLUS_EQUAL;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text[t->at] == '-') {
+  else if (t->text.data[t->at] == '-') {
     ret.type = META_TOKEN_TYPE_MINUS;
     ++t->at;
-    if (t->text[t->at] == '-') { // --
+    if (t->text.data[t->at] == '-') { // --
       ret.type = META_TOKEN_TYPE_MINUS_MINUS;
       ret.ope = ++t->at;
     }
-    else if (t->text[t->at] == '=') { // -=
+    else if (t->text.data[t->at] == '=') { // -=
       ret.type = META_TOKEN_TYPE_MINUS_EQUAL;
       ret.ope = ++t->at;
     }
-    else if (t->text[t->at] == '>') { // ->
+    else if (t->text.data[t->at] == '>') { // ->
       ret.type = META_TOKEN_TYPE_ARROW;
       ret.ope = ++t->at;
     }
-    else if (is_digit(t->text[t->at])) // negative number related literals
+    else if (is_digit(t->text.data[t->at])) // negative number related literals
     {    
       ret.type = META_TOKEN_TYPE_NUMBER;
-      while(is_digit(t->text[t->at]) ||
-            meta_is_accepted_character_for_number(t->text[t->at]))
+      while(is_digit(t->text.data[t->at]) ||
+            meta_is_accepted_character_for_number(t->text.data[t->at]))
       {
         ++t->at;
       }
       ret.ope = t->at;
     }
   }
-  else if (t->text[t->at] == '=') {
+  else if (t->text.data[t->at] == '=') {
     ret.type = META_TOKEN_TYPE_EQUAL;
     ++t->at;
 
-    if (t->text[t->at] == '=') { // ==
+    if (t->text.data[t->at] == '=') { // ==
       ret.type = META_TOKEN_TYPE_EQUAL_EQUAL;
       ret.ope = ++t->at;
     }
   }
 
-  else if (t->text[t->at] == '>') {
+  else if (t->text.data[t->at] == '>') {
     ret.type = META_TOKEN_TYPE_GREATER;
     ++t->at;
 
-    if (t->text[t->at] == '=') { // >=
+    if (t->text.data[t->at] == '=') { // >=
       ret.type = META_TOKEN_TYPE_GREATER_EQUAL;
       ret.ope = ++t->at;
     }
-    else if (t->text[t->at] == '>') { // >>
+    else if (t->text.data[t->at] == '>') { // >>
       ret.type = META_TOKEN_TYPE_GREATER_GREATER;
       ret.ope = ++t->at;
     }
   }
 
-  else if (t->text[t->at] == '<') {
+  else if (t->text.data[t->at] == '<') {
     ret.type = META_TOKEN_TYPE_LESSER;
     ++t->at;
 
-    if (t->text[t->at] == '=') { // >=
+    if (t->text.data[t->at] == '=') { // >=
       ret.type = META_TOKEN_TYPE_LESSER_EQUAL;
       ret.ope = ++t->at;
     }
-    else if (t->text[t->at] == '<') { // <<
+    else if (t->text.data[t->at] == '<') { // <<
       ret.type = META_TOKEN_TYPE_LESSER_LESSER;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text[t->at] == '|') {
+  else if (t->text.data[t->at] == '|') {
     ret.type = META_TOKEN_TYPE_OR;
     ++t->at;
 
-    if (t->text[t->at] == '|') { // ||
+    if (t->text.data[t->at] == '|') { // ||
       ret.type = META_TOKEN_TYPE_OR_OR;
       ret.ope = ++t->at;
     }
-    else if (t->text[t->at] == '=') { // |=
+    else if (t->text.data[t->at] == '=') { // |=
       ret.type = META_TOKEN_TYPE_OR_EQUAL;
       ret.ope = ++t->at;
     }
   }
 
-  else if (t->text[t->at] == ':') {
+  else if (t->text.data[t->at] == ':') {
     ret.type = META_TOKEN_TYPE_COLON;
     ++t->at;
 
-    if (t->text[t->at] == ':') { // ::
+    if (t->text.data[t->at] == ':') { // ::
       ret.type = META_TOKEN_TYPE_SCOPE;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text[t->at] == '&') {
+  else if (t->text.data[t->at] == '&') {
     ret.type = META_TOKEN_TYPE_AND;
     ++t->at;
 
-    if (t->text[t->at] == '&') { // &&
+    if (t->text.data[t->at] == '&') { // &&
       ret.type = META_TOKEN_TYPE_AND_AND;
       ret.ope = ++t->at;
     }
-    else if (t->text[t->at] == '=') { // &=
+    else if (t->text.data[t->at] == '=') { // &=
       ret.type = META_TOKEN_TYPE_AND_EQUAL;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text[t->at] == '*') {
+  else if (t->text.data[t->at] == '*') {
     ret.type = META_TOKEN_TYPE_STAR;
     ++t->at;
 
-    if (t->text[t->at] == '=') { // *=
+    if (t->text.data[t->at] == '=') { // *=
       ret.type = META_TOKEN_TYPE_STAR_EQUAL;
       ret.ope = ++t->at;
     }
   }
 
-  else if (t->text[t->at] == '/') {
+  else if (t->text.data[t->at] == '/') {
     ret.type = META_TOKEN_TYPE_SLASH;
     ++t->at;
 
-    if (t->text[t->at] == '=') { // /=
+    if (t->text.data[t->at] == '=') { // /=
       ret.type = META_TOKEN_TYPE_SLASH_EQUAL;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text[t->at] == '%') {
+  else if (t->text.data[t->at] == '%') {
     ret.type = META_TOKEN_TYPE_PERCENT;
     ++t->at;
 
-    if (t->text[t->at] == '=') { // %=
+    if (t->text.data[t->at] == '=') { // %=
       ret.type = META_TOKEN_TYPE_PERCENT_EQUAL;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text[t->at] == '^') {
+  else if (t->text.data[t->at] == '^') {
     ret.type = META_TOKEN_TYPE_XOR;
     ++t->at;
-    if (t->text[t->at] == '=') { // ^=
+    if (t->text.data[t->at] == '=') { // ^=
       ret.type = META_TOKEN_TYPE_XOR_EQUAL;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text[t->at] == '~') {
+  else if (t->text.data[t->at] == '~') {
     ret.type = META_TOKEN_TYPE_BITWISE_NOT;
     ++t->at;
   }
-  else if (t->text[t->at] == '!') {
+  else if (t->text.data[t->at] == '!') {
     ret.type = META_TOKEN_TYPE_LOGICAL_NOT;
     ++t->at;
   }
-  else if (t->text[t->at] == '.')
+  else if (t->text.data[t->at] == '.')
   {
     ret.type = META_TOKEN_TYPE_DOT; 
     ++t->at;
 
-    if (is_digit(t->text[t->at])) // positive number related literals
+    if (is_digit(t->text.data[t->at])) // positive number related literals
     {    
       ret.type = META_TOKEN_TYPE_NUMBER;
-      while(is_digit(t->text[t->at]) ||
-            meta_is_accepted_character_for_number(t->text[t->at]))
+      while(is_digit(t->text.data[t->at]) ||
+            meta_is_accepted_character_for_number(t->text.data[t->at]))
       {
         ++t->at;
       }
@@ -401,19 +442,19 @@ meta_next_token(meta_tokenizer_t* t) {
     }
   }
 
-  else if (t->text[t->at] == '#') {
+  else if (t->text.data[t->at] == '#') {
     b32_t continue_to_next_line = false;
 
     ret.type = META_TOKEN_TYPE_MACRO;
     ++t->at;
-    while(t->text[t->at] != 0) 
+    while(t->text.data[t->at] != 0) 
     {
 
-      if (t->text[t->at] == '\\') {
+      if (t->text.data[t->at] == '\\') {
         continue_to_next_line = true;
       }
 
-      if (t->text[t->at] == '\n') 
+      if (t->text.data[t->at] == '\n') 
       {
         if (continue_to_next_line) {
           continue_to_next_line = false;
@@ -427,14 +468,14 @@ meta_next_token(meta_tokenizer_t* t) {
     }
     ret.ope = t->at;
   }
-  else if (t->text[t->at] == '"') // string literals
+  else if (t->text.data[t->at] == '"') // string literals
   {
     ++t->at;
     ret.begin = t->at;
-    while(t->text[t->at] != '"') 
+    while(t->text.data[t->at] != '"') 
     {
-      if(t->text[t->at] == '\\' && 
-          t->text[t->at+1]) 
+      if(t->text.data[t->at] == '\\' && 
+          t->text.data[t->at+1]) 
       {
         ++t->at;
       }
@@ -445,11 +486,11 @@ meta_next_token(meta_tokenizer_t* t) {
     ++t->at;
   }
 
-  else if (is_alpha(t->text[t->at]) || t->text[t->at] == '_') 
+  else if (is_alpha(t->text.data[t->at]) || t->text.data[t->at] == '_') 
   {
-    while(is_alpha(t->text[t->at]) ||
-          is_digit(t->text[t->at]) ||
-          t->text[t->at] == '_') 
+    while(is_alpha(t->text.data[t->at]) ||
+          is_digit(t->text.data[t->at]) ||
+          t->text.data[t->at] == '_') 
     {
       ++t->at;
     }
@@ -464,22 +505,22 @@ meta_next_token(meta_tokenizer_t* t) {
     } 
   }
 
-  else if (is_digit(t->text[t->at])) // positive number related literals
+  else if (is_digit(t->text.data[t->at])) // positive number related literals
   {    
     ret.type = META_TOKEN_TYPE_NUMBER;
-    while(is_digit(t->text[t->at]) ||
-          meta_is_accepted_character_for_number(t->text[t->at]))
+    while(is_digit(t->text.data[t->at]) ||
+          meta_is_accepted_character_for_number(t->text.data[t->at]))
     {
       ++t->at;
     }
     ret.ope = t->at;
   }
 
-  else if (t->text[t->at] == '\'') // char literals
+  else if (t->text.data[t->at] == '\'') // char literals
   {
     ++t->at;
     ret.begin = t->at;
-    while(t->text[t->at] != '\'') {
+    while(t->text.data[t->at] != '\'') {
       ++t->at;
     }
     ret.type = META_TOKEN_TYPE_CHAR;

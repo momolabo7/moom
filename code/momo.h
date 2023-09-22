@@ -6939,6 +6939,12 @@ rp_pack(rp_rect_t* rects,
 
 //
 // JOURNAL
+// 
+// = 2023-09-22= 
+//   I'm thinking of writing an API for the OS layer soon. Or maybe it set of 
+//   'pig' APIs that are dumb and stupid but good enough to just 'get stuff out'.
+//   Basically stuff like 'get file size' or 'read file into buffer'. I am a little
+//   sick and tired of writing the same functions over and over again.
 //
 // = 2023-08-04 =
 //   Now that everything is in one file, it might be wise to add and

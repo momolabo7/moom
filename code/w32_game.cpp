@@ -589,7 +589,7 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
 
   // Setup for the game layer
   game_audio->sample_count = samples_to_write; 
-  game_audio->sample_buffer = 0;
+  game_audio->samples = nullptr;
 
   // Get the buffer 
   if (game_audio->sample_count > 0) 
@@ -604,7 +604,7 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
     // it should continue playing the sound without breaking continuity.
     hr = wasapi->render_client->GetBuffer(game_audio->sample_count, &data);
     if (SUCCEEDED(hr)) {
-      game_audio->sample_buffer = data;
+      game_audio->samples = data;
     }
 
   }
