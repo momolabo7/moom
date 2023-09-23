@@ -1,18 +1,22 @@
 // 
 // DESCRIPTION
-//   THis is the game engine
+//   This is the game engine!
 //
 // FLAGS
-//   GAME_USE_OPENGL - Flag to enable opengl
+//   GAME_USE_OPENGL - Flag to enable opengl code used to run the game
+//
 // 
 // BOOKMARKS AND MODULES
-//
 //   Graphics          - Graphics interfaces
 //   Opengl            - Graphics implementation with OGL
 //   Rendering         - Game functions for rendering
 //   
 // TODO
-//   Shaders pipeline for graphics?
+//   Threaded audio output
+//   Audio input
+//   Audio 'mixer' in the game layer.
+//
+//   
 
 
 #ifndef GAME_H
