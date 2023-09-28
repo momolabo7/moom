@@ -3,7 +3,7 @@
 //   This is my dear 2D game engine on win32 platform.
 //
 // FLAGS
-//   HOT_RELOADABLE - Enables hot-reload on game.dll when it changes. Default is 1.
+//   HOT_RELOAD - Enables hot-reload on game.dll when it changes. Default is 1.
 // 
 // BOOKMARKS
 //
@@ -21,8 +21,6 @@
 // NOTE(momo): For now, we enable these flags
 // These macros are in preparation in case we have
 // multiple ways to do audio or graphics
-
-
 #ifndef GAME_USE_WASAPI
 # define GAME_USE_WASAPI 1
 #endif
@@ -32,8 +30,8 @@
 # define WIN32_LEAN_AND_MEAN
 #endif
 
-#ifndef HOT_RELOADABLE
-# define HOT_RELOADABLE 1
+#ifndef HOT_RELOAD
+# define HOT_RELOAD 1
 #endif
 
 #include <windows.h>
@@ -47,6 +45,7 @@
 #undef far
 
 #include "momo.h"
+
 #include "game.h"
 
 
@@ -185,10 +184,10 @@ struct w32_wasapi_t {
   void* buffer;
   
   // Other variables for tracking purposes
-  u32_t latency_sample_count;
   u32_t samples_per_second;
-  u16_t bits_per_sample;
-  u16_t channels;
+  u32_t bits_per_sample;
+  u32_t channels;
+  u32_t frame_rate;
     
 	b32_t is_device_changed;
 	b32_t is_device_ready;
@@ -370,6 +369,7 @@ _w32_load_wgl_extentions() {
 }
 
 
+
 static 
 w32_gfx_load_sig(w32_gfx_load)
 {
@@ -509,18 +509,118 @@ w32_gfx_end_frame_sig(w32_gfx_end_frame) {
 // MARK:(Wasapi)
 //
 
-//
-// This is a thread!
-//
-static DWORD 
-w32_wasapi_run(void* passthrough) {
+static void
+_w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {
+  HRESULT hr;
+  //
+  // Use the device enumerator to find a default audio device.
+  //
+  // 'eRender' is a flag to tell it to find an audio rendering device (which are audio
+  // output devices like speakers, etc). For capture devices (mics), use 'eCapture'.
+  //
+  // Not really sure and don't really care what eConsole is for now.
+  //
+  hr = wasapi->mm_device_enum->GetDefaultAudioEndpoint(eRender, eConsole, &wasapi->mm_device);
+  assert(SUCCEEDED(hr)); // okay to fail
 
-  while(true) {
-    w32_log("Hello\n"); 
-  }
-  return 0;
+  // Create the audio client
+  hr = wasapi->mm_device->Activate(__uuidof(IAudioClient), CLSCTX_INPROC_SERVER, NULL, (LPVOID*)(&wasapi->audio_client));
+  assert(SUCCEEDED(hr)); // okay to fail
+
+                                               
+  //
+  // Initializes the audio client.
+  // 
+  // Explanation of flags:
+  //
+  //   AUDCLNT_STREAMFLAGS_EVENTCALLBACK
+  //     Enable events with audio device. Will use this to register a callback 
+  //     whenever the audio's buffer need to be refilled.
+  //
+  //   AUDCLNT_STREAMFLAG_NOPERSIST
+  //     Ensures that any thing we do to the device (like volume control) does not persist
+  //     upon application restart
+  //     
+  //   AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM
+  //     An audio client typically uses a fixed format (e.g. 32-bit or 16-bit, 48000hz or 44100 hz)
+  //     This is obtainable with IAudioClient::GetMixFormat().
+  //     This flag means that a mixer will be included that will help convert a given wave format
+  //     to the one that the audio client uses. We will use this flag because we will
+  //     let the game layer decide what format to use.
+  //
+  //  
+  // 
+  //
+  DWORD flags = 
+    (/*AUDCLNT_STREAMFLAGS_EVENTCALLBACK |*/ 
+     AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM |
+     AUDCLNT_STREAMFLAGS_NOPERSIST);
+  
+
+  WAVEFORMATEX wave_format = {};
+  wave_format.wFormatTag = (wasapi->bits_per_sample == 32) ? WAVE_FORMAT_IEEE_FLOAT : WAVE_FORMAT_PCM;
+  wave_format.wBitsPerSample = (WORD)wasapi->bits_per_sample;
+  wave_format.nChannels = (WORD)wasapi->channels;
+  wave_format.nSamplesPerSec = wasapi->samples_per_second;
+  // this is always correct for WAVE_FORMAT_CPM and WAVE_FORMAT_IEEE_FLOAT
+  wave_format.nBlockAlign = wave_format.nChannels * (wave_format.wBitsPerSample/8);   
+  wave_format.nAvgBytesPerSec = wave_format.nSamplesPerSec * wave_format.nBlockAlign; 
+
+
+  //
+  // The buffer duration is a time value expressed in 100-nanosecond units
+  // Basically, this is telling the audio engine our refresh rate, which in turns
+  // allows the audio engine to know what is the minimum buffer size to provide
+  // when our engine wants to write to the audio buffer.
+  //
+  // Note that 1 millisecond = 1,000,000 nanoseconds = 10000 100-nanoseconds
+  //
+  REFERENCE_TIME buffer_duration = wasapi->frame_rate * 10000; 
+  
+  hr = wasapi->audio_client->Initialize(
+      AUDCLNT_SHAREMODE_SHARED, 
+      flags, 
+      buffer_duration, 
+      0, 
+      &wave_format, 
+      NULL);
+
+  assert(SUCCEEDED(hr));
+
+
+  // Retrieves the render client. The render client is specifically the
+  // part of the audio client that plays sound. One render client represents
+  // one audio device (which can be an engine like NVdia Broadcast or a hardware).
+  hr = wasapi->audio_client->GetService(IID_PPV_ARGS(&wasapi->render_client));
+  assert(SUCCEEDED(hr));
+
+
+
+
+
+  // TODO: Do we just the the real buffer size and just use that value
+  // to initialize our sound buffer size that our game layer will write to?
+
+
+  // Get the number of audio frames that the buffer can hold.
+  // Note that 1 'audio frame' == 1 sample per second
+  UINT32 buffer_frame_count = 0;
+  hr = wasapi->audio_client->GetBufferSize(&buffer_frame_count);
+  assert(SUCCEEDED(hr));
+
+  // Get the number of frames of padding
+  UINT32 padding_frame_count = 0;
+  hr = wasapi->audio_client->GetCurrentPadding(&padding_frame_count);
+  assert(SUCCEEDED(hr));
+
+  // Initialize the secondary buffer.
+  UINT32 writable_frames = buffer_frame_count - padding_frame_count;
+
+
+
+  hr = wasapi->audio_client->Start();
+  assert(SUCCEEDED(hr));
 }
-
 
 //
 // API Correspondence
@@ -568,12 +668,41 @@ static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t
 static game_allocate_memory_sig(w32_allocate_memory);
 
 
+
 static 
 w32_audio_begin_frame_sig(w32_audio_begin_frame) 
 {
   auto* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
 
   HRESULT hr; 
+  
+  // Check if device changed
+  // TODO: Do we want to do the event method...?
+  {
+    IMMDevice* current_default_device = nullptr;
+    wasapi->mm_device_enum->GetDefaultAudioEndpoint(eRender, eConsole, &current_default_device);
+
+    LPWSTR id1;
+    LPWSTR id2;
+    wasapi->mm_device->GetId(&id1);
+    current_default_device->GetId(&id2);
+
+    b32_t has_device_changed  = wcscmp(id1, id2) != 0;
+
+    CoTaskMemFree(id1);
+    CoTaskMemFree(id2);
+    current_default_device->Release();
+
+    if (has_device_changed) {
+      wasapi->audio_client->Release();
+      wasapi->render_client->Release();
+      wasapi->mm_device->Release();
+
+    }
+
+  }
+
+
 
   // Get the number of audio frames that the buffer can hold.
   UINT32 buffer_frame_count = 0;
@@ -709,11 +838,11 @@ w32_audio_load_sig(w32_audio_load)
 
   game_audio->platform_data = wasapi;
 
+  wasapi->frame_rate = frame_rate;
   wasapi->channels = channels;
   wasapi->bits_per_sample = bits_per_sample;
   wasapi->samples_per_second = samples_per_second;
-  wasapi->latency_sample_count = (samples_per_second / frame_rate) * latency_frames;
-
+#if 0
   //
   // Setup the intermediate buffer for game to write audio to.
   //
@@ -725,13 +854,12 @@ w32_audio_load_sig(w32_audio_load)
   wasapi->buffer_size = samples_per_second * channels * bits_per_sample/8; // 1 second worth of samples
   wasapi->buffer = arena_push_size(allocator, wasapi->buffer_size, 16);
   assert(wasapi->buffer);
-
+#endif
 
   HRESULT hr;
   hr = CoInitializeEx(0, COINIT_SPEED_OVER_MEMORY);
-  assert(SUCCEEDED(hr));
+  assert(SUCCEEDED(hr)); // cannot fail
 
-  
   //
   // Create the device enumerator.
   //
@@ -742,117 +870,10 @@ w32_audio_load_sig(w32_audio_load)
                         0,
                         CLSCTX_INPROC_SERVER,
                         IID_PPV_ARGS(&wasapi->mm_device_enum));
-  assert(SUCCEEDED(hr));
-   
-  //
-  // Use the device enumerator to find a default audio device.
-  //
-  // 'eRender' is a flag to tell it to find an audio rendering device (which are audio
-  // output devices like speakers, etc). For capture devices (mics), use 'eCapture'.
-  //
-  // Not really sure and don't really care what eConsole is for now.
-  //
-  hr = wasapi->mm_device_enum->GetDefaultAudioEndpoint(eRender, eConsole, &wasapi->mm_device);
-  assert(SUCCEEDED(hr));
-
-  // Create the audio client
-  hr = wasapi->mm_device->Activate(__uuidof(IAudioClient), CLSCTX_INPROC_SERVER, NULL, (LPVOID*)(&wasapi->audio_client));
-  assert(SUCCEEDED(hr));
-
-                                               
-  //
-  // Initializes the audio client.
-  // 
-  // Explanation of flags:
-  //
-  //   AUDCLNT_STREAMFLAGS_EVENTCALLBACK
-  //     Enable events with audio device. Will use this to register a callback 
-  //     whenever the audio's buffer need to be refilled.
-  //
-  //   AUDCLNT_STREAMFLAG_NOPERSIST
-  //     Ensures that any thing we do to the device (like volume control) does not persist
-  //     upon application restart
-  //     
-  //   AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM
-  //     An audio client typically uses a fixed format (e.g. 32-bit or 16-bit, 48000hz or 44100 hz)
-  //     This is obtainable with IAudioClient::GetMixFormat().
-  //     This flag means that a mixer will be included that will help convert a given wave format
-  //     to the one that the audio client uses. We will use this flag because we will
-  //     let the game layer decide what format to use.
-  //
-  //  
-  // 
-  //
-  DWORD flags = 
-    (/*AUDCLNT_STREAMFLAGS_EVENTCALLBACK |*/ 
-     AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM |
-     AUDCLNT_STREAMFLAGS_NOPERSIST);
+  assert(SUCCEEDED(hr)); // cannot fail
   
+  _w32_wasapi_init_default_audio_output_device(wasapi);
 
-  WAVEFORMATEX wave_format = {};
-  wave_format.wFormatTag = (bits_per_sample == 32) ? WAVE_FORMAT_IEEE_FLOAT : WAVE_FORMAT_PCM;
-  wave_format.wBitsPerSample = bits_per_sample;
-  wave_format.nChannels = channels;
-  wave_format.nSamplesPerSec = samples_per_second;
-  // this is always correct for WAVE_FORMAT_CPM and WAVE_FORMAT_IEEE_FLOAT
-  wave_format.nBlockAlign = wave_format.nChannels * (wave_format.wBitsPerSample/8);   
-  wave_format.nAvgBytesPerSec = wave_format.nSamplesPerSec * wave_format.nBlockAlign; 
-
-
-
-  //
-  // The buffer duration is a time value expressed in 100-nanosecond units
-  // Basically, this is telling the audio engine our refresh rate, which in turns
-  // allows the audio engine to know what is the minimum buffer size to provide
-  // when our engine wants to write to the audio buffer.
-  //
-  // Note that 1 millisecond = 1,000,000 nanoseconds = 10000 100-nanoseconds
-  //
-  REFERENCE_TIME buffer_duration = frame_rate * 10000; 
-  
-  hr = wasapi->audio_client->Initialize(
-      AUDCLNT_SHAREMODE_SHARED, 
-      flags, 
-      buffer_duration, 
-      0, 
-      &wave_format, 
-      NULL);
-
-  assert(SUCCEEDED(hr));
-
-
-  // Retrieves the render client. The render client is specifically the
-  // part of the audio client that plays sound. One render client represents
-  // one audio device (which can be an engine like NVdia Broadcast or a hardware).
-  hr = wasapi->audio_client->GetService(IID_PPV_ARGS(&wasapi->render_client));
-  assert(SUCCEEDED(hr));
-
-
-
-
-
-  // TODO: Do we just the the real buffer size and just use that value
-  // to initialize our sound buffer size that our game layer will write to?
-
-
-  // Get the number of audio frames that the buffer can hold.
-  // Note that 1 'audio frame' == 1 sample per second
-  UINT32 buffer_frame_count = 0;
-  hr = wasapi->audio_client->GetBufferSize(&buffer_frame_count);
-  assert(SUCCEEDED(hr));
-
-  // Get the number of frames of padding
-  UINT32 padding_frame_count = 0;
-  hr = wasapi->audio_client->GetCurrentPadding(&padding_frame_count);
-  assert(SUCCEEDED(hr));
-
-  // Initialize the secondary buffer.
-  UINT32 writable_frames = buffer_frame_count - padding_frame_count;
-
-
-
-  hr = wasapi->audio_client->Start();
-  assert(SUCCEEDED(hr));
 
   
   
@@ -1174,7 +1195,6 @@ w32_unload_code(w32_loaded_code_t* code) {
 static void
 w32_load_code(w32_loaded_code_t* code) {
   code->is_valid = false;
-#if HOT_RELOADABLE 
   b32_t copy_success = false;
   for (u32_t attempt = 0; attempt < 100; ++attempt) {
     if(CopyFile(code->module_path, code->tmp_path, false)) {
@@ -1184,9 +1204,6 @@ w32_load_code(w32_loaded_code_t* code) {
     Sleep(100);
   }
   code->dll = LoadLibraryA(code->tmp_path);
-#else // HOT_RELOADABLE
-  code->dll = LoadLibraryA(code->module_path);
-#endif // HOT_RELOADABLE
   if (code->dll) {
     code->is_valid = true;
     for (u32_t function_index = 0; 
@@ -1678,18 +1695,30 @@ WinMain(HINSTANCE instance,
   //
   // Load game Functions
   //
+  //
   game_functions_t game_functions = {};
+#if HOT_RELOAD 
   w32_loaded_code_t game_code = {};
   game_code.function_count = array_count(game_function_names);
   game_code.function_names = game_function_names;
   game_code.module_path = "game.dll";
   game_code.functions = (void**)&game_functions;
   game_code.tmp_path = "tmp_game.dll";
-
   w32_load_code(&game_code);
   if (!game_code.is_valid) return 1;
   defer { w32_unload_code(&game_code); };
+
+#else  // HOT_RELOAD 
+  game_functions.get_config = game_get_config;
+  game_functions.update_and_render = game_update_and_render;
+
+#endif // HOT_RELOAD
+  
   game_config_t config = game_functions.get_config();
+
+
+
+
 
   //
   //- Create window in the middle of the screen
@@ -1848,15 +1877,15 @@ WinMain(HINSTANCE instance,
 
   while (w32_state.is_running && game.is_running) 
   {
-#if HOT_RELOADABLE
+#if HOT_RELOAD
     // Hot reload game.dll functions
     game.is_dll_reloaded = w32_reload_code_if_outdated(&game_code);
     if (game.is_dll_reloaded) {
       game_profiler_reset(&game.profiler);
     }
-#else 
+#else  // HOT_RELOAD
     game_profiler_reset(&game.profiler);
-#endif
+#endif // HOT_RELOAD
 
     // Begin frame
     if (config.audio_enabled) w32_audio_begin_frame(&game.audio);

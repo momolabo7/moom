@@ -32,7 +32,7 @@
 
 // Save file
 #define LIT_SAVE_FILE_ENABLE true
-#define LIT_SAVE_FILE "g_lit.sav"
+#define LIT_SAVE_FILE "lit.sav"
 
 // Sensor
 #define LIT_SENSOR_COLOR_MASK 0xFFFFFF00
