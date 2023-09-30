@@ -36,7 +36,7 @@ set me=%~dp0
 set root_dir=%me%..
 set code_dir=%root_dir%\code
 set build_dir=%root_dir%\build
-set ship_file= 
+set ship_file="" 
 
 set run=0
 set w32=0
@@ -109,8 +109,7 @@ echo *******************
 
 pushd %build_dir%
 
-if %ship%==1 (
-
+IF %ship%==1 (
   echo #include "%filename%.cpp" > %ship_file% 
   type %code_dir%\w32_game.cpp >>  %ship_file%  
   cl %compiler_flags% %ship_file% %linker_flags% 
@@ -120,6 +119,5 @@ if %ship%==1 (
 )
 
 if %run%==1 CALL %filename%.exe
-
 
 popd

@@ -5,80 +5,75 @@
 #include <stdio.h>
 #include "momo.h"
 
-enum meta_token_type_t {
-  META_TOKEN_TYPE_UNKNOWN,
-  META_TOKEN_TYPE_OPEN_PAREN,          // (
-  META_TOKEN_TYPE_CLOSE_PAREN,         // )
-  META_TOKEN_TYPE_SEMICOLON,           // ;
-  META_TOKEN_TYPE_COMMA,               // ,
-  META_TOKEN_TYPE_DOT,                 // ,
-  META_TOKEN_TYPE_COLON,               // : 
-  META_TOKEN_TYPE_SCOPE,               // :: 
-  META_TOKEN_TYPE_OPEN_BRACKET,        // [
-  META_TOKEN_TYPE_CLOSE_BRACKET,       // ]
-  META_TOKEN_TYPE_OPEN_BRACE,          // {
-  META_TOKEN_TYPE_CLOSE_BRACE,         // } 
-  META_TOKEN_TYPE_PLUS,                // +
-  META_TOKEN_TYPE_PLUS_PLUS,           // ++ 
-  META_TOKEN_TYPE_PLUS_EQUAL,          // += 
-  META_TOKEN_TYPE_MINUS,               // -
-  META_TOKEN_TYPE_MINUS_MINUS,         // -- 
-  META_TOKEN_TYPE_MINUS_EQUAL,         // -= 
-  META_TOKEN_TYPE_ARROW,               // ->
-  META_TOKEN_TYPE_EQUAL,               // =
-  META_TOKEN_TYPE_EQUAL_EQUAL,         // ==
-  META_TOKEN_TYPE_GREATER,             // > 
-  META_TOKEN_TYPE_GREATER_EQUAL,       // >= 
-  META_TOKEN_TYPE_GREATER_GREATER,     // >>
-  META_TOKEN_TYPE_LESSER,              // < 
-  META_TOKEN_TYPE_LESSER_EQUAL,        // <= 
-  META_TOKEN_TYPE_LESSER_LESSER,       // <<
-  META_TOKEN_TYPE_OR,                  // |
-  META_TOKEN_TYPE_OR_EQUAL,            // |=
-  META_TOKEN_TYPE_OR_OR,               // ||
-  META_TOKEN_TYPE_AND,                 // & 
-  META_TOKEN_TYPE_AND_AND,             // &&
-  META_TOKEN_TYPE_AND_EQUAL,           // &=
-  META_TOKEN_TYPE_LOGICAL_NOT,         // !
-  META_TOKEN_TYPE_BITWISE_NOT,         // ~
-  META_TOKEN_TYPE_XOR,                 // ^
-  META_TOKEN_TYPE_XOR_EQUAL,           // ^=
-  META_TOKEN_TYPE_QUESTION,            // ?
-  META_TOKEN_TYPE_STAR,                // *
-  META_TOKEN_TYPE_STAR_EQUAL,          // *=
-  META_TOKEN_TYPE_SLASH,               // /
-  META_TOKEN_TYPE_SLASH_EQUAL,         // /=
-  META_TOKEN_TYPE_PERCENT,             // %
-  META_TOKEN_TYPE_PERCENT_EQUAL,       // %=
-  META_TOKEN_TYPE_IDENTIFIER,
-  META_TOKEN_TYPE_KEYWORD,
-  META_TOKEN_TYPE_STRING,
-  META_TOKEN_TYPE_NUMBER,
-  META_TOKEN_TYPE_CHAR,
-  META_TOKEN_TYPE_MACRO,
-  META_TOKEN_TYPE_EOF
+enum clex_token_type_t {
+  CLEX_TOKEN_TYPE_UNKNOWN,
+  CLEX_TOKEN_TYPE_OPEN_PAREN,          // (
+  CLEX_TOKEN_TYPE_CLOSE_PAREN,         // )
+  CLEX_TOKEN_TYPE_SEMICOLON,           // ;
+  CLEX_TOKEN_TYPE_COMMA,               // ,
+  CLEX_TOKEN_TYPE_DOT,                 // ,
+  CLEX_TOKEN_TYPE_COLON,               // : 
+  CLEX_TOKEN_TYPE_SCOPE,               // :: 
+  CLEX_TOKEN_TYPE_OPEN_BRACKET,        // [
+  CLEX_TOKEN_TYPE_CLOSE_BRACKET,       // ]
+  CLEX_TOKEN_TYPE_OPEN_BRACE,          // {
+  CLEX_TOKEN_TYPE_CLOSE_BRACE,         // } 
+  CLEX_TOKEN_TYPE_PLUS,                // +
+  CLEX_TOKEN_TYPE_PLUS_PLUS,           // ++ 
+  CLEX_TOKEN_TYPE_PLUS_EQUAL,          // += 
+  CLEX_TOKEN_TYPE_MINUS,               // -
+  CLEX_TOKEN_TYPE_MINUS_MINUS,         // -- 
+  CLEX_TOKEN_TYPE_MINUS_EQUAL,         // -= 
+  CLEX_TOKEN_TYPE_ARROW,               // ->
+  CLEX_TOKEN_TYPE_EQUAL,               // =
+  CLEX_TOKEN_TYPE_EQUAL_EQUAL,         // ==
+  CLEX_TOKEN_TYPE_GREATER,             // > 
+  CLEX_TOKEN_TYPE_GREATER_EQUAL,       // >= 
+  CLEX_TOKEN_TYPE_GREATER_GREATER,     // >>
+  CLEX_TOKEN_TYPE_LESSER,              // < 
+  CLEX_TOKEN_TYPE_LESSER_EQUAL,        // <= 
+  CLEX_TOKEN_TYPE_LESSER_LESSER,       // <<
+  CLEX_TOKEN_TYPE_OR,                  // |
+  CLEX_TOKEN_TYPE_OR_EQUAL,            // |=
+  CLEX_TOKEN_TYPE_OR_OR,               // ||
+  CLEX_TOKEN_TYPE_AND,                 // & 
+  CLEX_TOKEN_TYPE_AND_AND,             // &&
+  CLEX_TOKEN_TYPE_AND_EQUAL,           // &=
+  CLEX_TOKEN_TYPE_LOGICAL_NOT,         // !
+  CLEX_TOKEN_TYPE_BITWISE_NOT,         // ~
+  CLEX_TOKEN_TYPE_XOR,                 // ^
+  CLEX_TOKEN_TYPE_XOR_EQUAL,           // ^=
+  CLEX_TOKEN_TYPE_QUESTION,            // ?
+  CLEX_TOKEN_TYPE_STAR,                // *
+  CLEX_TOKEN_TYPE_STAR_EQUAL,          // *=
+  CLEX_TOKEN_TYPE_SLASH,               // /
+  CLEX_TOKEN_TYPE_SLASH_EQUAL,         // /=
+  CLEX_TOKEN_TYPE_PERCENT,             // %
+  CLEX_TOKEN_TYPE_PERCENT_EQUAL,       // %=
+  CLEX_TOKEN_TYPE_IDENTIFIER,
+  CLEX_TOKEN_TYPE_KEYWORD,
+  CLEX_TOKEN_TYPE_STRING,
+  CLEX_TOKEN_TYPE_NUMBER,
+  CLEX_TOKEN_TYPE_CHAR,
+  CLEX_TOKEN_TYPE_MACRO,
+  CLEX_TOKEN_TYPE_EOF
 };
 
-struct meta_token_t {
-  meta_token_type_t type;
+struct clex_token_t {
+  clex_token_type_t type;
 
   usz_t begin;
   usz_t ope;
 };
 
-struct meta_tokenizer_t {
+struct clex_tokenizer_t {
   buffer_t text;
   usz_t at;
-#if 0
-  c8_t* text;
-  u32_t at;
-  u32_t text_length;
-#endif
 };
 
 
 static void
-meta_eat_ignorables(meta_tokenizer_t* t) {
+_clex_eat_ignorables(clex_tokenizer_t* t) {
   for (;;) {
     if(is_whitespace(t->text.data[t->at])) {
       ++t->at;
@@ -105,7 +100,7 @@ meta_eat_ignorables(meta_tokenizer_t* t) {
 }
 
 static b32_t 
-meta_is_accepted_character_for_number(char c) {
+clex_is_accepted_character_for_number(char c) {
   return c == '-' || c == '.' ||
     c == 'b' || c == 'x' || c == 'l' || c == 'f' || c == 'p' || c == 'e' ||
     c == 'B' || c == 'X' || c == 'L' || c == 'F' || c == 'P' || c == 'E';
@@ -156,7 +151,7 @@ foolishly_read_file_into_buffer(const char* filename, b32_t null_terminate = fal
   return ret;
 }
 
-static buffer_t
+static void
 foolishly_free_buffer(buffer_t buffer) {
   free(buffer.data);
 }
@@ -165,14 +160,14 @@ foolishly_free_buffer(buffer_t buffer) {
 
 
 static b32_t
-meta_tokenizer_init(meta_tokenizer_t* t, const char* filename) {
-  t->text = foolishly_read_file_into_buffer(filename, true); 
+clex_tokenizer_init(clex_tokenizer_t* t, buffer_t buffer) {
+  t->text = buffer; 
   t->at = 0;
   return !!t->text.size;
 }
 
 static b32_t
-meta_compare_token_with_string(meta_tokenizer_t* t, meta_token_t token, st8_t str) {
+clex_compare_token_with_string(clex_tokenizer_t* t, clex_token_t token, st8_t str) {
   if( str.count != (token.ope - token.begin)) {
     return false;
   }
@@ -187,13 +182,14 @@ meta_compare_token_with_string(meta_tokenizer_t* t, meta_token_t token, st8_t st
 }
 
 static void
-meta_print_token(meta_tokenizer_t* t, meta_token_t token)  {
+meta_print_token(clex_tokenizer_t* t, clex_token_t token)  {
   for(usz_t i = token.begin; i < token.ope; ++i) {
-    printf("%c", t->text.data[i]);
+    putchar(t->text.data[i]);
   }
 }
+
 static b32_t
-meta_is_keyword(meta_tokenizer_t* t, meta_token_t token) {
+_clex_is_keyword(clex_tokenizer_t* t, clex_token_t token) {
   static st8_t keywords[] = {
     st8_from_lit("if"),
     st8_from_lit("else"),
@@ -206,9 +202,10 @@ meta_is_keyword(meta_tokenizer_t* t, meta_token_t token) {
     st8_from_lit("operator"),
     st8_from_lit("auto"),
     st8_from_lit("goto"),
+    st8_from_lit("return"),
   };
   for_arr(i, keywords) {
-    if (meta_compare_token_with_string(t, token, keywords[i]))
+    if (clex_compare_token_with_string(t, token, keywords[i]))
     {
       return true;
     }
@@ -216,92 +213,87 @@ meta_is_keyword(meta_tokenizer_t* t, meta_token_t token) {
   return false;
 }
 
-static void 
-meta_tokenizer_free(meta_tokenizer_t* t) {
-  free(t->text.data);
-}
 
+static clex_token_t
+clex_next_token(clex_tokenizer_t* t) {
+  _clex_eat_ignorables(t);
 
-static meta_token_t
-meta_next_token(meta_tokenizer_t* t) {
-  meta_eat_ignorables(t);
-
-  meta_token_t ret = {};
+  clex_token_t ret = {};
   ret.begin = t->at;
   ret.ope = t->at + 1;
 
   if (t->text.data[t->at] == 0) {
-    ret.type = META_TOKEN_TYPE_EOF; 
+    ret.type = CLEX_TOKEN_TYPE_EOF; 
     ++t->at;
   }
   else if (t->text.data[t->at] == '(') {
-    ret.type = META_TOKEN_TYPE_OPEN_PAREN; 
+    ret.type = CLEX_TOKEN_TYPE_OPEN_PAREN; 
     ++t->at;
   }
   else if (t->text.data[t->at] == '?') {
-    ret.type = META_TOKEN_TYPE_QUESTION; 
+    ret.type = CLEX_TOKEN_TYPE_QUESTION; 
     ++t->at;
   }
   else if (t->text.data[t->at] == ')') {
-    ret.type = META_TOKEN_TYPE_CLOSE_PAREN; 
+    ret.type = CLEX_TOKEN_TYPE_CLOSE_PAREN; 
     ++t->at;
   }
   else if (t->text.data[t->at] == '[') {
-    ret.type = META_TOKEN_TYPE_OPEN_BRACKET; 
+    ret.type = CLEX_TOKEN_TYPE_OPEN_BRACKET; 
     ++t->at;
   } 
   else if (t->text.data[t->at] == ']') {
-    ret.type = META_TOKEN_TYPE_CLOSE_BRACKET; 
+    ret.type = CLEX_TOKEN_TYPE_CLOSE_BRACKET; 
     ++t->at;
   }
   else if (t->text.data[t->at] == '{') {
-    ret.type = META_TOKEN_TYPE_OPEN_BRACE; 
+    ret.type = CLEX_TOKEN_TYPE_OPEN_BRACE; 
     ++t->at;
   } 
   else if (t->text.data[t->at] == '}') {
-    ret.type = META_TOKEN_TYPE_CLOSE_BRACE; 
+    ret.type = CLEX_TOKEN_TYPE_CLOSE_BRACE; 
     ++t->at;
   } 
   else if (t->text.data[t->at] == ')') { 
-    ret.type = META_TOKEN_TYPE_COLON; 
+    ret.type = CLEX_TOKEN_TYPE_COLON; 
     ++t->at;
   } 
   else if (t->text.data[t->at] == ';') {
-    ret.type = META_TOKEN_TYPE_SEMICOLON; 
+    ret.type = CLEX_TOKEN_TYPE_SEMICOLON; 
     ++t->at;
   }
   else if (t->text.data[t->at] == '+') {
-    ret.type = META_TOKEN_TYPE_PLUS;
+    ret.type = CLEX_TOKEN_TYPE_PLUS;
     ++t->at;
     if (t->text.data[t->at] == '+') { // ++
-      ret.type = META_TOKEN_TYPE_PLUS_PLUS;
+      ret.type = CLEX_TOKEN_TYPE_PLUS_PLUS;
       ret.ope = ++t->at;
     }
     else if (t->text.data[t->at] == '=') { // +=
-      ret.type = META_TOKEN_TYPE_PLUS_EQUAL;
+      ret.type = CLEX_TOKEN_TYPE_PLUS_EQUAL;
       ret.ope = ++t->at;
     }
   }
   else if (t->text.data[t->at] == '-') {
-    ret.type = META_TOKEN_TYPE_MINUS;
+    ret.type = CLEX_TOKEN_TYPE_MINUS;
     ++t->at;
     if (t->text.data[t->at] == '-') { // --
-      ret.type = META_TOKEN_TYPE_MINUS_MINUS;
+      ret.type = CLEX_TOKEN_TYPE_MINUS_MINUS;
       ret.ope = ++t->at;
     }
     else if (t->text.data[t->at] == '=') { // -=
-      ret.type = META_TOKEN_TYPE_MINUS_EQUAL;
+      ret.type = CLEX_TOKEN_TYPE_MINUS_EQUAL;
       ret.ope = ++t->at;
     }
     else if (t->text.data[t->at] == '>') { // ->
-      ret.type = META_TOKEN_TYPE_ARROW;
+      ret.type = CLEX_TOKEN_TYPE_ARROW;
       ret.ope = ++t->at;
     }
     else if (is_digit(t->text.data[t->at])) // negative number related literals
     {    
-      ret.type = META_TOKEN_TYPE_NUMBER;
+      ret.type = CLEX_TOKEN_TYPE_NUMBER;
       while(is_digit(t->text.data[t->at]) ||
-            meta_is_accepted_character_for_number(t->text.data[t->at]))
+            clex_is_accepted_character_for_number(t->text.data[t->at]))
       {
         ++t->at;
       }
@@ -309,132 +301,132 @@ meta_next_token(meta_tokenizer_t* t) {
     }
   }
   else if (t->text.data[t->at] == '=') {
-    ret.type = META_TOKEN_TYPE_EQUAL;
+    ret.type = CLEX_TOKEN_TYPE_EQUAL;
     ++t->at;
 
     if (t->text.data[t->at] == '=') { // ==
-      ret.type = META_TOKEN_TYPE_EQUAL_EQUAL;
+      ret.type = CLEX_TOKEN_TYPE_EQUAL_EQUAL;
       ret.ope = ++t->at;
     }
   }
 
   else if (t->text.data[t->at] == '>') {
-    ret.type = META_TOKEN_TYPE_GREATER;
+    ret.type = CLEX_TOKEN_TYPE_GREATER;
     ++t->at;
 
     if (t->text.data[t->at] == '=') { // >=
-      ret.type = META_TOKEN_TYPE_GREATER_EQUAL;
+      ret.type = CLEX_TOKEN_TYPE_GREATER_EQUAL;
       ret.ope = ++t->at;
     }
     else if (t->text.data[t->at] == '>') { // >>
-      ret.type = META_TOKEN_TYPE_GREATER_GREATER;
+      ret.type = CLEX_TOKEN_TYPE_GREATER_GREATER;
       ret.ope = ++t->at;
     }
   }
 
   else if (t->text.data[t->at] == '<') {
-    ret.type = META_TOKEN_TYPE_LESSER;
+    ret.type = CLEX_TOKEN_TYPE_LESSER;
     ++t->at;
 
     if (t->text.data[t->at] == '=') { // >=
-      ret.type = META_TOKEN_TYPE_LESSER_EQUAL;
+      ret.type = CLEX_TOKEN_TYPE_LESSER_EQUAL;
       ret.ope = ++t->at;
     }
     else if (t->text.data[t->at] == '<') { // <<
-      ret.type = META_TOKEN_TYPE_LESSER_LESSER;
+      ret.type = CLEX_TOKEN_TYPE_LESSER_LESSER;
       ret.ope = ++t->at;
     }
   }
   else if (t->text.data[t->at] == '|') {
-    ret.type = META_TOKEN_TYPE_OR;
+    ret.type = CLEX_TOKEN_TYPE_OR;
     ++t->at;
 
     if (t->text.data[t->at] == '|') { // ||
-      ret.type = META_TOKEN_TYPE_OR_OR;
+      ret.type = CLEX_TOKEN_TYPE_OR_OR;
       ret.ope = ++t->at;
     }
     else if (t->text.data[t->at] == '=') { // |=
-      ret.type = META_TOKEN_TYPE_OR_EQUAL;
+      ret.type = CLEX_TOKEN_TYPE_OR_EQUAL;
       ret.ope = ++t->at;
     }
   }
 
   else if (t->text.data[t->at] == ':') {
-    ret.type = META_TOKEN_TYPE_COLON;
+    ret.type = CLEX_TOKEN_TYPE_COLON;
     ++t->at;
 
     if (t->text.data[t->at] == ':') { // ::
-      ret.type = META_TOKEN_TYPE_SCOPE;
+      ret.type = CLEX_TOKEN_TYPE_SCOPE;
       ret.ope = ++t->at;
     }
   }
   else if (t->text.data[t->at] == '&') {
-    ret.type = META_TOKEN_TYPE_AND;
+    ret.type = CLEX_TOKEN_TYPE_AND;
     ++t->at;
 
     if (t->text.data[t->at] == '&') { // &&
-      ret.type = META_TOKEN_TYPE_AND_AND;
+      ret.type = CLEX_TOKEN_TYPE_AND_AND;
       ret.ope = ++t->at;
     }
     else if (t->text.data[t->at] == '=') { // &=
-      ret.type = META_TOKEN_TYPE_AND_EQUAL;
+      ret.type = CLEX_TOKEN_TYPE_AND_EQUAL;
       ret.ope = ++t->at;
     }
   }
   else if (t->text.data[t->at] == '*') {
-    ret.type = META_TOKEN_TYPE_STAR;
+    ret.type = CLEX_TOKEN_TYPE_STAR;
     ++t->at;
 
     if (t->text.data[t->at] == '=') { // *=
-      ret.type = META_TOKEN_TYPE_STAR_EQUAL;
+      ret.type = CLEX_TOKEN_TYPE_STAR_EQUAL;
       ret.ope = ++t->at;
     }
   }
 
   else if (t->text.data[t->at] == '/') {
-    ret.type = META_TOKEN_TYPE_SLASH;
+    ret.type = CLEX_TOKEN_TYPE_SLASH;
     ++t->at;
 
     if (t->text.data[t->at] == '=') { // /=
-      ret.type = META_TOKEN_TYPE_SLASH_EQUAL;
+      ret.type = CLEX_TOKEN_TYPE_SLASH_EQUAL;
       ret.ope = ++t->at;
     }
   }
   else if (t->text.data[t->at] == '%') {
-    ret.type = META_TOKEN_TYPE_PERCENT;
+    ret.type = CLEX_TOKEN_TYPE_PERCENT;
     ++t->at;
 
     if (t->text.data[t->at] == '=') { // %=
-      ret.type = META_TOKEN_TYPE_PERCENT_EQUAL;
+      ret.type = CLEX_TOKEN_TYPE_PERCENT_EQUAL;
       ret.ope = ++t->at;
     }
   }
   else if (t->text.data[t->at] == '^') {
-    ret.type = META_TOKEN_TYPE_XOR;
+    ret.type = CLEX_TOKEN_TYPE_XOR;
     ++t->at;
     if (t->text.data[t->at] == '=') { // ^=
-      ret.type = META_TOKEN_TYPE_XOR_EQUAL;
+      ret.type = CLEX_TOKEN_TYPE_XOR_EQUAL;
       ret.ope = ++t->at;
     }
   }
   else if (t->text.data[t->at] == '~') {
-    ret.type = META_TOKEN_TYPE_BITWISE_NOT;
+    ret.type = CLEX_TOKEN_TYPE_BITWISE_NOT;
     ++t->at;
   }
   else if (t->text.data[t->at] == '!') {
-    ret.type = META_TOKEN_TYPE_LOGICAL_NOT;
+    ret.type = CLEX_TOKEN_TYPE_LOGICAL_NOT;
     ++t->at;
   }
   else if (t->text.data[t->at] == '.')
   {
-    ret.type = META_TOKEN_TYPE_DOT; 
+    ret.type = CLEX_TOKEN_TYPE_DOT; 
     ++t->at;
 
     if (is_digit(t->text.data[t->at])) // positive number related literals
     {    
-      ret.type = META_TOKEN_TYPE_NUMBER;
+      ret.type = CLEX_TOKEN_TYPE_NUMBER;
       while(is_digit(t->text.data[t->at]) ||
-            meta_is_accepted_character_for_number(t->text.data[t->at]))
+            clex_is_accepted_character_for_number(t->text.data[t->at]))
       {
         ++t->at;
       }
@@ -445,7 +437,7 @@ meta_next_token(meta_tokenizer_t* t) {
   else if (t->text.data[t->at] == '#') {
     b32_t continue_to_next_line = false;
 
-    ret.type = META_TOKEN_TYPE_MACRO;
+    ret.type = CLEX_TOKEN_TYPE_MACRO;
     ++t->at;
     while(t->text.data[t->at] != 0) 
     {
@@ -481,7 +473,7 @@ meta_next_token(meta_tokenizer_t* t) {
       }
       ++t->at;
     }
-    ret.type = META_TOKEN_TYPE_STRING;
+    ret.type = CLEX_TOKEN_TYPE_STRING;
     ret.ope = t->at;
     ++t->at;
   }
@@ -496,20 +488,20 @@ meta_next_token(meta_tokenizer_t* t) {
     }
     ret.ope = t->at;
     
-    if (meta_is_keyword(t, ret)) {
-      ret.type = META_TOKEN_TYPE_KEYWORD;
+    if (_clex_is_keyword(t, ret)) {
+      ret.type = CLEX_TOKEN_TYPE_KEYWORD;
     }
 
     else {
-      ret.type = META_TOKEN_TYPE_IDENTIFIER;
+      ret.type = CLEX_TOKEN_TYPE_IDENTIFIER;
     } 
   }
 
   else if (is_digit(t->text.data[t->at])) // positive number related literals
   {    
-    ret.type = META_TOKEN_TYPE_NUMBER;
+    ret.type = CLEX_TOKEN_TYPE_NUMBER;
     while(is_digit(t->text.data[t->at]) ||
-          meta_is_accepted_character_for_number(t->text.data[t->at]))
+          clex_is_accepted_character_for_number(t->text.data[t->at]))
     {
       ++t->at;
     }
@@ -523,13 +515,13 @@ meta_next_token(meta_tokenizer_t* t) {
     while(t->text.data[t->at] != '\'') {
       ++t->at;
     }
-    ret.type = META_TOKEN_TYPE_CHAR;
+    ret.type = CLEX_TOKEN_TYPE_CHAR;
     ret.ope = t->at;
     ++t->at;
   }
 
   else {
-    ret.type = META_TOKEN_TYPE_UNKNOWN;
+    ret.type = CLEX_TOKEN_TYPE_UNKNOWN;
     ++t->at;
   }
 
@@ -540,58 +532,53 @@ meta_next_token(meta_tokenizer_t* t) {
 
 
 static void 
-meta_is_function_approaching(meta_tokenizer_t* t) {
-  meta_tokenizer_t state = (*t);
-  meta_token_t token_a =  meta_next_token(t);
-  meta_token_t token_b =  meta_next_token(t);
-  meta_token_t token_c =  meta_next_token(t);
-  if (token_a.type == META_TOKEN_TYPE_IDENTIFIER &&
-      token_b.type == META_TOKEN_TYPE_IDENTIFIER &&
-      token_c.type == META_TOKEN_TYPE_OPEN_PAREN)
+meta_print_if_function_is_next(clex_tokenizer_t t) {
+  clex_token_t token_a =  clex_next_token(&t);
+  clex_token_t token_b =  clex_next_token(&t);
+  clex_token_t token_c =  clex_next_token(&t);
+  if (token_a.type == CLEX_TOKEN_TYPE_IDENTIFIER &&
+      token_b.type == CLEX_TOKEN_TYPE_IDENTIFIER &&
+      token_c.type == CLEX_TOKEN_TYPE_OPEN_PAREN)
   {
-#if 0
-    printf("Maybe we are a function: ");
-    printf("\n  ");
-    meta_print_token(t, token_a);
-    printf("\n  ");
-    meta_print_token(t, token_b);
-    printf("\n  ");
-    meta_print_token(t, token_c);
-    printf("\n");
-    printf("A function is approaching: ");
-    meta_print_token(t, token_b);
-    printf("\n");
-#endif
+    // search for close brace.
+    clex_token_t end_token;
+    do {
+      end_token = clex_next_token(&t);
+    } while(end_token.type != CLEX_TOKEN_TYPE_CLOSE_PAREN);
 
+    // TODO: Check for EOF
+
+    clex_token_t final_token = clex_next_token(&t);
+    
+    clex_token_t function_as_token;
+    function_as_token.begin = token_a.begin;
+    function_as_token.ope = end_token.ope;
+
+    if (final_token.type == CLEX_TOKEN_TYPE_SEMICOLON) {
+      printf("Declaration: ");
+    }
+    else if(final_token.type == CLEX_TOKEN_TYPE_OPEN_BRACE) {
+      printf("Definition: ");
+    }
+    else return;
+    meta_print_token(&t, function_as_token);
+
+    printf("\n");
   }
-
-  // 
-  (*t) = state;
-
 }
 
 // In this program
 int main() {
-  make(meta_tokenizer_t, t);
-#if 1
-  if (!meta_tokenizer_init(t, "../code/momo.h")){
-#else
-  if (!meta_tokenizer_init(t, "test.h")){
-#endif
-    printf("Cannot open file\n");
-    return 1;
-  }
-  defer { meta_tokenizer_free(t); };
+  make(clex_tokenizer_t, t);
+  buffer_t buffer = foolishly_read_file_into_buffer("../code/momo.h", true);
+  defer { foolishly_free_buffer(buffer); };
+
+  clex_tokenizer_init(t, buffer);
 
   for(;;) {
-    meta_token_t token = meta_next_token(t);
-#if 1
-    printf("Type: %d\n", token.type);
-    meta_print_token(t, token);
-    printf("\n===\n");
-#endif
-
-    if (token.type == META_TOKEN_TYPE_EOF) 
+    clex_token_t token = clex_next_token(t);
+    if (token.type == CLEX_TOKEN_TYPE_EOF) 
       break;
+    meta_print_if_function_is_next(*t);
   } 
 }
