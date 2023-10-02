@@ -1,4 +1,4 @@
-
+rem TODO need to redo this
 @echo off
 setlocal
 
@@ -16,7 +16,6 @@ if not exist %pack_dir% mkdir %pack_dir%
 
 move %build_dir%\lit.dat %pack_dir% >nul
 move %build_dir%\primix_w32.exe %pack_dir% >nul
-move %build_dir%\game.dll %pack_dir% >nul
 
 :eof
 

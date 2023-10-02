@@ -27,7 +27,7 @@ game_get_config_sig(game_get_config)
   ret.audio_arena_size = megabytes(256);
   
   ret.target_frame_rate = 60;
-  ret.window_title = "PNGTuber";
+  ret.window_title = "sandobokusu";
 
   return ret;
 }

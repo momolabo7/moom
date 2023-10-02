@@ -14,6 +14,8 @@
 //   Context     - Context Defines (Arch, OS, compiler, etc)
 //   Constants   - Common constant values
 //   Helper      - Common helper macros and functions 
+//   Float       - Common functions for floats (f32, f64)
+//   Int         - Common functions for integers (s32, u32, etc)
 //   ASCII       - Helper functions for ASCII 
 //   Memory      - Helper functions for Memory manipulation
 //   Hash        - Hash functions (using CString) 
@@ -30,12 +32,14 @@
 //   Arena       - Standard Linear Memory Arena
 //   Garena      - General Purpose Heap Arena
 //   String      - String manipulation
+//   CString     - CString manipulation
 //   Stream      - Memory stream
 //   TTF         - TTF font file
 //   WAV         - WAV audio file
 //   PNG         - PNG image file
 //   JSON        - JSON data file
 //   RectPack    - Rectangle packer
+//   Clex        - C Lexer
 //
 // TODO
 //   ??
@@ -486,6 +490,76 @@ struct rp_rect_t{
 };
 
 //
+// MARK:(Clex)
+//
+
+enum clex_token_type_t {
+  CLEX_TOKEN_TYPE_UNKNOWN,
+  CLEX_TOKEN_TYPE_OPEN_PAREN,          // (
+  CLEX_TOKEN_TYPE_CLOSE_PAREN,         // )
+  CLEX_TOKEN_TYPE_SEMICOLON,           // ;
+  CLEX_TOKEN_TYPE_COMMA,               // ,
+  CLEX_TOKEN_TYPE_DOT,                 // ,
+  CLEX_TOKEN_TYPE_COLON,               // : 
+  CLEX_TOKEN_TYPE_SCOPE,               // :: 
+  CLEX_TOKEN_TYPE_OPEN_BRACKET,        // [
+  CLEX_TOKEN_TYPE_CLOSE_BRACKET,       // ]
+  CLEX_TOKEN_TYPE_OPEN_BRACE,          // {
+  CLEX_TOKEN_TYPE_CLOSE_BRACE,         // } 
+  CLEX_TOKEN_TYPE_PLUS,                // +
+  CLEX_TOKEN_TYPE_PLUS_PLUS,           // ++ 
+  CLEX_TOKEN_TYPE_PLUS_EQUAL,          // += 
+  CLEX_TOKEN_TYPE_MINUS,               // -
+  CLEX_TOKEN_TYPE_MINUS_MINUS,         // -- 
+  CLEX_TOKEN_TYPE_MINUS_EQUAL,         // -= 
+  CLEX_TOKEN_TYPE_ARROW,               // ->
+  CLEX_TOKEN_TYPE_EQUAL,               // =
+  CLEX_TOKEN_TYPE_EQUAL_EQUAL,         // ==
+  CLEX_TOKEN_TYPE_GREATER,             // > 
+  CLEX_TOKEN_TYPE_GREATER_EQUAL,       // >= 
+  CLEX_TOKEN_TYPE_GREATER_GREATER,     // >>
+  CLEX_TOKEN_TYPE_LESSER,              // < 
+  CLEX_TOKEN_TYPE_LESSER_EQUAL,        // <= 
+  CLEX_TOKEN_TYPE_LESSER_LESSER,       // <<
+  CLEX_TOKEN_TYPE_OR,                  // |
+  CLEX_TOKEN_TYPE_OR_EQUAL,            // |=
+  CLEX_TOKEN_TYPE_OR_OR,               // ||
+  CLEX_TOKEN_TYPE_AND,                 // & 
+  CLEX_TOKEN_TYPE_AND_AND,             // &&
+  CLEX_TOKEN_TYPE_AND_EQUAL,           // &=
+  CLEX_TOKEN_TYPE_LOGICAL_NOT,         // !
+  CLEX_TOKEN_TYPE_BITWISE_NOT,         // ~
+  CLEX_TOKEN_TYPE_XOR,                 // ^
+  CLEX_TOKEN_TYPE_XOR_EQUAL,           // ^=
+  CLEX_TOKEN_TYPE_QUESTION,            // ?
+  CLEX_TOKEN_TYPE_STAR,                // *
+  CLEX_TOKEN_TYPE_STAR_EQUAL,          // *=
+  CLEX_TOKEN_TYPE_SLASH,               // /
+  CLEX_TOKEN_TYPE_SLASH_EQUAL,         // /=
+  CLEX_TOKEN_TYPE_PERCENT,             // %
+  CLEX_TOKEN_TYPE_PERCENT_EQUAL,       // %=
+  CLEX_TOKEN_TYPE_IDENTIFIER,
+  CLEX_TOKEN_TYPE_KEYWORD,
+  CLEX_TOKEN_TYPE_STRING,
+  CLEX_TOKEN_TYPE_NUMBER,
+  CLEX_TOKEN_TYPE_CHAR,
+  CLEX_TOKEN_TYPE_MACRO,
+  CLEX_TOKEN_TYPE_EOF
+};
+
+struct clex_token_t {
+  clex_token_type_t type;
+
+  usz_t begin;
+  usz_t ope;
+};
+
+struct clex_tokenizer_t {
+  buffer_t text;
+  usz_t at;
+};
+
+//
 // MARK:(JSON)
 //
 
@@ -696,7 +770,7 @@ static umi_t ptr_to_umi(void* p);
 static u8_t* umi_to_ptr(umi_t u);
 
 //
-// F32
+// MARK:(Float)
 //
 static f32_t f32_abs(f32_t x);
 static f32_t f32_lerp(f32_t s, f32_t e, f32_t f);
@@ -752,9 +826,6 @@ static f32_t f32_ease_in_expo(f32_t t);
 static f32_t f32_ease_out_expo(f32_t t);
 static f32_t f32_ease_inout_expo(f32_t t);
 
-//
-// F64
-//
 static f64_t f64_abs(f64_t x);
 static f64_t f64_lerp(f64_t s, f64_t e, f64_t f); 
 static f64_t f64_mod(f64_t lhs, f64_t rhs); 
@@ -830,7 +901,7 @@ static u64_t u64_atomic_assign(u64_t volatile* value, u64_t new_value);
 static u64_t u64_atomic_add(u64_t volatile* value, u64_t to_add);
 
 //
-// CString
+// MARK:(CString)
 //
 static usz_t cstr_len(const c8_t* str); 
 static void  cstr_copy(c8_t * dest, const c8_t* src); 
@@ -851,6 +922,7 @@ static u32_t djb2(const c8_t* str);
 //
 // MARK:(Linked List)
 //
+
 // Singly Linked List
 //
 // f - first node
@@ -1178,6 +1250,416 @@ static json_object_t* json_get_object(json_value_t* val);
 // Implementation
 //
 //
+
+//
+// MARK:(Clex)
+//
+static void
+_clex_eat_ignorables(clex_tokenizer_t* t) {
+  for (;;) {
+    if(is_whitespace(t->text.data[t->at])) {
+      ++t->at;
+    }
+    else if(t->text.data[t->at] == '/' && t->text.data[t->at+1] == '/')  // line comments
+    {
+      while(t->text.data[t->at] != '\n') {
+        ++t->at;
+      }
+    }
+    else if(t->text.data[t->at] == '/' && t->text.data[t->at+1] == '*')  // block comments
+    {
+      t->at += 3;
+      while(t->text.data[t->at] != '*' && t->text.data[t->at+1] != '/') {
+        ++t->at;
+      }
+
+    }
+    else {
+      break;
+    }
+  }
+
+}
+
+static b32_t 
+_clex_is_accepted_character_for_number(char c) {
+  return c == '-' || c == '.' ||
+    c == 'b' || c == 'x' || c == 'l' || c == 'f' || c == 'p' || c == 'e' ||
+    c == 'B' || c == 'X' || c == 'L' || c == 'F' || c == 'P' || c == 'E';
+}
+
+
+static b32_t
+_clex_compare_token_with_string(clex_tokenizer_t* t, clex_token_t token, st8_t str) {
+  if( str.count != (token.ope - token.begin)) {
+    return false;
+  }
+
+  for(u32_t i = 0; i < str.count; ++i) {
+    if (str.e[i] != t->text.data[token.begin+i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+static void
+meta_print_token(clex_tokenizer_t* t, clex_token_t token)  {
+  for(usz_t i = token.begin; i < token.ope; ++i) {
+    putchar(t->text.data[i]);
+  }
+}
+
+static b32_t
+clex_tokenizer_init(clex_tokenizer_t* t, buffer_t buffer) {
+  t->text = buffer; 
+  t->at = 0;
+  return !!t->text.size;
+}
+
+static b32_t
+_clex_is_keyword(clex_tokenizer_t* t, clex_token_t token) {
+  static st8_t keywords[] = {
+    st8_from_lit("if"),
+    st8_from_lit("else"),
+    st8_from_lit("switch"),
+    st8_from_lit("case"),
+    st8_from_lit("default"),
+    st8_from_lit("while"),
+    st8_from_lit("for"),
+    st8_from_lit("if"),
+    st8_from_lit("operator"),
+    st8_from_lit("auto"),
+    st8_from_lit("goto"),
+    st8_from_lit("return"),
+  };
+  for_arr(i, keywords) {
+    if (_clex_compare_token_with_string(t, token, keywords[i]))
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+
+static clex_token_t
+clex_next_token(clex_tokenizer_t* t) {
+  _clex_eat_ignorables(t);
+
+  clex_token_t ret = {};
+  ret.begin = t->at;
+  ret.ope = t->at + 1;
+
+  if (t->text.data[t->at] == 0) {
+    ret.type = CLEX_TOKEN_TYPE_EOF; 
+    ++t->at;
+  }
+  else if (t->text.data[t->at] == '(') {
+    ret.type = CLEX_TOKEN_TYPE_OPEN_PAREN; 
+    ++t->at;
+  }
+  else if (t->text.data[t->at] == '?') {
+    ret.type = CLEX_TOKEN_TYPE_QUESTION; 
+    ++t->at;
+  }
+  else if (t->text.data[t->at] == ')') {
+    ret.type = CLEX_TOKEN_TYPE_CLOSE_PAREN; 
+    ++t->at;
+  }
+  else if (t->text.data[t->at] == '[') {
+    ret.type = CLEX_TOKEN_TYPE_OPEN_BRACKET; 
+    ++t->at;
+  } 
+  else if (t->text.data[t->at] == ']') {
+    ret.type = CLEX_TOKEN_TYPE_CLOSE_BRACKET; 
+    ++t->at;
+  }
+  else if (t->text.data[t->at] == '{') {
+    ret.type = CLEX_TOKEN_TYPE_OPEN_BRACE; 
+    ++t->at;
+  } 
+  else if (t->text.data[t->at] == '}') {
+    ret.type = CLEX_TOKEN_TYPE_CLOSE_BRACE; 
+    ++t->at;
+  } 
+  else if (t->text.data[t->at] == ')') { 
+    ret.type = CLEX_TOKEN_TYPE_COLON; 
+    ++t->at;
+  } 
+  else if (t->text.data[t->at] == ';') {
+    ret.type = CLEX_TOKEN_TYPE_SEMICOLON; 
+    ++t->at;
+  }
+  else if (t->text.data[t->at] == '+') {
+    ret.type = CLEX_TOKEN_TYPE_PLUS;
+    ++t->at;
+    if (t->text.data[t->at] == '+') { // ++
+      ret.type = CLEX_TOKEN_TYPE_PLUS_PLUS;
+      ret.ope = ++t->at;
+    }
+    else if (t->text.data[t->at] == '=') { // +=
+      ret.type = CLEX_TOKEN_TYPE_PLUS_EQUAL;
+      ret.ope = ++t->at;
+    }
+  }
+  else if (t->text.data[t->at] == '-') {
+    ret.type = CLEX_TOKEN_TYPE_MINUS;
+    ++t->at;
+    if (t->text.data[t->at] == '-') { // --
+      ret.type = CLEX_TOKEN_TYPE_MINUS_MINUS;
+      ret.ope = ++t->at;
+    }
+    else if (t->text.data[t->at] == '=') { // -=
+      ret.type = CLEX_TOKEN_TYPE_MINUS_EQUAL;
+      ret.ope = ++t->at;
+    }
+    else if (t->text.data[t->at] == '>') { // ->
+      ret.type = CLEX_TOKEN_TYPE_ARROW;
+      ret.ope = ++t->at;
+    }
+    else if (is_digit(t->text.data[t->at])) // negative number related literals
+    {    
+      ret.type = CLEX_TOKEN_TYPE_NUMBER;
+      while(is_digit(t->text.data[t->at]) ||
+            _clex_is_accepted_character_for_number(t->text.data[t->at]))
+      {
+        ++t->at;
+      }
+      ret.ope = t->at;
+    }
+  }
+  else if (t->text.data[t->at] == '=') {
+    ret.type = CLEX_TOKEN_TYPE_EQUAL;
+    ++t->at;
+
+    if (t->text.data[t->at] == '=') { // ==
+      ret.type = CLEX_TOKEN_TYPE_EQUAL_EQUAL;
+      ret.ope = ++t->at;
+    }
+  }
+
+  else if (t->text.data[t->at] == '>') {
+    ret.type = CLEX_TOKEN_TYPE_GREATER;
+    ++t->at;
+
+    if (t->text.data[t->at] == '=') { // >=
+      ret.type = CLEX_TOKEN_TYPE_GREATER_EQUAL;
+      ret.ope = ++t->at;
+    }
+    else if (t->text.data[t->at] == '>') { // >>
+      ret.type = CLEX_TOKEN_TYPE_GREATER_GREATER;
+      ret.ope = ++t->at;
+    }
+  }
+
+  else if (t->text.data[t->at] == '<') {
+    ret.type = CLEX_TOKEN_TYPE_LESSER;
+    ++t->at;
+
+    if (t->text.data[t->at] == '=') { // >=
+      ret.type = CLEX_TOKEN_TYPE_LESSER_EQUAL;
+      ret.ope = ++t->at;
+    }
+    else if (t->text.data[t->at] == '<') { // <<
+      ret.type = CLEX_TOKEN_TYPE_LESSER_LESSER;
+      ret.ope = ++t->at;
+    }
+  }
+  else if (t->text.data[t->at] == '|') {
+    ret.type = CLEX_TOKEN_TYPE_OR;
+    ++t->at;
+
+    if (t->text.data[t->at] == '|') { // ||
+      ret.type = CLEX_TOKEN_TYPE_OR_OR;
+      ret.ope = ++t->at;
+    }
+    else if (t->text.data[t->at] == '=') { // |=
+      ret.type = CLEX_TOKEN_TYPE_OR_EQUAL;
+      ret.ope = ++t->at;
+    }
+  }
+
+  else if (t->text.data[t->at] == ':') {
+    ret.type = CLEX_TOKEN_TYPE_COLON;
+    ++t->at;
+
+    if (t->text.data[t->at] == ':') { // ::
+      ret.type = CLEX_TOKEN_TYPE_SCOPE;
+      ret.ope = ++t->at;
+    }
+  }
+  else if (t->text.data[t->at] == '&') {
+    ret.type = CLEX_TOKEN_TYPE_AND;
+    ++t->at;
+
+    if (t->text.data[t->at] == '&') { // &&
+      ret.type = CLEX_TOKEN_TYPE_AND_AND;
+      ret.ope = ++t->at;
+    }
+    else if (t->text.data[t->at] == '=') { // &=
+      ret.type = CLEX_TOKEN_TYPE_AND_EQUAL;
+      ret.ope = ++t->at;
+    }
+  }
+  else if (t->text.data[t->at] == '*') {
+    ret.type = CLEX_TOKEN_TYPE_STAR;
+    ++t->at;
+
+    if (t->text.data[t->at] == '=') { // *=
+      ret.type = CLEX_TOKEN_TYPE_STAR_EQUAL;
+      ret.ope = ++t->at;
+    }
+  }
+
+  else if (t->text.data[t->at] == '/') {
+    ret.type = CLEX_TOKEN_TYPE_SLASH;
+    ++t->at;
+
+    if (t->text.data[t->at] == '=') { // /=
+      ret.type = CLEX_TOKEN_TYPE_SLASH_EQUAL;
+      ret.ope = ++t->at;
+    }
+  }
+  else if (t->text.data[t->at] == '%') {
+    ret.type = CLEX_TOKEN_TYPE_PERCENT;
+    ++t->at;
+
+    if (t->text.data[t->at] == '=') { // %=
+      ret.type = CLEX_TOKEN_TYPE_PERCENT_EQUAL;
+      ret.ope = ++t->at;
+    }
+  }
+  else if (t->text.data[t->at] == '^') {
+    ret.type = CLEX_TOKEN_TYPE_XOR;
+    ++t->at;
+    if (t->text.data[t->at] == '=') { // ^=
+      ret.type = CLEX_TOKEN_TYPE_XOR_EQUAL;
+      ret.ope = ++t->at;
+    }
+  }
+  else if (t->text.data[t->at] == '~') {
+    ret.type = CLEX_TOKEN_TYPE_BITWISE_NOT;
+    ++t->at;
+  }
+  else if (t->text.data[t->at] == '!') {
+    ret.type = CLEX_TOKEN_TYPE_LOGICAL_NOT;
+    ++t->at;
+  }
+  else if (t->text.data[t->at] == '.')
+  {
+    ret.type = CLEX_TOKEN_TYPE_DOT; 
+    ++t->at;
+
+    if (is_digit(t->text.data[t->at])) // positive number related literals
+    {    
+      ret.type = CLEX_TOKEN_TYPE_NUMBER;
+      while(is_digit(t->text.data[t->at]) ||
+            _clex_is_accepted_character_for_number(t->text.data[t->at]))
+      {
+        ++t->at;
+      }
+      ret.ope = t->at;
+    }
+  }
+
+  else if (t->text.data[t->at] == '#') {
+    b32_t continue_to_next_line = false;
+
+    ret.type = CLEX_TOKEN_TYPE_MACRO;
+    ++t->at;
+    while(t->text.data[t->at] != 0) 
+    {
+
+      if (t->text.data[t->at] == '\\') {
+        continue_to_next_line = true;
+      }
+
+      if (t->text.data[t->at] == '\n') 
+      {
+        if (continue_to_next_line) {
+          continue_to_next_line = false;
+        }
+        else {
+          break;
+        }
+      }
+
+      ++t->at;
+    }
+    ret.ope = t->at;
+  }
+  else if (t->text.data[t->at] == '"') // string literals
+  {
+    ++t->at;
+    ret.begin = t->at;
+    while(t->text.data[t->at] != '"') 
+    {
+      if(t->text.data[t->at] == '\\' && 
+          t->text.data[t->at+1]) 
+      {
+        ++t->at;
+      }
+      ++t->at;
+    }
+    ret.type = CLEX_TOKEN_TYPE_STRING;
+    ret.ope = t->at;
+    ++t->at;
+  }
+
+  else if (is_alpha(t->text.data[t->at]) || t->text.data[t->at] == '_') 
+  {
+    while(is_alpha(t->text.data[t->at]) ||
+          is_digit(t->text.data[t->at]) ||
+          t->text.data[t->at] == '_') 
+    {
+      ++t->at;
+    }
+    ret.ope = t->at;
+    
+    if (_clex_is_keyword(t, ret)) {
+      ret.type = CLEX_TOKEN_TYPE_KEYWORD;
+    }
+
+    else {
+      ret.type = CLEX_TOKEN_TYPE_IDENTIFIER;
+    } 
+  }
+
+  else if (is_digit(t->text.data[t->at])) // positive number related literals
+  {    
+    ret.type = CLEX_TOKEN_TYPE_NUMBER;
+    while(is_digit(t->text.data[t->at]) ||
+          _clex_is_accepted_character_for_number(t->text.data[t->at]))
+    {
+      ++t->at;
+    }
+    ret.ope = t->at;
+  }
+
+  else if (t->text.data[t->at] == '\'') // char literals
+  {
+    ++t->at;
+    ret.begin = t->at;
+    while(t->text.data[t->at] != '\'') {
+      ++t->at;
+    }
+    ret.type = CLEX_TOKEN_TYPE_CHAR;
+    ret.ope = t->at;
+    ++t->at;
+  }
+
+  else {
+    ret.type = CLEX_TOKEN_TYPE_UNKNOWN;
+    ++t->at;
+  }
+
+
+  return ret;
+}
+
+
 
 static buffer_t 
 buffer_set(u8_t* mem, usz_t size) {

@@ -24,7 +24,7 @@ GOTO label_parse
 
 IF not exist %build_dir% mkdir %build_dir%
 
-SET CommonCompilerFlags=-MT -WX -W4 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa  -std:c++17
+SET CompilerFlags=-MT -WX -W4 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa  -std:c++17
 
 echo ******************* 
 
@@ -39,7 +39,7 @@ echo *******************
 
 
 pushd %build_dir%
-call cl %CompilerFlags% %code_dir%\%c_file%.cpp -LD -link -out:game.dll 
+call cl %CompilerFlags% %code_dir%\%c_file%.cpp -LD -link -incremental:no -opt:ref -out:game.dll 
 
 
 rem We do this because for some reason, compiling will result in the DLL being modified twice and cus our hot reloading feature to be loaded twice. This *should* prevent it.

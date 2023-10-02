@@ -2312,7 +2312,7 @@ lit_level_split() {
 static void
 lit_level_movement() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("MOVEMENT"), 13);
+  lit_game_init_level(m, st8_from_lit("MOVEMENT"), 12);
 
 //  lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
   lit_game_push_light(m, 400.f, 700.f, 0x008800FF, 15.f, 0.25f);

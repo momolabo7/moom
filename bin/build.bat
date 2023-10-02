@@ -60,7 +60,7 @@ GOTO label_parse
 
 
 set compiler_flags=-MT -WX -W4 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa  -std:c++17
-set linker_flags=-link -incremental:no -opt:ref
+set linker_flags=-link
 
 echo ******************* 
 
@@ -80,7 +80,7 @@ if %game%==1 (
   echo Build    : Game
   echo Out      : game.dll
   set compiler_flags=%compiler_flags% -LD
-  set linker_flags=%linker_flags% -out:game:dll 
+  set linker_flags=%linker_flags% -out:game.dll 
   goto end_build_type
 )
 
