@@ -42,7 +42,7 @@
 //   Clex        - C Lexer
 //
 // TODO
-//   ??
+//   - Stream API 
 //
 
 
@@ -220,32 +220,32 @@ struct buffer_t {
 // MARK:(Vector)
 //
 union v2u_t {
-	struct { u32_t x, y; };
-	struct { u32_t w, h; };
-	u32_t e[2];
+  struct { u32_t x, y; };
+  struct { u32_t w, h; };
+  u32_t e[2];
 };
 
 union v2s_t {
-	struct { s32_t x, y; };
-	struct { s32_t w, h; };
-	s32_t e[2];
+  struct { s32_t x, y; };
+  struct { s32_t w, h; };
+  s32_t e[2];
 };
 
 union v2f_t {
-	struct { f32_t x, y; };
-	struct { f32_t w, h; };
-	struct { f32_t u, v; };
-	f32_t e[2];
+  struct { f32_t x, y; };
+  struct { f32_t w, h; };
+  struct { f32_t u, v; };
+  f32_t e[2];
 };
 
 union v3f_t {
-	struct { f32_t x, y, z; };
-	struct { f32_t w, h, d; };
+  struct { f32_t x, y, z; };
+  struct { f32_t w, h, d; };
   f32_t e[3];
 };
 
 union v4f_t {
-	struct { f32_t x, y, z, w; };
+  struct { f32_t x, y, z, w; };
   f32_t e[4];
 };
 
@@ -253,7 +253,7 @@ union v4f_t {
 // MARK:(Matrix)
 //
 struct m44f_t {
-	f32_t e[4][4];
+  f32_t e[4][4];
 };
 
 //
@@ -325,9 +325,9 @@ struct crc8_table_t {
 // MARK:(Arena)
 //
 struct arena_t {
-	u8_t* memory;
-	usz_t pos;
-	usz_t cap;
+  u8_t* memory;
+  usz_t pos;
+  usz_t cap;
 
   usz_t highest_memory_usage;
 };
@@ -383,19 +383,19 @@ struct garena_t {
 // MARK:(Strings)
 //
 struct st8_t {
-	u8_t* e;
-	usz_t count;
+  u8_t* e;
+  usz_t count;
 };
 
 struct stb8_t{
-	union {
-		st8_t str;
-		struct {
-			u8_t* e;
-			usz_t count;
-		};
-	};
-	usz_t cap;
+  union {
+    st8_t str;
+    struct {
+      u8_t* e;
+      usz_t count;
+    };
+  };
+  usz_t cap;
 };
 
 //
@@ -404,7 +404,7 @@ struct stb8_t{
 struct stream_t {
   buffer_t contents;
   usz_t pos;
-	
+
   // For bit reading
   u32_t bit_buffer;
   u32_t bit_count;
@@ -417,11 +417,11 @@ struct stream_t {
 struct ttf_t {
   u8_t* data;
   u32_t glyph_count;
-  
+
   // these are positions from data
   u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;
   u32_t cmap_mappings;
-  
+
   u16_t loca_format;
 };
 
@@ -462,7 +462,7 @@ struct wav_t {
 //
 struct png_t {
   buffer_t contents;
-  
+
   u32_t width;
   u32_t height;
   u8_t bit_depth;
@@ -485,7 +485,7 @@ enum rp_sort_type_t {
 };
 
 struct rp_rect_t{
-	u32_t x, y, w, h;
+  u32_t x, y, w, h;
   void* user_data;
 };
 
@@ -566,7 +566,7 @@ struct clex_tokenizer_t {
 // The "key" of a JSON entry, which can only be a string.
 struct json_key_t {
   u8_t* at;
-  umi_t count;
+  usz_t count;
 };
 
 // Represents a JSON array, which is a linked list
@@ -582,7 +582,7 @@ struct json_element_t {
   union {
     struct {
       u8_t* at;
-      umi_t count;
+      usz_t count;
     };
     st8_t str;
   };
@@ -909,10 +909,11 @@ static b32_t cstr_compare(const c8_t* lhs, const c8_t* rhs);
 static b32_t cstr_compare_n(const c8_t* lhs, const c8_t* rhs, usz_t n); 
 static void  cstr_concat(c8_t* dest, const c8_t* Src);
 static f64_t cstr_to_f64(const c8_t* p); 
+static u32_t cstr_to_u32(const c8_t* p); 
 static void  cstr_clear(c8_t* dest); 
 static void  cstr_reverse(c8_t* dest); 
 static void  cstr_itoa(c8_t* dest, s32_t num); 
-
+static u32_t cstr_len_if(const char* str, b32_t (*pred)(char));
 
 //
 // MARK:(Hash)
@@ -1107,9 +1108,9 @@ static b32_t  st8_range_to(u32_t* out);
 
 #define stb8_make(name, cap) \
   u8_t temp_buffer_##__LINE__[cap] = {0}; \
-  stb8_t name_; \
-  stb8_t* name = &name_; \
-  stb8_init(name, temp_buffer_##__LINE__, cap);
+stb8_t name_; \
+stb8_t* name = &name_; \
+stb8_init(name, temp_buffer_##__LINE__, cap);
 
 static usz_t    stb8_remaining(stb8_t* b);
 static void     stb8_clear(stb8_t* b);
@@ -1131,11 +1132,13 @@ static void     stb8_init(stb8_t* b, u8_t* data, usz_t cap);
 // MARK:(Stream)
 //
 #define stream_consume(t,s) (t*) stream_consume_block((s), sizeof(t))
+#define stream_peek(t,s) (t*) stream_peek_block((s), sizeof(t))
 #define stream_write(s,item) stream_write_block((s), &(item), sizeof(item))
 static void     stream_init(stream_t* s, buffer_t contents);
 static void     stream_reset(stream_t* s);
 static b32_t    stream_is_eos(stream_t* s);
 static u8_t*    stream_consume_block(stream_t* s, usz_t amount);
+static u8_t*    stream_peek_block(stream_t* s, usz_t amount);
 static void     stream_flush_bits(stream_t* s);
 static u32_t    stream_consume_bits(stream_t* s, u32_t amount);
 static void     stream_write_block(stream_t* s, void* src, usz_t size);
@@ -1168,7 +1171,7 @@ static void arena_revert(arena_marker_t marker);
 
 # define __arena_set_revert_point(a,l) \
   auto _arena_marker_##l = arena_mark(a); \
-  defer{arena_revert(_arena_marker_##l);};
+defer{arena_revert(_arena_marker_##l);};
 # define _arena_set_revert_point(a,l) __arena_set_revert_point(a,l)
 # define arena_set_revert_point(arena) _arena_set_revert_point(arena, __LINE__) 
 
@@ -1245,15 +1248,71 @@ static json_element_t* json_get_element(json_value_t* val);
 static json_array_t* json_get_array(json_value_t* val);
 static json_object_t* json_get_object(json_value_t* val);
 
+
+//
+// MARK:(Clex)
+//
+
+static b32_t clex_tokenizer_init(clex_tokenizer_t* t, buffer_t buffer);
+static clex_token_t clex_next_token(clex_tokenizer_t* t);
+
 //
 //
 // Implementation
 //
 //
 
+#if FOOLISH // FOOLISH
+#include <stdlib.h>
+#include <stdio.h>
 //
-// MARK:(Clex)
+// MARK:(Foolish)
 //
+// These are foolish methods that should ideally not make 
+// it into any SERIOUS projects. They are meant to be dumb
+// but convienient for trying stuff out.
+//
+static void* 
+foolishly_allocate_size(usz_t size) {
+  return malloc(size); 
+}
+
+static void 
+foolishly_free_memory(void* mem) {
+  free(mem);
+}
+#define foolishly_allocate(t)  (t*)foolishly_allocate_size(sizeof(t))
+#define foolishly_allocate_array(t,n) (t*)foolishly_allocate_size(sizeof(t) * (n))
+
+static buffer_t
+foolishly_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {
+  FILE *file = fopen(filename, "rb");
+  if (!file) return buffer_set(0,0);
+  defer { fclose(file); };
+
+  fseek(file, 0, SEEK_END);
+  usz_t file_size = ftell(file);
+  fseek(file, 0, SEEK_SET);
+
+  buffer_t ret;
+  ret.size = file_size + null_terminate; // lol
+  ret.data = (u8_t*)foolishly_allocate_size(ret.size);
+
+  usz_t read_amount = fread(ret.data, 1, file_size, file);
+  if(read_amount != file_size) return buffer_set(0,0);
+
+  if (null_terminate) ret.data[file_size] = 0;  
+
+  return ret;
+}
+
+static void
+foolishly_free_buffer(buffer_t buffer) {
+  free(buffer.data);
+}
+
+#endif // FOOLISH
+
 static void
 _clex_eat_ignorables(clex_tokenizer_t* t) {
   for (;;) {
@@ -1304,12 +1363,6 @@ _clex_compare_token_with_string(clex_tokenizer_t* t, clex_token_t token, st8_t s
   return true;
 }
 
-static void
-meta_print_token(clex_tokenizer_t* t, clex_token_t token)  {
-  for(usz_t i = token.begin; i < token.ope; ++i) {
-    putchar(t->text.data[i]);
-  }
-}
 
 static b32_t
 clex_tokenizer_init(clex_tokenizer_t* t, buffer_t buffer) {
@@ -1423,7 +1476,7 @@ clex_next_token(clex_tokenizer_t* t) {
     {    
       ret.type = CLEX_TOKEN_TYPE_NUMBER;
       while(is_digit(t->text.data[t->at]) ||
-            _clex_is_accepted_character_for_number(t->text.data[t->at]))
+          _clex_is_accepted_character_for_number(t->text.data[t->at]))
       {
         ++t->at;
       }
@@ -1556,7 +1609,7 @@ clex_next_token(clex_tokenizer_t* t) {
     {    
       ret.type = CLEX_TOKEN_TYPE_NUMBER;
       while(is_digit(t->text.data[t->at]) ||
-            _clex_is_accepted_character_for_number(t->text.data[t->at]))
+          _clex_is_accepted_character_for_number(t->text.data[t->at]))
       {
         ++t->at;
       }
@@ -1611,13 +1664,13 @@ clex_next_token(clex_tokenizer_t* t) {
   else if (is_alpha(t->text.data[t->at]) || t->text.data[t->at] == '_') 
   {
     while(is_alpha(t->text.data[t->at]) ||
-          is_digit(t->text.data[t->at]) ||
-          t->text.data[t->at] == '_') 
+        is_digit(t->text.data[t->at]) ||
+        t->text.data[t->at] == '_') 
     {
       ++t->at;
     }
     ret.ope = t->at;
-    
+
     if (_clex_is_keyword(t, ret)) {
       ret.type = CLEX_TOKEN_TYPE_KEYWORD;
     }
@@ -1631,7 +1684,7 @@ clex_next_token(clex_tokenizer_t* t) {
   {    
     ret.type = CLEX_TOKEN_TYPE_NUMBER;
     while(is_digit(t->text.data[t->at]) ||
-          _clex_is_accepted_character_for_number(t->text.data[t->at]))
+        _clex_is_accepted_character_for_number(t->text.data[t->at]))
     {
       ++t->at;
     }
@@ -1674,9 +1727,9 @@ static f32_t _F32_INFINITY() {
   // Infinity is when bits 1-8 are on
   union { f32_t f; u32_t u; } ret = {};
   ret.u = 0x7f800000;
-  
+
   return ret.f;
-  
+
 }
 
 static f32_t 
@@ -1686,7 +1739,7 @@ _F32_NEG_INFINITY() {
   // Negative is when bit 0 is on
   union { f32_t f; u32_t u; } ret = {};
   ret.u = 0xff800000;
-  
+
   return ret.f;	
 }
 
@@ -1717,9 +1770,9 @@ _F64_INFINITY() {
   // Infinity is when bits 1-11 are on
   union { f64_t f; u64_t u; } ret = {};
   ret.u = 0x7FF0000000000000;
-  
+
   return ret.f;
-  
+
 }
 
 static f64_t 
@@ -1729,7 +1782,7 @@ _F64_NEG_INFINITY() {
   // Negative is when bit 0 is on
   union { f64_t f; u64_t u; } ret = {};
   ret.u = 0xFFF0000000000000;
-  
+
   return ret.f;	
 }
 
@@ -1772,17 +1825,17 @@ f64_abs(f64_t x) {
   union { f64_t f; u64_t u; } val = {};
   val.f = x;
   val.u &= 0x7fffffffffffffff;
-  
+
   return val.f;
 }
 
-static f32_t
+  static f32_t
 f32_mod(f32_t lhs, f32_t rhs) 
 {
   return fmodf(lhs, rhs);
 }
 
-static f64_t
+  static f64_t
 f64_mod(f64_t lhs, f64_t rhs) 
 {
   return fmod(lhs, rhs);
@@ -1849,7 +1902,7 @@ f32_turns_to_radians(f32_t turns) {
 static f64_t
 f64_deg_to_rad(f64_t degrees) {
   return degrees * PI_32 / 180.0;
-  
+
 }
 static f64_t 
 f64_rad_to_deg(f64_t radians) {
@@ -1885,10 +1938,10 @@ s16_endian_swap(s16_t value) {
 static u32_t
 u32_endian_swap(u32_t value) {
   return  ((value << 24) |
-           ((value & 0xFF00) << 8) |
-           ((value >> 8) & 0xFF00) |
-           (value >> 24));
-  
+      ((value & 0xFF00) << 8) |
+      ((value >> 8) & 0xFF00) |
+      (value >> 24));
+
 }
 
 
@@ -1967,7 +2020,7 @@ is_memory_same(const void* lhs, const void* rhs, usz_t size) {
     }
   }
   return true;
-  
+
 }
 #endif
 
@@ -1977,7 +2030,7 @@ static void
 swap_memory(void* lhs, void* rhs, usz_t size) {
   u8_t* l = (u8_t*)lhs;
   u8_t* r = (u8_t*)rhs;
-  
+
   while(size--) {
     u8_t tmp = (*l);
     *l++ = *r;
@@ -1992,6 +2045,31 @@ cstr_len(const c8_t* str) {
   return count;
 }
 
+  static u32_t 
+cstr_to_u32(const c8_t* str)
+{
+  u32_t ret = 0;
+  while(*str >= '0' && *str <= '9') {
+    ret *= 10;
+    ret += (*str - '0'); 
+    ++str; 
+  }
+  return ret;
+}
+
+  static u32_t 
+cstr_len_if(const char* str, b32_t (*pred)(char))
+{
+  // common strlen that counts what I care
+  u32_t ret = 0;
+  while(pred(*str)) 
+  {
+    ++str;
+    ++ret;
+  }
+
+  return ret;
+}
 static void
 cstr_copy(c8_t * dest, const c8_t* src) {
   for(; (*src) != 0 ; ++src, ++dest) {
@@ -2029,13 +2107,13 @@ cstr_concat(c8_t* dest, const c8_t* Src) {
   (*dest) = 0;
 }
 
-static f64_t
+  static f64_t
 _compute_f64(s64_t power, u64_t i, b32_t negative) 
 {
   static const f64_t power_of_ten[] = {
     1e0,  1e1,  1e2,  1e3,  1e4,  1e5,  1e6,  1e7,  1e8,  1e9,  1e10, 1e11,
     1e12, 1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19, 1e20, 1e21, 1e22};
-  
+
   static const u64_t mantissa_64[] = {
     0xa5ced43b7e3e9188, 0xcf42894a5dce35ea,
     0x818995ce7aa0e1b2, 0xa1ebfb4219491a1f,
@@ -2672,7 +2750,7 @@ _compute_f64(s64_t power, u64_t i, b32_t negative)
     0xd30560258f54e6ba, 0x47c6b82ef32a2069,
     0x4cdc331d57fa5441, 0xe0133fe4adf8e952,
     0x58180fddd97723a6, 0x570f09eaa7ea7648,};
-  
+
   if (-22 <= power && power <= 22 && i <= 9007199254740991) {
     f64_t d = f64_t(i);
     if (power < 0) {
@@ -2684,14 +2762,14 @@ _compute_f64(s64_t power, u64_t i, b32_t negative)
     if (negative) {
       d = -d;
     }
-    
+
     return d;
   }
-  
+
   if (i == 0) {
     return negative ? -0.0 : 0.0;
   }
-  
+
   //assert(false);
   return F64_INFINITY;
 }
@@ -2709,7 +2787,7 @@ cstr_to_f64(const c8_t* p) {
     }
   }
   const c8_t *const start_digits = p;
-  
+
   u64_t i;      // an unsigned int avoids signed overflows (which are bad)
   if (*p == '0') { // 0 cannot be followed by an integer
     ++p;
@@ -2744,8 +2822,8 @@ cstr_to_f64(const c8_t* p) {
       u8_t digit = *p - '0';
       ++p;
       i = i * 10 + digit; // might overflow + multiplication by 10 is likely
-      // cheaper than arbitrary mult.
-      // we will handle the overflow later
+                          // cheaper than arbitrary mult.
+                          // we will handle the overflow later
     } else {
       return 0.0;
     }
@@ -2753,7 +2831,7 @@ cstr_to_f64(const c8_t* p) {
       u8_t digit = *p - '0';
       ++p;
       i = i * 10 + digit; // in rare cases, this will overflow, but that's ok
-      // because we have parse_highprecision_float later.
+                          // because we have parse_highprecision_float later.
     }
     exponent = first_after_period - p;
   }
@@ -2792,18 +2870,18 @@ cstr_to_f64(const c8_t* p) {
     }
     exponent += (neg_exp ? -exp_number : exp_number);
   }
-  
+
   if (digit_count >= 19) {
     return F64_NAN;
   }
   if (exponent < -325 && exponent > 308) {
     return F64_NAN;
   }
-  
+
   // Unlikely cases. Can go for 'slow' path instead of asserting
   assert(digit_count < 19);
   assert(exponent >= -325 && exponent <= 308);
-  
+
   return _compute_f64(exponent, i, negative);
 }
 
@@ -2828,28 +2906,28 @@ cstr_itoa(c8_t* dest, s32_t num) {
   // Naive method. 
   // Extract each number starting from the back and fill the buffer. 
   // Then reverse it.
-  
+
   // Special case for 0
   if (num == 0) {
     dest[0] = '0';
     dest[1] = 0;
     return;
   }
-  
+
   b32_t negative = num < 0;
   num = s32_abs(num);
-  
+
   c8_t* it = dest;
   for(; num != 0; num /= 10) {
     s32_t digit_to_convert = num % 10;
     *(it++) = (c8_t)(digit_to_convert + '0');
   }
-  
+
   if (negative) {
     *(it++) = '-';
   }
   (*it) = 0;
-  
+
   cstr_reverse(dest);
 }
 
@@ -2877,7 +2955,7 @@ f64_is_nan(f64_t f) {
   return (ret.u & 0xFFFFFFFFFFFFFFFF) == 0xFFFFFFFFFFFFFFFF;
 }
 
-static u32_t 
+  static u32_t 
 djb2(const c8_t* str)
 {
   // DJB2
@@ -2898,23 +2976,23 @@ djb2(const c8_t* str)
 
 #if COMPILER_MSVC
 #include <intrin.h>
-static u32_t 
+  static u32_t 
 u32_atomic_compare_assign(u32_t volatile* value,
-                          u32_t new_value,
-                          u32_t expected_value)
+    u32_t new_value,
+    u32_t expected_value)
 {
   u32_t ret = _InterlockedCompareExchange((long volatile*)value,
-                                        new_value,
-                                        expected_value);
+      new_value,
+      expected_value);
   return ret;
 }
 
-static u64_t 
+  static u64_t 
 u64_atomic_assign(u64_t volatile* value,
-                  u64_t new_value)
+    u64_t new_value)
 {
   u64_t ret = _InterlockedExchange64((__int64 volatile*)value,
-                                   new_value);
+      new_value);
   return ret;
 }
 static u32_t 
@@ -2950,7 +3028,7 @@ f32_tan(f32_t x) {
 static f32_t 
 f32_sqrt(f32_t x) {
   return sqrtf(x);
-  
+
 }
 static f32_t 
 f32_asin(f32_t x) {
@@ -2990,7 +3068,7 @@ f64_tan(f64_t x) {
 static f64_t 
 f64_sqrt(f64_t x) {
   return sqrt(x);
-  
+
 }
 static f64_t 
 f64_asin(f64_t x) {
@@ -3016,7 +3094,7 @@ f64_pow(f64_t b, f64_t e){
 // TODO(momo): IEEE version of these?
 static f32_t f32_floor(f32_t value) {
   return floorf(value);
-  
+
 }
 static f64_t f64_floor(f64_t value){
   return floor(value);
@@ -3039,8 +3117,7 @@ static f64_t f64_round(f64_t value) {
 }
 
 static f32_t 
-f32_ease_linear(f32_t t) 
-{
+f32_ease_linear(f32_t t) {
   return t;
 }
 
@@ -3258,8 +3335,7 @@ f32_ease_inout_expo(f32_t t)  {
 }
 
 static f64_t 
-f64_ease_linear(f64_t t) 
-{
+f64_ease_linear(f64_t t) {
   return t;
 }
 
@@ -3487,9 +3563,9 @@ f64_ease_inout_expo(f64_t t)  {
 
 static v2f_t 
 v2f_add(v2f_t lhs, v2f_t rhs) {
-	lhs.x += rhs.x;
-	lhs.y += rhs.y;
-	return lhs;
+  lhs.x += rhs.x;
+  lhs.y += rhs.y;
+  return lhs;
 }
 
 static v2f_t 
@@ -3561,13 +3637,13 @@ v2f_norm(v2f_t v) {
 static b32_t
 v2f_is_close(v2f_t lhs, v2f_t rhs) {
   return (f32_is_close(lhs.x, rhs.x) &&
-          f32_is_close(lhs.y, rhs.y)); 
+      f32_is_close(lhs.y, rhs.y)); 
 }
 
 static v2f_t 
 v2f_mid(v2f_t lhs, v2f_t rhs) {
   return v2f_scale(v2f_add(lhs, rhs), 0.5f); 
-  
+
 }
 static v2f_t 
 v2f_proj(v2f_t v, v2f_t onto) {
@@ -3577,7 +3653,7 @@ v2f_proj(v2f_t v, v2f_t onto) {
   f32_t v_dot_onto = v2f_dot(v, onto);
   f32_t scalar = v_dot_onto / onto_len_sq;
   v2f_t ret = v2f_scale(onto, scalar);
-  
+
   return ret;
 }
 
@@ -3598,7 +3674,7 @@ v2f_rotate(v2f_t v, f32_t rad) {
   // Removes dependencies too
   f32_t c = f32_cos(rad);
   f32_t s = f32_sin(rad);
-  
+
   v2f_t ret = {};
   ret.x = (c * v.x) - (s * v.y);
   ret.y = (s * v.x) + (c * v.y);
@@ -3610,7 +3686,7 @@ v2f_cross(v2f_t lhs, v2f_t rhs) {
   return  lhs.x * rhs.y - lhs.y * rhs.x;
 }
 
-static v2f_t  
+  static v2f_t  
 v2f_lerp(v2f_t s, v2f_t e, f32_t a) 
 {
   v2f_t ret = {0};
@@ -3695,13 +3771,13 @@ v3f_norm(v3f_t v) {
 static b32_t
 v3f_is_close(v3f_t lhs, v3f_t rhs) {
   return (f32_is_close(lhs.x, rhs.x) &&
-          f32_is_close(lhs.y, rhs.y)); 
+      f32_is_close(lhs.y, rhs.y)); 
 }
 
 static v3f_t 
 v3f_mid(v3f_t lhs, v3f_t rhs) {
   return v3f_scale(v3f_add(lhs, rhs), 0.5f); 
-  
+
 }
 static v3f_t 
 v3f_project(v3f_t v, v3f_t onto) {
@@ -3711,7 +3787,7 @@ v3f_project(v3f_t v, v3f_t onto) {
   f32_t v_dot_onto = v3f_dot(v, onto);
   f32_t scalar = v_dot_onto / onto_len_sq;
   v3f_t ret = v3f_scale(onto, scalar);
-  
+
   return ret;
 }
 
@@ -3730,7 +3806,7 @@ v3f_cross(v3f_t lhs, v3f_t rhs) {
   ret.x = (lhs.y * rhs.z) - (lhs.z * rhs.y);
   ret.y = (lhs.z * rhs.x) - (lhs.x * rhs.z);
   ret.z = (lhs.x * rhs.y) - (lhs.y * rhs.x);
-  
+
   return ret;
 }
 
@@ -3790,156 +3866,156 @@ static v3f_t& operator*=(v3f_t& lhs, f32_t rhs) { return lhs = v3f_scale(lhs, rh
 
 static m44f_t
 m44f_concat(m44f_t lhs, m44f_t rhs) {
-	m44f_t ret = {};
+  m44f_t ret = {};
   for (u32_t r = 0; r < 4; r++) { 
     for (u32_t c = 0; c < 4; c++) { 
       for (u32_t i = 0; i < 4; i++) {
-				ret.e[r][c] += lhs.e[r][i] *  rhs.e[i][c]; 
-			}
-		} 
-	} 
-	return ret;
+        ret.e[r][c] += lhs.e[r][i] *  rhs.e[i][c]; 
+      }
+    } 
+  } 
+  return ret;
 }
 
 static m44f_t 
 m44f_transpose(m44f_t m) {
-	m44f_t ret = {};
-	for (u32_t i = 0; i < 4; ++i ) {
-		for (u32_t j = 0; j < 4; ++j) {
-			ret.e[i][j] = m.e[j][i];
-		}
-	}
-	return ret;
+  m44f_t ret = {};
+  for (u32_t i = 0; i < 4; ++i ) {
+    for (u32_t j = 0; j < 4; ++j) {
+      ret.e[i][j] = m.e[j][i];
+    }
+  }
+  return ret;
 }
 static m44f_t m44f_scale(f32_t x, f32_t y, f32_t z) {
-	m44f_t ret = {};
-	ret.e[0][0] = x;
-	ret.e[1][1] = y;
-	ret.e[2][2] = z;
-	ret.e[3][3] = 1.f;
-	
-	return ret;
+  m44f_t ret = {};
+  ret.e[0][0] = x;
+  ret.e[1][1] = y;
+  ret.e[2][2] = z;
+  ret.e[3][3] = 1.f;
+
+  return ret;
 }
 
 static m44f_t 
 m44f_identity() {
-	m44f_t ret = {};
-	ret.e[0][0] = 1.f;
-	ret.e[1][1] = 1.f;
-	ret.e[2][2] = 1.f;
-	ret.e[3][3] = 1.f;
-	
-	return ret;
+  m44f_t ret = {};
+  ret.e[0][0] = 1.f;
+  ret.e[1][1] = 1.f;
+  ret.e[2][2] = 1.f;
+  ret.e[3][3] = 1.f;
+
+  return ret;
 }
 
 static m44f_t 
 m44f_translation(f32_t x, f32_t y, f32_t z) {
-	m44f_t ret = m44f_identity();
-	ret.e[0][3] = x;
-	ret.e[1][3] = y;
-	ret.e[2][3] = z;
-	ret.e[3][3] = 1.f;
-	
-	return ret;
+  m44f_t ret = m44f_identity();
+  ret.e[0][3] = x;
+  ret.e[1][3] = y;
+  ret.e[2][3] = z;
+  ret.e[3][3] = 1.f;
+
+  return ret;
 }
 
 static m44f_t 
 m44f_rotation_x(f32_t rad) {
-	// NOTE(Momo): 
-	// 1  0  0  0
-	// 0  c -s  0
-	// 0  s  c  0
-	// 0  0  0  1
-	f32_t c = f32_cos(rad);
-	f32_t s = f32_sin(rad);
-	m44f_t ret = {};
-	ret.e[0][0] = 1.f;
-	ret.e[3][3] = 1.f;
-	ret.e[1][1] = c;
-	ret.e[1][2] = -s;
-	ret.e[2][1] = s;
-	ret.e[2][2] = c;
-	
-	return ret;
+  // NOTE(Momo): 
+  // 1  0  0  0
+  // 0  c -s  0
+  // 0  s  c  0
+  // 0  0  0  1
+  f32_t c = f32_cos(rad);
+  f32_t s = f32_sin(rad);
+  m44f_t ret = {};
+  ret.e[0][0] = 1.f;
+  ret.e[3][3] = 1.f;
+  ret.e[1][1] = c;
+  ret.e[1][2] = -s;
+  ret.e[2][1] = s;
+  ret.e[2][2] = c;
+
+  return ret;
 }
 static m44f_t m44f_rotation_y(f32_t rad) {
-	
-	// NOTE(Momo): 
-	//  c  0  s  0
-	//  0  1  0  0
-	// -s  0  c  0
-	//  0  0  0  1
-	f32_t c = f32_cos(rad);
-	f32_t s = f32_sin(rad);
-	m44f_t ret = {};
-	ret.e[0][0] = c;
-	ret.e[0][2] = s;
-	ret.e[1][1] = 1.f;
-	ret.e[2][0] = -s;
-	ret.e[2][2] = c;
-	ret.e[3][3] = 1.f;
-	
-	return ret;
+
+  // NOTE(Momo): 
+  //  c  0  s  0
+  //  0  1  0  0
+  // -s  0  c  0
+  //  0  0  0  1
+  f32_t c = f32_cos(rad);
+  f32_t s = f32_sin(rad);
+  m44f_t ret = {};
+  ret.e[0][0] = c;
+  ret.e[0][2] = s;
+  ret.e[1][1] = 1.f;
+  ret.e[2][0] = -s;
+  ret.e[2][2] = c;
+  ret.e[3][3] = 1.f;
+
+  return ret;
 }
 
 static m44f_t 
 m44f_rotation_z(f32_t rad) {
-	// NOTE(Momo): 
-	//  c -s  0  0
-	//  s  c  0  0
-	//  0  0  1  0
-	//  0  0  0  1
-	
-	f32_t c = f32_cos(rad);
-	f32_t s = f32_sin(rad);
-	m44f_t ret = {};
-	ret.e[0][0] = c;
-	ret.e[0][1] = -s;
-	ret.e[1][0] = s;
-	ret.e[1][1] = c;
-	ret.e[2][2] = 1.f;
-	ret.e[3][3] = 1.f;
-	
-	return ret;
+  // NOTE(Momo): 
+  //  c -s  0  0
+  //  s  c  0  0
+  //  0  0  1  0
+  //  0  0  0  1
+
+  f32_t c = f32_cos(rad);
+  f32_t s = f32_sin(rad);
+  m44f_t ret = {};
+  ret.e[0][0] = c;
+  ret.e[0][1] = -s;
+  ret.e[1][0] = s;
+  ret.e[1][1] = c;
+  ret.e[2][2] = 1.f;
+  ret.e[3][3] = 1.f;
+
+  return ret;
 }
 
 static m44f_t 
 m44f_orthographic(f32_t left, f32_t right, f32_t bottom, f32_t top, f32_t near, f32_t far) {
-	
-	m44f_t ret = {0};
-	ret.e[0][0] = 2.f/(right-left);
-	ret.e[1][1] = 2.f/(top-bottom);
-	ret.e[2][2] = 2.f/(far-near);
-	ret.e[3][3] = 1.f;
-	ret.e[0][3] = -(right+left)/(right-left);
-	ret.e[1][3] = -(top+bottom)/(top-bottom);
-	ret.e[2][3] = -(far+near)/(far-near);
-	
-	return ret;
+
+  m44f_t ret = {0};
+  ret.e[0][0] = 2.f/(right-left);
+  ret.e[1][1] = 2.f/(top-bottom);
+  ret.e[2][2] = 2.f/(far-near);
+  ret.e[3][3] = 1.f;
+  ret.e[0][3] = -(right+left)/(right-left);
+  ret.e[1][3] = -(top+bottom)/(top-bottom);
+  ret.e[2][3] = -(far+near)/(far-near);
+
+  return ret;
 }
 
 static m44f_t 
 m44f_frustum(f32_t left, f32_t right, f32_t bottom, f32_t top, f32_t near, f32_t far) {
-	m44f_t ret = {};
-	ret.e[0][0] = (2.f*near)/(right-left);
-	ret.e[1][1] = (2.f*near)/(top-bottom);
-	ret.e[2][2] = -(far+near)/(far-near);
-	ret.e[3][2] = 1;  
-	ret.e[0][2] = (right+left)/(right-left);
-	ret.e[1][2] = (top+bottom)/(top-bottom);
-	ret.e[1][3] = -near*(top+bottom)/(top-bottom);
-	ret.e[2][3] = 2.f*far*near/(far-near);
-	
-	return ret;
+  m44f_t ret = {};
+  ret.e[0][0] = (2.f*near)/(right-left);
+  ret.e[1][1] = (2.f*near)/(top-bottom);
+  ret.e[2][2] = -(far+near)/(far-near);
+  ret.e[3][2] = 1;  
+  ret.e[0][2] = (right+left)/(right-left);
+  ret.e[1][2] = (top+bottom)/(top-bottom);
+  ret.e[1][3] = -near*(top+bottom)/(top-bottom);
+  ret.e[2][3] = 2.f*far*near/(far-near);
+
+  return ret;
 }
 
 static m44f_t 
 m44f_perspective(f32_t fov, f32_t aspect, f32_t near, f32_t far){
-	f32_t top = near * f32_tan(fov*0.5f);
-	f32_t right = top * aspect;
-	return m44f_frustum(-right, right,
-                     -top, top,
-                     near, far);
+  f32_t top = near * f32_tan(fov*0.5f);
+  f32_t right = top * aspect;
+  return m44f_frustum(-right, right,
+      -top, top,
+      near, far);
 }
 
 static m44f_t operator*(m44f_t lhs, m44f_t rhs) {
@@ -3950,35 +4026,35 @@ static m44f_t operator*(m44f_t lhs, m44f_t rhs) {
 //
 static rgba_t 
 rgba_set(f32_t r, f32_t g, f32_t b, f32_t a){
-	rgba_t ret;
-	ret.r = r;
-	ret.g = g;
-	ret.b = b;
-	ret.a = a;
-	
-	return ret;
+  rgba_t ret;
+  ret.r = r;
+  ret.g = g;
+  ret.b = b;
+  ret.a = a;
+
+  return ret;
 }
 
 static hsla_t 
 hsla_set(f32_t h, f32_t s, f32_t l, f32_t a){
-	hsla_t ret;
-	ret.h = h;
-	ret.s = s;
-	ret.l = l;
-	ret.a = a;
-	
-	return ret;
+  hsla_t ret;
+  ret.h = h;
+  ret.s = s;
+  ret.l = l;
+  ret.a = a;
+
+  return ret;
 }
 
 static rgba_t
 rgba_hex(u32_t hex) {
   rgba_t ret;
-  
+
   ret.r = (f32_t)((hex & 0xFF000000) >> 24)/255.f;
   ret.g = (f32_t)((hex & 0x00FF0000) >> 16)/255.f;
   ret.b = (f32_t)((hex & 0x0000FF00) >> 8)/255.f;
   ret.a = (f32_t)(hex & 0x000000FF)/255.f;
-  
+
   return ret;
 }
 
@@ -3988,25 +4064,25 @@ hsl_set(f32_t h, f32_t s, f32_t l) {
   ret.h = h;
   ret.s = s;
   ret.l = l;
-  
+
   return ret;     
 }
 
 static hsl_t 
 rbg_to_hsl(rgb_t c) {
   assert(c.r >= 0.f &&
-         c.r <= 1.f &&
-         c.g >= 0.f &&
-         c.g <= 1.f &&
-         c.b >= 0.f &&
-         c.b <= 1.f);
+      c.r <= 1.f &&
+      c.g >= 0.f &&
+      c.g <= 1.f &&
+      c.b >= 0.f &&
+      c.b <= 1.f);
   hsl_t ret;
   f32_t max = max_of(max_of(c.r, c.g), c.b);
   f32_t min = min_of(min_of(c.r, c.g), c.b);
-  
+
   f32_t delta = max - min; // aka chroma
-  
-  
+
+
   if (f32_is_close(max, c.r)) {
     f32_t segment = (c.g - c.b)/delta;
     f32_t shift = 0.f / 60;
@@ -4018,13 +4094,13 @@ rbg_to_hsl(rgb_t c) {
     }
     ret.h = (segment + shift) * 60.f;
   }
-  
+
   else if (f32_is_close(max, c.g)) {
     f32_t segment = (c.b - c.r)/delta;
     f32_t shift = 120.f / 60.f;
     ret.h = (segment + shift) * 60.f;
   }
-  
+
   else if (f32_is_close(max, c.b)) {
     f32_t segment = (c.r - c.g)/delta;
     f32_t shift = 240.f / 60.f;
@@ -4034,23 +4110,22 @@ rbg_to_hsl(rgb_t c) {
     ret.h = 0.f;
   }
   ret.h /= 360.f;
-  
-  
+
+
   ret.l = (max + min) * 0.5f;
-  
+
   if (f32_is_close(delta, 0.f)) {
     ret.s = 0.f;
   }
   else {
     ret.s = delta/(1.f - f32_abs(2.f * ret.l - 1.f));
   }
-  
+
   return ret;
 }
 
 static f32_t 
 _hue_to_color(f32_t p, f32_t q, f32_t t) {
-  
   if (t < 0) 
     t += 1.f;
   if (t > 1.f) 
@@ -4061,21 +4136,19 @@ _hue_to_color(f32_t p, f32_t q, f32_t t) {
     return q;
   if (t < 2./3.f)   
     return p + (q - p) * (2.f/3.f - t) * 6.f;
-  
-  return p;
-  
-}
 
+  return p;
+}
 
 
 static rgb_t 
 hsl_to_rgb(hsl_t c) {
   assert(c.h >= 0.f &&
-         c.h <= 360.f &&
-         c.s >= 0.f &&
-         c.s <= 1.f &&
-         c.l >= 0.f &&
-         c.l <= 1.f);
+      c.h <= 360.f &&
+      c.s >= 0.f &&
+      c.s <= 1.f &&
+      c.l >= 0.f &&
+      c.l <= 1.f);
   rgb_t ret;
   if(f32_is_close(c.s, 0.f)) {
     ret.r = ret.g = ret.b = c.l; // achromatic
@@ -4087,10 +4160,10 @@ hsl_to_rgb(hsl_t c) {
     ret.g = _hue_to_color(p, q, c.h);
     ret.b = _hue_to_color(p, q, c.h - 1.f/3.f);
   }
-  
-  
+
+
   return ret;
-  
+
 }
 
 
@@ -4100,7 +4173,6 @@ static rgba_t hsla_to_rgba(hsla_t c) {
   ret.a = c.a;
 
   return ret;
-
 }
 
 //
@@ -4110,20 +4182,22 @@ static rgba_t hsla_to_rgba(hsla_t c) {
 //
 // Generic version of quicksort
 //
+
 typedef b32_t _quicksort_generic_cmp_t(const void* lhs, const void* rhs);
-static u32_t
+
+static u32_t 
 _quicksort_generic_partition(
     void* a,
     u32_t start, 
     u32_t ope,
     u32_t element_size,
-    _quicksort_generic_cmp_t cmp) 
-{
+    _quicksort_generic_cmp_t cmp) {
+
   // Save the rightmost index as pivot
   // This frees up the right most index as a slot
   u32_t pivot_idx = ope-1;
   u32_t eventual_pivot_idx = start;
-  
+
   for (u32_t i = start; i < ope-1; ++i) {
     u8_t* i_ptr = (u8_t*)a + (i * element_size);
     u8_t* pivot_ptr = (u8_t*)a + (pivot_idx * element_size);
@@ -4141,11 +4215,11 @@ _quicksort_generic_partition(
 // NOTE(Momo): This is done inplace
 static void
 _quicksort_generic_range(
-    void* a, 
-    u32_t start, 
-    u32_t ope,
-    u32_t element_size,
-    _quicksort_generic_cmp_t cmp) 
+  void* a, 
+  u32_t start, 
+  u32_t ope,
+  u32_t element_size,
+  _quicksort_generic_cmp_t cmp) 
 {
   if (ope - start <= 1) {
     return;
@@ -4180,7 +4254,7 @@ _quicksort_partition(sort_entry_t* a,
   // This frees up the right most index as a slot
   u32_t pivot_idx = ope-1;
   u32_t eventual_pivot_idx = start;
-  
+
   for (u32_t i = start; i < ope-1; ++i) {
     sort_entry_t* i_ptr = a + i;
     sort_entry_t* pivot_ptr = a + pivot_idx;
@@ -4189,11 +4263,11 @@ _quicksort_partition(sort_entry_t* a,
       _sort_swap_entries(i_ptr, eventual_pivot_ptr);
       ++eventual_pivot_idx;
     }
-    
+
   }
-  
+
   _sort_swap_entries(a + eventual_pivot_idx, a + pivot_idx);
-  
+
   return eventual_pivot_idx;
 }
 
@@ -4224,19 +4298,19 @@ quicksort(sort_entry_t* entries, u32_t entry_count) {
 static b32_t
 _bonk_tri2_pt2_parametric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
   f32_t denominator = (tp0.x*(tp1.y - tp2.y) + 
-                     tp0.y*(tp2.x - tp1.x) + 
-                     tp1.x*tp2.y - tp1.y*tp2.x);
-  
+    tp0.y*(tp2.x - tp1.x) + 
+    tp1.x*tp2.y - tp1.y*tp2.x);
+
   f32_t t1 = (pt.x*(tp2.y - tp0.y) + 
-            pt.y*(tp0.x - tp2.x) - 
-            tp0.x*tp2.y + tp0.y*tp2.x) / denominator;
-  
+    pt.y*(tp0.x - tp2.x) - 
+    tp0.x*tp2.y + tp0.y*tp2.x) / denominator;
+
   f32_t t2 = (pt.x*(tp1.y - tp0.y) + 
-            pt.y*(tp0.x - tp1.x) - 
-            tp0.x*tp1.y + tp0.y*tp1.x) / -denominator;
-  
+    pt.y*(tp0.x - tp1.x) - 
+    tp0.x*tp1.y + tp0.y*tp1.x) / -denominator;
+
   f32_t s = t1 + t2;
-  
+
   return 0 <= t1 && t1 <= 1 && 0 <= t2 && t2 <= 1 && s <= 1;
 }
 
@@ -4244,23 +4318,23 @@ _bonk_tri2_pt2_parametric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
 // -O2: ~27 cycles/hit 
 static b32_t
 _bonk_tri2_pt2_barycentric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
-  
+
   f32_t denominator = ((tp1.y - tp2.y)*
-                     (tp0.x - tp2.x) + (tp2.x - tp1.x)*
-                     (tp0.y - tp2.y));
-  
+    (tp0.x - tp2.x) + (tp2.x - tp1.x)*
+    (tp0.y - tp2.y));
+
   f32_t a = ((tp1.y - tp2.y)*
-           (pt.x - tp2.x) + (tp2.x - tp1.x)*
-           (pt.y - tp2.y)) / denominator;
-  
+    (pt.x - tp2.x) + (tp2.x - tp1.x)*
+    (pt.y - tp2.y)) / denominator;
+
   f32_t b = ((tp2.y - tp0.y)*
-           (pt.x - tp2.x) + (tp0.x - tp2.x)*
-           (pt.y - tp2.y)) / denominator;
-  
+    (pt.x - tp2.x) + (tp0.x - tp2.x)*
+    (pt.y - tp2.y)) / denominator;
+
   f32_t c = 1.f - a - b;
-  
+
   return 0.f <= a && a <= 1.f && 0.f <= b && b <= 1.f && 0.f <= c && c <= 1.f;
-  
+
 }
 
 // Unoptimized: ~262 cycles/hit
@@ -4270,15 +4344,15 @@ _bonk_tri2_pt2_dot_product(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
   v2f_t vec0 = v2f_set(pt.x - tp0.x, pt.y - tp0.y);      
   v2f_t vec1 = v2f_set(pt.x - tp1.x, pt.y - tp1.y);      
   v2f_t vec2 = v2f_set(pt.x - tp2.x, pt.y - tp2.y);      
-  
+
   v2f_t n0 = v2f_set(tp1.y - tp0.y, -tp1.x + tp0.x);
   v2f_t n1 = v2f_set(tp2.y - tp1.y, -tp2.x + tp1.x);
   v2f_t n2 = v2f_set(tp0.y - tp2.y, -tp0.x + tp2.x);
-  
+
   b32_t side0 = v2f_dot(n0,vec0) < 0.f;
   b32_t side1 = v2f_dot(n1,vec1) < 0.f;
   b32_t side2 = v2f_dot(n2,vec2) < 0.f;
-  
+
   return side0 == side1 && side0 == side2;
 }
 
@@ -4302,10 +4376,10 @@ static u32_t
 rng_next(rng_t* r)
 {
   u32_t result = r->seed;
-	result ^= result << 13;
-	result ^= result >> 17;
-	result ^= result << 5;
-	r->seed = result;
+  result ^= result << 13;
+  result ^= result >> 17;
+  result ^= result << 5;
+  r->seed = result;
   return result;
 }
 
@@ -4320,7 +4394,7 @@ rng_unilateral(rng_t* r)
 {
   f32_t divisor = 1.0f / (f32_t)U32_MAX;
   f32_t result = divisor*(f32_t)rng_next(r);
-  
+
   return result;
 }
 
@@ -4515,10 +4589,10 @@ crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t* table) {
 //
 static st8_t
 st8_set(u8_t* str, usz_t size) {
-	st8_t ret;
-	ret.e = str;
-	ret.count = size;
-	return ret;
+  st8_t ret;
+  ret.e = str;
+  ret.count = size;
+  return ret;
 }
 
 
@@ -4529,11 +4603,11 @@ st8_from_cstr(const c8_t* cstr) {
 
 static st8_t 
 st8_substr(st8_t str, usz_t start, usz_t count) {
-	st8_t ret;
-	ret.e = str.e + start;
-	ret.count = count;
-	
-	return ret;
+  st8_t ret;
+  ret.e = str.e + start;
+  ret.count = count;
+
+  return ret;
 }
 
 static b32_t
@@ -4571,7 +4645,7 @@ st8_compare_lexographically(st8_t lhs, st8_t rhs) {
   else {
     return (smi_t)(lhs.count - rhs.count);
   }
-  
+
 }
 
 
@@ -4582,7 +4656,7 @@ st8_to_u32_range(st8_t s, usz_t begin, usz_t ope, u32_t* out) {
   u32_t number = 0;
   for (usz_t i = begin; i < ope; ++i) {
     if (!is_digit(s.e[i]))
-        return false;
+      return false;
     number *= 10;
     number += ascii_to_digit(s.e[i]);
   }
@@ -4608,7 +4682,7 @@ st8_to_s32_range(st8_t s, usz_t begin, usz_t ope, s32_t* out) {
   s32_t number = 0;
   for (usz_t i = begin; i < ope; ++i) {
     if (!is_digit(s.e[i]))
-        return false;
+      return false;
     number *= 10;
     number += ascii_to_digit(s.e[i]);
   }
@@ -4665,51 +4739,51 @@ st8_to_s32(st8_t s, s32_t* out) {
 
 static void  
 stb8_init(stb8_t* b, u8_t* data, usz_t cap) {
-	b->e = data;
-	b->count = 0;
-	b->cap = cap;
+  b->e = data;
+  b->count = 0;
+  b->cap = cap;
 }
 
 static usz_t
 stb8_remaining(stb8_t* b) {
-	return b->cap - b->count; 
+  return b->cap - b->count; 
 }
 
 static void     
 stb8_clear(stb8_t* b) {
-	b->count = 0;
+  b->count = 0;
 }
 
 static void     
 stb8_pop(stb8_t* b) {
-	assert(b->count > 0);
-	--b->count;
+  assert(b->count > 0);
+  --b->count;
 }
 
 static void     
 stb8_push_u8(stb8_t* b, u8_t num) {
-	assert(b->count < b->cap); b->e[b->count++] = num;
+  assert(b->count < b->cap); b->e[b->count++] = num;
 }
 
 static void     
 stb8_push_c8(stb8_t* b, c8_t num) {
-	assert(b->count < b->cap);
-	b->e[b->count++] = num;
+  assert(b->count < b->cap);
+  b->e[b->count++] = num;
 }
 
 static void     
 stb8_push_u32(stb8_t* b, u32_t num) {
-	if (num == 0) {
+  if (num == 0) {
     stb8_push_c8(b, '0');
-		return;
+    return;
   }
   usz_t start_pt = b->count; 
-  
+
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-		stb8_push_c8(b, digit_to_ascii(digit_to_convert));
+    stb8_push_c8(b, digit_to_ascii(digit_to_convert));
   }
-  
+
   // Reverse starting from start point to count
   usz_t sub_str_len_half = (b->count - start_pt)/2;
   for(usz_t i = 0; i < sub_str_len_half; ++i) {
@@ -4718,17 +4792,17 @@ stb8_push_u32(stb8_t* b, u32_t num) {
 }
 static void     
 stb8_push_u64(stb8_t* b, u64_t num) {
-	if (num == 0) {
+  if (num == 0) {
     stb8_push_c8(b, '0');
-		return;
+    return;
   }
   usz_t start_pt = b->count; 
-  
+
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-		stb8_push_c8(b, digit_to_ascii(digit_to_convert));
+    stb8_push_c8(b, digit_to_ascii(digit_to_convert));
   }
-  
+
   // Reverse starting from start point to count
   usz_t sub_str_len_half = (b->count - start_pt)/2;
   for(usz_t i = 0; i < sub_str_len_half; ++i) {
@@ -4741,28 +4815,28 @@ stb8_push_s32(stb8_t* b, s32_t num) {
     stb8_push_c8(b, '0');
     return;
   }
-  
+
   usz_t start_pt = b->count; 
-  
+
   b32_t negate = num < 0;
   num = s32_abs(num);
-  
+
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-		stb8_push_c8(b, digit_to_ascii(digit_to_convert));
+    stb8_push_c8(b, digit_to_ascii(digit_to_convert));
   }
-  
+
   if (negate) {
     stb8_push_c8(b, '-');
   }
-  
+
   // Reverse starting from start point to count
   usz_t sub_str_len_half = (b->count - start_pt)/2;
   for(usz_t i = 0; i < sub_str_len_half; ++i) {
     swap(b->e[start_pt+i], b->e[b->count-1-i]);
-    
+
   }
-  
+
 }
 
 static void     
@@ -4771,83 +4845,83 @@ stb8_push_s64(stb8_t* b, s64_t num) {
     stb8_push_c8(b, '0');
     return;
   }
-  
+
   usz_t start_pt = b->count; 
-  
+
   b32_t negate = num < 0;
   num = s64_abs(num);
-  
+
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-		stb8_push_c8(b, digit_to_ascii(digit_to_convert));
+    stb8_push_c8(b, digit_to_ascii(digit_to_convert));
   }
-  
+
   if (negate) {
     stb8_push_c8(b, '-');
   }
-  
+
   // Reverse starting from start point to count
   usz_t sub_str_len_half = (b->count - start_pt)/2;
   for(usz_t i = 0; i < sub_str_len_half; ++i) {
     swap(b->e[start_pt+i], b->e[b->count-1-i]);
-    
+
   }
-  
+
 }
 
 static void     
 stb8_push_f32(stb8_t* b, f32_t value, u32_t precision) {
-	if (value < 0.f) {
-		stb8_push_c8(b, '-');	
-		value = -value;
-	}
+  if (value < 0.f) {
+    stb8_push_c8(b, '-');	
+    value = -value;
+  }
 
-	// NOTE(Momo): won't work for values that u32_t can't contain
-	u32_t integer_part = (u32_t)value;
-	stb8_push_u32(b, integer_part);
-	stb8_push_c8(b, '.');
-	
-	value -= (f32_t)integer_part;
-	
-	for (u32_t i = 0; i < precision; ++i) {
-		value *= 10.f;
-	}
+  // NOTE(Momo): won't work for values that u32_t can't contain
+  u32_t integer_part = (u32_t)value;
+  stb8_push_u32(b, integer_part);
+  stb8_push_c8(b, '.');
 
-	u32_t decimal_part = (u32_t)value;
-	stb8_push_u32(b, decimal_part);
+  value -= (f32_t)integer_part;
+
+  for (u32_t i = 0; i < precision; ++i) {
+    value *= 10.f;
+  }
+
+  u32_t decimal_part = (u32_t)value;
+  stb8_push_u32(b, decimal_part);
 }
 
 static void     
 stb8_push_f64(stb8_t* b, f64_t value, u32_t precision) {
-	if (value < 0.0) {
-		stb8_push_c8(b, '-');	
-		value = -value;
-	}
-	// NOTE(Momo): won't work for values that u32_t can't contain
-	u32_t integer_part = (u32_t)value;
-	stb8_push_u32(b, integer_part);
-	stb8_push_c8(b, '.');
-	
-	value -= (f64_t)integer_part;
-	
-	for (u32_t i = 0; i < precision; ++i) {
-		value *= 10.0;
-	}
-	
-	u32_t decimal_part = (u32_t)value;
-	stb8_push_u32(b, decimal_part);
+  if (value < 0.0) {
+    stb8_push_c8(b, '-');	
+    value = -value;
+  }
+  // NOTE(Momo): won't work for values that u32_t can't contain
+  u32_t integer_part = (u32_t)value;
+  stb8_push_u32(b, integer_part);
+  stb8_push_c8(b, '.');
+
+  value -= (f64_t)integer_part;
+
+  for (u32_t i = 0; i < precision; ++i) {
+    value *= 10.0;
+  }
+
+  u32_t decimal_part = (u32_t)value;
+  stb8_push_u32(b, decimal_part);
 }
 
 
 static void
 stb8_push_hex_u8(stb8_t* b, u8_t value) {
-  
+
   c8_t parts[2] = {
     (c8_t)(value >> 4),
     (c8_t)(value & 0xF),
-    
+
   };
-  
+
   for(u32_t i = 0; i < array_count(parts); ++i) {
     if (parts[i] >= 0 && parts[i] <= 9) {
       stb8_push_c8(b, parts[i] + '0');
@@ -4856,10 +4930,10 @@ stb8_push_hex_u8(stb8_t* b, u8_t value) {
       stb8_push_c8(b, parts[i] - 10 + 'A');
     }
   }
-  
-  
-  
-  
+
+
+
+
 }
 
 static void
@@ -4869,18 +4943,16 @@ stb8_push_hex_u32(stb8_t* b, u32_t value) {
   for(s32_t i = 3; i >= 0; --i) {
     stb8_push_hex_u8(b, combine.b[i]);
   }
-  
-  
 }
 
 static void
 _stb8_push_fmt_list(stb8_t* b, st8_t format, va_list args) {
   usz_t at = 0;
   while(at < format.count) {
-    
+
     if (format.e[at] == '%') {
       ++at;
-      
+
       // Width
       u32_t width = 0;
       while (format.e[at] >= '0' && format.e[at] <= '9') {
@@ -4888,9 +4960,9 @@ _stb8_push_fmt_list(stb8_t* b, st8_t format, va_list args) {
         width = (width * 10) + digit;
         ++at;
       }
-      
+
       stb8_make(tb, 64);
-      
+
       switch(format.e[at]) {
         case 'i': {
           s32_t value = va_arg(args, s32_t);
@@ -4929,20 +5001,20 @@ _stb8_push_fmt_list(stb8_t* b, st8_t format, va_list args) {
             ++cstr;
           }
         } break;
-        
+
         case 'S': {
           // st8_t, or 'text'.
           st8_t str = va_arg(args, st8_t);
           stb8_push_st8(tb, str);
         } break;
-        
+
         default: {
           // death
           assert(false);
         } break;
       }
       ++at;
-      
+
       if (width > 0 && tb->str.count < width) {
         usz_t spaces_to_pad = width - tb->str.count;
         while(spaces_to_pad--) {
@@ -4953,13 +5025,13 @@ _stb8_push_fmt_list(stb8_t* b, st8_t format, va_list args) {
       else {
         stb8_push_st8(b, tb->str);
       }
-      
-      
+
+
     }
     else {
       stb8_push_c8(b, format.e[at++]);
     }
-    
+
   }
 }
 
@@ -4986,7 +5058,7 @@ stb8_push_st8(stb8_t* b, st8_t src) {
 //
 static void
 stream_init(stream_t* s, buffer_t contents) {
-	s->contents = contents;
+  s->contents = contents;
   s->pos = 0;
   s->bit_buffer = 0;
   s->bit_count = 0;
@@ -5004,7 +5076,7 @@ stream_is_eos(stream_t* s) {
 
 static u8_t*
 stream_consume_block(stream_t* s, usz_t amount) {
-	if(s->pos + amount <= s->contents.size) {
+  if(s->pos + amount <= s->contents.size) {
     u8_t* ret = s->contents.data + s->pos;
     s->pos += amount;
     return ret;
@@ -5012,54 +5084,66 @@ stream_consume_block(stream_t* s, usz_t amount) {
   return nullptr;
 }
 
+static u8_t*
+stream_peek_block(stream_t* s, usz_t amount) {
+  if(s->pos + amount <= s->contents.size) {
+    u8_t* ret = s->contents.data + s->pos;
+    return ret;
+  }
+  return nullptr;
+}
+
 static void
 stream_write_block(stream_t* s, void* src, usz_t src_size) {
-	assert(s->pos + src_size <= s->contents.size);
+  assert(s->pos + src_size <= s->contents.size);
   copy_memory(s->contents.data + s->pos, src, src_size);
   s->pos += src_size; 
 }
 
 static void
 stream_flush_bits(stream_t* s){
-	s->bit_buffer = 0;
-	s->bit_count = 0;
+  s->bit_buffer = 0;
+  s->bit_count = 0;
 }
 
 // Bits are consumed from LSB to MSB
 static u32_t
 stream_consume_bits(stream_t* s, u32_t amount){
   assert(amount <= 32);
-  
+
   while(s->bit_count < amount) {
     u32_t byte = *stream_consume(u8_t, s);
     s->bit_buffer |= (byte << s->bit_count);
     s->bit_count += 8;
   }
-  
+
   u32_t result = s->bit_buffer & ((1 << amount) - 1); 
-  
+
   s->bit_count -= amount;
   s->bit_buffer >>= amount;
-  
+
   return result;
 }
 
 //
 // MARK:(WAV)
 //
-
+struct _wav_head_t { 
+  u32_t id, size;
+};
 // http://soundfile.sapp.org/doc/Waveformat/
+
 static b32_t 
 wav_read(wav_t* w, buffer_t contents) 
 {
-  const static u32_t riff_id_signature = 0x52494646;
-  const static u32_t riff_format_signature = 0x57415645;
-  const static u32_t fmt_id_signature = 0x666d7420;
-  const static u32_t data_id_signature = 0x64617461;
-  
+  const static u32_t riff_id_signature = u32_endian_swap(0x52494646);
+  const static u32_t riff_format_signature = u32_endian_swap(0x57415645);
+  const static u32_t fmt_id_signature = u32_endian_swap(0x666d7420);
+  const static u32_t data_id_signature = u32_endian_swap(0x64617461);
+
   make(stream_t, stream);
   stream_init(stream, contents);
-  
+
   // NOTE(Momo): Load Riff Chunk
   wav_riff_chunk_t* riff_chunk = stream_consume(wav_riff_chunk_t, stream);
   if (!riff_chunk) {
@@ -5073,13 +5157,13 @@ wav_read(wav_t* w, buffer_t contents)
   if (riff_chunk->format != riff_format_signature) {
     return 0;
   }
-  
+
   // NOTE(Momo): Load fmt Chunk
   auto* fmt_chunk = stream_consume(wav_fmt_chunk_t, stream);
   if (!fmt_chunk) {
     return 0;
   }
-  fmt_chunk->id = u32_endian_swap(fmt_chunk->id);
+
   if (fmt_chunk->id != fmt_id_signature) {
     return 0;
   }
@@ -5089,36 +5173,58 @@ wav_read(wav_t* w, buffer_t contents)
   if (fmt_chunk->audio_format != 1) {
     return 0;
   }
-  
+
   u32_t bytes_per_sample = fmt_chunk->bits_per_sample/8;
   if (fmt_chunk->byte_rate != 
-      fmt_chunk->sample_rate * fmt_chunk->num_channels * bytes_per_sample) {
+    fmt_chunk->sample_rate * fmt_chunk->num_channels * bytes_per_sample) {
     return 0;
   }
   if (fmt_chunk->block_align != fmt_chunk->num_channels * bytes_per_sample) {
     return 0;
   }
-  
+
+  _wav_head_t* head;
+
+  // Search until we find the 'data' chunk
+  while(true) {
+    head = stream_peek(_wav_head_t, stream);
+    if (head == nullptr) {
+      return 0;
+    }
+
+    if (head->id != 'data') {
+      stream_consume_block(stream, sizeof(_wav_head_t) + head->size);
+    }
+    else{
+      break;
+    }
+
+  };
+
+
   // Load data Chunk
   auto* data_chunk = stream_consume(wav_data_chunk_t, stream);
   if (!data_chunk) {
     return 0;
   }
-  data_chunk->id = u32_endian_swap(data_chunk->id);
+
+
+  // NOTE(momo): we don't endian swap anymore because we already did above
+  // data_chunk->id = u32_endian_swap(data_chunk->id);
   if (data_chunk->id != data_id_signature) {
     return 0;
   }
-  
+
   void* data = stream_consume_block(stream, data_chunk->size);
   if (!data) {
     return 0;
   }
-  
+
   w->riff_chunk = (*riff_chunk);
   w->fmt_chunk = (*fmt_chunk);
   w->data_chunk = (*data_chunk);
   w->data = data;
-  
+
   return 1;
 }
 
@@ -5134,7 +5240,7 @@ struct _ttf_glyph_point_t{
 struct _ttf_glyph_outline_t{
   _ttf_glyph_point_t* points;
   u32_t point_count;
-  
+
   u16_t* end_point_indices; // as many as contour_counts
   u32_t contour_count;
 };
@@ -5142,7 +5248,7 @@ struct _ttf_glyph_outline_t{
 struct _ttf_glyph_paths_t{
   v2f_t* vertices;
   u32_t vertex_count;
-  
+
   u32_t* path_lengths;
   u32_t path_count;
 };
@@ -5165,7 +5271,7 @@ enum {
   _TTF_CMAP_PF_ID_MACINTOSH = 1,
   _TTF_CMAP_PF_ID_RESERVED = 2,
   _TTF_CMAP_PF_ID_MICROSOFT = 3,
-  
+
 };
 
 enum {
@@ -5195,9 +5301,9 @@ _ttf_read_u32(u8_t* location) {
 // returns 0 is failure
 static u32_t
 _ttf_get_offset_to_glyph(const ttf_t* ttf, u32_t glyph_index) {
-  
+
   if(glyph_index >= ttf->glyph_count) return 0;
-  
+
   u32_t g1 = 0, g2 = 0;
   switch(ttf->loca_format) {
     case 0: { // short format
@@ -5212,18 +5318,18 @@ _ttf_get_offset_to_glyph(const ttf_t* ttf, u32_t glyph_index) {
       return 0;
     }
   }
-  
+
   return g1 == g2 ? 0 : g1;
-  
+
 }
 
 
 static b32_t 
 ttf_get_glyph_box(const ttf_t* ttf, u32_t glyph_index, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y1) {
-  
+
   u32_t g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   if (g <= 0) return false;
-  
+
   if (x0) (*x0) = _ttf_read_s16(ttf->data + g + 2);
   if (y0) (*y0) = _ttf_read_s16(ttf->data + g + 4);
   if (x1) (*x1) = _ttf_read_s16(ttf->data + g + 6);
@@ -5257,27 +5363,27 @@ _ttf_get_kern_advance(const ttf_t* ttf, s32_t g1, s32_t g2)
   // and I am not going to care because I mostly develop in Windows.
   //
   if (!ttf->kern) return 0;
-  
+
   u8_t* data = ttf->data + ttf->kern;
-  
+
   // number of tables must be 1 or more
   if (_ttf_read_u16(data+2) < 1) return 0;
-  
+
   // horizontal flag must be set
   if (_ttf_read_u16(data+8) != 1) return 0;
-  
+
   // format must be 0
   //if ((_ttf_read_u16(data+8) & 0x0F) != 0) return 0;
-  
+
   // We will be performing some kind of binary search
   s32_t l = 0;
   s32_t r = _ttf_read_u16(data+10) -1;
-  
+
   // the value we are looking for
   u32_t needle = g1 << 16 | g2;   
   while(l <= r) {
     s32_t m = (l + r) >> 1; // half
-    
+
     // 18 is where the kerning table is
     u32_t straw = _ttf_read_u32(data+18+(m*6));
     if (needle < straw) {
@@ -5290,7 +5396,7 @@ _ttf_get_kern_advance(const ttf_t* ttf, s32_t g1, s32_t g2)
       return _ttf_read_u16(data+22+(m*6));
     }
   }
-  
+
   return 0;
 }
 
@@ -5312,23 +5418,23 @@ _ttf_get_glyph_outline(const ttf_t* ttf,
 {
   u32_t g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   s16_t number_of_contours = _ttf_read_s16(ttf->data + g + 0);
-  
-  
+
+
   if (number_of_contours > 0) { // single glyph case
     u16_t point_count = _ttf_read_u16(ttf->data + g + 10 + number_of_contours*2-2) + 1;
     u16_t instruction_length = _ttf_read_u16(ttf->data + g + 10 + number_of_contours*2);
-    
+
     u32_t flags = g + 10 + number_of_contours*2 + 2 + instruction_length*2;
-    
+
     // output end pts of contours
     //test_eval_d(number_of_contours);
     //test_eval_d(point_count);
-   
+
     _ttf_glyph_point_t* points = arena_push_arr(_ttf_glyph_point_t, allocator, point_count);
     if (!points) return false;
     zero_range(points, point_count);
     u8_t* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
-    
+
     // Load the flags
     // flag info: https://docs.microsoft.com/en-us/typography/opentype/spec/glyf    
     {
@@ -5347,8 +5453,8 @@ _ttf_get_glyph_outline(const ttf_t* ttf,
         points[i].flags = current_flags;
       }
     }
-    
-    
+
+
     // Load the x coordinates
     {
       s16_t x = 0;
@@ -5371,12 +5477,12 @@ _ttf_get_glyph_outline(const ttf_t* ttf,
             x += _ttf_read_s16(point_itr);
             point_itr += 2;
           }
-          
+
         }
         points[i].x = x;
       }
     }
-    
+
     // Load the y coordinates
     {
       s16_t y = 0;
@@ -5399,12 +5505,12 @@ _ttf_get_glyph_outline(const ttf_t* ttf,
             y += _ttf_read_s16(point_itr);
             point_itr += 2;
           }
-          
+
         }
         points[i].y = y;
       }
     }
-    
+
     // mark the points that are contour endpoints
     u16_t* end_pt_indices = arena_push_arr(u16_t, allocator, number_of_contours);
     if (!end_pt_indices) return false;
@@ -5415,15 +5521,15 @@ _ttf_get_glyph_outline(const ttf_t* ttf,
         end_pt_indices[i] =_ttf_read_u16(ttf->data + contour_end_pts + i*2) ;
       }
     }
-    
+
     outline->points = points; 
     outline->point_count = point_count;
     outline->end_point_indices = end_pt_indices;
     outline->contour_count = number_of_contours;
-    
+
     return 1;
   }
-  
+
   else if (number_of_contours < 0) { // compound glyph case
     return 0;
   }
@@ -5460,12 +5566,12 @@ _ttf_tessellate_bezier(v2f_t* vertices,
 {
   v2f_t mid = (p0 + p1*2.f + p2) * 0.25f;
   v2f_t d = v2f_mid(p0, p2) - mid;
-  
+
   // if n == 16, that's 65535 segments which should be
   // more than enough. Increase this number if we are 
   // looking at abnormally large images...?
   if (n > 16) { return; }
-  
+
   if (d.x*d.x + d.y*d.y > flatness_squared) {
     _ttf_tessellate_bezier(vertices, vertex_count, p0,
                            v2f_mid(p0, p1), 
@@ -5477,538 +5583,538 @@ _ttf_tessellate_bezier(v2f_t* vertices,
   else {
     _ttf_add_vertex(vertices, (*vertex_count)++, p2);      
   }
-  
-  
-  
+
+
+
 }
 
-static b32_t 
-_ttf_get_paths_from_glyph_outline(_ttf_glyph_outline_t* outline,
-                                  _ttf_glyph_paths_t* paths,
-                                  arena_t* allocator) 
-{
-  // Count the amount of points generated
-  v2f_t* vertices = 0;
-  u32_t vertex_count = 0;
-  f32_t flatness = 0.35f;
-  f32_t flatness_squared = flatness*flatness;
- 
-  u32_t* path_lengths = arena_push_arr(u32_t, allocator, outline->contour_count);
-  if (!path_lengths) return false;
-  zero_range(path_lengths, outline->contour_count);
-  u32_t path_count = 0;
-  
-  // On the first pass, we count the number of points we will generate.
-  // On the second pass, we will push the list and actually fill 
-  // the list with generated points.
-  for (u32_t pass = 0; pass < 2; ++pass)
-  {
-    if (pass == 1) {
-      vertices = arena_push_arr(v2f_t, allocator, vertex_count);
-      if (!vertices) return false;
-      zero_range(vertices, vertex_count);
-      vertex_count = 0;
-      path_count = 0;
-    }
-    
-    // NOTE(Momo): For now, we assume that the first point is 
-    // always on curve, which is not always the case.
-    v2f_t anchor_pt = {};
-    u32_t j = 0;
-    for (u32_t i = 0; i < outline->contour_count; ++i) {
-      u32_t contour_start_index = j;
-      u32_t start_vertex_count = vertex_count;
-      
-      for(; j <= outline->end_point_indices[i]; ++j) {
-        u8_t flags = outline->points[j].flags;
-        
-        if (flags & 0x1) { // on curve 
-          anchor_pt.x = (f32_t)outline->points[j].x;
-          anchor_pt.y = (f32_t)outline->points[j].y;
-          
-          _ttf_add_vertex(vertices, vertex_count++, anchor_pt);
+  static b32_t 
+    _ttf_get_paths_from_glyph_outline(_ttf_glyph_outline_t* outline,
+        _ttf_glyph_paths_t* paths,
+        arena_t* allocator) 
+    {
+      // Count the amount of points generated
+      v2f_t* vertices = 0;
+      u32_t vertex_count = 0;
+      f32_t flatness = 0.35f;
+      f32_t flatness_squared = flatness*flatness;
+
+      u32_t* path_lengths = arena_push_arr(u32_t, allocator, outline->contour_count);
+      if (!path_lengths) return false;
+      zero_range(path_lengths, outline->contour_count);
+      u32_t path_count = 0;
+
+      // On the first pass, we count the number of points we will generate.
+      // On the second pass, we will push the list and actually fill 
+      // the list with generated points.
+      for (u32_t pass = 0; pass < 2; ++pass)
+      {
+        if (pass == 1) {
+          vertices = arena_push_arr(v2f_t, allocator, vertex_count);
+          if (!vertices) return false;
+          zero_range(vertices, vertex_count);
+          vertex_count = 0;
+          path_count = 0;
         }
-        else{ // not on curve
-          u32_t next_index = (j == outline->end_point_indices[i]) ? contour_start_index : j+1;
-          
-          // Check if next point is on curve
-          v2f_t p0 = anchor_pt;
-          v2f_t p1 = { (f32_t)outline->points[j].x, (f32_t)outline->points[j].y };
-          v2f_t p2 = { (f32_t)outline->points[next_index].x, (f32_t)outline->points[next_index].y } ;
-          
-          u8_t next_flags = outline->points[next_index].flags;
-          if (!(next_flags & 0x1)) {
-            // not on curve, thus it's a cubic curve, 
-            // so we have to generate midpoint
-            p2.x = p1.x + (p2.x - p1.x)*0.5f;
-            p2.y = p1.y + (p2.y - p1.y)*0.5f;
-          }
+
+        // NOTE(Momo): For now, we assume that the first point is 
+        // always on curve, which is not always the case.
+        v2f_t anchor_pt = {};
+        u32_t j = 0;
+        for (u32_t i = 0; i < outline->contour_count; ++i) {
+          u32_t contour_start_index = j;
+          u32_t start_vertex_count = vertex_count;
+
+          for(; j <= outline->end_point_indices[i]; ++j) {
+            u8_t flags = outline->points[j].flags;
+
+            if (flags & 0x1) { // on curve 
+              anchor_pt.x = (f32_t)outline->points[j].x;
+              anchor_pt.y = (f32_t)outline->points[j].y;
+
+              _ttf_add_vertex(vertices, vertex_count++, anchor_pt);
+            }
+            else{ // not on curve
+              u32_t next_index = (j == outline->end_point_indices[i]) ? contour_start_index : j+1;
+
+              // Check if next point is on curve
+              v2f_t p0 = anchor_pt;
+              v2f_t p1 = { (f32_t)outline->points[j].x, (f32_t)outline->points[j].y };
+              v2f_t p2 = { (f32_t)outline->points[next_index].x, (f32_t)outline->points[next_index].y } ;
+
+              u8_t next_flags = outline->points[next_index].flags;
+              if (!(next_flags & 0x1)) {
+                // not on curve, thus it's a cubic curve, 
+                // so we have to generate midpoint
+                p2.x = p1.x + (p2.x - p1.x)*0.5f;
+                p2.y = p1.y + (p2.y - p1.y)*0.5f;
+              }
 #if 0
-          // prevent duplicates?
-          else {
-            ++j;
-          }
+              // prevent duplicates?
+              else {
+                ++j;
+              }
 #endif
-          _ttf_tessellate_bezier(vertices, &vertex_count,
-                                 p0, p1, p2, flatness_squared, 0);
-          anchor_pt = p2;
+              _ttf_tessellate_bezier(vertices, &vertex_count,
+                  p0, p1, p2, flatness_squared, 0);
+              anchor_pt = p2;
+            }
+          }
+          path_lengths[path_count++] = vertex_count - start_vertex_count;
         }
       }
-      path_lengths[path_count++] = vertex_count - start_vertex_count;
-    }
-  }
-  paths->vertices = vertices;
-  paths->vertex_count = vertex_count;
-  paths->path_lengths = path_lengths;
-  paths->path_count = path_count;
-  
-  return true;
-  
-}
+      paths->vertices = vertices;
+      paths->vertex_count = vertex_count;
+      paths->path_lengths = path_lengths;
+      paths->path_count = path_count;
 
-static u32_t
-ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint) {
-  
-  u16_t format = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 0);
-  
-  switch(format) {
-    case 4: { // 
-      u16_t seg_count = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 6) >> 1;
-      u16_t search_range = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 8) >> 1;
-      u16_t entry_selector = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 10);
-      u16_t range_shift = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 12) >> 1;
-      
-      u32_t end_codes = ttf->cmap_mappings + 14;
-      u32_t start_codes = end_codes + 2 + (2*seg_count);
-      u32_t id_deltas = start_codes + (2*seg_count);
-      u32_t id_range_offsets = id_deltas + (2*seg_count);
-      u32_t glyph_index_array = id_range_offsets + (2*seg_count);
-      
-      if (codepoint == 0xffff) return 0;
-      
-      // Find the first end code that is greater than or equal to the codepoint
-      //
-      // NOTE(Momo): To optimize this, we could do a binary search based
-      // on the data given but there are some documentations that seem
-      // to suggest against this...
-      // 
-      u16_t seg_id = 0;
-      u16_t end_code = 0;
-      for(u16_t i = 0; i < seg_count; ++i) {
-        end_code = _ttf_read_u16(ttf->data + end_codes + (2 * i));
-        if( end_code >= codepoint ){
-          seg_id = i;
-          break;
+      return true;
+
+    }
+
+  static u32_t
+    ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint) {
+
+      u16_t format = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 0);
+
+      switch(format) {
+        case 4: { // 
+          u16_t seg_count = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 6) >> 1;
+          u16_t search_range = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 8) >> 1;
+          u16_t entry_selector = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 10);
+          u16_t range_shift = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 12) >> 1;
+
+          u32_t end_codes = ttf->cmap_mappings + 14;
+          u32_t start_codes = end_codes + 2 + (2*seg_count);
+          u32_t id_deltas = start_codes + (2*seg_count);
+          u32_t id_range_offsets = id_deltas + (2*seg_count);
+          u32_t glyph_index_array = id_range_offsets + (2*seg_count);
+
+          if (codepoint == 0xffff) return 0;
+
+          // Find the first end code that is greater than or equal to the codepoint
+          //
+          // NOTE(Momo): To optimize this, we could do a binary search based
+          // on the data given but there are some documentations that seem
+          // to suggest against this...
+          // 
+          u16_t seg_id = 0;
+          u16_t end_code = 0;
+          for(u16_t i = 0; i < seg_count; ++i) {
+            end_code = _ttf_read_u16(ttf->data + end_codes + (2 * i));
+            if( end_code >= codepoint ){
+              seg_id = i;
+              break;
+            }
+          }
+
+          u16_t start_code = _ttf_read_u16(ttf->data + start_codes + 2*seg_id);
+
+          if (start_code > codepoint) return 0;
+
+          u16_t offset = _ttf_read_u16(ttf->data + id_range_offsets + 2*seg_id);
+          s16_t delta = _ttf_read_s16(ttf->data + id_deltas + 2*seg_id);
+
+          if (offset == 0 ){
+            return codepoint + delta;
+          }
+          else {
+            return _ttf_read_u16(ttf->data +
+                id_range_offsets + 2*seg_id + // &id_range_offset[i]
+                offset + (codepoint - start_code)*2);
+
+          }
+
+        } break;
+
+        default: {
+          return 0; // invalid codepoint
         }
       }
-      
-      u16_t start_code = _ttf_read_u16(ttf->data + start_codes + 2*seg_id);
-      
-      if (start_code > codepoint) return 0;
-      
-      u16_t offset = _ttf_read_u16(ttf->data + id_range_offsets + 2*seg_id);
-      s16_t delta = _ttf_read_s16(ttf->data + id_deltas + 2*seg_id);
-      
-      if (offset == 0 ){
-        return codepoint + delta;
-      }
-      else {
-        return _ttf_read_u16(ttf->data +
-                             id_range_offsets + 2*seg_id + // &id_range_offset[i]
-                             offset + (codepoint - start_code)*2);
-        
-      }
-      
-    } break;
-    
-    default: {
-      return 0; // invalid codepoint
     }
-  }
-}
 
 
 static f32_t
-ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height) {
-  s32_t font_height = _ttf_read_s16(ttf->data + ttf->hhea + 4) - _ttf_read_s16(ttf->data + ttf->hhea + 6);
-  return (f32_t)pixel_height/font_height;
-}
-
-
-static void 
-ttf_get_glyph_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_t* line_gap) 
-{
-  if (ascent) *ascent = _ttf_read_s16(ttf->data + ttf->hhea + 4);
-  if (descent) *descent = _ttf_read_s16(ttf->data + ttf->hhea + 6);
-  if (line_gap) *line_gap = _ttf_read_s16(ttf->data + ttf->hhea + 8);
-}
-
-static void 
-ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, 
-                                 u32_t glyph_index, 
-                                 s16_t* advance_width, 
-                                 s16_t* left_side_bearing)
-{
-  u16_t num_of_long_horizontal_metrices = _ttf_read_u16(ttf->data + ttf->hhea + 34);
-
-  if (glyph_index < num_of_long_horizontal_metrices) {
-    if (advance_width) (*advance_width) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index);
-    if (left_side_bearing) (*left_side_bearing) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index + 2);
-  }
-  else {
-    if(advance_width) (*advance_width) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*(num_of_long_horizontal_metrices-1));
-    if(left_side_bearing) (*left_side_bearing) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*num_of_long_horizontal_metrices + 2*(glyph_index - num_of_long_horizontal_metrices));
-  }
-  
-}
-
-
-static b32_t
-ttf_read(ttf_t* ttf, buffer_t ttf_contents) {
-  ttf->data = ttf_contents.data;
-  
-  u32_t num_tables = _ttf_read_u16(ttf->data + 4);
-  
-  for (u32_t i= 0 ; i < num_tables; ++i ) {
-    u32_t directory = 12 + (16 * i);
-    u32_t tag = _ttf_read_u32(ttf->data + directory + 0);
-    
-    
-    switch(tag) {
-      case 'loca': {
-        ttf->loca = _ttf_read_u32(ttf->data + directory + 8);
-      }; break;
-      case 'head': {
-        ttf->head = _ttf_read_u32(ttf->data + directory + 8);
-      }; break;
-      case 'glyf': {
-        ttf->glyf = _ttf_read_u32(ttf->data + directory + 8);
-      }; break;
-      case 'maxp': {
-        ttf->maxp = _ttf_read_u32(ttf->data + directory + 8);
-      } break;
-      case 'cmap': {
-        ttf->cmap = _ttf_read_u32(ttf->data + directory + 8);
-      } break;
-      case 'hhea': {
-        ttf->hhea = _ttf_read_u32(ttf->data + directory + 8);
-      } break;
-      case 'hmtx': {
-        ttf->hmtx = _ttf_read_u32(ttf->data + directory + 8);
-      } break;
-      case 'kern': {
-        ttf->kern = _ttf_read_u32(ttf->data + directory + 8);
-      } break;
-      case 'GPOS': {
-        ttf->gpos = _ttf_read_u32(ttf->data + directory + 8);
-      } break;
-      default: {
-#if 0
-        char* tags = (char*)&tag;
-        test_log("found: %c%c%c%c\n", tags[3], tags[2], tags[1], tags[0]);
-#endif
-      };
+    ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height) {
+      s32_t font_height = _ttf_read_s16(ttf->data + ttf->hhea + 4) - _ttf_read_s16(ttf->data + ttf->hhea + 6);
+      return (f32_t)pixel_height/font_height;
     }
-    
-  }
-  
-  if (!ttf->loca || 
-      !ttf->maxp ||
-      !ttf->head ||
-      !ttf->glyf ||
-      !ttf->cmap ||
-      !ttf->hhea ||
-      !ttf->hmtx) return false;
-    
-  ttf->loca_format = _ttf_read_u16(ttf->data + ttf->head + 50);
-  if (ttf->loca_format >= 2) return false;
-  
-  ttf->glyph_count = _ttf_read_u16(ttf->data + ttf->maxp + 4);
-  
-  // Get index map
-  {
-    u32_t subtable_count = _ttf_read_u16(ttf->data + ttf->cmap + 2);
-    
-    b32_t found_index_table = false;
-    
-    for( u32_t i = 0; i < subtable_count; ++i) {
-      u32_t subtable = ttf->cmap + 4 + (8 * i);
-      
-      
-      // We only support unicode encoding...
-      // NOTE(Momo): They say mac is discouraged, so we won't care about it.
-      u32_t pf_id = _ttf_read_u16(ttf->data + subtable + 0);
-      switch(pf_id) {
-        case _TTF_CMAP_PF_ID_MICROSOFT: {
-          u32_t pf_specific_id = _ttf_read_u16(ttf->data + subtable + 2);
-          switch(pf_specific_id) {
-            case _TTF_CMAP_MS_ID_UNICODE_BMP:
-            case _TTF_CMAP_MS_ID_UNICODE_FULL: {
-              ttf->cmap_mappings = ttf->cmap + _ttf_read_u32(ttf->data + subtable + 4);
-              found_index_table =  true;
-            }break;
-            
-          }
-        }
-        case _TTF_CMAP_PF_ID_UNICODE: {
-          ttf->cmap_mappings = ttf->cmap + _ttf_read_u32(ttf->data + subtable + 4);
-          found_index_table = true;
-        } break;
-        
-      }
-      
-      if (found_index_table) break;
-    }
-   
-    if (!found_index_table) 
-      return false;
-  }
-  
-  
-  
-  return true;
-}
 
-static s32_t 
-ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2) {
-  
-  if (ttf->gpos) {
-    assert(false);
-    //return _ttf_get_gpos_advance(ttf, glyph_index_1, glyph_index_2);
-  }
-  else if (ttf->kern) {
-    return _ttf_get_kern_advance(ttf, glyph_index_1, glyph_index_2);
-  }
-  return 0;
-}
 
-static u32_t* 
-ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w, u32_t* out_h, arena_t* allocator) 
-{
-  u32_t* pixels = 0;
-  make(_ttf_glyph_outline_t, outline);
-  make(_ttf_glyph_paths_t, paths);
-
-  s32_t x0, y0, x1, y1;
-  ttf_get_glyph_bitmap_box(ttf, glyph_index, scale, &x0, &y0, &x1, &y1);
-
-  u32_t width = x1 - x0;
-  u32_t height = y1 - y0;
-  u32_t size = width * height * 4;
-
-  if (width == 0 || height == 0) {
-    //ttf_log("[ttf] Glyph dimension are bad\nj");
-    return nullptr;
-  }
-  
-  pixels = arena_push_arr(u32_t, allocator, size);
-  if (!pixels) {
-    //ttf_log("[ttf] Unable to push bitmap pixel\n");
-    return nullptr;
-  }
-  zero_memory(pixels, size);
- 
-  arena_set_revert_point(allocator);
-
-  if(!_ttf_get_glyph_outline(ttf, outline, glyph_index, allocator)) {
-    //ttf_log("[ttf] Unable to get glyph outline\n");
-    return nullptr;
-  }
-  if (!_ttf_get_paths_from_glyph_outline(outline, paths, allocator)) {
-    //ttf_log("[ttf] Unable glyph paths\n");
-    return nullptr;
-  }
-  
-  // generate scaled edges based on points
-  _ttf_edge_t* edges = arena_push_arr(_ttf_edge_t, allocator, paths->vertex_count);
-  if (!edges) {
-    //ttf_log("[ttf] Unable to push edges\n");
-    return nullptr;
-  }
-  zero_range(edges, paths->vertex_count);
-  
-  u32_t edge_count = 0;
-  {
-    u32_t vertex_index = 0;
-    for (u32_t path_index = 0; 
-         path_index < paths->path_count; 
-         ++path_index)
+  static void 
+    ttf_get_glyph_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_t* line_gap) 
     {
-      u32_t path_length = paths->path_lengths[path_index];
-      for (u32_t i = 0; i < path_length; ++i) {
-        _ttf_edge_t edge = {};
-        v2f_t v0 = paths->vertices[vertex_index];
-        v2f_t v1 = (i == path_length-1) ? paths->vertices[vertex_index-i] : paths->vertices[vertex_index+1];
-        ++vertex_index;
-        
-        // Skip if edge is going to be completely horizontal
-        if (v0.y == v1.y) {
-          continue;
-        }
-        
-        edge.p0.x = v0.x * scale - x0;
-        edge.p0.y = height - ((v0.y * scale) - y0);
-
-        edge.p1.x = v1.x * scale - x0;
-        edge.p1.y = height - ((v1.y * scale) - y0);
-        
-        // Check if edge's points need to be flipped.
-        // NOTE(Momo): It's easier for the rasterization algorithm to have the edges'
-        // p0 be on top of p1. If we flip, we will indicate it within the edge.
-        if (edge.p0.y > edge.p1.y) {
-          swap(edge.p0, edge.p1);
-          edge.is_inverted = true;
-        }
-        edges[edge_count++] = edge;
-      }
-    }  
-  }
-  
-  
-  // Rasterazation algorithm starts here
-  // Sort edges by top most edge
-  sort_entry_t* y_edges = arena_push_arr(sort_entry_t, allocator, edge_count);
-  if (!y_edges) { 
-    //ttf_log("[ttf] Unable to push sort entries for edges\n");
-    return nullptr;
-  }
-
-  for (u32_t i = 0; i < edge_count; ++i) {
-    y_edges[i].index = i;
-    y_edges[i].key = -(f32_t)max_of(edges[i].p0.y, edges[i].p1.y);
-  }
-  quicksort(y_edges, edge_count);
-
-  sort_entry_t* active_edges = arena_push_arr(sort_entry_t, allocator, edge_count);
-  if (!active_edges) {
-    //ttf_log("[ttf] Unable to push sort entries for active edges\n");
-    return nullptr;
-  }
-  
-  // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
-  // clearing and refilling the active_edges list per scan line
-  for(u32_t y = 0; y <= height; ++y) {
-    u32_t act_edge_count = 0; 
-    f32_t yf = (f32_t)y; // 'center' of pixel
-    
-    // Add to 'active edge list' any edges which have an 
-    // uppermost vertex (p0) before y and lowermost vertex (p1) after this y.
-    // Also, ignore p1 that ends EXACTLY on this y.
-    for (u32_t y_edge_id = 0; y_edge_id < edge_count; ++y_edge_id){
-      _ttf_edge_t* edge = edges + y_edges[y_edge_id].index;
-      
-      if (edge->p0.y <= yf && edge->p1.y > yf) {
-        // calculate the x intersection
-        f32_t dx = edge->p1.x - edge->p0.x;
-        f32_t dy = edge->p1.y - edge->p0.y;
-        if (dy != 0.f) {
-          f32_t t = (yf - edge->p0.y) / dy;
-          edge->x_intersect = edge->p0.x + (t * dx);
-         
-          // prepare sort_entry_t for active_edges
-          active_edges[act_edge_count].index = y_edges[y_edge_id].index;
-          active_edges[act_edge_count].key = edge->x_intersect;
-
-          ++act_edge_count;
-        }
-      }
+      if (ascent) *ascent = _ttf_read_s16(ttf->data + ttf->hhea + 4);
+      if (descent) *descent = _ttf_read_s16(ttf->data + ttf->hhea + 6);
+      if (line_gap) *line_gap = _ttf_read_s16(ttf->data + ttf->hhea + 8);
     }
-    quicksort(active_edges, act_edge_count);
- 
-    if (act_edge_count >= 2) {
-      u32_t crossings = 0;
-      for (u32_t act_edge_id = 0; 
-           act_edge_id < act_edge_count-1;
-           ++act_edge_id) 
+
+  static void 
+    ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, 
+        u32_t glyph_index, 
+        s16_t* advance_width, 
+        s16_t* left_side_bearing)
+    {
+      u16_t num_of_long_horizontal_metrices = _ttf_read_u16(ttf->data + ttf->hhea + 34);
+
+      if (glyph_index < num_of_long_horizontal_metrices) {
+        if (advance_width) (*advance_width) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index);
+        if (left_side_bearing) (*left_side_bearing) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index + 2);
+      }
+      else {
+        if(advance_width) (*advance_width) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*(num_of_long_horizontal_metrices-1));
+        if(left_side_bearing) (*left_side_bearing) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*num_of_long_horizontal_metrices + 2*(glyph_index - num_of_long_horizontal_metrices));
+      }
+
+    }
+
+
+  static b32_t
+    ttf_read(ttf_t* ttf, buffer_t ttf_contents) {
+      ttf->data = ttf_contents.data;
+
+      u32_t num_tables = _ttf_read_u16(ttf->data + 4);
+
+      for (u32_t i= 0 ; i < num_tables; ++i ) {
+        u32_t directory = 12 + (16 * i);
+        u32_t tag = _ttf_read_u32(ttf->data + directory + 0);
+
+
+        switch(tag) {
+          case 'loca': {
+            ttf->loca = _ttf_read_u32(ttf->data + directory + 8);
+          }; break;
+          case 'head': {
+            ttf->head = _ttf_read_u32(ttf->data + directory + 8);
+          }; break;
+          case 'glyf': {
+            ttf->glyf = _ttf_read_u32(ttf->data + directory + 8);
+          }; break;
+          case 'maxp': {
+            ttf->maxp = _ttf_read_u32(ttf->data + directory + 8);
+          } break;
+          case 'cmap': {
+            ttf->cmap = _ttf_read_u32(ttf->data + directory + 8);
+          } break;
+          case 'hhea': {
+            ttf->hhea = _ttf_read_u32(ttf->data + directory + 8);
+          } break;
+          case 'hmtx': {
+            ttf->hmtx = _ttf_read_u32(ttf->data + directory + 8);
+          } break;
+          case 'kern': {
+            ttf->kern = _ttf_read_u32(ttf->data + directory + 8);
+          } break;
+          case 'GPOS': {
+            ttf->gpos = _ttf_read_u32(ttf->data + directory + 8);
+          } break;
+          default: {
+#if 0
+            char* tags = (char*)&tag;
+            test_log("found: %c%c%c%c\n", tags[3], tags[2], tags[1], tags[0]);
+#endif
+          };
+        }
+
+      }
+
+      if (!ttf->loca || 
+          !ttf->maxp ||
+          !ttf->head ||
+          !ttf->glyf ||
+          !ttf->cmap ||
+          !ttf->hhea ||
+          !ttf->hmtx) return false;
+
+      ttf->loca_format = _ttf_read_u16(ttf->data + ttf->head + 50);
+      if (ttf->loca_format >= 2) return false;
+
+      ttf->glyph_count = _ttf_read_u16(ttf->data + ttf->maxp + 4);
+
+      // Get index map
       {
-        _ttf_edge_t* start_edge = edges + active_edges[act_edge_id].index; 
-        _ttf_edge_t* end_edge = edges + active_edges[act_edge_id+1].index; 
-        
-        start_edge->is_inverted ? ++crossings : --crossings;
-        
-        if (crossings > 0) {
-          u32_t start_x = (u32_t)start_edge->x_intersect;
-          u32_t end_x = (u32_t)end_edge->x_intersect;
-          for(u32_t x = start_x; x < end_x; ++x) {
-            pixels[x + y * width] = 0xFFFFFFFF;
+        u32_t subtable_count = _ttf_read_u16(ttf->data + ttf->cmap + 2);
+
+        b32_t found_index_table = false;
+
+        for( u32_t i = 0; i < subtable_count; ++i) {
+          u32_t subtable = ttf->cmap + 4 + (8 * i);
+
+
+          // We only support unicode encoding...
+          // NOTE(Momo): They say mac is discouraged, so we won't care about it.
+          u32_t pf_id = _ttf_read_u16(ttf->data + subtable + 0);
+          switch(pf_id) {
+            case _TTF_CMAP_PF_ID_MICROSOFT: {
+              u32_t pf_specific_id = _ttf_read_u16(ttf->data + subtable + 2);
+              switch(pf_specific_id) {
+                case _TTF_CMAP_MS_ID_UNICODE_BMP:
+                case _TTF_CMAP_MS_ID_UNICODE_FULL: {
+                  ttf->cmap_mappings = ttf->cmap + _ttf_read_u32(ttf->data + subtable + 4);
+                  found_index_table =  true;
+                }break;
+
+              }
+            }
+            case _TTF_CMAP_PF_ID_UNICODE: {
+              ttf->cmap_mappings = ttf->cmap + _ttf_read_u32(ttf->data + subtable + 4);
+              found_index_table = true;
+            } break;
+
+          }
+
+          if (found_index_table) break;
+        }
+
+        if (!found_index_table) 
+          return false;
+      }
+
+
+
+      return true;
+    }
+
+  static s32_t 
+    ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2) {
+
+      if (ttf->gpos) {
+        assert(false);
+        //return _ttf_get_gpos_advance(ttf, glyph_index_1, glyph_index_2);
+      }
+      else if (ttf->kern) {
+        return _ttf_get_kern_advance(ttf, glyph_index_1, glyph_index_2);
+      }
+      return 0;
+    }
+
+  static u32_t* 
+    ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w, u32_t* out_h, arena_t* allocator) 
+    {
+      u32_t* pixels = 0;
+      make(_ttf_glyph_outline_t, outline);
+      make(_ttf_glyph_paths_t, paths);
+
+      s32_t x0, y0, x1, y1;
+      ttf_get_glyph_bitmap_box(ttf, glyph_index, scale, &x0, &y0, &x1, &y1);
+
+      u32_t width = x1 - x0;
+      u32_t height = y1 - y0;
+      u32_t size = width * height * 4;
+
+      if (width == 0 || height == 0) {
+        //ttf_log("[ttf] Glyph dimension are bad\nj");
+        return nullptr;
+      }
+
+      pixels = arena_push_arr(u32_t, allocator, size);
+      if (!pixels) {
+        //ttf_log("[ttf] Unable to push bitmap pixel\n");
+        return nullptr;
+      }
+      zero_memory(pixels, size);
+
+      arena_set_revert_point(allocator);
+
+      if(!_ttf_get_glyph_outline(ttf, outline, glyph_index, allocator)) {
+        //ttf_log("[ttf] Unable to get glyph outline\n");
+        return nullptr;
+      }
+      if (!_ttf_get_paths_from_glyph_outline(outline, paths, allocator)) {
+        //ttf_log("[ttf] Unable glyph paths\n");
+        return nullptr;
+      }
+
+      // generate scaled edges based on points
+      _ttf_edge_t* edges = arena_push_arr(_ttf_edge_t, allocator, paths->vertex_count);
+      if (!edges) {
+        //ttf_log("[ttf] Unable to push edges\n");
+        return nullptr;
+      }
+      zero_range(edges, paths->vertex_count);
+
+      u32_t edge_count = 0;
+      {
+        u32_t vertex_index = 0;
+        for (u32_t path_index = 0; 
+            path_index < paths->path_count; 
+            ++path_index)
+        {
+          u32_t path_length = paths->path_lengths[path_index];
+          for (u32_t i = 0; i < path_length; ++i) {
+            _ttf_edge_t edge = {};
+            v2f_t v0 = paths->vertices[vertex_index];
+            v2f_t v1 = (i == path_length-1) ? paths->vertices[vertex_index-i] : paths->vertices[vertex_index+1];
+            ++vertex_index;
+
+            // Skip if edge is going to be completely horizontal
+            if (v0.y == v1.y) {
+              continue;
+            }
+
+            edge.p0.x = v0.x * scale - x0;
+            edge.p0.y = height - ((v0.y * scale) - y0);
+
+            edge.p1.x = v1.x * scale - x0;
+            edge.p1.y = height - ((v1.y * scale) - y0);
+
+            // Check if edge's points need to be flipped.
+            // NOTE(Momo): It's easier for the rasterization algorithm to have the edges'
+            // p0 be on top of p1. If we flip, we will indicate it within the edge.
+            if (edge.p0.y > edge.p1.y) {
+              swap(edge.p0, edge.p1);
+              edge.is_inverted = true;
+            }
+            edges[edge_count++] = edge;
+          }
+        }  
+      }
+
+
+      // Rasterazation algorithm starts here
+      // Sort edges by top most edge
+      sort_entry_t* y_edges = arena_push_arr(sort_entry_t, allocator, edge_count);
+      if (!y_edges) { 
+        //ttf_log("[ttf] Unable to push sort entries for edges\n");
+        return nullptr;
+      }
+
+      for (u32_t i = 0; i < edge_count; ++i) {
+        y_edges[i].index = i;
+        y_edges[i].key = -(f32_t)max_of(edges[i].p0.y, edges[i].p1.y);
+      }
+      quicksort(y_edges, edge_count);
+
+      sort_entry_t* active_edges = arena_push_arr(sort_entry_t, allocator, edge_count);
+      if (!active_edges) {
+        //ttf_log("[ttf] Unable to push sort entries for active edges\n");
+        return nullptr;
+      }
+
+      // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
+      // clearing and refilling the active_edges list per scan line
+      for(u32_t y = 0; y <= height; ++y) {
+        u32_t act_edge_count = 0; 
+        f32_t yf = (f32_t)y; // 'center' of pixel
+
+        // Add to 'active edge list' any edges which have an 
+        // uppermost vertex (p0) before y and lowermost vertex (p1) after this y.
+        // Also, ignore p1 that ends EXACTLY on this y.
+        for (u32_t y_edge_id = 0; y_edge_id < edge_count; ++y_edge_id){
+          _ttf_edge_t* edge = edges + y_edges[y_edge_id].index;
+
+          if (edge->p0.y <= yf && edge->p1.y > yf) {
+            // calculate the x intersection
+            f32_t dx = edge->p1.x - edge->p0.x;
+            f32_t dy = edge->p1.y - edge->p0.y;
+            if (dy != 0.f) {
+              f32_t t = (yf - edge->p0.y) / dy;
+              edge->x_intersect = edge->p0.x + (t * dx);
+
+              // prepare sort_entry_t for active_edges
+              active_edges[act_edge_count].index = y_edges[y_edge_id].index;
+              active_edges[act_edge_count].key = edge->x_intersect;
+
+              ++act_edge_count;
+            }
           }
         }
-      }
-    }
-    
+        quicksort(active_edges, act_edge_count);
+
+        if (act_edge_count >= 2) {
+          u32_t crossings = 0;
+          for (u32_t act_edge_id = 0; 
+              act_edge_id < act_edge_count-1;
+              ++act_edge_id) 
+          {
+            _ttf_edge_t* start_edge = edges + active_edges[act_edge_id].index; 
+            _ttf_edge_t* end_edge = edges + active_edges[act_edge_id+1].index; 
+
+            start_edge->is_inverted ? ++crossings : --crossings;
+
+            if (crossings > 0) {
+              u32_t start_x = (u32_t)start_edge->x_intersect;
+              u32_t end_x = (u32_t)end_edge->x_intersect;
+              for(u32_t x = start_x; x < end_x; ++x) {
+                pixels[x + y * width] = 0xFFFFFFFF;
+              }
+            }
+          }
+        }
+
 #if 0 
-    // Draw edges in green
-    for (u32_t i =0 ; i < edge_count; ++i) 
-    {
-      _ttf_edge_t* edge = edges + i;
-      f32_t ex0 = edge->p0.x;
-      f32_t ey0 = edge->p0.y;
-      
-      f32_t ex1 = edge->p1.x;
-      f32_t ey1 = edge->p1.y;
-      
-      f32_t dx = (ex1 - ex0)/100;
-      f32_t dy = (ey1 - ey0)/100;
-      
-      f32_t xx = ex0;
-      f32_t yy = ey0;
-      for (u32_t z = 0; z < 100; ++z) {
-        xx += dx;
-        yy += dy;
-        pixels[(u32_t)xx + (u32_t)yy * width] = 0xFF00FF00;      
+        // Draw edges in green
+        for (u32_t i =0 ; i < edge_count; ++i) 
+        {
+          _ttf_edge_t* edge = edges + i;
+          f32_t ex0 = edge->p0.x;
+          f32_t ey0 = edge->p0.y;
+
+          f32_t ex1 = edge->p1.x;
+          f32_t ey1 = edge->p1.y;
+
+          f32_t dx = (ex1 - ex0)/100;
+          f32_t dy = (ey1 - ey0)/100;
+
+          f32_t xx = ex0;
+          f32_t yy = ey0;
+          for (u32_t z = 0; z < 100; ++z) {
+            xx += dx;
+            yy += dy;
+            pixels[(u32_t)xx + (u32_t)yy * width] = 0xFF00FF00;      
+          }
+        }
+#endif
+
+
       }
-    }
-#endif
-    
-    
-  }
-  
-  
+
+
 #if 0
-  // Draw vertices in red
-  
-  for (u32_t i =0 ; i < edge_count; ++i) 
-  {
-    auto* edge = edges + i;
-    u32_t x0 = (u32_t)edge->p0.x;
-    u32_t y0 = (u32_t)edge->p0.y;
-    pixels[x0 + y0 * bitmap_dims.w] = 0xFF0000FF;
-    
-    
-    u32_t x1 = (u32_t)edge->p1.x;
-    u32_t y1 = (u32_t)edge->p1.y;
-    pixels[x1 + y1 * bitmap_dims.w] = 0xFF0000FF;
-    
-  }
+      // Draw vertices in red
+
+      for (u32_t i =0 ; i < edge_count; ++i) 
+      {
+        auto* edge = edges + i;
+        u32_t x0 = (u32_t)edge->p0.x;
+        u32_t y0 = (u32_t)edge->p0.y;
+        pixels[x0 + y0 * bitmap_dims.w] = 0xFF0000FF;
+
+
+        u32_t x1 = (u32_t)edge->p1.x;
+        u32_t y1 = (u32_t)edge->p1.y;
+        pixels[x1 + y1 * bitmap_dims.w] = 0xFF0000FF;
+
+      }
 #endif
-  
-  if (out_w) *out_w = width;
-  if (out_h) *out_h = height;
 
-  return pixels;
-}
+      if (out_w) *out_w = width;
+      if (out_h) *out_h = height;
 
-// 
-// MARK:(PNG)
-//
+      return pixels;
+    }
 
-// We are only interested in 4-channel images in rgba_t format
+  // 
+  // MARK:(PNG)
+  //
+
+  // We are only interested in 4-channel images in rgba_t format
 #define _PNG_CHANNELS 4 
 
 
 struct _png_context_t {
   stream_t stream;
   arena_t* arena; 
-  
+
   stream_t image_stream;
   u32_t image_width;
   u32_t image_height;
-  
+
   stream_t unfiltered_image_stream; // for filtering and deflating
-  
+
   // other useful info
   u32_t bit_depth;
-  
+
   stream_t compressed_image_stream;
 };
 
@@ -6062,7 +6168,7 @@ struct _png_huffman_t {
   // Canonical ordered symbols
   u16_t* symbols; 
   u32_t symbol_count;
-  
+
   // Number of symbols per length
   // i.e. code_lengths[1] is the number of symbols with length 1.
   u16_t* lengths;
@@ -6075,41 +6181,41 @@ struct _png_huffman_t {
 static u32_t
 _png_calculate_crc32(u8_t* data, u32_t data_size) {
   static const u32_t crc_table[256] =
-  {
-    0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
-    0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91,
-    0x1db71064, 0x6ab020f2, 0xf3b97148, 0x84be41de, 0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7,
-    0x136c9856, 0x646ba8c0, 0xfd62f97a, 0x8a65c9ec, 0x14015c4f, 0x63066cd9, 0xfa0f3d63, 0x8d080df5,
-    0x3b6e20c8, 0x4c69105e, 0xd56041e4, 0xa2677172, 0x3c03e4d1, 0x4b04d447, 0xd20d85fd, 0xa50ab56b,
-    0x35b5a8fa, 0x42b2986c, 0xdbbbc9d6, 0xacbcf940, 0x32d86ce3, 0x45df5c75, 0xdcd60dcf, 0xabd13d59,
-    0x26d930ac, 0x51de003a, 0xc8d75180, 0xbfd06116, 0x21b4f4b5, 0x56b3c423, 0xcfba9599, 0xb8bda50f,
-    0x2802b89e, 0x5f058808, 0xc60cd9b2, 0xb10be924, 0x2f6f7c87, 0x58684c11, 0xc1611dab, 0xb6662d3d,
-    0x76dc4190, 0x01db7106, 0x98d220bc, 0xefd5102a, 0x71b18589, 0x06b6b51f, 0x9fbfe4a5, 0xe8b8d433,
-    0x7807c9a2, 0x0f00f934, 0x9609a88e, 0xe10e9818, 0x7f6a0dbb, 0x086d3d2d, 0x91646c97, 0xe6635c01,
-    0x6b6b51f4, 0x1c6c6162, 0x856530d8, 0xf262004e, 0x6c0695ed, 0x1b01a57b, 0x8208f4c1, 0xf50fc457,
-    0x65b0d9c6, 0x12b7e950, 0x8bbeb8ea, 0xfcb9887c, 0x62dd1ddf, 0x15da2d49, 0x8cd37cf3, 0xfbd44c65,
-    0x4db26158, 0x3ab551ce, 0xa3bc0074, 0xd4bb30e2, 0x4adfa541, 0x3dd895d7, 0xa4d1c46d, 0xd3d6f4fb,
-    0x4369e96a, 0x346ed9fc, 0xad678846, 0xda60b8d0, 0x44042d73, 0x33031de5, 0xaa0a4c5f, 0xdd0d7cc9,
-    0x5005713c, 0x270241aa, 0xbe0b1010, 0xc90c2086, 0x5768b525, 0x206f85b3, 0xb966d409, 0xce61e49f,
-    0x5edef90e, 0x29d9c998, 0xb0d09822, 0xc7d7a8b4, 0x59b33d17, 0x2eb40d81, 0xb7bd5c3b, 0xc0ba6cad,
-    0xedb88320, 0x9abfb3b6, 0x03b6e20c, 0x74b1d29a, 0xead54739, 0x9dd277af, 0x04db2615, 0x73dc1683,
-    0xe3630b12, 0x94643b84, 0x0d6d6a3e, 0x7a6a5aa8, 0xe40ecf0b, 0x9309ff9d, 0x0a00ae27, 0x7d079eb1,
-    0xf00f9344, 0x8708a3d2, 0x1e01f268, 0x6906c2fe, 0xf762575d, 0x806567cb, 0x196c3671, 0x6e6b06e7,
-    0xfed41b76, 0x89d32be0, 0x10da7a5a, 0x67dd4acc, 0xf9b9df6f, 0x8ebeeff9, 0x17b7be43, 0x60b08ed5,
-    0xd6d6a3e8, 0xa1d1937e, 0x38d8c2c4, 0x4fdff252, 0xd1bb67f1, 0xa6bc5767, 0x3fb506dd, 0x48b2364b,
-    0xd80d2bda, 0xaf0a1b4c, 0x36034af6, 0x41047a60, 0xdf60efc3, 0xa867df55, 0x316e8eef, 0x4669be79,
-    0xcb61b38c, 0xbc66831a, 0x256fd2a0, 0x5268e236, 0xcc0c7795, 0xbb0b4703, 0x220216b9, 0x5505262f,
-    0xc5ba3bbe, 0xb2bd0b28, 0x2bb45a92, 0x5cb36a04, 0xc2d7ffa7, 0xb5d0cf31, 0x2cd99e8b, 0x5bdeae1d,
-    0x9b64c2b0, 0xec63f226, 0x756aa39c, 0x026d930a, 0x9c0906a9, 0xeb0e363f, 0x72076785, 0x05005713,
-    0x95bf4a82, 0xe2b87a14, 0x7bb12bae, 0x0cb61b38, 0x92d28e9b, 0xe5d5be0d, 0x7cdcefb7, 0x0bdbdf21,
-    0x86d3d2d4, 0xf1d4e242, 0x68ddb3f8, 0x1fda836e, 0x81be16cd, 0xf6b9265b, 0x6fb077e1, 0x18b74777,
-    0x88085ae6, 0xff0f6a70, 0x66063bca, 0x11010b5c, 0x8f659eff, 0xf862ae69, 0x616bffd3, 0x166ccf45,
-    0xa00ae278, 0xd70dd2ee, 0x4e048354, 0x3903b3c2, 0xa7672661, 0xd06016f7, 0x4969474d, 0x3e6e77db,
-    0xaed16a4a, 0xd9d65adc, 0x40df0b66, 0x37d83bf0, 0xa9bcae53, 0xdebb9ec5, 0x47b2cf7f, 0x30b5ffe9,
-    0xbdbdf21c, 0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf,
-    0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d,
-  };
-  
+    {
+      0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
+      0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91,
+      0x1db71064, 0x6ab020f2, 0xf3b97148, 0x84be41de, 0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7,
+      0x136c9856, 0x646ba8c0, 0xfd62f97a, 0x8a65c9ec, 0x14015c4f, 0x63066cd9, 0xfa0f3d63, 0x8d080df5,
+      0x3b6e20c8, 0x4c69105e, 0xd56041e4, 0xa2677172, 0x3c03e4d1, 0x4b04d447, 0xd20d85fd, 0xa50ab56b,
+      0x35b5a8fa, 0x42b2986c, 0xdbbbc9d6, 0xacbcf940, 0x32d86ce3, 0x45df5c75, 0xdcd60dcf, 0xabd13d59,
+      0x26d930ac, 0x51de003a, 0xc8d75180, 0xbfd06116, 0x21b4f4b5, 0x56b3c423, 0xcfba9599, 0xb8bda50f,
+      0x2802b89e, 0x5f058808, 0xc60cd9b2, 0xb10be924, 0x2f6f7c87, 0x58684c11, 0xc1611dab, 0xb6662d3d,
+      0x76dc4190, 0x01db7106, 0x98d220bc, 0xefd5102a, 0x71b18589, 0x06b6b51f, 0x9fbfe4a5, 0xe8b8d433,
+      0x7807c9a2, 0x0f00f934, 0x9609a88e, 0xe10e9818, 0x7f6a0dbb, 0x086d3d2d, 0x91646c97, 0xe6635c01,
+      0x6b6b51f4, 0x1c6c6162, 0x856530d8, 0xf262004e, 0x6c0695ed, 0x1b01a57b, 0x8208f4c1, 0xf50fc457,
+      0x65b0d9c6, 0x12b7e950, 0x8bbeb8ea, 0xfcb9887c, 0x62dd1ddf, 0x15da2d49, 0x8cd37cf3, 0xfbd44c65,
+      0x4db26158, 0x3ab551ce, 0xa3bc0074, 0xd4bb30e2, 0x4adfa541, 0x3dd895d7, 0xa4d1c46d, 0xd3d6f4fb,
+      0x4369e96a, 0x346ed9fc, 0xad678846, 0xda60b8d0, 0x44042d73, 0x33031de5, 0xaa0a4c5f, 0xdd0d7cc9,
+      0x5005713c, 0x270241aa, 0xbe0b1010, 0xc90c2086, 0x5768b525, 0x206f85b3, 0xb966d409, 0xce61e49f,
+      0x5edef90e, 0x29d9c998, 0xb0d09822, 0xc7d7a8b4, 0x59b33d17, 0x2eb40d81, 0xb7bd5c3b, 0xc0ba6cad,
+      0xedb88320, 0x9abfb3b6, 0x03b6e20c, 0x74b1d29a, 0xead54739, 0x9dd277af, 0x04db2615, 0x73dc1683,
+      0xe3630b12, 0x94643b84, 0x0d6d6a3e, 0x7a6a5aa8, 0xe40ecf0b, 0x9309ff9d, 0x0a00ae27, 0x7d079eb1,
+      0xf00f9344, 0x8708a3d2, 0x1e01f268, 0x6906c2fe, 0xf762575d, 0x806567cb, 0x196c3671, 0x6e6b06e7,
+      0xfed41b76, 0x89d32be0, 0x10da7a5a, 0x67dd4acc, 0xf9b9df6f, 0x8ebeeff9, 0x17b7be43, 0x60b08ed5,
+      0xd6d6a3e8, 0xa1d1937e, 0x38d8c2c4, 0x4fdff252, 0xd1bb67f1, 0xa6bc5767, 0x3fb506dd, 0x48b2364b,
+      0xd80d2bda, 0xaf0a1b4c, 0x36034af6, 0x41047a60, 0xdf60efc3, 0xa867df55, 0x316e8eef, 0x4669be79,
+      0xcb61b38c, 0xbc66831a, 0x256fd2a0, 0x5268e236, 0xcc0c7795, 0xbb0b4703, 0x220216b9, 0x5505262f,
+      0xc5ba3bbe, 0xb2bd0b28, 0x2bb45a92, 0x5cb36a04, 0xc2d7ffa7, 0xb5d0cf31, 0x2cd99e8b, 0x5bdeae1d,
+      0x9b64c2b0, 0xec63f226, 0x756aa39c, 0x026d930a, 0x9c0906a9, 0xeb0e363f, 0x72076785, 0x05005713,
+      0x95bf4a82, 0xe2b87a14, 0x7bb12bae, 0x0cb61b38, 0x92d28e9b, 0xe5d5be0d, 0x7cdcefb7, 0x0bdbdf21,
+      0x86d3d2d4, 0xf1d4e242, 0x68ddb3f8, 0x1fda836e, 0x81be16cd, 0xf6b9265b, 0x6fb077e1, 0x18b74777,
+      0x88085ae6, 0xff0f6a70, 0x66063bca, 0x11010b5c, 0x8f659eff, 0xf862ae69, 0x616bffd3, 0x166ccf45,
+      0xa00ae278, 0xd70dd2ee, 0x4e048354, 0x3903b3c2, 0xa7672661, 0xd06016f7, 0x4969474d, 0x3e6e77db,
+      0xaed16a4a, 0xd9d65adc, 0x40df0b66, 0x37d83bf0, 0xa9bcae53, 0xdebb9ec5, 0x47b2cf7f, 0x30b5ffe9,
+      0xbdbdf21c, 0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf,
+      0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d,
+    };
+
   u32_t r = 0xFFFFFFFFL;
   for (u32_t i = 0; i < data_size; ++i) {
     r = crc_table[(r ^ data[i]) & 0xFF] ^ (r >> 8);
@@ -6125,10 +6231,10 @@ _png_huffman_decode(stream_t* src_stream, _png_huffman_t huffman) {
   s32_t code = 0;
   s32_t first = 0;
   s32_t index = 0;
-  
+
   for (u32_t len = 1; 
-       len <= huffman.length_count - 1; 
-       ++len) 
+  len <= huffman.length_count - 1; 
+  ++len) 
   {
     u32_t bits = stream_consume_bits(src_stream, 1);
     code |= bits;
@@ -6141,7 +6247,7 @@ _png_huffman_decode(stream_t* src_stream, _png_huffman_t huffman) {
     first <<= 1;
     code <<= 1;
   }
-  
+
   return -1;
 }
 
@@ -6156,34 +6262,34 @@ _png_huffman_compute(_png_huffman_t* h,
                      u32_t max_lengths) 
 {
   _png_huffman_t ret = {};
-  
+
   // Each code corresponds to a symbol
   h->symbol_count = codes_size;
   h->symbols = arena_push_arr(u16_t, arena, codes_size);
   zero_memory(h->symbols, h->symbol_count * sizeof(u16_t));
-  
-  
+
+
   // We add +1 because lengths[0] is not possible
   h->length_count = max_lengths + 1;
   h->lengths = arena_push_arr(u16_t, arena, max_lengths + 1);
   zero_memory(h->lengths, h->length_count * sizeof(u16_t));
-  
+
   // 1. Count the number of codes for each code length
   for (u32_t sym = 0; sym < codes_size; ++sym)  {
     u16_t len = codes[sym];
     ++h->lengths[len];
   }
-  
+
   // 2. Numerical value of smallest code for each code length
   arena_marker_t mark = arena_mark(arena);
-  
+
   u16_t* len_offset_table = arena_push_arr(u16_t, arena, max_lengths+1);
   zero_memory(len_offset_table, (max_lengths+1) * sizeof(u16_t));
-  
+
   for (u32_t len = 1; len < max_lengths; ++len) {
     len_offset_table[len+1] = len_offset_table[len] + h->lengths[len]; 
   }
-  
+
   // 3. Assign numerical values to all codes
   for (u32_t sym = 0; sym < codes_size; ++sym)
   {
@@ -6194,14 +6300,14 @@ _png_huffman_compute(_png_huffman_t* h,
     }
   }
   arena_revert(mark); 
-  
+
 }
 
 
 static b32_t
 _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena) 
 {
-  
+
   static const u16_t lens[29] = { /* Size base for length codes 257..285 */
     3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31,
     35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258};
@@ -6216,18 +6322,18 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
     0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6,
     7, 7, 8, 8, 9, 9, 10, 10, 11, 11,
     12, 12, 13, 13 };
-  
-  
+
+
   u8_t BFINAL = 0;
   while(BFINAL == 0){
     arena_set_revert_point(arena);
-    
+
     BFINAL = (u8_t)stream_consume_bits(src_stream, 1);
     u16_t BTYPE = (u8_t)stream_consume_bits(src_stream, 2);
     switch(BTYPE) {
       case 0b00: {
         stream_flush_bits(src_stream);
-        
+
         stream_consume_bits(src_stream, 5);
         u16_t LEN = (u16_t)stream_consume_bits(src_stream, 16);
         u16_t NLEN = (u16_t)stream_consume_bits(src_stream, 16);
@@ -6241,12 +6347,12 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
       case 0b10: {
         _png_huffman_t lit_huffman = {};
         _png_huffman_t dist_huffman = {};
-        
+
         if (BTYPE == 0b01) {
           // Fixed huffman
           u16_t lit_codes[288] = {};
           u16_t dist_codes[32] = {};
-          
+
           u32_t lit = 0;
           for (; lit < 144; ++lit) {
             lit_codes[lit] = 8;
@@ -6263,8 +6369,8 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
           for (lit = 0; lit < array_count(dist_codes); ++lit) {
             dist_codes[lit] = 5;
           }
-          
-          
+
+
           _png_huffman_compute(&lit_huffman,
                                arena, 
                                lit_codes, 
@@ -6275,42 +6381,42 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
                                dist_codes,
                                array_count(dist_codes),
                                15);
-          
+
         }
         else // BTYPE == 0b10
         {
           u32_t HLIT = stream_consume_bits(src_stream, 5) + 257;
           u32_t HDIST = stream_consume_bits(src_stream, 5) + 1;
           u32_t HCLEN = stream_consume_bits(src_stream, 4) + 4;
-          
+
           static const u32_t order[] = {
             16, 17, 18, 0, 8 ,7, 9, 6, 10, 5, 
             11, 4, 12, 3, 13, 2, 14, 1, 15,
           };
-          
+
           u16_t code_codes[19] = {};
-          
+
           for(u32_t i = 0; i < HCLEN; ++i) {
             code_codes[order[i]] = (u16_t)stream_consume_bits(src_stream, 3);
           }
-          
+
           _png_huffman_t code_huffman = {};
           _png_huffman_compute(&code_huffman,
                                arena,
                                code_codes,
                                array_count(code_codes),
                                15); 
-          
-         
+
+
           u16_t* lit_dist_codes = arena_push_arr(u16_t, arena, HDIST + HLIT);
-          
+
           // NOTE(Momo): Decode
           // Loop until end of block code recognize
           u32_t last_len = 0;
           for(u32_t i = 0; i < (HDIST + HLIT);) {
-            
+
             s32_t sym = _png_huffman_decode(src_stream, code_huffman);
-            
+
             if(sym >= 0 && sym <= 15) {
               lit_dist_codes[i++] = (u16_t)sym;
             }
@@ -6321,12 +6427,12 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
               if (sym == 16) {
                 // Copy the previous code length 3-6 times
                 if (i == 0) return false;
-                
+
                 times_to_repeat = 3 + stream_consume_bits(src_stream, 2);
                 code_to_repeat = lit_dist_codes[i-1];
-                
+
               }
-              
+
               else if (sym == 17) {
                 // Repeat a code length of 0 for 3-10 times
                 times_to_repeat = 3 + stream_consume_bits(src_stream, 3);
@@ -6339,15 +6445,15 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
                 // Invalid symbol
                 return false;
               }
-              
+
               while(times_to_repeat--) {
                 lit_dist_codes[i++] = code_to_repeat;
               }
-              
+
             }
-            
+
           }
-          
+
           _png_huffman_compute(&lit_huffman,
                                arena, 
                                lit_dist_codes, 
@@ -6359,44 +6465,44 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
                                HDIST,
                                15);					
         }
-        
+
         static int pass =0;
         ++pass;
         int wtf = 0;
-        
+
         // NOTE(Momo): Actual decoding
         for (;;) 
         {
           ++wtf;
-          
+
           s32_t sym = _png_huffman_decode(src_stream, lit_huffman);
           if (pass == 2) {
             //test_log("%d\n", sym);
           }
           //_png_log("sym: %d\n", sym);
-          
+
           // NOTE(Momo): Normal case
           if (sym <= 255) { 
             u8_t byte_to_write = (u8_t)(sym & 0xFF); 
             stream_write(dest_stream, byte_to_write);
           }
-          // NOTE(Momo): Extra code case
+            // NOTE(Momo): Extra code case
           else if (sym >= 257) {
-            
+
             sym -= 257;
             if (sym >= 29) {
               return false;
             }
             u32_t len = lens[sym];
             if (len_ex_bits[sym]) len += stream_consume_bits(src_stream, len_ex_bits[sym]);
-            
+
             sym = _png_huffman_decode(src_stream, dist_huffman);
             if (sym < 0) return false;
-            
+
             u32_t dist = dists[sym];
             if (dist_ex_bits[sym]) dist += stream_consume_bits(src_stream, dist_ex_bits[sym]);
-            
-            
+
+
             // test_log("%d\n", len);
             while(len--) {
               usz_t target_index = dest_stream->pos - dist;
@@ -6452,12 +6558,12 @@ _png_get_channels_from_colour_type(u32_t colour_type) {
 static b32_t
 _png_is_format_supported(_png_ihdr_t* IHDR){
   if (IHDR->colour_type != 6 ||
-      IHDR->bit_depth != 8 ||
-      IHDR->compression_method != 0 ||
-      IHDR->filter_method != 0 ||
-      IHDR->interlace_method != 0) 
+    IHDR->bit_depth != 8 ||
+    IHDR->compression_method != 0 ||
+    IHDR->filter_method != 0 ||
+    IHDR->interlace_method != 0) 
   {
-    
+
     return false;
   }
   return true;
@@ -6468,13 +6574,13 @@ _png_is_signature_valid(u8_t* comparee) {
   static const u8_t signature[] = { 
     137, 80, 78, 71, 13, 10, 26, 10 
   };
-  
+
   for (u32_t i = 0; i < array_count(signature); ++i) {
     if (signature[i] != comparee[i]) {
       return false;
     }
   }
-  
+
   return true;
 }
 
@@ -6497,10 +6603,10 @@ _png_filter_sub(_png_context_t* c) {
   u32_t bpp = _PNG_CHANNELS; // bytes per pixel
   u32_t bpl = c->image_width * _PNG_CHANNELS; // bytes per line
   for (u32_t i = 0; i < bpl; ++i ){
-    
+
     u8_t* pixel_byte_p = stream_consume(u8_t, &c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr)return false;
-    
+
     u8_t pixel_byte = (*pixel_byte_p); // sub(x)
     if (i < bpp) {
       stream_write(&c->image_stream, pixel_byte);
@@ -6509,12 +6615,12 @@ _png_filter_sub(_png_context_t* c) {
       usz_t current_index = c->image_stream.pos;
       u8_t left_reference = c->image_stream.contents.data[current_index - bpp]; // Raw(x-bpp)
       u8_t pixel_byte_to_write = (pixel_byte + left_reference) % 256;  
-      
+
       stream_write(&c->image_stream, pixel_byte_to_write);
     }
-    
+
   }    
-  
+
   return true;
 }
 
@@ -6522,26 +6628,26 @@ static b32_t
 _png_filter_average(_png_context_t* c) {
   u32_t bpp = _PNG_CHANNELS; // bytes per pixel
   u32_t bpl = c->image_width * _PNG_CHANNELS; // bytes per line
-  
+
   for (u32_t i = 0; i < bpl; ++i ){
-    
+
     u8_t* pixel_byte_p = stream_consume(u8_t, &c->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) return false;
-    
+
     u8_t pixel_byte = (*pixel_byte_p); // sub(x)
-    
+
     usz_t current_index = c->image_stream.pos;
     u8_t left = (i < bpp) ? 0 :  c->image_stream.contents.data[current_index - bpp]; // Raw(x-bpp)
     u8_t top = (current_index < bpl) ? 0 : c->image_stream.contents.data[current_index - bpl]; // Prior(x)
-    
+
     // NOTE(Momo): Formula uses floor((left+top)/2). 
     // Integer Truncation should do the job!
     u8_t pixel_byte_to_write = (pixel_byte + (left + top)/2) % 256;  
-    
+
     stream_write(&c->image_stream, pixel_byte_to_write);
   }
-  
-  
+
+
   return true;
 }
 
@@ -6549,25 +6655,25 @@ static b32_t
 _png_filter_paeth(_png_context_t* cx) {
   u32_t bpp = _PNG_CHANNELS; // bytes per pixel
   u32_t bpl = cx->image_width * _PNG_CHANNELS; // bytes per line
-  
+
   for (u32_t i = 0; i < bpl; ++i ){
     u8_t* pixel_byte_p = stream_consume(u8_t, &cx->unfiltered_image_stream);
     if (pixel_byte_p == nullptr) return false;
     u8_t pixel_byte = (*pixel_byte_p); // Paeth(x)
-    
+
     // NOTE(Momo): PaethPredictor
     // https://www.w3.org/TR/png_t-Filters.html
     u8_t paeth_predictor; 
     {
       usz_t current_index = cx->image_stream.pos;
-      
+
       // respectively: left, top, top left
       s32_t a, b, c;
-      
+
       a = (i < bpp) ? 0 : (s32_t)(cx->image_stream.contents.data[current_index - bpp]); // Raw(x-bpp)
       b = (current_index < bpl) ? 0 : (s32_t)(cx->image_stream.contents.data[current_index - bpl]); // Prior(x)
       c = (i < bpp || current_index < bpl) ? 0 : (s32_t)(cx->image_stream.contents.data[current_index - bpl - bpp]); // Prior(x)
-      
+
       s32_t p = a + b - c; //initial estimate
       s32_t pa = s32_abs(p - a);
       s32_t pb = s32_abs(p - b);
@@ -6584,9 +6690,9 @@ _png_filter_paeth(_png_context_t* cx) {
         paeth_predictor = (u8_t)c;
       }
     }
-    
+
     u8_t pixel_byte_to_write = (pixel_byte + paeth_predictor)%256;  
-    
+
     stream_write(&cx->image_stream, pixel_byte_to_write);
   }
   return true;
@@ -6601,7 +6707,7 @@ _png_filter_up(_png_context_t* c) {
       return false;
     }
     u8_t pixel_byte = (*pixel_byte_p); // Up(x)
-    
+
     // NOTE(Momo): Ignore first scanline
     if (c->image_stream.pos < bpl) {
       stream_write(&c->image_stream, pixel_byte);
@@ -6610,25 +6716,25 @@ _png_filter_up(_png_context_t* c) {
       usz_t current_index = c->image_stream.pos;
       u8_t top = c->image_stream.contents.data[current_index - bpl]; 
       u8_t pixel_byte_to_write = (pixel_byte + top) % 256;  
-      
+
       stream_write(&c->image_stream, pixel_byte_to_write);
     }
   }
-  
+
   return true;
 }
 
 
 static b32_t
 _png_filter(_png_context_t* c) {
-  
+
   stream_reset(&c->unfiltered_image_stream);
-  
+
   // NOTE(Momo): Filter
   // data always starts with 1 byte indicating the type of filter
   // followed by the rest of the chunk.
   u32_t counter = 0;
-  
+
   while(!stream_is_eos(&c->unfiltered_image_stream)) {
     u8_t* filter_type_p = stream_consume(u8_t, &c->unfiltered_image_stream);
     u8_t filter_type = (*filter_type_p);
@@ -6655,24 +6761,24 @@ _png_filter(_png_context_t* c) {
     };
   }
   return true;
-  
+
 }
 
 static b32_t
 _png_decompress_zlib(_png_context_t* c, stream_t* zlib_stream) {
   _png_idat_header_t* IDAT = stream_consume(_png_idat_header_t, zlib_stream);
-  
+
   u32_t CM = IDAT->compression_flags & 0x0F;
   u32_t CINFO = IDAT->compression_flags >> 4;
   u32_t FCHECK = IDAT->additional_flags & 0x1F; //not needed?
   u32_t FDICT = (IDAT->additional_flags >> 5) & 0x01;
   u32_t FLEVEL = (IDAT->additional_flags >> 6); //useless?
-  
-  
+
+
   if (CM != 8 || FDICT != 0 || CINFO > 7) {
     return false;
   }
-  
+
   return _png_deflate(zlib_stream, &c->unfiltered_image_stream, c->arena);
 }
 
@@ -6692,22 +6798,22 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   ctx.image_width = png->width;
   ctx.image_height = png->height;
   ctx.bit_depth = png->bit_depth;
-  
+
   u32_t image_size = png->width * png->height * _PNG_CHANNELS;
   buffer_t image_buffer =  arena_push_buffer(arena, image_size, 16);
   if (!image_buffer) return nullptr;
   stream_init(&ctx.image_stream, image_buffer);
- 
+
   //arena_marker_t mark = arena_mark(arena);
   arena_set_revert_point(arena);
-  
+
   u32_t unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
   buffer_t unfiltered_image_buffer = arena_push_buffer(arena, unfiltered_size, 16);
   if (!unfiltered_image_buffer) return nullptr;
   stream_init(&ctx.unfiltered_image_stream, unfiltered_image_buffer);
-  
+
   stream_consume(_png_chunk_t, &ctx.stream);
-  
+
   // NOTE(Momo): This is really lousy method.
   // We will go through all the IDATs and push a giant contiguous 
   // chunk of memory to DEFLATE.
@@ -6726,12 +6832,12 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
       stream_consume(_png_chunk_footer_t, &stream);
     }
   }
-  
+
   buffer_t zlib_data = arena_push_buffer(arena, zlib_size, 16);
   if (!zlib_data) return nullptr;
 
   stream_init(zlib_stream, zlib_data);
-  
+
   // Second pass to push memory
   while(!stream_is_eos(&ctx.stream)) {
     _png_chunk_header_t* chunk_header = stream_consume(_png_chunk_header_t, &ctx.stream);
@@ -6740,18 +6846,18 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
     u32_t chunk_type = u32_endian_swap(chunk_header->type_U32);
     if (chunk_type == 'IDAT') {
       stream_write_block(zlib_stream, 
-                      ctx.stream.contents.data + ctx.stream.pos,
-                      chunk_length);
+                         ctx.stream.contents.data + ctx.stream.pos,
+                         chunk_length);
     }
     stream_consume_block(&ctx.stream, chunk_length);
     stream_consume(_png_chunk_footer_t, &ctx.stream);
   }
   stream_reset(zlib_stream);
-  
+
   if (!_png_decompress_zlib(&ctx, zlib_stream)) {
     return nullptr;
   }
-  
+
   if(!_png_filter(&ctx)) {					
     return nullptr;
   }
@@ -6785,33 +6891,33 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
     chunk_count += 1;
   }
   u32_t IDAT_chunk_size = 5 * chunk_count;
-  
+
   u32_t expected_memory_required = (signature_size + 
-                                  IHDR_size + 
-                                  IEND_size + 
-                                  IDAT_size + 
-                                  data_size + 
-                                  IDAT_chunk_size);
-  
+    IHDR_size + 
+    IEND_size + 
+    IDAT_size + 
+    data_size + 
+    IDAT_chunk_size);
+
   buffer_t stream_memory = arena_push_buffer(arena, expected_memory_required, 16);
   if (!stream_memory) return buffer_set(0,0);
 
   make(stream_t, stream);
   stream_init(stream, stream_memory);
   stream_write_block(stream, (void*)signature, sizeof(signature));
-  
-  
+
+
   // NOTE(Momo): write IHDR
   {
     u8_t* crc_start = nullptr;
-    
+
     _png_chunk_header_t header = {};
     header.type_U32 = u32_endian_swap('IHDR');
     header.length = sizeof(_png_ihdr_t);
     header.length = u32_endian_swap(header.length);
     stream_write(stream, header);
     crc_start = stream->contents.data + stream->pos - sizeof(header.type_U32);
-    
+
     _png_ihdr_t IHDR = {};
     IHDR.width = u32_endian_swap(width);
     IHDR.height = u32_endian_swap(height);
@@ -6821,30 +6927,30 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
     IHDR.filter_method = 0;
     IHDR.interlace_method = 0;
     stream_write(stream, IHDR);
-    
+
     _png_chunk_footer_t footer = {};
     u32_t crc_size = (u32_t)(stream->contents.data + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
     footer.crc = u32_endian_swap(footer.crc);
     stream_write(stream, footer);
-    
+
   }
-  
+
   // NOTE(Momo): write IDAT
   // TODO(Momo): Adler32
   {
-    
+
     u32_t chunk_overhead = sizeof(u16_t)*2 + sizeof(u8_t)*1;
 
     u8_t* crc_start = nullptr;
-    
+
     _png_chunk_header_t header = {};
     header.type_U32 = u32_endian_swap('IDAT');
     header.length = sizeof(_png_idat_header_t) + (chunk_overhead*chunk_count) + data_size; 
     header.length = u32_endian_swap(header.length);    
     stream_write(stream, header);
     crc_start = stream->contents.data + stream->pos - sizeof(header.type_U32);
-    
+
     // NOTE(Momo): Hardcoded IDAT chunk header header that fits our use-case
     //
     // CM = 8
@@ -6856,8 +6962,8 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
     IDAT.compression_flags = 8;
     IDAT.additional_flags = 29;
     stream_write(stream, IDAT);
-    
-    
+
+
     // NOTE(Momo): Deflate chunk header
     //
     // BFINAL = 1 (1 bit); // indicates if it's the final block
@@ -6865,65 +6971,65 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
     // 
     u32_t lines_remaining = height;
     u32_t current_line = 0;
-    
+
     for (u32_t chunk_index = 0; chunk_index < chunk_count; ++chunk_index){
       u32_t lines_to_write = min_of(lines_remaining, lines_per_chunk);
       lines_remaining -= lines_to_write;
-      
+
       u8_t BFINAL = ((chunk_index + 1) == chunk_count) ? 1 : 0;
       stream_write(stream, BFINAL);
-      
+
       u16_t LEN = (u16_t)(lines_to_write * data_bpl); // number of data bytes in the block
       u16_t NLEN = ~LEN; // one's complement of LEN
       stream_write(stream, LEN);
       stream_write(stream, NLEN);
-      
+
       // NOTE(Momo): Output data here
       // We have to do it row by row to add the filter byte at the front
       for (u32_t line_index = 0; line_index < lines_to_write; ++line_index) 
       {
         u8_t no_filter = 0;
         stream_write(stream, no_filter); // Filter type: None
-        
+
         stream_write_block(stream,
-                        (u8_t*)pixels + (current_line * image_bpl),
-                        image_bpl);
-        
+                           (u8_t*)pixels + (current_line * image_bpl),
+                           image_bpl);
+
         ++current_line;
-        
+
       }
-      
-      
+
+
     }
-    
-    
+
+
     _png_chunk_footer_t footer = {};
     u32_t crc_size = (u32_t)(stream->contents.data + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
     footer.crc = u32_endian_swap(footer.crc);
     stream_write(stream, footer);
   }
-  
+
   // NOTE(Momo): stream_write IEND
   {
     u8_t* crc_start = nullptr;
-    
+
     _png_chunk_header_t header = {};
     header.type_U32 = u32_endian_swap('IEND');
     header.length = 0;
     stream_write(stream, header);
     crc_start = stream->contents.data + stream->pos - sizeof(header.type_U32);
-    
-    
+
+
     _png_chunk_footer_t footer = {};
     u32_t crc_size = (u32_t)(stream->contents.data + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
     footer.crc = u32_endian_swap(footer.crc);
     stream_write(stream, footer);
   }
-  
-  
-  
+
+
+
   return buffer_set(stream->contents.data, stream->pos);
 }
 
@@ -6933,28 +7039,28 @@ png_read(png_t* png, buffer_t png_contents)
 {
   make(stream_t, stream);
   stream_init(stream, png_contents);
-  
+
   // Read Signature
   _png_chunk_t* png_header = stream_consume(_png_chunk_t, stream);  
   if (!_png_is_signature_valid(png_header->signature)) return false; 
-  
+
   // Read Chunk Header
   _png_chunk_header_t* chunk_header = stream_consume(_png_chunk_header_t, stream);
   u32_t chunk_length = u32_endian_swap(chunk_header->length);
   u32_t chunk_type = u32_endian_swap(chunk_header->type_U32);
-  
-  
+
+
   if(chunk_type != 'IHDR') { return false; }
-  
+
   _png_ihdr_t* IHDR = stream_consume(_png_ihdr_t, stream);
-  
+
   // NOTE(Momo): Width and height is in Big Endian
   // We assume that we are currently in a Little Endian system
   u32_t width = u32_endian_swap(IHDR->width);
   u32_t height = u32_endian_swap(IHDR->height);
-  
+
   if (!_png_is_format_supported(IHDR)) { return false; }
-  
+
   png->contents = png_contents;
   png->width = width;
   png->height = height;
@@ -6963,13 +7069,13 @@ png_read(png_t* png, buffer_t png_contents)
   png->compression_method = IHDR->compression_method;
   png->filter_method = IHDR->filter_method;
   png->interlace_method = IHDR->interlace_method;
-  
+
   return true;
 }
 
-// 
-// MARK:(Arena)
-//
+  // 
+  // MARK:(Arena)
+  //
 
 static void
 arena_init(arena_t* a, void* mem, usz_t cap) {
@@ -6995,19 +7101,19 @@ arena_remaining(arena_t* a) {
 static void* 
 arena_push_size(arena_t* a, usz_t size, usz_t align) {
   if (size == 0) return nullptr;
-	
-	usz_t imem = ptr_to_umi(a->memory);
-	umi_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
-	
+
+  usz_t imem = ptr_to_umi(a->memory);
+  umi_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
+
   if (imem + adjusted_pos + size >= imem + a->cap) return nullptr;
-	
-	u8_t* ret = umi_to_ptr(imem + adjusted_pos);
-	a->pos = adjusted_pos + size;
+
+  u8_t* ret = umi_to_ptr(imem + adjusted_pos);
+  a->pos = adjusted_pos + size;
 
   a->highest_memory_usage = max_of(a->pos, a->highest_memory_usage);
-	
-	return ret;
-	
+
+  return ret;
+
 }
 
 static void*
@@ -7022,11 +7128,11 @@ arena_push_size_zero(arena_t* a, usz_t size, usz_t align)
 
 static b32_t
 arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align) {	
-	void* mem = arena_push_size(a, size, align);
+  void* mem = arena_push_size(a, size, align);
   if (!mem) return false; 
   arena_init(partition, mem, size);
   return true;
-  
+
 }
 
 static buffer_t
@@ -7041,37 +7147,37 @@ arena_push_buffer(arena_t* a, usz_t size, usz_t align) {
 
 static b32_t    
 arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align){
-	usz_t imem = ptr_to_umi(a->memory);
-	usz_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
-	
+  usz_t imem = ptr_to_umi(a->memory);
+  usz_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
+
   if (imem + adjusted_pos >= imem + a->cap) return false;
   usz_t size = a->cap - adjusted_pos;	
-	void* mem = umi_to_ptr(imem + adjusted_pos);
-	a->pos = a->cap;
+  void* mem = umi_to_ptr(imem + adjusted_pos);
+  a->pos = a->cap;
 
   arena_init(partition, mem, size);
-	return true;
+  return true;
 
 }
 /*
-static inline void* 
-Arena_BootBlock(usz_t struct_size,
-                usz_t offset_to_arena,
-                void* memory,
-                usz_t memory_size)
-{
-  assert(struct_size < memory_size);
-	usz_t imem = ptr_to_umi(memory);
-	imem = align_up_pow2(imem, 16);
-	
-	void* arena_memory = (u8_t*)memory + struct_size; 
-	usz_t arena_memory_size = memory_size - struct_size;
-	arena_t* arena_ptr = (arena_t*)((u8_t*)memory + offset_to_arena);
-	(*arena_ptr) = Arena_Create(arena_memory, arena_memory_size);
-	
-	return usz_to_ptr(imem);
-}
-//*/
+     static inline void* 
+     Arena_BootBlock(usz_t struct_size,
+     usz_t offset_to_arena,
+     void* memory,
+     usz_t memory_size)
+     {
+     assert(struct_size < memory_size);
+     usz_t imem = ptr_to_umi(memory);
+     imem = align_up_pow2(imem, 16);
+
+     void* arena_memory = (u8_t*)memory + struct_size; 
+     usz_t arena_memory_size = memory_size - struct_size;
+     arena_t* arena_ptr = (arena_t*)((u8_t*)memory + offset_to_arena);
+     (*arena_ptr) = Arena_Create(arena_memory, arena_memory_size);
+
+     return usz_to_ptr(imem);
+     }
+  //*/
 
 static arena_marker_t
 arena_mark(arena_t* a) {
@@ -7143,7 +7249,7 @@ garena_push_size(garena_t* ga, usz_t size) {
     total_actual_size = itr->size;
   }
 
-  // Case where we split the block 
+    // Case where we split the block 
   else {
     u8_t* new_free_block_memory = (u8_t*)(itr) + total_required_size;
     new_free_block = (garena_free_block_t*)new_free_block_memory;
@@ -7157,7 +7263,7 @@ garena_push_size(garena_t* ga, usz_t size) {
     prev->next = new_free_block;
   }
 
-  // If there isn't a previous block, that means we need to update the head.
+    // If there isn't a previous block, that means we need to update the head.
   else {
     ga->free_list = new_free_block; 
   }
@@ -7165,7 +7271,7 @@ garena_push_size(garena_t* ga, usz_t size) {
   // Update header of block to return
   auto* header = (garena_header_t*)itr;
   header->size = total_actual_size;
-  
+
   // Return the pointer to the user
   u8_t* ret = (u8_t*)(itr) + sizeof(garena_header_t);
   return ret;
@@ -7174,7 +7280,7 @@ garena_push_size(garena_t* ga, usz_t size) {
 static void
 garena_free(garena_t* ga, void* block) {
   if (!block) return;
-  
+
   u8_t* block_u8 = (u8_t*)block;
 
   // NOTE(momo): Header is always 16 bytes behind block.
@@ -7201,7 +7307,7 @@ garena_free(garena_t* ga, void* block) {
   // Thus we simply set the head of the free list to this
   if (prev == nullptr) {
     prev = (garena_free_block_t*)(header);
-    
+
     // NOTE(momo): this is a bit dangerous
     // since prev is overlapping header BUT
     // it should be okay.
@@ -7209,15 +7315,15 @@ garena_free(garena_t* ga, void* block) {
     prev->next = ga->free_list;
     ga->free_list = prev;
   }
-  
-  // If the previous block is directly next to this block, 
-  // combine both blocks simply by adding to the previous block size
+
+    // If the previous block is directly next to this block, 
+    // combine both blocks simply by adding to the previous block size
   else if ( ((u8_t*)(prev) + prev->size) == (u8_t*)header) {
     prev->size += header->size;
   }
 
-  // The previous block is not next to the current block, so we turn 
-  // the current block directly into a free block
+    // The previous block is not next to the current block, so we turn 
+    // the current block directly into a free block
   else {
     auto* temp = (garena_free_block_t*)(header);
 
@@ -7245,7 +7351,7 @@ garena_free(garena_t* ga, void* block) {
 //
 
 struct _RP_Node{
-	u32_t x, y, w, h;
+  u32_t x, y, w, h;
 };
 
 static void
@@ -7309,7 +7415,7 @@ rp_pack(rp_rect_t* rects,
         arena_t* allocator) 
 {
   arena_marker_t restore_point = arena_mark(allocator);
- 
+
   sort_entry_t* sort_entries = arena_push_arr(sort_entry_t, allocator, rect_count);
   _rp_sort(rects, sort_entries, rect_count, sort_type);
   _RP_Node* nodes = arena_push_arr(_RP_Node, allocator, rect_count+1);
@@ -7319,46 +7425,46 @@ rp_pack(rp_rect_t* rects,
   nodes[0].y = 0;
   nodes[0].w = total_width;
   nodes[0].h = total_height;
-  
+
   for (u32_t i = 0; i < rect_count; ++i) {
     rp_rect_t* rect = rects + sort_entries[i].index;
-    
+
     // ignore rects with 0 width or height
     if(rect->w == 0 || rect->h == 0) continue;
-    
+
     // padding*2 because there are 2 sides
     u32_t rect_width = rect->w + padding*2;
     u32_t rect_height = rect->h + padding*2;
-    
+
     // NOTE(Momo): Iterate the empty spaces backwards to find the best fit index
     u32_t chosen_space_index = current_node_count;
     for (u32_t  j = 0; j < chosen_space_index ; ++j ) {
       u32_t index = chosen_space_index - j - 1;
       _RP_Node space = nodes[index];
-      
+
       // NOTE(Momo): Check if the image fits
       if (rect_width <= space.w && rect_height <= space.h) {
         chosen_space_index = index;
         break;
       }
     }
-    
-    
+
+
     // NOTE(Momo): If an empty space that can fit is found, 
     // we remove that space and split.
     if(chosen_space_index == current_node_count) { 
       arena_revert(restore_point);
       return false;
     }
-    
+
     // NOTE(Momo): swap and pop the chosen space
     _RP_Node chosen_space = nodes[chosen_space_index];
-    
+
     if (current_node_count > 0) {
       nodes[chosen_space_index] = nodes[current_node_count-1];
       --current_node_count;
     }
-    
+
     // NOTE(Momo): Split if not perfect fit
     if (chosen_space.w != rect_width && chosen_space.h == rect_height) {
       // Split right
@@ -7367,7 +7473,7 @@ rp_pack(rp_rect_t* rects,
       split_space_right.y = chosen_space.y;
       split_space_right.w = chosen_space.w - rect_width;
       split_space_right.h = chosen_space.h;
-      
+
       nodes[current_node_count++] = split_space_right;
     }
     else if (chosen_space.w == rect_width && chosen_space.h != rect_height) {
@@ -7386,18 +7492,18 @@ rp_pack(rp_rect_t* rects,
       split_space_right.y = chosen_space.y;
       split_space_right.w = chosen_space.w - rect_width;
       split_space_right.h = rect_height;
-      
+
       // Split down
       _RP_Node split_space_down;
       split_space_down.x = chosen_space.x;
       split_space_down.y = chosen_space.y + rect_height;
       split_space_down.w = chosen_space.w;
       split_space_down.h = chosen_space.h - rect_height;
-      
+
       // Choose to insert the bigger one first before the smaller one
       u32_t right_area = split_space_right.w * split_space_right.h;
       u32_t down_area = split_space_down.w * split_space_down.h;
-      
+
       if (right_area > down_area) {
         nodes[current_node_count++] = split_space_right;
         nodes[current_node_count++] = split_space_down;
@@ -7406,14 +7512,14 @@ rp_pack(rp_rect_t* rects,
         nodes[current_node_count++] = split_space_down;
         nodes[current_node_count++] = split_space_right;
       }
-      
+
     }
-    
+
     // NOTE(Momo): Translate the rect
     rect->x = chosen_space.x + padding;
     rect->y = chosen_space.y + padding;
   }
- 
+
   arena_revert(restore_point);
   return true;
 }

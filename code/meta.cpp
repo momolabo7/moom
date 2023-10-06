@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "momo.h"
 
-#if 1 // FOOLISH
+#if FOOLISH // FOOLISH
 
 #include <stdlib.h>
 
@@ -59,6 +59,12 @@ foolishly_free_buffer(buffer_t buffer) {
 
 
 
+static void
+meta_print_token(clex_tokenizer_t* t, clex_token_t token)  {
+  for(usz_t i = token.begin; i < token.ope; ++i) {
+    putchar(t->text.data[i]);
+  }
+}
 
 
 

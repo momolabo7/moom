@@ -2,9 +2,24 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+struct test_t {
+  int a;
+  int b;
+};
+
+static test_t* foo() {
+  test_t ret = { 10, 12 };
+  return &ret;
+}
 
 int main() {
-  printf("Hello World\n");
+  test_t* t1  = foo();
+  test_t* t2  = foo();
+
+  printf("%d %d\n", t1->a, t1->b);
+  printf("%d %d\n", t2->a, t2->b);
+
+
 }
 
 #if 0

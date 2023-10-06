@@ -68,10 +68,10 @@ echo *******************
 rem Optimization
 if %optimize%==1 (
   echo Version  : Release
-  set compiler_flags=-O2 -DASSERTIVE=0 %compiler_flags%
+  set compiler_flags=-O2 -DASSERTIVE=0 -DFOOLISH=0%compiler_flags%
 ) else (
   echo Version  : Internal 
-  set compiler_flags=-DASSERTIVE=1 %compiler_flags%
+  set compiler_flags=-DASSERTIVE=1 -DFOOLISH=1 %compiler_flags%
 )
 
 rem Different build types

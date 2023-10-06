@@ -49,36 +49,6 @@ struct ptube_t {
 
 #include <stdio.h>
 #include <stdlib.h>
-static buffer_t  
-read_file_like_an_idiot(const char* filename) {
-  FILE *file = fopen(filename, "rb");
-  if (!file) return buffer_set(0,0);
-  defer { fclose(file); };
-
-  fseek(file, 0, SEEK_END);
-  usz_t file_size = ftell(file);
-  fseek(file, 0, SEEK_SET);
-
-  buffer_t ret;
-  ret.data = (u8_t*)malloc(file_size);
-  ret.size = file_size;
-
-  usz_t read_amount = fread(ret.data, 1, file_size, file);
-  if(read_amount != file_size) return buffer_set(0,0);
-  
-  return ret;
-  
-}
-static b32_t 
-ptube_load_image(game_t* game, ptube_image_t* img, const char* filename) {
-  return false;
-}
-
-static b32_t 
-ptube_unload_image(game_t* game, ptube_image_t* img) {
-}
-
-
 exported 
 game_update_and_render_sig(game_update_and_render) 
 { 
@@ -123,7 +93,7 @@ game_update_and_render_sig(game_update_and_render)
   static wav_t wav;
   static s16_t* wave_data;
   if (!once) {
-    buffer_t contents =  read_file_like_an_idiot("bouken.wav");
+    buffer_t contents =  foolishly_read_file_into_buffer("bouken.wav");
     wav_read(&wav, contents);
     wave_data = (s16_t*)wav.data;
     once = true;
