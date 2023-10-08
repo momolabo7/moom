@@ -1273,19 +1273,19 @@ static clex_token_t clex_next_token(clex_tokenizer_t* t);
 // but convienient for trying stuff out.
 //
 static void* 
-foolishly_allocate_size(usz_t size) {
+foolish_allocate_size(usz_t size) {
   return malloc(size); 
 }
 
 static void 
-foolishly_free_memory(void* mem) {
+foolish_free_memory(void* mem) {
   free(mem);
 }
-#define foolishly_allocate(t)  (t*)foolishly_allocate_size(sizeof(t))
-#define foolishly_allocate_array(t,n) (t*)foolishly_allocate_size(sizeof(t) * (n))
+#define foolish_allocate(t)  (t*)foolish_allocate_size(sizeof(t))
+#define foolish_allocate_array(t,n) (t*)foolish_allocate_size(sizeof(t) * (n))
 
 static buffer_t
-foolishly_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {
+foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {
   FILE *file = fopen(filename, "rb");
   if (!file) return buffer_set(0,0);
   defer { fclose(file); };
@@ -1296,7 +1296,7 @@ foolishly_read_file_into_buffer(const char* filename, b32_t null_terminate = fal
 
   buffer_t ret;
   ret.size = file_size + null_terminate; // lol
-  ret.data = (u8_t*)foolishly_allocate_size(ret.size);
+  ret.data = (u8_t*)foolish_allocate_size(ret.size);
 
   usz_t read_amount = fread(ret.data, 1, file_size, file);
   if(read_amount != file_size) return buffer_set(0,0);
@@ -1307,7 +1307,7 @@ foolishly_read_file_into_buffer(const char* filename, b32_t null_terminate = fal
 }
 
 static void
-foolishly_free_buffer(buffer_t buffer) {
+foolish_free_buffer(buffer_t buffer) {
   free(buffer.data);
 }
 
@@ -5149,8 +5149,6 @@ wav_read(wav_t* w, buffer_t contents)
   if (!riff_chunk) {
     return 0;
   }
-  riff_chunk->id = u32_endian_swap(riff_chunk->id);
-  riff_chunk->format = u32_endian_swap(riff_chunk->format);
   if (riff_chunk->id != riff_id_signature) {
     return 0;
   }
@@ -5192,7 +5190,7 @@ wav_read(wav_t* w, buffer_t contents)
       return 0;
     }
 
-    if (head->id != 'data') {
+    if (head->id != data_id_signature) {
       stream_consume_block(stream, sizeof(_wav_head_t) + head->size);
     }
     else{
@@ -7073,9 +7071,9 @@ png_read(png_t* png, buffer_t png_contents)
   return true;
 }
 
-  // 
-  // MARK:(Arena)
-  //
+// 
+// MARK:(Arena)
+//
 
 static void
 arena_init(arena_t* a, void* mem, usz_t cap) {

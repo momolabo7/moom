@@ -1,11 +1,3 @@
-engine
-  - graphics should initialize game_gfx* instead of returning a pointer
-  - opengl rename to game_opengl
-  - game config should declare how many square/triangles to initialize graphics
-
-
-  
-
 assets 
   - 9 Slice 
   - Audio/Sound

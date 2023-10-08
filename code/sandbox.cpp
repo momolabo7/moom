@@ -93,7 +93,7 @@ game_update_and_render_sig(game_update_and_render)
   static wav_t wav;
   static s16_t* wave_data;
   if (!once) {
-    buffer_t contents =  foolishly_read_file_into_buffer("bouken.wav");
+    buffer_t contents =  foolish_read_file_into_buffer("bouken.wav");
     wav_read(&wav, contents);
     wave_data = (s16_t*)wav.data;
     once = true;

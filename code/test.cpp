@@ -19,7 +19,6 @@ int main() {
   printf("%d %d\n", t1->a, t1->b);
   printf("%d %d\n", t2->a, t2->b);
 
-
 }
 
 #if 0
