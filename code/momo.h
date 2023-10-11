@@ -8,7 +8,7 @@
 //   ASSERTIVE - Enables/Disables asserts. Default is 1. 
 //
 //
-// BOOKMARKS AND MODULES
+// BOOKMARKS
 //   
 //   Includes    - Includes 
 //   Context     - Context Defines (Arch, OS, compiler, etc)
@@ -40,6 +40,7 @@
 //   JSON        - JSON data file
 //   RectPack    - Rectangle packer
 //   Clex        - C Lexer
+//   OS          - OS Layer
 //
 // TODO
 //   - Stream API 
@@ -918,7 +919,7 @@ static u32_t cstr_len_if(const char* str, b32_t (*pred)(char));
 //
 // MARK:(Hash)
 // 
-static u32_t djb2(const c8_t* str);
+static u32_t hash_djb2(const c8_t* str);
 
 //
 // MARK:(Linked List)
@@ -2955,8 +2956,8 @@ f64_is_nan(f64_t f) {
   return (ret.u & 0xFFFFFFFFFFFFFFFF) == 0xFFFFFFFFFFFFFFFF;
 }
 
-  static u32_t 
-djb2(const c8_t* str)
+static u32_t 
+hash_djb2(const c8_t* str)
 {
   // DJB2
   //
@@ -2976,23 +2977,23 @@ djb2(const c8_t* str)
 
 #if COMPILER_MSVC
 #include <intrin.h>
-  static u32_t 
+static u32_t 
 u32_atomic_compare_assign(u32_t volatile* value,
-    u32_t new_value,
-    u32_t expected_value)
+                          u32_t new_value,
+                          u32_t expected_value)
 {
   u32_t ret = _InterlockedCompareExchange((long volatile*)value,
-      new_value,
-      expected_value);
+                                          new_value,
+                                          expected_value);
   return ret;
 }
 
-  static u64_t 
+static u64_t 
 u64_atomic_assign(u64_t volatile* value,
-    u64_t new_value)
+                  u64_t new_value)
 {
   u64_t ret = _InterlockedExchange64((__int64 volatile*)value,
-      new_value);
+                                     new_value);
   return ret;
 }
 static u32_t 
@@ -7348,7 +7349,7 @@ garena_free(garena_t* ga, void* block) {
 // MARK:(RectPack)
 //
 
-struct _RP_Node{
+struct _rp_node{
   u32_t x, y, w, h;
 };
 
@@ -7416,7 +7417,7 @@ rp_pack(rp_rect_t* rects,
 
   sort_entry_t* sort_entries = arena_push_arr(sort_entry_t, allocator, rect_count);
   _rp_sort(rects, sort_entries, rect_count, sort_type);
-  _RP_Node* nodes = arena_push_arr(_RP_Node, allocator, rect_count+1);
+  _rp_node* nodes = arena_push_arr(_rp_node, allocator, rect_count+1);
 
   u32_t current_node_count = 1;
   nodes[0].x = 0;
@@ -7438,7 +7439,7 @@ rp_pack(rp_rect_t* rects,
     u32_t chosen_space_index = current_node_count;
     for (u32_t  j = 0; j < chosen_space_index ; ++j ) {
       u32_t index = chosen_space_index - j - 1;
-      _RP_Node space = nodes[index];
+      _rp_node space = nodes[index];
 
       // NOTE(Momo): Check if the image fits
       if (rect_width <= space.w && rect_height <= space.h) {
@@ -7456,7 +7457,7 @@ rp_pack(rp_rect_t* rects,
     }
 
     // NOTE(Momo): swap and pop the chosen space
-    _RP_Node chosen_space = nodes[chosen_space_index];
+    _rp_node chosen_space = nodes[chosen_space_index];
 
     if (current_node_count > 0) {
       nodes[chosen_space_index] = nodes[current_node_count-1];
@@ -7466,7 +7467,7 @@ rp_pack(rp_rect_t* rects,
     // NOTE(Momo): Split if not perfect fit
     if (chosen_space.w != rect_width && chosen_space.h == rect_height) {
       // Split right
-      _RP_Node split_space_right;
+      _rp_node split_space_right;
       split_space_right.x = chosen_space.x + rect_width;
       split_space_right.y = chosen_space.y;
       split_space_right.w = chosen_space.w - rect_width;
@@ -7476,7 +7477,7 @@ rp_pack(rp_rect_t* rects,
     }
     else if (chosen_space.w == rect_width && chosen_space.h != rect_height) {
       // Split down
-      _RP_Node split_space_down;
+      _rp_node split_space_down;
       split_space_down.x = chosen_space.x;
       split_space_down.y = chosen_space.y + rect_height;
       split_space_down.w = chosen_space.w;
@@ -7485,14 +7486,14 @@ rp_pack(rp_rect_t* rects,
     }
     else if (chosen_space.w != rect_width && chosen_space.h != rect_height) {
       // Split right
-      _RP_Node split_space_right;
+      _rp_node split_space_right;
       split_space_right.x = chosen_space.x + rect_width;
       split_space_right.y = chosen_space.y;
       split_space_right.w = chosen_space.w - rect_width;
       split_space_right.h = rect_height;
 
       // Split down
-      _RP_Node split_space_down;
+      _rp_node split_space_down;
       split_space_down.x = chosen_space.x;
       split_space_down.y = chosen_space.y + rect_height;
       split_space_down.w = chosen_space.w;

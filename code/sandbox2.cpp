@@ -1,44 +1,11 @@
 
+
 #include "momo.h"
 #include "game.h"
 
 
 
-wav_t global_wavs[10];
-u32_t global_wavs_count = 0;
 
-static void
-sandbox_load_wav(const char* filename) {
-  buffer_t contents = foolish_read_file_into_buffer(filename);
-  wav_read(&global_wavs[global_wavs_count++], contents);
-}
-
-struct sandbox_audio_mixer_instance_t {
-  u32_t index;
-  u32_t offset;
-
-  b32_t is_loop;
-  b32_t is_playing;
-  f32_t volume;
-};
-
-struct sandbox_audio_mixer_t {
-
-  sandbox_audio_mixer_instance_t instances[32];
-  u32_t instance_count;
-
-  u32_t free_list[32];
-  f32_t global_volume;
-};
-
-static void sandbox_audio_mixer_play(sandbox_audio_mixer_t* mixer, u32_t index) {
-  auto* instance = mixer->instances + mixer->instance_count++;
-  instance->index = index;
-  instance->offset = 0;
-  instance->is_loop = false;
-  instance->is_playing = true;
-  instance->volume = 1;
-}
 
 
 //
@@ -124,32 +91,37 @@ game_update_and_render_sig(game_update_and_render)
   }
 #endif
 
-  static sandbox_audio_mixer_t mixer;
+#if 1
+  static b32_t play = true;
   static b32_t once = false;
+  static wav_t wav;
+  static s16_t* wave_data;
   if (!once) {
-    sandbox_load_wav("bouken.wav");
-    sandbox_audio_mixer_play(&mixer, 0);
+    buffer_t contents = foolish_read_file_into_buffer("bouken.wav");
+    wav_read(&wav, contents);
+    wave_data = (s16_t*)wav.data;
     once = true;
   }
-
-#if 0
+  
   if(game_is_button_poked(game, GAME_BUTTON_CODE_1)) {
+    play = !play;
   }
-#endif
-
-  // TODO: for each instanace
-  {
-    sandbox_audio_mixer_instance_t* instance = mixer.instances + 0;
-    wav_t* wav = global_wavs + instance->index; 
-    s16_t* dest = (s16_t*)game->audio.samples;
-    s16_t* src = (s16_t*)wav->data;
-    
+  if (play) {
+    s16_t* where = (s16_t*)game->audio.samples;
     for (u32_t i = 0; i < game->audio.sample_count; ++i) {
-      dref(dest++) = dref(src + instance->offset++);
-      dref(dest++) = dref(src + instance->offset++);
+      *where++ = *wave_data++;
+      *where++ = *wave_data++;
+    }
 
+  }
+  else {
+    s16_t* where = (s16_t*)game->audio.samples;
+    for (u32_t i = 0; i < game->audio.sample_count; ++i) {
+      *where++ = 0;
+      *where++ = 0;
     }
   }
+#endif
 
 
 }
