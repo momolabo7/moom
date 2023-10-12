@@ -152,9 +152,12 @@ atlas_sprite_count	code/pass.h	/^  u32_t atlas_sprite_count;$/;"	m	language:C++	
 audio	code/game.h	/^  game_audio_t audio; $/;"	m	language:C++	struct:game_t	typeref:typename:game_audio_t
 audio_arena	code/game.h	/^  arena_t audio_arena;$/;"	m	language:C++	struct:game_t	typeref:typename:arena_t
 audio_arena_size	code/game.h	/^  usz_t audio_arena_size;$/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
+audio_bits_per_sample	code/game.h	/^  u16_t audio_bits_per_sample;$/;"	m	language:C++	struct:game_config_t	typeref:typename:u16_t
+audio_channels	code/game.h	/^  u16_t audio_channels;$/;"	m	language:C++	struct:game_config_t	typeref:typename:u16_t
 audio_client	code/w32_game.cpp	/^  IAudioClient* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient *	file:
 audio_enabled	code/game.h	/^  b32_t audio_enabled;$/;"	m	language:C++	struct:game_config_t	typeref:typename:b32_t
 audio_format	code/momo.h	/^  u16_t audio_format;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
+audio_samples_per_second	code/game.h	/^  u32_t audio_samples_per_second;$/;"	m	language:C++	struct:game_config_t	typeref:typename:u32_t
 average	code/lit.cpp	/^  f64_t average;$/;"	m	language:C++	struct:lit_profiler_stat_t	typeref:typename:f64_t	file:
 b	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon1db7a63d0d0a::__anon1db7a63d0e08	typeref:typename:f32_t
 b	code/momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
@@ -175,7 +178,7 @@ bitmap_count	code/game_asset_file.h	/^  u32_t bitmap_count;$/;"	m	language:C++	s
 bitmap_count	code/pass.h	/^  u32_t bitmap_count;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:u32_t
 bitmap_exts	code/pass.h	/^  pass_pack_bitmap_ext_t* bitmap_exts;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:pass_pack_bitmap_ext_t *
 bits_per_sample	code/momo.h	/^  u16_t bits_per_sample;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
-bits_per_sample	code/w32_game.cpp	/^  u32_t bits_per_sample;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
+bits_per_sample	code/w32_game.cpp	/^  u16_t bits_per_sample;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t	file:
 bit_buffer	code/momo.h	/^  u32_t bit_buffer;$/;"	m	language:C++	struct:stream_t	typeref:typename:u32_t
 bit_count	code/momo.h	/^  u32_t bit_count;$/;"	m	language:C++	struct:stream_t	typeref:typename:u32_t
 bit_depth	code/momo.h	/^  u32_t bit_depth;$/;"	m	language:C++	struct:_png_context_t	typeref:typename:u32_t
@@ -222,7 +225,7 @@ cell	code/aoc2022.cpp	/^#define cell(/;"	d	language:C++	file:
 cell_get_value	code/aoc2022.cpp	/^#define cell_get_value(/;"	d	language:C++	file:
 cell_get_visible	code/aoc2022.cpp	/^#define cell_get_visible(/;"	d	language:C++	file:
 cell_set_visible	code/aoc2022.cpp	/^#define cell_set_visible(/;"	d	language:C++	file:
-channels	code/w32_game.cpp	/^  u32_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
+channels	code/w32_game.cpp	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t	file:
 chars	code/game.h	/^  u8_t chars[32];$/;"	m	language:C++	struct:game_input_t	typeref:typename:u8_t[32]
 char_count	code/game.h	/^  u32_t char_count;$/;"	m	language:C++	struct:game_input_t	typeref:typename:u32_t
 clamp_of	code/momo.h	/^#define clamp_of(/;"	d	language:C++
@@ -437,6 +440,9 @@ debug_log	code/game.h	/^  game_debug_log_f* debug_log;$/;"	m	language:C++	struct
 defer	code/momo.h	/^#define defer /;"	d	language:C++
 delta	code/lit.cpp	/^  v2f_t delta;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:v2f_t	file:
 delta_time	code/game.h	/^  f32_t delta_time; \/\/aka dt$/;"	m	language:C++	struct:game_input_t	typeref:typename:f32_t
+device_bits_per_sample	code/game.h	/^  u16_t device_bits_per_sample;$/;"	m	language:C++	struct:game_audio_t	typeref:typename:u16_t
+device_channels	code/game.h	/^  u16_t device_channels;$/;"	m	language:C++	struct:game_audio_t	typeref:typename:u16_t
+device_samples_per_second	code/game.h	/^  u32_t device_samples_per_second;$/;"	m	language:C++	struct:game_audio_t	typeref:typename:u32_t
 digit_to_ascii	code/momo.h	/^#define digit_to_ascii(/;"	d	language:C++
 dir	code/lit.cpp	/^  v2f_t dir;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:v2f_t	file:
 dll	code/w32_game.cpp	/^  HMODULE dll; $/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:HMODULE	file:
@@ -811,7 +817,8 @@ freeze	code/lit.cpp	/^  b32_t freeze;$/;"	m	language:C++	struct:lit_game_t	typer
 free_files	code/w32_game.cpp	/^  u32_t free_files[32];$/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:u32_t[32]	file:
 free_file_count	code/w32_game.cpp	/^  u32_t free_file_count;$/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:u32_t	file:
 free_list	code/momo.h	/^  garena_free_block_t* free_list;$/;"	m	language:C++	struct:garena_t	typeref:typename:garena_free_block_t *
-free_list	code/sandbox.cpp	/^  u32_t free_list[32];$/;"	m	language:C++	struct:sandbox_audio_mixer_t	typeref:typename:u32_t[32]	file:
+free_list	code/sandbox.cpp	/^  u32_t free_list[SANDBOX_AUDIO_INSTANCES];$/;"	m	language:C++	struct:sandbox_audio_mixer_t	typeref:typename:u32_t[]	file:
+free_list_count	code/sandbox.cpp	/^  u32_t free_list_count;$/;"	m	language:C++	struct:sandbox_audio_mixer_t	typeref:typename:u32_t	file:
 free_memory	code/game.h	/^  game_free_memory_f* free_memory;$/;"	m	language:C++	struct:game_t	typeref:typename:game_free_memory_f *
 front	code/gist_ring_buffer.cpp	/^  u32_t front;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
 func	code/game_console.h	/^  void (*func)(void*);$/;"	m	language:C++	struct:console_command_t	typeref:typename:void (*)(void *)
@@ -1455,10 +1462,9 @@ info_lines	code/game_console.h	/^  stb8_t info_lines[9]; \/\/ TODO: this should 
 input	code/game.h	/^  game_input_t input;$/;"	m	language:C++	struct:game_t	typeref:typename:game_input_t
 input_line	code/game_console.h	/^  stb8_t input_line;$/;"	m	language:C++	struct:console_t	typeref:typename:stb8_t
 inspector	code/game.h	/^  game_inspector_t inspector;$/;"	m	language:C++	struct:game_t	typeref:typename:game_inspector_t
-instances	code/sandbox.cpp	/^  sandbox_audio_mixer_instance_t instances[32];$/;"	m	language:C++	struct:sandbox_audio_mixer_t	typeref:typename:sandbox_audio_mixer_instance_t[32]	file:
+instances	code/sandbox.cpp	/^  sandbox_audio_mixer_instance_t instances[SANDBOX_AUDIO_INSTANCES];$/;"	m	language:C++	struct:sandbox_audio_mixer_t	typeref:typename:sandbox_audio_mixer_instance_t[]	file:
 instances_to_draw	code/game.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:game_gfx_opengl_sprite_batch_t	typeref:typename:GLsizei
 instances_to_draw	code/game.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:game_gfx_opengl_triangle_batch_t	typeref:typename:GLsizei
-instance_count	code/sandbox.cpp	/^  u32_t instance_count;$/;"	m	language:C++	struct:sandbox_audio_mixer_t	typeref:typename:u32_t	file:
 interlace_method	code/momo.h	/^  u8_t interlace_method;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t
 interlace_method	code/momo.h	/^  u8_t interlace_method;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:typename:u8_t
 intersections	code/lit.cpp	/^  lit_light_intersection_t intersections[512];$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:lit_light_intersection_t[512]	file:
@@ -2107,9 +2113,12 @@ samples	code/game.h	/^  void* samples;$/;"	m	language:C++	struct:game_audio_t	ty
 samples_per_second	code/w32_game.cpp	/^  u32_t samples_per_second;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 sample_count	code/game.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:game_audio_t	typeref:typename:u32_t
 sample_rate	code/momo.h	/^  u32_t sample_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
+SANDBOX_AUDIO_INSTANCES	code/sandbox.cpp	/^#define SANDBOX_AUDIO_INSTANCES /;"	d	language:C++	file:
+sandbox_audio_mixer_init	code/sandbox.cpp	/^sandbox_audio_mixer_init(sandbox_audio_mixer_t* mixer)$/;"	f	language:C++	typeref:typename:void	file:
 sandbox_audio_mixer_instance_t	code/sandbox.cpp	/^struct sandbox_audio_mixer_instance_t {$/;"	s	language:C++	file:
 sandbox_audio_mixer_play	code/sandbox.cpp	/^static void sandbox_audio_mixer_play(sandbox_audio_mixer_t* mixer, u32_t index, f32_t volume, b3/;"	f	language:C++	typeref:typename:void	file:
 sandbox_audio_mixer_t	code/sandbox.cpp	/^struct sandbox_audio_mixer_t {$/;"	s	language:C++	file:
+sandbox_audio_mixer_update	code/sandbox.cpp	/^sandbox_audio_mixer_update(sandbox_audio_mixer_t* mixer, game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
 sandbox_load_wav	code/sandbox.cpp	/^sandbox_load_wav(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
 save_data	code/lit.cpp	/^  lit_save_data_t save_data;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_save_data_t	file:
 score	code/aoc2022.cpp	/^  int score; \/\/ for debugging$/;"	m	language:C++	struct:__anon15770fd90408	typeref:typename:int	file:

@@ -185,8 +185,8 @@ struct w32_wasapi_t {
   
   // Other variables for tracking purposes
   u32_t samples_per_second;
-  u32_t bits_per_sample;
-  u32_t channels;
+  u16_t bits_per_sample;
+  u16_t channels;
   u32_t frame_rate;
     
 	b32_t is_device_changed;
@@ -719,6 +719,9 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
   // Setup for the game layer
   game_audio->sample_count = samples_to_write; 
   game_audio->samples = nullptr;
+  game_audio->device_bits_per_sample = wasapi->bits_per_sample;
+  game_audio->device_channels = wasapi->channels;
+  game_audio->device_samples_per_second = wasapi->samples_per_second;
 
   // Get the buffer 
   if (game_audio->sample_count > 0) 
@@ -1843,7 +1846,10 @@ WinMain(HINSTANCE instance,
 
     if (!w32_audio_load(
           &game.audio, 
-          48000, 16, 2, 1, 
+          config.audio_samples_per_second, 
+          config.audio_bits_per_sample,
+          config.audio_channels, 
+          1, 
           config.target_frame_rate, 
           audio_arena)) 
       return 1;

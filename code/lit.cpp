@@ -3844,6 +3844,9 @@ game_get_config_sig(game_get_config)
 
   ret.audio_enabled = false;
   ret.audio_arena_size = megabytes(256);
+  ret.audio_samples_per_second = 48000;
+  ret.audio_bits_per_sample = 16;
+  ret.audio_channels = 2;
   
   ret.window_title = "PRISMIX v1.0";
 

@@ -12,9 +12,10 @@
 //   Rendering         - Game functions for rendering
 //   
 // TODO
+//   Audio Mixer
+//     Need to cater for 8-bit, 16-bit and 32-bit sounds.
 //   Threaded audio output
-//   Audio input
-//   Audio 'mixer' in the game layer.
+//   Audio Input
 //
 //   
 
@@ -29,7 +30,7 @@
 // MARK:(Graphics)
 //
 // All the code here is a representation of how the 
-// moe views 'rendering'. The moe simply adds commands
+// game views 'rendering'. The moe simply adds commands
 // to a command queue, which will be dispatched to the 
 // appropriate graphics API, which details will be implemented
 // on top of the game_gfx_t class (through inheritance or composition). 
@@ -785,8 +786,14 @@ typedef game_set_design_dimensions_sig(game_set_design_dimensions_f);
 // App Audio API
 //
 struct game_audio_t {
+  // Audio buffer for game to write to
   void* samples;
   u32_t sample_count;
+
+  // Device information
+  u32_t device_samples_per_second;
+  u16_t device_bits_per_sample;
+  u16_t device_channels;
 
   void* platform_data;
 };
@@ -904,7 +911,6 @@ struct game_config_t {
   u32_t max_profiler_entries;
   u32_t max_profiler_snapshots; // snapshots per entry
 
-
   usz_t gfx_arena_size;
   usz_t texture_queue_size;
   usz_t render_command_size;
@@ -913,9 +919,11 @@ struct game_config_t {
   usz_t max_sprites;
   usz_t max_triangles;
 
-
   b32_t audio_enabled;
   usz_t audio_arena_size;
+  u32_t audio_samples_per_second;
+  u16_t audio_bits_per_sample;
+  u16_t audio_channels;
 
   // must be null terminated
   const char* window_title; 
@@ -3022,6 +3030,16 @@ game_profiler_update_entries(game_profiler_t* p) {
 
 //
 // JOURNAL
+// = 2023-10-12 = 
+//   Preliminary audio mixer is completed on the game layer.
+//   The next step is to figure out how to make it more generic
+//   such that it is integratable as a tool on the game.h 
+//   (like game_assets_t). Basically, it should be able to play
+//   not just 16-bit sound (which it does now) but also 8-bit
+//   and 32-bit sounds. 
+//
+//   I'm not entirely sure how to test different audio channels 
+//   with modern setup, but that can be in a far far away backlog.
 //
 // = 2023-09-19 =
 //   Was trying to refactor how audio works on the win32 layer and pinning down exactly
