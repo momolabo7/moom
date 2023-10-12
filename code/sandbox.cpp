@@ -28,16 +28,16 @@ struct sandbox_audio_mixer_t {
   u32_t instance_count;
 
   u32_t free_list[32];
-  f32_t global_volume;
+  f32_t volume;
 };
 
-static void sandbox_audio_mixer_play(sandbox_audio_mixer_t* mixer, u32_t index) {
+static void sandbox_audio_mixer_play(sandbox_audio_mixer_t* mixer, u32_t index, f32_t volume, b32_t is_loop) {
   auto* instance = mixer->instances + mixer->instance_count++;
   instance->index = index;
-  instance->offset = 0;
   instance->is_loop = false;
+  instance->volume = volume;
+  instance->offset = 0;
   instance->is_playing = true;
-  instance->volume = 1;
 }
 
 
@@ -125,15 +125,23 @@ game_update_and_render_sig(game_update_and_render)
 #endif
 
   static sandbox_audio_mixer_t mixer;
+
+
   static b32_t once = false;
   if (!once) {
     sandbox_load_wav("bouken.wav");
-    sandbox_audio_mixer_play(&mixer, 0);
+    sandbox_audio_mixer_play(&mixer, 0, 0.1f, false);
+    mixer.volume = 0.1f;
     once = true;
   }
 
-#if 0
+#if 1 
   if(game_is_button_poked(game, GAME_BUTTON_CODE_1)) {
+    mixer.volume -= 0.1f;
+
+  }
+  if(game_is_button_poked(game, GAME_BUTTON_CODE_2)) {
+    mixer.volume += 0.1f;
   }
 #endif
 
@@ -144,9 +152,21 @@ game_update_and_render_sig(game_update_and_render)
     s16_t* dest = (s16_t*)game->audio.samples;
     s16_t* src = (s16_t*)wav->data;
     
-    for (u32_t i = 0; i < game->audio.sample_count; ++i) {
-      dref(dest++) = dref(src + instance->offset++);
-      dref(dest++) = dref(src + instance->offset++);
+    for_cnt (_i, game->audio.sample_count) {
+      // TODO: For each channel
+      // TODO: This is a little dangerous. We should check the offset before incrementing.
+      dref(dest++) = s16_t(dref(src + instance->offset++) * instance->volume * mixer.volume);
+      dref(dest++) = s16_t(dref(src + instance->offset++) * instance->volume * mixer.volume);
+
+      if (instance->offset >= wav->data_chunk.size) {
+        if (instance->is_loop) {
+          instance->offset = 0;
+        }
+        else {
+          // TODO: stop
+        }
+      }
+
 
     }
   }

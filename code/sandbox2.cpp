@@ -106,6 +106,7 @@ game_update_and_render_sig(game_update_and_render)
   if(game_is_button_poked(game, GAME_BUTTON_CODE_1)) {
     play = !play;
   }
+
   if (play) {
     s16_t* where = (s16_t*)game->audio.samples;
     for (u32_t i = 0; i < game->audio.sample_count; ++i) {
