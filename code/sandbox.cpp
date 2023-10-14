@@ -3,8 +3,6 @@
 #include "game.h"
 
 
-#define SANDBOX_AUDIO_INSTANCES 32
-
 wav_t global_wavs[10];
 u32_t global_wavs_count = 0;
 
@@ -24,23 +22,25 @@ struct sandbox_audio_mixer_instance_t {
 };
 
 struct sandbox_audio_mixer_t {
-  sandbox_audio_mixer_instance_t instances[SANDBOX_AUDIO_INSTANCES];
-  u32_t free_list[SANDBOX_AUDIO_INSTANCES];
+  sandbox_audio_mixer_instance_t* instances;
+  u32_t instance_count;
+
+  u32_t* free_list;
   u32_t free_list_count;
+
   f32_t volume;
 };
 
 static void
 sandbox_audio_mixer_update(sandbox_audio_mixer_t* mixer, game_t* game) {
-  // TODO: Remove s16_t
+  u32_t bytes_per_sample = (game->audio.device_bits_per_sample/8);
+  zero_memory(game->audio.samples, bytes_per_sample * game->audio.device_channels * game->audio.sample_count);
+
   for_cnt (sample_index, game->audio.sample_count) 
   {
     s16_t* dest = (s16_t*)game->audio.samples + (sample_index * game->audio.device_channels);
-    for_cnt(channel_index, game->audio.device_channels) {
-      dest[channel_index] = 0;
-    }
 
-    for_arr(instance_index, mixer->instances)
+    for_cnt(instance_index, mixer->instance_count)
     {
       sandbox_audio_mixer_instance_t* instance = mixer->instances + instance_index;
       if (!instance->is_playing) continue;
@@ -50,10 +50,8 @@ sandbox_audio_mixer_update(sandbox_audio_mixer_t* mixer, game_t* game) {
       for_cnt(channel_index, game->audio.device_channels) {
         dest[channel_index] += s16_t(dref(src + instance->offset++) * instance->volume * mixer->volume);
       }
-      // TODO: Dividing by sizeof(s16) is hacky.
-      // We probably need to divide by the Bits Per Sample, but 
-      // We probably need to do a full cleanup first
-      u32_t bytes_per_sample = (game->audio.device_bits_per_sample/8);
+
+      // 
       if (instance->offset >= wav->data_chunk.size/bytes_per_sample) 
       {
         if (instance->is_loop) {
@@ -61,7 +59,7 @@ sandbox_audio_mixer_update(sandbox_audio_mixer_t* mixer, game_t* game) {
         }
         else {
           instance->is_playing = false;
-          assert(mixer->free_list_count < SANDBOX_AUDIO_INSTANCES);
+          assert(mixer->free_list_count < mixer->instance_count);
           mixer->free_list[mixer->free_list_count++] = instance->index;
         }
       }
@@ -72,16 +70,22 @@ sandbox_audio_mixer_update(sandbox_audio_mixer_t* mixer, game_t* game) {
 }
 
 static void 
-sandbox_audio_mixer_init(sandbox_audio_mixer_t* mixer)
+sandbox_audio_mixer_init(sandbox_audio_mixer_t* mixer, u32_t instances, arena_t* arena)
 {
+ 
+  mixer->instances = arena_push_arr_zero(sandbox_audio_mixer_instance_t, arena, instances);
+  mixer->free_list = arena_push_arr(u32_t, arena, instances);
+      
+  mixer->instance_count = instances;
+  mixer->free_list_count = instances;
   // Initialize the free list.
-  for_cnt(i, SANDBOX_AUDIO_INSTANCES) {
+  for_cnt(i, instances) {
     mixer->free_list[i] = i;
   }
-  mixer->free_list_count = SANDBOX_AUDIO_INSTANCES;
 }
 
-static void sandbox_audio_mixer_play(sandbox_audio_mixer_t* mixer, u32_t index, f32_t volume, b32_t is_loop) {
+static void 
+sandbox_audio_mixer_play(sandbox_audio_mixer_t* mixer, u32_t index, f32_t volume, b32_t is_loop) {
   // Pop the free list for a free index
   assert(mixer->free_list_count > 0);
   u32_t instance_index = mixer->free_list[mixer->free_list_count - 1];
@@ -130,45 +134,32 @@ game_get_config_sig(game_get_config)
   return ret;
 }
 
-struct ptube_image_t {
-  void* memory;
-  u32_t width;
-  u32_t height;
-};
 
-struct ptube_t {
-  ptube_image_t images[4];
-
-  // arenas
-  arena_t frame_arena;
-  arena_t image_arena;
-
+struct sandbox_t {
+  arena_t arena;
+  sandbox_audio_mixer_t mixer;
 };
 
 exported 
 game_update_and_render_sig(game_update_and_render) 
 { 
-#if 0
   if (game->game == nullptr)
   {
-    void* memory = game_allocate_memory(game, sizeof(ptube_t));
-    if (!memory) return;
-    game->game = memory;
-    ptube_t* ptube = (ptube_t*)(game->game);
+    game->game = game_allocate_memory(game, sizeof(sandbox_t));
+    if (!game->game) return;
+    auto* sandbox = (sandbox_t*)(game->game);
 
-    usz_t image_memory_size = megabytes(1);
-    void* image_memory = game_allocate_memory(game, image_memory_size);
-    arena_init(&ptube->image_arena, image_memory, image_memory_size);
+    usz_t arena_size = megabytes(200);
+    void* arena_memory = game_allocate_memory(game, arena_size);
+    arena_init(&sandbox->arena, arena_memory, arena_size);
 
-    usz_t frame_memory_size = megabytes(1);
-    void* frame_memory = game_allocate_memory(game, frame_memory_size);
-    arena_init(&ptube->frame_arena, frame_memory, frame_memory_size);
-
-
-    
-    ptube_load_image(game, &ptube->images[0], "test.png");
+    sandbox_load_wav("tenzen.wav");
+    sandbox_audio_mixer_init(&sandbox->mixer, 32, &sandbox->arena);
+    sandbox->mixer.volume = 0.1f;
   }
-#endif
+  
+  auto* sandbox = (sandbox_t*)(game->game);
+
 #if 0 // For testing only
   static f32_t sine = 0.f;
   s16_t* sample_out = game->audio.sample_buffer;
@@ -183,31 +174,23 @@ game_update_and_render_sig(game_update_and_render)
   }
 #endif
 
-  static sandbox_audio_mixer_t mixer;
 
 
-  static b32_t once = false;
-  if (!once) {
-    sandbox_load_wav("tenzen.wav");
-    sandbox_audio_mixer_init(&mixer);
-    mixer.volume = 0.1f;
-    once = true;
-  }
 
 #if 1 
   if(game_is_button_poked(game, GAME_BUTTON_CODE_1)) {
-    mixer.volume -= 0.1f;
+    sandbox->mixer.volume -= 0.1f;
 
   }
   if(game_is_button_poked(game, GAME_BUTTON_CODE_2)) {
-    mixer.volume += 0.1f;
+    sandbox->mixer.volume += 0.1f;
   }
   if(game_is_button_poked(game, GAME_BUTTON_CODE_3)) {
-    sandbox_audio_mixer_play(&mixer, 0, 0.5f, true);
+    sandbox_audio_mixer_play(&sandbox->mixer, 0, 0.5f, true);
   }
 #endif
 
-  sandbox_audio_mixer_update(&mixer, game);
+  sandbox_audio_mixer_update(&sandbox->mixer, game);
 
 
 

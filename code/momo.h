@@ -764,7 +764,7 @@ static b32_t is_digit(char c);
 #define copy_range(d,s,n) copy_memory((d), (s), sizeof(*(d)) * (n))
 static void copy_memory(void* dest, const void* src, usz_t size);
 static void copy_memory(void* dest, const void* src, usz_t size);
-static void zero_memory(void* dest, umi_t size);
+static void zero_memory(void* dest, usz_t size);
 static b32_t is_memory_same(const void* lhs, const void* rhs, usz_t size);
 static void swap_memory(void* lhs, void* rhs, usz_t size);
 static umi_t ptr_to_umi(void* p);
