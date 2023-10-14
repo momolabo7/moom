@@ -71,6 +71,7 @@ ARCH_X86	code/momo.h	/^# define ARCH_X86 /;"	d	language:C++
 arena	code/momo.h	/^  arena_t* arena; $/;"	m	language:C++	struct:_png_context_t	typeref:typename:arena_t *
 arena	code/momo.h	/^  arena_t* arena;$/;"	m	language:C++	struct:arena_marker_t	typeref:typename:arena_t *
 arena	code/pass.h	/^  arena_t* arena;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:arena_t *
+arena	code/sandbox.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:sandbox_t	typeref:typename:arena_t	file:
 arena_clear	code/momo.h	/^arena_clear(arena_t* a) {$/;"	f	language:C++	typeref:typename:void
 arena_clear	code/momo.h	/^static void     arena_clear(arena_t* a);$/;"	p	language:C++	typeref:typename:void
 arena_init	code/momo.h	/^arena_init(arena_t* a, void* mem, usz_t cap) {$/;"	f	language:C++	typeref:typename:void
@@ -157,6 +158,8 @@ audio_channels	code/game.h	/^  u16_t audio_channels;$/;"	m	language:C++	struct:g
 audio_client	code/w32_game.cpp	/^  IAudioClient* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient *	file:
 audio_enabled	code/game.h	/^  b32_t audio_enabled;$/;"	m	language:C++	struct:game_config_t	typeref:typename:b32_t
 audio_format	code/momo.h	/^  u16_t audio_format;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
+AUDIO_MIXER_BITRATE_TYPE_S16	code/sandbox.cpp	/^  AUDIO_MIXER_BITRATE_TYPE_S16,$/;"	e	language:C++	enum:sandbox_audio_mixer_bitrate_type_t	file:
+AUDIO_MIXER_BITRATE_TYPE_UNKNOWN	code/sandbox.cpp	/^  AUDIO_MIXER_BITRATE_TYPE_UNKNOWN,$/;"	e	language:C++	enum:sandbox_audio_mixer_bitrate_type_t	file:
 audio_samples_per_second	code/game.h	/^  u32_t audio_samples_per_second;$/;"	m	language:C++	struct:game_config_t	typeref:typename:u32_t
 average	code/lit.cpp	/^  f64_t average;$/;"	m	language:C++	struct:lit_profiler_stat_t	typeref:typename:f64_t	file:
 b	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon1db7a63d0d0a::__anon1db7a63d0e08	typeref:typename:f32_t
@@ -1804,6 +1807,7 @@ min	code/lit.cpp	/^  f64_t min;$/;"	m	language:C++	struct:lit_profiler_stat_t	ty
 min_of	code/momo.h	/^#define min_of(/;"	d	language:C++
 min_x	code/game.h	/^  f32_t min_x, max_x;$/;"	m	language:C++	struct:game_gfx_command_view_t	typeref:typename:f32_t
 min_y	code/game.h	/^  f32_t min_y, max_y;$/;"	m	language:C++	struct:game_gfx_command_view_t	typeref:typename:f32_t
+mixer	code/sandbox.cpp	/^  sandbox_audio_mixer_t mixer;$/;"	m	language:C++	struct:sandbox_t	typeref:typename:sandbox_audio_mixer_t	file:
 mm_device	code/w32_game.cpp	/^  IMMDevice* mm_device;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IMMDevice *	file:
 mm_device_enum	code/w32_game.cpp	/^  IMMDeviceEnumerator * mm_device_enum;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IMMDeviceEnumerator *	file:
 mode	code/lit.cpp	/^  lit_mode_t mode;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_mode_t	file:
@@ -2107,6 +2111,7 @@ samples	code/game.h	/^  void* samples;$/;"	m	language:C++	struct:game_audio_t	ty
 samples_per_second	code/w32_game.cpp	/^  u32_t samples_per_second;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 sample_count	code/game.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:game_audio_t	typeref:typename:u32_t
 sample_rate	code/momo.h	/^  u32_t sample_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
+sandbox_audio_mixer_bitrate_type_t	code/sandbox.cpp	/^enum sandbox_audio_mixer_bitrate_type_t {$/;"	g	language:C++	file:
 sandbox_audio_mixer_init	code/sandbox.cpp	/^sandbox_audio_mixer_init(sandbox_audio_mixer_t* mixer, u32_t instances, arena_t* arena)$/;"	f	language:C++	typeref:typename:void	file:
 sandbox_audio_mixer_instance_t	code/sandbox.cpp	/^struct sandbox_audio_mixer_instance_t {$/;"	s	language:C++	file:
 sandbox_audio_mixer_play	code/sandbox.cpp	/^sandbox_audio_mixer_play(sandbox_audio_mixer_t* mixer, u32_t index, f32_t volume, b32_t is_loop)/;"	f	language:C++	typeref:typename:void	file:

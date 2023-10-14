@@ -21,7 +21,13 @@ struct sandbox_audio_mixer_instance_t {
   f32_t volume;
 };
 
+enum sandbox_audio_mixer_bitrate_type_t {
+  AUDIO_MIXER_BITRATE_TYPE_S16,
+  // add more here and support them in audio_mixer_update
+};
 struct sandbox_audio_mixer_t {
+  sandbox_audio_mixer_bitrate_type_t bitrate_type;
+
   sandbox_audio_mixer_instance_t* instances;
   u32_t instance_count;
 
@@ -36,46 +42,51 @@ sandbox_audio_mixer_update(sandbox_audio_mixer_t* mixer, game_t* game) {
   u32_t bytes_per_sample = (game->audio.device_bits_per_sample/8);
   zero_memory(game->audio.samples, bytes_per_sample * game->audio.device_channels * game->audio.sample_count);
 
-  for_cnt (sample_index, game->audio.sample_count) 
+  if (mixer->bitrate_type == AUDIO_MIXER_BITRATE_TYPE_S16) 
   {
-    s16_t* dest = (s16_t*)game->audio.samples + (sample_index * game->audio.device_channels);
-
-    for_cnt(instance_index, mixer->instance_count)
+    for_cnt (sample_index, game->audio.sample_count) 
     {
-      sandbox_audio_mixer_instance_t* instance = mixer->instances + instance_index;
-      if (!instance->is_playing) continue;
 
-      wav_t* wav = global_wavs + instance->index; 
-      s16_t* src = (s16_t*)wav->data;
-      for_cnt(channel_index, game->audio.device_channels) {
-        dest[channel_index] += s16_t(dref(src + instance->offset++) * instance->volume * mixer->volume);
-      }
-
-      // 
-      if (instance->offset >= wav->data_chunk.size/bytes_per_sample) 
+      s16_t* dest = (s16_t*)game->audio.samples + (sample_index * game->audio.device_channels);
+      for_cnt(instance_index, mixer->instance_count)
       {
-        if (instance->is_loop) {
-          instance->offset = 0;
+        sandbox_audio_mixer_instance_t* instance = mixer->instances + instance_index;
+        if (!instance->is_playing) continue;
+
+        wav_t* wav = global_wavs + instance->index; 
+        s16_t* src = (s16_t*)wav->data;
+        for_cnt(channel_index, game->audio.device_channels) {
+          dest[channel_index] += s16_t(dref(src + instance->offset++) * instance->volume * mixer->volume);
         }
-        else {
-          instance->is_playing = false;
-          assert(mixer->free_list_count < mixer->instance_count);
-          mixer->free_list[mixer->free_list_count++] = instance->index;
+
+        // 
+        if (instance->offset >= wav->data_chunk.size/bytes_per_sample) 
+        {
+          if (instance->is_loop) {
+            instance->offset = 0;
+          }
+          else {
+            instance->is_playing = false;
+            assert(mixer->free_list_count < mixer->instance_count);
+            mixer->free_list[mixer->free_list_count++] = instance->index;
+          }
         }
       }
-
-
     }
   }
 }
 
 static void 
-sandbox_audio_mixer_init(sandbox_audio_mixer_t* mixer, u32_t instances, arena_t* arena)
+sandbox_audio_mixer_init(
+  sandbox_audio_mixer_t* mixer, 
+  sandbox_audio_mixer_bitrate_type_t bitrate_type,
+  u32_t instances, 
+  arena_t* arena)
 {
- 
+  mixer->bitrate_type = bitrate_type; 
   mixer->instances = arena_push_arr_zero(sandbox_audio_mixer_instance_t, arena, instances);
   mixer->free_list = arena_push_arr(u32_t, arena, instances);
-      
+
   mixer->instance_count = instances;
   mixer->free_list_count = instances;
   // Initialize the free list.
@@ -127,7 +138,7 @@ game_get_config_sig(game_get_config)
   ret.audio_bits_per_sample = 16;
   ret.audio_channels = 2;
   ret.audio_arena_size = megabytes(256);
-  
+
   ret.target_frame_rate = 60;
   ret.window_title = "sandobokusu";
 
@@ -141,8 +152,7 @@ struct sandbox_t {
 };
 
 exported 
-game_update_and_render_sig(game_update_and_render) 
-{ 
+game_update_and_render_sig(game_update_and_render) { 
   if (game->game == nullptr)
   {
     game->game = game_allocate_memory(game, sizeof(sandbox_t));
@@ -154,10 +164,10 @@ game_update_and_render_sig(game_update_and_render)
     arena_init(&sandbox->arena, arena_memory, arena_size);
 
     sandbox_load_wav("tenzen.wav");
-    sandbox_audio_mixer_init(&sandbox->mixer, 32, &sandbox->arena);
+    sandbox_audio_mixer_init(&sandbox->mixer, AUDIO_MIXER_BITRATE_TYPE_S16, 32,  &sandbox->arena);
     sandbox->mixer.volume = 0.1f;
   }
-  
+
   auto* sandbox = (sandbox_t*)(game->game);
 
 #if 0 // For testing only
@@ -168,16 +178,15 @@ game_update_and_render_sig(game_update_and_render)
     for (u32_t channel_index = 0; channel_index < game->audio.channels; ++channel_index) {
       f32_t sine_value = f32_sin(sine);
       sample_out[channel_index] = s16_t(sine_value * volume);
-, game_t* game    }
-    sample_out += game->audio.channels;
-    sine += 1.f;
-  }
+      , game_t* game    }
+      sample_out += game->audio.channels;
+      sine += 1.f;
+    }
 #endif
 
 
 
 
-#if 1 
   if(game_is_button_poked(game, GAME_BUTTON_CODE_1)) {
     sandbox->mixer.volume -= 0.1f;
 
@@ -188,7 +197,6 @@ game_update_and_render_sig(game_update_and_render)
   if(game_is_button_poked(game, GAME_BUTTON_CODE_3)) {
     sandbox_audio_mixer_play(&sandbox->mixer, 0, 0.5f, true);
   }
-#endif
 
   sandbox_audio_mixer_update(&sandbox->mixer, game);
 
