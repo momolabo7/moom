@@ -29,6 +29,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifndef GAME_ASSET_ID_DEFINED
+# error "Need to define game asset ids"
+#endif
+
 #include "game_asset_file.h"
 
 static buffer_t  
