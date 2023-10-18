@@ -2,7 +2,7 @@
 #define ASSET_FILE_H
 
 
-//#include "moe_asset_types.h"
+#include "momo.h"
 
 enum asset_type_t  {
   ASSET_TYPE_SPRITE,
@@ -21,10 +21,12 @@ struct asset_file_header_t {
   u32_t bitmap_count;
   u32_t font_count;
   u32_t sprite_count;
+  u32_t sound_count;
 
   u32_t offset_to_bitmaps;
   u32_t offset_to_fonts;
   u32_t offset_to_sprites;
+  u32_t offset_to_sounds;
 };
 
 
@@ -66,6 +68,16 @@ struct asset_file_font_t {
   // asset_file_font_glyph_t glyphs[glyph_count]
   // f32_t kerning[glyph_count][glyph_count]
   //
+
+};
+
+struct asset_file_sound_t {
+  u32_t data_size;
+  u32_t offset_to_data;
+  
+  // Data is:
+  // 
+  // u8_t data[data_size]
 
 };
 

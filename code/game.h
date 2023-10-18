@@ -23,6 +23,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "momo.h"
+
 // Switches
 #define GAME_USE_OPENGL 1
 
@@ -478,7 +480,6 @@ struct game_gfx_opengl_t {
 };
 #endif // GAME_USE_OPENGL
 
-//#include "game_gfx.h"
 #include "game_console.h"
 #include "game_asset_file.h"
 
@@ -844,6 +845,7 @@ struct game_t {
 enum game_asset_bitmap_id_t : u32_t {GAME_ASSET_BITMAP_ID_MAX};
 enum game_asset_sprite_id_t : u32_t {GAME_ASSET_SPRITE_ID_MAX};
 enum game_asset_font_id_t : u32_t {GAME_ASSET_FONT_ID_MAX};
+enum game_asset_sound_id_t : u32_t {GAME_ASSET_SOUND_ID_MAX};
 #endif
 
 

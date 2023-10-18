@@ -1,10 +1,13 @@
 
-#define assert_callback(s) printf("[pass][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
-#define lit_res_dir(filename) "../res/lit/" filename
+#include <stdlib.h>
+#include <stdio.h>
 
+#define assert_callback(s) printf("[pass][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
+#define sandbox_res_dir(filename) "../res/sandbox/" filename
+
+#include "momo.h"
 #include "lit_asset_types.h"
 #include "pass.h"
-
 
 int main() {
   usz_t memory_size = megabytes(256);
@@ -56,6 +59,7 @@ int main() {
     pass_pack_atlas_end(p, "test.png");
 
   }
+  pass_pack_sound(p, ASSET_SOUND_ID_MAX
   pass_pack_end(p, LIT_ASSET_FILE);
 }
 

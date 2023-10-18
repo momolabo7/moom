@@ -26,12 +26,9 @@
 //
 //
 
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 
-#define assert_callback(s) printf("[pass][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
-#include "momo.h"
-#include "lit_asset_types.h"
 #include "game_asset_file.h"
 
 static buffer_t  
@@ -166,6 +163,10 @@ struct pass_pack_font_ext_t {
   const char* filename;
 };
 
+struct pass_pack_sound_ext_t {
+  const char* filename;
+};
+
 
 struct pass_pack_t {
   arena_t* arena;
@@ -173,6 +174,10 @@ struct pass_pack_t {
   u32_t bitmap_count;
   pass_pack_bitmap_ext_t* bitmap_exts;
   asset_file_bitmap_t* bitmaps;
+
+  u32_t sound_count;
+  pass_pack_sound_ext_t* sound_exts;
+  asset_file_sound_t* sounds;
 
   u32_t sprite_count;
   asset_file_sprite_t* sprites;
@@ -202,7 +207,20 @@ struct pass_pack_t {
   u32_t atlas_sprite_count;
   u32_t atlas_sprite_cap;
 
+
 };
+
+
+static void 
+pass_pack_sound(
+  pass_pack_t* p,
+  game_asset_sound_id_t sound_id,
+  const char* filename)
+{
+  assert(sound_id < p->sound_count);
+  pass_pack_sound_ext_t* ext = p->sound_exts + sound_id;
+  ext->filename = filename;
+}
 
 static void 
 pass_pack_atlas_sprite(
@@ -219,6 +237,7 @@ pass_pack_atlas_sprite(
   asset_file_sprite_t* fs = p->sprites + as->sprite_id;
   fs->bitmap_asset_id = p->atlas_bitmap_id;
 }
+
 
 static void
 pass_pack_atlas_font_begin(
@@ -498,6 +517,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
     fs->texel_y1 = as->rect->y + as->rect->h;
   }
 
+
   // Insert Fonts and its glyphs
   for_cnt(atlas_font_id, p->atlas_font_count) {
     arena_set_revert_point(p->arena);
@@ -563,37 +583,55 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
 
 static void
 pass_pack_begin(
-    pass_pack_t* p, 
-    arena_t* arena,
-    u32_t max_bitmaps,
-    u32_t max_sprites,
-    u32_t max_fonts,
-    u32_t max_glyphs)
+  pass_pack_t* p, 
+  arena_t* arena,
+  u32_t max_bitmaps,
+  u32_t max_sprites,
+  u32_t max_fonts,
+  u32_t max_sounds,
+  u32_t max_glyphs
+  )
 {
   p->arena = arena;
 
   p->bitmap_count = max_bitmaps;
-  p->bitmap_exts = arena_push_arr(pass_pack_bitmap_ext_t, p->arena, max_bitmaps); 
-  p->bitmaps = arena_push_arr(asset_file_bitmap_t, p->arena, max_bitmaps); 
-  assert(p->bitmaps);
-  assert(p->bitmap_exts);
+  if (max_bitmaps > 0) {
+    p->bitmap_exts = arena_push_arr(pass_pack_bitmap_ext_t, p->arena, max_bitmaps); 
+    p->bitmaps = arena_push_arr(asset_file_bitmap_t, p->arena, max_bitmaps); 
+    assert(p->bitmaps);
+    assert(p->bitmap_exts);
+  }
+
+  p->sound_count = max_sounds;
+  if (p->sound_count > 0) {
+    p->sound_exts = arena_push_arr(pass_pack_sound_ext_t, p->arena, max_sounds); 
+    p->sounds = arena_push_arr(asset_file_sound_t, p->arena, max_sounds); 
+    assert(p->sounds);
+    assert(p->sound_exts);
+  }
 
   p->sprite_count = max_sprites;
-  p->sprites = arena_push_arr(asset_file_sprite_t, p->arena, max_sprites); 
-  assert(p->sprites);
+  if (p->sprite_count > 0) {
+    p->sprites = arena_push_arr(asset_file_sprite_t, p->arena, max_sprites); 
+    assert(p->sprites);
+  }
 
   p->font_count = max_fonts;
-  p->font_exts = arena_push_arr(pass_pack_font_ext_t, p->arena, max_fonts); 
-  p->fonts = arena_push_arr(asset_file_font_t, p->arena, max_fonts); 
-  assert(p->fonts);
-  assert(p->font_exts);
+  if (p->font_count > 0) {
+    p->font_exts = arena_push_arr(pass_pack_font_ext_t, p->arena, max_fonts); 
+    p->fonts = arena_push_arr(asset_file_font_t, p->arena, max_fonts); 
+    assert(p->fonts);
+    assert(p->font_exts);
+  }
 
   p->glyph_cap = max_glyphs;
-  p->glyph_count = 0;
-  p->glyphs = arena_push_arr(asset_file_font_glyph_t, p->arena, max_glyphs);
-  p->glyph_exts = arena_push_arr(pass_pack_font_glyph_ext_t, p->arena, max_glyphs);
-  assert(p->glyphs);
-  assert(p->glyph_exts);
+  if (p->glyph_cap > 0) {
+    p->glyph_count = 0;
+    p->glyphs = arena_push_arr(asset_file_font_glyph_t, p->arena, max_glyphs);
+    p->glyph_exts = arena_push_arr(pass_pack_font_glyph_ext_t, p->arena, max_glyphs);
+    assert(p->glyphs);
+    assert(p->glyph_exts);
+  }
 }
 
 
@@ -606,6 +644,7 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   u32_t fonts_size = sizeof(asset_file_font_t)*p->font_count;
   u32_t bitmaps_size = sizeof(asset_file_bitmap_t)*p->bitmap_count;
   u32_t sprites_size = sizeof(asset_file_sprite_t)*p->sprite_count;
+  u32_t sounds_size = sizeof(asset_file_sprite_t)*p->sound_count;
 
   asset_file_header_t header = {0};
   header.signature = ASSET_FILE_SIGNATURE;
@@ -615,10 +654,11 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   header.offset_to_fonts = sizeof(asset_file_header_t);
   header.offset_to_sprites = header.offset_to_fonts + fonts_size;
   header.offset_to_bitmaps = header.offset_to_sprites + sprites_size;
+  header.offset_to_sounds = header.offset_to_bitmaps + bitmaps_size;
 
   fwrite(&header, sizeof(header), 1, file);
 
-  u32_t offset_to_data = header.offset_to_bitmaps + bitmaps_size;
+  u32_t offset_to_data = header.offset_to_sounds + sounds_size;
   fseek(file, offset_to_data, SEEK_SET);
 
   //
@@ -668,6 +708,7 @@ pass_pack_end(pass_pack_t* p, const char* filename)
     offset_to_data = ftell(file);
   }
 
+  // Bitmaps
   for_cnt(bitmap_index, p->bitmap_count)
   {
     asset_file_bitmap_t* fb = p->bitmaps + bitmap_index;
@@ -678,6 +719,23 @@ pass_pack_end(pass_pack_t* p, const char* filename)
     offset_to_data = ftell(file);
   }
 
+  // Sounds
+  for_cnt(sound_index, p->sound_count) {
+    arena_set_revert_point(p->arena);
+
+    asset_file_sound_t* fs = p->sounds + sound_index; 
+    pass_pack_sound_ext_t* fse = p->sound_exts + sound_index; 
+    fs->offset_to_data = offset_to_data;
+
+    make(wav_t, wav);
+    b32_t ok = pass_read_wav_from_file(wav, fse->filename, p->arena); 
+
+    assert(ok);
+
+    fwrite(wav->data, wav->data_chunk.size, 1, file); 
+    offset_to_data = ftell(file);
+
+  }
 
   // Write metadata
   fseek(file, header.offset_to_fonts, SEEK_SET);
