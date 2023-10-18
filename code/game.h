@@ -841,12 +841,7 @@ struct game_t {
 // MARK:(Assets)
 //
 
-#ifndef GAME_ASSET_ID_DEFINED
-enum game_asset_bitmap_id_t : u32_t {GAME_ASSET_BITMAP_ID_MAX};
-enum game_asset_sprite_id_t : u32_t {GAME_ASSET_SPRITE_ID_MAX};
-enum game_asset_font_id_t : u32_t {GAME_ASSET_FONT_ID_MAX};
-enum game_asset_sound_id_t : u32_t {GAME_ASSET_SOUND_ID_MAX};
-#endif
+#include "game_asset_id_base.h"
 
 
 struct game_asset_bitmap_t {

@@ -2,7 +2,7 @@
 #define assert_callback(s) printf("[pass][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
 #define lit_res_dir(filename) "../res/lit/" filename
 
-#include "lit_asset_types.h"
+#include "game_asset_id_lit.h"
 #include "pass.h"
 
 

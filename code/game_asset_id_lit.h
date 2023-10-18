@@ -1,9 +1,8 @@
-#ifndef LIT_ASSET_TYPES_H
-#define LIT_ASSET_TYPES_H
+#ifndef GAME_ASSET_IDS
+#define GAME_ASSET_IDS
 
 #include "momo.h"
 
-#define GAME_ASSET_ID_DEFINED
 
 enum game_asset_bitmap_id_t : u32_t {
   ASSET_BITMAP_ID_ATLAS,

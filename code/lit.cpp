@@ -3,7 +3,7 @@
 
 
 #include "momo.h"
-#include "lit_asset_types.h"
+#include "game_asset_id_lit.h"
 #include "game.h"
 
 // 
