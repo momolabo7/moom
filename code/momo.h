@@ -548,6 +548,7 @@ enum clex_token_type_t {
   CLEX_TOKEN_TYPE_EOF
 };
 
+// TODO: Change to st8_t?
 struct clex_token_t {
   clex_token_type_t type;
 
@@ -1218,7 +1219,7 @@ static void ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t 
 //
 static b32_t     png_read(png_t* png, buffer_t png_contents);
 static u32_t*    png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena); 
-static buffer_t  png_write(png_t* png, u32_t width, u32_t height, arena_t* arena);
+static buffer_t  png_write(u8_t* pixels, u32_t width, u32_t height, arena_t* arena);
 
 // 
 // MARK:(RectPack)
@@ -1273,17 +1274,38 @@ static clex_token_t clex_next_token(clex_tokenizer_t* t);
 // it into any SERIOUS projects. They are meant to be dumb
 // but convienient for trying stuff out.
 //
+
+// TODO: Make this serious
 static void* 
 foolish_allocate_size(usz_t size) {
   return malloc(size); 
 }
 
+// TODO: Make this serious
 static void 
 foolish_free_memory(void* mem) {
   free(mem);
 }
 #define foolish_allocate(t)  (t*)foolish_allocate_size(sizeof(t))
 #define foolish_allocate_array(t,n) (t*)foolish_allocate_size(sizeof(t) * (n))
+
+// TODO: Make this serious
+static arena_t 
+foolish_allocate_arena(usz_t size) {
+  arena_t ret = {};
+  arena_init(&ret, foolish_allocate_size(size), size);
+  return ret;
+}
+
+static b32_t
+foolish_write_buffer_to_file(const char* filename, buffer_t buffer) {
+  FILE *file = fopen(filename, "wb");
+  if (!file) return false;
+  defer { fclose(file); };
+  
+  fwrite(buffer.data, 1, buffer.size, file);
+  return true;
+}
 
 static buffer_t
 foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {
