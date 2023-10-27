@@ -1308,7 +1308,7 @@ foolish_write_buffer_to_file(const char* filename, buffer_t buffer) {
 }
 
 static buffer_t
-foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {
+foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = true) {
   FILE *file = fopen(filename, "rb");
   if (!file) return buffer_set(0,0);
   defer { fclose(file); };
