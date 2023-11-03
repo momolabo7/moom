@@ -352,7 +352,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
   auto* rects = arena_push_arr(rp_rect_t, p->arena, rect_count);
   assert(rects);
 
-  auto * contexts = arena_push_arr(pass_pack_atlas_context_t, p->arena, rect_count);
+  auto* contexts = arena_push_arr(pass_pack_atlas_context_t, p->arena, rect_count);
   assert(contexts);
   
   //
@@ -645,13 +645,14 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   u32_t fonts_size = sizeof(asset_file_font_t)*p->font_count;
   u32_t bitmaps_size = sizeof(asset_file_bitmap_t)*p->bitmap_count;
   u32_t sprites_size = sizeof(asset_file_sprite_t)*p->sprite_count;
-  u32_t sounds_size = sizeof(asset_file_sprite_t)*p->sound_count;
+  u32_t sounds_size = sizeof(asset_file_sound_t)*p->sound_count;
 
   asset_file_header_t header = {0};
   header.signature = ASSET_FILE_SIGNATURE;
   header.font_count = p->font_count;
   header.sprite_count = p->sprite_count;
   header.bitmap_count = p->bitmap_count;
+  header.sound_count = p->sound_count;
   header.offset_to_fonts = sizeof(asset_file_header_t);
   header.offset_to_sprites = header.offset_to_fonts + fonts_size;
   header.offset_to_bitmaps = header.offset_to_sprites + sprites_size;
@@ -678,7 +679,6 @@ pass_pack_end(pass_pack_t* p, const char* filename)
     pass_pack_font_ext_t* ffe = p->font_exts + font_index;
     //pass_atlas_font_t* af = src->atlas_font;
     ff->offset_to_data = offset_to_data; 
-
 
     // Write glyphs that belong to this font
     fwrite(ffe->glyphs, sizeof(asset_file_font_glyph_t), ff->glyph_count, file);
@@ -730,12 +730,12 @@ pass_pack_end(pass_pack_t* p, const char* filename)
 
     make(wav_t, wav);
     b32_t ok = pass_read_wav_from_file(wav, fse->filename, p->arena); 
-
     assert(ok);
+
+    fs->data_size = wav->data_chunk.size;
 
     fwrite(wav->data, wav->data_chunk.size, 1, file); 
     offset_to_data = ftell(file);
-
   }
 
   // Write metadata
@@ -747,6 +747,9 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   
   fseek(file, header.offset_to_sprites, SEEK_SET);
   fwrite(p->sprites, sprites_size, 1, file); 
+
+  fseek(file, header.offset_to_sounds, SEEK_SET);
+  fwrite(p->sounds, sounds_size, 1, file); 
 
   arena_clear(p->arena);
 }

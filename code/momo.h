@@ -1254,15 +1254,64 @@ static json_object_t* json_get_object(json_value_t* val);
 //
 // MARK:(Clex)
 //
-
 static b32_t clex_tokenizer_init(clex_tokenizer_t* t, buffer_t buffer);
 static clex_token_t clex_next_token(clex_tokenizer_t* t);
+
+//
+// MARK:(OS)
+//
+
+static void*    os_allocate_memory(usz_t size);
+static void     os_free_memory(void* block);
+
 
 //
 //
 // Implementation
 //
 //
+
+#if OS_WINDOWS
+//
+// Windows implementation
+//
+#include <windows.h>
+#undef near
+#undef far
+
+static void* 
+os_allocate_memory(usz_t size) {
+  return 
+    VirtualAllocEx(
+      GetCurrentProcess(),
+      0, 
+      size,
+      MEM_RESERVE | MEM_COMMIT, 
+      PAGE_READWRITE);
+}
+
+static void 
+os_free_memory(void* mem) {
+  VirtualFree(mem, 0, MEM_RELEASE);
+}
+
+#else // OS_WINDOWS
+
+// Non-windows (mac and linux?) implementation
+#include <stdlib.h>
+
+static void* 
+os_allocate_memory(usz_t size) {
+  return malloc(size); 
+}
+
+static void 
+os_free_memory(void* mem) {
+  free(mem);
+}
+
+#endif // OS_WINDOWS
+
 
 #if FOOLISH // FOOLISH
 #include <stdlib.h>
@@ -1275,25 +1324,12 @@ static clex_token_t clex_next_token(clex_tokenizer_t* t);
 // but convienient for trying stuff out.
 //
 
-// TODO: Make this serious
-static void* 
-foolish_allocate_size(usz_t size) {
-  return malloc(size); 
-}
-
-// TODO: Make this serious
-static void 
-foolish_free_memory(void* mem) {
-  free(mem);
-}
-#define foolish_allocate(t)  (t*)foolish_allocate_size(sizeof(t))
-#define foolish_allocate_array(t,n) (t*)foolish_allocate_size(sizeof(t) * (n))
 
 // TODO: Make this serious
 static arena_t 
 foolish_allocate_arena(usz_t size) {
   arena_t ret = {};
-  arena_init(&ret, foolish_allocate_size(size), size);
+  arena_init(&ret, os_allocate_memory(size), size);
   return ret;
 }
 
@@ -1308,7 +1344,7 @@ foolish_write_buffer_to_file(const char* filename, buffer_t buffer) {
 }
 
 static buffer_t
-foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = true) {
+foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {
   FILE *file = fopen(filename, "rb");
   if (!file) return buffer_set(0,0);
   defer { fclose(file); };
@@ -1319,7 +1355,7 @@ foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = true)
 
   buffer_t ret;
   ret.size = file_size + null_terminate; // lol
-  ret.data = (u8_t*)foolish_allocate_size(ret.size);
+  ret.data = (u8_t*)os_allocate_memory(ret.size);
 
   usz_t read_amount = fread(ret.data, 1, file_size, file);
   if(read_amount != file_size) return buffer_set(0,0);
@@ -1331,7 +1367,7 @@ foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = true)
 
 static void
 foolish_free_buffer(buffer_t buffer) {
-  free(buffer.data);
+  os_free_memory(buffer.data);
 }
 
 #endif // FOOLISH

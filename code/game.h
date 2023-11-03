@@ -859,6 +859,11 @@ struct game_asset_sprite_t {
   game_asset_bitmap_id_t bitmap_asset_id;
 };
 
+struct game_asset_sound_t {
+  u32_t data_size;
+  void* data;
+};
+
 struct game_asset_font_glyph_t {
   u32_t texel_x0, texel_y0;
   u32_t texel_x1, texel_y1;
@@ -893,6 +898,9 @@ struct game_assets_t {
 
   u32_t sprite_count;
   game_asset_sprite_t* sprites;
+
+  u32_t sound_count;
+  game_asset_sound_t* sounds;
 };
 
 //
@@ -2462,16 +2470,47 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
 
   // Allocation for assets
   assets->bitmap_count = asset_file_header.bitmap_count;
-  assets->bitmaps = arena_push_arr(game_asset_bitmap_t, arena, assets->bitmap_count);
-  if (!assets->bitmaps) return false;
+  if (assets->bitmap_count > 0)  {
+    assets->bitmaps = arena_push_arr(game_asset_bitmap_t, arena, assets->bitmap_count);
+    if (!assets->bitmaps) return false;
+  }
 
   assets->sprite_count = asset_file_header.sprite_count;
-  assets->sprites = arena_push_arr(game_asset_sprite_t, arena, assets->sprite_count);
-  if (!assets->sprites) return false;
+  if (assets->sprite_count > 0) {
+    assets->sprites = arena_push_arr(game_asset_sprite_t, arena, assets->sprite_count);
+    if (!assets->sprites) return false;
+  }
 
   assets->font_count = asset_file_header.font_count;
-  assets->fonts = arena_push_arr(game_asset_font_t, arena, assets->font_count);
-  if (!assets->fonts) return false;
+  if (assets->font_count > 0) {
+    assets->fonts = arena_push_arr(game_asset_font_t, arena, assets->font_count);
+    if (!assets->fonts) return false;
+  }
+
+  assets->sound_count = asset_file_header.sound_count;
+  if (assets->sound_count > 0) {
+    assets->sounds = arena_push_arr(game_asset_sound_t, arena, assets->sound_count);
+    if (!assets->sounds) return false;
+  }
+
+  // 
+  // Read sounds
+  //
+  for_cnt(sound_index, assets->sound_count) {
+    umi_t offset_to_sound = asset_file_header.offset_to_sounds + sizeof(asset_file_sound_t) * sound_index; 
+    asset_file_sound_t file_sound = {};
+    if (!game_read_file(game, file, sizeof(asset_file_sound_t), offset_to_sound, &file_sound)) 
+      return false;
+
+    game_asset_sound_t* s = assets->sounds + sound_index;
+    s->data_size = file_sound.data_size;
+    s->data = arena_push_arr(u8_t, arena, s->data_size);
+    if (!s->data) 
+      return false;
+
+    if (!game_read_file(game, file, s->data_size, file_sound.offset_to_data, s->data)) 
+      return false;
+  }
 
   // 
   // Read sprites
@@ -2479,7 +2518,8 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
   for_cnt(sprite_index, assets->sprite_count) {
     umi_t offset_to_sprite = asset_file_header.offset_to_sprites + sizeof(asset_file_sprite_t) * sprite_index; 
     asset_file_sprite_t file_sprite = {};
-    game_read_file(game, file, sizeof(asset_file_sprite_t), offset_to_sprite, &file_sprite);
+    if (!game_read_file(game, file, sizeof(asset_file_sprite_t), offset_to_sprite, &file_sprite))
+      return false;
     game_asset_sprite_t* s = assets->sprites + sprite_index;
 
     s->bitmap_asset_id = (game_asset_bitmap_id_t)file_sprite.bitmap_asset_id;
@@ -2489,10 +2529,15 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
     s->texel_y1 = file_sprite.texel_y1;
   }
 
+  // 
+  // Read bitmaps
+  //
   for_cnt(bitmap_index, assets->bitmap_count) {
     umi_t offset_to_bitmap = asset_file_header.offset_to_bitmaps + sizeof(asset_file_bitmap_t) * bitmap_index; 
     asset_file_bitmap_t file_bitmap = {};
-    game_read_file(game, file, sizeof(asset_file_bitmap_t), offset_to_bitmap, &file_bitmap);
+    if (!game_read_file(game, file, sizeof(asset_file_bitmap_t), offset_to_bitmap, &file_bitmap)) {
+      return false;
+    }
 
     game_asset_bitmap_t* b = assets->bitmaps + bitmap_index;
     // TODO: is there anyway for gfx to assign this instead?
@@ -2506,12 +2551,15 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
     payload->texture_index = b->renderer_texture_handle;
     payload->texture_width = file_bitmap.width;
     payload->texture_height = file_bitmap.height;
-    game_read_file(
+    if (!game_read_file(
         game,
         file, 
         bitmap_size, 
         file_bitmap.offset_to_data, 
-        payload->texture_data);
+        payload->texture_data))
+    {
+      return false;
+    }
 
     game_gfx_complete_texture_transfer(payload);
   }
@@ -2520,7 +2568,8 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
   {
     umi_t offset_to_fonts = asset_file_header.offset_to_fonts + sizeof(asset_file_font_t) * font_index; 
     asset_file_font_t file_font = {};
-    game_read_file(game, file, sizeof(asset_file_font_t), offset_to_fonts, &file_font);
+    if (!game_read_file(game, file, sizeof(asset_file_font_t), offset_to_fonts, &file_font)) 
+      return false;
 
     game_asset_font_t* f = assets->fonts + font_index;
 
@@ -2549,12 +2598,15 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
         sizeof(asset_file_font_glyph_t)*glyph_index;
 
       asset_file_font_glyph_t file_glyph = {};
-      game_read_file(
+      if (!game_read_file(
           game,
           file, 
           sizeof(asset_file_font_glyph_t), 
           glyph_data_offset,
-          &file_glyph); 
+          &file_glyph)) 
+      {
+        return false;
+      }
 
       game_asset_font_glyph_t* glyph = glyphs + glyph_index;
       glyph->texel_x0 = file_glyph.texel_x0;
@@ -2628,6 +2680,10 @@ game_assets_get_bitmap(game_assets_t* assets, game_asset_bitmap_id_t bitmap_id) 
   return assets->bitmaps + bitmap_id;
 }
 
+static game_asset_sound_t*
+game_assets_get_sound(game_assets_t* assets, game_asset_sound_id_t sound_id) {
+  return assets->sounds + sound_id;
+}
 static game_asset_sprite_t*
 game_assets_get_sprite(game_assets_t* assets, game_asset_sprite_id_t sprite_id) {
   return assets->sprites + sprite_id;
@@ -3027,6 +3083,19 @@ game_profiler_update_entries(game_profiler_t* p) {
 
 //
 // JOURNAL
+// 
+// = 2023-11-03 =
+//   Sound is added to game assets. 
+//   I had finished it earlier but I had no idea where my changes went...
+//
+//   Now, I need to do a clean up of the audio mixer system. 
+//   I'm actually kind of happy with the API, but not entirely sure if 
+//   holding a pointer to the raw sound data is a good idea. 
+//
+//   The alternative is to hold a handle but that would tie the mixer API
+//   to some kind of storage API (like game assets), which will make it 
+//   very inflexible.
+//
 // = 2023-10-12 = 
 //   Preliminary audio mixer is completed on the game layer.
 //   The next step is to figure out how to make it more generic

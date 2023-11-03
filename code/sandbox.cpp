@@ -1,8 +1,10 @@
 
 #include "momo.h"
+#include "game_asset_id_sandbox.h"
 #include "game.h"
 
 
+#if 0
 wav_t global_wavs[10];
 u32_t global_wavs_count = 0;
 
@@ -11,10 +13,14 @@ sandbox_load_wav(const char* filename) {
   buffer_t contents = foolish_read_file_into_buffer(filename);
   wav_read(&global_wavs[global_wavs_count++], contents);
 }
+#endif
 
 struct sandbox_audio_mixer_instance_t {
-  u32_t index;
+  u32_t index; 
   u32_t offset;
+  void* data;
+  u32_t data_size;
+
 
   b32_t is_loop;
   b32_t is_playing;
@@ -42,25 +48,22 @@ sandbox_audio_mixer_update(sandbox_audio_mixer_t* mixer, game_t* game) {
   u32_t bytes_per_sample = (game->audio.device_bits_per_sample/8);
   zero_memory(game->audio.samples, bytes_per_sample * game->audio.device_channels * game->audio.sample_count);
 
-  if (mixer->bitrate_type == AUDIO_MIXER_BITRATE_TYPE_S16) 
-  {
-    for_cnt (sample_index, game->audio.sample_count) 
-    {
-
+  if (mixer->bitrate_type == AUDIO_MIXER_BITRATE_TYPE_S16) {
+    for_cnt (sample_index, game->audio.sample_count){
       s16_t* dest = (s16_t*)game->audio.samples + (sample_index * game->audio.device_channels);
-      for_cnt(instance_index, mixer->instance_count)
-      {
+      for_cnt(instance_index, mixer->instance_count) {
         sandbox_audio_mixer_instance_t* instance = mixer->instances + instance_index;
         if (!instance->is_playing) continue;
 
-        wav_t* wav = global_wavs + instance->index; 
-        s16_t* src = (s16_t*)wav->data;
+        //wav_t* wav = global_wavs + instance->index; 
+        //s16_t* src = (s16_t*)wav->data;
+        s16_t* src = (s16_t*)instance->data;
+
         for_cnt(channel_index, game->audio.device_channels) {
           dest[channel_index] += s16_t(dref(src + instance->offset++) * instance->volume * mixer->volume);
         }
 
-        // 
-        if (instance->offset >= wav->data_chunk.size/bytes_per_sample) 
+        if (instance->offset >= instance->data_size/bytes_per_sample) 
         {
           if (instance->is_loop) {
             instance->offset = 0;
@@ -75,7 +78,6 @@ sandbox_audio_mixer_update(sandbox_audio_mixer_t* mixer, game_t* game) {
     }
   }
 }
-
 static void 
 sandbox_audio_mixer_init(
   sandbox_audio_mixer_t* mixer, 
@@ -90,13 +92,14 @@ sandbox_audio_mixer_init(
   mixer->instance_count = instances;
   mixer->free_list_count = instances;
   // Initialize the free list.
-  for_cnt(i, instances) {
-    mixer->free_list[i] = i;
+  for_cnt(instance_index, instances) {
+    mixer->instances[instance_index].index = instance_index;
+    mixer->free_list[instance_index] = instance_index;
   }
 }
 
 static void 
-sandbox_audio_mixer_play(sandbox_audio_mixer_t* mixer, u32_t index, f32_t volume, b32_t is_loop) {
+sandbox_audio_mixer_play(sandbox_audio_mixer_t* mixer, void* data, u32_t data_size, f32_t volume, b32_t is_loop) {
   // Pop the free list for a free index
   assert(mixer->free_list_count > 0);
   u32_t instance_index = mixer->free_list[mixer->free_list_count - 1];
@@ -104,7 +107,8 @@ sandbox_audio_mixer_play(sandbox_audio_mixer_t* mixer, u32_t index, f32_t volume
 
   auto* instance = mixer->instances + instance_index;
 
-  instance->index = index;
+  instance->data = data;
+  instance->data_size = data_size;
   instance->is_loop = is_loop;
   instance->volume = volume;
   instance->offset = 0;
@@ -147,6 +151,7 @@ game_get_config_sig(game_get_config)
 
 
 struct sandbox_t {
+  game_assets_t assets;
   arena_t arena;
   sandbox_audio_mixer_t mixer;
 };
@@ -159,11 +164,13 @@ game_update_and_render_sig(game_update_and_render) {
     if (!game->game) return;
     auto* sandbox = (sandbox_t*)(game->game);
 
-    usz_t arena_size = megabytes(200);
+    usz_t arena_size = megabytes(256);
     void* arena_memory = game_allocate_memory(game, arena_size);
     arena_init(&sandbox->arena, arena_memory, arena_size);
 
-    sandbox_load_wav("tenzen.wav");
+    game_assets_init(&sandbox->assets, game, SANDBOX_ASSET_FILE, &sandbox->arena);
+
+    //sandbox_load_wav("tenzen.wav");
     sandbox_audio_mixer_init(&sandbox->mixer, AUDIO_MIXER_BITRATE_TYPE_S16, 32,  &sandbox->arena);
     sandbox->mixer.volume = 0.1f;
   }
@@ -195,7 +202,8 @@ game_update_and_render_sig(game_update_and_render) {
     sandbox->mixer.volume += 0.1f;
   }
   if(game_is_button_poked(game, GAME_BUTTON_CODE_3)) {
-    sandbox_audio_mixer_play(&sandbox->mixer, 0, 0.5f, true);
+    auto* sound = game_assets_get_sound(&sandbox->assets, ASSET_SOUND_ID_TEST);
+    sandbox_audio_mixer_play(&sandbox->mixer, sound->data, sound->data_size, 0.5f, true);
   }
 
   sandbox_audio_mixer_update(&sandbox->mixer, game);

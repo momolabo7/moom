@@ -1,7 +1,5 @@
 // TODO: Introduce time stop mechanic
 //
-
-
 #include "momo.h"
 #include "game_asset_id_lit.h"
 #include "game.h"
@@ -29,7 +27,7 @@
 // Credits
 #define LIT_CREDITS_START_COOLDOWN_DURATION (2.f)
 #define LIT_CREDITS_SCROLL_SPEED (200.f)
-
+spin_speed
 // Save file
 #define LIT_SAVE_FILE_ENABLE true
 #define LIT_SAVE_FILE "lit.sav"
@@ -40,6 +38,11 @@
 #define LIT_SENSOR_PARTICLE_CD 0.1f
 #define LIT_SENSOR_PARTICLE_SIZE 14.f
 #define LIT_SENSOR_PARTICLE_SPEED 20.f
+
+// Light
+#define LIT_LIGHT_EMITTER_SCALE 16.f
+#define LIT_LIGHT_EMITTER_SPIN_SPEED 2.f
+#define LIT_LIGHT_EMITTER_COLOR rgba_set(0.8f, 0.8f, 0.8f, 1.f) 
 
 // Player
 #define LIT_PLAYER_RADIUS 16.f
@@ -1354,14 +1357,32 @@ lit_game_render_lights(lit_game_t* g) {
   //
   // Emitters
   //
+  static f32_t shared_spinny_timer = 0.f;
+
+  shared_spinny_timer += g_game->input.delta_time * LIT_LIGHT_EMITTER_SPIN_SPEED;
+  if (shared_spinny_timer > PI_32) {
+    shared_spinny_timer = 0.f;
+  }
+  f32_t emitter_scale = f32_sin(shared_spinny_timer) * LIT_LIGHT_EMITTER_SCALE;
+
   for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
   {
     lit_game_light_t* light = g->lights + light_index;
-    game_draw_asset_sprite(g_game, &g_lit->assets, 
-        ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE,
+    game_draw_asset_sprite(
+        g_game, 
+        &g_lit->assets, 
+        ASSET_SPRITE_ID_CIRCLE_SPRITE,
         light->pos,
-        v2f_set(16.f, 16.f),
-        rgba_set(0.8f, 0.8f, 0.8f, 1.f));
+        v2f_set(emitter_scale, LIT_LIGHT_EMITTER_SCALE),
+        LIT_LIGHT_EMITTER_COLOR);
+    game_advance_depth(g_game);
+    game_draw_asset_sprite(
+        g_game, 
+        &g_lit->assets, 
+        ASSET_SPRITE_ID_CIRCLE_SPRITE,
+        light->pos,
+        v2f_set(LIT_LIGHT_EMITTER_SCALE, emitter_scale),
+        LIT_LIGHT_EMITTER_COLOR);
     game_advance_depth(g_game);
   }
 

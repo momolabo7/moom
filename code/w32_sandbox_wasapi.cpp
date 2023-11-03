@@ -9,20 +9,6 @@
 
 
 
-int APIENTRY CALLBACK
-WinMain(HINSTANCE instance, 
-    HINSTANCE prev_instance, 
-    LPSTR argv, 
-    int argc) 
-{
-
-}
-
-
-
-
-
-#if 0
 //
 // WASAPI test
 //
@@ -237,4 +223,3 @@ WinMain(HINSTANCE instance,
   SetThreadPriority(handle, THREAD_PRIORITY_TIME_CRITICAL);
   WaitForSingleObject(handle, INFINITE);
 }
-#endif // TEST_AUDIO
