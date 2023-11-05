@@ -27,7 +27,7 @@
 // Credits
 #define LIT_CREDITS_START_COOLDOWN_DURATION (2.f)
 #define LIT_CREDITS_SCROLL_SPEED (200.f)
-spin_speed
+
 // Save file
 #define LIT_SAVE_FILE_ENABLE true
 #define LIT_SAVE_FILE "lit.sav"
@@ -584,7 +584,7 @@ lit_profiler_update_and_render()
 {
   game_assets_t* assets = &g_lit->assets;
 
-  const f32_t render_width = LIT_WIDTH;
+  //const f32_t render_width = LIT_WIDTH;
   const f32_t render_height = LIT_HEIGHT;
   const f32_t font_height = 20.f;
 
@@ -1776,7 +1776,6 @@ lit_game_end_sensor_group(lit_game_t* m) {
 static void 
 lit_game_update_sensors(lit_game_t* g, f32_t dt) 
 {
-  lit_particle_pool_t* particles = &g->particles;
   rng_t* rng = &g->rng; 
 
   // This is an array of activated sensors per sensor_group
@@ -3315,8 +3314,6 @@ lit_level_menu() {
   if (lit_get_levels_unlocked_count() >= 21) {
     cx = 400;
     lit_game_push_aabb(m, cx, cy, 350.f, box_hh);
-    v2f_t* o = lit_game_push_point(m, v2f_set(cx, cy));
-
     lit_game_begin_sensor_group(m, lit_level_exit_with(lit_goto_credits));
     lit_game_push_sensor(m, cx,  cy,  row5_color); 
     lit_game_end_sensor_group(m);
@@ -3359,7 +3356,6 @@ static void
 lit_game_update() 
 {
   lit_game_t* g = &g_lit->g_game;
-  lit_game_player_t* player = &g->player;
 
   if (game_is_button_poked(g_game, GAME_BUTTON_CODE_SPACE)) {
     g->freeze = !g->freeze;
@@ -3576,7 +3572,6 @@ static f32_t
 lit_credits_push_subtitle_and_name(
     f32_t y, st8_t subtitle, st8_t name)
 {
-  lit_credits_t* credits = &g_lit->credits;
   game_draw_text_center_aligned(
       g_game, 
       &g_lit->assets, 
@@ -3724,42 +3719,67 @@ static void lit_sandbox_update() {
 static b32_t
 lit_tick() {
   if(g_game->game == nullptr) {
-    void* lit_memory = game_allocate_memory(g_game, sizeof(lit_t));
-    if (!lit_memory) return false;
-    g_game->game = lit_memory;
+    usz_t lit_memory_size = sizeof(lit_t);
+    usz_t asset_memory_size = megabytes(20);
+    usz_t debug_memory_size = megabytes(1);
+    usz_t frame_memory_size = megabytes(1);
+    usz_t mode_memory_size = megabytes(1);
+
+    // Calculate the total required memory with alignment
+    usz_t required_memory = 0;
+    {
+      make(arena_calc_t, c);
+      arena_calc_push(c, lit_memory_size, 16);
+      arena_calc_push(c, asset_memory_size, 16);
+      arena_calc_push(c, debug_memory_size, 16);
+      arena_calc_push(c, frame_memory_size, 16);
+      arena_calc_push(c, mode_memory_size, 16);
+      required_memory = arena_calc_get_result(c);
+    }
+
+    u8_t* memory = (u8_t*)game_allocate_memory(g_game, required_memory);
+    if (!memory) return false;
+    g_game->game = memory;
+
 
     g_lit = (lit_t*)(g_game->game);
     g_lit->level_to_start = 0;
     g_lit->next_mode = LIT_MODE_SPLASH;
     g_lit->mode = LIT_MODE_NONE;
     
+    usz_t offset = sizeof(lit_t);
+    offset = align_up_pow2(offset, 16);
+
+    // TODO: use arena partition to manage this
 
     //
     // Initialize assets
     //
-    usz_t asset_memory_size = megabytes(20);
-    void* asset_memory = game_allocate_memory(g_game, asset_memory_size);
-    if (asset_memory == nullptr) return false;
-    arena_init(&g_lit->asset_arena, asset_memory, asset_memory_size);
+    arena_init(&g_lit->asset_arena, memory + offset, asset_memory_size);
     game_assets_init(&g_lit->assets, g_game, LIT_ASSET_FILE, &g_lit->asset_arena);
-
+    offset += asset_memory_size;
+    offset = align_up_pow2(offset, 16);
 
     //
     // Initialize debug stuff
     //
-    usz_t debug_memory_size = megabytes(1);
-    void* debug_memory = game_allocate_memory(g_game, debug_memory_size);
-    arena_init(&g_lit->debug_arena, debug_memory, debug_memory_size);
+    arena_init(&g_lit->debug_arena, memory + offset, debug_memory_size);
     console_init(&g_lit->console, &g_lit->debug_arena, 32, 256);
+    offset += debug_memory_size;
+    offset = align_up_pow2(offset, 16);
 
-    usz_t frame_memory_size = megabytes(1);
-    void* frame_memory = game_allocate_memory(g_game, frame_memory_size);
-    arena_init(&g_lit->frame_arena, frame_memory, frame_memory_size);
+    //
+    // Frame memory
+    //
+    arena_init(&g_lit->frame_arena, memory + offset, frame_memory_size);
+    offset += frame_memory_size;
+    offset = align_up_pow2(offset, 16);
 
 
-    usz_t mode_memory_size = megabytes(1);
-    auto* mode_memory = game_allocate_memory(g_game, mode_memory_size);
-    arena_init(&g_lit->mode_arena, mode_memory, mode_memory_size);
+    //
+    // Mode memory
+    //
+    arena_init(&g_lit->mode_arena, memory + offset, mode_memory_size);
 
     game_set_design_dimensions(g_game, LIT_WIDTH, LIT_HEIGHT);
     game_set_view(g_game, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
@@ -3797,7 +3817,8 @@ lit_tick() {
       case LIT_MODE_SANDBOX: {
         lit_sandbox_init();
       } break;
-
+      case LIT_MODE_NONE: 
+        break;
     }
   }
 
@@ -3814,6 +3835,8 @@ lit_tick() {
     case LIT_MODE_SANDBOX: {
       lit_sandbox_update();
     } break;
+    case LIT_MODE_NONE: 
+      break;
   }
 
   // Debug

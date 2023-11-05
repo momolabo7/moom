@@ -1213,12 +1213,12 @@ game_gfx_draw_filled_triangle(game_gfx_t* g,
 
 
 static void 
-game_gfx_draw_line(game_gfx_t* g, 
-             v2f_t p0, v2f_t p1,
-             f32_t thickness,
-             rgba_t colors) 
+game_gfx_draw_line(
+    game_gfx_t* g, 
+    v2f_t p0, v2f_t p1,
+    f32_t thickness,
+    rgba_t colors) 
 { 
-  game_gfx_command_queue_t* q = &g->command_queue; 
   // NOTE(Momo): Min.Y needs to be lower than Max.y
   
   if (p0.y > p1.y) {
@@ -1251,7 +1251,6 @@ game_gfx_draw_filled_circle(game_gfx_t* g,
     assert(sections >= 3);
     return;
   }
-  game_gfx_command_queue_t* q = &g->command_queue; 
   f32_t section_angle = TAU_32/sections;
   f32_t current_angle = 0.f;
 
@@ -1275,8 +1274,6 @@ game_gfx_draw_filled_circle(game_gfx_t* g,
 static  void
 game_gfx_draw_circle_outline(game_gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
 {
-  game_gfx_command_queue_t* q = &g->command_queue; 
-
   // NOTE(Momo): Essentially a bunch of lines
   // We can't really have a surface with less than 3 lines
   if (line_count < 3) {
@@ -1517,10 +1514,10 @@ game_gfx_opengl_end_sprites(game_gfx_opengl_t* ogl) {
 game_gfx_opengl_attach_shader(game_gfx_opengl_t* ogl,
     u32_t program, 
     u32_t type, 
-    char* Code) 
+    char* code) 
 {
   GLuint shader_handle = ogl->glCreateShader(type);
-  ogl->glShaderSource(shader_handle, 1, &Code, NULL);
+  ogl->glShaderSource(shader_handle, 1, &code, NULL);
   ogl->glCompileShader(shader_handle);
   ogl->glAttachShader(program, shader_handle);
   ogl->glDeleteShader(shader_handle);
@@ -1591,7 +1588,7 @@ game_gfx_opengl_delete_texture(game_gfx_opengl_t* ogl, umi_t texture_index) {
 
 static void
 game_gfx_opengl_delete_all_textures(game_gfx_opengl_t* ogl) {
-  for (umi_t i = 0; i < array_count(ogl->textures); ++i ){
+  for (usz_t i = 0; i < ogl->texture_cap; ++i ){
     if (ogl->textures[i].handle != 0) {
       game_gfx_opengl_delete_texture(ogl, i);
     }
@@ -1812,10 +1809,10 @@ game_gfx_opengl_init_triangle_batch(game_gfx_opengl_t* ogl, usz_t max_triangles)
   tb->shader = ogl->glCreateProgram();
   game_gfx_opengl_attach_shader(ogl, tb->shader,
       GL_VERTEX_SHADER,
-      GAME_GFX_OPENGL_TRIANGLE_VSHADER);
+      (char*)GAME_GFX_OPENGL_TRIANGLE_VSHADER);
   game_gfx_opengl_attach_shader(ogl, tb->shader,
       GL_FRAGMENT_SHADER,
-      GAME_GFX_OPENGL_TRIANGLE_FSHADER);
+      (char*)GAME_GFX_OPENGL_TRIANGLE_FSHADER);
 
   ogl->glLinkProgram(tb->shader);
   GLint result;
@@ -2547,7 +2544,7 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
 
     u32_t bitmap_size = b->width * b->height * 4;
     game_gfx_texture_payload_t* payload = game_gfx_begin_texture_transfer(&game->gfx, bitmap_size);
-    if (!payload) false;
+    if (!payload) return false;
     payload->texture_index = b->renderer_texture_handle;
     payload->texture_width = file_bitmap.width;
     payload->texture_height = file_bitmap.height;
@@ -2588,7 +2585,6 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
     f->bitmap_asset_id = (game_asset_bitmap_id_t)file_font.bitmap_asset_id;
 
 
-    umi_t current_data_offset = file_font.offset_to_data;
     for(u16_t glyph_index = 0; 
         glyph_index < glyph_count;
         ++glyph_index)
@@ -2903,7 +2899,7 @@ game_draw_text_center_aligned(game_t* game, game_assets_t* assets, game_asset_fo
     u32_t prev_cp = str.e[char_index-1];
 
     game_asset_font_glyph_t *prev_glyph = game_assets_get_glyph(font, prev_cp);
-    game_asset_font_glyph_t *curr_glyph = game_assets_get_glyph(font, curr_cp);
+    //game_asset_font_glyph_t *curr_glyph = game_assets_get_glyph(font, curr_cp);
 
     f32_t kerning = game_assets_get_kerning(font, prev_cp, curr_cp);
     f32_t advance = prev_glyph->horizontal_advance;

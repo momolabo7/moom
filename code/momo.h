@@ -339,6 +339,12 @@ struct arena_marker_t {
   usz_t old_pos;
 };
 
+// API to calculate how much memory would be used by emulating pushing
+// sizes into an arena
+struct arena_calc_t {
+  usz_t result;
+};
+
 //
 // MARK:(Garena) 
 //
@@ -1170,6 +1176,10 @@ static usz_t    arena_remaining(arena_t* a);
 
 static arena_marker_t arena_mark(arena_t* a);
 static void arena_revert(arena_marker_t marker);
+
+static void arena_calc_push(arena_calc_t* c, usz_t size, usz_t alignment);
+static void arena_calc_clear(arena_calc_t* c);
+static usz_t arena_calc_get_result(arena_calc_t* c);
 
 # define __arena_set_revert_point(a,l) \
   auto _arena_marker_##l = arena_mark(a); \
@@ -2172,7 +2182,7 @@ _compute_f64(s64_t power, u64_t i, b32_t negative)
   static const f64_t power_of_ten[] = {
     1e0,  1e1,  1e2,  1e3,  1e4,  1e5,  1e6,  1e7,  1e8,  1e9,  1e10, 1e11,
     1e12, 1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19, 1e20, 1e21, 1e22};
-
+#if 0
   static const u64_t mantissa_64[] = {
     0xa5ced43b7e3e9188, 0xcf42894a5dce35ea,
     0x818995ce7aa0e1b2, 0xa1ebfb4219491a1f,
@@ -2491,6 +2501,7 @@ _compute_f64(s64_t power, u64_t i, b32_t negative)
     0xbaa718e68396cffd, 0xe950df20247c83fd,
     0x91d28b7416cdd27e, 0xb6472e511c81471d,
     0xe3d8f9e563a198e5, 0x8e679c2f5e44ff8f};
+
   static const u64_t mantissa_128[] = {
     0x419ea3bd35385e2d, 0x52064cac828675b9,
     0x7343efebd1940993, 0x1014ebe6c5f90bf8,
@@ -2809,6 +2820,7 @@ _compute_f64(s64_t power, u64_t i, b32_t negative)
     0xd30560258f54e6ba, 0x47c6b82ef32a2069,
     0x4cdc331d57fa5441, 0xe0133fe4adf8e952,
     0x58180fddd97723a6, 0x570f09eaa7ea7648,};
+#endif
 
   if (-22 <= power && power <= 22 && i <= 9007199254740991) {
     f64_t d = f64_t(i);
@@ -2835,7 +2847,6 @@ _compute_f64(s64_t power, u64_t i, b32_t negative)
 
 static f64_t
 cstr_to_f64(const c8_t* p) {
-  const c8_t* pinit = p;
   b32_t found_minus = (*p == '-');
   b32_t negative = false;
   if (found_minus) {
@@ -2933,13 +2944,13 @@ cstr_to_f64(const c8_t* p) {
   if (digit_count >= 19) {
     return F64_NAN;
   }
-  if (exponent < -325 && exponent > 308) {
+  if (exponent < -325 || exponent > 308) {
     return F64_NAN;
   }
 
   // Unlikely cases. Can go for 'slow' path instead of asserting
   assert(digit_count < 19);
-  assert(exponent >= -325 && exponent <= 308);
+  assert(exponent >= -325 || exponent <= 308);
 
   return _compute_f64(exponent, i, negative);
 }
@@ -5737,15 +5748,15 @@ _ttf_tessellate_bezier(v2f_t* vertices,
       switch(format) {
         case 4: { // 
           u16_t seg_count = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 6) >> 1;
-          u16_t search_range = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 8) >> 1;
-          u16_t entry_selector = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 10);
-          u16_t range_shift = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 12) >> 1;
+          //u16_t search_range = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 8) >> 1;
+          //u16_t entry_selector = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 10);
+          //u16_t range_shift = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 12) >> 1;
 
           u32_t end_codes = ttf->cmap_mappings + 14;
           u32_t start_codes = end_codes + 2 + (2*seg_count);
           u32_t id_deltas = start_codes + (2*seg_count);
           u32_t id_range_offsets = id_deltas + (2*seg_count);
-          u32_t glyph_index_array = id_range_offsets + (2*seg_count);
+          //u32_t glyph_index_array = id_range_offsets + (2*seg_count);
 
           if (codepoint == 0xffff) return 0;
 
@@ -6318,8 +6329,6 @@ _png_huffman_compute(_png_huffman_t* h,
                      u32_t codes_size, 
                      u32_t max_lengths) 
 {
-  _png_huffman_t ret = {};
-
   // Each code corresponds to a symbol
   h->symbol_count = codes_size;
   h->symbols = arena_push_arr(u16_t, arena, codes_size);
@@ -6469,7 +6478,6 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
 
           // NOTE(Momo): Decode
           // Loop until end of block code recognize
-          u32_t last_len = 0;
           for(u32_t i = 0; i < (HDIST + HLIT);) {
 
             s32_t sym = _png_huffman_decode(src_stream, code_huffman);
@@ -6525,12 +6533,10 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
 
         static int pass =0;
         ++pass;
-        int wtf = 0;
 
         // NOTE(Momo): Actual decoding
         for (;;) 
         {
-          ++wtf;
 
           s32_t sym = _png_huffman_decode(src_stream, lit_huffman);
           if (pass == 2) {
@@ -6790,8 +6796,6 @@ _png_filter(_png_context_t* c) {
   // NOTE(Momo): Filter
   // data always starts with 1 byte indicating the type of filter
   // followed by the rest of the chunk.
-  u32_t counter = 0;
-
   while(!stream_is_eos(&c->unfiltered_image_stream)) {
     u8_t* filter_type_p = stream_consume(u8_t, &c->unfiltered_image_stream);
     u8_t filter_type = (*filter_type_p);
@@ -6827,9 +6831,9 @@ _png_decompress_zlib(_png_context_t* c, stream_t* zlib_stream) {
 
   u32_t CM = IDAT->compression_flags & 0x0F;
   u32_t CINFO = IDAT->compression_flags >> 4;
-  u32_t FCHECK = IDAT->additional_flags & 0x1F; //not needed?
+  //u32_t FCHECK = IDAT->additional_flags & 0x1F; //not needed?
   u32_t FDICT = (IDAT->additional_flags >> 5) & 0x01;
-  u32_t FLEVEL = (IDAT->additional_flags >> 6); //useless?
+  //u32_t FLEVEL = (IDAT->additional_flags >> 6); //useless?
 
 
   if (CM != 8 || FDICT != 0 || CINFO > 7) {
@@ -7103,7 +7107,7 @@ png_read(png_t* png, buffer_t png_contents)
 
   // Read Chunk Header
   _png_chunk_header_t* chunk_header = stream_consume(_png_chunk_header_t, stream);
-  u32_t chunk_length = u32_endian_swap(chunk_header->length);
+  //u32_t chunk_length = u32_endian_swap(chunk_header->length);
   u32_t chunk_type = u32_endian_swap(chunk_header->type_U32);
 
 
@@ -7216,25 +7220,6 @@ arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)
   return true;
 
 }
-/*
-     static inline void* 
-     Arena_BootBlock(usz_t struct_size,
-     usz_t offset_to_arena,
-     void* memory,
-     usz_t memory_size)
-     {
-     assert(struct_size < memory_size);
-     usz_t imem = ptr_to_umi(memory);
-     imem = align_up_pow2(imem, 16);
-
-     void* arena_memory = (u8_t*)memory + struct_size; 
-     usz_t arena_memory_size = memory_size - struct_size;
-     arena_t* arena_ptr = (arena_t*)((u8_t*)memory + offset_to_arena);
-     (*arena_ptr) = Arena_Create(arena_memory, arena_memory_size);
-
-     return usz_to_ptr(imem);
-     }
-  //*/
 
 static arena_marker_t
 arena_mark(arena_t* a) {
@@ -7248,6 +7233,24 @@ static void
 arena_revert(arena_marker_t marker) {
   marker.arena->pos = marker.old_pos;
 }
+
+static void 
+arena_calc_push(arena_calc_t* c, usz_t size, usz_t alignment) {
+  c->result = align_up_pow2(c->result, alignment);
+  c->result += size;
+}
+
+
+static void 
+arena_calc_clear(arena_calc_t* c) {
+  c->result = 0;
+}
+
+static usz_t 
+arena_calc_get_result(arena_calc_t* c) {
+  return c->result;
+}
+
 
 //
 // MARK:(Garena)

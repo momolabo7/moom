@@ -1,6 +1,16 @@
-assets 
+GENERAL
+  We should go a cleanup on how we want to allocate memory.
+  Allocating memory always immediately means a LARGE allocation (more than 2MB)
+  and should not be used like malloc.
+
+  
+
+PROTOTYPING
+  - Create a very dumb prototyping asset system.
+
+ASSETS 
   - 9 Slice 
-  - Audio/Sound
+  
 
 
 

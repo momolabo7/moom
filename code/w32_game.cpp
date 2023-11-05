@@ -246,7 +246,7 @@ typedef const char* WINAPI wglGetExtensionsStringEXTFn(void);
 static wglChoosePixelFormatARBFn* wglChoosePixelFormatARB;
 static wglSwapIntervalEXTFn* wglSwapIntervalEXT;
 static wglCreateContextAttribsARBFn* wglCreateContextAttribsARB;
-static wglGetExtensionsStringEXTFn* wglGetExtensionsStringEXT;
+//static wglGetExtensionsStringEXTFn* wglGetExtensionsStringEXT;
 
 
 
@@ -362,7 +362,7 @@ _w32_load_wgl_extentions() {
     
   }
   else {
-    DWORD test = GetLastError();
+    //DWORD test = GetLastError();
     return false;
   }
 }
@@ -613,9 +613,7 @@ _w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {
   assert(SUCCEEDED(hr));
 
   // Initialize the secondary buffer.
-  UINT32 writable_frames = buffer_frame_count - padding_frame_count;
-
-
+  // UINT32 writable_frames = buffer_frame_count - padding_frame_count;
 
   hr = wasapi->audio_client->Start();
   assert(SUCCEEDED(hr));
@@ -1197,10 +1195,10 @@ w32_unload_code(w32_loaded_code_t* code) {
 static void
 w32_load_code(w32_loaded_code_t* code) {
   code->is_valid = false;
-  b32_t copy_success = false;
+  //b32_t copy_success = false;
   for (u32_t attempt = 0; attempt < 100; ++attempt) {
     if(CopyFile(code->module_path, code->tmp_path, false)) {
-      copy_success = true;
+      //copy_success = true;
       break;
     }
     Sleep(100);
@@ -1212,7 +1210,7 @@ w32_load_code(w32_loaded_code_t* code) {
          function_index < code->function_count; 
          ++function_index) 
     {
-      void* function = GetProcAddress(code->dll, code->function_names[function_index]);
+      void* function = (void*)GetProcAddress(code->dll, code->function_names[function_index]);
       if (!function) {
         code->is_valid = false;
         break;
@@ -1977,6 +1975,7 @@ WinMain(HINSTANCE instance,
         
     LARGE_INTEGER end_frame_count = w32_get_performance_counter();
 
+#if 0 
     f32_t secs_this_frame =  
       w32_get_secs_elapsed(
           last_frame_count,
@@ -1985,7 +1984,6 @@ WinMain(HINSTANCE instance,
     
     // only do this when VSYNC is enabled
     //target_secs_per_frame = secs_this_frame;
-#if 0 
     w32_log("target: %f vs %f \n", 
             target_secs_per_frame,
             secs_this_frame);

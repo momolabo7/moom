@@ -59,8 +59,9 @@ GOTO label_parse
 
 
 
-set compiler_flags=-MT -WX -W4 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa  -std:c++17
-set linker_flags=-link
+rem set compiler_flags=-MT -WX -W4 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa  -std:c++17
+set compiler_flags=-std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -Wno-deprecated-declarations -Wno-missing-braces
+set linker_flags=
 
 echo ******************* 
 
@@ -79,14 +80,17 @@ rem TODO: we should really have better names, maybe with prefixes like %build_ga
 if %game%==1 (
   echo Build    : Game
   echo Out      : game.dll
+
+  rem set linker_flags=%linker_flags% -out:game.dll 
   set compiler_flags=%compiler_flags% -LD
-  set linker_flags=%linker_flags% -out:game.dll 
+  set linker_flags=-shared -o game.dll 
   goto end_build_type
 )
 
 if %w32%==1 (
   echo Build    : Win32
-  set linker_flags=%linker_flags% user32.lib opengl32.lib gdi32.lib winmm.lib ole32.lib imm32.lib shell32.lib 
+  rem set linker_flags=-L user32.lib opengl32.lib gdi32.lib winmm.lib ole32.lib imm32.lib shell32.lib 
+  set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32
   goto end_build_type
 )
 
@@ -94,7 +98,7 @@ if %ship%==1 (
   echo Build    : Ship
   echo Out      : %filename%.exe
   set compiler_flags=%compiler_flags% -DHOT_RELOAD=0 
-  set linker_flags=%linker_flags% user32.lib opengl32.lib gdi32.lib winmm.lib ole32.lib imm32.lib shell32.lib -out:%filename%.exe
+  set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32 -o %filename%.exe
   set ship_file=%code_dir%\%filename%_ship.cpp 
   goto end_build_type
 )
@@ -112,10 +116,12 @@ pushd %build_dir%
 IF %ship%==1 (
   echo #include "%filename%.cpp" > %ship_file% 
   type %code_dir%\w32_game.cpp >>  %ship_file%  
-  cl %compiler_flags% %ship_file% %linker_flags% 
+  rem cl %compiler_flags% %ship_file% %linker_flags% 
+  clang++ %compiler_flags% %ship_file% %linker_flags% 
   del %ship_file% 
 ) else (
-  cl %compiler_flags% %code_dir%\%filename%.cpp %linker_flags% 
+  rem cl %compiler_flags% %code_dir%\%filename%.cpp %linker_flags% 
+  clang++ %compiler_flags% %code_dir%\%filename%.cpp %linker_flags% 
 )
 
 if %run%==1 CALL %filename%.exe
