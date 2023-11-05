@@ -150,6 +150,8 @@
 # define exported c_link __declspec(dllexport)
 #elif COMPILER_GCC
 # define exported __attribute__((visibility("default")))  
+#elif COMPILER_CLANG
+# define exported __attribute__((visibility("default")))  
 #else
 # error exported not defined for this compiler
 #endif
@@ -3078,7 +3080,7 @@ u64_atomic_add(u64_t volatile* value, u64_t to_add) {
 }
 
 #else
-# error "Not defined"
+# warning "Atomic functions are not implemented!"
 #endif
 
 static f32_t 
