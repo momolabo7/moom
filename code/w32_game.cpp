@@ -664,8 +664,6 @@ static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t
 
 static game_allocate_memory_sig(w32_allocate_memory);
 
-
-
 static 
 w32_audio_begin_frame_sig(w32_audio_begin_frame) 
 {
@@ -1647,6 +1645,12 @@ WinMain(HINSTANCE instance,
         LPSTR command_line, 
         int show_code) 
 {
+  {
+    SYSTEM_INFO info;
+    GetSystemInfo(&info);
+    w32_log("hello");
+  }
+
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
 

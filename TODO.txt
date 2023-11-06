@@ -1,7 +1,5 @@
-GENERAL
-  We should go a cleanup on how we want to allocate memory.
-  Allocating memory always immediately means a LARGE allocation (more than 2MB)
-  and should not be used like malloc.
+ENGINE
+  - Engine should manage memory allocation in a better way. I.e. reimplement malloc?
 
   
 

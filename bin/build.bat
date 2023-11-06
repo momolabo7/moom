@@ -89,8 +89,14 @@ if %game%==1 (
 
 if %w32%==1 (
   echo Build    : Win32
+  echo Out      : %filename%.exe
   rem set linker_flags=-L user32.lib opengl32.lib gdi32.lib winmm.lib ole32.lib imm32.lib shell32.lib 
-  set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32
+  
+  if %optimize%==0 (
+    set compiler_flags=%compiler_flags% -g -gcodeview
+  )
+
+  set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32 -o %filename%.exe
   goto end_build_type
 )
 
@@ -98,6 +104,9 @@ if %ship%==1 (
   echo Build    : Ship
   echo Out      : %filename%.exe
   set compiler_flags=%compiler_flags% -DHOT_RELOAD=0 
+  if %optimize%==0 (
+    set compiler_flags=%compiler_flags% -g -gcodeview
+  )
   set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32 -o %filename%.exe
   set ship_file=%code_dir%\%filename%_ship.cpp 
   goto end_build_type
