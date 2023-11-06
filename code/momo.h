@@ -66,7 +66,7 @@
 #elif defined(__GNUC__) 
 # define COMPILER_GCC 1
 #else 
-# error unsupported compiler
+# warning "[momo] unsupported compiler"
 #endif
 
 #if !defined(COMPILER_MSVC)
@@ -89,7 +89,7 @@
 #elif defined(__APPLE__) && defined(__MACH__) 
 # define OS_MAC 1
 #else 
-# error unsupported OS
+# warning "[momo] unsupported OS"
 #endif
 
 #if !defined(OS_WINDOWS)
@@ -115,7 +115,7 @@
 # elif defined(_M_ARM)
 #  define ARCH_ARM 1
 # else
-#  error unsupported architecture
+#  warning "[momo] unsupported architecture"
 # endif
 #elif COMPILER_GCC || COMPILER_CLANG
 # if defined(__i386__)
@@ -125,7 +125,7 @@
 # elif defined(__arm__)
 #  define ARCH_ARM 1
 # else 
-#  error unsupported architecture
+#  warning "[momo] unsupported architecture"
 # endif
 #endif
 
@@ -153,7 +153,7 @@
 #elif COMPILER_CLANG
 # define exported __attribute__((visibility("default")))  
 #else
-# error exported not defined for this compiler
+# warning "[momo] 'exported' not defined for this compiler"
 #endif
 
 //
@@ -3080,7 +3080,7 @@ u64_atomic_add(u64_t volatile* value, u64_t to_add) {
 }
 
 #else
-# warning "Atomic functions are not implemented!"
+# warning "[momo] Atomic functions are not implemented!"
 #endif
 
 static f32_t 
