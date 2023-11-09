@@ -3,7 +3,7 @@
 
 rem USAGE
 rem
-rem   build [-run] [-w32] [-o] [-game] [cpp files]
+rem   build [filename] [-run] [-w32] [-o] [-game]
 rem
 rem ARGUMENTS
 rem
@@ -62,28 +62,31 @@ GOTO label_parse
 rem set compiler_flags=-MT -WX -W4 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa  -std:c++17
 set compiler_flags=-std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -Wno-deprecated-declarations -Wno-missing-braces
 set linker_flags=
+set output_name=%filename%.exe
 
 echo ******************* 
+
 
 
 rem Optimization
 if %optimize%==1 (
   echo Version  : Release
-  set compiler_flags=-O2 -DASSERTIVE=0 -DFOOLISH=0%compiler_flags%
+  set compiler_flags=-O2 -DASSERTIVE=0 -DFOOLISH=0 %compiler_flags%
 ) else (
   echo Version  : Internal 
   set compiler_flags=-DASSERTIVE=1 -DFOOLISH=1 %compiler_flags%
+  set compiler_flags=%compiler_flags% -g -gcodeview
 )
 
 rem Different build types
 rem TODO: we should really have better names, maybe with prefixes like %build_game%
 if %game%==1 (
   echo Build    : Game
-  echo Out      : game.dll
 
   rem set linker_flags=%linker_flags% -out:game.dll 
   set compiler_flags=%compiler_flags% -LD
-  set linker_flags=-shared -o game.dll 
+  set linker_flags=-shared 
+  set output_name=game.dll
   goto end_build_type
 )
 
@@ -91,12 +94,7 @@ if %w32%==1 (
   echo Build    : Win32
   echo Out      : %filename%.exe
   rem set linker_flags=-L user32.lib opengl32.lib gdi32.lib winmm.lib ole32.lib imm32.lib shell32.lib 
-  
-  if %optimize%==0 (
-    set compiler_flags=%compiler_flags% -g -gcodeview
-  )
-
-  set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32 -o %filename%.exe
+  set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32
   goto end_build_type
 )
 
@@ -104,18 +102,16 @@ if %ship%==1 (
   echo Build    : Ship
   echo Out      : %filename%.exe
   set compiler_flags=%compiler_flags% -DHOT_RELOAD=0 
-  if %optimize%==0 (
-    set compiler_flags=%compiler_flags% -g -gcodeview
-  )
-  set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32 -o %filename%.exe
+  set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32
   set ship_file=%code_dir%\%filename%_ship.cpp 
   goto end_build_type
 )
 
 echo Build    : Normal 
-echo Out      : %filename%.exe
 
 :end_build_type
+
+echo Out      : %output_name%
 
 echo ******************* 
 
@@ -125,12 +121,12 @@ pushd %build_dir%
 IF %ship%==1 (
   echo #include "%filename%.cpp" > %ship_file% 
   type %code_dir%\w32_game.cpp >>  %ship_file%  
-  rem cl %compiler_flags% %ship_file% %linker_flags% 
-  clang++ %compiler_flags% %ship_file% %linker_flags% 
+  rem cl %compiler_flags% %ship_file% %linker_flags%  
+  clang++ %compiler_flags% %ship_file% %linker_flags% -o %output_name%
   del %ship_file% 
 ) else (
   rem cl %compiler_flags% %code_dir%\%filename%.cpp %linker_flags% 
-  clang++ %compiler_flags% %code_dir%\%filename%.cpp %linker_flags% 
+  clang++ %compiler_flags% %code_dir%\%filename%.cpp %linker_flags%-o %output_name%
 )
 
 if %run%==1 CALL %filename%.exe
