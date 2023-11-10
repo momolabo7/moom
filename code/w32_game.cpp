@@ -52,8 +52,7 @@
 // MARK:(Memory Management)
 //
 struct w32_memory_t {
-  void* memory;
-  usz_t size;
+  buffer_t os_memory;
   
   w32_memory_t* prev;
   w32_memory_t* next;
@@ -1593,11 +1592,29 @@ game_complete_all_tasks_sig(w32_complete_all_tasks)
 static 
 game_allocate_memory_sig(w32_allocate_memory)
 {
+  // NOTE(momo): We will allocate memory with a 'header'
+  // that contains w32_memory_t. 
+  // -------------------------------------
+  // | w32_memory_t | align | size       |
+  // -------------------------------------
+  // 
+  // If p is the memory to be returned to the user
+  // and q is the memory given by the os, to get from
+  // q to be: 
+  // - Add sizeof(w32_memory_t) 
+  // - align upwards to 16 bytes
+  //
+  // To get from p back to q:
+  // - Subtract sizeof(w32_memory_t)
+  // - align downwards to 16 bytes
+  //
   usz_t aligned_size = align_up_pow2(size, 16);
   usz_t padding_for_alignment = aligned_size - size;
   usz_t total_size = size + padding_for_alignment + sizeof(w32_memory_t);
-  usz_t base_offset = sizeof(w32_memory_t);
+  usz_t offset_to_user_memory = sizeof(w32_memory_t) + padding_for_alignment; 
 
+
+#if 0
   auto* block = (w32_memory_t*)
     VirtualAllocEx(GetCurrentProcess(),
                    0, 
@@ -1605,23 +1622,44 @@ game_allocate_memory_sig(w32_allocate_memory)
                    MEM_RESERVE | MEM_COMMIT, 
                    PAGE_READWRITE);
   if (!block) return nullptr;
+#endif
 
-  block->memory = (u8_t*)block + base_offset; 
-  block->size = size;
+  buffer_t blk = os_memory_allocate(total_size);
+  if (!buffer_is_valid(blk)) return nullptr;
 
+  u8_t* ret = blk.data + offset_to_user_memory; 
+
+
+  // Store the data for freeing
+  auto* w32_mem = (w32_memory_t*)blk.data;
+  w32_mem->os_memory = blk;
+
+  // Add to linked list
   w32_memory_t* sentinel = &w32_state.memory_sentinel;
-  cll_append(sentinel, block);
+  cll_append(sentinel, w32_mem);
 
-  return block->memory;
+  return ret;
 
 }
 
 static
 game_free_memory_sig(w32_free_memory) {
+  // To get from p back to q:
+  // - Subtract sizeof(w32_memory_t)
+  // - align downwards to 16 bytes
   if (ptr) {
-    auto* memory_block = (w32_memory_t*)(ptr);
-    cll_remove(memory_block);
-    VirtualFree(memory_block, 0, MEM_RELEASE);
+    umi_t ptr_u = ptr_to_umi(ptr);
+    ptr_u -= sizeof(w32_memory_t);
+    ptr_u = align_down_pow2(ptr_u, 16);
+    
+    auto* w32_mem = (w32_memory_t*)umi_to_ptr(ptr_u);
+    cll_remove(w32_mem);
+
+    if (!os_memory_free(w32_mem->os_memory)) {
+      assert(false);
+    }
+
+    //VirtualFree(memory_block, 0, MEM_RELEASE);
   }
 }
 
@@ -1645,11 +1683,6 @@ WinMain(HINSTANCE instance,
         LPSTR command_line, 
         int show_code) 
 {
-  {
-    SYSTEM_INFO info;
-    GetSystemInfo(&info);
-    w32_log("hello");
-  }
 
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
@@ -1683,8 +1716,22 @@ WinMain(HINSTANCE instance,
     w32_state.game_height = 1.f;  
 
     // initialize the circular linked list
-    w32_state.memory_sentinel.next = &w32_state.memory_sentinel;    
-    w32_state.memory_sentinel.prev = &w32_state.memory_sentinel;    
+    cll_init(&w32_state.memory_sentinel);
+
+#if 0
+    // Testing
+    {
+      auto* a = w32_allocate_memory(megabytes(1));
+      auto* b = w32_allocate_memory(megabytes(1));
+      auto* c = w32_allocate_memory(megabytes(1));
+      auto* d = w32_allocate_memory(megabytes(1));
+
+      w32_free_memory(d);
+      w32_free_memory(b);
+      w32_free_memory(c);
+      w32_free_memory(a);
+    }
+#endif
 
     w32_state.game = &game;
 
@@ -1994,10 +2041,9 @@ WinMain(HINSTANCE instance,
 #endif
     //w32_gfx_swap_buffer(gfx);
     last_frame_count = end_frame_count;
-    
-    
-    
   }
+
+
   return 0;  
   
 }

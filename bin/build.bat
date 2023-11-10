@@ -92,7 +92,6 @@ if %game%==1 (
 
 if %w32%==1 (
   echo Build    : Win32
-  echo Out      : %filename%.exe
   rem set linker_flags=-L user32.lib opengl32.lib gdi32.lib winmm.lib ole32.lib imm32.lib shell32.lib 
   set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32
   goto end_build_type
@@ -100,7 +99,6 @@ if %w32%==1 (
 
 if %ship%==1 (
   echo Build    : Ship
-  echo Out      : %filename%.exe
   set compiler_flags=%compiler_flags% -DHOT_RELOAD=0 
   set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32
   set ship_file=%code_dir%\%filename%_ship.cpp 
@@ -126,7 +124,7 @@ IF %ship%==1 (
   del %ship_file% 
 ) else (
   rem cl %compiler_flags% %code_dir%\%filename%.cpp %linker_flags% 
-  clang++ %compiler_flags% %code_dir%\%filename%.cpp %linker_flags%-o %output_name%
+  clang++ %compiler_flags% %code_dir%\%filename%.cpp %linker_flags% -o %output_name%
 )
 
 if %run%==1 CALL %filename%.exe

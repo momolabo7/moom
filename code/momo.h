@@ -213,7 +213,6 @@ struct buffer_t {
   u8_t* data;
   usz_t size;
 };
-static b32_t buffer_is_valid(buffer_t buffer);
 
 
 //
@@ -757,6 +756,8 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 // MARK:(Buffer)
 //
 static buffer_t buffer_set(u8_t* mem, usz_t size);
+static b32_t buffer_is_valid(buffer_t buffer);
+static buffer_t buffer_invalid();
 
 //
 // MARK:(ASCII)
@@ -1143,7 +1144,7 @@ static void     stb8_push_u64(stb8_t* b, u64_t num);
 static void     stb8_push_f32(stb8_t* b, f32_t value, u32_t precision);
 static void     stb8_push_s32(stb8_t* b, s32_t num);
 static void     stb8_push_s64(stb8_t* b, s64_t num);
-static void     stb8_push_st8_set(stb8_t* b, st8_t num);
+static void     stb8_push_st8(stb8_t* b, st8_t num);
 static void     stb8_push_hex_u8(stb8_t* b, u8_t num);
 static void     stb8_push_hex_u32(stb8_t* b, u32_t num);
 static void     stb8_push_fmt(stb8_t* b, st8_t fmt, ...);
@@ -1167,7 +1168,6 @@ static void     stream_write_block(stream_t* s, void* src, usz_t size);
 //
 // MARK:(Arena)
 //
-
 static void     arena_init(arena_t* a, void* mem, usz_t cap);
 static void     arena_clear(arena_t* a);
 static void*    arena_push_size(arena_t* a, usz_t size, usz_t align);
@@ -1270,13 +1270,9 @@ static clex_token_t clex_next_token(clex_tokenizer_t* t);
 
 // The memory returned is:
 // - Not shared by other threads
-struct os_memory_t {
-  void* data;
-  usz_t size;
-};
 
-static b32_t os_memory_allocate(os_memory_t* blk, usz_t size);
-static b32_t os_memory_free(os_memory_t* blk);
+static buffer_t os_memory_allocate(usz_t size);
+static b32_t    os_memory_free(buffer_t blk);
 
 //
 //
@@ -1284,9 +1280,6 @@ static b32_t os_memory_free(os_memory_t* blk);
 //
 //
 
-static b32_t buffer_is_valid(buffer_t buffer) {
-  return buffer.data != nullptr;
-}
 
 
 
@@ -1299,31 +1292,28 @@ static b32_t buffer_is_valid(buffer_t buffer) {
 #undef near
 #undef far
 
-static b32_t 
-os_memory_allocate(os_memory_t* blk, usz_t size) {
-  void* data = (u8_t*)VirtualAllocEx(
+static buffer_t
+os_memory_allocate(usz_t size) {
+  buffer_t ret = {};
+  u8_t* data = (u8_t*)VirtualAllocEx(
       GetCurrentProcess(),
       0, 
       size,
       MEM_RESERVE | MEM_COMMIT, 
       PAGE_READWRITE);
-  if (!data) return false;
 
-  blk->data = data;
-  blk->size = size;
+  if (!data) 
+    return ret;
 
-  return true;
+  ret.data = data;
+  ret.size = size;
+
+  return ret;
 }
 
 static b32_t 
-os_memory_free(os_memory_t* blk) {
-  if (!VirtualFree(blk->data, 0, MEM_RELEASE)) {
-    return false;
-  }
-  blk->data = nullptr;
-  blk->size = 0;
-
-  return true;
+os_memory_free(buffer_t blk) {
+  return VirtualFree(blk.data, 0, MEM_RELEASE);
 }
 
 
@@ -1333,9 +1323,10 @@ os_memory_free(os_memory_t* blk) {
 // #include <stdlib.h>
 #include <sys/mman.h> // mmap, munmap
 
-static b32_t
-os_memory_allocate(os_memory_t* blk, usz_t size) {
-  void* data = (u8_t*)mmap(
+static buffer_t
+os_memory_allocate(usz_t size) {
+  buffer_t ret = {};
+  u8_t* data = (u8_t*)mmap(
       0, 
       size, 
       PROT_READ | PROT_WRITE, 
@@ -1343,21 +1334,19 @@ os_memory_allocate(os_memory_t* blk, usz_t size) {
       -1, 
       0);
 
-  if (!data) return false;
+  if (!data) return ret;
 
-  blk->data = data;
-  blk->size = size;
+  
+  ret.data = data;
+  ret.size = size;
 
   return true;
 }
 
 static b32_t 
-os_memory_free(os_memory_t* blk) {
-  if (munmap(blk->data, blk->size) < 0)
+os_memory_free(buffer_t blk) {
+  if (munmap(blk.data, blk.size) < 0)
     return false;
-  blk->data = nullptr;
-  blk->data = 0;
-
   return true;
 }
 
@@ -2496,6 +2485,16 @@ buffer_set(u8_t* mem, usz_t size) {
   ret.data = mem;
   ret.size = size;
   return ret;
+}
+
+static b32_t 
+buffer_is_valid(buffer_t buffer) {
+  return buffer.data != nullptr;
+}
+
+static buffer_t
+buffer_invalid() {
+  return buffer_set(0,0);
 }
 
 static f32_t _F32_INFINITY() {
@@ -5782,7 +5781,7 @@ _stb8_push_fmt_list(stb8_t* b, st8_t format, va_list args) {
         case 'S': {
           // st8_t, or 'text'.
           st8_t str = va_arg(args, st8_t);
-          stb8_push_st8_set(tb, str);
+          stb8_push_st8(tb, str);
         } break;
 
         default: {
@@ -5797,10 +5796,10 @@ _stb8_push_fmt_list(stb8_t* b, st8_t format, va_list args) {
         while(spaces_to_pad--) {
           stb8_push_c8(b, ' ');
         }
-        stb8_push_st8_set(b, tb->str);
+        stb8_push_st8(b, tb->str);
       }
       else {
-        stb8_push_st8_set(b, tb->str);
+        stb8_push_st8(b, tb->str);
       }
 
 
@@ -5822,7 +5821,7 @@ stb8_push_fmt(stb8_t* b, st8_t fmt, ...) {
 }
 
 static void     
-stb8_push_st8_set(stb8_t* b, st8_t src) {
+stb8_push_st8(stb8_t* b, st8_t src) {
   assert(b->count + src.count <= b->cap);
   for (usz_t i = 0; i < src.count; ++i ) {
     b->e[b->count++] = src.e[i];
@@ -7852,8 +7851,6 @@ arena_init(arena_t* a, void* mem, usz_t cap) {
   a->cap = cap;
   a->highest_memory_usage = 0;
 }
-
-
 
 static void
 arena_clear(arena_t* a) {

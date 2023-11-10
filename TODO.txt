@@ -1,5 +1,5 @@
 ENGINE
-  - Engine should manage memory allocation in a better way. I.e. reimplement malloc?
+- might want to consider returning buffer_t for memory allocation for user.
 
   
 

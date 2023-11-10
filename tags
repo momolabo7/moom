@@ -224,6 +224,7 @@ bit_is_set	code/momo.h	/^#define bit_is_set(/;"	d	language:C++
 bit_set	code/momo.h	/^#define bit_set(/;"	d	language:C++
 bit_unset	code/momo.h	/^#define bit_unset(/;"	d	language:C++
 blank_texture	code/game.h	/^  game_gfx_opengl_texture_t blank_texture;$/;"	m	language:C++	struct:game_gfx_opengl_t	typeref:typename:game_gfx_opengl_texture_t
+blk	code/w32_game.cpp	/^  buffer_t blk;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:buffer_t	file:
 block_align	code/momo.h	/^  u16_t block_align;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 block_name	code/game.h	/^  const char* block_name;$/;"	m	language:C++	struct:game_profiler_entry_t	typeref:typename:const char *
 bonk_tri2_pt2	code/momo.h	/^bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {$/;"	f	language:C++	typeref:typename:b32_t
@@ -240,7 +241,9 @@ buffer	code/ffxiv.cpp	/^  buffer_t buffer;$/;"	m	language:C++	struct:csv_t	typer
 buffer	code/w32_game.cpp	/^  void* buffer;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:void *	file:
 buffers	code/game.h	/^  GLuint buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; \/\/ game_gfx_opengl_t__VBO_C/;"	m	language:C++	struct:game_gfx_opengl_sprite_batch_t	typeref:typename:GLuint[]
 buffers	code/game.h	/^  GLuint buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT];$/;"	m	language:C++	struct:game_gfx_opengl_triangle_batch_t	typeref:typename:GLuint[]
-buffer_is_valid	code/momo.h	/^static b32_t buffer_is_valid(buffer_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t
+buffer_invalid	code/momo.h	/^buffer_invalid() {$/;"	f	language:C++	typeref:typename:buffer_t
+buffer_invalid	code/momo.h	/^static buffer_t buffer_invalid();$/;"	p	language:C++	typeref:typename:buffer_t
+buffer_is_valid	code/momo.h	/^buffer_is_valid(buffer_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t
 buffer_is_valid	code/momo.h	/^static b32_t buffer_is_valid(buffer_t buffer);$/;"	p	language:C++	typeref:typename:b32_t
 buffer_set	code/momo.h	/^buffer_set(u8_t* mem, usz_t size) {$/;"	f	language:C++	typeref:typename:buffer_t
 buffer_set	code/momo.h	/^static buffer_t buffer_set(u8_t* mem, usz_t size);$/;"	p	language:C++	typeref:typename:buffer_t
@@ -358,7 +361,7 @@ compiler_flags	bin/build.bat	/^  set compiler_flags=%compiler_flags% -DHOT_RELOA
 compiler_flags	bin/build.bat	/^  set compiler_flags=%compiler_flags% -g -gcodeview$/;"	v	language:DosBatch
 compiler_flags	bin/build.bat	/^  set compiler_flags=%compiler_flags% -LD$/;"	v	language:DosBatch
 compiler_flags	bin/build.bat	/^  set compiler_flags=-DASSERTIVE=1 -DFOOLISH=1 %compiler_flags%$/;"	v	language:DosBatch
-compiler_flags	bin/build.bat	/^  set compiler_flags=-O2 -DASSERTIVE=0 -DFOOLISH=0%compiler_flags%$/;"	v	language:DosBatch
+compiler_flags	bin/build.bat	/^  set compiler_flags=-O2 -DASSERTIVE=0 -DFOOLISH=0 %compiler_flags%$/;"	v	language:DosBatch
 compiler_flags	bin/build.bat	/^rem set compiler_flags=-MT -WX -W4 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa/;"	v	language:DosBatch
 compiler_flags	bin/build.bat	/^set compiler_flags=-std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -/;"	v	language:DosBatch
 compiler_flags	bin/build_game_for_shipping.bat	/^  set compiler_flags=%compiler_flags% -LD$/;"	v	language:DosBatch
@@ -475,9 +478,9 @@ data	code/game.h	/^  u8_t* data;$/;"	m	language:C++	struct:game_input_characters
 data	code/game.h	/^  void* data; \/\/ pointer for platform's usage$/;"	m	language:C++	struct:game_file_t	typeref:typename:void *
 data	code/game.h	/^  void* data;$/;"	m	language:C++	struct:game_asset_sound_t	typeref:typename:void *
 data	code/game.h	/^  void* data;$/;"	m	language:C++	struct:game_gfx_command_t	typeref:typename:void *
+data	code/momo.h	/^  u8_t* data = (u8_t*)mmap($/;"	v	language:C++	typeref:typename:u8_t *
 data	code/momo.h	/^  u8_t* data;$/;"	m	language:C++	struct:buffer_t	typeref:typename:u8_t *
 data	code/momo.h	/^  u8_t* data;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u8_t *
-data	code/momo.h	/^  void* data;$/;"	m	language:C++	struct:os_memory_t	typeref:typename:void *
 data	code/momo.h	/^  void* data;$/;"	m	language:C++	struct:wav_t	typeref:typename:void *
 data	code/sandbox.cpp	/^  void* data;$/;"	m	language:C++	struct:sandbox_audio_mixer_instance_t	typeref:typename:void *	file:
 data	code/w32_game.cpp	/^  void* data;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:void *	file:
@@ -1896,7 +1899,6 @@ memory	code/game.h	/^	u8_t* memory;$/;"	m	language:C++	struct:game_gfx_command_q
 memory	code/momo.h	/^  u8_t* memory;$/;"	m	language:C++	struct:arena_t	typeref:typename:u8_t *
 memory	code/momo.h	/^  u8_t* memory;$/;"	m	language:C++	struct:garena_t	typeref:typename:u8_t *
 memory	code/sandbox2.cpp	/^  void* memory;$/;"	m	language:C++	struct:ptube_image_t	typeref:typename:void *	file:
-memory	code/w32_game.cpp	/^  void* memory;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:void *	file:
 memory_sentinel	code/w32_game.cpp	/^  w32_memory_t memory_sentinel;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_memory_t	file:
 memory_size	code/game.h	/^  usz_t memory_size;$/;"	m	language:C++	struct:game_gfx_command_queue_t	typeref:typename:usz_t
 meta_print_if_function_is_next	code/meta.cpp	/^meta_print_if_function_is_next(clex_tokenizer_t t) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -2013,13 +2015,11 @@ OS_LINUX	code/momo.h	/^# define OS_LINUX /;"	d	language:C++
 OS_LINUX	code/momo.h	/^# define OS_LINUX /;"	d	language:C++
 OS_MAC	code/momo.h	/^# define OS_MAC /;"	d	language:C++
 OS_MAC	code/momo.h	/^# define OS_MAC /;"	d	language:C++
-os_memory_allocate	code/momo.h	/^os_memory_allocate(os_memory_t* blk, usz_t size) {$/;"	f	language:C++	typeref:typename:b32_t
-os_memory_allocate	code/momo.h	/^os_memory_allocate(os_memory_t* blk, usz_t size) {$/;"	f	language:C++	typeref:typename:b32_t
-os_memory_allocate	code/momo.h	/^static b32_t os_memory_allocate(os_memory_t* blk, usz_t size);$/;"	p	language:C++	typeref:typename:b32_t
+os_memory_allocate	code/momo.h	/^os_memory_allocate(usz_t size) {$/;"	f	language:C++	typeref:typename:buffer_t
+os_memory_allocate	code/momo.h	/^static buffer_t os_memory_allocate(usz_t size);$/;"	p	language:C++	typeref:typename:buffer_t
+os_memory_free	code/momo.h	/^os_memory_free(buffer_t blk) {$/;"	f	language:C++	typeref:typename:b32_t
 os_memory_free	code/momo.h	/^os_memory_free(os_memory_t* blk) {$/;"	f	language:C++	typeref:typename:b32_t
-os_memory_free	code/momo.h	/^os_memory_free(os_memory_t* mem) {$/;"	f	language:C++	typeref:typename:b32_t
-os_memory_free	code/momo.h	/^static void  os_memory_free(os_memory_t* blk);$/;"	p	language:C++	typeref:typename:void
-os_memory_t	code/momo.h	/^struct os_memory_t {$/;"	s	language:C++
+os_memory_free	code/momo.h	/^static b32_t    os_memory_free(buffer_t blk);$/;"	p	language:C++	typeref:typename:b32_t
 OS_WINDOWS	code/momo.h	/^# define OS_WINDOWS /;"	d	language:C++
 OS_WINDOWS	code/momo.h	/^# define OS_WINDOWS /;"	d	language:C++
 output_name	bin/build.bat	/^  set output_name=game.dll$/;"	v	language:DosBatch
@@ -2151,6 +2151,7 @@ render_client	code/w32_game.cpp	/^  IAudioRenderClient* render_client;$/;"	m	lan
 render_command_size	code/game.h	/^  usz_t render_command_size;$/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
 render_wh	code/game.h	/^  v2u_t render_wh;$/;"	m	language:C++	struct:game_gfx_opengl_t	typeref:typename:v2u_t
 result	code/momo.h	/^  usz_t result;$/;"	m	language:C++	struct:arena_calc_t	typeref:typename:usz_t
+ret	code/momo.h	/^  buffer_t ret = {};$/;"	v	language:C++	typeref:typename:buffer_t
 rgb	code/momo.h	/^    rgb_t rgb;$/;"	m	language:C++	union:rgba_t::__anon1db7a63d0d0a	typeref:typename:rgb_t
 rgba_hex	code/momo.h	/^rgba_hex(u32_t hex) {$/;"	f	language:C++	typeref:typename:rgba_t
 rgba_hex	code/momo.h	/^static rgba_t rgba_hex(u32_t hex);  $/;"	p	language:C++	typeref:typename:rgba_t
@@ -2275,8 +2276,6 @@ size	code/momo.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typer
 size	code/momo.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_riff_chunk_t	typeref:typename:u32_t
 size	code/momo.h	/^  usz_t size; $/;"	m	language:C++	union:garena_header_t	typeref:typename:usz_t
 size	code/momo.h	/^  usz_t size;$/;"	m	language:C++	struct:buffer_t	typeref:typename:usz_t
-size	code/momo.h	/^  usz_t size;$/;"	m	language:C++	struct:os_memory_t	typeref:typename:usz_t
-size	code/w32_game.cpp	/^  usz_t size;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:usz_t	file:
 size_end	code/lit.cpp	/^  v2f_t size_start, size_end;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t	file:
 size_start	code/lit.cpp	/^  v2f_t size_start, size_end;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t	file:
 sll_append	code/momo.h	/^#define sll_append(/;"	d	language:C++
