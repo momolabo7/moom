@@ -767,6 +767,8 @@ static buffer_t buffer_invalid();
 static b32_t is_whitespace(char c);
 static b32_t is_alpha(char c);
 static b32_t is_digit(char c);
+static b32_t is_uppercase(char c);
+
 
 //
 // MARK:(Memory)
@@ -2584,7 +2586,11 @@ is_alpha(char c) {
 static b32_t
 is_digit(char c) {
   return (c >= '0' && c <= '9');
-  // this gets compiled to (uint8_t)(c - '0') <= 9 on all decent compilers
+}
+
+static b32_t
+is_uppercase(char c) {
+  return (c >= 'A' && c <= 'Z');
 }
 
 static f32_t 

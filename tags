@@ -49,6 +49,7 @@ aoc2022_d9_list_init	code/aoc2022.cpp	/^aoc2022_d9_list_init(aoc2022_d9_list_t* 
 aoc2022_d9_list_insert_unique	code/aoc2022.cpp	/^aoc2022_d9_list_insert_unique(aoc2022_d9_list_t* list, v2s_t pos) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 aoc2022_d9_list_t	code/aoc2022.cpp	/^} aoc2022_d9_list_t;$/;"	t	language:C++	typeref:struct:__anon15770fd90508	file:
 aoc2022_d9_move	code/aoc2022.cpp	/^aoc2022_d9_move(v2s_t* head, v2s_t* tail, aoc2022_d9_list_t* visited, char direction) $/;"	f	language:C++	typeref:typename:b32_t	file:
+aoc22_cstr_count_readables	code/aoc22.cpp	/^aoc22_cstr_count_readables(const char* buffer) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 aoc22_d1a	code/aoc22.cpp	/^aoc22_d1a(const char* filename) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d2a	code/aoc22.cpp	/^aoc22_d2a(const char* filename) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d2b	code/aoc22.cpp	/^aoc22_d2b(const char* filename) $/;"	f	language:C++	typeref:typename:void	file:
@@ -68,6 +69,7 @@ aoc22_d5_stacks_pop	code/aoc22.cpp	/^#define aoc22_d5_stacks_pop(/;"	d	language:
 aoc22_d5_stacks_print	code/aoc22.cpp	/^#define aoc22_d5_stacks_print(/;"	d	language:C++	file:
 aoc22_d5_stacks_print	code/aoc22.cpp	/^#define aoc22_d5_stacks_print(/;"	d	language:C++	file:
 aoc22_d5_stacks_push	code/aoc22.cpp	/^#define aoc22_d5_stacks_push(/;"	d	language:C++	file:
+aoc22_is_readable	code/aoc22.cpp	/^aoc22_is_readable(char c) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 aoc22_r2u_is_fully_overlapping	code/aoc22.cpp	/^aoc22_r2u_is_fully_overlapping(aoc22_r2u_t lhs, aoc22_r2u_t rhs) {$/;"	f	language:C++	typeref:typename:int	file:
 aoc22_r2u_is_overlapping	code/aoc22.cpp	/^aoc22_r2u_is_overlapping(aoc22_r2u_t lhs, aoc22_r2u_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 aoc22_r2u_t	code/aoc22.cpp	/^} aoc22_r2u_t;$/;"	t	language:C++	typeref:struct:__anonabc347370108	file:
@@ -1578,6 +1580,8 @@ is_pow2	code/momo.h	/^#define is_pow2(/;"	d	language:C++
 is_running	code/game.h	/^  b32_t is_running;$/;"	m	language:C++	struct:game_t	typeref:typename:b32_t
 is_running	code/w32_game.cpp	/^  b32_t is_running;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:b32_t	file:
 is_shell	code/lit.cpp	/^  b32_t is_shell;$/;"	m	language:C++	struct:lit_light_intersection_t	typeref:typename:b32_t	file:
+is_uppercase	code/momo.h	/^is_uppercase(char c) {$/;"	f	language:C++	typeref:typename:b32_t
+is_uppercase	code/momo.h	/^static b32_t is_uppercase(char c);$/;"	p	language:C++	typeref:typename:b32_t
 is_valid	code/w32_game.cpp	/^  b32_t is_valid;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:b32_t	file:
 is_whitespace	code/momo.h	/^is_whitespace(char c) {$/;"	f	language:C++	typeref:typename:b32_t
 is_whitespace	code/momo.h	/^static b32_t is_whitespace(char c);$/;"	p	language:C++	typeref:typename:b32_t
