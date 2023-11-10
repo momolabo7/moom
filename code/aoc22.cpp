@@ -3,6 +3,50 @@
 #include <stdlib.h>
 
 
+typedef struct aoc22_tokenizer_t {
+  char* buffer;
+  u32_t at;
+} aoc22_tokenizer_t;
+
+// terrible algorithm that will break if input is bad
+// in the case of this qn, do NOT call more than 4 times
+static u32_t 
+aoc22_tokenizer_get_next_u32(aoc22_tokenizer_t* t) {
+  // go forward until we find a digit
+  while(!is_digit(t->buffer[t->at])) ++(t->at);
+
+  u32_t num = 0;
+  while(is_digit(t->buffer[t->at])) {
+    num *= 10;
+    num += t->buffer[t->at] - '0'; 
+    t->at++;
+  }
+  return num;
+}
+
+typedef struct {
+  u32_t min, max;
+} aoc22_r2u_t;
+
+static b32_t
+aoc22_r2u_is_overlapping(aoc22_r2u_t lhs, aoc22_r2u_t rhs) {
+  // There exists 'x' such that:
+  //   lhs.min <= x <= lhs.max
+  //   rhs.min <= x <= rhs.max
+  // Thus:
+  return lhs.min <= rhs.max && rhs.min <= lhs.max;
+
+}
+
+static int 
+aoc22_r2u_is_fully_overlapping(aoc22_r2u_t lhs, aoc22_r2u_t rhs) {
+  int is_lhs_overlapping = lhs.min <= rhs.min && lhs.max >= rhs.max;
+  int is_rhs_overlapping = rhs.min <= lhs.min && rhs.max >= lhs.max; 
+
+  return is_lhs_overlapping || is_rhs_overlapping;
+}
+
+
 static void 
 aoc22_d1a(const char* filename) 
 {
@@ -226,8 +270,6 @@ aoc22_d3b(const char* filename)
   char buffer[3][128];
 
   if (fp) {
-    u32_t rucksack_index = 0;
-    u32_t priority = 0;
     // NOTE(momo): There are exactly 300 lines
     while(1) {
       char common = 0;
@@ -279,17 +321,17 @@ aoc22_d4a(const char* filename) {
   if (fp) {
 
     while(fgets(buffer, sizeof(buffer), fp)) {
-      tokenizer_t tokenizer = { buffer, 0 };
-      r2u_t first_elf;
-      r2u_t second_elf;
+      aoc22_tokenizer_t aoc22_tokenizer = { buffer, 0 };
+      aoc22_r2u_t first_elf;
+      aoc22_r2u_t second_elf;
 
-      first_elf.min = tokenizer_get_next_u32(&tokenizer);
-      first_elf.max = tokenizer_get_next_u32(&tokenizer);
+      first_elf.min = aoc22_tokenizer_get_next_u32(&aoc22_tokenizer);
+      first_elf.max = aoc22_tokenizer_get_next_u32(&aoc22_tokenizer);
 
-      second_elf.min = tokenizer_get_next_u32(&tokenizer);
-      second_elf.max = tokenizer_get_next_u32(&tokenizer);
+      second_elf.min = aoc22_tokenizer_get_next_u32(&aoc22_tokenizer);
+      second_elf.max = aoc22_tokenizer_get_next_u32(&aoc22_tokenizer);
 
-      u32_t overlap = r2u_is_fully_overlapping(first_elf, second_elf);
+      u32_t overlap = aoc22_r2u_is_fully_overlapping(first_elf, second_elf);
 #if 0
       printf("%d-%d,%d-%d: %d\n", 
              first_elf.min, first_elf.max, 
@@ -314,17 +356,17 @@ aoc22_d4b(const char* filename) {
   char buffer[16];
   if (fp) {
     while(fgets(buffer, sizeof(buffer), fp)) {
-      tokenizer_t tokenizer = { buffer, 0 };
-      r2u_t first_elf;
-      r2u_t second_elf;
+      aoc22_tokenizer_t aoc22_tokenizer = { buffer, 0 };
+      aoc22_r2u_t first_elf;
+      aoc22_r2u_t second_elf;
 
-      first_elf.min = tokenizer_get_next_u32(&tokenizer);
-      first_elf.max = tokenizer_get_next_u32(&tokenizer);
+      first_elf.min = aoc22_tokenizer_get_next_u32(&aoc22_tokenizer);
+      first_elf.max = aoc22_tokenizer_get_next_u32(&aoc22_tokenizer);
 
-      second_elf.min = tokenizer_get_next_u32(&tokenizer);
-      second_elf.max = tokenizer_get_next_u32(&tokenizer);
+      second_elf.min = aoc22_tokenizer_get_next_u32(&aoc22_tokenizer);
+      second_elf.max = aoc22_tokenizer_get_next_u32(&aoc22_tokenizer);
 
-      u32_t overlap = r2u_is_overlapping(first_elf, second_elf); 
+      u32_t overlap = aoc22_r2u_is_overlapping(first_elf, second_elf); 
 #if 0
       printf("%d-%d,%d-%d: %d\n", 
              first_elf.min, first_elf.max, 
