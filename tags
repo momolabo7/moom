@@ -58,6 +58,16 @@ aoc22_d3b	code/aoc22.cpp	/^aoc22_d3b(const char* filename) $/;"	f	language:C++	t
 aoc22_d3_get_priority	code/aoc22.cpp	/^aoc22_d3_get_priority(char c) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 aoc22_d4a	code/aoc22.cpp	/^aoc22_d4a(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d4b	code/aoc22.cpp	/^aoc22_d4b(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d5a	code/aoc22.cpp	/^aoc22_d5a(const char* filename) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d5b	code/aoc22.cpp	/^aoc22_d5b(const char* filename) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d5_stacks_at	code/aoc22.cpp	/^#define aoc22_d5_stacks_at(/;"	d	language:C++	file:
+aoc22_d5_stacks_at	code/aoc22.cpp	/^#define aoc22_d5_stacks_at(/;"	d	language:C++	file:
+aoc22_d5_stacks_last	code/aoc22.cpp	/^#define aoc22_d5_stacks_last(/;"	d	language:C++	file:
+aoc22_d5_stacks_last	code/aoc22.cpp	/^#define aoc22_d5_stacks_last(/;"	d	language:C++	file:
+aoc22_d5_stacks_pop	code/aoc22.cpp	/^#define aoc22_d5_stacks_pop(/;"	d	language:C++	file:
+aoc22_d5_stacks_print	code/aoc22.cpp	/^#define aoc22_d5_stacks_print(/;"	d	language:C++	file:
+aoc22_d5_stacks_print	code/aoc22.cpp	/^#define aoc22_d5_stacks_print(/;"	d	language:C++	file:
+aoc22_d5_stacks_push	code/aoc22.cpp	/^#define aoc22_d5_stacks_push(/;"	d	language:C++	file:
 aoc22_r2u_is_fully_overlapping	code/aoc22.cpp	/^aoc22_r2u_is_fully_overlapping(aoc22_r2u_t lhs, aoc22_r2u_t rhs) {$/;"	f	language:C++	typeref:typename:int	file:
 aoc22_r2u_is_overlapping	code/aoc22.cpp	/^aoc22_r2u_is_overlapping(aoc22_r2u_t lhs, aoc22_r2u_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 aoc22_r2u_t	code/aoc22.cpp	/^} aoc22_r2u_t;$/;"	t	language:C++	typeref:struct:__anonabc347370108	file:
