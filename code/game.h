@@ -833,7 +833,7 @@ struct game_t {
   arena_t audio_arena;
   arena_t debug_arena;
 
-  void* game;
+  void* user_data;
 };
 
 

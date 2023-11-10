@@ -3718,7 +3718,7 @@ static void lit_sandbox_update() {
 //
 static b32_t
 lit_tick() {
-  if(g_game->game == nullptr) {
+  if(g_game->user_data == nullptr) {
     usz_t lit_memory_size = sizeof(lit_t);
     usz_t asset_memory_size = megabytes(20);
     usz_t debug_memory_size = megabytes(1);
@@ -3739,10 +3739,10 @@ lit_tick() {
 
     u8_t* memory = (u8_t*)game_allocate_memory(g_game, required_memory);
     if (!memory) return false;
-    g_game->game = memory;
+    g_game->user_data = memory;
 
 
-    g_lit = (lit_t*)(g_game->game);
+    g_lit = (lit_t*)(g_game->user_data);
     g_lit->level_to_start = 0;
     g_lit->next_mode = LIT_MODE_SPLASH;
     g_lit->mode = LIT_MODE_NONE;
@@ -3796,7 +3796,7 @@ lit_tick() {
     
   }
 
-  g_lit = (lit_t*)(g_game->game);
+  g_lit = (lit_t*)(g_game->user_data);
 
   arena_clear(&g_lit->frame_arena);
 
