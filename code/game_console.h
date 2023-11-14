@@ -4,7 +4,7 @@
 
 
 struct console_command_t {
-  st8_t key;
+  str_t key;
   void* ctx;
   void (*func)(void*);
 };
@@ -42,7 +42,7 @@ console_init(console_t* console, arena_t* allocator, u32_t characters_per_line, 
 }
 
 static void
-console_add_command(console_t* console, st8_t key, void* ctx, void(*func)(void*)) 
+console_add_command(console_t* console, str_t key, void* ctx, void(*func)(void*)) 
 {
   // simulate adding commands
   assert(console->command_count < console->command_cap);
@@ -53,7 +53,7 @@ console_add_command(console_t* console, st8_t key, void* ctx, void(*func)(void*)
 }
 
 static void
-console_push_info(console_t* console, st8_t str) {
+console_push_info(console_t* console, str_t str) {
   // NOTE(Momo): There's probably a better to do with via some
   // crazy indexing scheme, but this is debug so we don't care for now
   
@@ -66,10 +66,10 @@ console_push_info(console_t* console, st8_t str) {
     stb8_t* line_to = console->info_lines + line_index;
     stb8_t* line_from = console->info_lines + line_index - 1;
     stb8_clear(line_to);
-    stb8_push_st8(line_to, line_from->str);
+    stb8_push_str(line_to, line_from->str);
   } 
   stb8_clear(console->info_lines + 0);
-  stb8_push_st8(console->info_lines + 0, str);
+  stb8_push_str(console->info_lines + 0, str);
 }
 
 static void
@@ -79,7 +79,7 @@ console_execute(console_t* console) {
       ++command_index) 
   {
     console_command_t* cmd = console->commands + command_index;
-    if (st8_match(cmd->key, console->input_line.str)) {
+    if (str_match(cmd->key, console->input_line.str)) {
       cmd->func(cmd->ctx);
     }
   }

@@ -302,7 +302,7 @@ struct lit_game_t {
 
   rng_t rng;
 
-  st8_t title;
+  str_t title;
   f32_t title_timer;
   u32_t title_wp_index;
     
@@ -478,7 +478,7 @@ lit_update_and_render_console()
     }
     // backspace 
     if (c == 8) {
-      if (console->input_line.count > 0) 
+      if (console->input_line.size > 0) 
         stb8_pop(&console->input_line);
     }    
     
@@ -632,7 +632,7 @@ lit_profiler_update_and_render()
     
     stb8_make(sb, 256);
     stb8_push_fmt(sb, 
-                 st8_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
+                 str_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
                  entry->block_name,
                  (u32_t)cycles.average,
                  (u32_t)hits.average,
@@ -698,11 +698,11 @@ lit_inspector_update_and_render()
     game_inspector_entry_t* entry = inspector->entries + entry_index;
     switch(entry->type){
       case GAME_INSPECTOR_ENTRY_TYPE_U32: {
-        stb8_push_fmt(sb, st8_from_lit("[%10S] %7u"),
+        stb8_push_fmt(sb, str_from_lit("[%10S] %7u"),
             entry->name, entry->item_u32);
       } break;
       case GAME_INSPECTOR_ENTRY_TYPE_F32: {
-        stb8_push_fmt(sb, st8_from_lit("[%10S] %7f"),
+        stb8_push_fmt(sb, str_from_lit("[%10S] %7f"),
             entry->name, entry->item_f32);
       } break;
     }
@@ -748,7 +748,7 @@ lit_splash_update() {
       g_game, 
       &g_lit->assets, 
       font, 
-      st8_from_lit("--------"), 
+      str_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -757,7 +757,7 @@ lit_splash_update() {
       g_game, 
       &g_lit->assets, 
       font,
-      st8_from_lit("PRIMIX"), 
+      str_from_lit("PRIMIX"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -767,7 +767,7 @@ lit_splash_update() {
       g_game, 
       &g_lit->assets, 
       font,
-      st8_from_lit("--------"), 
+      str_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -790,7 +790,7 @@ lit_splash_update() {
       g_game, 
       &g_lit->assets, 
       font,
-      st8_from_lit("a silly game by"), 
+      str_from_lit("a silly game by"), 
       grey,
       LIT_WIDTH/2, scroll_y, 
       36.f);
@@ -800,7 +800,7 @@ lit_splash_update() {
       g_game, 
       &g_lit->assets, 
       font,
-      st8_from_lit("momohoudai"), 
+      str_from_lit("momohoudai"), 
       grey,
       LIT_WIDTH/2, scroll_y, 
       72.f);
@@ -824,7 +824,7 @@ lit_game_is_exiting(lit_game_t* g) {
 }
 
 static void
-lit_game_set_title(lit_game_t* g, st8_t str = st8_t{}) {
+lit_game_set_title(lit_game_t* g, str_t str = str_t{}) {
   g->title = str;
   g->title_timer = 0.f;
   g->title_wp_index = 0;
@@ -1856,7 +1856,7 @@ lit_game_update_sensors(lit_game_t* g, f32_t dt)
     }
   }
 
-  game_inspect_u32(g_game, st8_from_lit("total_triangles"), total_triangles);
+  game_inspect_u32(g_game, str_from_lit("total_triangles"), total_triangles);
 }
 
 
@@ -1909,7 +1909,7 @@ static void lit_level_add();
 } 
 
 static void
-lit_game_init_level(lit_game_t* m, st8_t str, u32_t level_id) {
+lit_game_init_level(lit_game_t* m, str_t str, u32_t level_id) {
   m->stage_flash_timer = 0.f;
   m->stage_fade_timer = LIT_ENTER_DURATION;
 
@@ -1942,7 +1942,7 @@ lit_game_init_level(lit_game_t* m, st8_t str, u32_t level_id) {
   lit_game_push_edge(m, LIT_WIDTH, 0.f, LIT_WIDTH, LIT_HEIGHT);
   lit_game_push_edge(m, LIT_WIDTH, LIT_HEIGHT, 0.f, LIT_HEIGHT);
   lit_game_push_edge(m, 0.f, LIT_HEIGHT, 0.f, 0.f);
-  lit_init_player(m, 400.f, 400.f); // TODO: any point to this?
+  lit_init_player(m, 400.f, 400.f); 
 
   lit_game_set_title(m, str);
 }
@@ -1961,7 +1961,7 @@ lit_game_init_level(lit_game_t* m, st8_t str, u32_t level_id) {
 static void
 lit_level_move() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("MOVE"), 1);
+  lit_game_init_level(m, str_from_lit("MOVE"), 1);
 
   lit_game_push_light(m, 400.f, 400, 0x880000FF, 45.f, 0.75f);
 
@@ -1984,7 +1984,7 @@ lit_level_move() {
 static void
 lit_level_obstruct() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("OBSTRUCT"), 2);
+  lit_game_init_level(m, str_from_lit("OBSTRUCT"), 2);
   
   if (lit_is_in_tutorial()) {
     lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_add));
@@ -2010,7 +2010,7 @@ static void
 lit_level_add() { 
   lit_game_t* m = &g_lit->g_game;
   // Need to 'enclose' the shape
-  lit_game_init_level(m, st8_from_lit("ADD"), 3);
+  lit_game_init_level(m, str_from_lit("ADD"), 3);
   lit_game_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
@@ -2031,7 +2031,7 @@ lit_level_add() {
 static void
 lit_level_corners() { 
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("CORNERS"), 4);
+  lit_game_init_level(m, str_from_lit("CORNERS"), 4);
 
   // Need to 'enclose' the shape
   lit_game_push_double_edge(m, 500.f, 200.f, 600.f, 300.f);
@@ -2062,7 +2062,7 @@ static void
 lit_level_mix() {
   lit_game_t* m = &g_lit->g_game;
 
-  lit_game_init_level(m, st8_from_lit("MIX"), 5);
+  lit_game_init_level(m, str_from_lit("MIX"), 5);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   lit_game_push_sensor(m, 400.f, 400.f, 0x888800FF); 
@@ -2089,7 +2089,7 @@ lit_level_mix() {
 static void
 lit_level_blend() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("BLEND"), 6);
+  lit_game_init_level(m, str_from_lit("BLEND"), 6);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   lit_game_push_sensor(m, 400.f,  400.f, 0x888888FF); 
@@ -2118,7 +2118,7 @@ static void
 lit_level_rooms() {
   lit_game_t* m = &g_lit->g_game;
 
-  lit_game_init_level(m, st8_from_lit("ROOMS"), 7);
+  lit_game_init_level(m, str_from_lit("ROOMS"), 7);
 
   // middle
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
@@ -2155,7 +2155,7 @@ lit_level_rooms() {
 static void
 lit_level_disco() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("DISCO"), 8);
+  lit_game_init_level(m, str_from_lit("DISCO"), 8);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   // bottom left room
@@ -2215,7 +2215,7 @@ lit_level_disco() {
 static void
 lit_level_onion() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("ONION"), 9);
+  lit_game_init_level(m, str_from_lit("ONION"), 9);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   // layer 1
@@ -2253,7 +2253,7 @@ lit_level_onion() {
 static void
 lit_level_spectrum() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("SPECTRUM"), 10);
+  lit_game_init_level(m, str_from_lit("SPECTRUM"), 10);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   // cyans
@@ -2300,7 +2300,7 @@ lit_level_spectrum() {
 static void
 lit_level_split() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("SPLIT"), 11);
+  lit_game_init_level(m, str_from_lit("SPLIT"), 11);
 
   lit_game_push_light(m, 400.f, 410.f, 0x880000FF, 360.f, 0.f);
   lit_game_push_light(m, 390.f, 390.f, 0x008800FF, 360.f, 0.f);
@@ -2332,7 +2332,7 @@ lit_level_split() {
 static void
 lit_level_movement() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("MOVEMENT"), 12);
+  lit_game_init_level(m, str_from_lit("MOVEMENT"), 12);
 
 //  lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
   lit_game_push_light(m, 400.f, 700.f, 0x008800FF, 15.f, 0.25f);
@@ -2383,7 +2383,7 @@ lit_level_movement() {
 static void
 lit_level_interval() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("INTERVAL"), 13);
+  lit_game_init_level(m, str_from_lit("INTERVAL"), 13);
 
   const u32_t sections = 20;
   f32_t offset = LIT_WIDTH/20; 
@@ -2472,7 +2472,7 @@ lit_level_interval() {
 static void
 lit_level_patience() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("PATIENCE"), 14);
+  lit_game_init_level(m, str_from_lit("PATIENCE"), 14);
   lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
   lit_game_push_light(m, 400.f, 700.f, 0x008800FF, 15.f, 0.75f);
 
@@ -2494,7 +2494,7 @@ lit_level_patience() {
 static void
 lit_level_busy() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("SCRAMBLE"), 15);
+  lit_game_init_level(m, str_from_lit("SCRAMBLE"), 15);
   //lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
 #if 1
   lit_game_push_light(m, 600.f, 700.f, 0x660000FF, 15.f, 0.75f);
@@ -2580,7 +2580,7 @@ lit_level_busy() {
 static void
 lit_level_spin() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("SPIN"), 16);
+  lit_game_init_level(m, str_from_lit("SPIN"), 16);
 
   f32_t speed = 1.f;
 
@@ -2634,7 +2634,7 @@ lit_level_spin() {
 static void
 lit_level_orbit() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("ORBIT"), 17);
+  lit_game_init_level(m, str_from_lit("ORBIT"), 17);
 
   f32_t speed = 1.f;
 
@@ -2691,7 +2691,7 @@ lit_level_orbit() {
 static void
 lit_level_hourglass() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("HOURGLASS"), 18);
+  lit_game_init_level(m, str_from_lit("HOURGLASS"), 18);
 
   lit_game_push_light(m, 250, 400, 0x880000FF, 360.f, 0.75f);
   lit_game_push_light(m, 550, 400, 0x008800FF, 360.f, 0.75f);
@@ -2755,7 +2755,7 @@ lit_level_hourglass() {
 #if 0
 static void
 lit_level_test(lit_game_t* m) {
-  lit_game_init_level(m, st8_from_lit("TEST"), 1);
+  lit_game_init_level(m, str_from_lit("TEST"), 1);
 
   //lit_game_push_light(m, 250, 400, 0x880000FF, 360.f, 0.75f);
   //lit_game_push_light(m, 550, 400, 0x008800FF, 360.f, 0.75f);
@@ -2820,7 +2820,7 @@ lit_level_test(lit_game_t* m) {
 static void
 lit_level_triforce() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("TRIFORCE"), 19);
+  lit_game_init_level(m, str_from_lit("TRIFORCE"), 19);
 
   lit_game_push_light(m, 400, 427, 0x880000FF, 360.f, 0.75f);
   lit_game_push_light(m, 380, 380, 0x008800FF, 360.f, 0.75f);
@@ -2908,7 +2908,7 @@ lit_level_triforce() {
 static void
 lit_level_hands() {
   lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, st8_from_lit("HANDS"), 20);
+  lit_game_init_level(m, str_from_lit("HANDS"), 20);
 
   lit_game_push_light(m, 100, 100, 0x880000FF, 360.f, 0.75f);
   lit_game_push_light(m, 100, 400, 0x008800FF, 360.f, 0.75f);
@@ -2989,7 +2989,7 @@ lit_level_menu() {
   u32_t grey = 0x888888FF;
   f32_t row_y_offset = 150.f;
 
-  lit_game_init_level(m, st8_from_lit("HOME"), 0);
+  lit_game_init_level(m, str_from_lit("HOME"), 0);
 
   //
   // 1st row
@@ -3570,7 +3570,7 @@ lit_credits_init() {
 
 static f32_t 
 lit_credits_push_subtitle_and_name(
-    f32_t y, st8_t subtitle, st8_t name)
+    f32_t y, str_t subtitle, str_t name)
 {
   game_draw_text_center_aligned(
       g_game, 
@@ -3620,7 +3620,7 @@ lit_credits_update() {
       g_game, 
       &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      st8_from_lit("THANKS"), 
+      str_from_lit("THANKS"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       96.f);
@@ -3629,7 +3629,7 @@ lit_credits_update() {
       g_game, 
       &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      st8_from_lit("FOR"), 
+      str_from_lit("FOR"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       96.f);
@@ -3638,7 +3638,7 @@ lit_credits_update() {
       g_game, 
       &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      st8_from_lit("PLAYING!"), 
+      str_from_lit("PLAYING!"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       96.f);
@@ -3649,7 +3649,7 @@ lit_credits_update() {
       g_game, 
       &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      st8_from_lit("--------"), 
+      str_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -3659,7 +3659,7 @@ lit_credits_update() {
       g_game, 
       &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      st8_from_lit("PRIMIX"), 
+      str_from_lit("PRIMIX"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -3669,7 +3669,7 @@ lit_credits_update() {
       g_game, 
       &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      st8_from_lit("--------"), 
+      str_from_lit("--------"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -3678,14 +3678,14 @@ lit_credits_update() {
   //
   //  
   //
-  y = lit_credits_push_subtitle_and_name(y, st8_from_lit("engine"), st8_from_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, st8_from_lit("gameplay"), st8_from_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, st8_from_lit("art"), st8_from_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, st8_from_lit("lighting"), st8_from_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, st8_from_lit("particles"), st8_from_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, st8_from_lit("sound"), st8_from_lit("your imagination"));
-  y = lit_credits_push_subtitle_and_name(y, st8_from_lit("food"), st8_from_lit("my wife <3"));
-  y = lit_credits_push_subtitle_and_name(y, st8_from_lit("coffee"), st8_from_lit("a lot"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("engine"), str_from_lit("momohoudai"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("gameplay"), str_from_lit("momohoudai"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("art"), str_from_lit("momohoudai"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("lighting"), str_from_lit("momohoudai"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("particles"), str_from_lit("momohoudai"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("sound"), str_from_lit("your imagination"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("food"), str_from_lit("my wife <3"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("coffee"), str_from_lit("a lot"));
 
   if (y > LIT_HEIGHT) {
     g_lit->next_mode = LIT_MODE_GAME;
@@ -3704,7 +3704,7 @@ static void lit_sandbox_update() {
       g_game, 
       &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT, 
-      st8_from_lit("A"), 
+      str_from_lit("A"), 
       color,
       LIT_WIDTH/2, 
       LIT_HEIGHT/2, 
@@ -3747,10 +3747,9 @@ lit_tick() {
     g_lit->next_mode = LIT_MODE_SPLASH;
     g_lit->mode = LIT_MODE_NONE;
     
+
     usz_t offset = sizeof(lit_t);
     offset = align_up_pow2(offset, 16);
-
-    // TODO: use arena partition to manage this
 
     //
     // Initialize assets

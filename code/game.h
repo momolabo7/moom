@@ -548,7 +548,7 @@ enum game_inspector_entry_type_t {
 };
 
 struct game_inspector_entry_t {
-  st8_t name;
+  str_t name;
   game_inspector_entry_type_t type;
   union {
     f32_t item_f32;
@@ -2845,11 +2845,11 @@ game_draw_asset_sprite(
 
 
 static void
-game_draw_text(game_t* game, game_assets_t* assets, game_asset_font_id_t font_id, st8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+game_draw_text(game_t* game, game_assets_t* assets, game_asset_font_id_t font_id, str_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
   game_asset_font_t* font = game_assets_get_font(assets, font_id);
   for(u32_t char_index = 0; 
-      char_index < str.count;
+      char_index < str.size;
       ++char_index) 
   {
     u32_t curr_cp = str.e[char_index];
@@ -2884,14 +2884,14 @@ game_draw_text(game_t* game, game_assets_t* assets, game_asset_font_id_t font_id
 }
 
 static void
-game_draw_text_center_aligned(game_t* game, game_assets_t* assets, game_asset_font_id_t font_id, st8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+game_draw_text_center_aligned(game_t* game, game_assets_t* assets, game_asset_font_id_t font_id, str_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
   game_asset_font_t* font = game_assets_get_font(assets, font_id);
   
   // Calculate the total width of the text
   f32_t offset = 0.f;
   for(u32_t char_index = 1; 
-      char_index < str.count;
+      char_index < str.size;
       ++char_index)
   {
 
@@ -2908,7 +2908,7 @@ game_draw_text_center_aligned(game_t* game, game_assets_t* assets, game_asset_fo
 
   // Add the width of the last glyph
   {    
-    u32_t cp = str.e[str.count-1];
+    u32_t cp = str.e[str.size-1];
     game_asset_font_glyph_t* glyph = game_assets_get_glyph(font, cp);
     f32_t advance = glyph->horizontal_advance;
     offset += advance * font_height;
@@ -2916,7 +2916,7 @@ game_draw_text_center_aligned(game_t* game, game_assets_t* assets, game_asset_fo
   px -= offset/2 ;
 
   for(u32_t char_index = 0; 
-      char_index < str.count;
+      char_index < str.size;
       ++char_index) 
   {
     u32_t curr_cp = str.e[char_index];
@@ -2966,7 +2966,7 @@ game_inspector_clear(game_inspector_t* in)
 }
 
 static void
-game_inspector_add_u32(game_inspector_t* in, st8_t name, u32_t item) 
+game_inspector_add_u32(game_inspector_t* in, str_t name, u32_t item) 
 {
   assert(in->entry_count < in->entry_cap);
   game_inspector_entry_t* entry = in->entries + in->entry_count++;
@@ -2977,7 +2977,7 @@ game_inspector_add_u32(game_inspector_t* in, st8_t name, u32_t item)
 
 
 static void
-game_inspector_add_f32(game_inspector_t* in, st8_t name, f32_t item) {
+game_inspector_add_f32(game_inspector_t* in, str_t name, f32_t item) {
   assert(in->entry_count < in->entry_cap);
   game_inspector_entry_t* entry = in->entries + in->entry_count++;
   entry->item_f32 = item;

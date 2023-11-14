@@ -207,11 +207,25 @@ typedef size_t    usz_t; // Can contain up to the highest indexable value
 //
 
 //
-// MARK:(Buffer)
+// MARK:(Strings)
 //
-struct buffer_t {
-  u8_t* data;
+struct str_t {
+  u8_t* e;
   usz_t size;
+
+  //
+  // Note that it is entirely possible to have
+  // a string of size 0. That would represent
+  // the concept of an 'empty string'.
+  //
+  // Thus, the only way for a string to be completely
+  // invalid in our case would be when there is no
+  // data set at all.
+  //
+  operator bool() {
+
+    return e != nullptr;
+  }
 };
 
 
@@ -384,20 +398,13 @@ struct garena_t {
   garena_free_block_t* free_list;
 };
 
-//
-// MARK:(Strings)
-//
-struct st8_t {
-  u8_t* e;
-  usz_t count;
-};
 
 struct stb8_t{
   union {
-    st8_t str;
+    str_t str;
     struct {
       u8_t* e;
-      usz_t count;
+      usz_t size;
     };
   };
   usz_t cap;
@@ -407,7 +414,7 @@ struct stb8_t{
 // MARK:(Stream)
 //
 struct stream_t {
-  buffer_t contents;
+  str_t contents;
   usz_t pos;
 
   // For bit reading
@@ -466,7 +473,7 @@ struct wav_t {
 // MARK:(PNG Declaration)
 //
 struct png_t {
-  buffer_t contents;
+  str_t contents;
 
   u32_t width;
   u32_t height;
@@ -552,7 +559,7 @@ enum clex_token_type_t {
   CLEX_TOKEN_TYPE_EOF
 };
 
-// TODO: Change to st8_t?
+// TODO: Change to str_t?
 struct clex_token_t {
   clex_token_type_t type;
 
@@ -561,7 +568,7 @@ struct clex_token_t {
 };
 
 struct clex_tokenizer_t {
-  buffer_t text;
+  str_t text;
   usz_t at;
 };
 
@@ -572,7 +579,7 @@ struct clex_tokenizer_t {
 // The "key" of a JSON entry, which can only be a string.
 struct json_key_t {
   u8_t* at;
-  usz_t count;
+  usz_t size;
 };
 
 // Represents a JSON array, which is a linked list
@@ -588,9 +595,9 @@ struct json_element_t {
   union {
     struct {
       u8_t* at;
-      usz_t count;
+      usz_t size;
     };
-    st8_t str;
+    str_t str;
   };
 };
 
@@ -628,7 +635,7 @@ struct json_array_node_t {
 
 struct json_t {
   // for tokenizing
-  st8_t text;
+  str_t text;
   umi_t at;
 
   // The 'root' item in a JSON file is an object type.
@@ -637,7 +644,7 @@ struct json_t {
 
 
 static json_object_t* json_read(json_t* j, const u8_t* json_string, u32_t json_string_size, arena_t* ba);
-static json_value_t* json_get_value(json_object_t* j, st8_t key);
+static json_value_t* json_get_value(json_object_t* j, str_t key);
 static b32_t json_is_true(json_value_t* val);
 static b32_t json_is_false(json_value_t* val);
 static b32_t json_is_null(json_value_t* val);
@@ -753,13 +760,6 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 
 
 //
-// MARK:(Buffer)
-//
-static buffer_t buffer_set(u8_t* mem, usz_t size);
-static b32_t buffer_is_valid(buffer_t buffer);
-static buffer_t buffer_invalid();
-
-//
 // MARK:(ASCII)
 //
 #define digit_to_ascii(d) ((d) + '0')
@@ -768,6 +768,7 @@ static b32_t is_whitespace(char c);
 static b32_t is_alpha(char c);
 static b32_t is_digit(char c);
 static b32_t is_uppercase(char c);
+static b32_t is_readable(char c);
 
 
 //
@@ -1119,16 +1120,17 @@ static u32_t crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t
 // 
 // MARK:(Strings)
 //
-#define st8_from_lit(s) st8_set((u8_t*)(s), sizeof(s)-1)
-static st8_t  st8_set(u8_t* str, usz_t size);
-static st8_t  st8_substr(st8_t str, usz_t start, usz_t ope);
-static b32_t  st8_match(st8_t lhs, st8_t rhs);
-static st8_t  st8_from_cstr(const char* cstr);
-static smi_t  st8_compare_lexographically(st8_t lhs, st8_t rhs);
-static b32_t  st8_to_u32(st8_t s, u32_t* out);
-static b32_t  st8_to_f32(st8_t s, f32_t* out);
-static b32_t  st8_to_s32(st8_t s, s32_t* out);
-static b32_t  st8_range_to(u32_t* out);
+#define str_from_lit(s) str_set((u8_t*)(s), sizeof(s)-1)
+static str_t  str_bad();
+static str_t  str_set(u8_t* str, usz_t size);
+static str_t  str_substr(str_t str, usz_t start, usz_t ope);
+static b32_t  str_match(str_t lhs, str_t rhs);
+static str_t  str_from_cstr(const char* cstr);
+static smi_t  str_compare_lexographically(str_t lhs, str_t rhs);
+static b32_t  str_to_u32(str_t s, u32_t* out);
+static b32_t  str_to_f32(str_t s, f32_t* out);
+static b32_t  str_to_s32(str_t s, s32_t* out);
+static b32_t  str_range_to(u32_t* out);
 
 #define stb8_make(name, cap) \
   u8_t temp_buffer_##__LINE__[cap] = {0}; \
@@ -1146,10 +1148,10 @@ static void     stb8_push_u64(stb8_t* b, u64_t num);
 static void     stb8_push_f32(stb8_t* b, f32_t value, u32_t precision);
 static void     stb8_push_s32(stb8_t* b, s32_t num);
 static void     stb8_push_s64(stb8_t* b, s64_t num);
-static void     stb8_push_st8(stb8_t* b, st8_t num);
+static void     stb8_push_str(stb8_t* b, str_t num);
 static void     stb8_push_hex_u8(stb8_t* b, u8_t num);
 static void     stb8_push_hex_u32(stb8_t* b, u32_t num);
-static void     stb8_push_fmt(stb8_t* b, st8_t fmt, ...);
+static void     stb8_push_fmt(stb8_t* b, str_t fmt, ...);
 static void     stb8_init(stb8_t* b, u8_t* data, usz_t cap);
 
 //
@@ -1158,7 +1160,7 @@ static void     stb8_init(stb8_t* b, u8_t* data, usz_t cap);
 #define stream_consume(t,s) (t*) stream_consume_block((s), sizeof(t))
 #define stream_peek(t,s) (t*) stream_peek_block((s), sizeof(t))
 #define stream_write(s,item) stream_write_block((s), &(item), sizeof(item))
-static void     stream_init(stream_t* s, buffer_t contents);
+static void     stream_init(stream_t* s, str_t contents);
 static void     stream_reset(stream_t* s);
 static b32_t    stream_is_eos(stream_t* s);
 static u8_t*    stream_consume_block(stream_t* s, usz_t amount);
@@ -1176,7 +1178,7 @@ static void*    arena_push_size(arena_t* a, usz_t size, usz_t align);
 static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align); 
 static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align);
 static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align);
-static buffer_t arena_push_buffer(arena_t* a, usz_t size, usz_t align);
+static str_t arena_push_str(arena_t* a, usz_t size, usz_t align);
 static usz_t    arena_remaining(arena_t* a);
 
 #define arena_push_arr_align(t,b,n,a) (t*)arena_push_size(b, sizeof(t)*(n), a)
@@ -1217,7 +1219,7 @@ static void  garena_free(garena_t* ga, void* block);
 // MARK:(TTF)
 //
 
-static b32_t ttf_read(ttf_t* ttf, buffer_t ttf_contents);
+static b32_t ttf_read(ttf_t* ttf, str_t ttf_contents);
 
 static u32_t ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint);
 // returns 0 for invalid codepoints
@@ -1242,9 +1244,9 @@ static void ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t 
 //
 // MARK:(PNG)
 //
-static b32_t     png_read(png_t* png, buffer_t png_contents);
+static b32_t     png_read(png_t* png, str_t png_contents);
 static u32_t*    png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena); 
-static buffer_t  png_write(u8_t* pixels, u32_t width, u32_t height, arena_t* arena);
+static str_t  png_write(u8_t* pixels, u32_t width, u32_t height, arena_t* arena);
 
 // 
 // MARK:(RectPack)
@@ -1263,7 +1265,7 @@ static b32_t rp_pack(
 //
 // MARK:(Clex)
 //
-static b32_t clex_tokenizer_init(clex_tokenizer_t* t, buffer_t buffer);
+static b32_t clex_tokenizer_init(clex_tokenizer_t* t, str_t buffer);
 static clex_token_t clex_next_token(clex_tokenizer_t* t);
 
 //
@@ -1273,8 +1275,8 @@ static clex_token_t clex_next_token(clex_tokenizer_t* t);
 // The memory returned is:
 // - Not shared by other threads
 
-static buffer_t os_memory_allocate(usz_t size);
-static b32_t    os_memory_free(buffer_t blk);
+static void*  os_memory_allocate(usz_t size);
+static void   os_memory_free(void* blk);
 
 //
 //
@@ -1294,28 +1296,22 @@ static b32_t    os_memory_free(buffer_t blk);
 #undef near
 #undef far
 
-static buffer_t
+static void*
 os_memory_allocate(usz_t size) {
-  buffer_t ret = {};
-  u8_t* data = (u8_t*)VirtualAllocEx(
+  return VirtualAllocEx(
       GetCurrentProcess(),
       0, 
       size,
       MEM_RESERVE | MEM_COMMIT, 
       PAGE_READWRITE);
 
-  if (!data) 
-    return ret;
-
-  ret.data = data;
-  ret.size = size;
-
-  return ret;
 }
 
-static b32_t 
-os_memory_free(buffer_t blk) {
-  return VirtualFree(blk.data, 0, MEM_RELEASE);
+static void 
+os_memory_free(void* blk) {
+  if (!VirtualFree(blk, 0, MEM_RELEASE)){
+    assert(false);
+  }
 }
 
 
@@ -1325,31 +1321,49 @@ os_memory_free(buffer_t blk) {
 // #include <stdlib.h>
 #include <sys/mman.h> // mmap, munmap
 
-static buffer_t
-os_memory_allocate(usz_t size) {
-  buffer_t ret = {};
-  u8_t* data = (u8_t*)mmap(
+static void* os_memory_allocate(usz_t size) {
+  // We store the size before the actual memory block
+  // -----------------------------
+  // | size | pad | actual block |
+  // -----------------------------
+  usz_t actual_size = align_up_pow2(size + sizeof(usz_t), 16);
+  usz_t padding = actual_size - size - sizeof(usz_t);
+
+  union {
+    usz_t* sz;
+    u8_t* u8;
+    void* v;
+  } blk;
+
+  blk.v = mmap(
       0, 
-      size, 
+      actual_size, 
       PROT_READ | PROT_WRITE, 
       MAP_PRIVATE | MAP_ANONYMOUS,
       -1, 
       0);
 
-  if (!data) return ret;
+  dref(blk.sz) = size;
 
-  
-  ret.data = data;
-  ret.size = size;
+  void* ret = blk.u8 + sizeof(usz_t) + padding;
+  return ret;
 
-  return true;
+
 }
 
-static b32_t 
-os_memory_free(buffer_t blk) {
-  if (munmap(blk.data, blk.size) < 0)
-    return false;
-  return true;
+static void 
+os_memory_free(void* p) {
+  // We store the size before the actual memory block
+  // -----------------------------
+  // | size | pad | actual block |
+  // -----------------------------
+
+  auto* actual_ptr = (usz_t*)umi_to_ptr(align_down_pow2((ptr_to_umi(p) - sizeof(usz_t)), 16));
+  usz_t size = dref(actual_ptr);
+
+  if (munmap(actual_ptr, size) < 0) {
+    assert(false);
+  }
 }
 
 #endif // OS_WINDOWS
@@ -1385,40 +1399,42 @@ foolish_allocate_arena(usz_t size) {
 }
 
 static b32_t
-foolish_write_buffer_to_file(const char* filename, buffer_t buffer) {
+foolish_write_str_to_file(const char* filename, str_t buffer) {
   FILE *file = fopen(filename, "wb");
   if (!file) return false;
   defer { fclose(file); };
   
-  fwrite(buffer.data, 1, buffer.size, file);
+  fwrite(buffer.e, 1, buffer.size, file);
   return true;
 }
 
-static buffer_t
+
+static str_t
 foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {
   FILE *file = fopen(filename, "rb");
-  if (!file) return buffer_set(0,0);
+  if (!file) return str_set(0,0);
   defer { fclose(file); };
 
   fseek(file, 0, SEEK_END);
-  usz_t file_size = ftell(file);
+  usz_t file_size = ftell(file) ;
   fseek(file, 0, SEEK_SET);
 
-  buffer_t ret;
-  ret.size = file_size + null_terminate; // lol
-  ret.data = (u8_t*)os_memory_allocate(ret.size);
 
-  usz_t read_amount = fread(ret.data, 1, file_size, file);
-  if(read_amount != file_size) return buffer_set(0,0);
+  str_t ret;
+  ret.size = file_size + null_terminate;
+  ret.e = (u8_t*)os_memory_allocate(ret.size);
 
-  if (null_terminate) ret.data[file_size] = 0;  
+  usz_t read_amount = fread(ret.e, 1, file_size, file);
+
+  if(read_amount != file_size) return str_bad();
+
+  if (null_terminate) ret.e[file_size] = 0;  
 
   return ret;
 }
-
 static void
-foolish_free_buffer(buffer_t buffer) {
-  os_memory_free(buffer.data);
+foolish_free_buffer(str_t buffer) {
+  os_memory_free(buffer.e);
 }
 
 #endif // FOOLISH
@@ -1469,7 +1485,7 @@ struct _json_entry_t {
 struct _json_token_t {
   _json_token_type_t type;
   u8_t* at;
-  usz_t count;
+  usz_t size;
 };
 
 static b32_t _json_parse_object(json_object_t*, json_t* t, arena_t* ba);
@@ -1515,47 +1531,47 @@ _json_next_token(json_t* t) {
   switch(t->text.e[t->at]) {
     case '\0': {
       ret.type = _JSON_TOKEN_TYPE_EOF; 
-      ret.count = 1;
+      ret.size = 1;
       ++t->at;
     } break;
     case '[': {
       ret.type = _JSON_TOKEN_TYPE_OPEN_BRACKET; 
-      ret.count = 1;
+      ret.size = 1;
       ++t->at;
     } break;
     case ']': {
       ret.type = _JSON_TOKEN_TYPE_CLOSE_BRACKET; 
-      ret.count = 1;
+      ret.size = 1;
       ++t->at;
     } break;
     case '{': {
       ret.type = _JSON_TOKEN_TYPE_OPEN_BRACE; 
-      ret.count = 1;
+      ret.size = 1;
       ++t->at;
     } break;
     case '}': {
       ret.type = _JSON_TOKEN_TYPE_CLOSE_BRACE; 
-      ret.count = 1;
+      ret.size = 1;
       ++t->at;
     } break;
     case ',': {
       ret.type = _JSON_TOKEN_TYPE_COMMA;
-      ret.count = 1;
+      ret.size = 1;
       ++t->at;
     } break;
     case ':': { 
       ret.type = _JSON_TOKEN_TYPE_COLON; 
-      ret.count = 1;
+      ret.size = 1;
       ++t->at;
     } break;
     case 't':{
-      if(t->text.count - t->at >= 4 &&
+      if(t->text.size - t->at >= 4 &&
          t->text.e[t->at+1] == 'r' && 
          t->text.e[t->at+2] == 'u' && 
          t->text.e[t->at+3] == 'e')
       {
         ret.type = _JSON_TOKEN_TYPE_TRUE;
-        ret.count = 4;
+        ret.size = 4;
         t->at += 4;
       }
       else {
@@ -1563,14 +1579,14 @@ _json_next_token(json_t* t) {
       }
     } break;
     case 'f': {
-      if(t->text.count - t->at >= 5 &&
+      if(t->text.size - t->at >= 5 &&
          t->text.e[t->at+1] == 'a' && 
          t->text.e[t->at+2] == 'l' && 
          t->text.e[t->at+3] == 's' &&
          t->text.e[t->at+4] == 'e')
       {
         ret.type = _JSON_TOKEN_TYPE_FALSE;
-        ret.count = 5;
+        ret.size = 5;
         t->at += 5;
       }
       else {
@@ -1579,14 +1595,14 @@ _json_next_token(json_t* t) {
 
     } break;
     case 'n': {
-      if ((t->text.count - t->at) >= 4 && 
+      if ((t->text.size - t->at) >= 4 && 
            t->text.e[t->at+1] == 'u' && 
            t->text.e[t->at+2] == 'l' && 
            t->text.e[t->at+3] == 'l')
       {
         ret.type = _JSON_TOKEN_TYPE_NULL;
         t->at += 4;
-        ret.count = 4;
+        ret.size = 4;
       }
       else {
         ++t->at;
@@ -1605,10 +1621,10 @@ _json_next_token(json_t* t) {
            t->text.e[t->at+1]) 
         {
           ++t->at;
-          ++ret.count;
+          ++ret.size;
         }
         ++t->at;
-        ++ret.count;
+        ++ret.size;
       }
       ret.type = _JSON_TOKEN_TYPE_STRING;
       ++t->at;
@@ -1625,14 +1641,14 @@ _json_next_token(json_t* t) {
           else if (!is_digit(t->text.e[t->at])) {
             break;
           }
-          ++ret.count;
+          ++ret.size;
           ++t->at;
         }
         ret.type = _JSON_TOKEN_TYPE_NUMBER;
       }
       
       // Signed integer
-      else if ((t->text.count - t->at) >= 2 && 
+      else if ((t->text.size - t->at) >= 2 && 
                 t->text.e[t->at] == '-' && 
                 is_digit(t->text.e[t->at+1])) 
       {
@@ -1645,7 +1661,7 @@ _json_next_token(json_t* t) {
           else if (!is_digit(t->text.e[t->at])) {
             break;
           }
-          ++ret.count;
+          ++ret.size;
           ++t->at;
         }
         ret.type = _JSON_TOKEN_TYPE_NUMBER;
@@ -1671,10 +1687,10 @@ _json_insert_entry(json_t* t, _json_entry_t** entry, _json_entry_t* new_entry) {
   else {
     _json_entry_t* itr = (*entry);
     while(itr != nullptr) {
-      st8_t lhs = st8_set(itr->key.at, itr->key.count);
-      st8_t rhs = st8_set(new_entry->key.at, new_entry->key.count);
+      str_t lhs = str_set(itr->key.at, itr->key.size);
+      str_t rhs = str_set(new_entry->key.at, new_entry->key.size);
 
-      smi_t cmp = st8_compare_lexographically(lhs, rhs);
+      smi_t cmp = str_compare_lexographically(lhs, rhs);
       if (cmp > 0) {
         if (itr->left == nullptr) {
           itr->left = new_entry;
@@ -1749,34 +1765,38 @@ _json_parse_array(json_array_t* arr, json_t* t, arena_t* ba) {
 }
 
 static b32_t 
-_json_set_value_based_on_token(json_t* t, json_value_t* value, _json_token_t token, arena_t* ba) 
+_json_set_value_based_on_token(
+    json_t* t, 
+    json_value_t* value, 
+    _json_token_t token, 
+    arena_t* ba) 
 {
   b32_t error = false;
   if (token.type == _JSON_TOKEN_TYPE_NUMBER) {
     value->type = JSON_VALUE_TYPE_NUMBER;
     value->element.at = token.at;
-    value->element.count = token.count;
+    value->element.size = token.size;
   }
   else if(token.type == _JSON_TOKEN_TYPE_STRING) 
   {
     value->type = JSON_VALUE_TYPE_STRING;
     value->element.at = token.at;
-    value->element.count = token.count;
+    value->element.size = token.size;
   }
   else if (token.type == _JSON_TOKEN_TYPE_NULL) {
     value->type = JSON_VALUE_TYPE_NULL;
     value->element.at = token.at;
-    value->element.count = token.count;
+    value->element.size = token.size;
   }
   else if (token.type == _JSON_TOKEN_TYPE_FALSE) {
     value->type = JSON_VALUE_TYPE_FALSE;
     value->element.at = token.at;
-    value->element.count = token.count;
+    value->element.size = token.size;
   }
   else if (token.type == _JSON_TOKEN_TYPE_TRUE) {
     value->type = JSON_VALUE_TYPE_TRUE;
     value->element.at = token.at;
-    value->element.count = token.count;
+    value->element.size = token.size;
   }
   else if (token.type == _JSON_TOKEN_TYPE_OPEN_BRACE) { // Parse json object
     if (_json_parse_object(&value->object, t, ba)) {
@@ -1818,7 +1838,7 @@ _json_parse_object(json_object_t* obj, json_t* t, arena_t* ba) {
           }
           else {
             current_entry->key.at = token.at;
-            current_entry->key.count = token.count;
+            current_entry->key.size = token.size;
             expect_type = _JSON_EXPECT_TYPE_COLON;
           }
         }
@@ -1901,7 +1921,7 @@ _json_print_token(json_t* t, _json_token_t token)  {
     
   }
 #endif 
-  for(umi_t i = 0; i < token.count; ++i) {
+  for(umi_t i = 0; i < token.size; ++i) {
     printf("%c", token.at[i]);
   }
 }
@@ -1916,7 +1936,7 @@ _json_print_value(json_t* t, json_value_t* value) {
     case JSON_VALUE_TYPE_NULL: 
     {
       for(u32_t _i = 0;
-          _i < value->element.count;
+          _i < value->element.size;
           ++_i)
       {
         printf("%c", value->element.at[_i]);
@@ -1967,7 +1987,7 @@ _json_print_entries_in_order(json_t* t, _json_entry_t* entry)
       printf(" ");
     }
 
-    for (u32_t i = 0; i < entry->key.count; ++i) 
+    for (u32_t i = 0; i < entry->key.size; ++i) 
     {
       printf("%c", entry->key.at[i]);
     }
@@ -1983,12 +2003,12 @@ _json_print_entries_in_order(json_t* t, _json_entry_t* entry)
 #endif // JSON_DEBUG
 
 static _json_entry_t* 
-_json_get(json_object_t* json_object, st8_t key) {
+_json_get(json_object_t* json_object, str_t key) {
   _json_entry_t* node = json_object->head;
   while(node) {
-    st8_t lhs = st8_set(node->key.at, node->key.count);
-    st8_t rhs = st8_set(key.e, key.count);
-    smi_t cmp = st8_compare_lexographically(lhs, rhs); 
+    str_t lhs = str_set(node->key.at, node->key.size);
+    str_t rhs = str_set(key.e, key.size);
+    smi_t cmp = str_compare_lexographically(lhs, rhs); 
     if (cmp > 0) {
       node = node->left;
     }
@@ -2004,7 +2024,7 @@ _json_get(json_object_t* json_object, st8_t key) {
 }
 
 static json_value_t* 
-json_get_value(json_object_t* json_object, st8_t key) {
+json_get_value(json_object_t* json_object, str_t key) {
   _json_entry_t* entry = _json_get(json_object, key);
   if (!entry) return nullptr;
   return &entry->value;
@@ -2065,7 +2085,7 @@ json_read(
     u32_t json_string_size, 
     arena_t* ba) 
 {
-  j->text = st8_set(json_string, json_string_size);
+  j->text = str_set(json_string, json_string_size);
   j->at = 0;
   _json_token_t token = _json_next_token(j);
   if (token.type != _JSON_TOKEN_TYPE_OPEN_BRACE) return nullptr;
@@ -2083,19 +2103,19 @@ json_read(
 static void
 _clex_eat_ignorables(clex_tokenizer_t* t) {
   for (;;) {
-    if(is_whitespace(t->text.data[t->at])) {
+    if(is_whitespace(t->text.e[t->at])) {
       ++t->at;
     }
-    else if(t->text.data[t->at] == '/' && t->text.data[t->at+1] == '/')  // line comments
+    else if(t->text.e[t->at] == '/' && t->text.e[t->at+1] == '/')  // line comments
     {
-      while(t->text.data[t->at] != '\n') {
+      while(t->text.e[t->at] != '\n') {
         ++t->at;
       }
     }
-    else if(t->text.data[t->at] == '/' && t->text.data[t->at+1] == '*')  // block comments
+    else if(t->text.e[t->at] == '/' && t->text.e[t->at+1] == '*')  // block comments
     {
       t->at += 3;
-      while(t->text.data[t->at] != '*' && t->text.data[t->at+1] != '/') {
+      while(t->text.e[t->at] != '*' && t->text.e[t->at+1] != '/') {
         ++t->at;
       }
 
@@ -2116,13 +2136,13 @@ _clex_is_accepted_character_for_number(char c) {
 
 
 static b32_t
-_clex_compare_token_with_string(clex_tokenizer_t* t, clex_token_t token, st8_t str) {
-  if( str.count != (token.ope - token.begin)) {
+_clex_compare_token_with_string(clex_tokenizer_t* t, clex_token_t token, str_t str) {
+  if( str.size != (token.ope - token.begin)) {
     return false;
   }
 
-  for(u32_t i = 0; i < str.count; ++i) {
-    if (str.e[i] != t->text.data[token.begin+i]) {
+  for(u32_t i = 0; i < str.size; ++i) {
+    if (str.e[i] != t->text.e[token.begin+i]) {
       return false;
     }
   }
@@ -2132,7 +2152,7 @@ _clex_compare_token_with_string(clex_tokenizer_t* t, clex_token_t token, st8_t s
 
 
 static b32_t
-clex_tokenizer_init(clex_tokenizer_t* t, buffer_t buffer) {
+clex_tokenizer_init(clex_tokenizer_t* t, str_t buffer) {
   t->text = buffer; 
   t->at = 0;
   return !!t->text.size;
@@ -2140,19 +2160,19 @@ clex_tokenizer_init(clex_tokenizer_t* t, buffer_t buffer) {
 
 static b32_t
 _clex_is_keyword(clex_tokenizer_t* t, clex_token_t token) {
-  static st8_t keywords[] = {
-    st8_from_lit("if"),
-    st8_from_lit("else"),
-    st8_from_lit("switch"),
-    st8_from_lit("case"),
-    st8_from_lit("default"),
-    st8_from_lit("while"),
-    st8_from_lit("for"),
-    st8_from_lit("if"),
-    st8_from_lit("operator"),
-    st8_from_lit("auto"),
-    st8_from_lit("goto"),
-    st8_from_lit("return"),
+  static str_t keywords[] = {
+    str_from_lit("if"),
+    str_from_lit("else"),
+    str_from_lit("switch"),
+    str_from_lit("case"),
+    str_from_lit("default"),
+    str_from_lit("while"),
+    str_from_lit("for"),
+    str_from_lit("if"),
+    str_from_lit("operator"),
+    str_from_lit("auto"),
+    str_from_lit("goto"),
+    str_from_lit("return"),
   };
   for_arr(i, keywords) {
     if (_clex_compare_token_with_string(t, token, keywords[i]))
@@ -2172,211 +2192,211 @@ clex_next_token(clex_tokenizer_t* t) {
   ret.begin = t->at;
   ret.ope = t->at + 1;
 
-  if (t->text.data[t->at] == 0) {
+  if (t->text.e[t->at] == 0) {
     ret.type = CLEX_TOKEN_TYPE_EOF; 
     ++t->at;
   }
-  else if (t->text.data[t->at] == '(') {
+  else if (t->text.e[t->at] == '(') {
     ret.type = CLEX_TOKEN_TYPE_OPEN_PAREN; 
     ++t->at;
   }
-  else if (t->text.data[t->at] == '?') {
+  else if (t->text.e[t->at] == '?') {
     ret.type = CLEX_TOKEN_TYPE_QUESTION; 
     ++t->at;
   }
-  else if (t->text.data[t->at] == ')') {
+  else if (t->text.e[t->at] == ')') {
     ret.type = CLEX_TOKEN_TYPE_CLOSE_PAREN; 
     ++t->at;
   }
-  else if (t->text.data[t->at] == '[') {
+  else if (t->text.e[t->at] == '[') {
     ret.type = CLEX_TOKEN_TYPE_OPEN_BRACKET; 
     ++t->at;
   } 
-  else if (t->text.data[t->at] == ']') {
+  else if (t->text.e[t->at] == ']') {
     ret.type = CLEX_TOKEN_TYPE_CLOSE_BRACKET; 
     ++t->at;
   }
-  else if (t->text.data[t->at] == '{') {
+  else if (t->text.e[t->at] == '{') {
     ret.type = CLEX_TOKEN_TYPE_OPEN_BRACE; 
     ++t->at;
   } 
-  else if (t->text.data[t->at] == '}') {
+  else if (t->text.e[t->at] == '}') {
     ret.type = CLEX_TOKEN_TYPE_CLOSE_BRACE; 
     ++t->at;
   } 
-  else if (t->text.data[t->at] == ')') { 
+  else if (t->text.e[t->at] == ')') { 
     ret.type = CLEX_TOKEN_TYPE_COLON; 
     ++t->at;
   } 
-  else if (t->text.data[t->at] == ';') {
+  else if (t->text.e[t->at] == ';') {
     ret.type = CLEX_TOKEN_TYPE_SEMICOLON; 
     ++t->at;
   }
-  else if (t->text.data[t->at] == '+') {
+  else if (t->text.e[t->at] == '+') {
     ret.type = CLEX_TOKEN_TYPE_PLUS;
     ++t->at;
-    if (t->text.data[t->at] == '+') { // ++
+    if (t->text.e[t->at] == '+') { // ++
       ret.type = CLEX_TOKEN_TYPE_PLUS_PLUS;
       ret.ope = ++t->at;
     }
-    else if (t->text.data[t->at] == '=') { // +=
+    else if (t->text.e[t->at] == '=') { // +=
       ret.type = CLEX_TOKEN_TYPE_PLUS_EQUAL;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text.data[t->at] == '-') {
+  else if (t->text.e[t->at] == '-') {
     ret.type = CLEX_TOKEN_TYPE_MINUS;
     ++t->at;
-    if (t->text.data[t->at] == '-') { // --
+    if (t->text.e[t->at] == '-') { // --
       ret.type = CLEX_TOKEN_TYPE_MINUS_MINUS;
       ret.ope = ++t->at;
     }
-    else if (t->text.data[t->at] == '=') { // -=
+    else if (t->text.e[t->at] == '=') { // -=
       ret.type = CLEX_TOKEN_TYPE_MINUS_EQUAL;
       ret.ope = ++t->at;
     }
-    else if (t->text.data[t->at] == '>') { // ->
+    else if (t->text.e[t->at] == '>') { // ->
       ret.type = CLEX_TOKEN_TYPE_ARROW;
       ret.ope = ++t->at;
     }
-    else if (is_digit(t->text.data[t->at])) // negative number related literals
+    else if (is_digit(t->text.e[t->at])) // negative number related literals
     {    
       ret.type = CLEX_TOKEN_TYPE_NUMBER;
-      while(is_digit(t->text.data[t->at]) ||
-          _clex_is_accepted_character_for_number(t->text.data[t->at]))
+      while(is_digit(t->text.e[t->at]) ||
+          _clex_is_accepted_character_for_number(t->text.e[t->at]))
       {
         ++t->at;
       }
       ret.ope = t->at;
     }
   }
-  else if (t->text.data[t->at] == '=') {
+  else if (t->text.e[t->at] == '=') {
     ret.type = CLEX_TOKEN_TYPE_EQUAL;
     ++t->at;
 
-    if (t->text.data[t->at] == '=') { // ==
+    if (t->text.e[t->at] == '=') { // ==
       ret.type = CLEX_TOKEN_TYPE_EQUAL_EQUAL;
       ret.ope = ++t->at;
     }
   }
 
-  else if (t->text.data[t->at] == '>') {
+  else if (t->text.e[t->at] == '>') {
     ret.type = CLEX_TOKEN_TYPE_GREATER;
     ++t->at;
 
-    if (t->text.data[t->at] == '=') { // >=
+    if (t->text.e[t->at] == '=') { // >=
       ret.type = CLEX_TOKEN_TYPE_GREATER_EQUAL;
       ret.ope = ++t->at;
     }
-    else if (t->text.data[t->at] == '>') { // >>
+    else if (t->text.e[t->at] == '>') { // >>
       ret.type = CLEX_TOKEN_TYPE_GREATER_GREATER;
       ret.ope = ++t->at;
     }
   }
 
-  else if (t->text.data[t->at] == '<') {
+  else if (t->text.e[t->at] == '<') {
     ret.type = CLEX_TOKEN_TYPE_LESSER;
     ++t->at;
 
-    if (t->text.data[t->at] == '=') { // >=
+    if (t->text.e[t->at] == '=') { // >=
       ret.type = CLEX_TOKEN_TYPE_LESSER_EQUAL;
       ret.ope = ++t->at;
     }
-    else if (t->text.data[t->at] == '<') { // <<
+    else if (t->text.e[t->at] == '<') { // <<
       ret.type = CLEX_TOKEN_TYPE_LESSER_LESSER;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text.data[t->at] == '|') {
+  else if (t->text.e[t->at] == '|') {
     ret.type = CLEX_TOKEN_TYPE_OR;
     ++t->at;
 
-    if (t->text.data[t->at] == '|') { // ||
+    if (t->text.e[t->at] == '|') { // ||
       ret.type = CLEX_TOKEN_TYPE_OR_OR;
       ret.ope = ++t->at;
     }
-    else if (t->text.data[t->at] == '=') { // |=
+    else if (t->text.e[t->at] == '=') { // |=
       ret.type = CLEX_TOKEN_TYPE_OR_EQUAL;
       ret.ope = ++t->at;
     }
   }
 
-  else if (t->text.data[t->at] == ':') {
+  else if (t->text.e[t->at] == ':') {
     ret.type = CLEX_TOKEN_TYPE_COLON;
     ++t->at;
 
-    if (t->text.data[t->at] == ':') { // ::
+    if (t->text.e[t->at] == ':') { // ::
       ret.type = CLEX_TOKEN_TYPE_SCOPE;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text.data[t->at] == '&') {
+  else if (t->text.e[t->at] == '&') {
     ret.type = CLEX_TOKEN_TYPE_AND;
     ++t->at;
 
-    if (t->text.data[t->at] == '&') { // &&
+    if (t->text.e[t->at] == '&') { // &&
       ret.type = CLEX_TOKEN_TYPE_AND_AND;
       ret.ope = ++t->at;
     }
-    else if (t->text.data[t->at] == '=') { // &=
+    else if (t->text.e[t->at] == '=') { // &=
       ret.type = CLEX_TOKEN_TYPE_AND_EQUAL;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text.data[t->at] == '*') {
+  else if (t->text.e[t->at] == '*') {
     ret.type = CLEX_TOKEN_TYPE_STAR;
     ++t->at;
 
-    if (t->text.data[t->at] == '=') { // *=
+    if (t->text.e[t->at] == '=') { // *=
       ret.type = CLEX_TOKEN_TYPE_STAR_EQUAL;
       ret.ope = ++t->at;
     }
   }
 
-  else if (t->text.data[t->at] == '/') {
+  else if (t->text.e[t->at] == '/') {
     ret.type = CLEX_TOKEN_TYPE_SLASH;
     ++t->at;
 
-    if (t->text.data[t->at] == '=') { // /=
+    if (t->text.e[t->at] == '=') { // /=
       ret.type = CLEX_TOKEN_TYPE_SLASH_EQUAL;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text.data[t->at] == '%') {
+  else if (t->text.e[t->at] == '%') {
     ret.type = CLEX_TOKEN_TYPE_PERCENT;
     ++t->at;
 
-    if (t->text.data[t->at] == '=') { // %=
+    if (t->text.e[t->at] == '=') { // %=
       ret.type = CLEX_TOKEN_TYPE_PERCENT_EQUAL;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text.data[t->at] == '^') {
+  else if (t->text.e[t->at] == '^') {
     ret.type = CLEX_TOKEN_TYPE_XOR;
     ++t->at;
-    if (t->text.data[t->at] == '=') { // ^=
+    if (t->text.e[t->at] == '=') { // ^=
       ret.type = CLEX_TOKEN_TYPE_XOR_EQUAL;
       ret.ope = ++t->at;
     }
   }
-  else if (t->text.data[t->at] == '~') {
+  else if (t->text.e[t->at] == '~') {
     ret.type = CLEX_TOKEN_TYPE_BITWISE_NOT;
     ++t->at;
   }
-  else if (t->text.data[t->at] == '!') {
+  else if (t->text.e[t->at] == '!') {
     ret.type = CLEX_TOKEN_TYPE_LOGICAL_NOT;
     ++t->at;
   }
-  else if (t->text.data[t->at] == '.')
+  else if (t->text.e[t->at] == '.')
   {
     ret.type = CLEX_TOKEN_TYPE_DOT; 
     ++t->at;
 
-    if (is_digit(t->text.data[t->at])) // positive number related literals
+    if (is_digit(t->text.e[t->at])) // positive number related literals
     {    
       ret.type = CLEX_TOKEN_TYPE_NUMBER;
-      while(is_digit(t->text.data[t->at]) ||
-          _clex_is_accepted_character_for_number(t->text.data[t->at]))
+      while(is_digit(t->text.e[t->at]) ||
+          _clex_is_accepted_character_for_number(t->text.e[t->at]))
       {
         ++t->at;
       }
@@ -2384,19 +2404,19 @@ clex_next_token(clex_tokenizer_t* t) {
     }
   }
 
-  else if (t->text.data[t->at] == '#') {
+  else if (t->text.e[t->at] == '#') {
     b32_t continue_to_next_line = false;
 
     ret.type = CLEX_TOKEN_TYPE_MACRO;
     ++t->at;
-    while(t->text.data[t->at] != 0) 
+    while(t->text.e[t->at] != 0) 
     {
 
-      if (t->text.data[t->at] == '\\') {
+      if (t->text.e[t->at] == '\\') {
         continue_to_next_line = true;
       }
 
-      if (t->text.data[t->at] == '\n') 
+      if (t->text.e[t->at] == '\n') 
       {
         if (continue_to_next_line) {
           continue_to_next_line = false;
@@ -2410,14 +2430,14 @@ clex_next_token(clex_tokenizer_t* t) {
     }
     ret.ope = t->at;
   }
-  else if (t->text.data[t->at] == '"') // string literals
+  else if (t->text.e[t->at] == '"') // string literals
   {
     ++t->at;
     ret.begin = t->at;
-    while(t->text.data[t->at] != '"') 
+    while(t->text.e[t->at] != '"') 
     {
-      if(t->text.data[t->at] == '\\' && 
-          t->text.data[t->at+1]) 
+      if(t->text.e[t->at] == '\\' && 
+          t->text.e[t->at+1]) 
       {
         ++t->at;
       }
@@ -2428,11 +2448,11 @@ clex_next_token(clex_tokenizer_t* t) {
     ++t->at;
   }
 
-  else if (is_alpha(t->text.data[t->at]) || t->text.data[t->at] == '_') 
+  else if (is_alpha(t->text.e[t->at]) || t->text.e[t->at] == '_') 
   {
-    while(is_alpha(t->text.data[t->at]) ||
-        is_digit(t->text.data[t->at]) ||
-        t->text.data[t->at] == '_') 
+    while(is_alpha(t->text.e[t->at]) ||
+        is_digit(t->text.e[t->at]) ||
+        t->text.e[t->at] == '_') 
     {
       ++t->at;
     }
@@ -2447,22 +2467,22 @@ clex_next_token(clex_tokenizer_t* t) {
     } 
   }
 
-  else if (is_digit(t->text.data[t->at])) // positive number related literals
+  else if (is_digit(t->text.e[t->at])) // positive number related literals
   {    
     ret.type = CLEX_TOKEN_TYPE_NUMBER;
-    while(is_digit(t->text.data[t->at]) ||
-        _clex_is_accepted_character_for_number(t->text.data[t->at]))
+    while(is_digit(t->text.e[t->at]) ||
+        _clex_is_accepted_character_for_number(t->text.e[t->at]))
     {
       ++t->at;
     }
     ret.ope = t->at;
   }
 
-  else if (t->text.data[t->at] == '\'') // char literals
+  else if (t->text.e[t->at] == '\'') // char literals
   {
     ++t->at;
     ret.begin = t->at;
-    while(t->text.data[t->at] != '\'') {
+    while(t->text.e[t->at] != '\'') {
       ++t->at;
     }
     ret.type = CLEX_TOKEN_TYPE_CHAR;
@@ -2477,26 +2497,6 @@ clex_next_token(clex_tokenizer_t* t) {
 
 
   return ret;
-}
-
-
-
-static buffer_t 
-buffer_set(u8_t* mem, usz_t size) {
-  buffer_t ret;
-  ret.data = mem;
-  ret.size = size;
-  return ret;
-}
-
-static b32_t 
-buffer_is_valid(buffer_t buffer) {
-  return buffer.data != nullptr;
-}
-
-static buffer_t
-buffer_invalid() {
-  return buffer_set(0,0);
 }
 
 static f32_t _F32_INFINITY() {
@@ -2591,6 +2591,11 @@ is_digit(char c) {
 static b32_t
 is_uppercase(char c) {
   return (c >= 'A' && c <= 'Z');
+}
+
+static b32_t
+is_readable(char c) {
+  return is_alpha(c) || is_digit(c);
 }
 
 static f32_t 
@@ -2826,7 +2831,7 @@ cstr_len(const c8_t* str) {
   return count;
 }
 
-  static u32_t 
+static u32_t 
 cstr_to_u32(const c8_t* str)
 {
   u32_t ret = 0;
@@ -2838,7 +2843,7 @@ cstr_to_u32(const c8_t* str)
   return ret;
 }
 
-  static u32_t 
+static u32_t 
 cstr_len_if(const char* str, b32_t (*pred)(char))
 {
   // common strlen that counts what I care
@@ -2878,6 +2883,7 @@ cstr_compare_n(const c8_t* lhs, const c8_t* rhs, usz_t n) {
   }
   return true;
 }
+
 static void
 cstr_concat(c8_t* dest, const c8_t* Src) {
   // Go to the end of dest
@@ -4983,7 +4989,7 @@ _quicksort_generic_partition(
   for (u32_t i = start; i < ope-1; ++i) {
     u8_t* i_ptr = (u8_t*)a + (i * element_size);
     u8_t* pivot_ptr = (u8_t*)a + (pivot_idx * element_size);
-    //if (st8_compare_lexographically(*i_ptr, *pivot_ptr) < 0) {
+    //if (str_compare_lexographically(*i_ptr, *pivot_ptr) < 0) {
     if (cmp(i_ptr, pivot_ptr)) {
       u8_t* eventual_pivot_ptr = (u8_t*)a + (eventual_pivot_idx * element_size);
       swap_memory(i_ptr, eventual_pivot_ptr, element_size);
@@ -5369,35 +5375,39 @@ crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t* table) {
 //
 // MARK:(String)
 //
-static st8_t
-st8_set(u8_t* str, usz_t size) {
-  st8_t ret;
+static str_t
+str_set(u8_t* str, usz_t size) {
+  str_t ret;
   ret.e = str;
-  ret.count = size;
+  ret.size = size;
   return ret;
 }
 
+static str_t
+str_bad() {
+  return str_set(0,0);
+}
 
-static st8_t
-st8_from_cstr(const c8_t* cstr) {
+static str_t
+str_from_cstr(const c8_t* cstr) {
   return {(u8_t*)cstr, cstr_len(cstr)};
 }
 
-static st8_t 
-st8_substr(st8_t str, usz_t start, usz_t count) {
-  st8_t ret;
+static str_t 
+str_substr(str_t str, usz_t start, usz_t count) {
+  str_t ret;
   ret.e = str.e + start;
-  ret.count = count;
+  ret.size = count;
 
   return ret;
 }
 
 static b32_t
-st8_match(st8_t lhs, st8_t rhs) {
-  if(lhs.count != rhs.count) {
+str_match(str_t lhs, str_t rhs) {
+  if(lhs.size != rhs.size) {
     return false;
   }
-  for (usz_t i = 0; i < lhs.count; ++i) {
+  for (usz_t i = 0; i < lhs.size; ++i) {
     if (lhs.e[i] != rhs.e[i]) {
       return false;
     }
@@ -5411,8 +5421,8 @@ st8_match(st8_t lhs, st8_t rhs) {
 // If an unmatched character is found at an index, it will return the 'difference' between those characters
 // If no unmatched character is found at an index, it will return the size different between the strings 
 static smi_t 
-st8_compare_lexographically(st8_t lhs, st8_t rhs) {
-  for (usz_t i = 0; i < lhs.count && i < rhs.count; ++i) {
+str_compare_lexographically(str_t lhs, str_t rhs) {
+  for (usz_t i = 0; i < lhs.size && i < rhs.size; ++i) {
     if (lhs.e[i] == rhs.e[i]) continue;
     else {
       return lhs.e[i] - rhs.e[i];
@@ -5421,19 +5431,19 @@ st8_compare_lexographically(st8_t lhs, st8_t rhs) {
 
   // Edge case for strings like:
   // lhs == "asd" and rhs == "asdfg"
-  if (lhs.count == rhs.count) {
+  if (lhs.size == rhs.size) {
     return 0;
   }
   else {
-    return (smi_t)(lhs.count - rhs.count);
+    return (smi_t)(lhs.size - rhs.size);
   }
 
 }
 
 
 static b32_t 
-st8_to_u32_range(st8_t s, usz_t begin, usz_t ope, u32_t* out) {
-  if (ope > s.count) return false;
+str_to_u32_range(str_t s, usz_t begin, usz_t ope, u32_t* out) {
+  if (ope > s.size) return false;
 
   u32_t number = 0;
   for (usz_t i = begin; i < ope; ++i) {
@@ -5450,9 +5460,9 @@ st8_to_u32_range(st8_t s, usz_t begin, usz_t ope, u32_t* out) {
 
 
 static b32_t 
-st8_to_s32_range(st8_t s, usz_t begin, usz_t ope, s32_t* out) {
+str_to_s32_range(str_t s, usz_t begin, usz_t ope, s32_t* out) {
 
-  if (ope > s.count) return false;
+  if (ope > s.size) return false;
 
   b32_t is_negative = false;
   if (s.e[begin] == '-') {
@@ -5474,8 +5484,8 @@ st8_to_s32_range(st8_t s, usz_t begin, usz_t ope, s32_t* out) {
 }
 
 static b32_t 
-st8_to_f32_range(st8_t s, usz_t begin, usz_t ope, f32_t* out) {
-  if (ope > s.count) return false;
+str_to_f32_range(str_t s, usz_t begin, usz_t ope, f32_t* out) {
+  if (ope > s.size) return false;
   u32_t place = 0;
 
   // Really lousy algorithm
@@ -5503,18 +5513,18 @@ st8_to_f32_range(st8_t s, usz_t begin, usz_t ope, f32_t* out) {
 }
 
 static b32_t 
-st8_to_f32(st8_t s, f32_t* out) {
-  return st8_to_f32_range(s, 0, s.count, out);
+str_to_f32(str_t s, f32_t* out) {
+  return str_to_f32_range(s, 0, s.size, out);
 }
 static b32_t 
-st8_to_u32(st8_t s, u32_t* out) {
-  return st8_to_u32_range(s, 0, s.count, out);
+str_to_u32(str_t s, u32_t* out) {
+  return str_to_u32_range(s, 0, s.size, out);
 }
 
 // Parsing functions
 static b32_t 
-st8_to_s32(st8_t s, s32_t* out) {
-  return st8_to_s32_range(s, 0, s.count, out);
+str_to_s32(str_t s, s32_t* out) {
+  return str_to_s32_range(s, 0, s.size, out);
 }
 
 
@@ -5522,35 +5532,35 @@ st8_to_s32(st8_t s, s32_t* out) {
 static void  
 stb8_init(stb8_t* b, u8_t* data, usz_t cap) {
   b->e = data;
-  b->count = 0;
+  b->size = 0;
   b->cap = cap;
 }
 
 static usz_t
 stb8_remaining(stb8_t* b) {
-  return b->cap - b->count; 
+  return b->cap - b->size; 
 }
 
 static void     
 stb8_clear(stb8_t* b) {
-  b->count = 0;
+  b->size = 0;
 }
 
 static void     
 stb8_pop(stb8_t* b) {
-  assert(b->count > 0);
-  --b->count;
+  assert(b->size > 0);
+  --b->size;
 }
 
 static void     
 stb8_push_u8(stb8_t* b, u8_t num) {
-  assert(b->count < b->cap); b->e[b->count++] = num;
+  assert(b->size < b->cap); b->e[b->size++] = num;
 }
 
 static void     
 stb8_push_c8(stb8_t* b, c8_t num) {
-  assert(b->count < b->cap);
-  b->e[b->count++] = num;
+  assert(b->size < b->cap);
+  b->e[b->size++] = num;
 }
 
 static void     
@@ -5559,7 +5569,7 @@ stb8_push_u32(stb8_t* b, u32_t num) {
     stb8_push_c8(b, '0');
     return;
   }
-  usz_t start_pt = b->count; 
+  usz_t start_pt = b->size; 
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
@@ -5567,9 +5577,9 @@ stb8_push_u32(stb8_t* b, u32_t num) {
   }
 
   // Reverse starting from start point to count
-  usz_t sub_str_len_half = (b->count - start_pt)/2;
+  usz_t sub_str_len_half = (b->size - start_pt)/2;
   for(usz_t i = 0; i < sub_str_len_half; ++i) {
-    swap(b->e[start_pt + i], b->e[ b->count - 1 - i]);
+    swap(b->e[start_pt + i], b->e[ b->size - 1 - i]);
   }
 }
 static void     
@@ -5578,7 +5588,7 @@ stb8_push_u64(stb8_t* b, u64_t num) {
     stb8_push_c8(b, '0');
     return;
   }
-  usz_t start_pt = b->count; 
+  usz_t start_pt = b->size; 
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
@@ -5586,9 +5596,9 @@ stb8_push_u64(stb8_t* b, u64_t num) {
   }
 
   // Reverse starting from start point to count
-  usz_t sub_str_len_half = (b->count - start_pt)/2;
+  usz_t sub_str_len_half = (b->size - start_pt)/2;
   for(usz_t i = 0; i < sub_str_len_half; ++i) {
-    swap(b->e[start_pt + i], b->e[b->count - 1 - i]);
+    swap(b->e[start_pt + i], b->e[b->size - 1 - i]);
   }
 }
 static void     
@@ -5598,7 +5608,7 @@ stb8_push_s32(stb8_t* b, s32_t num) {
     return;
   }
 
-  usz_t start_pt = b->count; 
+  usz_t start_pt = b->size; 
 
   b32_t negate = num < 0;
   num = s32_abs(num);
@@ -5613,9 +5623,9 @@ stb8_push_s32(stb8_t* b, s32_t num) {
   }
 
   // Reverse starting from start point to count
-  usz_t sub_str_len_half = (b->count - start_pt)/2;
+  usz_t sub_str_len_half = (b->size - start_pt)/2;
   for(usz_t i = 0; i < sub_str_len_half; ++i) {
-    swap(b->e[start_pt+i], b->e[b->count-1-i]);
+    swap(b->e[start_pt+i], b->e[b->size-1-i]);
 
   }
 
@@ -5628,7 +5638,7 @@ stb8_push_s64(stb8_t* b, s64_t num) {
     return;
   }
 
-  usz_t start_pt = b->count; 
+  usz_t start_pt = b->size; 
 
   b32_t negate = num < 0;
   num = s64_abs(num);
@@ -5643,9 +5653,9 @@ stb8_push_s64(stb8_t* b, s64_t num) {
   }
 
   // Reverse starting from start point to count
-  usz_t sub_str_len_half = (b->count - start_pt)/2;
+  usz_t sub_str_len_half = (b->size - start_pt)/2;
   for(usz_t i = 0; i < sub_str_len_half; ++i) {
-    swap(b->e[start_pt+i], b->e[b->count-1-i]);
+    swap(b->e[start_pt+i], b->e[b->size-1-i]);
 
   }
 
@@ -5728,9 +5738,9 @@ stb8_push_hex_u32(stb8_t* b, u32_t value) {
 }
 
 static void
-_stb8_push_fmt_list(stb8_t* b, st8_t format, va_list args) {
+_stb8_push_fmt_list(stb8_t* b, str_t format, va_list args) {
   usz_t at = 0;
-  while(at < format.count) {
+  while(at < format.size) {
 
     if (format.e[at] == '%') {
       ++at;
@@ -5785,9 +5795,9 @@ _stb8_push_fmt_list(stb8_t* b, st8_t format, va_list args) {
         } break;
 
         case 'S': {
-          // st8_t, or 'text'.
-          st8_t str = va_arg(args, st8_t);
-          stb8_push_st8(tb, str);
+          // str_t, or 'text'.
+          str_t str = va_arg(args, str_t);
+          stb8_push_str(tb, str);
         } break;
 
         default: {
@@ -5797,15 +5807,15 @@ _stb8_push_fmt_list(stb8_t* b, st8_t format, va_list args) {
       }
       ++at;
 
-      if (width > 0 && tb->str.count < width) {
-        usz_t spaces_to_pad = width - tb->str.count;
+      if (width > 0 && tb->str.size < width) {
+        usz_t spaces_to_pad = width - tb->str.size;
         while(spaces_to_pad--) {
           stb8_push_c8(b, ' ');
         }
-        stb8_push_st8(b, tb->str);
+        stb8_push_str(b, tb->str);
       }
       else {
-        stb8_push_st8(b, tb->str);
+        stb8_push_str(b, tb->str);
       }
 
 
@@ -5819,7 +5829,7 @@ _stb8_push_fmt_list(stb8_t* b, st8_t format, va_list args) {
 
 
 static void     
-stb8_push_fmt(stb8_t* b, st8_t fmt, ...) {
+stb8_push_fmt(stb8_t* b, str_t fmt, ...) {
   va_list args;
   va_start(args, fmt);
   _stb8_push_fmt_list(b, fmt, args);
@@ -5827,10 +5837,10 @@ stb8_push_fmt(stb8_t* b, st8_t fmt, ...) {
 }
 
 static void     
-stb8_push_st8(stb8_t* b, st8_t src) {
-  assert(b->count + src.count <= b->cap);
-  for (usz_t i = 0; i < src.count; ++i ) {
-    b->e[b->count++] = src.e[i];
+stb8_push_str(stb8_t* b, str_t src) {
+  assert(b->size + src.size <= b->cap);
+  for (usz_t i = 0; i < src.size; ++i ) {
+    b->e[b->size++] = src.e[i];
   }
 }
 
@@ -5839,7 +5849,7 @@ stb8_push_st8(stb8_t* b, st8_t src) {
 // MARK:(Stream)
 //
 static void
-stream_init(stream_t* s, buffer_t contents) {
+stream_init(stream_t* s, str_t contents) {
   s->contents = contents;
   s->pos = 0;
   s->bit_buffer = 0;
@@ -5859,7 +5869,7 @@ stream_is_eos(stream_t* s) {
 static u8_t*
 stream_consume_block(stream_t* s, usz_t amount) {
   if(s->pos + amount <= s->contents.size) {
-    u8_t* ret = s->contents.data + s->pos;
+    u8_t* ret = s->contents.e + s->pos;
     s->pos += amount;
     return ret;
   }
@@ -5869,7 +5879,7 @@ stream_consume_block(stream_t* s, usz_t amount) {
 static u8_t*
 stream_peek_block(stream_t* s, usz_t amount) {
   if(s->pos + amount <= s->contents.size) {
-    u8_t* ret = s->contents.data + s->pos;
+    u8_t* ret = s->contents.e + s->pos;
     return ret;
   }
   return nullptr;
@@ -5878,7 +5888,7 @@ stream_peek_block(stream_t* s, usz_t amount) {
 static void
 stream_write_block(stream_t* s, void* src, usz_t src_size) {
   assert(s->pos + src_size <= s->contents.size);
-  copy_memory(s->contents.data + s->pos, src, src_size);
+  copy_memory(s->contents.e + s->pos, src, src_size);
   s->pos += src_size; 
 }
 
@@ -5916,7 +5926,7 @@ struct _wav_head_t {
 // http://soundfile.sapp.org/doc/Waveformat/
 
 static b32_t 
-wav_read(wav_t* w, buffer_t contents) 
+wav_read(wav_t* w, str_t contents) 
 {
   const static u32_t riff_id_signature = u32_endian_swap(0x52494646);
   const static u32_t riff_format_signature = u32_endian_swap(0x57415645);
@@ -6549,9 +6559,9 @@ static f32_t
     }
 
 
-  static b32_t
-    ttf_read(ttf_t* ttf, buffer_t ttf_contents) {
-      ttf->data = ttf_contents.data;
+static b32_t
+    ttf_read(ttf_t* ttf, str_t ttf_contents) {
+      ttf->data = ttf_contents.e;
 
       u32_t num_tables = _ttf_read_u16(ttf->data + 4);
 
@@ -7281,7 +7291,7 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
             // test_log("%d\n", len);
             while(len--) {
               usz_t target_index = dest_stream->pos - dist;
-              u8_t byte_to_write = dest_stream->contents.data[target_index];
+              u8_t byte_to_write = dest_stream->contents.e[target_index];
               stream_write(dest_stream, byte_to_write);
             }
           }
@@ -7388,7 +7398,7 @@ _png_filter_sub(_png_context_t* c) {
     }
     else {
       usz_t current_index = c->image_stream.pos;
-      u8_t left_reference = c->image_stream.contents.data[current_index - bpp]; // Raw(x-bpp)
+      u8_t left_reference = c->image_stream.contents.e[current_index - bpp]; // Raw(x-bpp)
       u8_t pixel_byte_to_write = (pixel_byte + left_reference) % 256;  
 
       stream_write(&c->image_stream, pixel_byte_to_write);
@@ -7412,8 +7422,8 @@ _png_filter_average(_png_context_t* c) {
     u8_t pixel_byte = (*pixel_byte_p); // sub(x)
 
     usz_t current_index = c->image_stream.pos;
-    u8_t left = (i < bpp) ? 0 :  c->image_stream.contents.data[current_index - bpp]; // Raw(x-bpp)
-    u8_t top = (current_index < bpl) ? 0 : c->image_stream.contents.data[current_index - bpl]; // Prior(x)
+    u8_t left = (i < bpp) ? 0 :  c->image_stream.contents.e[current_index - bpp]; // Raw(x-bpp)
+    u8_t top = (current_index < bpl) ? 0 : c->image_stream.contents.e[current_index - bpl]; // Prior(x)
 
     // NOTE(Momo): Formula uses floor((left+top)/2). 
     // Integer Truncation should do the job!
@@ -7445,9 +7455,9 @@ _png_filter_paeth(_png_context_t* cx) {
       // respectively: left, top, top left
       s32_t a, b, c;
 
-      a = (i < bpp) ? 0 : (s32_t)(cx->image_stream.contents.data[current_index - bpp]); // Raw(x-bpp)
-      b = (current_index < bpl) ? 0 : (s32_t)(cx->image_stream.contents.data[current_index - bpl]); // Prior(x)
-      c = (i < bpp || current_index < bpl) ? 0 : (s32_t)(cx->image_stream.contents.data[current_index - bpl - bpp]); // Prior(x)
+      a = (i < bpp) ? 0 : (s32_t)(cx->image_stream.contents.e[current_index - bpp]); // Raw(x-bpp)
+      b = (current_index < bpl) ? 0 : (s32_t)(cx->image_stream.contents.e[current_index - bpl]); // Prior(x)
+      c = (i < bpp || current_index < bpl) ? 0 : (s32_t)(cx->image_stream.contents.e[current_index - bpl - bpp]); // Prior(x)
 
       s32_t p = a + b - c; //initial estimate
       s32_t pa = s32_abs(p - a);
@@ -7489,7 +7499,7 @@ _png_filter_up(_png_context_t* c) {
     }
     else {
       usz_t current_index = c->image_stream.pos;
-      u8_t top = c->image_stream.contents.data[current_index - bpl]; 
+      u8_t top = c->image_stream.contents.e[current_index - bpl]; 
       u8_t pixel_byte_to_write = (pixel_byte + top) % 256;  
 
       stream_write(&c->image_stream, pixel_byte_to_write);
@@ -7573,16 +7583,16 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   ctx.bit_depth = png->bit_depth;
 
   u32_t image_size = png->width * png->height * _PNG_CHANNELS;
-  buffer_t image_buffer =  arena_push_buffer(arena, image_size, 16);
-  if (buffer_is_valid(image_buffer)) return nullptr;
+  str_t image_buffer =  arena_push_str(arena, image_size, 16);
+  if (!image_buffer) return nullptr;
   stream_init(&ctx.image_stream, image_buffer);
 
   //arena_marker_t mark = arena_mark(arena);
   arena_set_revert_point(arena);
 
   u32_t unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
-  buffer_t unfiltered_image_buffer = arena_push_buffer(arena, unfiltered_size, 16);
-  if (buffer_is_valid(unfiltered_image_buffer)) return nullptr;
+  str_t unfiltered_image_buffer = arena_push_str(arena, unfiltered_size, 16);
+  if (!unfiltered_image_buffer) return nullptr;
   stream_init(&ctx.unfiltered_image_stream, unfiltered_image_buffer);
 
   stream_consume(_png_chunk_t, &ctx.stream);
@@ -7606,8 +7616,8 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
     }
   }
 
-  buffer_t zlib_data = arena_push_buffer(arena, zlib_size, 16);
-  if (buffer_is_valid(zlib_data)) return nullptr;
+  str_t zlib_data = arena_push_str(arena, zlib_size, 16);
+  if (!zlib_data) return nullptr;
 
   stream_init(zlib_stream, zlib_data);
 
@@ -7619,7 +7629,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
     u32_t chunk_type = u32_endian_swap(chunk_header->type_U32);
     if (chunk_type == 'IDAT') {
       stream_write_block(zlib_stream, 
-                         ctx.stream.contents.data + ctx.stream.pos,
+                         ctx.stream.contents.e + ctx.stream.pos,
                          chunk_length);
     }
     stream_consume_block(&ctx.stream, chunk_length);
@@ -7637,13 +7647,13 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
 
   if (out_w) (*out_w) = ctx.image_width;
   if (out_h) (*out_h) = ctx.image_height;
-  return (u32_t*)ctx.image_stream.contents.data;
+  return (u32_t*)ctx.image_stream.contents.e;
 
 
 }
 // NOTE(Momo): Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
-static buffer_t
+static str_t
 png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
   static const u8_t signature[] = { 
     137, 80, 78, 71, 13, 10, 26, 10 
@@ -7672,8 +7682,8 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
     data_size + 
     IDAT_chunk_size);
 
-  buffer_t stream_memory = arena_push_buffer(arena, expected_memory_required, 16);
-  if (buffer_is_valid(stream_memory)) return buffer_set(0,0);
+  str_t stream_memory = arena_push_str(arena, expected_memory_required, 16);
+  if (!stream_memory) return str_bad();
 
   make(stream_t, stream);
   stream_init(stream, stream_memory);
@@ -7689,7 +7699,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
     header.length = sizeof(_png_ihdr_t);
     header.length = u32_endian_swap(header.length);
     stream_write(stream, header);
-    crc_start = stream->contents.data + stream->pos - sizeof(header.type_U32);
+    crc_start = stream->contents.e + stream->pos - sizeof(header.type_U32);
 
     _png_ihdr_t IHDR = {};
     IHDR.width = u32_endian_swap(width);
@@ -7702,7 +7712,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
     stream_write(stream, IHDR);
 
     _png_chunk_footer_t footer = {};
-    u32_t crc_size = (u32_t)(stream->contents.data + stream->pos - crc_start);
+    u32_t crc_size = (u32_t)(stream->contents.e + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
     footer.crc = u32_endian_swap(footer.crc);
     stream_write(stream, footer);
@@ -7722,7 +7732,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
     header.length = sizeof(_png_idat_header_t) + (chunk_overhead*chunk_count) + data_size; 
     header.length = u32_endian_swap(header.length);    
     stream_write(stream, header);
-    crc_start = stream->contents.data + stream->pos - sizeof(header.type_U32);
+    crc_start = stream->contents.e + stream->pos - sizeof(header.type_U32);
 
     // NOTE(Momo): Hardcoded IDAT chunk header header that fits our use-case
     //
@@ -7777,7 +7787,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
 
 
     _png_chunk_footer_t footer = {};
-    u32_t crc_size = (u32_t)(stream->contents.data + stream->pos - crc_start);
+    u32_t crc_size = (u32_t)(stream->contents.e + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
     footer.crc = u32_endian_swap(footer.crc);
     stream_write(stream, footer);
@@ -7791,11 +7801,11 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
     header.type_U32 = u32_endian_swap('IEND');
     header.length = 0;
     stream_write(stream, header);
-    crc_start = stream->contents.data + stream->pos - sizeof(header.type_U32);
+    crc_start = stream->contents.e + stream->pos - sizeof(header.type_U32);
 
 
     _png_chunk_footer_t footer = {};
-    u32_t crc_size = (u32_t)(stream->contents.data + stream->pos - crc_start);
+    u32_t crc_size = (u32_t)(stream->contents.e + stream->pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
     footer.crc = u32_endian_swap(footer.crc);
     stream_write(stream, footer);
@@ -7803,12 +7813,12 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
 
 
 
-  return buffer_set(stream->contents.data, stream->pos);
+  return str_set(stream->contents.e, stream->pos);
 }
 
 
 static b32_t     
-png_read(png_t* png, buffer_t png_contents)
+png_read(png_t* png, str_t png_contents)
 {
   make(stream_t, stream);
   stream_init(stream, png_contents);
@@ -7906,10 +7916,10 @@ arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align) {
 
 }
 
-static buffer_t
-arena_push_buffer(arena_t* a, usz_t size, usz_t align) {
-  buffer_t buffer = {};
-  buffer.data = arena_push_arr_align(u8_t, a, size, align);
+static str_t
+arena_push_str(arena_t* a, usz_t size, usz_t align) {
+  str_t buffer = {};
+  buffer.e = arena_push_arr_align(u8_t, a, size, align);
   buffer.size = size;
 
   return buffer;
@@ -8299,8 +8309,15 @@ rp_pack(rp_rect_t* rects,
 
 //
 // JOURNAL
+// = 2023-11-13 =
+//   Okay the OS layer is very slowly coming up, starting with memory allocation. 
+//   We have also moved and clang++ and have managed to compile in both windows 
+//   and ubuntu. 
+//
+//   The next thing I'm trying to tackle is trying to merge the idea of a 'string'
+//   and a 'buffer' to the same thing.
 // 
-// = 2023-09-22= 
+// = 2023-09-22 = 
 //   I'm thinking of writing an API for the OS layer soon. Or maybe it set of 
 //   'pig' APIs that are dumb and stupid but good enough to just 'get stuff out'.
 //   Basically stuff like 'get file size' or 'read file into buffer'. I am a little

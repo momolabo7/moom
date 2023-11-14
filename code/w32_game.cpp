@@ -52,7 +52,7 @@
 // MARK:(Memory Management)
 //
 struct w32_memory_t {
-  buffer_t os_memory;
+  void* os_memory;
   
   w32_memory_t* prev;
   w32_memory_t* next;
@@ -1624,19 +1624,15 @@ game_allocate_memory_sig(w32_allocate_memory)
   if (!block) return nullptr;
 #endif
 
-  buffer_t blk = os_memory_allocate(total_size);
-  if (!buffer_is_valid(blk)) return nullptr;
+  auto* blk= (w32_memory_t*)os_memory_allocate(total_size);
+  if (!blk) return nullptr;
 
-  u8_t* ret = blk.data + offset_to_user_memory; 
+  u8_t* ret = (u8_t*)blk + offset_to_user_memory; 
 
-
-  // Store the data for freeing
-  auto* w32_mem = (w32_memory_t*)blk.data;
-  w32_mem->os_memory = blk;
 
   // Add to linked list
   w32_memory_t* sentinel = &w32_state.memory_sentinel;
-  cll_append(sentinel, w32_mem);
+  cll_append(sentinel, blk);
 
   return ret;
 
@@ -1652,12 +1648,10 @@ game_free_memory_sig(w32_free_memory) {
     ptr_u -= sizeof(w32_memory_t);
     ptr_u = align_down_pow2(ptr_u, 16);
     
-    auto* w32_mem = (w32_memory_t*)umi_to_ptr(ptr_u);
-    cll_remove(w32_mem);
+    auto* blk = (w32_memory_t*)umi_to_ptr(ptr_u);
+    cll_remove(blk);
 
-    if (!os_memory_free(w32_mem->os_memory)) {
-      assert(false);
-    }
+    os_memory_free(blk);
 
     //VirtualFree(memory_block, 0, MEM_RELEASE);
   }
