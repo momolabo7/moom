@@ -1,3 +1,4 @@
+#include "lit.cpp"   
 // 
 // DESCRIPTION
 //   This is my dear 2D game engine on win32 platform.

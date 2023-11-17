@@ -3381,27 +3381,41 @@ lit_game_update()
   lit_profile_begin(transition);
   if (g->state == LIT_GAME_STATE_TYPE_TRANSITION_IN) 
   {
+
     // Title 
-    if (g->title_wp_index < array_count(lit_title_wps)-1) 
-    {
-      g->title_timer += dt;
-      lit_game_title_waypoint_t* next_wp = lit_title_wps + g->title_wp_index+1;
-      if (g->title_timer >= next_wp->arrival_time) 
-      {
-        g->title_wp_index++;
-      }
-    }
-    if (g->stage_fade_timer >= 0.f) 
-    {
-      g->stage_fade_timer -= dt;
-    }
-    else 
-    {
+    if (game_is_button_poked(g_game, GAME_BUTTON_CODE_LMB)) {
       g->stage_fade_timer = 0.f;
       g->state = LIT_GAME_STATE_TYPE_NORMAL;
+      g->title_timer = 0.f;
+      g->title_wp_index = array_count(lit_title_wps);
+    }
+    
+    else {
+      if (g->title_wp_index < array_count(lit_title_wps)-1) 
+      {
+        g->title_timer += dt;
+        lit_game_title_waypoint_t* next_wp = lit_title_wps + g->title_wp_index+1;
+        if (g->title_timer >= next_wp->arrival_time) 
+        {
+          g->title_wp_index++;
+        }
+      }
+
+      if (g->stage_fade_timer >= 0.f) 
+      {
+        g->stage_fade_timer -= dt;
+      }
+      else 
+      {
+        g->stage_fade_timer = 0.f;
+        g->state = LIT_GAME_STATE_TYPE_NORMAL;
+      }
     }
   }
 
+  //
+  // Flash fade in after solving the puzzle 
+  //
   else if (g->state == LIT_GAME_STATE_TYPE_SOLVED_IN) {
     g->stage_flash_timer += dt;
     if (g->stage_flash_timer >= LIT_EXIT_FLASH_DURATION) {
@@ -3409,6 +3423,10 @@ lit_game_update()
       g->state = LIT_GAME_STATE_TYPE_SOLVED_OUT;
     }
   }
+
+  //
+  // Flash fade out after solving a puzzle 
+  //
   else if (g->state == LIT_GAME_STATE_TYPE_SOLVED_OUT) {
     g->stage_flash_timer -= dt;
     if (g->stage_flash_timer <= 0.f) {
@@ -3416,6 +3434,10 @@ lit_game_update()
       g->state = LIT_GAME_STATE_TYPE_TRANSITION_OUT;
     }
   }
+
+  // 
+  // Stage fade out
+  //
   else if (g->state == LIT_GAME_STATE_TYPE_TRANSITION_OUT) {
     if (g->stage_fade_timer <= 1.f) {
       g->stage_fade_timer += dt;
@@ -3908,7 +3930,7 @@ game_get_config_sig(game_get_config)
   ret.audio_bits_per_sample = 16;
   ret.audio_channels = 2;
   
-  ret.window_title = "PRISMIX v1.0";
+  ret.window_title = "PRISMIX v1.1";
 
   ret.max_sprites = 4096;
   return ret;

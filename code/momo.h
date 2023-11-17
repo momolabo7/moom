@@ -1292,6 +1292,7 @@ static void   os_memory_free(void* blk);
 //
 // Windows implementation
 //
+
 #include <windows.h>
 #undef near
 #undef far
@@ -8300,6 +8301,14 @@ rp_pack(rp_rect_t* rects,
   arena_revert(restore_point);
   return true;
 }
+
+
+// Clean up macros for windows
+// NOTE: Yeah this is damn dumb
+#if OS_WINDOWS
+# define near
+# define far
+#endif // OS_WINDOWS
 
 
 #endif

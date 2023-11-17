@@ -6,6 +6,7 @@ add_task	code/game.h	/^  game_add_task_f* add_task;$/;"	m	language:C++	struct:ga
 align_down_pow2	code/momo.h	/^#define align_down_pow2(/;"	d	language:C++
 align_up_pow2	code/momo.h	/^#define align_up_pow2(/;"	d	language:C++
 allocate_memory	code/game.h	/^  game_allocate_memory_f* allocate_memory;$/;"	m	language:C++	struct:game_t	typeref:typename:game_allocate_memory_f *
+allocator	code/lit_ship.cpp	/^  arena_t allocator;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:arena_t	file:
 allocator	code/w32_game.cpp	/^  arena_t allocator;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:arena_t	file:
 anchor	code/game.h	/^  v2f_t anchor;$/;"	m	language:C++	struct:game_gfx_command_sprite_t	typeref:typename:v2f_t
 animators	code/lit.cpp	/^  lit_game_animator_t animators[64];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_animator_t[64]	file:
@@ -130,6 +131,7 @@ audio_arena	code/game.h	/^  arena_t audio_arena;$/;"	m	language:C++	struct:game_
 audio_arena_size	code/game.h	/^  usz_t audio_arena_size;$/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
 audio_bits_per_sample	code/game.h	/^  u16_t audio_bits_per_sample;$/;"	m	language:C++	struct:game_config_t	typeref:typename:u16_t
 audio_channels	code/game.h	/^  u16_t audio_channels;$/;"	m	language:C++	struct:game_config_t	typeref:typename:u16_t
+audio_client	code/lit_ship.cpp	/^  IAudioClient* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient *	file:
 audio_client	code/w32_game.cpp	/^  IAudioClient* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient *	file:
 audio_enabled	code/game.h	/^  b32_t audio_enabled;$/;"	m	language:C++	struct:game_config_t	typeref:typename:b32_t
 audio_format	code/momo.h	/^  u16_t audio_format;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
@@ -154,6 +156,7 @@ bitmap_count	code/game_asset_file.h	/^  u32_t bitmap_count;$/;"	m	language:C++	s
 bitmap_count	code/pass.h	/^  u32_t bitmap_count;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:u32_t
 bitmap_exts	code/pass.h	/^  pass_pack_bitmap_ext_t* bitmap_exts;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:pass_pack_bitmap_ext_t *
 bitrate_type	code/sandbox.cpp	/^  sandbox_audio_mixer_bitrate_type_t bitrate_type;$/;"	m	language:C++	struct:sandbox_audio_mixer_t	typeref:typename:sandbox_audio_mixer_bitrate_type_t	file:
+bits_per_sample	code/lit_ship.cpp	/^  u16_t bits_per_sample;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t	file:
 bits_per_sample	code/momo.h	/^  u16_t bits_per_sample;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 bits_per_sample	code/w32_game.cpp	/^  u16_t bits_per_sample;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t	file:
 bit_buffer	code/momo.h	/^  u32_t bit_buffer;$/;"	m	language:C++	struct:stream_t	typeref:typename:u32_t
@@ -178,22 +181,27 @@ box_y0	code/game_asset_file.h	/^  f32_t box_y0;$/;"	m	language:C++	struct:asset_
 box_y1	code/game.h	/^  f32_t box_x1, box_y1;$/;"	m	language:C++	struct:game_asset_font_glyph_t	typeref:typename:f32_t
 box_y1	code/game_asset_file.h	/^  f32_t box_y1;$/;"	m	language:C++	struct:asset_file_font_glyph_t	typeref:typename:f32_t
 buffer	code/ffxiv.cpp	/^  buffer_t buffer;$/;"	m	language:C++	struct:csv_t	typeref:typename:buffer_t	file:
+buffer	code/lit_ship.cpp	/^  void* buffer;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:void *	file:
 buffer	code/w32_game.cpp	/^  void* buffer;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:void *	file:
 buffers	code/game.h	/^  GLuint buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; \/\/ game_gfx_opengl_t__VBO_C/;"	m	language:C++	struct:game_gfx_opengl_sprite_batch_t	typeref:typename:GLuint[]
 buffers	code/game.h	/^  GLuint buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT];$/;"	m	language:C++	struct:game_gfx_opengl_triangle_batch_t	typeref:typename:GLuint[]
+buffer_size	code/lit_ship.cpp	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 buffer_size	code/w32_game.cpp	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 build_dir	bin/build.bat	/^set build_dir=%root_dir%\\build$/;"	v	language:DosBatch
 build_dir	bin/build_game_for_shipping.bat	/^set build_dir=%root_dir%\\build$/;"	v	language:DosBatch
 buttons	code/game.h	/^  game_button_t buttons[GAME_BUTTON_CODE_MAX];$/;"	m	language:C++	struct:game_input_t	typeref:typename:game_button_t[]
 byte_rate	code/momo.h	/^  u32_t byte_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 c8_t	code/momo.h	/^typedef char     c8_t;$/;"	t	language:C++	typeref:typename:char
+cabinet_index	code/lit_ship.cpp	/^  u32_t cabinet_index;$/;"	m	language:C++	struct:w32_file_t	typeref:typename:u32_t	file:
 cabinet_index	code/w32_game.cpp	/^  u32_t cabinet_index;$/;"	m	language:C++	struct:w32_file_t	typeref:typename:u32_t	file:
 callback	code/lit.cpp	/^  lit_game_exit_callback_f* callback;$/;"	m	language:C++	struct:lit_game_sensor_group_t	typeref:typename:lit_game_exit_callback_f *	file:
+callback	code/lit_ship.cpp	/^  game_task_callback_f* callback;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:game_task_callback_f *	file:
 callback	code/w32_game.cpp	/^  game_task_callback_f* callback;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:game_task_callback_f *	file:
 cap	code/momo.h	/^  u32_t cap;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:u32_t
 cap	code/momo.h	/^  usz_t cap;$/;"	m	language:C++	struct:arena_t	typeref:typename:usz_t
 cap	code/momo.h	/^  usz_t cap;$/;"	m	language:C++	struct:garena_t	typeref:typename:usz_t
 cap	code/momo.h	/^  usz_t cap;$/;"	m	language:C++	struct:stb8_t	typeref:typename:usz_t
+channels	code/lit_ship.cpp	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t	file:
 channels	code/w32_game.cpp	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t	file:
 chars	code/game.h	/^  u8_t chars[32];$/;"	m	language:C++	struct:game_input_t	typeref:typename:u8_t[32]
 char_count	code/game.h	/^  u32_t char_count;$/;"	m	language:C++	struct:game_input_t	typeref:typename:u32_t
@@ -300,7 +308,9 @@ COMPILER_GCC	code/momo.h	/^# define COMPILER_GCC /;"	d	language:C++
 COMPILER_MSVC	code/momo.h	/^# define COMPILER_MSVC /;"	d	language:C++
 COMPILER_MSVC	code/momo.h	/^# define COMPILER_MSVC /;"	d	language:C++
 complete_all_tasks	code/game.h	/^  game_complete_all_tasks_f* complete_all_tasks;$/;"	m	language:C++	struct:game_t	typeref:typename:game_complete_all_tasks_f *
+completion_count	code/lit_ship.cpp	/^  u32_t volatile completion_count;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile	file:
 completion_count	code/w32_game.cpp	/^  u32_t volatile completion_count;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile	file:
+completion_goal	code/lit_ship.cpp	/^  u32_t volatile completion_goal;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile	file:
 completion_goal	code/w32_game.cpp	/^  u32_t volatile completion_goal;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile	file:
 compressed_image_stream	code/momo.h	/^  stream_t compressed_image_stream;$/;"	m	language:C++	struct:_png_context_t	typeref:typename:stream_t
 compression_flags	code/momo.h	/^  u8_t compression_flags;$/;"	m	language:C++	struct:_png_idat_header_t	typeref:typename:u8_t
@@ -385,6 +395,7 @@ current_layer	code/game.h	/^  f32_t current_layer;$/;"	m	language:C++	struct:gam
 current_level_id	code/lit.cpp	/^  u32_t current_level_id;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
 current_texture	code/game.h	/^  GLuint current_texture;$/;"	m	language:C++	struct:game_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
 current_waypoint_index	code/lit.cpp	/^  u32_t current_waypoint_index;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:u32_t	file:
+cursor_pt_to_lock_to	code/lit_ship.cpp	/^  POINT cursor_pt_to_lock_to;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:POINT	file:
 cursor_pt_to_lock_to	code/w32_game.cpp	/^  POINT cursor_pt_to_lock_to;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:POINT	file:
 cycles	code/game.h	/^  u32_t cycles;$/;"	m	language:C++	struct:game_profiler_snapshot_t	typeref:typename:u32_t
 c_link	code/momo.h	/^#define c_link /;"	d	language:C++
@@ -395,6 +406,7 @@ data	code/game.h	/^  u8_t* data;$/;"	m	language:C++	struct:game_input_characters
 data	code/game.h	/^  void* data; \/\/ pointer for platform's usage$/;"	m	language:C++	struct:game_file_t	typeref:typename:void *
 data	code/game.h	/^  void* data;$/;"	m	language:C++	struct:game_asset_sound_t	typeref:typename:void *
 data	code/game.h	/^  void* data;$/;"	m	language:C++	struct:game_gfx_command_t	typeref:typename:void *
+data	code/lit_ship.cpp	/^  void* data;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:void *	file:
 data	code/momo.h	/^  u8_t* data;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u8_t *
 data	code/momo.h	/^  void* data;$/;"	m	language:C++	struct:wav_t	typeref:typename:void *
 data	code/sandbox.cpp	/^  void* data;$/;"	m	language:C++	struct:sandbox_audio_mixer_instance_t	typeref:typename:void *	file:
@@ -416,6 +428,7 @@ device_channels	code/game.h	/^  u16_t device_channels;$/;"	m	language:C++	struct
 device_samples_per_second	code/game.h	/^  u32_t device_samples_per_second;$/;"	m	language:C++	struct:game_audio_t	typeref:typename:u32_t
 digit_to_ascii	code/momo.h	/^#define digit_to_ascii(/;"	d	language:C++
 dir	code/lit.cpp	/^  v2f_t dir;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:v2f_t	file:
+dll	code/lit_ship.cpp	/^  HMODULE dll; $/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:HMODULE	file:
 dll	code/w32_game.cpp	/^  HMODULE dll; $/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:HMODULE	file:
 dref	code/momo.h	/^#define dref(/;"	d	language:C++
 dst	code/game.h	/^  game_gfx_blend_type_t dst;$/;"	m	language:C++	struct:game_gfx_command_blend_t	typeref:typename:game_gfx_blend_type_t
@@ -442,6 +455,7 @@ end_point_indices	code/momo.h	/^  u16_t* end_point_indices; \/\/ as many as cont
 end_pt	code/lit.cpp	/^  v2f_t end_pt;$/;"	m	language:C++	struct:lit_game_edge_t	typeref:typename:v2f_t	file:
 entries	code/game.h	/^  game_inspector_entry_t* entries;$/;"	m	language:C++	struct:game_inspector_t	typeref:typename:game_inspector_entry_t *
 entries	code/game.h	/^  game_profiler_entry_t* entries;$/;"	m	language:C++	struct:game_profiler_t	typeref:typename:game_profiler_entry_t *
+entries	code/lit_ship.cpp	/^  w32_work_t entries[256];$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:w32_work_t[256]	file:
 entries	code/w32_game.cpp	/^  w32_work_t entries[256];$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:w32_work_t[256]	file:
 entry_cap	code/game.h	/^  u32_t entry_cap;$/;"	m	language:C++	struct:game_inspector_t	typeref:typename:u32_t
 entry_cap	code/game.h	/^  u32_t entry_cap;$/;"	m	language:C++	struct:game_profiler_t	typeref:typename:u32_t
@@ -732,6 +746,7 @@ f64_turns_to_radians	code/momo.h	/^f64_turns_to_radians(f64_t turns) {$/;"	f	lan
 f64_turns_to_radians	code/momo.h	/^static f64_t f64_turns_to_radians(f64_t turns);$/;"	p	language:C++	typeref:typename:f64_t
 f64_weight	code/momo.h	/^f64_weight(f64_t v, f64_t min, f64_t max) { $/;"	f	language:C++	typeref:typename:f64_t
 f64_weight	code/momo.h	/^static f64_t f64_weight(f64_t v, f64_t min, f64_t max) ;$/;"	p	language:C++	typeref:typename:f64_t
+far	code/momo.h	/^# define far$/;"	d	language:C++
 ffxiv_generate_item_data	code/ffxiv.cpp	/^static b32_t ffxiv_generate_item_data() {$/;"	f	language:C++	typeref:typename:b32_t	file:
 ffxiv_generate_recipe_data	code/ffxiv.cpp	/^static b32_t ffxiv_generate_recipe_data() {$/;"	f	language:C++	typeref:typename:b32_t	file:
 ffxiv_test	code/ffxiv.cpp	/^static b32_t ffxiv_test() {$/;"	f	language:C++	typeref:typename:b32_t	file:
@@ -741,7 +756,9 @@ filename	code/game.h	/^  const char* filename;$/;"	m	language:C++	struct:game_pr
 filename	code/pass.h	/^  const char* filename;$/;"	m	language:C++	struct:pass_pack_atlas_sprite_t	typeref:typename:const char *
 filename	code/pass.h	/^  const char* filename;$/;"	m	language:C++	struct:pass_pack_font_ext_t	typeref:typename:const char *
 filename	code/pass.h	/^  const char* filename;$/;"	m	language:C++	struct:pass_pack_sound_ext_t	typeref:typename:const char *
+files	code/lit_ship.cpp	/^  w32_file_t files[32]; $/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:w32_file_t[32]	file:
 files	code/w32_game.cpp	/^  w32_file_t files[32]; $/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:w32_file_t[32]	file:
+file_cabinet	code/lit_ship.cpp	/^  w32_file_cabinet_t file_cabinet;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_file_cabinet_t	file:
 file_cabinet	code/w32_game.cpp	/^  w32_file_cabinet_t file_cabinet;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_file_cabinet_t	file:
 filter_method	code/momo.h	/^  u8_t filter_method;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t
 filter_method	code/momo.h	/^  u8_t filter_method;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:typename:u8_t
@@ -783,9 +800,12 @@ for_arr	code/momo.h	/^#define for_arr(/;"	d	language:C++
 for_cnt	code/momo.h	/^#define for_cnt(/;"	d	language:C++
 for_range	code/momo.h	/^#define for_range(/;"	d	language:C++
 frame_arena	code/lit.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
+frame_rate	code/lit_ship.cpp	/^  u32_t frame_rate;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 frame_rate	code/w32_game.cpp	/^  u32_t frame_rate;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 freeze	code/lit.cpp	/^  b32_t freeze;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:b32_t	file:
+free_files	code/lit_ship.cpp	/^  u32_t free_files[32];$/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:u32_t[32]	file:
 free_files	code/w32_game.cpp	/^  u32_t free_files[32];$/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:u32_t[32]	file:
+free_file_count	code/lit_ship.cpp	/^  u32_t free_file_count;$/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:u32_t	file:
 free_file_count	code/w32_game.cpp	/^  u32_t free_file_count;$/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:u32_t	file:
 free_list	code/momo.h	/^  garena_free_block_t* free_list;$/;"	m	language:C++	struct:garena_t	typeref:typename:garena_free_block_t *
 free_list	code/sandbox.cpp	/^  u32_t* free_list;$/;"	m	language:C++	struct:sandbox_audio_mixer_t	typeref:typename:u32_t *	file:
@@ -793,23 +813,30 @@ free_list_count	code/sandbox.cpp	/^  u32_t free_list_count;$/;"	m	language:C++	s
 free_memory	code/game.h	/^  game_free_memory_f* free_memory;$/;"	m	language:C++	struct:game_t	typeref:typename:game_free_memory_f *
 front	code/gist_ring_buffer.cpp	/^  u32_t front;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
 func	code/game_console.h	/^  void (*func)(void*);$/;"	m	language:C++	struct:console_command_t	typeref:typename:void (*)(void *)
+functions	code/lit_ship.cpp	/^  void** functions;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:void **	file:
 functions	code/w32_game.cpp	/^  void** functions;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:void **	file:
+function_count	code/lit_ship.cpp	/^  u32_t function_count;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:u32_t	file:
 function_count	code/w32_game.cpp	/^  u32_t function_count;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:u32_t	file:
+function_names	code/lit_ship.cpp	/^  const char** function_names;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char **	file:
 function_names	code/w32_game.cpp	/^  const char** function_names;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char **	file:
 g	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon1db7a63d0d0a::__anon1db7a63d0e08	typeref:typename:f32_t
 g	code/momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
 game	bin/build.bat	/^IF "%~1"=="-game"  set game=1$/;"	v	language:DosBatch
 game	bin/build.bat	/^set game=0$/;"	v	language:DosBatch
 game	code/lit.cpp	/^    lit_game_t game;$/;"	m	language:C++	union:lit_t::__anon7a0f2729020a	typeref:typename:lit_game_t	file:
+game	code/lit_ship.cpp	/^  game_t* game;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:game_t *	file:
 game	code/w32_game.cpp	/^  game_t* game;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:game_t *	file:
 game_add_task	code/game.h	/^#define game_add_task(/;"	d	language:C++
 game_add_task_sig	code/game.h	/^#define game_add_task_sig(/;"	d	language:C++
 game_add_task_sig	code/game.h	/^typedef game_add_task_sig(game_add_task_f);$/;"	t	language:C++
+game_add_task_sig	code/lit_ship.cpp	/^game_add_task_sig(w32_add_task)$/;"	f	language:C++	file:
 game_add_task_sig	code/w32_game.cpp	/^game_add_task_sig(w32_add_task)$/;"	f	language:C++	file:
 game_advance_depth	code/game.h	/^game_advance_depth(game_t* game) {$/;"	f	language:C++	typeref:typename:void
 game_allocate_memory	code/game.h	/^#define game_allocate_memory(/;"	d	language:C++
 game_allocate_memory_sig	code/game.h	/^#define game_allocate_memory_sig(/;"	d	language:C++
 game_allocate_memory_sig	code/game.h	/^typedef game_allocate_memory_sig(game_allocate_memory_f);$/;"	t	language:C++
+game_allocate_memory_sig	code/lit_ship.cpp	/^game_allocate_memory_sig(w32_allocate_memory)$/;"	f	language:C++	file:
+game_allocate_memory_sig	code/lit_ship.cpp	/^static game_allocate_memory_sig(w32_allocate_memory);$/;"	p	language:C++	file:
 game_allocate_memory_sig	code/w32_game.cpp	/^game_allocate_memory_sig(w32_allocate_memory)$/;"	f	language:C++	file:
 game_allocate_memory_sig	code/w32_game.cpp	/^static game_allocate_memory_sig(w32_allocate_memory);$/;"	p	language:C++	file:
 game_assets_get_bitmap	code/game.h	/^game_assets_get_bitmap(game_assets_t* assets, game_asset_bitmap_id_t bitmap_id) {$/;"	f	language:C++	typeref:typename:game_asset_bitmap_t *
@@ -921,15 +948,18 @@ game_clear_canvas	code/game.h	/^game_clear_canvas(game_t* game, rgba_t color) {$
 game_close_file	code/game.h	/^#define game_close_file(/;"	d	language:C++
 game_close_file_sig	code/game.h	/^#define game_close_file_sig(/;"	d	language:C++
 game_close_file_sig	code/game.h	/^typedef game_close_file_sig(game_close_file_f);$/;"	t	language:C++
+game_close_file_sig	code/lit_ship.cpp	/^game_close_file_sig(w32_close_file)$/;"	f	language:C++	file:
 game_close_file_sig	code/w32_game.cpp	/^game_close_file_sig(w32_close_file)$/;"	f	language:C++	file:
 game_complete_all_tasks	code/game.h	/^#define game_complete_all_tasks(/;"	d	language:C++
 game_complete_all_tasks_sig	code/game.h	/^#define game_complete_all_tasks_sig(/;"	d	language:C++
 game_complete_all_tasks_sig	code/game.h	/^typedef game_complete_all_tasks_sig(game_complete_all_tasks_f);$/;"	t	language:C++
+game_complete_all_tasks_sig	code/lit_ship.cpp	/^game_complete_all_tasks_sig(w32_complete_all_tasks) $/;"	f	language:C++	file:
 game_complete_all_tasks_sig	code/w32_game.cpp	/^game_complete_all_tasks_sig(w32_complete_all_tasks) $/;"	f	language:C++	file:
 game_config_t	code/game.h	/^struct game_config_t {$/;"	s	language:C++
 game_debug_log	code/game.h	/^#define game_debug_log(/;"	d	language:C++
 game_debug_log_sig	code/game.h	/^#define game_debug_log_sig(/;"	d	language:C++
 game_debug_log_sig	code/game.h	/^typedef game_debug_log_sig(game_debug_log_f);$/;"	t	language:C++
+game_debug_log_sig	code/lit_ship.cpp	/^game_debug_log_sig(w32_log_proc) $/;"	f	language:C++	file:
 game_debug_log_sig	code/w32_game.cpp	/^game_debug_log_sig(w32_log_proc) $/;"	f	language:C++	file:
 game_draw_asset_sprite	code/game.h	/^game_draw_asset_sprite($/;"	f	language:C++	typeref:typename:void
 game_draw_circle	code/game.h	/^game_draw_circle(game_t* game, v2f_t center, f32_t radius, u32_t sections, rgba_t color) {$/;"	f	language:C++	typeref:typename:void
@@ -951,6 +981,7 @@ game_file_t	code/game.h	/^struct game_file_t {$/;"	s	language:C++
 game_free_memory	code/game.h	/^#define game_free_memory(/;"	d	language:C++
 game_free_memory_sig	code/game.h	/^#define game_free_memory_sig(/;"	d	language:C++
 game_free_memory_sig	code/game.h	/^typedef game_free_memory_sig(game_free_memory_f);$/;"	t	language:C++
+game_free_memory_sig	code/lit_ship.cpp	/^game_free_memory_sig(w32_free_memory) {$/;"	f	language:C++	file:
 game_free_memory_sig	code/w32_game.cpp	/^game_free_memory_sig(w32_free_memory) {$/;"	f	language:C++	file:
 game_functions_t	code/game.h	/^struct game_functions_t {$/;"	s	language:C++
 game_function_names	code/game.h	/^static const char* game_function_names[] {$/;"	v	language:C++	typeref:typename:const char * []
@@ -962,6 +993,7 @@ game_get_dt	code/game.h	/^game_get_dt(game_t* game) {$/;"	f	language:C++	typeref
 game_get_file_size	code/game.h	/^#define game_get_file_size(/;"	d	language:C++
 game_get_file_size_sig	code/game.h	/^#define game_get_file_size_sig(/;"	d	language:C++
 game_get_file_size_sig	code/game.h	/^typedef game_get_file_size_sig(game_get_file_size_f);$/;"	t	language:C++
+game_get_file_size_sig	code/lit_ship.cpp	/^game_get_file_size_sig(w32_get_file_size)$/;"	f	language:C++	file:
 game_get_file_size_sig	code/w32_game.cpp	/^game_get_file_size_sig(w32_get_file_size)$/;"	f	language:C++	file:
 game_get_input_characters	code/game.h	/^game_get_input_characters(game_t* game) {$/;"	f	language:C++	typeref:typename:game_input_characters_t
 game_gfx_advance_depth	code/game.h	/^game_gfx_advance_depth(game_gfx_t* g) {$/;"	f	language:C++	typeref:typename:void
@@ -1137,10 +1169,12 @@ game_gfx_texture_payload_state_t	code/game.h	/^enum game_gfx_texture_payload_sta
 game_gfx_texture_payload_t	code/game.h	/^struct game_gfx_texture_payload_t {$/;"	s	language:C++
 game_gfx_texture_queue_t	code/game.h	/^struct game_gfx_texture_queue_t {$/;"	s	language:C++
 GAME_H	code/game.h	/^#define GAME_H$/;"	d	language:C++
+game_height	code/lit_ship.cpp	/^  f32_t game_height;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t	file:
 game_height	code/w32_game.cpp	/^  f32_t game_height;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t	file:
 game_hide_cursor	code/game.h	/^#define game_hide_cursor(/;"	d	language:C++
 game_hide_cursor_sig	code/game.h	/^#define game_hide_cursor_sig(/;"	d	language:C++
 game_hide_cursor_sig	code/game.h	/^typedef game_hide_cursor_sig(game_hide_cursor_f);$/;"	t	language:C++
+game_hide_cursor_sig	code/lit_ship.cpp	/^game_hide_cursor_sig(w32_hide_cursor) {$/;"	f	language:C++	file:
 game_hide_cursor_sig	code/w32_game.cpp	/^game_hide_cursor_sig(w32_hide_cursor) {$/;"	f	language:C++	file:
 game_input_characters_t	code/game.h	/^struct game_input_characters_t {$/;"	s	language:C++
 game_input_t	code/game.h	/^struct game_input_t {$/;"	s	language:C++
@@ -1163,10 +1197,12 @@ game_is_dll_reloaded	code/game.h	/^game_is_dll_reloaded(game_t* game) {$/;"	f	la
 game_lock_cursor	code/game.h	/^#define game_lock_cursor(/;"	d	language:C++
 game_lock_cursor_sig	code/game.h	/^#define game_lock_cursor_sig(/;"	d	language:C++
 game_lock_cursor_sig	code/game.h	/^typedef game_lock_cursor_sig(game_lock_cursor_f);$/;"	t	language:C++
+game_lock_cursor_sig	code/lit_ship.cpp	/^game_lock_cursor_sig(w32_lock_cursor) {$/;"	f	language:C++	file:
 game_lock_cursor_sig	code/w32_game.cpp	/^game_lock_cursor_sig(w32_lock_cursor) {$/;"	f	language:C++	file:
 game_open_file	code/game.h	/^#define game_open_file(/;"	d	language:C++
 game_open_file_sig	code/game.h	/^#define game_open_file_sig(/;"	d	language:C++
 game_open_file_sig	code/game.h	/^typedef game_open_file_sig(game_open_file_f);$/;"	t	language:C++
+game_open_file_sig	code/lit_ship.cpp	/^game_open_file_sig(w32_open_file)$/;"	f	language:C++	file:
 game_open_file_sig	code/w32_game.cpp	/^game_open_file_sig(w32_open_file)$/;"	f	language:C++	file:
 game_profiler_begin_block	code/game.h	/^#define game_profiler_begin_block(/;"	d	language:C++
 game_profiler_block	code/game.h	/^#define game_profiler_block(/;"	d	language:C++
@@ -1184,6 +1220,7 @@ game_profile_end	code/game.h	/^#define game_profile_end(/;"	d	language:C++
 game_read_file	code/game.h	/^#define game_read_file(/;"	d	language:C++
 game_read_file_sig	code/game.h	/^#define game_read_file_sig(/;"	d	language:C++
 game_read_file_sig	code/game.h	/^typedef game_read_file_sig(game_read_file_f);$/;"	t	language:C++
+game_read_file_sig	code/lit_ship.cpp	/^game_read_file_sig(w32_read_file)$/;"	f	language:C++	file:
 game_read_file_sig	code/w32_game.cpp	/^game_read_file_sig(w32_read_file)$/;"	f	language:C++	file:
 game_set_blend	code/game.h	/^#define game_set_blend(/;"	d	language:C++
 game_set_blend_additive	code/game.h	/^game_set_blend_additive(game_t* game) {$/;"	f	language:C++	typeref:typename:void
@@ -1197,23 +1234,28 @@ game_set_view	code/game.h	/^game_set_view(game_t* game, f32_t min_x, f32_t max_x
 game_show_cursor	code/game.h	/^#define game_show_cursor(/;"	d	language:C++
 game_show_cursor_sig	code/game.h	/^#define game_show_cursor_sig(/;"	d	language:C++
 game_show_cursor_sig	code/game.h	/^typedef game_show_cursor_sig(game_show_cursor_f);$/;"	t	language:C++
+game_show_cursor_sig	code/lit_ship.cpp	/^game_show_cursor_sig(w32_show_cursor)$/;"	f	language:C++	file:
 game_show_cursor_sig	code/w32_game.cpp	/^game_show_cursor_sig(w32_show_cursor)$/;"	f	language:C++	file:
 game_t	code/game.h	/^struct game_t {$/;"	s	language:C++
 game_task_callback_f	code/game.h	/^typedef void game_task_callback_f(void* data);$/;"	t	language:C++	typeref:typename:void ()(void * data)
 game_unlock_cursor	code/game.h	/^#define game_unlock_cursor(/;"	d	language:C++
 game_unlock_cursor_sig	code/game.h	/^#define game_unlock_cursor_sig(/;"	d	language:C++
 game_unlock_cursor_sig	code/game.h	/^typedef game_unlock_cursor_sig(game_unlock_cursor_f);$/;"	t	language:C++
+game_unlock_cursor_sig	code/lit_ship.cpp	/^game_unlock_cursor_sig(w32_unlock_cursor) {$/;"	f	language:C++	file:
 game_unlock_cursor_sig	code/w32_game.cpp	/^game_unlock_cursor_sig(w32_unlock_cursor) {$/;"	f	language:C++	file:
 game_update_and_render_sig	code/game.h	/^#define game_update_and_render_sig(/;"	d	language:C++
 game_update_and_render_sig	code/game.h	/^typedef game_update_and_render_sig(game_update_and_render_f);$/;"	t	language:C++
 game_update_and_render_sig	code/lit.cpp	/^game_update_and_render_sig(game_update_and_render) $/;"	f	language:C++	typeref:typename:exported
 game_update_and_render_sig	code/sandbox.cpp	/^game_update_and_render_sig(game_update_and_render) { $/;"	f	language:C++	typeref:typename:exported
 GAME_USE_OPENGL	code/game.h	/^#define GAME_USE_OPENGL /;"	d	language:C++
+GAME_USE_WASAPI	code/lit_ship.cpp	/^# define GAME_USE_WASAPI /;"	d	language:C++	file:
 GAME_USE_WASAPI	code/w32_game.cpp	/^# define GAME_USE_WASAPI /;"	d	language:C++	file:
+game_width	code/lit_ship.cpp	/^  f32_t game_width;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t	file:
 game_width	code/w32_game.cpp	/^  f32_t game_width;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t	file:
 game_write_file	code/game.h	/^#define game_write_file(/;"	d	language:C++
 game_write_file_sig	code/game.h	/^#define game_write_file_sig(/;"	d	language:C++
 game_write_file_sig	code/game.h	/^typedef game_write_file_sig(game_write_file_f);$/;"	t	language:C++
+game_write_file_sig	code/lit_ship.cpp	/^game_write_file_sig(w32_write_file)$/;"	f	language:C++	file:
 game_write_file_sig	code/w32_game.cpp	/^game_write_file_sig(w32_write_file)$/;"	f	language:C++	file:
 garena_clear	code/momo.h	/^garena_clear(garena_t* ga) {$/;"	f	language:C++	typeref:typename:void
 garena_clear	code/momo.h	/^static void  garena_clear(garena_t* ga);$/;"	p	language:C++	typeref:typename:void
@@ -1366,6 +1408,8 @@ GOLD_32	code/momo.h	/^#define GOLD_32 /;"	d	language:C++
 GOLD_64	code/momo.h	/^#define GOLD_64 /;"	d	language:C++
 gpos	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 group_id	code/lit.cpp	/^  u32_t group_id;$/;"	m	language:C++	struct:lit_game_sensor_t	typeref:typename:u32_t	file:
+g_game	code/lit.cpp	/^static game_t* g_game; $/;"	v	language:C++	typeref:typename:game_t *	file:
+g_lit	code/lit.cpp	/^static lit_t* g_lit;$/;"	v	language:C++	typeref:typename:lit_t *	file:
 h	code/momo.h	/^    struct { f32_t h,s,l; };  $/;"	m	language:C++	struct:hsla_t::__anon1db7a63d0b0a::__anon1db7a63d0c08	typeref:typename:f32_t
 h	code/momo.h	/^  f32_t h, s, l;  $/;"	m	language:C++	struct:hsl_t	typeref:typename:f32_t
 h	code/momo.h	/^  struct { f32_t w, h, d; };$/;"	m	language:C++	struct:v3f_t::__anon1db7a63d0908	typeref:typename:f32_t
@@ -1376,6 +1420,7 @@ h	code/momo.h	/^  u32_t x, y, w, h;$/;"	m	language:C++	struct:rp_rect_t	typeref:
 h	code/momo.h	/^  u32_t x, y, w, h;$/;"	m	language:C++	struct:_rp_node	typeref:typename:u32_t
 half_angle	code/lit.cpp	/^  f32_t half_angle;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:f32_t	file:
 handle	code/game.h	/^  GLuint handle;$/;"	m	language:C++	struct:game_gfx_opengl_texture_t	typeref:typename:GLuint
+handle	code/lit_ship.cpp	/^  HANDLE handle;$/;"	m	language:C++	struct:w32_file_t	typeref:typename:HANDLE	file:
 handle	code/w32_game.cpp	/^  HANDLE handle;$/;"	m	language:C++	struct:w32_file_t	typeref:typename:HANDLE	file:
 hash_djb2	code/momo.h	/^hash_djb2(const c8_t* str)$/;"	f	language:C++	typeref:typename:u32_t
 hash_djb2	code/momo.h	/^static u32_t hash_djb2(const c8_t* str);$/;"	p	language:C++	typeref:typename:u32_t
@@ -1400,6 +1445,7 @@ hits_and_cycles	code/game.h	/^  u64_t hits_and_cycles;$/;"	m	language:C++	struct
 hmtx	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 horizontal_advance	code/game.h	/^  f32_t horizontal_advance;$/;"	m	language:C++	struct:game_asset_font_glyph_t	typeref:typename:f32_t
 horizontal_advance	code/game_asset_file.h	/^  f32_t horizontal_advance;$/;"	m	language:C++	struct:asset_file_font_glyph_t	typeref:typename:f32_t
+HOT_RELOAD	code/lit_ship.cpp	/^# define HOT_RELOAD /;"	d	language:C++	file:
 HOT_RELOAD	code/w32_game.cpp	/^# define HOT_RELOAD /;"	d	language:C++	file:
 hsl	code/momo.h	/^    hsl_t hsl;$/;"	m	language:C++	union:hsla_t::__anon1db7a63d0b0a	typeref:typename:hsl_t
 hsla_set	code/momo.h	/^hsla_set(f32_t h, f32_t s, f32_t l, f32_t a){$/;"	f	language:C++	typeref:typename:hsla_t
@@ -1438,8 +1484,11 @@ intersections	code/lit.cpp	/^  lit_light_intersection_t intersections[512];$/;"	
 intersection_count	code/lit.cpp	/^  u32_t intersection_count;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:u32_t	file:
 is_alpha	code/momo.h	/^is_alpha(char c) {$/;"	f	language:C++	typeref:typename:b32_t
 is_alpha	code/momo.h	/^static b32_t is_alpha(char c);$/;"	p	language:C++	typeref:typename:b32_t
+is_cursor_locked	code/lit_ship.cpp	/^  b32_t is_cursor_locked;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:b32_t	file:
 is_cursor_locked	code/w32_game.cpp	/^  b32_t is_cursor_locked;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:b32_t	file:
+is_device_changed	code/lit_ship.cpp	/^	b32_t is_device_changed;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:b32_t	file:
 is_device_changed	code/w32_game.cpp	/^	b32_t is_device_changed;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:b32_t	file:
+is_device_ready	code/lit_ship.cpp	/^	b32_t is_device_ready;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:b32_t	file:
 is_device_ready	code/w32_game.cpp	/^	b32_t is_device_ready;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:b32_t	file:
 is_digit	code/momo.h	/^is_digit(char c) {$/;"	f	language:C++	typeref:typename:b32_t
 is_digit	code/momo.h	/^static b32_t is_digit(char c);$/;"	p	language:C++	typeref:typename:b32_t
@@ -1455,10 +1504,12 @@ is_pow2	code/momo.h	/^#define is_pow2(/;"	d	language:C++
 is_readable	code/momo.h	/^is_readable(char c) {$/;"	f	language:C++	typeref:typename:b32_t
 is_readable	code/momo.h	/^static b32_t is_readable(char c);$/;"	p	language:C++	typeref:typename:b32_t
 is_running	code/game.h	/^  b32_t is_running;$/;"	m	language:C++	struct:game_t	typeref:typename:b32_t
+is_running	code/lit_ship.cpp	/^  b32_t is_running;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:b32_t	file:
 is_running	code/w32_game.cpp	/^  b32_t is_running;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:b32_t	file:
 is_shell	code/lit.cpp	/^  b32_t is_shell;$/;"	m	language:C++	struct:lit_light_intersection_t	typeref:typename:b32_t	file:
 is_uppercase	code/momo.h	/^is_uppercase(char c) {$/;"	f	language:C++	typeref:typename:b32_t
 is_uppercase	code/momo.h	/^static b32_t is_uppercase(char c);$/;"	p	language:C++	typeref:typename:b32_t
+is_valid	code/lit_ship.cpp	/^  b32_t is_valid;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:b32_t	file:
 is_valid	code/w32_game.cpp	/^  b32_t is_valid;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:b32_t	file:
 is_whitespace	code/momo.h	/^is_whitespace(char c) {$/;"	f	language:C++	typeref:typename:b32_t
 is_whitespace	code/momo.h	/^static b32_t is_whitespace(char c);$/;"	p	language:C++	typeref:typename:b32_t
@@ -1546,12 +1597,12 @@ LIT_ANIMATOR_TYPE_PATROL_POINT	code/lit.cpp	/^  LIT_ANIMATOR_TYPE_PATROL_POINT,$
 LIT_ANIMATOR_TYPE_ROTATE_POINT	code/lit.cpp	/^  LIT_ANIMATOR_TYPE_ROTATE_POINT,$/;"	e	language:C++	enum:lit_game_animator_type_t	file:
 LIT_ASSET_FILE	code/game_asset_id_lit.h	/^#define LIT_ASSET_FILE /;"	d	language:C++
 LIT_ASSET_TYPES_H	code/sandbox_asset_types.h	/^#define LIT_ASSET_TYPES_H$/;"	d	language:C++
-lit_credits_init	code/lit.cpp	/^lit_credits_init(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_credits_init	code/lit.cpp	/^lit_credits_init() {$/;"	f	language:C++	typeref:typename:void	file:
 lit_credits_push_subtitle_and_name	code/lit.cpp	/^lit_credits_push_subtitle_and_name($/;"	f	language:C++	typeref:typename:f32_t	file:
 LIT_CREDITS_SCROLL_SPEED	code/lit.cpp	/^#define LIT_CREDITS_SCROLL_SPEED /;"	d	language:C++	file:
 LIT_CREDITS_START_COOLDOWN_DURATION	code/lit.cpp	/^#define LIT_CREDITS_START_COOLDOWN_DURATION /;"	d	language:C++	file:
 lit_credits_t	code/lit.cpp	/^struct lit_credits_t {$/;"	s	language:C++	file:
-lit_credits_update	code/lit.cpp	/^lit_credits_update(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_credits_update	code/lit.cpp	/^lit_credits_update() {$/;"	f	language:C++	typeref:typename:void	file:
 LIT_DEBUG	code/lit.cpp	/^#define LIT_DEBUG /;"	d	language:C++	file:
 LIT_DEBUG_LINES	code/lit.cpp	/^#define LIT_DEBUG_LINES /;"	d	language:C++	file:
 lit_draw_edges	code/lit.cpp	/^lit_draw_edges(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1559,7 +1610,6 @@ lit_draw_light_rays	code/lit.cpp	/^lit_draw_light_rays(lit_game_t* g) {$/;"	f	la
 LIT_ENTER_DURATION	code/lit.cpp	/^#define LIT_ENTER_DURATION /;"	d	language:C++	file:
 LIT_EXIT_FLASH_BRIGHTNESS	code/lit.cpp	/^#define LIT_EXIT_FLASH_BRIGHTNESS /;"	d	language:C++	file:
 LIT_EXIT_FLASH_DURATION	code/lit.cpp	/^#define LIT_EXIT_FLASH_DURATION /;"	d	language:C++	file:
-lit_from_game	code/lit.cpp	/^#define lit_from_game(/;"	d	language:C++	file:
 lit_game_animate	code/lit.cpp	/^lit_game_animate(lit_game_animator_t* animator, f32_t dt) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_animate_everything	code/lit.cpp	/^lit_game_animate_everything(lit_game_t* m, f32_t dt) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_animator_begin_patrol_point	code/lit.cpp	/^lit_game_animator_begin_patrol_point(lit_game_t* m, f32_t duration_per_waypoint, v2f_t* point) $/;"	f	language:C++	typeref:typename:lit_game_animator_t *	file:
@@ -1579,7 +1629,7 @@ lit_game_edge_t	code/lit.cpp	/^struct lit_game_edge_t {$/;"	s	language:C++	file:
 lit_game_end_patrolling_double_edge	code/lit.cpp	/^lit_game_end_patrolling_double_edge(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_end_patrolling_sensor	code/lit.cpp	/^lit_game_end_patrolling_sensor(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_end_sensor_group	code/lit.cpp	/^lit_game_end_sensor_group(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_game_exit_callback_f	code/lit.cpp	/^typedef void lit_game_exit_callback_f(game_t* game);$/;"	t	language:C++	typeref:typename:void ()(game_t * game)	file:
+lit_game_exit_callback_f	code/lit.cpp	/^typedef void lit_game_exit_callback_f();$/;"	t	language:C++	typeref:typename:void ()()	file:
 lit_game_generate_light	code/lit.cpp	/^lit_game_generate_light(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_get_ray_intersection_time_wrt_edges	code/lit.cpp	/^lit_game_get_ray_intersection_time_wrt_edges($/;"	f	language:C++	typeref:typename:f32_t	file:
 lit_game_init	code/lit.cpp	/^lit_game_init() $/;"	f	language:C++	typeref:typename:void	file:
@@ -1588,10 +1638,10 @@ lit_game_is_exiting	code/lit.cpp	/^lit_game_is_exiting(lit_game_t* g) {$/;"	f	la
 lit_game_light_t	code/lit.cpp	/^struct lit_game_light_t {$/;"	s	language:C++	file:
 lit_game_light_triangle_t	code/lit.cpp	/^struct lit_game_light_triangle_t {$/;"	s	language:C++	file:
 lit_game_light_type_t	code/lit.cpp	/^enum lit_game_light_type_t {$/;"	g	language:C++	file:
-lit_game_player_find_nearest_light	code/lit.cpp	/^lit_game_player_find_nearest_light(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_game_player_find_nearest_light	code/lit.cpp	/^lit_game_player_find_nearest_light(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_player_hold_nearest_light_if_empty_handed	code/lit.cpp	/^lit_game_player_hold_nearest_light_if_empty_handed($/;"	f	language:C++	typeref:typename:void	file:
 lit_game_player_light_hold_mode_t	code/lit.cpp	/^enum lit_game_player_light_hold_mode_t {$/;"	g	language:C++	file:
-lit_game_player_release_light	code/lit.cpp	/^lit_game_player_release_light(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_game_player_release_light	code/lit.cpp	/^lit_game_player_release_light(lit_game_t* g) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_player_t	code/lit.cpp	/^struct lit_game_player_t {$/;"	s	language:C++	file:
 lit_game_push_aabb	code/lit.cpp	/^lit_game_push_aabb(lit_game_t* m, f32_t cx, f32_t cy, f32_t hw, f32_t hh) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_game_push_box	code/lit.cpp	/^lit_game_push_box(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t max_y) $/;"	f	language:C++	typeref:typename:void	file:
@@ -1622,46 +1672,46 @@ LIT_GAME_STATE_TYPE_TRANSITION_IN	code/lit.cpp	/^  LIT_GAME_STATE_TYPE_TRANSITIO
 LIT_GAME_STATE_TYPE_TRANSITION_OUT	code/lit.cpp	/^  LIT_GAME_STATE_TYPE_TRANSITION_OUT,$/;"	e	language:C++	enum:lit_game_state_type_t	file:
 lit_game_t	code/lit.cpp	/^struct lit_game_t {$/;"	s	language:C++	file:
 lit_game_title_waypoint_t	code/lit.cpp	/^struct lit_game_title_waypoint_t {$/;"	s	language:C++	file:
-lit_game_update	code/lit.cpp	/^lit_game_update(game_t* game) $/;"	f	language:C++	typeref:typename:void	file:
+lit_game_update	code/lit.cpp	/^lit_game_update() $/;"	f	language:C++	typeref:typename:void	file:
 lit_game_update_particles	code/lit.cpp	/^lit_game_update_particles(lit_game_t* g, f32_t dt) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_game_update_player	code/lit.cpp	/^lit_game_update_player(game_t* game, f32_t dt) $/;"	f	language:C++	typeref:typename:void	file:
+lit_game_update_player	code/lit.cpp	/^lit_game_update_player(lit_game_t* g, f32_t dt) $/;"	f	language:C++	typeref:typename:void	file:
 lit_game_update_sensors	code/lit.cpp	/^lit_game_update_sensors(lit_game_t* g, f32_t dt) $/;"	f	language:C++	typeref:typename:void	file:
 lit_gen_lights	code/lit.cpp	/^lit_gen_lights($/;"	f	language:C++	typeref:typename:void	file:
 lit_gen_light_intersections	code/lit.cpp	/^lit_gen_light_intersections(lit_game_light_t* l,$/;"	f	language:C++	typeref:typename:void	file:
-lit_get_levels_unlocked_count	code/lit.cpp	/^lit_get_levels_unlocked_count(game_t* game) {$/;"	f	language:C++	typeref:typename:u32_t	file:
-lit_goto_credits	code/lit.cpp	/^lit_goto_credits(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_get_levels_unlocked_count	code/lit.cpp	/^lit_get_levels_unlocked_count() {$/;"	f	language:C++	typeref:typename:u32_t	file:
+lit_goto_credits	code/lit.cpp	/^lit_goto_credits() {$/;"	f	language:C++	typeref:typename:void	file:
 LIT_HEIGHT	code/lit.cpp	/^#define LIT_HEIGHT /;"	d	language:C++	file:
-lit_init_player	code/lit.cpp	/^lit_init_player(game_t* game, f32_t x, f32_t y) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_init_save_data	code/lit.cpp	/^lit_init_save_data(game_t* game) {$/;"	f	language:C++	typeref:typename:b32_t	file:
-lit_inspector_update_and_render	code/lit.cpp	/^lit_inspector_update_and_render(game_t* game) $/;"	f	language:C++	typeref:typename:void	file:
-lit_is_in_tutorial	code/lit.cpp	/^lit_is_in_tutorial(game_t* game) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+lit_init_player	code/lit.cpp	/^lit_init_player(lit_game_t* g, f32_t x, f32_t y) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_init_save_data	code/lit.cpp	/^lit_init_save_data() {$/;"	f	language:C++	typeref:typename:b32_t	file:
+lit_inspector_update_and_render	code/lit.cpp	/^lit_inspector_update_and_render() $/;"	f	language:C++	typeref:typename:void	file:
+lit_is_in_tutorial	code/lit.cpp	/^lit_is_in_tutorial() {$/;"	f	language:C++	typeref:typename:b32_t	file:
 LIT_LEARNT_BASICS_LEVEL_ID	code/lit.cpp	/^#define LIT_LEARNT_BASICS_LEVEL_ID /;"	d	language:C++	file:
 LIT_LEARNT_POINT_LIGHT_LEVEL_ID	code/lit.cpp	/^#define LIT_LEARNT_POINT_LIGHT_LEVEL_ID /;"	d	language:C++	file:
-lit_level_add	code/lit.cpp	/^lit_level_add(game_t* game) { $/;"	f	language:C++	typeref:typename:void	file:
-lit_level_add	code/lit.cpp	/^static void lit_level_add(game_t*);$/;"	p	language:C++	typeref:typename:void	file:
-lit_level_blend	code/lit.cpp	/^lit_level_blend(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_busy	code/lit.cpp	/^lit_level_busy(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_corners	code/lit.cpp	/^lit_level_corners(game_t* game) { $/;"	f	language:C++	typeref:typename:void	file:
-lit_level_disco	code/lit.cpp	/^lit_level_disco(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_add	code/lit.cpp	/^lit_level_add() { $/;"	f	language:C++	typeref:typename:void	file:
+lit_level_add	code/lit.cpp	/^static void lit_level_add();$/;"	p	language:C++	typeref:typename:void	file:
+lit_level_blend	code/lit.cpp	/^lit_level_blend() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_busy	code/lit.cpp	/^lit_level_busy() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_corners	code/lit.cpp	/^lit_level_corners() { $/;"	f	language:C++	typeref:typename:void	file:
+lit_level_disco	code/lit.cpp	/^lit_level_disco() {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_exit_with	code/lit.cpp	/^#define lit_level_exit_with(/;"	d	language:C++	file:
-lit_level_hands	code/lit.cpp	/^lit_level_hands(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_hourglass	code/lit.cpp	/^lit_level_hourglass(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_interval	code/lit.cpp	/^lit_level_interval(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_menu	code/lit.cpp	/^lit_level_menu(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_menu	code/lit.cpp	/^static void lit_level_menu(game_t*);$/;"	p	language:C++	typeref:typename:void	file:
-lit_level_mix	code/lit.cpp	/^lit_level_mix(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_move	code/lit.cpp	/^lit_level_move(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_movement	code/lit.cpp	/^lit_level_movement(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_obstruct	code/lit.cpp	/^lit_level_obstruct(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_obstruct	code/lit.cpp	/^static void lit_level_obstruct(game_t*);$/;"	p	language:C++	typeref:typename:void	file:
-lit_level_onion	code/lit.cpp	/^lit_level_onion(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_orbit	code/lit.cpp	/^lit_level_orbit(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_patience	code/lit.cpp	/^lit_level_patience(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_rooms	code/lit.cpp	/^lit_level_rooms(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_spectrum	code/lit.cpp	/^lit_level_spectrum(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_spin	code/lit.cpp	/^lit_level_spin(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_split	code/lit.cpp	/^lit_level_split(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_level_triforce	code/lit.cpp	/^lit_level_triforce(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_hands	code/lit.cpp	/^lit_level_hands() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_hourglass	code/lit.cpp	/^lit_level_hourglass() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_interval	code/lit.cpp	/^lit_level_interval() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_menu	code/lit.cpp	/^lit_level_menu() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_menu	code/lit.cpp	/^static void lit_level_menu();$/;"	p	language:C++	typeref:typename:void	file:
+lit_level_mix	code/lit.cpp	/^lit_level_mix() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_move	code/lit.cpp	/^lit_level_move() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_movement	code/lit.cpp	/^lit_level_movement() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_obstruct	code/lit.cpp	/^lit_level_obstruct() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_obstruct	code/lit.cpp	/^static void lit_level_obstruct();$/;"	p	language:C++	typeref:typename:void	file:
+lit_level_onion	code/lit.cpp	/^lit_level_onion() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_orbit	code/lit.cpp	/^lit_level_orbit() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_patience	code/lit.cpp	/^lit_level_patience() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_rooms	code/lit.cpp	/^lit_level_rooms() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_spectrum	code/lit.cpp	/^lit_level_spectrum() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_spin	code/lit.cpp	/^lit_level_spin() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_split	code/lit.cpp	/^lit_level_split() {$/;"	f	language:C++	typeref:typename:void	file:
+lit_level_triforce	code/lit.cpp	/^lit_level_triforce() {$/;"	f	language:C++	typeref:typename:void	file:
 LIT_LIGHT_EMITTER_ANIME_SPEED	code/lit.cpp	/^#define LIT_LIGHT_EMITTER_ANIME_SPEED /;"	d	language:C++	file:
 LIT_LIGHT_EMITTER_COLOR	code/lit.cpp	/^#define LIT_LIGHT_EMITTER_COLOR /;"	d	language:C++	file:
 LIT_LIGHT_EMITTER_GLOW_COLOR	code/lit.cpp	/^#define LIT_LIGHT_EMITTER_GLOW_COLOR /;"	d	language:C++	file:
@@ -1691,13 +1741,13 @@ lit_profiler_accumulate_stat	code/lit.cpp	/^lit_profiler_accumulate_stat(lit_pro
 lit_profiler_begin_stat	code/lit.cpp	/^lit_profiler_begin_stat(lit_profiler_stat_t* stat) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_profiler_end_stat	code/lit.cpp	/^lit_profiler_end_stat(lit_profiler_stat_t* stat) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_profiler_stat_t	code/lit.cpp	/^struct lit_profiler_stat_t {$/;"	s	language:C++	file:
-lit_profiler_update_and_render	code/lit.cpp	/^lit_profiler_update_and_render(game_t* game) $/;"	f	language:C++	typeref:typename:void	file:
+lit_profiler_update_and_render	code/lit.cpp	/^lit_profiler_update_and_render() $/;"	f	language:C++	typeref:typename:void	file:
 lit_profile_begin	code/lit.cpp	/^#define lit_profile_begin(/;"	d	language:C++	file:
 lit_profile_block	code/lit.cpp	/^#define lit_profile_block(/;"	d	language:C++	file:
 lit_profile_end	code/lit.cpp	/^#define lit_profile_end(/;"	d	language:C++	file:
 lit_res_dir	code/pass_lit.cpp	/^#define lit_res_dir(/;"	d	language:C++	file:
 lit_sandbox_init	code/lit.cpp	/^static void lit_sandbox_init() {$/;"	f	language:C++	typeref:typename:void	file:
-lit_sandbox_update	code/lit.cpp	/^static void lit_sandbox_update(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_sandbox_update	code/lit.cpp	/^static void lit_sandbox_update() {$/;"	f	language:C++	typeref:typename:void	file:
 lit_save_data_t	code/lit.cpp	/^struct lit_save_data_t {$/;"	s	language:C++	file:
 LIT_SAVE_FILE	code/lit.cpp	/^#define LIT_SAVE_FILE /;"	d	language:C++	file:
 LIT_SAVE_FILE_ENABLE	code/lit.cpp	/^#define LIT_SAVE_FILE_ENABLE /;"	d	language:C++	file:
@@ -1714,16 +1764,16 @@ LIT_SHOW_DEBUG_PROFILER	code/lit.cpp	/^  LIT_SHOW_DEBUG_PROFILER,$/;"	e	language
 lit_show_debug_type_t	code/lit.cpp	/^enum lit_show_debug_type_t {$/;"	g	language:C++	file:
 LIT_SKIP_TRANSITIONS	code/lit.cpp	/^#define LIT_SKIP_TRANSITIONS /;"	d	language:C++	file:
 lit_spawn_particle	code/lit.cpp	/^lit_spawn_particle($/;"	f	language:C++	typeref:typename:void	file:
-lit_splash_init	code/lit.cpp	/^lit_splash_init(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_splash_init	code/lit.cpp	/^lit_splash_init() {$/;"	f	language:C++	typeref:typename:void	file:
 LIT_SPLASH_SCROLL_DURATION	code/lit.cpp	/^#define LIT_SPLASH_SCROLL_DURATION /;"	d	language:C++	file:
 LIT_SPLASH_SCROLL_POS_Y_END	code/lit.cpp	/^#define LIT_SPLASH_SCROLL_POS_Y_END /;"	d	language:C++	file:
 LIT_SPLASH_SCROLL_POS_Y_START	code/lit.cpp	/^#define LIT_SPLASH_SCROLL_POS_Y_START /;"	d	language:C++	file:
 lit_splash_t	code/lit.cpp	/^struct lit_splash_t {$/;"	s	language:C++	file:
-lit_splash_update	code/lit.cpp	/^lit_splash_update(game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_splash_update	code/lit.cpp	/^lit_splash_update() {$/;"	f	language:C++	typeref:typename:void	file:
 lit_t	code/lit.cpp	/^struct lit_t {$/;"	s	language:C++	file:
 lit_title_wps	code/lit.cpp	/^static lit_game_title_waypoint_t lit_title_wps[] = {$/;"	v	language:C++	typeref:typename:lit_game_title_waypoint_t[]	file:
-lit_unlock_next_level	code/lit.cpp	/^lit_unlock_next_level(game_t* game, u32_t current_level_id) {$/;"	f	language:C++	typeref:typename:b32_t	file:
-lit_update_and_render_console	code/lit.cpp	/^lit_update_and_render_console(game_t* game) $/;"	f	language:C++	typeref:typename:void	file:
+lit_unlock_next_level	code/lit.cpp	/^lit_unlock_next_level(u32_t current_level_id) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+lit_update_and_render_console	code/lit.cpp	/^lit_update_and_render_console() $/;"	f	language:C++	typeref:typename:void	file:
 LIT_WIDTH	code/lit.cpp	/^#define LIT_WIDTH /;"	d	language:C++	file:
 loca	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 loca_format	code/momo.h	/^  u16_t loca_format;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u16_t
@@ -1786,6 +1836,7 @@ megabytes	code/momo.h	/^#define megabytes(/;"	d	language:C++
 memory	code/game.h	/^	u8_t* memory;$/;"	m	language:C++	struct:game_gfx_command_queue_t	typeref:typename:u8_t *
 memory	code/momo.h	/^  u8_t* memory;$/;"	m	language:C++	struct:arena_t	typeref:typename:u8_t *
 memory	code/momo.h	/^  u8_t* memory;$/;"	m	language:C++	struct:garena_t	typeref:typename:u8_t *
+memory_sentinel	code/lit_ship.cpp	/^  w32_memory_t memory_sentinel;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_memory_t	file:
 memory_sentinel	code/w32_game.cpp	/^  w32_memory_t memory_sentinel;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_memory_t	file:
 memory_size	code/game.h	/^  usz_t memory_size;$/;"	m	language:C++	struct:game_gfx_command_queue_t	typeref:typename:usz_t
 meta_print_if_function_is_next	code/meta.cpp	/^meta_print_if_function_is_next(clex_tokenizer_t t) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1796,13 +1847,17 @@ min_of	code/momo.h	/^#define min_of(/;"	d	language:C++
 min_x	code/game.h	/^  f32_t min_x, max_x;$/;"	m	language:C++	struct:game_gfx_command_view_t	typeref:typename:f32_t
 min_y	code/game.h	/^  f32_t min_y, max_y;$/;"	m	language:C++	struct:game_gfx_command_view_t	typeref:typename:f32_t
 mixer	code/sandbox.cpp	/^  sandbox_audio_mixer_t mixer;$/;"	m	language:C++	struct:sandbox_t	typeref:typename:sandbox_audio_mixer_t	file:
+mm_device	code/lit_ship.cpp	/^  IMMDevice* mm_device;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IMMDevice *	file:
 mm_device	code/w32_game.cpp	/^  IMMDevice* mm_device;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IMMDevice *	file:
+mm_device_enum	code/lit_ship.cpp	/^  IMMDeviceEnumerator * mm_device_enum;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IMMDeviceEnumerator *	file:
 mm_device_enum	code/w32_game.cpp	/^  IMMDeviceEnumerator * mm_device_enum;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IMMDeviceEnumerator *	file:
 mode	code/lit.cpp	/^  lit_mode_t mode;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_mode_t	file:
 model	code/game.h	/^  GLuint model; $/;"	m	language:C++	struct:game_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
 model	code/game.h	/^  GLuint model;$/;"	m	language:C++	struct:game_gfx_opengl_triangle_batch_t	typeref:typename:GLuint
 mode_arena	code/lit.cpp	/^  arena_t mode_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
+module_path	code/lit_ship.cpp	/^  const char* module_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *	file:
 module_path	code/w32_game.cpp	/^  const char* module_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *	file:
+module_write_time	code/lit_ship.cpp	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:LARGE_INTEGER	file:
 module_write_time	code/w32_game.cpp	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:LARGE_INTEGER	file:
 MOMO_CONSOLE_H	code/game_console.h	/^#define MOMO_CONSOLE_H$/;"	d	language:C++
 MOMO_H	code/momo.h	/^#define MOMO_H$/;"	d	language:C++
@@ -1814,12 +1869,16 @@ msg1len	learn/x64_1_conditionals.s	/^  msg1len: equ $ - msg1 $/;"	d	language:Asm
 msg2	learn/x64_1_conditionals.s	/^  msg2: db "a < b", 10, 0 $/;"	d	language:Asm
 msg2len	learn/x64_1_conditionals.s	/^  msg2len: equ $ - msg2$/;"	d	language:Asm
 name	code/game.h	/^  str_t name;$/;"	m	language:C++	struct:game_inspector_entry_t	typeref:typename:str_t
+near	code/momo.h	/^# define near$/;"	d	language:C++
 nearest_light	code/lit.cpp	/^  lit_game_light_t* nearest_light;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:lit_game_light_t *	file:
 next	code/gist_linked_list.cpp	/^  gist_cdl_node* next;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
+next	code/lit_ship.cpp	/^  w32_memory_t* next;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
 next	code/momo.h	/^    garena_free_block_t* next;$/;"	m	language:C++	struct:garena_free_block_t::__anon1db7a63d1008	typeref:typename:garena_free_block_t *
 next	code/momo.h	/^  json_array_node_t* next;$/;"	m	language:C++	struct:json_array_node_t	typeref:typename:json_array_node_t *
 next	code/w32_game.cpp	/^  w32_memory_t* next;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
+next_entry_to_read	code/lit_ship.cpp	/^  u32_t volatile next_entry_to_read;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile	file:
 next_entry_to_read	code/w32_game.cpp	/^  u32_t volatile next_entry_to_read;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile	file:
+next_entry_to_write	code/lit_ship.cpp	/^  u32_t volatile next_entry_to_write;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile	file:
 next_entry_to_write	code/w32_game.cpp	/^  u32_t volatile next_entry_to_write;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t volatile	file:
 next_mode	code/lit.cpp	/^  lit_mode_t next_mode;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_mode_t	file:
 next_waypoint_index	code/lit.cpp	/^  u32_t next_waypoint_index;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:u32_t	file:
@@ -1897,6 +1956,7 @@ OS_LINUX	code/momo.h	/^# define OS_LINUX /;"	d	language:C++
 OS_LINUX	code/momo.h	/^# define OS_LINUX /;"	d	language:C++
 OS_MAC	code/momo.h	/^# define OS_MAC /;"	d	language:C++
 OS_MAC	code/momo.h	/^# define OS_MAC /;"	d	language:C++
+os_memory	code/lit_ship.cpp	/^  void* os_memory;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:void *	file:
 os_memory	code/w32_game.cpp	/^  void* os_memory;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:void *	file:
 os_memory_allocate	code/momo.h	/^os_memory_allocate(usz_t size) {$/;"	f	language:C++	typeref:typename:void *
 os_memory_allocate	code/momo.h	/^static void*  os_memory_allocate(usz_t size);$/;"	p	language:C++	typeref:typename:void *
@@ -1995,6 +2055,7 @@ pos	code/momo.h	/^  usz_t pos;$/;"	m	language:C++	struct:stream_t	typeref:typena
 pos_x	code/game.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:game_gfx_command_view_t	typeref:typename:f32_t
 pos_y	code/game.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:game_gfx_command_view_t	typeref:typename:f32_t
 prev	code/gist_linked_list.cpp	/^  gist_cdl_node* prev;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
+prev	code/lit_ship.cpp	/^  w32_memory_t* prev;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
 prev	code/w32_game.cpp	/^  w32_memory_t* prev;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
 print_token	code/ffxiv.cpp	/^static void print_token(st8_t str) {$/;"	f	language:C++	typeref:typename:void	file:
 profiler	code/game.h	/^  game_profiler_t profiler;$/;"	m	language:C++	struct:game_t	typeref:typename:game_profiler_t
@@ -2021,6 +2082,7 @@ remainders	code/momo.h	/^  u16_t remainders[256];$/;"	m	language:C++	struct:crc1
 remainders	code/momo.h	/^  u32_t remainders[256];$/;"	m	language:C++	struct:crc32_table_t	typeref:typename:u32_t[256]
 remainders	code/momo.h	/^  u8_t remainders[256];$/;"	m	language:C++	struct:crc8_table_t	typeref:typename:u8_t[256]
 renderer_texture_handle	code/game.h	/^  u32_t renderer_texture_handle;$/;"	m	language:C++	struct:game_asset_bitmap_t	typeref:typename:u32_t
+render_client	code/lit_ship.cpp	/^  IAudioRenderClient* render_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioRenderClient *	file:
 render_client	code/w32_game.cpp	/^  IAudioRenderClient* render_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioRenderClient *	file:
 render_command_size	code/game.h	/^  usz_t render_command_size;$/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
 render_wh	code/game.h	/^  v2u_t render_wh;$/;"	m	language:C++	struct:game_gfx_opengl_t	typeref:typename:v2u_t
@@ -2098,6 +2160,7 @@ S8_MIN	code/momo.h	/^#define S8_MIN /;"	d	language:C++
 s8_t	code/momo.h	/^typedef int8_t   s8_t;$/;"	t	language:C++	typeref:typename:int8_t
 SafeRelease	code/w32_sandbox_wasapi.cpp	/^#define SafeRelease(/;"	d	language:C++	file:
 samples	code/game.h	/^  void* samples;$/;"	m	language:C++	struct:game_audio_t	typeref:typename:void *
+samples_per_second	code/lit_ship.cpp	/^  u32_t samples_per_second;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 samples_per_second	code/w32_game.cpp	/^  u32_t samples_per_second;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 sample_count	code/game.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:game_audio_t	typeref:typename:u32_t
 sample_rate	code/momo.h	/^  u32_t sample_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
@@ -2119,6 +2182,7 @@ selected_animator_for_double_edge_max	code/lit.cpp	/^  lit_game_animator_t* sele
 selected_animator_for_double_edge_min	code/lit.cpp	/^  lit_game_animator_t* selected_animator_for_double_edge_min[2]; $/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_animator_t * [2]	file:
 selected_animator_for_sensor	code/lit.cpp	/^  lit_game_animator_t* selected_animator_for_sensor; $/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_animator_t *	file:
 selected_sensor_group_id	code/lit.cpp	/^  u32_t selected_sensor_group_id;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
+semaphore	code/lit_ship.cpp	/^  HANDLE semaphore; $/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:HANDLE	file:
 semaphore	code/w32_game.cpp	/^  HANDLE semaphore; $/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:HANDLE	file:
 sensors	code/lit.cpp	/^  lit_game_sensor_t sensors[128];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_sensor_t[128]	file:
 sensor_count	code/lit.cpp	/^  u32_t sensor_count; \/\/ how many sensors there are$/;"	m	language:C++	struct:lit_game_sensor_group_t	typeref:typename:u32_t	file:
@@ -2279,7 +2343,9 @@ target_frame_rate	code/game.h	/^  u32_t target_frame_rate;$/;"	m	language:C++	st
 TAU_32	code/momo.h	/^#define TAU_32 /;"	d	language:C++
 TAU_64	code/momo.h	/^#define TAU_64 /;"	d	language:C++
 test_json	code/test.cpp	/^void test_json() {$/;"	f	language:C++	typeref:typename:void
+test_sine_wave	code/lit_ship.cpp	/^static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t t/;"	f	language:C++	typeref:typename:void	file:
 test_sine_wave	code/w32_game.cpp	/^static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t t/;"	f	language:C++	typeref:typename:void	file:
+test_square_wave	code/lit_ship.cpp	/^static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t/;"	f	language:C++	typeref:typename:void	file:
 test_square_wave	code/w32_game.cpp	/^static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t/;"	f	language:C++	typeref:typename:void	file:
 texel_x0	code/game.h	/^  u32_t texel_x0, texel_y0;$/;"	m	language:C++	struct:game_asset_font_glyph_t	typeref:typename:u32_t
 texel_x0	code/game.h	/^  u32_t texel_x0, texel_y0;$/;"	m	language:C++	struct:game_gfx_command_sprite_t	typeref:typename:u32_t
@@ -2326,6 +2392,7 @@ timer	code/lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_splash_t	typer
 title	code/lit.cpp	/^  str_t title;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:str_t	file:
 title_timer	code/lit.cpp	/^  f32_t title_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t	file:
 title_wp_index	code/lit.cpp	/^  u32_t title_wp_index;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
+tmp_path	code/lit_ship.cpp	/^  const char* tmp_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *	file:
 tmp_path	code/w32_game.cpp	/^  const char* tmp_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *	file:
 tokens	code/ffxiv.cpp	/^  st8_t* tokens;$/;"	m	language:C++	struct:csv_t	typeref:typename:st8_t *	file:
 transfer_memory	code/game.h	/^  u8_t* transfer_memory;$/;"	m	language:C++	struct:game_gfx_texture_queue_t	typeref:typename:u8_t *
@@ -2516,65 +2583,125 @@ w	code/momo.h	/^  u32_t x, y, w, h;$/;"	m	language:C++	struct:rp_rect_t	typeref:
 w	code/momo.h	/^  u32_t x, y, w, h;$/;"	m	language:C++	struct:_rp_node	typeref:typename:u32_t
 w32	bin/build.bat	/^IF "%~1"=="-w32"   set w32=1$/;"	v	language:DosBatch
 w32	bin/build.bat	/^set w32=0$/;"	v	language:DosBatch
+w32_add_task_entry	code/lit_ship.cpp	/^w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_add_task_entry	code/w32_game.cpp	/^w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_allocate_memory_into_arena	code/lit_ship.cpp	/^w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 w32_allocate_memory_into_arena	code/w32_game.cpp	/^w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+w32_audio_begin_frame_sig	code/lit_ship.cpp	/^#define w32_audio_begin_frame_sig(/;"	d	language:C++	file:
+w32_audio_begin_frame_sig	code/lit_ship.cpp	/^static w32_audio_begin_frame_sig(w32_audio_begin_frame);$/;"	p	language:C++	file:
+w32_audio_begin_frame_sig	code/lit_ship.cpp	/^w32_audio_begin_frame_sig(w32_audio_begin_frame) $/;"	f	language:C++	file:
 w32_audio_begin_frame_sig	code/w32_game.cpp	/^#define w32_audio_begin_frame_sig(/;"	d	language:C++	file:
 w32_audio_begin_frame_sig	code/w32_game.cpp	/^static w32_audio_begin_frame_sig(w32_audio_begin_frame);$/;"	p	language:C++	file:
 w32_audio_begin_frame_sig	code/w32_game.cpp	/^w32_audio_begin_frame_sig(w32_audio_begin_frame) $/;"	f	language:C++	file:
+w32_audio_end_frame_sig	code/lit_ship.cpp	/^#define w32_audio_end_frame_sig(/;"	d	language:C++	file:
+w32_audio_end_frame_sig	code/lit_ship.cpp	/^static w32_audio_end_frame_sig(w32_audio_end_frame);$/;"	p	language:C++	file:
+w32_audio_end_frame_sig	code/lit_ship.cpp	/^w32_audio_end_frame_sig(w32_audio_end_frame) $/;"	f	language:C++	file:
 w32_audio_end_frame_sig	code/w32_game.cpp	/^#define w32_audio_end_frame_sig(/;"	d	language:C++	file:
 w32_audio_end_frame_sig	code/w32_game.cpp	/^static w32_audio_end_frame_sig(w32_audio_end_frame);$/;"	p	language:C++	file:
 w32_audio_end_frame_sig	code/w32_game.cpp	/^w32_audio_end_frame_sig(w32_audio_end_frame) $/;"	f	language:C++	file:
+w32_audio_load_sig	code/lit_ship.cpp	/^#define w32_audio_load_sig(/;"	d	language:C++	file:
+w32_audio_load_sig	code/lit_ship.cpp	/^static w32_audio_load_sig(w32_audio_load);$/;"	p	language:C++	file:
+w32_audio_load_sig	code/lit_ship.cpp	/^w32_audio_load_sig(w32_audio_load)$/;"	f	language:C++	file:
 w32_audio_load_sig	code/w32_game.cpp	/^#define w32_audio_load_sig(/;"	d	language:C++	file:
 w32_audio_load_sig	code/w32_game.cpp	/^static w32_audio_load_sig(w32_audio_load);$/;"	p	language:C++	file:
 w32_audio_load_sig	code/w32_game.cpp	/^w32_audio_load_sig(w32_audio_load)$/;"	f	language:C++	file:
+w32_audio_unload_sig	code/lit_ship.cpp	/^#define w32_audio_unload_sig(/;"	d	language:C++	file:
+w32_audio_unload_sig	code/lit_ship.cpp	/^static w32_audio_unload_sig(w32_audio_unload);$/;"	p	language:C++	file:
+w32_audio_unload_sig	code/lit_ship.cpp	/^w32_audio_unload_sig(w32_audio_unload) {$/;"	f	language:C++	file:
 w32_audio_unload_sig	code/w32_game.cpp	/^#define w32_audio_unload_sig(/;"	d	language:C++	file:
 w32_audio_unload_sig	code/w32_game.cpp	/^static w32_audio_unload_sig(w32_audio_unload);$/;"	p	language:C++	file:
 w32_audio_unload_sig	code/w32_game.cpp	/^w32_audio_unload_sig(w32_audio_unload) {$/;"	f	language:C++	file:
+w32_calc_render_region	code/lit_ship.cpp	/^w32_calc_render_region(u32_t window_w, $/;"	f	language:C++	typeref:typename:RECT	file:
 w32_calc_render_region	code/w32_game.cpp	/^w32_calc_render_region(u32_t window_w, $/;"	f	language:C++	typeref:typename:RECT	file:
+w32_complete_all_tasks_entries	code/lit_ship.cpp	/^w32_complete_all_tasks_entries(w32_work_queue_t* wq) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_complete_all_tasks_entries	code/w32_game.cpp	/^w32_complete_all_tasks_entries(w32_work_queue_t* wq) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_do_next_work_entry	code/lit_ship.cpp	/^w32_do_next_work_entry(w32_work_queue_t* wq) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 w32_do_next_work_entry	code/w32_game.cpp	/^w32_do_next_work_entry(w32_work_queue_t* wq) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+w32_file_cabinet_t	code/lit_ship.cpp	/^struct w32_file_cabinet_t {$/;"	s	language:C++	file:
 w32_file_cabinet_t	code/w32_game.cpp	/^struct w32_file_cabinet_t {$/;"	s	language:C++	file:
+w32_file_t	code/lit_ship.cpp	/^struct w32_file_t {$/;"	s	language:C++	file:
 w32_file_t	code/w32_game.cpp	/^struct w32_file_t {$/;"	s	language:C++	file:
+w32_file_time_to_large_integer	code/lit_ship.cpp	/^w32_file_time_to_large_integer(FILETIME file_time) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER	file:
 w32_file_time_to_large_integer	code/w32_game.cpp	/^w32_file_time_to_large_integer(FILETIME file_time) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER	file:
+w32_free_all_memory	code/lit_ship.cpp	/^w32_free_all_memory() {$/;"	f	language:C++	typeref:typename:void	file:
 w32_free_all_memory	code/w32_game.cpp	/^w32_free_all_memory() {$/;"	f	language:C++	typeref:typename:void	file:
+w32_get_client_dims	code/lit_ship.cpp	/^w32_get_client_dims(HWND window) {$/;"	f	language:C++	typeref:typename:v2u_t	file:
 w32_get_client_dims	code/w32_game.cpp	/^w32_get_client_dims(HWND window) {$/;"	f	language:C++	typeref:typename:v2u_t	file:
+w32_get_file_last_write_time	code/lit_ship.cpp	/^w32_get_file_last_write_time(const char* filename) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER	file:
 w32_get_file_last_write_time	code/w32_game.cpp	/^w32_get_file_last_write_time(const char* filename) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER	file:
+w32_get_next_free_file	code/lit_ship.cpp	/^w32_get_next_free_file(w32_file_cabinet_t* c) {$/;"	f	language:C++	typeref:typename:w32_file_t *	file:
 w32_get_next_free_file	code/w32_game.cpp	/^w32_get_next_free_file(w32_file_cabinet_t* c) {$/;"	f	language:C++	typeref:typename:w32_file_t *	file:
+w32_get_performance_counter	code/lit_ship.cpp	/^w32_get_performance_counter(void) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER	file:
 w32_get_performance_counter	code/w32_game.cpp	/^w32_get_performance_counter(void) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER	file:
+w32_get_performance_counter_u64	code/lit_ship.cpp	/^w32_get_performance_counter_u64(void) {$/;"	f	language:C++	typeref:typename:u64_t	file:
 w32_get_performance_counter_u64	code/w32_game.cpp	/^w32_get_performance_counter_u64(void) {$/;"	f	language:C++	typeref:typename:u64_t	file:
+w32_get_secs_elapsed	code/lit_ship.cpp	/^w32_get_secs_elapsed(LARGE_INTEGER start,$/;"	f	language:C++	typeref:typename:f32_t	file:
 w32_get_secs_elapsed	code/w32_game.cpp	/^w32_get_secs_elapsed(LARGE_INTEGER start,$/;"	f	language:C++	typeref:typename:f32_t	file:
+w32_get_window_dims	code/lit_ship.cpp	/^w32_get_window_dims(HWND window) {$/;"	f	language:C++	typeref:typename:v2u_t	file:
 w32_get_window_dims	code/w32_game.cpp	/^w32_get_window_dims(HWND window) {$/;"	f	language:C++	typeref:typename:v2u_t	file:
+w32_gfx_begin_frame_sig	code/lit_ship.cpp	/^#define w32_gfx_begin_frame_sig(/;"	d	language:C++	file:
+w32_gfx_begin_frame_sig	code/lit_ship.cpp	/^static w32_gfx_begin_frame_sig(w32_gfx_begin_frame);$/;"	p	language:C++	file:
+w32_gfx_begin_frame_sig	code/lit_ship.cpp	/^w32_gfx_begin_frame_sig(w32_gfx_begin_frame)$/;"	f	language:C++	file:
 w32_gfx_begin_frame_sig	code/w32_game.cpp	/^#define w32_gfx_begin_frame_sig(/;"	d	language:C++	file:
 w32_gfx_begin_frame_sig	code/w32_game.cpp	/^static w32_gfx_begin_frame_sig(w32_gfx_begin_frame);$/;"	p	language:C++	file:
 w32_gfx_begin_frame_sig	code/w32_game.cpp	/^w32_gfx_begin_frame_sig(w32_gfx_begin_frame)$/;"	f	language:C++	file:
+w32_gfx_end_frame_sig	code/lit_ship.cpp	/^#define w32_gfx_end_frame_sig(/;"	d	language:C++	file:
+w32_gfx_end_frame_sig	code/lit_ship.cpp	/^static w32_gfx_end_frame_sig(w32_gfx_end_frame);$/;"	p	language:C++	file:
+w32_gfx_end_frame_sig	code/lit_ship.cpp	/^w32_gfx_end_frame_sig(w32_gfx_end_frame) {$/;"	f	language:C++	file:
 w32_gfx_end_frame_sig	code/w32_game.cpp	/^#define w32_gfx_end_frame_sig(/;"	d	language:C++	file:
 w32_gfx_end_frame_sig	code/w32_game.cpp	/^static w32_gfx_end_frame_sig(w32_gfx_end_frame);$/;"	p	language:C++	file:
 w32_gfx_end_frame_sig	code/w32_game.cpp	/^w32_gfx_end_frame_sig(w32_gfx_end_frame) {$/;"	f	language:C++	file:
+w32_gfx_load_sig	code/lit_ship.cpp	/^#define w32_gfx_load_sig(/;"	d	language:C++	file:
+w32_gfx_load_sig	code/lit_ship.cpp	/^static w32_gfx_load_sig(w32_gfx_load);$/;"	p	language:C++	file:
+w32_gfx_load_sig	code/lit_ship.cpp	/^w32_gfx_load_sig(w32_gfx_load)$/;"	f	language:C++	file:
 w32_gfx_load_sig	code/w32_game.cpp	/^#define w32_gfx_load_sig(/;"	d	language:C++	file:
 w32_gfx_load_sig	code/w32_game.cpp	/^static w32_gfx_load_sig(w32_gfx_load);$/;"	p	language:C++	file:
 w32_gfx_load_sig	code/w32_game.cpp	/^w32_gfx_load_sig(w32_gfx_load)$/;"	f	language:C++	file:
+w32_init_file_cabinet	code/lit_ship.cpp	/^w32_init_file_cabinet(w32_file_cabinet_t* c) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_init_file_cabinet	code/w32_game.cpp	/^w32_init_file_cabinet(w32_file_cabinet_t* c) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_init_work_queue	code/lit_ship.cpp	/^w32_init_work_queue(w32_work_queue_t* wq, u32_t thread_count) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 w32_init_work_queue	code/w32_game.cpp	/^w32_init_work_queue(w32_work_queue_t* wq, u32_t thread_count) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+w32_loaded_code_t	code/lit_ship.cpp	/^struct w32_loaded_code_t {$/;"	s	language:C++	file:
 w32_loaded_code_t	code/w32_game.cpp	/^struct w32_loaded_code_t {$/;"	s	language:C++	file:
+w32_load_code	code/lit_ship.cpp	/^w32_load_code(w32_loaded_code_t* code) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_load_code	code/w32_game.cpp	/^w32_load_code(w32_loaded_code_t* code) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_log	code/lit_ship.cpp	/^#define w32_log(/;"	d	language:C++	file:
 w32_log	code/w32_game.cpp	/^#define w32_log(/;"	d	language:C++	file:
+w32_memory_t	code/lit_ship.cpp	/^struct w32_memory_t {$/;"	s	language:C++	file:
 w32_memory_t	code/w32_game.cpp	/^struct w32_memory_t {$/;"	s	language:C++	file:
+w32_profile_block	code/lit_ship.cpp	/^#define w32_profile_block(/;"	d	language:C++	file:
 w32_profile_block	code/w32_game.cpp	/^#define w32_profile_block(/;"	d	language:C++	file:
+w32_rect_height	code/lit_ship.cpp	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG	file:
 w32_rect_height	code/w32_game.cpp	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG	file:
+w32_rect_width	code/lit_ship.cpp	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG	file:
 w32_rect_width	code/w32_game.cpp	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG	file:
+w32_reload_code_if_outdated	code/lit_ship.cpp	/^w32_reload_code_if_outdated(w32_loaded_code_t* code) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 w32_reload_code_if_outdated	code/w32_game.cpp	/^w32_reload_code_if_outdated(w32_loaded_code_t* code) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+w32_return_file	code/lit_ship.cpp	/^w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_return_file	code/w32_game.cpp	/^w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_set_game_dims	code/lit_ship.cpp	/^w32_set_game_dims(f32_t width, f32_t height) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_set_game_dims	code/w32_game.cpp	/^w32_set_game_dims(f32_t width, f32_t height) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_shutdown	code/lit_ship.cpp	/^w32_shutdown() {$/;"	f	language:C++	typeref:typename:void	file:
 w32_shutdown	code/w32_game.cpp	/^w32_shutdown() {$/;"	f	language:C++	typeref:typename:void	file:
+w32_state	code/lit_ship.cpp	/^static w32_state_t w32_state;$/;"	v	language:C++	typeref:typename:w32_state_t	file:
 w32_state	code/w32_game.cpp	/^static w32_state_t w32_state;$/;"	v	language:C++	typeref:typename:w32_state_t	file:
+w32_state_t	code/lit_ship.cpp	/^struct w32_state_t {$/;"	s	language:C++	file:
 w32_state_t	code/w32_game.cpp	/^struct w32_state_t {$/;"	s	language:C++	file:
+w32_unload_code	code/lit_ship.cpp	/^w32_unload_code(w32_loaded_code_t* code) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_unload_code	code/w32_game.cpp	/^w32_unload_code(w32_loaded_code_t* code) {$/;"	f	language:C++	typeref:typename:void	file:
+w32_update_input	code/lit_ship.cpp	/^w32_update_input(game_input_t* input, HWND window, f32_t delta_time, RECT rr) $/;"	f	language:C++	typeref:typename:void	file:
 w32_update_input	code/w32_game.cpp	/^w32_update_input(game_input_t* input, HWND window, f32_t delta_time, RECT rr) $/;"	f	language:C++	typeref:typename:void	file:
+w32_vkeys_to_game_button_code	code/lit_ship.cpp	/^w32_vkeys_to_game_button_code(u32_t code) {$/;"	f	language:C++	typeref:typename:game_button_code_t	file:
 w32_vkeys_to_game_button_code	code/w32_game.cpp	/^w32_vkeys_to_game_button_code(u32_t code) {$/;"	f	language:C++	typeref:typename:game_button_code_t	file:
+w32_wasapi_t	code/lit_ship.cpp	/^struct w32_wasapi_t {$/;"	s	language:C++	file:
 w32_wasapi_t	code/w32_game.cpp	/^struct w32_wasapi_t {$/;"	s	language:C++	file:
+w32_window_callback	code/lit_ship.cpp	/^w32_window_callback(HWND window, $/;"	f	language:C++	typeref:typename:LRESULT CALLBACK
 w32_window_callback	code/w32_game.cpp	/^w32_window_callback(HWND window, $/;"	f	language:C++	typeref:typename:LRESULT CALLBACK
+w32_worker_func	code/lit_ship.cpp	/^w32_worker_func(LPVOID ctx) {$/;"	f	language:C++	typeref:typename:DWORD WINAPI	file:
 w32_worker_func	code/w32_game.cpp	/^w32_worker_func(LPVOID ctx) {$/;"	f	language:C++	typeref:typename:DWORD WINAPI	file:
+w32_work_queue_t	code/lit_ship.cpp	/^struct w32_work_queue_t {$/;"	s	language:C++	file:
 w32_work_queue_t	code/w32_game.cpp	/^struct w32_work_queue_t {$/;"	s	language:C++	file:
+w32_work_t	code/lit_ship.cpp	/^struct w32_work_t {$/;"	s	language:C++	file:
 w32_work_t	code/w32_game.cpp	/^struct w32_work_t {$/;"	s	language:C++	file:
 wasapi__run	code/w32_sandbox_wasapi.cpp	/^wasapi__run(void* passthrough) {$/;"	f	language:C++	typeref:typename:DWORD	file:
 wav_data_chunk_t	code/momo.h	/^struct wav_data_chunk_t {$/;"	s	language:C++
@@ -2584,42 +2711,71 @@ wav_riff_chunk_t	code/momo.h	/^struct wav_riff_chunk_t {$/;"	s	language:C++
 wav_t	code/momo.h	/^struct wav_t {$/;"	s	language:C++
 waypoints	code/lit.cpp	/^  v2f_t waypoints[8];$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:v2f_t[8]	file:
 waypoint_count	code/lit.cpp	/^  u32_t waypoint_count;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:u32_t	file:
+wglChoosePixelFormatARB	code/lit_ship.cpp	/^static wglChoosePixelFormatARBFn* wglChoosePixelFormatARB;$/;"	v	language:C++	typeref:typename:wglChoosePixelFormatARBFn *	file:
 wglChoosePixelFormatARB	code/w32_game.cpp	/^static wglChoosePixelFormatARBFn* wglChoosePixelFormatARB;$/;"	v	language:C++	typeref:typename:wglChoosePixelFormatARBFn *	file:
+wglChoosePixelFormatARBFn	code/lit_ship.cpp	/^typedef BOOL WINAPI wglChoosePixelFormatARBFn(HDC hdc, const int* piAttribIList, const FLOAT* pf/;"	t	language:C++	typeref:typename:BOOL WINAPI ()(HDC hdc,const int * piAttribIList,const FLOAT * pfAttribFList,UINT nMaxFormats,int * piFormats,UINT * nNumFormats)	file:
 wglChoosePixelFormatARBFn	code/w32_game.cpp	/^typedef BOOL WINAPI wglChoosePixelFormatARBFn(HDC hdc, const int* piAttribIList, const FLOAT* pf/;"	t	language:C++	typeref:typename:BOOL WINAPI ()(HDC hdc,const int * piAttribIList,const FLOAT * pfAttribFList,UINT nMaxFormats,int * piFormats,UINT * nNumFormats)	file:
+wglCreateContextAttribsARB	code/lit_ship.cpp	/^static wglCreateContextAttribsARBFn* wglCreateContextAttribsARB;$/;"	v	language:C++	typeref:typename:wglCreateContextAttribsARBFn *	file:
 wglCreateContextAttribsARB	code/w32_game.cpp	/^static wglCreateContextAttribsARBFn* wglCreateContextAttribsARB;$/;"	v	language:C++	typeref:typename:wglCreateContextAttribsARBFn *	file:
+wglCreateContextAttribsARBFn	code/lit_ship.cpp	/^typedef HGLRC WINAPI wglCreateContextAttribsARBFn(HDC hdc, HGLRC hShareContext, const int* attri/;"	t	language:C++	typeref:typename:HGLRC WINAPI ()(HDC hdc,HGLRC hShareContext,const int * attribList)	file:
 wglCreateContextAttribsARBFn	code/w32_game.cpp	/^typedef HGLRC WINAPI wglCreateContextAttribsARBFn(HDC hdc, HGLRC hShareContext, const int* attri/;"	t	language:C++	typeref:typename:HGLRC WINAPI ()(HDC hdc,HGLRC hShareContext,const int * attribList)	file:
+wglGetExtensionsStringEXTFn	code/lit_ship.cpp	/^typedef const char* WINAPI wglGetExtensionsStringEXTFn(void);$/;"	t	language:C++	typeref:typename:const char * WINAPI ()(void)	file:
 wglGetExtensionsStringEXTFn	code/w32_game.cpp	/^typedef const char* WINAPI wglGetExtensionsStringEXTFn(void);$/;"	t	language:C++	typeref:typename:const char * WINAPI ()(void)	file:
+wglSwapIntervalEXT	code/lit_ship.cpp	/^static wglSwapIntervalEXTFn* wglSwapIntervalEXT;$/;"	v	language:C++	typeref:typename:wglSwapIntervalEXTFn *	file:
 wglSwapIntervalEXT	code/w32_game.cpp	/^static wglSwapIntervalEXTFn* wglSwapIntervalEXT;$/;"	v	language:C++	typeref:typename:wglSwapIntervalEXTFn *	file:
+wglSwapIntervalEXTFn	code/lit_ship.cpp	/^typedef BOOL WINAPI wglSwapIntervalEXTFn(int interval);$/;"	t	language:C++	typeref:typename:BOOL WINAPI ()(int interval)	file:
 wglSwapIntervalEXTFn	code/w32_game.cpp	/^typedef BOOL WINAPI wglSwapIntervalEXTFn(int interval);$/;"	t	language:C++	typeref:typename:BOOL WINAPI ()(int interval)	file:
+WGL_ACCELERATION_ARB	code/lit_ship.cpp	/^#define WGL_ACCELERATION_ARB /;"	d	language:C++	file:
 WGL_ACCELERATION_ARB	code/w32_game.cpp	/^#define WGL_ACCELERATION_ARB /;"	d	language:C++	file:
+WGL_CONTEXT_DEBUG_BIT_ARB	code/lit_ship.cpp	/^#define WGL_CONTEXT_DEBUG_BIT_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_DEBUG_BIT_ARB	code/w32_game.cpp	/^#define WGL_CONTEXT_DEBUG_BIT_ARB /;"	d	language:C++	file:
+WGL_CONTEXT_FLAGS_ARB	code/lit_ship.cpp	/^#define WGL_CONTEXT_FLAGS_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_FLAGS_ARB	code/w32_game.cpp	/^#define WGL_CONTEXT_FLAGS_ARB /;"	d	language:C++	file:
+WGL_CONTEXT_FLAG_ARB	code/lit_ship.cpp	/^#define WGL_CONTEXT_FLAG_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_FLAG_ARB	code/w32_game.cpp	/^#define WGL_CONTEXT_FLAG_ARB /;"	d	language:C++	file:
+WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	code/lit_ship.cpp	/^#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB	code/w32_game.cpp	/^#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB /;"	d	language:C++	file:
+WGL_CONTEXT_LAYER_PLANE_ARB	code/lit_ship.cpp	/^#define WGL_CONTEXT_LAYER_PLANE_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_LAYER_PLANE_ARB	code/w32_game.cpp	/^#define WGL_CONTEXT_LAYER_PLANE_ARB /;"	d	language:C++	file:
+WGL_CONTEXT_MAJOR_VERSION_ARB	code/lit_ship.cpp	/^#define WGL_CONTEXT_MAJOR_VERSION_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_MAJOR_VERSION_ARB	code/w32_game.cpp	/^#define WGL_CONTEXT_MAJOR_VERSION_ARB /;"	d	language:C++	file:
+WGL_CONTEXT_MINOR_VERSION_ARB	code/lit_ship.cpp	/^#define WGL_CONTEXT_MINOR_VERSION_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_MINOR_VERSION_ARB	code/w32_game.cpp	/^#define WGL_CONTEXT_MINOR_VERSION_ARB /;"	d	language:C++	file:
+WGL_CONTEXT_MOMO_PROFILE_BIT_ARB	code/lit_ship.cpp	/^#define WGL_CONTEXT_MOMO_PROFILE_BIT_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_MOMO_PROFILE_BIT_ARB	code/w32_game.cpp	/^#define WGL_CONTEXT_MOMO_PROFILE_BIT_ARB /;"	d	language:C++	file:
+WGL_CONTEXT_PROFILE_MASK_ARB	code/lit_ship.cpp	/^#define WGL_CONTEXT_PROFILE_MASK_ARB /;"	d	language:C++	file:
 WGL_CONTEXT_PROFILE_MASK_ARB	code/w32_game.cpp	/^#define WGL_CONTEXT_PROFILE_MASK_ARB /;"	d	language:C++	file:
+WGL_DOUBLE_BUFFER_ARB	code/lit_ship.cpp	/^#define WGL_DOUBLE_BUFFER_ARB /;"	d	language:C++	file:
 WGL_DOUBLE_BUFFER_ARB	code/w32_game.cpp	/^#define WGL_DOUBLE_BUFFER_ARB /;"	d	language:C++	file:
+WGL_DRAW_TO_WINDOW_ARB	code/lit_ship.cpp	/^#define WGL_DRAW_TO_WINDOW_ARB /;"	d	language:C++	file:
 WGL_DRAW_TO_WINDOW_ARB	code/w32_game.cpp	/^#define WGL_DRAW_TO_WINDOW_ARB /;"	d	language:C++	file:
+WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB	code/lit_ship.cpp	/^#define WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB /;"	d	language:C++	file:
 WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB	code/w32_game.cpp	/^#define WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB /;"	d	language:C++	file:
+WGL_FULL_ACCELERATION_ARB	code/lit_ship.cpp	/^#define WGL_FULL_ACCELERATION_ARB /;"	d	language:C++	file:
 WGL_FULL_ACCELERATION_ARB	code/w32_game.cpp	/^#define WGL_FULL_ACCELERATION_ARB /;"	d	language:C++	file:
+WGL_PIXEL_TYPE_ARB	code/lit_ship.cpp	/^#define WGL_PIXEL_TYPE_ARB /;"	d	language:C++	file:
 WGL_PIXEL_TYPE_ARB	code/w32_game.cpp	/^#define WGL_PIXEL_TYPE_ARB /;"	d	language:C++	file:
+wgl_set_opengl_function	code/lit_ship.cpp	/^#define wgl_set_opengl_function(/;"	d	language:C++	file:
 wgl_set_opengl_function	code/w32_game.cpp	/^#define wgl_set_opengl_function(/;"	d	language:C++	file:
+WGL_SUPPORT_OPENGL_ARB	code/lit_ship.cpp	/^#define WGL_SUPPORT_OPENGL_ARB /;"	d	language:C++	file:
 WGL_SUPPORT_OPENGL_ARB	code/w32_game.cpp	/^#define WGL_SUPPORT_OPENGL_ARB /;"	d	language:C++	file:
+WGL_TYPE_RGBA_ARB	code/lit_ship.cpp	/^#define WGL_TYPE_RGBA_ARB /;"	d	language:C++	file:
 WGL_TYPE_RGBA_ARB	code/w32_game.cpp	/^#define WGL_TYPE_RGBA_ARB /;"	d	language:C++	file:
 width	code/game.h	/^  u32_t width; $/;"	m	language:C++	struct:game_gfx_opengl_texture_t	typeref:typename:u32_t
 width	code/game.h	/^  u32_t width;$/;"	m	language:C++	struct:game_asset_bitmap_t	typeref:typename:u32_t
 width	code/game_asset_file.h	/^  u32_t width;$/;"	m	language:C++	struct:asset_file_bitmap_t	typeref:typename:u32_t
 width	code/momo.h	/^  u32_t width;$/;"	m	language:C++	struct:png_t	typeref:typename:u32_t
 width	code/momo.h	/^  u32_t width;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:typename:u32_t
+WIN32_LEAN_AND_MEAN	code/lit_ship.cpp	/^# define WIN32_LEAN_AND_MEAN$/;"	d	language:C++	file:
 WIN32_LEAN_AND_MEAN	code/w32_game.cpp	/^# define WIN32_LEAN_AND_MEAN$/;"	d	language:C++	file:
 WIN32_LEAN_AND_MEAN	code/w32_sandbox_socket.cpp	/^#define WIN32_LEAN_AND_MEAN$/;"	d	language:C++	file:
+window	code/lit_ship.cpp	/^  HWND window;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:HWND	file:
 window	code/w32_game.cpp	/^  HWND window;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:HWND	file:
 window_title	code/game.h	/^  const char* window_title; $/;"	m	language:C++	struct:game_config_t	typeref:typename:const char *
+WinMain	code/lit_ship.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 WinMain	code/w32_game.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 WinMain	code/w32_sandbox_wasapi.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int APIENTRY CALLBACK
+work_queue	code/lit_ship.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_work_queue_t	file:
 work_queue	code/w32_game.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_work_queue_t	file:
 write_file	code/game.h	/^  game_write_file_f* write_file;$/;"	m	language:C++	struct:game_t	typeref:typename:game_write_file_f *
 x	code/lit.cpp	/^  f32_t x;$/;"	m	language:C++	struct:lit_game_title_waypoint_t	typeref:typename:f32_t	file:
@@ -2766,9 +2922,13 @@ _ttf_read_s16	code/momo.h	/^_ttf_read_s16(u8_t* location) {$/;"	f	language:C++	t
 _ttf_read_u16	code/momo.h	/^_ttf_read_u16(u8_t* location) {$/;"	f	language:C++	typeref:typename:u16_t
 _ttf_read_u32	code/momo.h	/^_ttf_read_u32(u8_t* location) {$/;"	f	language:C++	typeref:typename:u32_t
 _ttf_tessellate_bezier	code/momo.h	/^_ttf_tessellate_bezier(v2f_t* vertices,$/;"	f	language:C++	typeref:typename:void
+_w32_load_wgl_extentions	code/lit_ship.cpp	/^_w32_load_wgl_extentions() {$/;"	f	language:C++	typeref:typename:b32_t	file:
 _w32_load_wgl_extentions	code/w32_game.cpp	/^_w32_load_wgl_extentions() {$/;"	f	language:C++	typeref:typename:b32_t	file:
+_w32_set_pixel_format	code/lit_ship.cpp	/^_w32_set_pixel_format(HDC dc) {$/;"	f	language:C++	typeref:typename:void	file:
 _w32_set_pixel_format	code/w32_game.cpp	/^_w32_set_pixel_format(HDC dc) {$/;"	f	language:C++	typeref:typename:void	file:
+_w32_try_get_wgl_function	code/lit_ship.cpp	/^_w32_try_get_wgl_function(const char* name, HMODULE fallback_module)$/;"	f	language:C++	typeref:typename:void *	file:
 _w32_try_get_wgl_function	code/w32_game.cpp	/^_w32_try_get_wgl_function(const char* name, HMODULE fallback_module)$/;"	f	language:C++	typeref:typename:void *	file:
+_w32_wasapi_init_default_audio_output_device	code/lit_ship.cpp	/^_w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:void	file:
 _w32_wasapi_init_default_audio_output_device	code/w32_game.cpp	/^_w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:void	file:
 _wav_head_t	code/momo.h	/^struct _wav_head_t { $/;"	s	language:C++
 __anon0ebb30df0103	code/game.h	/^enum{ $/;"	g	language:C++

@@ -121,7 +121,7 @@ IF %ship%==1 (
   type %code_dir%\w32_game.cpp >>  %ship_file%  
   rem cl %compiler_flags% %ship_file% %linker_flags%  
   clang++ %compiler_flags% %ship_file% %linker_flags% -o %output_name%
-  del %ship_file% 
+  rem del %ship_file% 
 ) else (
   rem cl %compiler_flags% %code_dir%\%filename%.cpp %linker_flags% 
   clang++ %compiler_flags% %code_dir%\%filename%.cpp %linker_flags% -o %output_name%

@@ -8,6 +8,8 @@
 #include <ws2tcpip.h>
 #include <iphlpapi.h>
 #include <stdio.h>
+#undef near
+#undef far
 
 #pragma comment(lib, "Ws2_32.lib")
 
