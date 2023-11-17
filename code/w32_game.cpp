@@ -949,7 +949,8 @@ w32_calc_render_region(u32_t window_w,
                        u32_t window_h, 
                        f32_t aspect_ratio)
 {
-	assert(aspect_ratio > 0.f && window_w > 0 && window_h > 0);
+	if(aspect_ratio <= 0.f || window_w == 0 || window_h == 0) 
+    return {};
   
 	RECT ret;
 	
@@ -1168,7 +1169,7 @@ w32_free_all_memory() {
   while(itr != sentinel) {
     w32_memory_t* next = itr->next;
     cll_remove(itr);
-    VirtualFree(itr, 0, MEM_RELEASE);
+    os_memory_free(itr);
     itr = next;
   }
 }

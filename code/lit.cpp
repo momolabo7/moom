@@ -17,6 +17,7 @@
 #define LIT_SKIP_TRANSITIONS false
 
 // Debug
+#define LIT_DEBUG 1
 #define LIT_DEBUG_LINES 0
 
 // Splash
@@ -41,8 +42,9 @@
 
 // Light
 #define LIT_LIGHT_EMITTER_SCALE 16.f
-#define LIT_LIGHT_EMITTER_SPIN_SPEED 2.f
-#define LIT_LIGHT_EMITTER_COLOR rgba_set(0.8f, 0.8f, 0.8f, 1.f) 
+#define LIT_LIGHT_EMITTER_ANIME_SPEED 2.f
+#define LIT_LIGHT_EMITTER_COLOR rgba_set(1.f, 1.f, 1.f, 0.75f) 
+#define LIT_LIGHT_EMITTER_GLOW_COLOR rgba_set(1.f, 1.f, 1.f, 0.5f) 
 
 // Player
 #define LIT_PLAYER_RADIUS 16.f
@@ -359,7 +361,7 @@ struct lit_t {
   lit_mode_t mode;
   union {
     lit_splash_t splash;
-    lit_game_t g_game;
+    lit_game_t game;
     lit_credits_t credits;
   };
   u32_t level_to_start;
@@ -1359,37 +1361,46 @@ lit_game_render_lights(lit_game_t* g) {
   //
   static f32_t shared_spinny_timer = 0.f;
 
-  shared_spinny_timer += g_game->input.delta_time * LIT_LIGHT_EMITTER_SPIN_SPEED;
+  shared_spinny_timer += g_game->input.delta_time * LIT_LIGHT_EMITTER_ANIME_SPEED;
   if (shared_spinny_timer > PI_32) {
     shared_spinny_timer = 0.f;
   }
-  f32_t emitter_scale = f32_sin(shared_spinny_timer) * LIT_LIGHT_EMITTER_SCALE;
+  
+  f32_t alpha = (f32_sin(shared_spinny_timer) + 5.f) / 6.f; 
+#if 0
+  game_inspector_t* inspector = &g_game->inspector;
+  game_inspector_add_f32(inspector, str_from_lit("a"), alpha);
+#endif
 
-  for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
+  f32_t emitter_scale = alpha * LIT_LIGHT_EMITTER_SCALE;
+  f32_t glow_scale = emitter_scale * (alpha * 1.4f);
+
+  for_cnt(light_index, g->light_count)
   {
     lit_game_light_t* light = g->lights + light_index;
     game_draw_asset_sprite(
         g_game, 
         &g_lit->assets, 
-        ASSET_SPRITE_ID_CIRCLE_SPRITE,
+        ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE,
         light->pos,
-        v2f_set(emitter_scale, LIT_LIGHT_EMITTER_SCALE),
+        v2f_set(emitter_scale, emitter_scale),
         LIT_LIGHT_EMITTER_COLOR);
     game_advance_depth(g_game);
+
     game_draw_asset_sprite(
         g_game, 
         &g_lit->assets, 
-        ASSET_SPRITE_ID_CIRCLE_SPRITE,
+        ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE,
         light->pos,
-        v2f_set(LIT_LIGHT_EMITTER_SCALE, emitter_scale),
-        LIT_LIGHT_EMITTER_COLOR);
+        v2f_set(glow_scale, glow_scale),
+        LIT_LIGHT_EMITTER_GLOW_COLOR);
     game_advance_depth(g_game);
   }
 
+  game_set_blend_additive(g_game);
   //
   // Lights
   //
-  game_set_blend_additive(g_game);
   for(u32_t light_index = 0; light_index < g->light_count; ++light_index)
   {
     lit_game_light_t* l = g->lights + light_index;
@@ -1904,8 +1915,8 @@ static void lit_level_add();
 
 
 #define lit_level_exit_with(where) [](){ \
-  lit_unlock_next_level(g_lit->g_game.current_level_id); \
-  g_lit->g_game.exit_callback = where;  \
+  lit_unlock_next_level(g_lit->game.current_level_id); \
+  g_lit->game.exit_callback = where;  \
 } 
 
 static void
@@ -1960,7 +1971,7 @@ lit_game_init_level(lit_game_t* m, str_t str, u32_t level_id) {
 //
 static void
 lit_level_move() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("MOVE"), 1);
 
   lit_game_push_light(m, 400.f, 400, 0x880000FF, 45.f, 0.75f);
@@ -1983,7 +1994,7 @@ lit_level_move() {
 //
 static void
 lit_level_obstruct() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("OBSTRUCT"), 2);
   
   if (lit_is_in_tutorial()) {
@@ -2008,7 +2019,7 @@ lit_level_obstruct() {
 //
 static void
 lit_level_add() { 
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   // Need to 'enclose' the shape
   lit_game_init_level(m, str_from_lit("ADD"), 3);
   lit_game_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
@@ -2030,7 +2041,7 @@ lit_level_add() {
 //
 static void
 lit_level_corners() { 
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("CORNERS"), 4);
 
   // Need to 'enclose' the shape
@@ -2060,7 +2071,7 @@ lit_level_corners() {
 //
 static void
 lit_level_mix() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
 
   lit_game_init_level(m, str_from_lit("MIX"), 5);
 
@@ -2088,7 +2099,7 @@ lit_level_mix() {
 //
 static void
 lit_level_blend() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("BLEND"), 6);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
@@ -2116,7 +2127,7 @@ lit_level_blend() {
 //
 static void
 lit_level_rooms() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
 
   lit_game_init_level(m, str_from_lit("ROOMS"), 7);
 
@@ -2154,7 +2165,7 @@ lit_level_rooms() {
 // LEVEL 8
 static void
 lit_level_disco() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("DISCO"), 8);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
@@ -2214,7 +2225,7 @@ lit_level_disco() {
 //  
 static void
 lit_level_onion() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("ONION"), 9);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
@@ -2251,9 +2262,42 @@ lit_level_onion() {
 
 // LEVEL 10
 static void
+lit_level_split() {
+  lit_game_t* m = &g_lit->game;
+  lit_game_init_level(m, str_from_lit("SPLIT"), 10);
+
+  lit_game_push_light(m, 400.f, 410.f, 0x880000FF, 360.f, 0.f);
+  lit_game_push_light(m, 390.f, 390.f, 0x008800FF, 360.f, 0.f);
+  lit_game_push_light(m, 410.f, 390.f, 0x000088FF, 360.f, 0.f);
+
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
+
+  lit_game_push_sensor(m, 400.f,   750.f, 0x888888FF); 
+  lit_game_push_sensor(m, 50.f,   50.f, 0x888888FF); 
+  lit_game_push_sensor(m, 750.f,   50.f, 0x888888FF); 
+
+  lit_game_push_sensor(m, 50.f,   750.f, 0x888800FF); 
+  lit_game_push_sensor(m, 750.f,   750.f, 0x880088FF); 
+  lit_game_push_sensor(m, 400.f,   50.f, 0x008888FF); 
+
+  lit_game_push_sensor(m, 400.f,   550.f, 0x880000FF); 
+  lit_game_push_sensor(m, 275.f,   380.f, 0x008800FF); 
+  lit_game_push_sensor(m, 525.f,   380.f, 0x000088FF); 
+
+  lit_game_end_sensor_group(m);
+
+  //lit_game_push_sensor(m, 0.f,   0.f, 0xFFFFFFFF); 
+  lit_game_push_box(m, 300, 300, 500, 500);
+  //lit_game_push_box(m, 150, 350, 250, 450);
+
+}
+
+// LEVEL 11
+
+static void
 lit_level_spectrum() {
-  lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, str_from_lit("SPECTRUM"), 10);
+  lit_game_t* m = &g_lit->game;
+  lit_game_init_level(m, str_from_lit("SPECTRUM"), 11);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   // cyans
@@ -2296,42 +2340,10 @@ lit_level_spectrum() {
   lit_game_push_light(m, 410.f, 390.f, 0x000088FF, 360.f, 0.f);
 }
 
-// LEVEL 11
-static void
-lit_level_split() {
-  lit_game_t* m = &g_lit->g_game;
-  lit_game_init_level(m, str_from_lit("SPLIT"), 11);
-
-  lit_game_push_light(m, 400.f, 410.f, 0x880000FF, 360.f, 0.f);
-  lit_game_push_light(m, 390.f, 390.f, 0x008800FF, 360.f, 0.f);
-  lit_game_push_light(m, 410.f, 390.f, 0x000088FF, 360.f, 0.f);
-
-  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
-
-  lit_game_push_sensor(m, 400.f,   750.f, 0x888888FF); 
-  lit_game_push_sensor(m, 50.f,   50.f, 0x888888FF); 
-  lit_game_push_sensor(m, 750.f,   50.f, 0x888888FF); 
-
-  lit_game_push_sensor(m, 50.f,   750.f, 0x888800FF); 
-  lit_game_push_sensor(m, 750.f,   750.f, 0x880088FF); 
-  lit_game_push_sensor(m, 400.f,   50.f, 0x008888FF); 
-
-  lit_game_push_sensor(m, 400.f,   550.f, 0x880000FF); 
-  lit_game_push_sensor(m, 275.f,   380.f, 0x008800FF); 
-  lit_game_push_sensor(m, 525.f,   380.f, 0x000088FF); 
-
-  lit_game_end_sensor_group(m);
-
-  //lit_game_push_sensor(m, 0.f,   0.f, 0xFFFFFFFF); 
-  lit_game_push_box(m, 300, 300, 500, 500);
-  //lit_game_push_box(m, 150, 350, 250, 450);
-
-}
-
-//LEVEL 12
+// LEVEL 12
 static void
 lit_level_movement() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("MOVEMENT"), 12);
 
 //  lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
@@ -2382,7 +2394,7 @@ lit_level_movement() {
 // LEVEL 13
 static void
 lit_level_interval() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("INTERVAL"), 13);
 
   const u32_t sections = 20;
@@ -2471,7 +2483,7 @@ lit_level_interval() {
 
 static void
 lit_level_patience() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("PATIENCE"), 14);
   lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
   lit_game_push_light(m, 400.f, 700.f, 0x008800FF, 15.f, 0.75f);
@@ -2493,7 +2505,7 @@ lit_level_patience() {
 
 static void
 lit_level_busy() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("SCRAMBLE"), 15);
   //lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 15.f, 0.25f);
 #if 1
@@ -2579,7 +2591,7 @@ lit_level_busy() {
 // LEVEL 16
 static void
 lit_level_spin() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("SPIN"), 16);
 
   f32_t speed = 1.f;
@@ -2633,7 +2645,7 @@ lit_level_spin() {
 // LEVEL 17
 static void
 lit_level_orbit() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("ORBIT"), 17);
 
   f32_t speed = 1.f;
@@ -2690,7 +2702,7 @@ lit_level_orbit() {
 // TODO LEVEL 18
 static void
 lit_level_hourglass() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("HOURGLASS"), 18);
 
   lit_game_push_light(m, 250, 400, 0x880000FF, 360.f, 0.75f);
@@ -2819,7 +2831,7 @@ lit_level_test(lit_game_t* m) {
 
 static void
 lit_level_triforce() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("TRIFORCE"), 19);
 
   lit_game_push_light(m, 400, 427, 0x880000FF, 360.f, 0.75f);
@@ -2907,7 +2919,7 @@ lit_level_triforce() {
 
 static void
 lit_level_hands() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
   lit_game_init_level(m, str_from_lit("HANDS"), 20);
 
   lit_game_push_light(m, 100, 100, 0x880000FF, 360.f, 0.75f);
@@ -2981,7 +2993,7 @@ lit_level_hands() {
 
 static void 
 lit_level_menu() {
-  lit_game_t* m = &g_lit->g_game;
+  lit_game_t* m = &g_lit->game;
 
   const f32_t box_hw = 50.f;
   const f32_t box_hh = 50.f;
@@ -3092,7 +3104,7 @@ lit_level_menu() {
   if (lit_get_levels_unlocked_count() >= 10) {
     cx = 700;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_spectrum));
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_split));
     lit_game_push_sensor(m, cx-25, cy+15, row2_color); 
     lit_game_push_sensor(m, cx+25, cy+15, row2_color); 
     lit_game_push_sensor(m, cx, cy+30, row2_color); 
@@ -3109,7 +3121,7 @@ lit_level_menu() {
   if (lit_get_levels_unlocked_count() >= 11) {
     cx = 100;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_split));
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_spectrum));
     lit_game_begin_patrolling_sensor(m, cx-25, cy, row3_color, 2.f); 
     lit_game_push_patrolling_sensor_waypoint(m, cx+25, cy);
     lit_game_end_patrolling_sensor(m);
@@ -3355,7 +3367,7 @@ lit_level_menu() {
 static void
 lit_game_update() 
 {
-  lit_game_t* g = &g_lit->g_game;
+  lit_game_t* g = &g_lit->game;
 
   if (game_is_button_poked(g_game, GAME_BUTTON_CODE_SPACE)) {
     g->freeze = !g->freeze;
@@ -3540,7 +3552,7 @@ lit_game_update()
 static void 
 lit_game_init() 
 {
-  lit_game_t* g = &g_lit->g_game;
+  lit_game_t* g = &g_lit->game;
   rng_init(&g->rng, 65535); // don't really need to be strict 
 
   g->freeze = false;
@@ -3840,7 +3852,7 @@ lit_tick() {
 
   // Debug
 #if LIT_DEBUG
-  if (is_poked(input, INPUT_BUTTON_CODE_F1)) {
+  if (game_is_button_poked(g_game, GAME_BUTTON_CODE_F1)) {
     g_lit->show_debug_type = 
       (lit_show_debug_type_t)((g_lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
   }
@@ -3906,7 +3918,6 @@ game_update_and_render_sig(game_update_and_render)
 
 //
 // JOURNAL
-//
 // = 2023-08-26 =
 //   Added "g_" prefix to some global variables
 // 

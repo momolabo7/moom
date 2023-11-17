@@ -4864,14 +4864,23 @@ rbg_to_hsl(rgb_t c) {
       c.g <= 1.f &&
       c.b >= 0.f &&
       c.b <= 1.f);
-  hsl_t ret;
+
   f32_t max = max_of(max_of(c.r, c.g), c.b);
   f32_t min = min_of(min_of(c.r, c.g), c.b);
 
   f32_t delta = max - min; // aka chroma
 
+  float l = (max + min) * 0.5f;
 
-  if (f32_is_close(max, c.r)) {
+  if (delta == 0.f) {
+    // no chroma: means it's grey
+    return hsl_set(0.f, 0.f, l);
+  }
+
+  // NOTE: we can actually compare direct float with ==
+  // because max is directly assigned one of these values
+  float h = 0.f;
+  if (max == c.r) {
     f32_t segment = (c.g - c.b)/delta;
     f32_t shift = 0.f / 60;
     if (segment < 0) {
@@ -4880,36 +4889,25 @@ rbg_to_hsl(rgb_t c) {
     else {
       shift = 0.f / 60;
     }
-    ret.h = (segment + shift) * 60.f;
+    h = (segment + shift) * 60.f;
   }
 
-  else if (f32_is_close(max, c.g)) {
+  else if (max == c.g) {
     f32_t segment = (c.b - c.r)/delta;
     f32_t shift = 120.f / 60.f;
-    ret.h = (segment + shift) * 60.f;
+    h = (segment + shift) * 60.f;
   }
 
-  else if (f32_is_close(max, c.b)) {
+  else if (max == c.b) {
     f32_t segment = (c.r - c.g)/delta;
     f32_t shift = 240.f / 60.f;
-    ret.h = ((segment + shift) * 60.f);
+    h = (segment + shift) * 60.f;
   }
-  else {
-    ret.h = 0.f;
-  }
-  ret.h /= 360.f;
+  h /= 360.f;
 
+  float s = delta/(1.f - f32_abs(2.f * l - 1.f));
 
-  ret.l = (max + min) * 0.5f;
-
-  if (f32_is_close(delta, 0.f)) {
-    ret.s = 0.f;
-  }
-  else {
-    ret.s = delta/(1.f - f32_abs(2.f * ret.l - 1.f));
-  }
-
-  return ret;
+  return hsl_set(h,s,l);
 }
 
 static f32_t 
@@ -4929,10 +4927,9 @@ _hue_to_color(f32_t p, f32_t q, f32_t t) {
 }
 
 
-static rgb_t 
-hsl_to_rgb(hsl_t c) {
+static rgb_t hsl_to_rgb(hsl_t c) {
   assert(c.h >= 0.f &&
-      c.h <= 360.f &&
+      c.h <= 1.f &&
       c.s >= 0.f &&
       c.s <= 1.f &&
       c.l >= 0.f &&
