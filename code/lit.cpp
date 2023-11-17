@@ -3728,8 +3728,11 @@ static void lit_sandbox_update() {
 //
 // Main tick function
 //
-static b32_t
-lit_tick() {
+
+exported 
+game_update_and_render_sig(game_update_and_render) 
+{ 
+  g_game = game;
   if(g_game->user_data == nullptr) {
     usz_t lit_memory_size = sizeof(lit_t);
     usz_t asset_memory_size = megabytes(20);
@@ -3750,7 +3753,10 @@ lit_tick() {
     }
 
     u8_t* memory = (u8_t*)game_allocate_memory(g_game, required_memory);
-    if (!memory) return false;
+    if (!memory) {
+      g_game->is_running = false;
+      return;
+    }
     g_game->user_data = memory;
 
 
@@ -3871,7 +3877,6 @@ lit_tick() {
   }
 #endif
 
-  return true;
 }
 
 //
@@ -3907,13 +3912,6 @@ game_get_config_sig(game_get_config)
 
   ret.max_sprites = 4096;
   return ret;
-}
-
-exported 
-game_update_and_render_sig(game_update_and_render) 
-{ 
-  g_game = game;
-  lit_tick();
 }
 
 //
