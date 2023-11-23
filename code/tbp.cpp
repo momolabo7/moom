@@ -6,12 +6,31 @@
 #include "game_asset_id_lit.h"
 #include "game.h"
 
+#define TBG_TILE_SIZE (50.f)
+#define TBG_TILE_SIZE_V2 (v2f_set(TBG_TILE_SIZE, TBG_TILE_SIZE))
+
+#define two_2_one(x, y, w) (x + (w * y))
+#define one_2_two(id, w)   (v2u_set(id%w, id/w))
+
+#define tbg_from_game(game) ((tbg_t*)game->user_data)
+
+u32_t g_grid_w = 10;
+u32_t g_grid_h = 10;
+u32_t g_grid[] = {
+  0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,1,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,
+};
 
 
-
-#define tbp_from_game(game) ((tbp_t*)game->user_data)
-
-struct tbp_t {
+struct tbg_t {
 
   arena_t main_arena;
   arena_t asset_arena;
@@ -22,16 +41,16 @@ struct tbp_t {
 };
 
 // Globals
-tbp_t* g_tbp;
+tbg_t* g_tbg;
 game_t* g_game;
 
 exported 
 game_update_and_render_sig(game_update_and_render) 
 { 
   g_game = game;
-  g_tbp = tbp_from_game(game);
+  g_tbg = tbg_from_game(game);
   if(game->user_data == nullptr) {
-    usz_t lit_memory_size = sizeof(tbp_t);
+    usz_t lit_memory_size = sizeof(tbg_t);
     usz_t asset_memory_size = megabytes(20);
     //usz_t debug_memory_size = megabytes(1);
     usz_t frame_memory_size = megabytes(1);
@@ -55,29 +74,38 @@ game_update_and_render_sig(game_update_and_render)
       return;
     }
     game->user_data = memory;
-    g_tbp = tbp_from_game(game);
+    g_tbg = tbg_from_game(game);
 
     //
     // Initialize arenas
     //
-    arena_init(&g_tbp->main_arena, memory + sizeof(tbp_t), required_memory - sizeof(tbp_t));
-    arena_push_partition(&g_tbp->main_arena, &g_tbp->asset_arena, asset_memory_size, 16);
-    arena_push_partition(&g_tbp->main_arena, &g_tbp->frame_arena, asset_memory_size, 16);
+    arena_init(&g_tbg->main_arena, memory + sizeof(tbg_t), required_memory - sizeof(tbg_t));
+    arena_push_partition(&g_tbg->main_arena, &g_tbg->asset_arena, asset_memory_size, 16);
+    arena_push_partition(&g_tbg->main_arena, &g_tbg->frame_arena, asset_memory_size, 16);
 
 
     // Initialize assets
-    game_assets_init(&g_tbp->assets, g_game, LIT_ASSET_FILE, &g_tbp->asset_arena);
+    game_assets_init(&g_tbg->assets, g_game, LIT_ASSET_FILE, &g_tbg->asset_arena);
     
     // Initialize view
     game_set_design_dimensions(g_game, 800, 800);
     game_set_view(g_game, 0.f, 800, 0.f, 800, 0.f, 0.f);
   }
 
-  arena_clear(&g_tbp->frame_arena);
-
+  arena_clear(&g_tbg->frame_arena);
   game_clear_canvas(g_game, rgba_set(0.2f, 0.2f, 0.2f, 1.f)); 
   game_set_blend_alpha(g_game);
-  game_draw_rect(g_game, v2f_set(100, 100), 0, v2f_set(50, 50), rgba_set(1,1,1,1));
+
+  
+
+  // Render grid
+  for(u32_t x = 0; x < 10; ++x){
+    for (u32_t y = 0; y < 10; ++y) {
+      if (g_grid[two_2_one(x,y,10)] == 0) {
+        game_draw_rect(g_game, v2f_set(x * 50, y * 50), 0, v2f_set(45, 45), rgba_set(0.5f,0.5f,0.5f,1));
+      }
+    }
+  }
   game_advance_depth(g_game);
 
 }

@@ -3931,6 +3931,8 @@ game_get_config_sig(game_get_config)
   ret.audio_channels = 2;
   
   ret.window_title = "PRISMIX v1.1";
+  ret.window_initial_width = 800;
+  ret.window_initial_height = 800;
 
   ret.max_sprites = 4096;
   return ret;

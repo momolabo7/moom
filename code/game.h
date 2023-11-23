@@ -932,6 +932,9 @@ struct game_config_t {
 
   // must be null terminated
   const char* window_title; 
+  u32_t window_initial_width;
+  u32_t window_initial_height;
+
 };
 
 #define game_get_config_sig(name) game_config_t name(void)
@@ -1057,7 +1060,7 @@ _game_gfx_push_command_block(game_gfx_command_queue_t* q, u32_t size, u32_t id, 
 
 // TODO: maybe we should change this to a macro to support C users
 template<typename T> static T*
-_game_gfx_push_command(game_gfx_command_queue_t* q, u32_t id, u32_t align = 4) {
+_game_gfx_push_command(game_gfx_command_queue_t* q, u32_t id, u32_t align = 16) {
   return (T*)_game_gfx_push_command_block(q, sizeof(T), id, align);
 }
 
@@ -1158,14 +1161,15 @@ game_gfx_clear_colors(game_gfx_t* g, rgba_t colors) {
 }
 
 static void
-game_gfx_push_sprite(game_gfx_t* g, 
-                rgba_t colors, 
-                v2f_t pos, 
-                v2f_t size,
-                v2f_t anchor,
-                u32_t texture_index,
-                u32_t texel_x0, u32_t texel_y0, 
-                u32_t texel_x1, u32_t texel_y1)
+game_gfx_push_sprite(
+    game_gfx_t* g, 
+    rgba_t colors, 
+    v2f_t pos, 
+    v2f_t size,
+    v2f_t anchor,
+    u32_t texture_index,
+    u32_t texel_x0, u32_t texel_y0, 
+    u32_t texel_x1, u32_t texel_y1)
 {
   game_gfx_command_queue_t* c = &g->command_queue; 
   auto* data = _game_gfx_push_command<game_gfx_command_sprite_t>(c, GAME_GFX_COMMAND_TYPE_SPRITE);
@@ -2281,7 +2285,8 @@ game_gfx_opengl_end_frame(game_gfx_t* gfx) {
       case GAME_GFX_COMMAND_TYPE_CLEAR: {
         auto* data = (game_gfx_command_clear_t*)entry->data;
 
-        ogl->glClearColor(data->colors.r, 
+        ogl->glClearColor(
+            data->colors.r, 
             data->colors.g, 
             data->colors.b, 
             data->colors.a);
@@ -2537,7 +2542,6 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
     }
 
     game_asset_bitmap_t* b = assets->bitmaps + bitmap_index;
-    // TODO: is there anyway for gfx to assign this instead?
     b->renderer_texture_handle = game_gfx_get_next_texture_handle(&game->gfx);
     b->width = file_bitmap.width;
     b->height = file_bitmap.height;
@@ -3079,6 +3083,10 @@ game_profiler_update_entries(game_profiler_t* p) {
 
 //
 // JOURNAL
+//
+// = 2023-11-22 =
+//   The API for texture transfering to the gfx module seems to be too complicated.
+//   We should compress it...
 // 
 // = 2023-11-03 =
 //   Sound is added to game assets. 

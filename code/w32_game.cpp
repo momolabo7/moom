@@ -1777,8 +1777,8 @@ WinMain(HINSTANCE instance,
   //
   HWND window;
   {
-    const int window_w = (int)800;
-    const int window_h = (int)800;
+    const int window_w = (int)config.window_initial_width;
+    const int window_h = (int)config.window_initial_height;
     const char* title = config.window_title;
     const char* icon_path = "window.ico";
     const int icon_w = 256;

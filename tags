@@ -151,11 +151,14 @@ assert_callback	pass_lit.cpp	/^#define assert_callback(/;"	d	language:C++	file:
 assert_callback	pass_sandbox.cpp	/^#define assert_callback(/;"	d	language:C++	file:
 assets	code/lit.cpp	/^  game_assets_t assets;$/;"	m	language:C++	struct:lit_t	typeref:typename:game_assets_t	file:
 assets	code/sandbox.cpp	/^  game_assets_t assets;$/;"	m	language:C++	struct:sandbox_t	typeref:typename:game_assets_t	file:
+assets	code/tbp.cpp	/^  game_assets_t assets;$/;"	m	language:C++	struct:tbg_t	typeref:typename:game_assets_t	file:
 assets	lit.cpp	/^  game_assets_t assets;$/;"	m	language:C++	struct:lit_t	typeref:typename:game_assets_t	file:
 assets	sandbox.cpp	/^  game_assets_t assets;$/;"	m	language:C++	struct:sandbox_t	typeref:typename:game_assets_t	file:
+assets	tbp.cpp	/^  game_assets_t assets;$/;"	m	language:C++	struct:tbg_t	typeref:typename:game_assets_t	file:
 asset_arena	code/lit.cpp	/^  arena_t asset_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
+asset_arena	code/tbp.cpp	/^  arena_t asset_arena;$/;"	m	language:C++	struct:tbg_t	typeref:typename:arena_t	file:
 asset_arena	lit.cpp	/^  arena_t asset_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
-asset_arena	tbp.cpp	/^  arena_t asset_arena;$/;"	m	language:C++	struct:tbp_t	typeref:typename:arena_t	file:
+asset_arena	tbp.cpp	/^  arena_t asset_arena;$/;"	m	language:C++	struct:tbg_t	typeref:typename:arena_t	file:
 ASSET_BITMAP_ID_ATLAS	code/game_asset_id_lit.h	/^  ASSET_BITMAP_ID_ATLAS,$/;"	e	language:C++	enum:game_asset_bitmap_id_t
 ASSET_BITMAP_ID_ATLAS	game_asset_id_lit.h	/^  ASSET_BITMAP_ID_ATLAS,$/;"	e	language:C++	enum:game_asset_bitmap_id_t
 ASSET_BITMAP_ID_MAX	code/game_asset_id_lit.h	/^  ASSET_BITMAP_ID_MAX$/;"	e	language:C++	enum:game_asset_bitmap_id_t
@@ -821,9 +824,10 @@ data_size	game_asset_file.h	/^  u32_t data_size;$/;"	m	language:C++	struct:asset
 data_size	sandbox.cpp	/^  u32_t data_size;$/;"	m	language:C++	struct:sandbox_audio_mixer_instance_t	typeref:typename:u32_t	file:
 debug_arena	code/game.h	/^  arena_t debug_arena;$/;"	m	language:C++	struct:game_t	typeref:typename:arena_t
 debug_arena	code/lit.cpp	/^  arena_t debug_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
+debug_arena	code/tbp.cpp	/^  arena_t debug_arena;$/;"	m	language:C++	struct:tbg_t	typeref:typename:arena_t	file:
 debug_arena	game.h	/^  arena_t debug_arena;$/;"	m	language:C++	struct:game_t	typeref:typename:arena_t
 debug_arena	lit.cpp	/^  arena_t debug_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
-debug_arena	tbp.cpp	/^  arena_t debug_arena;$/;"	m	language:C++	struct:tbp_t	typeref:typename:arena_t	file:
+debug_arena	tbp.cpp	/^  arena_t debug_arena;$/;"	m	language:C++	struct:tbg_t	typeref:typename:arena_t	file:
 debug_arena_size	code/game.h	/^  usz_t debug_arena_size;$/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
 debug_arena_size	game.h	/^  usz_t debug_arena_size;$/;"	m	language:C++	struct:game_config_t	typeref:typename:usz_t
 debug_log	code/game.h	/^  game_debug_log_f* debug_log;$/;"	m	language:C++	struct:game_t	typeref:typename:game_debug_log_f *
@@ -1544,6 +1548,7 @@ font_id	code/pass.h	/^  game_asset_font_id_t font_id;$/;"	m	language:C++	struct:
 font_id	pass.h	/^  game_asset_font_id_t font_id;$/;"	m	language:C++	struct:pass_pack_atlas_font_t	typeref:typename:game_asset_font_id_t
 FOOLISH	aoc22.cpp	/^#define FOOLISH /;"	d	language:C++	file:
 FOOLISH	code/aoc22.cpp	/^#define FOOLISH /;"	d	language:C++	file:
+FOOLISH	vtuber.cpp	/^#define FOOLISH /;"	d	language:C++	file:
 foolishly_allocate	code/meta.cpp	/^#define foolishly_allocate(/;"	d	language:C++	file:
 foolishly_allocate	meta.cpp	/^#define foolishly_allocate(/;"	d	language:C++	file:
 foolishly_allocate_array	code/meta.cpp	/^#define foolishly_allocate_array(/;"	d	language:C++	file:
@@ -1577,8 +1582,9 @@ for_cnt	momo.h	/^#define for_cnt(/;"	d	language:C++
 for_range	code/momo.h	/^#define for_range(/;"	d	language:C++
 for_range	momo.h	/^#define for_range(/;"	d	language:C++
 frame_arena	code/lit.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
+frame_arena	code/tbp.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:tbg_t	typeref:typename:arena_t	file:
 frame_arena	lit.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
-frame_arena	tbp.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:tbp_t	typeref:typename:arena_t	file:
+frame_arena	tbp.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:tbg_t	typeref:typename:arena_t	file:
 frame_rate	code/lit_ship.cpp	/^  u32_t frame_rate;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 frame_rate	code/w32_game.cpp	/^  u32_t frame_rate;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 frame_rate	lit_ship.cpp	/^  u32_t frame_rate;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
@@ -1951,11 +1957,13 @@ game_get_config_sig	code/game.h	/^#define game_get_config_sig(/;"	d	language:C++
 game_get_config_sig	code/game.h	/^typedef game_get_config_sig(game_get_config_f);$/;"	t	language:C++
 game_get_config_sig	code/lit.cpp	/^game_get_config_sig(game_get_config) $/;"	f	language:C++	typeref:typename:exported
 game_get_config_sig	code/sandbox.cpp	/^game_get_config_sig(game_get_config) $/;"	f	language:C++	typeref:typename:exported
+game_get_config_sig	code/tbp.cpp	/^game_get_config_sig(game_get_config) $/;"	f	language:C++	typeref:typename:exported
 game_get_config_sig	game.h	/^#define game_get_config_sig(/;"	d	language:C++
 game_get_config_sig	game.h	/^typedef game_get_config_sig(game_get_config_f);$/;"	t	language:C++
 game_get_config_sig	lit.cpp	/^game_get_config_sig(game_get_config) $/;"	f	language:C++	typeref:typename:exported
 game_get_config_sig	sandbox.cpp	/^game_get_config_sig(game_get_config) $/;"	f	language:C++	typeref:typename:exported
 game_get_config_sig	tbp.cpp	/^game_get_config_sig(game_get_config) $/;"	f	language:C++	typeref:typename:exported
+game_get_config_sig	vtuber.cpp	/^game_get_config_sig(game_get_config) $/;"	f	language:C++	typeref:typename:exported
 game_get_dt	code/game.h	/^game_get_dt(game_t* game) {$/;"	f	language:C++	typeref:typename:f32_t
 game_get_dt	game.h	/^game_get_dt(game_t* game) {$/;"	f	language:C++	typeref:typename:f32_t
 game_get_file_size	code/game.h	/^#define game_get_file_size(/;"	d	language:C++
@@ -2468,11 +2476,13 @@ game_update_and_render_sig	code/game.h	/^#define game_update_and_render_sig(/;"	
 game_update_and_render_sig	code/game.h	/^typedef game_update_and_render_sig(game_update_and_render_f);$/;"	t	language:C++
 game_update_and_render_sig	code/lit.cpp	/^game_update_and_render_sig(game_update_and_render) $/;"	f	language:C++	typeref:typename:exported
 game_update_and_render_sig	code/sandbox.cpp	/^game_update_and_render_sig(game_update_and_render) { $/;"	f	language:C++	typeref:typename:exported
+game_update_and_render_sig	code/tbp.cpp	/^game_update_and_render_sig(game_update_and_render) $/;"	f	language:C++	typeref:typename:exported
 game_update_and_render_sig	game.h	/^#define game_update_and_render_sig(/;"	d	language:C++
 game_update_and_render_sig	game.h	/^typedef game_update_and_render_sig(game_update_and_render_f);$/;"	t	language:C++
 game_update_and_render_sig	lit.cpp	/^game_update_and_render_sig(game_update_and_render) $/;"	f	language:C++	typeref:typename:exported
 game_update_and_render_sig	sandbox.cpp	/^game_update_and_render_sig(game_update_and_render) { $/;"	f	language:C++	typeref:typename:exported
 game_update_and_render_sig	tbp.cpp	/^game_update_and_render_sig(game_update_and_render) $/;"	f	language:C++	typeref:typename:exported
+game_update_and_render_sig	vtuber.cpp	/^game_update_and_render_sig(game_update_and_render) $/;"	f	language:C++	typeref:typename:exported
 GAME_USE_OPENGL	code/game.h	/^#define GAME_USE_OPENGL /;"	d	language:C++
 GAME_USE_OPENGL	game.h	/^#define GAME_USE_OPENGL /;"	d	language:C++
 GAME_USE_WASAPI	code/lit_ship.cpp	/^# define GAME_USE_WASAPI /;"	d	language:C++	file:
@@ -2796,11 +2806,17 @@ gpos	momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	
 group_id	code/lit.cpp	/^  u32_t group_id;$/;"	m	language:C++	struct:lit_game_sensor_t	typeref:typename:u32_t	file:
 group_id	lit.cpp	/^  u32_t group_id;$/;"	m	language:C++	struct:lit_game_sensor_t	typeref:typename:u32_t	file:
 g_game	code/lit.cpp	/^static game_t* g_game; $/;"	v	language:C++	typeref:typename:game_t *	file:
+g_game	code/tbp.cpp	/^game_t* g_game;$/;"	v	language:C++	typeref:typename:game_t *
 g_game	lit.cpp	/^static game_t* g_game; $/;"	v	language:C++	typeref:typename:game_t *	file:
 g_game	tbp.cpp	/^game_t* g_game;$/;"	v	language:C++	typeref:typename:game_t *
+g_grid	code/tbp.cpp	/^u32_t g_grid[] = {$/;"	v	language:C++	typeref:typename:u32_t[]
+g_grid	tbp.cpp	/^u32_t g_grid[] = {$/;"	v	language:C++	typeref:typename:u32_t[]
+g_grid_h	tbp.cpp	/^u32_t g_grid_h = 10;$/;"	v	language:C++	typeref:typename:u32_t
+g_grid_w	tbp.cpp	/^u32_t g_grid_w = 10;$/;"	v	language:C++	typeref:typename:u32_t
 g_lit	code/lit.cpp	/^static lit_t* g_lit;$/;"	v	language:C++	typeref:typename:lit_t *	file:
 g_lit	lit.cpp	/^static lit_t* g_lit;$/;"	v	language:C++	typeref:typename:lit_t *	file:
-g_tbp	tbp.cpp	/^tbp_t* g_tbp;$/;"	v	language:C++	typeref:typename:tbp_t *
+g_tbg	code/tbp.cpp	/^tbg_t* g_tbg;$/;"	v	language:C++	typeref:typename:tbg_t *
+g_tbg	tbp.cpp	/^tbg_t* g_tbg;$/;"	v	language:C++	typeref:typename:tbg_t *
 h	code/momo.h	/^    struct { f32_t h,s,l; };  $/;"	m	language:C++	struct:hsla_t::__anon1db7a63d0b0a::__anon1db7a63d0c08	typeref:typename:f32_t
 h	code/momo.h	/^  f32_t h, s, l;  $/;"	m	language:C++	struct:hsl_t	typeref:typename:f32_t
 h	code/momo.h	/^  struct { f32_t w, h, d; };$/;"	m	language:C++	struct:v3f_t::__anon1db7a63d0908	typeref:typename:f32_t
@@ -3592,7 +3608,8 @@ main	pass_lit.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	pass_sandbox.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	w32_sandbox_socket.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
-main_arena	tbp.cpp	/^  arena_t main_arena;$/;"	m	language:C++	struct:tbp_t	typeref:typename:arena_t	file:
+main_arena	code/tbp.cpp	/^  arena_t main_arena;$/;"	m	language:C++	struct:tbg_t	typeref:typename:arena_t	file:
+main_arena	tbp.cpp	/^  arena_t main_arena;$/;"	m	language:C++	struct:tbg_t	typeref:typename:arena_t	file:
 make	code/momo.h	/^#define make(/;"	d	language:C++
 make	momo.h	/^#define make(/;"	d	language:C++
 max	code/game.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:game_gfx_opengl_uv_t	typeref:typename:v2f_t
@@ -3761,6 +3778,8 @@ old_light_pos	code/lit.cpp	/^  v2f_t old_light_pos;$/;"	m	language:C++	struct:li
 old_light_pos	lit.cpp	/^  v2f_t old_light_pos;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:v2f_t	file:
 old_pos	code/momo.h	/^  usz_t old_pos;$/;"	m	language:C++	struct:arena_marker_t	typeref:typename:usz_t
 old_pos	momo.h	/^  usz_t old_pos;$/;"	m	language:C++	struct:arena_marker_t	typeref:typename:usz_t
+one_2_two	code/tbp.cpp	/^#define one_2_two(/;"	d	language:C++	file:
+one_2_two	tbp.cpp	/^#define one_2_two(/;"	d	language:C++	file:
 ope	code/momo.h	/^  usz_t ope;$/;"	m	language:C++	struct:clex_token_t	typeref:typename:usz_t
 ope	momo.h	/^  usz_t ope;$/;"	m	language:C++	struct:clex_token_t	typeref:typename:usz_t
 open_file	code/game.h	/^  game_open_file_f* open_file;$/;"	m	language:C++	struct:game_t	typeref:typename:game_open_file_f *
@@ -4633,8 +4652,14 @@ TAU_32	code/momo.h	/^#define TAU_32 /;"	d	language:C++
 TAU_32	momo.h	/^#define TAU_32 /;"	d	language:C++
 TAU_64	code/momo.h	/^#define TAU_64 /;"	d	language:C++
 TAU_64	momo.h	/^#define TAU_64 /;"	d	language:C++
-tbp_from_game	tbp.cpp	/^#define tbp_from_game(/;"	d	language:C++	file:
-tbp_t	tbp.cpp	/^struct tbp_t {$/;"	s	language:C++	file:
+tbg_from_game	code/tbp.cpp	/^#define tbg_from_game(/;"	d	language:C++	file:
+tbg_from_game	tbp.cpp	/^#define tbg_from_game(/;"	d	language:C++	file:
+tbg_t	code/tbp.cpp	/^struct tbg_t {$/;"	s	language:C++	file:
+tbg_t	tbp.cpp	/^struct tbg_t {$/;"	s	language:C++	file:
+TBG_TILE_SIZE	code/tbp.cpp	/^#define TBG_TILE_SIZE /;"	d	language:C++	file:
+TBG_TILE_SIZE	tbp.cpp	/^#define TBG_TILE_SIZE /;"	d	language:C++	file:
+TBG_TILE_SIZE_V2	code/tbp.cpp	/^#define TBG_TILE_SIZE_V2 /;"	d	language:C++	file:
+TBG_TILE_SIZE_V2	tbp.cpp	/^#define TBG_TILE_SIZE_V2 /;"	d	language:C++	file:
 test_json	code/test.cpp	/^void test_json() {$/;"	f	language:C++	typeref:typename:void
 test_json	test.cpp	/^void test_json() {$/;"	f	language:C++	typeref:typename:void
 test_sine_wave	code/lit_ship.cpp	/^static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t t/;"	f	language:C++	typeref:typename:void	file:
@@ -4796,6 +4821,8 @@ ttf_read	momo.h	/^    ttf_read(ttf_t* ttf, str_t ttf_contents) {$/;"	f	language:
 ttf_read	momo.h	/^static b32_t ttf_read(ttf_t* ttf, str_t ttf_contents);$/;"	p	language:C++	typeref:typename:b32_t
 ttf_t	code/momo.h	/^struct ttf_t {$/;"	s	language:C++
 ttf_t	momo.h	/^struct ttf_t {$/;"	s	language:C++
+two_2_one	code/tbp.cpp	/^#define two_2_one(/;"	d	language:C++	file:
+two_2_one	tbp.cpp	/^#define two_2_one(/;"	d	language:C++	file:
 type	code/game.h	/^  game_inspector_entry_type_t type;$/;"	m	language:C++	struct:game_inspector_entry_t	typeref:typename:game_inspector_entry_type_t
 type	code/lit.cpp	/^  lit_game_animator_type_t type;$/;"	m	language:C++	struct:lit_game_animator_t	typeref:typename:lit_game_animator_type_t	file:
 type	code/momo.h	/^    u8_t type[4];$/;"	m	language:C++	union:_png_chunk_header_t::__anon1db7a63d250a	typeref:typename:u8_t[4]
@@ -5002,6 +5029,10 @@ v2u_add	code/momo.h	/^static v2u_t v2u_add(v2u_t lhs, v2u_t rhs); $/;"	p	languag
 v2u_add	code/momo.h	/^v2u_add(v2u_t lhs, v2u_t rhs) {$/;"	f	language:C++	typeref:typename:v2u_t
 v2u_add	momo.h	/^static v2u_t v2u_add(v2u_t lhs, v2u_t rhs); $/;"	p	language:C++	typeref:typename:v2u_t
 v2u_add	momo.h	/^v2u_add(v2u_t lhs, v2u_t rhs) {$/;"	f	language:C++	typeref:typename:v2u_t
+v2u_set	code/momo.h	/^static v2u_t v2u_set(u32_t x, u32_t y); $/;"	p	language:C++	typeref:typename:v2u_t
+v2u_set	code/momo.h	/^v2u_set(u32_t x, u32_t y){$/;"	f	language:C++	typeref:typename:v2u_t
+v2u_set	momo.h	/^static v2u_t v2u_set(u32_t x, u32_t y); $/;"	p	language:C++	typeref:typename:v2u_t
+v2u_set	momo.h	/^v2u_set(u32_t x, u32_t y){$/;"	f	language:C++	typeref:typename:v2u_t
 v2u_sub	code/momo.h	/^static v2u_t v2u_sub(v2u_t lhs, v2u_t rhs);$/;"	p	language:C++	typeref:typename:v2u_t
 v2u_sub	code/momo.h	/^v2u_sub(v2u_t lhs, v2u_t rhs){$/;"	f	language:C++	typeref:typename:v2u_t
 v2u_sub	momo.h	/^static v2u_t v2u_sub(v2u_t lhs, v2u_t rhs);$/;"	p	language:C++	typeref:typename:v2u_t
@@ -5098,6 +5129,9 @@ volume	code/sandbox.cpp	/^  f32_t volume;$/;"	m	language:C++	struct:sandbox_audi
 volume	code/sandbox.cpp	/^  f32_t volume;$/;"	m	language:C++	struct:sandbox_audio_mixer_t	typeref:typename:f32_t	file:
 volume	sandbox.cpp	/^  f32_t volume;$/;"	m	language:C++	struct:sandbox_audio_mixer_instance_t	typeref:typename:f32_t	file:
 volume	sandbox.cpp	/^  f32_t volume;$/;"	m	language:C++	struct:sandbox_audio_mixer_t	typeref:typename:f32_t	file:
+vtuber_exit	vtuber.cpp	/^#define vtuber_exit(/;"	d	language:C++	file:
+vtuber_from_game	vtuber.cpp	/^#define vtuber_from_game(/;"	d	language:C++	file:
+vtuber_t	vtuber.cpp	/^struct vtuber_t {$/;"	s	language:C++	file:
 w	code/momo.h	/^  struct { f32_t w, h, d; };$/;"	m	language:C++	struct:v3f_t::__anon1db7a63d0908	typeref:typename:f32_t
 w	code/momo.h	/^  struct { f32_t w, h; };$/;"	m	language:C++	struct:v2f_t::__anon1db7a63d0608	typeref:typename:f32_t
 w	code/momo.h	/^  struct { f32_t x, y, z, w; };$/;"	m	language:C++	struct:v4f_t::__anon1db7a63d0a08	typeref:typename:f32_t
@@ -5803,8 +5837,8 @@ _w32_try_get_wgl_function	code/lit_ship.cpp	/^_w32_try_get_wgl_function(const ch
 _w32_try_get_wgl_function	code/w32_game.cpp	/^_w32_try_get_wgl_function(const char* name, HMODULE fallback_module)$/;"	f	language:C++	typeref:typename:void *	file:
 _w32_try_get_wgl_function	lit_ship.cpp	/^_w32_try_get_wgl_function(const char* name, HMODULE fallback_module)$/;"	f	language:C++	typeref:typename:void *	file:
 _w32_try_get_wgl_function	w32_game.cpp	/^_w32_try_get_wgl_function(const char* name, HMODULE fallback_module)$/;"	f	language:C++	typeref:typename:void *	file:
-_w32_wasapi_init_default_audio_output_device	code/lit_ship.cpp	/^_w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:void	file:
-_w32_wasapi_init_default_audio_output_device	code/w32_game.cpp	/^_w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:void	file:
+_w32_wasapi_init_default_audio_output_device	code/lit_ship.cpp	/^_w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+_w32_wasapi_init_default_audio_output_device	code/w32_game.cpp	/^_w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 _w32_wasapi_init_default_audio_output_device	lit_ship.cpp	/^_w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 _w32_wasapi_init_default_audio_output_device	w32_game.cpp	/^_w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 _wav_head_t	code/momo.h	/^struct _wav_head_t { $/;"	s	language:C++

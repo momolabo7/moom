@@ -42,9 +42,6 @@
 //   Clex        - C Lexer
 //   OS          - OS Layer
 //
-// TODO
-//   - Stream API 
-//
 
 
 #ifndef MOMO_H
@@ -732,7 +729,7 @@ static json_object_t* json_get_object(json_value_t* val);
 #define array_count(A) (sizeof(A)/sizeof(*A))
 #define offset_of(type, member) (umi_t)&(((type*)0)->member)
 #define make(t, name) \
-  t glue(name##_,__LINE__) = {0}; \
+  t glue(name##_,__LINE__) = {}; \
   t* name = &(glue(name##_,__LINE__))
 
 #define ns_begin(name) namespace name {
@@ -1008,10 +1005,11 @@ static v3f_t v3f_cross(v3f_t lhs, v3f_t rhs);
 static v2u_t v2u_add(v2u_t lhs, v2u_t rhs); 
 static v2u_t v2u_sub(v2u_t lhs, v2u_t rhs);
 static v2f_t v2f_set(f32_t x, f32_t y);
+static v2u_t v2u_set(u32_t x, u32_t y); 
 static v2f_t v2f_zero();
 
 static v2f_t  operator+(v2f_t lhs, v2f_t rhs); 
-static v2f_t  operator-(v2f_t lhs, v2f_t rhs); 
+static v2f_t  operator-(v2f_t lhs, v2f_t rhs);
 static v2f_t  operator*(v2f_t lhs, f32_t rhs); 
 static v2f_t  operator*(f32_t lhs, v2f_t rhs); 
 static b32_t  operator==(v2f_t lhs, v2f_t rhs); 
@@ -1246,7 +1244,7 @@ static void ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t 
 //
 static b32_t     png_read(png_t* png, str_t png_contents);
 static u32_t*    png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena); 
-static str_t  png_write(u8_t* pixels, u32_t width, u32_t height, arena_t* arena);
+static str_t     png_write(u8_t* pixels, u32_t width, u32_t height, arena_t* arena);
 
 // 
 // MARK:(RectPack)
@@ -4619,6 +4617,11 @@ v2f_set(f32_t x, f32_t y){
   return { x, y };
 }
 
+static v2u_t    
+v2u_set(u32_t x, u32_t y){
+  return { x, y };
+}
+
 static v2f_t    
 v2f_zero(void){
   return { 0, 0 };
@@ -7564,10 +7567,12 @@ _png_decompress_zlib(_png_context_t* c, stream_t* zlib_stream) {
 }
 
 
-// NOTE(Momo): For the code here, we are going to assume that 
+// NOTE(momo): For the code here, we are going to assume that 
 // the PNG file we are reading is correct. i.e. we don't emphasize on 
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
+// TODO(momo): We should have a png_rasterize_into_buffer that directly rasterizes
+// into a buffer (or a img struct?)
 static u32_t* 
 png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena) 
 {
