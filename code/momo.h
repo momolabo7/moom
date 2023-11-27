@@ -335,10 +335,14 @@ struct crc8_table_t {
 // MARK:(Arena)
 //
 struct arena_t {
-  u8_t* memory;
+  union {
+    str_t buffer;
+    struct {
+      u8_t* memory;
+      usz_t cap;
+    };
+  };
   usz_t pos;
-  usz_t cap;
-
   usz_t highest_memory_usage;
 };
 
@@ -1170,13 +1174,13 @@ static void     stream_write_block(stream_t* s, void* src, usz_t size);
 //
 // MARK:(Arena)
 //
-static void     arena_init(arena_t* a, void* mem, usz_t cap);
+static b32_t    arena_init(arena_t* a, str_t buffer);
 static void     arena_clear(arena_t* a);
 static void*    arena_push_size(arena_t* a, usz_t size, usz_t align);
 static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align); 
 static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align);
 static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align);
-static str_t arena_push_str(arena_t* a, usz_t size, usz_t align);
+static str_t    arena_push_str(arena_t* a, usz_t size, usz_t align);
 static usz_t    arena_remaining(arena_t* a);
 
 #define arena_push_arr_align(t,b,n,a) (t*)arena_push_size(b, sizeof(t)*(n), a)
@@ -1266,106 +1270,7 @@ static b32_t rp_pack(
 static b32_t clex_tokenizer_init(clex_tokenizer_t* t, str_t buffer);
 static clex_token_t clex_next_token(clex_tokenizer_t* t);
 
-//
-// MARK:(OS)
-//
 
-// The memory returned is:
-// - Not shared by other threads
-
-static void*  os_memory_allocate(usz_t size);
-static void   os_memory_free(void* blk);
-
-//
-//
-// Implementation
-//
-//
-
-
-
-
-
-#if OS_WINDOWS
-//
-// Windows implementation
-//
-
-#include <windows.h>
-#undef near
-#undef far
-
-static void*
-os_memory_allocate(usz_t size) {
-  return VirtualAllocEx(
-      GetCurrentProcess(),
-      0, 
-      size,
-      MEM_RESERVE | MEM_COMMIT, 
-      PAGE_READWRITE);
-
-}
-
-static void 
-os_memory_free(void* blk) {
-  if (!VirtualFree(blk, 0, MEM_RELEASE)){
-    assert(false);
-  }
-}
-
-
-#else // OS_WINDOWS
-
-// Non-windows (mac and linux?) implementation
-// #include <stdlib.h>
-#include <sys/mman.h> // mmap, munmap
-
-static void* os_memory_allocate(usz_t size) {
-  // We store the size before the actual memory block
-  // -----------------------------
-  // | size | pad | actual block |
-  // -----------------------------
-  usz_t actual_size = align_up_pow2(size + sizeof(usz_t), 16);
-  usz_t padding = actual_size - size - sizeof(usz_t);
-
-  union {
-    usz_t* sz;
-    u8_t* u8;
-    void* v;
-  } blk;
-
-  blk.v = mmap(
-      0, 
-      actual_size, 
-      PROT_READ | PROT_WRITE, 
-      MAP_PRIVATE | MAP_ANONYMOUS,
-      -1, 
-      0);
-
-  dref(blk.sz) = size;
-
-  void* ret = blk.u8 + sizeof(usz_t) + padding;
-  return ret;
-
-
-}
-
-static void 
-os_memory_free(void* p) {
-  // We store the size before the actual memory block
-  // -----------------------------
-  // | size | pad | actual block |
-  // -----------------------------
-
-  auto* actual_ptr = (usz_t*)umi_to_ptr(align_down_pow2((ptr_to_umi(p) - sizeof(usz_t)), 16));
-  usz_t size = dref(actual_ptr);
-
-  if (munmap(actual_ptr, size) < 0) {
-    assert(false);
-  }
-}
-
-#endif // OS_WINDOWS
 
 
 #if FOOLISH // FOOLISH
@@ -7863,12 +7768,15 @@ png_read(png_t* png, str_t png_contents)
 // MARK:(Arena)
 //
 
-static void
-arena_init(arena_t* a, void* mem, usz_t cap) {
-  a->memory = (u8_t*)mem;
+static b32_t
+arena_init(arena_t* a, str_t buffer) {
+  if (!buffer) return false;
+
+  a->buffer = buffer;
   a->pos = 0; 
-  a->cap = cap;
   a->highest_memory_usage = 0;
+    
+  return true;
 }
 
 static void
@@ -7912,9 +7820,9 @@ arena_push_size_zero(arena_t* a, usz_t size, usz_t align)
 
 static b32_t
 arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align) {	
-  void* mem = arena_push_size(a, size, align);
+  u8_t* mem = arena_push_arr_align(u8_t, a, size, align);
   if (!mem) return false; 
-  arena_init(partition, mem, size);
+  arena_init(partition, str_set(mem, size));
   return true;
 
 }
@@ -7939,7 +7847,7 @@ arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)
   void* mem = umi_to_ptr(imem + adjusted_pos);
   a->pos = a->cap;
 
-  arena_init(partition, mem, size);
+  arena_init(partition, str_set((u8_t*)mem, size));
   return true;
 
 }
@@ -8308,18 +8216,21 @@ rp_pack(rp_rect_t* rects,
 }
 
 
-// Clean up macros for windows
-// NOTE: Yeah this is damn dumb
-#if OS_WINDOWS
-# define near
-# define far
-#endif // OS_WINDOWS
-
-
 #endif
 
 //
 // JOURNAL
+// = 2023-11-26 = 
+//   It just occured to me that all OS functions are probably specific to the 
+//   PROGRAM rather than the platform itself...maybe having an OS layer here
+//   is not a good idea after all...
+//
+//   It might ACTUALLY be a legit choice to make a momo_os.h that will do 
+//   common os related things in a quick and dirty way. Then again, there
+//   are already the 'foolish' series of functions. 
+//
+//   MAYBE it is actually reasonable to wrap the os functions. 
+//
 // = 2023-11-13 =
 //   Okay the OS layer is very slowly coming up, starting with memory allocation. 
 //   We have also moved and clang++ and have managed to compile in both windows 

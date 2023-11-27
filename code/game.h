@@ -754,11 +754,11 @@ typedef game_unlock_cursor_sig(game_unlock_cursor_f);
 //
 // Memory Allocation API
 //
-#define game_allocate_memory_sig(name) void* name(usz_t size)
+#define game_allocate_memory_sig(name) str_t name(usz_t size)
 typedef game_allocate_memory_sig(game_allocate_memory_f);
 #define game_allocate_memory(game, ...) (game->allocate_memory(__VA_ARGS__))
 
-#define game_free_memory_sig(name) void name(void* ptr)
+#define game_free_memory_sig(name) void name(str_t block)
 typedef game_free_memory_sig(game_free_memory_f);
 #define game_free_memory(game, ...) (game->free_memory(__VA_ARGS__))
 

@@ -3726,6 +3726,8 @@ lit_credits_update() {
   }
 }
 
+
+
 // 
 // Sandbox Functions
 //
@@ -3754,32 +3756,16 @@ static void lit_sandbox_update() {
 exported 
 game_update_and_render_sig(game_update_and_render) 
 { 
+#define lit_exit() { game->is_running = false; return; } 
+
   g_game = game;
   if(g_game->user_data == nullptr) {
-    usz_t lit_memory_size = sizeof(lit_t);
-    usz_t asset_memory_size = megabytes(20);
-    usz_t debug_memory_size = megabytes(1);
-    usz_t frame_memory_size = megabytes(1);
-    usz_t mode_memory_size = megabytes(1);
 
-    // Calculate the total required memory with alignment
-    usz_t required_memory = 0;
-    {
-      make(arena_calc_t, c);
-      arena_calc_push(c, lit_memory_size, 16);
-      arena_calc_push(c, asset_memory_size, 16);
-      arena_calc_push(c, debug_memory_size, 16);
-      arena_calc_push(c, frame_memory_size, 16);
-      arena_calc_push(c, mode_memory_size, 16);
-      required_memory = arena_calc_get_result(c);
-    }
+    str_t memory = game_allocate_memory(g_game, sizeof(lit_t));
+    if (!memory) lit_exit();
 
-    u8_t* memory = (u8_t*)game_allocate_memory(g_game, required_memory);
-    if (!memory) {
-      g_game->is_running = false;
-      return;
-    }
-    g_game->user_data = memory;
+    
+    g_game->user_data = memory.e;
 
 
     g_lit = (lit_t*)(g_game->user_data);
@@ -3791,35 +3777,21 @@ game_update_and_render_sig(game_update_and_render)
     usz_t offset = sizeof(lit_t);
     offset = align_up_pow2(offset, 16);
 
-    //
-    // Initialize assets
-    //
-    arena_init(&g_lit->asset_arena, memory + offset, asset_memory_size);
-    game_assets_init(&g_lit->assets, g_game, LIT_ASSET_FILE, &g_lit->asset_arena);
-    offset += asset_memory_size;
-    offset = align_up_pow2(offset, 16);
+    arena_init(&g_lit->asset_arena, game_allocate_memory(game, megabytes(20)));
+    arena_init(&g_lit->debug_arena, game_allocate_memory(game, megabytes(1)));
+    arena_init(&g_lit->frame_arena, game_allocate_memory(game, megabytes(1)));
+    arena_init(&g_lit->mode_arena, game_allocate_memory(game, megabytes(1)));
 
     //
     // Initialize debug stuff
     //
-    arena_init(&g_lit->debug_arena, memory + offset, debug_memory_size);
     console_init(&g_lit->console, &g_lit->debug_arena, 32, 256);
-    offset += debug_memory_size;
-    offset = align_up_pow2(offset, 16);
 
     //
-    // Frame memory
+    // Initialize assets
     //
-    arena_init(&g_lit->frame_arena, memory + offset, frame_memory_size);
-    offset += frame_memory_size;
-    offset = align_up_pow2(offset, 16);
-
-
-    //
-    // Mode memory
-    //
-    arena_init(&g_lit->mode_arena, memory + offset, mode_memory_size);
-
+    game_assets_init(&g_lit->assets, g_game, LIT_ASSET_FILE, &g_lit->asset_arena);
+      
     game_set_design_dimensions(g_game, LIT_WIDTH, LIT_HEIGHT);
     game_set_view(g_game, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 

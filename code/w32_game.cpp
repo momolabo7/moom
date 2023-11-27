@@ -52,7 +52,7 @@
 // MARK:(Memory Management)
 //
 struct w32_memory_t {
-  void* os_memory;
+  str_t user_block;
   
   w32_memory_t* prev;
   w32_memory_t* next;
@@ -1175,7 +1175,7 @@ w32_free_all_memory() {
   while(itr != sentinel) {
     w32_memory_t* next = itr->next;
     cll_remove(itr);
-    os_memory_free(itr);
+    VirtualFree(itr, 0, MEM_RELEASE);
     itr = next;
   }
 }
@@ -1621,27 +1621,21 @@ game_allocate_memory_sig(w32_allocate_memory)
   usz_t offset_to_user_memory = sizeof(w32_memory_t) + padding_for_alignment; 
 
 
-#if 0
-  auto* block = (w32_memory_t*)
+  auto* memory = (w32_memory_t*)
     VirtualAllocEx(GetCurrentProcess(),
                    0, 
                    total_size,
                    MEM_RESERVE | MEM_COMMIT, 
                    PAGE_READWRITE);
-  if (!block) return nullptr;
-#endif
+  if (!memory) return str_set(0,0);
 
-  auto* blk= (w32_memory_t*)os_memory_allocate(total_size);
-  if (!blk) return nullptr;
-
-  u8_t* ret = (u8_t*)blk + offset_to_user_memory; 
-
+  memory->user_block = str_set((u8_t*)memory + offset_to_user_memory, size);
 
   // Add to linked list
   w32_memory_t* sentinel = &w32_state.memory_sentinel;
-  cll_append(sentinel, blk);
+  cll_append(sentinel, memory);
 
-  return ret;
+  return memory->user_block;
 
 }
 
@@ -1650,22 +1644,20 @@ game_free_memory_sig(w32_free_memory) {
   // To get from p back to q:
   // - Subtract sizeof(w32_memory_t)
   // - align downwards to 16 bytes
-  if (ptr) {
-    umi_t ptr_u = ptr_to_umi(ptr);
+  if (block) {
+    umi_t ptr_u = ptr_to_umi(block.e);
     ptr_u -= sizeof(w32_memory_t);
     ptr_u = align_down_pow2(ptr_u, 16);
     
     auto* blk = (w32_memory_t*)umi_to_ptr(ptr_u);
     cll_remove(blk);
 
-    os_memory_free(blk);
-
-    //VirtualFree(memory_block, 0, MEM_RELEASE);
+    VirtualFree(blk, 0, MEM_RELEASE);
   }
 }
 
 
-
+#if 0
 
 static b32_t
 w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {
@@ -1674,6 +1666,7 @@ w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {
   arena_init(a, data, memory_size);
   return true;
 }
+#endif
 
 //
 // Entry Point
@@ -1872,7 +1865,7 @@ WinMain(HINSTANCE instance,
   // Gfx
   // 
   arena_t* gfx_arena = &game.gfx_arena;
-  if (!w32_allocate_memory_into_arena(gfx_arena, config.gfx_arena_size)) 
+  if (!arena_init(gfx_arena, w32_allocate_memory(config.gfx_arena_size))) 
     return 1;
 
   if(!w32_gfx_load(
@@ -1890,7 +1883,7 @@ WinMain(HINSTANCE instance,
   // Init Audio
   arena_t* audio_arena = &game.audio_arena;
   if (config.audio_enabled) {
-    if (!w32_allocate_memory_into_arena(audio_arena, config.audio_arena_size)) 
+    if (!arena_init(audio_arena, w32_allocate_memory(config.audio_arena_size)))
       return 1;
 
     if (!w32_audio_load(
@@ -1911,7 +1904,8 @@ WinMain(HINSTANCE instance,
   // Init debug stuff
   //
   arena_t* debug_arena = &game.debug_arena;
-  if (!w32_allocate_memory_into_arena(debug_arena, config.debug_arena_size)) return false;
+  if (!arena_init(debug_arena, w32_allocate_memory(config.debug_arena_size)))
+    return 1;
 
   game_profiler_init(&game.profiler, w32_get_performance_counter_u64, debug_arena, config.max_profiler_entries, config.max_profiler_snapshots);
 
