@@ -1270,15 +1270,102 @@ static b32_t rp_pack(
 static b32_t clex_tokenizer_init(clex_tokenizer_t* t, str_t buffer);
 static clex_token_t clex_next_token(clex_tokenizer_t* t);
 
+//
+// MARK:(OS)
+//
+static str_t  os_allocate_memory(usz_t size);
+static void   os_free_memory(str_t blk);
+static u64_t  os_get_clock_time();
+static u64_t  os_get_clock_resolution();
+
+#if OS_WINDOWS
+//
+// Windows implementation
+//
+#include <windows.h>
+#undef near
+#undef far
+
+static str_t
+os_allocate_memory(usz_t size) {
+  return str_set(
+    (u8_t*)VirtualAllocEx(
+      GetCurrentProcess(),
+      0, 
+      size,
+      MEM_RESERVE | MEM_COMMIT, 
+      PAGE_READWRITE), 
+    size);
+
+}
+
+static void 
+os_free_memory(str_t blk) {
+  VirtualFree(blk.e, 0, MEM_RELEASE);
+}
+
+static u64_t
+os_get_clock_time() {
+  LARGE_INTEGER perf;
+  QueryPerformanceCounter(&perf);
+  u64_t ret = (u64_t)perf.QuadPart;
+  return ret;
+}
+
+static u64_t 
+os_get_clock_resolution() {
+  LARGE_INTEGER freq;
+  QueryPerformanceFrequency(&freq);
+  u64_t ret = (u64_t)freq.QuadPart;
+  return ret;
+}
 
 
+#else // OS_WINDOWS
 
-#if FOOLISH // FOOLISH
-#include <stdlib.h>
-#include <stdio.h>
+// Non-windows (mac and linux?) implementation
+// #include <stdlib.h>
+#include <sys/mman.h> // mmap, munmap
+#include <time.h> // clock_getres, clock_gettime
+
+static str_t 
+os_allocate_memory(usz_t size) {
+  u8_t* blk = (u8_t*)mmap(
+      0, 
+      actual_size, 
+      PROT_READ | PROT_WRITE, 
+      MAP_PRIVATE | MAP_ANONYMOUS,
+      -1, 
+      0);
+  return str_set(blk, size);
+
+}
+
+static void 
+os_free_memory(str_t blk) {
+  munmap(blk.e, blk.size)l
+}
+
+static u64_t
+os_get_clock_time() {
+  // TODO
+  return ret;
+}
+
+static u64_t 
+os_get_clock_resolution() {
+  // TODO
+  return ret;
+}
+#endif // OS_WINDOWS
+
+
 //
 // MARK:(Foolish)
 //
+#if FOOLISH // FOOLISH
+#include <stdlib.h>
+#include <stdio.h>
 // These are foolish methods that should ideally not make 
 // it into any SERIOUS projects. They are meant to be dumb
 // but convienient for trying stuff out.
@@ -1324,10 +1411,7 @@ foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false
   fseek(file, 0, SEEK_SET);
 
 
-  str_t ret;
-  ret.size = file_size + null_terminate;
-  ret.e = (u8_t*)os_memory_allocate(ret.size);
-
+  str_t ret = os_allocate_memory(file_size + null_terminate);
   usz_t read_amount = fread(ret.e, 1, file_size, file);
 
   if(read_amount != file_size) return str_bad();
@@ -1338,7 +1422,7 @@ foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false
 }
 static void
 foolish_free_buffer(str_t buffer) {
-  os_memory_free(buffer.e);
+  os_free_memory(buffer);
 }
 
 #endif // FOOLISH
