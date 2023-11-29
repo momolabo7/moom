@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "momo.h"
 
-
 void test_json() {
   const char json_str[] = "{\
     \"car\": 23, \
@@ -23,28 +22,29 @@ void test_json() {
 
   // Printing "car"
   {
-    auto* val = json_get_value(obj, st8_from_lit("car"));
+    auto* val = json_get_value(obj, str_from_lit("car"));
     if(val) {
       auto* element = json_get_element(val);
       s32_t out = 0;
-      st8_to_s32(element->str, &out);
+      str_to_s32(element->str, &out);
       printf("%d\n", out);
     }
   }
 
   // Printing "str"
   {
-    auto* val = json_get_value(obj, st8_from_lit("str"));
+    auto* val = json_get_value(obj, str_from_lit("str"));
     if(val) {
       auto* element = json_get_element(val);
       s32_t out = 0;
-      st8_to_s32(element->str, &out);
-      for_cnt(i, element->str.count) {
+      str_to_s32(element->str, &out);
+      for_cnt(i, element->str.size) {
         printf("%c", element->str.e[i]);
       }
       printf("\n");
     }
   }
+
 #if 0
     json_array_t* arr = json_get_array(val);
     if (arr) {
@@ -56,7 +56,7 @@ void test_json() {
         if (json_is_number(val2)) {
           json_element_t* element = json_get_element(val2);
           s32_t out = 0;
-          st8_to_s32(element->str, &out);
+          str_to_s32(element->str, &out);
           printf("%d\n", out);
         }
       }
@@ -154,9 +154,39 @@ int main() {
 }
 #endif
 
+struct test_arena_block_t {
+  arena_t arena;
+  test_arena_block_t* next;
+};
+
+struct test_arena_t {
+ // test_arena_block_t* first;
+
+  test_arena_block_t* current_block;
+  usz_t pos;
+};
+
+static void* test_arena_push(test_arena_t* a, usz_t size) 
+{
+  if (!a->current_block || ???) {
+    usz_t total_size = size + sizeof(test_arena_block_t);
+    auto* blk = (test_arena_block_t*)os_memory_allocate(total_size);
+    arena_init(&blk->arena, (u8_t*)blk + sizeof(test_arena_block_t), size);
+    blk->next = 0;
+    a->current_block = blk;
+  }
+
+  return arena_push_size(&current->block.arena, size);
+  
+}
+
 
 int main() {
-  test_json();
+  //test_json();
   //test_allocate_memory();
+  make(test_arena_t, a);
+  test_arena_push(a, 1024);
+
+ 
 }
 

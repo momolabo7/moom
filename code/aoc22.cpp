@@ -136,8 +136,12 @@ static void aoc22_d1a(const char* filename) {
 
 }
 
-int main() {
-  //aoc22_d1a("aoc22_d1a");
-  aoc22_d1b("aoc22_d1b");
+int main(int argv, char** argc) {
+  if (argv < 2) {
+    printf("Fileename not provided");
+    return 1;
+  }
+
+  aoc22_d1a(argc[1]);
 
 }

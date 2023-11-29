@@ -1,6 +1,5 @@
 @echo off
 
-
 rem USAGE
 rem
 rem   build [filename] [-run] [-w32] [-o] [-game]
@@ -44,18 +43,43 @@ set optimize=0
 set game=0
 set ship=0
 set filename=%~1
-shift
 
-:label_parse 
-IF "%~1"=="" GOTO label_end_parse
-IF "%~1"=="-run"   set run=1
-IF "%~1"=="-w32"   set w32=1
-IF "%~1"=="-o"     set optimize=1
-IF "%~1"=="-game"  set game=1
-IF "%~1"=="-ship"  set ship=1
+:label_parse_next
 shift
-GOTO label_parse
-:label_end_parse
+echo next is %~1
+IF "%~1"=="" (
+  GOTO label_parse_end
+)
+IF "%~1"=="-run" (
+  set run=1
+  GOTO label_parse_next
+)
+IF "%~1"=="-w32" (
+  set w32=1
+  GOTO label_parse_next
+)
+IF "%~1"=="-o" ( 
+  set optimize=1
+  GOTO label_parse_next
+)
+IF "%~1"=="-game" (
+  set game=1
+  GOTO label_parse_next
+)
+IF "%~1"=="-ship" (  
+  set ship=1
+  GOTO label_parse_next
+)
+
+rem ELSE there is arguments
+IF DEFINED args (
+  set args=%args% %~1
+) ELSE (
+  set args=%~1
+)
+GOTO label_parse_next
+
+:label_parse_end
 
 
 
@@ -110,6 +134,7 @@ echo Build    : Normal
 :end_build_type
 
 echo Out      : %output_name%
+echo Args     : %args%
 
 echo ******************* 
 
@@ -127,6 +152,8 @@ IF %ship%==1 (
   clang++ %compiler_flags% %code_dir%\%filename%.cpp %linker_flags% -o %output_name%
 )
 
-if %run%==1 CALL %filename%.exe
+if %run%==1 (
+  CALL %filename%.exe %args%
+)
 
 popd
