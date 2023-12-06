@@ -46,7 +46,6 @@ set filename=%~1
 
 :label_parse_next
 shift
-echo next is %~1
 IF "%~1"=="" (
   GOTO label_parse_end
 )

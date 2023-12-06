@@ -1170,6 +1170,7 @@ static u8_t*    stream_peek_block(stream_t* s, usz_t amount);
 static void     stream_flush_bits(stream_t* s);
 static u32_t    stream_consume_bits(stream_t* s, u32_t amount);
 static void     stream_write_block(stream_t* s, void* src, usz_t size);
+static str_t    stream_consume_line(stream_t* s);
 
 //
 // MARK:(Arena)
@@ -1372,20 +1373,20 @@ os_get_clock_resolution() {
 //
 // TODO: Make this serious
 
-static void* 
+static str_t 
 foolish_allocate_memory(usz_t size) {
-  return malloc(size);
+  return str_set((u8_t*)malloc(size), size);
 }
 
 static void
-foolish_free_memory(void* mem) {
-  free(mem);
+foolish_free_memory(str_t blk) {
+  free(blk.e);
 }
 
 static arena_t 
 foolish_allocate_arena(usz_t size) {
   arena_t ret = {};
-  arena_init(&ret, foolish_allocate_memory(size), size);
+  arena_init(&ret, foolish_allocate_memory(size));
   return ret;
 }
 
@@ -1403,6 +1404,7 @@ foolish_write_str_to_file(const char* filename, str_t buffer) {
 static str_t
 foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {
   FILE *file = fopen(filename, "rb");
+
   if (!file) return str_set(0,0);
   defer { fclose(file); };
 
@@ -1420,6 +1422,7 @@ foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false
 
   return ret;
 }
+
 static void
 foolish_free_buffer(str_t buffer) {
   os_free_memory(buffer);
@@ -5844,6 +5847,41 @@ stream_init(stream_t* s, str_t contents) {
   s->pos = 0;
   s->bit_buffer = 0;
   s->bit_count = 0;
+}
+
+static str_t 
+stream_consume_line(stream_t* s) {
+  if (stream_is_eos(s)) return str_bad();
+
+  str_t ret = str_set(s->contents.e + s->pos, 0);
+  while(!stream_is_eos(s)) {
+    
+    u8_t current_value = dref(stream_consume_block(s, 1));
+    if (current_value == 0 ) {
+      break;
+    }
+
+    else if (current_value == '\r') {
+      // We found a termination point. Do clean up.
+      current_value = dref(stream_peek_block(s, 1));
+      if (current_value == '\n') {
+        // \r\n found
+        stream_consume_block(s, 1);
+      }
+      break;
+    }
+
+    else if (current_value == '\n') {
+      break;
+    }
+
+    else {
+      ++ret.size;
+    }
+
+  }
+
+  return ret;
 }
 
 static void

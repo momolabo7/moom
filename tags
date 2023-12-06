@@ -24,9 +24,14 @@ animators	lit.cpp	/^  lit_game_animator_t animators[64];$/;"	m	language:C++	stru
 animator_count	code/lit.cpp	/^  u32_t animator_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
 animator_count	lit.cpp	/^  u32_t animator_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
 aoc22_d1a	aoc22.cpp	/^static void aoc22_d1a(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
-aoc22_d1a	code/aoc22.cpp	/^static void aoc22_d1a(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d1b	aoc22.cpp	/^static void aoc22_d1b(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
-aoc22_d1b	code/aoc22.cpp	/^static void aoc22_d1b(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d1p1	code/aoc22.cpp	/^static void aoc22_d1p1(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d1p2	code/aoc22.cpp	/^static void aoc22_d1p2(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d2p1	code/aoc22.cpp	/^static void aoc22_d2p1(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d2p2	code/aoc22.cpp	/^static void aoc22_d2p2(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_route	code/aoc22.cpp	/^#define aoc22_route(/;"	d	language:C++	file:
+aoc23_d1p1	code/aoc23.cpp	/^static void aoc23_d1p1(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
+aoc23_route	code/aoc23.cpp	/^#define aoc23_route(/;"	d	language:C++	file:
 ARCH_ARM	code/momo.h	/^#  define ARCH_ARM /;"	d	language:C++
 ARCH_ARM	code/momo.h	/^#  define ARCH_ARM /;"	d	language:C++
 ARCH_ARM	code/momo.h	/^# define ARCH_ARM /;"	d	language:C++
@@ -49,6 +54,7 @@ arena	code/momo.h	/^  arena_t* arena; $/;"	m	language:C++	struct:_png_context_t	
 arena	code/momo.h	/^  arena_t* arena;$/;"	m	language:C++	struct:arena_marker_t	typeref:typename:arena_t *
 arena	code/pass.h	/^  arena_t* arena;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:arena_t *
 arena	code/sandbox.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:sandbox_t	typeref:typename:arena_t	file:
+arena	code/test.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:test_arena_block_t	typeref:typename:arena_t	file:
 arena	momo.h	/^  arena_t* arena; $/;"	m	language:C++	struct:_png_context_t	typeref:typename:arena_t *
 arena	momo.h	/^  arena_t* arena;$/;"	m	language:C++	struct:arena_marker_t	typeref:typename:arena_t *
 arena	pass.h	/^  arena_t* arena;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:arena_t *
@@ -129,6 +135,8 @@ arena_set_revert_point	code/momo.h	/^# define arena_set_revert_point(/;"	d	langu
 arena_set_revert_point	momo.h	/^# define arena_set_revert_point(/;"	d	language:C++
 arena_t	code/momo.h	/^struct arena_t {$/;"	s	language:C++
 arena_t	momo.h	/^struct arena_t {$/;"	s	language:C++
+args	bin/build.bat	/^  set args=%args% %~1$/;"	v	language:DosBatch
+args	bin/build.bat	/^  set args=%~1$/;"	v	language:DosBatch
 array	code/momo.h	/^    json_array_t array;$/;"	m	language:C++	union:json_value_t::__anon1db7a63d180a	typeref:typename:json_array_t
 array	momo.h	/^    json_array_t array;$/;"	m	language:C++	union:json_value_t::__anon0e379513160a	typeref:typename:json_array_t
 array_count	code/momo.h	/^#define array_count(/;"	d	language:C++
@@ -767,6 +775,7 @@ csv_write	code/ffxiv.cpp	/^csv_write(st8_t* data , usz_t rows, usz_t columns, ar
 csv_write	ffxiv.cpp	/^csv_write(st8_t* data , usz_t rows, usz_t columns, arena_t* arena) {$/;"	f	language:C++	typeref:typename:buffer_t	file:
 ctx	code/game_console.h	/^  void* ctx;$/;"	m	language:C++	struct:console_command_t	typeref:typename:void *
 ctx	game_console.h	/^  void* ctx;$/;"	m	language:C++	struct:console_command_t	typeref:typename:void *
+current_block	code/test.cpp	/^  test_arena_block_t* current_block;$/;"	m	language:C++	struct:test_arena_t	typeref:typename:test_arena_block_t *	file:
 current_color	code/lit.cpp	/^  u32_t current_color;$/;"	m	language:C++	struct:lit_game_sensor_t	typeref:typename:u32_t	file:
 current_color	lit.cpp	/^  u32_t current_color;$/;"	m	language:C++	struct:lit_game_sensor_t	typeref:typename:u32_t	file:
 current_instance_index	code/game.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:game_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
@@ -1548,6 +1557,7 @@ font_id	code/pass.h	/^  game_asset_font_id_t font_id;$/;"	m	language:C++	struct:
 font_id	pass.h	/^  game_asset_font_id_t font_id;$/;"	m	language:C++	struct:pass_pack_atlas_font_t	typeref:typename:game_asset_font_id_t
 FOOLISH	aoc22.cpp	/^#define FOOLISH /;"	d	language:C++	file:
 FOOLISH	code/aoc22.cpp	/^#define FOOLISH /;"	d	language:C++	file:
+FOOLISH	code/aoc23.cpp	/^#define FOOLISH /;"	d	language:C++	file:
 FOOLISH	code/vtuber.cpp	/^#define FOOLISH /;"	d	language:C++	file:
 FOOLISH	vtuber.cpp	/^#define FOOLISH /;"	d	language:C++	file:
 foolishly_allocate	code/meta.cpp	/^#define foolishly_allocate(/;"	d	language:C++	file:
@@ -1564,11 +1574,11 @@ foolishly_read_file_into_buffer	code/meta.cpp	/^foolishly_read_file_into_buffer(
 foolishly_read_file_into_buffer	meta.cpp	/^foolishly_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {$/;"	f	language:C++	typeref:typename:buffer_t	file:
 foolish_allocate_arena	code/momo.h	/^foolish_allocate_arena(usz_t size) {$/;"	f	language:C++	typeref:typename:arena_t
 foolish_allocate_arena	momo.h	/^foolish_allocate_arena(usz_t size) {$/;"	f	language:C++	typeref:typename:arena_t
-foolish_allocate_memory	code/momo.h	/^foolish_allocate_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:void *
+foolish_allocate_memory	code/momo.h	/^foolish_allocate_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:str_t
 foolish_allocate_memory	momo.h	/^foolish_allocate_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:void *
 foolish_free_buffer	code/momo.h	/^foolish_free_buffer(str_t buffer) {$/;"	f	language:C++	typeref:typename:void
 foolish_free_buffer	momo.h	/^foolish_free_buffer(str_t buffer) {$/;"	f	language:C++	typeref:typename:void
-foolish_free_memory	code/momo.h	/^foolish_free_memory(void* mem) {$/;"	f	language:C++	typeref:typename:void
+foolish_free_memory	code/momo.h	/^foolish_free_memory(str_t blk) {$/;"	f	language:C++	typeref:typename:void
 foolish_free_memory	momo.h	/^foolish_free_memory(void* mem) {$/;"	f	language:C++	typeref:typename:void
 foolish_read_file_into_buffer	code/momo.h	/^foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {$/;"	f	language:C++	typeref:typename:str_t
 foolish_read_file_into_buffer	momo.h	/^foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {$/;"	f	language:C++	typeref:typename:str_t
@@ -1629,7 +1639,7 @@ g	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_
 g	code/momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
 g	momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon0e3795130d0a::__anon0e3795130e08	typeref:typename:f32_t
 g	momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
-game	bin/build.bat	/^IF "%~1"=="-game"  set game=1$/;"	v	language:DosBatch
+game	bin/build.bat	/^  set game=1$/;"	v	language:DosBatch
 game	bin/build.bat	/^set game=0$/;"	v	language:DosBatch
 game	code/lit.cpp	/^    lit_game_t game;$/;"	m	language:C++	union:lit_t::__anon7a0f2729020a	typeref:typename:lit_game_t	file:
 game	code/lit_ship.cpp	/^  game_t* game;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:game_t *	file:
@@ -3131,12 +3141,12 @@ l	code/momo.h	/^    struct { f32_t h,s,l; };  $/;"	m	language:C++	struct:hsla_t:
 l	code/momo.h	/^  f32_t h, s, l;  $/;"	m	language:C++	struct:hsl_t	typeref:typename:f32_t
 l	momo.h	/^    struct { f32_t h,s,l; };  $/;"	m	language:C++	struct:hsla_t::__anon0e3795130b0a::__anon0e3795130c08	typeref:typename:f32_t
 l	momo.h	/^  f32_t h, s, l;  $/;"	m	language:C++	struct:hsl_t	typeref:typename:f32_t
-label_end_parse	bin/build.bat	/^:label_end_parse$/;"	l	language:DosBatch
 label_end_parse	bin/build_game.bat	/^:label_end_parse$/;"	l	language:DosBatch
 label_end_parse	bin/build_w32.bat	/^:label_end_parse$/;"	l	language:DosBatch
-label_parse	bin/build.bat	/^:label_parse $/;"	l	language:DosBatch
 label_parse	bin/build_game.bat	/^:label_parse $/;"	l	language:DosBatch
 label_parse	bin/build_w32.bat	/^:label_parse $/;"	l	language:DosBatch
+label_parse_end	bin/build.bat	/^:label_parse_end$/;"	l	language:DosBatch
+label_parse_next	bin/build.bat	/^:label_parse_next$/;"	l	language:DosBatch
 last_drawn_instance_index	code/game.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:game_gfx_opengl_sprite_batch_t	typeref:typename:GLsizei
 last_drawn_instance_index	code/game.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:game_gfx_opengl_triangle_batch_t	typeref:typename:GLsizei
 last_drawn_instance_index	game.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:game_gfx_opengl_sprite_batch_t	typeref:typename:GLsizei
@@ -3595,7 +3605,8 @@ m44f_transpose	momo.h	/^m44f_transpose(m44f_t m) {$/;"	f	language:C++	typeref:ty
 m44f_transpose	momo.h	/^static m44f_t m44f_transpose(m44f_t m);$/;"	p	language:C++	typeref:typename:m44f_t
 main	aoc22.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	build.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
-main	code/aoc22.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
+main	code/aoc22.cpp	/^int main(int argv, char** argc) {$/;"	f	language:C++	typeref:typename:int
+main	code/aoc23.cpp	/^int main(int argv, char** argc) {$/;"	f	language:C++	typeref:typename:int
 main	code/build.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/euler.cpp	/^main() {$/;"	f	language:C++	typeref:typename:int
 main	code/ffxiv.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
@@ -3730,6 +3741,7 @@ next	code/gist_linked_list.cpp	/^  gist_cdl_node* next;$/;"	m	language:C++	struc
 next	code/lit_ship.cpp	/^  w32_memory_t* next;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
 next	code/momo.h	/^    garena_free_block_t* next;$/;"	m	language:C++	struct:garena_free_block_t::__anon1db7a63d1208	typeref:typename:garena_free_block_t *
 next	code/momo.h	/^  json_array_node_t* next;$/;"	m	language:C++	struct:json_array_node_t	typeref:typename:json_array_node_t *
+next	code/test.cpp	/^  test_arena_block_t* next;$/;"	m	language:C++	struct:test_arena_block_t	typeref:typename:test_arena_block_t *	file:
 next	code/w32_game.cpp	/^  w32_memory_t* next;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
 next	gist_linked_list.cpp	/^  gist_cdl_node* next;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
 next	lit_ship.cpp	/^  w32_memory_t* next;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
@@ -3886,7 +3898,7 @@ operator ==	momo.h	/^static b32_t  operator==(v3f_t lhs, v3f_t rhs) { return v3f
 operator ==	momo.h	/^static b32_t  operator==(v3f_t lhs, v3f_t rhs); $/;"	p	language:C++	typeref:typename:b32_t
 operator bool	code/momo.h	/^  operator bool() {$/;"	f	language:C++	struct:str_t
 operator bool	momo.h	/^  operator bool() {$/;"	f	language:C++	struct:str_t
-optimize	bin/build.bat	/^IF "%~1"=="-o"     set optimize=1$/;"	v	language:DosBatch
+optimize	bin/build.bat	/^  set optimize=1$/;"	v	language:DosBatch
 optimize	bin/build.bat	/^set optimize=0 $/;"	v	language:DosBatch
 os_allocate_memory	code/momo.h	/^os_allocate_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:str_t
 os_allocate_memory	code/momo.h	/^os_allocate_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:str_t
@@ -3895,7 +3907,9 @@ os_free_memory	code/momo.h	/^os_free_memory(str_t blk) {$/;"	f	language:C++	type
 os_free_memory	code/momo.h	/^os_free_memory(str_t blk) {$/;"	f	language:C++	typeref:typename:void
 os_free_memory	code/momo.h	/^static void   os_free_memory(str_t blk);$/;"	p	language:C++	typeref:typename:void
 os_get_clock_resolution	code/momo.h	/^os_get_clock_resolution() {$/;"	f	language:C++	typeref:typename:u64_t
+os_get_clock_resolution	code/momo.h	/^os_get_clock_resolution() {$/;"	f	language:C++	typeref:typename:u64_t
 os_get_clock_resolution	code/momo.h	/^static u64_t  os_get_clock_resolution();$/;"	p	language:C++	typeref:typename:u64_t
+os_get_clock_time	code/momo.h	/^os_get_clock_time() {$/;"	f	language:C++	typeref:typename:u64_t
 os_get_clock_time	code/momo.h	/^os_get_clock_time() {$/;"	f	language:C++	typeref:typename:u64_t
 os_get_clock_time	code/momo.h	/^static u64_t  os_get_clock_time();$/;"	p	language:C++	typeref:typename:u64_t
 OS_LINUX	code/momo.h	/^# define OS_LINUX /;"	d	language:C++
@@ -4081,6 +4095,7 @@ pos	code/lit.cpp	/^  v2f_t pos;$/;"	m	language:C++	struct:lit_game_player_t	type
 pos	code/lit.cpp	/^  v2f_t pos;$/;"	m	language:C++	struct:lit_game_sensor_t	typeref:typename:v2f_t	file:
 pos	code/momo.h	/^  usz_t pos;$/;"	m	language:C++	struct:arena_t	typeref:typename:usz_t
 pos	code/momo.h	/^  usz_t pos;$/;"	m	language:C++	struct:stream_t	typeref:typename:usz_t
+pos	code/test.cpp	/^  usz_t pos;$/;"	m	language:C++	struct:test_arena_t	typeref:typename:usz_t	file:
 pos	game.h	/^  v2f_t pos;$/;"	m	language:C++	struct:game_gfx_command_rect_t	typeref:typename:v2f_t
 pos	game.h	/^  v2f_t pos;$/;"	m	language:C++	struct:game_gfx_command_sprite_t	typeref:typename:v2f_t
 pos	lit.cpp	/^  v2f_t pos, vel;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t	file:
@@ -4247,7 +4262,7 @@ rp_sort_type_t	code/momo.h	/^enum rp_sort_type_t {$/;"	g	language:C++
 rp_sort_type_t	momo.h	/^enum rp_sort_type_t {$/;"	g	language:C++
 RP_SORT_TYPE_WIDTH	code/momo.h	/^  RP_SORT_TYPE_WIDTH,$/;"	e	language:C++	enum:rp_sort_type_t
 RP_SORT_TYPE_WIDTH	momo.h	/^  RP_SORT_TYPE_WIDTH,$/;"	e	language:C++	enum:rp_sort_type_t
-run	bin/build.bat	/^IF "%~1"=="-run"   set run=1$/;"	v	language:DosBatch
+run	bin/build.bat	/^  set run=1$/;"	v	language:DosBatch
 run	bin/build.bat	/^set run=0$/;"	v	language:DosBatch
 s	code/momo.h	/^    struct { f32_t h,s,l; };  $/;"	m	language:C++	struct:hsla_t::__anon1db7a63d0b0a::__anon1db7a63d0c08	typeref:typename:f32_t
 s	code/momo.h	/^  f32_t h, s, l;  $/;"	m	language:C++	struct:hsl_t	typeref:typename:f32_t
@@ -4365,7 +4380,7 @@ shader	code/game.h	/^  GLuint shader;$/;"	m	language:C++	struct:game_gfx_opengl_
 shader	code/game.h	/^  GLuint shader;$/;"	m	language:C++	struct:game_gfx_opengl_triangle_batch_t	typeref:typename:GLuint
 shader	game.h	/^  GLuint shader;$/;"	m	language:C++	struct:game_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
 shader	game.h	/^  GLuint shader;$/;"	m	language:C++	struct:game_gfx_opengl_triangle_batch_t	typeref:typename:GLuint
-ship	bin/build.bat	/^IF "%~1"=="-ship"  set ship=1$/;"	v	language:DosBatch
+ship	bin/build.bat	/^  set ship=1$/;"	v	language:DosBatch
 ship	bin/build.bat	/^set ship=0$/;"	v	language:DosBatch
 ship_file	bin/build.bat	/^  set ship_file=%code_dir%\\%filename%_ship.cpp $/;"	v	language:DosBatch
 ship_file	bin/build.bat	/^set ship_file="" $/;"	v	language:DosBatch
@@ -4557,6 +4572,8 @@ stream_consume_block	momo.h	/^static u8_t*    stream_consume_block(stream_t* s, 
 stream_consume_block	momo.h	/^stream_consume_block(stream_t* s, usz_t amount) {$/;"	f	language:C++	typeref:typename:u8_t *
 stream_consume_line	aoc22.cpp	/^stream_consume_line(stream_t* s) {$/;"	f	language:C++	typeref:typename:str_t	file:
 stream_consume_line	code/aoc22.cpp	/^stream_consume_line(stream_t* s) {$/;"	f	language:C++	typeref:typename:str_t	file:
+stream_consume_line	code/momo.h	/^static str_t    stream_consume_line(stream_t* s);$/;"	p	language:C++	typeref:typename:str_t
+stream_consume_line	code/momo.h	/^stream_consume_line(stream_t* s) {$/;"	f	language:C++	typeref:typename:str_t
 stream_flush_bits	code/momo.h	/^static void     stream_flush_bits(stream_t* s);$/;"	p	language:C++	typeref:typename:void
 stream_flush_bits	code/momo.h	/^stream_flush_bits(stream_t* s){$/;"	f	language:C++	typeref:typename:void
 stream_flush_bits	momo.h	/^static void     stream_flush_bits(stream_t* s);$/;"	p	language:C++	typeref:typename:void
@@ -4668,8 +4685,14 @@ TBG_TILE_SIZE	code/tbp.cpp	/^#define TBG_TILE_SIZE /;"	d	language:C++	file:
 TBG_TILE_SIZE	tbp.cpp	/^#define TBG_TILE_SIZE /;"	d	language:C++	file:
 TBG_TILE_SIZE_V2	code/tbp.cpp	/^#define TBG_TILE_SIZE_V2 /;"	d	language:C++	file:
 TBG_TILE_SIZE_V2	tbp.cpp	/^#define TBG_TILE_SIZE_V2 /;"	d	language:C++	file:
+test_arena_block_t	code/test.cpp	/^struct test_arena_block_t {$/;"	s	language:C++	file:
+test_arena_push	code/test.cpp	/^static void* test_arena_push(test_arena_t* a, usz_t size) $/;"	f	language:C++	typeref:typename:void *	file:
+test_arena_t	code/test.cpp	/^struct test_arena_t {$/;"	s	language:C++	file:
+test_assert_16	code/test.cpp	/^static void test_assert_16(void* addr) {$/;"	f	language:C++	typeref:typename:void	file:
 test_json	code/test.cpp	/^void test_json() {$/;"	f	language:C++	typeref:typename:void
 test_json	test.cpp	/^void test_json() {$/;"	f	language:C++	typeref:typename:void
+test_print_free_blocks	code/test.cpp	/^test_print_free_blocks(garena_t* ga) {$/;"	f	language:C++	typeref:typename:void	file:
+test_print_memory	code/test.cpp	/^static void test_print_memory(garena_t* ga, void* addr, const char* name) $/;"	f	language:C++	typeref:typename:void	file:
 test_sine_wave	code/lit_ship.cpp	/^static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t t/;"	f	language:C++	typeref:typename:void	file:
 test_sine_wave	code/w32_game.cpp	/^static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t t/;"	f	language:C++	typeref:typename:void	file:
 test_sine_wave	lit_ship.cpp	/^static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t t/;"	f	language:C++	typeref:typename:void	file:
@@ -5159,7 +5182,7 @@ w	momo.h	/^  struct { s32_t w, h; };$/;"	m	language:C++	struct:v2s_t::__anon0e37
 w	momo.h	/^  struct { u32_t w, h; };$/;"	m	language:C++	struct:v2u_t::__anon0e3795130208	typeref:typename:u32_t
 w	momo.h	/^  u32_t x, y, w, h;$/;"	m	language:C++	struct:rp_rect_t	typeref:typename:u32_t
 w	momo.h	/^  u32_t x, y, w, h;$/;"	m	language:C++	struct:_rp_node	typeref:typename:u32_t
-w32	bin/build.bat	/^IF "%~1"=="-w32"   set w32=1$/;"	v	language:DosBatch
+w32	bin/build.bat	/^  set w32=1$/;"	v	language:DosBatch
 w32	bin/build.bat	/^set w32=0$/;"	v	language:DosBatch
 w32_add_task_entry	code/lit_ship.cpp	/^w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_add_task_entry	code/w32_game.cpp	/^w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void	file:

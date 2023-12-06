@@ -1,3 +1,11 @@
+
+
+- perforce
+- communication
+- knowledge of game engine
+- visibility
+
+
 ENGINE
 - might want to consider returning buffer_t for memory allocation for user.
 
