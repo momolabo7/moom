@@ -1170,6 +1170,8 @@ static u8_t*    stream_peek_block(stream_t* s, usz_t amount);
 static void     stream_flush_bits(stream_t* s);
 static u32_t    stream_consume_bits(stream_t* s, u32_t amount);
 static void     stream_write_block(stream_t* s, void* src, usz_t size);
+
+// NOTE(momo): if size 
 static str_t    stream_consume_line(stream_t* s);
 
 //
@@ -5880,7 +5882,6 @@ stream_consume_line(stream_t* s) {
     }
 
   }
-
   return ret;
 }
 
