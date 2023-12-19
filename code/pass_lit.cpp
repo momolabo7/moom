@@ -58,6 +58,7 @@ int main() {
 
   }
   pass_pack_end(p, LIT_ASSET_FILE);
+  printf("Assets created\n");
 }
 
 

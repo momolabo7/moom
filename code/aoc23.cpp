@@ -346,7 +346,6 @@ static void aoc23_d3p1(const char* filename) {
   }
 
 
-
   defer{ foolish_free_memory(grid); };
 
   auto get_index = [](str_t grid, u32_t x, u32_t y, u32_t w) {
@@ -360,6 +359,7 @@ static void aoc23_d3p1(const char* filename) {
     }
     return false;
   };
+
 
   // Okay here we do the actual parsing
   u32_t current_num = 0;
@@ -376,7 +376,10 @@ static void aoc23_d3p1(const char* filename) {
       }
       else {
         if (is_num) {
-          sum += current_num;
+          if (is_part) {
+            sum += current_num;
+          }
+          printf("%d is %d\n", current_num, is_part);
           current_num = 0;
           is_part = false;
           is_num = false;
@@ -390,7 +393,7 @@ static void aoc23_d3p1(const char* filename) {
           check(grid, x+1, y-1, width, height) ||
           check(grid, x-1, y,   width, height) ||
           check(grid, x+1, y,   width, height) ||
-          check(grid, x+1, y+1, width, height) ||
+          check(grid, x-1, y+1, width, height) ||
           check(grid, x,   y+1, width, height) ||
           check(grid, x+1, y+1, width, height);
       }

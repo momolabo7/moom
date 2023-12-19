@@ -2003,13 +2003,14 @@ lit_level_obstruct() {
   else {
     lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   }
-  lit_game_push_sensor(m, 400.f, 600.f, 0x008800FF); 
+  lit_game_push_sensor(m, 400.f, 650.f, 0x008800FF); 
   lit_game_end_sensor_group(m);
 
-  lit_game_push_light(m, 400.f, 200.f, 0x008800FF, 45.f, 0.75f);
+  lit_game_push_light(m, 400.f, 150.f, 0x008800FF, 45.f, 0.25f);
   
   // Need to 'enclose' the shape
-  lit_game_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
+  lit_game_push_double_edge(m, 100.f, 300.f, 700.f, 300.f);
+  lit_game_push_double_edge(m, 100.f, 500.f, 700.f, 500.f);
 }
 
 //
@@ -2022,49 +2023,21 @@ lit_level_add() {
   lit_game_t* m = &g_lit->game;
   // Need to 'enclose' the shape
   lit_game_init_level(m, str_from_lit("ADD"), 3);
-  lit_game_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
+  lit_game_push_box(m, 300, 350, 500, 450);
+  //lit_game_push_double_edge(m, 100.f, 400.f, 700.f, 400.f);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
-  lit_game_push_sensor(m, 400.f, 600.f, 0x444488FF); 
+  lit_game_push_sensor(m, 400.f, 300.f, 0x444488FF); 
+  lit_game_push_sensor(m, 400.f, 500.f, 0x444488FF); 
   lit_game_end_sensor_group(m);
 
-  lit_game_push_light(m, 300.f, 200.f, 0x222244FF, 45.f, 0.75f);
-  lit_game_push_light(m, 500.f, 200.f, 0x222244FF, 45.f, 0.75f);
+  lit_game_push_light(m, 400.f, 750.f, 0x222244FF, 45.f, 0.75f);
+  lit_game_push_light(m, 400.f, 050.f, 0x222244FF, 45.f, 0.25f);
  
 }
 
-//
-// LEVEL 4
-//
-// - Learn about light saturation 2
-// - Sensor is in a box 
-//
-static void
-lit_level_corners() { 
-  lit_game_t* m = &g_lit->game;
-  lit_game_init_level(m, str_from_lit("CORNERS"), 4);
-
-  // Need to 'enclose' the shape
-  lit_game_push_double_edge(m, 500.f, 200.f, 600.f, 300.f);
-  lit_game_push_double_edge(m, 300.f, 200.f, 200.f, 300.f);
-  lit_game_push_double_edge(m, 200.f, 500.f, 300.f, 600.f);
-  lit_game_push_double_edge(m, 500.f, 600.f, 600.f, 500.f);
-
-  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
-  lit_game_push_sensor(m, 400.f, 400.f, 0xCCCC00FF); 
-  lit_game_end_sensor_group(m);
-
-  lit_game_push_light(m, 150.f, 150.f, 0x333300FF, 45.f, 0.125f);
-  lit_game_push_light(m, 650.f, 150.f, 0x333300FF, 45.f, 0.376f);
-  lit_game_push_light(m, 650.f, 650.f, 0x333300FF, 45.f, 0.626f);
-  lit_game_push_light(m, 150.f, 650.f, 0x333300FF, 45.f, 0.876f);
-
-  
-}
 
 
-//
-// LEVEL 5
 //
 // - Learn about color combinations
 // - R + G = Y
@@ -2073,7 +2046,7 @@ static void
 lit_level_mix() {
   lit_game_t* m = &g_lit->game;
 
-  lit_game_init_level(m, str_from_lit("MIX"), 5);
+  lit_game_init_level(m, str_from_lit("MIX"), 4);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   lit_game_push_sensor(m, 400.f, 400.f, 0x888800FF); 
@@ -2089,6 +2062,36 @@ lit_level_mix() {
   lit_game_push_light(m, 600.f, LIT_HEIGHT * 0.75f, 0x880000FF, 30.f, 0.0f);
 }
 
+static void
+lit_level_rainbow() { 
+  lit_game_t* m = &g_lit->game;
+  lit_game_init_level(m, str_from_lit("RAINBOW"), 5);
+
+  // Need to 'enclose' the shape
+#if 0
+  lit_game_push_double_edge(m, 500.f, 200.f, 600.f, 300.f);
+  lit_game_push_double_edge(m, 300.f, 200.f, 200.f, 300.f);
+  lit_game_push_double_edge(m, 200.f, 500.f, 300.f, 600.f);
+  lit_game_push_double_edge(m, 500.f, 600.f, 600.f, 500.f);
+#endif 
+
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
+  lit_game_push_sensor(m, 200.f, 400.f, 0xCC0000FF); // red
+  lit_game_push_sensor(m, 300.f, 400.f, 0xCCCC00FF); // yellow 
+  lit_game_push_sensor(m, 500.f, 400.f, 0x00CCCCFF); // cyan 
+  lit_game_push_sensor(m, 600.f, 400.f, 0x0000CCFF); // blue
+  lit_game_push_sensor(m, 400.f, 400.f, 0xCCCCCCFF); // white
+  lit_game_push_sensor(m, 400.f, 300.f, 0x00CC00FF); // green
+  lit_game_push_sensor(m, 300.f, 500.f, 0xCC00CCFF); // magenta
+  lit_game_push_sensor(m, 500.f, 500.f, 0xCC00CCFF); // magenta
+  lit_game_end_sensor_group(m);
+
+  lit_game_push_light(m, 150.f, 150.f, 0xCC0000FF, 45.f, 0.125f);
+  lit_game_push_light(m, 650.f, 150.f, 0x00CC00FF, 45.f, 0.376f);
+  lit_game_push_light(m, 650.f, 650.f, 0x0000CCFF, 45.f, 0.626f);
+
+  
+}
 
 //
 // LEVEL 6
@@ -3036,7 +3039,7 @@ lit_level_menu() {
   if (lit_get_levels_unlocked_count() >= 4) {
     cx = 550;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_corners));
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_mix));
     lit_game_push_sensor(m, cx-25, cy-25, grey); 
     lit_game_push_sensor(m, cx-25, cy+25, grey); 
     lit_game_push_sensor(m, cx+25, cy-25, grey); 
@@ -3048,7 +3051,7 @@ lit_level_menu() {
   if (lit_get_levels_unlocked_count() >= 5) {
     cx = 700;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_mix));
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_rainbow));
     lit_game_push_sensor(m, cx-25, cy-25, grey); 
     lit_game_push_sensor(m, cx-25, cy+25, grey); 
     lit_game_push_sensor(m, cx,    cy,    grey); 
