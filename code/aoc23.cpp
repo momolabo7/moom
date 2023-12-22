@@ -2,7 +2,6 @@
 #include "momo.h"
 
 
-
 static void aoc23_d1p1(const char* filename) {
   str_t file_buffer = foolish_read_file_into_buffer(filename, false); 
   if (!file_buffer) return;
@@ -366,8 +365,10 @@ static void aoc23_d3p1(const char* filename) {
   b32_t is_part = false; 
   b32_t is_num = false;
   u32_t sum = 0;
-  for_cnt(y, height) {
-    for_cnt(x, width) {
+  for_cnt(y, height) 
+  {
+    for_cnt(x, width) 
+    {
       u8_t c = get_index(grid, x, y, width);
       if(c >= 0 && c < 10) {
         current_num *= 10;
@@ -397,14 +398,20 @@ static void aoc23_d3p1(const char* filename) {
           check(grid, x,   y+1, width, height) ||
           check(grid, x+1, y+1, width, height);
       }
+
+      }
+    // once we are done with the row, sum anything we found
+      if (is_num) {
+        if (is_part) {
+          sum += current_num;
+        }
+        printf("%d is %d\n", current_num, is_part);
+        current_num = 0;
+        is_part = false;
+        is_num = false;
     }
     
   }
-
-
-  
-
-
   printf("%u\n", sum);
 
 }

@@ -1,4 +1,11 @@
-// TODO: Introduce time stop mechanic
+// TODO: 
+// - Sound
+// - Recording system??
+// - Level Design:
+// -- MIX: make it a little harder
+// -- INTERVAL: too hard. I feel liek I get a little lost before I even get to the "2 space" part of the puzzle
+// - Removed hardcoding of level value in lit_game_init_level()
+//
 //
 #include "momo.h"
 #include "game_asset_id_lit.h"
@@ -17,7 +24,7 @@
 #define LIT_SKIP_TRANSITIONS false
 
 // Debug
-#define LIT_DEBUG 1
+#define LIT_DEBUG 0
 #define LIT_DEBUG_LINES 0
 
 // Splash
@@ -52,6 +59,10 @@
 #define LIT_PLAYER_BREATH_DURATION 2.f
 #define LIT_PLAYER_PICKUP_DIST 512.f
 #define LIT_PLAYER_ROTATE_SPEED 1.f
+
+// SLOW MO MECHANIC
+#define LIT_SPEED_MULTIPLER_MIN 0.1f 
+#define LIT_SPEED_MULTIPLER_DECREMENT_RATE 2.f 
 
 // Tutorial
 #define LIT_LEARNT_BASICS_LEVEL_ID (3)
@@ -313,6 +324,7 @@ struct lit_game_t {
   
   // stop time
   b32_t freeze;
+  f32_t speed_multiplier;
 
 };
 
@@ -1890,7 +1902,7 @@ lit_game_generate_light(lit_game_t* g) {
     lit_game_light_t* light = g->lights + light_index;
     lit_gen_light_intersections(light, g->edges, g->edge_count, &g_lit->frame_arena);
 
-#if LIT_DEBUG_INTERSECTIONS
+#if LIT_DEBUG_LINES
     // Generate debug lines
     for (u32_t intersection_index = 0;
         intersection_index < light->intersection_count;
@@ -1962,7 +1974,6 @@ lit_game_init_level(lit_game_t* m, str_t str, u32_t level_id) {
 
 
 //
-// LEVEL 1
 //
 // Tutorial level
 // - Learn to move
@@ -1988,7 +1999,6 @@ lit_level_move() {
 }
 
 //
-// LEVEL 2
 //
 // - Learn about obstacles
 //
@@ -2014,7 +2024,6 @@ lit_level_obstruct() {
 }
 
 //
-// LEVEL 3
 //
 // - Learn about light saturation 
 //
@@ -2093,37 +2102,7 @@ lit_level_rainbow() {
   
 }
 
-//
-// LEVEL 6
-//
-// - Learn about more color combinations
-// - G + B = P
-// - R + G + B = W
-//
-static void
-lit_level_blend() {
-  lit_game_t* m = &g_lit->game;
-  lit_game_init_level(m, str_from_lit("BLEND"), 6);
 
-  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
-  lit_game_push_sensor(m, 400.f,  400.f, 0x888888FF); 
-
-  lit_game_push_sensor(m, 200.f, 400.f, 0x008888FF); 
-  lit_game_push_sensor(m, 600.f, 400.f, 0x008800FF); 
-
-  lit_game_push_sensor(m, 400.f, 200.f, 0x880000FF); 
-  lit_game_push_sensor(m, 400.f, 600.f, 0x880088FF); 
-  lit_game_end_sensor_group(m);
-
-  lit_game_push_light(m, 200.f, 150.f, 0x008800FF, 30.f, 0.75f);
-  lit_game_push_light(m, 400.f, 150.f, 0x880000FF, 30.f, 0.75f);
-  lit_game_push_light(m, 600.f, 150.f, 0x000088FF, 30.f, 0.75f);
-  
-
-}
-
-//
-// LEVEL 7
 //
 // - Sensors on inside room and outside room
 // - Point lights
@@ -2132,7 +2111,7 @@ static void
 lit_level_rooms() {
   lit_game_t* m = &g_lit->game;
 
-  lit_game_init_level(m, str_from_lit("ROOMS"), 7);
+  lit_game_init_level(m, str_from_lit("ROOMS"), 6);
 
   // middle
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
@@ -2165,11 +2144,10 @@ lit_level_rooms() {
 }
 
  
-// LEVEL 8
 static void
 lit_level_disco() {
   lit_game_t* m = &g_lit->game;
-  lit_game_init_level(m, str_from_lit("DISCO"), 8);
+  lit_game_init_level(m, str_from_lit("DISCO"), 7);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   // bottom left room
@@ -2222,14 +2200,12 @@ lit_level_disco() {
 }
 
 //
-// LEVEL 9
-//
 // Onion 
 //  
 static void
 lit_level_onion() {
   lit_game_t* m = &g_lit->game;
-  lit_game_init_level(m, str_from_lit("ONION"), 9);
+  lit_game_init_level(m, str_from_lit("ONION"), 8);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   // layer 1
@@ -2263,11 +2239,10 @@ lit_level_onion() {
   lit_game_push_light(m, 400.f, 400.f, 0x333333FF, 360.f, 0.f);
 }
 
-// LEVEL 10
 static void
 lit_level_split() {
   lit_game_t* m = &g_lit->game;
-  lit_game_init_level(m, str_from_lit("SPLIT"), 10);
+  lit_game_init_level(m, str_from_lit("SPLIT"), 9);
 
   lit_game_push_light(m, 400.f, 410.f, 0x880000FF, 360.f, 0.f);
   lit_game_push_light(m, 390.f, 390.f, 0x008800FF, 360.f, 0.f);
@@ -2295,12 +2270,11 @@ lit_level_split() {
 
 }
 
-// LEVEL 11
 
 static void
 lit_level_spectrum() {
   lit_game_t* m = &g_lit->game;
-  lit_game_init_level(m, str_from_lit("SPECTRUM"), 11);
+  lit_game_init_level(m, str_from_lit("SPECTRUM"), 10);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
   // cyans
@@ -2343,7 +2317,29 @@ lit_level_spectrum() {
   lit_game_push_light(m, 410.f, 390.f, 0x000088FF, 360.f, 0.f);
 }
 
-// LEVEL 12
+// TODO
+static void
+lit_level_blend() {
+  lit_game_t* m = &g_lit->game;
+  lit_game_init_level(m, str_from_lit("BLEND"), 11);
+
+  lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
+  lit_game_push_sensor(m, 400.f,  400.f, 0x888888FF); 
+
+  lit_game_push_sensor(m, 200.f, 400.f, 0x008888FF); 
+  lit_game_push_sensor(m, 600.f, 400.f, 0x008800FF); 
+
+  lit_game_push_sensor(m, 400.f, 200.f, 0x880000FF); 
+  lit_game_push_sensor(m, 400.f, 600.f, 0x880088FF); 
+  lit_game_end_sensor_group(m);
+
+  lit_game_push_light(m, 200.f, 150.f, 0x008800FF, 30.f, 0.75f);
+  lit_game_push_light(m, 400.f, 150.f, 0x880000FF, 30.f, 0.75f);
+  lit_game_push_light(m, 600.f, 150.f, 0x000088FF, 30.f, 0.75f);
+  
+
+}
+
 static void
 lit_level_movement() {
   lit_game_t* m = &g_lit->game;
@@ -2394,7 +2390,6 @@ lit_level_movement() {
 
 }
 
-// LEVEL 13
 static void
 lit_level_interval() {
   lit_game_t* m = &g_lit->game;
@@ -2591,7 +2586,6 @@ lit_level_busy() {
 
 }
 
-// LEVEL 16
 static void
 lit_level_spin() {
   lit_game_t* m = &g_lit->game;
@@ -2645,7 +2639,6 @@ lit_level_spin() {
 
 }
 
-// LEVEL 17
 static void
 lit_level_orbit() {
   lit_game_t* m = &g_lit->game;
@@ -2702,7 +2695,6 @@ lit_level_orbit() {
   lit_game_animator_push_rotate_point(m, origin, origin_2, 1.f); 
 }
 
-// TODO LEVEL 18
 static void
 lit_level_hourglass() {
   lit_game_t* m = &g_lit->game;
@@ -2835,7 +2827,7 @@ lit_level_test(lit_game_t* m) {
 static void
 lit_level_triforce() {
   lit_game_t* m = &g_lit->game;
-  lit_game_init_level(m, str_from_lit("TRIFORCE"), 19);
+  lit_game_init_level(m, str_from_lit("THREE FORCES"), 19);
 
   lit_game_push_light(m, 400, 427, 0x880000FF, 360.f, 0.75f);
   lit_game_push_light(m, 380, 380, 0x008800FF, 360.f, 0.75f);
@@ -3068,7 +3060,7 @@ lit_level_menu() {
   if (lit_get_levels_unlocked_count() >= 6) {
     cx = 100;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_blend));
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_rooms));
     lit_game_push_sensor(m, cx, cy, row2_color); 
     lit_game_end_sensor_group(m);
   }
@@ -3076,7 +3068,7 @@ lit_level_menu() {
   if (lit_get_levels_unlocked_count() >= 7) {
     cx = 250;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_rooms));
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_disco));
     lit_game_push_sensor(m, cx+25, cy+25, row2_color); 
     lit_game_push_sensor(m, cx-25, cy-25, row2_color); 
     lit_game_end_sensor_group(m);
@@ -3085,7 +3077,7 @@ lit_level_menu() {
   if (lit_get_levels_unlocked_count() >= 8 ) {
     cx = 400;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_disco));
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_onion));
     lit_game_push_sensor(m, cx-25, cy+25, row2_color); 
     lit_game_push_sensor(m, cx, cy, row2_color); 
     lit_game_push_sensor(m, cx+25, cy-25, row2_color); 
@@ -3096,7 +3088,7 @@ lit_level_menu() {
   if (lit_get_levels_unlocked_count() >= 9) {
     cx = 550;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_onion));
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_split));
     lit_game_push_sensor(m, cx, cy+35, row2_color); 
     lit_game_push_sensor(m, cx-35, cy, row2_color); 
     lit_game_push_sensor(m, cx, cy-35, row2_color); 
@@ -3107,7 +3099,7 @@ lit_level_menu() {
   if (lit_get_levels_unlocked_count() >= 10) {
     cx = 700;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_split));
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_spectrum));
     lit_game_push_sensor(m, cx-25, cy+15, row2_color); 
     lit_game_push_sensor(m, cx+25, cy+15, row2_color); 
     lit_game_push_sensor(m, cx, cy+30, row2_color); 
@@ -3124,7 +3116,7 @@ lit_level_menu() {
   if (lit_get_levels_unlocked_count() >= 11) {
     cx = 100;
     lit_game_push_aabb(m, cx, cy, box_hw, box_hh);
-    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_spectrum));
+    lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_blend));
     lit_game_begin_patrolling_sensor(m, cx-25, cy, row3_color, 2.f); 
     lit_game_push_patrolling_sensor_waypoint(m, cx+25, cy);
     lit_game_end_patrolling_sensor(m);
@@ -3371,9 +3363,17 @@ static void
 lit_game_update() 
 {
   lit_game_t* g = &g_lit->game;
-
-  if (game_is_button_poked(g_game, GAME_BUTTON_CODE_SPACE)) {
+#if LIT_DEBUG
+  if (game_is_button_poked(g_game, GAME_BUTTON_CODE_Z)) {
     g->freeze = !g->freeze;
+  }
+#endif
+  
+  if (game_is_button_held(g_game, GAME_BUTTON_CODE_SPACE)) {
+    g->speed_multiplier = max_of(LIT_SPEED_MULTIPLER_MIN, g->speed_multiplier - game_get_dt(g_game) * LIT_SPEED_MULTIPLER_DECREMENT_RATE);
+  }
+  else {
+    g->speed_multiplier = min_of(1.f, g->speed_multiplier + game_get_dt(g_game) * LIT_SPEED_MULTIPLER_DECREMENT_RATE);
   }
   
   f32_t dt = game_get_dt(g_game);
@@ -3457,10 +3457,12 @@ lit_game_update()
   //
   if (g->state == LIT_GAME_STATE_TYPE_NORMAL) 
   {
+
     lit_profile_begin(animate);
-    if (!g->freeze) {
-      lit_game_animate_everything(g, dt);
-    }
+#if LIT_DEBUG
+    if (!g->freeze) 
+#endif
+      lit_game_animate_everything(g, dt * g->speed_multiplier);
     lit_profile_end(animate);
 
     // Do input for exiting to HOME if not HOME
@@ -3580,7 +3582,11 @@ lit_game_init()
   lit_game_t* g = &g_lit->game;
   rng_init(&g->rng, 65535); // don't really need to be strict 
 
+#if LIT_DEBUG
   g->freeze = false;
+#endif
+
+  g->speed_multiplier = 1.0f;
 
   // Go to level based on user's progress
   switch(lit_get_levels_unlocked_count())
@@ -3915,6 +3921,9 @@ game_get_config_sig(game_get_config)
 
 //
 // JOURNAL
+// = 2023-12-22 =
+//   Cleaning up levels to make it more playable.
+//
 // = 2023-08-26 =
 //   Added "g_" prefix to some global variables
 // 
