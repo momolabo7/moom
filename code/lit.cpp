@@ -348,7 +348,7 @@ struct lit_credits_t {
 enum lit_show_debug_type_t {
   LIT_SHOW_DEBUG_NONE,
   LIT_SHOW_DEBUG_PROFILER,
-  LIT_SHOW_DEBUG_CONSOLE,
+  //LIT_SHOW_DEBUG_CONSOLE,
   LIT_SHOW_DEBUG_INSPECTOR,
   
   LIT_SHOW_DEBUG_MAX
@@ -367,6 +367,7 @@ struct lit_save_data_t {
 };
 
 struct lit_t {
+  
   lit_save_data_t save_data;
   lit_show_debug_type_t show_debug_type;
   lit_mode_t next_mode;
@@ -387,8 +388,6 @@ struct lit_t {
   // Assets
   game_assets_t assets;
 
-  // Debug Stuff 
-  console_t console;
 };
 
 //
@@ -471,6 +470,7 @@ lit_goto_credits() {
   g_lit->next_mode = LIT_MODE_CREDITS;
 }
 
+#if 0
 //
 // Console rendering
 //
@@ -558,6 +558,7 @@ lit_update_and_render_console()
       font_height);
   game_advance_depth(g_game);
 }
+#endif
 
 //
 // Profiler Update and Rendering
@@ -3794,7 +3795,7 @@ game_update_and_render_sig(game_update_and_render)
     //
     // Initialize debug stuff
     //
-    console_init(&g_lit->console, &g_lit->debug_arena, 32, 256);
+    //console_init(&g_lit->console, &g_lit->debug_arena, 32, 256);
 
     //
     // Initialize assets
@@ -3867,9 +3868,11 @@ game_update_and_render_sig(game_update_and_render)
   }
 
   switch (g_lit->show_debug_type) {
+#if 0
     case LIT_SHOW_DEBUG_CONSOLE: {
       lit_update_and_render_console(); 
     }break;
+#endif
     case LIT_SHOW_DEBUG_PROFILER: {
       lit_profiler_update_and_render(); 
     }break;
