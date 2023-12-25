@@ -7920,7 +7920,8 @@ arena_push_size(arena_t* a, usz_t size, usz_t align) {
   usz_t imem = ptr_to_umi(a->memory);
   umi_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
 
-  if (imem + adjusted_pos + size >= imem + a->cap) return nullptr;
+  if (imem + adjusted_pos + size >= imem + a->cap) 
+    return nullptr;
 
   u8_t* ret = umi_to_ptr(imem + adjusted_pos);
   a->pos = adjusted_pos + size;

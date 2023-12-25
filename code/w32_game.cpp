@@ -67,6 +67,7 @@ struct w32_work_t {
 };
 
 struct w32_work_queue_t {
+  u32_t entry_cap;
   w32_work_t entries[256];
   u32_t volatile next_entry_to_read;
   u32_t volatile next_entry_to_write;
@@ -102,10 +103,11 @@ struct w32_file_t {
   u32_t cabinet_index;
 };
 
-// TODO(momo): is it possible to use a vector? 
 struct w32_file_cabinet_t {
-  w32_file_t files[32]; 
-  u32_t free_files[32];
+  usz_t file_cap;
+  w32_file_t* files; 
+  u32_t* free_files;
+
   u32_t free_file_count;
 };
 
@@ -1145,12 +1147,17 @@ w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data
 
 
 static void
-w32_init_file_cabinet(w32_file_cabinet_t* c) {
-  for(u32_t i = 0; i < array_count(c->files); ++i) {
+w32_init_file_cabinet(w32_file_cabinet_t* c, usz_t file_cap, arena_t* arena) {
+  c->files = arena_push_arr(w32_file_t, arena, file_cap);
+  assert(c->files);
+  c->free_files = arena_push_arr(u32_t, arena, file_cap);
+  assert(c->free_files);
+
+  for(u32_t i = 0; i < file_cap; ++i) {
     c->files[i].cabinet_index = i;
     c->free_files[i] = i;
   }
-  c->free_file_count = array_count(c->files);
+  c->free_file_count = file_cap;
 }
 
 static w32_file_t*
@@ -1179,7 +1186,6 @@ w32_free_all_memory() {
     itr = next;
   }
 }
-
 
 static void 
 w32_shutdown() {
@@ -1627,7 +1633,7 @@ game_allocate_memory_sig(w32_allocate_memory)
                    total_size,
                    MEM_RESERVE | MEM_COMMIT, 
                    PAGE_READWRITE);
-  if (!memory) return str_set(0,0);
+  if (!memory) return str_bad();
 
   memory->user_block = str_set((u8_t*)memory + offset_to_user_memory, size);
 
@@ -1732,7 +1738,6 @@ WinMain(HINSTANCE instance,
     if (!w32_init_work_queue(&w32_state.work_queue, 8)) {
       return 1;
     }
-    w32_init_file_cabinet(&w32_state.file_cabinet);
   }
   defer { w32_free_all_memory(); };
   
@@ -1762,6 +1767,10 @@ WinMain(HINSTANCE instance,
   game_config_t config = game_functions.get_config();
 
 
+  arena_t* platform_arena = &game.platform_arena;
+  arena_init(platform_arena, w32_allocate_memory(config.total_required_memory));
+
+  w32_init_file_cabinet(&w32_state.file_cabinet, config.max_files, platform_arena );
 
 
 
@@ -1859,19 +1868,11 @@ WinMain(HINSTANCE instance,
   f32_t target_secs_per_frame = 1.f/(f32_t)config.target_frame_rate;
   w32_log("Target Frame Rate: %d Hz\n", config.target_frame_rate);
   
-  
-
-  //
-  // Gfx
-  // 
-  arena_t* gfx_arena = &game.gfx_arena;
-  if (!arena_init(gfx_arena, w32_allocate_memory(config.gfx_arena_size))) 
-    return 1;
 
   if(!w32_gfx_load(
       &game.gfx,
       window, 
-      gfx_arena,
+      platform_arena,
       config.render_command_size, 
       config.texture_queue_size,
       config.max_textures,
@@ -1881,10 +1882,7 @@ WinMain(HINSTANCE instance,
     return 1;
  
   // Init Audio
-  arena_t* audio_arena = &game.audio_arena;
   if (config.audio_enabled) {
-    if (!arena_init(audio_arena, w32_allocate_memory(config.audio_arena_size)))
-      return 1;
 
     if (!w32_audio_load(
           &game.audio, 
@@ -1893,7 +1891,7 @@ WinMain(HINSTANCE instance,
           config.audio_channels, 
           1, 
           config.target_frame_rate, 
-          audio_arena)) 
+          platform_arena)) 
       return 1;
   }
   defer{ if (config.audio_enabled) w32_audio_unload(&game.audio); };
@@ -1903,13 +1901,8 @@ WinMain(HINSTANCE instance,
   //
   // Init debug stuff
   //
-  arena_t* debug_arena = &game.debug_arena;
-  if (!arena_init(debug_arena, w32_allocate_memory(config.debug_arena_size)))
-    return 1;
-
-  game_profiler_init(&game.profiler, w32_get_performance_counter_u64, debug_arena, config.max_profiler_entries, config.max_profiler_snapshots);
-
-  game_inspector_init(&game.inspector, debug_arena, config.max_inspector_entries);
+  game_profiler_init(&game.profiler, w32_get_performance_counter_u64, platform_arena, config.max_profiler_entries, config.max_profiler_snapshots);
+  game_inspector_init(&game.inspector, platform_arena, config.max_inspector_entries);
 
 
   //

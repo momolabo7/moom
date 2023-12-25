@@ -92,9 +92,6 @@ struct game_gfx_texture_queue_t {
   usz_t first_payload_index;
   usz_t payload_count;
   usz_t payload_cap;
-
-
-  
 };
 
 // Command API
@@ -828,10 +825,7 @@ struct game_t {
   b32_t is_dll_reloaded;
   b32_t is_running;
 
-  // arenas relevant to the game
-  arena_t gfx_arena;
-  arena_t audio_arena;
-  arena_t debug_arena;
+  arena_t platform_arena;
 
   void* user_data;
 };
@@ -909,14 +903,18 @@ struct game_assets_t {
 //
 //
 struct game_config_t {
+  usz_t total_required_memory;
   u32_t target_frame_rate;
 
-  usz_t debug_arena_size;
+  u32_t max_files;
+  u32_t max_workers; 
+
+  //usz_t debug_arena_size;
   u32_t max_inspector_entries;
   u32_t max_profiler_entries;
   u32_t max_profiler_snapshots; // snapshots per entry
 
-  usz_t gfx_arena_size;
+  //usz_t gfx_arena_size;
   usz_t texture_queue_size;
   usz_t render_command_size;
   u32_t max_textures;
@@ -925,7 +923,7 @@ struct game_config_t {
   usz_t max_triangles;
 
   b32_t audio_enabled;
-  usz_t audio_arena_size;
+  //usz_t audio_arena_size;
   u32_t audio_samples_per_second;
   u16_t audio_bits_per_sample;
   u16_t audio_channels;

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "momo.h"
 
+#if 0
 void test_json() {
   const char json_str[] = "{\
     \"car\": 23, \
@@ -14,7 +15,7 @@ void test_json() {
   }";
 
   arena_t ba = {}; 
-  arena_init(&ba, malloc(megabytes(1)), megabytes(1)); 
+  arena_init(&ba, buffer_set(malloc(megabytes(1)), megabytes(1)); 
 
   make(json_t, json);
   auto* obj =  json_read(json, (u8_t*)json_str, array_count(json_str), &ba);
@@ -71,6 +72,7 @@ void test_json() {
   //printf("hello: %d", *two);
 
 }
+#endif
 
 #if 0
 static void
@@ -154,29 +156,52 @@ int main() {
 }
 #endif
 
-struct test_arena_block_t {
-  arena_t arena;
-  test_arena_block_t* next;
+struct test_arena_node_t {
+  str_t os_buffer;
+
+  str_t buffer;
+  usz_t pos; 
+
+  test_arena_node_t* prev;
+  test_arena_node_t* next;
 };
 
 struct test_arena_t {
- // test_arena_block_t* first;
-
-  test_arena_block_t* current_block;
-  usz_t pos;
+  test_arena_node_t sentinel;
+  test_arena_node_t* current_block;
 };
 
-static void* test_arena_push(test_arena_t* a, usz_t size) 
+static void test_arena_init(test_arena_t* a) {
+  cll_init(&a->sentinel);
+  a->current_block = 0;
+}
+
+static void* test_arena_push(test_arena_t* a, usz_t size, usz_t min_allocate_size = 0) 
 {
-  if (!a->current_block || ???) {
-    usz_t total_size = size + sizeof(test_arena_block_t);
-    auto* blk = (test_arena_block_t*)os_memory_allocate(total_size);
-    arena_init(&blk->arena, (u8_t*)blk + sizeof(test_arena_block_t), size);
-    blk->next = 0;
-    a->current_block = blk;
+  if (size == 0) return nullptr;
+
+  if (!a->current_block || a->current_block->pos + size > a->current_block->buffer.size) {
+    usz_t total_size = max_of(size, min_allocate_size) + sizeof(test_arena_node_t);
+    str_t blk = os_allocate_memory(total_size);
+
+    if (!blk) return nullptr;
+
+    auto* node = (test_arena_node_t*)blk.e;
+    node->os_buffer = blk;
+    node->pos = 0;
+
+    node->buffer = str_set(blk.e + sizeof(test_arena_node_t), size);
+
+    cll_append(&a->sentinel, node);
+    a->current_block = node;
+
   }
 
-  return arena_push_size(&current->block.arena, size);
+ 
+  void* ret = a->current_block->buffer.e + a->current_block->pos;
+  a->current_block->pos += size;
+  
+  return ret;
   
 }
 
@@ -185,7 +210,14 @@ int main() {
   //test_json();
   //test_allocate_memory();
   make(test_arena_t, a);
-  test_arena_push(a, 1024);
+  test_arena_init(a);
+  void* one = test_arena_push(a, 256);
+  void* two = test_arena_push(a, 256);
+  void* three = test_arena_push(a, 256);
+
+  printf("%p\n", one);
+  printf("%p\n", two);
+  printf("%p\n", three);
 
  
 }

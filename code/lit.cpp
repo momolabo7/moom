@@ -3771,11 +3771,11 @@ game_update_and_render_sig(game_update_and_render)
   g_game = game;
   if(g_game->user_data == nullptr) {
 
-    str_t memory = game_allocate_memory(g_game, sizeof(lit_t));
-    if (!memory) lit_exit();
+    //str_t memory = game_allocate_memory(g_game, sizeof(lit_t));
+    //if (!memory) lit_exit();
 
     
-    g_game->user_data = memory.e;
+    g_game->user_data = arena_push(lit_t, &g_game->platform_arena);
 
 
     g_lit = (lit_t*)(g_game->user_data);
@@ -3784,13 +3784,11 @@ game_update_and_render_sig(game_update_and_render)
     g_lit->mode = LIT_MODE_NONE;
     
 
-    usz_t offset = sizeof(lit_t);
-    offset = align_up_pow2(offset, 16);
-
-    arena_init(&g_lit->asset_arena, game_allocate_memory(game, megabytes(20)));
-    arena_init(&g_lit->debug_arena, game_allocate_memory(game, megabytes(1)));
-    arena_init(&g_lit->frame_arena, game_allocate_memory(game, megabytes(1)));
-    arena_init(&g_lit->mode_arena, game_allocate_memory(game, megabytes(1)));
+    //arena_init(&g_lit->asset_arena, game_allocate_memory(game, megabytes(20)));
+    if (!arena_push_partition(&g_game->platform_arena, &g_lit->asset_arena, megabytes(20), 16)) lit_exit();
+    if (!arena_push_partition(&g_game->platform_arena, &g_lit->debug_arena, megabytes(1), 16)) lit_exit();
+    if (!arena_push_partition(&g_game->platform_arena, &g_lit->frame_arena, megabytes(1), 16)) lit_exit();
+    if (!arena_push_partition(&g_game->platform_arena, &g_lit->mode_arena, megabytes(1), 16)) lit_exit();
 
     //
     // Initialize debug stuff
@@ -3891,16 +3889,19 @@ game_update_and_render_sig(game_update_and_render)
 exported 
 game_get_config_sig(game_get_config) 
 {
+
   game_config_t ret;
+  ret.total_required_memory = gigabytes(1);
 
   ret.target_frame_rate = 60;
 
-  ret.debug_arena_size = kilobytes(300);
+  ret.max_workers = 256;
+  ret.max_files = 32;
+
   ret.max_inspector_entries = 256;
   ret.max_profiler_entries = 256;
   ret.max_profiler_snapshots = 120;
 
-  ret.gfx_arena_size = megabytes(256);
   ret.texture_queue_size = megabytes(5);
   ret.render_command_size = megabytes(100);
   ret.max_textures = 1;
@@ -3909,7 +3910,6 @@ game_get_config_sig(game_get_config)
   ret.max_triangles = 4096;
 
   ret.audio_enabled = false;
-  ret.audio_arena_size = megabytes(256);
   ret.audio_samples_per_second = 48000;
   ret.audio_bits_per_sample = 16;
   ret.audio_channels = 2;
