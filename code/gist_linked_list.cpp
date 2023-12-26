@@ -18,7 +18,6 @@ struct gist_cdl_node {
 static gist_cdl_node nodes[128];
 static u32_t node_count = 0;
 
-
 static gist_cdl_node* 
 gist_cdl_new_node(int value) {
   gist_cdl_node* node = nodes + node_count++;
