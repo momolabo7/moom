@@ -273,6 +273,7 @@ struct rgb_t {
   f32_t r, g, b;   
 };
 
+
 // Each component are in the range of [0 - 1].
 // For hue, normally it is a number between [0 - 360], but
 // it will be mapped linearly to [0 - 1] in this case.
@@ -1081,6 +1082,7 @@ static rgb_t  hsl_to_rgb(hsl_t c);
 // MARK:(Bonk)
 //
 static b32_t bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt); 
+
 
 // 
 // MARK:(RNG)

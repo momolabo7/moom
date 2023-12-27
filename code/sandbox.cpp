@@ -3,18 +3,6 @@
 #include "game_asset_id_sandbox.h"
 #include "game.h"
 
-
-#if 0
-wav_t global_wavs[10];
-u32_t global_wavs_count = 0;
-
-static void
-sandbox_load_wav(const char* filename) {
-  buffer_t contents = foolish_read_file_into_buffer(filename);
-  wav_read(&global_wavs[global_wavs_count++], contents);
-}
-#endif
-
 struct sandbox_audio_mixer_instance_t {
   u32_t index; 
   u32_t offset;

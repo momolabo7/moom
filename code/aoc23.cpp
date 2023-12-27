@@ -380,7 +380,7 @@ static void aoc23_d3p1(const char* filename) {
           if (is_part) {
             sum += current_num;
           }
-          printf("%d is %d\n", current_num, is_part);
+          //printf("%d is %d\n", current_num, is_part);
           current_num = 0;
           is_part = false;
           is_num = false;
@@ -442,5 +442,6 @@ int main(int argv, char** argc) {
   aoc23_route(2,1);
   aoc23_route(2,2);
   aoc23_route(3,1);
+  //aoc23_route(3,2);
 
 }

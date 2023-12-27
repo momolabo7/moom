@@ -1489,7 +1489,7 @@ lit_game_player_find_nearest_light(lit_game_t* g) {
   player->nearest_light = nullptr;
 
   for(u32_t light_index = 0; light_index < g->light_count; ++light_index) {
-    lit_game_light_t* l = g->lights +light_index;
+    lit_game_light_t* l = g->lights + light_index;
     f32_t dist = v2f_dist_sq(l->pos, player->pos);
     if (shortest_dist > dist) {
       player->nearest_light = l;
