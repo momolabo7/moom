@@ -112,6 +112,13 @@ struct game_gfx_command_queue_t {
   usz_t peak_memory_usage;
 };
 
+enum game_gfx_blend_preset_type_t {
+  GAME_GFX_BLEND_PRESET_TYPE_NONE,
+  GAME_GFX_BLEND_PRESET_TYPE_ADD,
+  GAME_GFX_BLEND_PRESET_TYPE_ALPHA,
+  GAME_GFX_BLEND_PRESET_TYPE_MULTIPLY,
+};
+
 enum game_gfx_blend_type_t {
   GAME_GFX_BLEND_TYPE_ZERO,
   GAME_GFX_BLEND_TYPE_ONE,
@@ -192,6 +199,7 @@ struct game_gfx_t {
   game_gfx_command_queue_t command_queue;
   game_gfx_texture_queue_t texture_queue;
   usz_t max_textures;
+  game_gfx_blend_preset_type_t current_blend_preset;
 
   void* platform_data;
 };
@@ -1314,16 +1322,31 @@ game_gfx_set_blend(game_gfx_t* g, game_gfx_blend_type_t src, game_gfx_blend_type
 }
 
 static void 
-game_gfx_set_blend_additive(game_gfx_t* g) 
+game_gfx_set_blend_preset(game_gfx_t* g, game_gfx_blend_preset_type_t type)
 {
-  game_gfx_set_blend(g, GAME_GFX_BLEND_TYPE_SRC_ALPHA, GAME_GFX_BLEND_TYPE_ONE); 
+  switch(type) {
+    case GAME_GFX_BLEND_PRESET_TYPE_ADD:
+      g->current_blend_preset = type; 
+      game_gfx_set_blend(g, GAME_GFX_BLEND_TYPE_SRC_ALPHA, GAME_GFX_BLEND_TYPE_ONE); 
+      break;
+    case GAME_GFX_BLEND_PRESET_TYPE_MULTIPLY:
+      g->current_blend_preset = type; 
+      game_gfx_set_blend(g, GAME_GFX_BLEND_TYPE_DST_COLOR, GAME_GFX_BLEND_TYPE_ZERO); 
+      break;
+    case GAME_GFX_BLEND_PRESET_TYPE_ALPHA:
+      g->current_blend_preset = type; 
+      game_gfx_set_blend(g, GAME_GFX_BLEND_TYPE_SRC_ALPHA, GAME_GFX_BLEND_TYPE_INV_SRC_ALPHA); 
+      break;
+    case GAME_GFX_BLEND_PRESET_TYPE_NONE:
+      // Do nothing
+      break;
+  }
 }
 
+static game_gfx_blend_preset_type_t
+game_gfx_get_blend_preset(game_gfx_t* g) {
+  return g->current_blend_preset;
 
-static void 
-game_gfx_set_blend_alpha(game_gfx_t* g)
-{
-  game_gfx_set_blend(g, GAME_GFX_BLEND_TYPE_SRC_ALPHA, GAME_GFX_BLEND_TYPE_INV_SRC_ALPHA); 
 }
 
 static void
@@ -2790,19 +2813,17 @@ game_advance_depth(game_t* game) {
   game_gfx_advance_depth(gfx);
 }
 
-#define game_set_blend_sig(name) void name(game_blend_type_t src, game_blend_type_t dst)
-typedef game_set_blend_sig(game_set_blend_f);
-#define game_set_blend(game, ...) (game->set_blend(__VA_ARGS__))
 
 static void
-game_set_blend_additive(game_t* game) {
-  game_gfx_set_blend_additive(&game->gfx);
+game_set_blend_preset(game_t* game, game_gfx_blend_preset_type_t type) {
+  game_gfx_set_blend_preset(&game->gfx, type);
 }
 
-static void
-game_set_blend_alpha(game_t* game) {
-  game_gfx_set_blend_alpha(&game->gfx);
+static game_gfx_blend_preset_type_t
+game_get_blend_preset(game_t* game) {
+  return game_gfx_get_blend_preset(&game->gfx);
 }
+
 
 static void
 game_draw_line(game_t* game, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {

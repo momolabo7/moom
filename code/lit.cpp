@@ -4,7 +4,8 @@
 // - Level Design:
 // -- MIX: make it a little harder
 // -- INTERVAL: too hard. I feel liek I get a little lost before I even get to the "2 space" part of the puzzle
-// - Removed hardcoding of level value in lit_game_init_level()
+// - Credits should fade in
+//
 //
 //
 #include "momo.h"
@@ -35,6 +36,7 @@
 // Credits
 #define LIT_CREDITS_START_COOLDOWN_DURATION (2.f)
 #define LIT_CREDITS_SCROLL_SPEED (200.f)
+#define LIT_CREDITS_SCROLL_SPEED_MULTIPLIER (3.f)
 
 // Save file
 #define LIT_SAVE_FILE_ENABLE true
@@ -1410,7 +1412,7 @@ lit_game_render_lights(lit_game_t* g) {
     game_advance_depth(g_game);
   }
 
-  game_set_blend_additive(g_game);
+  game_set_blend_preset(g_game, GAME_GFX_BLEND_PRESET_TYPE_ADD);
   //
   // Lights
   //
@@ -1430,7 +1432,7 @@ lit_game_render_lights(lit_game_t* g) {
     } 
     game_advance_depth(g_game);
   }
-  game_set_blend_alpha(g_game);
+  game_set_blend_preset(g_game, GAME_GFX_BLEND_PRESET_TYPE_ALPHA);
 }
 
 
@@ -2608,7 +2610,7 @@ lit_level_15() {
   {
     v2f_t dir = v2f_set(0.f, 25.f);
     for_arr(i, colors) {
-      f32_t turn = i * (1.f/array_count(colors)) + 0.25f; 
+      f32_t turn = (f32_t)(i) * (1.f/(f32_t)(array_count(colors))) + 0.25f; 
 
       lit_game_push_light(m, origin->x + dir.x, origin->y + dir.y, 
           colors[array_count(colors)-i-1], 
@@ -3362,14 +3364,16 @@ lit_game_update()
   {
 
     // Title 
-    if (game_is_button_poked(g_game, GAME_BUTTON_CODE_LMB)) {
+    if (game_is_button_poked(g_game, GAME_BUTTON_CODE_LMB)) 
+    {
       g->stage_fade_timer = 0.f;
       g->state = LIT_GAME_STATE_TYPE_NORMAL;
       g->title_timer = 0.f;
       g->title_wp_index = array_count(lit_title_wps);
     }
     
-    else {
+    else 
+    {
       if (g->title_wp_index < array_count(lit_title_wps)-1) 
       {
         g->title_timer += dt;
@@ -3489,7 +3493,7 @@ lit_game_update()
   //
 
   // This is the default and hgameier blend mode
-  game_set_blend_alpha(g_game);
+  game_set_blend_preset(g_game, GAME_GFX_BLEND_PRESET_TYPE_ALPHA);
 
 
   lit_profile_begin(rendering);
@@ -3503,7 +3507,7 @@ lit_game_update()
   }
   lit_game_render_lights(g);
 
-  game_set_blend_alpha(g_game);
+  game_set_blend_preset(g_game, GAME_GFX_BLEND_PRESET_TYPE_ALPHA);
 
   if (!lit_game_is_exiting(g)) {
     lit_game_render_sensors(g); 
@@ -3517,7 +3521,7 @@ lit_game_update()
     game_advance_depth(g_game);
   }
 
-  // Overlay for pause fade
+  // Overlay for exit fade
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->exit_fade);
     game_draw_asset_sprite(g_game, &g_lit->assets, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
@@ -3616,17 +3620,18 @@ static void
 lit_credits_update() {
   lit_credits_t* credits = &g_lit->credits;
 
-  credits->timer += game_get_dt(g_game);
-  if (game_is_button_poked(g_game, GAME_BUTTON_CODE_LMB)) {
-    g_lit->next_mode = LIT_MODE_GAME;
-    return;
+  f32_t scroll_multipler = 1.f;
+  if (game_is_button_down(g_game, GAME_BUTTON_CODE_LMB)) {
+    scroll_multipler = LIT_CREDITS_SCROLL_SPEED_MULTIPLIER;
   }
 
+  credits->timer += game_get_dt(g_game) * scroll_multipler;
+  
   f32_t y = LIT_HEIGHT/2 + 96.f;
 
   if (credits->timer > LIT_CREDITS_START_COOLDOWN_DURATION) 
   {
-    y -= -(credits->timer - LIT_CREDITS_START_COOLDOWN_DURATION) * LIT_CREDITS_SCROLL_SPEED;
+    y -= -(credits->timer - LIT_CREDITS_START_COOLDOWN_DURATION) * LIT_CREDITS_SCROLL_SPEED * scroll_multipler;
   }
 
 
@@ -3717,9 +3722,52 @@ lit_credits_update() {
 // Sandbox Functions
 //
 
+struct lit_cool_transition_t { 
+  f32_t r, g, b;
+  f32_t timer;
+};
+lit_cool_transition_t test = {};
+
+static void lit_cool_transition_init(lit_cool_transition_t* t) {
+  t->r = t->g = t->b = t->timer = 0.f;
+}
+
+static void lit_cool_transition_update(lit_cool_transition_t* t) {
+  t->r += game_get_dt(g_game) * 10.f;
+  if (t->r > 1.f) {
+    t->r = 1.f;
+    t->g += game_get_dt(g_game) * 10.f;
+    if (t->g > 1.f) {
+      t->g = 1.f;
+      t->b += game_get_dt(g_game) * 10.f;
+      if (t->b > 1.f)
+        t->b = 1.f;
+    }
+  }
+}
+
+static void lit_cool_transition_render(lit_cool_transition_t* t) {
+  auto old_preset = game_get_blend_preset(g_game);
+  game_set_blend_preset(g_game, GAME_GFX_BLEND_PRESET_TYPE_MULTIPLY);
+  game_draw_asset_sprite(
+      g_game, 
+      &g_lit->assets, 
+      ASSET_SPRITE_ID_BLANK_SPRITE,
+      v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
+      v2f_set(LIT_WIDTH, LIT_HEIGHT),
+      rgba_set(t->r, t->g, t->b, 0.5f));
+  game_set_blend_preset(g_game, old_preset);
+  game_advance_depth(g_game);
+}
+
+
 static void lit_sandbox_init() {
 }
+
 static void lit_sandbox_update() {
+  lit_cool_transition_update(&test);
+  
+  game_set_blend_preset(g_game, GAME_GFX_BLEND_PRESET_TYPE_ALPHA);
   rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
   game_draw_text_center_aligned(
       g_game, 
@@ -3730,6 +3778,11 @@ static void lit_sandbox_update() {
       LIT_WIDTH/2, 
       LIT_HEIGHT/2, 
       128.f);
+
+  game_advance_depth(g_game);
+
+  lit_cool_transition_render(&test);
+
 }
 
 
@@ -3756,6 +3809,7 @@ game_update_and_render_sig(game_update_and_render)
     g_lit = (lit_t*)(g_game->user_data);
     g_lit->level_to_start = 0;
     g_lit->next_mode = LIT_MODE_SPLASH;
+    //g_lit->next_mode = LIT_MODE_SANDBOX;
     g_lit->mode = LIT_MODE_NONE;
     
 
@@ -3887,7 +3941,7 @@ game_get_config_sig(game_get_config)
   ret.audio_bits_per_sample = 16;
   ret.audio_channels = 2;
   
-  ret.window_title = "PRISMIX v1.1";
+  ret.window_title = "PRISMIX v1.2";
   ret.window_initial_width = 800;
   ret.window_initial_height = 800;
 

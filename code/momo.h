@@ -1368,7 +1368,7 @@ os_get_clock_resolution() {
 //
 // MARK:(Foolish)
 //
-#if FOOLISH // FOOLISH
+#ifdef FOOLISH // FOOLISH
 #include <stdlib.h>
 #include <stdio.h>
 // These are foolish methods that should ideally not make 
@@ -1405,7 +1405,7 @@ foolish_write_str_to_file(const char* filename, str_t buffer) {
 }
 
 
-static str_t
+static str_t 
 foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {
   FILE *file = fopen(filename, "rb");
 

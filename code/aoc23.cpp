@@ -1,11 +1,11 @@
-#define FOOLISH 1
+#define FOOLISH 
 #include "momo.h"
-
 
 static void aoc23_d1p1(const char* filename) {
   str_t file_buffer = foolish_read_file_into_buffer(filename, false); 
   if (!file_buffer) return;
   defer { foolish_free_buffer(file_buffer); };
+
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -415,6 +415,154 @@ static void aoc23_d3p1(const char* filename) {
   printf("%u\n", sum);
 
 }
+
+static void aoc23_d3p2(const char* filename) {
+  str_t file_buffer = foolish_read_file_into_buffer(filename, false); 
+  if (!file_buffer) return;
+  defer { foolish_free_buffer(file_buffer); };
+
+
+  // Initialize the grid data
+  u32_t width = 0;
+  u32_t height = 0;
+  str_t grid;
+  {  
+    make(stream_t, s);
+    stream_init(s, file_buffer);
+    while(!stream_is_eos(s)) {
+      str_t line = stream_consume_line(s);  
+      ++height;
+      width = line.size;
+    }
+    grid = foolish_allocate_memory(width * height);
+    if (!grid) {
+      printf("Cannot allocate memory\n");
+      return;
+    }
+
+    stream_reset(s);
+    // fill the grid
+    u32_t grid_i = 0;
+    while(!stream_is_eos(s)) {
+      str_t line = stream_consume_line(s);  
+      for_cnt(i, line.size) {
+        if (is_digit(line.e[i]) )
+          grid.e[grid_i++] = ascii_to_digit(line.e[i]);
+        else if (line.e[i] == '.')
+          grid.e[grid_i++] = 11;
+        else if (line.e[i] == '*')
+          grid.e[grid_i++] = 12;
+        else 
+          grid.e[grid_i++] = 10;
+      }
+    }
+  }
+  defer{ foolish_free_memory(grid); };
+
+  // Useful methods for grid
+  auto get_cell = [](str_t grid, u32_t x, u32_t y, u32_t w) {
+    return grid.e[x + y * w];
+  };
+
+
+  // 
+  // Actual work here
+  //
+  u32_t sum = 0;
+
+  for_cnt(y, height) 
+  {
+    for_cnt(x, width) 
+    {
+      auto val = get_cell(grid, x, y, width);
+      if (val == 12) // '*' value found
+      {
+        //printf("* found at %d %d\n", x, y);
+
+        //
+        // Here, we search for numbers around the '*' 
+        //
+
+        u32_t nums[2];
+        u32_t num_count = 0;
+
+        for (s32_t offset_y = -1; offset_y <= 1; ++offset_y) 
+        {
+          for(s32_t offset_x = -1; offset_x <= 1; ++offset_x) 
+          {
+            if (offset_x == 0 && offset_y == 0) continue;
+
+            s32_t cur_x = x + offset_x;
+            s32_t cur_y = y + offset_y;
+
+            u32_t val = get_cell(grid,cur_x,cur_y,width);
+            if (val < 10) {
+              s32_t start_x = cur_x;
+              s32_t end_x = cur_x;
+
+              // find start point
+              while(true)
+              {
+                u32_t cur_val = get_cell(grid, start_x, cur_y, width);
+                if (cur_val >= 10) 
+                {
+                  ++start_x;
+                  break;
+                }
+                --start_x;
+                if(start_x < 0) 
+                {
+                  ++start_x;
+                  break;
+                }
+              }
+
+
+              while(true){
+                u32_t cur_val = get_cell(grid, end_x, cur_y, width);
+                if (cur_val >= 10) {
+                  --end_x;
+                  break;
+                }
+                ++end_x;
+                if (end_x >= width) {
+                  --end_x;
+                  break;
+                }
+              }
+
+              // Get the actual number
+              u32_t actual_num = 0;
+              for_range(i, start_x, end_x) {
+                u32_t cur_val = get_cell(grid, i, cur_y, width);
+                actual_num = actual_num * 10 + cur_val;
+              }
+
+              // Shift offset forward based on end_x
+              s32_t delta = end_x - cur_x;
+              offset_x += delta;
+
+              nums[num_count++] = actual_num;
+              printf("num: %u\n", actual_num);
+              if (num_count == 2) 
+                goto aoc23_d3p2_escape; 
+            }
+          }
+        }
+aoc23_d3p2_escape:
+        if (num_count == 2) {
+          sum += nums[0] * nums[1];
+          printf("value: %d\n", nums[0] * nums[1]);
+        }
+      }
+    }
+  }
+
+  printf("%u\n", sum);
+
+}
+
+
 int main(int argv, char** argc) {
 
   if (argv < 2) {
@@ -442,6 +590,6 @@ int main(int argv, char** argc) {
   aoc23_route(2,1);
   aoc23_route(2,2);
   aoc23_route(3,1);
-  //aoc23_route(3,2);
+  aoc23_route(3,2);
 
 }

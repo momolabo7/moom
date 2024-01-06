@@ -10,42 +10,6 @@
 // The returned str_t will not include the \n or \r or 0. 
 //
 //
-static str_t 
-stream_consume_line(stream_t* s) {
-  if (stream_is_eos(s)) return str_bad();
-
-  str_t ret = str_set(s->contents.e + s->pos, 0);
-  while(!stream_is_eos(s)) {
-    
-    u8_t current_value = dref(stream_consume_block(s, 1));
-    if (current_value == 0 ) {
-      break;
-    }
-
-    else if (current_value == '\r') {
-      // We found a termination point. Do clean up.
-      current_value = dref(stream_peek_block(s, 1));
-      if (current_value == '\n') {
-        // \r\n found
-        stream_consume_block(s, 1);
-      }
-      break;
-    }
-
-    else if (current_value == '\n') {
-      break;
-    }
-
-    else {
-      ++ret.size;
-    }
-
-  }
-
-  return ret;
-}
-
-
 static void aoc22_d1p2(const char* filename) {
 
   str_t file_buffer = foolish_read_file_into_buffer(filename, true); 
@@ -197,11 +161,7 @@ static void aoc22_d2p2(const char* filename) {
   make(stream_t, s);
   stream_init(s, file_buffer);
 
-
-
-
-
-  printf("%d\n", sum);
+//  printf("%d\n", sum);
 }
 
 
