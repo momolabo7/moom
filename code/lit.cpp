@@ -1,6 +1,5 @@
 // TODO: 
 // - Sound
-// - Recording system??
 // - Level Design:
 // -- MIX: make it a little harder
 // -- INTERVAL: too hard. I feel liek I get a little lost before I even get to the "2 space" part of the puzzle
@@ -16,7 +15,6 @@
 // Configs
 //
 
-// Main
 #define LIT_WIDTH  800.f
 #define LIT_HEIGHT 800.f
 #define LIT_EXIT_FLASH_DURATION 0.1f
@@ -818,7 +816,7 @@ lit_splash_update() {
       &g_lit->assets, 
       font,
       str_from_lit("momohoudai"), 
-      grey,
+      rgba_hex(0xF8C8DCFF),
       LIT_WIDTH/2, scroll_y, 
       72.f);
   game_advance_depth(g_game);
@@ -2061,17 +2059,23 @@ lit_level_3() {
   lit_game_init_level(m, str_from_lit("MIX"), 4);
 
   lit_game_begin_sensor_group(m, lit_level_exit_with(lit_level_menu));
-  lit_game_push_sensor(m, 400.f, 400.f, 0x888800FF); 
-  
-  lit_game_push_sensor(m, 200.f, 400.f, 0x008800FF); 
-  lit_game_push_sensor(m, 600.f, 400.f, 0x008800FF); 
+  lit_game_push_sensor(m, 300.f, 600.f, 0x888800FF); 
+  lit_game_push_sensor(m, 500.f, 600.f, 0x008888FF); 
+  lit_game_push_sensor(m, 400.f, 400.f, 0x888888FF); 
 
-  lit_game_push_sensor(m, 400.f, 200.f, 0x880000FF); 
-  lit_game_push_sensor(m, 400.f, 600.f, 0x880000FF); 
+  lit_game_push_sensor(m, 250.f, 400.f, 0x880088FF); 
+  lit_game_push_sensor(m, 550.f, 400.f, 0x880088FF); 
+
+  // These are hints actually lol
+  lit_game_push_sensor(m, 400.f, 700.f, 0x008800FF); 
+  lit_game_push_sensor(m, 700.f, 200.f, 0x880000FF); 
+  lit_game_push_sensor(m, 200.f, 200.f, 0x000088FF); 
+
   lit_game_end_sensor_group(m);
 
   lit_game_push_light(m, 200.f, LIT_HEIGHT * 0.25f, 0x008800FF, 30.f, 0.5f);
   lit_game_push_light(m, 600.f, LIT_HEIGHT * 0.75f, 0x880000FF, 30.f, 0.0f);
+  lit_game_push_light(m, 600.f, LIT_HEIGHT * 0.5f,  0x000088FF, 30.f, 0.0f);
 }
 
 static void
@@ -3631,7 +3635,7 @@ lit_credits_update() {
 
   if (credits->timer > LIT_CREDITS_START_COOLDOWN_DURATION) 
   {
-    y -= -(credits->timer - LIT_CREDITS_START_COOLDOWN_DURATION) * LIT_CREDITS_SCROLL_SPEED * scroll_multipler;
+    y -= -(credits->timer - LIT_CREDITS_START_COOLDOWN_DURATION) * LIT_CREDITS_SCROLL_SPEED;
   }
 
 
@@ -3721,7 +3725,7 @@ lit_credits_update() {
 // 
 // Sandbox Functions
 //
-
+#if 0
 struct lit_cool_transition_t { 
   f32_t r, g, b;
   f32_t timer;
@@ -3732,19 +3736,29 @@ static void lit_cool_transition_init(lit_cool_transition_t* t) {
   t->r = t->g = t->b = t->timer = 0.f;
 }
 
-static void lit_cool_transition_update(lit_cool_transition_t* t) {
-  t->r += game_get_dt(g_game) * 10.f;
-  if (t->r > 1.f) {
-    t->r = 1.f;
-    t->g += game_get_dt(g_game) * 10.f;
-    if (t->g > 1.f) {
-      t->g = 1.f;
-      t->b += game_get_dt(g_game) * 10.f;
-      if (t->b > 1.f)
-        t->b = 1.f;
-    }
+static void lit_cool_transition_update_positive(lit_cool_transition_t* t) {
+  const f32_t dt = game_get_dt(g_game);
+  const f32_t duration = 10.f;
+  const f32_t duration_per_color = duration/3.f;
+
+  t->timer += dt;
+  if (t->timer < duration_per_color) {
+    t->r =  t->timer/duration_per_color;
   }
+  else if(t->timer < duration_per_color*2.f) {
+    t->r = 1.f;
+    t->g =  (t->timer - duration_per_color)/duration_per_color; 
+  }
+  else if (t->timer < duration_per_color*3.f) {
+    t->r = t->g = 1.f;
+    t->b =  (t->timer - duration_per_color*2.f)/duration_per_color;
+  }
+  else  {
+    t->r = t->g = t->b = 1.f;
+  }
+
 }
+
 
 static void lit_cool_transition_render(lit_cool_transition_t* t) {
   auto old_preset = game_get_blend_preset(g_game);
@@ -3760,12 +3774,12 @@ static void lit_cool_transition_render(lit_cool_transition_t* t) {
   game_advance_depth(g_game);
 }
 
+#endif
 
 static void lit_sandbox_init() {
 }
 
 static void lit_sandbox_update() {
-  lit_cool_transition_update(&test);
   
   game_set_blend_preset(g_game, GAME_GFX_BLEND_PRESET_TYPE_ALPHA);
   rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
@@ -3780,9 +3794,6 @@ static void lit_sandbox_update() {
       128.f);
 
   game_advance_depth(g_game);
-
-  lit_cool_transition_render(&test);
-
 }
 
 
