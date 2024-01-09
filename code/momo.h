@@ -8341,6 +8341,10 @@ rp_pack(rp_rect_t* rects,
   return true;
 }
 
+#if OS_WINDOWS
+# define near
+# define far
+#endif
 
 #endif
 

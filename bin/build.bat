@@ -140,6 +140,8 @@ if %build%==1 (
 
 
 :end_build_type
+
+echo Output   : %output_name%
 echo ******************* 
 
 
