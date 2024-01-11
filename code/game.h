@@ -3102,6 +3102,11 @@ game_profiler_update_entries(game_profiler_t* p) {
 
 //
 // JOURNAL
+// = 2024-01-11 =
+//   Changed up how icons work in the pack scripts (eg. pack_lit). I'm still not 100%
+//   if I like icons to be a seperate resource...feels really awkward to ship. Perhaps
+//   a better way is to have some kind of a meta pass to convert an image file into a
+//   ICO file?
 //
 // = 2023-11-22 =
 //   The API for texture transfering to the gfx module seems to be too complicated.
