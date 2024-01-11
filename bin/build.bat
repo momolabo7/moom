@@ -148,13 +148,15 @@ echo *******************
 
 pushd %build_dir%
 
-IF %ship%==1 (
-  echo #include "%filename%.cpp" > %ship_file% 
-  type %code_dir%\w32_game.cpp >>  %ship_file%  
-  clang++ !compiler_flags! %ship_file% !linker_flags! -o %output_name%
-  rem del %ship_file% 
-) else (
-  clang++ !compiler_flags! %code_dir%\%filename%.cpp !linker_flags! -o %output_name%
+IF %build%==1 (
+  IF %ship%==1 (
+    echo #include "%filename%.cpp" > %ship_file% 
+    type %code_dir%\w32_game.cpp >>  %ship_file%  
+    clang++ !compiler_flags! %ship_file% !linker_flags! -o %output_name%
+    del %ship_file% 
+  ) else (
+    clang++ !compiler_flags! %code_dir%\%filename%.cpp !linker_flags! -o %output_name%
+  )
 )
 
 if %run%==1 (
@@ -164,5 +166,6 @@ if %run%==1 (
   echo ******************* 
   CALL %filename%.exe %args%
 )
+
 popd
 

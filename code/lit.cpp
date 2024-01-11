@@ -763,7 +763,7 @@ lit_splash_update() {
       g_game, 
       &g_lit->assets, 
       font, 
-      str_from_lit("--------"), 
+      str_from_lit("-----"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -772,7 +772,7 @@ lit_splash_update() {
       g_game, 
       &g_lit->assets, 
       font,
-      str_from_lit("PRIMIX"), 
+      str_from_lit("LIT"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -782,7 +782,7 @@ lit_splash_update() {
       g_game, 
       &g_lit->assets, 
       font,
-      str_from_lit("--------"), 
+      str_from_lit("-----"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -3677,7 +3677,7 @@ lit_credits_update() {
       g_game, 
       &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      str_from_lit("--------"), 
+      str_from_lit("-----"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -3687,7 +3687,7 @@ lit_credits_update() {
       g_game, 
       &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      str_from_lit("PRIMIX"), 
+      str_from_lit("LIT"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -3697,7 +3697,7 @@ lit_credits_update() {
       g_game, 
       &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      str_from_lit("--------"), 
+      str_from_lit("----"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -3952,7 +3952,7 @@ game_get_config_sig(game_get_config)
   ret.audio_bits_per_sample = 16;
   ret.audio_channels = 2;
   
-  ret.window_title = "PRISMIX v1.2";
+  ret.window_title = "LIT v0.4";
   ret.window_initial_width = 800;
   ret.window_initial_height = 800;
 

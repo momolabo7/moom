@@ -1785,14 +1785,12 @@ WinMain(HINSTANCE instance,
     const char* icon_path = "window.ico";
     const int icon_w = 256;
     const int icon_h = 256;
-    
     WNDCLASSA w32_class = {};
     w32_class.style = CS_HREDRAW | CS_VREDRAW;
     w32_class.lpfnWndProc = w32_window_callback;
     w32_class.hInstance = instance;
     w32_class.hCursor = LoadCursor(0, IDC_ARROW);
     w32_class.lpszClassName = "MainWindowClass";
-    
     w32_class.hIcon = (HICON)LoadImageA(NULL, 
                                         icon_path,
                                         IMAGE_ICON, 
