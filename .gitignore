@@ -6,3 +6,4 @@ build/
 *.pdb
 inno/output/
 emsdk/
+pack/
