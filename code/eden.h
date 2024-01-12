@@ -1,9 +1,9 @@
 // 
 // DESCRIPTION
-//   This is the game engine!
+//   This is the eden engine!
 //
 // FLAGS
-//   GAME_USE_OPENGL - Flag to enable opengl code used to run the game
+//   EDEN_USE_OPENGL - Flag to enable opengl code used to run the eden
 //
 // 
 // BOOKMARKS AND MODULES
@@ -20,22 +20,22 @@
 //   
 
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef EDEN_H
+#define EDEN_H
 
 #include "momo.h"
 
 // Switches
-#define GAME_USE_OPENGL 1
+#define EDEN_USE_OPENGL 1
 
 //
 // MARK:(Graphics)
 //
 // All the code here is a representation of how the 
-// game views 'rendering'. The moe simply adds commands
+// eden views 'rendering'. The moe simply adds commands
 // to a command queue, which will be dispatched to the 
 // appropriate graphics API, which details will be implemented
-// on top of the game_gfx_t class (through inheritance or composition). 
+// on top of the eden_gfx_t class (through inheritance or composition). 
 //
 //
 // Most importantly, other than the commands, the moe
@@ -58,14 +58,14 @@
 // 
 
 // Texture Queue API
-enum game_gfx_texture_payload_state_t {
-  GAME_GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
-  GAME_GFX_TEXTURE_PAYLOAD_STATE_LOADING,
-  GAME_GFX_TEXTURE_PAYLOAD_STATE_READY,
+enum eden_gfx_texture_payload_state_t {
+  EDEN_GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
+  EDEN_GFX_TEXTURE_PAYLOAD_STATE_LOADING,
+  EDEN_GFX_TEXTURE_PAYLOAD_STATE_READY,
 };
 
-struct game_gfx_texture_payload_t {
-  volatile game_gfx_texture_payload_state_t state;
+struct eden_gfx_texture_payload_t {
+  volatile eden_gfx_texture_payload_state_t state;
   usz_t transfer_memory_start;
   usz_t transfer_memory_end;
 
@@ -78,7 +78,7 @@ struct game_gfx_texture_payload_t {
 
 };
 
-struct game_gfx_texture_queue_t {
+struct eden_gfx_texture_queue_t {
   u8_t* transfer_memory;
   usz_t transfer_memory_size;
   usz_t transfer_memory_start;
@@ -88,19 +88,19 @@ struct game_gfx_texture_queue_t {
   usz_t highest_transfer_memory_usage;
   usz_t highest_payload_usage;
   
-  game_gfx_texture_payload_t* payloads;
+  eden_gfx_texture_payload_t* payloads;
   usz_t first_payload_index;
   usz_t payload_count;
   usz_t payload_cap;
 };
 
 // Command API
-struct game_gfx_command_t {
+struct eden_gfx_command_t {
   u32_t id; // type id from user
   void* data;
 };
 
-struct game_gfx_command_queue_t {
+struct eden_gfx_command_queue_t {
 	u8_t* memory;
   usz_t memory_size;
 	usz_t data_pos;
@@ -112,52 +112,52 @@ struct game_gfx_command_queue_t {
   usz_t peak_memory_usage;
 };
 
-enum game_gfx_blend_preset_type_t {
-  GAME_GFX_BLEND_PRESET_TYPE_NONE,
-  GAME_GFX_BLEND_PRESET_TYPE_ADD,
-  GAME_GFX_BLEND_PRESET_TYPE_ALPHA,
-  GAME_GFX_BLEND_PRESET_TYPE_MULTIPLY,
+enum eden_gfx_blend_preset_type_t {
+  EDEN_GFX_BLEND_PRESET_TYPE_NONE,
+  EDEN_GFX_BLEND_PRESET_TYPE_ADD,
+  EDEN_GFX_BLEND_PRESET_TYPE_ALPHA,
+  EDEN_GFX_BLEND_PRESET_TYPE_MULTIPLY,
 };
 
-enum game_gfx_blend_type_t {
-  GAME_GFX_BLEND_TYPE_ZERO,
-  GAME_GFX_BLEND_TYPE_ONE,
-  GAME_GFX_BLEND_TYPE_SRC_COLOR,
-  GAME_GFX_BLEND_TYPE_INV_SRC_COLOR,
-  GAME_GFX_BLEND_TYPE_SRC_ALPHA,
-  GAME_GFX_BLEND_TYPE_INV_SRC_ALPHA,
-  GAME_GFX_BLEND_TYPE_DST_ALPHA,
-  GAME_GFX_BLEND_TYPE_INV_DST_ALPHA,
-  GAME_GFX_BLEND_TYPE_DST_COLOR,
-  GAME_GFX_BLEND_TYPE_INV_DST_COLOR,
+enum eden_gfx_blend_type_t {
+  EDEN_GFX_BLEND_TYPE_ZERO,
+  EDEN_GFX_BLEND_TYPE_ONE,
+  EDEN_GFX_BLEND_TYPE_SRC_COLOR,
+  EDEN_GFX_BLEND_TYPE_INV_SRC_COLOR,
+  EDEN_GFX_BLEND_TYPE_SRC_ALPHA,
+  EDEN_GFX_BLEND_TYPE_INV_SRC_ALPHA,
+  EDEN_GFX_BLEND_TYPE_DST_ALPHA,
+  EDEN_GFX_BLEND_TYPE_INV_DST_ALPHA,
+  EDEN_GFX_BLEND_TYPE_DST_COLOR,
+  EDEN_GFX_BLEND_TYPE_INV_DST_COLOR,
 };
 
-enum game_gfx_command_type_t {
-  GAME_GFX_COMMAND_TYPE_CLEAR,
-  GAME_GFX_COMMAND_TYPE_TRIANGLE,
-  GAME_GFX_COMMAND_TYPE_RECT,
-  GAME_GFX_COMMAND_TYPE_LINE,
-  GAME_GFX_COMMAND_TYPE_SPRITE,
-  GAME_GFX_COMMAND_TYPE_DELETE_TEXTURE,
-  GAME_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,
-  GAME_GFX_COMMAND_TYPE_BLEND,
-  GAME_GFX_COMMAND_TYPE_VIEW,
-  GAME_GFX_COMMAND_TYPE_ADVANCE_DEPTH,
+enum eden_gfx_command_type_t {
+  EDEN_GFX_COMMAND_TYPE_CLEAR,
+  EDEN_GFX_COMMAND_TYPE_TRIANGLE,
+  EDEN_GFX_COMMAND_TYPE_RECT,
+  EDEN_GFX_COMMAND_TYPE_LINE,
+  EDEN_GFX_COMMAND_TYPE_SPRITE,
+  EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE,
+  EDEN_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,
+  EDEN_GFX_COMMAND_TYPE_BLEND,
+  EDEN_GFX_COMMAND_TYPE_VIEW,
+  EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH,
 };
 
 
-struct game_gfx_command_clear_t {
+struct eden_gfx_command_clear_t {
   rgba_t colors;
 };
 
 
-struct game_gfx_command_view_t {
+struct eden_gfx_command_view_t {
   f32_t pos_x, pos_y;
   f32_t min_x, max_x;
   f32_t min_y, max_y;
 };
 
-struct game_gfx_command_sprite_t {
+struct eden_gfx_command_sprite_t {
   v2f_t pos;
   v2f_t size;
 
@@ -170,36 +170,36 @@ struct game_gfx_command_sprite_t {
   v2f_t anchor;
 };
 
-struct game_gfx_command_delete_texture_t {
+struct eden_gfx_command_delete_texture_t {
   u32_t texture_index;
 };
 
-struct game_gfx_command_delete_all_textures_t {};
-struct game_gfx_command_advance_depth_t {};
+struct eden_gfx_command_delete_all_textures_t {};
+struct eden_gfx_command_advance_depth_t {};
 
-struct game_gfx_command_rect_t {
+struct eden_gfx_command_rect_t {
   rgba_t colors;
   v2f_t pos;
   f32_t rot;
   v2f_t size;
 };
 
-struct game_gfx_command_triangle_t {
+struct eden_gfx_command_triangle_t {
   rgba_t colors;
   v2f_t p0, p1, p2;
 };
 
-struct game_gfx_command_blend_t {
-  game_gfx_blend_type_t src;
-  game_gfx_blend_type_t dst;
+struct eden_gfx_command_blend_t {
+  eden_gfx_blend_type_t src;
+  eden_gfx_blend_type_t dst;
 };
 
 
-struct game_gfx_t {
-  game_gfx_command_queue_t command_queue;
-  game_gfx_texture_queue_t texture_queue;
+struct eden_gfx_t {
+  eden_gfx_command_queue_t command_queue;
+  eden_gfx_texture_queue_t texture_queue;
   usz_t max_textures;
-  game_gfx_blend_preset_type_t current_blend_preset;
+  eden_gfx_blend_preset_type_t current_blend_preset;
 
   void* platform_data;
 };
@@ -207,7 +207,7 @@ struct game_gfx_t {
 //
 // MARK:(Opengl)
 //
-#if GAME_USE_OPENGL
+#if EDEN_USE_OPENGL
 // opengl typedefs
 #define GL_TRUE                 1
 #define GL_FALSE                0
@@ -264,7 +264,7 @@ struct game_gfx_t {
 #define GL_DEBUG_TYPE_MARKER 0x8268
 
 
-//- game_gfx_opengl_t Types
+//- eden_gfx_opengl_t Types
 typedef s32_t  GLenum;
 typedef s32_t  GLint; 
 typedef s32_t  GLsizei;
@@ -285,120 +285,120 @@ typedef void (GLDEBUGPROC)(GLenum source,
     const void *userParam);
 
 //- OpenGL Functions
-typedef void    game_gfx_opengl_glEnable(GLenum cap);
-typedef void    game_gfx_opengl_glDisable(GLenum cap);
-typedef void    game_gfx_opengl_glViewport(GLint x, GLint y, GLsizei width, GLsizei height);
-typedef void    game_gfx_opengl_glScissor(GLint x, GLint y, GLsizei width, GLsizei height); 
-typedef GLuint  game_gfx_opengl_glCreateShader(GLenum type);
-typedef void    game_gfx_opengl_glCompileShader(GLuint program);
-typedef void    game_gfx_opengl_glShaderSource(GLuint shader, GLsizei count, GLchar** string, GLint* length);
-typedef void    game_gfx_opengl_glAttachShader(GLuint program, GLuint shader);
-typedef void    game_gfx_opengl_glDeleteShader(GLuint program);
-typedef void    game_gfx_opengl_glClear(GLbitfield mask);
-typedef void    game_gfx_opengl_glClearColor(GLclampf r, GLclampf g, GLclampf b, GLclampf a);
-typedef void    game_gfx_opengl_glCreateBuffers(GLsizei n, GLuint* buffers);
-typedef void    game_gfx_opengl_glNamedBufferStorage(GLuint buffer, GLsizeiptr size, const void* data, GLbitfield flags);
-typedef void    game_gfx_opengl_glCreateVertexArrays(GLsizei n, GLuint* arrays);
-typedef void    game_gfx_opengl_glVertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride);
-typedef void    game_gfx_opengl_glEnableVertexArrayAttrib(GLuint vaobj, GLuint index);
-typedef void    game_gfx_opengl_glVertexArrayAttribFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLboolean normalized, GLuint relativeoffset);
-typedef void    game_gfx_opengl_glVertexArrayAttribBinding(GLuint vaobj,GLuint attribindex,GLuint bindingindex);
-typedef void    game_gfx_opengl_glVertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint divisor);
-typedef void    game_gfx_opengl_glBlendFunc(GLenum sfactor, GLenum dfactor);
-typedef void    game_gfx_opengl_glBlendFuncSeparate(GLenum srcRGB, GLenum destRGB, GLenum srcAlpha, GLenum destAlpha);
-typedef void    game_gfx_opengl_glVertexArrayElementBuffer(GLuint vaobj, GLuint buffer);
-typedef GLuint  game_gfx_opengl_glCreateProgram();
-typedef void    game_gfx_opengl_glLinkProgram(GLuint program);
-typedef void    game_gfx_opengl_glGetProgramiv(GLuint program, GLenum pname, GLint* params);
-typedef void    game_gfx_opengl_glGetProgramInfoLog(GLuint program, GLsizei maxLength, GLsizei* length,GLchar* infoLog);
-typedef void    game_gfx_opengl_glCreateTextures(GLenum target, GLsizei n, GLuint* textures);
-typedef void    game_gfx_opengl_glTextureStorage2D(GLuint texture, GLsizei levels, GLenum internalformat,GLsizei width, GLsizei height);
-typedef void    game_gfx_opengl_glTextureSubImage2D(GLuint texture,GLint level,GLint xoffset,GLint yoffset,GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels);
-typedef void    game_gfx_opengl_glBindTexture(GLenum target, GLuint texture);
-typedef void    game_gfx_opengl_glTexParameteri(GLenum target, GLenum pname, GLint param);
-typedef void    game_gfx_opengl_glBindVertexArray(GLuint array);
-typedef void    game_gfx_opengl_glDrawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type, const void* indices, GLsizei instancecount, GLuint baseinstance);
-typedef void    game_gfx_opengl_glUseProgram(GLuint program);
-typedef void    game_gfx_opengl_glNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, const void* data);
-typedef GLint   game_gfx_opengl_glGetUniformLocation(GLuint program, const GLchar* name);
-typedef void    game_gfx_opengl_glProgramUniformMatrix4fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
-typedef void    game_gfx_opengl_glProgramUniform4fv(GLuint program, GLint location, GLsizei count, const GLfloat* value);
-typedef void    game_gfx_opengl_glDeleteTextures(GLsizei n, const GLuint* textures);
-typedef void    game_gfx_opengl_glDrawArrays(GLenum mode, GLint first, GLsizei count);
-typedef void    game_gfx_opengl_glDebugMessageCallbackARB(GLDEBUGPROC *callback, const void* userParams);
+typedef void    eden_gfx_opengl_glEnable(GLenum cap);
+typedef void    eden_gfx_opengl_glDisable(GLenum cap);
+typedef void    eden_gfx_opengl_glViewport(GLint x, GLint y, GLsizei width, GLsizei height);
+typedef void    eden_gfx_opengl_glScissor(GLint x, GLint y, GLsizei width, GLsizei height); 
+typedef GLuint  eden_gfx_opengl_glCreateShader(GLenum type);
+typedef void    eden_gfx_opengl_glCompileShader(GLuint program);
+typedef void    eden_gfx_opengl_glShaderSource(GLuint shader, GLsizei count, GLchar** string, GLint* length);
+typedef void    eden_gfx_opengl_glAttachShader(GLuint program, GLuint shader);
+typedef void    eden_gfx_opengl_glDeleteShader(GLuint program);
+typedef void    eden_gfx_opengl_glClear(GLbitfield mask);
+typedef void    eden_gfx_opengl_glClearColor(GLclampf r, GLclampf g, GLclampf b, GLclampf a);
+typedef void    eden_gfx_opengl_glCreateBuffers(GLsizei n, GLuint* buffers);
+typedef void    eden_gfx_opengl_glNamedBufferStorage(GLuint buffer, GLsizeiptr size, const void* data, GLbitfield flags);
+typedef void    eden_gfx_opengl_glCreateVertexArrays(GLsizei n, GLuint* arrays);
+typedef void    eden_gfx_opengl_glVertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride);
+typedef void    eden_gfx_opengl_glEnableVertexArrayAttrib(GLuint vaobj, GLuint index);
+typedef void    eden_gfx_opengl_glVertexArrayAttribFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLboolean normalized, GLuint relativeoffset);
+typedef void    eden_gfx_opengl_glVertexArrayAttribBinding(GLuint vaobj,GLuint attribindex,GLuint bindingindex);
+typedef void    eden_gfx_opengl_glVertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint divisor);
+typedef void    eden_gfx_opengl_glBlendFunc(GLenum sfactor, GLenum dfactor);
+typedef void    eden_gfx_opengl_glBlendFuncSeparate(GLenum srcRGB, GLenum destRGB, GLenum srcAlpha, GLenum destAlpha);
+typedef void    eden_gfx_opengl_glVertexArrayElementBuffer(GLuint vaobj, GLuint buffer);
+typedef GLuint  eden_gfx_opengl_glCreateProgram();
+typedef void    eden_gfx_opengl_glLinkProgram(GLuint program);
+typedef void    eden_gfx_opengl_glGetProgramiv(GLuint program, GLenum pname, GLint* params);
+typedef void    eden_gfx_opengl_glGetProgramInfoLog(GLuint program, GLsizei maxLength, GLsizei* length,GLchar* infoLog);
+typedef void    eden_gfx_opengl_glCreateTextures(GLenum target, GLsizei n, GLuint* textures);
+typedef void    eden_gfx_opengl_glTextureStorage2D(GLuint texture, GLsizei levels, GLenum internalformat,GLsizei width, GLsizei height);
+typedef void    eden_gfx_opengl_glTextureSubImage2D(GLuint texture,GLint level,GLint xoffset,GLint yoffset,GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels);
+typedef void    eden_gfx_opengl_glBindTexture(GLenum target, GLuint texture);
+typedef void    eden_gfx_opengl_glTexParameteri(GLenum target, GLenum pname, GLint param);
+typedef void    eden_gfx_opengl_glBindVertexArray(GLuint array);
+typedef void    eden_gfx_opengl_glDrawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type, const void* indices, GLsizei instancecount, GLuint baseinstance);
+typedef void    eden_gfx_opengl_glUseProgram(GLuint program);
+typedef void    eden_gfx_opengl_glNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, const void* data);
+typedef GLint   eden_gfx_opengl_glGetUniformLocation(GLuint program, const GLchar* name);
+typedef void    eden_gfx_opengl_glProgramUniformMatrix4fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
+typedef void    eden_gfx_opengl_glProgramUniform4fv(GLuint program, GLint location, GLsizei count, const GLfloat* value);
+typedef void    eden_gfx_opengl_glDeleteTextures(GLsizei n, const GLuint* textures);
+typedef void    eden_gfx_opengl_glDrawArrays(GLenum mode, GLint first, GLsizei count);
+typedef void    eden_gfx_opengl_glDebugMessageCallbackARB(GLDEBUGPROC *callback, const void* userParams);
 
 enum{ 
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL,       // 0 
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL,       // 0 
                                                 //
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,     // 1 
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,     // 2
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,     // 3
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4,     // 4
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,     // 1 
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,     // 2
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,     // 3
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4,     // 4
                                                 //
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1,   // 5
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2,   // 6
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3,   // 7
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4,   // 8
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1,   // 5
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2,   // 6
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3,   // 7
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4,   // 8
                                                 //
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 9
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 10
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 11
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 12
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 9
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 10
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 11
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 12
 };
 
 enum {
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL,
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS,
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE,
-  GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL,
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS,
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE,
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM
 };
 
 enum {
-  GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL,
-  GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES,
-  GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS,
-  GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE,
-  GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM,
-  GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT // 5
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL,
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES,
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS,
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE,
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM,
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT // 5
 };
 
 enum{ 
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL,    // 0 
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,   // 1
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,   // 2
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,   // 3
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 4
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 5
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 6
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 7
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL,    // 0 
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,   // 1
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,   // 2
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,   // 3
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 4
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 5
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 6
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 7
 };
 
 enum {
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL,
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS,
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL,
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS,
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM
 };
 
 enum {
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL,
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES,
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS,
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM,
-  GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT // 5
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL,
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES,
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS,
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM,
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT // 5
 };
 
-struct game_gfx_opengl_texture_t {
+struct eden_gfx_opengl_texture_t {
   GLuint handle;
   u32_t width; 
   u32_t height;
 } ;
 
-struct game_gfx_opengl_uv_t {
+struct eden_gfx_opengl_uv_t {
   v2f_t min, max;
 };
 
-struct game_gfx_opengl_sprite_batch_t{
-  GLuint buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; // game_gfx_opengl_t__VBO_Count
+struct eden_gfx_opengl_sprite_batch_t{
+  GLuint buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; // eden_gfx_opengl_t__VBO_Count
   GLuint shader;
   GLuint model; 
   GLuint current_texture;
@@ -408,8 +408,8 @@ struct game_gfx_opengl_sprite_batch_t{
 };
 
 
-struct game_gfx_opengl_triangle_batch_t{
-  GLuint buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT];
+struct eden_gfx_opengl_triangle_batch_t{
+  GLuint buffers[EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT];
   GLuint shader;
   GLuint model;
   GLsizei instances_to_draw;
@@ -417,7 +417,7 @@ struct game_gfx_opengl_triangle_batch_t{
   GLuint current_instance_index;
 };
 
-struct game_gfx_opengl_t {
+struct eden_gfx_opengl_t {
   v2u_t render_wh;
 
   u32_t region_x0; 
@@ -425,86 +425,86 @@ struct game_gfx_opengl_t {
   u32_t region_x1;
   u32_t region_y1;
 
-  game_gfx_opengl_sprite_batch_t sprite_batch;
-  game_gfx_opengl_triangle_batch_t triangle_batch;
+  eden_gfx_opengl_sprite_batch_t sprite_batch;
+  eden_gfx_opengl_triangle_batch_t triangle_batch;
 
-  game_gfx_opengl_texture_t* textures;
+  eden_gfx_opengl_texture_t* textures;
   usz_t texture_cap;
 
   usz_t max_sprites;
   usz_t max_triangles;
 
-  game_gfx_opengl_texture_t dummy_texture;
-  game_gfx_opengl_texture_t blank_texture;
+  eden_gfx_opengl_texture_t dummy_texture;
+  eden_gfx_opengl_texture_t blank_texture;
 
   f32_t current_layer;
 
-  game_gfx_opengl_glEnable* glEnable;
-  game_gfx_opengl_glDisable* glDisable;
-  game_gfx_opengl_glViewport* glViewport;
-  game_gfx_opengl_glScissor* glScissor ;
-  game_gfx_opengl_glCreateShader* glCreateShader;
-  game_gfx_opengl_glCompileShader* glCompileShader;
-  game_gfx_opengl_glShaderSource* glShaderSource;
-  game_gfx_opengl_glAttachShader* glAttachShader;
-  game_gfx_opengl_glDeleteShader* glDeleteShader;
-  game_gfx_opengl_glClear* glClear;
-  game_gfx_opengl_glClearColor* glClearColor;
-  game_gfx_opengl_glCreateBuffers* glCreateBuffers;
-  game_gfx_opengl_glNamedBufferStorage* glNamedBufferStorage;
-  game_gfx_opengl_glCreateVertexArrays* glCreateVertexArrays;
-  game_gfx_opengl_glVertexArrayVertexBuffer* glVertexArrayVertexBuffer;
-  game_gfx_opengl_glEnableVertexArrayAttrib* glEnableVertexArrayAttrib;
-  game_gfx_opengl_glVertexArrayAttribFormat* glVertexArrayAttribFormat;
-  game_gfx_opengl_glVertexArrayAttribBinding* glVertexArrayAttribBinding;
-  game_gfx_opengl_glVertexArrayBindingDivisor* glVertexArrayBindingDivisor;
-  game_gfx_opengl_glBlendFunc* glBlendFunc;
-  game_gfx_opengl_glBlendFuncSeparate* glBlendFuncSeparate;
-  game_gfx_opengl_glVertexArrayElementBuffer* glVertexArrayElementBuffer;
-  game_gfx_opengl_glLinkProgram* glLinkProgram;
-  game_gfx_opengl_glCreateProgram* glCreateProgram;
-  game_gfx_opengl_glGetProgramiv* glGetProgramiv;
-  game_gfx_opengl_glGetProgramInfoLog* glGetProgramInfoLog;
-  game_gfx_opengl_glCreateTextures* glCreateTextures;
-  game_gfx_opengl_glTextureStorage2D* glTextureStorage2D ;
-  game_gfx_opengl_glTextureSubImage2D*  glTextureSubImage2D;
-  game_gfx_opengl_glBindTexture* glBindTexture ;
-  game_gfx_opengl_glTexParameteri*  glTexParameteri ;
-  game_gfx_opengl_glBindVertexArray* glBindVertexArray;
-  game_gfx_opengl_glDrawElementsInstancedBaseInstance* glDrawElementsInstancedBaseInstance;
-  game_gfx_opengl_glGetUniformLocation* glGetUniformLocation;
-  game_gfx_opengl_glProgramUniform4fv* glProgramUniform4fv;
-  game_gfx_opengl_glProgramUniformMatrix4fv* glProgramUniformMatrix4fv;
-  game_gfx_opengl_glDeleteTextures* glDeleteTextures;
-  game_gfx_opengl_glDebugMessageCallbackARB* glDebugMessageCallbackARB;
-  game_gfx_opengl_glNamedBufferSubData* glNamedBufferSubData;
-  game_gfx_opengl_glUseProgram* glUseProgram;  
-  game_gfx_opengl_glDrawArrays* glDrawArrays;
+  eden_gfx_opengl_glEnable* glEnable;
+  eden_gfx_opengl_glDisable* glDisable;
+  eden_gfx_opengl_glViewport* glViewport;
+  eden_gfx_opengl_glScissor* glScissor ;
+  eden_gfx_opengl_glCreateShader* glCreateShader;
+  eden_gfx_opengl_glCompileShader* glCompileShader;
+  eden_gfx_opengl_glShaderSource* glShaderSource;
+  eden_gfx_opengl_glAttachShader* glAttachShader;
+  eden_gfx_opengl_glDeleteShader* glDeleteShader;
+  eden_gfx_opengl_glClear* glClear;
+  eden_gfx_opengl_glClearColor* glClearColor;
+  eden_gfx_opengl_glCreateBuffers* glCreateBuffers;
+  eden_gfx_opengl_glNamedBufferStorage* glNamedBufferStorage;
+  eden_gfx_opengl_glCreateVertexArrays* glCreateVertexArrays;
+  eden_gfx_opengl_glVertexArrayVertexBuffer* glVertexArrayVertexBuffer;
+  eden_gfx_opengl_glEnableVertexArrayAttrib* glEnableVertexArrayAttrib;
+  eden_gfx_opengl_glVertexArrayAttribFormat* glVertexArrayAttribFormat;
+  eden_gfx_opengl_glVertexArrayAttribBinding* glVertexArrayAttribBinding;
+  eden_gfx_opengl_glVertexArrayBindingDivisor* glVertexArrayBindingDivisor;
+  eden_gfx_opengl_glBlendFunc* glBlendFunc;
+  eden_gfx_opengl_glBlendFuncSeparate* glBlendFuncSeparate;
+  eden_gfx_opengl_glVertexArrayElementBuffer* glVertexArrayElementBuffer;
+  eden_gfx_opengl_glLinkProgram* glLinkProgram;
+  eden_gfx_opengl_glCreateProgram* glCreateProgram;
+  eden_gfx_opengl_glGetProgramiv* glGetProgramiv;
+  eden_gfx_opengl_glGetProgramInfoLog* glGetProgramInfoLog;
+  eden_gfx_opengl_glCreateTextures* glCreateTextures;
+  eden_gfx_opengl_glTextureStorage2D* glTextureStorage2D ;
+  eden_gfx_opengl_glTextureSubImage2D*  glTextureSubImage2D;
+  eden_gfx_opengl_glBindTexture* glBindTexture ;
+  eden_gfx_opengl_glTexParameteri*  glTexParameteri ;
+  eden_gfx_opengl_glBindVertexArray* glBindVertexArray;
+  eden_gfx_opengl_glDrawElementsInstancedBaseInstance* glDrawElementsInstancedBaseInstance;
+  eden_gfx_opengl_glGetUniformLocation* glGetUniformLocation;
+  eden_gfx_opengl_glProgramUniform4fv* glProgramUniform4fv;
+  eden_gfx_opengl_glProgramUniformMatrix4fv* glProgramUniformMatrix4fv;
+  eden_gfx_opengl_glDeleteTextures* glDeleteTextures;
+  eden_gfx_opengl_glDebugMessageCallbackARB* glDebugMessageCallbackARB;
+  eden_gfx_opengl_glNamedBufferSubData* glNamedBufferSubData;
+  eden_gfx_opengl_glUseProgram* glUseProgram;  
+  eden_gfx_opengl_glDrawArrays* glDrawArrays;
 
   void* platform_data;
 };
-#endif // GAME_USE_OPENGL
+#endif // EDEN_USE_OPENGL
 
-#include "game_console.h"
-#include "game_asset_file.h"
+#include "eden_console.h"
+#include "eden_asset_file.h"
 
 //
 // MARK:(Profiler)
 // 
-typedef u64_t game_profiler_get_performance_counter_f();
+typedef u64_t eden_profiler_get_performance_counter_f();
 
-struct game_profiler_snapshot_t {
+struct eden_profiler_snapshot_t {
   u32_t hits;
   u32_t cycles;
 };
 
-struct game_profiler_entry_t {
+struct eden_profiler_entry_t {
   u32_t line;
   const char* filename;
   const char* block_name;
   u64_t hits_and_cycles;
   
-  game_profiler_snapshot_t* snapshots;
+  eden_profiler_snapshot_t* snapshots;
   
   // NOTE(Momo): For initialization of entry. 
   // Maybe it shouldn't be stored here
@@ -516,163 +516,163 @@ struct game_profiler_entry_t {
 };
 
 
-struct game_profiler_t {
+struct eden_profiler_t {
   u32_t entry_snapshot_count;
   u32_t entry_count;
   u32_t entry_cap;
-  game_profiler_entry_t* entries;
+  eden_profiler_entry_t* entries;
   u32_t snapshot_index;
 
-  game_profiler_get_performance_counter_f* get_performance_counter;
+  eden_profiler_get_performance_counter_f* get_performance_counter;
 };
 
-#define game_profiler_begin_block(p, name) \
-  static game_profiler_entry_t* _profiler_block_##name = 0; \
+#define eden_profiler_begin_block(p, name) \
+  static eden_profiler_entry_t* _profiler_block_##name = 0; \
   if (_profiler_block_##name == 0 || _profiler_block_##name->flag_for_reset) {\
-    _profiler_block_##name = _game_profiler_init_block(p, __FILE__, __LINE__, __FUNCTION__, #name);  \
+    _profiler_block_##name = _eden_profiler_init_block(p, __FILE__, __LINE__, __FUNCTION__, #name);  \
   }\
-  _game_profiler_begin_block(p, _profiler_block_##name)\
+  _eden_profiler_begin_block(p, _profiler_block_##name)\
 
-#define game_profiler_end_block(p, name) \
-  _game_profiler_end_block(p, _profiler_block_##name) 
+#define eden_profiler_end_block(p, name) \
+  _eden_profiler_end_block(p, _profiler_block_##name) 
 
-#define game_profiler_block(p, name) game_profiler_begin_block(p, name); defer {game_profiler_end_block(p,name);}
+#define eden_profiler_block(p, name) eden_profiler_begin_block(p, name); defer {eden_profiler_end_block(p,name);}
 
 // Correspond with API
-#define game_profile_begin(game, name) game_profiler_begin_block(&game->profiler, name)
-#define game_profile_end(game, name)   game_profiler_end_block(&game->profiler, name)
-#define game_profile_block(game, name) game_profiler_block(&game->profiler, name)
+#define eden_profile_begin(eden, name) eden_profiler_begin_block(&eden->profiler, name)
+#define eden_profile_end(eden, name)   eden_profiler_end_block(&eden->profiler, name)
+#define eden_profile_block(eden, name) eden_profiler_block(&eden->profiler, name)
 
 
 //
 // MARK:(Inspector)
 //
-enum game_inspector_entry_type_t {
-  GAME_INSPECTOR_ENTRY_TYPE_F32,
-  GAME_INSPECTOR_ENTRY_TYPE_U32,
+enum eden_inspector_entry_type_t {
+  EDEN_INSPECTOR_ENTRY_TYPE_F32,
+  EDEN_INSPECTOR_ENTRY_TYPE_U32,
 };
 
-struct game_inspector_entry_t {
+struct eden_inspector_entry_t {
   str_t name;
-  game_inspector_entry_type_t type;
+  eden_inspector_entry_type_t type;
   union {
     f32_t item_f32;
     u32_t item_u32;
   };
 };
 
-struct game_inspector_t {
+struct eden_inspector_t {
   u32_t entry_cap;
   u32_t entry_count;
-  game_inspector_entry_t* entries;
+  eden_inspector_entry_t* entries;
 };
 
 // API correspondence
-#define game_inspect_u32(game, name, item) game_inspector_add_u32(&game->inspector, name, item)
-#define game_inspect_f32(game, name, item) game_inspector_add_f32(&game->inspector, name, item)
+#define eden_inspect_u32(eden, name, item) eden_inspector_add_u32(&eden->inspector, name, item)
+#define eden_inspect_f32(eden, name, item) eden_inspector_add_f32(&eden->inspector, name, item)
 
 // 
 // MARK:(Graphics)
 //
-enum game_blend_type_t {
-  game_blend_type_zero,
-  game_blend_type_one,
-  game_blend_type_src_color,
-  game_blend_type_inv_src_color,
-  game_blend_type_src_alpha,
-  game_blend_type_inv_src_alpha,
-  game_blend_type_dst_alpha,
-  game_blend_type_inv_dst_alpha,
-  game_blend_type_dst_color,
-  game_blend_type_inv_dst_color,
+enum eden_blend_type_t {
+  eden_blend_type_zero,
+  eden_blend_type_one,
+  eden_blend_type_src_color,
+  eden_blend_type_inv_src_color,
+  eden_blend_type_src_alpha,
+  eden_blend_type_inv_src_alpha,
+  eden_blend_type_dst_alpha,
+  eden_blend_type_inv_dst_alpha,
+  eden_blend_type_dst_color,
+  eden_blend_type_inv_dst_color,
 };
 
 
 // 
 // MARK:(Button)
 //
-struct game_button_t {
+struct eden_button_t {
   b32_t before : 1;
   b32_t now: 1; 
 };
 
-enum game_button_code_t {
+enum eden_button_code_t {
   // my god
   // keyboard keys
-  GAME_BUTTON_CODE_UNKNOWN,
-  GAME_BUTTON_CODE_0,
-  GAME_BUTTON_CODE_1,
-  GAME_BUTTON_CODE_2,
-  GAME_BUTTON_CODE_3,
-  GAME_BUTTON_CODE_4,
-  GAME_BUTTON_CODE_5,
-  GAME_BUTTON_CODE_6,
-  GAME_BUTTON_CODE_7,
-  GAME_BUTTON_CODE_8,
-  GAME_BUTTON_CODE_9,
-  GAME_BUTTON_CODE_F1,
-  GAME_BUTTON_CODE_F2,
-  GAME_BUTTON_CODE_F3,
-  GAME_BUTTON_CODE_F4,
-  GAME_BUTTON_CODE_F5,
-  GAME_BUTTON_CODE_F6,
-  GAME_BUTTON_CODE_F7,
-  GAME_BUTTON_CODE_F8,
-  GAME_BUTTON_CODE_F9,
-  GAME_BUTTON_CODE_F10,
-  GAME_BUTTON_CODE_F11,
-  GAME_BUTTON_CODE_F12,
-  GAME_BUTTON_CODE_BACKSPACE,
-  GAME_BUTTON_CODE_A,
-  GAME_BUTTON_CODE_B,
-  GAME_BUTTON_CODE_C,
-  GAME_BUTTON_CODE_D,
-  GAME_BUTTON_CODE_E,
-  GAME_BUTTON_CODE_F,
-  GAME_BUTTON_CODE_G,
-  GAME_BUTTON_CODE_H,
-  GAME_BUTTON_CODE_I,
-  GAME_BUTTON_CODE_J,
-  GAME_BUTTON_CODE_K,
-  GAME_BUTTON_CODE_L,
-  GAME_BUTTON_CODE_M,
-  GAME_BUTTON_CODE_N,
-  GAME_BUTTON_CODE_O,
-  GAME_BUTTON_CODE_P,
-  GAME_BUTTON_CODE_Q,
-  GAME_BUTTON_CODE_R,
-  GAME_BUTTON_CODE_S,
-  GAME_BUTTON_CODE_T,
-  GAME_BUTTON_CODE_U,
-  GAME_BUTTON_CODE_V,
-  GAME_BUTTON_CODE_W,
-  GAME_BUTTON_CODE_X,
-  GAME_BUTTON_CODE_Y,
-  GAME_BUTTON_CODE_Z,
-  GAME_BUTTON_CODE_SPACE,
-  GAME_BUTTON_CODE_RMB,
-  GAME_BUTTON_CODE_LMB,
-  GAME_BUTTON_CODE_MMB,
+  EDEN_BUTTON_CODE_UNKNOWN,
+  EDEN_BUTTON_CODE_0,
+  EDEN_BUTTON_CODE_1,
+  EDEN_BUTTON_CODE_2,
+  EDEN_BUTTON_CODE_3,
+  EDEN_BUTTON_CODE_4,
+  EDEN_BUTTON_CODE_5,
+  EDEN_BUTTON_CODE_6,
+  EDEN_BUTTON_CODE_7,
+  EDEN_BUTTON_CODE_8,
+  EDEN_BUTTON_CODE_9,
+  EDEN_BUTTON_CODE_F1,
+  EDEN_BUTTON_CODE_F2,
+  EDEN_BUTTON_CODE_F3,
+  EDEN_BUTTON_CODE_F4,
+  EDEN_BUTTON_CODE_F5,
+  EDEN_BUTTON_CODE_F6,
+  EDEN_BUTTON_CODE_F7,
+  EDEN_BUTTON_CODE_F8,
+  EDEN_BUTTON_CODE_F9,
+  EDEN_BUTTON_CODE_F10,
+  EDEN_BUTTON_CODE_F11,
+  EDEN_BUTTON_CODE_F12,
+  EDEN_BUTTON_CODE_BACKSPACE,
+  EDEN_BUTTON_CODE_A,
+  EDEN_BUTTON_CODE_B,
+  EDEN_BUTTON_CODE_C,
+  EDEN_BUTTON_CODE_D,
+  EDEN_BUTTON_CODE_E,
+  EDEN_BUTTON_CODE_F,
+  EDEN_BUTTON_CODE_G,
+  EDEN_BUTTON_CODE_H,
+  EDEN_BUTTON_CODE_I,
+  EDEN_BUTTON_CODE_J,
+  EDEN_BUTTON_CODE_K,
+  EDEN_BUTTON_CODE_L,
+  EDEN_BUTTON_CODE_M,
+  EDEN_BUTTON_CODE_N,
+  EDEN_BUTTON_CODE_O,
+  EDEN_BUTTON_CODE_P,
+  EDEN_BUTTON_CODE_Q,
+  EDEN_BUTTON_CODE_R,
+  EDEN_BUTTON_CODE_S,
+  EDEN_BUTTON_CODE_T,
+  EDEN_BUTTON_CODE_U,
+  EDEN_BUTTON_CODE_V,
+  EDEN_BUTTON_CODE_W,
+  EDEN_BUTTON_CODE_X,
+  EDEN_BUTTON_CODE_Y,
+  EDEN_BUTTON_CODE_Z,
+  EDEN_BUTTON_CODE_SPACE,
+  EDEN_BUTTON_CODE_RMB,
+  EDEN_BUTTON_CODE_LMB,
+  EDEN_BUTTON_CODE_MMB,
 
-  GAME_BUTTON_CODE_MAX,
+  EDEN_BUTTON_CODE_MAX,
 
 };
-#define game_gfx_foreach_command(g,i) \
+#define eden_gfx_foreach_command(g,i) \
   for(u32_t (i) = 0; (i) < (g)->command_queue.entry_count; ++(i))
 
 //
 // MARK:(Input)
 //
 // NOTE(momo): Input is SPECIFICALLY stuff that can be recorded and
-// replayed by some kind of system. Other things go to game_t
+// replayed by some kind of system. Other things go to eden_t
 // 
-struct game_input_characters_t {
+struct eden_input_characters_t {
   u8_t* data;
   u32_t count;
 };
 
-struct game_input_t {
-  game_button_t buttons[GAME_BUTTON_CODE_MAX];
+struct eden_input_t {
+  eden_button_t buttons[EDEN_BUTTON_CODE_MAX];
   u8_t chars[32];
   u32_t char_count;
 
@@ -693,106 +693,106 @@ struct game_input_t {
 //
 // MARK:(File)
 // 
-enum game_file_path_t {
-  GAME_FILE_PATH_EXE,
-  GAME_FILE_PATH_USER,
-  GAME_FILE_PATH_CACHE,
+enum eden_file_path_t {
+  EDEN_FILE_PATH_EXE,
+  EDEN_FILE_PATH_USER,
+  EDEN_FILE_PATH_CACHE,
 
 };
 
-enum game_file_access_t {
-  GAME_FILE_ACCESS_READ,
-  GAME_FILE_ACCESS_OVERWRITE,
+enum eden_file_access_t {
+  EDEN_FILE_ACCESS_READ,
+  EDEN_FILE_ACCESS_OVERWRITE,
 };
 
-struct game_file_t {
+struct eden_file_t {
   void* data; // pointer for platform's usage
 };
 
-#define game_open_file_sig(name) b32_t name(game_file_t* file, const char* filename, game_file_access_t file_access, game_file_path_t file_path)
-typedef game_open_file_sig(game_open_file_f);
-#define game_open_file(game, ...) (game->open_file(__VA_ARGS__))
+#define eden_open_file_sig(name) b32_t name(eden_file_t* file, const char* filename, eden_file_access_t file_access, eden_file_path_t file_path)
+typedef eden_open_file_sig(eden_open_file_f);
+#define eden_open_file(eden, ...) (eden->open_file(__VA_ARGS__))
 
-#define game_close_file_sig(name) void  name(game_file_t* file)
-typedef game_close_file_sig(game_close_file_f);
-#define game_close_file(game, ...) (game->close_file(__VA_ARGS__))
+#define eden_close_file_sig(name) void  name(eden_file_t* file)
+typedef eden_close_file_sig(eden_close_file_f);
+#define eden_close_file(eden, ...) (eden->close_file(__VA_ARGS__))
 
-#define game_read_file_sig(name) b32_t name(game_file_t* file, usz_t size, usz_t offset, void* dest)
-typedef game_read_file_sig(game_read_file_f);
-#define game_read_file(game, ...) (game->read_file(__VA_ARGS__))
+#define eden_read_file_sig(name) b32_t name(eden_file_t* file, usz_t size, usz_t offset, void* dest)
+typedef eden_read_file_sig(eden_read_file_f);
+#define eden_read_file(eden, ...) (eden->read_file(__VA_ARGS__))
 
-#define game_write_file_sig(name) b32_t name(game_file_t* file, usz_t size, usz_t offset, void* src)
-typedef game_write_file_sig(game_write_file_f);
-#define game_write_file(game, ...) (game->write_file(__VA_ARGS__))
+#define eden_write_file_sig(name) b32_t name(eden_file_t* file, usz_t size, usz_t offset, void* src)
+typedef eden_write_file_sig(eden_write_file_f);
+#define eden_write_file(eden, ...) (eden->write_file(__VA_ARGS__))
 
-#define game_get_file_size_sig(name) u64_t name(game_file_t* file)
-typedef game_get_file_size_sig(game_get_file_size_f);
-#define game_get_file_size(game, ...) (game->get_file_size(__VA_ARGS__))
+#define eden_get_file_size_sig(name) u64_t name(eden_file_t* file)
+typedef eden_get_file_size_sig(eden_get_file_size_f);
+#define eden_get_file_size(eden, ...) (eden->get_file_size(__VA_ARGS__))
 
 //
 // App Logging API
 // 
-#define game_debug_log_sig(name) void name(const char* fmt, ...)
-typedef game_debug_log_sig(game_debug_log_f);
-#define game_debug_log(game, ...) (game->debug_log(__VA_ARGS__))
+#define eden_debug_log_sig(name) void name(const char* fmt, ...)
+typedef eden_debug_log_sig(eden_debug_log_f);
+#define eden_debug_log(eden, ...) (eden->debug_log(__VA_ARGS__))
 
 //
 // App Cursor API
 //
-#define game_show_cursor_sig(name) void name()
-typedef game_show_cursor_sig(game_show_cursor_f);
-#define game_show_cursor(game, ...) (game->show_cursor(__VA_ARGS__))
+#define eden_show_cursor_sig(name) void name()
+typedef eden_show_cursor_sig(eden_show_cursor_f);
+#define eden_show_cursor(eden, ...) (eden->show_cursor(__VA_ARGS__))
 
-#define game_hide_cursor_sig(name) void name()
-typedef game_hide_cursor_sig(game_hide_cursor_f);
-#define game_hide_cursor(game, ...) (game->hide_cursor(__VA_ARGS__))
+#define eden_hide_cursor_sig(name) void name()
+typedef eden_hide_cursor_sig(eden_hide_cursor_f);
+#define eden_hide_cursor(eden, ...) (eden->hide_cursor(__VA_ARGS__))
 
-#define game_lock_cursor_sig(name) void name()
-typedef game_lock_cursor_sig(game_lock_cursor_f);
-#define game_lock_cursor(game, ...) (game->lock_cursor(__VA_ARGS__))
+#define eden_lock_cursor_sig(name) void name()
+typedef eden_lock_cursor_sig(eden_lock_cursor_f);
+#define eden_lock_cursor(eden, ...) (eden->lock_cursor(__VA_ARGS__))
 
-#define game_unlock_cursor_sig(name) void name()
-typedef game_unlock_cursor_sig(game_unlock_cursor_f);
-#define game_unlock_cursor(game, ...) (game->unlock_cursor(__VA_ARGS__))
+#define eden_unlock_cursor_sig(name) void name()
+typedef eden_unlock_cursor_sig(eden_unlock_cursor_f);
+#define eden_unlock_cursor(eden, ...) (eden->unlock_cursor(__VA_ARGS__))
 
 
 //
 // Memory Allocation API
 //
-#define game_allocate_memory_sig(name) str_t name(usz_t size)
-typedef game_allocate_memory_sig(game_allocate_memory_f);
-#define game_allocate_memory(game, ...) (game->allocate_memory(__VA_ARGS__))
+#define eden_allocate_memory_sig(name) str_t name(usz_t size)
+typedef eden_allocate_memory_sig(eden_allocate_memory_f);
+#define eden_allocate_memory(eden, ...) (eden->allocate_memory(__VA_ARGS__))
 
-#define game_free_memory_sig(name) void name(str_t block)
-typedef game_free_memory_sig(game_free_memory_f);
-#define game_free_memory(game, ...) (game->free_memory(__VA_ARGS__))
+#define eden_free_memory_sig(name) void name(str_t block)
+typedef eden_free_memory_sig(eden_free_memory_f);
+#define eden_free_memory(eden, ...) (eden->free_memory(__VA_ARGS__))
 
 //
 // Multithreaded work API
 //
-typedef void game_task_callback_f(void* data);
+typedef void eden_task_callback_f(void* data);
 
-#define game_add_task_sig(name) void name(game_task_callback_f callback, void* data)
-typedef game_add_task_sig(game_add_task_f);
-#define game_add_task(game, ...) (game->add_task(__VA_ARGS__))
+#define eden_add_task_sig(name) void name(eden_task_callback_f callback, void* data)
+typedef eden_add_task_sig(eden_add_task_f);
+#define eden_add_task(eden, ...) (eden->add_task(__VA_ARGS__))
 
-#define game_complete_all_tasks_sig(name) void name(void)
-typedef game_complete_all_tasks_sig(game_complete_all_tasks_f);
-#define game_complete_all_tasks(game, ...) (game->complete_all_tasks(__VA_ARGS__))
+#define eden_complete_all_tasks_sig(name) void name(void)
+typedef eden_complete_all_tasks_sig(eden_complete_all_tasks_f);
+#define eden_complete_all_tasks(eden, ...) (eden->complete_all_tasks(__VA_ARGS__))
 
 // 
 // Window/Graphics related
 //
-#define game_set_design_dimensions_sig(name) void name(f32_t width, f32_t height)
-typedef game_set_design_dimensions_sig(game_set_design_dimensions_f);
-#define game_set_design_dimensions(game, ...) (game->set_design_dimensions(__VA_ARGS__))
+#define eden_set_design_dimensions_sig(name) void name(f32_t width, f32_t height)
+typedef eden_set_design_dimensions_sig(eden_set_design_dimensions_f);
+#define eden_set_design_dimensions(eden, ...) (eden->set_design_dimensions(__VA_ARGS__))
 
 
 //
 // App Audio API
 //
-struct game_audio_t {
-  // Audio buffer for game to write to
+struct eden_audio_t {
+  // Audio buffer for eden to write to
   void* samples;
   u32_t sample_count;
 
@@ -806,29 +806,29 @@ struct game_audio_t {
 
 
 
-struct game_t {
-  game_show_cursor_f* show_cursor;
-  game_hide_cursor_f* hide_cursor;
-  game_lock_cursor_f* lock_cursor;
-  game_unlock_cursor_f* unlock_cursor;
-  game_allocate_memory_f* allocate_memory;
-  game_free_memory_f* free_memory;
-  game_debug_log_f* debug_log;
-  game_add_task_f* add_task;
-  game_complete_all_tasks_f* complete_all_tasks;
-  game_set_design_dimensions_f* set_design_dimensions;
-  game_open_file_f* open_file;
-  game_close_file_f* close_file;
-  game_write_file_f* write_file;
-  game_read_file_f* read_file;
-  game_get_file_size_f* get_file_size;
+struct eden_t {
+  eden_show_cursor_f* show_cursor;
+  eden_hide_cursor_f* hide_cursor;
+  eden_lock_cursor_f* lock_cursor;
+  eden_unlock_cursor_f* unlock_cursor;
+  eden_allocate_memory_f* allocate_memory;
+  eden_free_memory_f* free_memory;
+  eden_debug_log_f* debug_log;
+  eden_add_task_f* add_task;
+  eden_complete_all_tasks_f* complete_all_tasks;
+  eden_set_design_dimensions_f* set_design_dimensions;
+  eden_open_file_f* open_file;
+  eden_close_file_f* close_file;
+  eden_write_file_f* write_file;
+  eden_read_file_f* read_file;
+  eden_get_file_size_f* get_file_size;
 
-  game_input_t input;
-  game_audio_t audio; 
+  eden_input_t input;
+  eden_audio_t audio; 
 
-  game_gfx_t gfx;
-  game_profiler_t profiler;
-  game_inspector_t inspector;
+  eden_gfx_t gfx;
+  eden_profiler_t profiler;
+  eden_inspector_t inspector;
           
   b32_t is_dll_reloaded;
   b32_t is_running;
@@ -843,30 +843,30 @@ struct game_t {
 // MARK:(Assets)
 //
 
-#include "game_asset_id_base.h"
+#include "eden_asset_id_base.h"
 
 
-struct game_asset_bitmap_t {
+struct eden_asset_bitmap_t {
   u32_t renderer_texture_handle;
   u32_t width;
   u32_t height;
 };
 
-struct game_asset_sprite_t {
+struct eden_asset_sprite_t {
   u32_t texel_x0;
   u32_t texel_y0;
   u32_t texel_x1;
   u32_t texel_y1;
 
-  game_asset_bitmap_id_t bitmap_asset_id;
+  eden_asset_bitmap_id_t bitmap_asset_id;
 };
 
-struct game_asset_sound_t {
+struct eden_asset_sound_t {
   u32_t data_size;
   void* data;
 };
 
-struct game_asset_font_glyph_t {
+struct eden_asset_font_glyph_t {
   u32_t texel_x0, texel_y0;
   u32_t texel_x1, texel_y1;
 
@@ -878,31 +878,31 @@ struct game_asset_font_glyph_t {
 
 };
 
-struct game_asset_font_t {
-  game_asset_bitmap_id_t bitmap_asset_id;
+struct eden_asset_font_t {
+  eden_asset_bitmap_id_t bitmap_asset_id;
 
   u32_t highest_codepoint;
   u16_t* codepoint_map;
 
   u32_t glyph_count;
-  game_asset_font_glyph_t* glyphs;
+  eden_asset_font_glyph_t* glyphs;
   f32_t* kernings;
 };
 
-struct game_assets_t {
-  game_gfx_texture_queue_t* texture_queue;
+struct eden_assets_t {
+  eden_gfx_texture_queue_t* texture_queue;
 
   u32_t bitmap_count;
-  game_asset_bitmap_t* bitmaps;
+  eden_asset_bitmap_t* bitmaps;
 
   u32_t font_count;
-  game_asset_font_t* fonts;
+  eden_asset_font_t* fonts;
 
   u32_t sprite_count;
-  game_asset_sprite_t* sprites;
+  eden_asset_sprite_t* sprites;
 
   u32_t sound_count;
-  game_asset_sound_t* sounds;
+  eden_asset_sound_t* sounds;
 };
 
 //
@@ -910,7 +910,7 @@ struct game_assets_t {
 // Game API
 //
 //
-struct game_config_t {
+struct eden_config_t {
   usz_t total_required_memory;
   u32_t target_frame_rate;
 
@@ -943,21 +943,21 @@ struct game_config_t {
 
 };
 
-#define game_get_config_sig(name) game_config_t name(void)
-typedef game_get_config_sig(game_get_config_f);
+#define eden_get_config_sig(name) eden_config_t name(void)
+typedef eden_get_config_sig(eden_get_config_f);
 
-#define game_update_and_render_sig(name) void name(game_t* game)
-typedef game_update_and_render_sig(game_update_and_render_f);
+#define eden_update_and_render_sig(name) void name(eden_t* eden)
+typedef eden_update_and_render_sig(eden_update_and_render_f);
 
 // To be called by platform
-struct game_functions_t {
-  game_get_config_f* get_config;
-  game_update_and_render_f* update_and_render;
+struct eden_functions_t {
+  eden_get_config_f* get_config;
+  eden_update_and_render_f* update_and_render;
 };
 
-static const char* game_function_names[] {
-  "game_get_config",
-  "game_update_and_render",
+static const char* eden_function_names[] {
+  "eden_get_config",
+  "eden_update_and_render",
 };
 
 
@@ -972,8 +972,8 @@ static const char* game_function_names[] {
 //
 
 static void
-game_gfx_clear_commands(game_gfx_t* g) {
-  game_gfx_command_queue_t* q = &g->command_queue;
+eden_gfx_clear_commands(eden_gfx_t* g) {
+  eden_gfx_command_queue_t* q = &g->command_queue;
   q->data_pos = 0;	
 	q->entry_count = 0;
 	
@@ -984,8 +984,8 @@ game_gfx_clear_commands(game_gfx_t* g) {
 }
 
 static b32_t 
-game_gfx_init(
-    game_gfx_t* g, 
+eden_gfx_init(
+    eden_gfx_t* g, 
     arena_t* arena,
     usz_t texture_queue_size, 
     usz_t command_queue_size,
@@ -995,20 +995,20 @@ game_gfx_init(
 
   // commands
   {
-    game_gfx_command_queue_t* q = &g->command_queue;
+    eden_gfx_command_queue_t* q = &g->command_queue;
     q->memory = arena_push_arr(u8_t, arena, command_queue_size);
     if (!q->memory) return false;
     q->memory_size = command_queue_size;
     q->peak_memory_usage = 0;
-    game_gfx_clear_commands(g);
+    eden_gfx_clear_commands(g);
   }
 
   // textures
   {
-    game_gfx_texture_queue_t* q = &g->texture_queue;
+    eden_gfx_texture_queue_t* q = &g->texture_queue;
     q->transfer_memory = arena_push_arr(u8_t, arena, texture_queue_size);
     if (!q->transfer_memory) return false;
-    q->payloads = arena_push_arr(game_gfx_texture_payload_t, arena, max_payloads);
+    q->payloads = arena_push_arr(eden_gfx_texture_payload_t, arena, max_payloads);
     if (!q->payloads) return false;
     q->transfer_memory_size = texture_queue_size;
     q->transfer_memory_start = 0;
@@ -1025,33 +1025,33 @@ game_gfx_init(
 }
 
 static u32_t
-game_gfx_get_next_texture_handle(game_gfx_t* game_gfx) {
+eden_gfx_get_next_texture_handle(eden_gfx_t* eden_gfx) {
   static u32_t id = 0;
-  return id++ % game_gfx->max_textures;
+  return id++ % eden_gfx->max_textures;
 }
 
-static game_gfx_command_t*
-game_gfx_get_command(game_gfx_t* g, u32_t index) {
-  game_gfx_command_queue_t* q = &g->command_queue;
+static eden_gfx_command_t*
+eden_gfx_get_command(eden_gfx_t* g, u32_t index) {
+  eden_gfx_command_queue_t* q = &g->command_queue;
   assert(index < q->entry_count);
-	usz_t stride = align_up_pow2(sizeof(game_gfx_command_t), 4);
-	return (game_gfx_command_t*)(q->memory + q->entry_start - ((index+1) * stride));
+	usz_t stride = align_up_pow2(sizeof(eden_gfx_command_t), 4);
+	return (eden_gfx_command_t*)(q->memory + q->entry_start - ((index+1) * stride));
 }
 
 static void*
-_game_gfx_push_command_block(game_gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4) {
+_eden_gfx_push_command_block(eden_gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4) {
 
 	umi_t imem = ptr_to_umi(q->memory);
 	
 	umi_t adjusted_data_pos = align_up_pow2(imem + q->data_pos, (usz_t)align) - imem;
 	umi_t adjusted_entry_pos = align_down_pow2(imem + q->entry_pos, 4) - imem; 
 	
-	assert(adjusted_data_pos + size + sizeof(game_gfx_command_t) < adjusted_entry_pos);
+	assert(adjusted_data_pos + size + sizeof(eden_gfx_command_t) < adjusted_entry_pos);
 	
 	q->data_pos = (u32_t)adjusted_data_pos + size;
-	q->entry_pos = (u32_t)adjusted_entry_pos - sizeof(game_gfx_command_t);
+	q->entry_pos = (u32_t)adjusted_entry_pos - sizeof(eden_gfx_command_t);
 	
-	auto* entry = (game_gfx_command_t*)umi_to_ptr(imem + q->entry_pos);
+	auto* entry = (eden_gfx_command_t*)umi_to_ptr(imem + q->entry_pos);
 	entry->id = id;
 	entry->data = umi_to_ptr(imem + adjusted_data_pos);
 	
@@ -1066,15 +1066,15 @@ _game_gfx_push_command_block(game_gfx_command_queue_t* q, u32_t size, u32_t id, 
 
 // TODO: maybe we should change this to a macro to support C users
 template<typename T> static T*
-_game_gfx_push_command(game_gfx_command_queue_t* q, u32_t id, u32_t align = 16) {
-  return (T*)_game_gfx_push_command_block(q, sizeof(T), id, align);
+_eden_gfx_push_command(eden_gfx_command_queue_t* q, u32_t id, u32_t align = 16) {
+  return (T*)_eden_gfx_push_command_block(q, sizeof(T), id, align);
 }
 
 
-static game_gfx_texture_payload_t*
-game_gfx_begin_texture_transfer(game_gfx_t* g, u32_t required_space) {
-  game_gfx_texture_queue_t* q = &g->texture_queue;
-  game_gfx_texture_payload_t* ret = 0;
+static eden_gfx_texture_payload_t*
+eden_gfx_begin_texture_transfer(eden_gfx_t* g, u32_t required_space) {
+  eden_gfx_texture_queue_t* q = &g->texture_queue;
+  eden_gfx_texture_payload_t* ret = 0;
   
   if (q->payload_count < q->payload_cap) {
     usz_t avaliable_space = 0;
@@ -1114,7 +1114,7 @@ game_gfx_begin_texture_transfer(game_gfx_t* g, u32_t required_space) {
       ret->texture_data = q->transfer_memory + memory_at;
       ret->transfer_memory_start = memory_at;
       ret->transfer_memory_end = memory_at + required_space;
-      ret->state = GAME_GFX_TEXTURE_PAYLOAD_STATE_LOADING;
+      ret->state = EDEN_GFX_TEXTURE_PAYLOAD_STATE_LOADING;
 
       q->transfer_memory_end = ret->transfer_memory_end;
 
@@ -1135,22 +1135,22 @@ game_gfx_begin_texture_transfer(game_gfx_t* g, u32_t required_space) {
 
 
 static void
-game_gfx_complete_texture_transfer(game_gfx_texture_payload_t* entry) {
-  entry->state = GAME_GFX_TEXTURE_PAYLOAD_STATE_READY;
+eden_gfx_complete_texture_transfer(eden_gfx_texture_payload_t* entry) {
+  entry->state = EDEN_GFX_TEXTURE_PAYLOAD_STATE_READY;
 }
 
 static void
-game_gfx_cancel_texture_transfer(game_gfx_texture_payload_t* entry) {
-  entry->state = GAME_GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
+eden_gfx_cancel_texture_transfer(eden_gfx_texture_payload_t* entry) {
+  entry->state = EDEN_GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
 }
 
 
 static void 
-game_gfx_set_view(game_gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y) 
+eden_gfx_set_view(eden_gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y) 
 {
-  game_gfx_command_queue_t* c = &g->command_queue; 
+  eden_gfx_command_queue_t* c = &g->command_queue; 
     
-  game_gfx_command_view_t* data = _game_gfx_push_command<game_gfx_command_view_t>(c, GAME_GFX_COMMAND_TYPE_VIEW);
+  eden_gfx_command_view_t* data = _eden_gfx_push_command<eden_gfx_command_view_t>(c, EDEN_GFX_COMMAND_TYPE_VIEW);
   data->min_x = min_x;
   data->min_y = min_y;
   data->max_x = max_x;
@@ -1160,15 +1160,15 @@ game_gfx_set_view(game_gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t ma
 }
 
 static void
-game_gfx_clear_colors(game_gfx_t* g, rgba_t colors) {
-  game_gfx_command_queue_t* c = &g->command_queue; 
-  game_gfx_command_clear_t* data = _game_gfx_push_command<game_gfx_command_clear_t>(c, GAME_GFX_COMMAND_TYPE_CLEAR);
+eden_gfx_clear_colors(eden_gfx_t* g, rgba_t colors) {
+  eden_gfx_command_queue_t* c = &g->command_queue; 
+  eden_gfx_command_clear_t* data = _eden_gfx_push_command<eden_gfx_command_clear_t>(c, EDEN_GFX_COMMAND_TYPE_CLEAR);
   data->colors = colors;
 }
 
 static void
-game_gfx_push_sprite(
-    game_gfx_t* g, 
+eden_gfx_push_sprite(
+    eden_gfx_t* g, 
     rgba_t colors, 
     v2f_t pos, 
     v2f_t size,
@@ -1177,8 +1177,8 @@ game_gfx_push_sprite(
     u32_t texel_x0, u32_t texel_y0, 
     u32_t texel_x1, u32_t texel_y1)
 {
-  game_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data = _game_gfx_push_command<game_gfx_command_sprite_t>(c, GAME_GFX_COMMAND_TYPE_SPRITE);
+  eden_gfx_command_queue_t* c = &g->command_queue; 
+  auto* data = _eden_gfx_push_command<eden_gfx_command_sprite_t>(c, EDEN_GFX_COMMAND_TYPE_SPRITE);
   data->colors = colors;
   data->texture_index = texture_index;
 
@@ -1193,13 +1193,13 @@ game_gfx_push_sprite(
 }
 
 static void
-game_gfx_draw_filled_rect(game_gfx_t* g, 
+eden_gfx_draw_filled_rect(eden_gfx_t* g, 
                      rgba_t colors, 
                      v2f_t pos, f32_t rot, v2f_t size)
 {
-  game_gfx_command_queue_t* c = &g->command_queue; 
+  eden_gfx_command_queue_t* c = &g->command_queue; 
 
-  auto* data = _game_gfx_push_command<game_gfx_command_rect_t>(c, GAME_GFX_COMMAND_TYPE_RECT);
+  auto* data = _eden_gfx_push_command<eden_gfx_command_rect_t>(c, EDEN_GFX_COMMAND_TYPE_RECT);
   data->colors = colors;
   data->pos = pos;
   data->rot = rot;
@@ -1208,12 +1208,12 @@ game_gfx_draw_filled_rect(game_gfx_t* g,
 
 
 static void
-game_gfx_draw_filled_triangle(game_gfx_t* g,
+eden_gfx_draw_filled_triangle(eden_gfx_t* g,
                          rgba_t colors,
                          v2f_t p0, v2f_t p1, v2f_t p2)
 {
-  game_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data = _game_gfx_push_command<game_gfx_command_triangle_t>(c, GAME_GFX_COMMAND_TYPE_TRIANGLE);
+  eden_gfx_command_queue_t* c = &g->command_queue; 
+  auto* data = _eden_gfx_push_command<eden_gfx_command_triangle_t>(c, EDEN_GFX_COMMAND_TYPE_TRIANGLE);
   data->colors = colors;
   data->p0 = p0;
   data->p1 = p1;
@@ -1223,8 +1223,8 @@ game_gfx_draw_filled_triangle(game_gfx_t* g,
 
 
 static void 
-game_gfx_draw_line(
-    game_gfx_t* g, 
+eden_gfx_draw_line(
+    eden_gfx_t* g, 
     v2f_t p0, v2f_t p1,
     f32_t thickness,
     rgba_t colors) 
@@ -1242,14 +1242,14 @@ game_gfx_draw_line(
   v2f_t x_axis = v2f_set(1.f, 0.f);
   f32_t angle = v2f_angle(line_vector, x_axis);
   
-  game_gfx_draw_filled_rect(g, colors, 
+  eden_gfx_draw_filled_rect(g, colors, 
                        {line_mid.x, line_mid.y},
                        angle, 
                        {line_length, thickness});
 }
 
 static void
-game_gfx_draw_filled_circle(game_gfx_t* g, 
+eden_gfx_draw_filled_circle(eden_gfx_t* g, 
                        v2f_t center, 
                        f32_t radius,
                        u32_t sections,
@@ -1275,14 +1275,14 @@ game_gfx_draw_filled_circle(game_gfx_t* g,
     v2f_t p1 = p0 + v2f_set(f32_cos(current_angle), f32_sin(current_angle)) * radius;
     v2f_t p2 = p0 + v2f_set(f32_cos(next_angle), f32_sin(next_angle)) * radius; 
 
-    game_gfx_draw_filled_triangle(g, color, p0, p1, p2); 
+    eden_gfx_draw_filled_triangle(g, color, p0, p1, p2); 
     current_angle += section_angle;
   }
 }
 
 
 static  void
-game_gfx_draw_circle_outline(game_gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
+eden_gfx_draw_circle_outline(eden_gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
 {
   // NOTE(Momo): Essentially a bunch of lines
   // We can't really have a surface with less than 3 lines
@@ -1297,7 +1297,7 @@ game_gfx_draw_circle_outline(game_gfx_t* g, v2f_t center, f32_t radius, f32_t th
   for (u32_t i = 0; i < line_count; ++i) {
     v2f_t p0 = v2f_add(pt1, center);
     v2f_t p1 = v2f_add(pt2, center);
-    game_gfx_draw_line(g, p0, p1, thickness, color);
+    eden_gfx_draw_line(g, p0, p1, thickness, color);
     
     pt1 = pt2;
     pt2 = v2f_rotate(pt1, angle_increment);
@@ -1306,63 +1306,63 @@ game_gfx_draw_circle_outline(game_gfx_t* g, v2f_t center, f32_t radius, f32_t th
 }
 
 static void 
-game_gfx_delete_texture(game_gfx_t* g, u32_t texture_index) {
-  game_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data= _game_gfx_push_command<game_gfx_command_delete_texture_t>(c, GAME_GFX_COMMAND_TYPE_DELETE_TEXTURE);
+eden_gfx_delete_texture(eden_gfx_t* g, u32_t texture_index) {
+  eden_gfx_command_queue_t* c = &g->command_queue; 
+  auto* data= _eden_gfx_push_command<eden_gfx_command_delete_texture_t>(c, EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE);
   data->texture_index = texture_index;
   
 }
 
 static void 
-game_gfx_set_blend(game_gfx_t* g, game_gfx_blend_type_t src, game_gfx_blend_type_t dst) {
-  game_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data= _game_gfx_push_command<game_gfx_command_blend_t>(c, GAME_GFX_COMMAND_TYPE_BLEND);
+eden_gfx_set_blend(eden_gfx_t* g, eden_gfx_blend_type_t src, eden_gfx_blend_type_t dst) {
+  eden_gfx_command_queue_t* c = &g->command_queue; 
+  auto* data= _eden_gfx_push_command<eden_gfx_command_blend_t>(c, EDEN_GFX_COMMAND_TYPE_BLEND);
   data->src = src;
   data->dst = dst;
 }
 
 static void 
-game_gfx_set_blend_preset(game_gfx_t* g, game_gfx_blend_preset_type_t type)
+eden_gfx_set_blend_preset(eden_gfx_t* g, eden_gfx_blend_preset_type_t type)
 {
   switch(type) {
-    case GAME_GFX_BLEND_PRESET_TYPE_ADD:
+    case EDEN_GFX_BLEND_PRESET_TYPE_ADD:
       g->current_blend_preset = type; 
-      game_gfx_set_blend(g, GAME_GFX_BLEND_TYPE_SRC_ALPHA, GAME_GFX_BLEND_TYPE_ONE); 
+      eden_gfx_set_blend(g, EDEN_GFX_BLEND_TYPE_SRC_ALPHA, EDEN_GFX_BLEND_TYPE_ONE); 
       break;
-    case GAME_GFX_BLEND_PRESET_TYPE_MULTIPLY:
+    case EDEN_GFX_BLEND_PRESET_TYPE_MULTIPLY:
       g->current_blend_preset = type; 
-      game_gfx_set_blend(g, GAME_GFX_BLEND_TYPE_DST_COLOR, GAME_GFX_BLEND_TYPE_ZERO); 
+      eden_gfx_set_blend(g, EDEN_GFX_BLEND_TYPE_DST_COLOR, EDEN_GFX_BLEND_TYPE_ZERO); 
       break;
-    case GAME_GFX_BLEND_PRESET_TYPE_ALPHA:
+    case EDEN_GFX_BLEND_PRESET_TYPE_ALPHA:
       g->current_blend_preset = type; 
-      game_gfx_set_blend(g, GAME_GFX_BLEND_TYPE_SRC_ALPHA, GAME_GFX_BLEND_TYPE_INV_SRC_ALPHA); 
+      eden_gfx_set_blend(g, EDEN_GFX_BLEND_TYPE_SRC_ALPHA, EDEN_GFX_BLEND_TYPE_INV_SRC_ALPHA); 
       break;
-    case GAME_GFX_BLEND_PRESET_TYPE_NONE:
+    case EDEN_GFX_BLEND_PRESET_TYPE_NONE:
       // Do nothing
       break;
   }
 }
 
-static game_gfx_blend_preset_type_t
-game_gfx_get_blend_preset(game_gfx_t* g) {
+static eden_gfx_blend_preset_type_t
+eden_gfx_get_blend_preset(eden_gfx_t* g) {
   return g->current_blend_preset;
 
 }
 
 static void
-game_gfx_advance_depth(game_gfx_t* g) {
-  game_gfx_command_queue_t* c = &g->command_queue; 
-  _game_gfx_push_command<game_gfx_command_advance_depth_t>(c, GAME_GFX_COMMAND_TYPE_ADVANCE_DEPTH);
+eden_gfx_advance_depth(eden_gfx_t* g) {
+  eden_gfx_command_queue_t* c = &g->command_queue; 
+  _eden_gfx_push_command<eden_gfx_command_advance_depth_t>(c, EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH);
 }
 
-#if GAME_USE_OPENGL
+#if EDEN_USE_OPENGL
 
 //
 // MARK:(Opengl)
 // 
 static void 
-game_gfx_opengl_flush_sprites(game_gfx_opengl_t* ogl) {
-  game_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
+eden_gfx_opengl_flush_sprites(eden_gfx_opengl_t* ogl) {
+  eden_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
   assert(sb->instances_to_draw + sb->last_drawn_instance_index < ogl->max_sprites);
 
   if (sb->instances_to_draw > 0) {
@@ -1390,12 +1390,12 @@ game_gfx_opengl_flush_sprites(game_gfx_opengl_t* ogl) {
 }
 
 static void 
-game_gfx_opengl_push_triangle(
-    game_gfx_opengl_t* ogl, 
+eden_gfx_opengl_push_triangle(
+    eden_gfx_opengl_t* ogl, 
     m44f_t transform,
     rgba_t color)
 {
-  game_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
+  eden_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
 
   // TODO: Take in an array of 3 colors
 #if 1 
@@ -1413,18 +1413,18 @@ game_gfx_opengl_push_triangle(
 #endif
 
   ogl->glNamedBufferSubData(
-      tb->buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS], 
+      tb->buffers[EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS], 
       tb->current_instance_index * sizeof(color_per_vertex),
       sizeof(color_per_vertex), 
       &color_per_vertex);
 
   // NOTE(Momo): m44f_transpose; moe is row-major
-  m44f_t game_gfx_opengl_transform = m44f_transpose(transform);
+  m44f_t eden_gfx_opengl_transform = m44f_transpose(transform);
   ogl->glNamedBufferSubData(
-      tb->buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
+      tb->buffers[EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
       tb->current_instance_index* sizeof(m44f_t), 
       sizeof(m44f_t), 
-      &game_gfx_opengl_transform);
+      &eden_gfx_opengl_transform);
 
   // NOTE(Momo): Update Bookkeeping
   ++tb->instances_to_draw;
@@ -1433,8 +1433,8 @@ game_gfx_opengl_push_triangle(
 }
 
 static void 
-game_gfx_opengl_flush_triangles(game_gfx_opengl_t* ogl) {
-  game_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
+eden_gfx_opengl_flush_triangles(eden_gfx_opengl_t* ogl) {
+  eden_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
   assert(tb->instances_to_draw + tb->last_drawn_instance_index < ogl->max_triangles);
 
   if (tb->instances_to_draw > 0) {
@@ -1456,16 +1456,16 @@ game_gfx_opengl_flush_triangles(game_gfx_opengl_t* ogl) {
 
 
 static void 
-game_gfx_opengl_push_sprite(
-    game_gfx_opengl_t* ogl, 
+eden_gfx_opengl_push_sprite(
+    eden_gfx_opengl_t* ogl, 
     m44f_t transform,
     rgba_t color,
-    game_gfx_opengl_uv_t uv,
+    eden_gfx_opengl_uv_t uv,
     GLuint texture) 
 {
-  game_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
+  eden_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
   if (sb->current_texture != texture) {
-    game_gfx_opengl_flush_sprites(ogl);
+    eden_gfx_opengl_flush_sprites(ogl);
     sb->current_texture = texture;
   }
 
@@ -1476,7 +1476,7 @@ game_gfx_opengl_push_sprite(
   };
 
   ogl->glNamedBufferSubData(
-      sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS], 
+      sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS], 
       sb->current_instance_index * sizeof(color_per_vertex),
       sizeof(color_per_vertex), 
       &color_per_vertex);
@@ -1488,17 +1488,17 @@ game_gfx_opengl_push_sprite(
     uv.min.x, uv.min.y
   };
   ogl->glNamedBufferSubData(
-      sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE],
+      sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE],
       sb->current_instance_index * sizeof(uv_per_vertex),
       sizeof(uv_per_vertex),
       &uv_per_vertex);
 
   // NOTE(Momo): m44f_transpose; moe is row-major
-  m44f_t game_gfx_opengl_transform = m44f_transpose(transform);
-  ogl->glNamedBufferSubData(sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
+  m44f_t eden_gfx_opengl_transform = m44f_transpose(transform);
+  ogl->glNamedBufferSubData(sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
       sb->current_instance_index* sizeof(m44f_t), 
       sizeof(m44f_t), 
-      &game_gfx_opengl_transform);
+      &eden_gfx_opengl_transform);
 
   // NOTE(Momo): Update Bookkeeping
   ++sb->instances_to_draw;
@@ -1507,8 +1507,8 @@ game_gfx_opengl_push_sprite(
 }
 
 static void 
-game_gfx_opengl_begin_sprites(game_gfx_opengl_t* ogl) {
-  game_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
+eden_gfx_opengl_begin_sprites(eden_gfx_opengl_t* ogl) {
+  eden_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
 
   sb->current_texture = 0;
   sb->instances_to_draw = 0;
@@ -1517,8 +1517,8 @@ game_gfx_opengl_begin_sprites(game_gfx_opengl_t* ogl) {
 }
 
 static void 
-game_gfx_opengl_begin_triangles(game_gfx_opengl_t* ogl) {
-  game_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
+eden_gfx_opengl_begin_triangles(eden_gfx_opengl_t* ogl) {
+  eden_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
 
   tb->instances_to_draw = 0;
   tb->last_drawn_instance_index = 0;
@@ -1526,17 +1526,17 @@ game_gfx_opengl_begin_triangles(game_gfx_opengl_t* ogl) {
 }
 
 static void 
-game_gfx_opengl_end_triangles(game_gfx_opengl_t* ogl) {
-  game_gfx_opengl_flush_triangles(ogl);
+eden_gfx_opengl_end_triangles(eden_gfx_opengl_t* ogl) {
+  eden_gfx_opengl_flush_triangles(ogl);
 }
 
 static void 
-game_gfx_opengl_end_sprites(game_gfx_opengl_t* ogl) {
-  game_gfx_opengl_flush_sprites(ogl);
+eden_gfx_opengl_end_sprites(eden_gfx_opengl_t* ogl) {
+  eden_gfx_opengl_flush_sprites(ogl);
 }
 
   static void 
-game_gfx_opengl_attach_shader(game_gfx_opengl_t* ogl,
+eden_gfx_opengl_attach_shader(eden_gfx_opengl_t* ogl,
     u32_t program, 
     u32_t type, 
     char* code) 
@@ -1549,7 +1549,7 @@ game_gfx_opengl_attach_shader(game_gfx_opengl_t* ogl,
 }
 
 static void 
-game_gfx_opengl_align_viewport(game_gfx_opengl_t* ogl) 
+eden_gfx_opengl_align_viewport(eden_gfx_opengl_t* ogl) 
 {
 
   u32_t x, y, w, h;
@@ -1567,8 +1567,8 @@ game_gfx_opengl_align_viewport(game_gfx_opengl_t* ogl)
 }
 
 static void
-game_gfx_opengl_set_texture(
-    game_gfx_opengl_t* ogl,
+eden_gfx_opengl_set_texture(
+    eden_gfx_opengl_t* ogl,
     umi_t index,
     u32_t width,
     u32_t height,
@@ -1577,7 +1577,7 @@ game_gfx_opengl_set_texture(
 
   assert(index < ogl->texture_cap);
 
-  game_gfx_opengl_texture_t entry = {0};
+  eden_gfx_opengl_texture_t entry = {0};
   entry.width = width;
   entry.height = height;
 
@@ -1604,24 +1604,24 @@ game_gfx_opengl_set_texture(
 }
 
 static void 
-game_gfx_opengl_delete_texture(game_gfx_opengl_t* ogl, umi_t texture_index) {
+eden_gfx_opengl_delete_texture(eden_gfx_opengl_t* ogl, umi_t texture_index) {
   assert(texture_index < ogl->texture_cap);
-  game_gfx_opengl_texture_t* texture = ogl->textures + texture_index;
+  eden_gfx_opengl_texture_t* texture = ogl->textures + texture_index;
   ogl->glDeleteTextures(1, &texture->handle);
   ogl->textures[texture_index].handle = 0;
 }
 
 static void
-game_gfx_opengl_delete_all_textures(game_gfx_opengl_t* ogl) {
+eden_gfx_opengl_delete_all_textures(eden_gfx_opengl_t* ogl) {
   for (usz_t i = 0; i < ogl->texture_cap; ++i ){
     if (ogl->textures[i].handle != 0) {
-      game_gfx_opengl_delete_texture(ogl, i);
+      eden_gfx_opengl_delete_texture(ogl, i);
     }
   }
 }
 
 static void 
-game_gfx_opengl_add_predefined_textures(game_gfx_opengl_t* ogl) {
+eden_gfx_opengl_add_predefined_textures(eden_gfx_opengl_t* ogl) {
   // NOTE(Momo): Dummy texture setup
   {
     u8_t pixels[4][4] {
@@ -1640,7 +1640,7 @@ game_gfx_opengl_add_predefined_textures(game_gfx_opengl_t* ogl) {
         GL_RGBA, 
         GL_UNSIGNED_BYTE, 
         &pixels);
-    game_gfx_opengl_texture_t texture = {};
+    eden_gfx_opengl_texture_t texture = {};
     texture.width = 2;
     texture.height = 2;
     texture.handle = dummy_texture;
@@ -1660,7 +1660,7 @@ game_gfx_opengl_add_predefined_textures(game_gfx_opengl_t* ogl) {
         1, 1, 
         GL_RGBA, GL_UNSIGNED_BYTE, 
         &pixels);
-    game_gfx_opengl_texture_t texture = {};
+    eden_gfx_opengl_texture_t texture = {};
     texture.width = 2;
     texture.height = 2;
     texture.handle = blank_texture;
@@ -1671,7 +1671,7 @@ game_gfx_opengl_add_predefined_textures(game_gfx_opengl_t* ogl) {
 
 }
 
-#define GAME_GFX_OPENGL_TRIANGLE_VSHADER "\
+#define EDEN_GFX_OPENGL_TRIANGLE_VSHADER "\
 #version 450 core \n\
 layout(location=0) in vec3 aModelVtx; \n\
 layout(location=1) in vec4 aColor[3]; \n\
@@ -1683,7 +1683,7 @@ void main(void) { \n\
   mColor = aColor[gl_VertexID];\n\
 }"
 
-#define GAME_GFX_OPENGL_TRIANGLE_FSHADER "\
+#define EDEN_GFX_OPENGL_TRIANGLE_FSHADER "\
 #version 450 core \n\
 in vec4 mColor;\n\
 out vec4 FragColor;\n\
@@ -1692,8 +1692,8 @@ void main(void) {\n\
 }"
 
 static b32_t
-game_gfx_opengl_init_triangle_batch(game_gfx_opengl_t* ogl, usz_t max_triangles) {
-  game_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
+eden_gfx_opengl_init_triangle_batch(eden_gfx_opengl_t* ogl, usz_t max_triangles) {
+  eden_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
   ogl->max_triangles = max_triangles;
 
   // Triangle model
@@ -1712,23 +1712,23 @@ game_gfx_opengl_init_triangle_batch(game_gfx_opengl_t* ogl, usz_t max_triangles)
   const u32_t vertex_count = array_count(triangle_model)/3;
 
   // VBOs
-  ogl->glCreateBuffers(GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT, tb->buffers);
-  ogl->glNamedBufferStorage(tb->buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL], 
+  ogl->glCreateBuffers(EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT, tb->buffers);
+  ogl->glNamedBufferStorage(tb->buffers[EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL], 
       sizeof(triangle_model), 
       triangle_model, 
       0);
 
-  ogl->glNamedBufferStorage(tb->buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES], 
+  ogl->glNamedBufferStorage(tb->buffers[EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES], 
       sizeof(triangle_indices), 
       triangle_indices, 
       0);
 
-  ogl->glNamedBufferStorage(tb->buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS], 
+  ogl->glNamedBufferStorage(tb->buffers[EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS], 
       sizeof(v4f_t) * ogl->max_triangles, 
       nullptr, 
       GL_DYNAMIC_STORAGE_BIT);
 
-  ogl->glNamedBufferStorage(tb->buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
+  ogl->glNamedBufferStorage(tb->buffers[EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
       sizeof(m44f_t) * ogl->max_triangles, 
       nullptr, 
       GL_DYNAMIC_STORAGE_BIT);
@@ -1737,41 +1737,41 @@ game_gfx_opengl_init_triangle_batch(game_gfx_opengl_t* ogl, usz_t max_triangles)
   //VAOs
   ogl->glCreateVertexArrays(1, &tb->model);
   ogl->glVertexArrayVertexBuffer(tb->model, 
-      GAME_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL, 
-      tb->buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL], 
+      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL, 
+      tb->buffers[EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL], 
       0, 
       sizeof(v3f_t));
 
   ogl->glVertexArrayVertexBuffer(tb->model, 
-      GAME_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 
-      tb->buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS],  
+      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 
+      tb->buffers[EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS],  
       0, 
       sizeof(rgba_t) * vertex_count);
 
   ogl->glVertexArrayVertexBuffer(tb->model, 
-      GAME_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
-      tb->buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
+      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
+      tb->buffers[EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
       0, 
       sizeof(m44f_t));
 
 
   // Attributes
   // aModelVtx
-  ogl->glEnableVertexArrayAttrib(tb->model, GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
+  ogl->glEnableVertexArrayAttrib(tb->model, EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
   ogl->glVertexArrayAttribFormat(tb->model, 
-      GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
+      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
       3, 
       GL_FLOAT, 
       GL_FALSE, 
       0);
 
   ogl->glVertexArrayAttribBinding(tb->model, 
-      GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
-      GAME_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL);
+      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
+      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL);
 
   // aColor
   for (u32_t vertex_index = 0; vertex_index < vertex_count; ++vertex_index) {
-    u32_t attrib_type = GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1 + vertex_index;
+    u32_t attrib_type = EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1 + vertex_index;
     ogl->glEnableVertexArrayAttrib(
         tb->model, 
         attrib_type); 
@@ -1787,27 +1787,27 @@ game_gfx_opengl_init_triangle_batch(game_gfx_opengl_t* ogl, usz_t max_triangles)
     ogl->glVertexArrayAttribBinding(
         tb->model, 
         attrib_type,
-        GAME_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
+        EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
 
   }
 #if 0
-  ogl->glEnableVertexArrayAttrib(tb->model, GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS); 
+  ogl->glEnableVertexArrayAttrib(tb->model, EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS); 
   ogl->glVertexArrayAttribFormat(tb->model, 
-      GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
+      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
       4, 
       GL_FLOAT, GL_FALSE, 0);
   ogl->glVertexArrayAttribBinding(tb->model, 
-      GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
-      GAME_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
+      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
+      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
 #endif
 
-  ogl->glVertexArrayBindingDivisor(tb->model, GAME_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 1); 
+  ogl->glVertexArrayBindingDivisor(tb->model, EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 1); 
 
 
 
   // aTransform
   for (u32_t cols = 0; cols < 4; ++cols) {
-    u32_t attrib_type = GAME_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1 + cols;
+    u32_t attrib_type = EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1 + cols;
     ogl->glEnableVertexArrayAttrib(tb->model, attrib_type); 
     ogl->glVertexArrayAttribFormat(tb->model, 
         attrib_type, 
@@ -1818,26 +1818,26 @@ game_gfx_opengl_init_triangle_batch(game_gfx_opengl_t* ogl, usz_t max_triangles)
 
     ogl->glVertexArrayAttribBinding(tb->model, 
         attrib_type, 
-        GAME_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM);
+        EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM);
   }
 
   ogl->glVertexArrayBindingDivisor(tb->model, 
-      GAME_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
+      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
       1); 
 
   // NOTE(Momo): Setup indices
   ogl->glVertexArrayElementBuffer(tb->model, 
-      tb->buffers[GAME_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES]);
+      tb->buffers[EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES]);
 
 
   // TODO(Momo): //BeginShader/EndShader?
   tb->shader = ogl->glCreateProgram();
-  game_gfx_opengl_attach_shader(ogl, tb->shader,
+  eden_gfx_opengl_attach_shader(ogl, tb->shader,
       GL_VERTEX_SHADER,
-      (char*)GAME_GFX_OPENGL_TRIANGLE_VSHADER);
-  game_gfx_opengl_attach_shader(ogl, tb->shader,
+      (char*)EDEN_GFX_OPENGL_TRIANGLE_VSHADER);
+  eden_gfx_opengl_attach_shader(ogl, tb->shader,
       GL_FRAGMENT_SHADER,
-      (char*)GAME_GFX_OPENGL_TRIANGLE_FSHADER);
+      (char*)EDEN_GFX_OPENGL_TRIANGLE_FSHADER);
 
   ogl->glLinkProgram(tb->shader);
   GLint result;
@@ -1850,7 +1850,7 @@ game_gfx_opengl_init_triangle_batch(game_gfx_opengl_t* ogl, usz_t max_triangles)
   return true;
 }
 
-#define GAME_GFX_OPENGL_SPRITE_VSHADER "\
+#define EDEN_GFX_OPENGL_SPRITE_VSHADER "\
 #version 450 core \n\
 layout(location=0) in vec3 aModelVtx;  \n\
 layout(location=1) in vec4 aColor[4]; \n\
@@ -1865,7 +1865,7 @@ void main(void) { \n\
   mTexCoord = aTexCoord[gl_VertexID]; \n\
 }"
 
-#define GAME_GFX_OPENGL_SPRITE_FSHADER "\
+#define EDEN_GFX_OPENGL_SPRITE_FSHADER "\
 #version 450 core \n\
 out vec4 fragColor; \n\
 in vec4 mColor; \n\
@@ -1878,8 +1878,8 @@ void main(void) { \n\
 
 
 static b32_t 
-game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl, usz_t max_sprites) {
-  game_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
+eden_gfx_opengl_init_sprite_batch(eden_gfx_opengl_t* ogl, usz_t max_sprites) {
+  eden_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
   ogl->max_sprites = max_sprites;
 
 
@@ -1898,32 +1898,32 @@ game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl, usz_t max_sprites) {
   const u32_t vertex_count = array_count(sprite_model)/3;
 
   // NOTE(Momo): Setup VBO
-  ogl->glCreateBuffers(GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT, sb->buffers);
-  ogl->glNamedBufferStorage(sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL], 
+  ogl->glCreateBuffers(EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT, sb->buffers);
+  ogl->glNamedBufferStorage(sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL], 
       sizeof(sprite_model), 
       sprite_model, 
       0);
 
   ogl->glNamedBufferStorage(
-      sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES], 
+      sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES], 
       sizeof(sprite_indices), 
       sprite_indices, 
       0);
 
   ogl->glNamedBufferStorage(
-      sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE], 
+      sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE], 
       sizeof(v2f_t) * vertex_count * ogl->max_sprites, 
       nullptr, 
       GL_DYNAMIC_STORAGE_BIT);
 
   ogl->glNamedBufferStorage(
-      sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS], 
+      sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS], 
       sizeof(rgba_t) * vertex_count * ogl->max_sprites, 
       nullptr, 
       GL_DYNAMIC_STORAGE_BIT);
 
   ogl->glNamedBufferStorage(
-      sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
+      sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
       sizeof(m44f_t) * ogl->max_sprites, 
       nullptr, 
       GL_DYNAMIC_STORAGE_BIT);
@@ -1932,48 +1932,48 @@ game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl, usz_t max_sprites) {
   ogl->glCreateVertexArrays(1, &sb->model);
   ogl->glVertexArrayVertexBuffer(
       sb->model, 
-      GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL, 
-      sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL], 
+      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL, 
+      sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL], 
       0, 
       sizeof(v3f_t));
 
   ogl->glVertexArrayVertexBuffer(
       sb->model, 
-      GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
-      sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE], 
+      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
+      sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TEXTURE], 
       0, 
       sizeof(v2f_t) * vertex_count);
 
   ogl->glVertexArrayVertexBuffer(
       sb->model, 
-      GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 
-      sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS],  
+      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 
+      sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COLORS],  
       0, 
       sizeof(rgba_t) * vertex_count);
 
   ogl->glVertexArrayVertexBuffer(sb->model, 
-      GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
-      sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
+      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
+      sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
       0, 
       sizeof(m44f_t));
 
   // NOTE(Momo): Setup Attributes
   // aModelVtx
-  ogl->glEnableVertexArrayAttrib(sb->model, GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
+  ogl->glEnableVertexArrayAttrib(sb->model, EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
   ogl->glVertexArrayAttribFormat(sb->model, 
-      GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
+      EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
       3, 
       GL_FLOAT, 
       GL_FALSE, 
       0);
 
   ogl->glVertexArrayAttribBinding(sb->model, 
-      GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
-      GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL);
+      EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
+      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL);
 
   // aColor
   for (u32_t vertex_index = 0; vertex_index < vertex_count; ++vertex_index) {
-    u32_t attrib_type = GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1 + vertex_index;
+    u32_t attrib_type = EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1 + vertex_index;
     ogl->glEnableVertexArrayAttrib(
         sb->model, 
         attrib_type); 
@@ -1989,15 +1989,15 @@ game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl, usz_t max_sprites) {
     ogl->glVertexArrayAttribBinding(
         sb->model, 
         attrib_type,
-        GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS);
+        EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS);
 
   }
 
-  ogl->glVertexArrayBindingDivisor(sb->model, GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 1); 
+  ogl->glVertexArrayBindingDivisor(sb->model, EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 1); 
 
   // aTexCoord
   for (u32_t vertex_index = 0; vertex_index < vertex_count; ++vertex_index) {
-    u32_t attrib_type = GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1 + vertex_index;
+    u32_t attrib_type = EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1 + vertex_index;
     ogl->glEnableVertexArrayAttrib(sb->model, attrib_type); 
     ogl->glVertexArrayAttribFormat(
         sb->model, 
@@ -2011,11 +2011,11 @@ game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl, usz_t max_sprites) {
     ogl->glVertexArrayAttribBinding(
         sb->model, 
         attrib_type,
-        GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE);
+        EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE);
   }
 
   ogl->glVertexArrayBindingDivisor(sb->model, 
-      GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
+      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
       1); 
 
 
@@ -2023,7 +2023,7 @@ game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl, usz_t max_sprites) {
   // NOTE(momo): this actually has nothing to do with vertex count.
   for (u32_t cols = 0; cols < 4; ++cols) {
 
-    u32_t attrib_type = GAME_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1 + cols;
+    u32_t attrib_type = EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1 + cols;
 
     ogl->glEnableVertexArrayAttrib(sb->model, attrib_type); 
     ogl->glVertexArrayAttribFormat(sb->model, 
@@ -2036,29 +2036,29 @@ game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl, usz_t max_sprites) {
     ogl->glVertexArrayAttribBinding(
         sb->model, 
         attrib_type, 
-        GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM);
+        EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM);
   }
 
   ogl->glVertexArrayBindingDivisor(
       sb->model, 
-      GAME_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
+      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
       1); 
 
 
   // NOTE(Momo): Setup indices
   ogl->glVertexArrayElementBuffer(sb->model, 
-      sb->buffers[GAME_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES]);
+      sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES]);
 
   // NOTE(Momo): Setup shader Program
   sb->shader = ogl->glCreateProgram();
-  game_gfx_opengl_attach_shader(ogl,
+  eden_gfx_opengl_attach_shader(ogl,
       sb->shader, 
       GL_VERTEX_SHADER, 
-      (char*)GAME_GFX_OPENGL_SPRITE_VSHADER);
-  game_gfx_opengl_attach_shader(ogl,
+      (char*)EDEN_GFX_OPENGL_SPRITE_VSHADER);
+  eden_gfx_opengl_attach_shader(ogl,
       sb->shader, 
       GL_FRAGMENT_SHADER, 
-      (char*)GAME_GFX_OPENGL_SPRITE_FSHADER);
+      (char*)EDEN_GFX_OPENGL_SPRITE_FSHADER);
 
   ogl->glLinkProgram(sb->shader);
 
@@ -2074,8 +2074,8 @@ game_gfx_opengl_init_sprite_batch(game_gfx_opengl_t* ogl, usz_t max_sprites) {
 
 
 static b32_t
-game_gfx_opengl_init(
-    game_gfx_t* gfx,
+eden_gfx_opengl_init(
+    eden_gfx_t* gfx,
     arena_t* arena,
     usz_t command_queue_size, 
     usz_t texture_queue_size,
@@ -2084,13 +2084,13 @@ game_gfx_opengl_init(
     usz_t max_sprites,
     usz_t max_triangles)
 {	
-  auto* ogl = (game_gfx_opengl_t*)gfx->platform_data;
+  auto* ogl = (eden_gfx_opengl_t*)gfx->platform_data;
 
-  ogl->textures = arena_push_arr(game_gfx_opengl_texture_t, arena, max_textures);
+  ogl->textures = arena_push_arr(eden_gfx_opengl_texture_t, arena, max_textures);
   ogl->texture_cap = max_payloads;
   if (!ogl->textures) return false;
 
-  if (!game_gfx_init(
+  if (!eden_gfx_init(
         gfx, 
         arena,
         command_queue_size,
@@ -2103,47 +2103,47 @@ game_gfx_opengl_init(
   ogl->glEnable(GL_SCISSOR_TEST);
   ogl->glEnable(GL_BLEND);
 
-  if (!game_gfx_opengl_init_sprite_batch(ogl, max_sprites)) return false;
-  if (!game_gfx_opengl_init_triangle_batch(ogl, max_triangles)) return false;
-  game_gfx_opengl_add_predefined_textures(ogl);
-  game_gfx_opengl_delete_all_textures(ogl);
+  if (!eden_gfx_opengl_init_sprite_batch(ogl, max_sprites)) return false;
+  if (!eden_gfx_opengl_init_triangle_batch(ogl, max_triangles)) return false;
+  eden_gfx_opengl_add_predefined_textures(ogl);
+  eden_gfx_opengl_delete_all_textures(ogl);
 
 
   return true;
 }
 
 static GLenum
-game_gfx_opengl_get_blend_mode_from_game_gfx_blend_type(game_gfx_blend_type_t type) {
+eden_gfx_opengl_get_blend_mode_from_eden_gfx_blend_type(eden_gfx_blend_type_t type) {
   GLenum  ret = {0};
   switch(type) {
-    case GAME_GFX_BLEND_TYPE_ZERO: 
+    case EDEN_GFX_BLEND_TYPE_ZERO: 
       ret = GL_ZERO;
       break;
-    case GAME_GFX_BLEND_TYPE_ONE:
+    case EDEN_GFX_BLEND_TYPE_ONE:
       ret = GL_ONE;
       break;
-    case GAME_GFX_BLEND_TYPE_SRC_COLOR:
+    case EDEN_GFX_BLEND_TYPE_SRC_COLOR:
       ret = GL_SRC_COLOR;
       break;
-    case GAME_GFX_BLEND_TYPE_INV_SRC_COLOR:
+    case EDEN_GFX_BLEND_TYPE_INV_SRC_COLOR:
       ret = GL_ONE_MINUS_SRC_COLOR;
       break;
-    case GAME_GFX_BLEND_TYPE_SRC_ALPHA:
+    case EDEN_GFX_BLEND_TYPE_SRC_ALPHA:
       ret = GL_SRC_ALPHA;
       break;
-    case GAME_GFX_BLEND_TYPE_INV_SRC_ALPHA: 
+    case EDEN_GFX_BLEND_TYPE_INV_SRC_ALPHA: 
       ret = GL_ONE_MINUS_SRC_ALPHA;
       break;
-    case GAME_GFX_BLEND_TYPE_DST_ALPHA:
+    case EDEN_GFX_BLEND_TYPE_DST_ALPHA:
       ret = GL_DST_ALPHA;
       break;
-    case GAME_GFX_BLEND_TYPE_INV_DST_ALPHA:
+    case EDEN_GFX_BLEND_TYPE_INV_DST_ALPHA:
       ret = GL_ONE_MINUS_DST_ALPHA; 
       break;
-    case GAME_GFX_BLEND_TYPE_DST_COLOR: 
+    case EDEN_GFX_BLEND_TYPE_DST_COLOR: 
       ret = GL_DST_COLOR; 
       break;
-    case GAME_GFX_BLEND_TYPE_INV_DST_COLOR:
+    case EDEN_GFX_BLEND_TYPE_INV_DST_COLOR:
       ret = GL_ONE_MINUS_DST_COLOR; 
       break;
   }
@@ -2153,20 +2153,20 @@ game_gfx_opengl_get_blend_mode_from_game_gfx_blend_type(game_gfx_blend_type_t ty
 
 
 static void 
-game_gfx_opengl_set_blend_mode(game_gfx_opengl_t* ogl, game_gfx_blend_type_t src, game_gfx_blend_type_t dst) {
-  GLenum src_e = game_gfx_opengl_get_blend_mode_from_game_gfx_blend_type(src);
-  GLenum dst_e = game_gfx_opengl_get_blend_mode_from_game_gfx_blend_type(dst);
+eden_gfx_opengl_set_blend_mode(eden_gfx_opengl_t* ogl, eden_gfx_blend_type_t src, eden_gfx_blend_type_t dst) {
+  GLenum src_e = eden_gfx_opengl_get_blend_mode_from_eden_gfx_blend_type(src);
+  GLenum dst_e = eden_gfx_opengl_get_blend_mode_from_eden_gfx_blend_type(dst);
   ogl->glBlendFunc(src_e, dst_e);
 
 #if 0
   switch(type) {
-    case GAME_GFX_BLEND_TYPE_ADD: {
+    case EDEN_GFX_BLEND_TYPE_ADD: {
       ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
     } break;
-    case GAME_GFX_BLEND_TYPE_ALPHA: {
+    case EDEN_GFX_BLEND_TYPE_ALPHA: {
       ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     } break;
-    case GAME_GFX_BLEND_TYPE_TEST: {
+    case EDEN_GFX_BLEND_TYPE_TEST: {
       // TODO
     } break;
     default: {}
@@ -2175,31 +2175,31 @@ game_gfx_opengl_set_blend_mode(game_gfx_opengl_t* ogl, game_gfx_blend_type_t src
 }
 
 static void
-game_gfx_opengl_process_texture_queue(game_gfx_t* gfx) {
-  auto* ogl = (game_gfx_opengl_t*)gfx->platform_data;
+eden_gfx_opengl_process_texture_queue(eden_gfx_t* gfx) {
+  auto* ogl = (eden_gfx_opengl_t*)gfx->platform_data;
 
   // NOTE(Momo): In this algorithm of processing the texture queue,
   // it is entirely possible that if the first payload in the queue
   // is loading forever, the rest of the payloads will never be processed.
   // This is fine and intentional. A payload should never be loading forever.
   // 
-  game_gfx_texture_queue_t* textures = &gfx->texture_queue;
+  eden_gfx_texture_queue_t* textures = &gfx->texture_queue;
   while(textures->payload_count) {
-    game_gfx_texture_payload_t* payload = textures->payloads + textures->first_payload_index;
+    eden_gfx_texture_payload_t* payload = textures->payloads + textures->first_payload_index;
 
     b32_t stop_loop = false;
     switch(payload->state) {
-      case GAME_GFX_TEXTURE_PAYLOAD_STATE_LOADING: {
+      case EDEN_GFX_TEXTURE_PAYLOAD_STATE_LOADING: {
         stop_loop = true;
       } break;
-      case GAME_GFX_TEXTURE_PAYLOAD_STATE_READY: {
+      case EDEN_GFX_TEXTURE_PAYLOAD_STATE_READY: {
         if(payload->texture_width < (u32_t)S32_MAX &&
             payload->texture_height < (u32_t)S32_MAX &&
             payload->texture_width > 0 &&
             payload->texture_height > 0)
         {
 
-          game_gfx_opengl_set_texture(ogl, 
+          eden_gfx_opengl_set_texture(ogl, 
               payload->texture_index, 
               (s32_t)payload->texture_width, 
               (s32_t)payload->texture_height, 
@@ -2210,7 +2210,7 @@ game_gfx_opengl_process_texture_queue(game_gfx_t* gfx) {
         }
 
       } break;
-      case GAME_GFX_TEXTURE_PAYLOAD_STATE_EMPTY: {
+      case EDEN_GFX_TEXTURE_PAYLOAD_STATE_EMPTY: {
         // Possibly 'cancelled'. i.e. Do nothing either way?
       } break;
       default: {
@@ -2232,14 +2232,14 @@ game_gfx_opengl_process_texture_queue(game_gfx_t* gfx) {
 }
 
 static void
-game_gfx_opengl_begin_frame(
-    game_gfx_t* gfx,
+eden_gfx_opengl_begin_frame(
+    eden_gfx_t* gfx,
     v2u_t render_wh,
     u32_t region_x0, u32_t region_y0, 
     u32_t region_x1, u32_t region_y1) 
 {
-  auto* ogl = (game_gfx_opengl_t*)gfx->platform_data;
-  game_gfx_clear_commands(gfx);  
+  auto* ogl = (eden_gfx_opengl_t*)gfx->platform_data;
+  eden_gfx_clear_commands(gfx);  
 
   ogl->render_wh = render_wh;
 
@@ -2253,23 +2253,23 @@ game_gfx_opengl_begin_frame(
 
 // Only call opengl functions when we end frame
 static void
-game_gfx_opengl_end_frame(game_gfx_t* gfx) {
-  auto* ogl = (game_gfx_opengl_t*)gfx->platform_data;
+eden_gfx_opengl_end_frame(eden_gfx_t* gfx) {
+  auto* ogl = (eden_gfx_opengl_t*)gfx->platform_data;
 
-  game_gfx_opengl_align_viewport(ogl);
-  game_gfx_opengl_process_texture_queue(gfx);
-  game_gfx_opengl_begin_sprites(ogl);
-  game_gfx_opengl_begin_triangles(ogl);
+  eden_gfx_opengl_align_viewport(ogl);
+  eden_gfx_opengl_process_texture_queue(gfx);
+  eden_gfx_opengl_begin_sprites(ogl);
+  eden_gfx_opengl_begin_triangles(ogl);
 
   //for (u32_t cmd_index = 0; cmd_index < cmds->entry_count; ++cmd_index) {
-  game_gfx_foreach_command(gfx, cmd_index) {
-    game_gfx_command_t* entry = game_gfx_get_command(gfx, cmd_index);
+  eden_gfx_foreach_command(gfx, cmd_index) {
+    eden_gfx_command_t* entry = eden_gfx_get_command(gfx, cmd_index);
     switch(entry->id) {
-      case GAME_GFX_COMMAND_TYPE_VIEW: {
-        game_gfx_opengl_flush_sprites(ogl);
-        game_gfx_opengl_flush_triangles(ogl);
+      case EDEN_GFX_COMMAND_TYPE_VIEW: {
+        eden_gfx_opengl_flush_sprites(ogl);
+        eden_gfx_opengl_flush_triangles(ogl);
 
-        auto* data = (game_gfx_command_view_t*)entry->data;
+        auto* data = (eden_gfx_command_view_t*)entry->data;
 
         f32_t depth = (f32_t)(ogl->current_layer + 1);
         // TODO: Avoid computation of matrices
@@ -2281,7 +2281,7 @@ game_gfx_opengl_end_frame(game_gfx_t* gfx) {
         // TODO: Do we share shaders? Or just have a 'view' shader?
         m44f_t result = m44f_transpose(p*v);
         {
-          game_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
+          eden_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
           GLint uProjectionLoc = ogl->glGetUniformLocation(sb->shader,
               "uProjection");
           ogl->glProgramUniformMatrix4fv(sb->shader, 
@@ -2292,7 +2292,7 @@ game_gfx_opengl_end_frame(game_gfx_t* gfx) {
         }
 
         {
-          game_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
+          eden_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
           GLint uProjectionLoc = ogl->glGetUniformLocation(tb->shader,
               "uProjection");
           ogl->glProgramUniformMatrix4fv(tb->shader, 
@@ -2303,8 +2303,8 @@ game_gfx_opengl_end_frame(game_gfx_t* gfx) {
         }
 
       } break;
-      case GAME_GFX_COMMAND_TYPE_CLEAR: {
-        auto* data = (game_gfx_command_clear_t*)entry->data;
+      case EDEN_GFX_COMMAND_TYPE_CLEAR: {
+        auto* data = (eden_gfx_command_clear_t*)entry->data;
 
         ogl->glClearColor(
             data->colors.r, 
@@ -2315,10 +2315,10 @@ game_gfx_opengl_end_frame(game_gfx_t* gfx) {
 
       } break;
 
-      case GAME_GFX_COMMAND_TYPE_TRIANGLE: {
-        game_gfx_opengl_flush_sprites(ogl);
+      case EDEN_GFX_COMMAND_TYPE_TRIANGLE: {
+        eden_gfx_opengl_flush_sprites(ogl);
 
-        game_gfx_command_triangle_t* data = (game_gfx_command_triangle_t*)entry->data;
+        eden_gfx_command_triangle_t* data = (eden_gfx_command_triangle_t*)entry->data;
         m44f_t inverse_of_model = m44f_identity();
         inverse_of_model.e[0][0] = -1.f;
         inverse_of_model.e[1][0] = 0.f;
@@ -2364,11 +2364,11 @@ game_gfx_opengl_end_frame(game_gfx_t* gfx) {
 
         m44f_t transform = target_vertices * inverse_of_model;
 
-        game_gfx_opengl_push_triangle(ogl, transform, data->colors); 
+        eden_gfx_opengl_push_triangle(ogl, transform, data->colors); 
 
 
 #if 0
-        game_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
+        eden_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
 
         ogl->glBindVertexArray(tb->model);
         ogl->glUseProgram(tb->shader);
@@ -2395,30 +2395,30 @@ game_gfx_opengl_end_frame(game_gfx_t* gfx) {
 #endif
 
       } break;
-      case GAME_GFX_COMMAND_TYPE_RECT: {
-        game_gfx_opengl_uv_t uv = {
+      case EDEN_GFX_COMMAND_TYPE_RECT: {
+        eden_gfx_opengl_uv_t uv = {
           { 0.f, 0.f },
           { 1.f, 1.f },
         };
 
-        game_gfx_command_rect_t* data = (game_gfx_command_rect_t*)entry->data;
+        eden_gfx_command_rect_t* data = (eden_gfx_command_rect_t*)entry->data;
         m44f_t T = m44f_translation(data->pos.x, data->pos.y, ogl->current_layer);
         m44f_t R = m44f_rotation_z(data->rot);
         m44f_t S = m44f_scale(data->size.w, data->size.h, 1.f) ;
 
-        game_gfx_opengl_push_sprite(ogl, 
+        eden_gfx_opengl_push_sprite(ogl, 
             T*R*S,
             data->colors,
             uv,
             ogl->blank_texture.handle);
       } break;
 
-      case GAME_GFX_COMMAND_TYPE_SPRITE: {
-        game_gfx_opengl_flush_triangles(ogl);
-        game_gfx_command_sprite_t* data = (game_gfx_command_sprite_t*)entry->data;
+      case EDEN_GFX_COMMAND_TYPE_SPRITE: {
+        eden_gfx_opengl_flush_triangles(ogl);
+        eden_gfx_command_sprite_t* data = (eden_gfx_command_sprite_t*)entry->data;
         assert(ogl->texture_cap > data->texture_index);
 
-        game_gfx_opengl_texture_t* texture = ogl->textures + data->texture_index; 
+        eden_gfx_opengl_texture_t* texture = ogl->textures + data->texture_index; 
         if (texture->handle == 0) {
           texture->handle = ogl->dummy_texture.handle;
         }
@@ -2433,86 +2433,86 @@ game_gfx_opengl_end_frame(game_gfx_t* gfx) {
         f32_t lerped_y = f32_lerp(0.5f, -0.5f, data->anchor.y);
         m44f_t a = m44f_translation(lerped_x, lerped_y);
 
-        game_gfx_opengl_uv_t uv = {0};
+        eden_gfx_opengl_uv_t uv = {0};
         uv.min.x = (f32_t)data->texel_x0 / texture->width;
         uv.min.y = (f32_t)data->texel_y0 / texture->height;
         uv.max.x = (f32_t)data->texel_x1 / texture->width;
         uv.max.y = (f32_t)data->texel_y1 / texture->height;
 
-        game_gfx_opengl_push_sprite(ogl, 
+        eden_gfx_opengl_push_sprite(ogl, 
             transform*a,
             data->colors,
             uv,
             texture->handle);
 
       } break;
-      case GAME_GFX_COMMAND_TYPE_BLEND: {
-        game_gfx_opengl_flush_sprites(ogl);
-        game_gfx_opengl_flush_triangles(ogl);
-        game_gfx_command_blend_t* data = (game_gfx_command_blend_t*)entry->data;
-        game_gfx_opengl_set_blend_mode(ogl, data->src, data->dst);
+      case EDEN_GFX_COMMAND_TYPE_BLEND: {
+        eden_gfx_opengl_flush_sprites(ogl);
+        eden_gfx_opengl_flush_triangles(ogl);
+        eden_gfx_command_blend_t* data = (eden_gfx_command_blend_t*)entry->data;
+        eden_gfx_opengl_set_blend_mode(ogl, data->src, data->dst);
       } break;
-      case GAME_GFX_COMMAND_TYPE_DELETE_TEXTURE: {
-        game_gfx_command_delete_texture_t* data = (game_gfx_command_delete_texture_t*)entry->data;
-        game_gfx_opengl_delete_texture(ogl, data->texture_index);
+      case EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE: {
+        eden_gfx_command_delete_texture_t* data = (eden_gfx_command_delete_texture_t*)entry->data;
+        eden_gfx_opengl_delete_texture(ogl, data->texture_index);
       } break;
-      case GAME_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
-        game_gfx_opengl_delete_all_textures(ogl);
+      case EDEN_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
+        eden_gfx_opengl_delete_all_textures(ogl);
       } break;
-      case GAME_GFX_COMMAND_TYPE_ADVANCE_DEPTH: {
+      case EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH: {
         ogl->current_layer -= 1.f;
       } break;
     }
   }
-  game_gfx_opengl_end_sprites(ogl);
-  game_gfx_opengl_end_triangles(ogl);
+  eden_gfx_opengl_end_sprites(ogl);
+  eden_gfx_opengl_end_triangles(ogl);
 }
 
-#endif // GAME_USE_OPENGL
+#endif // EDEN_USE_OPENGL
 
 //
 // MARK:(Assets)
 //
 static b32_t 
-game_assets_init(game_assets_t* assets, game_t* game, const char* filename, arena_t* arena) 
+eden_assets_init(eden_assets_t* assets, eden_t* eden, const char* filename, arena_t* arena) 
 {
-  make(game_file_t, file);
-  if(!game_open_file(
-        game,
+  make(eden_file_t, file);
+  if(!eden_open_file(
+        eden,
         file,
         filename,
-        GAME_FILE_ACCESS_READ, 
-        GAME_FILE_PATH_EXE)) 
+        EDEN_FILE_ACCESS_READ, 
+        EDEN_FILE_PATH_EXE)) 
     return false;
 
 
   // Read header
   asset_file_header_t asset_file_header = {};
-  game_read_file(game, file, sizeof(asset_file_header_t), 0, &asset_file_header);
+  eden_read_file(eden, file, sizeof(asset_file_header_t), 0, &asset_file_header);
   if (asset_file_header.signature != ASSET_FILE_SIGNATURE) return false;
 
   // Allocation for assets
   assets->bitmap_count = asset_file_header.bitmap_count;
   if (assets->bitmap_count > 0)  {
-    assets->bitmaps = arena_push_arr(game_asset_bitmap_t, arena, assets->bitmap_count);
+    assets->bitmaps = arena_push_arr(eden_asset_bitmap_t, arena, assets->bitmap_count);
     if (!assets->bitmaps) return false;
   }
 
   assets->sprite_count = asset_file_header.sprite_count;
   if (assets->sprite_count > 0) {
-    assets->sprites = arena_push_arr(game_asset_sprite_t, arena, assets->sprite_count);
+    assets->sprites = arena_push_arr(eden_asset_sprite_t, arena, assets->sprite_count);
     if (!assets->sprites) return false;
   }
 
   assets->font_count = asset_file_header.font_count;
   if (assets->font_count > 0) {
-    assets->fonts = arena_push_arr(game_asset_font_t, arena, assets->font_count);
+    assets->fonts = arena_push_arr(eden_asset_font_t, arena, assets->font_count);
     if (!assets->fonts) return false;
   }
 
   assets->sound_count = asset_file_header.sound_count;
   if (assets->sound_count > 0) {
-    assets->sounds = arena_push_arr(game_asset_sound_t, arena, assets->sound_count);
+    assets->sounds = arena_push_arr(eden_asset_sound_t, arena, assets->sound_count);
     if (!assets->sounds) return false;
   }
 
@@ -2522,16 +2522,16 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
   for_cnt(sound_index, assets->sound_count) {
     umi_t offset_to_sound = asset_file_header.offset_to_sounds + sizeof(asset_file_sound_t) * sound_index; 
     asset_file_sound_t file_sound = {};
-    if (!game_read_file(game, file, sizeof(asset_file_sound_t), offset_to_sound, &file_sound)) 
+    if (!eden_read_file(eden, file, sizeof(asset_file_sound_t), offset_to_sound, &file_sound)) 
       return false;
 
-    game_asset_sound_t* s = assets->sounds + sound_index;
+    eden_asset_sound_t* s = assets->sounds + sound_index;
     s->data_size = file_sound.data_size;
     s->data = arena_push_arr(u8_t, arena, s->data_size);
     if (!s->data) 
       return false;
 
-    if (!game_read_file(game, file, s->data_size, file_sound.offset_to_data, s->data)) 
+    if (!eden_read_file(eden, file, s->data_size, file_sound.offset_to_data, s->data)) 
       return false;
   }
 
@@ -2541,11 +2541,11 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
   for_cnt(sprite_index, assets->sprite_count) {
     umi_t offset_to_sprite = asset_file_header.offset_to_sprites + sizeof(asset_file_sprite_t) * sprite_index; 
     asset_file_sprite_t file_sprite = {};
-    if (!game_read_file(game, file, sizeof(asset_file_sprite_t), offset_to_sprite, &file_sprite))
+    if (!eden_read_file(eden, file, sizeof(asset_file_sprite_t), offset_to_sprite, &file_sprite))
       return false;
-    game_asset_sprite_t* s = assets->sprites + sprite_index;
+    eden_asset_sprite_t* s = assets->sprites + sprite_index;
 
-    s->bitmap_asset_id = (game_asset_bitmap_id_t)file_sprite.bitmap_asset_id;
+    s->bitmap_asset_id = (eden_asset_bitmap_id_t)file_sprite.bitmap_asset_id;
     s->texel_x0 = file_sprite.texel_x0;
     s->texel_y0 = file_sprite.texel_y0;
     s->texel_x1 = file_sprite.texel_x1;
@@ -2558,23 +2558,23 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
   for_cnt(bitmap_index, assets->bitmap_count) {
     umi_t offset_to_bitmap = asset_file_header.offset_to_bitmaps + sizeof(asset_file_bitmap_t) * bitmap_index; 
     asset_file_bitmap_t file_bitmap = {};
-    if (!game_read_file(game, file, sizeof(asset_file_bitmap_t), offset_to_bitmap, &file_bitmap)) {
+    if (!eden_read_file(eden, file, sizeof(asset_file_bitmap_t), offset_to_bitmap, &file_bitmap)) {
       return false;
     }
 
-    game_asset_bitmap_t* b = assets->bitmaps + bitmap_index;
-    b->renderer_texture_handle = game_gfx_get_next_texture_handle(&game->gfx);
+    eden_asset_bitmap_t* b = assets->bitmaps + bitmap_index;
+    b->renderer_texture_handle = eden_gfx_get_next_texture_handle(&eden->gfx);
     b->width = file_bitmap.width;
     b->height = file_bitmap.height;
 
     u32_t bitmap_size = b->width * b->height * 4;
-    game_gfx_texture_payload_t* payload = game_gfx_begin_texture_transfer(&game->gfx, bitmap_size);
+    eden_gfx_texture_payload_t* payload = eden_gfx_begin_texture_transfer(&eden->gfx, bitmap_size);
     if (!payload) return false;
     payload->texture_index = b->renderer_texture_handle;
     payload->texture_width = file_bitmap.width;
     payload->texture_height = file_bitmap.height;
-    if (!game_read_file(
-        game,
+    if (!eden_read_file(
+        eden,
         file, 
         bitmap_size, 
         file_bitmap.offset_to_data, 
@@ -2583,17 +2583,17 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
       return false;
     }
 
-    game_gfx_complete_texture_transfer(payload);
+    eden_gfx_complete_texture_transfer(payload);
   }
 
   for_cnt(font_index, assets->font_count) 
   {
     umi_t offset_to_fonts = asset_file_header.offset_to_fonts + sizeof(asset_file_font_t) * font_index; 
     asset_file_font_t file_font = {};
-    if (!game_read_file(game, file, sizeof(asset_file_font_t), offset_to_fonts, &file_font)) 
+    if (!eden_read_file(eden, file, sizeof(asset_file_font_t), offset_to_fonts, &file_font)) 
       return false;
 
-    game_asset_font_t* f = assets->fonts + font_index;
+    eden_asset_font_t* f = assets->fonts + font_index;
 
     u32_t glyph_count = file_font.glyph_count;
     u32_t highest_codepoint = file_font.highest_codepoint;
@@ -2601,13 +2601,13 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
     u16_t* codepoint_map = arena_push_arr(u16_t, arena, highest_codepoint);
     if(!codepoint_map) return false;
 
-    game_asset_font_glyph_t* glyphs = arena_push_arr(game_asset_font_glyph_t, arena, glyph_count);
+    eden_asset_font_glyph_t* glyphs = arena_push_arr(eden_asset_font_glyph_t, arena, glyph_count);
     if(!glyphs) return false;
 
     f32_t* kernings = arena_push_arr(f32_t, arena, glyph_count*glyph_count);
     if (!kernings) return false;
 
-    f->bitmap_asset_id = (game_asset_bitmap_id_t)file_font.bitmap_asset_id;
+    f->bitmap_asset_id = (eden_asset_bitmap_id_t)file_font.bitmap_asset_id;
 
 
     for(u16_t glyph_index = 0; 
@@ -2619,8 +2619,8 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
         sizeof(asset_file_font_glyph_t)*glyph_index;
 
       asset_file_font_glyph_t file_glyph = {};
-      if (!game_read_file(
-          game,
+      if (!eden_read_file(
+          eden,
           file, 
           sizeof(asset_file_font_glyph_t), 
           glyph_data_offset,
@@ -2629,7 +2629,7 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
         return false;
       }
 
-      game_asset_font_glyph_t* glyph = glyphs + glyph_index;
+      eden_asset_font_glyph_t* glyph = glyphs + glyph_index;
       glyph->texel_x0 = file_glyph.texel_x0;
       glyph->texel_y0 = file_glyph.texel_y0;
       glyph->texel_x1 = file_glyph.texel_x1;
@@ -2652,8 +2652,8 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
         file_font.offset_to_data + 
         sizeof(asset_file_font_glyph_t)*glyph_count;
 
-      game_read_file(
-          game,
+      eden_read_file(
+          eden,
           file, 
           sizeof(f32_t)*glyph_count*glyph_count, 
           kernings_data_offset, 
@@ -2673,8 +2673,8 @@ game_assets_init(game_assets_t* assets, game_t* game, const char* filename, aren
 
 
 static f32_t
-game_assets_get_kerning(
-    game_asset_font_t* font,
+eden_assets_get_kerning(
+    eden_asset_font_t* font,
     u32_t left_codepoint, 
     u32_t right_codepoint) 
 {
@@ -2687,31 +2687,31 @@ game_assets_get_kerning(
   return font->kernings[advance_index];
 }
 
-static game_asset_font_glyph_t*
-game_assets_get_glyph(game_asset_font_t* font, u32_t codepoint) {
+static eden_asset_font_glyph_t*
+eden_assets_get_glyph(eden_asset_font_t* font, u32_t codepoint) {
   u32_t glyph_index_plus_one = font->codepoint_map[codepoint] + 1;
   if (glyph_index_plus_one == 0) return nullptr;
-  game_asset_font_glyph_t *glyph = font->glyphs + glyph_index_plus_one - 1;
+  eden_asset_font_glyph_t *glyph = font->glyphs + glyph_index_plus_one - 1;
   return glyph;
 }
 
 
-static game_asset_bitmap_t*
-game_assets_get_bitmap(game_assets_t* assets, game_asset_bitmap_id_t bitmap_id) {
+static eden_asset_bitmap_t*
+eden_assets_get_bitmap(eden_assets_t* assets, eden_asset_bitmap_id_t bitmap_id) {
   return assets->bitmaps + bitmap_id;
 }
 
-static game_asset_sound_t*
-game_assets_get_sound(game_assets_t* assets, game_asset_sound_id_t sound_id) {
+static eden_asset_sound_t*
+eden_assets_get_sound(eden_assets_t* assets, eden_asset_sound_id_t sound_id) {
   return assets->sounds + sound_id;
 }
-static game_asset_sprite_t*
-game_assets_get_sprite(game_assets_t* assets, game_asset_sprite_id_t sprite_id) {
+static eden_asset_sprite_t*
+eden_assets_get_sprite(eden_assets_t* assets, eden_asset_sprite_id_t sprite_id) {
   return assets->sprites + sprite_id;
 }
 
-static game_asset_font_t*
-game_assets_get_font(game_assets_t* assets, game_asset_font_id_t font_id) {
+static eden_asset_font_t*
+eden_assets_get_font(eden_assets_t* assets, eden_asset_font_id_t font_id) {
   return assets->fonts + font_id;
 }
 
@@ -2720,52 +2720,52 @@ game_assets_get_font(game_assets_t* assets, game_asset_font_id_t font_id) {
 //
 // before: 0, now: 1
 static b32_t
-game_is_button_poked(game_t* game, game_button_code_t code) {
-  game_input_t* in = &game->input;
+eden_is_button_poked(eden_t* eden, eden_button_code_t code) {
+  eden_input_t* in = &eden->input;
   auto btn = in->buttons[code];
   return !btn.before && btn.now;
 }
 
 // before: 1, now: 0
 static b32_t
-game_is_button_released(game_t* game, game_button_code_t code) {
-  game_input_t* in = &game->input;
+eden_is_button_released(eden_t* eden, eden_button_code_t code) {
+  eden_input_t* in = &eden->input;
   auto btn = in->buttons[code];
   return btn.before && !btn.now;
 }
 
 // before: X, now: 1
 static b32_t
-game_is_button_down(game_t* game, game_button_code_t code){
-  game_input_t* in = &game->input;
+eden_is_button_down(eden_t* eden, eden_button_code_t code){
+  eden_input_t* in = &eden->input;
   return in->buttons[code].now;
 }
 
 
 // before: 1, now: 1
 static b32_t
-game_is_button_held(game_t* game, game_button_code_t code) {
-  game_input_t* in = &game->input;
+eden_is_button_held(eden_t* eden, eden_button_code_t code) {
+  eden_input_t* in = &eden->input;
   auto btn = in->buttons[code];
   return btn.before && btn.now;
 }
 
 static b32_t
-game_is_dll_reloaded(game_t* game) {
-  return game->is_dll_reloaded;
+eden_is_dll_reloaded(eden_t* eden) {
+  return eden->is_dll_reloaded;
 }
 
 static f32_t 
-game_get_dt(game_t* game) {
-  return game->input.delta_time;
+eden_get_dt(eden_t* eden) {
+  return eden->input.delta_time;
 }
 
 
-static game_input_characters_t
-game_get_input_characters(game_t* game) {
-  game_input_characters_t ret;
-  ret.data = game->input.chars;
-  ret.count = game->input.char_count; 
+static eden_input_characters_t
+eden_get_input_characters(eden_t* eden) {
+  eden_input_characters_t ret;
+  ret.data = eden->input.chars;
+  ret.count = eden->input.char_count; 
 
   return ret;
 }
@@ -2774,89 +2774,89 @@ game_get_input_characters(game_t* game) {
 // MARK:(Rendering) 
 //
 static void
-game_clear_canvas(game_t* game, rgba_t color) {
-  game_gfx_t* gfx = &game->gfx;
-  game_gfx_clear_colors(gfx, color); 
+eden_clear_canvas(eden_t* eden, rgba_t color) {
+  eden_gfx_t* gfx = &eden->gfx;
+  eden_gfx_clear_colors(gfx, color); 
 }
 
 static void 
-game_set_view(game_t* game, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y)
+eden_set_view(eden_t* eden, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y)
 {
-  game_gfx_t* gfx = &game->gfx;
-  game_gfx_set_view(gfx, min_x, max_x, min_y, max_y, pos_x, pos_y); 
+  eden_gfx_t* gfx = &eden->gfx;
+  eden_gfx_set_view(gfx, min_x, max_x, min_y, max_y, pos_x, pos_y); 
 }
 
 static void 
-game_draw_sprite(game_t* game, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1, rgba_t color) 
+eden_draw_sprite(eden_t* eden, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1, rgba_t color) 
 {
-  game_gfx_t* gfx = &game->gfx;
-  game_gfx_push_sprite(gfx, color, pos, size, anchor, texture_index, texel_x0, texel_y0, texel_x1, texel_y1 ); 
+  eden_gfx_t* gfx = &eden->gfx;
+  eden_gfx_push_sprite(gfx, color, pos, size, anchor, texture_index, texel_x0, texel_y0, texel_x1, texel_y1 ); 
 }
 
 static void
-game_draw_rect(game_t* game, v2f_t pos, f32_t rot, v2f_t scale, rgba_t color) 
+eden_draw_rect(eden_t* eden, v2f_t pos, f32_t rot, v2f_t scale, rgba_t color) 
 {
-  game_gfx_t* gfx = &game->gfx;
-  game_gfx_draw_filled_rect(gfx,color, pos, rot, scale);
+  eden_gfx_t* gfx = &eden->gfx;
+  eden_gfx_draw_filled_rect(gfx,color, pos, rot, scale);
 }
 
 static void
-game_draw_tri(game_t* game, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t color)
+eden_draw_tri(eden_t* eden, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t color)
 {
-  game_gfx_t* gfx = &game->gfx;
-  game_gfx_draw_filled_triangle(gfx,color, p0, p1, p2);
+  eden_gfx_t* gfx = &eden->gfx;
+  eden_gfx_draw_filled_triangle(gfx,color, p0, p1, p2);
 }
 
 static void
-game_advance_depth(game_t* game) {
-  game_gfx_t* gfx = &game->gfx;
-  game_gfx_advance_depth(gfx);
-}
-
-
-static void
-game_set_blend_preset(game_t* game, game_gfx_blend_preset_type_t type) {
-  game_gfx_set_blend_preset(&game->gfx, type);
-}
-
-static game_gfx_blend_preset_type_t
-game_get_blend_preset(game_t* game) {
-  return game_gfx_get_blend_preset(&game->gfx);
+eden_advance_depth(eden_t* eden) {
+  eden_gfx_t* gfx = &eden->gfx;
+  eden_gfx_advance_depth(gfx);
 }
 
 
 static void
-game_draw_line(game_t* game, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {
-  game_gfx_draw_line(&game->gfx, p0, p1, thickness, colors);
+eden_set_blend_preset(eden_t* eden, eden_gfx_blend_preset_type_t type) {
+  eden_gfx_set_blend_preset(&eden->gfx, type);
+}
+
+static eden_gfx_blend_preset_type_t
+eden_get_blend_preset(eden_t* eden) {
+  return eden_gfx_get_blend_preset(&eden->gfx);
+}
+
+
+static void
+eden_draw_line(eden_t* eden, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {
+  eden_gfx_draw_line(&eden->gfx, p0, p1, thickness, colors);
 }
 
 static void
-game_draw_circle(game_t* game, v2f_t center, f32_t radius, u32_t sections, rgba_t color) {
-  game_gfx_draw_filled_circle(&game->gfx, center, radius, sections, color);
+eden_draw_circle(eden_t* eden, v2f_t center, f32_t radius, u32_t sections, rgba_t color) {
+  eden_gfx_draw_filled_circle(&eden->gfx, center, radius, sections, color);
 }
 
 static void
-game_draw_circ_outline(game_t* game, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
+eden_draw_circ_outline(eden_t* eden, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
 {
-  game_gfx_draw_circle_outline(&game->gfx, center, radius, thickness, line_count, color);
+  eden_gfx_draw_circle_outline(&eden->gfx, center, radius, thickness, line_count, color);
 }
 
 
 static void
-game_draw_asset_sprite(
-    game_t* game, 
-    game_assets_t* assets, 
-    game_asset_sprite_id_t sprite_id, 
+eden_draw_asset_sprite(
+    eden_t* eden, 
+    eden_assets_t* assets, 
+    eden_asset_sprite_id_t sprite_id, 
     v2f_t pos, 
     v2f_t size, 
     rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
 {
-  game_asset_sprite_t* sprite = game_assets_get_sprite(assets, sprite_id);
-  game_asset_bitmap_t* bitmap = game_assets_get_bitmap(assets, sprite->bitmap_asset_id);
+  eden_asset_sprite_t* sprite = eden_assets_get_sprite(assets, sprite_id);
+  eden_asset_bitmap_t* bitmap = eden_assets_get_bitmap(assets, sprite->bitmap_asset_id);
   v2f_t anchor = v2f_set(0.5f, 0.5f); 
   
-  game_draw_sprite(
-      game, 
+  eden_draw_sprite(
+      eden, 
       pos, size, anchor,
       bitmap->renderer_texture_handle, 
       sprite->texel_x0,
@@ -2868,9 +2868,9 @@ game_draw_asset_sprite(
 
 
 static void
-game_draw_text(game_t* game, game_assets_t* assets, game_asset_font_id_t font_id, str_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+eden_draw_text(eden_t* eden, eden_assets_t* assets, eden_asset_font_id_t font_id, str_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
-  game_asset_font_t* font = game_assets_get_font(assets, font_id);
+  eden_asset_font_t* font = eden_assets_get_font(assets, font_id);
   for(u32_t char_index = 0; 
       char_index < str.size;
       ++char_index) 
@@ -2879,22 +2879,22 @@ game_draw_text(game_t* game, game_assets_t* assets, game_asset_font_id_t font_id
 
     if (char_index > 0) {
       u32_t prev_cp = str.e[char_index-1];
-      game_asset_font_glyph_t *prev_glyph = game_assets_get_glyph(font, prev_cp);
+      eden_asset_font_glyph_t *prev_glyph = eden_assets_get_glyph(font, prev_cp);
 
-      f32_t kerning = game_assets_get_kerning(font, prev_cp, curr_cp);
+      f32_t kerning = eden_assets_get_kerning(font, prev_cp, curr_cp);
       f32_t advance = prev_glyph->horizontal_advance;
       px += (kerning + advance) * font_height;
     }
 
-    game_asset_font_glyph_t *glyph = game_assets_get_glyph(font, curr_cp);
-    game_asset_bitmap_t* bitmap = game_assets_get_bitmap(assets, font->bitmap_asset_id);
+    eden_asset_font_glyph_t *glyph = eden_assets_get_glyph(font, curr_cp);
+    eden_asset_bitmap_t* bitmap = eden_assets_get_bitmap(assets, font->bitmap_asset_id);
     f32_t width = (glyph->box_x1 - glyph->box_x0)*font_height;
     f32_t height = (glyph->box_y1 - glyph->box_y0)*font_height;
     
     v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py + (glyph->box_y0*font_height));
     v2f_t size = v2f_set(width, height);
     v2f_t anchor = v2f_set(0.f, 0.f); // bottom left
-    game_draw_sprite(game, 
+    eden_draw_sprite(eden, 
                     pos, size, anchor,
                     bitmap->renderer_texture_handle, 
                     glyph->texel_x0,
@@ -2907,9 +2907,9 @@ game_draw_text(game_t* game, game_assets_t* assets, game_asset_font_id_t font_id
 }
 
 static void
-game_draw_text_center_aligned(game_t* game, game_assets_t* assets, game_asset_font_id_t font_id, str_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+eden_draw_text_center_aligned(eden_t* eden, eden_assets_t* assets, eden_asset_font_id_t font_id, str_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
-  game_asset_font_t* font = game_assets_get_font(assets, font_id);
+  eden_asset_font_t* font = eden_assets_get_font(assets, font_id);
   
   // Calculate the total width of the text
   f32_t offset = 0.f;
@@ -2921,10 +2921,10 @@ game_draw_text_center_aligned(game_t* game, game_assets_t* assets, game_asset_fo
     u32_t curr_cp = str.e[char_index];
     u32_t prev_cp = str.e[char_index-1];
 
-    game_asset_font_glyph_t *prev_glyph = game_assets_get_glyph(font, prev_cp);
-    //game_asset_font_glyph_t *curr_glyph = game_assets_get_glyph(font, curr_cp);
+    eden_asset_font_glyph_t *prev_glyph = eden_assets_get_glyph(font, prev_cp);
+    //eden_asset_font_glyph_t *curr_glyph = eden_assets_get_glyph(font, curr_cp);
 
-    f32_t kerning = game_assets_get_kerning(font, prev_cp, curr_cp);
+    f32_t kerning = eden_assets_get_kerning(font, prev_cp, curr_cp);
     f32_t advance = prev_glyph->horizontal_advance;
     offset += (kerning + advance) * font_height;
   }
@@ -2932,7 +2932,7 @@ game_draw_text_center_aligned(game_t* game, game_assets_t* assets, game_asset_fo
   // Add the width of the last glyph
   {    
     u32_t cp = str.e[str.size-1];
-    game_asset_font_glyph_t* glyph = game_assets_get_glyph(font, cp);
+    eden_asset_font_glyph_t* glyph = eden_assets_get_glyph(font, cp);
     f32_t advance = glyph->horizontal_advance;
     offset += advance * font_height;
   }
@@ -2946,22 +2946,22 @@ game_draw_text_center_aligned(game_t* game, game_assets_t* assets, game_asset_fo
 
     if (char_index > 0) {
       u32_t prev_cp = str.e[char_index-1];
-      game_asset_font_glyph_t *prev_glyph = game_assets_get_glyph(font, prev_cp);
+      eden_asset_font_glyph_t *prev_glyph = eden_assets_get_glyph(font, prev_cp);
 
-      f32_t kerning = game_assets_get_kerning(font, prev_cp, curr_cp);
+      f32_t kerning = eden_assets_get_kerning(font, prev_cp, curr_cp);
       f32_t advance = prev_glyph->horizontal_advance;
       px += (kerning + advance) * font_height;
     }
 
-    game_asset_font_glyph_t *glyph = game_assets_get_glyph(font, curr_cp);
-    game_asset_bitmap_t* bitmap = game_assets_get_bitmap(assets, font->bitmap_asset_id);
+    eden_asset_font_glyph_t *glyph = eden_assets_get_glyph(font, curr_cp);
+    eden_asset_bitmap_t* bitmap = eden_assets_get_bitmap(assets, font->bitmap_asset_id);
     f32_t width = (glyph->box_x1 - glyph->box_x0)*font_height;
     f32_t height = (glyph->box_y1 - glyph->box_y0)*font_height;
     
     v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py + (glyph->box_y0*font_height));
     v2f_t size = v2f_set(width, height);
     v2f_t anchor = v2f_set(0.f, 0.f); // bottom left
-    game_draw_sprite(game, 
+    eden_draw_sprite(eden, 
                     pos, size, anchor,
                     bitmap->renderer_texture_handle, 
                     glyph->texel_x0,
@@ -2974,50 +2974,50 @@ game_draw_text_center_aligned(game_t* game, game_assets_t* assets, game_asset_fo
 }
 
 static void 
-game_inspector_init(game_inspector_t* in, arena_t* arena, u32_t max_entries) 
+eden_inspector_init(eden_inspector_t* in, arena_t* arena, u32_t max_entries) 
 {
   in->entry_cap = max_entries;
   in->entry_count = 0;
-  in->entries = arena_push_arr(game_inspector_entry_t, arena, max_entries);
+  in->entries = arena_push_arr(eden_inspector_entry_t, arena, max_entries);
   assert(in->entries != nullptr);
 }
 
 static void 
-game_inspector_clear(game_inspector_t* in) 
+eden_inspector_clear(eden_inspector_t* in) 
 {
   in->entry_count = 0;
 }
 
 static void
-game_inspector_add_u32(game_inspector_t* in, str_t name, u32_t item) 
+eden_inspector_add_u32(eden_inspector_t* in, str_t name, u32_t item) 
 {
   assert(in->entry_count < in->entry_cap);
-  game_inspector_entry_t* entry = in->entries + in->entry_count++;
+  eden_inspector_entry_t* entry = in->entries + in->entry_count++;
   entry->item_u32 = item;
-  entry->type = GAME_INSPECTOR_ENTRY_TYPE_U32;
+  entry->type = EDEN_INSPECTOR_ENTRY_TYPE_U32;
   entry->name = name;
 }
 
 
 static void
-game_inspector_add_f32(game_inspector_t* in, str_t name, f32_t item) {
+eden_inspector_add_f32(eden_inspector_t* in, str_t name, f32_t item) {
   assert(in->entry_count < in->entry_cap);
-  game_inspector_entry_t* entry = in->entries + in->entry_count++;
+  eden_inspector_entry_t* entry = in->entries + in->entry_count++;
   entry->item_f32 = item;
-  entry->type = GAME_INSPECTOR_ENTRY_TYPE_F32;
+  entry->type = EDEN_INSPECTOR_ENTRY_TYPE_F32;
   entry->name = name;
 }
 
-static game_profiler_entry_t*
-_game_profiler_init_block(
-    game_profiler_t* p,
+static eden_profiler_entry_t*
+_eden_profiler_init_block(
+    eden_profiler_t* p,
     const char* filename, 
     u32_t line,
     const char* function_name,
     const char* block_name = 0) 
 {
   if (p->entry_count < p->entry_cap) {
-    game_profiler_entry_t* entry = p->entries + p->entry_count++;
+    eden_profiler_entry_t* entry = p->entries + p->entry_count++;
     entry->filename = filename;
     entry->block_name = block_name ? block_name : function_name;
     entry->line = line;
@@ -3031,25 +3031,25 @@ _game_profiler_init_block(
 }
 
 static void
-_game_profiler_begin_block(game_profiler_t* p, game_profiler_entry_t* entry) 
+_eden_profiler_begin_block(eden_profiler_t* p, eden_profiler_entry_t* entry) 
 {
   entry->start_cycles = (u32_t)p->get_performance_counter();
   entry->start_hits = 1;
 }
 
 static void
-_game_profiler_end_block(game_profiler_t* p, game_profiler_entry_t* entry) {
+_eden_profiler_end_block(eden_profiler_t* p, eden_profiler_entry_t* entry) {
   u64_t delta = ((u32_t)p->get_performance_counter() - entry->start_cycles) | ((u64_t)(entry->start_hits)) << 32;
   u64_atomic_add(&entry->hits_and_cycles, delta);
 }
 
 
 static void 
-game_profiler_reset(game_profiler_t* p) {
+eden_profiler_reset(eden_profiler_t* p) {
 
   for(u32_t entry_id = 0; entry_id < p->entry_count; ++entry_id)
   {
-    game_profiler_entry_t* itr = p->entries + entry_id;
+    eden_profiler_entry_t* itr = p->entries + entry_id;
     itr->flag_for_reset = true;
   }
 
@@ -3057,32 +3057,32 @@ game_profiler_reset(game_profiler_t* p) {
 }
 
 static void 
-game_profiler_init(
-    game_profiler_t* p, 
-    game_profiler_get_performance_counter_f* get_performance_counter,
+eden_profiler_init(
+    eden_profiler_t* p, 
+    eden_profiler_get_performance_counter_f* get_performance_counter,
     arena_t* arena,
     u32_t max_entries,
     u32_t max_snapshots_per_entry)
 {
   p->entry_cap = max_entries;
   p->entry_snapshot_count = max_snapshots_per_entry;
-  p->entries = arena_push_arr(game_profiler_entry_t, arena, p->entry_cap);
+  p->entries = arena_push_arr(eden_profiler_entry_t, arena, p->entry_cap);
   assert(p->entries);
   p->get_performance_counter = get_performance_counter;
 
   for (u32_t i = 0; i < p->entry_cap; ++i) {
-    p->entries[i].snapshots = arena_push_arr(game_profiler_snapshot_t, arena, max_snapshots_per_entry);
+    p->entries[i].snapshots = arena_push_arr(eden_profiler_snapshot_t, arena, max_snapshots_per_entry);
     assert(p->entries[i].snapshots);
   }
-  game_profiler_reset(p);
+  eden_profiler_reset(p);
 }
 
 
 static void
-game_profiler_update_entries(game_profiler_t* p) {
+eden_profiler_update_entries(eden_profiler_t* p) {
   for(u32_t entry_id = 0; entry_id < p->entry_count; ++entry_id)
   {
-    game_profiler_entry_t* itr = p->entries + entry_id;
+    eden_profiler_entry_t* itr = p->entries + entry_id;
     u64_t hits_and_cycles = u64_atomic_assign(&itr->hits_and_cycles, 0);
     u32_t hits = (u32_t)(hits_and_cycles >> 32);
     u32_t cycles = (u32_t)(hits_and_cycles & 0xFFFFFFFF);
@@ -3097,7 +3097,7 @@ game_profiler_update_entries(game_profiler_t* p) {
 }
 
 
-#endif //GAME_H
+#endif //EDEN_H
 
 
 //
@@ -3113,7 +3113,7 @@ game_profiler_update_entries(game_profiler_t* p) {
 //   We should compress it...
 // 
 // = 2023-11-03 =
-//   Sound is added to game assets. 
+//   Sound is added to eden assets. 
 //   I had finished it earlier but I had no idea where my changes went...
 //
 //   Now, I need to do a clean up of the audio mixer system. 
@@ -3121,14 +3121,14 @@ game_profiler_update_entries(game_profiler_t* p) {
 //   holding a pointer to the raw sound data is a good idea. 
 //
 //   The alternative is to hold a handle but that would tie the mixer API
-//   to some kind of storage API (like game assets), which will make it 
+//   to some kind of storage API (like eden assets), which will make it 
 //   very inflexible.
 //
 // = 2023-10-12 = 
-//   Preliminary audio mixer is completed on the game layer.
+//   Preliminary audio mixer is completed on the eden layer.
 //   The next step is to figure out how to make it more generic
-//   such that it is integratable as a tool on the game.h 
-//   (like game_assets_t). Basically, it should be able to play
+//   such that it is integratable as a tool on the eden.h 
+//   (like eden_assets_t). Basically, it should be able to play
 //   not just 16-bit sound (which it does now) but also 8-bit
 //   and 32-bit sounds. 
 //
@@ -3141,46 +3141,46 @@ game_profiler_update_entries(game_profiler_t* p) {
 //   but I'm not sure what's the best way to go about it.
 //   
 //   Right now, I'm just doing the straightforward way of just asking the audio client
-//   for it's own avaliable buffer each frame and then just passing it to the game
-//   layer and let the game dump whatever it can. This feels absolutely terrible 
-//   for games that are extremely dependant on music, like rhythm games. I don't forsee
-//   myself writing a rhythm game at the moment. 
+//   for it's own avaliable buffer each frame and then just passing it to the eden
+//   layer and let the eden dump whatever it can. This feels absolutely terrible 
+//   for edens that are extremely dependant on music, like rhythm edens. I don't forsee
+//   myself writing a rhythm eden at the moment. 
 //
-//   For non-rhythm critical games, the only issue I can think of is what happens when the
-//   game pushes a NET LESS samples than it should. For example, let's say that 10 seconds
-//   has passed for the game but the audio SOMEHOW only manages to only push 5 seconds 
+//   For non-rhythm critical edens, the only issue I can think of is what happens when the
+//   eden pushes a NET LESS samples than it should. For example, let's say that 10 seconds
+//   has passed for the eden but the audio SOMEHOW only manages to only push 5 seconds 
 //   worth of audio. What happens then? How do I even test this?
 //
 // 
 // = 2023-09-09 =
-//   Decided to allow the game layer to specify a target frame rate. 
+//   Decided to allow the eden layer to specify a target frame rate. 
 //   I don't think I want to deal with monitor refresh rate and tying that to the
-//   game's ideal frame rate anymore. 
+//   eden's ideal frame rate anymore. 
 //
 // = 2023-09-05 =
 //   Added graphics code in here.
 //
 // = 2023-08-10 =
 //   I spent an afternoon yesterday thinking how I could remove things
-//   like the config from the game layer because a part of me believes
-//   that the game layer shouldn't know the specifics of the engine layer
+//   like the config from the eden layer because a part of me believes
+//   that the eden layer shouldn't know the specifics of the engine layer
 //   like who many bytes should the "graphics arena" have. 
 //
-//   At the same time, if the game layer doesn't specify, the engine because 
+//   At the same time, if the eden layer doesn't specify, the engine because 
 //   too general purpose, and that would require me to write a bunch of general
 //   purpose stuff (like a general purpose allocator) which...could have really
 //   inefficient outcomes if the stars do not align, like higher wastage of memory.
 //   
 //   Thus this is a reminder to myself to spearhead and go with the config idea.
-//   The next thing to do is for the game to somehow retrieve the arena usages 
-//   of the engine so that the game side can manually fine tune their numbers.
+//   The next thing to do is for the eden to somehow retrieve the arena usages 
+//   of the engine so that the eden side can manually fine tune their numbers.
 // 
 // = 2023-07-30 = 
 //   I'm not entirely sure where assets should really be.
 //   I feel like they should be shifted *somewhere* but it's hard
 //   to figure out exactly where. The main issue I *feel* is that
-//   the game side shouldn't be the one to initialize the assets;
-//   instead it should be on the game's side. This would make it 
+//   the eden side shouldn't be the one to initialize the assets;
+//   instead it should be on the eden's side. This would make it 
 //   more reasonable to do some kind of 'hot reloading' of assets.
 //
 // = 2023-07-18 = 
@@ -3189,7 +3189,7 @@ game_profiler_update_entries(game_profiler_t* p) {
 //
 //   For the gfx layer, we will probably want to remove the need for
 //   a command buffer and maybe even the texture buffer, at least 
-//   from the views of the game layer. 
+//   from the views of the eden layer. 
 //
 //   Profiler layer is more straightforward...it's more of whether we
 //   should consolidate ALL debug-related things into one big struct. 

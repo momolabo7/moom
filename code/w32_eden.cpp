@@ -1,9 +1,9 @@
 // 
 // DESCRIPTION
-//   This is my dear 2D game engine on win32 platform.
+//   This is my dear 2D eden engine on win32 platform.
 //
 // FLAGS
-//   HOT_RELOAD - Enables hot-reload on game.dll when it changes. Default is 1.
+//   HOT_RELOAD - Enables hot-reload on eden.dll when it changes. Default is 1.
 // 
 // BOOKMARKS
 //
@@ -21,8 +21,9 @@
 // NOTE(momo): For now, we enable these flags
 // These macros are in preparation in case we have
 // multiple ways to do audio or graphics
-#ifndef GAME_USE_WASAPI
-# define GAME_USE_WASAPI 1
+
+#ifndef EDEN_USE_WASAPI
+# define EDEN_USE_WASAPI 1
 #endif
 
 
@@ -44,8 +45,7 @@
 #undef near
 #undef far
 
-#include "momo.h"
-#include "game.h"
+#include "eden.h"
 
 
 //
@@ -63,7 +63,7 @@ struct w32_memory_t {
 //
 struct w32_work_t {
   void* data;
-  game_task_callback_f* callback;
+  eden_task_callback_f* callback;
 };
 
 struct w32_work_queue_t {
@@ -121,8 +121,8 @@ struct w32_state_t {
   b32_t is_cursor_locked;
   POINT cursor_pt_to_lock_to;
   
-  f32_t game_width;
-  f32_t game_height;
+  f32_t eden_width;
+  f32_t eden_height;
   
   w32_work_queue_t work_queue;
   w32_file_cabinet_t file_cabinet;
@@ -130,7 +130,7 @@ struct w32_state_t {
   HWND window;
 
   w32_memory_t memory_sentinel;
-  game_t* game;
+  eden_t* eden;
 };
 static w32_state_t w32_state;
 
@@ -140,7 +140,7 @@ static w32_state_t w32_state;
 // MARK:(Logging)
 //
 static 
-game_debug_log_sig(w32_log_proc) 
+eden_debug_log_sig(w32_log_proc) 
 {
   char buffer[256] = {0};
   va_list args;
@@ -154,23 +154,23 @@ game_debug_log_sig(w32_log_proc)
 //
 // Mark:(Audio)
 //
-#define w32_audio_load_sig(name) b32_t name(game_audio_t* game_audio, u32_t samples_per_second, u16_t bits_per_sample, u16_t channels, u32_t latency_frames, u32_t frame_rate, arena_t* allocator)
+#define w32_audio_load_sig(name) b32_t name(eden_audio_t* eden_audio, u32_t samples_per_second, u16_t bits_per_sample, u16_t channels, u32_t latency_frames, u32_t frame_rate, arena_t* allocator)
 static w32_audio_load_sig(w32_audio_load);
 
-#define w32_audio_unload_sig(name) void name(game_audio_t* game_audio)
+#define w32_audio_unload_sig(name) void name(eden_audio_t* eden_audio)
 static w32_audio_unload_sig(w32_audio_unload);
 
-#define w32_audio_begin_frame_sig(name) void name(game_audio_t* game_audio)
+#define w32_audio_begin_frame_sig(name) void name(eden_audio_t* eden_audio)
 static w32_audio_begin_frame_sig(w32_audio_begin_frame);
 
-#define w32_audio_end_frame_sig(name) void name(game_audio_t* game_audio)
+#define w32_audio_end_frame_sig(name) void name(eden_audio_t* eden_audio)
 static w32_audio_end_frame_sig(w32_audio_end_frame);
 
 
 //
 // Mark:(Wasapi)
 //
-#ifdef GAME_USE_WASAPI 
+#ifdef EDEN_USE_WASAPI 
 
 struct w32_wasapi_t {
   //w32_wasapi_notif_client_t notifs;
@@ -179,7 +179,7 @@ struct w32_wasapi_t {
   IAudioClient* audio_client;
   IAudioRenderClient* render_client;
   
-  // Intermediate ring buffer for game to write audio to.
+  // Intermediate ring buffer for eden to write audio to.
   u32_t buffer_size;
   void* buffer;
   
@@ -195,20 +195,20 @@ struct w32_wasapi_t {
   arena_t allocator;
 };
 
-#endif // GAME_USE_WASAPI
+#endif // EDEN_USE_WASAPI
 
 
 
 //
 // MARK:(Gfx)
 // 
-#define w32_gfx_load_sig(name) b32_t  name(game_gfx_t* gfx, HWND window, arena_t* arena, usz_t command_queue_size, usz_t texture_queue_size, usz_t max_textures, usz_t max_payloads, usz_t max_sprites, usz_t max_triangles)
+#define w32_gfx_load_sig(name) b32_t  name(eden_gfx_t* gfx, HWND window, arena_t* arena, usz_t command_queue_size, usz_t texture_queue_size, usz_t max_textures, usz_t max_payloads, usz_t max_sprites, usz_t max_triangles)
 static w32_gfx_load_sig(w32_gfx_load);
 
-#define w32_gfx_begin_frame_sig(name) void name(game_gfx_t* gfx, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1)
+#define w32_gfx_begin_frame_sig(name) void name(eden_gfx_t* gfx, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1)
 static w32_gfx_begin_frame_sig(w32_gfx_begin_frame);
 
-#define w32_gfx_end_frame_sig(name) void name(game_gfx_t* gfx)
+#define w32_gfx_end_frame_sig(name) void name(eden_gfx_t* gfx)
 static w32_gfx_end_frame_sig(w32_gfx_end_frame);
 
 
@@ -216,7 +216,7 @@ static w32_gfx_end_frame_sig(w32_gfx_end_frame);
 //
 // MARK:(Opengl)
 // 
-#ifdef GAME_USE_OPENGL
+#ifdef EDEN_USE_OPENGL
 #define WGL_CONTEXT_MAJOR_VERSION_ARB           0x2091
 #define WGL_CONTEXT_MINOR_VERSION_ARB           0x2092
 #define WGL_CONTEXT_LAYER_PLANE_ARB             0x2093
@@ -397,7 +397,7 @@ w32_gfx_load_sig(w32_gfx_load)
     return false;
   }
 
-  auto* opengl = arena_push(game_gfx_opengl_t, arena);
+  auto* opengl = arena_push(eden_gfx_opengl_t, arena);
   gfx->platform_data = opengl;
 
   if (!opengl) {
@@ -408,7 +408,7 @@ w32_gfx_load_sig(w32_gfx_load)
   if(wglMakeCurrent(dc, opengl_ctx)) {
     HMODULE module = LoadLibraryA("opengl32.dll");
 #define wgl_set_opengl_function(name) \
-opengl->name = (game_gfx_opengl_##name*)_w32_try_get_wgl_function(#name, module); \
+opengl->name = (eden_gfx_opengl_##name*)_w32_try_get_wgl_function(#name, module); \
 if (!opengl->name) { return false; } 
     wgl_set_opengl_function(glEnable);
     wgl_set_opengl_function(glDisable); 
@@ -454,7 +454,7 @@ if (!opengl->name) { return false; }
   }
 #undef wgl_set_opengl_function
   
-  if (!game_gfx_opengl_init(
+  if (!eden_gfx_opengl_init(
         gfx, 
         arena,
         command_queue_size,
@@ -489,15 +489,15 @@ if (!opengl->name) { return false; }
 static 
 w32_gfx_begin_frame_sig(w32_gfx_begin_frame)
 {
-  game_gfx_opengl_begin_frame(gfx, render_wh, region_x0, region_y0, region_x1, region_y1);
+  eden_gfx_opengl_begin_frame(gfx, render_wh, region_x0, region_y0, region_x1, region_y1);
 }
 
 static
 w32_gfx_end_frame_sig(w32_gfx_end_frame) {
-  game_gfx_opengl_end_frame(gfx);
+  eden_gfx_opengl_end_frame(gfx);
   SwapBuffers(wglGetCurrentDC());
 }
-#endif // GAME_USE_OPENGL
+#endif // EDEN_USE_OPENGL
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -546,7 +546,7 @@ _w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {
   //     This is obtainable with IAudioClient::GetMixFormat().
   //     This flag means that a mixer will be included that will help convert a given wave format
   //     to the one that the audio client uses. We will use this flag because we will
-  //     let the game layer decide what format to use.
+  //     let the eden layer decide what format to use.
   //
   //  
   // 
@@ -598,7 +598,7 @@ _w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {
 
 
   // TODO: Do we just the the real buffer size and just use that value
-  // to initialize our sound buffer size that our game layer will write to?
+  // to initialize our sound buffer size that our eden layer will write to?
 
 
   // Get the number of audio frames that the buffer can hold.
@@ -664,12 +664,12 @@ static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t
 
 #include <stdio.h>
 
-static game_allocate_memory_sig(w32_allocate_memory);
+static eden_allocate_memory_sig(w32_allocate_memory);
 
 static 
 w32_audio_begin_frame_sig(w32_audio_begin_frame) 
 {
-  auto* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
+  auto* wasapi = (w32_wasapi_t*)(eden_audio->platform_data);
 
   HRESULT hr; 
   
@@ -713,15 +713,15 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
 
   UINT32 samples_to_write = buffer_frame_count - padding_frame_count; 
 
-  // Setup for the game layer
-  game_audio->sample_count = samples_to_write; 
-  game_audio->samples = nullptr;
-  game_audio->device_bits_per_sample = wasapi->bits_per_sample;
-  game_audio->device_channels = wasapi->channels;
-  game_audio->device_samples_per_second = wasapi->samples_per_second;
+  // Setup for the eden layer
+  eden_audio->sample_count = samples_to_write; 
+  eden_audio->samples = nullptr;
+  eden_audio->device_bits_per_sample = wasapi->bits_per_sample;
+  eden_audio->device_channels = wasapi->channels;
+  eden_audio->device_samples_per_second = wasapi->samples_per_second;
 
   // Get the buffer 
-  if (game_audio->sample_count > 0) 
+  if (eden_audio->sample_count > 0) 
   {
     // Ask for the address of the buffer with the size of sample_count.
     // This could actually fail for a multitude of reasons so it's 
@@ -731,15 +731,15 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
     // We should expect GetBuffer to fail.
     // In which we, we should do nothing, but the NEXT time it succees
     // it should continue playing the sound without breaking continuity.
-    hr = wasapi->render_client->GetBuffer(game_audio->sample_count, &data);
+    hr = wasapi->render_client->GetBuffer(eden_audio->sample_count, &data);
     if (SUCCEEDED(hr)) {
-      game_audio->samples = data;
+      eden_audio->samples = data;
     }
 
   }
 
 #if 0
-  w32_wasapi_t* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
+  w32_wasapi_t* wasapi = (w32_wasapi_t*)(eden_audio->platform_data);
 	if (wasapi->is_device_changed) {
 		//w32_log("[w32_wasapi] Resetting wasapi device\n");
 		// Attempt to change device
@@ -771,9 +771,9 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
 		samples_to_write = wasapi->buffer_size;
 	}
 
-  game_audio->sample_buffer = wasapi->buffer;
-  game_audio->sample_count = samples_to_write; 
-  game_audio->channels = wasapi->channels;
+  eden_audio->sample_buffer = wasapi->buffer;
+  eden_audio->sample_count = samples_to_write; 
+  eden_audio->channels = wasapi->channels;
 #endif
 
 }
@@ -781,10 +781,10 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
 static 
 w32_audio_end_frame_sig(w32_audio_end_frame) 
 {
-  auto* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
+  auto* wasapi = (w32_wasapi_t*)(eden_audio->platform_data);
 
-  if (game_audio->sample_count > 0) {
-    wasapi->render_client->ReleaseBuffer(game_audio->sample_count, 0);
+  if (eden_audio->sample_count > 0) {
+    wasapi->render_client->ReleaseBuffer(eden_audio->sample_count, 0);
   }
   
 
@@ -794,16 +794,16 @@ w32_audio_end_frame_sig(w32_audio_end_frame)
   // NOTE(Momo): Kinda assumes 16-bit Sound
   BYTE* sound_buffer_data;
   HRESULT hr = IAudioRenderClient_GetBuffer(wasapi->render_client, 
-                                            (UINT32)game_audio->sample_count, 
+                                            (UINT32)eden_audio->sample_count, 
                                             &sound_buffer_data);
   if (FAILED(hr)) return;
 
-  s16_t* src_sample = game_audio->sample_buffer;
+  s16_t* src_sample = eden_audio->sample_buffer;
   s16_t* dest_sample = (s16_t*)sound_buffer_data;
   // buffer structure for stereo:
   // s16_t   s16_t    s16_t  s16_t   s16_t  s16_t
   // [LEFT RIGHT] LEFT RIGHT LEFT RIGHT....
-  for(u32_t sample_index = 0; sample_index < game_audio->sample_count; ++sample_index)
+  for(u32_t sample_index = 0; sample_index < eden_audio->sample_count; ++sample_index)
   {
     for (u32_t channel_index = 0; channel_index < wasapi->channels; ++channel_index) {
       *dest_sample++ = *src_sample++;
@@ -812,7 +812,7 @@ w32_audio_end_frame_sig(w32_audio_end_frame)
 
   IAudioRenderClient_ReleaseBuffer(
       wasapi->render_client, 
-      (UINT32)game_audio->sample_count, 
+      (UINT32)eden_audio->sample_count, 
       0);
 #endif
 }
@@ -836,7 +836,7 @@ w32_audio_load_sig(w32_audio_load)
   auto* wasapi = arena_push(w32_wasapi_t, allocator);
   if (!wasapi) return false;
 
-  game_audio->platform_data = wasapi;
+  eden_audio->platform_data = wasapi;
 
   wasapi->frame_rate = frame_rate;
   wasapi->channels = channels;
@@ -844,7 +844,7 @@ w32_audio_load_sig(w32_audio_load)
   wasapi->samples_per_second = samples_per_second;
 #if 0
   //
-  // Setup the intermediate buffer for game to write audio to.
+  // Setup the intermediate buffer for eden to write audio to.
   //
   // I don't really know the best buffer size to use AND I don't want to keep changing buffer
   // size when the device changes, so I'm just going to allocate 1 second worth of samples
@@ -905,7 +905,7 @@ w32_audio_load_sig(w32_audio_load)
 
 static 
 w32_audio_unload_sig(w32_audio_unload) {
-  auto* wasapi = (w32_wasapi_t*)(game_audio->platform_data);
+  auto* wasapi = (w32_wasapi_t*)(eden_audio->platform_data);
   wasapi->audio_client->Release();
   wasapi->render_client->Release();
   wasapi->mm_device->Release();
@@ -1259,36 +1259,36 @@ w32_reload_code_if_outdated(w32_loaded_code_t* code) {
   return reloaded;
 }
 
-static game_button_code_t
-w32_vkeys_to_game_button_code(u32_t code) {
+static eden_button_code_t
+w32_vkeys_to_eden_button_code(u32_t code) {
 
   // A to Z
   if (code >= 0x41 && code <= 0x5A) {
-    return game_button_code_t(GAME_BUTTON_CODE_A + code - 0x41);
+    return eden_button_code_t(EDEN_BUTTON_CODE_A + code - 0x41);
   }
   
   // 0 to 9
   else if (code >= 0x30 && code <= 0x39) {
-    return game_button_code_t(GAME_BUTTON_CODE_0 + code - 0x30);
+    return eden_button_code_t(EDEN_BUTTON_CODE_0 + code - 0x30);
   }
 
   // F1 to F12
   // NOTE(momo): there are actually more F-keys??
   else if (code >= 0x70 && code <= 0x7B) {
-    return game_button_code_t(GAME_BUTTON_CODE_F1 + code - 0x70);
+    return eden_button_code_t(EDEN_BUTTON_CODE_F1 + code - 0x70);
   }
   else {
     switch(code) {
-      case VK_SPACE: return GAME_BUTTON_CODE_SPACE;
+      case VK_SPACE: return EDEN_BUTTON_CODE_SPACE;
     }
 
   }
-  return GAME_BUTTON_CODE_UNKNOWN;
+  return EDEN_BUTTON_CODE_UNKNOWN;
 }
 
 // TODO: change 'rr' to 'render_region'
 static void
-w32_update_input(game_input_t* input, HWND window, f32_t delta_time, RECT rr) 
+w32_update_input(eden_input_t* input, HWND window, f32_t delta_time, RECT rr) 
 {
   // Update input
   for (u32_t i = 0; i < array_count(input->buttons); ++i) 
@@ -1324,19 +1324,19 @@ w32_update_input(game_input_t* input, HWND window, f32_t delta_time, RECT rr)
       case WM_LBUTTONUP:
       case WM_LBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_LBUTTONDOWN;
-        input->buttons[GAME_BUTTON_CODE_LMB].now = is_key_down;
+        input->buttons[EDEN_BUTTON_CODE_LMB].now = is_key_down;
       } break;
 
       case WM_MBUTTONUP:
       case WM_MBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_MBUTTONDOWN;
-        input->buttons[GAME_BUTTON_CODE_MMB].now = is_key_down;
+        input->buttons[EDEN_BUTTON_CODE_MMB].now = is_key_down;
       } break;
 
       case WM_RBUTTONUP:
       case WM_RBUTTONDOWN: {
         b32_t is_key_down = msg.message == WM_RBUTTONDOWN;
-        input->buttons[GAME_BUTTON_CODE_RMB].now = is_key_down;
+        input->buttons[EDEN_BUTTON_CODE_RMB].now = is_key_down;
       } break;
       
       case WM_KEYUP:
@@ -1346,7 +1346,7 @@ w32_update_input(game_input_t* input, HWND window, f32_t delta_time, RECT rr)
       {
         u32_t code = (u32_t)msg.wParam;
         b32_t is_key_down = msg.message == WM_KEYDOWN;
-        input->buttons[w32_vkeys_to_game_button_code(code)].now = is_key_down;
+        input->buttons[w32_vkeys_to_eden_button_code(code)].now = is_key_down;
 
         TranslateMessage(&msg);
       } break;
@@ -1374,15 +1374,15 @@ w32_update_input(game_input_t* input, HWND window, f32_t delta_time, RECT rr)
   f32_t region_width = (f32_t)(rr.right - rr.left);
   f32_t region_height = (f32_t)(rr.top - rr.bottom);
 
-  f32_t game_to_render_w = w32_state.game_width / region_width;
-  f32_t game_to_render_h = w32_state.game_height / region_height;
+  f32_t eden_to_render_w = w32_state.eden_width / region_width;
+  f32_t eden_to_render_h = w32_state.eden_height / region_height;
   
-  input->mouse_pos.x = render_mouse_pos_x * game_to_render_w;
-  input->mouse_pos.y = render_mouse_pos_y * game_to_render_h;
+  input->mouse_pos.x = render_mouse_pos_x * eden_to_render_w;
+  input->mouse_pos.y = render_mouse_pos_y * eden_to_render_h;
   
   
   // NOTE(Momo): Flip y
-  //game.design_mouse_pos.y = f32_lerp(MOMO_HEIGHT, 0.f, game.design_mouse_pos.y/MOMO_HEIGHT);	
+  //eden.design_mouse_pos.y = f32_lerp(MOMO_HEIGHT, 0.f, eden.design_mouse_pos.y/MOMO_HEIGHT);	
   if (w32_state.is_cursor_locked) {
     SetCursorPos(
         w32_state.cursor_pt_to_lock_to.x,
@@ -1392,14 +1392,14 @@ w32_update_input(game_input_t* input, HWND window, f32_t delta_time, RECT rr)
 }
 
 static void
-w32_set_game_dims(f32_t width, f32_t height) {
+w32_set_eden_dims(f32_t width, f32_t height) {
   assert(width > 0.f && height > 0.f);
 
   // Ignore if there is no change
-  if (width == w32_state.game_width && height == w32_state.game_height) return;
+  if (width == w32_state.eden_width && height == w32_state.eden_height) return;
 
-  w32_state.game_width = width;
-  w32_state.game_height = height;
+  w32_state.eden_width = width;
+  w32_state.eden_height = height;
 
   // Get monitor info
   HMONITOR monitor = MonitorFromWindow(0, MONITOR_DEFAULTTONEAREST);
@@ -1429,24 +1429,24 @@ w32_set_game_dims(f32_t width, f32_t height) {
 }
 
 static 
-game_show_cursor_sig(w32_show_cursor)
+eden_show_cursor_sig(w32_show_cursor)
 {
   while(ShowCursor(1) < 0);
 }
 
 static  
-game_hide_cursor_sig(w32_hide_cursor) {
+eden_hide_cursor_sig(w32_hide_cursor) {
   while(ShowCursor(0) >= 0);
 }
 
 static 
-game_lock_cursor_sig(w32_lock_cursor) {
+eden_lock_cursor_sig(w32_lock_cursor) {
   w32_state.is_cursor_locked = true;
   GetCursorPos(&w32_state.cursor_pt_to_lock_to);
 }
 
 static 
-game_unlock_cursor_sig(w32_unlock_cursor) {
+eden_unlock_cursor_sig(w32_unlock_cursor) {
   w32_state.is_cursor_locked = false;
 }
 
@@ -1478,17 +1478,17 @@ w32_window_callback(HWND window,
 //
 
 static 
-game_open_file_sig(w32_open_file)
+eden_open_file_sig(w32_open_file)
 {
   // Opening the file
   DWORD access_flag = {};
   DWORD creation_disposition = {};
   switch (file_access) {
-    case GAME_FILE_ACCESS_READ: {
+    case EDEN_FILE_ACCESS_READ: {
       access_flag = GENERIC_READ;
       creation_disposition = OPEN_EXISTING;
     } break;
-    case GAME_FILE_ACCESS_OVERWRITE: {
+    case EDEN_FILE_ACCESS_OVERWRITE: {
       access_flag = GENERIC_WRITE;
       creation_disposition = CREATE_ALWAYS;
     } break;
@@ -1524,7 +1524,7 @@ game_open_file_sig(w32_open_file)
 }
 
 static 
-game_close_file_sig(w32_close_file)
+eden_close_file_sig(w32_close_file)
 {
   w32_file_t* w32_file = (w32_file_t*)file->data;
   CloseHandle(w32_file->handle);
@@ -1534,18 +1534,18 @@ game_close_file_sig(w32_close_file)
 }
 
 static 
-game_read_file_sig(w32_read_file)
+eden_read_file_sig(w32_read_file)
 { 
   w32_file_t* w32_file = (w32_file_t*)file->data;
   
   // Reading the file
-  OVERLAPPED overlgameed = {};
-  overlgameed.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
-  overlgameed.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
+  OVERLAPPED overledened = {};
+  overledened.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
+  overledened.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
   
   DWORD bytes_read;
   
-  if(ReadFile(w32_file->handle, dest, (DWORD)size, &bytes_read, &overlgameed) &&
+  if(ReadFile(w32_file->handle, dest, (DWORD)size, &bytes_read, &overledened) &&
      (DWORD)size == bytes_read) 
   {
     return true;
@@ -1556,7 +1556,7 @@ game_read_file_sig(w32_read_file)
 }
 
 static 
-game_get_file_size_sig(w32_get_file_size)
+eden_get_file_size_sig(w32_get_file_size)
 { 
   w32_file_t* w32_file = (w32_file_t*)file->data;
  
@@ -1571,16 +1571,16 @@ game_get_file_size_sig(w32_get_file_size)
 }
 
 static  
-game_write_file_sig(w32_write_file)
+eden_write_file_sig(w32_write_file)
 {
   w32_file_t* w32_file = (w32_file_t*)file->data;
   
-  OVERLAPPED overlgameed = {};
-  overlgameed.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
-  overlgameed.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
+  OVERLAPPED overledened = {};
+  overledened.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
+  overledened.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
   
   DWORD bytes_wrote;
-  if(WriteFile(w32_file->handle, src, (DWORD)size, &bytes_wrote, &overlgameed) &&
+  if(WriteFile(w32_file->handle, src, (DWORD)size, &bytes_wrote, &overledened) &&
      (DWORD)size == bytes_wrote) 
   {
     return true;
@@ -1591,19 +1591,19 @@ game_write_file_sig(w32_write_file)
 }
 
 static 
-game_add_task_sig(w32_add_task)
+eden_add_task_sig(w32_add_task)
 {
   w32_add_task_entry(&w32_state.work_queue, callback, data);
 }
 
 static 
-game_complete_all_tasks_sig(w32_complete_all_tasks) 
+eden_complete_all_tasks_sig(w32_complete_all_tasks) 
 {
   w32_complete_all_tasks_entries(&w32_state.work_queue);
 }
 
 static 
-game_allocate_memory_sig(w32_allocate_memory)
+eden_allocate_memory_sig(w32_allocate_memory)
 {
   // NOTE(momo): We will allocate memory with a 'header'
   // that contains w32_memory_t. 
@@ -1646,7 +1646,7 @@ game_allocate_memory_sig(w32_allocate_memory)
 }
 
 static
-game_free_memory_sig(w32_free_memory) {
+eden_free_memory_sig(w32_free_memory) {
   // To get from p back to q:
   // - Subtract sizeof(w32_memory_t)
   // - align downwards to 16 bytes
@@ -1687,24 +1687,24 @@ WinMain(HINSTANCE instance,
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
 
-  game_t game = {};
+  eden_t eden = {};
 
-  game.is_running = true;
-  game.show_cursor = w32_show_cursor;
-  game.lock_cursor = w32_lock_cursor;
-  game.hide_cursor = w32_hide_cursor;
-  game.unlock_cursor = w32_unlock_cursor;
-  game.allocate_memory = w32_allocate_memory;
-  game.free_memory = w32_free_memory;
-  game.debug_log = w32_log_proc;
-  game.add_task = w32_add_task;
-  game.complete_all_tasks = w32_complete_all_tasks;
-  game.set_design_dimensions = w32_set_game_dims;
-  game.open_file = w32_open_file;
-  game.read_file = w32_read_file;
-  game.write_file = w32_write_file;
-  game.get_file_size = w32_get_file_size;
-  game.close_file = w32_close_file;
+  eden.is_running = true;
+  eden.show_cursor = w32_show_cursor;
+  eden.lock_cursor = w32_lock_cursor;
+  eden.hide_cursor = w32_hide_cursor;
+  eden.unlock_cursor = w32_unlock_cursor;
+  eden.allocate_memory = w32_allocate_memory;
+  eden.free_memory = w32_free_memory;
+  eden.debug_log = w32_log_proc;
+  eden.add_task = w32_add_task;
+  eden.complete_all_tasks = w32_complete_all_tasks;
+  eden.set_design_dimensions = w32_set_eden_dims;
+  eden.open_file = w32_open_file;
+  eden.read_file = w32_read_file;
+  eden.write_file = w32_write_file;
+  eden.get_file_size = w32_get_file_size;
+  eden.close_file = w32_close_file;
 
   //
   // Initialize w32 state
@@ -1712,8 +1712,8 @@ WinMain(HINSTANCE instance,
   {
     w32_state.is_running = true;
 
-    w32_state.game_width = 1.f;
-    w32_state.game_height = 1.f;  
+    w32_state.eden_width = 1.f;
+    w32_state.eden_height = 1.f;  
 
     // initialize the circular linked list
     cll_init(&w32_state.memory_sentinel);
@@ -1733,7 +1733,7 @@ WinMain(HINSTANCE instance,
     }
 #endif
 
-    w32_state.game = &game;
+    w32_state.eden = &eden;
 
     if (!w32_init_work_queue(&w32_state.work_queue, 8)) {
       return 1;
@@ -1743,31 +1743,31 @@ WinMain(HINSTANCE instance,
   
 
   //
-  // Load game Functions
+  // Load eden Functions
   //
   //
-  game_functions_t game_functions = {};
+  eden_functions_t eden_functions = {};
 #if HOT_RELOAD 
-  w32_loaded_code_t game_code = {};
-  game_code.function_count = array_count(game_function_names);
-  game_code.function_names = game_function_names;
-  game_code.module_path = "game.dll";
-  game_code.functions = (void**)&game_functions;
-  game_code.tmp_path = "tmp_game.dll";
-  w32_load_code(&game_code);
-  if (!game_code.is_valid) return 1;
-  defer { w32_unload_code(&game_code); };
+  w32_loaded_code_t eden_code = {};
+  eden_code.function_count = array_count(eden_function_names);
+  eden_code.function_names = eden_function_names;
+  eden_code.module_path = "eden.dll";
+  eden_code.functions = (void**)&eden_functions;
+  eden_code.tmp_path = "tmp_eden.dll";
+  w32_load_code(&eden_code);
+  if (!eden_code.is_valid) return 1;
+  defer { w32_unload_code(&eden_code); };
 
 #else  // HOT_RELOAD 
-  game_functions.get_config = game_get_config;
-  game_functions.update_and_render = game_update_and_render;
+  eden_functions.get_config = eden_get_config;
+  eden_functions.update_and_render = eden_update_and_render;
 
 #endif // HOT_RELOAD
   
-  game_config_t config = game_functions.get_config();
+  eden_config_t config = eden_functions.get_config();
 
 
-  arena_t* platform_arena = &game.platform_arena;
+  arena_t* platform_arena = &eden.platform_arena;
   arena_init(platform_arena, w32_allocate_memory(config.total_required_memory));
 
   w32_init_file_cabinet(&w32_state.file_cabinet, config.max_files, platform_arena );
@@ -1868,7 +1868,7 @@ WinMain(HINSTANCE instance,
   
 
   if(!w32_gfx_load(
-      &game.gfx,
+      &eden.gfx,
       window, 
       platform_arena,
       config.render_command_size, 
@@ -1883,7 +1883,7 @@ WinMain(HINSTANCE instance,
   if (config.audio_enabled) {
 
     if (!w32_audio_load(
-          &game.audio, 
+          &eden.audio, 
           config.audio_samples_per_second, 
           config.audio_bits_per_sample,
           config.audio_channels, 
@@ -1892,22 +1892,22 @@ WinMain(HINSTANCE instance,
           platform_arena)) 
       return 1;
   }
-  defer{ if (config.audio_enabled) w32_audio_unload(&game.audio); };
+  defer{ if (config.audio_enabled) w32_audio_unload(&eden.audio); };
 
 
 
   //
   // Init debug stuff
   //
-  game_profiler_init(&game.profiler, w32_get_performance_counter_u64, platform_arena, config.max_profiler_entries, config.max_profiler_snapshots);
-  game_inspector_init(&game.inspector, platform_arena, config.max_inspector_entries);
+  eden_profiler_init(&eden.profiler, w32_get_performance_counter_u64, platform_arena, config.max_profiler_entries, config.max_profiler_snapshots);
+  eden_inspector_init(&eden.inspector, platform_arena, config.max_inspector_entries);
 
 
   //
   // Game setup
   //
 
-  // Begin game loop
+  // Begin eden loop
   b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   
   // Send this to global state
@@ -1915,45 +1915,45 @@ WinMain(HINSTANCE instance,
   QueryPerformanceFrequency(&performance_frequency);
   LARGE_INTEGER last_frame_count = w32_get_performance_counter();
 
-  while (w32_state.is_running && game.is_running) 
+  while (w32_state.is_running && eden.is_running) 
   {
 #if HOT_RELOAD
-    // Hot reload game.dll functions
-    game.is_dll_reloaded = w32_reload_code_if_outdated(&game_code);
-    if (game.is_dll_reloaded) {
-      game_profiler_reset(&game.profiler);
+    // Hot reload eden.dll functions
+    eden.is_dll_reloaded = w32_reload_code_if_outdated(&eden_code);
+    if (eden.is_dll_reloaded) {
+      eden_profiler_reset(&eden.profiler);
     }
 #else  // HOT_RELOAD
-    game_profiler_reset(&game.profiler);
+    eden_profiler_reset(&eden.profiler);
 #endif // HOT_RELOAD
 
     // Begin frame
-    if (config.audio_enabled) w32_audio_begin_frame(&game.audio);
+    if (config.audio_enabled) w32_audio_begin_frame(&eden.audio);
     v2u_t client_wh = w32_get_client_dims(window);
 
 
-    f32_t game_aspect = w32_state.game_width / w32_state.game_height;
+    f32_t eden_aspect = w32_state.eden_width / w32_state.eden_height;
     RECT rr = w32_calc_render_region(client_wh.w,
                                      client_wh.h,
-                                     game_aspect);
+                                     eden_aspect);
 
-    w32_gfx_begin_frame(&game.gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
+    w32_gfx_begin_frame(&eden.gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
        
     //Process messages and input
-    w32_update_input(&game.input, window, target_secs_per_frame, rr);
+    w32_update_input(&eden.input, window, target_secs_per_frame, rr);
     
     
-    game_functions.update_and_render(&game);
+    eden_functions.update_and_render(&eden);
 
 
     // End frame
-    game_profiler_update_entries(&game.profiler);
-    game_inspector_clear(&game.inspector);
-    w32_gfx_end_frame(&game.gfx);
+    eden_profiler_update_entries(&eden.profiler);
+    eden_inspector_clear(&eden.inspector);
+    w32_gfx_end_frame(&eden.gfx);
     
     
 
-    if (config.audio_enabled) w32_audio_end_frame(&game.audio);
+    if (config.audio_enabled) w32_audio_end_frame(&eden.audio);
 #if 0
     if (w32_state.is_cursor_locked) {
       SetCursorPos(
