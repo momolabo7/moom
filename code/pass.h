@@ -29,8 +29,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "game_asset_file.h"
-#include "game_asset_id_base.h"
+#include "eden_asset_file.h"
+#include "eden_asset_id_base.h"
 
 static str_t  
 pass_read_file(const char* filename, arena_t* allocator) {
@@ -117,7 +117,7 @@ struct pass_pack_atlas_context_t {
 // Atlas asset types
 //
 struct pass_pack_atlas_font_t {
-  game_asset_font_id_t font_id;
+  eden_asset_font_id_t font_id;
   f32_t font_height;
 
   // Will be generated after packing
@@ -128,7 +128,7 @@ struct pass_pack_atlas_font_t {
 
 struct pass_pack_atlas_sprite_t {
   const char* filename;
-  game_asset_sprite_id_t sprite_id;
+  eden_asset_sprite_id_t sprite_id;
 
   // Will be generated after packing
   rp_rect_t* rect;
@@ -197,7 +197,7 @@ struct pass_pack_t {
   // For Atlas Packing API
   //
   arena_marker_t atlas_arena_marker; // used for clearing arena when done generating
-  game_asset_bitmap_id_t atlas_bitmap_id;
+  eden_asset_bitmap_id_t atlas_bitmap_id;
   pass_pack_atlas_font_t* atlas_active_font;
                                     
   pass_pack_atlas_font_t* atlas_fonts;
@@ -215,7 +215,7 @@ struct pass_pack_t {
 static void 
 pass_pack_sound(
   pass_pack_t* p,
-  game_asset_sound_id_t sound_id,
+  eden_asset_sound_id_t sound_id,
   const char* filename)
 {
   assert(sound_id < p->sound_count);
@@ -226,7 +226,7 @@ pass_pack_sound(
 static void 
 pass_pack_atlas_sprite(
     pass_pack_t* p, 
-    game_asset_sprite_id_t sprite_id,
+    eden_asset_sprite_id_t sprite_id,
     const char* filename) 
 {
   assert(sprite_id < p->sprite_count);
@@ -243,7 +243,7 @@ pass_pack_atlas_sprite(
 static void
 pass_pack_atlas_font_begin(
     pass_pack_t* p,
-    game_asset_font_id_t font_id,
+    eden_asset_font_id_t font_id,
     const char* filename,
     f32_t font_height)
 {
@@ -293,7 +293,7 @@ pass_pack_atlas_font_end(pass_pack_t* p) {
 static void 
 pass_pack_atlas_begin(
     pass_pack_t* p, 
-    game_asset_bitmap_id_t bitmap_id,
+    eden_asset_bitmap_id_t bitmap_id,
     u32_t bitmap_width,
     u32_t bitmap_height,
     u32_t max_sprites,

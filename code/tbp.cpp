@@ -3,8 +3,8 @@
 // "Tile Based Platformer"
 // 
 #include "momo.h"
-#include "game_asset_id_lit.h"
-#include "game.h"
+#include "eden_asset_id_lit.h"
+#include "eden.h"
 
 #define TBG_TILE_SIZE (50.f)
 #define TBG_TILE_SIZE_V2 (v2f_set(TBG_TILE_SIZE, TBG_TILE_SIZE))
@@ -12,7 +12,7 @@
 #define two_2_one(x, y, w) (x + (w * y))
 #define one_2_two(id, w)   (v2u_set(id%w, id/w))
 
-#define tbg_from_game(game) ((tbg_t*)game->user_data)
+#define tbg_from_eden(eden) ((tbg_t*)eden->user_data)
 
 u32_t g_grid_w = 10;
 u32_t g_grid_h = 10;
@@ -37,19 +37,19 @@ struct tbg_t {
   arena_t debug_arena;
   arena_t frame_arena;
 
-  game_assets_t assets;
+  eden_assets_t assets;
 };
 
 // Globals
 tbg_t* g_tbg;
-game_t* g_game;
+eden_t* g_eden;
 
 exported 
-game_update_and_render_sig(game_update_and_render) 
+eden_update_and_render_sig(eden_update_and_render) 
 { 
-  g_game = game;
-  g_tbg = tbg_from_game(game);
-  if(game->user_data == nullptr) {
+  g_eden = eden;
+  g_tbg = tbg_from_eden(eden);
+  if(eden->user_data == nullptr) {
     usz_t lit_memory_size = sizeof(tbg_t);
     usz_t asset_memory_size = megabytes(20);
     //usz_t debug_memory_size = megabytes(1);
@@ -68,13 +68,13 @@ game_update_and_render_sig(game_update_and_render)
       required_memory = arena_calc_get_result(c);
     }
 
-    u8_t* memory = (u8_t*)game_allocate_memory(g_game, required_memory);
+    u8_t* memory = (u8_t*)eden_allocate_memory(g_eden, required_memory);
     if (!memory) {
-      game->is_running = false;
+      eden->is_running = false;
       return;
     }
-    game->user_data = memory;
-    g_tbg = tbg_from_game(game);
+    eden->user_data = memory;
+    g_tbg = tbg_from_eden(eden);
 
     //
     // Initialize arenas
@@ -85,16 +85,16 @@ game_update_and_render_sig(game_update_and_render)
 
 
     // Initialize assets
-    game_assets_init(&g_tbg->assets, g_game, LIT_ASSET_FILE, &g_tbg->asset_arena);
+    eden_assets_init(&g_tbg->assets, g_eden, LIT_ASSET_FILE, &g_tbg->asset_arena);
     
     // Initialize view
-    game_set_design_dimensions(g_game, 800, 800);
-    game_set_view(g_game, 0.f, 800, 0.f, 800, 0.f, 0.f);
+    eden_set_design_dimensions(g_eden, 800, 800);
+    eden_set_view(g_eden, 0.f, 800, 0.f, 800, 0.f, 0.f);
   }
 
   arena_clear(&g_tbg->frame_arena);
-  game_clear_canvas(g_game, rgba_set(0.2f, 0.2f, 0.2f, 1.f)); 
-  game_set_blend_alpha(g_game);
+  eden_clear_canvas(g_eden, rgba_set(0.2f, 0.2f, 0.2f, 1.f)); 
+  eden_set_blend_alpha(g_eden);
 
   
 
@@ -102,11 +102,11 @@ game_update_and_render_sig(game_update_and_render)
   for(u32_t x = 0; x < 10; ++x){
     for (u32_t y = 0; y < 10; ++y) {
       if (g_grid[two_2_one(x,y,10)] == 0) {
-        game_draw_rect(g_game, v2f_set(x * 50, y * 50), 0, v2f_set(45, 45), rgba_set(0.5f,0.5f,0.5f,1));
+        eden_draw_rect(g_eden, v2f_set(x * 50, y * 50), 0, v2f_set(45, 45), rgba_set(0.5f,0.5f,0.5f,1));
       }
     }
   }
-  game_advance_depth(g_game);
+  eden_advance_depth(g_eden);
 
 }
 
@@ -114,9 +114,9 @@ game_update_and_render_sig(game_update_and_render)
 // Game functions
 // 
 exported 
-game_get_config_sig(game_get_config) 
+eden_get_config_sig(eden_get_config) 
 {
-  game_config_t ret;
+  eden_config_t ret;
 
   ret.target_frame_rate = 60;
 

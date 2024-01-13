@@ -7,7 +7,7 @@ SET build_dir=%root_dir%\build
 SET icon_dir=%root_dir%\icons
 SET pack_dir=%root_dir%\pack\lit
 
-call pass_lit
+call build pass_lit -run
 call build lit -ship -o 
 
 if not exist %build_dir% goto :eof
