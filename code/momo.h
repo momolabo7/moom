@@ -1187,6 +1187,7 @@ static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size,
 static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align);
 static str_t    arena_push_str(arena_t* a, usz_t size, usz_t align);
 static usz_t    arena_remaining(arena_t* a);
+static void*    arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, str_t buffer);
 
 #define arena_push_arr_align(t,b,n,a) (t*)arena_push_size(b, sizeof(t)*(n), a)
 #define arena_push_arr(t,b,n)         (t*)arena_push_size(b, sizeof(t)*(n),alignof(t))
@@ -1197,6 +1198,7 @@ static usz_t    arena_remaining(arena_t* a);
 #define arena_push_arr_zero(t,b,n)         (t*)arena_push_size_zero(b, sizeof(t)*(n),alignof(t))
 #define arena_push_zero_align(t,b,a)       (t*)arena_push_size_zero(b, sizeof(t), a)
 #define arena_push_zero(t,b)               (t*)arena_push_size_zero(b, sizeof(t), alignof(t))
+#define arena_bootstrap_push(t,m,b)  (t*)arena_bootstrap_push_size(sizeof(t), offsetof(t,m), b)
 
 static arena_marker_t arena_mark(arena_t* a);
 static void arena_revert(arena_marker_t marker);
@@ -7913,6 +7915,25 @@ arena_clear(arena_t* a) {
 static usz_t 
 arena_remaining(arena_t* a) {
   return a->cap - a->pos;
+}
+
+static void*   
+arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, str_t buffer)
+{
+  if (size > buffer.size) {
+    return nullptr;
+  }
+
+  str_t arena_buffer = {
+    .e = (u8_t*)buffer.e + size,
+    .size = buffer.size - size,
+  };
+
+  arena_t* arena_ptr = (arena_t*)((u8_t*)buffer.e + offset_to_arena);
+  if (!arena_init(arena_ptr, arena_buffer)) {
+    return nullptr;
+  }
+  return buffer.e;
 }
 
 static void* 

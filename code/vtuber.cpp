@@ -1,39 +1,37 @@
 #define FOOLISH 1
 
 #include "momo.h"
-#include "game_asset_id_lit.h"
-#include "game.h"
-
-
+#include "eden_asset_id_lit.h"
+#include "eden.h"
 
 struct vtuber_t {
   arena_t frame_arena;
   u32_t texture_handle;
 };
 
-#define vtuber_exit() { game->is_running = false; return; }
-#define vtuber_from_game(game) ((vtuber_t*)game->user_data)
+#define vtuber_exit() { eden->is_running = false; return; }
+#define vtuber_from_eden(eden) ((vtuber_t*)eden->user_data)
 
 // TODO: maybe add an image struct?
 static u32_t  
-vtuber_add_texture(game_gfx_t* gfx, u32_t w, u32_t h, u32_t* pixel_data) {
+vtuber_add_texture(eden_gfx_t* gfx, u32_t w, u32_t h, u32_t* pixel_data) {
   u32_t image_size = w*h*sizeof(u32_t);
 
-  game_gfx_texture_payload_t* payload = game_gfx_begin_texture_transfer(gfx, image_size);
+  eden_gfx_texture_payload_t* payload = eden_gfx_begin_texture_transfer(gfx, image_size);
   assert(payload);
 
-  u32_t texture_handle = game_gfx_get_next_texture_handle(gfx);
+  u32_t texture_handle = eden_gfx_get_next_texture_handle(gfx);
   payload->texture_index = texture_handle;
   payload->texture_width = w;
   payload->texture_height = h;
   copy_memory(payload->texture_data, pixel_data, image_size);  
-  game_gfx_complete_texture_transfer(payload);
+  eden_gfx_complete_texture_transfer(payload);
 
   return texture_handle;
 }
 
 static b32_t
-vtuber_add_png(game_t* game, vtuber_t* vtuber, const char* filename) {
+vtuber_add_png(eden_t* eden, vtuber_t* vtuber, const char* filename) {
   make(png_t, png);
   str_t buffer = foolish_read_file_into_buffer(filename);
   if (!buffer) return false; 
@@ -43,17 +41,17 @@ vtuber_add_png(game_t* game, vtuber_t* vtuber, const char* filename) {
   u32_t* bytes = png_rasterize(png, &w, &h, &vtuber->frame_arena);
   if (!bytes) return false;
 
-  vtuber->texture_handle = vtuber_add_texture(&game->gfx, w, h, bytes); 
+  vtuber->texture_handle = vtuber_add_texture(&eden->gfx, w, h, bytes); 
   return true;
 }
 
 
 exported 
-game_update_and_render_sig(game_update_and_render) 
+eden_update_and_render_sig(eden_update_and_render) 
 { 
   make(vtuber_t, vtuber);
 
-  if(game->user_data == nullptr) {
+  if(eden->user_data == nullptr) {
     usz_t vtuber_memory_size = sizeof(vtuber_t);
     usz_t frame_memory_size = megabytes(256);
 
@@ -65,31 +63,31 @@ game_update_and_render_sig(game_update_and_render)
       required_memory = arena_calc_get_result(c);
     }
 
-    u8_t* memory = (u8_t*)game_allocate_memory(game, required_memory);
+    u8_t* memory = (u8_t*)eden_allocate_memory(eden, required_memory);
     if (!memory) vtuber_exit();
-    game->user_data = memory;
+    eden->user_data = memory;
 
-    vtuber = vtuber_from_game(game);
+    vtuber = vtuber_from_eden(eden);
 
     usz_t offset = sizeof(vtuber_t);
     offset = align_up_pow2(offset, 16);
     arena_init(&vtuber->frame_arena, memory + offset, frame_memory_size);
 
-    if (!vtuber_add_png(game, vtuber, "moom.png")) vtuber_exit();
+    if (!vtuber_add_png(eden, vtuber, "moom.png")) vtuber_exit();
 
     
     // Initialize view
-    game_set_design_dimensions(game, 1600, 900);
-    game_set_view(game, 0.f, 1600.f, 0.f, 900.f, 0.f, 0.f);
+    eden_set_design_dimensions(eden, 1600, 900);
+    eden_set_view(eden, 0.f, 1600.f, 0.f, 900.f, 0.f, 0.f);
 
   }
 
-  vtuber = vtuber_from_game(game);
-  game_clear_canvas(game, rgba_set(0.f, 1.0f, 0.f, 1.f)); 
-  game_set_blend_alpha(game);
+  vtuber = vtuber_from_eden(eden);
+  eden_clear_canvas(eden, rgba_set(0.f, 1.0f, 0.f, 1.f)); 
+  eden_set_blend_alpha(eden);
 
-  game_gfx_push_sprite(
-      &game->gfx,
+  eden_gfx_push_sprite(
+      &eden->gfx,
       rgba_set(1.f, 1.f, 1.f, 1.f),
       v2f_set(800.f, 450.f),
       v2f_set(800.f, 800.f),
@@ -103,9 +101,9 @@ game_update_and_render_sig(game_update_and_render)
 // Game functions
 // 
 exported 
-game_get_config_sig(game_get_config) 
+eden_get_config_sig(eden_get_config) 
 {
-  game_config_t ret;
+  eden_config_t ret;
 
   ret.target_frame_rate = 60;
 

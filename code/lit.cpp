@@ -380,6 +380,7 @@ struct lit_t {
   u32_t level_to_start;
 
   // Arenas
+  arena_t main_arena;
   arena_t mode_arena;
   arena_t asset_arena;
   arena_t debug_arena;
@@ -3810,12 +3811,11 @@ eden_update_and_render_sig(eden_update_and_render)
   g_eden = eden;
   if(g_eden->user_data == nullptr) {
 
-    //str_t memory = eden_allocate_memory(g_eden, sizeof(lit_t));
-    //if (!memory) lit_exit();
-
+    str_t memory = eden_allocate_memory(g_eden, megabytes(32));
+    if (!memory) lit_exit();
     
-    g_eden->user_data = arena_push(lit_t, &g_eden->platform_arena);
 
+    g_eden->user_data = arena_bootstrap_push(lit_t, main_arena, memory);
 
     g_lit = (lit_t*)(g_eden->user_data);
     g_lit->level_to_start = 0;
@@ -3825,10 +3825,10 @@ eden_update_and_render_sig(eden_update_and_render)
     
 
     //arena_init(&g_lit->asset_arena, eden_allocate_memory(eden, megabytes(20)));
-    if (!arena_push_partition(&g_eden->platform_arena, &g_lit->asset_arena, megabytes(20), 16)) lit_exit();
-    if (!arena_push_partition(&g_eden->platform_arena, &g_lit->debug_arena, megabytes(1), 16)) lit_exit();
-    if (!arena_push_partition(&g_eden->platform_arena, &g_lit->frame_arena, megabytes(1), 16)) lit_exit();
-    if (!arena_push_partition(&g_eden->platform_arena, &g_lit->mode_arena, megabytes(1), 16)) lit_exit();
+    if (!arena_push_partition(&g_lit->main_arena, &g_lit->asset_arena, megabytes(20), 16)) lit_exit();
+    if (!arena_push_partition(&g_lit->main_arena, &g_lit->debug_arena, megabytes(1), 16)) lit_exit();
+    if (!arena_push_partition(&g_lit->main_arena, &g_lit->frame_arena, megabytes(1), 16)) lit_exit();
+    if (!arena_push_partition(&g_lit->main_arena, &g_lit->mode_arena, megabytes(1), 16)) lit_exit();
 
     //
     // Initialize debug stuff
@@ -3929,7 +3929,7 @@ eden_get_config_sig(eden_get_config)
 {
 
   eden_config_t ret;
-  ret.total_required_memory = gigabytes(1);
+  ret.platform_memory_size = gigabytes(1);
 
   ret.target_frame_rate = 60;
 

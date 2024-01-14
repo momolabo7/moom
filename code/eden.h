@@ -911,7 +911,7 @@ struct eden_assets_t {
 //
 //
 struct eden_config_t {
-  usz_t total_required_memory;
+  usz_t platform_memory_size;
   u32_t target_frame_rate;
 
   u32_t max_files;

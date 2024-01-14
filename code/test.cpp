@@ -206,19 +206,18 @@ static void* test_arena_push(test_arena_t* a, usz_t size, usz_t min_allocate_siz
 }
 
 
+struct test_booty {
+  arena_t arena;
+};
+
 int main() {
-  //test_json();
-  //test_allocate_memory();
-  make(test_arena_t, a);
-  test_arena_init(a);
-  void* one = test_arena_push(a, 256);
-  void* two = test_arena_push(a, 256);
-  void* three = test_arena_push(a, 256);
+  u8_t buffer[256];
+  str_t b {
+    .e = buffer,
+    .size = sizeof(buffer)
+  };
 
-  printf("%p\n", one);
-  printf("%p\n", two);
-  printf("%p\n", three);
-
+  test_booty* t = arena_bootstrap_push(test_booty, arena, b);
  
 }
 

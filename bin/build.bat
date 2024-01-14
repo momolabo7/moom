@@ -14,7 +14,7 @@ rem   -o
 rem     Run with my favourite optimization flags 
 rem
 rem   -game
-rem     Build as game.dll. Expects only 1 .cpp file
+rem     Build as eden.dll. Expects only 1 .cpp file
 rem
 rem   -w32
 rem     Build with common win32 stuff. Expects only 1 .cpp file
@@ -118,7 +118,7 @@ if %build%==1 (
     echo Build    : Game
     set compiler_flags=!compiler_flags! -LD
     set linker_flags=-shared 
-    set output_name=game.dll
+    set output_name=eden.dll
     goto end_build_type
   )
 

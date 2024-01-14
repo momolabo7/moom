@@ -486,6 +486,7 @@ if (!opengl->name) { return false; }
 }
 
 
+
 static 
 w32_gfx_begin_frame_sig(w32_gfx_begin_frame)
 {
@@ -1768,7 +1769,7 @@ WinMain(HINSTANCE instance,
 
 
   arena_t* platform_arena = &eden.platform_arena;
-  arena_init(platform_arena, w32_allocate_memory(config.total_required_memory));
+  arena_init(platform_arena, w32_allocate_memory(config.platform_memory_size));
 
   w32_init_file_cabinet(&w32_state.file_cabinet, config.max_files, platform_arena );
 
