@@ -183,25 +183,28 @@ struct test_arena_t {
   usz_t commit_pos;
 };
 
+
 static void 
-test_arena_init(test_arena_t* a, usz_t reserve_amount) {
+test_arena_reserve(test_arena_t* a, usz_t reserve_amount) {
   a->memory = test_os_reserve_memory(reserve_amount);
-  a->cap = gigabytes(1);
+  a->cap = reserve_amount;
 
   a->pos = 0;
   a->commit_pos = 0;
 }
 
 static void
-test_arena_free(void* ptr){ 
+test_arena_release(void* ptr){ 
   test_os_free_memory(ptr);
 }
 
 static void 
-test_arena_init_with_given_memory(test_arena_t* a, str_t buffer) {
+test_arena_init(test_arena_t* a, str_t buffer) {
   a->memory = buffer.e;
   a->cap = a->commit_pos = buffer.size;
 }
+
+
 
 static u8_t* 
 test_arena_push(test_arena_t* a, usz_t size, usz_t align = 16) 
@@ -241,7 +244,7 @@ int main() {
     str_t buffer = foolish_allocate_memory(gigabytes(1));
     defer { foolish_free_memory(buffer); };
 
-    test_arena_init_with_given_memory(&test, buffer);
+    test_arena_init(&test, buffer);
     u64_t start_time = os_get_clock_time();
     for (int i = 0; i < runs; ++i) { 
       test_arena_push(&test, sizeof(u32_t));  
@@ -253,7 +256,8 @@ int main() {
   // arena with committed memory
   {
 
-    test_arena_init(&test, gigabytes(1));
+    test_arena_reserve(&test, gigabytes(1));
+    defer { test_arena_release(&test); };
     u64_t start_time = os_get_clock_time();
     for (int i = 0; i < runs; ++i) { 
       test_arena_push(&test, sizeof(u32_t));  

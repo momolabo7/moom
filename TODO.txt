@@ -1,15 +1,5 @@
-
-
-- perforce
-- communication
-- knowledge of game engine
-- visibility
-
-
 ENGINE
-- might want to consider returning buffer_t for memory allocation for user.
-
-  
+  - Growing arena API
 
 PROTOTYPING
   - Create a very dumb prototyping asset system.
