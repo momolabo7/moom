@@ -1,3 +1,8 @@
+LIT v0.5 plans
+ - Sound
+ - Music
+ - Better win animation/transition??
+
 ENGINE
   - Growing arena API
 

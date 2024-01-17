@@ -806,7 +806,7 @@ lit_splash_update() {
       g_eden, 
       &g_lit->assets, 
       font,
-      str_from_lit("a silly eden by"), 
+      str_from_lit("a silly game by"), 
       grey,
       LIT_WIDTH/2, scroll_y, 
       36.f);
@@ -2074,9 +2074,9 @@ lit_level_3() {
 
   lit_game_end_sensor_group(m);
 
-  lit_game_push_light(m, 200.f, LIT_HEIGHT * 0.25f, 0x008800FF, 30.f, 0.5f);
-  lit_game_push_light(m, 600.f, LIT_HEIGHT * 0.75f, 0x880000FF, 30.f, 0.0f);
-  lit_game_push_light(m, 600.f, LIT_HEIGHT * 0.5f,  0x000088FF, 30.f, 0.0f);
+  lit_game_push_light(m, 200.f, 100.f, 0x008800FF, 30.f, 3.f/8);
+  lit_game_push_light(m, 400.f, 100.f, 0x880000FF, 30.f, 2.f/8);
+  lit_game_push_light(m, 600.f, 100.f, 0x000088FF, 30.f, 1.f/8);
 }
 
 static void
