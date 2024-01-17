@@ -3897,11 +3897,13 @@ eden_update_and_render_sig(eden_update_and_render)
   }
 
   // Debug
-#if LIT_DEBUG
   if (eden_is_button_poked(g_eden, EDEN_BUTTON_CODE_F1)) {
     g_lit->show_debug_type = 
       (lit_show_debug_type_t)((g_lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
   }
+
+  // Check arena size
+  eden_inspect_u32(g_eden, str_from_lit("platform_memory"), (u32_t)arena_remaining(&g_eden->platform_arena)/megabytes(1));
 
   switch (g_lit->show_debug_type) {
 #if 0
@@ -3917,7 +3919,6 @@ eden_update_and_render_sig(eden_update_and_render)
     }break;
     default: {}
   }
-#endif
 
 }
 
@@ -3929,15 +3930,15 @@ eden_get_config_sig(eden_get_config)
 {
 
   eden_config_t ret;
-  ret.platform_memory_size = gigabytes(1);
+  ret.platform_memory_size = megabytes(128);
 
   ret.target_frame_rate = 60;
 
   ret.max_workers = 256;
   ret.max_files = 32;
 
-  ret.max_inspector_entries = 256;
-  ret.max_profiler_entries = 256;
+  ret.max_inspector_entries = 8;
+  ret.max_profiler_entries = 8;
   ret.max_profiler_snapshots = 120;
 
   ret.texture_queue_size = megabytes(5);

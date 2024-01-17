@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
+
+#define FOOLISH
 #include "momo.h"
 
 #if 0
@@ -156,68 +158,126 @@ int main() {
 }
 #endif
 
-struct test_arena_node_t {
-  str_t os_buffer;
-
-  str_t buffer;
-  usz_t pos; 
-
-  test_arena_node_t* prev;
-  test_arena_node_t* next;
-};
-
-struct test_arena_t {
-  test_arena_node_t sentinel;
-  test_arena_node_t* current_block;
-};
-
-static void test_arena_init(test_arena_t* a) {
-  cll_init(&a->sentinel);
-  a->current_block = 0;
+static u8_t*
+test_os_reserve_memory(usz_t size) {
+  return (u8_t*)VirtualAlloc(0, size, MEM_RESERVE, PAGE_READWRITE);
 }
 
-static void* test_arena_push(test_arena_t* a, usz_t size, usz_t min_allocate_size = 0) 
+static b32_t
+test_os_commit_memory(void* ptr, usz_t size) {
+  b32_t result = (VirtualAlloc(ptr, size, MEM_COMMIT, PAGE_READWRITE) != 0);
+  return result;
+}
+
+static void 
+test_os_free_memory(void* ptr)
+{
+  VirtualFree(ptr, 0, MEM_RELEASE);
+}
+
+struct test_arena_t {
+  u8_t* memory;
+  usz_t cap;
+  usz_t pos;
+
+  usz_t commit_pos;
+};
+
+static void 
+test_arena_init(test_arena_t* a, usz_t reserve_amount) {
+  a->memory = test_os_reserve_memory(reserve_amount);
+  a->cap = gigabytes(1);
+
+  a->pos = 0;
+  a->commit_pos = 0;
+}
+
+static void
+test_arena_free(void* ptr){ 
+  test_os_free_memory(ptr);
+}
+
+static void 
+test_arena_init_with_given_memory(test_arena_t* a, str_t buffer) {
+  a->memory = buffer.e;
+  a->cap = a->commit_pos = buffer.size;
+}
+
+static u8_t* 
+test_arena_push(test_arena_t* a, usz_t size, usz_t align = 16) 
 {
   if (size == 0) return nullptr;
 
-  if (!a->current_block || a->current_block->pos + size > a->current_block->buffer.size) {
-    usz_t total_size = max_of(size, min_allocate_size) + sizeof(test_arena_node_t);
-    str_t blk = os_allocate_memory(total_size);
+  usz_t imem = ptr_to_umi(a->memory);
+  umi_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
 
-    if (!blk) return nullptr;
+  if (imem + adjusted_pos + size >= imem + a->cap) 
+    return nullptr;
 
-    auto* node = (test_arena_node_t*)blk.e;
-    node->os_buffer = blk;
-    node->pos = 0;
+  usz_t new_pos = adjusted_pos + size;
 
-    node->buffer = str_set(blk.e + sizeof(test_arena_node_t), size);
-
-    cll_append(&a->sentinel, node);
-    a->current_block = node;
-
+  // Commit memory if required
+  if (new_pos > a->commit_pos)
+  {
+    u8_t* commit_ptr = a->memory + a->pos;
+    usz_t commit_size = adjusted_pos - a->pos + size;
+    test_os_commit_memory(commit_ptr, commit_size);
   }
 
- 
-  void* ret = a->current_block->buffer.e + a->current_block->pos;
-  a->current_block->pos += size;
-  
+  u8_t* ret = umi_to_ptr(imem + adjusted_pos);
+  a->pos = new_pos;
   return ret;
-  
 }
 
 
-struct test_booty {
-  arena_t arena;
-};
 
 int main() {
-  u8_t buffer[256];
-  str_t b {
-    .e = buffer,
-    .size = sizeof(buffer)
-  };
+  printf("Hello Test\n");
+  test_arena_t test = {};
 
-  test_booty* t = arena_bootstrap_push(test_booty, arena, b);
+  const u32_t runs = 10000000;
+  // arena with committed memory
+  {
+    str_t buffer = foolish_allocate_memory(gigabytes(1));
+    defer { foolish_free_memory(buffer); };
+
+    test_arena_init_with_given_memory(&test, buffer);
+    u64_t start_time = os_get_clock_time();
+    for (int i = 0; i < runs; ++i) { 
+      test_arena_push(&test, sizeof(u32_t));  
+    }
+    u64_t end_time = os_get_clock_time();
+    printf("arena #0: %f\n", (f32_t)(end_time - start_time)/runs);
+  }
+
+  // arena with committed memory
+  {
+
+    test_arena_init(&test, gigabytes(1));
+    u64_t start_time = os_get_clock_time();
+    for (int i = 0; i < runs; ++i) { 
+      test_arena_push(&test, sizeof(u32_t));  
+    }
+    u64_t end_time = os_get_clock_time();
+    printf("arena #1: %f\n", (f32_t)(end_time - start_time)/runs);
+  }
+
+  // Olde arena
+  {
+    arena_t normal_arena = {};
+    str_t buffer = foolish_allocate_memory(gigabytes(1));
+    defer { foolish_free_memory(buffer); };
+    arena_init(&normal_arena, buffer);
+
+    u64_t start_time = os_get_clock_time();
+    for (int i = 0; i < runs; ++i) { 
+      arena_push_size(&normal_arena, sizeof(u32_t), 16);  
+    }
+    u64_t end_time = os_get_clock_time();
+
+    printf("arena #2: %f\n", (f32_t)(end_time - start_time)/runs);
+  }
+
  
 }
 

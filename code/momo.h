@@ -329,9 +329,6 @@ struct crc8_table_t {
   u8_t remainders[256];
 };
 
-
-
-
 //
 // MARK:(Arena)
 //
@@ -1292,6 +1289,9 @@ static u64_t  os_get_clock_resolution();
 #include <windows.h>
 #undef near
 #undef far
+
+
+
 
 static str_t
 os_allocate_memory(usz_t size) {
@@ -8371,6 +8371,22 @@ rp_pack(rp_rect_t* rects,
 
 //
 // JOURNAL
+// = 2024-01-16 =
+//   I have second thoughts again. Maybe having OS functions here is okay.
+//   
+//   The reason why I wanted OS functions seperate at first was because I wanted
+//   this layer to be independent of the OS. 
+//
+//   However, there are a lot of very important basic functionalities in programming
+//   that would be too crippling not to include here. Right now, there are these 
+//   funtionalities that OS provides which would be incredibly useful to have 
+//   *anywhere* with me:
+//   1. Memory allocation  
+//   2. Clock 
+//   3. Atomic functions
+//
+//   In fact, maybe even things like spawning threads sound useful...
+//
 // = 2023-11-26 = 
 //   It just occured to me that all OS functions are probably specific to the 
 //   PROGRAM rather than the platform itself...maybe having an OS layer here

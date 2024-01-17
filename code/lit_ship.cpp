@@ -131,7 +131,6 @@ struct w32_state_t {
   HWND window;
 
   w32_memory_t memory_sentinel;
-  eden_t* eden;
 };
 static w32_state_t w32_state;
 
@@ -485,6 +484,7 @@ if (!opengl->name) { return false; }
 
   return true;
 }
+
 
 
 static 
@@ -1383,7 +1383,7 @@ w32_update_input(eden_input_t* input, HWND window, f32_t delta_time, RECT rr)
   
   
   // NOTE(Momo): Flip y
-  //eden.design_mouse_pos.y = f32_lerp(MOMO_HEIGHT, 0.f, eden.design_mouse_pos.y/MOMO_HEIGHT);	
+  //eden->design_mouse_pos.y = f32_lerp(MOMO_HEIGHT, 0.f, eden->design_mouse_pos.y/MOMO_HEIGHT);	
   if (w32_state.is_cursor_locked) {
     SetCursorPos(
         w32_state.cursor_pt_to_lock_to.x,
@@ -1688,24 +1688,6 @@ WinMain(HINSTANCE instance,
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
 
-  eden_t eden = {};
-
-  eden.is_running = true;
-  eden.show_cursor = w32_show_cursor;
-  eden.lock_cursor = w32_lock_cursor;
-  eden.hide_cursor = w32_hide_cursor;
-  eden.unlock_cursor = w32_unlock_cursor;
-  eden.allocate_memory = w32_allocate_memory;
-  eden.free_memory = w32_free_memory;
-  eden.debug_log = w32_log_proc;
-  eden.add_task = w32_add_task;
-  eden.complete_all_tasks = w32_complete_all_tasks;
-  eden.set_design_dimensions = w32_set_eden_dims;
-  eden.open_file = w32_open_file;
-  eden.read_file = w32_read_file;
-  eden.write_file = w32_write_file;
-  eden.get_file_size = w32_get_file_size;
-  eden.close_file = w32_close_file;
 
   //
   // Initialize w32 state
@@ -1733,8 +1715,6 @@ WinMain(HINSTANCE instance,
       w32_free_memory(a);
     }
 #endif
-
-    w32_state.eden = &eden;
 
     if (!w32_init_work_queue(&w32_state.work_queue, 8)) {
       return 1;
@@ -1767,9 +1747,26 @@ WinMain(HINSTANCE instance,
   
   eden_config_t config = eden_functions.get_config();
 
+  eden_t* eden = arena_bootstrap_push(eden_t, platform_arena, w32_allocate_memory(config.platform_memory_size));
 
-  arena_t* platform_arena = &eden.platform_arena;
-  arena_init(platform_arena, w32_allocate_memory(config.total_required_memory));
+  arena_t* platform_arena = &eden->platform_arena;
+
+  eden->is_running = true;
+  eden->show_cursor = w32_show_cursor;
+  eden->lock_cursor = w32_lock_cursor;
+  eden->hide_cursor = w32_hide_cursor;
+  eden->unlock_cursor = w32_unlock_cursor;
+  eden->allocate_memory = w32_allocate_memory;
+  eden->free_memory = w32_free_memory;
+  eden->debug_log = w32_log_proc;
+  eden->add_task = w32_add_task;
+  eden->complete_all_tasks = w32_complete_all_tasks;
+  eden->set_design_dimensions = w32_set_eden_dims;
+  eden->open_file = w32_open_file;
+  eden->read_file = w32_read_file;
+  eden->write_file = w32_write_file;
+  eden->get_file_size = w32_get_file_size;
+  eden->close_file = w32_close_file;
 
   w32_init_file_cabinet(&w32_state.file_cabinet, config.max_files, platform_arena );
 
@@ -1869,7 +1866,7 @@ WinMain(HINSTANCE instance,
   
 
   if(!w32_gfx_load(
-      &eden.gfx,
+      &eden->gfx,
       window, 
       platform_arena,
       config.render_command_size, 
@@ -1884,7 +1881,7 @@ WinMain(HINSTANCE instance,
   if (config.audio_enabled) {
 
     if (!w32_audio_load(
-          &eden.audio, 
+          &eden->audio, 
           config.audio_samples_per_second, 
           config.audio_bits_per_sample,
           config.audio_channels, 
@@ -1893,15 +1890,15 @@ WinMain(HINSTANCE instance,
           platform_arena)) 
       return 1;
   }
-  defer{ if (config.audio_enabled) w32_audio_unload(&eden.audio); };
+  defer{ if (config.audio_enabled) w32_audio_unload(&eden->audio); };
 
 
 
   //
   // Init debug stuff
   //
-  eden_profiler_init(&eden.profiler, w32_get_performance_counter_u64, platform_arena, config.max_profiler_entries, config.max_profiler_snapshots);
-  eden_inspector_init(&eden.inspector, platform_arena, config.max_inspector_entries);
+  eden_profiler_init(&eden->profiler, w32_get_performance_counter_u64, platform_arena, config.max_profiler_entries, config.max_profiler_snapshots);
+  eden_inspector_init(&eden->inspector, platform_arena, config.max_inspector_entries);
 
 
   //
@@ -1916,20 +1913,20 @@ WinMain(HINSTANCE instance,
   QueryPerformanceFrequency(&performance_frequency);
   LARGE_INTEGER last_frame_count = w32_get_performance_counter();
 
-  while (w32_state.is_running && eden.is_running) 
+  while (w32_state.is_running && eden->is_running) 
   {
 #if HOT_RELOAD
-    // Hot reload eden.dll functions
-    eden.is_dll_reloaded = w32_reload_code_if_outdated(&eden_code);
-    if (eden.is_dll_reloaded) {
-      eden_profiler_reset(&eden.profiler);
+    // Hot reload eden->dll functions
+    eden->is_dll_reloaded = w32_reload_code_if_outdated(&eden_code);
+    if (eden->is_dll_reloaded) {
+      eden_profiler_reset(&eden->profiler);
     }
 #else  // HOT_RELOAD
-    eden_profiler_reset(&eden.profiler);
+    eden_profiler_reset(&eden->profiler);
 #endif // HOT_RELOAD
 
     // Begin frame
-    if (config.audio_enabled) w32_audio_begin_frame(&eden.audio);
+    if (config.audio_enabled) w32_audio_begin_frame(&eden->audio);
     v2u_t client_wh = w32_get_client_dims(window);
 
 
@@ -1938,30 +1935,23 @@ WinMain(HINSTANCE instance,
                                      client_wh.h,
                                      eden_aspect);
 
-    w32_gfx_begin_frame(&eden.gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
+    w32_gfx_begin_frame(&eden->gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
        
     //Process messages and input
-    w32_update_input(&eden.input, window, target_secs_per_frame, rr);
+    w32_update_input(&eden->input, window, target_secs_per_frame, rr);
     
     
-    eden_functions.update_and_render(&eden);
+    eden_functions.update_and_render(eden);
 
 
     // End frame
-    eden_profiler_update_entries(&eden.profiler);
-    eden_inspector_clear(&eden.inspector);
-    w32_gfx_end_frame(&eden.gfx);
+    eden_profiler_update_entries(&eden->profiler);
+    eden_inspector_clear(&eden->inspector);
+    w32_gfx_end_frame(&eden->gfx);
     
     
 
-    if (config.audio_enabled) w32_audio_end_frame(&eden.audio);
-#if 0
-    if (w32_state.is_cursor_locked) {
-      SetCursorPos(
-          w32_state.cursor_pt_to_lock_to.x,
-          w32_state.cursor_pt_to_lock_to.y);
-    }
-#endif
+    if (config.audio_enabled) w32_audio_end_frame(&eden->audio);
 
     // Frame-rate control
     //

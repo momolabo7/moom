@@ -13,9 +13,9 @@ call build lit -ship -o
 if not exist %build_dir% goto :eof
 if not exist %pack_dir% mkdir %pack_dir%
 
-move %build_dir%\lit.dat %pack_dir% >nul
-move %build_dir%\lit.exe %pack_dir% >nul
-move %icon_dir%\lit.ico %pack_dir%\window.ico
+xcopy /q /y %build_dir%\lit.dat %pack_dir% >nul
+xcopy /q /y %build_dir%\lit.exe %pack_dir% >nul
+xcopy /q /y %icon_dir%\lit.ico %pack_dir%\window.ico 
 
 :eof
 
