@@ -1,5 +1,4 @@
-
-// Test to do threaded audio on wasapi
+#define FOOLISH 
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -12,28 +11,153 @@
 #undef far
 
 #pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "Winmm.lib")
 
+#include "momo.h"
+
+#define SERVER "irc.chat.twitch.tv"
+#define PORT "6667"
+#define NICK "NICK moom_bot\r\n"
+#define CHANNEL "JOIN #momohoudai\r\n"
+#define CAPREQ "CAP REQ :twitch.tv/membership twitch.tv/tags twitch.tv/commands\r\n"
+
+
+struct os_socket_t {
+  b32_t valid; // Probably should be some error code?
+#if OS_WINDOWS
+  SOCKET sock;
+#else 
+  // Linux here?
+#endif
+};
+
+#if OS_WINDOWS
+static b32_t
+os_socket_system_begin() {
+  WSADATA wsa_data;
+  if (WSAStartup(MAKEWORD(2,2), &wsa_data) != 0) {
+    return false;
+  }
+  return true;
+}
+
+// TODO: parameters for socket
+static os_socket_t
+os_socket_begin()
+{
+  os_socket_t ret = {};
+
+  addrinfo * addr = NULL;
+  addrinfo addr_hints = {};
+  //
+  // AF_INET supposedly specifies IPv4 family.
+  // There are other types: 
+  //   AF_IRDA
+  //   AF_BLUETOOTH
+  //   AF_INET for IPv4
+  //   AF_INET6 for IPv6
+  //   AF_UNSPEC means either IPv4 or IPv6
+  // Should give a good idea on what "address family" means
+  //
+  addr_hints.ai_family = AF_UNSPEC;  
+
+  // 
+  // TCP uses SOCK_STREAM (connection-based)
+  // UDP uses DGRAM (datagram-based)
+  //
+  addr_hints.ai_socktype = SOCK_STREAM;
+
+
+  // NOTE(momo): This one is self-explanatory...?
+  addr_hints.ai_protocol = IPPROTO_TCP;
+
+
+  if (getaddrinfo(SERVER, PORT, &addr_hints, &addr) != 0) {
+    return ret;
+  }
+  defer{ freeaddrinfo(addr); };
+  
+  //
+  // With the actual addrinfo, we use that to create our socket
+  //
+  // NOTE(momo): addrinfo is a linked list.
+  // Perhaps an idea would be to iterate through the linked list of addresses
+  // until one works?
+  //
+  SOCKET sock = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
+  if (sock == INVALID_SOCKET) {
+    return ret;
+  }
+  if (connect(sock, addr->ai_addr, addr->ai_addrlen) == SOCKET_ERROR) {
+    return ret;
+  }
+
+  ret.valid = true;
+  ret.sock = sock;
+  return ret;
+}
+
+static void 
+os_socket_end(os_socket_t s) {
+  closesocket(s.sock);
+}
+
+static void
+os_socket_system_end() {
+  WSACleanup();
+}
+
+#endif
 
 int main() 
 {
+  str_t pw = foolish_read_file_into_buffer("moom_bot_pass");
+  str_t refresh_token = foolish_read_file_into_buffer("moom_bot_refresh");
+  defer {
+    foolish_free_buffer(pw);
+    foolish_free_buffer(refresh_token);
+  };
+
   printf("Hello World\n");
-  WSADATA wsa_data;
-  // Start Winsock DLL, specifying version 2.2
-  if (WSAStartup(MAKEWORD(2,2), &wsa_data) != 0) {
-    return 1;
+  os_socket_system_begin();
+  defer { os_socket_system_end(); };
+
+  os_socket_t s = os_socket_begin();
+  defer { os_socket_end(s); };
+
+
+  char buffer[512] = {};
+
+  send(s.sock, CAPREQ, sizeof(CAPREQ), 0);
+  send(s.sock, (char*)pw.e, pw.size, 0);
+  send(s.sock, NICK, sizeof(NICK), 0);
+  {
+    int received_bytes = recv(s.sock, buffer, sizeof(buffer), 0);
+    buffer[received_bytes] = 0;
+    printf("%s\n", buffer);
   }
 
+  send(s.sock, CHANNEL, sizeof(CHANNEL), 0);
+  {
+    int received_bytes = recv(s.sock, buffer, sizeof(buffer), 0);
+    buffer[received_bytes] = 0;
+    printf("%s\n", buffer);
+  }
+  printf("Joined\n");
+#define TESTMSG "PRIVMSG #momohoudai :HEHE HOHO IM FEK MOOM\r\n"
+  send(s.sock, TESTMSG, sizeof(TESTMSG), 0);
+  {
+    int received_bytes = recv(s.sock, buffer, sizeof(buffer), 0);
+    buffer[received_bytes] = 0;
+    printf("%s\n", buffer);
+  }
 #if 0
-  addrinfo * result = NULL;
-  addrinfo hints;
+  while(1){
 
-  ZeroMemory(&hints, sizeof(hints));
-  hints.ai_family = AF_INET;
-  hints.socktype = SOCK_STREAM;
-  hints.ai_protocol = IPPROTO_TCP;
-  hints.ai_flags = AI_PASSIVE;
-  getaddrinfo(NULL, 1337, &hints, &result);
+  }
+
 #endif
+  printf("Great success!\n");
 
 
   return 0;
