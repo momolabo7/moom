@@ -1,8 +1,5 @@
 #define FOOLISH 
 
-#define WIN32_LEAN_AND_MEAN
-
-#include <windows.h>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <iphlpapi.h>
@@ -23,7 +20,7 @@
 
 
 struct os_socket_t {
-  b32_t valid; // Probably should be some error code?
+  b32_t is_valid; // Probably should be some error code?
 #if OS_WINDOWS
   SOCKET sock;
 #else 
@@ -32,6 +29,7 @@ struct os_socket_t {
 };
 
 #if OS_WINDOWS
+// NOTE(momo): my god windows why you make me do this.
 static b32_t
 os_socket_system_begin() {
   WSADATA wsa_data;
@@ -43,7 +41,7 @@ os_socket_system_begin() {
 
 // TODO: parameters for socket
 static os_socket_t
-os_socket_begin()
+os_socket_begin(const char* server, const char* port)
 {
   os_socket_t ret = {};
 
@@ -72,7 +70,7 @@ os_socket_begin()
   addr_hints.ai_protocol = IPPROTO_TCP;
 
 
-  if (getaddrinfo(SERVER, PORT, &addr_hints, &addr) != 0) {
+  if (getaddrinfo(server, port, &addr_hints, &addr) != 0) {
     return ret;
   }
   defer{ freeaddrinfo(addr); };
@@ -92,9 +90,14 @@ os_socket_begin()
     return ret;
   }
 
-  ret.valid = true;
+  ret.is_valid = true;
   ret.sock = sock;
   return ret;
+}
+
+static void
+os_socket_send(os_socket_t s, str_t msg) {
+  send(s.sock, (char*)msg.e, msg.size, 0);
 }
 
 static void 
@@ -106,7 +109,10 @@ static void
 os_socket_system_end() {
   WSACleanup();
 }
-
+#elif OS_LINUX
+#warning "socket library not implemented!"
+#elif
+#warning "socket library not implemented!"
 #endif
 
 int main() 
@@ -119,17 +125,25 @@ int main()
   };
 
   printf("Hello World\n");
-  os_socket_system_begin();
+  b32_t success = os_socket_system_begin();
+  if (!success) {
+    printf("Cannot start socket system\n");
+    return 1;
+  }
   defer { os_socket_system_end(); };
 
-  os_socket_t s = os_socket_begin();
+  os_socket_t s = os_socket_begin(SERVER, PORT);
+  if (!s.is_valid) {
+    printf("Cannot create socket\n");
+    return 1;
+  }
   defer { os_socket_end(s); };
 
 
   char buffer[512] = {};
 
   send(s.sock, CAPREQ, sizeof(CAPREQ), 0);
-  send(s.sock, (char*)pw.e, pw.size, 0);
+  os_socket_send(s, pw);
   send(s.sock, NICK, sizeof(NICK), 0);
   {
     int received_bytes = recv(s.sock, buffer, sizeof(buffer), 0);
@@ -137,6 +151,7 @@ int main()
     printf("%s\n", buffer);
   }
 
+#if 0
   send(s.sock, CHANNEL, sizeof(CHANNEL), 0);
   {
     int received_bytes = recv(s.sock, buffer, sizeof(buffer), 0);
@@ -151,7 +166,6 @@ int main()
     buffer[received_bytes] = 0;
     printf("%s\n", buffer);
   }
-#if 0
   while(1){
 
   }
