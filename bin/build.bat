@@ -38,7 +38,7 @@ set code_dir=%root_dir%\code
 set build_dir=%root_dir%\build
 set ship_file="" 
 
-set build=0
+set build=1
 set run=0
 set w32=0
 set optimize=0 
@@ -53,6 +53,7 @@ IF "%~1"=="" (
 )
 IF "%~1"=="-run" (
   set run=1
+  set build=0
   GOTO label_parse_next
 )
 IF "%~1"=="-w32" (
@@ -99,7 +100,6 @@ set linker_flags=
 set output_name=%filename%.exe
 
 echo ******************* 
-
 
 if %build%==1 (
 
