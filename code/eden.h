@@ -1064,11 +1064,6 @@ _eden_gfx_push_command_block(eden_gfx_command_queue_t* q, u32_t size, u32_t id, 
 	return entry->data;
 }
 
-// TODO: maybe we should change this to a macro to support C users
-template<typename T> static T*
-_eden_gfx_push_command(eden_gfx_command_queue_t* q, u32_t id, u32_t align = 16) {
-  return (T*)_eden_gfx_push_command_block(q, sizeof(T), id, align);
-}
 
 
 static eden_gfx_texture_payload_t*
@@ -1145,12 +1140,18 @@ eden_gfx_cancel_texture_transfer(eden_gfx_texture_payload_t* entry) {
 }
 
 
+//
+// Basic Commands
+//
+
+#define _eden_gfx_push_command(t, q, id, align) ((t*)_eden_gfx_push_command_block(q, sizeof(t), id, align))
+
 static void 
 eden_gfx_set_view(eden_gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y) 
 {
   eden_gfx_command_queue_t* c = &g->command_queue; 
     
-  eden_gfx_command_view_t* data = _eden_gfx_push_command<eden_gfx_command_view_t>(c, EDEN_GFX_COMMAND_TYPE_VIEW);
+  eden_gfx_command_view_t* data = _eden_gfx_push_command(eden_gfx_command_view_t, c, EDEN_GFX_COMMAND_TYPE_VIEW, 16);
   data->min_x = min_x;
   data->min_y = min_y;
   data->max_x = max_x;
@@ -1162,7 +1163,7 @@ eden_gfx_set_view(eden_gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t ma
 static void
 eden_gfx_clear_colors(eden_gfx_t* g, rgba_t colors) {
   eden_gfx_command_queue_t* c = &g->command_queue; 
-  eden_gfx_command_clear_t* data = _eden_gfx_push_command<eden_gfx_command_clear_t>(c, EDEN_GFX_COMMAND_TYPE_CLEAR);
+  eden_gfx_command_clear_t* data = _eden_gfx_push_command(eden_gfx_command_clear_t, c, EDEN_GFX_COMMAND_TYPE_CLEAR, 16);
   data->colors = colors;
 }
 
@@ -1178,7 +1179,7 @@ eden_gfx_push_sprite(
     u32_t texel_x1, u32_t texel_y1)
 {
   eden_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data = _eden_gfx_push_command<eden_gfx_command_sprite_t>(c, EDEN_GFX_COMMAND_TYPE_SPRITE);
+  auto* data = _eden_gfx_push_command(eden_gfx_command_sprite_t, c, EDEN_GFX_COMMAND_TYPE_SPRITE, 16);
   data->colors = colors;
   data->texture_index = texture_index;
 
@@ -1199,7 +1200,7 @@ eden_gfx_draw_filled_rect(eden_gfx_t* g,
 {
   eden_gfx_command_queue_t* c = &g->command_queue; 
 
-  auto* data = _eden_gfx_push_command<eden_gfx_command_rect_t>(c, EDEN_GFX_COMMAND_TYPE_RECT);
+  auto* data = _eden_gfx_push_command(eden_gfx_command_rect_t, c, EDEN_GFX_COMMAND_TYPE_RECT, 16);
   data->colors = colors;
   data->pos = pos;
   data->rot = rot;
@@ -1207,20 +1208,46 @@ eden_gfx_draw_filled_rect(eden_gfx_t* g,
 }
 
 
+static void 
+eden_gfx_delete_texture(eden_gfx_t* g, u32_t texture_index) {
+  eden_gfx_command_queue_t* c = &g->command_queue; 
+  auto* data= _eden_gfx_push_command(eden_gfx_command_delete_texture_t, c, EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE, 16);
+  data->texture_index = texture_index;
+  
+}
+
+static void 
+eden_gfx_set_blend(eden_gfx_t* g, eden_gfx_blend_type_t src, eden_gfx_blend_type_t dst) {
+  eden_gfx_command_queue_t* c = &g->command_queue; 
+  auto* data= _eden_gfx_push_command(eden_gfx_command_blend_t, c, EDEN_GFX_COMMAND_TYPE_BLEND, 16);
+  data->src = src;
+  data->dst = dst;
+}
+
 static void
 eden_gfx_draw_filled_triangle(eden_gfx_t* g,
                          rgba_t colors,
                          v2f_t p0, v2f_t p1, v2f_t p2)
 {
   eden_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data = _eden_gfx_push_command<eden_gfx_command_triangle_t>(c, EDEN_GFX_COMMAND_TYPE_TRIANGLE);
+  auto* data = _eden_gfx_push_command(eden_gfx_command_triangle_t, c, EDEN_GFX_COMMAND_TYPE_TRIANGLE, 16);
   data->colors = colors;
   data->p0 = p0;
   data->p1 = p1;
   data->p2 = p2;
 }
 
+static void
+eden_gfx_advance_depth(eden_gfx_t* g) { 
+  eden_gfx_command_queue_t* c = &g->command_queue; 
+  _eden_gfx_push_command(eden_gfx_command_advance_depth_t, c, EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH, 16);
+}
 
+#undef _eden_gfx_push_command
+
+//
+// Deriviative commands
+//
 
 static void 
 eden_gfx_draw_line(
@@ -1305,21 +1332,6 @@ eden_gfx_draw_circle_outline(eden_gfx_t* g, v2f_t center, f32_t radius, f32_t th
   }
 }
 
-static void 
-eden_gfx_delete_texture(eden_gfx_t* g, u32_t texture_index) {
-  eden_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data= _eden_gfx_push_command<eden_gfx_command_delete_texture_t>(c, EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE);
-  data->texture_index = texture_index;
-  
-}
-
-static void 
-eden_gfx_set_blend(eden_gfx_t* g, eden_gfx_blend_type_t src, eden_gfx_blend_type_t dst) {
-  eden_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data= _eden_gfx_push_command<eden_gfx_command_blend_t>(c, EDEN_GFX_COMMAND_TYPE_BLEND);
-  data->src = src;
-  data->dst = dst;
-}
 
 static void 
 eden_gfx_set_blend_preset(eden_gfx_t* g, eden_gfx_blend_preset_type_t type)
@@ -1349,11 +1361,6 @@ eden_gfx_get_blend_preset(eden_gfx_t* g) {
 
 }
 
-static void
-eden_gfx_advance_depth(eden_gfx_t* g) {
-  eden_gfx_command_queue_t* c = &g->command_queue; 
-  _eden_gfx_push_command<eden_gfx_command_advance_depth_t>(c, EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH);
-}
 
 #if EDEN_USE_OPENGL
 
