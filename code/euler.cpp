@@ -1063,15 +1063,15 @@ euler_q21() {
     }
   }
 
-  printf("%lu\n", sum);
+  printf("%u\n", sum);
 
 }
 
 static u32_t 
-euler_q22_get_score(st8_t str) 
+euler_q22_get_score(str_t str) 
 {
   u32_t score = 0;
-  for_cnt(i, str.count) {
+  for_cnt(i, str.size) {
     u32_t place = str.e[i] - 'A' + 1;
     score += place;
   }
@@ -1083,10 +1083,10 @@ euler_q22_get_score(st8_t str)
 
 static
 quicksort_generic_predicate_sig(euler_q22_cmp) {
-  st8_t l = dref((st8_t*)(lhs));
-  st8_t r = dref((st8_t*)(rhs));
+  str_t l = dref((str_t*)(lhs));
+  str_t r = dref((str_t*)(rhs));
 
-  return st8_compare_lexographically(l, r) < 0;
+  return str_compare_lexographically(l, r) < 0;
 }
 
 
@@ -1675,7 +1675,7 @@ euler_q22() {
 #endif
   };
 
-  auto* entries = (st8_t*)malloc(sizeof(st8_t)* array_count(names));
+  auto* entries = (str_t*)malloc(sizeof(str_t)* array_count(names));
   if (!entries) {
     printf("Ded\n");
     return;
@@ -1684,14 +1684,14 @@ euler_q22() {
 
   // Fill the sort entries
   for(u32_t i = 0; i < array_count(names); ++i) {
-    entries[i] = st8_from_cstr(names[i]); 
+    entries[i] = str_from_cstr(names[i]); 
   }
   
   quicksort_generic(entries, array_count(names), euler_q22_cmp);
   u32_t sum = 0;
   for(u32_t i = 0; i < array_count(names); ++i) {
 
-    st8_t name = entries[i];
+    str_t name = entries[i];
     sum += (i+1) * euler_q22_get_score(name);
 #if 0
     for_cnt(j, name.count) {
@@ -1704,6 +1704,72 @@ euler_q22() {
 
 }
 
+static u32_t 
+euler_q23_get_sum_of_divisors(u32_t num)
+{
+  u32_t sum_of_divisors = 1;
+  u32_t low = 2;
+  u32_t high = num;
+  while(low < high) {
+    u32_t q = num / low;
+    u32_t r = num % low;
+
+    if (r == 0) {
+      //printf("%d %d\n", q, low); 
+      high = q;
+      sum_of_divisors += q;
+      sum_of_divisors += low;
+    }
+
+    ++low;
+  }
+  return sum_of_divisors;
+}
+
+static b32_t
+euler_q23_is_abundant(u32_t num) {
+  return euler_q23_get_sum_of_divisors(num) > num;
+}
+
+static void
+euler_q23()
+{
+  u32_t sum = 0;
+  u32_t lookup[10000] = {};
+  u32_t lookup_count = 0;
+
+  for (u32_t i = 12; i <= 28123; ++i){
+    if (euler_q23_is_abundant(i)) {
+      lookup[lookup_count++] = i;
+    }
+  }
+
+  
+  for (u32_t k = 24; k <= 28123; ++k) 
+  {
+    for_cnt(i, lookup_count) 
+    {
+      if (i > k) continue;
+      for_cnt(j, lookup_count) 
+      {
+        if (j > k) continue; 
+
+        u32_t lookup_sum = lookup[i] + lookup[j];
+        if (lookup_sum == k)
+        {
+          goto done;
+        }
+      }
+    }
+    // if none of the sum of two abundant numbers 
+    // can be found, add to sum.
+    sum += k;
+done:
+    continue;
+  }
+
+  printf("%u\n", sum);
+}
 
 int
 main() {
@@ -1728,7 +1794,8 @@ main() {
   //euler_q19();
   //euler_q20();
   //euler_q21();
-  euler_q22();
+  //euler_q22();
+  euler_q23();
   
 
 }

@@ -10,14 +10,9 @@
 //   Graphics          - Graphics interfaces
 //   Opengl            - Graphics implementation with OGL
 //   Rendering         - Game functions for rendering
-//   
-// TODO
-//   Audio Mixer
-//     Need to cater for 8-bit, 16-bit and 32-bit sounds.
-//   Threaded audio output
-//   Audio Input
+//   Profiler          - Profiler system
+//   Assets            - Asset System (using pass system)
 //
-//   
 
 
 #ifndef EDEN_H
@@ -3109,6 +3104,23 @@ eden_profiler_update_entries(eden_profiler_t* p) {
 
 //
 // JOURNAL
+// = 2024-02-03 = 
+//   I realized that there is a difference of 'systems' provided
+//   by this file at the moment. There are core systems which 
+//   are bound to the eden engine, and there are 'optional' 
+//   systems which can be common for games (atm it looks like
+//   console and asset systems are seperate).
+//
+//   Console is straight forward. The interesting one is the
+//   asset system; I thought I wanted a generic asset system
+//   at first but looks like there is a use case for a less
+//   serious asset system (e.g. a simple one that just loads
+//   and frees files on demand)
+//
+//   There is a small issue, which is that some rendering functions
+//   require the asset system as well. Maybe those need to be 
+//   seperated as well?
+//
 // = 2024-01-11 =
 //   Changed up how icons work in the pack scripts (eg. pack_lit). I'm still not 100%
 //   if I like icons to be a seperate resource...feels really awkward to ship. Perhaps
