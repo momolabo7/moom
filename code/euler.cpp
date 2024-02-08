@@ -1707,6 +1707,7 @@ euler_q22() {
 static u32_t 
 euler_q23_get_sum_of_divisors(u32_t num)
 {
+  //printf("=== Num: %d ===\n", num);
   u32_t sum_of_divisors = 1;
   u32_t low = 2;
   u32_t high = num;
@@ -1718,7 +1719,9 @@ euler_q23_get_sum_of_divisors(u32_t num)
       //printf("%d %d\n", q, low); 
       high = q;
       sum_of_divisors += q;
-      sum_of_divisors += low;
+      if (low != q) {
+        sum_of_divisors += low;
+      }
     }
 
     ++low;
@@ -1738,14 +1741,19 @@ euler_q23()
   u32_t lookup[10000] = {};
   u32_t lookup_count = 0;
 
+  //for (u32_t i = 12; i <= 28123; ++i){
   for (u32_t i = 12; i <= 28123; ++i){
     if (euler_q23_is_abundant(i)) {
       lookup[lookup_count++] = i;
     }
   }
+#if 0
+  for_cnt(i, lookup_count) {
+    printf("%d ", lookup[i]);
+  }
+#endif
 
-  
-  for (u32_t k = 24; k <= 28123; ++k) 
+  for (u32_t k = 1; k <= 28123; ++k) 
   {
     for_cnt(i, lookup_count) 
     {
@@ -1753,7 +1761,6 @@ euler_q23()
       for_cnt(j, lookup_count) 
       {
         if (j > k) continue; 
-
         u32_t lookup_sum = lookup[i] + lookup[j];
         if (lookup_sum == k)
         {
@@ -1769,6 +1776,11 @@ done:
   }
 
   printf("%u\n", sum);
+}
+
+static void 
+euler_q24()
+{
 }
 
 int
@@ -1795,7 +1807,8 @@ main() {
   //euler_q20();
   //euler_q21();
   //euler_q22();
-  euler_q23();
+  //euler_q23();
+  euler_q24();
   
 
 }
