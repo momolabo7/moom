@@ -55,7 +55,8 @@ int main() {
 
     }
     pass_pack_atlas_end(p, "test.png");
-
+    pass_pack_sound(p, ASSET_SOUND_PICKUP, lit_res_dir("test.wav")); 
+    pass_pack_sound(p, ASSET_SOUND_PUTDOWN, lit_res_dir("test.wav")); 
   }
   pass_pack_end(p, LIT_ASSET_FILE);
   printf("Assets created\n");

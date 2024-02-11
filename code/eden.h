@@ -858,7 +858,7 @@ struct eden_asset_sprite_t {
 
 struct eden_asset_sound_t {
   u32_t data_size;
-  void* data;
+  u8_t* data;
 };
 
 struct eden_asset_font_glyph_t {
