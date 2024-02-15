@@ -1778,9 +1778,47 @@ done:
   printf("%u\n", sum);
 }
 
+static
+quicksort_generic_predicate_sig(euler_q24_cmp) {
+  u32_t l = dref((u32_t*)lhs);
+  u32_t r = dref((u32_t*)lhs);
+  return l > r;
+}
+
+static void
+euler_q24_print_permutations(u32_t* input, u32_t input_len, u32_t start, u32_t end) 
+{
+  if (start == end) 
+  {
+    for (u32_t i = 0; i < input_len; ++i)
+      printf("%d", input[i]);
+    printf("\n");
+  }
+  else 
+  {
+    // Sort start to end
+    quicksort_generic(input, input_len, euler_q24_cmp);
+    
+    for (u32_t i = 0; i < input_len; ++i)
+      printf("%d", input[i]);
+    printf("\n");
+#if 0
+    for(u32_t i = start; i <= end; ++i) {
+      swap(input[start], input[i]);
+      euler_q24_print_permutations(input, input_len, start + 1, end);
+      swap(input[start], input[i]);
+    }
+#endif
+
+  }
+}
+
 static void 
 euler_q24()
 {
+  u32_t arr[] = { 0, 1, 2 };
+  euler_q24_print_permutations(arr, array_count(arr),  0, array_count(arr)-1);
+
 }
 
 int
