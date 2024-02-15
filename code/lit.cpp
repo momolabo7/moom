@@ -73,6 +73,23 @@
 #define lit_profile_begin(name) eden_profile_begin(g_eden, name)
 #define lit_profile_end(name) eden_profile_end(g_eden, name)
 
+struct lit_audio_mixer_instance_t {
+  eden_asset_sound_id_t sound_id;
+  u32_t current_offset;
+  u32_t index;
+  
+  b32_t is_loop;
+  b32_t is_playing;
+  f32_t volume;
+};
+
+struct lit_audio_mixer_t {
+  lit_audio_mixer_instance_t instances[32]; // TODO make this dynamic;
+  u32_t free_list[32];
+  u32_t free_list_count;
+  f32_t volume;
+};
+
 
 //
 // Profiler stats
@@ -388,6 +405,7 @@ struct lit_t {
 
   // Assets
   eden_assets_t assets;
+  lit_audio_mixer_t mixer;
 
 };
 
@@ -402,6 +420,101 @@ static lit_game_title_waypoint_t lit_title_wps[] = {
   { 500.0f,   2.0f },
   { 1600.0f,  3.0f },
 };
+
+//
+// MIXER
+//
+
+static void
+lit_audio_mixer_init(lit_audio_mixer_t* mixer) {
+  mixer->free_list_count = array_count(mixer->free_list);
+  for_arr(i, mixer->free_list) {
+    auto* instance = mixer->instances + i;
+    instance->is_loop = false;
+    instance->is_playing = false;
+    instance->volume = 0.f;
+    instance->current_offset = 0.f;
+    instance->index = i;
+
+    mixer->free_list[i] = i;  
+    
+  }
+  mixer->volume = 1.f;
+}
+
+
+static lit_audio_mixer_instance_t*
+lit_audio_mixer_play(
+    lit_audio_mixer_t* mixer, 
+    eden_asset_sound_id_t sound_id,
+    b32_t loop,
+    f32_t volume) 
+{
+  // get last index from free list
+  if (mixer->free_list_count == 0) 
+    return nullptr;
+
+  u32_t index = mixer->free_list[--mixer->free_list_count];
+  
+  auto* instance = mixer->instances + index;
+  instance->is_loop = loop;
+  instance->current_offset = 0;
+  instance->sound_id = sound_id;
+  instance->is_playing = true;
+  instance->volume = volume;
+  instance->index = index;
+
+  return instance;
+}
+
+static void
+lit_audio_mixer_stop(
+    lit_audio_mixer_t* mixer,
+    lit_audio_mixer_instance_t* instance)
+{
+  instance->is_playing = false;
+  mixer->free_list[mixer->free_list_count++] = instance->index;
+}
+
+//
+// This is for audio mixer to update as if it's 16-bit channel
+// TODO: we should update differently depending on channel.
+//
+static void
+lit_audio_mixer_update(
+    lit_audio_mixer_t* mixer,
+    eden_audio_t* audio)
+{
+  s16_t* sample_out = (s16_t*)audio->samples;
+  for_cnt(sample_index, audio->sample_count) {
+    for_cnt (channel_index, audio->device_channels) {
+      sample_out[channel_index] = 0;
+    }
+
+    for_arr(instance_index, mixer->instances) {
+      auto* instance = mixer->instances + instance_index;
+      if (instance->is_playing == false) {
+        continue;
+      }
+      eden_asset_sound_t* sound = eden_assets_get_sound(&g_lit->assets, instance->sound_id);
+
+      for_cnt (channel_index, audio->device_channels) {
+        sample_out[channel_index] += (s16_t)(sound->data[instance->current_offset++] * 
+            mixer->volume * instance->volume);
+      }
+
+      if (instance->current_offset >= sound->data_size) {
+        if (instance->is_loop) {
+          instance->current_offset = 0;
+        }
+        else {
+          lit_audio_mixer_stop(mixer, instance);
+        }
+      }
+    }
+    sample_out += audio->device_channels;
+  }
+}
 
 //
 // Save Data Functions
@@ -3839,6 +3952,11 @@ eden_update_and_render_sig(eden_update_and_render)
     // Initialize assets
     //
     eden_assets_init(&g_lit->assets, g_eden, LIT_ASSET_FILE, &g_lit->asset_arena);
+
+    //
+    // Initialize mixer
+    //
+    lit_audio_mixer_init(&g_lit->mixer);
       
     eden_set_design_dimensions(g_eden, LIT_WIDTH, LIT_HEIGHT);
     eden_set_view(g_eden, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
@@ -3898,8 +4016,10 @@ eden_update_and_render_sig(eden_update_and_render)
 
   // Debug
   if (eden_is_button_poked(g_eden, EDEN_BUTTON_CODE_F1)) {
+    lit_audio_mixer_play(&g_lit->mixer, ASSET_SOUND_PICKUP, false, 1.f);
     g_lit->show_debug_type = 
       (lit_show_debug_type_t)((g_lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
+
   }
 
   // Check arena size
@@ -3919,6 +4039,8 @@ eden_update_and_render_sig(eden_update_and_render)
     }break;
     default: {}
   }
+
+  lit_audio_mixer_update(&g_lit->mixer, &g_eden->audio);
 
 }
 
@@ -3948,12 +4070,12 @@ eden_get_config_sig(eden_get_config)
   ret.max_sprites = 4096;
   ret.max_triangles = 4096;
 
-  ret.audio_enabled = false;
+  ret.audio_enabled = true;
   ret.audio_samples_per_second = 48000;
   ret.audio_bits_per_sample = 16;
   ret.audio_channels = 2;
   
-  ret.window_title = "LIT v0.4";
+  ret.window_title = "LIT v0.5";
   ret.window_initial_width = 800;
   ret.window_initial_height = 800;
 
@@ -3963,6 +4085,9 @@ eden_get_config_sig(eden_get_config)
 
 //
 // JOURNAL
+// = 2023-12-22 =
+//   I have add sound!
+//
 // = 2023-12-22 =
 //   Cleaning up levels to make it more playable.
 //
