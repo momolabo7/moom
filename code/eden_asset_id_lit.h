@@ -28,8 +28,7 @@ enum eden_asset_font_id_t : u32_t {
 };
 
 enum eden_asset_sound_id_t : u32_t {
-  ASSET_SOUND_PICKUP,
-  ASSET_SOUND_PUTDOWN,
+  ASSET_SOUND_BGM,
   ASSET_SOUND_ID_MAX
 };
 

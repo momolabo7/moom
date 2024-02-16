@@ -74,7 +74,7 @@
 #define lit_profile_end(name) eden_profile_end(g_eden, name)
 
 struct lit_audio_mixer_instance_t {
-  eden_asset_sound_id_t sound_id;
+  eden_asset_sound_id_t sound_id; // TODO: do not rely on sound_id
   u32_t current_offset;
   u32_t index;
   
@@ -83,7 +83,14 @@ struct lit_audio_mixer_instance_t {
   f32_t volume;
 };
 
+enum lit_audio_mixer_bitrate_type_t {
+  LIT_AUDIO_MIXER_BITRATE_TYPE_S16,
+  // add more here and support them in audio_mixer_update
+};
+
 struct lit_audio_mixer_t {
+  lit_audio_mixer_bitrate_type_t bitrate_type;
+
   lit_audio_mixer_instance_t instances[32]; // TODO make this dynamic;
   u32_t free_list[32];
   u32_t free_list_count;
@@ -426,9 +433,14 @@ static lit_game_title_waypoint_t lit_title_wps[] = {
 //
 
 static void
-lit_audio_mixer_init(lit_audio_mixer_t* mixer) {
+lit_audio_mixer_init(
+    lit_audio_mixer_t* mixer, 
+    lit_audio_mixer_bitrate_type_t bitrate_type) 
+{
+  mixer->bitrate_type = bitrate_type;
   mixer->free_list_count = array_count(mixer->free_list);
-  for_arr(i, mixer->free_list) {
+  for_arr(i, mixer->free_list) 
+  {
     auto* instance = mixer->instances + i;
     instance->is_loop = false;
     instance->is_playing = false;
@@ -451,8 +463,7 @@ lit_audio_mixer_play(
     f32_t volume) 
 {
   // get last index from free list
-  if (mixer->free_list_count == 0) 
-    return nullptr;
+  assert(mixer->free_list_count > 0);
 
   u32_t index = mixer->free_list[--mixer->free_list_count];
   
@@ -485,35 +496,52 @@ lit_audio_mixer_update(
     lit_audio_mixer_t* mixer,
     eden_audio_t* audio)
 {
-  s16_t* sample_out = (s16_t*)audio->samples;
-  for_cnt(sample_index, audio->sample_count) {
-    for_cnt (channel_index, audio->device_channels) {
-      sample_out[channel_index] = 0;
-    }
+#if 1
+  u32_t bytes_per_sample = (audio->device_bits_per_sample/8);
+  zero_memory(audio->samples, bytes_per_sample * audio->device_channels * audio->sample_count);
 
-    for_arr(instance_index, mixer->instances) {
-      auto* instance = mixer->instances + instance_index;
-      if (instance->is_playing == false) {
-        continue;
-      }
-      eden_asset_sound_t* sound = eden_assets_get_sound(&g_lit->assets, instance->sound_id);
+  if (mixer->bitrate_type == LIT_AUDIO_MIXER_BITRATE_TYPE_S16) {
+    for_cnt (sample_index, audio->sample_count){
+      s16_t* dest = (s16_t*)audio->samples + (sample_index * audio->device_channels);
+      for_arr(instance_index, mixer->instances) {
+        lit_audio_mixer_instance_t* instance = mixer->instances + instance_index;
+        if (!instance->is_playing) continue;
 
-      for_cnt (channel_index, audio->device_channels) {
-        sample_out[channel_index] += (s16_t)(sound->data[instance->current_offset++] * 
-            mixer->volume * instance->volume);
-      }
+        auto* sound = eden_assets_get_sound(&g_lit->assets, instance->sound_id);
+        //s16_t* src = (s16_t*)instance->data;
+        s16_t* src = (s16_t*)sound->data;
 
-      if (instance->current_offset >= sound->data_size) {
-        if (instance->is_loop) {
-          instance->current_offset = 0;
+        for_cnt(channel_index, audio->device_channels) {
+          dest[channel_index] += s16_t(dref(src + instance->current_offset++) * instance->volume * mixer->volume);
         }
-        else {
-          lit_audio_mixer_stop(mixer, instance);
+
+//        if (instance->current_offset >= instance->data_size/bytes_per_sample) 
+        if (instance->current_offset >= sound->data_size/bytes_per_sample) 
+        {
+          if (instance->is_loop) {
+            instance->current_offset = 0;
+          }
+          else {
+            lit_audio_mixer_stop(mixer, instance);
+          }
         }
       }
     }
-    sample_out += audio->device_channels;
   }
+#else // for testing
+
+  static f32_t sine = 0.f;
+  s16_t* sample_out = (s16_t*)audio->samples;
+  s16_t volume = 3000;
+  for(u32_t sample_index = 0; sample_index < audio->sample_count; ++sample_index) {
+      for (u32_t channel_index = 0; channel_index < audio->device_channels; ++channel_index) {
+        f32_t sine_value = f32_sin(sine);
+        sample_out[channel_index] = s16_t(sine_value * volume);
+      }
+      sample_out += audio->device_channels;
+      sine += 2.f;
+  }
+#endif
 }
 
 //
@@ -3956,7 +3984,7 @@ eden_update_and_render_sig(eden_update_and_render)
     //
     // Initialize mixer
     //
-    lit_audio_mixer_init(&g_lit->mixer);
+    lit_audio_mixer_init(&g_lit->mixer, LIT_AUDIO_MIXER_BITRATE_TYPE_S16);
       
     eden_set_design_dimensions(g_eden, LIT_WIDTH, LIT_HEIGHT);
     eden_set_view(g_eden, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
@@ -4016,7 +4044,7 @@ eden_update_and_render_sig(eden_update_and_render)
 
   // Debug
   if (eden_is_button_poked(g_eden, EDEN_BUTTON_CODE_F1)) {
-    lit_audio_mixer_play(&g_lit->mixer, ASSET_SOUND_PICKUP, false, 1.f);
+    lit_audio_mixer_play(&g_lit->mixer, ASSET_SOUND_BGM, false, 0.1f);
     g_lit->show_debug_type = 
       (lit_show_debug_type_t)((g_lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
 
@@ -4079,13 +4107,12 @@ eden_get_config_sig(eden_get_config)
   ret.window_initial_width = 800;
   ret.window_initial_height = 800;
 
-  ret.max_sprites = 4096;
   return ret;
 }
 
 //
 // JOURNAL
-// = 2023-12-22 =
+// = 2023-02-11 =
 //   I have add sound!
 //
 // = 2023-12-22 =

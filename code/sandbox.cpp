@@ -1,7 +1,7 @@
 
 #include "momo.h"
-#include "game_asset_id_sandbox.h"
-#include "game.h"
+#include "eden_asset_id_sandbox.h"
+#include "eden.h"
 
 struct sandbox_audio_mixer_instance_t {
   u32_t index; 
@@ -32,13 +32,13 @@ struct sandbox_audio_mixer_t {
 };
 
 static void
-sandbox_audio_mixer_update(sandbox_audio_mixer_t* mixer, game_t* game) {
-  u32_t bytes_per_sample = (game->audio.device_bits_per_sample/8);
-  zero_memory(game->audio.samples, bytes_per_sample * game->audio.device_channels * game->audio.sample_count);
+sandbox_audio_mixer_update(sandbox_audio_mixer_t* mixer, eden_t* eden) {
+  u32_t bytes_per_sample = (eden->audio.device_bits_per_sample/8);
+  zero_memory(eden->audio.samples, bytes_per_sample * eden->audio.device_channels * eden->audio.sample_count);
 
   if (mixer->bitrate_type == AUDIO_MIXER_BITRATE_TYPE_S16) {
-    for_cnt (sample_index, game->audio.sample_count){
-      s16_t* dest = (s16_t*)game->audio.samples + (sample_index * game->audio.device_channels);
+    for_cnt (sample_index, eden->audio.sample_count){
+      s16_t* dest = (s16_t*)eden->audio.samples + (sample_index * eden->audio.device_channels);
       for_cnt(instance_index, mixer->instance_count) {
         sandbox_audio_mixer_instance_t* instance = mixer->instances + instance_index;
         if (!instance->is_playing) continue;
@@ -47,7 +47,7 @@ sandbox_audio_mixer_update(sandbox_audio_mixer_t* mixer, game_t* game) {
         //s16_t* src = (s16_t*)wav->data;
         s16_t* src = (s16_t*)instance->data;
 
-        for_cnt(channel_index, game->audio.device_channels) {
+        for_cnt(channel_index, eden->audio.device_channels) {
           dest[channel_index] += s16_t(dref(src + instance->offset++) * instance->volume * mixer->volume);
         }
 
@@ -108,16 +108,17 @@ sandbox_audio_mixer_play(sandbox_audio_mixer_t* mixer, void* data, u32_t data_si
 // Game functions
 // 
 exported 
-game_get_config_sig(game_get_config) 
+eden_get_config_sig(eden_get_config) 
 {
-  game_config_t ret;
+  eden_config_t ret;
+  ret.platform_memory_size = megabytes(128);
 
-  ret.debug_arena_size = kilobytes(300);
-  ret.max_inspector_entries = 256;
-  ret.max_profiler_entries = 256;
+  ret.target_frame_rate = 60;
+
+  ret.max_inspector_entries = 8;
+  ret.max_profiler_entries = 8;
   ret.max_profiler_snapshots = 120;
 
-  ret.gfx_arena_size = megabytes(256);
   ret.texture_queue_size = megabytes(5);
   ret.render_command_size = megabytes(100);
   ret.max_textures = 1;
@@ -129,52 +130,48 @@ game_get_config_sig(game_get_config)
   ret.audio_samples_per_second = 48000;
   ret.audio_bits_per_sample = 16;
   ret.audio_channels = 2;
-  ret.audio_arena_size = megabytes(256);
 
-  ret.target_frame_rate = 60;
   ret.window_title = "sandobokusu";
+  ret.window_initial_width = 800;
+  ret.window_initial_height = 800;
 
   return ret;
 }
 
 
 struct sandbox_t {
-  game_assets_t assets;
+  eden_assets_t assets;
   arena_t arena;
   sandbox_audio_mixer_t mixer;
 };
 
 exported 
-game_update_and_render_sig(game_update_and_render) { 
-  if (game->game == nullptr)
+eden_update_and_render_sig(eden_update_and_render) { 
+  if (eden->user_data == nullptr)
   {
-    game->game = game_allocate_memory(game, sizeof(sandbox_t));
-    if (!game->game) return;
-    auto* sandbox = (sandbox_t*)(game->game);
+    str_t memory = eden_allocate_memory(eden, megabytes(256));
+    if (!memory) return;
+    eden->user_data = arena_bootstrap_push(sandbox_t, arena, memory); 
 
-    usz_t arena_size = megabytes(256);
-    void* arena_memory = game_allocate_memory(game, arena_size);
-    arena_init(&sandbox->arena, arena_memory, arena_size);
-
-    game_assets_init(&sandbox->assets, game, SANDBOX_ASSET_FILE, &sandbox->arena);
+    auto* sandbox = (sandbox_t*)(eden->user_data);
+    eden_assets_init(&sandbox->assets, eden, SANDBOX_ASSET_FILE, &sandbox->arena);
 
     //sandbox_load_wav("tenzen.wav");
     sandbox_audio_mixer_init(&sandbox->mixer, AUDIO_MIXER_BITRATE_TYPE_S16, 32,  &sandbox->arena);
     sandbox->mixer.volume = 0.1f;
   }
 
-  auto* sandbox = (sandbox_t*)(game->game);
+  auto* sandbox = (sandbox_t*)(eden->user_data);
 
 #if 0 // For testing only
   static f32_t sine = 0.f;
-  s16_t* sample_out = game->audio.sample_buffer;
+  s16_t* sample_out = eden->audio.sample_buffer;
   s16_t volume = 1000;
-  for(u32_t sample_index = 0; sample_index < game->audio.sample_count; ++sample_index) {
-    for (u32_t channel_index = 0; channel_index < game->audio.channels; ++channel_index) {
+  for(u32_t sample_index = 0; sample_index < eden->audio.sample_count; ++sample_index) {
+    for (u32_t channel_index = 0; channel_index < eden->audio.channels; ++channel_index) {
       f32_t sine_value = f32_sin(sine);
       sample_out[channel_index] = s16_t(sine_value * volume);
-      , game_t* game    }
-      sample_out += game->audio.channels;
+      sample_out += eden->audio.channels;
       sine += 1.f;
     }
 #endif
@@ -182,19 +179,19 @@ game_update_and_render_sig(game_update_and_render) {
 
 
 
-  if(game_is_button_poked(game, GAME_BUTTON_CODE_1)) {
+  if(eden_is_button_poked(eden, EDEN_BUTTON_CODE_1)) {
     sandbox->mixer.volume -= 0.1f;
 
   }
-  if(game_is_button_poked(game, GAME_BUTTON_CODE_2)) {
+  if(eden_is_button_poked(eden, EDEN_BUTTON_CODE_2)) {
     sandbox->mixer.volume += 0.1f;
   }
-  if(game_is_button_poked(game, GAME_BUTTON_CODE_3)) {
-    auto* sound = game_assets_get_sound(&sandbox->assets, ASSET_SOUND_ID_TEST);
+  if(eden_is_button_poked(eden, EDEN_BUTTON_CODE_3)) {
+    auto* sound = eden_assets_get_sound(&sandbox->assets, ASSET_SOUND_ID_TEST);
     sandbox_audio_mixer_play(&sandbox->mixer, sound->data, sound->data_size, 0.5f, true);
   }
 
-  sandbox_audio_mixer_update(&sandbox->mixer, game);
+  sandbox_audio_mixer_update(&sandbox->mixer, eden);
 
 
 

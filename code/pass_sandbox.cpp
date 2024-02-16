@@ -5,7 +5,7 @@
 #define assert_callback(s) printf("[pass][assert] %s:%d:%s\n", __FILE__, __LINE__, #s); fflush(stdout);
 #define sandbox_res_dir(filename) "../res/sandbox/" filename
 
-#include "game_asset_id_sandbox.h"
+#include "eden_asset_id_sandbox.h"
 #include "pass.h"
 
 int main() {
@@ -14,7 +14,7 @@ int main() {
   void* memory = malloc(memory_size);
   defer { free(memory); };
   make(arena_t, arena);
-  arena_init(arena, memory, memory_size);
+  arena_init(arena, str_set((u8_t*)memory, memory_size));
 
   make(pass_pack_t, p);
 

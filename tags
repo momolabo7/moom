@@ -90,7 +90,7 @@ assert_callback	code/momo.h	/^#  define assert_callback(/;"	d	language:C++
 assert_callback	code/pass_lit.cpp	/^#define assert_callback(/;"	d	language:C++	file:
 assert_callback	code/pass_sandbox.cpp	/^#define assert_callback(/;"	d	language:C++	file:
 assets	code/lit.cpp	/^  eden_assets_t assets;$/;"	m	language:C++	struct:lit_t	typeref:typename:eden_assets_t	file:
-assets	code/sandbox.cpp	/^  game_assets_t assets;$/;"	m	language:C++	struct:sandbox_t	typeref:typename:game_assets_t	file:
+assets	code/sandbox.cpp	/^  eden_assets_t assets;$/;"	m	language:C++	struct:sandbox_t	typeref:typename:eden_assets_t	file:
 assets	code/tbp.cpp	/^  eden_assets_t assets;$/;"	m	language:C++	struct:tbg_t	typeref:typename:eden_assets_t	file:
 asset_arena	code/lit.cpp	/^  arena_t asset_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
 asset_arena	code/tbp.cpp	/^  arena_t asset_arena;$/;"	m	language:C++	struct:tbg_t	typeref:typename:arena_t	file:
@@ -166,6 +166,7 @@ bitmap_count	code/eden.h	/^  u32_t bitmap_count;$/;"	m	language:C++	struct:eden_
 bitmap_count	code/eden_asset_file.h	/^  u32_t bitmap_count;$/;"	m	language:C++	struct:asset_file_header_t	typeref:typename:u32_t
 bitmap_count	code/pass.h	/^  u32_t bitmap_count;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:u32_t
 bitmap_exts	code/pass.h	/^  pass_pack_bitmap_ext_t* bitmap_exts;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:pass_pack_bitmap_ext_t *
+bitrate_type	code/lit.cpp	/^  lit_audio_mixer_bitrate_type_t bitrate_type;$/;"	m	language:C++	struct:lit_audio_mixer_t	typeref:typename:lit_audio_mixer_bitrate_type_t	file:
 bitrate_type	code/sandbox.cpp	/^  sandbox_audio_mixer_bitrate_type_t bitrate_type;$/;"	m	language:C++	struct:sandbox_audio_mixer_t	typeref:typename:sandbox_audio_mixer_bitrate_type_t	file:
 bits_per_sample	code/momo.h	/^  u16_t bits_per_sample;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 bits_per_sample	code/w32_eden.cpp	/^  u16_t bits_per_sample;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t	file:
@@ -404,9 +405,9 @@ c_link	code/momo.h	/^#define c_link /;"	d	language:C++
 c_link_begin	code/momo.h	/^#define c_link_begin /;"	d	language:C++
 c_link_end	code/momo.h	/^#define c_link_end /;"	d	language:C++
 d	code/momo.h	/^  struct { f32_t w, h, d; };$/;"	m	language:C++	struct:v3f_t::__anon1db7a63d0908	typeref:typename:f32_t
+data	code/eden.h	/^  u8_t* data;$/;"	m	language:C++	struct:eden_asset_sound_t	typeref:typename:u8_t *
 data	code/eden.h	/^  u8_t* data;$/;"	m	language:C++	struct:eden_input_characters_t	typeref:typename:u8_t *
 data	code/eden.h	/^  void* data; \/\/ pointer for platform's usage$/;"	m	language:C++	struct:eden_file_t	typeref:typename:void *
-data	code/eden.h	/^  void* data;$/;"	m	language:C++	struct:eden_asset_sound_t	typeref:typename:void *
 data	code/eden.h	/^  void* data;$/;"	m	language:C++	struct:eden_gfx_command_t	typeref:typename:void *
 data	code/momo.h	/^  u8_t* data;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u8_t *
 data	code/momo.h	/^  void* data;$/;"	m	language:C++	struct:wav_t	typeref:typename:void *
@@ -565,11 +566,11 @@ eden_debug_log_sig	code/eden.h	/^typedef eden_debug_log_sig(eden_debug_log_f);$/
 eden_debug_log_sig	code/w32_eden.cpp	/^eden_debug_log_sig(w32_log_proc) $/;"	f	language:C++	file:
 eden_draw_asset_sprite	code/eden.h	/^eden_draw_asset_sprite($/;"	f	language:C++	typeref:typename:void
 eden_draw_circle	code/eden.h	/^eden_draw_circle(eden_t* eden, v2f_t center, f32_t radius, u32_t sections, rgba_t color) {$/;"	f	language:C++	typeref:typename:void
-eden_draw_circ_outline	code/eden.h	/^eden_draw_circ_outline(eden_t* eden, v2f_t center, f32_t radius, f32_t thickness, u32_t line_cou/;"	f	language:C++	typeref:typename:void
+eden_draw_circle_outline	code/eden.h	/^eden_draw_circle_outline(eden_t* eden, v2f_t center, f32_t radius, f32_t thickness, u32_t line_c/;"	f	language:C++	typeref:typename:void
 eden_draw_line	code/eden.h	/^eden_draw_line(eden_t* eden, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {$/;"	f	language:C++	typeref:typename:void
 eden_draw_rect	code/eden.h	/^eden_draw_rect(eden_t* eden, v2f_t pos, f32_t rot, v2f_t scale, rgba_t color) $/;"	f	language:C++	typeref:typename:void
 eden_draw_sprite	code/eden.h	/^eden_draw_sprite(eden_t* eden, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t t/;"	f	language:C++	typeref:typename:void
-eden_draw_text	code/eden.h	/^eden_draw_text(eden_t* eden, eden_assets_t* assets, eden_asset_font_id_t font_id, str_t str, rgb/;"	f	language:C++	typeref:typename:void
+eden_draw_text	code/eden.h	/^eden_draw_text($/;"	f	language:C++	typeref:typename:void
 eden_draw_text_center_aligned	code/eden.h	/^eden_draw_text_center_aligned(eden_t* eden, eden_assets_t* assets, eden_asset_font_id_t font_id,/;"	f	language:C++	typeref:typename:void
 eden_draw_tri	code/eden.h	/^eden_draw_tri(eden_t* eden, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t color)$/;"	f	language:C++	typeref:typename:void
 EDEN_FILE_ACCESS_OVERWRITE	code/eden.h	/^  EDEN_FILE_ACCESS_OVERWRITE,$/;"	e	language:C++	enum:eden_file_access_t
@@ -590,6 +591,7 @@ eden_get_blend_preset	code/eden.h	/^eden_get_blend_preset(eden_t* eden) {$/;"	f	
 eden_get_config_sig	code/eden.h	/^#define eden_get_config_sig(/;"	d	language:C++
 eden_get_config_sig	code/eden.h	/^typedef eden_get_config_sig(eden_get_config_f);$/;"	t	language:C++
 eden_get_config_sig	code/lit.cpp	/^eden_get_config_sig(eden_get_config) $/;"	f	language:C++	typeref:typename:exported
+eden_get_config_sig	code/sandbox.cpp	/^eden_get_config_sig(eden_get_config) $/;"	f	language:C++	typeref:typename:exported
 eden_get_config_sig	code/tbp.cpp	/^eden_get_config_sig(eden_get_config) $/;"	f	language:C++	typeref:typename:exported
 eden_get_config_sig	code/vtuber.cpp	/^eden_get_config_sig(eden_get_config) $/;"	f	language:C++	typeref:typename:exported
 eden_get_dt	code/eden.h	/^eden_get_dt(eden_t* eden) {$/;"	f	language:C++	typeref:typename:f32_t
@@ -842,6 +844,7 @@ eden_unlock_cursor_sig	code/w32_eden.cpp	/^eden_unlock_cursor_sig(w32_unlock_cur
 eden_update_and_render_sig	code/eden.h	/^#define eden_update_and_render_sig(/;"	d	language:C++
 eden_update_and_render_sig	code/eden.h	/^typedef eden_update_and_render_sig(eden_update_and_render_f);$/;"	t	language:C++
 eden_update_and_render_sig	code/lit.cpp	/^eden_update_and_render_sig(eden_update_and_render) $/;"	f	language:C++	typeref:typename:exported
+eden_update_and_render_sig	code/sandbox.cpp	/^eden_update_and_render_sig(eden_update_and_render) { $/;"	f	language:C++	typeref:typename:exported
 eden_update_and_render_sig	code/tbp.cpp	/^eden_update_and_render_sig(eden_update_and_render) $/;"	f	language:C++	typeref:typename:exported
 eden_update_and_render_sig	code/vtuber.cpp	/^eden_update_and_render_sig(eden_update_and_render) $/;"	f	language:C++	typeref:typename:exported
 EDEN_USE_OPENGL	code/eden.h	/^#define EDEN_USE_OPENGL /;"	d	language:C++
@@ -1235,8 +1238,6 @@ GAME_ASSET_IDS	code/eden_asset_id_lit.h	/^#define GAME_ASSET_IDS$/;"	d	language:
 GAME_ASSET_IDS	code/eden_asset_id_sandbox.h	/^#define GAME_ASSET_IDS$/;"	d	language:C++
 GAME_ASSET_SOUND_ID_MAX	code/eden_asset_id_base.h	/^enum eden_asset_sound_id_t : u32_t {GAME_ASSET_SOUND_ID_MAX};$/;"	e	language:C++	enum:eden_asset_sound_id_t
 GAME_ASSET_SPRITE_ID_MAX	code/eden_asset_id_base.h	/^enum eden_asset_sprite_id_t : u32_t {GAME_ASSET_SPRITE_ID_MAX};$/;"	e	language:C++	enum:eden_asset_sprite_id_t
-game_get_config_sig	code/sandbox.cpp	/^game_get_config_sig(game_get_config) $/;"	f	language:C++	typeref:typename:exported
-game_update_and_render_sig	code/sandbox.cpp	/^game_update_and_render_sig(game_update_and_render) { $/;"	f	language:C++	typeref:typename:exported
 garena_clear	code/momo.h	/^garena_clear(garena_t* ga) {$/;"	f	language:C++	typeref:typename:void
 garena_clear	code/momo.h	/^static void  garena_clear(garena_t* ga);$/;"	p	language:C++	typeref:typename:void
 garena_free	code/momo.h	/^garena_free(garena_t* ga, void* block) {$/;"	f	language:C++	typeref:typename:void
@@ -1568,7 +1569,9 @@ linker_flags	bin/build.bat	/^set linker_flags=$/;"	v	language:DosBatch
 LIT_ANIMATOR_TYPE_PATROL_POINT	code/lit.cpp	/^  LIT_ANIMATOR_TYPE_PATROL_POINT,$/;"	e	language:C++	enum:lit_game_animator_type_t	file:
 LIT_ANIMATOR_TYPE_ROTATE_POINT	code/lit.cpp	/^  LIT_ANIMATOR_TYPE_ROTATE_POINT,$/;"	e	language:C++	enum:lit_game_animator_type_t	file:
 LIT_ASSET_FILE	code/eden_asset_id_lit.h	/^#define LIT_ASSET_FILE /;"	d	language:C++
-lit_audio_mixer_init	code/lit.cpp	/^lit_audio_mixer_init(lit_audio_mixer_t* mixer) {$/;"	f	language:C++	typeref:typename:void	file:
+LIT_AUDIO_MIXER_BITRATE_TYPE_S16	code/lit.cpp	/^  LIT_AUDIO_MIXER_BITRATE_TYPE_S16,$/;"	e	language:C++	enum:lit_audio_mixer_bitrate_type_t	file:
+lit_audio_mixer_bitrate_type_t	code/lit.cpp	/^enum lit_audio_mixer_bitrate_type_t {$/;"	g	language:C++	file:
+lit_audio_mixer_init	code/lit.cpp	/^lit_audio_mixer_init($/;"	f	language:C++	typeref:typename:void	file:
 lit_audio_mixer_instance_t	code/lit.cpp	/^struct lit_audio_mixer_instance_t {$/;"	s	language:C++	file:
 lit_audio_mixer_play	code/lit.cpp	/^lit_audio_mixer_play($/;"	f	language:C++	typeref:typename:lit_audio_mixer_instance_t *	file:
 lit_audio_mixer_stop	code/lit.cpp	/^lit_audio_mixer_stop($/;"	f	language:C++	typeref:typename:void	file:
@@ -2158,7 +2161,7 @@ sandbox_audio_mixer_init	code/sandbox.cpp	/^sandbox_audio_mixer_init($/;"	f	lang
 sandbox_audio_mixer_instance_t	code/sandbox.cpp	/^struct sandbox_audio_mixer_instance_t {$/;"	s	language:C++	file:
 sandbox_audio_mixer_play	code/sandbox.cpp	/^sandbox_audio_mixer_play(sandbox_audio_mixer_t* mixer, void* data, u32_t data_size, f32_t volume/;"	f	language:C++	typeref:typename:void	file:
 sandbox_audio_mixer_t	code/sandbox.cpp	/^struct sandbox_audio_mixer_t {$/;"	s	language:C++	file:
-sandbox_audio_mixer_update	code/sandbox.cpp	/^sandbox_audio_mixer_update(sandbox_audio_mixer_t* mixer, game_t* game) {$/;"	f	language:C++	typeref:typename:void	file:
+sandbox_audio_mixer_update	code/sandbox.cpp	/^sandbox_audio_mixer_update(sandbox_audio_mixer_t* mixer, eden_t* eden) {$/;"	f	language:C++	typeref:typename:void	file:
 sandbox_res_dir	code/pass_sandbox.cpp	/^#define sandbox_res_dir(/;"	d	language:C++	file:
 sandbox_t	code/sandbox.cpp	/^struct sandbox_t {$/;"	s	language:C++	file:
 save_data	code/lit.cpp	/^  lit_save_data_t save_data;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_save_data_t	file:
@@ -2215,7 +2218,7 @@ sound_count	code/eden.h	/^  u32_t sound_count;$/;"	m	language:C++	struct:eden_as
 sound_count	code/eden_asset_file.h	/^  u32_t sound_count;$/;"	m	language:C++	struct:asset_file_header_t	typeref:typename:u32_t
 sound_count	code/pass.h	/^  u32_t sound_count;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:u32_t
 sound_exts	code/pass.h	/^  pass_pack_sound_ext_t* sound_exts;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:pass_pack_sound_ext_t *
-sound_id	code/lit.cpp	/^  eden_asset_sound_id_t sound_id;$/;"	m	language:C++	struct:lit_audio_mixer_instance_t	typeref:typename:eden_asset_sound_id_t	file:
+sound_id	code/lit.cpp	/^  eden_asset_sound_id_t sound_id; \/\/ TODO: do not rely on sound_id$/;"	m	language:C++	struct:lit_audio_mixer_instance_t	typeref:typename:eden_asset_sound_id_t	file:
 speed	code/lit.cpp	/^  f32_t speed;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:f32_t	file:
 speed_multiplier	code/lit.cpp	/^  f32_t speed_multiplier;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t	file:
 splash	code/lit.cpp	/^    lit_splash_t splash;$/;"	m	language:C++	union:lit_t::__anon7a0f2729020a	typeref:typename:lit_splash_t	file:

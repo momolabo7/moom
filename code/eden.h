@@ -14,7 +14,6 @@
 //   Assets            - Asset System (using pass system)
 //
 
-
 #ifndef EDEN_H
 #define EDEN_H
 
@@ -27,17 +26,17 @@
 // MARK:(Graphics)
 //
 // All the code here is a representation of how the 
-// eden views 'rendering'. The moe simply adds commands
+// eden views 'rendering'. The system simply adds commands
 // to a command queue, which will be dispatched to the 
 // appropriate graphics API, which details will be implemented
 // on top of the eden_gfx_t class (through inheritance or composition). 
 //
 //
-// Most importantly, other than the commands, the moe
+// Most importantly, other than the commands, the game
 // expects the following rules in its rendering logic:
 // - This is a 2D renderer in 3D space. 
 // - Right-handed coordinate system: +Y is up, +Z is towards you
-// - The moe only have one type of object: A quad that can be 
+// - The game only have one type of object: A quad that can be 
 //   textured and colored 
 // - UV origin is from top left. Points given for UV to map to the quad 
 //   is given in this order:
@@ -259,7 +258,7 @@ struct eden_gfx_t {
 #define GL_DEBUG_TYPE_MARKER 0x8268
 
 
-//- eden_gfx_opengl_t Types
+//- OpenGL Types
 typedef s32_t  GLenum;
 typedef s32_t  GLint; 
 typedef s32_t  GLsizei;
@@ -2870,7 +2869,15 @@ eden_draw_asset_sprite(
 
 
 static void
-eden_draw_text(eden_t* eden, eden_assets_t* assets, eden_asset_font_id_t font_id, str_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+eden_draw_text(
+    eden_t* eden, 
+    eden_assets_t* assets, 
+    eden_asset_font_id_t font_id, 
+    str_t str, 
+    rgba_t color, 
+    f32_t px, 
+    f32_t py, 
+    f32_t font_height) 
 {
   eden_asset_font_t* font = eden_assets_get_font(assets, font_id);
   for(u32_t char_index = 0; 
@@ -3104,6 +3111,7 @@ eden_profiler_update_entries(eden_profiler_t* p) {
 
 //
 // JOURNAL
+//
 // = 2024-02-03 = 
 //   I realized that there is a difference of 'systems' provided
 //   by this file at the moment. There are core systems which 
