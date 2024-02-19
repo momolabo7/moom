@@ -159,10 +159,10 @@ static w32_audio_load_sig(w32_audio_load);
 #define w32_audio_unload_sig(name) void name(eden_audio_t* eden_audio)
 static w32_audio_unload_sig(w32_audio_unload);
 
-#define w32_audio_begin_frame_sig(name) void name(eden_audio_t* eden_audio)
+#define w32_audio_begin_frame_sig(name) b32_t name(eden_audio_t* eden_audio)
 static w32_audio_begin_frame_sig(w32_audio_begin_frame);
 
-#define w32_audio_end_frame_sig(name) void name(eden_audio_t* eden_audio)
+#define w32_audio_end_frame_sig(name) b32_t name(eden_audio_t* eden_audio)
 static w32_audio_end_frame_sig(w32_audio_end_frame);
 
 
@@ -666,6 +666,7 @@ static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t
 
 static eden_allocate_memory_sig(w32_allocate_memory);
 
+// TODO: we should remove all the asserts tbh
 static 
 w32_audio_begin_frame_sig(w32_audio_begin_frame) 
 {
@@ -675,6 +676,7 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
   
   // Check if device changed
   // TODO: Do we want to do the event method...?
+  b32_t default_device_changed = false;
   {
     IMMDevice* current_default_device = nullptr;
     wasapi->mm_device_enum->GetDefaultAudioEndpoint(eRender, eConsole, &current_default_device);
@@ -684,32 +686,32 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
     wasapi->mm_device->GetId(&id1);
     current_default_device->GetId(&id2);
 
-    b32_t has_device_changed  = wcscmp(id1, id2) != 0;
+    default_device_changed  = wcscmp(id1, id2) != 0;
 
     CoTaskMemFree(id1);
     CoTaskMemFree(id2);
     current_default_device->Release();
-
-    if (has_device_changed) {
-      wasapi->audio_client->Release();
-      wasapi->render_client->Release();
-      wasapi->mm_device->Release();
-
-    }
-
   }
 
+  if (default_device_changed) {
+    wasapi->audio_client->Release();
+    wasapi->render_client->Release();
+    wasapi->mm_device->Release();
+    if (!_w32_wasapi_init_default_audio_output_device(wasapi)) {
+      return false;
+    }
+  }
 
 
   // Get the number of audio frames that the buffer can hold.
   UINT32 buffer_frame_count = 0;
   hr = wasapi->audio_client->GetBufferSize(&buffer_frame_count);
-  assert(SUCCEEDED(hr));
+  if (FAILED(hr)) return false;
 
   // Get the number of frames of padding
   UINT32 padding_frame_count = 0;
   hr = wasapi->audio_client->GetCurrentPadding(&padding_frame_count);
-  assert(SUCCEEDED(hr));
+  if (FAILED(hr)) return false;
 
   UINT32 samples_to_write = buffer_frame_count - padding_frame_count; 
 
@@ -776,6 +778,8 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
   eden_audio->channels = wasapi->channels;
 #endif
 
+  return true;
+
 }
 
 static 
@@ -815,6 +819,8 @@ w32_audio_end_frame_sig(w32_audio_end_frame)
       (UINT32)eden_audio->sample_count, 
       0);
 #endif
+
+  return true;
 }
 
 

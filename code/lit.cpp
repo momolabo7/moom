@@ -1619,6 +1619,10 @@ lit_init_player(lit_game_t* g, f32_t x, f32_t y) {
 static void
 lit_game_player_release_light(lit_game_t* g) {
   lit_game_player_t* player = &g->player;
+  if (player->held_light) {
+    lit_audio_mixer_play(&g_lit->mixer, ASSET_SOUND_PUTDOWN, false, 0.5f);
+  }
+
   player->held_light = nullptr;
   player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
   eden_show_cursor(g_eden);
@@ -1655,6 +1659,7 @@ lit_game_player_hold_nearest_light_if_empty_handed(
       player->light_retrival_time = 0.f;
       player->light_hold_mode = light_hold_mode;
       eden_hide_cursor(g_eden);
+      lit_audio_mixer_play(&g_lit->mixer, ASSET_SOUND_PICKUP, false, 0.5f);
     }
   }
 }
@@ -4044,7 +4049,6 @@ eden_update_and_render_sig(eden_update_and_render)
 
   // Debug
   if (eden_is_button_poked(g_eden, EDEN_BUTTON_CODE_F1)) {
-    lit_audio_mixer_play(&g_lit->mixer, ASSET_SOUND_BGM, false, 0.1f);
     g_lit->show_debug_type = 
       (lit_show_debug_type_t)((g_lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
 
