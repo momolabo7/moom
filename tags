@@ -110,6 +110,8 @@ ASSET_FONT_ID_DEBUG	code/eden_asset_id_lit.h	/^  ASSET_FONT_ID_DEBUG,$/;"	e	lang
 ASSET_FONT_ID_DEFAULT	code/eden_asset_id_lit.h	/^  ASSET_FONT_ID_DEFAULT,$/;"	e	language:C++	enum:eden_asset_font_id_t
 ASSET_FONT_ID_MAX	code/eden_asset_id_lit.h	/^  ASSET_FONT_ID_MAX$/;"	e	language:C++	enum:eden_asset_font_id_t
 ASSET_FONT_ID_MAX	code/eden_asset_id_sandbox.h	/^  ASSET_FONT_ID_MAX$/;"	e	language:C++	enum:eden_asset_font_id_t
+ASSET_SOUND_BGM	code/eden_asset_id_lit.h	/^  ASSET_SOUND_BGM,$/;"	e	language:C++	enum:eden_asset_sound_id_t
+ASSET_SOUND_DONE	code/eden_asset_id_lit.h	/^  ASSET_SOUND_DONE,$/;"	e	language:C++	enum:eden_asset_sound_id_t
 ASSET_SOUND_ID_MAX	code/eden_asset_id_lit.h	/^  ASSET_SOUND_ID_MAX$/;"	e	language:C++	enum:eden_asset_sound_id_t
 ASSET_SOUND_ID_MAX	code/eden_asset_id_sandbox.h	/^  ASSET_SOUND_ID_MAX$/;"	e	language:C++	enum:eden_asset_sound_id_t
 ASSET_SOUND_ID_TEST	code/eden_asset_id_sandbox.h	/^  ASSET_SOUND_ID_TEST,$/;"	e	language:C++	enum:eden_asset_sound_id_t
@@ -566,7 +568,7 @@ eden_debug_log_sig	code/eden.h	/^typedef eden_debug_log_sig(eden_debug_log_f);$/
 eden_debug_log_sig	code/w32_eden.cpp	/^eden_debug_log_sig(w32_log_proc) $/;"	f	language:C++	file:
 eden_draw_asset_sprite	code/eden.h	/^eden_draw_asset_sprite($/;"	f	language:C++	typeref:typename:void
 eden_draw_circle	code/eden.h	/^eden_draw_circle(eden_t* eden, v2f_t center, f32_t radius, u32_t sections, rgba_t color) {$/;"	f	language:C++	typeref:typename:void
-eden_draw_circle_outline	code/eden.h	/^eden_draw_circle_outline(eden_t* eden, v2f_t center, f32_t radius, f32_t thickness, u32_t line_c/;"	f	language:C++	typeref:typename:void
+eden_draw_circ_outline	code/eden.h	/^eden_draw_circ_outline(eden_t* eden, v2f_t center, f32_t radius, f32_t thickness, u32_t line_cou/;"	f	language:C++	typeref:typename:void
 eden_draw_line	code/eden.h	/^eden_draw_line(eden_t* eden, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {$/;"	f	language:C++	typeref:typename:void
 eden_draw_rect	code/eden.h	/^eden_draw_rect(eden_t* eden, v2f_t pos, f32_t rot, v2f_t scale, rgba_t color) $/;"	f	language:C++	typeref:typename:void
 eden_draw_sprite	code/eden.h	/^eden_draw_sprite(eden_t* eden, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t t/;"	f	language:C++	typeref:typename:void
@@ -908,6 +910,7 @@ euler_q23	code/euler.cpp	/^euler_q23()$/;"	f	language:C++	typeref:typename:void	
 euler_q23_get_sum_of_divisors	code/euler.cpp	/^euler_q23_get_sum_of_divisors(u32_t num)$/;"	f	language:C++	typeref:typename:u32_t	file:
 euler_q23_is_abundant	code/euler.cpp	/^euler_q23_is_abundant(u32_t num) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 euler_q24	code/euler.cpp	/^euler_q24()$/;"	f	language:C++	typeref:typename:void	file:
+euler_q24_print_permutations	code/euler.cpp	/^euler_q24_print_permutations(u32_t* input, u32_t input_len, u32_t start, u32_t end) $/;"	f	language:C++	typeref:typename:void	file:
 euler_q3	code/euler.cpp	/^euler_q3() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q4	code/euler.cpp	/^euler_q4() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q4_is_palindrome	code/euler.cpp	/^euler_q4_is_palindrome(u32_t x) {$/;"	f	language:C++	typeref:typename:b32_t	file:
@@ -2059,6 +2062,7 @@ quicksort	code/momo.h	/^quicksort(sort_entry_t* entries, u32_t entry_count) {$/;
 quicksort	code/momo.h	/^static void quicksort(sort_entry_t* entries, u32_t entry_count);$/;"	p	language:C++	typeref:typename:void
 quicksort_generic	code/momo.h	/^#define quicksort_generic(/;"	d	language:C++
 quicksort_generic_predicate_sig	code/euler.cpp	/^quicksort_generic_predicate_sig(euler_q22_cmp) {$/;"	f	language:C++	file:
+quicksort_generic_predicate_sig	code/euler.cpp	/^quicksort_generic_predicate_sig(euler_q24_cmp) {$/;"	f	language:C++	file:
 quicksort_generic_predicate_sig	code/momo.h	/^#define quicksort_generic_predicate_sig(/;"	d	language:C++
 r	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon1db7a63d0d0a::__anon1db7a63d0e08	typeref:typename:f32_t
 r	code/momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t

@@ -1,5 +1,4 @@
 // TODO: 
-// - Sound
 // - Level Design:
 // -- MIX: make it a little harder
 // -- INTERVAL: too hard. I feel liek I get a little lost before I even get to the "2 space" part of the puzzle
@@ -3555,6 +3554,7 @@ lit_game_update()
     if (g->stage_flash_timer >= LIT_EXIT_FLASH_DURATION) {
       g->stage_flash_timer = LIT_EXIT_FLASH_DURATION;
       g->state = LIT_GAME_STATE_TYPE_SOLVED_OUT;
+      lit_audio_mixer_play(&g_lit->mixer, ASSET_SOUND_DONE, false, 0.5f);
     }
   }
 
