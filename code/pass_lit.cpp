@@ -13,7 +13,8 @@ int main() {
   void* memory = malloc(memory_size);
   defer { free(memory); };
   make(arena_t, arena);
-  arena_init(arena, str_set((u8_t*)memory, memory_size));
+  arena_alloc(arena, gigabytes(1));
+  defer { arena_free(arena); };
 
   make(pass_pack_t, p);
 
@@ -22,6 +23,7 @@ int main() {
   u32_t end_cp = 126;
   u32_t total_cp = end_cp - start_cp + 1;
 
+  u64_t start_time = os_get_clock_time();
   pass_pack_begin(p, arena, 
       ASSET_BITMAP_ID_MAX, 
       ASSET_SPRITE_ID_MAX, 
@@ -61,7 +63,8 @@ int main() {
     pass_pack_sound(p, ASSET_SOUND_DONE, lit_res_dir("done.wav")); 
   }
   pass_pack_end(p, LIT_ASSET_FILE);
-  printf("Assets created\n");
+  u64_t end_time = os_get_clock_time();
+  printf("Assets created: %fs\n", (f32_t)(end_time - start_time)/os_get_clock_resolution());
 }
 
 

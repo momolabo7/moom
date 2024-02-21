@@ -35,7 +35,8 @@ arena	code/momo.h	/^  arena_t* arena; $/;"	m	language:C++	struct:_png_context_t	
 arena	code/momo.h	/^  arena_t* arena;$/;"	m	language:C++	struct:arena_marker_t	typeref:typename:arena_t *
 arena	code/pass.h	/^  arena_t* arena;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:arena_t *
 arena	code/sandbox.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:sandbox_t	typeref:typename:arena_t	file:
-arena	code/test.cpp	/^  test_arena_t* arena;$/;"	m	language:C++	struct:test_arena_marker_t	typeref:typename:test_arena_t *	file:
+arena_alloc	code/momo.h	/^arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit) $/;"	f	language:C++	typeref:typename:b32_t
+arena_alloc	code/momo.h	/^static b32_t    arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit = false);$/;"	p	language:C++	typeref:typename:b32_t
 arena_bootstrap_push	code/momo.h	/^#define arena_bootstrap_push(/;"	d	language:C++
 arena_bootstrap_push_size	code/momo.h	/^arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, str_t buffer)$/;"	f	language:C++	typeref:typename:void *
 arena_bootstrap_push_size	code/momo.h	/^static void*    arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, str_t buffer);$/;"	p	language:C++	typeref:typename:void *
@@ -48,6 +49,7 @@ arena_calc_push	code/momo.h	/^static void arena_calc_push(arena_calc_t* c, usz_t
 arena_calc_t	code/momo.h	/^struct arena_calc_t {$/;"	s	language:C++
 arena_clear	code/momo.h	/^arena_clear(arena_t* a) {$/;"	f	language:C++	typeref:typename:void
 arena_clear	code/momo.h	/^static void     arena_clear(arena_t* a);$/;"	p	language:C++	typeref:typename:void
+arena_free	code/momo.h	/^arena_free(arena_t* a)$/;"	f	language:C++	typeref:typename:void
 arena_init	code/momo.h	/^arena_init(arena_t* a, str_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t
 arena_init	code/momo.h	/^static b32_t    arena_init(arena_t* a, str_t buffer);$/;"	p	language:C++	typeref:typename:b32_t
 arena_mark	code/momo.h	/^arena_mark(arena_t* a) {$/;"	f	language:C++	typeref:typename:arena_marker_t
@@ -215,7 +217,6 @@ cap	code/momo.h	/^      usz_t cap;$/;"	m	language:C++	struct:arena_t::__anon1db7
 cap	code/momo.h	/^  u32_t cap;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:u32_t
 cap	code/momo.h	/^  usz_t cap;$/;"	m	language:C++	struct:garena_t	typeref:typename:usz_t
 cap	code/momo.h	/^  usz_t cap;$/;"	m	language:C++	struct:stb8_t	typeref:typename:usz_t
-cap	code/test.cpp	/^  usz_t cap;$/;"	m	language:C++	struct:test_arena_t	typeref:typename:usz_t	file:
 CAPREQ	code/w32_sandbox_socket.cpp	/^#define CAPREQ /;"	d	language:C++	file:
 CHANNEL	code/w32_sandbox_socket.cpp	/^#define CHANNEL /;"	d	language:C++	file:
 channels	code/w32_eden.cpp	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t	file:
@@ -304,7 +305,7 @@ commands	code/eden_console.h	/^  console_command_t* commands;$/;"	m	language:C++
 command_cap	code/eden_console.h	/^  u32_t command_cap;$/;"	m	language:C++	struct:console_t	typeref:typename:u32_t
 command_count	code/eden_console.h	/^  u32_t command_count;$/;"	m	language:C++	struct:console_t	typeref:typename:u32_t
 command_queue	code/eden.h	/^  eden_gfx_command_queue_t command_queue;$/;"	m	language:C++	struct:eden_gfx_t	typeref:typename:eden_gfx_command_queue_t
-commit_pos	code/test.cpp	/^  usz_t commit_pos;$/;"	m	language:C++	struct:test_arena_t	typeref:typename:usz_t	file:
+commit_pos	code/momo.h	/^  usz_t commit_pos;$/;"	m	language:C++	struct:arena_t	typeref:typename:usz_t
 COMPILER_CLANG	code/momo.h	/^# define COMPILER_CLANG /;"	d	language:C++
 COMPILER_CLANG	code/momo.h	/^# define COMPILER_CLANG /;"	d	language:C++
 compiler_flags	bin/build.bat	/^    set compiler_flags=!compiler_flags! -DHOT_RELOAD=0 $/;"	v	language:DosBatch
@@ -1423,7 +1424,6 @@ hhea	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;
 hide_cursor	code/eden.h	/^  eden_hide_cursor_f* hide_cursor;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_hide_cursor_f *
 highest_codepoint	code/eden.h	/^  u32_t highest_codepoint;$/;"	m	language:C++	struct:eden_asset_font_t	typeref:typename:u32_t
 highest_codepoint	code/eden_asset_file.h	/^  u32_t highest_codepoint;$/;"	m	language:C++	struct:asset_file_font_t	typeref:typename:u32_t
-highest_memory_usage	code/momo.h	/^  usz_t highest_memory_usage;$/;"	m	language:C++	struct:arena_t	typeref:typename:usz_t
 highest_payload_usage	code/eden.h	/^  usz_t highest_payload_usage;$/;"	m	language:C++	struct:eden_gfx_texture_queue_t	typeref:typename:usz_t
 highest_transfer_memory_usage	code/eden.h	/^  usz_t highest_transfer_memory_usage;$/;"	m	language:C++	struct:eden_gfx_texture_queue_t	typeref:typename:usz_t
 hits	code/eden.h	/^  u32_t hits;$/;"	m	language:C++	struct:eden_profiler_snapshot_t	typeref:typename:u32_t
@@ -1823,7 +1823,6 @@ megabytes	code/momo.h	/^#define megabytes(/;"	d	language:C++
 memory	code/eden.h	/^	u8_t* memory;$/;"	m	language:C++	struct:eden_gfx_command_queue_t	typeref:typename:u8_t *
 memory	code/momo.h	/^      u8_t* memory;$/;"	m	language:C++	struct:arena_t::__anon1db7a63d0f0a::__anon1db7a63d1008	typeref:typename:u8_t *
 memory	code/momo.h	/^  u8_t* memory;$/;"	m	language:C++	struct:garena_t	typeref:typename:u8_t *
-memory	code/test.cpp	/^  u8_t* memory;$/;"	m	language:C++	struct:test_arena_t	typeref:typename:u8_t *	file:
 memory_sentinel	code/w32_eden.cpp	/^  w32_memory_t memory_sentinel;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_memory_t	file:
 memory_size	code/eden.h	/^  usz_t memory_size;$/;"	m	language:C++	struct:eden_gfx_command_queue_t	typeref:typename:usz_t
 meta_print_if_function_is_next	code/meta.cpp	/^meta_print_if_function_is_next(clex_tokenizer_t t) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1937,7 +1936,9 @@ optimize	bin/build.bat	/^  set optimize=1$/;"	v	language:DosBatch
 optimize	bin/build.bat	/^set optimize=0 $/;"	v	language:DosBatch
 os_allocate_memory	code/momo.h	/^os_allocate_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:str_t
 os_allocate_memory	code/momo.h	/^os_allocate_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:str_t
-os_allocate_memory	code/momo.h	/^static str_t  os_allocate_memory(usz_t size);$/;"	p	language:C++	typeref:typename:str_t
+os_allocate_memory	code/momo.h	/^static str_t  os_allocate_memory(usz_t size); \/\/ reserve + commit$/;"	p	language:C++	typeref:typename:str_t
+os_commit_memory	code/momo.h	/^os_commit_memory(str_t blk) {$/;"	f	language:C++	typeref:typename:b32_t
+os_commit_memory	code/momo.h	/^static b32_t  os_commit_memory(str_t blk);$/;"	p	language:C++	typeref:typename:b32_t
 os_free_memory	code/momo.h	/^os_free_memory(str_t blk) {$/;"	f	language:C++	typeref:typename:void
 os_free_memory	code/momo.h	/^os_free_memory(str_t blk) {$/;"	f	language:C++	typeref:typename:void
 os_free_memory	code/momo.h	/^static void   os_free_memory(str_t blk);$/;"	p	language:C++	typeref:typename:void
@@ -1951,6 +1952,8 @@ OS_LINUX	code/momo.h	/^# define OS_LINUX /;"	d	language:C++
 OS_LINUX	code/momo.h	/^# define OS_LINUX /;"	d	language:C++
 OS_MAC	code/momo.h	/^# define OS_MAC /;"	d	language:C++
 OS_MAC	code/momo.h	/^# define OS_MAC /;"	d	language:C++
+os_reserve_memory	code/momo.h	/^os_reserve_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:str_t
+os_reserve_memory	code/momo.h	/^static str_t  os_reserve_memory(usz_t size);$/;"	p	language:C++	typeref:typename:str_t
 os_socket_begin	code/w32_sandbox_socket.cpp	/^os_socket_begin(const char* server, const char* port)$/;"	f	language:C++	typeref:typename:os_socket_t	file:
 os_socket_end	code/w32_sandbox_socket.cpp	/^os_socket_end(os_socket_t s) {$/;"	f	language:C++	typeref:typename:void	file:
 os_socket_send	code/w32_sandbox_socket.cpp	/^os_socket_send(os_socket_t s, str_t msg) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -2048,8 +2051,6 @@ pos	code/lit.cpp	/^  v2f_t pos;$/;"	m	language:C++	struct:lit_game_player_t	type
 pos	code/lit.cpp	/^  v2f_t pos;$/;"	m	language:C++	struct:lit_game_sensor_t	typeref:typename:v2f_t	file:
 pos	code/momo.h	/^  usz_t pos;$/;"	m	language:C++	struct:arena_t	typeref:typename:usz_t
 pos	code/momo.h	/^  usz_t pos;$/;"	m	language:C++	struct:stream_t	typeref:typename:usz_t
-pos	code/test.cpp	/^  usz_t pos;$/;"	m	language:C++	struct:test_arena_marker_t	typeref:typename:usz_t	file:
-pos	code/test.cpp	/^  usz_t pos;$/;"	m	language:C++	struct:test_arena_t	typeref:typename:usz_t	file:
 pos_x	code/eden.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:eden_gfx_command_view_t	typeref:typename:f32_t
 pos_y	code/eden.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:eden_gfx_command_view_t	typeref:typename:f32_t
 prev	code/gist_linked_list.cpp	/^  gist_cdl_node* prev;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
@@ -2083,7 +2084,6 @@ render_client	code/w32_eden.cpp	/^  IAudioRenderClient* render_client;$/;"	m	lan
 render_command_size	code/eden.h	/^  usz_t render_command_size;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:usz_t
 render_wh	code/eden.h	/^  v2u_t render_wh;$/;"	m	language:C++	struct:eden_gfx_opengl_t	typeref:typename:v2u_t
 result	code/momo.h	/^  usz_t result;$/;"	m	language:C++	struct:arena_calc_t	typeref:typename:usz_t
-reuse	code/test.cpp	/^  b32_t reuse;$/;"	m	language:C++	struct:test_arena_marker_t	typeref:typename:b32_t	file:
 rgb	code/momo.h	/^    rgb_t rgb;$/;"	m	language:C++	union:rgba_t::__anon1db7a63d0d0a	typeref:typename:rgb_t
 rgba_hex	code/momo.h	/^rgba_hex(u32_t hex) {$/;"	f	language:C++	typeref:typename:rgba_t
 rgba_hex	code/momo.h	/^static rgba_t rgba_hex(u32_t hex);  $/;"	p	language:C++	typeref:typename:rgba_t
@@ -2343,16 +2343,6 @@ tbg_from_eden	code/tbp.cpp	/^#define tbg_from_eden(/;"	d	language:C++	file:
 tbg_t	code/tbp.cpp	/^struct tbg_t {$/;"	s	language:C++	file:
 TBG_TILE_SIZE	code/tbp.cpp	/^#define TBG_TILE_SIZE /;"	d	language:C++	file:
 TBG_TILE_SIZE_V2	code/tbp.cpp	/^#define TBG_TILE_SIZE_V2 /;"	d	language:C++	file:
-test_arena_alloc	code/test.cpp	/^test_arena_alloc(test_arena_t* a, usz_t reserve_amount, b32_t commit = false) $/;"	f	language:C++	typeref:typename:void	file:
-test_arena_free	code/test.cpp	/^test_arena_free(void* ptr){ $/;"	f	language:C++	typeref:typename:void	file:
-test_arena_init	code/test.cpp	/^test_arena_init(test_arena_t* a, str_t buffer) {$/;"	f	language:C++	typeref:typename:void	file:
-test_arena_mark	code/test.cpp	/^test_arena_mark(test_arena_t* a, b32_t reuse = true) {$/;"	f	language:C++	typeref:typename:test_arena_marker_t	file:
-test_arena_marker_t	code/test.cpp	/^struct test_arena_marker_t {$/;"	s	language:C++	file:
-test_arena_push	code/test.cpp	/^test_arena_push(test_arena_t* a, usz_t size, usz_t align = 16) $/;"	f	language:C++	typeref:typename:u8_t *	file:
-test_arena_t	code/test.cpp	/^struct test_arena_t {$/;"	s	language:C++	file:
-test_os_commit_memory	code/test.cpp	/^test_os_commit_memory(void* ptr, usz_t size) {$/;"	f	language:C++	typeref:typename:b32_t	file:
-test_os_free_memory	code/test.cpp	/^test_os_free_memory(void* ptr)$/;"	f	language:C++	typeref:typename:void	file:
-test_os_reserve_memory	code/test.cpp	/^test_os_reserve_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:u8_t *	file:
 test_sine_wave	code/w32_eden.cpp	/^static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t t/;"	f	language:C++	typeref:typename:void	file:
 test_square_wave	code/w32_eden.cpp	/^static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t/;"	f	language:C++	typeref:typename:void	file:
 texel_x0	code/eden.h	/^  u32_t texel_x0, texel_y0;$/;"	m	language:C++	struct:eden_asset_font_glyph_t	typeref:typename:u32_t

@@ -341,7 +341,7 @@ struct arena_t {
     };
   };
   usz_t pos;
-  usz_t highest_memory_usage;
+  usz_t commit_pos;
 };
 
 // Temporary memory API used to arena_revert an arena to an original state;
@@ -1177,6 +1177,7 @@ static str_t    stream_consume_line(stream_t* s);
 // MARK:(Arena)
 //
 static b32_t    arena_init(arena_t* a, str_t buffer);
+static b32_t    arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit = false);
 static void     arena_clear(arena_t* a);
 static void*    arena_push_size(arena_t* a, usz_t size, usz_t align);
 static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align); 
@@ -1184,18 +1185,18 @@ static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size,
 static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align);
 static str_t    arena_push_str(arena_t* a, usz_t size, usz_t align);
 static usz_t    arena_remaining(arena_t* a);
-static void*    arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, str_t buffer);
+static void*    arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size);
 
-#define arena_push_arr_align(t,b,n,a) (t*)arena_push_size(b, sizeof(t)*(n), a)
-#define arena_push_arr(t,b,n)         (t*)arena_push_size(b, sizeof(t)*(n),alignof(t))
-#define arena_push_align(t,b,a)       (t*)arena_push_size(b, sizeof(t), a)
+#define arena_push_arr_align(t,b,n,a) (t*)arena_push_size((b), sizeof(t)*(n), a)
+#define arena_push_arr(t,b,n)         (t*)arena_push_size((b), sizeof(t)*(n),alignof(t))
+#define arena_push_align(t,b,a)       (t*)arena_push_size((b), sizeof(t), a)
 #define arena_push(t,b)               (t*)arena_push_size((b), sizeof(t), alignof(t))
 
 #define arena_push_arr_zero_align(t,b,n,a) (t*)arena_push_size_zero(b, sizeof(t)*(n), a)
 #define arena_push_arr_zero(t,b,n)         (t*)arena_push_size_zero(b, sizeof(t)*(n),alignof(t))
 #define arena_push_zero_align(t,b,a)       (t*)arena_push_size_zero(b, sizeof(t), a)
 #define arena_push_zero(t,b)               (t*)arena_push_size_zero(b, sizeof(t), alignof(t))
-#define arena_bootstrap_push(t,m,b)  (t*)arena_bootstrap_push_size(sizeof(t), offsetof(t,m), b)
+#define arena_bootstrap_push(t,m,s)        (t*)arena_bootstrap_push_size(sizeof(t), offsetof(t,m), s)
 
 static arena_marker_t arena_mark(arena_t* a);
 static void arena_revert(arena_marker_t marker);
@@ -1277,7 +1278,9 @@ static clex_token_t clex_next_token(clex_tokenizer_t* t);
 //
 // MARK:(OS)
 //
-static str_t  os_allocate_memory(usz_t size);
+static str_t  os_reserve_memory(usz_t size);
+static b32_t  os_commit_memory(str_t blk);
+static str_t  os_allocate_memory(usz_t size); // reserve + commit
 static void   os_free_memory(str_t blk);
 static u64_t  os_get_clock_time();
 static u64_t  os_get_clock_resolution();
@@ -1291,6 +1294,18 @@ static u64_t  os_get_clock_resolution();
 #undef far
 
 
+static str_t
+os_reserve_memory(usz_t size) {
+  return str_set(
+      (u8_t*)VirtualAlloc(0, size, MEM_RESERVE, PAGE_READWRITE),
+      size);
+}
+
+static b32_t
+os_commit_memory(str_t blk) {
+  b32_t result = (VirtualAlloc(blk.e, blk.size, MEM_COMMIT, PAGE_READWRITE) != 0);
+  return result;
+}
 
 
 static str_t
@@ -7901,9 +7916,34 @@ arena_init(arena_t* a, str_t buffer) {
 
   a->buffer = buffer;
   a->pos = 0; 
-  a->highest_memory_usage = 0;
+
+  a->memory = buffer.e;
+  a->cap = a->commit_pos = buffer.size;
     
   return true;
+}
+
+static b32_t 
+arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit) 
+{
+  a->buffer = os_reserve_memory(reserve_amount);
+  if (!a->buffer) return false;
+
+  if (commit) {
+    if(!os_commit_memory(a->buffer)) return false;
+    a->commit_pos = reserve_amount;
+  }
+  else {
+    a->commit_pos = 0;
+  }
+  a->pos = 0;
+  return true;
+}
+
+static void
+arena_free(arena_t* a)
+{ 
+  os_free_memory(a->buffer);
 }
 
 static void
@@ -7918,26 +7958,44 @@ arena_remaining(arena_t* a) {
 }
 
 static void*   
-arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, str_t buffer)
+arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size)
 {
-  if (size > buffer.size) {
-    return nullptr;
-  }
+  arena_t arena = {};
+  arena_alloc(&arena, virtual_size);
+  void* ret = arena_push_size(&arena, size, 16); // alignment shouldn't matter here
 
-  str_t arena_buffer = {
-    .e = (u8_t*)buffer.e + size,
-    .size = buffer.size - size,
-  };
 
-  arena_t* arena_ptr = (arena_t*)((u8_t*)buffer.e + offset_to_arena);
-  if (!arena_init(arena_ptr, arena_buffer)) {
-    return nullptr;
-  }
-  return buffer.e;
+  auto* arena_ptr = (arena_t*)((u8_t*)ret + offset_to_arena);
+  dref(arena_ptr) = arena;
+  return ret;
 }
 
 static void* 
 arena_push_size(arena_t* a, usz_t size, usz_t align) {
+
+  if (size == 0) return nullptr;
+
+  usz_t imem = ptr_to_umi(a->memory);
+  umi_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
+
+  if (imem + adjusted_pos + size >= imem + a->cap) {
+    return nullptr;
+  }
+
+  usz_t new_pos = adjusted_pos + size;
+
+  // Commit memory if required
+  if (new_pos > a->commit_pos)
+  {
+    u8_t* commit_ptr = a->memory + a->pos;
+    usz_t commit_size = adjusted_pos - a->pos + size;
+    os_commit_memory(str_set(commit_ptr, commit_size));
+  }
+
+  u8_t* ret = umi_to_ptr(imem + adjusted_pos);
+  a->pos = new_pos;
+  return ret;
+#if 0
   if (size == 0) return nullptr;
 
   usz_t imem = ptr_to_umi(a->memory);
@@ -7952,6 +8010,7 @@ arena_push_size(arena_t* a, usz_t size, usz_t align) {
   a->highest_memory_usage = max_of(a->pos, a->highest_memory_usage);
 
   return ret;
+#endif
 
 }
 
@@ -8371,6 +8430,34 @@ rp_pack(rp_rect_t* rects,
 
 //
 // JOURNAL
+// = 2024-02-21 =
+//   Alright, the arena is up and running. I do have something I want to deal with:
+//   bootstrapping arenas. To be honest, I'm not sure if we want to keep such an API.
+//   
+//   Basically, bootstrapping arenas is just to 'inject' the struct that would hold
+//   an arena with the struct itself INTO its arena.
+//
+//   I wonder if there are any good reason to do it other than to safe space
+//   on the stack...
+//
+// = 2024-02-20 =
+//   Been awhile since I worked on the engine. I feel like the next thing I want 
+//   to try is to support some kind of commit-based arena. We have ran into a few
+//   use cases where it is not easy to determine the maximum size of an arena; 
+//   we need the arena to grow as it needs more memory...
+//
+//   One use case is platform memory. The game actually cannot determine 
+//   how much memory the platform *actually* needs especially upon shipping.
+//   The game doesn't know if it's running on linux or windows, using opengl or
+//   directx, etc. 
+//
+//   In this regard, I'm also not sure if the game should even determine how much 
+//   memory things like the texture transfer limit is. We might actually need it to
+//   grow too.
+//
+//   It will also be a lot easier for the asset system. I guess we will 'pilot' the
+//   commit based arena there first?
+//
 // = 2024-01-16 =
 //   I have second thoughts again. Maybe having OS functions here is okay.
 //   

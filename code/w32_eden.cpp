@@ -1669,16 +1669,6 @@ eden_free_memory_sig(w32_free_memory) {
 }
 
 
-#if 0
-
-static b32_t
-w32_allocate_memory_into_arena(arena_t* a, usz_t memory_size) {
-  void* data = w32_allocate_memory(memory_size);
-  if(data == nullptr) return false;
-  arena_init(a, data, memory_size);
-  return true;
-}
-#endif
 
 //
 // Entry Point
@@ -1706,20 +1696,6 @@ WinMain(HINSTANCE instance,
     // initialize the circular linked list
     cll_init(&w32_state.memory_sentinel);
 
-#if 0
-    // Testing
-    {
-      auto* a = w32_allocate_memory(megabytes(1));
-      auto* b = w32_allocate_memory(megabytes(1));
-      auto* c = w32_allocate_memory(megabytes(1));
-      auto* d = w32_allocate_memory(megabytes(1));
-
-      w32_free_memory(d);
-      w32_free_memory(b);
-      w32_free_memory(c);
-      w32_free_memory(a);
-    }
-#endif
 
     if (!w32_init_work_queue(&w32_state.work_queue, 8)) {
       return 1;
@@ -1752,7 +1728,7 @@ WinMain(HINSTANCE instance,
   
   eden_config_t config = eden_functions.get_config();
 
-  eden_t* eden = arena_bootstrap_push(eden_t, platform_arena, w32_allocate_memory(config.platform_memory_size));
+  eden_t* eden = arena_bootstrap_push(eden_t, platform_arena, gigabytes(1));
 
   arena_t* platform_arena = &eden->platform_arena;
 

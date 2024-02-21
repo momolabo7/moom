@@ -3957,11 +3957,7 @@ eden_update_and_render_sig(eden_update_and_render)
   g_eden = eden;
   if(g_eden->user_data == nullptr) {
 
-    str_t memory = eden_allocate_memory(g_eden, megabytes(32));
-    if (!memory) lit_exit();
-    
-
-    g_eden->user_data = arena_bootstrap_push(lit_t, main_arena, memory);
+    g_eden->user_data = arena_bootstrap_push(lit_t, main_arena, gigabytes(1));
 
     g_lit = (lit_t*)(g_eden->user_data);
     g_lit->level_to_start = 0;
@@ -4084,7 +4080,6 @@ eden_get_config_sig(eden_get_config)
 {
 
   eden_config_t ret;
-  ret.platform_memory_size = megabytes(128);
 
   ret.target_frame_rate = 60;
 

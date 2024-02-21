@@ -158,116 +158,17 @@ int main() {
 }
 #endif
 
-static u8_t*
-test_os_reserve_memory(usz_t size) {
-  return (u8_t*)VirtualAlloc(0, size, MEM_RESERVE, PAGE_READWRITE);
-}
-
-static b32_t
-test_os_commit_memory(void* ptr, usz_t size) {
-  b32_t result = (VirtualAlloc(ptr, size, MEM_COMMIT, PAGE_READWRITE) != 0);
-  return result;
-}
-
-static void 
-test_os_free_memory(void* ptr)
-{
-  VirtualFree(ptr, 0, MEM_RELEASE);
-}
-
-struct test_arena_t {
-  u8_t* memory;
-  usz_t cap;
-  usz_t pos;
-
-  usz_t commit_pos;
-};
-
-
-static void 
-test_arena_alloc(test_arena_t* a, usz_t reserve_amount, b32_t commit = false) 
-{
-  a->memory = test_os_reserve_memory(reserve_amount);
-  a->cap = reserve_amount;
-  if (commit) {
-    test_os_commit_memory(a->memory, reserve_amount);
-    a->commit_pos = reserve_amount;
-  }
-  else {
-    a->commit_pos = 0;
-  }
-  a->pos = 0;
-}
-
-static void
-test_arena_free(void* ptr){ 
-  test_os_free_memory(ptr);
-}
-
-static void 
-test_arena_init(test_arena_t* a, str_t buffer) {
-  a->memory = buffer.e;
-  a->cap = a->commit_pos = buffer.size;
-}
-
-
-
-static u8_t* 
-test_arena_push(test_arena_t* a, usz_t size, usz_t align = 16) 
-{
-  if (size == 0) return nullptr;
-
-  usz_t imem = ptr_to_umi(a->memory);
-  umi_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
-
-  if (imem + adjusted_pos + size >= imem + a->cap) 
-    return nullptr;
-
-  usz_t new_pos = adjusted_pos + size;
-
-  // Commit memory if required
-  if (new_pos > a->commit_pos)
-  {
-    u8_t* commit_ptr = a->memory + a->pos;
-    usz_t commit_size = adjusted_pos - a->pos + size;
-    test_os_commit_memory(commit_ptr, commit_size);
-  }
-
-  u8_t* ret = umi_to_ptr(imem + adjusted_pos);
-  a->pos = new_pos;
-  return ret;
-}
-
-
-struct test_arena_marker_t {
-  test_arena_t* arena;
-  b32_t reuse;
-  usz_t pos;
-};
-
-static test_arena_marker_t
-test_arena_mark(test_arena_t* a, b32_t reuse = true) {
-  test_arena_marker_t ret = {};
-  ret.arena = a;
-  ret.pos = a->pos;
-  ret.reuse = reuse;
-  return ret;
-}
-
-
-
-
 int main() {
   printf("Hello Test\n");
-  test_arena_t test = {};
+  arena_t test = {};
 
   const u32_t runs = 10000000;
   // arena with committed memory
   {
-    test_arena_alloc(&test, gigabytes(1), true);
+    arena_alloc(&test, gigabytes(1), true);
     u64_t start_time = os_get_clock_time();
     for (int i = 0; i < runs; ++i) { 
-      test_arena_push(&test, sizeof(u32_t));  
+      arena_push_size(&test, sizeof(u32_t), alignof(u32_t));  
     }
     u64_t end_time = os_get_clock_time();
     printf("arena #0: %f\n", (f32_t)(end_time - start_time)/runs);
@@ -275,12 +176,11 @@ int main() {
 
   // arena with non-committed memory
   {
-
-    test_arena_alloc(&test, gigabytes(1));
-    defer { test_arena_free(&test); };
+    arena_alloc(&test, gigabytes(1));
+    defer { arena_free(&test); };
     u64_t start_time = os_get_clock_time();
     for (int i = 0; i < runs; ++i) { 
-      test_arena_push(&test, sizeof(u32_t));  
+      arena_push_size(&test, sizeof(u32_t), alignof(u32_t));  
     }
     u64_t end_time = os_get_clock_time();
     printf("arena #1: %f\n", (f32_t)(end_time - start_time)/runs);
@@ -295,7 +195,7 @@ int main() {
 
     u64_t start_time = os_get_clock_time();
     for (int i = 0; i < runs; ++i) { 
-      arena_push_size(&normal_arena, sizeof(u32_t), 16);  
+      arena_push_size(&normal_arena, sizeof(u32_t), alignof(u32_t));  
     }
     u64_t end_time = os_get_clock_time();
 
