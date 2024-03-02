@@ -879,6 +879,7 @@ lit_splash_init() {
 
   splash->timer = 3.f;
   splash->scroll_in_timer = LIT_SPLASH_SCROLL_DURATION;
+  lit_audio_mixer_play(&g_lit->mixer, ASSET_SOUND_BGM, true, 1.0f);
 }
 
 static void
@@ -956,7 +957,7 @@ lit_splash_update() {
       g_eden, 
       &g_lit->assets, 
       font,
-      str_from_lit("momohoudai"), 
+      str_from_lit("momolabo"), 
       rgba_hex(0xF8C8DCFF),
       LIT_WIDTH/2, scroll_y, 
       72.f);
@@ -1003,8 +1004,6 @@ lit_game_push_point(lit_game_t* m, v2f_t point) {
 // 
 // Animator
 //
-
-
 static void 
 lit_game_animator_push_patrol_point_waypoint(
     lit_game_animator_t* animator, 
@@ -3844,7 +3843,7 @@ lit_credits_update() {
       g_eden, 
       &g_lit->assets, 
       ASSET_FONT_ID_DEFAULT,
-      str_from_lit("----"), 
+      str_from_lit("-----"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -3853,12 +3852,12 @@ lit_credits_update() {
   //
   //  
   //
-  y = lit_credits_push_subtitle_and_name(y, str_from_lit("engine"), str_from_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, str_from_lit("edenplay"), str_from_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, str_from_lit("art"), str_from_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, str_from_lit("lighting"), str_from_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, str_from_lit("particles"), str_from_lit("momohoudai"));
-  y = lit_credits_push_subtitle_and_name(y, str_from_lit("sound"), str_from_lit("your imagination"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("engine"), str_from_lit("momolabo"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("gameplay"), str_from_lit("momolabo"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("art"), str_from_lit("momolabo"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("lighting"), str_from_lit("momolabo"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("particles"), str_from_lit("momolabo"));
+  y = lit_credits_push_subtitle_and_name(y, str_from_lit("sound"), str_from_lit("momolabo"));
   y = lit_credits_push_subtitle_and_name(y, str_from_lit("food"), str_from_lit("my wife <3"));
   y = lit_credits_push_subtitle_and_name(y, str_from_lit("coffee"), str_from_lit("a lot"));
 
