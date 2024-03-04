@@ -2,7 +2,7 @@
 
 rem USAGE
 rem
-rem   build [filename] [-run] [-w32] [-o] [-game] [-ship] [-bun] [args...]
+rem   build [filename] [-run] [-w32] [-o] [-app] [-ship] [-bun] [args...]
 rem
 rem ARGUMENTS
 rem
@@ -13,15 +13,15 @@ rem
 rem   -o    
 rem     Run with my favourite optimization flags 
 rem
-rem   -game
+rem   -app
 rem     Build as eden.dll. Expects only 1 .cpp file
 rem
 rem   -w32
 rem     Build with common win32 stuff. Expects only 1 .cpp file
 rem   
 rem   -ship
-rem     Special build for shipping a game. Expects 1 .cpp file. 
-rem     Will build w32_game.cpp and the given 1.cpp file.
+rem     Special build for shipping a app. Expects 1 .cpp file. 
+rem     Will build w32_app.cpp and the given 1.cpp file.
 rem     
 rem   TODO: Maybe allow an output flag?
 rem
@@ -42,7 +42,7 @@ set build=1
 set run=0
 set w32=0
 set optimize=0 
-set game=0
+set app=0
 set ship=0
 set filename=%~1
 
@@ -70,9 +70,9 @@ IF "%~1"=="-o" (
   set optimize=1
   GOTO label_parse_next
 )
-IF "%~1"=="-game" (
+IF "%~1"=="-app" (
   set build=1
-  set game=1
+  set app=1
   GOTO label_parse_next
 )
 
@@ -114,7 +114,7 @@ if %build%==1 (
   )
 
   rem Different build types
-  if %game%==1 (
+  if %app%==1 (
     echo Build    : Game
     set compiler_flags=!compiler_flags! -LD
     set linker_flags=-shared 

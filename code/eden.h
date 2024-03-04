@@ -12,6 +12,7 @@
 //   Rendering         - Game functions for rendering
 //   Profiler          - Profiler system
 //   Assets            - Asset System (using pass system)
+//   Mixer             - Audio Mixer System
 //
 
 #ifndef EDEN_H
@@ -199,6 +200,99 @@ struct eden_gfx_t {
 };
 
 //
+// MARK:(Assets)
+//
+
+#include "eden_asset_id_base.h"
+
+
+struct eden_asset_bitmap_t {
+  u32_t renderer_texture_handle;
+  u32_t width;
+  u32_t height;
+};
+
+struct eden_asset_sprite_t {
+  u32_t texel_x0;
+  u32_t texel_y0;
+  u32_t texel_x1;
+  u32_t texel_y1;
+
+  eden_asset_bitmap_id_t bitmap_asset_id;
+};
+
+struct eden_asset_sound_t {
+  u32_t data_size;
+  u8_t* data;
+};
+
+struct eden_asset_font_glyph_t {
+  u32_t texel_x0, texel_y0;
+  u32_t texel_x1, texel_y1;
+
+  f32_t box_x0, box_y0;
+  f32_t box_x1, box_y1;
+
+  f32_t horizontal_advance;
+  f32_t vertical_advance;
+
+};
+
+struct eden_asset_font_t {
+  eden_asset_bitmap_id_t bitmap_asset_id;
+
+  u32_t highest_codepoint;
+  u16_t* codepoint_map;
+
+  u32_t glyph_count;
+  eden_asset_font_glyph_t* glyphs;
+  f32_t* kernings;
+};
+
+struct eden_assets_t {
+  eden_gfx_texture_queue_t* texture_queue;
+
+  u32_t bitmap_count;
+  eden_asset_bitmap_t* bitmaps;
+
+  u32_t font_count;
+  eden_asset_font_t* fonts;
+
+  u32_t sprite_count;
+  eden_asset_sprite_t* sprites;
+
+  u32_t sound_count;
+  eden_asset_sound_t* sounds;
+};
+// 
+// MARK:(Mixer)
+//
+struct eden_audio_mixer_instance_t {
+  eden_asset_sound_id_t sound_id; // TODO: do not rely on sound_id
+  u32_t current_offset;
+  u32_t index;
+  
+  b32_t is_loop;
+  b32_t is_playing;
+  f32_t volume;
+};
+
+enum eden_audio_mixer_bitrate_type_t {
+  EDEN_AUDIO_MIXER_BITRATE_TYPE_S16,
+  // add more here and support them in audio_mixer_update
+};
+
+struct eden_audio_mixer_t {
+  eden_audio_mixer_bitrate_type_t bitrate_type;
+
+  eden_audio_mixer_instance_t* instances;
+  u32_t max_instances;
+  u32_t* free_list;
+  u32_t free_list_count;
+
+  f32_t volume;
+};
+//
 // MARK:(Opengl)
 //
 #if EDEN_USE_OPENGL
@@ -252,7 +346,7 @@ struct eden_gfx_t {
 #define GL_DEBUG_TYPE_ERROR 0x824C
 #define GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR 0x824D
 #define GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR 0x824E
-#define GL_DEBUG_TYPE_PORTABILITY 0x824F
+#define GL_DEBUG_TYPE_PORTABIEDENY 0x824F
 #define GL_DEBUG_TYPE_PERFORMANCE 0x8250
 #define GL_DEBUG_TYPE_OTHER 0x8251
 #define GL_DEBUG_TYPE_MARKER 0x8268
@@ -785,6 +879,8 @@ typedef eden_set_design_dimensions_sig(eden_set_design_dimensions_f);
 //
 // App Audio API
 //
+
+// TODO: change name to eden_audio_output_t
 struct eden_audio_t {
   // Audio buffer for eden to write to
   void* samples;
@@ -821,8 +917,11 @@ struct eden_t {
   eden_audio_t audio; 
 
   eden_gfx_t gfx;
+
   eden_profiler_t profiler;
   eden_inspector_t inspector;
+  eden_assets_t assets;
+  eden_audio_mixer_t mixer;
           
   b32_t is_dll_reloaded;
   b32_t is_running;
@@ -833,71 +932,6 @@ struct eden_t {
 };
 
 
-//
-// MARK:(Assets)
-//
-
-#include "eden_asset_id_base.h"
-
-
-struct eden_asset_bitmap_t {
-  u32_t renderer_texture_handle;
-  u32_t width;
-  u32_t height;
-};
-
-struct eden_asset_sprite_t {
-  u32_t texel_x0;
-  u32_t texel_y0;
-  u32_t texel_x1;
-  u32_t texel_y1;
-
-  eden_asset_bitmap_id_t bitmap_asset_id;
-};
-
-struct eden_asset_sound_t {
-  u32_t data_size;
-  u8_t* data;
-};
-
-struct eden_asset_font_glyph_t {
-  u32_t texel_x0, texel_y0;
-  u32_t texel_x1, texel_y1;
-
-  f32_t box_x0, box_y0;
-  f32_t box_x1, box_y1;
-
-  f32_t horizontal_advance;
-  f32_t vertical_advance;
-
-};
-
-struct eden_asset_font_t {
-  eden_asset_bitmap_id_t bitmap_asset_id;
-
-  u32_t highest_codepoint;
-  u16_t* codepoint_map;
-
-  u32_t glyph_count;
-  eden_asset_font_glyph_t* glyphs;
-  f32_t* kernings;
-};
-
-struct eden_assets_t {
-  eden_gfx_texture_queue_t* texture_queue;
-
-  u32_t bitmap_count;
-  eden_asset_bitmap_t* bitmaps;
-
-  u32_t font_count;
-  eden_asset_font_t* fonts;
-
-  u32_t sprite_count;
-  eden_asset_sprite_t* sprites;
-
-  u32_t sound_count;
-  eden_asset_sound_t* sounds;
-};
 
 //
 // 
@@ -2473,9 +2507,51 @@ eden_gfx_opengl_end_frame(eden_gfx_t* gfx) {
 //
 // MARK:(Assets)
 //
-static b32_t 
-eden_assets_init(eden_assets_t* assets, eden_t* eden, const char* filename, arena_t* arena) 
+static b32_t
+eden_assets_init(
+    eden_t* eden, 
+    u32_t bitmap_count,
+    u32_t sprite_count,
+    u32_t font_count,
+    u32_t sound_count,
+    arena_t* arena)
 {
+  eden_assets_t* assets = &eden->assets;
+
+  // Allocation for assets
+  assets->bitmap_count = bitmap_count;
+  if (assets->bitmap_count > 0)  {
+    assets->bitmaps = arena_push_arr(eden_asset_bitmap_t, arena, assets->bitmap_count);
+    if (!assets->bitmaps) return false;
+  }
+
+  assets->sprite_count = sprite_count;
+  if (assets->sprite_count > 0) {
+    assets->sprites = arena_push_arr(eden_asset_sprite_t, arena, assets->sprite_count);
+    if (!assets->sprites) return false;
+  }
+
+  assets->font_count = font_count;
+  if (assets->font_count > 0) {
+    assets->fonts = arena_push_arr(eden_asset_font_t, arena, assets->font_count);
+    if (!assets->fonts) return false;
+  }
+
+  assets->sound_count = sound_count;
+  if (assets->sound_count > 0) {
+    assets->sounds = arena_push_arr(eden_asset_sound_t, arena, assets->sound_count);
+    if (!assets->sounds) return false;
+  }
+  return true;
+}
+
+static b32_t 
+eden_assets_init_from_file(
+    eden_t* eden, 
+    const char* filename, 
+    arena_t* arena) 
+{
+  eden_assets_t* assets = &eden->assets;
   make(eden_file_t, file);
   if(!eden_open_file(
         eden,
@@ -2489,32 +2565,22 @@ eden_assets_init(eden_assets_t* assets, eden_t* eden, const char* filename, aren
   // Read header
   asset_file_header_t asset_file_header = {};
   eden_read_file(eden, file, sizeof(asset_file_header_t), 0, &asset_file_header);
-  if (asset_file_header.signature != ASSET_FILE_SIGNATURE) return false;
-
-  // Allocation for assets
-  assets->bitmap_count = asset_file_header.bitmap_count;
-  if (assets->bitmap_count > 0)  {
-    assets->bitmaps = arena_push_arr(eden_asset_bitmap_t, arena, assets->bitmap_count);
-    if (!assets->bitmaps) return false;
+  if (asset_file_header.signature != ASSET_FILE_SIGNATURE) 
+  {
+    return false;
   }
 
-  assets->sprite_count = asset_file_header.sprite_count;
-  if (assets->sprite_count > 0) {
-    assets->sprites = arena_push_arr(eden_asset_sprite_t, arena, assets->sprite_count);
-    if (!assets->sprites) return false;
+  if(!eden_assets_init(
+        eden, 
+        asset_file_header.bitmap_count, 
+        asset_file_header.sprite_count,
+        asset_file_header.font_count,
+        asset_file_header.sound_count,
+        arena)) 
+  {
+    return false;
   }
 
-  assets->font_count = asset_file_header.font_count;
-  if (assets->font_count > 0) {
-    assets->fonts = arena_push_arr(eden_asset_font_t, arena, assets->font_count);
-    if (!assets->fonts) return false;
-  }
-
-  assets->sound_count = asset_file_header.sound_count;
-  if (assets->sound_count > 0) {
-    assets->sounds = arena_push_arr(eden_asset_sound_t, arena, assets->sound_count);
-    if (!assets->sounds) return false;
-  }
 
   // 
   // Read sounds
@@ -2845,12 +2911,13 @@ eden_draw_circ_outline(eden_t* eden, v2f_t center, f32_t radius, f32_t thickness
 static void
 eden_draw_asset_sprite(
     eden_t* eden, 
-    eden_assets_t* assets, 
     eden_asset_sprite_id_t sprite_id, 
     v2f_t pos, 
     v2f_t size, 
     rgba_t color = rgba_set(1.f,1.f,1.f,1.f))
 {
+  auto* assets = &eden->assets;
+
   eden_asset_sprite_t* sprite = eden_assets_get_sprite(assets, sprite_id);
   eden_asset_bitmap_t* bitmap = eden_assets_get_bitmap(assets, sprite->bitmap_asset_id);
   v2f_t anchor = v2f_set(0.5f, 0.5f); 
@@ -2870,7 +2937,6 @@ eden_draw_asset_sprite(
 static void
 eden_draw_text(
     eden_t* eden, 
-    eden_assets_t* assets, 
     eden_asset_font_id_t font_id, 
     str_t str, 
     rgba_t color, 
@@ -2878,6 +2944,7 @@ eden_draw_text(
     f32_t py, 
     f32_t font_height) 
 {
+  eden_assets_t* assets = &eden->assets;
   eden_asset_font_t* font = eden_assets_get_font(assets, font_id);
   for(u32_t char_index = 0; 
       char_index < str.size;
@@ -2915,8 +2982,9 @@ eden_draw_text(
 }
 
 static void
-eden_draw_text_center_aligned(eden_t* eden, eden_assets_t* assets, eden_asset_font_id_t font_id, str_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+eden_draw_text_center_aligned(eden_t* eden, eden_asset_font_id_t font_id, str_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
+  eden_assets_t* assets = &eden->assets;
   eden_asset_font_t* font = eden_assets_get_font(assets, font_id);
   
   // Calculate the total width of the text
@@ -3105,11 +3173,149 @@ eden_profiler_update_entries(eden_profiler_t* p) {
 }
 
 
+
+//
+// MARK:(Mixer)
+//
+static b32_t
+eden_audio_mixer_init(
+    eden_t* eden,
+    eden_audio_mixer_bitrate_type_t bitrate_type,
+    u32_t max_instances,
+    arena_t* arena) 
+{
+  eden_audio_mixer_t* mixer = &eden->mixer;
+  mixer->bitrate_type = bitrate_type;
+  mixer->max_instances = max_instances;
+  mixer->free_list_count = max_instances; 
+  
+  mixer->free_list = arena_push_arr(u32_t, arena, max_instances);
+  mixer->instances = arena_push_arr(eden_audio_mixer_instance_t, arena, max_instances);
+  if (!mixer->free_list || !mixer->instances)
+    return false;
+
+  for_cnt(i, max_instances) 
+  {
+    auto* instance = mixer->instances + i;
+    instance->is_loop = false;
+    instance->is_playing = false;
+    instance->volume = 0.f;
+    instance->current_offset = 0.f;
+    instance->index = i;
+
+    mixer->free_list[i] = i;  
+    
+  }
+  mixer->volume = 1.f;
+  return true;
+}
+
+
+static eden_audio_mixer_instance_t*
+eden_audio_mixer_play(
+    eden_t* eden,
+    eden_asset_sound_id_t sound_id,
+    b32_t loop,
+    f32_t volume) 
+{
+  eden_audio_mixer_t* mixer = &eden->mixer;
+  // get last index from free list
+  assert(mixer->free_list_count > 0);
+
+  u32_t index = mixer->free_list[--mixer->free_list_count];
+  
+  auto* instance = mixer->instances + index;
+  instance->is_loop = loop;
+  instance->current_offset = 0;
+  instance->sound_id = sound_id;
+  instance->is_playing = true;
+  instance->volume = volume;
+  instance->index = index;
+
+  return instance;
+}
+
+static void
+eden_audio_mixer_stop(
+    eden_audio_mixer_t* mixer,
+    eden_audio_mixer_instance_t* instance)
+{
+  instance->is_playing = false;
+  mixer->free_list[mixer->free_list_count++] = instance->index;
+}
+
+//
+// This is for audio mixer to update as if it's 16-bit channel
+// TODO: we should update differently depending on channel.
+//
+static void
+eden_audio_mixer_update(eden_t* eden)
+{
+  eden_audio_mixer_t* mixer = &eden->mixer;
+  eden_audio_t* audio = &eden->audio;
+#if 1
+  u32_t bytes_per_sample = (audio->device_bits_per_sample/8);
+  zero_memory(audio->samples, bytes_per_sample * audio->device_channels * audio->sample_count);
+
+  if (mixer->bitrate_type == EDEN_AUDIO_MIXER_BITRATE_TYPE_S16) {
+    for_cnt (sample_index, audio->sample_count){
+      s16_t* dest = (s16_t*)audio->samples + (sample_index * audio->device_channels);
+      for_cnt(instance_index, mixer->max_instances) {
+        eden_audio_mixer_instance_t* instance = mixer->instances + instance_index;
+        if (!instance->is_playing) continue;
+
+        auto* sound = eden_assets_get_sound(&eden->assets, instance->sound_id);
+        //s16_t* src = (s16_t*)instance->data;
+        s16_t* src = (s16_t*)sound->data;
+
+        for_cnt(channel_index, audio->device_channels) {
+          dest[channel_index] += s16_t(dref(src + instance->current_offset++) * instance->volume * mixer->volume);
+        }
+
+//        if (instance->current_offset >= instance->data_size/bytes_per_sample) 
+        if (instance->current_offset >= sound->data_size/bytes_per_sample) 
+        {
+          if (instance->is_loop) {
+            instance->current_offset = 0;
+          }
+          else {
+            eden_audio_mixer_stop(mixer, instance);
+          }
+        }
+      }
+    }
+  }
+  else {
+    assert(false);
+  }
+#else // for testing
+
+  static f32_t sine = 0.f;
+  s16_t* sample_out = (s16_t*)audio->samples;
+  s16_t volume = 3000;
+  for(u32_t sample_index = 0; sample_index < audio->sample_count; ++sample_index) {
+      for (u32_t channel_index = 0; channel_index < audio->device_channels; ++channel_index) {
+        f32_t sine_value = f32_sin(sine);
+        sample_out[channel_index] = s16_t(sine_value * volume);
+      }
+      sample_out += audio->device_channels;
+      sine += 2.f;
+  }
+#endif
+}
+
+
 #endif //EDEN_H
 
 
 //
 // JOURNAL
+// = 2024-03-02 = 
+//   The asset system and mixer systems are now in Eden. 
+//   The init functions for them, however, is still in the 
+//   app side of things so consider shifting them to config
+//   and perhaps it is good to have the control of 
+//   mixer and assets to be the platform/eden/engine side.
 //
 // = 2024-02-03 = 
 //   I realized that there is a difference of 'systems' provided
