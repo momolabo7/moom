@@ -220,7 +220,6 @@ struct str_t {
   // data set at all.
   //
   operator bool() {
-
     return e != nullptr;
   }
 };
@@ -1343,18 +1342,38 @@ os_get_clock_resolution() {
 }
 
 
-#else // OS_WINDOWS
+#elif OS_LINUX 
 
 // Non-windows (mac and linux?) implementation
 // #include <stdlib.h>
 #include <sys/mman.h> // mmap, munmap
 #include <time.h> // clock_getres, clock_gettime
 
+// NOTE(momo): Apparently linux already handles committing and reserving 
+// for the user already so there is no need to commit/reserve?
+static str_t
+os_reserve_memory(usz_t size) {
+  u8_t* blk = (u8_t*)mmap(
+      0, 
+      size, 
+      PROT_NONE, 
+      MAP_PRIVATE | MAP_ANONYMOUS,
+      -1, 
+      0);
+  return str_set(blk, size);
+}
+
+static b32_t
+os_commit_memory(str_t blk) {
+  return mprotect(blk.e, blk.size, PROT_READ | PROT_WRITE) == 0;
+}
+
+
 static str_t 
 os_allocate_memory(usz_t size) {
   u8_t* blk = (u8_t*)mmap(
       0, 
-      actual_size, 
+      size, 
       PROT_READ | PROT_WRITE, 
       MAP_PRIVATE | MAP_ANONYMOUS,
       -1, 
@@ -1365,19 +1384,19 @@ os_allocate_memory(usz_t size) {
 
 static void 
 os_free_memory(str_t blk) {
-  munmap(blk.e, blk.size)l
+  munmap(blk.e, blk.size);
 }
 
 static u64_t
 os_get_clock_time() {
   // TODO
-  return ret;
+  return 0;
 }
 
 static u64_t 
 os_get_clock_resolution() {
   // TODO
-  return ret;
+  return 0;
 }
 #endif // OS_WINDOWS
 
@@ -8430,6 +8449,34 @@ rp_pack(rp_rect_t* rects,
 
 //
 // JOURNAL
+// = 2024-03-15 =
+//   Okay we are starting to clean up some of the OS functions.
+//   - File API started. We can read files!
+//   - Starting to make use of our expandable arena. We should technically
+//     be able to do away with any form of mallocs from now on and hopefully
+//     remove all the 'foolish' functions.
+//   - Linux implementation added.
+//
+//   Doing the linux implementations of the OS functions was quite interesting.
+//   Not only I found that the API design differences between Linux and Windows
+//   interesting, but also people's attitude giving advice related to these
+//   API calls. 
+//
+//   For example, it was really easy to find advice on how to reserve and commit
+//   memory in Window, but somehow it's really hard to find the same thing in 
+//   Linux. I'm honestly still not 100% sure if my implementation is correct in 
+//   Linux for this and I really need to test it more in the future...there's 
+//   supposedly some weird abstraction that pretty much says "let the OS handle
+//   it" but...I don't really want that.
+//
+//   File IO too. In windows, everytime you read, you have to specific the offset
+//   to the file. In Linux, we do the seek() thing, which implies that there is
+//   some form of state management in Linux. It's going to be interesting to
+//   think which is the preferred API design; do I rather to seek() and store
+//   the state of the current position to read/write from? Or do I not bother
+//   and leave it to the users? After all, store state is still storing *something*.
+//   There are times where you don't need that functionality!
+//
 // = 2024-02-21 =
 //   Alright, the arena is up and running. I do have something I want to deal with:
 //   bootstrapping arenas. To be honest, I'm not sure if we want to keep such an API.

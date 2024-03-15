@@ -30,6 +30,8 @@ compiler_flags="-std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macr
 clang++ $compiler_flags $code_dir/$filename.cpp -o $build_dir/$filename.exe
 
 if [ $run = 1 ]; then
-  $build_dir/$filename.exe
+  pushd $build_dir  
+  ./$filename.exe
+  popd
 fi
 
