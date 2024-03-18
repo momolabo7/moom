@@ -3919,9 +3919,6 @@ eden_update_and_render_sig(eden_update_and_render)
     }break;
     default: {}
   }
-
-  eden_audio_mixer_update(g_eden);
-
 }
 
 //

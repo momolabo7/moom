@@ -118,15 +118,13 @@ os_file_open(
   int flags = 0;
   switch (access_type) {
     case OS_FILE_ACCESS_READ:
-//      w32_access_flag = GENERIC_READ;
-//      w32_creation_flag = OPEN_EXISTING;
+//      flags = O_RDONLY;
       break;
     case OS_FILE_ACCESS_CREATE:
-      flags |= O_CREAT;
+      flags = O_CREAT | O_RDWR;
       break;
     case OS_FILE_ACCESS_MODIFY:
-//      w32_access_flag = GENERIC_WRITE | GENERIC_READ;
-//      w32_creation_flag = OPEN_ALWAYS;
+      flags = O_RDWR;
       break;
   }
 

@@ -351,8 +351,9 @@ struct eden_audio_mixer_t {
 #define GL_DEBUG_TYPE_OTHER 0x8251
 #define GL_DEBUG_TYPE_MARKER 0x8268
 
-
-//- OpenGL Types
+//
+// OpenGL Types
+//
 typedef s32_t  GLenum;
 typedef s32_t  GLint; 
 typedef s32_t  GLsizei;
@@ -372,7 +373,9 @@ typedef void (GLDEBUGPROC)(GLenum source,
     GLchar *msg,
     const void *userParam);
 
-//- OpenGL Functions
+//
+// OpenGL Functions
+//
 typedef void    eden_gfx_opengl_glEnable(GLenum cap);
 typedef void    eden_gfx_opengl_glDisable(GLenum cap);
 typedef void    eden_gfx_opengl_glViewport(GLint x, GLint y, GLsizei width, GLsizei height);
@@ -3310,6 +3313,10 @@ eden_audio_mixer_update(eden_t* eden)
 
 //
 // JOURNAL
+// = 2024-03-18 = 
+//   I was thinking about what to do about shaders and whether 
+//   it is possible to let users specify meshes...hmm...
+//
 // = 2024-03-02 = 
 //   The asset system and mixer systems are now in Eden. 
 //   The init functions for them, however, is still in the 

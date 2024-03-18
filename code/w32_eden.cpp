@@ -1926,6 +1926,9 @@ WinMain(HINSTANCE instance,
 
 
     // End frame
+    if (config.audio_enabled) 
+      eden_audio_mixer_update(eden);
+    
     eden_profiler_update_entries(&eden->profiler);
     eden_inspector_clear(&eden->inspector);
     w32_gfx_end_frame(&eden->gfx);
