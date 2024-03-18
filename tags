@@ -1,6 +1,8 @@
 !_TAG_FILE_SORTED	2	/0=unsorted, 1=sorted, 2=foldcase/
 a	code/momo.h	/^  f32_t a;$/;"	m	language:C++	struct:hsla_t	typeref:typename:f32_t
 a	code/momo.h	/^  f32_t a;$/;"	m	language:C++	struct:rgba_t	typeref:typename:f32_t
+A	code/student_test.cpp	/^    A()$/;"	f	language:C++	class:A	file:
+A	code/student_test.cpp	/^class A {$/;"	c	language:C++	file:
 additional_flags	code/momo.h	/^  u8_t additional_flags;$/;"	m	language:C++	struct:_png_idat_header_t	typeref:typename:u8_t
 add_task	code/eden.h	/^  eden_add_task_f* add_task;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_add_task_f *
 align_down_pow2	code/momo.h	/^#define align_down_pow2(/;"	d	language:C++
@@ -163,6 +165,8 @@ average	code/app_lit.cpp	/^  f64_t average;$/;"	m	language:C++	struct:lit_profil
 b	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon1db7a63d0d0a::__anon1db7a63d0e08	typeref:typename:f32_t
 b	code/momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
 b	code/momo.h	/^  union { u32_t v; u8_t b[4]; } combine;$/;"	m	language:C++	union:stb8_push_hex_u32::__anon1db7a63d230a	typeref:typename:u8_t[4]
+B	code/student_test.cpp	/^  B(\/*..*\/);$/;"	p	language:C++	class:B	file:
+B	code/student_test.cpp	/^class B {$/;"	c	language:C++	file:
 b32_t	code/momo.h	/^typedef u32_t    b32_t;$/;"	t	language:C++	typeref:typename:u32_t
 b8_t	code/momo.h	/^typedef u8_t     b8_t;$/;"	t	language:C++	typeref:typename:u8_t
 before	code/eden.h	/^  b32_t before : 1;$/;"	m	language:C++	struct:eden_button_t	typeref:typename:b32_t:1
@@ -452,6 +456,9 @@ data	code/lit_ship.cpp	/^  void* data;$/;"	m	language:C++	struct:w32_work_t	type
 data	code/momo.h	/^  u8_t* data;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u8_t *
 data	code/momo.h	/^  void* data;$/;"	m	language:C++	struct:wav_t	typeref:typename:void *
 data	code/w32_eden.cpp	/^  void* data;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:void *	file:
+data1	code/student_test.cpp	/^    B data1;$/;"	m	language:C++	class:A	typeref:typename:B	file:
+data2	code/student_test.cpp	/^    B data2;$/;"	m	language:C++	class:A	typeref:typename:B	file:
+data3	code/student_test.cpp	/^    B data3;$/;"	m	language:C++	class:A	typeref:typename:B	file:
 data_chunk	code/momo.h	/^  wav_data_chunk_t data_chunk;$/;"	m	language:C++	struct:wav_t	typeref:typename:wav_data_chunk_t
 data_pos	code/eden.h	/^	usz_t data_pos;$/;"	m	language:C++	struct:eden_gfx_command_queue_t	typeref:typename:usz_t
 data_size	code/app_sandbox.cpp	/^  u32_t data_size;$/;"	m	language:C++	struct:sandbox_audio_mixer_instance_t	typeref:typename:u32_t	file:
@@ -1908,6 +1915,7 @@ main	code/gist_ring_buffer.cpp	/^int main() $/;"	f	language:C++	typeref:typename
 main	code/meta.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/pass_lit.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/pass_sandbox.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
+main	code/student_test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test_arena.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test_bigint.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test_fileio_api.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
@@ -2071,6 +2079,7 @@ os_allocate_memory	code/momo.h	/^os_allocate_memory(usz_t size) {$/;"	f	language
 os_allocate_memory	code/momo.h	/^os_allocate_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:str_t
 os_allocate_memory	code/momo.h	/^static str_t  os_allocate_memory(usz_t size); \/\/ reserve + commit$/;"	p	language:C++	typeref:typename:str_t
 os_commit_memory	code/momo.h	/^os_commit_memory(str_t blk) {$/;"	f	language:C++	typeref:typename:b32_t
+os_commit_memory	code/momo.h	/^os_commit_memory(str_t blk) {$/;"	f	language:C++	typeref:typename:b32_t
 os_commit_memory	code/momo.h	/^static b32_t  os_commit_memory(str_t blk);$/;"	p	language:C++	typeref:typename:b32_t
 OS_FILE_ACCESS_CREATE	code/test_fileio_api.cpp	/^  OS_FILE_ACCESS_CREATE, \/\/ Creates or truncates a file for writing, as if it's new$/;"	e	language:C++	enum:os_file_access_t	file:
 OS_FILE_ACCESS_MODIFY	code/test_fileio_api.cpp	/^  OS_FILE_ACCESS_MODIFY, \/\/ Write to a file, but does not truncate.$/;"	e	language:C++	enum:os_file_access_t	file:
@@ -2085,6 +2094,7 @@ os_file_read	code/test_fileio_api.cpp	/^os_file_read(os_file_t* fp, u8_t* dest, 
 os_file_size	code/test_fileio_api.cpp	/^os_file_size(os_file_t* fp) {$/;"	f	language:C++	typeref:typename:u64_t	file:
 os_file_size	code/test_fileio_api.cpp	/^os_file_size(os_file_t* fp) {$/;"	f	language:C++	typeref:typename:u64_t	file:
 os_file_t	code/test_fileio_api.cpp	/^struct os_file_t {$/;"	s	language:C++	file:
+os_file_write	code/test_fileio_api.cpp	/^os_file_write(os_file_t* fp, const u8_t* src, usz_t size, usz_t offset) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 os_free_memory	code/momo.h	/^os_free_memory(str_t blk) {$/;"	f	language:C++	typeref:typename:void
 os_free_memory	code/momo.h	/^os_free_memory(str_t blk) {$/;"	f	language:C++	typeref:typename:void
 os_free_memory	code/momo.h	/^static void   os_free_memory(str_t blk);$/;"	p	language:C++	typeref:typename:void
@@ -2100,6 +2110,7 @@ OS_MAC	code/momo.h	/^# define OS_MAC /;"	d	language:C++
 OS_MAC	code/momo.h	/^# define OS_MAC /;"	d	language:C++
 os_read_file_into_str	code/test_fileio_api.cpp	/^os_read_file_into_str(const char* filename, arena_t* arena, b32_t null_terminate = false) {$/;"	f	language:C++	typeref:typename:str_t	file:
 os_reserve_memory	code/momo.h	/^os_reserve_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:str_t
+os_reserve_memory	code/momo.h	/^os_reserve_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:str_t
 os_reserve_memory	code/momo.h	/^static str_t  os_reserve_memory(usz_t size);$/;"	p	language:C++	typeref:typename:str_t
 os_socket_begin	code/w32_sandbox_socket.cpp	/^os_socket_begin(const char* server, const char* port)$/;"	f	language:C++	typeref:typename:os_socket_t	file:
 os_socket_end	code/w32_sandbox_socket.cpp	/^os_socket_end(os_socket_t s) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -2109,6 +2120,7 @@ os_socket_system_end	code/w32_sandbox_socket.cpp	/^os_socket_system_end() {$/;"	
 os_socket_t	code/w32_sandbox_socket.cpp	/^struct os_socket_t {$/;"	s	language:C++	file:
 OS_WINDOWS	code/momo.h	/^# define OS_WINDOWS /;"	d	language:C++
 OS_WINDOWS	code/momo.h	/^# define OS_WINDOWS /;"	d	language:C++
+os_write_str_to_file	code/test_fileio_api.cpp	/^os_write_str_to_file(const char* filename, str_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 output_name	bin/build.bat	/^    set output_name=eden.dll$/;"	v	language:DosBatch
 output_name	bin/build.bat	/^set output_name=%filename%.exe$/;"	v	language:DosBatch
 output_test_sine_wave_f32	code/w32_sandbox_wasapi.cpp	/^static void output_test_sine_wave_f32(s32_t samples_per_second, s32_t sample_count, f32_t *sampl/;"	f	language:C++	typeref:typename:void	file:
