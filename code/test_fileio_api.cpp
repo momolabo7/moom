@@ -115,10 +115,11 @@ os_file_open(
     const char* filename,
     os_file_access_t access_type) 
 {
+  // NOTE(momo): O_RDONLY is 0
   int flags = 0;
   switch (access_type) {
     case OS_FILE_ACCESS_READ:
-//      flags = O_RDONLY;
+      flags = O_RDONLY;
       break;
     case OS_FILE_ACCESS_CREATE:
       flags = O_CREAT | O_RDWR;
