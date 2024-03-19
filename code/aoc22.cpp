@@ -1,5 +1,3 @@
-#define FOOLISH 1
-
 #include "momo.h"
 
 #include <stdio.h>
@@ -11,10 +9,12 @@
 //
 //
 static void aoc22_d1p2(const char* filename) {
-
-  str_t file_buffer = foolish_read_file_into_buffer(filename, true); 
+  make(arena_t, arena);
+  arena_alloc(arena, gigabytes(1)); 
+  defer { arena_free(arena); }; 
+  
+  str_t file_buffer = os_read_file_into_str(filename, arena, true); 
   if (!file_buffer) return;
-  defer { foolish_free_buffer(file_buffer); };
   
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -67,9 +67,12 @@ static void aoc22_d1p2(const char* filename) {
 
 
 static void aoc22_d1p1(const char* filename) {
-  str_t file_buffer = foolish_read_file_into_buffer(filename, true); 
+  make(arena_t, arena);
+  arena_alloc(arena, gigabytes(1)); 
+  defer { arena_free(arena); }; 
+  
+  str_t file_buffer = os_read_file_into_str(filename, arena, true); 
   if (!file_buffer) return;
-  defer { foolish_free_buffer(file_buffer); };
   
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -103,9 +106,12 @@ static void aoc22_d1p1(const char* filename) {
 }
 
 static void aoc22_d2p1(const char* filename) {
-  str_t file_buffer = foolish_read_file_into_buffer(filename, false); 
+  make(arena_t, arena);
+  arena_alloc(arena, gigabytes(1)); 
+  defer { arena_free(arena); }; 
+  
+  str_t file_buffer = os_read_file_into_str(filename, arena, true); 
   if (!file_buffer) return;
-  defer { foolish_free_buffer(file_buffer); };
 
   
   make(stream_t, s);
@@ -153,9 +159,12 @@ static void aoc22_d2p1(const char* filename) {
 }
 
 static void aoc22_d2p2(const char* filename) {
-  str_t file_buffer = foolish_read_file_into_buffer(filename, false); 
+  make(arena_t, arena);
+  arena_alloc(arena, gigabytes(1)); 
+  defer { arena_free(arena); }; 
+  
+  str_t file_buffer = os_read_file_into_str(filename, arena, true); 
   if (!file_buffer) return;
-  defer { foolish_free_buffer(file_buffer); };
 
   
   make(stream_t, s);
@@ -168,7 +177,7 @@ static void aoc22_d2p2(const char* filename) {
 int main(int argv, char** argc) {
 
   if (argv < 2) {
-    printf("Usage: aoc22 <day> <part> <filename>\nExample: aoc22 1 1 input.txt");
+    printf("Usage: aoc22 <day> <part> <filename>\nExample: aoc22 1 1 input.txt\n");
     return 1;
   }
 

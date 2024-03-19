@@ -1575,7 +1575,7 @@ half_angle	code/app_lit.cpp	/^  f32_t half_angle;$/;"	m	language:C++	struct:lit_
 handle	code/app_lit_ship.cpp	/^  HANDLE handle;$/;"	m	language:C++	struct:w32_file_t	typeref:typename:HANDLE	file:
 handle	code/eden.h	/^  GLuint handle;$/;"	m	language:C++	struct:eden_gfx_opengl_texture_t	typeref:typename:GLuint
 handle	code/lit_ship.cpp	/^  HANDLE handle;$/;"	m	language:C++	struct:w32_file_t	typeref:typename:HANDLE	file:
-handle	code/test_fileio_api.cpp	/^  HANDLE handle;$/;"	m	language:C++	struct:os_file_t	typeref:typename:HANDLE	file:
+handle	code/momo.h	/^  HANDLE handle;$/;"	m	language:C++	struct:os_file_t	typeref:typename:HANDLE
 handle	code/w32_eden.cpp	/^  HANDLE handle;$/;"	m	language:C++	struct:w32_file_t	typeref:typename:HANDLE	file:
 hash_djb2	code/momo.h	/^hash_djb2(const c8_t* str)$/;"	f	language:C++	typeref:typename:u32_t
 hash_djb2	code/momo.h	/^static u32_t hash_djb2(const c8_t* str);$/;"	p	language:C++	typeref:typename:u32_t
@@ -2081,20 +2081,25 @@ os_allocate_memory	code/momo.h	/^static str_t  os_allocate_memory(usz_t size); \
 os_commit_memory	code/momo.h	/^os_commit_memory(str_t blk) {$/;"	f	language:C++	typeref:typename:b32_t
 os_commit_memory	code/momo.h	/^os_commit_memory(str_t blk) {$/;"	f	language:C++	typeref:typename:b32_t
 os_commit_memory	code/momo.h	/^static b32_t  os_commit_memory(str_t blk);$/;"	p	language:C++	typeref:typename:b32_t
-OS_FILE_ACCESS_CREATE	code/test_fileio_api.cpp	/^  OS_FILE_ACCESS_CREATE, \/\/ Creates or truncates a file for writing, as if it's new$/;"	e	language:C++	enum:os_file_access_t	file:
-OS_FILE_ACCESS_MODIFY	code/test_fileio_api.cpp	/^  OS_FILE_ACCESS_MODIFY, \/\/ Write to a file, but does not truncate.$/;"	e	language:C++	enum:os_file_access_t	file:
-OS_FILE_ACCESS_READ	code/test_fileio_api.cpp	/^  OS_FILE_ACCESS_READ,   \/\/ Only reads the file, does not write$/;"	e	language:C++	enum:os_file_access_t	file:
-os_file_access_t	code/test_fileio_api.cpp	/^enum os_file_access_t {$/;"	g	language:C++	file:
-os_file_close	code/test_fileio_api.cpp	/^os_file_close(os_file_t* fp) $/;"	f	language:C++	typeref:typename:void	file:
-os_file_close	code/test_fileio_api.cpp	/^os_file_close(os_file_t* fp) $/;"	f	language:C++	typeref:typename:void	file:
-os_file_open	code/test_fileio_api.cpp	/^os_file_open($/;"	f	language:C++	typeref:typename:b32_t	file:
-os_file_open	code/test_fileio_api.cpp	/^os_file_open($/;"	f	language:C++	typeref:typename:b32_t	file:
-os_file_read	code/test_fileio_api.cpp	/^os_file_read(os_file_t* fp, u8_t* dest, usz_t size, usz_t offset) {$/;"	f	language:C++	typeref:typename:b32_t	file:
-os_file_read	code/test_fileio_api.cpp	/^os_file_read(os_file_t* fp, u8_t* dest, usz_t size, usz_t offset) {$/;"	f	language:C++	typeref:typename:b32_t	file:
-os_file_size	code/test_fileio_api.cpp	/^os_file_size(os_file_t* fp) {$/;"	f	language:C++	typeref:typename:u64_t	file:
-os_file_size	code/test_fileio_api.cpp	/^os_file_size(os_file_t* fp) {$/;"	f	language:C++	typeref:typename:u64_t	file:
-os_file_t	code/test_fileio_api.cpp	/^struct os_file_t {$/;"	s	language:C++	file:
-os_file_write	code/test_fileio_api.cpp	/^os_file_write(os_file_t* fp, const u8_t* src, usz_t size, usz_t offset) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+OS_FILE_ACCESS_CREATE	code/momo.h	/^  OS_FILE_ACCESS_CREATE, \/\/ Creates or truncates a file for writing, as if it's new$/;"	e	language:C++	enum:os_file_access_t
+OS_FILE_ACCESS_MODIFY	code/momo.h	/^  OS_FILE_ACCESS_MODIFY, \/\/ Write to a file, but does not truncate.$/;"	e	language:C++	enum:os_file_access_t
+OS_FILE_ACCESS_READ	code/momo.h	/^  OS_FILE_ACCESS_READ,   \/\/ Only reads the file, does not write$/;"	e	language:C++	enum:os_file_access_t
+os_file_access_t	code/momo.h	/^enum os_file_access_t {$/;"	g	language:C++
+os_file_close	code/momo.h	/^os_file_close(os_file_t* fp) $/;"	f	language:C++	typeref:typename:void
+os_file_close	code/momo.h	/^os_file_close(os_file_t* fp) $/;"	f	language:C++	typeref:typename:void
+os_file_close	code/momo.h	/^static void   os_file_close(os_file_t* fp); $/;"	p	language:C++	typeref:typename:void
+os_file_open	code/momo.h	/^os_file_open($/;"	f	language:C++	typeref:typename:b32_t
+os_file_open	code/momo.h	/^os_file_open($/;"	f	language:C++	typeref:typename:b32_t
+os_file_open	code/momo.h	/^static b32_t  os_file_open(os_file_t* fp, const char* filename, os_file_access_t access_type);$/;"	p	language:C++	typeref:typename:b32_t
+os_file_read	code/momo.h	/^os_file_read(os_file_t* fp, u8_t* dest, usz_t size, usz_t offset) {$/;"	f	language:C++	typeref:typename:b32_t
+os_file_read	code/momo.h	/^os_file_read(os_file_t* fp, u8_t* dest, usz_t size, usz_t offset) {$/;"	f	language:C++	typeref:typename:b32_t
+os_file_read	code/momo.h	/^static b32_t  os_file_read(os_file_t* fp, u8_t* dest, usz_t size, usz_t offset);$/;"	p	language:C++	typeref:typename:b32_t
+os_file_size	code/momo.h	/^os_file_size(os_file_t* fp) {$/;"	f	language:C++	typeref:typename:u64_t
+os_file_size	code/momo.h	/^os_file_size(os_file_t* fp) {$/;"	f	language:C++	typeref:typename:u64_t
+os_file_t	code/momo.h	/^struct os_file_t {$/;"	s	language:C++
+os_file_write	code/momo.h	/^os_file_write(os_file_t* fp, const u8_t* src, usz_t size, usz_t offset) $/;"	f	language:C++	typeref:typename:b32_t
+os_file_write	code/momo.h	/^os_file_write(os_file_t* fp, const u8_t* src, usz_t size, usz_t offset) $/;"	f	language:C++	typeref:typename:b32_t
+os_file_write	code/momo.h	/^static b32_t  os_file_write(os_file_t* fp, const u8_t* src, usz_t size, usz_t offset);$/;"	p	language:C++	typeref:typename:b32_t
 os_free_memory	code/momo.h	/^os_free_memory(str_t blk) {$/;"	f	language:C++	typeref:typename:void
 os_free_memory	code/momo.h	/^os_free_memory(str_t blk) {$/;"	f	language:C++	typeref:typename:void
 os_free_memory	code/momo.h	/^static void   os_free_memory(str_t blk);$/;"	p	language:C++	typeref:typename:void
@@ -2108,7 +2113,7 @@ OS_LINUX	code/momo.h	/^# define OS_LINUX /;"	d	language:C++
 OS_LINUX	code/momo.h	/^# define OS_LINUX /;"	d	language:C++
 OS_MAC	code/momo.h	/^# define OS_MAC /;"	d	language:C++
 OS_MAC	code/momo.h	/^# define OS_MAC /;"	d	language:C++
-os_read_file_into_str	code/test_fileio_api.cpp	/^os_read_file_into_str(const char* filename, arena_t* arena, b32_t null_terminate = false) {$/;"	f	language:C++	typeref:typename:str_t	file:
+os_read_file_into_str	code/momo.h	/^static str_t  os_read_file_into_str(const char* filename, arena_t* arena, b32_t null_terminate =/;"	p	language:C++	typeref:typename:str_t
 os_reserve_memory	code/momo.h	/^os_reserve_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:str_t
 os_reserve_memory	code/momo.h	/^os_reserve_memory(usz_t size) {$/;"	f	language:C++	typeref:typename:str_t
 os_reserve_memory	code/momo.h	/^static str_t  os_reserve_memory(usz_t size);$/;"	p	language:C++	typeref:typename:str_t
@@ -2120,7 +2125,7 @@ os_socket_system_end	code/w32_sandbox_socket.cpp	/^os_socket_system_end() {$/;"	
 os_socket_t	code/w32_sandbox_socket.cpp	/^struct os_socket_t {$/;"	s	language:C++	file:
 OS_WINDOWS	code/momo.h	/^# define OS_WINDOWS /;"	d	language:C++
 OS_WINDOWS	code/momo.h	/^# define OS_WINDOWS /;"	d	language:C++
-os_write_str_to_file	code/test_fileio_api.cpp	/^os_write_str_to_file(const char* filename, str_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+os_write_str_to_file	code/momo.h	/^static b32_t  os_write_str_to_file(const char* filename, str_t buffer);$/;"	p	language:C++	typeref:typename:b32_t
 output_name	bin/build.bat	/^    set output_name=eden.dll$/;"	v	language:DosBatch
 output_name	bin/build.bat	/^set output_name=%filename%.exe$/;"	v	language:DosBatch
 output_test_sine_wave_f32	code/w32_sandbox_wasapi.cpp	/^static void output_test_sine_wave_f32(s32_t samples_per_second, s32_t sample_count, f32_t *sampl/;"	f	language:C++	typeref:typename:void	file:
