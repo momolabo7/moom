@@ -268,11 +268,14 @@ static void aoc22_d3p2(const char* filename, arena_t* arena) {
   make(stream_t, s);
   stream_init(s, file_buffer);
   u32_t sum = 0;
+  u32_t count = 0;
   while(!stream_is_eos(s)) 
   {
     str_t line0 = stream_consume_line(s);  
     str_t line1 = stream_consume_line(s);  
     str_t line2 = stream_consume_line(s);  
+
+    count += 3;
 
     // Find common item between line0 and line1
     for_cnt(i, line0.size) 
@@ -300,6 +303,7 @@ static void aoc22_d3p2(const char* filename, arena_t* arena) {
     }
 found:
   }
+  printf("%d\n", count);
   printf("%d\n", sum);
 }
 
