@@ -275,7 +275,6 @@ static void aoc22_d3p2(const char* filename, arena_t* arena) {
     str_t line2 = stream_consume_line(s);  
 
 
-    count += 3;
     // Find common item between line0 and line1
     for_cnt(i, line0.size) 
     {
