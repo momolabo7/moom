@@ -15,7 +15,7 @@ int main()
   }
   
   if (!os_write_str_to_file("test3.csv", str)) {
-    return str_bad()
+    return str_bad();
   }
 
 }
