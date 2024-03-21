@@ -308,43 +308,8 @@ struct str_arr_t {
   u32_t size;
 };
 
-// 
-static str_node_t*
-str_split(str_t str, u8_t delimiter, arena_t* arena) {
-  if (!str) return nullptr;
-
-  // Note that everything from this point on assumes
-  // that the str input is valid
-  str_node_t* head = 0;
-  str_node_t* cur = 0;
-
-  u32_t start = 0;
-  u32_t end = 0;
-  for(; end < str.size; ++end) 
-  {
-    if (str.e[end] == delimiter) 
-    {
-      str_node_t* new_node = arena_push(str_node_t, arena);
-      new_node->next = nullptr;
-      new_node->item = str_set(str.e + start, end - start);
-      sll_append(head, cur, new_node);
-
-      // book keeping
-      ++end;
-      start = end;
-    }
-  }
-
-  str_node_t* new_node = arena_push(str_node_t, arena);
-  new_node->next = nullptr;
-  new_node->item = str_set(str.e + start, end - start);
-  sll_append(head, cur, new_node);
-
-  return head;
-}
-
 static str_arr_t
-str_split2(str_t str, u8_t delimiter, arena_t* arena) {
+str_split(str_t str, u8_t delimiter, arena_t* arena) {
   str_arr_t ret = {};
   if (!str) return ret;
 
@@ -388,69 +353,99 @@ static void aoc22_d4p1(const char* filename, arena_t* arena) {
   {
     arena_set_revert_point(arena);
     str_t str = stream_consume_line(s);  
-#if 0
-    str_node_t* comma_itr = str_split(str, ',', arena);
-    while(comma_itr != nullptr) {
-      arena_set_revert_point(arena);
-
-      str_node_t* dash_itr = str_split(comma_itr->item, '-', arena);
-      while(dash_itr != nullptr) {
-        u32_t test = 0;
-        str_to_u32(dash_itr->item, &test);
-        printf("%d\n", test);
-        dash_itr = dash_itr->next;
-      }
-
-      comma_itr = comma_itr->next;
-    while(comma_itr != nullptr) {
-
-      str_node_t* dash_itr = str_split(comma_itr->item, '-', arena);
-      while(dash_itr != nullptr) {
-        u32_t test = 0;
-        str_to_u32(dash_itr->item, &test);
-        printf("%d\n", test);
-        dash_itr = dash_itr->next;
-      }
-
-      comma_itr = comma_itr->next;
-    }
-    printf("\n");
-#else
-    str_arr_t arr0 = str_split2(str, ',', arena);
+    u32_t nums[4] = {};
+    
+    str_arr_t arr0 = str_split(str, ',', arena);
+    u32_t cur_index = 0;
     for_cnt(i, arr0.size) 
     {
       arena_set_revert_point(arena);
-      str_arr_t arr1 = str_split2(arr0.e[i], '-', arena);
+      str_arr_t arr1 = str_split(arr0.e[i], '-', arena);
       for_cnt(j, arr1.size) 
       {
-        u32_t test = 0;
-        str_to_u32(arr1.e[j], &test);
-        printf("%d\n", test);
+        str_to_u32(arr1.e[j], &nums[cur_index++]);
       }
-
     }
-
-    printf("\n");
-#endif 
 
 
     // Example: 20-40,60-80
-#if 0
-    u32_t lhs_low = ascii_to_digit(str.e[0]);
-    u32_t lhs_high = ascii_to_digit(str.e[2]);
-    u32_t rhs_low = ascii_to_digit(str.e[4]);
-    u32_t rhs_high = ascii_to_digit(str.e[6]);
+    u32_t lhs_low = nums[0];
+    u32_t lhs_high = nums[1];
+    u32_t rhs_low = nums[2];
+    u32_t rhs_high = nums[3];
 
     if ((rhs_low >= lhs_low && rhs_high <= lhs_high) ||
         (lhs_low >= rhs_low && lhs_high <= rhs_high)) 
     {
       ++sum;
     }
-#endif
   }
   printf("%d\n", sum);
 }
 
+static void aoc22_d4p2(const char* filename, arena_t* arena) {
+  arena_set_revert_point(arena);
+
+  str_t file_buffer = os_read_file_into_str(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+  u32_t sum = 0;
+
+  while(!stream_is_eos(s)) 
+  {
+    arena_set_revert_point(arena);
+    str_t str = stream_consume_line(s);  
+    u32_t nums[4] = {};
+    
+    str_arr_t arr0 = str_split(str, ',', arena);
+    u32_t cur_index = 0;
+    for_cnt(i, arr0.size) 
+    {
+      arena_set_revert_point(arena);
+      str_arr_t arr1 = str_split(arr0.e[i], '-', arena);
+      for_cnt(j, arr1.size) 
+      {
+        str_to_u32(arr1.e[j], &nums[cur_index++]);
+      }
+    }
+
+
+    // Example: 20-40,60-80
+    u32_t lhs_low = nums[0];
+    u32_t lhs_high = nums[1];
+    u32_t rhs_low = nums[2];
+    u32_t rhs_high = nums[3];
+
+    // This is stupid so non-intuitive for me like why is it so hard
+    // Okay the way I think about it is that there are two scenarios
+    // where it does not collide
+    //
+    // Example 1:
+    //         a0 ------ a1
+    //  b0 -- b1
+    // 
+    // Example 2:
+    //         a0 ------ a1
+    //                      b0 -- b1
+    //
+    // So, it is NOT colliding when:
+    //   b1 < a0 OR b0 > a1
+    //
+    // Thus it IS colliding when:
+    //     !(b1 < a0 OR b0 > a1)
+    //   = b1 >= a0 AND b0 <= a1
+    // 
+    // Damn I love algebra
+    //   
+    if (rhs_high >= lhs_low && rhs_low <= lhs_high)
+    {
+      ++sum;
+    }
+  }
+  printf("%d\n", sum);
+}
 int main(int argv, char** argc) {
   if (argv < 2) {
     printf("Usage: aoc22 <day> <part> <filename>\nExample: aoc22 1 1 input.txt\n");
@@ -483,5 +478,6 @@ int main(int argv, char** argc) {
   aoc22_route(3,1);
   aoc22_route(3,2);
   aoc22_route(4,1);
+  aoc22_route(4,2);
 
 }
