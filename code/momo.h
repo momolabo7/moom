@@ -6121,27 +6121,38 @@ stream_init(stream_t* s, str_t contents) {
 
 static str_t 
 stream_consume_line(stream_t* s) {
-  if (stream_is_eos(s)) return str_bad();
+  if (stream_is_eos(s)) {
+    return str_bad();
+  }
 
   str_t ret = str_set(s->contents.e + s->pos, 0);
+
+  // TODO: this is terribly coded. Refactor?
   while(!stream_is_eos(s)) {
-    
     u8_t current_value = dref(stream_consume_block(s, 1));
-    if (current_value == 0 ) {
+    if (current_value == 0) {
+      stream_consume_block(s, 1);
       break;
     }
-
     else if (current_value == '\r') {
       // We found a termination point. Do clean up.
       current_value = dref(stream_peek_block(s, 1));
       if (current_value == '\n') {
         // \r\n found
         stream_consume_block(s, 1);
+        current_value = dref(stream_peek_block(s, 1));
+        if (current_value == 0) {
+          stream_consume_block(s, 1);
+        }
       }
       break;
     }
 
     else if (current_value == '\n') {
+      current_value = dref(stream_peek_block(s, 1));
+      if ( current_value == 0) {
+        stream_consume_block(s, 1);
+      }
       break;
     }
 

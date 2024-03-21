@@ -9,8 +9,7 @@
 //
 //
 static void aoc22_d1p2(const char* filename, arena_t* arena) {
-  auto mark = arena_mark(arena);
-  defer { arena_revert(mark); };
+  arena_set_revert_point(arena);
 
   str_t file_buffer = os_read_file_into_str(filename, arena, true); 
   if (!file_buffer) return;
@@ -66,8 +65,7 @@ static void aoc22_d1p2(const char* filename, arena_t* arena) {
 
 
 static void aoc22_d1p1(const char* filename, arena_t* arena) {
-  auto mark = arena_mark(arena);
-  defer { arena_revert(mark); };
+  arena_set_revert_point(arena);
 
   str_t file_buffer = os_read_file_into_str(filename, arena, true); 
   if (!file_buffer) return;
@@ -104,8 +102,7 @@ static void aoc22_d1p1(const char* filename, arena_t* arena) {
 }
 
 static void aoc22_d2p1(const char* filename, arena_t* arena) {
-  auto mark = arena_mark(arena);
-  defer { arena_revert(mark); };
+  arena_set_revert_point(arena);
 
   str_t file_buffer = os_read_file_into_str(filename, arena, false); 
   if (!file_buffer) return;
@@ -154,8 +151,7 @@ static void aoc22_d2p1(const char* filename, arena_t* arena) {
 }
 
 static void aoc22_d2p2(const char* filename, arena_t* arena) {
-  auto mark = arena_mark(arena);
-  defer { arena_revert(mark); };
+  arena_set_revert_point(arena);
 
   str_t file_buffer = os_read_file_into_str(filename, arena, true); 
   if (!file_buffer) return;
@@ -218,8 +214,7 @@ static void aoc22_d2p2(const char* filename, arena_t* arena) {
 }
 
 static void aoc22_d3p1(const char* filename, arena_t* arena) {
-  auto mark = arena_mark(arena);
-  defer { arena_revert(mark); };
+  arena_set_revert_point(arena);
 
   str_t file_buffer = os_read_file_into_str(filename, arena, true); 
   if (!file_buffer) return;
@@ -259,8 +254,7 @@ found:
 }
 
 static void aoc22_d3p2(const char* filename, arena_t* arena) {
-  auto mark = arena_mark(arena);
-  defer { arena_revert(mark); };
+  arena_set_revert_point(arena);
 
   str_t file_buffer = os_read_file_into_str(filename, arena, true); 
   if (!file_buffer) return;
@@ -268,14 +262,12 @@ static void aoc22_d3p2(const char* filename, arena_t* arena) {
   make(stream_t, s);
   stream_init(s, file_buffer);
   u32_t sum = 0;
-  u32_t count = 0;
   while(!stream_is_eos(s)) 
   {
     str_t line0 = stream_consume_line(s);  
     str_t line1 = stream_consume_line(s);  
     str_t line2 = stream_consume_line(s);  
 
-    count += 3;
 
     // Find common item between line0 and line1
     for_cnt(i, line0.size) 
@@ -303,7 +295,159 @@ static void aoc22_d3p2(const char* filename, arena_t* arena) {
     }
 found:
   }
-  printf("%d\n", count);
+  printf("%d\n", sum);
+}
+
+struct str_node_t  {
+  str_t item;
+  str_node_t* next;
+};
+
+struct str_arr_t {
+  str_t* e;
+  u32_t size;
+};
+
+// 
+static str_node_t*
+str_split(str_t str, u8_t delimiter, arena_t* arena) {
+  if (!str) return nullptr;
+
+  // Note that everything from this point on assumes
+  // that the str input is valid
+  str_node_t* head = 0;
+  str_node_t* cur = 0;
+
+  u32_t start = 0;
+  u32_t end = 0;
+  for(; end < str.size; ++end) 
+  {
+    if (str.e[end] == delimiter) 
+    {
+      str_node_t* new_node = arena_push(str_node_t, arena);
+      new_node->next = nullptr;
+      new_node->item = str_set(str.e + start, end - start);
+      sll_append(head, cur, new_node);
+
+      // book keeping
+      ++end;
+      start = end;
+    }
+  }
+
+  str_node_t* new_node = arena_push(str_node_t, arena);
+  new_node->next = nullptr;
+  new_node->item = str_set(str.e + start, end - start);
+  sll_append(head, cur, new_node);
+
+  return head;
+}
+
+static str_arr_t
+str_split2(str_t str, u8_t delimiter, arena_t* arena) {
+  str_arr_t ret = {};
+  if (!str) return ret;
+
+
+  u32_t start = 0;
+  u32_t end = 0;
+  for(; end < str.size; ++end) 
+  {
+    if (str.e[end] == delimiter) 
+    {
+      str_t* new_node = arena_push(str_t, arena);
+      dref(new_node) = str_set(str.e + start, end - start);
+
+      if (ret.e == nullptr) {
+        ret.e = new_node;
+      }
+      // book keeping
+      ++end;
+      start = end;
+      ++ret.size;
+    }
+  }
+
+  str_t* new_node = arena_push(str_t, arena);
+  dref(new_node) = str_set(str.e + start, end - start);
+  ++ret.size;
+
+  return ret;
+}
+static void aoc22_d4p1(const char* filename, arena_t* arena) {
+  arena_set_revert_point(arena);
+
+  str_t file_buffer = os_read_file_into_str(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+  u32_t sum = 0;
+
+  while(!stream_is_eos(s)) 
+  {
+    arena_set_revert_point(arena);
+    str_t str = stream_consume_line(s);  
+#if 0
+    str_node_t* comma_itr = str_split(str, ',', arena);
+    while(comma_itr != nullptr) {
+      arena_set_revert_point(arena);
+
+      str_node_t* dash_itr = str_split(comma_itr->item, '-', arena);
+      while(dash_itr != nullptr) {
+        u32_t test = 0;
+        str_to_u32(dash_itr->item, &test);
+        printf("%d\n", test);
+        dash_itr = dash_itr->next;
+      }
+
+      comma_itr = comma_itr->next;
+    while(comma_itr != nullptr) {
+
+      str_node_t* dash_itr = str_split(comma_itr->item, '-', arena);
+      while(dash_itr != nullptr) {
+        u32_t test = 0;
+        str_to_u32(dash_itr->item, &test);
+        printf("%d\n", test);
+        dash_itr = dash_itr->next;
+      }
+
+      comma_itr = comma_itr->next;
+    }
+    printf("\n");
+#else
+    str_arr_t arr0 = str_split2(str, ',', arena);
+    for_cnt(i, arr0.size) 
+    {
+      arena_set_revert_point(arena);
+      str_arr_t arr1 = str_split2(arr0.e[i], '-', arena);
+      for_cnt(j, arr1.size) 
+      {
+        u32_t test = 0;
+        str_to_u32(arr1.e[j], &test);
+        printf("%d\n", test);
+      }
+
+    }
+
+    printf("\n");
+#endif 
+
+
+    // Example: 20-40,60-80
+#if 0
+    u32_t lhs_low = ascii_to_digit(str.e[0]);
+    u32_t lhs_high = ascii_to_digit(str.e[2]);
+    u32_t rhs_low = ascii_to_digit(str.e[4]);
+    u32_t rhs_high = ascii_to_digit(str.e[6]);
+
+    if ((rhs_low >= lhs_low && rhs_high <= lhs_high) ||
+        (lhs_low >= rhs_low && lhs_high <= rhs_high)) 
+    {
+      ++sum;
+    }
+#endif
+  }
   printf("%d\n", sum);
 }
 
@@ -338,5 +482,6 @@ int main(int argv, char** argc) {
   aoc22_route(2,2);
   aoc22_route(3,1);
   aoc22_route(3,2);
+  aoc22_route(4,1);
 
 }

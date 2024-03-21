@@ -18,6 +18,9 @@ aoc22_d1p1	code/aoc22.cpp	/^static void aoc22_d1p1(const char* filename, arena_t
 aoc22_d1p2	code/aoc22.cpp	/^static void aoc22_d1p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d2p1	code/aoc22.cpp	/^static void aoc22_d2p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d2p2	code/aoc22.cpp	/^static void aoc22_d2p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d3p1	code/aoc22.cpp	/^static void aoc22_d3p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d3p2	code/aoc22.cpp	/^static void aoc22_d3p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d4p1	code/aoc22.cpp	/^static void aoc22_d4p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_route	code/aoc22.cpp	/^#define aoc22_route(/;"	d	language:C++	file:
 aoc23_d1p1	code/aoc23.cpp	/^static void aoc23_d1p1(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc23_d1p2	code/aoc23.cpp	/^static void aoc23_d1p2(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -345,7 +348,7 @@ compiler_flags	bin/build.bat	/^    set compiler_flags=!compiler_flags! -LD$/;"	v
 compiler_flags	bin/build.bat	/^    set compiler_flags=-DASSERTIVE=1 -DFOOLISH=1 !compiler_flags!$/;"	v	language:DosBatch
 compiler_flags	bin/build.bat	/^    set compiler_flags=-O2 -DASSERTIVE=0 -DFOOLISH=0 !compiler_flags!$/;"	v	language:DosBatch
 compiler_flags	bin/build.bat	/^rem set compiler_flags=-MT -WX -W4 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa/;"	v	language:DosBatch
-compiler_flags	bin/build.bat	/^set compiler_flags=-std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -/;"	v	language:DosBatch
+compiler_flags	bin/build.bat	/^set compiler_flags=-std=c++2b -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -/;"	v	language:DosBatch
 COMPILER_GCC	code/momo.h	/^# define COMPILER_GCC /;"	d	language:C++
 COMPILER_GCC	code/momo.h	/^# define COMPILER_GCC /;"	d	language:C++
 COMPILER_MSVC	code/momo.h	/^# define COMPILER_MSVC /;"	d	language:C++
@@ -378,6 +381,7 @@ copy_memory	code/momo.h	/^static void copy_memory(void* dest, const void* src, u
 copy_memory	code/momo.h	/^static void copy_memory(void* dest, const void* src, usz_t size);$/;"	p	language:C++	typeref:typename:void
 copy_range	code/momo.h	/^#define copy_range(/;"	d	language:C++
 copy_struct	code/momo.h	/^#define copy_struct(/;"	d	language:C++
+count	code/aoc22.cpp	/^  u32_t count;$/;"	m	language:C++	struct:str_arr_t	typeref:typename:u32_t	file:
 count	code/app_lit.cpp	/^  u32_t count;$/;"	m	language:C++	struct:lit_profiler_stat_t	typeref:typename:u32_t	file:
 count	code/eden.h	/^  u32_t count;$/;"	m	language:C++	struct:eden_input_characters_t	typeref:typename:u32_t
 count	code/gist_ring_buffer.cpp	/^  u32_t count;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
@@ -1677,6 +1681,7 @@ is_valid	code/w32_eden.cpp	/^  b32_t is_valid;$/;"	m	language:C++	struct:w32_loa
 is_valid	code/w32_sandbox_socket.cpp	/^  b32_t is_valid; \/\/ Probably should be some error code?$/;"	m	language:C++	struct:os_socket_t	typeref:typename:b32_t	file:
 is_whitespace	code/momo.h	/^is_whitespace(char c) {$/;"	f	language:C++	typeref:typename:b32_t
 is_whitespace	code/momo.h	/^static b32_t is_whitespace(char c);$/;"	p	language:C++	typeref:typename:b32_t
+item	code/aoc22.cpp	/^  str_t item;$/;"	m	language:C++	struct:str_node_t	typeref:typename:str_t	file:
 item_f32	code/eden.h	/^    f32_t item_f32;$/;"	m	language:C++	union:eden_inspector_entry_t::__anon0a42ec61070a	typeref:typename:f32_t
 item_u32	code/eden.h	/^    u32_t item_u32;$/;"	m	language:C++	union:eden_inspector_entry_t::__anon0a42ec61070a	typeref:typename:u32_t
 json_array_node_t	code/momo.h	/^struct json_array_node_t {$/;"	s	language:C++
@@ -1988,6 +1993,7 @@ msg2len	learn/x64_1_conditionals.s	/^  msg2len: equ $ - msg2$/;"	d	language:Asm
 name	code/eden.h	/^  str_t name;$/;"	m	language:C++	struct:eden_inspector_entry_t	typeref:typename:str_t
 near	code/momo.h	/^# define near$/;"	d	language:C++
 nearest_light	code/app_lit.cpp	/^  lit_game_light_t* nearest_light;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:lit_game_light_t *	file:
+next	code/aoc22.cpp	/^  str_node_t* next;$/;"	m	language:C++	struct:str_node_t	typeref:typename:str_node_t *	file:
 next	code/app_lit_ship.cpp	/^  w32_memory_t* next;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
 next	code/gist_linked_list.cpp	/^  gist_cdl_node* next;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
 next	code/lit_ship.cpp	/^  w32_memory_t* next;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
@@ -2482,6 +2488,8 @@ stream_write_block	code/momo.h	/^static void     stream_write_block(stream_t* s,
 stream_write_block	code/momo.h	/^stream_write_block(stream_t* s, void* src, usz_t src_size) {$/;"	f	language:C++	typeref:typename:void
 stringify	code/momo.h	/^#define stringify(/;"	d	language:C++
 stringify_	code/momo.h	/^#define stringify_(/;"	d	language:C++
+strs	code/aoc22.cpp	/^  str_t* strs;$/;"	m	language:C++	struct:str_arr_t	typeref:typename:str_t *	file:
+str_arr_t	code/aoc22.cpp	/^struct str_arr_t {$/;"	s	language:C++	file:
 str_bad	code/momo.h	/^static str_t  str_bad();$/;"	p	language:C++	typeref:typename:str_t
 str_bad	code/momo.h	/^str_bad() {$/;"	f	language:C++	typeref:typename:str_t
 str_compare_lexographically	code/momo.h	/^static smi_t  str_compare_lexographically(str_t lhs, str_t rhs);$/;"	p	language:C++	typeref:typename:smi_t
@@ -2491,9 +2499,12 @@ str_from_cstr	code/momo.h	/^str_from_cstr(const c8_t* cstr) {$/;"	f	language:C++
 str_from_lit	code/momo.h	/^#define str_from_lit(/;"	d	language:C++
 str_match	code/momo.h	/^static b32_t  str_match(str_t lhs, str_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
 str_match	code/momo.h	/^str_match(str_t lhs, str_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t
+str_node_t	code/aoc22.cpp	/^struct str_node_t  {$/;"	s	language:C++	file:
 str_range_to	code/momo.h	/^static b32_t  str_range_to(u32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
 str_set	code/momo.h	/^static str_t  str_set(u8_t* str, usz_t size);$/;"	p	language:C++	typeref:typename:str_t
 str_set	code/momo.h	/^str_set(u8_t* str, usz_t size) {$/;"	f	language:C++	typeref:typename:str_t
+str_split	code/aoc22.cpp	/^str_split(str_t str, u8_t delimiter, arena_t* arena) {$/;"	f	language:C++	typeref:typename:str_arr_t	file:
+str_split	code/aoc22.cpp	/^str_split(str_t str, u8_t delimiter, arena_t* arena) {$/;"	f	language:C++	typeref:typename:str_node_t *	file:
 str_substr	code/momo.h	/^static str_t  str_substr(str_t str, usz_t start, usz_t ope);$/;"	p	language:C++	typeref:typename:str_t
 str_substr	code/momo.h	/^str_substr(str_t str, usz_t start, usz_t count) {$/;"	f	language:C++	typeref:typename:str_t
 str_t	code/momo.h	/^struct str_t {$/;"	s	language:C++
