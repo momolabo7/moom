@@ -1294,16 +1294,7 @@ enum os_file_access_t {
   OS_FILE_ACCESS_MODIFY, // Write to a file, but does not truncate.
 };
 
-struct os_file_t {
-#if OS_WINDOWS
-  HANDLE handle;
-#elif OS_LINUX
-  int handle;
-#else
-# warning "Not implemented"
-#endif
-};
-
+struct os_file_t; 
 static str_t  os_reserve_memory(usz_t size);
 static b32_t  os_commit_memory(str_t blk);
 static str_t  os_allocate_memory(usz_t size); // reserve + commit
@@ -1322,48 +1313,12 @@ static u64_t  os_file_size(os_file_t* fp);
 //
 // IMPLEMENTATIONS
 //
-static str_t 
-os_read_file_into_str(const char* filename, arena_t* arena, b32_t null_terminate) {
-  os_file_t file = {};
-  if (!os_file_open(&file, filename, OS_FILE_ACCESS_READ)) {
-    return str_bad();
-  }
-  defer { os_file_close(&file); };
-
-  u64_t file_size = os_file_size(&file);
-
-  str_t ret = arena_push_str(arena, file_size + null_terminate, 16);
-  if (!ret) {
-    return str_bad();
-  }
-
-
-  if (!os_file_read(&file, ret.e, file_size, 0)) {
-    return str_bad();
-  }
-
-  if (null_terminate) 
-    ret.e[file_size] = 0;  
-
-  return ret;
-}
-
-static b32_t
-os_write_str_to_file(const char* filename, str_t buffer) {
-  os_file_t file = {};
-  if (!os_file_open(&file, filename, OS_FILE_ACCESS_CREATE)) {
-    return false; 
-  }
-
-  defer { os_file_close(&file); };
-  os_file_write(&file, buffer.e, buffer.size, 0);
-
-  return true;
-}
 #if OS_WINDOWS
-//
-// Windows implementation
-//
+
+struct os_file_t {
+  HANDLE handle;
+};
+
 static void
 os_file_close(os_file_t* fp) 
 {
@@ -1510,6 +1465,9 @@ os_get_clock_resolution() {
 
 #elif OS_LINUX 
 
+struct os_file_t {
+  int handle;
+};
 
 static void
 os_file_close(os_file_t* fp) 
@@ -1630,6 +1588,45 @@ os_get_clock_resolution() {
 }
 #endif // OS_WINDOWS
 
+
+static str_t 
+os_read_file_into_str(const char* filename, arena_t* arena, b32_t null_terminate) {
+  os_file_t file = {};
+  if (!os_file_open(&file, filename, OS_FILE_ACCESS_READ)) {
+    return str_bad();
+  }
+  defer { os_file_close(&file); };
+
+  u64_t file_size = os_file_size(&file);
+
+  str_t ret = arena_push_str(arena, file_size + null_terminate, 16);
+  if (!ret) {
+    return str_bad();
+  }
+
+
+  if (!os_file_read(&file, ret.e, file_size, 0)) {
+    return str_bad();
+  }
+
+  if (null_terminate) 
+    ret.e[file_size] = 0;  
+
+  return ret;
+}
+
+static b32_t
+os_write_str_to_file(const char* filename, str_t buffer) {
+  os_file_t file = {};
+  if (!os_file_open(&file, filename, OS_FILE_ACCESS_CREATE)) {
+    return false; 
+  }
+
+  defer { os_file_close(&file); };
+  os_file_write(&file, buffer.e, buffer.size, 0);
+
+  return true;
+}
 
 //
 // MARK:(Foolish)
