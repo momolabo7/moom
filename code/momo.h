@@ -1297,8 +1297,8 @@ static b32_t  file_write_from_str(const char* filename, str_t buffer);
 
 static void   file_close(file_t* fp); 
 static b32_t  file_open(file_t* fp, const char* filename, file_access_t access_type);
-static b32_t  file_read(file_t* fp, u8_t* dest, usz_t size, usz_t offset);
-static b32_t  file_write(file_t* fp, const u8_t* src, usz_t size, usz_t offset);
+static b32_t  file_read(file_t* fp, void* dest, usz_t size, usz_t offset);
+static b32_t  file_write(file_t* fp, const void* src, usz_t size, usz_t offset);
 static u64_t  file_get_size(file_t* fp);
 
 //
@@ -1377,7 +1377,7 @@ file_open(
 }
 
 static b32_t
-file_read(file_t* fp, u8_t* dest, usz_t size, usz_t offset) {
+file_read(file_t* fp, void* dest, usz_t size, usz_t offset) {
   
   // Reading the file
   OVERLAPPED overledened = {};
@@ -1397,7 +1397,7 @@ file_read(file_t* fp, u8_t* dest, usz_t size, usz_t offset) {
 }
 
 static b32_t
-file_write(file_t* fp, const u8_t* src, usz_t size, usz_t offset) 
+file_write(file_t* fp, const void* src, usz_t size, usz_t offset) 
 {
   OVERLAPPED overledened = {};
   overledened.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
@@ -1517,7 +1517,7 @@ file_open(
 }
 
 static b32_t
-file_read(file_t* fp, u8_t* dest, usz_t size, usz_t offset) {
+file_read(file_t* fp, void* dest, usz_t size, usz_t offset) {
   if (lseek(fp->handle, offset, SEEK_SET) == -1) {
     return false;
   }
@@ -1529,7 +1529,7 @@ file_read(file_t* fp, u8_t* dest, usz_t size, usz_t offset) {
 }
 
 static b32_t
-file_write(file_t* fp, const u8_t* src, usz_t size, usz_t offset) 
+file_write(file_t* fp, const void* src, usz_t size, usz_t offset) 
 {
   if (lseek(fp->handle, offset, SEEK_SET) == -1) {
     return false;

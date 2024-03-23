@@ -582,7 +582,6 @@ struct eden_gfx_opengl_t {
 //
 // MARK:(Profiler)
 // 
-typedef u64_t eden_profiler_get_performance_counter_f();
 
 struct eden_profiler_snapshot_t {
   u32_t hits;
@@ -613,8 +612,6 @@ struct eden_profiler_t {
   u32_t entry_cap;
   eden_profiler_entry_t* entries;
   u32_t snapshot_index;
-
-  eden_profiler_get_performance_counter_f* get_performance_counter;
 };
 
 #define eden_profiler_begin_block(p, name) \
@@ -2555,19 +2552,20 @@ eden_assets_init_from_file(
     arena_t* arena) 
 {
   eden_assets_t* assets = &eden->assets;
-  make(eden_file_t, file);
-  if(!eden_open_file(
-        eden,
+  make(file_t, file);
+  if(!file_open(
         file,
         filename,
-        EDEN_FILE_ACCESS_READ, 
-        EDEN_FILE_PATH_EXE)) 
+        FILE_ACCESS_READ))
+  {
     return false;
+  }
+  defer { file_close(file); };
 
 
   // Read header
   asset_file_header_t asset_file_header = {};
-  eden_read_file(eden, file, sizeof(asset_file_header_t), 0, &asset_file_header);
+  file_read(file, &asset_file_header, sizeof(asset_file_header_t), 0);
   if (asset_file_header.signature != ASSET_FILE_SIGNATURE) 
   {
     return false;
@@ -2591,7 +2589,7 @@ eden_assets_init_from_file(
   for_cnt(sound_index, assets->sound_count) {
     umi_t offset_to_sound = asset_file_header.offset_to_sounds + sizeof(asset_file_sound_t) * sound_index; 
     asset_file_sound_t file_sound = {};
-    if (!eden_read_file(eden, file, sizeof(asset_file_sound_t), offset_to_sound, &file_sound)) 
+    if (!file_read(file, &file_sound, sizeof(asset_file_sound_t), offset_to_sound)) 
       return false;
 
     eden_asset_sound_t* s = assets->sounds + sound_index;
@@ -2600,7 +2598,7 @@ eden_assets_init_from_file(
     if (!s->data) 
       return false;
 
-    if (!eden_read_file(eden, file, s->data_size, file_sound.offset_to_data, s->data)) 
+    if (!file_read(file, s->data, s->data_size, file_sound.offset_to_data))
       return false;
   }
 
@@ -2610,7 +2608,7 @@ eden_assets_init_from_file(
   for_cnt(sprite_index, assets->sprite_count) {
     umi_t offset_to_sprite = asset_file_header.offset_to_sprites + sizeof(asset_file_sprite_t) * sprite_index; 
     asset_file_sprite_t file_sprite = {};
-    if (!eden_read_file(eden, file, sizeof(asset_file_sprite_t), offset_to_sprite, &file_sprite))
+    if (!file_read(file, &file_sprite, sizeof(asset_file_sprite_t), offset_to_sprite))
       return false;
     eden_asset_sprite_t* s = assets->sprites + sprite_index;
 
@@ -2627,7 +2625,7 @@ eden_assets_init_from_file(
   for_cnt(bitmap_index, assets->bitmap_count) {
     umi_t offset_to_bitmap = asset_file_header.offset_to_bitmaps + sizeof(asset_file_bitmap_t) * bitmap_index; 
     asset_file_bitmap_t file_bitmap = {};
-    if (!eden_read_file(eden, file, sizeof(asset_file_bitmap_t), offset_to_bitmap, &file_bitmap)) {
+    if (!file_read(file, &file_bitmap, sizeof(asset_file_bitmap_t), offset_to_bitmap)) {
       return false;
     }
 
@@ -2642,12 +2640,11 @@ eden_assets_init_from_file(
     payload->texture_index = b->renderer_texture_handle;
     payload->texture_width = file_bitmap.width;
     payload->texture_height = file_bitmap.height;
-    if (!eden_read_file(
-        eden,
+    if (!file_read(
         file, 
+        payload->texture_data,
         bitmap_size, 
-        file_bitmap.offset_to_data, 
-        payload->texture_data))
+        file_bitmap.offset_to_data))
     {
       return false;
     }
@@ -2659,7 +2656,7 @@ eden_assets_init_from_file(
   {
     umi_t offset_to_fonts = asset_file_header.offset_to_fonts + sizeof(asset_file_font_t) * font_index; 
     asset_file_font_t file_font = {};
-    if (!eden_read_file(eden, file, sizeof(asset_file_font_t), offset_to_fonts, &file_font)) 
+    if (!file_read(file, &file_font, sizeof(asset_file_font_t), offset_to_fonts)) 
       return false;
 
     eden_asset_font_t* f = assets->fonts + font_index;
@@ -2688,12 +2685,11 @@ eden_assets_init_from_file(
         sizeof(asset_file_font_glyph_t)*glyph_index;
 
       asset_file_font_glyph_t file_glyph = {};
-      if (!eden_read_file(
-          eden,
+      if (!file_read(
           file, 
+          &file_glyph,
           sizeof(asset_file_font_glyph_t), 
-          glyph_data_offset,
-          &file_glyph)) 
+          glyph_data_offset)) 
       {
         return false;
       }
@@ -2721,12 +2717,11 @@ eden_assets_init_from_file(
         file_font.offset_to_data + 
         sizeof(asset_file_font_glyph_t)*glyph_count;
 
-      eden_read_file(
-          eden,
+      file_read(
           file, 
+          kernings,
           sizeof(f32_t)*glyph_count*glyph_count, 
-          kernings_data_offset, 
-          kernings);
+          kernings_data_offset);
 
       f->glyphs = glyphs;
       f->codepoint_map = codepoint_map;
@@ -3100,7 +3095,7 @@ _eden_profiler_init_block(
     entry->filename = filename;
     entry->block_name = block_name ? block_name : function_name;
     entry->line = line;
-    entry->start_cycles = (u32_t)p->get_performance_counter();
+    entry->start_cycles = (u32_t)clock_time();
     entry->start_hits = 1;
     entry->flag_for_reset = false;
     return entry;
@@ -3112,13 +3107,13 @@ _eden_profiler_init_block(
 static void
 _eden_profiler_begin_block(eden_profiler_t* p, eden_profiler_entry_t* entry) 
 {
-  entry->start_cycles = (u32_t)p->get_performance_counter();
+  entry->start_cycles = (u32_t)clock_time();
   entry->start_hits = 1;
 }
 
 static void
 _eden_profiler_end_block(eden_profiler_t* p, eden_profiler_entry_t* entry) {
-  u64_t delta = ((u32_t)p->get_performance_counter() - entry->start_cycles) | ((u64_t)(entry->start_hits)) << 32;
+  u64_t delta = ((u32_t)clock_time() - entry->start_cycles) | ((u64_t)(entry->start_hits)) << 32;
   u64_atomic_add(&entry->hits_and_cycles, delta);
 }
 
@@ -3138,7 +3133,6 @@ eden_profiler_reset(eden_profiler_t* p) {
 static void 
 eden_profiler_init(
     eden_profiler_t* p, 
-    eden_profiler_get_performance_counter_f* get_performance_counter,
     arena_t* arena,
     u32_t max_entries,
     u32_t max_snapshots_per_entry)
@@ -3147,7 +3141,6 @@ eden_profiler_init(
   p->entry_snapshot_count = max_snapshots_per_entry;
   p->entries = arena_push_arr(eden_profiler_entry_t, arena, p->entry_cap);
   assert(p->entries);
-  p->get_performance_counter = get_performance_counter;
 
   for (u32_t i = 0; i < p->entry_cap; ++i) {
     p->entries[i].snapshots = arena_push_arr(eden_profiler_snapshot_t, arena, max_snapshots_per_entry);

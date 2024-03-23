@@ -934,7 +934,6 @@ eden_profiler_begin_block	code/eden.h	/^#define eden_profiler_begin_block(/;"	d	
 eden_profiler_block	code/eden.h	/^#define eden_profiler_block(/;"	d	language:C++
 eden_profiler_end_block	code/eden.h	/^#define eden_profiler_end_block(/;"	d	language:C++
 eden_profiler_entry_t	code/eden.h	/^struct eden_profiler_entry_t {$/;"	s	language:C++
-eden_profiler_get_performance_counter_f	code/eden.h	/^typedef u64_t eden_profiler_get_performance_counter_f();$/;"	t	language:C++	typeref:typename:u64_t ()()
 eden_profiler_init	code/eden.h	/^eden_profiler_init($/;"	f	language:C++	typeref:typename:void
 eden_profiler_reset	code/eden.h	/^eden_profiler_reset(eden_profiler_t* p) {$/;"	f	language:C++	typeref:typename:void
 eden_profiler_snapshot_t	code/eden.h	/^struct eden_profiler_snapshot_t {$/;"	s	language:C++
@@ -1086,13 +1085,14 @@ f	code/momo.h	/^  F f;$/;"	m	language:C++	struct:_defer_scope_guard	typeref:type
 f	code/momo.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_INFINITY::__anon1db7a63d190a	typeref:typename:f32_t
 f	code/momo.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_NAN::__anon1db7a63d1b0a	typeref:typename:f32_t
 f	code/momo.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_NEG_INFINITY::__anon1db7a63d1a0a	typeref:typename:f32_t
-f	code/momo.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	m	language:C++	union:__anon1db7a63d1f0a	typeref:typename:f32_t
+f	code/momo.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	m	language:C++	union:f32_abs::__anon1db7a63d1f0a	typeref:typename:f32_t
 f	code/momo.h	/^  union { f32_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:f32_is_nan::__anon1db7a63d210a	typeref:typename:f32_t
 f	code/momo.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:f64_is_nan::__anon1db7a63d220a	typeref:typename:f64_t
 f	code/momo.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_INFINITY::__anon1db7a63d1d0a	typeref:typename:f64_t
 f	code/momo.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_NAN::__anon1db7a63d1c0a	typeref:typename:f64_t
 f	code/momo.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_NEG_INFINITY::__anon1db7a63d1e0a	typeref:typename:f64_t
 f	code/momo.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	m	language:C++	union:f64_abs::__anon1db7a63d200a	typeref:typename:f64_t
+f32_abs	code/momo.h	/^f32_abs(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
 f32_abs	code/momo.h	/^static f32_t f32_abs(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
 f32_acos	code/momo.h	/^f32_acos(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
 f32_acos	code/momo.h	/^static f32_t f32_acos(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
@@ -1336,6 +1336,9 @@ file_cap	code/w32_eden.cpp	/^  usz_t file_cap;$/;"	m	language:C++	struct:w32_fil
 file_close	code/momo.h	/^file_close(file_t* fp) $/;"	f	language:C++	typeref:typename:void
 file_close	code/momo.h	/^file_close(file_t* fp) $/;"	f	language:C++	typeref:typename:void
 file_close	code/momo.h	/^static void   file_close(file_t* fp); $/;"	p	language:C++	typeref:typename:void
+file_get_size	code/momo.h	/^file_get_size(file_t* fp) {$/;"	f	language:C++	typeref:typename:u64_t
+file_get_size	code/momo.h	/^file_get_size(file_t* fp) {$/;"	f	language:C++	typeref:typename:u64_t
+file_get_size	code/momo.h	/^static u64_t  file_get_size(file_t* fp);$/;"	p	language:C++	typeref:typename:u64_t
 file_open	code/momo.h	/^file_open($/;"	f	language:C++	typeref:typename:b32_t
 file_open	code/momo.h	/^file_open($/;"	f	language:C++	typeref:typename:b32_t
 file_open	code/momo.h	/^static b32_t  file_open(file_t* fp, const char* filename, file_access_t access_type);$/;"	p	language:C++	typeref:typename:b32_t
@@ -1344,9 +1347,6 @@ file_read	code/momo.h	/^file_read(file_t* fp, u8_t* dest, usz_t size, usz_t offs
 file_read	code/momo.h	/^static b32_t  file_read(file_t* fp, u8_t* dest, usz_t size, usz_t offset);$/;"	p	language:C++	typeref:typename:b32_t
 file_read_into_str	code/momo.h	/^file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate) {$/;"	f	language:C++	typeref:typename:str_t
 file_read_into_str	code/momo.h	/^static str_t  file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate = fa/;"	p	language:C++	typeref:typename:str_t
-file_size	code/momo.h	/^file_size(file_t* fp) {$/;"	f	language:C++	typeref:typename:u64_t
-file_size	code/momo.h	/^file_size(file_t* fp) {$/;"	f	language:C++	typeref:typename:u64_t
-file_size	code/momo.h	/^static u64_t  file_size(file_t* fp);$/;"	p	language:C++	typeref:typename:u64_t
 file_t	code/momo.h	/^struct file_t {$/;"	s	language:C++
 file_t	code/momo.h	/^struct file_t {$/;"	s	language:C++
 file_write	code/momo.h	/^file_write(file_t* fp, const u8_t* src, usz_t size, usz_t offset) $/;"	f	language:C++	typeref:typename:b32_t
@@ -1450,7 +1450,6 @@ garena_push_size	code/momo.h	/^static void* garena_push_size(garena_t* ga, usz_t
 garena_t	code/momo.h	/^struct garena_t {$/;"	s	language:C++
 get_config	code/eden.h	/^  eden_get_config_f* get_config;$/;"	m	language:C++	struct:eden_functions_t	typeref:typename:eden_get_config_f *
 get_file_size	code/eden.h	/^  eden_get_file_size_f* get_file_size;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_get_file_size_f *
-get_performance_counter	code/eden.h	/^  eden_profiler_get_performance_counter_f* get_performance_counter;$/;"	m	language:C++	struct:eden_profiler_t	typeref:typename:eden_profiler_get_performance_counter_f *
 gfx	code/eden.h	/^  eden_gfx_t gfx;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_gfx_t
 gigabytes	code/momo.h	/^#define gigabytes(/;"	d	language:C++
 gist_cdl_init	code/gist_linked_list.cpp	/^gist_cdl_init(gist_cdl_node* sentinel) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -2182,10 +2181,8 @@ pass_pack_font_glyph_ext_t	code/pass.h	/^struct pass_pack_font_glyph_ext_t {$/;"
 pass_pack_sound	code/pass.h	/^pass_pack_sound($/;"	f	language:C++	typeref:typename:void
 pass_pack_sound_ext_t	code/pass.h	/^struct pass_pack_sound_ext_t {$/;"	s	language:C++
 pass_pack_t	code/pass.h	/^struct pass_pack_t {$/;"	s	language:C++
-pass_read_file	code/pass.h	/^pass_read_file(const char* filename, arena_t* allocator) {$/;"	f	language:C++	typeref:typename:str_t
 pass_read_font_from_file	code/pass.h	/^pass_read_font_from_file(ttf_t* ttf, const char* filename, arena_t* allocator) {$/;"	f	language:C++	typeref:typename:b32_t
 pass_read_wav_from_file	code/pass.h	/^pass_read_wav_from_file(wav_t* wav, const char* filename, arena_t* allocator) {$/;"	f	language:C++	typeref:typename:b32_t
-pass_write_file	code/pass.h	/^pass_write_file(const char* filename, str_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t
 path_count	code/momo.h	/^  u32_t path_count;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:u32_t
 path_lengths	code/momo.h	/^  u32_t* path_lengths;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:u32_t *
 payloads	code/eden.h	/^  eden_gfx_texture_payload_t* payloads;$/;"	m	language:C++	struct:eden_gfx_texture_queue_t	typeref:typename:eden_gfx_texture_payload_t *
@@ -2626,7 +2623,7 @@ u	code/momo.h	/^  struct { f32_t u, v; };$/;"	m	language:C++	struct:v2f_t::__ano
 u	code/momo.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_INFINITY::__anon1db7a63d190a	typeref:typename:u32_t
 u	code/momo.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_NAN::__anon1db7a63d1b0a	typeref:typename:u32_t
 u	code/momo.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	m	language:C++	union:_F32_NEG_INFINITY::__anon1db7a63d1a0a	typeref:typename:u32_t
-u	code/momo.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	m	language:C++	union:__anon1db7a63d1f0a	typeref:typename:u32_t
+u	code/momo.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	m	language:C++	union:f32_abs::__anon1db7a63d1f0a	typeref:typename:u32_t
 u	code/momo.h	/^  union { f32_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:f32_is_nan::__anon1db7a63d210a	typeref:typename:u64_t
 u	code/momo.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:f64_is_nan::__anon1db7a63d220a	typeref:typename:u64_t
 u	code/momo.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	m	language:C++	union:_F64_INFINITY::__anon1db7a63d1d0a	typeref:typename:u64_t
@@ -2656,7 +2653,7 @@ u64_factorial	code/momo.h	/^u64_factorial(u64_t x) {$/;"	f	language:C++	typeref:
 U64_MAX	code/momo.h	/^#define U64_MAX /;"	d	language:C++
 u64_t	code/momo.h	/^typedef uint64_t u64_t;$/;"	t	language:C++	typeref:typename:uint64_t
 u8_is_alpha	code/momo.h	/^static b32_t u8_is_alpha(u8_t c);$/;"	p	language:C++	typeref:typename:b32_t
-u8_is_alpha	code/momo.h	/^u8_is_alpha(char c) {$/;"	f	language:C++	typeref:typename:b32_t
+u8_is_alpha	code/momo.h	/^u8_is_alpha(u8_t c) {$/;"	f	language:C++	typeref:typename:b32_t
 u8_is_digit	code/momo.h	/^static b32_t u8_is_digit(u8_t c);$/;"	p	language:C++	typeref:typename:b32_t
 u8_is_digit	code/momo.h	/^u8_is_digit(u8_t c) {$/;"	f	language:C++	typeref:typename:b32_t
 u8_is_readable	code/momo.h	/^static b32_t u8_is_readable(u8_t c);$/;"	p	language:C++	typeref:typename:b32_t
@@ -2767,7 +2764,6 @@ v3f_sub	code/momo.h	/^static v3f_t v3f_sub(v3f_t lhs, v3f_t rhs); $/;"	p	languag
 v3f_sub	code/momo.h	/^v3f_sub(v3f_t lhs, v3f_t rhs) {$/;"	f	language:C++	typeref:typename:v3f_t
 v3f_t	code/momo.h	/^union v3f_t {$/;"	u	language:C++
 v4f_t	code/momo.h	/^union v4f_t {$/;"	u	language:C++
-val	code/momo.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	v	language:C++	typeref:union:__anon1db7a63d1f0a
 value	code/gist_linked_list.cpp	/^  int value;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:int	file:
 value	code/momo.h	/^  json_value_t value;$/;"	m	language:C++	struct:json_array_node_t	typeref:typename:json_value_t
 value	code/momo.h	/^  json_value_t value;$/;"	m	language:C++	struct:_json_entry_t	typeref:typename:json_value_t
@@ -2869,7 +2865,6 @@ w32_get_performance_counter	code/lit_ship.cpp	/^w32_get_performance_counter(void
 w32_get_performance_counter	code/w32_eden.cpp	/^w32_get_performance_counter(void) {$/;"	f	language:C++	typeref:typename:LARGE_INTEGER	file:
 w32_get_performance_counter_u64	code/app_lit_ship.cpp	/^w32_get_performance_counter_u64(void) {$/;"	f	language:C++	typeref:typename:u64_t	file:
 w32_get_performance_counter_u64	code/lit_ship.cpp	/^w32_get_performance_counter_u64(void) {$/;"	f	language:C++	typeref:typename:u64_t	file:
-w32_get_performance_counter_u64	code/w32_eden.cpp	/^w32_get_performance_counter_u64(void) {$/;"	f	language:C++	typeref:typename:u64_t	file:
 w32_get_secs_elapsed	code/app_lit_ship.cpp	/^w32_get_secs_elapsed(LARGE_INTEGER start,$/;"	f	language:C++	typeref:typename:f32_t	file:
 w32_get_secs_elapsed	code/lit_ship.cpp	/^w32_get_secs_elapsed(LARGE_INTEGER start,$/;"	f	language:C++	typeref:typename:f32_t	file:
 w32_get_secs_elapsed	code/w32_eden.cpp	/^w32_get_secs_elapsed(LARGE_INTEGER start,$/;"	f	language:C++	typeref:typename:f32_t	file:
@@ -3267,7 +3262,7 @@ __anon1db7a63d1b0a	code/momo.h	/^  union { f32_t f; u32_t u; } ret = {};$/;"	u	l
 __anon1db7a63d1c0a	code/momo.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:_F64_NAN
 __anon1db7a63d1d0a	code/momo.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:_F64_INFINITY
 __anon1db7a63d1e0a	code/momo.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:_F64_NEG_INFINITY
-__anon1db7a63d1f0a	code/momo.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	u	language:C++
+__anon1db7a63d1f0a	code/momo.h	/^  union { f32_t f; u32_t u; } val = {};$/;"	u	language:C++	function:f32_abs
 __anon1db7a63d200a	code/momo.h	/^  union { f64_t f; u64_t u; } val = {};$/;"	u	language:C++	function:f64_abs
 __anon1db7a63d210a	code/momo.h	/^  union { f32_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:f32_is_nan
 __anon1db7a63d220a	code/momo.h	/^  union { f64_t f; u64_t u; } ret = {};$/;"	u	language:C++	function:f64_is_nan

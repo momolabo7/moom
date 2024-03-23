@@ -1003,12 +1003,6 @@ w32_get_performance_counter(void) {
   return result;
 }
 
-static u64_t
-w32_get_performance_counter_u64(void) {
-  LARGE_INTEGER counter = w32_get_performance_counter();
-  u64_t ret = (u64_t)counter.QuadPart;
-  return ret;
-}
 static f32_t
 w32_get_secs_elapsed(LARGE_INTEGER start,
                      LARGE_INTEGER end,
@@ -1205,7 +1199,7 @@ w32_unload_code(w32_loaded_code_t* code) {
     code->dll = 0;
   }
   code->is_valid = false;
-  zero_range(code->functions, code->function_count);
+  memory_zero_range(code->functions, code->function_count);
 }
 
 static void
@@ -1292,7 +1286,6 @@ w32_vkeys_to_eden_button_code(u32_t code) {
   return EDEN_BUTTON_CODE_UNKNOWN;
 }
 
-// TODO: change 'rr' to 'render_region'
 static void
 w32_update_input(eden_input_t* input, HWND window, f32_t delta_time, RECT rr) 
 {
@@ -1878,7 +1871,7 @@ WinMain(HINSTANCE instance,
   //
   // Init debug stuff
   //
-  eden_profiler_init(&eden->profiler, w32_get_performance_counter_u64, platform_arena, config.max_profiler_entries, config.max_profiler_snapshots);
+  eden_profiler_init(&eden->profiler, platform_arena, config.max_profiler_entries, config.max_profiler_snapshots);
   eden_inspector_init(&eden->inspector, platform_arena, config.max_inspector_entries);
 
 
