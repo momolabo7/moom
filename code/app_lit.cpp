@@ -3810,7 +3810,7 @@ eden_update_and_render_sig(eden_update_and_render)
   g_eden = eden;
   if(g_eden->user_data == nullptr) {
 
-    g_eden->user_data = arena_bootstrap_push(lit_t, main_arena, gigabytes(1));
+    g_eden->user_data = arena_bootstrap_push(lit_t, main_arena, megabytes(32));
 
     g_lit = (lit_t*)(g_eden->user_data);
     g_lit->level_to_start = 0;
