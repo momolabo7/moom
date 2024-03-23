@@ -3258,7 +3258,7 @@ eden_audio_mixer_update(eden_t* eden)
   eden_audio_t* audio = &eden->audio;
 #if 1
   u32_t bytes_per_sample = (audio->device_bits_per_sample/8);
-  zero_memory(audio->samples, bytes_per_sample * audio->device_channels * audio->sample_count);
+   memory_zero(audio->samples, bytes_per_sample * audio->device_channels * audio->sample_count);
 
   if (mixer->bitrate_type == EDEN_AUDIO_MIXER_BITRATE_TYPE_S16) {
     for_cnt (sample_index, audio->sample_count){

@@ -32,46 +32,17 @@
 #include "eden_asset_file.h"
 #include "eden_asset_id_base.h"
 
-static str_t  
-pass_read_file(const char* filename, arena_t* allocator) {
-  FILE *file = fopen(filename, "rb");
-  if (!file) return str_set(0,0);
-  defer { fclose(file); };
-
-  fseek(file, 0, SEEK_END);
-  usz_t file_size = ftell(file);
-  fseek(file, 0, SEEK_SET);
- 
-  //pass_log("%s, %lld\n", filename, file_size);
-  str_t file_contents = arena_push_str(allocator, file_size, 16);
-  if (!file_contents) return str_set(0,0);
-  usz_t read_amount = fread(file_contents.e, 1, file_size, file);
-  if(read_amount != file_size) return str_set(0,0);
-  
-  return file_contents;
-  
-}
-
-static b32_t
-pass_write_file(const char* filename, str_t buffer) {
-  FILE *file = fopen(filename, "wb");
-  if (!file) return false;
-  defer { fclose(file); };
-  
-  fwrite(buffer.e, 1, buffer.size, file);
-  return true;
-}
 
 static b32_t 
 pass_read_font_from_file(ttf_t* ttf, const char* filename, arena_t* allocator) {
-  str_t file_contents = pass_read_file(filename, allocator); 
+  str_t file_contents = file_read_into_str(filename, allocator); 
   if (!file_contents) return false;
   return ttf_read(ttf, file_contents);
 }
 
 static b32_t 
 pass_read_wav_from_file(wav_t* wav, const char* filename, arena_t* allocator) {
-  str_t file_contents = pass_read_file(filename, allocator); 
+  str_t file_contents = file_read_into_str(filename, allocator); 
   if(!file_contents) return false;
   return wav_read(wav, file_contents);
 }
@@ -366,7 +337,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
     arena_set_revert_point(p->arena);
     pass_pack_atlas_sprite_t* s = p->atlas_sprites + sprite_index;
 
-    str_t file_data = pass_read_file(s->filename, p->arena);
+    str_t file_data = file_read_into_str(s->filename, p->arena);
     assert(file_data);
 
     make(png_t, png);
@@ -446,7 +417,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
         arena_set_revert_point(p->arena);
         pass_pack_atlas_sprite_t* related_entry = context->sprite;
        
-        str_t file_data = pass_read_file(related_entry->filename, p->arena);
+        str_t file_data = file_read_into_str(related_entry->filename, p->arena);
         
         make(png_t, png);
         b32_t ok = png_read(png, file_data);
@@ -500,7 +471,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
                 fb->width, 
                 fb->height, 
                 p->arena);
-    pass_write_file(opt_png_output, png_to_write_mem);
+    file_write_from_str(opt_png_output, png_to_write_mem);
   }
 
 

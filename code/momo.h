@@ -40,7 +40,8 @@
 //   JSON        - JSON data file
 //   RectPack    - Rectangle packer
 //   Clex        - C Lexer
-//   OS          - OS Layer
+//   File        - File IO
+//   Clock       - Timer functions
 //
 
 
@@ -762,11 +763,11 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 //
 #define digit_to_ascii(d) ((d) + '0')
 #define ascii_to_digit(a) ((a) - '0')
-static b32_t is_whitespace(char c);
-static b32_t is_alpha(char c);
-static b32_t is_digit(char c);
-static b32_t is_uppercase(char c);
-static b32_t is_readable(char c);
+static b32_t u8_is_whitespace(u8_t c);
+static b32_t u8_is_alpha(u8_t c);
+static b32_t u8_is_digit(u8_t c);
+static b32_t u8_is_uppercase(u8_t c);
+static b32_t u8_is_readable(u8_t c);
 
 
 //
@@ -778,17 +779,22 @@ static b32_t is_readable(char c);
 #define align_down_pow2(v,a) ((v) & ~((a)-1))
 #define align_up_pow2(v,a) ((v) + ((a)-1) & ~((a)-1))
 #define is_pow2(v) ((v) & ((v)-1) == 0)
-#define zero_struct(p)    zero_memory((p), sizeof(*(p)))
-#define zero_array(p)     zero_memory((p), sizeof(p))
-#define zero_range(p,s)   zero_memory((p), sizeof(*(p)) * (s))
-#define copy_struct(d,s)  copy_memory((d), (s), sizeof(*(d)))
-#define copy_array(d,s)   copy_memory((d), (s), sizeof(d))
-#define copy_range(d,s,n) copy_memory((d), (s), sizeof(*(d)) * (n))
-static void copy_memory(void* dest, const void* src, usz_t size);
-static void copy_memory(void* dest, const void* src, usz_t size);
-static void zero_memory(void* dest, usz_t size);
-static b32_t is_memory_same(const void* lhs, const void* rhs, usz_t size);
-static void swap_memory(void* lhs, void* rhs, usz_t size);
+#define memory_zero_struct(p)    memory_zero((p), sizeof(*(p)))
+#define memory_zero_array(p)     memory_zero((p), sizeof(p))
+#define memory_zero_range(p,s)   memory_zero((p), sizeof(*(p)) * (s))
+#define memory_copy_struct(d,s)  memory_copy((d), (s), sizeof(*(d)))
+#define memory_copy_array(d,s)   memory_copy((d), (s), sizeof(d))
+#define memory_copy_range(d,s,n) memory_copy((d), (s), sizeof(*(d)) * (n))
+static void   memory_copy(void* dest, const void* src, usz_t size);
+static void   memory_zero(void* dest, usz_t size);
+static b32_t  memory_is_same(const void* lhs, const void* rhs, usz_t size);
+static void   memory_jwap(void* lhs, void* rhs, usz_t size);
+
+static str_t  memory_reserve(usz_t size);
+static b32_t  memory_commit(str_t blk);
+static str_t  memory_allocate(usz_t size); // reserve + commit
+static void   memory_free(str_t blk);
+
 static umi_t ptr_to_umi(void* p);
 static u8_t* umi_to_ptr(umi_t u);
 
@@ -1275,7 +1281,37 @@ static b32_t clex_tokenizer_init(clex_tokenizer_t* t, str_t buffer);
 static clex_token_t clex_next_token(clex_tokenizer_t* t);
 
 //
-// MARK:(OS)
+// MARK:(File)
+//
+
+enum file_access_t {
+  FILE_ACCESS_READ,   // Only reads the file, does not write
+  FILE_ACCESS_CREATE, // Creates or truncates a file for writing, as if it's new
+  FILE_ACCESS_MODIFY, // Write to a file, but does not truncate.
+};
+
+struct file_t; 
+
+static str_t  file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate = false); 
+static b32_t  file_write_from_str(const char* filename, str_t buffer);
+
+static void   file_close(file_t* fp); 
+static b32_t  file_open(file_t* fp, const char* filename, file_access_t access_type);
+static b32_t  file_read(file_t* fp, u8_t* dest, usz_t size, usz_t offset);
+static b32_t  file_write(file_t* fp, const u8_t* src, usz_t size, usz_t offset);
+static u64_t  file_get_size(file_t* fp);
+
+//
+// MARK:(Clock)
+//
+static u64_t  clock_time();
+static u64_t  clock_resolution();
+
+
+
+//
+// IMPLEMENTATIONS
+//
 //
 #if OS_WINDOWS
 # include <windows.h>
@@ -1283,44 +1319,19 @@ static clex_token_t clex_next_token(clex_tokenizer_t* t);
 # undef far
 #elif OS_LINUX
 # include <sys/mman.h> // mmap, munmap
-# include <time.h> // clock_getres, clock_gettime
-# include <fcntl.h> // TODO: do we need this?
-# include <unistd.h> // open, write, read, close
+# include <sys/times.h> // times 
+# include <fcntl.h> // open 
+# include <unistd.h> // write, read, close, sysconf
 #endif
 
-enum os_file_access_t {
-  OS_FILE_ACCESS_READ,   // Only reads the file, does not write
-  OS_FILE_ACCESS_CREATE, // Creates or truncates a file for writing, as if it's new
-  OS_FILE_ACCESS_MODIFY, // Write to a file, but does not truncate.
-};
-
-struct os_file_t; 
-static str_t  os_reserve_memory(usz_t size);
-static b32_t  os_commit_memory(str_t blk);
-static str_t  os_allocate_memory(usz_t size); // reserve + commit
-static void   os_free_memory(str_t blk);
-static u64_t  os_get_clock_time();
-static u64_t  os_get_clock_resolution();
-static str_t  os_read_file_into_str(const char* filename, arena_t* arena, b32_t null_terminate = false); 
-static b32_t  os_write_str_to_file(const char* filename, str_t buffer);
-
-static void   os_file_close(os_file_t* fp); 
-static b32_t  os_file_open(os_file_t* fp, const char* filename, os_file_access_t access_type);
-static b32_t  os_file_read(os_file_t* fp, u8_t* dest, usz_t size, usz_t offset);
-static b32_t  os_file_write(os_file_t* fp, const u8_t* src, usz_t size, usz_t offset);
-static u64_t  os_file_size(os_file_t* fp);
-
-//
-// IMPLEMENTATIONS
-//
 #if OS_WINDOWS
 
-struct os_file_t {
+struct file_t {
   HANDLE handle;
 };
 
 static void
-os_file_close(os_file_t* fp) 
+file_close(file_t* fp) 
 {
   if (fp->handle) {
     CloseHandle(fp->handle);
@@ -1328,23 +1339,23 @@ os_file_close(os_file_t* fp)
 }
 
 static b32_t
-os_file_open(
-    os_file_t* fp, 
+file_open(
+    file_t* fp, 
     const char* filename,
-    os_file_access_t access_type) 
+    file_access_t access_type) 
 {
   DWORD w32_access_flag = 0;
   DWORD w32_creation_flag = 0;
   switch (access_type) {
-    case OS_FILE_ACCESS_READ:
+    case FILE_ACCESS_READ:
       w32_access_flag = GENERIC_READ;
       w32_creation_flag = OPEN_EXISTING;
       break;
-    case OS_FILE_ACCESS_CREATE:
+    case FILE_ACCESS_CREATE:
       w32_access_flag = GENERIC_WRITE | GENERIC_READ;
       w32_creation_flag = CREATE_ALWAYS;
       break;
-    case OS_FILE_ACCESS_MODIFY:
+    case FILE_ACCESS_MODIFY:
       w32_access_flag = GENERIC_WRITE | GENERIC_READ;
       w32_creation_flag = OPEN_ALWAYS;
       break;
@@ -1366,7 +1377,7 @@ os_file_open(
 }
 
 static b32_t
-os_file_read(os_file_t* fp, u8_t* dest, usz_t size, usz_t offset) {
+file_read(file_t* fp, u8_t* dest, usz_t size, usz_t offset) {
   
   // Reading the file
   OVERLAPPED overledened = {};
@@ -1386,7 +1397,7 @@ os_file_read(os_file_t* fp, u8_t* dest, usz_t size, usz_t offset) {
 }
 
 static b32_t
-os_file_write(os_file_t* fp, const u8_t* src, usz_t size, usz_t offset) 
+file_write(file_t* fp, const u8_t* src, usz_t size, usz_t offset) 
 {
   OVERLAPPED overledened = {};
   overledened.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
@@ -1404,7 +1415,7 @@ os_file_write(os_file_t* fp, const u8_t* src, usz_t size, usz_t offset)
 }
 
 static u64_t
-os_file_size(os_file_t* fp) {
+file_get_size(file_t* fp) {
   LARGE_INTEGER file_size;
   if (!GetFileSizeEx(fp->handle, &file_size)) {
     return 0;
@@ -1415,21 +1426,21 @@ os_file_size(os_file_t* fp) {
 }
 
 static str_t
-os_reserve_memory(usz_t size) {
+memory_reserve(usz_t size) {
   return str_set(
       (u8_t*)VirtualAlloc(0, size, MEM_RESERVE, PAGE_READWRITE),
       size);
 }
 
 static b32_t
-os_commit_memory(str_t blk) {
+memory_commit(str_t blk) {
   b32_t result = (VirtualAlloc(blk.e, blk.size, MEM_COMMIT, PAGE_READWRITE) != 0);
   return result;
 }
 
 
 static str_t
-os_allocate_memory(usz_t size) {
+memory_allocate(usz_t size) {
   return str_set(
     (u8_t*)VirtualAllocEx(
       GetCurrentProcess(),
@@ -1442,12 +1453,12 @@ os_allocate_memory(usz_t size) {
 }
 
 static void 
-os_free_memory(str_t blk) {
+memory_free(str_t blk) {
   VirtualFree(blk.e, 0, MEM_RELEASE);
 }
 
 static u64_t
-os_get_clock_time() {
+clock_time() {
   LARGE_INTEGER perf;
   QueryPerformanceCounter(&perf);
   u64_t ret = (u64_t)perf.QuadPart;
@@ -1455,7 +1466,7 @@ os_get_clock_time() {
 }
 
 static u64_t 
-os_get_clock_resolution() {
+clock_resolution() {
   LARGE_INTEGER freq;
   QueryPerformanceFrequency(&freq);
   u64_t ret = (u64_t)freq.QuadPart;
@@ -1465,12 +1476,12 @@ os_get_clock_resolution() {
 
 #elif OS_LINUX 
 
-struct os_file_t {
+struct file_t {
   int handle;
 };
 
 static void
-os_file_close(os_file_t* fp) 
+file_close(file_t* fp) 
 {
   if (fp->handle) {
     close(fp->handle);
@@ -1478,21 +1489,21 @@ os_file_close(os_file_t* fp)
 }
 
 static b32_t
-os_file_open(
-    os_file_t* fp, 
+file_open(
+    file_t* fp, 
     const char* filename,
-    os_file_access_t access_type) 
+    file_access_t access_type) 
 {
   // NOTE(momo): O_RDONLY is 0
   int flags = 0;
   switch (access_type) {
-    case OS_FILE_ACCESS_READ:
+    case FILE_ACCESS_READ:
       flags = O_RDONLY;
       break;
-    case OS_FILE_ACCESS_CREATE:
+    case FILE_ACCESS_CREATE:
       flags = O_CREAT | O_RDWR;
       break;
-    case OS_FILE_ACCESS_MODIFY:
+    case FILE_ACCESS_MODIFY:
       flags = O_RDWR;
       break;
   }
@@ -1506,7 +1517,7 @@ os_file_open(
 }
 
 static b32_t
-os_file_read(os_file_t* fp, u8_t* dest, usz_t size, usz_t offset) {
+file_read(file_t* fp, u8_t* dest, usz_t size, usz_t offset) {
   if (lseek(fp->handle, offset, SEEK_SET) == -1) {
     return false;
   }
@@ -1518,7 +1529,7 @@ os_file_read(os_file_t* fp, u8_t* dest, usz_t size, usz_t offset) {
 }
 
 static b32_t
-os_file_write(os_file_t* fp, const u8_t* src, usz_t size, usz_t offset) 
+file_write(file_t* fp, const u8_t* src, usz_t size, usz_t offset) 
 {
   if (lseek(fp->handle, offset, SEEK_SET) == -1) {
     return false;
@@ -1530,7 +1541,7 @@ os_file_write(os_file_t* fp, const u8_t* src, usz_t size, usz_t offset)
 }
 
 static u64_t
-os_file_size(os_file_t* fp) {
+file_get_size(file_t* fp) {
   // NOTE(momo): We don't have to 'reset' the seek position 
   // because of how our read/write API works...at least for now
   // until we decide to store seek positions.
@@ -1540,7 +1551,7 @@ os_file_size(os_file_t* fp) {
 // NOTE(momo): Apparently linux already handles committing and reserving 
 // for the user already so there is no need to commit/reserve?
 static str_t
-os_reserve_memory(usz_t size) {
+memory_reserve(usz_t size) {
   u8_t* blk = (u8_t*)mmap(
       0, 
       size, 
@@ -1552,13 +1563,13 @@ os_reserve_memory(usz_t size) {
 }
 
 static b32_t
-os_commit_memory(str_t blk) {
+memory_commit(str_t blk) {
   return mprotect(blk.e, blk.size, PROT_READ | PROT_WRITE) == 0;
 }
 
 
 static str_t 
-os_allocate_memory(usz_t size) {
+memory_allocate(usz_t size) {
   u8_t* blk = (u8_t*)mmap(
       0, 
       size, 
@@ -1571,33 +1582,33 @@ os_allocate_memory(usz_t size) {
 }
 
 static void 
-os_free_memory(str_t blk) {
+memory_free(str_t blk) {
   munmap(blk.e, blk.size);
 }
 
 static u64_t
-os_get_clock_time() {
-  // TODO
-  return 0;
+clock_time() {
+  tms time;
+  return times(&time);
 }
 
 static u64_t 
-os_get_clock_resolution() {
-  // TODO
-  return 0;
+clock_resolution() {
+  u64_t ret = sysconf(_SC_CLK_TCK);
+  return ret;
 }
 #endif // OS_WINDOWS
 
 
 static str_t 
-os_read_file_into_str(const char* filename, arena_t* arena, b32_t null_terminate) {
-  os_file_t file = {};
-  if (!os_file_open(&file, filename, OS_FILE_ACCESS_READ)) {
+file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate) {
+  file_t file = {};
+  if (!file_open(&file, filename, FILE_ACCESS_READ)) {
     return str_bad();
   }
-  defer { os_file_close(&file); };
+  defer { file_close(&file); };
 
-  u64_t file_size = os_file_size(&file);
+  u64_t file_size = file_get_size(&file);
 
   str_t ret = arena_push_str(arena, file_size + null_terminate, 16);
   if (!ret) {
@@ -1605,7 +1616,7 @@ os_read_file_into_str(const char* filename, arena_t* arena, b32_t null_terminate
   }
 
 
-  if (!os_file_read(&file, ret.e, file_size, 0)) {
+  if (!file_read(&file, ret.e, file_size, 0)) {
     return str_bad();
   }
 
@@ -1616,14 +1627,14 @@ os_read_file_into_str(const char* filename, arena_t* arena, b32_t null_terminate
 }
 
 static b32_t
-os_write_str_to_file(const char* filename, str_t buffer) {
-  os_file_t file = {};
-  if (!os_file_open(&file, filename, OS_FILE_ACCESS_CREATE)) {
+file_write_from_str(const char* filename, str_t buffer) {
+  file_t file = {};
+  if (!file_open(&file, filename, FILE_ACCESS_CREATE)) {
     return false; 
   }
 
-  defer { os_file_close(&file); };
-  os_file_write(&file, buffer.e, buffer.size, 0);
+  defer { file_close(&file); };
+  file_write(&file, buffer.e, buffer.size, 0);
 
   return true;
 }
@@ -1680,7 +1691,7 @@ foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false
   fseek(file, 0, SEEK_SET);
 
 
-  str_t ret = os_allocate_memory(file_size + null_terminate);
+  str_t ret = memory_allocate(file_size + null_terminate);
   usz_t read_amount = fread(ret.e, 1, file_size, file);
 
   if(read_amount != file_size) return str_bad();
@@ -1692,7 +1703,7 @@ foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false
 
 static void
 foolish_free_buffer(str_t buffer) {
-  os_free_memory(buffer);
+  memory_free(buffer);
 }
 
 #endif // FOOLISH
@@ -1759,7 +1770,7 @@ _json_append_array(json_array_t* arr, json_array_node_t* node) {
 static void
 _json_eat_ignorables(json_t* t) {
   for (;;) {
-    if(is_whitespace(t->text.e[t->at])) {
+    if(u8_is_whitespace(t->text.e[t->at])) {
       ++t->at;
     }
     else if(t->text.e[t->at] == '/' && t->text.e[t->at+1] == '/') {
@@ -1890,13 +1901,13 @@ _json_next_token(json_t* t) {
     
     default: {
       // Unsigned integer
-      if (is_digit(t->text.e[t->at])) {
+      if (u8_is_digit(t->text.e[t->at])) {
         while(true)
         {
           // TODO check for double dots?
           if (t->text.e[t->at] == '.') {
           }
-          else if (!is_digit(t->text.e[t->at])) {
+          else if (!u8_is_digit(t->text.e[t->at])) {
             break;
           }
           ++ret.size;
@@ -1908,7 +1919,7 @@ _json_next_token(json_t* t) {
       // Signed integer
       else if ((t->text.size - t->at) >= 2 && 
                 t->text.e[t->at] == '-' && 
-                is_digit(t->text.e[t->at+1])) 
+                u8_is_digit(t->text.e[t->at+1])) 
       {
         ++t->at; // keeps the negative sign
         while(true)
@@ -1916,7 +1927,7 @@ _json_next_token(json_t* t) {
           // TODO check for double dots?
           if (t->text.e[t->at] == '.') {
           }
-          else if (!is_digit(t->text.e[t->at])) {
+          else if (!u8_is_digit(t->text.e[t->at])) {
             break;
           }
           ++ret.size;
@@ -2361,7 +2372,7 @@ json_read(
 static void
 _clex_eat_ignorables(clex_tokenizer_t* t) {
   for (;;) {
-    if(is_whitespace(t->text.e[t->at])) {
+    if(u8_is_whitespace(t->text.e[t->at])) {
       ++t->at;
     }
     else if(t->text.e[t->at] == '/' && t->text.e[t->at+1] == '/')  // line comments
@@ -2517,10 +2528,10 @@ clex_next_token(clex_tokenizer_t* t) {
       ret.type = CLEX_TOKEN_TYPE_ARROW;
       ret.ope = ++t->at;
     }
-    else if (is_digit(t->text.e[t->at])) // negative number related literals
+    else if (u8_is_digit(t->text.e[t->at])) // negative number related literals
     {    
       ret.type = CLEX_TOKEN_TYPE_NUMBER;
-      while(is_digit(t->text.e[t->at]) ||
+      while(u8_is_digit(t->text.e[t->at]) ||
           _clex_is_accepted_character_for_number(t->text.e[t->at]))
       {
         ++t->at;
@@ -2650,10 +2661,10 @@ clex_next_token(clex_tokenizer_t* t) {
     ret.type = CLEX_TOKEN_TYPE_DOT; 
     ++t->at;
 
-    if (is_digit(t->text.e[t->at])) // positive number related literals
+    if (u8_is_digit(t->text.e[t->at])) // positive number related literals
     {    
       ret.type = CLEX_TOKEN_TYPE_NUMBER;
-      while(is_digit(t->text.e[t->at]) ||
+      while(u8_is_digit(t->text.e[t->at]) ||
           _clex_is_accepted_character_for_number(t->text.e[t->at]))
       {
         ++t->at;
@@ -2706,10 +2717,10 @@ clex_next_token(clex_tokenizer_t* t) {
     ++t->at;
   }
 
-  else if (is_alpha(t->text.e[t->at]) || t->text.e[t->at] == '_') 
+  else if (u8_is_alpha(t->text.e[t->at]) || t->text.e[t->at] == '_') 
   {
-    while(is_alpha(t->text.e[t->at]) ||
-        is_digit(t->text.e[t->at]) ||
+    while(u8_is_alpha(t->text.e[t->at]) ||
+        u8_is_digit(t->text.e[t->at]) ||
         t->text.e[t->at] == '_') 
     {
       ++t->at;
@@ -2725,10 +2736,10 @@ clex_next_token(clex_tokenizer_t* t) {
     } 
   }
 
-  else if (is_digit(t->text.e[t->at])) // positive number related literals
+  else if (u8_is_digit(t->text.e[t->at])) // positive number related literals
   {    
     ret.type = CLEX_TOKEN_TYPE_NUMBER;
-    while(is_digit(t->text.e[t->at]) ||
+    while(u8_is_digit(t->text.e[t->at]) ||
         _clex_is_accepted_character_for_number(t->text.e[t->at]))
     {
       ++t->at;
@@ -2832,28 +2843,28 @@ umi_to_ptr(umi_t u) {
 }
 
 static b32_t
-is_whitespace(char c) {
+u8_is_whitespace(u8_t c) {
   return c == ' ' || c == '\n' || c == '\r' || c == '\t';
 }
 
 static b32_t
-is_alpha(char c) {
+u8_is_alpha(u8_t c) {
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
 static b32_t
-is_digit(char c) {
+u8_is_digit(u8_t c) {
   return (c >= '0' && c <= '9');
 }
 
 static b32_t
-is_uppercase(char c) {
+u8_is_uppercase(u8_t c) {
   return (c >= 'A' && c <= 'Z');
 }
 
 static b32_t
-is_readable(char c) {
-  return is_alpha(c) || is_digit(c);
+u8_is_readable(u8_t c) {
+  return u8_is_alpha(c) || u8_is_digit(c);
 }
 
 static f32_t 
@@ -3023,22 +3034,22 @@ f64_factorial(f64_t x) {
 #if 1
 #include <string.h>
 static void 
-copy_memory(void* dest, const void* src, usz_t size) {
+memory_copy(void* dest, const void* src, usz_t size) {
   memcpy(dest, src, size);
 }
 
 static void 
-zero_memory(void* dest, usz_t size) {
+memory_zero(void* dest, usz_t size) {
   memset(dest, 0, size);
 }
 static b32_t
-is_memory_same(const void* lhs, const void* rhs, usz_t size) {
+memory_is_same(const void* lhs, const void* rhs, usz_t size) {
   return memcmp(lhs, rhs, size) == 0; 
 }
 
 #else
 static void
-copy_memory(void* dest, const void* src, usz_t size) {
+memory_copy(void* dest, const void* src, usz_t size) {
   u8_t *p = (u8_t*)dest;
   const u8_t *q = (const u8_t*)src;
   while(size--) {
@@ -3047,7 +3058,7 @@ copy_memory(void* dest, const void* src, usz_t size) {
 }
 
 static void 
-zero_memory(void* dest, usz_t size) {
+memory_zero(void* dest, usz_t size) {
   u8_t *p = (u8_t*)dest;
   while(size--){
     *p++ = 0;
@@ -3055,7 +3066,7 @@ zero_memory(void* dest, usz_t size) {
 }
 
 static b32_t
-is_memory_same(const void* lhs, const void* rhs, usz_t size) {
+memory_is_same(const void* lhs, const void* rhs, usz_t size) {
   const u8_t *p = (const u8_t*)lhs;
   const u8_t *q = (const u8_t*)rhs;
   while(size--) {
@@ -3071,7 +3082,7 @@ is_memory_same(const void* lhs, const void* rhs, usz_t size) {
 
 
 static void 
-swap_memory(void* lhs, void* rhs, usz_t size) {
+memory_swap(void* lhs, void* rhs, usz_t size) {
   u8_t* l = (u8_t*)lhs;
   u8_t* r = (u8_t*)rhs;
 
@@ -3828,7 +3839,7 @@ cstr_to_f64(const c8_t* p) {
   if (found_minus) {
     ++p;
     negative = true;
-    if (!is_digit(*p)) { // a negative sign must be followed by an integer
+    if (!u8_is_digit(*p)) { // a negative sign must be followed by an integer
       return 0.0;
     }
   }
@@ -3837,13 +3848,13 @@ cstr_to_f64(const c8_t* p) {
   u64_t i;      // an unsigned int avoids signed overflows (which are bad)
   if (*p == '0') { // 0 cannot be followed by an integer
     ++p;
-    if (is_digit(*p)) {
+    if (u8_is_digit(*p)) {
       return 0.0;
     }
     i = 0;
   } 
   else {
-    if (!(is_digit(*p))) { // must start with an integer
+    if (!(u8_is_digit(*p))) { // must start with an integer
       return 0.0;
     }
     u8_t digit = *p - '0';
@@ -3851,7 +3862,7 @@ cstr_to_f64(const c8_t* p) {
     p++;
     // the is_made_of_eight_digits_fast routine is unlikely to help here because
     // we rarely see large integer parts like 123456789
-    while (is_digit(*p)) {
+    while (u8_is_digit(*p)) {
       digit = *p - '0';
       // a multiplication by 10 is cheaper than an arbitrary integer
       // multiplication
@@ -3864,7 +3875,7 @@ cstr_to_f64(const c8_t* p) {
   if (*p == '.') {
     ++p;
     first_after_period = p;
-    if (is_digit(*p)) {
+    if (u8_is_digit(*p)) {
       u8_t digit = *p - '0';
       ++p;
       i = i * 10 + digit; // might overflow + multiplication by 10 is likely
@@ -3873,7 +3884,7 @@ cstr_to_f64(const c8_t* p) {
     } else {
       return 0.0;
     }
-    while (is_digit(*p)) {
+    while (u8_is_digit(*p)) {
       u8_t digit = *p - '0';
       ++p;
       i = i * 10 + digit; // in rare cases, this will overflow, but that's ok
@@ -3891,23 +3902,23 @@ cstr_to_f64(const c8_t* p) {
     } else if ('+' == *p) {
       ++p;
     }
-    if (!is_digit(*p)) {
+    if (!u8_is_digit(*p)) {
       return 0.0;
     }
     u8_t digit = *p - '0';
     int64_t exp_number = digit;
     p++;
-    if (is_digit(*p)) {
+    if (u8_is_digit(*p)) {
       digit = *p - '0';
       exp_number = 10 * exp_number + digit;
       ++p;
     }
-    if (is_digit(*p)) {
+    if (u8_is_digit(*p)) {
       digit = *p - '0';
       exp_number = 10 * exp_number + digit;
       ++p;
     }
-    while (is_digit(*p)) {
+    while (u8_is_digit(*p)) {
       digit = *p - '0';
       if (exp_number < 0x100000000) { // we need to check for overflows
         exp_number = 10 * exp_number + digit;
@@ -5252,11 +5263,11 @@ _quicksort_generic_partition(
     //if (str_compare_lexographically(*i_ptr, *pivot_ptr) < 0) {
     if (cmp(i_ptr, pivot_ptr)) {
       u8_t* eventual_pivot_ptr = (u8_t*)a + (eventual_pivot_idx * element_size);
-      swap_memory(i_ptr, eventual_pivot_ptr, element_size);
+      memory_swap(i_ptr, eventual_pivot_ptr, element_size);
       ++eventual_pivot_idx;
     }
   }
-  swap_memory((u8_t*)a+(eventual_pivot_idx*element_size), (u8_t*)a+(pivot_idx*element_size), element_size);
+  memory_swap((u8_t*)a+(eventual_pivot_idx*element_size), (u8_t*)a+(pivot_idx*element_size), element_size);
   return eventual_pivot_idx;
 }
 
@@ -5707,7 +5718,7 @@ str_to_u32_range(str_t s, usz_t begin, usz_t ope, u32_t* out) {
 
   u32_t number = 0;
   for (usz_t i = begin; i < ope; ++i) {
-    if (!is_digit(s.e[i]))
+    if (!u8_is_digit(s.e[i]))
       return false;
     number *= 10;
     number += ascii_to_digit(s.e[i]);
@@ -5733,7 +5744,7 @@ str_to_s32_range(str_t s, usz_t begin, usz_t ope, s32_t* out) {
 
   s32_t number = 0;
   for (usz_t i = begin; i < ope; ++i) {
-    if (!is_digit(s.e[i]))
+    if (!u8_is_digit(s.e[i]))
       return false;
     number *= 10;
     number += ascii_to_digit(s.e[i]);
@@ -6193,7 +6204,7 @@ stream_peek_block(stream_t* s, usz_t amount) {
 static void
 stream_write_block(stream_t* s, void* src, usz_t src_size) {
   assert(s->pos + src_size <= s->contents.size);
-  copy_memory(s->contents.e + s->pos, src, src_size);
+  memory_copy(s->contents.e + s->pos, src, src_size);
   s->pos += src_size; 
 }
 
@@ -6527,7 +6538,7 @@ _ttf_get_glyph_outline(const ttf_t* ttf,
 
     _ttf_glyph_point_t* points = arena_push_arr(_ttf_glyph_point_t, allocator, point_count);
     if (!points) return false;
-    zero_range(points, point_count);
+    memory_zero_range(points, point_count);
     u8_t* point_itr = ttf->data +  g + 10 + number_of_contours*2 + 2 + instruction_length;
 
     // Load the flags
@@ -6609,7 +6620,7 @@ _ttf_get_glyph_outline(const ttf_t* ttf,
     // mark the points that are contour endpoints
     u16_t* end_pt_indices = arena_push_arr(u16_t, allocator, number_of_contours);
     if (!end_pt_indices) return false;
-    zero_range(end_pt_indices, number_of_contours); 
+    memory_zero_range(end_pt_indices, number_of_contours); 
     {
       u32_t contour_end_pts = g + 10; 
       for (s16_t i = 0; i < number_of_contours; ++i) {
@@ -6696,7 +6707,7 @@ _ttf_tessellate_bezier(v2f_t* vertices,
 
       u32_t* path_lengths = arena_push_arr(u32_t, allocator, outline->contour_count);
       if (!path_lengths) return false;
-      zero_range(path_lengths, outline->contour_count);
+      memory_zero_range(path_lengths, outline->contour_count);
       u32_t path_count = 0;
 
       // On the first pass, we count the number of points we will generate.
@@ -6707,7 +6718,7 @@ _ttf_tessellate_bezier(v2f_t* vertices,
         if (pass == 1) {
           vertices = arena_push_arr(v2f_t, allocator, vertex_count);
           if (!vertices) return false;
-          zero_range(vertices, vertex_count);
+          memory_zero_range(vertices, vertex_count);
           vertex_count = 0;
           path_count = 0;
         }
@@ -7007,7 +7018,7 @@ static b32_t
         //ttf_log("[ttf] Unable to push bitmap pixel\n");
         return nullptr;
       }
-      zero_memory(pixels, size);
+      memory_zero(pixels, size);
 
       arena_set_revert_point(allocator);
 
@@ -7026,7 +7037,7 @@ static b32_t
         //ttf_log("[ttf] Unable to push edges\n");
         return nullptr;
       }
-      zero_range(edges, paths->vertex_count);
+      memory_zero_range(edges, paths->vertex_count);
 
       u32_t edge_count = 0;
       {
@@ -7359,13 +7370,13 @@ _png_huffman_compute(_png_huffman_t* h,
   // Each code corresponds to a symbol
   h->symbol_count = codes_size;
   h->symbols = arena_push_arr(u16_t, arena, codes_size);
-  zero_memory(h->symbols, h->symbol_count * sizeof(u16_t));
+  memory_zero(h->symbols, h->symbol_count * sizeof(u16_t));
 
 
   // We add +1 because lengths[0] is not possible
   h->length_count = max_lengths + 1;
   h->lengths = arena_push_arr(u16_t, arena, max_lengths + 1);
-  zero_memory(h->lengths, h->length_count * sizeof(u16_t));
+  memory_zero(h->lengths, h->length_count * sizeof(u16_t));
 
   // 1. Count the number of codes for each code length
   for (u32_t sym = 0; sym < codes_size; ++sym)  {
@@ -7377,7 +7388,7 @@ _png_huffman_compute(_png_huffman_t* h,
   arena_marker_t mark = arena_mark(arena);
 
   u16_t* len_offset_table = arena_push_arr(u16_t, arena, max_lengths+1);
-  zero_memory(len_offset_table, (max_lengths+1) * sizeof(u16_t));
+  memory_zero(len_offset_table, (max_lengths+1) * sizeof(u16_t));
 
   for (u32_t len = 1; len < max_lengths; ++len) {
     len_offset_table[len+1] = len_offset_table[len] + h->lengths[len]; 
@@ -8183,11 +8194,11 @@ arena_init(arena_t* a, str_t buffer) {
 static b32_t 
 arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit) 
 {
-  a->buffer = os_reserve_memory(reserve_amount);
+  a->buffer = memory_reserve(reserve_amount);
   if (!a->buffer) return false;
 
   if (commit) {
-    if(!os_commit_memory(a->buffer)) return false;
+    if(!memory_commit(a->buffer)) return false;
     a->commit_pos = reserve_amount;
   }
   else {
@@ -8200,7 +8211,7 @@ arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit)
 static void
 arena_free(arena_t* a)
 { 
-  os_free_memory(a->buffer);
+  memory_free(a->buffer);
 }
 
 static void
@@ -8246,7 +8257,7 @@ arena_push_size(arena_t* a, usz_t size, usz_t align) {
   {
     u8_t* commit_ptr = a->memory + a->pos;
     usz_t commit_size = adjusted_pos - a->pos + size;
-    os_commit_memory(str_set(commit_ptr, commit_size));
+    memory_commit(str_set(commit_ptr, commit_size));
   }
 
   u8_t* ret = umi_to_ptr(imem + adjusted_pos);
@@ -8276,7 +8287,7 @@ arena_push_size_zero(arena_t* a, usz_t size, usz_t align)
 {
   void* mem = arena_push_size(a, size, align);
   if (!mem) return nullptr;
-  zero_memory(mem, size);
+  memory_zero(mem, size);
   return mem;
 }
 
@@ -8687,6 +8698,24 @@ rp_pack(rp_rect_t* rects,
 
 //
 // JOURNAL
+// = 2024-03-23 =
+//   Did some cleanup to the APIs, primarily removing the idea of an "OS layer". 
+//   At this point, I'm not sure if the user level cares about whether a function 
+//   or system is OS dependant or not. Like...I don't think there's any value
+//   at all. 
+//
+//   This actually brings some relief to the API design of arena, which was 
+//   giving me some headache because arena can now do OS calls. 
+//   I was experimenting with the ideas of 'maybe I can make an os_arena' API
+//   using inheritance so that I can avoid repeated code, but because arena_push()
+//   relies on OS calls (commiting to memory), this does mean that every API would
+//   then be OS-related; which kind of signals that I might as well puut arena
+//   into the OS-layer etc...which is awkward because arena CAN function without
+//   OS-called. Then I would have a make two arena APIs??
+//
+//   In the end, this shift in perspective of removing the OS layer just simplifies
+//   everything. And I don't have to do anything in the end; the best kind of solution!
+//
 // = 2024-03-15 =
 //   Okay we are starting to clean up some of the OS functions.
 //   - File API started. We can read files!

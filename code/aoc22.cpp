@@ -11,7 +11,7 @@
 static void aoc22_d1p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = os_read_file_into_str(filename, arena, true); 
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -67,7 +67,7 @@ static void aoc22_d1p2(const char* filename, arena_t* arena) {
 static void aoc22_d1p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = os_read_file_into_str(filename, arena, true); 
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -104,7 +104,7 @@ static void aoc22_d1p1(const char* filename, arena_t* arena) {
 static void aoc22_d2p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = os_read_file_into_str(filename, arena, false); 
+  str_t file_buffer = file_read_into_str(filename, arena, false); 
   if (!file_buffer) return;
 
 
@@ -153,7 +153,7 @@ static void aoc22_d2p1(const char* filename, arena_t* arena) {
 static void aoc22_d2p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = os_read_file_into_str(filename, arena, true); 
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -216,7 +216,7 @@ static void aoc22_d2p2(const char* filename, arena_t* arena) {
 static void aoc22_d3p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = os_read_file_into_str(filename, arena, true); 
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -256,7 +256,7 @@ found:
 static void aoc22_d3p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = os_read_file_into_str(filename, arena, true); 
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -342,7 +342,7 @@ str_split(str_t str, u8_t delimiter, arena_t* arena) {
 static void aoc22_d4p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = os_read_file_into_str(filename, arena, true); 
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -386,7 +386,7 @@ static void aoc22_d4p1(const char* filename, arena_t* arena) {
 static void aoc22_d4p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = os_read_file_into_str(filename, arena, true); 
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);

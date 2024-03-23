@@ -9,6 +9,9 @@ int main() {
   printf("Hello Test\n");
   arena_t test = {};
 
+  u64_t res = os_get_clock_resolution();
+  printf("%zu\n", res);
+
   const u32_t runs = 10000000;
   // arena with committed memory
   {
@@ -18,7 +21,7 @@ int main() {
       arena_push_size(&test, sizeof(u32_t), alignof(u32_t));  
     }
     u64_t end_time = os_get_clock_time();
-    printf("arena #0: %f\n", (f32_t)(end_time - start_time)/runs);
+    printf("arena #0: %f\n", ((f32_t)(end_time - start_time))/res);
   }
 
   // arena with non-committed memory
@@ -30,7 +33,7 @@ int main() {
       arena_push_size(&test, sizeof(u32_t), alignof(u32_t));  
     }
     u64_t end_time = os_get_clock_time();
-    printf("arena #1: %f\n", (f32_t)(end_time - start_time)/runs);
+    printf("arena #1: %f\n", ((f32_t)(end_time - start_time))/res);
   }
 
   // Olde arena
@@ -46,7 +49,7 @@ int main() {
     }
     u64_t end_time = os_get_clock_time();
 
-    printf("arena #2: %f\n", (f32_t)(end_time - start_time)/runs);
+    printf("arena #2: %f\n", ((f32_t)(end_time - start_time))/res);
   }
 
  

@@ -1781,8 +1781,22 @@ done:
 static
 quicksort_generic_predicate_sig(euler_q24_cmp) {
   u32_t l = dref((u32_t*)lhs);
-  u32_t r = dref((u32_t*)lhs);
-  return l > r;
+  u32_t r = dref((u32_t*)rhs);
+  return l < r;
+}
+
+static void
+euler_q24_print(u32_t* input, u32_t input_len) {
+  static u32_t times = 0;
+
+  ++times;
+
+  if (times == 1000000) {
+    printf("%d: ", times);
+    for (u32_t i = 0; i < input_len; ++i)
+      printf("%d", input[i]);
+    printf("\n");
+  }
 }
 
 static void
@@ -1790,25 +1804,23 @@ euler_q24_print_permutations(u32_t* input, u32_t input_len, u32_t start, u32_t e
 {
   if (start == end) 
   {
+    euler_q24_print(input, input_len);
+#if 0
     for (u32_t i = 0; i < input_len; ++i)
       printf("%d", input[i]);
     printf("\n");
+#endif
   }
   else 
   {
     // Sort start to end
-    quicksort_generic(input, input_len, euler_q24_cmp);
+    quicksort_generic(input + start, end-start+1, euler_q24_cmp);
     
-    for (u32_t i = 0; i < input_len; ++i)
-      printf("%d", input[i]);
-    printf("\n");
-#if 0
     for(u32_t i = start; i <= end; ++i) {
       swap(input[start], input[i]);
       euler_q24_print_permutations(input, input_len, start + 1, end);
       swap(input[start], input[i]);
     }
-#endif
 
   }
 }
@@ -1816,7 +1828,8 @@ euler_q24_print_permutations(u32_t* input, u32_t input_len, u32_t start, u32_t e
 static void 
 euler_q24()
 {
-  u32_t arr[] = { 0, 1, 2 };
+  u32_t arr[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
   euler_q24_print_permutations(arr, array_count(arr),  0, array_count(arr)-1);
 
 }
