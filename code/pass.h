@@ -293,13 +293,17 @@ pass_pack_atlas_begin(
 
   p->atlas_sprite_count = 0;
   p->atlas_sprite_cap = max_sprites;
-  p->atlas_sprites = arena_push_arr(pass_pack_atlas_sprite_t, p->arena, max_sprites); 
-  assert(p->atlas_sprites);
+  if (max_sprites) {
+    p->atlas_sprites = arena_push_arr(pass_pack_atlas_sprite_t, p->arena, max_sprites); 
+    assert(p->atlas_sprites);
+  }
 
   p->atlas_font_count = 0;
   p->atlas_font_cap = max_fonts;
-  p->atlas_fonts = arena_push_arr(pass_pack_atlas_font_t, p->arena, max_fonts); 
-  assert(p->atlas_fonts);
+  if (max_fonts) {
+    p->atlas_fonts = arena_push_arr(pass_pack_atlas_font_t, p->arena, max_fonts); 
+    assert(p->atlas_fonts);
+  }
 
   p->atlas_active_font = nullptr;
 

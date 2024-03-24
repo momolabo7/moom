@@ -31,8 +31,12 @@ int main() {
       total_cp*2);
   {
     pass_pack_sound(p, ASSET_SOUND_ID_TEST, sandbox_res_dir("bgm.wav"));
+    pass_pack_atlas_begin(p, ASSET_BITMAP_ID_ATLAS, 32, 32, 1, 0); 
+    pass_pack_atlas_sprite(p, ASSET_SPRITE_ID_BLANK, sandbox_res_dir("blank.png"));
+    pass_pack_atlas_end(p); 
   }
   pass_pack_end(p, SANDBOX_ASSET_FILE);
+  printf("done\n");
 }
 
 
