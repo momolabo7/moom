@@ -22,7 +22,6 @@ static void aoc22_d1p2(const char* filename, arena_t* arena) {
   while(!stream_is_eos(s)) {
     str_t line = stream_consume_line(s);  
     if (line.size == 0) {
-
       for_arr(i, maxs) {
         if (sum > maxs[i]) {
           // assume that we are sorted. 
@@ -248,7 +247,7 @@ static void aoc22_d3p1(const char* filename, arena_t* arena) {
         }
       }
     }
-found:
+found:;
   }
   printf("%d\n", sum);
 }
@@ -293,7 +292,7 @@ static void aoc22_d3p2(const char* filename, arena_t* arena) {
         }
       }
     }
-found:
+found:;
   }
   printf("%d\n", sum);
 }
@@ -446,6 +445,57 @@ static void aoc22_d4p2(const char* filename, arena_t* arena) {
   }
   printf("%d\n", sum);
 }
+
+
+struct aoc22_d5p1_node_t {
+  char value;
+  aoc22_d5p1_node_t* next;
+  aoc22_d5p1_node_t* prev;
+}
+static void aoc22_d5p1(const char* filename, arena_t* arena) {
+  //
+  // @note: Format looks something like this:
+  //
+  //     [D]    
+  // [N] [C]    
+  // [Z] [M] [P]
+  //  1   2   3 
+  //
+  // move 1 from 2 to 1
+  // move 3 from 1 to 3
+  // move 2 from 2 to 1
+  // move 1 from 1 to 2
+  // 
+  // @note: 
+  //  The maximum stacks is 9
+  //
+  arena_set_revert_point(arena);
+
+
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+  //u32_t sum = 0;
+
+  aoc22_d5p1_node_t stacks[9] = {};
+  while(!stream_is_eos(s)) 
+  {
+    arena_set_revert_point(arena);
+    str_t str = stream_consume_line(s);  
+    if (str.e[1] == '1') break;
+
+#if 0
+    for(int i = 0; i < str.size; ++i) {
+      printf("%c", str.e[i]);
+    }
+    printf("\n");
+#endif
+  }
+  //printf("%d\n", sum);
+}
+
 int main(int argv, char** argc) {
   if (argv < 2) {
     printf("Usage: aoc22 <day> <part> <filename>\nExample: aoc22 1 1 input.txt\n");
@@ -479,5 +529,6 @@ int main(int argv, char** argc) {
   aoc22_route(3,2);
   aoc22_route(4,1);
   aoc22_route(4,2);
+  aoc22_route(5,1);
 
 }

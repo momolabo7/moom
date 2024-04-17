@@ -12,7 +12,7 @@ struct vtuber_t {
 #define vtuber_exit() { eden->is_running = false; return; }
 #define vtuber_from_eden(eden) ((vtuber_t*)eden->user_data)
 
-// TODO: maybe add an image struct?
+// @todo: maybe add an image struct?
 static u32_t  
 vtuber_add_texture(eden_gfx_t* gfx, u32_t w, u32_t h, u32_t* pixel_data) {
   u32_t image_size = w*h*sizeof(u32_t);

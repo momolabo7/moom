@@ -23,9 +23,9 @@ rem   -ship
 rem     Special build for shipping a app. Expects 1 .cpp file. 
 rem     Will build w32_app.cpp and the given 1.cpp file.
 rem     
-rem   TODO: Maybe allow an output flag?
+rem   @todo: Maybe allow an output flag?
 rem
-rem TODO
+rem @todo
 rem - output flag to specify output?
 rem - When building, place all intermiediately file elsewhere
 rem

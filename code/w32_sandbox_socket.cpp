@@ -29,7 +29,7 @@ struct os_socket_t {
 };
 
 #if OS_WINDOWS
-// NOTE(momo): my god windows why you make me do this.
+// @note: my god windows why you make me do this.
 static b32_t
 os_socket_system_begin() {
   WSADATA wsa_data;
@@ -39,7 +39,7 @@ os_socket_system_begin() {
   return true;
 }
 
-// TODO: parameters for socket
+// @todo: parameters for socket
 static os_socket_t
 os_socket_begin(const char* server, const char* port)
 {
@@ -66,7 +66,7 @@ os_socket_begin(const char* server, const char* port)
   addr_hints.ai_socktype = SOCK_STREAM;
 
 
-  // NOTE(momo): This one is self-explanatory...?
+  // @note: This one is self-explanatory...?
   addr_hints.ai_protocol = IPPROTO_TCP;
 
 
@@ -78,7 +78,7 @@ os_socket_begin(const char* server, const char* port)
   //
   // With the actual addrinfo, we use that to create our socket
   //
-  // NOTE(momo): addrinfo is a linked list.
+  // @note: addrinfo is a linked list.
   // Perhaps an idea would be to iterate through the linked list of addresses
   // until one works?
   //

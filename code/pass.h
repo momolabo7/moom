@@ -131,7 +131,7 @@ struct pass_pack_font_ext_t {
   //
   asset_file_font_glyph_t* glyphs;
 
-  // TODO: should remove this?
+  // @todo: should remove this?
   const char* filename;
 };
 
@@ -286,7 +286,7 @@ pass_pack_atlas_begin(
   assert(fbe->pixels);
   
   //
-  // NOTE: Everything here is temporary and will
+  // @note: Everything here is temporary and will
   // be cleared away after pass_pack_atlas_end()
   //
   p->atlas_arena_marker = arena_mark(p->arena);  
@@ -502,7 +502,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
     pass_pack_font_ext_t* ffe = p->font_exts + af->font_id;
     
 
-    // TODO: We already read the TTF earlier. Is there
+    // @todo: We already read the TTF earlier. Is there
     // a way to not do this multiple times?
     make(ttf_t, ttf);
     b32_t ok = pass_read_font_from_file(ttf, ffe->filename, p->arena); 
@@ -516,7 +516,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
       rp_rect_t* rect = af->glyph_rects + glyph_index;
       asset_file_font_glyph_t* fg = ffe->glyphs + glyph_index;
 
-      // NOTE: codepoint is should already be set!
+      // @note: codepoint is should already be set!
 
       u32_t ttf_glyph_index = ttf_get_glyph_index(ttf, fg->codepoint);
 
@@ -642,7 +642,7 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   // Write the 'data' section for the assets. 
   // The 'data' section are basically parts of the asset that are dynamic.
   //
-  // NOTE: sprites do no have this section!
+  // @note: sprites do no have this section!
   //
 
   // Fonts
@@ -661,7 +661,7 @@ pass_pack_end(pass_pack_t* p, const char* filename)
     //
     // Write kerning
     //
-    // TODO: Again we are reading ttf here. Maybe we can avoid this? 
+    // @todo: Again we are reading ttf here. Maybe we can avoid this? 
     //
     make(ttf_t, ttf);
     b32_t ok = pass_read_font_from_file(ttf, ffe->filename, p->arena); 

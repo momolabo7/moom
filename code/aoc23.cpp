@@ -100,7 +100,7 @@ static void aoc23_d1p2(const char* filename) {
         u32_t num = num_table[table_index];
 
         str_t sub_line = str_set(line.e + i - (str.size-1), str.size);
-        // NOTE(momo): I'm pretty sure I should need more checks here but 
+        // @note: I'm pretty sure I should need more checks here but 
         // oh well, the answer is correct.
         if ((i-(str.size-1)) >= 0 && 
            !str_compare_lexographically(str, sub_line)) 

@@ -268,7 +268,7 @@ struct eden_assets_t {
 // MARK:(Mixer)
 //
 struct eden_audio_mixer_instance_t {
-  eden_asset_sound_id_t sound_id; // TODO: do not rely on sound_id
+  eden_asset_sound_id_t sound_id; // @todo: do not rely on sound_id
   u32_t current_offset;
   u32_t index;
   
@@ -596,7 +596,7 @@ struct eden_profiler_entry_t {
   
   eden_profiler_snapshot_t* snapshots;
   
-  // NOTE(Momo): For initialization of entry. 
+  // @note: For initialization of entry. 
   // Maybe it shouldn't be stored here
   // but on where they called it? 
   // i.e. use a functor that wraps?
@@ -751,7 +751,7 @@ enum eden_button_code_t {
 //
 // MARK:(Input)
 //
-// NOTE(momo): Input is SPECIFICALLY stuff that can be recorded and
+// @note: Input is SPECIFICALLY stuff that can be recorded and
 // replayed by some kind of system. Other things go to eden_t
 // 
 struct eden_input_characters_t {
@@ -764,17 +764,17 @@ struct eden_input_t {
   u8_t chars[32];
   u32_t char_count;
 
-  // NOTE(Momo): The mouse position is relative to the moe's dimensions given
+  // @note: The mouse position is relative to the moe's dimensions given
   // via set_design_dims(). It is possible to get back the normalized dimensions
   // by dividing the x/y by the width/height of the moe.
   v2f_t mouse_pos;
 
-  // NOTE(Momo): Mouse wheels values are not normally analog!
+  // @note: Mouse wheels values are not normally analog!
   // +ve is forwards
   // -ve is backwards
   s32_t mouse_scroll_delta;
 
-  // TODO(Momo): not sure if this should even be here
+  // @todo(Momo): not sure if this should even be here
   f32_t delta_time; //aka dt
 };
 
@@ -880,7 +880,7 @@ typedef eden_set_design_dimensions_sig(eden_set_design_dimensions_f);
 // App Audio API
 //
 
-// TODO: change name to eden_audio_output_t
+// @todo: change name to eden_audio_output_t
 struct eden_audio_t {
   // Audio buffer for eden to write to
   void* samples;
@@ -1283,7 +1283,7 @@ eden_gfx_draw_line(
     f32_t thickness,
     rgba_t colors) 
 { 
-  // NOTE(Momo): Min.Y needs to be lower than Max.y
+  // @note: Min.Y needs to be lower than Max.y
   
   if (p0.y > p1.y) {
     swap(p0.x, p1.x);
@@ -1338,7 +1338,7 @@ eden_gfx_draw_filled_circle(eden_gfx_t* g,
 static  void
 eden_gfx_draw_circle_outline(eden_gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
 {
-  // NOTE(Momo): Essentially a bunch of lines
+  // @note: Essentially a bunch of lines
   // We can't really have a surface with less than 3 lines
   if (line_count < 3) {
     assert(line_count >= 3);
@@ -1431,7 +1431,7 @@ eden_gfx_opengl_push_triangle(
 {
   eden_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
 
-  // TODO: Take in an array of 3 colors
+  // @todo: Take in an array of 3 colors
 #if 1 
   rgba_t color_per_vertex[] = {
     color, 
@@ -1452,7 +1452,7 @@ eden_gfx_opengl_push_triangle(
       sizeof(color_per_vertex), 
       &color_per_vertex);
 
-  // NOTE(Momo): m44f_transpose; moe is row-major
+  // @note: m44f_transpose; moe is row-major
   m44f_t eden_gfx_opengl_transform = m44f_transpose(transform);
   ogl->glNamedBufferSubData(
       tb->buffers[EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM], 
@@ -1460,7 +1460,7 @@ eden_gfx_opengl_push_triangle(
       sizeof(m44f_t), 
       &eden_gfx_opengl_transform);
 
-  // NOTE(Momo): Update Bookkeeping
+  // @note: Update Bookkeeping
   ++tb->instances_to_draw;
   ++tb->current_instance_index;
 
@@ -1504,7 +1504,7 @@ eden_gfx_opengl_push_sprite(
   }
 
 
-  // TODO: Take in an array of 4 colors
+  // @todo: Take in an array of 4 colors
   rgba_t color_per_vertex[] = {
     color, color, color, color
   };
@@ -1527,14 +1527,14 @@ eden_gfx_opengl_push_sprite(
       sizeof(uv_per_vertex),
       &uv_per_vertex);
 
-  // NOTE(Momo): m44f_transpose; moe is row-major
+  // @note: m44f_transpose; moe is row-major
   m44f_t eden_gfx_opengl_transform = m44f_transpose(transform);
   ogl->glNamedBufferSubData(sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_TRANSFORM], 
       sb->current_instance_index* sizeof(m44f_t), 
       sizeof(m44f_t), 
       &eden_gfx_opengl_transform);
 
-  // NOTE(Momo): Update Bookkeeping
+  // @note: Update Bookkeeping
   ++sb->instances_to_draw;
   ++sb->current_instance_index;
 
@@ -1656,7 +1656,7 @@ eden_gfx_opengl_delete_all_textures(eden_gfx_opengl_t* ogl) {
 
 static void 
 eden_gfx_opengl_add_predefined_textures(eden_gfx_opengl_t* ogl) {
-  // NOTE(Momo): Dummy texture setup
+  // @note: Dummy texture setup
   {
     u8_t pixels[4][4] {
       { 125, 125, 125, 255 },
@@ -1683,7 +1683,7 @@ eden_gfx_opengl_add_predefined_textures(eden_gfx_opengl_t* ogl) {
 
   }
 
-  // NOTE(Momo): Blank texture setup
+  // @note: Blank texture setup
   {
     u8_t pixels[4] = { 255, 255, 255, 255 };
     GLuint blank_texture;
@@ -1731,7 +1731,7 @@ eden_gfx_opengl_init_triangle_batch(eden_gfx_opengl_t* ogl, usz_t max_triangles)
   ogl->max_triangles = max_triangles;
 
   // Triangle model
-  // TODO(Momo): shift this somewhere else
+  // @todo(Momo): shift this somewhere else
   const f32_t triangle_model[] = {
     0.f, 0.f, 0.f,
     0.f, 1.f, 0.f,
@@ -1859,12 +1859,12 @@ eden_gfx_opengl_init_triangle_batch(eden_gfx_opengl_t* ogl, usz_t max_triangles)
       EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
       1); 
 
-  // NOTE(Momo): Setup indices
+  // @note: Setup indices
   ogl->glVertexArrayElementBuffer(tb->model, 
       tb->buffers[EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES]);
 
 
-  // TODO(Momo): //BeginShader/EndShader?
+  // @todo(Momo): //BeginShader/EndShader?
   tb->shader = ogl->glCreateProgram();
   eden_gfx_opengl_attach_shader(ogl, tb->shader,
       GL_VERTEX_SHADER,
@@ -1931,7 +1931,7 @@ eden_gfx_opengl_init_sprite_batch(eden_gfx_opengl_t* ogl, usz_t max_sprites) {
 
   const u32_t vertex_count = array_count(sprite_model)/3;
 
-  // NOTE(Momo): Setup VBO
+  // @note: Setup VBO
   ogl->glCreateBuffers(EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT, sb->buffers);
   ogl->glNamedBufferStorage(sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_MODEL], 
       sizeof(sprite_model), 
@@ -1962,7 +1962,7 @@ eden_gfx_opengl_init_sprite_batch(eden_gfx_opengl_t* ogl, usz_t max_sprites) {
       nullptr, 
       GL_DYNAMIC_STORAGE_BIT);
 
-  // NOTE(Momo): Setup VAO
+  // @note: Setup VAO
   ogl->glCreateVertexArrays(1, &sb->model);
   ogl->glVertexArrayVertexBuffer(
       sb->model, 
@@ -1991,7 +1991,7 @@ eden_gfx_opengl_init_sprite_batch(eden_gfx_opengl_t* ogl, usz_t max_sprites) {
       0, 
       sizeof(m44f_t));
 
-  // NOTE(Momo): Setup Attributes
+  // @note: Setup Attributes
   // aModelVtx
   ogl->glEnableVertexArrayAttrib(sb->model, EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
   ogl->glVertexArrayAttribFormat(sb->model, 
@@ -2054,7 +2054,7 @@ eden_gfx_opengl_init_sprite_batch(eden_gfx_opengl_t* ogl, usz_t max_sprites) {
 
 
   // aTransform
-  // NOTE(momo): this actually has nothing to do with vertex count.
+  // @note: this actually has nothing to do with vertex count.
   for (u32_t cols = 0; cols < 4; ++cols) {
 
     u32_t attrib_type = EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1 + cols;
@@ -2079,11 +2079,11 @@ eden_gfx_opengl_init_sprite_batch(eden_gfx_opengl_t* ogl, usz_t max_sprites) {
       1); 
 
 
-  // NOTE(Momo): Setup indices
+  // @note: Setup indices
   ogl->glVertexArrayElementBuffer(sb->model, 
       sb->buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_INDICES]);
 
-  // NOTE(Momo): Setup shader Program
+  // @note: Setup shader Program
   sb->shader = ogl->glCreateProgram();
   eden_gfx_opengl_attach_shader(ogl,
       sb->shader, 
@@ -2201,7 +2201,7 @@ eden_gfx_opengl_set_blend_mode(eden_gfx_opengl_t* ogl, eden_gfx_blend_type_t src
       ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     } break;
     case EDEN_GFX_BLEND_TYPE_TEST: {
-      // TODO
+      // @todo
     } break;
     default: {}
   }
@@ -2212,7 +2212,7 @@ static void
 eden_gfx_opengl_process_texture_queue(eden_gfx_t* gfx) {
   auto* ogl = (eden_gfx_opengl_t*)gfx->platform_data;
 
-  // NOTE(Momo): In this algorithm of processing the texture queue,
+  // @note: In this algorithm of processing the texture queue,
   // it is entirely possible that if the first payload in the queue
   // is loading forever, the rest of the payloads will never be processed.
   // This is fine and intentional. A payload should never be loading forever.
@@ -2306,13 +2306,13 @@ eden_gfx_opengl_end_frame(eden_gfx_t* gfx) {
         auto* data = (eden_gfx_command_view_t*)entry->data;
 
         f32_t depth = (f32_t)(ogl->current_layer + 1);
-        // TODO: Avoid computation of matrices
+
         m44f_t p = m44f_orthographic(data->min_x, data->max_x,
             data->min_y, data->max_y, 
             0.f, depth);
         m44f_t v = m44f_translation(-data->pos_x, -data->pos_y);
 
-        // TODO: Do we share shaders? Or just have a 'view' shader?
+        // @todo: Do we share shaders? Or just have a 'view' shader?
         m44f_t result = m44f_transpose(p*v);
         {
           eden_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
@@ -3242,7 +3242,7 @@ eden_audio_mixer_stop(
 
 //
 // This is for audio mixer to update as if it's 16-bit channel
-// TODO: we should update differently depending on channel.
+// @todo: we should update differently depending on channel.
 //
 static void
 eden_audio_mixer_update(eden_t* eden)

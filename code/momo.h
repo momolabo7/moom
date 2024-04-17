@@ -103,7 +103,7 @@
 //
 // CPU architecture contexts
 //
-// NOTE(Momo): For ARM, there are probably different versions
+// @note: For ARM, there are probably different versions
 //
 #if COMPILER_MSVC
 # if defined(_M_X86)
@@ -359,7 +359,7 @@ struct arena_calc_t {
 //
 // MARK:(Garena) 
 //
-// NOTES
+// @noteS
 //   Header is always 16 bytes and aligned to 16 bytes.
 //
 //   This helps in getting back the header address whenever
@@ -558,7 +558,7 @@ enum clex_token_type_t {
   CLEX_TOKEN_TYPE_EOF
 };
 
-// TODO: Change to str_t?
+// @todo: Change to str_t?
 struct clex_token_t {
   clex_token_type_t type;
 
@@ -713,7 +713,7 @@ static json_object_t* json_get_object(json_value_t* val);
 #define stringify(s) stringify_(s)
 #define glue_(a,b) a##b
 #define glue(a,b) glue_(a,b)
-// NOTE(Momo): We need this do/while  
+// @note: We need this do/while  
 // macro to cater for if/else statements
 // that looks like this:
 // >> if (...) 
@@ -742,9 +742,17 @@ static json_object_t* json_get_object(json_value_t* val);
 #define clamp_of(x,b,t) (max_of(min_of(x,t),b))
 #define swap(l,r) { auto tmp = (l); (l) = (r); (r) = tmp; } 
 
-#define for_arr(id, arr) for(umi_t id = 0, cnt = array_count(arr); (id) < (cnt); ++id)
+#define for_arr(id, arr) \
+  for(umi_t id = 0; \
+      (id) < array_count(arr); \
+      ++id)
+
 #define for_cnt(id, cnt) for(decltype(cnt) id = 0; id < (cnt); ++id)
 #define for_range(id, beg, end) for(decltype(beg) id = (beg); id <= (end); ++id)
+#define for_arr_reverse(id, arr) \
+  for(umi_t glue(itr,__LINE__) = 0, id = array_count(arr)-1; \
+      glue(itr,__LINE__) < array_count(arr); \
+      ++(glue(itr,__LINE__)), id = array_count(arr)-1-glue(itr,__LINE__))
 
 template<typename F> 
 struct _defer_scope_guard {
@@ -1064,7 +1072,7 @@ static m44f_t operator*(m44f_t lhs, m44f_t rhs);
 //   usable and concrete value, say, [0 - 255], they would just need to 
 //   multiply the values by 255 and go from there.
 //
-// Todo:
+// @todo:
 // - HSV support?
 // 
 
@@ -1138,6 +1146,7 @@ static b32_t  str_to_f32(str_t s, f32_t* out);
 static b32_t  str_to_s32(str_t s, s32_t* out);
 static b32_t  str_range_to(u32_t* out);
 
+// @todo: the ##LINE might be fake!
 #define stb8_make(name, cap) \
   u8_t temp_buffer_##__LINE__[cap] = {0}; \
 stb8_t name_; \
@@ -1175,7 +1184,7 @@ static void     stream_flush_bits(stream_t* s);
 static u32_t    stream_consume_bits(stream_t* s, u32_t amount);
 static void     stream_write_block(stream_t* s, void* src, usz_t size);
 
-// NOTE(momo): if size 
+// @note(momo): if size 
 static str_t    stream_consume_line(stream_t* s);
 
 //
@@ -1494,7 +1503,7 @@ file_open(
     const char* filename,
     file_access_t access_type) 
 {
-  // NOTE(momo): O_RDONLY is 0
+  // @note(momo): O_RDONLY is 0
   int flags = 0;
   switch (access_type) {
     case FILE_ACCESS_READ:
@@ -1542,13 +1551,13 @@ file_write(file_t* fp, const void* src, usz_t size, usz_t offset)
 
 static u64_t
 file_get_size(file_t* fp) {
-  // NOTE(momo): We don't have to 'reset' the seek position 
+  // @note(momo): We don't have to 'reset' the seek position 
   // because of how our read/write API works...at least for now
   // until we decide to store seek positions.
   return lseek(fp->handle, 0, SEEK_END);
 }
 
-// NOTE(momo): Apparently linux already handles committing and reserving 
+// @note(momo): Apparently linux already handles committing and reserving 
 // for the user already so there is no need to commit/reserve?
 static str_t
 memory_reserve(usz_t size) {
@@ -1649,7 +1658,7 @@ file_write_from_str(const char* filename, str_t buffer) {
 // it into any SERIOUS projects. They are meant to be dumb
 // but convienient for trying stuff out.
 //
-// TODO: Make this serious
+// @todo: Make this serious
 
 static str_t 
 foolish_allocate_memory(usz_t size) {
@@ -1904,7 +1913,7 @@ _json_next_token(json_t* t) {
       if (u8_is_digit(t->text.e[t->at])) {
         while(true)
         {
-          // TODO check for double dots?
+          // @todo check for double dots?
           if (t->text.e[t->at] == '.') {
           }
           else if (!u8_is_digit(t->text.e[t->at])) {
@@ -1924,7 +1933,7 @@ _json_next_token(json_t* t) {
         ++t->at; // keeps the negative sign
         while(true)
         {
-          // TODO check for double dots?
+          // @todo check for double dots?
           if (t->text.e[t->at] == '.') {
           }
           else if (!u8_is_digit(t->text.e[t->at])) {
@@ -2769,7 +2778,7 @@ clex_next_token(clex_tokenizer_t* t) {
 }
 
 static f32_t _F32_INFINITY() {
-  // NOTE(Momo): Use 'type pruning'
+  // @note: Use 'type pruning'
   // Infinity is when bits 1-8 are on
   union { f32_t f; u32_t u; } ret = {};
   ret.u = 0x7f800000;
@@ -2780,7 +2789,7 @@ static f32_t _F32_INFINITY() {
 
 static f32_t 
 _F32_NEG_INFINITY() {
-  // NOTE(Momo): Use 'type pruning'
+  // @note: Use 'type pruning'
   // Infinity is when bits 1-8 are on
   // Negative is when bit 0 is on
   union { f32_t f; u32_t u; } ret = {};
@@ -2791,7 +2800,7 @@ _F32_NEG_INFINITY() {
 
 static f32_t
 _F32_NAN() {
-  // NOTE(Momo): Use 'type pruning'
+  // @note: Use 'type pruning'
   // NAN is when bits 1-11 and 1 other bit is on
   // In this case, we will just turn on all bits
   union { f32_t f; u32_t u; } ret = {};
@@ -2801,7 +2810,7 @@ _F32_NAN() {
 
 static f64_t
 _F64_NAN() {
-  // NOTE(Momo): Use 'type pruning'
+  // @note: Use 'type pruning'
   // NAN is when bits 1-11 and 1 other bit is on
   // In this case, we will just turn on all bits
   union { f64_t f; u64_t u; } ret = {};
@@ -2812,7 +2821,7 @@ _F64_NAN() {
 
 static f64_t 
 _F64_INFINITY() {
-  // NOTE(Momo): Use 'type pruning'
+  // @note: Use 'type pruning'
   // Infinity is when bits 1-11 are on
   union { f64_t f; u64_t u; } ret = {};
   ret.u = 0x7FF0000000000000;
@@ -2823,7 +2832,7 @@ _F64_INFINITY() {
 
 static f64_t 
 _F64_NEG_INFINITY() {
-  // NOTE(Momo): Use 'type pruning'
+  // @note: Use 'type pruning'
   // Infinity is when bits 1-11 are on
   // Negative is when bit 0 is on
   union { f64_t f; u64_t u; } ret = {};
@@ -4148,7 +4157,7 @@ f64_pow(f64_t b, f64_t e){
 }
 
 
-// TODO(momo): IEEE version of these?
+// @todo: IEEE version of these?
 static f32_t f32_floor(f32_t value) {
   return floorf(value);
 
@@ -4569,7 +4578,7 @@ f64_ease_inout_elastic(f64_t t)  {
 
 
 
-// NOTE(Momo): These require power function. 
+// @note: These require power function. 
 static f64_t 
 f64_ease_in_bounce(f64_t t)  {
   return f64_pow(2.0, 6.0 * (t - 1.0)) * f64_abs(f64_sin(t * PI_64 * 3.5));
@@ -4983,7 +4992,7 @@ m44f_translation(f32_t x, f32_t y, f32_t z) {
 
 static m44f_t 
 m44f_rotation_x(f32_t rad) {
-  // NOTE(Momo): 
+  // @note: 
   // 1  0  0  0
   // 0  c -s  0
   // 0  s  c  0
@@ -5002,7 +5011,7 @@ m44f_rotation_x(f32_t rad) {
 }
 static m44f_t m44f_rotation_y(f32_t rad) {
 
-  // NOTE(Momo): 
+  // @note: 
   //  c  0  s  0
   //  0  1  0  0
   // -s  0  c  0
@@ -5022,7 +5031,7 @@ static m44f_t m44f_rotation_y(f32_t rad) {
 
 static m44f_t 
 m44f_rotation_z(f32_t rad) {
-  // NOTE(Momo): 
+  // @note: 
   //  c -s  0  0
   //  s  c  0  0
   //  0  0  1  0
@@ -5151,7 +5160,7 @@ rbg_to_hsl(rgb_t c) {
     return hsl_set(0.f, 0.f, l);
   }
 
-  // NOTE: we can actually compare direct float with ==
+  // @note: we can actually compare direct float with ==
   // because max is directly assigned one of these values
   float h = 0.f;
   if (max == c.r) {
@@ -5271,7 +5280,7 @@ _quicksort_generic_partition(
   return eventual_pivot_idx;
 }
 
-// NOTE(Momo): This is done inplace
+// @note: This is done inplace
 static void
 _quicksort_generic_range(
   void* a, 
@@ -5330,7 +5339,7 @@ _quicksort_partition(sort_entry_t* a,
   return eventual_pivot_idx;
 }
 
-// NOTE(Momo): This is done inplace
+// @note: This is done inplace
 static void
 _quicksort_range(sort_entry_t* a, 
                  u32_t start, 
@@ -5418,7 +5427,7 @@ _bonk_tri2_pt2_dot_product(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
 
 static b32_t
 bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
-  // NOTE(momo): this is the fastest of the 3 apparently
+  // @note(momo): this is the fastest of the 3 apparently
   return _bonk_tri2_pt2_barycentric(tp0, tp1, tp2, pt);
 }
 
@@ -5939,7 +5948,7 @@ stb8_push_f32(stb8_t* b, f32_t value, u32_t precision) {
     value = -value;
   }
 
-  // NOTE(Momo): won't work for values that u32_t can't contain
+  // @note: won't work for values that u32_t can't contain
   u32_t integer_part = (u32_t)value;
   stb8_push_u32(b, integer_part);
   stb8_push_c8(b, '.');
@@ -5960,7 +5969,7 @@ stb8_push_f64(stb8_t* b, f64_t value, u32_t precision) {
     stb8_push_c8(b, '-');	
     value = -value;
   }
-  // NOTE(Momo): won't work for values that u32_t can't contain
+  // @note: won't work for values that u32_t can't contain
   u32_t integer_part = (u32_t)value;
   stb8_push_u32(b, integer_part);
   stb8_push_c8(b, '.');
@@ -6135,7 +6144,7 @@ stream_consume_line(stream_t* s) {
 
   str_t ret = str_set(s->contents.e + s->pos, 0);
 
-  // TODO: this is terribly coded. Refactor?
+  // @todo: this is terribly coded. Refactor?
   while(!stream_is_eos(s)) {
     u8_t current_value = dref(stream_consume_block(s, 1));
     if (current_value == 0) {
@@ -6252,7 +6261,7 @@ wav_read(wav_t* w, str_t contents)
   make(stream_t, stream);
   stream_init(stream, contents);
 
-  // NOTE(Momo): Load Riff Chunk
+  // @note: Load Riff Chunk
   wav_riff_chunk_t* riff_chunk = stream_consume(wav_riff_chunk_t, stream);
   if (!riff_chunk) {
     return 0;
@@ -6264,7 +6273,7 @@ wav_read(wav_t* w, str_t contents)
     return 0;
   }
 
-  // NOTE(Momo): Load fmt Chunk
+  // @note: Load fmt Chunk
   auto* fmt_chunk = stream_consume(wav_fmt_chunk_t, stream);
   if (!fmt_chunk) {
     return 0;
@@ -6315,7 +6324,7 @@ wav_read(wav_t* w, str_t contents)
   }
 
 
-  // NOTE(momo): we don't endian swap anymore because we already did above
+  // @note(momo): we don't endian swap anymore because we already did above
   // data_chunk->id = u32_endian_swap(data_chunk->id);
   if (data_chunk->id != data_id_signature) {
     return 0;
@@ -6464,7 +6473,7 @@ ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t
 static s32_t
 _ttf_get_kern_advance(const ttf_t* ttf, s32_t g1, s32_t g2) 
 {
-  // NOTE(Momo): We only care about format 0, which Windows cares
+  // @note: We only care about format 0, which Windows cares
   // For now, OSX has too many things to handle for this table 
   // and I am not going to care because I mostly develop in Windows.
   //
@@ -6723,7 +6732,7 @@ _ttf_tessellate_bezier(v2f_t* vertices,
           path_count = 0;
         }
 
-        // NOTE(Momo): For now, we assume that the first point is 
+        // @note: For now, we assume that the first point is 
         // always on curve, which is not always the case.
         v2f_t anchor_pt = {};
         u32_t j = 0;
@@ -6800,7 +6809,7 @@ _ttf_tessellate_bezier(v2f_t* vertices,
 
           // Find the first end code that is greater than or equal to the codepoint
           //
-          // NOTE(Momo): To optimize this, we could do a binary search based
+          // @note: To optimize this, we could do a binary search based
           // on the data given but there are some documentations that seem
           // to suggest against this...
           // 
@@ -6948,7 +6957,7 @@ static b32_t
 
 
           // We only support unicode encoding...
-          // NOTE(Momo): They say mac is discouraged, so we won't care about it.
+          // @note: They say mac is discouraged, so we won't care about it.
           u32_t pf_id = _ttf_read_u16(ttf->data + subtable + 0);
           switch(pf_id) {
             case _TTF_CMAP_PF_ID_MICROSOFT: {
@@ -7065,7 +7074,7 @@ static b32_t
             edge.p1.y = height - ((v1.y * scale) - y0);
 
             // Check if edge's points need to be flipped.
-            // NOTE(Momo): It's easier for the rasterization algorithm to have the edges'
+            // @note: It's easier for the rasterization algorithm to have the edges'
             // p0 be on top of p1. If we flip, we will indicate it within the edge.
             if (edge.p0.y > edge.p1.y) {
               swap(edge.p0, edge.p1);
@@ -7097,7 +7106,7 @@ static b32_t
         return nullptr;
       }
 
-      // NOTE(Momo): Currently, I'm lazy, so I'll just keep 
+      // @note: Currently, I'm lazy, so I'll just keep 
       // clearing and refilling the active_edges list per scan line
       for(u32_t y = 0; y <= height; ++y) {
         u32_t act_edge_count = 0; 
@@ -7357,7 +7366,7 @@ _png_huffman_decode(stream_t* src_stream, _png_huffman_t huffman) {
   return -1;
 }
 
-// NOTE(Momo): 
+// @note: 
 // https://datatracker.ietf.org/doc/html/rfc1951
 // Section 3.2.2
 static void
@@ -7444,7 +7453,7 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
         if ((u16_t)LEN != ~((u16_t)(NLEN))) {
           return false; 
         }
-        // TODO(Momo): support this type?
+        // @todo(Momo): support this type?
         return false;
       } break;
       case 0b01: 
@@ -7514,7 +7523,7 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
 
           u16_t* lit_dist_codes = arena_push_arr(u16_t, arena, HDIST + HLIT);
 
-          // NOTE(Momo): Decode
+          // @note: Decode
           // Loop until end of block code recognize
           for(u32_t i = 0; i < (HDIST + HLIT);) {
 
@@ -7572,7 +7581,7 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
         static int pass =0;
         ++pass;
 
-        // NOTE(Momo): Actual decoding
+        // @note: Actual decoding
         for (;;) 
         {
 
@@ -7582,12 +7591,12 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
           }
           //_png_log("sym: %d\n", sym);
 
-          // NOTE(Momo): Normal case
+          // @note: Normal case
           if (sym <= 255) { 
             u8_t byte_to_write = (u8_t)(sym & 0xFF); 
             stream_write(dest_stream, byte_to_write);
           }
-            // NOTE(Momo): Extra code case
+            // @note: Extra code case
           else if (sym >= 257) {
 
             sym -= 257;
@@ -7630,7 +7639,7 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
 
 static u32_t 
 _png_get_channels_from_colour_type(u32_t colour_type) {
-  // NOTE(Momo): Determine the channels
+  // @note: Determine the channels
   // colour_type 1 = Pallete used
   // colour_type 2 = Colour used 
   // colour_type 4 = alpha used
@@ -7685,7 +7694,7 @@ _png_is_signature_valid(u8_t* comparee) {
   return true;
 }
 
-//~ NOTE(Momo): Filtering
+//~ @note: Filtering
 static b32_t
 _png_filter_none(_png_context_t* c) {
   u32_t bpl = c->image_width * _PNG_CHANNELS; // bytes per line
@@ -7741,7 +7750,7 @@ _png_filter_average(_png_context_t* c) {
     u8_t left = (i < bpp) ? 0 :  c->image_stream.contents.e[current_index - bpp]; // Raw(x-bpp)
     u8_t top = (current_index < bpl) ? 0 : c->image_stream.contents.e[current_index - bpl]; // Prior(x)
 
-    // NOTE(Momo): Formula uses floor((left+top)/2). 
+    // @note: Formula uses floor((left+top)/2). 
     // Integer Truncation should do the job!
     u8_t pixel_byte_to_write = (pixel_byte + (left + top)/2) % 256;  
 
@@ -7762,7 +7771,7 @@ _png_filter_paeth(_png_context_t* cx) {
     if (pixel_byte_p == nullptr) return false;
     u8_t pixel_byte = (*pixel_byte_p); // Paeth(x)
 
-    // NOTE(Momo): PaethPredictor
+    // @note: PaethPredictor
     // https://www.w3.org/TR/png_t-Filters.html
     u8_t paeth_predictor; 
     {
@@ -7809,7 +7818,7 @@ _png_filter_up(_png_context_t* c) {
     }
     u8_t pixel_byte = (*pixel_byte_p); // Up(x)
 
-    // NOTE(Momo): Ignore first scanline
+    // @note: Ignore first scanline
     if (c->image_stream.pos < bpl) {
       stream_write(&c->image_stream, pixel_byte);
     }
@@ -7831,13 +7840,13 @@ _png_filter(_png_context_t* c) {
 
   stream_reset(&c->unfiltered_image_stream);
 
-  // NOTE(Momo): Filter
+  // @note: Filter
   // data always starts with 1 byte indicating the type of filter
   // followed by the rest of the chunk.
   while(!stream_is_eos(&c->unfiltered_image_stream)) {
     u8_t* filter_type_p = stream_consume(u8_t, &c->unfiltered_image_stream);
     u8_t filter_type = (*filter_type_p);
-    // NOTE(Momo): https://www.w3.org/TR/png_t-Filters.html
+    // @note: https://www.w3.org/TR/png_t-Filters.html
     switch(filter_type) {
       case 0: { // None
         if (!_png_filter_none(c)) return false;
@@ -7882,11 +7891,11 @@ _png_decompress_zlib(_png_context_t* c, stream_t* zlib_stream) {
 }
 
 
-// NOTE(momo): For the code here, we are going to assume that 
+// @note(momo): For the code here, we are going to assume that 
 // the PNG file we are reading is correct. i.e. we don't emphasize on 
 // checking correctness of the PNG outside of the most basic of checks (e.g. sig)
 //
-// TODO(momo): We should have a png_rasterize_into_buffer that directly rasterizes
+// @todo(momo): We should have a png_rasterize_into_buffer that directly rasterizes
 // into a buffer (or a img struct?)
 static u32_t* 
 png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena) 
@@ -7915,7 +7924,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
 
   stream_consume(_png_chunk_t, &ctx.stream);
 
-  // NOTE(Momo): This is really lousy method.
+  // @note: This is really lousy method.
   // We will go through all the IDATs and push a giant contiguous 
   // chunk of memory to DEFLATE.
   usz_t zlib_size = 0;
@@ -7969,7 +7978,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
 
 
 }
-// NOTE(Momo): Really dumb way to write.
+// @note: Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
 static str_t
 png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
@@ -8008,7 +8017,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
   stream_write_block(stream, (void*)signature, sizeof(signature));
 
 
-  // NOTE(Momo): write IHDR
+  // @note: write IHDR
   {
     u8_t* crc_start = nullptr;
 
@@ -8037,8 +8046,8 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
 
   }
 
-  // NOTE(Momo): write IDAT
-  // TODO(Momo): Adler32
+  // @note: write IDAT
+  // @todo(Momo): Adler32
   {
 
     u32_t chunk_overhead = sizeof(u16_t)*2 + sizeof(u8_t)*1;
@@ -8052,7 +8061,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
     stream_write(stream, header);
     crc_start = stream->contents.e + stream->pos - sizeof(header.type_U32);
 
-    // NOTE(Momo): Hardcoded IDAT chunk header header that fits our use-case
+    // @note: Hardcoded IDAT chunk header header that fits our use-case
     //
     // CM = 8
     // CINFO = any number < 7? 1?
@@ -8065,7 +8074,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
     stream_write(stream, IDAT);
 
 
-    // NOTE(Momo): Deflate chunk header
+    // @note: Deflate chunk header
     //
     // BFINAL = 1 (1 bit); // indicates if it's the final block
     // BTYPE = 0 (2 bits); // indicates no compression
@@ -8085,7 +8094,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
       stream_write(stream, LEN);
       stream_write(stream, NLEN);
 
-      // NOTE(Momo): Output data here
+      // @note: Output data here
       // We have to do it row by row to add the filter byte at the front
       for (u32_t line_index = 0; line_index < lines_to_write; ++line_index) 
       {
@@ -8111,7 +8120,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
     stream_write(stream, footer);
   }
 
-  // NOTE(Momo): stream_write IEND
+  // @note: stream_write IEND
   {
     u8_t* crc_start = nullptr;
 
@@ -8155,7 +8164,7 @@ png_read(png_t* png, str_t png_contents)
 
   _png_ihdr_t* IHDR = stream_consume(_png_ihdr_t, stream);
 
-  // NOTE(Momo): Width and height is in Big Endian
+  // @note: Width and height is in Big Endian
   // We assume that we are currently in a Little Endian system
   u32_t width = u32_endian_swap(IHDR->width);
   u32_t height = u32_endian_swap(IHDR->height);
@@ -8381,8 +8390,7 @@ garena_push_size(garena_t* ga, usz_t size) {
   usz_t total_required_size = align_up_pow2(size + sizeof(garena_header_t), 16) ;
   usz_t total_actual_size = total_required_size;
 
-  // TODO: header must be aligned
-  // Right now it's not.
+  // @todo: header must be aligned. Right now it's not.
 
   // First Fit Strategy
   garena_free_block_t* itr = ga->free_list;
@@ -8448,7 +8456,7 @@ garena_free(garena_t* ga, void* block) {
 
   u8_t* block_u8 = (u8_t*)block;
 
-  // NOTE(momo): Header is always 16 bytes behind block.
+  // @note(momo): Header is always 16 bytes behind block.
   auto* header = (garena_header_t*)(block_u8 - sizeof(garena_header_t));
   umi_t block_end = ptr_to_umi((u8_t*)header + header->size);
 
@@ -8473,7 +8481,7 @@ garena_free(garena_t* ga, void* block) {
   if (prev == nullptr) {
     prev = (garena_free_block_t*)(header);
 
-    // NOTE(momo): this is a bit dangerous
+    // @note(momo): this is a bit dangerous
     // since prev is overlapping header BUT
     // it should be okay.
     prev->size = header->size; 
@@ -8492,7 +8500,7 @@ garena_free(garena_t* ga, void* block) {
   else {
     auto* temp = (garena_free_block_t*)(header);
 
-    // NOTE(momo): this is a bit dangerous
+    // @note(momo): this is a bit dangerous
     // since prev is over590ping header BUT
     // it should be okay.
     temp->size = header->size;
@@ -8601,13 +8609,13 @@ rp_pack(rp_rect_t* rects,
     u32_t rect_width = rect->w + padding*2;
     u32_t rect_height = rect->h + padding*2;
 
-    // NOTE(Momo): Iterate the empty spaces backwards to find the best fit index
+    // @note: Iterate the empty spaces backwards to find the best fit index
     u32_t chosen_space_index = current_node_count;
     for (u32_t  j = 0; j < chosen_space_index ; ++j ) {
       u32_t index = chosen_space_index - j - 1;
       _rp_node space = nodes[index];
 
-      // NOTE(Momo): Check if the image fits
+      // @note: Check if the image fits
       if (rect_width <= space.w && rect_height <= space.h) {
         chosen_space_index = index;
         break;
@@ -8615,14 +8623,14 @@ rp_pack(rp_rect_t* rects,
     }
 
 
-    // NOTE(Momo): If an empty space that can fit is found, 
+    // @note: If an empty space that can fit is found, 
     // we remove that space and split.
     if(chosen_space_index == current_node_count) { 
       arena_revert(restore_point);
       return false;
     }
 
-    // NOTE(Momo): swap and pop the chosen space
+    // @note: swap and pop the chosen space
     _rp_node chosen_space = nodes[chosen_space_index];
 
     if (current_node_count > 0) {
@@ -8630,7 +8638,7 @@ rp_pack(rp_rect_t* rects,
       --current_node_count;
     }
 
-    // NOTE(Momo): Split if not perfect fit
+    // @note: Split if not perfect fit
     if (chosen_space.w != rect_width && chosen_space.h == rect_height) {
       // Split right
       _rp_node split_space_right;
@@ -8680,7 +8688,7 @@ rp_pack(rp_rect_t* rects,
 
     }
 
-    // NOTE(Momo): Translate the rect
+    // @note: Translate the rect
     rect->x = chosen_space.x + padding;
     rect->y = chosen_space.y + padding;
   }

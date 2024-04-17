@@ -10,7 +10,7 @@
 //   of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
 //   Find the sum of all the multiples of 3 or 5 below 1000.
 //
-// TODO: 
+// @todo: 
 //   Optimize finding multiple of 3
 //   Optimize finding multiples of 5
 //
@@ -612,7 +612,7 @@ euler_q14() {
 // 
 // Question 15
 //
-// NOTE(momo): 
+// @note: 
 //  Feels like a combinatorics question.
 //
 //  Let each direction be represented by a letter:

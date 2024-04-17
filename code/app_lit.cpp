@@ -1,4 +1,4 @@
-// TODO: 
+// @todo: 
 // - Level Design:
 // -- MIX: make it a little harder
 // -- INTERVAL: too hard. I feel liek I get a little lost before I even get to the "2 space" part of the puzzle
@@ -738,7 +738,7 @@ lit_splash_init() {
 
   splash->timer = 3.f;
   splash->scroll_in_timer = LIT_SPLASH_SCROLL_DURATION;
-  eden_audio_mixer_play(g_eden, ASSET_SOUND_BGM, true, 1.0f);
+  eden_audio_mixer_play(g_eden, ASSET_SOUND_BGM, true, 0.5f);
 }
 
 static void
@@ -984,7 +984,7 @@ lit_game_push_edge(lit_game_t* m, f32_t min_x, f32_t min_y, f32_t max_x, f32_t m
   edge->start_pt = v2f_set(min_x, min_y);
   edge->end_pt = v2f_set(max_x, max_y);
 
-  // TODO: can we remove this part?
+  // @todo: can we remove this part?
   v2f_t p0, p1;
   lit_game_calc_ghost_edge_line(edge, &p0, &p1);
   edge->start_pt = p0;
@@ -2323,7 +2323,7 @@ lit_level_9() {
   lit_game_push_light(m, 410.f, 390.f, 0x000088FF, 360.f, 0.f);
 }
 
-// TODO
+// @todo
 static void
 lit_level_10() {
   lit_game_t* m = &g_lit->eden;
@@ -3829,7 +3829,7 @@ eden_update_and_render_sig(eden_update_and_render)
     //console_init(&g_lit->console, &g_lit->debug_arena, 32, 256);
 
     // Initialize assets
-    // TODO: shift this to config? I'm not sure if we care about 
+    // @todo: shift this to config? I'm not sure if we care about 
     // the app caring about the asset's arena though...
     if (!eden_assets_init_from_file(g_eden, LIT_ASSET_FILE, &g_lit->asset_arena))
     {
@@ -3837,7 +3837,7 @@ eden_update_and_render_sig(eden_update_and_render)
     }
 
     // Initialize mixer
-    // TODO: shift this to config? 
+    // @todo: shift this to config? 
     if (!eden_audio_mixer_init(g_eden, EDEN_AUDIO_MIXER_BITRATE_TYPE_S16, 4, &g_lit->mode_arena)) 
     {
       lit_exit();

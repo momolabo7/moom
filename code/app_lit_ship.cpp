@@ -19,7 +19,7 @@
 //   Opengl            - Graphics implementation with OGL
 //   
 
-// NOTE(momo): For now, we enable these flags
+// @note: For now, we enable these flags
 // These macros are in preparation in case we have
 // multiple ways to do audio or graphics
 
@@ -598,7 +598,7 @@ _w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {
 
 
 
-  // TODO: Do we just the the real buffer size and just use that value
+  // @todo: Do we just the the real buffer size and just use that value
   // to initialize our sound buffer size that our eden layer will write to?
 
 
@@ -667,7 +667,7 @@ static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t
 
 static eden_allocate_memory_sig(w32_allocate_memory);
 
-// TODO: we should remove all the asserts tbh
+// @todo: we should remove all the asserts tbh
 static 
 w32_audio_begin_frame_sig(w32_audio_begin_frame) 
 {
@@ -676,7 +676,7 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
   HRESULT hr; 
   
   // Check if device changed
-  // TODO: Do we want to do the event method...?
+  // @todo: Do we want to do the event method...?
   b32_t default_device_changed = false;
   {
     IMMDevice* current_default_device = nullptr;
@@ -769,7 +769,7 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
 		}
 	}
 	else {
-		// NOTE(Momo): if there is no device avaliable,
+		// if there is no device avaliable,
 		// just write to the whole 'dummy' buffer.
 		samples_to_write = wasapi->buffer_size;
 	}
@@ -796,7 +796,7 @@ w32_audio_end_frame_sig(w32_audio_end_frame)
 #if 0
 	if (!wasapi->is_device_ready) return;
 
-  // NOTE(Momo): Kinda assumes 16-bit Sound
+  // @note: Kinda assumes 16-bit Sound
   BYTE* sound_buffer_data;
   HRESULT hr = IAudioRenderClient_GetBuffer(wasapi->render_client, 
                                             (UINT32)eden_audio->sample_count, 
@@ -870,7 +870,7 @@ w32_audio_load_sig(w32_audio_load)
   //
   // Create the device enumerator.
   //
-  // NOTE(momo): The device enumerator is just a thing to enumerates 
+  // @note: The device enumerator is just a thing to enumerates 
   // through a list of devices. Note that this includes ALL devices (not just audio!)
   //
   hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), 
@@ -880,7 +880,7 @@ w32_audio_load_sig(w32_audio_load)
   if (!SUCCEEDED(hr)) return false;
   
 
-  // TODO: We need to figure out how can possibly cause this
+  // @todo: We need to figure out how can possibly cause this
   // If there are NO audio devices at ALL, does this even fail?
   if (!_w32_wasapi_init_default_audio_output_device(wasapi)) {
     return false;
@@ -892,7 +892,7 @@ w32_audio_load_sig(w32_audio_load)
 
 
   //
-  // TODO: Enable Refill event here?
+  // @todo: Enable Refill event here?
   //
 #if 0 
   HANDLE hRefillEvent = CreateEventEx(NULL, NULL, 0, EVENT_MODIFY_STATE | SYNCHRONIZE);
@@ -973,7 +973,7 @@ w32_calc_render_region(u32_t window_w,
 	f32_t optimal_window_h = (f32_t)window_w * 1.f/aspect_ratio;
 	
 	if (optimal_window_w > (f32_t)window_w) {
-		// NOTE(Momo): width has priority - top and bottom bars
+		// @note: width has priority - top and bottom bars
 		ret.left = 0;
 		ret.right = window_w;
 		
@@ -983,7 +983,7 @@ w32_calc_render_region(u32_t window_w,
 		ret.top = ret.bottom + (u32_t)optimal_window_h;
 	}
 	else {
-		// NOTE(Momo): height has priority - left and right bars
+		// @note: height has priority - left and right bars
 		ret.bottom = 0;
 		ret.top = window_h;
 		
@@ -1004,12 +1004,6 @@ w32_get_performance_counter(void) {
   return result;
 }
 
-static u64_t
-w32_get_performance_counter_u64(void) {
-  LARGE_INTEGER counter = w32_get_performance_counter();
-  u64_t ret = (u64_t)counter.QuadPart;
-  return ret;
-}
 static f32_t
 w32_get_secs_elapsed(LARGE_INTEGER start,
                      LARGE_INTEGER end,
@@ -1038,12 +1032,12 @@ w32_get_file_last_write_time(const char* filename) {
   return w32_file_time_to_large_integer(last_write_time); 
 }
 
-// NOTE(Momo): This function is accessed by multiple threads!
+// @note: This function is accessed by multiple threads!
 static b32_t
 w32_do_next_work_entry(w32_work_queue_t* wq) {
   b32_t should_sleep = false;
   
-  // NOTE(Momo): Generally, we want to do: 
+  // @note: Generally, we want to do: 
   // 1. Get index of next work to do
   // 2. Update index of next work to do
   // 3. Do work
@@ -1078,7 +1072,7 @@ w32_do_next_work_entry(w32_work_queue_t* wq) {
   return should_sleep;
 }
 
-// NOTE(Momo): This makes the main thread
+// @note: This makes the main thread
 // participate in the work queue.
 //
 // In some sense, calling this will simulate 'async' 
@@ -1134,7 +1128,7 @@ w32_init_work_queue(w32_work_queue_t* wq, u32_t thread_count) {
   return true;
 }
 
-// NOTE(Momo): This is not very thread safe. Other threads shouldn't call this.
+// @note: This is not very thread safe. Other threads shouldn't call this.
 static void
 w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data) {
   u32_t old_next_entry_to_write = wq->next_entry_to_write;
@@ -1206,7 +1200,7 @@ w32_unload_code(w32_loaded_code_t* code) {
     code->dll = 0;
   }
   code->is_valid = false;
-  zero_range(code->functions, code->function_count);
+  memory_zero_range(code->functions, code->function_count);
 }
 
 static void
@@ -1280,7 +1274,7 @@ w32_vkeys_to_eden_button_code(u32_t code) {
   }
 
   // F1 to F12
-  // NOTE(momo): there are actually more F-keys??
+  // @note: there are actually more F-keys??
   else if (code >= 0x70 && code <= 0x7B) {
     return eden_button_code_t(EDEN_BUTTON_CODE_F1 + code - 0x70);
   }
@@ -1293,7 +1287,6 @@ w32_vkeys_to_eden_button_code(u32_t code) {
   return EDEN_BUTTON_CODE_UNKNOWN;
 }
 
-// TODO: change 'rr' to 'render_region'
 static void
 w32_update_input(eden_input_t* input, HWND window, f32_t delta_time, RECT rr) 
 {
@@ -1388,7 +1381,7 @@ w32_update_input(eden_input_t* input, HWND window, f32_t delta_time, RECT rr)
   input->mouse_pos.y = render_mouse_pos_y * eden_to_render_h;
   
   
-  // NOTE(Momo): Flip y
+  // @note: Flip y
   //eden->design_mouse_pos.y = f32_lerp(MOMO_HEIGHT, 0.f, eden->design_mouse_pos.y/MOMO_HEIGHT);	
   if (w32_state.is_cursor_locked) {
     SetCursorPos(
@@ -1612,7 +1605,7 @@ eden_complete_all_tasks_sig(w32_complete_all_tasks)
 static 
 eden_allocate_memory_sig(w32_allocate_memory)
 {
-  // NOTE(momo): We will allocate memory with a 'header'
+  // @note: We will allocate memory with a 'header'
   // that contains w32_memory_t. 
   // -------------------------------------
   // | w32_memory_t | align | size       |
@@ -1784,7 +1777,7 @@ WinMain(HINSTANCE instance,
     
     RECT window_rect = {0};
     {
-      // NOTE(Momo): Monitor dimensions
+      // Monitor dimensions
       HMONITOR monitor = MonitorFromWindow(0, MONITOR_DEFAULTTONEAREST);
       MONITORINFOEX monitor_info;
       monitor_info.cbSize = sizeof(monitor_info);
@@ -1879,7 +1872,7 @@ WinMain(HINSTANCE instance,
   //
   // Init debug stuff
   //
-  eden_profiler_init(&eden->profiler, w32_get_performance_counter_u64, platform_arena, config.max_profiler_entries, config.max_profiler_snapshots);
+  eden_profiler_init(&eden->profiler, platform_arena, config.max_profiler_entries, config.max_profiler_snapshots);
   eden_inspector_init(&eden->inspector, platform_arena, config.max_inspector_entries);
 
 
@@ -1927,6 +1920,9 @@ WinMain(HINSTANCE instance,
 
 
     // End frame
+    if (config.audio_enabled) 
+      eden_audio_mixer_update(eden);
+    
     eden_profiler_update_entries(&eden->profiler);
     eden_inspector_clear(&eden->inspector);
     w32_gfx_end_frame(&eden->gfx);
@@ -1941,7 +1937,7 @@ WinMain(HINSTANCE instance,
     // 2. If the time elapsed is greater than the target time elapsed,
     //    sleep/spin-lock until then.    
     //
-    // NOTE: We might want to think about VSYNC or getting VBLANK
+    // @note: We might want to think about VSYNC or getting VBLANK
     // value so that we can figure out how long we *should* sleep
     f32_t secs_elapsed_after_update = 
       w32_get_secs_elapsed(last_frame_count,

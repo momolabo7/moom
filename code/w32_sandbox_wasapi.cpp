@@ -147,7 +147,7 @@ wasapi__run(void* passthrough) {
       UINT32 numFramesPadding = 0;
       hr = audio_client->GetCurrentPadding(&numFramesPadding);
 
-      // NOTE(nick): check for device change
+      // @note(nick): check for device change
       if (hr == AUDCLNT_E_DEVICE_INVALIDATED || default_device_changed)
       {
         hr = audio_client->Stop();
@@ -185,7 +185,7 @@ wasapi__run(void* passthrough) {
         continue;
       }
 
-      // NOTE(nick): output sound
+      // @note(nick): output sound
       UINT32 SampleCount = bufferFrameCount - numFramesPadding;
       if (SampleCount > 0)
       {

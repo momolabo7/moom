@@ -1,5 +1,5 @@
 // 
-// TODO: parse negative numbers correctly
+// @todo: parse negative numbers correctly
 //
 
 #include <stdio.h>
@@ -84,7 +84,7 @@ meta_print_if_function_is_next(clex_tokenizer_t t) {
       end_token = clex_next_token(&t);
     } while(end_token.type != CLEX_TOKEN_TYPE_CLOSE_PAREN);
 
-    // TODO: Check for EOF
+    // @todo: Check for EOF
 
     clex_token_t final_token = clex_next_token(&t);
     

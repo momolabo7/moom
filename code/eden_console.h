@@ -14,7 +14,7 @@ struct console_t {
   u32_t command_count;
   console_command_t* commands;
   
-  stb8_t info_lines[9]; // TODO: this should be allocated as well
+  stb8_t info_lines[9]; // @todo: this should be allocated as well
   stb8_t input_line;
 };
 
@@ -54,7 +54,7 @@ console_add_command(console_t* console, str_t key, void* ctx, void(*func)(void*)
 
 static void
 console_push_info(console_t* console, str_t str) {
-  // NOTE(Momo): There's probably a better to do with via some
+  // @note: There's probably a better to do with via some
   // crazy indexing scheme, but this is debug so we don't care for now
   
   // Copy everything from i + 1 from i

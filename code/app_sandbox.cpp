@@ -24,7 +24,7 @@ eden_get_config_sig(eden_get_config)
   ret.max_textures = 1;
   ret.max_texture_payloads = 1;
   ret.max_sprites = 4096;
-  ret.max_triangles = 1;
+  ret.max_triangles = 1; // TODO: triangles and sprites should allow for 0
 
   ret.audio_enabled = true;
   ret.audio_samples_per_second = 48000;
@@ -32,15 +32,34 @@ eden_get_config_sig(eden_get_config)
   ret.audio_channels = 2;
 
   ret.window_title = "sandobokusu";
-  ret.window_initial_width = 800;
-  ret.window_initial_height = 800;
+  ret.window_initial_width = 1600;
+  ret.window_initial_height = 900;
 
   return ret;
 }
 
+struct camera_t {
+  f32_t min_x, min_y, max_x, max_y; 
+};
+
+static void 
+camera_
+
+static void
+camera_lookat(camera_t* cam) {
+}
+
+static void 
+camera_update(camera_t* cam) 
+{
+  eden_set_view(eden, min_x, max_x, min_y, max_y, 0.f, 0.f);
+}
+
+
 
 struct sandbox_t {
   arena_t arena;
+  camera_t camera;
 };
 
 exported 
@@ -52,13 +71,16 @@ eden_update_and_render_sig(eden_update_and_render) {
     auto* sandbox = (sandbox_t*)(eden->user_data);
     eden_assets_init_from_file(eden, SANDBOX_ASSET_FILE, &sandbox->arena);
 
+    sandbox->camera = {-};
+
   }
 
   auto* sandbox = (sandbox_t*)(eden->user_data);
 
 
   eden_set_design_dimensions(eden, 1600, 900);
-  eden_set_view(eden, -800.f, 800, -450.f, 450.f, 0.f, 0.f);
+  camera_update
+
   eden_draw_asset_sprite(eden, ASSET_SPRITE_ID_BLANK, { 0.f, 0.f }, {100.f, 100.f});
 
 }

@@ -57,7 +57,7 @@ struct asset_file_font_glyph_t {
 };
 
 struct asset_file_font_t {
-  // TODO: Maybe add 'lowest codepoint'?
+  // @todo: Maybe add 'lowest codepoint'?
   u32_t bitmap_asset_id;
   u32_t highest_codepoint;
   u32_t glyph_count;
