@@ -19,43 +19,48 @@ static void aoc22_d1p2(const char* filename, arena_t* arena) {
 
   u32_t maxs[3] = {};
   u32_t sum = 0;
-  while(!stream_is_eos(s)) {
+  while(!stream_is_eos(s)) 
+  {
     str_t line = stream_consume_line(s);  
-    if (line.size == 0) {
-      for_arr(i, maxs) {
-        if (sum > maxs[i]) {
+    if (line.size == 0) 
+    {
+      for_arr(i, maxs) 
+      {
+        if (sum > maxs[i]) 
+        {
           // assume that we are sorted. 
           // pass the baggage down
           u32_t baggage = maxs[i];
-          for(u32_t j = i + 1; j < array_count(maxs); ++j) {
-            if (baggage > maxs[j]) {
+          for(u32_t j = i + 1; j < array_count(maxs); ++j) 
+          {
+            if (baggage > maxs[j]) 
+            {
               maxs[j] = baggage;
               break;
             }
           }
-
           maxs[i] = sum;
           break;
         }
       }
-
       sum = 0;
       continue;
     }
-
     u32_t value = 0;
-    if (str_to_u32(line, &value)){
+    if (str_to_u32(line, &value))
+    {
       sum += value;
     }
-    else {
+    else 
+    {
       printf("Invalid line found\n");
       return;
     }
-
   }
 
   u32_t total = 0;
-  for_arr(i, maxs) {
+  for_arr(i, maxs) 
+  {
     total += maxs[i];
   }
 
@@ -74,10 +79,13 @@ static void aoc22_d1p1(const char* filename, arena_t* arena) {
 
   u32_t max = 0;
   u32_t sum = 0;
-  while(!stream_is_eos(s)) {
+  while(!stream_is_eos(s)) 
+  {
     str_t line = stream_consume_line(s);  
-    if (line.size == 0) {
-      if (sum > max) {
+    if (line.size == 0) 
+    {
+      if (sum > max) 
+      {
         max = sum;
       }
       sum = 0;
@@ -85,10 +93,12 @@ static void aoc22_d1p1(const char* filename, arena_t* arena) {
     }
 
     u32_t value = 0;
-    if (str_to_u32(line, &value)){
+    if (str_to_u32(line, &value))
+    {
       sum += value;
     }
-    else {
+    else 
+    {
       printf("Invalid line found\n");
       return;
     }
@@ -100,7 +110,8 @@ static void aoc22_d1p1(const char* filename, arena_t* arena) {
 
 }
 
-static void aoc22_d2p1(const char* filename, arena_t* arena) {
+static void aoc22_d2p1(const char* filename, arena_t* arena) 
+{
   arena_set_revert_point(arena);
 
   str_t file_buffer = file_read_into_str(filename, arena, false); 
@@ -122,17 +133,20 @@ static void aoc22_d2p1(const char* filename, arena_t* arena) {
   // This means we can read each line and just look at indices 0 and 2
 
   u32_t sum = 0;
-  while(!stream_is_eos(s)) {
+  while(!stream_is_eos(s)) 
+  {
     str_t line = stream_consume_line(s);  
     s32_t lhs = line.e[0] - 'A';
     s32_t rhs = line.e[2] - 'X';
-
-    if (lhs == 0) {
+    
+    if (lhs == 0) 
+    {
       if (rhs == 0) sum += 3;
       else if (rhs == 1) sum += 6;
       else if (rhs == 2) sum += 0;
     }
-    else if (lhs == 1) {
+    else if (lhs == 1) 
+    {
       if (rhs == 0) sum += 0;
       else if (rhs == 1) sum += 3;
       else if (rhs == 2) sum += 6;
@@ -143,7 +157,6 @@ static void aoc22_d2p1(const char* filename, arena_t* arena) {
       else if (rhs == 1) sum += 0;
       else if (rhs == 2) sum += 3;
     }
-
     sum += rhs + 1;
   }
   printf("%d\n", sum);
@@ -185,12 +198,13 @@ static void aoc22_d2p2(const char* filename, arena_t* arena) {
   // Format of each line is always "X Y"
   // This means we can read each line and just look at indices 0 and 2
   u32_t sum = 0;
-  while(!stream_is_eos(s)) {
+  while(!stream_is_eos(s)) 
+  {
     str_t line = stream_consume_line(s);  
     s32_t lhs = line.e[0] - 'A';
     s32_t rhs = line.e[2] - 'X';
-
-    if (lhs == 0) { // is rock          
+    
+    if (lhs == 0) { // is rock         
       if (rhs == 0) sum += lose + scissors; 
       else if (rhs == 1) sum += draw + rock;
       else if (rhs == 2) sum += win + paper;
@@ -235,11 +249,13 @@ static void aoc22_d3p1(const char* filename, arena_t* arena) {
         if (lhs.e[i] == rhs.e[j]) 
         {
           // Map
-          if(lhs.e[i] >= 'a' && lhs.e[i] <= 'z') {
+          if(lhs.e[i] >= 'a' && lhs.e[i] <= 'z') 
+          {
             u32_t value = lhs.e[i] - 'a' + 1;
             sum += value;
           }
-          else if (lhs.e[i] >= 'A' && lhs.e[i] <= 'Z') {
+          else if (lhs.e[i] >= 'A' && lhs.e[i] <= 'Z') 
+          {
             u32_t value = lhs.e[i] - 'A' + 27;
             sum += value; 
           }
@@ -267,7 +283,6 @@ static void aoc22_d3p2(const char* filename, arena_t* arena) {
     str_t line1 = stream_consume_line(s);  
     str_t line2 = stream_consume_line(s);  
 
-
     // Find common item between line0 and line1
     for_cnt(i, line0.size) 
     {
@@ -279,11 +294,13 @@ static void aoc22_d3p2(const char* filename, arena_t* arena) {
               line1.e[j] == line2.e[k]) 
           {
             char item = line0.e[i]; 
-            if(item >= 'a' && item <= 'z') {
+            if(item >= 'a' && item <= 'z') 
+            {
               u32_t value = item - 'a' + 1;
               sum += value;
             }
-            else if (item >= 'A' && item <= 'Z') {
+            else if (item >= 'A' && item <= 'Z') 
+            {
               u32_t value = item - 'A' + 27;
               sum += value; 
             }
@@ -297,47 +314,6 @@ found:;
   printf("%d\n", sum);
 }
 
-struct str_node_t  {
-  str_t item;
-  str_node_t* next;
-};
-
-struct str_arr_t {
-  str_t* e;
-  u32_t size;
-};
-
-static str_arr_t
-str_split(str_t str, u8_t delimiter, arena_t* arena) {
-  str_arr_t ret = {};
-  if (!str) return ret;
-
-
-  u32_t start = 0;
-  u32_t end = 0;
-  for(; end < str.size; ++end) 
-  {
-    if (str.e[end] == delimiter) 
-    {
-      str_t* new_node = arena_push(str_t, arena);
-      dref(new_node) = str_set(str.e + start, end - start);
-
-      if (ret.e == nullptr) {
-        ret.e = new_node;
-      }
-      // book keeping
-      ++end;
-      start = end;
-      ++ret.size;
-    }
-  }
-
-  str_t* new_node = arena_push(str_t, arena);
-  dref(new_node) = str_set(str.e + start, end - start);
-  ++ret.size;
-
-  return ret;
-}
 static void aoc22_d4p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
@@ -447,11 +423,12 @@ static void aoc22_d4p2(const char* filename, arena_t* arena) {
 }
 
 
-struct aoc22_d5p1_node_t {
+struct aoc22_d5_node_t {
   char value;
-  aoc22_d5p1_node_t* next;
-  aoc22_d5p1_node_t* prev;
-}
+  aoc22_d5_node_t* next;
+  aoc22_d5_node_t* prev;
+};
+
 static void aoc22_d5p1(const char* filename, arena_t* arena) {
   //
   // @note: Format looks something like this:
@@ -459,7 +436,7 @@ static void aoc22_d5p1(const char* filename, arena_t* arena) {
   //     [D]    
   // [N] [C]    
   // [Z] [M] [P]
-  //  1   2   3 
+  //  1   k   3 
   //
   // move 1 from 2 to 1
   // move 3 from 1 to 3
@@ -479,23 +456,228 @@ static void aoc22_d5p1(const char* filename, arena_t* arena) {
   stream_init(s, file_buffer);
   //u32_t sum = 0;
 
-  aoc22_d5p1_node_t stacks[9] = {};
+  aoc22_d5_node_t stacks[9] = {};
+  for_arr(i, stacks) cll_init(stacks + i);
+
+  b32_t is_setup = true;
   while(!stream_is_eos(s)) 
   {
-    arena_set_revert_point(arena);
     str_t str = stream_consume_line(s);  
-    if (str.e[1] == '1') break;
-
+    if (str.e[1] == '1') {
+      is_setup = false;
+      stream_consume_line(s); // there is one more line of whitespace
+      
 #if 0
-    for(int i = 0; i < str.size; ++i) {
-      printf("%c", str.e[i]);
-    }
-    printf("\n");
+      for_arr(i, stacks) 
+      {
+        auto* s = stacks + i;
+        printf("%d: ", i);
+        auto* itr = s->next;
+        while(itr != s) {
+          printf("[%c] > ", itr->value);
+          itr = itr->next;
+        }
+        printf("\n");
+
+      }
 #endif
+      continue;
+    }
+
+    if (is_setup) // setup phase
+    {
+      for(u32_t i = 1, j = 0; i < str.size; i+=4, ++j) 
+      {
+        if (str.e[i] != ' ') 
+        {
+          auto* new_node = arena_push(aoc22_d5_node_t, arena);
+          new_node->value = str.e[i];
+          cll_push_front(stacks + j, new_node);
+        }
+      }
+    }
+    else // movement phase 
+    {
+      arena_set_revert_point(arena);
+      str_arr_t split = str_split(str, ' ', arena);
+      u32_t amount, from, to = 0;
+      str_to_u32(split.e[1], &amount);
+      str_to_u32(split.e[3], &from);
+      str_to_u32(split.e[5], &to);
+      from -= 1;
+      to -= 1;
+      //printf("moving %d from %d to %d\n", amount, from, to);
+
+      for_cnt(i, amount) 
+      {
+        auto* from_stack_sentinal = stacks + from;
+        auto* to_stack_sentinal = stacks + to;
+        
+        // grab the last node from the 'from' stack;
+        auto* node_to_move = from_stack_sentinal->prev;
+        cll_remove(node_to_move);  // unlink the node
+        cll_push_back(to_stack_sentinal, node_to_move); // put to to the back of the 'to' stack
+      }
+#if 0
+      for_arr(i, stacks) 
+      {
+        auto* s = stacks + i;
+        printf("%d: ", i);
+        auto* itr = s->next;
+        while(itr != s) {
+          printf("[%c] > ", itr->value);
+          itr = itr->next;
+        }
+        printf("\n");
+      }
+#endif
+    }
+
   }
+
+  for_arr(i, stacks) 
+  {
+    auto* s = stacks + i;
+    printf("%c", s->prev->value);
+  }
+  printf("\n");
+
+
+
   //printf("%d\n", sum);
 }
 
+static void aoc22_d5p2(const char* filename, arena_t* arena) {
+  //
+  // @note: Format looks something like this:
+  //
+  //     [D]    
+  // [N] [C]    
+  // [Z] [M] [P]
+  //  1   k   3 
+  //
+  // move 1 from 2 to 1
+  // move 3 from 1 to 3
+  // move 2 from 2 to 1
+  // move 1 from 1 to 2
+  // 
+  // @note: 
+  //  The maximum stacks is 9
+  //
+  arena_set_revert_point(arena);
+
+
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+  //u32_t sum = 0;
+
+  aoc22_d5_node_t stacks[9] = {};
+  for_arr(i, stacks) cll_init(stacks + i);
+
+  b32_t is_setup = true;
+  while(!stream_is_eos(s)) 
+  {
+    str_t str = stream_consume_line(s);  
+    if (str.e[1] == '1') {
+      is_setup = false;
+      stream_consume_line(s); // there is one more line of whitespace
+      
+#if 0
+      for_arr(i, stacks) 
+      {
+        auto* s = stacks + i;
+        printf("%d: ", i);
+        auto* itr = s->next;
+        while(itr != s) {
+          printf("[%c] > ", itr->value);
+          itr = itr->next;
+        }
+        printf("\n");
+
+      }
+#endif
+      continue;
+    }
+
+    if (is_setup) // setup phase
+    {
+      for(u32_t i = 1, j = 0; i < str.size; i+=4, ++j) 
+      {
+        if (str.e[i] != ' ') 
+        {
+          auto* new_node = arena_push(aoc22_d5_node_t, arena);
+          new_node->value = str.e[i];
+          cll_push_front(stacks + j, new_node);
+        }
+      }
+    }
+    else // movement phase 
+    {
+      arena_set_revert_point(arena);
+      str_arr_t split = str_split(str, ' ', arena);
+      u32_t amount, from, to = 0;
+      str_to_u32(split.e[1], &amount);
+      str_to_u32(split.e[3], &from);
+      str_to_u32(split.e[5], &to);
+      from -= 1;
+      to -= 1;
+      //printf("moving %d from %d to %d\n", amount, from, to);
+
+      auto* from_stack_sentinal = stacks + from;
+      auto* to_stack_sentinal = stacks + to;
+      
+      // grab the nth node from the top of the 'from' stack;
+      auto* node_to_move_top = from_stack_sentinal->prev;
+      auto* node_to_move_bottom = from_stack_sentinal;
+      for_cnt(i, amount) {
+        node_to_move_bottom = node_to_move_bottom->prev;
+      }
+      node_to_move_bottom->prev->next = from_stack_sentinal;
+      node_to_move_top->next->prev = node_to_move_bottom->prev;
+      node_to_move_bottom->prev = 0;
+      node_to_move_top->next = 0;
+      
+      
+      // Add it to the top of the 'to' stack by changing its pointers
+      auto* node_to_add_on = to_stack_sentinal->prev;
+      node_to_add_on->next = node_to_move_bottom;
+      node_to_move_bottom->prev = node_to_add_on;
+      node_to_move_top->next = to_stack_sentinal;
+      to_stack_sentinal->prev = node_to_move_top;
+      
+      
+
+#if 0
+      for_arr(i, stacks) 
+      {
+        auto* s = stacks + i;
+        printf("%d: ", i);
+        auto* itr = s->next;
+        while(itr != s) {
+          printf("[%c] > ", itr->value);
+          itr = itr->next;
+        }
+        printf("\n");
+      }
+#endif
+    }
+
+  }
+
+  for_arr(i, stacks) 
+  {
+    auto* s = stacks + i;
+    printf("%c", s->prev->value);
+  }
+  printf("\n");
+
+
+
+  //printf("%d\n", sum);
+}
 int main(int argv, char** argc) {
   if (argv < 2) {
     printf("Usage: aoc22 <day> <part> <filename>\nExample: aoc22 1 1 input.txt\n");
@@ -530,5 +712,6 @@ int main(int argv, char** argc) {
   aoc22_route(4,1);
   aoc22_route(4,2);
   aoc22_route(5,1);
+  aoc22_route(5,2);
 
 }

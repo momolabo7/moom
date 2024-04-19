@@ -1638,7 +1638,7 @@ eden_allocate_memory_sig(w32_allocate_memory)
 
   // Add to linked list
   w32_memory_t* sentinel = &w32_state.memory_sentinel;
-  cll_append(sentinel, memory);
+  cll_push_front(sentinel, memory);
 
   return memory->user_block;
 

@@ -225,6 +225,10 @@ struct str_t {
   }
 };
 
+struct str_arr_t {
+  str_t* e;
+  u32_t size;
+};
 
 //
 // MARK:(Vector)
@@ -974,9 +978,11 @@ static u32_t hash_djb2(const c8_t* str);
 // 
 // s - sentinel
 // n - node
-#define cll_init(s)     (s)->prev = (s), (s)->next = (s) 
-#define cll_append(s,n) (n)->next = (s), (n)->prev = (s)->prev, (n)->prev->next = (n), (n)->next->prev = (n)
-#define cll_remove(n)   (n)->prev->next = (n)->next, (n)->next->prev = (n)->prev, (n)->next = 0, (n)->prev = 0;
+#define cll_init(s)         (s)->prev = (s), (s)->next = (s) 
+#define cll_push_back(s,n)  (n)->next = (s), (n)->prev = (s)->prev, (n)->prev->next = (n), (n)->next->prev = (n)
+#define cll_push_front(s,n) (n)->prev = (s), (n)->next = (s)->next, (n)->prev->next = (n), (n)->next->prev = (n)
+#define cll_remove(n)       (n)->prev->next = (n)->next, (n)->next->prev = (n)->prev, (n)->next = 0, (n)->prev = 0
+#define cll_is_empty(s)     ((s)->prev == (s) && (s)->next == (s))
 
 
 //
@@ -1135,16 +1141,17 @@ static u32_t crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t
 // MARK:(Strings)
 //
 #define str_from_lit(s) str_set((u8_t*)(s), sizeof(s)-1)
-static str_t  str_bad();
-static str_t  str_set(u8_t* str, usz_t size);
-static str_t  str_substr(str_t str, usz_t start, usz_t ope);
-static b32_t  str_match(str_t lhs, str_t rhs);
-static str_t  str_from_cstr(const char* cstr);
-static smi_t  str_compare_lexographically(str_t lhs, str_t rhs);
-static b32_t  str_to_u32(str_t s, u32_t* out);
-static b32_t  str_to_f32(str_t s, f32_t* out);
-static b32_t  str_to_s32(str_t s, s32_t* out);
-static b32_t  str_range_to(u32_t* out);
+static str_t     str_bad();
+static str_t     str_set(u8_t* str, usz_t size);
+static str_t     str_substr(str_t str, usz_t start, usz_t ope);
+static b32_t     str_match(str_t lhs, str_t rhs);
+static str_t     str_from_cstr(const char* cstr);
+static smi_t     str_compare_lexographically(str_t lhs, str_t rhs);
+static b32_t     str_to_u32(str_t s, u32_t* out);
+static b32_t     str_to_f32(str_t s, f32_t* out);
+static b32_t     str_to_s32(str_t s, s32_t* out);
+static b32_t     str_range_to(u32_t* out);
+static str_arr_t str_split(str_t str, u8_t delimiter, arena_t* arena); 
 
 // @todo: the ##LINE might be fake!
 #define stb8_make(name, cap) \
@@ -5667,6 +5674,39 @@ static str_t
 str_bad() {
   return str_set(0,0);
 }
+
+static str_arr_t 
+str_split(str_t str, u8_t delimiter, arena_t* arena) {
+  str_arr_t ret = {};
+  if (!str) return ret;
+
+
+  u32_t start = 0;
+  u32_t end = 0;
+  for(; end < str.size; ++end) 
+  {
+    if (str.e[end] == delimiter) 
+    {
+      str_t* new_node = arena_push(str_t, arena);
+      dref(new_node) = str_set(str.e + start, end - start);
+
+      if (ret.e == nullptr) {
+        ret.e = new_node;
+      }
+      // book keeping
+      ++end;
+      start = end;
+      ++ret.size;
+    }
+  }
+
+  str_t* new_node = arena_push(str_t, arena);
+  dref(new_node) = str_set(str.e + start, end - start);
+  ++ret.size;
+
+  return ret;
+}
+
 
 static str_t
 str_from_cstr(const c8_t* cstr) {

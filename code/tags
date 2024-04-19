@@ -889,6 +889,7 @@ _rp_node	code/momo.h	/^struct _rp_node{$/;"	s	language:C++
 _rp_node	momo.h	/^struct _rp_node{$/;"	s
 _rp_sort	code/momo.h	/^_rp_sort(rp_rect_t* rects,$/;"	f	language:C++	typeref:typename:void
 _rp_sort	momo.h	/^_rp_sort(rp_rect_t* rects,$/;"	f	typeref:typename:void
+_sort_key_to_u32	code/test_radix_sort.cpp	/^_sort_key_to_u32(f32_t sort_key)$/;"	f	language:C++	typeref:typename:u32_t	file:
 _sort_swap_entries	code/momo.h	/^_sort_swap_entries(sort_entry_t* a, sort_entry_t* b) {$/;"	f	language:C++	typeref:typename:void
 _sort_swap_entries	momo.h	/^_sort_swap_entries(sort_entry_t* a, sort_entry_t* b) {$/;"	f	typeref:typename:void
 _start	learn/x64_1_conditionals.s	/^_start:$/;"	l	language:Asm
@@ -958,14 +959,14 @@ animator_count	code/app_lit.cpp	/^  u32_t animator_count;$/;"	m	language:C++	str
 animators	code/app_lit.cpp	/^  lit_game_animator_t animators[64];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_animator_t[64]	file:
 aoc22_d1p1	code/aoc22.cpp	/^static void aoc22_d1p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d1p2	code/aoc22.cpp	/^static void aoc22_d1p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
-aoc22_d2p1	code/aoc22.cpp	/^static void aoc22_d2p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d2p1	code/aoc22.cpp	/^static void aoc22_d2p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d2p2	code/aoc22.cpp	/^static void aoc22_d2p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d3p1	code/aoc22.cpp	/^static void aoc22_d3p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d3p2	code/aoc22.cpp	/^static void aoc22_d3p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d4p1	code/aoc22.cpp	/^static void aoc22_d4p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d4p2	code/aoc22.cpp	/^static void aoc22_d4p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
-aoc22_d5p1	code/aoc22.cpp	/^static void aoc22_d5p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:struct:aoc22_d5p1_node_t void
-aoc22_d5p1_node_t	code/aoc22.cpp	/^struct aoc22_d5p1_node_t {$/;"	s	language:C++	file:
+aoc22_d5_node_t	code/aoc22.cpp	/^struct aoc22_d5_node_t {$/;"	s	language:C++	file:
+aoc22_d5p1	code/aoc22.cpp	/^static void aoc22_d5p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_route	code/aoc22.cpp	/^#define aoc22_route(/;"	d	language:C++	file:
 aoc23_d1p1	code/aoc23.cpp	/^static void aoc23_d1p1(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc23_d1p2	code/aoc23.cpp	/^static void aoc23_d1p2(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1247,10 +1248,12 @@ clex_tokenizer_init	code/momo.h	/^static b32_t clex_tokenizer_init(clex_tokenize
 clex_tokenizer_init	momo.h	/^clex_tokenizer_init(clex_tokenizer_t* t, str_t buffer) {$/;"	f	typeref:typename:b32_t
 clex_tokenizer_t	code/momo.h	/^struct clex_tokenizer_t {$/;"	s	language:C++
 clex_tokenizer_t	momo.h	/^struct clex_tokenizer_t {$/;"	s
-cll_append	code/momo.h	/^#define cll_append(/;"	d	language:C++
 cll_append	momo.h	/^#define cll_append(/;"	d
 cll_init	code/momo.h	/^#define cll_init(/;"	d	language:C++
 cll_init	momo.h	/^#define cll_init(/;"	d
+cll_is_empty	code/momo.h	/^#define cll_is_empty(/;"	d	language:C++
+cll_push_back	code/momo.h	/^#define cll_push_back(/;"	d	language:C++
+cll_push_front	code/momo.h	/^#define cll_push_front(/;"	d	language:C++
 cll_remove	code/momo.h	/^#define cll_remove(/;"	d	language:C++
 cll_remove	momo.h	/^#define cll_remove(/;"	d
 clock_resolution	code/momo.h	/^clock_resolution() {$/;"	f	language:C++	typeref:typename:u64_t
@@ -1451,7 +1454,6 @@ dref	momo.h	/^#define dref(/;"	d
 dst	code/eden.h	/^  eden_gfx_blend_type_t dst;$/;"	m	language:C++	struct:eden_gfx_command_blend_t	typeref:typename:eden_gfx_blend_type_t
 dummy_texture	code/eden.h	/^  eden_gfx_opengl_texture_t dummy_texture;$/;"	m	language:C++	struct:eden_gfx_opengl_t	typeref:typename:eden_gfx_opengl_texture_t
 duration	code/app_lit.cpp	/^  f32_t duration;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:f32_t	file:
-e	code/aoc22.cpp	/^  str_t* e;$/;"	m	language:C++	struct:str_arr_t	typeref:typename:str_t *	file:
 e	code/momo.h	/^      u8_t* e;$/;"	m	language:C++	struct:stb8_t::__anon1db7a63d140a::__anon1db7a63d1508	typeref:typename:u8_t *
 e	code/momo.h	/^  _ttf_edge_t** e;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:_ttf_edge_t **
 e	code/momo.h	/^  f32_t e[2];$/;"	m	language:C++	union:v2f_t	typeref:typename:f32_t[2]
@@ -1459,6 +1461,7 @@ e	code/momo.h	/^  f32_t e[3];$/;"	m	language:C++	union:v3f_t	typeref:typename:f3
 e	code/momo.h	/^  f32_t e[4];$/;"	m	language:C++	union:v4f_t	typeref:typename:f32_t[4]
 e	code/momo.h	/^  f32_t e[4][4];$/;"	m	language:C++	struct:m44f_t	typeref:typename:f32_t[4][4]
 e	code/momo.h	/^  s32_t e[2];$/;"	m	language:C++	union:v2s_t	typeref:typename:s32_t[2]
+e	code/momo.h	/^  str_t* e;$/;"	m	language:C++	struct:str_arr_t	typeref:typename:str_t *
 e	code/momo.h	/^  u32_t e[2];$/;"	m	language:C++	union:v2u_t	typeref:typename:u32_t[2]
 e	code/momo.h	/^  u8_t* e;$/;"	m	language:C++	struct:str_t	typeref:typename:u8_t *
 e	momo.h	/^      u8_t* e;$/;"	m	struct:stb8_t::__anon0e379513140a::__anon0e3795131508	typeref:typename:u8_t *
@@ -2584,7 +2587,6 @@ is_valid	code/app_lit_ship.cpp	/^  b32_t is_valid;$/;"	m	language:C++	struct:w32
 is_valid	code/lit_ship.cpp	/^  b32_t is_valid;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:b32_t	file:
 is_valid	code/w32_eden.cpp	/^  b32_t is_valid;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:b32_t	file:
 is_valid	code/w32_sandbox_socket.cpp	/^  b32_t is_valid; \/\/ Probably should be some error code?$/;"	m	language:C++	struct:os_socket_t	typeref:typename:b32_t	file:
-item	code/aoc22.cpp	/^  str_t item;$/;"	m	language:C++	struct:str_node_t	typeref:typename:str_t	file:
 item_f32	code/eden.h	/^    f32_t item_f32;$/;"	m	language:C++	union:eden_inspector_entry_t::__anon0a42ec61070a	typeref:typename:f32_t
 item_u32	code/eden.h	/^    u32_t item_u32;$/;"	m	language:C++	union:eden_inspector_entry_t::__anon0a42ec61070a	typeref:typename:u32_t
 json_array_node_t	code/momo.h	/^struct json_array_node_t {$/;"	s	language:C++
@@ -2982,8 +2984,7 @@ name	code/eden.h	/^  str_t name;$/;"	m	language:C++	struct:eden_inspector_entry_
 near	code/momo.h	/^# define near$/;"	d	language:C++
 near	momo.h	/^# define near$/;"	d
 nearest_light	code/app_lit.cpp	/^  lit_game_light_t* nearest_light;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:lit_game_light_t *	file:
-next	code/aoc22.cpp	/^  aoc22_d5p1_node_t* next;$/;"	m	language:C++	struct:aoc22_d5p1_node_t	typeref:typename:aoc22_d5p1_node_t *	file:
-next	code/aoc22.cpp	/^  str_node_t* next;$/;"	m	language:C++	struct:str_node_t	typeref:typename:str_node_t *	file:
+next	code/aoc22.cpp	/^  aoc22_d5_node_t* next;$/;"	m	language:C++	struct:aoc22_d5_node_t	typeref:typename:aoc22_d5_node_t *	file:
 next	code/app_lit_ship.cpp	/^  w32_memory_t* next;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
 next	code/gist_linked_list.cpp	/^  gist_cdl_node* next;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
 next	code/lit_ship.cpp	/^  w32_memory_t* next;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
@@ -3207,7 +3208,7 @@ pos	momo.h	/^  usz_t pos;$/;"	m	struct:arena_t	typeref:typename:usz_t
 pos	momo.h	/^  usz_t pos;$/;"	m	struct:stream_t	typeref:typename:usz_t
 pos_x	code/eden.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:eden_gfx_command_view_t	typeref:typename:f32_t
 pos_y	code/eden.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:eden_gfx_command_view_t	typeref:typename:f32_t
-prev	code/aoc22.cpp	/^  aoc22_d5p1_node_t* prev;$/;"	m	language:C++	struct:aoc22_d5p1_node_t	typeref:typename:aoc22_d5p1_node_t *	file:
+prev	code/aoc22.cpp	/^  aoc22_d5_node_t* prev;$/;"	m	language:C++	struct:aoc22_d5_node_t	typeref:typename:aoc22_d5_node_t *	file:
 prev	code/app_lit_ship.cpp	/^  w32_memory_t* prev;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
 prev	code/gist_linked_list.cpp	/^  gist_cdl_node* prev;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
 prev	code/lit_ship.cpp	/^  w32_memory_t* prev;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
@@ -3384,13 +3385,13 @@ show_debug_type	code/app_lit.cpp	/^  lit_show_debug_type_t show_debug_type;$/;"	
 signature	code/eden_asset_file.h	/^  u32_t signature;$/;"	m	language:C++	struct:asset_file_header_t	typeref:typename:u32_t
 signature	code/momo.h	/^  u8_t signature[8];$/;"	m	language:C++	struct:_png_chunk_t	typeref:typename:u8_t[8]
 signature	momo.h	/^  u8_t signature[8];$/;"	m	struct:_png_chunk_t	typeref:typename:u8_t[8]
-size	code/aoc22.cpp	/^  u32_t size;$/;"	m	language:C++	struct:str_arr_t	typeref:typename:u32_t	file:
 size	code/eden.h	/^  v2f_t size;$/;"	m	language:C++	struct:eden_gfx_command_rect_t	typeref:typename:v2f_t
 size	code/eden.h	/^  v2f_t size;$/;"	m	language:C++	struct:eden_gfx_command_sprite_t	typeref:typename:v2f_t
 size	code/momo.h	/^      usz_t size;$/;"	m	language:C++	struct:json_element_t::__anon1db7a63d160a::__anon1db7a63d1708	typeref:typename:usz_t
 size	code/momo.h	/^      usz_t size;$/;"	m	language:C++	struct:stb8_t::__anon1db7a63d140a::__anon1db7a63d1508	typeref:typename:usz_t
 size	code/momo.h	/^    usz_t size;$/;"	m	language:C++	struct:garena_free_block_t::__anon1db7a63d1208	typeref:typename:usz_t
 size	code/momo.h	/^  u32_t id, size;$/;"	m	language:C++	struct:_wav_head_t	typeref:typename:u32_t
+size	code/momo.h	/^  u32_t size;$/;"	m	language:C++	struct:str_arr_t	typeref:typename:u32_t
 size	code/momo.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_data_chunk_t	typeref:typename:u32_t
 size	code/momo.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 size	code/momo.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_riff_chunk_t	typeref:typename:u32_t
@@ -3507,43 +3508,43 @@ str	code/momo.h	/^    str_t str;$/;"	m	language:C++	union:json_element_t::__anon
 str	code/momo.h	/^    str_t str;$/;"	m	language:C++	union:stb8_t::__anon1db7a63d140a	typeref:typename:str_t
 str	momo.h	/^    str_t str;$/;"	m	union:json_element_t::__anon0e379513160a	typeref:typename:str_t
 str	momo.h	/^    str_t str;$/;"	m	union:stb8_t::__anon0e379513140a	typeref:typename:str_t
-str_arr_t	code/aoc22.cpp	/^struct str_arr_t {$/;"	s	language:C++	file:
-str_bad	code/momo.h	/^static str_t  str_bad();$/;"	p	language:C++	typeref:typename:str_t
+str_arr_t	code/momo.h	/^struct str_arr_t {$/;"	s	language:C++
+str_bad	code/momo.h	/^static str_t     str_bad();$/;"	p	language:C++	typeref:typename:str_t
 str_bad	code/momo.h	/^str_bad() {$/;"	f	language:C++	typeref:typename:str_t
 str_bad	momo.h	/^str_bad() {$/;"	f	typeref:typename:str_t
-str_compare_lexographically	code/momo.h	/^static smi_t  str_compare_lexographically(str_t lhs, str_t rhs);$/;"	p	language:C++	typeref:typename:smi_t
+str_compare_lexographically	code/momo.h	/^static smi_t     str_compare_lexographically(str_t lhs, str_t rhs);$/;"	p	language:C++	typeref:typename:smi_t
 str_compare_lexographically	code/momo.h	/^str_compare_lexographically(str_t lhs, str_t rhs) {$/;"	f	language:C++	typeref:typename:smi_t
 str_compare_lexographically	momo.h	/^str_compare_lexographically(str_t lhs, str_t rhs) {$/;"	f	typeref:typename:smi_t
-str_from_cstr	code/momo.h	/^static str_t  str_from_cstr(const char* cstr);$/;"	p	language:C++	typeref:typename:str_t
+str_from_cstr	code/momo.h	/^static str_t     str_from_cstr(const char* cstr);$/;"	p	language:C++	typeref:typename:str_t
 str_from_cstr	code/momo.h	/^str_from_cstr(const c8_t* cstr) {$/;"	f	language:C++	typeref:typename:str_t
 str_from_cstr	momo.h	/^str_from_cstr(const c8_t* cstr) {$/;"	f	typeref:typename:str_t
 str_from_lit	code/momo.h	/^#define str_from_lit(/;"	d	language:C++
 str_from_lit	momo.h	/^#define str_from_lit(/;"	d
-str_match	code/momo.h	/^static b32_t  str_match(str_t lhs, str_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
+str_match	code/momo.h	/^static b32_t     str_match(str_t lhs, str_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
 str_match	code/momo.h	/^str_match(str_t lhs, str_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t
 str_match	momo.h	/^str_match(str_t lhs, str_t rhs) {$/;"	f	typeref:typename:b32_t
-str_node_t	code/aoc22.cpp	/^struct str_node_t  {$/;"	s	language:C++	file:
-str_range_to	code/momo.h	/^static b32_t  str_range_to(u32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
-str_set	code/momo.h	/^static str_t  str_set(u8_t* str, usz_t size);$/;"	p	language:C++	typeref:typename:str_t
+str_range_to	code/momo.h	/^static b32_t     str_range_to(u32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
+str_set	code/momo.h	/^static str_t     str_set(u8_t* str, usz_t size);$/;"	p	language:C++	typeref:typename:str_t
 str_set	code/momo.h	/^str_set(u8_t* str, usz_t size) {$/;"	f	language:C++	typeref:typename:str_t
 str_set	momo.h	/^str_set(u8_t* str, usz_t size) {$/;"	f	typeref:typename:str_t
-str_split	code/aoc22.cpp	/^str_split(str_t str, u8_t delimiter, arena_t* arena) {$/;"	f	language:C++	typeref:typename:str_arr_t	file:
-str_substr	code/momo.h	/^static str_t  str_substr(str_t str, usz_t start, usz_t ope);$/;"	p	language:C++	typeref:typename:str_t
+str_split	code/momo.h	/^static str_arr_t str_split(str_t str, u8_t delimiter, arena_t* arena); $/;"	p	language:C++	typeref:typename:str_arr_t
+str_split	code/momo.h	/^str_split(str_t str, u8_t delimiter, arena_t* arena) {$/;"	f	language:C++	typeref:typename:str_arr_t
+str_substr	code/momo.h	/^static str_t     str_substr(str_t str, usz_t start, usz_t ope);$/;"	p	language:C++	typeref:typename:str_t
 str_substr	code/momo.h	/^str_substr(str_t str, usz_t start, usz_t count) {$/;"	f	language:C++	typeref:typename:str_t
 str_substr	momo.h	/^str_substr(str_t str, usz_t start, usz_t count) {$/;"	f	typeref:typename:str_t
 str_t	code/momo.h	/^struct str_t {$/;"	s	language:C++
 str_t	momo.h	/^struct str_t {$/;"	s
-str_to_f32	code/momo.h	/^static b32_t  str_to_f32(str_t s, f32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
+str_to_f32	code/momo.h	/^static b32_t     str_to_f32(str_t s, f32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
 str_to_f32	code/momo.h	/^str_to_f32(str_t s, f32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
 str_to_f32	momo.h	/^str_to_f32(str_t s, f32_t* out) {$/;"	f	typeref:typename:b32_t
 str_to_f32_range	code/momo.h	/^str_to_f32_range(str_t s, usz_t begin, usz_t ope, f32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
 str_to_f32_range	momo.h	/^str_to_f32_range(str_t s, usz_t begin, usz_t ope, f32_t* out) {$/;"	f	typeref:typename:b32_t
-str_to_s32	code/momo.h	/^static b32_t  str_to_s32(str_t s, s32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
+str_to_s32	code/momo.h	/^static b32_t     str_to_s32(str_t s, s32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
 str_to_s32	code/momo.h	/^str_to_s32(str_t s, s32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
 str_to_s32	momo.h	/^str_to_s32(str_t s, s32_t* out) {$/;"	f	typeref:typename:b32_t
 str_to_s32_range	code/momo.h	/^str_to_s32_range(str_t s, usz_t begin, usz_t ope, s32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
 str_to_s32_range	momo.h	/^str_to_s32_range(str_t s, usz_t begin, usz_t ope, s32_t* out) {$/;"	f	typeref:typename:b32_t
-str_to_u32	code/momo.h	/^static b32_t  str_to_u32(str_t s, u32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
+str_to_u32	code/momo.h	/^static b32_t     str_to_u32(str_t s, u32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
 str_to_u32	code/momo.h	/^str_to_u32(str_t s, u32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
 str_to_u32	momo.h	/^str_to_u32(str_t s, u32_t* out) {$/;"	f	typeref:typename:b32_t
 str_to_u32_range	code/momo.h	/^str_to_u32_range(str_t s, usz_t begin, usz_t ope, u32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
@@ -3931,7 +3932,7 @@ v3f_t	code/momo.h	/^union v3f_t {$/;"	u	language:C++
 v3f_t	momo.h	/^union v3f_t {$/;"	u
 v4f_t	code/momo.h	/^union v4f_t {$/;"	u	language:C++
 v4f_t	momo.h	/^union v4f_t {$/;"	u
-value	code/aoc22.cpp	/^  char value;$/;"	m	language:C++	struct:aoc22_d5p1_node_t	typeref:typename:char	file:
+value	code/aoc22.cpp	/^  char value;$/;"	m	language:C++	struct:aoc22_d5_node_t	typeref:typename:char	file:
 value	code/gist_linked_list.cpp	/^  int value;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:int	file:
 value	code/momo.h	/^  json_value_t value;$/;"	m	language:C++	struct:_json_entry_t	typeref:typename:json_value_t
 value	code/momo.h	/^  json_value_t value;$/;"	m	language:C++	struct:json_array_node_t	typeref:typename:json_value_t
