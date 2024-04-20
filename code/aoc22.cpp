@@ -510,13 +510,13 @@ static void aoc22_d5p1(const char* filename, arena_t* arena) {
 
       for_cnt(i, amount) 
       {
-        auto* from_stack_sentinal = stacks + from;
-        auto* to_stack_sentinal = stacks + to;
+        auto* from_stack_sentinel = stacks + from;
+        auto* to_stack_sentinel = stacks + to;
         
         // grab the last node from the 'from' stack;
-        auto* node_to_move = from_stack_sentinal->prev;
+        auto* node_to_move = from_stack_sentinel->prev;
         cll_remove(node_to_move);  // unlink the node
-        cll_push_back(to_stack_sentinal, node_to_move); // put to to the back of the 'to' stack
+        cll_push_back(to_stack_sentinel, node_to_move); // put to to the back of the 'to' stack
       }
 #if 0
       for_arr(i, stacks) 
@@ -626,27 +626,27 @@ static void aoc22_d5p2(const char* filename, arena_t* arena) {
       to -= 1;
       //printf("moving %d from %d to %d\n", amount, from, to);
 
-      auto* from_stack_sentinal = stacks + from;
-      auto* to_stack_sentinal = stacks + to;
+      auto* from_stack_sentinel = stacks + from;
+      auto* to_stack_sentinel = stacks + to;
       
       // grab the nth node from the top of the 'from' stack;
-      auto* node_to_move_top = from_stack_sentinal->prev;
-      auto* node_to_move_bottom = from_stack_sentinal;
+      auto* node_to_move_top = from_stack_sentinel->prev;
+      auto* node_to_move_bottom = from_stack_sentinel;
       for_cnt(i, amount) {
         node_to_move_bottom = node_to_move_bottom->prev;
       }
-      node_to_move_bottom->prev->next = from_stack_sentinal;
+      node_to_move_bottom->prev->next = from_stack_sentinel;
       node_to_move_top->next->prev = node_to_move_bottom->prev;
       node_to_move_bottom->prev = 0;
       node_to_move_top->next = 0;
       
       
       // Add it to the top of the 'to' stack by changing its pointers
-      auto* node_to_add_on = to_stack_sentinal->prev;
+      auto* node_to_add_on = to_stack_sentinel->prev;
       node_to_add_on->next = node_to_move_bottom;
       node_to_move_bottom->prev = node_to_add_on;
-      node_to_move_top->next = to_stack_sentinal;
-      to_stack_sentinal->prev = node_to_move_top;
+      node_to_move_top->next = to_stack_sentinel;
+      to_stack_sentinel->prev = node_to_move_top;
       
       
 
@@ -678,6 +678,172 @@ static void aoc22_d5p2(const char* filename, arena_t* arena) {
 
   //printf("%d\n", sum);
 }
+
+static void 
+aoc22_d6p1(const char* filename, arena_t* arena) 
+{
+  const u32_t window_size = 4;
+  arena_set_revert_point(arena);
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+
+  u32_t solulu = 0;
+  while(!stream_is_eos(s)) 
+  {
+    // 012345, size = 6
+    str_t str = stream_consume_line(s);  
+    for_cnt(str_index, str.size - window_size - 1) 
+    {
+      //printf("%c", str.e[str_index]);
+      u32_t repeats_found = false;
+      for(u32_t i = 0; i < window_size; ++i) 
+      {
+        for(u32_t j = i + 1; j < window_size; ++j) 
+        {
+          if (str.e[str_index + i] == str.e[str_index + j])
+          {
+            repeats_found = true;
+            goto stop_checking;
+          }
+        }
+      }
+      
+stop_checking:
+      if (!repeats_found) 
+      {
+        solulu = str_index + window_size;
+        goto found;
+      }
+    }
+
+found:;
+    printf("%u\n", solulu);
+
+  }
+}
+
+static void 
+aoc22_d6p2(const char* filename, arena_t* arena) 
+{
+  const u32_t window_size = 14;
+  arena_set_revert_point(arena);
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+
+  u32_t solulu = 0;
+  while(!stream_is_eos(s)) 
+  {
+    // 012345, size = 6
+    str_t str = stream_consume_line(s);  
+    for_cnt(str_index, str.size - window_size - 1) 
+    {
+      //printf("%c", str.e[str_index]);
+      u32_t repeats_found = false;
+      for(u32_t i = 0; i < window_size; ++i) 
+      {
+        for(u32_t j = i + 1; j < window_size; ++j) 
+        {
+          if (str.e[str_index + i] == str.e[str_index + j])
+          {
+            repeats_found = true;
+            goto stop_checking;
+          }
+        }
+      }
+      
+stop_checking:
+      if (!repeats_found) 
+      {
+        solulu = str_index + window_size;
+        goto found;
+      }
+    }
+
+found:;
+    printf("%u\n", solulu);
+  }
+}
+
+enum aoc22_d7_node_type_t 
+{
+  AOC22_D7_NODE_TYPE_FILE,
+  AOC22_D7_NODE_TYPE_DIR,
+};
+
+
+struct aoc22_d7_file_t;
+struct aoc22_d7_dir_t;
+struct aoc22_d7_node_t {
+  aoc22_d7_node_type_t type;
+  str_t name;
+  union {
+    aoc22_d7_file_t* file;
+    aoc22_d7_dir_t* dir;
+  };
+
+  aoc22_d7_node_t* prev;
+  aoc22_d7_node_t* next;
+};
+
+struct aoc22_d7_file_t 
+{
+  u32_t size;
+};
+
+struct aoc22_d7_dir_t 
+{
+  aoc22_d7_node_t sentinel;
+};
+
+static void 
+aoc22_d7p1(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+#if 0
+  const u32_t window_size = 14;
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+
+  while(!stream_is_eos(s)) 
+  {
+    // 012345, size = 6
+    str_t str = stream_consume_line(s);  
+  }
+#endif
+
+  auto* root = arena_push(aoc22_d7_node_t, arena);
+  root->type = AOC22_D7_NODE_TYPE_DIR;
+  root->name = str_from_lit("hello");
+  root->dir = arena_push(aoc22_d7_dir_t, arena);
+
+  auto * new_node = arena_push(aoc22_d7_node_t, arena);
+  new_node->type = AOC22_D7_NODE_TYPE_FILE;
+  new_node->name = str_from_lit("pupu");
+  new_node->file = arena_push(aoc22_d7_file_t, arena);
+  new_node->file->size = 123;
+
+  cll_push_back(&root->dir->sentinel, new_node);
+
+  // iteration test
+
+
+  
+
+  
+  printf("Hello!\n");
+}
+
+
+
 int main(int argv, char** argc) {
   if (argv < 2) {
     printf("Usage: aoc22 <day> <part> <filename>\nExample: aoc22 1 1 input.txt\n");
@@ -713,5 +879,8 @@ int main(int argv, char** argc) {
   aoc22_route(4,2);
   aoc22_route(5,1);
   aoc22_route(5,2);
+  aoc22_route(6,1);
+  aoc22_route(6,2);
+  aoc22_route(7,1);
 
 }

@@ -9,6 +9,8 @@
 !_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	5.9.0	/6f544dfc/
+AOC22_D7_NODE_TYPE_DIR	code/aoc22.cpp	/^  AOC22_D7_NODE_TYPE_DIR,$/;"	e	language:C++	enum:aoc22_d7_node_type_t	file:
+AOC22_D7_NODE_TYPE_FILE	code/aoc22.cpp	/^  AOC22_D7_NODE_TYPE_FILE,$/;"	e	language:C++	enum:aoc22_d7_node_type_t	file:
 ARCH_ARM	code/momo.h	/^#  define ARCH_ARM /;"	d	language:C++
 ARCH_ARM	code/momo.h	/^#  define ARCH_ARM /;"	d	language:C++
 ARCH_ARM	code/momo.h	/^# define ARCH_ARM /;"	d	language:C++
@@ -764,6 +766,7 @@ __anon1db7a63d2403	code/momo.h	/^enum {$/;"	g	language:C++
 __anon1db7a63d2503	code/momo.h	/^enum {$/;"	g	language:C++
 __anon1db7a63d260a	code/momo.h	/^  union {$/;"	u	language:C++	struct:_png_chunk_header_t
 __anon23bd245c010a	code/pass.h	/^  union {$/;"	u	language:C++	struct:pass_pack_atlas_context_t
+__anonabc34737010a	code/aoc22.cpp	/^  union {$/;"	u	language:C++	struct:aoc22_d7_node_t	file:
 __anonabd55fb80102	code/aoc23.cpp	/^  auto get_index = [](str_t grid, u32_t x, u32_t y, u32_t w) {$/;"	f	language:C++	function:aoc23_d3p1	file:
 __anonabd55fb80202	code/aoc23.cpp	/^  auto check = [](str_t grid, s32_t x, s32_t y, s32_t w, s32_t h) {$/;"	f	language:C++	function:aoc23_d3p1	file:
 __anonabd55fb80302	code/aoc23.cpp	/^  auto get_cell = [](str_t grid, u32_t x, u32_t y, u32_t w) {$/;"	f	language:C++	function:aoc23_d3p2	file:
@@ -967,6 +970,14 @@ aoc22_d4p1	code/aoc22.cpp	/^static void aoc22_d4p1(const char* filename, arena_t
 aoc22_d4p2	code/aoc22.cpp	/^static void aoc22_d4p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d5_node_t	code/aoc22.cpp	/^struct aoc22_d5_node_t {$/;"	s	language:C++	file:
 aoc22_d5p1	code/aoc22.cpp	/^static void aoc22_d5p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d5p2	code/aoc22.cpp	/^static void aoc22_d5p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d6p1	code/aoc22.cpp	/^aoc22_d6p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d6p2	code/aoc22.cpp	/^aoc22_d6p2(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d7_dir_t	code/aoc22.cpp	/^struct aoc22_d7_dir_t {$/;"	s	language:C++	file:
+aoc22_d7_file_t	code/aoc22.cpp	/^struct aoc22_d7_file_t {$/;"	s	language:C++	file:
+aoc22_d7_node_t	code/aoc22.cpp	/^struct aoc22_d7_node_t {$/;"	s	language:C++	file:
+aoc22_d7_node_type_t	code/aoc22.cpp	/^enum aoc22_d7_node_type_t {$/;"	g	language:C++	file:
+aoc22_d7p1	code/aoc22.cpp	/^aoc22_d7p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_route	code/aoc22.cpp	/^#define aoc22_route(/;"	d	language:C++	file:
 aoc23_d1p1	code/aoc23.cpp	/^static void aoc23_d1p1(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc23_d1p2	code/aoc23.cpp	/^static void aoc23_d1p2(const char* filename) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1445,6 +1456,7 @@ device_channels	code/eden.h	/^  u16_t device_channels;$/;"	m	language:C++	struct
 device_samples_per_second	code/eden.h	/^  u32_t device_samples_per_second;$/;"	m	language:C++	struct:eden_audio_t	typeref:typename:u32_t
 digit_to_ascii	code/momo.h	/^#define digit_to_ascii(/;"	d	language:C++
 digit_to_ascii	momo.h	/^#define digit_to_ascii(/;"	d
+dir	code/aoc22.cpp	/^    aoc22_d7_dir_t dir;$/;"	m	language:C++	union:aoc22_d7_node_t::__anonabc34737010a	typeref:typename:aoc22_d7_dir_t	file:
 dir	code/app_lit.cpp	/^  v2f_t dir;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:v2f_t	file:
 dll	code/app_lit_ship.cpp	/^  HMODULE dll; $/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:HMODULE	file:
 dll	code/lit_ship.cpp	/^  HMODULE dll; $/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:HMODULE	file:
@@ -2216,6 +2228,7 @@ f64_weight	code/momo.h	/^static f64_t f64_weight(f64_t v, f64_t min, f64_t max) 
 f64_weight	momo.h	/^f64_weight(f64_t v, f64_t min, f64_t max) { $/;"	f	typeref:typename:f64_t
 far	code/momo.h	/^# define far$/;"	d	language:C++
 far	momo.h	/^# define far$/;"	d
+file	code/aoc22.cpp	/^    aoc22_d7_file_t file;$/;"	m	language:C++	union:aoc22_d7_node_t::__anonabc34737010a	typeref:typename:aoc22_d7_file_t	file:
 file_access_t	code/momo.h	/^enum file_access_t {$/;"	g	language:C++
 file_access_t	momo.h	/^enum file_access_t {$/;"	g
 file_cabinet	code/app_lit_ship.cpp	/^  w32_file_cabinet_t file_cabinet;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_file_cabinet_t	file:
@@ -2980,6 +2993,7 @@ msg1	learn/x64_1_conditionals.s	/^  msg1: db "a >= b", 10, 0 $/;"	d	language:Asm
 msg1len	learn/x64_1_conditionals.s	/^  msg1len: equ $ - msg1 $/;"	d	language:Asm
 msg2	learn/x64_1_conditionals.s	/^  msg2: db "a < b", 10, 0 $/;"	d	language:Asm
 msg2len	learn/x64_1_conditionals.s	/^  msg2len: equ $ - msg2$/;"	d	language:Asm
+name	code/aoc22.cpp	/^  str_t name;$/;"	m	language:C++	struct:aoc22_d7_file_t	typeref:typename:str_t	file:
 name	code/eden.h	/^  str_t name;$/;"	m	language:C++	struct:eden_inspector_entry_t	typeref:typename:str_t
 near	code/momo.h	/^# define near$/;"	d	language:C++
 near	momo.h	/^# define near$/;"	d
@@ -3385,6 +3399,7 @@ show_debug_type	code/app_lit.cpp	/^  lit_show_debug_type_t show_debug_type;$/;"	
 signature	code/eden_asset_file.h	/^  u32_t signature;$/;"	m	language:C++	struct:asset_file_header_t	typeref:typename:u32_t
 signature	code/momo.h	/^  u8_t signature[8];$/;"	m	language:C++	struct:_png_chunk_t	typeref:typename:u8_t[8]
 signature	momo.h	/^  u8_t signature[8];$/;"	m	struct:_png_chunk_t	typeref:typename:u8_t[8]
+size	code/aoc22.cpp	/^  u32_t size;$/;"	m	language:C++	struct:aoc22_d7_file_t	typeref:typename:u32_t	file:
 size	code/eden.h	/^  v2f_t size;$/;"	m	language:C++	struct:eden_gfx_command_rect_t	typeref:typename:v2f_t
 size	code/eden.h	/^  v2f_t size;$/;"	m	language:C++	struct:eden_gfx_command_sprite_t	typeref:typename:v2f_t
 size	code/momo.h	/^      usz_t size;$/;"	m	language:C++	struct:json_element_t::__anon1db7a63d160a::__anon1db7a63d1708	typeref:typename:usz_t
@@ -3698,6 +3713,7 @@ ttf_read	momo.h	/^    ttf_read(ttf_t* ttf, str_t ttf_contents) {$/;"	f	typeref:t
 ttf_t	code/momo.h	/^struct ttf_t {$/;"	s	language:C++
 ttf_t	momo.h	/^struct ttf_t {$/;"	s
 two_2_one	code/app_tbp.cpp	/^#define two_2_one(/;"	d	language:C++	file:
+type	code/aoc22.cpp	/^  aoc22_d7_node_type_t type;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:aoc22_d7_node_type_t	file:
 type	code/app_lit.cpp	/^  lit_game_animator_type_t type;$/;"	m	language:C++	struct:lit_game_animator_t	typeref:typename:lit_game_animator_type_t	file:
 type	code/eden.h	/^  eden_inspector_entry_type_t type;$/;"	m	language:C++	struct:eden_inspector_entry_t	typeref:typename:eden_inspector_entry_type_t
 type	code/momo.h	/^    u8_t type[4];$/;"	m	language:C++	union:_png_chunk_header_t::__anon1db7a63d260a	typeref:typename:u8_t[4]
