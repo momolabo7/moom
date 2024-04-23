@@ -770,12 +770,10 @@ found:;
   }
 }
 
-enum aoc22_d7_node_type_t 
-{
-  AOC22_D7_NODE_TYPE_FILE,
+enum aoc22_d7_node_type_t {
   AOC22_D7_NODE_TYPE_DIR,
+  AOC22_D7_NODE_TYPE_FILE
 };
-
 
 struct aoc22_d7_file_t;
 struct aoc22_d7_dir_t;
@@ -787,9 +785,9 @@ struct aoc22_d7_node_t {
     aoc22_d7_dir_t* dir;
   };
 
-  aoc22_d7_node_t* prev;
-  aoc22_d7_node_t* next;
+  aoc22_d7_node_t* prev, *next;
 };
+
 
 struct aoc22_d7_file_t 
 {
@@ -798,48 +796,372 @@ struct aoc22_d7_file_t
 
 struct aoc22_d7_dir_t 
 {
+  aoc22_d7_dir_t* parent;
   aoc22_d7_node_t sentinel;
 };
+
+static aoc22_d7_node_t*
+aoc22_d7_push_dir(
+    aoc22_d7_dir_t* parent, 
+    str_t name, 
+    arena_t* arena)
+{
+  auto* node = arena_push(aoc22_d7_node_t, arena);
+  node->type = AOC22_D7_NODE_TYPE_DIR;
+  node->name = name;
+  node->dir = arena_push(aoc22_d7_dir_t, arena);
+  cll_init(&node->dir->sentinel);
+  node->dir->parent = parent;
+  if (parent)
+  {
+    cll_push_back(&parent->sentinel, node);
+  }
+  return node;
+}
+
+static aoc22_d7_node_t*
+aoc22_d7_push_file(
+    aoc22_d7_dir_t* parent, 
+    str_t name, 
+    u32_t size,
+    arena_t* arena)
+{
+  auto* node = arena_push(aoc22_d7_node_t, arena);
+  node->type = AOC22_D7_NODE_TYPE_FILE;
+  node->name = name;
+  node->file = arena_push(aoc22_d7_file_t, arena);
+  node->file->size = size;
+  if (parent)
+  {
+    cll_push_back(&parent->sentinel, node);
+  }
+  return node;
+}
+
+static void
+aoc22_print_str(str_t str) {
+  for_cnt(i, str.size) {
+    printf("%c", str.e[i]);
+  }
+}
+
+static u32_t 
+aoc22_d7p1_parse_dir(aoc22_d7_dir_t* dir, u32_t* total_dir_sum)
+{
+  u32_t ret = 0; 
+
+  for_cll_forward(itr, &dir->sentinel)
+  {
+    if (itr->type == AOC22_D7_NODE_TYPE_DIR) 
+    {
+      u32_t sum = aoc22_d7p1_parse_dir(itr->dir, total_dir_sum);
+#if 0
+      printf("directory: ");
+      aoc22_print_str(itr->name);
+      printf(" @ %d\n", sum);
+#endif
+      ret += sum;
+    }
+    else
+    {
+#if 0
+      printf("file: ");
+      aoc22_print_str(itr->name);
+      printf("\n");
+#endif
+      //if (itr->file->size <= 100000)
+        ret += itr->file->size;
+    }
+
+  }
+
+  if (ret <= 100000) {
+    dref(total_dir_sum) += ret;
+  }
+  return ret;
+}
+
+static u32_t 
+aoc22_d7p2_parse_dir(aoc22_d7_dir_t* dir, u32_t* kinda_min, u32_t space_needed_to_free)
+{
+  u32_t ret = 0; 
+
+  for_cll_forward(itr, &dir->sentinel)
+  {
+    if (itr->type == AOC22_D7_NODE_TYPE_DIR) 
+    {
+      u32_t sum = aoc22_d7p2_parse_dir(itr->dir, kinda_min, space_needed_to_free);
+      ret += sum;
+    }
+    else
+    {
+      ret += itr->file->size;
+    }
+
+  }
+
+  if (ret >= space_needed_to_free) 
+  {
+    if (ret < dref(kinda_min))
+    {
+      dref(kinda_min) = ret;
+    }
+  }
+  return ret;
+}
+
+static u32_t 
+aoc22_d7_get_dir_size(aoc22_d7_dir_t* dir)
+{
+  u32_t ret = 0; 
+
+  for_cll_forward(itr, &dir->sentinel)
+  {
+    if (itr->type == AOC22_D7_NODE_TYPE_DIR) 
+    {
+      u32_t sum = aoc22_d7_get_dir_size(itr->dir);
+      ret += sum;
+    }
+    else
+    {
+      ret += itr->file->size;
+    }
+
+  }
+  return ret;
+}
+
+static void
+aoc22_d7_print_nodes(aoc22_d7_node_t* node, u32_t level = 0) 
+{
+  for_cnt(i, level) printf(" ");
+  aoc22_print_str(node->name);
+  printf(" (dir, size = %u)\n", aoc22_d7_get_dir_size(node->dir));
+
+  level += 2;
+
+  for_cll_forward(itr, &node->dir->sentinel)
+  {
+    if (itr->type == AOC22_D7_NODE_TYPE_DIR) 
+    {
+      aoc22_d7_print_nodes(itr, level);
+    }
+    else
+    {
+      for_cnt(i, level) printf(" ");
+      aoc22_print_str(itr->name);
+      printf(" (file, size = %u)\n", itr->file->size);
+    }
+
+  }
+}
 
 static void 
 aoc22_d7p1(const char* filename, arena_t* arena) 
 {
   arena_set_revert_point(arena);
-#if 0
-  const u32_t window_size = 14;
+
   str_t file_buffer = file_read_into_str(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
 
+  // Initialize root first
+  aoc22_d7_node_t* root = aoc22_d7_push_dir(nullptr, str_from_lit("/"), arena);
+  aoc22_d7_dir_t* cd = root->dir;
+
+  // @note: We are pretty much assume ignore 'ls' command because
+  // it doesn't really do anything. We just need to handle lines
+  // that represent 'cd' commands, files and directories
   while(!stream_is_eos(s)) 
   {
-    // 012345, size = 6
     str_t str = stream_consume_line(s);  
+    if (str.e[0] == '$') 
+    {
+      if (str.e[2] == 'c') //cd
+      {
+        str_t dir_name = str_set(str.e + 5, str.size - 5);
+
+        // go to root
+        if (!str_compare_lexographically(dir_name, str_from_lit("/")))
+        {
+          cd = root->dir;
+          //printf("cd /\n");
+        }
+
+        // go to parent
+        else if (!str_compare_lexographically(dir_name, str_from_lit("..")))
+        {
+          cd = cd->parent;
+          //printf("cd ..\n");
+        }
+        else 
+        {
+          // Look for directory with the name and set it as current dir
+          aoc22_d7_node_t* itr = cd->sentinel.next;
+          while(itr != &cd->sentinel) 
+          {
+            if (!str_compare_lexographically(itr->name, dir_name))
+            {
+              cd = itr->dir; 
+              break;
+            }
+            itr = itr->next;
+          }
+          //printf("cd ");
+          //aoc22_print_str(dir_name);
+          //printf("\n");
+        }
+      }
+    }
+    else 
+    {
+      arena_marker_t mark = arena_mark(arena);
+      str_arr_t arr = str_split(str, ' ', arena);
+      // format: dir <directory_name> 
+      if (!str_compare_lexographically(arr.e[0], str_from_lit("dir")))
+      {
+        str_t dir_name = arr.e[1]; 
+        //printf("directory found: ");
+        //aoc22_print_str(dir_name);
+        //printf("\n");
+
+        arena_revert(mark);
+
+        // Create a directory
+        aoc22_d7_push_dir(cd, dir_name, arena); 
+
+      }
+      else 
+      {
+        u32_t file_size = 0;
+        str_t file_name = arr.e[1];
+        str_to_u32(arr.e[0], &file_size);
+
+        //printf("file found: ");
+        //aoc22_print_str(file_name);
+        //printf(" @ %d\n", file_size);
+
+        arena_revert(mark);
+
+        // format: <size> <filename>
+        aoc22_d7_push_file(cd, file_name, file_size, arena); 
+      }
+    }
   }
-#endif
 
-  auto* root = arena_push(aoc22_d7_node_t, arena);
-  root->type = AOC22_D7_NODE_TYPE_DIR;
-  root->name = str_from_lit("hello");
-  root->dir = arena_push(aoc22_d7_dir_t, arena);
-
-  auto * new_node = arena_push(aoc22_d7_node_t, arena);
-  new_node->type = AOC22_D7_NODE_TYPE_FILE;
-  new_node->name = str_from_lit("pupu");
-  new_node->file = arena_push(aoc22_d7_file_t, arena);
-  new_node->file->size = 123;
-
-  cll_push_back(&root->dir->sentinel, new_node);
-
-  // iteration test
+  u32_t sum = 0;
+  aoc22_d7p1_parse_dir(root->dir, &sum);
+  printf("%d\n", sum);
+}
 
 
+static void 
+aoc22_d7p2(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+
+  // Initialize root first
+  aoc22_d7_node_t* root = aoc22_d7_push_dir(nullptr, str_from_lit("/"), arena);
+  aoc22_d7_dir_t* cd = root->dir;
+
+  // @note: We are pretty much assume ignore 'ls' command because
+  // it doesn't really do anything. We just need to handle lines
+  // that represent 'cd' commands, files and directories
+  while(!stream_is_eos(s)) 
+  {
+    str_t str = stream_consume_line(s);  
+    if (str.e[0] == '$') 
+    {
+      if (str.e[2] == 'c') //cd
+      {
+        str_t dir_name = str_set(str.e + 5, str.size - 5);
+
+        // go to root
+        if (!str_compare_lexographically(dir_name, str_from_lit("/")))
+        {
+          cd = root->dir;
+          //printf("cd /\n");
+        }
+
+        // go to parent
+        else if (!str_compare_lexographically(dir_name, str_from_lit("..")))
+        {
+          cd = cd->parent;
+          //printf("cd ..\n");
+        }
+        else 
+        {
+          // Look for directory with the name and set it as current dir
+          aoc22_d7_node_t* itr = cd->sentinel.next;
+          while(itr != &cd->sentinel) 
+          {
+            if (!str_compare_lexographically(itr->name, dir_name))
+            {
+              cd = itr->dir; 
+              break;
+            }
+            itr = itr->next;
+          }
+          //printf("cd ");
+          //aoc22_print_str(dir_name);
+          //printf("\n");
+        }
+      }
+    }
+    else 
+    {
+      arena_marker_t mark = arena_mark(arena);
+      str_arr_t arr = str_split(str, ' ', arena);
+      // format: dir <directory_name> 
+      if (!str_compare_lexographically(arr.e[0], str_from_lit("dir")))
+      {
+        str_t dir_name = arr.e[1]; 
+        //printf("directory found: ");
+        //aoc22_print_str(dir_name);
+        //printf("\n");
+
+        arena_revert(mark);
+
+        // Create a directory
+        aoc22_d7_push_dir(cd, dir_name, arena); 
+
+      }
+      else 
+      {
+        u32_t file_size = 0;
+        str_t file_name = arr.e[1];
+        str_to_u32(arr.e[0], &file_size);
+
+        //printf("file found: ");
+        //aoc22_print_str(file_name);
+        //printf(" @ %d\n", file_size);
+
+        arena_revert(mark);
+
+        // format: <size> <filename>
+        aoc22_d7_push_file(cd, file_name, file_size, arena); 
+      }
+    }
+  }
+
+  const u32_t space_total = 70000000;
+  const u32_t space_required = 30000000;
+  const u32_t space_used = aoc22_d7_get_dir_size(root->dir);
+  const u32_t space_free = space_total - space_used; 
+  const u32_t space_needed_to_free = space_required - space_free;
   
-
-  
-  printf("Hello!\n");
+  //aoc22_d7_print_nodes(root);
+  u32_t result = space_total;
+  aoc22_d7p2_parse_dir(root->dir, &result, space_needed_to_free);
+  printf("%d\n", result);
 }
 
 
@@ -882,5 +1204,6 @@ int main(int argv, char** argc) {
   aoc22_route(6,1);
   aoc22_route(6,2);
   aoc22_route(7,1);
+  aoc22_route(7,2);
 
 }

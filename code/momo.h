@@ -983,6 +983,9 @@ static u32_t hash_djb2(const c8_t* str);
 #define cll_push_front(s,n) (n)->prev = (s), (n)->next = (s)->next, (n)->prev->next = (n), (n)->next->prev = (n)
 #define cll_remove(n)       (n)->prev->next = (n)->next, (n)->next->prev = (n)->prev, (n)->next = 0, (n)->prev = 0
 #define cll_is_empty(s)     ((s)->prev == (s) && (s)->next == (s))
+#define cll_first(s)        ((s)->next)
+
+#define for_cll_forward(itr_name, s) for(auto* itr_name = (s)->next; itr_name != (s); itr_name = itr_name->next)
 
 
 //
@@ -1152,6 +1155,7 @@ static b32_t     str_to_f32(str_t s, f32_t* out);
 static b32_t     str_to_s32(str_t s, s32_t* out);
 static b32_t     str_range_to(u32_t* out);
 static str_arr_t str_split(str_t str, u8_t delimiter, arena_t* arena); 
+static usz_t     str_find(str_t str, u8_t character); 
 
 // @todo: the ##LINE might be fake!
 #define stb8_make(name, cap) \
@@ -8376,7 +8380,8 @@ arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)
 }
 
 static arena_marker_t
-arena_mark(arena_t* a) {
+arena_mark(arena_t* a) 
+{
   arena_marker_t ret;
   ret.arena = a;
   ret.old_pos = a->pos;
