@@ -22,7 +22,7 @@
 #define LIT_SKIP_TRANSITIONS false
 
 // Debug
-#define LIT_DEBUG 0
+#define LIT_DEBUG_FREEZE 0
 #define LIT_DEBUG_LINES 0
 
 // Splash
@@ -1288,7 +1288,7 @@ lit_gen_light_intersections(lit_game_light_t* l,
       sorted_its[its_id].key = key; 
     }
 
-    quicksort(sorted_its, l->intersection_count);
+    sort_quick(sorted_its, l->intersection_count);
 
     for (u32_t sorted_its_id = 0;
         sorted_its_id < l->intersection_count - 1;
@@ -3344,7 +3344,7 @@ static void
 lit_game_update() 
 {
   lit_game_t* g = &g_lit->eden;
-#if LIT_DEBUG
+#if LIT_DEBUG_FREEZE
   if (eden_is_button_poked(g_eden, EDEN_BUTTON_CODE_Z)) {
     g->freeze = !g->freeze;
   }
@@ -3443,7 +3443,7 @@ lit_game_update()
   {
 
     lit_profile_begin(animate);
-#if LIT_DEBUG
+#if LIT_DEBUG_FREEZE
     if (!g->freeze) 
 #endif
       lit_game_animate_everything(g, dt * g->speed_multiplier);
@@ -3566,7 +3566,7 @@ lit_game_init()
   lit_game_t* g = &g_lit->eden;
   rng_init(&g->rng, 65535); // don't really need to be strict 
 
-#if LIT_DEBUG
+#if LIT_DEBUG_FREEZE
   g->freeze = false;
 #endif
 
