@@ -1082,7 +1082,7 @@ euler_q22_get_score(str_t str)
 
 
 static
-quicksort_generic_predicate_sig(euler_q22_cmp) {
+sort_quick_generic_predicate_sig(euler_q22_cmp) {
   str_t l = dref((str_t*)(lhs));
   str_t r = dref((str_t*)(rhs));
 
@@ -1687,7 +1687,7 @@ euler_q22() {
     entries[i] = str_from_cstr(names[i]); 
   }
   
-  quicksort_generic(entries, array_count(names), euler_q22_cmp);
+  sort_quick_generic(entries, array_count(names), euler_q22_cmp);
   u32_t sum = 0;
   for(u32_t i = 0; i < array_count(names); ++i) {
 
@@ -1779,7 +1779,7 @@ done:
 }
 
 static
-quicksort_generic_predicate_sig(euler_q24_cmp) {
+sort_quick_generic_predicate_sig(euler_q24_cmp) {
   u32_t l = dref((u32_t*)lhs);
   u32_t r = dref((u32_t*)rhs);
   return l < r;
@@ -1814,7 +1814,7 @@ euler_q24_print_permutations(u32_t* input, u32_t input_len, u32_t start, u32_t e
   else 
   {
     // Sort start to end
-    quicksort_generic(input + start, end-start+1, euler_q24_cmp);
+    sort_quick_generic(input + start, end-start+1, euler_q24_cmp);
     
     for(u32_t i = start; i <= end; ++i) {
       swap(input[start], input[i]);

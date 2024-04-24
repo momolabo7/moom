@@ -850,7 +850,7 @@ aoc22_d7p1_parse_dir(aoc22_d7_dir_t* dir, u32_t* total_dir_sum)
 {
   u32_t ret = 0; 
 
-  for_cll_forward(itr, &dir->sentinel)
+  cll_foreach(itr, &dir->sentinel)
   {
     if (itr->type == AOC22_D7_NODE_TYPE_DIR) 
     {
@@ -886,7 +886,7 @@ aoc22_d7p2_parse_dir(aoc22_d7_dir_t* dir, u32_t* kinda_min, u32_t space_needed_t
 {
   u32_t ret = 0; 
 
-  for_cll_forward(itr, &dir->sentinel)
+  cll_foreach(itr, &dir->sentinel)
   {
     if (itr->type == AOC22_D7_NODE_TYPE_DIR) 
     {
@@ -915,7 +915,7 @@ aoc22_d7_get_dir_size(aoc22_d7_dir_t* dir)
 {
   u32_t ret = 0; 
 
-  for_cll_forward(itr, &dir->sentinel)
+  cll_foreach(itr, &dir->sentinel)
   {
     if (itr->type == AOC22_D7_NODE_TYPE_DIR) 
     {
@@ -940,7 +940,7 @@ aoc22_d7_print_nodes(aoc22_d7_node_t* node, u32_t level = 0)
 
   level += 2;
 
-  for_cll_forward(itr, &node->dir->sentinel)
+  cll_foreach(itr, &node->dir->sentinel)
   {
     if (itr->type == AOC22_D7_NODE_TYPE_DIR) 
     {

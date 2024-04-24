@@ -49,16 +49,15 @@ _sort_key_to_u32(f32_t sort_key)
   return result;
 }
 
-int main() 
+static void 
+sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena)
 {
+  arena_set_revert_point(arena);
+  sort_entry_t* tmp = arena_push_arr(sort_entry_t, arena, entry_count);
+  assert(tmp);
 
-  f32_t nums[] = { -22, 35, 53, 10, 22, 145, -230, 103};
-  f32_t tmp[array_count(nums)] = {};
-
-  f32_t* src = nums;
-  f32_t* dest = tmp;
-  u32_t n = array_count(nums);
-
+  sort_entry_t* src = entries;
+  sort_entry_t* dest = tmp;
 
   for(u32_t byte_index = 0;
       byte_index < 32;
@@ -67,8 +66,8 @@ int main()
     u32_t offsets[256] = {};
 
     // Counting pass: count how many of each key
-    for_cnt(i, n) {
-      u32_t value = _sort_key_to_u32(src[i]);
+    for_cnt(i, entry_count) {
+      u32_t value = _sort_key_to_u32(src[i].key);
       u32_t piece = (value >> byte_index) & 0xFF;
       ++offsets[piece];
     }
@@ -85,8 +84,8 @@ int main()
       total += count;
     }
 
-    for_cnt(i, n) {
-      u32_t value = _sort_key_to_u32(src[i]);
+    for_cnt(i, entry_count) {
+      u32_t value = _sort_key_to_u32(src[i].key);
       u32_t piece = (value >> byte_index) & 0xFF;
       dest[offsets[piece]++] = src[i];
     }
@@ -95,7 +94,22 @@ int main()
 
   }
 
-  for_arr(id, nums) {
+
+}
+
+int main() 
+{
+
+  make(arena_t, arena);
+  arena_alloc(arena, gigabytes(1)); 
+  defer { arena_free(arena); }; 
+
+  f32_t nums[] = { -22, 35, 53, 10, 22, 145, -230, 103};
+  sort_radix(nums, array_count(nums), arena);
+
+
+  for_arr(id, nums) 
+  {
     printf("%f ", nums[id]);
   }
   printf("\n");

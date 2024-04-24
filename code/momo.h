@@ -8,55 +8,27 @@
 //   ASSERTIVE - Enables/Disables asserts. Default is 1. 
 //
 //
-// BOOKMARKS
-//   
-//   Includes    - Includes 
-//   Context     - Context Defines (Arch, OS, compiler, etc)
-//   Constants   - Common constant values
-//   Helper      - Common helper macros and functions 
-//   Float       - Common functions for floats (f32, f64)
-//   Int         - Common functions for integers (s32, u32, etc)
-//   ASCII       - Helper functions for ASCII 
-//   Memory      - Helper functions for Memory manipulation
-//   Hash        - Hash functions (using CString) 
-//   Linked List - Linked List macros 
-//   SI Units    - Helper functions to get SI units
-//   Bonk        - Collision detection 
-//   Buffer      - Simple type for holding a chunk of memory
-//   Vector      - Math vectors
-//   Matrix      - Math matrices
-//   Color       - Color structs (RGBA, HSL, HSV, ...)
-//   RNG         - Random Numer Generator
-//   CRC         - CRC generators
-//   Sorting     - Sorting algorithms
-//   Arena       - Standard Linear Memory Arena
-//   Garena      - General Purpose Heap Arena
-//   String      - String manipulation
-//   CString     - CString manipulation
-//   Stream      - Memory stream
-//   TTF         - TTF font file
-//   WAV         - WAV audio file
-//   PNG         - PNG image file
-//   JSON        - JSON data file
-//   RectPack    - Rectangle packer
-//   Clex        - C Lexer
-//   File        - File IO
-//   Clock       - Timer functions
+// BOOKMARKS: search using @mark
+//   Context          - Context Defines (Arch, OS, compiler, etc)
+//   Helper           - Common helper macros and functions 
+//   Struct           - All object declarations 
+//   Functions        - All function-like stuff
+//   Implementation   - All function-like stuff
+//
+//
 //
 
 
 #ifndef MOMO_H
 #define MOMO_H
 
-//
-// MARK:(Includes)
-//
 #include <stdarg.h> // for varadic arguments
 #include <math.h>
 
 //
-// MARK:(Contexts)
+// @mark: Context
 //
+
 #if defined(_MSC_VER) 
 # define COMPILER_MSVC 1
 #elif defined(__clang__)
@@ -77,9 +49,6 @@
 # define COMPILER_GCC 0
 #endif
 
-//
-// OS contexts
-//
 #if defined(_WIN32)
 # define OS_WINDOWS 1
 #elif defined(__gnu_linux__)
@@ -100,11 +69,6 @@
 # define OS_MAC 0
 #endif 
 
-//
-// CPU architecture contexts
-//
-// @note: For ARM, there are probably different versions
-//
 #if COMPILER_MSVC
 # if defined(_M_X86)
 #  define ARCH_X86 1
@@ -154,13 +118,13 @@
 # warning "[momo] 'exported' not defined for this compiler"
 #endif
 
-//
-// Asserts
-//
 #if !defined(ASSERTIVE)
 # define ASSERTIVE 1
 #endif 
 
+// 
+// @mark: Helper
+//
 # if !defined(assert_callback)
 #  define assert_callback(s) (*(volatile int*)0 = 0)
 # endif 
@@ -171,9 +135,6 @@
 # define assert(s)
 #endif 
 
-//
-// Primitive Types 
-//
 #include <stdint.h>
 #if COMPILER_GCC || COMPILER_CLANG
 # include <stddef.h>
@@ -199,20 +160,99 @@ typedef uintptr_t umi_t; // aka 'unsigned memory index'
 typedef intptr_t  smi_t; // aka 'signed memory index'
 typedef size_t    usz_t; // Can contain up to the highest indexable value 
 
-////
+#define S8_MIN  (-0x80)
+#define S16_MIN (-0x8000)
+#define S32_MIN (-0x80000000ll)
+#define S64_MIN (-0x8000000000000001ll - 1)
+
+#define S8_MAX  (0x7F)
+#define S16_MAX (0x7FFF)
+#define S32_MAX (0x7FFFFFFFl)
+#define S64_MAX (0x7FFFFFFFFFFFFFFFll)
+
+#define U8_MAX  (0xFF)
+#define U16_MAX (0xFFFF)
+#define U32_MAX (0xFFFFFFFF)
+#define U64_MAX (0xFFFFFFFFFFFFFFFFllu)
+
+#define F32_EPSILON       (1.1920929E-7f)
+#define F32_INFINITY      (_F32_INFINITY())
+#define F32_NEG_INFINITY  (_F32_NEG_INFINITY())
+#define F32_NAN           (_F32_NAN())
+
+#define F64_EPSILON       (2.220446E-16)
+#define F64_INFINITY      (_F64_INFINITY())
+#define F64_NEG_INFINITY  (_F64_NEG_INFINITY())
+#define F64_NAN           (_F64_NAN())
+
+#define PI_32   (3.14159265359f)
+#define PI_64   (3.14159265359)
+#define TAU_32  (6.28318530718f)
+#define TAU_64  (6.28318530718)
+#define GOLD_32 (1.61803398875f)
+#define GOLD_64 (1.61803398875)
+
+#define dref(expr) (*(expr))
+#define stringify_(s) #s
+#define stringify(s) stringify_(s)
+#define glue_(a,b) a##b
+#define glue(a,b) glue_(a,b)
+// @note: We need this do/while  
+// macro to cater for if/else statements
+// that looks like this:
+// >> if (...) 
+// >>     swap(...); 
+// >> else 
+// >>     ...
+// because it will expand to:
+// >> if (...) 
+// >>    {...}; 
+// >> else 
+// >>    ...
+// which causes an invalid ';' error
 //
-// Custom Types
-//
+#define stmt(s) do { s } while(0)
+#define array_count(A) (sizeof(A)/sizeof(*A))
+#define offset_of(type, member) (umi_t)&(((type*)0)->member)
+#define make(t, name) \
+  t glue(name##_,__LINE__) = {}; \
+  t* name = &(glue(name##_,__LINE__))
+
+#define ns_begin(name) namespace name {
+#define ns_end(name) }
+
+#define for_cnt(id, cnt) for(decltype(cnt) id = 0; id < (cnt); ++id)
+#define for_range(id, beg, end) for(decltype(beg) id = (beg); id <= (end); ++id)
+#define for_arr_reverse(id, arr) \
+  for(umi_t glue(itr,__LINE__) = 0, id = array_count(arr)-1; \
+      glue(itr,__LINE__) < array_count(arr); \
+      ++(glue(itr,__LINE__)), id = array_count(arr)-1-glue(itr,__LINE__))
+#define for_arr(id, arr) \
+  for(umi_t id = 0; \
+      (id) < array_count(arr); \
+      ++id)
+
+template<typename F> 
+struct _defer_scope_guard {
+  F f;
+  ~_defer_scope_guard() { f(); }
+};
+struct _defer_dummy {};
+template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
+  return { f };
+}
+#define defer auto glue(_defer, __LINE__) = _defer_dummy{} + [&]()
 
 //
-// MARK:(Strings)
+// @mark: Struct
 //
-struct str_t {
+struct str_t 
+{
   u8_t* e;
   usz_t size;
 
   //
-  // Note that it is entirely possible to have
+  // @note: that it is entirely possible to have
   // a string of size 0. That would represent
   // the concept of an 'empty string'.
   //
@@ -225,121 +265,121 @@ struct str_t {
   }
 };
 
-struct str_arr_t {
+
+
+struct str_arr_t 
+{
   str_t* e;
   u32_t size;
 };
 
-//
-// MARK:(Vector)
-//
-union v2u_t {
+union v2u_t 
+{
   struct { u32_t x, y; };
   struct { u32_t w, h; };
   u32_t e[2];
 };
 
-union v2s_t {
+union v2s_t 
+{
   struct { s32_t x, y; };
   struct { s32_t w, h; };
   s32_t e[2];
 };
 
-union v2f_t {
+union v2f_t 
+{
   struct { f32_t x, y; };
   struct { f32_t w, h; };
   struct { f32_t u, v; };
   f32_t e[2];
 };
 
-union v3f_t {
+union v3f_t 
+{
   struct { f32_t x, y, z; };
   struct { f32_t w, h, d; };
   f32_t e[3];
 };
 
-union v4f_t {
+union v4f_t 
+{
   struct { f32_t x, y, z, w; };
   f32_t e[4];
 };
 
-//
-// MARK:(Matrix)
-//
-struct m44f_t {
+struct m44f_t 
+{
   f32_t e[4][4];
 };
 
-//
-// MARK:(Color)
-//
-struct rgb_t {
+struct rgb_t 
+{
   f32_t r, g, b;   
 };
 
-
-// Each component are in the range of [0 - 1].
+// @note: Each component are in the range of [0 - 1].
 // For hue, normally it is a number between [0 - 360], but
 // it will be mapped linearly to [0 - 1] in this case.
 // i.e. hue 0 is 0 degrees, hue 1 is 360 degrees.
-struct hsl_t {
+struct hsl_t 
+{
   f32_t h, s, l;  
 };
 
-struct hsla_t {
-  union {
+struct hsla_t 
+{
+  union 
+  {
     struct { f32_t h,s,l; };  
     hsl_t hsl;
   };
   f32_t a;
 };
 
-
-struct rgba_t {
-  union {
+struct rgba_t 
+{
+  union 
+  {
     struct { f32_t r, g, b; };  
     rgb_t rgb;
   };
   f32_t a;
 };
 
-//
-// MARK:(RNG Declarations)
-//
-struct rng_t {
+struct rng_t 
+{
   u32_t seed;
 };
 
-//
-// MARK:(Sorting)
-//
-struct sort_entry_t {
+struct sort_entry_t 
+{
   f32_t key;
   u32_t index;
 };
 
-//
-// MARK:(CRC)
-//
-struct crc32_table_t {
+struct crc32_table_t 
+{
   u32_t remainders[256];
 };
 
-struct crc16_table_t {
+struct crc16_table_t 
+{
   u16_t remainders[256];
 };
 
-struct crc8_table_t {
+struct crc8_table_t 
+{
   u8_t remainders[256];
 };
 
-//
-// MARK:(Arena)
-//
-struct arena_t {
-  union {
+struct arena_t 
+{
+  union 
+  {
     str_t buffer;
-    struct {
+    struct 
+    {
       u8_t* memory;
       usz_t cap;
     };
@@ -348,22 +388,15 @@ struct arena_t {
   usz_t commit_pos;
 };
 
-// Temporary memory API used to arena_revert an arena to an original state;
-struct arena_marker_t {
+struct arena_marker_t 
+{
   arena_t* arena;
   usz_t old_pos;
 };
 
-// API to calculate how much memory would be used by emulating pushing
-// sizes into an arena
-struct arena_calc_t {
-  usz_t result;
-};
 
 //
-// MARK:(Garena) 
-//
-// @noteS
+// @note:
 //   Header is always 16 bytes and aligned to 16 bytes.
 //
 //   This helps in getting back the header address whenever
@@ -373,28 +406,33 @@ struct arena_calc_t {
 //   16 bytes, which, for most use cases is the optimal 
 //   alignment for any optmization operations.
 //
-// 
-union garena_header_t {
+union garena_header_t 
+{
   usz_t size; 
-  struct {
+  struct 
+  {
     u64_t padding_1, padding_2;
   };
 };
 
 // This should also always be 16 bytes.
-union garena_free_block_t {
-  struct {
+union garena_free_block_t 
+{
+  struct 
+  {
     usz_t size;
     garena_free_block_t* next;
   };
-  struct {
+  struct 
+  {
     u64_t padding_1, padding_2;
   };
 };
 static_assert(sizeof(garena_header_t) == 16);
 static_assert(sizeof(garena_free_block_t) == 16);
 
-struct garena_t {
+struct garena_t 
+{
   u8_t* memory;
   usz_t cap;
 
@@ -402,10 +440,13 @@ struct garena_t {
 };
 
 
-struct stb8_t{
-  union {
+struct stb8_t
+{
+  union 
+  {
     str_t str;
-    struct {
+    struct 
+    {
       u8_t* e;
       usz_t size;
     };
@@ -416,7 +457,8 @@ struct stb8_t{
 //
 // MARK:(Stream)
 //
-struct stream_t {
+struct stream_t 
+{
   str_t contents;
   usz_t pos;
 
@@ -425,11 +467,8 @@ struct stream_t {
   u32_t bit_count;
 };
 
-
-//
-// MARK:(TTF) 
-//
-struct ttf_t {
+struct ttf_t 
+{
   u8_t* data;
   u32_t glyph_count;
 
@@ -440,16 +479,15 @@ struct ttf_t {
   u16_t loca_format;
 };
 
-//
-// MARK:(WAV Declaration)
-//
-struct wav_riff_chunk_t {
+struct wav_riff_chunk_t 
+{
   u32_t id; // big endian
   u32_t size;
   u32_t format; // big endian
 };
 
-struct wav_fmt_chunk_t {
+struct wav_fmt_chunk_t 
+{
   u32_t id;
   u32_t size;
   u16_t audio_format;
@@ -460,22 +498,22 @@ struct wav_fmt_chunk_t {
   u16_t bits_per_sample;
 };
 
-struct wav_data_chunk_t {
+struct wav_data_chunk_t 
+{
   u32_t id;
   u32_t size;
 };
 
-struct wav_t {
+struct wav_t 
+{
   wav_riff_chunk_t riff_chunk;
   wav_fmt_chunk_t fmt_chunk;
   wav_data_chunk_t data_chunk;
   void* data;
 };
 
-//
-// MARK:(PNG Declaration)
-//
-struct png_t {
+struct png_t 
+{
   str_t contents;
 
   u32_t width;
@@ -487,10 +525,8 @@ struct png_t {
   u8_t interlace_method;
 };
 
-// 
-// MARK:(RectPack)
-//
-enum rp_sort_type_t {
+enum rp_sort_type_t 
+{
   RP_SORT_TYPE_WIDTH,
   RP_SORT_TYPE_HEIGHT,
   RP_SORT_TYPE_AREA,
@@ -499,7 +535,8 @@ enum rp_sort_type_t {
   RP_SORT_TYPE_PATHOLOGICAL,
 };
 
-struct rp_rect_t{
+struct rp_rect_t
+{
   u32_t x, y, w, h;
   void* user_data;
 };
@@ -508,7 +545,8 @@ struct rp_rect_t{
 // MARK:(Clex)
 //
 
-enum clex_token_type_t {
+enum clex_token_type_t 
+{
   CLEX_TOKEN_TYPE_UNKNOWN,
   CLEX_TOKEN_TYPE_OPEN_PAREN,          // (
   CLEX_TOKEN_TYPE_CLOSE_PAREN,         // )
@@ -562,41 +600,42 @@ enum clex_token_type_t {
   CLEX_TOKEN_TYPE_EOF
 };
 
-// @todo: Change to str_t?
-struct clex_token_t {
+struct clex_token_t 
+{
   clex_token_type_t type;
 
   usz_t begin;
   usz_t ope;
 };
 
-struct clex_tokenizer_t {
+struct clex_tokenizer_t 
+{
   str_t text;
   usz_t at;
 };
 
-//
-// MARK:(JSON)
-//
-
-// The "key" of a JSON entry, which can only be a string.
-struct json_key_t {
+struct json_key_t 
+{
   u8_t* at;
   usz_t size;
 };
 
-// Represents a JSON array, which is a linked list
+// @note: Represents a JSON array, which is a linked list
 // of nodes containing more values.
 struct json_array_node_t;
-struct json_array_t {
+struct json_array_t 
+{
   json_array_node_t* head;
   json_array_node_t* tail;
 };
 
-// Represents a JSON element, which is a string.
-struct json_element_t {
-  union {
-    struct {
+// @note: Represents a JSON element, which is a string.
+struct json_element_t 
+{
+  union 
+  {
+    struct 
+    {
       u8_t* at;
       usz_t size;
     };
@@ -604,7 +643,8 @@ struct json_element_t {
   };
 };
 
-enum json_value_type_t {
+enum json_value_type_t 
+{
   //JSON_VALUE_TYPE_BOOLEAN,
 
   JSON_VALUE_TYPE_TRUE,
@@ -618,11 +658,13 @@ enum json_value_type_t {
 };
 
 // An object contains a bunch of entries
-struct json_object_t {
+struct json_object_t 
+{
   struct _json_entry_t* head; // points to the first entry
 };
 
-struct json_value_t {
+struct json_value_t 
+{
   json_value_type_t type;
   union {
     json_element_t element;
@@ -631,12 +673,14 @@ struct json_value_t {
   };
 };
 
-struct json_array_node_t {
+struct json_array_node_t 
+{
   json_array_node_t* next;
   json_value_t value;
 };
 
-struct json_t {
+struct json_t 
+{
   // for tokenizing
   str_t text;
   umi_t at;
@@ -646,7 +690,37 @@ struct json_t {
 };
 
 
-static json_object_t* json_read(json_t* j, const u8_t* json_string, u32_t json_string_size, arena_t* ba);
+enum file_access_t {
+  FILE_ACCESS_READ,   // Only reads the file, does not write
+  FILE_ACCESS_CREATE, // Creates or truncates a file for writing, as if it's new
+  FILE_ACCESS_MODIFY, // Write to a file, but does not truncate.
+};
+struct file_t;  // @note: Implementation is different depending on OS
+
+//
+// @mark: Functions
+//
+
+// @note: These need to be macros instead of function
+// because I don't want these to return or take in to a specific strict type.
+// Returning a strict type almost always end up requiring an explicit
+// conversion on the user side.
+#define kilobytes(n) ((1<<10) * n)
+#define megabytes(n) ((1<<20) * n)
+#define gigabytes(n) ((1<<30) * n)
+#define hundreds(x) ((x) * 100) 
+#define thousands(x) ((x) * 1000)
+#define min_of(l,r) ((l) < (r) ? (l) : (r))
+#define max_of(l,r) ((l) > (r) ? (l) : (r))
+#define clamp_of(x,b,t) (max_of(min_of(x,t),b))
+#define swap(l,r) { auto tmp = (l); (l) = (r); (r) = tmp; } 
+
+
+static json_object_t* json_read(
+    json_t* j, 
+    const u8_t* json_string, 
+    u32_t json_string_size, 
+    arena_t* ba);
 static json_value_t* json_get_value(json_object_t* j, str_t key);
 static b32_t json_is_true(json_value_t* val);
 static b32_t json_is_false(json_value_t* val);
@@ -660,119 +734,6 @@ static json_element_t* json_get_element(json_value_t* val);
 static json_array_t* json_get_array(json_value_t* val);
 static json_object_t* json_get_object(json_value_t* val);
 
-//
-// MARK:(Constants)
-//
-#define S8_MIN  (-0x80)
-#define S16_MIN (-0x8000)
-#define S32_MIN (-0x80000000ll)
-#define S64_MIN (-0x8000000000000001ll - 1)
-
-#define S8_MAX  (0x7F)
-#define S16_MAX (0x7FFF)
-#define S32_MAX (0x7FFFFFFFl)
-#define S64_MAX (0x7FFFFFFFFFFFFFFFll)
-
-#define U8_MAX  (0xFF)
-#define U16_MAX (0xFFFF)
-#define U32_MAX (0xFFFFFFFF)
-#define U64_MAX (0xFFFFFFFFFFFFFFFFllu)
-
-#define F32_EPSILON       (1.1920929E-7f)
-#define F32_INFINITY      (_F32_INFINITY())
-#define F32_NEG_INFINITY  (_F32_NEG_INFINITY())
-#define F32_NAN           (_F32_NAN())
-
-#define F64_EPSILON       (2.220446E-16)
-#define F64_INFINITY      (_F64_INFINITY())
-#define F64_NEG_INFINITY  (_F64_NEG_INFINITY())
-#define F64_NAN           (_F64_NAN())
-
-#define PI_32   (3.14159265359f)
-#define PI_64   (3.14159265359)
-#define TAU_32  (6.28318530718f)
-#define TAU_64  (6.28318530718)
-#define GOLD_32 (1.61803398875f)
-#define GOLD_64 (1.61803398875)
-
-//
-// MARK:(SI Units)
-//
-// These need to be macros instead of function
-// because I don't want these to return or take in to a specific strict type.
-// Returning a strict type almost always end up requiring an explicit
-// conversion on the user side.
-// 
-#define kilobytes(n) ((1<<10) * n)
-#define megabytes(n) ((1<<20) * n)
-#define gigabytes(n) ((1<<30) * n)
-#define hundreds(x) ((x) * 100) 
-#define thousands(x) ((x) * 1000)
-
-//
-// MARK:(Helpers)
-//
-#define dref(expr) (*(expr))
-#define stringify_(s) #s
-#define stringify(s) stringify_(s)
-#define glue_(a,b) a##b
-#define glue(a,b) glue_(a,b)
-// @note: We need this do/while  
-// macro to cater for if/else statements
-// that looks like this:
-// >> if (...) 
-// >>     swap(...); 
-// >> else 
-// >>     ...
-// because it will expand to:
-// >> if (...) 
-// >>    {...}; 
-// >> else 
-// >>    ...
-// which causes an invalid ';' error
-//
-#define stmt(s) do { s } while(0)
-#define array_count(A) (sizeof(A)/sizeof(*A))
-#define offset_of(type, member) (umi_t)&(((type*)0)->member)
-#define make(t, name) \
-  t glue(name##_,__LINE__) = {}; \
-  t* name = &(glue(name##_,__LINE__))
-
-#define ns_begin(name) namespace name {
-#define ns_end(name) }
-
-#define min_of(l,r) ((l) < (r) ? (l) : (r))
-#define max_of(l,r) ((l) > (r) ? (l) : (r))
-#define clamp_of(x,b,t) (max_of(min_of(x,t),b))
-#define swap(l,r) { auto tmp = (l); (l) = (r); (r) = tmp; } 
-
-#define for_arr(id, arr) \
-  for(umi_t id = 0; \
-      (id) < array_count(arr); \
-      ++id)
-
-#define for_cnt(id, cnt) for(decltype(cnt) id = 0; id < (cnt); ++id)
-#define for_range(id, beg, end) for(decltype(beg) id = (beg); id <= (end); ++id)
-#define for_arr_reverse(id, arr) \
-  for(umi_t glue(itr,__LINE__) = 0, id = array_count(arr)-1; \
-      glue(itr,__LINE__) < array_count(arr); \
-      ++(glue(itr,__LINE__)), id = array_count(arr)-1-glue(itr,__LINE__))
-
-template<typename F> 
-struct _defer_scope_guard {
-  F f;
-  ~_defer_scope_guard() { f(); }
-};
-struct _defer_dummy {};
-template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
-  return { f };
-}
-#define defer auto glue(_defer, __LINE__) = _defer_dummy{} + [&]()
-
-
-//
-// MARK:(ASCII)
-//
 #define digit_to_ascii(d) ((d) + '0')
 #define ascii_to_digit(a) ((a) - '0')
 static b32_t u8_is_whitespace(u8_t c);
@@ -781,13 +742,9 @@ static b32_t u8_is_digit(u8_t c);
 static b32_t u8_is_uppercase(u8_t c);
 static b32_t u8_is_readable(u8_t c);
 
-
-//
-// MARK:(Memory)
-//
-#define bit_is_set(mask,bit) ((mask) & ((u64_t)1 << (bit)))
-#define bit_set(mask, bit) ((mask) |= ((u64_t)1 << (bit)))
-#define bit_unset(mask, bit) ((mask) &= ~((u64_t)1 << (bit)))
+#define bit_is_set(mask,bit) ((mask) & ((decltype(mask))(1) << (bit)))
+#define bit_set(mask, bit) ((mask) |= ((decltype(mask)(1) << (bit)))
+#define bit_unset(mask, bit) ((mask) &= ~((decltype(mask))1 << (bit)))
 #define align_down_pow2(v,a) ((v) & ~((a)-1))
 #define align_up_pow2(v,a) ((v) + ((a)-1) & ~((a)-1))
 #define is_pow2(v) ((v) & ((v)-1) == 0)
@@ -800,8 +757,7 @@ static b32_t u8_is_readable(u8_t c);
 static void   memory_copy(void* dest, const void* src, usz_t size);
 static void   memory_zero(void* dest, usz_t size);
 static b32_t  memory_is_same(const void* lhs, const void* rhs, usz_t size);
-static void   memory_jwap(void* lhs, void* rhs, usz_t size);
-
+static void   memory_swap(void* lhs, void* rhs, usz_t size);
 static str_t  memory_reserve(usz_t size);
 static b32_t  memory_commit(str_t blk);
 static str_t  memory_allocate(usz_t size); // reserve + commit
@@ -810,9 +766,6 @@ static void   memory_free(str_t blk);
 static umi_t ptr_to_umi(void* p);
 static u8_t* umi_to_ptr(umi_t u);
 
-//
-// MARK:(Float)
-//
 static f32_t f32_abs(f32_t x);
 static f32_t f32_lerp(f32_t s, f32_t e, f32_t f);
 static f32_t f32_mod(f32_t lhs, f32_t rhs);
@@ -921,9 +874,6 @@ static f64_t f64_ease_in_expo(f64_t t);
 static f64_t f64_ease_out_expo(f64_t t);
 static f64_t f64_ease_inout_expo(f64_t t);
 
-//
-// Integers
-//
 static s8_t  s8_abs(s8_t x);
 static s16_t s16_abs(s16_t x);
 static s16_t s16_endian_swap(s16_t value);
@@ -941,9 +891,6 @@ static u64_t u64_factorial(u64_t x);
 static u64_t u64_atomic_assign(u64_t volatile* value, u64_t new_value);
 static u64_t u64_atomic_add(u64_t volatile* value, u64_t to_add);
 
-//
-// MARK:(CString)
-//
 static usz_t cstr_len(const c8_t* str); 
 static void  cstr_copy(c8_t * dest, const c8_t* src); 
 static b32_t cstr_compare(const c8_t* lhs, const c8_t* rhs); 
@@ -956,25 +903,20 @@ static void  cstr_reverse(c8_t* dest);
 static void  cstr_itoa(c8_t* dest, s32_t num); 
 static u32_t cstr_len_if(const char* str, b32_t (*pred)(char));
 
-//
-// MARK:(Hash)
-// 
 static u32_t hash_djb2(const c8_t* str);
 
 //
-// MARK:(Linked List)
-//
-
-// Singly Linked List
+// @note: Singly Linked List
 //
 // f - first node
 // l - last node
 // n - node
+//
 #define sll_prepend(f,l,n) (f) ? ((n)->next = (f), (f) = (n)) : ((f) = (l) = (n))
 #define sll_append(f,l,n)  (f) ? ((l)->next = (n), (l) = (n)) : ((f) = (l) = (n), (l)->next = 0)
 
 //
-// Circular Doubly Linked List with sentinel
+// @note: Circular Doubly Linked List with sentinel
 // 
 // s - sentinel
 // n - node
@@ -984,13 +926,8 @@ static u32_t hash_djb2(const c8_t* str);
 #define cll_remove(n)       (n)->prev->next = (n)->next, (n)->next->prev = (n)->prev, (n)->next = 0, (n)->prev = 0
 #define cll_is_empty(s)     ((s)->prev == (s) && (s)->next == (s))
 #define cll_first(s)        ((s)->next)
+#define cll_foreach(itr_name, s) for(auto* itr_name = (s)->next; itr_name != (s); itr_name = itr_name->next)
 
-#define for_cll_forward(itr_name, s) for(auto* itr_name = (s)->next; itr_name != (s); itr_name = itr_name->next)
-
-
-//
-// MARK:(Vector)
-//
 static v2f_t v2f_add(v2f_t lhs, v2f_t rhs); 
 static v2f_t v2f_sub(v2f_t lhs, v2f_t rhs); 
 static v2f_t v2f_scale(v2f_t lhs, f32_t rhs); 
@@ -1055,9 +992,6 @@ static v3f_t& operator+=(v3f_t& lhs, v3f_t rhs);
 static v3f_t& operator-=(v3f_t& lhs, v3f_t rhs); 
 static v3f_t& operator*=(v3f_t& lhs, f32_t rhs); 
 
-//
-// MARK:(Matrix)
-//
 static m44f_t m44f_concat(m44f_t lhs, m44f_t rhs);
 static m44f_t m44f_transpose(m44f_t m);
 static m44f_t m44f_scale(f32_t x, f32_t y, f32_t z);
@@ -1072,9 +1006,7 @@ static m44f_t m44f_perspective(f32_t fov, f32_t aspect, f32_t near, f32_t far);
 static m44f_t operator*(m44f_t lhs, m44f_t rhs);
 
 //
-// MARK:(Colors)
-//
-// Notes:
+// @note: colors
 // - While there could be several representation of colors,
 //   I would prefer to use floating point values between [0-1] 
 //   to cover all general cases. If the user needs to convert it to a more
@@ -1095,17 +1027,12 @@ static hsl_t  rbg_to_hsl(rgb_t c);
 static rgb_t  hsl_to_rgb(hsl_t c);
 
 #define RGBA_WHITE rgba_set(1.f, 1.f, 1.f, 1.f)
+#define RGBA_GREEN rgba_set(0.f, 1.f, 0.f, 1.f)
+#define RGBA_RED   rgba_set(1.f, 0.f, 0.f, 1.f)
+#define RGBA_BLACK rgba_set(0.f, 0.f, 0.f, 1.f)
 
-
-//
-// MARK:(Bonk)
-//
 static b32_t bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt); 
 
-
-// 
-// MARK:(RNG)
-//
 static void  rng_init(rng_t* r, u32_t seed);
 static u32_t rng_next(rng_t* r);
 static u32_t rng_choice(rng_t* r, u32_t choice_count);
@@ -1115,17 +1042,11 @@ static f32_t rng_range_F32(rng_t* r, f32_t min, f32_t max);
 static s32_t rng_range_S32(rng_t* r, s32_t min, s32_t max);
 static v2f_t rng_unit_circle(rng_t* r);
 
-//
-// MARK:(Sorting)
-//
+// @note: These are for sort entries, which we should try to default to.
+static void sort_quick(sort_entry_t* entries, u32_t entry_count);
 
-// These are for sort entries, which we should try to default to.
-static void quicksort(sort_entry_t* entries, u32_t entry_count);
-
-// These are for generic quicksort onto an array.
-// Performance depends on size of the element
-#define quicksort_generic_predicate_sig(name) b32_t name(const void* lhs, const void* rhs)
-#define quicksort_generic(arr, count, predicate) _quicksort_generic(arr, count, sizeof(*arr), predicate)
+#define sort_quick_generic_predicate_sig(name) b32_t name(const void* lhs, const void* rhs)
+#define sort_quick_generic(arr, count, predicate) _sort_quick_generic(arr, count, sizeof(*arr), predicate)
 
 //
 // MARK:(CRC)
@@ -1226,9 +1147,6 @@ static void*    arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz
 static arena_marker_t arena_mark(arena_t* a);
 static void arena_revert(arena_marker_t marker);
 
-static void arena_calc_push(arena_calc_t* c, usz_t size, usz_t alignment);
-static void arena_calc_clear(arena_calc_t* c);
-static usz_t arena_calc_get_result(arena_calc_t* c);
 
 # define __arena_set_revert_point(a,l) \
   auto _arena_marker_##l = arena_mark(a); \
@@ -1273,16 +1191,10 @@ static s32_t ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t 
 static b32_t ttf_get_glyph_box(const ttf_t* ttf, u32_t glyph_index, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y1);
 static void ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y1);
 
-//
-// MARK:(PNG)
-//
 static b32_t     png_read(png_t* png, str_t png_contents);
 static u32_t*    png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena); 
 static str_t     png_write(u8_t* pixels, u32_t width, u32_t height, arena_t* arena);
 
-// 
-// MARK:(RectPack)
-//
 static b32_t rp_pack(
     rp_rect_t* rects, 
     u32_t rect_count, 
@@ -1292,25 +1204,9 @@ static b32_t rp_pack(
     rp_sort_type_t sort_type,
     arena_t* allocator);
 
-
-
-//
-// MARK:(Clex)
-//
 static b32_t clex_tokenizer_init(clex_tokenizer_t* t, str_t buffer);
 static clex_token_t clex_next_token(clex_tokenizer_t* t);
 
-//
-// MARK:(File)
-//
-
-enum file_access_t {
-  FILE_ACCESS_READ,   // Only reads the file, does not write
-  FILE_ACCESS_CREATE, // Creates or truncates a file for writing, as if it's new
-  FILE_ACCESS_MODIFY, // Write to a file, but does not truncate.
-};
-
-struct file_t; 
 
 static str_t  file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate = false); 
 static b32_t  file_write_from_str(const char* filename, str_t buffer);
@@ -1321,17 +1217,11 @@ static b32_t  file_read(file_t* fp, void* dest, usz_t size, usz_t offset);
 static b32_t  file_write(file_t* fp, const void* src, usz_t size, usz_t offset);
 static u64_t  file_get_size(file_t* fp);
 
-//
-// MARK:(Clock)
-//
 static u64_t  clock_time();
 static u64_t  clock_resolution();
 
-
-
 //
-// IMPLEMENTATIONS
-//
+// @mark: Implementation
 //
 #if OS_WINDOWS
 # include <windows.h>
@@ -5259,18 +5149,18 @@ static rgba_t hsla_to_rgba(hsla_t c) {
 //
 
 //
-// Generic version of quicksort
+// Generic version of sort_quick
 //
 
-typedef b32_t _quicksort_generic_cmp_t(const void* lhs, const void* rhs);
+typedef b32_t _sort_quick_generic_cmp_t(const void* lhs, const void* rhs);
 
 static u32_t 
-_quicksort_generic_partition(
+_sort_quick_generic_partition(
     void* a,
     u32_t start, 
     u32_t ope,
     u32_t element_size,
-    _quicksort_generic_cmp_t cmp) {
+    _sort_quick_generic_cmp_t cmp) {
 
   // Save the rightmost index as pivot
   // This frees up the right most index as a slot
@@ -5293,25 +5183,25 @@ _quicksort_generic_partition(
 
 // @note: This is done inplace
 static void
-_quicksort_generic_range(
+_sort_quick_generic_range(
   void* a, 
   u32_t start, 
   u32_t ope,
   u32_t element_size,
-  _quicksort_generic_cmp_t cmp) 
+  _sort_quick_generic_cmp_t cmp) 
 {
   if (ope - start <= 1) {
     return;
   }
-  u32_t pivot = _quicksort_generic_partition(a, start, ope, element_size, cmp);
-  _quicksort_generic_range(a, start, pivot, element_size, cmp);
-  _quicksort_generic_range(a, pivot+1, ope, element_size, cmp);
+  u32_t pivot = _sort_quick_generic_partition(a, start, ope, element_size, cmp);
+  _sort_quick_generic_range(a, start, pivot, element_size, cmp);
+  _sort_quick_generic_range(a, pivot+1, ope, element_size, cmp);
 }
 
 
 static void
-_quicksort_generic(void* entries, u32_t entry_count, u32_t element_size, _quicksort_generic_cmp_t cmp) {
-  _quicksort_generic_range(entries, 0, entry_count, element_size, cmp);
+_sort_quick_generic(void* entries, u32_t entry_count, u32_t element_size, _sort_quick_generic_cmp_t cmp) {
+  _sort_quick_generic_range(entries, 0, entry_count, element_size, cmp);
 }
 
 static void
@@ -5325,7 +5215,7 @@ _sort_swap_entries(sort_entry_t* a, sort_entry_t* b) {
 // Quick sort
 //
 static u32_t
-_quicksort_partition(sort_entry_t* a,
+_sort_quick_partition(sort_entry_t* a,
                      u32_t start, 
                      u32_t ope) 
 {
@@ -5352,21 +5242,21 @@ _quicksort_partition(sort_entry_t* a,
 
 // @note: This is done inplace
 static void
-_quicksort_range(sort_entry_t* a, 
+_sort_quick_range(sort_entry_t* a, 
                  u32_t start, 
                  u32_t ope) 
 {
   if (ope - start <= 1) {
     return;
   }
-  u32_t pivot = _quicksort_partition(a, start, ope);
-  _quicksort_range(a, start, pivot);
-  _quicksort_range(a, pivot+1, ope);
+  u32_t pivot = _sort_quick_partition(a, start, ope);
+  _sort_quick_range(a, start, pivot);
+  _sort_quick_range(a, pivot+1, ope);
 }
 
 static void
-quicksort(sort_entry_t* entries, u32_t entry_count) {
-  _quicksort_range(entries, 0, entry_count);
+sort_quick(sort_entry_t* entries, u32_t entry_count) {
+  _sort_quick_range(entries, 0, entry_count);
 
 }
 
@@ -7142,7 +7032,7 @@ static b32_t
         y_edges[i].index = i;
         y_edges[i].key = -(f32_t)max_of(edges[i].p0.y, edges[i].p1.y);
       }
-      quicksort(y_edges, edge_count);
+      sort_quick(y_edges, edge_count);
 
       sort_entry_t* active_edges = arena_push_arr(sort_entry_t, allocator, edge_count);
       if (!active_edges) {
@@ -7178,7 +7068,7 @@ static b32_t
             }
           }
         }
-        quicksort(active_edges, act_edge_count);
+        sort_quick(active_edges, act_edge_count);
 
         if (act_edge_count >= 2) {
           u32_t crossings = 0;
@@ -8393,22 +8283,6 @@ arena_revert(arena_marker_t marker) {
   marker.arena->pos = marker.old_pos;
 }
 
-static void 
-arena_calc_push(arena_calc_t* c, usz_t size, usz_t alignment) {
-  c->result = align_up_pow2(c->result, alignment);
-  c->result += size;
-}
-
-
-static void 
-arena_calc_clear(arena_calc_t* c) {
-  c->result = 0;
-}
-
-static usz_t 
-arena_calc_get_result(arena_calc_t* c) {
-  return c->result;
-}
 
 
 //
@@ -8564,9 +8438,6 @@ garena_free(garena_t* ga, void* block) {
 
 }
 
-//
-// MARK:(RectPack)
-//
 
 struct _rp_node{
   u32_t x, y, w, h;
@@ -8620,7 +8491,7 @@ _rp_sort(rp_rect_t* rects,
       }
     } break;
   }
-  quicksort(entries, count);
+  sort_quick(entries, count);
 }
 
 static b32_t

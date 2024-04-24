@@ -14,6 +14,8 @@ eden_get_config_sig(eden_get_config)
   eden_config_t ret;
 
   ret.target_frame_rate = 60;
+  ret.max_workers = 256;
+  ret.max_files = 32;
 
   ret.max_inspector_entries = 8;
   ret.max_profiler_entries = 8;
@@ -38,28 +40,8 @@ eden_get_config_sig(eden_get_config)
   return ret;
 }
 
-struct camera_t {
-  f32_t min_x, min_y, max_x, max_y; 
-};
-
-static void 
-camera_
-
-static void
-camera_lookat(camera_t* cam) {
-}
-
-static void 
-camera_update(camera_t* cam) 
-{
-  eden_set_view(eden, min_x, max_x, min_y, max_y, 0.f, 0.f);
-}
-
-
-
 struct sandbox_t {
   arena_t arena;
-  camera_t camera;
 };
 
 exported 
@@ -70,16 +52,10 @@ eden_update_and_render_sig(eden_update_and_render) {
 
     auto* sandbox = (sandbox_t*)(eden->user_data);
     eden_assets_init_from_file(eden, SANDBOX_ASSET_FILE, &sandbox->arena);
-
-    sandbox->camera = {-};
-
   }
 
   auto* sandbox = (sandbox_t*)(eden->user_data);
-
-
   eden_set_design_dimensions(eden, 1600, 900);
-  camera_update
 
   eden_draw_asset_sprite(eden, ASSET_SPRITE_ID_BLANK, { 0.f, 0.f }, {100.f, 100.f});
 

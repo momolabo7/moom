@@ -1,114 +1,9 @@
 
-//
-// "Tile Based Platformer"
-// 
 #include "momo.h"
-#include "eden_asset_id_lit.h"
+#include "eden_asset_id_sandbox.h"
 #include "eden.h"
 
-#define TBG_TILE_SIZE (50.f)
-#define TBG_TILE_SIZE_V2 (v2f_set(TBG_TILE_SIZE, TBG_TILE_SIZE))
 
-#define two_2_one(x, y, w) (x + (w * y))
-#define one_2_two(id, w)   (v2u_set(id%w, id/w))
-
-#define tbg_from_eden(eden) ((tbg_t*)eden->user_data)
-
-u32_t g_grid_w = 10;
-u32_t g_grid_h = 10;
-u32_t g_grid[] = {
-  0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,1,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,
-};
-
-
-struct tbg_t {
-
-  arena_t main_arena;
-  arena_t asset_arena;
-  arena_t debug_arena;
-  arena_t frame_arena;
-
-  eden_assets_t assets;
-};
-
-// Globals
-tbg_t* g_tbg;
-eden_t* g_eden;
-
-exported 
-eden_update_and_render_sig(eden_update_and_render) 
-{ 
-  g_eden = eden;
-  g_tbg = tbg_from_eden(eden);
-  if(eden->user_data == nullptr) {
-    usz_t lit_memory_size = sizeof(tbg_t);
-    usz_t asset_memory_size = megabytes(20);
-    //usz_t debug_memory_size = megabytes(1);
-    usz_t frame_memory_size = megabytes(1);
-    //usz_t mode_memory_size = megabytes(1);
-
-    // Calculate the total required memory with alignment
-    usz_t required_memory = 0;
-    {
-      make(arena_calc_t, c);
-      arena_calc_push(c, lit_memory_size, 16);
-      arena_calc_push(c, asset_memory_size, 16);
-      //arena_calc_push(c, debug_memory_size, 16);
-      arena_calc_push(c, frame_memory_size, 16);
-      //arena_calc_push(c, mode_memory_size, 16);
-      required_memory = arena_calc_get_result(c);
-    }
-
-    u8_t* memory = (u8_t*)eden_allocate_memory(g_eden, required_memory);
-    if (!memory) {
-      eden->is_running = false;
-      return;
-    }
-    eden->user_data = memory;
-    g_tbg = tbg_from_eden(eden);
-
-    //
-    // Initialize arenas
-    //
-    arena_init(&g_tbg->main_arena, memory + sizeof(tbg_t), required_memory - sizeof(tbg_t));
-    arena_push_partition(&g_tbg->main_arena, &g_tbg->asset_arena, asset_memory_size, 16);
-    arena_push_partition(&g_tbg->main_arena, &g_tbg->frame_arena, asset_memory_size, 16);
-
-
-    // Initialize assets
-    eden_assets_init(&g_tbg->assets, g_eden, LIT_ASSET_FILE, &g_tbg->asset_arena);
-    
-    // Initialize view
-    eden_set_design_dimensions(g_eden, 800, 800);
-    eden_set_view(g_eden, 0.f, 800, 0.f, 800, 0.f, 0.f);
-  }
-
-  arena_clear(&g_tbg->frame_arena);
-  eden_clear_canvas(g_eden, rgba_set(0.2f, 0.2f, 0.2f, 1.f)); 
-  eden_set_blend_alpha(g_eden);
-
-  
-
-  // Render grid
-  for(u32_t x = 0; x < 10; ++x){
-    for (u32_t y = 0; y < 10; ++y) {
-      if (g_grid[two_2_one(x,y,10)] == 0) {
-        eden_draw_rect(g_eden, v2f_set(x * 50, y * 50), 0, v2f_set(45, 45), rgba_set(0.5f,0.5f,0.5f,1));
-      }
-    }
-  }
-  eden_advance_depth(g_eden);
-
-}
 
 //
 // Game functions
@@ -119,28 +14,190 @@ eden_get_config_sig(eden_get_config)
   eden_config_t ret;
 
   ret.target_frame_rate = 60;
+  ret.max_workers = 256;
+  ret.max_files = 32;
 
-  ret.debug_arena_size = kilobytes(300);
-  ret.max_inspector_entries = 256;
-  ret.max_profiler_entries = 256;
+  ret.max_inspector_entries = 8;
+  ret.max_profiler_entries = 8;
   ret.max_profiler_snapshots = 120;
 
-  ret.gfx_arena_size = megabytes(256);
   ret.texture_queue_size = megabytes(5);
   ret.render_command_size = megabytes(100);
   ret.max_textures = 1;
   ret.max_texture_payloads = 1;
   ret.max_sprites = 4096;
-  ret.max_triangles = 4096;
+  ret.max_triangles = 1; // TODO: triangles and sprites should allow for 0
 
   ret.audio_enabled = false;
-  ret.audio_arena_size = megabytes(256);
   ret.audio_samples_per_second = 48000;
   ret.audio_bits_per_sample = 16;
   ret.audio_channels = 2;
-  
-  ret.window_title = "tbg";
 
-  ret.max_sprites = 4096;
+  ret.window_title = "tile based platformer";
+  ret.window_initial_width = 1600;
+  ret.window_initial_height = 900;
+
   return ret;
+}
+
+struct tbp_player_t {
+  v2f_t pos, vel, acc;
+  v2f_t size;
+  b32_t can_jump;
+};
+
+struct tbp_tile_t {
+  v2f_t pos;
+  v2f_t size;
+};
+
+struct tbp_t {
+  arena_t arena;
+  tbp_player_t player;
+  tbp_tile_t tile;
+};
+
+exported 
+eden_update_and_render_sig(eden_update_and_render) { 
+  if (eden->user_data == nullptr)
+  {
+    eden->user_data = arena_bootstrap_push(tbp_t, arena, megabytes(32)); 
+    auto* tbp = (tbp_t*)(eden->user_data);
+    eden_assets_init_from_file(eden, SANDBOX_ASSET_FILE, &tbp->arena);
+
+    // player
+    tbp->player.pos = v2f_set(800, 800);
+    tbp->player.size = v2f_set(100, 100);
+    tbp->player.vel = v2f_zero();
+    tbp->player.acc = v2f_zero();
+    tbp->player.can_jump = false;
+
+    // tile
+    tbp->tile.pos = v2f_set(800, 300);
+    tbp->tile.size = v2f_set(100, 100);
+
+  }
+
+  f32_t dt = eden_get_dt(eden);
+
+  auto* tbp = (tbp_t*)(eden->user_data);
+  eden_set_design_dimensions(eden, 1600, 900);
+  eden_set_view(eden, 0.f, 1600, 0.f, 900, 0.f, 0.f);
+  eden_clear_canvas(eden, rgba_set(0.1f, 0.1f, 0.1f, 1.0f));
+
+  // Zero out the forces
+  tbp->player.acc = v2f_zero();
+
+  // Player controls
+  {
+    const f32_t speed = 500.f;
+    const f32_t jump_force = 50000.f;
+
+    v2f_t dir = {};
+    if (eden_is_button_down(eden, EDEN_BUTTON_CODE_A)) 
+    {
+      dir.x -= 1.f;
+    }
+    if (eden_is_button_down(eden, EDEN_BUTTON_CODE_D)) 
+    {
+      dir.x += 1.f;
+    }
+    if (eden_is_button_down(eden, EDEN_BUTTON_CODE_SPACE))
+    {
+      if (tbp->player.can_jump)
+        tbp->player.acc.y += jump_force;
+    }
+    tbp->player.vel.x = dir.x * speed;
+  }
+
+  // update player
+  {
+    // lup sup gravity
+    const f32_t gravity = 1000.f;
+    tbp->player.acc.y -= gravity; 
+  
+    // lup sup euler's integration
+    tbp->player.vel += tbp->player.acc * dt;
+    tbp->player.pos += tbp->player.vel * dt;
+
+    // lupsup collision
+    {
+      // Just collide with floor
+      f32_t feet = tbp->player.pos.y - tbp->player.size.h/2;
+      if (feet < 0)  // detect if feet is on floor
+      {
+        // do collision
+        f32_t floor_y = 0;
+        f32_t pushback = floor_y - feet;
+        tbp->player.pos.y += pushback;
+        tbp->player.vel.y = 0; // negate y
+        tbp->player.can_jump = true;
+      }
+      else 
+      {
+        tbp->player.can_jump = false;
+      }
+    }
+
+    rgba_t color = RGBA_WHITE;
+    // tile collision
+    {
+      f32_t widths = tbp->player.size.w/2 + tbp->tile.size.w/2;
+      f32_t px = tbp->player.pos.x;
+      f32_t tx = tbp->tile.pos.x; 
+      f32_t delta_x = px - tx;
+      f32_t distance_x = f32_abs(delta_x);
+
+      if ((distance_x - widths) < 0) 
+      {
+        f32_t heights = tbp->player.size.h/2 + tbp->tile.size.h/2;
+        f32_t py = tbp->player.pos.y;
+        f32_t ty = tbp->tile.pos.y; 
+        f32_t delta_y = py - ty;
+        f32_t distance_y = f32_abs(delta_y);
+        if ((distance_y - heights) < 0)
+        {
+          // Collision!
+          color = RGBA_RED;
+
+          f32_t pushback_x = widths - distance_x;
+          f32_t pushback_y = heights - distance_y;
+
+          // Response
+          if (pushback_x < pushback_y) 
+          {
+            // @todo: efficient way to get signed numbers out of f32
+            if (delta_x < 0) pushback_x *= -1.f;
+            tbp->player.pos.x += pushback_x;
+            tbp->player.vel.x = 0;
+          }
+          else  // pushback_y <= pushback_x
+          {
+            // @todo: efficient way to get signed numbers out of f32
+            if (delta_y < 0) pushback_y *= -1.f;
+            tbp->player.pos.y += pushback_y;
+
+            tbp->player.vel.y = 0;
+          }
+        }
+      }
+
+    }
+
+    
+
+    eden_draw_rect(eden, 
+        tbp->tile.pos,
+        0.f, 
+        tbp->tile.size, 
+        color);
+
+
+    eden_draw_rect(eden, 
+        tbp->player.pos,
+        0.f, 
+        tbp->player.size, 
+        RGBA_GREEN);
+  }
+
 }
