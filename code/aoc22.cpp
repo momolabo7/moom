@@ -1165,6 +1165,25 @@ aoc22_d7p2(const char* filename, arena_t* arena)
 }
 
 
+static void 
+aoc22_d8p1(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+
+  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+
+  while(!stream_is_eos(s)) 
+  {
+    str_t str = stream_consume_line(s);  
+  }
+
+  u32_t sum = 0;
+  printf("%d\n", sum);
+}
 
 int main(int argv, char** argc) {
   if (argv < 2) {

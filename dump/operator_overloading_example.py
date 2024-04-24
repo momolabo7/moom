@@ -64,9 +64,63 @@ class Fraction:
     def __le__(self, other):
         return self < other or self == other
 
-
-# TODO: examples
-
+print("=== Testing constructor === ")
 f1 = Fraction(1, 2)
-f2 = Fraction(2, 4)
-print(f1 >= f2);
+f2 = Fraction(1, 4)
+f3 = Fraction(2, 4)
+print(f1);
+print(f2);
+print(f3);
+
+print("=== Testing __neg__() === ")
+print(-f1);
+print(-f2);
+
+print("=== Testing __add__() === ")
+print(f"{f1} +  {f2} = {f1 + f2}");
+
+print("=== Testing __sub__() === ")
+print(f"{f1} - {f2} = {f1 - f2}");
+
+print("=== Testing __mul__() with same type === ")
+print(f"{f1} * {f2} = {f1 * f2}");
+
+print("=== Testing __mul__() with int type === ")
+print(f"{f1} * 2 = {f1 * 2} ");
+
+print("=== Testing __mul__() with float type === ")
+print(f"{f1} * 1.5 = {f1 * 1.5} ");
+
+print("=== Testing __rmul__() with int type === ")
+print(f"2 * {f1}= {2 * f1} ");
+
+print("=== Testing __rmul__() with float type === ")
+print(f"1.5 * {f1} = {1.5 * f1} ");
+
+print("=== Testing __eq__() ")
+print(f"{f1} == {f3} = {f1 == f3}")
+print(f"{f2} == {f3} = {f2 == f3}")
+
+print("=== Testing __ne__() ")
+print(f"{f1} != {f3} = {f1 != f3}")
+print(f"{f2} != {f3} = {f2 != f3}")
+
+print("=== Testing __gt__() ")
+print(f"{f1} > {f3} = {f1 > f3}")
+print(f"{f2} > {f3} = {f2 > f3}")
+print(f"{f1} > {f2} = {f1 > f2}")
+
+print("=== Testing __lt__() ")
+print(f"{f1} < {f3} = {f1 < f3}")
+print(f"{f2} < {f3} = {f2 < f3}")
+print(f"{f1} < {f2} = {f1 < f2}")
+
+print("=== Testing __ge__() ")
+print(f"{f1} >= {f3} = {f1 >= f3}")
+print(f"{f2} >= {f3} = {f2 >= f3}")
+print(f"{f1} >= {f2} = {f1 >= f2}")
+
+print("=== Testing __le__() ")
+print(f"{f1} <= {f3} = {f1 <= f3}")
+print(f"{f2} <= {f3} = {f2 <= f3}")
+print(f"{f1} <= {f2} = {f1 <= f2}")
