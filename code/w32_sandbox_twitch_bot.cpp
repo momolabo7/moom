@@ -1,3 +1,10 @@
+//
+// @todo:
+// - Linux implementation (DO THIS FIRST MOMO)
+// - Twitch-Bot API
+// 
+
+
 #define FOOLISH 
 
 #include <winsock2.h>
@@ -15,7 +22,7 @@
 #define SERVER "irc.chat.twitch.tv"
 #define PORT "6667"
 #define NICK "NICK moom_bot\r\n"
-#define CHANNEL "JOIN #momohoudai\r\n"
+#define CHANNEL "JOIN #momolabo7\r\n"
 #define CAPREQ "CAP REQ :twitch.tv/membership twitch.tv/tags twitch.tv/commands\r\n"
 
 
@@ -109,6 +116,30 @@ static void
 os_socket_system_end() {
   WSACleanup();
 }
+
+//
+// @note: 
+// - Will null terminate the last byte of the buffer
+// - Will poll for response
+// - Returns a valid str that is up to the received bytes 
+//
+// @todo: maybe we shouldn't null terminate?
+//
+static str_t
+os_socket_receive(os_socket_t s, str_t buffer)
+{
+  // @note: will poll
+  int received_bytes = recv(s.sock, (char*)buffer.e, buffer.size, 0);
+  return str_set(buffer.e, received_bytes);
+}
+static void
+os_sleep(u32_t ms_to_sleep) {
+  Sleep(ms_to_sleep);
+}
+
+#define ms_from_mins(mins) ((mins) * 1000 * 60)
+#define ms_from_secs(secs) ((secs) * 1000)
+
 #elif OS_LINUX
 #warning "socket library not implemented!"
 #elif
@@ -117,6 +148,9 @@ os_socket_system_end() {
 
 int main() 
 {
+  make(arena_t, arena);
+  arena_alloc(arena, gigabytes(1), false);
+
   str_t pw = foolish_read_file_into_buffer("moom_bot_pass");
   str_t refresh_token = foolish_read_file_into_buffer("moom_bot_refresh");
   defer {
@@ -124,7 +158,6 @@ int main()
     foolish_free_buffer(refresh_token);
   };
 
-  printf("Hello World\n");
   b32_t success = os_socket_system_begin();
   if (!success) {
     printf("Cannot start socket system\n");
@@ -140,40 +173,74 @@ int main()
   defer { os_socket_end(s); };
 
 
-  char buffer[512] = {};
 
-  send(s.sock, CAPREQ, sizeof(CAPREQ), 0);
+  str_t buffer = arena_push_str(arena, 512, 16);
+  os_socket_send(s, str_from_lit(CAPREQ));
   os_socket_send(s, pw);
-  send(s.sock, NICK, sizeof(NICK), 0);
-  {
-    int received_bytes = recv(s.sock, buffer, sizeof(buffer), 0);
-    buffer[received_bytes] = 0;
-    printf("%s\n", buffer);
-  }
+  os_socket_send(s, str_from_lit(NICK));
+  str_t r = os_socket_receive(s, buffer);
+  for_cnt(i, r.size) printf("%c", r.e[i]); printf("\n");
+  //printf("%s\n", buffer.e);
+
+  os_socket_send(s, str_from_lit(CHANNEL));
+  r = os_socket_receive(s, buffer);
+  for_cnt(i, r.size) printf("%c", r.e[i]); printf("\n");
+  //printf("%s\n", buffer.e);
+  printf("Joined\n");
 
 #if 0
-  send(s.sock, CHANNEL, sizeof(CHANNEL), 0);
-  {
-    int received_bytes = recv(s.sock, buffer, sizeof(buffer), 0);
-    buffer[received_bytes] = 0;
-    printf("%s\n", buffer);
-  }
-  printf("Joined\n");
-#define TESTMSG "PRIVMSG #momohoudai :HEHE HOHO IM FEK MOOM\r\n"
-  send(s.sock, TESTMSG, sizeof(TESTMSG), 0);
-  {
-    int received_bytes = recv(s.sock, buffer, sizeof(buffer), 0);
-    buffer[received_bytes] = 0;
-    printf("%s\n", buffer);
-  }
-  while(1){
-
-  }
-
+#define TESTMSG "PRIVMSG #momolabo7 :HEHE HOHO IM FEK MOOM\r\n"
+  os_socket_send(s, str_from_lit(TESTMSG));
+  r = os_socket_receive(s, buffer);
+  for_cnt(i, r.size) printf("%c", r.e[i]); printf("\n");
 #endif
+
+  // @todo: output
+  while(1)
+  {
+#if 0
+    // test reminders
+#define REMINDER "PRIVMSG #momolabo7 :Remember to stretch! :)\r\n"
+    os_socket_send(s, str_from_lit(REMINDER));
+    os_socket_receive(s, buffer);
+#endif
+
+    str_t result = os_socket_receive(s, buffer);
+    {
+      arena_set_revert_point(arena);
+      str_arr_t msgs = str_split(result, ' ', arena);
+      for_cnt(i, r.size) printf("%c", r.e[i]); printf("\n");
+      if (msgs.size > 3) 
+      {
+        str_t type = msgs.e[2];
+        if (!str_compare_lexographically(type, str_from_lit("PRIVMSG")))
+        {
+          // This is the first 'argument' of a command
+          str_t cmd = msgs.e[4]; 
+          if (!str_compare_lexographically(cmd, str_from_lit(":!wtf")))
+          {
+            stb8_make(stb, 256);
+            str_t who = msgs.e[5];
+            who.size -=2; // @todo: HELP LA (removes \r\n)
+            stb8_push_fmt(stb, str_from_lit("PRIVMSG #momolabo7 :Check out my BRO %S at twitch.tv/%S\r\n"), who, who);
+            os_socket_send(s, stb->str);
+
+          }
+#if 0
+          printf("Message received: ");
+          for_cnt(i , msg.size) 
+            printf("%c", msg.e[i]);
+          printf("\n");
+#endif
+        }
+      }
+      
+    }
+
+//    os_sleep(ms_from_mins(5));
+  }
+
   printf("Great success!\n");
-
-
   return 0;
 
 }
