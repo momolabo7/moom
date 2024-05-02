@@ -1100,6 +1100,7 @@ static void     stb8_push_hex_u8(stb8_t* b, u8_t num);
 static void     stb8_push_hex_u32(stb8_t* b, u32_t num);
 static void     stb8_push_fmt(stb8_t* b, str_t fmt, ...);
 static void     stb8_init(stb8_t* b, u8_t* data, usz_t cap);
+static void     stb8_init_from_str(stb8_t* b, str_t str);
 
 //
 // MARK:(Stream)
@@ -1210,7 +1211,6 @@ static clex_token_t clex_next_token(clex_tokenizer_t* t);
 
 static str_t  file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate = false); 
 static b32_t  file_write_from_str(const char* filename, str_t buffer);
-
 static void   file_close(file_t* fp); 
 static b32_t  file_open(file_t* fp, const char* filename, file_access_t access_type);
 static b32_t  file_read(file_t* fp, void* dest, usz_t size, usz_t offset);
@@ -1223,18 +1223,17 @@ static u64_t  clock_resolution();
 //
 // @mark: Implementation
 //
-#if OS_WINDOWS
-# include <windows.h>
-# undef near
-# undef far
-#elif OS_LINUX
-# include <sys/mman.h> // mmap, munmap
-# include <sys/times.h> // times 
-# include <fcntl.h> // open 
-# include <unistd.h> // write, read, close, sysconf
-#endif
 
 #if OS_WINDOWS
+# include <winsock2.h>
+# include <windows.h> // @note: must be in front of <winsock2.h> :(
+# include <ws2tcpip.h>
+# include <iphlpapi.h>
+# undef near
+# undef far
+
+#pragma comment(lib, "Ws2_32.lib")
+#pragma comment(lib, "Winmm.lib")
 
 struct file_t {
   HANDLE handle;
@@ -1385,6 +1384,15 @@ clock_resolution() {
 
 
 #elif OS_LINUX 
+
+# include <sys/mman.h> // mmap, munmap
+# include <sys/times.h> // times 
+# include <fcntl.h> // open 
+# include <unistd.h> // write, read, close, sysconf
+# include <sys/types.h>
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <netdb.h>
 
 struct file_t {
   int handle;
@@ -5737,17 +5745,27 @@ str_to_u32(str_t s, u32_t* out) {
 
 // Parsing functions
 static b32_t 
-str_to_s32(str_t s, s32_t* out) {
+str_to_s32(str_t s, s32_t* out) 
+{
   return str_to_s32_range(s, 0, s.size, out);
 }
 
 
 
 static void  
-stb8_init(stb8_t* b, u8_t* data, usz_t cap) {
+stb8_init(stb8_t* b, u8_t* data, usz_t cap) 
+{
   b->e = data;
   b->size = 0;
   b->cap = cap;
+}
+
+static void  
+stb8_init_from_str(stb8_t* b, str_t str) 
+{
+  b->e = str.e;
+  b->size = 0;
+  b->cap = str.size;
 }
 
 static usz_t
@@ -8252,7 +8270,6 @@ arena_push_str(arena_t* a, usz_t size, usz_t align) {
 
   return buffer;
 }
-
 
 static b32_t    
 arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align){
