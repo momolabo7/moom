@@ -710,6 +710,8 @@ struct file_t;  // @note: Implementation is different depending on OS
 #define gigabytes(n) ((1<<30) * n)
 #define hundreds(x) ((x) * 100) 
 #define thousands(x) ((x) * 1000)
+#define ms_from_mins(mins) ((mins) * 1000 * 60)
+#define ms_from_secs(secs) ((secs) * 1000)
 #define min_of(l,r) ((l) < (r) ? (l) : (r))
 #define max_of(l,r) ((l) > (r) ? (l) : (r))
 #define clamp_of(x,b,t) (max_of(min_of(x,t),b))
@@ -1044,6 +1046,7 @@ static v2f_t rng_unit_circle(rng_t* r);
 
 // @note: These are for sort entries, which we should try to default to.
 static void sort_quick(sort_entry_t* entries, u32_t entry_count);
+static void sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena);
 
 #define sort_quick_generic_predicate_sig(name) b32_t name(const void* lhs, const void* rhs)
 #define sort_quick_generic(arr, count, predicate) _sort_quick_generic(arr, count, sizeof(*arr), predicate)
@@ -1220,6 +1223,19 @@ static u64_t  file_get_size(file_t* fp);
 static u64_t  clock_time();
 static u64_t  clock_resolution();
 
+
+// @todo: is there a way to remove socket_system_begin/end()?
+struct socket_t;
+static b32_t  socket_system_begin();
+static void   socket_system_end();
+static b32_t  socket_begin(socket_t* socket, const char* server, u32_t port);
+static void   socket_end(socket_t* s);
+static b32_t  socket_send(socket_t* s, str_t msg);
+static str_t  socket_receive(socket_t* s, str_t buffer);
+
+static void snooze(u32_t ms_to_snooze);
+
+
 //
 // @mark: Implementation
 //
@@ -1238,6 +1254,135 @@ static u64_t  clock_resolution();
 struct file_t {
   HANDLE handle;
 };
+
+struct socket_t {
+  SOCKET sock;
+};
+
+//
+// @note: my god windows why you make me do this.
+//
+static b32_t
+socket_system_begin() {
+  WSADATA wsa_data;
+  if (WSAStartup(MAKEWORD(2,2), &wsa_data) != 0) {
+    return false;
+  }
+  return true;
+}
+
+
+static b32_t
+socket_begin(socket_t* s, const char* server, u32_t port)
+{
+  // 1337
+  // 1337 % 10 -> 7 
+  
+  // @todo: this is absolutely a terrible algorthim lul please redo one day.
+  // @note: port numbers are assumed to go up to 5 numbers.
+  char port_str[6] = {};
+  {
+    for(u32_t index = 0; 
+        index < array_count(port_str)-1; 
+        ++index)
+    {
+      port_str[index] = digit_to_ascii(port % 10);
+      port /= 10;
+    }
+    cstr_reverse(port_str);
+  }
+
+
+
+  addrinfo * addr = NULL;
+  addrinfo addr_hints = {};
+  //
+  // AF_INET supposedly specifies IPv4 family.
+  // There are other types: 
+  //   AF_IRDA
+  //   AF_BLUETOOTH
+  //   AF_INET for IPv4
+  //   AF_INET6 for IPv6
+  //   AF_UNSPEC means either IPv4 or IPv6
+  // Should give a good idea on what "address family" means
+  //
+  addr_hints.ai_family = AF_UNSPEC;  
+
+  // 
+  // TCP uses SOCK_STREAM (connection-based)
+  // UDP uses DGRAM (datagram-based)
+  //
+  addr_hints.ai_socktype = SOCK_STREAM;
+
+
+  // @note: This one is self-explanatory...?
+  addr_hints.ai_protocol = IPPROTO_TCP;
+
+  if (getaddrinfo(server, port_str, &addr_hints, &addr) != 0) 
+  {
+    return false;
+  }
+  defer{ freeaddrinfo(addr); };
+  
+  //
+  // With the actual addrinfo, we use that to create our socket
+  //
+  // @note: addrinfo is a linked list.
+  // Perhaps an idea would be to iterate through the linked list of addresses
+  // until one works?
+  //
+  SOCKET sock = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
+  if (sock == INVALID_SOCKET) {
+    return false;
+  }
+  if (connect(sock, addr->ai_addr, addr->ai_addrlen) == SOCKET_ERROR) {
+    return false;
+  }
+
+  s->sock = sock;
+  return true;
+}
+
+static b32_t
+socket_send(socket_t* s, str_t msg) 
+{
+  if (send(s->sock, (char*)msg.e, msg.size, 0) == SOCKET_ERROR) {
+    return false;
+  }
+  return true;
+}
+
+static void 
+socket_end(socket_t* s) 
+{
+  closesocket(s->sock);
+}
+
+static void
+socket_system_end() 
+{
+  WSACleanup();
+}
+
+//
+// @note: 
+// - Will poll for response
+// - Returns a valid str that is up to the received bytes 
+//
+// @todo: 
+// - Maybe it should take in an arena...?
+//
+static str_t
+socket_receive(socket_t* s, str_t buffer)
+{
+  // @note: will poll
+  int received_bytes = recv(s->sock, (char*)buffer.e, buffer.size, 0);
+  return str_set(buffer.e, received_bytes);
+}
+static void
+snooze(u32_t ms_to_snooze) {
+  Sleep(ms_to_snooze);
+}
 
 static void
 file_close(file_t* fp) 
@@ -1397,6 +1542,86 @@ clock_resolution() {
 struct file_t {
   int handle;
 };
+
+
+struct socket_t {
+  b32_t is_valid; // Probably should be some error code?
+  int sock;
+  operator bool() {
+    return is_valid;
+  }
+};
+
+static b32_t 
+socket_system_begin() 
+{
+  return true; 
+}
+
+static void  socket_system_end() {}
+
+static b32_t
+socket_begin(socket_t* s, const char* server, u32_t port)
+{
+  hostent* server_host = gethostbyname(server);
+  if(!server_host) {
+    return false;
+  }
+
+  int fd = socket(AF_INET, SOCK_STREAM, 0);  
+  if (fd == -1) {
+    return false;
+  }
+
+  sockaddr_in address = {};
+  address.sin_family = AF_INET;
+  memory_copy(&address.sin_addr, server_host->h_addr, server_host->h_length);
+  address.sin_port = htons(6667);
+
+  if (connect(fd, (sockaddr*)&address, sizeof(address)) == -1)
+  {
+    return false;
+  }
+
+  s->sock = fd;
+
+  return true;
+}
+
+static void
+socket_end(socket_t* s) 
+{
+  close(s->sock);
+}
+
+static b32_t
+socket_send(socket_t* s, str_t msg) 
+{
+  if (send(s->sock, (char*)msg.e, msg.size, 0) == -1)
+  {
+    return false;
+  }
+
+  return true;
+}
+
+static str_t
+socket_receive(socket_t* s, str_t buffer)
+{
+  // @note: will poll
+  ssize_t received_bytes = recv(s->sock, (char*)buffer.e, buffer.size, 0);
+  if (received_bytes == -1)
+  {
+    return str_bad();
+  }
+  return str_set(buffer.e, received_bytes);
+}
+
+static void 
+snooze(u32_t ms_to_snooze) 
+{
+  usleep(ms_to_snooze * 1000);
+}
 
 static void
 file_close(file_t* fp) 
@@ -5156,10 +5381,104 @@ static rgba_t hsla_to_rgba(hsla_t c) {
 // MARK:(Sorting)
 //
 
-//
-// Generic version of sort_quick
-//
 
+// How this works:
+//   Recall how IEEE floating point works. 
+//   If our floating points are all positive (signed bit is 0),
+//   we technically don't have to care much about the exponent
+//   and mantisa because they are already in order.
+//   e.g. 3.14 > 5.123 when comparing just their bits.
+//
+//   The issue comes when we have to consider NEGATIVE floating point
+//   values. We solve the positive floating point values by setting the 
+//   first bit, which will shift all positive numbers forwards. 
+//
+//   This implies that all negative numbers will not have their first bit 
+//   set. However, just 'unsetting' the negative number's first bit is not 
+//   enough before negative numbers increase backwards. 
+//
+//   e.g. -3.14 > -5.123 but if we just remove the negative bits, 
+//         3.14 is now < 5.123, which is wrong. 
+//         We must maintain that 3.14 < 5.123
+//         (since they are originally negative)
+//
+//   Consider that we want the following (remember first bit means negative):
+//     100 > 101  > 110 > 111
+//     (-0)  (-1)   (-2)  (-3)
+//   
+//   to be converted to something like this:
+//     011 > 010  > 001 > 000
+//     (3)   (2)    (1)   (0)
+//
+//   which means -0 converts to 3, -1 converts to 2, etc...
+//
+//   It seems that we can presumably just flip the bits. 
+//
+static u32_t 
+_sort_key_to_u32(f32_t sort_key)
+{
+  u32_t result = *(u32_t*)&sort_key;
+  if (result & 0x80000000) 
+  {
+    // if signed bit is set, flip everything
+    result = ~result;
+  }
+  else 
+  {
+    // if signed bit is not set, set it
+    result |= 0x80000000;
+  }
+  return result;
+}
+static void 
+sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena)
+{
+  arena_set_revert_point(arena);
+  sort_entry_t* tmp = arena_push_arr(sort_entry_t, arena, entry_count);
+  assert(tmp);
+
+  sort_entry_t* src = entries;
+  sort_entry_t* dest = tmp;
+
+  for(u32_t byte_index = 0;
+      byte_index < 32;
+      byte_index += 8)
+  {
+    u32_t offsets[256] = {};
+
+    // Counting pass: count how many of each key
+    for_cnt(i, entry_count) {
+      u32_t value = _sort_key_to_u32(src[i].key);
+      u32_t piece = (value >> byte_index) & 0xFF;
+      ++offsets[piece];
+    }
+    
+    // Cumulative sum pass: change counts to offsets
+    // Basically at the end of this pass, each item
+    // in offsets[] should contain the index of dest
+    // where the first item of that value to go.
+    u32_t total = 0;
+    for_arr(offset_index, offsets) 
+    {
+      u32_t count = offsets[offset_index];
+      offsets[offset_index] = total;
+      total += count;
+    }
+
+    for_cnt(i, entry_count) {
+      u32_t value = _sort_key_to_u32(src[i].key);
+      u32_t piece = (value >> byte_index) & 0xFF;
+      dest[offsets[piece]++] = src[i];
+    }
+
+    swap(src, dest);
+
+  }
+
+
+}
+
+// Generic version of sort_quick
 typedef b32_t _sort_quick_generic_cmp_t(const void* lhs, const void* rhs);
 
 static u32_t 

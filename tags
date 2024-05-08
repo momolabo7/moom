@@ -227,6 +227,7 @@ box_y1	code/eden.h	/^  f32_t box_x1, box_y1;$/;"	m	language:C++	struct:eden_asse
 box_y1	code/eden_asset_file.h	/^  f32_t box_y1;$/;"	m	language:C++	struct:asset_file_font_glyph_t	typeref:typename:f32_t
 buffer	code/app_lit_ship.cpp	/^  void* buffer;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:void *	file:
 buffer	code/momo.h	/^    str_t buffer;$/;"	m	language:C++	union:arena_t::__anon1db7a63d0f0a	typeref:typename:str_t
+buffer	code/twitch_bot.cpp	/^  u8_t buffer[512];$/;"	m	language:C++	struct:tmi_t	typeref:typename:u8_t[512]	file:
 buffer	code/w32_eden.cpp	/^  void* buffer;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:void *	file:
 buffer	code/w32_sandbox_twitch_bot.cpp	/^  u8_t buffer[512];$/;"	m	language:C++	struct:tmi_t	typeref:typename:u8_t[512]	file:
 buffers	code/eden.h	/^  GLuint buffers[EDEN_GFX_OPENGL_SPRITE_VERTEX_BUFFER_TYPE_COUNT]; \/\/ eden_gfx_opengl_t__VBO_C/;"	m	language:C++	struct:eden_gfx_opengl_sprite_batch_t	typeref:typename:GLuint[]
@@ -329,6 +330,7 @@ cll_remove	code/momo.h	/^#define cll_remove(/;"	d	language:C++
 clock_resolution	code/momo.h	/^clock_resolution() {$/;"	f	language:C++	typeref:typename:u64_t
 clock_resolution	code/momo.h	/^clock_resolution() {$/;"	f	language:C++	typeref:typename:u64_t
 clock_resolution	code/momo.h	/^static u64_t  clock_resolution();$/;"	p	language:C++	typeref:typename:u64_t
+clock_secs_elapsed	code/twitch_bot.cpp	/^clock_secs_elapsed(u64_t start, u64_t end) {$/;"	f	language:C++	typeref:typename:f32_t	file:
 clock_time	code/momo.h	/^clock_time() {$/;"	f	language:C++	typeref:typename:u64_t
 clock_time	code/momo.h	/^clock_time() {$/;"	f	language:C++	typeref:typename:u64_t
 clock_time	code/momo.h	/^static u64_t  clock_time();$/;"	p	language:C++	typeref:typename:u64_t
@@ -1592,6 +1594,7 @@ is_running	code/eden.h	/^  b32_t is_running;$/;"	m	language:C++	struct:eden_t	ty
 is_running	code/w32_eden.cpp	/^  b32_t is_running;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:b32_t	file:
 is_shell	code/app_lit.cpp	/^  b32_t is_shell;$/;"	m	language:C++	struct:lit_light_intersection_t	typeref:typename:b32_t	file:
 is_valid	code/app_lit_ship.cpp	/^  b32_t is_valid;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:b32_t	file:
+is_valid	code/momo.h	/^  b32_t is_valid; \/\/ Probably should be some error code?$/;"	m	language:C++	struct:socket_t	typeref:typename:b32_t
 is_valid	code/w32_eden.cpp	/^  b32_t is_valid;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:b32_t	file:
 is_valid	code/w32_sandbox_socket.cpp	/^  b32_t is_valid; \/\/ Probably should be some error code?$/;"	m	language:C++	struct:os_socket_t	typeref:typename:b32_t	file:
 is_valid	code/w32_sandbox_twitch_bot.cpp	/^  b32_t is_valid; \/\/ Probably should be some error code?$/;"	m	language:C++	struct:socket_t	typeref:typename:b32_t	file:
@@ -1891,6 +1894,7 @@ main	code/test_bigint.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test_fileio_api.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_json.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test_radix_sort.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
+main	code/twitch_bot.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/w32_sandbox_socket.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/w32_sandbox_twitch_bot.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main_arena	code/app_lit.cpp	/^  arena_t main_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
@@ -1980,7 +1984,9 @@ msg1	learn/x64_1_conditionals.s	/^  msg1: db "a >= b", 10, 0 $/;"	d	language:Asm
 msg1len	learn/x64_1_conditionals.s	/^  msg1len: equ $ - msg1 $/;"	d	language:Asm
 msg2	learn/x64_1_conditionals.s	/^  msg2: db "a < b", 10, 0 $/;"	d	language:Asm
 msg2len	learn/x64_1_conditionals.s	/^  msg2len: equ $ - msg2$/;"	d	language:Asm
+ms_from_mins	code/momo.h	/^#define ms_from_mins(/;"	d	language:C++
 ms_from_mins	code/w32_sandbox_twitch_bot.cpp	/^#define ms_from_mins(/;"	d	language:C++	file:
+ms_from_secs	code/momo.h	/^#define ms_from_secs(/;"	d	language:C++
 ms_from_secs	code/w32_sandbox_twitch_bot.cpp	/^#define ms_from_secs(/;"	d	language:C++	file:
 name	code/aoc22.cpp	/^  str_t name;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:str_t	file:
 name	code/eden.h	/^  str_t name;$/;"	m	language:C++	struct:eden_inspector_entry_t	typeref:typename:str_t
@@ -2066,6 +2072,7 @@ operator ==	code/momo.h	/^static b32_t  operator==(v2f_t lhs, v2f_t rhs) { retur
 operator ==	code/momo.h	/^static b32_t  operator==(v2f_t lhs, v2f_t rhs); $/;"	p	language:C++	typeref:typename:b32_t
 operator ==	code/momo.h	/^static b32_t  operator==(v3f_t lhs, v3f_t rhs) { return v3f_is_close(lhs, rhs); }$/;"	f	language:C++	typeref:typename:b32_t
 operator ==	code/momo.h	/^static b32_t  operator==(v3f_t lhs, v3f_t rhs); $/;"	p	language:C++	typeref:typename:b32_t
+operator bool	code/momo.h	/^  operator bool() {$/;"	f	language:C++	struct:socket_t
 operator bool	code/momo.h	/^  operator bool() {$/;"	f	language:C++	struct:str_t
 optimize	bin/build.bat	/^  set optimize=1$/;"	v	language:DosBatch
 optimize	bin/build.bat	/^set optimize=0 $/;"	v	language:DosBatch
@@ -2189,6 +2196,7 @@ rbg_to_hsl	code/momo.h	/^rbg_to_hsl(rgb_t c) {$/;"	f	language:C++	typeref:typena
 rbg_to_hsl	code/momo.h	/^static hsl_t  rbg_to_hsl(rgb_t c);$/;"	p	language:C++	typeref:typename:hsl_t
 read_file	code/eden.h	/^  eden_read_file_f* read_file;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_read_file_f *
 rear	code/gist_ring_buffer.cpp	/^  u32_t rear;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
+receiver	code/twitch_bot.cpp	/^  str_t receiver;$/;"	m	language:C++	struct:tmi_t	typeref:typename:str_t	file:
 receiver	code/w32_sandbox_twitch_bot.cpp	/^  str_t receiver;$/;"	m	language:C++	struct:tmi_t	typeref:typename:str_t	file:
 rect	code/pass.h	/^  rp_rect_t* rect;$/;"	m	language:C++	struct:pass_pack_atlas_sprite_t	typeref:typename:rp_rect_t *
 region_x0	code/eden.h	/^  u32_t region_x0; $/;"	m	language:C++	struct:eden_gfx_opengl_t	typeref:typename:u32_t
@@ -2199,6 +2207,8 @@ remainders	code/momo.h	/^  u16_t remainders[256];$/;"	m	language:C++	struct:crc1
 remainders	code/momo.h	/^  u32_t remainders[256];$/;"	m	language:C++	struct:crc32_table_t	typeref:typename:u32_t[256]
 remainders	code/momo.h	/^  u8_t remainders[256];$/;"	m	language:C++	struct:crc8_table_t	typeref:typename:u8_t[256]
 REMINDER	code/w32_sandbox_twitch_bot.cpp	/^#define REMINDER /;"	d	language:C++	file:
+reminders	code/twitch_bot.cpp	/^  str_t reminders[8];$/;"	m	language:C++	struct:tmi_t	typeref:typename:str_t[8]	file:
+reminder_count	code/twitch_bot.cpp	/^  u32_t reminder_count;$/;"	m	language:C++	struct:tmi_t	typeref:typename:u32_t	file:
 renderer_texture_handle	code/eden.h	/^  u32_t renderer_texture_handle;$/;"	m	language:C++	struct:eden_asset_bitmap_t	typeref:typename:u32_t
 render_client	code/app_lit_ship.cpp	/^  IAudioRenderClient* render_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioRenderClient *	file:
 render_client	code/w32_eden.cpp	/^  IAudioRenderClient* render_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioRenderClient *	file:
@@ -2300,6 +2310,7 @@ selected_animator_for_sensor	code/app_lit.cpp	/^  lit_game_animator_t* selected_
 selected_sensor_group_id	code/app_lit.cpp	/^  u32_t selected_sensor_group_id;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
 semaphore	code/app_lit_ship.cpp	/^  HANDLE semaphore; $/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:HANDLE	file:
 semaphore	code/w32_eden.cpp	/^  HANDLE semaphore; $/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:HANDLE	file:
+sender	code/twitch_bot.cpp	/^  stb8_t sender;$/;"	m	language:C++	struct:tmi_t	typeref:typename:stb8_t	file:
 sender	code/w32_sandbox_twitch_bot.cpp	/^  stb8_t sender;$/;"	m	language:C++	struct:tmi_t	typeref:typename:stb8_t	file:
 sensors	code/app_lit.cpp	/^  lit_game_sensor_t sensors[128];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_sensor_t[128]	file:
 sensor_count	code/app_lit.cpp	/^  u32_t sensor_count; \/\/ how many sensors there are$/;"	m	language:C++	struct:lit_game_sensor_group_t	typeref:typename:u32_t	file:
@@ -2343,20 +2354,46 @@ sll_prepend	code/momo.h	/^#define sll_prepend(/;"	d	language:C++
 smi_t	code/momo.h	/^typedef intptr_t  smi_t; \/\/ aka 'signed memory index'$/;"	t	language:C++	typeref:typename:intptr_t
 snapshots	code/eden.h	/^  eden_profiler_snapshot_t* snapshots;$/;"	m	language:C++	struct:eden_profiler_entry_t	typeref:typename:eden_profiler_snapshot_t *
 snapshot_index	code/eden.h	/^  u32_t snapshot_index;$/;"	m	language:C++	struct:eden_profiler_t	typeref:typename:u32_t
+snooze	code/momo.h	/^snooze(u32_t ms_to_snooze) $/;"	f	language:C++	typeref:typename:void
+snooze	code/momo.h	/^snooze(u32_t ms_to_snooze) {$/;"	f	language:C++	typeref:typename:void
+snooze	code/momo.h	/^static void snooze(u32_t ms_to_snooze);$/;"	p	language:C++	typeref:typename:void
+sock	code/momo.h	/^  int sock;$/;"	m	language:C++	struct:socket_t	typeref:typename:int
+sock	code/momo.h	/^  SOCKET sock;$/;"	m	language:C++	struct:socket_t	typeref:typename:SOCKET
 sock	code/w32_sandbox_socket.cpp	/^  SOCKET sock;$/;"	m	language:C++	struct:os_socket_t	typeref:typename:SOCKET	file:
 sock	code/w32_sandbox_twitch_bot.cpp	/^  int sock;$/;"	m	language:C++	struct:socket_t	typeref:typename:int	file:
 sock	code/w32_sandbox_twitch_bot.cpp	/^  SOCKET sock;$/;"	m	language:C++	struct:socket_t	typeref:typename:SOCKET	file:
+socket	code/twitch_bot.cpp	/^  socket_t socket;$/;"	m	language:C++	struct:tmi_t	typeref:typename:socket_t	file:
 socket	code/w32_sandbox_twitch_bot.cpp	/^  socket_t socket;$/;"	m	language:C++	struct:tmi_t	typeref:typename:socket_t	file:
+socket_begin	code/momo.h	/^socket_begin(socket_t* s, const char* server, u32_t port)$/;"	f	language:C++	typeref:typename:b32_t
+socket_begin	code/momo.h	/^socket_begin(socket_t* s, const char* server, u32_t port)$/;"	f	language:C++	typeref:typename:b32_t
+socket_begin	code/momo.h	/^static b32_t  socket_begin(socket_t* socket, const char* server, u32_t port);$/;"	p	language:C++	typeref:typename:b32_t
 socket_begin	code/w32_sandbox_twitch_bot.cpp	/^socket_begin(const char* server, const char* port)$/;"	f	language:C++	typeref:typename:socket_t	file:
 socket_begin	code/w32_sandbox_twitch_bot.cpp	/^socket_begin(const char* server, const char* port)$/;"	f	language:C++	typeref:typename:socket_t	file:
+socket_end	code/momo.h	/^socket_end(socket_t* s) $/;"	f	language:C++	typeref:typename:void
+socket_end	code/momo.h	/^socket_end(socket_t* s) $/;"	f	language:C++	typeref:typename:void
+socket_end	code/momo.h	/^static void   socket_end(socket_t* s);$/;"	p	language:C++	typeref:typename:void
 socket_end	code/w32_sandbox_twitch_bot.cpp	/^socket_end(socket_t s) {$/;"	f	language:C++	typeref:typename:void	file:
 socket_end	code/w32_sandbox_twitch_bot.cpp	/^socket_end(socket_t s) {$/;"	f	language:C++	typeref:typename:void	file:
+socket_receive	code/momo.h	/^socket_receive(socket_t* s, str_t buffer)$/;"	f	language:C++	typeref:typename:str_t
+socket_receive	code/momo.h	/^socket_receive(socket_t* s, str_t buffer)$/;"	f	language:C++	typeref:typename:str_t
+socket_receive	code/momo.h	/^static str_t  socket_receive(socket_t* s, str_t buffer);$/;"	p	language:C++	typeref:typename:str_t
 socket_receive	code/w32_sandbox_twitch_bot.cpp	/^socket_receive(socket_t s, str_t buffer)$/;"	f	language:C++	typeref:typename:str_t	file:
+socket_send	code/momo.h	/^socket_send(socket_t* s, str_t msg) $/;"	f	language:C++	typeref:typename:b32_t
+socket_send	code/momo.h	/^socket_send(socket_t* s, str_t msg) $/;"	f	language:C++	typeref:typename:b32_t
+socket_send	code/momo.h	/^static b32_t  socket_send(socket_t* s, str_t msg);$/;"	p	language:C++	typeref:typename:b32_t
 socket_send	code/w32_sandbox_twitch_bot.cpp	/^socket_send(socket_t s, str_t msg) {$/;"	f	language:C++	typeref:typename:void	file:
+socket_system_begin	code/momo.h	/^socket_system_begin() $/;"	f	language:C++	typeref:typename:b32_t
+socket_system_begin	code/momo.h	/^socket_system_begin() {$/;"	f	language:C++	typeref:typename:b32_t
+socket_system_begin	code/momo.h	/^static b32_t  socket_system_begin();$/;"	p	language:C++	typeref:typename:b32_t
 socket_system_begin	code/w32_sandbox_twitch_bot.cpp	/^socket_system_begin() $/;"	f	language:C++	typeref:typename:b32_t	file:
 socket_system_begin	code/w32_sandbox_twitch_bot.cpp	/^socket_system_begin() {$/;"	f	language:C++	typeref:typename:b32_t	file:
+socket_system_end	code/momo.h	/^socket_system_end() $/;"	f	language:C++	typeref:typename:void
+socket_system_end	code/momo.h	/^static void   socket_system_end();$/;"	p	language:C++	typeref:typename:void
+socket_system_end	code/momo.h	/^static void  socket_system_end() {}$/;"	f	language:C++	typeref:typename:void
 socket_system_end	code/w32_sandbox_twitch_bot.cpp	/^socket_system_end() {$/;"	f	language:C++	typeref:typename:void	file:
 socket_system_end	code/w32_sandbox_twitch_bot.cpp	/^static void  socket_system_end() {$/;"	f	language:C++	typeref:typename:void	file:
+socket_t	code/momo.h	/^struct socket_t {$/;"	s	language:C++
+socket_t	code/momo.h	/^struct socket_t {$/;"	s	language:C++
 socket_t	code/w32_sandbox_twitch_bot.cpp	/^struct socket_t {$/;"	s	language:C++	file:
 sort_entry_t	code/momo.h	/^struct sort_entry_t $/;"	s	language:C++
 sort_quick	code/momo.h	/^sort_quick(sort_entry_t* entries, u32_t entry_count) {$/;"	f	language:C++	typeref:typename:void
@@ -2547,10 +2584,16 @@ timer	code/app_lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_splash_t	t
 title	code/app_lit.cpp	/^  str_t title;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:str_t	file:
 title_timer	code/app_lit.cpp	/^  f32_t title_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t	file:
 title_wp_index	code/app_lit.cpp	/^  u32_t title_wp_index;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
+tmi_add_reminder	code/twitch_bot.cpp	/^tmi_add_reminder(tmi_t, str_t reminder, f32_t interval)$/;"	f	language:C++	typeref:typename:void	file:
+tmi_connect	code/twitch_bot.cpp	/^tmi_connect(tmi_t* tmi, str_t password, str_t channel, str_t nick, arena_t* arena) $/;"	f	language:C++	typeref:typename:b32_t	file:
 tmi_connect	code/w32_sandbox_twitch_bot.cpp	/^tmi_connect(tmi_t* tmi, str_t password, str_t channel, str_t nick, arena_t* arena) $/;"	f	language:C++	typeref:typename:b32_t	file:
+tmi_disconnect	code/twitch_bot.cpp	/^tmi_disconnect(tmi_t* tmi) $/;"	f	language:C++	typeref:typename:void	file:
 tmi_disconnect	code/w32_sandbox_twitch_bot.cpp	/^tmi_disconnect(tmi_t* tmi) $/;"	f	language:C++	typeref:typename:void	file:
+tmi_send_message	code/twitch_bot.cpp	/^tmi_send_message(tmi_t* tmi, str_t message)$/;"	f	language:C++	typeref:typename:void	file:
 tmi_send_message	code/w32_sandbox_twitch_bot.cpp	/^tmi_send_message(tmi_t* tmi, str_t message)$/;"	f	language:C++	typeref:typename:void	file:
+tmi_t	code/twitch_bot.cpp	/^struct tmi_t$/;"	s	language:C++	file:
 tmi_t	code/w32_sandbox_twitch_bot.cpp	/^struct tmi_t$/;"	s	language:C++	file:
+tmi_update	code/twitch_bot.cpp	/^tmi_update(tmi_t* tmi) $/;"	f	language:C++	typeref:typename:void	file:
 tmp_path	code/app_lit_ship.cpp	/^  const char* tmp_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *	file:
 tmp_path	code/w32_eden.cpp	/^  const char* tmp_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *	file:
 transfer_memory	code/eden.h	/^  u8_t* transfer_memory;$/;"	m	language:C++	struct:eden_gfx_texture_queue_t	typeref:typename:u8_t *
@@ -3066,6 +3109,7 @@ _sort_quick_range	code/momo.h	/^_sort_quick_range(sort_entry_t* a, $/;"	f	langua
 _sort_swap_entries	code/momo.h	/^_sort_swap_entries(sort_entry_t* a, sort_entry_t* b) {$/;"	f	language:C++	typeref:typename:void
 _start	learn/x64_1_conditionals.s	/^_start:$/;"	l	language:Asm
 _stb8_push_fmt_list	code/momo.h	/^_stb8_push_fmt_list(stb8_t* b, str_t format, va_list args) {$/;"	f	language:C++	typeref:typename:void
+_tmi_print_str	code/twitch_bot.cpp	/^_tmi_print_str(str_t str)$/;"	f	language:C++	typeref:typename:void	file:
 _tmi_print_str	code/w32_sandbox_twitch_bot.cpp	/^_tmi_print_str(tmi_t* tmi, str_t str)$/;"	f	language:C++	typeref:typename:void	file:
 _ttf_add_vertex	code/momo.h	/^_ttf_add_vertex(v2f_t* vertices, u32_t n, f32_t x, f32_t y) {$/;"	f	language:C++	typeref:typename:void
 _ttf_add_vertex	code/momo.h	/^_ttf_add_vertex(v2f_t* vertices, u32_t n, v2f_t v) {$/;"	f	language:C++	typeref:typename:void
