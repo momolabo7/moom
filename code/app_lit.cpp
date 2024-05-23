@@ -139,7 +139,7 @@ struct lit_game_light_triangle_t {
 };
 
 
-// NOTE(momo): Probably better to put all the triangles together
+// @todo: Probably better to put all the triangles together
 // so that stuff is more data oriented, instead of having 
 // a bunch of triangles per light
 struct lit_game_light_t {
@@ -154,7 +154,6 @@ struct lit_game_light_t {
 
   u32_t intersection_count;
   lit_light_intersection_t intersections[512];
-
 };
 
 
@@ -348,7 +347,7 @@ struct lit_credits_t {
 enum lit_show_debug_type_t {
   LIT_SHOW_DEBUG_NONE,
   LIT_SHOW_DEBUG_PROFILER,
-  //LIT_SHOW_DEBUG_CONSOLE,
+  LIT_SHOW_DEBUG_CONSOLE,
   LIT_SHOW_DEBUG_INSPECTOR,
   
   LIT_SHOW_DEBUG_MAX
@@ -367,7 +366,9 @@ struct lit_save_data_t {
 };
 
 struct lit_t {
-  
+  eden_audio_mixer_instance_t* bgm;
+  eden_asset_sound_id_t bgm_id;
+
   lit_save_data_t save_data;
   lit_show_debug_type_t show_debug_type;
   lit_mode_t next_mode;
@@ -377,7 +378,6 @@ struct lit_t {
     lit_game_t eden;
     lit_credits_t credits;
   };
-  u32_t level_to_start;
 
   // Arenas
   arena_t main_arena;
@@ -481,7 +481,7 @@ lit_goto_credits() {
 static void
 lit_update_and_render_console() 
 {
-  console_t* console = &g_lit->console;
+  eden_console_t* console = &g_lit->console;
   eden_assets_t* assets = &g_lit->assets;
   eden_input_characters_t characters = eden_get_input_characters(g_eden);
 
@@ -492,12 +492,12 @@ lit_update_and_render_console()
     // NOTE(Momo): Not very portable to other platforms....
     u8_t c = characters.data[char_index];
     if (c >= 32 && c <= 126) {
-      stb8_push_u8(&console->input_line, c);
+      strb_push_u8(&console->input_line, c);
     }
     // backspace 
     if (c == 8) {
       if (console->input_line.size > 0) 
-        stb8_pop(&console->input_line);
+        strb_pop(&console->input_line);
     }    
     
     if (c == '\r') {
@@ -539,7 +539,7 @@ lit_update_and_render_console()
        line_index < array_count(console->info_lines);
        ++line_index)
   {
-    stb8_t* line = console->info_lines + line_index;
+    strb_t* line = console->info_lines + line_index;
 
     eden_draw_text(
         g_eden, assets, 
@@ -646,9 +646,9 @@ lit_profiler_update_and_render()
     lit_profiler_end_stat(&cycles);
     lit_profiler_end_stat(&hits);
     lit_profiler_end_stat(&cycles_per_hit);
-    
-    stb8_make(sb, 256);
-    stb8_push_fmt(sb, 
+   
+    strb_t sb = arena_push_strb(&g_lit->frame_arena, 256, 16);
+    strb_push_fmt(&sb, 
                  str_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
                  entry->block_name,
                  (u32_t)cycles.average,
@@ -657,7 +657,7 @@ lit_profiler_update_and_render()
     
     eden_draw_text(g_eden, 
         ASSET_FONT_ID_DEBUG, 
-        sb->str,
+        sb.str,
         rgba_hex(0xFFFFFFFF),
         0.f, 
         render_height - font_height * (line_num), 
@@ -704,27 +704,55 @@ lit_inspector_update_and_render()
       rgba_set(0.f, 0.f, 0.f, 0.5f));
   eden_advance_depth(g_eden);
 
+  strb_t sb = arena_push_strb(&g_lit->frame_arena, 256, 16);
+  
   for(u32_t entry_index = 0; entry_index < inspector->entry_count; ++entry_index)
   {
+    strb_clear(&sb);
     f32_t line_height = 32.f;
-    stb8_make(sb, 256);
-
-
     eden_inspector_entry_t* entry = inspector->entries + entry_index;
     switch(entry->type){
       case EDEN_INSPECTOR_ENTRY_TYPE_U32: {
-        stb8_push_fmt(sb, str_from_lit("[%10S] %7u"),
+        strb_push_fmt(&sb, str_from_lit("[%10S] %7u"),
             entry->name, entry->item_u32);
       } break;
       case EDEN_INSPECTOR_ENTRY_TYPE_F32: {
-        stb8_push_fmt(sb, str_from_lit("[%10S] %7f"),
+        strb_push_fmt(&sb, str_from_lit("[%10S] %7f"),
             entry->name, entry->item_f32);
       } break;
     }
 
     f32_t y = LIT_HEIGHT - line_height * (entry_index+1);
-    eden_draw_text(g_eden, ASSET_FONT_ID_DEBUG, sb->str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
+    eden_draw_text(g_eden, ASSET_FONT_ID_DEBUG, sb.str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
     eden_advance_depth(g_eden);
+  }
+}
+
+static void
+lit_play_correct_bgm() {
+  eden_asset_sound_id_t bgm_id = ASSET_SOUND_BGM0;
+  if(g_lit->save_data.unlocked_levels >= 5) 
+  {
+    bgm_id = ASSET_SOUND_BGM1;
+  }
+  if(g_lit->save_data.unlocked_levels >= 10) 
+  {
+    bgm_id = ASSET_SOUND_BGM2;
+  }
+  if(g_lit->save_data.unlocked_levels >= 15) 
+  {
+    bgm_id = ASSET_SOUND_BGM3;
+  }
+  
+  // Only change if bgm is diff
+  if (bgm_id != g_lit->bgm_id) 
+  {
+    if (g_lit->bgm) 
+    {
+      eden_audio_mixer_stop(g_eden, g_lit->bgm);
+    }
+    g_lit->bgm = eden_audio_mixer_play(g_eden, bgm_id, true, 0.5f);
+    g_lit->bgm_id = bgm_id;
   }
 }
 
@@ -738,7 +766,7 @@ lit_splash_init() {
 
   splash->timer = 3.f;
   splash->scroll_in_timer = LIT_SPLASH_SCROLL_DURATION;
-  eden_audio_mixer_play(g_eden, ASSET_SOUND_BGM, true, 0.5f);
+  lit_play_correct_bgm();
 }
 
 static void
@@ -771,7 +799,7 @@ lit_splash_update() {
   eden_draw_text_center_aligned(
       g_eden, 
       font,
-      str_from_lit("EDEN"), 
+      str_from_lit("LIT"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -1627,8 +1655,6 @@ lit_game_render_player(lit_game_t* g){
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
     eden_advance_depth(g_eden);
-
-
   }
 }
 
@@ -1968,6 +1994,8 @@ lit_game_init_level(lit_game_t* m, str_t str, u32_t level_id) {
   lit_init_player(m, 400.f, 400.f); 
 
   lit_game_set_title(m, str);
+
+  lit_play_correct_bgm();
 }
 
 
@@ -3687,7 +3715,7 @@ lit_credits_update() {
       g_eden, 
       
       ASSET_FONT_ID_DEFAULT,
-      str_from_lit("EDEN"), 
+      str_from_lit("LIT"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
       LIT_WIDTH/2, y, 
       128.f);
@@ -3813,7 +3841,6 @@ eden_update_and_render_sig(eden_update_and_render)
     g_eden->user_data = arena_bootstrap_push(lit_t, main_arena, megabytes(32));
 
     g_lit = (lit_t*)(g_eden->user_data);
-    g_lit->level_to_start = 0;
     g_lit->next_mode = LIT_MODE_SPLASH;
     //g_lit->next_mode = LIT_MODE_SANDBOX;
     g_lit->mode = LIT_MODE_NONE;
@@ -3854,6 +3881,7 @@ eden_update_and_render_sig(eden_update_and_render)
 #else
     g_lit->save_data.unlocked_levels = 100;
 #endif
+    g_lit->bgm = nullptr;
   }
 
   g_lit = (lit_t*)(g_eden->user_data);
@@ -3955,7 +3983,7 @@ eden_get_config_sig(eden_get_config)
   ret.audio_bits_per_sample = 16;
   ret.audio_channels = 2;
   
-  ret.window_title = "EDEN v0.9";
+  ret.window_title = "LIT v1.10";
   ret.window_initial_width = 800;
   ret.window_initial_height = 800;
 

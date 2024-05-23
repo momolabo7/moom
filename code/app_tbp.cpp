@@ -4,6 +4,8 @@
 #include "eden.h"
 
 
+#define TBP_TILE_SIZE (30)
+#define TBP_TILE_SIZE_HALF (TBP_TILE_SIZE/2)
 
 //
 // Game functions
@@ -42,13 +44,11 @@ eden_get_config_sig(eden_get_config)
 
 struct tbp_player_t {
   v2f_t pos, vel, acc;
-  v2f_t size;
   b32_t can_jump;
 };
 
 struct tbp_tile_t {
   v2f_t pos;
-  v2f_t size;
 };
 
 struct tbp_t {
@@ -67,14 +67,12 @@ eden_update_and_render_sig(eden_update_and_render) {
 
     // player
     tbp->player.pos = v2f_set(800, 800);
-    tbp->player.size = v2f_set(100, 100);
     tbp->player.vel = v2f_zero();
     tbp->player.acc = v2f_zero();
     tbp->player.can_jump = false;
 
     // tile
     tbp->tile.pos = v2f_set(800, 300);
-    tbp->tile.size = v2f_set(100, 100);
 
   }
 
@@ -123,7 +121,7 @@ eden_update_and_render_sig(eden_update_and_render) {
     // lupsup collision
     {
       // Just collide with floor
-      f32_t feet = tbp->player.pos.y - tbp->player.size.h/2;
+      f32_t feet = tbp->player.pos.y - TBP_TILE_SIZE_HALF;
       if (feet < 0)  // detect if feet is on floor
       {
         // do collision
@@ -142,7 +140,7 @@ eden_update_and_render_sig(eden_update_and_render) {
     rgba_t color = RGBA_WHITE;
     // tile collision
     {
-      f32_t widths = tbp->player.size.w/2 + tbp->tile.size.w/2;
+      f32_t widths = TBP_TILE_SIZE_HALF + TBP_TILE_SIZE_HALF;
       f32_t px = tbp->player.pos.x;
       f32_t tx = tbp->tile.pos.x; 
       f32_t delta_x = px - tx;
@@ -150,7 +148,7 @@ eden_update_and_render_sig(eden_update_and_render) {
 
       if ((distance_x - widths) < 0) 
       {
-        f32_t heights = tbp->player.size.h/2 + tbp->tile.size.h/2;
+        f32_t heights = TBP_TILE_SIZE_HALF + TBP_TILE_SIZE_HALF;
         f32_t py = tbp->player.pos.y;
         f32_t ty = tbp->tile.pos.y; 
         f32_t delta_y = py - ty;
@@ -189,14 +187,14 @@ eden_update_and_render_sig(eden_update_and_render) {
     eden_draw_rect(eden, 
         tbp->tile.pos,
         0.f, 
-        tbp->tile.size, 
+        v2f_set(TBP_TILE_SIZE, TBP_TILE_SIZE),
         color);
 
 
     eden_draw_rect(eden, 
         tbp->player.pos,
         0.f, 
-        tbp->player.size, 
+        v2f_set(TBP_TILE_SIZE, TBP_TILE_SIZE),
         RGBA_GREEN);
   }
 

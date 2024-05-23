@@ -15,8 +15,6 @@
 //   Functions        - All function-like stuff
 //   Implementation   - All function-like stuff
 //
-//
-//
 
 
 #ifndef MOMO_H
@@ -440,7 +438,7 @@ struct garena_t
 };
 
 
-struct stb8_t
+struct strb_t
 {
   union 
   {
@@ -452,6 +450,10 @@ struct stb8_t
     };
   };
   usz_t cap;
+
+  operator bool() {
+    return e != nullptr;
+  }
 };
 
 //
@@ -1082,28 +1084,28 @@ static str_arr_t str_split(str_t str, u8_t delimiter, arena_t* arena);
 static usz_t     str_find(str_t str, u8_t character); 
 
 // @todo: the ##LINE might be fake!
-#define stb8_make(name, cap) \
+#define strb_make(name, cap) \
   u8_t temp_buffer_##__LINE__[cap] = {0}; \
-stb8_t name_; \
-stb8_t* name = &name_; \
-stb8_init(name, temp_buffer_##__LINE__, cap);
+strb_t name_; \
+strb_t* name = &name_; \
+strb_init(name, temp_buffer_##__LINE__, cap);
 
-static usz_t    stb8_remaining(stb8_t* b);
-static void     stb8_clear(stb8_t* b);
-static void     stb8_pop(stb8_t* b);
-static void     stb8_push_c8(stb8_t* b, c8_t num);
-static void     stb8_push_u8(stb8_t* b, u8_t num);
-static void     stb8_push_u32(stb8_t* b, u32_t num);
-static void     stb8_push_u64(stb8_t* b, u64_t num);
-static void     stb8_push_f32(stb8_t* b, f32_t value, u32_t precision);
-static void     stb8_push_s32(stb8_t* b, s32_t num);
-static void     stb8_push_s64(stb8_t* b, s64_t num);
-static void     stb8_push_str(stb8_t* b, str_t num);
-static void     stb8_push_hex_u8(stb8_t* b, u8_t num);
-static void     stb8_push_hex_u32(stb8_t* b, u32_t num);
-static void     stb8_push_fmt(stb8_t* b, str_t fmt, ...);
-static void     stb8_init(stb8_t* b, u8_t* data, usz_t cap);
-static void     stb8_init_from_str(stb8_t* b, str_t str);
+static usz_t    strb_remaining(strb_t* b);
+static void     strb_clear(strb_t* b);
+static void     strb_pop(strb_t* b);
+static void     strb_push_c8(strb_t* b, c8_t num);
+static void     strb_push_u8(strb_t* b, u8_t num);
+static void     strb_push_u32(strb_t* b, u32_t num);
+static void     strb_push_u64(strb_t* b, u64_t num);
+static void     strb_push_f32(strb_t* b, f32_t value, u32_t precision);
+static void     strb_push_s32(strb_t* b, s32_t num);
+static void     strb_push_s64(strb_t* b, s64_t num);
+static void     strb_push_str(strb_t* b, str_t num);
+static void     strb_push_hex_u8(strb_t* b, u8_t num);
+static void     strb_push_hex_u32(strb_t* b, u32_t num);
+static void     strb_push_fmt(strb_t* b, str_t fmt, ...);
+static void     strb_init(strb_t* b, u8_t* data, usz_t cap);
+static void     strb_init_from_str(strb_t* b, str_t str);
 
 //
 // MARK:(Stream)
@@ -1134,6 +1136,7 @@ static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align);
 static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align);
 static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align);
 static str_t    arena_push_str(arena_t* a, usz_t size, usz_t align);
+static strb_t   arena_push_strb(arena_t* a, usz_t size, usz_t align);
 static usz_t    arena_remaining(arena_t* a);
 static void*    arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size);
 
@@ -1233,8 +1236,7 @@ static void   socket_end(socket_t* s);
 static b32_t  socket_send(socket_t* s, str_t msg);
 static str_t  socket_receive(socket_t* s, str_t buffer);
 
-static void snooze(u32_t ms_to_snooze);
-
+static void doze(u32_t ms_to_doze);
 
 //
 // @mark: Implementation
@@ -1291,8 +1293,6 @@ socket_begin(socket_t* s, const char* server, u32_t port)
     }
     cstr_reverse(port_str);
   }
-
-
 
   addrinfo * addr = NULL;
   addrinfo addr_hints = {};
@@ -1380,8 +1380,8 @@ socket_receive(socket_t* s, str_t buffer)
   return str_set(buffer.e, received_bytes);
 }
 static void
-snooze(u32_t ms_to_snooze) {
-  Sleep(ms_to_snooze);
+doze(u32_t ms_to_doze) {
+  Sleep(ms_to_doze);
 }
 
 static void
@@ -1431,8 +1431,8 @@ file_open(
 }
 
 static b32_t
-file_read(file_t* fp, void* dest, usz_t size, usz_t offset) {
-  
+file_read(file_t* fp, void* dest, usz_t size, usz_t offset) 
+{
   // Reading the file
   OVERLAPPED overledened = {};
   overledened.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
@@ -1527,7 +1527,6 @@ clock_resolution() {
   return ret;
 }
 
-
 #elif OS_LINUX 
 
 # include <sys/mman.h> // mmap, munmap
@@ -1618,9 +1617,9 @@ socket_receive(socket_t* s, str_t buffer)
 }
 
 static void 
-snooze(u32_t ms_to_snooze) 
+doze(u32_t ms_to_doze) 
 {
-  usleep(ms_to_snooze * 1000);
+  usleep(ms_to_doze * 1000);
 }
 
 static void
@@ -6069,10 +6068,8 @@ str_to_s32(str_t s, s32_t* out)
   return str_to_s32_range(s, 0, s.size, out);
 }
 
-
-
 static void  
-stb8_init(stb8_t* b, u8_t* data, usz_t cap) 
+strb_init(strb_t* b, u8_t* data, usz_t cap) 
 {
   b->e = data;
   b->size = 0;
@@ -6080,7 +6077,7 @@ stb8_init(stb8_t* b, u8_t* data, usz_t cap)
 }
 
 static void  
-stb8_init_from_str(stb8_t* b, str_t str) 
+strb_init_from_str(strb_t* b, str_t str) 
 {
   b->e = str.e;
   b->size = 0;
@@ -6088,43 +6085,43 @@ stb8_init_from_str(stb8_t* b, str_t str)
 }
 
 static usz_t
-stb8_remaining(stb8_t* b) {
+strb_remaining(strb_t* b) {
   return b->cap - b->size; 
 }
 
 static void     
-stb8_clear(stb8_t* b) {
+strb_clear(strb_t* b) {
   b->size = 0;
 }
 
 static void     
-stb8_pop(stb8_t* b) {
+strb_pop(strb_t* b) {
   assert(b->size > 0);
   --b->size;
 }
 
 static void     
-stb8_push_u8(stb8_t* b, u8_t num) {
+strb_push_u8(strb_t* b, u8_t num) {
   assert(b->size < b->cap); b->e[b->size++] = num;
 }
 
 static void     
-stb8_push_c8(stb8_t* b, c8_t num) {
+strb_push_c8(strb_t* b, c8_t num) {
   assert(b->size < b->cap);
   b->e[b->size++] = num;
 }
 
 static void     
-stb8_push_u32(stb8_t* b, u32_t num) {
+strb_push_u32(strb_t* b, u32_t num) {
   if (num == 0) {
-    stb8_push_c8(b, '0');
+    strb_push_c8(b, '0');
     return;
   }
   usz_t start_pt = b->size; 
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    stb8_push_c8(b, digit_to_ascii(digit_to_convert));
+    strb_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   // Reverse starting from start point to count
@@ -6134,16 +6131,16 @@ stb8_push_u32(stb8_t* b, u32_t num) {
   }
 }
 static void     
-stb8_push_u64(stb8_t* b, u64_t num) {
+strb_push_u64(strb_t* b, u64_t num) {
   if (num == 0) {
-    stb8_push_c8(b, '0');
+    strb_push_c8(b, '0');
     return;
   }
   usz_t start_pt = b->size; 
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    stb8_push_c8(b, digit_to_ascii(digit_to_convert));
+    strb_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   // Reverse starting from start point to count
@@ -6153,9 +6150,9 @@ stb8_push_u64(stb8_t* b, u64_t num) {
   }
 }
 static void     
-stb8_push_s32(stb8_t* b, s32_t num) {
+strb_push_s32(strb_t* b, s32_t num) {
   if (num == 0) {
-    stb8_push_c8(b, '0');
+    strb_push_c8(b, '0');
     return;
   }
 
@@ -6166,11 +6163,11 @@ stb8_push_s32(stb8_t* b, s32_t num) {
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    stb8_push_c8(b, digit_to_ascii(digit_to_convert));
+    strb_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   if (negate) {
-    stb8_push_c8(b, '-');
+    strb_push_c8(b, '-');
   }
 
   // Reverse starting from start point to count
@@ -6183,9 +6180,9 @@ stb8_push_s32(stb8_t* b, s32_t num) {
 }
 
 static void     
-stb8_push_s64(stb8_t* b, s64_t num) {
+strb_push_s64(strb_t* b, s64_t num) {
   if (num == 0) {
-    stb8_push_c8(b, '0');
+    strb_push_c8(b, '0');
     return;
   }
 
@@ -6196,11 +6193,11 @@ stb8_push_s64(stb8_t* b, s64_t num) {
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    stb8_push_c8(b, digit_to_ascii(digit_to_convert));
+    strb_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   if (negate) {
-    stb8_push_c8(b, '-');
+    strb_push_c8(b, '-');
   }
 
   // Reverse starting from start point to count
@@ -6213,16 +6210,16 @@ stb8_push_s64(stb8_t* b, s64_t num) {
 }
 
 static void     
-stb8_push_f32(stb8_t* b, f32_t value, u32_t precision) {
+strb_push_f32(strb_t* b, f32_t value, u32_t precision) {
   if (value < 0.f) {
-    stb8_push_c8(b, '-');	
+    strb_push_c8(b, '-');	
     value = -value;
   }
 
   // @note: won't work for values that u32_t can't contain
   u32_t integer_part = (u32_t)value;
-  stb8_push_u32(b, integer_part);
-  stb8_push_c8(b, '.');
+  strb_push_u32(b, integer_part);
+  strb_push_c8(b, '.');
 
   value -= (f32_t)integer_part;
 
@@ -6231,19 +6228,19 @@ stb8_push_f32(stb8_t* b, f32_t value, u32_t precision) {
   }
 
   u32_t decimal_part = (u32_t)value;
-  stb8_push_u32(b, decimal_part);
+  strb_push_u32(b, decimal_part);
 }
 
 static void     
-stb8_push_f64(stb8_t* b, f64_t value, u32_t precision) {
+strb_push_f64(strb_t* b, f64_t value, u32_t precision) {
   if (value < 0.0) {
-    stb8_push_c8(b, '-');	
+    strb_push_c8(b, '-');	
     value = -value;
   }
   // @note: won't work for values that u32_t can't contain
   u32_t integer_part = (u32_t)value;
-  stb8_push_u32(b, integer_part);
-  stb8_push_c8(b, '.');
+  strb_push_u32(b, integer_part);
+  strb_push_c8(b, '.');
 
   value -= (f64_t)integer_part;
 
@@ -6252,12 +6249,12 @@ stb8_push_f64(stb8_t* b, f64_t value, u32_t precision) {
   }
 
   u32_t decimal_part = (u32_t)value;
-  stb8_push_u32(b, decimal_part);
+  strb_push_u32(b, decimal_part);
 }
 
 
 static void
-stb8_push_hex_u8(stb8_t* b, u8_t value) {
+strb_push_hex_u8(strb_t* b, u8_t value) {
 
   c8_t parts[2] = {
     (c8_t)(value >> 4),
@@ -6267,10 +6264,10 @@ stb8_push_hex_u8(stb8_t* b, u8_t value) {
 
   for(u32_t i = 0; i < array_count(parts); ++i) {
     if (parts[i] >= 0 && parts[i] <= 9) {
-      stb8_push_c8(b, parts[i] + '0');
+      strb_push_c8(b, parts[i] + '0');
     }
     else if (parts[i] >= 10 && parts[i] <= 15) {
-      stb8_push_c8(b, parts[i] - 10 + 'A');
+      strb_push_c8(b, parts[i] - 10 + 'A');
     }
   }
 
@@ -6280,16 +6277,18 @@ stb8_push_hex_u8(stb8_t* b, u8_t value) {
 }
 
 static void
-stb8_push_hex_u32(stb8_t* b, u32_t value) {
+strb_push_hex_u32(strb_t* b, u32_t value) {
   union { u32_t v; u8_t b[4]; } combine;
   combine.v = value;
   for(s32_t i = 3; i >= 0; --i) {
-    stb8_push_hex_u8(b, combine.b[i]);
+    strb_push_hex_u8(b, combine.b[i]);
   }
 }
 
+
 static void
-_stb8_push_fmt_list(stb8_t* b, str_t format, va_list args) {
+_strb_push_fmt_list(strb_t* b, str_t format, va_list args) 
+{
   usz_t at = 0;
   while(at < format.size) {
 
@@ -6304,43 +6303,47 @@ _stb8_push_fmt_list(stb8_t* b, str_t format, va_list args) {
         ++at;
       }
 
-      stb8_make(tb, 64);
+      // @todo: So, there is an issue here, which is that we quite 
+      // literally do not know how big the buffer our string maker 
+      // should be. For now we hardcode it because my use cases are
+      // definitive, but it should be more dynamic.
+      strb_make(tb, 64);
 
       switch(format.e[at]) {
         case 'i': {
           s32_t value = va_arg(args, s32_t);
-          stb8_push_s32(tb, value);
+          strb_push_s32(tb, value);
         } break;
         case 'I': {
           s64_t value = va_arg(args, s64_t);
-          stb8_push_s64(tb, value);
+          strb_push_s64(tb, value);
         } break;
         case 'U': {
           u64_t value = va_arg(args, u64_t);
-          stb8_push_u64(tb, value);
+          strb_push_u64(tb, value);
         } break;
         case 'u': {
           u32_t value = va_arg(args, u32_t);
-          stb8_push_u32(tb, value);
+          strb_push_u32(tb, value);
         } break;
         case 'f': {
           f64_t value = va_arg(args, f64_t);
-          stb8_push_f32(tb, (f32_t)value, 5);
+          strb_push_f32(tb, (f32_t)value, 5);
         } break;
         case 'F': {
           f64_t value = va_arg(args, f64_t);
-          stb8_push_f64(tb, (f64_t)value, 5);
+          strb_push_f64(tb, (f64_t)value, 5);
         } break;
         case 'x':
         case 'X': {
           u32_t value = va_arg(args, u32_t);
-          stb8_push_hex_u32(tb, value);
+          strb_push_hex_u32(tb, value);
         } break;
         case 's': {
           // c-string
           const char* cstr = va_arg(args, const char*);
           while(cstr[0] != 0) {
-            stb8_push_c8(tb, (u8_t)cstr[0]);
+            strb_push_c8(tb, (u8_t)cstr[0]);
             ++cstr;
           }
         } break;
@@ -6348,7 +6351,7 @@ _stb8_push_fmt_list(stb8_t* b, str_t format, va_list args) {
         case 'S': {
           // str_t, or 'text'.
           str_t str = va_arg(args, str_t);
-          stb8_push_str(tb, str);
+          strb_push_str(tb, str);
         } break;
 
         default: {
@@ -6361,18 +6364,18 @@ _stb8_push_fmt_list(stb8_t* b, str_t format, va_list args) {
       if (width > 0 && tb->str.size < width) {
         usz_t spaces_to_pad = width - tb->str.size;
         while(spaces_to_pad--) {
-          stb8_push_c8(b, ' ');
+          strb_push_c8(b, ' ');
         }
-        stb8_push_str(b, tb->str);
+        strb_push_str(b, tb->str);
       }
       else {
-        stb8_push_str(b, tb->str);
+        strb_push_str(b, tb->str);
       }
 
 
     }
     else {
-      stb8_push_c8(b, format.e[at++]);
+      strb_push_c8(b, format.e[at++]);
     }
 
   }
@@ -6380,15 +6383,15 @@ _stb8_push_fmt_list(stb8_t* b, str_t format, va_list args) {
 
 
 static void     
-stb8_push_fmt(stb8_t* b, str_t fmt, ...) {
+strb_push_fmt(strb_t* b, str_t fmt, ...) {
   va_list args;
   va_start(args, fmt);
-  _stb8_push_fmt_list(b, fmt, args);
+  _strb_push_fmt_list(b, fmt, args);
   va_end(args);
 }
 
 static void     
-stb8_push_str(stb8_t* b, str_t src) {
+strb_push_str(strb_t* b, str_t src) {
   assert(b->size + src.size <= b->cap);
   for (usz_t i = 0; i < src.size; ++i ) {
     b->e[b->size++] = src.e[i];
@@ -8588,6 +8591,21 @@ arena_push_str(arena_t* a, usz_t size, usz_t align) {
   buffer.size = size;
 
   return buffer;
+}
+
+static strb_t
+arena_push_strb(arena_t* a, usz_t size, usz_t align) 
+{
+  strb_t ret = {}; 
+
+  str_t buffer = {};
+  buffer.e = arena_push_arr_align(u8_t, a, size, align);
+  buffer.size = 0;
+
+  ret.str = buffer;
+  ret.cap = size;
+
+  return ret;
 }
 
 static b32_t    

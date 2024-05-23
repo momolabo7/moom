@@ -6,13 +6,14 @@
 //   EDEN_USE_OPENGL - Flag to enable opengl code used to run the eden
 //
 // 
-// BOOKMARKS AND MODULES
-//   Graphics          - Graphics interfaces
-//   Opengl            - Graphics implementation with OGL
-//   Rendering         - Game functions for rendering
-//   Profiler          - Profiler system
-//   Assets            - Asset System (using pass system)
-//   Mixer             - Audio Mixer System
+// BOOKMARKS
+//   graphics          - Graphics interfaces
+//   opengl            - Graphics implementation with OGL
+//   rendering         - Game functions for rendering
+//   profile           - Profiler system
+//   assets            - Asset System (using pass system)
+//   mixer             - Audio Mixer System
+//   console           - In game console system
 //
 
 #ifndef EDEN_H
@@ -24,7 +25,7 @@
 #define EDEN_USE_OPENGL 1
 
 //
-// MARK:(Graphics)
+// @mark: graphics
 //
 // All the code here is a representation of how the 
 // eden views 'rendering'. The system simply adds commands
@@ -200,7 +201,7 @@ struct eden_gfx_t {
 };
 
 //
-// MARK:(Assets)
+// @mark: assets
 //
 
 #include "eden_asset_id_base.h"
@@ -265,7 +266,7 @@ struct eden_assets_t {
   eden_asset_sound_t* sounds;
 };
 // 
-// MARK:(Mixer)
+// @mark: mixer
 //
 struct eden_audio_mixer_instance_t {
   eden_asset_sound_id_t sound_id; // @todo: do not rely on sound_id
@@ -292,8 +293,10 @@ struct eden_audio_mixer_t {
 
   f32_t volume;
 };
+
+
 //
-// MARK:(Opengl)
+// @mark: opengl
 //
 #if EDEN_USE_OPENGL
 // opengl typedefs
@@ -576,11 +579,29 @@ struct eden_gfx_opengl_t {
 };
 #endif // EDEN_USE_OPENGL
 
-#include "eden_console.h"
 #include "eden_asset_file.h"
 
+struct eden_console_command_t {
+  str_t key;
+  void* ctx;
+  void (*func)(void*);
+};
+
+struct eden_console_t {
+  u32_t command_cap;
+  u32_t command_count;
+  eden_console_command_t* commands;
+  
+  strb_t* info_lines; 
+  u32_t info_line_count;
+
+  strb_t input_line;
+
+};
+
+
 //
-// MARK:(Profiler)
+// @mark: profiler
 // 
 
 struct eden_profiler_snapshot_t {
@@ -631,9 +652,12 @@ struct eden_profiler_t {
 #define eden_profile_end(eden, name)   eden_profiler_end_block(&eden->profiler, name)
 #define eden_profile_block(eden, name) eden_profiler_block(&eden->profiler, name)
 
+//
+// @mark: console
+//
 
 //
-// MARK:(Inspector)
+// @mark:(Inspector)
 //
 enum eden_inspector_entry_type_t {
   EDEN_INSPECTOR_ENTRY_TYPE_F32,
@@ -655,12 +679,8 @@ struct eden_inspector_t {
   eden_inspector_entry_t* entries;
 };
 
-// API correspondence
-#define eden_inspect_u32(eden, name, item) eden_inspector_add_u32(&eden->inspector, name, item)
-#define eden_inspect_f32(eden, name, item) eden_inspector_add_f32(&eden->inspector, name, item)
-
 // 
-// MARK:(Graphics)
+// @mark:(Graphics)
 //
 enum eden_blend_type_t {
   eden_blend_type_zero,
@@ -677,7 +697,7 @@ enum eden_blend_type_t {
 
 
 // 
-// MARK:(Button)
+// @mark:(Button)
 //
 struct eden_button_t {
   b32_t before : 1;
@@ -749,7 +769,7 @@ enum eden_button_code_t {
   for(u32_t (i) = 0; (i) < (g)->command_queue.entry_count; ++(i))
 
 //
-// MARK:(Input)
+// @mark:(Input)
 //
 // @note: Input is SPECIFICALLY stuff that can be recorded and
 // replayed by some kind of system. Other things go to eden_t
@@ -778,44 +798,6 @@ struct eden_input_t {
   f32_t delta_time; //aka dt
 };
 
-//
-// MARK:(File)
-// 
-enum eden_file_path_t {
-  EDEN_FILE_PATH_EXE,
-  EDEN_FILE_PATH_USER,
-  EDEN_FILE_PATH_CACHE,
-
-};
-
-enum eden_file_access_t {
-  EDEN_FILE_ACCESS_READ,
-  EDEN_FILE_ACCESS_OVERWRITE,
-};
-
-struct eden_file_t {
-  void* data; // pointer for platform's usage
-};
-
-#define eden_open_file_sig(name) b32_t name(eden_file_t* file, const char* filename, eden_file_access_t file_access, eden_file_path_t file_path)
-typedef eden_open_file_sig(eden_open_file_f);
-#define eden_open_file(eden, ...) (eden->open_file(__VA_ARGS__))
-
-#define eden_close_file_sig(name) void  name(eden_file_t* file)
-typedef eden_close_file_sig(eden_close_file_f);
-#define eden_close_file(eden, ...) (eden->close_file(__VA_ARGS__))
-
-#define eden_read_file_sig(name) b32_t name(eden_file_t* file, usz_t size, usz_t offset, void* dest)
-typedef eden_read_file_sig(eden_read_file_f);
-#define eden_read_file(eden, ...) (eden->read_file(__VA_ARGS__))
-
-#define eden_write_file_sig(name) b32_t name(eden_file_t* file, usz_t size, usz_t offset, void* src)
-typedef eden_write_file_sig(eden_write_file_f);
-#define eden_write_file(eden, ...) (eden->write_file(__VA_ARGS__))
-
-#define eden_get_file_size_sig(name) u64_t name(eden_file_t* file)
-typedef eden_get_file_size_sig(eden_get_file_size_f);
-#define eden_get_file_size(eden, ...) (eden->get_file_size(__VA_ARGS__))
 
 //
 // App Logging API
@@ -844,16 +826,6 @@ typedef eden_unlock_cursor_sig(eden_unlock_cursor_f);
 #define eden_unlock_cursor(eden, ...) (eden->unlock_cursor(__VA_ARGS__))
 
 
-//
-// Memory Allocation API
-//
-#define eden_allocate_memory_sig(name) str_t name(usz_t size)
-typedef eden_allocate_memory_sig(eden_allocate_memory_f);
-#define eden_allocate_memory(eden, ...) (eden->allocate_memory(__VA_ARGS__))
-
-#define eden_free_memory_sig(name) void name(str_t block)
-typedef eden_free_memory_sig(eden_free_memory_f);
-#define eden_free_memory(eden, ...) (eden->free_memory(__VA_ARGS__))
 
 //
 // Multithreaded work API
@@ -901,17 +873,10 @@ struct eden_t {
   eden_hide_cursor_f* hide_cursor;
   eden_lock_cursor_f* lock_cursor;
   eden_unlock_cursor_f* unlock_cursor;
-  eden_allocate_memory_f* allocate_memory;
-  eden_free_memory_f* free_memory;
   eden_debug_log_f* debug_log;
   eden_add_task_f* add_task;
   eden_complete_all_tasks_f* complete_all_tasks;
   eden_set_design_dimensions_f* set_design_dimensions;
-  eden_open_file_f* open_file;
-  eden_close_file_f* close_file;
-  eden_write_file_f* write_file;
-  eden_read_file_f* read_file;
-  eden_get_file_size_f* get_file_size;
 
   eden_input_t input;
   eden_audio_t audio; 
@@ -988,18 +953,22 @@ static const char* eden_function_names[] {
 };
 
 
-///////////////////////////////
-///
-// IMPLEMENTATIONS
-//
-//
+
+
+
+
+
+
+
 
 //
-// MARK:(Graphics)
+// @mark: implementation
 //
+
 
 static void
-eden_gfx_clear_commands(eden_gfx_t* g) {
+eden_gfx_clear_commands(eden_gfx_t* g) 
+{
   eden_gfx_command_queue_t* q = &g->command_queue;
   q->data_pos = 0;	
 	q->entry_count = 0;
@@ -1392,7 +1361,7 @@ eden_gfx_get_blend_preset(eden_gfx_t* g) {
 #if EDEN_USE_OPENGL
 
 //
-// MARK:(Opengl)
+// @mark:(Opengl)
 // 
 static void 
 eden_gfx_opengl_flush_sprites(eden_gfx_opengl_t* ogl) {
@@ -2505,7 +2474,7 @@ eden_gfx_opengl_end_frame(eden_gfx_t* gfx) {
 #endif // EDEN_USE_OPENGL
 
 //
-// MARK:(Assets)
+// @mark:(Assets)
 //
 static b32_t
 eden_assets_init(
@@ -2780,7 +2749,7 @@ eden_assets_get_font(eden_assets_t* assets, eden_asset_font_id_t font_id) {
 }
 
 //
-// MARK:(Input)
+// @mark:(Input)
 //
 // before: 0, now: 1
 static b32_t
@@ -2835,7 +2804,7 @@ eden_get_input_characters(eden_t* eden) {
 }
 
 //
-// MARK:(Rendering) 
+// @mark:(Rendering) 
 //
 static void
 eden_clear_canvas(eden_t* eden, rgba_t color) {
@@ -3047,6 +3016,10 @@ eden_draw_text_center_aligned(eden_t* eden, eden_asset_font_id_t font_id, str_t 
 
 }
 
+
+#define eden_inspect_u32(eden, name, item) eden_inspector_add_u32(&eden->inspector, name, item)
+#define eden_inspect_f32(eden, name, item) eden_inspector_add_f32(&eden->inspector, name, item)
+
 static void 
 eden_inspector_init(eden_inspector_t* in, arena_t* arena, u32_t max_entries) 
 {
@@ -3168,10 +3141,94 @@ eden_profiler_update_entries(eden_profiler_t* p) {
   }
 }
 
+//
+// @mark: console
+//
+static void
+eden_console_init(
+    eden_console_t* console, 
+    arena_t* allocator, 
+    u32_t characters_per_line, 
+    u32_t max_commands, 
+    u32_t max_lines) 
+{
+  console->command_count = 0;
+  console->command_cap = max_commands;
+  console->info_line_count = 0;
+  console->commands = arena_push_arr(eden_console_command_t, allocator, max_commands);
+  console->info_lines = arena_push_arr(strb_t, allocator, max_lines);
 
+  u32_t line_size = characters_per_line;
+  strb_init(&console->input_line,
+           arena_push_arr(u8_t, allocator, line_size),
+           line_size);
+  
+  for (u32_t info_line_index = 0;
+       info_line_index < console->info_line_count;
+       ++info_line_index) 
+  {    
+    strb_t* info_line = console->info_lines + info_line_index;
+    strb_init(info_line,
+             arena_push_arr(u8_t, allocator, line_size),
+             line_size);
+  }
+}
+
+static void
+eden_console_add_command(eden_console_t* console, str_t key, void* ctx, void(*func)(void*)) 
+{
+  // simulate adding commands
+  assert(console->command_count < console->command_cap);
+  eden_console_command_t* cmd = console->commands + console->command_count++;
+  cmd->key = key;
+  cmd->ctx = ctx;
+  cmd->func = func;
+}
+
+static void
+eden_console_push_info(eden_console_t* console, str_t str) {
+  // @note: There's probably a better to do with via some
+  // crazy indexing scheme, but this is debug so we don't care for now
+  
+  // Copy everything from i + 1 from i
+  for (u32_t i = 0; 
+       i < console->info_line_count - 1;
+       ++i)
+  {
+    u32_t line_index = console->info_line_count - 1 - i;
+    strb_t* line_to = console->info_lines + line_index;
+    strb_t* line_from = console->info_lines + line_index - 1;
+    strb_clear(line_to);
+    strb_push_str(line_to, line_from->str);
+  } 
+  strb_clear(console->info_lines + 0);
+  strb_push_str(console->info_lines + 0, str);
+}
+
+static void
+eden_console_execute(eden_console_t* console) 
+{
+  for(u32_t command_index = 0; 
+      command_index < console->command_count; 
+      ++command_index) 
+  {
+    eden_console_command_t* cmd = console->commands + command_index;
+    if (str_match(cmd->key, console->input_line.str)) {
+      cmd->func(cmd->ctx);
+    }
+  }
+  
+  eden_console_push_info(console, console->input_line.str);
+  strb_clear(&console->input_line);
+}
+
+static void
+eden_update_and_render_console(eden_console_t*)
+{
+}
 
 //
-// MARK:(Mixer)
+// @mark: mixer
 //
 static b32_t
 eden_audio_mixer_init(
@@ -3233,9 +3290,10 @@ eden_audio_mixer_play(
 
 static void
 eden_audio_mixer_stop(
-    eden_audio_mixer_t* mixer,
+    eden_t* eden,
     eden_audio_mixer_instance_t* instance)
 {
+  eden_audio_mixer_t* mixer = &eden->mixer;
   instance->is_playing = false;
   mixer->free_list[mixer->free_list_count++] = instance->index;
 }
@@ -3275,7 +3333,7 @@ eden_audio_mixer_update(eden_t* eden)
             instance->current_offset = 0;
           }
           else {
-            eden_audio_mixer_stop(mixer, instance);
+            eden_audio_mixer_stop(eden, instance);
           }
         }
       }

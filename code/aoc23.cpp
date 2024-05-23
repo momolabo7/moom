@@ -81,7 +81,7 @@ static void aoc23_d1p2(const char* filename) {
 
         str_t sub_line = str_set(line.e + i, str.size);
         if ((i + str.size-1) < line.size && 
-          !str_compare_lexographically(str, sub_line)) 
+          str_match(str, sub_line)) 
         {
           found = true;
           number += num * 10;
@@ -103,7 +103,7 @@ static void aoc23_d1p2(const char* filename) {
         // @note: I'm pretty sure I should need more checks here but 
         // oh well, the answer is correct.
         if ((i-(str.size-1)) >= 0 && 
-           !str_compare_lexographically(str, sub_line)) 
+           str_match(str, sub_line)) 
         {
           found = true;
           number += num;

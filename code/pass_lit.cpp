@@ -53,7 +53,10 @@ int main() {
 
     }
     pass_pack_atlas_end(p, "test.png");
-    pass_pack_sound(p, ASSET_SOUND_BGM, lit_res_dir("bgm.wav")); 
+    pass_pack_sound(p, ASSET_SOUND_BGM0, lit_res_dir("bgm0.wav")); 
+    pass_pack_sound(p, ASSET_SOUND_BGM1, lit_res_dir("bgm1.wav")); 
+    pass_pack_sound(p, ASSET_SOUND_BGM2, lit_res_dir("bgm2.wav")); 
+    pass_pack_sound(p, ASSET_SOUND_BGM3, lit_res_dir("bgm3.wav")); 
     pass_pack_sound(p, ASSET_SOUND_PICKUP, lit_res_dir("pickup.wav")); 
     pass_pack_sound(p, ASSET_SOUND_PUTDOWN, lit_res_dir("putdown.wav")); 
     pass_pack_sound(p, ASSET_SOUND_DONE, lit_res_dir("done.wav")); 

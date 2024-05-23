@@ -984,14 +984,14 @@ aoc22_d7p1(const char* filename, arena_t* arena)
         str_t dir_name = str_set(str.e + 5, str.size - 5);
 
         // go to root
-        if (!str_compare_lexographically(dir_name, str_from_lit("/")))
+        if (str_match(dir_name, str_from_lit("/")))
         {
           cd = root->dir;
           //printf("cd /\n");
         }
 
         // go to parent
-        else if (!str_compare_lexographically(dir_name, str_from_lit("..")))
+        else if (str_match(dir_name, str_from_lit("..")))
         {
           cd = cd->parent;
           //printf("cd ..\n");
@@ -1002,7 +1002,7 @@ aoc22_d7p1(const char* filename, arena_t* arena)
           aoc22_d7_node_t* itr = cd->sentinel.next;
           while(itr != &cd->sentinel) 
           {
-            if (!str_compare_lexographically(itr->name, dir_name))
+            if (str_match(itr->name, dir_name))
             {
               cd = itr->dir; 
               break;
@@ -1020,7 +1020,7 @@ aoc22_d7p1(const char* filename, arena_t* arena)
       arena_marker_t mark = arena_mark(arena);
       str_arr_t arr = str_split(str, ' ', arena);
       // format: dir <directory_name> 
-      if (!str_compare_lexographically(arr.e[0], str_from_lit("dir")))
+      if (str_match(arr.e[0], str_from_lit("dir")))
       {
         str_t dir_name = arr.e[1]; 
         //printf("directory found: ");
@@ -1085,14 +1085,14 @@ aoc22_d7p2(const char* filename, arena_t* arena)
         str_t dir_name = str_set(str.e + 5, str.size - 5);
 
         // go to root
-        if (!str_compare_lexographically(dir_name, str_from_lit("/")))
+        if (str_match(dir_name, str_from_lit("/")))
         {
           cd = root->dir;
           //printf("cd /\n");
         }
 
         // go to parent
-        else if (!str_compare_lexographically(dir_name, str_from_lit("..")))
+        else if (str_match(dir_name, str_from_lit("..")))
         {
           cd = cd->parent;
           //printf("cd ..\n");
@@ -1103,7 +1103,7 @@ aoc22_d7p2(const char* filename, arena_t* arena)
           aoc22_d7_node_t* itr = cd->sentinel.next;
           while(itr != &cd->sentinel) 
           {
-            if (!str_compare_lexographically(itr->name, dir_name))
+            if (str_match(itr->name, dir_name))
             {
               cd = itr->dir; 
               break;
@@ -1121,7 +1121,7 @@ aoc22_d7p2(const char* filename, arena_t* arena)
       arena_marker_t mark = arena_mark(arena);
       str_arr_t arr = str_split(str, ' ', arena);
       // format: dir <directory_name> 
-      if (!str_compare_lexographically(arr.e[0], str_from_lit("dir")))
+      if (str_match(arr.e[0], str_from_lit("dir")))
       {
         str_t dir_name = arr.e[1]; 
         //printf("directory found: ");
