@@ -618,8 +618,9 @@ eden_gfx_opengl_init_foo(eden_gfx_opengl_t* ogl)
 #version 330 core \n\
 layout(location=0) in vec3 model_vertex;  \n\
 out vec4 vertex_color; \n\
+uniform mat4 projection_mtx; \n\
 void main(void) { \n\
-  gl_Position = vec4(model_vertex, 1.0); \n\
+  gl_Position = projection_mtx * vec4(model_vertex, 1.0); \n\
   vertex_color = vec4(1.0, 0.0, 1.0, 1.0); \n\
 }"
 
@@ -1077,6 +1078,16 @@ eden_gfx_opengl_end_frame(eden_gfx_t* gfx) {
           GLint uProjectionLoc = ogl->glGetUniformLocation(tb->shader,
               "uProjection");
           ogl->glProgramUniformMatrix4fv(tb->shader, 
+              uProjectionLoc, 
+              1, 
+              GL_FALSE, 
+              (const GLfloat*)&result);
+        }
+        {
+          eden_gfx_opengl_foo_batch_t* b = &ogl->foo_batch;
+          GLint uProjectionLoc = ogl->glGetUniformLocation(tb->shader,
+              "projection_mtx");
+          ogl->glProgramUniformMatrix4fv(b->shader, 
               uProjectionLoc, 
               1, 
               GL_FALSE, 
