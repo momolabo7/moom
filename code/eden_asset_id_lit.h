@@ -3,6 +3,14 @@
 
 #include "momo.h"
 
+// @note: for now this is only GLSL
+enum eden_asset_shader_id_t : u32_t {
+  ASSET_SHADER_ID_VERTEX,
+  ASSET_SHADER_ID_PIXEL,
+
+  ASSET_SHADER_ID_MAX
+};
+
 
 enum eden_asset_bitmap_id_t : u32_t {
   ASSET_BITMAP_ID_ATLAS,

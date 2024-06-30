@@ -28,7 +28,7 @@ eden_get_config_sig(eden_get_config)
   ret.max_sprites = 4096;
   ret.max_triangles = 1; // TODO: triangles and sprites should allow for 0
 
-  ret.audio_enabled = true;
+  ret.audio_enabled = false;
   ret.audio_samples_per_second = 48000;
   ret.audio_bits_per_sample = 16;
   ret.audio_channels = 2;
@@ -56,7 +56,10 @@ eden_update_and_render_sig(eden_update_and_render) {
 
   auto* sandbox = (sandbox_t*)(eden->user_data);
   eden_set_design_dimensions(eden, 1600, 900);
+  eden_set_view(eden, 0.f, 1600.f, 0.f, 900.f, 0.f, 0.f);
+  eden_clear_canvas(eden, rgba_set(0.25f, 0.25f, 0.25f, 1.0f));
+  
 
-  eden_draw_asset_sprite(eden, ASSET_SPRITE_ID_BLANK, { 0.f, 0.f }, {100.f, 100.f});
+  eden_gfx_test(&eden->gfx);
 
 }

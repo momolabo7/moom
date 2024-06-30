@@ -28,12 +28,12 @@ IF "%~1"=="" (
 :label_parse_end
 
 IF %run%==0 (
-  cmd /c build pass_lit -bun
+  cmd /c build pass_tbp -bun
   cmd /c build app_tbp -app
   cmd /c build w32_eden -w32 
 )
 IF %run%==1 ( 
-  cmd /c build pass_lit -bun
+  cmd /c build pass_tbp -bun
   cmd /c build app_tbp -app
   cmd /c build w32_eden -w32 -bun
 ) 

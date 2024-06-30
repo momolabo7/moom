@@ -16,6 +16,7 @@
 //     pass_pack_atlas_sprite();
 //    pass_pack_atlas_end()
 //    pass_pack_sound() 
+//    pass_pack_shader()
 //   pass_pack_end()
 //
 // OTHER UTILITY FUNCTIONS
@@ -139,6 +140,9 @@ struct pass_pack_sound_ext_t {
   const char* filename;
 };
 
+struct pass_pack_shader_ext_t {
+  const char* filename;
+};
 
 struct pass_pack_t {
   arena_t* arena;
@@ -157,6 +161,10 @@ struct pass_pack_t {
   u32_t font_count;
   pass_pack_font_ext_t* font_exts;
   asset_file_font_t* fonts;
+
+  u32_t shader_count;
+  pass_pack_shader_ext_t* shader_exts;
+  asset_file_shader_t* shaders;
 
   // For fonts
   u32_t glyph_cap;
@@ -182,6 +190,16 @@ struct pass_pack_t {
 
 };
 
+static void
+pass_pack_shader(
+    pass_pack_t* p,
+    eden_asset_shader_id_t shader_id,
+    const char* filename)
+{
+  assert(shader_id < p->shader_count);
+  pass_pack_shader_ext_t* ext = p->shader_exts + shader_id;
+  ext->filename = filename;
+}
 
 static void 
 pass_pack_sound(
@@ -234,10 +252,9 @@ pass_pack_atlas_font_begin(
   ext->filename = filename;
   ext->glyphs = p->glyphs + p->glyph_count; 
 
-
   p->atlas_active_font = af;
-  
 }
+
 
 static void 
 pass_pack_atlas_font_codepoint(pass_pack_t* p, u32_t codepoint) 
@@ -565,8 +582,8 @@ pass_pack_begin(
   u32_t max_sprites,
   u32_t max_fonts,
   u32_t max_sounds,
-  u32_t max_glyphs
-  )
+  u32_t max_glyphs,
+  u32_t max_shaders)
 {
   p->arena = arena;
 
@@ -584,6 +601,14 @@ pass_pack_begin(
     p->sounds = arena_push_arr(asset_file_sound_t, p->arena, max_sounds); 
     assert(p->sounds);
     assert(p->sound_exts);
+  }
+
+  p->shader_count = max_shaders;
+  if (p->shader_count > 0) {
+    p->shader_exts = arena_push_arr(pass_pack_shader_ext_t, p->arena, max_shaders); 
+    p->shaders = arena_push_arr(asset_file_shader_t, p->arena, max_shaders); 
+    assert(p->shaders);
+    assert(p->shader_exts);
   }
 
   p->sprite_count = max_sprites;
@@ -621,6 +646,7 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   u32_t bitmaps_size = sizeof(asset_file_bitmap_t)*p->bitmap_count;
   u32_t sprites_size = sizeof(asset_file_sprite_t)*p->sprite_count;
   u32_t sounds_size = sizeof(asset_file_sound_t)*p->sound_count;
+  u32_t shaders_size = sizeof(asset_file_shader_t)*p->shader_count;
 
   asset_file_header_t header = {0};
   header.signature = ASSET_FILE_SIGNATURE;
@@ -628,10 +654,13 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   header.sprite_count = p->sprite_count;
   header.bitmap_count = p->bitmap_count;
   header.sound_count = p->sound_count;
+  header.shader_count = p->shader_count;
   header.offset_to_fonts = sizeof(asset_file_header_t);
   header.offset_to_sprites = header.offset_to_fonts + fonts_size;
   header.offset_to_bitmaps = header.offset_to_sprites + sprites_size;
   header.offset_to_sounds = header.offset_to_bitmaps + bitmaps_size;
+  header.offset_to_shaders = header.offset_to_sounds + sounds_size;
+
 
   fwrite(&header, sizeof(header), 1, file);
 
@@ -713,6 +742,24 @@ pass_pack_end(pass_pack_t* p, const char* filename)
     offset_to_data = ftell(file);
   }
 
+  // Shader 
+  for_cnt(shader_index, p->shader_count) {
+    arena_set_revert_point(p->arena);
+
+    asset_file_shader_t* fs = p->shaders + shader_index; 
+    pass_pack_shader_ext_t* fse = p->shader_exts + shader_index; 
+    str_t file_contents = file_read_into_str(fse->filename, p->arena, true); 
+
+    fs->length = file_contents.size;
+    fs->offset_to_data = offset_to_data;
+
+
+    assert(file_contents);
+
+    fwrite(file_contents.e, file_contents.size, 1, file); 
+    offset_to_data = ftell(file);
+  }
+
   // Write metadata
   fseek(file, header.offset_to_fonts, SEEK_SET);
   fwrite(p->fonts, fonts_size, 1, file); 
@@ -725,6 +772,9 @@ pass_pack_end(pass_pack_t* p, const char* filename)
 
   fseek(file, header.offset_to_sounds, SEEK_SET);
   fwrite(p->sounds, sounds_size, 1, file); 
+
+  fseek(file, header.offset_to_shaders, SEEK_SET);
+  fwrite(p->shaders, shaders_size, 1, file); 
 
   arena_clear(p->arena);
 }

@@ -3838,6 +3838,7 @@ eden_update_and_render_sig(eden_update_and_render)
   g_eden = eden;
   if(g_eden->user_data == nullptr) {
 
+    // @todo: partition from platform arena?
     g_eden->user_data = arena_bootstrap_push(lit_t, main_arena, megabytes(32));
 
     g_lit = (lit_t*)(g_eden->user_data);
@@ -3852,8 +3853,6 @@ eden_update_and_render_sig(eden_update_and_render)
     if (!arena_push_partition(&g_lit->main_arena, &g_lit->frame_arena, megabytes(1), 16)) lit_exit();
     if (!arena_push_partition(&g_lit->main_arena, &g_lit->mode_arena, megabytes(1), 16)) lit_exit();
 
-    // Initialize debug stuff
-    //console_init(&g_lit->console, &g_lit->debug_arena, 32, 256);
 
     // Initialize assets
     // @todo: shift this to config? I'm not sure if we care about 
@@ -3863,12 +3862,6 @@ eden_update_and_render_sig(eden_update_and_render)
       lit_exit();
     }
 
-    // Initialize mixer
-    // @todo: shift this to config? 
-    if (!eden_audio_mixer_init(g_eden, EDEN_AUDIO_MIXER_BITRATE_TYPE_S16, 4, &g_lit->mode_arena)) 
-    {
-      lit_exit();
-    }
       
     eden_set_design_dimensions(g_eden, LIT_WIDTH, LIT_HEIGHT);
     eden_set_view(g_eden, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
@@ -3978,11 +3971,11 @@ eden_get_config_sig(eden_get_config)
   ret.max_sprites = 4096;
   ret.max_triangles = 4096;
 
-  ret.audio_enabled = true;
+  ret.audio_enabled = false;
   ret.audio_samples_per_second = 48000;
   ret.audio_bits_per_sample = 16;
   ret.audio_channels = 2;
-  
+
   ret.window_title = "LIT v1.10";
   ret.window_initial_width = 800;
   ret.window_initial_height = 800;
@@ -3991,7 +3984,8 @@ eden_get_config_sig(eden_get_config)
 }
 
 //
-// JOURNAL
+// @journal
+//
 // = 2023-03-02 =
 //   I have add bgm!
 //

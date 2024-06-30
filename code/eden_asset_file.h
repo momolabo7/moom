@@ -8,6 +8,7 @@ enum asset_type_t  {
   ASSET_TYPE_SPRITE,
   ASSET_TYPE_FONT,
   ASSET_TYPE_BITMAP,
+  ASSET_TYPE_SHADER,
 };
 
 // asset_file.h
@@ -22,11 +23,13 @@ struct asset_file_header_t {
   u32_t font_count;
   u32_t sprite_count;
   u32_t sound_count;
+  u32_t shader_count;
 
   u32_t offset_to_bitmaps;
   u32_t offset_to_fonts;
   u32_t offset_to_sprites;
   u32_t offset_to_sounds;
+  u32_t offset_to_shaders;
 };
 
 
@@ -54,6 +57,16 @@ struct asset_file_font_glyph_t {
   u32_t codepoint;
   f32_t horizontal_advance;
   f32_t vertical_advance;
+};
+
+struct asset_file_shader_t {
+  u32_t length;
+
+  u32_t offset_to_data;
+  // Data:
+  //
+  // u8 str[length]
+  //
 };
 
 struct asset_file_font_t {

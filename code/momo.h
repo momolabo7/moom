@@ -1081,6 +1081,8 @@ static b32_t     str_to_f32(str_t s, f32_t* out);
 static b32_t     str_to_s32(str_t s, s32_t* out);
 static b32_t     str_range_to(u32_t* out);
 static str_arr_t str_split(str_t str, u8_t delimiter, arena_t* arena); 
+
+// @note: returns str.size if not found
 static usz_t     str_find(str_t str, u8_t character); 
 
 // @todo: the ##LINE might be fake!
@@ -1273,6 +1275,11 @@ socket_system_begin() {
   return true;
 }
 
+static void
+socket_set_receive_timeout(socket_t* s, u32_t timeout_in_ms)
+{
+  setsockopt(s->sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)(&timeout_in_ms), sizeof(timeout_in_ms));
+}
 
 static b32_t
 socket_begin(socket_t* s, const char* server, u32_t port)
@@ -1377,6 +1384,9 @@ socket_receive(socket_t* s, str_t buffer)
 {
   // @note: will poll
   int received_bytes = recv(s->sock, (char*)buffer.e, buffer.size, 0);
+  if (received_bytes == SOCKET_ERROR) {
+    return str_bad();
+  }
   return str_set(buffer.e, received_bytes);
 }
 static void
@@ -5893,6 +5903,19 @@ str_set(u8_t* str, usz_t size) {
 static str_t
 str_bad() {
   return str_set(0,0);
+}
+
+
+static usz_t     
+str_find(str_t str, u8_t character){
+  for_cnt(i, str.size)
+  {
+    if (str.e[i] == character)
+    {
+      return i;
+    }
+  }
+  return str.size;
 }
 
 static str_arr_t 

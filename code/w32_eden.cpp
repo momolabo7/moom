@@ -438,7 +438,6 @@ if (!opengl->name) { return false; }
     wgl_set_opengl_function(glTextureSubImage2D);
     wgl_set_opengl_function(glBindTexture);
     wgl_set_opengl_function(glTexParameteri);
-    wgl_set_opengl_function(glBindVertexArray);
     wgl_set_opengl_function(glDrawElementsInstancedBaseInstance);
     wgl_set_opengl_function(glGetUniformLocation);
     wgl_set_opengl_function(glNamedBufferSubData);
@@ -448,6 +447,15 @@ if (!opengl->name) { return false; }
     wgl_set_opengl_function(glDeleteTextures);
     wgl_set_opengl_function(glDebugMessageCallbackARB);
     wgl_set_opengl_function(glDrawArrays);
+
+    wgl_set_opengl_function(glGenVertexArrays);
+    wgl_set_opengl_function(glGenBuffers);
+    wgl_set_opengl_function(glBindBuffer);
+    wgl_set_opengl_function(glBufferData);
+    wgl_set_opengl_function(glEnableVertexAttribArray);
+    wgl_set_opengl_function(glVertexAttribPointer);
+    wgl_set_opengl_function(glBindVertexArray);
+    wgl_set_opengl_function(glDrawElements);
   }
 #undef wgl_set_opengl_function
   
@@ -1673,6 +1681,8 @@ WinMain(HINSTANCE instance,
   // Init Audio
   if (config.audio_enabled) {
 
+    // @todo: is there a way to merge initializing audio 
+    // and audio mixer? Or should they be completely seperate?
     if (!w32_audio_load(
           &eden->audio, 
           config.audio_samples_per_second, 
@@ -1681,7 +1691,18 @@ WinMain(HINSTANCE instance,
           1, 
           config.target_frame_rate, 
           platform_arena)) 
+    {
       return 1;
+    }
+
+    if (!eden_audio_mixer_init(
+          &eden->mixer, 
+          config.audio_mixer_bitrate_type,
+          config.audio_mixer_max_instances, 
+          platform_arena))
+    {
+      return 1;
+    }
   }
   defer{ if (config.audio_enabled) w32_audio_unload(&eden->audio); };
 

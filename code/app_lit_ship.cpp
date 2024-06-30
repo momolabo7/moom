@@ -43,8 +43,6 @@
 #include <initguid.h>
 #include <audioclient.h>
 #include <mmdeviceapi.h>
-#undef near
-#undef far
 
 #include "eden.h"
 
@@ -665,7 +663,6 @@ static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t
 
 #include <stdio.h>
 
-static eden_allocate_memory_sig(w32_allocate_memory);
 
 // @todo: we should remove all the asserts tbh
 static 
@@ -1477,118 +1474,6 @@ w32_window_callback(HWND window,
 // App function definitions
 //
 
-static 
-eden_open_file_sig(w32_open_file)
-{
-  // Opening the file
-  DWORD access_flag = {};
-  DWORD creation_disposition = {};
-  switch (file_access) {
-    case EDEN_FILE_ACCESS_READ: {
-      access_flag = GENERIC_READ;
-      creation_disposition = OPEN_EXISTING;
-    } break;
-    case EDEN_FILE_ACCESS_OVERWRITE: {
-      access_flag = GENERIC_WRITE;
-      creation_disposition = CREATE_ALWAYS;
-    } break;
-    /*
-    case Platform_File_Access_Modify: {
-      access_flag = GENERIC_READ | GENERIC_WRITE;
-      creation_disposition = OPEN_ALWAYS;
-    } break;
-    */
-    
-  }
-  
-  HANDLE handle = CreateFileA(filename,
-                              access_flag,
-                              FILE_SHARE_READ,
-                              0,
-                              creation_disposition,
-                              0,
-                              0) ;
-  if (handle == INVALID_HANDLE_VALUE) {
-    file->data = nullptr;
-    return false;
-  }
-  else {
-    
-    w32_file_t* w32_file = w32_get_next_free_file(&w32_state.file_cabinet);
-    assert(w32_file);
-    w32_file->handle = handle;
-    
-    file->data = w32_file;
-    return true;
-  }
-}
-
-static 
-eden_close_file_sig(w32_close_file)
-{
-  w32_file_t* w32_file = (w32_file_t*)file->data;
-  CloseHandle(w32_file->handle);
-  
-  w32_return_file(&w32_state.file_cabinet, w32_file);
-  file->data = nullptr;
-}
-
-static 
-eden_read_file_sig(w32_read_file)
-{ 
-  w32_file_t* w32_file = (w32_file_t*)file->data;
-  
-  // Reading the file
-  OVERLAPPED overledened = {};
-  overledened.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
-  overledened.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
-  
-  DWORD bytes_read;
-  
-  if(ReadFile(w32_file->handle, dest, (DWORD)size, &bytes_read, &overledened) &&
-     (DWORD)size == bytes_read) 
-  {
-    return true;
-  }
-  else {
-    return false;
-  }
-}
-
-static 
-eden_get_file_size_sig(w32_get_file_size)
-{ 
-  w32_file_t* w32_file = (w32_file_t*)file->data;
- 
-  LARGE_INTEGER file_size;
-  if (!GetFileSizeEx(w32_file->handle, &file_size)) {
-    assert(false);
-  }
-  
-  u64_t ret = (u64_t)file_size.QuadPart;
-  return ret;
-
-}
-
-static  
-eden_write_file_sig(w32_write_file)
-{
-  w32_file_t* w32_file = (w32_file_t*)file->data;
-  
-  OVERLAPPED overledened = {};
-  overledened.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
-  overledened.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
-  
-  DWORD bytes_wrote;
-  if(WriteFile(w32_file->handle, src, (DWORD)size, &bytes_wrote, &overledened) &&
-     (DWORD)size == bytes_wrote) 
-  {
-    return true;
-  }
-  else {
-    return false;
-  }
-}
 
 static 
 eden_add_task_sig(w32_add_task)
@@ -1602,65 +1487,6 @@ eden_complete_all_tasks_sig(w32_complete_all_tasks)
   w32_complete_all_tasks_entries(&w32_state.work_queue);
 }
 
-static 
-eden_allocate_memory_sig(w32_allocate_memory)
-{
-  // @note: We will allocate memory with a 'header'
-  // that contains w32_memory_t. 
-  // -------------------------------------
-  // | w32_memory_t | align | size       |
-  // -------------------------------------
-  // 
-  // If p is the memory to be returned to the user
-  // and q is the memory given by the os, to get from
-  // q to be: 
-  // - Add sizeof(w32_memory_t) 
-  // - align upwards to 16 bytes
-  //
-  // To get from p back to q:
-  // - Subtract sizeof(w32_memory_t)
-  // - align downwards to 16 bytes
-  //
-  usz_t aligned_size = align_up_pow2(size, 16);
-  usz_t padding_for_alignment = aligned_size - size;
-  usz_t total_size = size + padding_for_alignment + sizeof(w32_memory_t);
-  usz_t offset_to_user_memory = sizeof(w32_memory_t) + padding_for_alignment; 
-
-
-  auto* memory = (w32_memory_t*)
-    VirtualAllocEx(GetCurrentProcess(),
-                   0, 
-                   total_size,
-                   MEM_RESERVE | MEM_COMMIT, 
-                   PAGE_READWRITE);
-  if (!memory) return str_bad();
-
-  memory->user_block = str_set((u8_t*)memory + offset_to_user_memory, size);
-
-  // Add to linked list
-  w32_memory_t* sentinel = &w32_state.memory_sentinel;
-  cll_append(sentinel, memory);
-
-  return memory->user_block;
-
-}
-
-static
-eden_free_memory_sig(w32_free_memory) {
-  // To get from p back to q:
-  // - Subtract sizeof(w32_memory_t)
-  // - align downwards to 16 bytes
-  if (block) {
-    umi_t ptr_u = ptr_to_umi(block.e);
-    ptr_u -= sizeof(w32_memory_t);
-    ptr_u = align_down_pow2(ptr_u, 16);
-    
-    auto* blk = (w32_memory_t*)umi_to_ptr(ptr_u);
-    cll_remove(blk);
-
-    VirtualFree(blk, 0, MEM_RELEASE);
-  }
-}
 
 
 
@@ -1731,17 +1557,10 @@ WinMain(HINSTANCE instance,
   eden->lock_cursor = w32_lock_cursor;
   eden->hide_cursor = w32_hide_cursor;
   eden->unlock_cursor = w32_unlock_cursor;
-  eden->allocate_memory = w32_allocate_memory;
-  eden->free_memory = w32_free_memory;
   eden->debug_log = w32_log_proc;
   eden->add_task = w32_add_task;
   eden->complete_all_tasks = w32_complete_all_tasks;
   eden->set_design_dimensions = w32_set_eden_dims;
-  eden->open_file = w32_open_file;
-  eden->read_file = w32_read_file;
-  eden->write_file = w32_write_file;
-  eden->get_file_size = w32_get_file_size;
-  eden->close_file = w32_close_file;
 
   w32_init_file_cabinet(&w32_state.file_cabinet, config.max_files, platform_arena );
 

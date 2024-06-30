@@ -25,7 +25,8 @@ int main() {
       ASSET_SPRITE_ID_MAX, 
       ASSET_FONT_ID_MAX, 
       ASSET_SOUND_ID_MAX, 
-      total_cp*2);
+      total_cp*2,
+      ASSET_SHADER_ID_MAX);
   {
     pass_pack_atlas_begin(p, 
         ASSET_BITMAP_ID_ATLAS, 
@@ -50,7 +51,6 @@ int main() {
       pass_pack_atlas_sprite(p, ASSET_SPRITE_ID_ROTATE_SPRITE, lit_res_dir("rotate.png"));
       pass_pack_atlas_sprite(p, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, lit_res_dir("filled_circle.png"));
       pass_pack_atlas_sprite(p, ASSET_SPRITE_ID_CIRCLE_SPRITE, lit_res_dir("circle.png"));
-
     }
     pass_pack_atlas_end(p, "test.png");
     pass_pack_sound(p, ASSET_SOUND_BGM0, lit_res_dir("bgm0.wav")); 
@@ -60,6 +60,10 @@ int main() {
     pass_pack_sound(p, ASSET_SOUND_PICKUP, lit_res_dir("pickup.wav")); 
     pass_pack_sound(p, ASSET_SOUND_PUTDOWN, lit_res_dir("putdown.wav")); 
     pass_pack_sound(p, ASSET_SOUND_DONE, lit_res_dir("done.wav")); 
+
+    pass_pack_shader(p, ASSET_SHADER_ID_VERTEX, lit_res_dir("shader_vertex.glsl")); 
+    pass_pack_shader(p, ASSET_SHADER_ID_PIXEL, lit_res_dir("shader_pixel.glsl")); 
+
   }
   pass_pack_end(p, LIT_ASSET_FILE);
   u64_t end_time = clock_time();
