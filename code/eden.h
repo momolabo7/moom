@@ -456,6 +456,7 @@ typedef void    eden_gfx_opengl_glBindBuffer(GLenum target, GLuint buffer);
 typedef void    eden_gfx_opengl_glBufferData(GLenum target ,GLsizeiptr size, const void* data, GLenum usage);
 typedef void    eden_gfx_opengl_glEnableVertexAttribArray(GLuint index);
 typedef void    eden_gfx_opengl_glVertexAttribPointer(GLuint index, GLint size,	GLenum type, GLboolean normalized, GLsizei stride, const void * pointer);
+typedef void    eden_gfx_opengl_glVertexAttribDivisor(GLuint index, GLuint divisor);
 typedef void    eden_gfx_opengl_glBindVertexArray(GLuint array);
 typedef void    eden_gfx_opengl_glDrawElements(GLenum mode, GLsizei count, GLenum type, const void* indices);
 
@@ -554,7 +555,8 @@ struct eden_gfx_opengl_foo_batch_t {
   GLuint vao;
   GLuint model_ebo;
   GLuint model_vbo;
-  GLuint instance_vbo;
+  GLuint instance_color_vbo;
+  GLuint instance_transform_vbo;
   GLuint shader;
 };
 
@@ -629,6 +631,7 @@ struct eden_gfx_opengl_t {
   eden_gfx_opengl_glBufferData* glBufferData;
   eden_gfx_opengl_glEnableVertexAttribArray* glEnableVertexAttribArray;
   eden_gfx_opengl_glVertexAttribPointer* glVertexAttribPointer;
+  eden_gfx_opengl_glVertexAttribDivisor* glVertexAttribDivisor;
 
   eden_gfx_opengl_glDrawElements* glDrawElements;
 

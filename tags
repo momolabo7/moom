@@ -787,10 +787,11 @@ eden_gfx_opengl_glVertexArrayAttribFormat	code/eden.h	/^typedef void    eden_gfx
 eden_gfx_opengl_glVertexArrayBindingDivisor	code/eden.h	/^typedef void    eden_gfx_opengl_glVertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, G/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint bindingindex,GLuint divisor)
 eden_gfx_opengl_glVertexArrayElementBuffer	code/eden.h	/^typedef void    eden_gfx_opengl_glVertexArrayElementBuffer(GLuint vaobj, GLuint buffer);$/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint buffer)
 eden_gfx_opengl_glVertexArrayVertexBuffer	code/eden.h	/^typedef void    eden_gfx_opengl_glVertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, GLu/;"	t	language:C++	typeref:typename:void ()(GLuint vaobj,GLuint bindingindex,GLuint buffer,GLintptr offset,GLsizei stride)
+eden_gfx_opengl_glVertexAttribDivisor	code/eden.h	/^typedef void    eden_gfx_opengl_glVertexAttribDivisor(GLuint index, GLuint divisor);$/;"	t	language:C++	typeref:typename:void ()(GLuint index,GLuint divisor)
 eden_gfx_opengl_glVertexAttribPointer	code/eden.h	/^typedef void    eden_gfx_opengl_glVertexAttribPointer(GLuint index, GLint size,	GLenum type, GLb/;"	t	language:C++	typeref:typename:void ()(GLuint index,GLint size,GLenum type,GLboolean normalized,GLsizei stride,const void * pointer)
 eden_gfx_opengl_glViewport	code/eden.h	/^typedef void    eden_gfx_opengl_glViewport(GLint x, GLint y, GLsizei width, GLsizei height);$/;"	t	language:C++	typeref:typename:void ()(GLint x,GLint y,GLsizei width,GLsizei height)
 eden_gfx_opengl_init	code/eden_gfx_opengl.h	/^eden_gfx_opengl_init($/;"	f	language:C++	typeref:typename:b32_t
-eden_gfx_opengl_init_foo	code/eden_gfx_opengl.h	/^eden_gfx_opengl_init_foo(eden_gfx_opengl_t* ogl) $/;"	f	language:C++	typeref:typename:void
+eden_gfx_opengl_init_foo	code/eden_gfx_opengl.h	/^eden_gfx_opengl_init_foo(eden_gfx_opengl_t* ogl) $/;"	f	language:C++	typeref:typename:b32_t
 eden_gfx_opengl_init_sprite_batch	code/eden_gfx_opengl.h	/^eden_gfx_opengl_init_sprite_batch(eden_gfx_opengl_t* ogl, usz_t max_sprites) {$/;"	f	language:C++	typeref:typename:b32_t
 eden_gfx_opengl_init_triangle_batch	code/eden_gfx_opengl.h	/^eden_gfx_opengl_init_triangle_batch(eden_gfx_opengl_t* ogl, usz_t max_triangles) {$/;"	f	language:C++	typeref:typename:b32_t
 eden_gfx_opengl_process_texture_queue	code/eden_gfx_opengl.h	/^eden_gfx_opengl_process_texture_queue(eden_gfx_t* gfx) {$/;"	f	language:C++	typeref:typename:void
@@ -1446,6 +1447,7 @@ glVertexArrayAttribFormat	code/eden.h	/^  eden_gfx_opengl_glVertexArrayAttribFor
 glVertexArrayBindingDivisor	code/eden.h	/^  eden_gfx_opengl_glVertexArrayBindingDivisor* glVertexArrayBindingDivisor;$/;"	m	language:C++	struct:eden_gfx_opengl_t	typeref:typename:eden_gfx_opengl_glVertexArrayBindingDivisor *
 glVertexArrayElementBuffer	code/eden.h	/^  eden_gfx_opengl_glVertexArrayElementBuffer* glVertexArrayElementBuffer;$/;"	m	language:C++	struct:eden_gfx_opengl_t	typeref:typename:eden_gfx_opengl_glVertexArrayElementBuffer *
 glVertexArrayVertexBuffer	code/eden.h	/^  eden_gfx_opengl_glVertexArrayVertexBuffer* glVertexArrayVertexBuffer;$/;"	m	language:C++	struct:eden_gfx_opengl_t	typeref:typename:eden_gfx_opengl_glVertexArrayVertexBuffer *
+glVertexAttribDivisor	code/eden.h	/^  eden_gfx_opengl_glVertexAttribDivisor* glVertexAttribDivisor;$/;"	m	language:C++	struct:eden_gfx_opengl_t	typeref:typename:eden_gfx_opengl_glVertexAttribDivisor *
 glVertexAttribPointer	code/eden.h	/^  eden_gfx_opengl_glVertexAttribPointer* glVertexAttribPointer;$/;"	m	language:C++	struct:eden_gfx_opengl_t	typeref:typename:eden_gfx_opengl_glVertexAttribPointer *
 glViewport	code/eden.h	/^  eden_gfx_opengl_glViewport* glViewport;$/;"	m	language:C++	struct:eden_gfx_opengl_t	typeref:typename:eden_gfx_opengl_glViewport *
 glyf	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
@@ -1602,7 +1604,8 @@ inspector	code/eden.h	/^  eden_inspector_t inspector;$/;"	m	language:C++	struct:
 instances	code/eden.h	/^  eden_audio_mixer_instance_t* instances;$/;"	m	language:C++	struct:eden_audio_mixer_t	typeref:typename:eden_audio_mixer_instance_t *
 instances_to_draw	code/eden.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:eden_gfx_opengl_sprite_batch_t	typeref:typename:GLsizei
 instances_to_draw	code/eden.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:eden_gfx_opengl_triangle_batch_t	typeref:typename:GLsizei
-instance_vbo	code/eden.h	/^  GLuint instance_vbo;$/;"	m	language:C++	struct:eden_gfx_opengl_foo_batch_t	typeref:typename:GLuint
+instance_color_vbo	code/eden.h	/^  GLuint instance_color_vbo;$/;"	m	language:C++	struct:eden_gfx_opengl_foo_batch_t	typeref:typename:GLuint
+instance_transform_vbo	code/eden.h	/^  GLuint instance_transform_vbo;$/;"	m	language:C++	struct:eden_gfx_opengl_foo_batch_t	typeref:typename:GLuint
 interlace_method	code/momo.h	/^  u8_t interlace_method;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t
 interlace_method	code/momo.h	/^  u8_t interlace_method;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:typename:u8_t
 intersections	code/app_lit.cpp	/^  lit_light_intersection_t intersections[512];$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:lit_light_intersection_t[512]	file:

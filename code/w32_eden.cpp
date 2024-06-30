@@ -454,6 +454,7 @@ if (!opengl->name) { return false; }
     wgl_set_opengl_function(glBufferData);
     wgl_set_opengl_function(glEnableVertexAttribArray);
     wgl_set_opengl_function(glVertexAttribPointer);
+    wgl_set_opengl_function(glVertexAttribDivisor);
     wgl_set_opengl_function(glBindVertexArray);
     wgl_set_opengl_function(glDrawElements);
   }

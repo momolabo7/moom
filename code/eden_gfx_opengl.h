@@ -528,10 +528,10 @@ eden_gfx_opengl_init_foo(eden_gfx_opengl_t* ogl)
 #else
 
   const f32_t model[] = {
-    -0.5f, -0.5f, 0.0f,  // bottom left
-    0.5f, -0.5f, 0.0f,  // bottom right
-    0.5f,  0.5f, 0.0f,  // top right
-    -0.5f,  0.5f, 0.0f,   // top left 
+    100.0f, 100.0f, 0.0f,  // bottom left
+    300.0f, 100.0f, 0.0f,  // bottom right
+    300.0f, 300.0f, 0.0f,  // top right
+    100.0f, 300.0f, 0.0f,   // top left 
   };
 #endif
 
@@ -551,77 +551,154 @@ eden_gfx_opengl_init_foo(eden_gfx_opengl_t* ogl)
 
   // Reserve space in GPU for our objects.
   ogl->glGenVertexArrays(1, &b->vao);  
-  ogl->glGenBuffers(1, &b->model_vbo);
-  ogl->glGenBuffers(1, &b->model_ebo);
 
 
   // Tell the GPU that we want to setup our VAO
   // All GL commands hereafter will be related to our VAO!
   ogl->glBindVertexArray(b->vao);
 
-  //
-  // @note: 
-  // 
-  // GL_ARRAY_BUFFER represents the intent to use the 
-  // buffer object for vertex attribute data.
-  // "I want to use VBO like a GL_ARRAY_BUFFER".
-  //
-  ogl->glBindBuffer(GL_ARRAY_BUFFER, b->model_vbo);
-
-  //
-  // @note: 
-  //
-  // This binds the data of model to the VBO
-  // GL_STATIC_DRAW means that it will never change.
-  // "The data for the buffer I bound above is this"
-  //
-  ogl->glBufferData(GL_ARRAY_BUFFER, sizeof(model), model, GL_STATIC_DRAW);
 
 
-  //
-  // @note: 
-  //
-  // This is used to set the indices of the vertices
-  // GL_ELEMENT_ARRAY_BUFFER is SPECIFICALLY used to indicate that
-  // a buffer is being used for indices.
-  // "I want to use EBO like a GL_ELEMENT_ARRAY_BUFFER (which represents indices)"
-  //
-  // ngl it's kind of stupid but ok.
-  //
-  ogl->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, b->model_ebo);
+  // Setup model EBO
+  {
+    //
+    // @note: 
+    //
+    // This is used to set the indices of the vertices
+    // GL_ELEMENT_ARRAY_BUFFER is SPECIFICALLY used to indicate that a buffer is being used for indices.
+    // Basically, we are telling Opengl what 1 item is in a set of vertices (an instance?).
+    //
+    ogl->glGenBuffers(1, &b->model_ebo);
+    ogl->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, b->model_ebo);
 
-  // "The data that contains indices is this"
-  ogl->glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    // "The data that contains indices is this"
+    ogl->glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+  }
 
   
-  //
-  // @note: 
-  //
-  // "vertex attributes" basically sets up the input parameters for the vertex shader
-  // tied to these vertices. 
   
-  // Shader parameter name: in_model_vertex
-  // Type: v3f_t, which is 3 floats
-  ogl->glEnableVertexAttribArray(0); // @todo: parameter should be enum
-  ogl->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  // Setup model VBO and attributes
+  {
+    ogl->glGenBuffers(1, &b->model_vbo);
+    //
+    // @note: 
+    // 
+    // GL_ARRAY_BUFFER represents the intent to use the 
+    // buffer object for vertex attribute data.
+    // "I want to use VBO like a GL_ARRAY_BUFFER".
+    //
+    ogl->glBindBuffer(GL_ARRAY_BUFFER, b->model_vbo);
 
-  // Shader parameter name: aColor
+    //
+    // @note: 
+    //
+    // This binds the data of model to the VBO
+    // GL_STATIC_DRAW means that it will never change.
+    // "The data for the buffer I bound above is this"
+    //
+    ogl->glBufferData(GL_ARRAY_BUFFER, sizeof(model), model, GL_STATIC_DRAW);
+
+    //
+    // @note: 
+    //
+    // "attributes" are simply the input parameters for the vertex shader.
+    // This is where we bind VBOs to those attributes.
+    // In this case, the model's VBO is bound to the 0th attribute in the vertex shader.
+    //
+    ogl->glEnableVertexAttribArray(0);  // 0 is: model_vertex
+                                        //
+    // Type: 3 floats
+    ogl->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    ogl->glBindBuffer(GL_ARRAY_BUFFER, 0); // cleanup
+  }
+
+  // Setup instance color VBO and attributes
+  {
+    ogl->glGenBuffers(1, &b->instance_color_vbo);
+    ogl->glBindBuffer(GL_ARRAY_BUFFER, b->instance_color_vbo);
+
+    const f32_t colors[] = {
+      1, 0, 0, 1,
+      1, 1, 1, 1,
+      0, 1, 0, 1,
+      0, 0, 1, 1
+    };
+
+    ogl->glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors,  GL_STATIC_DRAW);
+
+    // Type: 4 floats
+    ogl->glEnableVertexAttribArray(1); // 1 is: instance_vertex_color
+    ogl->glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+    ogl->glBindBuffer(GL_ARRAY_BUFFER, 0); // cleanup
+  }
+
+  // Setup instance matrix VBO and attributes
+  
+#if 1 
+  {
+    ogl->glGenBuffers(1, &b->instance_transform_vbo);
+    ogl->glBindBuffer(GL_ARRAY_BUFFER, b->instance_transform_vbo);
+
+    const f32_t transform[] = {
+      2, 0, 0, 0,
+      0, 2, 0, 0,
+      0, 0, 2, 0,
+      0, 0, 0, 1
+    };
+
+    ogl->glBufferData(GL_ARRAY_BUFFER, sizeof(transform), transform,  GL_STATIC_DRAW);
+
+    // Type: 16 floats
+    ogl->glEnableVertexAttribArray(2); // 2,3,4,5 are: instance_transform_mtx
+    ogl->glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(m44f_t), (void*)(sizeof(v4f_t)*0));
+
+    ogl->glEnableVertexAttribArray(3); 
+    ogl->glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(m44f_t), (void*)(sizeof(v4f_t)*1));
+
+    ogl->glEnableVertexAttribArray(4); 
+    ogl->glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(m44f_t), (void*)(sizeof(v4f_t)*2));
+
+    ogl->glEnableVertexAttribArray(5); 
+    ogl->glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(m44f_t), (void*)(sizeof(v4f_t)*3));
+
+                                           
+    // 
+    // @note:
+    // 
+    // 1 in the second parameter means 1 set per element
+    // (in this case, 1 element is 6 vertices as defined by our EBO)
+    //
+    // 0 means 1 per vertex, which is the default
+    //
+   
+    ogl->glVertexAttribDivisor(2, 1);
+    ogl->glVertexAttribDivisor(3, 1);
+    ogl->glVertexAttribDivisor(4, 1);
+    ogl->glVertexAttribDivisor(5, 1);
+
+    ogl->glBindBuffer(GL_ARRAY_BUFFER, 0); // cleanup
+  }
+#endif
+
+  // Shader parameter name: vertex_color
   // Type: rgba_t, which is 4 floats 
   //ogl->glEnableVertexAttribArray(1); // @todo: parameter should be enum
   //ogl->glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
-  // This is just cleanup; to tell OpenGL that 
-  // we are no longer setting up our VAO
-  ogl->glBindVertexArray(0);  
+  ogl->glBindVertexArray(0); // cleanup
 
 #define EDEN_GFX_TEST_VSHADER "\
 #version 330 core \n\
 layout(location=0) in vec3 model_vertex;  \n\
+layout(location=1) in vec4 instance_vertex_color;  \n\
+layout(location=2) in mat4 instance_transform;  \n\
 out vec4 vertex_color; \n\
 uniform mat4 projection_mtx; \n\
 void main(void) { \n\
-  gl_Position = projection_mtx * vec4(model_vertex, 1.0); \n\
-  vertex_color = vec4(1.0, 0.0, 1.0, 1.0); \n\
+  gl_Position = projection_mtx * instance_transform * vec4(model_vertex, 1.0); \n\
+  vertex_color = instance_vertex_color; \n\
 }"
 
 
@@ -1083,9 +1160,10 @@ eden_gfx_opengl_end_frame(eden_gfx_t* gfx) {
               GL_FALSE, 
               (const GLfloat*)&result);
         }
+
         {
           eden_gfx_opengl_foo_batch_t* b = &ogl->foo_batch;
-          GLint uProjectionLoc = ogl->glGetUniformLocation(tb->shader,
+          GLint uProjectionLoc = ogl->glGetUniformLocation(b->shader,
               "projection_mtx");
           ogl->glProgramUniformMatrix4fv(b->shader, 
               uProjectionLoc, 
