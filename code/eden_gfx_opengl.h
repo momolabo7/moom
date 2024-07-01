@@ -648,7 +648,7 @@ eden_gfx_opengl_init_foo(eden_gfx_opengl_t* ogl)
       0, 0, 0, 1
     };
 
-    ogl->glBufferData(GL_ARRAY_BUFFER, sizeof(transform), transform,  GL_STATIC_DRAW);
+    ogl->glBufferData(GL_ARRAY_BUFFER, sizeof(transform) * 100, transform,  GL_STATIC_DRAW);
 
     // Type: 16 floats
     ogl->glEnableVertexAttribArray(2); // 2,3,4,5 are: instance_transform_mtx
@@ -662,7 +662,6 @@ eden_gfx_opengl_init_foo(eden_gfx_opengl_t* ogl)
 
     ogl->glEnableVertexAttribArray(5); 
     ogl->glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(m44f_t), (void*)(sizeof(v4f_t)*3));
-
                                            
     // 
     // @note:
