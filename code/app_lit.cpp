@@ -3957,8 +3957,8 @@ eden_get_config_sig(eden_get_config)
 
   ret.target_frame_rate = 60;
 
-  ret.max_workers = 256;
-  ret.max_files = 32;
+  ret.max_workers = 8;
+  ret.max_files = 1;
 
   ret.max_inspector_entries = 8;
   ret.max_profiler_entries = 8;
@@ -3971,10 +3971,12 @@ eden_get_config_sig(eden_get_config)
   ret.max_sprites = 4096;
   ret.max_triangles = 4096;
 
-  ret.audio_enabled = false;
+  ret.audio_enabled = true;
   ret.audio_samples_per_second = 48000;
   ret.audio_bits_per_sample = 16;
   ret.audio_channels = 2;
+  ret.audio_mixer_max_instances = 8;
+  ret.audio_mixer_bitrate_type = EDEN_AUDIO_MIXER_BITRATE_TYPE_S16;
 
   ret.window_title = "LIT v1.10";
   ret.window_initial_width = 800;
