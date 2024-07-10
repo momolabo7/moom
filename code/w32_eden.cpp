@@ -199,13 +199,13 @@ struct w32_wasapi_t {
 //
 // MARK:(Gfx)
 // 
-#define w32_gfx_load_sig(name) b32_t  name(eden_gfx_t* gfx, HWND window, arena_t* arena, usz_t command_queue_size, usz_t texture_queue_size, usz_t max_textures, usz_t max_payloads, usz_t max_sprites, usz_t max_triangles)
+#define w32_gfx_load_sig(name) b32_t  name(hell_gfx_t* gfx, HWND window, arena_t* arena, usz_t command_queue_size, usz_t texture_queue_size, usz_t max_textures, usz_t max_payloads, usz_t max_sprites, usz_t max_triangles)
 static w32_gfx_load_sig(w32_gfx_load);
 
-#define w32_gfx_begin_frame_sig(name) void name(eden_gfx_t* gfx, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1)
+#define w32_gfx_begin_frame_sig(name) void name(hell_gfx_t* gfx, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1)
 static w32_gfx_begin_frame_sig(w32_gfx_begin_frame);
 
-#define w32_gfx_end_frame_sig(name) void name(eden_gfx_t* gfx)
+#define w32_gfx_end_frame_sig(name) void name(hell_gfx_t* gfx)
 static w32_gfx_end_frame_sig(w32_gfx_end_frame);
 
 
@@ -394,7 +394,7 @@ w32_gfx_load_sig(w32_gfx_load)
     return false;
   }
 
-  auto* opengl = arena_push(eden_gfx_opengl_t, arena);
+  auto* opengl = arena_push(hell_gfx_opengl_t, arena);
   gfx->platform_data = opengl;
 
   if (!opengl) {
@@ -405,7 +405,7 @@ w32_gfx_load_sig(w32_gfx_load)
   if(wglMakeCurrent(dc, opengl_ctx)) {
     HMODULE module = LoadLibraryA("opengl32.dll");
 #define wgl_set_opengl_function(name) \
-opengl->name = (eden_gfx_opengl_##name*)_w32_try_get_wgl_function(#name, module); \
+opengl->name = (hell_gfx_opengl_##name*)_w32_try_get_wgl_function(#name, module); \
 if (!opengl->name) { return false; } 
     wgl_set_opengl_function(glEnable);
     wgl_set_opengl_function(glDisable); 
@@ -460,7 +460,7 @@ if (!opengl->name) { return false; }
   }
 #undef wgl_set_opengl_function
   
-  if (!eden_gfx_opengl_init(
+  if (!hell_gfx_opengl_init(
         gfx, 
         arena,
         command_queue_size,
@@ -496,12 +496,12 @@ if (!opengl->name) { return false; }
 static 
 w32_gfx_begin_frame_sig(w32_gfx_begin_frame)
 {
-  eden_gfx_opengl_begin_frame(gfx, render_wh, region_x0, region_y0, region_x1, region_y1);
+  hell_gfx_opengl_begin_frame(gfx, render_wh, region_x0, region_y0, region_x1, region_y1);
 }
 
 static
 w32_gfx_end_frame_sig(w32_gfx_end_frame) {
-  eden_gfx_opengl_end_frame(gfx);
+  hell_gfx_opengl_end_frame(gfx);
   SwapBuffers(wglGetCurrentDC());
 }
 #endif // EDEN_USE_OPENGL
