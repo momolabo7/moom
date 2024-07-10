@@ -228,7 +228,7 @@ bit_set	code/momo.h	/^#define bit_set(/;"	d	language:C++
 bit_unset	code/momo.h	/^#define bit_unset(/;"	d	language:C++
 blank_texture	code/eden.h	/^  hell_gfx_opengl_texture_t blank_texture;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:hell_gfx_opengl_texture_t
 block_align	code/momo.h	/^  u16_t block_align;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
-block_name	code/eden.h	/^  const char* block_name;$/;"	m	language:C++	struct:eden_profiler_entry_t	typeref:typename:const char *
+block_name	code/eden.h	/^  const char* block_name;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:const char *
 bonk_tri2_pt2	code/momo.h	/^bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {$/;"	f	language:C++	typeref:typename:b32_t
 bonk_tri2_pt2	code/momo.h	/^static b32_t bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt); $/;"	p	language:C++	typeref:typename:b32_t
 box_x0	code/eden.h	/^  f32_t box_x0, box_y0;$/;"	m	language:C++	struct:eden_asset_font_glyph_t	typeref:typename:f32_t
@@ -456,7 +456,7 @@ cstr_to_u32	code/momo.h	/^cstr_to_u32(const c8_t* str)$/;"	f	language:C++	typere
 cstr_to_u32	code/momo.h	/^static u32_t cstr_to_u32(const c8_t* p); $/;"	p	language:C++	typeref:typename:u32_t
 ctx	code/eden.h	/^  void* ctx;$/;"	m	language:C++	struct:eden_console_command_t	typeref:typename:void *
 ctx	code/eden_console.h	/^  void* ctx;$/;"	m	language:C++	struct:console_command_t	typeref:typename:void *
-current_blend_preset	code/eden.h	/^  hell_gfx_blend_preset_type_t current_blend_preset;$/;"	m	language:C++	struct:hell_gfx_t	typeref:typename:hell_gfx_blend_preset_type_t
+current_blend_preset	code/eden.h	/^  eden_blend_preset_type_t current_blend_preset;$/;"	m	language:C++	struct:hell_gfx_t	typeref:typename:eden_blend_preset_type_t
 current_color	code/app_lit.cpp	/^  u32_t current_color;$/;"	m	language:C++	struct:lit_game_sensor_t	typeref:typename:u32_t	file:
 current_instance_index	code/eden.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
 current_instance_index	code/eden.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:hell_gfx_opengl_triangle_batch_t	typeref:typename:GLuint
@@ -467,7 +467,7 @@ current_texture	code/eden.h	/^  GLuint current_texture;$/;"	m	language:C++	struc
 current_waypoint_index	code/app_lit.cpp	/^  u32_t current_waypoint_index;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:u32_t	file:
 cursor_pt_to_lock_to	code/app_lit_ship.cpp	/^  POINT cursor_pt_to_lock_to;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:POINT	file:
 cursor_pt_to_lock_to	code/w32_eden.cpp	/^  POINT cursor_pt_to_lock_to;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:POINT	file:
-cycles	code/eden.h	/^  u32_t cycles;$/;"	m	language:C++	struct:eden_profiler_snapshot_t	typeref:typename:u32_t
+cycles	code/eden.h	/^  u32_t cycles;$/;"	m	language:C++	struct:hell_profiler_snapshot_t	typeref:typename:u32_t
 c_link	code/momo.h	/^#define c_link /;"	d	language:C++
 c_link_begin	code/momo.h	/^#define c_link_begin /;"	d	language:C++
 c_link_end	code/momo.h	/^#define c_link_end /;"	d	language:C++
@@ -573,17 +573,22 @@ eden_audio_mixer_stop	code/eden.h	/^eden_audio_mixer_stop($/;"	f	language:C++	ty
 eden_audio_mixer_t	code/eden.h	/^struct eden_audio_mixer_t {$/;"	s	language:C++
 eden_audio_mixer_update	code/eden.h	/^eden_audio_mixer_update(eden_t* eden)$/;"	f	language:C++	typeref:typename:void
 eden_audio_t	code/eden.h	/^struct eden_audio_t {$/;"	s	language:C++
-eden_blend_type_dst_alpha	code/eden.h	/^  eden_blend_type_dst_alpha,$/;"	e	language:C++	enum:eden_blend_type_t
-eden_blend_type_dst_color	code/eden.h	/^  eden_blend_type_dst_color,$/;"	e	language:C++	enum:eden_blend_type_t
-eden_blend_type_inv_dst_alpha	code/eden.h	/^  eden_blend_type_inv_dst_alpha,$/;"	e	language:C++	enum:eden_blend_type_t
-eden_blend_type_inv_dst_color	code/eden.h	/^  eden_blend_type_inv_dst_color,$/;"	e	language:C++	enum:eden_blend_type_t
-eden_blend_type_inv_src_alpha	code/eden.h	/^  eden_blend_type_inv_src_alpha,$/;"	e	language:C++	enum:eden_blend_type_t
-eden_blend_type_inv_src_color	code/eden.h	/^  eden_blend_type_inv_src_color,$/;"	e	language:C++	enum:eden_blend_type_t
-eden_blend_type_one	code/eden.h	/^  eden_blend_type_one,$/;"	e	language:C++	enum:eden_blend_type_t
-eden_blend_type_src_alpha	code/eden.h	/^  eden_blend_type_src_alpha,$/;"	e	language:C++	enum:eden_blend_type_t
-eden_blend_type_src_color	code/eden.h	/^  eden_blend_type_src_color,$/;"	e	language:C++	enum:eden_blend_type_t
+EDEN_BLEND_PRESET_TYPE_ADD	code/eden.h	/^  EDEN_BLEND_PRESET_TYPE_ADD,$/;"	e	language:C++	enum:eden_blend_preset_type_t
+EDEN_BLEND_PRESET_TYPE_ALPHA	code/eden.h	/^  EDEN_BLEND_PRESET_TYPE_ALPHA,$/;"	e	language:C++	enum:eden_blend_preset_type_t
+EDEN_BLEND_PRESET_TYPE_MULTIPLY	code/eden.h	/^  EDEN_BLEND_PRESET_TYPE_MULTIPLY,$/;"	e	language:C++	enum:eden_blend_preset_type_t
+EDEN_BLEND_PRESET_TYPE_NONE	code/eden.h	/^  EDEN_BLEND_PRESET_TYPE_NONE,$/;"	e	language:C++	enum:eden_blend_preset_type_t
+eden_blend_preset_type_t	code/eden.h	/^enum eden_blend_preset_type_t {$/;"	g	language:C++
+EDEN_BLEND_TYPE_DST_ALPHA	code/eden.h	/^  EDEN_BLEND_TYPE_DST_ALPHA,$/;"	e	language:C++	enum:eden_blend_type_t
+EDEN_BLEND_TYPE_DST_COLOR	code/eden.h	/^  EDEN_BLEND_TYPE_DST_COLOR,$/;"	e	language:C++	enum:eden_blend_type_t
+EDEN_BLEND_TYPE_INV_DST_ALPHA	code/eden.h	/^  EDEN_BLEND_TYPE_INV_DST_ALPHA,$/;"	e	language:C++	enum:eden_blend_type_t
+EDEN_BLEND_TYPE_INV_DST_COLOR	code/eden.h	/^  EDEN_BLEND_TYPE_INV_DST_COLOR,$/;"	e	language:C++	enum:eden_blend_type_t
+EDEN_BLEND_TYPE_INV_SRC_ALPHA	code/eden.h	/^  EDEN_BLEND_TYPE_INV_SRC_ALPHA,$/;"	e	language:C++	enum:eden_blend_type_t
+EDEN_BLEND_TYPE_INV_SRC_COLOR	code/eden.h	/^  EDEN_BLEND_TYPE_INV_SRC_COLOR,$/;"	e	language:C++	enum:eden_blend_type_t
+EDEN_BLEND_TYPE_ONE	code/eden.h	/^  EDEN_BLEND_TYPE_ONE,$/;"	e	language:C++	enum:eden_blend_type_t
+EDEN_BLEND_TYPE_SRC_ALPHA	code/eden.h	/^  EDEN_BLEND_TYPE_SRC_ALPHA,$/;"	e	language:C++	enum:eden_blend_type_t
+EDEN_BLEND_TYPE_SRC_COLOR	code/eden.h	/^  EDEN_BLEND_TYPE_SRC_COLOR,$/;"	e	language:C++	enum:eden_blend_type_t
 eden_blend_type_t	code/eden.h	/^enum eden_blend_type_t {$/;"	g	language:C++
-eden_blend_type_zero	code/eden.h	/^  eden_blend_type_zero,$/;"	e	language:C++	enum:eden_blend_type_t
+EDEN_BLEND_TYPE_ZERO	code/eden.h	/^  EDEN_BLEND_TYPE_ZERO,$/;"	e	language:C++	enum:eden_blend_type_t
 EDEN_BUTTON_CODE_0	code/eden.h	/^  EDEN_BUTTON_CODE_0,$/;"	e	language:C++	enum:eden_button_code_t
 EDEN_BUTTON_CODE_1	code/eden.h	/^  EDEN_BUTTON_CODE_1,$/;"	e	language:C++	enum:eden_button_code_t
 EDEN_BUTTON_CODE_2	code/eden.h	/^  EDEN_BUTTON_CODE_2,$/;"	e	language:C++	enum:eden_button_code_t
@@ -671,7 +676,7 @@ eden_draw_tri	code/eden.h	/^eden_draw_tri(eden_t* eden, v2f_t p0, v2f_t p1, v2f_
 eden_exit_next_frame	code/eden.h	/^eden_exit_next_frame(eden_t* eden)$/;"	f	language:C++	typeref:typename:void
 eden_functions_t	code/eden.h	/^struct eden_functions_t {$/;"	s	language:C++
 eden_function_names	code/eden.h	/^static const char* eden_function_names[] {$/;"	v	language:C++	typeref:typename:const char * []
-eden_get_blend_preset	code/eden.h	/^eden_get_blend_preset(eden_t* eden) {$/;"	f	language:C++	typeref:typename:hell_gfx_blend_preset_type_t
+eden_get_blend_preset	code/eden.h	/^eden_get_blend_preset(eden_t* eden) {$/;"	f	language:C++	typeref:typename:eden_blend_preset_type_t
 eden_get_config_sig	code/app_lit.cpp	/^eden_get_config_sig(eden_get_config) $/;"	f	language:C++	typeref:typename:exported
 eden_get_config_sig	code/app_sandbox.cpp	/^eden_get_config_sig(eden_get_config) $/;"	f	language:C++	typeref:typename:exported
 eden_get_config_sig	code/app_tbp.cpp	/^eden_get_config_sig(eden_get_config) $/;"	f	language:C++	typeref:typename:exported
@@ -682,34 +687,9 @@ eden_get_dt	code/eden.h	/^eden_get_dt(eden_t* eden) {$/;"	f	language:C++	typeref
 eden_get_input_characters	code/eden.h	/^eden_get_input_characters(eden_t* eden) {$/;"	f	language:C++	typeref:typename:eden_input_characters_t
 eden_gfx_advance_depth	code/eden_gfx.h	/^eden_gfx_advance_depth(eden_gfx_t* g) { $/;"	f	language:C++	typeref:typename:void
 eden_gfx_begin_texture_transfer	code/eden_gfx.h	/^eden_gfx_begin_texture_transfer(eden_gfx_t* g, u32_t required_space) {$/;"	f	language:C++	typeref:typename:eden_gfx_texture_payload_t *
-EDEN_GFX_BLEND_PRESET_TYPE_ADD	code/eden.h	/^  EDEN_GFX_BLEND_PRESET_TYPE_ADD,$/;"	e	language:C++	enum:hell_gfx_blend_preset_type_t
-EDEN_GFX_BLEND_PRESET_TYPE_ALPHA	code/eden.h	/^  EDEN_GFX_BLEND_PRESET_TYPE_ALPHA,$/;"	e	language:C++	enum:hell_gfx_blend_preset_type_t
-EDEN_GFX_BLEND_PRESET_TYPE_MULTIPLY	code/eden.h	/^  EDEN_GFX_BLEND_PRESET_TYPE_MULTIPLY,$/;"	e	language:C++	enum:hell_gfx_blend_preset_type_t
-EDEN_GFX_BLEND_PRESET_TYPE_NONE	code/eden.h	/^  EDEN_GFX_BLEND_PRESET_TYPE_NONE,$/;"	e	language:C++	enum:hell_gfx_blend_preset_type_t
-EDEN_GFX_BLEND_TYPE_DST_ALPHA	code/eden.h	/^  EDEN_GFX_BLEND_TYPE_DST_ALPHA,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
-EDEN_GFX_BLEND_TYPE_DST_COLOR	code/eden.h	/^  EDEN_GFX_BLEND_TYPE_DST_COLOR,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
-EDEN_GFX_BLEND_TYPE_INV_DST_ALPHA	code/eden.h	/^  EDEN_GFX_BLEND_TYPE_INV_DST_ALPHA,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
-EDEN_GFX_BLEND_TYPE_INV_DST_COLOR	code/eden.h	/^  EDEN_GFX_BLEND_TYPE_INV_DST_COLOR,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
-EDEN_GFX_BLEND_TYPE_INV_SRC_ALPHA	code/eden.h	/^  EDEN_GFX_BLEND_TYPE_INV_SRC_ALPHA,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
-EDEN_GFX_BLEND_TYPE_INV_SRC_COLOR	code/eden.h	/^  EDEN_GFX_BLEND_TYPE_INV_SRC_COLOR,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
-EDEN_GFX_BLEND_TYPE_ONE	code/eden.h	/^  EDEN_GFX_BLEND_TYPE_ONE,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
-EDEN_GFX_BLEND_TYPE_SRC_ALPHA	code/eden.h	/^  EDEN_GFX_BLEND_TYPE_SRC_ALPHA,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
-EDEN_GFX_BLEND_TYPE_SRC_COLOR	code/eden.h	/^  EDEN_GFX_BLEND_TYPE_SRC_COLOR,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
-EDEN_GFX_BLEND_TYPE_ZERO	code/eden.h	/^  EDEN_GFX_BLEND_TYPE_ZERO,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
 eden_gfx_cancel_texture_transfer	code/eden_gfx.h	/^eden_gfx_cancel_texture_transfer(eden_gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
 eden_gfx_clear_colors	code/eden_gfx.h	/^eden_gfx_clear_colors(eden_gfx_t* g, rgba_t colors) {$/;"	f	language:C++	typeref:typename:void
 eden_gfx_clear_commands	code/eden_gfx.h	/^eden_gfx_clear_commands(eden_gfx_t* g) $/;"	f	language:C++	typeref:typename:void
-EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH	code/eden.h	/^  EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH,$/;"	e	language:C++	enum:hell_gfx_command_type_t
-EDEN_GFX_COMMAND_TYPE_BLEND	code/eden.h	/^  EDEN_GFX_COMMAND_TYPE_BLEND,$/;"	e	language:C++	enum:hell_gfx_command_type_t
-EDEN_GFX_COMMAND_TYPE_CLEAR	code/eden.h	/^  EDEN_GFX_COMMAND_TYPE_CLEAR,$/;"	e	language:C++	enum:hell_gfx_command_type_t
-EDEN_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES	code/eden.h	/^  EDEN_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,$/;"	e	language:C++	enum:hell_gfx_command_type_t
-EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE	code/eden.h	/^  EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE,$/;"	e	language:C++	enum:hell_gfx_command_type_t
-EDEN_GFX_COMMAND_TYPE_LINE	code/eden.h	/^  EDEN_GFX_COMMAND_TYPE_LINE,$/;"	e	language:C++	enum:hell_gfx_command_type_t
-EDEN_GFX_COMMAND_TYPE_RECT	code/eden.h	/^  EDEN_GFX_COMMAND_TYPE_RECT,$/;"	e	language:C++	enum:hell_gfx_command_type_t
-EDEN_GFX_COMMAND_TYPE_SPRITE	code/eden.h	/^  EDEN_GFX_COMMAND_TYPE_SPRITE,$/;"	e	language:C++	enum:hell_gfx_command_type_t
-EDEN_GFX_COMMAND_TYPE_TEST	code/eden.h	/^  EDEN_GFX_COMMAND_TYPE_TEST, \/\/ only for testing$/;"	e	language:C++	enum:hell_gfx_command_type_t
-EDEN_GFX_COMMAND_TYPE_TRIANGLE	code/eden.h	/^  EDEN_GFX_COMMAND_TYPE_TRIANGLE,$/;"	e	language:C++	enum:hell_gfx_command_type_t
-EDEN_GFX_COMMAND_TYPE_VIEW	code/eden.h	/^  EDEN_GFX_COMMAND_TYPE_VIEW,$/;"	e	language:C++	enum:hell_gfx_command_type_t
 eden_gfx_complete_texture_transfer	code/eden_gfx.h	/^eden_gfx_complete_texture_transfer(eden_gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
 eden_gfx_delete_texture	code/eden_gfx.h	/^eden_gfx_delete_texture(eden_gfx_t* g, u32_t texture_index) {$/;"	f	language:C++	typeref:typename:void
 eden_gfx_draw_circle_outline	code/eden_gfx.h	/^eden_gfx_draw_circle_outline(eden_gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t l/;"	f	language:C++	typeref:typename:void
@@ -744,46 +724,9 @@ eden_gfx_opengl_push_sprite	code/eden_gfx_opengl.h	/^eden_gfx_opengl_push_sprite
 eden_gfx_opengl_push_triangle	code/eden_gfx_opengl.h	/^eden_gfx_opengl_push_triangle($/;"	f	language:C++	typeref:typename:void
 eden_gfx_opengl_set_blend_mode	code/eden_gfx_opengl.h	/^eden_gfx_opengl_set_blend_mode(eden_gfx_opengl_t* ogl, eden_gfx_blend_type_t src, eden_gfx_blend/;"	f	language:C++	typeref:typename:void
 eden_gfx_opengl_set_texture	code/eden_gfx_opengl.h	/^eden_gfx_opengl_set_texture($/;"	f	language:C++	typeref:typename:void
-EDEN_GFX_OPENGL_SPRITE_FSHADER	code/eden.h	/^#define EDEN_GFX_OPENGL_SPRITE_FSHADER /;"	d	language:C++
 EDEN_GFX_OPENGL_SPRITE_FSHADER	code/eden_gfx_opengl.h	/^#define EDEN_GFX_OPENGL_SPRITE_FSHADER /;"	d	language:C++
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:__anon0a42ec610203
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL,$/;"	e	language:C++	enum:__anon0a42ec610203
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE,$/;"	e	language:C++	enum:__anon0a42ec610203
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM$/;"	e	language:C++	enum:__anon0a42ec610203
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,     \/\/ 1 $/;"	e	language:C++	enum:__anon0a42ec610103
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,     \/\/ 2$/;"	e	language:C++	enum:__anon0a42ec610103
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,     \/\/ 3$/;"	e	language:C++	enum:__anon0a42ec610103
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4,     \/\/ 4$/;"	e	language:C++	enum:__anon0a42ec610103
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL,       \/\/ 0 $/;"	e	language:C++	enum:__anon0a42ec610103
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1,   \/\/ 5$/;"	e	language:C++	enum:__anon0a42ec610103
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2,   \/\/ 6$/;"	e	language:C++	enum:__anon0a42ec610103
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3,   \/\/ 7$/;"	e	language:C++	enum:__anon0a42ec610103
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4,   \/\/ 8$/;"	e	language:C++	enum:__anon0a42ec610103
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, \/\/ 9$/;"	e	language:C++	enum:__anon0a42ec610103
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, \/\/ 10$/;"	e	language:C++	enum:__anon0a42ec610103
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, \/\/ 11$/;"	e	language:C++	enum:__anon0a42ec610103
-EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4	code/eden.h	/^  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  \/\/ 12$/;"	e	language:C++	enum:__anon0a42ec610103
-EDEN_GFX_OPENGL_SPRITE_VSHADER	code/eden.h	/^#define EDEN_GFX_OPENGL_SPRITE_VSHADER /;"	d	language:C++
 EDEN_GFX_OPENGL_SPRITE_VSHADER	code/eden_gfx_opengl.h	/^#define EDEN_GFX_OPENGL_SPRITE_VSHADER /;"	d	language:C++
-EDEN_GFX_OPENGL_TRIANGLE_FSHADER	code/eden.h	/^#define EDEN_GFX_OPENGL_TRIANGLE_FSHADER /;"	d	language:C++
 EDEN_GFX_OPENGL_TRIANGLE_FSHADER	code/eden_gfx_opengl.h	/^#define EDEN_GFX_OPENGL_TRIANGLE_FSHADER /;"	d	language:C++
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:__anon0a42ec610403
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL,$/;"	e	language:C++	enum:__anon0a42ec610403
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM$/;"	e	language:C++	enum:__anon0a42ec610403
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,   \/\/ 1$/;"	e	language:C++	enum:__anon0a42ec610303
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,   \/\/ 2$/;"	e	language:C++	enum:__anon0a42ec610303
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,   \/\/ 3$/;"	e	language:C++	enum:__anon0a42ec610303
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL,    \/\/ 0 $/;"	e	language:C++	enum:__anon0a42ec610303
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, \/\/ 4$/;"	e	language:C++	enum:__anon0a42ec610303
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, \/\/ 5$/;"	e	language:C++	enum:__anon0a42ec610303
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, \/\/ 6$/;"	e	language:C++	enum:__anon0a42ec610303
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  \/\/ 7$/;"	e	language:C++	enum:__anon0a42ec610303
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS,$/;"	e	language:C++	enum:__anon0a42ec610503
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT \/\/ 5$/;"	e	language:C++	enum:__anon0a42ec610503
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES,$/;"	e	language:C++	enum:__anon0a42ec610503
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL,$/;"	e	language:C++	enum:__anon0a42ec610503
-EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM	code/eden.h	/^  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM,$/;"	e	language:C++	enum:__anon0a42ec610503
-EDEN_GFX_OPENGL_TRIANGLE_VSHADER	code/eden.h	/^#define EDEN_GFX_OPENGL_TRIANGLE_VSHADER /;"	d	language:C++
 EDEN_GFX_OPENGL_TRIANGLE_VSHADER	code/eden_gfx_opengl.h	/^#define EDEN_GFX_OPENGL_TRIANGLE_VSHADER /;"	d	language:C++
 eden_gfx_push_sprite	code/eden_gfx.h	/^eden_gfx_push_sprite($/;"	f	language:C++	typeref:typename:void
 eden_gfx_set_blend	code/eden_gfx.h	/^eden_gfx_set_blend(eden_gfx_t* g, eden_gfx_blend_type_t src, eden_gfx_blend_type_t dst) {$/;"	f	language:C++	typeref:typename:void
@@ -792,9 +735,6 @@ eden_gfx_set_view	code/eden_gfx.h	/^eden_gfx_set_view(eden_gfx_t* g, f32_t min_x
 eden_gfx_test	code/eden_gfx.h	/^eden_gfx_test(eden_gfx_t* g) { $/;"	f	language:C++	typeref:typename:void
 EDEN_GFX_TEST_FSHADER	code/eden_gfx_opengl.h	/^#define EDEN_GFX_TEST_FSHADER /;"	d	language:C++
 EDEN_GFX_TEST_VSHADER	code/eden_gfx_opengl.h	/^#define EDEN_GFX_TEST_VSHADER /;"	d	language:C++
-EDEN_GFX_TEXTURE_PAYLOAD_STATE_EMPTY	code/eden.h	/^  EDEN_GFX_TEXTURE_PAYLOAD_STATE_EMPTY,$/;"	e	language:C++	enum:hell_gfx_texture_payload_state_t
-EDEN_GFX_TEXTURE_PAYLOAD_STATE_LOADING	code/eden.h	/^  EDEN_GFX_TEXTURE_PAYLOAD_STATE_LOADING,$/;"	e	language:C++	enum:hell_gfx_texture_payload_state_t
-EDEN_GFX_TEXTURE_PAYLOAD_STATE_READY	code/eden.h	/^  EDEN_GFX_TEXTURE_PAYLOAD_STATE_READY,$/;"	e	language:C++	enum:hell_gfx_texture_payload_state_t
 EDEN_H	code/eden.h	/^#define EDEN_H$/;"	d	language:C++
 eden_height	code/app_lit_ship.cpp	/^  f32_t eden_height;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t	file:
 eden_height	code/w32_eden.cpp	/^  f32_t eden_height;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t	file:
@@ -805,17 +745,8 @@ eden_hide_cursor_sig	code/eden.h	/^typedef eden_hide_cursor_sig(eden_hide_cursor
 eden_hide_cursor_sig	code/w32_eden.cpp	/^eden_hide_cursor_sig(w32_hide_cursor) {$/;"	f	language:C++	file:
 eden_input_characters_t	code/eden.h	/^struct eden_input_characters_t {$/;"	s	language:C++
 eden_input_t	code/eden.h	/^struct eden_input_t {$/;"	s	language:C++
-eden_inspector_add_f32	code/eden.h	/^eden_inspector_add_f32(eden_inspector_t* in, str_t name, f32_t item) {$/;"	f	language:C++	typeref:typename:void
-eden_inspector_add_u32	code/eden.h	/^eden_inspector_add_u32(eden_inspector_t* in, str_t name, u32_t item) $/;"	f	language:C++	typeref:typename:void
-eden_inspector_clear	code/eden.h	/^eden_inspector_clear(eden_inspector_t* in) $/;"	f	language:C++	typeref:typename:void
-eden_inspector_entry_t	code/eden.h	/^struct eden_inspector_entry_t {$/;"	s	language:C++
-EDEN_INSPECTOR_ENTRY_TYPE_F32	code/eden.h	/^  EDEN_INSPECTOR_ENTRY_TYPE_F32,$/;"	e	language:C++	enum:eden_inspector_entry_type_t
-eden_inspector_entry_type_t	code/eden.h	/^enum eden_inspector_entry_type_t {$/;"	g	language:C++
-EDEN_INSPECTOR_ENTRY_TYPE_U32	code/eden.h	/^  EDEN_INSPECTOR_ENTRY_TYPE_U32,$/;"	e	language:C++	enum:eden_inspector_entry_type_t
-eden_inspector_init	code/eden.h	/^eden_inspector_init(eden_inspector_t* in, arena_t* arena, u32_t max_entries) $/;"	f	language:C++	typeref:typename:void
-eden_inspector_t	code/eden.h	/^struct eden_inspector_t {$/;"	s	language:C++
-eden_inspect_f32	code/eden.h	/^#define eden_inspect_f32(/;"	d	language:C++
-eden_inspect_u32	code/eden.h	/^#define eden_inspect_u32(/;"	d	language:C++
+eden_inspect_f32	code/eden.h	/^eden_inspect_f32(eden_t* eden, str_t name, u32_t item)$/;"	f	language:C++	typeref:typename:void
+eden_inspect_u32	code/eden.h	/^eden_inspect_u32(eden_t* eden, str_t name, u32_t item) $/;"	f	language:C++	typeref:typename:void
 eden_is_button_down	code/eden.h	/^eden_is_button_down(eden_t* eden, eden_button_code_t code){$/;"	f	language:C++	typeref:typename:b32_t
 eden_is_button_held	code/eden.h	/^eden_is_button_held(eden_t* eden, eden_button_code_t code) {$/;"	f	language:C++	typeref:typename:b32_t
 eden_is_button_poked	code/eden.h	/^eden_is_button_poked(eden_t* eden, eden_button_code_t code) {$/;"	f	language:C++	typeref:typename:b32_t
@@ -826,19 +757,10 @@ eden_lock_cursor_sig	code/app_lit_ship.cpp	/^eden_lock_cursor_sig(w32_lock_curso
 eden_lock_cursor_sig	code/eden.h	/^#define eden_lock_cursor_sig(/;"	d	language:C++
 eden_lock_cursor_sig	code/eden.h	/^typedef eden_lock_cursor_sig(eden_lock_cursor_f);$/;"	t	language:C++
 eden_lock_cursor_sig	code/w32_eden.cpp	/^eden_lock_cursor_sig(w32_lock_cursor) {$/;"	f	language:C++	file:
-eden_profiler_begin_block	code/eden.h	/^#define eden_profiler_begin_block(/;"	d	language:C++
-eden_profiler_block	code/eden.h	/^#define eden_profiler_block(/;"	d	language:C++
-eden_profiler_end_block	code/eden.h	/^#define eden_profiler_end_block(/;"	d	language:C++
-eden_profiler_entry_t	code/eden.h	/^struct eden_profiler_entry_t {$/;"	s	language:C++
-eden_profiler_init	code/eden.h	/^eden_profiler_init($/;"	f	language:C++	typeref:typename:void
-eden_profiler_reset	code/eden.h	/^eden_profiler_reset(eden_profiler_t* p) {$/;"	f	language:C++	typeref:typename:void
-eden_profiler_snapshot_t	code/eden.h	/^struct eden_profiler_snapshot_t {$/;"	s	language:C++
-eden_profiler_t	code/eden.h	/^struct eden_profiler_t {$/;"	s	language:C++
-eden_profiler_update_entries	code/eden.h	/^eden_profiler_update_entries(eden_profiler_t* p) {$/;"	f	language:C++	typeref:typename:void
 eden_profile_begin	code/eden.h	/^#define eden_profile_begin(/;"	d	language:C++
 eden_profile_block	code/eden.h	/^#define eden_profile_block(/;"	d	language:C++
 eden_profile_end	code/eden.h	/^#define eden_profile_end(/;"	d	language:C++
-eden_set_blend_preset	code/eden.h	/^eden_set_blend_preset(eden_t* eden, hell_gfx_blend_preset_type_t type) {$/;"	f	language:C++	typeref:typename:void
+eden_set_blend_preset	code/eden.h	/^eden_set_blend_preset(eden_t* eden, eden_blend_preset_type_t type) {$/;"	f	language:C++	typeref:typename:void
 eden_set_design_dimensions	code/eden.h	/^#define eden_set_design_dimensions(/;"	d	language:C++
 eden_set_design_dimensions_sig	code/eden.h	/^#define eden_set_design_dimensions_sig(/;"	d	language:C++
 eden_set_design_dimensions_sig	code/eden.h	/^typedef eden_set_design_dimensions_sig(eden_set_design_dimensions_f);$/;"	t	language:C++
@@ -875,18 +797,18 @@ end_build_type	bin/build.bat	/^:end_build_type$/;"	l	language:DosBatch
 end_point_indices	code/momo.h	/^  u16_t* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u16_t *
 end_pt	code/app_lit.cpp	/^  v2f_t end_pt;$/;"	m	language:C++	struct:lit_game_edge_t	typeref:typename:v2f_t	file:
 entries	code/app_lit_ship.cpp	/^  w32_work_t entries[256];$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:w32_work_t[256]	file:
-entries	code/eden.h	/^  eden_inspector_entry_t* entries;$/;"	m	language:C++	struct:eden_inspector_t	typeref:typename:eden_inspector_entry_t *
-entries	code/eden.h	/^  eden_profiler_entry_t* entries;$/;"	m	language:C++	struct:eden_profiler_t	typeref:typename:eden_profiler_entry_t *
+entries	code/eden.h	/^  hell_inspector_entry_t* entries;$/;"	m	language:C++	struct:hell_inspector_t	typeref:typename:hell_inspector_entry_t *
+entries	code/eden.h	/^  hell_profiler_entry_t* entries;$/;"	m	language:C++	struct:hell_profiler_t	typeref:typename:hell_profiler_entry_t *
 entries	code/w32_eden.cpp	/^  w32_work_t entries[256];$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:w32_work_t[256]	file:
 entry_cap	code/app_lit_ship.cpp	/^  u32_t entry_cap;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t	file:
-entry_cap	code/eden.h	/^  u32_t entry_cap;$/;"	m	language:C++	struct:eden_inspector_t	typeref:typename:u32_t
-entry_cap	code/eden.h	/^  u32_t entry_cap;$/;"	m	language:C++	struct:eden_profiler_t	typeref:typename:u32_t
+entry_cap	code/eden.h	/^  u32_t entry_cap;$/;"	m	language:C++	struct:hell_inspector_t	typeref:typename:u32_t
+entry_cap	code/eden.h	/^  u32_t entry_cap;$/;"	m	language:C++	struct:hell_profiler_t	typeref:typename:u32_t
 entry_cap	code/w32_eden.cpp	/^  u32_t entry_cap;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t	file:
 entry_count	code/eden.h	/^	usz_t entry_count;$/;"	m	language:C++	struct:hell_gfx_command_queue_t	typeref:typename:usz_t
-entry_count	code/eden.h	/^  u32_t entry_count;$/;"	m	language:C++	struct:eden_inspector_t	typeref:typename:u32_t
-entry_count	code/eden.h	/^  u32_t entry_count;$/;"	m	language:C++	struct:eden_profiler_t	typeref:typename:u32_t
+entry_count	code/eden.h	/^  u32_t entry_count;$/;"	m	language:C++	struct:hell_inspector_t	typeref:typename:u32_t
+entry_count	code/eden.h	/^  u32_t entry_count;$/;"	m	language:C++	struct:hell_profiler_t	typeref:typename:u32_t
 entry_pos	code/eden.h	/^	usz_t entry_pos;$/;"	m	language:C++	struct:hell_gfx_command_queue_t	typeref:typename:usz_t
-entry_snapshot_count	code/eden.h	/^  u32_t entry_snapshot_count;$/;"	m	language:C++	struct:eden_profiler_t	typeref:typename:u32_t
+entry_snapshot_count	code/eden.h	/^  u32_t entry_snapshot_count;$/;"	m	language:C++	struct:hell_profiler_t	typeref:typename:u32_t
 entry_start	code/eden.h	/^	usz_t entry_start;$/;"	m	language:C++	struct:hell_gfx_command_queue_t	typeref:typename:usz_t
 eof	bin/pack_lit.bat	/^:eof$/;"	l	language:DosBatch
 euler_q1	code/euler.cpp	/^euler_q1() {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1181,7 +1103,7 @@ f64_weight	code/momo.h	/^static f64_t f64_weight(f64_t v, f64_t min, f64_t max) 
 far	code/momo.h	/^# define far$/;"	d	language:C++
 file	code/aoc22.cpp	/^    aoc22_d7_file_t* file;$/;"	m	language:C++	union:aoc22_d7_node_t::__anonabc34737010a	typeref:typename:aoc22_d7_file_t *	file:
 filename	bin/build.bat	/^set filename=%~1$/;"	v	language:DosBatch
-filename	code/eden.h	/^  const char* filename;$/;"	m	language:C++	struct:eden_profiler_entry_t	typeref:typename:const char *
+filename	code/eden.h	/^  const char* filename;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:const char *
 filename	code/pass.h	/^  const char* filename;$/;"	m	language:C++	struct:pass_pack_atlas_sprite_t	typeref:typename:const char *
 filename	code/pass.h	/^  const char* filename;$/;"	m	language:C++	struct:pass_pack_font_ext_t	typeref:typename:const char *
 filename	code/pass.h	/^  const char* filename;$/;"	m	language:C++	struct:pass_pack_shader_ext_t	typeref:typename:const char *
@@ -1221,7 +1143,7 @@ filter_method	code/momo.h	/^  u8_t filter_method;$/;"	m	language:C++	struct:png_
 filter_method	code/momo.h	/^  u8_t filter_method;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:typename:u8_t
 first_payload_index	code/eden.h	/^  usz_t first_payload_index;$/;"	m	language:C++	struct:hell_gfx_texture_queue_t	typeref:typename:usz_t
 flags	code/momo.h	/^  u8_t flags;$/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:u8_t
-flag_for_reset	code/eden.h	/^  b32_t flag_for_reset;$/;"	m	language:C++	struct:eden_profiler_entry_t	typeref:typename:b32_t
+flag_for_reset	code/eden.h	/^  b32_t flag_for_reset;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:b32_t
 fmt_chunk	code/momo.h	/^  wav_fmt_chunk_t fmt_chunk;$/;"	m	language:C++	struct:wav_t	typeref:typename:wav_fmt_chunk_t
 fn_compare_and_print	learn/x64_1_conditionals.s	/^fn_compare_and_print:$/;"	l	language:Asm
 fn_compare_and_print_continue	learn/x64_1_conditionals.s	/^fn_compare_and_print_continue:$/;"	l	language:Asm
@@ -1498,8 +1420,17 @@ height	code/momo.h	/^  u32_t height;$/;"	m	language:C++	struct:_png_ihdr_t	typer
 held_light	code/app_lit.cpp	/^  lit_game_light_t* held_light;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:lit_game_light_t *	file:
 hell_gfx_advance_depth	code/eden.h	/^hell_gfx_advance_depth(hell_gfx_t* g) { $/;"	f	language:C++	typeref:typename:void
 hell_gfx_begin_texture_transfer	code/eden.h	/^hell_gfx_begin_texture_transfer(hell_gfx_t* g, u32_t required_space) {$/;"	f	language:C++	typeref:typename:hell_gfx_texture_payload_t *
-hell_gfx_blend_preset_type_t	code/eden.h	/^enum hell_gfx_blend_preset_type_t {$/;"	g	language:C++
+HELL_GFX_BLEND_TYPE_DST_ALPHA	code/eden.h	/^  HELL_GFX_BLEND_TYPE_DST_ALPHA,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
+HELL_GFX_BLEND_TYPE_DST_COLOR	code/eden.h	/^  HELL_GFX_BLEND_TYPE_DST_COLOR,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
+HELL_GFX_BLEND_TYPE_INV_DST_ALPHA	code/eden.h	/^  HELL_GFX_BLEND_TYPE_INV_DST_ALPHA,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
+HELL_GFX_BLEND_TYPE_INV_DST_COLOR	code/eden.h	/^  HELL_GFX_BLEND_TYPE_INV_DST_COLOR,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
+HELL_GFX_BLEND_TYPE_INV_SRC_ALPHA	code/eden.h	/^  HELL_GFX_BLEND_TYPE_INV_SRC_ALPHA,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
+HELL_GFX_BLEND_TYPE_INV_SRC_COLOR	code/eden.h	/^  HELL_GFX_BLEND_TYPE_INV_SRC_COLOR,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
+HELL_GFX_BLEND_TYPE_ONE	code/eden.h	/^  HELL_GFX_BLEND_TYPE_ONE,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
+HELL_GFX_BLEND_TYPE_SRC_ALPHA	code/eden.h	/^  HELL_GFX_BLEND_TYPE_SRC_ALPHA,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
+HELL_GFX_BLEND_TYPE_SRC_COLOR	code/eden.h	/^  HELL_GFX_BLEND_TYPE_SRC_COLOR,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
 hell_gfx_blend_type_t	code/eden.h	/^enum hell_gfx_blend_type_t {$/;"	g	language:C++
+HELL_GFX_BLEND_TYPE_ZERO	code/eden.h	/^  HELL_GFX_BLEND_TYPE_ZERO,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
 hell_gfx_cancel_texture_transfer	code/eden.h	/^hell_gfx_cancel_texture_transfer(hell_gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_clear_colors	code/eden.h	/^hell_gfx_clear_colors(hell_gfx_t* g, rgba_t colors) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_clear_commands	code/eden.h	/^hell_gfx_clear_commands(hell_gfx_t* g) $/;"	f	language:C++	typeref:typename:void
@@ -1514,7 +1445,18 @@ hell_gfx_command_sprite_t	code/eden.h	/^struct hell_gfx_command_sprite_t {$/;"	s
 hell_gfx_command_t	code/eden.h	/^struct hell_gfx_command_t {$/;"	s	language:C++
 hell_gfx_command_test_t	code/eden.h	/^struct hell_gfx_command_test_t {$/;"	s	language:C++
 hell_gfx_command_triangle_t	code/eden.h	/^struct hell_gfx_command_triangle_t {$/;"	s	language:C++
+HELL_GFX_COMMAND_TYPE_ADVANCE_DEPTH	code/eden.h	/^  HELL_GFX_COMMAND_TYPE_ADVANCE_DEPTH,$/;"	e	language:C++	enum:hell_gfx_command_type_t
+HELL_GFX_COMMAND_TYPE_BLEND	code/eden.h	/^  HELL_GFX_COMMAND_TYPE_BLEND,$/;"	e	language:C++	enum:hell_gfx_command_type_t
+HELL_GFX_COMMAND_TYPE_CLEAR	code/eden.h	/^  HELL_GFX_COMMAND_TYPE_CLEAR,$/;"	e	language:C++	enum:hell_gfx_command_type_t
+HELL_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES	code/eden.h	/^  HELL_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,$/;"	e	language:C++	enum:hell_gfx_command_type_t
+HELL_GFX_COMMAND_TYPE_DELETE_TEXTURE	code/eden.h	/^  HELL_GFX_COMMAND_TYPE_DELETE_TEXTURE,$/;"	e	language:C++	enum:hell_gfx_command_type_t
+HELL_GFX_COMMAND_TYPE_LINE	code/eden.h	/^  HELL_GFX_COMMAND_TYPE_LINE,$/;"	e	language:C++	enum:hell_gfx_command_type_t
+HELL_GFX_COMMAND_TYPE_RECT	code/eden.h	/^  HELL_GFX_COMMAND_TYPE_RECT,$/;"	e	language:C++	enum:hell_gfx_command_type_t
+HELL_GFX_COMMAND_TYPE_SPRITE	code/eden.h	/^  HELL_GFX_COMMAND_TYPE_SPRITE,$/;"	e	language:C++	enum:hell_gfx_command_type_t
 hell_gfx_command_type_t	code/eden.h	/^enum hell_gfx_command_type_t {$/;"	g	language:C++
+HELL_GFX_COMMAND_TYPE_TEST	code/eden.h	/^  HELL_GFX_COMMAND_TYPE_TEST, \/\/ only for testing$/;"	e	language:C++	enum:hell_gfx_command_type_t
+HELL_GFX_COMMAND_TYPE_TRIANGLE	code/eden.h	/^  HELL_GFX_COMMAND_TYPE_TRIANGLE,$/;"	e	language:C++	enum:hell_gfx_command_type_t
+HELL_GFX_COMMAND_TYPE_VIEW	code/eden.h	/^  HELL_GFX_COMMAND_TYPE_VIEW,$/;"	e	language:C++	enum:hell_gfx_command_type_t
 hell_gfx_command_view_t	code/eden.h	/^struct hell_gfx_command_view_t {$/;"	s	language:C++
 hell_gfx_complete_texture_transfer	code/eden.h	/^hell_gfx_complete_texture_transfer(hell_gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_delete_texture	code/eden.h	/^hell_gfx_delete_texture(hell_gfx_t* g, u32_t texture_index) {$/;"	f	language:C++	typeref:typename:void
@@ -1523,7 +1465,7 @@ hell_gfx_draw_filled_circle	code/eden.h	/^hell_gfx_draw_filled_circle(hell_gfx_t
 hell_gfx_draw_filled_rect	code/eden.h	/^hell_gfx_draw_filled_rect(hell_gfx_t* g, $/;"	f	language:C++	typeref:typename:void
 hell_gfx_draw_filled_triangle	code/eden.h	/^hell_gfx_draw_filled_triangle(hell_gfx_t* g,$/;"	f	language:C++	typeref:typename:void
 hell_gfx_draw_line	code/eden.h	/^hell_gfx_draw_line($/;"	f	language:C++	typeref:typename:void
-hell_gfx_get_blend_preset	code/eden.h	/^hell_gfx_get_blend_preset(hell_gfx_t* g) {$/;"	f	language:C++	typeref:typename:hell_gfx_blend_preset_type_t
+hell_gfx_get_blend_preset	code/eden.h	/^hell_gfx_get_blend_preset(hell_gfx_t* g) {$/;"	f	language:C++	typeref:typename:eden_blend_preset_type_t
 hell_gfx_get_command	code/eden.h	/^hell_gfx_get_command(hell_gfx_t* g, u32_t index) {$/;"	f	language:C++	typeref:typename:hell_gfx_command_t *
 hell_gfx_get_next_texture_handle	code/eden.h	/^hell_gfx_get_next_texture_handle(hell_gfx_t* hell_gfx) {$/;"	f	language:C++	typeref:typename:u32_t
 hell_gfx_init	code/eden.h	/^hell_gfx_init($/;"	f	language:C++	typeref:typename:b32_t
@@ -1599,27 +1541,83 @@ hell_gfx_opengl_push_triangle	code/eden.h	/^hell_gfx_opengl_push_triangle($/;"	f
 hell_gfx_opengl_set_blend_mode	code/eden.h	/^hell_gfx_opengl_set_blend_mode(hell_gfx_opengl_t* ogl, hell_gfx_blend_type_t src, hell_gfx_blend/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_set_texture	code/eden.h	/^hell_gfx_opengl_set_texture($/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_sprite_batch_t	code/eden.h	/^struct hell_gfx_opengl_sprite_batch_t{$/;"	s	language:C++
+HELL_GFX_OPENGL_SPRITE_FSHADER	code/eden.h	/^#define HELL_GFX_OPENGL_SPRITE_FSHADER /;"	d	language:C++
+HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:__anon0a42ec610203
+HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL,$/;"	e	language:C++	enum:__anon0a42ec610203
+HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE,$/;"	e	language:C++	enum:__anon0a42ec610203
+HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM$/;"	e	language:C++	enum:__anon0a42ec610203
+HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,     \/\/ 1 $/;"	e	language:C++	enum:__anon0a42ec610103
+HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,     \/\/ 2$/;"	e	language:C++	enum:__anon0a42ec610103
+HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,     \/\/ 3$/;"	e	language:C++	enum:__anon0a42ec610103
+HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4,     \/\/ 4$/;"	e	language:C++	enum:__anon0a42ec610103
+HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL,       \/\/ 0 $/;"	e	language:C++	enum:__anon0a42ec610103
+HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1,   \/\/ 5$/;"	e	language:C++	enum:__anon0a42ec610103
+HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2,   \/\/ 6$/;"	e	language:C++	enum:__anon0a42ec610103
+HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3,   \/\/ 7$/;"	e	language:C++	enum:__anon0a42ec610103
+HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4,   \/\/ 8$/;"	e	language:C++	enum:__anon0a42ec610103
+HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, \/\/ 9$/;"	e	language:C++	enum:__anon0a42ec610103
+HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, \/\/ 10$/;"	e	language:C++	enum:__anon0a42ec610103
+HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, \/\/ 11$/;"	e	language:C++	enum:__anon0a42ec610103
+HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  \/\/ 12$/;"	e	language:C++	enum:__anon0a42ec610103
+HELL_GFX_OPENGL_SPRITE_VSHADER	code/eden.h	/^#define HELL_GFX_OPENGL_SPRITE_VSHADER /;"	d	language:C++
 hell_gfx_opengl_t	code/eden.h	/^struct hell_gfx_opengl_t {$/;"	s	language:C++
 hell_gfx_opengl_texture_t	code/eden.h	/^struct hell_gfx_opengl_texture_t {$/;"	s	language:C++
 hell_gfx_opengl_triangle_batch_t	code/eden.h	/^struct hell_gfx_opengl_triangle_batch_t{$/;"	s	language:C++
+HELL_GFX_OPENGL_TRIANGLE_FSHADER	code/eden.h	/^#define HELL_GFX_OPENGL_TRIANGLE_FSHADER /;"	d	language:C++
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:__anon0a42ec610403
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL,$/;"	e	language:C++	enum:__anon0a42ec610403
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM$/;"	e	language:C++	enum:__anon0a42ec610403
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,   \/\/ 1$/;"	e	language:C++	enum:__anon0a42ec610303
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,   \/\/ 2$/;"	e	language:C++	enum:__anon0a42ec610303
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,   \/\/ 3$/;"	e	language:C++	enum:__anon0a42ec610303
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL,    \/\/ 0 $/;"	e	language:C++	enum:__anon0a42ec610303
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, \/\/ 4$/;"	e	language:C++	enum:__anon0a42ec610303
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, \/\/ 5$/;"	e	language:C++	enum:__anon0a42ec610303
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, \/\/ 6$/;"	e	language:C++	enum:__anon0a42ec610303
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  \/\/ 7$/;"	e	language:C++	enum:__anon0a42ec610303
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS,$/;"	e	language:C++	enum:__anon0a42ec610503
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT \/\/ 5$/;"	e	language:C++	enum:__anon0a42ec610503
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES,$/;"	e	language:C++	enum:__anon0a42ec610503
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL,$/;"	e	language:C++	enum:__anon0a42ec610503
+HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM,$/;"	e	language:C++	enum:__anon0a42ec610503
+HELL_GFX_OPENGL_TRIANGLE_VSHADER	code/eden.h	/^#define HELL_GFX_OPENGL_TRIANGLE_VSHADER /;"	d	language:C++
 hell_gfx_opengl_uv_t	code/eden.h	/^struct hell_gfx_opengl_uv_t {$/;"	s	language:C++
 hell_gfx_push_sprite	code/eden.h	/^hell_gfx_push_sprite($/;"	f	language:C++	typeref:typename:void
 hell_gfx_set_blend	code/eden.h	/^hell_gfx_set_blend(hell_gfx_t* g, hell_gfx_blend_type_t src, hell_gfx_blend_type_t dst) {$/;"	f	language:C++	typeref:typename:void
-hell_gfx_set_blend_preset	code/eden.h	/^hell_gfx_set_blend_preset(hell_gfx_t* g, hell_gfx_blend_preset_type_t type)$/;"	f	language:C++	typeref:typename:void
+hell_gfx_set_blend_preset	code/eden.h	/^hell_gfx_set_blend_preset(hell_gfx_t* g, eden_blend_preset_type_t type)$/;"	f	language:C++	typeref:typename:void
 hell_gfx_set_view	code/eden.h	/^hell_gfx_set_view(hell_gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x/;"	f	language:C++	typeref:typename:void
 hell_gfx_t	code/eden.h	/^struct hell_gfx_t {$/;"	s	language:C++
 hell_gfx_test	code/eden.h	/^hell_gfx_test(hell_gfx_t* g) { $/;"	f	language:C++	typeref:typename:void
+HELL_GFX_TEXTURE_PAYLOAD_STATE_EMPTY	code/eden.h	/^  HELL_GFX_TEXTURE_PAYLOAD_STATE_EMPTY,$/;"	e	language:C++	enum:hell_gfx_texture_payload_state_t
+HELL_GFX_TEXTURE_PAYLOAD_STATE_LOADING	code/eden.h	/^  HELL_GFX_TEXTURE_PAYLOAD_STATE_LOADING,$/;"	e	language:C++	enum:hell_gfx_texture_payload_state_t
+HELL_GFX_TEXTURE_PAYLOAD_STATE_READY	code/eden.h	/^  HELL_GFX_TEXTURE_PAYLOAD_STATE_READY,$/;"	e	language:C++	enum:hell_gfx_texture_payload_state_t
 hell_gfx_texture_payload_state_t	code/eden.h	/^enum hell_gfx_texture_payload_state_t {$/;"	g	language:C++
 hell_gfx_texture_payload_t	code/eden.h	/^struct hell_gfx_texture_payload_t {$/;"	s	language:C++
 hell_gfx_texture_queue_t	code/eden.h	/^struct hell_gfx_texture_queue_t {$/;"	s	language:C++
+hell_inspector_entry_t	code/eden.h	/^struct hell_inspector_entry_t {$/;"	s	language:C++
+HELL_INSPECTOR_ENTRY_TYPE_F32	code/eden.h	/^  HELL_INSPECTOR_ENTRY_TYPE_F32,$/;"	e	language:C++	enum:hell_inspector_entry_type_t
+hell_inspector_entry_type_t	code/eden.h	/^enum hell_inspector_entry_type_t {$/;"	g	language:C++
+HELL_INSPECTOR_ENTRY_TYPE_U32	code/eden.h	/^  HELL_INSPECTOR_ENTRY_TYPE_U32,$/;"	e	language:C++	enum:hell_inspector_entry_type_t
+hell_inspector_init	code/eden.h	/^hell_inspector_init(hell_inspector_t* in, arena_t* arena, u32_t max_entries) $/;"	f	language:C++	typeref:typename:b32_t
+hell_inspector_t	code/eden.h	/^struct hell_inspector_t {$/;"	s	language:C++
+hell_inspect_clear	code/eden.h	/^hell_inspect_clear(eden_t* eden) $/;"	f	language:C++	typeref:typename:void
+hell_profiler_begin_block	code/eden.h	/^#define hell_profiler_begin_block(/;"	d	language:C++
+hell_profiler_block	code/eden.h	/^#define hell_profiler_block(/;"	d	language:C++
+hell_profiler_end_block	code/eden.h	/^#define hell_profiler_end_block(/;"	d	language:C++
+hell_profiler_entry_t	code/eden.h	/^struct hell_profiler_entry_t {$/;"	s	language:C++
+hell_profiler_init	code/eden.h	/^hell_profiler_init($/;"	f	language:C++	typeref:typename:void
+hell_profiler_reset	code/eden.h	/^hell_profiler_reset(hell_profiler_t* p) {$/;"	f	language:C++	typeref:typename:void
+hell_profiler_snapshot_t	code/eden.h	/^struct hell_profiler_snapshot_t {$/;"	s	language:C++
+hell_profiler_t	code/eden.h	/^struct hell_profiler_t {$/;"	s	language:C++
+hell_profiler_update_entries	code/eden.h	/^hell_profiler_update_entries(hell_profiler_t* p) {$/;"	f	language:C++	typeref:typename:void
 hhea	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 hide_cursor	code/eden.h	/^  eden_hide_cursor_f* hide_cursor;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_hide_cursor_f *
 highest_codepoint	code/eden.h	/^  u32_t highest_codepoint;$/;"	m	language:C++	struct:eden_asset_font_t	typeref:typename:u32_t
 highest_codepoint	code/eden_asset_file.h	/^  u32_t highest_codepoint;$/;"	m	language:C++	struct:asset_file_font_t	typeref:typename:u32_t
 highest_payload_usage	code/eden.h	/^  usz_t highest_payload_usage;$/;"	m	language:C++	struct:hell_gfx_texture_queue_t	typeref:typename:usz_t
 highest_transfer_memory_usage	code/eden.h	/^  usz_t highest_transfer_memory_usage;$/;"	m	language:C++	struct:hell_gfx_texture_queue_t	typeref:typename:usz_t
-hits	code/eden.h	/^  u32_t hits;$/;"	m	language:C++	struct:eden_profiler_snapshot_t	typeref:typename:u32_t
-hits_and_cycles	code/eden.h	/^  u64_t hits_and_cycles;$/;"	m	language:C++	struct:eden_profiler_entry_t	typeref:typename:u64_t
+hits	code/eden.h	/^  u32_t hits;$/;"	m	language:C++	struct:hell_profiler_snapshot_t	typeref:typename:u32_t
+hits_and_cycles	code/eden.h	/^  u64_t hits_and_cycles;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:u64_t
 hmtx	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 horizontal_advance	code/eden.h	/^  f32_t horizontal_advance;$/;"	m	language:C++	struct:eden_asset_font_glyph_t	typeref:typename:f32_t
 horizontal_advance	code/eden_asset_file.h	/^  f32_t horizontal_advance;$/;"	m	language:C++	struct:asset_file_font_glyph_t	typeref:typename:f32_t
@@ -1656,7 +1654,9 @@ info_line_count	code/eden.h	/^  u32_t info_line_count;$/;"	m	language:C++	struct
 input	code/eden.h	/^  eden_input_t input;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_input_t
 input_line	code/eden.h	/^  strb_t input_line;$/;"	m	language:C++	struct:eden_console_t	typeref:typename:strb_t
 input_line	code/eden_console.h	/^  strb_t input_line;$/;"	m	language:C++	struct:console_t	typeref:typename:strb_t
-inspector	code/eden.h	/^  eden_inspector_t inspector;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_inspector_t
+inspector	code/eden.h	/^  hell_inspector_t inspector;$/;"	m	language:C++	struct:eden_t	typeref:typename:hell_inspector_t
+inspect_enabled	code/eden.h	/^  b32_t inspect_enabled;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:b32_t
+inspect_entries_cap	code/eden.h	/^  u32_t inspect_entries_cap;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 instances	code/eden.h	/^  eden_audio_mixer_instance_t* instances;$/;"	m	language:C++	struct:eden_audio_mixer_t	typeref:typename:eden_audio_mixer_instance_t *
 instances_to_draw	code/eden.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLsizei
 instances_to_draw	code/eden.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:hell_gfx_opengl_triangle_batch_t	typeref:typename:GLsizei
@@ -1691,8 +1691,8 @@ is_valid	code/momo.h	/^  b32_t is_valid; \/\/ Probably should be some error code
 is_valid	code/w32_eden.cpp	/^  b32_t is_valid;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:b32_t	file:
 is_valid	code/w32_sandbox_socket.cpp	/^  b32_t is_valid; \/\/ Probably should be some error code?$/;"	m	language:C++	struct:os_socket_t	typeref:typename:b32_t	file:
 is_valid	code/w32_sandbox_twitch_bot.cpp	/^  b32_t is_valid; \/\/ Probably should be some error code?$/;"	m	language:C++	struct:socket_t	typeref:typename:b32_t	file:
-item_f32	code/eden.h	/^    f32_t item_f32;$/;"	m	language:C++	union:eden_inspector_entry_t::__anon0a42ec61060a	typeref:typename:f32_t
-item_u32	code/eden.h	/^    u32_t item_u32;$/;"	m	language:C++	union:eden_inspector_entry_t::__anon0a42ec61060a	typeref:typename:u32_t
+item_f32	code/eden.h	/^    f32_t item_f32;$/;"	m	language:C++	union:hell_inspector_entry_t::__anon0a42ec61060a	typeref:typename:f32_t
+item_u32	code/eden.h	/^    u32_t item_u32;$/;"	m	language:C++	union:hell_inspector_entry_t::__anon0a42ec61060a	typeref:typename:u32_t
 json_array_node_t	code/momo.h	/^struct json_array_node_t $/;"	s	language:C++
 json_array_t	code/momo.h	/^struct json_array_t $/;"	s	language:C++
 json_element_t	code/momo.h	/^struct json_element_t $/;"	s	language:C++
@@ -1773,7 +1773,7 @@ lights	code/app_lit.cpp	/^  lit_game_light_t lights[32];$/;"	m	language:C++	stru
 light_count	code/app_lit.cpp	/^  u32_t light_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
 light_hold_mode	code/app_lit.cpp	/^  lit_game_player_light_hold_mode_t light_hold_mode;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:lit_game_player_light_hold_mode_t	file:
 light_retrival_time	code/app_lit.cpp	/^  f32_t light_retrival_time;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:f32_t	file:
-line	code/eden.h	/^  u32_t line;$/;"	m	language:C++	struct:eden_profiler_entry_t	typeref:typename:u32_t
+line	code/eden.h	/^  u32_t line;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:u32_t
 linker_flags	bin/build.bat	/^    set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32$/;"	v	language:DosBatch
 linker_flags	bin/build.bat	/^    set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32$/;"	v	language:DosBatch
 linker_flags	bin/build.bat	/^    set linker_flags=-shared $/;"	v	language:DosBatch
@@ -2014,11 +2014,8 @@ max	code/app_lit.cpp	/^  f64_t max;$/;"	m	language:C++	struct:lit_profiler_stat_
 max	code/eden.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:hell_gfx_opengl_uv_t	typeref:typename:v2f_t
 maxp	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 max_files	code/eden.h	/^  u32_t max_files;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
-max_inspector_entries	code/eden.h	/^  u32_t max_inspector_entries;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 max_instances	code/eden.h	/^  u32_t max_instances;$/;"	m	language:C++	struct:eden_audio_mixer_t	typeref:typename:u32_t
 max_of	code/momo.h	/^#define max_of(/;"	d	language:C++
-max_profiler_entries	code/eden.h	/^  u32_t max_profiler_entries;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
-max_profiler_snapshots	code/eden.h	/^  u32_t max_profiler_snapshots; \/\/ snapshots per entry$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 max_sprites	code/eden.h	/^  usz_t max_sprites;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:usz_t
 max_sprites	code/eden.h	/^  usz_t max_sprites;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:usz_t
 max_textures	code/eden.h	/^  u32_t max_textures;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
@@ -2101,7 +2098,7 @@ ms_from_mins	code/w32_sandbox_twitch_bot.cpp	/^#define ms_from_mins(/;"	d	langua
 ms_from_secs	code/momo.h	/^#define ms_from_secs(/;"	d	language:C++
 ms_from_secs	code/w32_sandbox_twitch_bot.cpp	/^#define ms_from_secs(/;"	d	language:C++	file:
 name	code/aoc22.cpp	/^  str_t name;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:str_t	file:
-name	code/eden.h	/^  str_t name;$/;"	m	language:C++	struct:eden_inspector_entry_t	typeref:typename:str_t
+name	code/eden.h	/^  str_t name;$/;"	m	language:C++	struct:hell_inspector_entry_t	typeref:typename:str_t
 near	code/momo.h	/^# define near$/;"	d	language:C++
 nearest_light	code/app_lit.cpp	/^  lit_game_light_t* nearest_light;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:lit_game_light_t *	file:
 next	code/aoc22.cpp	/^  aoc22_d5_node_t* next;$/;"	m	language:C++	struct:aoc22_d5_node_t	typeref:typename:aoc22_d5_node_t *	file:
@@ -2302,7 +2299,10 @@ prev	code/aoc22.cpp	/^  aoc22_d7_node_t* prev, *next;$/;"	m	language:C++	struct:
 prev	code/app_lit_ship.cpp	/^  w32_memory_t* prev;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
 prev	code/gist_linked_list.cpp	/^  gist_cdl_node* prev;$/;"	m	language:C++	struct:gist_cdl_node	typeref:typename:gist_cdl_node *	file:
 prev	code/w32_eden.cpp	/^  w32_memory_t* prev;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
-profiler	code/eden.h	/^  eden_profiler_t profiler;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_profiler_t
+profiler	code/eden.h	/^  hell_profiler_t profiler;$/;"	m	language:C++	struct:eden_t	typeref:typename:hell_profiler_t
+profile_enabled	code/eden.h	/^  b32_t profile_enabled;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:b32_t
+profile_entries	code/eden.h	/^  u32_t profile_entries;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
+profile_snapshots	code/eden.h	/^  u32_t profile_snapshots;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 pt	code/app_lit.cpp	/^  v2f_t pt;$/;"	m	language:C++	struct:lit_light_intersection_t	typeref:typename:v2f_t	file:
 ptr_to_umi	code/momo.h	/^ptr_to_umi(void* p) { $/;"	f	language:C++	typeref:typename:umi_t
 ptr_to_umi	code/momo.h	/^static umi_t ptr_to_umi(void* p);$/;"	p	language:C++	typeref:typename:umi_t
@@ -2476,8 +2476,8 @@ size_start	code/app_lit.cpp	/^  v2f_t size_start, size_end;$/;"	m	language:C++	s
 sll_append	code/momo.h	/^#define sll_append(/;"	d	language:C++
 sll_prepend	code/momo.h	/^#define sll_prepend(/;"	d	language:C++
 smi_t	code/momo.h	/^typedef intptr_t  smi_t; \/\/ aka 'signed memory index'$/;"	t	language:C++	typeref:typename:intptr_t
-snapshots	code/eden.h	/^  eden_profiler_snapshot_t* snapshots;$/;"	m	language:C++	struct:eden_profiler_entry_t	typeref:typename:eden_profiler_snapshot_t *
-snapshot_index	code/eden.h	/^  u32_t snapshot_index;$/;"	m	language:C++	struct:eden_profiler_t	typeref:typename:u32_t
+snapshots	code/eden.h	/^  hell_profiler_snapshot_t* snapshots;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:hell_profiler_snapshot_t *
+snapshot_index	code/eden.h	/^  u32_t snapshot_index;$/;"	m	language:C++	struct:hell_profiler_t	typeref:typename:u32_t
 sock	code/momo.h	/^  int sock;$/;"	m	language:C++	struct:socket_t	typeref:typename:int
 sock	code/momo.h	/^  SOCKET sock;$/;"	m	language:C++	struct:socket_t	typeref:typename:SOCKET
 sock	code/w32_sandbox_socket.cpp	/^  SOCKET sock;$/;"	m	language:C++	struct:os_socket_t	typeref:typename:SOCKET	file:
@@ -2549,8 +2549,8 @@ src	code/eden.h	/^  hell_gfx_blend_type_t src;$/;"	m	language:C++	struct:hell_gf
 stage_fade_timer	code/app_lit.cpp	/^  f32_t stage_fade_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t	file:
 stage_flash_timer	code/app_lit.cpp	/^  f32_t stage_flash_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t	file:
 start	code/app_lit.cpp	/^  v2f_t start;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:v2f_t	file:
-start_cycles	code/eden.h	/^  u32_t start_cycles;$/;"	m	language:C++	struct:eden_profiler_entry_t	typeref:typename:u32_t
-start_hits	code/eden.h	/^  u32_t start_hits;$/;"	m	language:C++	struct:eden_profiler_entry_t	typeref:typename:u32_t
+start_cycles	code/eden.h	/^  u32_t start_cycles;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:u32_t
+start_hits	code/eden.h	/^  u32_t start_hits;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:u32_t
 start_pt	code/app_lit.cpp	/^  v2f_t start_pt;$/;"	m	language:C++	struct:lit_game_edge_t	typeref:typename:v2f_t	file:
 start_time	code/twitch_bot.cpp	/^  u64_t start_time;$/;"	m	language:C++	struct:karu_bot_reminder_t	typeref:typename:u64_t	file:
 state	code/app_lit.cpp	/^  lit_game_state_type_t state;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_state_type_t	file:
@@ -2753,7 +2753,7 @@ ttf_read	code/momo.h	/^static b32_t ttf_read(ttf_t* ttf, str_t ttf_contents);$/;
 ttf_t	code/momo.h	/^struct ttf_t $/;"	s	language:C++
 type	code/aoc22.cpp	/^  aoc22_d7_node_type_t type;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:aoc22_d7_node_type_t	file:
 type	code/app_lit.cpp	/^  lit_game_animator_type_t type;$/;"	m	language:C++	struct:lit_game_animator_t	typeref:typename:lit_game_animator_type_t	file:
-type	code/eden.h	/^  eden_inspector_entry_type_t type;$/;"	m	language:C++	struct:eden_inspector_entry_t	typeref:typename:eden_inspector_entry_type_t
+type	code/eden.h	/^  hell_inspector_entry_type_t type;$/;"	m	language:C++	struct:hell_inspector_entry_t	typeref:typename:hell_inspector_entry_type_t
 type	code/momo.h	/^    u8_t type[4];$/;"	m	language:C++	union:_png_chunk_header_t::__anon1db7a63d260a	typeref:typename:u8_t[4]
 type	code/momo.h	/^  clex_token_type_t type;$/;"	m	language:C++	struct:clex_token_t	typeref:typename:clex_token_type_t
 type	code/momo.h	/^  json_value_type_t type;$/;"	m	language:C++	struct:json_value_t	typeref:typename:json_value_type_t
@@ -3159,9 +3159,6 @@ _defer_dummy	code/momo.h	/^struct _defer_dummy {};$/;"	s	language:C++
 _defer_scope_guard	code/momo.h	/^struct _defer_scope_guard {$/;"	s	language:C++
 _eden_gfx_push_command	code/eden_gfx.h	/^#define _eden_gfx_push_command(/;"	d	language:C++
 _eden_gfx_push_command_block	code/eden_gfx.h	/^_eden_gfx_push_command_block(eden_gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4)/;"	f	language:C++	typeref:typename:void *
-_eden_profiler_begin_block	code/eden.h	/^_eden_profiler_begin_block(eden_profiler_t* p, eden_profiler_entry_t* entry) $/;"	f	language:C++	typeref:typename:void
-_eden_profiler_end_block	code/eden.h	/^_eden_profiler_end_block(eden_profiler_t* p, eden_profiler_entry_t* entry) {$/;"	f	language:C++	typeref:typename:void
-_eden_profiler_init_block	code/eden.h	/^_eden_profiler_init_block($/;"	f	language:C++	typeref:typename:eden_profiler_entry_t *
 _F32_INFINITY	code/momo.h	/^static f32_t _F32_INFINITY() {$/;"	f	language:C++	typeref:typename:f32_t
 _F32_NAN	code/momo.h	/^_F32_NAN() {$/;"	f	language:C++	typeref:typename:f32_t
 _F32_NEG_INFINITY	code/momo.h	/^_F32_NEG_INFINITY() {$/;"	f	language:C++	typeref:typename:f32_t
@@ -3170,6 +3167,9 @@ _F64_NAN	code/momo.h	/^_F64_NAN() {$/;"	f	language:C++	typeref:typename:f64_t
 _F64_NEG_INFINITY	code/momo.h	/^_F64_NEG_INFINITY() {$/;"	f	language:C++	typeref:typename:f64_t
 _hell_gfx_push_command	code/eden.h	/^#define _hell_gfx_push_command(/;"	d	language:C++
 _hell_gfx_push_command_block	code/eden.h	/^_hell_gfx_push_command_block(hell_gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4)/;"	f	language:C++	typeref:typename:void *
+_hell_profiler_begin_block	code/eden.h	/^_hell_profiler_begin_block(hell_profiler_t* p, hell_profiler_entry_t* entry) $/;"	f	language:C++	typeref:typename:void
+_hell_profiler_end_block	code/eden.h	/^_hell_profiler_end_block(hell_profiler_t* p, hell_profiler_entry_t* entry) {$/;"	f	language:C++	typeref:typename:void
+_hell_profiler_init_block	code/eden.h	/^_hell_profiler_init_block($/;"	f	language:C++	typeref:typename:hell_profiler_entry_t *
 _hue_to_color	code/momo.h	/^_hue_to_color(f32_t p, f32_t q, f32_t t) {$/;"	f	language:C++	typeref:typename:f32_t
 _json_append_array	code/momo.h	/^_json_append_array(json_array_t* arr, json_array_node_t* node) {$/;"	f	language:C++	typeref:typename:void
 _json_eat_ignorables	code/momo.h	/^_json_eat_ignorables(json_t* t) {$/;"	f	language:C++	typeref:typename:void
@@ -3283,7 +3283,7 @@ __anon0a42ec610203	code/eden.h	/^enum {$/;"	g	language:C++
 __anon0a42ec610303	code/eden.h	/^enum { $/;"	g	language:C++
 __anon0a42ec610403	code/eden.h	/^enum {$/;"	g	language:C++
 __anon0a42ec610503	code/eden.h	/^enum {$/;"	g	language:C++
-__anon0a42ec61060a	code/eden.h	/^  union {$/;"	u	language:C++	struct:eden_inspector_entry_t
+__anon0a42ec61060a	code/eden.h	/^  union {$/;"	u	language:C++	struct:hell_inspector_entry_t
 __anon1b0212a9010a	code/app_lit.cpp	/^  union {$/;"	u	language:C++	struct:lit_game_animator_t	file:
 __anon1b0212a9020a	code/app_lit.cpp	/^  union {$/;"	u	language:C++	struct:lit_t	file:
 __anon1db7a63d0108	code/momo.h	/^  struct { u32_t x, y; };$/;"	s	language:C++	union:v2u_t

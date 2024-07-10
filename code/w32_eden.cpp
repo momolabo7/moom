@@ -1712,8 +1712,28 @@ WinMain(HINSTANCE instance,
   //
   // Init debug stuff
   //
-  eden_profiler_init(&eden->profiler, platform_arena, config.max_profiler_entries, config.max_profiler_snapshots);
-  eden_inspector_init(&eden->inspector, platform_arena, config.max_inspector_entries);
+  if (config.profiler_enabled) 
+  {
+    if (!hell_profiler_init(
+          &eden->profiler, 
+          platform_arena, 
+          config.profiler_max_entries, 
+          config.profiler_max_snapshots_per_entry))
+    {
+      return 1;
+    }
+  }
+
+  if (config.inspector_enabled) 
+  {
+    if (!hell_inspector_init(
+          &eden->inspector, 
+          platform_arena, 
+          config.inspector_max_entries))
+    {
+      return 1;
+    }
+  }
 
 
   //
@@ -1734,10 +1754,10 @@ WinMain(HINSTANCE instance,
     // Hot reload eden->dll functions
     eden->is_dll_reloaded = w32_reload_code_if_outdated(&eden_code);
     if (eden->is_dll_reloaded) {
-      eden_profiler_reset(&eden->profiler);
+      hell_profiler_reset(&eden->profiler);
     }
 #else  // HOT_RELOAD
-    eden_profiler_reset(&eden->profiler);
+    hell_profiler_reset(&eden->profiler);
 #endif // HOT_RELOAD
 
     // Begin frame
@@ -1763,8 +1783,13 @@ WinMain(HINSTANCE instance,
     if (config.audio_enabled) 
       eden_audio_mixer_update(eden);
     
-    eden_profiler_update_entries(&eden->profiler);
-    eden_inspector_clear(&eden->inspector);
+
+    if (config.profiler_enabled)
+      hell_profiler_update_entries(&eden->profiler);
+
+
+    if (config.inspector_enabled) 
+      hell_inspect_clear(eden);
     w32_gfx_end_frame(&eden->gfx);
     
     

@@ -617,7 +617,7 @@ lit_profiler_update_and_render()
   
   for(u32_t entry_id = 0; entry_id < g_eden->profiler.entry_count; ++entry_id)
   {
-    eden_profiler_entry_t* entry = g_eden->profiler.entries + entry_id;
+    hell_profiler_entry_t* entry = g_eden->profiler.entries + entry_id;
 
     lit_profiler_stat_t cycles;
     lit_profiler_stat_t hits;
@@ -632,7 +632,7 @@ lit_profiler_update_and_render()
          ++snapshot_index)
     {
       
-      eden_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
+      hell_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
       
       lit_profiler_accumulate_stat(&cycles, (f64_t)snapshot->cycles);
       lit_profiler_accumulate_stat(&hits, (f64_t)snapshot->hits);
@@ -670,7 +670,7 @@ lit_profiler_update_and_render()
          snapshot_index < g_eden->profiler.entry_snapshot_count;
          ++snapshot_index)
     {
-      eden_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
+      hell_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
       
       const f32_t snapshot_bar_width = 1.5f;
       f32_t height_scale = 1.0f / (f32_t)cycles.max;
@@ -692,10 +692,13 @@ lit_profiler_update_and_render()
 //
 // Inspector update and render
 //
+
+
+// @todo: remove this from lit
 static void 
 lit_inspector_update_and_render() 
 {
-  eden_inspector_t* inspector = &g_eden->inspector;
+  auto* inspector = &g_eden->inspector;
   eden_draw_asset_sprite(
       g_eden, 
       ASSET_SPRITE_ID_BLANK_SPRITE, 
@@ -710,13 +713,13 @@ lit_inspector_update_and_render()
   {
     strb_clear(&sb);
     f32_t line_height = 32.f;
-    eden_inspector_entry_t* entry = inspector->entries + entry_index;
+    auto* entry = inspector->entries + entry_index;
     switch(entry->type){
-      case EDEN_INSPECTOR_ENTRY_TYPE_U32: {
+      case HELL_INSPECTOR_ENTRY_TYPE_U32: {
         strb_push_fmt(&sb, str_from_lit("[%10S] %7u"),
             entry->name, entry->item_u32);
       } break;
-      case EDEN_INSPECTOR_ENTRY_TYPE_F32: {
+      case HELL_INSPECTOR_ENTRY_TYPE_F32: {
         strb_push_fmt(&sb, str_from_lit("[%10S] %7f"),
             entry->name, entry->item_f32);
       } break;
@@ -1432,7 +1435,7 @@ lit_game_render_lights(lit_game_t* g) {
     eden_advance_depth(g_eden);
   }
 
-  eden_set_blend_preset(g_eden, EDEN_GFX_BLEND_PRESET_TYPE_ADD);
+  eden_set_blend_preset(g_eden, EDEN_BLEND_PRESET_TYPE_ADD);
   //
   // Lights
   //
@@ -1452,7 +1455,7 @@ lit_game_render_lights(lit_game_t* g) {
     } 
     eden_advance_depth(g_eden);
   }
-  eden_set_blend_preset(g_eden, EDEN_GFX_BLEND_PRESET_TYPE_ALPHA);
+  eden_set_blend_preset(g_eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
 }
 
 
@@ -3525,7 +3528,7 @@ lit_game_update()
   //
 
   // This is the default and hedenier blend mode
-  eden_set_blend_preset(g_eden, EDEN_GFX_BLEND_PRESET_TYPE_ALPHA);
+  eden_set_blend_preset(g_eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
 
 
   lit_profile_begin(rendering);
@@ -3539,7 +3542,7 @@ lit_game_update()
   }
   lit_game_render_lights(g);
 
-  eden_set_blend_preset(g_eden, EDEN_GFX_BLEND_PRESET_TYPE_ALPHA);
+  eden_set_blend_preset(g_eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
 
   if (!lit_game_is_exiting(g)) {
     lit_game_render_sensors(g); 
@@ -3790,7 +3793,7 @@ static void lit_cool_transition_update_positive(lit_cool_transition_t* t) {
 
 static void lit_cool_transition_render(lit_cool_transition_t* t) {
   auto old_preset = eden_get_blend_preset(g_eden);
-  eden_set_blend_preset(g_eden, EDEN_GFX_BLEND_PRESET_TYPE_MULTIPLY);
+  eden_set_blend_preset(g_eden, EDEN_BLEND_PRESET_TYPE_MULTIPLY);
   eden_draw_asset_sprite(
       g_eden, 
       
@@ -3809,7 +3812,7 @@ static void lit_sandbox_init() {
 
 static void lit_sandbox_update() {
   
-  eden_set_blend_preset(g_eden, EDEN_GFX_BLEND_PRESET_TYPE_ALPHA);
+  eden_set_blend_preset(g_eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
   rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
   eden_draw_text_center_aligned(
       g_eden, 
@@ -3960,9 +3963,12 @@ eden_get_config_sig(eden_get_config)
   ret.max_workers = 8;
   ret.max_files = 1;
 
-  ret.max_inspector_entries = 8;
-  ret.max_profiler_entries = 8;
-  ret.max_profiler_snapshots = 120;
+  ret.inspector_enabled = true;
+  ret.inspector_max_entries = 8;
+
+  ret.profiler_enabled = true;
+  ret.profiler_max_entries = 8;
+  ret.profiler_max_snapshots_per_entry = 120;
 
   ret.texture_queue_size = megabytes(5);
   ret.render_command_size = megabytes(100);

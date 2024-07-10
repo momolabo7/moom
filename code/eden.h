@@ -15,6 +15,11 @@
 //   mixer             - Audio Mixer System
 //   console           - In game console system
 //
+// @todo:
+//   refactor inspector
+//   refactor profiler
+//   have a name for drawing stuff (like eden_draw?)
+//
 
 #ifndef EDEN_H
 #define EDEN_H
@@ -58,9 +63,9 @@
 // 
 // Texture Queue API
 enum hell_gfx_texture_payload_state_t {
-  EDEN_GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
-  EDEN_GFX_TEXTURE_PAYLOAD_STATE_LOADING,
-  EDEN_GFX_TEXTURE_PAYLOAD_STATE_READY,
+  HELL_GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
+  HELL_GFX_TEXTURE_PAYLOAD_STATE_LOADING,
+  HELL_GFX_TEXTURE_PAYLOAD_STATE_READY,
 };
 
 struct hell_gfx_texture_payload_t {
@@ -110,39 +115,39 @@ struct hell_gfx_command_queue_t {
   usz_t peak_memory_usage;
 };
 
-enum hell_gfx_blend_preset_type_t {
-  EDEN_GFX_BLEND_PRESET_TYPE_NONE,
-  EDEN_GFX_BLEND_PRESET_TYPE_ADD,
-  EDEN_GFX_BLEND_PRESET_TYPE_ALPHA,
-  EDEN_GFX_BLEND_PRESET_TYPE_MULTIPLY,
+enum eden_blend_preset_type_t {
+  EDEN_BLEND_PRESET_TYPE_NONE,
+  EDEN_BLEND_PRESET_TYPE_ADD,
+  EDEN_BLEND_PRESET_TYPE_ALPHA,
+  EDEN_BLEND_PRESET_TYPE_MULTIPLY,
 };
 
 enum hell_gfx_blend_type_t {
-  EDEN_GFX_BLEND_TYPE_ZERO,
-  EDEN_GFX_BLEND_TYPE_ONE,
-  EDEN_GFX_BLEND_TYPE_SRC_COLOR,
-  EDEN_GFX_BLEND_TYPE_INV_SRC_COLOR,
-  EDEN_GFX_BLEND_TYPE_SRC_ALPHA,
-  EDEN_GFX_BLEND_TYPE_INV_SRC_ALPHA,
-  EDEN_GFX_BLEND_TYPE_DST_ALPHA,
-  EDEN_GFX_BLEND_TYPE_INV_DST_ALPHA,
-  EDEN_GFX_BLEND_TYPE_DST_COLOR,
-  EDEN_GFX_BLEND_TYPE_INV_DST_COLOR,
+  HELL_GFX_BLEND_TYPE_ZERO,
+  HELL_GFX_BLEND_TYPE_ONE,
+  HELL_GFX_BLEND_TYPE_SRC_COLOR,
+  HELL_GFX_BLEND_TYPE_INV_SRC_COLOR,
+  HELL_GFX_BLEND_TYPE_SRC_ALPHA,
+  HELL_GFX_BLEND_TYPE_INV_SRC_ALPHA,
+  HELL_GFX_BLEND_TYPE_DST_ALPHA,
+  HELL_GFX_BLEND_TYPE_INV_DST_ALPHA,
+  HELL_GFX_BLEND_TYPE_DST_COLOR,
+  HELL_GFX_BLEND_TYPE_INV_DST_COLOR,
 };
 
 enum hell_gfx_command_type_t {
-  EDEN_GFX_COMMAND_TYPE_CLEAR,
-  EDEN_GFX_COMMAND_TYPE_TRIANGLE,
-  EDEN_GFX_COMMAND_TYPE_RECT,
-  EDEN_GFX_COMMAND_TYPE_LINE,
-  EDEN_GFX_COMMAND_TYPE_SPRITE,
-  EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE,
-  EDEN_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,
-  EDEN_GFX_COMMAND_TYPE_BLEND,
-  EDEN_GFX_COMMAND_TYPE_VIEW,
-  EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH,
+  HELL_GFX_COMMAND_TYPE_CLEAR,
+  HELL_GFX_COMMAND_TYPE_TRIANGLE,
+  HELL_GFX_COMMAND_TYPE_RECT,
+  HELL_GFX_COMMAND_TYPE_LINE,
+  HELL_GFX_COMMAND_TYPE_SPRITE,
+  HELL_GFX_COMMAND_TYPE_DELETE_TEXTURE,
+  HELL_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,
+  HELL_GFX_COMMAND_TYPE_BLEND,
+  HELL_GFX_COMMAND_TYPE_VIEW,
+  HELL_GFX_COMMAND_TYPE_ADVANCE_DEPTH,
 
-  EDEN_GFX_COMMAND_TYPE_TEST, // only for testing
+  HELL_GFX_COMMAND_TYPE_TEST, // only for testing
 };
 
 
@@ -202,7 +207,7 @@ struct hell_gfx_t {
   hell_gfx_command_queue_t command_queue;
   hell_gfx_texture_queue_t texture_queue;
   usz_t max_textures;
-  hell_gfx_blend_preset_type_t current_blend_preset;
+  eden_blend_preset_type_t current_blend_preset;
 
   void* platform_data;
 };
@@ -472,54 +477,54 @@ typedef void    hell_gfx_opengl_glDrawElements(GLenum mode, GLsizei count, GLenu
 
 
 enum{ 
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL,       // 0 
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL,       // 0 
                                                 //
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,     // 1 
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,     // 2
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,     // 3
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4,     // 4
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,     // 1 
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,     // 2
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,     // 3
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4,     // 4
                                                 //
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1,   // 5
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2,   // 6
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3,   // 7
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4,   // 8
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1,   // 5
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2,   // 6
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3,   // 7
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4,   // 8
                                                 //
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 9
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 10
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 11
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 12
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 9
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 10
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 11
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 12
 };
 
 enum {
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL,
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS,
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE,
-  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL,
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS,
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE,
+  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM
 };
 
 enum { 
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL,    // 0 
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,   // 1
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,   // 2
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,   // 3
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 4
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 5
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 6
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 7
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL,    // 0 
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,   // 1
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,   // 2
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,   // 3
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 4
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 5
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 6
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 7
 };
 
 enum {
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL,
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS,
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL,
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS,
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM
 };
 
 enum {
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL,
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES,
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS,
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM,
-  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT // 5
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL,
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES,
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS,
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM,
+  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT // 5
 };
 
 struct hell_gfx_opengl_texture_t {
@@ -666,18 +671,18 @@ struct eden_console_t {
 // @mark: profiler
 // 
 
-struct eden_profiler_snapshot_t {
+struct hell_profiler_snapshot_t {
   u32_t hits;
   u32_t cycles;
 };
 
-struct eden_profiler_entry_t {
+struct hell_profiler_entry_t {
   u32_t line;
   const char* filename;
   const char* block_name;
   u64_t hits_and_cycles;
   
-  eden_profiler_snapshot_t* snapshots;
+  hell_profiler_snapshot_t* snapshots;
   
   // @note: For initialization of entry. 
   // Maybe it shouldn't be stored here
@@ -689,68 +694,68 @@ struct eden_profiler_entry_t {
 };
 
 
-struct eden_profiler_t {
+struct hell_profiler_t {
   u32_t entry_snapshot_count;
   u32_t entry_count;
   u32_t entry_cap;
-  eden_profiler_entry_t* entries;
+  hell_profiler_entry_t* entries;
   u32_t snapshot_index;
 };
 
-#define eden_profiler_begin_block(p, name) \
-  static eden_profiler_entry_t* _profiler_block_##name = 0; \
+#define hell_profiler_begin_block(p, name) \
+  static hell_profiler_entry_t* _profiler_block_##name = 0; \
   if (_profiler_block_##name == 0 || _profiler_block_##name->flag_for_reset) {\
-    _profiler_block_##name = _eden_profiler_init_block(p, __FILE__, __LINE__, __FUNCTION__, #name);  \
+    _profiler_block_##name = _hell_profiler_init_block(p, __FILE__, __LINE__, __FUNCTION__, #name);  \
   }\
-  _eden_profiler_begin_block(p, _profiler_block_##name)\
+  _hell_profiler_begin_block(p, _profiler_block_##name)\
 
-#define eden_profiler_end_block(p, name) \
-  _eden_profiler_end_block(p, _profiler_block_##name) 
+#define hell_profiler_end_block(p, name) \
+  _hell_profiler_end_block(p, _profiler_block_##name) 
 
-#define eden_profiler_block(p, name) eden_profiler_begin_block(p, name); defer {eden_profiler_end_block(p,name);}
+#define hell_profiler_block(p, name) hell_profiler_begin_block(p, name); defer {hell_profiler_end_block(p,name);}
 
 // Correspond with API
-#define eden_profile_begin(eden, name) eden_profiler_begin_block(&eden->profiler, name)
-#define eden_profile_end(eden, name)   eden_profiler_end_block(&eden->profiler, name)
-#define eden_profile_block(eden, name) eden_profiler_block(&eden->profiler, name)
+#define eden_profile_begin(eden, name) hell_profiler_begin_block(&eden->profiler, name)
+#define eden_profile_end(eden, name)   hell_profiler_end_block(&eden->profiler, name)
+#define eden_profile_block(eden, name) hell_profiler_block(&eden->profiler, name)
 
 //
 // @mark: inspector
 //
-enum eden_inspector_entry_type_t {
-  EDEN_INSPECTOR_ENTRY_TYPE_F32,
-  EDEN_INSPECTOR_ENTRY_TYPE_U32,
+enum hell_inspector_entry_type_t {
+  HELL_INSPECTOR_ENTRY_TYPE_F32,
+  HELL_INSPECTOR_ENTRY_TYPE_U32,
 };
 
-struct eden_inspector_entry_t {
+struct hell_inspector_entry_t {
   str_t name;
-  eden_inspector_entry_type_t type;
+  hell_inspector_entry_type_t type;
   union {
     f32_t item_f32;
     u32_t item_u32;
   };
 };
 
-struct eden_inspector_t {
+struct hell_inspector_t {
   u32_t entry_cap;
   u32_t entry_count;
-  eden_inspector_entry_t* entries;
+  hell_inspector_entry_t* entries;
 };
 
 // 
 // @mark: graphics
 //
 enum eden_blend_type_t {
-  eden_blend_type_zero,
-  eden_blend_type_one,
-  eden_blend_type_src_color,
-  eden_blend_type_inv_src_color,
-  eden_blend_type_src_alpha,
-  eden_blend_type_inv_src_alpha,
-  eden_blend_type_dst_alpha,
-  eden_blend_type_inv_dst_alpha,
-  eden_blend_type_dst_color,
-  eden_blend_type_inv_dst_color,
+  EDEN_BLEND_TYPE_ZERO,
+  EDEN_BLEND_TYPE_ONE,
+  EDEN_BLEND_TYPE_SRC_COLOR,
+  EDEN_BLEND_TYPE_INV_SRC_COLOR,
+  EDEN_BLEND_TYPE_SRC_ALPHA,
+  EDEN_BLEND_TYPE_INV_SRC_ALPHA,
+  EDEN_BLEND_TYPE_DST_ALPHA,
+  EDEN_BLEND_TYPE_INV_DST_ALPHA,
+  EDEN_BLEND_TYPE_DST_COLOR,
+  EDEN_BLEND_TYPE_INV_DST_COLOR,
 };
 
 
@@ -939,8 +944,8 @@ struct eden_t {
 
   hell_gfx_t gfx;
 
-  eden_profiler_t profiler;
-  eden_inspector_t inspector;
+  hell_profiler_t profiler;
+  hell_inspector_t inspector;
   eden_assets_t assets;
   eden_audio_mixer_t mixer;
           
@@ -965,9 +970,12 @@ struct eden_config_t {
   u32_t max_files;
   u32_t max_workers; 
 
-  u32_t max_inspector_entries;
-  u32_t max_profiler_entries;
-  u32_t max_profiler_snapshots; // snapshots per entry
+  b32_t inspector_enabled;
+  u32_t inspector_max_entries;
+
+  b32_t profiler_enabled;
+  u32_t profiler_max_entries;
+  u32_t profiler_max_snapshots_per_entry;
 
   usz_t texture_queue_size;
   usz_t render_command_size;
@@ -1148,7 +1156,7 @@ hell_gfx_begin_texture_transfer(hell_gfx_t* g, u32_t required_space) {
       ret->texture_data = q->transfer_memory + memory_at;
       ret->transfer_memory_start = memory_at;
       ret->transfer_memory_end = memory_at + required_space;
-      ret->state = EDEN_GFX_TEXTURE_PAYLOAD_STATE_LOADING;
+      ret->state = HELL_GFX_TEXTURE_PAYLOAD_STATE_LOADING;
 
       q->transfer_memory_end = ret->transfer_memory_end;
 
@@ -1170,12 +1178,12 @@ hell_gfx_begin_texture_transfer(hell_gfx_t* g, u32_t required_space) {
 
 static void
 hell_gfx_complete_texture_transfer(hell_gfx_texture_payload_t* entry) {
-  entry->state = EDEN_GFX_TEXTURE_PAYLOAD_STATE_READY;
+  entry->state = HELL_GFX_TEXTURE_PAYLOAD_STATE_READY;
 }
 
 static void
 hell_gfx_cancel_texture_transfer(hell_gfx_texture_payload_t* entry) {
-  entry->state = EDEN_GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
+  entry->state = HELL_GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
 }
 
 //
@@ -1189,7 +1197,7 @@ hell_gfx_set_view(hell_gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t ma
 {
   hell_gfx_command_queue_t* c = &g->command_queue; 
     
-  hell_gfx_command_view_t* data = _hell_gfx_push_command(hell_gfx_command_view_t, c, EDEN_GFX_COMMAND_TYPE_VIEW, 16);
+  hell_gfx_command_view_t* data = _hell_gfx_push_command(hell_gfx_command_view_t, c, HELL_GFX_COMMAND_TYPE_VIEW, 16);
   data->min_x = min_x;
   data->min_y = min_y;
   data->max_x = max_x;
@@ -1201,7 +1209,7 @@ hell_gfx_set_view(hell_gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t ma
 static void
 hell_gfx_clear_colors(hell_gfx_t* g, rgba_t colors) {
   hell_gfx_command_queue_t* c = &g->command_queue; 
-  hell_gfx_command_clear_t* data = _hell_gfx_push_command(hell_gfx_command_clear_t, c, EDEN_GFX_COMMAND_TYPE_CLEAR, 16);
+  hell_gfx_command_clear_t* data = _hell_gfx_push_command(hell_gfx_command_clear_t, c, HELL_GFX_COMMAND_TYPE_CLEAR, 16);
   data->colors = colors;
 }
 
@@ -1217,7 +1225,7 @@ hell_gfx_push_sprite(
     u32_t texel_x1, u32_t texel_y1)
 {
   hell_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data = _hell_gfx_push_command(hell_gfx_command_sprite_t, c, EDEN_GFX_COMMAND_TYPE_SPRITE, 16);
+  auto* data = _hell_gfx_push_command(hell_gfx_command_sprite_t, c, HELL_GFX_COMMAND_TYPE_SPRITE, 16);
   data->colors = colors;
   data->texture_index = texture_index;
 
@@ -1238,7 +1246,7 @@ hell_gfx_draw_filled_rect(hell_gfx_t* g,
 {
   hell_gfx_command_queue_t* c = &g->command_queue; 
 
-  auto* data = _hell_gfx_push_command(hell_gfx_command_rect_t, c, EDEN_GFX_COMMAND_TYPE_RECT, 16);
+  auto* data = _hell_gfx_push_command(hell_gfx_command_rect_t, c, HELL_GFX_COMMAND_TYPE_RECT, 16);
   data->colors = colors;
   data->pos = pos;
   data->rot = rot;
@@ -1249,7 +1257,7 @@ hell_gfx_draw_filled_rect(hell_gfx_t* g,
 static void 
 hell_gfx_delete_texture(hell_gfx_t* g, u32_t texture_index) {
   hell_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data= _hell_gfx_push_command(hell_gfx_command_delete_texture_t, c, EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE, 16);
+  auto* data= _hell_gfx_push_command(hell_gfx_command_delete_texture_t, c, HELL_GFX_COMMAND_TYPE_DELETE_TEXTURE, 16);
   data->texture_index = texture_index;
   
 }
@@ -1257,7 +1265,7 @@ hell_gfx_delete_texture(hell_gfx_t* g, u32_t texture_index) {
 static void 
 hell_gfx_set_blend(hell_gfx_t* g, hell_gfx_blend_type_t src, hell_gfx_blend_type_t dst) {
   hell_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data= _hell_gfx_push_command(hell_gfx_command_blend_t, c, EDEN_GFX_COMMAND_TYPE_BLEND, 16);
+  auto* data= _hell_gfx_push_command(hell_gfx_command_blend_t, c, HELL_GFX_COMMAND_TYPE_BLEND, 16);
   data->src = src;
   data->dst = dst;
 }
@@ -1268,7 +1276,7 @@ hell_gfx_draw_filled_triangle(hell_gfx_t* g,
                          v2f_t p0, v2f_t p1, v2f_t p2)
 {
   hell_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data = _hell_gfx_push_command(hell_gfx_command_triangle_t, c, EDEN_GFX_COMMAND_TYPE_TRIANGLE, 16);
+  auto* data = _hell_gfx_push_command(hell_gfx_command_triangle_t, c, HELL_GFX_COMMAND_TYPE_TRIANGLE, 16);
   data->colors = colors;
   data->p0 = p0;
   data->p1 = p1;
@@ -1278,13 +1286,13 @@ hell_gfx_draw_filled_triangle(hell_gfx_t* g,
 static void
 hell_gfx_advance_depth(hell_gfx_t* g) { 
   hell_gfx_command_queue_t* c = &g->command_queue; 
-  _hell_gfx_push_command(hell_gfx_command_advance_depth_t, c, EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH, 16);
+  _hell_gfx_push_command(hell_gfx_command_advance_depth_t, c, HELL_GFX_COMMAND_TYPE_ADVANCE_DEPTH, 16);
 }
 
 static void
 hell_gfx_test(hell_gfx_t* g) { 
   hell_gfx_command_queue_t* c = &g->command_queue; 
-  _hell_gfx_push_command(hell_gfx_command_test_t, c, EDEN_GFX_COMMAND_TYPE_TEST, 16);
+  _hell_gfx_push_command(hell_gfx_command_test_t, c, HELL_GFX_COMMAND_TYPE_TEST, 16);
 }
 
 #undef _hell_gfx_push_command
@@ -1378,28 +1386,28 @@ hell_gfx_draw_circle_outline(hell_gfx_t* g, v2f_t center, f32_t radius, f32_t th
 
 
 static void 
-hell_gfx_set_blend_preset(hell_gfx_t* g, hell_gfx_blend_preset_type_t type)
+hell_gfx_set_blend_preset(hell_gfx_t* g, eden_blend_preset_type_t type)
 {
   switch(type) {
-    case EDEN_GFX_BLEND_PRESET_TYPE_ADD:
+    case EDEN_BLEND_PRESET_TYPE_ADD:
       g->current_blend_preset = type; 
-      hell_gfx_set_blend(g, EDEN_GFX_BLEND_TYPE_SRC_ALPHA, EDEN_GFX_BLEND_TYPE_ONE); 
+      hell_gfx_set_blend(g, HELL_GFX_BLEND_TYPE_SRC_ALPHA, HELL_GFX_BLEND_TYPE_ONE); 
       break;
-    case EDEN_GFX_BLEND_PRESET_TYPE_MULTIPLY:
+    case EDEN_BLEND_PRESET_TYPE_MULTIPLY:
       g->current_blend_preset = type; 
-      hell_gfx_set_blend(g, EDEN_GFX_BLEND_TYPE_DST_COLOR, EDEN_GFX_BLEND_TYPE_ZERO); 
+      hell_gfx_set_blend(g, HELL_GFX_BLEND_TYPE_DST_COLOR, HELL_GFX_BLEND_TYPE_ZERO); 
       break;
-    case EDEN_GFX_BLEND_PRESET_TYPE_ALPHA:
+    case EDEN_BLEND_PRESET_TYPE_ALPHA:
       g->current_blend_preset = type; 
-      hell_gfx_set_blend(g, EDEN_GFX_BLEND_TYPE_SRC_ALPHA, EDEN_GFX_BLEND_TYPE_INV_SRC_ALPHA); 
+      hell_gfx_set_blend(g, HELL_GFX_BLEND_TYPE_SRC_ALPHA, HELL_GFX_BLEND_TYPE_INV_SRC_ALPHA); 
       break;
-    case EDEN_GFX_BLEND_PRESET_TYPE_NONE:
+    case EDEN_BLEND_PRESET_TYPE_NONE:
       // Do nothing
       break;
   }
 }
 
-static hell_gfx_blend_preset_type_t
+static eden_blend_preset_type_t
 hell_gfx_get_blend_preset(hell_gfx_t* g) {
   return g->current_blend_preset;
 }
@@ -1718,7 +1726,7 @@ hell_gfx_opengl_add_predefined_textures(hell_gfx_opengl_t* ogl) {
 
 }
 
-#define EDEN_GFX_OPENGL_TRIANGLE_VSHADER "\
+#define HELL_GFX_OPENGL_TRIANGLE_VSHADER "\
 #version 450 core \n\
 layout(location=0) in vec3 aModelVtx; \n\
 layout(location=1) in vec4 aColor[3]; \n\
@@ -1730,7 +1738,7 @@ void main(void) { \n\
   mColor = aColor[gl_VertexID];\n\
 }"
 
-#define EDEN_GFX_OPENGL_TRIANGLE_FSHADER "\
+#define HELL_GFX_OPENGL_TRIANGLE_FSHADER "\
 #version 450 core \n\
 in vec4 mColor;\n\
 out vec4 FragColor;\n\
@@ -1788,20 +1796,20 @@ hell_gfx_opengl_init_triangle_batch(hell_gfx_opengl_t* ogl, usz_t max_triangles)
   ogl->glCreateVertexArrays(1, &tb->vao);
   ogl->glVertexArrayVertexBuffer(
       tb->vao, 
-      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL, 
+      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL, 
       tb->model_vbo, 
       0, 
       sizeof(v3f_t));
 
   ogl->glVertexArrayVertexBuffer(
       tb->vao, 
-      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 
+      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 
       tb->instance_color_vbo,  
       0, 
       sizeof(rgba_t) * vertex_count);
 
   ogl->glVertexArrayVertexBuffer(tb->vao, 
-      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
+      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
       tb->instance_transform_vbo, 
       0, 
       sizeof(m44f_t));
@@ -1809,21 +1817,21 @@ hell_gfx_opengl_init_triangle_batch(hell_gfx_opengl_t* ogl, usz_t max_triangles)
 
   // Attributes
   // aModelVtx
-  ogl->glEnableVertexArrayAttrib(tb->vao, EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
+  ogl->glEnableVertexArrayAttrib(tb->vao, HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
   ogl->glVertexArrayAttribFormat(tb->vao, 
-      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
+      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
       3, 
       GL_FLOAT, 
       GL_FALSE, 
       0);
 
   ogl->glVertexArrayAttribBinding(tb->vao, 
-      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
-      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL);
+      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
+      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL);
 
   // aColor
   for (u32_t vertex_index = 0; vertex_index < vertex_count; ++vertex_index) {
-    u32_t attrib_type = EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1 + vertex_index;
+    u32_t attrib_type = HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1 + vertex_index;
     ogl->glEnableVertexArrayAttrib(
         tb->vao, 
         attrib_type); 
@@ -1839,27 +1847,27 @@ hell_gfx_opengl_init_triangle_batch(hell_gfx_opengl_t* ogl, usz_t max_triangles)
     ogl->glVertexArrayAttribBinding(
         tb->vao, 
         attrib_type,
-        EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
+        HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
 
   }
 #if 0
-  ogl->glEnableVertexArrayAttrib(tb->vao, EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS); 
+  ogl->glEnableVertexArrayAttrib(tb->vao, HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS); 
   ogl->glVertexArrayAttribFormat(tb->vao, 
-      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
+      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
       4, 
       GL_FLOAT, GL_FALSE, 0);
   ogl->glVertexArrayAttribBinding(tb->vao, 
-      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
-      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
+      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
+      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
 #endif
 
-  ogl->glVertexArrayBindingDivisor(tb->vao, EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 1); 
+  ogl->glVertexArrayBindingDivisor(tb->vao, HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 1); 
 
 
 
   // aTransform
   for (u32_t cols = 0; cols < 4; ++cols) {
-    u32_t attrib_type = EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1 + cols;
+    u32_t attrib_type = HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1 + cols;
     ogl->glEnableVertexArrayAttrib(tb->vao, attrib_type); 
     ogl->glVertexArrayAttribFormat(tb->vao, 
         attrib_type, 
@@ -1870,11 +1878,11 @@ hell_gfx_opengl_init_triangle_batch(hell_gfx_opengl_t* ogl, usz_t max_triangles)
 
     ogl->glVertexArrayAttribBinding(tb->vao, 
         attrib_type, 
-        EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM);
+        HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM);
   }
 
   ogl->glVertexArrayBindingDivisor(tb->vao, 
-      EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
+      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
       1); 
 
   // @note: Setup indices
@@ -1886,10 +1894,10 @@ hell_gfx_opengl_init_triangle_batch(hell_gfx_opengl_t* ogl, usz_t max_triangles)
   tb->shader = ogl->glCreateProgram();
   hell_gfx_opengl_attach_shader(ogl, tb->shader,
       GL_VERTEX_SHADER,
-      (char*)EDEN_GFX_OPENGL_TRIANGLE_VSHADER);
+      (char*)HELL_GFX_OPENGL_TRIANGLE_VSHADER);
   hell_gfx_opengl_attach_shader(ogl, tb->shader,
       GL_FRAGMENT_SHADER,
-      (char*)EDEN_GFX_OPENGL_TRIANGLE_FSHADER);
+      (char*)HELL_GFX_OPENGL_TRIANGLE_FSHADER);
 
   ogl->glLinkProgram(tb->shader);
   GLint result;
@@ -1902,7 +1910,7 @@ hell_gfx_opengl_init_triangle_batch(hell_gfx_opengl_t* ogl, usz_t max_triangles)
   return true;
 }
 
-#define EDEN_GFX_OPENGL_SPRITE_VSHADER "\
+#define HELL_GFX_OPENGL_SPRITE_VSHADER "\
 #version 450 core \n\
 layout(location=0) in vec3 aModelVtx;  \n\
 layout(location=1) in vec4 aColor[4]; \n\
@@ -1917,7 +1925,7 @@ void main(void) { \n\
   mTexCoord = aTexCoord[gl_VertexID]; \n\
 }"
 
-#define EDEN_GFX_OPENGL_SPRITE_FSHADER "\
+#define HELL_GFX_OPENGL_SPRITE_FSHADER "\
 #version 450 core \n\
 out vec4 fragColor; \n\
 in vec4 mColor; \n\
@@ -1988,49 +1996,49 @@ hell_gfx_opengl_init_sprite_batch(hell_gfx_opengl_t* ogl, usz_t max_sprites) {
   ogl->glCreateVertexArrays(1, &sb->vao);
   ogl->glVertexArrayVertexBuffer(
       sb->vao, 
-      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL, 
+      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL, 
       sb->model_vbo, 
       0, 
       sizeof(v3f_t));
 
   ogl->glVertexArrayVertexBuffer(
       sb->vao, 
-      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
+      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
       sb->instance_texture_vbo, 
       0, 
       sizeof(v2f_t) * vertex_count);
 
   ogl->glVertexArrayVertexBuffer(
       sb->vao, 
-      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 
+      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 
       sb->instance_color_vbo,  
       0, 
       sizeof(rgba_t) * vertex_count);
 
   ogl->glVertexArrayVertexBuffer(sb->vao, 
-      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
+      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
       sb->instance_transform_vbo, 
       0, 
       sizeof(m44f_t));
 
   // @note: Setup Attributes
   // aModelVtx
-  ogl->glEnableVertexArrayAttrib(sb->vao, EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
+  ogl->glEnableVertexArrayAttrib(sb->vao, HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
   ogl->glVertexArrayAttribFormat(
       sb->vao, 
-      EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
+      HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
       3, 
       GL_FLOAT, 
       GL_FALSE, 
       0);
 
   ogl->glVertexArrayAttribBinding(sb->vao, 
-      EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
-      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL);
+      HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
+      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL);
 
   // aColor
   for (u32_t vertex_index = 0; vertex_index < vertex_count; ++vertex_index) {
-    u32_t attrib_type = EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1 + vertex_index;
+    u32_t attrib_type = HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1 + vertex_index;
     ogl->glEnableVertexArrayAttrib(
         sb->vao, 
         attrib_type); 
@@ -2046,15 +2054,15 @@ hell_gfx_opengl_init_sprite_batch(hell_gfx_opengl_t* ogl, usz_t max_sprites) {
     ogl->glVertexArrayAttribBinding(
         sb->vao, 
         attrib_type,
-        EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS);
+        HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS);
 
   }
 
-  ogl->glVertexArrayBindingDivisor(sb->vao, EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 1); 
+  ogl->glVertexArrayBindingDivisor(sb->vao, HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 1); 
 
   // aTexCoord
   for (u32_t vertex_index = 0; vertex_index < vertex_count; ++vertex_index) {
-    u32_t attrib_type = EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1 + vertex_index;
+    u32_t attrib_type = HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1 + vertex_index;
     ogl->glEnableVertexArrayAttrib(sb->vao, attrib_type); 
     ogl->glVertexArrayAttribFormat(
         sb->vao, 
@@ -2068,11 +2076,11 @@ hell_gfx_opengl_init_sprite_batch(hell_gfx_opengl_t* ogl, usz_t max_sprites) {
     ogl->glVertexArrayAttribBinding(
         sb->vao, 
         attrib_type,
-        EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE);
+        HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE);
   }
 
   ogl->glVertexArrayBindingDivisor(sb->vao, 
-      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
+      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
       1); 
 
 
@@ -2080,7 +2088,7 @@ hell_gfx_opengl_init_sprite_batch(hell_gfx_opengl_t* ogl, usz_t max_sprites) {
   // @note: this actually has nothing to do with vertex count.
   for (u32_t cols = 0; cols < 4; ++cols) {
 
-    u32_t attrib_type = EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1 + cols;
+    u32_t attrib_type = HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1 + cols;
 
     ogl->glEnableVertexArrayAttrib(sb->vao, attrib_type); 
     ogl->glVertexArrayAttribFormat(sb->vao, 
@@ -2093,12 +2101,12 @@ hell_gfx_opengl_init_sprite_batch(hell_gfx_opengl_t* ogl, usz_t max_sprites) {
     ogl->glVertexArrayAttribBinding(
         sb->vao, 
         attrib_type, 
-        EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM);
+        HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM);
   }
 
   ogl->glVertexArrayBindingDivisor(
       sb->vao, 
-      EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
+      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
       1); 
 
 
@@ -2110,11 +2118,11 @@ hell_gfx_opengl_init_sprite_batch(hell_gfx_opengl_t* ogl, usz_t max_sprites) {
   hell_gfx_opengl_attach_shader(ogl,
       sb->shader, 
       GL_VERTEX_SHADER, 
-      (char*)EDEN_GFX_OPENGL_SPRITE_VSHADER);
+      (char*)HELL_GFX_OPENGL_SPRITE_VSHADER);
   hell_gfx_opengl_attach_shader(ogl,
       sb->shader, 
       GL_FRAGMENT_SHADER, 
-      (char*)EDEN_GFX_OPENGL_SPRITE_FSHADER);
+      (char*)HELL_GFX_OPENGL_SPRITE_FSHADER);
 
   ogl->glLinkProgram(sb->shader);
 
@@ -2173,34 +2181,34 @@ static GLenum
 hell_gfx_opengl_get_blend_mode_from_hell_gfx_blend_type(hell_gfx_blend_type_t type) {
   GLenum  ret = {0};
   switch(type) {
-    case EDEN_GFX_BLEND_TYPE_ZERO: 
+    case HELL_GFX_BLEND_TYPE_ZERO: 
       ret = GL_ZERO;
       break;
-    case EDEN_GFX_BLEND_TYPE_ONE:
+    case HELL_GFX_BLEND_TYPE_ONE:
       ret = GL_ONE;
       break;
-    case EDEN_GFX_BLEND_TYPE_SRC_COLOR:
+    case HELL_GFX_BLEND_TYPE_SRC_COLOR:
       ret = GL_SRC_COLOR;
       break;
-    case EDEN_GFX_BLEND_TYPE_INV_SRC_COLOR:
+    case HELL_GFX_BLEND_TYPE_INV_SRC_COLOR:
       ret = GL_ONE_MINUS_SRC_COLOR;
       break;
-    case EDEN_GFX_BLEND_TYPE_SRC_ALPHA:
+    case HELL_GFX_BLEND_TYPE_SRC_ALPHA:
       ret = GL_SRC_ALPHA;
       break;
-    case EDEN_GFX_BLEND_TYPE_INV_SRC_ALPHA: 
+    case HELL_GFX_BLEND_TYPE_INV_SRC_ALPHA: 
       ret = GL_ONE_MINUS_SRC_ALPHA;
       break;
-    case EDEN_GFX_BLEND_TYPE_DST_ALPHA:
+    case HELL_GFX_BLEND_TYPE_DST_ALPHA:
       ret = GL_DST_ALPHA;
       break;
-    case EDEN_GFX_BLEND_TYPE_INV_DST_ALPHA:
+    case HELL_GFX_BLEND_TYPE_INV_DST_ALPHA:
       ret = GL_ONE_MINUS_DST_ALPHA; 
       break;
-    case EDEN_GFX_BLEND_TYPE_DST_COLOR: 
+    case HELL_GFX_BLEND_TYPE_DST_COLOR: 
       ret = GL_DST_COLOR; 
       break;
-    case EDEN_GFX_BLEND_TYPE_INV_DST_COLOR:
+    case HELL_GFX_BLEND_TYPE_INV_DST_COLOR:
       ret = GL_ONE_MINUS_DST_COLOR; 
       break;
   }
@@ -2217,13 +2225,13 @@ hell_gfx_opengl_set_blend_mode(hell_gfx_opengl_t* ogl, hell_gfx_blend_type_t src
 
 #if 0
   switch(type) {
-    case EDEN_GFX_BLEND_TYPE_ADD: {
+    case HELL_GFX_BLEND_TYPE_ADD: {
       ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
     } break;
-    case EDEN_GFX_BLEND_TYPE_ALPHA: {
+    case HELL_GFX_BLEND_TYPE_ALPHA: {
       ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     } break;
-    case EDEN_GFX_BLEND_TYPE_TEST: {
+    case HELL_GFX_BLEND_TYPE_TEST: {
       // @todo
     } break;
     default: {}
@@ -2246,10 +2254,10 @@ hell_gfx_opengl_process_texture_queue(hell_gfx_t* gfx) {
 
     b32_t stop_loop = false;
     switch(payload->state) {
-      case EDEN_GFX_TEXTURE_PAYLOAD_STATE_LOADING: {
+      case HELL_GFX_TEXTURE_PAYLOAD_STATE_LOADING: {
         stop_loop = true;
       } break;
-      case EDEN_GFX_TEXTURE_PAYLOAD_STATE_READY: {
+      case HELL_GFX_TEXTURE_PAYLOAD_STATE_READY: {
         if(payload->texture_width < (u32_t)S32_MAX &&
             payload->texture_height < (u32_t)S32_MAX &&
             payload->texture_width > 0 &&
@@ -2267,7 +2275,7 @@ hell_gfx_opengl_process_texture_queue(hell_gfx_t* gfx) {
         }
 
       } break;
-      case EDEN_GFX_TEXTURE_PAYLOAD_STATE_EMPTY: {
+      case HELL_GFX_TEXTURE_PAYLOAD_STATE_EMPTY: {
         // Possibly 'cancelled'. i.e. Do nothing either way?
       } break;
       default: {
@@ -2324,7 +2332,7 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
   {
     hell_gfx_command_t* entry = hell_gfx_get_command(gfx, cmd_index);
     switch(entry->id) {
-      case EDEN_GFX_COMMAND_TYPE_VIEW: {
+      case HELL_GFX_COMMAND_TYPE_VIEW: {
         hell_gfx_opengl_flush_sprites(ogl);
         hell_gfx_opengl_flush_triangles(ogl);
 
@@ -2362,7 +2370,7 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
         }
 
       } break;
-      case EDEN_GFX_COMMAND_TYPE_CLEAR: {
+      case HELL_GFX_COMMAND_TYPE_CLEAR: {
         auto* data = (hell_gfx_command_clear_t*)entry->data;
 
         ogl->glClearColor(
@@ -2374,7 +2382,7 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
 
       } break;
 
-      case EDEN_GFX_COMMAND_TYPE_TRIANGLE: {
+      case HELL_GFX_COMMAND_TYPE_TRIANGLE: {
         hell_gfx_opengl_flush_sprites(ogl);
 
         hell_gfx_command_triangle_t* data = (hell_gfx_command_triangle_t*)entry->data;
@@ -2428,7 +2436,7 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
 
 
       } break;
-      case EDEN_GFX_COMMAND_TYPE_RECT: {
+      case HELL_GFX_COMMAND_TYPE_RECT: {
         hell_gfx_opengl_uv_t uv = {
           { 0.f, 0.f },
           { 1.f, 1.f },
@@ -2446,7 +2454,7 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
             ogl->blank_texture.handle);
       } break;
 
-      case EDEN_GFX_COMMAND_TYPE_SPRITE: {
+      case HELL_GFX_COMMAND_TYPE_SPRITE: {
         hell_gfx_opengl_flush_triangles(ogl);
         hell_gfx_command_sprite_t* data = (hell_gfx_command_sprite_t*)entry->data;
         assert(ogl->texture_cap > data->texture_index);
@@ -2479,23 +2487,23 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
             texture->handle);
 
       } break;
-      case EDEN_GFX_COMMAND_TYPE_BLEND: {
+      case HELL_GFX_COMMAND_TYPE_BLEND: {
         hell_gfx_opengl_flush_sprites(ogl);
         hell_gfx_opengl_flush_triangles(ogl);
         hell_gfx_command_blend_t* data = (hell_gfx_command_blend_t*)entry->data;
         hell_gfx_opengl_set_blend_mode(ogl, data->src, data->dst);
       } break;
-      case EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE: {
+      case HELL_GFX_COMMAND_TYPE_DELETE_TEXTURE: {
         hell_gfx_command_delete_texture_t* data = (hell_gfx_command_delete_texture_t*)entry->data;
         hell_gfx_opengl_delete_texture(ogl, data->texture_index);
       } break;
-      case EDEN_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
+      case HELL_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
         hell_gfx_opengl_delete_all_textures(ogl);
       } break;
-      case EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH: {
+      case HELL_GFX_COMMAND_TYPE_ADVANCE_DEPTH: {
         ogl->current_layer -= 1.f;
       } break;
-      case EDEN_GFX_COMMAND_TYPE_TEST: {
+      case HELL_GFX_COMMAND_TYPE_TEST: {
       } break;
     }
   }
@@ -2906,11 +2914,11 @@ eden_advance_depth(eden_t* eden) {
 
 
 static void
-eden_set_blend_preset(eden_t* eden, hell_gfx_blend_preset_type_t type) {
+eden_set_blend_preset(eden_t* eden, eden_blend_preset_type_t type) {
   hell_gfx_set_blend_preset(&eden->gfx, type);
 }
 
-static hell_gfx_blend_preset_type_t
+static eden_blend_preset_type_t
 eden_get_blend_preset(eden_t* eden) {
   return hell_gfx_get_blend_preset(&eden->gfx);
 }
@@ -3074,55 +3082,56 @@ eden_draw_text_center_aligned(eden_t* eden, eden_asset_font_id_t font_id, str_t 
 
 }
 
+static void
+eden_inspect_u32(eden_t* eden, str_t name, u32_t item) 
+{
+  hell_inspector_t* in = &eden->inspector;
+  assert(in->entry_count < in->entry_cap);
+  hell_inspector_entry_t* entry = in->entries + in->entry_count++;
+  entry->item_u32 = item;
+  entry->type = HELL_INSPECTOR_ENTRY_TYPE_U32;
+  entry->name = name;
+}
 
-#define eden_inspect_u32(eden, name, item) eden_inspector_add_u32(&eden->inspector, name, item)
-#define eden_inspect_f32(eden, name, item) eden_inspector_add_f32(&eden->inspector, name, item)
+static void
+eden_inspect_f32(eden_t* eden, str_t name, u32_t item)
+{
+  hell_inspector_t* in = &eden->inspector;
+  assert(in->entry_count < in->entry_cap);
+  hell_inspector_entry_t* entry = in->entries + in->entry_count++;
+  entry->item_f32 = item;
+  entry->type = HELL_INSPECTOR_ENTRY_TYPE_F32;
+  entry->name = name;
+}
 
-static void 
-eden_inspector_init(eden_inspector_t* in, arena_t* arena, u32_t max_entries) 
+static b32_t 
+hell_inspector_init(hell_inspector_t* in, arena_t* arena, u32_t max_entries) 
 {
   in->entry_cap = max_entries;
   in->entry_count = 0;
-  in->entries = arena_push_arr(eden_inspector_entry_t, arena, max_entries);
-  assert(in->entries != nullptr);
+  in->entries = arena_push_arr(hell_inspector_entry_t, arena, max_entries);
+  if (!in->entries) 
+    return false;
+  return true;
 }
 
 static void 
-eden_inspector_clear(eden_inspector_t* in) 
+hell_inspect_clear(eden_t* eden) 
 {
+  hell_inspector_t* in = &eden->inspector;
   in->entry_count = 0;
 }
 
-static void
-eden_inspector_add_u32(eden_inspector_t* in, str_t name, u32_t item) 
-{
-  assert(in->entry_count < in->entry_cap);
-  eden_inspector_entry_t* entry = in->entries + in->entry_count++;
-  entry->item_u32 = item;
-  entry->type = EDEN_INSPECTOR_ENTRY_TYPE_U32;
-  entry->name = name;
-}
-
-
-static void
-eden_inspector_add_f32(eden_inspector_t* in, str_t name, f32_t item) {
-  assert(in->entry_count < in->entry_cap);
-  eden_inspector_entry_t* entry = in->entries + in->entry_count++;
-  entry->item_f32 = item;
-  entry->type = EDEN_INSPECTOR_ENTRY_TYPE_F32;
-  entry->name = name;
-}
-
-static eden_profiler_entry_t*
-_eden_profiler_init_block(
-    eden_profiler_t* p,
+static hell_profiler_entry_t*
+_hell_profiler_init_block(
+    hell_profiler_t* p,
     const char* filename, 
     u32_t line,
     const char* function_name,
     const char* block_name = 0) 
 {
   if (p->entry_count < p->entry_cap) {
-    eden_profiler_entry_t* entry = p->entries + p->entry_count++;
+    hell_profiler_entry_t* entry = p->entries + p->entry_count++;
     entry->filename = filename;
     entry->block_name = block_name ? block_name : function_name;
     entry->line = line;
@@ -3136,56 +3145,57 @@ _eden_profiler_init_block(
 }
 
 static void
-_eden_profiler_begin_block(eden_profiler_t* p, eden_profiler_entry_t* entry) 
+_hell_profiler_begin_block(hell_profiler_t* p, hell_profiler_entry_t* entry) 
 {
   entry->start_cycles = (u32_t)clock_time();
   entry->start_hits = 1;
 }
 
 static void
-_eden_profiler_end_block(eden_profiler_t* p, eden_profiler_entry_t* entry) {
+_hell_profiler_end_block(hell_profiler_t* p, hell_profiler_entry_t* entry) {
   u64_t delta = ((u32_t)clock_time() - entry->start_cycles) | ((u64_t)(entry->start_hits)) << 32;
   u64_atomic_add(&entry->hits_and_cycles, delta);
 }
 
 
 static void 
-eden_profiler_reset(eden_profiler_t* p) {
+hell_profiler_reset(hell_profiler_t* p) {
 
   for(u32_t entry_id = 0; entry_id < p->entry_count; ++entry_id)
   {
-    eden_profiler_entry_t* itr = p->entries + entry_id;
+    hell_profiler_entry_t* itr = p->entries + entry_id;
     itr->flag_for_reset = true;
   }
 
   p->entry_count = 0;
 }
 
-static void 
-eden_profiler_init(
-    eden_profiler_t* p, 
+static b32_t 
+hell_profiler_init(
+    hell_profiler_t* p, 
     arena_t* arena,
     u32_t max_entries,
     u32_t max_snapshots_per_entry)
 {
   p->entry_cap = max_entries;
   p->entry_snapshot_count = max_snapshots_per_entry;
-  p->entries = arena_push_arr(eden_profiler_entry_t, arena, p->entry_cap);
-  assert(p->entries);
+  p->entries = arena_push_arr(hell_profiler_entry_t, arena, p->entry_cap);
+  if (!p->entries) return false;
 
   for (u32_t i = 0; i < p->entry_cap; ++i) {
-    p->entries[i].snapshots = arena_push_arr(eden_profiler_snapshot_t, arena, max_snapshots_per_entry);
-    assert(p->entries[i].snapshots);
+    p->entries[i].snapshots = arena_push_arr(hell_profiler_snapshot_t, arena, max_snapshots_per_entry);
+    if(!p->entries[i].snapshots) return false;
   }
-  eden_profiler_reset(p);
+  hell_profiler_reset(p);
+  return true;
 }
 
 
 static void
-eden_profiler_update_entries(eden_profiler_t* p) {
+hell_profiler_update_entries(hell_profiler_t* p) {
   for(u32_t entry_id = 0; entry_id < p->entry_count; ++entry_id)
   {
-    eden_profiler_entry_t* itr = p->entries + entry_id;
+    hell_profiler_entry_t* itr = p->entries + entry_id;
     u64_t hits_and_cycles = u64_atomic_assign(&itr->hits_and_cycles, 0);
     u32_t hits = (u32_t)(hits_and_cycles >> 32);
     u32_t cycles = (u32_t)(hits_and_cycles & 0xFFFFFFFF);
@@ -3421,6 +3431,13 @@ eden_audio_mixer_update(eden_t* eden)
 
 //
 // JOURNAL
+// = 2024-07-10 =
+//   Renamed some functions to have "hell" prefix. All "hell"
+//   functions are like private eden functions; they are not to
+//   be seen by the app at all (platform and eden layer can see it).
+//   The equivalent to this is having a _eden prefix. 
+//   This is hopefully a start to organizing the eden codebase better.
+//
 // = 2024-03-18 = 
 //   I was thinking about what to do about shaders and whether 
 //   it is possible to let users specify meshes...hmm...
