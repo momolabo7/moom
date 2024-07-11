@@ -3940,7 +3940,14 @@ eden_update_and_render_sig(eden_update_and_render)
     }break;
 #endif
     case LIT_SHOW_DEBUG_PROFILER: {
-      lit_profiler_update_and_render(); 
+      eden_profile_update_and_render(
+          g_eden, 
+          20.f, 
+          LIT_WIDTH, 
+          LIT_HEIGHT, 
+          ASSET_SPRITE_ID_BLANK_SPRITE, 
+          ASSET_FONT_ID_DEBUG,
+          &g_lit->frame_arena);
     }break;
     case LIT_SHOW_DEBUG_INSPECTOR: {
       lit_inspector_update_and_render();

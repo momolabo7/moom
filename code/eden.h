@@ -676,6 +676,13 @@ struct hell_profiler_snapshot_t {
   u32_t cycles;
 };
 
+struct hell_profiler_stat_t {
+  f64_t min;
+  f64_t max;
+  f64_t average;
+  u32_t count;
+};
+
 struct hell_profiler_entry_t {
   u32_t line;
   const char* filename;
@@ -702,22 +709,18 @@ struct hell_profiler_t {
   u32_t snapshot_index;
 };
 
-#define hell_profiler_begin_block(p, name) \
+#define eden_profile_begin(eden, name) \
   static hell_profiler_entry_t* _profiler_block_##name = 0; \
   if (_profiler_block_##name == 0 || _profiler_block_##name->flag_for_reset) {\
-    _profiler_block_##name = _hell_profiler_init_block(p, __FILE__, __LINE__, __FUNCTION__, #name);  \
+    _profiler_block_##name = _hell_profiler_init_block(&eden->profiler, __FILE__, __LINE__, __FUNCTION__, #name);  \
   }\
-  _hell_profiler_begin_block(p, _profiler_block_##name)\
+  _hell_profiler_begin_block(&eden->profiler, _profiler_block_##name)\
 
-#define hell_profiler_end_block(p, name) \
-  _hell_profiler_end_block(p, _profiler_block_##name) 
+#define eden_profile_end(eden, name) \
+  _hell_profiler_end_block(&eden->profiler, _profiler_block_##name) 
 
-#define hell_profiler_block(p, name) hell_profiler_begin_block(p, name); defer {hell_profiler_end_block(p,name);}
+#define eden_profile_block(eden, name) hell_profiler_begin_block(&eden->profiler, name); defer {hell_profiler_end_block(&eden->profiler,name);}
 
-// Correspond with API
-#define eden_profile_begin(eden, name) hell_profiler_begin_block(&eden->profiler, name)
-#define eden_profile_end(eden, name)   hell_profiler_end_block(&eden->profiler, name)
-#define eden_profile_block(eden, name) hell_profiler_block(&eden->profiler, name)
 
 //
 // @mark: inspector
@@ -1974,18 +1977,21 @@ hell_gfx_opengl_init_sprite_batch(hell_gfx_opengl_t* ogl, usz_t max_sprites) {
       sprite_indices, 
       0);
 
+  ogl->glCreateBuffers(1, &sb->instance_texture_vbo);
   ogl->glNamedBufferStorage(
       sb->instance_texture_vbo, 
       sizeof(v2f_t) * vertex_count * ogl->max_sprites, 
       nullptr, 
       GL_DYNAMIC_STORAGE_BIT);
 
+  ogl->glCreateBuffers(1, &sb->instance_color_vbo);
   ogl->glNamedBufferStorage(
       sb->instance_color_vbo, 
       sizeof(rgba_t) * vertex_count * ogl->max_sprites, 
       nullptr, 
       GL_DYNAMIC_STORAGE_BIT);
 
+  ogl->glCreateBuffers(1, &sb->instance_transform_vbo);
   ogl->glNamedBufferStorage(
       sb->instance_transform_vbo, 
       sizeof(m44f_t) * ogl->max_sprites, 
@@ -3082,6 +3088,9 @@ eden_draw_text_center_aligned(eden_t* eden, eden_asset_font_id_t font_id, str_t 
 
 }
 
+//
+// @mark: inspect
+//
 static void
 eden_inspect_u32(eden_t* eden, str_t name, u32_t item) 
 {
@@ -3122,6 +3131,9 @@ hell_inspect_clear(eden_t* eden)
   in->entry_count = 0;
 }
 
+//
+// @mark: profile
+//
 static hell_profiler_entry_t*
 _hell_profiler_init_block(
     hell_profiler_t* p,
@@ -3142,6 +3154,132 @@ _hell_profiler_init_block(
   }
 
   return nullptr;
+}
+
+static void
+hell_profiler_begin_stat(hell_profiler_stat_t* stat) {
+  stat->min = F64_INFINITY;
+  stat->max = F64_NEG_INFINITY;
+  stat->average = 0.0;
+  stat->count = 0;
+}
+
+static void
+hell_profiler_accumulate_stat(hell_profiler_stat_t* stat, f64_t value) {
+  ++stat->count;
+  if (stat->min > value) {
+    stat->min = value;
+  }
+  if (stat->max < value) {
+    stat->max = value;
+  }
+  stat->average += value;
+}
+
+static void
+hell_profiler_end_stat(hell_profiler_stat_t* stat) {
+  if(stat->count) {
+    stat->average /= (f64_t)stat->count;
+  }
+  else {
+    stat->min = 0.0;
+    stat->max = 0.0;
+  }
+}
+static void 
+eden_profile_update_and_render(
+    eden_t* eden,
+    f32_t font_height,
+    f32_t width,
+    f32_t height,
+    eden_asset_sprite_id_t blank_sprite,
+    eden_asset_font_id_t font,
+    arena_t* frame_arena)
+{
+  const f32_t render_height = height;
+
+  // Overlay
+  eden_draw_asset_sprite(
+      eden, blank_sprite, 
+      v2f_set(width/2, height/2), 
+      v2f_set(width, height),
+      rgba_set(0.f, 0.f, 0.f, 0.5f));
+  eden_advance_depth(eden);
+  
+  u32_t line_num = 1;
+  
+  for(u32_t entry_id = 0; entry_id < eden->profiler.entry_count; ++entry_id)
+  {
+    hell_profiler_entry_t* entry = eden->profiler.entries + entry_id;
+
+    hell_profiler_stat_t cycles;
+    hell_profiler_stat_t hits;
+    hell_profiler_stat_t cycles_per_hit;
+    
+    hell_profiler_begin_stat(&cycles);
+    hell_profiler_begin_stat(&hits);
+    hell_profiler_begin_stat(&cycles_per_hit);
+    
+    for (u32_t snapshot_index = 0;
+         snapshot_index < eden->profiler.entry_snapshot_count;
+         ++snapshot_index)
+    {
+      
+      hell_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
+      
+      hell_profiler_accumulate_stat(&cycles, (f64_t)snapshot->cycles);
+      hell_profiler_accumulate_stat(&hits, (f64_t)snapshot->hits);
+      
+      f64_t cph = 0.0;
+      if (snapshot->hits) {
+        cph = (f64_t)snapshot->cycles/(f64_t)snapshot->hits;
+      }
+      hell_profiler_accumulate_stat(&cycles_per_hit, cph);
+    }
+    hell_profiler_end_stat(&cycles);
+    hell_profiler_end_stat(&hits);
+    hell_profiler_end_stat(&cycles_per_hit);
+   
+    strb_t sb = arena_push_strb(frame_arena, 256, 16);
+    strb_push_fmt(&sb, 
+                 str_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
+                 entry->block_name,
+                 (u32_t)cycles.average,
+                 (u32_t)hits.average,
+                 (u32_t)cycles_per_hit.average);
+    
+    eden_draw_text(eden, 
+        font, 
+        sb.str,
+        rgba_hex(0xFFFFFFFF),
+        0.f, 
+        render_height - font_height * (line_num), 
+        font_height);
+    eden_advance_depth(eden);
+
+    
+    // Draw graph
+    for (u32_t snapshot_index = 0;
+         snapshot_index < eden->profiler.entry_snapshot_count;
+         ++snapshot_index)
+    {
+      hell_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
+      
+      const f32_t snapshot_bar_width = 1.5f;
+      f32_t height_scale = 1.0f / (f32_t)cycles.max;
+      f32_t snapshot_bar_height = 
+        height_scale * font_height * (f32_t)snapshot->cycles * 0.95f;
+     
+      v2f_t pos = v2f_set(
+        560.f + snapshot_bar_width * (snapshot_index), 
+        render_height - font_height * (line_num) + font_height/4);
+
+      v2f_t size = v2f_set(snapshot_bar_width, snapshot_bar_height);
+      eden_draw_asset_sprite(eden, blank_sprite, pos, size, rgba_hex(0x00FF00FF));
+    }
+    eden_advance_depth(eden);
+    ++line_num;
+  }
 }
 
 static void
@@ -3467,7 +3605,7 @@ eden_audio_mixer_update(eden_t* eden)
 //   seperated as well?
 //
 // = 2024-01-11 =
-//   Changed up how icons work in the pack scripts (eg. pack_lit). I'm still not 100%
+//   Changed up how icons work in the pack scripts (eg. pack_hell). I'm still not 100%
 //   if I like icons to be a seperate resource...feels really awkward to ship. Perhaps
 //   a better way is to have some kind of a meta pass to convert an image file into a
 //   ICO file?
