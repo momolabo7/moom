@@ -3113,6 +3113,50 @@ eden_inspect_f32(eden_t* eden, str_t name, u32_t item)
   entry->name = name;
 }
 
+static void 
+eden_inspector_update_and_render(
+    eden_t* eden,
+    f32_t font_size,
+    f32_t width,
+    f32_t height,
+    eden_asset_sprite_id_t blank_sprite,
+    eden_asset_font_id_t font,
+    arena_t* frame_arena) 
+{
+  auto* inspector = &eden->inspector;
+  eden_draw_asset_sprite(
+      eden, 
+      blank_sprite, 
+      v2f_set(width/2, height/2), 
+      v2f_set(width, height),
+      rgba_set(0.f, 0.f, 0.f, 0.5f));
+  eden_advance_depth(eden);
+
+  strb_t sb = arena_push_strb(frame_arena, 256, 16);
+  
+  for(u32_t entry_index = 0; 
+      entry_index < inspector->entry_count; 
+      ++entry_index)
+  {
+    strb_clear(&sb);
+    auto* entry = inspector->entries + entry_index;
+    switch(entry->type){
+      case HELL_INSPECTOR_ENTRY_TYPE_U32: {
+        strb_push_fmt(&sb, str_from_lit("[%10S] %7u"),
+            entry->name, entry->item_u32);
+      } break;
+      case HELL_INSPECTOR_ENTRY_TYPE_F32: {
+        strb_push_fmt(&sb, str_from_lit("[%10S] %7f"),
+            entry->name, entry->item_f32);
+      } break;
+    }
+
+    f32_t y = height - font_size * (entry_index+1);
+    eden_draw_text(eden, font, sb.str, rgba_hex(0xFFFFFFFF), 0.f, y, font_size);
+    eden_advance_depth(eden);
+  }
+}
+
 static b32_t 
 hell_inspector_init(hell_inspector_t* in, arena_t* arena, u32_t max_entries) 
 {

@@ -6,11 +6,6 @@
 #include "momo.h"
 #include <stdio.h>
 
-static f32_t 
-clock_secs_elapsed(u64_t start, u64_t end) 
-{
-  return (f32_t)(end - start)/clock_resolution();
-}
 
 struct karu_bot_reminder_t {
   str_t message;

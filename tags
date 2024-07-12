@@ -344,7 +344,7 @@ cll_remove	code/momo.h	/^#define cll_remove(/;"	d	language:C++
 clock_resolution	code/momo.h	/^clock_resolution() {$/;"	f	language:C++	typeref:typename:u64_t
 clock_resolution	code/momo.h	/^clock_resolution() {$/;"	f	language:C++	typeref:typename:u64_t
 clock_resolution	code/momo.h	/^static u64_t  clock_resolution();$/;"	p	language:C++	typeref:typename:u64_t
-clock_secs_elapsed	code/twitch_bot.cpp	/^clock_secs_elapsed(u64_t start, u64_t end) $/;"	f	language:C++	typeref:typename:f32_t	file:
+clock_secs_elapsed	code/momo.h	/^clock_secs_elapsed(u64_t start, u64_t end) $/;"	f	language:C++	typeref:typename:f32_t
 clock_time	code/momo.h	/^clock_time() {$/;"	f	language:C++	typeref:typename:u64_t
 clock_time	code/momo.h	/^clock_time() {$/;"	f	language:C++	typeref:typename:u64_t
 clock_time	code/momo.h	/^static u64_t  clock_time();$/;"	p	language:C++	typeref:typename:u64_t
@@ -747,6 +747,7 @@ eden_hide_cursor_sig	code/eden.h	/^typedef eden_hide_cursor_sig(eden_hide_cursor
 eden_hide_cursor_sig	code/w32_eden.cpp	/^eden_hide_cursor_sig(w32_hide_cursor) {$/;"	f	language:C++	file:
 eden_input_characters_t	code/eden.h	/^struct eden_input_characters_t {$/;"	s	language:C++
 eden_input_t	code/eden.h	/^struct eden_input_t {$/;"	s	language:C++
+eden_inspector_update_and_render	code/eden.h	/^eden_inspector_update_and_render($/;"	f	language:C++	typeref:typename:void
 eden_inspect_f32	code/eden.h	/^eden_inspect_f32(eden_t* eden, str_t name, u32_t item)$/;"	f	language:C++	typeref:typename:void
 eden_inspect_u32	code/eden.h	/^eden_inspect_u32(eden_t* eden, str_t name, u32_t item) $/;"	f	language:C++	typeref:typename:void
 eden_is_button_down	code/eden.h	/^eden_is_button_down(eden_t* eden, eden_button_code_t code){$/;"	f	language:C++	typeref:typename:b32_t
@@ -1605,10 +1606,7 @@ hell_inspector_init	code/eden.h	/^hell_inspector_init(hell_inspector_t* in, aren
 hell_inspector_t	code/eden.h	/^struct hell_inspector_t {$/;"	s	language:C++
 hell_inspect_clear	code/eden.h	/^hell_inspect_clear(eden_t* eden) $/;"	f	language:C++	typeref:typename:void
 hell_profiler_accumulate_stat	code/eden.h	/^hell_profiler_accumulate_stat(hell_profiler_stat_t* stat, f64_t value) {$/;"	f	language:C++	typeref:typename:void
-hell_profiler_begin_block	code/eden.h	/^#define hell_profiler_begin_block(/;"	d	language:C++
 hell_profiler_begin_stat	code/eden.h	/^hell_profiler_begin_stat(hell_profiler_stat_t* stat) {$/;"	f	language:C++	typeref:typename:void
-hell_profiler_block	code/eden.h	/^#define hell_profiler_block(/;"	d	language:C++
-hell_profiler_end_block	code/eden.h	/^#define hell_profiler_end_block(/;"	d	language:C++
 hell_profiler_end_stat	code/eden.h	/^hell_profiler_end_stat(hell_profiler_stat_t* stat) {$/;"	f	language:C++	typeref:typename:void
 hell_profiler_entry_t	code/eden.h	/^struct hell_profiler_entry_t {$/;"	s	language:C++
 hell_profiler_init	code/eden.h	/^hell_profiler_init($/;"	f	language:C++	typeref:typename:b32_t
@@ -1876,7 +1874,6 @@ lit_goto_credits	code/app_lit.cpp	/^lit_goto_credits() {$/;"	f	language:C++	type
 LIT_HEIGHT	code/app_lit.cpp	/^#define LIT_HEIGHT /;"	d	language:C++	file:
 lit_init_player	code/app_lit.cpp	/^lit_init_player(lit_game_t* g, f32_t x, f32_t y) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_init_save_data	code/app_lit.cpp	/^lit_init_save_data() {$/;"	f	language:C++	typeref:typename:b32_t	file:
-lit_inspector_update_and_render	code/app_lit.cpp	/^lit_inspector_update_and_render() $/;"	f	language:C++	typeref:typename:void	file:
 lit_is_in_tutorial	code/app_lit.cpp	/^lit_is_in_tutorial() {$/;"	f	language:C++	typeref:typename:b32_t	file:
 LIT_LEARNT_BASICS_LEVEL_ID	code/app_lit.cpp	/^#define LIT_LEARNT_BASICS_LEVEL_ID /;"	d	language:C++	file:
 LIT_LEARNT_POINT_LIGHT_LEVEL_ID	code/app_lit.cpp	/^#define LIT_LEARNT_POINT_LIGHT_LEVEL_ID /;"	d	language:C++	file:
@@ -1931,11 +1928,7 @@ LIT_PLAYER_PICKUP_DIST	code/app_lit.cpp	/^#define LIT_PLAYER_PICKUP_DIST /;"	d	l
 LIT_PLAYER_RADIUS	code/app_lit.cpp	/^#define LIT_PLAYER_RADIUS /;"	d	language:C++	file:
 LIT_PLAYER_ROTATE_SPEED	code/app_lit.cpp	/^#define LIT_PLAYER_ROTATE_SPEED /;"	d	language:C++	file:
 lit_play_correct_bgm	code/app_lit.cpp	/^lit_play_correct_bgm() {$/;"	f	language:C++	typeref:typename:void	file:
-lit_profiler_accumulate_stat	code/app_lit.cpp	/^lit_profiler_accumulate_stat(lit_profiler_stat_t* stat, f64_t value) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_profiler_begin_stat	code/app_lit.cpp	/^lit_profiler_begin_stat(lit_profiler_stat_t* stat) {$/;"	f	language:C++	typeref:typename:void	file:
-lit_profiler_end_stat	code/app_lit.cpp	/^lit_profiler_end_stat(lit_profiler_stat_t* stat) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_profiler_stat_t	code/app_lit.cpp	/^struct lit_profiler_stat_t {$/;"	s	language:C++	file:
-lit_profiler_update_and_render	code/app_lit.cpp	/^lit_profiler_update_and_render() $/;"	f	language:C++	typeref:typename:void	file:
 lit_profile_begin	code/app_lit.cpp	/^#define lit_profile_begin(/;"	d	language:C++	file:
 lit_profile_block	code/app_lit.cpp	/^#define lit_profile_block(/;"	d	language:C++	file:
 lit_profile_end	code/app_lit.cpp	/^#define lit_profile_end(/;"	d	language:C++	file:

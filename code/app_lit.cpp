@@ -565,171 +565,9 @@ lit_update_and_render_console()
 #endif
 
 //
-// Profiler Update and Rendering
-//
-static void
-lit_profiler_begin_stat(lit_profiler_stat_t* stat) {
-  stat->min = F64_INFINITY;
-  stat->max = F64_NEG_INFINITY;
-  stat->average = 0.0;
-  stat->count = 0;
-}
-
-static void
-lit_profiler_accumulate_stat(lit_profiler_stat_t* stat, f64_t value) {
-  ++stat->count;
-  if (stat->min > value) {
-    stat->min = value;
-  }
-  if (stat->max < value) {
-    stat->max = value;
-  }
-  stat->average += value;
-}
-
-static void
-lit_profiler_end_stat(lit_profiler_stat_t* stat) {
-  if(stat->count) {
-    stat->average /= (f64_t)stat->count;
-  }
-  else {
-    stat->min = 0.0;
-    stat->max = 0.0;
-  }
-}
-
-static void
-lit_profiler_update_and_render() 
-{
-  //const f32_t render_width = LIT_WIDTH;
-  const f32_t render_height = LIT_HEIGHT;
-  const f32_t font_height = 20.f;
-
-  // Overlay
-  eden_draw_asset_sprite(
-      g_eden, ASSET_SPRITE_ID_BLANK_SPRITE, 
-      v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
-      v2f_set(LIT_WIDTH, LIT_HEIGHT),
-      rgba_set(0.f, 0.f, 0.f, 0.5f));
-  eden_advance_depth(g_eden);
-  
-  u32_t line_num = 1;
-  
-  for(u32_t entry_id = 0; entry_id < g_eden->profiler.entry_count; ++entry_id)
-  {
-    hell_profiler_entry_t* entry = g_eden->profiler.entries + entry_id;
-
-    lit_profiler_stat_t cycles;
-    lit_profiler_stat_t hits;
-    lit_profiler_stat_t cycles_per_hit;
-    
-    lit_profiler_begin_stat(&cycles);
-    lit_profiler_begin_stat(&hits);
-    lit_profiler_begin_stat(&cycles_per_hit);
-    
-    for (u32_t snapshot_index = 0;
-         snapshot_index < g_eden->profiler.entry_snapshot_count;
-         ++snapshot_index)
-    {
-      
-      hell_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
-      
-      lit_profiler_accumulate_stat(&cycles, (f64_t)snapshot->cycles);
-      lit_profiler_accumulate_stat(&hits, (f64_t)snapshot->hits);
-      
-      f64_t cph = 0.0;
-      if (snapshot->hits) {
-        cph = (f64_t)snapshot->cycles/(f64_t)snapshot->hits;
-      }
-      lit_profiler_accumulate_stat(&cycles_per_hit, cph);
-    }
-    lit_profiler_end_stat(&cycles);
-    lit_profiler_end_stat(&hits);
-    lit_profiler_end_stat(&cycles_per_hit);
-   
-    strb_t sb = arena_push_strb(&g_lit->frame_arena, 256, 16);
-    strb_push_fmt(&sb, 
-                 str_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
-                 entry->block_name,
-                 (u32_t)cycles.average,
-                 (u32_t)hits.average,
-                 (u32_t)cycles_per_hit.average);
-    
-    eden_draw_text(g_eden, 
-        ASSET_FONT_ID_DEBUG, 
-        sb.str,
-        rgba_hex(0xFFFFFFFF),
-        0.f, 
-        render_height - font_height * (line_num), 
-        font_height);
-    eden_advance_depth(g_eden);
-
-    
-    // Draw graph
-    for (u32_t snapshot_index = 0;
-         snapshot_index < g_eden->profiler.entry_snapshot_count;
-         ++snapshot_index)
-    {
-      hell_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
-      
-      const f32_t snapshot_bar_width = 1.5f;
-      f32_t height_scale = 1.0f / (f32_t)cycles.max;
-      f32_t snapshot_bar_height = 
-        height_scale * font_height * (f32_t)snapshot->cycles * 0.95f;
-     
-      v2f_t pos = v2f_set(
-        560.f + snapshot_bar_width * (snapshot_index), 
-        render_height - font_height * (line_num) + font_height/4);
-
-      v2f_t size = v2f_set(snapshot_bar_width, snapshot_bar_height);
-      eden_draw_asset_sprite(g_eden, ASSET_SPRITE_ID_BLANK_SPRITE, pos, size, rgba_hex(0x00FF00FF));
-    }
-    eden_advance_depth(g_eden);
-    ++line_num;
-  }
-}
-
-//
 // Inspector update and render
 //
 
-
-// @todo: remove this from lit
-static void 
-lit_inspector_update_and_render() 
-{
-  auto* inspector = &g_eden->inspector;
-  eden_draw_asset_sprite(
-      g_eden, 
-      ASSET_SPRITE_ID_BLANK_SPRITE, 
-      v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
-      v2f_set(LIT_WIDTH, LIT_HEIGHT),
-      rgba_set(0.f, 0.f, 0.f, 0.5f));
-  eden_advance_depth(g_eden);
-
-  strb_t sb = arena_push_strb(&g_lit->frame_arena, 256, 16);
-  
-  for(u32_t entry_index = 0; entry_index < inspector->entry_count; ++entry_index)
-  {
-    strb_clear(&sb);
-    f32_t line_height = 32.f;
-    auto* entry = inspector->entries + entry_index;
-    switch(entry->type){
-      case HELL_INSPECTOR_ENTRY_TYPE_U32: {
-        strb_push_fmt(&sb, str_from_lit("[%10S] %7u"),
-            entry->name, entry->item_u32);
-      } break;
-      case HELL_INSPECTOR_ENTRY_TYPE_F32: {
-        strb_push_fmt(&sb, str_from_lit("[%10S] %7f"),
-            entry->name, entry->item_f32);
-      } break;
-    }
-
-    f32_t y = LIT_HEIGHT - line_height * (entry_index+1);
-    eden_draw_text(g_eden, ASSET_FONT_ID_DEBUG, sb.str, rgba_hex(0xFFFFFFFF), 0.f, y, line_height);
-    eden_advance_depth(g_eden);
-  }
-}
 
 static void
 lit_play_correct_bgm() {
@@ -3950,7 +3788,14 @@ eden_update_and_render_sig(eden_update_and_render)
           &g_lit->frame_arena);
     }break;
     case LIT_SHOW_DEBUG_INSPECTOR: {
-      lit_inspector_update_and_render();
+      eden_inspector_update_and_render(
+          g_eden, 
+          20.f, 
+          LIT_WIDTH, 
+          LIT_HEIGHT, 
+          ASSET_SPRITE_ID_BLANK_SPRITE, 
+          ASSET_FONT_ID_DEBUG,
+          &g_lit->frame_arena);
     }break;
     default: {}
   }

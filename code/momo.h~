@@ -1751,11 +1751,6 @@ clock_resolution() {
 }
 #endif // OS_WINDOWS
 
-static f32_t 
-clock_secs_elapsed(u64_t start, u64_t end) 
-{
-  return (f32_t)(end - start)/clock_resolution();
-}
 
 static str_t 
 file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate) {
