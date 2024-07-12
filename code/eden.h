@@ -16,8 +16,7 @@
 //   console           - In game console system
 //
 // @todo:
-//   refactor inspector
-//   refactor profiler
+//   refactor audio mixer
 //   have a name for drawing stuff (like eden_draw?)
 //
 
