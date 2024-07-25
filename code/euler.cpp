@@ -995,7 +995,7 @@ euler_q20() {
     u32_t multiply_by = factorial;
     //printf("%d\n", multiply_by);
 
-    copy_array(original, num);
+    memory_copy_array(original, num);
     while(multiply_by > 1) {
       u32_t carry = 0;
       for_arr(num_index, num) {
@@ -1780,47 +1780,71 @@ done:
 
 static
 sort_quick_generic_predicate_sig(euler_q24_cmp) {
-  u32_t l = dref((u32_t*)lhs);
-  u32_t r = dref((u32_t*)rhs);
+  auto l = dref((u8_t*)lhs);
+  auto r = dref((u8_t*)rhs);
   return l < r;
 }
 
-static void
-euler_q24_print(u32_t* input, u32_t input_len) {
-  static u32_t times = 0;
-
-  ++times;
-
-  if (times == 1000000) {
-    printf("%d: ", times);
-    for (u32_t i = 0; i < input_len; ++i)
-      printf("%d", input[i]);
-    printf("\n");
-  }
-}
 
 static void
-euler_q24_print_permutations(u32_t* input, u32_t input_len, u32_t start, u32_t end) 
+euler_q24_print_permutations_lexographically(str_t str) 
 {
-  if (start == end) 
+  sort_quick_generic(str.e, str.size, euler_q24_cmp);
+
+  u32_t i = 0;
+  while(true) 
   {
-    euler_q24_print(input, input_len);
-#if 0
-    for (u32_t i = 0; i < input_len; ++i)
-      printf("%d", input[i]);
-    printf("\n");
-#endif
-  }
-  else 
-  {
-    // Sort start to end
-    sort_quick_generic(input + start, end-start+1, euler_q24_cmp);
-    
-    for(u32_t i = start; i <= end; ++i) {
-      swap(input[start], input[i]);
-      euler_q24_print_permutations(input, input_len, start + 1, end);
-      swap(input[start], input[i]);
+    ++i;
+    if (i == 1000000) {
+      for_cnt(i, str.size) printf("%c", str.e[i]);
+      printf("\n");
+      break;
     }
+
+    // Find the rightmost character whose character is smaller than its next character.
+    // This is our 'first' character.
+    s32_t first_index;
+    for(first_index = str.size - 2; first_index >= 0; --first_index)
+    {
+      if (str.e[first_index] < str.e[first_index+1])
+        break;
+    }
+
+    // If there are no characters that fit the description above,
+    // it means that we are done.
+    if (first_index == -1) 
+      break;
+
+    // Find the smallest character to the right of the first character
+    // that is greater than the first character.
+    // This is our 'second' character.
+    // 
+    // @note: 
+    // There shouldn't be any condition where we can't find a 'second'
+    // character since we already ruled that out in the previous loop.
+    //
+    s32_t second_index = first_index + 1;
+    for (s32_t i = first_index + 1; 
+         i < str.size; 
+         ++i)
+    {
+      if (str.e[i] > str.e[first_index] && 
+          str.e[i] < str.e[second_index])
+      {
+        second_index = i;
+      }
+    }
+
+
+    // Swap first and second characters
+    swap(str.e[first_index], str.e[second_index]);
+
+    // sort from the right side of first character
+    //printf("sort: %d - %d\n", first_index + 1, str.size - first_index - 1);
+    sort_quick_generic(str.e + first_index + 1, str.size - first_index - 1, euler_q24_cmp);
+    
+  
+
 
   }
 }
@@ -1828,10 +1852,9 @@ euler_q24_print_permutations(u32_t* input, u32_t input_len, u32_t start, u32_t e
 static void 
 euler_q24()
 {
-  u32_t arr[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-
-  euler_q24_print_permutations(arr, array_count(arr),  0, array_count(arr)-1);
-
+  u8_t in[] = "0123456789";
+  str_t input =  str_set(in, array_count(in)-1);
+  euler_q24_print_permutations_lexographically(input);
 }
 
 int

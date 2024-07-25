@@ -1,4 +1,4 @@
-#define FOOLISH 
+#define MOMO_FOOLISH 
 #include "momo.h"
 
 static void aoc23_d1p1(const char* filename) {
@@ -25,7 +25,7 @@ static void aoc23_d1p1(const char* filename) {
     }
 
     // count from the back
-    for( s32_t i = line.size-1; i >= 0; --i) {
+    for(s32_t i = line.size-1; i >= 0; --i) {
       if (is_digit(line.e[i])) {
         number += ascii_to_digit(line.e[i]);
         break;
@@ -482,7 +482,6 @@ static void aoc23_d3p2(const char* filename) {
         //
         // Here, we search for numbers around the '*' 
         //
-
         u32_t nums[2];
         u32_t num_count = 0;
 

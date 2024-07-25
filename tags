@@ -177,16 +177,8 @@ atlas_font_count	code/pass.h	/^  u32_t atlas_font_count;$/;"	m	language:C++	stru
 atlas_sprites	code/pass.h	/^  pass_pack_atlas_sprite_t* atlas_sprites;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:pass_pack_atlas_sprite_t *
 atlas_sprite_cap	code/pass.h	/^  u32_t atlas_sprite_cap;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:u32_t
 atlas_sprite_count	code/pass.h	/^  u32_t atlas_sprite_count;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:u32_t
-audio	code/eden.h	/^  eden_audio_t audio; $/;"	m	language:C++	struct:eden_t	typeref:typename:eden_audio_t
-audio_bits_per_sample	code/eden.h	/^  u16_t audio_bits_per_sample;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u16_t
-audio_channels	code/eden.h	/^  u16_t audio_channels;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u16_t
 audio_client	code/app_lit_ship.cpp	/^  IAudioClient* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient *	file:
-audio_client	code/w32_eden.cpp	/^  IAudioClient* audio_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient *	file:
-audio_enabled	code/eden.h	/^  b32_t audio_enabled;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:b32_t
 audio_format	code/momo.h	/^  u16_t audio_format;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
-audio_mixer_bitrate_type	code/eden.h	/^  eden_audio_mixer_bitrate_type_t audio_mixer_bitrate_type;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:eden_audio_mixer_bitrate_type_t
-audio_mixer_max_instances	code/eden.h	/^  u32_t audio_mixer_max_instances;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
-audio_samples_per_second	code/eden.h	/^  u32_t audio_samples_per_second;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 average	code/app_lit.cpp	/^  f64_t average;$/;"	m	language:C++	struct:lit_profiler_stat_t	typeref:typename:f64_t	file:
 average	code/eden.h	/^  f64_t average;$/;"	m	language:C++	struct:hell_profiler_stat_t	typeref:typename:f64_t
 b	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon1db7a63d0d0a::__anon1db7a63d0e08	typeref:typename:f32_t
@@ -196,7 +188,7 @@ b32_t	code/momo.h	/^typedef u32_t    b32_t;$/;"	t	language:C++	typeref:typename:
 b8_t	code/momo.h	/^typedef u8_t     b8_t;$/;"	t	language:C++	typeref:typename:u8_t
 before	code/eden.h	/^  b32_t before : 1;$/;"	m	language:C++	struct:eden_button_t	typeref:typename:b32_t:1
 begin	code/momo.h	/^  usz_t begin;$/;"	m	language:C++	struct:clex_token_t	typeref:typename:usz_t
-bgm	code/app_lit.cpp	/^  eden_audio_mixer_instance_t* bgm;$/;"	m	language:C++	struct:lit_t	typeref:typename:eden_audio_mixer_instance_t *	file:
+bgm	code/app_lit.cpp	/^  eden_speaker_sound_t* bgm; $/;"	m	language:C++	struct:lit_t	typeref:typename:eden_speaker_sound_t *	file:
 bgm_id	code/app_lit.cpp	/^  eden_asset_sound_id_t bgm_id;$/;"	m	language:C++	struct:lit_t	typeref:typename:eden_asset_sound_id_t	file:
 bigint_add	code/test_bigint.cpp	/^bigint_add(bigint_t* b, u32_t value) {$/;"	f	language:C++	typeref:typename:void	file:
 bigint_compare	code/test_bigint.cpp	/^bigint_compare(bigint_t* lhs, bigint_t* rhs) $/;"	f	language:C++	typeref:typename:s32_t	file:
@@ -215,7 +207,7 @@ bitmap_count	code/eden.h	/^  u32_t bitmap_count;$/;"	m	language:C++	struct:eden_
 bitmap_count	code/eden_asset_file.h	/^  u32_t bitmap_count;$/;"	m	language:C++	struct:asset_file_header_t	typeref:typename:u32_t
 bitmap_count	code/pass.h	/^  u32_t bitmap_count;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:u32_t
 bitmap_exts	code/pass.h	/^  pass_pack_bitmap_ext_t* bitmap_exts;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:pass_pack_bitmap_ext_t *
-bitrate_type	code/eden.h	/^  eden_audio_mixer_bitrate_type_t bitrate_type;$/;"	m	language:C++	struct:eden_audio_mixer_t	typeref:typename:eden_audio_mixer_bitrate_type_t
+bitrate_type	code/eden.h	/^  eden_speaker_bitrate_type_t bitrate_type;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:eden_speaker_bitrate_type_t
 bits_per_sample	code/app_lit_ship.cpp	/^  u16_t bits_per_sample;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t	file:
 bits_per_sample	code/momo.h	/^  u16_t bits_per_sample;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 bits_per_sample	code/w32_eden.cpp	/^  u16_t bits_per_sample;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t	file:
@@ -464,7 +456,7 @@ current_instance_index	code/eden.h	/^  GLuint current_instance_index;$/;"	m	lang
 current_instance_index	code/eden.h	/^  GLuint current_instance_index;$/;"	m	language:C++	struct:hell_gfx_opengl_triangle_batch_t	typeref:typename:GLuint
 current_layer	code/eden.h	/^  f32_t current_layer;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:f32_t
 current_level_id	code/app_lit.cpp	/^  u32_t current_level_id;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
-current_offset	code/eden.h	/^  u32_t current_offset;$/;"	m	language:C++	struct:eden_audio_mixer_instance_t	typeref:typename:u32_t
+current_offset	code/eden.h	/^  u32_t current_offset;$/;"	m	language:C++	struct:eden_speaker_sound_t	typeref:typename:u32_t
 current_texture	code/eden.h	/^  GLuint current_texture;$/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
 current_waypoint_index	code/app_lit.cpp	/^  u32_t current_waypoint_index;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:u32_t	file:
 cursor_pt_to_lock_to	code/app_lit_ship.cpp	/^  POINT cursor_pt_to_lock_to;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:POINT	file:
@@ -490,9 +482,9 @@ debug_log	code/eden.h	/^  eden_debug_log_f* debug_log;$/;"	m	language:C++	struct
 defer	code/momo.h	/^#define defer /;"	d	language:C++
 delta	code/app_lit.cpp	/^  v2f_t delta;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:v2f_t	file:
 delta_time	code/eden.h	/^  f32_t delta_time; \/\/aka dt$/;"	m	language:C++	struct:eden_input_t	typeref:typename:f32_t
-device_bits_per_sample	code/eden.h	/^  u16_t device_bits_per_sample;$/;"	m	language:C++	struct:eden_audio_t	typeref:typename:u16_t
-device_channels	code/eden.h	/^  u16_t device_channels;$/;"	m	language:C++	struct:eden_audio_t	typeref:typename:u16_t
-device_samples_per_second	code/eden.h	/^  u32_t device_samples_per_second;$/;"	m	language:C++	struct:eden_audio_t	typeref:typename:u32_t
+device_bits_per_sample	code/eden.h	/^  u16_t device_bits_per_sample;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u16_t
+device_channels	code/eden.h	/^  u16_t device_channels;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u16_t
+device_samples_per_second	code/eden.h	/^  u32_t device_samples_per_second;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u32_t
 digit_to_ascii	code/momo.h	/^#define digit_to_ascii(/;"	d	language:C++
 dir	code/aoc22.cpp	/^    aoc22_d7_dir_t* dir;$/;"	m	language:C++	union:aoc22_d7_node_t::__anonabc34737010a	typeref:typename:aoc22_d7_dir_t *	file:
 dir	code/app_lit.cpp	/^  v2f_t dir;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:v2f_t	file:
@@ -566,15 +558,6 @@ eden_asset_sprite_id_t	code/eden_asset_id_base.h	/^enum eden_asset_sprite_id_t :
 eden_asset_sprite_id_t	code/eden_asset_id_lit.h	/^enum eden_asset_sprite_id_t : u32_t {$/;"	g	language:C++	typeref:typename:u32_t
 eden_asset_sprite_id_t	code/eden_asset_id_sandbox.h	/^enum eden_asset_sprite_id_t : u32_t {$/;"	g	language:C++	typeref:typename:u32_t
 eden_asset_sprite_t	code/eden.h	/^struct eden_asset_sprite_t {$/;"	s	language:C++
-EDEN_AUDIO_MIXER_BITRATE_TYPE_S16	code/eden.h	/^  EDEN_AUDIO_MIXER_BITRATE_TYPE_S16,$/;"	e	language:C++	enum:eden_audio_mixer_bitrate_type_t
-eden_audio_mixer_bitrate_type_t	code/eden.h	/^enum eden_audio_mixer_bitrate_type_t {$/;"	g	language:C++
-eden_audio_mixer_init	code/eden.h	/^eden_audio_mixer_init($/;"	f	language:C++	typeref:typename:b32_t
-eden_audio_mixer_instance_t	code/eden.h	/^struct eden_audio_mixer_instance_t {$/;"	s	language:C++
-eden_audio_mixer_play	code/eden.h	/^eden_audio_mixer_play($/;"	f	language:C++	typeref:typename:eden_audio_mixer_instance_t *
-eden_audio_mixer_stop	code/eden.h	/^eden_audio_mixer_stop($/;"	f	language:C++	typeref:typename:void
-eden_audio_mixer_t	code/eden.h	/^struct eden_audio_mixer_t {$/;"	s	language:C++
-eden_audio_mixer_update	code/eden.h	/^eden_audio_mixer_update(eden_t* eden)$/;"	f	language:C++	typeref:typename:void
-eden_audio_t	code/eden.h	/^struct eden_audio_t {$/;"	s	language:C++
 EDEN_BLEND_PRESET_TYPE_ADD	code/eden.h	/^  EDEN_BLEND_PRESET_TYPE_ADD,$/;"	e	language:C++	enum:eden_blend_preset_type_t
 EDEN_BLEND_PRESET_TYPE_ALPHA	code/eden.h	/^  EDEN_BLEND_PRESET_TYPE_ALPHA,$/;"	e	language:C++	enum:eden_blend_preset_type_t
 EDEN_BLEND_PRESET_TYPE_MULTIPLY	code/eden.h	/^  EDEN_BLEND_PRESET_TYPE_MULTIPLY,$/;"	e	language:C++	enum:eden_blend_preset_type_t
@@ -774,6 +757,11 @@ eden_show_cursor_sig	code/app_lit_ship.cpp	/^eden_show_cursor_sig(w32_show_curso
 eden_show_cursor_sig	code/eden.h	/^#define eden_show_cursor_sig(/;"	d	language:C++
 eden_show_cursor_sig	code/eden.h	/^typedef eden_show_cursor_sig(eden_show_cursor_f);$/;"	t	language:C++
 eden_show_cursor_sig	code/w32_eden.cpp	/^eden_show_cursor_sig(w32_show_cursor)$/;"	f	language:C++	file:
+EDEN_SPEAKER_BITRATE_TYPE_S16	code/eden.h	/^  EDEN_SPEAKER_BITRATE_TYPE_S16,$/;"	e	language:C++	enum:eden_speaker_bitrate_type_t
+eden_speaker_bitrate_type_t	code/eden.h	/^enum eden_speaker_bitrate_type_t {$/;"	g	language:C++
+eden_speaker_play	code/eden.h	/^eden_speaker_play($/;"	f	language:C++	typeref:typename:eden_speaker_sound_t *
+eden_speaker_sound_t	code/eden.h	/^struct eden_speaker_sound_t {$/;"	s	language:C++
+eden_speaker_stop	code/eden.h	/^eden_speaker_stop($/;"	f	language:C++	typeref:typename:void
 eden_t	code/eden.h	/^struct eden_t {$/;"	s	language:C++
 eden_task_callback_f	code/eden.h	/^typedef void eden_task_callback_f(void* data);$/;"	t	language:C++	typeref:typename:void ()(void * data)
 eden_unlock_cursor	code/eden.h	/^#define eden_unlock_cursor(/;"	d	language:C++
@@ -849,8 +837,7 @@ euler_q23	code/euler.cpp	/^euler_q23()$/;"	f	language:C++	typeref:typename:void	
 euler_q23_get_sum_of_divisors	code/euler.cpp	/^euler_q23_get_sum_of_divisors(u32_t num)$/;"	f	language:C++	typeref:typename:u32_t	file:
 euler_q23_is_abundant	code/euler.cpp	/^euler_q23_is_abundant(u32_t num) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 euler_q24	code/euler.cpp	/^euler_q24()$/;"	f	language:C++	typeref:typename:void	file:
-euler_q24_print	code/euler.cpp	/^euler_q24_print(u32_t* input, u32_t input_len) {$/;"	f	language:C++	typeref:typename:void	file:
-euler_q24_print_permutations	code/euler.cpp	/^euler_q24_print_permutations(u32_t* input, u32_t input_len, u32_t start, u32_t end) $/;"	f	language:C++	typeref:typename:void	file:
+euler_q24_print_permutations_lexographically	code/euler.cpp	/^euler_q24_print_permutations_lexographically(str_t str) $/;"	f	language:C++	typeref:typename:void	file:
 euler_q3	code/euler.cpp	/^euler_q3() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q4	code/euler.cpp	/^euler_q4() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q4_is_palindrome	code/euler.cpp	/^euler_q4_is_palindrome(u32_t x) {$/;"	f	language:C++	typeref:typename:b32_t	file:
@@ -1166,7 +1153,6 @@ font_glyph	code/pass.h	/^    pass_pack_atlas_font_glyph_context_t font_glyph;$/;
 font_height	code/pass.h	/^  f32_t font_height;$/;"	m	language:C++	struct:pass_pack_atlas_font_t	typeref:typename:f32_t
 font_id	code/pass.h	/^  eden_asset_font_id_t font_id;$/;"	m	language:C++	struct:pass_pack_atlas_font_t	typeref:typename:eden_asset_font_id_t
 foo	dump/test.py	/^def foo():$/;"	f	language:Python
-FOOLISH	code/aoc23.cpp	/^#define FOOLISH /;"	d	language:C++	file:
 FOOLISH	code/app_vtuber.cpp	/^#define FOOLISH /;"	d	language:C++	file:
 FOOLISH	code/test_arena.cpp	/^#define FOOLISH$/;"	d	language:C++	file:
 FOOLISH	code/test_json.cpp	/^#define FOOLISH$/;"	d	language:C++	file:
@@ -1198,9 +1184,7 @@ free_files	code/app_lit_ship.cpp	/^  u32_t* free_files;$/;"	m	language:C++	struc
 free_files	code/w32_eden.cpp	/^  u32_t* free_files;$/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:u32_t *	file:
 free_file_count	code/app_lit_ship.cpp	/^  u32_t free_file_count;$/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:u32_t	file:
 free_file_count	code/w32_eden.cpp	/^  u32_t free_file_count;$/;"	m	language:C++	struct:w32_file_cabinet_t	typeref:typename:u32_t	file:
-free_list	code/eden.h	/^  u32_t* free_list;$/;"	m	language:C++	struct:eden_audio_mixer_t	typeref:typename:u32_t *
 free_list	code/momo.h	/^  garena_free_block_t* free_list;$/;"	m	language:C++	struct:garena_t	typeref:typename:garena_free_block_t *
-free_list_count	code/eden.h	/^  u32_t free_list_count;$/;"	m	language:C++	struct:eden_audio_mixer_t	typeref:typename:u32_t
 front	code/gist_ring_buffer.cpp	/^  u32_t front;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
 func	code/eden.h	/^  void (*func)(void*);$/;"	m	language:C++	struct:eden_console_command_t	typeref:typename:void (*)(void *)
 func	code/eden_console.h	/^  void (*func)(void*);$/;"	m	language:C++	struct:console_command_t	typeref:typename:void (*)(void *)
@@ -1475,7 +1459,7 @@ hell_gfx_get_next_texture_handle	code/eden.h	/^hell_gfx_get_next_texture_handle(
 hell_gfx_init	code/eden.h	/^hell_gfx_init($/;"	f	language:C++	typeref:typename:b32_t
 hell_gfx_opengl_add_predefined_textures	code/eden.h	/^hell_gfx_opengl_add_predefined_textures(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_align_viewport	code/eden.h	/^hell_gfx_opengl_align_viewport(hell_gfx_opengl_t* ogl) $/;"	f	language:C++	typeref:typename:void
-hell_gfx_opengl_attach_shader	code/eden.h	/^hell_gfx_opengl_attach_shader(hell_gfx_opengl_t* ogl,$/;"	f	language:C++	typeref:typename:void
+hell_gfx_opengl_attach_shader	code/eden.h	/^hell_gfx_opengl_attach_shader($/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_begin_frame	code/eden.h	/^hell_gfx_opengl_begin_frame($/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_begin_sprites	code/eden.h	/^hell_gfx_opengl_begin_sprites(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_begin_triangles	code/eden.h	/^hell_gfx_opengl_begin_triangles(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
@@ -1615,6 +1599,9 @@ hell_profiler_snapshot_t	code/eden.h	/^struct hell_profiler_snapshot_t {$/;"	s	l
 hell_profiler_stat_t	code/eden.h	/^struct hell_profiler_stat_t {$/;"	s	language:C++
 hell_profiler_t	code/eden.h	/^struct hell_profiler_t {$/;"	s	language:C++
 hell_profiler_update_entries	code/eden.h	/^hell_profiler_update_entries(hell_profiler_t* p) {$/;"	f	language:C++	typeref:typename:void
+hell_speaker_init	code/eden.h	/^hell_speaker_init($/;"	f	language:C++	typeref:typename:b32_t
+hell_speaker_t	code/eden.h	/^struct hell_speaker_t {$/;"	s	language:C++
+hell_speaker_update	code/eden.h	/^hell_speaker_update(eden_t* eden)$/;"	f	language:C++	typeref:typename:void
 hhea	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 hide_cursor	code/eden.h	/^  eden_hide_cursor_f* hide_cursor;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_hide_cursor_f *
 highest_codepoint	code/eden.h	/^  u32_t highest_codepoint;$/;"	m	language:C++	struct:eden_asset_font_t	typeref:typename:u32_t
@@ -1649,7 +1636,7 @@ image_height	code/momo.h	/^  u32_t image_height;$/;"	m	language:C++	struct:_png_
 image_size	code/pass.h	/^  u32_t image_size;$/;"	m	language:C++	struct:pass_pack_bitmap_ext_t	typeref:typename:u32_t
 image_stream	code/momo.h	/^  stream_t image_stream;$/;"	m	language:C++	struct:_png_context_t	typeref:typename:stream_t
 image_width	code/momo.h	/^  u32_t image_width;$/;"	m	language:C++	struct:_png_context_t	typeref:typename:u32_t
-index	code/eden.h	/^  u32_t index;$/;"	m	language:C++	struct:eden_audio_mixer_instance_t	typeref:typename:u32_t
+index	code/eden.h	/^  u32_t index;$/;"	m	language:C++	struct:eden_speaker_sound_t	typeref:typename:u32_t
 index	code/momo.h	/^  u32_t index;$/;"	m	language:C++	struct:sort_entry_t	typeref:typename:u32_t
 indices_vbo	code/eden.h	/^  GLuint indices_vbo;$/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
 indices_vbo	code/eden.h	/^  GLuint indices_vbo;$/;"	m	language:C++	struct:hell_gfx_opengl_triangle_batch_t	typeref:typename:GLuint
@@ -1662,7 +1649,6 @@ input_line	code/eden_console.h	/^  strb_t input_line;$/;"	m	language:C++	struct:
 inspector	code/eden.h	/^  hell_inspector_t inspector;$/;"	m	language:C++	struct:eden_t	typeref:typename:hell_inspector_t
 inspector_enabled	code/eden.h	/^  b32_t inspector_enabled;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:b32_t
 inspector_max_entries	code/eden.h	/^  u32_t inspector_max_entries;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
-instances	code/eden.h	/^  eden_audio_mixer_instance_t* instances;$/;"	m	language:C++	struct:eden_audio_mixer_t	typeref:typename:eden_audio_mixer_instance_t *
 instances_to_draw	code/eden.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLsizei
 instances_to_draw	code/eden.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:hell_gfx_opengl_triangle_batch_t	typeref:typename:GLsizei
 instance_color_vbo	code/eden.h	/^  GLuint instance_color_vbo;$/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
@@ -1684,8 +1670,8 @@ is_device_ready	code/w32_eden.cpp	/^	b32_t is_device_ready;$/;"	m	language:C++	s
 is_dll_reloaded	code/eden.h	/^  b32_t is_dll_reloaded;$/;"	m	language:C++	struct:eden_t	typeref:typename:b32_t
 is_holding_light	code/app_lit.cpp	/^  b32_t is_holding_light;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:b32_t	file:
 is_inverted	code/momo.h	/^  b32_t is_inverted;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:b32_t
-is_loop	code/eden.h	/^  b32_t is_loop;$/;"	m	language:C++	struct:eden_audio_mixer_instance_t	typeref:typename:b32_t
-is_playing	code/eden.h	/^  b32_t is_playing;$/;"	m	language:C++	struct:eden_audio_mixer_instance_t	typeref:typename:b32_t
+is_loop	code/eden.h	/^  b32_t is_loop;$/;"	m	language:C++	struct:eden_speaker_sound_t	typeref:typename:b32_t
+is_playing	code/eden.h	/^  b32_t is_playing;$/;"	m	language:C++	struct:eden_speaker_sound_t	typeref:typename:b32_t
 is_pow2	code/momo.h	/^#define is_pow2(/;"	d	language:C++
 is_running	code/app_lit_ship.cpp	/^  b32_t is_running;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:b32_t	file:
 is_running	code/eden.h	/^  b32_t is_running;$/;"	m	language:C++	struct:eden_t	typeref:typename:b32_t
@@ -2015,7 +2001,6 @@ max	code/eden.h	/^  f64_t max;$/;"	m	language:C++	struct:hell_profiler_stat_t	ty
 max	code/eden.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:hell_gfx_opengl_uv_t	typeref:typename:v2f_t
 maxp	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 max_files	code/eden.h	/^  u32_t max_files;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
-max_instances	code/eden.h	/^  u32_t max_instances;$/;"	m	language:C++	struct:eden_audio_mixer_t	typeref:typename:u32_t
 max_of	code/momo.h	/^#define max_of(/;"	d	language:C++
 max_sprites	code/eden.h	/^  usz_t max_sprites;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:usz_t
 max_sprites	code/eden.h	/^  usz_t max_sprites;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:usz_t
@@ -2073,7 +2058,6 @@ min	code/eden.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:hell_gfx_opengl_uv
 min_of	code/momo.h	/^#define min_of(/;"	d	language:C++
 min_x	code/eden.h	/^  f32_t min_x, max_x;$/;"	m	language:C++	struct:hell_gfx_command_view_t	typeref:typename:f32_t
 min_y	code/eden.h	/^  f32_t min_y, max_y;$/;"	m	language:C++	struct:hell_gfx_command_view_t	typeref:typename:f32_t
-mixer	code/eden.h	/^  eden_audio_mixer_t mixer;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_audio_mixer_t
 mm_device	code/app_lit_ship.cpp	/^  IMMDevice* mm_device;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IMMDevice *	file:
 mm_device	code/w32_eden.cpp	/^  IMMDevice* mm_device;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IMMDevice *	file:
 mm_device_enum	code/app_lit_ship.cpp	/^  IMMDeviceEnumerator * mm_device_enum;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IMMDeviceEnumerator *	file:
@@ -2087,6 +2071,7 @@ module_path	code/w32_eden.cpp	/^  const char* module_path;$/;"	m	language:C++	st
 module_write_time	code/app_lit_ship.cpp	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:LARGE_INTEGER	file:
 module_write_time	code/w32_eden.cpp	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:LARGE_INTEGER	file:
 MOMO_CONSOLE_H	code/eden_console.h	/^#define MOMO_CONSOLE_H$/;"	d	language:C++
+MOMO_FOOLISH	code/aoc23.cpp	/^#define MOMO_FOOLISH /;"	d	language:C++	file:
 MOMO_H	code/momo.h	/^#define MOMO_H$/;"	d	language:C++
 mouse_pos	code/eden.h	/^  v2f_t mouse_pos;$/;"	m	language:C++	struct:eden_input_t	typeref:typename:v2f_t
 mouse_scroll_delta	code/eden.h	/^  s32_t mouse_scroll_delta;$/;"	m	language:C++	struct:eden_input_t	typeref:typename:s32_t
@@ -2264,9 +2249,9 @@ pixels	code/pass.h	/^  u32_t* pixels;$/;"	m	language:C++	struct:pass_pack_bitmap
 PI_32	code/momo.h	/^#define PI_32 /;"	d	language:C++
 PI_64	code/momo.h	/^#define PI_64 /;"	d	language:C++
 platform_arena	code/eden.h	/^  arena_t platform_arena;$/;"	m	language:C++	struct:eden_t	typeref:typename:arena_t
-platform_data	code/eden.h	/^  void* platform_data;$/;"	m	language:C++	struct:eden_audio_t	typeref:typename:void *
 platform_data	code/eden.h	/^  void* platform_data;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:void *
 platform_data	code/eden.h	/^  void* platform_data;$/;"	m	language:C++	struct:hell_gfx_t	typeref:typename:void *
+platform_data	code/eden.h	/^  void* platform_data;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:void *
 player	code/app_lit.cpp	/^  lit_game_player_t player;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_player_t	file:
 player	code/app_tbp.cpp	/^  tbp_player_t player;$/;"	m	language:C++	struct:tbp_t	typeref:typename:tbp_player_t	file:
 png_rasterize	code/momo.h	/^png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena) $/;"	f	language:C++	typeref:typename:u32_t *
@@ -2413,10 +2398,10 @@ S8_MAX	code/momo.h	/^#define S8_MAX /;"	d	language:C++
 S8_MIN	code/momo.h	/^#define S8_MIN /;"	d	language:C++
 s8_t	code/momo.h	/^typedef int8_t   s8_t;$/;"	t	language:C++	typeref:typename:int8_t
 SafeRelease	code/w32_sandbox_wasapi.cpp	/^#define SafeRelease(/;"	d	language:C++	file:
-samples	code/eden.h	/^  void* samples;$/;"	m	language:C++	struct:eden_audio_t	typeref:typename:void *
+samples	code/eden.h	/^  void* samples;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:void *
 samples_per_second	code/app_lit_ship.cpp	/^  u32_t samples_per_second;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 samples_per_second	code/w32_eden.cpp	/^  u32_t samples_per_second;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
-sample_count	code/eden.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:eden_audio_t	typeref:typename:u32_t
+sample_count	code/eden.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u32_t
 sample_rate	code/momo.h	/^  u32_t sample_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 SANDBOX_ASSET_FILE	code/eden_asset_id_sandbox.h	/^#define SANDBOX_ASSET_FILE /;"	d	language:C++
 sandbox_res_dir	code/pass_sandbox.cpp	/^#define sandbox_res_dir(/;"	d	language:C++	file:
@@ -2529,12 +2514,24 @@ sort_quick_generic_predicate_sig	code/momo.h	/^#define sort_quick_generic_predic
 sort_radix	code/momo.h	/^sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena)$/;"	f	language:C++	typeref:typename:void
 sort_radix	code/momo.h	/^static void sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena);$/;"	p	language:C++	typeref:typename:void
 sounds	code/eden.h	/^  eden_asset_sound_t* sounds;$/;"	m	language:C++	struct:eden_assets_t	typeref:typename:eden_asset_sound_t *
+sounds	code/eden.h	/^  eden_speaker_sound_t* sounds;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:eden_speaker_sound_t *
 sounds	code/pass.h	/^  asset_file_sound_t* sounds;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:asset_file_sound_t *
+sound_cap	code/eden.h	/^  u32_t sound_cap;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u32_t
 sound_count	code/eden.h	/^  u32_t sound_count;$/;"	m	language:C++	struct:eden_assets_t	typeref:typename:u32_t
 sound_count	code/eden_asset_file.h	/^  u32_t sound_count;$/;"	m	language:C++	struct:asset_file_header_t	typeref:typename:u32_t
 sound_count	code/pass.h	/^  u32_t sound_count;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:u32_t
 sound_exts	code/pass.h	/^  pass_pack_sound_ext_t* sound_exts;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:pass_pack_sound_ext_t *
-sound_id	code/eden.h	/^  eden_asset_sound_id_t sound_id; \/\/ @todo: do not rely on sound_id$/;"	m	language:C++	struct:eden_audio_mixer_instance_t	typeref:typename:eden_asset_sound_id_t
+sound_free_list	code/eden.h	/^  u32_t* sound_free_list;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u32_t *
+sound_free_list_count	code/eden.h	/^  u32_t sound_free_list_count;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u32_t
+sound_id	code/eden.h	/^  eden_asset_sound_id_t sound_id; \/\/ @todo: do not rely on sound_id$/;"	m	language:C++	struct:eden_speaker_sound_t	typeref:typename:eden_asset_sound_id_t
+speaker	code/eden.h	/^  hell_speaker_t speaker; $/;"	m	language:C++	struct:eden_t	typeref:typename:hell_speaker_t
+speaker_bitrate_type	code/eden.h	/^  eden_speaker_bitrate_type_t speaker_bitrate_type;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:eden_speaker_bitrate_type_t
+speaker_bits_per_sample	code/eden.h	/^  u16_t speaker_bits_per_sample;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u16_t
+speaker_channels	code/eden.h	/^  u16_t speaker_channels;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u16_t
+speaker_client	code/w32_eden.cpp	/^  IAudioClient* speaker_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioClient *	file:
+speaker_enabled	code/eden.h	/^  b32_t speaker_enabled;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:b32_t
+speaker_max_sounds	code/eden.h	/^  u32_t speaker_max_sounds;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
+speaker_samples_per_second	code/eden.h	/^  u32_t speaker_samples_per_second;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 speed	code/app_lit.cpp	/^  f32_t speed;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:f32_t	file:
 speed_multiplier	code/app_lit.cpp	/^  f32_t speed_multiplier;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t	file:
 splash	code/app_lit.cpp	/^    lit_splash_t splash;$/;"	m	language:C++	union:lit_t::__anon1b0212a9020a	typeref:typename:lit_splash_t	file:
@@ -2919,8 +2916,8 @@ vertex_count	code/momo.h	/^  u32_t vertex_count;$/;"	m	language:C++	struct:_ttf_
 vertical_advance	code/eden.h	/^  f32_t vertical_advance;$/;"	m	language:C++	struct:eden_asset_font_glyph_t	typeref:typename:f32_t
 vertical_advance	code/eden_asset_file.h	/^  f32_t vertical_advance;$/;"	m	language:C++	struct:asset_file_font_glyph_t	typeref:typename:f32_t
 vertices	code/momo.h	/^  v2f_t* vertices;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:v2f_t *
-volume	code/eden.h	/^  f32_t volume;$/;"	m	language:C++	struct:eden_audio_mixer_instance_t	typeref:typename:f32_t
-volume	code/eden.h	/^  f32_t volume;$/;"	m	language:C++	struct:eden_audio_mixer_t	typeref:typename:f32_t
+volume	code/eden.h	/^  f32_t volume;$/;"	m	language:C++	struct:eden_speaker_sound_t	typeref:typename:f32_t
+volume	code/eden.h	/^  f32_t volume;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:f32_t
 vtuber_add_png	code/app_vtuber.cpp	/^vtuber_add_png(eden_t* eden, vtuber_t* vtuber, const char* filename) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 vtuber_add_texture	code/app_vtuber.cpp	/^vtuber_add_texture(eden_gfx_t* gfx, u32_t w, u32_t h, u32_t* pixel_data) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 vtuber_exit	code/app_vtuber.cpp	/^#define vtuber_exit(/;"	d	language:C++	file:
@@ -2940,27 +2937,15 @@ w32_add_task_entry	code/w32_eden.cpp	/^w32_add_task_entry(w32_work_queue_t* wq, 
 w32_audio_begin_frame_sig	code/app_lit_ship.cpp	/^#define w32_audio_begin_frame_sig(/;"	d	language:C++	file:
 w32_audio_begin_frame_sig	code/app_lit_ship.cpp	/^static w32_audio_begin_frame_sig(w32_audio_begin_frame);$/;"	p	language:C++	file:
 w32_audio_begin_frame_sig	code/app_lit_ship.cpp	/^w32_audio_begin_frame_sig(w32_audio_begin_frame) $/;"	f	language:C++	file:
-w32_audio_begin_frame_sig	code/w32_eden.cpp	/^#define w32_audio_begin_frame_sig(/;"	d	language:C++	file:
-w32_audio_begin_frame_sig	code/w32_eden.cpp	/^static w32_audio_begin_frame_sig(w32_audio_begin_frame);$/;"	p	language:C++	file:
-w32_audio_begin_frame_sig	code/w32_eden.cpp	/^w32_audio_begin_frame_sig(w32_audio_begin_frame) $/;"	f	language:C++	file:
 w32_audio_end_frame_sig	code/app_lit_ship.cpp	/^#define w32_audio_end_frame_sig(/;"	d	language:C++	file:
 w32_audio_end_frame_sig	code/app_lit_ship.cpp	/^static w32_audio_end_frame_sig(w32_audio_end_frame);$/;"	p	language:C++	file:
 w32_audio_end_frame_sig	code/app_lit_ship.cpp	/^w32_audio_end_frame_sig(w32_audio_end_frame) $/;"	f	language:C++	file:
-w32_audio_end_frame_sig	code/w32_eden.cpp	/^#define w32_audio_end_frame_sig(/;"	d	language:C++	file:
-w32_audio_end_frame_sig	code/w32_eden.cpp	/^static w32_audio_end_frame_sig(w32_audio_end_frame);$/;"	p	language:C++	file:
-w32_audio_end_frame_sig	code/w32_eden.cpp	/^w32_audio_end_frame_sig(w32_audio_end_frame) $/;"	f	language:C++	file:
 w32_audio_load_sig	code/app_lit_ship.cpp	/^#define w32_audio_load_sig(/;"	d	language:C++	file:
 w32_audio_load_sig	code/app_lit_ship.cpp	/^static w32_audio_load_sig(w32_audio_load);$/;"	p	language:C++	file:
 w32_audio_load_sig	code/app_lit_ship.cpp	/^w32_audio_load_sig(w32_audio_load)$/;"	f	language:C++	file:
-w32_audio_load_sig	code/w32_eden.cpp	/^#define w32_audio_load_sig(/;"	d	language:C++	file:
-w32_audio_load_sig	code/w32_eden.cpp	/^static w32_audio_load_sig(w32_audio_load);$/;"	p	language:C++	file:
-w32_audio_load_sig	code/w32_eden.cpp	/^w32_audio_load_sig(w32_audio_load)$/;"	f	language:C++	file:
 w32_audio_unload_sig	code/app_lit_ship.cpp	/^#define w32_audio_unload_sig(/;"	d	language:C++	file:
 w32_audio_unload_sig	code/app_lit_ship.cpp	/^static w32_audio_unload_sig(w32_audio_unload);$/;"	p	language:C++	file:
 w32_audio_unload_sig	code/app_lit_ship.cpp	/^w32_audio_unload_sig(w32_audio_unload) {$/;"	f	language:C++	file:
-w32_audio_unload_sig	code/w32_eden.cpp	/^#define w32_audio_unload_sig(/;"	d	language:C++	file:
-w32_audio_unload_sig	code/w32_eden.cpp	/^static w32_audio_unload_sig(w32_audio_unload);$/;"	p	language:C++	file:
-w32_audio_unload_sig	code/w32_eden.cpp	/^w32_audio_unload_sig(w32_audio_unload) {$/;"	f	language:C++	file:
 w32_calc_render_region	code/app_lit_ship.cpp	/^w32_calc_render_region(u32_t window_w, $/;"	f	language:C++	typeref:typename:RECT	file:
 w32_calc_render_region	code/w32_eden.cpp	/^w32_calc_render_region(u32_t window_w, $/;"	f	language:C++	typeref:typename:RECT	file:
 w32_complete_all_tasks_entries	code/app_lit_ship.cpp	/^w32_complete_all_tasks_entries(w32_work_queue_t* wq) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -3031,6 +3016,18 @@ w32_set_eden_dims	code/app_lit_ship.cpp	/^w32_set_eden_dims(f32_t width, f32_t h
 w32_set_eden_dims	code/w32_eden.cpp	/^w32_set_eden_dims(f32_t width, f32_t height) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_shutdown	code/app_lit_ship.cpp	/^w32_shutdown() {$/;"	f	language:C++	typeref:typename:void	file:
 w32_shutdown	code/w32_eden.cpp	/^w32_shutdown() {$/;"	f	language:C++	typeref:typename:void	file:
+w32_speaker_begin_frame_sig	code/w32_eden.cpp	/^#define w32_speaker_begin_frame_sig(/;"	d	language:C++	file:
+w32_speaker_begin_frame_sig	code/w32_eden.cpp	/^static w32_speaker_begin_frame_sig(w32_speaker_begin_frame);$/;"	p	language:C++	file:
+w32_speaker_begin_frame_sig	code/w32_eden.cpp	/^w32_speaker_begin_frame_sig(w32_speaker_begin_frame) $/;"	f	language:C++	file:
+w32_speaker_end_frame_sig	code/w32_eden.cpp	/^#define w32_speaker_end_frame_sig(/;"	d	language:C++	file:
+w32_speaker_end_frame_sig	code/w32_eden.cpp	/^static w32_speaker_end_frame_sig(w32_speaker_end_frame);$/;"	p	language:C++	file:
+w32_speaker_end_frame_sig	code/w32_eden.cpp	/^w32_speaker_end_frame_sig(w32_speaker_end_frame) $/;"	f	language:C++	file:
+w32_speaker_load_sig	code/w32_eden.cpp	/^#define w32_speaker_load_sig(/;"	d	language:C++	file:
+w32_speaker_load_sig	code/w32_eden.cpp	/^static w32_speaker_load_sig(w32_speaker_load);$/;"	p	language:C++	file:
+w32_speaker_load_sig	code/w32_eden.cpp	/^w32_speaker_load_sig(w32_speaker_load)$/;"	f	language:C++	file:
+w32_speaker_unload_sig	code/w32_eden.cpp	/^#define w32_speaker_unload_sig(/;"	d	language:C++	file:
+w32_speaker_unload_sig	code/w32_eden.cpp	/^static w32_speaker_unload_sig(w32_speaker_unload);$/;"	p	language:C++	file:
+w32_speaker_unload_sig	code/w32_eden.cpp	/^w32_speaker_unload_sig(w32_speaker_unload) {$/;"	f	language:C++	file:
 w32_state	code/app_lit_ship.cpp	/^static w32_state_t w32_state;$/;"	v	language:C++	typeref:typename:w32_state_t	file:
 w32_state	code/w32_eden.cpp	/^static w32_state_t w32_state;$/;"	v	language:C++	typeref:typename:w32_state_t	file:
 w32_state_t	code/app_lit_ship.cpp	/^struct w32_state_t {$/;"	s	language:C++	file:
@@ -3277,7 +3274,7 @@ _w32_set_pixel_format	code/w32_eden.cpp	/^_w32_set_pixel_format(HDC dc) {$/;"	f	
 _w32_try_get_wgl_function	code/app_lit_ship.cpp	/^_w32_try_get_wgl_function(const char* name, HMODULE fallback_module)$/;"	f	language:C++	typeref:typename:void *	file:
 _w32_try_get_wgl_function	code/w32_eden.cpp	/^_w32_try_get_wgl_function(const char* name, HMODULE fallback_module)$/;"	f	language:C++	typeref:typename:void *	file:
 _w32_wasapi_init_default_audio_output_device	code/app_lit_ship.cpp	/^_w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:b32_t	file:
-_w32_wasapi_init_default_audio_output_device	code/w32_eden.cpp	/^_w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+_w32_wasapi_init_default_speaker_output_device	code/w32_eden.cpp	/^_w32_wasapi_init_default_speaker_output_device(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 _wav_head_t	code/momo.h	/^struct _wav_head_t { $/;"	s	language:C++
 __add__	dump/operator_overloading_example.py	/^    def __add__(self, other):$/;"	m	language:Python	class:Fraction
 __anon0a42ec610103	code/eden.h	/^enum{ $/;"	g	language:C++

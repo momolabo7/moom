@@ -1051,7 +1051,7 @@ static void sort_quick(sort_entry_t* entries, u32_t entry_count);
 static void sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena);
 
 #define sort_quick_generic_predicate_sig(name) b32_t name(const void* lhs, const void* rhs)
-#define sort_quick_generic(arr, count, predicate) _sort_quick_generic(arr, count, sizeof(*arr), predicate)
+#define sort_quick_generic(arr, count, predicate) _sort_quick_generic(arr, count, sizeof(*(arr)), predicate)
 
 //
 // MARK:(CRC)
@@ -1799,7 +1799,7 @@ file_write_from_str(const char* filename, str_t buffer) {
 //
 // MARK:(Foolish)
 //
-#ifdef FOOLISH // FOOLISH
+#ifdef MOMO_FOOLISH // FOOLISH
 #include <stdlib.h>
 #include <stdio.h>
 // These are foolish methods that should ideally not make 

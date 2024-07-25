@@ -291,34 +291,7 @@ struct eden_assets_t {
   eden_asset_shader_t* shaders;
 };
 
-// 
-// @mark: mixer
-//
-struct eden_audio_mixer_instance_t {
-  eden_asset_sound_id_t sound_id; // @todo: do not rely on sound_id
-  u32_t current_offset;
-  u32_t index;
-  
-  b32_t is_loop;
-  b32_t is_playing;
-  f32_t volume;
-};
 
-enum eden_audio_mixer_bitrate_type_t {
-  EDEN_AUDIO_MIXER_BITRATE_TYPE_S16,
-  // add more here and support them in audio_mixer_update
-};
-
-struct eden_audio_mixer_t {
-  eden_audio_mixer_bitrate_type_t bitrate_type;
-
-  eden_audio_mixer_instance_t* instances;
-  u32_t max_instances;
-  u32_t* free_list;
-  u32_t free_list_count;
-
-  f32_t volume;
-};
 
 
 //
@@ -912,11 +885,25 @@ typedef eden_set_design_dimensions_sig(eden_set_design_dimensions_f);
 
 
 //
-// App Audio API
+// Audio API
 //
 
-// @todo: change name to eden_audio_output_t
-struct eden_audio_t {
+struct eden_speaker_sound_t {
+  eden_asset_sound_id_t sound_id; // @todo: do not rely on sound_id
+  u32_t current_offset;
+  u32_t index;
+  
+  b32_t is_loop;
+  b32_t is_playing;
+  f32_t volume;
+
+};
+
+enum eden_speaker_bitrate_type_t {
+  EDEN_SPEAKER_BITRATE_TYPE_S16,
+};
+
+struct hell_speaker_t {
   // Audio buffer for eden to write to
   void* samples;
   u32_t sample_count;
@@ -925,6 +912,15 @@ struct eden_audio_t {
   u32_t device_samples_per_second;
   u16_t device_bits_per_sample;
   u16_t device_channels;
+
+  // Mixer
+  eden_speaker_bitrate_type_t bitrate_type;
+  eden_speaker_sound_t* sounds;
+  u32_t sound_cap;
+  u32_t* sound_free_list;
+  u32_t sound_free_list_count;
+
+  f32_t volume;
 
   void* platform_data;
 };
@@ -942,14 +938,13 @@ struct eden_t {
   eden_set_design_dimensions_f* set_design_dimensions;
 
   eden_input_t input;
-  eden_audio_t audio; 
 
   hell_gfx_t gfx;
+  hell_speaker_t speaker; 
 
   hell_profiler_t profiler;
   hell_inspector_t inspector;
   eden_assets_t assets;
-  eden_audio_mixer_t mixer;
           
   b32_t is_dll_reloaded;
   b32_t is_running;
@@ -986,12 +981,12 @@ struct eden_config_t {
   usz_t max_sprites;
   usz_t max_triangles;
 
-  b32_t audio_enabled;
-  u32_t audio_samples_per_second;
-  u16_t audio_bits_per_sample;
-  u16_t audio_channels;
-  u32_t audio_mixer_max_instances;
-  eden_audio_mixer_bitrate_type_t audio_mixer_bitrate_type;
+  b32_t speaker_enabled;
+  u32_t speaker_samples_per_second;
+  u16_t speaker_bits_per_sample;
+  u16_t speaker_channels;
+  u32_t speaker_max_sounds;
+  eden_speaker_bitrate_type_t speaker_bitrate_type;
 
   // must be null terminated
   const char* window_title; 
@@ -1592,8 +1587,9 @@ hell_gfx_opengl_end_sprites(hell_gfx_opengl_t* ogl) {
   hell_gfx_opengl_flush_sprites(ogl);
 }
 
-  static void 
-hell_gfx_opengl_attach_shader(hell_gfx_opengl_t* ogl,
+static void 
+hell_gfx_opengl_attach_shader(
+    hell_gfx_opengl_t* ogl,
     u32_t program, 
     u32_t type, 
     char* code) 
@@ -3477,73 +3473,73 @@ eden_update_and_render_console(eden_console_t*)
 }
 
 //
-// @mark: mixer
+// @mark: speaker
 //
 static b32_t
-eden_audio_mixer_init(
-    eden_audio_mixer_t* mixer,
-    eden_audio_mixer_bitrate_type_t bitrate_type,
-    u32_t max_instances,
+hell_speaker_init(
+    hell_speaker_t* speaker,
+    eden_speaker_bitrate_type_t bitrate_type,
+    u32_t sound_cap,
     arena_t* arena) 
 {
-  mixer->bitrate_type = bitrate_type;
-  mixer->max_instances = max_instances;
-  mixer->free_list_count = max_instances; 
+  speaker->bitrate_type = bitrate_type;
+  speaker->sound_cap = sound_cap;
+  speaker->sound_free_list_count = sound_cap; 
   
-  mixer->free_list = arena_push_arr(u32_t, arena, max_instances);
-  mixer->instances = arena_push_arr(eden_audio_mixer_instance_t, arena, max_instances);
-  if (!mixer->free_list || !mixer->instances)
+  speaker->sound_free_list = arena_push_arr(u32_t, arena, sound_cap);
+  speaker->sounds = arena_push_arr(eden_speaker_sound_t, arena, sound_cap);
+  if (!speaker->sound_free_list || !speaker->sounds)
     return false;
 
-  for_cnt(i, max_instances) 
+  for_cnt(i, sound_cap) 
   {
-    auto* instance = mixer->instances + i;
-    instance->is_loop = false;
-    instance->is_playing = false;
-    instance->volume = 0.f;
-    instance->current_offset = 0.f;
-    instance->index = i;
+    auto* sound = speaker->sounds + i;
+    sound->is_loop = false;
+    sound->is_playing = false;
+    sound->volume = 0.f;
+    sound->current_offset = 0.f;
+    sound->index = i;
 
-    mixer->free_list[i] = i;  
+    speaker->sound_free_list[i] = i;  
     
   }
-  mixer->volume = 1.f;
+  speaker->volume = 1.f;
   return true;
 }
 
 
-static eden_audio_mixer_instance_t*
-eden_audio_mixer_play(
+static eden_speaker_sound_t*
+eden_speaker_play(
     eden_t* eden,
     eden_asset_sound_id_t sound_id,
     b32_t loop,
     f32_t volume) 
 {
-  eden_audio_mixer_t* mixer = &eden->mixer;
+  hell_speaker_t* speaker = &eden->speaker;
   // get last index from free list
-  assert(mixer->free_list_count > 0);
+  assert(speaker->sound_free_list_count > 0);
 
-  u32_t index = mixer->free_list[--mixer->free_list_count];
+  u32_t index = speaker->sound_free_list[--speaker->sound_free_list_count];
   
-  auto* instance = mixer->instances + index;
-  instance->is_loop = loop;
-  instance->current_offset = 0;
-  instance->sound_id = sound_id;
-  instance->is_playing = true;
-  instance->volume = volume;
-  instance->index = index;
+  auto* sound = speaker->sounds + index;
+  sound->is_loop = loop;
+  sound->current_offset = 0;
+  sound->sound_id = sound_id;
+  sound->is_playing = true;
+  sound->volume = volume;
+  sound->index = index;
 
-  return instance;
+  return sound;
 }
 
 static void
-eden_audio_mixer_stop(
+eden_speaker_stop(
     eden_t* eden,
-    eden_audio_mixer_instance_t* instance)
+    eden_speaker_sound_t* instance)
 {
-  eden_audio_mixer_t* mixer = &eden->mixer;
+  hell_speaker_t* speaker = &eden->speaker;
   instance->is_playing = false;
-  mixer->free_list[mixer->free_list_count++] = instance->index;
+  speaker->sound_free_list[speaker->sound_free_list_count++] = instance->index;
 }
 
 //
@@ -3551,37 +3547,36 @@ eden_audio_mixer_stop(
 // @todo: we should update differently depending on channel.
 //
 static void
-eden_audio_mixer_update(eden_t* eden)
+hell_speaker_update(eden_t* eden)
 {
-  eden_audio_mixer_t* mixer = &eden->mixer;
-  eden_audio_t* audio = &eden->audio;
+  hell_speaker_t* speaker = &eden->speaker;
 #if 1
-  u32_t bytes_per_sample = (audio->device_bits_per_sample/8);
-   memory_zero(audio->samples, bytes_per_sample * audio->device_channels * audio->sample_count);
+  u32_t bytes_per_sample = (speaker->device_bits_per_sample/8);
+   memory_zero(speaker->samples, bytes_per_sample * speaker->device_channels * speaker->sample_count);
 
-  if (mixer->bitrate_type == EDEN_AUDIO_MIXER_BITRATE_TYPE_S16) {
-    for_cnt (sample_index, audio->sample_count){
-      s16_t* dest = (s16_t*)audio->samples + (sample_index * audio->device_channels);
-      for_cnt(instance_index, mixer->max_instances) {
-        eden_audio_mixer_instance_t* instance = mixer->instances + instance_index;
-        if (!instance->is_playing) continue;
+  if (speaker->bitrate_type == EDEN_SPEAKER_BITRATE_TYPE_S16) 
+  {
+    for_cnt (sample_index, speaker->sample_count){
+      s16_t* dest = (s16_t*)speaker->samples + (sample_index * speaker->device_channels);
+      for_cnt(sound_index, speaker->sound_cap) {
+        eden_speaker_sound_t* sound = speaker->sounds + sound_index;
+        if (!sound->is_playing) continue;
 
-        auto* sound = eden_assets_get_sound(&eden->assets, instance->sound_id);
-        //s16_t* src = (s16_t*)instance->data;
-        s16_t* src = (s16_t*)sound->data;
+        auto* asset_sound = eden_assets_get_sound(&eden->assets, sound->sound_id);
+        //s16_t* src = (s16_t*)sound->data;
+        s16_t* src = (s16_t*)asset_sound->data;
 
-        for_cnt(channel_index, audio->device_channels) {
-          dest[channel_index] += s16_t(dref(src + instance->current_offset++) * instance->volume * mixer->volume);
+        for_cnt(channel_index, speaker->device_channels) {
+          dest[channel_index] += s16_t(dref(src + sound->current_offset++) * sound->volume * speaker->volume);
         }
 
-//        if (instance->current_offset >= instance->data_size/bytes_per_sample) 
-        if (instance->current_offset >= sound->data_size/bytes_per_sample) 
+        if (sound->current_offset >= asset_sound->data_size/bytes_per_sample) 
         {
-          if (instance->is_loop) {
-            instance->current_offset = 0;
+          if (sound->is_loop) {
+            sound->current_offset = 0;
           }
           else {
-            eden_audio_mixer_stop(eden, instance);
+            eden_speaker_stop(eden, sound);
           }
         }
       }
@@ -3593,14 +3588,14 @@ eden_audio_mixer_update(eden_t* eden)
 #else // for testing
 
   static f32_t sine = 0.f;
-  s16_t* sample_out = (s16_t*)audio->samples;
+  s16_t* sample_out = (s16_t*)speaker->samples;
   s16_t volume = 3000;
-  for(u32_t sample_index = 0; sample_index < audio->sample_count; ++sample_index) {
-      for (u32_t channel_index = 0; channel_index < audio->device_channels; ++channel_index) {
+  for(u32_t sample_index = 0; sample_index < speaker->sample_count; ++sample_index) {
+      for (u32_t channel_index = 0; channel_index < speaker->device_channels; ++channel_index) {
         f32_t sine_value = f32_sin(sine);
         sample_out[channel_index] = s16_t(sine_value * volume);
       }
-      sample_out += audio->device_channels;
+      sample_out += speaker->device_channels;
       sine += 2.f;
   }
 #endif

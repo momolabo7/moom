@@ -366,7 +366,7 @@ struct lit_save_data_t {
 };
 
 struct lit_t {
-  eden_audio_mixer_instance_t* bgm;
+  eden_speaker_sound_t* bgm; 
   eden_asset_sound_id_t bgm_id;
 
   lit_save_data_t save_data;
@@ -590,9 +590,9 @@ lit_play_correct_bgm() {
   {
     if (g_lit->bgm) 
     {
-      eden_audio_mixer_stop(g_eden, g_lit->bgm);
+      eden_speaker_stop(g_eden, g_lit->bgm);
     }
-    g_lit->bgm = eden_audio_mixer_play(g_eden, bgm_id, true, 0.5f);
+    g_lit->bgm = eden_speaker_play(g_eden, bgm_id, true, 0.5f);
     g_lit->bgm_id = bgm_id;
   }
 }
@@ -1341,7 +1341,7 @@ static void
 lit_game_player_release_light(lit_game_t* g) {
   lit_game_player_t* player = &g->player;
   if (player->held_light) {
-    eden_audio_mixer_play(g_eden, ASSET_SOUND_PUTDOWN, false, 0.5f);
+    eden_speaker_play(g_eden, ASSET_SOUND_PUTDOWN, false, 0.5f);
   }
 
   player->held_light = nullptr;
@@ -1380,7 +1380,7 @@ lit_game_player_hold_nearest_light_if_empty_handed(
       player->light_retrival_time = 0.f;
       player->light_hold_mode = light_hold_mode;
       eden_hide_cursor(g_eden);
-      eden_audio_mixer_play(g_eden, ASSET_SOUND_PICKUP, false, 0.5f);
+      eden_speaker_play(g_eden, ASSET_SOUND_PICKUP, false, 0.5f);
     }
   }
 }
@@ -3276,7 +3276,7 @@ lit_game_update()
     if (g->stage_flash_timer >= LIT_EXIT_FLASH_DURATION) {
       g->stage_flash_timer = LIT_EXIT_FLASH_DURATION;
       g->state = LIT_GAME_STATE_TYPE_SOLVED_OUT;
-      eden_audio_mixer_play(g_eden, ASSET_SOUND_DONE, false, 0.5f);
+      eden_speaker_play(g_eden, ASSET_SOUND_DONE, false, 0.5f);
     }
   }
 
@@ -3829,12 +3829,12 @@ eden_get_config_sig(eden_get_config)
   ret.max_sprites = 4096;
   ret.max_triangles = 4096;
 
-  ret.audio_enabled = true;
-  ret.audio_samples_per_second = 48000;
-  ret.audio_bits_per_sample = 16;
-  ret.audio_channels = 2;
-  ret.audio_mixer_max_instances = 8;
-  ret.audio_mixer_bitrate_type = EDEN_AUDIO_MIXER_BITRATE_TYPE_S16;
+  ret.speaker_enabled = true;
+  ret.speaker_samples_per_second = 48000;
+  ret.speaker_bits_per_sample = 16;
+  ret.speaker_channels = 2;
+  ret.speaker_max_sounds = 8;
+  ret.speaker_bitrate_type = EDEN_SPEAKER_BITRATE_TYPE_S16;
 
   ret.window_title = "LIT v1.10";
   ret.window_initial_width = 800;

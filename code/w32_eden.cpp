@@ -20,7 +20,7 @@
 
 // @note: For now, we enable these flags
 // These macros are in preparation in case we have
-// multiple ways to do audio or graphics
+// multiple ways to do speaker or graphics
 
 #ifndef EDEN_USE_WASAPI
 # define EDEN_USE_WASAPI 1
@@ -151,17 +151,17 @@ eden_debug_log_sig(w32_log_proc)
 //
 // Mark:(Audio)
 //
-#define w32_audio_load_sig(name) b32_t name(eden_audio_t* eden_audio, u32_t samples_per_second, u16_t bits_per_sample, u16_t channels, u32_t latency_frames, u32_t frame_rate, arena_t* allocator)
-static w32_audio_load_sig(w32_audio_load);
+#define w32_speaker_load_sig(name) b32_t name(hell_speaker_t* hell_speaker, u32_t samples_per_second, u16_t bits_per_sample, u16_t channels, u32_t latency_frames, u32_t frame_rate, arena_t* allocator)
+static w32_speaker_load_sig(w32_speaker_load);
 
-#define w32_audio_unload_sig(name) void name(eden_audio_t* eden_audio)
-static w32_audio_unload_sig(w32_audio_unload);
+#define w32_speaker_unload_sig(name) void name(hell_speaker_t* hell_speaker)
+static w32_speaker_unload_sig(w32_speaker_unload);
 
-#define w32_audio_begin_frame_sig(name) b32_t name(eden_audio_t* eden_audio)
-static w32_audio_begin_frame_sig(w32_audio_begin_frame);
+#define w32_speaker_begin_frame_sig(name) b32_t name(hell_speaker_t* hell_speaker)
+static w32_speaker_begin_frame_sig(w32_speaker_begin_frame);
 
-#define w32_audio_end_frame_sig(name) b32_t name(eden_audio_t* eden_audio)
-static w32_audio_end_frame_sig(w32_audio_end_frame);
+#define w32_speaker_end_frame_sig(name) b32_t name(hell_speaker_t* hell_speaker)
+static w32_speaker_end_frame_sig(w32_speaker_end_frame);
 
 
 //
@@ -173,10 +173,10 @@ struct w32_wasapi_t {
   //w32_wasapi_notif_client_t notifs;
   IMMDevice* mm_device;
   IMMDeviceEnumerator * mm_device_enum;
-  IAudioClient* audio_client;
+  IAudioClient* speaker_client;
   IAudioRenderClient* render_client;
   
-  // Intermediate ring buffer for eden to write audio to.
+  // Intermediate ring buffer for eden to write speaker to.
   u32_t buffer_size;
   void* buffer;
   
@@ -517,12 +517,12 @@ w32_gfx_end_frame_sig(w32_gfx_end_frame) {
 //
 
 static b32_t
-_w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {
+_w32_wasapi_init_default_speaker_output_device(w32_wasapi_t* wasapi) {
   HRESULT hr;
   //
-  // Use the device enumerator to find a default audio device.
+  // Use the device enumerator to find a default speaker device.
   //
-  // 'eRender' is a flag to tell it to find an audio rendering device (which are audio
+  // 'eRender' is a flag to tell it to find an speaker rendering device (which are speaker
   // output devices like speakers, etc). For capture devices (mics), use 'eCapture'.
   //
   // Not really sure and don't really care what eConsole is for now.
@@ -530,29 +530,29 @@ _w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {
   hr = wasapi->mm_device_enum->GetDefaultAudioEndpoint(eRender, eConsole, &wasapi->mm_device);
   if (!SUCCEEDED(hr)) return false;
 
-  // Create the audio client
-  hr = wasapi->mm_device->Activate(__uuidof(IAudioClient), CLSCTX_INPROC_SERVER, NULL, (LPVOID*)(&wasapi->audio_client));
+  // Create the speaker client
+  hr = wasapi->mm_device->Activate(__uuidof(IAudioClient), CLSCTX_INPROC_SERVER, NULL, (LPVOID*)(&wasapi->speaker_client));
   if (!SUCCEEDED(hr)) return false;
 
                                                
   //
-  // Initializes the audio client.
+  // Initializes the speaker client.
   // 
   // Explanation of flags:
   //
   //   AUDCLNT_STREAMFLAGS_EVENTCALLBACK
-  //     Enable events with audio device. Will use this to register a callback 
-  //     whenever the audio's buffer need to be refilled.
+  //     Enable events with speaker device. Will use this to register a callback 
+  //     whenever the speaker's buffer need to be refilled.
   //
   //   AUDCLNT_STREAMFLAG_NOPERSIST
   //     Ensures that any thing we do to the device (like volume control) does not persist
   //     upon application restart
   //     
   //   AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM
-  //     An audio client typically uses a fixed format (e.g. 32-bit or 16-bit, 48000hz or 44100 hz)
+  //     An speaker client typically uses a fixed format (e.g. 32-bit or 16-bit, 48000hz or 44100 hz)
   //     This is obtainable with IAudioClient::GetMixFormat().
   //     This flag means that a mixer will be included that will help convert a given wave format
-  //     to the one that the audio client uses. We will use this flag because we will
+  //     to the one that the speaker client uses. We will use this flag because we will
   //     let the eden layer decide what format to use.
   //
   //  
@@ -576,15 +576,15 @@ _w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {
 
   //
   // The buffer duration is a time value expressed in 100-nanosecond units
-  // Basically, this is telling the audio engine our refresh rate, which in turns
-  // allows the audio engine to know what is the minimum buffer size to provide
-  // when our engine wants to write to the audio buffer.
+  // Basically, this is telling the speaker engine our refresh rate, which in turns
+  // allows the speaker engine to know what is the minimum buffer size to provide
+  // when our engine wants to write to the speaker buffer.
   //
   // Note that 1 millisecond = 1,000,000 nanoseconds = 10000 100-nanoseconds
   //
   REFERENCE_TIME buffer_duration = wasapi->frame_rate * 10000; 
   
-  hr = wasapi->audio_client->Initialize(
+  hr = wasapi->speaker_client->Initialize(
       AUDCLNT_SHAREMODE_SHARED, 
       flags, 
       buffer_duration, 
@@ -596,9 +596,9 @@ _w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {
 
 
   // Retrieves the render client. The render client is specifically the
-  // part of the audio client that plays sound. One render client represents
-  // one audio device (which can be an engine like NVdia Broadcast or a hardware).
-  hr = wasapi->audio_client->GetService(IID_PPV_ARGS(&wasapi->render_client));
+  // part of the speaker client that plays sound. One render client represents
+  // one speaker device (which can be an engine like NVdia Broadcast or a hardware).
+  hr = wasapi->speaker_client->GetService(IID_PPV_ARGS(&wasapi->render_client));
   if (!SUCCEEDED(hr)) return false;
 
 
@@ -608,21 +608,21 @@ _w32_wasapi_init_default_audio_output_device(w32_wasapi_t* wasapi) {
   // to initialize our sound buffer size that our eden layer will write to?
 
 
-  // Get the number of audio frames that the buffer can hold.
-  // Note that 1 'audio frame' == 1 sample per second
+  // Get the number of speaker frames that the buffer can hold.
+  // Note that 1 'speaker frame' == 1 sample per second
   UINT32 buffer_frame_count = 0;
-  hr = wasapi->audio_client->GetBufferSize(&buffer_frame_count);
+  hr = wasapi->speaker_client->GetBufferSize(&buffer_frame_count);
   if (!SUCCEEDED(hr)) return false;
 
   // Get the number of frames of padding
   UINT32 padding_frame_count = 0;
-  hr = wasapi->audio_client->GetCurrentPadding(&padding_frame_count);
+  hr = wasapi->speaker_client->GetCurrentPadding(&padding_frame_count);
   if (!SUCCEEDED(hr)) return false;
 
   // Initialize the secondary buffer.
   // UINT32 writable_frames = buffer_frame_count - padding_frame_count;
 
-  hr = wasapi->audio_client->Start();
+  hr = wasapi->speaker_client->Start();
   if (!SUCCEEDED(hr)) return false;
 
   return true;
@@ -674,9 +674,9 @@ static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t
 
 // @todo: we should remove all the asserts tbh
 static 
-w32_audio_begin_frame_sig(w32_audio_begin_frame) 
+w32_speaker_begin_frame_sig(w32_speaker_begin_frame) 
 {
-  auto* wasapi = (w32_wasapi_t*)(eden_audio->platform_data);
+  auto* wasapi = (w32_wasapi_t*)(hell_speaker->platform_data);
 
   HRESULT hr; 
   
@@ -700,36 +700,36 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
   }
 
   if (default_device_changed) {
-    wasapi->audio_client->Release();
+    wasapi->speaker_client->Release();
     wasapi->render_client->Release();
     wasapi->mm_device->Release();
-    if (!_w32_wasapi_init_default_audio_output_device(wasapi)) {
+    if (!_w32_wasapi_init_default_speaker_output_device(wasapi)) {
       return false;
     }
   }
 
 
-  // Get the number of audio frames that the buffer can hold.
+  // Get the number of speaker frames that the buffer can hold.
   UINT32 buffer_frame_count = 0;
-  hr = wasapi->audio_client->GetBufferSize(&buffer_frame_count);
+  hr = wasapi->speaker_client->GetBufferSize(&buffer_frame_count);
   if (FAILED(hr)) return false;
 
   // Get the number of frames of padding
   UINT32 padding_frame_count = 0;
-  hr = wasapi->audio_client->GetCurrentPadding(&padding_frame_count);
+  hr = wasapi->speaker_client->GetCurrentPadding(&padding_frame_count);
   if (FAILED(hr)) return false;
 
   UINT32 samples_to_write = buffer_frame_count - padding_frame_count; 
 
   // Setup for the eden layer
-  eden_audio->sample_count = samples_to_write; 
-  eden_audio->samples = nullptr;
-  eden_audio->device_bits_per_sample = wasapi->bits_per_sample;
-  eden_audio->device_channels = wasapi->channels;
-  eden_audio->device_samples_per_second = wasapi->samples_per_second;
+  hell_speaker->sample_count = samples_to_write; 
+  hell_speaker->samples = nullptr;
+  hell_speaker->device_bits_per_sample = wasapi->bits_per_sample;
+  hell_speaker->device_channels = wasapi->channels;
+  hell_speaker->device_samples_per_second = wasapi->samples_per_second;
 
   // Get the buffer 
-  if (eden_audio->sample_count > 0) 
+  if (hell_speaker->sample_count > 0) 
   {
     // Ask for the address of the buffer with the size of sample_count.
     // This could actually fail for a multitude of reasons so it's 
@@ -739,15 +739,15 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
     // We should expect GetBuffer to fail.
     // In which we, we should do nothing, but the NEXT time it succees
     // it should continue playing the sound without breaking continuity.
-    hr = wasapi->render_client->GetBuffer(eden_audio->sample_count, &data);
+    hr = wasapi->render_client->GetBuffer(hell_speaker->sample_count, &data);
     if (SUCCEEDED(hr)) {
-      eden_audio->samples = data;
+      hell_speaker->samples = data;
     }
 
   }
 
 #if 0
-  w32_wasapi_t* wasapi = (w32_wasapi_t*)(eden_audio->platform_data);
+  w32_wasapi_t* wasapi = (w32_wasapi_t*)(hell_speaker->platform_data);
 	if (wasapi->is_device_changed) {
 		//w32_log("[w32_wasapi] Resetting wasapi device\n");
 		// Attempt to change device
@@ -762,7 +762,7 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
 	if (wasapi->is_device_ready) {
 		// Padding is how much valid data is queued up in the sound buffer
 		// if there's enough padding then we could skip writing more data
-		HRESULT hr = IAudioClient2_GetCurrentPadding(wasapi->audio_client, &sound_padding_size);
+		HRESULT hr = IAudioClient2_GetCurrentPadding(wasapi->speaker_client, &sound_padding_size);
 		
 		if (SUCCEEDED(hr)) {
 			samples_to_write = (UINT32)wasapi->buffer_size - sound_padding_size;
@@ -779,9 +779,9 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
 		samples_to_write = wasapi->buffer_size;
 	}
 
-  eden_audio->sample_buffer = wasapi->buffer;
-  eden_audio->sample_count = samples_to_write; 
-  eden_audio->channels = wasapi->channels;
+  hell_speaker->sample_buffer = wasapi->buffer;
+  hell_speaker->sample_count = samples_to_write; 
+  hell_speaker->channels = wasapi->channels;
 #endif
 
   return true;
@@ -789,12 +789,12 @@ w32_audio_begin_frame_sig(w32_audio_begin_frame)
 }
 
 static 
-w32_audio_end_frame_sig(w32_audio_end_frame) 
+w32_speaker_end_frame_sig(w32_speaker_end_frame) 
 {
-  auto* wasapi = (w32_wasapi_t*)(eden_audio->platform_data);
+  auto* wasapi = (w32_wasapi_t*)(hell_speaker->platform_data);
 
-  if (eden_audio->sample_count > 0) {
-    wasapi->render_client->ReleaseBuffer(eden_audio->sample_count, 0);
+  if (hell_speaker->sample_count > 0) {
+    wasapi->render_client->ReleaseBuffer(hell_speaker->sample_count, 0);
   }
   
 
@@ -804,16 +804,16 @@ w32_audio_end_frame_sig(w32_audio_end_frame)
   // @note: Kinda assumes 16-bit Sound
   BYTE* sound_buffer_data;
   HRESULT hr = IAudioRenderClient_GetBuffer(wasapi->render_client, 
-                                            (UINT32)eden_audio->sample_count, 
+                                            (UINT32)hell_speaker->sample_count, 
                                             &sound_buffer_data);
   if (FAILED(hr)) return;
 
-  s16_t* src_sample = eden_audio->sample_buffer;
+  s16_t* src_sample = hell_speaker->sample_buffer;
   s16_t* dest_sample = (s16_t*)sound_buffer_data;
   // buffer structure for stereo:
   // s16_t   s16_t    s16_t  s16_t   s16_t  s16_t
   // [LEFT RIGHT] LEFT RIGHT LEFT RIGHT....
-  for(u32_t sample_index = 0; sample_index < eden_audio->sample_count; ++sample_index)
+  for(u32_t sample_index = 0; sample_index < hell_speaker->sample_count; ++sample_index)
   {
     for (u32_t channel_index = 0; channel_index < wasapi->channels; ++channel_index) {
       *dest_sample++ = *src_sample++;
@@ -822,7 +822,7 @@ w32_audio_end_frame_sig(w32_audio_end_frame)
 
   IAudioRenderClient_ReleaseBuffer(
       wasapi->render_client, 
-      (UINT32)eden_audio->sample_count, 
+      (UINT32)hell_speaker->sample_count, 
       0);
 #endif
 
@@ -831,7 +831,7 @@ w32_audio_end_frame_sig(w32_audio_end_frame)
 
 
 static 
-w32_audio_load_sig(w32_audio_load)
+w32_speaker_load_sig(w32_speaker_load)
 {
   assert(bits_per_sample == 32 || bits_per_sample == 8 || bits_per_sample == 16);
   assert(channels == 1 || channels == 2);
@@ -848,7 +848,7 @@ w32_audio_load_sig(w32_audio_load)
   auto* wasapi = arena_push(w32_wasapi_t, allocator);
   if (!wasapi) return false;
 
-  eden_audio->platform_data = wasapi;
+  hell_speaker->platform_data = wasapi;
 
   wasapi->frame_rate = frame_rate;
   wasapi->channels = channels;
@@ -856,7 +856,7 @@ w32_audio_load_sig(w32_audio_load)
   wasapi->samples_per_second = samples_per_second;
 #if 0
   //
-  // Setup the intermediate buffer for eden to write audio to.
+  // Setup the intermediate buffer for eden to write speaker to.
   //
   // I don't really know the best buffer size to use AND I don't want to keep changing buffer
   // size when the device changes, so I'm just going to allocate 1 second worth of samples
@@ -876,7 +876,7 @@ w32_audio_load_sig(w32_audio_load)
   // Create the device enumerator.
   //
   // @note: The device enumerator is just a thing to enumerates 
-  // through a list of devices. Note that this includes ALL devices (not just audio!)
+  // through a list of devices. Note that this includes ALL devices (not just speaker!)
   //
   hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), 
                         0,
@@ -886,22 +886,17 @@ w32_audio_load_sig(w32_audio_load)
   
 
   // @todo: We need to figure out how can possibly cause this
-  // If there are NO audio devices at ALL, does this even fail?
-  if (!_w32_wasapi_init_default_audio_output_device(wasapi)) {
+  // If there are NO speaker devices at ALL, does this even fail?
+  if (!_w32_wasapi_init_default_speaker_output_device(wasapi)) {
     return false;
   }
-
-
-  
-  
-
 
   //
   // @todo: Enable Refill event here?
   //
 #if 0 
   HANDLE hRefillEvent = CreateEventEx(NULL, NULL, 0, EVENT_MODIFY_STATE | SYNCHRONIZE);
-  hr = audio_client->SetEventHandle(hRefillEvent);
+  hr = speaker_client->SetEventHandle(hRefillEvent);
   assert(SUCCEEDED(hr));
 #endif
 
@@ -916,16 +911,15 @@ w32_audio_load_sig(w32_audio_load)
 
 
 static 
-w32_audio_unload_sig(w32_audio_unload) {
-  auto* wasapi = (w32_wasapi_t*)(eden_audio->platform_data);
-  wasapi->audio_client->Release();
+w32_speaker_unload_sig(w32_speaker_unload) {
+  auto* wasapi = (w32_wasapi_t*)(hell_speaker->platform_data);
+  wasapi->speaker_client->Release();
   wasapi->render_client->Release();
   wasapi->mm_device->Release();
   wasapi->mm_device_enum->Release();
 
 
 #if 0
-
   _w32_wasapi_release_current_device(wasapi);
 	IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
 	IMMDeviceEnumerator_Release(wasapi->mm_device_enum);
@@ -1680,15 +1674,15 @@ WinMain(HINSTANCE instance,
     return 1;
  
   // Init Audio
-  if (config.audio_enabled) {
+  if (config.speaker_enabled) {
 
-    // @todo: is there a way to merge initializing audio 
-    // and audio mixer? Or should they be completely seperate?
-    if (!w32_audio_load(
-          &eden->audio, 
-          config.audio_samples_per_second, 
-          config.audio_bits_per_sample,
-          config.audio_channels, 
+    // @todo: is there a way to merge initializing speaker 
+    // and speaker mixer? Or should they be completely seperate?
+    if (!w32_speaker_load(
+          &eden->speaker, 
+          config.speaker_samples_per_second, 
+          config.speaker_bits_per_sample,
+          config.speaker_channels, 
           1, 
           config.target_frame_rate, 
           platform_arena)) 
@@ -1696,16 +1690,16 @@ WinMain(HINSTANCE instance,
       return 1;
     }
 
-    if (!eden_audio_mixer_init(
-          &eden->mixer, 
-          config.audio_mixer_bitrate_type,
-          config.audio_mixer_max_instances, 
+    if (!hell_speaker_init(
+          &eden->speaker, 
+          config.speaker_bitrate_type,
+          config.speaker_max_sounds, 
           platform_arena))
     {
       return 1;
     }
   }
-  defer{ if (config.audio_enabled) w32_audio_unload(&eden->audio); };
+  defer{ if (config.speaker_enabled) w32_speaker_unload(&eden->speaker); };
 
 
 
@@ -1761,7 +1755,7 @@ WinMain(HINSTANCE instance,
 #endif // HOT_RELOAD
 
     // Begin frame
-    if (config.audio_enabled) w32_audio_begin_frame(&eden->audio);
+    if (config.speaker_enabled) w32_speaker_begin_frame(&eden->speaker);
     v2u_t client_wh = w32_get_client_dims(window);
 
 
@@ -1780,8 +1774,8 @@ WinMain(HINSTANCE instance,
 
 
     // End frame
-    if (config.audio_enabled) 
-      eden_audio_mixer_update(eden);
+    if (config.speaker_enabled) 
+      hell_speaker_update(eden);
     
 
     if (config.profiler_enabled)
@@ -1794,7 +1788,7 @@ WinMain(HINSTANCE instance,
     
     
 
-    if (config.audio_enabled) w32_audio_end_frame(&eden->audio);
+    if (config.speaker_enabled) w32_speaker_end_frame(&eden->speaker);
 
     // Frame-rate control
     //
