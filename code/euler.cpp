@@ -1857,6 +1857,20 @@ euler_q24()
   euler_q24_print_permutations_lexographically(input);
 }
 
+static void 
+euler_q25()
+{
+  make(arena_t, arena);
+  arena_alloc(arena, gigabytes(1)); 
+  defer { arena_free(arena); }; 
+
+  make(bigint_t, b0);
+  make(bigint_t, b1);
+  bigint_init(b1, 1000, arena);
+  bigint_init(b1, 1000, arena);
+
+}
+
 int
 main() {
   //euler_q1();

@@ -7,7 +7,6 @@
 // This will just consume all characters until the next \n or \r or 0. 
 // The returned str_t will not include the \n or \r or 0. 
 //
-//
 static void aoc22_d1p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 

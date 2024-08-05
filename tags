@@ -838,6 +838,7 @@ euler_q23_get_sum_of_divisors	code/euler.cpp	/^euler_q23_get_sum_of_divisors(u32
 euler_q23_is_abundant	code/euler.cpp	/^euler_q23_is_abundant(u32_t num) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 euler_q24	code/euler.cpp	/^euler_q24()$/;"	f	language:C++	typeref:typename:void	file:
 euler_q24_print_permutations_lexographically	code/euler.cpp	/^euler_q24_print_permutations_lexographically(str_t str) $/;"	f	language:C++	typeref:typename:void	file:
+euler_q25	code/euler.cpp	/^euler_q25()$/;"	f	language:C++	typeref:typename:void	file:
 euler_q3	code/euler.cpp	/^euler_q3() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q4	code/euler.cpp	/^euler_q4() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q4_is_palindrome	code/euler.cpp	/^euler_q4_is_palindrome(u32_t x) {$/;"	f	language:C++	typeref:typename:b32_t	file:

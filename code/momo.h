@@ -345,6 +345,20 @@ struct rgba_t
   f32_t a;
 };
 
+
+//
+// @mark: bigint
+//
+struct bigint_t 
+{
+  u8_t* arr;
+  u32_t cap;
+  u32_t count; 
+};
+
+//
+// @mark: rng
+//
 struct rng_t 
 {
   u32_t seed;
