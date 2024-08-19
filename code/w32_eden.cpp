@@ -151,7 +151,7 @@ eden_debug_log_sig(w32_log_proc)
 //
 // Mark:(Audio)
 //
-#define w32_speaker_load_sig(name) b32_t name(hell_speaker_t* hell_speaker, u32_t samples_per_second, u16_t bits_per_sample, u16_t channels, u32_t latency_frames, u32_t frame_rate, arena_t* allocator)
+#define w32_speaker_load_sig(name) b32_t name(hell_speaker_t* hell_speaker, u32_t samples_per_second, eden_speaker_bitrate_type_t bitrate_type, u16_t channels, u32_t latency_frames, u32_t frame_rate, u32_t max_sounds, arena_t* allocator)
 static w32_speaker_load_sig(w32_speaker_load);
 
 #define w32_speaker_unload_sig(name) void name(hell_speaker_t* hell_speaker)
@@ -833,8 +833,14 @@ w32_speaker_end_frame_sig(w32_speaker_end_frame)
 static 
 w32_speaker_load_sig(w32_speaker_load)
 {
-  assert(bits_per_sample == 32 || bits_per_sample == 8 || bits_per_sample == 16);
   assert(channels == 1 || channels == 2);
+  u32_t bits_per_sample = 0;
+  switch(bitrate_type)
+  {
+    case EDEN_SPEAKER_BITRATE_TYPE_S16:
+      bits_per_sample = 16;
+
+  };
 
 
 #if 0
@@ -903,6 +909,12 @@ w32_speaker_load_sig(w32_speaker_load)
   // Does the success of this matter?
   // Do we even need to return success for this method??
   //_w32_wasapi_set_default_device_as_current_device(wasapi);
+
+
+  // Initialize mixer
+  if(!hell_speaker_init(hell_speaker, bitrate_type, max_sounds, allocator))
+    return false;
+
 
 	return true;
 	
@@ -1676,28 +1688,19 @@ WinMain(HINSTANCE instance,
   // Init Audio
   if (config.speaker_enabled) {
 
-    // @todo: is there a way to merge initializing speaker 
-    // and speaker mixer? Or should they be completely seperate?
     if (!w32_speaker_load(
           &eden->speaker, 
           config.speaker_samples_per_second, 
-          config.speaker_bits_per_sample,
+          config.speaker_bitrate_type,
           config.speaker_channels, 
           1, 
           config.target_frame_rate, 
+          config.speaker_max_sounds, 
           platform_arena)) 
     {
       return 1;
     }
 
-    if (!hell_speaker_init(
-          &eden->speaker, 
-          config.speaker_bitrate_type,
-          config.speaker_max_sounds, 
-          platform_arena))
-    {
-      return 1;
-    }
   }
   defer{ if (config.speaker_enabled) w32_speaker_unload(&eden->speaker); };
 
