@@ -220,6 +220,10 @@ typedef size_t    usz_t; // Can contain up to the highest indexable value
 #define ns_end(name) }
 
 #define for_cnt(id, cnt) for(decltype(cnt) id = 0; id < (cnt); ++id)
+#define for_cnt_reverse(id, cnt) \
+  for(umi_t glue(itr,__LINE__) = 0, id = (cnt)-1; \
+      glue(itr,__LINE__) < (cnt); \
+      ++(glue(itr,__LINE__)), id = (cnt)-1-glue(itr,__LINE__))
 #define for_range(id, beg, end) for(decltype(beg) id = (beg); id <= (end); ++id)
 #define for_arr_reverse(id, arr) \
   for(umi_t glue(itr,__LINE__) = 0, id = array_count(arr)-1; \
@@ -351,7 +355,7 @@ struct rgba_t
 //
 struct bigint_t 
 {
-  u8_t* arr;
+  u8_t* e;
   u32_t cap;
   u32_t count; 
 };
@@ -9007,6 +9011,187 @@ rp_pack(rp_rect_t* rects,
 
   arena_revert(restore_point);
   return true;
+}
+
+
+static void 
+bigint_zero(bigint_t* b) {
+  for_cnt(i, b->cap) {
+    b->e[i] = 0;
+  }
+  b->count = 1;
+}
+
+static void 
+bigint_set_max(bigint_t* b) {
+  for_cnt(i, b->cap) {
+    b->e[i] = 9;
+  }
+  b->count = b->cap;
+}
+
+static b32_t 
+bigint_init(bigint_t* b, u32_t cap, arena_t* arena) 
+{
+  assert(cap > 0);
+  b->e = arena_push_arr(u8_t, arena, cap);
+  if (!b->e) return false;
+  b->cap = cap;
+  bigint_zero(b);
+  return true;
+}
+
+static void
+bigint_copy(bigint_t* to, bigint_t* from)
+{
+  if(from->count > to->cap) {
+    bigint_set_max(to);
+  }
+
+  to->count = from->count;
+  for_cnt(i, from->count)
+  {
+    to->e[i] = from->e[i];
+  }
+
+}
+
+static void
+bigint_set(bigint_t* b, u32_t value) {
+  u32_t index = 0;
+  while (value > 0) {
+    if (index >= b->cap) {
+      bigint_set_max(b);
+      return;
+    }
+
+    b->e[index] = (u8_t)(value % 10); 
+    value /= 10;
+    ++index;
+  }
+
+  if (index > b->count) {
+    b->count = index;
+  }
+}
+
+static void
+bigint_add(bigint_t* b, bigint_t* value)
+{
+  u32_t index = 0;
+  u8_t carry = 0;
+  while(index < value->count)
+  {
+    if (index >= b->cap) {
+      bigint_set_max(b);
+      return;
+    }
+    u8_t result = value->e[index] + carry + b->e[index];
+    if (result >= 10) {
+      carry = 1;
+      result -= 10;
+    }
+    else {
+      carry = 0;
+    }
+    b->e[index] = result; 
+    ++index;
+  }
+
+  while(carry > 0) {
+    if (index >= b->cap) {
+      bigint_set_max(b);
+      return;
+    }
+    u8_t result = b->e[index] + carry;
+    if (result >= 10) {
+      carry = 1;
+      result -= 10;
+    }
+    else {
+      carry = 0;
+    }
+    b->e[index] = result;
+    ++index;
+  }
+
+  if (index > b->count) {
+    b->count = index;
+  }
+}
+
+static void 
+bigint_add_u32(bigint_t* b, u32_t value) {
+  u32_t index = 0;
+  u8_t carry = 0;
+  while (value > 0) {
+    if (index >= b->cap) {
+      bigint_set_max(b);
+      return;
+    }
+    u8_t extracted_value = (u8_t)(value % 10);
+    u8_t result = extracted_value + carry + b->e[index];
+    if (result >= 10) {
+      carry = 1;
+      result -= 10;
+    }
+    else {
+      carry = 0;
+    }
+    b->e[index] = result; 
+    value /= 10;
+    ++index;
+
+  }
+
+  while(carry > 0) {
+    if (index >= b->cap) {
+      bigint_set_max(b);
+      return;
+    }
+    u8_t result = b->e[index] + carry;
+    if (result >= 10) {
+      carry = 1;
+      result -= 10;
+    }
+    else {
+      carry = 0;
+    }
+    b->e[index] = result;
+    ++index;
+  }
+
+  if (index > b->count) {
+    b->count = index;
+  }
+}
+
+
+// -1 if lhs < rhs
+// 0  if lhs == rhs
+// 1  if lhs > rhs
+static s32_t
+bigint_compare(bigint_t* lhs, bigint_t* rhs) 
+{
+  if (lhs->count < rhs->count) 
+    return -1;
+  else if (lhs->count > rhs->count) 
+    return 1;
+  else 
+  {
+    for (u32_t i = 0; i < lhs->count; ++i) {
+      u32_t index = lhs->count - 1 - i;
+      if (lhs->e[index] < rhs->e[index]) {
+        return -1;
+      }
+      else if (lhs->e[index] > rhs->e[index]) {
+        return 1;
+      }
+    }
+
+  }
+
+  return 0;
 }
 
 #if OS_WINDOWS

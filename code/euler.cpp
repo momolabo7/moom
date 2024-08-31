@@ -1866,8 +1866,33 @@ euler_q25()
 
   make(bigint_t, b0);
   make(bigint_t, b1);
-  bigint_init(b1, 1000, arena);
-  bigint_init(b1, 1000, arena);
+  make(bigint_t, b2);
+  bigint_init(b0, 10000, arena);
+  bigint_init(b1, 10000, arena);
+  bigint_init(b2, 10000, arena);
+
+  bigint_set(b0, 1);
+  bigint_set(b1, 1);
+  bigint_zero(b2);
+
+  // perform fib
+  u32_t index = 0;
+  while(b2->count < 1000)
+  {
+    bigint_copy(b0, b1);
+    bigint_copy(b1, b2);
+    bigint_zero(b2);
+    bigint_add(b2, b0);
+    bigint_add(b2, b1);
+
+    ++index;
+  }
+
+#if 0
+  for_cnt_reverse(i, b2->count) printf("%d", b2->e[i]);
+  printf("\n");
+#endif
+  printf("%d\n", index);
 
 }
 
@@ -1896,7 +1921,8 @@ main() {
   //euler_q21();
   //euler_q22();
   //euler_q23();
-  euler_q24();
+  //euler_q24();
+  euler_q25();
   
 
 }

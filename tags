@@ -190,13 +190,16 @@ before	code/eden.h	/^  b32_t before : 1;$/;"	m	language:C++	struct:eden_button_t
 begin	code/momo.h	/^  usz_t begin;$/;"	m	language:C++	struct:clex_token_t	typeref:typename:usz_t
 bgm	code/app_lit.cpp	/^  eden_speaker_sound_t* bgm; $/;"	m	language:C++	struct:lit_t	typeref:typename:eden_speaker_sound_t *	file:
 bgm_id	code/app_lit.cpp	/^  eden_asset_sound_id_t bgm_id;$/;"	m	language:C++	struct:lit_t	typeref:typename:eden_asset_sound_id_t	file:
-bigint_add	code/test_bigint.cpp	/^bigint_add(bigint_t* b, u32_t value) {$/;"	f	language:C++	typeref:typename:void	file:
-bigint_compare	code/test_bigint.cpp	/^bigint_compare(bigint_t* lhs, bigint_t* rhs) $/;"	f	language:C++	typeref:typename:s32_t	file:
-bigint_init	code/test_bigint.cpp	/^bigint_init(bigint_t* b, u32_t cap, arena_t* arena) $/;"	f	language:C++	typeref:typename:b32_t	file:
-bigint_set	code/test_bigint.cpp	/^bigint_set(bigint_t* b, u32_t value) {$/;"	f	language:C++	typeref:typename:void	file:
-bigint_set_max	code/test_bigint.cpp	/^bigint_set_max(bigint_t* b) {$/;"	f	language:C++	typeref:typename:void	file:
+bigint_add	code/momo.h	/^bigint_add(bigint_t* b, bigint_t* value)$/;"	f	language:C++	typeref:typename:void
+bigint_add_u32	code/momo.h	/^bigint_add_u32(bigint_t* b, u32_t value) {$/;"	f	language:C++	typeref:typename:void
+bigint_compare	code/momo.h	/^bigint_compare(bigint_t* lhs, bigint_t* rhs) $/;"	f	language:C++	typeref:typename:s32_t
+bigint_copy	code/momo.h	/^bigint_copy(bigint_t* to, bigint_t* from)$/;"	f	language:C++	typeref:typename:void
+bigint_init	code/momo.h	/^bigint_init(bigint_t* b, u32_t cap, arena_t* arena) $/;"	f	language:C++	typeref:typename:b32_t
+bigint_set	code/momo.h	/^bigint_set(bigint_t* b, u32_t value) {$/;"	f	language:C++	typeref:typename:void
+bigint_set_max	code/momo.h	/^bigint_set_max(bigint_t* b) {$/;"	f	language:C++	typeref:typename:void
+bigint_t	code/momo.h	/^struct bigint_t $/;"	s	language:C++
 bigint_t	code/test_bigint.cpp	/^struct bigint_t $/;"	s	language:C++	file:
-bigint_zero	code/test_bigint.cpp	/^bigint_zero(bigint_t* b) {$/;"	f	language:C++	typeref:typename:void	file:
+bigint_zero	code/momo.h	/^bigint_zero(bigint_t* b) {$/;"	f	language:C++	typeref:typename:void
 bitmaps	code/eden.h	/^  eden_asset_bitmap_t* bitmaps;$/;"	m	language:C++	struct:eden_assets_t	typeref:typename:eden_asset_bitmap_t *
 bitmaps	code/pass.h	/^  asset_file_bitmap_t* bitmaps;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:asset_file_bitmap_t *
 bitmap_asset_id	code/eden.h	/^  eden_asset_bitmap_id_t bitmap_asset_id;$/;"	m	language:C++	struct:eden_asset_font_t	typeref:typename:eden_asset_bitmap_id_t
@@ -256,6 +259,7 @@ callback	code/app_lit_ship.cpp	/^  eden_task_callback_f* callback;$/;"	m	languag
 callback	code/w32_eden.cpp	/^  eden_task_callback_f* callback;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:eden_task_callback_f *	file:
 can_jump	code/app_tbp.cpp	/^  b32_t can_jump;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:b32_t	file:
 cap	code/momo.h	/^      usz_t cap;$/;"	m	language:C++	struct:arena_t::__anon1db7a63d0f0a::__anon1db7a63d1008	typeref:typename:usz_t
+cap	code/momo.h	/^  u32_t cap;$/;"	m	language:C++	struct:bigint_t	typeref:typename:u32_t
 cap	code/momo.h	/^  u32_t cap;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:u32_t
 cap	code/momo.h	/^  usz_t cap;$/;"	m	language:C++	struct:garena_t	typeref:typename:usz_t
 cap	code/momo.h	/^  usz_t cap;$/;"	m	language:C++	struct:strb_t	typeref:typename:usz_t
@@ -401,6 +405,7 @@ count	code/app_lit.cpp	/^  u32_t count;$/;"	m	language:C++	struct:lit_profiler_s
 count	code/eden.h	/^  u32_t count;$/;"	m	language:C++	struct:eden_input_characters_t	typeref:typename:u32_t
 count	code/eden.h	/^  u32_t count;$/;"	m	language:C++	struct:hell_profiler_stat_t	typeref:typename:u32_t
 count	code/gist_ring_buffer.cpp	/^  u32_t count;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
+count	code/momo.h	/^  u32_t count; $/;"	m	language:C++	struct:bigint_t	typeref:typename:u32_t
 count	code/momo.h	/^  u32_t count;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:u32_t
 count	code/test_bigint.cpp	/^  u32_t count; $/;"	m	language:C++	struct:bigint_t	typeref:typename:u32_t	file:
 crc	code/momo.h	/^  u32_t crc; $/;"	m	language:C++	struct:_png_chunk_footer_t	typeref:typename:u32_t
@@ -505,6 +510,7 @@ e	code/momo.h	/^  f32_t e[4][4];$/;"	m	language:C++	struct:m44f_t	typeref:typena
 e	code/momo.h	/^  s32_t e[2];$/;"	m	language:C++	union:v2s_t	typeref:typename:s32_t[2]
 e	code/momo.h	/^  str_t* e;$/;"	m	language:C++	struct:str_arr_t	typeref:typename:str_t *
 e	code/momo.h	/^  u32_t e[2];$/;"	m	language:C++	union:v2u_t	typeref:typename:u32_t[2]
+e	code/momo.h	/^  u8_t* e;$/;"	m	language:C++	struct:bigint_t	typeref:typename:u8_t *
 e	code/momo.h	/^  u8_t* e;$/;"	m	language:C++	struct:str_t	typeref:typename:u8_t *
 e	code/momo.h	/^  _ttf_edge_t** e;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:_ttf_edge_t **
 e1	code/app_lit.cpp	/^  lit_game_edge_t* e1;$/;"	m	language:C++	struct:lit_game_double_edge_t	typeref:typename:lit_game_edge_t *	file:
@@ -1174,6 +1180,7 @@ format	code/momo.h	/^  u32_t format; \/\/ big endian$/;"	m	language:C++	struct:w
 for_arr	code/momo.h	/^#define for_arr(/;"	d	language:C++
 for_arr_reverse	code/momo.h	/^#define for_arr_reverse(/;"	d	language:C++
 for_cnt	code/momo.h	/^#define for_cnt(/;"	d	language:C++
+for_cnt_reverse	code/momo.h	/^#define for_cnt_reverse(/;"	d	language:C++
 for_range	code/momo.h	/^#define for_range(/;"	d	language:C++
 Fraction	dump/operator_overloading_example.py	/^class Fraction:$/;"	c	language:Python
 frame_arena	code/app_lit.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
