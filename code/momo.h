@@ -8679,7 +8679,7 @@ arena_mark(arena_t* a)
 }
 
 static void
-arena_revert(arena_marker_t marker) {
+  arena_revert(arena_marker_t marker) {
   marker.arena->pos = marker.old_pos;
 }
 
@@ -9013,10 +9013,10 @@ rp_pack(rp_rect_t* rects,
   return true;
 }
 
-
 static void 
 bigint_zero(bigint_t* b) {
-  for_cnt(i, b->cap) {
+  for_cnt(i, b->cap) 
+  {
     b->e[i] = 0;
   }
   b->count = 1;
@@ -9024,7 +9024,8 @@ bigint_zero(bigint_t* b) {
 
 static void 
 bigint_set_max(bigint_t* b) {
-  for_cnt(i, b->cap) {
+  for_cnt(i, b->cap) 
+  {
     b->e[i] = 9;
   }
   b->count = b->cap;
@@ -9056,8 +9057,32 @@ bigint_copy(bigint_t* to, bigint_t* from)
 
 }
 
+static bigint_t*
+bigint_alloc(arena_t* arena, u32_t cap)
+{
+  arena_marker_t mark = arena_mark(arena);
+  bigint_t* ret = arena_push(bigint_t, arena);
+  if (!ret) 
+  {
+    return ret;
+  }
+  if (!bigint_init(ret, cap, arena)) 
+  {
+    arena_revert(mark);
+    return nullptr;
+  }
+
+  return ret;
+
+
+}
+
+
+
+
 static void
-bigint_set(bigint_t* b, u32_t value) {
+bigint_set_u32(bigint_t* b, u32_t value) 
+{
   u32_t index = 0;
   while (value > 0) {
     if (index >= b->cap) {
@@ -9076,92 +9101,110 @@ bigint_set(bigint_t* b, u32_t value) {
 }
 
 static void
-bigint_add(bigint_t* b, bigint_t* value)
+bigint_add(bigint_t* b, bigint_t* lhs, bigint_t* rhs)
 {
   u32_t index = 0;
   u8_t carry = 0;
-  while(index < value->count)
+  while(index < rhs->count)
   {
-    if (index >= b->cap) {
+    if (index >= b->cap) 
+    {
       bigint_set_max(b);
       return;
     }
-    u8_t result = value->e[index] + carry + b->e[index];
-    if (result >= 10) {
+    u8_t result = lhs->e[index] + rhs->e[index] + carry;
+    if (result >= 10) 
+    {
       carry = 1;
       result -= 10;
     }
-    else {
+    else 
+    {
       carry = 0;
     }
     b->e[index] = result; 
     ++index;
   }
 
-  while(carry > 0) {
-    if (index >= b->cap) {
+  while(carry > 0) 
+  {
+    if (index >= b->cap) 
+    {
       bigint_set_max(b);
       return;
     }
     u8_t result = b->e[index] + carry;
-    if (result >= 10) {
+    if (result >= 10) 
+    {
       carry = 1;
       result -= 10;
     }
-    else {
+    else 
+    {
       carry = 0;
     }
     b->e[index] = result;
     ++index;
   }
 
-  if (index > b->count) {
+  if (index > b->count) 
+  {
     b->count = index;
   }
 }
 
 static void 
-bigint_add_u32(bigint_t* b, u32_t value) {
+bigint_add_u32(bigint_t* b, bigint_t* lhs, u32_t rhs) 
+{
   u32_t index = 0;
   u8_t carry = 0;
-  while (value > 0) {
-    if (index >= b->cap) {
+  while (rhs > 0) 
+  {
+    if (index >= b->cap) 
+    {
       bigint_set_max(b);
       return;
     }
-    u8_t extracted_value = (u8_t)(value % 10);
-    u8_t result = extracted_value + carry + b->e[index];
-    if (result >= 10) {
+    u8_t extracted_value = (u8_t)(rhs % 10);
+    u8_t result = extracted_value + carry + lhs->e[index];
+    if (result >= 10) 
+    {
       carry = 1;
       result -= 10;
     }
-    else {
+    else 
+    {
       carry = 0;
     }
     b->e[index] = result; 
-    value /= 10;
+    rhs /= 10;
     ++index;
 
   }
 
-  while(carry > 0) {
-    if (index >= b->cap) {
+  while(carry > 0) 
+  {
+    if (index >= b->cap) 
+    {
       bigint_set_max(b);
       return;
     }
     u8_t result = b->e[index] + carry;
-    if (result >= 10) {
+    if (result >= 10) 
+    {
       carry = 1;
       result -= 10;
     }
-    else {
+    else 
+    {
       carry = 0;
     }
     b->e[index] = result;
     ++index;
   }
 
-  if (index > b->count) {
+  if (index > b->count) 
+  {
     b->count = index;
   }
 }

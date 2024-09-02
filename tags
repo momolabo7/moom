@@ -99,7 +99,7 @@ arena_push_zero	code/momo.h	/^#define arena_push_zero(/;"	d	language:C++
 arena_push_zero_align	code/momo.h	/^#define arena_push_zero_align(/;"	d	language:C++
 arena_remaining	code/momo.h	/^arena_remaining(arena_t* a) {$/;"	f	language:C++	typeref:typename:usz_t
 arena_remaining	code/momo.h	/^static usz_t    arena_remaining(arena_t* a);$/;"	p	language:C++	typeref:typename:usz_t
-arena_revert	code/momo.h	/^arena_revert(arena_marker_t marker) {$/;"	f	language:C++	typeref:typename:void
+arena_revert	code/momo.h	/^  arena_revert(arena_marker_t marker) {$/;"	f	language:C++	typeref:typename:void
 arena_revert	code/momo.h	/^static void arena_revert(arena_marker_t marker);$/;"	p	language:C++	typeref:typename:void
 arena_set_revert_point	code/momo.h	/^# define arena_set_revert_point(/;"	d	language:C++
 arena_t	code/momo.h	/^struct arena_t $/;"	s	language:C++
@@ -190,13 +190,14 @@ before	code/eden.h	/^  b32_t before : 1;$/;"	m	language:C++	struct:eden_button_t
 begin	code/momo.h	/^  usz_t begin;$/;"	m	language:C++	struct:clex_token_t	typeref:typename:usz_t
 bgm	code/app_lit.cpp	/^  eden_speaker_sound_t* bgm; $/;"	m	language:C++	struct:lit_t	typeref:typename:eden_speaker_sound_t *	file:
 bgm_id	code/app_lit.cpp	/^  eden_asset_sound_id_t bgm_id;$/;"	m	language:C++	struct:lit_t	typeref:typename:eden_asset_sound_id_t	file:
-bigint_add	code/momo.h	/^bigint_add(bigint_t* b, bigint_t* value)$/;"	f	language:C++	typeref:typename:void
-bigint_add_u32	code/momo.h	/^bigint_add_u32(bigint_t* b, u32_t value) {$/;"	f	language:C++	typeref:typename:void
+bigint_add	code/momo.h	/^bigint_add(bigint_t* b, bigint_t* lhs, bigint_t* rhs)$/;"	f	language:C++	typeref:typename:void
+bigint_add_u32	code/momo.h	/^bigint_add_u32(bigint_t* b, bigint_t* lhs, u32_t rhs) $/;"	f	language:C++	typeref:typename:void
+bigint_alloc	code/momo.h	/^bigint_alloc(arena_t* arena, u32_t cap)$/;"	f	language:C++	typeref:typename:bigint_t *
 bigint_compare	code/momo.h	/^bigint_compare(bigint_t* lhs, bigint_t* rhs) $/;"	f	language:C++	typeref:typename:s32_t
 bigint_copy	code/momo.h	/^bigint_copy(bigint_t* to, bigint_t* from)$/;"	f	language:C++	typeref:typename:void
 bigint_init	code/momo.h	/^bigint_init(bigint_t* b, u32_t cap, arena_t* arena) $/;"	f	language:C++	typeref:typename:b32_t
-bigint_set	code/momo.h	/^bigint_set(bigint_t* b, u32_t value) {$/;"	f	language:C++	typeref:typename:void
 bigint_set_max	code/momo.h	/^bigint_set_max(bigint_t* b) {$/;"	f	language:C++	typeref:typename:void
+bigint_set_u32	code/momo.h	/^bigint_set_u32(bigint_t* b, u32_t value) $/;"	f	language:C++	typeref:typename:void
 bigint_t	code/momo.h	/^struct bigint_t $/;"	s	language:C++
 bigint_t	code/test_bigint.cpp	/^struct bigint_t $/;"	s	language:C++	file:
 bigint_zero	code/momo.h	/^bigint_zero(bigint_t* b) {$/;"	f	language:C++	typeref:typename:void

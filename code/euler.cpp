@@ -1864,15 +1864,12 @@ euler_q25()
   arena_alloc(arena, gigabytes(1)); 
   defer { arena_free(arena); }; 
 
-  make(bigint_t, b0);
-  make(bigint_t, b1);
-  make(bigint_t, b2);
-  bigint_init(b0, 10000, arena);
-  bigint_init(b1, 10000, arena);
-  bigint_init(b2, 10000, arena);
+  bigint_t* b0 = bigint_alloc(arena, 10000);
+  bigint_t* b1 = bigint_alloc(arena, 10000);
+  bigint_t* b2 = bigint_alloc(arena, 10000);
 
-  bigint_set(b0, 1);
-  bigint_set(b1, 1);
+  bigint_set_u32(b0, 1);
+  bigint_set_u32(b1, 1);
   bigint_zero(b2);
 
   // perform fib
@@ -1882,8 +1879,8 @@ euler_q25()
     bigint_copy(b0, b1);
     bigint_copy(b1, b2);
     bigint_zero(b2);
-    bigint_add(b2, b0);
-    bigint_add(b2, b1);
+    bigint_add(b2, b2, b0);
+    bigint_add(b2, b2, b1);
 
     ++index;
   }
