@@ -16,7 +16,6 @@
 //   console           - In game console system
 //
 // @todo:
-//   refactor audio mixer
 //   have a name for drawing stuff (like eden_draw?)
 //
 

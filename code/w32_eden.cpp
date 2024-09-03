@@ -891,8 +891,6 @@ w32_speaker_load_sig(w32_speaker_load)
   if (!SUCCEEDED(hr)) return false;
   
 
-  // @todo: We need to figure out how can possibly cause this
-  // If there are NO speaker devices at ALL, does this even fail?
   if (!_w32_wasapi_init_default_speaker_output_device(wasapi)) {
     return false;
   }
