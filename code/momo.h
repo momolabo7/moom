@@ -1097,8 +1097,8 @@ static smi_t     str_compare_lexographically(str_t lhs, str_t rhs);
 static b32_t     str_to_u32(str_t s, u32_t* out);
 static b32_t     str_to_f32(str_t s, f32_t* out);
 static b32_t     str_to_s32(str_t s, s32_t* out);
-static b32_t     str_range_to(u32_t* out);
 static str_arr_t str_split(str_t str, u8_t delimiter, arena_t* arena); 
+static void      str_reverse(str_t* dest, str_t src);
 
 // @note: returns str.size if not found
 static usz_t     str_find(str_t str, u8_t character); 
@@ -1120,12 +1120,14 @@ static void     strb_push_u64(strb_t* b, u64_t num);
 static void     strb_push_f32(strb_t* b, f32_t value, u32_t precision);
 static void     strb_push_s32(strb_t* b, s32_t num);
 static void     strb_push_s64(strb_t* b, s64_t num);
-static void     strb_push_str(strb_t* b, str_t num);
+static void     strb_push_str(strb_t* b, str_t str);
+static void     strb_push_cstr(strb_t* b, const c8_t* cstr);
 static void     strb_push_hex_u8(strb_t* b, u8_t num);
 static void     strb_push_hex_u32(strb_t* b, u32_t num);
 static void     strb_push_fmt(strb_t* b, str_t fmt, ...);
 static void     strb_init(strb_t* b, u8_t* data, usz_t cap);
 static void     strb_init_from_str(strb_t* b, str_t str);
+static strb_t*  strb_alloc(arena_t* arena, usz_t cap);
 
 //
 // MARK:(Stream)
@@ -1156,7 +1158,7 @@ static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align);
 static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align);
 static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align);
 static str_t    arena_push_str(arena_t* a, usz_t size, usz_t align);
-static strb_t   arena_push_strb(arena_t* a, usz_t size, usz_t align);
+static strb_t   arena_push_strb(arena_t* a, usz_t size, usz_t align); // @todo: remove
 static usz_t    arena_remaining(arena_t* a);
 static void*    arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size);
 
@@ -5941,6 +5943,16 @@ str_find(str_t str, u8_t character){
   return str.size;
 }
 
+static void
+str_reverse(str_t* dest)
+{
+  u8_t* front_ptr = dest->e;
+  u8_t* back_ptr = dest->e + dest->size - 1;
+  for (;front_ptr < back_ptr; ++front_ptr, --back_ptr) {
+    swap(*front_ptr, *back_ptr);
+  }
+}
+
 static str_arr_t 
 str_split(str_t str, u8_t delimiter, arena_t* arena) {
   str_arr_t ret = {};
@@ -6128,6 +6140,30 @@ strb_init_from_str(strb_t* b, str_t str)
   b->e = str.e;
   b->size = 0;
   b->cap = str.size;
+}
+
+static strb_t*  
+strb_alloc(arena_t* arena, usz_t cap)
+{
+
+  arena_marker_t mark = arena_mark(arena);
+  strb_t* ret = arena_push(strb_t, arena);
+  if (!ret) 
+  {
+    return ret;
+  }
+
+  u8_t* data = arena_push_arr(u8_t, arena, cap);
+  if (!data) 
+  {
+    arena_revert(mark);
+    return ret;
+  }
+
+  strb_init(ret, data, cap);
+
+  return ret;
+
 }
 
 static usz_t
@@ -6441,6 +6477,15 @@ strb_push_str(strb_t* b, str_t src) {
   assert(b->size + src.size <= b->cap);
   for (usz_t i = 0; i < src.size; ++i ) {
     b->e[b->size++] = src.e[i];
+  }
+}
+
+static void     
+strb_push_cstr(strb_t* b, const c8_t* src) {
+  while(b->size < b->cap && dref(src) != 0)
+  {
+    b->e[b->size++] = dref(src);
+    ++src;
   }
 }
 
@@ -9023,25 +9068,22 @@ bigint_zero(bigint_t* b) {
 }
 
 static void 
-bigint_set_max(bigint_t* b) {
+bigint_init(bigint_t* b, u8_t* data, u32_t cap) 
+{
+  b->e = data;
+  b->cap = cap;
+  bigint_zero(b);
+}
+
+static void 
+bigint_set_max(bigint_t* b) 
+{
   for_cnt(i, b->cap) 
   {
     b->e[i] = 9;
   }
   b->count = b->cap;
 }
-
-static b32_t 
-bigint_init(bigint_t* b, u32_t cap, arena_t* arena) 
-{
-  assert(cap > 0);
-  b->e = arena_push_arr(u8_t, arena, cap);
-  if (!b->e) return false;
-  b->cap = cap;
-  bigint_zero(b);
-  return true;
-}
-
 static void
 bigint_copy(bigint_t* to, bigint_t* from)
 {
@@ -9066,15 +9108,16 @@ bigint_alloc(arena_t* arena, u32_t cap)
   {
     return ret;
   }
-  if (!bigint_init(ret, cap, arena)) 
+  u8_t* data = arena_push_arr(u8_t, arena, cap);
+  if (!data) 
   {
     arena_revert(mark);
     return nullptr;
   }
 
+  bigint_init(ret, data, cap);
+
   return ret;
-
-
 }
 
 

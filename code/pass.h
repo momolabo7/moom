@@ -471,7 +471,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
         for (usz_t y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (usz_t x = rect->x; x < rect->x + rect->w; ++x) {
             usz_t index = (x + y * fb->width);
-            ((u32_t*)(fbe->pixels))[index] = (pixels)[j++];
+            ((u32_t*)(fbe->pixels))[index] = pixels[j++];
           }
         }
         
