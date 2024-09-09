@@ -1738,7 +1738,6 @@ WinMain(HINSTANCE instance,
   // Begin eden loop
   b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   
-  // Send this to global state
   LARGE_INTEGER performance_frequency;
   QueryPerformanceFrequency(&performance_frequency);
   LARGE_INTEGER last_frame_count = w32_get_performance_counter();

@@ -1248,7 +1248,6 @@ static u64_t  file_get_size(file_t* fp);
 static u64_t  clock_time();
 static u64_t  clock_resolution();
 
-
 // @todo: is there a way to remove socket_system_begin/end()?
 struct socket_t;
 static b32_t  socket_system_begin();
@@ -1263,6 +1262,7 @@ static void doze(u32_t ms_to_doze);
 //
 // @mark: Implementation
 //
+
 
 #if OS_WINDOWS
 # include <winsock2.h>
