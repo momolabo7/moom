@@ -5,7 +5,10 @@
 #define FOOLISH
 #include "momo.h"
 
-int main() {
+#if 0
+static void
+test_arena_performance() 
+{
   printf("Hello Test\n");
   arena_t test = {};
 
@@ -53,4 +56,34 @@ int main() {
   }
 
  
+}
+#endif
+
+int main() {
+  arena_t test = {};
+  arena_alloc(&test, gigabytes(1), true);
+  printf("arena address:\t%p\n", test.memory);
+  printf("arena pos:\t%p\n", test.memory + test.pos);
+  
+  printf("> pushing array of 100 elements\n");
+  u32_t* arr = arena_push_arr(u32_t, &test, 100);
+  printf("arr address:\t%p\n", arr);
+  printf("arr end pos:\t%p\n", arr + 100);
+  printf("arena address:\t%p\n", test.memory);
+  printf("arena pos:\t%p\n", test.memory + test.pos);
+
+  if(arena_grow_arr(u32_t, &test, arr, 100, 200))
+  {
+    printf("> array grown successfully to 200\n"); 
+    printf("arr address:\t%p\n", arr);
+    printf("arr end pos:\t%p\n", arr + 200);
+    printf("arena address:\t%p\n", test.memory);
+    printf("arena pos:\t%p\n", test.memory + test.pos);
+  }
+  else
+  {
+    printf("> failed to grow array\n");
+  }
+
+
 }

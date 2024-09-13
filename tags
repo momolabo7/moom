@@ -74,6 +74,9 @@ arena_bootstrap_push_size	code/momo.h	/^static void*    arena_bootstrap_push_siz
 arena_clear	code/momo.h	/^arena_clear(arena_t* a) {$/;"	f	language:C++	typeref:typename:void
 arena_clear	code/momo.h	/^static void     arena_clear(arena_t* a);$/;"	p	language:C++	typeref:typename:void
 arena_free	code/momo.h	/^arena_free(arena_t* a)$/;"	f	language:C++	typeref:typename:void
+arena_grow_arr	code/momo.h	/^#define arena_grow_arr(/;"	d	language:C++
+arena_grow_size	code/momo.h	/^arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size) $/;"	f	language:C++	typeref:typename:b32_t
+arena_grow_size	code/momo.h	/^static void*    arena_grow_size(arena_t* a, usz_t size);$/;"	p	language:C++	typeref:typename:void *
 arena_init	code/momo.h	/^arena_init(arena_t* a, str_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t
 arena_init	code/momo.h	/^static b32_t    arena_init(arena_t* a, str_t buffer);$/;"	p	language:C++	typeref:typename:b32_t
 arena_mark	code/momo.h	/^arena_mark(arena_t* a) $/;"	f	language:C++	typeref:typename:arena_marker_t
@@ -2703,6 +2706,7 @@ TBP_TILE_SIZE	code/app_tbp.cpp	/^#define TBP_TILE_SIZE /;"	d	language:C++	file:
 TBP_TILE_SIZE_HALF	code/app_tbp.cpp	/^#define TBP_TILE_SIZE_HALF /;"	d	language:C++	file:
 tbp_tile_t	code/app_tbp.cpp	/^struct tbp_tile_t {$/;"	s	language:C++	file:
 tbp_update_and_render_grid_stuff	code/app_tbp.cpp	/^tbp_update_and_render_grid_stuff(eden_t* eden, tbp_t* tbp)$/;"	f	language:C++	typeref:typename:void	file:
+test_arena_performance	code/test_arena.cpp	/^test_arena_performance() $/;"	f	language:C++	typeref:typename:void	file:
 test_sine_wave	code/app_lit_ship.cpp	/^static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t t/;"	f	language:C++	typeref:typename:void	file:
 test_sine_wave	code/w32_eden.cpp	/^static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t t/;"	f	language:C++	typeref:typename:void	file:
 test_square_wave	code/app_lit_ship.cpp	/^static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t/;"	f	language:C++	typeref:typename:void	file:

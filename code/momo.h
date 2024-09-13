@@ -1161,6 +1161,9 @@ static str_t    arena_push_str(arena_t* a, usz_t size, usz_t align);
 static strb_t   arena_push_strb(arena_t* a, usz_t size, usz_t align); // @todo: remove
 static usz_t    arena_remaining(arena_t* a);
 static void*    arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size);
+static b32_t    arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size);
+
+#define arena_grow_arr(t,b,a,o,n)     arena_grow_size((b), (a), sizeof(t)*(o), sizeof(t)*(n))
 
 #define arena_push_arr_align(t,b,n,a) (t*)arena_push_size((b), sizeof(t)*(n), a)
 #define arena_push_arr(t,b,n)         (t*)arena_push_size((b), sizeof(t)*(n),alignof(t))
@@ -8593,6 +8596,22 @@ arena_clear(arena_t* a) {
   a->pos = 0;
 }
 
+static b32_t
+arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size) 
+{
+  if (new_size <= old_size) return false;
+
+  // The thing we are growing should be the last thing that we 'pushed'
+  // Otherwise, it's not possible.
+  if ( (a->memory + a->pos) != ((u8_t*)(ptr) + old_size))
+    return false;
+
+  if (!arena_push_size(a, new_size - old_size, 1)) 
+    return false;
+
+  return true;
+
+}
 
 static usz_t 
 arena_remaining(arena_t* a) {
