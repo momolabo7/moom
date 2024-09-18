@@ -21,7 +21,7 @@ struct karu_bot_t
   // @note: don't mess with these guys.
   // sb and s will share the same buffer
   u8_t buffer[512];
-  strb_t sender;
+  str_builder_t sender;
   str_t receiver;
 
   // reminder system
@@ -51,9 +51,9 @@ karu_connect(karu_bot_t* karu, str_t password, str_t channel, str_t nick, arena_
 
   // @note: this is more of initialization then 
   // 'connecting' but whatever i guess
-  strb_t* sender = &karu->sender;
+  str_builder_t* sender = &karu->sender;
   karu->receiver = str_set(karu->buffer, sizeof(karu->buffer));
-  strb_init_from_str(sender, karu->receiver);
+  str_builder_init(sender, karu->receiver);
 
   // @note: we will be abusing and reusing this buffer
 
@@ -69,9 +69,9 @@ karu_connect(karu_bot_t* karu, str_t password, str_t channel, str_t nick, arena_
 
   // Inform twitch our nickname
   {
-    strb_push_fmt(sender, str_from_lit("NICK %S\r\n"), nick); 
+    str_builder_push_fmt(sender, str_from_lit("NICK %S\r\n"), nick); 
     socket_send(s, sender->str);
-    strb_clear(sender);
+    str_builder_clear(sender);
     str_t r = socket_receive(s, karu->receiver);
     karu_print_str(r);
   }
@@ -80,9 +80,9 @@ karu_connect(karu_bot_t* karu, str_t password, str_t channel, str_t nick, arena_
 
   // Tell twitch which channel to join.
   {
-    strb_push_fmt(sender, str_from_lit("JOIN #%S\r\n"), channel); 
+    str_builder_push_fmt(sender, str_from_lit("JOIN #%S\r\n"), channel); 
     socket_send(s, sender->str);
-    strb_clear(sender);
+    str_builder_clear(sender);
     str_t r = socket_receive(s, karu->receiver);
     karu_print_str(r);
   }
@@ -100,10 +100,10 @@ karu_disconnect(karu_bot_t* karu)
 static void
 karu_send_message(karu_bot_t* karu, str_t message)
 {
-  strb_t* sender = &karu->sender;
-  strb_push_fmt(sender, str_from_lit("PRIVMSG #momolabo7 :%S\r\n"), message); 
+  str_builder_t* sender = &karu->sender;
+  str_builder_push_fmt(sender, str_from_lit("PRIVMSG #momolabo7 :%S\r\n"), message); 
   socket_send(&karu->socket, sender->str);
-  strb_clear(sender);
+  str_builder_clear(sender);
   str_t r = socket_receive(&karu->socket, karu->receiver);
   karu_print_str(r);
 }
@@ -186,10 +186,10 @@ karu_update(karu_bot_t* karu, arena_t* arena)
         str_t cmd = msgs.e[4]; 
         if (!str_compare_lexographically(cmd, str_from_lit(":!wtf")))
         {
-          strb_make(stb, 256);
+          str_builder_make(stb, 256);
           str_t who = msgs.e[5];
           who.size -=2; // @todo: HELP LA (removes \r\n)
-          strb_push_fmt(stb, str_from_lit("PRIVMSG #momolabo7 :Check out my BRO %S at twitch.tv/%S\r\n"), who, who);
+          str_builder_push_fmt(stb, str_from_lit("PRIVMSG #momolabo7 :Check out my BRO %S at twitch.tv/%S\r\n"), who, who);
           karu_send_message(karu, stb->str);
 
         }

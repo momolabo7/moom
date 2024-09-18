@@ -1864,9 +1864,9 @@ euler_q25()
   arena_alloc(arena, gigabytes(1)); 
   defer { arena_free(arena); }; 
 
-  bigint_t* b0 = bigint_alloc(arena, 10000);
-  bigint_t* b1 = bigint_alloc(arena, 10000);
-  bigint_t* b2 = bigint_alloc(arena, 10000);
+  bigint_t* b0 = bigint_new(arena, 10000);
+  bigint_t* b1 = bigint_new(arena, 10000);
+  bigint_t* b2 = bigint_new(arena, 10000);
 
   bigint_set_u32(b0, 1);
   bigint_set_u32(b1, 1);

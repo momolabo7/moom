@@ -29,9 +29,9 @@ eden_get_config_sig(eden_get_config)
   ret.max_workers = 256;
   ret.max_files = 32;
 
-  ret.max_inspector_entries = 8;
-  ret.max_profiler_entries = 8;
-  ret.max_profiler_snapshots = 120;
+  ret.inspector_max_entries = 8;
+  ret.profiler_max_entries = 8;
+  ret.profiler_max_snapshots_per_entry = 120;
 
   ret.texture_queue_size = megabytes(5);
   ret.render_command_size = megabytes(100);
@@ -40,10 +40,10 @@ eden_get_config_sig(eden_get_config)
   ret.max_sprites = 4096;
   ret.max_triangles = 1; // TODO: triangles and sprites should allow for 0
 
-  ret.audio_enabled = false;
-  ret.audio_samples_per_second = 48000;
-  ret.audio_bits_per_sample = 16;
-  ret.audio_channels = 2;
+  ret.speaker_enabled = false;
+  ret.speaker_samples_per_second = 48000;
+  ret.speaker_bits_per_sample = 16;
+  ret.speaker_channels = 2;
 
   ret.window_title = "tile based platformer";
   ret.window_initial_width = TBP_DESIGN_WIDTH;
@@ -223,7 +223,7 @@ eden_update_and_render_sig(eden_update_and_render)
 
     // lupsup collision
     {
-#if 0
+#if 1
       // Just collide with floor
       f32_t feet = tbp->player.pos.y - TBP_TILE_SIZE_HALF;
       if (feet < 0)  // detect if feet is on floor

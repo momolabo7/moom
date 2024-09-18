@@ -630,10 +630,10 @@ struct eden_console_t {
   u32_t command_count;
   eden_console_command_t* commands;
   
-  strb_t* info_lines; 
+  str_builder_t* info_lines; 
   u32_t info_line_count;
 
-  strb_t input_line;
+  str_builder_t input_line;
 
 };
 
@@ -3126,21 +3126,22 @@ eden_inspector_update_and_render(
       rgba_set(0.f, 0.f, 0.f, 0.5f));
   eden_advance_depth(eden);
 
-  strb_t sb = arena_push_strb(frame_arena, 256, 16);
+  str_builder_t sb = {};
+  str_builder_init(&sb, frame_arena, 256);
   
   for(u32_t entry_index = 0; 
       entry_index < inspector->entry_count; 
       ++entry_index)
   {
-    strb_clear(&sb);
+    str_builder_clear(&sb);
     auto* entry = inspector->entries + entry_index;
     switch(entry->type){
       case HELL_INSPECTOR_ENTRY_TYPE_U32: {
-        strb_push_fmt(&sb, str_from_lit("[%10S] %7u"),
+        str_builder_push_fmt(&sb, str_from_lit("[%10S] %7u"),
             entry->name, entry->item_u32);
       } break;
       case HELL_INSPECTOR_ENTRY_TYPE_F32: {
-        strb_push_fmt(&sb, str_from_lit("[%10S] %7f"),
+        str_builder_push_fmt(&sb, str_from_lit("[%10S] %7f"),
             entry->name, entry->item_f32);
       } break;
     }
@@ -3278,8 +3279,10 @@ eden_profile_update_and_render(
     hell_profiler_end_stat(&hits);
     hell_profiler_end_stat(&cycles_per_hit);
    
-    strb_t sb = arena_push_strb(frame_arena, 256, 16);
-    strb_push_fmt(&sb, 
+    str_builder_t sb = {};
+    str_builder_init(&sb, frame_arena, 256);
+
+    str_builder_push_fmt(&sb, 
                  str_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
                  entry->block_name,
                  (u32_t)cycles.average,
@@ -3400,21 +3403,17 @@ eden_console_init(
   console->command_cap = max_commands;
   console->info_line_count = 0;
   console->commands = arena_push_arr(eden_console_command_t, allocator, max_commands);
-  console->info_lines = arena_push_arr(strb_t, allocator, max_lines);
+  console->info_lines = arena_push_arr(str_builder_t, allocator, max_lines);
 
   u32_t line_size = characters_per_line;
-  strb_init(&console->input_line,
-           arena_push_arr(u8_t, allocator, line_size),
-           line_size);
+  str_builder_init(&console->input_line, allocator, line_size);
   
   for (u32_t info_line_index = 0;
        info_line_index < console->info_line_count;
        ++info_line_index) 
   {    
-    strb_t* info_line = console->info_lines + info_line_index;
-    strb_init(info_line,
-             arena_push_arr(u8_t, allocator, line_size),
-             line_size);
+    str_builder_t* info_line = console->info_lines + info_line_index;
+    str_builder_init(info_line, allocator, line_size);
   }
 }
 
@@ -3440,13 +3439,13 @@ eden_console_push_info(eden_console_t* console, str_t str) {
        ++i)
   {
     u32_t line_index = console->info_line_count - 1 - i;
-    strb_t* line_to = console->info_lines + line_index;
-    strb_t* line_from = console->info_lines + line_index - 1;
-    strb_clear(line_to);
-    strb_push_str(line_to, line_from->str);
+    str_builder_t* line_to = console->info_lines + line_index;
+    str_builder_t* line_from = console->info_lines + line_index - 1;
+    str_builder_clear(line_to);
+    str_builder_push_str(line_to, line_from->str);
   } 
-  strb_clear(console->info_lines + 0);
-  strb_push_str(console->info_lines + 0, str);
+  str_builder_clear(console->info_lines + 0);
+  str_builder_push_str(console->info_lines + 0, str);
 }
 
 static void
@@ -3463,12 +3462,13 @@ eden_console_execute(eden_console_t* console)
   }
   
   eden_console_push_info(console, console->input_line.str);
-  strb_clear(&console->input_line);
+  str_builder_clear(&console->input_line);
 }
 
 static void
 eden_update_and_render_console(eden_console_t*)
 {
+  // @todo: complete
 }
 
 //

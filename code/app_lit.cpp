@@ -492,12 +492,12 @@ lit_update_and_render_console()
     // NOTE(Momo): Not very portable to other platforms....
     u8_t c = characters.data[char_index];
     if (c >= 32 && c <= 126) {
-      strb_push_u8(&console->input_line, c);
+      str_builder_push_u8(&console->input_line, c);
     }
     // backspace 
     if (c == 8) {
       if (console->input_line.size > 0) 
-        strb_pop(&console->input_line);
+        str_builder_pop(&console->input_line);
     }    
     
     if (c == '\r') {
@@ -539,7 +539,7 @@ lit_update_and_render_console()
        line_index < array_count(console->info_lines);
        ++line_index)
   {
-    strb_t* line = console->info_lines + line_index;
+    str_builder_t* line = console->info_lines + line_index;
 
     eden_draw_text(
         g_eden, assets, 

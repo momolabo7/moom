@@ -1,10 +1,14 @@
 #define MOMO_FOOLISH 
 #include "momo.h"
 
-static void aoc23_d1p1(const char* filename) {
-  str_t file_buffer = foolish_read_file_into_buffer(filename, false); 
+
+
+static void aoc23_d1p1(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+
+  str_t file_buffer = file_read_into_str(filename, arena, false); 
   if (!file_buffer) return;
-  defer { foolish_free_buffer(file_buffer); };
 
 
   make(stream_t, s);
@@ -17,7 +21,7 @@ static void aoc23_d1p1(const char* filename) {
     
     // count from the front
     for( s32_t i = 0; i <  line.size; ++i) {
-      if (is_digit(line.e[i])) {
+      if (u8_is_digit(line.e[i])) {
         number += ascii_to_digit(line.e[i]);
         number *= 10;
         break;
@@ -26,7 +30,7 @@ static void aoc23_d1p1(const char* filename) {
 
     // count from the back
     for(s32_t i = line.size-1; i >= 0; --i) {
-      if (is_digit(line.e[i])) {
+      if (u8_is_digit(line.e[i])) {
         number += ascii_to_digit(line.e[i]);
         break;
       }
@@ -37,10 +41,11 @@ static void aoc23_d1p1(const char* filename) {
 }
 
 
-static void aoc23_d1p2(const char* filename) {
-  str_t file_buffer = foolish_read_file_into_buffer(filename, false); 
+static void aoc23_d1p2(const char* filename, arena_t* arena) {
+  arena_set_revert_point(arena);
+
+  str_t file_buffer = file_read_into_str(filename, arena, false); 
   if (!file_buffer) return;
-  defer { foolish_free_buffer(file_buffer); };
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -119,10 +124,11 @@ static void aoc23_d1p2(const char* filename) {
   printf("%u\n", sum);
 }
 
-static void aoc23_d2p1(const char* filename) {
-  str_t file_buffer = foolish_read_file_into_buffer(filename, false); 
+static void aoc23_d2p1(const char* filename, arena_t* arena) {
+  arena_set_revert_point(arena);
+
+  str_t file_buffer = file_read_into_str(filename, arena, false); 
   if (!file_buffer) return;
-  defer { foolish_free_buffer(file_buffer); };
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -149,7 +155,7 @@ static void aoc23_d2p1(const char* filename) {
 
       // Then we expect a number
       u32_t num = 0;
-      while(is_digit(dref(itr))) {
+      while(u8_is_digit(dref(itr))) {
         num *= 10;
         num += ascii_to_digit(dref(itr));
         ++itr;
@@ -211,10 +217,11 @@ static void aoc23_d2p1(const char* filename) {
 
 }
 
-static void aoc23_d2p2(const char* filename) {
-  str_t file_buffer = foolish_read_file_into_buffer(filename, false); 
+static void aoc23_d2p2(const char* filename, arena_t* arena) {
+  arena_set_revert_point(arena);
+
+  str_t file_buffer = file_read_into_str(filename, arena, false); 
   if (!file_buffer) return;
-  defer { foolish_free_buffer(file_buffer); };
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -245,7 +252,7 @@ static void aoc23_d2p2(const char* filename) {
       b32_t is_done = false;
       // Then we expect a number
       u32_t num = 0;
-      while(is_digit(dref(itr))) {
+      while(u8_is_digit(dref(itr))) {
         num *= 10;
         num += ascii_to_digit(dref(itr));
         ++itr;
@@ -303,10 +310,11 @@ static void aoc23_d2p2(const char* filename) {
 }
 
 
-static void aoc23_d3p1(const char* filename) {
-  str_t file_buffer = foolish_read_file_into_buffer(filename, false); 
+static void aoc23_d3p1(const char* filename, arena_t* arena) {
+  arena_set_revert_point(arena);
+
+  str_t file_buffer = file_read_into_str(filename, arena, false); 
   if (!file_buffer) return;
-  defer { foolish_free_buffer(file_buffer); };
 
 
   // Get with width and height
@@ -321,7 +329,7 @@ static void aoc23_d3p1(const char* filename) {
       ++height;
       width = line.size;
     }
-    grid = foolish_allocate_memory(width * height);
+    grid = arena_push_str(arena, width * height, 0);
     if (!grid) {
       printf("Cannot allocate memory\n");
       return;
@@ -333,7 +341,7 @@ static void aoc23_d3p1(const char* filename) {
     while(!stream_is_eos(s)) {
       str_t line = stream_consume_line(s);  
       for_cnt(i, line.size) {
-        if (is_digit(line.e[i]) )
+        if (u8_is_digit(line.e[i]) )
           grid.e[grid_i++] = ascii_to_digit(line.e[i]);
         else if (line.e[i] == '.')
           grid.e[grid_i++] = 11;
@@ -344,8 +352,6 @@ static void aoc23_d3p1(const char* filename) {
     }
   }
 
-
-  defer{ foolish_free_memory(grid); };
 
   auto get_index = [](str_t grid, u32_t x, u32_t y, u32_t w) {
     return grid.e[x + y * w];
@@ -416,10 +422,11 @@ static void aoc23_d3p1(const char* filename) {
 
 }
 
-static void aoc23_d3p2(const char* filename) {
-  str_t file_buffer = foolish_read_file_into_buffer(filename, false); 
+static void aoc23_d3p2(const char* filename, arena_t* arena) {
+  arena_set_revert_point(arena);
+
+  str_t file_buffer = file_read_into_str(filename, arena, false); 
   if (!file_buffer) return;
-  defer { foolish_free_buffer(file_buffer); };
 
 
   // Initialize the grid data
@@ -434,7 +441,7 @@ static void aoc23_d3p2(const char* filename) {
       ++height;
       width = line.size;
     }
-    grid = foolish_allocate_memory(width * height);
+    grid = arena_push_str(arena, width * height, 0);
     if (!grid) {
       printf("Cannot allocate memory\n");
       return;
@@ -446,7 +453,7 @@ static void aoc23_d3p2(const char* filename) {
     while(!stream_is_eos(s)) {
       str_t line = stream_consume_line(s);  
       for_cnt(i, line.size) {
-        if (is_digit(line.e[i]) )
+        if (u8_is_digit(line.e[i]) )
           grid.e[grid_i++] = ascii_to_digit(line.e[i]);
         else if (line.e[i] == '.')
           grid.e[grid_i++] = 11;
@@ -457,7 +464,6 @@ static void aoc23_d3p2(const char* filename) {
       }
     }
   }
-  defer{ foolish_free_memory(grid); };
 
   // Useful methods for grid
   auto get_cell = [](str_t grid, u32_t x, u32_t y, u32_t w) {
@@ -583,7 +589,11 @@ int main(int argv, char** argc) {
     return 1;
   }
 
-#define aoc23_route(dd, pp) if (day == dd && part == pp) aoc23_d ## dd ## p ## pp(filename);
+  make(arena_t, arena);
+  arena_alloc(arena, gigabytes(1)); 
+  defer { arena_free(arena); }; 
+
+#define aoc23_route(dd, pp) if (day == dd && part == pp) aoc23_d ## dd ## p ## pp(filename, arena);
   aoc23_route(1,1);
   aoc23_route(1,2);
   aoc23_route(2,1);

@@ -2,10 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define FOOLISH
 #include "momo.h"
 
-#if 0
 static void
 test_arena_performance() 
 {
@@ -39,25 +37,8 @@ test_arena_performance()
     printf("arena #1: %f\n", ((f32_t)(end_time - start_time))/res);
   }
 
-  // Olde arena
-  {
-    arena_t normal_arena = {};
-    str_t buffer = foolish_allocate_memory(gigabytes(1));
-    defer { foolish_free_memory(buffer); };
-    arena_init(&normal_arena, buffer);
-
-    u64_t start_time = os_get_clock_time();
-    for (int i = 0; i < runs; ++i) { 
-      arena_push_size(&normal_arena, sizeof(u32_t), alignof(u32_t));  
-    }
-    u64_t end_time = os_get_clock_time();
-
-    printf("arena #2: %f\n", ((f32_t)(end_time - start_time))/res);
-  }
-
  
 }
-#endif
 
 int main() {
   arena_t test = {};

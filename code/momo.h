@@ -8,7 +8,7 @@
 //   ASSERTIVE - Enables/Disables asserts. Default is 1. 
 //
 //
-// BOOKMARKS: search using @mark
+// BOOK@markS: search using @mark
 //   Context          - Context Defines (Arch, OS, compiler, etc)
 //   Helper           - Common helper macros and functions 
 //   Struct           - All object declarations 
@@ -456,7 +456,8 @@ struct garena_t
 };
 
 
-struct strb_t
+//@todo: rename to 'str_builder'
+struct str_builder_t
 {
   union 
   {
@@ -469,13 +470,14 @@ struct strb_t
   };
   usz_t cap;
 
+  // @todo: remove
   operator bool() {
     return e != nullptr;
   }
 };
 
 //
-// MARK:(Stream)
+// @mark:(Stream)
 //
 struct stream_t 
 {
@@ -562,7 +564,7 @@ struct rp_rect_t
 };
 
 //
-// MARK:(Clex)
+// @mark:(Clex)
 //
 
 enum clex_token_type_t 
@@ -1072,7 +1074,7 @@ static void sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena)
 #define sort_quick_generic(arr, count, predicate) _sort_quick_generic(arr, count, sizeof(*(arr)), predicate)
 
 //
-// MARK:(CRC)
+// @mark:(CRC)
 //
 static void  crc32_init_table(crc32_table_t* table, u32_t polynomial);
 static void  crc16_init_table(crc16_table_t* table, u16_t polynomial);
@@ -1085,7 +1087,7 @@ static u32_t crc16(u8_t* data, u32_t data_size, u16_t start_register, crc16_tabl
 static u32_t crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t* table);
 
 // 
-// MARK:(Strings)
+// @mark:(Strings)
 //
 #define str_from_lit(s) str_set((u8_t*)(s), sizeof(s)-1)
 static str_t     str_bad();
@@ -1104,33 +1106,33 @@ static void      str_reverse(str_t* dest, str_t src);
 static usz_t     str_find(str_t str, u8_t character); 
 
 // @todo: the ##LINE might be fake!
-#define strb_make(name, cap) \
+#define str_builder_make(name, cap) \
   u8_t temp_buffer_##__LINE__[cap] = {0}; \
-strb_t name_; \
-strb_t* name = &name_; \
-strb_init(name, temp_buffer_##__LINE__, cap);
+str_builder_t name_; \
+str_builder_t* name = &name_; \
+str_builder_init(name, temp_buffer_##__LINE__, cap);
 
-static usz_t    strb_remaining(strb_t* b);
-static void     strb_clear(strb_t* b);
-static void     strb_pop(strb_t* b);
-static void     strb_push_c8(strb_t* b, c8_t num);
-static void     strb_push_u8(strb_t* b, u8_t num);
-static void     strb_push_u32(strb_t* b, u32_t num);
-static void     strb_push_u64(strb_t* b, u64_t num);
-static void     strb_push_f32(strb_t* b, f32_t value, u32_t precision);
-static void     strb_push_s32(strb_t* b, s32_t num);
-static void     strb_push_s64(strb_t* b, s64_t num);
-static void     strb_push_str(strb_t* b, str_t str);
-static void     strb_push_cstr(strb_t* b, const c8_t* cstr);
-static void     strb_push_hex_u8(strb_t* b, u8_t num);
-static void     strb_push_hex_u32(strb_t* b, u32_t num);
-static void     strb_push_fmt(strb_t* b, str_t fmt, ...);
-static void     strb_init(strb_t* b, u8_t* data, usz_t cap);
-static void     strb_init_from_str(strb_t* b, str_t str);
-static strb_t*  strb_alloc(arena_t* arena, usz_t cap);
+static usz_t    str_builder_remaining(str_builder_t* b);
+static void     str_builder_clear(str_builder_t* b);
+static void     str_builder_pop(str_builder_t* b);
+static void     str_builder_push_c8(str_builder_t* b, c8_t num);
+static void     str_builder_push_u8(str_builder_t* b, u8_t num);
+static void     str_builder_push_u32(str_builder_t* b, u32_t num);
+static void     str_builder_push_u64(str_builder_t* b, u64_t num);
+static void     str_builder_push_f32(str_builder_t* b, f32_t value, u32_t precision);
+static void     str_builder_push_s32(str_builder_t* b, s32_t num);
+static void     str_builder_push_s64(str_builder_t* b, s64_t num);
+static void     str_builder_push_str(str_builder_t* b, str_t str);
+static void     str_builder_push_cstr(str_builder_t* b, const c8_t* cstr);
+static void     str_builder_push_hex_u8(str_builder_t* b, u8_t num);
+static void     str_builder_push_hex_u32(str_builder_t* b, u32_t num);
+static void     str_builder_push_fmt(str_builder_t* b, str_t fmt, ...);
+static void     str_builder_init(str_builder_t* b, u8_t* data, usz_t cap);
+static void     str_builder_init(str_builder_t* b, str_t str);
+static b32_t    str_builder_init(str_builder_t* b, arena_t* arena, usz_t cap);
 
 //
-// MARK:(Stream)
+// @mark:(Stream)
 //
 #define stream_consume(t,s) (t*) stream_consume_block((s), sizeof(t))
 #define stream_peek(t,s) (t*) stream_peek_block((s), sizeof(t))
@@ -1143,12 +1145,10 @@ static u8_t*    stream_peek_block(stream_t* s, usz_t amount);
 static void     stream_flush_bits(stream_t* s);
 static u32_t    stream_consume_bits(stream_t* s, u32_t amount);
 static void     stream_write_block(stream_t* s, void* src, usz_t size);
-
-// @note(momo): if size 
 static str_t    stream_consume_line(stream_t* s);
 
 //
-// MARK:(Arena)
+// @mark:(Arena)
 //
 static b32_t    arena_init(arena_t* a, str_t buffer);
 static b32_t    arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit = false);
@@ -1158,18 +1158,15 @@ static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align);
 static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align);
 static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align);
 static str_t    arena_push_str(arena_t* a, usz_t size, usz_t align);
-static strb_t   arena_push_strb(arena_t* a, usz_t size, usz_t align); // @todo: remove
 static usz_t    arena_remaining(arena_t* a);
 static void*    arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size);
 static b32_t    arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size);
 
 #define arena_grow_arr(t,b,a,o,n)     arena_grow_size((b), (a), sizeof(t)*(o), sizeof(t)*(n))
-
 #define arena_push_arr_align(t,b,n,a) (t*)arena_push_size((b), sizeof(t)*(n), a)
 #define arena_push_arr(t,b,n)         (t*)arena_push_size((b), sizeof(t)*(n),alignof(t))
 #define arena_push_align(t,b,a)       (t*)arena_push_size((b), sizeof(t), a)
 #define arena_push(t,b)               (t*)arena_push_size((b), sizeof(t), alignof(t))
-
 #define arena_push_arr_zero_align(t,b,n,a) (t*)arena_push_size_zero(b, sizeof(t)*(n), a)
 #define arena_push_arr_zero(t,b,n)         (t*)arena_push_size_zero(b, sizeof(t)*(n),alignof(t))
 #define arena_push_zero_align(t,b,a)       (t*)arena_push_size_zero(b, sizeof(t), a)
@@ -1188,7 +1185,7 @@ defer{arena_revert(_arena_marker_##l);};
 
 
 //
-// MARK:(Garena)
+// @mark:(Garena)
 //
 static void  garena_clear(garena_t* ga);
 static void  garena_init(garena_t* ga, u8_t* memory, usz_t cap);
@@ -1198,7 +1195,7 @@ static void  garena_free(garena_t* ga, void* block);
 #define garena_push_arr(t,b,n) (t*)garena_push_size((b), sizeof(t) * n)
 
 //
-// MARK:(TTF)
+// @mark:(TTF)
 //
 
 static b32_t ttf_read(ttf_t* ttf, str_t ttf_contents);
@@ -1820,7 +1817,7 @@ file_write_from_str(const char* filename, str_t buffer) {
 }
 
 //
-// MARK:(Foolish)
+// @mark:(Foolish)
 //
 #ifdef MOMO_FOOLISH // FOOLISH
 #include <stdlib.h>
@@ -4795,7 +4792,7 @@ f64_ease_inout_expo(f64_t t)  {
 
 
 //
-// MARK:(Vector)
+// @mark:(Vector)
 //
 
 static v2f_t 
@@ -5103,7 +5100,7 @@ static v3f_t& operator-=(v3f_t& lhs, v3f_t rhs) { return lhs = v3f_sub(lhs, rhs)
 static v3f_t& operator*=(v3f_t& lhs, f32_t rhs) { return lhs = v3f_scale(lhs, rhs); }
 
 // 
-// MARK:(Matrix)
+// @mark:(Matrix)
 // 
 
 static m44f_t
@@ -5264,7 +5261,7 @@ static m44f_t operator*(m44f_t lhs, m44f_t rhs) {
   return m44f_concat(lhs, rhs);
 }
 //
-// MARK:(Colors)
+// @mark:(Colors)
 //
 static rgba_t 
 rgba_set(f32_t r, f32_t g, f32_t b, f32_t a){
@@ -5415,7 +5412,7 @@ static rgba_t hsla_to_rgba(hsla_t c) {
 }
 
 //
-// MARK:(Sorting)
+// @mark:(Sorting)
 //
 
 
@@ -5626,7 +5623,7 @@ sort_quick(sort_entry_t* entries, u32_t entry_count) {
 
 
 //
-// MARK:(Bonk)
+// @mark:(Bonk)
 //
 static b32_t
 _bonk_tri2_pt2_parametric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
@@ -5697,7 +5694,7 @@ bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
 }
 
 //
-// MARK:(RNG)
+// @mark:(RNG)
 //
 static void
 rng_init(rng_t* r, u32_t seed)
@@ -5772,7 +5769,7 @@ rng_unit_circle(rng_t* r) {
 }
 
 //
-// MARK:(CRC)
+// @mark:(CRC)
 //
 
 //
@@ -5918,7 +5915,7 @@ crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t* table) {
 }
 
 //
-// MARK:(String)
+// @mark:(String)
 //
 static str_t
 str_set(u8_t* str, usz_t size) {
@@ -6130,83 +6127,72 @@ str_to_s32(str_t s, s32_t* out)
 }
 
 static void  
-strb_init(strb_t* b, u8_t* data, usz_t cap) 
+str_builder_init(str_builder_t* b, u8_t* data, usz_t cap) 
 {
   b->e = data;
   b->size = 0;
   b->cap = cap;
 }
 
+static b32_t     
+str_builder_init(str_builder_t* b, arena_t* arena, usz_t cap)
+{
+  u8_t* buffer = arena_push_arr(u8_t, arena, cap);
+  if (!buffer) return false;
+
+  str_builder_init(b, buffer, cap);
+
+  return true;
+
+}
+
 static void  
-strb_init_from_str(strb_t* b, str_t str) 
+str_builder_init(str_builder_t* b, str_t str) 
 {
   b->e = str.e;
   b->size = 0;
   b->cap = str.size;
 }
 
-static strb_t*  
-strb_alloc(arena_t* arena, usz_t cap)
-{
-
-  arena_marker_t mark = arena_mark(arena);
-  strb_t* ret = arena_push(strb_t, arena);
-  if (!ret) 
-  {
-    return ret;
-  }
-
-  u8_t* data = arena_push_arr(u8_t, arena, cap);
-  if (!data) 
-  {
-    arena_revert(mark);
-    return ret;
-  }
-
-  strb_init(ret, data, cap);
-
-  return ret;
-
-}
 
 static usz_t
-strb_remaining(strb_t* b) {
+str_builder_remaining(str_builder_t* b) {
   return b->cap - b->size; 
 }
 
 static void     
-strb_clear(strb_t* b) {
+str_builder_clear(str_builder_t* b) {
   b->size = 0;
 }
 
 static void     
-strb_pop(strb_t* b) {
+str_builder_pop(str_builder_t* b) {
   assert(b->size > 0);
   --b->size;
 }
 
 static void     
-strb_push_u8(strb_t* b, u8_t num) {
+str_builder_push_u8(str_builder_t* b, u8_t num) {
   assert(b->size < b->cap); b->e[b->size++] = num;
 }
 
 static void     
-strb_push_c8(strb_t* b, c8_t num) {
+str_builder_push_c8(str_builder_t* b, c8_t num) {
   assert(b->size < b->cap);
   b->e[b->size++] = num;
 }
 
 static void     
-strb_push_u32(strb_t* b, u32_t num) {
+str_builder_push_u32(str_builder_t* b, u32_t num) {
   if (num == 0) {
-    strb_push_c8(b, '0');
+    str_builder_push_c8(b, '0');
     return;
   }
   usz_t start_pt = b->size; 
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    strb_push_c8(b, digit_to_ascii(digit_to_convert));
+    str_builder_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   // Reverse starting from start point to count
@@ -6216,16 +6202,16 @@ strb_push_u32(strb_t* b, u32_t num) {
   }
 }
 static void     
-strb_push_u64(strb_t* b, u64_t num) {
+str_builder_push_u64(str_builder_t* b, u64_t num) {
   if (num == 0) {
-    strb_push_c8(b, '0');
+    str_builder_push_c8(b, '0');
     return;
   }
   usz_t start_pt = b->size; 
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    strb_push_c8(b, digit_to_ascii(digit_to_convert));
+    str_builder_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   // Reverse starting from start point to count
@@ -6235,9 +6221,9 @@ strb_push_u64(strb_t* b, u64_t num) {
   }
 }
 static void     
-strb_push_s32(strb_t* b, s32_t num) {
+str_builder_push_s32(str_builder_t* b, s32_t num) {
   if (num == 0) {
-    strb_push_c8(b, '0');
+    str_builder_push_c8(b, '0');
     return;
   }
 
@@ -6248,11 +6234,11 @@ strb_push_s32(strb_t* b, s32_t num) {
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    strb_push_c8(b, digit_to_ascii(digit_to_convert));
+    str_builder_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   if (negate) {
-    strb_push_c8(b, '-');
+    str_builder_push_c8(b, '-');
   }
 
   // Reverse starting from start point to count
@@ -6265,9 +6251,9 @@ strb_push_s32(strb_t* b, s32_t num) {
 }
 
 static void     
-strb_push_s64(strb_t* b, s64_t num) {
+str_builder_push_s64(str_builder_t* b, s64_t num) {
   if (num == 0) {
-    strb_push_c8(b, '0');
+    str_builder_push_c8(b, '0');
     return;
   }
 
@@ -6278,11 +6264,11 @@ strb_push_s64(strb_t* b, s64_t num) {
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    strb_push_c8(b, digit_to_ascii(digit_to_convert));
+    str_builder_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   if (negate) {
-    strb_push_c8(b, '-');
+    str_builder_push_c8(b, '-');
   }
 
   // Reverse starting from start point to count
@@ -6295,16 +6281,16 @@ strb_push_s64(strb_t* b, s64_t num) {
 }
 
 static void     
-strb_push_f32(strb_t* b, f32_t value, u32_t precision) {
+str_builder_push_f32(str_builder_t* b, f32_t value, u32_t precision) {
   if (value < 0.f) {
-    strb_push_c8(b, '-');	
+    str_builder_push_c8(b, '-');	
     value = -value;
   }
 
   // @note: won't work for values that u32_t can't contain
   u32_t integer_part = (u32_t)value;
-  strb_push_u32(b, integer_part);
-  strb_push_c8(b, '.');
+  str_builder_push_u32(b, integer_part);
+  str_builder_push_c8(b, '.');
 
   value -= (f32_t)integer_part;
 
@@ -6313,19 +6299,19 @@ strb_push_f32(strb_t* b, f32_t value, u32_t precision) {
   }
 
   u32_t decimal_part = (u32_t)value;
-  strb_push_u32(b, decimal_part);
+  str_builder_push_u32(b, decimal_part);
 }
 
 static void     
-strb_push_f64(strb_t* b, f64_t value, u32_t precision) {
+str_builder_push_f64(str_builder_t* b, f64_t value, u32_t precision) {
   if (value < 0.0) {
-    strb_push_c8(b, '-');	
+    str_builder_push_c8(b, '-');	
     value = -value;
   }
   // @note: won't work for values that u32_t can't contain
   u32_t integer_part = (u32_t)value;
-  strb_push_u32(b, integer_part);
-  strb_push_c8(b, '.');
+  str_builder_push_u32(b, integer_part);
+  str_builder_push_c8(b, '.');
 
   value -= (f64_t)integer_part;
 
@@ -6334,12 +6320,12 @@ strb_push_f64(strb_t* b, f64_t value, u32_t precision) {
   }
 
   u32_t decimal_part = (u32_t)value;
-  strb_push_u32(b, decimal_part);
+  str_builder_push_u32(b, decimal_part);
 }
 
 
 static void
-strb_push_hex_u8(strb_t* b, u8_t value) {
+str_builder_push_hex_u8(str_builder_t* b, u8_t value) {
 
   c8_t parts[2] = {
     (c8_t)(value >> 4),
@@ -6349,10 +6335,10 @@ strb_push_hex_u8(strb_t* b, u8_t value) {
 
   for(u32_t i = 0; i < array_count(parts); ++i) {
     if (parts[i] >= 0 && parts[i] <= 9) {
-      strb_push_c8(b, parts[i] + '0');
+      str_builder_push_c8(b, parts[i] + '0');
     }
     else if (parts[i] >= 10 && parts[i] <= 15) {
-      strb_push_c8(b, parts[i] - 10 + 'A');
+      str_builder_push_c8(b, parts[i] - 10 + 'A');
     }
   }
 
@@ -6362,17 +6348,17 @@ strb_push_hex_u8(strb_t* b, u8_t value) {
 }
 
 static void
-strb_push_hex_u32(strb_t* b, u32_t value) {
+str_builder_push_hex_u32(str_builder_t* b, u32_t value) {
   union { u32_t v; u8_t b[4]; } combine;
   combine.v = value;
   for(s32_t i = 3; i >= 0; --i) {
-    strb_push_hex_u8(b, combine.b[i]);
+    str_builder_push_hex_u8(b, combine.b[i]);
   }
 }
 
 
 static void
-_strb_push_fmt_list(strb_t* b, str_t format, va_list args) 
+_str_builder_push_fmt_list(str_builder_t* b, str_t format, va_list args) 
 {
   usz_t at = 0;
   while(at < format.size) {
@@ -6392,43 +6378,43 @@ _strb_push_fmt_list(strb_t* b, str_t format, va_list args)
       // literally do not know how big the buffer our string maker 
       // should be. For now we hardcode it because my use cases are
       // definitive, but it should be more dynamic.
-      strb_make(tb, 64);
+      str_builder_make(tb, 64);
 
       switch(format.e[at]) {
         case 'i': {
           s32_t value = va_arg(args, s32_t);
-          strb_push_s32(tb, value);
+          str_builder_push_s32(tb, value);
         } break;
         case 'I': {
           s64_t value = va_arg(args, s64_t);
-          strb_push_s64(tb, value);
+          str_builder_push_s64(tb, value);
         } break;
         case 'U': {
           u64_t value = va_arg(args, u64_t);
-          strb_push_u64(tb, value);
+          str_builder_push_u64(tb, value);
         } break;
         case 'u': {
           u32_t value = va_arg(args, u32_t);
-          strb_push_u32(tb, value);
+          str_builder_push_u32(tb, value);
         } break;
         case 'f': {
           f64_t value = va_arg(args, f64_t);
-          strb_push_f32(tb, (f32_t)value, 5);
+          str_builder_push_f32(tb, (f32_t)value, 5);
         } break;
         case 'F': {
           f64_t value = va_arg(args, f64_t);
-          strb_push_f64(tb, (f64_t)value, 5);
+          str_builder_push_f64(tb, (f64_t)value, 5);
         } break;
         case 'x':
         case 'X': {
           u32_t value = va_arg(args, u32_t);
-          strb_push_hex_u32(tb, value);
+          str_builder_push_hex_u32(tb, value);
         } break;
         case 's': {
           // c-string
           const char* cstr = va_arg(args, const char*);
           while(cstr[0] != 0) {
-            strb_push_c8(tb, (u8_t)cstr[0]);
+            str_builder_push_c8(tb, (u8_t)cstr[0]);
             ++cstr;
           }
         } break;
@@ -6436,7 +6422,7 @@ _strb_push_fmt_list(strb_t* b, str_t format, va_list args)
         case 'S': {
           // str_t, or 'text'.
           str_t str = va_arg(args, str_t);
-          strb_push_str(tb, str);
+          str_builder_push_str(tb, str);
         } break;
 
         default: {
@@ -6449,18 +6435,18 @@ _strb_push_fmt_list(strb_t* b, str_t format, va_list args)
       if (width > 0 && tb->str.size < width) {
         usz_t spaces_to_pad = width - tb->str.size;
         while(spaces_to_pad--) {
-          strb_push_c8(b, ' ');
+          str_builder_push_c8(b, ' ');
         }
-        strb_push_str(b, tb->str);
+        str_builder_push_str(b, tb->str);
       }
       else {
-        strb_push_str(b, tb->str);
+        str_builder_push_str(b, tb->str);
       }
 
 
     }
     else {
-      strb_push_c8(b, format.e[at++]);
+      str_builder_push_c8(b, format.e[at++]);
     }
 
   }
@@ -6468,15 +6454,15 @@ _strb_push_fmt_list(strb_t* b, str_t format, va_list args)
 
 
 static void     
-strb_push_fmt(strb_t* b, str_t fmt, ...) {
+str_builder_push_fmt(str_builder_t* b, str_t fmt, ...) {
   va_list args;
   va_start(args, fmt);
-  _strb_push_fmt_list(b, fmt, args);
+  _str_builder_push_fmt_list(b, fmt, args);
   va_end(args);
 }
 
 static void     
-strb_push_str(strb_t* b, str_t src) {
+str_builder_push_str(str_builder_t* b, str_t src) {
   assert(b->size + src.size <= b->cap);
   for (usz_t i = 0; i < src.size; ++i ) {
     b->e[b->size++] = src.e[i];
@@ -6484,7 +6470,7 @@ strb_push_str(strb_t* b, str_t src) {
 }
 
 static void     
-strb_push_cstr(strb_t* b, const c8_t* src) {
+str_builder_push_cstr(str_builder_t* b, const c8_t* src) {
   while(b->size < b->cap && dref(src) != 0)
   {
     b->e[b->size++] = dref(src);
@@ -6494,7 +6480,7 @@ strb_push_cstr(strb_t* b, const c8_t* src) {
 
 
 //
-// MARK:(Stream)
+// @mark:(Stream)
 //
 static void
 stream_init(stream_t* s, str_t contents) {
@@ -6611,7 +6597,7 @@ stream_consume_bits(stream_t* s, u32_t amount){
 }
 
 //
-// MARK:(WAV)
+// @mark:(WAV)
 //
 struct _wav_head_t { 
   u32_t id, size;
@@ -6712,7 +6698,7 @@ wav_read(wav_t* w, str_t contents)
 }
 
 //
-// MARK:(TTF)
+// @mark:(TTF)
 //
 
 struct _ttf_glyph_point_t{
@@ -7578,7 +7564,7 @@ static b32_t
     }
 
   // 
-  // MARK:(PNG)
+  // @mark:(PNG)
   //
 
   // We are only interested in 4-channel images in rgba_t format
@@ -8552,7 +8538,7 @@ png_read(png_t* png, str_t png_contents)
 }
 
 // 
-// MARK:(Arena)
+// @mark:(Arena)
 //
 
 static b32_t
@@ -8595,6 +8581,7 @@ static void
 arena_clear(arena_t* a) {
   a->pos = 0;
 }
+
 
 static b32_t
 arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size) 
@@ -8686,7 +8673,8 @@ arena_push_size_zero(arena_t* a, usz_t size, usz_t align)
 
 
 static b32_t
-arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align) {	
+arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align) 
+{	
   u8_t* mem = arena_push_arr_align(u8_t, a, size, align);
   if (!mem) return false; 
   arena_init(partition, str_set(mem, size));
@@ -8695,7 +8683,8 @@ arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align) {
 }
 
 static str_t
-arena_push_str(arena_t* a, usz_t size, usz_t align) {
+arena_push_str(arena_t* a, usz_t size, usz_t align) 
+{
   str_t buffer = {};
   buffer.e = arena_push_arr_align(u8_t, a, size, align);
   buffer.size = size;
@@ -8703,23 +8692,9 @@ arena_push_str(arena_t* a, usz_t size, usz_t align) {
   return buffer;
 }
 
-static strb_t
-arena_push_strb(arena_t* a, usz_t size, usz_t align) 
-{
-  strb_t ret = {}; 
-
-  str_t buffer = {};
-  buffer.e = arena_push_arr_align(u8_t, a, size, align);
-  buffer.size = 0;
-
-  ret.str = buffer;
-  ret.cap = size;
-
-  return ret;
-}
-
 static b32_t    
-arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align){
+arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)
+{
   usz_t imem = ptr_to_umi(a->memory);
   usz_t adjusted_pos = align_up_pow2(imem + a->pos, align) - imem;
 
@@ -8750,7 +8725,7 @@ static void
 
 
 //
-// MARK:(Garena)
+// @mark:(Garena)
 //
 static void
 garena_clear(garena_t* ga) {
@@ -9119,7 +9094,7 @@ bigint_copy(bigint_t* to, bigint_t* from)
 }
 
 static bigint_t*
-bigint_alloc(arena_t* arena, u32_t cap)
+bigint_new(arena_t* arena, u32_t cap)
 {
   arena_marker_t mark = arena_mark(arena);
   bigint_t* ret = arena_push(bigint_t, arena);

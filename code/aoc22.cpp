@@ -1177,7 +1177,7 @@ aoc22_d8p1(const char* filename, arena_t* arena)
 
   while(!stream_is_eos(s)) 
   {
-    str_t str = stream_consume_line(s);  
+    //str_t str = stream_consume_line(s);  
   }
 
   u32_t sum = 0;

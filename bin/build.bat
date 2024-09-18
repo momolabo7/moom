@@ -132,7 +132,7 @@ if %build%==1 (
     echo Build    : Ship
     set compiler_flags=!compiler_flags! -DHOT_RELOAD=0 
     set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32
-    set ship_file=%code_dir%\%filename%_ship.cpp 
+    set ship_file=%code_dir%\ship_%filename%.cpp 
     goto end_build_type
   )
   echo Build    : Normal 

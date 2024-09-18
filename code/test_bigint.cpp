@@ -15,13 +15,11 @@ int main() {
   make(arena_t, a);
   arena_alloc(a, megabytes(256), false);
 
-  make(bigint_t, b1);
-  bigint_init(b1, 32, a);
+  bigint_t* b1 = bigint_new(a, 32);
   bigint_add(b1, 123);
   bigint_add(b1, 123);
 
-  make(bigint_t, b2);
-  bigint_init(b2, 32, a);
+  bigint_t* b2 = bigint_new(a, 32);
   bigint_add(b2, 123);
 
   printf("%d\n", bigint_compare(b1, b2));
