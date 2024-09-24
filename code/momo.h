@@ -5,15 +5,7 @@
 //   anything that I do in C/C++
 //
 // FLAGS
-//   ASSERTIVE - Enables/Disables asserts. Default is 1. 
-//
-//
-// BOOK@markS: search using @mark
-//   Context          - Context Defines (Arch, OS, compiler, etc)
-//   Helper           - Common helper macros and functions 
-//   Struct           - All object declarations 
-//   Functions        - All function-like stuff
-//   Implementation   - All function-like stuff
+//   MOMO_ASSERTIVE - Enables/Disables asserts. Default is 1 (enabled)
 //
 
 
@@ -116,8 +108,8 @@
 # warning "[momo] 'exported' not defined for this compiler"
 #endif
 
-#if !defined(ASSERTIVE)
-# define ASSERTIVE 1
+#if !defined(MOMO_ASSERTIVE)
+# define MOMO_ASSERTIVE 1
 #endif 
 
 // 
@@ -127,7 +119,7 @@
 #  define assert_callback(s) (*(volatile int*)0 = 0)
 # endif 
 
-#if ASSERTIVE
+#if MOMO_ASSERTIVE
 # define assert(s) stmt(if(!(s)) { assert_callback(s); })
 #else 
 # define assert(s)

@@ -77,7 +77,8 @@ arena_free	code/momo.h	/^arena_free(arena_t* a)$/;"	f	language:C++	typeref:typen
 arena_grow_arr	code/momo.h	/^#define arena_grow_arr(/;"	d	language:C++
 arena_grow_size	code/momo.h	/^arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size) $/;"	f	language:C++	typeref:typename:b32_t
 arena_grow_size	code/momo.h	/^static b32_t    arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size);$/;"	p	language:C++	typeref:typename:b32_t
-arena_grow_str	code/momo.h	/^static b32_t    arena_grow_str(arena_t* a, void* ptr, usz_t old_size, usz_t new_size);$/;"	p	language:C++	typeref:typename:b32_t
+arena_grow_str	code/momo.h	/^arena_grow_str(arena_t* a, str_t* str, usz_t new_size)$/;"	f	language:C++	typeref:typename:b32_t
+arena_grow_str	code/momo.h	/^static b32_t    arena_grow_str(arena_t* a, str_t* str, usz_t new_size);$/;"	p	language:C++	typeref:typename:b32_t
 arena_init	code/momo.h	/^arena_init(arena_t* a, str_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t
 arena_init	code/momo.h	/^static b32_t    arena_init(arena_t* a, str_t buffer);$/;"	p	language:C++	typeref:typename:b32_t
 arena_mark	code/momo.h	/^arena_mark(arena_t* a) $/;"	f	language:C++	typeref:typename:arena_marker_t
@@ -89,6 +90,8 @@ arena_push_arr	code/momo.h	/^#define arena_push_arr(/;"	d	language:C++
 arena_push_arr_align	code/momo.h	/^#define arena_push_arr_align(/;"	d	language:C++
 arena_push_arr_zero	code/momo.h	/^#define arena_push_arr_zero(/;"	d	language:C++
 arena_push_arr_zero_align	code/momo.h	/^#define arena_push_arr_zero_align(/;"	d	language:C++
+arena_push_buffer	code/momo.h	/^arena_push_buffer(arena_t* a, usz_t size, usz_t align) $/;"	f	language:C++	typeref:typename:str_t
+arena_push_buffer	code/momo.h	/^static str_t    arena_push_buffer(arena_t* a, usz_t size, usz_t align);$/;"	p	language:C++	typeref:typename:str_t
 arena_push_partition	code/momo.h	/^arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align) $/;"	f	language:C++	typeref:typename:b32_t
 arena_push_partition	code/momo.h	/^static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align);$/;"	p	language:C++	typeref:typename:b32_t
 arena_push_partition_with_remaining	code/momo.h	/^arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)$/;"	f	language:C++	typeref:typename:b32_t
@@ -97,8 +100,6 @@ arena_push_size	code/momo.h	/^arena_push_size(arena_t* a, usz_t size, usz_t alig
 arena_push_size	code/momo.h	/^static void*    arena_push_size(arena_t* a, usz_t size, usz_t align);$/;"	p	language:C++	typeref:typename:void *
 arena_push_size_zero	code/momo.h	/^arena_push_size_zero(arena_t* a, usz_t size, usz_t align) $/;"	f	language:C++	typeref:typename:void *
 arena_push_size_zero	code/momo.h	/^static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align); $/;"	p	language:C++	typeref:typename:void *
-arena_push_str	code/momo.h	/^arena_push_str(arena_t* a, usz_t size, usz_t align) $/;"	f	language:C++	typeref:typename:str_t
-arena_push_str	code/momo.h	/^static str_t    arena_push_str(arena_t* a, usz_t size, usz_t align);$/;"	p	language:C++	typeref:typename:str_t
 arena_push_zero	code/momo.h	/^#define arena_push_zero(/;"	d	language:C++
 arena_push_zero_align	code/momo.h	/^#define arena_push_zero_align(/;"	d	language:C++
 arena_remaining	code/momo.h	/^arena_remaining(arena_t* a) {$/;"	f	language:C++	typeref:typename:usz_t
@@ -116,7 +117,6 @@ arrival_time	code/app_lit.cpp	/^  f32_t arrival_time;$/;"	m	language:C++	struct:
 ascii_to_digit	code/momo.h	/^#define ascii_to_digit(/;"	d	language:C++
 assert	code/momo.h	/^# define assert(/;"	d	language:C++
 assert	code/momo.h	/^# define assert(/;"	d	language:C++
-ASSERTIVE	code/momo.h	/^# define ASSERTIVE /;"	d	language:C++
 assert_callback	code/momo.h	/^#  define assert_callback(/;"	d	language:C++
 assert_callback	code/pass_lit.cpp	/^#define assert_callback(/;"	d	language:C++	file:
 assert_callback	code/pass_sandbox.cpp	/^#define assert_callback(/;"	d	language:C++	file:
@@ -253,6 +253,7 @@ buffer	code/w32_sandbox_twitch_bot.cpp	/^  u8_t buffer[512];$/;"	m	language:C++	
 buffer_size	code/app_lit_ship.cpp	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 buffer_size	code/w32_chip8.cpp	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_dib_t	typeref:typename:u32_t	file:
 buffer_size	code/w32_eden.cpp	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
+buffer_t	code/momo.h	/^struct buffer_t$/;"	s	language:C++
 build	bin/build.bat	/^  set build=0$/;"	v	language:DosBatch
 build	bin/build.bat	/^  set build=1$/;"	v	language:DosBatch
 build	bin/build.bat	/^  set build=1$/;"	v	language:DosBatch
@@ -526,8 +527,9 @@ e	code/momo.h	/^  s32_t e[2];$/;"	m	language:C++	union:v2s_t	typeref:typename:s3
 e	code/momo.h	/^  str_t* e;$/;"	m	language:C++	struct:str_arr_t	typeref:typename:str_t *
 e	code/momo.h	/^  u32_t e[2];$/;"	m	language:C++	union:v2u_t	typeref:typename:u32_t[2]
 e	code/momo.h	/^  u8_t* e;$/;"	m	language:C++	struct:bigint_t	typeref:typename:u8_t *
-e	code/momo.h	/^  u8_t* e;$/;"	m	language:C++	struct:str_t	typeref:typename:u8_t *
+e	code/momo.h	/^  u8_t* e;$/;"	m	language:C++	struct:buffer_t	typeref:typename:u8_t *
 e	code/momo.h	/^  _ttf_edge_t** e;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:_ttf_edge_t **
+e	code/test_wstr.cpp	/^  u16_t* e;$/;"	m	language:C++	struct:wstr_t	typeref:typename:u16_t *	file:
 e1	code/app_lit.cpp	/^  lit_game_edge_t* e1;$/;"	m	language:C++	struct:lit_game_double_edge_t	typeref:typename:lit_game_edge_t *	file:
 e2	code/app_lit.cpp	/^  lit_game_edge_t* e2;$/;"	m	language:C++	struct:lit_game_double_edge_t	typeref:typename:lit_game_edge_t *	file:
 eden	code/app_lit.cpp	/^    lit_game_t eden;$/;"	m	language:C++	union:lit_t::__anon1b0212a9020a	typeref:typename:lit_game_t	file:
@@ -1146,15 +1148,15 @@ file_open	code/momo.h	/^static b32_t  file_open(file_t* fp, const char* filename
 file_read	code/momo.h	/^file_read(file_t* fp, void* dest, usz_t size, usz_t offset) $/;"	f	language:C++	typeref:typename:b32_t
 file_read	code/momo.h	/^file_read(file_t* fp, void* dest, usz_t size, usz_t offset) {$/;"	f	language:C++	typeref:typename:b32_t
 file_read	code/momo.h	/^static b32_t  file_read(file_t* fp, void* dest, usz_t size, usz_t offset);$/;"	p	language:C++	typeref:typename:b32_t
-file_read_into_str	code/momo.h	/^file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate) {$/;"	f	language:C++	typeref:typename:str_t
-file_read_into_str	code/momo.h	/^static str_t  file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate = fa/;"	p	language:C++	typeref:typename:str_t
+file_read_into_buffer	code/momo.h	/^file_read_into_buffer(const char* filename, arena_t* arena, b32_t null_terminate) {$/;"	f	language:C++	typeref:typename:str_t
+file_read_into_buffer	code/momo.h	/^static str_t  file_read_into_buffer(const char* filename, arena_t* arena, b32_t null_terminate =/;"	p	language:C++	typeref:typename:str_t
 file_t	code/momo.h	/^struct file_t {$/;"	s	language:C++
 file_t	code/momo.h	/^struct file_t {$/;"	s	language:C++
 file_write	code/momo.h	/^file_write(file_t* fp, const void* src, usz_t size, usz_t offset) $/;"	f	language:C++	typeref:typename:b32_t
 file_write	code/momo.h	/^file_write(file_t* fp, const void* src, usz_t size, usz_t offset) $/;"	f	language:C++	typeref:typename:b32_t
 file_write	code/momo.h	/^static b32_t  file_write(file_t* fp, const void* src, usz_t size, usz_t offset);$/;"	p	language:C++	typeref:typename:b32_t
-file_write_from_str	code/momo.h	/^file_write_from_str(const char* filename, str_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t
-file_write_from_str	code/momo.h	/^static b32_t  file_write_from_str(const char* filename, str_t buffer);$/;"	p	language:C++	typeref:typename:b32_t
+file_write_from_buffer	code/momo.h	/^file_write_from_buffer(const char* filename, str_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t
+file_write_from_buffer	code/momo.h	/^static b32_t  file_write_from_buffer(const char* filename, str_t buffer);$/;"	p	language:C++	typeref:typename:b32_t
 filter_method	code/momo.h	/^  u8_t filter_method;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t
 filter_method	code/momo.h	/^  u8_t filter_method;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:typename:u8_t
 first_payload_index	code/eden.h	/^  usz_t first_payload_index;$/;"	m	language:C++	struct:hell_gfx_texture_queue_t	typeref:typename:usz_t
@@ -2015,6 +2017,7 @@ main	code/test_hashmap.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_http.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_json.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test_radix_sort.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
+main	code/test_wstr.cpp	/^int main()$/;"	f	language:C++	typeref:typename:int
 main	code/twitch_bot.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/w32_sandbox_socket.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/w32_sandbox_twitch_bot.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
@@ -2105,6 +2108,7 @@ momolabot_send_message	code/twitch_bot.cpp	/^momolabot_send_message(momolabot_t*
 momolabot_t	code/twitch_bot.cpp	/^struct momolabot_t$/;"	s	language:C++	file:
 momolabot_test	code/twitch_bot.cpp	/^momolabot_test(void* data) {$/;"	f	language:C++	typeref:typename:DWORD WINAPI
 momolabot_update	code/twitch_bot.cpp	/^momolabot_update(momolabot_t* m, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+MOMO_ASSERTIVE	code/momo.h	/^# define MOMO_ASSERTIVE /;"	d	language:C++
 MOMO_CONSOLE_H	code/eden_console.h	/^#define MOMO_CONSOLE_H$/;"	d	language:C++
 MOMO_FOOLISH	code/aoc23.cpp	/^#define MOMO_FOOLISH /;"	d	language:C++	file:
 MOMO_H	code/momo.h	/^#define MOMO_H$/;"	d	language:C++
@@ -2204,9 +2208,9 @@ operator ==	code/momo.h	/^static b32_t  operator==(v2f_t lhs, v2f_t rhs) { retur
 operator ==	code/momo.h	/^static b32_t  operator==(v2f_t lhs, v2f_t rhs); $/;"	p	language:C++	typeref:typename:b32_t
 operator ==	code/momo.h	/^static b32_t  operator==(v3f_t lhs, v3f_t rhs) { return v3f_is_close(lhs, rhs); }$/;"	f	language:C++	typeref:typename:b32_t
 operator ==	code/momo.h	/^static b32_t  operator==(v3f_t lhs, v3f_t rhs); $/;"	p	language:C++	typeref:typename:b32_t
+operator bool	code/momo.h	/^  operator bool() {$/;"	f	language:C++	struct:buffer_t
 operator bool	code/momo.h	/^  operator bool() {$/;"	f	language:C++	struct:socket_t
 operator bool	code/momo.h	/^  operator bool() {$/;"	f	language:C++	struct:str_builder_t
-operator bool	code/momo.h	/^  operator bool() {$/;"	f	language:C++	struct:str_t
 optimize	bin/build.bat	/^  set optimize=1$/;"	v	language:DosBatch
 optimize	bin/build.bat	/^set optimize=0 $/;"	v	language:DosBatch
 OS_LINUX	code/momo.h	/^# define OS_LINUX /;"	d	language:C++
@@ -2494,9 +2498,10 @@ size	code/momo.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_data_chunk_t	type
 size	code/momo.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 size	code/momo.h	/^  u32_t size;$/;"	m	language:C++	struct:wav_riff_chunk_t	typeref:typename:u32_t
 size	code/momo.h	/^  usz_t size; $/;"	m	language:C++	union:garena_header_t	typeref:typename:usz_t
+size	code/momo.h	/^  usz_t size;$/;"	m	language:C++	struct:buffer_t	typeref:typename:usz_t
 size	code/momo.h	/^  usz_t size;$/;"	m	language:C++	struct:json_key_t	typeref:typename:usz_t
-size	code/momo.h	/^  usz_t size;$/;"	m	language:C++	struct:str_t	typeref:typename:usz_t
 size	code/momo.h	/^  usz_t size;$/;"	m	language:C++	struct:_json_token_t	typeref:typename:usz_t
+size	code/test_wstr.cpp	/^  usz_t size;$/;"	m	language:C++	struct:wstr_t	typeref:typename:usz_t	file:
 size_end	code/app_lit.cpp	/^  v2f_t size_start, size_end;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t	file:
 size_start	code/app_lit.cpp	/^  v2f_t size_start, size_end;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t	file:
 sll_append	code/momo.h	/^#define sll_append(/;"	d	language:C++
@@ -2680,7 +2685,6 @@ str_split	code/momo.h	/^static str_arr_t str_split(str_t str, u8_t delimiter, ar
 str_split	code/momo.h	/^str_split(str_t str, u8_t delimiter, arena_t* arena) {$/;"	f	language:C++	typeref:typename:str_arr_t
 str_substr	code/momo.h	/^static str_t     str_substr(str_t str, usz_t start, usz_t ope);$/;"	p	language:C++	typeref:typename:str_t
 str_substr	code/momo.h	/^str_substr(str_t str, usz_t start, usz_t count) {$/;"	f	language:C++	typeref:typename:str_t
-str_t	code/momo.h	/^struct str_t $/;"	s	language:C++
 str_to_f32	code/momo.h	/^static b32_t     str_to_f32(str_t s, f32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
 str_to_f32	code/momo.h	/^str_to_f32(str_t s, f32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
 str_to_f32_range	code/momo.h	/^str_to_f32_range(str_t s, usz_t begin, usz_t ope, f32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
@@ -3187,6 +3191,9 @@ wip_add_item	code/test_hashmap.cpp	/^wip_add_item(u32_t key, u32_t value)$/;"	f	
 wip_dumbass_hash	code/test_hashmap.cpp	/^wip_dumbass_hash(u32_t v)$/;"	f	language:C++	typeref:typename:usz_t	file:
 work_queue	code/app_lit_ship.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_work_queue_t	file:
 work_queue	code/w32_eden.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_work_queue_t	file:
+wstr_from_lit	code/test_wstr.cpp	/^#define wstr_from_lit(/;"	d	language:C++	file:
+wstr_set	code/test_wstr.cpp	/^wstr_set(u16_t* data, usz_t size)$/;"	f	language:C++	typeref:typename:wstr_t	file:
+wstr_t	code/test_wstr.cpp	/^struct wstr_t $/;"	s	language:C++	file:
 x	code/app_lit.cpp	/^  f32_t x;$/;"	m	language:C++	struct:lit_game_title_waypoint_t	typeref:typename:f32_t	file:
 x	code/momo.h	/^  s16_t x, y; $/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:s16_t
 x	code/momo.h	/^  struct { f32_t x, y, z, w; };$/;"	m	language:C++	struct:v4f_t::__anon1db7a63d0a08	typeref:typename:f32_t
