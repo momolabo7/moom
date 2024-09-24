@@ -35,14 +35,14 @@
 
 static b32_t 
 pass_read_font_from_file(ttf_t* ttf, const char* filename, arena_t* allocator) {
-  str_t file_contents = file_read_into_str(filename, allocator); 
+  str8_t file_contents = file_read_into_str(filename, allocator); 
   if (!file_contents) return false;
   return ttf_read(ttf, file_contents);
 }
 
 static b32_t 
 pass_read_wav_from_file(wav_t* wav, const char* filename, arena_t* allocator) {
-  str_t file_contents = file_read_into_str(filename, allocator); 
+  str8_t file_contents = file_read_into_str(filename, allocator); 
   if(!file_contents) return false;
   return wav_read(wav, file_contents);
 }
@@ -357,7 +357,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
     arena_set_revert_point(p->arena);
     pass_pack_atlas_sprite_t* s = p->atlas_sprites + sprite_index;
 
-    str_t file_data = file_read_into_str(s->filename, p->arena);
+    str8_t file_data = file_read_into_str(s->filename, p->arena);
     assert(file_data);
 
     make(png_t, png);
@@ -437,7 +437,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
         arena_set_revert_point(p->arena);
         pass_pack_atlas_sprite_t* related_entry = context->sprite;
        
-        str_t file_data = file_read_into_str(related_entry->filename, p->arena);
+        str8_t file_data = file_read_into_str(related_entry->filename, p->arena);
         
         make(png_t, png);
         b32_t ok = png_read(png, file_data);
@@ -486,7 +486,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
   //
   if (opt_png_output)
   {
-    str_t png_to_write_mem  = 
+    str8_t png_to_write_mem  = 
       png_write(fbe->pixels, 
                 fb->width, 
                 fb->height, 
@@ -676,7 +676,6 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   // Fonts
   for_cnt(font_index, p->font_count)
   {
-    printf("%d\n", p->font_count);
     arena_set_revert_point(p->arena);
 
     asset_file_font_t* ff = p->fonts + font_index;
@@ -748,7 +747,7 @@ pass_pack_end(pass_pack_t* p, const char* filename)
 
     asset_file_shader_t* fs = p->shaders + shader_index; 
     pass_pack_shader_ext_t* fse = p->shader_exts + shader_index; 
-    str_t file_contents = file_read_into_str(fse->filename, p->arena, true); 
+    str8_t file_contents = file_read_into_str(fse->filename, p->arena, true); 
 
     fs->length = file_contents.size;
     fs->offset_to_data = offset_to_data;

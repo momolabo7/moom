@@ -2,31 +2,31 @@
 
 #include <stdio.h>
 
-struct wstr_t 
+struct str16_t 
 {
   u16_t* e;
   usz_t size;
 };
 
-static wstr_t
-wstr_set(u16_t* data, usz_t size)
+static str16_t
+str16_set(u16_t* data, usz_t size)
 {
-  wstr_t ret;
+  str16_t ret;
   ret.e = data;
   ret.size = size;
 
   return ret;
 }
 
-#define wstr_from_lit(lit) wstr_set((u16_t*)(L ## lit), sizeof(lit)/2-1)
+#define str16_from_lit(lit) str16_set((u16_t*)(L ## lit), sizeof(lit)/2-1)
 
 int main()
 {
   arena_t arena;
-  str_t str;
+  str16_t str;
   arena_alloc(&arena, gigabytes(1), false);
   
-  str = str_from_lit("←");
+  str = str16_from_lit("←");
 
 
   printf("%ls\n", str.e);

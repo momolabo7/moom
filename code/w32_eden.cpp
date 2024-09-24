@@ -55,7 +55,7 @@
 // MARK:(Memory Management)
 //
 struct w32_memory_t {
-  str_t user_block;
+  str8_t user_block;
   
   w32_memory_t* prev;
   w32_memory_t* next;

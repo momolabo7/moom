@@ -240,7 +240,7 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 //
 // @mark: Struct
 //
-struct str_t 
+struct str8_t 
 {
   u8_t* e;
   usz_t size;
@@ -261,9 +261,9 @@ struct str_t
 
 
 
-struct str_arr_t 
+struct str8_arr_t 
 {
-  str_t* e;
+  str8_t* e;
   u32_t size;
 };
 
@@ -385,7 +385,7 @@ struct arena_t
 {
   union 
   {
-    str_t buffer;
+    str8_t buffer;
     struct 
     {
       u8_t* memory;
@@ -448,12 +448,12 @@ struct garena_t
 };
 
 
-//@todo: rename to 'str_builder'
-struct str_builder_t
+//@todo: rename to 'str8_builder'
+struct str8_builder_t
 {
   union 
   {
-    str_t str;
+    str8_t str;
     struct 
     {
       u8_t* e;
@@ -473,7 +473,7 @@ struct str_builder_t
 //
 struct stream_t 
 {
-  str_t contents;
+  str8_t contents;
   usz_t pos;
 
   // For bit reading
@@ -528,7 +528,7 @@ struct wav_t
 
 struct png_t 
 {
-  str_t contents;
+  str8_t contents;
 
   u32_t width;
   u32_t height;
@@ -624,7 +624,7 @@ struct clex_token_t
 
 struct clex_tokenizer_t 
 {
-  str_t text;
+  str8_t text;
   usz_t at;
 };
 
@@ -653,7 +653,7 @@ struct json_element_t
       u8_t* at;
       usz_t size;
     };
-    str_t str;
+    str8_t str;
   };
 };
 
@@ -696,7 +696,7 @@ struct json_array_node_t
 struct json_t 
 {
   // for tokenizing
-  str_t text;
+  str8_t text;
   umi_t at;
 
   // The 'root' item in a JSON file is an object type.
@@ -737,7 +737,7 @@ static json_object_t* json_read(
     const u8_t* json_string, 
     u32_t json_string_size, 
     arena_t* ba);
-static json_value_t* json_get_value(json_object_t* j, str_t key);
+static json_value_t* json_get_value(json_object_t* j, str8_t key);
 static b32_t json_is_true(json_value_t* val);
 static b32_t json_is_false(json_value_t* val);
 static b32_t json_is_null(json_value_t* val);
@@ -774,10 +774,10 @@ static void   memory_copy(void* dest, const void* src, usz_t size);
 static void   memory_zero(void* dest, usz_t size);
 static b32_t  memory_is_same(const void* lhs, const void* rhs, usz_t size);
 static void   memory_swap(void* lhs, void* rhs, usz_t size);
-static str_t  memory_reserve(usz_t size);
-static b32_t  memory_commit(str_t blk);
-static str_t  memory_allocate(usz_t size); // reserve + commit
-static void   memory_free(str_t blk);
+static str8_t  memory_reserve(usz_t size);
+static b32_t  memory_commit(str8_t blk);
+static str8_t  memory_allocate(usz_t size); // reserve + commit
+static void   memory_free(str8_t blk);
 
 static umi_t ptr_to_umi(void* p);
 static u8_t* umi_to_ptr(umi_t u);
@@ -907,17 +907,17 @@ static u64_t u64_factorial(u64_t x);
 static u64_t u64_atomic_assign(u64_t volatile* value, u64_t new_value);
 static u64_t u64_atomic_add(u64_t volatile* value, u64_t to_add);
 
-static usz_t cstr_len(const c8_t* str); 
-static void  cstr_copy(c8_t * dest, const c8_t* src); 
-static b32_t cstr_compare(const c8_t* lhs, const c8_t* rhs); 
-static b32_t cstr_compare_n(const c8_t* lhs, const c8_t* rhs, usz_t n); 
-static void  cstr_concat(c8_t* dest, const c8_t* Src);
-static f64_t cstr_to_f64(const c8_t* p); 
-static u32_t cstr_to_u32(const c8_t* p); 
-static void  cstr_clear(c8_t* dest); 
-static void  cstr_reverse(c8_t* dest); 
-static void  cstr_itoa(c8_t* dest, s32_t num); 
-static u32_t cstr_len_if(const char* str, b32_t (*pred)(char));
+static usz_t cstr8_len(const c8_t* str); 
+static void  cstr8_copy(c8_t * dest, const c8_t* src); 
+static b32_t cstr8_compare(const c8_t* lhs, const c8_t* rhs); 
+static b32_t cstr8_compare_n(const c8_t* lhs, const c8_t* rhs, usz_t n); 
+static void  cstr8_concat(c8_t* dest, const c8_t* Src);
+static f64_t cstr8_to_f64(const c8_t* p); 
+static u32_t cstr8_to_u32(const c8_t* p); 
+static void  cstr8_clear(c8_t* dest); 
+static void  cstr8_reverse(c8_t* dest); 
+static void  cstr8_itoa(c8_t* dest, s32_t num); 
+static u32_t cstr8_len_if(const char* str, b32_t (*pred)(char));
 
 static u32_t hash_djb2(const c8_t* str);
 
@@ -1081,47 +1081,47 @@ static u32_t crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t
 // 
 // @mark:(Strings)
 //
-#define str_from_lit(s) str_set((u8_t*)(s), sizeof(s)-1)
-static str_t     str_bad();
-static str_t     str_set(u8_t* str, usz_t size);
-static str_t     str_substr(str_t str, usz_t start, usz_t ope);
-static b32_t     str_match(str_t lhs, str_t rhs);
-static str_t     str_from_cstr(const char* cstr);
-static smi_t     str_compare_lexographically(str_t lhs, str_t rhs);
-static b32_t     str_to_u32(str_t s, u32_t* out);
-static b32_t     str_to_f32(str_t s, f32_t* out);
-static b32_t     str_to_s32(str_t s, s32_t* out);
-static str_arr_t str_split(str_t str, u8_t delimiter, arena_t* arena); 
-static void      str_reverse(str_t* dest, str_t src);
+#define str8_from_lit(s) str8_set((u8_t*)(s), sizeof(s)-1)
+static str8_t     str8_bad();
+static str8_t     str8_set(u8_t* str, usz_t size);
+static str8_t     str8_substr(str8_t str, usz_t start, usz_t ope);
+static b32_t     str8_match(str8_t lhs, str8_t rhs);
+static str8_t     str8_from_cstr(const char* cstr);
+static smi_t     str8_compare_lexographically(str8_t lhs, str8_t rhs);
+static b32_t     str8_to_u32(str8_t s, u32_t* out);
+static b32_t     str8_to_f32(str8_t s, f32_t* out);
+static b32_t     str8_to_s32(str8_t s, s32_t* out);
+static str8_arr_t str8_split(str8_t str, u8_t delimiter, arena_t* arena); 
+static void      str8_reverse(str8_t* dest, str8_t src);
 
 // @note: returns str.size if not found
-static usz_t     str_find(str_t str, u8_t character); 
+static usz_t     str8_find(str8_t str, u8_t character); 
 
 // @todo: the ##LINE might be fake!
-#define str_builder_make(name, cap) \
+#define str8_builder_make(name, cap) \
   u8_t temp_buffer_##__LINE__[cap] = {0}; \
-str_builder_t name_; \
-str_builder_t* name = &name_; \
-str_builder_init(name, temp_buffer_##__LINE__, cap);
+str8_builder_t name_; \
+str8_builder_t* name = &name_; \
+str8_builder_init(name, temp_buffer_##__LINE__, cap);
 
-static usz_t    str_builder_remaining(str_builder_t* b);
-static void     str_builder_clear(str_builder_t* b);
-static void     str_builder_pop(str_builder_t* b);
-static void     str_builder_push_c8(str_builder_t* b, c8_t num);
-static void     str_builder_push_u8(str_builder_t* b, u8_t num);
-static void     str_builder_push_u32(str_builder_t* b, u32_t num);
-static void     str_builder_push_u64(str_builder_t* b, u64_t num);
-static void     str_builder_push_f32(str_builder_t* b, f32_t value, u32_t precision);
-static void     str_builder_push_s32(str_builder_t* b, s32_t num);
-static void     str_builder_push_s64(str_builder_t* b, s64_t num);
-static void     str_builder_push_str(str_builder_t* b, str_t str);
-static void     str_builder_push_cstr(str_builder_t* b, const c8_t* cstr);
-static void     str_builder_push_hex_u8(str_builder_t* b, u8_t num);
-static void     str_builder_push_hex_u32(str_builder_t* b, u32_t num);
-static void     str_builder_push_fmt(str_builder_t* b, str_t fmt, ...);
-static void     str_builder_init(str_builder_t* b, u8_t* data, usz_t cap);
-static void     str_builder_init(str_builder_t* b, str_t str);
-static b32_t    str_builder_init(str_builder_t* b, arena_t* arena, usz_t cap);
+static usz_t    str8_builder_remaining(str8_builder_t* b);
+static void     str8_builder_clear(str8_builder_t* b);
+static void     str8_builder_pop(str8_builder_t* b);
+static void     str8_builder_push_c8(str8_builder_t* b, c8_t num);
+static void     str8_builder_push_u8(str8_builder_t* b, u8_t num);
+static void     str8_builder_push_u32(str8_builder_t* b, u32_t num);
+static void     str8_builder_push_u64(str8_builder_t* b, u64_t num);
+static void     str8_builder_push_f32(str8_builder_t* b, f32_t value, u32_t precision);
+static void     str8_builder_push_s32(str8_builder_t* b, s32_t num);
+static void     str8_builder_push_s64(str8_builder_t* b, s64_t num);
+static void     str8_builder_push_str(str8_builder_t* b, str8_t str);
+static void     str8_builder_push_cstr(str8_builder_t* b, const c8_t* cstr);
+static void     str8_builder_push_hex_u8(str8_builder_t* b, u8_t num);
+static void     str8_builder_push_hex_u32(str8_builder_t* b, u32_t num);
+static void     str8_builder_push_fmt(str8_builder_t* b, str8_t fmt, ...);
+static void     str8_builder_init(str8_builder_t* b, u8_t* data, usz_t cap);
+static void     str8_builder_init(str8_builder_t* b, str8_t str);
+static b32_t    str8_builder_init(str8_builder_t* b, arena_t* arena, usz_t cap);
 
 //
 // @mark:(Stream)
@@ -1129,7 +1129,7 @@ static b32_t    str_builder_init(str_builder_t* b, arena_t* arena, usz_t cap);
 #define stream_consume(t,s) (t*) stream_consume_block((s), sizeof(t))
 #define stream_peek(t,s) (t*) stream_peek_block((s), sizeof(t))
 #define stream_write(s,item) stream_write_block((s), &(item), sizeof(item))
-static void     stream_init(stream_t* s, str_t contents);
+static void     stream_init(stream_t* s, str8_t contents);
 static void     stream_reset(stream_t* s);
 static b32_t    stream_is_eos(stream_t* s);
 static u8_t*    stream_consume_block(stream_t* s, usz_t amount);
@@ -1137,23 +1137,23 @@ static u8_t*    stream_peek_block(stream_t* s, usz_t amount);
 static void     stream_flush_bits(stream_t* s);
 static u32_t    stream_consume_bits(stream_t* s, u32_t amount);
 static void     stream_write_block(stream_t* s, void* src, usz_t size);
-static str_t    stream_consume_line(stream_t* s);
+static str8_t    stream_consume_line(stream_t* s);
 
 //
 // @mark:(Arena)
 //
-static b32_t    arena_init(arena_t* a, str_t buffer);
+static b32_t    arena_init(arena_t* a, str8_t buffer);
 static b32_t    arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit = false);
 static void     arena_clear(arena_t* a);
 static void*    arena_push_size(arena_t* a, usz_t size, usz_t align);
 static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align); 
 static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align);
 static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align);
-static str_t    arena_push_str(arena_t* a, usz_t size, usz_t align);
+static str8_t    arena_push_str(arena_t* a, usz_t size, usz_t align);
 static usz_t    arena_remaining(arena_t* a);
 static void*    arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size);
 static b32_t    arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size);
-static b32_t    arena_grow_str(arena_t* a, str_t* str, usz_t new_size);
+static b32_t    arena_grow_str(arena_t* a, str8_t* str, usz_t new_size);
 
 #define arena_grow_arr(t,b,a,o,n)     arena_grow_size((b), (a), sizeof(t)*(o), sizeof(t)*(n))
 #define arena_push_arr_align(t,b,n,a) (t*)arena_push_size((b), sizeof(t)*(n), a)
@@ -1191,7 +1191,7 @@ static void  garena_free(garena_t* ga, void* block);
 // @mark:(TTF)
 //
 
-static b32_t ttf_read(ttf_t* ttf, str_t ttf_contents);
+static b32_t ttf_read(ttf_t* ttf, str8_t ttf_contents);
 
 static u32_t ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint);
 // returns 0 for invalid codepoints
@@ -1213,9 +1213,9 @@ static s32_t ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t 
 static b32_t ttf_get_glyph_box(const ttf_t* ttf, u32_t glyph_index, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y1);
 static void ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y1);
 
-static b32_t     png_read(png_t* png, str_t png_contents);
+static b32_t     png_read(png_t* png, str8_t png_contents);
 static u32_t*    png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena); 
-static str_t     png_write(u8_t* pixels, u32_t width, u32_t height, arena_t* arena);
+static str8_t     png_write(u8_t* pixels, u32_t width, u32_t height, arena_t* arena);
 
 static b32_t rp_pack(
     rp_rect_t* rects, 
@@ -1226,12 +1226,12 @@ static b32_t rp_pack(
     rp_sort_type_t sort_type,
     arena_t* allocator);
 
-static b32_t clex_tokenizer_init(clex_tokenizer_t* t, str_t buffer);
+static b32_t clex_tokenizer_init(clex_tokenizer_t* t, str8_t buffer);
 static clex_token_t clex_next_token(clex_tokenizer_t* t);
 
 
-static str_t  file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate = false); 
-static b32_t  file_write_from_str(const char* filename, str_t buffer);
+static str8_t  file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate = false); 
+static b32_t  file_write_from_str(const char* filename, str8_t buffer);
 static void   file_close(file_t* fp); 
 static b32_t  file_open(file_t* fp, const char* filename, file_access_t access_type);
 static b32_t  file_read(file_t* fp, void* dest, usz_t size, usz_t offset);
@@ -1246,8 +1246,8 @@ static b32_t  socket_system_begin();
 static void   socket_system_end();
 static b32_t  socket_begin(socket_t* socket, const char* server, u32_t port);
 static void   socket_end(socket_t* s);
-static b32_t  socket_send(socket_t* s, str_t msg);
-static str_t  socket_receive(socket_t* s, str_t buffer);
+static b32_t  socket_send(socket_t* s, str8_t msg);
+static str8_t  socket_receive(socket_t* s, str8_t buffer);
 
 
 static void doze(u32_t ms_to_doze);
@@ -1315,7 +1315,7 @@ socket_begin(socket_t* s, const char* server, u32_t port)
       port_str[index] = digit_to_ascii(port % 10);
       port /= 10;
     }
-    cstr_reverse(port_str);
+    cstr8_reverse(port_str);
   }
 
   addrinfo * addr = NULL;
@@ -1368,7 +1368,7 @@ socket_begin(socket_t* s, const char* server, u32_t port)
 }
 
 static b32_t
-socket_send(socket_t* s, str_t msg) 
+socket_send(socket_t* s, str8_t msg) 
 {
   if (send(s->sock, (char*)msg.e, msg.size, 0) == SOCKET_ERROR) {
     return false;
@@ -1396,15 +1396,15 @@ socket_system_end()
 // @todo: 
 // - Maybe it should take in an arena...?
 //
-static str_t
-socket_receive(socket_t* s, str_t buffer)
+static str8_t
+socket_receive(socket_t* s, str8_t buffer)
 {
   // @note: will poll
   int received_bytes = recv(s->sock, (char*)buffer.e, buffer.size, 0);
   if (received_bytes == SOCKET_ERROR) {
-    return str_bad();
+    return str8_bad();
   }
-  return str_set(buffer.e, received_bytes);
+  return str8_set(buffer.e, received_bytes);
 }
 static void
 doze(u32_t ms_to_doze) {
@@ -1506,23 +1506,23 @@ file_get_size(file_t* fp) {
   return ret;
 }
 
-static str_t
+static str8_t
 memory_reserve(usz_t size) {
-  return str_set(
+  return str8_set(
       (u8_t*)VirtualAlloc(0, size, MEM_RESERVE, PAGE_READWRITE),
       size);
 }
 
 static b32_t
-memory_commit(str_t blk) {
+memory_commit(str8_t blk) {
   b32_t result = (VirtualAlloc(blk.e, blk.size, MEM_COMMIT, PAGE_READWRITE) != 0);
   return result;
 }
 
 
-static str_t
+static str8_t
 memory_allocate(usz_t size) {
-  return str_set(
+  return str8_set(
     (u8_t*)VirtualAllocEx(
       GetCurrentProcess(),
       0, 
@@ -1534,7 +1534,7 @@ memory_allocate(usz_t size) {
 }
 
 static void 
-memory_free(str_t blk) {
+memory_free(str8_t blk) {
   VirtualFree(blk.e, 0, MEM_RELEASE);
 }
 
@@ -1621,7 +1621,7 @@ socket_end(socket_t* s)
 }
 
 static b32_t
-socket_send(socket_t* s, str_t msg) 
+socket_send(socket_t* s, str8_t msg) 
 {
   if (send(s->sock, (char*)msg.e, msg.size, 0) == -1)
   {
@@ -1631,16 +1631,16 @@ socket_send(socket_t* s, str_t msg)
   return true;
 }
 
-static str_t
-socket_receive(socket_t* s, str_t buffer)
+static str8_t
+socket_receive(socket_t* s, str8_t buffer)
 {
   // @note: will poll
   ssize_t received_bytes = recv(s->sock, (char*)buffer.e, buffer.size, 0);
   if (received_bytes == -1)
   {
-    return str_bad();
+    return str8_bad();
   }
-  return str_set(buffer.e, received_bytes);
+  return str8_set(buffer.e, received_bytes);
 }
 
 static void 
@@ -1719,7 +1719,7 @@ file_get_size(file_t* fp) {
 
 // @note(momo): Apparently linux already handles committing and reserving 
 // for the user already so there is no need to commit/reserve?
-static str_t
+static str8_t
 memory_reserve(usz_t size) {
   u8_t* blk = (u8_t*)mmap(
       0, 
@@ -1728,16 +1728,16 @@ memory_reserve(usz_t size) {
       MAP_PRIVATE | MAP_ANONYMOUS,
       -1, 
       0);
-  return str_set(blk, size);
+  return str8_set(blk, size);
 }
 
 static b32_t
-memory_commit(str_t blk) {
+memory_commit(str8_t blk) {
   return mprotect(blk.e, blk.size, PROT_READ | PROT_WRITE) == 0;
 }
 
 
-static str_t 
+static str8_t 
 memory_allocate(usz_t size) {
   u8_t* blk = (u8_t*)mmap(
       0, 
@@ -1746,12 +1746,12 @@ memory_allocate(usz_t size) {
       MAP_PRIVATE | MAP_ANONYMOUS,
       -1, 
       0);
-  return str_set(blk, size);
+  return str8_set(blk, size);
 
 }
 
 static void 
-memory_free(str_t blk) {
+memory_free(str8_t blk) {
   munmap(blk.e, blk.size);
 }
 
@@ -1774,24 +1774,24 @@ clock_secs_elapsed(u64_t start, u64_t end)
   return (f32_t)(end - start)/clock_resolution();
 }
 
-static str_t 
+static str8_t 
 file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate) {
   file_t file = {};
   if (!file_open(&file, filename, FILE_ACCESS_READ)) {
-    return str_bad();
+    return str8_bad();
   }
   defer { file_close(&file); };
 
   u64_t file_size = file_get_size(&file);
 
-  str_t ret = arena_push_str(arena, file_size + null_terminate, 16);
+  str8_t ret = arena_push_str(arena, file_size + null_terminate, 16);
   if (!ret) {
-    return str_bad();
+    return str8_bad();
   }
 
 
   if (!file_read(&file, ret.e, file_size, 0)) {
-    return str_bad();
+    return str8_bad();
   }
 
   if (null_terminate) 
@@ -1801,7 +1801,7 @@ file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate) {
 }
 
 static b32_t
-file_write_from_str(const char* filename, str_t buffer) {
+file_write_from_str(const char* filename, str8_t buffer) {
   file_t file = {};
   if (!file_open(&file, filename, FILE_ACCESS_CREATE)) {
     return false; 
@@ -1825,13 +1825,13 @@ file_write_from_str(const char* filename, str_t buffer) {
 //
 // @todo: Make this serious
 
-static str_t 
+static str8_t 
 foolish_allocate_memory(usz_t size) {
-  return str_set((u8_t*)malloc(size), size);
+  return str8_set((u8_t*)malloc(size), size);
 }
 
 static void
-foolish_free_memory(str_t blk) {
+foolish_free_memory(str8_t blk) {
   free(blk.e);
 }
 
@@ -1843,7 +1843,7 @@ foolish_allocate_arena(usz_t size) {
 }
 
 static b32_t
-foolish_write_str_to_file(const char* filename, str_t buffer) {
+foolish_write_str8_to_file(const char* filename, str8_t buffer) {
   FILE *file = fopen(filename, "wb");
   if (!file) return false;
   defer { fclose(file); };
@@ -1853,11 +1853,11 @@ foolish_write_str_to_file(const char* filename, str_t buffer) {
 }
 
 
-static str_t 
+static str8_t 
 foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {
   FILE *file = fopen(filename, "rb");
 
-  if (!file) return str_set(0,0);
+  if (!file) return str8_set(0,0);
   defer { fclose(file); };
 
   fseek(file, 0, SEEK_END);
@@ -1865,10 +1865,10 @@ foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false
   fseek(file, 0, SEEK_SET);
 
 
-  str_t ret = memory_allocate(file_size + null_terminate);
+  str8_t ret = memory_allocate(file_size + null_terminate);
   usz_t read_amount = fread(ret.e, 1, file_size, file);
 
-  if(read_amount != file_size) return str_bad();
+  if(read_amount != file_size) return str8_bad();
 
   if (null_terminate) ret.e[file_size] = 0;  
 
@@ -1876,7 +1876,7 @@ foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false
 }
 
 static void
-foolish_free_buffer(str_t buffer) {
+foolish_free_buffer(str8_t buffer) {
   memory_free(buffer);
 }
 
@@ -2130,10 +2130,10 @@ _json_insert_entry(json_t* t, _json_entry_t** entry, _json_entry_t* new_entry) {
   else {
     _json_entry_t* itr = (*entry);
     while(itr != nullptr) {
-      str_t lhs = str_set(itr->key.at, itr->key.size);
-      str_t rhs = str_set(new_entry->key.at, new_entry->key.size);
+      str8_t lhs = str8_set(itr->key.at, itr->key.size);
+      str8_t rhs = str8_set(new_entry->key.at, new_entry->key.size);
 
-      smi_t cmp = str_compare_lexographically(lhs, rhs);
+      smi_t cmp = str8_compare_lexographically(lhs, rhs);
       if (cmp > 0) {
         if (itr->left == nullptr) {
           itr->left = new_entry;
@@ -2446,12 +2446,12 @@ _json_print_entries_in_order(json_t* t, _json_entry_t* entry)
 #endif // JSON_DEBUG
 
 static _json_entry_t* 
-_json_get(json_object_t* json_object, str_t key) {
+_json_get(json_object_t* json_object, str8_t key) {
   _json_entry_t* node = json_object->head;
   while(node) {
-    str_t lhs = str_set(node->key.at, node->key.size);
-    str_t rhs = str_set(key.e, key.size);
-    smi_t cmp = str_compare_lexographically(lhs, rhs); 
+    str8_t lhs = str8_set(node->key.at, node->key.size);
+    str8_t rhs = str8_set(key.e, key.size);
+    smi_t cmp = str8_compare_lexographically(lhs, rhs); 
     if (cmp > 0) {
       node = node->left;
     }
@@ -2467,7 +2467,7 @@ _json_get(json_object_t* json_object, str_t key) {
 }
 
 static json_value_t* 
-json_get_value(json_object_t* json_object, str_t key) {
+json_get_value(json_object_t* json_object, str8_t key) {
   _json_entry_t* entry = _json_get(json_object, key);
   if (!entry) return nullptr;
   return &entry->value;
@@ -2528,7 +2528,7 @@ json_read(
     u32_t json_string_size, 
     arena_t* ba) 
 {
-  j->text = str_set(json_string, json_string_size);
+  j->text = str8_set(json_string, json_string_size);
   j->at = 0;
   _json_token_t token = _json_next_token(j);
   if (token.type != _JSON_TOKEN_TYPE_OPEN_BRACE) return nullptr;
@@ -2579,7 +2579,7 @@ _clex_is_accepted_character_for_number(char c) {
 
 
 static b32_t
-_clex_compare_token_with_string(clex_tokenizer_t* t, clex_token_t token, str_t str) {
+_clex_compare_token_with_string(clex_tokenizer_t* t, clex_token_t token, str8_t str) {
   if( str.size != (token.ope - token.begin)) {
     return false;
   }
@@ -2595,7 +2595,7 @@ _clex_compare_token_with_string(clex_tokenizer_t* t, clex_token_t token, str_t s
 
 
 static b32_t
-clex_tokenizer_init(clex_tokenizer_t* t, str_t buffer) {
+clex_tokenizer_init(clex_tokenizer_t* t, str8_t buffer) {
   t->text = buffer; 
   t->at = 0;
   return !!t->text.size;
@@ -2603,19 +2603,19 @@ clex_tokenizer_init(clex_tokenizer_t* t, str_t buffer) {
 
 static b32_t
 _clex_is_keyword(clex_tokenizer_t* t, clex_token_t token) {
-  static str_t keywords[] = {
-    str_from_lit("if"),
-    str_from_lit("else"),
-    str_from_lit("switch"),
-    str_from_lit("case"),
-    str_from_lit("default"),
-    str_from_lit("while"),
-    str_from_lit("for"),
-    str_from_lit("if"),
-    str_from_lit("operator"),
-    str_from_lit("auto"),
-    str_from_lit("goto"),
-    str_from_lit("return"),
+  static str8_t keywords[] = {
+    str8_from_lit("if"),
+    str8_from_lit("else"),
+    str8_from_lit("switch"),
+    str8_from_lit("case"),
+    str8_from_lit("default"),
+    str8_from_lit("while"),
+    str8_from_lit("for"),
+    str8_from_lit("if"),
+    str8_from_lit("operator"),
+    str8_from_lit("auto"),
+    str8_from_lit("goto"),
+    str8_from_lit("return"),
   };
   for_arr(i, keywords) {
     if (_clex_compare_token_with_string(t, token, keywords[i]))
@@ -3268,14 +3268,14 @@ memory_swap(void* lhs, void* rhs, usz_t size) {
 }
 
 static usz_t
-cstr_len(const c8_t* str) {
+cstr8_len(const c8_t* str) {
   usz_t count = 0;
   for(; (*str) != 0 ; ++count, ++str);
   return count;
 }
 
 static u32_t 
-cstr_to_u32(const c8_t* str)
+cstr8_to_u32(const c8_t* str)
 {
   u32_t ret = 0;
   while(*str >= '0' && *str <= '9') {
@@ -3287,7 +3287,7 @@ cstr_to_u32(const c8_t* str)
 }
 
 static u32_t 
-cstr_len_if(const char* str, b32_t (*pred)(char))
+cstr8_len_if(const char* str, b32_t (*pred)(char))
 {
   // common strlen that counts what I care
   u32_t ret = 0;
@@ -3300,7 +3300,7 @@ cstr_len_if(const char* str, b32_t (*pred)(char))
   return ret;
 }
 static void
-cstr_copy(c8_t * dest, const c8_t* src) {
+cstr8_copy(c8_t * dest, const c8_t* src) {
   for(; (*src) != 0 ; ++src, ++dest) {
     (*dest) = (*src);
   }
@@ -3308,7 +3308,7 @@ cstr_copy(c8_t * dest, const c8_t* src) {
 }
 
 static b32_t
-cstr_compare(const c8_t* lhs, const c8_t* rhs) {
+cstr8_compare(const c8_t* lhs, const c8_t* rhs) {
   for(; (*rhs) != 0 ; ++rhs, ++lhs) {
     if ((*lhs) != (*rhs)) {
       return false;
@@ -3318,7 +3318,7 @@ cstr_compare(const c8_t* lhs, const c8_t* rhs) {
 }
 
 static b32_t
-cstr_compare_n(const c8_t* lhs, const c8_t* rhs, usz_t n) {
+cstr8_compare_n(const c8_t* lhs, const c8_t* rhs, usz_t n) {
   while(n--) {
     if ((*lhs++) != (*rhs++)) {
       return false;
@@ -3328,7 +3328,7 @@ cstr_compare_n(const c8_t* lhs, const c8_t* rhs, usz_t n) {
 }
 
 static void
-cstr_concat(c8_t* dest, const c8_t* Src) {
+cstr8_concat(c8_t* dest, const c8_t* Src) {
   // Go to the end of dest
   for (; (*dest) != 0; ++dest);
   for (; (*Src) != 0; ++Src, ++dest) {
@@ -4007,7 +4007,7 @@ _compute_f64(s64_t power, u64_t i, b32_t negative)
 }
 
 static f64_t
-cstr_to_f64(const c8_t* p) {
+cstr8_to_f64(const c8_t* p) {
   b32_t found_minus = (*p == '-');
   b32_t negative = false;
   if (found_minus) {
@@ -4117,12 +4117,12 @@ cstr_to_f64(const c8_t* p) {
 }
 
 static void 
-cstr_clear(c8_t* dest) {
+cstr8_clear(c8_t* dest) {
   (*dest) = 0;
 }
 
 static void
-cstr_reverse(c8_t* dest) {
+cstr8_reverse(c8_t* dest) {
   c8_t* back_ptr = dest;
   for (; *(back_ptr+1) != 0; ++back_ptr);
   for (;dest < back_ptr; ++dest, --back_ptr) {
@@ -4133,7 +4133,7 @@ cstr_reverse(c8_t* dest) {
 
 
 static void 
-cstr_itoa(c8_t* dest, s32_t num) {
+cstr8_itoa(c8_t* dest, s32_t num) {
   // Naive method. 
   // Extract each number starting from the back and fill the buffer. 
   // Then reverse it.
@@ -4159,7 +4159,7 @@ cstr_itoa(c8_t* dest, s32_t num) {
   }
   (*it) = 0;
 
-  cstr_reverse(dest);
+  cstr8_reverse(dest);
 }
 
 static b32_t 
@@ -5528,7 +5528,7 @@ _sort_quick_generic_partition(
   for (u32_t i = start; i < ope-1; ++i) {
     u8_t* i_ptr = (u8_t*)a + (i * element_size);
     u8_t* pivot_ptr = (u8_t*)a + (pivot_idx * element_size);
-    //if (str_compare_lexographically(*i_ptr, *pivot_ptr) < 0) {
+    //if (str8_compare_lexographically(*i_ptr, *pivot_ptr) < 0) {
     if (cmp(i_ptr, pivot_ptr)) {
       u8_t* eventual_pivot_ptr = (u8_t*)a + (eventual_pivot_idx * element_size);
       memory_swap(i_ptr, eventual_pivot_ptr, element_size);
@@ -5914,22 +5914,22 @@ crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t* table) {
 //
 // @mark:(String)
 //
-static str_t
-str_set(u8_t* str, usz_t size) {
-  str_t ret;
+static str8_t
+str8_set(u8_t* str, usz_t size) {
+  str8_t ret;
   ret.e = str;
   ret.size = size;
   return ret;
 }
 
-static str_t
-str_bad() {
-  return str_set(0,0);
+static str8_t
+str8_bad() {
+  return str8_set(0,0);
 }
 
 
 static usz_t     
-str_find(str_t str, u8_t character){
+str8_find(str8_t str, u8_t character){
   for_cnt(i, str.size)
   {
     if (str.e[i] == character)
@@ -5941,7 +5941,7 @@ str_find(str_t str, u8_t character){
 }
 
 static void
-str_reverse(str_t* dest)
+str8_reverse(str8_t* dest)
 {
   u8_t* front_ptr = dest->e;
   u8_t* back_ptr = dest->e + dest->size - 1;
@@ -5950,9 +5950,9 @@ str_reverse(str_t* dest)
   }
 }
 
-static str_arr_t 
-str_split(str_t str, u8_t delimiter, arena_t* arena) {
-  str_arr_t ret = {};
+static str8_arr_t 
+str8_split(str8_t str, u8_t delimiter, arena_t* arena) {
+  str8_arr_t ret = {};
   if (!str) return ret;
 
 
@@ -5962,8 +5962,8 @@ str_split(str_t str, u8_t delimiter, arena_t* arena) {
   {
     if (str.e[end] == delimiter) 
     {
-      str_t* new_node = arena_push(str_t, arena);
-      dref(new_node) = str_set(str.e + start, end - start);
+      str8_t* new_node = arena_push(str8_t, arena);
+      dref(new_node) = str8_set(str.e + start, end - start);
 
       if (ret.e == nullptr) {
         ret.e = new_node;
@@ -5975,22 +5975,22 @@ str_split(str_t str, u8_t delimiter, arena_t* arena) {
     }
   }
 
-  str_t* new_node = arena_push(str_t, arena);
-  dref(new_node) = str_set(str.e + start, end - start);
+  str8_t* new_node = arena_push(str8_t, arena);
+  dref(new_node) = str8_set(str.e + start, end - start);
   ++ret.size;
 
   return ret;
 }
 
 
-static str_t
-str_from_cstr(const c8_t* cstr) {
-  return {(u8_t*)cstr, cstr_len(cstr)};
+static str8_t
+str8_from_cstr(const c8_t* cstr) {
+  return {(u8_t*)cstr, cstr8_len(cstr)};
 }
 
-static str_t 
-str_substr(str_t str, usz_t start, usz_t count) {
-  str_t ret;
+static str8_t 
+str8_substr(str8_t str, usz_t start, usz_t count) {
+  str8_t ret;
   ret.e = str.e + start;
   ret.size = count;
 
@@ -5998,7 +5998,7 @@ str_substr(str_t str, usz_t start, usz_t count) {
 }
 
 static b32_t
-str_match(str_t lhs, str_t rhs) {
+str8_match(str8_t lhs, str8_t rhs) {
   if(lhs.size != rhs.size) {
     return false;
   }
@@ -6016,7 +6016,7 @@ str_match(str_t lhs, str_t rhs) {
 // If an unmatched character is found at an index, it will return the 'difference' between those characters
 // If no unmatched character is found at an index, it will return the size different between the strings 
 static smi_t 
-str_compare_lexographically(str_t lhs, str_t rhs) {
+str8_compare_lexographically(str8_t lhs, str8_t rhs) {
   for (usz_t i = 0; i < lhs.size && i < rhs.size; ++i) {
     if (lhs.e[i] == rhs.e[i]) continue;
     else {
@@ -6037,7 +6037,7 @@ str_compare_lexographically(str_t lhs, str_t rhs) {
 
 
 static b32_t 
-str_to_u32_range(str_t s, usz_t begin, usz_t ope, u32_t* out) {
+str8_to_u32_range(str8_t s, usz_t begin, usz_t ope, u32_t* out) {
   if (ope > s.size) return false;
 
   u32_t number = 0;
@@ -6055,7 +6055,7 @@ str_to_u32_range(str_t s, usz_t begin, usz_t ope, u32_t* out) {
 
 
 static b32_t 
-str_to_s32_range(str_t s, usz_t begin, usz_t ope, s32_t* out) {
+str8_to_s32_range(str8_t s, usz_t begin, usz_t ope, s32_t* out) {
 
   if (ope > s.size) return false;
 
@@ -6079,7 +6079,7 @@ str_to_s32_range(str_t s, usz_t begin, usz_t ope, s32_t* out) {
 }
 
 static b32_t 
-str_to_f32_range(str_t s, usz_t begin, usz_t ope, f32_t* out) {
+str8_to_f32_range(str8_t s, usz_t begin, usz_t ope, f32_t* out) {
   if (ope > s.size) return false;
   u32_t place = 0;
 
@@ -6108,23 +6108,23 @@ str_to_f32_range(str_t s, usz_t begin, usz_t ope, f32_t* out) {
 }
 
 static b32_t 
-str_to_f32(str_t s, f32_t* out) {
-  return str_to_f32_range(s, 0, s.size, out);
+str8_to_f32(str8_t s, f32_t* out) {
+  return str8_to_f32_range(s, 0, s.size, out);
 }
 static b32_t 
-str_to_u32(str_t s, u32_t* out) {
-  return str_to_u32_range(s, 0, s.size, out);
+str8_to_u32(str8_t s, u32_t* out) {
+  return str8_to_u32_range(s, 0, s.size, out);
 }
 
 // Parsing functions
 static b32_t 
-str_to_s32(str_t s, s32_t* out) 
+str8_to_s32(str8_t s, s32_t* out) 
 {
-  return str_to_s32_range(s, 0, s.size, out);
+  return str8_to_s32_range(s, 0, s.size, out);
 }
 
 static void  
-str_builder_init(str_builder_t* b, u8_t* data, usz_t cap) 
+str8_builder_init(str8_builder_t* b, u8_t* data, usz_t cap) 
 {
   b->e = data;
   b->size = 0;
@@ -6132,19 +6132,19 @@ str_builder_init(str_builder_t* b, u8_t* data, usz_t cap)
 }
 
 static b32_t     
-str_builder_init(str_builder_t* b, arena_t* arena, usz_t cap)
+str8_builder_init(str8_builder_t* b, arena_t* arena, usz_t cap)
 {
   u8_t* buffer = arena_push_arr(u8_t, arena, cap);
   if (!buffer) return false;
 
-  str_builder_init(b, buffer, cap);
+  str8_builder_init(b, buffer, cap);
 
   return true;
 
 }
 
 static void  
-str_builder_init(str_builder_t* b, str_t str) 
+str8_builder_init(str8_builder_t* b, str8_t str) 
 {
   b->e = str.e;
   b->size = 0;
@@ -6153,74 +6153,74 @@ str_builder_init(str_builder_t* b, str_t str)
 
 
 static usz_t
-str_builder_remaining(str_builder_t* b) {
+str8_builder_remaining(str8_builder_t* b) {
   return b->cap - b->size; 
 }
 
 static void     
-str_builder_clear(str_builder_t* b) {
+str8_builder_clear(str8_builder_t* b) {
   b->size = 0;
 }
 
 static void     
-str_builder_pop(str_builder_t* b) {
+str8_builder_pop(str8_builder_t* b) {
   assert(b->size > 0);
   --b->size;
 }
 
 static void     
-str_builder_push_u8(str_builder_t* b, u8_t num) {
+str8_builder_push_u8(str8_builder_t* b, u8_t num) {
   assert(b->size < b->cap); b->e[b->size++] = num;
 }
 
 static void     
-str_builder_push_c8(str_builder_t* b, c8_t num) {
+str8_builder_push_c8(str8_builder_t* b, c8_t num) {
   assert(b->size < b->cap);
   b->e[b->size++] = num;
 }
 
 static void     
-str_builder_push_u32(str_builder_t* b, u32_t num) {
+str8_builder_push_u32(str8_builder_t* b, u32_t num) {
   if (num == 0) {
-    str_builder_push_c8(b, '0');
+    str8_builder_push_c8(b, '0');
     return;
   }
   usz_t start_pt = b->size; 
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    str_builder_push_c8(b, digit_to_ascii(digit_to_convert));
+    str8_builder_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   // Reverse starting from start point to count
-  usz_t sub_str_len_half = (b->size - start_pt)/2;
-  for(usz_t i = 0; i < sub_str_len_half; ++i) {
+  usz_t sub_str8_len_half = (b->size - start_pt)/2;
+  for(usz_t i = 0; i < sub_str8_len_half; ++i) {
     swap(b->e[start_pt + i], b->e[ b->size - 1 - i]);
   }
 }
 static void     
-str_builder_push_u64(str_builder_t* b, u64_t num) {
+str8_builder_push_u64(str8_builder_t* b, u64_t num) {
   if (num == 0) {
-    str_builder_push_c8(b, '0');
+    str8_builder_push_c8(b, '0');
     return;
   }
   usz_t start_pt = b->size; 
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    str_builder_push_c8(b, digit_to_ascii(digit_to_convert));
+    str8_builder_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   // Reverse starting from start point to count
-  usz_t sub_str_len_half = (b->size - start_pt)/2;
-  for(usz_t i = 0; i < sub_str_len_half; ++i) {
+  usz_t sub_str8_len_half = (b->size - start_pt)/2;
+  for(usz_t i = 0; i < sub_str8_len_half; ++i) {
     swap(b->e[start_pt + i], b->e[b->size - 1 - i]);
   }
 }
 static void     
-str_builder_push_s32(str_builder_t* b, s32_t num) {
+str8_builder_push_s32(str8_builder_t* b, s32_t num) {
   if (num == 0) {
-    str_builder_push_c8(b, '0');
+    str8_builder_push_c8(b, '0');
     return;
   }
 
@@ -6231,16 +6231,16 @@ str_builder_push_s32(str_builder_t* b, s32_t num) {
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    str_builder_push_c8(b, digit_to_ascii(digit_to_convert));
+    str8_builder_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   if (negate) {
-    str_builder_push_c8(b, '-');
+    str8_builder_push_c8(b, '-');
   }
 
   // Reverse starting from start point to count
-  usz_t sub_str_len_half = (b->size - start_pt)/2;
-  for(usz_t i = 0; i < sub_str_len_half; ++i) {
+  usz_t sub_str8_len_half = (b->size - start_pt)/2;
+  for(usz_t i = 0; i < sub_str8_len_half; ++i) {
     swap(b->e[start_pt+i], b->e[b->size-1-i]);
 
   }
@@ -6248,9 +6248,9 @@ str_builder_push_s32(str_builder_t* b, s32_t num) {
 }
 
 static void     
-str_builder_push_s64(str_builder_t* b, s64_t num) {
+str8_builder_push_s64(str8_builder_t* b, s64_t num) {
   if (num == 0) {
-    str_builder_push_c8(b, '0');
+    str8_builder_push_c8(b, '0');
     return;
   }
 
@@ -6261,16 +6261,16 @@ str_builder_push_s64(str_builder_t* b, s64_t num) {
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    str_builder_push_c8(b, digit_to_ascii(digit_to_convert));
+    str8_builder_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   if (negate) {
-    str_builder_push_c8(b, '-');
+    str8_builder_push_c8(b, '-');
   }
 
   // Reverse starting from start point to count
-  usz_t sub_str_len_half = (b->size - start_pt)/2;
-  for(usz_t i = 0; i < sub_str_len_half; ++i) {
+  usz_t sub_str8_len_half = (b->size - start_pt)/2;
+  for(usz_t i = 0; i < sub_str8_len_half; ++i) {
     swap(b->e[start_pt+i], b->e[b->size-1-i]);
 
   }
@@ -6278,16 +6278,16 @@ str_builder_push_s64(str_builder_t* b, s64_t num) {
 }
 
 static void     
-str_builder_push_f32(str_builder_t* b, f32_t value, u32_t precision) {
+str8_builder_push_f32(str8_builder_t* b, f32_t value, u32_t precision) {
   if (value < 0.f) {
-    str_builder_push_c8(b, '-');	
+    str8_builder_push_c8(b, '-');	
     value = -value;
   }
 
   // @note: won't work for values that u32_t can't contain
   u32_t integer_part = (u32_t)value;
-  str_builder_push_u32(b, integer_part);
-  str_builder_push_c8(b, '.');
+  str8_builder_push_u32(b, integer_part);
+  str8_builder_push_c8(b, '.');
 
   value -= (f32_t)integer_part;
 
@@ -6296,19 +6296,19 @@ str_builder_push_f32(str_builder_t* b, f32_t value, u32_t precision) {
   }
 
   u32_t decimal_part = (u32_t)value;
-  str_builder_push_u32(b, decimal_part);
+  str8_builder_push_u32(b, decimal_part);
 }
 
 static void     
-str_builder_push_f64(str_builder_t* b, f64_t value, u32_t precision) {
+str8_builder_push_f64(str8_builder_t* b, f64_t value, u32_t precision) {
   if (value < 0.0) {
-    str_builder_push_c8(b, '-');	
+    str8_builder_push_c8(b, '-');	
     value = -value;
   }
   // @note: won't work for values that u32_t can't contain
   u32_t integer_part = (u32_t)value;
-  str_builder_push_u32(b, integer_part);
-  str_builder_push_c8(b, '.');
+  str8_builder_push_u32(b, integer_part);
+  str8_builder_push_c8(b, '.');
 
   value -= (f64_t)integer_part;
 
@@ -6317,12 +6317,12 @@ str_builder_push_f64(str_builder_t* b, f64_t value, u32_t precision) {
   }
 
   u32_t decimal_part = (u32_t)value;
-  str_builder_push_u32(b, decimal_part);
+  str8_builder_push_u32(b, decimal_part);
 }
 
 
 static void
-str_builder_push_hex_u8(str_builder_t* b, u8_t value) {
+str8_builder_push_hex_u8(str8_builder_t* b, u8_t value) {
 
   c8_t parts[2] = {
     (c8_t)(value >> 4),
@@ -6332,10 +6332,10 @@ str_builder_push_hex_u8(str_builder_t* b, u8_t value) {
 
   for(u32_t i = 0; i < array_count(parts); ++i) {
     if (parts[i] >= 0 && parts[i] <= 9) {
-      str_builder_push_c8(b, parts[i] + '0');
+      str8_builder_push_c8(b, parts[i] + '0');
     }
     else if (parts[i] >= 10 && parts[i] <= 15) {
-      str_builder_push_c8(b, parts[i] - 10 + 'A');
+      str8_builder_push_c8(b, parts[i] - 10 + 'A');
     }
   }
 
@@ -6345,17 +6345,17 @@ str_builder_push_hex_u8(str_builder_t* b, u8_t value) {
 }
 
 static void
-str_builder_push_hex_u32(str_builder_t* b, u32_t value) {
+str8_builder_push_hex_u32(str8_builder_t* b, u32_t value) {
   union { u32_t v; u8_t b[4]; } combine;
   combine.v = value;
   for(s32_t i = 3; i >= 0; --i) {
-    str_builder_push_hex_u8(b, combine.b[i]);
+    str8_builder_push_hex_u8(b, combine.b[i]);
   }
 }
 
 
 static void
-_str_builder_push_fmt_list(str_builder_t* b, str_t format, va_list args) 
+_str8_builder_push_fmt_list(str8_builder_t* b, str8_t format, va_list args) 
 {
   usz_t at = 0;
   while(at < format.size) {
@@ -6375,51 +6375,51 @@ _str_builder_push_fmt_list(str_builder_t* b, str_t format, va_list args)
       // literally do not know how big the buffer our string maker 
       // should be. For now we hardcode it because my use cases are
       // definitive, but it should be more dynamic.
-      str_builder_make(tb, 64);
+      str8_builder_make(tb, 64);
 
       switch(format.e[at]) {
         case 'i': {
           s32_t value = va_arg(args, s32_t);
-          str_builder_push_s32(tb, value);
+          str8_builder_push_s32(tb, value);
         } break;
         case 'I': {
           s64_t value = va_arg(args, s64_t);
-          str_builder_push_s64(tb, value);
+          str8_builder_push_s64(tb, value);
         } break;
         case 'U': {
           u64_t value = va_arg(args, u64_t);
-          str_builder_push_u64(tb, value);
+          str8_builder_push_u64(tb, value);
         } break;
         case 'u': {
           u32_t value = va_arg(args, u32_t);
-          str_builder_push_u32(tb, value);
+          str8_builder_push_u32(tb, value);
         } break;
         case 'f': {
           f64_t value = va_arg(args, f64_t);
-          str_builder_push_f32(tb, (f32_t)value, 5);
+          str8_builder_push_f32(tb, (f32_t)value, 5);
         } break;
         case 'F': {
           f64_t value = va_arg(args, f64_t);
-          str_builder_push_f64(tb, (f64_t)value, 5);
+          str8_builder_push_f64(tb, (f64_t)value, 5);
         } break;
         case 'x':
         case 'X': {
           u32_t value = va_arg(args, u32_t);
-          str_builder_push_hex_u32(tb, value);
+          str8_builder_push_hex_u32(tb, value);
         } break;
         case 's': {
           // c-string
           const char* cstr = va_arg(args, const char*);
           while(cstr[0] != 0) {
-            str_builder_push_c8(tb, (u8_t)cstr[0]);
+            str8_builder_push_c8(tb, (u8_t)cstr[0]);
             ++cstr;
           }
         } break;
 
         case 'S': {
-          // str_t, or 'text'.
-          str_t str = va_arg(args, str_t);
-          str_builder_push_str(tb, str);
+          // str8_t, or 'text'.
+          str8_t str = va_arg(args, str8_t);
+          str8_builder_push_str(tb, str);
         } break;
 
         default: {
@@ -6432,18 +6432,18 @@ _str_builder_push_fmt_list(str_builder_t* b, str_t format, va_list args)
       if (width > 0 && tb->str.size < width) {
         usz_t spaces_to_pad = width - tb->str.size;
         while(spaces_to_pad--) {
-          str_builder_push_c8(b, ' ');
+          str8_builder_push_c8(b, ' ');
         }
-        str_builder_push_str(b, tb->str);
+        str8_builder_push_str(b, tb->str);
       }
       else {
-        str_builder_push_str(b, tb->str);
+        str8_builder_push_str(b, tb->str);
       }
 
 
     }
     else {
-      str_builder_push_c8(b, format.e[at++]);
+      str8_builder_push_c8(b, format.e[at++]);
     }
 
   }
@@ -6451,15 +6451,15 @@ _str_builder_push_fmt_list(str_builder_t* b, str_t format, va_list args)
 
 
 static void     
-str_builder_push_fmt(str_builder_t* b, str_t fmt, ...) {
+str8_builder_push_fmt(str8_builder_t* b, str8_t fmt, ...) {
   va_list args;
   va_start(args, fmt);
-  _str_builder_push_fmt_list(b, fmt, args);
+  _str8_builder_push_fmt_list(b, fmt, args);
   va_end(args);
 }
 
 static void     
-str_builder_push_str(str_builder_t* b, str_t src) {
+str8_builder_push_str(str8_builder_t* b, str8_t src) {
   assert(b->size + src.size <= b->cap);
   for (usz_t i = 0; i < src.size; ++i ) {
     b->e[b->size++] = src.e[i];
@@ -6467,7 +6467,7 @@ str_builder_push_str(str_builder_t* b, str_t src) {
 }
 
 static void     
-str_builder_push_cstr(str_builder_t* b, const c8_t* src) {
+str8_builder_push_cstr(str8_builder_t* b, const c8_t* src) {
   while(b->size < b->cap && dref(src) != 0)
   {
     b->e[b->size++] = dref(src);
@@ -6480,20 +6480,20 @@ str_builder_push_cstr(str_builder_t* b, const c8_t* src) {
 // @mark:(Stream)
 //
 static void
-stream_init(stream_t* s, str_t contents) {
+stream_init(stream_t* s, str8_t contents) {
   s->contents = contents;
   s->pos = 0;
   s->bit_buffer = 0;
   s->bit_count = 0;
 }
 
-static str_t 
+static str8_t 
 stream_consume_line(stream_t* s) {
   if (stream_is_eos(s)) {
-    return str_bad();
+    return str8_bad();
   }
 
-  str_t ret = str_set(s->contents.e + s->pos, 0);
+  str8_t ret = str8_set(s->contents.e + s->pos, 0);
 
   // @todo: this is terribly coded. Refactor?
   while(!stream_is_eos(s)) {
@@ -6602,7 +6602,7 @@ struct _wav_head_t {
 // http://soundfile.sapp.org/doc/Waveformat/
 
 static b32_t 
-wav_read(wav_t* w, str_t contents) 
+wav_read(wav_t* w, str8_t contents) 
 {
   const static u32_t riff_id_signature = u32_endian_swap(0x52494646);
   const static u32_t riff_format_signature = u32_endian_swap(0x57415645);
@@ -7236,7 +7236,7 @@ static f32_t
 
 
 static b32_t
-    ttf_read(ttf_t* ttf, str_t ttf_contents) {
+    ttf_read(ttf_t* ttf, str8_t ttf_contents) {
       ttf->data = ttf_contents.e;
 
       u32_t num_tables = _ttf_read_u16(ttf->data + 4);
@@ -8261,7 +8261,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   ctx.bit_depth = png->bit_depth;
 
   u32_t image_size = png->width * png->height * _PNG_CHANNELS;
-  str_t image_buffer =  arena_push_str(arena, image_size, 16);
+  str8_t image_buffer =  arena_push_str(arena, image_size, 16);
   if (!image_buffer) return nullptr;
   stream_init(&ctx.image_stream, image_buffer);
 
@@ -8269,7 +8269,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   arena_set_revert_point(arena);
 
   u32_t unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
-  str_t unfiltered_image_buffer = arena_push_str(arena, unfiltered_size, 16);
+  str8_t unfiltered_image_buffer = arena_push_str(arena, unfiltered_size, 16);
   if (!unfiltered_image_buffer) return nullptr;
   stream_init(&ctx.unfiltered_image_stream, unfiltered_image_buffer);
 
@@ -8294,7 +8294,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
     }
   }
 
-  str_t zlib_data = arena_push_str(arena, zlib_size, 16);
+  str8_t zlib_data = arena_push_str(arena, zlib_size, 16);
   if (!zlib_data) return nullptr;
 
   stream_init(zlib_stream, zlib_data);
@@ -8331,7 +8331,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
 }
 // @note: Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
-static str_t
+static str8_t
 png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
   static const u8_t signature[] = { 
     137, 80, 78, 71, 13, 10, 26, 10 
@@ -8360,8 +8360,8 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
     data_size + 
     IDAT_chunk_size);
 
-  str_t stream_memory = arena_push_str(arena, expected_memory_required, 16);
-  if (!stream_memory) return str_bad();
+  str8_t stream_memory = arena_push_str(arena, expected_memory_required, 16);
+  if (!stream_memory) return str8_bad();
 
   make(stream_t, stream);
   stream_init(stream, stream_memory);
@@ -8491,12 +8491,12 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
 
 
 
-  return str_set(stream->contents.e, stream->pos);
+  return str8_set(stream->contents.e, stream->pos);
 }
 
 
 static b32_t     
-png_read(png_t* png, str_t png_contents)
+png_read(png_t* png, str8_t png_contents)
 {
   make(stream_t, stream);
   stream_init(stream, png_contents);
@@ -8539,7 +8539,7 @@ png_read(png_t* png, str_t png_contents)
 //
 
 static b32_t
-arena_init(arena_t* a, str_t buffer) {
+arena_init(arena_t* a, str8_t buffer) {
   if (!buffer) return false;
 
   a->buffer = buffer;
@@ -8580,7 +8580,7 @@ arena_clear(arena_t* a) {
 }
 
 static b32_t 
-arena_grow_str(arena_t* a, str_t* str, usz_t new_size)
+arena_grow_str(arena_t* a, str8_t* str, usz_t new_size)
 {
 
   b32_t ret = arena_grow_size(a, str->e, str->size, new_size);
@@ -8648,7 +8648,7 @@ arena_push_size(arena_t* a, usz_t size, usz_t align) {
   {
     u8_t* commit_ptr = a->memory + a->pos;
     usz_t commit_size = adjusted_pos - a->pos + size;
-    memory_commit(str_set(commit_ptr, commit_size));
+    memory_commit(str8_set(commit_ptr, commit_size));
   }
 
   u8_t* ret = umi_to_ptr(imem + adjusted_pos);
@@ -8688,15 +8688,15 @@ arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align)
 {	
   u8_t* mem = arena_push_arr_align(u8_t, a, size, align);
   if (!mem) return false; 
-  arena_init(partition, str_set(mem, size));
+  arena_init(partition, str8_set(mem, size));
   return true;
 
 }
 
-static str_t
+static str8_t
 arena_push_str(arena_t* a, usz_t size, usz_t align) 
 {
-  str_t buffer = {};
+  str8_t buffer = {};
   buffer.e = arena_push_arr_align(u8_t, a, size, align);
   buffer.size = size;
 
@@ -8714,7 +8714,7 @@ arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)
   void* mem = umi_to_ptr(imem + adjusted_pos);
   a->pos = a->cap;
 
-  arena_init(partition, str_set((u8_t*)mem, size));
+  arena_init(partition, str8_set((u8_t*)mem, size));
   return true;
 
 }
@@ -9286,7 +9286,8 @@ bigint_compare(bigint_t* lhs, bigint_t* rhs)
 #endif
 
 //
-// JOURNAL
+// @journal
+//  
 // = 2024-03-23 =
 //   Did some cleanup to the APIs, primarily removing the idea of an "OS layer". 
 //   At this point, I'm not sure if the user level cares about whether a function 
