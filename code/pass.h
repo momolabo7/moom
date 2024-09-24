@@ -676,6 +676,7 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   // Fonts
   for_cnt(font_index, p->font_count)
   {
+    printf("%d\n", p->font_count);
     arena_set_revert_point(p->arena);
 
     asset_file_font_t* ff = p->fonts + font_index;

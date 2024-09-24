@@ -1161,6 +1161,7 @@ static str_t    arena_push_str(arena_t* a, usz_t size, usz_t align);
 static usz_t    arena_remaining(arena_t* a);
 static void*    arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size);
 static b32_t    arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size);
+static b32_t    arena_grow_str(arena_t* a, str_t* str, usz_t new_size);
 
 #define arena_grow_arr(t,b,a,o,n)     arena_grow_size((b), (a), sizeof(t)*(o), sizeof(t)*(n))
 #define arena_push_arr_align(t,b,n,a) (t*)arena_push_size((b), sizeof(t)*(n), a)
@@ -1248,7 +1249,6 @@ static u64_t  file_get_size(file_t* fp);
 static u64_t  clock_time();
 static u64_t  clock_resolution();
 
-// @todo: is there a way to remove socket_system_begin/end()?
 struct socket_t;
 static b32_t  socket_system_begin();
 static void   socket_system_end();
@@ -1256,6 +1256,7 @@ static b32_t  socket_begin(socket_t* socket, const char* server, u32_t port);
 static void   socket_end(socket_t* s);
 static b32_t  socket_send(socket_t* s, str_t msg);
 static str_t  socket_receive(socket_t* s, str_t buffer);
+
 
 static void doze(u32_t ms_to_doze);
 
@@ -1265,15 +1266,19 @@ static void doze(u32_t ms_to_doze);
 
 
 #if OS_WINDOWS
+# define WINDOWS_LEAN_AND_MEAN
 # include <winsock2.h>
-# include <windows.h> // @note: must be in front of <winsock2.h> :(
 # include <ws2tcpip.h>
+# include <winhttp.h>
+# include <windows.h> // @note: must be in front of <winsock2.h> :(
 # include <iphlpapi.h>
 # undef near
 # undef far
 
 #pragma comment(lib, "Ws2_32.lib")
-#pragma comment(lib, "Winmm.lib")
+#pragma comment(lib, "winmm.lib")
+#pragma comment(lib, "winhttp.lib")
+//#pragma comment(lib, "shell32.lib")
 
 struct file_t {
   HANDLE handle;
@@ -8582,6 +8587,18 @@ arena_clear(arena_t* a) {
   a->pos = 0;
 }
 
+static b32_t 
+arena_grow_str(arena_t* a, str_t* str, usz_t new_size)
+{
+
+  b32_t ret = arena_grow_size(a, str->e, str->size, new_size);
+  if (ret)
+  {
+    str->size = new_size;
+  }
+  return ret;
+}
+
 
 static b32_t
 arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size) 
@@ -8590,14 +8607,16 @@ arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size)
 
   // The thing we are growing should be the last thing that we 'pushed'
   // Otherwise, it's not possible.
-  if ( (a->memory + a->pos) != ((u8_t*)(ptr) + old_size))
+  if ( (a->memory + a->pos) != ((u8_t*)(ptr) + old_size)) 
+  {
     return false;
+  }
 
   if (!arena_push_size(a, new_size - old_size, 1)) 
+  {
     return false;
-
+  }
   return true;
-
 }
 
 static usz_t 
@@ -9093,25 +9112,18 @@ bigint_copy(bigint_t* to, bigint_t* from)
 
 }
 
-static bigint_t*
-bigint_new(arena_t* arena, u32_t cap)
+static b32_t
+bigint_init(bigint_t* b, arena_t* arena, u32_t cap)
 {
-  arena_marker_t mark = arena_mark(arena);
-  bigint_t* ret = arena_push(bigint_t, arena);
-  if (!ret) 
-  {
-    return ret;
-  }
   u8_t* data = arena_push_arr(u8_t, arena, cap);
   if (!data) 
   {
-    arena_revert(mark);
-    return nullptr;
+    return false;
   }
 
-  bigint_init(ret, data, cap);
+  bigint_init(b, data, cap);
 
-  return ret;
+  return true;
 }
 
 

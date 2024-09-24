@@ -45,6 +45,11 @@
 
 #include "eden.h"
 
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "opengl32.lib")
+#pragma comment(lib, "gdi32.lib")
+#pragma comment(lib, "ole32.lib")
+#pragma comment(lib, "imm32.lib")
 
 //
 // MARK:(Memory Management)

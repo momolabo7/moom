@@ -77,6 +77,7 @@ arena_free	code/momo.h	/^arena_free(arena_t* a)$/;"	f	language:C++	typeref:typen
 arena_grow_arr	code/momo.h	/^#define arena_grow_arr(/;"	d	language:C++
 arena_grow_size	code/momo.h	/^arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size) $/;"	f	language:C++	typeref:typename:b32_t
 arena_grow_size	code/momo.h	/^static b32_t    arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size);$/;"	p	language:C++	typeref:typename:b32_t
+arena_grow_str	code/momo.h	/^static b32_t    arena_grow_str(arena_t* a, void* ptr, usz_t old_size, usz_t new_size);$/;"	p	language:C++	typeref:typename:b32_t
 arena_init	code/momo.h	/^arena_init(arena_t* a, str_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t
 arena_init	code/momo.h	/^static b32_t    arena_init(arena_t* a, str_t buffer);$/;"	p	language:C++	typeref:typename:b32_t
 arena_mark	code/momo.h	/^arena_mark(arena_t* a) $/;"	f	language:C++	typeref:typename:arena_marker_t
@@ -200,8 +201,8 @@ bigint_add	code/momo.h	/^bigint_add(bigint_t* b, bigint_t* lhs, bigint_t* rhs)$/
 bigint_add_u32	code/momo.h	/^bigint_add_u32(bigint_t* b, bigint_t* lhs, u32_t rhs) $/;"	f	language:C++	typeref:typename:void
 bigint_compare	code/momo.h	/^bigint_compare(bigint_t* lhs, bigint_t* rhs) $/;"	f	language:C++	typeref:typename:s32_t
 bigint_copy	code/momo.h	/^bigint_copy(bigint_t* to, bigint_t* from)$/;"	f	language:C++	typeref:typename:void
+bigint_init	code/momo.h	/^bigint_init(bigint_t* b, arena_t* arena, u32_t cap)$/;"	f	language:C++	typeref:typename:b32_t
 bigint_init	code/momo.h	/^bigint_init(bigint_t* b, u8_t* data, u32_t cap) $/;"	f	language:C++	typeref:typename:void
-bigint_new	code/momo.h	/^bigint_new(arena_t* arena, u32_t cap)$/;"	f	language:C++	typeref:typename:bigint_t *
 bigint_set_max	code/momo.h	/^bigint_set_max(bigint_t* b) $/;"	f	language:C++	typeref:typename:void
 bigint_set_u32	code/momo.h	/^bigint_set_u32(bigint_t* b, u32_t value) $/;"	f	language:C++	typeref:typename:void
 bigint_t	code/momo.h	/^struct bigint_t $/;"	s	language:C++
@@ -246,7 +247,7 @@ box_y1	code/eden.h	/^  f32_t box_x1, box_y1;$/;"	m	language:C++	struct:eden_asse
 box_y1	code/eden_asset_file.h	/^  f32_t box_y1;$/;"	m	language:C++	struct:asset_file_font_glyph_t	typeref:typename:f32_t
 buffer	code/app_lit_ship.cpp	/^  void* buffer;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:void *	file:
 buffer	code/momo.h	/^    str_t buffer;$/;"	m	language:C++	union:arena_t::__anon1db7a63d0f0a	typeref:typename:str_t
-buffer	code/twitch_bot.cpp	/^  u8_t buffer[512];$/;"	m	language:C++	struct:karu_bot_t	typeref:typename:u8_t[512]	file:
+buffer	code/twitch_bot.cpp	/^  u8_t buffer[512];$/;"	m	language:C++	struct:momolabot_t	typeref:typename:u8_t[512]	file:
 buffer	code/w32_eden.cpp	/^  void* buffer;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:void *	file:
 buffer	code/w32_sandbox_twitch_bot.cpp	/^  u8_t buffer[512];$/;"	m	language:C++	struct:tmi_t	typeref:typename:u8_t[512]	file:
 buffer_size	code/app_lit_ship.cpp	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
@@ -404,6 +405,7 @@ compressed_image_stream	code/momo.h	/^  stream_t compressed_image_stream;$/;"	m	
 compression_flags	code/momo.h	/^  u8_t compression_flags;$/;"	m	language:C++	struct:_png_idat_header_t	typeref:typename:u8_t
 compression_method	code/momo.h	/^  u8_t compression_method;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t
 compression_method	code/momo.h	/^  u8_t compression_method;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:typename:u8_t
+connection	code/test_http.cpp	/^  HINTERNET connection;$/;"	m	language:C++	struct:https_t	typeref:typename:HINTERNET	file:
 console_add_command	code/eden_console.h	/^console_add_command(console_t* console, str_t key, void* ctx, void(*func)(void*)) $/;"	f	language:C++	typeref:typename:void
 console_command_t	code/eden_console.h	/^struct console_command_t {$/;"	s	language:C++
 console_execute	code/eden_console.h	/^console_execute(console_t* console) {$/;"	f	language:C++	typeref:typename:void
@@ -1653,6 +1655,11 @@ hsl_set	code/momo.h	/^static hsl_t  hsl_set(f32_t h, f32_t s, f32_t l);$/;"	p	la
 hsl_t	code/momo.h	/^struct hsl_t $/;"	s	language:C++
 hsl_to_rgb	code/momo.h	/^static rgb_t  hsl_to_rgb(hsl_t c);$/;"	p	language:C++	typeref:typename:rgb_t
 hsl_to_rgb	code/momo.h	/^static rgb_t hsl_to_rgb(hsl_t c) {$/;"	f	language:C++	typeref:typename:rgb_t
+https_begin	code/test_http.cpp	/^https_begin(https_t* https)$/;"	f	language:C++	typeref:typename:void	file:
+https_connect	code/test_http.cpp	/^https_connect(https_t* https, const wchar_t* url)$/;"	f	language:C++	typeref:typename:void	file:
+https_end	code/test_http.cpp	/^https_end(https_t* https)$/;"	f	language:C++	typeref:typename:void	file:
+https_request	code/test_http.cpp	/^https_request($/;"	f	language:C++	typeref:typename:str_t	file:
+https_t	code/test_http.cpp	/^struct https_t$/;"	s	language:C++	file:
 hundreds	code/momo.h	/^#define hundreds(/;"	d	language:C++
 id	code/eden.h	/^  u32_t id; \/\/ type id from user$/;"	m	language:C++	struct:hell_gfx_command_t	typeref:typename:u32_t
 id	code/momo.h	/^  u32_t id, size;$/;"	m	language:C++	struct:_wav_head_t	typeref:typename:u32_t
@@ -1687,7 +1694,7 @@ interlace_method	code/momo.h	/^  u8_t interlace_method;$/;"	m	language:C++	struc
 interlace_method	code/momo.h	/^  u8_t interlace_method;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:typename:u8_t
 intersections	code/app_lit.cpp	/^  lit_light_intersection_t intersections[512];$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:lit_light_intersection_t[512]	file:
 intersection_count	code/app_lit.cpp	/^  u32_t intersection_count;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:u32_t	file:
-interval	code/twitch_bot.cpp	/^  f32_t interval;$/;"	m	language:C++	struct:karu_bot_reminder_t	typeref:typename:f32_t	file:
+interval	code/twitch_bot.cpp	/^  f32_t interval;$/;"	m	language:C++	struct:momolabot_reminder_t	typeref:typename:f32_t	file:
 is_cursor_locked	code/app_lit_ship.cpp	/^  b32_t is_cursor_locked;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:b32_t	file:
 is_cursor_locked	code/w32_eden.cpp	/^  b32_t is_cursor_locked;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:b32_t	file:
 is_device_changed	code/app_lit_ship.cpp	/^	b32_t is_device_changed;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:b32_t	file:
@@ -1753,17 +1760,6 @@ JSON_VALUE_TYPE_OBJECT	code/momo.h	/^  JSON_VALUE_TYPE_OBJECT,$/;"	e	language:C+
 JSON_VALUE_TYPE_STRING	code/momo.h	/^  JSON_VALUE_TYPE_STRING,$/;"	e	language:C++	enum:json_value_type_t
 json_value_type_t	code/momo.h	/^enum json_value_type_t $/;"	g	language:C++
 JSON_VALUE_TYPE_TRUE	code/momo.h	/^  JSON_VALUE_TYPE_TRUE,$/;"	e	language:C++	enum:json_value_type_t
-karu_add_reminder	code/twitch_bot.cpp	/^karu_add_reminder(karu_bot_t* karu, str_t message, f32_t interval_in_secs)$/;"	f	language:C++	typeref:typename:void	file:
-karu_bot_reminder_t	code/twitch_bot.cpp	/^struct karu_bot_reminder_t {$/;"	s	language:C++	file:
-karu_bot_t	code/twitch_bot.cpp	/^struct karu_bot_t$/;"	s	language:C++	file:
-karu_connect	code/twitch_bot.cpp	/^karu_connect(karu_bot_t* karu, str_t password, str_t channel, str_t nick, arena_t* arena) $/;"	f	language:C++	typeref:typename:b32_t	file:
-karu_disconnect	code/twitch_bot.cpp	/^karu_disconnect(karu_bot_t* karu) $/;"	f	language:C++	typeref:typename:void	file:
-karu_print_str	code/twitch_bot.cpp	/^karu_print_str(str_t str)$/;"	f	language:C++	typeref:typename:void	file:
-karu_process_commands	code/twitch_bot.cpp	/^karu_process_commands($/;"	f	language:C++	typeref:typename:void	file:
-karu_receive	code/twitch_bot.cpp	/^karu_receive(karu_bot_t* karu)$/;"	f	language:C++	typeref:typename:str_t	file:
-karu_send_message	code/twitch_bot.cpp	/^karu_send_message(karu_bot_t* karu, str_t message)$/;"	f	language:C++	typeref:typename:void	file:
-karu_test	code/twitch_bot.cpp	/^karu_test(void* data) {$/;"	f	language:C++	typeref:typename:DWORD WINAPI
-karu_update	code/twitch_bot.cpp	/^karu_update(karu_bot_t* karu, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 kern	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 kernings	code/eden.h	/^  f32_t* kernings;$/;"	m	language:C++	struct:eden_asset_font_t	typeref:typename:f32_t *
 key	code/eden.h	/^  str_t key;$/;"	m	language:C++	struct:eden_console_command_t	typeref:typename:str_t
@@ -1794,8 +1790,6 @@ light_count	code/app_lit.cpp	/^  u32_t light_count;$/;"	m	language:C++	struct:li
 light_hold_mode	code/app_lit.cpp	/^  lit_game_player_light_hold_mode_t light_hold_mode;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:lit_game_player_light_hold_mode_t	file:
 light_retrival_time	code/app_lit.cpp	/^  f32_t light_retrival_time;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:f32_t	file:
 line	code/eden.h	/^  u32_t line;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:u32_t
-linker_flags	bin/build.bat	/^    set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32$/;"	v	language:DosBatch
-linker_flags	bin/build.bat	/^    set linker_flags=-luser32 -lopengl32 -lgdi32 -lwinmm -lole32 -limm32 -lshell32$/;"	v	language:DosBatch
 linker_flags	bin/build.bat	/^    set linker_flags=-shared $/;"	v	language:DosBatch
 linker_flags	bin/build.bat	/^set linker_flags=$/;"	v	language:DosBatch
 LIT_ANIMATOR_TYPE_PATROL_POINT	code/app_lit.cpp	/^  LIT_ANIMATOR_TYPE_PATROL_POINT,$/;"	e	language:C++	enum:lit_game_animator_type_t	file:
@@ -2018,6 +2012,7 @@ main	code/test_arena.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test_bigint.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test_fileio_api.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_hashmap.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
+main	code/test_http.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_json.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test_radix_sort.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/twitch_bot.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
@@ -2078,7 +2073,7 @@ memory_zero	code/momo.h	/^static void   memory_zero(void* dest, usz_t size);$/;"
 memory_zero_array	code/momo.h	/^#define memory_zero_array(/;"	d	language:C++
 memory_zero_range	code/momo.h	/^#define memory_zero_range(/;"	d	language:C++
 memory_zero_struct	code/momo.h	/^#define memory_zero_struct(/;"	d	language:C++
-message	code/twitch_bot.cpp	/^  str_t message;$/;"	m	language:C++	struct:karu_bot_reminder_t	typeref:typename:str_t	file:
+message	code/twitch_bot.cpp	/^  str_t message;$/;"	m	language:C++	struct:momolabot_reminder_t	typeref:typename:str_t	file:
 meta_print_if_function_is_next	code/meta.cpp	/^meta_print_if_function_is_next(clex_tokenizer_t t) {$/;"	f	language:C++	typeref:typename:void	file:
 meta_print_token	code/meta.cpp	/^meta_print_token(clex_tokenizer_t* t, clex_token_t token)  {$/;"	f	language:C++	typeref:typename:void	file:
 min	code/app_lit.cpp	/^  f64_t min;$/;"	m	language:C++	struct:lit_profiler_stat_t	typeref:typename:f64_t	file:
@@ -2099,6 +2094,17 @@ module_path	code/app_lit_ship.cpp	/^  const char* module_path;$/;"	m	language:C+
 module_path	code/w32_eden.cpp	/^  const char* module_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *	file:
 module_write_time	code/app_lit_ship.cpp	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:LARGE_INTEGER	file:
 module_write_time	code/w32_eden.cpp	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:LARGE_INTEGER	file:
+momolabot_add_reminder	code/twitch_bot.cpp	/^momolabot_add_reminder(momolabot_t* m, str_t message, f32_t interval_in_secs)$/;"	f	language:C++	typeref:typename:void	file:
+momolabot_connect	code/twitch_bot.cpp	/^momolabot_connect(momolabot_t* m, str_t password, str_t channel, str_t nick, arena_t* arena) $/;"	f	language:C++	typeref:typename:b32_t	file:
+momolabot_disconnect	code/twitch_bot.cpp	/^momolabot_disconnect(momolabot_t* m) $/;"	f	language:C++	typeref:typename:void	file:
+momolabot_print_str	code/twitch_bot.cpp	/^momolabot_print_str(str_t str)$/;"	f	language:C++	typeref:typename:void	file:
+momolabot_process_commands	code/twitch_bot.cpp	/^momolabot_process_commands($/;"	f	language:C++	typeref:typename:void	file:
+momolabot_receive	code/twitch_bot.cpp	/^momolabot_receive(momolabot_t* m)$/;"	f	language:C++	typeref:typename:str_t	file:
+momolabot_reminder_t	code/twitch_bot.cpp	/^struct momolabot_reminder_t {$/;"	s	language:C++	file:
+momolabot_send_message	code/twitch_bot.cpp	/^momolabot_send_message(momolabot_t* m, str_t message)$/;"	f	language:C++	typeref:typename:void	file:
+momolabot_t	code/twitch_bot.cpp	/^struct momolabot_t$/;"	s	language:C++	file:
+momolabot_test	code/twitch_bot.cpp	/^momolabot_test(void* data) {$/;"	f	language:C++	typeref:typename:DWORD WINAPI
+momolabot_update	code/twitch_bot.cpp	/^momolabot_update(momolabot_t* m, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 MOMO_CONSOLE_H	code/eden_console.h	/^#define MOMO_CONSOLE_H$/;"	d	language:C++
 MOMO_FOOLISH	code/aoc23.cpp	/^#define MOMO_FOOLISH /;"	d	language:C++	file:
 MOMO_H	code/momo.h	/^#define MOMO_H$/;"	d	language:C++
@@ -2329,7 +2335,7 @@ r	code/momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:type
 rbg_to_hsl	code/momo.h	/^rbg_to_hsl(rgb_t c) {$/;"	f	language:C++	typeref:typename:hsl_t
 rbg_to_hsl	code/momo.h	/^static hsl_t  rbg_to_hsl(rgb_t c);$/;"	p	language:C++	typeref:typename:hsl_t
 rear	code/gist_ring_buffer.cpp	/^  u32_t rear;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
-receiver	code/twitch_bot.cpp	/^  str_t receiver;$/;"	m	language:C++	struct:karu_bot_t	typeref:typename:str_t	file:
+receiver	code/twitch_bot.cpp	/^  str_t receiver;$/;"	m	language:C++	struct:momolabot_t	typeref:typename:str_t	file:
 receiver	code/w32_sandbox_twitch_bot.cpp	/^  str_t receiver;$/;"	m	language:C++	struct:tmi_t	typeref:typename:str_t	file:
 rect	code/pass.h	/^  rp_rect_t* rect;$/;"	m	language:C++	struct:pass_pack_atlas_sprite_t	typeref:typename:rp_rect_t *
 region_x0	code/eden.h	/^  u32_t region_x0; $/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:u32_t
@@ -2340,13 +2346,14 @@ remainders	code/momo.h	/^  u16_t remainders[256];$/;"	m	language:C++	struct:crc1
 remainders	code/momo.h	/^  u32_t remainders[256];$/;"	m	language:C++	struct:crc32_table_t	typeref:typename:u32_t[256]
 remainders	code/momo.h	/^  u8_t remainders[256];$/;"	m	language:C++	struct:crc8_table_t	typeref:typename:u8_t[256]
 REMINDER	code/w32_sandbox_twitch_bot.cpp	/^#define REMINDER /;"	d	language:C++	file:
-reminders	code/twitch_bot.cpp	/^  karu_bot_reminder_t reminders[8];$/;"	m	language:C++	struct:karu_bot_t	typeref:typename:karu_bot_reminder_t[8]	file:
-reminder_count	code/twitch_bot.cpp	/^  u32_t reminder_count;$/;"	m	language:C++	struct:karu_bot_t	typeref:typename:u32_t	file:
+reminders	code/twitch_bot.cpp	/^  momolabot_reminder_t reminders[8];$/;"	m	language:C++	struct:momolabot_t	typeref:typename:momolabot_reminder_t[8]	file:
+reminder_count	code/twitch_bot.cpp	/^  u32_t reminder_count;$/;"	m	language:C++	struct:momolabot_t	typeref:typename:u32_t	file:
 renderer_texture_handle	code/eden.h	/^  u32_t renderer_texture_handle;$/;"	m	language:C++	struct:eden_asset_bitmap_t	typeref:typename:u32_t
 render_client	code/app_lit_ship.cpp	/^  IAudioRenderClient* render_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioRenderClient *	file:
 render_client	code/w32_eden.cpp	/^  IAudioRenderClient* render_client;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:IAudioRenderClient *	file:
 render_command_size	code/eden.h	/^  usz_t render_command_size;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:usz_t
 render_wh	code/eden.h	/^  v2u_t render_wh;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:v2u_t
+request	code/test_http.cpp	/^  HINTERNET request;$/;"	m	language:C++	struct:https_t	typeref:typename:HINTERNET	file:
 rgb	code/momo.h	/^    rgb_t rgb;$/;"	m	language:C++	union:rgba_t::__anon1db7a63d0d0a	typeref:typename:rgb_t
 RGBA_BLACK	code/momo.h	/^#define RGBA_BLACK /;"	d	language:C++
 RGBA_GREEN	code/momo.h	/^#define RGBA_GREEN /;"	d	language:C++
@@ -2448,7 +2455,7 @@ selected_animator_for_sensor	code/app_lit.cpp	/^  lit_game_animator_t* selected_
 selected_sensor_group_id	code/app_lit.cpp	/^  u32_t selected_sensor_group_id;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
 semaphore	code/app_lit_ship.cpp	/^  HANDLE semaphore; $/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:HANDLE	file:
 semaphore	code/w32_eden.cpp	/^  HANDLE semaphore; $/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:HANDLE	file:
-sender	code/twitch_bot.cpp	/^  str_builder_t sender;$/;"	m	language:C++	struct:karu_bot_t	typeref:typename:str_builder_t	file:
+sender	code/twitch_bot.cpp	/^  str_builder_t sender;$/;"	m	language:C++	struct:momolabot_t	typeref:typename:str_builder_t	file:
 sender	code/w32_sandbox_twitch_bot.cpp	/^  stb8_t sender;$/;"	m	language:C++	struct:tmi_t	typeref:typename:stb8_t	file:
 sensors	code/app_lit.cpp	/^  lit_game_sensor_t sensors[128];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_sensor_t[128]	file:
 sensor_count	code/app_lit.cpp	/^  u32_t sensor_count; \/\/ how many sensors there are$/;"	m	language:C++	struct:lit_game_sensor_group_t	typeref:typename:u32_t	file:
@@ -2457,6 +2464,7 @@ sensor_groups	code/app_lit.cpp	/^  lit_game_sensor_group_t sensor_groups[32];$/;
 sensor_group_count	code/app_lit.cpp	/^  u32_t sensor_group_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
 sentinel	code/aoc22.cpp	/^  aoc22_d7_node_t sentinel;$/;"	m	language:C++	struct:aoc22_d7_dir_t	typeref:typename:aoc22_d7_node_t	file:
 SERVER	code/w32_sandbox_socket.cpp	/^#define SERVER /;"	d	language:C++	file:
+session	code/test_http.cpp	/^  HINTERNET session;$/;"	m	language:C++	struct:https_t	typeref:typename:HINTERNET	file:
 set_design_dimensions	code/eden.h	/^  eden_set_design_dimensions_f* set_design_dimensions;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_set_design_dimensions_f *
 shader	code/eden.h	/^  GLuint shader;$/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
 shader	code/eden.h	/^  GLuint shader;$/;"	m	language:C++	struct:hell_gfx_opengl_triangle_batch_t	typeref:typename:GLuint
@@ -2501,7 +2509,7 @@ sock	code/momo.h	/^  SOCKET sock;$/;"	m	language:C++	struct:socket_t	typeref:typ
 sock	code/w32_sandbox_socket.cpp	/^  SOCKET sock;$/;"	m	language:C++	struct:os_socket_t	typeref:typename:SOCKET	file:
 sock	code/w32_sandbox_twitch_bot.cpp	/^  int sock;$/;"	m	language:C++	struct:socket_t	typeref:typename:int	file:
 sock	code/w32_sandbox_twitch_bot.cpp	/^  SOCKET sock;$/;"	m	language:C++	struct:socket_t	typeref:typename:SOCKET	file:
-socket	code/twitch_bot.cpp	/^  socket_t socket;$/;"	m	language:C++	struct:karu_bot_t	typeref:typename:socket_t	file:
+socket	code/twitch_bot.cpp	/^  socket_t socket;$/;"	m	language:C++	struct:momolabot_t	typeref:typename:socket_t	file:
 socket	code/w32_sandbox_twitch_bot.cpp	/^  socket_t socket;$/;"	m	language:C++	struct:tmi_t	typeref:typename:socket_t	file:
 socket_begin	code/momo.h	/^socket_begin(socket_t* s, const char* server, u32_t port)$/;"	f	language:C++	typeref:typename:b32_t
 socket_begin	code/momo.h	/^socket_begin(socket_t* s, const char* server, u32_t port)$/;"	f	language:C++	typeref:typename:b32_t
@@ -2582,7 +2590,7 @@ start	code/app_lit.cpp	/^  v2f_t start;$/;"	m	language:C++	struct:lit_game_anima
 start_cycles	code/eden.h	/^  u32_t start_cycles;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:u32_t
 start_hits	code/eden.h	/^  u32_t start_hits;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:u32_t
 start_pt	code/app_lit.cpp	/^  v2f_t start_pt;$/;"	m	language:C++	struct:lit_game_edge_t	typeref:typename:v2f_t	file:
-start_time	code/twitch_bot.cpp	/^  u64_t start_time;$/;"	m	language:C++	struct:karu_bot_reminder_t	typeref:typename:u64_t	file:
+start_time	code/twitch_bot.cpp	/^  u64_t start_time;$/;"	m	language:C++	struct:momolabot_reminder_t	typeref:typename:u64_t	file:
 state	code/app_lit.cpp	/^  lit_game_state_type_t state;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_state_type_t	file:
 state	code/eden.h	/^  volatile hell_gfx_texture_payload_state_t state;$/;"	m	language:C++	struct:hell_gfx_texture_payload_t	typeref:typename:volatile hell_gfx_texture_payload_state_t
 stmt	code/momo.h	/^#define stmt(/;"	d	language:C++
@@ -3167,6 +3175,7 @@ WIN32_LEAN_AND_MEAN	code/app_lit_ship.cpp	/^# define WIN32_LEAN_AND_MEAN$/;"	d	l
 WIN32_LEAN_AND_MEAN	code/w32_eden.cpp	/^# define WIN32_LEAN_AND_MEAN$/;"	d	language:C++	file:
 window	code/app_lit_ship.cpp	/^  HWND window;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:HWND	file:
 window	code/w32_eden.cpp	/^  HWND window;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:HWND	file:
+WINDOWS_LEAN_AND_MEAN	code/momo.h	/^# define WINDOWS_LEAN_AND_MEAN$/;"	d	language:C++
 window_initial_height	code/eden.h	/^  u32_t window_initial_height;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 window_initial_width	code/eden.h	/^  u32_t window_initial_width;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 window_title	code/eden.h	/^  const char* window_title; $/;"	m	language:C++	struct:eden_config_t	typeref:typename:const char *

@@ -1864,29 +1864,29 @@ euler_q25()
   arena_alloc(arena, gigabytes(1)); 
   defer { arena_free(arena); }; 
 
-  bigint_t* b0 = bigint_new(arena, 10000);
-  bigint_t* b1 = bigint_new(arena, 10000);
-  bigint_t* b2 = bigint_new(arena, 10000);
+  bigint_t b0; bigint_init(&b0, arena, 10000);
+  bigint_t b1; bigint_init(&b1, arena, 10000);
+  bigint_t b2; bigint_init(&b2, arena, 10000);
 
-  bigint_set_u32(b0, 1);
-  bigint_set_u32(b1, 1);
-  bigint_zero(b2);
+  bigint_set_u32(&b0, 1);
+  bigint_set_u32(&b1, 1);
+  bigint_zero(&b2);
 
   // perform fib
   u32_t index = 0;
-  while(b2->count < 1000)
+  while(b2.count < 1000)
   {
-    bigint_copy(b0, b1);
-    bigint_copy(b1, b2);
-    bigint_zero(b2);
-    bigint_add(b2, b2, b0);
-    bigint_add(b2, b2, b1);
+    bigint_copy(&b0, &b1);
+    bigint_copy(&b1, &b2);
+    bigint_zero(&b2);
+    bigint_add(&b2, &b2, &b0);
+    bigint_add(&b2, &b2, &b1);
 
     ++index;
   }
 
 #if 0
-  for_cnt_reverse(i, b2->count) printf("%d", b2->e[i]);
+  for_cnt_reverse(i, b2.count) printf("%d", b2->e[i]);
   printf("\n");
 #endif
   printf("%d\n", index);
