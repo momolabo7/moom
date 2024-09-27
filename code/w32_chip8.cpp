@@ -1,11 +1,18 @@
 #include "momo.h"
 
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "gdi32.lib")
+
+struct chip8_t
+{
+};
+
+
 // @note: this is basicall a bitmap
 struct w32_dib_t 
 {
   BITMAPINFO bitmap_info;
   HBITMAP bitmap;
-
 
   u32_t width, height;
   u32_t buffer_size;

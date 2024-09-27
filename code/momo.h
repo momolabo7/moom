@@ -237,6 +237,15 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 }
 #define defer auto glue(_defer, __LINE__) = _defer_dummy{} + [&]()
 
+struct str16_t 
+{
+  u16_t* e;
+  usz_t size;
+  operator bool() {
+    return e != nullptr;
+  }
+};
+
 //
 // @mark: Struct
 //
@@ -1085,17 +1094,22 @@ static u32_t crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t
 static str8_t     str8_bad();
 static str8_t     str8_set(u8_t* str, usz_t size);
 static str8_t     str8_substr(str8_t str, usz_t start, usz_t ope);
-static b32_t     str8_match(str8_t lhs, str8_t rhs);
+static b32_t      str8_match(str8_t lhs, str8_t rhs);
 static str8_t     str8_from_cstr(const char* cstr);
-static smi_t     str8_compare_lexographically(str8_t lhs, str8_t rhs);
-static b32_t     str8_to_u32(str8_t s, u32_t* out);
-static b32_t     str8_to_f32(str8_t s, f32_t* out);
-static b32_t     str8_to_s32(str8_t s, s32_t* out);
+static smi_t      str8_compare_lexographically(str8_t lhs, str8_t rhs);
+static b32_t      str8_to_u32(str8_t s, u32_t* out);
+static b32_t      str8_to_f32(str8_t s, f32_t* out);
+static b32_t      str8_to_s32(str8_t s, s32_t* out);
 static str8_arr_t str8_split(str8_t str, u8_t delimiter, arena_t* arena); 
-static void      str8_reverse(str8_t* dest, str8_t src);
+static void       str8_reverse(str8_t* dest, str8_t src);
+
 
 // @note: returns str.size if not found
 static usz_t     str8_find(str8_t str, u8_t character); 
+
+static str16_t    str16_set(u16_t* data, usz_t size);
+static str16_t    str16_bad();
+#define str16_from_lit(lit) str16_set((u16_t*)(L ## lit), sizeof(lit)/2-1)
 
 // @todo: the ##LINE might be fake!
 #define str8_builder_make(name, cap) \
@@ -5914,6 +5928,22 @@ crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t* table) {
 //
 // @mark:(String)
 //
+
+static str16_t
+str16_set(u16_t* data, usz_t size)
+{
+  str16_t ret;
+  ret.e = data;
+  ret.size = size;
+
+  return ret;
+}
+
+static str16_t
+str16_bad() {
+  return str16_set(0,0);
+}
+
 static str8_t
 str8_set(u8_t* str, usz_t size) {
   str8_t ret;
@@ -9287,6 +9317,18 @@ bigint_compare(bigint_t* lhs, bigint_t* rhs)
 
 //
 // @journal
+// = 2024-09-25 = 
+//   I have been doing some HTTP stuff recently and finally encountered 16-bit
+//   characters. I tried to figure out what's the best way to go about it. 
+//
+//   I tried to convert my string object to cater for 16-bit characters and have a 
+//   completely seperate object for buffers. This proved difficult because there are
+//   parts of the code where it's difficult to differentiate between what is a string
+//   and a buffer.
+//
+//   In the end, at least for now, I figured that the best way forward is to just have
+//   a str8_t and a str16_t objects that just does different things, then maybe we can
+//   extend by using adapter functions or something in the future.
 //  
 // = 2024-03-23 =
 //   Did some cleanup to the APIs, primarily removing the idea of an "OS layer". 
