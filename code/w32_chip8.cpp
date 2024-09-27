@@ -5,6 +5,7 @@
 
 struct chip8_t
 {
+  // 
 };
 
 
