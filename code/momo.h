@@ -1244,6 +1244,7 @@ static b32_t clex_tokenizer_init(clex_tokenizer_t* t, str8_t buffer);
 static clex_token_t clex_next_token(clex_tokenizer_t* t);
 
 
+// @todo: change const char* to str?
 static str8_t  file_read_into_str(const char* filename, arena_t* arena, b32_t null_terminate = false); 
 static b32_t  file_write_from_str(const char* filename, str8_t buffer);
 static void   file_close(file_t* fp); 
@@ -3219,23 +3220,6 @@ f64_factorial(f64_t x) {
   return ret;
 }
 
-#if 1
-#include <string.h>
-static void 
-memory_copy(void* dest, const void* src, usz_t size) {
-  memcpy(dest, src, size);
-}
-
-static void 
-memory_zero(void* dest, usz_t size) {
-  memset(dest, 0, size);
-}
-static b32_t
-memory_is_same(const void* lhs, const void* rhs, usz_t size) {
-  return memcmp(lhs, rhs, size) == 0; 
-}
-
-#else
 static void
 memory_copy(void* dest, const void* src, usz_t size) {
   u8_t *p = (u8_t*)dest;
@@ -3265,7 +3249,6 @@ memory_is_same(const void* lhs, const void* rhs, usz_t size) {
   return true;
 
 }
-#endif
 
 
 

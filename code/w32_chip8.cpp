@@ -3,10 +3,67 @@
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "gdi32.lib")
 
+// https://tobiasvl.github.io/blog/write-a-chip-8-emulator/
+#define CHIP8_DISPLAY_WIDTH  (64)
+#define CHIP8_DISPLAY_HEIGHT (32)
+#define CHIP8_WINDOW_WIDTH   (400)
+#define CHIP8_WINDOW_HEIGHT  (400) 
+#define CHIP8_FRAME_RATE     (60)
+
 struct chip8_t
 {
-  // 
+  u8_t ram[4096];
+  u32_t ram_usage;
+
+  u8_t display[CHIP8_DISPLAY_WIDTH * CHIP8_DISPLAY_HEIGHT];
+
+  u8_t program_counter;
+  u16_t index; // used to point at locations in memory
+  u16_t stack[256];
+
+  u8_t delay_timer;
+  u8_t sound_timer; 
+
+  u8_t registers[16];
 };
+
+static b32_t
+chip8_init(chip8_t* chip8, str8_t instructions)
+{
+  if (instructions.size <= sizeof(chip8->ram))
+  {
+    memory_copy(chip8->ram, instructions.e, instructions.size);
+    chip8->ram_usage = instructions.size;
+    return true;
+  }
+
+  return false;
+}
+
+static b32_t
+chip8_init_from_file(chip8_t* chip8, const char* filename)
+{
+  arena_set_revert_point(&arena);
+  str8_t instructions = file_read_into_str("test.ch8", &arena);
+  return chip8_init(chip8, instructions);
+}
+
+static void
+chip8_update(chip8_t* chip8)
+{
+  // Fetch
+  
+  // Decode
+
+  // Loop
+
+}
+
+static void
+chip8_exit(chip8_t* chip8)
+{
+}
+
 
 
 // @note: this is basicall a bitmap
@@ -29,6 +86,9 @@ struct w32_frc_t
   b32_t is_sleep_granular = timeBeginPeriod(1) == TIMERR_NOERROR;
   u64_t performance_frequency;
 };
+
+
+
 
 static void 
 w32_frc_init(w32_frc_t* frc, u32_t target_frame_rate)
@@ -79,9 +139,6 @@ w32_frc_end(w32_frc_t* frc)
 //
 // @todo: clean 
 //
-#define CHIP8_WINDOW_WIDTH (400)
-#define CHIP8_WINDOW_HEIGHT (400) 
-#define CHIP8_FRAME_RATE (60)
 b32_t g_is_running = true;
 w32_dib_t g_frame_dib;
 
@@ -208,11 +265,11 @@ WinMain(HINSTANCE instance,
   // create window
   HWND window;
   {
-
     const char* title = "chip8 emulator";
     const char* icon_path = "window.ico";
     const s32_t icon_w = 256;
     const s32_t icon_h = 256;
+
     WNDCLASSA w32_class = {};
     w32_class.style = CS_HREDRAW | CS_VREDRAW;
     w32_class.lpfnWndProc = w32_window_callback;
@@ -266,7 +323,6 @@ WinMain(HINSTANCE instance,
                              0,
                              instance,
                              0);
-    
     if (!window) {
       return 1;
     }
@@ -274,9 +330,17 @@ WinMain(HINSTANCE instance,
     
   }
   
+  arena_t arena = {};
+  arena_alloc(&arena, gigabytes(1), false); 
+  defer { arena_free(&arena); };
 
   w32_dib_init(&g_frame_dib, CHIP8_WINDOW_WIDTH, CHIP8_WINDOW_HEIGHT, window);
   defer { w32_dib_free(&g_frame_dib); };  
+
+  chip8_t* chip8 = arena_push(chip8_t, &arena);
+  {
+    chip8_init(
+  }
 
 
   make(w32_frc_t, frc);

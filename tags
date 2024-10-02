@@ -282,7 +282,13 @@ channels	code/app_lit_ship.cpp	/^  u16_t channels;$/;"	m	language:C++	struct:w32
 channels	code/w32_eden.cpp	/^  u16_t channels;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u16_t	file:
 chars	code/eden.h	/^  u8_t chars[32];$/;"	m	language:C++	struct:eden_input_t	typeref:typename:u8_t[32]
 char_count	code/eden.h	/^  u32_t char_count;$/;"	m	language:C++	struct:eden_input_t	typeref:typename:u32_t
+CHIP8_DISPLAY_HEIGHT	code/w32_chip8.cpp	/^#define CHIP8_DISPLAY_HEIGHT /;"	d	language:C++	file:
+CHIP8_DISPLAY_WIDTH	code/w32_chip8.cpp	/^#define CHIP8_DISPLAY_WIDTH /;"	d	language:C++	file:
+chip8_exit	code/w32_chip8.cpp	/^chip8_exit(chip8_t* chip8)$/;"	f	language:C++	typeref:typename:void	file:
 CHIP8_FRAME_RATE	code/w32_chip8.cpp	/^#define CHIP8_FRAME_RATE /;"	d	language:C++	file:
+chip8_init	code/w32_chip8.cpp	/^chip8_init(chip8_t* chip8)$/;"	f	language:C++	typeref:typename:void	file:
+chip8_t	code/w32_chip8.cpp	/^struct chip8_t$/;"	s	language:C++	file:
+chip8_update	code/w32_chip8.cpp	/^chip8_update(chip8_t* chip8)$/;"	f	language:C++	typeref:typename:void	file:
 CHIP8_WINDOW_HEIGHT	code/w32_chip8.cpp	/^#define CHIP8_WINDOW_HEIGHT /;"	d	language:C++	file:
 CHIP8_WINDOW_WIDTH	code/w32_chip8.cpp	/^#define CHIP8_WINDOW_WIDTH /;"	d	language:C++	file:
 clamp_of	code/momo.h	/^#define clamp_of(/;"	d	language:C++
@@ -500,6 +506,7 @@ data_size	code/eden_asset_file.h	/^  u32_t data_size;$/;"	m	language:C++	struct:
 debug_arena	code/app_lit.cpp	/^  arena_t debug_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
 debug_log	code/eden.h	/^  eden_debug_log_f* debug_log;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_debug_log_f *
 defer	code/momo.h	/^#define defer /;"	d	language:C++
+delay_timer	code/w32_chip8.cpp	/^  u8_t delay_timer;$/;"	m	language:C++	struct:chip8_t	typeref:typename:u8_t	file:
 delta	code/app_lit.cpp	/^  v2f_t delta;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:v2f_t	file:
 delta_time	code/eden.h	/^  f32_t delta_time; \/\/aka dt$/;"	m	language:C++	struct:eden_input_t	typeref:typename:f32_t
 device_bits_per_sample	code/eden.h	/^  u16_t device_bits_per_sample;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u16_t
@@ -508,6 +515,7 @@ device_samples_per_second	code/eden.h	/^  u32_t device_samples_per_second;$/;"	m
 digit_to_ascii	code/momo.h	/^#define digit_to_ascii(/;"	d	language:C++
 dir	code/aoc22.cpp	/^    aoc22_d7_dir_t* dir;$/;"	m	language:C++	union:aoc22_d7_node_t::__anonabc34737010a	typeref:typename:aoc22_d7_dir_t *	file:
 dir	code/app_lit.cpp	/^  v2f_t dir;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:v2f_t	file:
+display	code/w32_chip8.cpp	/^  u8_t display[CHIP8_DISPLAY_WIDTH * CHIP8_DISPLAY_HEIGHT];$/;"	m	language:C++	struct:chip8_t	typeref:typename:u8_t[]	file:
 dll	code/app_lit_ship.cpp	/^  HMODULE dll; $/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:HMODULE	file:
 dll	code/w32_eden.cpp	/^  HMODULE dll; $/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:HMODULE	file:
 doze	code/momo.h	/^doze(u32_t ms_to_doze) $/;"	f	language:C++	typeref:typename:void
@@ -1674,6 +1682,7 @@ image_stream	code/momo.h	/^  stream_t image_stream;$/;"	m	language:C++	struct:_p
 image_width	code/momo.h	/^  u32_t image_width;$/;"	m	language:C++	struct:_png_context_t	typeref:typename:u32_t
 index	code/eden.h	/^  u32_t index;$/;"	m	language:C++	struct:eden_speaker_sound_t	typeref:typename:u32_t
 index	code/momo.h	/^  u32_t index;$/;"	m	language:C++	struct:sort_entry_t	typeref:typename:u32_t
+index	code/w32_chip8.cpp	/^  u16_t index; \/\/ used to point at locations in memory$/;"	m	language:C++	struct:chip8_t	typeref:typename:u16_t	file:
 indices_vbo	code/eden.h	/^  GLuint indices_vbo;$/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
 indices_vbo	code/eden.h	/^  GLuint indices_vbo;$/;"	m	language:C++	struct:hell_gfx_opengl_triangle_batch_t	typeref:typename:GLuint
 info_lines	code/eden.h	/^  str8_builder_t* info_lines; $/;"	m	language:C++	struct:eden_console_t	typeref:typename:str8_builder_t *
@@ -2332,11 +2341,13 @@ profiler	code/eden.h	/^  hell_profiler_t profiler;$/;"	m	language:C++	struct:ede
 profiler_enabled	code/eden.h	/^  b32_t profiler_enabled;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:b32_t
 profiler_max_entries	code/eden.h	/^  u32_t profiler_max_entries;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 profiler_max_snapshots_per_entry	code/eden.h	/^  u32_t profiler_max_snapshots_per_entry;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
+program_counter	code/w32_chip8.cpp	/^  u8_t program_counter;$/;"	m	language:C++	struct:chip8_t	typeref:typename:u8_t	file:
 pt	code/app_lit.cpp	/^  v2f_t pt;$/;"	m	language:C++	struct:lit_light_intersection_t	typeref:typename:v2f_t	file:
 ptr_to_umi	code/momo.h	/^ptr_to_umi(void* p) { $/;"	f	language:C++	typeref:typename:umi_t
 ptr_to_umi	code/momo.h	/^static umi_t ptr_to_umi(void* p);$/;"	p	language:C++	typeref:typename:umi_t
 r	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon1db7a63d0d0a::__anon1db7a63d0e08	typeref:typename:f32_t
 r	code/momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
+ram	code/w32_chip8.cpp	/^  u8_t ram[4096];$/;"	m	language:C++	struct:chip8_t	typeref:typename:u8_t[4096]	file:
 rbg_to_hsl	code/momo.h	/^rbg_to_hsl(rgb_t c) {$/;"	f	language:C++	typeref:typename:hsl_t
 rbg_to_hsl	code/momo.h	/^static hsl_t  rbg_to_hsl(rgb_t c);$/;"	p	language:C++	typeref:typename:hsl_t
 rear	code/gist_ring_buffer.cpp	/^  u32_t rear;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
@@ -2347,6 +2358,7 @@ region_x0	code/eden.h	/^  u32_t region_x0; $/;"	m	language:C++	struct:hell_gfx_o
 region_x1	code/eden.h	/^  u32_t region_x1;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:u32_t
 region_y0	code/eden.h	/^  u32_t region_y0; $/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:u32_t
 region_y1	code/eden.h	/^  u32_t region_y1;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:u32_t
+registers	code/w32_chip8.cpp	/^  u8_t registers[16];$/;"	m	language:C++	struct:chip8_t	typeref:typename:u8_t[16]	file:
 remainders	code/momo.h	/^  u16_t remainders[256];$/;"	m	language:C++	struct:crc16_table_t	typeref:typename:u16_t[256]
 remainders	code/momo.h	/^  u32_t remainders[256];$/;"	m	language:C++	struct:crc32_table_t	typeref:typename:u32_t[256]
 remainders	code/momo.h	/^  u8_t remainders[256];$/;"	m	language:C++	struct:crc8_table_t	typeref:typename:u8_t[256]
@@ -2570,6 +2582,7 @@ sound_exts	code/pass.h	/^  pass_pack_sound_ext_t* sound_exts;$/;"	m	language:C++
 sound_free_list	code/eden.h	/^  u32_t* sound_free_list;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u32_t *
 sound_free_list_count	code/eden.h	/^  u32_t sound_free_list_count;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u32_t
 sound_id	code/eden.h	/^  eden_asset_sound_id_t sound_id; \/\/ @todo: do not rely on sound_id$/;"	m	language:C++	struct:eden_speaker_sound_t	typeref:typename:eden_asset_sound_id_t
+sound_timer	code/w32_chip8.cpp	/^  u8_t sound_timer; $/;"	m	language:C++	struct:chip8_t	typeref:typename:u8_t	file:
 speaker	code/eden.h	/^  hell_speaker_t speaker; $/;"	m	language:C++	struct:eden_t	typeref:typename:hell_speaker_t
 speaker_bitrate_type	code/eden.h	/^  eden_speaker_bitrate_type_t speaker_bitrate_type;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:eden_speaker_bitrate_type_t
 speaker_bits_per_sample	code/eden.h	/^  u16_t speaker_bits_per_sample;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u16_t
