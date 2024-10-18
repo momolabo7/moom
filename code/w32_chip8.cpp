@@ -17,8 +17,9 @@ struct chip8_t
 
   u8_t display[CHIP8_DISPLAY_WIDTH * CHIP8_DISPLAY_HEIGHT];
 
-  u8_t program_counter;
-  u16_t index; // used to point at locations in memory
+  u16_t program_counter;
+
+  u16_t stack_pointer; // used to point at locations in memory
   u16_t stack[256];
 
   u8_t delay_timer;
@@ -41,21 +42,65 @@ chip8_init(chip8_t* chip8, str8_t instructions)
 }
 
 static b32_t
-chip8_init_from_file(chip8_t* chip8, const char* filename)
+chip8_init_from_file(chip8_t* chip8, const char* filename, arena_t* arena)
 {
-  arena_set_revert_point(&arena);
-  str8_t instructions = file_read_into_str("test.ch8", &arena);
+  arena_set_revert_point(arena);
+  str8_t instructions = file_read_into_str("test.ch8", arena);
   return chip8_init(chip8, instructions);
 }
+
+
 
 static void
 chip8_update(chip8_t* chip8)
 {
   // Fetch
+  u16_t instruction;
+  {
+    // Read the instruction that PC is current pointing at from
+    // memory. An instruction is 2 bytes.
+    instruction = dref((u16_t*)(chip8->ram + chip8->program_counter));
+    chip8->program_counter += 2;
+  }
   
-  // Decode
+  // Decode + Execute
+  u8_t nibbles[4];
+  nibbles[0] = (instruction & 0xF000) >> 24;
+  nibbles[1] = (instruction & 0x0F00) >> 16;
+  nibbles[2] = (instruction & 0x00F0) >> 8;
+  nibbles[3] = (instruction & 0x000F);
 
-  // Loop
+
+  switch(instruction & 0xF000)
+  {
+    case 0x0000: {
+      switch(instruction & 0x0FFF)
+      {
+        case 0x00E0: {
+          // 00E0: clear screen
+          memory_zero(chip8->display, sizeof(chip8->display));
+        } break;
+        case 0x0EE: {
+          // 00E0: call subroutine
+          // @todo
+        } break;
+      }
+    } break;
+    case 0x1000: {
+      // 1NNN: jump
+      // @note: set PC to NNN
+      chip8->program_counter = (instruction & 0x0FFF);
+    } break;
+    case 0x2000: {
+      // 2NNN: call
+      chip8->stack[chip8->stack_pointer++] = chip8->program_counter;
+      chip8->program_counter = (instruction & 0x0FFF);
+      
+    }; 
+
+
+  }
+
 
 }
 
@@ -339,7 +384,7 @@ WinMain(HINSTANCE instance,
 
   chip8_t* chip8 = arena_push(chip8_t, &arena);
   {
-    chip8_init(
+    //chip8_init_from_file()
   }
 
 

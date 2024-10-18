@@ -286,7 +286,8 @@ CHIP8_DISPLAY_HEIGHT	code/w32_chip8.cpp	/^#define CHIP8_DISPLAY_HEIGHT /;"	d	lan
 CHIP8_DISPLAY_WIDTH	code/w32_chip8.cpp	/^#define CHIP8_DISPLAY_WIDTH /;"	d	language:C++	file:
 chip8_exit	code/w32_chip8.cpp	/^chip8_exit(chip8_t* chip8)$/;"	f	language:C++	typeref:typename:void	file:
 CHIP8_FRAME_RATE	code/w32_chip8.cpp	/^#define CHIP8_FRAME_RATE /;"	d	language:C++	file:
-chip8_init	code/w32_chip8.cpp	/^chip8_init(chip8_t* chip8)$/;"	f	language:C++	typeref:typename:void	file:
+chip8_init	code/w32_chip8.cpp	/^chip8_init(chip8_t* chip8, str8_t instructions)$/;"	f	language:C++	typeref:typename:b32_t	file:
+chip8_init_from_file	code/w32_chip8.cpp	/^chip8_init_from_file(chip8_t* chip8, const char* filename)$/;"	f	language:C++	typeref:typename:b32_t	file:
 chip8_t	code/w32_chip8.cpp	/^struct chip8_t$/;"	s	language:C++	file:
 chip8_update	code/w32_chip8.cpp	/^chip8_update(chip8_t* chip8)$/;"	f	language:C++	typeref:typename:void	file:
 CHIP8_WINDOW_HEIGHT	code/w32_chip8.cpp	/^#define CHIP8_WINDOW_HEIGHT /;"	d	language:C++	file:
@@ -2060,7 +2061,6 @@ memory_commit	code/momo.h	/^memory_commit(str8_t blk) {$/;"	f	language:C++	typer
 memory_commit	code/momo.h	/^memory_commit(str8_t blk) {$/;"	f	language:C++	typeref:typename:b32_t
 memory_commit	code/momo.h	/^static b32_t  memory_commit(str8_t blk);$/;"	p	language:C++	typeref:typename:b32_t
 memory_copy	code/momo.h	/^memory_copy(void* dest, const void* src, usz_t size) {$/;"	f	language:C++	typeref:typename:void
-memory_copy	code/momo.h	/^memory_copy(void* dest, const void* src, usz_t size) {$/;"	f	language:C++	typeref:typename:void
 memory_copy	code/momo.h	/^static void   memory_copy(void* dest, const void* src, usz_t size);$/;"	p	language:C++	typeref:typename:void
 memory_copy_array	code/momo.h	/^#define memory_copy_array(/;"	d	language:C++
 memory_copy_range	code/momo.h	/^#define memory_copy_range(/;"	d	language:C++
@@ -2068,7 +2068,6 @@ memory_copy_struct	code/momo.h	/^#define memory_copy_struct(/;"	d	language:C++
 memory_free	code/momo.h	/^memory_free(str8_t blk) {$/;"	f	language:C++	typeref:typename:void
 memory_free	code/momo.h	/^memory_free(str8_t blk) {$/;"	f	language:C++	typeref:typename:void
 memory_free	code/momo.h	/^static void   memory_free(str8_t blk);$/;"	p	language:C++	typeref:typename:void
-memory_is_same	code/momo.h	/^memory_is_same(const void* lhs, const void* rhs, usz_t size) {$/;"	f	language:C++	typeref:typename:b32_t
 memory_is_same	code/momo.h	/^memory_is_same(const void* lhs, const void* rhs, usz_t size) {$/;"	f	language:C++	typeref:typename:b32_t
 memory_is_same	code/momo.h	/^static b32_t  memory_is_same(const void* lhs, const void* rhs, usz_t size);$/;"	p	language:C++	typeref:typename:b32_t
 memory_reserve	code/momo.h	/^memory_reserve(usz_t size) {$/;"	f	language:C++	typeref:typename:str8_t
@@ -2079,7 +2078,6 @@ memory_sentinel	code/w32_eden.cpp	/^  w32_memory_t memory_sentinel;$/;"	m	langua
 memory_size	code/eden.h	/^  usz_t memory_size;$/;"	m	language:C++	struct:hell_gfx_command_queue_t	typeref:typename:usz_t
 memory_swap	code/momo.h	/^memory_swap(void* lhs, void* rhs, usz_t size) {$/;"	f	language:C++	typeref:typename:void
 memory_swap	code/momo.h	/^static void   memory_swap(void* lhs, void* rhs, usz_t size);$/;"	p	language:C++	typeref:typename:void
-memory_zero	code/momo.h	/^memory_zero(void* dest, usz_t size) {$/;"	f	language:C++	typeref:typename:void
 memory_zero	code/momo.h	/^memory_zero(void* dest, usz_t size) {$/;"	f	language:C++	typeref:typename:void
 memory_zero	code/momo.h	/^static void   memory_zero(void* dest, usz_t size);$/;"	p	language:C++	typeref:typename:void
 memory_zero_array	code/momo.h	/^#define memory_zero_array(/;"	d	language:C++
@@ -2348,6 +2346,7 @@ ptr_to_umi	code/momo.h	/^static umi_t ptr_to_umi(void* p);$/;"	p	language:C++	ty
 r	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon1db7a63d0d0a::__anon1db7a63d0e08	typeref:typename:f32_t
 r	code/momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
 ram	code/w32_chip8.cpp	/^  u8_t ram[4096];$/;"	m	language:C++	struct:chip8_t	typeref:typename:u8_t[4096]	file:
+ram_usage	code/w32_chip8.cpp	/^  u32_t ram_usage;$/;"	m	language:C++	struct:chip8_t	typeref:typename:u32_t	file:
 rbg_to_hsl	code/momo.h	/^rbg_to_hsl(rgb_t c) {$/;"	f	language:C++	typeref:typename:hsl_t
 rbg_to_hsl	code/momo.h	/^static hsl_t  rbg_to_hsl(rgb_t c);$/;"	p	language:C++	typeref:typename:hsl_t
 rear	code/gist_ring_buffer.cpp	/^  u32_t rear;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
@@ -2604,6 +2603,7 @@ sprite_count	code/pass.h	/^  u32_t sprite_count;$/;"	m	language:C++	struct:pass_
 sprite_id	code/app_lit.cpp	/^  eden_asset_sprite_id_t sprite_id;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:eden_asset_sprite_id_t	file:
 sprite_id	code/pass.h	/^  eden_asset_sprite_id_t sprite_id;$/;"	m	language:C++	struct:pass_pack_atlas_sprite_t	typeref:typename:eden_asset_sprite_id_t
 src	code/eden.h	/^  hell_gfx_blend_type_t src;$/;"	m	language:C++	struct:hell_gfx_command_blend_t	typeref:typename:hell_gfx_blend_type_t
+stack	code/w32_chip8.cpp	/^  u16_t stack[256];$/;"	m	language:C++	struct:chip8_t	typeref:typename:u16_t[256]	file:
 stage_fade_timer	code/app_lit.cpp	/^  f32_t stage_fade_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t	file:
 stage_flash_timer	code/app_lit.cpp	/^  f32_t stage_flash_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t	file:
 start	code/app_lit.cpp	/^  v2f_t start;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:v2f_t	file:
