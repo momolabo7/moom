@@ -57,9 +57,7 @@ int main ()
   for(;;)
   {
     if (seat_index >= seat_count)
-    {
       break;
-    }
     // check neighbours of current seat we are slotting.
     u32_t seat_row = seat_index / rows;
     u32_t seat_col = seat_index % rows;
