@@ -42,6 +42,7 @@ aoc22_d7_print_nodes	code/aoc22.cpp	/^aoc22_d7_print_nodes(aoc22_d7_node_t* node
 aoc22_d7_push_dir	code/aoc22.cpp	/^aoc22_d7_push_dir($/;"	f	language:C++	typeref:typename:aoc22_d7_node_t *	file:
 aoc22_d7_push_file	code/aoc22.cpp	/^aoc22_d7_push_file($/;"	f	language:C++	typeref:typename:aoc22_d7_node_t *	file:
 aoc22_d8p1	code/aoc22.cpp	/^aoc22_d8p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d8p2	code/aoc22.cpp	/^aoc22_d8p2(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_grid_get	code/aoc22.cpp	/^aoc22_grid_get(aoc22_grid_t* grid, u32_t x, u32_t y)$/;"	f	language:C++	typeref:typename:u8_t	file:
 aoc22_grid_init	code/aoc22.cpp	/^aoc22_grid_init(aoc22_grid_t* grid, buffer_t b)$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_grid_t	code/aoc22.cpp	/^struct aoc22_grid_t$/;"	s	language:C++	file:
@@ -870,6 +871,7 @@ edges	code/app_lit.cpp	/^  lit_game_edge_t edges[256];$/;"	m	language:C++	struct
 edge_count	code/app_lit.cpp	/^  u32_t edge_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
 element	code/momo.h	/^    json_element_t element;$/;"	m	language:C++	union:json_value_t::__anon1db7a63d180a	typeref:typename:json_element_t
 end	code/app_lit.cpp	/^  v2f_t end;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:v2f_t	file:
+endline_padding	code/aoc22.cpp	/^  u32_t endline_padding; \/\/ 1 if \\n, 2 if \\n\\r$/;"	m	language:C++	struct:aoc22_grid_t	typeref:typename:u32_t	file:
 end_build_type	bin/build.bat	/^:end_build_type$/;"	l	language:DosBatch
 end_point_indices	code/momo.h	/^  u16_t* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u16_t *
 end_pt	code/app_lit.cpp	/^  v2f_t end_pt;$/;"	m	language:C++	struct:lit_game_edge_t	typeref:typename:v2f_t	file:

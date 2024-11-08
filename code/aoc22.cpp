@@ -1290,6 +1290,82 @@ aoc22_d8p1(const char* filename, arena_t* arena)
   printf("%d\n", sum);
 }
 
+static void 
+aoc22_d8p2(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!file_buffer) return;
+
+  aoc22_grid_t grid;
+  aoc22_grid_init(&grid, file_buffer);
+
+  u32_t max = 0;
+
+  for_cnt(y, grid.h)
+  {
+    for_cnt(x, grid.w)
+    {
+      u32_t current_score = 1; 
+      u32_t score = 1;
+      u8_t current_tree = aoc22_grid_get(&grid, x, y);
+
+      // check right
+      for (s32_t i = x+1; i < grid.w; ++i){
+        u8_t tree_to_check = aoc22_grid_get(&grid, i, y);
+        if (tree_to_check >= current_tree)
+        {
+          break;
+        }
+        ++score;
+      }
+      current_score *= score;
+
+      // check left
+      score = 1
+      for (s32_t i = x-1; i >= 0; --i){
+        u8_t tree_to_check = aoc22_grid_get(&grid, i, y);
+        if (tree_to_check >= current_tree)
+        {
+          break;
+        }
+        ++score;
+      }
+      current_score *= score;
+      
+      // check down
+      score = 1
+      for (s32_t i = y+1; i < grid.h; ++i){
+        u8_t tree_to_check = aoc22_grid_get(&grid, x, i);
+        if (tree_to_check >= current_tree)
+        {
+          break;
+        }
+        ++score;
+      }
+      current_score *= score;
+      
+      //check up
+      score = 1
+      for (s32_t i = y-1; i >= 0; --i){
+        u8_t tree_to_check = aoc22_grid_get(&grid, x, i);
+        if (tree_to_check >= current_tree)
+        {
+          break;
+        }
+        ++score;
+      }
+      current_score *= score;
+
+      max = max_of(max, current_score);
+      //printf("%c", aoc22_grid_get(&grid, x, y));
+    }
+  }
+
+  printf("%d\n", max);
+}
+
 int main(int argv, char** argc) {
   if (argv < 2) {
     printf("Usage: aoc22 <day> <part> <filename>\nExample: aoc22 1 1 input.txt\n");
@@ -1330,5 +1406,6 @@ int main(int argv, char** argc) {
   aoc22_route(7,1);
   aoc22_route(7,2);
   aoc22_route(8,1);
+  aoc22_route(8,2);
 
 }
