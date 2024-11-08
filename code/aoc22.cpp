@@ -1308,58 +1308,57 @@ aoc22_d8p2(const char* filename, arena_t* arena)
     for_cnt(x, grid.w)
     {
       u32_t current_score = 1; 
-      u32_t score = 1;
+      u32_t score = 0;
       u8_t current_tree = aoc22_grid_get(&grid, x, y);
 
       // check right
       for (s32_t i = x+1; i < grid.w; ++i){
+        ++score;
         u8_t tree_to_check = aoc22_grid_get(&grid, i, y);
         if (tree_to_check >= current_tree)
         {
           break;
         }
-        ++score;
       }
       current_score *= score;
 
       // check left
-      score = 1
+      score = 0;
       for (s32_t i = x-1; i >= 0; --i){
+        ++score;
         u8_t tree_to_check = aoc22_grid_get(&grid, i, y);
         if (tree_to_check >= current_tree)
         {
           break;
         }
-        ++score;
       }
       current_score *= score;
       
       // check down
-      score = 1
-      for (s32_t i = y+1; i < grid.h; ++i){
+      score = 0;
+      for (s32_t i = y+1; i < grid.h; ++i)
+      {
+        ++score;
         u8_t tree_to_check = aoc22_grid_get(&grid, x, i);
         if (tree_to_check >= current_tree)
         {
           break;
         }
-        ++score;
       }
       current_score *= score;
       
       //check up
-      score = 1
+      score = 0;
       for (s32_t i = y-1; i >= 0; --i){
+        ++score;
         u8_t tree_to_check = aoc22_grid_get(&grid, x, i);
         if (tree_to_check >= current_tree)
         {
           break;
         }
-        ++score;
       }
       current_score *= score;
-
       max = max_of(max, current_score);
-      //printf("%c", aoc22_grid_get(&grid, x, y));
     }
   }
 
