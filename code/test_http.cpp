@@ -1,11 +1,20 @@
 #include <stdio.h>
 #include "momo.h"
 
+
+
 struct https_t
 {
   HINTERNET session;
   HINTERNET connection;
   HINTERNET request;
+};
+
+enum https_request_type_t
+{
+  HTTPS_REQUEST_TYPE_GET,
+  HTTPS_REQUEST_TYPE_POST,
+  HTTPS_REQUEST_TYPE_PUT,
 };
 
 static void 
@@ -30,27 +39,38 @@ https_connect(https_t* https, const wchar_t* url)
 }
 
 
-static str_t
+static buffer_t
 https_request(
     https_t* https, 
-    const wchar_t* request_type,
-    const wchar_t* endpoint,
-    arena_t* arena )
+    https_request_type_t request_type,
+    buffer_t endpoint,
+    arena_t* arena)
 {
+  const wchar_t* request_type_str = L"GET";
+  if(request_type == HTTPS_REQUEST_TYPE_POST) request_type_str = L"POST";
+  if(request_type == HTTPS_REQUEST_TYPE_PUT) request_type_str = L"PUT";
+
   arena_marker_t mark = arena_mark(arena);
   DWORD bytes_read;
   DWORD size_to_read;
   DWORD size_so_far = 0;
-  str_t ret = str_bad();
+  buffer_t ret = buffer_bad();
+
+
+  s32_t wchar_len = MultiByteToWideChar(CP_UTF8, 0, (char*)endpoint.e, -1, NULL, 0);
+  LPWSTR wchar_endpoint = (LPWSTR)arena_push_size(arena, sizeof(wchar_t)*wchar_len, 16);
+  MultiByteToWideChar(CP_UTF8, 0, (char*)endpoint.e, -1, wchar_endpoint, wchar_len);
 
   https->request = WinHttpOpenRequest(
     https->connection,
-    request_type,
-    endpoint,
+    request_type_str,
+    wchar_endpoint,
     NULL,
     WINHTTP_NO_REFERER,
     WINHTTP_DEFAULT_ACCEPT_TYPES,
     WINHTTP_FLAG_SECURE);
+
+   arena_revert(mark);
 
    if (!WinHttpSendRequest(https->request, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0))
    {
@@ -70,7 +90,7 @@ https_request(
 
      if (!ret) 
      {
-       ret = arena_push_str(arena, size_so_far, 16);
+       ret = arena_push_buffer(arena, size_so_far, 16);
        if (!ret) 
        {
          goto bad_end;
@@ -79,7 +99,7 @@ https_request(
 
      else if (size_so_far > ret.size)
      {
-       if (!arena_grow_str(arena, &ret, size_so_far))
+       if (!arena_grow_buffer(arena, &ret, size_so_far))
        {
          goto bad_end;
        }
@@ -96,7 +116,7 @@ https_request(
 
 bad_end:
    arena_revert(mark);
-   return str_bad();
+   return buffer_bad();
 
 }
 
@@ -119,7 +139,7 @@ int main()
 
   https_begin(&https);
   https_connect(&https, L"google.com");
-  str_t res = https_request(&https, L"GET", L"/", &arena);
+  buffer_t res = https_request(&https, HTTPS_REQUEST_TYPE_GET, buffer_from_lit(L"/"), &arena);
   if (res)
   {
     for(int i = 0; i < res.size; ++i)

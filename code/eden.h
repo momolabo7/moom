@@ -245,7 +245,7 @@ struct eden_asset_sound_t {
 };
 
 struct eden_asset_shader_t {
-  str8_t code;
+  buffer_t code;
 };
 
 struct eden_asset_font_glyph_t {
@@ -620,7 +620,7 @@ struct hell_gfx_opengl_t {
 #include "eden_asset_file.h"
 
 struct eden_console_command_t {
-  str8_t key;
+  buffer_t key;
   void* ctx;
   void (*func)(void*);
 };
@@ -630,10 +630,10 @@ struct eden_console_t {
   u32_t command_count;
   eden_console_command_t* commands;
   
-  str8_builder_t* info_lines; 
+  str_builder_t* info_lines; 
   u32_t info_line_count;
 
-  str8_builder_t input_line;
+  str_builder_t input_line;
 
 };
 
@@ -702,7 +702,7 @@ enum hell_inspector_entry_type_t {
 };
 
 struct hell_inspector_entry_t {
-  str8_t name;
+  buffer_t name;
   hell_inspector_entry_type_t type;
   union {
     f32_t item_f32;
@@ -2627,7 +2627,7 @@ eden_assets_init_from_file(
       return false;
 
     eden_asset_shader_t* s = assets->shaders + shader_index;
-    s->code = arena_push_str(arena, file_shader.length, 16);
+    s->code = arena_push_buffer(arena, file_shader.length, 16);
     if (!s->code) 
       return false;
 
@@ -2971,7 +2971,7 @@ static void
 eden_draw_text(
     eden_t* eden, 
     eden_asset_font_id_t font_id, 
-    str8_t str, 
+    buffer_t str, 
     rgba_t color, 
     f32_t px, 
     f32_t py, 
@@ -3015,7 +3015,7 @@ eden_draw_text(
 }
 
 static void
-eden_draw_text_center_aligned(eden_t* eden, eden_asset_font_id_t font_id, str8_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+eden_draw_text_center_aligned(eden_t* eden, eden_asset_font_id_t font_id, buffer_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
 {
   eden_assets_t* assets = &eden->assets;
   eden_asset_font_t* font = eden_assets_get_font(assets, font_id);
@@ -3086,7 +3086,7 @@ eden_draw_text_center_aligned(eden_t* eden, eden_asset_font_id_t font_id, str8_t
 // @mark: inspect
 //
 static void
-eden_inspect_u32(eden_t* eden, str8_t name, u32_t item) 
+eden_inspect_u32(eden_t* eden, buffer_t name, u32_t item) 
 {
   hell_inspector_t* in = &eden->inspector;
   assert(in->entry_count < in->entry_cap);
@@ -3097,7 +3097,7 @@ eden_inspect_u32(eden_t* eden, str8_t name, u32_t item)
 }
 
 static void
-eden_inspect_f32(eden_t* eden, str8_t name, u32_t item)
+eden_inspect_f32(eden_t* eden, buffer_t name, u32_t item)
 {
   hell_inspector_t* in = &eden->inspector;
   assert(in->entry_count < in->entry_cap);
@@ -3126,22 +3126,22 @@ eden_inspector_update_and_render(
       rgba_set(0.f, 0.f, 0.f, 0.5f));
   eden_advance_depth(eden);
 
-  str8_builder_t sb = {};
-  str8_builder_init(&sb, frame_arena, 256);
+  str_builder_t sb = {};
+  str_builder_init(&sb, frame_arena, 256);
   
   for(u32_t entry_index = 0; 
       entry_index < inspector->entry_count; 
       ++entry_index)
   {
-    str8_builder_clear(&sb);
+    str_builder_clear(&sb);
     auto* entry = inspector->entries + entry_index;
     switch(entry->type){
       case HELL_INSPECTOR_ENTRY_TYPE_U32: {
-        str8_builder_push_fmt(&sb, str8_from_lit("[%10S] %7u"),
+        str_builder_push_fmt(&sb, buffer_from_lit("[%10S] %7u"),
             entry->name, entry->item_u32);
       } break;
       case HELL_INSPECTOR_ENTRY_TYPE_F32: {
-        str8_builder_push_fmt(&sb, str8_from_lit("[%10S] %7f"),
+        str_builder_push_fmt(&sb, buffer_from_lit("[%10S] %7f"),
             entry->name, entry->item_f32);
       } break;
     }
@@ -3279,11 +3279,11 @@ eden_profile_update_and_render(
     hell_profiler_end_stat(&hits);
     hell_profiler_end_stat(&cycles_per_hit);
    
-    str8_builder_t sb = {};
-    str8_builder_init(&sb, frame_arena, 256);
+    str_builder_t sb = {};
+    str_builder_init(&sb, frame_arena, 256);
 
-    str8_builder_push_fmt(&sb, 
-                 str8_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
+    str_builder_push_fmt(&sb, 
+                 buffer_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
                  entry->block_name,
                  (u32_t)cycles.average,
                  (u32_t)hits.average,
@@ -3403,22 +3403,22 @@ eden_console_init(
   console->command_cap = max_commands;
   console->info_line_count = 0;
   console->commands = arena_push_arr(eden_console_command_t, allocator, max_commands);
-  console->info_lines = arena_push_arr(str8_builder_t, allocator, max_lines);
+  console->info_lines = arena_push_arr(str_builder_t, allocator, max_lines);
 
   u32_t line_size = characters_per_line;
-  str8_builder_init(&console->input_line, allocator, line_size);
+  str_builder_init(&console->input_line, allocator, line_size);
   
   for (u32_t info_line_index = 0;
        info_line_index < console->info_line_count;
        ++info_line_index) 
   {    
-    str8_builder_t* info_line = console->info_lines + info_line_index;
-    str8_builder_init(info_line, allocator, line_size);
+    str_builder_t* info_line = console->info_lines + info_line_index;
+    str_builder_init(info_line, allocator, line_size);
   }
 }
 
 static void
-eden_console_add_command(eden_console_t* console, str8_t key, void* ctx, void(*func)(void*)) 
+eden_console_add_command(eden_console_t* console, buffer_t key, void* ctx, void(*func)(void*)) 
 {
   // simulate adding commands
   assert(console->command_count < console->command_cap);
@@ -3429,7 +3429,7 @@ eden_console_add_command(eden_console_t* console, str8_t key, void* ctx, void(*f
 }
 
 static void
-eden_console_push_info(eden_console_t* console, str8_t str) {
+eden_console_push_info(eden_console_t* console, buffer_t str) {
   // @note: There's probably a better to do with via some
   // crazy indexing scheme, but this is debug so we don't care for now
   
@@ -3439,13 +3439,13 @@ eden_console_push_info(eden_console_t* console, str8_t str) {
        ++i)
   {
     u32_t line_index = console->info_line_count - 1 - i;
-    str8_builder_t* line_to = console->info_lines + line_index;
-    str8_builder_t* line_from = console->info_lines + line_index - 1;
-    str8_builder_clear(line_to);
-    str8_builder_push_str(line_to, line_from->str);
+    str_builder_t* line_to = console->info_lines + line_index;
+    str_builder_t* line_from = console->info_lines + line_index - 1;
+    str_builder_clear(line_to);
+    str_builder_push_buffer(line_to, line_from->str);
   } 
-  str8_builder_clear(console->info_lines + 0);
-  str8_builder_push_str(console->info_lines + 0, str);
+  str_builder_clear(console->info_lines + 0);
+  str_builder_push_buffer(console->info_lines + 0, str);
 }
 
 static void
@@ -3456,13 +3456,13 @@ eden_console_execute(eden_console_t* console)
       ++command_index) 
   {
     eden_console_command_t* cmd = console->commands + command_index;
-    if (str8_match(cmd->key, console->input_line.str)) {
+    if (buffer_match(cmd->key, console->input_line.str)) {
       cmd->func(cmd->ctx);
     }
   }
   
   eden_console_push_info(console, console->input_line.str);
-  str8_builder_clear(&console->input_line);
+  str_builder_clear(&console->input_line);
 }
 
 static void

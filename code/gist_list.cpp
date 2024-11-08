@@ -38,7 +38,8 @@ static void
 gist_list_remove_maintain_order(gist_list_t* l, u32_t index)
 {
   assert(index < l->count);
-  for_range(list_index, index, l->count-1) {
+  for_range(list_index, index, l->count) 
+  {
     l->e[list_index] = l->e[list_index+1];
   }
   l->count--;

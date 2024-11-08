@@ -3,14 +3,71 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+struct aoc22_grid_t
+{
+  buffer_t buffer;
+  u32_t endline_padding; // 1 if \n, 2 if \n\r
+  u32_t w, h;
+};
+
+static u8_t
+aoc22_grid_get(aoc22_grid_t* grid, u32_t x, u32_t y)
+{
+  assert(x < grid->w);
+  assert(y < grid->h);
+  return grid->buffer.e[x + (grid->w + grid->endline_padding) * y];
+}
+
+static void
+aoc22_grid_init(aoc22_grid_t* grid, buffer_t b)
+{
+  // assumes that it's a square grid.
+  grid->buffer = b;
+
+  stream_t s;
+  stream_init(&s, b);
+
+  // count width
+  grid->w = 0;
+  grid->endline_padding = 1;
+  {
+    buffer_t line = stream_consume_line(&s);  
+    // @note: kinda hacky way to count \n or \r or \n\r
+    //
+    // There's only a few combinations. The line either ends with:
+    // - \n (linux)
+    // - \r (mac)
+    // - \r\n (windows)
+    // - 0 (eof)
+    //
+    // There is only one case where there's two characters (windows) so 
+    // we technically just need to check 2 characters ahead and see if it's
+    // \r or not
+    if (line.e[line.size+1] == '\n'){
+      grid->endline_padding = 2;
+    }
+    
+    grid->w = line.size;
+    stream_reset(&s);
+  }
+
+  // count height
+  grid->h = 0;
+  while(!stream_is_eos(&s)) 
+  {
+    stream_consume_line(&s);  
+    ++grid->h;
+  }
+}
+
 // 
 // This will just consume all characters until the next \n or \r or 0. 
-// The returned str_t will not include the \n or \r or 0. 
+// The returned buffer_t will not include the \n or \r or 0. 
 //
 static void aoc22_d1p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -20,7 +77,7 @@ static void aoc22_d1p2(const char* filename, arena_t* arena) {
   u32_t sum = 0;
   while(!stream_is_eos(s)) 
   {
-    str_t line = stream_consume_line(s);  
+    buffer_t line = stream_consume_line(s);  
     if (line.size == 0) 
     {
       for_arr(i, maxs) 
@@ -46,7 +103,7 @@ static void aoc22_d1p2(const char* filename, arena_t* arena) {
       continue;
     }
     u32_t value = 0;
-    if (str_to_u32(line, &value))
+    if (buffer_to_u32(line, &value))
     {
       sum += value;
     }
@@ -70,7 +127,7 @@ static void aoc22_d1p2(const char* filename, arena_t* arena) {
 static void aoc22_d1p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -80,7 +137,7 @@ static void aoc22_d1p1(const char* filename, arena_t* arena) {
   u32_t sum = 0;
   while(!stream_is_eos(s)) 
   {
-    str_t line = stream_consume_line(s);  
+    buffer_t line = stream_consume_line(s);  
     if (line.size == 0) 
     {
       if (sum > max) 
@@ -92,7 +149,7 @@ static void aoc22_d1p1(const char* filename, arena_t* arena) {
     }
 
     u32_t value = 0;
-    if (str_to_u32(line, &value))
+    if (buffer_to_u32(line, &value))
     {
       sum += value;
     }
@@ -113,7 +170,7 @@ static void aoc22_d2p1(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = file_read_into_str(filename, arena, false); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, false); 
   if (!file_buffer) return;
 
 
@@ -134,7 +191,7 @@ static void aoc22_d2p1(const char* filename, arena_t* arena)
   u32_t sum = 0;
   while(!stream_is_eos(s)) 
   {
-    str_t line = stream_consume_line(s);  
+    buffer_t line = stream_consume_line(s);  
     s32_t lhs = line.e[0] - 'A';
     s32_t rhs = line.e[2] - 'X';
     
@@ -164,7 +221,7 @@ static void aoc22_d2p1(const char* filename, arena_t* arena)
 static void aoc22_d2p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -199,7 +256,7 @@ static void aoc22_d2p2(const char* filename, arena_t* arena) {
   u32_t sum = 0;
   while(!stream_is_eos(s)) 
   {
-    str_t line = stream_consume_line(s);  
+    buffer_t line = stream_consume_line(s);  
     s32_t lhs = line.e[0] - 'A';
     s32_t rhs = line.e[2] - 'X';
     
@@ -228,7 +285,7 @@ static void aoc22_d2p2(const char* filename, arena_t* arena) {
 static void aoc22_d3p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -236,9 +293,9 @@ static void aoc22_d3p1(const char* filename, arena_t* arena) {
   u32_t sum = 0;
   while(!stream_is_eos(s)) 
   {
-    str_t line = stream_consume_line(s);  
-    str_t lhs = str_set(line.e, line.size/2);
-    str_t rhs = str_set(line.e + line.size/2, line.size/2);
+    buffer_t line = stream_consume_line(s);  
+    buffer_t lhs = buffer_set(line.e, line.size/2);
+    buffer_t rhs = buffer_set(line.e + line.size/2, line.size/2);
     
     // find common items
     for_cnt(i, lhs.size) 
@@ -270,7 +327,7 @@ found:;
 static void aoc22_d3p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -278,9 +335,9 @@ static void aoc22_d3p2(const char* filename, arena_t* arena) {
   u32_t sum = 0;
   while(!stream_is_eos(s)) 
   {
-    str_t line0 = stream_consume_line(s);  
-    str_t line1 = stream_consume_line(s);  
-    str_t line2 = stream_consume_line(s);  
+    buffer_t line0 = stream_consume_line(s);  
+    buffer_t line1 = stream_consume_line(s);  
+    buffer_t line2 = stream_consume_line(s);  
 
     // Find common item between line0 and line1
     for_cnt(i, line0.size) 
@@ -316,7 +373,7 @@ found:;
 static void aoc22_d4p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -326,18 +383,18 @@ static void aoc22_d4p1(const char* filename, arena_t* arena) {
   while(!stream_is_eos(s)) 
   {
     arena_set_revert_point(arena);
-    str_t str = stream_consume_line(s);  
+    buffer_t str8 = stream_consume_line(s);  
     u32_t nums[4] = {};
     
-    str_arr_t arr0 = str_split(str, ',', arena);
+    buffer_arr_t arr0 = buffer_split(str8, ',', arena);
     u32_t cur_index = 0;
     for_cnt(i, arr0.size) 
     {
       arena_set_revert_point(arena);
-      str_arr_t arr1 = str_split(arr0.e[i], '-', arena);
+      buffer_arr_t arr1 = buffer_split(arr0.e[i], '-', arena);
       for_cnt(j, arr1.size) 
       {
-        str_to_u32(arr1.e[j], &nums[cur_index++]);
+        buffer_to_u32(arr1.e[j], &nums[cur_index++]);
       }
     }
 
@@ -360,7 +417,7 @@ static void aoc22_d4p1(const char* filename, arena_t* arena) {
 static void aoc22_d4p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -370,18 +427,18 @@ static void aoc22_d4p2(const char* filename, arena_t* arena) {
   while(!stream_is_eos(s)) 
   {
     arena_set_revert_point(arena);
-    str_t str = stream_consume_line(s);  
+    buffer_t str8 = stream_consume_line(s);  
     u32_t nums[4] = {};
     
-    str_arr_t arr0 = str_split(str, ',', arena);
+    buffer_arr_t arr0 = buffer_split(str8, ',', arena);
     u32_t cur_index = 0;
     for_cnt(i, arr0.size) 
     {
       arena_set_revert_point(arena);
-      str_arr_t arr1 = str_split(arr0.e[i], '-', arena);
+      buffer_arr_t arr1 = buffer_split(arr0.e[i], '-', arena);
       for_cnt(j, arr1.size) 
       {
-        str_to_u32(arr1.e[j], &nums[cur_index++]);
+        buffer_to_u32(arr1.e[j], &nums[cur_index++]);
       }
     }
 
@@ -448,7 +505,7 @@ static void aoc22_d5p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
 
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -461,8 +518,8 @@ static void aoc22_d5p1(const char* filename, arena_t* arena) {
   b32_t is_setup = true;
   while(!stream_is_eos(s)) 
   {
-    str_t str = stream_consume_line(s);  
-    if (str.e[1] == '1') {
+    buffer_t str8 = stream_consume_line(s);  
+    if (str8.e[1] == '1') {
       is_setup = false;
       stream_consume_line(s); // there is one more line of whitespace
       
@@ -485,12 +542,12 @@ static void aoc22_d5p1(const char* filename, arena_t* arena) {
 
     if (is_setup) // setup phase
     {
-      for(u32_t i = 1, j = 0; i < str.size; i+=4, ++j) 
+      for(u32_t i = 1, j = 0; i < str8.size; i+=4, ++j) 
       {
-        if (str.e[i] != ' ') 
+        if (str8.e[i] != ' ') 
         {
           auto* new_node = arena_push(aoc22_d5_node_t, arena);
-          new_node->value = str.e[i];
+          new_node->value = str8.e[i];
           cll_push_front(stacks + j, new_node);
         }
       }
@@ -498,11 +555,11 @@ static void aoc22_d5p1(const char* filename, arena_t* arena) {
     else // movement phase 
     {
       arena_set_revert_point(arena);
-      str_arr_t split = str_split(str, ' ', arena);
+      buffer_arr_t split = buffer_split(str8, ' ', arena);
       u32_t amount, from, to = 0;
-      str_to_u32(split.e[1], &amount);
-      str_to_u32(split.e[3], &from);
-      str_to_u32(split.e[5], &to);
+      buffer_to_u32(split.e[1], &amount);
+      buffer_to_u32(split.e[3], &from);
+      buffer_to_u32(split.e[5], &to);
       from -= 1;
       to -= 1;
       //printf("moving %d from %d to %d\n", amount, from, to);
@@ -566,7 +623,7 @@ static void aoc22_d5p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
 
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -579,8 +636,8 @@ static void aoc22_d5p2(const char* filename, arena_t* arena) {
   b32_t is_setup = true;
   while(!stream_is_eos(s)) 
   {
-    str_t str = stream_consume_line(s);  
-    if (str.e[1] == '1') {
+    buffer_t str8 = stream_consume_line(s);  
+    if (str8.e[1] == '1') {
       is_setup = false;
       stream_consume_line(s); // there is one more line of whitespace
       
@@ -603,12 +660,12 @@ static void aoc22_d5p2(const char* filename, arena_t* arena) {
 
     if (is_setup) // setup phase
     {
-      for(u32_t i = 1, j = 0; i < str.size; i+=4, ++j) 
+      for(u32_t i = 1, j = 0; i < str8.size; i+=4, ++j) 
       {
-        if (str.e[i] != ' ') 
+        if (str8.e[i] != ' ') 
         {
           auto* new_node = arena_push(aoc22_d5_node_t, arena);
-          new_node->value = str.e[i];
+          new_node->value = str8.e[i];
           cll_push_front(stacks + j, new_node);
         }
       }
@@ -616,11 +673,11 @@ static void aoc22_d5p2(const char* filename, arena_t* arena) {
     else // movement phase 
     {
       arena_set_revert_point(arena);
-      str_arr_t split = str_split(str, ' ', arena);
+      buffer_arr_t split = buffer_split(str8, ' ', arena);
       u32_t amount, from, to = 0;
-      str_to_u32(split.e[1], &amount);
-      str_to_u32(split.e[3], &from);
-      str_to_u32(split.e[5], &to);
+      buffer_to_u32(split.e[1], &amount);
+      buffer_to_u32(split.e[3], &from);
+      buffer_to_u32(split.e[5], &to);
       from -= 1;
       to -= 1;
       //printf("moving %d from %d to %d\n", amount, from, to);
@@ -683,7 +740,7 @@ aoc22_d6p1(const char* filename, arena_t* arena)
 {
   const u32_t window_size = 4;
   arena_set_revert_point(arena);
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -693,16 +750,16 @@ aoc22_d6p1(const char* filename, arena_t* arena)
   while(!stream_is_eos(s)) 
   {
     // 012345, size = 6
-    str_t str = stream_consume_line(s);  
-    for_cnt(str_index, str.size - window_size - 1) 
+    buffer_t str8 = stream_consume_line(s);  
+    for_cnt(buffer_index, str8.size - window_size - 1) 
     {
-      //printf("%c", str.e[str_index]);
+      //printf("%c", str8.e[buffer_index]);
       u32_t repeats_found = false;
       for(u32_t i = 0; i < window_size; ++i) 
       {
         for(u32_t j = i + 1; j < window_size; ++j) 
         {
-          if (str.e[str_index + i] == str.e[str_index + j])
+          if (str8.e[buffer_index + i] == str8.e[buffer_index + j])
           {
             repeats_found = true;
             goto stop_checking;
@@ -713,7 +770,7 @@ aoc22_d6p1(const char* filename, arena_t* arena)
 stop_checking:
       if (!repeats_found) 
       {
-        solulu = str_index + window_size;
+        solulu = buffer_index + window_size;
         goto found;
       }
     }
@@ -729,7 +786,7 @@ aoc22_d6p2(const char* filename, arena_t* arena)
 {
   const u32_t window_size = 14;
   arena_set_revert_point(arena);
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -739,16 +796,16 @@ aoc22_d6p2(const char* filename, arena_t* arena)
   while(!stream_is_eos(s)) 
   {
     // 012345, size = 6
-    str_t str = stream_consume_line(s);  
-    for_cnt(str_index, str.size - window_size - 1) 
+    buffer_t str8 = stream_consume_line(s);  
+    for_cnt(buffer_index, str8.size - window_size - 1) 
     {
-      //printf("%c", str.e[str_index]);
+      //printf("%c", str8.e[buffer_index]);
       u32_t repeats_found = false;
       for(u32_t i = 0; i < window_size; ++i) 
       {
         for(u32_t j = i + 1; j < window_size; ++j) 
         {
-          if (str.e[str_index + i] == str.e[str_index + j])
+          if (str8.e[buffer_index + i] == str8.e[buffer_index + j])
           {
             repeats_found = true;
             goto stop_checking;
@@ -759,7 +816,7 @@ aoc22_d6p2(const char* filename, arena_t* arena)
 stop_checking:
       if (!repeats_found) 
       {
-        solulu = str_index + window_size;
+        solulu = buffer_index + window_size;
         goto found;
       }
     }
@@ -778,7 +835,7 @@ struct aoc22_d7_file_t;
 struct aoc22_d7_dir_t;
 struct aoc22_d7_node_t {
   aoc22_d7_node_type_t type;
-  str_t name;
+  buffer_t name;
   union {
     aoc22_d7_file_t* file;
     aoc22_d7_dir_t* dir;
@@ -802,7 +859,7 @@ struct aoc22_d7_dir_t
 static aoc22_d7_node_t*
 aoc22_d7_push_dir(
     aoc22_d7_dir_t* parent, 
-    str_t name, 
+    buffer_t name, 
     arena_t* arena)
 {
   auto* node = arena_push(aoc22_d7_node_t, arena);
@@ -821,7 +878,7 @@ aoc22_d7_push_dir(
 static aoc22_d7_node_t*
 aoc22_d7_push_file(
     aoc22_d7_dir_t* parent, 
-    str_t name, 
+    buffer_t name, 
     u32_t size,
     arena_t* arena)
 {
@@ -838,9 +895,9 @@ aoc22_d7_push_file(
 }
 
 static void
-aoc22_print_str(str_t str) {
-  for_cnt(i, str.size) {
-    printf("%c", str.e[i]);
+aoc22_print_str8(buffer_t str8) {
+  for_cnt(i, str8.size) {
+    printf("%c", str8.e[i]);
   }
 }
 
@@ -856,7 +913,7 @@ aoc22_d7p1_parse_dir(aoc22_d7_dir_t* dir, u32_t* total_dir_sum)
       u32_t sum = aoc22_d7p1_parse_dir(itr->dir, total_dir_sum);
 #if 0
       printf("directory: ");
-      aoc22_print_str(itr->name);
+      aoc22_print_str8(itr->name);
       printf(" @ %d\n", sum);
 #endif
       ret += sum;
@@ -865,7 +922,7 @@ aoc22_d7p1_parse_dir(aoc22_d7_dir_t* dir, u32_t* total_dir_sum)
     {
 #if 0
       printf("file: ");
-      aoc22_print_str(itr->name);
+      aoc22_print_str8(itr->name);
       printf("\n");
 #endif
       //if (itr->file->size <= 100000)
@@ -934,7 +991,7 @@ static void
 aoc22_d7_print_nodes(aoc22_d7_node_t* node, u32_t level = 0) 
 {
   for_cnt(i, level) printf(" ");
-  aoc22_print_str(node->name);
+  aoc22_print_str8(node->name);
   printf(" (dir, size = %u)\n", aoc22_d7_get_dir_size(node->dir));
 
   level += 2;
@@ -948,7 +1005,7 @@ aoc22_d7_print_nodes(aoc22_d7_node_t* node, u32_t level = 0)
     else
     {
       for_cnt(i, level) printf(" ");
-      aoc22_print_str(itr->name);
+      aoc22_print_str8(itr->name);
       printf(" (file, size = %u)\n", itr->file->size);
     }
 
@@ -960,14 +1017,14 @@ aoc22_d7p1(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
 
   // Initialize root first
-  aoc22_d7_node_t* root = aoc22_d7_push_dir(nullptr, str_from_lit("/"), arena);
+  aoc22_d7_node_t* root = aoc22_d7_push_dir(nullptr, buffer_from_lit("/"), arena);
   aoc22_d7_dir_t* cd = root->dir;
 
   // @note: We are pretty much assume ignore 'ls' command because
@@ -975,22 +1032,22 @@ aoc22_d7p1(const char* filename, arena_t* arena)
   // that represent 'cd' commands, files and directories
   while(!stream_is_eos(s)) 
   {
-    str_t str = stream_consume_line(s);  
-    if (str.e[0] == '$') 
+    buffer_t str8 = stream_consume_line(s);  
+    if (str8.e[0] == '$') 
     {
-      if (str.e[2] == 'c') //cd
+      if (str8.e[2] == 'c') //cd
       {
-        str_t dir_name = str_set(str.e + 5, str.size - 5);
+        buffer_t dir_name = buffer_set(str8.e + 5, str8.size - 5);
 
         // go to root
-        if (str_match(dir_name, str_from_lit("/")))
+        if (buffer_match(dir_name, buffer_from_lit("/")))
         {
           cd = root->dir;
           //printf("cd /\n");
         }
 
         // go to parent
-        else if (str_match(dir_name, str_from_lit("..")))
+        else if (buffer_match(dir_name, buffer_from_lit("..")))
         {
           cd = cd->parent;
           //printf("cd ..\n");
@@ -1001,7 +1058,7 @@ aoc22_d7p1(const char* filename, arena_t* arena)
           aoc22_d7_node_t* itr = cd->sentinel.next;
           while(itr != &cd->sentinel) 
           {
-            if (str_match(itr->name, dir_name))
+            if (buffer_match(itr->name, dir_name))
             {
               cd = itr->dir; 
               break;
@@ -1009,7 +1066,7 @@ aoc22_d7p1(const char* filename, arena_t* arena)
             itr = itr->next;
           }
           //printf("cd ");
-          //aoc22_print_str(dir_name);
+          //aoc22_print_str8(dir_name);
           //printf("\n");
         }
       }
@@ -1017,13 +1074,13 @@ aoc22_d7p1(const char* filename, arena_t* arena)
     else 
     {
       arena_marker_t mark = arena_mark(arena);
-      str_arr_t arr = str_split(str, ' ', arena);
+      buffer_arr_t arr = buffer_split(str8, ' ', arena);
       // format: dir <directory_name> 
-      if (str_match(arr.e[0], str_from_lit("dir")))
+      if (buffer_match(arr.e[0], buffer_from_lit("dir")))
       {
-        str_t dir_name = arr.e[1]; 
+        buffer_t dir_name = arr.e[1]; 
         //printf("directory found: ");
-        //aoc22_print_str(dir_name);
+        //aoc22_print_str8(dir_name);
         //printf("\n");
 
         arena_revert(mark);
@@ -1035,11 +1092,11 @@ aoc22_d7p1(const char* filename, arena_t* arena)
       else 
       {
         u32_t file_size = 0;
-        str_t file_name = arr.e[1];
-        str_to_u32(arr.e[0], &file_size);
+        buffer_t file_name = arr.e[1];
+        buffer_to_u32(arr.e[0], &file_size);
 
         //printf("file found: ");
-        //aoc22_print_str(file_name);
+        //aoc22_print_str8(file_name);
         //printf(" @ %d\n", file_size);
 
         arena_revert(mark);
@@ -1061,14 +1118,14 @@ aoc22_d7p2(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
 
   // Initialize root first
-  aoc22_d7_node_t* root = aoc22_d7_push_dir(nullptr, str_from_lit("/"), arena);
+  aoc22_d7_node_t* root = aoc22_d7_push_dir(nullptr, buffer_from_lit("/"), arena);
   aoc22_d7_dir_t* cd = root->dir;
 
   // @note: We are pretty much assume ignore 'ls' command because
@@ -1076,22 +1133,22 @@ aoc22_d7p2(const char* filename, arena_t* arena)
   // that represent 'cd' commands, files and directories
   while(!stream_is_eos(s)) 
   {
-    str_t str = stream_consume_line(s);  
-    if (str.e[0] == '$') 
+    buffer_t str8 = stream_consume_line(s);  
+    if (str8.e[0] == '$') 
     {
-      if (str.e[2] == 'c') //cd
+      if (str8.e[2] == 'c') //cd
       {
-        str_t dir_name = str_set(str.e + 5, str.size - 5);
+        buffer_t dir_name = buffer_set(str8.e + 5, str8.size - 5);
 
         // go to root
-        if (str_match(dir_name, str_from_lit("/")))
+        if (buffer_match(dir_name, buffer_from_lit("/")))
         {
           cd = root->dir;
           //printf("cd /\n");
         }
 
         // go to parent
-        else if (str_match(dir_name, str_from_lit("..")))
+        else if (buffer_match(dir_name, buffer_from_lit("..")))
         {
           cd = cd->parent;
           //printf("cd ..\n");
@@ -1102,7 +1159,7 @@ aoc22_d7p2(const char* filename, arena_t* arena)
           aoc22_d7_node_t* itr = cd->sentinel.next;
           while(itr != &cd->sentinel) 
           {
-            if (str_match(itr->name, dir_name))
+            if (buffer_match(itr->name, dir_name))
             {
               cd = itr->dir; 
               break;
@@ -1110,7 +1167,7 @@ aoc22_d7p2(const char* filename, arena_t* arena)
             itr = itr->next;
           }
           //printf("cd ");
-          //aoc22_print_str(dir_name);
+          //aoc22_print_str8(dir_name);
           //printf("\n");
         }
       }
@@ -1118,13 +1175,13 @@ aoc22_d7p2(const char* filename, arena_t* arena)
     else 
     {
       arena_marker_t mark = arena_mark(arena);
-      str_arr_t arr = str_split(str, ' ', arena);
+      buffer_arr_t arr = buffer_split(str8, ' ', arena);
       // format: dir <directory_name> 
-      if (str_match(arr.e[0], str_from_lit("dir")))
+      if (buffer_match(arr.e[0], buffer_from_lit("dir")))
       {
-        str_t dir_name = arr.e[1]; 
+        buffer_t dir_name = arr.e[1]; 
         //printf("directory found: ");
-        //aoc22_print_str(dir_name);
+        //aoc22_print_str8(dir_name);
         //printf("\n");
 
         arena_revert(mark);
@@ -1136,11 +1193,11 @@ aoc22_d7p2(const char* filename, arena_t* arena)
       else 
       {
         u32_t file_size = 0;
-        str_t file_name = arr.e[1];
-        str_to_u32(arr.e[0], &file_size);
+        buffer_t file_name = arr.e[1];
+        buffer_to_u32(arr.e[0], &file_size);
 
         //printf("file found: ");
-        //aoc22_print_str(file_name);
+        //aoc22_print_str8(file_name);
         //printf(" @ %d\n", file_size);
 
         arena_revert(mark);
@@ -1169,18 +1226,67 @@ aoc22_d8p1(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
 
-  str_t file_buffer = file_read_into_str(filename, arena, true); 
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  aoc22_grid_t grid;
+  aoc22_grid_init(&grid, file_buffer);
 
-  while(!stream_is_eos(s)) 
+  u32_t sum = grid.w * 2 + grid.h * 2 - 4;
+
+  for_range(y, 1, grid.h-1)
   {
-    //str_t str = stream_consume_line(s);  
+    for_range(x, 1, grid.w-1)
+    {
+      u32_t blocked_sides = 0; // if this is 4, means not visible
+      u8_t current_tree = aoc22_grid_get(&grid, x, y);
+
+      // check right
+      for (s32_t i = x+1; i < grid.w; ++i){
+        u8_t tree_to_check = aoc22_grid_get(&grid, i, y);
+   //   printf("checking: %c vs %c\n", current_tree, tree_to_check);
+        if (tree_to_check >= current_tree)
+        {
+          ++blocked_sides;
+          break;
+        }
+      }
+
+      // check left
+      for (s32_t i = x-1; i >= 0; --i){
+        u8_t tree_to_check = aoc22_grid_get(&grid, i, y);
+        if (tree_to_check >= current_tree)
+        {
+          ++blocked_sides;
+          break;
+        }
+      }
+      
+      // check down
+      for (s32_t i = y+1; i < grid.h; ++i){
+        u8_t tree_to_check = aoc22_grid_get(&grid, x, i);
+        if (tree_to_check >= current_tree)
+        {
+          ++blocked_sides;
+          break;
+        }
+      }
+      
+      //check up
+      for (s32_t i = y-1; i >= 0; --i){
+        u8_t tree_to_check = aoc22_grid_get(&grid, x, i);
+        if (tree_to_check >= current_tree)
+        {
+          ++blocked_sides;
+          break;
+        }
+      }
+      if (blocked_sides != 4)
+        ++sum;
+      //printf("%c", aoc22_grid_get(&grid, x, y));
+    }
   }
 
-  u32_t sum = 0;
   printf("%d\n", sum);
 }
 
@@ -1194,12 +1300,12 @@ int main(int argv, char** argc) {
   u32_t part = 0;
   char* filename = argc[3];
 
-  if (!str_to_u32(str_from_cstr(argc[1]), &day)) {
+  if (!buffer_to_u32(buffer_from_cstr(argc[1]), &day)) {
     printf("Bad day\n");
     return 1;
   }
 
-  if (!str_to_u32(str_from_cstr(argc[2]), &part)) {
+  if (!buffer_to_u32(buffer_from_cstr(argc[2]), &part)) {
     printf("Bad part\n");
     return 1;
   }
@@ -1223,5 +1329,6 @@ int main(int argv, char** argc) {
   aoc22_route(6,2);
   aoc22_route(7,1);
   aoc22_route(7,2);
+  aoc22_route(8,1);
 
 }

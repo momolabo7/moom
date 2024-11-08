@@ -29,7 +29,7 @@ struct chip8_t
 };
 
 static b32_t
-chip8_init(chip8_t* chip8, str8_t instructions)
+chip8_init(chip8_t* chip8, buffer_t instructions)
 {
   if (instructions.size <= sizeof(chip8->ram))
   {
@@ -45,7 +45,7 @@ static b32_t
 chip8_init_from_file(chip8_t* chip8, const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
-  str8_t instructions = file_read_into_str("test.ch8", arena);
+  buffer_t instructions = file_read_into_buffer("test.ch8", arena);
   return chip8_init(chip8, instructions);
 }
 

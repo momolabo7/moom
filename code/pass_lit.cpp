@@ -16,8 +16,8 @@ int main() {
 
 
   u32_t start_cp = 32; 
-  u32_t end_cp = 126;
-  u32_t total_cp = end_cp - start_cp + 1;
+  u32_t ope_cp = 127;
+  u32_t total_cp = ope_cp - start_cp;
 
   u64_t start_time = clock_time();
   pass_pack_begin(p, arena, 
@@ -35,13 +35,15 @@ int main() {
         ASSET_FONT_ID_MAX); 
     {
       pass_pack_atlas_font_begin(p, ASSET_FONT_ID_DEFAULT, lit_res_dir("nokiafc22.ttf"), 72.f);
-      for_range (i, start_cp, end_cp) {
+      for_range (i, start_cp, ope_cp) 
+      {
         pass_pack_atlas_font_codepoint(p, i);
       }
       pass_pack_atlas_font_end(p);
 
       pass_pack_atlas_font_begin(p, ASSET_FONT_ID_DEBUG, lit_res_dir("liberation-mono.ttf"), 72.f);
-      for_range (i, start_cp, end_cp) {
+      for_range (i, start_cp, ope_cp) 
+      {
         pass_pack_atlas_font_codepoint(p, i);
       } 
       pass_pack_atlas_font_end(p);

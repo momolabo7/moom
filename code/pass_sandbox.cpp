@@ -20,8 +20,8 @@ int main() {
 
 
   u32_t start_cp = 32; 
-  u32_t end_cp = 126;
-  u32_t total_cp = end_cp - start_cp + 1;
+  u32_t ope_cp = 127;
+  u32_t total_cp = end_cp - start_cp;
 
   pass_pack_begin(
       p, 
@@ -40,7 +40,8 @@ int main() {
       pass_pack_atlas_sprite(p, ASSET_SPRITE_ID_BLANK, sandbox_res_dir("blank.png"));
 
       pass_pack_atlas_font_begin(p, ASSET_FONT_ID_DEFAULT, sandbox_res_dir("nokiafc22.ttf"), 72.f);
-      for_range (i, start_cp, end_cp)  {
+      for_range (i, start_cp, ope_cp)  
+      {
         pass_pack_atlas_font_codepoint(p, i);
       }
       pass_pack_atlas_font_end(p);
