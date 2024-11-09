@@ -1,7 +1,6 @@
 !_TAG_FILE_SORTED	2	/0=unsorted, 1=sorted, 2=foldcase/
 a	code/momo.h	/^  f32_t a;$/;"	m	language:C++	struct:hsla_t	typeref:typename:f32_t
 a	code/momo.h	/^  f32_t a;$/;"	m	language:C++	struct:rgba_t	typeref:typename:f32_t
-acc	code/app_gbg.cpp	/^  v2f_t pos, vel, acc;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:v2f_t	file:
 acc	code/app_tbg.cpp	/^  v2f_t pos, vel, acc;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:v2f_t	file:
 acc	code/app_tbp.cpp	/^  v2f_t pos, vel, acc;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:v2f_t	file:
 additional_flags	code/momo.h	/^  u8_t additional_flags;$/;"	m	language:C++	struct:_png_idat_header_t	typeref:typename:u8_t
@@ -67,7 +66,7 @@ ARCH_X86	code/momo.h	/^#  define ARCH_X86 /;"	d	language:C++
 ARCH_X86	code/momo.h	/^#  define ARCH_X86 /;"	d	language:C++
 ARCH_X86	code/momo.h	/^# define ARCH_X86 /;"	d	language:C++
 arena	code/app_alu.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:alu_t	typeref:typename:arena_t	file:
-arena	code/app_gbg.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:tbp_t	typeref:typename:arena_t	file:
+arena	code/app_gbg.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:gbg_t	typeref:typename:arena_t	file:
 arena	code/app_sandbox.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:sandbox_t	typeref:typename:arena_t	file:
 arena	code/app_tbg.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:tbp_t	typeref:typename:arena_t	file:
 arena	code/app_tbp.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:tbp_t	typeref:typename:arena_t	file:
@@ -307,7 +306,6 @@ cabinet_index	code/w32_eden.cpp	/^  u32_t cabinet_index;$/;"	m	language:C++	stru
 callback	code/app_lit.cpp	/^  lit_game_exit_callback_f* callback;$/;"	m	language:C++	struct:lit_game_sensor_group_t	typeref:typename:lit_game_exit_callback_f *	file:
 callback	code/app_lit_ship.cpp	/^  eden_task_callback_f* callback;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:eden_task_callback_f *	file:
 callback	code/w32_eden.cpp	/^  eden_task_callback_f* callback;$/;"	m	language:C++	struct:w32_work_t	typeref:typename:eden_task_callback_f *	file:
-can_jump	code/app_gbg.cpp	/^  b32_t can_jump;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:b32_t	file:
 can_jump	code/app_tbg.cpp	/^  b32_t can_jump;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:b32_t	file:
 can_jump	code/app_tbp.cpp	/^  b32_t can_jump;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:b32_t	file:
 cap	code/momo.h	/^      usz_t cap;$/;"	m	language:C++	struct:arena_t::__anon1db7a63d0f0a::__anon1db7a63d1008	typeref:typename:usz_t
@@ -339,7 +337,7 @@ cbuffer_to_f64	code/momo.h	/^cbuffer_to_f64(const c8_t* p) {$/;"	f	language:C++	
 cbuffer_to_f64	code/momo.h	/^static f64_t cbuffer_to_f64(const c8_t* p); $/;"	p	language:C++	typeref:typename:f64_t
 cbuffer_to_u32	code/momo.h	/^cbuffer_to_u32(const c8_t* str)$/;"	f	language:C++	typeref:typename:u32_t
 cbuffer_to_u32	code/momo.h	/^static u32_t cbuffer_to_u32(const c8_t* p); $/;"	p	language:C++	typeref:typename:u32_t
-cells	code/app_gbg.cpp	/^  u8_t cells[GBG_GRID_HEIGHT][GBG_GRID_WIDTH];$/;"	m	language:C++	struct:tbp_t	typeref:typename:u8_t[][]	file:
+cells	code/app_gbg.cpp	/^  u8_t cells[GBG_GRID_HEIGHT][GBG_GRID_WIDTH];$/;"	m	language:C++	struct:gbg_t	typeref:typename:u8_t[][]	file:
 cells	code/app_tbg.cpp	/^  u8_t cells[TBP_GRID_HEIGHT][TBP_GRID_WIDTH];$/;"	m	language:C++	struct:tbp_t	typeref:typename:u8_t[][]	file:
 cells	code/app_tbp.cpp	/^  u8_t cells[TBP_GRID_HEIGHT][TBP_GRID_WIDTH];$/;"	m	language:C++	struct:tbp_t	typeref:typename:u8_t[][]	file:
 CHANNEL	code/w32_sandbox_socket.cpp	/^#define CHANNEL /;"	d	language:C++	file:
@@ -1313,10 +1311,17 @@ garena_push_size	code/momo.h	/^static void* garena_push_size(garena_t* ga, usz_t
 garena_t	code/momo.h	/^struct garena_t $/;"	s	language:C++
 GBG_DESIGN_HEIGHT	code/app_gbg.cpp	/^#define GBG_DESIGN_HEIGHT /;"	d	language:C++	file:
 GBG_DESIGN_WIDTH	code/app_gbg.cpp	/^#define GBG_DESIGN_WIDTH /;"	d	language:C++	file:
+GBG_GRID_COLS	code/app_gbg.cpp	/^#define GBG_GRID_COLS /;"	d	language:C++	file:
 GBG_GRID_HEIGHT	code/app_gbg.cpp	/^#define GBG_GRID_HEIGHT /;"	d	language:C++	file:
+GBG_GRID_ROWS	code/app_gbg.cpp	/^#define GBG_GRID_ROWS /;"	d	language:C++	file:
+GBG_GRID_START_X	code/app_gbg.cpp	/^#define GBG_GRID_START_X /;"	d	language:C++	file:
+GBG_GRID_START_Y	code/app_gbg.cpp	/^#define GBG_GRID_START_Y /;"	d	language:C++	file:
 GBG_GRID_WIDTH	code/app_gbg.cpp	/^#define GBG_GRID_WIDTH /;"	d	language:C++	file:
+gbg_player_t	code/app_gbg.cpp	/^struct gbg_player_t {$/;"	s	language:C++	file:
+gbg_t	code/app_gbg.cpp	/^struct gbg_t {$/;"	s	language:C++	file:
 GBG_TILE_SIZE	code/app_gbg.cpp	/^#define GBG_TILE_SIZE /;"	d	language:C++	file:
-GBG_TILE_SIZE_HALF	code/app_gbg.cpp	/^#define GBG_TILE_SIZE_HALF /;"	d	language:C++	file:
+gbg_tile_t	code/app_gbg.cpp	/^struct gbg_tile_t {$/;"	s	language:C++	file:
+gbg_update_and_render_grid_stuff	code/app_gbg.cpp	/^gbg_update_and_render_grid_stuff(eden_t* eden, gbg_t* gbg, float start_x, float start_y)$/;"	f	language:C++	typeref:typename:void	file:
 get_config	code/eden.h	/^  eden_get_config_f* get_config;$/;"	m	language:C++	struct:eden_functions_t	typeref:typename:eden_get_config_f *
 get_lowest_common_multiple	dump/operator_overloading_example.py	/^def get_lowest_common_multiple(a, b):$/;"	f	language:Python
 gfx	code/eden.h	/^  hell_gfx_t gfx;$/;"	m	language:C++	struct:eden_t	typeref:typename:hell_gfx_t
@@ -2384,7 +2389,7 @@ platform_arena	code/eden.h	/^  arena_t platform_arena;$/;"	m	language:C++	struct
 platform_data	code/eden.h	/^  void* platform_data;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:void *
 platform_data	code/eden.h	/^  void* platform_data;$/;"	m	language:C++	struct:hell_gfx_t	typeref:typename:void *
 platform_data	code/eden.h	/^  void* platform_data;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:void *
-player	code/app_gbg.cpp	/^  tbp_player_t player;$/;"	m	language:C++	struct:tbp_t	typeref:typename:tbp_player_t	file:
+player	code/app_gbg.cpp	/^  gbg_player_t player;$/;"	m	language:C++	struct:gbg_t	typeref:typename:gbg_player_t	file:
 player	code/app_lit.cpp	/^  lit_game_player_t player;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_player_t	file:
 player	code/app_tbg.cpp	/^  tbp_player_t player;$/;"	m	language:C++	struct:tbp_t	typeref:typename:tbp_player_t	file:
 player	code/app_tbp.cpp	/^  tbp_player_t player;$/;"	m	language:C++	struct:tbp_t	typeref:typename:tbp_player_t	file:
@@ -2403,8 +2408,8 @@ point_count	code/app_lit.cpp	/^  u32_t point_count;$/;"	m	language:C++	struct:li
 point_count	code/momo.h	/^  u32_t point_count;$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u32_t
 point_of_rotation	code/app_lit.cpp	/^  v2f_t* point_of_rotation;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:v2f_t *	file:
 PORT	code/w32_sandbox_socket.cpp	/^#define PORT /;"	d	language:C++	file:
-pos	code/app_gbg.cpp	/^  v2f_t pos, vel, acc;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:v2f_t	file:
-pos	code/app_gbg.cpp	/^  v2f_t pos;$/;"	m	language:C++	struct:tbp_tile_t	typeref:typename:v2f_t	file:
+pos	code/app_gbg.cpp	/^  v2f_t pos;$/;"	m	language:C++	struct:gbg_player_t	typeref:typename:v2f_t	file:
+pos	code/app_gbg.cpp	/^  v2f_t pos;$/;"	m	language:C++	struct:gbg_tile_t	typeref:typename:v2f_t	file:
 pos	code/app_lit.cpp	/^  v2f_t pos, vel;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t	file:
 pos	code/app_lit.cpp	/^  v2f_t pos;  $/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:v2f_t	file:
 pos	code/app_lit.cpp	/^  v2f_t pos;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:v2f_t	file:
@@ -2793,23 +2798,18 @@ TBP_GRID_HEIGHT	code/app_tbg.cpp	/^#define TBP_GRID_HEIGHT /;"	d	language:C++	fi
 TBP_GRID_HEIGHT	code/app_tbp.cpp	/^#define TBP_GRID_HEIGHT /;"	d	language:C++	file:
 TBP_GRID_WIDTH	code/app_tbg.cpp	/^#define TBP_GRID_WIDTH /;"	d	language:C++	file:
 TBP_GRID_WIDTH	code/app_tbp.cpp	/^#define TBP_GRID_WIDTH /;"	d	language:C++	file:
-tbp_level_0	code/app_gbg.cpp	/^tbp_level_0(tbp_t* tbp)$/;"	f	language:C++	typeref:typename:void	file:
 tbp_level_0	code/app_tbg.cpp	/^tbp_level_0(tbp_t* tbp)$/;"	f	language:C++	typeref:typename:void	file:
 tbp_level_0	code/app_tbp.cpp	/^tbp_level_0(tbp_t* tbp)$/;"	f	language:C++	typeref:typename:void	file:
-tbp_player_t	code/app_gbg.cpp	/^struct tbp_player_t {$/;"	s	language:C++	file:
 tbp_player_t	code/app_tbg.cpp	/^struct tbp_player_t {$/;"	s	language:C++	file:
 tbp_player_t	code/app_tbp.cpp	/^struct tbp_player_t {$/;"	s	language:C++	file:
-tbp_t	code/app_gbg.cpp	/^struct tbp_t {$/;"	s	language:C++	file:
 tbp_t	code/app_tbg.cpp	/^struct tbp_t {$/;"	s	language:C++	file:
 tbp_t	code/app_tbp.cpp	/^struct tbp_t {$/;"	s	language:C++	file:
 TBP_TILE_SIZE	code/app_tbg.cpp	/^#define TBP_TILE_SIZE /;"	d	language:C++	file:
 TBP_TILE_SIZE	code/app_tbp.cpp	/^#define TBP_TILE_SIZE /;"	d	language:C++	file:
 TBP_TILE_SIZE_HALF	code/app_tbg.cpp	/^#define TBP_TILE_SIZE_HALF /;"	d	language:C++	file:
 TBP_TILE_SIZE_HALF	code/app_tbp.cpp	/^#define TBP_TILE_SIZE_HALF /;"	d	language:C++	file:
-tbp_tile_t	code/app_gbg.cpp	/^struct tbp_tile_t {$/;"	s	language:C++	file:
 tbp_tile_t	code/app_tbg.cpp	/^struct tbp_tile_t {$/;"	s	language:C++	file:
 tbp_tile_t	code/app_tbp.cpp	/^struct tbp_tile_t {$/;"	s	language:C++	file:
-tbp_update_and_render_grid_stuff	code/app_gbg.cpp	/^tbp_update_and_render_grid_stuff(eden_t* eden, tbp_t* tbp)$/;"	f	language:C++	typeref:typename:void	file:
 tbp_update_and_render_grid_stuff	code/app_tbg.cpp	/^tbp_update_and_render_grid_stuff(eden_t* eden, tbp_t* tbp)$/;"	f	language:C++	typeref:typename:void	file:
 tbp_update_and_render_grid_stuff	code/app_tbp.cpp	/^tbp_update_and_render_grid_stuff(eden_t* eden, tbp_t* tbp)$/;"	f	language:C++	typeref:typename:void	file:
 test_arena_performance	code/test_arena.cpp	/^test_arena_performance() $/;"	f	language:C++	typeref:typename:void	file:
@@ -2858,7 +2858,7 @@ texture_queue_size	code/eden.h	/^  usz_t texture_queue_size;$/;"	m	language:C++	
 texture_width	code/eden.h	/^  u32_t texture_width;$/;"	m	language:C++	struct:hell_gfx_texture_payload_t	typeref:typename:u32_t
 The MOMO (name pending) game engine	README.md	/^# The MOMO (name pending) game engine$/;"	c	language:Markdown
 thousands	code/momo.h	/^#define thousands(/;"	d	language:C++
-tile	code/app_gbg.cpp	/^  tbp_tile_t tile;$/;"	m	language:C++	struct:tbp_t	typeref:typename:tbp_tile_t	file:
+tile	code/app_gbg.cpp	/^  gbg_tile_t tile;$/;"	m	language:C++	struct:gbg_t	typeref:typename:gbg_tile_t	file:
 tile	code/app_tbg.cpp	/^  tbp_tile_t tile;$/;"	m	language:C++	struct:tbp_t	typeref:typename:tbp_tile_t	file:
 tile	code/app_tbp.cpp	/^  tbp_tile_t tile;$/;"	m	language:C++	struct:tbp_t	typeref:typename:tbp_tile_t	file:
 timer	code/app_lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_credits_t	typeref:typename:f32_t	file:
@@ -3068,7 +3068,6 @@ value	code/momo.h	/^  json_value_t value;$/;"	m	language:C++	struct:_json_entry_
 values	code/gist_ring_buffer.cpp	/^  int values[4];$/;"	m	language:C++	struct:gist_rb	typeref:typename:int[4]	file:
 vao	code/eden.h	/^  GLuint vao; $/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
 vao	code/eden.h	/^  GLuint vao;$/;"	m	language:C++	struct:hell_gfx_opengl_triangle_batch_t	typeref:typename:GLuint
-vel	code/app_gbg.cpp	/^  v2f_t pos, vel, acc;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:v2f_t	file:
 vel	code/app_lit.cpp	/^  v2f_t pos, vel;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t	file:
 vel	code/app_tbg.cpp	/^  v2f_t pos, vel, acc;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:v2f_t	file:
 vel	code/app_tbp.cpp	/^  v2f_t pos, vel, acc;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:v2f_t	file:
