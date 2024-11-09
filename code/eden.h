@@ -40,9 +40,10 @@
 // Most importantly, other than the commands, the game
 // expects the following rules in its rendering logic:
 // - This is a 2D renderer in 3D space. 
-// - Right-handed coordinate system: +Y is up, +Z is towards you
-// - The game only have one type of object: A quad that can be 
-//   textured and colored 
+// - Left-handed coordinate system: +Y is down, +Z is towards you
+// - The game only have 2 types of object: 
+// -- A quad that can be textured and colored 
+// -- A triangle that can only be colored
 // - UV origin is from top left. Points given for UV to map to the quad 
 //   is given in this order:
 // >> 0. Top left
@@ -1533,10 +1534,10 @@ hell_gfx_opengl_push_sprite(
       &color_per_vertex);
 
   f32_t uv_per_vertex[] = {
-    uv.min.x, uv.max.y,
-    uv.max.x, uv.max.y,
-    uv.max.x, uv.min.y,
-    uv.min.x, uv.min.y
+    uv.min.x, uv.min.y, // top left
+    uv.max.x, uv.min.y, // top right
+    uv.max.x, uv.max.y, // bottom right
+    uv.min.x, uv.max.y, // bottom left
   };
   ogl->glNamedBufferSubData(
       sb->instance_texture_vbo,
@@ -1943,10 +1944,10 @@ hell_gfx_opengl_init_sprite_batch(hell_gfx_opengl_t* ogl, usz_t max_sprites) {
 
 
   const f32_t sprite_model[] = {
-    -0.5f, -0.5f, 0.0f,  // bottom left
-    0.5f, -0.5f, 0.0f,  // bottom right
-    0.5f,  0.5f, 0.0f,  // top right
-    -0.5f,  0.5f, 0.0f,   // top left 
+    -0.5f, -0.5f, 0.0f,   // 0. top left
+    0.5f, -0.5f, 0.0f,    // 1. top right
+    0.5f,  0.5f, 0.0f,    // 2. bottom right
+    -0.5f,  0.5f, 0.0f,   // 3. bottom left 
   };
 
   const u8_t sprite_indices[] = {
@@ -2340,8 +2341,10 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
 
         f32_t depth = (f32_t)(ogl->current_layer + 1);
 
-        m44f_t p = m44f_orthographic(data->min_x, data->max_x,
-            data->max_y, data->min_y, 
+        // 
+        m44f_t p = m44f_orthographic(
+            data->min_x, data->max_x,
+            data->max_y, data->min_y,  // @note: we flip this cus our y-axis in eden points down
             0.f, depth);
         m44f_t v = m44f_translation(-data->pos_x, -data->pos_y);
 
@@ -2999,9 +3002,9 @@ eden_draw_text(
     f32_t width = (glyph->box_x1 - glyph->box_x0)*font_height;
     f32_t height = (glyph->box_y1 - glyph->box_y0)*font_height;
     
-    v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py + (glyph->box_y0*font_height));
+    v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py - (glyph->box_y0*font_height));
     v2f_t size = v2f_set(width, height);
-    v2f_t anchor = v2f_set(0.f, 0.f); // bottom left
+    v2f_t anchor = v2f_set(0.f, 1.f); // bottom left
     eden_draw_sprite(eden, 
                     pos, size, anchor,
                     bitmap->renderer_texture_handle, 
@@ -3067,9 +3070,9 @@ eden_draw_text_center_aligned(eden_t* eden, eden_asset_font_id_t font_id, buffer
     f32_t width = (glyph->box_x1 - glyph->box_x0)*font_height;
     f32_t height = (glyph->box_y1 - glyph->box_y0)*font_height;
     
-    v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py + (glyph->box_y0*font_height));
+    v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py - (glyph->box_y0*font_height));
     v2f_t size = v2f_set(width, height);
-    v2f_t anchor = v2f_set(0.f, 0.f); // bottom left
+    v2f_t anchor = v2f_set(0.f, 1.f); // bottom left
     eden_draw_sprite(eden, 
                     pos, size, anchor,
                     bitmap->renderer_texture_handle, 

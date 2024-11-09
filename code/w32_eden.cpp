@@ -1395,8 +1395,6 @@ w32_update_input(eden_input_t* input, HWND window, f32_t delta_time, RECT rr)
   input->mouse_pos.y = render_mouse_pos_y * eden_to_render_h;
   
   
-  // @note: Flip y
-  //eden->design_mouse_pos.y = f32_lerp(MOMO_HEIGHT, 0.f, eden->design_mouse_pos.y/MOMO_HEIGHT);	
   if (w32_state.is_cursor_locked) {
     SetCursorPos(
         w32_state.cursor_pt_to_lock_to.x,

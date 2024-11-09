@@ -113,7 +113,7 @@ gbg_update_and_render_grid_stuff(eden_t* eden, gbg_t* gbg, float start_x, float 
     {
       eden_draw_rect(
           eden, 
-          v2f_set(0, 0),
+          v2f_set(current_x, current_y),
           0.f, 
           v2f_set(GBG_TILE_SIZE*0.9f, GBG_TILE_SIZE*0.9f),
           rgba_set(0.2f, 0.2f, 0.2f, 1.f));
