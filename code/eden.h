@@ -2341,7 +2341,7 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
         f32_t depth = (f32_t)(ogl->current_layer + 1);
 
         m44f_t p = m44f_orthographic(data->min_x, data->max_x,
-            data->min_y, data->max_y, 
+            data->max_y, data->min_y, 
             0.f, depth);
         m44f_t v = m44f_translation(-data->pos_x, -data->pos_y);
 
