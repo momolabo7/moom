@@ -1365,6 +1365,112 @@ aoc22_d8p2(const char* filename, arena_t* arena)
   printf("%d\n", max);
 }
 
+static void 
+aoc22_d9p1(const char* filename, arena_t* arena) 
+{
+
+  arena_set_revert_point(arena);
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+
+  // @note: x goes right and y goes down
+  s32_t head_x = 0;
+  s32_t head_y = 0;
+
+  s32_t tail_x = 0;
+  s32_t tail_y = 0;
+
+  u32_t position_count = 0;
+  v2s_t* positions = arena_push_arr(v2s_t, arena, position_count+1);
+  positions[position_count++] = v2s_t { tail_x, tail_y };
+
+  // Initialize root first
+  while(!stream_is_eos(s)) 
+  {
+    buffer_t line = stream_consume_line(s);  
+    u8_t command = line.e[0];
+    u32_t amount = 0;
+    buffer_t amount_str = buffer_set(line.e + 2, line.size - 2);
+    buffer_to_u32(amount_str, &amount);
+
+    for_cnt(i, amount)
+    {
+
+      if (command == 'R')
+      {
+        head_x++;
+      }
+      else if (command == 'U')
+      {
+        head_y--;
+      }
+      else if (command == 'L')
+      {
+        head_x--;
+      }
+      else if (command == 'D')
+      {
+        head_y++;
+      }
+
+
+      if ((head_x - tail_x) == 2)
+      {
+        tail_x++;
+        if (tail_y != head_y) 
+          tail_y = head_y;
+      }
+      else if ((head_x - tail_x) == -2)
+      {
+        tail_x--;
+        if (tail_y != head_y) 
+          tail_y = head_y;
+      }
+      else if ((head_y - tail_y) == 2)
+      {
+        tail_y++;
+        if (tail_x != head_x) 
+          tail_x = head_x;
+      }
+      else if ((head_y - tail_y) == -2)
+      {
+        tail_y--;
+        if (tail_x != head_x) 
+          tail_x = head_x;
+      }
+
+      // @note: ah fuck it whatever...
+      b32_t found = false;
+      for_cnt(i, position_count)
+      {
+        if (tail_x == positions[i].x &&
+            tail_y == positions[i].y)
+        {
+          found = true;
+          break;
+        }
+
+      }
+      if (!found)
+      {
+        arena_grow_arr(
+            v2s_t, 
+            arena, 
+            positions, 
+            position_count, 
+            position_count+1);
+        positions[position_count++] = v2s_t { tail_x, tail_y };
+      }
+
+    }
+  }
+
+  printf("%d\n", position_count);
+}
+
 int main(int argv, char** argc) {
   if (argv < 2) {
     printf("Usage: aoc22 <day> <part> <filename>\nExample: aoc22 1 1 input.txt\n");
@@ -1406,5 +1512,6 @@ int main(int argv, char** argc) {
   aoc22_route(7,2);
   aoc22_route(8,1);
   aoc22_route(8,2);
+  aoc22_route(9,1);
 
 }

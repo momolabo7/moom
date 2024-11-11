@@ -42,6 +42,7 @@ aoc22_d7_push_dir	code/aoc22.cpp	/^aoc22_d7_push_dir($/;"	f	language:C++	typeref
 aoc22_d7_push_file	code/aoc22.cpp	/^aoc22_d7_push_file($/;"	f	language:C++	typeref:typename:aoc22_d7_node_t *	file:
 aoc22_d8p1	code/aoc22.cpp	/^aoc22_d8p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d8p2	code/aoc22.cpp	/^aoc22_d8p2(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d9p1	code/aoc22.cpp	/^aoc22_d9p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_grid_get	code/aoc22.cpp	/^aoc22_grid_get(aoc22_grid_t* grid, u32_t x, u32_t y)$/;"	f	language:C++	typeref:typename:u8_t	file:
 aoc22_grid_init	code/aoc22.cpp	/^aoc22_grid_init(aoc22_grid_t* grid, buffer_t b)$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_grid_t	code/aoc22.cpp	/^struct aoc22_grid_t$/;"	s	language:C++	file:
