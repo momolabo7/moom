@@ -43,6 +43,7 @@ aoc22_d7_push_file	code/aoc22.cpp	/^aoc22_d7_push_file($/;"	f	language:C++	typer
 aoc22_d8p1	code/aoc22.cpp	/^aoc22_d8p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d8p2	code/aoc22.cpp	/^aoc22_d8p2(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d9p1	code/aoc22.cpp	/^aoc22_d9p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d9p2	code/aoc22.cpp	/^aoc22_d9p2(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_grid_get	code/aoc22.cpp	/^aoc22_grid_get(aoc22_grid_t* grid, u32_t x, u32_t y)$/;"	f	language:C++	typeref:typename:u8_t	file:
 aoc22_grid_init	code/aoc22.cpp	/^aoc22_grid_init(aoc22_grid_t* grid, buffer_t b)$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_grid_t	code/aoc22.cpp	/^struct aoc22_grid_t$/;"	s	language:C++	file:
@@ -2534,6 +2535,7 @@ S16_MIN	code/momo.h	/^#define S16_MIN /;"	d	language:C++
 s16_t	code/momo.h	/^typedef int16_t  s16_t;$/;"	t	language:C++	typeref:typename:int16_t
 s32_abs	code/momo.h	/^s32_abs(s32_t x) {$/;"	f	language:C++	typeref:typename:s32_t
 s32_abs	code/momo.h	/^static s32_t s32_abs(s32_t x); $/;"	p	language:C++	typeref:typename:s32_t
+s32_compare	code/aoc22.cpp	/^s32_compare(s32_t lhs, s32_t rhs)$/;"	f	language:C++	typeref:typename:s32_t	file:
 S32_MAX	code/momo.h	/^#define S32_MAX /;"	d	language:C++
 S32_MIN	code/momo.h	/^#define S32_MIN /;"	d	language:C++
 s32_t	code/momo.h	/^typedef int32_t  s32_t;$/;"	t	language:C++	typeref:typename:int32_t

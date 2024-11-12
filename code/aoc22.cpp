@@ -1471,6 +1471,136 @@ aoc22_d9p1(const char* filename, arena_t* arena)
   printf("%d\n", position_count);
 }
 
+
+static void 
+aoc22_d9p2(const char* filename, arena_t* arena) 
+{
+
+  arena_set_revert_point(arena);
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+
+  // @note: x goes right and y goes down
+  v2s_t rope_nodes[10] = {};
+
+  u32_t position_count = 0;
+  v2s_t* positions = arena_push_arr(v2s_t, arena, position_count+1);
+  positions[position_count++] = v2s_t { 0, 0 };
+
+  // Initialize root first
+  while(!stream_is_eos(s)) 
+  {
+    buffer_t line = stream_consume_line(s);  
+    u8_t command = line.e[0];
+    u32_t amount = 0;
+    buffer_t amount_str = buffer_set(line.e + 2, line.size - 2);
+    buffer_to_u32(amount_str, &amount);
+
+    for_cnt(i, amount)
+    {
+      v2s_t* front_node = rope_nodes;
+      v2s_t* back_node = 0;
+
+      if (command == 'R')
+      {
+        front_node->x++;
+      }
+      else if (command == 'U')
+      {
+        front_node->y--;
+      }
+      else if (command == 'L')
+      {
+        front_node->x--;
+      }
+      else if (command == 'D')
+      {
+        front_node->y++;
+      }
+
+      for(u32_t node_index = 1; 
+          node_index < array_count(rope_nodes); 
+          ++node_index)
+      {
+        front_node = rope_nodes + node_index - 1;
+        back_node = rope_nodes + node_index;
+
+        if ((front_node->x - back_node->x) == 2)
+        {
+          back_node->x++;
+          if (back_node->y < front_node->y) 
+            back_node->y++;
+          else if (back_node->y > front_node->y)
+            back_node->y--;
+        }
+        else if ((front_node->x - back_node->x) == -2)
+        {
+          back_node->x--;
+          if (back_node->y < front_node->y) 
+            back_node->y++;
+          else if (back_node->y > front_node->y)
+            back_node->y--;
+        }
+        else if ((front_node->y - back_node->y) == 2)
+        {
+          back_node->y++;
+          if (back_node->x < front_node->x) 
+            back_node->x++;
+          else if (back_node->x > front_node->x)
+            back_node->x--;
+        }
+        else if ((front_node->y - back_node->y) == -2)
+        {
+          back_node->y--;
+          if (back_node->x < front_node->x) 
+            back_node->x++;
+          else if (back_node->x > front_node->x)
+            back_node->x--;
+        }
+      }
+#if 0
+      for_arr(i, rope_nodes)
+      {
+        printf("%d: %d %d\n", i, rope_nodes[i].x, rope_nodes[i].y); 
+      }
+      printf("\n");
+#endif
+      v2s_t* tail_node = rope_nodes + array_count(rope_nodes) - 1;
+      //printf("%d %d\n", tail_node->x, tail_node->y);
+
+      // @note: ah fuck it whatever...
+      b32_t found = false;
+      for_cnt(i, position_count)
+      {
+        if (tail_node->x == positions[i].x &&
+            tail_node->y == positions[i].y)
+        {
+          found = true;
+          break;
+        }
+
+      }
+
+      if (!found)
+      {
+        arena_grow_arr(
+            v2s_t, 
+            arena, 
+            positions, 
+            position_count, 
+            position_count+1);
+        positions[position_count++] = v2s_t { tail_node->x, tail_node->y };
+      }
+
+    }
+  }
+
+  printf("%d\n", position_count);
+}
+
 int main(int argv, char** argc) {
   if (argv < 2) {
     printf("Usage: aoc22 <day> <part> <filename>\nExample: aoc22 1 1 input.txt\n");
@@ -1513,5 +1643,6 @@ int main(int argv, char** argc) {
   aoc22_route(8,1);
   aoc22_route(8,2);
   aoc22_route(9,1);
+  aoc22_route(9,2);
 
 }
