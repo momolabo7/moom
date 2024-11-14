@@ -1601,6 +1601,120 @@ aoc22_d9p2(const char* filename, arena_t* arena)
   printf("%d\n", position_count);
 }
 
+static void 
+aoc22_d10p1(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+
+  u32_t x = 1;
+  s32_t x_to_add = 0;
+  u32_t cycles = 1;
+  u32_t delay = 0;
+  u32_t sum = 0;
+
+  // Initialize root first
+  for(;!stream_is_eos(s); ++cycles) 
+  {
+    if (delay == 0) 
+    {
+      buffer_t line = stream_consume_line(s);  
+      buffer_t command = buffer_set(line.e, 4);
+      x += x_to_add;
+      x_to_add = 0;
+
+      if (buffer_match(command, buffer_from_lit("addx")))
+      {
+        buffer_t amount_str = buffer_set(line.e + 5, line.size - 5);
+        buffer_to_s32(amount_str, &x_to_add);
+        delay = 1;
+        //printf("addx: %d\n", x_to_add);
+      }
+      else {
+        //printf("noop\n");
+      }
+    }
+    else 
+    {
+      delay--;
+    }
+
+    if (cycles >= 20)
+    {
+      if ((cycles - 20) % 40 == 0)
+      {
+        //printf("cycle %03d: %d -> %d\n", cycles, x, cycles * x);
+        sum += cycles * x;
+      }
+    }
+  }
+  printf("%d\n", sum);
+}
+
+
+static void 
+aoc22_d10p2(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+
+  u32_t x = 1;
+  s32_t x_to_add = 0;
+  u32_t cycles = 0;
+  u32_t delay = 0;
+
+  // Initialize root first
+  for(;!stream_is_eos(s); ++cycles) 
+  {
+    if (delay == 0) 
+    {
+      buffer_t line = stream_consume_line(s);  
+      buffer_t command = buffer_set(line.e, 4);
+      x += x_to_add;
+      x_to_add = 0;
+
+      if (buffer_match(command, buffer_from_lit("addx")))
+      {
+        buffer_t amount_str = buffer_set(line.e + 5, line.size - 5);
+        buffer_to_s32(amount_str, &x_to_add);
+        delay = 1;
+        //printf("addx: %d\n", x_to_add);
+      }
+      else {
+        //printf("noop\n");
+      }
+    }
+    else 
+    {
+      delay--;
+    }
+
+    if (cycles > 0 && cycles % 40 == 0)
+    {
+      printf("\n");
+    }
+    u32_t current_pixel_index = cycles % 40;
+    if (current_pixel_index == x ||
+        current_pixel_index == x-1 ||
+        current_pixel_index == x+1)
+    {
+      printf("#");
+    }
+    else {
+      printf(".");
+    }
+     
+  }
+  printf("\n");
+}
 int main(int argv, char** argc) {
   if (argv < 2) {
     printf("Usage: aoc22 <day> <part> <filename>\nExample: aoc22 1 1 input.txt\n");
@@ -1644,5 +1758,7 @@ int main(int argv, char** argc) {
   aoc22_route(8,2);
   aoc22_route(9,1);
   aoc22_route(9,2);
+  aoc22_route(10,1);
+  aoc22_route(10,2);
 
 }

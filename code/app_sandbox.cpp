@@ -17,9 +17,12 @@ eden_get_config_sig(eden_get_config)
   ret.max_workers = 256;
   ret.max_files = 32;
 
-  ret.max_inspector_entries = 8;
-  ret.max_profiler_entries = 8;
-  ret.max_profiler_snapshots = 120;
+  ret.inspector_enabled = true;
+  ret.inspector_max_entries = 8;
+
+  ret.profiler_enabled = true;
+  ret.profiler_max_entries = 8;
+  ret.profiler_max_snapshots_per_entry = 120;
 
   ret.texture_queue_size = megabytes(5);
   ret.render_command_size = megabytes(100);
@@ -28,10 +31,10 @@ eden_get_config_sig(eden_get_config)
   ret.max_sprites = 4096;
   ret.max_triangles = 1; // TODO: triangles and sprites should allow for 0
 
-  ret.audio_enabled = false;
-  ret.audio_samples_per_second = 48000;
-  ret.audio_bits_per_sample = 16;
-  ret.audio_channels = 2;
+  ret.speaker_enabled = false;
+  ret.speaker_samples_per_second = 48000;
+  ret.speaker_bits_per_sample = 16;
+  ret.speaker_channels = 2;
 
   ret.window_title = "sandobokusu";
   ret.window_initial_width = 1600;
@@ -40,7 +43,8 @@ eden_get_config_sig(eden_get_config)
   return ret;
 }
 
-struct sandbox_t {
+struct sandbox_t 
+{
   arena_t arena;
 };
 
@@ -57,9 +61,10 @@ eden_update_and_render_sig(eden_update_and_render) {
   auto* sandbox = (sandbox_t*)(eden->user_data);
   eden_set_design_dimensions(eden, 1600, 900);
   eden_set_view(eden, 0.f, 1600.f, 0.f, 900.f, 0.f, 0.f);
-  eden_clear_canvas(eden, rgba_set(0.25f, 0.25f, 0.25f, 1.0f));
-  
+  eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
 
-  eden_gfx_test(&eden->gfx);
+  eden_clear_canvas(eden, rgba_set(0.25f, 0.25f, 0.25f, 0.0f));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buffer_from_lit("hello world"), RGBA_WHITE, 400.f, 400.f, 72.f);
+  eden_advance_depth(eden);
 
 }

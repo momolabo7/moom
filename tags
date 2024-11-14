@@ -13,6 +13,8 @@ alu_t	code/app_alu.cpp	/^struct alu_t {$/;"	s	language:C++	file:
 anchor	code/eden.h	/^  v2f_t anchor;$/;"	m	language:C++	struct:hell_gfx_command_sprite_t	typeref:typename:v2f_t
 animators	code/app_lit.cpp	/^  lit_game_animator_t animators[64];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_animator_t[64]	file:
 animator_count	code/app_lit.cpp	/^  u32_t animator_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
+aoc22_d10p1	code/aoc22.cpp	/^aoc22_d10p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d10p2	code/aoc22.cpp	/^aoc22_d10p2(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d1p1	code/aoc22.cpp	/^static void aoc22_d1p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d1p2	code/aoc22.cpp	/^static void aoc22_d1p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d2p1	code/aoc22.cpp	/^static void aoc22_d2p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
@@ -2535,7 +2537,6 @@ S16_MIN	code/momo.h	/^#define S16_MIN /;"	d	language:C++
 s16_t	code/momo.h	/^typedef int16_t  s16_t;$/;"	t	language:C++	typeref:typename:int16_t
 s32_abs	code/momo.h	/^s32_abs(s32_t x) {$/;"	f	language:C++	typeref:typename:s32_t
 s32_abs	code/momo.h	/^static s32_t s32_abs(s32_t x); $/;"	p	language:C++	typeref:typename:s32_t
-s32_compare	code/aoc22.cpp	/^s32_compare(s32_t lhs, s32_t rhs)$/;"	f	language:C++	typeref:typename:s32_t	file:
 S32_MAX	code/momo.h	/^#define S32_MAX /;"	d	language:C++
 S32_MIN	code/momo.h	/^#define S32_MIN /;"	d	language:C++
 s32_t	code/momo.h	/^typedef int32_t  s32_t;$/;"	t	language:C++	typeref:typename:int32_t
@@ -2558,7 +2559,7 @@ sample_rate	code/momo.h	/^  u32_t sample_rate;$/;"	m	language:C++	struct:wav_fmt
 SANDBOX_ASSET_FILE	code/eden_asset_id_sandbox.h	/^#define SANDBOX_ASSET_FILE /;"	d	language:C++
 sandbox_res_dir	code/pass_sandbox.cpp	/^#define sandbox_res_dir(/;"	d	language:C++	file:
 sandbox_res_dir	code/pass_tbp.cpp	/^#define sandbox_res_dir(/;"	d	language:C++	file:
-sandbox_t	code/app_sandbox.cpp	/^struct sandbox_t {$/;"	s	language:C++	file:
+sandbox_t	code/app_sandbox.cpp	/^struct sandbox_t $/;"	s	language:C++	file:
 save_data	code/app_lit.cpp	/^  lit_save_data_t save_data;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_save_data_t	file:
 sccount	code/momo.h	/^static u32_t sccount = 0;$/;"	v	language:C++	typeref:typename:u32_t
 scroll_in_timer	code/app_lit.cpp	/^  f32_t scroll_in_timer;$/;"	m	language:C++	struct:lit_splash_t	typeref:typename:f32_t	file:

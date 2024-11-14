@@ -14,14 +14,14 @@ int main() {
   void* memory = malloc(memory_size);
   defer { free(memory); };
   make(arena_t, arena);
-  arena_init(arena, str_set((u8_t*)memory, memory_size));
+  arena_init(arena, buffer_set((u8_t*)memory, memory_size));
 
   make(pass_pack_t, p);
 
 
   u32_t start_cp = 32; 
   u32_t ope_cp = 127;
-  u32_t total_cp = end_cp - start_cp;
+  u32_t total_cp = ope_cp - start_cp;
 
   pass_pack_begin(
       p, 
