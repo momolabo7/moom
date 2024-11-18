@@ -206,7 +206,7 @@ typedef size_t    usz_t; // Can contain up to the highest indexable value
 #define offset_of(type, member) (umi_t)&(((type*)0)->member)
 #define make(t, name) \
   t glue(name##_,__LINE__) = {}; \
-  t* name = &(glue(name##_,__LINE__))
+t* name = &(glue(name##_,__LINE__))
 
 #define ns_begin(name) namespace name {
 #define ns_end(name) }
@@ -771,16 +771,16 @@ static b32_t u8_is_readable(u8_t c);
 #define memory_copy_struct(d,s)  memory_copy((d), (s), sizeof(*(d)))
 #define memory_copy_array(d,s)   memory_copy((d), (s), sizeof(d))
 #define memory_copy_range(d,s,n) memory_copy((d), (s), sizeof(*(d)) * (n))
-static void   memory_copy(void* dest, const void* src, usz_t size);
-static void   memory_zero(void* dest, usz_t size);
-static b32_t  memory_is_same(const void* lhs, const void* rhs, usz_t size);
-static void   memory_swap(void* lhs, void* rhs, usz_t size);
-static buffer_t  memory_reserve(usz_t size);
-static b32_t  memory_commit(buffer_t blk);
-static buffer_t  memory_allocate(usz_t size); // reserve + commit
-static void   memory_free(buffer_t blk);
+    static void   memory_copy(void* dest, const void* src, usz_t size);
+    static void   memory_zero(void* dest, usz_t size);
+    static b32_t  memory_is_same(const void* lhs, const void* rhs, usz_t size);
+    static void   memory_swap(void* lhs, void* rhs, usz_t size);
+    static buffer_t  memory_reserve(usz_t size);
+    static b32_t  memory_commit(buffer_t blk);
+    static buffer_t  memory_allocate(usz_t size); // reserve + commit
+    static void   memory_free(buffer_t blk);
 
-static umi_t ptr_to_umi(void* p);
+    static umi_t ptr_to_umi(void* p);
 static u8_t* umi_to_ptr(umi_t u);
 
 static f32_t f32_abs(f32_t x);
@@ -1200,7 +1200,7 @@ static u32_t ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint);
 
 static void ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, u32_t glyph_index, s16_t* advance_width, s16_t* left_side_bearing);
 
-static void ttf_get_glyph_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_t* line_gap);
+static void ttf_get_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_t* line_gap);
 //you should advance the vertical position by "*ascent - *descent + *lineGap"
 
 static f32_t ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height);
@@ -1295,18 +1295,18 @@ socket_system_begin() {
   return true;
 }
 
-static void
+  static void
 socket_set_receive_timeout(socket_t* s, u32_t timeout_in_ms)
 {
   setsockopt(s->sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)(&timeout_in_ms), sizeof(timeout_in_ms));
 }
 
-static b32_t
+  static b32_t
 socket_begin(socket_t* s, const char* server, u32_t port)
 {
   // 1337
   // 1337 % 10 -> 7 
-  
+
   // @todo: this is absolutely a terrible algorthim lul please redo one day.
   // @note: port numbers are assumed to go up to 5 numbers.
   char port_str[6] = {};
@@ -1350,7 +1350,7 @@ socket_begin(socket_t* s, const char* server, u32_t port)
     return false;
   }
   defer{ freeaddrinfo(addr); };
-  
+
   //
   // With the actual addrinfo, we use that to create our socket
   //
@@ -1370,7 +1370,7 @@ socket_begin(socket_t* s, const char* server, u32_t port)
   return true;
 }
 
-static b32_t
+  static b32_t
 socket_send(socket_t* s, buffer_t msg) 
 {
   if (send(s->sock, (char*)msg.e, msg.size, 0) == SOCKET_ERROR) {
@@ -1379,13 +1379,13 @@ socket_send(socket_t* s, buffer_t msg)
   return true;
 }
 
-static void 
+  static void 
 socket_end(socket_t* s) 
 {
   closesocket(s->sock);
 }
 
-static void
+  static void
 socket_system_end() 
 {
   WSACleanup();
@@ -1399,7 +1399,7 @@ socket_system_end()
 // @todo: 
 // - Maybe it should take in an arena...?
 //
-static buffer_t
+  static buffer_t
 socket_receive(socket_t* s, buffer_t buffer)
 {
   // @note: will poll
@@ -1414,7 +1414,7 @@ doze(u32_t ms_to_doze) {
   Sleep(ms_to_doze);
 }
 
-static void
+  static void
 file_close(file_t* fp) 
 {
   if (fp->handle) {
@@ -1422,7 +1422,7 @@ file_close(file_t* fp)
   }
 }
 
-static b32_t
+  static b32_t
 file_open(
     file_t* fp, 
     const char* filename,
@@ -1460,18 +1460,18 @@ file_open(
   return true;
 }
 
-static b32_t
+  static b32_t
 file_read(file_t* fp, void* dest, usz_t size, usz_t offset) 
 {
   // Reading the file
   OVERLAPPED overledened = {};
   overledened.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
   overledened.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
-  
+
   DWORD bytes_read;
-  
+
   if(ReadFile(fp->handle, dest, (DWORD)size, &bytes_read, &overledened) &&
-     (DWORD)size == bytes_read) 
+      (DWORD)size == bytes_read) 
   {
     return true;
   }
@@ -1480,16 +1480,16 @@ file_read(file_t* fp, void* dest, usz_t size, usz_t offset)
   }
 }
 
-static b32_t
+  static b32_t
 file_write(file_t* fp, const void* src, usz_t size, usz_t offset) 
 {
   OVERLAPPED overledened = {};
   overledened.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
   overledened.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
-  
+
   DWORD bytes_wrote;
   if(WriteFile(fp->handle, src, (DWORD)size, &bytes_wrote, &overledened) &&
-     (DWORD)size == bytes_wrote) 
+      (DWORD)size == bytes_wrote) 
   {
     return true;
   }
@@ -1504,7 +1504,7 @@ file_get_size(file_t* fp) {
   if (!GetFileSizeEx(fp->handle, &file_size)) {
     return 0;
   }
-  
+
   u64_t ret = (u64_t)file_size.QuadPart;
   return ret;
 }
@@ -1526,13 +1526,13 @@ memory_commit(buffer_t blk) {
 static buffer_t
 memory_allocate(usz_t size) {
   return buffer_set(
-    (u8_t*)VirtualAllocEx(
-      GetCurrentProcess(),
-      0, 
-      size,
-      MEM_RESERVE | MEM_COMMIT, 
-      PAGE_READWRITE), 
-    size);
+      (u8_t*)VirtualAllocEx(
+        GetCurrentProcess(),
+        0, 
+        size,
+        MEM_RESERVE | MEM_COMMIT, 
+        PAGE_READWRITE), 
+      size);
 
 }
 
@@ -1581,7 +1581,7 @@ struct socket_t {
   }
 };
 
-static b32_t 
+  static b32_t 
 socket_system_begin() 
 {
   return true; 
@@ -1589,7 +1589,7 @@ socket_system_begin()
 
 static void  socket_system_end() {}
 
-static b32_t
+  static b32_t
 socket_begin(socket_t* s, const char* server, u32_t port)
 {
   hostent* server_host = gethostbyname(server);
@@ -1617,13 +1617,13 @@ socket_begin(socket_t* s, const char* server, u32_t port)
   return true;
 }
 
-static void
+  static void
 socket_end(socket_t* s) 
 {
   close(s->sock);
 }
 
-static b32_t
+  static b32_t
 socket_send(socket_t* s, buffer_t msg) 
 {
   if (send(s->sock, (char*)msg.e, msg.size, 0) == -1)
@@ -1634,7 +1634,7 @@ socket_send(socket_t* s, buffer_t msg)
   return true;
 }
 
-static buffer_t
+  static buffer_t
 socket_receive(socket_t* s, buffer_t buffer)
 {
   // @note: will poll
@@ -1646,13 +1646,13 @@ socket_receive(socket_t* s, buffer_t buffer)
   return buffer_set(buffer.e, received_bytes);
 }
 
-static void 
+  static void 
 doze(u32_t ms_to_doze) 
 {
   usleep(ms_to_doze * 1000);
 }
 
-static void
+  static void
 file_close(file_t* fp) 
 {
   if (fp->handle) {
@@ -1660,7 +1660,7 @@ file_close(file_t* fp)
   }
 }
 
-static b32_t
+  static b32_t
 file_open(
     file_t* fp, 
     const char* filename,
@@ -1700,7 +1700,7 @@ file_read(file_t* fp, void* dest, usz_t size, usz_t offset) {
   return true;
 }
 
-static b32_t
+  static b32_t
 file_write(file_t* fp, const void* src, usz_t size, usz_t offset) 
 {
   if (lseek(fp->handle, offset, SEEK_SET) == -1) {
@@ -1771,7 +1771,7 @@ clock_resolution() {
 }
 #endif // OS_WINDOWS
 
-static f32_t 
+  static f32_t 
 clock_secs_elapsed(u64_t start, u64_t end) 
 {
   return (f32_t)(end - start)/clock_resolution();
@@ -1850,7 +1850,7 @@ foolish_write_buffer_to_file(const char* filename, buffer_t buffer) {
   FILE *file = fopen(filename, "wb");
   if (!file) return false;
   defer { fclose(file); };
-  
+
   fwrite(buffer.e, 1, buffer.size, file);
   return true;
 }
@@ -1893,7 +1893,7 @@ enum _json_token_type_t {
   _JSON_TOKEN_TYPE_OPEN_BRACE,
   _JSON_TOKEN_TYPE_CLOSE_BRACE,
   _JSON_TOKEN_TYPE_COMMA,
-  
+
   _JSON_TOKEN_TYPE_STRING,
   _JSON_TOKEN_TYPE_NULL,
 #if 0
@@ -1907,7 +1907,7 @@ enum _json_token_type_t {
 #endif
   _JSON_TOKEN_TYPE_TRUE,
   _JSON_TOKEN_TYPE_FALSE,
-  
+
   _JSON_TOKEN_TYPE_EOF,
 };
 
@@ -1958,7 +1958,7 @@ _json_eat_ignorables(json_t* t) {
     }
     else if(t->text.e[t->at] == '/' && t->text.e[t->at+1] == '*') {
       t->at += 2;
-      
+
     }
     else {
       break;
@@ -1969,11 +1969,11 @@ _json_eat_ignorables(json_t* t) {
 static _json_token_t
 _json_next_token(json_t* t) {
   _json_eat_ignorables(t);
-  
+
   _json_token_t ret = {};
   ret.at = t->text.e + t->at;
   ret.type = _JSON_TOKEN_TYPE_UNKNOWN;
-  
+
   switch(t->text.e[t->at]) {
     case '\0': {
       ret.type = _JSON_TOKEN_TYPE_EOF; 
@@ -2012,9 +2012,9 @@ _json_next_token(json_t* t) {
     } break;
     case 't':{
       if(t->text.size - t->at >= 4 &&
-         t->text.e[t->at+1] == 'r' && 
-         t->text.e[t->at+2] == 'u' && 
-         t->text.e[t->at+3] == 'e')
+          t->text.e[t->at+1] == 'r' && 
+          t->text.e[t->at+2] == 'u' && 
+          t->text.e[t->at+3] == 'e')
       {
         ret.type = _JSON_TOKEN_TYPE_TRUE;
         ret.size = 4;
@@ -2026,10 +2026,10 @@ _json_next_token(json_t* t) {
     } break;
     case 'f': {
       if(t->text.size - t->at >= 5 &&
-         t->text.e[t->at+1] == 'a' && 
-         t->text.e[t->at+2] == 'l' && 
-         t->text.e[t->at+3] == 's' &&
-         t->text.e[t->at+4] == 'e')
+          t->text.e[t->at+1] == 'a' && 
+          t->text.e[t->at+2] == 'l' && 
+          t->text.e[t->at+3] == 's' &&
+          t->text.e[t->at+4] == 'e')
       {
         ret.type = _JSON_TOKEN_TYPE_FALSE;
         ret.size = 5;
@@ -2042,9 +2042,9 @@ _json_next_token(json_t* t) {
     } break;
     case 'n': {
       if ((t->text.size - t->at) >= 4 && 
-           t->text.e[t->at+1] == 'u' && 
-           t->text.e[t->at+2] == 'l' && 
-           t->text.e[t->at+3] == 'l')
+          t->text.e[t->at+1] == 'u' && 
+          t->text.e[t->at+2] == 'l' && 
+          t->text.e[t->at+3] == 'l')
       {
         ret.type = _JSON_TOKEN_TYPE_NULL;
         t->at += 4;
@@ -2057,25 +2057,25 @@ _json_next_token(json_t* t) {
     } break;
 
     case '"': // strings
-    {
-      ++t->at; // move past the initial double quote
-      ret.at = t->text.e + t->at;
-      while(t->text.e[t->at] &&
-            t->text.e[t->at] != '"') 
       {
-        if(t->text.e[t->at] == '\\' && 
-           t->text.e[t->at+1]) 
+        ++t->at; // move past the initial double quote
+        ret.at = t->text.e + t->at;
+        while(t->text.e[t->at] &&
+            t->text.e[t->at] != '"') 
         {
+          if(t->text.e[t->at] == '\\' && 
+              t->text.e[t->at+1]) 
+          {
+            ++t->at;
+            ++ret.size;
+          }
           ++t->at;
           ++ret.size;
         }
+        ret.type = _JSON_TOKEN_TYPE_STRING;
         ++t->at;
-        ++ret.size;
-      }
-      ret.type = _JSON_TOKEN_TYPE_STRING;
-      ++t->at;
-    } break;
-    
+      } break;
+
     default: {
       // Unsigned integer
       if (u8_is_digit(t->text.e[t->at])) {
@@ -2092,11 +2092,11 @@ _json_next_token(json_t* t) {
         }
         ret.type = _JSON_TOKEN_TYPE_NUMBER;
       }
-      
+
       // Signed integer
       else if ((t->text.size - t->at) >= 2 && 
-                t->text.e[t->at] == '-' && 
-                u8_is_digit(t->text.e[t->at+1])) 
+          t->text.e[t->at] == '-' && 
+          u8_is_digit(t->text.e[t->at+1])) 
       {
         ++t->at; // keeps the negative sign
         while(true)
@@ -2168,7 +2168,7 @@ _json_parse_array(json_array_t* arr, json_t* t, arena_t* ba) {
   b32_t is_done = false;
   u32_t expect_type = 0;
   b32_t error = false;
-  
+
 
   while(!is_done) {
     _json_token_t token = _json_next_token(t);
@@ -2206,11 +2206,11 @@ _json_parse_array(json_array_t* arr, json_t* t, arena_t* ba) {
       }
     }
   }
- 
+
   return !error;
 }
 
-static b32_t 
+  static b32_t 
 _json_set_value_based_on_token(
     json_t* t, 
     json_value_t* value, 
@@ -2313,7 +2313,7 @@ _json_parse_object(json_object_t* obj, json_t* t, arena_t* ba) {
 
         expect_type = _JSON_EXPECT_TYPE_COMMA_OR_CLOSE;
 
-    
+
       } break;
       case _JSON_EXPECT_TYPE_COMMA_OR_CLOSE:{
         if (token.type == _JSON_TOKEN_TYPE_COMMA) {
@@ -2326,7 +2326,7 @@ _json_parse_object(json_object_t* obj, json_t* t, arena_t* ba) {
       case _JSON_EXPECT_TYPE_OPEN: {} break;
     }
   }
-  
+
   obj->head = entry; 
   return true;
 }
@@ -2364,7 +2364,7 @@ _json_print_token(json_t* t, _json_token_t token)  {
     case _JSON_TOKEN_TYPE_UNKNOWN: {
       printf("unknown: ");
     } break;
-    
+
   }
 #endif 
   for(umi_t i = 0; i < token.size; ++i) {
@@ -2380,44 +2380,44 @@ _json_print_value(json_t* t, json_value_t* value) {
     case JSON_VALUE_TYPE_STRING: 
     case JSON_VALUE_TYPE_NUMBER: 
     case JSON_VALUE_TYPE_NULL: 
-    {
-      for(u32_t _i = 0;
-          _i < value->element.size;
-          ++_i)
       {
-        printf("%c", value->element.at[_i]);
-      }
-    } break;
+        for(u32_t _i = 0;
+            _i < value->element.size;
+            ++_i)
+        {
+          printf("%c", value->element.at[_i]);
+        }
+      } break;
 
     case JSON_VALUE_TYPE_OBJECT: 
-    {
-      sccount++;
-      printf("{\n");
-      _json_print_entries_in_order(t, value->object.head);
-      sccount--;
-      for(u32_t _i = 0; _i < sccount; ++_i) 
-        printf(" ");
-      printf("}");
-    } break;
-    case JSON_VALUE_TYPE_ARRAY: 
-    {
-      printf("[");
-      for (json_array_node_t* itr = value->array.head;
-          itr != nullptr;
-          itr = itr->next) 
       {
-        _json_print_value(t, &itr->value);
-        if (itr->next != nullptr)
-          printf(",");
-      }
-      printf("]");
-           
+        sccount++;
+        printf("{\n");
+        _json_print_entries_in_order(t, value->object.head);
+        sccount--;
+        for(u32_t _i = 0; _i < sccount; ++_i) 
+          printf(" ");
+        printf("}");
+      } break;
+    case JSON_VALUE_TYPE_ARRAY: 
+      {
+        printf("[");
+        for (json_array_node_t* itr = value->array.head;
+            itr != nullptr;
+            itr = itr->next) 
+        {
+          _json_print_value(t, &itr->value);
+          if (itr->next != nullptr)
+            printf(",");
+        }
+        printf("]");
 
-    } break;
+
+      } break;
   }
 }
 
-static void 
+  static void 
 _json_print_entries_in_order(json_t* t, _json_entry_t* entry) 
 {
   if (entry == nullptr) 
@@ -2440,7 +2440,7 @@ _json_print_entries_in_order(json_t* t, _json_entry_t* entry)
     printf(":");
 
     _json_print_value(t, &entry->value);
-    
+
     printf("\n");
 
     _json_print_entries_in_order(t, entry->right);
@@ -2476,13 +2476,13 @@ json_get_value(json_object_t* json_object, buffer_t key) {
   return &entry->value;
 }
 
-static b32_t 
+  static b32_t 
 json_is_true(json_value_t* val) 
 {
   return val->type == JSON_VALUE_TYPE_TRUE;
 }
 
-static b32_t 
+  static b32_t 
 json_is_false(json_value_t* val) 
 {
   return val->type == JSON_VALUE_TYPE_FALSE;
@@ -2524,7 +2524,7 @@ static json_object_t* json_get_object(json_value_t* val) {
 }
 
 
-static json_object_t*
+  static json_object_t*
 json_read(
     json_t* j, 
     u8_t* json_string, 
@@ -3259,7 +3259,7 @@ cbuffer_len(const c8_t* str) {
   return count;
 }
 
-static u32_t 
+  static u32_t 
 cbuffer_to_u32(const c8_t* str)
 {
   u32_t ret = 0;
@@ -3271,7 +3271,7 @@ cbuffer_to_u32(const c8_t* str)
   return ret;
 }
 
-static u32_t 
+  static u32_t 
 cbuffer_len_if(const char* str, b32_t (*pred)(char))
 {
   // common strlen that counts what I care
@@ -4171,7 +4171,7 @@ f64_is_nan(f64_t f) {
   return (ret.u & 0xFFFFFFFFFFFFFFFF) == 0xFFFFFFFFFFFFFFFF;
 }
 
-static u32_t 
+  static u32_t 
 hash_djb2(const c8_t* str)
 {
   // DJB2
@@ -4192,23 +4192,23 @@ hash_djb2(const c8_t* str)
 
 #if COMPILER_MSVC
 #include <intrin.h>
-static u32_t 
+  static u32_t 
 u32_atomic_compare_assign(u32_t volatile* value,
-                          u32_t new_value,
-                          u32_t expected_value)
+    u32_t new_value,
+    u32_t expected_value)
 {
   u32_t ret = _InterlockedCompareExchange((long volatile*)value,
-                                          new_value,
-                                          expected_value);
+      new_value,
+      expected_value);
   return ret;
 }
 
-static u64_t 
+  static u64_t 
 u64_atomic_assign(u64_t volatile* value,
-                  u64_t new_value)
+    u64_t new_value)
 {
   u64_t ret = _InterlockedExchange64((__int64 volatile*)value,
-                                     new_value);
+      new_value);
   return ret;
 }
 static u32_t 
@@ -5397,7 +5397,7 @@ static rgba_t hsla_to_rgba(hsla_t c) {
 // @mark:(Sorting)
 //
 
-
+//
 // How this works:
 //   Recall how IEEE floating point works. 
 //   If our floating points are all positive (signed bit is 0),
@@ -5430,7 +5430,8 @@ static rgba_t hsla_to_rgba(hsla_t c) {
 //
 //   It seems that we can presumably just flip the bits. 
 //
-static u32_t 
+
+  static u32_t 
 _sort_key_to_u32(f32_t sort_key)
 {
   u32_t result = *(u32_t*)&sort_key;
@@ -5446,7 +5447,8 @@ _sort_key_to_u32(f32_t sort_key)
   }
   return result;
 }
-static void 
+
+  static void 
 sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena)
 {
   arena_set_revert_point(arena);
@@ -5468,7 +5470,7 @@ sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena)
       u32_t piece = (value >> byte_index) & 0xFF;
       ++offsets[piece];
     }
-    
+
     // Cumulative sum pass: change counts to offsets
     // Basically at the end of this pass, each item
     // in offsets[] should contain the index of dest
@@ -5497,24 +5499,26 @@ sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena)
 // Generic version of sort_quick
 typedef b32_t _sort_quick_generic_cmp_t(const void* lhs, const void* rhs);
 
-static u32_t 
+  static u32_t 
 _sort_quick_generic_partition(
     void* a,
     u32_t start, 
     u32_t ope,
     u32_t element_size,
-    _sort_quick_generic_cmp_t cmp) {
+    _sort_quick_generic_cmp_t cmp) 
+{
 
   // Save the rightmost index as pivot
   // This frees up the right most index as a slot
   u32_t pivot_idx = ope-1;
   u32_t eventual_pivot_idx = start;
 
-  for (u32_t i = start; i < ope-1; ++i) {
+  for (u32_t i = start; i < ope-1; ++i)
+  {
     u8_t* i_ptr = (u8_t*)a + (i * element_size);
     u8_t* pivot_ptr = (u8_t*)a + (pivot_idx * element_size);
-    //if (buffer_compare_lexographically(*i_ptr, *pivot_ptr) < 0) {
-    if (cmp(i_ptr, pivot_ptr)) {
+    if (cmp(i_ptr, pivot_ptr)) 
+    {
       u8_t* eventual_pivot_ptr = (u8_t*)a + (eventual_pivot_idx * element_size);
       memory_swap(i_ptr, eventual_pivot_ptr, element_size);
       ++eventual_pivot_idx;
@@ -5525,13 +5529,13 @@ _sort_quick_generic_partition(
 }
 
 // @note: This is done inplace
-static void
+  static void
 _sort_quick_generic_range(
-  void* a, 
-  u32_t start, 
-  u32_t ope,
-  u32_t element_size,
-  _sort_quick_generic_cmp_t cmp) 
+    void* a, 
+    u32_t start, 
+    u32_t ope,
+    u32_t element_size,
+    _sort_quick_generic_cmp_t cmp) 
 {
   if (ope - start <= 1) {
     return;
@@ -5557,10 +5561,10 @@ _sort_swap_entries(sort_entry_t* a, sort_entry_t* b) {
 //
 // Quick sort
 //
-static u32_t
+  static u32_t
 _sort_quick_partition(sort_entry_t* a,
-                     u32_t start, 
-                     u32_t ope) 
+    u32_t start, 
+    u32_t ope) 
 {
   // Save the rightmost index as pivot
   // This frees up the right most index as a slot
@@ -5584,10 +5588,10 @@ _sort_quick_partition(sort_entry_t* a,
 }
 
 // @note: This is done inplace
-static void
+  static void
 _sort_quick_range(sort_entry_t* a, 
-                 u32_t start, 
-                 u32_t ope) 
+    u32_t start, 
+    u32_t ope) 
 {
   if (ope - start <= 1) {
     return;
@@ -5610,16 +5614,16 @@ sort_quick(sort_entry_t* entries, u32_t entry_count) {
 static b32_t
 _bonk_tri2_pt2_parametric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
   f32_t denominator = (tp0.x*(tp1.y - tp2.y) + 
-    tp0.y*(tp2.x - tp1.x) + 
-    tp1.x*tp2.y - tp1.y*tp2.x);
+      tp0.y*(tp2.x - tp1.x) + 
+      tp1.x*tp2.y - tp1.y*tp2.x);
 
   f32_t t1 = (pt.x*(tp2.y - tp0.y) + 
-    pt.y*(tp0.x - tp2.x) - 
-    tp0.x*tp2.y + tp0.y*tp2.x) / denominator;
+      pt.y*(tp0.x - tp2.x) - 
+      tp0.x*tp2.y + tp0.y*tp2.x) / denominator;
 
   f32_t t2 = (pt.x*(tp1.y - tp0.y) + 
-    pt.y*(tp0.x - tp1.x) - 
-    tp0.x*tp1.y + tp0.y*tp1.x) / -denominator;
+      pt.y*(tp0.x - tp1.x) - 
+      tp0.x*tp1.y + tp0.y*tp1.x) / -denominator;
 
   f32_t s = t1 + t2;
 
@@ -5632,16 +5636,16 @@ static b32_t
 _bonk_tri2_pt2_barycentric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
 
   f32_t denominator = ((tp1.y - tp2.y)*
-    (tp0.x - tp2.x) + (tp2.x - tp1.x)*
-    (tp0.y - tp2.y));
+      (tp0.x - tp2.x) + (tp2.x - tp1.x)*
+      (tp0.y - tp2.y));
 
   f32_t a = ((tp1.y - tp2.y)*
-    (pt.x - tp2.x) + (tp2.x - tp1.x)*
-    (pt.y - tp2.y)) / denominator;
+      (pt.x - tp2.x) + (tp2.x - tp1.x)*
+      (pt.y - tp2.y)) / denominator;
 
   f32_t b = ((tp2.y - tp0.y)*
-    (pt.x - tp2.x) + (tp0.x - tp2.x)*
-    (pt.y - tp2.y)) / denominator;
+      (pt.x - tp2.x) + (tp0.x - tp2.x)*
+      (pt.y - tp2.y)) / denominator;
 
   f32_t c = 1.f - a - b;
 
@@ -5678,13 +5682,13 @@ bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
 //
 // @mark:(RNG)
 //
-static void
+  static void
 rng_init(rng_t* r, u32_t seed)
 {
   r->seed = seed;
 }
 
-static u32_t
+  static u32_t
 rng_next(rng_t* r)
 {
   u32_t result = r->seed;
@@ -5701,7 +5705,7 @@ rng_choice(rng_t* r, u32_t choice_count) {
 }
 
 // Get number within [0, 1]
-static f32_t 
+  static f32_t 
 rng_unilateral(rng_t* r)
 {
   f32_t divisor = 1.0f / (f32_t)U32_MAX;
@@ -5712,28 +5716,28 @@ rng_unilateral(rng_t* r)
 
 
 // Get number within [-1, 1]
-static f32_t 
+  static f32_t 
 rng_bilateral(rng_t* r)
 {
   f32_t result = 2.0f * rng_unilateral(r) - 1.0f;  
   return(result);
 }
 
-static f32_t 
+  static f32_t 
 rng_range_f32(rng_t* r, f32_t min, f32_t max)
 {
   f32_t result = f32_lerp(min, rng_unilateral(r), max);
   return(result);
 }
 
-static s32_t 
+  static s32_t 
 rng_range_s32(rng_t* r, s32_t min, s32_t max)
 {
   s32_t result = min + (s32_t)(rng_next(r)%((max + 1) - min));
   return(result);
 }
 
-static u32_t
+  static u32_t
 rng_range_u32(rng_t* r, u32_t min, u32_t max)
 {
   u32_t result = min + (u32_t)(rng_next(r)%((max + 1) - min));
@@ -5927,7 +5931,7 @@ buffer_find(buffer_t str, u8_t character){
   return str.size;
 }
 
-static void
+  static void
 buffer_reverse(buffer_t* dest)
 {
   u8_t* front_ptr = dest->e;
@@ -6104,13 +6108,13 @@ buffer_to_u32(buffer_t s, u32_t* out) {
 }
 
 // Parsing functions
-static b32_t 
+  static b32_t 
 buffer_to_s32(buffer_t s, s32_t* out) 
 {
   return buffer_to_s32_range(s, 0, s.size, out);
 }
 
-static void  
+  static void  
 str_builder_init(str_builder_t* b, u8_t* data, usz_t cap) 
 {
   b->e = data;
@@ -6118,7 +6122,7 @@ str_builder_init(str_builder_t* b, u8_t* data, usz_t cap)
   b->cap = cap;
 }
 
-static b32_t     
+  static b32_t     
 str_builder_init(str_builder_t* b, arena_t* arena, usz_t cap)
 {
   u8_t* buffer = arena_push_arr(u8_t, arena, cap);
@@ -6130,7 +6134,7 @@ str_builder_init(str_builder_t* b, arena_t* arena, usz_t cap)
 
 }
 
-static void  
+  static void  
 str_builder_init(str_builder_t* b, buffer_t str) 
 {
   b->e = str.e;
@@ -6341,7 +6345,7 @@ str_builder_push_hex_u32(str_builder_t* b, u32_t value) {
 }
 
 
-static void
+  static void
 _str_builder_push_fmt_list(str_builder_t* b, buffer_t format, va_list args) 
 {
   usz_t at = 0;
@@ -6588,7 +6592,7 @@ struct _wav_head_t {
 };
 // http://soundfile.sapp.org/doc/Waveformat/
 
-static b32_t 
+  static b32_t 
 wav_read(wav_t* w, buffer_t contents) 
 {
   const static u32_t riff_id_signature = u32_endian_swap(0x52494646);
@@ -6629,7 +6633,7 @@ wav_read(wav_t* w, buffer_t contents)
 
   u32_t bytes_per_sample = fmt_chunk->bits_per_sample/8;
   if (fmt_chunk->byte_rate != 
-    fmt_chunk->sample_rate * fmt_chunk->num_channels * bytes_per_sample) {
+      fmt_chunk->sample_rate * fmt_chunk->num_channels * bytes_per_sample) {
     return 0;
   }
   if (fmt_chunk->block_align != fmt_chunk->num_channels * bytes_per_sample) {
@@ -6808,7 +6812,7 @@ ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t
   }
 }
 
-static s32_t
+  static s32_t
 _ttf_get_kern_advance(const ttf_t* ttf, s32_t g1, s32_t g2) 
 {
   // @note: We only care about format 0, which Windows cares
@@ -6863,11 +6867,11 @@ _ttf_get_kern_advance(const ttf_t* ttf, s32_t g1, s32_t g2)
 // | 
 // ----x
 //
-static b32_t 
+  static b32_t 
 _ttf_get_glyph_outline(const ttf_t* ttf, 
-                       _ttf_glyph_outline_t* outline,
-                       u32_t glyph_index, 
-                       arena_t* allocator) 
+    _ttf_glyph_outline_t* outline,
+    u32_t glyph_index, 
+    arena_t* allocator) 
 {
   u32_t g = _ttf_get_offset_to_glyph(ttf, glyph_index);
   s16_t number_of_contours = _ttf_read_s16(ttf->data + g + 0);
@@ -7008,14 +7012,14 @@ _ttf_add_vertex(v2f_t* vertices, u32_t n, v2f_t v) {
 }
 
 
-static void
+  static void
 _ttf_tessellate_bezier(v2f_t* vertices,
-                       u32_t* vertex_count,
-                       v2f_t p0, 
-                       v2f_t p1,
-                       v2f_t p2,
-                       f32_t flatness_squared,
-                       u32_t n) 
+    u32_t* vertex_count,
+    v2f_t p0, 
+    v2f_t p1,
+    v2f_t p2,
+    f32_t flatness_squared,
+    u32_t n) 
 {
   v2f_t mid = (p0 + p1*2.f + p2) * 0.25f;
   v2f_t d = v2f_mid(p0, p2) - mid;
@@ -7027,11 +7031,11 @@ _ttf_tessellate_bezier(v2f_t* vertices,
 
   if (d.x*d.x + d.y*d.y > flatness_squared) {
     _ttf_tessellate_bezier(vertices, vertex_count, p0,
-                           v2f_mid(p0, p1), 
-                           mid, flatness_squared, n+1 );
+        v2f_mid(p0, p1), 
+        mid, flatness_squared, n+1 );
     _ttf_tessellate_bezier(vertices, vertex_count, mid,
-                           v2f_mid(p1, p2), 
-                           p2, flatness_squared, n+1 );
+        v2f_mid(p1, p2), 
+        p2, flatness_squared, n+1 );
   }
   else {
     _ttf_add_vertex(vertices, (*vertex_count)++, p2);      
@@ -7042,516 +7046,517 @@ _ttf_tessellate_bezier(v2f_t* vertices,
 }
 
   static b32_t 
-    _ttf_get_paths_from_glyph_outline(_ttf_glyph_outline_t* outline,
-        _ttf_glyph_paths_t* paths,
-        arena_t* allocator) 
-    {
-      // Count the amount of points generated
-      v2f_t* vertices = 0;
-      u32_t vertex_count = 0;
-      f32_t flatness = 0.35f;
-      f32_t flatness_squared = flatness*flatness;
+_ttf_get_paths_from_glyph_outline(_ttf_glyph_outline_t* outline,
+    _ttf_glyph_paths_t* paths,
+    arena_t* allocator) 
+{
+  // Count the amount of points generated
+  v2f_t* vertices = 0;
+  u32_t vertex_count = 0;
+  f32_t flatness = 0.35f;
+  f32_t flatness_squared = flatness*flatness;
 
-      u32_t* path_lengths = arena_push_arr(u32_t, allocator, outline->contour_count);
-      if (!path_lengths) return false;
-      memory_zero_range(path_lengths, outline->contour_count);
-      u32_t path_count = 0;
+  u32_t* path_lengths = arena_push_arr(u32_t, allocator, outline->contour_count);
+  if (!path_lengths) return false;
+  memory_zero_range(path_lengths, outline->contour_count);
+  u32_t path_count = 0;
 
-      // On the first pass, we count the number of points we will generate.
-      // On the second pass, we will push the list and actually fill 
-      // the list with generated points.
-      for (u32_t pass = 0; pass < 2; ++pass)
-      {
-        if (pass == 1) {
-          vertices = arena_push_arr(v2f_t, allocator, vertex_count);
-          if (!vertices) return false;
-          memory_zero_range(vertices, vertex_count);
-          vertex_count = 0;
-          path_count = 0;
+  // On the first pass, we count the number of points we will generate.
+  // On the second pass, we will push the list and actually fill 
+  // the list with generated points.
+  for (u32_t pass = 0; pass < 2; ++pass)
+  {
+    if (pass == 1) {
+      vertices = arena_push_arr(v2f_t, allocator, vertex_count);
+      if (!vertices) return false;
+      memory_zero_range(vertices, vertex_count);
+      vertex_count = 0;
+      path_count = 0;
+    }
+
+    // @note: For now, we assume that the first point is 
+    // always on curve, which is not always the case.
+    v2f_t anchor_pt = {};
+    u32_t j = 0;
+    for (u32_t i = 0; i < outline->contour_count; ++i) {
+      u32_t contour_start_index = j;
+      u32_t start_vertex_count = vertex_count;
+
+      for(; j <= outline->end_point_indices[i]; ++j) {
+        u8_t flags = outline->points[j].flags;
+
+        if (flags & 0x1) { // on curve 
+          anchor_pt.x = (f32_t)outline->points[j].x;
+          anchor_pt.y = (f32_t)outline->points[j].y;
+
+          _ttf_add_vertex(vertices, vertex_count++, anchor_pt);
         }
+        else{ // not on curve
+          u32_t next_index = (j == outline->end_point_indices[i]) ? contour_start_index : j+1;
 
-        // @note: For now, we assume that the first point is 
-        // always on curve, which is not always the case.
-        v2f_t anchor_pt = {};
-        u32_t j = 0;
-        for (u32_t i = 0; i < outline->contour_count; ++i) {
-          u32_t contour_start_index = j;
-          u32_t start_vertex_count = vertex_count;
+          // Check if next point is on curve
+          v2f_t p0 = anchor_pt;
+          v2f_t p1 = { (f32_t)outline->points[j].x, (f32_t)outline->points[j].y };
+          v2f_t p2 = { (f32_t)outline->points[next_index].x, (f32_t)outline->points[next_index].y } ;
 
-          for(; j <= outline->end_point_indices[i]; ++j) {
-            u8_t flags = outline->points[j].flags;
-
-            if (flags & 0x1) { // on curve 
-              anchor_pt.x = (f32_t)outline->points[j].x;
-              anchor_pt.y = (f32_t)outline->points[j].y;
-
-              _ttf_add_vertex(vertices, vertex_count++, anchor_pt);
-            }
-            else{ // not on curve
-              u32_t next_index = (j == outline->end_point_indices[i]) ? contour_start_index : j+1;
-
-              // Check if next point is on curve
-              v2f_t p0 = anchor_pt;
-              v2f_t p1 = { (f32_t)outline->points[j].x, (f32_t)outline->points[j].y };
-              v2f_t p2 = { (f32_t)outline->points[next_index].x, (f32_t)outline->points[next_index].y } ;
-
-              u8_t next_flags = outline->points[next_index].flags;
-              if (!(next_flags & 0x1)) {
-                // not on curve, thus it's a cubic curve, 
-                // so we have to generate midpoint
-                p2.x = p1.x + (p2.x - p1.x)*0.5f;
-                p2.y = p1.y + (p2.y - p1.y)*0.5f;
-              }
+          u8_t next_flags = outline->points[next_index].flags;
+          if (!(next_flags & 0x1)) {
+            // not on curve, thus it's a cubic curve, 
+            // so we have to generate midpoint
+            p2.x = p1.x + (p2.x - p1.x)*0.5f;
+            p2.y = p1.y + (p2.y - p1.y)*0.5f;
+          }
 #if 0
-              // prevent duplicates?
-              else {
-                ++j;
-              }
-#endif
-              _ttf_tessellate_bezier(vertices, &vertex_count,
-                  p0, p1, p2, flatness_squared, 0);
-              anchor_pt = p2;
-            }
-          }
-          path_lengths[path_count++] = vertex_count - start_vertex_count;
-        }
-      }
-      paths->vertices = vertices;
-      paths->vertex_count = vertex_count;
-      paths->path_lengths = path_lengths;
-      paths->path_count = path_count;
-
-      return true;
-
-    }
-
-  static u32_t
-    ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint) {
-
-      u16_t format = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 0);
-
-      switch(format) {
-        case 4: { // 
-          u16_t seg_count = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 6) >> 1;
-          //u16_t search_range = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 8) >> 1;
-          //u16_t entry_selector = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 10);
-          //u16_t range_shift = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 12) >> 1;
-
-          u32_t end_codes = ttf->cmap_mappings + 14;
-          u32_t start_codes = end_codes + 2 + (2*seg_count);
-          u32_t id_deltas = start_codes + (2*seg_count);
-          u32_t id_range_offsets = id_deltas + (2*seg_count);
-          //u32_t glyph_index_array = id_range_offsets + (2*seg_count);
-
-          if (codepoint == 0xffff) return 0;
-
-          // Find the first end code that is greater than or equal to the codepoint
-          //
-          // @note: To optimize this, we could do a binary search based
-          // on the data given but there are some documentations that seem
-          // to suggest against this...
-          // 
-          u16_t seg_id = 0;
-          u16_t end_code = 0;
-          for(u16_t i = 0; i < seg_count; ++i) {
-            end_code = _ttf_read_u16(ttf->data + end_codes + (2 * i));
-            if( end_code >= codepoint ){
-              seg_id = i;
-              break;
-            }
-          }
-
-          u16_t start_code = _ttf_read_u16(ttf->data + start_codes + 2*seg_id);
-
-          if (start_code > codepoint) return 0;
-
-          u16_t offset = _ttf_read_u16(ttf->data + id_range_offsets + 2*seg_id);
-          s16_t delta = _ttf_read_s16(ttf->data + id_deltas + 2*seg_id);
-
-          if (offset == 0 ){
-            return codepoint + delta;
-          }
+          // prevent duplicates?
           else {
-            return _ttf_read_u16(ttf->data +
-                id_range_offsets + 2*seg_id + // &id_range_offset[i]
-                offset + (codepoint - start_code)*2);
-
+            ++j;
           }
-
-        } break;
-
-        default: {
-          return 0; // invalid codepoint
+#endif
+          _ttf_tessellate_bezier(vertices, &vertex_count,
+              p0, p1, p2, flatness_squared, 0);
+          anchor_pt = p2;
         }
       }
+      path_lengths[path_count++] = vertex_count - start_vertex_count;
     }
+  }
+  paths->vertices = vertices;
+  paths->vertex_count = vertex_count;
+  paths->path_lengths = path_lengths;
+  paths->path_count = path_count;
+
+  return true;
+
+}
+
+static u32_t
+ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint) {
+
+  u16_t format = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 0);
+
+  switch(format) {
+    case 4: { // 
+      u16_t seg_count = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 6) >> 1;
+      //u16_t search_range = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 8) >> 1;
+      //u16_t entry_selector = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 10);
+      //u16_t range_shift = _ttf_read_u16(ttf->data + ttf->cmap_mappings + 12) >> 1;
+
+      u32_t end_codes = ttf->cmap_mappings + 14;
+      u32_t start_codes = end_codes + 2 + (2*seg_count);
+      u32_t id_deltas = start_codes + (2*seg_count);
+      u32_t id_range_offsets = id_deltas + (2*seg_count);
+      //u32_t glyph_index_array = id_range_offsets + (2*seg_count);
+
+      if (codepoint == 0xffff) return 0;
+
+      // Find the first end code that is greater than or equal to the codepoint
+      //
+      // @note: To optimize this, we could do a binary search based
+      // on the data given but there are some documentations that seem
+      // to suggest against this...
+      // 
+      u16_t seg_id = 0;
+      u16_t end_code = 0;
+      for(u16_t i = 0; i < seg_count; ++i) {
+        end_code = _ttf_read_u16(ttf->data + end_codes + (2 * i));
+        if( end_code >= codepoint ){
+          seg_id = i;
+          break;
+        }
+      }
+
+      u16_t start_code = _ttf_read_u16(ttf->data + start_codes + 2*seg_id);
+
+      if (start_code > codepoint) return 0;
+
+      u16_t offset = _ttf_read_u16(ttf->data + id_range_offsets + 2*seg_id);
+      s16_t delta = _ttf_read_s16(ttf->data + id_deltas + 2*seg_id);
+
+      if (offset == 0 ){
+        return codepoint + delta;
+      }
+      else {
+        return _ttf_read_u16(ttf->data +
+            id_range_offsets + 2*seg_id + // &id_range_offset[i]
+            offset + (codepoint - start_code)*2);
+
+      }
+
+    } break;
+
+    default: {
+      return 0; // invalid codepoint
+    }
+  }
+}
 
 
 static f32_t
-    ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height) {
-      s32_t font_height = _ttf_read_s16(ttf->data + ttf->hhea + 4) - _ttf_read_s16(ttf->data + ttf->hhea + 6);
-      return (f32_t)pixel_height/font_height;
-    }
+ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height) 
+{
+  s32_t font_height = _ttf_read_s16(ttf->data + ttf->hhea + 4) - _ttf_read_s16(ttf->data + ttf->hhea + 6);
+  return (f32_t)pixel_height/font_height;
+}
 
 
-  static void 
-    ttf_get_glyph_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_t* line_gap) 
-    {
-      if (ascent) *ascent = _ttf_read_s16(ttf->data + ttf->hhea + 4);
-      if (descent) *descent = _ttf_read_s16(ttf->data + ttf->hhea + 6);
-      if (line_gap) *line_gap = _ttf_read_s16(ttf->data + ttf->hhea + 8);
-    }
+static void 
+ttf_get_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_t* line_gap) 
+{
+  if (ascent) *ascent = _ttf_read_s16(ttf->data + ttf->hhea + 4);
+  if (descent) *descent = _ttf_read_s16(ttf->data + ttf->hhea + 6);
+  if (line_gap) *line_gap = _ttf_read_s16(ttf->data + ttf->hhea + 8);
+}
 
-  static void 
-    ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, 
-        u32_t glyph_index, 
-        s16_t* advance_width, 
-        s16_t* left_side_bearing)
-    {
-      u16_t num_of_long_horizontal_metrices = _ttf_read_u16(ttf->data + ttf->hhea + 34);
+static void 
+ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, 
+    u32_t glyph_index, 
+    s16_t* advance_width, 
+    s16_t* left_side_bearing)
+{
+  u16_t num_of_long_horizontal_metrices = _ttf_read_u16(ttf->data + ttf->hhea + 34);
 
-      if (glyph_index < num_of_long_horizontal_metrices) {
-        if (advance_width) (*advance_width) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index);
-        if (left_side_bearing) (*left_side_bearing) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index + 2);
-      }
-      else {
-        if(advance_width) (*advance_width) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*(num_of_long_horizontal_metrices-1));
-        if(left_side_bearing) (*left_side_bearing) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*num_of_long_horizontal_metrices + 2*(glyph_index - num_of_long_horizontal_metrices));
-      }
+  if (glyph_index < num_of_long_horizontal_metrices) {
+    if (advance_width) (*advance_width) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index);
+    if (left_side_bearing) (*left_side_bearing) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*glyph_index + 2);
+  }
+  else {
+    if(advance_width) (*advance_width) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*(num_of_long_horizontal_metrices-1));
+    if(left_side_bearing) (*left_side_bearing) = _ttf_read_s16(ttf->data + ttf->hmtx + 4*num_of_long_horizontal_metrices + 2*(glyph_index - num_of_long_horizontal_metrices));
+  }
 
-    }
+}
 
 
 static b32_t
-    ttf_read(ttf_t* ttf, buffer_t ttf_contents) {
-      ttf->data = ttf_contents.e;
+ttf_read(ttf_t* ttf, buffer_t ttf_contents) {
+  ttf->data = ttf_contents.e;
 
-      u32_t num_tables = _ttf_read_u16(ttf->data + 4);
+  u32_t num_tables = _ttf_read_u16(ttf->data + 4);
 
-      for (u32_t i= 0 ; i < num_tables; ++i ) {
-        u32_t directory = 12 + (16 * i);
-        u32_t tag = _ttf_read_u32(ttf->data + directory + 0);
+  for (u32_t i= 0 ; i < num_tables; ++i ) {
+    u32_t directory = 12 + (16 * i);
+    u32_t tag = _ttf_read_u32(ttf->data + directory + 0);
 
 
-        switch(tag) {
-          case 'loca': {
-            ttf->loca = _ttf_read_u32(ttf->data + directory + 8);
-          }; break;
-          case 'head': {
-            ttf->head = _ttf_read_u32(ttf->data + directory + 8);
-          }; break;
-          case 'glyf': {
-            ttf->glyf = _ttf_read_u32(ttf->data + directory + 8);
-          }; break;
-          case 'maxp': {
-            ttf->maxp = _ttf_read_u32(ttf->data + directory + 8);
-          } break;
-          case 'cmap': {
-            ttf->cmap = _ttf_read_u32(ttf->data + directory + 8);
-          } break;
-          case 'hhea': {
-            ttf->hhea = _ttf_read_u32(ttf->data + directory + 8);
-          } break;
-          case 'hmtx': {
-            ttf->hmtx = _ttf_read_u32(ttf->data + directory + 8);
-          } break;
-          case 'kern': {
-            ttf->kern = _ttf_read_u32(ttf->data + directory + 8);
-          } break;
-          case 'GPOS': {
-            ttf->gpos = _ttf_read_u32(ttf->data + directory + 8);
-          } break;
-          default: {
+    switch(tag) {
+      case 'loca': {
+        ttf->loca = _ttf_read_u32(ttf->data + directory + 8);
+      }; break;
+      case 'head': {
+        ttf->head = _ttf_read_u32(ttf->data + directory + 8);
+      }; break;
+      case 'glyf': {
+        ttf->glyf = _ttf_read_u32(ttf->data + directory + 8);
+      }; break;
+      case 'maxp': {
+        ttf->maxp = _ttf_read_u32(ttf->data + directory + 8);
+      } break;
+      case 'cmap': {
+        ttf->cmap = _ttf_read_u32(ttf->data + directory + 8);
+      } break;
+      case 'hhea': {
+        ttf->hhea = _ttf_read_u32(ttf->data + directory + 8);
+      } break;
+      case 'hmtx': {
+        ttf->hmtx = _ttf_read_u32(ttf->data + directory + 8);
+      } break;
+      case 'kern': {
+        ttf->kern = _ttf_read_u32(ttf->data + directory + 8);
+      } break;
+      case 'GPOS': {
+        ttf->gpos = _ttf_read_u32(ttf->data + directory + 8);
+      } break;
+      default: {
 #if 0
-            char* tags = (char*)&tag;
-            test_log("found: %c%c%c%c\n", tags[3], tags[2], tags[1], tags[0]);
+        char* tags = (char*)&tag;
+        test_log("found: %c%c%c%c\n", tags[3], tags[2], tags[1], tags[0]);
 #endif
-          };
-        }
+      };
+    }
 
-      }
+  }
 
-      if (!ttf->loca || 
-          !ttf->maxp ||
-          !ttf->head ||
-          !ttf->glyf ||
-          !ttf->cmap ||
-          !ttf->hhea ||
-          !ttf->hmtx) return false;
+  if (!ttf->loca || 
+      !ttf->maxp ||
+      !ttf->head ||
+      !ttf->glyf ||
+      !ttf->cmap ||
+      !ttf->hhea ||
+      !ttf->hmtx) return false;
 
-      ttf->loca_format = _ttf_read_u16(ttf->data + ttf->head + 50);
-      if (ttf->loca_format >= 2) return false;
+  ttf->loca_format = _ttf_read_u16(ttf->data + ttf->head + 50);
+  if (ttf->loca_format >= 2) return false;
 
-      ttf->glyph_count = _ttf_read_u16(ttf->data + ttf->maxp + 4);
+  ttf->glyph_count = _ttf_read_u16(ttf->data + ttf->maxp + 4);
 
-      // Get index map
-      {
-        u32_t subtable_count = _ttf_read_u16(ttf->data + ttf->cmap + 2);
+  // Get index map
+  {
+    u32_t subtable_count = _ttf_read_u16(ttf->data + ttf->cmap + 2);
 
-        b32_t found_index_table = false;
+    b32_t found_index_table = false;
 
-        for( u32_t i = 0; i < subtable_count; ++i) {
-          u32_t subtable = ttf->cmap + 4 + (8 * i);
+    for( u32_t i = 0; i < subtable_count; ++i) {
+      u32_t subtable = ttf->cmap + 4 + (8 * i);
 
 
-          // We only support unicode encoding...
-          // @note: They say mac is discouraged, so we won't care about it.
-          u32_t pf_id = _ttf_read_u16(ttf->data + subtable + 0);
-          switch(pf_id) {
-            case _TTF_CMAP_PF_ID_MICROSOFT: {
-              u32_t pf_specific_id = _ttf_read_u16(ttf->data + subtable + 2);
-              switch(pf_specific_id) {
-                case _TTF_CMAP_MS_ID_UNICODE_BMP:
-                case _TTF_CMAP_MS_ID_UNICODE_FULL: {
-                  ttf->cmap_mappings = ttf->cmap + _ttf_read_u32(ttf->data + subtable + 4);
-                  found_index_table =  true;
-                }break;
-
-              }
-            }
-            case _TTF_CMAP_PF_ID_UNICODE: {
+      // We only support unicode encoding...
+      // @note: They say mac is discouraged, so we won't care about it.
+      u32_t pf_id = _ttf_read_u16(ttf->data + subtable + 0);
+      switch(pf_id) {
+        case _TTF_CMAP_PF_ID_MICROSOFT: {
+          u32_t pf_specific_id = _ttf_read_u16(ttf->data + subtable + 2);
+          switch(pf_specific_id) {
+            case _TTF_CMAP_MS_ID_UNICODE_BMP:
+            case _TTF_CMAP_MS_ID_UNICODE_FULL: {
               ttf->cmap_mappings = ttf->cmap + _ttf_read_u32(ttf->data + subtable + 4);
-              found_index_table = true;
-            } break;
+              found_index_table =  true;
+            }break;
 
           }
-
-          if (found_index_table) break;
         }
+        case _TTF_CMAP_PF_ID_UNICODE: {
+          ttf->cmap_mappings = ttf->cmap + _ttf_read_u32(ttf->data + subtable + 4);
+          found_index_table = true;
+        } break;
 
-        if (!found_index_table) 
-          return false;
       }
 
-
-
-      return true;
+      if (found_index_table) break;
     }
 
-  static s32_t 
-    ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2) {
+    if (!found_index_table) 
+      return false;
+  }
 
-      if (ttf->gpos) {
-        assert(false);
-        //return _ttf_get_gpos_advance(ttf, glyph_index_1, glyph_index_2);
-      }
-      else if (ttf->kern) {
-        return _ttf_get_kern_advance(ttf, glyph_index_1, glyph_index_2);
-      }
-      return 0;
-    }
+
+
+  return true;
+}
+
+static s32_t 
+ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2) {
+
+  if (ttf->gpos) {
+    assert(false);
+    //return _ttf_get_gpos_advance(ttf, glyph_index_1, glyph_index_2);
+  }
+  else if (ttf->kern) {
+    return _ttf_get_kern_advance(ttf, glyph_index_1, glyph_index_2);
+  }
+  return 0;
+}
 
   static u32_t* 
-    ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w, u32_t* out_h, arena_t* allocator) 
+ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w, u32_t* out_h, arena_t* allocator) 
+{
+  u32_t* pixels = 0;
+  make(_ttf_glyph_outline_t, outline);
+  make(_ttf_glyph_paths_t, paths);
+
+  s32_t x0, y0, x1, y1;
+  ttf_get_glyph_bitmap_box(ttf, glyph_index, scale, &x0, &y0, &x1, &y1);
+
+  u32_t width = x1 - x0;
+  u32_t height = y1 - y0;
+  u32_t size = width * height * 4;
+
+  if (width == 0 || height == 0) {
+    //ttf_log("[ttf] Glyph dimension are bad\nj");
+    return nullptr;
+  }
+
+  pixels = arena_push_arr(u32_t, allocator, size);
+  if (!pixels) {
+    //ttf_log("[ttf] Unable to push bitmap pixel\n");
+    return nullptr;
+  }
+  memory_zero(pixels, size);
+
+  arena_set_revert_point(allocator);
+
+  if(!_ttf_get_glyph_outline(ttf, outline, glyph_index, allocator)) {
+    //ttf_log("[ttf] Unable to get glyph outline\n");
+    return nullptr;
+  }
+  if (!_ttf_get_paths_from_glyph_outline(outline, paths, allocator)) {
+    //ttf_log("[ttf] Unable glyph paths\n");
+    return nullptr;
+  }
+
+  // generate scaled edges based on points
+  _ttf_edge_t* edges = arena_push_arr(_ttf_edge_t, allocator, paths->vertex_count);
+  if (!edges) {
+    //ttf_log("[ttf] Unable to push edges\n");
+    return nullptr;
+  }
+  memory_zero_range(edges, paths->vertex_count);
+
+  u32_t edge_count = 0;
+  {
+    u32_t vertex_index = 0;
+    for (u32_t path_index = 0; 
+        path_index < paths->path_count; 
+        ++path_index)
     {
-      u32_t* pixels = 0;
-      make(_ttf_glyph_outline_t, outline);
-      make(_ttf_glyph_paths_t, paths);
+      u32_t path_length = paths->path_lengths[path_index];
+      for (u32_t i = 0; i < path_length; ++i) {
+        _ttf_edge_t edge = {};
+        v2f_t v0 = paths->vertices[vertex_index];
+        v2f_t v1 = (i == path_length-1) ? paths->vertices[vertex_index-i] : paths->vertices[vertex_index+1];
+        ++vertex_index;
 
-      s32_t x0, y0, x1, y1;
-      ttf_get_glyph_bitmap_box(ttf, glyph_index, scale, &x0, &y0, &x1, &y1);
+        // Skip if edge is going to be completely horizontal
+        if (v0.y == v1.y) {
+          continue;
+        }
 
-      u32_t width = x1 - x0;
-      u32_t height = y1 - y0;
-      u32_t size = width * height * 4;
+        edge.p0.x = v0.x * scale - x0;
+        edge.p0.y = height - ((v0.y * scale) - y0);
 
-      if (width == 0 || height == 0) {
-        //ttf_log("[ttf] Glyph dimension are bad\nj");
-        return nullptr;
+        edge.p1.x = v1.x * scale - x0;
+        edge.p1.y = height - ((v1.y * scale) - y0);
+
+        // Check if edge's points need to be flipped.
+        // @note: It's easier for the rasterization algorithm to have the edges'
+        // p0 be on top of p1. If we flip, we will indicate it within the edge.
+        if (edge.p0.y > edge.p1.y) {
+          swap(edge.p0, edge.p1);
+          edge.is_inverted = true;
+        }
+        edges[edge_count++] = edge;
       }
+    }  
+  }
 
-      pixels = arena_push_arr(u32_t, allocator, size);
-      if (!pixels) {
-        //ttf_log("[ttf] Unable to push bitmap pixel\n");
-        return nullptr;
+
+  // Rasterazation algorithm starts here
+  // Sort edges by top most edge
+  sort_entry_t* y_edges = arena_push_arr(sort_entry_t, allocator, edge_count);
+  if (!y_edges) { 
+    //ttf_log("[ttf] Unable to push sort entries for edges\n");
+    return nullptr;
+  }
+
+  for (u32_t i = 0; i < edge_count; ++i) {
+    y_edges[i].index = i;
+    y_edges[i].key = -(f32_t)max_of(edges[i].p0.y, edges[i].p1.y);
+  }
+  sort_quick(y_edges, edge_count);
+
+  sort_entry_t* active_edges = arena_push_arr(sort_entry_t, allocator, edge_count);
+  if (!active_edges) {
+    //ttf_log("[ttf] Unable to push sort entries for active edges\n");
+    return nullptr;
+  }
+
+  // @note: Currently, I'm lazy, so I'll just keep 
+  // clearing and refilling the active_edges list per scan line
+  for(u32_t y = 0; y <= height; ++y) {
+    u32_t act_edge_count = 0; 
+    f32_t yf = (f32_t)y; // 'center' of pixel
+
+    // Add to 'active edge list' any edges which have an 
+    // uppermost vertex (p0) before y and lowermost vertex (p1) after this y.
+    // Also, ignore p1 that ends EXACTLY on this y.
+    for (u32_t y_edge_id = 0; y_edge_id < edge_count; ++y_edge_id){
+      _ttf_edge_t* edge = edges + y_edges[y_edge_id].index;
+
+      if (edge->p0.y <= yf && edge->p1.y > yf) {
+        // calculate the x intersection
+        f32_t dx = edge->p1.x - edge->p0.x;
+        f32_t dy = edge->p1.y - edge->p0.y;
+        if (dy != 0.f) {
+          f32_t t = (yf - edge->p0.y) / dy;
+          edge->x_intersect = edge->p0.x + (t * dx);
+
+          // prepare sort_entry_t for active_edges
+          active_edges[act_edge_count].index = y_edges[y_edge_id].index;
+          active_edges[act_edge_count].key = edge->x_intersect;
+
+          ++act_edge_count;
+        }
       }
-      memory_zero(pixels, size);
+    }
+    sort_quick(active_edges, act_edge_count);
 
-      arena_set_revert_point(allocator);
-
-      if(!_ttf_get_glyph_outline(ttf, outline, glyph_index, allocator)) {
-        //ttf_log("[ttf] Unable to get glyph outline\n");
-        return nullptr;
-      }
-      if (!_ttf_get_paths_from_glyph_outline(outline, paths, allocator)) {
-        //ttf_log("[ttf] Unable glyph paths\n");
-        return nullptr;
-      }
-
-      // generate scaled edges based on points
-      _ttf_edge_t* edges = arena_push_arr(_ttf_edge_t, allocator, paths->vertex_count);
-      if (!edges) {
-        //ttf_log("[ttf] Unable to push edges\n");
-        return nullptr;
-      }
-      memory_zero_range(edges, paths->vertex_count);
-
-      u32_t edge_count = 0;
+    if (act_edge_count >= 2) {
+      u32_t crossings = 0;
+      for (u32_t act_edge_id = 0; 
+          act_edge_id < act_edge_count-1;
+          ++act_edge_id) 
       {
-        u32_t vertex_index = 0;
-        for (u32_t path_index = 0; 
-            path_index < paths->path_count; 
-            ++path_index)
-        {
-          u32_t path_length = paths->path_lengths[path_index];
-          for (u32_t i = 0; i < path_length; ++i) {
-            _ttf_edge_t edge = {};
-            v2f_t v0 = paths->vertices[vertex_index];
-            v2f_t v1 = (i == path_length-1) ? paths->vertices[vertex_index-i] : paths->vertices[vertex_index+1];
-            ++vertex_index;
+        _ttf_edge_t* start_edge = edges + active_edges[act_edge_id].index; 
+        _ttf_edge_t* end_edge = edges + active_edges[act_edge_id+1].index; 
 
-            // Skip if edge is going to be completely horizontal
-            if (v0.y == v1.y) {
-              continue;
-            }
+        start_edge->is_inverted ? ++crossings : --crossings;
 
-            edge.p0.x = v0.x * scale - x0;
-            edge.p0.y = height - ((v0.y * scale) - y0);
-
-            edge.p1.x = v1.x * scale - x0;
-            edge.p1.y = height - ((v1.y * scale) - y0);
-
-            // Check if edge's points need to be flipped.
-            // @note: It's easier for the rasterization algorithm to have the edges'
-            // p0 be on top of p1. If we flip, we will indicate it within the edge.
-            if (edge.p0.y > edge.p1.y) {
-              swap(edge.p0, edge.p1);
-              edge.is_inverted = true;
-            }
-            edges[edge_count++] = edge;
-          }
-        }  
-      }
-
-
-      // Rasterazation algorithm starts here
-      // Sort edges by top most edge
-      sort_entry_t* y_edges = arena_push_arr(sort_entry_t, allocator, edge_count);
-      if (!y_edges) { 
-        //ttf_log("[ttf] Unable to push sort entries for edges\n");
-        return nullptr;
-      }
-
-      for (u32_t i = 0; i < edge_count; ++i) {
-        y_edges[i].index = i;
-        y_edges[i].key = -(f32_t)max_of(edges[i].p0.y, edges[i].p1.y);
-      }
-      sort_quick(y_edges, edge_count);
-
-      sort_entry_t* active_edges = arena_push_arr(sort_entry_t, allocator, edge_count);
-      if (!active_edges) {
-        //ttf_log("[ttf] Unable to push sort entries for active edges\n");
-        return nullptr;
-      }
-
-      // @note: Currently, I'm lazy, so I'll just keep 
-      // clearing and refilling the active_edges list per scan line
-      for(u32_t y = 0; y <= height; ++y) {
-        u32_t act_edge_count = 0; 
-        f32_t yf = (f32_t)y; // 'center' of pixel
-
-        // Add to 'active edge list' any edges which have an 
-        // uppermost vertex (p0) before y and lowermost vertex (p1) after this y.
-        // Also, ignore p1 that ends EXACTLY on this y.
-        for (u32_t y_edge_id = 0; y_edge_id < edge_count; ++y_edge_id){
-          _ttf_edge_t* edge = edges + y_edges[y_edge_id].index;
-
-          if (edge->p0.y <= yf && edge->p1.y > yf) {
-            // calculate the x intersection
-            f32_t dx = edge->p1.x - edge->p0.x;
-            f32_t dy = edge->p1.y - edge->p0.y;
-            if (dy != 0.f) {
-              f32_t t = (yf - edge->p0.y) / dy;
-              edge->x_intersect = edge->p0.x + (t * dx);
-
-              // prepare sort_entry_t for active_edges
-              active_edges[act_edge_count].index = y_edges[y_edge_id].index;
-              active_edges[act_edge_count].key = edge->x_intersect;
-
-              ++act_edge_count;
-            }
+        if (crossings > 0) {
+          u32_t start_x = (u32_t)start_edge->x_intersect;
+          u32_t end_x = (u32_t)end_edge->x_intersect;
+          for(u32_t x = start_x; x < end_x; ++x) {
+            pixels[x + y * width] = 0xFFFFFFFF;
           }
         }
-        sort_quick(active_edges, act_edge_count);
-
-        if (act_edge_count >= 2) {
-          u32_t crossings = 0;
-          for (u32_t act_edge_id = 0; 
-              act_edge_id < act_edge_count-1;
-              ++act_edge_id) 
-          {
-            _ttf_edge_t* start_edge = edges + active_edges[act_edge_id].index; 
-            _ttf_edge_t* end_edge = edges + active_edges[act_edge_id+1].index; 
-
-            start_edge->is_inverted ? ++crossings : --crossings;
-
-            if (crossings > 0) {
-              u32_t start_x = (u32_t)start_edge->x_intersect;
-              u32_t end_x = (u32_t)end_edge->x_intersect;
-              for(u32_t x = start_x; x < end_x; ++x) {
-                pixels[x + y * width] = 0xFFFFFFFF;
-              }
-            }
-          }
-        }
+      }
+    }
 
 #if 0 
-        // Draw edges in green
-        for (u32_t i =0 ; i < edge_count; ++i) 
-        {
-          _ttf_edge_t* edge = edges + i;
-          f32_t ex0 = edge->p0.x;
-          f32_t ey0 = edge->p0.y;
+    // Draw edges in green
+    for (u32_t i =0 ; i < edge_count; ++i) 
+    {
+      _ttf_edge_t* edge = edges + i;
+      f32_t ex0 = edge->p0.x;
+      f32_t ey0 = edge->p0.y;
 
-          f32_t ex1 = edge->p1.x;
-          f32_t ey1 = edge->p1.y;
+      f32_t ex1 = edge->p1.x;
+      f32_t ey1 = edge->p1.y;
 
-          f32_t dx = (ex1 - ex0)/100;
-          f32_t dy = (ey1 - ey0)/100;
+      f32_t dx = (ex1 - ex0)/100;
+      f32_t dy = (ey1 - ey0)/100;
 
-          f32_t xx = ex0;
-          f32_t yy = ey0;
-          for (u32_t z = 0; z < 100; ++z) {
-            xx += dx;
-            yy += dy;
-            pixels[(u32_t)xx + (u32_t)yy * width] = 0xFF00FF00;      
-          }
-        }
+      f32_t xx = ex0;
+      f32_t yy = ey0;
+      for (u32_t z = 0; z < 100; ++z) {
+        xx += dx;
+        yy += dy;
+        pixels[(u32_t)xx + (u32_t)yy * width] = 0xFF00FF00;      
+      }
+    }
 #endif
 
 
-      }
+  }
 
 
 #if 0
-      // Draw vertices in red
+  // Draw vertices in red
 
-      for (u32_t i =0 ; i < edge_count; ++i) 
-      {
-        auto* edge = edges + i;
-        u32_t x0 = (u32_t)edge->p0.x;
-        u32_t y0 = (u32_t)edge->p0.y;
-        pixels[x0 + y0 * bitmap_dims.w] = 0xFF0000FF;
+  for (u32_t i =0 ; i < edge_count; ++i) 
+  {
+    auto* edge = edges + i;
+    u32_t x0 = (u32_t)edge->p0.x;
+    u32_t y0 = (u32_t)edge->p0.y;
+    pixels[x0 + y0 * bitmap_dims.w] = 0xFF0000FF;
 
 
-        u32_t x1 = (u32_t)edge->p1.x;
-        u32_t y1 = (u32_t)edge->p1.y;
-        pixels[x1 + y1 * bitmap_dims.w] = 0xFF0000FF;
+    u32_t x1 = (u32_t)edge->p1.x;
+    u32_t y1 = (u32_t)edge->p1.y;
+    pixels[x1 + y1 * bitmap_dims.w] = 0xFF0000FF;
 
-      }
+  }
 #endif
 
-      if (out_w) *out_w = width;
-      if (out_h) *out_h = height;
+  if (out_w) *out_w = width;
+  if (out_h) *out_h = height;
 
-      return pixels;
-    }
+  return pixels;
+}
 
-  // 
-  // @mark:(PNG)
-  //
+// 
+// @mark:(PNG)
+//
 
-  // We are only interested in 4-channel images in rgba_t format
+// We are only interested in 4-channel images in rgba_t format
 #define _PNG_CHANNELS 4 
 
 
@@ -7634,40 +7639,40 @@ struct _png_huffman_t {
 static u32_t
 _png_calculate_crc32(u8_t* data, u32_t data_size) {
   static const u32_t crc_table[256] =
-    {
-      0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
-      0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91,
-      0x1db71064, 0x6ab020f2, 0xf3b97148, 0x84be41de, 0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7,
-      0x136c9856, 0x646ba8c0, 0xfd62f97a, 0x8a65c9ec, 0x14015c4f, 0x63066cd9, 0xfa0f3d63, 0x8d080df5,
-      0x3b6e20c8, 0x4c69105e, 0xd56041e4, 0xa2677172, 0x3c03e4d1, 0x4b04d447, 0xd20d85fd, 0xa50ab56b,
-      0x35b5a8fa, 0x42b2986c, 0xdbbbc9d6, 0xacbcf940, 0x32d86ce3, 0x45df5c75, 0xdcd60dcf, 0xabd13d59,
-      0x26d930ac, 0x51de003a, 0xc8d75180, 0xbfd06116, 0x21b4f4b5, 0x56b3c423, 0xcfba9599, 0xb8bda50f,
-      0x2802b89e, 0x5f058808, 0xc60cd9b2, 0xb10be924, 0x2f6f7c87, 0x58684c11, 0xc1611dab, 0xb6662d3d,
-      0x76dc4190, 0x01db7106, 0x98d220bc, 0xefd5102a, 0x71b18589, 0x06b6b51f, 0x9fbfe4a5, 0xe8b8d433,
-      0x7807c9a2, 0x0f00f934, 0x9609a88e, 0xe10e9818, 0x7f6a0dbb, 0x086d3d2d, 0x91646c97, 0xe6635c01,
-      0x6b6b51f4, 0x1c6c6162, 0x856530d8, 0xf262004e, 0x6c0695ed, 0x1b01a57b, 0x8208f4c1, 0xf50fc457,
-      0x65b0d9c6, 0x12b7e950, 0x8bbeb8ea, 0xfcb9887c, 0x62dd1ddf, 0x15da2d49, 0x8cd37cf3, 0xfbd44c65,
-      0x4db26158, 0x3ab551ce, 0xa3bc0074, 0xd4bb30e2, 0x4adfa541, 0x3dd895d7, 0xa4d1c46d, 0xd3d6f4fb,
-      0x4369e96a, 0x346ed9fc, 0xad678846, 0xda60b8d0, 0x44042d73, 0x33031de5, 0xaa0a4c5f, 0xdd0d7cc9,
-      0x5005713c, 0x270241aa, 0xbe0b1010, 0xc90c2086, 0x5768b525, 0x206f85b3, 0xb966d409, 0xce61e49f,
-      0x5edef90e, 0x29d9c998, 0xb0d09822, 0xc7d7a8b4, 0x59b33d17, 0x2eb40d81, 0xb7bd5c3b, 0xc0ba6cad,
-      0xedb88320, 0x9abfb3b6, 0x03b6e20c, 0x74b1d29a, 0xead54739, 0x9dd277af, 0x04db2615, 0x73dc1683,
-      0xe3630b12, 0x94643b84, 0x0d6d6a3e, 0x7a6a5aa8, 0xe40ecf0b, 0x9309ff9d, 0x0a00ae27, 0x7d079eb1,
-      0xf00f9344, 0x8708a3d2, 0x1e01f268, 0x6906c2fe, 0xf762575d, 0x806567cb, 0x196c3671, 0x6e6b06e7,
-      0xfed41b76, 0x89d32be0, 0x10da7a5a, 0x67dd4acc, 0xf9b9df6f, 0x8ebeeff9, 0x17b7be43, 0x60b08ed5,
-      0xd6d6a3e8, 0xa1d1937e, 0x38d8c2c4, 0x4fdff252, 0xd1bb67f1, 0xa6bc5767, 0x3fb506dd, 0x48b2364b,
-      0xd80d2bda, 0xaf0a1b4c, 0x36034af6, 0x41047a60, 0xdf60efc3, 0xa867df55, 0x316e8eef, 0x4669be79,
-      0xcb61b38c, 0xbc66831a, 0x256fd2a0, 0x5268e236, 0xcc0c7795, 0xbb0b4703, 0x220216b9, 0x5505262f,
-      0xc5ba3bbe, 0xb2bd0b28, 0x2bb45a92, 0x5cb36a04, 0xc2d7ffa7, 0xb5d0cf31, 0x2cd99e8b, 0x5bdeae1d,
-      0x9b64c2b0, 0xec63f226, 0x756aa39c, 0x026d930a, 0x9c0906a9, 0xeb0e363f, 0x72076785, 0x05005713,
-      0x95bf4a82, 0xe2b87a14, 0x7bb12bae, 0x0cb61b38, 0x92d28e9b, 0xe5d5be0d, 0x7cdcefb7, 0x0bdbdf21,
-      0x86d3d2d4, 0xf1d4e242, 0x68ddb3f8, 0x1fda836e, 0x81be16cd, 0xf6b9265b, 0x6fb077e1, 0x18b74777,
-      0x88085ae6, 0xff0f6a70, 0x66063bca, 0x11010b5c, 0x8f659eff, 0xf862ae69, 0x616bffd3, 0x166ccf45,
-      0xa00ae278, 0xd70dd2ee, 0x4e048354, 0x3903b3c2, 0xa7672661, 0xd06016f7, 0x4969474d, 0x3e6e77db,
-      0xaed16a4a, 0xd9d65adc, 0x40df0b66, 0x37d83bf0, 0xa9bcae53, 0xdebb9ec5, 0x47b2cf7f, 0x30b5ffe9,
-      0xbdbdf21c, 0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf,
-      0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d,
-    };
+  {
+    0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
+    0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91,
+    0x1db71064, 0x6ab020f2, 0xf3b97148, 0x84be41de, 0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7,
+    0x136c9856, 0x646ba8c0, 0xfd62f97a, 0x8a65c9ec, 0x14015c4f, 0x63066cd9, 0xfa0f3d63, 0x8d080df5,
+    0x3b6e20c8, 0x4c69105e, 0xd56041e4, 0xa2677172, 0x3c03e4d1, 0x4b04d447, 0xd20d85fd, 0xa50ab56b,
+    0x35b5a8fa, 0x42b2986c, 0xdbbbc9d6, 0xacbcf940, 0x32d86ce3, 0x45df5c75, 0xdcd60dcf, 0xabd13d59,
+    0x26d930ac, 0x51de003a, 0xc8d75180, 0xbfd06116, 0x21b4f4b5, 0x56b3c423, 0xcfba9599, 0xb8bda50f,
+    0x2802b89e, 0x5f058808, 0xc60cd9b2, 0xb10be924, 0x2f6f7c87, 0x58684c11, 0xc1611dab, 0xb6662d3d,
+    0x76dc4190, 0x01db7106, 0x98d220bc, 0xefd5102a, 0x71b18589, 0x06b6b51f, 0x9fbfe4a5, 0xe8b8d433,
+    0x7807c9a2, 0x0f00f934, 0x9609a88e, 0xe10e9818, 0x7f6a0dbb, 0x086d3d2d, 0x91646c97, 0xe6635c01,
+    0x6b6b51f4, 0x1c6c6162, 0x856530d8, 0xf262004e, 0x6c0695ed, 0x1b01a57b, 0x8208f4c1, 0xf50fc457,
+    0x65b0d9c6, 0x12b7e950, 0x8bbeb8ea, 0xfcb9887c, 0x62dd1ddf, 0x15da2d49, 0x8cd37cf3, 0xfbd44c65,
+    0x4db26158, 0x3ab551ce, 0xa3bc0074, 0xd4bb30e2, 0x4adfa541, 0x3dd895d7, 0xa4d1c46d, 0xd3d6f4fb,
+    0x4369e96a, 0x346ed9fc, 0xad678846, 0xda60b8d0, 0x44042d73, 0x33031de5, 0xaa0a4c5f, 0xdd0d7cc9,
+    0x5005713c, 0x270241aa, 0xbe0b1010, 0xc90c2086, 0x5768b525, 0x206f85b3, 0xb966d409, 0xce61e49f,
+    0x5edef90e, 0x29d9c998, 0xb0d09822, 0xc7d7a8b4, 0x59b33d17, 0x2eb40d81, 0xb7bd5c3b, 0xc0ba6cad,
+    0xedb88320, 0x9abfb3b6, 0x03b6e20c, 0x74b1d29a, 0xead54739, 0x9dd277af, 0x04db2615, 0x73dc1683,
+    0xe3630b12, 0x94643b84, 0x0d6d6a3e, 0x7a6a5aa8, 0xe40ecf0b, 0x9309ff9d, 0x0a00ae27, 0x7d079eb1,
+    0xf00f9344, 0x8708a3d2, 0x1e01f268, 0x6906c2fe, 0xf762575d, 0x806567cb, 0x196c3671, 0x6e6b06e7,
+    0xfed41b76, 0x89d32be0, 0x10da7a5a, 0x67dd4acc, 0xf9b9df6f, 0x8ebeeff9, 0x17b7be43, 0x60b08ed5,
+    0xd6d6a3e8, 0xa1d1937e, 0x38d8c2c4, 0x4fdff252, 0xd1bb67f1, 0xa6bc5767, 0x3fb506dd, 0x48b2364b,
+    0xd80d2bda, 0xaf0a1b4c, 0x36034af6, 0x41047a60, 0xdf60efc3, 0xa867df55, 0x316e8eef, 0x4669be79,
+    0xcb61b38c, 0xbc66831a, 0x256fd2a0, 0x5268e236, 0xcc0c7795, 0xbb0b4703, 0x220216b9, 0x5505262f,
+    0xc5ba3bbe, 0xb2bd0b28, 0x2bb45a92, 0x5cb36a04, 0xc2d7ffa7, 0xb5d0cf31, 0x2cd99e8b, 0x5bdeae1d,
+    0x9b64c2b0, 0xec63f226, 0x756aa39c, 0x026d930a, 0x9c0906a9, 0xeb0e363f, 0x72076785, 0x05005713,
+    0x95bf4a82, 0xe2b87a14, 0x7bb12bae, 0x0cb61b38, 0x92d28e9b, 0xe5d5be0d, 0x7cdcefb7, 0x0bdbdf21,
+    0x86d3d2d4, 0xf1d4e242, 0x68ddb3f8, 0x1fda836e, 0x81be16cd, 0xf6b9265b, 0x6fb077e1, 0x18b74777,
+    0x88085ae6, 0xff0f6a70, 0x66063bca, 0x11010b5c, 0x8f659eff, 0xf862ae69, 0x616bffd3, 0x166ccf45,
+    0xa00ae278, 0xd70dd2ee, 0x4e048354, 0x3903b3c2, 0xa7672661, 0xd06016f7, 0x4969474d, 0x3e6e77db,
+    0xaed16a4a, 0xd9d65adc, 0x40df0b66, 0x37d83bf0, 0xa9bcae53, 0xdebb9ec5, 0x47b2cf7f, 0x30b5ffe9,
+    0xbdbdf21c, 0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf,
+    0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d,
+  };
 
   u32_t r = 0xFFFFFFFFL;
   for (u32_t i = 0; i < data_size; ++i) {
@@ -7686,8 +7691,8 @@ _png_huffman_decode(stream_t* src_stream, _png_huffman_t huffman) {
   s32_t index = 0;
 
   for (u32_t len = 1; 
-  len <= huffman.length_count - 1; 
-  ++len) 
+      len <= huffman.length_count - 1; 
+      ++len) 
   {
     u32_t bits = stream_consume_bits(src_stream, 1);
     code |= bits;
@@ -7707,12 +7712,12 @@ _png_huffman_decode(stream_t* src_stream, _png_huffman_t huffman) {
 // @note: 
 // https://datatracker.ietf.org/doc/html/rfc1951
 // Section 3.2.2
-static void
+  static void
 _png_huffman_compute(_png_huffman_t* h,
-                     arena_t* arena, 
-                     u16_t* codes,
-                     u32_t codes_size, 
-                     u32_t max_lengths) 
+    arena_t* arena, 
+    u16_t* codes,
+    u32_t codes_size, 
+    u32_t max_lengths) 
 {
   // Each code corresponds to a symbol
   h->symbol_count = codes_size;
@@ -7755,7 +7760,7 @@ _png_huffman_compute(_png_huffman_t* h,
 }
 
 
-static b32_t
+  static b32_t
 _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena) 
 {
 
@@ -7823,15 +7828,15 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
 
 
           _png_huffman_compute(&lit_huffman,
-                               arena, 
-                               lit_codes, 
-                               array_count(lit_codes),
-                               15);
+              arena, 
+              lit_codes, 
+              array_count(lit_codes),
+              15);
           _png_huffman_compute(&dist_huffman,
-                               arena,
-                               dist_codes,
-                               array_count(dist_codes),
-                               15);
+              arena,
+              dist_codes,
+              array_count(dist_codes),
+              15);
 
         }
         else // BTYPE == 0b10
@@ -7853,10 +7858,10 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
 
           _png_huffman_t code_huffman = {};
           _png_huffman_compute(&code_huffman,
-                               arena,
-                               code_codes,
-                               array_count(code_codes),
-                               15); 
+              arena,
+              code_codes,
+              array_count(code_codes),
+              15); 
 
 
           u16_t* lit_dist_codes = arena_push_arr(u16_t, arena, HDIST + HLIT);
@@ -7905,15 +7910,15 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
           }
 
           _png_huffman_compute(&lit_huffman,
-                               arena, 
-                               lit_dist_codes, 
-                               HLIT,
-                               15);
+              arena, 
+              lit_dist_codes, 
+              HLIT,
+              15);
           _png_huffman_compute(&dist_huffman,
-                               arena,
-                               lit_dist_codes + HLIT,
-                               HDIST,
-                               15);					
+              arena,
+              lit_dist_codes + HLIT,
+              HDIST,
+              15);					
         }
 
         static int pass =0;
@@ -7934,7 +7939,7 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
             u8_t byte_to_write = (u8_t)(sym & 0xFF); 
             stream_write(dest_stream, byte_to_write);
           }
-            // @note: Extra code case
+          // @note: Extra code case
           else if (sym >= 257) {
 
             sym -= 257;
@@ -8006,10 +8011,10 @@ _png_get_channels_from_colour_type(u32_t colour_type) {
 static b32_t
 _png_is_format_supported(_png_ihdr_t* IHDR){
   if (IHDR->colour_type != 6 ||
-    IHDR->bit_depth != 8 ||
-    IHDR->compression_method != 0 ||
-    IHDR->filter_method != 0 ||
-    IHDR->interlace_method != 0) 
+      IHDR->bit_depth != 8 ||
+      IHDR->compression_method != 0 ||
+      IHDR->filter_method != 0 ||
+      IHDR->interlace_method != 0) 
   {
 
     return false;
@@ -8235,7 +8240,7 @@ _png_decompress_zlib(_png_context_t* c, stream_t* zlib_stream) {
 //
 // @todo(momo): We should have a png_rasterize_into_buffer that directly rasterizes
 // into a buffer (or a img struct?)
-static u32_t* 
+  static u32_t* 
 png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena) 
 {
   make(stream_t, zlib_stream);
@@ -8294,8 +8299,8 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
     u32_t chunk_type = u32_endian_swap(chunk_header->type_U32);
     if (chunk_type == 'IDAT') {
       stream_write_block(zlib_stream, 
-                         ctx.stream.contents.e + ctx.stream.pos,
-                         chunk_length);
+          ctx.stream.contents.e + ctx.stream.pos,
+          chunk_length);
     }
     stream_consume_block(&ctx.stream, chunk_length);
     stream_consume(_png_chunk_footer_t, &ctx.stream);
@@ -8341,11 +8346,11 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
   u32_t IDAT_chunk_size = 5 * chunk_count;
 
   u32_t expected_memory_required = (signature_size + 
-    IHDR_size + 
-    IEND_size + 
-    IDAT_size + 
-    data_size + 
-    IDAT_chunk_size);
+      IHDR_size + 
+      IEND_size + 
+      IDAT_size + 
+      data_size + 
+      IDAT_chunk_size);
 
   buffer_t stream_memory = arena_push_buffer(arena, expected_memory_required, 16);
   if (!stream_memory) return buffer_bad();
@@ -8440,8 +8445,8 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
         stream_write(stream, no_filter); // Filter type: None
 
         stream_write_block(stream,
-                           (u8_t*)pixels + (current_line * image_bpl),
-                           image_bpl);
+            (u8_t*)pixels + (current_line * image_bpl),
+            image_bpl);
 
         ++current_line;
 
@@ -8482,7 +8487,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
 }
 
 
-static b32_t     
+  static b32_t     
 png_read(png_t* png, buffer_t png_contents)
 {
   make(stream_t, stream);
@@ -8534,11 +8539,11 @@ arena_init(arena_t* a, buffer_t buffer) {
 
   a->memory = buffer.e;
   a->cap = a->commit_pos = buffer.size;
-    
+
   return true;
 }
 
-static b32_t 
+  static b32_t 
 arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit) 
 {
   a->buffer = memory_reserve(reserve_amount);
@@ -8555,7 +8560,7 @@ arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit)
   return true;
 }
 
-static void
+  static void
 arena_free(arena_t* a)
 { 
   memory_free(a->buffer);
@@ -8566,7 +8571,7 @@ arena_clear(arena_t* a) {
   a->pos = 0;
 }
 
-static b32_t 
+  static b32_t 
 arena_grow_buffer(arena_t* a, buffer_t* str, usz_t new_size)
 {
 
@@ -8579,7 +8584,7 @@ arena_grow_buffer(arena_t* a, buffer_t* str, usz_t new_size)
 }
 
 
-static b32_t
+  static b32_t
 arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size) 
 {
   if (new_size <= old_size) return false;
@@ -8603,7 +8608,7 @@ arena_remaining(arena_t* a) {
   return a->cap - a->pos;
 }
 
-static void*   
+  static void*   
 arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size)
 {
   arena_t arena = {};
@@ -8660,7 +8665,7 @@ arena_push_size(arena_t* a, usz_t size, usz_t align) {
 
 }
 
-static void*
+  static void*
 arena_push_size_zero(arena_t* a, usz_t size, usz_t align) 
 {
   void* mem = arena_push_size(a, size, align);
@@ -8670,7 +8675,7 @@ arena_push_size_zero(arena_t* a, usz_t size, usz_t align)
 }
 
 
-static b32_t
+  static b32_t
 arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align) 
 {	
   u8_t* mem = arena_push_arr_align(u8_t, a, size, align);
@@ -8680,7 +8685,7 @@ arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align)
 
 }
 
-static buffer_t
+  static buffer_t
 arena_push_buffer(arena_t* a, usz_t size, usz_t align) 
 {
   buffer_t buffer = {};
@@ -8690,7 +8695,7 @@ arena_push_buffer(arena_t* a, usz_t size, usz_t align)
   return buffer;
 }
 
-static b32_t    
+  static b32_t    
 arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)
 {
   usz_t imem = ptr_to_umi(a->memory);
@@ -8706,7 +8711,7 @@ arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)
 
 }
 
-static arena_marker_t
+  static arena_marker_t
 arena_mark(arena_t* a) 
 {
   arena_marker_t ret;
@@ -8716,7 +8721,7 @@ arena_mark(arena_t* a)
 }
 
 static void
-  arena_revert(arena_marker_t marker) {
+arena_revert(arena_marker_t marker) {
   marker.arena->pos = marker.old_pos;
 }
 
@@ -8778,7 +8783,7 @@ garena_push_size(garena_t* ga, usz_t size) {
     total_actual_size = itr->size;
   }
 
-    // Case where we split the block 
+  // Case where we split the block 
   else {
     u8_t* new_free_block_memory = (u8_t*)(itr) + total_required_size;
     new_free_block = (garena_free_block_t*)new_free_block_memory;
@@ -8792,7 +8797,7 @@ garena_push_size(garena_t* ga, usz_t size) {
     prev->next = new_free_block;
   }
 
-    // If there isn't a previous block, that means we need to update the head.
+  // If there isn't a previous block, that means we need to update the head.
   else {
     ga->free_list = new_free_block; 
   }
@@ -8845,14 +8850,14 @@ garena_free(garena_t* ga, void* block) {
     ga->free_list = prev;
   }
 
-    // If the previous block is directly next to this block, 
-    // combine both blocks simply by adding to the previous block size
+  // If the previous block is directly next to this block, 
+  // combine both blocks simply by adding to the previous block size
   else if ( ((u8_t*)(prev) + prev->size) == (u8_t*)header) {
     prev->size += header->size;
   }
 
-    // The previous block is not next to the current block, so we turn 
-    // the current block directly into a free block
+  // The previous block is not next to the current block, so we turn 
+  // the current block directly into a free block
   else {
     auto* temp = (garena_free_block_t*)(header);
 
@@ -8880,11 +8885,11 @@ struct _rp_node{
   u32_t x, y, w, h;
 };
 
-static void
+  static void
 _rp_sort(rp_rect_t* rects,
-         sort_entry_t* entries,
-         u32_t count,
-         rp_sort_type_t sort_type) 
+    sort_entry_t* entries,
+    u32_t count,
+    rp_sort_type_t sort_type) 
 {
   switch(sort_type) {
     case RP_SORT_TYPE_HEIGHT: {
@@ -8931,14 +8936,14 @@ _rp_sort(rp_rect_t* rects,
   sort_quick(entries, count);
 }
 
-static b32_t
+  static b32_t
 rp_pack(rp_rect_t* rects, 
-        u32_t rect_count, 
-        u32_t padding,
-        u32_t total_width,
-        u32_t total_height,
-        rp_sort_type_t sort_type,
-        arena_t* allocator) 
+    u32_t rect_count, 
+    u32_t padding,
+    u32_t total_width,
+    u32_t total_height,
+    rp_sort_type_t sort_type,
+    arena_t* allocator) 
 {
   arena_marker_t restore_point = arena_mark(allocator);
 
@@ -9059,7 +9064,7 @@ bigint_zero(bigint_t* b) {
   b->count = 1;
 }
 
-static void 
+  static void 
 bigint_init(bigint_t* b, u8_t* data, u32_t cap) 
 {
   b->e = data;
@@ -9067,7 +9072,7 @@ bigint_init(bigint_t* b, u8_t* data, u32_t cap)
   bigint_zero(b);
 }
 
-static void 
+  static void 
 bigint_set_max(bigint_t* b) 
 {
   for_cnt(i, b->cap) 
@@ -9076,7 +9081,7 @@ bigint_set_max(bigint_t* b)
   }
   b->count = b->cap;
 }
-static void
+  static void
 bigint_copy(bigint_t* to, bigint_t* from)
 {
   if(from->count > to->cap) {
@@ -9091,7 +9096,7 @@ bigint_copy(bigint_t* to, bigint_t* from)
 
 }
 
-static b32_t
+  static b32_t
 bigint_init(bigint_t* b, arena_t* arena, u32_t cap)
 {
   u8_t* data = arena_push_arr(u8_t, arena, cap);
@@ -9108,7 +9113,7 @@ bigint_init(bigint_t* b, arena_t* arena, u32_t cap)
 
 
 
-static void
+  static void
 bigint_set_u32(bigint_t* b, u32_t value) 
 {
   u32_t index = 0;
@@ -9128,7 +9133,7 @@ bigint_set_u32(bigint_t* b, u32_t value)
   }
 }
 
-static void
+  static void
 bigint_add(bigint_t* b, bigint_t* lhs, bigint_t* rhs)
 {
   u32_t index = 0;
@@ -9181,7 +9186,7 @@ bigint_add(bigint_t* b, bigint_t* lhs, bigint_t* rhs)
   }
 }
 
-static void 
+  static void 
 bigint_add_u32(bigint_t* b, bigint_t* lhs, u32_t rhs) 
 {
   u32_t index = 0;
@@ -9241,7 +9246,7 @@ bigint_add_u32(bigint_t* b, bigint_t* lhs, u32_t rhs)
 // -1 if lhs < rhs
 // 0  if lhs == rhs
 // 1  if lhs > rhs
-static s32_t
+  static s32_t
 bigint_compare(bigint_t* lhs, bigint_t* rhs) 
 {
   if (lhs->count < rhs->count) 

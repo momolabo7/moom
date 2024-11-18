@@ -115,7 +115,7 @@ arena_push_zero	code/momo.h	/^#define arena_push_zero(/;"	d	language:C++
 arena_push_zero_align	code/momo.h	/^#define arena_push_zero_align(/;"	d	language:C++
 arena_remaining	code/momo.h	/^arena_remaining(arena_t* a) {$/;"	f	language:C++	typeref:typename:usz_t
 arena_remaining	code/momo.h	/^static usz_t    arena_remaining(arena_t* a);$/;"	p	language:C++	typeref:typename:usz_t
-arena_revert	code/momo.h	/^  arena_revert(arena_marker_t marker) {$/;"	f	language:C++	typeref:typename:void
+arena_revert	code/momo.h	/^arena_revert(arena_marker_t marker) {$/;"	f	language:C++	typeref:typename:void
 arena_revert	code/momo.h	/^static void arena_revert(arena_marker_t marker);$/;"	p	language:C++	typeref:typename:void
 arena_set_revert_point	code/momo.h	/^# define arena_set_revert_point(/;"	d	language:C++
 arena_t	code/momo.h	/^struct arena_t $/;"	s	language:C++
@@ -125,6 +125,8 @@ arr	code/test_bigint.cpp	/^  u8_t* arr;$/;"	m	language:C++	struct:bigint_t	typer
 array	code/momo.h	/^    json_array_t array;$/;"	m	language:C++	union:json_value_t::__anon1db7a63d180a	typeref:typename:json_array_t
 array_count	code/momo.h	/^#define array_count(/;"	d	language:C++
 arrival_time	code/app_lit.cpp	/^  f32_t arrival_time;$/;"	m	language:C++	struct:lit_game_title_waypoint_t	typeref:typename:f32_t	file:
+ascent	code/eden.h	/^  f32_t ascent;$/;"	m	language:C++	struct:eden_asset_font_t	typeref:typename:f32_t
+ascent	code/eden_asset_file.h	/^  f32_t ascent;$/;"	m	language:C++	struct:asset_file_font_t	typeref:typename:f32_t
 ascii_to_digit	code/momo.h	/^#define ascii_to_digit(/;"	d	language:C++
 assert	code/momo.h	/^# define assert(/;"	d	language:C++
 assert	code/momo.h	/^# define assert(/;"	d	language:C++
@@ -558,6 +560,8 @@ defer	code/momo.h	/^#define defer /;"	d	language:C++
 delay_timer	code/w32_chip8.cpp	/^  u8_t delay_timer;$/;"	m	language:C++	struct:chip8_t	typeref:typename:u8_t	file:
 delta	code/app_lit.cpp	/^  v2f_t delta;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:v2f_t	file:
 delta_time	code/eden.h	/^  f32_t delta_time; \/\/aka dt$/;"	m	language:C++	struct:eden_input_t	typeref:typename:f32_t
+descent	code/eden.h	/^  f32_t descent;$/;"	m	language:C++	struct:eden_asset_font_t	typeref:typename:f32_t
+descent	code/eden_asset_file.h	/^  f32_t descent;$/;"	m	language:C++	struct:asset_file_font_t	typeref:typename:f32_t
 device_bits_per_sample	code/eden.h	/^  u16_t device_bits_per_sample;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u16_t
 device_channels	code/eden.h	/^  u16_t device_channels;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u16_t
 device_samples_per_second	code/eden.h	/^  u32_t device_samples_per_second;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u32_t
@@ -738,7 +742,9 @@ eden_draw_line	code/eden.h	/^eden_draw_line(eden_t* eden, v2f_t p0, v2f_t p1, f3
 eden_draw_rect	code/eden.h	/^eden_draw_rect(eden_t* eden, v2f_t pos, f32_t rot, v2f_t scale, rgba_t color) $/;"	f	language:C++	typeref:typename:void
 eden_draw_sprite	code/eden.h	/^eden_draw_sprite(eden_t* eden, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t t/;"	f	language:C++	typeref:typename:void
 eden_draw_text	code/eden.h	/^eden_draw_text($/;"	f	language:C++	typeref:typename:void
-eden_draw_text_center_aligned	code/eden.h	/^eden_draw_text_center_aligned(eden_t* eden, eden_asset_font_id_t font_id, buffer_t str, rgba_t c/;"	f	language:C++	typeref:typename:void
+eden_draw_text_center_aligned	code/eden.h	/^eden_draw_text_center_aligned($/;"	f	language:C++	typeref:typename:void
+eden_draw_text_new	code/eden.h	/^eden_draw_text_new($/;"	f	language:C++	typeref:typename:void
+eden_draw_text_right_aligned	code/eden.h	/^eden_draw_text_right_aligned($/;"	f	language:C++	typeref:typename:void
 eden_draw_tri	code/eden.h	/^eden_draw_tri(eden_t* eden, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t color)$/;"	f	language:C++	typeref:typename:void
 eden_exit_next_frame	code/eden.h	/^eden_exit_next_frame(eden_t* eden)$/;"	f	language:C++	typeref:typename:void
 eden_functions_t	code/eden.h	/^struct eden_functions_t {$/;"	s	language:C++
@@ -755,6 +761,7 @@ eden_get_config_sig	code/eden.h	/^#define eden_get_config_sig(/;"	d	language:C++
 eden_get_config_sig	code/eden.h	/^typedef eden_get_config_sig(eden_get_config_f);$/;"	t	language:C++
 eden_get_dt	code/eden.h	/^eden_get_dt(eden_t* eden) {$/;"	f	language:C++	typeref:typename:f32_t
 eden_get_input_characters	code/eden.h	/^eden_get_input_characters(eden_t* eden) {$/;"	f	language:C++	typeref:typename:eden_input_characters_t
+eden_get_text_length	code/eden.h	/^eden_get_text_length($/;"	f	language:C++	typeref:typename:f32_t
 eden_gfx_advance_depth	code/eden_gfx.h	/^eden_gfx_advance_depth(eden_gfx_t* g) { $/;"	f	language:C++	typeref:typename:void
 eden_gfx_begin_texture_transfer	code/eden_gfx.h	/^eden_gfx_begin_texture_transfer(eden_gfx_t* g, u32_t required_space) {$/;"	f	language:C++	typeref:typename:eden_gfx_texture_payload_t *
 eden_gfx_cancel_texture_transfer	code/eden_gfx.h	/^eden_gfx_cancel_texture_transfer(eden_gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
@@ -1867,9 +1874,11 @@ kilobytes	code/momo.h	/^#define kilobytes(/;"	d	language:C++
 l	code/momo.h	/^    struct { f32_t h,s,l; };  $/;"	m	language:C++	struct:hsla_t::__anon1db7a63d0b0a::__anon1db7a63d0c08	typeref:typename:f32_t
 l	code/momo.h	/^  f32_t h, s, l;  $/;"	m	language:C++	struct:hsl_t	typeref:typename:f32_t
 label_parse_end	bin/app_lit.bat	/^:label_parse_end$/;"	l	language:DosBatch
+label_parse_end	bin/app_sandbox.bat	/^:label_parse_end$/;"	l	language:DosBatch
 label_parse_end	bin/app_tbp.bat	/^:label_parse_end$/;"	l	language:DosBatch
 label_parse_end	bin/build.bat	/^:label_parse_end$/;"	l	language:DosBatch
 label_parse_next	bin/app_lit.bat	/^:label_parse_next$/;"	l	language:DosBatch
+label_parse_next	bin/app_sandbox.bat	/^:label_parse_next$/;"	l	language:DosBatch
 label_parse_next	bin/app_tbp.bat	/^:label_parse_next$/;"	l	language:DosBatch
 label_parse_next	bin/build.bat	/^:label_parse_next$/;"	l	language:DosBatch
 last_drawn_instance_index	code/eden.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLsizei
@@ -1887,6 +1896,8 @@ light_count	code/app_lit.cpp	/^  u32_t light_count;$/;"	m	language:C++	struct:li
 light_hold_mode	code/app_lit.cpp	/^  lit_game_player_light_hold_mode_t light_hold_mode;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:lit_game_player_light_hold_mode_t	file:
 light_retrival_time	code/app_lit.cpp	/^  f32_t light_retrival_time;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:f32_t	file:
 line	code/eden.h	/^  u32_t line;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:u32_t
+line_gap	code/eden.h	/^  f32_t line_gap;$/;"	m	language:C++	struct:eden_asset_font_t	typeref:typename:f32_t
+line_gap	code/eden_asset_file.h	/^  f32_t line_gap;$/;"	m	language:C++	struct:asset_file_font_t	typeref:typename:f32_t
 linker_flags	bin/build.bat	/^    set linker_flags=-shared $/;"	v	language:DosBatch
 linker_flags	bin/build.bat	/^set linker_flags=$/;"	v	language:DosBatch
 list_init	code/test_list.cpp	/^list_init(list_t<type_t, cap, count_t>* list)$/;"	f	language:C++	typeref:typename:void	file:
@@ -2147,32 +2158,32 @@ megabytes	code/momo.h	/^#define megabytes(/;"	d	language:C++
 memory	code/eden.h	/^	u8_t* memory;$/;"	m	language:C++	struct:hell_gfx_command_queue_t	typeref:typename:u8_t *
 memory	code/momo.h	/^      u8_t* memory;$/;"	m	language:C++	struct:arena_t::__anon1db7a63d0f0a::__anon1db7a63d1008	typeref:typename:u8_t *
 memory	code/momo.h	/^  u8_t* memory;$/;"	m	language:C++	struct:garena_t	typeref:typename:u8_t *
+memory_allocate	code/momo.h	/^    static buffer_t  memory_allocate(usz_t size); \/\/ reserve + commit$/;"	p	language:C++	typeref:typename:buffer_t
 memory_allocate	code/momo.h	/^memory_allocate(usz_t size) {$/;"	f	language:C++	typeref:typename:buffer_t
 memory_allocate	code/momo.h	/^memory_allocate(usz_t size) {$/;"	f	language:C++	typeref:typename:buffer_t
-memory_allocate	code/momo.h	/^static buffer_t  memory_allocate(usz_t size); \/\/ reserve + commit$/;"	p	language:C++	typeref:typename:buffer_t
+memory_commit	code/momo.h	/^    static b32_t  memory_commit(buffer_t blk);$/;"	p	language:C++	typeref:typename:b32_t
 memory_commit	code/momo.h	/^memory_commit(buffer_t blk) {$/;"	f	language:C++	typeref:typename:b32_t
 memory_commit	code/momo.h	/^memory_commit(buffer_t blk) {$/;"	f	language:C++	typeref:typename:b32_t
-memory_commit	code/momo.h	/^static b32_t  memory_commit(buffer_t blk);$/;"	p	language:C++	typeref:typename:b32_t
+memory_copy	code/momo.h	/^    static void   memory_copy(void* dest, const void* src, usz_t size);$/;"	p	language:C++	typeref:typename:void
 memory_copy	code/momo.h	/^memory_copy(void* dest, const void* src, usz_t size) {$/;"	f	language:C++	typeref:typename:void
-memory_copy	code/momo.h	/^static void   memory_copy(void* dest, const void* src, usz_t size);$/;"	p	language:C++	typeref:typename:void
 memory_copy_array	code/momo.h	/^#define memory_copy_array(/;"	d	language:C++
 memory_copy_range	code/momo.h	/^#define memory_copy_range(/;"	d	language:C++
 memory_copy_struct	code/momo.h	/^#define memory_copy_struct(/;"	d	language:C++
+memory_free	code/momo.h	/^    static void   memory_free(buffer_t blk);$/;"	p	language:C++	typeref:typename:void
 memory_free	code/momo.h	/^memory_free(buffer_t blk) {$/;"	f	language:C++	typeref:typename:void
 memory_free	code/momo.h	/^memory_free(buffer_t blk) {$/;"	f	language:C++	typeref:typename:void
-memory_free	code/momo.h	/^static void   memory_free(buffer_t blk);$/;"	p	language:C++	typeref:typename:void
+memory_is_same	code/momo.h	/^    static b32_t  memory_is_same(const void* lhs, const void* rhs, usz_t size);$/;"	p	language:C++	typeref:typename:b32_t
 memory_is_same	code/momo.h	/^memory_is_same(const void* lhs, const void* rhs, usz_t size) {$/;"	f	language:C++	typeref:typename:b32_t
-memory_is_same	code/momo.h	/^static b32_t  memory_is_same(const void* lhs, const void* rhs, usz_t size);$/;"	p	language:C++	typeref:typename:b32_t
+memory_reserve	code/momo.h	/^    static buffer_t  memory_reserve(usz_t size);$/;"	p	language:C++	typeref:typename:buffer_t
 memory_reserve	code/momo.h	/^memory_reserve(usz_t size) {$/;"	f	language:C++	typeref:typename:buffer_t
 memory_reserve	code/momo.h	/^memory_reserve(usz_t size) {$/;"	f	language:C++	typeref:typename:buffer_t
-memory_reserve	code/momo.h	/^static buffer_t  memory_reserve(usz_t size);$/;"	p	language:C++	typeref:typename:buffer_t
 memory_sentinel	code/app_lit_ship.cpp	/^  w32_memory_t memory_sentinel;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_memory_t	file:
 memory_sentinel	code/w32_eden.cpp	/^  w32_memory_t memory_sentinel;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_memory_t	file:
 memory_size	code/eden.h	/^  usz_t memory_size;$/;"	m	language:C++	struct:hell_gfx_command_queue_t	typeref:typename:usz_t
+memory_swap	code/momo.h	/^    static void   memory_swap(void* lhs, void* rhs, usz_t size);$/;"	p	language:C++	typeref:typename:void
 memory_swap	code/momo.h	/^memory_swap(void* lhs, void* rhs, usz_t size) {$/;"	f	language:C++	typeref:typename:void
-memory_swap	code/momo.h	/^static void   memory_swap(void* lhs, void* rhs, usz_t size);$/;"	p	language:C++	typeref:typename:void
+memory_zero	code/momo.h	/^    static void   memory_zero(void* dest, usz_t size);$/;"	p	language:C++	typeref:typename:void
 memory_zero	code/momo.h	/^memory_zero(void* dest, usz_t size) {$/;"	f	language:C++	typeref:typename:void
-memory_zero	code/momo.h	/^static void   memory_zero(void* dest, usz_t size);$/;"	p	language:C++	typeref:typename:void
 memory_zero_array	code/momo.h	/^#define memory_zero_array(/;"	d	language:C++
 memory_zero_range	code/momo.h	/^#define memory_zero_range(/;"	d	language:C++
 memory_zero_struct	code/momo.h	/^#define memory_zero_struct(/;"	d	language:C++
@@ -2439,8 +2450,8 @@ profiler_max_entries	code/eden.h	/^  u32_t profiler_max_entries;$/;"	m	language:
 profiler_max_snapshots_per_entry	code/eden.h	/^  u32_t profiler_max_snapshots_per_entry;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 program_counter	code/w32_chip8.cpp	/^  u16_t program_counter;$/;"	m	language:C++	struct:chip8_t	typeref:typename:u16_t	file:
 pt	code/app_lit.cpp	/^  v2f_t pt;$/;"	m	language:C++	struct:lit_light_intersection_t	typeref:typename:v2f_t	file:
+ptr_to_umi	code/momo.h	/^    static umi_t ptr_to_umi(void* p);$/;"	p	language:C++	typeref:typename:umi_t
 ptr_to_umi	code/momo.h	/^ptr_to_umi(void* p) { $/;"	f	language:C++	typeref:typename:umi_t
-ptr_to_umi	code/momo.h	/^static umi_t ptr_to_umi(void* p);$/;"	p	language:C++	typeref:typename:umi_t
 r	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon1db7a63d0d0a::__anon1db7a63d0e08	typeref:typename:f32_t
 r	code/momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
 ram	code/w32_chip8.cpp	/^  u8_t ram[4096];$/;"	m	language:C++	struct:chip8_t	typeref:typename:u8_t[4096]	file:
@@ -2519,6 +2530,10 @@ run	bin/app_lit.bat	/^  set run=1$/;"	v	language:DosBatch
 run	bin/app_lit.bat	/^  set run=2$/;"	v	language:DosBatch
 run	bin/app_lit.bat	/^  set run=3$/;"	v	language:DosBatch
 run	bin/app_lit.bat	/^set run=0$/;"	v	language:DosBatch
+run	bin/app_sandbox.bat	/^  set run=1$/;"	v	language:DosBatch
+run	bin/app_sandbox.bat	/^  set run=2$/;"	v	language:DosBatch
+run	bin/app_sandbox.bat	/^  set run=3$/;"	v	language:DosBatch
+run	bin/app_sandbox.bat	/^set run=0$/;"	v	language:DosBatch
 run	bin/app_tbp.bat	/^  set run=1$/;"	v	language:DosBatch
 run	bin/app_tbp.bat	/^  set run=2$/;"	v	language:DosBatch
 run	bin/app_tbp.bat	/^  set run=3$/;"	v	language:DosBatch
@@ -2891,20 +2906,20 @@ ttf_get_glyph_bitmap_box	code/momo.h	/^static void ttf_get_glyph_bitmap_box(cons
 ttf_get_glyph_bitmap_box	code/momo.h	/^ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t* x0, s32_t* y0,/;"	f	language:C++	typeref:typename:void
 ttf_get_glyph_box	code/momo.h	/^static b32_t ttf_get_glyph_box(const ttf_t* ttf, u32_t glyph_index, s32_t* x0, s32_t* y0, s32_t*/;"	p	language:C++	typeref:typename:b32_t
 ttf_get_glyph_box	code/momo.h	/^ttf_get_glyph_box(const ttf_t* ttf, u32_t glyph_index, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y/;"	f	language:C++	typeref:typename:b32_t
-ttf_get_glyph_horizontal_metrics	code/momo.h	/^    ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, $/;"	f	language:C++	typeref:typename:void
 ttf_get_glyph_horizontal_metrics	code/momo.h	/^static void ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, u32_t glyph_index, s16_t* advance/;"	p	language:C++	typeref:typename:void
-ttf_get_glyph_index	code/momo.h	/^    ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint) {$/;"	f	language:C++	typeref:typename:u32_t
+ttf_get_glyph_horizontal_metrics	code/momo.h	/^ttf_get_glyph_horizontal_metrics(const ttf_t* ttf, $/;"	f	language:C++	typeref:typename:void
 ttf_get_glyph_index	code/momo.h	/^static u32_t ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint);$/;"	p	language:C++	typeref:typename:u32_t
-ttf_get_glyph_kerning	code/momo.h	/^    ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2) {$/;"	f	language:C++	typeref:typename:s32_t
+ttf_get_glyph_index	code/momo.h	/^ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint) {$/;"	f	language:C++	typeref:typename:u32_t
 ttf_get_glyph_kerning	code/momo.h	/^static s32_t ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2);$/;"	p	language:C++	typeref:typename:s32_t
-ttf_get_glyph_vertical_metrics	code/momo.h	/^    ttf_get_glyph_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_t* line_/;"	f	language:C++	typeref:typename:void
-ttf_get_glyph_vertical_metrics	code/momo.h	/^static void ttf_get_glyph_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_/;"	p	language:C++	typeref:typename:void
-ttf_get_scale_for_pixel_height	code/momo.h	/^    ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height) {$/;"	f	language:C++	typeref:typename:f32_t
+ttf_get_glyph_kerning	code/momo.h	/^ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2) {$/;"	f	language:C++	typeref:typename:s32_t
 ttf_get_scale_for_pixel_height	code/momo.h	/^static f32_t ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height);$/;"	p	language:C++	typeref:typename:f32_t
-ttf_rasterize_glyph	code/momo.h	/^    ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w, u32_t* o/;"	f	language:C++	typeref:typename:u32_t *
+ttf_get_scale_for_pixel_height	code/momo.h	/^ttf_get_scale_for_pixel_height(const ttf_t* ttf, f32_t pixel_height) $/;"	f	language:C++	typeref:typename:f32_t
+ttf_get_vertical_metrics	code/momo.h	/^static void ttf_get_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_t* lin/;"	p	language:C++	typeref:typename:void
+ttf_get_vertical_metrics	code/momo.h	/^ttf_get_vertical_metrics(const ttf_t* ttf, s16_t* ascent, s16_t* descent, s16_t* line_gap) $/;"	f	language:C++	typeref:typename:void
 ttf_rasterize_glyph	code/momo.h	/^static u32_t* ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w/;"	p	language:C++	typeref:typename:u32_t *
-ttf_read	code/momo.h	/^    ttf_read(ttf_t* ttf, buffer_t ttf_contents) {$/;"	f	language:C++	typeref:typename:b32_t
+ttf_rasterize_glyph	code/momo.h	/^ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w, u32_t* out_h/;"	f	language:C++	typeref:typename:u32_t *
 ttf_read	code/momo.h	/^static b32_t ttf_read(ttf_t* ttf, buffer_t ttf_contents);$/;"	p	language:C++	typeref:typename:b32_t
+ttf_read	code/momo.h	/^ttf_read(ttf_t* ttf, buffer_t ttf_contents) {$/;"	f	language:C++	typeref:typename:b32_t
 ttf_t	code/momo.h	/^struct ttf_t $/;"	s	language:C++
 tuple_get	code/gist_tuple.cpp	/^tuple_get(tuple_t<H, T...> t)$/;"	f	language:C++	typeref:typename:auto	file:
 tuple_set	code/gist_tuple.cpp	/^tuple_set()$/;"	f	language:C++	typeref:typename:tuple_t<>	file:
@@ -3076,8 +3091,6 @@ vel	code/app_lit.cpp	/^  v2f_t pos, vel;$/;"	m	language:C++	struct:lit_particle_
 vel	code/app_tbg.cpp	/^  v2f_t pos, vel, acc;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:v2f_t	file:
 vel	code/app_tbp.cpp	/^  v2f_t pos, vel, acc;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:v2f_t	file:
 vertex_count	code/momo.h	/^  u32_t vertex_count;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:u32_t
-vertical_advance	code/eden.h	/^  f32_t vertical_advance;$/;"	m	language:C++	struct:eden_asset_font_glyph_t	typeref:typename:f32_t
-vertical_advance	code/eden_asset_file.h	/^  f32_t vertical_advance;$/;"	m	language:C++	struct:asset_file_font_glyph_t	typeref:typename:f32_t
 vertices	code/momo.h	/^  v2f_t* vertices;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:v2f_t *
 volume	code/eden.h	/^  f32_t volume;$/;"	m	language:C++	struct:eden_speaker_sound_t	typeref:typename:f32_t
 volume	code/eden.h	/^  f32_t volume;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:f32_t
@@ -3438,7 +3451,7 @@ _ttf_edge_t	code/momo.h	/^struct _ttf_edge_t{$/;"	s	language:C++
 _ttf_get_glyph_outline	code/momo.h	/^_ttf_get_glyph_outline(const ttf_t* ttf, $/;"	f	language:C++	typeref:typename:b32_t
 _ttf_get_kern_advance	code/momo.h	/^_ttf_get_kern_advance(const ttf_t* ttf, s32_t g1, s32_t g2) $/;"	f	language:C++	typeref:typename:s32_t
 _ttf_get_offset_to_glyph	code/momo.h	/^_ttf_get_offset_to_glyph(const ttf_t* ttf, u32_t glyph_index) {$/;"	f	language:C++	typeref:typename:u32_t
-_ttf_get_paths_from_glyph_outline	code/momo.h	/^    _ttf_get_paths_from_glyph_outline(_ttf_glyph_outline_t* outline,$/;"	f	language:C++	typeref:typename:b32_t
+_ttf_get_paths_from_glyph_outline	code/momo.h	/^_ttf_get_paths_from_glyph_outline(_ttf_glyph_outline_t* outline,$/;"	f	language:C++	typeref:typename:b32_t
 _ttf_glyph_outline_t	code/momo.h	/^struct _ttf_glyph_outline_t{$/;"	s	language:C++
 _ttf_glyph_paths_t	code/momo.h	/^struct _ttf_glyph_paths_t{$/;"	s	language:C++
 _ttf_glyph_point_t	code/momo.h	/^struct _ttf_glyph_point_t{$/;"	s	language:C++

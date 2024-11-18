@@ -56,7 +56,6 @@ struct asset_file_font_glyph_t {
 
   u32_t codepoint;
   f32_t horizontal_advance;
-  f32_t vertical_advance;
 };
 
 struct asset_file_shader_t {
@@ -74,6 +73,15 @@ struct asset_file_font_t {
   u32_t bitmap_asset_id;
   u32_t highest_codepoint;
   u32_t glyph_count;
+
+  // @note: 
+  //
+  // The idea of 'vertical advance' can be calculated as (ascent - descent) + line_gap
+  // A font's total height can be calculated as (ascent - descent)
+  //
+  f32_t line_gap;
+  f32_t ascent;
+  f32_t descent;
 
   u32_t offset_to_data;
   // Data is: 

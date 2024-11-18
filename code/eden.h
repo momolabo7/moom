@@ -257,15 +257,24 @@ struct eden_asset_font_glyph_t {
   f32_t box_x1, box_y1;
 
   f32_t horizontal_advance;
-  f32_t vertical_advance;
 
 };
 
 struct eden_asset_font_t {
   eden_asset_bitmap_id_t bitmap_asset_id;
 
+  // @note: vertical information
+  //
+  // The idea of 'vertical advance' can be calculated as (ascent - descent) + line_gap
+  // A font's total height can be calculated as (ascent - descent)
+  //
+  f32_t line_gap;
+  f32_t ascent;
+  f32_t descent;
+
   u32_t highest_codepoint;
   u16_t* codepoint_map;
+
 
   u32_t glyph_count;
   eden_asset_font_glyph_t* glyphs;
@@ -2709,6 +2718,9 @@ eden_assets_init_from_file(
     if (!kernings) return false;
 
     f->bitmap_asset_id = (eden_asset_bitmap_id_t)file_font.bitmap_asset_id;
+    f->line_gap = file_font.line_gap;
+    f->ascent = file_font.ascent;
+    f->descent = file_font.descent;
 
 
     for(u16_t glyph_index = 0; 
@@ -2742,7 +2754,6 @@ eden_assets_init_from_file(
       glyph->box_y1 = file_glyph.box_y1;
 
       glyph->horizontal_advance = file_glyph.horizontal_advance;
-      glyph->vertical_advance = file_glyph.vertical_advance;
       codepoint_map[file_glyph.codepoint] = glyph_index;
     }
 
@@ -2970,6 +2981,44 @@ eden_draw_asset_sprite(
 }
 
 
+static f32_t
+eden_get_text_length(
+    eden_t* eden,
+    eden_asset_font_id_t font_id, 
+    buffer_t str, 
+    f32_t font_height)
+{
+  f32_t ret = 0.f;
+
+  eden_assets_t* assets = &eden->assets;
+  eden_asset_font_t* font = eden_assets_get_font(assets, font_id);
+
+  for(u32_t char_index = 1; 
+      char_index < str.size;
+      ++char_index)
+  {
+
+    u32_t curr_cp = str.e[char_index];
+    u32_t prev_cp = str.e[char_index-1];
+
+    eden_asset_font_glyph_t *prev_glyph = eden_assets_get_glyph(font, prev_cp);
+    //eden_asset_font_glyph_t *curr_glyph = eden_assets_get_glyph(font, curr_cp);
+
+    f32_t kerning = eden_assets_get_kerning(font, prev_cp, curr_cp);
+    f32_t advance = prev_glyph->horizontal_advance;
+    ret += (kerning + advance) * font_height;
+  }
+
+  // Add the width of the last glyph
+  {    
+    u32_t cp = str.e[str.size-1];
+    eden_asset_font_glyph_t* glyph = eden_assets_get_glyph(font, cp);
+    f32_t advance = glyph->horizontal_advance;
+    ret += advance * font_height;
+  }
+  return ret;
+}
+
 static void
 eden_draw_text(
     eden_t* eden, 
@@ -3017,38 +3066,38 @@ eden_draw_text(
   
 }
 
+
 static void
-eden_draw_text_center_aligned(eden_t* eden, eden_asset_font_id_t font_id, buffer_t str, rgba_t color, f32_t px, f32_t py, f32_t font_height) 
+eden_draw_text_new(
+    eden_t* eden, 
+    eden_asset_font_id_t font_id, 
+    buffer_t str, 
+    rgba_t color, 
+    v2f_t pos,
+    f32_t font_height,
+    v2f_t origin) 
 {
+  // @note: 
+  //
+  // origin (0,0) is top left
+  // origin (1,1) is bottom right
+  //
+  // @note: Drawing of text is almost always from bottom left 
+  // thanks to humans being humans, so we have to set the anchor
+  // point of the sprite accordingly.
+  //
   eden_assets_t* assets = &eden->assets;
   eden_asset_font_t* font = eden_assets_get_font(assets, font_id);
-  
-  // Calculate the total width of the text
-  f32_t offset = 0.f;
-  for(u32_t char_index = 1; 
-      char_index < str.size;
-      ++char_index)
+
+  if (origin.x != 0)
   {
-
-    u32_t curr_cp = str.e[char_index];
-    u32_t prev_cp = str.e[char_index-1];
-
-    eden_asset_font_glyph_t *prev_glyph = eden_assets_get_glyph(font, prev_cp);
-    //eden_asset_font_glyph_t *curr_glyph = eden_assets_get_glyph(font, curr_cp);
-
-    f32_t kerning = eden_assets_get_kerning(font, prev_cp, curr_cp);
-    f32_t advance = prev_glyph->horizontal_advance;
-    offset += (kerning + advance) * font_height;
+    // @note: if origin.x is 1, then we adjust x position by -length
+    pos.x += eden_get_text_length(eden, font_id, str, font_height) * -origin.x;
   }
 
-  // Add the width of the last glyph
-  {    
-    u32_t cp = str.e[str.size-1];
-    eden_asset_font_glyph_t* glyph = eden_assets_get_glyph(font, cp);
-    f32_t advance = glyph->horizontal_advance;
-    offset += advance * font_height;
-  }
-  px -= offset/2 ;
+  const f32_t vertical_height = (font->ascent - font->descent) * font_height;
+  pos.y += vertical_height - (vertical_height * origin.y);
+
 
   for(u32_t char_index = 0; 
       char_index < str.size;
@@ -3062,7 +3111,7 @@ eden_draw_text_center_aligned(eden_t* eden, eden_asset_font_id_t font_id, buffer
 
       f32_t kerning = eden_assets_get_kerning(font, prev_cp, curr_cp);
       f32_t advance = prev_glyph->horizontal_advance;
-      px += (kerning + advance) * font_height;
+      pos.x += (kerning + advance) * font_height;
     }
 
     eden_asset_font_glyph_t *glyph = eden_assets_get_glyph(font, curr_cp);
@@ -3070,11 +3119,14 @@ eden_draw_text_center_aligned(eden_t* eden, eden_asset_font_id_t font_id, buffer
     f32_t width = (glyph->box_x1 - glyph->box_x0)*font_height;
     f32_t height = (glyph->box_y1 - glyph->box_y0)*font_height;
     
-    v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py - (glyph->box_y0*font_height));
+    v2f_t actual_pos = v2f_set(pos.x, pos.y);
     v2f_t size = v2f_set(width, height);
+
     v2f_t anchor = v2f_set(0.f, 1.f); // bottom left
     eden_draw_sprite(eden, 
-                    pos, size, anchor,
+                    actual_pos, 
+                    size, 
+                    anchor,
                     bitmap->renderer_texture_handle, 
                     glyph->texel_x0,
                     glyph->texel_y0,
@@ -3082,7 +3134,39 @@ eden_draw_text_center_aligned(eden_t* eden, eden_asset_font_id_t font_id, buffer
                     glyph->texel_y1,
                     color);
   }
+  
+}
 
+static void
+eden_draw_text_right_aligned(
+    eden_t* eden, 
+    eden_asset_font_id_t font_id, 
+    buffer_t str, 
+    rgba_t color, 
+    f32_t px, 
+    f32_t py, 
+    f32_t font_height) 
+{
+  f32_t offset = eden_get_text_length(eden, font_id, str, font_height);
+  px -= offset;
+  eden_draw_text(eden, font_id, str, color, px, py, font_height);
+}
+
+
+
+static void
+eden_draw_text_center_aligned(
+    eden_t* eden, 
+    eden_asset_font_id_t font_id, 
+    buffer_t str, 
+    rgba_t color, 
+    f32_t px, 
+    f32_t py, 
+    f32_t font_height) 
+{
+  f32_t offset = eden_get_text_length(eden, font_id, str, font_height);
+  px -= offset/2 ;
+  eden_draw_text(eden, font_id, str, color, px, py, font_height);
 }
 
 //

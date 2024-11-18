@@ -525,6 +525,17 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
     assert(ok);
     f32_t scale = ttf_get_scale_for_pixel_height(ttf, 1.f);
 
+    // Vertical Advance
+    {
+      s16_t ascent = 0;
+      s16_t descent = 0;
+      s16_t line_gap = 0;
+      ttf_get_vertical_metrics(ttf, 
+          &ascent, &descent, &line_gap);
+      ff->ascent = (f32_t)ascent * scale;
+      ff->descent = (f32_t)descent * scale;
+      ff->line_gap = (f32_t)line_gap * scale;
+    }
 
     // Set glyphs
     for_cnt(glyph_index, ff->glyph_count)
@@ -553,18 +564,10 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
       
       // Horizontal dvance
       s16_t advance_width = 0;
-      ttf_get_glyph_horizontal_metrics(ttf, ttf_glyph_index, 
+      ttf_get_glyph_horizontal_metrics(
+          ttf, ttf_glyph_index, 
           &advance_width, nullptr);
       fg->horizontal_advance = (f32_t)advance_width * scale;
-
-      // Vertical Advance
-      s16_t ascent = 0;
-      s16_t descent = 0;
-      s16_t line_gap = 0;
-      ttf_get_glyph_vertical_metrics(ttf, 
-          &ascent, &descent, &line_gap);
-      s16_t vertical_advance = ascent - descent + line_gap;
-      fg->vertical_advance = (f32_t)vertical_advance * scale;
     }
 
   }
