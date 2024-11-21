@@ -742,9 +742,6 @@ eden_draw_line	code/eden.h	/^eden_draw_line(eden_t* eden, v2f_t p0, v2f_t p1, f3
 eden_draw_rect	code/eden.h	/^eden_draw_rect(eden_t* eden, v2f_t pos, f32_t rot, v2f_t scale, rgba_t color) $/;"	f	language:C++	typeref:typename:void
 eden_draw_sprite	code/eden.h	/^eden_draw_sprite(eden_t* eden, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t t/;"	f	language:C++	typeref:typename:void
 eden_draw_text	code/eden.h	/^eden_draw_text($/;"	f	language:C++	typeref:typename:void
-eden_draw_text_center_aligned	code/eden.h	/^eden_draw_text_center_aligned($/;"	f	language:C++	typeref:typename:void
-eden_draw_text_new	code/eden.h	/^eden_draw_text_new($/;"	f	language:C++	typeref:typename:void
-eden_draw_text_right_aligned	code/eden.h	/^eden_draw_text_right_aligned($/;"	f	language:C++	typeref:typename:void
 eden_draw_tri	code/eden.h	/^eden_draw_tri(eden_t* eden, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t color)$/;"	f	language:C++	typeref:typename:void
 eden_exit_next_frame	code/eden.h	/^eden_exit_next_frame(eden_t* eden)$/;"	f	language:C++	typeref:typename:void
 eden_functions_t	code/eden.h	/^struct eden_functions_t {$/;"	s	language:C++
@@ -2575,6 +2572,7 @@ SANDBOX_ASSET_FILE	code/eden_asset_id_sandbox.h	/^#define SANDBOX_ASSET_FILE /;"
 sandbox_res_dir	code/pass_sandbox.cpp	/^#define sandbox_res_dir(/;"	d	language:C++	file:
 sandbox_res_dir	code/pass_tbp.cpp	/^#define sandbox_res_dir(/;"	d	language:C++	file:
 sandbox_t	code/app_sandbox.cpp	/^struct sandbox_t $/;"	s	language:C++	file:
+sandbox_update_and_render_font_alignment_test	code/app_sandbox.cpp	/^sandbox_update_and_render_font_alignment_test(eden_t* eden)$/;"	f	language:C++	typeref:typename:void	file:
 save_data	code/app_lit.cpp	/^  lit_save_data_t save_data;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_save_data_t	file:
 sccount	code/momo.h	/^static u32_t sccount = 0;$/;"	v	language:C++	typeref:typename:u32_t
 scroll_in_timer	code/app_lit.cpp	/^  f32_t scroll_in_timer;$/;"	m	language:C++	struct:lit_splash_t	typeref:typename:f32_t	file:

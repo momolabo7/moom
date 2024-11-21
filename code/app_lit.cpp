@@ -27,7 +27,7 @@
 
 // Splash
 #define LIT_SPLASH_SCROLL_POS_Y_START (900.f)
-#define LIT_SPLASH_SCROLL_POS_Y_END (500.f)
+#define LIT_SPLASH_SCROLL_POS_Y_END (450.f)
 #define LIT_SPLASH_SCROLL_DURATION 1.5f
 
 // Credits
@@ -627,33 +627,35 @@ lit_splash_update() {
     }
   }
 
-  f32_t y = LIT_HEIGHT/2 - 100.f;
+  f32_t y = LIT_HEIGHT/2 - 200.f;
 
-  eden_draw_text_center_aligned(
+  eden_draw_text(
       g_eden, 
       font, 
       buffer_from_lit("-----"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
-      LIT_WIDTH/2, y, 
-      128.f);
+      v2f_set(LIT_WIDTH/2, y), 
+      128.f,
+      v2f_set(0.5f, 0.5f));
   y += 70;
-  eden_draw_text_center_aligned(
+  eden_draw_text(
       g_eden, 
       font,
       buffer_from_lit("LIT"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
-      LIT_WIDTH/2, y, 
-      128.f);
+      v2f_set(LIT_WIDTH/2, y), 
+      128.f,
+      v2f_set(0.5f, 0.5f));
 
   y += 70;
-  eden_draw_text_center_aligned(
+  eden_draw_text(
       g_eden, 
-      
       font,
       buffer_from_lit("-----"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
-      LIT_WIDTH/2, y, 
-      128.f);
+      v2f_set(LIT_WIDTH/2, y), 
+      128.f,
+      v2f_set(0.5f, 0.5f));
   y += 60.f;
 
   
@@ -669,24 +671,24 @@ lit_splash_update() {
 
   f32_t scroll_y = (alpha)*LIT_SPLASH_SCROLL_POS_Y_END + (1.f-alpha)*LIT_SPLASH_SCROLL_POS_Y_START; 
   rgba_t grey = rgba_set(0.7f, 0.7f, 0.7f, 1.f); 
-  eden_draw_text_center_aligned(
+  eden_draw_text(
       g_eden, 
-      
       font,
       buffer_from_lit("a silly game by"), 
       grey,
-      LIT_WIDTH/2, scroll_y, 
-      36.f);
+      v2f_set(LIT_WIDTH/2, scroll_y), 
+      36.f,
+      v2f_set(0.5f, 0.5f));
 
-  scroll_y += 60.f;
-  eden_draw_text_center_aligned(
+  scroll_y += 45.f;
+  eden_draw_text(
       g_eden, 
-      
       font,
-      buffer_from_lit("momolabo"), 
+      buffer_from_lit("momolabo77"), 
       rgba_hex(0xF8C8DCFF),
-      LIT_WIDTH/2, scroll_y, 
-      72.f);
+      v2f_set(LIT_WIDTH/2, scroll_y),
+      72.f,
+      v2f_set(0.5f, 0.5f));
   eden_advance_depth(g_eden);
 
 
@@ -3443,9 +3445,14 @@ lit_game_update()
     f32_t title_x = cur_wp->x + a * (next_wp->x - cur_wp->x); 
     rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
 
-    // @note: hacky way to get the y-axis to center.
-    // we should really make a way to align font vertically AND horizontally...
-    eden_draw_text_center_aligned(g_eden, ASSET_FONT_ID_DEFAULT, g->title, color, title_x, LIT_HEIGHT/2 + 40.f, 128.f);
+    eden_draw_text(
+        g_eden, 
+        ASSET_FONT_ID_DEFAULT, 
+        g->title, 
+        color, 
+        v2f_set(title_x, LIT_HEIGHT/2), 
+        128.,
+        v2f_set(0.5f, 0.5f));
     eden_advance_depth(g_eden);
 
   }
@@ -3491,24 +3498,24 @@ static f32_t
 lit_credits_push_subtitle_and_name(
     f32_t y, buffer_t subtitle, buffer_t name)
 {
-  eden_draw_text_center_aligned(
+  eden_draw_text(
       g_eden, 
-      
       ASSET_FONT_ID_DEFAULT,
       subtitle,
       rgba_set(0.5f, 0.5f, 0.5f, 1.f),
-      LIT_WIDTH/2, y, 
-      48.f);
-  y -= 50.f;
-  eden_draw_text_center_aligned(
+      v2f_set(LIT_WIDTH/2, y), 
+      48.f,
+      v2f_set(0.5f, 0.5f));
+  y += 50.f;
+  eden_draw_text(
       g_eden, 
-      
       ASSET_FONT_ID_DEFAULT,
       name,
       rgba_hex(0xF8C8DCFF),
-      LIT_WIDTH/2, y, 
-      48.f);
-  y -= 100.f;
+      v2f_set(LIT_WIDTH/2, y), 
+      48.f,
+      v2f_set(0.5f, 0.5f));
+  y += 100.f;
   return y;
 }
 
@@ -3527,7 +3534,7 @@ lit_credits_update() {
 
   if (credits->timer > LIT_CREDITS_START_COOLDOWN_DURATION) 
   {
-    y -= -(credits->timer - LIT_CREDITS_START_COOLDOWN_DURATION) * LIT_CREDITS_SCROLL_SPEED;
+    y += -(credits->timer - LIT_CREDITS_START_COOLDOWN_DURATION) * LIT_CREDITS_SCROLL_SPEED;
   }
 
 
@@ -3536,78 +3543,78 @@ lit_credits_update() {
   //
   
   // Title
-  eden_draw_text_center_aligned(
+  eden_draw_text(
       g_eden, 
-      
       ASSET_FONT_ID_DEFAULT,
       buffer_from_lit("THANKS"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
-      LIT_WIDTH/2, y, 
-      96.f);
-  y -= 96.f;
-  eden_draw_text_center_aligned(
+      v2f_set(LIT_WIDTH/2, y), 
+      96.f,
+      v2f_set(0.5f, 0.5f));
+  y += 96.f;
+  eden_draw_text(
       g_eden, 
-      
       ASSET_FONT_ID_DEFAULT,
       buffer_from_lit("FOR"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
-      LIT_WIDTH/2, y, 
-      96.f);
-  y-=96.f;
-  eden_draw_text_center_aligned(
+      v2f_set(LIT_WIDTH/2, y), 
+      96.f,
+      v2f_set(0.5f, 0.5f));
+  y+=96.f;
+  eden_draw_text(
       g_eden, 
-      
       ASSET_FONT_ID_DEFAULT,
       buffer_from_lit("PLAYING!"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
-      LIT_WIDTH/2, y, 
-      96.f);
-  y -= LIT_HEIGHT - 100.f;
+      v2f_set(LIT_WIDTH/2, y), 
+      96.f,
+      v2f_set(0.5f, 0.5f));
+  y += LIT_HEIGHT - 100.f;
 
 
-  eden_draw_text_center_aligned(
+  eden_draw_text(
       g_eden, 
-      
       ASSET_FONT_ID_DEFAULT,
       buffer_from_lit("-----"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
-      LIT_WIDTH/2, y, 
-      128.f);
+      v2f_set(LIT_WIDTH/2, y), 
+      128.f,
+      v2f_set(0.5f, 0.5f));
 
-  y -= 70;
-  eden_draw_text_center_aligned(
+  y += 70;
+  eden_draw_text(
       g_eden, 
-      
       ASSET_FONT_ID_DEFAULT,
       buffer_from_lit("LIT"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
-      LIT_WIDTH/2, y, 
-      128.f);
+      v2f_set(LIT_WIDTH/2, y), 
+      128.f,
+      v2f_set(0.5f, 0.5f));
 
-  y -= 70;
-  eden_draw_text_center_aligned(
+  y += 70;
+  eden_draw_text(
       g_eden, 
-      
       ASSET_FONT_ID_DEFAULT,
       buffer_from_lit("-----"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
-      LIT_WIDTH/2, y, 
-      128.f);
-  y -= 60.f;
+      v2f_set(LIT_WIDTH/2, y), 
+      128.f,
+      v2f_set(0.5f, 0.5f));
+  y += 60.f;
   
   //
   //  
   //
-  y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("engine"), buffer_from_lit("momolabo"));
-  y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("gameplay"), buffer_from_lit("momolabo"));
-  y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("art"), buffer_from_lit("momolabo"));
-  y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("lighting"), buffer_from_lit("momolabo"));
-  y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("particles"), buffer_from_lit("momolabo"));
-  y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("sound"), buffer_from_lit("momolabo"));
+  y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("engine"), buffer_from_lit("momolabo7"));
+  y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("gameplay"), buffer_from_lit("momolabo7"));
+  y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("art"), buffer_from_lit("momolabo7"));
+  y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("lighting"), buffer_from_lit("momolabo7"));
+  y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("particles"), buffer_from_lit("momolabo7"));
+  y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("sound"), buffer_from_lit("momolabo7"));
   y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("food"), buffer_from_lit("my wife <3"));
   y = lit_credits_push_subtitle_and_name(y, buffer_from_lit("coffee"), buffer_from_lit("a lot"));
 
-  if (y > LIT_HEIGHT) {
+  if (y < -LIT_HEIGHT) {
     g_lit->next_mode = LIT_MODE_EDEN;
   }
 }
@@ -3675,15 +3682,15 @@ static void lit_sandbox_update() {
   
   eden_set_blend_preset(g_eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
   rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
-  eden_draw_text_center_aligned(
+  eden_draw_text(
       g_eden, 
-      
       ASSET_FONT_ID_DEFAULT, 
       buffer_from_lit("A"), 
       color,
-      LIT_WIDTH/2, 
-      LIT_HEIGHT/2, 
-      128.f);
+      v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2),
+      128.f,
+      v2f_set(0.5f, 0.5f)
+      );
 
   eden_advance_depth(g_eden);
 }

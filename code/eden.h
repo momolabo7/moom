@@ -1,11 +1,15 @@
 // 
 // DESCRIPTION
-//   This is the eden engine!
+//   This is the eden engine, Momo's personal game engine for him to build games
+//   in his own terms. 
+//   
+//   The API is split into two parts: 
+//   - 'hell' layer: The application layer doesn't see this; only visible by platform layer
+//   - 'eden' layer: Both the application layer or the platform layer can see this.
 //
 // FLAGS
 //   EDEN_USE_OPENGL - Flag to enable opengl code used to run the eden
 //
-// 
 // BOOKMARKS
 //   graphics          - Graphics interfaces
 //   opengl            - Graphics implementation with OGL
@@ -3019,62 +3023,15 @@ eden_get_text_length(
   return ret;
 }
 
+
 static void
 eden_draw_text(
     eden_t* eden, 
     eden_asset_font_id_t font_id, 
     buffer_t str, 
     rgba_t color, 
-    f32_t px, 
-    f32_t py, 
-    f32_t font_height) 
-{
-  eden_assets_t* assets = &eden->assets;
-  eden_asset_font_t* font = eden_assets_get_font(assets, font_id);
-  for(u32_t char_index = 0; 
-      char_index < str.size;
-      ++char_index) 
-  {
-    u32_t curr_cp = str.e[char_index];
-
-    if (char_index > 0) {
-      u32_t prev_cp = str.e[char_index-1];
-      eden_asset_font_glyph_t *prev_glyph = eden_assets_get_glyph(font, prev_cp);
-
-      f32_t kerning = eden_assets_get_kerning(font, prev_cp, curr_cp);
-      f32_t advance = prev_glyph->horizontal_advance;
-      px += (kerning + advance) * font_height;
-    }
-
-    eden_asset_font_glyph_t *glyph = eden_assets_get_glyph(font, curr_cp);
-    eden_asset_bitmap_t* bitmap = eden_assets_get_bitmap(assets, font->bitmap_asset_id);
-    f32_t width = (glyph->box_x1 - glyph->box_x0)*font_height;
-    f32_t height = (glyph->box_y1 - glyph->box_y0)*font_height;
-    
-    v2f_t pos = v2f_set(px + (glyph->box_x0*font_height), py - (glyph->box_y0*font_height));
-    v2f_t size = v2f_set(width, height);
-    v2f_t anchor = v2f_set(0.f, 1.f); // bottom left
-    eden_draw_sprite(eden, 
-                    pos, size, anchor,
-                    bitmap->renderer_texture_handle, 
-                    glyph->texel_x0,
-                    glyph->texel_y0,
-                    glyph->texel_x1,
-                    glyph->texel_y1,
-                    color);
-  }
-  
-}
-
-
-static void
-eden_draw_text_new(
-    eden_t* eden, 
-    eden_asset_font_id_t font_id, 
-    buffer_t str, 
-    rgba_t color, 
     v2f_t pos,
-    f32_t font_height,
+    f32_t size,
     v2f_t origin) 
 {
   // @note: 
@@ -3092,10 +3049,10 @@ eden_draw_text_new(
   if (origin.x != 0)
   {
     // @note: if origin.x is 1, then we adjust x position by -length
-    pos.x += eden_get_text_length(eden, font_id, str, font_height) * -origin.x;
+    pos.x += eden_get_text_length(eden, font_id, str, size) * -origin.x;
   }
 
-  const f32_t vertical_height = (font->ascent - font->descent) * font_height;
+  const f32_t vertical_height = (font->ascent - font->descent) * size;
   pos.y += vertical_height - (vertical_height * origin.y);
 
 
@@ -3111,21 +3068,21 @@ eden_draw_text_new(
 
       f32_t kerning = eden_assets_get_kerning(font, prev_cp, curr_cp);
       f32_t advance = prev_glyph->horizontal_advance;
-      pos.x += (kerning + advance) * font_height;
+      pos.x += (kerning + advance) * size;
     }
 
     eden_asset_font_glyph_t *glyph = eden_assets_get_glyph(font, curr_cp);
     eden_asset_bitmap_t* bitmap = eden_assets_get_bitmap(assets, font->bitmap_asset_id);
-    f32_t width = (glyph->box_x1 - glyph->box_x0)*font_height;
-    f32_t height = (glyph->box_y1 - glyph->box_y0)*font_height;
+    f32_t width = (glyph->box_x1 - glyph->box_x0)*size;
+    f32_t height = (glyph->box_y1 - glyph->box_y0)*size;
     
-    v2f_t actual_pos = v2f_set(pos.x, pos.y);
-    v2f_t size = v2f_set(width, height);
+    v2f_t glyph_pos = v2f_set(pos.x + (glyph->box_x0*size), pos.y - (glyph->box_y0*size));
+    v2f_t glyph_size = v2f_set(width, height);
 
     v2f_t anchor = v2f_set(0.f, 1.f); // bottom left
     eden_draw_sprite(eden, 
-                    actual_pos, 
-                    size, 
+                    glyph_pos, 
+                    glyph_size, 
                     anchor,
                     bitmap->renderer_texture_handle, 
                     glyph->texel_x0,
@@ -3137,37 +3094,6 @@ eden_draw_text_new(
   
 }
 
-static void
-eden_draw_text_right_aligned(
-    eden_t* eden, 
-    eden_asset_font_id_t font_id, 
-    buffer_t str, 
-    rgba_t color, 
-    f32_t px, 
-    f32_t py, 
-    f32_t font_height) 
-{
-  f32_t offset = eden_get_text_length(eden, font_id, str, font_height);
-  px -= offset;
-  eden_draw_text(eden, font_id, str, color, px, py, font_height);
-}
-
-
-
-static void
-eden_draw_text_center_aligned(
-    eden_t* eden, 
-    eden_asset_font_id_t font_id, 
-    buffer_t str, 
-    rgba_t color, 
-    f32_t px, 
-    f32_t py, 
-    f32_t font_height) 
-{
-  f32_t offset = eden_get_text_length(eden, font_id, str, font_height);
-  px -= offset/2 ;
-  eden_draw_text(eden, font_id, str, color, px, py, font_height);
-}
 
 //
 // @mark: inspect
@@ -3234,7 +3160,7 @@ eden_inspector_update_and_render(
     }
 
     f32_t y = height - font_size * (entry_index+1);
-    eden_draw_text(eden, font, sb.str, rgba_hex(0xFFFFFFFF), 0.f, y, font_size);
+    eden_draw_text(eden, font, sb.str, rgba_hex(0xFFFFFFFF), v2f_set(0.f, y), font_size, v2f_set(0.f, 0.f));
     eden_advance_depth(eden);
   }
 }
@@ -3322,7 +3248,7 @@ eden_profile_update_and_render(
     eden_asset_font_id_t font,
     arena_t* frame_arena)
 {
-  const f32_t render_height = height;
+  const f32_t render_height = 0;
 
   // Overlay
   eden_draw_asset_sprite(
@@ -3332,7 +3258,7 @@ eden_profile_update_and_render(
       rgba_set(0.f, 0.f, 0.f, 0.5f));
   eden_advance_depth(eden);
   
-  u32_t line_num = 1;
+  u32_t line_num = 0;
   
   for(u32_t entry_id = 0; entry_id < eden->profiler.entry_count; ++entry_id)
   {
@@ -3376,13 +3302,14 @@ eden_profile_update_and_render(
                  (u32_t)hits.average,
                  (u32_t)cycles_per_hit.average);
     
-    eden_draw_text(eden, 
+    eden_draw_text(
+        eden, 
         font, 
         sb.str,
         rgba_hex(0xFFFFFFFF),
-        0.f, 
-        render_height - font_height * (line_num), 
-        font_height);
+        v2f_set(0.f, render_height + font_height * (line_num)), 
+        font_height,
+        v2f_zero());
     eden_advance_depth(eden);
 
     
