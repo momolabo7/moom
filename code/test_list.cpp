@@ -9,8 +9,6 @@
 
 #include "momo.h"
 
-
-
 template<typename type_t, u32_t cap, typename count_t = u32_t>
 struct list_t {
   type_t e[cap];

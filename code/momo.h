@@ -1087,14 +1087,14 @@ static u32_t crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t
 static buffer_t      buffer_bad();
 static buffer_t      buffer_set(u8_t* str, usz_t size);
 static buffer_t      buffer_substr(buffer_t str, usz_t start, usz_t ope);
-static b32_t      buffer_match(buffer_t lhs, buffer_t rhs);
+static b32_t         buffer_match(buffer_t lhs, buffer_t rhs);
 static buffer_t      buffer_from_cstr(const char* cstr);
-static smi_t      buffer_compare_lexographically(buffer_t lhs, buffer_t rhs);
-static b32_t      buffer_to_u32(buffer_t s, u32_t* out);
-static b32_t      buffer_to_f32(buffer_t s, f32_t* out);
-static b32_t      buffer_to_s32(buffer_t s, s32_t* out);
+static smi_t         buffer_compare_lexographically(buffer_t lhs, buffer_t rhs);
+static b32_t         buffer_to_u32(buffer_t s, u32_t* out);
+static b32_t         buffer_to_f32(buffer_t s, f32_t* out);
+static b32_t         buffer_to_s32(buffer_t s, s32_t* out);
 static buffer_arr_t  buffer_split(buffer_t str, u8_t delimiter, arena_t* arena); 
-static void       buffer_reverse(buffer_t* dest, buffer_t src);
+static void          buffer_reverse(buffer_t* dest, buffer_t src);
 
 // @note: returns str.size if not found
 static usz_t     buffer_find(buffer_t str, u8_t character); 
@@ -6042,6 +6042,21 @@ buffer_to_u32_range(buffer_t s, usz_t begin, usz_t ope, u32_t* out) {
   return true;
 }
 
+static b32_t 
+buffer_to_u64_range(buffer_t s, usz_t begin, usz_t ope, u64_t* out) {
+  if (ope > s.size) return false;
+
+  u64_t number = 0;
+  for (usz_t i = begin; i < ope; ++i) {
+    if (!u8_is_digit(s.e[i]))
+      return false;
+    number *= 10;
+    number += ascii_to_digit(s.e[i]);
+  }
+  (*out) = number;
+  return true;
+}
+
 // Parsing functions
 
 
@@ -6105,6 +6120,11 @@ buffer_to_f32(buffer_t s, f32_t* out) {
 static b32_t 
 buffer_to_u32(buffer_t s, u32_t* out) {
   return buffer_to_u32_range(s, 0, s.size, out);
+}
+
+static b32_t 
+buffer_to_u64(buffer_t s, u64_t* out) {
+  return buffer_to_u64_range(s, 0, s.size, out);
 }
 
 // Parsing functions

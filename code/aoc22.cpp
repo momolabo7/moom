@@ -1715,6 +1715,437 @@ aoc22_d10p2(const char* filename, arena_t* arena)
   }
   printf("\n");
 }
+
+struct aoc22_d11_item_node_t
+{
+  u64_t worry_level;
+
+  aoc22_d11_item_node_t* next;
+  aoc22_d11_item_node_t* prev;
+};
+
+struct aoc22_d11_monkey_t
+{
+  u8_t operation_type; // '+' or '*'
+  u32_t operation_value; // let 0 be a special case, where it's old*old
+
+  u32_t test_value;
+  u32_t throw_to_index_if_true;
+  u32_t throw_to_index_if_false;
+
+  u64_t inspect_count;
+  aoc22_d11_item_node_t item_sentinel;
+};
+
+
+static void 
+aoc22_d11p1(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+
+  u32_t item_count = 0;
+  u32_t monkey_count = 0;
+
+  // One pass to find out how many monkeys and items there are
+  while(!stream_is_eos(s)) 
+  {
+    buffer_t line = stream_consume_line(s);
+    if (line.e[0] == 'M') 
+    {
+      ++monkey_count;
+    }
+    else if (line.e[2] == 'S')
+    {
+      //@note: we can safely assume that all monkeys have at least 1 item
+      ++item_count;
+      for(u32_t i = 18; i < line.size; ++i)
+      {
+        if (line.e[i] == ',')
+          ++item_count;
+      }
+    }
+  }
+
+  auto* items = arena_push_arr_zero(aoc22_d11_item_node_t, arena, item_count);
+  auto* monkeys = arena_push_arr_zero(aoc22_d11_monkey_t, arena, monkey_count);
+  for_cnt(i, monkey_count)
+    cll_init(&monkeys[i].item_sentinel);
+
+  stream_reset(s);
+  u32_t monkey_index = 0;
+  u32_t item_index = 0;
+  while(!stream_is_eos(s)) 
+  {
+    buffer_t line = stream_consume_line(s);
+    if (line.e[2] == 'S') // "Starting items"
+    {
+      u32_t start = 18;
+      for(u32_t end = start+1; end < line.size; ++end)
+      {
+        if (line.e[end] == ',') 
+        {
+          aoc22_d11_item_node_t* item = items + item_index++;
+          aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+          buffer_to_u64(buffer_set(line.e + start, end-start), &item->worry_level);
+          cll_push_back(&monkey->item_sentinel, item);
+          start = end += 2;
+        }
+      }
+      aoc22_d11_item_node_t* item = items + item_index++;
+      aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+      buffer_to_u64(buffer_set(line.e + start, line.size-start), &item->worry_level);
+      cll_push_back(&monkey->item_sentinel, item);
+    }
+    else if (line.e[2] == 'O') // "Operation"
+    {
+      aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+      monkey->operation_type = line.e[23];
+
+      // @note: if this fails, operation_value will be 0, which will indicate old*old
+      buffer_to_u32(buffer_set(line.e + 25, line.size - 25), &monkey->operation_value);
+    }
+    else if (line.e[2] == 'T') // "Test"
+    {
+      aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+      buffer_to_u32(buffer_set(line.e + 21, line.size - 21), &monkey->test_value);
+
+
+    }
+    else if (line.e[7] == 't') // "if true"
+    {
+      aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+      buffer_to_u32(buffer_set(line.e + 29, line.size - 29), &monkey->throw_to_index_if_true);
+    }
+    else if (line.e[7] == 'f') // "if false"
+    {
+      aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+      buffer_to_u32(buffer_set(line.e + 30, line.size - 30), &monkey->throw_to_index_if_false);
+
+      ++monkey_index; // this is the last instruction
+    }
+  }
+
+  // simulation
+  for_cnt(round, 20)
+  {
+    for_cnt(monkey_index, monkey_count)
+    {
+      aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+      while(!cll_is_empty(&monkey->item_sentinel))
+      {
+        monkey->inspect_count++;
+        aoc22_d11_item_node_t* item = cll_first(&monkey->item_sentinel);
+
+        if (monkey->operation_type == '*')
+        {
+          // @note: operation value might be 0, in which it's old*old
+          item->worry_level *= ((monkey->operation_value == 0) ? item->worry_level : monkey->operation_value);
+        }
+        else if (monkey->operation_type == '+')
+        {
+          // @note: operation value should always be > 0
+          item->worry_level += monkey->operation_value;
+        }
+        item->worry_level /= 3;
+        cll_remove(item);
+        if (item->worry_level % monkey->test_value == 0) // is divisible
+        {
+          cll_push_back(&monkeys[monkey->throw_to_index_if_true].item_sentinel, item);
+        }
+        else
+        {
+          cll_push_back(&monkeys[monkey->throw_to_index_if_false].item_sentinel, item);
+        }
+
+      }
+
+    }
+
+  }
+
+
+#if 0
+  for_cnt(i, monkey_count)
+  {
+    aoc22_d11_monkey_t* monkey = monkeys + i;
+    printf("monkey %d:\n", i);
+    printf("  items: ");
+    cll_foreach(itr, &monkey->item_sentinel)
+    {
+      printf("%d ", itr->worry_level);
+    }
+    printf("\n");
+    printf("  operation: %c %d\n", monkey->operation_type, monkey->operation_value);
+    printf("  test: %d\n", monkey->test_value);
+    printf("  true: %d\n", monkey->throw_to_index_if_true);
+    printf("  false: %d\n", monkey->throw_to_index_if_false);
+  }
+#endif
+
+  u32_t active_monkey_0 = 0;
+  u32_t active_monkey_1 = 0;
+
+  for(u32_t i = 0; i < monkey_count; ++i)
+  {
+    if (monkeys[i].inspect_count > monkeys[active_monkey_0].inspect_count)
+    {
+      active_monkey_0 = i;
+    }
+  }
+  if (active_monkey_0 == 0) active_monkey_1 = 1;
+
+  for(u32_t i = 0; i < monkey_count; ++i)
+  {
+    if (i == active_monkey_0) continue;
+
+    if (monkeys[i].inspect_count > monkeys[active_monkey_1].inspect_count )
+    {
+      active_monkey_1 = i;
+      break;
+    }
+  }
+  printf("%d\n", monkeys[active_monkey_0].inspect_count * monkeys[active_monkey_1].inspect_count);
+
+}
+
+// @note:
+//
+// There's apparently a smart way and dumb way to do this.
+// 
+// The dumb (but scalable) way is to just use a growing bigint
+//
+// The smarter way (but not scalable way) is apparently to 
+// realize that we need to do the 'tests' through checking if
+// something is divisible. Then we should be able to find a number
+// in which the nature of what we are checking starts repeating. 
+// Okay the wording is terrible but let's use examples.
+//
+// Let's say we are checking divisibility by 2. 
+// Then:
+//   0 % 2 = 0
+//   1 % 2 = 1
+//   2 % 2 = 0
+//   3 % 2 = 1
+//   4 % 2 = 0
+//   5 % 2 = 1
+// We can say that checking checking for 0 is the same as checking
+// for 2 is the same as checking for 4. Likewise for 1 -> 3 -> 5.
+//
+// This expands when we check for 2 numbers. Let's say now we are
+// checking for divisibility by 2 and 3:
+//   0  % 2 = 0   0  % 3 = 0
+//   1  % 2 = 1   1  % 3 = 1
+//   2  % 2 = 0   2  % 3 = 2
+//   3  % 2 = 1   3  % 3 = 0
+//   4  % 2 = 0   4  % 3 = 1
+//   5  % 2 = 1   5  % 3 = 2
+//
+//   6  % 2 = 0   6  % 3 = 0
+//   7  % 2 = 1   7  % 3 = 1
+//   8  % 2 = 0   8  % 3 = 2
+//   9  % 2 = 1   9  % 3 = 0
+//   10 % 2 = 0   10 % 3 = 1
+//   11 % 2 = 1   11 % 3 = 2
+//
+//
+//   Notice that the combination of results between %2 and %3 repeats
+//   after 6, which means that checking for 6 is the same for checking
+//   for 0, checking for 7 is the same for checking for 1, etc.
+//
+//   This means that we don't have to store numbers like 11; we can just
+//   store it as 5, and we get that but doing 11 % 6!
+//
+//   And 6 is simply 2 * 3. 
+//   Thus, we should be able to just get all the numbers we are interested to 
+//   divide, multiply them together, and modulo that value on our worry level of
+//   our items after result of the operation. 
+//
+//   (technically we can use the LCM of all the numbers too!)
+// 
+static void 
+aoc22_d11p2(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!file_buffer) return;
+
+  make(stream_t, s);
+  stream_init(s, file_buffer);
+
+  u32_t item_count = 0;
+  u32_t monkey_count = 0;
+  u32_t supermodulo = 1;
+
+  // One pass to find out how many monkeys and items there are
+  while(!stream_is_eos(s)) 
+  {
+    buffer_t line = stream_consume_line(s);
+    if (line.e[0] == 'M') 
+    {
+      ++monkey_count;
+    }
+    else if (line.e[2] == 'S')
+    {
+      //@note: we can safely assume that all monkeys have at least 1 item
+      ++item_count;
+      for(u32_t i = 18; i < line.size; ++i)
+      {
+        if (line.e[i] == ',')
+          ++item_count;
+      }
+    }
+  }
+
+  auto* items = arena_push_arr_zero(aoc22_d11_item_node_t, arena, item_count);
+  auto* monkeys = arena_push_arr_zero(aoc22_d11_monkey_t, arena, monkey_count);
+  for_cnt(i, monkey_count)
+    cll_init(&monkeys[i].item_sentinel);
+
+  stream_reset(s);
+  u32_t monkey_index = 0;
+  u32_t item_index = 0;
+  while(!stream_is_eos(s)) 
+  {
+    buffer_t line = stream_consume_line(s);
+    if (line.e[2] == 'S') // "Starting items"
+    {
+      u32_t start = 18;
+      for(u32_t end = start+1; end < line.size; ++end)
+      {
+        if (line.e[end] == ',') 
+        {
+          aoc22_d11_item_node_t* item = items + item_index++;
+          aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+          buffer_to_u64(buffer_set(line.e + start, end-start), &item->worry_level);
+          cll_push_back(&monkey->item_sentinel, item);
+          start = end += 2;
+        }
+      }
+      aoc22_d11_item_node_t* item = items + item_index++;
+      aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+      buffer_to_u64(buffer_set(line.e + start, line.size-start), &item->worry_level);
+      cll_push_back(&monkey->item_sentinel, item);
+    }
+    else if (line.e[2] == 'O') // "Operation"
+    {
+      aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+      monkey->operation_type = line.e[23];
+
+      // @note: if this fails, operation_value will be 0, which will indicate old*old
+      buffer_to_u32(buffer_set(line.e + 25, line.size - 25), &monkey->operation_value);
+    }
+    else if (line.e[2] == 'T') // "Test"
+    {
+      aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+      buffer_to_u32(buffer_set(line.e + 21, line.size - 21), &monkey->test_value);
+      supermodulo *= monkey->test_value;
+    }
+    else if (line.e[7] == 't') // "if true"
+    {
+      aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+      buffer_to_u32(buffer_set(line.e + 29, line.size - 29), &monkey->throw_to_index_if_true);
+    }
+    else if (line.e[7] == 'f') // "if false"
+    {
+      aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+      buffer_to_u32(buffer_set(line.e + 30, line.size - 30), &monkey->throw_to_index_if_false);
+
+      ++monkey_index; // this is the last instruction
+    }
+  }
+
+  // simulation
+  for_cnt(round, 10000)
+  {
+    for_cnt(monkey_index, monkey_count)
+    {
+      aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
+      while(!cll_is_empty(&monkey->item_sentinel))
+      {
+        monkey->inspect_count++;
+        aoc22_d11_item_node_t* item = cll_first(&monkey->item_sentinel);
+
+        if (monkey->operation_type == '*')
+        {
+          // @note: operation value might be 0, in which it's old*old
+          u64_t value_to_multiply = ((monkey->operation_value == 0) ? item->worry_level : monkey->operation_value);
+          item->worry_level *= value_to_multiply;
+        }
+        else if (monkey->operation_type == '+')
+        {
+          // @note: operation value should always be > 0
+          item->worry_level += monkey->operation_value;
+        }
+        item->worry_level %= supermodulo;
+        cll_remove(item);
+        if (item->worry_level % monkey->test_value == 0) // is divisible
+        {
+          cll_push_back(&monkeys[monkey->throw_to_index_if_true].item_sentinel, item);
+        }
+        else
+        {
+          cll_push_back(&monkeys[monkey->throw_to_index_if_false].item_sentinel, item);
+        }
+
+#if 0
+        printf("Round End Inspect Count:\n");
+        for_cnt(i, monkey_count)
+        {
+          aoc22_d11_monkey_t* monkey = monkeys + i;
+          printf("monkey %d: ", i);
+          cll_foreach(itr, &monkey->item_sentinel)
+          {
+            printf("%d ", itr->worry_level);
+          }
+          printf("\n");
+        }
+#endif
+      }
+
+#if 0
+      for(u32_t i = 0; i < monkey_count; ++i)
+      {
+        printf("monkey %u: %u\n", i, monkeys[i].inspect_count);
+      }
+#endif
+    }
+
+  }
+
+
+
+  u32_t active_monkey_0 = 0;
+  u32_t active_monkey_1 = 0;
+
+  for(u32_t i = 0; i < monkey_count; ++i)
+  {
+    if (monkeys[i].inspect_count > monkeys[active_monkey_0].inspect_count)
+    {
+      active_monkey_0 = i;
+    }
+  }
+  if (active_monkey_0 == 0) active_monkey_1 = 1;
+
+  for(u32_t i = 0; i < monkey_count; ++i)
+  {
+    if (i == active_monkey_0) continue;
+
+    if (monkeys[i].inspect_count > monkeys[active_monkey_1].inspect_count )
+    {
+      active_monkey_1 = i;
+      break;
+    }
+  }
+  printf("%llu\n", monkeys[active_monkey_0].inspect_count * monkeys[active_monkey_1].inspect_count);
+
+
+}
+
 int main(int argv, char** argc) {
   if (argv < 2) {
     printf("Usage: aoc22 <day> <part> <filename>\nExample: aoc22 1 1 input.txt\n");
@@ -1761,5 +2192,6 @@ int main(int argv, char** argc) {
   aoc22_route(10,1);
   aoc22_route(10,2);
   aoc22_route(11,1);
+  aoc22_route(11,2);
 
 }

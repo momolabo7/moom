@@ -684,7 +684,7 @@ lit_splash_update() {
   eden_draw_text(
       g_eden, 
       font,
-      buffer_from_lit("momolabo77"), 
+      buffer_from_lit("momolabo7"), 
       rgba_hex(0xF8C8DCFF),
       v2f_set(LIT_WIDTH/2, scroll_y),
       72.f,
