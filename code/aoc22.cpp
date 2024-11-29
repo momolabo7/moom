@@ -2193,5 +2193,6 @@ int main(int argv, char** argc) {
   aoc22_route(10,2);
   aoc22_route(11,1);
   aoc22_route(11,2);
+  aoc22_route(12,1);
 
 }

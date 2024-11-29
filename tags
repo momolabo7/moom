@@ -137,6 +137,7 @@ ascii_to_digit	code/momo.h	/^#define ascii_to_digit(/;"	d	language:C++
 assert	code/momo.h	/^# define assert(/;"	d	language:C++
 assert	code/momo.h	/^# define assert(/;"	d	language:C++
 assert_callback	code/momo.h	/^#  define assert_callback(/;"	d	language:C++
+assert_callback	code/pass_gbg.cpp	/^#define assert_callback(/;"	d	language:C++	file:
 assert_callback	code/pass_lit.cpp	/^#define assert_callback(/;"	d	language:C++	file:
 assert_callback	code/pass_sandbox.cpp	/^#define assert_callback(/;"	d	language:C++	file:
 assert_callback	code/pass_tbp.cpp	/^#define assert_callback(/;"	d	language:C++	file:
@@ -356,7 +357,6 @@ cbuffer_to_f64	code/momo.h	/^cbuffer_to_f64(const c8_t* p) {$/;"	f	language:C++	
 cbuffer_to_f64	code/momo.h	/^static f64_t cbuffer_to_f64(const c8_t* p); $/;"	p	language:C++	typeref:typename:f64_t
 cbuffer_to_u32	code/momo.h	/^cbuffer_to_u32(const c8_t* str)$/;"	f	language:C++	typeref:typename:u32_t
 cbuffer_to_u32	code/momo.h	/^static u32_t cbuffer_to_u32(const c8_t* p); $/;"	p	language:C++	typeref:typename:u32_t
-cells	code/app_gbg.cpp	/^  u8_t cells[GBG_GRID_HEIGHT][GBG_GRID_WIDTH];$/;"	m	language:C++	struct:gbg_t	typeref:typename:u8_t[][]	file:
 cells	code/app_tbg.cpp	/^  u8_t cells[TBP_GRID_HEIGHT][TBP_GRID_WIDTH];$/;"	m	language:C++	struct:tbp_t	typeref:typename:u8_t[][]	file:
 cells	code/app_tbp.cpp	/^  u8_t cells[TBP_GRID_HEIGHT][TBP_GRID_WIDTH];$/;"	m	language:C++	struct:tbp_t	typeref:typename:u8_t[][]	file:
 CHANNEL	code/w32_sandbox_socket.cpp	/^#define CHANNEL /;"	d	language:C++	file:
@@ -1361,15 +1361,16 @@ GBG_DESIGN_HEIGHT	code/app_gbg.cpp	/^#define GBG_DESIGN_HEIGHT /;"	d	language:C+
 GBG_DESIGN_WIDTH	code/app_gbg.cpp	/^#define GBG_DESIGN_WIDTH /;"	d	language:C++	file:
 GBG_GRID_COLS	code/app_gbg.cpp	/^#define GBG_GRID_COLS /;"	d	language:C++	file:
 GBG_GRID_HEIGHT	code/app_gbg.cpp	/^#define GBG_GRID_HEIGHT /;"	d	language:C++	file:
+gbg_grid_pos_to_real_pos	code/app_gbg.cpp	/^gbg_grid_pos_to_real_pos(v2u_t grid_pos)$/;"	f	language:C++	typeref:typename:v2f_t	file:
 GBG_GRID_ROWS	code/app_gbg.cpp	/^#define GBG_GRID_ROWS /;"	d	language:C++	file:
 GBG_GRID_START_X	code/app_gbg.cpp	/^#define GBG_GRID_START_X /;"	d	language:C++	file:
 GBG_GRID_START_Y	code/app_gbg.cpp	/^#define GBG_GRID_START_Y /;"	d	language:C++	file:
 GBG_GRID_WIDTH	code/app_gbg.cpp	/^#define GBG_GRID_WIDTH /;"	d	language:C++	file:
 gbg_player_t	code/app_gbg.cpp	/^struct gbg_player_t {$/;"	s	language:C++	file:
+gbg_render_grid	code/app_gbg.cpp	/^gbg_render_grid(eden_t* eden, gbg_t* gbg)$/;"	f	language:C++	typeref:typename:void	file:
 gbg_t	code/app_gbg.cpp	/^struct gbg_t {$/;"	s	language:C++	file:
 GBG_TILE_SIZE	code/app_gbg.cpp	/^#define GBG_TILE_SIZE /;"	d	language:C++	file:
-gbg_tile_t	code/app_gbg.cpp	/^struct gbg_tile_t {$/;"	s	language:C++	file:
-gbg_update_and_render_grid_stuff	code/app_gbg.cpp	/^gbg_update_and_render_grid_stuff(eden_t* eden, gbg_t* gbg, float start_x, float start_y)$/;"	f	language:C++	typeref:typename:void	file:
+gbg_tile_t	code/app_gbg.cpp	/^struct gbg_tile_t $/;"	s	language:C++	file:
 get_config	code/eden.h	/^  eden_get_config_f* get_config;$/;"	m	language:C++	struct:eden_functions_t	typeref:typename:eden_get_config_f *
 get_lowest_common_multiple	dump/operator_overloading_example.py	/^def get_lowest_common_multiple(a, b):$/;"	f	language:Python
 gfx	code/eden.h	/^  hell_gfx_t gfx;$/;"	m	language:C++	struct:eden_t	typeref:typename:hell_gfx_t
@@ -1536,6 +1537,7 @@ GL_ZERO	code/eden.h	/^#define GL_ZERO /;"	d	language:C++
 GOLD_32	code/momo.h	/^#define GOLD_32 /;"	d	language:C++
 GOLD_64	code/momo.h	/^#define GOLD_64 /;"	d	language:C++
 gpos	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+grid_pos	code/app_gbg.cpp	/^  v2u_t grid_pos;$/;"	m	language:C++	struct:gbg_player_t	typeref:typename:v2u_t	file:
 group_id	code/app_lit.cpp	/^  u32_t group_id;$/;"	m	language:C++	struct:lit_game_sensor_t	typeref:typename:u32_t	file:
 g_eden	code/app_lit.cpp	/^static eden_t* g_eden; $/;"	v	language:C++	typeref:typename:eden_t *	file:
 g_frame_dib	code/w32_chip8.cpp	/^w32_dib_t g_frame_dib;$/;"	v	language:C++	typeref:typename:w32_dib_t
@@ -1825,7 +1827,7 @@ insert	code/gist_hashmap.cpp	/^gist_hm_t insert(gist_hm_t* hm, const char* key, 
 inspector	code/eden.h	/^  hell_inspector_t inspector;$/;"	m	language:C++	struct:eden_t	typeref:typename:hell_inspector_t
 inspector_enabled	code/eden.h	/^  b32_t inspector_enabled;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:b32_t
 inspector_max_entries	code/eden.h	/^  u32_t inspector_max_entries;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
-inspect_count	code/aoc22.cpp	/^  u32_t inspect_count;$/;"	m	language:C++	struct:aoc22_d11_monkey_t	typeref:typename:u32_t	file:
+inspect_count	code/aoc22.cpp	/^  u64_t inspect_count;$/;"	m	language:C++	struct:aoc22_d11_monkey_t	typeref:typename:u64_t	file:
 instances_to_draw	code/eden.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLsizei
 instances_to_draw	code/eden.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:hell_gfx_opengl_triangle_batch_t	typeref:typename:GLsizei
 instance_color_vbo	code/eden.h	/^  GLuint instance_color_vbo;$/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
@@ -2156,6 +2158,7 @@ m44f_translation	code/momo.h	/^m44f_translation(f32_t x, f32_t y, f32_t z) {$/;"
 m44f_translation	code/momo.h	/^static m44f_t m44f_translation(f32_t x, f32_t y, f32_t z = 0.f);$/;"	p	language:C++	typeref:typename:m44f_t
 m44f_transpose	code/momo.h	/^m44f_transpose(m44f_t m) {$/;"	f	language:C++	typeref:typename:m44f_t
 m44f_transpose	code/momo.h	/^static m44f_t m44f_transpose(m44f_t m);$/;"	p	language:C++	typeref:typename:m44f_t
+main	build/meta_test.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/aoc22.cpp	/^int main(int argv, char** argc) {$/;"	f	language:C++	typeref:typename:int
 main	code/aoc23.cpp	/^int main(int argv, char** argc) {$/;"	f	language:C++	typeref:typename:int
 main	code/euler.cpp	/^main() {$/;"	f	language:C++	typeref:typename:int
@@ -2165,6 +2168,7 @@ main	code/gist_list.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/gist_ring_buffer.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/gist_tuple.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/meta.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
+main	code/pass_gbg.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/pass_lit.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/pass_sandbox.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/pass_tbp.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
@@ -2481,8 +2485,6 @@ point_count	code/app_lit.cpp	/^  u32_t point_count;$/;"	m	language:C++	struct:li
 point_count	code/momo.h	/^  u32_t point_count;$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u32_t
 point_of_rotation	code/app_lit.cpp	/^  v2f_t* point_of_rotation;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:v2f_t *	file:
 PORT	code/w32_sandbox_socket.cpp	/^#define PORT /;"	d	language:C++	file:
-pos	code/app_gbg.cpp	/^  v2f_t pos;$/;"	m	language:C++	struct:gbg_player_t	typeref:typename:v2f_t	file:
-pos	code/app_gbg.cpp	/^  v2f_t pos;$/;"	m	language:C++	struct:gbg_tile_t	typeref:typename:v2f_t	file:
 pos	code/app_lit.cpp	/^  v2f_t pos, vel;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t	file:
 pos	code/app_lit.cpp	/^  v2f_t pos;  $/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:v2f_t	file:
 pos	code/app_lit.cpp	/^  v2f_t pos;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:v2f_t	file:
@@ -2505,6 +2507,7 @@ prev	code/gist_linked_list.cpp	/^  gist_cdl_node* prev;$/;"	m	language:C++	struc
 prev	code/ship_app_lit.cpp	/^  w32_memory_t* prev;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
 prev	code/w32_eden.cpp	/^  w32_memory_t* prev;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
 profiler	code/eden.h	/^  hell_profiler_t profiler;$/;"	m	language:C++	struct:eden_t	typeref:typename:hell_profiler_t
+Profiler_Block_Types	build/meta_test.h	/^enum Profiler_Block_Types {$/;"	g	language:C++
 profiler_enabled	code/eden.h	/^  b32_t profiler_enabled;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:b32_t
 profiler_max_entries	code/eden.h	/^  u32_t profiler_max_entries;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 profiler_max_snapshots_per_entry	code/eden.h	/^  u32_t profiler_max_snapshots_per_entry;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
@@ -2518,6 +2521,7 @@ ram	code/w32_chip8.cpp	/^  u8_t ram[4096];$/;"	m	language:C++	struct:chip8_t	typ
 ram_usage	code/w32_chip8.cpp	/^  u32_t ram_usage;$/;"	m	language:C++	struct:chip8_t	typeref:typename:u32_t	file:
 rbg_to_hsl	code/momo.h	/^rbg_to_hsl(rgb_t c) {$/;"	f	language:C++	typeref:typename:hsl_t
 rbg_to_hsl	code/momo.h	/^static hsl_t  rbg_to_hsl(rgb_t c);$/;"	p	language:C++	typeref:typename:hsl_t
+real_pos	code/app_gbg.cpp	/^  v2f_t real_pos;$/;"	m	language:C++	struct:gbg_player_t	typeref:typename:v2f_t	file:
 rear	code/gist_ring_buffer.cpp	/^  u32_t rear;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
 receiver	code/twitch_bot.cpp	/^  str_t receiver;$/;"	m	language:C++	struct:momolabot_t	typeref:typename:str_t	file:
 receiver	code/w32_sandbox_twitch_bot.cpp	/^  str_t receiver;$/;"	m	language:C++	struct:tmi_t	typeref:typename:str_t	file:
@@ -2634,6 +2638,7 @@ samples_per_second	code/w32_eden.cpp	/^  u32_t samples_per_second;$/;"	m	languag
 sample_count	code/eden.h	/^  u32_t sample_count;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:u32_t
 sample_rate	code/momo.h	/^  u32_t sample_rate;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u32_t
 SANDBOX_ASSET_FILE	code/eden_asset_id_sandbox.h	/^#define SANDBOX_ASSET_FILE /;"	d	language:C++
+sandbox_res_dir	code/pass_gbg.cpp	/^#define sandbox_res_dir(/;"	d	language:C++	file:
 sandbox_res_dir	code/pass_sandbox.cpp	/^#define sandbox_res_dir(/;"	d	language:C++	file:
 sandbox_res_dir	code/pass_tbp.cpp	/^#define sandbox_res_dir(/;"	d	language:C++	file:
 sandbox_t	code/app_sandbox.cpp	/^struct sandbox_t $/;"	s	language:C++	file:
@@ -2947,9 +2952,9 @@ The MOMO (name pending) game engine	README.md	/^# The MOMO (name pending) game e
 thousands	code/momo.h	/^#define thousands(/;"	d	language:C++
 throw_to_index_if_false	code/aoc22.cpp	/^  u32_t throw_to_index_if_false;$/;"	m	language:C++	struct:aoc22_d11_monkey_t	typeref:typename:u32_t	file:
 throw_to_index_if_true	code/aoc22.cpp	/^  u32_t throw_to_index_if_true;$/;"	m	language:C++	struct:aoc22_d11_monkey_t	typeref:typename:u32_t	file:
-tile	code/app_gbg.cpp	/^  gbg_tile_t tile;$/;"	m	language:C++	struct:gbg_t	typeref:typename:gbg_tile_t	file:
 tile	code/app_tbg.cpp	/^  tbp_tile_t tile;$/;"	m	language:C++	struct:tbp_t	typeref:typename:tbp_tile_t	file:
 tile	code/app_tbp.cpp	/^  tbp_tile_t tile;$/;"	m	language:C++	struct:tbp_t	typeref:typename:tbp_tile_t	file:
+tiles	code/app_gbg.cpp	/^  gbg_tile_t tiles[GBG_GRID_HEIGHT][GBG_GRID_WIDTH];$/;"	m	language:C++	struct:gbg_t	typeref:typename:gbg_tile_t[][]	file:
 timer	code/app_lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_credits_t	typeref:typename:f32_t	file:
 timer	code/app_lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:f32_t	file:
 timer	code/app_lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_splash_t	typeref:typename:f32_t	file:

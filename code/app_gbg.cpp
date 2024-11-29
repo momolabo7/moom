@@ -7,29 +7,16 @@
 #include "eden_asset_id_sandbox.h"
 #include "eden.h"
 
-#define GBG_DESIGN_WIDTH (1600)
+#define GBG_DESIGN_WIDTH (900)
 #define GBG_DESIGN_HEIGHT (900)
-
-// @note: 
-//
-// Generally speaking, the grid 2 units wide in the middle of the screen
-// and the sides are 1 unit at the sides.
-//
-// ------------------------
-// |     |          |     |  
-// |     |          |     |
-// |  1  |    2     |  1  |
-// |     |          |     | 
-// |     |          |     |
-// ------------------------
 
 #define GBG_GRID_WIDTH (GBG_DESIGN_WIDTH/4*2)
 #define GBG_GRID_HEIGHT (GBG_DESIGN_HEIGHT)
-#define GBG_GRID_START_X (GBG_DESIGN_WIDTH/4)
-#define GBG_GRID_START_Y (0)
-#define GBG_GRID_ROWS (5)
-#define GBG_GRID_COLS (5)
-#define GBG_TILE_SIZE (GBG_GRID_WIDTH/GBG_GRID_COLS)
+#define GBG_TILE_SIZE (GBG_GRID_HEIGHT/GBG_GRID_ROWS)
+#define GBG_GRID_START_X (GBG_TILE_SIZE/2)
+#define GBG_GRID_START_Y (GBG_TILE_SIZE/2)
+#define GBG_GRID_ROWS (9)
+#define GBG_GRID_COLS (9)
 
 //
 // Game functions
@@ -67,35 +54,42 @@ eden_get_config_sig(eden_get_config)
 }
 
 struct gbg_player_t {
-  v2f_t pos;
+  v2f_t real_pos;
+  v2u_t grid_pos;
 };
 
-struct gbg_tile_t {
-  v2f_t pos;
+struct gbg_tile_t 
+{
 };
 
 
 struct gbg_t {
   arena_t arena;
 
-  gbg_player_t player;
-  gbg_tile_t tile;
 
-  u8_t cells[GBG_GRID_HEIGHT][GBG_GRID_WIDTH];
+  gbg_player_t player;
+  gbg_tile_t tiles[GBG_GRID_HEIGHT][GBG_GRID_WIDTH];
 };
 
-
+static v2f_t
+gbg_grid_pos_to_real_pos(v2u_t grid_pos)
+{
+  v2f_t ret;
+  ret.x = grid_pos.x * GBG_TILE_SIZE + GBG_TILE_SIZE/2;
+  ret.y = grid_pos.y * GBG_TILE_SIZE + GBG_TILE_SIZE/2;
+  return ret;
+}
 
 static void 
-gbg_update_and_render_grid_stuff(eden_t* eden, gbg_t* gbg, float start_x, float start_y)
+gbg_render_grid(eden_t* eden, gbg_t* gbg)
 {
   //
   // Draw grid
   //
   // @note: we start from the top left and render right-down
   //
-  f32_t current_x = start_x;
-  f32_t current_y = start_y;
+  f32_t current_x = GBG_GRID_START_X;
+  f32_t current_y = GBG_GRID_START_Y;
 
   // background
 #if 0
@@ -120,7 +114,7 @@ gbg_update_and_render_grid_stuff(eden_t* eden, gbg_t* gbg, float start_x, float 
       current_x += GBG_TILE_SIZE;
     }
     current_y += GBG_TILE_SIZE;
-    current_x = start_x;
+    current_x = GBG_GRID_START_X;
   }
 }
 
@@ -142,25 +136,47 @@ eden_update_and_render_sig(eden_update_and_render)
 
   eden_clear_canvas(eden, rgba_set(0.1f, 0.1f, 0.1f, 1.0f));
   // Player controls
+  if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_D)) 
   {
-    if (eden_is_button_down(eden, EDEN_BUTTON_CODE_A)) 
+    if (gbg->player.grid_pos.x < GBG_GRID_COLS)
     {
+      gbg->player.grid_pos.x += 1;
     }
-    if (eden_is_button_down(eden, EDEN_BUTTON_CODE_D)) 
+  }
+  if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_A)) 
+  {
+    if (gbg->player.grid_pos.x > 0)
     {
+      gbg->player.grid_pos.x -= 1;
     }
-    if (eden_is_button_down(eden, EDEN_BUTTON_CODE_SPACE))
+  }
+  if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_W)) 
+  {
+    if (gbg->player.grid_pos.y > 0)
     {
+      gbg->player.grid_pos.y -= 1;
+    }
+  }
+  if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_S)) 
+  {
+    if (gbg->player.grid_pos.y < GBG_GRID_ROWS)
+    {
+      gbg->player.grid_pos.y += 1;
     }
   }
 
-  gbg_update_and_render_grid_stuff(eden, gbg, GBG_GRID_START_X, 100);
 
+  // update player position
+  gbg->player.real_pos = gbg_grid_pos_to_real_pos(gbg->player.grid_pos); 
+
+  gbg_render_grid(eden, gbg);
+
+  // draw player
   eden_draw_rect(
       eden, 
-      gbg->player.pos,
+      gbg->player.real_pos,
       0.f, 
-      v2f_set(GBG_TILE_SIZE, GBG_TILE_SIZE),
+      v2f_set(GBG_TILE_SIZE, GBG_TILE_SIZE) * 0.8f,
       RGBA_GREEN);
 
 }
@@ -169,3 +185,7 @@ eden_update_and_render_sig(eden_update_and_render)
 //
 // @journal
 //
+// 2024-11-30
+//   Started basic movement of player. We probably should
+//   do a few more obstacles/enemies first before we start
+//   seriously looking into animation.
