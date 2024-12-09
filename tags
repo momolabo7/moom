@@ -20,6 +20,19 @@ aoc22_d11p1	code/aoc22.cpp	/^aoc22_d11p1(const char* filename, arena_t* arena) $
 aoc22_d11p2	code/aoc22.cpp	/^aoc22_d11p2(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d11_item_node_t	code/aoc22.cpp	/^struct aoc22_d11_item_node_t$/;"	s	language:C++	file:
 aoc22_d11_monkey_t	code/aoc22.cpp	/^struct aoc22_d11_monkey_t$/;"	s	language:C++	file:
+aoc22_d12p1	code/aoc22.cpp	/^aoc22_d12p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d12p1_grid_init	code/aoc22.cpp	/^aoc22_d12p1_grid_init(aoc22_d12p1_grid_t* grid, buffer_t buffer, arena_t* arena)$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d12p1_grid_pathfind	code/aoc22.cpp	/^aoc22_d12p1_grid_pathfind(aoc22_d12p1_grid_t* grid)$/;"	f	language:C++	typeref:typename:u32_t	file:
+aoc22_d12p1_grid_pathfind_recalculate_neighbour_vertex	code/aoc22.cpp	/^aoc22_d12p1_grid_pathfind_recalculate_neighbour_vertex($/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d12p1_grid_t	code/aoc22.cpp	/^struct aoc22_d12p1_grid_t $/;"	s	language:C++	file:
+aoc22_d12p1_vertex_t	code/aoc22.cpp	/^struct aoc22_d12p1_vertex_t$/;"	s	language:C++	file:
+aoc22_d12p2	code/aoc22.cpp	/^aoc22_d12p2(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d12p2_grid_init	code/aoc22.cpp	/^aoc22_d12p2_grid_init(aoc22_d12p2_grid_t* grid, buffer_t buffer, arena_t* arena)$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d12p2_grid_pathfind	code/aoc22.cpp	/^aoc22_d12p2_grid_pathfind(aoc22_d12p2_grid_t* grid)$/;"	f	language:C++	typeref:typename:u32_t	file:
+aoc22_d12p2_grid_pathfind_recalculate_neighbour_vertex	code/aoc22.cpp	/^aoc22_d12p2_grid_pathfind_recalculate_neighbour_vertex($/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d12p2_grid_pathfind_sub	code/aoc22.cpp	/^aoc22_d12p2_grid_pathfind_sub(aoc22_d12p2_grid_t* grid)$/;"	f	language:C++	typeref:typename:u32_t	file:
+aoc22_d12p2_grid_t	code/aoc22.cpp	/^struct aoc22_d12p2_grid_t $/;"	s	language:C++	file:
+aoc22_d12p2_vertex_t	code/aoc22.cpp	/^struct aoc22_d12p2_vertex_t$/;"	s	language:C++	file:
 aoc22_d1p1	code/aoc22.cpp	/^static void aoc22_d1p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d1p2	code/aoc22.cpp	/^static void aoc22_d1p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d2p1	code/aoc22.cpp	/^static void aoc22_d2p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
@@ -587,9 +600,13 @@ digit_to_ascii	code/momo.h	/^#define digit_to_ascii(/;"	d	language:C++
 dir	code/aoc22.cpp	/^    aoc22_d7_dir_t* dir;$/;"	m	language:C++	union:aoc22_d7_node_t::__anonabc34737010a	typeref:typename:aoc22_d7_dir_t *	file:
 dir	code/app_lit.cpp	/^  v2f_t dir;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:v2f_t	file:
 display	code/w32_chip8.cpp	/^  u8_t display[CHIP8_DISPLAY_WIDTH * CHIP8_DISPLAY_HEIGHT];$/;"	m	language:C++	struct:chip8_t	typeref:typename:u8_t[]	file:
+distance	code/aoc22.cpp	/^  u32_t distance;$/;"	m	language:C++	struct:aoc22_d12p1_vertex_t	typeref:typename:u32_t	file:
+distance	code/aoc22.cpp	/^  u32_t distance;$/;"	m	language:C++	struct:aoc22_d12p2_vertex_t	typeref:typename:u32_t	file:
 dll	code/app_lit_ship.cpp	/^  HMODULE dll; $/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:HMODULE	file:
 dll	code/ship_app_lit.cpp	/^  HMODULE dll; $/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:HMODULE	file:
 dll	code/w32_eden.cpp	/^  HMODULE dll; $/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:HMODULE	file:
+done	code/aoc22.cpp	/^  b32_t done;$/;"	m	language:C++	struct:aoc22_d12p1_vertex_t	typeref:typename:b32_t	file:
+done	code/aoc22.cpp	/^  b32_t done;$/;"	m	language:C++	struct:aoc22_d12p2_vertex_t	typeref:typename:b32_t	file:
 doze	code/momo.h	/^doze(u32_t ms_to_doze) $/;"	f	language:C++	typeref:typename:void
 doze	code/momo.h	/^doze(u32_t ms_to_doze) {$/;"	f	language:C++	typeref:typename:void
 doze	code/momo.h	/^static void doze(u32_t ms_to_doze);$/;"	p	language:C++	typeref:typename:void
@@ -1566,6 +1583,10 @@ head	code/gist_tuple.cpp	/^  H head;$/;"	m	language:C++	struct:tuple_t	typeref:t
 head	code/momo.h	/^  json_array_node_t* head;$/;"	m	language:C++	struct:json_array_t	typeref:typename:json_array_node_t *
 head	code/momo.h	/^  struct _json_entry_t* head; \/\/ points to the first entry$/;"	m	language:C++	struct:json_object_t	typeref:struct:_json_entry_t *
 head	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+height	code/aoc22.cpp	/^  u32_t height;$/;"	m	language:C++	struct:aoc22_d12p1_vertex_t	typeref:typename:u32_t	file:
+height	code/aoc22.cpp	/^  u32_t height;$/;"	m	language:C++	struct:aoc22_d12p2_vertex_t	typeref:typename:u32_t	file:
+height	code/aoc22.cpp	/^  u32_t width, height;$/;"	m	language:C++	struct:aoc22_d12p1_grid_t	typeref:typename:u32_t	file:
+height	code/aoc22.cpp	/^  u32_t width, height;$/;"	m	language:C++	struct:aoc22_d12p2_grid_t	typeref:typename:u32_t	file:
 height	code/eden.h	/^  u32_t height;$/;"	m	language:C++	struct:eden_asset_bitmap_t	typeref:typename:u32_t
 height	code/eden.h	/^  u32_t height;$/;"	m	language:C++	struct:hell_gfx_opengl_texture_t	typeref:typename:u32_t
 height	code/eden_asset_file.h	/^  u32_t height;$/;"	m	language:C++	struct:asset_file_bitmap_t	typeref:typename:u32_t
@@ -2500,6 +2521,8 @@ pos	code/momo.h	/^  usz_t pos;$/;"	m	language:C++	struct:stream_t	typeref:typena
 pos_x	code/eden.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:hell_gfx_command_view_t	typeref:typename:f32_t
 pos_y	code/eden.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:hell_gfx_command_view_t	typeref:typename:f32_t
 prev	code/aoc22.cpp	/^  aoc22_d11_item_node_t* prev;$/;"	m	language:C++	struct:aoc22_d11_item_node_t	typeref:typename:aoc22_d11_item_node_t *	file:
+prev	code/aoc22.cpp	/^  aoc22_d12p1_vertex_t* prev;$/;"	m	language:C++	struct:aoc22_d12p1_vertex_t	typeref:typename:aoc22_d12p1_vertex_t *	file:
+prev	code/aoc22.cpp	/^  aoc22_d12p2_vertex_t* prev;$/;"	m	language:C++	struct:aoc22_d12p2_vertex_t	typeref:typename:aoc22_d12p2_vertex_t *	file:
 prev	code/aoc22.cpp	/^  aoc22_d5_node_t* prev;$/;"	m	language:C++	struct:aoc22_d5_node_t	typeref:typename:aoc22_d5_node_t *	file:
 prev	code/aoc22.cpp	/^  aoc22_d7_node_t* prev, *next;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:aoc22_d7_node_t *	file:
 prev	code/app_lit_ship.cpp	/^  w32_memory_t* prev;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
@@ -2791,6 +2814,8 @@ stack_pointer	code/w32_chip8.cpp	/^  u16_t stack_pointer; \/\/ used to point at 
 stage_fade_timer	code/app_lit.cpp	/^  f32_t stage_fade_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t	file:
 stage_flash_timer	code/app_lit.cpp	/^  f32_t stage_flash_timer;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t	file:
 start	code/app_lit.cpp	/^  v2f_t start;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:v2f_t	file:
+starts	code/aoc22.cpp	/^  u32_t* starts;$/;"	m	language:C++	struct:aoc22_d12p2_grid_t	typeref:typename:u32_t *	file:
+start_count	code/aoc22.cpp	/^  u32_t start_count;$/;"	m	language:C++	struct:aoc22_d12p2_grid_t	typeref:typename:u32_t	file:
 start_cycles	code/eden.h	/^  u32_t start_cycles;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:u32_t
 start_hits	code/eden.h	/^  u32_t start_hits;$/;"	m	language:C++	struct:hell_profiler_entry_t	typeref:typename:u32_t
 start_pt	code/app_lit.cpp	/^  v2f_t start_pt;$/;"	m	language:C++	struct:lit_game_edge_t	typeref:typename:v2f_t	file:
@@ -2869,6 +2894,8 @@ str_builder_remaining	code/momo.h	/^str_builder_remaining(str_builder_t* b) {$/;
 str_builder_t	code/momo.h	/^struct str_builder_t$/;"	s	language:C++
 student_id	code/tool_seat_randomizer.cpp	/^  u32_t student_id;$/;"	m	language:C++	struct:tsr_seat_t	typeref:typename:u32_t	file:
 swap	code/momo.h	/^#define swap(/;"	d	language:C++
+symbol	code/aoc22.cpp	/^  u8_t symbol;$/;"	m	language:C++	struct:aoc22_d12p1_vertex_t	typeref:typename:u8_t	file:
+symbol	code/aoc22.cpp	/^  u8_t symbol;$/;"	m	language:C++	struct:aoc22_d12p2_vertex_t	typeref:typename:u8_t	file:
 symbols	code/momo.h	/^  u16_t* symbols; $/;"	m	language:C++	struct:_png_huffman_t	typeref:typename:u16_t *
 symbol_count	code/momo.h	/^  u32_t symbol_count;$/;"	m	language:C++	struct:_png_huffman_t	typeref:typename:u32_t
 tail	code/gist_tuple.cpp	/^  tuple_t<T...> tail;$/;"	m	language:C++	struct:tuple_t	typeref:typename:tuple_t<T...>	file:
@@ -3167,7 +3194,11 @@ vao	code/eden.h	/^  GLuint vao;$/;"	m	language:C++	struct:hell_gfx_opengl_triang
 vel	code/app_lit.cpp	/^  v2f_t pos, vel;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:v2f_t	file:
 vel	code/app_tbg.cpp	/^  v2f_t pos, vel, acc;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:v2f_t	file:
 vel	code/app_tbp.cpp	/^  v2f_t pos, vel, acc;$/;"	m	language:C++	struct:tbp_player_t	typeref:typename:v2f_t	file:
+vertex_count	code/aoc22.cpp	/^  u32_t vertex_count;$/;"	m	language:C++	struct:aoc22_d12p1_grid_t	typeref:typename:u32_t	file:
+vertex_count	code/aoc22.cpp	/^  u32_t vertex_count;$/;"	m	language:C++	struct:aoc22_d12p2_grid_t	typeref:typename:u32_t	file:
 vertex_count	code/momo.h	/^  u32_t vertex_count;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:u32_t
+vertices	code/aoc22.cpp	/^  aoc22_d12p1_vertex_t* vertices;$/;"	m	language:C++	struct:aoc22_d12p1_grid_t	typeref:typename:aoc22_d12p1_vertex_t *	file:
+vertices	code/aoc22.cpp	/^  aoc22_d12p2_vertex_t* vertices;$/;"	m	language:C++	struct:aoc22_d12p2_grid_t	typeref:typename:aoc22_d12p2_vertex_t *	file:
 vertices	code/momo.h	/^  v2f_t* vertices;$/;"	m	language:C++	struct:_ttf_glyph_paths_t	typeref:typename:v2f_t *
 volume	code/eden.h	/^  f32_t volume;$/;"	m	language:C++	struct:eden_speaker_sound_t	typeref:typename:f32_t
 volume	code/eden.h	/^  f32_t volume;$/;"	m	language:C++	struct:hell_speaker_t	typeref:typename:f32_t
@@ -3455,6 +3486,8 @@ WGL_SUPPORT_OPENGL_ARB	code/w32_eden.cpp	/^#define WGL_SUPPORT_OPENGL_ARB /;"	d	
 WGL_TYPE_RGBA_ARB	code/app_lit_ship.cpp	/^#define WGL_TYPE_RGBA_ARB /;"	d	language:C++	file:
 WGL_TYPE_RGBA_ARB	code/ship_app_lit.cpp	/^#define WGL_TYPE_RGBA_ARB /;"	d	language:C++	file:
 WGL_TYPE_RGBA_ARB	code/w32_eden.cpp	/^#define WGL_TYPE_RGBA_ARB /;"	d	language:C++	file:
+width	code/aoc22.cpp	/^  u32_t width, height;$/;"	m	language:C++	struct:aoc22_d12p1_grid_t	typeref:typename:u32_t	file:
+width	code/aoc22.cpp	/^  u32_t width, height;$/;"	m	language:C++	struct:aoc22_d12p2_grid_t	typeref:typename:u32_t	file:
 width	code/eden.h	/^  u32_t width; $/;"	m	language:C++	struct:hell_gfx_opengl_texture_t	typeref:typename:u32_t
 width	code/eden.h	/^  u32_t width;$/;"	m	language:C++	struct:eden_asset_bitmap_t	typeref:typename:u32_t
 width	code/eden_asset_file.h	/^  u32_t width;$/;"	m	language:C++	struct:asset_file_bitmap_t	typeref:typename:u32_t
@@ -3482,6 +3515,8 @@ work_queue	code/app_lit_ship.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language
 work_queue	code/ship_app_lit.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_work_queue_t	file:
 work_queue	code/w32_eden.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_work_queue_t	file:
 worry_level	code/aoc22.cpp	/^  u64_t worry_level;$/;"	m	language:C++	struct:aoc22_d11_item_node_t	typeref:typename:u64_t	file:
+x	code/aoc22.cpp	/^  u32_t x;$/;"	m	language:C++	struct:aoc22_d12p1_vertex_t	typeref:typename:u32_t	file:
+x	code/aoc22.cpp	/^  u32_t x;$/;"	m	language:C++	struct:aoc22_d12p2_vertex_t	typeref:typename:u32_t	file:
 x	code/app_lit.cpp	/^  f32_t x;$/;"	m	language:C++	struct:lit_game_title_waypoint_t	typeref:typename:f32_t	file:
 x	code/momo.h	/^  s16_t x, y; $/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:s16_t
 x	code/momo.h	/^  struct { f32_t x, y, z, w; };$/;"	m	language:C++	struct:v4f_t::__anon1db7a63d0a08	typeref:typename:f32_t
@@ -3492,6 +3527,8 @@ x	code/momo.h	/^  struct { u32_t x, y; };$/;"	m	language:C++	struct:v2u_t::__ano
 x	code/momo.h	/^  u32_t x, y, w, h;$/;"	m	language:C++	struct:rp_rect_t	typeref:typename:u32_t
 x	code/momo.h	/^  u32_t x, y, w, h;$/;"	m	language:C++	struct:_rp_node	typeref:typename:u32_t
 x_intersect	code/momo.h	/^  f32_t x_intersect;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:f32_t
+y	code/aoc22.cpp	/^  u32_t y;$/;"	m	language:C++	struct:aoc22_d12p1_vertex_t	typeref:typename:u32_t	file:
+y	code/aoc22.cpp	/^  u32_t y;$/;"	m	language:C++	struct:aoc22_d12p2_vertex_t	typeref:typename:u32_t	file:
 y	code/momo.h	/^  s16_t x, y; $/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:s16_t
 y	code/momo.h	/^  struct { f32_t x, y, z, w; };$/;"	m	language:C++	struct:v4f_t::__anon1db7a63d0a08	typeref:typename:f32_t
 y	code/momo.h	/^  struct { f32_t x, y, z; };$/;"	m	language:C++	struct:v3f_t::__anon1db7a63d0808	typeref:typename:f32_t

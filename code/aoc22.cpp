@@ -2146,6 +2146,458 @@ aoc22_d11p2(const char* filename, arena_t* arena)
 
 }
 
+struct aoc22_d12p1_vertex_t
+{
+  u32_t x;
+  u32_t y;
+  u8_t symbol;
+  u32_t height;
+  u32_t distance;
+  b32_t done;
+  aoc22_d12p1_vertex_t* prev;
+};
+
+struct aoc22_d12p1_grid_t 
+{
+  aoc22_d12p1_vertex_t* vertices;
+  u32_t vertex_count;
+  u32_t width, height;
+};
+
+static void
+aoc22_d12p1_grid_init(aoc22_d12p1_grid_t* grid, buffer_t buffer, arena_t* arena)
+{
+  stream_t s;
+  stream_init(&s, buffer);
+
+  // figure out width
+  {
+    buffer_t line = stream_consume_line(&s);  
+    grid->width = line.size;
+  }
+
+  stream_reset(&s);
+  
+  // figure out height
+  grid->height = 0;
+  while(!stream_is_eos(&s)) 
+  {
+    stream_consume_line(&s);  
+    ++grid->height;
+  }
+  stream_reset(&s);
+
+  grid->vertex_count = grid->width * grid->height;
+  grid->vertices = arena_push_arr(aoc22_d12p1_vertex_t, arena, grid->vertex_count);
+  assert(grid->vertices);
+  
+  u32_t vertex_index = 0;
+  while(!stream_is_eos(&s)) 
+  {
+    buffer_t line = stream_consume_line(&s);  
+
+    for_cnt(i, line.size)
+    {
+      aoc22_d12p1_vertex_t* vertex = grid->vertices + vertex_index;
+      vertex->symbol = line.e[i];
+      vertex->prev = nullptr;
+      vertex->done = false;
+      vertex->x = vertex_index % grid->width;
+      vertex->y = vertex_index / grid->width;
+
+      if (vertex->symbol == 'S')
+      {
+        vertex->distance =  0;
+
+        // 'S' is 0.
+        vertex->height = 0; 
+      }
+      else if (vertex->symbol == 'E')
+      {
+        // 'E' should be 27.
+        vertex->height = 'z' - 'a' + 2;
+        vertex->distance = U32_MAX;
+      }
+      else 
+      {
+        vertex->distance = U32_MAX;
+
+        // 'a' is 1
+        // 'b' is 2
+        // ...etc
+        vertex->height = vertex->symbol - 'a' + 1;
+      }
+      vertex_index++;
+    }
+  }
+}
+
+static void
+aoc22_d12p1_grid_pathfind_recalculate_neighbour_vertex(
+    aoc22_d12p1_grid_t* grid, 
+    aoc22_d12p1_vertex_t* current_vertex,
+    u32_t neighbour_vertex_x,
+    u32_t neighbour_vertex_y)
+{
+  aoc22_d12p1_vertex_t* neighbour = grid->vertices + (neighbour_vertex_x + neighbour_vertex_y * grid->width);
+  b32_t can_climb = (neighbour->height-1 <= current_vertex->height);
+  if(!neighbour->done && can_climb)
+  {
+    u32_t new_distance = current_vertex->distance + 1;
+    if (new_distance < neighbour->distance) 
+    {
+      neighbour->distance = new_distance; 
+      neighbour->prev = current_vertex;
+    }
+  }
+}
+
+static u32_t 
+aoc22_d12p1_grid_pathfind(aoc22_d12p1_grid_t* grid)
+{
+  u32_t vertices_left = grid->vertex_count;
+  while (vertices_left > 0)
+  {
+    // find vertex with smallest dist
+    u32_t current_vertex_index = 0;
+    {
+      u32_t min = U32_MAX;
+      for_cnt(vertex_index, grid->vertex_count)
+      {
+        aoc22_d12p1_vertex_t* itr = grid->vertices + vertex_index;
+        if (itr->done) continue;
+
+        if (itr->distance < min)
+        {
+          min = itr->distance;
+          current_vertex_index = vertex_index;
+        }
+      }
+    }
+    aoc22_d12p1_vertex_t* current_vertex = grid->vertices + current_vertex_index;
+
+    // terminate case
+    //printf("symbol[%d,%d]: %c, %d\n", current_vertex->x, current_vertex->y, current_vertex->symbol, current_vertex->distance);
+    if (current_vertex->symbol == 'E')
+    {
+      //printf("E found\n");
+      auto* itr = current_vertex->prev;
+      u32_t sum = 0;
+      while(itr)
+      {
+        // printf("symbol[%d,%d]: %c, %d\n", itr->x, itr->y, itr->symbol, itr->distance);
+        itr = itr->prev;
+        ++sum;
+      }
+      return sum;
+    }
+    
+    // remove the smallest vertex from the list 
+    current_vertex->done = true; // emulates removal
+    vertices_left--;
+
+
+    // left
+    if (current_vertex->x > 0)
+    {
+      aoc22_d12p1_grid_pathfind_recalculate_neighbour_vertex(
+          grid, 
+          current_vertex, 
+          current_vertex->x - 1, 
+          current_vertex->y);
+    }
+    //right
+    if (current_vertex->x < grid->width-1)
+    {
+      aoc22_d12p1_grid_pathfind_recalculate_neighbour_vertex(
+          grid, 
+          current_vertex, 
+          current_vertex->x + 1, 
+          current_vertex->y);
+    }
+    // up
+    if (current_vertex->y > 0)
+    {
+      aoc22_d12p1_grid_pathfind_recalculate_neighbour_vertex(
+          grid, 
+          current_vertex, 
+          current_vertex->x, 
+          current_vertex->y - 1);
+    }
+    // down
+    if (current_vertex->y < grid->height-1)
+    {
+      aoc22_d12p1_grid_pathfind_recalculate_neighbour_vertex(
+          grid, 
+          current_vertex, 
+          current_vertex->x, 
+          current_vertex->y + 1);
+    }
+  }
+  return 0;
+}
+
+
+static void 
+aoc22_d12p1(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!file_buffer) return;
+
+  aoc22_d12p1_grid_t grid;
+  aoc22_d12p1_grid_init(&grid, file_buffer, arena); 
+  u32_t steps = aoc22_d12p1_grid_pathfind(&grid);
+  printf("%d\n", steps);
+}
+
+struct aoc22_d12p2_vertex_t
+{
+  u32_t x;
+  u32_t y;
+  u8_t symbol;
+  u32_t height;
+  u32_t distance;
+  b32_t done;
+  aoc22_d12p2_vertex_t* prev;
+};
+
+struct aoc22_d12p2_grid_t 
+{
+  aoc22_d12p2_vertex_t* vertices;
+  u32_t vertex_count;
+  u32_t width, height;
+
+  u32_t* starts;
+  u32_t start_count;
+};
+
+static void
+aoc22_d12p2_grid_init(aoc22_d12p2_grid_t* grid, buffer_t buffer, arena_t* arena)
+{
+  stream_t s;
+  stream_init(&s, buffer);
+
+  // figure out width
+  {
+    buffer_t line = stream_consume_line(&s);  
+    grid->width = line.size;
+  }
+
+  stream_reset(&s);
+  
+  // figure out height
+  // at the same time, figure out how many starting points
+  grid->height = 0;
+  grid->start_count = 0;
+  while(!stream_is_eos(&s)) 
+  {
+    buffer_t line = stream_consume_line(&s);  
+    for_cnt(i, line.size)
+    {
+      if (line.e[i] == 'S' || line.e[i] == 'a')
+        ++grid->start_count;
+    }
+    ++grid->height;
+  }
+  stream_reset(&s);
+
+  grid->vertex_count = grid->width * grid->height;
+  grid->vertices = arena_push_arr(aoc22_d12p2_vertex_t, arena, grid->vertex_count);
+  grid->starts = arena_push_arr(u32_t, arena, grid->start_count);
+  assert(grid->starts);
+  assert(grid->vertices);
+  
+  u32_t vertex_index = 0;
+  u32_t start_index = 0;
+  while(!stream_is_eos(&s)) 
+  {
+    buffer_t line = stream_consume_line(&s);  
+
+    for_cnt(i, line.size)
+    {
+      aoc22_d12p2_vertex_t* vertex = grid->vertices + vertex_index;
+      vertex->symbol = line.e[i];
+      vertex->prev = nullptr;
+      vertex->done = false;
+      vertex->x = vertex_index % grid->width;
+      vertex->y = vertex_index / grid->width;
+      vertex->distance = U32_MAX;
+
+      if (vertex->symbol == 'S')
+      {
+        vertex->symbol = 'a';
+      }
+
+
+      if (vertex->symbol == 'E')
+      {
+        // 'E' should be 27.
+        vertex->height = 'z' - 'a' + 2;
+      }
+      else 
+      {
+        // 'a' is 1
+        // 'b' is 2
+        // ...etc
+        vertex->height = vertex->symbol - 'a' + 1;
+
+        if (vertex->symbol == 'a')
+        {
+          grid->starts[start_index++] = vertex_index;
+        }
+      }
+      vertex_index++;
+    }
+  }
+
+}
+
+static void
+aoc22_d12p2_grid_pathfind_recalculate_neighbour_vertex(
+    aoc22_d12p2_grid_t* grid, 
+    aoc22_d12p2_vertex_t* current_vertex,
+    u32_t neighbour_vertex_x,
+    u32_t neighbour_vertex_y)
+{
+  aoc22_d12p2_vertex_t* neighbour = grid->vertices + (neighbour_vertex_x + neighbour_vertex_y * grid->width);
+  b32_t can_climb = (neighbour->height-1 <= current_vertex->height);
+  if(!neighbour->done && can_climb)
+  {
+    u32_t new_distance = current_vertex->distance + 1;
+    if (new_distance < neighbour->distance) 
+    {
+      neighbour->distance = new_distance; 
+      neighbour->prev = current_vertex;
+    }
+  }
+}
+
+
+static u32_t 
+aoc22_d12p2_grid_pathfind_sub(aoc22_d12p2_grid_t* grid)
+{
+  u32_t vertices_left = grid->vertex_count;
+  while (vertices_left > 0)
+  {
+    // find vertex with smallest dist
+    u32_t current_vertex_index = 0;
+    {
+      u32_t min = U32_MAX;
+      for_cnt(vertex_index, grid->vertex_count)
+      {
+        aoc22_d12p2_vertex_t* itr = grid->vertices + vertex_index;
+        if (itr->done) continue;
+
+        if (itr->distance < min)
+        {
+          min = itr->distance;
+          current_vertex_index = vertex_index;
+        }
+      }
+    }
+    aoc22_d12p2_vertex_t* current_vertex = grid->vertices + current_vertex_index;
+
+    // terminate case
+    //printf("symbol[%d,%d]: %c, %d\n", current_vertex->x, current_vertex->y, current_vertex->symbol, current_vertex->distance);
+    if (current_vertex->symbol == 'E')
+    {
+      //printf("E found\n");
+      auto* itr = current_vertex->prev;
+      u32_t sum = 0;
+      while(itr)
+      {
+        // printf("symbol[%d,%d]: %c, %d\n", itr->x, itr->y, itr->symbol, itr->distance);
+        itr = itr->prev;
+        ++sum;
+      }
+      return sum;
+    }
+    
+    // remove the smallest vertex from the list 
+    current_vertex->done = true; // emulates removal
+    vertices_left--;
+
+
+    // left
+    if (current_vertex->x > 0)
+    {
+      aoc22_d12p2_grid_pathfind_recalculate_neighbour_vertex(
+          grid, 
+          current_vertex, 
+          current_vertex->x - 1, 
+          current_vertex->y);
+    }
+    //right
+    if (current_vertex->x < grid->width-1)
+    {
+      aoc22_d12p2_grid_pathfind_recalculate_neighbour_vertex(
+          grid, 
+          current_vertex, 
+          current_vertex->x + 1, 
+          current_vertex->y);
+    }
+    // up
+    if (current_vertex->y > 0)
+    {
+      aoc22_d12p2_grid_pathfind_recalculate_neighbour_vertex(
+          grid, 
+          current_vertex, 
+          current_vertex->x, 
+          current_vertex->y - 1);
+    }
+    // down
+    if (current_vertex->y < grid->height-1)
+    {
+      aoc22_d12p2_grid_pathfind_recalculate_neighbour_vertex(
+          grid, 
+          current_vertex, 
+          current_vertex->x, 
+          current_vertex->y + 1);
+    }
+  }
+  return 0;
+}
+
+static u32_t 
+aoc22_d12p2_grid_pathfind(aoc22_d12p2_grid_t* grid)
+{
+  u32_t min = U32_MAX;
+  printf("starts: %u\n", grid->start_count)
+  for_cnt(start_index, grid->start_count)
+  {
+    // reset all vertices to U32_MAX
+    for_cnt(vertex_index, grid->vertex_count)
+    {
+      aoc22_d12p2_vertex_t* vertex = grid->vertices + vertex_index;
+      vertex->distance = U32_MAX;
+      vertex->done = false;
+      vertex->prev = nullptr;
+    }
+    // initialize the starting vertex
+    u32_t start_vertex_index = grid->starts[start_index];
+    aoc22_d12p2_vertex_t* vertex = grid->vertices + start_vertex_index;
+    vertex->distance = 0;
+
+    min = min_of(min, aoc22_d12p2_grid_pathfind_sub(grid));
+  }
+  return min;
+}
+
+static void 
+aoc22_d12p2(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!file_buffer) return;
+
+  u32_t min = U32_MAX;
+  aoc22_d12p2_grid_t grid;
+  aoc22_d12p2_grid_init(&grid, file_buffer, arena); 
+  u32_t steps = aoc22_d12p2_grid_pathfind(&grid);
+  printf("%d\n", steps);
+}
+
 int main(int argv, char** argc) {
   if (argv < 2) {
     printf("Usage: aoc22 <day> <part> <filename>\nExample: aoc22 1 1 input.txt\n");
@@ -2194,5 +2646,6 @@ int main(int argv, char** argc) {
   aoc22_route(11,1);
   aoc22_route(11,2);
   aoc22_route(12,1);
+  aoc22_route(12,2);
 
 }
