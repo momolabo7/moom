@@ -2563,7 +2563,6 @@ static u32_t
 aoc22_d12p2_grid_pathfind(aoc22_d12p2_grid_t* grid)
 {
   u32_t min = U32_MAX;
-  printf("starts: %u\n", grid->start_count)
   for_cnt(start_index, grid->start_count)
   {
     // reset all vertices to U32_MAX
@@ -2591,11 +2590,111 @@ aoc22_d12p2(const char* filename, arena_t* arena)
   buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!file_buffer) return;
 
-  u32_t min = U32_MAX;
   aoc22_d12p2_grid_t grid;
   aoc22_d12p2_grid_init(&grid, file_buffer, arena); 
   u32_t steps = aoc22_d12p2_grid_pathfind(&grid);
   printf("%d\n", steps);
+}
+
+enum aoc22_d13_node_type_t
+{
+  AOC22_D13_NODE_TYPE_NIEN,
+
+  AOC22_D13_NODE_TYPE_INTEGER,
+  AOC22_D13_NODE_TYPE_LIST,
+};
+
+struct aoc22_d13_node_t
+{
+  aoc22_d13_node_type_t type;
+  union 
+  {
+    u32_t integer; // represents integer
+    aoc22_d13_node_t* list; // represents a list
+  };
+  aoc22_d13_node_t* prev;
+  aoc22_d13_node_t* next;
+};
+
+static void 
+aoc22_d13_node_print(aoc22_d13_node_t* node)
+{
+  cll_foreach(itr, node)
+  {
+    if (itr->type == AOC22_D13_NODE_TYPE_LIST)
+    {
+      printf("[");
+      aoc22_d13_node_print(itr->list);
+      printf("]");
+    }
+    else 
+    {
+      // Integer
+      printf("%u", itr->integer);
+    }
+  }
+}
+
+
+static u32_t
+aoc22_d13p1_parse_list(aoc22_d13_node_t* root, buffer_t str, u32_t start_character_index, arena_t* arena)
+{
+  for(u32_t character_index = start_character_index; character_index < str.size; ++character_index)
+  {
+    u8_t c = str.e[character_index];
+    if (c == '[')
+    {
+      aoc22_d13_node_t* node = arena_push(aoc22_d13_node_t, arena);
+      node->type = AOC22_D13_NODE_TYPE_LIST;
+      node->list = arena_push_zero(aoc22_d13_node_t, arena);
+      cll_init(node->list);
+      cll_push_back(root, node);
+      character_index = aoc22_d13p1_parse_list(node->list, str, character_index + 1, arena);
+    }
+    else if (c == ']')
+    {
+      // return the character index we to continue from
+      return character_index;
+    }
+    else if (c >= '0' && c <= '9')
+    {
+      aoc22_d13_node_t * node = arena_push(aoc22_d13_node_t, arena);
+      node->type = AOC22_D13_NODE_TYPE_INTEGER;
+      node->integer = c - '0';
+      cll_push_back(root, node);
+    }
+  }
+  return str.size;
+}
+
+static void 
+aoc22_d13p1(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!file_buffer) return;
+
+  stream_t s;
+  stream_init(&s, file_buffer);
+
+  aoc22_d13_node_t left;
+  cll_init(&left);
+
+  aoc22_d13_node_t right;
+  cll_init(&right);
+
+  aoc22_d13_node_t* current_node = &left;
+
+  u32_t line_index = 0;
+  //while(!stream_is_eos(&s)) 
+  {
+    buffer_t line = stream_consume_line(&s);  
+    aoc22_d13p1_parse_list(&left, line, 0, arena);  
+    ++line_index;
+  }
+  aoc22_d13_node_print(current_node);
+  
+
 }
 
 int main(int argv, char** argc) {
@@ -2647,5 +2746,6 @@ int main(int argv, char** argc) {
   aoc22_route(11,2);
   aoc22_route(12,1);
   aoc22_route(12,2);
+  aoc22_route(13,1);
 
 }

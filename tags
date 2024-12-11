@@ -33,6 +33,13 @@ aoc22_d12p2_grid_pathfind_recalculate_neighbour_vertex	code/aoc22.cpp	/^aoc22_d1
 aoc22_d12p2_grid_pathfind_sub	code/aoc22.cpp	/^aoc22_d12p2_grid_pathfind_sub(aoc22_d12p2_grid_t* grid)$/;"	f	language:C++	typeref:typename:u32_t	file:
 aoc22_d12p2_grid_t	code/aoc22.cpp	/^struct aoc22_d12p2_grid_t $/;"	s	language:C++	file:
 aoc22_d12p2_vertex_t	code/aoc22.cpp	/^struct aoc22_d12p2_vertex_t$/;"	s	language:C++	file:
+aoc22_d13p1	code/aoc22.cpp	/^aoc22_d13p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d13p1_parse_list	code/aoc22.cpp	/^aoc22_d13p1_parse_list(buffer_t str, arena_t* arena)$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d13_node_print	code/aoc22.cpp	/^aoc22_d13_node_print(aoc22_d13_node_t* node)$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d13_node_t	code/aoc22.cpp	/^struct aoc22_d13_node_t$/;"	s	language:C++	file:
+AOC22_D13_NODE_TYPE_INTEGER	code/aoc22.cpp	/^  AOC22_D13_NODE_TYPE_INTEGER,$/;"	e	language:C++	enum:aoc22_d13_node_type_t	file:
+AOC22_D13_NODE_TYPE_LIST	code/aoc22.cpp	/^  AOC22_D13_NODE_TYPE_LIST,$/;"	e	language:C++	enum:aoc22_d13_node_type_t	file:
+aoc22_d13_node_type_t	code/aoc22.cpp	/^enum aoc22_d13_node_type_t$/;"	g	language:C++	file:
 aoc22_d1p1	code/aoc22.cpp	/^static void aoc22_d1p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d1p2	code/aoc22.cpp	/^static void aoc22_d1p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d2p1	code/aoc22.cpp	/^static void aoc22_d2p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
@@ -2315,6 +2322,7 @@ name	code/eden.h	/^  buffer_t name;$/;"	m	language:C++	struct:hell_inspector_ent
 near	code/momo.h	/^# define near$/;"	d	language:C++
 nearest_light	code/app_lit.cpp	/^  lit_game_light_t* nearest_light;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:lit_game_light_t *	file:
 next	code/aoc22.cpp	/^  aoc22_d11_item_node_t* next;$/;"	m	language:C++	struct:aoc22_d11_item_node_t	typeref:typename:aoc22_d11_item_node_t *	file:
+next	code/aoc22.cpp	/^  aoc22_d13_node_t* next;$/;"	m	language:C++	struct:aoc22_d13_node_t	typeref:typename:aoc22_d13_node_t *	file:
 next	code/aoc22.cpp	/^  aoc22_d5_node_t* next;$/;"	m	language:C++	struct:aoc22_d5_node_t	typeref:typename:aoc22_d5_node_t *	file:
 next	code/aoc22.cpp	/^  aoc22_d7_node_t* prev, *next;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:aoc22_d7_node_t *	file:
 next	code/app_lit_ship.cpp	/^  w32_memory_t* next;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
@@ -2337,6 +2345,7 @@ node_count	code/gist_linked_list.cpp	/^static u32_t node_count = 0;$/;"	v	langua
 now	code/eden.h	/^  b32_t now: 1; $/;"	m	language:C++	struct:eden_button_t	typeref:typename:b32_t:1
 ns_begin	code/momo.h	/^#define ns_begin(/;"	d	language:C++
 ns_end	code/momo.h	/^#define ns_end(/;"	d	language:C++
+num	code/aoc22.cpp	/^    u32_t num; \/\/ represents integer$/;"	m	language:C++	union:aoc22_d13_node_t::__anonabc34737020a	typeref:typename:u32_t	file:
 num_channels	code/momo.h	/^  u16_t num_channels;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 object	code/momo.h	/^    json_object_t object;$/;"	m	language:C++	union:json_value_t::__anon1db7a63d180a	typeref:typename:json_object_t
 offset_of	code/momo.h	/^#define offset_of(/;"	d	language:C++
@@ -2523,6 +2532,7 @@ pos_y	code/eden.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:hell_gfx_com
 prev	code/aoc22.cpp	/^  aoc22_d11_item_node_t* prev;$/;"	m	language:C++	struct:aoc22_d11_item_node_t	typeref:typename:aoc22_d11_item_node_t *	file:
 prev	code/aoc22.cpp	/^  aoc22_d12p1_vertex_t* prev;$/;"	m	language:C++	struct:aoc22_d12p1_vertex_t	typeref:typename:aoc22_d12p1_vertex_t *	file:
 prev	code/aoc22.cpp	/^  aoc22_d12p2_vertex_t* prev;$/;"	m	language:C++	struct:aoc22_d12p2_vertex_t	typeref:typename:aoc22_d12p2_vertex_t *	file:
+prev	code/aoc22.cpp	/^  aoc22_d13_node_t* prev;$/;"	m	language:C++	struct:aoc22_d13_node_t	typeref:typename:aoc22_d13_node_t *	file:
 prev	code/aoc22.cpp	/^  aoc22_d5_node_t* prev;$/;"	m	language:C++	struct:aoc22_d5_node_t	typeref:typename:aoc22_d5_node_t *	file:
 prev	code/aoc22.cpp	/^  aoc22_d7_node_t* prev, *next;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:aoc22_d7_node_t *	file:
 prev	code/app_lit_ship.cpp	/^  w32_memory_t* prev;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
@@ -2684,6 +2694,7 @@ sensor_count	code/app_lit.cpp	/^  u32_t sensor_count; \/\/ how many sensors ther
 sensor_count	code/app_lit.cpp	/^  u32_t sensor_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
 sensor_groups	code/app_lit.cpp	/^  lit_game_sensor_group_t sensor_groups[32];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_sensor_group_t[32]	file:
 sensor_group_count	code/app_lit.cpp	/^  u32_t sensor_group_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
+sentinel	code/aoc22.cpp	/^    aoc22_d13_node_t* sentinel; \/\/ represents a list$/;"	m	language:C++	union:aoc22_d13_node_t::__anonabc34737020a	typeref:typename:aoc22_d13_node_t *	file:
 sentinel	code/aoc22.cpp	/^  aoc22_d7_node_t sentinel;$/;"	m	language:C++	struct:aoc22_d7_dir_t	typeref:typename:aoc22_d7_node_t	file:
 SERVER	code/w32_sandbox_socket.cpp	/^#define SERVER /;"	d	language:C++	file:
 session	code/test_http.cpp	/^  HINTERNET session;$/;"	m	language:C++	struct:https_t	typeref:typename:HINTERNET	file:
@@ -3029,6 +3040,7 @@ tuple_set	code/gist_tuple.cpp	/^tuple_set()$/;"	f	language:C++	typeref:typename:
 tuple_set	code/gist_tuple.cpp	/^tuple_set(H value, T... rest)$/;"	f	language:C++	typeref:typename:tuple_t<H,T...>	file:
 tuple_t	code/gist_tuple.cpp	/^struct tuple_t<H, T...>$/;"	s	language:C++	file:
 tuple_t	code/gist_tuple.cpp	/^struct tuple_t{};$/;"	s	language:C++	file:
+type	code/aoc22.cpp	/^  aoc22_d13_node_type_t type;$/;"	m	language:C++	struct:aoc22_d13_node_t	typeref:typename:aoc22_d13_node_type_t	file:
 type	code/aoc22.cpp	/^  aoc22_d7_node_type_t type;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:aoc22_d7_node_type_t	file:
 type	code/app_lit.cpp	/^  lit_game_animator_type_t type;$/;"	m	language:C++	struct:lit_game_animator_t	typeref:typename:lit_game_animator_type_t	file:
 type	code/eden.h	/^  hell_inspector_entry_type_t type;$/;"	m	language:C++	struct:hell_inspector_entry_t	typeref:typename:hell_inspector_entry_type_t
@@ -3723,6 +3735,7 @@ __anon1db7a63d2503	code/momo.h	/^enum {$/;"	g	language:C++
 __anon1db7a63d260a	code/momo.h	/^  union {$/;"	u	language:C++	struct:_png_chunk_header_t
 __anon23bd245c010a	code/pass.h	/^  union {$/;"	u	language:C++	struct:pass_pack_atlas_context_t
 __anonabc34737010a	code/aoc22.cpp	/^  union {$/;"	u	language:C++	struct:aoc22_d7_node_t	file:
+__anonabc34737020a	code/aoc22.cpp	/^  {$/;"	u	language:C++	struct:aoc22_d13_node_t	file:
 __anonabd55fb80102	code/aoc23.cpp	/^  auto get_index = [](buffer_t grid, u32_t x, u32_t y, u32_t w) {$/;"	f	language:C++	function:aoc23_d3p1	file:
 __anonabd55fb80202	code/aoc23.cpp	/^  auto check = [](buffer_t grid, s32_t x, s32_t y, s32_t w, s32_t h) {$/;"	f	language:C++	function:aoc23_d3p1	file:
 __anonabd55fb80302	code/aoc23.cpp	/^  auto get_cell = [](buffer_t grid, u32_t x, u32_t y, u32_t w) {$/;"	f	language:C++	function:aoc23_d3p2	file:
