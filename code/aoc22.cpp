@@ -2630,7 +2630,7 @@ aoc22_d13_node_print(aoc22_d13_node_t* node)
     else 
     {
       // Integer
-      printf("%u", itr->integer);
+      printf("(%u)", itr->integer);
     }
   }
 }
@@ -2658,15 +2658,150 @@ aoc22_d13p1_parse_list(aoc22_d13_node_t* root, buffer_t str, u32_t start_charact
     }
     else if (c >= '0' && c <= '9')
     {
+      u32_t number = 0;
+      u32_t end_index = character_index;
+      while (str.e[end_index] >= '0' && str.e[end_index] <= '9') ++end_index;
+      buffer_t number_as_str = buffer_set(str.e + character_index, end_index - character_index);
+      b32_t success = buffer_to_u32(number_as_str, &number);
+      assert(success);
+
       aoc22_d13_node_t * node = arena_push(aoc22_d13_node_t, arena);
+
       node->type = AOC22_D13_NODE_TYPE_INTEGER;
-      node->integer = c - '0';
+      node->integer = number;
       cll_push_back(root, node);
+
+      character_index = end_index-1;
     }
   }
   return str.size;
 }
 
+enum aoc22_d13_compare_result_type_t
+{
+  AOC22_D13_COMPARE_RESULT_TYPE_CONTINUE,
+  AOC22_D13_COMPARE_RESULT_TYPE_RIGHT_ORDER,
+  AOC22_D13_COMPARE_RESULT_TYPE_WRONG_ORDER,
+};
+
+static aoc22_d13_compare_result_type_t
+aoc22_d13_compare_lists(aoc22_d13_node_t* left, aoc22_d13_node_t* right)
+{
+  aoc22_d13_node_t* left_itr = left->next;
+  aoc22_d13_node_t* right_itr = right->next;
+  for(;;)
+  {
+    // termination cases
+    if (left_itr == left && right_itr == right)
+    {
+      return AOC22_D13_COMPARE_RESULT_TYPE_CONTINUE;
+    }
+    if (left_itr == left)
+    {
+      return AOC22_D13_COMPARE_RESULT_TYPE_RIGHT_ORDER;
+    }
+    if (right_itr == right)
+    {
+      return AOC22_D13_COMPARE_RESULT_TYPE_WRONG_ORDER;
+    }
+
+    // normal checking cases
+    if (left_itr->type == AOC22_D13_NODE_TYPE_LIST && 
+        right_itr->type == AOC22_D13_NODE_TYPE_LIST)
+    {
+      auto result = aoc22_d13_compare_lists(left_itr->list, right_itr->list);
+      if (result != AOC22_D13_COMPARE_RESULT_TYPE_CONTINUE)
+        return result;
+    }
+
+    else if (left_itr->type == AOC22_D13_NODE_TYPE_INTEGER &&
+             right_itr->type == AOC22_D13_NODE_TYPE_INTEGER)
+    {
+      if (left_itr->integer > right_itr->integer)
+      {
+        return AOC22_D13_COMPARE_RESULT_TYPE_WRONG_ORDER;
+      }
+      else if (left_itr->integer < right_itr->integer)
+      {
+        return AOC22_D13_COMPARE_RESULT_TYPE_RIGHT_ORDER;
+      }
+      else // (left_itr->integer == right_itr->integer)
+      {
+        // do nothing
+      }
+    }
+    else if (left_itr->type == AOC22_D13_NODE_TYPE_INTEGER &&
+             right_itr->type == AOC22_D13_NODE_TYPE_LIST)
+    {
+      // recursively search until we reach an integer
+      aoc22_d13_node_t* finder = right_itr;
+      while(finder->type == AOC22_D13_NODE_TYPE_LIST)
+      {
+        if (cll_is_empty(finder->list))
+        {
+          return AOC22_D13_COMPARE_RESULT_TYPE_WRONG_ORDER; // terminate if list is empty
+        }
+        finder = finder->list->next;
+      }
+
+      assert(finder->type == AOC22_D13_NODE_TYPE_INTEGER);
+
+      // At this point, finder should be AOC22_D13_NODE_TYPE_INTEGER
+      if (finder->integer < left_itr->integer)
+      {
+        return AOC22_D13_COMPARE_RESULT_TYPE_WRONG_ORDER;
+      }
+      else 
+      {
+        return AOC22_D13_COMPARE_RESULT_TYPE_RIGHT_ORDER;
+      }
+    }
+    else 
+    {
+      assert(left_itr->type != AOC22_D13_NODE_TYPE_NIEN);
+      assert(right_itr->type != AOC22_D13_NODE_TYPE_NIEN);
+      // Mixed types. Find until they reach an integer
+      aoc22_d13_node_t* left_finder = left_itr;
+      aoc22_d13_node_t* right_finder = right_itr;
+      while(left_finder->type == AOC22_D13_NODE_TYPE_LIST)
+      {
+        if (cll_is_empty(left_finder->list))
+        {
+          return AOC22_D13_COMPARE_RESULT_TYPE_RIGHT_ORDER; // terminate if list is empty
+        }
+        left_finder = left_finder->list->next;
+      }
+
+      while(right_finder->type == AOC22_D13_NODE_TYPE_LIST)
+      {
+        if (cll_is_empty(right_finder->list))
+        {
+          return AOC22_D13_COMPARE_RESULT_TYPE_WRONG_ORDER; // terminate if list is empty
+        }
+        right_finder = right_finder->list->next;
+      }
+      assert(left_finder->type == AOC22_D13_NODE_TYPE_INTEGER);
+      assert(right_finder->type == AOC22_D13_NODE_TYPE_INTEGER);
+
+      // At this point, finder should be AOC22_D13_NODE_TYPE_INTEGER
+      if (left_finder->integer < right_finder->integer)
+      {
+        return AOC22_D13_COMPARE_RESULT_TYPE_RIGHT_ORDER;
+      }
+      else 
+      {
+        return AOC22_D13_COMPARE_RESULT_TYPE_WRONG_ORDER;
+      }
+
+    }
+
+    left_itr = left_itr->next;
+    right_itr = right_itr->next;
+  }
+}
+
+
+#if 1
 static void 
 aoc22_d13p1(const char* filename, arena_t* arena) 
 {
@@ -2677,25 +2812,59 @@ aoc22_d13p1(const char* filename, arena_t* arena)
   stream_t s;
   stream_init(&s, file_buffer);
 
-  aoc22_d13_node_t left;
-  cll_init(&left);
+  aoc22_d13_node_t left = {};
+  aoc22_d13_node_t right = {};
 
-  aoc22_d13_node_t right;
-  cll_init(&right);
-
-  aoc22_d13_node_t* current_node = &left;
+  u32_t sum = 0;
 
   u32_t line_index = 0;
-  //while(!stream_is_eos(&s)) 
+  u32_t pair_index = 1;
+  auto mark = arena_mark(arena);
+  while(!stream_is_eos(&s)) 
   {
     buffer_t line = stream_consume_line(&s);  
-    aoc22_d13p1_parse_list(&left, line, 0, arena);  
+    switch(line_index % 3)
+    {
+      case 0:
+      {
+        cll_init(&left);
+        cll_init(&right);
+        aoc22_d13p1_parse_list(&left, line, 0, arena);  
+      } break;
+      case 1:
+      {
+        aoc22_d13p1_parse_list(&right, line, 0, arena);  
+        b32_t result = aoc22_d13_compare_lists(&left, &right);
+        if (result == AOC22_D13_COMPARE_RESULT_TYPE_RIGHT_ORDER)
+        {
+          sum += pair_index;
+        }
+        pair_index++;
+#if 0
+        aoc22_d13_node_print(&left);
+        printf("\n");
+        aoc22_d13_node_print(&right);
+        printf("\n");
+        printf("%d\n", result);
+        printf("\n");
+#endif
+        arena_revert(mark);
+      } break;
+      case 2:
+      {
+        // do nothing
+      } break;
+
+    }
     ++line_index;
   }
-  aoc22_d13_node_print(current_node);
   
+  printf("%u\n", sum);
 
 }
+#endif
+
+
 
 int main(int argv, char** argc) {
   if (argv < 2) {

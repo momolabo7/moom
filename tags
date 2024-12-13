@@ -34,11 +34,18 @@ aoc22_d12p2_grid_pathfind_sub	code/aoc22.cpp	/^aoc22_d12p2_grid_pathfind_sub(aoc
 aoc22_d12p2_grid_t	code/aoc22.cpp	/^struct aoc22_d12p2_grid_t $/;"	s	language:C++	file:
 aoc22_d12p2_vertex_t	code/aoc22.cpp	/^struct aoc22_d12p2_vertex_t$/;"	s	language:C++	file:
 aoc22_d13p1	code/aoc22.cpp	/^aoc22_d13p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
-aoc22_d13p1_parse_list	code/aoc22.cpp	/^aoc22_d13p1_parse_list(buffer_t str, arena_t* arena)$/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d13p1_compare	code/aoc22.cpp	/^aoc22_d13p1_compare(buffer_t left, buffer_t right)$/;"	f	language:C++	typeref:typename:b32_t	file:
+aoc22_d13p1_parse_list	code/aoc22.cpp	/^aoc22_d13p1_parse_list(aoc22_d13_node_t* root, buffer_t str, u32_t start_character_index, arena_/;"	f	language:C++	typeref:typename:u32_t	file:
+aoc22_d13_compare_lists	code/aoc22.cpp	/^aoc22_d13_compare_lists(aoc22_d13_node_t* left, aoc22_d13_node_t* right)$/;"	f	language:C++	typeref:typename:aoc22_d13_compare_result_type_t	file:
+AOC22_D13_COMPARE_RESULT_TYPE_CONTINUE	code/aoc22.cpp	/^  AOC22_D13_COMPARE_RESULT_TYPE_CONTINUE,$/;"	e	language:C++	enum:aoc22_d13_compare_result_type_t	file:
+AOC22_D13_COMPARE_RESULT_TYPE_RIGHT_ORDER	code/aoc22.cpp	/^  AOC22_D13_COMPARE_RESULT_TYPE_RIGHT_ORDER,$/;"	e	language:C++	enum:aoc22_d13_compare_result_type_t	file:
+aoc22_d13_compare_result_type_t	code/aoc22.cpp	/^enum aoc22_d13_compare_result_type_t$/;"	g	language:C++	file:
+AOC22_D13_COMPARE_RESULT_TYPE_WRONG_ORDER	code/aoc22.cpp	/^  AOC22_D13_COMPARE_RESULT_TYPE_WRONG_ORDER,$/;"	e	language:C++	enum:aoc22_d13_compare_result_type_t	file:
 aoc22_d13_node_print	code/aoc22.cpp	/^aoc22_d13_node_print(aoc22_d13_node_t* node)$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d13_node_t	code/aoc22.cpp	/^struct aoc22_d13_node_t$/;"	s	language:C++	file:
 AOC22_D13_NODE_TYPE_INTEGER	code/aoc22.cpp	/^  AOC22_D13_NODE_TYPE_INTEGER,$/;"	e	language:C++	enum:aoc22_d13_node_type_t	file:
 AOC22_D13_NODE_TYPE_LIST	code/aoc22.cpp	/^  AOC22_D13_NODE_TYPE_LIST,$/;"	e	language:C++	enum:aoc22_d13_node_type_t	file:
+AOC22_D13_NODE_TYPE_NIEN	code/aoc22.cpp	/^  AOC22_D13_NODE_TYPE_NIEN,$/;"	e	language:C++	enum:aoc22_d13_node_type_t	file:
 aoc22_d13_node_type_t	code/aoc22.cpp	/^enum aoc22_d13_node_type_t$/;"	g	language:C++	file:
 aoc22_d1p1	code/aoc22.cpp	/^static void aoc22_d1p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d1p2	code/aoc22.cpp	/^static void aoc22_d1p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1863,6 +1870,7 @@ instance_color_vbo	code/eden.h	/^  GLuint instance_color_vbo;$/;"	m	language:C++
 instance_texture_vbo	code/eden.h	/^  GLuint instance_texture_vbo;$/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
 instance_transform_vbo	code/eden.h	/^  GLuint instance_transform_vbo;$/;"	m	language:C++	struct:hell_gfx_opengl_sprite_batch_t	typeref:typename:GLuint
 instance_transform_vbo	code/eden.h	/^  GLuint instance_transform_vbo;$/;"	m	language:C++	struct:hell_gfx_opengl_triangle_batch_t	typeref:typename:GLuint
+integer	code/aoc22.cpp	/^    u32_t integer; \/\/ represents integer$/;"	m	language:C++	union:aoc22_d13_node_t::__anonabc34737020a	typeref:typename:u32_t	file:
 interlace_method	code/momo.h	/^  u8_t interlace_method;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t
 interlace_method	code/momo.h	/^  u8_t interlace_method;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:typename:u8_t
 intersections	code/app_lit.cpp	/^  lit_light_intersection_t intersections[512];$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:lit_light_intersection_t[512]	file:
@@ -1976,6 +1984,7 @@ line_gap	code/eden.h	/^  f32_t line_gap;$/;"	m	language:C++	struct:eden_asset_fo
 line_gap	code/eden_asset_file.h	/^  f32_t line_gap;$/;"	m	language:C++	struct:asset_file_font_t	typeref:typename:f32_t
 linker_flags	bin/build.bat	/^    set linker_flags=-shared $/;"	v	language:DosBatch
 linker_flags	bin/build.bat	/^set linker_flags=$/;"	v	language:DosBatch
+list	code/aoc22.cpp	/^    aoc22_d13_node_t* list; \/\/ represents a list$/;"	m	language:C++	union:aoc22_d13_node_t::__anonabc34737020a	typeref:typename:aoc22_d13_node_t *	file:
 list_init	code/test_list.cpp	/^list_init(list_t<type_t, cap, count_t>* list)$/;"	f	language:C++	typeref:typename:void	file:
 list_push	code/test_list.cpp	/^list_push(list_t<type_t, cap, count_t>* list, type_t item)$/;"	f	language:C++	typeref:typename:void	file:
 list_t	code/test_list.cpp	/^struct list_t {$/;"	s	language:C++	file:
@@ -2345,7 +2354,6 @@ node_count	code/gist_linked_list.cpp	/^static u32_t node_count = 0;$/;"	v	langua
 now	code/eden.h	/^  b32_t now: 1; $/;"	m	language:C++	struct:eden_button_t	typeref:typename:b32_t:1
 ns_begin	code/momo.h	/^#define ns_begin(/;"	d	language:C++
 ns_end	code/momo.h	/^#define ns_end(/;"	d	language:C++
-num	code/aoc22.cpp	/^    u32_t num; \/\/ represents integer$/;"	m	language:C++	union:aoc22_d13_node_t::__anonabc34737020a	typeref:typename:u32_t	file:
 num_channels	code/momo.h	/^  u16_t num_channels;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 object	code/momo.h	/^    json_object_t object;$/;"	m	language:C++	union:json_value_t::__anon1db7a63d180a	typeref:typename:json_object_t
 offset_of	code/momo.h	/^#define offset_of(/;"	d	language:C++
@@ -2694,7 +2702,6 @@ sensor_count	code/app_lit.cpp	/^  u32_t sensor_count; \/\/ how many sensors ther
 sensor_count	code/app_lit.cpp	/^  u32_t sensor_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
 sensor_groups	code/app_lit.cpp	/^  lit_game_sensor_group_t sensor_groups[32];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_sensor_group_t[32]	file:
 sensor_group_count	code/app_lit.cpp	/^  u32_t sensor_group_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
-sentinel	code/aoc22.cpp	/^    aoc22_d13_node_t* sentinel; \/\/ represents a list$/;"	m	language:C++	union:aoc22_d13_node_t::__anonabc34737020a	typeref:typename:aoc22_d13_node_t *	file:
 sentinel	code/aoc22.cpp	/^  aoc22_d7_node_t sentinel;$/;"	m	language:C++	struct:aoc22_d7_dir_t	typeref:typename:aoc22_d7_node_t	file:
 SERVER	code/w32_sandbox_socket.cpp	/^#define SERVER /;"	d	language:C++	file:
 session	code/test_http.cpp	/^  HINTERNET session;$/;"	m	language:C++	struct:https_t	typeref:typename:HINTERNET	file:
