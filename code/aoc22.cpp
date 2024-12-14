@@ -2637,7 +2637,7 @@ aoc22_d13_node_print(aoc22_d13_node_t* node)
 
 
 static u32_t
-aoc22_d13p1_parse_list(aoc22_d13_node_t* root, buffer_t str, u32_t start_character_index, arena_t* arena)
+aoc22_d13_parse_list(aoc22_d13_node_t* root, buffer_t str, u32_t start_character_index, arena_t* arena)
 {
   for(u32_t character_index = start_character_index; character_index < str.size; ++character_index)
   {
@@ -2649,7 +2649,7 @@ aoc22_d13p1_parse_list(aoc22_d13_node_t* root, buffer_t str, u32_t start_charact
       node->list = arena_push_zero(aoc22_d13_node_t, arena);
       cll_init(node->list);
       cll_push_back(root, node);
-      character_index = aoc22_d13p1_parse_list(node->list, str, character_index + 1, arena);
+      character_index = aoc22_d13_parse_list(node->list, str, character_index + 1, arena);
     }
     else if (c == ']')
     {
@@ -2801,7 +2801,6 @@ aoc22_d13_compare_lists(aoc22_d13_node_t* left, aoc22_d13_node_t* right)
 }
 
 
-#if 1
 static void 
 aoc22_d13p1(const char* filename, arena_t* arena) 
 {
@@ -2829,11 +2828,11 @@ aoc22_d13p1(const char* filename, arena_t* arena)
       {
         cll_init(&left);
         cll_init(&right);
-        aoc22_d13p1_parse_list(&left, line, 0, arena);  
+        aoc22_d13_parse_list(&left, line, 0, arena);  
       } break;
       case 1:
       {
-        aoc22_d13p1_parse_list(&right, line, 0, arena);  
+        aoc22_d13_parse_list(&right, line, 0, arena);  
         b32_t result = aoc22_d13_compare_lists(&left, &right);
         if (result == AOC22_D13_COMPARE_RESULT_TYPE_RIGHT_ORDER)
         {
@@ -2862,9 +2861,84 @@ aoc22_d13p1(const char* filename, arena_t* arena)
   printf("%u\n", sum);
 
 }
+
+sort_quick_generic_predicate_sig(aoc22_d13p2_pred)
+{
+  aoc22_d13_node_t* left = dref((aoc22_d13_node_t**)lhs);
+  aoc22_d13_node_t* right = dref((aoc22_d13_node_t**)rhs);
+
+  aoc22_d13_compare_result_type_t result = aoc22_d13_compare_lists(left, right);
+  assert(result != AOC22_D13_COMPARE_RESULT_TYPE_CONTINUE); 
+  return result == AOC22_D13_COMPARE_RESULT_TYPE_RIGHT_ORDER;
+
+}
+
+static void
+aoc22_d13p2(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!file_buffer) return;
+
+  stream_t s;
+  stream_init(&s, file_buffer);
+
+  u32_t sum = 0;
+
+  u32_t list_count = 2; 
+  while(!stream_is_eos(&s)) 
+  {
+    buffer_t line = stream_consume_line(&s);  
+    if (line.e[0] == '[')
+      ++list_count;
+  }
+  stream_reset(&s);
+
+  aoc22_d13_node_t* lists = arena_push_arr_zero(aoc22_d13_node_t, arena, list_count);
+  assert(lists);
+
+  u32_t pair_index = 1;
+  u32_t list_itr = 0;
+  while(!stream_is_eos(&s)) 
+  {
+    buffer_t line = stream_consume_line(&s);  
+    if (line.e[0] == '[')
+    {
+      cll_init(lists + list_itr);
+      aoc22_d13_parse_list(lists + list_itr++, line, 0, arena); 
+    }
+  }
+  cll_init(lists + list_itr);
+  aoc22_d13_parse_list(lists + list_itr++, buffer_from_lit("[2]"), 0, arena);
+  cll_init(lists + list_itr);
+  aoc22_d13_parse_list(lists + list_itr++, buffer_from_lit("[6]"), 0, arena);
+
+  aoc22_d13_node_t** sort_entries = arena_push_arr_zero(aoc22_d13_node_t*, arena, list_count);
+  assert(sort_entries);
+
+  for_cnt(i, list_count) 
+    sort_entries[i] = (lists + i);
+
+
+#if 0
+  for_cnt(i, list_count)
+  {
+    aoc22_d13_node_print(lists + i);
+    printf("\n");
+  }
+#endif
+  sort_quick_generic(sort_entries, list_count, aoc22_d13p2_pred);
+
+#if 1
+  for_cnt(i, list_count)
+  {
+    aoc22_d13_node_print(dref(sort_entries + i));
+    printf("\n");
+  }
 #endif
 
 
+}
 
 int main(int argv, char** argc) {
   if (argv < 2) {
@@ -2916,5 +2990,6 @@ int main(int argv, char** argc) {
   aoc22_route(12,1);
   aoc22_route(12,2);
   aoc22_route(13,1);
+  aoc22_route(13,2);
 
 }

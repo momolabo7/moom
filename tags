@@ -34,8 +34,7 @@ aoc22_d12p2_grid_pathfind_sub	code/aoc22.cpp	/^aoc22_d12p2_grid_pathfind_sub(aoc
 aoc22_d12p2_grid_t	code/aoc22.cpp	/^struct aoc22_d12p2_grid_t $/;"	s	language:C++	file:
 aoc22_d12p2_vertex_t	code/aoc22.cpp	/^struct aoc22_d12p2_vertex_t$/;"	s	language:C++	file:
 aoc22_d13p1	code/aoc22.cpp	/^aoc22_d13p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
-aoc22_d13p1_compare	code/aoc22.cpp	/^aoc22_d13p1_compare(buffer_t left, buffer_t right)$/;"	f	language:C++	typeref:typename:b32_t	file:
-aoc22_d13p1_parse_list	code/aoc22.cpp	/^aoc22_d13p1_parse_list(aoc22_d13_node_t* root, buffer_t str, u32_t start_character_index, arena_/;"	f	language:C++	typeref:typename:u32_t	file:
+aoc22_d13p2	code/aoc22.cpp	/^aoc22_d13p2(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d13_compare_lists	code/aoc22.cpp	/^aoc22_d13_compare_lists(aoc22_d13_node_t* left, aoc22_d13_node_t* right)$/;"	f	language:C++	typeref:typename:aoc22_d13_compare_result_type_t	file:
 AOC22_D13_COMPARE_RESULT_TYPE_CONTINUE	code/aoc22.cpp	/^  AOC22_D13_COMPARE_RESULT_TYPE_CONTINUE,$/;"	e	language:C++	enum:aoc22_d13_compare_result_type_t	file:
 AOC22_D13_COMPARE_RESULT_TYPE_RIGHT_ORDER	code/aoc22.cpp	/^  AOC22_D13_COMPARE_RESULT_TYPE_RIGHT_ORDER,$/;"	e	language:C++	enum:aoc22_d13_compare_result_type_t	file:
@@ -47,6 +46,7 @@ AOC22_D13_NODE_TYPE_INTEGER	code/aoc22.cpp	/^  AOC22_D13_NODE_TYPE_INTEGER,$/;"	
 AOC22_D13_NODE_TYPE_LIST	code/aoc22.cpp	/^  AOC22_D13_NODE_TYPE_LIST,$/;"	e	language:C++	enum:aoc22_d13_node_type_t	file:
 AOC22_D13_NODE_TYPE_NIEN	code/aoc22.cpp	/^  AOC22_D13_NODE_TYPE_NIEN,$/;"	e	language:C++	enum:aoc22_d13_node_type_t	file:
 aoc22_d13_node_type_t	code/aoc22.cpp	/^enum aoc22_d13_node_type_t$/;"	g	language:C++	file:
+aoc22_d13_parse_list	code/aoc22.cpp	/^aoc22_d13_parse_list(aoc22_d13_node_t* root, buffer_t str, u32_t start_character_index, arena_t*/;"	f	language:C++	typeref:typename:u32_t	file:
 aoc22_d1p1	code/aoc22.cpp	/^static void aoc22_d1p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d1p2	code/aoc22.cpp	/^static void aoc22_d1p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d2p1	code/aoc22.cpp	/^static void aoc22_d2p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
@@ -2788,6 +2788,7 @@ sort_entry_t	code/momo.h	/^struct sort_entry_t $/;"	s	language:C++
 sort_quick	code/momo.h	/^sort_quick(sort_entry_t* entries, u32_t entry_count) {$/;"	f	language:C++	typeref:typename:void
 sort_quick	code/momo.h	/^static void sort_quick(sort_entry_t* entries, u32_t entry_count);$/;"	p	language:C++	typeref:typename:void
 sort_quick_generic	code/momo.h	/^#define sort_quick_generic(/;"	d	language:C++
+sort_quick_generic_predicate_sig	code/aoc22.cpp	/^sort_quick_generic_predicate_sig(aoc22_d13p2_compare_pred)$/;"	f	language:C++
 sort_quick_generic_predicate_sig	code/euler.cpp	/^sort_quick_generic_predicate_sig(euler_q22_cmp) {$/;"	f	language:C++	file:
 sort_quick_generic_predicate_sig	code/euler.cpp	/^sort_quick_generic_predicate_sig(euler_q24_cmp) {$/;"	f	language:C++	file:
 sort_quick_generic_predicate_sig	code/momo.h	/^#define sort_quick_generic_predicate_sig(/;"	d	language:C++
