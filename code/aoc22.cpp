@@ -298,9 +298,9 @@ static void aoc22_d3p1(const char* filename, arena_t* arena) {
     buffer_t rhs = buffer_set(line.e + line.size/2, line.size/2);
     
     // find common items
-    for_cnt(i, lhs.size) 
+    for(u32_t i = 0; i < lhs.size; ++i)
     {
-      for_cnt(j, rhs.size) 
+      for(u32_t j = 0; j < rhs.size; ++j)
       {
         if (lhs.e[i] == rhs.e[j]) 
         {
@@ -340,11 +340,11 @@ static void aoc22_d3p2(const char* filename, arena_t* arena) {
     buffer_t line2 = stream_consume_line(s);  
 
     // Find common item between line0 and line1
-    for_cnt(i, line0.size) 
+    for(u32_t i = 0; i < line0.size; ++i)
     {
-      for_cnt(j, line1.size) 
+      for(u32_t j = 0; j < line1.size; ++j)
       {
-        for_cnt(k, line2.size)
+        for(u32_t k = 0; k < line2.size; ++k)
         {
           if (line0.e[i] == line1.e[j] && 
               line1.e[j] == line2.e[k]) 
@@ -388,11 +388,11 @@ static void aoc22_d4p1(const char* filename, arena_t* arena) {
     
     buffer_arr_t arr0 = buffer_split(str8, ',', arena);
     u32_t cur_index = 0;
-    for_cnt(i, arr0.size) 
+    for(u32_t i = 0; i < arr0.size; ++i)
     {
       arena_set_revert_point(arena);
       buffer_arr_t arr1 = buffer_split(arr0.e[i], '-', arena);
-      for_cnt(j, arr1.size) 
+      for(u32_t j = 0; j < arr1.size; ++j)
       {
         buffer_to_u32(arr1.e[j], &nums[cur_index++]);
       }
@@ -432,11 +432,11 @@ static void aoc22_d4p2(const char* filename, arena_t* arena) {
     
     buffer_arr_t arr0 = buffer_split(str8, ',', arena);
     u32_t cur_index = 0;
-    for_cnt(i, arr0.size) 
+    for(u32_t i = 0; i < arr0.size; ++i)
     {
       arena_set_revert_point(arena);
       buffer_arr_t arr1 = buffer_split(arr0.e[i], '-', arena);
-      for_cnt(j, arr1.size) 
+      for(u32_t j = 0; j < arr1.size; ++j)
       {
         buffer_to_u32(arr1.e[j], &nums[cur_index++]);
       }
@@ -564,7 +564,7 @@ static void aoc22_d5p1(const char* filename, arena_t* arena) {
       to -= 1;
       //printf("moving %d from %d to %d\n", amount, from, to);
 
-      for_cnt(i, amount) 
+      for(u32_t i = 0; i < amount; ++i)
       {
         auto* from_stack_sentinel = stacks + from;
         auto* to_stack_sentinel = stacks + to;
@@ -688,7 +688,8 @@ static void aoc22_d5p2(const char* filename, arena_t* arena) {
       // grab the nth node from the top of the 'from' stack;
       auto* node_to_move_top = from_stack_sentinel->prev;
       auto* node_to_move_bottom = from_stack_sentinel;
-      for_cnt(i, amount) {
+      for(u32_t i = 0; i < amount; ++i)
+      {
         node_to_move_bottom = node_to_move_bottom->prev;
       }
       node_to_move_bottom->prev->next = from_stack_sentinel;
@@ -751,7 +752,7 @@ aoc22_d6p1(const char* filename, arena_t* arena)
   {
     // 012345, size = 6
     buffer_t str8 = stream_consume_line(s);  
-    for_cnt(buffer_index, str8.size - window_size - 1) 
+    for(u32_t buffer_index = 0; buffer_index < str8.size - window_size - 1; ++buffer_index)
     {
       //printf("%c", str8.e[buffer_index]);
       u32_t repeats_found = false;
@@ -797,7 +798,7 @@ aoc22_d6p2(const char* filename, arena_t* arena)
   {
     // 012345, size = 6
     buffer_t str8 = stream_consume_line(s);  
-    for_cnt(buffer_index, str8.size - window_size - 1) 
+    for(u32_t buffer_index = 0; buffer_index < str8.size - window_size - 1; ++buffer_index)
     {
       //printf("%c", str8.e[buffer_index]);
       u32_t repeats_found = false;
@@ -896,7 +897,8 @@ aoc22_d7_push_file(
 
 static void
 aoc22_print_str8(buffer_t str8) {
-  for_cnt(i, str8.size) {
+  for(u32_t i = 0; i < str8.size; ++i)
+  {
     printf("%c", str8.e[i]);
   }
 }
@@ -990,7 +992,8 @@ aoc22_d7_get_dir_size(aoc22_d7_dir_t* dir)
 static void
 aoc22_d7_print_nodes(aoc22_d7_node_t* node, u32_t level = 0) 
 {
-  for_cnt(i, level) printf(" ");
+  for(u32_t i = 0; i < level; ++i)
+    printf(" ");
   aoc22_print_str8(node->name);
   printf(" (dir, size = %u)\n", aoc22_d7_get_dir_size(node->dir));
 
@@ -1004,7 +1007,8 @@ aoc22_d7_print_nodes(aoc22_d7_node_t* node, u32_t level = 0)
     }
     else
     {
-      for_cnt(i, level) printf(" ");
+      for(u32_t i = 0; i < level; ++i)
+        printf(" ");
       aoc22_print_str8(itr->name);
       printf(" (file, size = %u)\n", itr->file->size);
     }
@@ -1234,9 +1238,9 @@ aoc22_d8p1(const char* filename, arena_t* arena)
 
   u32_t sum = grid.w * 2 + grid.h * 2 - 4;
 
-  for_range(y, 1, grid.h-1)
+  for(u32_t y = 1; y < grid.h-1; ++y)
   {
-    for_range(x, 1, grid.w-1)
+    for(u32_t x = 1; x < grid.w-1; ++x)
     {
       u32_t blocked_sides = 0; // if this is 4, means not visible
       u8_t current_tree = aoc22_grid_get(&grid, x, y);
@@ -1303,9 +1307,9 @@ aoc22_d8p2(const char* filename, arena_t* arena)
 
   u32_t max = 0;
 
-  for_cnt(y, grid.h)
+  for(u32_t y = 0; y < grid.h; ++y)
   {
-    for_cnt(x, grid.w)
+    for(u32_t x = 0; x < grid.w; ++x)
     {
       u32_t current_score = 1; 
       u32_t score = 0;
@@ -1396,7 +1400,7 @@ aoc22_d9p1(const char* filename, arena_t* arena)
     buffer_t amount_str = buffer_set(line.e + 2, line.size - 2);
     buffer_to_u32(amount_str, &amount);
 
-    for_cnt(i, amount)
+    for(u32_t i = 0; i < amount; ++i)
     {
 
       if (command == 'R')
@@ -1444,7 +1448,7 @@ aoc22_d9p1(const char* filename, arena_t* arena)
 
       // @note: ah fuck it whatever...
       b32_t found = false;
-      for_cnt(i, position_count)
+      for(u32_t i = 0; i < position_count; ++i)
       {
         if (tail_x == positions[i].x &&
             tail_y == positions[i].y)
@@ -1499,7 +1503,7 @@ aoc22_d9p2(const char* filename, arena_t* arena)
     buffer_t amount_str = buffer_set(line.e + 2, line.size - 2);
     buffer_to_u32(amount_str, &amount);
 
-    for_cnt(i, amount)
+    for(u32_t i = 0; i < amount; ++i)
     {
       v2s_t* front_node = rope_nodes;
       v2s_t* back_node = 0;
@@ -1573,7 +1577,7 @@ aoc22_d9p2(const char* filename, arena_t* arena)
 
       // @note: ah fuck it whatever...
       b32_t found = false;
-      for_cnt(i, position_count)
+      for(u32_t i = 0; i < position_count; ++i)
       {
         if (tail_node->x == positions[i].x &&
             tail_node->y == positions[i].y)
@@ -1773,7 +1777,7 @@ aoc22_d11p1(const char* filename, arena_t* arena)
 
   auto* items = arena_push_arr_zero(aoc22_d11_item_node_t, arena, item_count);
   auto* monkeys = arena_push_arr_zero(aoc22_d11_monkey_t, arena, monkey_count);
-  for_cnt(i, monkey_count)
+  for(u32_t i = 0; i < monkey_count; ++i)
     cll_init(&monkeys[i].item_sentinel);
 
   stream_reset(s);
@@ -1831,9 +1835,9 @@ aoc22_d11p1(const char* filename, arena_t* arena)
   }
 
   // simulation
-  for_cnt(round, 20)
+  for(u32_t round = 0; round < 20; ++round)
   {
-    for_cnt(monkey_index, monkey_count)
+    for(u32_t monkey_index = 0; monkey_index < monkey_count; ++monkey_index)
     {
       aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
       while(!cll_is_empty(&monkey->item_sentinel))
@@ -1870,7 +1874,7 @@ aoc22_d11p1(const char* filename, arena_t* arena)
 
 
 #if 0
-  for_cnt(i, monkey_count)
+  for(u32_t i = 0; i < monkey_count; ++i)
   {
     aoc22_d11_monkey_t* monkey = monkeys + i;
     printf("monkey %d:\n", i);
@@ -2003,7 +2007,7 @@ aoc22_d11p2(const char* filename, arena_t* arena)
 
   auto* items = arena_push_arr_zero(aoc22_d11_item_node_t, arena, item_count);
   auto* monkeys = arena_push_arr_zero(aoc22_d11_monkey_t, arena, monkey_count);
-  for_cnt(i, monkey_count)
+  for(u32_t i = 0; i < monkey_count; ++i)
     cll_init(&monkeys[i].item_sentinel);
 
   stream_reset(s);
@@ -2060,9 +2064,9 @@ aoc22_d11p2(const char* filename, arena_t* arena)
   }
 
   // simulation
-  for_cnt(round, 10000)
+  for(u32_t round = 0; round < 10000; ++round)
   {
-    for_cnt(monkey_index, monkey_count)
+    for(u32_t monkey_index = 0; monkey_index < monkey_count; ++monkey_index)
     {
       aoc22_d11_monkey_t* monkey = monkeys + monkey_index;
       while(!cll_is_empty(&monkey->item_sentinel))
@@ -2094,7 +2098,7 @@ aoc22_d11p2(const char* filename, arena_t* arena)
 
 #if 0
         printf("Round End Inspect Count:\n");
-        for_cnt(i, monkey_count)
+        for(u32_t i = 0; i < monkey_count; ++i)
         {
           aoc22_d11_monkey_t* monkey = monkeys + i;
           printf("monkey %d: ", i);
@@ -2196,7 +2200,7 @@ aoc22_d12p1_grid_init(aoc22_d12p1_grid_t* grid, buffer_t buffer, arena_t* arena)
   {
     buffer_t line = stream_consume_line(&s);  
 
-    for_cnt(i, line.size)
+    for(u32_t i = 0; i < line.size; ++i)
     {
       aoc22_d12p1_vertex_t* vertex = grid->vertices + vertex_index;
       vertex->symbol = line.e[i];
@@ -2262,7 +2266,7 @@ aoc22_d12p1_grid_pathfind(aoc22_d12p1_grid_t* grid)
     u32_t current_vertex_index = 0;
     {
       u32_t min = U32_MAX;
-      for_cnt(vertex_index, grid->vertex_count)
+      for(u32_t vertex_index = 0; vertex_index < grid->vertex_count; ++vertex_index)
       {
         aoc22_d12p1_vertex_t* itr = grid->vertices + vertex_index;
         if (itr->done) continue;
@@ -2393,7 +2397,7 @@ aoc22_d12p2_grid_init(aoc22_d12p2_grid_t* grid, buffer_t buffer, arena_t* arena)
   while(!stream_is_eos(&s)) 
   {
     buffer_t line = stream_consume_line(&s);  
-    for_cnt(i, line.size)
+    for(u32_t i = 0; i < line.size; ++i)
     {
       if (line.e[i] == 'S' || line.e[i] == 'a')
         ++grid->start_count;
@@ -2414,7 +2418,7 @@ aoc22_d12p2_grid_init(aoc22_d12p2_grid_t* grid, buffer_t buffer, arena_t* arena)
   {
     buffer_t line = stream_consume_line(&s);  
 
-    for_cnt(i, line.size)
+    for(u32_t i = 0; i < line.size; ++i)
     {
       aoc22_d12p2_vertex_t* vertex = grid->vertices + vertex_index;
       vertex->symbol = line.e[i];
@@ -2484,7 +2488,7 @@ aoc22_d12p2_grid_pathfind_sub(aoc22_d12p2_grid_t* grid)
     u32_t current_vertex_index = 0;
     {
       u32_t min = U32_MAX;
-      for_cnt(vertex_index, grid->vertex_count)
+      for(u32_t vertex_index = 0; vertex_index < grid->vertex_count; ++vertex_index)
       {
         aoc22_d12p2_vertex_t* itr = grid->vertices + vertex_index;
         if (itr->done) continue;
@@ -2563,10 +2567,10 @@ static u32_t
 aoc22_d12p2_grid_pathfind(aoc22_d12p2_grid_t* grid)
 {
   u32_t min = U32_MAX;
-  for_cnt(start_index, grid->start_count)
+  for(u32_t start_index = 0; start_index < grid->start_count; ++start_index)
   {
     // reset all vertices to U32_MAX
-    for_cnt(vertex_index, grid->vertex_count)
+    for(u32_t vertex_index = 0; vertex_index < grid->vertex_count; ++vertex_index)
     {
       aoc22_d12p2_vertex_t* vertex = grid->vertices + vertex_index;
       vertex->distance = U32_MAX;
@@ -2614,6 +2618,8 @@ struct aoc22_d13_node_t
   };
   aoc22_d13_node_t* prev;
   aoc22_d13_node_t* next;
+
+  b32_t is_divider; // for day 2
 };
 
 static void 
@@ -2883,7 +2889,6 @@ aoc22_d13p2(const char* filename, arena_t* arena)
   stream_t s;
   stream_init(&s, file_buffer);
 
-  u32_t sum = 0;
 
   u32_t list_count = 2; 
   while(!stream_is_eos(&s)) 
@@ -2897,7 +2902,6 @@ aoc22_d13p2(const char* filename, arena_t* arena)
   aoc22_d13_node_t* lists = arena_push_arr_zero(aoc22_d13_node_t, arena, list_count);
   assert(lists);
 
-  u32_t pair_index = 1;
   u32_t list_itr = 0;
   while(!stream_is_eos(&s)) 
   {
@@ -2909,19 +2913,21 @@ aoc22_d13p2(const char* filename, arena_t* arena)
     }
   }
   cll_init(lists + list_itr);
+  lists[list_itr].is_divider = true;
   aoc22_d13_parse_list(lists + list_itr++, buffer_from_lit("[2]"), 0, arena);
   cll_init(lists + list_itr);
+  lists[list_itr].is_divider = true;
   aoc22_d13_parse_list(lists + list_itr++, buffer_from_lit("[6]"), 0, arena);
 
   aoc22_d13_node_t** sort_entries = arena_push_arr_zero(aoc22_d13_node_t*, arena, list_count);
   assert(sort_entries);
 
-  for_cnt(i, list_count) 
+  for(u32_t i = 0; i < list_count; ++i)
     sort_entries[i] = (lists + i);
 
 
 #if 0
-  for_cnt(i, list_count)
+  for(u32_t i = 0; i < list_count; ++i)
   {
     aoc22_d13_node_print(lists + i);
     printf("\n");
@@ -2929,15 +2935,214 @@ aoc22_d13p2(const char* filename, arena_t* arena)
 #endif
   sort_quick_generic(sort_entries, list_count, aoc22_d13p2_pred);
 
-#if 1
-  for_cnt(i, list_count)
+  u32_t sum = 1;
+  for(u32_t i = 0; i < list_count; ++i)
   {
-    aoc22_d13_node_print(dref(sort_entries + i));
+    //aoc22_d13_node_print(dref(sort_entries + i));
+    //printf("\n");
+    if (sort_entries[i]->is_divider)
+    {
+      sum *= (i + 1);
+    }
+  }
+  printf("%u\n", sum);
+
+
+}
+
+struct aoc22_d14_node_t
+{
+  b32_t is_divider;
+  u32_t x;
+  u32_t y;
+  aoc22_d14_node_t* prev;
+  aoc22_d14_node_t* next;
+};
+
+
+static void
+aoc22_d14p1(const char* filename, arena_t* arena) 
+{
+  aoc22_d14_node_t point_list;
+  cll_init(&point_list);
+  arena_set_revert_point(arena);
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!file_buffer) return;
+
+  stream_t s;
+  stream_init(&s, file_buffer);
+
+  // one pass to find out what's the smallest and largest x and y value
+  v2u_t min = v2u_set(U32_MAX, U32_MAX);
+  v2u_t max = {};
+  while(!stream_is_eos(&s)) 
+  {
+    buffer_t line = stream_consume_line(&s);  
+
+    aoc22_d14_node_t* new_node = arena_push_zero(aoc22_d14_node_t, arena);
+    new_node->is_divider = true;
+    cll_push_back(&point_list, new_node);
+    
+    u32_t chaser = 0;
+    u32_t value = 0;
+    for(u32_t i = 0; i < line.size; ++i)
+    {
+      if (line.e[i] == ',')
+      {
+        buffer_t substr = buffer_set(line.e + chaser, i - chaser);
+        buffer_to_u32(substr, &value);
+        min.x = min_of(min.x, value);
+        max.x = max_of(max.x, value);
+        chaser = i + 1;
+        new_node = arena_push_zero(aoc22_d14_node_t, arena);
+        new_node->x = value;
+      }
+      else if (line.e[i] == ' ')
+      {
+        buffer_t substr = buffer_set(line.e + chaser, i - chaser);
+        buffer_to_u32(substr, &value);
+        i += 3; 
+        min.y = min_of(min.y, value);
+        max.y = max_of(max.y, value);
+        chaser = i + 1;
+        new_node->y = value;
+        cll_push_back(&point_list, new_node);
+      }
+    }
+    // one more pass for y
+    buffer_t substr = buffer_set(line.e + chaser, line.size-chaser);
+    buffer_to_u32(substr, &value);
+    min.y = min_of(min.y, value);
+    max.y = max_of(max.y, value);
+    new_node->y = value;
+    cll_push_back(&point_list, new_node);
+  }
+
+//  printf("%u %u\n", min.x, min.y);
+//  printf("%u %u\n", max.x, max.y);
+  u32_t grid_w = max.x - min.x + 1;
+  u32_t grid_h = max.y + 1;
+
+  // 0 is empty
+  // 1 is sand
+  // 2 is obstacle
+  u32_t* grid = arena_push_arr_zero(u32_t, arena, grid_w * grid_h);
+
+  b32_t first = true;
+  u32_t beg_x = 0;
+  u32_t beg_y = 0;
+  cll_foreach(itr, &point_list)
+  {
+    if (itr->is_divider) 
+    {
+      first = true;
+      continue;
+    }
+    
+    if (first)
+    {
+      first = false;
+      beg_x = itr->x - min.x;
+      beg_y = itr->y;
+    }
+    else
+    {
+      u32_t end_x = itr->x - min.x;
+      u32_t end_y = itr->y;
+      // fill between start and itr
+      // lines are garunteed to be straight so need to
+      // check if x or y is same
+      if (beg_x == end_x)
+      {
+        // fill y-wards
+        if (end_y < beg_y) 
+          for(u32_t y = end_y; y <= beg_y; ++y)
+            grid[beg_x + y * grid_w] = 1;
+        else
+          for(u32_t y = beg_y; y <= end_y; ++y)
+            grid[beg_x + y * grid_w] = 1;
+      }
+      else if (beg_y == end_y)
+      {
+        // fill x-wards
+        if (end_x < beg_x) 
+          for(u32_t x = end_x; x <= beg_x; ++x)
+            grid[x + beg_y * grid_w] = 1;
+        else
+          for(u32_t x = beg_x; x <= end_x; ++x)
+            grid[x + beg_y * grid_w] = 1;
+      }
+      beg_x = end_x;
+      beg_y = end_y;
+    }
+  }
+
+  //
+  // Simulation
+  //
+  const u32_t sand_spawn_x = 500 - min.x;
+  const u32_t sand_spawn_y = 0;
+
+  u32_t count = 0;
+  for(;;)
+  {
+    s32_t sand_x = sand_spawn_x;
+    s32_t sand_y = sand_spawn_y;
+    for(;;)
+    {
+      if (sand_x < 0 ||
+          sand_y < 0 ||
+          sand_x >= grid_w-1 ||
+          sand_y >= grid_h-1)
+      {
+        goto abyss;
+      }
+
+      u32_t down =  grid[sand_x + (sand_y + 1) * grid_w];
+      if (down == 0)
+      {
+        sand_y++;
+        continue;
+      }
+
+      u32_t left = grid[(sand_x-1) + (sand_y + 1) * grid_w];
+      if (left == 0)
+      {
+        sand_y++;
+        sand_x--;
+        continue;
+      }
+
+      u32_t right = grid[(sand_x+1) + (sand_y + 1) * grid_w];
+      if (right == 0)
+      {
+        sand_y++;
+        sand_x++;
+        continue;
+      }
+
+      break;
+    }
+    
+    // come to rest
+    ++count;
+    grid[sand_x + sand_y * grid_w] = 2;
+  }
+abyss:
+
+#if 1
+  // check grid
+  for(u32_t y = 0; y < grid_h; ++y)
+  {
+    for(u32_t x = 0; x < grid_w; ++x)
+    {
+      printf("%u", grid[x + y * grid_w]);
+    }
     printf("\n");
   }
 #endif
-
-
+  printf("%u", count);
+  
 }
 
 int main(int argv, char** argc) {
@@ -2991,5 +3196,6 @@ int main(int argv, char** argc) {
   aoc22_route(12,2);
   aoc22_route(13,1);
   aoc22_route(13,2);
+  aoc22_route(14,1);
 
 }

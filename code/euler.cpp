@@ -794,7 +794,8 @@ euler_q17() {
   
   u32_t sum = 0;
 
-  for_range(i, 1, 1001) {
+  for(u32_t i = 1; i < 1001; ++i) 
+  {
     //u32_t i = 115;
     u32_t num = i; 
     u32_t thous = num/1000;
@@ -1054,7 +1055,7 @@ euler_q21() {
   u32_t sum = 0;
   u32_t start = 1;
   u32_t ope = 10001;
-  for_range(i, start, ope)
+  for(u32_t i = start; i < ope; ++i)
   {
     u32_t b = euler_q21_d(i);
     u32_t a = euler_q21_d(b);

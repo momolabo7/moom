@@ -538,7 +538,8 @@ static void aoc23_d3p2(const char* filename, arena_t* arena) {
 
               // Get the actual number
               u32_t actual_num = 0;
-              for_range(i, start_x, end_x+1) {
+              for(u32_t i = start_x; i < end_x+1; ++i) 
+              {
                 u32_t cur_val = get_cell(grid, i, cur_y, width);
                 actual_num = actual_num * 10 + cur_val;
               }

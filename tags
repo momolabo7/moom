@@ -47,6 +47,8 @@ AOC22_D13_NODE_TYPE_LIST	code/aoc22.cpp	/^  AOC22_D13_NODE_TYPE_LIST,$/;"	e	lang
 AOC22_D13_NODE_TYPE_NIEN	code/aoc22.cpp	/^  AOC22_D13_NODE_TYPE_NIEN,$/;"	e	language:C++	enum:aoc22_d13_node_type_t	file:
 aoc22_d13_node_type_t	code/aoc22.cpp	/^enum aoc22_d13_node_type_t$/;"	g	language:C++	file:
 aoc22_d13_parse_list	code/aoc22.cpp	/^aoc22_d13_parse_list(aoc22_d13_node_t* root, buffer_t str, u32_t start_character_index, arena_t*/;"	f	language:C++	typeref:typename:u32_t	file:
+aoc22_d14p1	code/aoc22.cpp	/^aoc22_d14p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d14_node_t	code/aoc22.cpp	/^struct aoc22_d14_node_t$/;"	s	language:C++	file:
 aoc22_d1p1	code/aoc22.cpp	/^static void aoc22_d1p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d1p2	code/aoc22.cpp	/^static void aoc22_d1p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d2p1	code/aoc22.cpp	/^static void aoc22_d2p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
@@ -1334,6 +1336,7 @@ for_arr_reverse	code/momo.h	/^#define for_arr_reverse(/;"	d	language:C++
 for_cnt	code/momo.h	/^#define for_cnt(/;"	d	language:C++
 for_cnt_reverse	code/momo.h	/^#define for_cnt_reverse(/;"	d	language:C++
 for_range	code/momo.h	/^#define for_range(/;"	d	language:C++
+for_range_closed	code/momo.h	/^#define for_range_closed(/;"	d	language:C++
 Fraction	dump/operator_overloading_example.py	/^class Fraction:$/;"	c	language:Python
 frame_arena	code/app_alu.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:alu_t	typeref:typename:arena_t	file:
 frame_arena	code/app_lit.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
@@ -1885,6 +1888,8 @@ is_device_changed	code/w32_eden.cpp	/^	b32_t is_device_changed;$/;"	m	language:C
 is_device_ready	code/app_lit_ship.cpp	/^	b32_t is_device_ready;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:b32_t	file:
 is_device_ready	code/ship_app_lit.cpp	/^	b32_t is_device_ready;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:b32_t	file:
 is_device_ready	code/w32_eden.cpp	/^	b32_t is_device_ready;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:b32_t	file:
+is_divider	code/aoc22.cpp	/^  b32_t is_divider; \/\/ for day 2$/;"	m	language:C++	struct:aoc22_d13_node_t	typeref:typename:b32_t	file:
+is_divider	code/aoc22.cpp	/^  b32_t is_divider;$/;"	m	language:C++	struct:aoc22_d14_node_t	typeref:typename:b32_t	file:
 is_dll_reloaded	code/eden.h	/^  b32_t is_dll_reloaded;$/;"	m	language:C++	struct:eden_t	typeref:typename:b32_t
 is_holding_light	code/app_lit.cpp	/^  b32_t is_holding_light;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:b32_t	file:
 is_inverted	code/momo.h	/^  b32_t is_inverted;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:b32_t
@@ -1985,6 +1990,7 @@ line_gap	code/eden_asset_file.h	/^  f32_t line_gap;$/;"	m	language:C++	struct:as
 linker_flags	bin/build.bat	/^    set linker_flags=-shared $/;"	v	language:DosBatch
 linker_flags	bin/build.bat	/^set linker_flags=$/;"	v	language:DosBatch
 list	code/aoc22.cpp	/^    aoc22_d13_node_t* list; \/\/ represents a list$/;"	m	language:C++	union:aoc22_d13_node_t::__anonabc34737020a	typeref:typename:aoc22_d13_node_t *	file:
+list_clear	code/test_list.cpp	/^list_clear(list_t<type_t, cap, count_t>* list)$/;"	f	language:C++
 list_init	code/test_list.cpp	/^list_init(list_t<type_t, cap, count_t>* list)$/;"	f	language:C++	typeref:typename:void	file:
 list_push	code/test_list.cpp	/^list_push(list_t<type_t, cap, count_t>* list, type_t item)$/;"	f	language:C++	typeref:typename:void	file:
 list_t	code/test_list.cpp	/^struct list_t {$/;"	s	language:C++	file:
@@ -2332,6 +2338,7 @@ near	code/momo.h	/^# define near$/;"	d	language:C++
 nearest_light	code/app_lit.cpp	/^  lit_game_light_t* nearest_light;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:lit_game_light_t *	file:
 next	code/aoc22.cpp	/^  aoc22_d11_item_node_t* next;$/;"	m	language:C++	struct:aoc22_d11_item_node_t	typeref:typename:aoc22_d11_item_node_t *	file:
 next	code/aoc22.cpp	/^  aoc22_d13_node_t* next;$/;"	m	language:C++	struct:aoc22_d13_node_t	typeref:typename:aoc22_d13_node_t *	file:
+next	code/aoc22.cpp	/^  aoc22_d14_node_t* next;$/;"	m	language:C++	struct:aoc22_d14_node_t	typeref:typename:aoc22_d14_node_t *	file:
 next	code/aoc22.cpp	/^  aoc22_d5_node_t* next;$/;"	m	language:C++	struct:aoc22_d5_node_t	typeref:typename:aoc22_d5_node_t *	file:
 next	code/aoc22.cpp	/^  aoc22_d7_node_t* prev, *next;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:aoc22_d7_node_t *	file:
 next	code/app_lit_ship.cpp	/^  w32_memory_t* next;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
@@ -2541,6 +2548,7 @@ prev	code/aoc22.cpp	/^  aoc22_d11_item_node_t* prev;$/;"	m	language:C++	struct:a
 prev	code/aoc22.cpp	/^  aoc22_d12p1_vertex_t* prev;$/;"	m	language:C++	struct:aoc22_d12p1_vertex_t	typeref:typename:aoc22_d12p1_vertex_t *	file:
 prev	code/aoc22.cpp	/^  aoc22_d12p2_vertex_t* prev;$/;"	m	language:C++	struct:aoc22_d12p2_vertex_t	typeref:typename:aoc22_d12p2_vertex_t *	file:
 prev	code/aoc22.cpp	/^  aoc22_d13_node_t* prev;$/;"	m	language:C++	struct:aoc22_d13_node_t	typeref:typename:aoc22_d13_node_t *	file:
+prev	code/aoc22.cpp	/^  aoc22_d14_node_t* prev;$/;"	m	language:C++	struct:aoc22_d14_node_t	typeref:typename:aoc22_d14_node_t *	file:
 prev	code/aoc22.cpp	/^  aoc22_d5_node_t* prev;$/;"	m	language:C++	struct:aoc22_d5_node_t	typeref:typename:aoc22_d5_node_t *	file:
 prev	code/aoc22.cpp	/^  aoc22_d7_node_t* prev, *next;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:aoc22_d7_node_t *	file:
 prev	code/app_lit_ship.cpp	/^  w32_memory_t* prev;$/;"	m	language:C++	struct:w32_memory_t	typeref:typename:w32_memory_t *	file:
@@ -2788,7 +2796,7 @@ sort_entry_t	code/momo.h	/^struct sort_entry_t $/;"	s	language:C++
 sort_quick	code/momo.h	/^sort_quick(sort_entry_t* entries, u32_t entry_count) {$/;"	f	language:C++	typeref:typename:void
 sort_quick	code/momo.h	/^static void sort_quick(sort_entry_t* entries, u32_t entry_count);$/;"	p	language:C++	typeref:typename:void
 sort_quick_generic	code/momo.h	/^#define sort_quick_generic(/;"	d	language:C++
-sort_quick_generic_predicate_sig	code/aoc22.cpp	/^sort_quick_generic_predicate_sig(aoc22_d13p2_compare_pred)$/;"	f	language:C++
+sort_quick_generic_predicate_sig	code/aoc22.cpp	/^sort_quick_generic_predicate_sig(aoc22_d13p2_pred)$/;"	f	language:C++
 sort_quick_generic_predicate_sig	code/euler.cpp	/^sort_quick_generic_predicate_sig(euler_q22_cmp) {$/;"	f	language:C++	file:
 sort_quick_generic_predicate_sig	code/euler.cpp	/^sort_quick_generic_predicate_sig(euler_q24_cmp) {$/;"	f	language:C++	file:
 sort_quick_generic_predicate_sig	code/momo.h	/^#define sort_quick_generic_predicate_sig(/;"	d	language:C++
@@ -3537,6 +3545,7 @@ work_queue	code/w32_eden.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language:C++
 worry_level	code/aoc22.cpp	/^  u64_t worry_level;$/;"	m	language:C++	struct:aoc22_d11_item_node_t	typeref:typename:u64_t	file:
 x	code/aoc22.cpp	/^  u32_t x;$/;"	m	language:C++	struct:aoc22_d12p1_vertex_t	typeref:typename:u32_t	file:
 x	code/aoc22.cpp	/^  u32_t x;$/;"	m	language:C++	struct:aoc22_d12p2_vertex_t	typeref:typename:u32_t	file:
+x	code/aoc22.cpp	/^  u32_t x;$/;"	m	language:C++	struct:aoc22_d14_node_t	typeref:typename:u32_t	file:
 x	code/app_lit.cpp	/^  f32_t x;$/;"	m	language:C++	struct:lit_game_title_waypoint_t	typeref:typename:f32_t	file:
 x	code/momo.h	/^  s16_t x, y; $/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:s16_t
 x	code/momo.h	/^  struct { f32_t x, y, z, w; };$/;"	m	language:C++	struct:v4f_t::__anon1db7a63d0a08	typeref:typename:f32_t
@@ -3549,6 +3558,7 @@ x	code/momo.h	/^  u32_t x, y, w, h;$/;"	m	language:C++	struct:_rp_node	typeref:t
 x_intersect	code/momo.h	/^  f32_t x_intersect;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:f32_t
 y	code/aoc22.cpp	/^  u32_t y;$/;"	m	language:C++	struct:aoc22_d12p1_vertex_t	typeref:typename:u32_t	file:
 y	code/aoc22.cpp	/^  u32_t y;$/;"	m	language:C++	struct:aoc22_d12p2_vertex_t	typeref:typename:u32_t	file:
+y	code/aoc22.cpp	/^  u32_t y;$/;"	m	language:C++	struct:aoc22_d14_node_t	typeref:typename:u32_t	file:
 y	code/momo.h	/^  s16_t x, y; $/;"	m	language:C++	struct:_ttf_glyph_point_t	typeref:typename:s16_t
 y	code/momo.h	/^  struct { f32_t x, y, z, w; };$/;"	m	language:C++	struct:v4f_t::__anon1db7a63d0a08	typeref:typename:f32_t
 y	code/momo.h	/^  struct { f32_t x, y, z; };$/;"	m	language:C++	struct:v3f_t::__anon1db7a63d0808	typeref:typename:f32_t

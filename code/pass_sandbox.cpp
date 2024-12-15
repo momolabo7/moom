@@ -40,7 +40,7 @@ int main() {
       pass_pack_atlas_sprite(p, ASSET_SPRITE_ID_BLANK, sandbox_res_dir("blank.png"));
 
       pass_pack_atlas_font_begin(p, ASSET_FONT_ID_DEFAULT, sandbox_res_dir("nokiafc22.ttf"), 72.f);
-      for_range (i, start_cp, ope_cp)  
+      for (u32_t i = start_cp; i < ope_cp; ++i)  
       {
         pass_pack_atlas_font_codepoint(p, i);
       }

@@ -1255,7 +1255,9 @@ lit_game_render_lights(lit_game_t* g) {
   f32_t emitter_scale = alpha * LIT_LIGHT_EMITTER_SCALE;
   f32_t glow_scale = emitter_scale * (alpha * 1.4f);
 
-  for_cnt(light_index, g->light_count)
+  for(u32_t light_index = 0;
+      light_index < g->light_count;
+      ++light_index)
   {
     lit_game_light_t* light = g->lights + light_index;
     eden_draw_asset_sprite(
@@ -1306,7 +1308,11 @@ lit_draw_light_rays(lit_game_t* g) {
   for(u32_t light_index = 0; light_index < g->light_count; ++light_index) 
   {
     lit_game_light_t* light = g->lights + light_index;
-    for_cnt(intersection_index, light->intersection_count){
+    
+    for(u32_t intersection_index = 0;
+        intersection_index < light->intersection_count;
+        ++intersection_index)
+    {
       lit_light_intersection_t* intersection = light->intersections + intersection_index;
       eden_draw_line(g_eden, light->pos, intersection->pt, 2.f, rgba_hex(0xFF0000FF));
 
@@ -1740,7 +1746,10 @@ lit_game_update_sensors(lit_game_t* g, f32_t dt)
   }
 
   // For each sensor group, we find which one is actually activated
-  for_cnt(group_index, g->sensor_group_count) {
+  for(u32_t group_index = 0;
+      group_index < g->sensor_group_count;
+      ++group_index)
+  {
     lit_game_sensor_group_t* group = g->sensor_groups + group_index;
     if (group->sensor_count == activated[group_index]) {
       // We found a group that can activate the exit callback

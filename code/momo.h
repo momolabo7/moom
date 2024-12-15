@@ -211,12 +211,6 @@ t* name = &(glue(name##_,__LINE__))
 #define ns_begin(name) namespace name {
 #define ns_end(name) }
 
-#define for_cnt(id, cnt) for(decltype(cnt) id = 0; id < (cnt); ++id)
-#define for_cnt_reverse(id, cnt) \
-  for(umi_t glue(itr,__LINE__) = 0, id = (cnt)-1; \
-      glue(itr,__LINE__) < (cnt); \
-      ++(glue(itr,__LINE__)), id = (cnt)-1-glue(itr,__LINE__))
-#define for_range(id, beg, end) for(decltype(beg) id = (beg); id < (end); ++id)
 #define for_arr_reverse(id, arr) \
   for(umi_t glue(itr,__LINE__) = 0, id = array_count(arr)-1; \
       glue(itr,__LINE__) < array_count(arr); \
@@ -5465,7 +5459,10 @@ sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena)
     u32_t offsets[256] = {};
 
     // Counting pass: count how many of each key
-    for_cnt(i, entry_count) {
+    for(u32_t i = 0;
+        i < entry_count;
+        ++i) 
+    {
       u32_t value = _sort_key_to_u32(src[i].key);
       u32_t piece = (value >> byte_index) & 0xFF;
       ++offsets[piece];
@@ -5483,7 +5480,10 @@ sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena)
       total += count;
     }
 
-    for_cnt(i, entry_count) {
+    for(u32_t i = 0l;
+        i < entry_count;
+        ++i)
+    {
       u32_t value = _sort_key_to_u32(src[i].key);
       u32_t piece = (value >> byte_index) & 0xFF;
       dest[offsets[piece]++] = src[i];
@@ -5921,7 +5921,9 @@ buffer_bad() {
 
 static usz_t     
 buffer_find(buffer_t str, u8_t character){
-  for_cnt(i, str.size)
+  for(u32_t i = 0;
+      i < str.size;
+      ++i)
   {
     if (str.e[i] == character)
     {
@@ -9077,7 +9079,9 @@ rp_pack(rp_rect_t* rects,
 
 static void 
 bigint_zero(bigint_t* b) {
-  for_cnt(i, b->cap) 
+  for(u32_t i = 0;
+      i < b->cap;
+      ++i)
   {
     b->e[i] = 0;
   }
@@ -9095,7 +9099,9 @@ bigint_init(bigint_t* b, u8_t* data, u32_t cap)
   static void 
 bigint_set_max(bigint_t* b) 
 {
-  for_cnt(i, b->cap) 
+  for(u32_t i = 0;
+      i < b->cap;
+      ++i)
   {
     b->e[i] = 9;
   }
@@ -9109,7 +9115,9 @@ bigint_copy(bigint_t* to, bigint_t* from)
   }
 
   to->count = from->count;
-  for_cnt(i, from->count)
+  for(u32_t i = 0;
+      i < from->count;
+      ++i)
   {
     to->e[i] = from->e[i];
   }

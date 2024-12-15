@@ -35,14 +35,14 @@ int main() {
         ASSET_FONT_ID_MAX); 
     {
       pass_pack_atlas_font_begin(p, ASSET_FONT_ID_DEFAULT, lit_res_dir("nokiafc22.ttf"), 72.f);
-      for_range (i, start_cp, ope_cp) 
+      for (u32_t i = start_cp; i < ope_cp; ++i) 
       {
         pass_pack_atlas_font_codepoint(p, i);
       }
       pass_pack_atlas_font_end(p);
 
       pass_pack_atlas_font_begin(p, ASSET_FONT_ID_DEBUG, lit_res_dir("liberation-mono.ttf"), 72.f);
-      for_range (i, start_cp, ope_cp) 
+      for (u32_t i = start_cp; i < ope_cp; ++i) 
       {
         pass_pack_atlas_font_codepoint(p, i);
       } 

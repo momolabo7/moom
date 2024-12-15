@@ -332,7 +332,10 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
 {
   // Count the number of rects to pack
   u32_t rect_count = p->atlas_sprite_count;
-  for_cnt(atlas_font_id, p->atlas_font_count) {
+  for(u32_t atlas_font_id = 0;
+      atlas_font_id < p->atlas_font_count;
+      ++atlas_font_id) 
+  {
     pass_pack_atlas_font_t* af = p->atlas_fonts + atlas_font_id;
     asset_file_font_t* ff = p->fonts + af->font_id;
     rect_count += ff->glyph_count;
@@ -353,7 +356,10 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
   u32_t context_index = 0;
 
   // Prepare for sprites
-  for_cnt(sprite_index, p->atlas_sprite_count) {
+  for(u32_t sprite_index = 0;
+      sprite_index < p->atlas_sprite_count;
+      ++sprite_index)
+  {
     arena_set_revert_point(p->arena);
     pass_pack_atlas_sprite_t* s = p->atlas_sprites + sprite_index;
 
@@ -378,7 +384,10 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
   }
 
   // Prepare for fonts
-  for_cnt(atlas_font_id, p->atlas_font_count) {
+  for(u32_t atlas_font_id = 0;
+      atlas_font_id < p->atlas_font_count;
+      ++atlas_font_id)
+  {
     arena_set_revert_point(p->arena);
     pass_pack_atlas_font_t* af = p->atlas_fonts + atlas_font_id;
     asset_file_font_t* ff = p->fonts + af->font_id;
@@ -395,7 +404,10 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
     af->glyph_contexts = contexts + context_index;
     //f->glyph_rect_count = 0;
     
-    for_cnt (glyph_index, ff->glyph_count) {
+    for (u32_t glyph_index = 0;
+        glyph_index < ff->glyph_count;
+        ++glyph_index)
+    {
       asset_file_font_glyph_t* fg = ffe->glyphs + glyph_index;
       u32_t ttf_glyph_index = ttf_get_glyph_index(ttf, fg->codepoint);
 
@@ -428,7 +440,9 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
   
   // Rasterization step
 
-  for_cnt(i, rect_count)
+  for(u32_t i = 0;
+      i < rect_count;
+      ++i)
   {
     rp_rect_t* rect = rects + i;
     auto* context = (pass_pack_atlas_context_t*)(rect->user_data);
@@ -500,7 +514,10 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
   //
   
   // Insert Sprites
-  for_cnt(atlas_sprite_index, p->atlas_sprite_count) {
+  for(u32_t atlas_sprite_index = 0;
+      atlas_sprite_index < p->atlas_sprite_count;
+      ++atlas_sprite_index)
+  {
     pass_pack_atlas_sprite_t* as = p->atlas_sprites + atlas_sprite_index;
     asset_file_sprite_t* fs = p->sprites + as->sprite_id; 
     fs->texel_x0 = as->rect->x;
@@ -511,7 +528,10 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
 
 
   // Insert Fonts and its glyphs
-  for_cnt(atlas_font_id, p->atlas_font_count) {
+  for(u32_t atlas_font_id = 0;
+      atlas_font_id < p->atlas_font_count;
+      ++atlas_font_id)
+  {
     arena_set_revert_point(p->arena);
     pass_pack_atlas_font_t* af = p->atlas_fonts + atlas_font_id;
     asset_file_font_t* ff = p->fonts + af->font_id;
@@ -538,7 +558,9 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
     }
 
     // Set glyphs
-    for_cnt(glyph_index, ff->glyph_count)
+    for(u32_t glyph_index = 0;
+        glyph_index < ff->glyph_count;
+        ++glyph_index)
     {
       rp_rect_t* rect = af->glyph_rects + glyph_index;
       asset_file_font_glyph_t* fg = ffe->glyphs + glyph_index;
@@ -677,7 +699,9 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   //
 
   // Fonts
-  for_cnt(font_index, p->font_count)
+  for(u32_t font_index = 0;
+      font_index < p->font_count;
+      ++font_index)
   {
     arena_set_revert_point(p->arena);
 
@@ -698,8 +722,14 @@ pass_pack_end(pass_pack_t* p, const char* filename)
     b32_t ok = pass_read_font_from_file(ttf, ffe->filename, p->arena); 
     assert(ok);
     f32_t pixel_scale = ttf_get_scale_for_pixel_height(ttf, 1.f);
-    for_cnt(g1, ff->glyph_count) {
-      for_cnt(g2, ff->glyph_count) {
+    for(u32_t g1 = 0;
+        g1 < ff->glyph_count;
+        ++g1)
+    {
+      for(u32_t g2 = 0;
+          g2 < ff->glyph_count;
+          ++g2)
+      {
         u32_t cp1 = ffe->glyphs[g1].codepoint;
         u32_t cp2 = ffe->glyphs[g2].codepoint;
 
@@ -716,7 +746,9 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   }
 
   // Bitmaps
-  for_cnt(bitmap_index, p->bitmap_count)
+  for(u32_t bitmap_index = 0;
+      bitmap_index < p->bitmap_count;
+      ++bitmap_index)
   {
     asset_file_bitmap_t* fb = p->bitmaps + bitmap_index;
     pass_pack_bitmap_ext_t* fbe = p->bitmap_exts + bitmap_index; 
@@ -727,7 +759,10 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   }
 
   // Sounds
-  for_cnt(sound_index, p->sound_count) {
+  for(u32_t sound_index = 0;
+      sound_index < p->sound_count;
+      ++sound_index)
+  {
     arena_set_revert_point(p->arena);
 
     asset_file_sound_t* fs = p->sounds + sound_index; 
@@ -745,7 +780,10 @@ pass_pack_end(pass_pack_t* p, const char* filename)
   }
 
   // Shader 
-  for_cnt(shader_index, p->shader_count) {
+  for(u32_t shader_index = 0; 
+      shader_index < p->shader_count; 
+      ++shader_index)
+  {
     arena_set_revert_point(p->arena);
 
     asset_file_shader_t* fs = p->shaders + shader_index; 

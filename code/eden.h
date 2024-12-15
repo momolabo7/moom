@@ -2617,7 +2617,10 @@ eden_assets_init_from_file(
   // 
   // Read sounds
   //
-  for_cnt(sound_index, assets->sound_count) {
+  for(u32_t sound_index = 0;
+      sound_index < assets->sound_count;
+      ++sound_index)
+  {
     umi_t offset_to_sound = asset_file_header.offset_to_sounds + sizeof(asset_file_sound_t) * sound_index; 
     asset_file_sound_t file_sound = {};
     if (!file_read(file, &file_sound, sizeof(asset_file_sound_t), offset_to_sound)) 
@@ -2636,7 +2639,10 @@ eden_assets_init_from_file(
   // 
   // Read shaders
   //
-  for_cnt(shader_index, assets->shader_count) {
+  for(u32_t shader_index = 0;
+      shader_index < assets->shader_count;
+      ++shader_index)
+  {
     umi_t offset_to_shader = asset_file_header.offset_to_shaders + sizeof(asset_file_shader_t) * shader_index; 
     asset_file_shader_t file_shader = {};
     if (!file_read(file, &file_shader, sizeof(asset_file_shader_t), offset_to_shader)) 
@@ -2653,7 +2659,10 @@ eden_assets_init_from_file(
   // 
   // Read sprites
   //
-  for_cnt(sprite_index, assets->sprite_count) {
+  for(u32_t sprite_index = 0;
+      sprite_index < assets->sprite_count;
+      ++sprite_index)
+  {
     umi_t offset_to_sprite = asset_file_header.offset_to_sprites + sizeof(asset_file_sprite_t) * sprite_index; 
     asset_file_sprite_t file_sprite = {};
     if (!file_read(file, &file_sprite, sizeof(asset_file_sprite_t), offset_to_sprite))
@@ -2670,7 +2679,10 @@ eden_assets_init_from_file(
   // 
   // Read bitmaps
   //
-  for_cnt(bitmap_index, assets->bitmap_count) {
+  for(u32_t bitmap_index = 0;
+      bitmap_index < assets->bitmap_count;
+      ++bitmap_index)
+  {
     umi_t offset_to_bitmap = asset_file_header.offset_to_bitmaps + sizeof(asset_file_bitmap_t) * bitmap_index; 
     asset_file_bitmap_t file_bitmap = {};
     if (!file_read(file, &file_bitmap, sizeof(asset_file_bitmap_t), offset_to_bitmap)) {
@@ -2700,7 +2712,9 @@ eden_assets_init_from_file(
     hell_gfx_complete_texture_transfer(payload);
   }
 
-  for_cnt(font_index, assets->font_count) 
+  for(u32_t font_index = 0;
+      font_index < assets->font_count;
+      ++font_index)
   {
     umi_t offset_to_fonts = asset_file_header.offset_to_fonts + sizeof(asset_file_font_t) * font_index; 
     asset_file_font_t file_font = {};
@@ -3504,7 +3518,9 @@ hell_speaker_init(
   if (!speaker->sound_free_list || !speaker->sounds)
     return false;
 
-  for_cnt(i, sound_cap) 
+  for(u32_t i = 0;
+      i < sound_cap;
+      ++i)
   {
     auto* sound = speaker->sounds + i;
     sound->is_loop = false;
@@ -3569,9 +3585,15 @@ hell_speaker_update(eden_t* eden)
 
   if (speaker->bitrate_type == EDEN_SPEAKER_BITRATE_TYPE_S16) 
   {
-    for_cnt (sample_index, speaker->sample_count){
+    for (u32_t sample_index = 0;
+        sample_index < speaker->sample_count;
+        ++sample_index)
+    {
       s16_t* dest = (s16_t*)speaker->samples + (sample_index * speaker->device_channels);
-      for_cnt(sound_index, speaker->sound_cap) {
+      for(u32_t sound_index = 0;
+          sound_index < speaker->sound_cap;
+          ++sound_index)
+      {
         eden_speaker_sound_t* sound = speaker->sounds + sound_index;
         if (!sound->is_playing) continue;
 
@@ -3579,7 +3601,10 @@ hell_speaker_update(eden_t* eden)
         //s16_t* src = (s16_t*)sound->data;
         s16_t* src = (s16_t*)asset_sound->data;
 
-        for_cnt(channel_index, speaker->device_channels) {
+        for(u32_t channel_index = 0;
+            channel_index < speaker->device_channels;
+            ++channel_index)
+        {
           dest[channel_index] += s16_t(dref(src + sound->current_offset++) * sound->volume * speaker->volume);
         }
 
