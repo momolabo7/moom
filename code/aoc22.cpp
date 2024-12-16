@@ -3130,7 +3130,7 @@ aoc22_d14p1(const char* filename, arena_t* arena)
   }
 abyss:
 
-#if 1
+#if 0
   // check grid
   for(u32_t y = 0; y < grid_h; ++y)
   {
@@ -3141,8 +3141,212 @@ abyss:
     printf("\n");
   }
 #endif
-  printf("%u", count);
+  printf("%u\n", count);
   
+}
+
+static void
+aoc22_d14p2(const char* filename, arena_t* arena) 
+{
+  aoc22_d14_node_t point_list;
+  cll_init(&point_list);
+  arena_set_revert_point(arena);
+  buffer_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!file_buffer) return;
+
+  stream_t s;
+  stream_init(&s, file_buffer);
+
+  // one pass to find out what's the smallest and largest x and y value
+  v2u_t min = v2u_set(U32_MAX, U32_MAX);
+  v2u_t max = {};
+  while(!stream_is_eos(&s)) 
+  {
+    buffer_t line = stream_consume_line(&s);  
+
+    aoc22_d14_node_t* new_node = arena_push_zero(aoc22_d14_node_t, arena);
+    new_node->is_divider = true;
+    cll_push_back(&point_list, new_node);
+    
+    u32_t chaser = 0;
+    u32_t value = 0;
+    for(u32_t i = 0; i < line.size; ++i)
+    {
+      if (line.e[i] == ',')
+      {
+        buffer_t substr = buffer_set(line.e + chaser, i - chaser);
+        buffer_to_u32(substr, &value);
+        min.x = min_of(min.x, value);
+        max.x = max_of(max.x, value);
+        chaser = i + 1;
+        new_node = arena_push_zero(aoc22_d14_node_t, arena);
+        new_node->x = value;
+      }
+      else if (line.e[i] == ' ')
+      {
+        buffer_t substr = buffer_set(line.e + chaser, i - chaser);
+        buffer_to_u32(substr, &value);
+        i += 3; 
+        min.y = min_of(min.y, value);
+        max.y = max_of(max.y, value);
+        chaser = i + 1;
+        new_node->y = value;
+        cll_push_back(&point_list, new_node);
+      }
+    }
+    // one more pass for y
+    buffer_t substr = buffer_set(line.e + chaser, line.size-chaser);
+    buffer_to_u32(substr, &value);
+    min.y = min_of(min.y, value);
+    max.y = max_of(max.y, value);
+    new_node->y = value;
+    cll_push_back(&point_list, new_node);
+  }
+
+  max.y += 2; // add for the infinite floor
+  const u32_t x_padding = max.y;
+  printf("%u\n", x_padding);
+  min.x -= x_padding;
+  max.x += x_padding;
+
+  // @note: I'm not sure about how much extra horizontal space I need but I think it's 
+  // related to how far the floor is to the spawn point
+  u32_t grid_w = max.x - min.x + 1;
+  u32_t grid_h = max.y + 1;
+
+  // 0 is empty
+  // 1 is sand
+  // 2 is obstacle
+  u32_t* grid = arena_push_arr_zero(u32_t, arena, grid_w * grid_h);
+
+  b32_t first = true;
+  u32_t beg_x = 0;
+  u32_t beg_y = 0;
+  cll_foreach(itr, &point_list)
+  {
+    if (itr->is_divider) 
+    {
+      first = true;
+      continue;
+    }
+    
+    if (first)
+    {
+      first = false;
+      beg_x = itr->x - min.x;
+      beg_y = itr->y;
+    }
+    else
+    {
+      u32_t end_x = itr->x - min.x;
+      u32_t end_y = itr->y;
+      // fill between start and itr
+      // lines are garunteed to be straight so need to
+      // check if x or y is same
+      if (beg_x == end_x)
+      {
+        // fill y-wards
+        if (end_y < beg_y) 
+          for(u32_t y = end_y; y <= beg_y; ++y)
+            grid[beg_x + y * grid_w] = 1;
+        else
+          for(u32_t y = beg_y; y <= end_y; ++y)
+            grid[beg_x + y * grid_w] = 1;
+      }
+      else if (beg_y == end_y)
+      {
+        // fill x-wards
+        if (end_x < beg_x) 
+          for(u32_t x = end_x; x <= beg_x; ++x)
+            grid[x + beg_y * grid_w] = 1;
+        else
+          for(u32_t x = beg_x; x <= end_x; ++x)
+            grid[x + beg_y * grid_w] = 1;
+      }
+      beg_x = end_x;
+      beg_y = end_y;
+    }
+  }
+  // fill the last line with 1
+  printf("%d\n", max.y);
+  for (u32_t x = 0; x < grid_w; ++x)
+  {
+    grid[x + max.y * grid_w] = 1;
+  }
+
+  //
+  // Simulation
+  //
+  const u32_t sand_spawn_x = 500 - min.x;
+  const u32_t sand_spawn_y = 0;
+
+  u32_t count = 1;
+  for(;;)
+  {
+    s32_t sand_x = sand_spawn_x;
+    s32_t sand_y = sand_spawn_y;
+    for(;;)
+    {
+      if (sand_x < 0 ||
+          sand_y < 0 ||
+          sand_x >= grid_w-1 ||
+          sand_y >= grid_h-1)
+      {
+        printf("dedge\n");
+        goto abyss;
+      }
+
+      u32_t down =  grid[sand_x + (sand_y + 1) * grid_w];
+      if (down == 0)
+      {
+        sand_y++;
+        continue;
+      }
+
+      u32_t left = grid[(sand_x-1) + (sand_y + 1) * grid_w];
+      if (left == 0)
+      {
+        sand_y++;
+        sand_x--;
+        continue;
+      }
+
+      u32_t right = grid[(sand_x+1) + (sand_y + 1) * grid_w];
+      if (right == 0)
+      {
+        sand_y++;
+        sand_x++;
+        continue;
+      }
+
+      if (sand_x == sand_spawn_x && sand_y == sand_spawn_y)
+      {
+        goto abyss;
+      }
+
+
+      break;
+    }
+    
+    // come to rest
+    ++count;
+    grid[sand_x + sand_y * grid_w] = 2;
+  }
+abyss:
+  grid[sand_spawn_x + sand_spawn_y * grid_w] = 2;
+
+#if 0
+  // check grid
+  for(u32_t y = 0; y < grid_h; ++y)
+  {
+    for(u32_t x = 0; x < grid_w; ++x)
+    {
+      printf("%u", grid[x + y * grid_w]);
+    }
+    printf("\n");
+  }
+#endif
+  printf("%u\n", count);
 }
 
 int main(int argv, char** argc) {
@@ -3197,5 +3401,6 @@ int main(int argv, char** argc) {
   aoc22_route(13,1);
   aoc22_route(13,2);
   aoc22_route(14,1);
+  aoc22_route(14,2);
 
 }

@@ -48,6 +48,7 @@ AOC22_D13_NODE_TYPE_NIEN	code/aoc22.cpp	/^  AOC22_D13_NODE_TYPE_NIEN,$/;"	e	lang
 aoc22_d13_node_type_t	code/aoc22.cpp	/^enum aoc22_d13_node_type_t$/;"	g	language:C++	file:
 aoc22_d13_parse_list	code/aoc22.cpp	/^aoc22_d13_parse_list(aoc22_d13_node_t* root, buffer_t str, u32_t start_character_index, arena_t*/;"	f	language:C++	typeref:typename:u32_t	file:
 aoc22_d14p1	code/aoc22.cpp	/^aoc22_d14p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d14p2	code/aoc22.cpp	/^aoc22_d14p2(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d14_node_t	code/aoc22.cpp	/^struct aoc22_d14_node_t$/;"	s	language:C++	file:
 aoc22_d1p1	code/aoc22.cpp	/^static void aoc22_d1p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d1p2	code/aoc22.cpp	/^static void aoc22_d1p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1333,10 +1334,6 @@ foolish_write_buffer_to_file	code/momo.h	/^foolish_write_buffer_to_file(const ch
 format	code/momo.h	/^  u32_t format; \/\/ big endian$/;"	m	language:C++	struct:wav_riff_chunk_t	typeref:typename:u32_t
 for_arr	code/momo.h	/^#define for_arr(/;"	d	language:C++
 for_arr_reverse	code/momo.h	/^#define for_arr_reverse(/;"	d	language:C++
-for_cnt	code/momo.h	/^#define for_cnt(/;"	d	language:C++
-for_cnt_reverse	code/momo.h	/^#define for_cnt_reverse(/;"	d	language:C++
-for_range	code/momo.h	/^#define for_range(/;"	d	language:C++
-for_range_closed	code/momo.h	/^#define for_range_closed(/;"	d	language:C++
 Fraction	dump/operator_overloading_example.py	/^class Fraction:$/;"	c	language:Python
 frame_arena	code/app_alu.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:alu_t	typeref:typename:arena_t	file:
 frame_arena	code/app_lit.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
@@ -2223,6 +2220,7 @@ main	code/test_http.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_json.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test_list.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_radix_sort.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
+main	code/test_utf8.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_wstr.cpp	/^int main()$/;"	f	language:C++	typeref:typename:int
 main	code/tool_seat_randomizer.cpp	/^int main () $/;"	f	language:C++	typeref:typename:int
 main	code/twitch_bot.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
