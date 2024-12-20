@@ -9,32 +9,7 @@
 
 #include "momo.h"
 
-template<typename type_t, u32_t cap, typename count_t = u32_t>
-struct list_t {
-  type_t e[cap];
-  count_t count;
-};
 
-template<typename type_t, u32_t cap, typename count_t = u32_t>
-static void 
-list_init(list_t<type_t, cap, count_t>* list)
-{
-  list->count = 0;
-}
-
-template<typename type_t, u32_t cap, typename count_t = u32_t>
-static void 
-list_push(list_t<type_t, cap, count_t>* list, type_t item)
-{
-  assert(list->count < array_count(list->e))
-  list->e[list->count++] = item;
-}
-
-template<typename type_t, u32_t cap, typename count_t = u32_t>
-list_clear(list_t<type_t, cap, count_t>* list)
-{
-  list->count = 0;
-}
 
 
 int main() 

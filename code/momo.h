@@ -765,16 +765,17 @@ static b32_t u8_is_readable(u8_t c);
 #define memory_copy_struct(d,s)  memory_copy((d), (s), sizeof(*(d)))
 #define memory_copy_array(d,s)   memory_copy((d), (s), sizeof(d))
 #define memory_copy_range(d,s,n) memory_copy((d), (s), sizeof(*(d)) * (n))
-    static void   memory_copy(void* dest, const void* src, usz_t size);
-    static void   memory_zero(void* dest, usz_t size);
-    static b32_t  memory_is_same(const void* lhs, const void* rhs, usz_t size);
-    static void   memory_swap(void* lhs, void* rhs, usz_t size);
-    static buffer_t  memory_reserve(usz_t size);
-    static b32_t  memory_commit(buffer_t blk);
-    static buffer_t  memory_allocate(usz_t size); // reserve + commit
-    static void   memory_free(buffer_t blk);
 
-    static umi_t ptr_to_umi(void* p);
+static void   memory_copy(void* dest, const void* src, usz_t size);
+static void   memory_zero(void* dest, usz_t size);
+static b32_t  memory_is_same(const void* lhs, const void* rhs, usz_t size);
+static void   memory_swap(void* lhs, void* rhs, usz_t size);
+static buffer_t  memory_reserve(usz_t size);
+static b32_t  memory_commit(buffer_t blk);
+static buffer_t  memory_allocate(usz_t size); // reserve + commit
+static void   memory_free(buffer_t blk);
+
+static umi_t ptr_to_umi(void* p);
 static u8_t* umi_to_ptr(umi_t u);
 
 static f32_t f32_abs(f32_t x);
@@ -1078,6 +1079,7 @@ static u32_t crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t
 // @mark:(Strings)
 //
 #define buffer_from_lit(s) buffer_set((u8_t*)(s), sizeof(s)-1)
+static buffer_t buffer_slice(buffer_t b, usz_t start, usz_t end);
 static buffer_t      buffer_bad();
 static buffer_t      buffer_set(u8_t* str, usz_t size);
 static buffer_t      buffer_substr(buffer_t str, usz_t start, usz_t ope);
@@ -5918,6 +5920,14 @@ buffer_bad() {
   return buffer_set(0,0);
 }
 
+
+static buffer_t 
+buffer_slice(buffer_t b, usz_t start, usz_t end)
+{
+  assert(start < end);
+  assert(end < b.size);
+  return buffer_set(b.e + start, end - start);
+}
 
 static usz_t     
 buffer_find(buffer_t str, u8_t character){

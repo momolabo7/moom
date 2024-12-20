@@ -2960,6 +2960,7 @@ struct aoc22_d14_node_t
 };
 
 
+
 static void
 aoc22_d14p1(const char* filename, arena_t* arena) 
 {
@@ -2989,7 +2990,7 @@ aoc22_d14p1(const char* filename, arena_t* arena)
     {
       if (line.e[i] == ',')
       {
-        buffer_t substr = buffer_set(line.e + chaser, i - chaser);
+        buffer_t substr = buffer_slice(line, chaser, i);
         buffer_to_u32(substr, &value);
         min.x = min_of(min.x, value);
         max.x = max_of(max.x, value);
