@@ -11,21 +11,21 @@ IF %option%==-ship (
 )
 
 IF %option%==-build (
-  cmd /c build pass_%app_name% -bun
-  cmd /c build app_%app_name% -app
-  cmd /c build w32_eden -w32 
+  build pass_%app_name% -bun
+  build app_%app_name% -app
+  build w32_eden -w32 
 )
 
 IF %option%==-hot (
-  cmd /c build app_%app_name% -app
+  build app_%app_name% -app
 )
 
 IF %option%==-run (
-  cmd /c build w32_eden -run
+  build w32_eden -run
 )
 
 IF %option%==-pass (
-  cmd /c build pass_%app_name% -bun
+  build pass_%app_name% -bun
 )
 
 

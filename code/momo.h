@@ -1456,7 +1456,7 @@ file_open(
   return true;
 }
 
-  static b32_t
+static b32_t
 file_read(file_t* fp, void* dest, usz_t size, usz_t offset) 
 {
   // Reading the file
@@ -1476,7 +1476,7 @@ file_read(file_t* fp, void* dest, usz_t size, usz_t offset)
   }
 }
 
-  static b32_t
+static b32_t
 file_write(file_t* fp, const void* src, usz_t size, usz_t offset) 
 {
   OVERLAPPED overledened = {};
@@ -2413,7 +2413,7 @@ _json_print_value(json_t* t, json_value_t* value) {
   }
 }
 
-  static void 
+static void 
 _json_print_entries_in_order(json_t* t, _json_entry_t* entry) 
 {
   if (entry == nullptr) 
@@ -2472,7 +2472,7 @@ json_get_value(json_object_t* json_object, buffer_t key) {
   return &entry->value;
 }
 
-  static b32_t 
+static b32_t 
 json_is_true(json_value_t* val) 
 {
   return val->type == JSON_VALUE_TYPE_TRUE;
@@ -2502,9 +2502,11 @@ json_is_number(json_value_t* val) {
 static b32_t json_is_array(json_value_t* val) {
   return val->type == JSON_VALUE_TYPE_ARRAY;
 }
+
 static b32_t json_is_object(json_value_t* val) {
   return val->type == JSON_VALUE_TYPE_OBJECT;
 }
+
 static b32_t json_is_element(json_value_t* val) {
   return !json_is_object(val) && !json_is_array(val);
 }
@@ -2512,15 +2514,17 @@ static b32_t json_is_element(json_value_t* val) {
 static json_element_t* json_get_element(json_value_t* val) {
   return json_is_element(val) ? &val->element : nullptr;
 }
+
 static json_array_t* json_get_array(json_value_t* val) {
   return json_is_array(val) ? &val->array : nullptr;
 }
+
 static json_object_t* json_get_object(json_value_t* val) {
   return json_is_object(val) ? &val->object : nullptr;
 }
 
 
-  static json_object_t*
+static json_object_t*
 json_read(
     json_t* j, 
     u8_t* json_string, 

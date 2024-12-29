@@ -950,6 +950,7 @@ end_build_type	bin/build.bat	/^:end_build_type$/;"	l	language:DosBatch
 end_point_indices	code/momo.h	/^  u16_t* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u16_t *
 end_pt	code/app_lit.cpp	/^  v2f_t end_pt;$/;"	m	language:C++	struct:lit_game_edge_t	typeref:typename:v2f_t	file:
 enemy	code/app_gbg.cpp	/^  gbg_enemy_t enemy;$/;"	m	language:C++	struct:gbg_t	typeref:typename:gbg_enemy_t	file:
+enemy_index	code/app_gbg.cpp	/^  umi_t enemy_index;$/;"	m	language:C++	struct:gbg_tile_t	typeref:typename:umi_t	file:
 entries	code/app_lit_ship.cpp	/^  w32_work_t entries[256];$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:w32_work_t[256]	file:
 entries	code/eden.h	/^  hell_inspector_entry_t* entries;$/;"	m	language:C++	struct:hell_inspector_t	typeref:typename:hell_inspector_entry_t *
 entries	code/eden.h	/^  hell_profiler_entry_t* entries;$/;"	m	language:C++	struct:hell_profiler_t	typeref:typename:hell_profiler_entry_t *
@@ -1404,6 +1405,7 @@ GBG_GRID_START_X	code/app_gbg.cpp	/^#define GBG_GRID_START_X /;"	d	language:C++	
 GBG_GRID_START_Y	code/app_gbg.cpp	/^#define GBG_GRID_START_Y /;"	d	language:C++	file:
 gbg_grid_to_world_pos	code/app_gbg.cpp	/^gbg_grid_to_world_pos(v2u_t grid_pos)$/;"	f	language:C++	typeref:typename:v2f_t	file:
 GBG_GRID_WIDTH	code/app_gbg.cpp	/^#define GBG_GRID_WIDTH /;"	d	language:C++	file:
+gbg_is_within_grid	code/app_gbg.cpp	/^gbg_is_within_grid(v2u_t pos)$/;"	f	language:C++	typeref:typename:b32_t	file:
 gbg_player_move_begin	code/app_gbg.cpp	/^gbg_player_move_begin(gbg_t* gbg, s32_t x, s32_t y)$/;"	f	language:C++	typeref:typename:void	file:
 GBG_PLAYER_MOVE_DURATION	code/app_gbg.cpp	/^#define GBG_PLAYER_MOVE_DURATION /;"	d	language:C++	file:
 gbg_player_move_end	code/app_gbg.cpp	/^gbg_player_move_end(gbg_t* gbg)$/;"	f	language:C++	typeref:typename:void	file:
@@ -1411,7 +1413,11 @@ gbg_player_t	code/app_gbg.cpp	/^struct gbg_player_t {$/;"	s	language:C++	file:
 gbg_render_grid	code/app_gbg.cpp	/^gbg_render_grid(eden_t* eden, gbg_t* gbg)$/;"	f	language:C++	typeref:typename:void	file:
 gbg_t	code/app_gbg.cpp	/^struct gbg_t {$/;"	s	language:C++	file:
 GBG_TILE_SIZE	code/app_gbg.cpp	/^#define GBG_TILE_SIZE /;"	d	language:C++	file:
-gbg_tile_t	code/app_gbg.cpp	/^struct gbg_tile_t $/;"	s	language:C++	file:
+gbg_tile_t	code/app_gbg.cpp	/^struct gbg_tile_t$/;"	s	language:C++	file:
+GBG_TILE_TYPE_EXIT	code/app_gbg.cpp	/^  GBG_TILE_TYPE_EXIT,$/;"	e	language:C++	enum:gbg_tile_type_t	file:
+GBG_TILE_TYPE_NOTHING	code/app_gbg.cpp	/^  GBG_TILE_TYPE_NOTHING,$/;"	e	language:C++	enum:gbg_tile_type_t	file:
+GBG_TILE_TYPE_OBSTACLE	code/app_gbg.cpp	/^  GBG_TILE_TYPE_OBSTACLE,$/;"	e	language:C++	enum:gbg_tile_type_t	file:
+gbg_tile_type_t	code/app_gbg.cpp	/^enum gbg_tile_type_t$/;"	g	language:C++	file:
 get_config	code/eden.h	/^  eden_get_config_f* get_config;$/;"	m	language:C++	struct:eden_functions_t	typeref:typename:eden_get_config_f *
 get_lowest_common_multiple	dump/operator_overloading_example.py	/^def get_lowest_common_multiple(a, b):$/;"	f	language:Python
 gfx	code/eden.h	/^  hell_gfx_t gfx;$/;"	m	language:C++	struct:eden_t	typeref:typename:hell_gfx_t
@@ -3024,6 +3030,7 @@ throw_to_index_if_true	code/aoc22.cpp	/^  u32_t throw_to_index_if_true;$/;"	m	la
 tile	code/app_tbg.cpp	/^  tbp_tile_t tile;$/;"	m	language:C++	struct:tbp_t	typeref:typename:tbp_tile_t	file:
 tile	code/app_tbp.cpp	/^  tbp_tile_t tile;$/;"	m	language:C++	struct:tbp_t	typeref:typename:tbp_tile_t	file:
 tiles	code/app_gbg.cpp	/^  gbg_tile_t tiles[GBG_GRID_HEIGHT][GBG_GRID_WIDTH];$/;"	m	language:C++	struct:gbg_t	typeref:typename:gbg_tile_t[][]	file:
+tile_type	code/app_gbg.cpp	/^  gbg_tile_type_t tile_type;$/;"	m	language:C++	struct:gbg_tile_t	typeref:typename:gbg_tile_type_t	file:
 timer	code/app_gbg.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:gbg_player_t	typeref:typename:f32_t	file:
 timer	code/app_lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_credits_t	typeref:typename:f32_t	file:
 timer	code/app_lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:f32_t	file:

@@ -162,7 +162,7 @@ if %run%==1 (
   echo Run      : %output_name%
   echo Args     : %args%
   echo ******************* 
-  CALL %filename%.exe %args%
+  call %filename%.exe %args%
 )
 
 popd
