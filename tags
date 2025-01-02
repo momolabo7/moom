@@ -949,8 +949,9 @@ endline_padding	code/aoc22.cpp	/^  u32_t endline_padding; \/\/ 1 if \\n, 2 if \\
 end_build_type	bin/build.bat	/^:end_build_type$/;"	l	language:DosBatch
 end_point_indices	code/momo.h	/^  u16_t* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u16_t *
 end_pt	code/app_lit.cpp	/^  v2f_t end_pt;$/;"	m	language:C++	struct:lit_game_edge_t	typeref:typename:v2f_t	file:
-enemy	code/app_gbg.cpp	/^  gbg_enemy_t enemy;$/;"	m	language:C++	struct:gbg_t	typeref:typename:gbg_enemy_t	file:
+enemy_count	code/app_gbg.cpp	/^  u32_t enemy_count;$/;"	m	language:C++	struct:gbg_t	typeref:typename:u32_t	file:
 enemy_index	code/app_gbg.cpp	/^  umi_t enemy_index;$/;"	m	language:C++	struct:gbg_tile_t	typeref:typename:umi_t	file:
+enemy_list	code/app_gbg.cpp	/^  gbg_enemy_t enemy_list[GBG_GRID_WIDTH*GBG_GRID_HEIGHT];$/;"	m	language:C++	struct:gbg_t	typeref:typename:gbg_enemy_t[]	file:
 entries	code/app_lit_ship.cpp	/^  w32_work_t entries[256];$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:w32_work_t[256]	file:
 entries	code/eden.h	/^  hell_inspector_entry_t* entries;$/;"	m	language:C++	struct:hell_inspector_t	typeref:typename:hell_inspector_entry_t *
 entries	code/eden.h	/^  hell_profiler_entry_t* entries;$/;"	m	language:C++	struct:hell_profiler_t	typeref:typename:hell_profiler_entry_t *
@@ -1397,6 +1398,7 @@ garena_push_size	code/momo.h	/^static void* garena_push_size(garena_t* ga, usz_t
 garena_t	code/momo.h	/^struct garena_t $/;"	s	language:C++
 GBG_DESIGN_HEIGHT	code/app_gbg.cpp	/^#define GBG_DESIGN_HEIGHT /;"	d	language:C++	file:
 GBG_DESIGN_WIDTH	code/app_gbg.cpp	/^#define GBG_DESIGN_WIDTH /;"	d	language:C++	file:
+gbg_enemy_spawn	code/app_gbg.cpp	/^gbg_enemy_spawn(gbg_t* gbg, u32_t x, u32_t y)$/;"	f	language:C++	typeref:typename:gbg_enemy_t *	file:
 gbg_enemy_t	code/app_gbg.cpp	/^struct gbg_enemy_t $/;"	s	language:C++	file:
 GBG_GRID_COLS	code/app_gbg.cpp	/^#define GBG_GRID_COLS /;"	d	language:C++	file:
 GBG_GRID_HEIGHT	code/app_gbg.cpp	/^#define GBG_GRID_HEIGHT /;"	d	language:C++	file:

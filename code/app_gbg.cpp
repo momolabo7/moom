@@ -82,8 +82,7 @@ enum gbg_tile_type_t
 struct gbg_tile_t
 {
   gbg_tile_type_t tile_type;
-
-  umi_t enemy_index;
+  gbg_enemy_t* enemy;
 };
 
 
@@ -94,8 +93,9 @@ struct gbg_t {
   gbg_player_t player;
 
   gbg_tile_t tiles[GBG_GRID_HEIGHT][GBG_GRID_WIDTH];
-
-  gbg_enemy_t enemy;
+  
+  gbg_enemy_t enemy_list[GBG_GRID_WIDTH*GBG_GRID_HEIGHT];
+  u32_t enemy_count;
 };
 
 static v2f_t
@@ -192,7 +192,6 @@ gbg_player_move_begin(gbg_t* gbg, s32_t x, s32_t y)
   if (gbg->tiles[new_grid_pos.y][new_grid_pos.x].tile_type == GBG_TILE_TYPE_OBSTACLE) 
     return;
 
-  // enemy
 
   {
     player->grid_pos = new_grid_pos;
@@ -213,6 +212,28 @@ gbg_player_move_end(gbg_t* gbg)
   player->is_moving = false;
 }
 
+static gbg_enemy_t*
+gbg_enemy_spawn(gbg_t* gbg, u32_t x, u32_t y)
+{
+  if (!gbg_is_within_grid({x, y}))
+  {
+    return nullptr;
+  }
+
+  if (gbg->tiles[x][y].enemy != nullptr)
+  {
+    return nullptr;
+  }
+
+  gbg_enemy_t*  ret = gbg->enemy_list + gbg->enemy_count++;
+  ret->grid_pos = v2u_set(x, y);
+  ret->world_pos = gbg_grid_to_world_pos(ret->grid_pos); 
+  gbg->tiles[x][y].enemy = ret;
+
+  return ret;
+}
+
+
 exported 
 eden_update_and_render_sig(eden_update_and_render) 
 {
@@ -226,8 +247,8 @@ eden_update_and_render_sig(eden_update_and_render)
     gbg->player.world_pos = gbg_grid_to_world_pos(gbg->player.grid_pos); 
     gbg->player.is_moving = false;
 
-    gbg->enemy.grid_pos = v2u_set(1,1);
-    gbg->enemy.world_pos = gbg_grid_to_world_pos(gbg->enemy.grid_pos); 
+    gbg_enemy_spawn(gbg, 1,1);
+    gbg_enemy_spawn(gbg, 2,2);
 
     // @todo, randomize tile values
     
@@ -292,13 +313,16 @@ eden_update_and_render_sig(eden_update_and_render)
       v2f_set(GBG_TILE_SIZE, GBG_TILE_SIZE) * 0.8f,
       RGBA_GREEN);
 
-  // draw enemy
-  eden_draw_rect(
-      eden, 
-      gbg->enemy.world_pos,
-      0.f, 
-      v2f_set(GBG_TILE_SIZE, GBG_TILE_SIZE) * 0.8f,
-      RGBA_RED);
+  // draw enemies
+  for(u32_t i = 0; i < gbg->enemy_count; ++i)
+  {
+    eden_draw_rect(
+        eden, 
+        gbg->enemy_list[i].world_pos,
+        0.f, 
+        v2f_set(GBG_TILE_SIZE, GBG_TILE_SIZE) * 0.8f,
+        RGBA_RED);
+  }
 
 }
 
