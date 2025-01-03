@@ -1291,13 +1291,13 @@ socket_system_begin() {
   return true;
 }
 
-  static void
+static void
 socket_set_receive_timeout(socket_t* s, u32_t timeout_in_ms)
 {
   setsockopt(s->sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)(&timeout_in_ms), sizeof(timeout_in_ms));
 }
 
-  static b32_t
+static b32_t
 socket_begin(socket_t* s, const char* server, u32_t port)
 {
   // 1337
@@ -1366,7 +1366,7 @@ socket_begin(socket_t* s, const char* server, u32_t port)
   return true;
 }
 
-  static b32_t
+static b32_t
 socket_send(socket_t* s, buffer_t msg) 
 {
   if (send(s->sock, (char*)msg.e, msg.size, 0) == SOCKET_ERROR) {
@@ -1375,13 +1375,13 @@ socket_send(socket_t* s, buffer_t msg)
   return true;
 }
 
-  static void 
+static void 
 socket_end(socket_t* s) 
 {
   closesocket(s->sock);
 }
 
-  static void
+static void
 socket_system_end() 
 {
   WSACleanup();
@@ -1395,7 +1395,7 @@ socket_system_end()
 // @todo: 
 // - Maybe it should take in an arena...?
 //
-  static buffer_t
+static buffer_t
 socket_receive(socket_t* s, buffer_t buffer)
 {
   // @note: will poll
@@ -1410,7 +1410,7 @@ doze(u32_t ms_to_doze) {
   Sleep(ms_to_doze);
 }
 
-  static void
+static void
 file_close(file_t* fp) 
 {
   if (fp->handle) {
@@ -1418,7 +1418,7 @@ file_close(file_t* fp)
   }
 }
 
-  static b32_t
+static b32_t
 file_open(
     file_t* fp, 
     const char* filename,
@@ -1577,7 +1577,7 @@ struct socket_t {
   }
 };
 
-  static b32_t 
+static b32_t 
 socket_system_begin() 
 {
   return true; 
@@ -1585,7 +1585,7 @@ socket_system_begin()
 
 static void  socket_system_end() {}
 
-  static b32_t
+static b32_t
 socket_begin(socket_t* s, const char* server, u32_t port)
 {
   hostent* server_host = gethostbyname(server);
@@ -1613,13 +1613,13 @@ socket_begin(socket_t* s, const char* server, u32_t port)
   return true;
 }
 
-  static void
+static void
 socket_end(socket_t* s) 
 {
   close(s->sock);
 }
 
-  static b32_t
+static b32_t
 socket_send(socket_t* s, buffer_t msg) 
 {
   if (send(s->sock, (char*)msg.e, msg.size, 0) == -1)
@@ -1630,7 +1630,7 @@ socket_send(socket_t* s, buffer_t msg)
   return true;
 }
 
-  static buffer_t
+static buffer_t
 socket_receive(socket_t* s, buffer_t buffer)
 {
   // @note: will poll
@@ -1642,13 +1642,13 @@ socket_receive(socket_t* s, buffer_t buffer)
   return buffer_set(buffer.e, received_bytes);
 }
 
-  static void 
+static void 
 doze(u32_t ms_to_doze) 
 {
   usleep(ms_to_doze * 1000);
 }
 
-  static void
+static void
 file_close(file_t* fp) 
 {
   if (fp->handle) {
@@ -1656,7 +1656,7 @@ file_close(file_t* fp)
   }
 }
 
-  static b32_t
+static b32_t
 file_open(
     file_t* fp, 
     const char* filename,
@@ -1696,7 +1696,7 @@ file_read(file_t* fp, void* dest, usz_t size, usz_t offset) {
   return true;
 }
 
-  static b32_t
+static b32_t
 file_write(file_t* fp, const void* src, usz_t size, usz_t offset) 
 {
   if (lseek(fp->handle, offset, SEEK_SET) == -1) {
@@ -1767,7 +1767,7 @@ clock_resolution() {
 }
 #endif // OS_WINDOWS
 
-  static f32_t 
+static f32_t 
 clock_secs_elapsed(u64_t start, u64_t end) 
 {
   return (f32_t)(end - start)/clock_resolution();
@@ -2206,7 +2206,7 @@ _json_parse_array(json_array_t* arr, json_t* t, arena_t* ba) {
   return !error;
 }
 
-  static b32_t 
+static b32_t 
 _json_set_value_based_on_token(
     json_t* t, 
     json_value_t* value, 
@@ -2478,7 +2478,7 @@ json_is_true(json_value_t* val)
   return val->type == JSON_VALUE_TYPE_TRUE;
 }
 
-  static b32_t 
+static b32_t 
 json_is_false(json_value_t* val) 
 {
   return val->type == JSON_VALUE_TYPE_FALSE;
@@ -2606,7 +2606,7 @@ clex_tokenizer_init(clex_tokenizer_t* t, buffer_t buffer) {
 
 static b32_t
 _clex_is_keyword(clex_tokenizer_t* t, clex_token_t token) {
-  static buffer_t keywords[] = {
+static buffer_t keywords[] = {
     buffer_from_lit("if"),
     buffer_from_lit("else"),
     buffer_from_lit("switch"),
@@ -3061,13 +3061,13 @@ f64_abs(f64_t x) {
   return val.f;
 }
 
-  static f32_t
+static f32_t
 f32_mod(f32_t lhs, f32_t rhs) 
 {
   return fmodf(lhs, rhs);
 }
 
-  static f64_t
+static f64_t
 f64_mod(f64_t lhs, f64_t rhs) 
 {
   return fmod(lhs, rhs);
@@ -3259,7 +3259,7 @@ cbuffer_len(const c8_t* str) {
   return count;
 }
 
-  static u32_t 
+static u32_t 
 cbuffer_to_u32(const c8_t* str)
 {
   u32_t ret = 0;
@@ -3271,7 +3271,7 @@ cbuffer_to_u32(const c8_t* str)
   return ret;
 }
 
-  static u32_t 
+static u32_t 
 cbuffer_len_if(const char* str, b32_t (*pred)(char))
 {
   // common strlen that counts what I care
@@ -3322,14 +3322,14 @@ cbuffer_concat(c8_t* dest, const c8_t* Src) {
   (*dest) = 0;
 }
 
-  static f64_t
+static f64_t
 _compute_f64(s64_t power, u64_t i, b32_t negative) 
 {
-  static const f64_t power_of_ten[] = {
+static const f64_t power_of_ten[] = {
     1e0,  1e1,  1e2,  1e3,  1e4,  1e5,  1e6,  1e7,  1e8,  1e9,  1e10, 1e11,
     1e12, 1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19, 1e20, 1e21, 1e22};
 #if 0
-  static const u64_t mantissa_64[] = {
+static const u64_t mantissa_64[] = {
     0xa5ced43b7e3e9188, 0xcf42894a5dce35ea,
     0x818995ce7aa0e1b2, 0xa1ebfb4219491a1f,
     0xca66fa129f9b60a6, 0xfd00b897478238d0,
@@ -3648,7 +3648,7 @@ _compute_f64(s64_t power, u64_t i, b32_t negative)
     0x91d28b7416cdd27e, 0xb6472e511c81471d,
     0xe3d8f9e563a198e5, 0x8e679c2f5e44ff8f};
 
-  static const u64_t mantissa_128[] = {
+static const u64_t mantissa_128[] = {
     0x419ea3bd35385e2d, 0x52064cac828675b9,
     0x7343efebd1940993, 0x1014ebe6c5f90bf8,
     0xd41a26e077774ef6, 0x8920b098955522b4,
@@ -4171,7 +4171,7 @@ f64_is_nan(f64_t f) {
   return (ret.u & 0xFFFFFFFFFFFFFFFF) == 0xFFFFFFFFFFFFFFFF;
 }
 
-  static u32_t 
+static u32_t 
 hash_djb2(const c8_t* str)
 {
   // DJB2
@@ -4192,7 +4192,7 @@ hash_djb2(const c8_t* str)
 
 #if COMPILER_MSVC
 #include <intrin.h>
-  static u32_t 
+static u32_t 
 u32_atomic_compare_assign(u32_t volatile* value,
     u32_t new_value,
     u32_t expected_value)
@@ -4203,7 +4203,7 @@ u32_atomic_compare_assign(u32_t volatile* value,
   return ret;
 }
 
-  static u64_t 
+static u64_t 
 u64_atomic_assign(u64_t volatile* value,
     u64_t new_value)
 {
@@ -4902,7 +4902,7 @@ v2f_cross(v2f_t lhs, v2f_t rhs) {
   return  lhs.x * rhs.y - lhs.y * rhs.x;
 }
 
-  static v2f_t  
+static v2f_t  
 v2f_lerp(v2f_t s, v2f_t e, f32_t a) 
 {
   v2f_t ret = {0};
@@ -5431,7 +5431,7 @@ static rgba_t hsla_to_rgba(hsla_t c) {
 //   It seems that we can presumably just flip the bits. 
 //
 
-  static u32_t 
+static u32_t 
 _sort_key_to_u32(f32_t sort_key)
 {
   u32_t result = *(u32_t*)&sort_key;
@@ -5448,7 +5448,7 @@ _sort_key_to_u32(f32_t sort_key)
   return result;
 }
 
-  static void 
+static void 
 sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena)
 {
   arena_set_revert_point(arena);
@@ -5505,7 +5505,7 @@ sort_radix(sort_entry_t* entries, u32_t entry_count, arena_t* arena)
 // Generic version of sort_quick
 typedef b32_t _sort_quick_generic_cmp_t(const void* lhs, const void* rhs);
 
-  static u32_t 
+static u32_t 
 _sort_quick_generic_partition(
     void* a,
     u32_t start, 
@@ -5535,7 +5535,7 @@ _sort_quick_generic_partition(
 }
 
 // @note: This is done inplace
-  static void
+static void
 _sort_quick_generic_range(
     void* a, 
     u32_t start, 
@@ -5567,7 +5567,7 @@ _sort_swap_entries(sort_entry_t* a, sort_entry_t* b) {
 //
 // Quick sort
 //
-  static u32_t
+static u32_t
 _sort_quick_partition(sort_entry_t* a,
     u32_t start, 
     u32_t ope) 
@@ -5594,7 +5594,7 @@ _sort_quick_partition(sort_entry_t* a,
 }
 
 // @note: This is done inplace
-  static void
+static void
 _sort_quick_range(sort_entry_t* a, 
     u32_t start, 
     u32_t ope) 
@@ -5688,13 +5688,14 @@ bonk_tri2_pt2(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {
 //
 // @mark:(RNG)
 //
-  static void
+
+static void 
 rng_init(rng_t* r, u32_t seed)
 {
   r->seed = seed;
 }
 
-  static u32_t
+static u32_t
 rng_next(rng_t* r)
 {
   u32_t result = r->seed;
@@ -5711,7 +5712,7 @@ rng_choice(rng_t* r, u32_t choice_count) {
 }
 
 // Get number within [0, 1]
-  static f32_t 
+static f32_t 
 rng_unilateral(rng_t* r)
 {
   f32_t divisor = 1.0f / (f32_t)U32_MAX;
@@ -5722,28 +5723,28 @@ rng_unilateral(rng_t* r)
 
 
 // Get number within [-1, 1]
-  static f32_t 
+static f32_t 
 rng_bilateral(rng_t* r)
 {
   f32_t result = 2.0f * rng_unilateral(r) - 1.0f;  
   return(result);
 }
 
-  static f32_t 
+static f32_t 
 rng_range_f32(rng_t* r, f32_t min, f32_t max)
 {
   f32_t result = f32_lerp(min, rng_unilateral(r), max);
   return(result);
 }
 
-  static s32_t 
+static s32_t 
 rng_range_s32(rng_t* r, s32_t min, s32_t max)
 {
   s32_t result = min + (s32_t)(rng_next(r)%((max + 1) - min));
   return(result);
 }
 
-  static u32_t
+static u32_t
 rng_range_u32(rng_t* r, u32_t min, u32_t max)
 {
   u32_t result = min + (u32_t)(rng_next(r)%((max + 1) - min));
@@ -5947,7 +5948,7 @@ buffer_find(buffer_t str, u8_t character){
   return str.size;
 }
 
-  static void
+static void
 buffer_reverse(buffer_t* dest)
 {
   u8_t* front_ptr = dest->e;
@@ -6144,13 +6145,13 @@ buffer_to_u64(buffer_t s, u64_t* out) {
 }
 
 // Parsing functions
-  static b32_t 
+static b32_t 
 buffer_to_s32(buffer_t s, s32_t* out) 
 {
   return buffer_to_s32_range(s, 0, s.size, out);
 }
 
-  static void  
+static void  
 str_builder_init(str_builder_t* b, u8_t* data, usz_t cap) 
 {
   b->e = data;
@@ -6158,7 +6159,7 @@ str_builder_init(str_builder_t* b, u8_t* data, usz_t cap)
   b->cap = cap;
 }
 
-  static b32_t     
+static b32_t     
 str_builder_init(str_builder_t* b, arena_t* arena, usz_t cap)
 {
   u8_t* buffer = arena_push_arr(u8_t, arena, cap);
@@ -6170,7 +6171,7 @@ str_builder_init(str_builder_t* b, arena_t* arena, usz_t cap)
 
 }
 
-  static void  
+static void  
 str_builder_init(str_builder_t* b, buffer_t str) 
 {
   b->e = str.e;
@@ -6381,7 +6382,7 @@ str_builder_push_hex_u32(str_builder_t* b, u32_t value) {
 }
 
 
-  static void
+static void
 _str_builder_push_fmt_list(str_builder_t* b, buffer_t format, va_list args) 
 {
   usz_t at = 0;
@@ -6628,7 +6629,7 @@ struct _wav_head_t {
 };
 // http://soundfile.sapp.org/doc/Waveformat/
 
-  static b32_t 
+static b32_t 
 wav_read(wav_t* w, buffer_t contents) 
 {
   const static u32_t riff_id_signature = u32_endian_swap(0x52494646);
@@ -6848,7 +6849,7 @@ ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t
   }
 }
 
-  static s32_t
+static s32_t
 _ttf_get_kern_advance(const ttf_t* ttf, s32_t g1, s32_t g2) 
 {
   // @note: We only care about format 0, which Windows cares
@@ -6903,7 +6904,7 @@ _ttf_get_kern_advance(const ttf_t* ttf, s32_t g1, s32_t g2)
 // | 
 // ----x
 //
-  static b32_t 
+static b32_t 
 _ttf_get_glyph_outline(const ttf_t* ttf, 
     _ttf_glyph_outline_t* outline,
     u32_t glyph_index, 
@@ -7048,7 +7049,7 @@ _ttf_add_vertex(v2f_t* vertices, u32_t n, v2f_t v) {
 }
 
 
-  static void
+static void
 _ttf_tessellate_bezier(v2f_t* vertices,
     u32_t* vertex_count,
     v2f_t p0, 
@@ -7081,7 +7082,7 @@ _ttf_tessellate_bezier(v2f_t* vertices,
 
 }
 
-  static b32_t 
+static b32_t 
 _ttf_get_paths_from_glyph_outline(_ttf_glyph_outline_t* outline,
     _ttf_glyph_paths_t* paths,
     arena_t* allocator) 
@@ -7382,7 +7383,7 @@ ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2
   return 0;
 }
 
-  static u32_t* 
+static u32_t* 
 ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w, u32_t* out_h, arena_t* allocator) 
 {
   u32_t* pixels = 0;
@@ -7674,7 +7675,7 @@ struct _png_huffman_t {
 // crc variable indicates the starting register
 static u32_t
 _png_calculate_crc32(u8_t* data, u32_t data_size) {
-  static const u32_t crc_table[256] =
+static const u32_t crc_table[256] =
   {
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
     0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91,
@@ -7748,7 +7749,7 @@ _png_huffman_decode(stream_t* src_stream, _png_huffman_t huffman) {
 // @note: 
 // https://datatracker.ietf.org/doc/html/rfc1951
 // Section 3.2.2
-  static void
+static void
 _png_huffman_compute(_png_huffman_t* h,
     arena_t* arena, 
     u16_t* codes,
@@ -7796,21 +7797,21 @@ _png_huffman_compute(_png_huffman_t* h,
 }
 
 
-  static b32_t
+static b32_t
 _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena) 
 {
 
-  static const u16_t lens[29] = { /* Size base for length codes 257..285 */
+static const u16_t lens[29] = { /* Size base for length codes 257..285 */
     3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 15, 17, 19, 23, 27, 31,
     35, 43, 51, 59, 67, 83, 99, 115, 131, 163, 195, 227, 258};
-  static const u16_t len_ex_bits[29] = { /* Extra bits for length codes 257..285 */
+static const u16_t len_ex_bits[29] = { /* Extra bits for length codes 257..285 */
     0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2,
     3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 0};
-  static const u16_t dists[30] = { /* Offset base for distance codes 0..29 */
+static const u16_t dists[30] = { /* Offset base for distance codes 0..29 */
     1, 2, 3, 4, 5, 7, 9, 13, 17, 25, 33, 49, 65, 97, 129, 193,
     257, 385, 513, 769, 1025, 1537, 2049, 3073, 4097, 6145,
     8193, 12289, 16385, 24577};
-  static const u16_t dist_ex_bits[30] = { /* Extra bits for distance codes 0..29 */
+static const u16_t dist_ex_bits[30] = { /* Extra bits for distance codes 0..29 */
     0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6,
     7, 7, 8, 8, 9, 9, 10, 10, 11, 11,
     12, 12, 13, 13 };
@@ -7881,7 +7882,7 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
           u32_t HDIST = stream_consume_bits(src_stream, 5) + 1;
           u32_t HCLEN = stream_consume_bits(src_stream, 4) + 4;
 
-          static const u32_t order[] = {
+        static const u32_t order[] = {
             16, 17, 18, 0, 8 ,7, 9, 6, 10, 5, 
             11, 4, 12, 3, 13, 2, 14, 1, 15,
           };
@@ -7957,7 +7958,7 @@ _png_deflate(stream_t* src_stream, stream_t* dest_stream, arena_t* arena)
               15);					
         }
 
-        static int pass =0;
+      static int pass =0;
         ++pass;
 
         // @note: Actual decoding
@@ -8060,7 +8061,7 @@ _png_is_format_supported(_png_ihdr_t* IHDR){
 
 static b32_t
 _png_is_signature_valid(u8_t* comparee) {
-  static const u8_t signature[] = { 
+static const u8_t signature[] = { 
     137, 80, 78, 71, 13, 10, 26, 10 
   };
 
@@ -8276,7 +8277,7 @@ _png_decompress_zlib(_png_context_t* c, stream_t* zlib_stream) {
 //
 // @todo(momo): We should have a png_rasterize_into_buffer that directly rasterizes
 // into a buffer (or a img struct?)
-  static u32_t* 
+static u32_t* 
 png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena) 
 {
   make(stream_t, zlib_stream);
@@ -8361,7 +8362,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
 static buffer_t
 png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
-  static const u8_t signature[] = { 
+static const u8_t signature[] = { 
     137, 80, 78, 71, 13, 10, 26, 10 
   };
   u32_t image_bpl = (width * 4);
@@ -8523,7 +8524,7 @@ png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
 }
 
 
-  static b32_t     
+static b32_t     
 png_read(png_t* png, buffer_t png_contents)
 {
   make(stream_t, stream);
@@ -8567,8 +8568,12 @@ png_read(png_t* png, buffer_t png_contents)
 //
 
 static b32_t
-arena_init(arena_t* a, buffer_t buffer) {
-  if (!buffer) return false;
+arena_init(arena_t* a, buffer_t buffer) 
+{
+  if (!buffer) 
+  {
+    return false;
+  }
 
   a->buffer = buffer;
   a->pos = 0; 
@@ -8579,24 +8584,31 @@ arena_init(arena_t* a, buffer_t buffer) {
   return true;
 }
 
-  static b32_t 
+static b32_t 
 arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit) 
 {
   a->buffer = memory_reserve(reserve_amount);
-  if (!a->buffer) return false;
+  if (!a->buffer) {
+    return false;
+  }
 
-  if (commit) {
-    if(!memory_commit(a->buffer)) return false;
+  if (commit) 
+  {
+    if(!memory_commit(a->buffer)) 
+    {
+      return false;
+    }
     a->commit_pos = reserve_amount;
   }
-  else {
+  else 
+  {
     a->commit_pos = 0;
   }
   a->pos = 0;
   return true;
 }
 
-  static void
+static void
 arena_free(arena_t* a)
 { 
   memory_free(a->buffer);
@@ -8607,7 +8619,7 @@ arena_clear(arena_t* a) {
   a->pos = 0;
 }
 
-  static b32_t 
+static b32_t 
 arena_grow_buffer(arena_t* a, buffer_t* str, usz_t new_size)
 {
 
@@ -8620,7 +8632,7 @@ arena_grow_buffer(arena_t* a, buffer_t* str, usz_t new_size)
 }
 
 
-  static b32_t
+static b32_t
 arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size) 
 {
   if (new_size <= old_size) return false;
@@ -8644,7 +8656,7 @@ arena_remaining(arena_t* a) {
   return a->cap - a->pos;
 }
 
-  static void*   
+static void*   
 arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size)
 {
   arena_t arena = {};
@@ -8701,7 +8713,7 @@ arena_push_size(arena_t* a, usz_t size, usz_t align) {
 
 }
 
-  static void*
+static void*
 arena_push_size_zero(arena_t* a, usz_t size, usz_t align) 
 {
   void* mem = arena_push_size(a, size, align);
@@ -8711,7 +8723,7 @@ arena_push_size_zero(arena_t* a, usz_t size, usz_t align)
 }
 
 
-  static b32_t
+static b32_t
 arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align) 
 {	
   u8_t* mem = arena_push_arr_align(u8_t, a, size, align);
@@ -8721,7 +8733,7 @@ arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align)
 
 }
 
-  static buffer_t
+static buffer_t
 arena_push_buffer(arena_t* a, usz_t size, usz_t align) 
 {
   buffer_t buffer = {};
@@ -8731,7 +8743,7 @@ arena_push_buffer(arena_t* a, usz_t size, usz_t align)
   return buffer;
 }
 
-  static b32_t    
+static b32_t    
 arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)
 {
   usz_t imem = ptr_to_umi(a->memory);
@@ -8747,7 +8759,7 @@ arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)
 
 }
 
-  static arena_marker_t
+static arena_marker_t
 arena_mark(arena_t* a) 
 {
   arena_marker_t ret;
@@ -8921,7 +8933,7 @@ struct _rp_node{
   u32_t x, y, w, h;
 };
 
-  static void
+static void
 _rp_sort(rp_rect_t* rects,
     sort_entry_t* entries,
     u32_t count,
@@ -8972,7 +8984,7 @@ _rp_sort(rp_rect_t* rects,
   sort_quick(entries, count);
 }
 
-  static b32_t
+static b32_t
 rp_pack(rp_rect_t* rects, 
     u32_t rect_count, 
     u32_t padding,
@@ -9102,7 +9114,7 @@ bigint_zero(bigint_t* b) {
   b->count = 1;
 }
 
-  static void 
+static void 
 bigint_init(bigint_t* b, u8_t* data, u32_t cap) 
 {
   b->e = data;
@@ -9110,7 +9122,7 @@ bigint_init(bigint_t* b, u8_t* data, u32_t cap)
   bigint_zero(b);
 }
 
-  static void 
+static void 
 bigint_set_max(bigint_t* b) 
 {
   for(u32_t i = 0;
@@ -9121,7 +9133,7 @@ bigint_set_max(bigint_t* b)
   }
   b->count = b->cap;
 }
-  static void
+static void
 bigint_copy(bigint_t* to, bigint_t* from)
 {
   if(from->count > to->cap) {
@@ -9138,7 +9150,7 @@ bigint_copy(bigint_t* to, bigint_t* from)
 
 }
 
-  static b32_t
+static b32_t
 bigint_init(bigint_t* b, arena_t* arena, u32_t cap)
 {
   u8_t* data = arena_push_arr(u8_t, arena, cap);
@@ -9155,7 +9167,7 @@ bigint_init(bigint_t* b, arena_t* arena, u32_t cap)
 
 
 
-  static void
+static void
 bigint_set_u32(bigint_t* b, u32_t value) 
 {
   u32_t index = 0;
@@ -9175,7 +9187,7 @@ bigint_set_u32(bigint_t* b, u32_t value)
   }
 }
 
-  static void
+static void
 bigint_add(bigint_t* b, bigint_t* lhs, bigint_t* rhs)
 {
   u32_t index = 0;
@@ -9228,7 +9240,7 @@ bigint_add(bigint_t* b, bigint_t* lhs, bigint_t* rhs)
   }
 }
 
-  static void 
+static void 
 bigint_add_u32(bigint_t* b, bigint_t* lhs, u32_t rhs) 
 {
   u32_t index = 0;
@@ -9288,7 +9300,7 @@ bigint_add_u32(bigint_t* b, bigint_t* lhs, u32_t rhs)
 // -1 if lhs < rhs
 // 0  if lhs == rhs
 // 1  if lhs > rhs
-  static s32_t
+static s32_t
 bigint_compare(bigint_t* lhs, bigint_t* rhs) 
 {
   if (lhs->count < rhs->count) 
