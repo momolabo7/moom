@@ -1119,7 +1119,7 @@ static void     str_builder_push_hex_u32(str_builder_t* b, u32_t num);
 static void     str_builder_push_fmt(str_builder_t* b, buffer_t fmt, ...);
 static void     str_builder_init(str_builder_t* b, u8_t* data, usz_t cap);
 static void     str_builder_init(str_builder_t* b, buffer_t str);
-static b32_t    str_builder_init(str_builder_t* b, arena_t* arena, usz_t cap);
+static b32_t    str_builder_init_from_arena(str_builder_t* b, arena_t* arena, usz_t cap);
 
 //
 // @mark:(Stream)
@@ -5911,7 +5911,6 @@ crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t* table) {
 // @mark:(String)
 //
 
-
 static buffer_t
 buffer_set(u8_t* str, usz_t size) {
   buffer_t ret;
@@ -6159,18 +6158,6 @@ str_builder_init(str_builder_t* b, u8_t* data, usz_t cap)
   b->cap = cap;
 }
 
-static b32_t     
-str_builder_init(str_builder_t* b, arena_t* arena, usz_t cap)
-{
-  u8_t* buffer = arena_push_arr(u8_t, arena, cap);
-  if (!buffer) return false;
-
-  str_builder_init(b, buffer, cap);
-
-  return true;
-
-}
-
 static void  
 str_builder_init(str_builder_t* b, buffer_t str) 
 {
@@ -6178,6 +6165,18 @@ str_builder_init(str_builder_t* b, buffer_t str)
   b->size = 0;
   b->cap = str.size;
 }
+
+static b32_t     
+str_builder_alloc(str_builder_t* b, arena_t* arena, usz_t cap)
+{
+  u8_t* buffer = arena_push_arr(u8_t, arena, cap);
+  if (!buffer) return false;
+  str_builder_init(b, buffer, cap);
+  return true;
+
+}
+
+
 
 
 static usz_t
@@ -8742,6 +8741,7 @@ arena_push_buffer(arena_t* a, usz_t size, usz_t align)
 
   return buffer;
 }
+
 
 static b32_t    
 arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)

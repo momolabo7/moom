@@ -3154,7 +3154,7 @@ eden_inspector_update_and_render(
   eden_advance_depth(eden);
 
   str_builder_t sb = {};
-  str_builder_init(&sb, frame_arena, 256);
+  str_builder_alloc(&sb, frame_arena, 256);
   
   for(u32_t entry_index = 0; 
       entry_index < inspector->entry_count; 
@@ -3307,7 +3307,7 @@ eden_profile_update_and_render(
     hell_profiler_end_stat(&cycles_per_hit);
    
     str_builder_t sb = {};
-    str_builder_init(&sb, frame_arena, 256);
+    str_builder_alloc(&sb, frame_arena, 256);
 
     str_builder_push_fmt(&sb, 
                  buffer_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
@@ -3434,14 +3434,14 @@ eden_console_init(
   console->info_lines = arena_push_arr(str_builder_t, allocator, max_lines);
 
   u32_t line_size = characters_per_line;
-  str_builder_init(&console->input_line, allocator, line_size);
+  str_builder_alloc(&console->input_line, allocator, line_size);
   
   for (u32_t info_line_index = 0;
        info_line_index < console->info_line_count;
        ++info_line_index) 
   {    
     str_builder_t* info_line = console->info_lines + info_line_index;
-    str_builder_init(info_line, allocator, line_size);
+    str_builder_alloc(info_line, allocator, line_size);
   }
 }
 

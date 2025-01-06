@@ -20,12 +20,20 @@ IF %option%==-hot (
   build app_%app_name% -app
 )
 
+IF %option%==-bun (
+  build pass_%app_name% -bun
+  build app_%app_name% -app
+  build w32_eden -w32 
+  build w32_eden -run
+)
+
 IF %option%==-run (
   build w32_eden -run
 )
 
 IF %option%==-pass (
   build pass_%app_name% -bun
+  goto end
 )
 
 
