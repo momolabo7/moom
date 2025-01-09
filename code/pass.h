@@ -35,14 +35,14 @@
 
 static b32_t 
 pass_read_font_from_file(ttf_t* ttf, const char* filename, arena_t* allocator) {
-  buffer_t file_contents = file_read_into_buffer(filename, allocator); 
+  buf_t file_contents = file_read_into_buffer(filename, allocator); 
   if (!file_contents) return false;
   return ttf_read(ttf, file_contents);
 }
 
 static b32_t 
 pass_read_wav_from_file(wav_t* wav, const char* filename, arena_t* allocator) {
-  buffer_t file_contents = file_read_into_buffer(filename, allocator); 
+  buf_t file_contents = file_read_into_buffer(filename, allocator); 
   if(!file_contents) return false;
   return wav_read(wav, file_contents);
 }
@@ -363,7 +363,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
     arena_set_revert_point(p->arena);
     pass_pack_atlas_sprite_t* s = p->atlas_sprites + sprite_index;
 
-    buffer_t file_data = file_read_into_buffer(s->filename, p->arena);
+    buf_t file_data = file_read_into_buffer(s->filename, p->arena);
     assert(file_data);
 
     make(png_t, png);
@@ -451,7 +451,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
         arena_set_revert_point(p->arena);
         pass_pack_atlas_sprite_t* related_entry = context->sprite;
        
-        buffer_t file_data = file_read_into_buffer(related_entry->filename, p->arena);
+        buf_t file_data = file_read_into_buffer(related_entry->filename, p->arena);
         
         make(png_t, png);
         b32_t ok = png_read(png, file_data);
@@ -500,7 +500,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
   //
   if (opt_png_output)
   {
-    buffer_t png_to_write_mem  = 
+    buf_t png_to_write_mem  = 
       png_write(fbe->pixels, 
                 fb->width, 
                 fb->height, 
@@ -788,7 +788,7 @@ pass_pack_end(pass_pack_t* p, const char* filename)
 
     asset_file_shader_t* fs = p->shaders + shader_index; 
     pass_pack_shader_ext_t* fse = p->shader_exts + shader_index; 
-    buffer_t file_contents = file_read_into_buffer(fse->filename, p->arena, true); 
+    buf_t file_contents = file_read_into_buffer(fse->filename, p->arena, true); 
 
     fs->length = file_contents.size;
     fs->offset_to_data = offset_to_data;

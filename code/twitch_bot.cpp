@@ -21,7 +21,7 @@ struct momolabot_t
   // @note: don't mess with these guys.
   // sb and s will share the same buffer
   u8_t buffer[512];
-  str_builder_t sender;
+  bufio_t sender;
   str_t receiver;
 
   // reminder system
@@ -51,9 +51,9 @@ momolabot_connect(momolabot_t* m, str_t password, str_t channel, str_t nick, are
 
   // @note: this is more of initialization then 
   // 'connecting' but whatever i guess
-  str_builder_t* sender = &m->sender;
+  bufio_t* sender = &m->sender;
   m->receiver = str_set(m->buffer, sizeof(m->buffer));
-  str_builder_init(sender, m->receiver);
+  bufio_init(sender, m->receiver);
 
   // @note: we will be abusing and reusing this buffer
 
@@ -65,9 +65,9 @@ momolabot_connect(momolabot_t* m, str_t password, str_t channel, str_t nick, are
 
   // Inform twitch our nickname
   {
-    str_builder_push_fmt(sender, str_from_lit("NICK %S\r\n"), nick); 
+    bufio_push_fmt(sender, str_from_lit("NICK %S\r\n"), nick); 
     socket_send(s, sender->str);
-    str_builder_clear(sender);
+    bufio_clear(sender);
     str_t r = socket_receive(s, m->receiver);
     momolabot_print_str(r);
   }
@@ -76,9 +76,9 @@ momolabot_connect(momolabot_t* m, str_t password, str_t channel, str_t nick, are
 
   // Tell twitch which channel to join.
   {
-    str_builder_push_fmt(sender, str_from_lit("JOIN #%S\r\n"), channel); 
+    bufio_push_fmt(sender, str_from_lit("JOIN #%S\r\n"), channel); 
     socket_send(s, sender->str);
-    str_builder_clear(sender);
+    bufio_clear(sender);
     str_t r = socket_receive(s, m->receiver);
     momolabot_print_str(r);
   }
@@ -96,10 +96,10 @@ momolabot_disconnect(momolabot_t* m)
 static void
 momolabot_send_message(momolabot_t* m, str_t message)
 {
-  str_builder_t* sender = &m->sender;
-  str_builder_push_fmt(sender, str_from_lit("PRIVMSG #momolabo7 :%S\r\n"), message); 
+  bufio_t* sender = &m->sender;
+  bufio_push_fmt(sender, str_from_lit("PRIVMSG #momolabo7 :%S\r\n"), message); 
   socket_send(&m->socket, sender->str);
-  str_builder_clear(sender);
+  bufio_clear(sender);
   str_t r = socket_receive(&m->socket, m->receiver);
   momolabot_print_str(r);
 }
@@ -182,10 +182,10 @@ momolabot_update(momolabot_t* m, arena_t* arena)
         str_t cmd = msgs.e[4]; 
         if (!str_compare_lexographically(cmd, str_from_lit(":!wtf")))
         {
-          str_builder_make(stb, 256);
+          bufio_make(stb, 256);
           str_t who = msgs.e[5];
           who.size -=2; // @todo: HELP LA (removes \r\n)
-          str_builder_push_fmt(stb, str_from_lit("PRIVMSG #momolabo7 :Check out my BRO %S at twitch.tv/%S\r\n"), who, who);
+          bufio_push_fmt(stb, str_from_lit("PRIVMSG #momolabo7 :Check out my BRO %S at twitch.tv/%S\r\n"), who, who);
           momolabot_send_message(m, stb->str);
 
         }

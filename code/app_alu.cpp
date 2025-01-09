@@ -76,9 +76,9 @@ eden_update_and_render_sig(eden_update_and_render)
   eden_clear_canvas(eden, rgba_set(0.25f, 0.25f, 0.25f, 1.0f));
 
 
-  str_builder_t test;
-  str_builder_init_from_arena(&alu->frame_arena, 100)
-  str_builder_push_u32(test, "hello world");
+  bufio_t test;
+  bufio_alloc(&alu->frame_arena, 100)
+  bufio_push_u32(test, "hello world");
 
 
   str_reverse(&test->str);

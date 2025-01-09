@@ -330,8 +330,8 @@ eden_update_and_render_sig(eden_update_and_render)
 
   {
     arena_set_revert_point(&gbg->arena);
-    str_builder_t sb;
-    str_builder_init_from_arena(&sb, &gbg->arena, 32);
+    bufio_t sb;
+    bufio_init_from_arena(&sb, &gbg->arena, 32);
     // draw enemies
     for(u32_t i = 0; i < gbg->enemy_count; ++i)
     {
@@ -345,9 +345,7 @@ eden_update_and_render_sig(eden_update_and_render)
           RGBA_RED);
       eden_advance_depth(eden);
 
-
-
-      str_builder_push_u32(&sb, enemy->pp);
+      bufio_push_u32(&sb, enemy->pp);
 
       eden_draw_text(
             eden, 

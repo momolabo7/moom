@@ -55,7 +55,7 @@
 // MARK:(Memory Management)
 //
 struct w32_memory_t {
-  buffer_t user_block;
+  buf_t user_block;
   
   w32_memory_t* prev;
   w32_memory_t* next;
@@ -182,7 +182,7 @@ struct w32_wasapi_t {
   IAudioRenderClient* render_client;
   
   // Intermediate ring buffer for eden to write speaker to.
-  u32_t buffer_size;
+  u32_t buf_size;
   void* buffer;
   
   // Other variables for tracking purposes
@@ -587,12 +587,12 @@ _w32_wasapi_init_default_speaker_output_device(w32_wasapi_t* wasapi) {
   //
   // Note that 1 millisecond = 1,000,000 nanoseconds = 10000 100-nanoseconds
   //
-  REFERENCE_TIME buffer_duration = wasapi->frame_rate * 10000; 
+  REFERENCE_TIME buf_duration = wasapi->frame_rate * 10000; 
   
   hr = wasapi->speaker_client->Initialize(
       AUDCLNT_SHAREMODE_SHARED, 
       flags, 
-      buffer_duration, 
+      buf_duration, 
       0, 
       &wave_format, 
       NULL);
@@ -615,8 +615,8 @@ _w32_wasapi_init_default_speaker_output_device(w32_wasapi_t* wasapi) {
 
   // Get the number of speaker frames that the buffer can hold.
   // Note that 1 'speaker frame' == 1 sample per second
-  UINT32 buffer_frame_count = 0;
-  hr = wasapi->speaker_client->GetBufferSize(&buffer_frame_count);
+  UINT32 buf_frame_count = 0;
+  hr = wasapi->speaker_client->GetBufferSize(&buf_frame_count);
   if (!SUCCEEDED(hr)) return false;
 
   // Get the number of frames of padding
@@ -625,7 +625,7 @@ _w32_wasapi_init_default_speaker_output_device(w32_wasapi_t* wasapi) {
   if (!SUCCEEDED(hr)) return false;
 
   // Initialize the secondary buffer.
-  // UINT32 writable_frames = buffer_frame_count - padding_frame_count;
+  // UINT32 writable_frames = buf_frame_count - padding_frame_count;
 
   hr = wasapi->speaker_client->Start();
   if (!SUCCEEDED(hr)) return false;
@@ -715,8 +715,8 @@ w32_speaker_begin_frame_sig(w32_speaker_begin_frame)
 
 
   // Get the number of speaker frames that the buffer can hold.
-  UINT32 buffer_frame_count = 0;
-  hr = wasapi->speaker_client->GetBufferSize(&buffer_frame_count);
+  UINT32 buf_frame_count = 0;
+  hr = wasapi->speaker_client->GetBufferSize(&buf_frame_count);
   if (FAILED(hr)) return false;
 
   // Get the number of frames of padding
@@ -724,7 +724,7 @@ w32_speaker_begin_frame_sig(w32_speaker_begin_frame)
   hr = wasapi->speaker_client->GetCurrentPadding(&padding_frame_count);
   if (FAILED(hr)) return false;
 
-  UINT32 samples_to_write = buffer_frame_count - padding_frame_count; 
+  UINT32 samples_to_write = buf_frame_count - padding_frame_count; 
 
   // Setup for the eden layer
   hell_speaker->sample_count = samples_to_write; 
@@ -770,7 +770,7 @@ w32_speaker_begin_frame_sig(w32_speaker_begin_frame)
 		HRESULT hr = IAudioClient2_GetCurrentPadding(wasapi->speaker_client, &sound_padding_size);
 		
 		if (SUCCEEDED(hr)) {
-			samples_to_write = (UINT32)wasapi->buffer_size - sound_padding_size;
+			samples_to_write = (UINT32)wasapi->buf_size - sound_padding_size;
 			
 			// Cap the samples to write to how much latency is allowed.
 			if (samples_to_write > wasapi->latency_sample_count) {
@@ -781,7 +781,7 @@ w32_speaker_begin_frame_sig(w32_speaker_begin_frame)
 	else {
 		// if there is no device avaliable,
 		// just write to the whole 'dummy' buffer.
-		samples_to_write = wasapi->buffer_size;
+		samples_to_write = wasapi->buf_size;
 	}
 
   hell_speaker->sample_buffer = wasapi->buffer;
@@ -807,14 +807,14 @@ w32_speaker_end_frame_sig(w32_speaker_end_frame)
 	if (!wasapi->is_device_ready) return;
 
   // @note: Kinda assumes 16-bit Sound
-  BYTE* sound_buffer_data;
+  BYTE* sound_buf_data;
   HRESULT hr = IAudioRenderClient_GetBuffer(wasapi->render_client, 
                                             (UINT32)hell_speaker->sample_count, 
-                                            &sound_buffer_data);
+                                            &sound_buf_data);
   if (FAILED(hr)) return;
 
   s16_t* src_sample = hell_speaker->sample_buffer;
-  s16_t* dest_sample = (s16_t*)sound_buffer_data;
+  s16_t* dest_sample = (s16_t*)sound_buf_data;
   // buffer structure for stereo:
   // s16_t   s16_t    s16_t  s16_t   s16_t  s16_t
   // [LEFT RIGHT] LEFT RIGHT LEFT RIGHT....
@@ -874,8 +874,8 @@ w32_speaker_load_sig(w32_speaker_load)
   // This means that we are taking the strategy of allocating so much that we should not worry 
   // about having too little. 
   //
-  wasapi->buffer_size = samples_per_second * channels * bits_per_sample/8; // 1 second worth of samples
-  wasapi->buffer = arena_push_size(allocator, wasapi->buffer_size, 16);
+  wasapi->buf_size = samples_per_second * channels * bits_per_sample/8; // 1 second worth of samples
+  wasapi->buffer = arena_push_size(allocator, wasapi->buf_size, 16);
   assert(wasapi->buffer);
 #endif
 

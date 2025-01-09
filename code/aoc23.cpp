@@ -7,7 +7,7 @@ static void aoc23_d1p1(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
 
-  buffer_t file_buffer = file_read_into_str(filename, arena, false); 
+  buf_t file_buffer = file_read_into_str(filename, arena, false); 
   if (!file_buffer) return;
 
 
@@ -16,7 +16,7 @@ static void aoc23_d1p1(const char* filename, arena_t* arena)
 
   u32_t sum = 0;
   while(!stream_is_eos(s)) {
-    buffer_t line = stream_consume_line(s);  
+    buf_t line = stream_consume_line(s);  
     u32_t number = 0;
     
     // count from the front
@@ -44,49 +44,49 @@ static void aoc23_d1p1(const char* filename, arena_t* arena)
 static void aoc23_d1p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  buffer_t file_buffer = file_read_into_str(filename, arena, false); 
+  buf_t file_buffer = file_read_into_str(filename, arena, false); 
   if (!file_buffer) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
 
-  buffer_t buffer_table[] = { 
-    buffer_from_lit("1"), 
-    buffer_from_lit("2"), 
-    buffer_from_lit("3"), 
-    buffer_from_lit("4"), 
-    buffer_from_lit("5"), 
-    buffer_from_lit("6"), 
-    buffer_from_lit("7"), 
-    buffer_from_lit("8"),
-    buffer_from_lit("9"), 
-    buffer_from_lit("one"), 
-    buffer_from_lit("two"), 
-    buffer_from_lit("three"), 
-    buffer_from_lit("four"), 
-    buffer_from_lit("five"), 
-    buffer_from_lit("six"), 
-    buffer_from_lit("seven"), 
-    buffer_from_lit("eight"), 
-    buffer_from_lit("nine") 
+  buf_t buf_table[] = { 
+    buf_from_lit("1"), 
+    buf_from_lit("2"), 
+    buf_from_lit("3"), 
+    buf_from_lit("4"), 
+    buf_from_lit("5"), 
+    buf_from_lit("6"), 
+    buf_from_lit("7"), 
+    buf_from_lit("8"),
+    buf_from_lit("9"), 
+    buf_from_lit("one"), 
+    buf_from_lit("two"), 
+    buf_from_lit("three"), 
+    buf_from_lit("four"), 
+    buf_from_lit("five"), 
+    buf_from_lit("six"), 
+    buf_from_lit("seven"), 
+    buf_from_lit("eight"), 
+    buf_from_lit("nine") 
   };
   u32_t num_table[] = { 1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9 };
 
   u32_t sum = 0;
   while(!stream_is_eos(s)) {
-    buffer_t line = stream_consume_line(s);  
+    buf_t line = stream_consume_line(s);  
     u32_t number = 0;
 
     // count from the front
     for( s32_t i = 0; i <  line.size; ++i) {
       b32_t found = false;
       for_arr(table_index, num_table) {
-        buffer_t str = buffer_table[table_index];
+        buf_t str = buf_table[table_index];
         u32_t num = num_table[table_index];
 
-        buffer_t sub_line = buffer_set(line.e + i, str.size);
+        buf_t sub_line = buf_set(line.e + i, str.size);
         if ((i + str.size-1) < line.size && 
-          buffer_match(str, sub_line)) 
+          buf_match(str, sub_line)) 
         {
           found = true;
           number += num * 10;
@@ -101,14 +101,14 @@ static void aoc23_d1p2(const char* filename, arena_t* arena) {
     for( s32_t i = line.size-1; i >= 0; --i) {
       b32_t found = false;
       for_arr(table_index, num_table) {
-        buffer_t str = buffer_table[table_index];
+        buf_t str = buf_table[table_index];
         u32_t num = num_table[table_index];
 
-        buffer_t sub_line = buffer_set(line.e + i - (str.size-1), str.size);
+        buf_t sub_line = buf_set(line.e + i - (str.size-1), str.size);
         // @note: I'm pretty sure I should need more checks here but 
         // oh well, the answer is correct.
         if ((i-(str.size-1)) >= 0 && 
-           buffer_match(str, sub_line)) 
+           buf_match(str, sub_line)) 
         {
           found = true;
           number += num;
@@ -127,7 +127,7 @@ static void aoc23_d1p2(const char* filename, arena_t* arena) {
 static void aoc23_d2p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  buffer_t file_buffer = file_read_into_str(filename, arena, false); 
+  buf_t file_buffer = file_read_into_str(filename, arena, false); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -135,7 +135,7 @@ static void aoc23_d2p1(const char* filename, arena_t* arena) {
   u32_t game_id = 0;
   u32_t sum = 0;
   while(!stream_is_eos(s)) {
-    buffer_t line = stream_consume_line(s);  
+    buf_t line = stream_consume_line(s);  
     ++game_id;
     if (line.size == 0) {
       break;
@@ -220,7 +220,7 @@ static void aoc23_d2p1(const char* filename, arena_t* arena) {
 static void aoc23_d2p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  buffer_t file_buffer = file_read_into_str(filename, arena, false); 
+  buf_t file_buffer = file_read_into_str(filename, arena, false); 
   if (!file_buffer) return;
 
   make(stream_t, s);
@@ -228,7 +228,7 @@ static void aoc23_d2p2(const char* filename, arena_t* arena) {
   u32_t game_id = 0;
   u32_t sum = 0;
   while(!stream_is_eos(s)) {
-    buffer_t line = stream_consume_line(s);  
+    buf_t line = stream_consume_line(s);  
     ++game_id;
     if (line.size == 0) {
       break;
@@ -313,19 +313,19 @@ static void aoc23_d2p2(const char* filename, arena_t* arena) {
 static void aoc23_d3p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  buffer_t file_buffer = file_read_into_str(filename, arena, false); 
+  buf_t file_buffer = file_read_into_str(filename, arena, false); 
   if (!file_buffer) return;
 
 
   // Get with width and height
   u32_t width = 0;
   u32_t height = 0;
-  buffer_t grid;
+  buf_t grid;
   {  
     make(stream_t, s);
     stream_init(s, file_buffer);
     while(!stream_is_eos(s)) {
-      buffer_t line = stream_consume_line(s);  
+      buf_t line = stream_consume_line(s);  
       ++height;
       width = line.size;
     }
@@ -339,7 +339,7 @@ static void aoc23_d3p1(const char* filename, arena_t* arena) {
     // fill the grid
     u32_t grid_i = 0;
     while(!stream_is_eos(s)) {
-      buffer_t line = stream_consume_line(s);  
+      buf_t line = stream_consume_line(s);  
       for_cnt(i, line.size) {
         if (u8_is_digit(line.e[i]) )
           grid.e[grid_i++] = ascii_to_digit(line.e[i]);
@@ -353,10 +353,10 @@ static void aoc23_d3p1(const char* filename, arena_t* arena) {
   }
 
 
-  auto get_index = [](buffer_t grid, u32_t x, u32_t y, u32_t w) {
+  auto get_index = [](buf_t grid, u32_t x, u32_t y, u32_t w) {
     return grid.e[x + y * w];
   };
-  auto check = [](buffer_t grid, s32_t x, s32_t y, s32_t w, s32_t h) {
+  auto check = [](buf_t grid, s32_t x, s32_t y, s32_t w, s32_t h) {
     if (x < 0 || y < 0 || x >= w  || x >= h)
       return false;
     if (grid.e[x+y*w] == 10) {
@@ -425,19 +425,19 @@ static void aoc23_d3p1(const char* filename, arena_t* arena) {
 static void aoc23_d3p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  buffer_t file_buffer = file_read_into_str(filename, arena, false); 
+  buf_t file_buffer = file_read_into_str(filename, arena, false); 
   if (!file_buffer) return;
 
 
   // Initialize the grid data
   u32_t width = 0;
   u32_t height = 0;
-  buffer_t grid;
+  buf_t grid;
   {  
     make(stream_t, s);
     stream_init(s, file_buffer);
     while(!stream_is_eos(s)) {
-      buffer_t line = stream_consume_line(s);  
+      buf_t line = stream_consume_line(s);  
       ++height;
       width = line.size;
     }
@@ -451,7 +451,7 @@ static void aoc23_d3p2(const char* filename, arena_t* arena) {
     // fill the grid
     u32_t grid_i = 0;
     while(!stream_is_eos(s)) {
-      buffer_t line = stream_consume_line(s);  
+      buf_t line = stream_consume_line(s);  
       for_cnt(i, line.size) {
         if (u8_is_digit(line.e[i]) )
           grid.e[grid_i++] = ascii_to_digit(line.e[i]);
@@ -466,7 +466,7 @@ static void aoc23_d3p2(const char* filename, arena_t* arena) {
   }
 
   // Useful methods for grid
-  auto get_cell = [](buffer_t grid, u32_t x, u32_t y, u32_t w) {
+  auto get_cell = [](buf_t grid, u32_t x, u32_t y, u32_t w) {
     return grid.e[x + y * w];
   };
 
@@ -580,12 +580,12 @@ int main(int argv, char** argc) {
   u32_t part = 0;
   char* filename = argc[3];
 
-  if (!buffer_to_u32(buffer_from_cstr(argc[1]), &day)) {
+  if (!buf_to_u32(buf_from_cstr(argc[1]), &day)) {
     printf("Bad day\n");
     return 1;
   }
 
-  if (!buffer_to_u32(buffer_from_cstr(argc[2]), &part)) {
+  if (!buf_to_u32(buf_from_cstr(argc[2]), &part)) {
     printf("Bad part\n");
     return 1;
   }

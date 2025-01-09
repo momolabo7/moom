@@ -250,7 +250,7 @@ struct eden_asset_sound_t {
 };
 
 struct eden_asset_shader_t {
-  buffer_t code;
+  buf_t code;
 };
 
 struct eden_asset_font_glyph_t {
@@ -634,7 +634,7 @@ struct hell_gfx_opengl_t {
 #include "eden_asset_file.h"
 
 struct eden_console_command_t {
-  buffer_t key;
+  buf_t key;
   void* ctx;
   void (*func)(void*);
 };
@@ -644,10 +644,10 @@ struct eden_console_t {
   u32_t command_count;
   eden_console_command_t* commands;
   
-  str_builder_t* info_lines; 
+  bufio_t* info_lines; 
   u32_t info_line_count;
 
-  str_builder_t input_line;
+  bufio_t input_line;
 
 };
 
@@ -716,7 +716,7 @@ enum hell_inspector_entry_type_t {
 };
 
 struct hell_inspector_entry_t {
-  buffer_t name;
+  buf_t name;
   hell_inspector_entry_type_t type;
   union {
     f32_t item_f32;
@@ -3003,7 +3003,7 @@ static f32_t
 eden_get_text_length(
     eden_t* eden,
     eden_asset_font_id_t font_id, 
-    buffer_t str, 
+    buf_t str, 
     f32_t font_height)
 {
   f32_t ret = 0.f;
@@ -3042,7 +3042,7 @@ static void
 eden_draw_text(
     eden_t* eden, 
     eden_asset_font_id_t font_id, 
-    buffer_t str, 
+    buf_t str, 
     rgba_t color, 
     v2f_t pos,
     f32_t size,
@@ -3113,7 +3113,7 @@ eden_draw_text(
 // @mark: inspect
 //
 static void
-eden_inspect_u32(eden_t* eden, buffer_t name, u32_t item) 
+eden_inspect_u32(eden_t* eden, buf_t name, u32_t item) 
 {
   hell_inspector_t* in = &eden->inspector;
   assert(in->entry_count < in->entry_cap);
@@ -3124,7 +3124,7 @@ eden_inspect_u32(eden_t* eden, buffer_t name, u32_t item)
 }
 
 static void
-eden_inspect_f32(eden_t* eden, buffer_t name, u32_t item)
+eden_inspect_f32(eden_t* eden, buf_t name, u32_t item)
 {
   hell_inspector_t* in = &eden->inspector;
   assert(in->entry_count < in->entry_cap);
@@ -3153,22 +3153,22 @@ eden_inspector_update_and_render(
       rgba_set(0.f, 0.f, 0.f, 0.5f));
   eden_advance_depth(eden);
 
-  str_builder_t sb = {};
-  str_builder_alloc(&sb, frame_arena, 256);
+  bufio_t sb = {};
+  bufio_alloc(&sb, frame_arena, 256);
   
   for(u32_t entry_index = 0; 
       entry_index < inspector->entry_count; 
       ++entry_index)
   {
-    str_builder_clear(&sb);
+    bufio_clear(&sb);
     auto* entry = inspector->entries + entry_index;
     switch(entry->type){
       case HELL_INSPECTOR_ENTRY_TYPE_U32: {
-        str_builder_push_fmt(&sb, buffer_from_lit("[%10S] %7u"),
+        bufio_push_fmt(&sb, buf_from_lit("[%10S] %7u"),
             entry->name, entry->item_u32);
       } break;
       case HELL_INSPECTOR_ENTRY_TYPE_F32: {
-        str_builder_push_fmt(&sb, buffer_from_lit("[%10S] %7f"),
+        bufio_push_fmt(&sb, buf_from_lit("[%10S] %7f"),
             entry->name, entry->item_f32);
       } break;
     }
@@ -3306,11 +3306,11 @@ eden_profile_update_and_render(
     hell_profiler_end_stat(&hits);
     hell_profiler_end_stat(&cycles_per_hit);
    
-    str_builder_t sb = {};
-    str_builder_alloc(&sb, frame_arena, 256);
+    bufio_t sb = {};
+    bufio_alloc(&sb, frame_arena, 256);
 
-    str_builder_push_fmt(&sb, 
-                 buffer_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
+    bufio_push_fmt(&sb, 
+                 buf_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
                  entry->block_name,
                  (u32_t)cycles.average,
                  (u32_t)hits.average,
@@ -3431,22 +3431,22 @@ eden_console_init(
   console->command_cap = max_commands;
   console->info_line_count = 0;
   console->commands = arena_push_arr(eden_console_command_t, allocator, max_commands);
-  console->info_lines = arena_push_arr(str_builder_t, allocator, max_lines);
+  console->info_lines = arena_push_arr(bufio_t, allocator, max_lines);
 
   u32_t line_size = characters_per_line;
-  str_builder_alloc(&console->input_line, allocator, line_size);
+  bufio_alloc(&console->input_line, allocator, line_size);
   
   for (u32_t info_line_index = 0;
        info_line_index < console->info_line_count;
        ++info_line_index) 
   {    
-    str_builder_t* info_line = console->info_lines + info_line_index;
-    str_builder_alloc(info_line, allocator, line_size);
+    bufio_t* info_line = console->info_lines + info_line_index;
+    bufio_alloc(info_line, allocator, line_size);
   }
 }
 
 static void
-eden_console_add_command(eden_console_t* console, buffer_t key, void* ctx, void(*func)(void*)) 
+eden_console_add_command(eden_console_t* console, buf_t key, void* ctx, void(*func)(void*)) 
 {
   // simulate adding commands
   assert(console->command_count < console->command_cap);
@@ -3457,7 +3457,7 @@ eden_console_add_command(eden_console_t* console, buffer_t key, void* ctx, void(
 }
 
 static void
-eden_console_push_info(eden_console_t* console, buffer_t str) {
+eden_console_push_info(eden_console_t* console, buf_t str) {
   // @note: There's probably a better to do with via some
   // crazy indexing scheme, but this is debug so we don't care for now
   
@@ -3467,13 +3467,13 @@ eden_console_push_info(eden_console_t* console, buffer_t str) {
        ++i)
   {
     u32_t line_index = console->info_line_count - 1 - i;
-    str_builder_t* line_to = console->info_lines + line_index;
-    str_builder_t* line_from = console->info_lines + line_index - 1;
-    str_builder_clear(line_to);
-    str_builder_push_buffer(line_to, line_from->str);
+    bufio_t* line_to = console->info_lines + line_index;
+    bufio_t* line_from = console->info_lines + line_index - 1;
+    bufio_clear(line_to);
+    bufio_push_buffer(line_to, line_from->str);
   } 
-  str_builder_clear(console->info_lines + 0);
-  str_builder_push_buffer(console->info_lines + 0, str);
+  bufio_clear(console->info_lines + 0);
+  bufio_push_buffer(console->info_lines + 0, str);
 }
 
 static void
@@ -3484,13 +3484,13 @@ eden_console_execute(eden_console_t* console)
       ++command_index) 
   {
     eden_console_command_t* cmd = console->commands + command_index;
-    if (buffer_match(cmd->key, console->input_line.str)) {
+    if (buf_match(cmd->key, console->input_line.str)) {
       cmd->func(cmd->ctx);
     }
   }
   
   eden_console_push_info(console, console->input_line.str);
-  str_builder_clear(&console->input_line);
+  bufio_clear(&console->input_line);
 }
 
 static void

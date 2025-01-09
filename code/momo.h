@@ -235,7 +235,7 @@ template<typename F> _defer_scope_guard<F> operator+(_defer_dummy, F f) {
 //
 // @mark: Struct
 //
-struct buffer_t 
+struct buf_t 
 {
   u8_t* e;
   usz_t size;
@@ -256,9 +256,9 @@ struct buffer_t
 
 
 
-struct buffer_arr_t 
+struct buf_arr_t 
 {
-  buffer_t* e;
+  buf_t* e;
   u32_t size;
 };
 
@@ -343,8 +343,8 @@ struct rgba_t
 struct bigint_t 
 {
   u8_t* e;
-  u32_t cap;
-  u32_t count; 
+  usz_t cap;
+  usz_t count; 
 };
 
 //
@@ -380,7 +380,7 @@ struct arena_t
 {
   union 
   {
-    buffer_t buffer;
+    buf_t buffer;
     struct 
     {
       u8_t* memory;
@@ -443,11 +443,11 @@ struct garena_t
 };
 
 
-struct str_builder_t
+struct bufio_t
 {
   union 
   {
-    buffer_t str;
+    buf_t str;
     struct 
     {
       u8_t* e;
@@ -463,7 +463,7 @@ struct str_builder_t
 //
 struct stream_t 
 {
-  buffer_t contents;
+  buf_t contents;
   usz_t pos;
 
   // For bit reading
@@ -518,7 +518,7 @@ struct wav_t
 
 struct png_t 
 {
-  buffer_t contents;
+  buf_t contents;
 
   u32_t width;
   u32_t height;
@@ -614,7 +614,7 @@ struct clex_token_t
 
 struct clex_tokenizer_t 
 {
-  buffer_t text;
+  buf_t text;
   usz_t at;
 };
 
@@ -643,7 +643,7 @@ struct json_element_t
       u8_t* at;
       usz_t size;
     };
-    buffer_t str;
+    buf_t str;
   };
 };
 
@@ -686,7 +686,7 @@ struct json_array_node_t
 struct json_t 
 {
   // for tokenizing
-  buffer_t text;
+  buf_t text;
   umi_t at;
 
   // The 'root' item in a JSON file is an object type.
@@ -727,7 +727,7 @@ static json_object_t* json_read(
     const u8_t* json_string, 
     u32_t json_string_size, 
     arena_t* ba);
-static json_value_t* json_get_value(json_object_t* j, buffer_t key);
+static json_value_t* json_get_value(json_object_t* j, buf_t key);
 static b32_t json_is_true(json_value_t* val);
 static b32_t json_is_false(json_value_t* val);
 static b32_t json_is_null(json_value_t* val);
@@ -765,10 +765,10 @@ static void     memory_copy(void* dest, const void* src, usz_t size);
 static void     memory_zero(void* dest, usz_t size);
 static b32_t    memory_is_same(const void* lhs, const void* rhs, usz_t size);
 static void     memory_swap(void* lhs, void* rhs, usz_t size);
-static buffer_t memory_reserve(usz_t size);
-static b32_t    memory_commit(buffer_t blk);
-static buffer_t memory_allocate(usz_t size); // reserve + commit
-static void     memory_free(buffer_t blk);
+static buf_t memory_reserve(usz_t size);
+static b32_t    memory_commit(buf_t blk);
+static buf_t memory_allocate(usz_t size); // reserve + commit
+static void     memory_free(buf_t blk);
 
 static umi_t ptr_to_umi(void* p);
 static u8_t* umi_to_ptr(umi_t u);
@@ -1073,46 +1073,46 @@ static u32_t crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t
 // 
 // @mark:(Strings)
 //
-#define buffer_from_lit(s) buffer_set((u8_t*)(s), sizeof(s)-1)
-static buffer_t      buffer_slice(buffer_t b, usz_t start, usz_t end);
-static buffer_t      buffer_bad();
-static buffer_t      buffer_set(u8_t* str, usz_t size);
-static buffer_t      buffer_substr(buffer_t str, usz_t start, usz_t ope);
-static b32_t         buffer_match(buffer_t lhs, buffer_t rhs);
-static buffer_t      buffer_from_cstr(const char* cstr);
-static smi_t         buffer_compare_lexographically(buffer_t lhs, buffer_t rhs);
-static b32_t         buffer_to_u32(buffer_t s, u32_t* out);
-static b32_t         buffer_to_f32(buffer_t s, f32_t* out);
-static b32_t         buffer_to_s32(buffer_t s, s32_t* out);
-static buffer_arr_t  buffer_split(buffer_t str, u8_t delimiter, arena_t* arena); 
-static void          buffer_reverse(buffer_t dest, buffer_t src);
+#define buf_from_lit(s) buf_set((u8_t*)(s), sizeof(s)-1)
+static buf_t      buf_slice(buf_t b, usz_t start, usz_t end);
+static buf_t      buf_bad();
+static buf_t      buf_set(u8_t* str, usz_t size);
+static buf_t      buf_substr(buf_t str, usz_t start, usz_t ope);
+static b32_t         buf_match(buf_t lhs, buf_t rhs);
+static buf_t      buf_from_cstr(const char* cstr);
+static smi_t         buf_compare_lexographically(buf_t lhs, buf_t rhs);
+static b32_t         buf_to_u32(buf_t s, u32_t* out);
+static b32_t         buf_to_f32(buf_t s, f32_t* out);
+static b32_t         buf_to_s32(buf_t s, s32_t* out);
+static buf_arr_t  buf_split(buf_t str, u8_t delimiter, arena_t* arena); 
+static void          buf_reverse(buf_t dest, buf_t src);
 
 // @note: returns str.size if not found
-static usz_t     buffer_find(buffer_t str, u8_t character); 
+static usz_t     buf_find(buf_t str, u8_t character); 
 
-#define str_builder_make(name, cap) \
-  u8_t glue(temp_buffer_,__LINE__)[cap] = {0}; \
-str_builder_t name_; \
-str_builder_t* name = &name_; \
-str_builder_init(name, glue(temp_buffer_,__LINE__), cap);
+#define bufio_make(name, cap) \
+  u8_t glue(temp_buf_,__LINE__)[cap] = {0}; \
+bufio_t name_; \
+bufio_t* name = &name_; \
+bufio_init(name, glue(temp_buf_,__LINE__), cap);
 
-static usz_t    str_builder_remaining(str_builder_t* b);
-static void     str_builder_clear(str_builder_t* b);
-static void     str_builder_pop(str_builder_t* b);
-static void     str_builder_push_c8(str_builder_t* b, c8_t num);
-static void     str_builder_push_u8(str_builder_t* b, u8_t num);
-static void     str_builder_push_u32(str_builder_t* b, u32_t num);
-static void     str_builder_push_u64(str_builder_t* b, u64_t num);
-static void     str_builder_push_f32(str_builder_t* b, f32_t value, u32_t precision);
-static void     str_builder_push_s32(str_builder_t* b, s32_t num);
-static void     str_builder_push_s64(str_builder_t* b, s64_t num);
-static void     str_builder_push_buffer(str_builder_t* b, buffer_t str);
-static void     str_builder_push_cstr(str_builder_t* b, const c8_t* cstr);
-static void     str_builder_push_hex_u8(str_builder_t* b, u8_t num);
-static void     str_builder_push_hex_u32(str_builder_t* b, u32_t num);
-static void     str_builder_push_fmt(str_builder_t* b, buffer_t fmt, ...);
-static void     str_builder_init(str_builder_t* b, buffer_t str);
-static b32_t    str_builder_init_from_arena(str_builder_t* b, arena_t* arena, usz_t cap);
+static usz_t    bufio_remaining(bufio_t* b);
+static void     bufio_clear(bufio_t* b);
+static void     bufio_pop(bufio_t* b);
+static void     bufio_push_c8(bufio_t* b, c8_t num);
+static void     bufio_push_u8(bufio_t* b, u8_t num);
+static void     bufio_push_u32(bufio_t* b, u32_t num);
+static void     bufio_push_u64(bufio_t* b, u64_t num);
+static void     bufio_push_f32(bufio_t* b, f32_t value, u32_t precision);
+static void     bufio_push_s32(bufio_t* b, s32_t num);
+static void     bufio_push_s64(bufio_t* b, s64_t num);
+static void     bufio_push_buffer(bufio_t* b, buf_t str);
+static void     bufio_push_cstr(bufio_t* b, const c8_t* cstr);
+static void     bufio_push_hex_u8(bufio_t* b, u8_t num);
+static void     bufio_push_hex_u32(bufio_t* b, u32_t num);
+static void     bufio_push_fmt(bufio_t* b, buf_t fmt, ...);
+static void     bufio_init(bufio_t* b, buf_t str);
+static b32_t    bufio_init_from_arena(bufio_t* b, arena_t* arena, usz_t cap);
 
 //
 // @mark:(Stream)
@@ -1120,7 +1120,7 @@ static b32_t    str_builder_init_from_arena(str_builder_t* b, arena_t* arena, us
 #define stream_consume(t,s) (t*) stream_consume_block((s), sizeof(t))
 #define stream_peek(t,s) (t*) stream_peek_block((s), sizeof(t))
 #define stream_write(s,item) stream_write_block((s), &(item), sizeof(item))
-static void     stream_init(stream_t* s, buffer_t contents);
+static void     stream_init(stream_t* s, buf_t contents);
 static void     stream_reset(stream_t* s);
 static b32_t    stream_is_eos(stream_t* s);
 static u8_t*    stream_consume_block(stream_t* s, usz_t amount);
@@ -1128,23 +1128,23 @@ static u8_t*    stream_peek_block(stream_t* s, usz_t amount);
 static void     stream_flush_bits(stream_t* s);
 static u32_t    stream_consume_bits(stream_t* s, u32_t amount);
 static void     stream_write_block(stream_t* s, void* src, usz_t size);
-static buffer_t    stream_consume_line(stream_t* s);
+static buf_t    stream_consume_line(stream_t* s);
 
 //
 // @mark:(Arena)
 //
-static b32_t    arena_init(arena_t* a, buffer_t buffer);
+static b32_t    arena_init(arena_t* a, buf_t buffer);
 static b32_t    arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit = false);
 static void     arena_clear(arena_t* a);
 static void*    arena_push_size(arena_t* a, usz_t size, usz_t align);
 static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align); 
 static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align);
 static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align);
-static buffer_t    arena_push_buffer(arena_t* a, usz_t size, usz_t align);
+static buf_t    arena_push_buffer(arena_t* a, usz_t size, usz_t align = 16);
 static usz_t    arena_remaining(arena_t* a);
 static void*    arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size);
 static b32_t    arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size);
-static b32_t    arena_grow_buffer(arena_t* a, buffer_t* str, usz_t new_size);
+static b32_t    arena_grow_buffer(arena_t* a, buf_t* str, usz_t new_size);
 
 #define arena_grow_arr(t,b,a,o,n)     arena_grow_size((b), (a), sizeof(t)*(o), sizeof(t)*(n))
 #define arena_push_arr_align(t,b,n,a) (t*)arena_push_size((b), sizeof(t)*(n), a)
@@ -1182,7 +1182,7 @@ static void  garena_free(garena_t* ga, void* block);
 // @mark:(TTF)
 //
 
-static b32_t ttf_read(ttf_t* ttf, buffer_t ttf_contents);
+static b32_t ttf_read(ttf_t* ttf, buf_t ttf_contents);
 
 static u32_t ttf_get_glyph_index(const ttf_t* ttf, u32_t codepoint);
 // returns 0 for invalid codepoints
@@ -1204,9 +1204,9 @@ static s32_t ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t 
 static b32_t ttf_get_glyph_box(const ttf_t* ttf, u32_t glyph_index, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y1);
 static void ttf_get_glyph_bitmap_box(const ttf_t* ttf, u32_t glyph_index, f32_t scale, s32_t* x0, s32_t* y0, s32_t* x1, s32_t* y1);
 
-static b32_t     png_read(png_t* png, buffer_t png_contents);
+static b32_t     png_read(png_t* png, buf_t png_contents);
 static u32_t*    png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena); 
-static buffer_t     png_write(u8_t* pixels, u32_t width, u32_t height, arena_t* arena);
+static buf_t     png_write(u8_t* pixels, u32_t width, u32_t height, arena_t* arena);
 
 static b32_t rp_pack(
     rp_rect_t* rects, 
@@ -1217,13 +1217,13 @@ static b32_t rp_pack(
     rp_sort_type_t sort_type,
     arena_t* allocator);
 
-static b32_t clex_tokenizer_init(clex_tokenizer_t* t, buffer_t buffer);
+static b32_t clex_tokenizer_init(clex_tokenizer_t* t, buf_t buffer);
 static clex_token_t clex_next_token(clex_tokenizer_t* t);
 
 
 // @todo: change const char* to str?
-static buffer_t  file_read_into_buffer(const char* filename, arena_t* arena, b32_t null_terminate = false); 
-static b32_t  file_write_from_str(const char* filename, buffer_t buffer);
+static buf_t  file_read_into_buffer(const char* filename, arena_t* arena, b32_t null_terminate = false); 
+static b32_t  file_write_from_str(const char* filename, buf_t buffer);
 static void   file_close(file_t* fp); 
 static b32_t  file_open(file_t* fp, const char* filename, file_access_t access_type);
 static b32_t  file_read(file_t* fp, void* dest, usz_t size, usz_t offset);
@@ -1238,8 +1238,8 @@ static b32_t  socket_system_begin();
 static void   socket_system_end();
 static b32_t  socket_begin(socket_t* socket, const char* server, u32_t port);
 static void   socket_end(socket_t* s);
-static b32_t  socket_send(socket_t* s, buffer_t msg);
-static buffer_t  socket_receive(socket_t* s, buffer_t buffer);
+static b32_t  socket_send(socket_t* s, buf_t msg);
+static buf_t  socket_receive(socket_t* s, buf_t buffer);
 
 
 static void doze(u32_t ms_to_doze);
@@ -1360,7 +1360,7 @@ socket_begin(socket_t* s, const char* server, u32_t port)
 }
 
 static b32_t
-socket_send(socket_t* s, buffer_t msg) 
+socket_send(socket_t* s, buf_t msg) 
 {
   if (send(s->sock, (char*)msg.e, msg.size, 0) == SOCKET_ERROR) {
     return false;
@@ -1388,15 +1388,15 @@ socket_system_end()
 // @todo: 
 // - Maybe it should take in an arena...?
 //
-static buffer_t
-socket_receive(socket_t* s, buffer_t buffer)
+static buf_t
+socket_receive(socket_t* s, buf_t buffer)
 {
   // @note: will poll
   int received_bytes = recv(s->sock, (char*)buffer.e, buffer.size, 0);
   if (received_bytes == SOCKET_ERROR) {
-    return buffer_bad();
+    return buf_bad();
   }
-  return buffer_set(buffer.e, received_bytes);
+  return buf_set(buffer.e, received_bytes);
 }
 static void
 doze(u32_t ms_to_doze) {
@@ -1498,23 +1498,23 @@ file_get_size(file_t* fp) {
   return ret;
 }
 
-static buffer_t
+static buf_t
 memory_reserve(usz_t size) {
-  return buffer_set(
+  return buf_set(
       (u8_t*)VirtualAlloc(0, size, MEM_RESERVE, PAGE_READWRITE),
       size);
 }
 
 static b32_t
-memory_commit(buffer_t blk) {
+memory_commit(buf_t blk) {
   b32_t result = (VirtualAlloc(blk.e, blk.size, MEM_COMMIT, PAGE_READWRITE) != 0);
   return result;
 }
 
 
-static buffer_t
+static buf_t
 memory_allocate(usz_t size) {
-  return buffer_set(
+  return buf_set(
       (u8_t*)VirtualAllocEx(
         GetCurrentProcess(),
         0, 
@@ -1526,7 +1526,7 @@ memory_allocate(usz_t size) {
 }
 
 static void 
-memory_free(buffer_t blk) {
+memory_free(buf_t blk) {
   VirtualFree(blk.e, 0, MEM_RELEASE);
 }
 
@@ -1613,7 +1613,7 @@ socket_end(socket_t* s)
 }
 
 static b32_t
-socket_send(socket_t* s, buffer_t msg) 
+socket_send(socket_t* s, buf_t msg) 
 {
   if (send(s->sock, (char*)msg.e, msg.size, 0) == -1)
   {
@@ -1623,16 +1623,16 @@ socket_send(socket_t* s, buffer_t msg)
   return true;
 }
 
-static buffer_t
-socket_receive(socket_t* s, buffer_t buffer)
+static buf_t
+socket_receive(socket_t* s, buf_t buffer)
 {
   // @note: will poll
   ssize_t received_bytes = recv(s->sock, (char*)buffer.e, buffer.size, 0);
   if (received_bytes == -1)
   {
-    return buffer_bad();
+    return buf_bad();
   }
-  return buffer_set(buffer.e, received_bytes);
+  return buf_set(buffer.e, received_bytes);
 }
 
 static void 
@@ -1711,7 +1711,7 @@ file_get_size(file_t* fp) {
 
 // @note(momo): Apparently linux already handles committing and reserving 
 // for the user already so there is no need to commit/reserve?
-static buffer_t
+static buf_t
 memory_reserve(usz_t size) {
   u8_t* blk = (u8_t*)mmap(
       0, 
@@ -1720,16 +1720,16 @@ memory_reserve(usz_t size) {
       MAP_PRIVATE | MAP_ANONYMOUS,
       -1, 
       0);
-  return buffer_set(blk, size);
+  return buf_set(blk, size);
 }
 
 static b32_t
-memory_commit(buffer_t blk) {
+memory_commit(buf_t blk) {
   return mprotect(blk.e, blk.size, PROT_READ | PROT_WRITE) == 0;
 }
 
 
-static buffer_t 
+static buf_t 
 memory_allocate(usz_t size) {
   u8_t* blk = (u8_t*)mmap(
       0, 
@@ -1738,12 +1738,12 @@ memory_allocate(usz_t size) {
       MAP_PRIVATE | MAP_ANONYMOUS,
       -1, 
       0);
-  return buffer_set(blk, size);
+  return buf_set(blk, size);
 
 }
 
 static void 
-memory_free(buffer_t blk) {
+memory_free(buf_t blk) {
   munmap(blk.e, blk.size);
 }
 
@@ -1766,24 +1766,24 @@ clock_secs_elapsed(u64_t start, u64_t end)
   return (f32_t)(end - start)/clock_resolution();
 }
 
-static buffer_t 
+static buf_t 
 file_read_into_buffer(const char* filename, arena_t* arena, b32_t null_terminate) {
   file_t file = {};
   if (!file_open(&file, filename, FILE_ACCESS_READ)) {
-    return buffer_bad();
+    return buf_bad();
   }
   defer { file_close(&file); };
 
   u64_t file_size = file_get_size(&file);
 
-  buffer_t ret = arena_push_buffer(arena, file_size + null_terminate, 16);
+  buf_t ret = arena_push_buffer(arena, file_size + null_terminate, 16);
   if (!ret) {
-    return buffer_bad();
+    return buf_bad();
   }
 
 
   if (!file_read(&file, ret.e, file_size, 0)) {
-    return buffer_bad();
+    return buf_bad();
   }
 
   if (null_terminate) 
@@ -1793,7 +1793,7 @@ file_read_into_buffer(const char* filename, arena_t* arena, b32_t null_terminate
 }
 
 static b32_t
-file_write_from_str(const char* filename, buffer_t buffer) {
+file_write_from_str(const char* filename, buf_t buffer) {
   file_t file = {};
   if (!file_open(&file, filename, FILE_ACCESS_CREATE)) {
     return false; 
@@ -1817,13 +1817,13 @@ file_write_from_str(const char* filename, buffer_t buffer) {
 //
 // @todo: Make this serious
 
-static buffer_t 
+static buf_t 
 foolish_allocate_memory(usz_t size) {
-  return buffer_set((u8_t*)malloc(size), size);
+  return buf_set((u8_t*)malloc(size), size);
 }
 
 static void
-foolish_free_memory(buffer_t blk) {
+foolish_free_memory(buf_t blk) {
   free(blk.e);
 }
 
@@ -1835,7 +1835,7 @@ foolish_allocate_arena(usz_t size) {
 }
 
 static b32_t
-foolish_write_buffer_to_file(const char* filename, buffer_t buffer) {
+foolish_write_buf_to_file(const char* filename, buf_t buffer) {
   FILE *file = fopen(filename, "wb");
   if (!file) return false;
   defer { fclose(file); };
@@ -1845,11 +1845,11 @@ foolish_write_buffer_to_file(const char* filename, buffer_t buffer) {
 }
 
 
-static buffer_t 
+static buf_t 
 foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false) {
   FILE *file = fopen(filename, "rb");
 
-  if (!file) return buffer_set(0,0);
+  if (!file) return buf_set(0,0);
   defer { fclose(file); };
 
   fseek(file, 0, SEEK_END);
@@ -1857,10 +1857,10 @@ foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false
   fseek(file, 0, SEEK_SET);
 
 
-  buffer_t ret = memory_allocate(file_size + null_terminate);
+  buf_t ret = memory_allocate(file_size + null_terminate);
   usz_t read_amount = fread(ret.e, 1, file_size, file);
 
-  if(read_amount != file_size) return buffer_bad();
+  if(read_amount != file_size) return buf_bad();
 
   if (null_terminate) ret.e[file_size] = 0;  
 
@@ -1868,7 +1868,7 @@ foolish_read_file_into_buffer(const char* filename, b32_t null_terminate = false
 }
 
 static void
-foolish_free_buffer(buffer_t buffer) {
+foolish_free_buffer(buf_t buffer) {
   memory_free(buffer);
 }
 
@@ -2122,10 +2122,10 @@ _json_insert_entry(json_t* t, _json_entry_t** entry, _json_entry_t* new_entry) {
   else {
     _json_entry_t* itr = (*entry);
     while(itr != nullptr) {
-      buffer_t lhs = buffer_set(itr->key.at, itr->key.size);
-      buffer_t rhs = buffer_set(new_entry->key.at, new_entry->key.size);
+      buf_t lhs = buf_set(itr->key.at, itr->key.size);
+      buf_t rhs = buf_set(new_entry->key.at, new_entry->key.size);
 
-      smi_t cmp = buffer_compare_lexographically(lhs, rhs);
+      smi_t cmp = buf_compare_lexographically(lhs, rhs);
       if (cmp > 0) {
         if (itr->left == nullptr) {
           itr->left = new_entry;
@@ -2438,12 +2438,12 @@ _json_print_entries_in_order(json_t* t, _json_entry_t* entry)
 #endif // JSON_DEBUG
 
 static _json_entry_t* 
-_json_get(json_object_t* json_object, buffer_t key) {
+_json_get(json_object_t* json_object, buf_t key) {
   _json_entry_t* node = json_object->head;
   while(node) {
-    buffer_t lhs = buffer_set(node->key.at, node->key.size);
-    buffer_t rhs = buffer_set(key.e, key.size);
-    smi_t cmp = buffer_compare_lexographically(lhs, rhs); 
+    buf_t lhs = buf_set(node->key.at, node->key.size);
+    buf_t rhs = buf_set(key.e, key.size);
+    smi_t cmp = buf_compare_lexographically(lhs, rhs); 
     if (cmp > 0) {
       node = node->left;
     }
@@ -2459,7 +2459,7 @@ _json_get(json_object_t* json_object, buffer_t key) {
 }
 
 static json_value_t* 
-json_get_value(json_object_t* json_object, buffer_t key) {
+json_get_value(json_object_t* json_object, buf_t key) {
   _json_entry_t* entry = _json_get(json_object, key);
   if (!entry) return nullptr;
   return &entry->value;
@@ -2524,7 +2524,7 @@ json_read(
     u32_t json_string_size, 
     arena_t* ba) 
 {
-  j->text = buffer_set(json_string, json_string_size);
+  j->text = buf_set(json_string, json_string_size);
   j->at = 0;
   _json_token_t token = _json_next_token(j);
   if (token.type != _JSON_TOKEN_TYPE_OPEN_BRACE) return nullptr;
@@ -2575,7 +2575,7 @@ _clex_is_accepted_character_for_number(char c) {
 
 
 static b32_t
-_clex_compare_token_with_string(clex_tokenizer_t* t, clex_token_t token, buffer_t str) {
+_clex_compare_token_with_string(clex_tokenizer_t* t, clex_token_t token, buf_t str) {
   if( str.size != (token.ope - token.begin)) {
     return false;
   }
@@ -2591,7 +2591,7 @@ _clex_compare_token_with_string(clex_tokenizer_t* t, clex_token_t token, buffer_
 
 
 static b32_t
-clex_tokenizer_init(clex_tokenizer_t* t, buffer_t buffer) {
+clex_tokenizer_init(clex_tokenizer_t* t, buf_t buffer) {
   t->text = buffer; 
   t->at = 0;
   return !!t->text.size;
@@ -2599,19 +2599,19 @@ clex_tokenizer_init(clex_tokenizer_t* t, buffer_t buffer) {
 
 static b32_t
 _clex_is_keyword(clex_tokenizer_t* t, clex_token_t token) {
-static buffer_t keywords[] = {
-    buffer_from_lit("if"),
-    buffer_from_lit("else"),
-    buffer_from_lit("switch"),
-    buffer_from_lit("case"),
-    buffer_from_lit("default"),
-    buffer_from_lit("while"),
-    buffer_from_lit("for"),
-    buffer_from_lit("if"),
-    buffer_from_lit("operator"),
-    buffer_from_lit("auto"),
-    buffer_from_lit("goto"),
-    buffer_from_lit("return"),
+static buf_t keywords[] = {
+    buf_from_lit("if"),
+    buf_from_lit("else"),
+    buf_from_lit("switch"),
+    buf_from_lit("case"),
+    buf_from_lit("default"),
+    buf_from_lit("while"),
+    buf_from_lit("for"),
+    buf_from_lit("if"),
+    buf_from_lit("operator"),
+    buf_from_lit("auto"),
+    buf_from_lit("goto"),
+    buf_from_lit("return"),
   };
   for_arr(i, keywords) {
     if (_clex_compare_token_with_string(t, token, keywords[i]))
@@ -5904,30 +5904,30 @@ crc8(u8_t* data, u32_t data_size, u8_t start_register, crc8_table_t* table) {
 // @mark:(String)
 //
 
-static buffer_t
-buffer_set(u8_t* str, usz_t size) {
-  buffer_t ret;
+static buf_t
+buf_set(u8_t* str, usz_t size) {
+  buf_t ret;
   ret.e = str;
   ret.size = size;
   return ret;
 }
 
-static buffer_t
-buffer_bad() {
-  return buffer_set(0,0);
+static buf_t
+buf_bad() {
+  return buf_set(0,0);
 }
 
 
-static buffer_t 
-buffer_slice(buffer_t b, usz_t start, usz_t ope)
+static buf_t 
+buf_slice(buf_t b, usz_t start, usz_t ope)
 {
   assert(start < ope);
   assert(ope <= b.size);
-  return buffer_set(b.e + start, ope - start);
+  return buf_set(b.e + start, ope - start);
 }
 
 static usz_t     
-buffer_find(buffer_t str, u8_t character){
+buf_find(buf_t str, u8_t character){
   for(u32_t i = 0;
       i < str.size;
       ++i)
@@ -5941,7 +5941,7 @@ buffer_find(buffer_t str, u8_t character){
 }
 
 static void
-buffer_reverse(buffer_t dest)
+buf_reverse(buf_t dest)
 {
   u8_t* front_ptr = dest.e;
   u8_t* back_ptr = dest.e + dest.size - 1;
@@ -5950,9 +5950,9 @@ buffer_reverse(buffer_t dest)
   }
 }
 
-static buffer_arr_t 
-buffer_split(buffer_t str, u8_t delimiter, arena_t* arena) {
-  buffer_arr_t ret = {};
+static buf_arr_t 
+buf_split(buf_t str, u8_t delimiter, arena_t* arena) {
+  buf_arr_t ret = {};
   if (!str) return ret;
 
 
@@ -5962,8 +5962,8 @@ buffer_split(buffer_t str, u8_t delimiter, arena_t* arena) {
   {
     if (str.e[end] == delimiter) 
     {
-      buffer_t* new_node = arena_push(buffer_t, arena);
-      dref(new_node) = buffer_set(str.e + start, end - start);
+      buf_t* new_node = arena_push(buf_t, arena);
+      dref(new_node) = buf_set(str.e + start, end - start);
 
       if (ret.e == nullptr) {
         ret.e = new_node;
@@ -5975,22 +5975,22 @@ buffer_split(buffer_t str, u8_t delimiter, arena_t* arena) {
     }
   }
 
-  buffer_t* new_node = arena_push(buffer_t, arena);
-  dref(new_node) = buffer_set(str.e + start, end - start);
+  buf_t* new_node = arena_push(buf_t, arena);
+  dref(new_node) = buf_set(str.e + start, end - start);
   ++ret.size;
 
   return ret;
 }
 
 
-static buffer_t
-buffer_from_cstr(const c8_t* cstr) {
+static buf_t
+buf_from_cstr(const c8_t* cstr) {
   return {(u8_t*)cstr, cstr_len(cstr)};
 }
 
-static buffer_t 
-buffer_substr(buffer_t str, usz_t start, usz_t count) {
-  buffer_t ret;
+static buf_t 
+buf_substr(buf_t str, usz_t start, usz_t count) {
+  buf_t ret;
   ret.e = str.e + start;
   ret.size = count;
 
@@ -5998,7 +5998,7 @@ buffer_substr(buffer_t str, usz_t start, usz_t count) {
 }
 
 static b32_t
-buffer_match(buffer_t lhs, buffer_t rhs) {
+buf_match(buf_t lhs, buf_t rhs) {
   if(lhs.size != rhs.size) {
     return false;
   }
@@ -6016,7 +6016,7 @@ buffer_match(buffer_t lhs, buffer_t rhs) {
 // If an unmatched character is found at an index, it will return the 'difference' between those characters
 // If no unmatched character is found at an index, it will return the size different between the strings 
 static smi_t 
-buffer_compare_lexographically(buffer_t lhs, buffer_t rhs) {
+buf_compare_lexographically(buf_t lhs, buf_t rhs) {
   for (usz_t i = 0; i < lhs.size && i < rhs.size; ++i) {
     if (lhs.e[i] == rhs.e[i]) continue;
     else {
@@ -6037,7 +6037,7 @@ buffer_compare_lexographically(buffer_t lhs, buffer_t rhs) {
 
 
 static b32_t 
-buffer_to_u32_range(buffer_t s, usz_t begin, usz_t ope, u32_t* out) {
+buf_to_u32_range(buf_t s, usz_t begin, usz_t ope, u32_t* out) {
   if (ope > s.size) return false;
 
   u32_t number = 0;
@@ -6052,7 +6052,7 @@ buffer_to_u32_range(buffer_t s, usz_t begin, usz_t ope, u32_t* out) {
 }
 
 static b32_t 
-buffer_to_u64_range(buffer_t s, usz_t begin, usz_t ope, u64_t* out) {
+buf_to_u64_range(buf_t s, usz_t begin, usz_t ope, u64_t* out) {
   if (ope > s.size) return false;
 
   u64_t number = 0;
@@ -6070,7 +6070,7 @@ buffer_to_u64_range(buffer_t s, usz_t begin, usz_t ope, u64_t* out) {
 
 
 static b32_t 
-buffer_to_s32_range(buffer_t s, usz_t begin, usz_t ope, s32_t* out) {
+buf_to_s32_range(buf_t s, usz_t begin, usz_t ope, s32_t* out) {
 
   if (ope > s.size) return false;
 
@@ -6094,7 +6094,7 @@ buffer_to_s32_range(buffer_t s, usz_t begin, usz_t ope, s32_t* out) {
 }
 
 static b32_t 
-buffer_to_f32_range(buffer_t s, usz_t begin, usz_t ope, f32_t* out) {
+buf_to_f32_range(buf_t s, usz_t begin, usz_t ope, f32_t* out) {
   if (ope > s.size) return false;
   u32_t place = 0;
 
@@ -6123,36 +6123,29 @@ buffer_to_f32_range(buffer_t s, usz_t begin, usz_t ope, f32_t* out) {
 }
 
 static b32_t 
-buffer_to_f32(buffer_t s, f32_t* out) {
-  return buffer_to_f32_range(s, 0, s.size, out);
+buf_to_f32(buf_t s, f32_t* out) {
+  return buf_to_f32_range(s, 0, s.size, out);
 }
 static b32_t 
-buffer_to_u32(buffer_t s, u32_t* out) {
-  return buffer_to_u32_range(s, 0, s.size, out);
+buf_to_u32(buf_t s, u32_t* out) {
+  return buf_to_u32_range(s, 0, s.size, out);
 }
 
 static b32_t 
-buffer_to_u64(buffer_t s, u64_t* out) {
-  return buffer_to_u64_range(s, 0, s.size, out);
+buf_to_u64(buf_t s, u64_t* out) {
+  return buf_to_u64_range(s, 0, s.size, out);
 }
 
 // Parsing functions
 static b32_t 
-buffer_to_s32(buffer_t s, s32_t* out) 
+buf_to_s32(buf_t s, s32_t* out) 
 {
-  return buffer_to_s32_range(s, 0, s.size, out);
+  return buf_to_s32_range(s, 0, s.size, out);
 }
 
-static void  
-str_builder_init(str_builder_t* b, u8_t* data, usz_t cap) 
-{
-  b->e = data;
-  b->size = 0;
-  b->cap = cap;
-}
 
 static void  
-str_builder_init(str_builder_t* b, buffer_t str) 
+bufio_init(bufio_t* b, buf_t str) 
 {
   b->e = str.e;
   b->size = 0;
@@ -6160,11 +6153,11 @@ str_builder_init(str_builder_t* b, buffer_t str)
 }
 
 static b32_t     
-str_builder_alloc(str_builder_t* b, arena_t* arena, usz_t cap)
+bufio_alloc(bufio_t* b, arena_t* arena, usz_t cap)
 {
-  u8_t* buffer = arena_push_arr(u8_t, arena, cap);
+  buf_t buffer = arena_push_buffer(arena, cap);
   if (!buffer) return false;
-  str_builder_init(b, buffer, cap);
+  bufio_init(b, buffer);
   return true;
 
 }
@@ -6173,74 +6166,74 @@ str_builder_alloc(str_builder_t* b, arena_t* arena, usz_t cap)
 
 
 static usz_t
-str_builder_remaining(str_builder_t* b) {
+bufio_remaining(bufio_t* b) {
   return b->cap - b->size; 
 }
 
 static void     
-str_builder_clear(str_builder_t* b) {
+bufio_clear(bufio_t* b) {
   b->size = 0;
 }
 
 static void     
-str_builder_pop(str_builder_t* b) {
+bufio_pop(bufio_t* b) {
   assert(b->size > 0);
   --b->size;
 }
 
 static void     
-str_builder_push_u8(str_builder_t* b, u8_t num) {
+bufio_push_u8(bufio_t* b, u8_t num) {
   assert(b->size < b->cap); b->e[b->size++] = num;
 }
 
 static void     
-str_builder_push_c8(str_builder_t* b, c8_t num) {
+bufio_push_c8(bufio_t* b, c8_t num) {
   assert(b->size < b->cap);
   b->e[b->size++] = num;
 }
 
 static void     
-str_builder_push_u32(str_builder_t* b, u32_t num) {
+bufio_push_u32(bufio_t* b, u32_t num) {
   if (num == 0) {
-    str_builder_push_c8(b, '0');
+    bufio_push_c8(b, '0');
     return;
   }
   usz_t start_pt = b->size; 
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    str_builder_push_c8(b, digit_to_ascii(digit_to_convert));
+    bufio_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   // Reverse starting from start point to count
-  usz_t sub_buffer_len_half = (b->size - start_pt)/2;
-  for(usz_t i = 0; i < sub_buffer_len_half; ++i) {
+  usz_t sub_buf_len_half = (b->size - start_pt)/2;
+  for(usz_t i = 0; i < sub_buf_len_half; ++i) {
     swap(b->e[start_pt + i], b->e[ b->size - 1 - i]);
   }
 }
 static void     
-str_builder_push_u64(str_builder_t* b, u64_t num) {
+bufio_push_u64(bufio_t* b, u64_t num) {
   if (num == 0) {
-    str_builder_push_c8(b, '0');
+    bufio_push_c8(b, '0');
     return;
   }
   usz_t start_pt = b->size; 
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    str_builder_push_c8(b, digit_to_ascii(digit_to_convert));
+    bufio_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   // Reverse starting from start point to count
-  usz_t sub_buffer_len_half = (b->size - start_pt)/2;
-  for(usz_t i = 0; i < sub_buffer_len_half; ++i) {
+  usz_t sub_buf_len_half = (b->size - start_pt)/2;
+  for(usz_t i = 0; i < sub_buf_len_half; ++i) {
     swap(b->e[start_pt + i], b->e[b->size - 1 - i]);
   }
 }
 static void     
-str_builder_push_s32(str_builder_t* b, s32_t num) {
+bufio_push_s32(bufio_t* b, s32_t num) {
   if (num == 0) {
-    str_builder_push_c8(b, '0');
+    bufio_push_c8(b, '0');
     return;
   }
 
@@ -6251,25 +6244,25 @@ str_builder_push_s32(str_builder_t* b, s32_t num) {
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    str_builder_push_c8(b, digit_to_ascii(digit_to_convert));
+    bufio_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   if (negate) {
-    str_builder_push_c8(b, '-');
+    bufio_push_c8(b, '-');
   }
 
   // Reverse starting from start point to count
-  usz_t sub_buffer_len_half = (b->size - start_pt)/2;
-  for(usz_t i = 0; i < sub_buffer_len_half; ++i) {
+  usz_t sub_buf_len_half = (b->size - start_pt)/2;
+  for(usz_t i = 0; i < sub_buf_len_half; ++i) {
     swap(b->e[start_pt+i], b->e[b->size-1-i]);
   }
 
 }
 
 static void     
-str_builder_push_s64(str_builder_t* b, s64_t num) {
+bufio_push_s64(bufio_t* b, s64_t num) {
   if (num == 0) {
-    str_builder_push_c8(b, '0');
+    bufio_push_c8(b, '0');
     return;
   }
 
@@ -6280,16 +6273,16 @@ str_builder_push_s64(str_builder_t* b, s64_t num) {
 
   for(; num != 0; num /= 10) {
     u8_t digit_to_convert = (u8_t)(num % 10);
-    str_builder_push_c8(b, digit_to_ascii(digit_to_convert));
+    bufio_push_c8(b, digit_to_ascii(digit_to_convert));
   }
 
   if (negate) {
-    str_builder_push_c8(b, '-');
+    bufio_push_c8(b, '-');
   }
 
   // Reverse starting from start point to count
-  usz_t sub_buffer_len_half = (b->size - start_pt)/2;
-  for(usz_t i = 0; i < sub_buffer_len_half; ++i) {
+  usz_t sub_buf_len_half = (b->size - start_pt)/2;
+  for(usz_t i = 0; i < sub_buf_len_half; ++i) {
     swap(b->e[start_pt+i], b->e[b->size-1-i]);
 
   }
@@ -6297,16 +6290,16 @@ str_builder_push_s64(str_builder_t* b, s64_t num) {
 }
 
 static void     
-str_builder_push_f32(str_builder_t* b, f32_t value, u32_t precision) {
+bufio_push_f32(bufio_t* b, f32_t value, u32_t precision) {
   if (value < 0.f) {
-    str_builder_push_c8(b, '-');	
+    bufio_push_c8(b, '-');	
     value = -value;
   }
 
   // @note: won't work for values that u32_t can't contain
   u32_t integer_part = (u32_t)value;
-  str_builder_push_u32(b, integer_part);
-  str_builder_push_c8(b, '.');
+  bufio_push_u32(b, integer_part);
+  bufio_push_c8(b, '.');
 
   value -= (f32_t)integer_part;
 
@@ -6315,19 +6308,19 @@ str_builder_push_f32(str_builder_t* b, f32_t value, u32_t precision) {
   }
 
   u32_t decimal_part = (u32_t)value;
-  str_builder_push_u32(b, decimal_part);
+  bufio_push_u32(b, decimal_part);
 }
 
 static void     
-str_builder_push_f64(str_builder_t* b, f64_t value, u32_t precision) {
+bufio_push_f64(bufio_t* b, f64_t value, u32_t precision) {
   if (value < 0.0) {
-    str_builder_push_c8(b, '-');	
+    bufio_push_c8(b, '-');	
     value = -value;
   }
   // @note: won't work for values that u32_t can't contain
   u32_t integer_part = (u32_t)value;
-  str_builder_push_u32(b, integer_part);
-  str_builder_push_c8(b, '.');
+  bufio_push_u32(b, integer_part);
+  bufio_push_c8(b, '.');
 
   value -= (f64_t)integer_part;
 
@@ -6336,12 +6329,12 @@ str_builder_push_f64(str_builder_t* b, f64_t value, u32_t precision) {
   }
 
   u32_t decimal_part = (u32_t)value;
-  str_builder_push_u32(b, decimal_part);
+  bufio_push_u32(b, decimal_part);
 }
 
 
 static void
-str_builder_push_hex_u8(str_builder_t* b, u8_t value) {
+bufio_push_hex_u8(bufio_t* b, u8_t value) {
 
   c8_t parts[2] = {
     (c8_t)(value >> 4),
@@ -6352,25 +6345,25 @@ str_builder_push_hex_u8(str_builder_t* b, u8_t value) {
   for(u32_t i = 0; i < array_count(parts); ++i) 
   {
     if (parts[i] >= 0 && parts[i] <= 9) {
-      str_builder_push_c8(b, parts[i] + '0');
+      bufio_push_c8(b, parts[i] + '0');
     }
     else if (parts[i] >= 10 && parts[i] <= 15) {
-      str_builder_push_c8(b, parts[i] - 10 + 'A');
+      bufio_push_c8(b, parts[i] - 10 + 'A');
     }
   }
 }
 
 static void
-str_builder_push_hex_u32(str_builder_t* b, u32_t value) {
+bufio_push_hex_u32(bufio_t* b, u32_t value) {
   union { u32_t v; u8_t b[4]; } combine;
   combine.v = value;
   for(s32_t i = 3; i >= 0; --i) {
-    str_builder_push_hex_u8(b, combine.b[i]);
+    bufio_push_hex_u8(b, combine.b[i]);
   }
 }
 
 static void
-_str_builder_push_fmt_list(str_builder_t* b, buffer_t format, va_list args) 
+_bufio_push_fmt_list(bufio_t* b, buf_t format, va_list args) 
 {
   usz_t at = 0;
   while(at < format.size) {
@@ -6387,53 +6380,53 @@ _str_builder_push_fmt_list(str_builder_t* b, buffer_t format, va_list args)
       }
 
       u8_t tmp_buffer[64];
-      str_builder_t tb;
-      str_builder_init(&tb, { tmp_buffer, sizeof(tmp_buffer) });
+      bufio_t tb;
+      bufio_init(&tb, { tmp_buffer, sizeof(tmp_buffer) });
 
       switch(format.e[at]) 
       {
         case 'i': {
           s32_t value = va_arg(args, s32_t);
-          str_builder_push_s32(&tb, value);
+          bufio_push_s32(&tb, value);
         } break;
         case 'I': {
           s64_t value = va_arg(args, s64_t);
-          str_builder_push_s64(&tb, value);
+          bufio_push_s64(&tb, value);
         } break;
         case 'U': {
           u64_t value = va_arg(args, u64_t);
-          str_builder_push_u64(&tb, value);
+          bufio_push_u64(&tb, value);
         } break;
         case 'u': {
           u32_t value = va_arg(args, u32_t);
-          str_builder_push_u32(&tb, value);
+          bufio_push_u32(&tb, value);
         } break;
         case 'f': {
           f64_t value = va_arg(args, f64_t);
-          str_builder_push_f32(&tb, (f32_t)value, 5);
+          bufio_push_f32(&tb, (f32_t)value, 5);
         } break;
         case 'F': {
           f64_t value = va_arg(args, f64_t);
-          str_builder_push_f64(&tb, (f64_t)value, 5);
+          bufio_push_f64(&tb, (f64_t)value, 5);
         } break;
         case 'x':
         case 'X': {
           u32_t value = va_arg(args, u32_t);
-          str_builder_push_hex_u32(&tb, value);
+          bufio_push_hex_u32(&tb, value);
         } break;
         case 's': {
           // c-string
           const char* cstr = va_arg(args, const char*);
           while(cstr[0] != 0) {
-            str_builder_push_c8(&tb, (u8_t)cstr[0]);
+            bufio_push_c8(&tb, (u8_t)cstr[0]);
             ++cstr;
           }
         } break;
 
         case 'S': {
-          // buffer_t, or 'text'.
-          buffer_t str = va_arg(args, buffer_t);
-          str_builder_push_buffer(&tb, str);
+          // buf_t, or 'text'.
+          buf_t str = va_arg(args, buf_t);
+          bufio_push_buffer(&tb, str);
         } break;
 
         default: {
@@ -6446,18 +6439,18 @@ _str_builder_push_fmt_list(str_builder_t* b, buffer_t format, va_list args)
       if (width > 0 && tb.str.size < width) {
         usz_t spaces_to_pad = width - tb.str.size;
         while(spaces_to_pad--) {
-          str_builder_push_c8(b, ' ');
+          bufio_push_c8(b, ' ');
         }
-        str_builder_push_buffer(b, tb.str);
+        bufio_push_buffer(b, tb.str);
       }
       else {
-        str_builder_push_buffer(b, tb.str);
+        bufio_push_buffer(b, tb.str);
       }
 
     }
     else 
     {
-      str_builder_push_c8(b, format.e[at++]);
+      bufio_push_c8(b, format.e[at++]);
     }
 
   }
@@ -6465,15 +6458,15 @@ _str_builder_push_fmt_list(str_builder_t* b, buffer_t format, va_list args)
 
 
 static void     
-str_builder_push_fmt(str_builder_t* b, buffer_t fmt, ...) {
+bufio_push_fmt(bufio_t* b, buf_t fmt, ...) {
   va_list args;
   va_start(args, fmt);
-  _str_builder_push_fmt_list(b, fmt, args);
+  _bufio_push_fmt_list(b, fmt, args);
   va_end(args);
 }
 
 static void     
-str_builder_push_buffer(str_builder_t* b, buffer_t src) {
+bufio_push_buffer(bufio_t* b, buf_t src) {
   assert(b->size + src.size <= b->cap);
   for (usz_t i = 0; i < src.size; ++i ) {
     b->e[b->size++] = src.e[i];
@@ -6481,7 +6474,7 @@ str_builder_push_buffer(str_builder_t* b, buffer_t src) {
 }
 
 static void     
-str_builder_push_cstr(str_builder_t* b, const c8_t* src) {
+bufio_push_cstr(bufio_t* b, const c8_t* src) {
   while(b->size < b->cap && dref(src) != 0)
   {
     b->e[b->size++] = dref(src);
@@ -6494,20 +6487,20 @@ str_builder_push_cstr(str_builder_t* b, const c8_t* src) {
 // @mark:(Stream)
 //
 static void
-stream_init(stream_t* s, buffer_t contents) {
+stream_init(stream_t* s, buf_t contents) {
   s->contents = contents;
   s->pos = 0;
   s->bit_buffer = 0;
   s->bit_count = 0;
 }
 
-static buffer_t 
+static buf_t 
 stream_consume_line(stream_t* s) {
   if (stream_is_eos(s)) {
-    return buffer_bad();
+    return buf_bad();
   }
 
-  buffer_t ret = buffer_set(s->contents.e + s->pos, 0);
+  buf_t ret = buf_set(s->contents.e + s->pos, 0);
 
   // @todo: this is terribly coded. Refactor?
   while(!stream_is_eos(s)) {
@@ -6616,7 +6609,7 @@ struct _wav_head_t {
 // http://soundfile.sapp.org/doc/Waveformat/
 
 static b32_t 
-wav_read(wav_t* w, buffer_t contents) 
+wav_read(wav_t* w, buf_t contents) 
 {
   const static u32_t riff_id_signature = u32_endian_swap(0x52494646);
   const static u32_t riff_format_signature = u32_endian_swap(0x57415645);
@@ -7251,7 +7244,7 @@ ttf_get_glyph_horizontal_metrics(const ttf_t* ttf,
 
 
 static b32_t
-ttf_read(ttf_t* ttf, buffer_t ttf_contents) {
+ttf_read(ttf_t* ttf, buf_t ttf_contents) {
   ttf->data = ttf_contents.e;
 
   u32_t num_tables = _ttf_read_u16(ttf->data + 4);
@@ -8276,7 +8269,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   ctx.bit_depth = png->bit_depth;
 
   u32_t image_size = png->width * png->height * _PNG_CHANNELS;
-  buffer_t image_buffer =  arena_push_buffer(arena, image_size, 16);
+  buf_t image_buffer =  arena_push_buffer(arena, image_size, 16);
   if (!image_buffer) return nullptr;
   stream_init(&ctx.image_stream, image_buffer);
 
@@ -8284,7 +8277,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   arena_set_revert_point(arena);
 
   u32_t unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
-  buffer_t unfiltered_image_buffer = arena_push_buffer(arena, unfiltered_size, 16);
+  buf_t unfiltered_image_buffer = arena_push_buffer(arena, unfiltered_size, 16);
   if (!unfiltered_image_buffer) return nullptr;
   stream_init(&ctx.unfiltered_image_stream, unfiltered_image_buffer);
 
@@ -8309,7 +8302,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
     }
   }
 
-  buffer_t zlib_data = arena_push_buffer(arena, zlib_size, 16);
+  buf_t zlib_data = arena_push_buffer(arena, zlib_size, 16);
   if (!zlib_data) return nullptr;
 
   stream_init(zlib_stream, zlib_data);
@@ -8346,7 +8339,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
 }
 // @note: Really dumb way to write.
 // Just have a IHDR, IEND and a single IDAT that's not encoded lul
-static buffer_t
+static buf_t
 png_write(u32_t* pixels, u32_t width, u32_t height, arena_t* arena) {
 static const u8_t signature[] = { 
     137, 80, 78, 71, 13, 10, 26, 10 
@@ -8375,8 +8368,8 @@ static const u8_t signature[] = {
       data_size + 
       IDAT_chunk_size);
 
-  buffer_t stream_memory = arena_push_buffer(arena, expected_memory_required, 16);
-  if (!stream_memory) return buffer_bad();
+  buf_t stream_memory = arena_push_buffer(arena, expected_memory_required);
+  if (!stream_memory) return buf_bad();
 
   make(stream_t, stream);
   stream_init(stream, stream_memory);
@@ -8506,12 +8499,12 @@ static const u8_t signature[] = {
 
 
 
-  return buffer_set(stream->contents.e, stream->pos);
+  return buf_set(stream->contents.e, stream->pos);
 }
 
 
 static b32_t     
-png_read(png_t* png, buffer_t png_contents)
+png_read(png_t* png, buf_t png_contents)
 {
   make(stream_t, stream);
   stream_init(stream, png_contents);
@@ -8554,7 +8547,7 @@ png_read(png_t* png, buffer_t png_contents)
 //
 
 static b32_t
-arena_init(arena_t* a, buffer_t buffer) 
+arena_init(arena_t* a, buf_t buffer) 
 {
   if (!buffer) 
   {
@@ -8607,7 +8600,7 @@ arena_clear(arena_t* a) {
 
 // @todo: remove?
 static b32_t 
-arena_grow_buffer(arena_t* a, buffer_t* str, usz_t new_size)
+arena_grow_buffer(arena_t* a, buf_t* str, usz_t new_size)
 {
   b32_t ret = arena_grow_size(a, str->e, str->size, new_size);
   if (ret)
@@ -8674,7 +8667,7 @@ arena_push_size(arena_t* a, usz_t size, usz_t align) {
   {
     u8_t* commit_ptr = a->memory + a->pos;
     usz_t commit_size = adjusted_pos - a->pos + size;
-    memory_commit(buffer_set(commit_ptr, commit_size));
+    memory_commit(buf_set(commit_ptr, commit_size));
   }
 
   u8_t* ret = umi_to_ptr(imem + adjusted_pos);
@@ -8714,15 +8707,15 @@ arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align)
 {	
   u8_t* mem = arena_push_arr_align(u8_t, a, size, align);
   if (!mem) return false; 
-  arena_init(partition, buffer_set(mem, size));
+  arena_init(partition, buf_set(mem, size));
   return true;
 
 }
 
-static buffer_t
+static buf_t
 arena_push_buffer(arena_t* a, usz_t size, usz_t align) 
 {
-  buffer_t buffer = {};
+  buf_t buffer = {};
   buffer.e = arena_push_arr_align(u8_t, a, size, align);
   buffer.size = size;
 
@@ -8741,9 +8734,8 @@ arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)
   void* mem = umi_to_ptr(imem + adjusted_pos);
   a->pos = a->cap;
 
-  arena_init(partition, buffer_set((u8_t*)mem, size));
+  arena_init(partition, buf_set((u8_t*)mem, size));
   return true;
-
 }
 
 static arena_marker_t
@@ -9102,17 +9094,17 @@ bigint_zero(bigint_t* b) {
 }
 
 static void 
-bigint_init(bigint_t* b, u8_t* data, u32_t cap) 
+bigint_init(bigint_t* b, buf_t buffer) 
 {
-  b->e = data;
-  b->cap = cap;
+  b->e = buffer.e;
+  b->cap = buffer.size;
   bigint_zero(b);
 }
 
 static void 
 bigint_set_max(bigint_t* b) 
 {
-  for(u32_t i = 0;
+  for(usz_t i = 0;
       i < b->cap;
       ++i)
   {
@@ -9128,7 +9120,7 @@ bigint_copy(bigint_t* to, bigint_t* from)
   }
 
   to->count = from->count;
-  for(u32_t i = 0;
+  for(usz_t i = 0;
       i < from->count;
       ++i)
   {
@@ -9138,15 +9130,14 @@ bigint_copy(bigint_t* to, bigint_t* from)
 }
 
 static b32_t
-bigint_init(bigint_t* b, arena_t* arena, u32_t cap)
+bigint_alloc(bigint_t* b, arena_t* arena, u32_t cap)
 {
-  u8_t* data = arena_push_arr(u8_t, arena, cap);
+  buf_t data = arena_push_buffer(arena, cap);
   if (!data) 
   {
     return false;
   }
-
-  bigint_init(b, data, cap);
+  bigint_init(b, data);
 
   return true;
 }
@@ -9296,12 +9287,15 @@ bigint_compare(bigint_t* lhs, bigint_t* rhs)
     return 1;
   else 
   {
-    for (u32_t i = 0; i < lhs->count; ++i) {
-      u32_t index = lhs->count - 1 - i;
-      if (lhs->e[index] < rhs->e[index]) {
+    for (usz_t i = 0; i < lhs->count; ++i) 
+    {
+      usz_t index = lhs->count - 1 - i;
+      if (lhs->e[index] < rhs->e[index]) 
+      {
         return -1;
       }
-      else if (lhs->e[index] > rhs->e[index]) {
+      else if (lhs->e[index] > rhs->e[index]) 
+      {
         return 1;
       }
     }

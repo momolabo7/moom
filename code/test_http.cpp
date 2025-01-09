@@ -90,7 +90,7 @@ https_request(
 
      if (!ret) 
      {
-       ret = arena_push_buffer(arena, size_so_far, 16);
+       ret = arena_push_buffer(arena, size_so_far);
        if (!ret) 
        {
          goto bad_end;
