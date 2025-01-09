@@ -350,7 +350,7 @@ eden_update_and_render_sig(eden_update_and_render)
       eden_draw_text(
             eden, 
             ASSET_FONT_ID_DEFAULT, 
-            buffer_from_lit("0"), 
+            buf_from_lit("0"), 
             RGBA_WHITE, 
             enemy->world_pos + size*0.4f,
             36.f, 

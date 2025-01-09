@@ -36,14 +36,14 @@
 static b32_t 
 pass_read_font_from_file(ttf_t* ttf, const char* filename, arena_t* allocator) {
   buf_t file_contents = file_read_into_buffer(filename, allocator); 
-  if (!file_contents) return false;
+  if (!buf_valid(file_contents)) return false;
   return ttf_read(ttf, file_contents);
 }
 
 static b32_t 
 pass_read_wav_from_file(wav_t* wav, const char* filename, arena_t* allocator) {
   buf_t file_contents = file_read_into_buffer(filename, allocator); 
-  if(!file_contents) return false;
+  if(!buf_valid(file_contents)) return false;
   return wav_read(wav, file_contents);
 }
 
@@ -364,7 +364,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
     pass_pack_atlas_sprite_t* s = p->atlas_sprites + sprite_index;
 
     buf_t file_data = file_read_into_buffer(s->filename, p->arena);
-    assert(file_data);
+    assert(buf_valid(file_data));
 
     make(png_t, png);
     b32_t ok = png_read(png, file_data);
@@ -505,7 +505,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
                 fb->width, 
                 fb->height, 
                 p->arena);
-    file_write_from_str(opt_png_output, png_to_write_mem);
+    file_write_from_buffer(opt_png_output, png_to_write_mem);
   }
 
 
@@ -794,7 +794,7 @@ pass_pack_end(pass_pack_t* p, const char* filename)
     fs->offset_to_data = offset_to_data;
 
 
-    assert(file_contents);
+    assert(buf_valid(file_contents));
 
     fwrite(file_contents.e, file_contents.size, 1, file); 
     offset_to_data = ftell(file);

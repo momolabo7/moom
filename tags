@@ -341,16 +341,17 @@ buf_arr_t	code/momo.h	/^struct buf_arr_t $/;"	s	language:C++
 buf_bad	code/momo.h	/^buf_bad() {$/;"	f	language:C++	typeref:typename:buf_t
 buf_bad	code/momo.h	/^static buf_t      buf_bad();$/;"	p	language:C++	typeref:typename:buf_t
 buf_compare_lexographically	code/momo.h	/^buf_compare_lexographically(buf_t lhs, buf_t rhs) {$/;"	f	language:C++	typeref:typename:smi_t
-buf_compare_lexographically	code/momo.h	/^static smi_t         buf_compare_lexographically(buf_t lhs, buf_t rhs);$/;"	p	language:C++	typeref:typename:smi_t
+buf_compare_lexographically	code/momo.h	/^static smi_t      buf_compare_lexographically(buf_t lhs, buf_t rhs);$/;"	p	language:C++	typeref:typename:smi_t
 buf_find	code/momo.h	/^buf_find(buf_t str, u8_t character){$/;"	f	language:C++	typeref:typename:usz_t
 buf_find	code/momo.h	/^static usz_t     buf_find(buf_t str, u8_t character); $/;"	p	language:C++	typeref:typename:usz_t
 buf_from_cstr	code/momo.h	/^buf_from_cstr(const c8_t* cstr) {$/;"	f	language:C++	typeref:typename:buf_t
 buf_from_cstr	code/momo.h	/^static buf_t      buf_from_cstr(const char* cstr);$/;"	p	language:C++	typeref:typename:buf_t
 buf_from_lit	code/momo.h	/^#define buf_from_lit(/;"	d	language:C++
 buf_match	code/momo.h	/^buf_match(buf_t lhs, buf_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t
-buf_match	code/momo.h	/^static b32_t         buf_match(buf_t lhs, buf_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
+buf_match	code/momo.h	/^static b32_t      buf_match(buf_t lhs, buf_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
+buf_print	code/momo.h	/^#define buf_print(/;"	d	language:C++
 buf_reverse	code/momo.h	/^buf_reverse(buf_t dest)$/;"	f	language:C++	typeref:typename:void
-buf_reverse	code/momo.h	/^static void          buf_reverse(buf_t dest, buf_t src);$/;"	p	language:C++	typeref:typename:void
+buf_reverse	code/momo.h	/^static void       buf_reverse(buf_t dest, buf_t src);$/;"	p	language:C++	typeref:typename:void
 buf_set	code/momo.h	/^buf_set(u8_t* str, usz_t size) {$/;"	f	language:C++	typeref:typename:buf_t
 buf_set	code/momo.h	/^static buf_t      buf_set(u8_t* str, usz_t size);$/;"	p	language:C++	typeref:typename:buf_t
 buf_size	code/w32_eden.cpp	/^  u32_t buf_size;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
@@ -362,16 +363,18 @@ buf_substr	code/momo.h	/^buf_substr(buf_t str, usz_t start, usz_t count) {$/;"	f
 buf_substr	code/momo.h	/^static buf_t      buf_substr(buf_t str, usz_t start, usz_t ope);$/;"	p	language:C++	typeref:typename:buf_t
 buf_t	code/momo.h	/^struct buf_t $/;"	s	language:C++
 buf_to_f32	code/momo.h	/^buf_to_f32(buf_t s, f32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
-buf_to_f32	code/momo.h	/^static b32_t         buf_to_f32(buf_t s, f32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
+buf_to_f32	code/momo.h	/^static b32_t      buf_to_f32(buf_t s, f32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
 buf_to_f32_range	code/momo.h	/^buf_to_f32_range(buf_t s, usz_t begin, usz_t ope, f32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
 buf_to_s32	code/momo.h	/^buf_to_s32(buf_t s, s32_t* out) $/;"	f	language:C++	typeref:typename:b32_t
-buf_to_s32	code/momo.h	/^static b32_t         buf_to_s32(buf_t s, s32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
+buf_to_s32	code/momo.h	/^static b32_t      buf_to_s32(buf_t s, s32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
 buf_to_s32_range	code/momo.h	/^buf_to_s32_range(buf_t s, usz_t begin, usz_t ope, s32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
 buf_to_u32	code/momo.h	/^buf_to_u32(buf_t s, u32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
-buf_to_u32	code/momo.h	/^static b32_t         buf_to_u32(buf_t s, u32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
+buf_to_u32	code/momo.h	/^static b32_t      buf_to_u32(buf_t s, u32_t* out);$/;"	p	language:C++	typeref:typename:b32_t
 buf_to_u32_range	code/momo.h	/^buf_to_u32_range(buf_t s, usz_t begin, usz_t ope, u32_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
 buf_to_u64	code/momo.h	/^buf_to_u64(buf_t s, u64_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
 buf_to_u64_range	code/momo.h	/^buf_to_u64_range(buf_t s, usz_t begin, usz_t ope, u64_t* out) {$/;"	f	language:C++	typeref:typename:b32_t
+buf_valid	code/momo.h	/^buf_valid(buf_t buf) {$/;"	f	language:C++	typeref:typename:b32_t
+buf_valid	code/momo.h	/^static b32_t      buf_valid(buf_t buf);$/;"	p	language:C++	typeref:typename:b32_t
 build	bin/build.bat	/^  set build=0$/;"	v	language:DosBatch
 build	bin/build.bat	/^  set build=1$/;"	v	language:DosBatch
 build	bin/build.bat	/^  set build=1$/;"	v	language:DosBatch
@@ -1222,7 +1225,7 @@ file_t	code/momo.h	/^struct file_t {$/;"	s	language:C++
 file_write	code/momo.h	/^file_write(file_t* fp, const void* src, usz_t size, usz_t offset) $/;"	f	language:C++	typeref:typename:b32_t
 file_write	code/momo.h	/^file_write(file_t* fp, const void* src, usz_t size, usz_t offset) $/;"	f	language:C++	typeref:typename:b32_t
 file_write	code/momo.h	/^static b32_t  file_write(file_t* fp, const void* src, usz_t size, usz_t offset);$/;"	p	language:C++	typeref:typename:b32_t
-file_write_from_str	code/momo.h	/^file_write_from_str(const char* filename, buf_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t
+file_write_from_buffer	code/momo.h	/^file_write_from_buffer(const char* filename, buf_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t
 file_write_from_str	code/momo.h	/^static b32_t  file_write_from_str(const char* filename, buf_t buffer);$/;"	p	language:C++	typeref:typename:b32_t
 filter_method	code/momo.h	/^  u8_t filter_method;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t
 filter_method	code/momo.h	/^  u8_t filter_method;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:typename:u8_t
@@ -2179,7 +2182,7 @@ memory_zero	code/momo.h	/^static void     memory_zero(void* dest, usz_t size);$/
 memory_zero_array	code/momo.h	/^#define memory_zero_array(/;"	d	language:C++
 memory_zero_range	code/momo.h	/^#define memory_zero_range(/;"	d	language:C++
 memory_zero_struct	code/momo.h	/^#define memory_zero_struct(/;"	d	language:C++
-message	code/twitch_bot.cpp	/^  str_t message;$/;"	m	language:C++	struct:momolabot_reminder_t	typeref:typename:str_t	file:
+message	code/twitch_bot.cpp	/^  buf_t message;$/;"	m	language:C++	struct:momolabot_reminder_t	typeref:typename:buf_t	file:
 meta_print_if_function_is_next	code/meta.cpp	/^meta_print_if_function_is_next(clex_tokenizer_t t) {$/;"	f	language:C++	typeref:typename:void	file:
 meta_print_token	code/meta.cpp	/^meta_print_token(clex_tokenizer_t* t, clex_token_t token)  {$/;"	f	language:C++	typeref:typename:void	file:
 min	code/app_lit.cpp	/^  f64_t min;$/;"	m	language:C++	struct:lit_profiler_stat_t	typeref:typename:f64_t	file:
@@ -2200,14 +2203,14 @@ module_path	code/ship_app_lit.cpp	/^  const char* module_path;$/;"	m	language:C+
 module_path	code/w32_eden.cpp	/^  const char* module_path;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char *	file:
 module_write_time	code/ship_app_lit.cpp	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:LARGE_INTEGER	file:
 module_write_time	code/w32_eden.cpp	/^  LARGE_INTEGER module_write_time;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:LARGE_INTEGER	file:
-momolabot_add_reminder	code/twitch_bot.cpp	/^momolabot_add_reminder(momolabot_t* m, str_t message, f32_t interval_in_secs)$/;"	f	language:C++	typeref:typename:void	file:
-momolabot_connect	code/twitch_bot.cpp	/^momolabot_connect(momolabot_t* m, str_t password, str_t channel, str_t nick, arena_t* arena) $/;"	f	language:C++	typeref:typename:b32_t	file:
+momolabot_add_reminder	code/twitch_bot.cpp	/^momolabot_add_reminder(momolabot_t* m, buf_t message, f32_t interval_in_secs)$/;"	f	language:C++	typeref:typename:void	file:
+momolabot_connect	code/twitch_bot.cpp	/^momolabot_connect(momolabot_t* m, buf_t password, buf_t channel, buf_t nick, arena_t* arena) $/;"	f	language:C++	typeref:typename:b32_t	file:
 momolabot_disconnect	code/twitch_bot.cpp	/^momolabot_disconnect(momolabot_t* m) $/;"	f	language:C++	typeref:typename:void	file:
-momolabot_print_str	code/twitch_bot.cpp	/^momolabot_print_str(str_t str)$/;"	f	language:C++	typeref:typename:void	file:
+momolabot_print_str	code/twitch_bot.cpp	/^momolabot_print_str(buf_t str)$/;"	f	language:C++	typeref:typename:void	file:
 momolabot_process_commands	code/twitch_bot.cpp	/^momolabot_process_commands($/;"	f	language:C++	typeref:typename:void	file:
-momolabot_receive	code/twitch_bot.cpp	/^momolabot_receive(momolabot_t* m)$/;"	f	language:C++	typeref:typename:str_t	file:
+momolabot_receive	code/twitch_bot.cpp	/^momolabot_receive(momolabot_t* m)$/;"	f	language:C++	typeref:typename:buf_t	file:
 momolabot_reminder_t	code/twitch_bot.cpp	/^struct momolabot_reminder_t {$/;"	s	language:C++	file:
-momolabot_send_message	code/twitch_bot.cpp	/^momolabot_send_message(momolabot_t* m, str_t message)$/;"	f	language:C++	typeref:typename:void	file:
+momolabot_send_message	code/twitch_bot.cpp	/^momolabot_send_message(momolabot_t* m, buf_t message)$/;"	f	language:C++	typeref:typename:void	file:
 momolabot_t	code/twitch_bot.cpp	/^struct momolabot_t$/;"	s	language:C++	file:
 momolabot_test	code/twitch_bot.cpp	/^momolabot_test(void* data) {$/;"	f	language:C++	typeref:typename:DWORD WINAPI
 momolabot_update	code/twitch_bot.cpp	/^momolabot_update(momolabot_t* m, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
@@ -2312,8 +2315,6 @@ operator ==	code/momo.h	/^static b32_t  operator==(v2f_t lhs, v2f_t rhs) { retur
 operator ==	code/momo.h	/^static b32_t  operator==(v2f_t lhs, v2f_t rhs); $/;"	p	language:C++	typeref:typename:b32_t
 operator ==	code/momo.h	/^static b32_t  operator==(v3f_t lhs, v3f_t rhs) { return v3f_is_close(lhs, rhs); }$/;"	f	language:C++	typeref:typename:b32_t
 operator ==	code/momo.h	/^static b32_t  operator==(v3f_t lhs, v3f_t rhs); $/;"	p	language:C++	typeref:typename:b32_t
-operator bool	code/momo.h	/^  operator bool() {$/;"	f	language:C++	struct:buf_t
-operator bool	code/momo.h	/^  operator bool() {$/;"	f	language:C++	struct:socket_t
 optimize	bin/build.bat	/^  set optimize=1$/;"	v	language:DosBatch
 optimize	bin/build.bat	/^set optimize=0 $/;"	v	language:DosBatch
 option	bin/garden.bat	/^set option=%2$/;"	v	language:DosBatch
@@ -2447,7 +2448,7 @@ ram_usage	code/w32_chip8.cpp	/^  u32_t ram_usage;$/;"	m	language:C++	struct:chip
 rbg_to_hsl	code/momo.h	/^rbg_to_hsl(rgb_t c) {$/;"	f	language:C++	typeref:typename:hsl_t
 rbg_to_hsl	code/momo.h	/^static hsl_t  rbg_to_hsl(rgb_t c);$/;"	p	language:C++	typeref:typename:hsl_t
 rear	code/gist_ring_buffer.cpp	/^  u32_t rear;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:
-receiver	code/twitch_bot.cpp	/^  str_t receiver;$/;"	m	language:C++	struct:momolabot_t	typeref:typename:str_t	file:
+receiver	code/twitch_bot.cpp	/^  buf_t receiver;$/;"	m	language:C++	struct:momolabot_t	typeref:typename:buf_t	file:
 rect	code/pass.h	/^  rp_rect_t* rect;$/;"	m	language:C++	struct:pass_pack_atlas_sprite_t	typeref:typename:rp_rect_t *
 region_x0	code/eden.h	/^  u32_t region_x0; $/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:u32_t
 region_x1	code/eden.h	/^  u32_t region_x1;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:u32_t

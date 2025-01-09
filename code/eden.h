@@ -2650,7 +2650,7 @@ eden_assets_init_from_file(
 
     eden_asset_shader_t* s = assets->shaders + shader_index;
     s->code = arena_push_buffer(arena, file_shader.length, 16);
-    if (!s->code) 
+    if (!buf_valid(s->code)) 
       return false;
 
     if (!file_read(file, s->code.e, s->code.size, file_shader.offset_to_data))

@@ -239,19 +239,6 @@ struct buf_t
 {
   u8_t* e;
   usz_t size;
-
-  //
-  // @note: that it is entirely possible to have
-  // a string of size 0. That would represent
-  // the concept of an 'empty string'.
-  //
-  // Thus, the only way for a string to be completely
-  // invalid in our case would be when there is no
-  // data set at all.
-  //
-  operator bool() {
-    return e != nullptr;
-  }
 };
 
 
@@ -1078,14 +1065,16 @@ static buf_t      buf_slice(buf_t b, usz_t start, usz_t end);
 static buf_t      buf_bad();
 static buf_t      buf_set(u8_t* str, usz_t size);
 static buf_t      buf_substr(buf_t str, usz_t start, usz_t ope);
-static b32_t         buf_match(buf_t lhs, buf_t rhs);
+static b32_t      buf_match(buf_t lhs, buf_t rhs);
+static b32_t      buf_valid(buf_t buf);
 static buf_t      buf_from_cstr(const char* cstr);
-static smi_t         buf_compare_lexographically(buf_t lhs, buf_t rhs);
-static b32_t         buf_to_u32(buf_t s, u32_t* out);
-static b32_t         buf_to_f32(buf_t s, f32_t* out);
-static b32_t         buf_to_s32(buf_t s, s32_t* out);
+static smi_t      buf_compare_lexographically(buf_t lhs, buf_t rhs);
+static b32_t      buf_to_u32(buf_t s, u32_t* out);
+static b32_t      buf_to_f32(buf_t s, f32_t* out);
+static b32_t      buf_to_s32(buf_t s, s32_t* out);
 static buf_arr_t  buf_split(buf_t str, u8_t delimiter, arena_t* arena); 
-static void          buf_reverse(buf_t dest, buf_t src);
+static void       buf_reverse(buf_t dest, buf_t src);
+
 
 // @note: returns str.size if not found
 static usz_t     buf_find(buf_t str, u8_t character); 
@@ -1565,9 +1554,6 @@ struct file_t {
 struct socket_t {
   b32_t is_valid; // Probably should be some error code?
   int sock;
-  operator bool() {
-    return is_valid;
-  }
 };
 
 static b32_t 
@@ -1777,7 +1763,8 @@ file_read_into_buffer(const char* filename, arena_t* arena, b32_t null_terminate
   u64_t file_size = file_get_size(&file);
 
   buf_t ret = arena_push_buffer(arena, file_size + null_terminate, 16);
-  if (!ret) {
+  if (!buf_valid(ret)) 
+  {
     return buf_bad();
   }
 
@@ -1793,7 +1780,7 @@ file_read_into_buffer(const char* filename, arena_t* arena, b32_t null_terminate
 }
 
 static b32_t
-file_write_from_str(const char* filename, buf_t buffer) {
+file_write_from_buffer(const char* filename, buf_t buffer) {
   file_t file = {};
   if (!file_open(&file, filename, FILE_ACCESS_CREATE)) {
     return false; 
@@ -5953,7 +5940,7 @@ buf_reverse(buf_t dest)
 static buf_arr_t 
 buf_split(buf_t str, u8_t delimiter, arena_t* arena) {
   buf_arr_t ret = {};
-  if (!str) return ret;
+  if (!buf_valid(str)) return ret;
 
 
   u32_t start = 0;
@@ -5995,6 +5982,20 @@ buf_substr(buf_t str, usz_t start, usz_t count) {
   ret.size = count;
 
   return ret;
+}
+
+static b32_t 
+buf_valid(buf_t buf) {
+  //
+  // @note: that it is entirely possible to have
+  // a string of size 0. That would represent
+  // the concept of an 'empty string'.
+  //
+  // Thus, the only way for a string to be completely
+  // invalid in our case would be when there is no
+  // data set at all.
+  //
+  return buf.e != nullptr;
 }
 
 static b32_t
@@ -6156,10 +6157,9 @@ static b32_t
 bufio_alloc(bufio_t* b, arena_t* arena, usz_t cap)
 {
   buf_t buffer = arena_push_buffer(arena, cap);
-  if (!buffer) return false;
+  if (!buf_valid(buffer)) return false;
   bufio_init(b, buffer);
   return true;
-
 }
 
 
@@ -8270,7 +8270,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
 
   u32_t image_size = png->width * png->height * _PNG_CHANNELS;
   buf_t image_buffer =  arena_push_buffer(arena, image_size, 16);
-  if (!image_buffer) return nullptr;
+  if (!buf_valid(image_buffer)) return nullptr;
   stream_init(&ctx.image_stream, image_buffer);
 
   //arena_marker_t mark = arena_mark(arena);
@@ -8278,7 +8278,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
 
   u32_t unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
   buf_t unfiltered_image_buffer = arena_push_buffer(arena, unfiltered_size, 16);
-  if (!unfiltered_image_buffer) return nullptr;
+  if (!buf_valid(unfiltered_image_buffer)) return nullptr;
   stream_init(&ctx.unfiltered_image_stream, unfiltered_image_buffer);
 
   stream_consume(_png_chunk_t, &ctx.stream);
@@ -8303,7 +8303,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   }
 
   buf_t zlib_data = arena_push_buffer(arena, zlib_size, 16);
-  if (!zlib_data) return nullptr;
+  if (!buf_valid(zlib_data)) return nullptr;
 
   stream_init(zlib_stream, zlib_data);
 
@@ -8369,7 +8369,7 @@ static const u8_t signature[] = {
       IDAT_chunk_size);
 
   buf_t stream_memory = arena_push_buffer(arena, expected_memory_required);
-  if (!stream_memory) return buf_bad();
+  if (!buf_valid(stream_memory)) return buf_bad();
 
   make(stream_t, stream);
   stream_init(stream, stream_memory);
@@ -8549,7 +8549,7 @@ png_read(png_t* png, buf_t png_contents)
 static b32_t
 arena_init(arena_t* a, buf_t buffer) 
 {
-  if (!buffer) 
+  if (!buf_valid(buffer)) 
   {
     return false;
   }
@@ -8567,7 +8567,7 @@ static b32_t
 arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit) 
 {
   a->buffer = memory_reserve(reserve_amount);
-  if (!a->buffer) {
+  if (!buf_valid(a->buffer)) {
     return false;
   }
 
@@ -9133,12 +9133,8 @@ static b32_t
 bigint_alloc(bigint_t* b, arena_t* arena, u32_t cap)
 {
   buf_t data = arena_push_buffer(arena, cap);
-  if (!data) 
-  {
-    return false;
-  }
+  if (!buf_valid(data)) return false;
   bigint_init(b, data);
-
   return true;
 }
 
