@@ -3144,6 +3144,9 @@ eden_inspector_update_and_render(
     eden_asset_font_id_t font,
     arena_t* frame_arena) 
 {
+  arena_set_revert_point(frame_arena);
+  bufio_t sb = bufio_set(arena_push_buffer(frame_arena, 256));
+
   auto* inspector = &eden->inspector;
   eden_draw_asset_sprite(
       eden, 
@@ -3153,8 +3156,6 @@ eden_inspector_update_and_render(
       rgba_set(0.f, 0.f, 0.f, 0.5f));
   eden_advance_depth(eden);
 
-  bufio_t sb = {};
-  bufio_alloc(&sb, frame_arena, 256);
   
   for(u32_t entry_index = 0; 
       entry_index < inspector->entry_count; 
@@ -3276,6 +3277,7 @@ eden_profile_update_and_render(
   
   for(u32_t entry_id = 0; entry_id < eden->profiler.entry_count; ++entry_id)
   {
+    arena_set_revert_point(frame_arena);
     hell_profiler_entry_t* entry = eden->profiler.entries + entry_id;
 
     hell_profiler_stat_t cycles;
@@ -3306,8 +3308,7 @@ eden_profile_update_and_render(
     hell_profiler_end_stat(&hits);
     hell_profiler_end_stat(&cycles_per_hit);
    
-    bufio_t sb = {};
-    bufio_alloc(&sb, frame_arena, 256);
+    bufio_t sb = bufio_set(arena_push_buffer(frame_arena, 256));
 
     bufio_push_fmt(&sb, 
                  buf_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
@@ -3434,14 +3435,13 @@ eden_console_init(
   console->info_lines = arena_push_arr(bufio_t, allocator, max_lines);
 
   u32_t line_size = characters_per_line;
-  bufio_alloc(&console->input_line, allocator, line_size);
+  console->input_line = bufio_set(arena_push_buffer(allocator, line_size));
   
   for (u32_t info_line_index = 0;
        info_line_index < console->info_line_count;
        ++info_line_index) 
   {    
-    bufio_t* info_line = console->info_lines + info_line_index;
-    bufio_alloc(info_line, allocator, line_size);
+    console->info_lines[info_line_index] = bufio_set(arena_push_buffer(allocator, line_size));
   }
 }
 

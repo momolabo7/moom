@@ -300,13 +300,9 @@ buffer	code/twitch_bot.cpp	/^  u8_t buffer[512];$/;"	m	language:C++	struct:momol
 buffer	code/w32_eden.cpp	/^  void* buffer;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:void *	file:
 buffer_size	code/ship_app_lit.cpp	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 buffer_size	code/w32_chip8.cpp	/^  u32_t buffer_size;$/;"	m	language:C++	struct:w32_dib_t	typeref:typename:u32_t	file:
-bufio_alloc	code/momo.h	/^bufio_alloc(bufio_t* b, arena_t* arena, usz_t cap)$/;"	f	language:C++	typeref:typename:b32_t
 bufio_clear	code/momo.h	/^bufio_clear(bufio_t* b) {$/;"	f	language:C++	typeref:typename:void
 bufio_clear	code/momo.h	/^static void     bufio_clear(bufio_t* b);$/;"	p	language:C++	typeref:typename:void
-bufio_init	code/momo.h	/^bufio_init(bufio_t* b, buf_t str) $/;"	f	language:C++	typeref:typename:void
 bufio_init	code/momo.h	/^static void     bufio_init(bufio_t* b, buf_t str);$/;"	p	language:C++	typeref:typename:void
-bufio_init_from_arena	code/momo.h	/^static b32_t    bufio_init_from_arena(bufio_t* b, arena_t* arena, usz_t cap);$/;"	p	language:C++	typeref:typename:b32_t
-bufio_make	code/momo.h	/^#define bufio_make(/;"	d	language:C++
 bufio_pop	code/momo.h	/^bufio_pop(bufio_t* b) {$/;"	f	language:C++	typeref:typename:void
 bufio_pop	code/momo.h	/^static void     bufio_pop(bufio_t* b);$/;"	p	language:C++	typeref:typename:void
 bufio_push_buffer	code/momo.h	/^bufio_push_buffer(bufio_t* b, buf_t src) {$/;"	f	language:C++	typeref:typename:void
@@ -336,6 +332,7 @@ bufio_push_u8	code/momo.h	/^bufio_push_u8(bufio_t* b, u8_t num) {$/;"	f	language
 bufio_push_u8	code/momo.h	/^static void     bufio_push_u8(bufio_t* b, u8_t num);$/;"	p	language:C++	typeref:typename:void
 bufio_remaining	code/momo.h	/^bufio_remaining(bufio_t* b) {$/;"	f	language:C++	typeref:typename:usz_t
 bufio_remaining	code/momo.h	/^static usz_t    bufio_remaining(bufio_t* b);$/;"	p	language:C++	typeref:typename:usz_t
+bufio_set	code/momo.h	/^bufio_set(buf_t str) $/;"	f	language:C++	typeref:typename:bufio_t
 bufio_t	code/momo.h	/^struct bufio_t$/;"	s	language:C++
 buf_arr_t	code/momo.h	/^struct buf_arr_t $/;"	s	language:C++
 buf_bad	code/momo.h	/^buf_bad() {$/;"	f	language:C++	typeref:typename:buf_t
@@ -344,12 +341,13 @@ buf_compare_lexographically	code/momo.h	/^buf_compare_lexographically(buf_t lhs,
 buf_compare_lexographically	code/momo.h	/^static smi_t      buf_compare_lexographically(buf_t lhs, buf_t rhs);$/;"	p	language:C++	typeref:typename:smi_t
 buf_find	code/momo.h	/^buf_find(buf_t str, u8_t character){$/;"	f	language:C++	typeref:typename:usz_t
 buf_find	code/momo.h	/^static usz_t     buf_find(buf_t str, u8_t character); $/;"	p	language:C++	typeref:typename:usz_t
+buf_fmt	code/test_casey_bufio.cpp	/^buf_fmt(buf_t dest, u8_t* fmt, ...)$/;"	f	language:C++	typeref:typename:buf_t	file:
 buf_from_cstr	code/momo.h	/^buf_from_cstr(const c8_t* cstr) {$/;"	f	language:C++	typeref:typename:buf_t
 buf_from_cstr	code/momo.h	/^static buf_t      buf_from_cstr(const char* cstr);$/;"	p	language:C++	typeref:typename:buf_t
 buf_from_lit	code/momo.h	/^#define buf_from_lit(/;"	d	language:C++
 buf_match	code/momo.h	/^buf_match(buf_t lhs, buf_t rhs) {$/;"	f	language:C++	typeref:typename:b32_t
 buf_match	code/momo.h	/^static b32_t      buf_match(buf_t lhs, buf_t rhs);$/;"	p	language:C++	typeref:typename:b32_t
-buf_print	code/momo.h	/^#define buf_print(/;"	d	language:C++
+buf_put_u8	code/test_casey_bufio.cpp	/^buf_put_u8(buf_t* dest, u8_t u8)$/;"	f	language:C++	typeref:typename:void	file:
 buf_reverse	code/momo.h	/^buf_reverse(buf_t dest)$/;"	f	language:C++	typeref:typename:void
 buf_reverse	code/momo.h	/^static void       buf_reverse(buf_t dest, buf_t src);$/;"	p	language:C++	typeref:typename:void
 buf_set	code/momo.h	/^buf_set(u8_t* str, usz_t size) {$/;"	f	language:C++	typeref:typename:buf_t
@@ -1249,6 +1247,7 @@ font_exts	code/pass.h	/^  pass_pack_font_ext_t* font_exts;$/;"	m	language:C++	st
 font_glyph	code/pass.h	/^    pass_pack_atlas_font_glyph_context_t font_glyph;$/;"	m	language:C++	union:pass_pack_atlas_context_t::__anon23bd245c010a	typeref:typename:pass_pack_atlas_font_glyph_context_t
 font_height	code/pass.h	/^  f32_t font_height;$/;"	m	language:C++	struct:pass_pack_atlas_font_t	typeref:typename:f32_t
 font_id	code/pass.h	/^  eden_asset_font_id_t font_id;$/;"	m	language:C++	struct:pass_pack_atlas_font_t	typeref:typename:eden_asset_font_id_t
+foo	code/test_casey_bufio.cpp	/^foo(buf_t dest, u64_t num)$/;"	f	language:C++	typeref:typename:void	file:
 FOOLISH	code/test_json.cpp	/^#define FOOLISH$/;"	d	language:C++	file:
 foolishly_allocate	code/meta.cpp	/^#define foolishly_allocate(/;"	d	language:C++	file:
 foolishly_allocate_array	code/meta.cpp	/^#define foolishly_allocate_array(/;"	d	language:C++	file:
@@ -2122,6 +2121,7 @@ main	code/pass_tbp.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/pass_vigil.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test_arena.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test_bigint.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
+main	code/test_casey_bufio.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_fileio_api.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_http.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_json.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int

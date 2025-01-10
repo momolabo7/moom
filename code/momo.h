@@ -1079,12 +1079,6 @@ static void       buf_reverse(buf_t dest, buf_t src);
 // @note: returns str.size if not found
 static usz_t     buf_find(buf_t str, u8_t character); 
 
-#define bufio_make(name, cap) \
-  u8_t glue(temp_buf_,__LINE__)[cap] = {0}; \
-bufio_t name_; \
-bufio_t* name = &name_; \
-bufio_init(name, glue(temp_buf_,__LINE__), cap);
-
 static usz_t    bufio_remaining(bufio_t* b);
 static void     bufio_clear(bufio_t* b);
 static void     bufio_pop(bufio_t* b);
@@ -1101,7 +1095,6 @@ static void     bufio_push_hex_u8(bufio_t* b, u8_t num);
 static void     bufio_push_hex_u32(bufio_t* b, u32_t num);
 static void     bufio_push_fmt(bufio_t* b, buf_t fmt, ...);
 static void     bufio_init(bufio_t* b, buf_t str);
-static b32_t    bufio_init_from_arena(bufio_t* b, arena_t* arena, usz_t cap);
 
 //
 // @mark:(Stream)
@@ -6145,25 +6138,15 @@ buf_to_s32(buf_t s, s32_t* out)
 }
 
 
-static void  
-bufio_init(bufio_t* b, buf_t str) 
+static bufio_t 
+bufio_set(buf_t str) 
 {
-  b->e = str.e;
-  b->size = 0;
-  b->cap = str.size;
+  bufio_t ret = {};
+  ret.e = str.e;
+  ret.size = 0;
+  ret.cap = str.size;
+  return ret;
 }
-
-static b32_t     
-bufio_alloc(bufio_t* b, arena_t* arena, usz_t cap)
-{
-  buf_t buffer = arena_push_buffer(arena, cap);
-  if (!buf_valid(buffer)) return false;
-  bufio_init(b, buffer);
-  return true;
-}
-
-
-
 
 static usz_t
 bufio_remaining(bufio_t* b) {
@@ -6193,25 +6176,6 @@ bufio_push_c8(bufio_t* b, c8_t num) {
 }
 
 static void     
-bufio_push_u32(bufio_t* b, u32_t num) {
-  if (num == 0) {
-    bufio_push_c8(b, '0');
-    return;
-  }
-  usz_t start_pt = b->size; 
-
-  for(; num != 0; num /= 10) {
-    u8_t digit_to_convert = (u8_t)(num % 10);
-    bufio_push_c8(b, digit_to_ascii(digit_to_convert));
-  }
-
-  // Reverse starting from start point to count
-  usz_t sub_buf_len_half = (b->size - start_pt)/2;
-  for(usz_t i = 0; i < sub_buf_len_half; ++i) {
-    swap(b->e[start_pt + i], b->e[ b->size - 1 - i]);
-  }
-}
-static void     
 bufio_push_u64(bufio_t* b, u64_t num) {
   if (num == 0) {
     bufio_push_c8(b, '0');
@@ -6230,33 +6194,10 @@ bufio_push_u64(bufio_t* b, u64_t num) {
     swap(b->e[start_pt + i], b->e[b->size - 1 - i]);
   }
 }
+
 static void     
-bufio_push_s32(bufio_t* b, s32_t num) {
-  if (num == 0) {
-    bufio_push_c8(b, '0');
-    return;
-  }
-
-  usz_t start_pt = b->size; 
-
-  b32_t negate = num < 0;
-  num = s32_abs(num);
-
-  for(; num != 0; num /= 10) {
-    u8_t digit_to_convert = (u8_t)(num % 10);
-    bufio_push_c8(b, digit_to_ascii(digit_to_convert));
-  }
-
-  if (negate) {
-    bufio_push_c8(b, '-');
-  }
-
-  // Reverse starting from start point to count
-  usz_t sub_buf_len_half = (b->size - start_pt)/2;
-  for(usz_t i = 0; i < sub_buf_len_half; ++i) {
-    swap(b->e[start_pt+i], b->e[b->size-1-i]);
-  }
-
+bufio_push_u32(bufio_t* b, u32_t num) {
+  bufio_push_u64(b, (u64_t)num);
 }
 
 static void     
@@ -6265,8 +6206,6 @@ bufio_push_s64(bufio_t* b, s64_t num) {
     bufio_push_c8(b, '0');
     return;
   }
-
-  usz_t start_pt = b->size; 
 
   b32_t negate = num < 0;
   num = s64_abs(num);
@@ -6280,35 +6219,12 @@ bufio_push_s64(bufio_t* b, s64_t num) {
     bufio_push_c8(b, '-');
   }
 
-  // Reverse starting from start point to count
-  usz_t sub_buf_len_half = (b->size - start_pt)/2;
-  for(usz_t i = 0; i < sub_buf_len_half; ++i) {
-    swap(b->e[start_pt+i], b->e[b->size-1-i]);
-
-  }
-
+  bufio_push_u64(b, (u64_t)num);
 }
 
 static void     
-bufio_push_f32(bufio_t* b, f32_t value, u32_t precision) {
-  if (value < 0.f) {
-    bufio_push_c8(b, '-');	
-    value = -value;
-  }
-
-  // @note: won't work for values that u32_t can't contain
-  u32_t integer_part = (u32_t)value;
-  bufio_push_u32(b, integer_part);
-  bufio_push_c8(b, '.');
-
-  value -= (f32_t)integer_part;
-
-  for (u32_t i = 0; i < precision; ++i) {
-    value *= 10.f;
-  }
-
-  u32_t decimal_part = (u32_t)value;
-  bufio_push_u32(b, decimal_part);
+bufio_push_s32(bufio_t* b, s32_t num) {
+  bufio_push_s64(b, (s64_t)num);
 }
 
 static void     
@@ -6317,9 +6233,9 @@ bufio_push_f64(bufio_t* b, f64_t value, u32_t precision) {
     bufio_push_c8(b, '-');	
     value = -value;
   }
-  // @note: won't work for values that u32_t can't contain
-  u32_t integer_part = (u32_t)value;
-  bufio_push_u32(b, integer_part);
+  
+  u64_t integer_part = (u64_t)value;
+  bufio_push_u64(b, integer_part);
   bufio_push_c8(b, '.');
 
   value -= (f64_t)integer_part;
@@ -6328,9 +6244,15 @@ bufio_push_f64(bufio_t* b, f64_t value, u32_t precision) {
     value *= 10.0;
   }
 
-  u32_t decimal_part = (u32_t)value;
-  bufio_push_u32(b, decimal_part);
+  u64_t decimal_part = (u64_t)value;
+  bufio_push_u64(b, decimal_part);
 }
+
+static void     
+bufio_push_f32(bufio_t* b, f32_t value, u32_t precision) {
+  bufio_push_f64(b, (f64_t)value, precision);
+}
+
 
 
 static void
@@ -6380,8 +6302,7 @@ _bufio_push_fmt_list(bufio_t* b, buf_t format, va_list args)
       }
 
       u8_t tmp_buffer[64];
-      bufio_t tb;
-      bufio_init(&tb, { tmp_buffer, sizeof(tmp_buffer) });
+      bufio_t tb = bufio_set({ tmp_buffer, sizeof(tmp_buffer) });
 
       switch(format.e[at]) 
       {

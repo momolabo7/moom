@@ -75,9 +75,9 @@ eden_update_and_render_sig(eden_update_and_render)
   auto* alu = (alu_t*)(eden->user_data);
   eden_clear_canvas(eden, rgba_set(0.25f, 0.25f, 0.25f, 1.0f));
 
-
+  buf_t buffer = arena_push_buffer(&alu->frame_arena, 100);
   bufio_t test;
-  bufio_alloc(&alu->frame_arena, 100)
+  bufio_alloc(&test, buffer)
   bufio_push_u32(test, "hello world");
 
 
