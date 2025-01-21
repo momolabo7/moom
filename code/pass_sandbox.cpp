@@ -14,7 +14,7 @@ int main() {
   void* memory = malloc(memory_size);
   defer { free(memory); };
   make(arena_t, arena);
-  arena_init(arena, buffer_set((u8_t*)memory, memory_size));
+  arena_init(arena, buf_set((u8_t*)memory, memory_size));
 
   make(pass_pack_t, p);
 

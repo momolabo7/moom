@@ -452,6 +452,7 @@ if (!opengl->name) { return false; }
     wgl_set_opengl_function(glDeleteTextures);
     wgl_set_opengl_function(glDebugMessageCallbackARB);
     wgl_set_opengl_function(glDrawArrays);
+    wgl_set_opengl_function(glGetError);
 
     wgl_set_opengl_function(glGenVertexArrays);
     wgl_set_opengl_function(glGenBuffers);
@@ -462,6 +463,7 @@ if (!opengl->name) { return false; }
     wgl_set_opengl_function(glVertexAttribDivisor);
     wgl_set_opengl_function(glBindVertexArray);
     wgl_set_opengl_function(glDrawElements);
+    wgl_set_opengl_function(glBufferSubData);
   }
 #undef wgl_set_opengl_function
   
@@ -1563,7 +1565,7 @@ WinMain(HINSTANCE instance,
   
   eden_config_t config = eden_functions.get_config();
 
-  eden_t* eden = arena_bootstrap_push(eden_t, platform_arena, gigabytes(1));
+  eden_t* eden = arena_bootstrap_push(eden_t, platform_arena, gigabytes(2));
 
   arena_t* platform_arena = &eden->platform_arena;
 

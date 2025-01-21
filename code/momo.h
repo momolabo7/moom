@@ -273,14 +273,39 @@ union v2f_t
 
 union v3f_t 
 {
-  struct { f32_t x, y, z; };
-  struct { f32_t w, h, d; };
+  struct 
+  { 
+    union 
+    {
+      struct { f32_t x, y; };
+      v2f_t xy;
+    };
+    f32_t z; 
+  };
+  struct 
+  { 
+    union 
+    {
+      struct { f32_t w, h; };
+      v2f_t wh;
+    };
+    f32_t d; 
+  };
+
   f32_t e[3];
 };
 
 union v4f_t 
 {
-  struct { f32_t x, y, z, w; };
+  struct 
+  { 
+    union 
+    {
+      struct { f32_t x, y, z; };
+      v3f_t xyz;
+    };
+    f32_t w; 
+  };
   f32_t e[4];
 };
 
@@ -696,9 +721,9 @@ struct file_t;  // @note: Implementation is different depending on OS
 // because I don't want these to return or take in to a specific strict type.
 // Returning a strict type almost always end up requiring an explicit
 // conversion on the user side.
-#define kilobytes(n) ((1<<10) * n)
-#define megabytes(n) ((1<<20) * n)
-#define gigabytes(n) ((1<<30) * n)
+#define kilobytes(n) ((1U<<10) * n)
+#define megabytes(n) ((1U<<20) * n)
+#define gigabytes(n) ((1U<<30) * n)
 #define hundreds(x) ((x) * 100) 
 #define thousands(x) ((x) * 1000)
 #define ms_from_mins(mins) ((mins) * 1000 * 60)
@@ -741,6 +766,7 @@ static b32_t u8_is_readable(u8_t c);
 #define align_down_pow2(v,a) ((v) & ~((a)-1))
 #define align_up_pow2(v,a) ((v) + ((a)-1) & ~((a)-1))
 #define is_pow2(v) ((v) & ((v)-1) == 0)
+#define is_multiple_of_pow2(v,a) ((v) & ((a)-1) == 0)
 #define memory_zero_struct(p)    memory_zero((p), sizeof(*(p)))
 #define memory_zero_array(p)     memory_zero((p), sizeof(p))
 #define memory_zero_range(p,s)   memory_zero((p), sizeof(*(p)) * (s))
@@ -941,6 +967,8 @@ static f32_t v2f_angle(v2f_t lhs, v2f_t rhs);
 static v2f_t v2f_rotate(v2f_t v, f32_t rad); 
 static f32_t v2f_cross(v2f_t lhs, v2f_t rhs); 
 static v2f_t v2f_lerp(v2f_t s, v2f_t e, f32_t a); 
+static v4f_t v4f_set(f32_t x, f32_t y, f32_t z, f32_t w);
+static v3f_t v3f_set(f32_t x, f32_t y, f32_t z);
 static v3f_t v3f_add(v3f_t lhs, v3f_t rhs); 
 static v3f_t v3f_sub(v3f_t lhs, v3f_t rhs); 
 static v3f_t v3f_scale(v3f_t lhs, f32_t rhs); 
@@ -957,6 +985,7 @@ static v3f_t v3f_mid(v3f_t lhs, v3f_t rhs);
 static v3f_t v3f_project(v3f_t v, v3f_t onto); 
 static f32_t v3f_angle(v3f_t lhs, v3f_t rhs); 
 static v3f_t v3f_cross(v3f_t lhs, v3f_t rhs); 
+static v3f_t v3f_rotate_z(v3f_t v, f32_t rad); 
 static v2u_t v2u_add(v2u_t lhs, v2u_t rhs); 
 static v2u_t v2u_sub(v2u_t lhs, v2u_t rhs);
 static v2f_t v2f_set(f32_t x, f32_t y);
@@ -987,6 +1016,7 @@ static v3f_t& operator-=(v3f_t& lhs, v3f_t rhs);
 static v3f_t& operator*=(v3f_t& lhs, f32_t rhs); 
 
 static m44f_t m44f_concat(m44f_t lhs, m44f_t rhs);
+static v4f_t  m44f_concat_v4f(m44f_t lhs, v4f_t rhs);
 static m44f_t m44f_transpose(m44f_t m);
 static m44f_t m44f_scale(f32_t x, f32_t y, f32_t z);
 static m44f_t m44f_identity();
@@ -998,6 +1028,7 @@ static m44f_t m44f_orthographic(f32_t left, f32_t right, f32_t bottom, f32_t top
 static m44f_t m44f_frustum(f32_t left, f32_t right, f32_t bottom, f32_t top, f32_t near, f32_t far);
 static m44f_t m44f_perspective(f32_t fov, f32_t aspect, f32_t near, f32_t far);
 static m44f_t operator*(m44f_t lhs, m44f_t rhs);
+static v4f_t  operator*(m44f_t lhs, v4f_t rhs);
 
 //
 // @note: colors
@@ -4858,9 +4889,6 @@ v2f_angle(v2f_t lhs, v2f_t rhs) {
 
 static v2f_t 
 v2f_rotate(v2f_t v, f32_t rad) {
-  // Technically, we can use matrices but
-  // meh, it's easy to code this out without it.
-  // Removes dependencies too
   f32_t c = f32_cos(rad);
   f32_t s = f32_sin(rad);
 
@@ -4884,6 +4912,26 @@ v2f_lerp(v2f_t s, v2f_t e, f32_t a)
   return ret;
 }
 
+static v3f_t 
+v3f_set(f32_t x, f32_t y, f32_t z) 
+{
+  v3f_t ret;
+  ret.x = x; 
+  ret.y = y;
+  ret.z = z;
+  return ret;
+}
+
+static v4f_t 
+v4f_set(f32_t x, f32_t y, f32_t z, f32_t w) 
+{
+  v4f_t ret;
+  ret.x = x; 
+  ret.y = y;
+  ret.z = z;
+  ret.w = w;
+  return ret;
+}
 
 static v3f_t 
 v3f_add(v3f_t lhs, v3f_t rhs) {
@@ -4999,6 +5047,12 @@ v3f_cross(v3f_t lhs, v3f_t rhs) {
   return ret;
 }
 
+static v3f_t
+v3f_rotate_z(v3f_t lhs, f32_t rad) {
+  v2f_t rot = v2f_rotate({lhs.x, lhs.y}, rad);
+  return { rot.x, rot.y, lhs.z };
+}
+
 //~ v2u_t
 static v2u_t    
 v2u_add(v2u_t lhs, v2u_t rhs) {
@@ -5066,6 +5120,20 @@ m44f_concat(m44f_t lhs, m44f_t rhs) {
       for (u32_t i = 0; i < 4; i++) {
         ret.e[r][c] += lhs.e[r][i] *  rhs.e[i][c]; 
       }
+    } 
+  } 
+  return ret;
+}
+
+static v4f_t
+m44f_concat_v4f(m44f_t lhs, v4f_t rhs) 
+{
+  v4f_t ret = {};
+  for (u32_t r = 0; r < 4; r++) 
+  { 
+    for (u32_t c = 0; c < 4; c++) 
+    { 
+      ret.e[r] += lhs.e[r][c] * rhs.e[c];
     } 
   } 
   return ret;
@@ -5214,6 +5282,10 @@ m44f_perspective(f32_t fov, f32_t aspect, f32_t near, f32_t far){
 
 static m44f_t operator*(m44f_t lhs, m44f_t rhs) {
   return m44f_concat(lhs, rhs);
+}
+
+static v4f_t operator*(m44f_t lhs, v4f_t rhs) {
+  return m44f_concat_v4f(lhs, rhs);
 }
 //
 // @mark:(Colors)

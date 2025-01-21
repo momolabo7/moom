@@ -20,7 +20,12 @@
 //   console           - In game console system
 //
 // @todo:
-//   have a name for drawing stuff (like eden_draw?)
+//   - have a name for drawing stuff (like eden_draw?)
+//   - batch system fixes:
+//     - fix potential wastage of triangles
+//     - fix double flushing
+//     - code refactor
+//     - elements as input
 //
 
 #ifndef EDEN_H
@@ -398,6 +403,7 @@ typedef smi_t  GLsizeiptr;
 typedef smi_t  GLintptr;
 typedef b8_t   GLboolean;
 typedef f32_t  GLfloat;
+typedef void   GLvoid;
 typedef void (GLDEBUGPROC)(GLenum source,
     GLenum type,
     GLuint id,
@@ -454,11 +460,13 @@ typedef void    hell_gfx_opengl_glGenVertexArrays(GLsizei n, GLuint* arrays);
 typedef void    hell_gfx_opengl_glGenBuffers(GLsizei n, GLuint* buffers);
 typedef void    hell_gfx_opengl_glBindBuffer(GLenum target, GLuint buffer);
 typedef void    hell_gfx_opengl_glBufferData(GLenum target ,GLsizeiptr size, const void* data, GLenum usage);
+typedef void    hell_gfx_opengl_glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void* data);
 typedef void    hell_gfx_opengl_glEnableVertexAttribArray(GLuint index);
 typedef void    hell_gfx_opengl_glVertexAttribPointer(GLuint index, GLint size,	GLenum type, GLboolean normalized, GLsizei stride, const void * pointer);
 typedef void    hell_gfx_opengl_glVertexAttribDivisor(GLuint index, GLuint divisor);
 typedef void    hell_gfx_opengl_glBindVertexArray(GLuint array);
 typedef void    hell_gfx_opengl_glDrawElements(GLenum mode, GLsizei count, GLenum type, const void* indices);
+typedef GLenum  hell_gfx_opengl_glGetError();
 
 
 enum{ 
@@ -551,8 +559,54 @@ struct hell_gfx_opengl_triangle_batch_t{
   GLuint current_instance_index;
 };
 
+enum { 
+  HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES,
+  HELL_GFX_OPENGL_BATCH_ATTRIBUTE_UVS,
+  HELL_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS,
+};
 
-struct hell_gfx_opengl_t {
+enum hell_gfx_opengl_draw_mode_t
+{
+  HELL_GFX_OPENGL_DRAW_MODE_QUADS,
+  HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES,
+};
+
+struct hell_gfx_opengl_batch_t 
+{
+  // @note: how many elements we are supposed to have.
+  // based on this number, we will decide how big out buffers will be
+  usz_t element_count;
+
+  v3f_t* vertices;
+  v2f_t* uvs;
+  rgba_t* colors;
+  usz_t vertex_count;
+
+  u32_t* indices;
+  usz_t index_count;
+
+  GLuint vao;
+  GLuint vbo_vertices;
+  GLuint vbo_uvs;
+  GLuint vbo_colors;
+  GLuint vbo_indices;
+
+  GLuint shader;
+  GLuint current_texture;
+
+  usz_t vertex_index_start;
+  usz_t vertex_index_ope;
+
+  hell_gfx_opengl_draw_mode_t draw_mode; 
+};
+
+
+static_assert(sizeof(v3f_t) == sizeof(GLfloat)*3);
+static_assert(sizeof(v2f_t) == sizeof(GLfloat)*2);
+static_assert(sizeof(rgba_t) == sizeof(GLfloat)*4);
+
+struct hell_gfx_opengl_t 
+{
   v2u_t render_wh;
 
   u32_t region_x0; 
@@ -560,8 +614,21 @@ struct hell_gfx_opengl_t {
   u32_t region_x1;
   u32_t region_y1;
 
-  hell_gfx_opengl_sprite_batch_t sprite_batch;
-  hell_gfx_opengl_triangle_batch_t triangle_batch;
+  hell_gfx_opengl_batch_t batch;
+
+  //@todo: TESTING
+#if 0
+  v3f_t batch_vertices[4*100];
+  rgba_t batch_colors[4*100];
+  v2f_t batch_uvs[4*100];
+  u32_t batch_indices[6*100];
+  GLuint batch_vao;
+  GLuint batch_vbos[10];
+  GLuint batch_shader;
+#endif
+  
+  //hell_gfx_opengl_sprite_batch_t sprite_batch;
+  //hell_gfx_opengl_triangle_batch_t triangle_batch;
 
   hell_gfx_opengl_texture_t* textures;
   usz_t texture_cap;
@@ -623,9 +690,9 @@ struct hell_gfx_opengl_t {
   hell_gfx_opengl_glEnableVertexAttribArray* glEnableVertexAttribArray;
   hell_gfx_opengl_glVertexAttribPointer* glVertexAttribPointer;
   hell_gfx_opengl_glVertexAttribDivisor* glVertexAttribDivisor;
-
   hell_gfx_opengl_glDrawElements* glDrawElements;
-
+  hell_gfx_opengl_glGetError* glGetError;
+  hell_gfx_opengl_glBufferSubData* glBufferSubData;
 
   void* platform_data;
 };
@@ -940,7 +1007,8 @@ struct hell_speaker_t {
 
 
 
-struct eden_t {
+struct eden_t 
+{
   eden_show_cursor_f* show_cursor;
   eden_hide_cursor_f* hide_cursor;
   eden_lock_cursor_f* lock_cursor;
@@ -974,7 +1042,8 @@ struct eden_t {
 // Game API
 //
 //
-struct eden_config_t {
+struct eden_config_t 
+{
   u32_t target_frame_rate;
 
   u32_t max_files;
@@ -1426,181 +1495,6 @@ hell_gfx_get_blend_preset(hell_gfx_t* g) {
 #if EDEN_USE_OPENGL
 
 static void 
-hell_gfx_opengl_flush_sprites(hell_gfx_opengl_t* ogl) {
-  hell_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
-  assert(sb->instances_to_draw + sb->last_drawn_instance_index < ogl->max_sprites);
-
-  if (sb->instances_to_draw > 0) {
-    ogl->glBindTexture(GL_TEXTURE_2D, sb->current_texture);
-    ogl->glTexParameteri(GL_TEXTURE_2D, 
-        GL_TEXTURE_MIN_FILTER, 
-        GL_NEAREST);
-    ogl->glTexParameteri(GL_TEXTURE_2D, 
-        GL_TEXTURE_MAG_FILTER, 
-        GL_NEAREST);
-    //ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ogl->glBindVertexArray(sb->vao);
-    ogl->glUseProgram(sb->shader);
-
-    ogl->glDrawElementsInstancedBaseInstance(GL_TRIANGLES, 
-        6, 
-        GL_UNSIGNED_BYTE, 
-        nullptr, 
-        sb->instances_to_draw,
-        sb->last_drawn_instance_index);
-
-    sb->last_drawn_instance_index += sb->instances_to_draw;
-    sb->instances_to_draw = 0;
-  }
-}
-
-static void 
-hell_gfx_opengl_push_triangle(
-    hell_gfx_opengl_t* ogl, 
-    m44f_t transform,
-    rgba_t color)
-{
-  hell_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
-
-  // @todo: Take in an array of 3 colors
-#if 1 
-  rgba_t color_per_vertex[] = {
-    color, 
-    color, 
-    color, 
-  };
-#else
-  rgba_t color_per_vertex[] = {
-    rgba_set(1,1,1,1), 
-    rgba_set(1,1,1,1), 
-    rgba_set(1,1,1,1),
-  };
-#endif
-
-  ogl->glNamedBufferSubData(
-      tb->instance_color_vbo, 
-      tb->current_instance_index * sizeof(color_per_vertex),
-      sizeof(color_per_vertex), 
-      &color_per_vertex);
-
-  // @note: m44f_transpose; moe is row-major
-  m44f_t hell_gfx_opengl_transform = m44f_transpose(transform);
-  ogl->glNamedBufferSubData(
-      tb->instance_transform_vbo, 
-      tb->current_instance_index* sizeof(m44f_t), 
-      sizeof(m44f_t), 
-      &hell_gfx_opengl_transform);
-
-  // @note: Update Bookkeeping
-  ++tb->instances_to_draw;
-  ++tb->current_instance_index;
-
-}
-
-static void 
-hell_gfx_opengl_flush_triangles(hell_gfx_opengl_t* ogl) {
-  hell_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
-  assert(tb->instances_to_draw + tb->last_drawn_instance_index < ogl->max_triangles);
-
-  if (tb->instances_to_draw > 0) {
-    ogl->glBindVertexArray(tb->vao);
-    ogl->glUseProgram(tb->shader);
-
-    ogl->glDrawElementsInstancedBaseInstance(GL_TRIANGLES, 
-        3, 
-        GL_UNSIGNED_BYTE, 
-        nullptr, 
-        tb->instances_to_draw,
-        tb->last_drawn_instance_index);
-
-    tb->last_drawn_instance_index += tb->instances_to_draw;
-    tb->instances_to_draw = 0;
-  }
-}
-
-
-
-static void 
-hell_gfx_opengl_push_sprite(
-    hell_gfx_opengl_t* ogl, 
-    m44f_t transform,
-    rgba_t color,
-    hell_gfx_opengl_uv_t uv,
-    GLuint texture) 
-{
-  hell_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
-  if (sb->current_texture != texture) {
-    hell_gfx_opengl_flush_sprites(ogl);
-    sb->current_texture = texture;
-  }
-
-
-  // @todo: Take in an array of 4 colors
-  rgba_t color_per_vertex[] = {
-    color, color, color, color
-  };
-
-  ogl->glNamedBufferSubData(
-      sb->instance_color_vbo, 
-      sb->current_instance_index * sizeof(color_per_vertex),
-      sizeof(color_per_vertex), 
-      &color_per_vertex);
-
-  f32_t uv_per_vertex[] = {
-    uv.min.x, uv.min.y, // top left
-    uv.max.x, uv.min.y, // top right
-    uv.max.x, uv.max.y, // bottom right
-    uv.min.x, uv.max.y, // bottom left
-  };
-  ogl->glNamedBufferSubData(
-      sb->instance_texture_vbo,
-      sb->current_instance_index * sizeof(uv_per_vertex),
-      sizeof(uv_per_vertex),
-      &uv_per_vertex);
-
-  // @note: m44f_transpose; moe is row-major
-  m44f_t hell_gfx_opengl_transform = m44f_transpose(transform);
-  ogl->glNamedBufferSubData(sb->instance_transform_vbo, 
-      sb->current_instance_index* sizeof(m44f_t), 
-      sizeof(m44f_t), 
-      &hell_gfx_opengl_transform);
-
-  // @note: Update Bookkeeping
-  ++sb->instances_to_draw;
-  ++sb->current_instance_index;
-
-}
-
-static void 
-hell_gfx_opengl_begin_sprites(hell_gfx_opengl_t* ogl) {
-  hell_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
-
-  sb->current_texture = 0;
-  sb->instances_to_draw = 0;
-  sb->last_drawn_instance_index = 0;
-  sb->current_instance_index = 0;
-}
-
-static void 
-hell_gfx_opengl_begin_triangles(hell_gfx_opengl_t* ogl) {
-  hell_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
-
-  tb->instances_to_draw = 0;
-  tb->last_drawn_instance_index = 0;
-  tb->current_instance_index = 0;
-}
-
-static void 
-hell_gfx_opengl_end_triangles(hell_gfx_opengl_t* ogl) {
-  hell_gfx_opengl_flush_triangles(ogl);
-}
-
-static void 
-hell_gfx_opengl_end_sprites(hell_gfx_opengl_t* ogl) {
-  hell_gfx_opengl_flush_sprites(ogl);
-}
-
-static void 
 hell_gfx_opengl_attach_shader(
     hell_gfx_opengl_t* ogl,
     u32_t program, 
@@ -1737,418 +1631,33 @@ hell_gfx_opengl_add_predefined_textures(hell_gfx_opengl_t* ogl) {
 
 }
 
-#define HELL_GFX_OPENGL_TRIANGLE_VSHADER "\
-#version 450 core \n\
-layout(location=0) in vec3 aModelVtx; \n\
-layout(location=1) in vec4 aColor[3]; \n\
-layout(location=4) in mat4 aTransform; \n\
-out vec4 mColor; \n\
-uniform mat4 uProjection; \n\
-void main(void) { \n\
-  gl_Position = uProjection * aTransform *  vec4(aModelVtx, 1.0); \n\
-  mColor = aColor[gl_VertexID];\n\
-}"
-
-#define HELL_GFX_OPENGL_TRIANGLE_FSHADER "\
-#version 450 core \n\
-in vec4 mColor;\n\
-out vec4 FragColor;\n\
-void main(void) {\n\
-  FragColor = mColor;\n\
-}"
-
-static b32_t
-hell_gfx_opengl_init_triangle_batch(hell_gfx_opengl_t* ogl, usz_t max_triangles) {
-  hell_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
-  ogl->max_triangles = max_triangles;
-
-  // Triangle model
-  // @todo(Momo): shift this somewhere else
-  const f32_t triangle_model[] = {
-    0.f, 0.f, 0.f,
-    0.f, 1.f, 0.f,
-    1.f, 0.f, 0.f,
-  };
-
-  const u8_t triangle_indices[] = {
-    0, 2, 1
-  };
 
 
-  const u32_t vertex_count = array_count(triangle_model)/3;
-
-  // VBOs
-  ogl->glCreateBuffers(1, &tb->model_vbo);
-  ogl->glNamedBufferStorage(tb->model_vbo, 
-      sizeof(triangle_model), 
-      triangle_model, 
-      0);
-
-  ogl->glCreateBuffers(1, &tb->indices_vbo);
-  ogl->glNamedBufferStorage(tb->indices_vbo, 
-      sizeof(triangle_indices), 
-      triangle_indices, 
-      0);
-
-  ogl->glCreateBuffers(1, &tb->instance_color_vbo);
-  ogl->glNamedBufferStorage(tb->instance_color_vbo, 
-      sizeof(v4f_t) * ogl->max_triangles, 
-      nullptr, 
-      GL_DYNAMIC_STORAGE_BIT);
-
-  ogl->glCreateBuffers(1, &tb->instance_transform_vbo);
-  ogl->glNamedBufferStorage(tb->instance_transform_vbo, 
-      sizeof(m44f_t) * ogl->max_triangles, 
-      nullptr, 
-      GL_DYNAMIC_STORAGE_BIT);
-
-
-  //VAOs
-  ogl->glCreateVertexArrays(1, &tb->vao);
-  ogl->glVertexArrayVertexBuffer(
-      tb->vao, 
-      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL, 
-      tb->model_vbo, 
-      0, 
-      sizeof(v3f_t));
-
-  ogl->glVertexArrayVertexBuffer(
-      tb->vao, 
-      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 
-      tb->instance_color_vbo,  
-      0, 
-      sizeof(rgba_t) * vertex_count);
-
-  ogl->glVertexArrayVertexBuffer(tb->vao, 
-      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
-      tb->instance_transform_vbo, 
-      0, 
-      sizeof(m44f_t));
-
-
-  // Attributes
-  // aModelVtx
-  ogl->glEnableVertexArrayAttrib(tb->vao, HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
-  ogl->glVertexArrayAttribFormat(tb->vao, 
-      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
-      3, 
-      GL_FLOAT, 
-      GL_FALSE, 
-      0);
-
-  ogl->glVertexArrayAttribBinding(tb->vao, 
-      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
-      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL);
-
-  // aColor
-  for (u32_t vertex_index = 0; vertex_index < vertex_count; ++vertex_index) {
-    u32_t attrib_type = HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1 + vertex_index;
-    ogl->glEnableVertexArrayAttrib(
-        tb->vao, 
-        attrib_type); 
-
-    ogl->glVertexArrayAttribFormat(
-        tb->vao, 
-        attrib_type,
-        4, 
-        GL_FLOAT, 
-        GL_FALSE, 
-        sizeof(rgba_t) * vertex_index);
-
-    ogl->glVertexArrayAttribBinding(
-        tb->vao, 
-        attrib_type,
-        HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
-
-  }
-#if 0
-  ogl->glEnableVertexArrayAttrib(tb->vao, HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS); 
-  ogl->glVertexArrayAttribFormat(tb->vao, 
-      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
-      4, 
-      GL_FLOAT, GL_FALSE, 0);
-  ogl->glVertexArrayAttribBinding(tb->vao, 
-      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLORS, 
-      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS);
-#endif
-
-  ogl->glVertexArrayBindingDivisor(tb->vao, HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS, 1); 
-
-
-
-  // aTransform
-  for (u32_t cols = 0; cols < 4; ++cols) {
-    u32_t attrib_type = HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1 + cols;
-    ogl->glEnableVertexArrayAttrib(tb->vao, attrib_type); 
-    ogl->glVertexArrayAttribFormat(tb->vao, 
-        attrib_type, 
-        4, 
-        GL_FLOAT, 
-        GL_FALSE, 
-        sizeof(v4f_t) * cols);
-
-    ogl->glVertexArrayAttribBinding(tb->vao, 
-        attrib_type, 
-        HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM);
-  }
-
-  ogl->glVertexArrayBindingDivisor(tb->vao, 
-      HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM, 
-      1); 
-
-  // @note: Setup indices
-  ogl->glVertexArrayElementBuffer(tb->vao, 
-      tb->indices_vbo);
-
-
-  // @todo(Momo): //BeginShader/EndShader?
-  tb->shader = ogl->glCreateProgram();
-  hell_gfx_opengl_attach_shader(ogl, tb->shader,
-      GL_VERTEX_SHADER,
-      (char*)HELL_GFX_OPENGL_TRIANGLE_VSHADER);
-  hell_gfx_opengl_attach_shader(ogl, tb->shader,
-      GL_FRAGMENT_SHADER,
-      (char*)HELL_GFX_OPENGL_TRIANGLE_FSHADER);
-
-  ogl->glLinkProgram(tb->shader);
-  GLint result;
-  ogl->glGetProgramiv(tb->shader, GL_LINK_STATUS, &result);
-  if (result != GL_TRUE) {
-    char msg[kilobytes(1)] = {};
-    ogl->glGetProgramInfoLog(tb->shader, sizeof(msg), nullptr, msg);
-    return false;
-  }
-  return true;
-}
-
-#define HELL_GFX_OPENGL_SPRITE_VSHADER "\
-#version 450 core \n\
-layout(location=0) in vec3 aModelVtx;  \n\
-layout(location=1) in vec4 aColor[4]; \n\
-layout(location=5) in vec2 aTexCoord[4]; \n\
-layout(location=9) in mat4 aTransform; \n\
-out vec4 mColor;\n\
-out vec2 mTexCoord; \n\
-uniform mat4 uProjection; \n\
-void main(void) { \n\
-  gl_Position = uProjection * aTransform *  vec4(aModelVtx, 1.0); \n\
-  mColor = aColor[gl_VertexID]; \n\
-  mTexCoord = aTexCoord[gl_VertexID]; \n\
-}"
-
-#define HELL_GFX_OPENGL_SPRITE_FSHADER "\
-#version 450 core \n\
-out vec4 fragColor; \n\
-in vec4 mColor; \n\
-in vec2 mTexCoord; \n\
-uniform sampler2D uTexture; \n\
-void main(void) { \n\
-  fragColor = texture(uTexture, mTexCoord) * mColor;  \n\
+#define HELL_GFX_OPENGL_TEST_VSHADER "\
+#version 330 core \n\
+layout(location=0) in vec3 attrib_position; \n\
+layout(location=1) in vec2 attrib_uv;       \n\
+layout(location=2) in vec4 attrib_color;     \n\
+out vec4 vertex_color; \n\
+out vec2 vertex_uv; \n\
+uniform mat4 uni_mvp; \n\
+void main() { \n\
+  vertex_uv = attrib_uv; \n\
+  vertex_color = attrib_color; \n\
+  gl_Position = uni_mvp * vec4(attrib_position, 1.0); \n\
 }"
 
 
-
-
-
-static b32_t 
-hell_gfx_opengl_init_sprite_batch(hell_gfx_opengl_t* ogl, usz_t max_sprites) {
-  hell_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
-  ogl->max_sprites = max_sprites;
-
-
-  const f32_t sprite_model[] = {
-    -0.5f, -0.5f, 0.0f,   // 0. top left
-    0.5f, -0.5f, 0.0f,    // 1. top right
-    0.5f,  0.5f, 0.0f,    // 2. bottom right
-    -0.5f,  0.5f, 0.0f,   // 3. bottom left 
-  };
-
-  const u8_t sprite_indices[] = {
-    0, 1, 2,
-    0, 2, 3,
-  };
-
-  const u32_t vertex_count = array_count(sprite_model)/3;
-
-  // @note: Setup VBO
-  ogl->glCreateBuffers(1, &sb->model_vbo);
-  ogl->glNamedBufferStorage(
-      sb->model_vbo, 
-      sizeof(sprite_model), 
-      sprite_model, 
-      0);
-
-  ogl->glCreateBuffers(1, &sb->indices_vbo);
-  ogl->glNamedBufferStorage(
-      sb->indices_vbo, 
-      sizeof(sprite_indices), 
-      sprite_indices, 
-      0);
-
-  ogl->glCreateBuffers(1, &sb->instance_texture_vbo);
-  ogl->glNamedBufferStorage(
-      sb->instance_texture_vbo, 
-      sizeof(v2f_t) * vertex_count * ogl->max_sprites, 
-      nullptr, 
-      GL_DYNAMIC_STORAGE_BIT);
-
-  ogl->glCreateBuffers(1, &sb->instance_color_vbo);
-  ogl->glNamedBufferStorage(
-      sb->instance_color_vbo, 
-      sizeof(rgba_t) * vertex_count * ogl->max_sprites, 
-      nullptr, 
-      GL_DYNAMIC_STORAGE_BIT);
-
-  ogl->glCreateBuffers(1, &sb->instance_transform_vbo);
-  ogl->glNamedBufferStorage(
-      sb->instance_transform_vbo, 
-      sizeof(m44f_t) * ogl->max_sprites, 
-      nullptr, 
-      GL_DYNAMIC_STORAGE_BIT);
-
-  // @note: Setup VAO
-  ogl->glCreateVertexArrays(1, &sb->vao);
-  ogl->glVertexArrayVertexBuffer(
-      sb->vao, 
-      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL, 
-      sb->model_vbo, 
-      0, 
-      sizeof(v3f_t));
-
-  ogl->glVertexArrayVertexBuffer(
-      sb->vao, 
-      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
-      sb->instance_texture_vbo, 
-      0, 
-      sizeof(v2f_t) * vertex_count);
-
-  ogl->glVertexArrayVertexBuffer(
-      sb->vao, 
-      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 
-      sb->instance_color_vbo,  
-      0, 
-      sizeof(rgba_t) * vertex_count);
-
-  ogl->glVertexArrayVertexBuffer(sb->vao, 
-      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
-      sb->instance_transform_vbo, 
-      0, 
-      sizeof(m44f_t));
-
-  // @note: Setup Attributes
-  // aModelVtx
-  ogl->glEnableVertexArrayAttrib(sb->vao, HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL); 
-  ogl->glVertexArrayAttribFormat(
-      sb->vao, 
-      HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
-      3, 
-      GL_FLOAT, 
-      GL_FALSE, 
-      0);
-
-  ogl->glVertexArrayAttribBinding(sb->vao, 
-      HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL, 
-      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL);
-
-  // aColor
-  for (u32_t vertex_index = 0; vertex_index < vertex_count; ++vertex_index) {
-    u32_t attrib_type = HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1 + vertex_index;
-    ogl->glEnableVertexArrayAttrib(
-        sb->vao, 
-        attrib_type); 
-
-    ogl->glVertexArrayAttribFormat(
-        sb->vao, 
-        attrib_type,
-        4, 
-        GL_FLOAT, 
-        GL_FALSE, 
-        sizeof(rgba_t) * vertex_index);
-
-    ogl->glVertexArrayAttribBinding(
-        sb->vao, 
-        attrib_type,
-        HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS);
-
-  }
-
-  ogl->glVertexArrayBindingDivisor(sb->vao, HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS, 1); 
-
-  // aTexCoord
-  for (u32_t vertex_index = 0; vertex_index < vertex_count; ++vertex_index) {
-    u32_t attrib_type = HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1 + vertex_index;
-    ogl->glEnableVertexArrayAttrib(sb->vao, attrib_type); 
-    ogl->glVertexArrayAttribFormat(
-        sb->vao, 
-        attrib_type, 
-        2, 
-        GL_FLOAT, 
-        GL_FALSE,
-        sizeof(v2f_t) * vertex_index);
-
-
-    ogl->glVertexArrayAttribBinding(
-        sb->vao, 
-        attrib_type,
-        HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE);
-  }
-
-  ogl->glVertexArrayBindingDivisor(sb->vao, 
-      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE, 
-      1); 
-
-
-  // aTransform
-  // @note: this actually has nothing to do with vertex count.
-  for (u32_t cols = 0; cols < 4; ++cols) {
-
-    u32_t attrib_type = HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1 + cols;
-
-    ogl->glEnableVertexArrayAttrib(sb->vao, attrib_type); 
-    ogl->glVertexArrayAttribFormat(sb->vao, 
-        attrib_type, 
-        4, 
-        GL_FLOAT, 
-        GL_FALSE, 
-        sizeof(f32_t) * cols * 4);
-
-    ogl->glVertexArrayAttribBinding(
-        sb->vao, 
-        attrib_type, 
-        HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM);
-  }
-
-  ogl->glVertexArrayBindingDivisor(
-      sb->vao, 
-      HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM, 
-      1); 
-
-
-  // @note: Setup indices
-  ogl->glVertexArrayElementBuffer(sb->vao, sb->indices_vbo);
-
-  // @note: Setup shader Program
-  sb->shader = ogl->glCreateProgram();
-  hell_gfx_opengl_attach_shader(ogl,
-      sb->shader, 
-      GL_VERTEX_SHADER, 
-      (char*)HELL_GFX_OPENGL_SPRITE_VSHADER);
-  hell_gfx_opengl_attach_shader(ogl,
-      sb->shader, 
-      GL_FRAGMENT_SHADER, 
-      (char*)HELL_GFX_OPENGL_SPRITE_FSHADER);
-
-  ogl->glLinkProgram(sb->shader);
-
-  GLint Result;
-  ogl->glGetProgramiv(sb->shader, GL_LINK_STATUS, &Result);
-  if (Result != GL_TRUE) {
-    char msg[kilobytes(1)];
-    ogl->glGetProgramInfoLog(sb->shader, sizeof(msg), nullptr, msg);
-    return false;
-  }
-  return true;
-}
+#define HELL_GFX_OPENGL_TEST_FSHADER "\
+#version 330 core\n\
+in vec4 vertex_color;\n\
+in vec2 vertex_uv; \n\
+out vec4 frag_color;\n\
+uniform sampler2D uni_texture; \n\
+void main() \n\
+{\n\
+  frag_color = texture(uni_texture, vertex_uv) * vertex_color;  \n\
+}"
 
 
 static b32_t
@@ -2181,18 +1690,110 @@ hell_gfx_opengl_init(
   ogl->glEnable(GL_SCISSOR_TEST);
   ogl->glEnable(GL_BLEND);
 
-  if (!hell_gfx_opengl_init_sprite_batch(ogl, max_sprites)) return false;
-  if (!hell_gfx_opengl_init_triangle_batch(ogl, max_triangles)) return false;
+
+  // init batch
+  {
+    hell_gfx_opengl_batch_t* batch = &ogl->batch;
+    batch->element_count = 8000;
+
+    // one element has 4 vertices, uvs, and colors (one for each vertex)
+    batch->vertex_count = batch->element_count*4; 
+    batch->vertices = arena_push_arr(v3f_t, arena, batch->vertex_count); 
+    batch->colors = arena_push_arr(rgba_t, arena, batch->vertex_count); 
+    batch->uvs = arena_push_arr(v2f_t, arena, batch->vertex_count); 
+
+    // one element has 6 indices
+    batch->index_count = batch->element_count*6;
+    batch->indices = arena_push_arr(u32_t, arena, batch->index_count); 
+
+    if (!batch->vertices || !batch->colors || !batch->uvs || !batch->indices) 
+    {
+      return false;
+    }
+
+    // @note: can directly initialize indices here
+    for (usz_t element_index = 0;
+        element_index < batch->element_count; 
+        ++element_index)
+    {
+      usz_t index_index = element_index*6;
+      batch->indices[index_index+0] = 4*element_index+0;  
+      batch->indices[index_index+1] = 4*element_index+1;
+      batch->indices[index_index+2] = 4*element_index+2;
+      batch->indices[index_index+3] = 4*element_index+0;
+      batch->indices[index_index+4] = 4*element_index+2;
+      batch->indices[index_index+5] = 4*element_index+3;
+    }
+
+    ogl->glGenVertexArrays(1, &batch->vao);
+    ogl->glBindVertexArray(batch->vao);
+
+    // @todo: there should be a better way to store the attribute location than using a enum
+    // I think we can load the shaders to find the attribute location first...?
+    
+    // buffer for vertices (shader location = 0)
+    ogl->glGenBuffers(1, &batch->vbo_vertices); 
+    ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_vertices);
+    ogl->glBufferData(GL_ARRAY_BUFFER, batch->vertex_count*sizeof(dref(batch->vertices)), batch->vertices, GL_DYNAMIC_DRAW);
+    ogl->glVertexAttribPointer(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES, 3, GL_FLOAT, GL_FALSE, sizeof(v3f_t), 0);
+    ogl->glEnableVertexAttribArray(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES); // @todo: 0 should be enum
+
+    // buffer for UVs (shader-location = 1)
+    ogl->glGenBuffers(1, &batch->vbo_uvs);
+    ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_uvs);
+    ogl->glBufferData(GL_ARRAY_BUFFER, batch->vertex_count*sizeof(dref(batch->uvs)), batch->uvs, GL_DYNAMIC_DRAW);
+    ogl->glVertexAttribPointer(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_UVS, 2, GL_FLOAT, GL_FALSE, sizeof(v2f_t), 0);
+    ogl->glEnableVertexAttribArray(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_UVS);
+
+    // buffer for colors (shader-location = 2)
+    ogl->glGenBuffers(1, &batch->vbo_colors);
+    ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_colors);
+    ogl->glBufferData(GL_ARRAY_BUFFER, batch->vertex_count*sizeof(dref(batch->colors)), batch->colors, GL_DYNAMIC_DRAW);
+    ogl->glVertexAttribPointer(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS, 4, GL_FLOAT, GL_FALSE, sizeof(rgba_t), 0);
+    ogl->glEnableVertexAttribArray(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS);
+
+    // buffer for indices 
+    ogl->glGenBuffers(1, &batch->vbo_indices);
+    ogl->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch->vbo_indices);
+    ogl->glBufferData(GL_ELEMENT_ARRAY_BUFFER, batch->index_count*sizeof(dref(batch->indices)), batch->indices, GL_STATIC_DRAW);
+
+    ogl->glBindBuffer(GL_ARRAY_BUFFER, 0);
+    ogl->glBindVertexArray(0);
+
+    // shader
+    batch->shader = ogl->glCreateProgram();
+    hell_gfx_opengl_attach_shader(
+        ogl,
+        batch->shader, 
+        GL_VERTEX_SHADER, 
+        (char*)HELL_GFX_OPENGL_TEST_VSHADER);
+    hell_gfx_opengl_attach_shader(
+        ogl,
+        batch->shader, 
+        GL_FRAGMENT_SHADER, 
+        (char*)HELL_GFX_OPENGL_TEST_FSHADER);
+
+    ogl->glLinkProgram(batch->shader);
+
+    GLint Result;
+    ogl->glGetProgramiv(batch->shader, GL_LINK_STATUS, &Result);
+    if (Result != GL_TRUE) {
+      char msg[kilobytes(1)];
+      ogl->glGetProgramInfoLog(batch->shader, sizeof(msg), nullptr, msg);
+      return false;
+    }
+
+
+  }
 
   hell_gfx_opengl_add_predefined_textures(ogl);
   hell_gfx_opengl_delete_all_textures(ogl);
-
 
   return true;
 }
 
 static GLenum
-hell_gfx_opengl_get_blend_mode_from_hell_gfx_blend_type(hell_gfx_blend_type_t type) {
+hell_gfx_opengl_get_blend_mode_from_blend_type(hell_gfx_blend_type_t type) {
   GLenum  ret = {0};
   switch(type) {
     case HELL_GFX_BLEND_TYPE_ZERO: 
@@ -2232,25 +1833,14 @@ hell_gfx_opengl_get_blend_mode_from_hell_gfx_blend_type(hell_gfx_blend_type_t ty
 
 
 static void 
-hell_gfx_opengl_set_blend_mode(hell_gfx_opengl_t* ogl, hell_gfx_blend_type_t src, hell_gfx_blend_type_t dst) {
-  GLenum src_e = hell_gfx_opengl_get_blend_mode_from_hell_gfx_blend_type(src);
-  GLenum dst_e = hell_gfx_opengl_get_blend_mode_from_hell_gfx_blend_type(dst);
+hell_gfx_opengl_set_blend_mode(
+    hell_gfx_opengl_t* ogl, 
+    hell_gfx_blend_type_t src, 
+    hell_gfx_blend_type_t dst) 
+{
+  GLenum src_e = hell_gfx_opengl_get_blend_mode_from_blend_type(src);
+  GLenum dst_e = hell_gfx_opengl_get_blend_mode_from_blend_type(dst);
   ogl->glBlendFunc(src_e, dst_e);
-
-#if 0
-  switch(type) {
-    case HELL_GFX_BLEND_TYPE_ADD: {
-      ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE); 
-    } break;
-    case HELL_GFX_BLEND_TYPE_ALPHA: {
-      ogl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    } break;
-    case HELL_GFX_BLEND_TYPE_TEST: {
-      // @todo
-    } break;
-    default: {}
-  }
-#endif
 }
 
 static void
@@ -2330,6 +1920,91 @@ hell_gfx_opengl_begin_frame(
   ogl->current_layer = 1000.f;
 }
 
+static void
+hell_gfx_opengl_flush_batch(hell_gfx_opengl_t* ogl) 
+{
+  hell_gfx_opengl_batch_t* batch = &ogl->batch;
+  usz_t vertices_to_draw = batch->vertex_index_ope - batch->vertex_index_start;
+  if (vertices_to_draw > 0)
+  {
+    //
+    // vertices
+    //
+    ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_vertices);
+    ogl->glBufferSubData(
+        GL_ARRAY_BUFFER, 
+        sizeof(dref(batch->vertices))*batch->vertex_index_start, 
+        sizeof(dref(batch->vertices))*vertices_to_draw, 
+        (GLvoid*)(batch->vertices + batch->vertex_index_start));
+
+    //
+    // uvs
+    //
+    ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_uvs);
+    ogl->glBufferSubData(
+        GL_ARRAY_BUFFER, 
+        sizeof(dref(batch->uvs))*batch->vertex_index_start, 
+        sizeof(dref(batch->uvs))*vertices_to_draw, 
+        (GLvoid*)(batch->uvs + batch->vertex_index_start));
+
+    //
+    // colors
+    //
+    ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_colors);
+    ogl->glBufferSubData(
+        GL_ARRAY_BUFFER, 
+        sizeof(dref(batch->colors))*batch->vertex_index_start, 
+        sizeof(dref(batch->colors))*vertices_to_draw, 
+        (GLvoid*)(batch->colors + batch->vertex_index_start));
+
+    //
+    // Draw!
+    //
+    ogl->glUseProgram(batch->shader);
+    ogl->glBindVertexArray(batch->vao);
+    ogl->glBindTexture(GL_TEXTURE_2D, batch->current_texture);
+    ogl->glTexParameteri(GL_TEXTURE_2D, 
+        GL_TEXTURE_MIN_FILTER, 
+        GL_NEAREST);
+    ogl->glTexParameteri(GL_TEXTURE_2D, 
+        GL_TEXTURE_MAG_FILTER, 
+        GL_NEAREST);
+
+    // @todo: please use enum tolong
+    if (batch->draw_mode == HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES)
+    {
+      // quad drawing mode
+      
+      // @note: This is so stupid. Opengl has conflicting statements about the last variable.
+      // It say it takes in the pointer to the index buffer, but it can also take in a uint
+      // indicating the offset (in bytes) in the EBO.
+      usz_t index_count = vertices_to_draw/4*6;
+      usz_t index_offset = batch->vertex_index_start/4*6;
+      ogl->glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, (GLvoid*)(index_offset*sizeof(dref(batch->indices))));
+    }
+    else // HELL_GFX_OPENGL_DRAW_MODE_QUADS
+    {
+      // triangle drawing mode
+      ogl->glDrawArrays(GL_TRIANGLES, batch->vertex_index_start, vertices_to_draw);
+
+      // Align the vertex index to a multiple of 4 so that we can get ready to draw elements
+      //
+      // @todo: This isn't the best way or place to do it if we go from drawing 
+      // triangles to triangles, because we potentially waste vertices!!!
+      //
+      if (!is_multiple_of_pow2(batch->vertex_index_ope,4)) // checks for multiple of 4
+      {
+        batch->vertex_index_ope = align_up_pow2(batch->vertex_index_ope, 4);
+      }
+    }
+    ogl->glBindVertexArray(0);
+
+    // Reset!
+    batch->vertex_index_start = batch->vertex_index_ope;
+  }
+}
+
+
 // Only call opengl functions when we end frame
 static void
 hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
@@ -2337,8 +2012,14 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
 
   hell_gfx_opengl_align_viewport(ogl);
   hell_gfx_opengl_process_texture_queue(gfx);
-  hell_gfx_opengl_begin_sprites(ogl);
-  hell_gfx_opengl_begin_triangles(ogl);
+
+  hell_gfx_opengl_batch_t* batch = &ogl->batch;
+
+  // initialize the batch
+  batch->current_texture = 0;
+  batch->vertex_index_start = 0;
+  batch->vertex_index_ope = 0;
+  batch->draw_mode = HELL_GFX_OPENGL_DRAW_MODE_QUADS;
 
   for (u32_t cmd_index = 0; 
        cmd_index < gfx->command_queue.entry_count; 
@@ -2347,11 +2028,9 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
     hell_gfx_command_t* entry = hell_gfx_get_command(gfx, cmd_index);
     switch(entry->id) {
       case HELL_GFX_COMMAND_TYPE_VIEW: {
-        hell_gfx_opengl_flush_sprites(ogl);
-        hell_gfx_opengl_flush_triangles(ogl);
+        hell_gfx_opengl_flush_batch(ogl);
 
         auto* data = (hell_gfx_command_view_t*)entry->data;
-
         f32_t depth = (f32_t)(ogl->current_layer + 1);
 
         // 
@@ -2360,31 +2039,17 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
             data->max_y, data->min_y,  // @note: we flip this cus our y-axis in eden points down
             0.f, depth);
         m44f_t v = m44f_translation(-data->pos_x, -data->pos_y);
-
-        // @todo: Do we share shaders? Or just have a 'view' shader?
         m44f_t result = m44f_transpose(p*v);
-        {
-          hell_gfx_opengl_sprite_batch_t* sb = &ogl->sprite_batch;
-          GLint uProjectionLoc = ogl->glGetUniformLocation(sb->shader,
-              "uProjection");
-          ogl->glProgramUniformMatrix4fv(sb->shader, 
-              uProjectionLoc, 
-              1, 
-              GL_FALSE, 
-              (const GLfloat*)&result);
-        }
+        GLint uProjectionLoc = ogl->glGetUniformLocation(
+            batch->shader,
+            "uni_mvp");
 
-        {
-          hell_gfx_opengl_triangle_batch_t* tb = &ogl->triangle_batch;
-          GLint uProjectionLoc = ogl->glGetUniformLocation(tb->shader,
-              "uProjection");
-          ogl->glProgramUniformMatrix4fv(tb->shader, 
-              uProjectionLoc, 
-              1, 
-              GL_FALSE, 
-              (const GLfloat*)&result);
-        }
-
+        ogl->glProgramUniformMatrix4fv(
+            batch->shader, 
+            uProjectionLoc, 
+            1, 
+            GL_FALSE, 
+            (const GLfloat*)&result);
       } break;
       case HELL_GFX_COMMAND_TYPE_CLEAR: {
         auto* data = (hell_gfx_command_clear_t*)entry->data;
@@ -2399,132 +2064,179 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
       } break;
 
       case HELL_GFX_COMMAND_TYPE_TRIANGLE: {
-        hell_gfx_opengl_flush_sprites(ogl);
-
         hell_gfx_command_triangle_t* data = (hell_gfx_command_triangle_t*)entry->data;
-        m44f_t inverse_of_model = m44f_identity();
-        inverse_of_model.e[0][0] = -1.f;
-        inverse_of_model.e[1][0] = 0.f;
-        inverse_of_model.e[2][0] = 1.f;
-        inverse_of_model.e[3][0] = 0.f;
+        // @todo: momo the possibility to flushing the toilet twice is wasting water!!
+        // water bills will be angri
+        // and we will start living from paycheck to paycheck :<
+        if (batch->draw_mode != HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES)
+        {
+          hell_gfx_opengl_flush_batch(ogl);
+          batch->draw_mode = HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES;
+        }
 
-        inverse_of_model.e[0][1] = -1.f;
-        inverse_of_model.e[1][1] = 1.f;
-        inverse_of_model.e[2][1] = 0.f;
-        inverse_of_model.e[3][1] = 0.f;
+        if (batch->current_texture != ogl->blank_texture.handle) 
+        {
+          hell_gfx_opengl_flush_batch(ogl);
+          batch->current_texture = ogl->blank_texture.handle;
+        }
 
-        inverse_of_model.e[0][2] = 1.f;
-        inverse_of_model.e[1][2] = -1.f;
-        inverse_of_model.e[2][2] = -1.f;
-        inverse_of_model.e[3][2] = 1.f;
+        batch->vertices[batch->vertex_index_ope+0] = v3f_set(data->p0.x, data->p0.y, ogl->current_layer);
+        batch->vertices[batch->vertex_index_ope+1] = v3f_set(data->p1.x, data->p1.y, ogl->current_layer);
+        batch->vertices[batch->vertex_index_ope+2] = v3f_set(data->p2.x, data->p2.y, ogl->current_layer);
 
-        inverse_of_model.e[0][3] = 1.f;
-        inverse_of_model.e[1][3] = 0.f;
-        inverse_of_model.e[2][3] = 0.f;
-        inverse_of_model.e[3][3] = 0.f;
+        batch->uvs[batch->vertex_index_ope+0] = { 0.f, 0.f };
+        batch->uvs[batch->vertex_index_ope+1] = { 1.f, 0.f };
 
+        batch->colors[batch->vertex_index_ope+0] = data->colors;
+        batch->colors[batch->vertex_index_ope+1] = data->colors;
+        batch->colors[batch->vertex_index_ope+2] = data->colors;
 
-        m44f_t target_vertices = m44f_identity();
-        target_vertices.e[0][0] = data->p0.x;
-        target_vertices.e[1][0] = data->p0.y;
-        target_vertices.e[2][0] = ogl->current_layer;
-        target_vertices.e[3][0] = 1.f;
-
-        target_vertices.e[0][1] = data->p1.x;
-        target_vertices.e[1][1] = data->p1.y;
-        target_vertices.e[2][1] = ogl->current_layer;
-        target_vertices.e[3][1] = 1.f;
-
-        target_vertices.e[0][2] = data->p2.x;
-        target_vertices.e[1][2] = data->p2.y;
-        target_vertices.e[2][2] = ogl->current_layer;
-        target_vertices.e[3][2] = 1.f;
-
-        target_vertices.e[0][3] = 1.f;
-        target_vertices.e[1][3] = 1.f;
-        target_vertices.e[2][3] = 1.f;
-        target_vertices.e[3][3] = 1.f;
-
-        m44f_t transform = target_vertices * inverse_of_model;
-
-        hell_gfx_opengl_push_triangle(ogl, transform, data->colors); 
-
-
+        batch->vertex_index_ope += 3;
 
       } break;
-      case HELL_GFX_COMMAND_TYPE_RECT: {
-        hell_gfx_opengl_uv_t uv = {
-          { 0.f, 0.f },
-          { 1.f, 1.f },
-        };
-
+      case HELL_GFX_COMMAND_TYPE_RECT: 
+      {
         hell_gfx_command_rect_t* data = (hell_gfx_command_rect_t*)entry->data;
-        m44f_t T = m44f_translation(data->pos.x, data->pos.y, ogl->current_layer);
-        m44f_t R = m44f_rotation_z(data->rot);
-        m44f_t S = m44f_scale(data->size.w, data->size.h, 1.f) ;
+        hell_gfx_opengl_batch_t* batch = &ogl->batch;
 
-        hell_gfx_opengl_push_sprite(ogl, 
-            T*R*S,
-            data->colors,
-            uv,
-            ogl->blank_texture.handle);
+        if (batch->draw_mode != HELL_GFX_OPENGL_DRAW_MODE_QUADS)
+        {
+          hell_gfx_opengl_flush_batch(ogl);
+          batch->draw_mode = HELL_GFX_OPENGL_DRAW_MODE_QUADS;
+        }
+
+        if (batch->current_texture != ogl->blank_texture.handle) 
+        {
+          hell_gfx_opengl_flush_batch(ogl);
+          batch->current_texture = ogl->blank_texture.handle;
+        }
+
+        m44f_t transform;
+        {
+          m44f_t t = m44f_translation(data->pos.x, data->pos.y, ogl->current_layer);
+          m44f_t r = m44f_rotation_z(data->rot);
+          m44f_t s = m44f_scale(data->size.w, data->size.h, 1.f) ;
+          transform = t*r*s;
+        }
+
+        // order:
+        // - top left
+        // - top right
+        // - bottom right
+        // - bottom left
+        v4f_t vertices[4];
+        vertices[0] = transform * v4f_set(-0.5f, -0.5f, 0, 1);
+        vertices[1] = transform * v4f_set(+0.5f, -0.5f, 0, 1);
+        vertices[2] = transform * v4f_set(+0.5f, +0.5f, 0, 1);
+        vertices[3] = transform * v4f_set(-0.5f, +0.5f, 0, 1);
+
+        batch->vertices[batch->vertex_index_ope+0] = vertices[0].xyz;
+        batch->vertices[batch->vertex_index_ope+1] = vertices[1].xyz;
+        batch->vertices[batch->vertex_index_ope+2] = vertices[2].xyz;
+        batch->vertices[batch->vertex_index_ope+3] = vertices[3].xyz;
+
+        batch->uvs[batch->vertex_index_ope+0] = { 0.f, 0.f };
+        batch->uvs[batch->vertex_index_ope+1] = { 1.f, 0.f };
+        batch->uvs[batch->vertex_index_ope+2] = { 1.f, 1.f };
+        batch->uvs[batch->vertex_index_ope+3] = { 0.f, 1.f };
+
+        batch->colors[batch->vertex_index_ope+0] = data->colors;
+        batch->colors[batch->vertex_index_ope+1] = data->colors;
+        batch->colors[batch->vertex_index_ope+2] = data->colors;
+        batch->colors[batch->vertex_index_ope+3] = data->colors;
+
+        batch->vertex_index_ope += 4;
       } break;
 
       case HELL_GFX_COMMAND_TYPE_SPRITE: {
-        hell_gfx_opengl_flush_triangles(ogl);
         hell_gfx_command_sprite_t* data = (hell_gfx_command_sprite_t*)entry->data;
+        hell_gfx_opengl_batch_t* batch = &ogl->batch;
         assert(ogl->texture_cap > data->texture_index);
-
         hell_gfx_opengl_texture_t* texture = ogl->textures + data->texture_index; 
-        if (texture->handle == 0) {
-          texture->handle = ogl->dummy_texture.handle;
+
+        if (batch->draw_mode != HELL_GFX_OPENGL_DRAW_MODE_QUADS)
+        {
+          hell_gfx_opengl_flush_batch(ogl);
+          batch->draw_mode = HELL_GFX_OPENGL_DRAW_MODE_QUADS;
         }
+
+        if (batch->current_texture != texture->handle) 
+        {
+          hell_gfx_opengl_flush_batch(ogl);
+          batch->current_texture = texture->handle;
+        }
+
         m44f_t transform = m44f_identity();
-        transform.e[0][0] = data->size.w;
-        transform.e[1][1] = data->size.h;
-        transform.e[0][3] = data->pos.x;
-        transform.e[1][3] = data->pos.y;
-        transform.e[2][3] = ogl->current_layer;
+        {
+          transform.e[0][0] = data->size.w;
+          transform.e[1][1] = data->size.h;
+          transform.e[0][3] = data->pos.x;
+          transform.e[1][3] = data->pos.y;
+          transform.e[2][3] = ogl->current_layer;
+          f32_t lerped_x = f32_lerp(0.5f, -0.5f, data->anchor.x);
+          f32_t lerped_y = f32_lerp(0.5f, -0.5f, data->anchor.y);
+          m44f_t a = m44f_translation(lerped_x, lerped_y);
+          transform = transform * a;
+        }
 
-        f32_t lerped_x = f32_lerp(0.5f, -0.5f, data->anchor.x);
-        f32_t lerped_y = f32_lerp(0.5f, -0.5f, data->anchor.y);
-        m44f_t a = m44f_translation(lerped_x, lerped_y);
+        v2f_t uv_min, uv_max;
+        uv_min.x = (f32_t)data->texel_x0 / texture->width;
+        uv_min.y = (f32_t)data->texel_y0 / texture->height;
+        uv_max.x = (f32_t)data->texel_x1 / texture->width;
+        uv_max.y = (f32_t)data->texel_y1 / texture->height;
 
-        hell_gfx_opengl_uv_t uv = {0};
-        uv.min.x = (f32_t)data->texel_x0 / texture->width;
-        uv.min.y = (f32_t)data->texel_y0 / texture->height;
-        uv.max.x = (f32_t)data->texel_x1 / texture->width;
-        uv.max.y = (f32_t)data->texel_y1 / texture->height;
+        // order:
+        // - top left
+        // - top right
+        // - bottom right
+        // - bottom left
+        v4f_t vertices[4];
+        vertices[0] = transform * v4f_set(-0.5f, -0.5f, 0, 1);
+        vertices[1] = transform * v4f_set(+0.5f, -0.5f, 0, 1);
+        vertices[2] = transform * v4f_set(+0.5f, +0.5f, 0, 1);
+        vertices[3] = transform * v4f_set(-0.5f, +0.5f, 0, 1);
 
-        hell_gfx_opengl_push_sprite(ogl, 
-            transform*a,
-            data->colors,
-            uv,
-            texture->handle);
+        batch->vertices[batch->vertex_index_ope+0] = vertices[0].xyz;
+        batch->vertices[batch->vertex_index_ope+1] = vertices[1].xyz;
+        batch->vertices[batch->vertex_index_ope+2] = vertices[2].xyz;
+        batch->vertices[batch->vertex_index_ope+3] = vertices[3].xyz;
 
+        batch->uvs[batch->vertex_index_ope+0] = v2f_set( uv_min.x, uv_min.y );
+        batch->uvs[batch->vertex_index_ope+1] = v2f_set( uv_max.x, uv_min.y );
+        batch->uvs[batch->vertex_index_ope+2] = v2f_set( uv_max.x, uv_max.y );
+        batch->uvs[batch->vertex_index_ope+3] = v2f_set( uv_min.x, uv_max.y );
+
+        batch->colors[batch->vertex_index_ope+0] = data->colors;
+        batch->colors[batch->vertex_index_ope+1] = data->colors;
+        batch->colors[batch->vertex_index_ope+2] = data->colors;
+        batch->colors[batch->vertex_index_ope+3] = data->colors;
+
+        batch->vertex_index_ope += 4;
       } break;
-      case HELL_GFX_COMMAND_TYPE_BLEND: {
-        hell_gfx_opengl_flush_sprites(ogl);
-        hell_gfx_opengl_flush_triangles(ogl);
+      case HELL_GFX_COMMAND_TYPE_BLEND:
+      {
+        hell_gfx_opengl_flush_batch(ogl);
         hell_gfx_command_blend_t* data = (hell_gfx_command_blend_t*)entry->data;
         hell_gfx_opengl_set_blend_mode(ogl, data->src, data->dst);
       } break;
-      case HELL_GFX_COMMAND_TYPE_DELETE_TEXTURE: {
+      case HELL_GFX_COMMAND_TYPE_DELETE_TEXTURE:
+      {
         hell_gfx_command_delete_texture_t* data = (hell_gfx_command_delete_texture_t*)entry->data;
         hell_gfx_opengl_delete_texture(ogl, data->texture_index);
       } break;
-      case HELL_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES: {
+      case HELL_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES:
+      {
         hell_gfx_opengl_delete_all_textures(ogl);
       } break;
-      case HELL_GFX_COMMAND_TYPE_ADVANCE_DEPTH: {
+      case HELL_GFX_COMMAND_TYPE_ADVANCE_DEPTH:
+      {
         ogl->current_layer -= 1.f;
       } break;
       case HELL_GFX_COMMAND_TYPE_TEST: {
       } break;
     }
   }
-  hell_gfx_opengl_end_sprites(ogl);
-  hell_gfx_opengl_end_triangles(ogl);
+  hell_gfx_opengl_flush_batch(ogl);
 
 }
 #endif
@@ -2944,6 +2656,11 @@ eden_advance_depth(eden_t* eden) {
   hell_gfx_advance_depth(gfx);
 }
 
+static void
+eden_gfx_test(eden_t* eden) {
+  hell_gfx_t* gfx = &eden->gfx;
+  hell_gfx_test(gfx);
+}
 
 static void
 eden_set_blend_preset(eden_t* eden, eden_blend_preset_type_t type) {
@@ -3645,6 +3362,17 @@ hell_speaker_update(eden_t* eden)
 
 //
 // JOURNAL
+// = 2025-01-14=
+//   I have decided to redo the rendering pipeline, and it's time to
+//   trade performance for flexibility and portability. I will try
+//   to move things away from instancing, so that I can target lower
+//   versions of opengl (and possibly WebGL itself?), and also so that
+//   I won't have a crazy headache everytime I want to do something 
+//   outside of quads...
+//
+//   Oh yes, shaders too. I'm kind of done dealing with per-element 
+//   shaders. Per-vertex feels a lot more intuitive.
+//    
 // = 2024-07-10 =
 //   Renamed some functions to have "hell" prefix. All "hell"
 //   functions are like private eden functions; they are not to

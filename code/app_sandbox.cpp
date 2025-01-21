@@ -57,33 +57,34 @@ sandbox_update_and_render_font_alignment_test(eden_t* eden)
   eden_clear_canvas(eden, rgba_set(0.25f, 0.25f, 0.25f, 0.0f));
 
   // Bottom left
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buffer_from_lit("Hello World"), RGBA_WHITE, v2f_set(0,900), 72.f, v2f_set(0,1));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(0,900), 72.f, v2f_set(0,1));
 
   // Bottom center
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buffer_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600/2,900), 72.f, v2f_set(0.5f,1));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600/2,900), 72.f, v2f_set(0.5f,1));
 
   // Bottom right
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buffer_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600,900), 72.f, v2f_set(1,1));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600,900), 72.f, v2f_set(1,1));
 
   // Top left
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buffer_from_lit("Hello World"), RGBA_WHITE, v2f_set(0,0), 72.f, v2f_set(0,0));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(0,0), 72.f, v2f_set(0,0));
 
   // Top center
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buffer_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600/2,0), 72.f, v2f_set(0.5f,0));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600/2,0), 72.f, v2f_set(0.5f,0));
 
   // Top right
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buffer_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600,0), 72.f, v2f_set(1,0));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600,0), 72.f, v2f_set(1,0));
 
   // Center left
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buffer_from_lit("Hello World"), RGBA_WHITE, v2f_set(0,900/2), 72.f, v2f_set(0,0.5f));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(0,900/2), 72.f, v2f_set(0,0.5f));
 
   // Center
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buffer_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600/2,900.f/2), 72.f, v2f_set(0.5f,0.5f));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600/2,900.f/2), 72.f, v2f_set(0.5f,0.5f));
 
   // Center right
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buffer_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600,900/2), 72.f, v2f_set(1,0.5f));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600,900/2), 72.f, v2f_set(1,0.5f));
 
   eden_advance_depth(eden);
+
 }
 
 exported 
@@ -94,9 +95,25 @@ eden_update_and_render_sig(eden_update_and_render) {
 
     auto* sandbox = (sandbox_t*)(eden->user_data);
     eden_assets_init_from_file(eden, SANDBOX_ASSET_FILE, &sandbox->arena);
+    
+    eden_set_design_dimensions(eden, 1600, 900);
+    eden_set_view(eden, 0.f, 1600.f, 0.f, 900.f, 0.f, 0.f);
+    eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
   }
 
-  sandbox_update_and_render_font_alignment_test(eden);
+  eden_clear_canvas(eden, rgba_set(0.25f, 0.25f, 0.25f, 0.0f));
+  eden_advance_depth(eden);
+  eden_draw_tri(eden, {500.f, 500.f}, {100.f, 100.f}, {200.f, 100.f}, RGBA_WHITE);
+  eden_draw_tri(eden, {400.f, 400.f}, {300.f, 100.f}, {200.f, 100.f}, RGBA_RED);
+  eden_draw_tri(eden, {400.f, 400.f}, {300.f, 100.f}, {200.f, 100.f}, RGBA_RED);
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600/2,0), 72.f, v2f_set(0.5f,0));
+  eden_advance_depth(eden);
+  eden_draw_rect(eden, { 500.f, 500.f }, f32_deg_to_rad(45.f), {200.f, 200.f}, RGBA_WHITE);
+  eden_draw_rect(eden, { 500.f, 200.f }, 0.f, {200.f, 200.f}, RGBA_GREEN);
+  eden_draw_rect(eden, { 1000.f, 500.f }, 0.f, {50.f, 50.f}, RGBA_RED);
+  eden_advance_depth(eden);
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600/2,900.f/2), 72.f, v2f_set(0.5f,0.5f));
+  //sandbox_update_and_render_font_alignment_test(eden);
 
 
 }
