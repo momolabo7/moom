@@ -106,6 +106,7 @@ eden_update_and_render_sig(eden_update_and_render) {
   eden_draw_tri(eden, {500.f, 500.f}, {100.f, 100.f}, {200.f, 100.f}, RGBA_WHITE);
   eden_draw_tri(eden, {400.f, 400.f}, {300.f, 100.f}, {200.f, 100.f}, RGBA_RED);
   eden_draw_tri(eden, {400.f, 400.f}, {300.f, 100.f}, {200.f, 100.f}, RGBA_RED);
+  eden_draw_rect(eden, { 500.f, 500.f }, f32_deg_to_rad(45.f), {200.f, 200.f}, RGBA_WHITE);
   eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600/2,0), 72.f, v2f_set(0.5f,0));
   eden_advance_depth(eden);
   eden_draw_rect(eden, { 500.f, 500.f }, f32_deg_to_rad(45.f), {200.f, 200.f}, RGBA_WHITE);

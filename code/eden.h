@@ -598,6 +598,7 @@ struct hell_gfx_opengl_batch_t
   usz_t vertex_index_ope;
 
   hell_gfx_opengl_draw_mode_t draw_mode; 
+  GLuint uniform_mvp_location;
 };
 
 
@@ -1660,6 +1661,104 @@ void main() \n\
 }"
 
 
+static b32_t 
+hell_gfx_opengl_batch_init(hell_gfx_opengl_t* ogl, arena_t* arena)
+{
+  hell_gfx_opengl_batch_t* batch = &ogl->batch;
+  batch->element_count = 8000;
+
+  // one element has 4 vertices, uvs, and colors (one for each vertex)
+  batch->vertex_count = batch->element_count*4; 
+  batch->vertices = arena_push_arr(v3f_t, arena, batch->vertex_count); 
+  batch->colors = arena_push_arr(rgba_t, arena, batch->vertex_count); 
+  batch->uvs = arena_push_arr(v2f_t, arena, batch->vertex_count); 
+
+  // one element has 6 indices
+  batch->index_count = batch->element_count*6;
+  batch->indices = arena_push_arr(u32_t, arena, batch->index_count); 
+
+  if (!batch->vertices || !batch->colors || !batch->uvs || !batch->indices) 
+  {
+    return false;
+  }
+
+  // @note: can directly initialize indices here
+  for (usz_t element_index = 0;
+      element_index < batch->element_count; 
+      ++element_index)
+  {
+    usz_t index_index = element_index*6;
+    batch->indices[index_index+0] = 4*element_index+0;  
+    batch->indices[index_index+1] = 4*element_index+1;
+    batch->indices[index_index+2] = 4*element_index+2;
+    batch->indices[index_index+3] = 4*element_index+0;
+    batch->indices[index_index+4] = 4*element_index+2;
+    batch->indices[index_index+5] = 4*element_index+3;
+  }
+
+  ogl->glGenVertexArrays(1, &batch->vao);
+  ogl->glBindVertexArray(batch->vao);
+
+  // @todo: there should be a better way to store the attribute location than using a enum
+  // I think we can load the shaders to find the attribute location first...?
+
+  // buffer for vertices (shader location = 0)
+  ogl->glGenBuffers(1, &batch->vbo_vertices); 
+  ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_vertices);
+  ogl->glBufferData(GL_ARRAY_BUFFER, batch->vertex_count*sizeof(dref(batch->vertices)), batch->vertices, GL_DYNAMIC_DRAW);
+  ogl->glVertexAttribPointer(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES, 3, GL_FLOAT, GL_FALSE, sizeof(v3f_t), 0);
+  ogl->glEnableVertexAttribArray(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES); // @todo: 0 should be enum
+
+  // buffer for UVs (shader-location = 1)
+  ogl->glGenBuffers(1, &batch->vbo_uvs);
+  ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_uvs);
+  ogl->glBufferData(GL_ARRAY_BUFFER, batch->vertex_count*sizeof(dref(batch->uvs)), batch->uvs, GL_DYNAMIC_DRAW);
+  ogl->glVertexAttribPointer(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_UVS, 2, GL_FLOAT, GL_FALSE, sizeof(v2f_t), 0);
+  ogl->glEnableVertexAttribArray(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_UVS);
+
+  // buffer for colors (shader-location = 2)
+  ogl->glGenBuffers(1, &batch->vbo_colors);
+  ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_colors);
+  ogl->glBufferData(GL_ARRAY_BUFFER, batch->vertex_count*sizeof(dref(batch->colors)), batch->colors, GL_DYNAMIC_DRAW);
+  ogl->glVertexAttribPointer(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS, 4, GL_FLOAT, GL_FALSE, sizeof(rgba_t), 0);
+  ogl->glEnableVertexAttribArray(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS);
+
+  // buffer for indices 
+  ogl->glGenBuffers(1, &batch->vbo_indices);
+  ogl->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch->vbo_indices);
+  ogl->glBufferData(GL_ELEMENT_ARRAY_BUFFER, batch->index_count*sizeof(dref(batch->indices)), batch->indices, GL_STATIC_DRAW);
+
+  ogl->glBindBuffer(GL_ARRAY_BUFFER, 0);
+  ogl->glBindVertexArray(0);
+
+  // shader
+  batch->shader = ogl->glCreateProgram();
+  hell_gfx_opengl_attach_shader(
+      ogl,
+      batch->shader, 
+      GL_VERTEX_SHADER, 
+      (char*)HELL_GFX_OPENGL_TEST_VSHADER);
+  hell_gfx_opengl_attach_shader(
+      ogl,
+      batch->shader, 
+      GL_FRAGMENT_SHADER, 
+      (char*)HELL_GFX_OPENGL_TEST_FSHADER);
+
+  ogl->glLinkProgram(batch->shader);
+
+  GLint Result;
+  ogl->glGetProgramiv(batch->shader, GL_LINK_STATUS, &Result);
+  if (Result != GL_TRUE) {
+    char msg[kilobytes(1)];
+    ogl->glGetProgramInfoLog(batch->shader, sizeof(msg), nullptr, msg);
+    return false;
+  }
+  batch->uniform_mvp_location = ogl->glGetUniformLocation(
+      batch->shader,
+      "uni_mvp");
+  return true;
+}
+
 static b32_t
 hell_gfx_opengl_init(
     hell_gfx_t* gfx,
@@ -1692,102 +1791,9 @@ hell_gfx_opengl_init(
 
 
   // init batch
-  {
-    hell_gfx_opengl_batch_t* batch = &ogl->batch;
-    batch->element_count = 8000;
-
-    // one element has 4 vertices, uvs, and colors (one for each vertex)
-    batch->vertex_count = batch->element_count*4; 
-    batch->vertices = arena_push_arr(v3f_t, arena, batch->vertex_count); 
-    batch->colors = arena_push_arr(rgba_t, arena, batch->vertex_count); 
-    batch->uvs = arena_push_arr(v2f_t, arena, batch->vertex_count); 
-
-    // one element has 6 indices
-    batch->index_count = batch->element_count*6;
-    batch->indices = arena_push_arr(u32_t, arena, batch->index_count); 
-
-    if (!batch->vertices || !batch->colors || !batch->uvs || !batch->indices) 
-    {
-      return false;
-    }
-
-    // @note: can directly initialize indices here
-    for (usz_t element_index = 0;
-        element_index < batch->element_count; 
-        ++element_index)
-    {
-      usz_t index_index = element_index*6;
-      batch->indices[index_index+0] = 4*element_index+0;  
-      batch->indices[index_index+1] = 4*element_index+1;
-      batch->indices[index_index+2] = 4*element_index+2;
-      batch->indices[index_index+3] = 4*element_index+0;
-      batch->indices[index_index+4] = 4*element_index+2;
-      batch->indices[index_index+5] = 4*element_index+3;
-    }
-
-    ogl->glGenVertexArrays(1, &batch->vao);
-    ogl->glBindVertexArray(batch->vao);
-
-    // @todo: there should be a better way to store the attribute location than using a enum
-    // I think we can load the shaders to find the attribute location first...?
-    
-    // buffer for vertices (shader location = 0)
-    ogl->glGenBuffers(1, &batch->vbo_vertices); 
-    ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_vertices);
-    ogl->glBufferData(GL_ARRAY_BUFFER, batch->vertex_count*sizeof(dref(batch->vertices)), batch->vertices, GL_DYNAMIC_DRAW);
-    ogl->glVertexAttribPointer(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES, 3, GL_FLOAT, GL_FALSE, sizeof(v3f_t), 0);
-    ogl->glEnableVertexAttribArray(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES); // @todo: 0 should be enum
-
-    // buffer for UVs (shader-location = 1)
-    ogl->glGenBuffers(1, &batch->vbo_uvs);
-    ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_uvs);
-    ogl->glBufferData(GL_ARRAY_BUFFER, batch->vertex_count*sizeof(dref(batch->uvs)), batch->uvs, GL_DYNAMIC_DRAW);
-    ogl->glVertexAttribPointer(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_UVS, 2, GL_FLOAT, GL_FALSE, sizeof(v2f_t), 0);
-    ogl->glEnableVertexAttribArray(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_UVS);
-
-    // buffer for colors (shader-location = 2)
-    ogl->glGenBuffers(1, &batch->vbo_colors);
-    ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_colors);
-    ogl->glBufferData(GL_ARRAY_BUFFER, batch->vertex_count*sizeof(dref(batch->colors)), batch->colors, GL_DYNAMIC_DRAW);
-    ogl->glVertexAttribPointer(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS, 4, GL_FLOAT, GL_FALSE, sizeof(rgba_t), 0);
-    ogl->glEnableVertexAttribArray(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS);
-
-    // buffer for indices 
-    ogl->glGenBuffers(1, &batch->vbo_indices);
-    ogl->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch->vbo_indices);
-    ogl->glBufferData(GL_ELEMENT_ARRAY_BUFFER, batch->index_count*sizeof(dref(batch->indices)), batch->indices, GL_STATIC_DRAW);
-
-    ogl->glBindBuffer(GL_ARRAY_BUFFER, 0);
-    ogl->glBindVertexArray(0);
-
-    // shader
-    batch->shader = ogl->glCreateProgram();
-    hell_gfx_opengl_attach_shader(
-        ogl,
-        batch->shader, 
-        GL_VERTEX_SHADER, 
-        (char*)HELL_GFX_OPENGL_TEST_VSHADER);
-    hell_gfx_opengl_attach_shader(
-        ogl,
-        batch->shader, 
-        GL_FRAGMENT_SHADER, 
-        (char*)HELL_GFX_OPENGL_TEST_FSHADER);
-
-    ogl->glLinkProgram(batch->shader);
-
-    GLint Result;
-    ogl->glGetProgramiv(batch->shader, GL_LINK_STATUS, &Result);
-    if (Result != GL_TRUE) {
-      char msg[kilobytes(1)];
-      ogl->glGetProgramInfoLog(batch->shader, sizeof(msg), nullptr, msg);
-      return false;
-    }
-
-
-  }
-
   hell_gfx_opengl_add_predefined_textures(ogl);
   hell_gfx_opengl_delete_all_textures(ogl);
+  hell_gfx_opengl_batch_init(ogl, arena);
 
   return true;
 }
@@ -1842,6 +1848,7 @@ hell_gfx_opengl_set_blend_mode(
   GLenum dst_e = hell_gfx_opengl_get_blend_mode_from_blend_type(dst);
   ogl->glBlendFunc(src_e, dst_e);
 }
+
 
 static void
 hell_gfx_opengl_process_texture_queue(hell_gfx_t* gfx) {
@@ -1970,8 +1977,7 @@ hell_gfx_opengl_flush_batch(hell_gfx_opengl_t* ogl)
         GL_TEXTURE_MAG_FILTER, 
         GL_NEAREST);
 
-    // @todo: please use enum tolong
-    if (batch->draw_mode == HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES)
+    if (batch->draw_mode == HELL_GFX_OPENGL_DRAW_MODE_QUADS)
     {
       // quad drawing mode
       
@@ -1982,7 +1988,7 @@ hell_gfx_opengl_flush_batch(hell_gfx_opengl_t* ogl)
       usz_t index_offset = batch->vertex_index_start/4*6;
       ogl->glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, (GLvoid*)(index_offset*sizeof(dref(batch->indices))));
     }
-    else // HELL_GFX_OPENGL_DRAW_MODE_QUADS
+    else // HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES
     {
       // triangle drawing mode
       ogl->glDrawArrays(GL_TRIANGLES, batch->vertex_index_start, vertices_to_draw);
@@ -2003,6 +2009,108 @@ hell_gfx_opengl_flush_batch(hell_gfx_opengl_t* ogl)
     batch->vertex_index_start = batch->vertex_index_ope;
   }
 }
+static void
+hell_gfx_opengl_batch_begin(hell_gfx_opengl_t* ogl) 
+{
+  hell_gfx_opengl_batch_t* batch = &ogl->batch;
+  batch->current_texture = 0;
+  batch->vertex_index_start = 0;
+  batch->vertex_index_ope = 0;
+  batch->draw_mode = HELL_GFX_OPENGL_DRAW_MODE_QUADS;
+}
+
+static void
+hell_gfx_opengl_batch_update_and_flush_if_required(
+    hell_gfx_opengl_t* ogl,
+    hell_gfx_opengl_draw_mode_t incoming_draw_mode,
+    GLuint incoming_texture)
+{
+  hell_gfx_opengl_batch_t* batch = &ogl->batch;
+  if (batch->draw_mode != incoming_draw_mode || batch->current_texture != ogl->blank_texture.handle)
+  {
+    hell_gfx_opengl_flush_batch(ogl);
+  }
+  batch->draw_mode = incoming_draw_mode;
+  batch->current_texture = ogl->blank_texture.handle;
+}
+
+
+static void
+hell_gfx_opengl_batch_push_triangle(
+    hell_gfx_opengl_t* ogl,
+    v3f_t p0, v3f_t p1, v3f_t p2,
+    v2f_t uv0, v2f_t uv1, v2f_t uv2,
+    rgba_t c0, rgba_t c1, rgba_t c2,
+    GLuint texture)
+{
+  hell_gfx_opengl_batch_t* batch = &ogl->batch;
+  hell_gfx_opengl_batch_update_and_flush_if_required(ogl, HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES, texture);
+
+  batch->vertices[batch->vertex_index_ope+0] = p0;
+  batch->vertices[batch->vertex_index_ope+1] = p1;
+  batch->vertices[batch->vertex_index_ope+2] = p2;
+
+  batch->uvs[batch->vertex_index_ope+0] = uv0;
+  batch->uvs[batch->vertex_index_ope+1] = uv1;
+  batch->uvs[batch->vertex_index_ope+2] = uv2;
+
+  batch->colors[batch->vertex_index_ope+0] = c0; 
+  batch->colors[batch->vertex_index_ope+1] = c1; 
+  batch->colors[batch->vertex_index_ope+2] = c2; 
+
+  batch->vertex_index_ope += 3;
+}
+
+
+static void
+hell_gfx_opengl_batch_push_quad(
+    hell_gfx_opengl_t* ogl,
+    v3f_t p0, v3f_t p1, v3f_t p2, v3f_t p3,
+    v2f_t uv0, v2f_t uv1, v2f_t uv2, v2f_t uv3,
+    rgba_t c0, rgba_t c1, rgba_t c2, rgba_t c3,
+    GLuint texture)
+{
+  hell_gfx_opengl_batch_t* batch = &ogl->batch;
+  hell_gfx_opengl_batch_update_and_flush_if_required(ogl, HELL_GFX_OPENGL_DRAW_MODE_QUADS, texture);
+
+  batch->vertices[batch->vertex_index_ope+0] = p0;
+  batch->vertices[batch->vertex_index_ope+1] = p1;
+  batch->vertices[batch->vertex_index_ope+2] = p2;
+  batch->vertices[batch->vertex_index_ope+3] = p3;
+
+  batch->uvs[batch->vertex_index_ope+0] = uv0;
+  batch->uvs[batch->vertex_index_ope+1] = uv1;
+  batch->uvs[batch->vertex_index_ope+2] = uv2;
+  batch->uvs[batch->vertex_index_ope+3] = uv3;
+
+  batch->colors[batch->vertex_index_ope+0] = c0;
+  batch->colors[batch->vertex_index_ope+1] = c1;
+  batch->colors[batch->vertex_index_ope+2] = c2;
+  batch->colors[batch->vertex_index_ope+3] = c3;
+
+  batch->vertex_index_ope += 4;
+}
+
+static void
+hell_gfx_opengl_batch_push_mvp(hell_gfx_opengl_t* ogl, m44f_t mvp) 
+{
+  hell_gfx_opengl_flush_batch(ogl);
+  hell_gfx_opengl_batch_t* batch = &ogl->batch;
+
+  ogl->glProgramUniformMatrix4fv(
+      batch->shader, 
+      batch->uniform_mvp_location, 
+      1, 
+      GL_FALSE, 
+      (const GLfloat*)&mvp);
+}
+
+
+static void
+hell_gfx_opengl_batch_end(hell_gfx_opengl_t* ogl)
+{
+  hell_gfx_opengl_flush_batch(ogl);
+}
 
 
 // Only call opengl functions when we end frame
@@ -2013,13 +2121,7 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
   hell_gfx_opengl_align_viewport(ogl);
   hell_gfx_opengl_process_texture_queue(gfx);
 
-  hell_gfx_opengl_batch_t* batch = &ogl->batch;
-
-  // initialize the batch
-  batch->current_texture = 0;
-  batch->vertex_index_start = 0;
-  batch->vertex_index_ope = 0;
-  batch->draw_mode = HELL_GFX_OPENGL_DRAW_MODE_QUADS;
+  hell_gfx_opengl_batch_begin(ogl);
 
   for (u32_t cmd_index = 0; 
        cmd_index < gfx->command_queue.entry_count; 
@@ -2028,32 +2130,19 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
     hell_gfx_command_t* entry = hell_gfx_get_command(gfx, cmd_index);
     switch(entry->id) {
       case HELL_GFX_COMMAND_TYPE_VIEW: {
-        hell_gfx_opengl_flush_batch(ogl);
-
         auto* data = (hell_gfx_command_view_t*)entry->data;
-        f32_t depth = (f32_t)(ogl->current_layer + 1);
-
-        // 
+        f32_t depth = (f32_t)(ogl->current_layer + 1); //@todo: i think this calculation is wrong?
         m44f_t p = m44f_orthographic(
             data->min_x, data->max_x,
             data->max_y, data->min_y,  // @note: we flip this cus our y-axis in eden points down
             0.f, depth);
         m44f_t v = m44f_translation(-data->pos_x, -data->pos_y);
         m44f_t result = m44f_transpose(p*v);
-        GLint uProjectionLoc = ogl->glGetUniformLocation(
-            batch->shader,
-            "uni_mvp");
 
-        ogl->glProgramUniformMatrix4fv(
-            batch->shader, 
-            uProjectionLoc, 
-            1, 
-            GL_FALSE, 
-            (const GLfloat*)&result);
+        hell_gfx_opengl_batch_push_mvp(ogl, result);
       } break;
       case HELL_GFX_COMMAND_TYPE_CLEAR: {
         auto* data = (hell_gfx_command_clear_t*)entry->data;
-
         ogl->glClearColor(
             data->colors.r, 
             data->colors.g, 
@@ -2065,51 +2154,23 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
 
       case HELL_GFX_COMMAND_TYPE_TRIANGLE: {
         hell_gfx_command_triangle_t* data = (hell_gfx_command_triangle_t*)entry->data;
-        // @todo: momo the possibility to flushing the toilet twice is wasting water!!
-        // water bills will be angri
-        // and we will start living from paycheck to paycheck :<
-        if (batch->draw_mode != HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES)
-        {
-          hell_gfx_opengl_flush_batch(ogl);
-          batch->draw_mode = HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES;
-        }
-
-        if (batch->current_texture != ogl->blank_texture.handle) 
-        {
-          hell_gfx_opengl_flush_batch(ogl);
-          batch->current_texture = ogl->blank_texture.handle;
-        }
-
-        batch->vertices[batch->vertex_index_ope+0] = v3f_set(data->p0.x, data->p0.y, ogl->current_layer);
-        batch->vertices[batch->vertex_index_ope+1] = v3f_set(data->p1.x, data->p1.y, ogl->current_layer);
-        batch->vertices[batch->vertex_index_ope+2] = v3f_set(data->p2.x, data->p2.y, ogl->current_layer);
-
-        batch->uvs[batch->vertex_index_ope+0] = { 0.f, 0.f };
-        batch->uvs[batch->vertex_index_ope+1] = { 1.f, 0.f };
-
-        batch->colors[batch->vertex_index_ope+0] = data->colors;
-        batch->colors[batch->vertex_index_ope+1] = data->colors;
-        batch->colors[batch->vertex_index_ope+2] = data->colors;
-
-        batch->vertex_index_ope += 3;
+        hell_gfx_opengl_batch_push_triangle(
+            ogl,
+            v3f_set(data->p0.x, data->p0.y, ogl->current_layer),
+            v3f_set(data->p1.x, data->p1.y, ogl->current_layer),
+            v3f_set(data->p2.x, data->p2.y, ogl->current_layer),
+            v2f_set(0.f, 0.f),
+            v2f_set(1.f, 0.f),
+            v2f_set(1.f, 1.f), // doesn't matter?
+            data->colors,
+            data->colors,
+            data->colors,
+            ogl->blank_texture.handle);
 
       } break;
       case HELL_GFX_COMMAND_TYPE_RECT: 
       {
         hell_gfx_command_rect_t* data = (hell_gfx_command_rect_t*)entry->data;
-        hell_gfx_opengl_batch_t* batch = &ogl->batch;
-
-        if (batch->draw_mode != HELL_GFX_OPENGL_DRAW_MODE_QUADS)
-        {
-          hell_gfx_opengl_flush_batch(ogl);
-          batch->draw_mode = HELL_GFX_OPENGL_DRAW_MODE_QUADS;
-        }
-
-        if (batch->current_texture != ogl->blank_texture.handle) 
-        {
-          hell_gfx_opengl_flush_batch(ogl);
-          batch->current_texture = ogl->blank_texture.handle;
-        }
 
         m44f_t transform;
         {
@@ -2130,22 +2191,22 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
         vertices[2] = transform * v4f_set(+0.5f, +0.5f, 0, 1);
         vertices[3] = transform * v4f_set(-0.5f, +0.5f, 0, 1);
 
-        batch->vertices[batch->vertex_index_ope+0] = vertices[0].xyz;
-        batch->vertices[batch->vertex_index_ope+1] = vertices[1].xyz;
-        batch->vertices[batch->vertex_index_ope+2] = vertices[2].xyz;
-        batch->vertices[batch->vertex_index_ope+3] = vertices[3].xyz;
+        hell_gfx_opengl_batch_push_quad(
+            ogl,
+            vertices[0].xyz,
+            vertices[1].xyz,
+            vertices[2].xyz,
+            vertices[3].xyz,
+            v2f_set(0.f, 0.f),
+            v2f_set(1.f, 0.f),
+            v2f_set(1.f, 1.f),
+            v2f_set(0.f, 1.f),
+            data->colors,
+            data->colors,
+            data->colors,
+            data->colors,
+            ogl->blank_texture.handle);
 
-        batch->uvs[batch->vertex_index_ope+0] = { 0.f, 0.f };
-        batch->uvs[batch->vertex_index_ope+1] = { 1.f, 0.f };
-        batch->uvs[batch->vertex_index_ope+2] = { 1.f, 1.f };
-        batch->uvs[batch->vertex_index_ope+3] = { 0.f, 1.f };
-
-        batch->colors[batch->vertex_index_ope+0] = data->colors;
-        batch->colors[batch->vertex_index_ope+1] = data->colors;
-        batch->colors[batch->vertex_index_ope+2] = data->colors;
-        batch->colors[batch->vertex_index_ope+3] = data->colors;
-
-        batch->vertex_index_ope += 4;
       } break;
 
       case HELL_GFX_COMMAND_TYPE_SPRITE: {
@@ -2236,8 +2297,7 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
       } break;
     }
   }
-  hell_gfx_opengl_flush_batch(ogl);
-
+  hell_gfx_opengl_batch_end(ogl);
 }
 #endif
 

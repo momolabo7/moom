@@ -3168,12 +3168,17 @@ hell_gfx_opengl_attach_shader	eden.h	/^hell_gfx_opengl_attach_shader($/;"	f	lang
 HELL_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS	code/eden.h	/^  HELL_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS,$/;"	e	language:C++	enum:__anon0a42ec610603
 HELL_GFX_OPENGL_BATCH_ATTRIBUTE_UVS	code/eden.h	/^  HELL_GFX_OPENGL_BATCH_ATTRIBUTE_UVS,$/;"	e	language:C++	enum:__anon0a42ec610603
 HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES	code/eden.h	/^  HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES,$/;"	e	language:C++	enum:__anon0a42ec610603
+hell_gfx_opengl_batch_begin	code/eden.h	/^hell_gfx_opengl_batch_begin(hell_gfx_opengl_t* ogl) $/;"	f	language:C++	typeref:typename:void
+hell_gfx_opengl_batch_end	code/eden.h	/^hell_gfx_opengl_batch_end(hell_gfx_opengl_t* ogl)$/;"	f	language:C++	typeref:typename:void
+hell_gfx_opengl_batch_init	code/eden.h	/^hell_gfx_opengl_batch_init(hell_gfx_opengl_t* ogl, arena_t* arena)$/;"	f	language:C++	typeref:typename:b32_t
+hell_gfx_opengl_batch_push_mvp	code/eden.h	/^hell_gfx_opengl_batch_push_mvp(hell_gfx_opengl_t* ogl, m44f_t mvp) $/;"	f	language:C++	typeref:typename:void
+hell_gfx_opengl_batch_push_quad	code/eden.h	/^hell_gfx_opengl_batch_push_quad($/;"	f	language:C++	typeref:typename:void
+hell_gfx_opengl_batch_push_triangle	code/eden.h	/^hell_gfx_opengl_batch_push_triangle($/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_batch_t	code/eden.h	/^struct hell_gfx_opengl_batch_t $/;"	s	language:C++
+hell_gfx_opengl_batch_update_and_flush_if_required	code/eden.h	/^hell_gfx_opengl_batch_update_and_flush_if_required($/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_begin_frame	code/eden.h	/^hell_gfx_opengl_begin_frame($/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_begin_frame	eden.h	/^hell_gfx_opengl_begin_frame($/;"	f	language:C++	typeref:typename:void
-hell_gfx_opengl_begin_sprites	code/eden.h	/^hell_gfx_opengl_begin_sprites(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_begin_sprites	eden.h	/^hell_gfx_opengl_begin_sprites(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
-hell_gfx_opengl_begin_triangles	code/eden.h	/^hell_gfx_opengl_begin_triangles(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_begin_triangles	eden.h	/^hell_gfx_opengl_begin_triangles(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_delete_all_textures	code/eden.h	/^hell_gfx_opengl_delete_all_textures(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_delete_all_textures	eden.h	/^hell_gfx_opengl_delete_all_textures(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
@@ -3184,14 +3189,10 @@ hell_gfx_opengl_draw_mode_t	code/eden.h	/^enum hell_gfx_opengl_draw_mode_t$/;"	g
 HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES	code/eden.h	/^  HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES,$/;"	e	language:C++	enum:hell_gfx_opengl_draw_mode_t
 hell_gfx_opengl_end_frame	code/eden.h	/^hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_end_frame	eden.h	/^hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {$/;"	f	language:C++	typeref:typename:void
-hell_gfx_opengl_end_sprites	code/eden.h	/^hell_gfx_opengl_end_sprites(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_end_sprites	eden.h	/^hell_gfx_opengl_end_sprites(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
-hell_gfx_opengl_end_triangles	code/eden.h	/^hell_gfx_opengl_end_triangles(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_end_triangles	eden.h	/^hell_gfx_opengl_end_triangles(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_flush_batch	code/eden.h	/^hell_gfx_opengl_flush_batch(hell_gfx_opengl_t* ogl) $/;"	f	language:C++	typeref:typename:void
-hell_gfx_opengl_flush_sprites	code/eden.h	/^hell_gfx_opengl_flush_sprites(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_flush_sprites	eden.h	/^hell_gfx_opengl_flush_sprites(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
-hell_gfx_opengl_flush_triangles	code/eden.h	/^hell_gfx_opengl_flush_triangles(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_flush_triangles	eden.h	/^hell_gfx_opengl_flush_triangles(hell_gfx_opengl_t* ogl) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_get_blend_mode_from_blend_type	code/eden.h	/^hell_gfx_opengl_get_blend_mode_from_blend_type(hell_gfx_blend_type_t type) {$/;"	f	language:C++	typeref:typename:GLenum
 hell_gfx_opengl_get_blend_mode_from_blend_type	eden.h	/^hell_gfx_opengl_get_blend_mode_from_blend_type(hell_gfx_blend_type_t type) {$/;"	f	language:C++	typeref:typename:GLenum
@@ -3298,15 +3299,11 @@ hell_gfx_opengl_glViewport	code/eden.h	/^typedef void    hell_gfx_opengl_glViewp
 hell_gfx_opengl_glViewport	eden.h	/^typedef void    hell_gfx_opengl_glViewport(GLint x, GLint y, GLsizei width, GLsizei height);$/;"	t	language:C++	typeref:typename:void ()(GLint x,GLint y,GLsizei width,GLsizei height)
 hell_gfx_opengl_init	code/eden.h	/^hell_gfx_opengl_init($/;"	f	language:C++	typeref:typename:b32_t
 hell_gfx_opengl_init	eden.h	/^hell_gfx_opengl_init($/;"	f	language:C++	typeref:typename:b32_t
-hell_gfx_opengl_init_sprite_batch	code/eden.h	/^hell_gfx_opengl_init_sprite_batch(hell_gfx_opengl_t* ogl, usz_t max_sprites) {$/;"	f	language:C++	typeref:typename:b32_t
 hell_gfx_opengl_init_sprite_batch	eden.h	/^hell_gfx_opengl_init_sprite_batch(hell_gfx_opengl_t* ogl, usz_t max_sprites) {$/;"	f	language:C++	typeref:typename:b32_t
-hell_gfx_opengl_init_triangle_batch	code/eden.h	/^hell_gfx_opengl_init_triangle_batch(hell_gfx_opengl_t* ogl, usz_t max_triangles) $/;"	f	language:C++	typeref:typename:b32_t
 hell_gfx_opengl_init_triangle_batch	eden.h	/^hell_gfx_opengl_init_triangle_batch(hell_gfx_opengl_t* ogl, usz_t max_triangles) {$/;"	f	language:C++	typeref:typename:b32_t
 hell_gfx_opengl_process_texture_queue	code/eden.h	/^hell_gfx_opengl_process_texture_queue(hell_gfx_t* gfx) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_process_texture_queue	eden.h	/^hell_gfx_opengl_process_texture_queue(hell_gfx_t* gfx) {$/;"	f	language:C++	typeref:typename:void
-hell_gfx_opengl_push_sprite	code/eden.h	/^hell_gfx_opengl_push_sprite($/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_push_sprite	eden.h	/^hell_gfx_opengl_push_sprite($/;"	f	language:C++	typeref:typename:void
-hell_gfx_opengl_push_triangle	code/eden.h	/^hell_gfx_opengl_push_triangle($/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_push_triangle	eden.h	/^hell_gfx_opengl_push_triangle($/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_set_blend_mode	code/eden.h	/^hell_gfx_opengl_set_blend_mode($/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_set_blend_mode	eden.h	/^hell_gfx_opengl_set_blend_mode($/;"	f	language:C++	typeref:typename:void
@@ -3314,7 +3311,6 @@ hell_gfx_opengl_set_texture	code/eden.h	/^hell_gfx_opengl_set_texture($/;"	f	lan
 hell_gfx_opengl_set_texture	eden.h	/^hell_gfx_opengl_set_texture($/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_sprite_batch_t	code/eden.h	/^struct hell_gfx_opengl_sprite_batch_t{$/;"	s	language:C++
 hell_gfx_opengl_sprite_batch_t	eden.h	/^struct hell_gfx_opengl_sprite_batch_t{$/;"	s	language:C++
-HELL_GFX_OPENGL_SPRITE_FSHADER	code/eden.h	/^#define HELL_GFX_OPENGL_SPRITE_FSHADER /;"	d	language:C++
 HELL_GFX_OPENGL_SPRITE_FSHADER	eden.h	/^#define HELL_GFX_OPENGL_SPRITE_FSHADER /;"	d	language:C++
 HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:__anon0a42ec610203
 HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS	eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:__anonfac2db370203
@@ -3350,7 +3346,6 @@ HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3	code/eden.h	/^  HELL_GF
 HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3	eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, \/\/ 11$/;"	e	language:C++	enum:__anonfac2db370103
 HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4	code/eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  \/\/ 12$/;"	e	language:C++	enum:__anon0a42ec610103
 HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4	eden.h	/^  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  \/\/ 12$/;"	e	language:C++	enum:__anonfac2db370103
-HELL_GFX_OPENGL_SPRITE_VSHADER	code/eden.h	/^#define HELL_GFX_OPENGL_SPRITE_VSHADER /;"	d	language:C++
 HELL_GFX_OPENGL_SPRITE_VSHADER	eden.h	/^#define HELL_GFX_OPENGL_SPRITE_VSHADER /;"	d	language:C++
 hell_gfx_opengl_t	code/eden.h	/^struct hell_gfx_opengl_t $/;"	s	language:C++
 hell_gfx_opengl_t	eden.h	/^struct hell_gfx_opengl_t {$/;"	s	language:C++
@@ -3362,7 +3357,6 @@ hell_gfx_opengl_texture_t	code/eden.h	/^struct hell_gfx_opengl_texture_t {$/;"	s
 hell_gfx_opengl_texture_t	eden.h	/^struct hell_gfx_opengl_texture_t {$/;"	s	language:C++
 hell_gfx_opengl_triangle_batch_t	code/eden.h	/^struct hell_gfx_opengl_triangle_batch_t{$/;"	s	language:C++
 hell_gfx_opengl_triangle_batch_t	eden.h	/^struct hell_gfx_opengl_triangle_batch_t{$/;"	s	language:C++
-HELL_GFX_OPENGL_TRIANGLE_FSHADER	code/eden.h	/^#define HELL_GFX_OPENGL_TRIANGLE_FSHADER /;"	d	language:C++
 HELL_GFX_OPENGL_TRIANGLE_FSHADER	eden.h	/^#define HELL_GFX_OPENGL_TRIANGLE_FSHADER /;"	d	language:C++
 HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:__anon0a42ec610403
 HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS	eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS,$/;"	e	language:C++	enum:__anonfac2db370403
@@ -3396,7 +3390,6 @@ HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL	code/eden.h	/^  HELL_GFX_OPENG
 HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL	eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL,$/;"	e	language:C++	enum:__anonfac2db370503
 HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM	code/eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM,$/;"	e	language:C++	enum:__anon0a42ec610503
 HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM	eden.h	/^  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM,$/;"	e	language:C++	enum:__anonfac2db370503
-HELL_GFX_OPENGL_TRIANGLE_VSHADER	code/eden.h	/^#define HELL_GFX_OPENGL_TRIANGLE_VSHADER /;"	d	language:C++
 HELL_GFX_OPENGL_TRIANGLE_VSHADER	eden.h	/^#define HELL_GFX_OPENGL_TRIANGLE_VSHADER /;"	d	language:C++
 hell_gfx_opengl_uv_t	code/eden.h	/^struct hell_gfx_opengl_uv_t {$/;"	s	language:C++
 hell_gfx_opengl_uv_t	eden.h	/^struct hell_gfx_opengl_uv_t {$/;"	s	language:C++
@@ -5789,6 +5782,7 @@ umi_to_ptr	momo.h	/^static u8_t* umi_to_ptr(umi_t u);$/;"	p	language:C++	typeref
 umi_to_ptr	momo.h	/^umi_to_ptr(umi_t u) { $/;"	f	language:C++	typeref:typename:u8_t *
 unfiltered_image_stream	code/momo.h	/^  stream_t unfiltered_image_stream; \/\/ for filtering and deflating$/;"	m	language:C++	struct:_png_context_t	typeref:typename:stream_t
 unfiltered_image_stream	momo.h	/^  stream_t unfiltered_image_stream; \/\/ for filtering and deflating$/;"	m	language:C++	struct:_png_context_t	typeref:typename:stream_t
+uniform_mvp_location	code/eden.h	/^  GLuint uniform_mvp_location;$/;"	m	language:C++	struct:hell_gfx_opengl_batch_t	typeref:typename:GLuint
 unlocked_levels	app_lit.cpp	/^  u32_t unlocked_levels;$/;"	m	language:C++	struct:lit_save_data_t	typeref:typename:u32_t	file:
 unlocked_levels	code/app_lit.cpp	/^  u32_t unlocked_levels;$/;"	m	language:C++	struct:lit_save_data_t	typeref:typename:u32_t	file:
 unlock_cursor	code/eden.h	/^  eden_unlock_cursor_f* unlock_cursor;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_unlock_cursor_f *
