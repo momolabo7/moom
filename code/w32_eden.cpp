@@ -156,16 +156,16 @@ eden_debug_log_sig(w32_log_proc)
 //
 // Mark:(Audio)
 //
-#define w32_speaker_load_sig(name) b32_t name(hell_speaker_t* hell_speaker, u32_t samples_per_second, eden_speaker_bitrate_type_t bitrate_type, u16_t channels, u32_t latency_frames, u32_t frame_rate, u32_t max_sounds, arena_t* allocator)
+#define w32_speaker_load_sig(name) b32_t name(eden_speaker_t* eden_speaker, u32_t samples_per_second, eden_speaker_bitrate_type_t bitrate_type, u16_t channels, u32_t latency_frames, u32_t frame_rate, u32_t max_sounds, arena_t* allocator)
 static w32_speaker_load_sig(w32_speaker_load);
 
-#define w32_speaker_unload_sig(name) void name(hell_speaker_t* hell_speaker)
+#define w32_speaker_unload_sig(name) void name(eden_speaker_t* eden_speaker)
 static w32_speaker_unload_sig(w32_speaker_unload);
 
-#define w32_speaker_begin_frame_sig(name) b32_t name(hell_speaker_t* hell_speaker)
+#define w32_speaker_begin_frame_sig(name) b32_t name(eden_speaker_t* eden_speaker)
 static w32_speaker_begin_frame_sig(w32_speaker_begin_frame);
 
-#define w32_speaker_end_frame_sig(name) b32_t name(hell_speaker_t* hell_speaker)
+#define w32_speaker_end_frame_sig(name) b32_t name(eden_speaker_t* eden_speaker)
 static w32_speaker_end_frame_sig(w32_speaker_end_frame);
 
 
@@ -204,13 +204,13 @@ struct w32_wasapi_t {
 //
 // MARK:(Gfx)
 // 
-#define w32_gfx_load_sig(name) b32_t  name(hell_gfx_t* gfx, HWND window, arena_t* arena, usz_t command_queue_size, usz_t texture_queue_size, usz_t max_textures, usz_t max_payloads, usz_t max_elements)
+#define w32_gfx_load_sig(name) b32_t  name(eden_gfx_t* gfx, HWND window, arena_t* arena, usz_t command_queue_size, usz_t texture_queue_size, usz_t max_textures, usz_t max_payloads, usz_t max_elements)
 static w32_gfx_load_sig(w32_gfx_load);
 
-#define w32_gfx_begin_frame_sig(name) void name(hell_gfx_t* gfx, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1)
+#define w32_gfx_begin_frame_sig(name) void name(eden_gfx_t* gfx, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1)
 static w32_gfx_begin_frame_sig(w32_gfx_begin_frame);
 
-#define w32_gfx_end_frame_sig(name) void name(hell_gfx_t* gfx)
+#define w32_gfx_end_frame_sig(name) void name(eden_gfx_t* gfx)
 static w32_gfx_end_frame_sig(w32_gfx_end_frame);
 
 
@@ -399,7 +399,7 @@ w32_gfx_load_sig(w32_gfx_load)
     return false;
   }
 
-  auto* opengl = arena_push(hell_gfx_opengl_t, arena);
+  auto* opengl = arena_push(eden_gfx_opengl_t, arena);
   gfx->platform_data = opengl;
 
   if (!opengl) {
@@ -410,7 +410,7 @@ w32_gfx_load_sig(w32_gfx_load)
   if(wglMakeCurrent(dc, opengl_ctx)) {
     HMODULE module = LoadLibraryA("opengl32.dll");
 #define wgl_set_opengl_function(name) \
-opengl->name = (hell_gfx_opengl_##name*)_w32_try_get_wgl_function(#name, module); \
+opengl->name = (eden_gfx_opengl_##name*)_w32_try_get_wgl_function(#name, module); \
 if (!opengl->name) { return false; } 
     wgl_set_opengl_function(glEnable);
     wgl_set_opengl_function(glDisable); 
@@ -467,7 +467,7 @@ if (!opengl->name) { return false; }
   }
 #undef wgl_set_opengl_function
   
-  if (!hell_gfx_opengl_init(
+  if (!eden_gfx_opengl_init(
         gfx, 
         arena,
         command_queue_size,
@@ -502,12 +502,12 @@ if (!opengl->name) { return false; }
 static 
 w32_gfx_begin_frame_sig(w32_gfx_begin_frame)
 {
-  hell_gfx_opengl_begin_frame(gfx, render_wh, region_x0, region_y0, region_x1, region_y1);
+  eden_gfx_opengl_begin_frame(gfx, render_wh, region_x0, region_y0, region_x1, region_y1);
 }
 
 static
 w32_gfx_end_frame_sig(w32_gfx_end_frame) {
-  hell_gfx_opengl_end_frame(gfx);
+  eden_gfx_opengl_end_frame(gfx);
   SwapBuffers(wglGetCurrentDC());
 }
 #endif // EDEN_USE_OPENGL
@@ -682,7 +682,7 @@ static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t
 static 
 w32_speaker_begin_frame_sig(w32_speaker_begin_frame) 
 {
-  auto* wasapi = (w32_wasapi_t*)(hell_speaker->platform_data);
+  auto* wasapi = (w32_wasapi_t*)(eden_speaker->platform_data);
 
   HRESULT hr; 
   
@@ -728,14 +728,14 @@ w32_speaker_begin_frame_sig(w32_speaker_begin_frame)
   UINT32 samples_to_write = buf_frame_count - padding_frame_count; 
 
   // Setup for the eden layer
-  hell_speaker->sample_count = samples_to_write; 
-  hell_speaker->samples = nullptr;
-  hell_speaker->device_bits_per_sample = wasapi->bits_per_sample;
-  hell_speaker->device_channels = wasapi->channels;
-  hell_speaker->device_samples_per_second = wasapi->samples_per_second;
+  eden_speaker->sample_count = samples_to_write; 
+  eden_speaker->samples = nullptr;
+  eden_speaker->device_bits_per_sample = wasapi->bits_per_sample;
+  eden_speaker->device_channels = wasapi->channels;
+  eden_speaker->device_samples_per_second = wasapi->samples_per_second;
 
   // Get the buffer 
-  if (hell_speaker->sample_count > 0) 
+  if (eden_speaker->sample_count > 0) 
   {
     // Ask for the address of the buffer with the size of sample_count.
     // This could actually fail for a multitude of reasons so it's 
@@ -745,15 +745,15 @@ w32_speaker_begin_frame_sig(w32_speaker_begin_frame)
     // We should expect GetBuffer to fail.
     // In which we, we should do nothing, but the NEXT time it succees
     // it should continue playing the sound without breaking continuity.
-    hr = wasapi->render_client->GetBuffer(hell_speaker->sample_count, &data);
+    hr = wasapi->render_client->GetBuffer(eden_speaker->sample_count, &data);
     if (SUCCEEDED(hr)) {
-      hell_speaker->samples = data;
+      eden_speaker->samples = data;
     }
 
   }
 
 #if 0
-  w32_wasapi_t* wasapi = (w32_wasapi_t*)(hell_speaker->platform_data);
+  w32_wasapi_t* wasapi = (w32_wasapi_t*)(eden_speaker->platform_data);
 	if (wasapi->is_device_changed) {
 		//w32_log("[w32_wasapi] Resetting wasapi device\n");
 		// Attempt to change device
@@ -785,9 +785,9 @@ w32_speaker_begin_frame_sig(w32_speaker_begin_frame)
 		samples_to_write = wasapi->buf_size;
 	}
 
-  hell_speaker->sample_buffer = wasapi->buffer;
-  hell_speaker->sample_count = samples_to_write; 
-  hell_speaker->channels = wasapi->channels;
+  eden_speaker->sample_buffer = wasapi->buffer;
+  eden_speaker->sample_count = samples_to_write; 
+  eden_speaker->channels = wasapi->channels;
 #endif
 
   return true;
@@ -797,10 +797,10 @@ w32_speaker_begin_frame_sig(w32_speaker_begin_frame)
 static 
 w32_speaker_end_frame_sig(w32_speaker_end_frame) 
 {
-  auto* wasapi = (w32_wasapi_t*)(hell_speaker->platform_data);
+  auto* wasapi = (w32_wasapi_t*)(eden_speaker->platform_data);
 
-  if (hell_speaker->sample_count > 0) {
-    wasapi->render_client->ReleaseBuffer(hell_speaker->sample_count, 0);
+  if (eden_speaker->sample_count > 0) {
+    wasapi->render_client->ReleaseBuffer(eden_speaker->sample_count, 0);
   }
   
 
@@ -810,16 +810,16 @@ w32_speaker_end_frame_sig(w32_speaker_end_frame)
   // @note: Kinda assumes 16-bit Sound
   BYTE* sound_buf_data;
   HRESULT hr = IAudioRenderClient_GetBuffer(wasapi->render_client, 
-                                            (UINT32)hell_speaker->sample_count, 
+                                            (UINT32)eden_speaker->sample_count, 
                                             &sound_buf_data);
   if (FAILED(hr)) return;
 
-  s16_t* src_sample = hell_speaker->sample_buffer;
+  s16_t* src_sample = eden_speaker->sample_buffer;
   s16_t* dest_sample = (s16_t*)sound_buf_data;
   // buffer structure for stereo:
   // s16_t   s16_t    s16_t  s16_t   s16_t  s16_t
   // [LEFT RIGHT] LEFT RIGHT LEFT RIGHT....
-  for(u32_t sample_index = 0; sample_index < hell_speaker->sample_count; ++sample_index)
+  for(u32_t sample_index = 0; sample_index < eden_speaker->sample_count; ++sample_index)
   {
     for (u32_t channel_index = 0; channel_index < wasapi->channels; ++channel_index) {
       *dest_sample++ = *src_sample++;
@@ -828,7 +828,7 @@ w32_speaker_end_frame_sig(w32_speaker_end_frame)
 
   IAudioRenderClient_ReleaseBuffer(
       wasapi->render_client, 
-      (UINT32)hell_speaker->sample_count, 
+      (UINT32)eden_speaker->sample_count, 
       0);
 #endif
 
@@ -860,7 +860,7 @@ w32_speaker_load_sig(w32_speaker_load)
   auto* wasapi = arena_push(w32_wasapi_t, allocator);
   if (!wasapi) return false;
 
-  hell_speaker->platform_data = wasapi;
+  eden_speaker->platform_data = wasapi;
 
   wasapi->frame_rate = frame_rate;
   wasapi->channels = channels;
@@ -916,7 +916,7 @@ w32_speaker_load_sig(w32_speaker_load)
 
 
   // Initialize mixer
-  if(!hell_speaker_init(hell_speaker, bitrate_type, max_sounds, allocator))
+  if(!eden_speaker_init(eden_speaker, bitrate_type, max_sounds, allocator))
     return false;
 
 
@@ -928,7 +928,7 @@ w32_speaker_load_sig(w32_speaker_load)
 
 static 
 w32_speaker_unload_sig(w32_speaker_unload) {
-  auto* wasapi = (w32_wasapi_t*)(hell_speaker->platform_data);
+  auto* wasapi = (w32_wasapi_t*)(eden_speaker->platform_data);
   wasapi->speaker_client->Release();
   wasapi->render_client->Release();
   wasapi->mm_device->Release();
@@ -1712,7 +1712,7 @@ WinMain(HINSTANCE instance,
   //
   if (config.profiler_enabled) 
   {
-    if (!hell_profiler_init(
+    if (!eden_profiler_init(
           &eden->profiler, 
           platform_arena, 
           config.profiler_max_entries, 
@@ -1724,7 +1724,7 @@ WinMain(HINSTANCE instance,
 
   if (config.inspector_enabled) 
   {
-    if (!hell_inspector_init(
+    if (!eden_inspector_init(
           &eden->inspector, 
           platform_arena, 
           config.inspector_max_entries))
@@ -1751,10 +1751,10 @@ WinMain(HINSTANCE instance,
     // Hot reload eden->dll functions
     eden->is_dll_reloaded = w32_reload_code_if_outdated(&eden_code);
     if (eden->is_dll_reloaded) {
-      hell_profiler_reset(&eden->profiler);
+      eden_profiler_reset(&eden->profiler);
     }
 #else  // HOT_RELOAD
-    hell_profiler_reset(&eden->profiler);
+    eden_profiler_reset(&eden->profiler);
 #endif // HOT_RELOAD
 
     // Begin frame
@@ -1778,15 +1778,15 @@ WinMain(HINSTANCE instance,
 
     // End frame
     if (config.speaker_enabled) 
-      hell_speaker_update(eden);
+      eden_speaker_update(eden);
     
 
     if (config.profiler_enabled)
-      hell_profiler_update_entries(&eden->profiler);
+      eden_profiler_update_entries(&eden->profiler);
 
 
     if (config.inspector_enabled) 
-      hell_inspect_clear(eden);
+      eden_inspect_clear(eden);
     w32_gfx_end_frame(&eden->gfx);
     
     

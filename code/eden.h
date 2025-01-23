@@ -40,7 +40,7 @@
 // eden views 'rendering'. The system simply adds commands
 // to a command queue, which will be dispatched to the 
 // appropriate graphics API, which details will be implemented
-// on top of the hell_gfx_t class (through inheritance or composition). 
+// on top of the graphics class (through inheritance or composition). 
 //
 //
 // Most importantly, other than the commands, the game
@@ -67,14 +67,14 @@
 // @mark: gfx
 // 
 // Texture Queue API
-enum hell_gfx_texture_payload_state_t {
-  HELL_GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
-  HELL_GFX_TEXTURE_PAYLOAD_STATE_LOADING,
-  HELL_GFX_TEXTURE_PAYLOAD_STATE_READY,
+enum eden_gfx_texture_payload_state_t {
+  EDEN_GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
+  EDEN_GFX_TEXTURE_PAYLOAD_STATE_LOADING,
+  EDEN_GFX_TEXTURE_PAYLOAD_STATE_READY,
 };
 
-struct hell_gfx_texture_payload_t {
-  volatile hell_gfx_texture_payload_state_t state;
+struct eden_gfx_texture_payload_t {
+  volatile eden_gfx_texture_payload_state_t state;
   usz_t transfer_memory_start;
   usz_t transfer_memory_end;
   
@@ -86,7 +86,7 @@ struct hell_gfx_texture_payload_t {
 
 };
 
-struct hell_gfx_texture_queue_t {
+struct eden_gfx_texture_queue_t {
   u8_t* transfer_memory;
   usz_t transfer_memory_size;
   usz_t transfer_memory_start;
@@ -96,19 +96,19 @@ struct hell_gfx_texture_queue_t {
   usz_t highest_transfer_memory_usage;
   usz_t highest_payload_usage;
   
-  hell_gfx_texture_payload_t* payloads;
+  eden_gfx_texture_payload_t* payloads;
   usz_t first_payload_index;
   usz_t payload_count;
   usz_t payload_cap;
 };
 
 // Command API
-struct hell_gfx_command_t {
+struct eden_gfx_command_t {
   u32_t id; // type id from user
   void* data;
 };
 
-struct hell_gfx_command_queue_t {
+struct eden_gfx_command_queue_t {
 	u8_t* memory;
   usz_t memory_size;
 	usz_t data_pos;
@@ -127,47 +127,47 @@ enum eden_blend_preset_type_t {
   EDEN_BLEND_PRESET_TYPE_MULTIPLY,
 };
 
-enum hell_gfx_blend_type_t {
-  HELL_GFX_BLEND_TYPE_ZERO,
-  HELL_GFX_BLEND_TYPE_ONE,
-  HELL_GFX_BLEND_TYPE_SRC_COLOR,
-  HELL_GFX_BLEND_TYPE_INV_SRC_COLOR,
-  HELL_GFX_BLEND_TYPE_SRC_ALPHA,
-  HELL_GFX_BLEND_TYPE_INV_SRC_ALPHA,
-  HELL_GFX_BLEND_TYPE_DST_ALPHA,
-  HELL_GFX_BLEND_TYPE_INV_DST_ALPHA,
-  HELL_GFX_BLEND_TYPE_DST_COLOR,
-  HELL_GFX_BLEND_TYPE_INV_DST_COLOR,
+enum eden_gfx_blend_type_t {
+  EDEN_GFX_BLEND_TYPE_ZERO,
+  EDEN_GFX_BLEND_TYPE_ONE,
+  EDEN_GFX_BLEND_TYPE_SRC_COLOR,
+  EDEN_GFX_BLEND_TYPE_INV_SRC_COLOR,
+  EDEN_GFX_BLEND_TYPE_SRC_ALPHA,
+  EDEN_GFX_BLEND_TYPE_INV_SRC_ALPHA,
+  EDEN_GFX_BLEND_TYPE_DST_ALPHA,
+  EDEN_GFX_BLEND_TYPE_INV_DST_ALPHA,
+  EDEN_GFX_BLEND_TYPE_DST_COLOR,
+  EDEN_GFX_BLEND_TYPE_INV_DST_COLOR,
 };
 
-enum hell_gfx_command_type_t {
-  HELL_GFX_COMMAND_TYPE_CLEAR,
-  HELL_GFX_COMMAND_TYPE_TRIANGLE,
-  HELL_GFX_COMMAND_TYPE_RECT,
-  HELL_GFX_COMMAND_TYPE_LINE,
-  HELL_GFX_COMMAND_TYPE_SPRITE,
-  HELL_GFX_COMMAND_TYPE_DELETE_TEXTURE,
-  HELL_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,
-  HELL_GFX_COMMAND_TYPE_BLEND,
-  HELL_GFX_COMMAND_TYPE_VIEW,
-  HELL_GFX_COMMAND_TYPE_ADVANCE_DEPTH,
+enum eden_gfx_command_type_t {
+  EDEN_GFX_COMMAND_TYPE_CLEAR,
+  EDEN_GFX_COMMAND_TYPE_TRIANGLE,
+  EDEN_GFX_COMMAND_TYPE_RECT,
+  EDEN_GFX_COMMAND_TYPE_LINE,
+  EDEN_GFX_COMMAND_TYPE_SPRITE,
+  EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE,
+  EDEN_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,
+  EDEN_GFX_COMMAND_TYPE_BLEND,
+  EDEN_GFX_COMMAND_TYPE_VIEW,
+  EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH,
 
-  HELL_GFX_COMMAND_TYPE_TEST, // only for testing
+  EDEN_GFX_COMMAND_TYPE_TEST, // only for testing
 };
 
 
-struct hell_gfx_command_clear_t {
+struct eden_gfx_command_clear_t {
   rgba_t colors;
 };
 
 
-struct hell_gfx_command_view_t {
+struct eden_gfx_command_view_t {
   f32_t pos_x, pos_y;
   f32_t min_x, max_x;
   f32_t min_y, max_y;
 };
 
-struct hell_gfx_command_sprite_t {
+struct eden_gfx_command_sprite_t {
   v2f_t pos;
   v2f_t size;
 
@@ -180,37 +180,37 @@ struct hell_gfx_command_sprite_t {
   v2f_t anchor;
 };
 
-struct hell_gfx_command_test_t {
+struct eden_gfx_command_test_t {
 };
 
-struct hell_gfx_command_delete_texture_t {
+struct eden_gfx_command_delete_texture_t {
   u32_t texture_index;
 };
 
-struct hell_gfx_command_delete_all_textures_t {};
-struct hell_gfx_command_advance_depth_t {};
+struct eden_gfx_command_delete_all_textures_t {};
+struct eden_gfx_command_advance_depth_t {};
 
-struct hell_gfx_command_rect_t {
+struct eden_gfx_command_rect_t {
   rgba_t colors;
   v2f_t pos;
   f32_t rot;
   v2f_t size;
 };
 
-struct hell_gfx_command_triangle_t {
+struct eden_gfx_command_triangle_t {
   rgba_t colors;
   v2f_t p0, p1, p2;
 };
 
-struct hell_gfx_command_blend_t {
-  hell_gfx_blend_type_t src;
-  hell_gfx_blend_type_t dst;
+struct eden_gfx_command_blend_t {
+  eden_gfx_blend_type_t src;
+  eden_gfx_blend_type_t dst;
 };
 
 
-struct hell_gfx_t {
-  hell_gfx_command_queue_t command_queue;
-  hell_gfx_texture_queue_t texture_queue;
+struct eden_gfx_t {
+  eden_gfx_command_queue_t command_queue;
+  eden_gfx_texture_queue_t texture_queue;
   usz_t max_textures;
   eden_blend_preset_type_t current_blend_preset;
 
@@ -288,7 +288,7 @@ struct eden_asset_font_t {
 };
 
 struct eden_assets_t {
-  hell_gfx_texture_queue_t* texture_queue;
+  eden_gfx_texture_queue_t* texture_queue;
 
   u32_t bitmap_count;
   eden_asset_bitmap_t* bitmaps;
@@ -412,122 +412,122 @@ typedef void (GLDEBUGPROC)(GLenum source,
 //
 // OpenGL Functions
 //
-typedef void    hell_gfx_opengl_glEnable(GLenum cap);
-typedef void    hell_gfx_opengl_glDisable(GLenum cap);
-typedef void    hell_gfx_opengl_glViewport(GLint x, GLint y, GLsizei width, GLsizei height);
-typedef void    hell_gfx_opengl_glScissor(GLint x, GLint y, GLsizei width, GLsizei height); 
-typedef GLuint  hell_gfx_opengl_glCreateShader(GLenum type);
-typedef void    hell_gfx_opengl_glCompileShader(GLuint program);
-typedef void    hell_gfx_opengl_glShaderSource(GLuint shader, GLsizei count, GLchar** string, GLint* length);
-typedef void    hell_gfx_opengl_glAttachShader(GLuint program, GLuint shader);
-typedef void    hell_gfx_opengl_glDeleteShader(GLuint program);
-typedef void    hell_gfx_opengl_glClear(GLbitfield mask);
-typedef void    hell_gfx_opengl_glClearColor(GLclampf r, GLclampf g, GLclampf b, GLclampf a);
-typedef void    hell_gfx_opengl_glCreateBuffers(GLsizei n, GLuint* buffers);
-typedef void    hell_gfx_opengl_glNamedBufferStorage(GLuint buffer, GLsizeiptr size, const void* data, GLbitfield flags);
-typedef void    hell_gfx_opengl_glCreateVertexArrays(GLsizei n, GLuint* arrays);
-typedef void    hell_gfx_opengl_glVertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride);
-typedef void    hell_gfx_opengl_glEnableVertexArrayAttrib(GLuint vaobj, GLuint index);
-typedef void    hell_gfx_opengl_glVertexArrayAttribFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLboolean normalized, GLuint relativeoffset);
-typedef void    hell_gfx_opengl_glVertexArrayAttribBinding(GLuint vaobj,GLuint attribindex,GLuint bindingindex);
-typedef void    hell_gfx_opengl_glVertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint divisor);
-typedef void    hell_gfx_opengl_glBlendFunc(GLenum sfactor, GLenum dfactor);
-typedef void    hell_gfx_opengl_glBlendFuncSeparate(GLenum srcRGB, GLenum destRGB, GLenum srcAlpha, GLenum destAlpha);
-typedef void    hell_gfx_opengl_glVertexArrayElementBuffer(GLuint vaobj, GLuint buffer);
-typedef GLuint  hell_gfx_opengl_glCreateProgram();
-typedef void    hell_gfx_opengl_glLinkProgram(GLuint program);
-typedef void    hell_gfx_opengl_glGetProgramiv(GLuint program, GLenum pname, GLint* params);
-typedef void    hell_gfx_opengl_glGetProgramInfoLog(GLuint program, GLsizei maxLength, GLsizei* length,GLchar* infoLog);
-typedef void    hell_gfx_opengl_glCreateTextures(GLenum target, GLsizei n, GLuint* textures);
-typedef void    hell_gfx_opengl_glTextureStorage2D(GLuint texture, GLsizei levels, GLenum internalformat,GLsizei width, GLsizei height);
-typedef void    hell_gfx_opengl_glTextureSubImage2D(GLuint texture,GLint level,GLint xoffset,GLint yoffset,GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels);
-typedef void    hell_gfx_opengl_glBindTexture(GLenum target, GLuint texture);
-typedef void    hell_gfx_opengl_glTexParameteri(GLenum target, GLenum pname, GLint param);
-typedef void    hell_gfx_opengl_glDrawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type, const void* indices, GLsizei instancecount, GLuint baseinstance);
-typedef void    hell_gfx_opengl_glUseProgram(GLuint program);
-typedef void    hell_gfx_opengl_glNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, const void* data);
-typedef GLint   hell_gfx_opengl_glGetUniformLocation(GLuint program, const GLchar* name);
-typedef void    hell_gfx_opengl_glProgramUniformMatrix4fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
-typedef void    hell_gfx_opengl_glProgramUniform4fv(GLuint program, GLint location, GLsizei count, const GLfloat* value);
-typedef void    hell_gfx_opengl_glDeleteTextures(GLsizei n, const GLuint* textures);
-typedef void    hell_gfx_opengl_glDrawArrays(GLenum mode, GLint first, GLsizei count);
-typedef void    hell_gfx_opengl_glDebugMessageCallbackARB(GLDEBUGPROC *callback, const void* userParams);
+typedef void    eden_gfx_opengl_glEnable(GLenum cap);
+typedef void    eden_gfx_opengl_glDisable(GLenum cap);
+typedef void    eden_gfx_opengl_glViewport(GLint x, GLint y, GLsizei width, GLsizei height);
+typedef void    eden_gfx_opengl_glScissor(GLint x, GLint y, GLsizei width, GLsizei height); 
+typedef GLuint  eden_gfx_opengl_glCreateShader(GLenum type);
+typedef void    eden_gfx_opengl_glCompileShader(GLuint program);
+typedef void    eden_gfx_opengl_glShaderSource(GLuint shader, GLsizei count, GLchar** string, GLint* length);
+typedef void    eden_gfx_opengl_glAttachShader(GLuint program, GLuint shader);
+typedef void    eden_gfx_opengl_glDeleteShader(GLuint program);
+typedef void    eden_gfx_opengl_glClear(GLbitfield mask);
+typedef void    eden_gfx_opengl_glClearColor(GLclampf r, GLclampf g, GLclampf b, GLclampf a);
+typedef void    eden_gfx_opengl_glCreateBuffers(GLsizei n, GLuint* buffers);
+typedef void    eden_gfx_opengl_glNamedBufferStorage(GLuint buffer, GLsizeiptr size, const void* data, GLbitfield flags);
+typedef void    eden_gfx_opengl_glCreateVertexArrays(GLsizei n, GLuint* arrays);
+typedef void    eden_gfx_opengl_glVertexArrayVertexBuffer(GLuint vaobj, GLuint bindingindex, GLuint buffer, GLintptr offset, GLsizei stride);
+typedef void    eden_gfx_opengl_glEnableVertexArrayAttrib(GLuint vaobj, GLuint index);
+typedef void    eden_gfx_opengl_glVertexArrayAttribFormat(GLuint vaobj, GLuint attribindex, GLint size, GLenum type, GLboolean normalized, GLuint relativeoffset);
+typedef void    eden_gfx_opengl_glVertexArrayAttribBinding(GLuint vaobj,GLuint attribindex,GLuint bindingindex);
+typedef void    eden_gfx_opengl_glVertexArrayBindingDivisor(GLuint vaobj, GLuint bindingindex, GLuint divisor);
+typedef void    eden_gfx_opengl_glBlendFunc(GLenum sfactor, GLenum dfactor);
+typedef void    eden_gfx_opengl_glBlendFuncSeparate(GLenum srcRGB, GLenum destRGB, GLenum srcAlpha, GLenum destAlpha);
+typedef void    eden_gfx_opengl_glVertexArrayElementBuffer(GLuint vaobj, GLuint buffer);
+typedef GLuint  eden_gfx_opengl_glCreateProgram();
+typedef void    eden_gfx_opengl_glLinkProgram(GLuint program);
+typedef void    eden_gfx_opengl_glGetProgramiv(GLuint program, GLenum pname, GLint* params);
+typedef void    eden_gfx_opengl_glGetProgramInfoLog(GLuint program, GLsizei maxLength, GLsizei* length,GLchar* infoLog);
+typedef void    eden_gfx_opengl_glCreateTextures(GLenum target, GLsizei n, GLuint* textures);
+typedef void    eden_gfx_opengl_glTextureStorage2D(GLuint texture, GLsizei levels, GLenum internalformat,GLsizei width, GLsizei height);
+typedef void    eden_gfx_opengl_glTextureSubImage2D(GLuint texture,GLint level,GLint xoffset,GLint yoffset,GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels);
+typedef void    eden_gfx_opengl_glBindTexture(GLenum target, GLuint texture);
+typedef void    eden_gfx_opengl_glTexParameteri(GLenum target, GLenum pname, GLint param);
+typedef void    eden_gfx_opengl_glDrawElementsInstancedBaseInstance(GLenum mode, GLsizei count, GLenum type, const void* indices, GLsizei instancecount, GLuint baseinstance);
+typedef void    eden_gfx_opengl_glUseProgram(GLuint program);
+typedef void    eden_gfx_opengl_glNamedBufferSubData(GLuint buffer, GLintptr offset, GLsizeiptr size, const void* data);
+typedef GLint   eden_gfx_opengl_glGetUniformLocation(GLuint program, const GLchar* name);
+typedef void    eden_gfx_opengl_glProgramUniformMatrix4fv(GLuint program, GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
+typedef void    eden_gfx_opengl_glProgramUniform4fv(GLuint program, GLint location, GLsizei count, const GLfloat* value);
+typedef void    eden_gfx_opengl_glDeleteTextures(GLsizei n, const GLuint* textures);
+typedef void    eden_gfx_opengl_glDrawArrays(GLenum mode, GLint first, GLsizei count);
+typedef void    eden_gfx_opengl_glDebugMessageCallbackARB(GLDEBUGPROC *callback, const void* userParams);
 
-typedef void    hell_gfx_opengl_glGenVertexArrays(GLsizei n, GLuint* arrays);
-typedef void    hell_gfx_opengl_glGenBuffers(GLsizei n, GLuint* buffers);
-typedef void    hell_gfx_opengl_glBindBuffer(GLenum target, GLuint buffer);
-typedef void    hell_gfx_opengl_glBufferData(GLenum target ,GLsizeiptr size, const void* data, GLenum usage);
-typedef void    hell_gfx_opengl_glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void* data);
-typedef void    hell_gfx_opengl_glEnableVertexAttribArray(GLuint index);
-typedef void    hell_gfx_opengl_glVertexAttribPointer(GLuint index, GLint size,	GLenum type, GLboolean normalized, GLsizei stride, const void * pointer);
-typedef void    hell_gfx_opengl_glVertexAttribDivisor(GLuint index, GLuint divisor);
-typedef void    hell_gfx_opengl_glBindVertexArray(GLuint array);
-typedef void    hell_gfx_opengl_glDrawElements(GLenum mode, GLsizei count, GLenum type, const void* indices);
-typedef GLenum  hell_gfx_opengl_glGetError();
+typedef void    eden_gfx_opengl_glGenVertexArrays(GLsizei n, GLuint* arrays);
+typedef void    eden_gfx_opengl_glGenBuffers(GLsizei n, GLuint* buffers);
+typedef void    eden_gfx_opengl_glBindBuffer(GLenum target, GLuint buffer);
+typedef void    eden_gfx_opengl_glBufferData(GLenum target ,GLsizeiptr size, const void* data, GLenum usage);
+typedef void    eden_gfx_opengl_glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void* data);
+typedef void    eden_gfx_opengl_glEnableVertexAttribArray(GLuint index);
+typedef void    eden_gfx_opengl_glVertexAttribPointer(GLuint index, GLint size,	GLenum type, GLboolean normalized, GLsizei stride, const void * pointer);
+typedef void    eden_gfx_opengl_glVertexAttribDivisor(GLuint index, GLuint divisor);
+typedef void    eden_gfx_opengl_glBindVertexArray(GLuint array);
+typedef void    eden_gfx_opengl_glDrawElements(GLenum mode, GLsizei count, GLenum type, const void* indices);
+typedef GLenum  eden_gfx_opengl_glGetError();
 
 
 enum{ 
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL,       // 0 
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_MODEL,       // 0 
                                                 //
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,     // 1 
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,     // 2
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,     // 3
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4,     // 4
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,     // 1 
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,     // 2
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,     // 3
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_COLOR_4,     // 4
                                                 //
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1,   // 5
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2,   // 6
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3,   // 7
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4,   // 8
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_1,   // 5
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_2,   // 6
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_3,   // 7
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TEXTURE_4,   // 8
                                                 //
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 9
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 10
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 11
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 12
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 9
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 10
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 11
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 12
 };
 
 enum {
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL,
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS,
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE,
-  HELL_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_MODEL,
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_COLORS,
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TEXTURE,
+  EDEN_GFX_OPENGL_SPRITE_VERTEX_ARRAY_BINDING_TRANSFORM
 };
 
 enum { 
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL,    // 0 
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,   // 1
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,   // 2
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,   // 3
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 4
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 5
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 6
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 7
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_MODEL,    // 0 
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_1,   // 1
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_2,   // 2
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_COLOR_3,   // 3
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_1, // 4
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_2, // 5
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_3, // 6
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ATTRIBUTE_TYPE_TRANSFORM_4  // 7
 };
 
 enum {
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL,
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS,
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_MODEL,
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_COLORS,
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_ARRAY_BINDING_TRANSFORM
 };
 
 enum {
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL,
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES,
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS,
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM,
-  HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT // 5
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_MODEL,
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_INDICES,
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COLORS,
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM,
+  EDEN_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_COUNT // 5
 };
 
-struct hell_gfx_opengl_texture_t {
+struct eden_gfx_opengl_texture_t {
   GLuint handle;
   u32_t width; 
   u32_t height;
 } ;
 
-struct hell_gfx_opengl_uv_t {
+struct eden_gfx_opengl_uv_t {
   v2f_t min, max;
 };
 
-struct hell_gfx_opengl_sprite_batch_t{
+struct eden_gfx_opengl_sprite_batch_t{
   GLuint model_vbo;
   GLuint indices_vbo;
   GLuint instance_color_vbo;
@@ -543,7 +543,7 @@ struct hell_gfx_opengl_sprite_batch_t{
 };
 
 
-struct hell_gfx_opengl_triangle_batch_t{
+struct eden_gfx_opengl_triangle_batch_t{
   GLuint model_vbo;
   GLuint indices_vbo;
   GLuint instance_color_vbo;
@@ -557,18 +557,18 @@ struct hell_gfx_opengl_triangle_batch_t{
 };
 
 enum { 
-  HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES,
-  HELL_GFX_OPENGL_BATCH_ATTRIBUTE_UVS,
-  HELL_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS,
+  EDEN_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES,
+  EDEN_GFX_OPENGL_BATCH_ATTRIBUTE_UVS,
+  EDEN_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS,
 };
 
-enum hell_gfx_opengl_draw_mode_t
+enum eden_gfx_opengl_draw_mode_t
 {
-  HELL_GFX_OPENGL_DRAW_MODE_QUADS,
-  HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES,
+  EDEN_GFX_OPENGL_DRAW_MODE_QUADS,
+  EDEN_GFX_OPENGL_DRAW_MODE_TRIANGLES,
 };
 
-struct hell_gfx_opengl_batch_t 
+struct eden_gfx_opengl_batch_t 
 {
   // @note: how many elements we are supposed to have.
   // based on this number, we will decide how big out buffers will be
@@ -594,7 +594,7 @@ struct hell_gfx_opengl_batch_t
   usz_t vertex_index_start;
   usz_t vertex_index_ope;
 
-  hell_gfx_opengl_draw_mode_t draw_mode; 
+  eden_gfx_opengl_draw_mode_t draw_mode; 
   GLuint uniform_mvp_location;
 };
 
@@ -603,7 +603,7 @@ static_assert(sizeof(v3f_t) == sizeof(GLfloat)*3);
 static_assert(sizeof(v2f_t) == sizeof(GLfloat)*2);
 static_assert(sizeof(rgba_t) == sizeof(GLfloat)*4);
 
-struct hell_gfx_opengl_t 
+struct eden_gfx_opengl_t 
 {
   v2u_t render_wh;
 
@@ -612,72 +612,72 @@ struct hell_gfx_opengl_t
   u32_t region_x1;
   u32_t region_y1;
 
-  hell_gfx_opengl_batch_t batch;
+  eden_gfx_opengl_batch_t batch;
 
 
-  hell_gfx_opengl_texture_t* textures;
+  eden_gfx_opengl_texture_t* textures;
   usz_t texture_cap;
 
   usz_t max_sprites;
   usz_t max_triangles;
 
-  hell_gfx_opengl_texture_t dummy_texture;
-  hell_gfx_opengl_texture_t blank_texture;
+  eden_gfx_opengl_texture_t dummy_texture;
+  eden_gfx_opengl_texture_t blank_texture;
 
   f32_t current_layer;
 
-  hell_gfx_opengl_glEnable* glEnable;
-  hell_gfx_opengl_glDisable* glDisable;
-  hell_gfx_opengl_glViewport* glViewport;
-  hell_gfx_opengl_glScissor* glScissor ;
-  hell_gfx_opengl_glCreateShader* glCreateShader;
-  hell_gfx_opengl_glCompileShader* glCompileShader;
-  hell_gfx_opengl_glShaderSource* glShaderSource;
-  hell_gfx_opengl_glAttachShader* glAttachShader;
-  hell_gfx_opengl_glDeleteShader* glDeleteShader;
-  hell_gfx_opengl_glClear* glClear;
-  hell_gfx_opengl_glClearColor* glClearColor;
-  hell_gfx_opengl_glCreateBuffers* glCreateBuffers;
-  hell_gfx_opengl_glNamedBufferStorage* glNamedBufferStorage;
-  hell_gfx_opengl_glCreateVertexArrays* glCreateVertexArrays;
-  hell_gfx_opengl_glVertexArrayVertexBuffer* glVertexArrayVertexBuffer;
-  hell_gfx_opengl_glEnableVertexArrayAttrib* glEnableVertexArrayAttrib;
-  hell_gfx_opengl_glVertexArrayAttribFormat* glVertexArrayAttribFormat;
-  hell_gfx_opengl_glVertexArrayAttribBinding* glVertexArrayAttribBinding;
-  hell_gfx_opengl_glVertexArrayBindingDivisor* glVertexArrayBindingDivisor;
-  hell_gfx_opengl_glBlendFunc* glBlendFunc;
-  hell_gfx_opengl_glBlendFuncSeparate* glBlendFuncSeparate;
-  hell_gfx_opengl_glVertexArrayElementBuffer* glVertexArrayElementBuffer;
-  hell_gfx_opengl_glLinkProgram* glLinkProgram;
-  hell_gfx_opengl_glCreateProgram* glCreateProgram;
-  hell_gfx_opengl_glGetProgramiv* glGetProgramiv;
-  hell_gfx_opengl_glGetProgramInfoLog* glGetProgramInfoLog;
-  hell_gfx_opengl_glCreateTextures* glCreateTextures;
-  hell_gfx_opengl_glTextureStorage2D* glTextureStorage2D ;
-  hell_gfx_opengl_glTextureSubImage2D*  glTextureSubImage2D;
-  hell_gfx_opengl_glBindTexture* glBindTexture ;
-  hell_gfx_opengl_glTexParameteri*  glTexParameteri ;
-  hell_gfx_opengl_glBindVertexArray* glBindVertexArray;
-  hell_gfx_opengl_glDrawElementsInstancedBaseInstance* glDrawElementsInstancedBaseInstance;
-  hell_gfx_opengl_glGetUniformLocation* glGetUniformLocation;
-  hell_gfx_opengl_glProgramUniform4fv* glProgramUniform4fv;
-  hell_gfx_opengl_glProgramUniformMatrix4fv* glProgramUniformMatrix4fv;
-  hell_gfx_opengl_glDeleteTextures* glDeleteTextures;
-  hell_gfx_opengl_glDebugMessageCallbackARB* glDebugMessageCallbackARB;
-  hell_gfx_opengl_glNamedBufferSubData* glNamedBufferSubData;
-  hell_gfx_opengl_glUseProgram* glUseProgram;  
-  hell_gfx_opengl_glDrawArrays* glDrawArrays;
+  eden_gfx_opengl_glEnable* glEnable;
+  eden_gfx_opengl_glDisable* glDisable;
+  eden_gfx_opengl_glViewport* glViewport;
+  eden_gfx_opengl_glScissor* glScissor ;
+  eden_gfx_opengl_glCreateShader* glCreateShader;
+  eden_gfx_opengl_glCompileShader* glCompileShader;
+  eden_gfx_opengl_glShaderSource* glShaderSource;
+  eden_gfx_opengl_glAttachShader* glAttachShader;
+  eden_gfx_opengl_glDeleteShader* glDeleteShader;
+  eden_gfx_opengl_glClear* glClear;
+  eden_gfx_opengl_glClearColor* glClearColor;
+  eden_gfx_opengl_glCreateBuffers* glCreateBuffers;
+  eden_gfx_opengl_glNamedBufferStorage* glNamedBufferStorage;
+  eden_gfx_opengl_glCreateVertexArrays* glCreateVertexArrays;
+  eden_gfx_opengl_glVertexArrayVertexBuffer* glVertexArrayVertexBuffer;
+  eden_gfx_opengl_glEnableVertexArrayAttrib* glEnableVertexArrayAttrib;
+  eden_gfx_opengl_glVertexArrayAttribFormat* glVertexArrayAttribFormat;
+  eden_gfx_opengl_glVertexArrayAttribBinding* glVertexArrayAttribBinding;
+  eden_gfx_opengl_glVertexArrayBindingDivisor* glVertexArrayBindingDivisor;
+  eden_gfx_opengl_glBlendFunc* glBlendFunc;
+  eden_gfx_opengl_glBlendFuncSeparate* glBlendFuncSeparate;
+  eden_gfx_opengl_glVertexArrayElementBuffer* glVertexArrayElementBuffer;
+  eden_gfx_opengl_glLinkProgram* glLinkProgram;
+  eden_gfx_opengl_glCreateProgram* glCreateProgram;
+  eden_gfx_opengl_glGetProgramiv* glGetProgramiv;
+  eden_gfx_opengl_glGetProgramInfoLog* glGetProgramInfoLog;
+  eden_gfx_opengl_glCreateTextures* glCreateTextures;
+  eden_gfx_opengl_glTextureStorage2D* glTextureStorage2D ;
+  eden_gfx_opengl_glTextureSubImage2D*  glTextureSubImage2D;
+  eden_gfx_opengl_glBindTexture* glBindTexture ;
+  eden_gfx_opengl_glTexParameteri*  glTexParameteri ;
+  eden_gfx_opengl_glBindVertexArray* glBindVertexArray;
+  eden_gfx_opengl_glDrawElementsInstancedBaseInstance* glDrawElementsInstancedBaseInstance;
+  eden_gfx_opengl_glGetUniformLocation* glGetUniformLocation;
+  eden_gfx_opengl_glProgramUniform4fv* glProgramUniform4fv;
+  eden_gfx_opengl_glProgramUniformMatrix4fv* glProgramUniformMatrix4fv;
+  eden_gfx_opengl_glDeleteTextures* glDeleteTextures;
+  eden_gfx_opengl_glDebugMessageCallbackARB* glDebugMessageCallbackARB;
+  eden_gfx_opengl_glNamedBufferSubData* glNamedBufferSubData;
+  eden_gfx_opengl_glUseProgram* glUseProgram;  
+  eden_gfx_opengl_glDrawArrays* glDrawArrays;
   
-  hell_gfx_opengl_glGenVertexArrays* glGenVertexArrays;
-  hell_gfx_opengl_glGenBuffers* glGenBuffers;
-  hell_gfx_opengl_glBindBuffer* glBindBuffer;
-  hell_gfx_opengl_glBufferData* glBufferData;
-  hell_gfx_opengl_glEnableVertexAttribArray* glEnableVertexAttribArray;
-  hell_gfx_opengl_glVertexAttribPointer* glVertexAttribPointer;
-  hell_gfx_opengl_glVertexAttribDivisor* glVertexAttribDivisor;
-  hell_gfx_opengl_glDrawElements* glDrawElements;
-  hell_gfx_opengl_glGetError* glGetError;
-  hell_gfx_opengl_glBufferSubData* glBufferSubData;
+  eden_gfx_opengl_glGenVertexArrays* glGenVertexArrays;
+  eden_gfx_opengl_glGenBuffers* glGenBuffers;
+  eden_gfx_opengl_glBindBuffer* glBindBuffer;
+  eden_gfx_opengl_glBufferData* glBufferData;
+  eden_gfx_opengl_glEnableVertexAttribArray* glEnableVertexAttribArray;
+  eden_gfx_opengl_glVertexAttribPointer* glVertexAttribPointer;
+  eden_gfx_opengl_glVertexAttribDivisor* glVertexAttribDivisor;
+  eden_gfx_opengl_glDrawElements* glDrawElements;
+  eden_gfx_opengl_glGetError* glGetError;
+  eden_gfx_opengl_glBufferSubData* glBufferSubData;
 
   void* platform_data;
 };
@@ -707,25 +707,25 @@ struct eden_console_t {
 //
 // @mark: profiler
 // 
-struct hell_profiler_snapshot_t {
+struct eden_profiler_snapshot_t {
   u32_t hits;
   u32_t cycles;
 };
 
-struct hell_profiler_stat_t {
+struct eden_profiler_stat_t {
   f64_t min;
   f64_t max;
   f64_t average;
   u32_t count;
 };
 
-struct hell_profiler_entry_t {
+struct eden_profiler_entry_t {
   u32_t line;
   const char* filename;
   const char* block_name;
   u64_t hits_and_cycles;
   
-  hell_profiler_snapshot_t* snapshots;
+  eden_profiler_snapshot_t* snapshots;
   
   // @note: For initialization of entry. 
   // Maybe it shouldn't be stored here
@@ -737,48 +737,48 @@ struct hell_profiler_entry_t {
 };
 
 
-struct hell_profiler_t {
+struct eden_profiler_t {
   u32_t entry_snapshot_count;
   u32_t entry_count;
   u32_t entry_cap;
-  hell_profiler_entry_t* entries;
+  eden_profiler_entry_t* entries;
   u32_t snapshot_index;
 };
 
 #define eden_profile_begin(eden, name) \
-  static hell_profiler_entry_t* _profiler_block_##name = 0; \
+  static eden_profiler_entry_t* _profiler_block_##name = 0; \
   if (_profiler_block_##name == 0 || _profiler_block_##name->flag_for_reset) {\
-    _profiler_block_##name = _hell_profiler_init_block(&eden->profiler, __FILE__, __LINE__, __FUNCTION__, #name);  \
+    _profiler_block_##name = _eden_profiler_init_block(&eden->profiler, __FILE__, __LINE__, __FUNCTION__, #name);  \
   }\
-  _hell_profiler_begin_block(&eden->profiler, _profiler_block_##name)\
+  _eden_profiler_begin_block(&eden->profiler, _profiler_block_##name)\
 
 #define eden_profile_end(eden, name) \
-  _hell_profiler_end_block(&eden->profiler, _profiler_block_##name) 
+  _eden_profiler_end_block(&eden->profiler, _profiler_block_##name) 
 
-#define eden_profile_block(eden, name) hell_profiler_begin_block(&eden->profiler, name); defer {hell_profiler_end_block(&eden->profiler,name);}
+#define eden_profile_block(eden, name) eden_profiler_begin_block(&eden->profiler, name); defer {eden_profiler_end_block(&eden->profiler,name);}
 
 
 //
 // @mark: inspector
 //
-enum hell_inspector_entry_type_t {
+enum eden_inspector_entry_type_t {
   HELL_INSPECTOR_ENTRY_TYPE_F32,
   HELL_INSPECTOR_ENTRY_TYPE_U32,
 };
 
-struct hell_inspector_entry_t {
+struct eden_inspector_entry_t {
   buf_t name;
-  hell_inspector_entry_type_t type;
+  eden_inspector_entry_type_t type;
   union {
     f32_t item_f32;
     u32_t item_u32;
   };
 };
 
-struct hell_inspector_t {
+struct eden_inspector_t {
   u32_t entry_cap;
   u32_t entry_count;
-  hell_inspector_entry_t* entries;
+  eden_inspector_entry_t* entries;
 };
 
 // 
@@ -967,7 +967,7 @@ enum eden_speaker_bitrate_type_t {
   EDEN_SPEAKER_BITRATE_TYPE_S16,
 };
 
-struct hell_speaker_t {
+struct eden_speaker_t {
   // Audio buffer for eden to write to
   void* samples;
   u32_t sample_count;
@@ -1004,11 +1004,11 @@ struct eden_t
 
   eden_input_t input;
 
-  hell_gfx_t gfx;
-  hell_speaker_t speaker; 
+  eden_gfx_t gfx;
+  eden_speaker_t speaker; 
 
-  hell_profiler_t profiler;
-  hell_inspector_t inspector;
+  eden_profiler_t profiler;
+  eden_inspector_t inspector;
   eden_assets_t assets;
           
   b32_t is_dll_reloaded;
@@ -1080,9 +1080,9 @@ static const char* eden_function_names[] {
 
 
 static void
-hell_gfx_clear_commands(hell_gfx_t* g) 
+eden_gfx_clear_commands(eden_gfx_t* g) 
 {
-  hell_gfx_command_queue_t* q = &g->command_queue;
+  eden_gfx_command_queue_t* q = &g->command_queue;
   q->data_pos = 0;	
 	q->entry_count = 0;
 	
@@ -1093,8 +1093,8 @@ hell_gfx_clear_commands(hell_gfx_t* g)
 }
 
 static b32_t 
-hell_gfx_init(
-    hell_gfx_t* g, 
+eden_gfx_init(
+    eden_gfx_t* g, 
     arena_t* arena,
     usz_t texture_queue_size, 
     usz_t command_queue_size,
@@ -1104,20 +1104,20 @@ hell_gfx_init(
 
   // commands
   {
-    hell_gfx_command_queue_t* q = &g->command_queue;
+    eden_gfx_command_queue_t* q = &g->command_queue;
     q->memory = arena_push_arr(u8_t, arena, command_queue_size);
     if (!q->memory) return false;
     q->memory_size = command_queue_size;
     q->peak_memory_usage = 0;
-    hell_gfx_clear_commands(g);
+    eden_gfx_clear_commands(g);
   }
 
   // textures
   {
-    hell_gfx_texture_queue_t* q = &g->texture_queue;
+    eden_gfx_texture_queue_t* q = &g->texture_queue;
     q->transfer_memory = arena_push_arr(u8_t, arena, texture_queue_size);
     if (!q->transfer_memory) return false;
-    q->payloads = arena_push_arr(hell_gfx_texture_payload_t, arena, max_payloads);
+    q->payloads = arena_push_arr(eden_gfx_texture_payload_t, arena, max_payloads);
     if (!q->payloads) return false;
     q->transfer_memory_size = texture_queue_size;
     q->transfer_memory_start = 0;
@@ -1134,34 +1134,34 @@ hell_gfx_init(
 }
 
 static u32_t
-hell_gfx_get_next_texture_handle(hell_gfx_t* hell_gfx) {
+eden_gfx_get_next_texture_handle(eden_gfx_t* eden_gfx) {
   static u32_t id = 0;
-  return id++ % hell_gfx->max_textures;
+  return id++ % eden_gfx->max_textures;
 }
 
-static hell_gfx_command_t*
-hell_gfx_get_command(hell_gfx_t* g, u32_t index) {
-  hell_gfx_command_queue_t* q = &g->command_queue;
+static eden_gfx_command_t*
+eden_gfx_get_command(eden_gfx_t* g, u32_t index) {
+  eden_gfx_command_queue_t* q = &g->command_queue;
   assert(index < q->entry_count);
-	usz_t stride = align_up_pow2(sizeof(hell_gfx_command_t), 4);
-	return (hell_gfx_command_t*)(q->memory + q->entry_start - ((index+1) * stride));
+	usz_t stride = align_up_pow2(sizeof(eden_gfx_command_t), 4);
+	return (eden_gfx_command_t*)(q->memory + q->entry_start - ((index+1) * stride));
 }
 
 static void*
 eden_push_gfx_command_block(eden_t* eden, u32_t size, u32_t id, u32_t align = 16) 
 {
-  hell_gfx_command_queue_t* q = &eden->gfx.command_queue;
+  eden_gfx_command_queue_t* q = &eden->gfx.command_queue;
 	umi_t imem = ptr_to_umi(q->memory);
 	
 	umi_t adjusted_data_pos = align_up_pow2(imem + q->data_pos, (usz_t)align) - imem;
 	umi_t adjusted_entry_pos = align_down_pow2(imem + q->entry_pos, 4) - imem; 
 	
-	assert(adjusted_data_pos + size + sizeof(hell_gfx_command_t) < adjusted_entry_pos);
+	assert(adjusted_data_pos + size + sizeof(eden_gfx_command_t) < adjusted_entry_pos);
 	
 	q->data_pos = (u32_t)adjusted_data_pos + size;
-	q->entry_pos = (u32_t)adjusted_entry_pos - sizeof(hell_gfx_command_t);
+	q->entry_pos = (u32_t)adjusted_entry_pos - sizeof(eden_gfx_command_t);
 	
-	auto* entry = (hell_gfx_command_t*)umi_to_ptr(imem + q->entry_pos);
+	auto* entry = (eden_gfx_command_t*)umi_to_ptr(imem + q->entry_pos);
 	entry->id = id;
 	entry->data = umi_to_ptr(imem + adjusted_data_pos);
 	
@@ -1176,10 +1176,10 @@ eden_push_gfx_command_block(eden_t* eden, u32_t size, u32_t id, u32_t align = 16
 
 
 
-static hell_gfx_texture_payload_t*
-hell_gfx_begin_texture_transfer(hell_gfx_t* g, u32_t required_space) {
-  hell_gfx_texture_queue_t* q = &g->texture_queue;
-  hell_gfx_texture_payload_t* ret = 0;
+static eden_gfx_texture_payload_t*
+eden_gfx_begin_texture_transfer(eden_gfx_t* g, u32_t required_space) {
+  eden_gfx_texture_queue_t* q = &g->texture_queue;
+  eden_gfx_texture_payload_t* ret = 0;
   
   if (q->payload_count < q->payload_cap) {
     usz_t avaliable_space = 0;
@@ -1219,7 +1219,7 @@ hell_gfx_begin_texture_transfer(hell_gfx_t* g, u32_t required_space) {
       ret->texture_data = q->transfer_memory + memory_at;
       ret->transfer_memory_start = memory_at;
       ret->transfer_memory_end = memory_at + required_space;
-      ret->state = HELL_GFX_TEXTURE_PAYLOAD_STATE_LOADING;
+      ret->state = EDEN_GFX_TEXTURE_PAYLOAD_STATE_LOADING;
 
       q->transfer_memory_end = ret->transfer_memory_end;
 
@@ -1240,13 +1240,13 @@ hell_gfx_begin_texture_transfer(hell_gfx_t* g, u32_t required_space) {
 
 
 static void
-hell_gfx_complete_texture_transfer(hell_gfx_texture_payload_t* entry) {
-  entry->state = HELL_GFX_TEXTURE_PAYLOAD_STATE_READY;
+eden_gfx_complete_texture_transfer(eden_gfx_texture_payload_t* entry) {
+  entry->state = EDEN_GFX_TEXTURE_PAYLOAD_STATE_READY;
 }
 
 static void
-hell_gfx_cancel_texture_transfer(hell_gfx_texture_payload_t* entry) {
-  entry->state = HELL_GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
+eden_gfx_cancel_texture_transfer(eden_gfx_texture_payload_t* entry) {
+  entry->state = EDEN_GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
 }
 
 //
@@ -1255,8 +1255,8 @@ hell_gfx_cancel_texture_transfer(hell_gfx_texture_payload_t* entry) {
 #if EDEN_USE_OPENGL
 
 static void 
-hell_gfx_opengl_attach_shader(
-    hell_gfx_opengl_t* ogl,
+eden_gfx_opengl_attach_shader(
+    eden_gfx_opengl_t* ogl,
     u32_t program, 
     u32_t type, 
     char* code) 
@@ -1269,7 +1269,7 @@ hell_gfx_opengl_attach_shader(
 }
 
 static void 
-hell_gfx_opengl_align_viewport(hell_gfx_opengl_t* ogl) 
+eden_gfx_opengl_align_viewport(eden_gfx_opengl_t* ogl) 
 {
 
   u32_t x, y, w, h;
@@ -1287,8 +1287,8 @@ hell_gfx_opengl_align_viewport(hell_gfx_opengl_t* ogl)
 }
 
 static void
-hell_gfx_opengl_set_texture(
-    hell_gfx_opengl_t* ogl,
+eden_gfx_opengl_set_texture(
+    eden_gfx_opengl_t* ogl,
     umi_t index,
     u32_t width,
     u32_t height,
@@ -1297,7 +1297,7 @@ hell_gfx_opengl_set_texture(
 
   assert(index < ogl->texture_cap);
 
-  hell_gfx_opengl_texture_t entry = {0};
+  eden_gfx_opengl_texture_t entry = {0};
   entry.width = width;
   entry.height = height;
 
@@ -1324,24 +1324,24 @@ hell_gfx_opengl_set_texture(
 }
 
 static void 
-hell_gfx_opengl_delete_texture(hell_gfx_opengl_t* ogl, umi_t texture_index) {
+eden_gfx_opengl_delete_texture(eden_gfx_opengl_t* ogl, umi_t texture_index) {
   assert(texture_index < ogl->texture_cap);
-  hell_gfx_opengl_texture_t* texture = ogl->textures + texture_index;
+  eden_gfx_opengl_texture_t* texture = ogl->textures + texture_index;
   ogl->glDeleteTextures(1, &texture->handle);
   ogl->textures[texture_index].handle = 0;
 }
 
 static void
-hell_gfx_opengl_delete_all_textures(hell_gfx_opengl_t* ogl) {
+eden_gfx_opengl_delete_all_textures(eden_gfx_opengl_t* ogl) {
   for (usz_t i = 0; i < ogl->texture_cap; ++i ){
     if (ogl->textures[i].handle != 0) {
-      hell_gfx_opengl_delete_texture(ogl, i);
+      eden_gfx_opengl_delete_texture(ogl, i);
     }
   }
 }
 
 static void 
-hell_gfx_opengl_add_predefined_textures(hell_gfx_opengl_t* ogl) {
+eden_gfx_opengl_add_predefined_textures(eden_gfx_opengl_t* ogl) {
   // @note: Dummy texture setup
   {
     u8_t pixels[4][4] {
@@ -1360,7 +1360,7 @@ hell_gfx_opengl_add_predefined_textures(hell_gfx_opengl_t* ogl) {
         GL_RGBA, 
         GL_UNSIGNED_BYTE, 
         &pixels);
-    hell_gfx_opengl_texture_t texture = {};
+    eden_gfx_opengl_texture_t texture = {};
     texture.width = 2;
     texture.height = 2;
     texture.handle = dummy_texture;
@@ -1380,7 +1380,7 @@ hell_gfx_opengl_add_predefined_textures(hell_gfx_opengl_t* ogl) {
         1, 1, 
         GL_RGBA, GL_UNSIGNED_BYTE, 
         &pixels);
-    hell_gfx_opengl_texture_t texture = {};
+    eden_gfx_opengl_texture_t texture = {};
     texture.width = 2;
     texture.height = 2;
     texture.handle = blank_texture;
@@ -1393,7 +1393,7 @@ hell_gfx_opengl_add_predefined_textures(hell_gfx_opengl_t* ogl) {
 
 
 
-#define HELL_GFX_OPENGL_TEST_VSHADER "\
+#define EDEN_GFX_OPENGL_TEST_VSHADER "\
 #version 330 core \n\
 layout(location=0) in vec3 attrib_position; \n\
 layout(location=1) in vec2 attrib_uv;       \n\
@@ -1408,7 +1408,7 @@ void main() { \n\
 }"
 
 
-#define HELL_GFX_OPENGL_TEST_FSHADER "\
+#define EDEN_GFX_OPENGL_TEST_FSHADER "\
 #version 330 core\n\
 in vec4 vertex_color;\n\
 in vec2 vertex_uv; \n\
@@ -1421,9 +1421,9 @@ void main() \n\
 
 
 static b32_t 
-hell_gfx_opengl_batch_init(hell_gfx_opengl_t* ogl, arena_t* arena, usz_t element_count)
+eden_gfx_opengl_batch_init(eden_gfx_opengl_t* ogl, arena_t* arena, usz_t element_count)
 {
-  hell_gfx_opengl_batch_t* batch = &ogl->batch;
+  eden_gfx_opengl_batch_t* batch = &ogl->batch;
   batch->element_count = element_count;
 
   // one element has 4 vertices, uvs, and colors (one for each vertex)
@@ -1465,22 +1465,22 @@ hell_gfx_opengl_batch_init(hell_gfx_opengl_t* ogl, arena_t* arena, usz_t element
   ogl->glGenBuffers(1, &batch->vbo_vertices); 
   ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_vertices);
   ogl->glBufferData(GL_ARRAY_BUFFER, batch->vertex_count*sizeof(dref(batch->vertices)), batch->vertices, GL_DYNAMIC_DRAW);
-  ogl->glVertexAttribPointer(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES, 3, GL_FLOAT, GL_FALSE, sizeof(v3f_t), 0);
-  ogl->glEnableVertexAttribArray(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES); // @todo: 0 should be enum
+  ogl->glVertexAttribPointer(EDEN_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES, 3, GL_FLOAT, GL_FALSE, sizeof(v3f_t), 0);
+  ogl->glEnableVertexAttribArray(EDEN_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES); // @todo: 0 should be enum
 
   // buffer for UVs (shader-location = 1)
   ogl->glGenBuffers(1, &batch->vbo_uvs);
   ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_uvs);
   ogl->glBufferData(GL_ARRAY_BUFFER, batch->vertex_count*sizeof(dref(batch->uvs)), batch->uvs, GL_DYNAMIC_DRAW);
-  ogl->glVertexAttribPointer(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_UVS, 2, GL_FLOAT, GL_FALSE, sizeof(v2f_t), 0);
-  ogl->glEnableVertexAttribArray(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_UVS);
+  ogl->glVertexAttribPointer(EDEN_GFX_OPENGL_BATCH_ATTRIBUTE_UVS, 2, GL_FLOAT, GL_FALSE, sizeof(v2f_t), 0);
+  ogl->glEnableVertexAttribArray(EDEN_GFX_OPENGL_BATCH_ATTRIBUTE_UVS);
 
   // buffer for colors (shader-location = 2)
   ogl->glGenBuffers(1, &batch->vbo_colors);
   ogl->glBindBuffer(GL_ARRAY_BUFFER, batch->vbo_colors);
   ogl->glBufferData(GL_ARRAY_BUFFER, batch->vertex_count*sizeof(dref(batch->colors)), batch->colors, GL_DYNAMIC_DRAW);
-  ogl->glVertexAttribPointer(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS, 4, GL_FLOAT, GL_FALSE, sizeof(rgba_t), 0);
-  ogl->glEnableVertexAttribArray(HELL_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS);
+  ogl->glVertexAttribPointer(EDEN_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS, 4, GL_FLOAT, GL_FALSE, sizeof(rgba_t), 0);
+  ogl->glEnableVertexAttribArray(EDEN_GFX_OPENGL_BATCH_ATTRIBUTE_COLORS);
 
   // buffer for indices 
   ogl->glGenBuffers(1, &batch->vbo_indices);
@@ -1492,16 +1492,16 @@ hell_gfx_opengl_batch_init(hell_gfx_opengl_t* ogl, arena_t* arena, usz_t element
 
   // shader
   batch->shader = ogl->glCreateProgram();
-  hell_gfx_opengl_attach_shader(
+  eden_gfx_opengl_attach_shader(
       ogl,
       batch->shader, 
       GL_VERTEX_SHADER, 
-      (char*)HELL_GFX_OPENGL_TEST_VSHADER);
-  hell_gfx_opengl_attach_shader(
+      (char*)EDEN_GFX_OPENGL_TEST_VSHADER);
+  eden_gfx_opengl_attach_shader(
       ogl,
       batch->shader, 
       GL_FRAGMENT_SHADER, 
-      (char*)HELL_GFX_OPENGL_TEST_FSHADER);
+      (char*)EDEN_GFX_OPENGL_TEST_FSHADER);
 
   ogl->glLinkProgram(batch->shader);
 
@@ -1519,8 +1519,8 @@ hell_gfx_opengl_batch_init(hell_gfx_opengl_t* ogl, arena_t* arena, usz_t element
 }
 
 static b32_t
-hell_gfx_opengl_init(
-    hell_gfx_t* gfx,
+eden_gfx_opengl_init(
+    eden_gfx_t* gfx,
     arena_t* arena,
     usz_t command_queue_size, 
     usz_t texture_queue_size,
@@ -1528,13 +1528,13 @@ hell_gfx_opengl_init(
     usz_t max_payloads,
     usz_t max_elements)
 {	
-  auto* ogl = (hell_gfx_opengl_t*)gfx->platform_data;
+  auto* ogl = (eden_gfx_opengl_t*)gfx->platform_data;
 
-  ogl->textures = arena_push_arr(hell_gfx_opengl_texture_t, arena, max_textures);
+  ogl->textures = arena_push_arr(eden_gfx_opengl_texture_t, arena, max_textures);
   ogl->texture_cap = max_payloads;
   if (!ogl->textures) return false;
 
-  if (!hell_gfx_init(
+  if (!eden_gfx_init(
         gfx, 
         arena,
         command_queue_size,
@@ -1549,45 +1549,45 @@ hell_gfx_opengl_init(
 
 
   // init batch
-  hell_gfx_opengl_add_predefined_textures(ogl);
-  hell_gfx_opengl_delete_all_textures(ogl);
-  hell_gfx_opengl_batch_init(ogl, arena, max_elements);
+  eden_gfx_opengl_add_predefined_textures(ogl);
+  eden_gfx_opengl_delete_all_textures(ogl);
+  eden_gfx_opengl_batch_init(ogl, arena, max_elements);
 
   return true;
 }
 
 static GLenum
-hell_gfx_opengl_get_blend_mode_from_blend_type(hell_gfx_blend_type_t type) {
+eden_gfx_opengl_get_blend_mode_from_blend_type(eden_gfx_blend_type_t type) {
   GLenum  ret = {0};
   switch(type) {
-    case HELL_GFX_BLEND_TYPE_ZERO: 
+    case EDEN_GFX_BLEND_TYPE_ZERO: 
       ret = GL_ZERO;
       break;
-    case HELL_GFX_BLEND_TYPE_ONE:
+    case EDEN_GFX_BLEND_TYPE_ONE:
       ret = GL_ONE;
       break;
-    case HELL_GFX_BLEND_TYPE_SRC_COLOR:
+    case EDEN_GFX_BLEND_TYPE_SRC_COLOR:
       ret = GL_SRC_COLOR;
       break;
-    case HELL_GFX_BLEND_TYPE_INV_SRC_COLOR:
+    case EDEN_GFX_BLEND_TYPE_INV_SRC_COLOR:
       ret = GL_ONE_MINUS_SRC_COLOR;
       break;
-    case HELL_GFX_BLEND_TYPE_SRC_ALPHA:
+    case EDEN_GFX_BLEND_TYPE_SRC_ALPHA:
       ret = GL_SRC_ALPHA;
       break;
-    case HELL_GFX_BLEND_TYPE_INV_SRC_ALPHA: 
+    case EDEN_GFX_BLEND_TYPE_INV_SRC_ALPHA: 
       ret = GL_ONE_MINUS_SRC_ALPHA;
       break;
-    case HELL_GFX_BLEND_TYPE_DST_ALPHA:
+    case EDEN_GFX_BLEND_TYPE_DST_ALPHA:
       ret = GL_DST_ALPHA;
       break;
-    case HELL_GFX_BLEND_TYPE_INV_DST_ALPHA:
+    case EDEN_GFX_BLEND_TYPE_INV_DST_ALPHA:
       ret = GL_ONE_MINUS_DST_ALPHA; 
       break;
-    case HELL_GFX_BLEND_TYPE_DST_COLOR: 
+    case EDEN_GFX_BLEND_TYPE_DST_COLOR: 
       ret = GL_DST_COLOR; 
       break;
-    case HELL_GFX_BLEND_TYPE_INV_DST_COLOR:
+    case EDEN_GFX_BLEND_TYPE_INV_DST_COLOR:
       ret = GL_ONE_MINUS_DST_COLOR; 
       break;
   }
@@ -1597,43 +1597,43 @@ hell_gfx_opengl_get_blend_mode_from_blend_type(hell_gfx_blend_type_t type) {
 
 
 static void 
-hell_gfx_opengl_set_blend_mode(
-    hell_gfx_opengl_t* ogl, 
-    hell_gfx_blend_type_t src, 
-    hell_gfx_blend_type_t dst) 
+eden_gfx_opengl_set_blend_mode(
+    eden_gfx_opengl_t* ogl, 
+    eden_gfx_blend_type_t src, 
+    eden_gfx_blend_type_t dst) 
 {
-  GLenum src_e = hell_gfx_opengl_get_blend_mode_from_blend_type(src);
-  GLenum dst_e = hell_gfx_opengl_get_blend_mode_from_blend_type(dst);
+  GLenum src_e = eden_gfx_opengl_get_blend_mode_from_blend_type(src);
+  GLenum dst_e = eden_gfx_opengl_get_blend_mode_from_blend_type(dst);
   ogl->glBlendFunc(src_e, dst_e);
 }
 
 
 static void
-hell_gfx_opengl_process_texture_queue(hell_gfx_t* gfx) {
-  auto* ogl = (hell_gfx_opengl_t*)gfx->platform_data;
+eden_gfx_opengl_process_texture_queue(eden_gfx_t* gfx) {
+  auto* ogl = (eden_gfx_opengl_t*)gfx->platform_data;
 
   // @note: In this algorithm of processing the texture queue,
   // it is entirely possible that if the first payload in the queue
   // is loading forever, the rest of the payloads will never be processed.
   // This is fine and intentional. A payload should never be loading forever.
   // 
-  hell_gfx_texture_queue_t* textures = &gfx->texture_queue;
+  eden_gfx_texture_queue_t* textures = &gfx->texture_queue;
   while(textures->payload_count) {
-    hell_gfx_texture_payload_t* payload = textures->payloads + textures->first_payload_index;
+    eden_gfx_texture_payload_t* payload = textures->payloads + textures->first_payload_index;
 
     b32_t stop_loop = false;
     switch(payload->state) {
-      case HELL_GFX_TEXTURE_PAYLOAD_STATE_LOADING: {
+      case EDEN_GFX_TEXTURE_PAYLOAD_STATE_LOADING: {
         stop_loop = true;
       } break;
-      case HELL_GFX_TEXTURE_PAYLOAD_STATE_READY: {
+      case EDEN_GFX_TEXTURE_PAYLOAD_STATE_READY: {
         if(payload->texture_width < (u32_t)S32_MAX &&
             payload->texture_height < (u32_t)S32_MAX &&
             payload->texture_width > 0 &&
             payload->texture_height > 0)
         {
 
-          hell_gfx_opengl_set_texture(ogl, 
+          eden_gfx_opengl_set_texture(ogl, 
               payload->texture_index, 
               (s32_t)payload->texture_width, 
               (s32_t)payload->texture_height, 
@@ -1644,7 +1644,7 @@ hell_gfx_opengl_process_texture_queue(hell_gfx_t* gfx) {
         }
 
       } break;
-      case HELL_GFX_TEXTURE_PAYLOAD_STATE_EMPTY: {
+      case EDEN_GFX_TEXTURE_PAYLOAD_STATE_EMPTY: {
         // Possibly 'cancelled'. i.e. Do nothing either way?
       } break;
       default: {
@@ -1666,14 +1666,14 @@ hell_gfx_opengl_process_texture_queue(hell_gfx_t* gfx) {
 }
 
 static void
-hell_gfx_opengl_begin_frame(
-    hell_gfx_t* gfx,
+eden_gfx_opengl_begin_frame(
+    eden_gfx_t* gfx,
     v2u_t render_wh,
     u32_t region_x0, u32_t region_y0, 
     u32_t region_x1, u32_t region_y1) 
 {
-  auto* ogl = (hell_gfx_opengl_t*)gfx->platform_data;
-  hell_gfx_clear_commands(gfx);  
+  auto* ogl = (eden_gfx_opengl_t*)gfx->platform_data;
+  eden_gfx_clear_commands(gfx);  
 
   ogl->render_wh = render_wh;
 
@@ -1686,9 +1686,9 @@ hell_gfx_opengl_begin_frame(
 }
 
 static void
-hell_gfx_opengl_flush_batch(hell_gfx_opengl_t* ogl) 
+eden_gfx_opengl_flush_batch(eden_gfx_opengl_t* ogl) 
 {
-  hell_gfx_opengl_batch_t* batch = &ogl->batch;
+  eden_gfx_opengl_batch_t* batch = &ogl->batch;
   usz_t vertices_to_draw = batch->vertex_index_ope - batch->vertex_index_start;
   if (vertices_to_draw > 0)
   {
@@ -1735,7 +1735,7 @@ hell_gfx_opengl_flush_batch(hell_gfx_opengl_t* ogl)
         GL_TEXTURE_MAG_FILTER, 
         GL_NEAREST);
 
-    if (batch->draw_mode == HELL_GFX_OPENGL_DRAW_MODE_QUADS)
+    if (batch->draw_mode == EDEN_GFX_OPENGL_DRAW_MODE_QUADS)
     {
       // quad drawing mode
       
@@ -1746,7 +1746,7 @@ hell_gfx_opengl_flush_batch(hell_gfx_opengl_t* ogl)
       usz_t index_offset = batch->vertex_index_start/4*6;
       ogl->glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, (GLvoid*)(index_offset*sizeof(dref(batch->indices))));
     }
-    else // HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES
+    else // EDEN_GFX_OPENGL_DRAW_MODE_TRIANGLES
     {
       // triangle drawing mode
       ogl->glDrawArrays(GL_TRIANGLES, batch->vertex_index_start, vertices_to_draw);
@@ -1759,26 +1759,26 @@ hell_gfx_opengl_flush_batch(hell_gfx_opengl_t* ogl)
   }
 }
 static void
-hell_gfx_opengl_batch_begin(hell_gfx_opengl_t* ogl) 
+eden_gfx_opengl_batch_begin(eden_gfx_opengl_t* ogl) 
 {
-  hell_gfx_opengl_batch_t* batch = &ogl->batch;
+  eden_gfx_opengl_batch_t* batch = &ogl->batch;
   batch->current_texture = 0;
   batch->vertex_index_start = 0;
   batch->vertex_index_ope = 0;
-  batch->draw_mode = HELL_GFX_OPENGL_DRAW_MODE_QUADS;
+  batch->draw_mode = EDEN_GFX_OPENGL_DRAW_MODE_QUADS;
 }
 
 static void
-hell_gfx_opengl_batch_update_and_flush_if_required(
-    hell_gfx_opengl_t* ogl,
-    hell_gfx_opengl_draw_mode_t incoming_draw_mode,
+eden_gfx_opengl_batch_update_and_flush_if_required(
+    eden_gfx_opengl_t* ogl,
+    eden_gfx_opengl_draw_mode_t incoming_draw_mode,
     GLuint incoming_texture)
 {
-  hell_gfx_opengl_batch_t* batch = &ogl->batch;
+  eden_gfx_opengl_batch_t* batch = &ogl->batch;
   if (batch->draw_mode != incoming_draw_mode || batch->current_texture != ogl->blank_texture.handle)
   {
-    hell_gfx_opengl_flush_batch(ogl);
-    if (incoming_draw_mode == HELL_GFX_OPENGL_DRAW_MODE_QUADS)
+    eden_gfx_opengl_flush_batch(ogl);
+    if (incoming_draw_mode == EDEN_GFX_OPENGL_DRAW_MODE_QUADS)
     {
       // If we are going to draw quads next, make sure that we
       // align the vertex index to a multiple of 4 so that we can get ready to draw
@@ -1795,15 +1795,15 @@ hell_gfx_opengl_batch_update_and_flush_if_required(
 
 
 static void
-hell_gfx_opengl_batch_push_triangle(
-    hell_gfx_opengl_t* ogl,
+eden_gfx_opengl_batch_push_triangle(
+    eden_gfx_opengl_t* ogl,
     v3f_t p0, v3f_t p1, v3f_t p2,
     v2f_t uv0, v2f_t uv1, v2f_t uv2,
     rgba_t c0, rgba_t c1, rgba_t c2,
     GLuint texture)
 {
-  hell_gfx_opengl_batch_t* batch = &ogl->batch;
-  hell_gfx_opengl_batch_update_and_flush_if_required(ogl, HELL_GFX_OPENGL_DRAW_MODE_TRIANGLES, texture);
+  eden_gfx_opengl_batch_t* batch = &ogl->batch;
+  eden_gfx_opengl_batch_update_and_flush_if_required(ogl, EDEN_GFX_OPENGL_DRAW_MODE_TRIANGLES, texture);
 
   batch->vertices[batch->vertex_index_ope+0] = p0;
   batch->vertices[batch->vertex_index_ope+1] = p1;
@@ -1822,15 +1822,15 @@ hell_gfx_opengl_batch_push_triangle(
 
 
 static void
-hell_gfx_opengl_batch_push_quad(
-    hell_gfx_opengl_t* ogl,
+eden_gfx_opengl_batch_push_quad(
+    eden_gfx_opengl_t* ogl,
     v3f_t p0, v3f_t p1, v3f_t p2, v3f_t p3,
     v2f_t uv0, v2f_t uv1, v2f_t uv2, v2f_t uv3,
     rgba_t c0, rgba_t c1, rgba_t c2, rgba_t c3,
     GLuint texture)
 {
-  hell_gfx_opengl_batch_t* batch = &ogl->batch;
-  hell_gfx_opengl_batch_update_and_flush_if_required(ogl, HELL_GFX_OPENGL_DRAW_MODE_QUADS, texture);
+  eden_gfx_opengl_batch_t* batch = &ogl->batch;
+  eden_gfx_opengl_batch_update_and_flush_if_required(ogl, EDEN_GFX_OPENGL_DRAW_MODE_QUADS, texture);
 
   batch->vertices[batch->vertex_index_ope+0] = p0;
   batch->vertices[batch->vertex_index_ope+1] = p1;
@@ -1851,10 +1851,10 @@ hell_gfx_opengl_batch_push_quad(
 }
 
 static void
-hell_gfx_opengl_batch_push_mvp(hell_gfx_opengl_t* ogl, m44f_t mvp) 
+eden_gfx_opengl_batch_push_mvp(eden_gfx_opengl_t* ogl, m44f_t mvp) 
 {
-  hell_gfx_opengl_flush_batch(ogl);
-  hell_gfx_opengl_batch_t* batch = &ogl->batch;
+  eden_gfx_opengl_flush_batch(ogl);
+  eden_gfx_opengl_batch_t* batch = &ogl->batch;
 
   ogl->glProgramUniformMatrix4fv(
       batch->shader, 
@@ -1866,30 +1866,30 @@ hell_gfx_opengl_batch_push_mvp(hell_gfx_opengl_t* ogl, m44f_t mvp)
 
 
 static void
-hell_gfx_opengl_batch_end(hell_gfx_opengl_t* ogl)
+eden_gfx_opengl_batch_end(eden_gfx_opengl_t* ogl)
 {
-  hell_gfx_opengl_flush_batch(ogl);
+  eden_gfx_opengl_flush_batch(ogl);
 }
 
 
 // Only call opengl functions when we end frame
 static void
-hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
-  auto* ogl = (hell_gfx_opengl_t*)gfx->platform_data;
+eden_gfx_opengl_end_frame(eden_gfx_t* gfx) {
+  auto* ogl = (eden_gfx_opengl_t*)gfx->platform_data;
 
-  hell_gfx_opengl_align_viewport(ogl);
-  hell_gfx_opengl_process_texture_queue(gfx);
+  eden_gfx_opengl_align_viewport(ogl);
+  eden_gfx_opengl_process_texture_queue(gfx);
 
-  hell_gfx_opengl_batch_begin(ogl);
+  eden_gfx_opengl_batch_begin(ogl);
 
   for (u32_t cmd_index = 0; 
        cmd_index < gfx->command_queue.entry_count; 
        ++cmd_index) 
   {
-    hell_gfx_command_t* entry = hell_gfx_get_command(gfx, cmd_index);
+    eden_gfx_command_t* entry = eden_gfx_get_command(gfx, cmd_index);
     switch(entry->id) {
-      case HELL_GFX_COMMAND_TYPE_VIEW: {
-        auto* data = (hell_gfx_command_view_t*)entry->data;
+      case EDEN_GFX_COMMAND_TYPE_VIEW: {
+        auto* data = (eden_gfx_command_view_t*)entry->data;
         f32_t depth = (f32_t)(ogl->current_layer + 1); //@todo: i think this calculation is wrong?
         m44f_t p = m44f_orthographic(
             data->min_x, data->max_x,
@@ -1898,10 +1898,10 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
         m44f_t v = m44f_translation(-data->pos_x, -data->pos_y);
         m44f_t result = m44f_transpose(p*v);
 
-        hell_gfx_opengl_batch_push_mvp(ogl, result);
+        eden_gfx_opengl_batch_push_mvp(ogl, result);
       } break;
-      case HELL_GFX_COMMAND_TYPE_CLEAR: {
-        auto* data = (hell_gfx_command_clear_t*)entry->data;
+      case EDEN_GFX_COMMAND_TYPE_CLEAR: {
+        auto* data = (eden_gfx_command_clear_t*)entry->data;
         ogl->glClearColor(
             data->colors.r, 
             data->colors.g, 
@@ -1911,9 +1911,9 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
 
       } break;
 
-      case HELL_GFX_COMMAND_TYPE_TRIANGLE: {
-        hell_gfx_command_triangle_t* data = (hell_gfx_command_triangle_t*)entry->data;
-        hell_gfx_opengl_batch_push_triangle(
+      case EDEN_GFX_COMMAND_TYPE_TRIANGLE: {
+        eden_gfx_command_triangle_t* data = (eden_gfx_command_triangle_t*)entry->data;
+        eden_gfx_opengl_batch_push_triangle(
             ogl,
             v3f_set(data->p0.x, data->p0.y, ogl->current_layer),
             v3f_set(data->p1.x, data->p1.y, ogl->current_layer),
@@ -1927,9 +1927,9 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
             ogl->blank_texture.handle);
 
       } break;
-      case HELL_GFX_COMMAND_TYPE_RECT: 
+      case EDEN_GFX_COMMAND_TYPE_RECT: 
       {
-        hell_gfx_command_rect_t* data = (hell_gfx_command_rect_t*)entry->data;
+        eden_gfx_command_rect_t* data = (eden_gfx_command_rect_t*)entry->data;
 
         m44f_t transform;
         {
@@ -1950,7 +1950,7 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
         vertices[2] = transform * v4f_set(+0.5f, +0.5f, 0, 1);
         vertices[3] = transform * v4f_set(-0.5f, +0.5f, 0, 1);
 
-        hell_gfx_opengl_batch_push_quad(
+        eden_gfx_opengl_batch_push_quad(
             ogl,
             vertices[0].xyz,
             vertices[1].xyz,
@@ -1968,21 +1968,21 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
 
       } break;
 
-      case HELL_GFX_COMMAND_TYPE_SPRITE: {
-        hell_gfx_command_sprite_t* data = (hell_gfx_command_sprite_t*)entry->data;
-        hell_gfx_opengl_batch_t* batch = &ogl->batch;
+      case EDEN_GFX_COMMAND_TYPE_SPRITE: {
+        eden_gfx_command_sprite_t* data = (eden_gfx_command_sprite_t*)entry->data;
+        eden_gfx_opengl_batch_t* batch = &ogl->batch;
         assert(ogl->texture_cap > data->texture_index);
-        hell_gfx_opengl_texture_t* texture = ogl->textures + data->texture_index; 
+        eden_gfx_opengl_texture_t* texture = ogl->textures + data->texture_index; 
 
-        if (batch->draw_mode != HELL_GFX_OPENGL_DRAW_MODE_QUADS)
+        if (batch->draw_mode != EDEN_GFX_OPENGL_DRAW_MODE_QUADS)
         {
-          hell_gfx_opengl_flush_batch(ogl);
-          batch->draw_mode = HELL_GFX_OPENGL_DRAW_MODE_QUADS;
+          eden_gfx_opengl_flush_batch(ogl);
+          batch->draw_mode = EDEN_GFX_OPENGL_DRAW_MODE_QUADS;
         }
 
         if (batch->current_texture != texture->handle) 
         {
-          hell_gfx_opengl_flush_batch(ogl);
+          eden_gfx_opengl_flush_batch(ogl);
           batch->current_texture = texture->handle;
         }
 
@@ -2033,30 +2033,30 @@ hell_gfx_opengl_end_frame(hell_gfx_t* gfx) {
 
         batch->vertex_index_ope += 4;
       } break;
-      case HELL_GFX_COMMAND_TYPE_BLEND:
+      case EDEN_GFX_COMMAND_TYPE_BLEND:
       {
-        hell_gfx_opengl_flush_batch(ogl);
-        hell_gfx_command_blend_t* data = (hell_gfx_command_blend_t*)entry->data;
-        hell_gfx_opengl_set_blend_mode(ogl, data->src, data->dst);
+        eden_gfx_opengl_flush_batch(ogl);
+        eden_gfx_command_blend_t* data = (eden_gfx_command_blend_t*)entry->data;
+        eden_gfx_opengl_set_blend_mode(ogl, data->src, data->dst);
       } break;
-      case HELL_GFX_COMMAND_TYPE_DELETE_TEXTURE:
+      case EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE:
       {
-        hell_gfx_command_delete_texture_t* data = (hell_gfx_command_delete_texture_t*)entry->data;
-        hell_gfx_opengl_delete_texture(ogl, data->texture_index);
+        eden_gfx_command_delete_texture_t* data = (eden_gfx_command_delete_texture_t*)entry->data;
+        eden_gfx_opengl_delete_texture(ogl, data->texture_index);
       } break;
-      case HELL_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES:
+      case EDEN_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES:
       {
-        hell_gfx_opengl_delete_all_textures(ogl);
+        eden_gfx_opengl_delete_all_textures(ogl);
       } break;
-      case HELL_GFX_COMMAND_TYPE_ADVANCE_DEPTH:
+      case EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH:
       {
         ogl->current_layer -= 1.f;
       } break;
-      case HELL_GFX_COMMAND_TYPE_TEST: {
+      case EDEN_GFX_COMMAND_TYPE_TEST: {
       } break;
     }
   }
-  hell_gfx_opengl_batch_end(ogl);
+  eden_gfx_opengl_batch_end(ogl);
 }
 #endif
 
@@ -2221,12 +2221,12 @@ eden_assets_init_from_file(
     }
 
     eden_asset_bitmap_t* b = assets->bitmaps + bitmap_index;
-    b->renderer_texture_handle = hell_gfx_get_next_texture_handle(&eden->gfx);
+    b->renderer_texture_handle = eden_gfx_get_next_texture_handle(&eden->gfx);
     b->width = file_bitmap.width;
     b->height = file_bitmap.height;
 
     u32_t bitmap_size = b->width * b->height * 4;
-    hell_gfx_texture_payload_t* payload = hell_gfx_begin_texture_transfer(&eden->gfx, bitmap_size);
+    eden_gfx_texture_payload_t* payload = eden_gfx_begin_texture_transfer(&eden->gfx, bitmap_size);
     if (!payload) return false;
     payload->texture_index = b->renderer_texture_handle;
     payload->texture_width = file_bitmap.width;
@@ -2240,7 +2240,7 @@ eden_assets_init_from_file(
       return false;
     }
 
-    hell_gfx_complete_texture_transfer(payload);
+    eden_gfx_complete_texture_transfer(payload);
   }
 
   for(u32_t font_index = 0;
@@ -2439,14 +2439,14 @@ eden_get_input_characters(eden_t* eden) {
 static void
 eden_clear_canvas(eden_t* eden, rgba_t colors) 
 {
-  hell_gfx_command_clear_t* data = eden_push_gfx_command(hell_gfx_command_clear_t, eden, HELL_GFX_COMMAND_TYPE_CLEAR, 16);
+  eden_gfx_command_clear_t* data = eden_push_gfx_command(eden_gfx_command_clear_t, eden, EDEN_GFX_COMMAND_TYPE_CLEAR, 16);
   data->colors = colors;
 }
 
 static void 
 eden_set_view(eden_t* eden, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y)
 {
-  hell_gfx_command_view_t* data = eden_push_gfx_command(hell_gfx_command_view_t, eden, HELL_GFX_COMMAND_TYPE_VIEW, 16);
+  eden_gfx_command_view_t* data = eden_push_gfx_command(eden_gfx_command_view_t, eden, EDEN_GFX_COMMAND_TYPE_VIEW, 16);
   data->min_x = min_x;
   data->min_y = min_y;
   data->max_x = max_x;
@@ -2458,7 +2458,7 @@ eden_set_view(eden_t* eden, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, 
 static void 
 eden_draw_sprite(eden_t* eden, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1, rgba_t colors) 
 {
-  auto* data = eden_push_gfx_command(hell_gfx_command_sprite_t, eden, HELL_GFX_COMMAND_TYPE_SPRITE, 16);
+  auto* data = eden_push_gfx_command(eden_gfx_command_sprite_t, eden, EDEN_GFX_COMMAND_TYPE_SPRITE, 16);
   data->colors = colors;
   data->texture_index = texture_index;
 
@@ -2475,7 +2475,7 @@ eden_draw_sprite(eden_t* eden, v2f_t pos, v2f_t size, v2f_t anchor, u32_t textur
 static void
 eden_draw_rect(eden_t* eden, v2f_t pos, f32_t rot, v2f_t scale, rgba_t colors) 
 {
-  auto* data = eden_push_gfx_command(hell_gfx_command_rect_t, eden, HELL_GFX_COMMAND_TYPE_RECT, 16);
+  auto* data = eden_push_gfx_command(eden_gfx_command_rect_t, eden, EDEN_GFX_COMMAND_TYPE_RECT, 16);
   data->colors = colors;
   data->pos = pos;
   data->rot = rot;
@@ -2485,7 +2485,7 @@ eden_draw_rect(eden_t* eden, v2f_t pos, f32_t rot, v2f_t scale, rgba_t colors)
 static void
 eden_draw_tri(eden_t* eden, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t colors)
 {
-  auto* data = eden_push_gfx_command(hell_gfx_command_triangle_t, eden, HELL_GFX_COMMAND_TYPE_TRIANGLE, 16);
+  auto* data = eden_push_gfx_command(eden_gfx_command_triangle_t, eden, EDEN_GFX_COMMAND_TYPE_TRIANGLE, 16);
   data->colors = colors;
   data->p0 = p0;
   data->p1 = p1;
@@ -2496,39 +2496,39 @@ eden_draw_tri(eden_t* eden, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t colors)
 static void
 eden_advance_depth(eden_t* eden) 
 {
-  eden_push_gfx_command(hell_gfx_command_advance_depth_t, eden, HELL_GFX_COMMAND_TYPE_ADVANCE_DEPTH, 16);
+  eden_push_gfx_command(eden_gfx_command_advance_depth_t, eden, EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH, 16);
 }
 
 
 static void
 eden_gfx_test(eden_t* eden) 
 {
-  eden_push_gfx_command(hell_gfx_command_test_t, eden, HELL_GFX_COMMAND_TYPE_TEST, 16);
+  eden_push_gfx_command(eden_gfx_command_test_t, eden, EDEN_GFX_COMMAND_TYPE_TEST, 16);
 }
 
 static void
-eden_set_blend(eden_t* eden, hell_gfx_blend_type_t src, hell_gfx_blend_type_t dst)
+eden_set_blend(eden_t* eden, eden_gfx_blend_type_t src, eden_gfx_blend_type_t dst)
 {
-  auto* data= eden_push_gfx_command(hell_gfx_command_blend_t, eden, HELL_GFX_COMMAND_TYPE_BLEND, 16);
+  auto* data= eden_push_gfx_command(eden_gfx_command_blend_t, eden, EDEN_GFX_COMMAND_TYPE_BLEND, 16);
   data->src = src;
   data->dst = dst;
 }
 
 static void
 eden_set_blend_preset(eden_t* eden, eden_blend_preset_type_t type) {
-  hell_gfx_t* g = &eden->gfx;
+  eden_gfx_t* g = &eden->gfx;
   switch(type) {
     case EDEN_BLEND_PRESET_TYPE_ADD:
       g->current_blend_preset = type; 
-      eden_set_blend(eden, HELL_GFX_BLEND_TYPE_SRC_ALPHA, HELL_GFX_BLEND_TYPE_ONE); 
+      eden_set_blend(eden, EDEN_GFX_BLEND_TYPE_SRC_ALPHA, EDEN_GFX_BLEND_TYPE_ONE); 
       break;
     case EDEN_BLEND_PRESET_TYPE_MULTIPLY:
       g->current_blend_preset = type; 
-      eden_set_blend(eden, HELL_GFX_BLEND_TYPE_DST_COLOR, HELL_GFX_BLEND_TYPE_ZERO); 
+      eden_set_blend(eden, EDEN_GFX_BLEND_TYPE_DST_COLOR, EDEN_GFX_BLEND_TYPE_ZERO); 
       break;
     case EDEN_BLEND_PRESET_TYPE_ALPHA:
       g->current_blend_preset = type; 
-      eden_set_blend(eden, HELL_GFX_BLEND_TYPE_SRC_ALPHA, HELL_GFX_BLEND_TYPE_INV_SRC_ALPHA); 
+      eden_set_blend(eden, EDEN_GFX_BLEND_TYPE_SRC_ALPHA, EDEN_GFX_BLEND_TYPE_INV_SRC_ALPHA); 
       break;
     case EDEN_BLEND_PRESET_TYPE_NONE:
       // Do nothing
@@ -2538,7 +2538,7 @@ eden_set_blend_preset(eden_t* eden, eden_blend_preset_type_t type) {
 
 static eden_blend_preset_type_t
 eden_get_blend_preset(eden_t* eden) {
-  hell_gfx_t* g = &eden->gfx;
+  eden_gfx_t* g = &eden->gfx;
   return g->current_blend_preset;
 }
 
@@ -2621,7 +2621,6 @@ eden_draw_circ_outline(
     
   }
 }
-
 
 static void
 eden_draw_asset_sprite(
@@ -2765,9 +2764,9 @@ eden_draw_text(
 static void
 eden_inspect_u32(eden_t* eden, buf_t name, u32_t item) 
 {
-  hell_inspector_t* in = &eden->inspector;
+  eden_inspector_t* in = &eden->inspector;
   assert(in->entry_count < in->entry_cap);
-  hell_inspector_entry_t* entry = in->entries + in->entry_count++;
+  eden_inspector_entry_t* entry = in->entries + in->entry_count++;
   entry->item_u32 = item;
   entry->type = HELL_INSPECTOR_ENTRY_TYPE_U32;
   entry->name = name;
@@ -2776,9 +2775,9 @@ eden_inspect_u32(eden_t* eden, buf_t name, u32_t item)
 static void
 eden_inspect_f32(eden_t* eden, buf_t name, u32_t item)
 {
-  hell_inspector_t* in = &eden->inspector;
+  eden_inspector_t* in = &eden->inspector;
   assert(in->entry_count < in->entry_cap);
-  hell_inspector_entry_t* entry = in->entries + in->entry_count++;
+  eden_inspector_entry_t* entry = in->entries + in->entry_count++;
   entry->item_f32 = item;
   entry->type = HELL_INSPECTOR_ENTRY_TYPE_F32;
   entry->name = name;
@@ -2831,36 +2830,36 @@ eden_inspector_update_and_render(
 }
 
 static b32_t 
-hell_inspector_init(hell_inspector_t* in, arena_t* arena, u32_t max_entries) 
+eden_inspector_init(eden_inspector_t* in, arena_t* arena, u32_t max_entries) 
 {
   in->entry_cap = max_entries;
   in->entry_count = 0;
-  in->entries = arena_push_arr(hell_inspector_entry_t, arena, max_entries);
+  in->entries = arena_push_arr(eden_inspector_entry_t, arena, max_entries);
   if (!in->entries) 
     return false;
   return true;
 }
 
 static void 
-hell_inspect_clear(eden_t* eden) 
+eden_inspect_clear(eden_t* eden) 
 {
-  hell_inspector_t* in = &eden->inspector;
+  eden_inspector_t* in = &eden->inspector;
   in->entry_count = 0;
 }
 
 //
 // @mark: profile
 //
-static hell_profiler_entry_t*
-_hell_profiler_init_block(
-    hell_profiler_t* p,
+static eden_profiler_entry_t*
+_eden_profiler_init_block(
+    eden_profiler_t* p,
     const char* filename, 
     u32_t line,
     const char* function_name,
     const char* block_name = 0) 
 {
   if (p->entry_count < p->entry_cap) {
-    hell_profiler_entry_t* entry = p->entries + p->entry_count++;
+    eden_profiler_entry_t* entry = p->entries + p->entry_count++;
     entry->filename = filename;
     entry->block_name = block_name ? block_name : function_name;
     entry->line = line;
@@ -2874,7 +2873,7 @@ _hell_profiler_init_block(
 }
 
 static void
-hell_profiler_begin_stat(hell_profiler_stat_t* stat) {
+eden_profiler_begin_stat(eden_profiler_stat_t* stat) {
   stat->min = F64_INFINITY;
   stat->max = F64_NEG_INFINITY;
   stat->average = 0.0;
@@ -2882,7 +2881,7 @@ hell_profiler_begin_stat(hell_profiler_stat_t* stat) {
 }
 
 static void
-hell_profiler_accumulate_stat(hell_profiler_stat_t* stat, f64_t value) {
+eden_profiler_accumulate_stat(eden_profiler_stat_t* stat, f64_t value) {
   ++stat->count;
   if (stat->min > value) {
     stat->min = value;
@@ -2894,7 +2893,7 @@ hell_profiler_accumulate_stat(hell_profiler_stat_t* stat, f64_t value) {
 }
 
 static void
-hell_profiler_end_stat(hell_profiler_stat_t* stat) {
+eden_profiler_end_stat(eden_profiler_stat_t* stat) {
   if(stat->count) {
     stat->average /= (f64_t)stat->count;
   }
@@ -2928,35 +2927,35 @@ eden_profile_update_and_render(
   for(u32_t entry_id = 0; entry_id < eden->profiler.entry_count; ++entry_id)
   {
     arena_set_revert_point(frame_arena);
-    hell_profiler_entry_t* entry = eden->profiler.entries + entry_id;
+    eden_profiler_entry_t* entry = eden->profiler.entries + entry_id;
 
-    hell_profiler_stat_t cycles;
-    hell_profiler_stat_t hits;
-    hell_profiler_stat_t cycles_per_hit;
+    eden_profiler_stat_t cycles;
+    eden_profiler_stat_t hits;
+    eden_profiler_stat_t cycles_per_hit;
     
-    hell_profiler_begin_stat(&cycles);
-    hell_profiler_begin_stat(&hits);
-    hell_profiler_begin_stat(&cycles_per_hit);
+    eden_profiler_begin_stat(&cycles);
+    eden_profiler_begin_stat(&hits);
+    eden_profiler_begin_stat(&cycles_per_hit);
     
     for (u32_t snapshot_index = 0;
          snapshot_index < eden->profiler.entry_snapshot_count;
          ++snapshot_index)
     {
       
-      hell_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
+      eden_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
       
-      hell_profiler_accumulate_stat(&cycles, (f64_t)snapshot->cycles);
-      hell_profiler_accumulate_stat(&hits, (f64_t)snapshot->hits);
+      eden_profiler_accumulate_stat(&cycles, (f64_t)snapshot->cycles);
+      eden_profiler_accumulate_stat(&hits, (f64_t)snapshot->hits);
       
       f64_t cph = 0.0;
       if (snapshot->hits) {
         cph = (f64_t)snapshot->cycles/(f64_t)snapshot->hits;
       }
-      hell_profiler_accumulate_stat(&cycles_per_hit, cph);
+      eden_profiler_accumulate_stat(&cycles_per_hit, cph);
     }
-    hell_profiler_end_stat(&cycles);
-    hell_profiler_end_stat(&hits);
-    hell_profiler_end_stat(&cycles_per_hit);
+    eden_profiler_end_stat(&cycles);
+    eden_profiler_end_stat(&hits);
+    eden_profiler_end_stat(&cycles_per_hit);
    
     bufio_t sb = bufio_set(arena_push_buffer(frame_arena, 256));
 
@@ -2983,7 +2982,7 @@ eden_profile_update_and_render(
          snapshot_index < eden->profiler.entry_snapshot_count;
          ++snapshot_index)
     {
-      hell_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
+      eden_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
       
       const f32_t snapshot_bar_width = 1.5f;
       f32_t height_scale = 1.0f / (f32_t)cycles.max;
@@ -3003,25 +3002,25 @@ eden_profile_update_and_render(
 }
 
 static void
-_hell_profiler_begin_block(hell_profiler_t* p, hell_profiler_entry_t* entry) 
+_eden_profiler_begin_block(eden_profiler_t* p, eden_profiler_entry_t* entry) 
 {
   entry->start_cycles = (u32_t)clock_time();
   entry->start_hits = 1;
 }
 
 static void
-_hell_profiler_end_block(hell_profiler_t* p, hell_profiler_entry_t* entry) {
+_eden_profiler_end_block(eden_profiler_t* p, eden_profiler_entry_t* entry) {
   u64_t delta = ((u32_t)clock_time() - entry->start_cycles) | ((u64_t)(entry->start_hits)) << 32;
   u64_atomic_add(&entry->hits_and_cycles, delta);
 }
 
 
 static void 
-hell_profiler_reset(hell_profiler_t* p) {
+eden_profiler_reset(eden_profiler_t* p) {
 
   for(u32_t entry_id = 0; entry_id < p->entry_count; ++entry_id)
   {
-    hell_profiler_entry_t* itr = p->entries + entry_id;
+    eden_profiler_entry_t* itr = p->entries + entry_id;
     itr->flag_for_reset = true;
   }
 
@@ -3029,31 +3028,31 @@ hell_profiler_reset(hell_profiler_t* p) {
 }
 
 static b32_t 
-hell_profiler_init(
-    hell_profiler_t* p, 
+eden_profiler_init(
+    eden_profiler_t* p, 
     arena_t* arena,
     u32_t max_entries,
     u32_t max_snapshots_per_entry)
 {
   p->entry_cap = max_entries;
   p->entry_snapshot_count = max_snapshots_per_entry;
-  p->entries = arena_push_arr(hell_profiler_entry_t, arena, p->entry_cap);
+  p->entries = arena_push_arr(eden_profiler_entry_t, arena, p->entry_cap);
   if (!p->entries) return false;
 
   for (u32_t i = 0; i < p->entry_cap; ++i) {
-    p->entries[i].snapshots = arena_push_arr(hell_profiler_snapshot_t, arena, max_snapshots_per_entry);
+    p->entries[i].snapshots = arena_push_arr(eden_profiler_snapshot_t, arena, max_snapshots_per_entry);
     if(!p->entries[i].snapshots) return false;
   }
-  hell_profiler_reset(p);
+  eden_profiler_reset(p);
   return true;
 }
 
 
 static void
-hell_profiler_update_entries(hell_profiler_t* p) {
+eden_profiler_update_entries(eden_profiler_t* p) {
   for(u32_t entry_id = 0; entry_id < p->entry_count; ++entry_id)
   {
-    hell_profiler_entry_t* itr = p->entries + entry_id;
+    eden_profiler_entry_t* itr = p->entries + entry_id;
     u64_t hits_and_cycles = u64_atomic_assign(&itr->hits_and_cycles, 0);
     u32_t hits = (u32_t)(hits_and_cycles >> 32);
     u32_t cycles = (u32_t)(hits_and_cycles & 0xFFFFFFFF);
@@ -3153,8 +3152,8 @@ eden_update_and_render_console(eden_console_t*)
 // @mark: speaker
 //
 static b32_t
-hell_speaker_init(
-    hell_speaker_t* speaker,
+eden_speaker_init(
+    eden_speaker_t* speaker,
     eden_speaker_bitrate_type_t bitrate_type,
     u32_t sound_cap,
     arena_t* arena) 
@@ -3194,7 +3193,7 @@ eden_speaker_play(
     b32_t loop,
     f32_t volume) 
 {
-  hell_speaker_t* speaker = &eden->speaker;
+  eden_speaker_t* speaker = &eden->speaker;
   // get last index from free list
   assert(speaker->sound_free_list_count > 0);
 
@@ -3216,7 +3215,7 @@ eden_speaker_stop(
     eden_t* eden,
     eden_speaker_sound_t* instance)
 {
-  hell_speaker_t* speaker = &eden->speaker;
+  eden_speaker_t* speaker = &eden->speaker;
   instance->is_playing = false;
   speaker->sound_free_list[speaker->sound_free_list_count++] = instance->index;
 }
@@ -3226,9 +3225,9 @@ eden_speaker_stop(
 // @todo: we should update differently depending on channel.
 //
 static void
-hell_speaker_update(eden_t* eden)
+eden_speaker_update(eden_t* eden)
 {
-  hell_speaker_t* speaker = &eden->speaker;
+  eden_speaker_t* speaker = &eden->speaker;
 #if 1
   u32_t bytes_per_sample = (speaker->device_bits_per_sample/8);
    memory_zero(speaker->samples, bytes_per_sample * speaker->device_channels * speaker->sample_count);
