@@ -22,9 +22,6 @@
 // @todo:
 //   - have a name for drawing stuff (like eden_draw?)
 //   - batch system fixes:
-//     - fix potential wastage of triangles
-//     - fix double flushing
-//     - code refactor
 //     - elements as input
 //
 
@@ -617,19 +614,6 @@ struct hell_gfx_opengl_t
 
   hell_gfx_opengl_batch_t batch;
 
-  //@todo: TESTING
-#if 0
-  v3f_t batch_vertices[4*100];
-  rgba_t batch_colors[4*100];
-  v2f_t batch_uvs[4*100];
-  u32_t batch_indices[6*100];
-  GLuint batch_vao;
-  GLuint batch_vbos[10];
-  GLuint batch_shader;
-#endif
-  
-  //hell_gfx_opengl_sprite_batch_t sprite_batch;
-  //hell_gfx_opengl_triangle_batch_t triangle_batch;
 
   hell_gfx_opengl_texture_t* textures;
   usz_t texture_cap;
@@ -723,7 +707,6 @@ struct eden_console_t {
 //
 // @mark: profiler
 // 
-
 struct hell_profiler_snapshot_t {
   u32_t hits;
   u32_t cycles;
@@ -1061,8 +1044,7 @@ struct eden_config_t
   usz_t render_command_size;
   u32_t max_textures;
   usz_t max_texture_payloads; 
-  usz_t max_sprites;
-  usz_t max_triangles;
+  usz_t max_elements;
 
   b32_t speaker_enabled;
   u32_t speaker_samples_per_second;
@@ -1166,8 +1148,9 @@ hell_gfx_get_command(hell_gfx_t* g, u32_t index) {
 }
 
 static void*
-_hell_gfx_push_command_block(hell_gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4) {
-
+eden_push_gfx_command_block(eden_t* eden, u32_t size, u32_t id, u32_t align = 16) 
+{
+  hell_gfx_command_queue_t* q = &eden->gfx.command_queue;
 	umi_t imem = ptr_to_umi(q->memory);
 	
 	umi_t adjusted_data_pos = align_up_pow2(imem + q->data_pos, (usz_t)align) - imem;
@@ -1269,230 +1252,6 @@ hell_gfx_cancel_texture_transfer(hell_gfx_texture_payload_t* entry) {
 //
 // Commands
 //
-
-#define _hell_gfx_push_command(t, q, id, align) ((t*)_hell_gfx_push_command_block(q, sizeof(t), id, align))
-
-static void 
-hell_gfx_set_view(hell_gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y) 
-{
-  hell_gfx_command_queue_t* c = &g->command_queue; 
-    
-  hell_gfx_command_view_t* data = _hell_gfx_push_command(hell_gfx_command_view_t, c, HELL_GFX_COMMAND_TYPE_VIEW, 16);
-  data->min_x = min_x;
-  data->min_y = min_y;
-  data->max_x = max_x;
-  data->max_y = max_y;
-  data->pos_x = pos_x;
-  data->pos_y = pos_y;
-}
-
-static void
-hell_gfx_clear_colors(hell_gfx_t* g, rgba_t colors) {
-  hell_gfx_command_queue_t* c = &g->command_queue; 
-  hell_gfx_command_clear_t* data = _hell_gfx_push_command(hell_gfx_command_clear_t, c, HELL_GFX_COMMAND_TYPE_CLEAR, 16);
-  data->colors = colors;
-}
-
-static void
-hell_gfx_push_sprite(
-    hell_gfx_t* g, 
-    rgba_t colors, 
-    v2f_t pos, 
-    v2f_t size,
-    v2f_t anchor,
-    u32_t texture_index,
-    u32_t texel_x0, u32_t texel_y0, 
-    u32_t texel_x1, u32_t texel_y1)
-{
-  hell_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data = _hell_gfx_push_command(hell_gfx_command_sprite_t, c, HELL_GFX_COMMAND_TYPE_SPRITE, 16);
-  data->colors = colors;
-  data->texture_index = texture_index;
-
-  data->texel_x0 = texel_x0;
-  data->texel_y0 = texel_y0;
-  data->texel_x1 = texel_x1;
-  data->texel_y1 = texel_y1;
-
-  data->pos = pos;
-  data->size = size;
-  data->anchor = anchor;
-}
-
-static void
-hell_gfx_draw_filled_rect(hell_gfx_t* g, 
-                     rgba_t colors, 
-                     v2f_t pos, f32_t rot, v2f_t size)
-{
-  hell_gfx_command_queue_t* c = &g->command_queue; 
-
-  auto* data = _hell_gfx_push_command(hell_gfx_command_rect_t, c, HELL_GFX_COMMAND_TYPE_RECT, 16);
-  data->colors = colors;
-  data->pos = pos;
-  data->rot = rot;
-  data->size = size;
-}
-
-
-static void 
-hell_gfx_delete_texture(hell_gfx_t* g, u32_t texture_index) {
-  hell_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data= _hell_gfx_push_command(hell_gfx_command_delete_texture_t, c, HELL_GFX_COMMAND_TYPE_DELETE_TEXTURE, 16);
-  data->texture_index = texture_index;
-  
-}
-
-static void 
-hell_gfx_set_blend(hell_gfx_t* g, hell_gfx_blend_type_t src, hell_gfx_blend_type_t dst) {
-  hell_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data= _hell_gfx_push_command(hell_gfx_command_blend_t, c, HELL_GFX_COMMAND_TYPE_BLEND, 16);
-  data->src = src;
-  data->dst = dst;
-}
-
-static void
-hell_gfx_draw_filled_triangle(hell_gfx_t* g,
-                         rgba_t colors,
-                         v2f_t p0, v2f_t p1, v2f_t p2)
-{
-  hell_gfx_command_queue_t* c = &g->command_queue; 
-  auto* data = _hell_gfx_push_command(hell_gfx_command_triangle_t, c, HELL_GFX_COMMAND_TYPE_TRIANGLE, 16);
-  data->colors = colors;
-  data->p0 = p0;
-  data->p1 = p1;
-  data->p2 = p2;
-}
-
-static void
-hell_gfx_advance_depth(hell_gfx_t* g) { 
-  hell_gfx_command_queue_t* c = &g->command_queue; 
-  _hell_gfx_push_command(hell_gfx_command_advance_depth_t, c, HELL_GFX_COMMAND_TYPE_ADVANCE_DEPTH, 16);
-}
-
-static void
-hell_gfx_test(hell_gfx_t* g) { 
-  hell_gfx_command_queue_t* c = &g->command_queue; 
-  _hell_gfx_push_command(hell_gfx_command_test_t, c, HELL_GFX_COMMAND_TYPE_TEST, 16);
-}
-
-#undef _hell_gfx_push_command
-
-//
-// Deriviative commands
-//
-
-static void 
-hell_gfx_draw_line(
-    hell_gfx_t* g, 
-    v2f_t p0, v2f_t p1,
-    f32_t thickness,
-    rgba_t colors) 
-{ 
-  // @note: Min.Y needs to be lower than Max.y
-  
-  if (p0.y > p1.y) {
-    swap(p0.x, p1.x);
-  }
-  
-  v2f_t line_vector = p1 - p0;
-  f32_t line_length = v2f_len(line_vector);
-  v2f_t line_mid = v2f_mid(p1, p0);
-  
-  v2f_t x_axis = v2f_set(1.f, 0.f);
-  f32_t angle = v2f_angle(line_vector, x_axis);
-  
-  hell_gfx_draw_filled_rect(g, colors, 
-                       {line_mid.x, line_mid.y},
-                       angle, 
-                       {line_length, thickness});
-}
-
-static void
-hell_gfx_draw_filled_circle(hell_gfx_t* g, 
-                       v2f_t center, 
-                       f32_t radius,
-                       u32_t sections,
-                       rgba_t color)
-{
-  // We must have at least 3 sections
-  // which would form a triangle
-  if (sections < 3) {
-    assert(sections >= 3);
-    return;
-  }
-  f32_t section_angle = TAU_32/sections;
-  f32_t current_angle = 0.f;
-
-  // Basically it's just a bunch of triangles
-  for(u32_t section_id = 0;
-      section_id < sections;
-      ++section_id)
-  {
-    f32_t next_angle = current_angle + section_angle; 
-
-    v2f_t p0 = center;
-    v2f_t p1 = p0 + v2f_set(f32_cos(current_angle), f32_sin(current_angle)) * radius;
-    v2f_t p2 = p0 + v2f_set(f32_cos(next_angle), f32_sin(next_angle)) * radius; 
-
-    hell_gfx_draw_filled_triangle(g, color, p0, p1, p2); 
-    current_angle += section_angle;
-  }
-}
-
-
-static  void
-hell_gfx_draw_circle_outline(hell_gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
-{
-  // @note: Essentially a bunch of lines
-  // We can't really have a surface with less than 3 lines
-  if (line_count < 3) {
-    assert(line_count >= 3);
-    return;
-  }
-  f32_t angle_increment = TAU_32 / line_count;
-  v2f_t pt1 = v2f_set( 0.f, radius); 
-  v2f_t pt2 = v2f_rotate(pt1, angle_increment);
-  
-  for (u32_t i = 0; i < line_count; ++i) {
-    v2f_t p0 = v2f_add(pt1, center);
-    v2f_t p1 = v2f_add(pt2, center);
-    hell_gfx_draw_line(g, p0, p1, thickness, color);
-    
-    pt1 = pt2;
-    pt2 = v2f_rotate(pt1, angle_increment);
-    
-  }
-}
-
-
-static void 
-hell_gfx_set_blend_preset(hell_gfx_t* g, eden_blend_preset_type_t type)
-{
-  switch(type) {
-    case EDEN_BLEND_PRESET_TYPE_ADD:
-      g->current_blend_preset = type; 
-      hell_gfx_set_blend(g, HELL_GFX_BLEND_TYPE_SRC_ALPHA, HELL_GFX_BLEND_TYPE_ONE); 
-      break;
-    case EDEN_BLEND_PRESET_TYPE_MULTIPLY:
-      g->current_blend_preset = type; 
-      hell_gfx_set_blend(g, HELL_GFX_BLEND_TYPE_DST_COLOR, HELL_GFX_BLEND_TYPE_ZERO); 
-      break;
-    case EDEN_BLEND_PRESET_TYPE_ALPHA:
-      g->current_blend_preset = type; 
-      hell_gfx_set_blend(g, HELL_GFX_BLEND_TYPE_SRC_ALPHA, HELL_GFX_BLEND_TYPE_INV_SRC_ALPHA); 
-      break;
-    case EDEN_BLEND_PRESET_TYPE_NONE:
-      // Do nothing
-      break;
-  }
-}
-
-static eden_blend_preset_type_t
-hell_gfx_get_blend_preset(hell_gfx_t* g) {
-  return g->current_blend_preset;
-}
-
-
 #if EDEN_USE_OPENGL
 
 static void 
@@ -1662,10 +1421,10 @@ void main() \n\
 
 
 static b32_t 
-hell_gfx_opengl_batch_init(hell_gfx_opengl_t* ogl, arena_t* arena)
+hell_gfx_opengl_batch_init(hell_gfx_opengl_t* ogl, arena_t* arena, usz_t element_count)
 {
   hell_gfx_opengl_batch_t* batch = &ogl->batch;
-  batch->element_count = 8000;
+  batch->element_count = element_count;
 
   // one element has 4 vertices, uvs, and colors (one for each vertex)
   batch->vertex_count = batch->element_count*4; 
@@ -1767,8 +1526,7 @@ hell_gfx_opengl_init(
     usz_t texture_queue_size,
     usz_t max_textures,
     usz_t max_payloads,
-    usz_t max_sprites,
-    usz_t max_triangles)
+    usz_t max_elements)
 {	
   auto* ogl = (hell_gfx_opengl_t*)gfx->platform_data;
 
@@ -1793,7 +1551,7 @@ hell_gfx_opengl_init(
   // init batch
   hell_gfx_opengl_add_predefined_textures(ogl);
   hell_gfx_opengl_delete_all_textures(ogl);
-  hell_gfx_opengl_batch_init(ogl, arena);
+  hell_gfx_opengl_batch_init(ogl, arena, max_elements);
 
   return true;
 }
@@ -1993,15 +1751,6 @@ hell_gfx_opengl_flush_batch(hell_gfx_opengl_t* ogl)
       // triangle drawing mode
       ogl->glDrawArrays(GL_TRIANGLES, batch->vertex_index_start, vertices_to_draw);
 
-      // Align the vertex index to a multiple of 4 so that we can get ready to draw elements
-      //
-      // @todo: This isn't the best way or place to do it if we go from drawing 
-      // triangles to triangles, because we potentially waste vertices!!!
-      //
-      if (!is_multiple_of_pow2(batch->vertex_index_ope,4)) // checks for multiple of 4
-      {
-        batch->vertex_index_ope = align_up_pow2(batch->vertex_index_ope, 4);
-      }
     }
     ogl->glBindVertexArray(0);
 
@@ -2029,6 +1778,16 @@ hell_gfx_opengl_batch_update_and_flush_if_required(
   if (batch->draw_mode != incoming_draw_mode || batch->current_texture != ogl->blank_texture.handle)
   {
     hell_gfx_opengl_flush_batch(ogl);
+    if (incoming_draw_mode == HELL_GFX_OPENGL_DRAW_MODE_QUADS)
+    {
+      // If we are going to draw quads next, make sure that we
+      // align the vertex index to a multiple of 4 so that we can get ready to draw
+      // using indices
+      if (!is_multiple_of_pow2(batch->vertex_index_ope,4)) // checks for multiple of 4
+      {
+        batch->vertex_index_start = batch->vertex_index_ope = align_up_pow2(batch->vertex_index_ope, 4);
+      }
+    }
   }
   batch->draw_mode = incoming_draw_mode;
   batch->current_texture = ogl->blank_texture.handle;
@@ -2676,77 +2435,191 @@ eden_get_input_characters(eden_t* eden) {
 //
 // @mark:(Rendering) 
 //
+#define eden_push_gfx_command(t, eden, id, align) ((t*)eden_push_gfx_command_block(eden, sizeof(t), id, align))
 static void
-eden_clear_canvas(eden_t* eden, rgba_t color) {
-  hell_gfx_t* gfx = &eden->gfx;
-  hell_gfx_clear_colors(gfx, color); 
+eden_clear_canvas(eden_t* eden, rgba_t colors) 
+{
+  hell_gfx_command_clear_t* data = eden_push_gfx_command(hell_gfx_command_clear_t, eden, HELL_GFX_COMMAND_TYPE_CLEAR, 16);
+  data->colors = colors;
 }
 
 static void 
 eden_set_view(eden_t* eden, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x, f32_t pos_y)
 {
-  hell_gfx_t* gfx = &eden->gfx;
-  hell_gfx_set_view(gfx, min_x, max_x, min_y, max_y, pos_x, pos_y); 
+  hell_gfx_command_view_t* data = eden_push_gfx_command(hell_gfx_command_view_t, eden, HELL_GFX_COMMAND_TYPE_VIEW, 16);
+  data->min_x = min_x;
+  data->min_y = min_y;
+  data->max_x = max_x;
+  data->max_y = max_y;
+  data->pos_x = pos_x;
+  data->pos_y = pos_y;
 }
 
 static void 
-eden_draw_sprite(eden_t* eden, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1, rgba_t color) 
+eden_draw_sprite(eden_t* eden, v2f_t pos, v2f_t size, v2f_t anchor, u32_t texture_index, u32_t texel_x0, u32_t texel_y0, u32_t texel_x1, u32_t texel_y1, rgba_t colors) 
 {
-  hell_gfx_t* gfx = &eden->gfx;
-  hell_gfx_push_sprite(gfx, color, pos, size, anchor, texture_index, texel_x0, texel_y0, texel_x1, texel_y1 ); 
+  auto* data = eden_push_gfx_command(hell_gfx_command_sprite_t, eden, HELL_GFX_COMMAND_TYPE_SPRITE, 16);
+  data->colors = colors;
+  data->texture_index = texture_index;
+
+  data->texel_x0 = texel_x0;
+  data->texel_y0 = texel_y0;
+  data->texel_x1 = texel_x1;
+  data->texel_y1 = texel_y1;
+
+  data->pos = pos;
+  data->size = size;
+  data->anchor = anchor;
 }
 
 static void
-eden_draw_rect(eden_t* eden, v2f_t pos, f32_t rot, v2f_t scale, rgba_t color) 
+eden_draw_rect(eden_t* eden, v2f_t pos, f32_t rot, v2f_t scale, rgba_t colors) 
 {
-  hell_gfx_t* gfx = &eden->gfx;
-  hell_gfx_draw_filled_rect(gfx,color, pos, rot, scale);
+  auto* data = eden_push_gfx_command(hell_gfx_command_rect_t, eden, HELL_GFX_COMMAND_TYPE_RECT, 16);
+  data->colors = colors;
+  data->pos = pos;
+  data->rot = rot;
+  data->size = scale;
 }
 
 static void
-eden_draw_tri(eden_t* eden, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t color)
+eden_draw_tri(eden_t* eden, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t colors)
 {
-  hell_gfx_t* gfx = &eden->gfx;
-  hell_gfx_draw_filled_triangle(gfx,color, p0, p1, p2);
+  auto* data = eden_push_gfx_command(hell_gfx_command_triangle_t, eden, HELL_GFX_COMMAND_TYPE_TRIANGLE, 16);
+  data->colors = colors;
+  data->p0 = p0;
+  data->p1 = p1;
+  data->p2 = p2;
+}
+
+
+static void
+eden_advance_depth(eden_t* eden) 
+{
+  eden_push_gfx_command(hell_gfx_command_advance_depth_t, eden, HELL_GFX_COMMAND_TYPE_ADVANCE_DEPTH, 16);
+}
+
+
+static void
+eden_gfx_test(eden_t* eden) 
+{
+  eden_push_gfx_command(hell_gfx_command_test_t, eden, HELL_GFX_COMMAND_TYPE_TEST, 16);
 }
 
 static void
-eden_advance_depth(eden_t* eden) {
-  hell_gfx_t* gfx = &eden->gfx;
-  hell_gfx_advance_depth(gfx);
-}
-
-static void
-eden_gfx_test(eden_t* eden) {
-  hell_gfx_t* gfx = &eden->gfx;
-  hell_gfx_test(gfx);
+eden_set_blend(eden_t* eden, hell_gfx_blend_type_t src, hell_gfx_blend_type_t dst)
+{
+  auto* data= eden_push_gfx_command(hell_gfx_command_blend_t, eden, HELL_GFX_COMMAND_TYPE_BLEND, 16);
+  data->src = src;
+  data->dst = dst;
 }
 
 static void
 eden_set_blend_preset(eden_t* eden, eden_blend_preset_type_t type) {
-  hell_gfx_set_blend_preset(&eden->gfx, type);
+  hell_gfx_t* g = &eden->gfx;
+  switch(type) {
+    case EDEN_BLEND_PRESET_TYPE_ADD:
+      g->current_blend_preset = type; 
+      eden_set_blend(eden, HELL_GFX_BLEND_TYPE_SRC_ALPHA, HELL_GFX_BLEND_TYPE_ONE); 
+      break;
+    case EDEN_BLEND_PRESET_TYPE_MULTIPLY:
+      g->current_blend_preset = type; 
+      eden_set_blend(eden, HELL_GFX_BLEND_TYPE_DST_COLOR, HELL_GFX_BLEND_TYPE_ZERO); 
+      break;
+    case EDEN_BLEND_PRESET_TYPE_ALPHA:
+      g->current_blend_preset = type; 
+      eden_set_blend(eden, HELL_GFX_BLEND_TYPE_SRC_ALPHA, HELL_GFX_BLEND_TYPE_INV_SRC_ALPHA); 
+      break;
+    case EDEN_BLEND_PRESET_TYPE_NONE:
+      // Do nothing
+      break;
+  }
 }
 
 static eden_blend_preset_type_t
 eden_get_blend_preset(eden_t* eden) {
-  return hell_gfx_get_blend_preset(&eden->gfx);
+  hell_gfx_t* g = &eden->gfx;
+  return g->current_blend_preset;
 }
 
 
 static void
 eden_draw_line(eden_t* eden, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {
-  hell_gfx_draw_line(&eden->gfx, p0, p1, thickness, colors);
+  // @note: Min.Y needs to be lower than Max.y
+  if (p0.y > p1.y) {
+    swap(p0.x, p1.x);
+  }
+  
+  v2f_t line_vector = p1 - p0;
+  f32_t line_length = v2f_len(line_vector);
+  v2f_t line_mid = v2f_mid(p1, p0);
+  
+  v2f_t x_axis = v2f_set(1.f, 0.f);
+  f32_t angle = v2f_angle(line_vector, x_axis);
+  
+  eden_draw_rect(
+      eden, 
+      {line_mid.x, line_mid.y},
+      angle, 
+      {line_length, thickness},
+      colors);
 }
 
 static void
 eden_draw_circle(eden_t* eden, v2f_t center, f32_t radius, u32_t sections, rgba_t color) {
-  hell_gfx_draw_filled_circle(&eden->gfx, center, radius, sections, color);
+  // We must have at least 3 sections
+  // which would form a triangle
+  if (sections < 3) {
+    assert(sections >= 3);
+    return;
+  }
+  f32_t section_angle = TAU_32/sections;
+  f32_t current_angle = 0.f;
+
+  // Basically it's just a bunch of triangles
+  for(u32_t section_id = 0;
+      section_id < sections;
+      ++section_id)
+  {
+    f32_t next_angle = current_angle + section_angle; 
+
+    v2f_t p0 = center;
+    v2f_t p1 = p0 + v2f_set(f32_cos(current_angle), f32_sin(current_angle)) * radius;
+    v2f_t p2 = p0 + v2f_set(f32_cos(next_angle), f32_sin(next_angle)) * radius; 
+
+    eden_draw_tri(eden, p0, p1, p2, color); 
+    current_angle += section_angle;
+  }
 }
 
 static void
-eden_draw_circ_outline(eden_t* eden, v2f_t center, f32_t radius, f32_t thickness, u32_t line_count, rgba_t color) 
+eden_draw_circ_outline(
+    eden_t* eden, 
+    v2f_t center, 
+    f32_t radius, 
+    f32_t thickness, 
+    u32_t line_count, 
+    rgba_t color) 
 {
-  hell_gfx_draw_circle_outline(&eden->gfx, center, radius, thickness, line_count, color);
+  // @note: Essentially a bunch of lines
+  // We can't really have a surface with less than 3 lines
+  if (line_count < 3) {
+    assert(line_count >= 3);
+    return;
+  }
+  f32_t angle_increment = TAU_32 / line_count;
+  v2f_t pt1 = v2f_set( 0.f, radius); 
+  v2f_t pt2 = v2f_rotate(pt1, angle_increment);
+  
+  for (u32_t i = 0; i < line_count; ++i) {
+    v2f_t p0 = v2f_add(pt1, center);
+    v2f_t p1 = v2f_add(pt2, center);
+    eden_draw_line(eden, p0, p1, thickness, color);
+    
+    pt1 = pt2;
+    pt2 = v2f_rotate(pt1, angle_increment);
+    
+  }
 }
 
 

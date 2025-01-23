@@ -26,8 +26,7 @@ eden_get_config_sig(eden_get_config)
   ret.render_command_size = megabytes(100);
   ret.max_textures = 1;
   ret.max_texture_payloads = 1;
-  ret.max_sprites = 4096;
-  ret.max_triangles = 1; // TODO: triangles and sprites should allow for 0
+  ret.max_elements = 4096;
 
   ret.speaker_enabled = false;
   ret.speaker_samples_per_second = 48000;

@@ -1322,7 +1322,7 @@ eden_add_task_sig	eden.h	/^#define eden_add_task_sig(/;"	d	language:C++
 eden_add_task_sig	eden.h	/^typedef eden_add_task_sig(eden_add_task_f);$/;"	t	language:C++
 eden_add_task_sig	ship_app_lit.cpp	/^eden_add_task_sig(w32_add_task)$/;"	f	language:C++	file:
 eden_add_task_sig	w32_eden.cpp	/^eden_add_task_sig(w32_add_task)$/;"	f	language:C++	file:
-eden_advance_depth	code/eden.h	/^eden_advance_depth(eden_t* eden) {$/;"	f	language:C++	typeref:typename:void
+eden_advance_depth	code/eden.h	/^eden_advance_depth(eden_t* eden) $/;"	f	language:C++	typeref:typename:void
 eden_advance_depth	eden.h	/^eden_advance_depth(eden_t* eden) {$/;"	f	language:C++	typeref:typename:void
 eden_assets_get_bitmap	code/eden.h	/^eden_assets_get_bitmap(eden_assets_t* assets, eden_asset_bitmap_id_t bitmap_id) {$/;"	f	language:C++	typeref:typename:eden_asset_bitmap_t *
 eden_assets_get_bitmap	eden.h	/^eden_assets_get_bitmap(eden_assets_t* assets, eden_asset_bitmap_id_t bitmap_id) {$/;"	f	language:C++	typeref:typename:eden_asset_bitmap_t *
@@ -1570,7 +1570,7 @@ eden_draw_asset_sprite	code/eden.h	/^eden_draw_asset_sprite($/;"	f	language:C++	
 eden_draw_asset_sprite	eden.h	/^eden_draw_asset_sprite($/;"	f	language:C++	typeref:typename:void
 eden_draw_circle	code/eden.h	/^eden_draw_circle(eden_t* eden, v2f_t center, f32_t radius, u32_t sections, rgba_t color) {$/;"	f	language:C++	typeref:typename:void
 eden_draw_circle	eden.h	/^eden_draw_circle(eden_t* eden, v2f_t center, f32_t radius, u32_t sections, rgba_t color) {$/;"	f	language:C++	typeref:typename:void
-eden_draw_circ_outline	code/eden.h	/^eden_draw_circ_outline(eden_t* eden, v2f_t center, f32_t radius, f32_t thickness, u32_t line_cou/;"	f	language:C++	typeref:typename:void
+eden_draw_circ_outline	code/eden.h	/^eden_draw_circ_outline($/;"	f	language:C++	typeref:typename:void
 eden_draw_circ_outline	eden.h	/^eden_draw_circ_outline(eden_t* eden, v2f_t center, f32_t radius, f32_t thickness, u32_t line_cou/;"	f	language:C++	typeref:typename:void
 eden_draw_line	code/eden.h	/^eden_draw_line(eden_t* eden, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {$/;"	f	language:C++	typeref:typename:void
 eden_draw_line	eden.h	/^eden_draw_line(eden_t* eden, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {$/;"	f	language:C++	typeref:typename:void
@@ -1612,7 +1612,8 @@ eden_get_input_characters	code/eden.h	/^eden_get_input_characters(eden_t* eden) 
 eden_get_input_characters	eden.h	/^eden_get_input_characters(eden_t* eden) {$/;"	f	language:C++	typeref:typename:eden_input_characters_t
 eden_get_text_length	code/eden.h	/^eden_get_text_length($/;"	f	language:C++	typeref:typename:f32_t
 eden_get_text_length	eden.h	/^eden_get_text_length($/;"	f	language:C++	typeref:typename:f32_t
-eden_gfx_test	code/eden.h	/^eden_gfx_test(eden_t* eden) {$/;"	f	language:C++	typeref:typename:void
+eden_gfx_push_command	code/eden.h	/^#define eden_gfx_push_command(/;"	d	language:C++
+eden_gfx_test	code/eden.h	/^eden_gfx_test(eden_t* eden) $/;"	f	language:C++	typeref:typename:void
 eden_gfx_test	eden.h	/^eden_gfx_test(eden_t* eden) {$/;"	f	language:C++	typeref:typename:void
 EDEN_H	code/eden.h	/^#define EDEN_H$/;"	d	language:C++
 EDEN_H	eden.h	/^#define EDEN_H$/;"	d	language:C++
@@ -1668,6 +1669,8 @@ eden_profile_end	code/eden.h	/^#define eden_profile_end(/;"	d	language:C++
 eden_profile_end	eden.h	/^#define eden_profile_end(/;"	d	language:C++
 eden_profile_update_and_render	code/eden.h	/^eden_profile_update_and_render($/;"	f	language:C++	typeref:typename:void
 eden_profile_update_and_render	eden.h	/^eden_profile_update_and_render($/;"	f	language:C++	typeref:typename:void
+eden_push_gfx_command_block	code/eden.h	/^eden_push_gfx_command_block(eden_t* eden, u32_t size, u32_t id, u32_t align = 16) $/;"	f	language:C++	typeref:typename:void *
+eden_set_blend	code/eden.h	/^eden_set_blend(eden_t* eden, hell_gfx_blend_type_t src, hell_gfx_blend_type_t dst)$/;"	f	language:C++	typeref:typename:void
 eden_set_blend_preset	code/eden.h	/^eden_set_blend_preset(eden_t* eden, eden_blend_preset_type_t type) {$/;"	f	language:C++	typeref:typename:void
 eden_set_blend_preset	eden.h	/^eden_set_blend_preset(eden_t* eden, eden_blend_preset_type_t type) {$/;"	f	language:C++	typeref:typename:void
 eden_set_design_dimensions	code/eden.h	/^#define eden_set_design_dimensions(/;"	d	language:C++
@@ -3057,7 +3060,6 @@ height	momo.h	/^  u32_t height;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:ty
 height	w32_chip8.cpp	/^  u32_t width, height;$/;"	m	language:C++	struct:w32_dib_t	typeref:typename:u32_t	file:
 held_light	app_lit.cpp	/^  lit_game_light_t* held_light;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:lit_game_light_t *	file:
 held_light	code/app_lit.cpp	/^  lit_game_light_t* held_light;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:lit_game_light_t *	file:
-hell_gfx_advance_depth	code/eden.h	/^hell_gfx_advance_depth(hell_gfx_t* g) { $/;"	f	language:C++	typeref:typename:void
 hell_gfx_advance_depth	eden.h	/^hell_gfx_advance_depth(hell_gfx_t* g) { $/;"	f	language:C++	typeref:typename:void
 hell_gfx_begin_texture_transfer	code/eden.h	/^hell_gfx_begin_texture_transfer(hell_gfx_t* g, u32_t required_space) {$/;"	f	language:C++	typeref:typename:hell_gfx_texture_payload_t *
 hell_gfx_begin_texture_transfer	eden.h	/^hell_gfx_begin_texture_transfer(hell_gfx_t* g, u32_t required_space) {$/;"	f	language:C++	typeref:typename:hell_gfx_texture_payload_t *
@@ -3085,7 +3087,6 @@ HELL_GFX_BLEND_TYPE_ZERO	code/eden.h	/^  HELL_GFX_BLEND_TYPE_ZERO,$/;"	e	languag
 HELL_GFX_BLEND_TYPE_ZERO	eden.h	/^  HELL_GFX_BLEND_TYPE_ZERO,$/;"	e	language:C++	enum:hell_gfx_blend_type_t
 hell_gfx_cancel_texture_transfer	code/eden.h	/^hell_gfx_cancel_texture_transfer(hell_gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_cancel_texture_transfer	eden.h	/^hell_gfx_cancel_texture_transfer(hell_gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
-hell_gfx_clear_colors	code/eden.h	/^hell_gfx_clear_colors(hell_gfx_t* g, rgba_t colors) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_clear_colors	eden.h	/^hell_gfx_clear_colors(hell_gfx_t* g, rgba_t colors) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_clear_commands	code/eden.h	/^hell_gfx_clear_commands(hell_gfx_t* g) $/;"	f	language:C++	typeref:typename:void
 hell_gfx_clear_commands	eden.h	/^hell_gfx_clear_commands(hell_gfx_t* g) $/;"	f	language:C++	typeref:typename:void
@@ -3139,19 +3140,12 @@ hell_gfx_command_view_t	code/eden.h	/^struct hell_gfx_command_view_t {$/;"	s	lan
 hell_gfx_command_view_t	eden.h	/^struct hell_gfx_command_view_t {$/;"	s	language:C++
 hell_gfx_complete_texture_transfer	code/eden.h	/^hell_gfx_complete_texture_transfer(hell_gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_complete_texture_transfer	eden.h	/^hell_gfx_complete_texture_transfer(hell_gfx_texture_payload_t* entry) {$/;"	f	language:C++	typeref:typename:void
-hell_gfx_delete_texture	code/eden.h	/^hell_gfx_delete_texture(hell_gfx_t* g, u32_t texture_index) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_delete_texture	eden.h	/^hell_gfx_delete_texture(hell_gfx_t* g, u32_t texture_index) {$/;"	f	language:C++	typeref:typename:void
-hell_gfx_draw_circle_outline	code/eden.h	/^hell_gfx_draw_circle_outline(hell_gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t l/;"	f	language:C++	typeref:typename:void
 hell_gfx_draw_circle_outline	eden.h	/^hell_gfx_draw_circle_outline(hell_gfx_t* g, v2f_t center, f32_t radius, f32_t thickness, u32_t l/;"	f	language:C++	typeref:typename:void
-hell_gfx_draw_filled_circle	code/eden.h	/^hell_gfx_draw_filled_circle(hell_gfx_t* g, $/;"	f	language:C++	typeref:typename:void
 hell_gfx_draw_filled_circle	eden.h	/^hell_gfx_draw_filled_circle(hell_gfx_t* g, $/;"	f	language:C++	typeref:typename:void
-hell_gfx_draw_filled_rect	code/eden.h	/^hell_gfx_draw_filled_rect(hell_gfx_t* g, $/;"	f	language:C++	typeref:typename:void
 hell_gfx_draw_filled_rect	eden.h	/^hell_gfx_draw_filled_rect(hell_gfx_t* g, $/;"	f	language:C++	typeref:typename:void
-hell_gfx_draw_filled_triangle	code/eden.h	/^hell_gfx_draw_filled_triangle(hell_gfx_t* g,$/;"	f	language:C++	typeref:typename:void
 hell_gfx_draw_filled_triangle	eden.h	/^hell_gfx_draw_filled_triangle(hell_gfx_t* g,$/;"	f	language:C++	typeref:typename:void
-hell_gfx_draw_line	code/eden.h	/^hell_gfx_draw_line($/;"	f	language:C++	typeref:typename:void
 hell_gfx_draw_line	eden.h	/^hell_gfx_draw_line($/;"	f	language:C++	typeref:typename:void
-hell_gfx_get_blend_preset	code/eden.h	/^hell_gfx_get_blend_preset(hell_gfx_t* g) {$/;"	f	language:C++	typeref:typename:eden_blend_preset_type_t
 hell_gfx_get_blend_preset	eden.h	/^hell_gfx_get_blend_preset(hell_gfx_t* g) {$/;"	f	language:C++	typeref:typename:eden_blend_preset_type_t
 hell_gfx_get_command	code/eden.h	/^hell_gfx_get_command(hell_gfx_t* g, u32_t index) {$/;"	f	language:C++	typeref:typename:hell_gfx_command_t *
 hell_gfx_get_command	eden.h	/^hell_gfx_get_command(hell_gfx_t* g, u32_t index) {$/;"	f	language:C++	typeref:typename:hell_gfx_command_t *
@@ -3170,7 +3164,7 @@ HELL_GFX_OPENGL_BATCH_ATTRIBUTE_UVS	code/eden.h	/^  HELL_GFX_OPENGL_BATCH_ATTRIB
 HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES	code/eden.h	/^  HELL_GFX_OPENGL_BATCH_ATTRIBUTE_VERTICES,$/;"	e	language:C++	enum:__anon0a42ec610603
 hell_gfx_opengl_batch_begin	code/eden.h	/^hell_gfx_opengl_batch_begin(hell_gfx_opengl_t* ogl) $/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_batch_end	code/eden.h	/^hell_gfx_opengl_batch_end(hell_gfx_opengl_t* ogl)$/;"	f	language:C++	typeref:typename:void
-hell_gfx_opengl_batch_init	code/eden.h	/^hell_gfx_opengl_batch_init(hell_gfx_opengl_t* ogl, arena_t* arena)$/;"	f	language:C++	typeref:typename:b32_t
+hell_gfx_opengl_batch_init	code/eden.h	/^hell_gfx_opengl_batch_init(hell_gfx_opengl_t* ogl, arena_t* arena, usz_t element_count)$/;"	f	language:C++	typeref:typename:b32_t
 hell_gfx_opengl_batch_push_mvp	code/eden.h	/^hell_gfx_opengl_batch_push_mvp(hell_gfx_opengl_t* ogl, m44f_t mvp) $/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_batch_push_quad	code/eden.h	/^hell_gfx_opengl_batch_push_quad($/;"	f	language:C++	typeref:typename:void
 hell_gfx_opengl_batch_push_triangle	code/eden.h	/^hell_gfx_opengl_batch_push_triangle($/;"	f	language:C++	typeref:typename:void
@@ -3393,17 +3387,12 @@ HELL_GFX_OPENGL_TRIANGLE_VERTEX_BUFFER_TYPE_TRANSFORM	eden.h	/^  HELL_GFX_OPENGL
 HELL_GFX_OPENGL_TRIANGLE_VSHADER	eden.h	/^#define HELL_GFX_OPENGL_TRIANGLE_VSHADER /;"	d	language:C++
 hell_gfx_opengl_uv_t	code/eden.h	/^struct hell_gfx_opengl_uv_t {$/;"	s	language:C++
 hell_gfx_opengl_uv_t	eden.h	/^struct hell_gfx_opengl_uv_t {$/;"	s	language:C++
-hell_gfx_push_sprite	code/eden.h	/^hell_gfx_push_sprite($/;"	f	language:C++	typeref:typename:void
 hell_gfx_push_sprite	eden.h	/^hell_gfx_push_sprite($/;"	f	language:C++	typeref:typename:void
-hell_gfx_set_blend	code/eden.h	/^hell_gfx_set_blend(hell_gfx_t* g, hell_gfx_blend_type_t src, hell_gfx_blend_type_t dst) {$/;"	f	language:C++	typeref:typename:void
 hell_gfx_set_blend	eden.h	/^hell_gfx_set_blend(hell_gfx_t* g, hell_gfx_blend_type_t src, hell_gfx_blend_type_t dst) {$/;"	f	language:C++	typeref:typename:void
-hell_gfx_set_blend_preset	code/eden.h	/^hell_gfx_set_blend_preset(hell_gfx_t* g, eden_blend_preset_type_t type)$/;"	f	language:C++	typeref:typename:void
 hell_gfx_set_blend_preset	eden.h	/^hell_gfx_set_blend_preset(hell_gfx_t* g, eden_blend_preset_type_t type)$/;"	f	language:C++	typeref:typename:void
-hell_gfx_set_view	code/eden.h	/^hell_gfx_set_view(hell_gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x/;"	f	language:C++	typeref:typename:void
 hell_gfx_set_view	eden.h	/^hell_gfx_set_view(hell_gfx_t* g, f32_t min_x, f32_t max_x, f32_t min_y, f32_t max_y, f32_t pos_x/;"	f	language:C++	typeref:typename:void
 hell_gfx_t	code/eden.h	/^struct hell_gfx_t {$/;"	s	language:C++
 hell_gfx_t	eden.h	/^struct hell_gfx_t {$/;"	s	language:C++
-hell_gfx_test	code/eden.h	/^hell_gfx_test(hell_gfx_t* g) { $/;"	f	language:C++	typeref:typename:void
 hell_gfx_test	eden.h	/^hell_gfx_test(hell_gfx_t* g) { $/;"	f	language:C++	typeref:typename:void
 HELL_GFX_TEXTURE_PAYLOAD_STATE_EMPTY	code/eden.h	/^  HELL_GFX_TEXTURE_PAYLOAD_STATE_EMPTY,$/;"	e	language:C++	enum:hell_gfx_texture_payload_state_t
 HELL_GFX_TEXTURE_PAYLOAD_STATE_EMPTY	eden.h	/^  HELL_GFX_TEXTURE_PAYLOAD_STATE_EMPTY,$/;"	e	language:C++	enum:hell_gfx_texture_payload_state_t
@@ -4272,11 +4261,11 @@ max	eden.h	/^  f64_t max;$/;"	m	language:C++	struct:hell_profiler_stat_t	typeref
 max	eden.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:hell_gfx_opengl_uv_t	typeref:typename:v2f_t
 maxp	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 maxp	momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
+max_elements	code/eden.h	/^  usz_t max_elements;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:usz_t
 max_files	code/eden.h	/^  u32_t max_files;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 max_files	eden.h	/^  u32_t max_files;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 max_of	code/momo.h	/^#define max_of(/;"	d	language:C++
 max_of	momo.h	/^#define max_of(/;"	d	language:C++
-max_sprites	code/eden.h	/^  usz_t max_sprites;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:usz_t
 max_sprites	code/eden.h	/^  usz_t max_sprites;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:usz_t
 max_sprites	eden.h	/^  usz_t max_sprites;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:usz_t
 max_sprites	eden.h	/^  usz_t max_sprites;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:usz_t
@@ -4286,7 +4275,6 @@ max_textures	eden.h	/^  u32_t max_textures;$/;"	m	language:C++	struct:eden_confi
 max_textures	eden.h	/^  usz_t max_textures;$/;"	m	language:C++	struct:hell_gfx_t	typeref:typename:usz_t
 max_texture_payloads	code/eden.h	/^  usz_t max_texture_payloads; $/;"	m	language:C++	struct:eden_config_t	typeref:typename:usz_t
 max_texture_payloads	eden.h	/^  usz_t max_texture_payloads; $/;"	m	language:C++	struct:eden_config_t	typeref:typename:usz_t
-max_triangles	code/eden.h	/^  usz_t max_triangles;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:usz_t
 max_triangles	code/eden.h	/^  usz_t max_triangles;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:usz_t
 max_triangles	eden.h	/^  usz_t max_triangles;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:usz_t
 max_triangles	eden.h	/^  usz_t max_triangles;$/;"	m	language:C++	struct:hell_gfx_opengl_t	typeref:typename:usz_t
@@ -6566,9 +6554,7 @@ _F64_NAN	code/momo.h	/^_F64_NAN() {$/;"	f	language:C++	typeref:typename:f64_t
 _F64_NAN	momo.h	/^_F64_NAN() {$/;"	f	language:C++	typeref:typename:f64_t
 _F64_NEG_INFINITY	code/momo.h	/^_F64_NEG_INFINITY() {$/;"	f	language:C++	typeref:typename:f64_t
 _F64_NEG_INFINITY	momo.h	/^_F64_NEG_INFINITY() {$/;"	f	language:C++	typeref:typename:f64_t
-_hell_gfx_push_command	code/eden.h	/^#define _hell_gfx_push_command(/;"	d	language:C++
 _hell_gfx_push_command	eden.h	/^#define _hell_gfx_push_command(/;"	d	language:C++
-_hell_gfx_push_command_block	code/eden.h	/^_hell_gfx_push_command_block(hell_gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4)/;"	f	language:C++	typeref:typename:void *
 _hell_gfx_push_command_block	eden.h	/^_hell_gfx_push_command_block(hell_gfx_command_queue_t* q, u32_t size, u32_t id, u32_t align = 4)/;"	f	language:C++	typeref:typename:void *
 _hell_profiler_begin_block	code/eden.h	/^_hell_profiler_begin_block(hell_profiler_t* p, hell_profiler_entry_t* entry) $/;"	f	language:C++	typeref:typename:void
 _hell_profiler_begin_block	eden.h	/^_hell_profiler_begin_block(hell_profiler_t* p, hell_profiler_entry_t* entry) $/;"	f	language:C++	typeref:typename:void

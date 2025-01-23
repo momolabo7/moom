@@ -3865,8 +3865,7 @@ eden_get_config_sig(eden_get_config)
   ret.render_command_size = megabytes(100);
   ret.max_textures = 1;
   ret.max_texture_payloads = 1;
-  ret.max_sprites = 4096;
-  ret.max_triangles = 4096;
+  ret.max_elements = 4096;
 
   ret.speaker_enabled = true;
   ret.speaker_samples_per_second = 48000;
@@ -3875,7 +3874,7 @@ eden_get_config_sig(eden_get_config)
   ret.speaker_max_sounds = 8;
   ret.speaker_bitrate_type = EDEN_SPEAKER_BITRATE_TYPE_S16;
 
-  ret.window_title = "LIT v1.10";
+  ret.window_title = "LIT v1.11";
   ret.window_initial_width = 800;
   ret.window_initial_height = 800;
 

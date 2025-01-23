@@ -204,7 +204,7 @@ struct w32_wasapi_t {
 //
 // MARK:(Gfx)
 // 
-#define w32_gfx_load_sig(name) b32_t  name(hell_gfx_t* gfx, HWND window, arena_t* arena, usz_t command_queue_size, usz_t texture_queue_size, usz_t max_textures, usz_t max_payloads, usz_t max_sprites, usz_t max_triangles)
+#define w32_gfx_load_sig(name) b32_t  name(hell_gfx_t* gfx, HWND window, arena_t* arena, usz_t command_queue_size, usz_t texture_queue_size, usz_t max_textures, usz_t max_payloads, usz_t max_elements)
 static w32_gfx_load_sig(w32_gfx_load);
 
 #define w32_gfx_begin_frame_sig(name) void name(hell_gfx_t* gfx, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1)
@@ -474,8 +474,7 @@ if (!opengl->name) { return false; }
         texture_queue_size,
         max_textures,
         max_payloads,
-        max_sprites,
-        max_triangles)) 
+        max_elements)) 
   {
     return false;
   }
@@ -1684,8 +1683,7 @@ WinMain(HINSTANCE instance,
       config.texture_queue_size,
       config.max_textures,
       config.max_texture_payloads,
-      config.max_sprites,
-      config.max_triangles))
+      config.max_elements))
     return 1;
  
   // Init Audio
