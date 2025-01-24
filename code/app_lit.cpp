@@ -3719,7 +3719,7 @@ eden_update_and_render_sig(eden_update_and_render)
   if(g_eden->user_data == nullptr) {
 
     // @todo: partition from platform arena?
-    g_eden->user_data = arena_bootstrap_push(lit_t, main_arena, megabytes(32));
+    g_eden->user_data = arena_alloc_bootstrap(lit_t, main_arena, megabytes(32));
 
     g_lit = (lit_t*)(g_eden->user_data);
     g_lit->next_mode = LIT_MODE_SPLASH;

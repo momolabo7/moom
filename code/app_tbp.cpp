@@ -160,7 +160,7 @@ eden_update_and_render_sig(eden_update_and_render)
 {
   if (eden->user_data == nullptr)
   {
-    eden->user_data = arena_bootstrap_push(tbp_t, arena, megabytes(32)); 
+    eden->user_data = arena_alloc_bootstrap(tbp_t, arena, megabytes(32)); 
     auto* tbp = (tbp_t*)(eden->user_data);
     eden_assets_init_from_file(eden, SANDBOX_ASSET_FILE, &tbp->arena);
 

@@ -58,7 +58,7 @@ eden_update_and_render_sig(eden_update_and_render)
 {
   if (eden->user_data == nullptr)
   {
-    eden->user_data = arena_bootstrap_push(tbp_t, arena, megabytes(24)); 
+    eden->user_data = arena_alloc_bootstrap(tbp_t, arena, megabytes(24)); 
     auto* alu = (alu_t*)(eden->user_data);
 
     if (!arena_push_partition(&alu->main_arena, &alu->asset_arena, megabytes(20), 16)) lit_exit();

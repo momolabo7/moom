@@ -1564,7 +1564,7 @@ WinMain(HINSTANCE instance,
   
   eden_config_t config = eden_functions.get_config();
 
-  eden_t* eden = arena_bootstrap_push(eden_t, platform_arena, gigabytes(1));
+  eden_t* eden = arena_alloc_bootstrap(eden_t, platform_arena, gigabytes(1));
 
   arena_t* platform_arena = &eden->platform_arena;
 

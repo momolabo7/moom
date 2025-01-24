@@ -204,7 +204,7 @@ struct w32_wasapi_t {
 //
 // MARK:(Gfx)
 // 
-#define w32_gfx_load_sig(name) b32_t  name(eden_gfx_t* gfx, HWND window, arena_t* arena, usz_t command_queue_size, usz_t texture_queue_size, usz_t max_textures, usz_t max_payloads, usz_t max_elements)
+#define w32_gfx_load_sig(name) b32_t  name(eden_t* eden, HWND window, usz_t command_queue_size, usz_t texture_queue_size, usz_t max_textures, usz_t max_payloads, usz_t max_elements)
 static w32_gfx_load_sig(w32_gfx_load);
 
 #define w32_gfx_begin_frame_sig(name) void name(eden_gfx_t* gfx, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1)
@@ -392,15 +392,14 @@ w32_gfx_load_sig(w32_gfx_load)
     WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_MOMO_PROFILE_BIT_ARB,
     0,
   };
-  HGLRC opengl_ctx = wglCreateContextAttribsARB(dc, 0, 
-                                                opengl_attribs); 
+  HGLRC opengl_ctx = wglCreateContextAttribsARB(dc, 0, opengl_attribs); 
   
   if (!opengl_ctx) {
     return false;
   }
 
-  auto* opengl = arena_push(eden_gfx_opengl_t, arena);
-  gfx->platform_data = opengl;
+  auto* opengl = arena_alloc_bootstrap(eden_opengl_t, arena, gigabytes(1));
+  eden->gfx.platform_data = opengl;
 
   if (!opengl) {
     return false;
@@ -410,7 +409,7 @@ w32_gfx_load_sig(w32_gfx_load)
   if(wglMakeCurrent(dc, opengl_ctx)) {
     HMODULE module = LoadLibraryA("opengl32.dll");
 #define wgl_set_opengl_function(name) \
-opengl->name = (eden_gfx_opengl_##name*)_w32_try_get_wgl_function(#name, module); \
+opengl->name = (eden_opengl_##name*)_w32_try_get_wgl_function(#name, module); \
 if (!opengl->name) { return false; } 
     wgl_set_opengl_function(glEnable);
     wgl_set_opengl_function(glDisable); 
@@ -450,10 +449,8 @@ if (!opengl->name) { return false; }
     wgl_set_opengl_function(glProgramUniformMatrix4fv);
     wgl_set_opengl_function(glUseProgram);
     wgl_set_opengl_function(glDeleteTextures);
-    wgl_set_opengl_function(glDebugMessageCallbackARB);
     wgl_set_opengl_function(glDrawArrays);
     wgl_set_opengl_function(glGetError);
-
     wgl_set_opengl_function(glGenVertexArrays);
     wgl_set_opengl_function(glGenBuffers);
     wgl_set_opengl_function(glBindBuffer);
@@ -467,9 +464,8 @@ if (!opengl->name) { return false; }
   }
 #undef wgl_set_opengl_function
   
-  if (!eden_gfx_opengl_init(
-        gfx, 
-        arena,
+  if (!eden_opengl_init(
+        eden,
         command_queue_size,
         texture_queue_size,
         max_textures,
@@ -502,12 +498,12 @@ if (!opengl->name) { return false; }
 static 
 w32_gfx_begin_frame_sig(w32_gfx_begin_frame)
 {
-  eden_gfx_opengl_begin_frame(gfx, render_wh, region_x0, region_y0, region_x1, region_y1);
+  eden_opengl_begin_frame(gfx, render_wh, region_x0, region_y0, region_x1, region_y1);
 }
 
 static
 w32_gfx_end_frame_sig(w32_gfx_end_frame) {
-  eden_gfx_opengl_end_frame(gfx);
+  eden_opengl_end_frame(gfx);
   SwapBuffers(wglGetCurrentDC());
 }
 #endif // EDEN_USE_OPENGL
@@ -1564,7 +1560,7 @@ WinMain(HINSTANCE instance,
   
   eden_config_t config = eden_functions.get_config();
 
-  eden_t* eden = arena_bootstrap_push(eden_t, platform_arena, gigabytes(2));
+  eden_t* eden = arena_alloc_bootstrap(eden_t, platform_arena, gigabytes(2));
 
   arena_t* platform_arena = &eden->platform_arena;
 
@@ -1676,9 +1672,8 @@ WinMain(HINSTANCE instance,
   
 
   if(!w32_gfx_load(
-      &eden->gfx,
+      eden,
       window, 
-      platform_arena,
       config.render_command_size, 
       config.texture_queue_size,
       config.max_textures,

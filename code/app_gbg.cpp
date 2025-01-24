@@ -264,7 +264,7 @@ eden_update_and_render_sig(eden_update_and_render)
 {
   if (eden->user_data == nullptr || eden_is_button_poked(eden, EDEN_BUTTON_CODE_F1))
   {
-    eden->user_data = arena_bootstrap_push(gbg_t, arena, megabytes(32)); 
+    eden->user_data = arena_alloc_bootstrap(gbg_t, arena, megabytes(32)); 
     auto* gbg = (gbg_t*)(eden->user_data);
     eden_assets_init_from_file(eden, SANDBOX_ASSET_FILE, &gbg->arena);
     

@@ -1148,6 +1148,7 @@ static buf_t    stream_consume_line(stream_t* s);
 //
 static b32_t    arena_init(arena_t* a, buf_t buffer);
 static b32_t    arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit = false);
+static void*    arena_alloc_bootstrap_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size);
 static void     arena_clear(arena_t* a);
 static void*    arena_push_size(arena_t* a, usz_t size, usz_t align);
 static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align); 
@@ -1155,7 +1156,6 @@ static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size,
 static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align);
 static buf_t    arena_push_buffer(arena_t* a, usz_t size, usz_t align = 16);
 static usz_t    arena_remaining(arena_t* a);
-static void*    arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size);
 static b32_t    arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size);
 static b32_t    arena_grow_buffer(arena_t* a, buf_t* str, usz_t new_size);
 
@@ -1168,7 +1168,7 @@ static b32_t    arena_grow_buffer(arena_t* a, buf_t* str, usz_t new_size);
 #define arena_push_arr_zero(t,b,n)         (t*)arena_push_size_zero(b, sizeof(t)*(n),alignof(t))
 #define arena_push_zero_align(t,b,a)       (t*)arena_push_size_zero(b, sizeof(t), a)
 #define arena_push_zero(t,b)               (t*)arena_push_size_zero(b, sizeof(t), alignof(t))
-#define arena_bootstrap_push(t,m,s)        (t*)arena_bootstrap_push_size(sizeof(t), offsetof(t,m), s)
+#define arena_alloc_bootstrap(t,m,s)        (t*)arena_alloc_bootstrap_size(sizeof(t), offsetof(t,m), s)
 
 static arena_marker_t arena_mark(arena_t* a);
 static void arena_revert(arena_marker_t marker);
@@ -8629,7 +8629,7 @@ arena_remaining(arena_t* a) {
 }
 
 static void*   
-arena_bootstrap_push_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size)
+arena_alloc_bootstrap_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size)
 {
   arena_t arena = {};
   arena_alloc(&arena, virtual_size);
