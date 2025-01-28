@@ -158,9 +158,9 @@ struct lit_game_light_t {
 
 
 enum lit_game_light_type_t {
-  Lit_LIGHT_TYPE_POINT,
-  Lit_LIGHT_TYPE_DIRECTIONAL,
-  Lit_LIGHT_TYPE_WEIRD
+  LIT_LIGHT_TYPE_POINT,
+  LIT_LIGHT_TYPE_DIRECTIONAL,
+  LIT_LIGHT_TYPE_WEIRD
 };
 
 
@@ -342,7 +342,7 @@ struct lit_credits_t {
 };
 
 // 
-// Lit 
+// LIT 
 //
 enum lit_show_debug_type_t {
   LIT_SHOW_DEBUG_NONE,
@@ -1066,12 +1066,12 @@ lit_gen_light_intersections(lit_game_light_t* l,
   //moe_profile_block(light_generation);
   arena_set_revert_point(tmp_arena);
 
-  lit_game_light_type_t light_type = Lit_LIGHT_TYPE_POINT;
+  lit_game_light_type_t light_type = LIT_LIGHT_TYPE_POINT;
   if (l->half_angle < PI_32/2) {
-    light_type = Lit_LIGHT_TYPE_DIRECTIONAL; 
+    light_type = LIT_LIGHT_TYPE_DIRECTIONAL; 
   }
   else if(l->half_angle < PI_32) {
-    light_type = Lit_LIGHT_TYPE_WEIRD;
+    light_type = LIT_LIGHT_TYPE_WEIRD;
   }
 
   l->intersection_count = 0;
@@ -1095,12 +1095,12 @@ lit_gen_light_intersections(lit_game_light_t* l,
 
       // ignore endpoints that are not within the angle 
       f32_t angle = v2f_angle(l->dir, ep - l->pos);
-      if (light_type == Lit_LIGHT_TYPE_WEIRD || 
-          light_type == Lit_LIGHT_TYPE_DIRECTIONAL) 
+      if (light_type == LIT_LIGHT_TYPE_WEIRD || 
+          light_type == LIT_LIGHT_TYPE_DIRECTIONAL) 
       {
         if (angle > l->half_angle) continue;
       }
-      else // light_type == Lit_LIGHT_TYPE_POINT 
+      else // light_type == LIT_LIGHT_TYPE_POINT 
       {
         // if it's a point light, we don't do anything here.
       }
@@ -1119,7 +1119,7 @@ lit_gen_light_intersections(lit_game_light_t* l,
 
   // Consider 'shell rays', which are rays that are at the 
   // extreme ends of the light (only for non-point lights)
-  if (light_type != Lit_LIGHT_TYPE_POINT)
+  if (light_type != LIT_LIGHT_TYPE_POINT)
   {
     for (u32_t offset_index = 0;
         offset_index < array_count(offset_angles);
@@ -1172,7 +1172,7 @@ lit_gen_light_intersections(lit_game_light_t* l,
 
       // In the case of 'wierd' lights,
       // shell ray should not have a triangle to another shell ray 
-      if (light_type == Lit_LIGHT_TYPE_WEIRD) {
+      if (light_type == LIT_LIGHT_TYPE_WEIRD) {
         if (its0->is_shell && its1->is_shell) {
           ignore = true;
         }
@@ -1197,7 +1197,7 @@ lit_gen_light_intersections(lit_game_light_t* l,
     // shell ray should not have a triangle to another shell ray 
 
     b32_t ignore = false;
-    if (light_type == Lit_LIGHT_TYPE_WEIRD) {
+    if (light_type == LIT_LIGHT_TYPE_WEIRD) {
       if (its0->is_shell && its1->is_shell) {
         ignore = true;
       }
@@ -1757,7 +1757,7 @@ lit_game_update_sensors(lit_game_t* g, f32_t dt)
     }
   }
 
-  eden_inspect_u32(g_eden, buf_from_lit("total_triangles"), total_triangles);
+  eden_debug_u32(g_eden, buf_from_lit("total_triangles"), total_triangles);
 }
 
 
@@ -3808,7 +3808,7 @@ eden_update_and_render_sig(eden_update_and_render)
   }
 
   // Check arena size
-  eden_inspect_u32(g_eden, buf_from_lit("platform_memory"), (u32_t)arena_remaining(&g_eden->platform_arena)/megabytes(1));
+  eden_debug_u32(g_eden, buf_from_lit("platform_memory"), (u32_t)arena_remaining(&g_eden->platform_arena)/megabytes(1));
 
   switch (g_lit->show_debug_type) {
 #if 0

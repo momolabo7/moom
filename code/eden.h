@@ -986,6 +986,31 @@ struct eden_speaker_t {
 };
 
 
+enum eden_debug_event_type_t
+{
+  EDEN_DEBUG_EVENT_TYPE_B32,
+  EDEN_DEBUG_EVENT_TYPE_U32,
+  EDEN_DEBUG_EVENT_TYPE_F32,
+};
+
+struct eden_debug_event_t
+{
+  const char* name;
+  eden_debug_entry_type_t type;
+  union
+  {
+    b32_t b32;
+    u32_t u32;
+    f32_t f32;
+  };
+}
+
+struct eden_debugger_t
+{
+  eden_debug_event_t events[65525];
+  usz_t event_count;
+};
+
 
 struct eden_t 
 {
@@ -1013,6 +1038,8 @@ struct eden_t
   arena_t platform_arena;
 
   void* user_data;
+
+  eden_debug_t debugger;
 };
 
 
@@ -2765,31 +2792,32 @@ eden_draw_text(
   
 }
 
+static void
+eden_debug_u32(eden_t* eden, buf_t name, u32_t item) 
+{
+  eden_debugger_t* d = &eden->debugger;
+  assert(d->event_count < array_count(d->events));
+  eden_debug_event_t* e = in->events + in->event_count++;
+  e->u32 = item;
+  e->type = EDEN_INSPECTOR_ENTRY_TYPE_U32;
+  e->name = name;
+}
+
+static void
+eden_debug_f32(eden_t* eden, buf_t name, f32_t item) 
+{
+  eden_debugger_t* d = &eden->debugger;
+  assert(d->event_count < array_count(d->events));
+  eden_debug_event_t* e = in->events + in->event_count++;
+  e->f32 = item;
+  e->type = EDEN_INSPECTOR_ENTRY_TYPE_F32;
+  e->name = name;
+}
+
 
 //
 // @mark: inspect
 //
-static void
-eden_inspect_u32(eden_t* eden, buf_t name, u32_t item) 
-{
-  eden_inspector_t* in = &eden->inspector;
-  assert(in->entry_count < in->entry_cap);
-  eden_inspector_entry_t* entry = in->entries + in->entry_count++;
-  entry->item_u32 = item;
-  entry->type = EDEN_INSPECTOR_ENTRY_TYPE_U32;
-  entry->name = name;
-}
-
-static void
-eden_inspect_f32(eden_t* eden, buf_t name, u32_t item)
-{
-  eden_inspector_t* in = &eden->inspector;
-  assert(in->entry_count < in->entry_cap);
-  eden_inspector_entry_t* entry = in->entries + in->entry_count++;
-  entry->item_f32 = item;
-  entry->type = EDEN_INSPECTOR_ENTRY_TYPE_F32;
-  entry->name = name;
-}
 
 static void 
 eden_inspector_update_and_render(
