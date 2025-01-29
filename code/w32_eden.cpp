@@ -2,30 +2,14 @@
 // DESCRIPTION
 //   This is my dear 2D eden engine on win32 platform.
 //
-// FLAGS
-//   HOT_RELOAD - Enables hot-reload on eden.dll when it changes. Default is 1.
-// 
-// BOOKMARKS
-//
-//   Memory Management - For managing allocated memory from OS.
-//   Work Queue        - Multithreaded work queue system
-//   Hot Reload        - Hot reloading system 
-//   File              - File system 
-//   State             - Main global state
-//   Audio             - Audio interfaces
-//   Wasapi            - Audio implementation with WASAPI
-//   Graphics          - Graphics interfaces
-//   Opengl            - Graphics implementation with OGL
-//   
-
-// @note: For now, we enable these flags
-// These macros are in preparation in case we have
-// multiple ways to do speaker or graphics
 
 #ifndef EDEN_USE_WASAPI
 # define EDEN_USE_WASAPI 1
 #endif
 
+#ifndef EDEN_USE_OPENGL
+# define EDEN_USE_OPENGL 1
+#endif
 
 #ifndef WIN32_LEAN_AND_MEAN
 # define WIN32_LEAN_AND_MEAN
@@ -38,28 +22,22 @@
 #include <windows.h>
 #include <windowsx.h>
 #include <timeapi.h>
-#include <imm.h>
-#include <initguid.h>
-#include <audioclient.h>
-#include <mmdeviceapi.h>
+#include <stdio.h>
 
 #include "eden.h"
 
+#ifdef EDEN_USE_WASAPI 
+# include "w32_eden_audio_wasapi.h"
+#endif // EDEN_USE_WASAPI
+
+#if EDEN_USE_OPENGL
+# include "w32_eden_gfx_opengl.h"
+#endif // EDEN_USE_OPENGL
+
 #pragma comment(lib, "user32.lib")
-#pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "gdi32.lib")
 #pragma comment(lib, "ole32.lib")
 #pragma comment(lib, "imm32.lib")
-
-//
-// MARK:(Memory Management)
-//
-struct w32_memory_t {
-  buf_t user_block;
-  
-  w32_memory_t* prev;
-  w32_memory_t* next;
-};
 
 //
 // MARK:(Work Queue)
@@ -106,13 +84,6 @@ struct w32_file_t {
   u32_t cabinet_index;
 };
 
-struct w32_file_cabinet_t {
-  usz_t file_cap;
-  w32_file_t* files; 
-  u32_t* free_files;
-
-  u32_t free_file_count;
-};
 
 //
 // MARK:(State)
@@ -128,19 +99,15 @@ struct w32_state_t {
   f32_t eden_height;
   
   w32_work_queue_t work_queue;
-  w32_file_cabinet_t file_cabinet;
   
   HWND window;
 
-  w32_memory_t memory_sentinel;
+  arena_t arena;
 };
+// @todo: can we remove this global shit somehow?
 static w32_state_t w32_state;
 
-#include <stdio.h>
 
-//
-// MARK:(Logging)
-//
 static 
 eden_debug_log_sig(w32_log_proc) 
 {
@@ -153,791 +120,6 @@ eden_debug_log_sig(w32_log_proc)
 }
 #define w32_log(...) w32_log_proc(__VA_ARGS__)
 
-//
-// Mark:(Audio)
-//
-#define w32_speaker_load_sig(name) b32_t name(eden_speaker_t* eden_speaker, u32_t samples_per_second, eden_speaker_bitrate_type_t bitrate_type, u16_t channels, u32_t latency_frames, u32_t frame_rate, u32_t max_sounds, arena_t* allocator)
-static w32_speaker_load_sig(w32_speaker_load);
-
-#define w32_speaker_unload_sig(name) void name(eden_speaker_t* eden_speaker)
-static w32_speaker_unload_sig(w32_speaker_unload);
-
-#define w32_speaker_begin_frame_sig(name) b32_t name(eden_speaker_t* eden_speaker)
-static w32_speaker_begin_frame_sig(w32_speaker_begin_frame);
-
-#define w32_speaker_end_frame_sig(name) b32_t name(eden_speaker_t* eden_speaker)
-static w32_speaker_end_frame_sig(w32_speaker_end_frame);
-
-
-//
-// Mark:(Wasapi)
-//
-#ifdef EDEN_USE_WASAPI 
-
-struct w32_wasapi_t {
-  //w32_wasapi_notif_client_t notifs;
-  IMMDevice* mm_device;
-  IMMDeviceEnumerator * mm_device_enum;
-  IAudioClient* speaker_client;
-  IAudioRenderClient* render_client;
-  
-  // Intermediate ring buffer for eden to write speaker to.
-  u32_t buf_size;
-  void* buffer;
-  
-  // Other variables for tracking purposes
-  u32_t samples_per_second;
-  u16_t bits_per_sample;
-  u16_t channels;
-  u32_t frame_rate;
-    
-	b32_t is_device_changed;
-	b32_t is_device_ready;
-
-  arena_t allocator;
-};
-
-#endif // EDEN_USE_WASAPI
-
-
-
-//
-// MARK:(Gfx)
-// 
-#define w32_gfx_load_sig(name) b32_t  name(eden_t* eden, HWND window, usz_t command_queue_size, usz_t texture_queue_size, usz_t max_textures, usz_t max_payloads, usz_t max_elements)
-static w32_gfx_load_sig(w32_gfx_load);
-
-#define w32_gfx_begin_frame_sig(name) void name(eden_gfx_t* gfx, v2u_t render_wh, u32_t region_x0, u32_t region_y0, u32_t region_x1, u32_t region_y1)
-static w32_gfx_begin_frame_sig(w32_gfx_begin_frame);
-
-#define w32_gfx_end_frame_sig(name) void name(eden_gfx_t* gfx)
-static w32_gfx_end_frame_sig(w32_gfx_end_frame);
-
-
-
-//
-// MARK:(Opengl)
-// 
-#ifdef EDEN_USE_OPENGL
-#define WGL_CONTEXT_MAJOR_VERSION_ARB           0x2091
-#define WGL_CONTEXT_MINOR_VERSION_ARB           0x2092
-#define WGL_CONTEXT_LAYER_PLANE_ARB             0x2093
-#define WGL_CONTEXT_FLAGS_ARB                   0x2094
-#define WGL_CONTEXT_PROFILE_MASK_ARB            0x9126
-
-#define WGL_DRAW_TO_WINDOW_ARB                  0x2001
-#define WGL_ACCELERATION_ARB                    0x2003
-#define WGL_SUPPORT_OPENGL_ARB                  0x2010
-#define WGL_DOUBLE_BUFFER_ARB                   0x2011
-#define WGL_PIXEL_TYPE_ARB                      0x2013
-#define WGL_TYPE_RGBA_ARB                       0x202B
-#define WGL_FULL_ACCELERATION_ARB               0x2027
-#define WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB        0x20A9
-#define WGL_CONTEXT_FLAG_ARB                    0x2094
-#define WGL_CONTEXT_DEBUG_BIT_ARB               0x0001
-#define WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB  0x0002
-#define WGL_CONTEXT_MOMO_PROFILE_BIT_ARB        0x00000001
-
-typedef BOOL WINAPI wglChoosePixelFormatARBFn(HDC hdc, const int* piAttribIList, const FLOAT* pfAttribFList, UINT nMaxFormats, int* piFormats, UINT* nNumFormats);
-
-typedef BOOL WINAPI wglSwapIntervalEXTFn(int interval);
-
-typedef HGLRC WINAPI wglCreateContextAttribsARBFn(HDC hdc, HGLRC hShareContext, const int* attribList);
-
-typedef const char* WINAPI wglGetExtensionsStringEXTFn(void);
-
-static wglChoosePixelFormatARBFn* wglChoosePixelFormatARB;
-static wglSwapIntervalEXTFn* wglSwapIntervalEXT;
-static wglCreateContextAttribsARBFn* wglCreateContextAttribsARB;
-//static wglGetExtensionsStringEXTFn* wglGetExtensionsStringEXT;
-
-
-
-static void* 
-_w32_try_get_wgl_function(const char* name, HMODULE fallback_module)
-{
-  void* p = (void*)wglGetProcAddress(name);
-  if ((p == 0) || 
-      (p == (void*)0x1) || 
-      (p == (void*)0x2) || 
-      (p == (void*)0x3) || 
-      (p == (void*)-1))
-  {
-    p = (void*)GetProcAddress(fallback_module, name);
-  }
-  return p;
-  
-}
-
-static void
-_w32_set_pixel_format(HDC dc) {
-  s32_t suggested_pixel_format_index = 0;
-  u32_t extended_pick = 0;
-  
-  if (wglChoosePixelFormatARB) {
-    s32_t attrib_list[] = {
-      WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
-      WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
-      WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
-      WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
-      WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
-      WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB, GL_TRUE,
-      0,
-    };
-    
-    wglChoosePixelFormatARB(dc, attrib_list, 0, 1,
-                            &suggested_pixel_format_index, &extended_pick);
-    
-  }
-  
-  if (!extended_pick) {
-    PIXELFORMATDESCRIPTOR desired_pixel_format = {};
-    desired_pixel_format.nSize = sizeof(desired_pixel_format);
-    desired_pixel_format.nVersion = 1;
-    desired_pixel_format.iPixelType = PFD_TYPE_RGBA;
-    desired_pixel_format.dwFlags = 
-      PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER; 
-    desired_pixel_format.cColorBits = 32;
-    desired_pixel_format.cAlphaBits = 8;
-    desired_pixel_format.iLayerType = PFD_MAIN_PLANE;
-    
-    // Here, we ask windows to find the best supported pixel 
-    // format based on our desired format.
-    suggested_pixel_format_index = 
-      ChoosePixelFormat(dc, &desired_pixel_format);
-  }
-  PIXELFORMATDESCRIPTOR suggested_pixel_format = {};
-  
-  DescribePixelFormat(dc, suggested_pixel_format_index, 
-                      sizeof(suggested_pixel_format), 
-                      &suggested_pixel_format);
-  SetPixelFormat(dc, 
-                 suggested_pixel_format_index, 
-                 &suggested_pixel_format);
-}
-static b32_t
-_w32_load_wgl_extentions() {
-  WNDCLASSA window_class = {};
-  // Er yeah...we have to create a 'fake' opengl_t context 
-  // to load the extensions lol.
-  window_class.lpfnWndProc = DefWindowProcA;
-  window_class.hInstance = GetModuleHandle(0);
-  window_class.lpszClassName = "WGLLoader2";
-  
-  if (RegisterClassA(&window_class)) {
-    HWND window = CreateWindowExA( 
-                                  0,
-                                  window_class.lpszClassName,
-                                  "wgl Loader2",
-                                  0,
-                                  CW_USEDEFAULT,
-                                  CW_USEDEFAULT,
-                                  CW_USEDEFAULT,
-                                  CW_USEDEFAULT,
-                                  0,
-                                  0,
-                                  window_class.hInstance,
-                                  0);
-    
-    HDC dc = GetDC(window);
-    _w32_set_pixel_format(dc);
-    HGLRC opengl_context = wglCreateContext(dc);
-    
-    b32_t success = true;
-    
-    if (wglMakeCurrent(dc, opengl_context)) {
-      wglChoosePixelFormatARB = (wglChoosePixelFormatARBFn*)wglGetProcAddress("wglChoosePixelFormatARB");
-      wglCreateContextAttribsARB = (wglCreateContextAttribsARBFn*)wglGetProcAddress("wglCreateContextAttribsARB");
-      
-      if (!wglChoosePixelFormatARB || !wglCreateContextAttribsARB) {
-        success = false;
-      }
-      
-      DestroyWindow(window);
-      ReleaseDC(window, dc);
-      wglDeleteContext(opengl_context);
-      wglMakeCurrent(0, 0);
-      return success;
-    }
-    else {
-      return false;
-    }
-    
-  }
-  else {
-    //DWORD test = GetLastError();
-    return false;
-  }
-}
-
-
-
-static 
-w32_gfx_load_sig(w32_gfx_load)
-{
-  HDC dc = GetDC(window); 
-  if (!dc) return 0;
-  if (!_w32_load_wgl_extentions()) return 0;
-
-  _w32_set_pixel_format(dc);
-  
-  s32_t opengl_attribs[] {
-    WGL_CONTEXT_MAJOR_VERSION_ARB, 4,
-    WGL_CONTEXT_MINOR_VERSION_ARB, 5,
-    WGL_CONTEXT_FLAG_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
-#if 0
-    | WGL_CONTEXT_DEBUG_BIT_ARB
-#endif
-    ,
-    WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_MOMO_PROFILE_BIT_ARB,
-    0,
-  };
-  HGLRC opengl_ctx = wglCreateContextAttribsARB(dc, 0, opengl_attribs); 
-  
-  if (!opengl_ctx) {
-    return false;
-  }
-
-  auto* opengl = arena_alloc_bootstrap(eden_opengl_t, arena, gigabytes(1));
-  eden->gfx.platform_data = opengl;
-
-  if (!opengl) {
-    return false;
-  }
-  
-  
-  if(wglMakeCurrent(dc, opengl_ctx)) {
-    HMODULE module = LoadLibraryA("opengl32.dll");
-#define wgl_set_opengl_function(name) \
-opengl->name = (eden_opengl_##name*)_w32_try_get_wgl_function(#name, module); \
-if (!opengl->name) { return false; } 
-    wgl_set_opengl_function(glEnable);
-    wgl_set_opengl_function(glDisable); 
-    wgl_set_opengl_function(glViewport);
-    wgl_set_opengl_function(glScissor);
-    wgl_set_opengl_function(glCreateShader);
-    wgl_set_opengl_function(glCompileShader);
-    wgl_set_opengl_function(glShaderSource);
-    wgl_set_opengl_function(glAttachShader);
-    wgl_set_opengl_function(glDeleteShader);
-    wgl_set_opengl_function(glClear);
-    wgl_set_opengl_function(glClearColor);
-    wgl_set_opengl_function(glCreateBuffers);
-    wgl_set_opengl_function(glNamedBufferStorage);
-    wgl_set_opengl_function(glCreateVertexArrays);
-    wgl_set_opengl_function(glVertexArrayVertexBuffer);
-    wgl_set_opengl_function(glEnableVertexArrayAttrib);
-    wgl_set_opengl_function(glVertexArrayAttribFormat);
-    wgl_set_opengl_function(glVertexArrayAttribBinding);
-    wgl_set_opengl_function(glVertexArrayBindingDivisor);
-    wgl_set_opengl_function(glBlendFunc);
-    wgl_set_opengl_function(glBlendFuncSeparate);
-    wgl_set_opengl_function(glCreateProgram);
-    wgl_set_opengl_function(glLinkProgram);
-    wgl_set_opengl_function(glGetProgramiv);
-    wgl_set_opengl_function(glGetProgramInfoLog);
-    wgl_set_opengl_function(glVertexArrayElementBuffer);
-    wgl_set_opengl_function(glCreateTextures);
-    wgl_set_opengl_function(glTextureStorage2D);
-    wgl_set_opengl_function(glTextureSubImage2D);
-    wgl_set_opengl_function(glBindTexture);
-    wgl_set_opengl_function(glTexParameteri);
-    wgl_set_opengl_function(glDrawElementsInstancedBaseInstance);
-    wgl_set_opengl_function(glGetUniformLocation);
-    wgl_set_opengl_function(glNamedBufferSubData);
-    wgl_set_opengl_function(glProgramUniform4fv);
-    wgl_set_opengl_function(glProgramUniformMatrix4fv);
-    wgl_set_opengl_function(glUseProgram);
-    wgl_set_opengl_function(glDeleteTextures);
-    wgl_set_opengl_function(glDrawArrays);
-    wgl_set_opengl_function(glGetError);
-    wgl_set_opengl_function(glGenVertexArrays);
-    wgl_set_opengl_function(glGenBuffers);
-    wgl_set_opengl_function(glBindBuffer);
-    wgl_set_opengl_function(glBufferData);
-    wgl_set_opengl_function(glEnableVertexAttribArray);
-    wgl_set_opengl_function(glVertexAttribPointer);
-    wgl_set_opengl_function(glVertexAttribDivisor);
-    wgl_set_opengl_function(glBindVertexArray);
-    wgl_set_opengl_function(glDrawElements);
-    wgl_set_opengl_function(glBufferSubData);
-  }
-#undef wgl_set_opengl_function
-  
-  if (!eden_opengl_init(
-        eden,
-        command_queue_size,
-        texture_queue_size,
-        max_textures,
-        max_payloads,
-        max_elements)) 
-  {
-    return false;
-  }
-  
-#if 0
-  opengl->glEnable(GL_DEBUG_OUTPUT);
-  opengl->glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-  opengl->glDebugMessageCallbackARB(Win_opengl_t_DebugCallback, nullptr);
-#endif
-  
-  
-  // VSync. 
-  if (!wglSwapIntervalEXT) {
-    wglSwapIntervalEXT = (wglSwapIntervalEXTFn*)wglGetProcAddress("wglSwapIntervalEXT");
-  }
-  if (wglSwapIntervalEXT) {
-    wglSwapIntervalEXT(1);
-  }
-
-  return true;
-}
-
-
-
-static 
-w32_gfx_begin_frame_sig(w32_gfx_begin_frame)
-{
-  eden_opengl_begin_frame(gfx, render_wh, region_x0, region_y0, region_x1, region_y1);
-}
-
-static
-w32_gfx_end_frame_sig(w32_gfx_end_frame) {
-  eden_opengl_end_frame(gfx);
-  SwapBuffers(wglGetCurrentDC());
-}
-#endif // EDEN_USE_OPENGL
-
-////////////////////////////////////////////////////////////////////////
-//
-// Implementations
-//
-
-
-//
-// MARK:(Wasapi)
-//
-
-static b32_t
-_w32_wasapi_init_default_speaker_output_device(w32_wasapi_t* wasapi) {
-  HRESULT hr;
-  //
-  // Use the device enumerator to find a default speaker device.
-  //
-  // 'eRender' is a flag to tell it to find an speaker rendering device (which are speaker
-  // output devices like speakers, etc). For capture devices (mics), use 'eCapture'.
-  //
-  // Not really sure and don't really care what eConsole is for now.
-  //
-  hr = wasapi->mm_device_enum->GetDefaultAudioEndpoint(eRender, eConsole, &wasapi->mm_device);
-  if (!SUCCEEDED(hr)) return false;
-
-  // Create the speaker client
-  hr = wasapi->mm_device->Activate(__uuidof(IAudioClient), CLSCTX_INPROC_SERVER, NULL, (LPVOID*)(&wasapi->speaker_client));
-  if (!SUCCEEDED(hr)) return false;
-
-                                               
-  //
-  // Initializes the speaker client.
-  // 
-  // Explanation of flags:
-  //
-  //   AUDCLNT_STREAMFLAGS_EVENTCALLBACK
-  //     Enable events with speaker device. Will use this to register a callback 
-  //     whenever the speaker's buffer need to be refilled.
-  //
-  //   AUDCLNT_STREAMFLAG_NOPERSIST
-  //     Ensures that any thing we do to the device (like volume control) does not persist
-  //     upon application restart
-  //     
-  //   AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM
-  //     An speaker client typically uses a fixed format (e.g. 32-bit or 16-bit, 48000hz or 44100 hz)
-  //     This is obtainable with IAudioClient::GetMixFormat().
-  //     This flag means that a mixer will be included that will help convert a given wave format
-  //     to the one that the speaker client uses. We will use this flag because we will
-  //     let the eden layer decide what format to use.
-  //
-  //  
-  // 
-  //
-  DWORD flags = 
-    (/*AUDCLNT_STREAMFLAGS_EVENTCALLBACK |*/ 
-     AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM |
-     AUDCLNT_STREAMFLAGS_NOPERSIST);
-  
-
-  WAVEFORMATEX wave_format = {};
-  wave_format.wFormatTag = (wasapi->bits_per_sample == 32) ? WAVE_FORMAT_IEEE_FLOAT : WAVE_FORMAT_PCM;
-  wave_format.wBitsPerSample = (WORD)wasapi->bits_per_sample;
-  wave_format.nChannels = (WORD)wasapi->channels;
-  wave_format.nSamplesPerSec = wasapi->samples_per_second;
-  // this is always correct for WAVE_FORMAT_CPM and WAVE_FORMAT_IEEE_FLOAT
-  wave_format.nBlockAlign = wave_format.nChannels * (wave_format.wBitsPerSample/8);   
-  wave_format.nAvgBytesPerSec = wave_format.nSamplesPerSec * wave_format.nBlockAlign; 
-
-
-  //
-  // The buffer duration is a time value expressed in 100-nanosecond units
-  // Basically, this is telling the speaker engine our refresh rate, which in turns
-  // allows the speaker engine to know what is the minimum buffer size to provide
-  // when our engine wants to write to the speaker buffer.
-  //
-  // Note that 1 millisecond = 1,000,000 nanoseconds = 10000 100-nanoseconds
-  //
-  REFERENCE_TIME buf_duration = wasapi->frame_rate * 10000; 
-  
-  hr = wasapi->speaker_client->Initialize(
-      AUDCLNT_SHAREMODE_SHARED, 
-      flags, 
-      buf_duration, 
-      0, 
-      &wave_format, 
-      NULL);
-
-  if (!SUCCEEDED(hr)) return false;
-
-
-  // Retrieves the render client. The render client is specifically the
-  // part of the speaker client that plays sound. One render client represents
-  // one speaker device (which can be an engine like NVdia Broadcast or a hardware).
-  hr = wasapi->speaker_client->GetService(IID_PPV_ARGS(&wasapi->render_client));
-  if (!SUCCEEDED(hr)) return false;
-
-
-
-
-  // @todo: Do we just the the real buffer size and just use that value
-  // to initialize our sound buffer size that our eden layer will write to?
-
-
-  // Get the number of speaker frames that the buffer can hold.
-  // Note that 1 'speaker frame' == 1 sample per second
-  UINT32 buf_frame_count = 0;
-  hr = wasapi->speaker_client->GetBufferSize(&buf_frame_count);
-  if (!SUCCEEDED(hr)) return false;
-
-  // Get the number of frames of padding
-  UINT32 padding_frame_count = 0;
-  hr = wasapi->speaker_client->GetCurrentPadding(&padding_frame_count);
-  if (!SUCCEEDED(hr)) return false;
-
-  // Initialize the secondary buffer.
-  // UINT32 writable_frames = buf_frame_count - padding_frame_count;
-
-  hr = wasapi->speaker_client->Start();
-  if (!SUCCEEDED(hr)) return false;
-
-  return true;
-}
-
-//
-// API Correspondence
-//
-static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t tone_hz = 440, f32_t tone_volume = 0.1) {
-  static f32_t t_sine = 0;
-  s32_t wave_period = s32_t(samples_per_second / tone_hz);
-
-  f32_t *sample_out = samples;
-  for (int sample_index = 0; sample_index < sample_count; sample_index++) {
-    f32_t sine_value = f32_sin(t_sine);
-    f32_t sample_value = (f32_t)(sine_value * tone_volume);
-    *sample_out++ = sample_value;
-    *sample_out++ = sample_value;
-
-    t_sine += TAU_32 / (f32_t)wave_period;
-    if (t_sine >= TAU_32) {
-      t_sine -= TAU_32;
-    }
-  }
-}
-
-static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t tone_hz = 440, f32_t tone_volume = 0.1) {
-  static f32_t t_sine = 0;
-  s32_t wave_period = s32_t(samples_per_second / tone_hz);
-
-  f32_t *sample_out = samples;
-  for (int sample_index = 0; sample_index < sample_count; sample_index++) {
-    f32_t sine_value = f32_sin(t_sine);
-    if (sine_value > 0) sine_value = 1.f;
-    else sine_value = -1.f;
-    f32_t sample_value = (f32_t)(sine_value * tone_volume);
-    *sample_out++ = sample_value;
-    *sample_out++ = sample_value;
-
-    t_sine += TAU_32 / (f32_t)wave_period;
-    if (t_sine >= TAU_32) {
-      t_sine -= TAU_32;
-    }
-  }
-}
-
-#include <stdio.h>
-
-
-// @todo: we should remove all the asserts tbh
-static 
-w32_speaker_begin_frame_sig(w32_speaker_begin_frame) 
-{
-  auto* wasapi = (w32_wasapi_t*)(eden_speaker->platform_data);
-
-  HRESULT hr; 
-  
-  // Check if device changed
-  // @todo: Do we want to do the event method...?
-  b32_t default_device_changed = false;
-  {
-    IMMDevice* current_default_device = nullptr;
-    wasapi->mm_device_enum->GetDefaultAudioEndpoint(eRender, eConsole, &current_default_device);
-
-    LPWSTR id1;
-    LPWSTR id2;
-    wasapi->mm_device->GetId(&id1);
-    current_default_device->GetId(&id2);
-
-    default_device_changed  = wcscmp(id1, id2) != 0;
-
-    CoTaskMemFree(id1);
-    CoTaskMemFree(id2);
-    current_default_device->Release();
-  }
-
-  if (default_device_changed) {
-    wasapi->speaker_client->Release();
-    wasapi->render_client->Release();
-    wasapi->mm_device->Release();
-    if (!_w32_wasapi_init_default_speaker_output_device(wasapi)) {
-      return false;
-    }
-  }
-
-
-  // Get the number of speaker frames that the buffer can hold.
-  UINT32 buf_frame_count = 0;
-  hr = wasapi->speaker_client->GetBufferSize(&buf_frame_count);
-  if (FAILED(hr)) return false;
-
-  // Get the number of frames of padding
-  UINT32 padding_frame_count = 0;
-  hr = wasapi->speaker_client->GetCurrentPadding(&padding_frame_count);
-  if (FAILED(hr)) return false;
-
-  UINT32 samples_to_write = buf_frame_count - padding_frame_count; 
-
-  // Setup for the eden layer
-  eden_speaker->sample_count = samples_to_write; 
-  eden_speaker->samples = nullptr;
-  eden_speaker->device_bits_per_sample = wasapi->bits_per_sample;
-  eden_speaker->device_channels = wasapi->channels;
-  eden_speaker->device_samples_per_second = wasapi->samples_per_second;
-
-  // Get the buffer 
-  if (eden_speaker->sample_count > 0) 
-  {
-    // Ask for the address of the buffer with the size of sample_count.
-    // This could actually fail for a multitude of reasons so it's 
-    // probably good to account for that.
-    BYTE* data = 0;
-
-    // We should expect GetBuffer to fail.
-    // In which we, we should do nothing, but the NEXT time it succees
-    // it should continue playing the sound without breaking continuity.
-    hr = wasapi->render_client->GetBuffer(eden_speaker->sample_count, &data);
-    if (SUCCEEDED(hr)) {
-      eden_speaker->samples = data;
-    }
-
-  }
-
-#if 0
-  w32_wasapi_t* wasapi = (w32_wasapi_t*)(eden_speaker->platform_data);
-	if (wasapi->is_device_changed) {
-		//w32_log("[w32_wasapi] Resetting wasapi device\n");
-		// Attempt to change device
-		_w32_wasapi_release_current_device(wasapi);
-		_w32_wasapi_set_default_device_as_current_device(wasapi);
-		wasapi->is_device_changed = false;
-	}
-	
-  UINT32 sound_padding_size;
-  UINT32 samples_to_write = 0;
-    
-	if (wasapi->is_device_ready) {
-		// Padding is how much valid data is queued up in the sound buffer
-		// if there's enough padding then we could skip writing more data
-		HRESULT hr = IAudioClient2_GetCurrentPadding(wasapi->speaker_client, &sound_padding_size);
-		
-		if (SUCCEEDED(hr)) {
-			samples_to_write = (UINT32)wasapi->buf_size - sound_padding_size;
-			
-			// Cap the samples to write to how much latency is allowed.
-			if (samples_to_write > wasapi->latency_sample_count) {
-				samples_to_write = wasapi->latency_sample_count;
-			}
-		}
-	}
-	else {
-		// if there is no device avaliable,
-		// just write to the whole 'dummy' buffer.
-		samples_to_write = wasapi->buf_size;
-	}
-
-  eden_speaker->sample_buffer = wasapi->buffer;
-  eden_speaker->sample_count = samples_to_write; 
-  eden_speaker->channels = wasapi->channels;
-#endif
-
-  return true;
-
-}
-
-static 
-w32_speaker_end_frame_sig(w32_speaker_end_frame) 
-{
-  auto* wasapi = (w32_wasapi_t*)(eden_speaker->platform_data);
-
-  if (eden_speaker->sample_count > 0) {
-    wasapi->render_client->ReleaseBuffer(eden_speaker->sample_count, 0);
-  }
-  
-
-#if 0
-	if (!wasapi->is_device_ready) return;
-
-  // @note: Kinda assumes 16-bit Sound
-  BYTE* sound_buf_data;
-  HRESULT hr = IAudioRenderClient_GetBuffer(wasapi->render_client, 
-                                            (UINT32)eden_speaker->sample_count, 
-                                            &sound_buf_data);
-  if (FAILED(hr)) return;
-
-  s16_t* src_sample = eden_speaker->sample_buffer;
-  s16_t* dest_sample = (s16_t*)sound_buf_data;
-  // buffer structure for stereo:
-  // s16_t   s16_t    s16_t  s16_t   s16_t  s16_t
-  // [LEFT RIGHT] LEFT RIGHT LEFT RIGHT....
-  for(u32_t sample_index = 0; sample_index < eden_speaker->sample_count; ++sample_index)
-  {
-    for (u32_t channel_index = 0; channel_index < wasapi->channels; ++channel_index) {
-      *dest_sample++ = *src_sample++;
-    }
-  }
-
-  IAudioRenderClient_ReleaseBuffer(
-      wasapi->render_client, 
-      (UINT32)eden_speaker->sample_count, 
-      0);
-#endif
-
-  return true;
-}
-
-
-static 
-w32_speaker_load_sig(w32_speaker_load)
-{
-  assert(channels == 1 || channels == 2);
-  u32_t bits_per_sample = 0;
-  switch(bitrate_type)
-  {
-    case EDEN_SPEAKER_BITRATE_TYPE_S16:
-      bits_per_sample = 16;
-
-  };
-
-
-#if 0
-  DWORD thread_id = 0;
-  HANDLE handle = CreateThread(0, 0, w32_wasapi_run, 0, 0, &thread_id);
-  SetThreadPriority(handle, THREAD_PRIORITY_TIME_CRITICAL);
-  WaitForSingleObject(handle, INFINITE);
-#endif
-
-
-  auto* wasapi = arena_push(w32_wasapi_t, allocator);
-  if (!wasapi) return false;
-
-  eden_speaker->platform_data = wasapi;
-
-  wasapi->frame_rate = frame_rate;
-  wasapi->channels = channels;
-  wasapi->bits_per_sample = bits_per_sample;
-  wasapi->samples_per_second = samples_per_second;
-#if 0
-  //
-  // Setup the intermediate buffer for eden to write speaker to.
-  //
-  // I don't really know the best buffer size to use AND I don't want to keep changing buffer
-  // size when the device changes, so I'm just going to allocate 1 second worth of samples
-  // This means that we are taking the strategy of allocating so much that we should not worry 
-  // about having too little. 
-  //
-  wasapi->buf_size = samples_per_second * channels * bits_per_sample/8; // 1 second worth of samples
-  wasapi->buffer = arena_push_size(allocator, wasapi->buf_size, 16);
-  assert(wasapi->buffer);
-#endif
-
-  HRESULT hr;
-  hr = CoInitializeEx(0, COINIT_SPEED_OVER_MEMORY);
-  if (!SUCCEEDED(hr)) return false;
-
-  //
-  // Create the device enumerator.
-  //
-  // @note: The device enumerator is just a thing to enumerates 
-  // through a list of devices. Note that this includes ALL devices (not just speaker!)
-  //
-  hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), 
-                        0,
-                        CLSCTX_INPROC_SERVER,
-                        IID_PPV_ARGS(&wasapi->mm_device_enum));
-  if (!SUCCEEDED(hr)) return false;
-  
-
-  if (!_w32_wasapi_init_default_speaker_output_device(wasapi)) {
-    return false;
-  }
-
-  //
-  // @todo: Enable Refill event here?
-  //
-#if 0 
-  HANDLE hRefillEvent = CreateEventEx(NULL, NULL, 0, EVENT_MODIFY_STATE | SYNCHRONIZE);
-  hr = speaker_client->SetEventHandle(hRefillEvent);
-  assert(SUCCEEDED(hr));
-#endif
-
-  // Does the success of this matter?
-  // Do we even need to return success for this method??
-  //_w32_wasapi_set_default_device_as_current_device(wasapi);
-
-
-  // Initialize mixer
-  if(!eden_speaker_init(eden_speaker, bitrate_type, max_sounds, allocator))
-    return false;
-
-
-	return true;
-	
-}
-
-
-
-static 
-w32_speaker_unload_sig(w32_speaker_unload) {
-  auto* wasapi = (w32_wasapi_t*)(eden_speaker->platform_data);
-  wasapi->speaker_client->Release();
-  wasapi->render_client->Release();
-  wasapi->mm_device->Release();
-  wasapi->mm_device_enum->Release();
-
-
-#if 0
-  _w32_wasapi_release_current_device(wasapi);
-	IMMDeviceEnumerator_UnregisterEndpointNotificationCallback(wasapi->mm_device_enum, &wasapi->notifs.imm_notifs);
-	IMMDeviceEnumerator_Release(wasapi->mm_device_enum);
-  arena_clear(&wasapi->allocator);
-#endif
-}
 
 #define w32_profile_block(...) profiler_block(profiler, __VA_ARGS__)
 
@@ -1157,47 +339,6 @@ w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data
   ReleaseSemaphore(wq->semaphore, 1, 0);
 }
 
-
-static void
-w32_init_file_cabinet(w32_file_cabinet_t* c, usz_t file_cap, arena_t* arena) {
-  c->files = arena_push_arr(w32_file_t, arena, file_cap);
-  assert(c->files);
-  c->free_files = arena_push_arr(u32_t, arena, file_cap);
-  assert(c->free_files);
-
-  for(u32_t i = 0; i < file_cap; ++i) {
-    c->files[i].cabinet_index = i;
-    c->free_files[i] = i;
-  }
-  c->free_file_count = file_cap;
-}
-
-static w32_file_t*
-w32_get_next_free_file(w32_file_cabinet_t* c) {
-  if (c->free_file_count == 0) {
-    return nullptr;
-  }
-  u32_t free_file_index = c->free_files[c->free_file_count--];
-  return c->files + free_file_index; 
-  
-}
-
-static void
-w32_return_file(w32_file_cabinet_t* c, w32_file_t* f) {
-  c->free_files[c->free_file_count++] = f->cabinet_index;
-}
-
-static void
-w32_free_all_memory() {
-  w32_memory_t* sentinel = &w32_state.memory_sentinel; 
-  w32_memory_t* itr = sentinel->next;
-  while(itr != sentinel) {
-    w32_memory_t* next = itr->next;
-    cll_remove(itr);
-    VirtualFree(itr, 0, MEM_RELEASE);
-    itr = next;
-  }
-}
 
 static void 
 w32_shutdown() {
@@ -1515,7 +656,6 @@ WinMain(HINSTANCE instance,
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
   ImmDisableIME((DWORD)-1);
 
-
   //
   // Initialize w32 state
   //
@@ -1525,20 +665,14 @@ WinMain(HINSTANCE instance,
     w32_state.eden_width = 1.f;
     w32_state.eden_height = 1.f;  
 
-    // initialize the circular linked list
-    cll_init(&w32_state.memory_sentinel);
-
-
     if (!w32_init_work_queue(&w32_state.work_queue, 8)) {
       return 1;
     }
   }
-  defer { w32_free_all_memory(); };
   
 
   //
   // Load eden Functions
-  //
   //
   eden_functions_t eden_functions = {};
 #if HOT_RELOAD 
@@ -1551,16 +685,14 @@ WinMain(HINSTANCE instance,
   w32_load_code(&eden_code);
   if (!eden_code.is_valid) return 1;
   defer { w32_unload_code(&eden_code); };
-
 #else  // HOT_RELOAD 
   eden_functions.get_config = eden_get_config;
   eden_functions.update_and_render = eden_update_and_render;
-
 #endif // HOT_RELOAD
   
   eden_config_t config = eden_functions.get_config();
 
-  eden_t* eden = arena_alloc_bootstrap(eden_t, platform_arena, gigabytes(2));
+  eden_t* eden = arena_alloc_bootstrap(eden_t, platform_arena, gigabytes(1));
 
   arena_t* platform_arena = &eden->platform_arena;
 
@@ -1574,12 +706,9 @@ WinMain(HINSTANCE instance,
   eden->complete_all_tasks = w32_complete_all_tasks;
   eden->set_design_dimensions = w32_set_eden_dims;
 
-  w32_init_file_cabinet(&w32_state.file_cabinet, config.max_files, platform_arena );
-
-
 
   //
-  //- Create window in the middle of the screen
+  // Create window in the middle of the screen
   //
   HWND window;
   {
@@ -1650,10 +779,6 @@ WinMain(HINSTANCE instance,
     
   }
   w32_state.window = window;
-  
-
-  //  w32_toggle_fullscreen(window);
-  
   
 #if 0
   u32_t monitor_frame_rate = 60;

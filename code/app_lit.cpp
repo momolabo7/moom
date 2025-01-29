@@ -1757,7 +1757,7 @@ lit_game_update_sensors(lit_game_t* g, f32_t dt)
     }
   }
 
-  eden_debug_u32(g_eden, buf_from_lit("total_triangles"), total_triangles);
+  eden_debug_u32(g_eden, "total_triangles", total_triangles);
 }
 
 
@@ -3806,9 +3806,6 @@ eden_update_and_render_sig(eden_update_and_render)
       (lit_show_debug_type_t)((g_lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
 
   }
-
-  // Check arena size
-  eden_debug_u32(g_eden, buf_from_lit("platform_memory"), (u32_t)arena_remaining(&g_eden->platform_arena)/megabytes(1));
 
   switch (g_lit->show_debug_type) {
 #if 0
