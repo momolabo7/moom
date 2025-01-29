@@ -56,7 +56,6 @@ struct w32_work_queue_t {
   u32_t volatile completion_count;
   u32_t volatile completion_goal;
   HANDLE semaphore; 
-  
 };
 
 //
@@ -105,7 +104,7 @@ struct w32_state_t {
   arena_t arena;
 };
 // @todo: can we remove this global shit somehow?
-static w32_state_t w32_state;
+static w32_state_t* w32_state;
 
 
 static 
@@ -342,7 +341,7 @@ w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data
 
 static void 
 w32_shutdown() {
-  w32_state.is_running = false;
+  w32_state->is_running = false;
 }
 
 static void
@@ -470,7 +469,7 @@ w32_update_input(eden_input_t* input, HWND window, f32_t delta_time, RECT rr)
       case WM_QUIT:
       case WM_DESTROY:
       case WM_CLOSE: {
-        w32_state.is_running = false;
+        w32_state->is_running = false;
       } break;
 
       case WM_LBUTTONUP:
@@ -526,17 +525,17 @@ w32_update_input(eden_input_t* input, HWND window, f32_t delta_time, RECT rr)
   f32_t region_width = (f32_t)(rr.right - rr.left);
   f32_t region_height = (f32_t)(rr.top - rr.bottom);
 
-  f32_t eden_to_render_w = w32_state.eden_width / region_width;
-  f32_t eden_to_render_h = w32_state.eden_height / region_height;
+  f32_t eden_to_render_w = w32_state->eden_width / region_width;
+  f32_t eden_to_render_h = w32_state->eden_height / region_height;
   
   input->mouse_pos.x = render_mouse_pos_x * eden_to_render_w;
   input->mouse_pos.y = render_mouse_pos_y * eden_to_render_h;
   
   
-  if (w32_state.is_cursor_locked) {
+  if (w32_state->is_cursor_locked) {
     SetCursorPos(
-        w32_state.cursor_pt_to_lock_to.x,
-        w32_state.cursor_pt_to_lock_to.y);
+        w32_state->cursor_pt_to_lock_to.x,
+        w32_state->cursor_pt_to_lock_to.y);
   }
     
 }
@@ -546,10 +545,10 @@ w32_set_eden_dims(f32_t width, f32_t height) {
   assert(width > 0.f && height > 0.f);
 
   // Ignore if there is no change
-  if (width == w32_state.eden_width && height == w32_state.eden_height) return;
+  if (width == w32_state->eden_width && height == w32_state->eden_height) return;
 
-  w32_state.eden_width = width;
-  w32_state.eden_height = height;
+  w32_state->eden_width = width;
+  w32_state->eden_height = height;
 
   // Get monitor info
   HMONITOR monitor = MonitorFromWindow(0, MONITOR_DEFAULTTONEAREST);
@@ -558,10 +557,10 @@ w32_set_eden_dims(f32_t width, f32_t height) {
   GetMonitorInfo(monitor, &monitor_info); 
 
   RECT client_dims;
-  GetClientRect(w32_state.window, &client_dims); 
+  GetClientRect(w32_state->window, &client_dims); 
 
   RECT window_dims;
-  GetWindowRect(w32_state.window, &window_dims);
+  GetWindowRect(w32_state->window, &window_dims);
 
   POINT diff;
   diff.x = (window_dims.right - window_dims.left) - client_dims.right;
@@ -574,7 +573,7 @@ w32_set_eden_dims(f32_t width, f32_t height) {
   LONG top = monitor_h/2 - (u32_t)height/2;
 
   // Make it right at the center!
-  MoveWindow(w32_state.window, left, top, (s32_t)width + diff.x, (s32_t)height + diff.y, TRUE);
+  MoveWindow(w32_state->window, left, top, (s32_t)width + diff.x, (s32_t)height + diff.y, TRUE);
 
 }
 
@@ -591,13 +590,13 @@ eden_hide_cursor_sig(w32_hide_cursor) {
 
 static 
 eden_lock_cursor_sig(w32_lock_cursor) {
-  w32_state.is_cursor_locked = true;
-  GetCursorPos(&w32_state.cursor_pt_to_lock_to);
+  w32_state->is_cursor_locked = true;
+  GetCursorPos(&w32_state->cursor_pt_to_lock_to);
 }
 
 static 
 eden_unlock_cursor_sig(w32_unlock_cursor) {
-  w32_state.is_cursor_locked = false;
+  w32_state->is_cursor_locked = false;
 }
 
 //
@@ -614,7 +613,7 @@ w32_window_callback(HWND window,
     case WM_CLOSE:  
     case WM_QUIT:
     case WM_DESTROY: {
-      w32_state.is_running = false;
+      w32_state->is_running = false;
     } break;
     default: {
       result = DefWindowProcA(window, message, w_param, l_param);
@@ -631,13 +630,13 @@ w32_window_callback(HWND window,
 static 
 eden_add_task_sig(w32_add_task)
 {
-  w32_add_task_entry(&w32_state.work_queue, callback, data);
+  w32_add_task_entry(&w32_state->work_queue, callback, data);
 }
 
 static 
 eden_complete_all_tasks_sig(w32_complete_all_tasks) 
 {
-  w32_complete_all_tasks_entries(&w32_state.work_queue);
+  w32_complete_all_tasks_entries(&w32_state->work_queue);
 }
 
 
@@ -659,16 +658,19 @@ WinMain(HINSTANCE instance,
   //
   // Initialize w32 state
   //
+  
+  w32_state = arena_alloc_bootstrap(w32_state_t, arena, gigabytes(1));
   {
-    w32_state.is_running = true;
+    w32_state->is_running = true;
 
-    w32_state.eden_width = 1.f;
-    w32_state.eden_height = 1.f;  
+    w32_state->eden_width = 1.f;
+    w32_state->eden_height = 1.f;  
 
-    if (!w32_init_work_queue(&w32_state.work_queue, 8)) {
+    if (!w32_init_work_queue(&w32_state->work_queue, 8)) {
       return 1;
     }
   }
+  arena_t* platform_arena = &w32_state->arena;
   
 
   //
@@ -692,10 +694,7 @@ WinMain(HINSTANCE instance,
   
   eden_config_t config = eden_functions.get_config();
 
-  eden_t* eden = arena_alloc_bootstrap(eden_t, platform_arena, gigabytes(1));
-
-  arena_t* platform_arena = &eden->platform_arena;
-
+  eden_t* eden = arena_push(eden_t, &w32_state->arena);
   eden->is_running = true;
   eden->show_cursor = w32_show_cursor;
   eden->lock_cursor = w32_lock_cursor;
@@ -778,7 +777,7 @@ WinMain(HINSTANCE instance,
     
     
   }
-  w32_state.window = window;
+  w32_state->window = window;
   
 #if 0
   u32_t monitor_frame_rate = 60;
@@ -865,7 +864,7 @@ WinMain(HINSTANCE instance,
   QueryPerformanceFrequency(&performance_frequency);
   LARGE_INTEGER last_frame_count = w32_get_performance_counter();
 
-  while (w32_state.is_running && eden->is_running) 
+  while (w32_state->is_running && eden->is_running) 
   {
 #if HOT_RELOAD
     // Hot reload eden->dll functions
@@ -882,7 +881,7 @@ WinMain(HINSTANCE instance,
     v2u_t client_wh = w32_get_client_dims(window);
 
 
-    f32_t eden_aspect = w32_state.eden_width / w32_state.eden_height;
+    f32_t eden_aspect = w32_state->eden_width / w32_state->eden_height;
     RECT rr = w32_calc_render_region(client_wh.w,
                                      client_wh.h,
                                      eden_aspect);

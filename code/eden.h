@@ -489,8 +489,6 @@ struct eden_t
   b32_t is_dll_reloaded;
   b32_t is_running;
 
-  // @todo: remove this!
-  arena_t platform_arena;
 
   void* user_data;
 
