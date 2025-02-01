@@ -6,20 +6,23 @@
 // https://tobiasvl.github.io/blog/write-a-chip-8-emulator/
 #define CHIP8_DISPLAY_WIDTH  (64)
 #define CHIP8_DISPLAY_HEIGHT (32)
-#define CHIP8_WINDOW_WIDTH   (400)
-#define CHIP8_WINDOW_HEIGHT  (400) 
+#define CHIP8_WINDOW_SCALE   (10)
+#define CHIP8_WINDOW_WIDTH   (CHIP8_DISPLAY_WIDTH*CHIP8_WINDOW_SCALE)
+#define CHIP8_WINDOW_HEIGHT  (CHIP8_DISPLAY_HEIGHT*CHIP8_WINDOW_SCALE) 
 #define CHIP8_FRAME_RATE     (60)
 
 struct chip8_t
 {
-  u8_t ram[4096];
-  u32_t ram_usage;
+  u8_t memory[4096];
+  u32_t memory_usage;
 
   u8_t display[CHIP8_DISPLAY_WIDTH * CHIP8_DISPLAY_HEIGHT];
 
   u16_t program_counter;
 
-  u16_t stack_pointer; // used to point at locations in memory
+  u16_t index_register;
+
+  u8_t stack_pointer;
   u16_t stack[256];
 
   u8_t delay_timer;
@@ -29,12 +32,13 @@ struct chip8_t
 };
 
 static b32_t
-chip8_init(chip8_t* chip8, buffer_t instructions)
+chip8_init(chip8_t* chip8, buf_t instructions)
 {
-  if (instructions.size <= sizeof(chip8->ram))
+  if (instructions.size <= sizeof(chip8->memory) - 0x200)
   {
-    memory_copy(chip8->ram, instructions.e, instructions.size);
-    chip8->ram_usage = instructions.size;
+    memory_copy(chip8->memory + 0x200, instructions.e, instructions.size);
+    chip8->memory_usage = instructions.size;
+    chip8->program_counter = 0x200;
     return true;
   }
 
@@ -45,7 +49,7 @@ static b32_t
 chip8_init_from_file(chip8_t* chip8, const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
-  buffer_t instructions = file_read_into_buffer("test.ch8", arena);
+  buf_t instructions = file_read_into_buffer(filename, arena);
   return chip8_init(chip8, instructions);
 }
 
@@ -55,22 +59,124 @@ static void
 chip8_update(chip8_t* chip8)
 {
   // Fetch
-  u16_t instruction;
-  {
-    // Read the instruction that PC is current pointing at from
-    // memory. An instruction is 2 bytes.
-    instruction = dref((u16_t*)(chip8->ram + chip8->program_counter));
-    chip8->program_counter += 2;
-  }
+  //
+  // Read the instruction that PC is current pointing at from
+  // memory. An instruction is 2 bytes.
+  u16_t instruction = dref((u16_t*)(chip8->memory + chip8->program_counter));
+  chip8->program_counter += 2;
+  instruction = u16_endian_swap(instruction);
+
   
   // Decode + Execute
-  u8_t nibbles[4];
-  nibbles[0] = (instruction & 0xF000) >> 24;
-  nibbles[1] = (instruction & 0x0F00) >> 16;
-  nibbles[2] = (instruction & 0x00F0) >> 8;
-  nibbles[3] = (instruction & 0x000F);
+  u8_t type = (instruction & 0xF000) >> 12;
+  switch(type) 
+  {
+    case 0x0:
+    {
+      if (instruction == 0x0E0) 
+      {
+        memory_zero(chip8->display, sizeof(chip8->display));
+      }
+      else if (instruction == 0x0EE)
+      {
+        // @todo
+      }
+    }break;
+    case 0x1:
+    {
+      // 1NNN: jump PC to NNN
+      chip8->program_counter = (instruction & 0x0FFF);
+    }break;
+    case 0x2:
+    {
+    }break;
+    case 0x3:
+    {
+    }break;
+    case 0x4:
+    {
+    }break;
+    case 0x5:
+    {
+    }break;
+    case 0x6:
+    {
+      // 6XNN: set register X to NN
+      u8_t x = (instruction & 0x0F00) >> 8; 
+      chip8->registers[x] = (instruction & 0x00FF);
+    }break;
+    case 0x7:
+    {
+      // 7XNN: add NN to register X
+      u8_t x = (instruction & 0x0F00) >> 8; 
+      chip8->registers[x] += (instruction & 0x00FF);
+    }break;
+    case 0x8:
+    {
+    }break;
+    case 0x9:
+    {
+    }break;
+    case 0xA:
+    {
+      // ANNN: set index register to NNN
+      chip8->index_register = (instruction & 0x0FFF);
+    }break;
+    case 0xB:
+    {
+    }break;
+    case 0xC:
+    {
+    }break;
+    case 0xD:
+    {
+      // 0XYN: draw 
+      u8_t x = (instruction & 0x0F00) >> 8; 
+      u8_t y = (instruction & 0x00F0) >> 4; 
+      u8_t n = instruction & 0x000F; 
 
+      chip8->registers[0xF] = 0;
+      v2u_t coords = v2u_set(
+          chip8->registers[x] % CHIP8_DISPLAY_WIDTH, 
+          chip8->registers[y] % CHIP8_DISPLAY_HEIGHT);
+      // set VF to zero?
+      for (u8_t r = 0; r < n; ++r)
+      {
+        if ((coords.y + r) >= CHIP8_DISPLAY_HEIGHT)
+          break;
 
+        u8_t sprite_byte = chip8->memory[chip8->index_register + r];
+        // sprites are always 8-pixels wide
+        for (u8_t c = 0; c < 8; ++c)
+        {
+          if ((coords.x + c) >= CHIP8_DISPLAY_WIDTH)
+            break;
+
+          u8_t sprite_pixel = (sprite_byte >> c) & 0x1;
+          u8_t* screen_pixel = &chip8->display[(coords.y + r) * CHIP8_DISPLAY_WIDTH + (coords.x + c)];
+          if (sprite_pixel)
+          {
+            if (*screen_pixel == 1)
+            {
+              chip8->registers[0xF] = 1;
+            }
+
+            *screen_pixel ^= 1;
+          }
+        }
+      }
+      
+    }break;
+    case 0xE:
+    {
+    }break;
+    case 0xF:
+    {
+    }break;
+
+  }
+
+#if 0
   switch(instruction & 0xF000)
   {
     case 0x0000: {
@@ -78,7 +184,6 @@ chip8_update(chip8_t* chip8)
       {
         case 0x00E0: {
           // 00E0: clear screen
-          memory_zero(chip8->display, sizeof(chip8->display));
         } break;
         case 0x0EE: {
           // 00E0: call subroutine
@@ -97,9 +202,8 @@ chip8_update(chip8_t* chip8)
       chip8->program_counter = (instruction & 0x0FFF);
       
     }; 
-
-
   }
+#endif
 
 
 }
@@ -209,7 +313,8 @@ w32_dib_blit_to_dc(w32_dib_t* dib, HDC dc)
     BitBlt(
         dc, 
         0, 0, 
-        dib->width, dib->height,
+        dib->width, 
+        dib->height,
         temp_dc,
         0, 0,
         SRCCOPY);
@@ -242,7 +347,7 @@ w32_dib_init(w32_dib_t* dib, u32_t width, u32_t height, HWND window)
   dib->bitmap_info.bmiHeader.biClrUsed = 0;
   dib->bitmap_info.bmiHeader.biClrImportant = 0;
   dib->bitmap_info.bmiHeader.biWidth = width;
-  dib->bitmap_info.bmiHeader.biHeight = height;
+  dib->bitmap_info.bmiHeader.biHeight = -height;
 
   dib->width = width;
   dib->height = height;
@@ -383,9 +488,7 @@ WinMain(HINSTANCE instance,
   defer { w32_dib_free(&g_frame_dib); };  
 
   chip8_t* chip8 = arena_push(chip8_t, &arena);
-  {
-    //chip8_init_from_file()
-  }
+  chip8_init_from_file(chip8, "IBM Logo.ch8", &arena);
 
 
   make(w32_frc_t, frc);
@@ -406,15 +509,68 @@ WinMain(HINSTANCE instance,
       // @todo audio
     }
 
+    chip8_update(chip8);
+
     // rendering
     {
-      for (s32_t x = 0; x < g_frame_dib.width; ++x) 
+
+      s32_t scale = 10;
+      s32_t start_x = 63 * scale;
+      s32_t start_y = 10 * scale;
+      s32_t end_x = start_x + scale;
+      s32_t end_y = start_y + scale;
+
+      for (s32_t dx = start_x; dx < end_x; ++dx)
+        w32_dib_set_pixel(&g_frame_dib, dx, 20, 255, 255, 255, 255);
+      for (s32_t dx = start_x; dx < end_x; ++dx)
+        w32_dib_set_pixel(&g_frame_dib, dx, 22, 255, 255, 255, 255);
+      
+#if 0
+      for(s32_t y = 0; y < CHIP8_DISPLAY_HEIGHT; ++y)
       {
-        for(s32_t y = 0; y < g_frame_dib.height; ++y)
+        for (s32_t x = 0; x < CHIP8_DISPLAY_WIDTH; ++x) 
         {
-          w32_dib_set_pixel(&g_frame_dib, x, y, 255, 255, 255, 0);
+          u8_t pixel = chip8->display[y * CHIP8_DISPLAY_WIDTH + x];
+
+          s32_t start_x = x * CHIP8_WINDOW_SCALE;
+          s32_t start_y = y * CHIP8_WINDOW_SCALE;
+          s32_t end_x = start_x + CHIP8_WINDOW_SCALE;
+          s32_t end_y = start_y + CHIP8_WINDOW_SCALE;
+          
+          for (s32_t dy = start_y; dy < end_y; ++dy)
+          {
+            for (s32_t dx = start_x; dx < end_x; ++dx)
+            {
+              if (pixel)
+              {
+                w32_dib_set_pixel(&g_frame_dib, dx, dy, 255, 255, 255, 255);
+              }
+              else
+              {
+                w32_dib_set_pixel(&g_frame_dib, dx, dy, 0,0,0,0);
+              }
+            }
+          }
         }
       }
+#endif
+#if 0
+      for(s32_t y = 0; y < g_frame_dib.height; ++y)
+      {
+        for (s32_t x = 0; x < g_frame_dib.width; ++x) 
+        {
+          if (x < CHIP8_DISPLAY_WIDTH && y < CHIP8_DISPLAY_HEIGHT)
+          {
+            w32_dib_set_pixel(&g_frame_dib, x, y, 0, 0, 0, 0);
+            u8_t pixel = chip8->display[y * CHIP8_DISPLAY_WIDTH + x];
+            if (pixel)
+            {
+              w32_dib_set_pixel(&g_frame_dib, x, y, 255, 255, 255, 255);
+            }
+          }
+        }
+      }
+#endif
 
       // @note: tells window that the screen is outdated and requires repainting
       InvalidateRect(window, NULL, FALSE);
