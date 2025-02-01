@@ -130,7 +130,7 @@ chip8_update(chip8_t* chip8)
     }break;
     case 0xD:
     {
-      // 0XYN: draw 
+      // DXYN: draw 
       u8_t x = (instruction & 0x0F00) >> 8; 
       u8_t y = (instruction & 0x00F0) >> 4; 
       u8_t n = instruction & 0x000F; 
@@ -152,7 +152,7 @@ chip8_update(chip8_t* chip8)
           if ((coords.x + c) >= CHIP8_DISPLAY_WIDTH)
             break;
 
-          u8_t sprite_pixel = (sprite_byte >> c) & 0x1;
+          u8_t sprite_pixel = (sprite_byte >> (7 - c)) & 0x1;
           u8_t* screen_pixel = &chip8->display[(coords.y + r) * CHIP8_DISPLAY_WIDTH + (coords.x + c)];
           if (sprite_pixel)
           {
@@ -329,7 +329,7 @@ w32_dib_set_pixel(w32_dib_t* dib, u32_t x, u32_t y, u32_t a, u32_t r, u32_t g, u
   assert(x < dib->width);
   assert(y < dib->height);
   u32_t color = (a << 24) + (r << 16) + (g << 8) + (b << 0);
-  dib->pixel_buffer[x + y * dib->height] = color;
+  dib->pixel_buffer[x + y * dib->width] = color;
 }
 
 static b32_t
@@ -452,9 +452,13 @@ WinMain(HINSTANCE instance,
       window_rect.right = monitor_w/2 + CHIP8_WINDOW_WIDTH/2;
       window_rect.top = monitor_h/2 - CHIP8_WINDOW_HEIGHT/2;
       window_rect.bottom = monitor_h/2 + CHIP8_WINDOW_HEIGHT/2;
+
     }
     
-    DWORD style = WS_OVERLAPPED | WS_VISIBLE | WS_SYSMENU;
+    DWORD style = WS_OVERLAPPEDWINDOW | WS_VISIBLE | WS_SYSMENU;
+
+    // disable maximize and resizing
+    style  &= ~(WS_MAXIMIZEBOX | WS_SIZEBOX);
     
     AdjustWindowRectEx(&window_rect,
                        style,
@@ -488,7 +492,10 @@ WinMain(HINSTANCE instance,
   defer { w32_dib_free(&g_frame_dib); };  
 
   chip8_t* chip8 = arena_push(chip8_t, &arena);
-  chip8_init_from_file(chip8, "IBM Logo.ch8", &arena);
+  if (!chip8_init_from_file(chip8, "ibm.ch8", &arena))
+  {
+    return false;
+  }
 
 
   make(w32_frc_t, frc);
@@ -514,18 +521,7 @@ WinMain(HINSTANCE instance,
     // rendering
     {
 
-      s32_t scale = 10;
-      s32_t start_x = 63 * scale;
-      s32_t start_y = 10 * scale;
-      s32_t end_x = start_x + scale;
-      s32_t end_y = start_y + scale;
-
-      for (s32_t dx = start_x; dx < end_x; ++dx)
-        w32_dib_set_pixel(&g_frame_dib, dx, 20, 255, 255, 255, 255);
-      for (s32_t dx = start_x; dx < end_x; ++dx)
-        w32_dib_set_pixel(&g_frame_dib, dx, 22, 255, 255, 255, 255);
       
-#if 0
       for(s32_t y = 0; y < CHIP8_DISPLAY_HEIGHT; ++y)
       {
         for (s32_t x = 0; x < CHIP8_DISPLAY_WIDTH; ++x) 
@@ -553,24 +549,6 @@ WinMain(HINSTANCE instance,
           }
         }
       }
-#endif
-#if 0
-      for(s32_t y = 0; y < g_frame_dib.height; ++y)
-      {
-        for (s32_t x = 0; x < g_frame_dib.width; ++x) 
-        {
-          if (x < CHIP8_DISPLAY_WIDTH && y < CHIP8_DISPLAY_HEIGHT)
-          {
-            w32_dib_set_pixel(&g_frame_dib, x, y, 0, 0, 0, 0);
-            u8_t pixel = chip8->display[y * CHIP8_DISPLAY_WIDTH + x];
-            if (pixel)
-            {
-              w32_dib_set_pixel(&g_frame_dib, x, y, 255, 255, 255, 255);
-            }
-          }
-        }
-      }
-#endif
 
       // @note: tells window that the screen is outdated and requires repainting
       InvalidateRect(window, NULL, FALSE);
