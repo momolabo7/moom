@@ -246,6 +246,7 @@ if (!opengl->name) { return false; }
     wgl_set_opengl_function(glBindVertexArray);
     wgl_set_opengl_function(glDrawElements);
     wgl_set_opengl_function(glBufferSubData);
+    wgl_set_opengl_function(glClearDepth);
   }
 #undef wgl_set_opengl_function
   

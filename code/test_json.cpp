@@ -16,11 +16,10 @@ int main() {
   }";
 
   arena_t ba = {}; 
-  arena_init(&ba, buffer_set(malloc(megabytes(1)), megabytes(1)); 
+  arena_alloc(&ba, gigabytes(1));
 
   make(json_t, json);
   auto* obj =  json_read(json, (u8_t*)json_str, array_count(json_str), &ba);
-
 
   // Printing "car"
   {
@@ -39,8 +38,8 @@ int main() {
     if(val) {
       auto* element = json_get_element(val);
       s32_t out = 0;
-      str_to_s32(element->str, &out);
-      for_cnt(i, element->str.size) {
+      buf_to_s32(element->str, &out);
+      for(i, element->str.size) {
         printf("%c", element->str.e[i]);
       }
       printf("\n");

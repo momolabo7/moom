@@ -29,8 +29,9 @@
 //  |/|
 //  ---
 
-
+//
 // Texture Queue API
+//
 enum eden_gfx_texture_payload_state_t {
   EDEN_GFX_TEXTURE_PAYLOAD_STATE_EMPTY,
   EDEN_GFX_TEXTURE_PAYLOAD_STATE_LOADING,
@@ -67,28 +68,21 @@ struct eden_gfx_texture_queue_t {
 };
 
 // Command API
-struct eden_gfx_command_t {
-  u32_t id; // type id from user
-  void* data;
-};
 
-struct eden_gfx_command_queue_t {
-	u8_t* memory;
-  usz_t memory_size;
-	usz_t data_pos;
-	usz_t entry_pos;
-	usz_t entry_start;
-	usz_t entry_count;
+enum eden_gfx_command_type_t {
+  EDEN_GFX_COMMAND_TYPE_CLEAR,
+  EDEN_GFX_COMMAND_TYPE_TRIANGLE,
+  EDEN_GFX_COMMAND_TYPE_RECT,
+  EDEN_GFX_COMMAND_TYPE_SPRITE,
+  EDEN_GFX_COMMAND_TYPE_BLEND,
+  EDEN_GFX_COMMAND_TYPE_VIEW,
+#if 0
+  EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH,
+  EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE,
+  EDEN_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,
+#endif
 
-  // stats
-  usz_t peak_memory_usage;
-};
-
-enum eden_blend_preset_type_t {
-  EDEN_BLEND_PRESET_TYPE_NONE,
-  EDEN_BLEND_PRESET_TYPE_ADD,
-  EDEN_BLEND_PRESET_TYPE_ALPHA,
-  EDEN_BLEND_PRESET_TYPE_MULTIPLY,
+  EDEN_GFX_COMMAND_TYPE_TEST, // only for testing
 };
 
 enum eden_gfx_blend_type_t {
@@ -104,55 +98,10 @@ enum eden_gfx_blend_type_t {
   EDEN_GFX_BLEND_TYPE_INV_DST_COLOR,
 };
 
-enum eden_gfx_command_type_t {
-  EDEN_GFX_COMMAND_TYPE_CLEAR,
-  EDEN_GFX_COMMAND_TYPE_TRIANGLE,
-  EDEN_GFX_COMMAND_TYPE_RECT,
-  EDEN_GFX_COMMAND_TYPE_LINE,
-  EDEN_GFX_COMMAND_TYPE_SPRITE,
-  EDEN_GFX_COMMAND_TYPE_DELETE_TEXTURE,
-  EDEN_GFX_COMMAND_TYPE_DELETE_ALL_TEXTURES,
-  EDEN_GFX_COMMAND_TYPE_BLEND,
-  EDEN_GFX_COMMAND_TYPE_VIEW,
-  EDEN_GFX_COMMAND_TYPE_ADVANCE_DEPTH,
-
-  EDEN_GFX_COMMAND_TYPE_TEST, // only for testing
-};
-
-
-struct eden_gfx_command_clear_t {
-  rgba_t colors;
-};
-
-
-struct eden_gfx_command_view_t {
-  f32_t pos_x, pos_y;
-  f32_t min_x, max_x;
-  f32_t min_y, max_y;
-};
-
-struct eden_gfx_command_sprite_t {
-  v2f_t pos;
-  v2f_t size;
-
-  u32_t texel_x0, texel_y0;
-  u32_t texel_x1, texel_y1;
-
-
-  rgba_t colors;
-  u32_t texture_index;
-  v2f_t anchor;
-};
-
-struct eden_gfx_command_test_t {
-};
-
-struct eden_gfx_command_delete_texture_t {
+struct eden_gfx_command_delete_texture_t 
+{
   u32_t texture_index;
 };
-
-struct eden_gfx_command_delete_all_textures_t {};
-struct eden_gfx_command_advance_depth_t {};
 
 struct eden_gfx_command_rect_t {
   rgba_t colors;
@@ -171,9 +120,54 @@ struct eden_gfx_command_blend_t {
   eden_gfx_blend_type_t dst;
 };
 
+struct eden_gfx_command_clear_t {
+  rgba_t colors;
+};
+
+struct eden_gfx_command_view_t {
+  f32_t pos_x, pos_y;
+  f32_t min_x, max_x;
+  f32_t min_y, max_y;
+};
+
+struct eden_gfx_command_sprite_t {
+  v2f_t pos;
+  v2f_t size;
+
+  u32_t texel_x0, texel_y0;
+  u32_t texel_x1, texel_y1;
+
+  rgba_t colors;
+  u32_t texture_index;
+  v2f_t anchor;
+};
+
+struct eden_gfx_command_t {
+  eden_gfx_command_type_t type; 
+  union 
+  {
+    eden_gfx_command_rect_t rect;
+    eden_gfx_command_triangle_t tri;
+    eden_gfx_command_clear_t clear;
+    eden_gfx_command_view_t view;
+    eden_gfx_command_sprite_t sprite;
+    eden_gfx_command_blend_t blend;
+  };
+};
+
+
+enum eden_blend_preset_type_t {
+  EDEN_BLEND_PRESET_TYPE_NONE,
+  EDEN_BLEND_PRESET_TYPE_ADD,
+  EDEN_BLEND_PRESET_TYPE_ALPHA,
+  EDEN_BLEND_PRESET_TYPE_MULTIPLY,
+};
 
 struct eden_gfx_t {
-  eden_gfx_command_queue_t command_queue;
+  u32_t command_cap;
+  u32_t command_count;
+  eden_gfx_command_t* commands;
+
   eden_gfx_texture_queue_t texture_queue;
   usz_t max_textures;
   eden_blend_preset_type_t current_blend_preset;

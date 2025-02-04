@@ -662,7 +662,6 @@ struct json_element_t
 enum json_value_type_t 
 {
   //JSON_VALUE_TYPE_BOOLEAN,
-
   JSON_VALUE_TYPE_TRUE,
   JSON_VALUE_TYPE_FALSE,
 
@@ -2166,14 +2165,14 @@ _json_insert_entry(json_t* t, _json_entry_t** entry, _json_entry_t* new_entry) {
 static b32_t
 _json_parse_array(json_array_t* arr, json_t* t, arena_t* ba) {
   b32_t is_done = false;
-  u32_t expect_type = 0;
+  u32_t expect_type = _JSON_EXPECT_TYPE_OPEN;
   b32_t error = false;
 
 
   while(!is_done) {
     _json_token_t token = _json_next_token(t);
 
-    if (expect_type == 0) {
+    if (expect_type == _JSON_EXPECT_TYPE_OPEN) {
       json_value_t v = {};
       if(_json_set_value_based_on_token(t, &v, token, ba)) {
         json_array_node_t* array_node = arena_push(json_array_node_t, ba); 
@@ -2191,11 +2190,11 @@ _json_parse_array(json_array_t* arr, json_t* t, arena_t* ba) {
         is_done = true;
         error = true;
       }
-      expect_type = 1;
+      expect_type = _JSON_EXPECT_TYPE_KEY_OR_CLOSE;
     }
-    else if (expect_type == 1) {
+    else if (expect_type == _JSON_EXPECT_TYPE_KEY_OR_CLOSE) {
       if (token.type == _JSON_TOKEN_TYPE_COMMA) {
-        expect_type = 0;
+        expect_type = _JSON_EXPECT_TYPE_OPEN;
       }
       else if (token.type == _JSON_TOKEN_TYPE_CLOSE_BRACKET) {
         is_done = true;

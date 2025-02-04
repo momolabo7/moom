@@ -526,12 +526,12 @@ lit_update_and_render_console()
       v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(0.f, 0.f, 0.f, 0.8f));
-  eden_advance_depth(g_eden);
+  //eden_advance_depth(g_eden);
   
   eden_draw_asset_sprite(g_eden, assets, ASSET_SPRITE_ID_BLANK_SPRITE, console_pos, console_size, rgba_hex(0x787878FF));
-  eden_advance_depth(g_eden);
+  //eden_advance_depth(g_eden);
   eden_draw_asset_sprite(g_eden, assets, ASSET_SPRITE_ID_BLANK_SPRITE, input_area_pos, input_area_size, rgba_hex(0x505050FF));
-  eden_advance_depth(g_eden);
+  //eden_advance_depth(g_eden);
   
   
   // Draw info text
@@ -552,7 +552,7 @@ lit_update_and_render_console()
     
   }
 
-  eden_advance_depth(g_eden);
+  //eden_advance_depth(g_eden);
   eden_draw_text(g_eden, assets, 
       ASSET_FONT_ID_DEBUG,
       console->input_line.str,
@@ -560,7 +560,7 @@ lit_update_and_render_console()
       left_pad, 
       font_bottom_pad,
       font_height);
-  eden_advance_depth(g_eden);
+  //eden_advance_depth(g_eden);
 }
 #endif
 
@@ -689,7 +689,7 @@ lit_splash_update() {
       v2f_set(LIT_WIDTH/2, scroll_y),
       72.f,
       v2f_set(0.5f, 0.5f));
-  eden_advance_depth(g_eden);
+  //eden_advance_depth(g_eden);
 
 
   if (splash->timer <= 0.f) {
@@ -1266,7 +1266,7 @@ lit_game_render_lights(lit_game_t* g) {
         light->pos,
         v2f_set(emitter_scale, emitter_scale),
         LIT_LIGHT_EMITTER_COLOR);
-    eden_advance_depth(g_eden);
+    //eden_advance_depth(g_eden);
 
     eden_draw_asset_sprite(
         g_eden, 
@@ -1274,7 +1274,7 @@ lit_game_render_lights(lit_game_t* g) {
         light->pos,
         v2f_set(glow_scale, glow_scale),
         LIT_LIGHT_EMITTER_GLOW_COLOR);
-    eden_advance_depth(g_eden);
+    //eden_advance_depth(g_eden);
   }
 
   eden_set_blend_preset(g_eden, EDEN_BLEND_PRESET_TYPE_ADD);
@@ -1295,7 +1295,7 @@ lit_game_render_lights(lit_game_t* g) {
           rgba_hex(l->color));
 
     } 
-    eden_advance_depth(g_eden);
+    //eden_advance_depth(g_eden);
   }
   eden_set_blend_preset(g_eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
 }
@@ -1319,7 +1319,7 @@ lit_draw_light_rays(lit_game_t* g) {
     }
 
   }
-  eden_advance_depth(g_eden);
+  //eden_advance_depth(g_eden);
 }
 
 static void
@@ -1330,7 +1330,7 @@ lit_draw_edges(lit_game_t* g) {
     lit_game_edge_t* edge = g->edges + edge_index;
     eden_draw_line(g_eden, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
   }
-  eden_advance_depth(g_eden);
+  //eden_advance_depth(g_eden);
 }
 
 //
@@ -1487,7 +1487,7 @@ lit_game_render_player(lit_game_t* g){
           ASSET_SPRITE_ID_CIRCLE_SPRITE,
           player->nearest_light->pos, 
           v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-      eden_advance_depth(g_eden);
+      //eden_advance_depth(g_eden);
     }
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE) {
@@ -1495,7 +1495,7 @@ lit_game_render_player(lit_game_t* g){
         ASSET_SPRITE_ID_ROTATE_SPRITE,
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-    eden_advance_depth(g_eden);
+    //eden_advance_depth(g_eden);
 
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_MOVE) {
@@ -1503,7 +1503,7 @@ lit_game_render_player(lit_game_t* g){
         ASSET_SPRITE_ID_MOVE_SPRITE,
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-    eden_advance_depth(g_eden);
+    //eden_advance_depth(g_eden);
   }
 }
 
@@ -1578,7 +1578,7 @@ lit_game_render_particles(lit_game_t* g) {
     size.h = f32_lerp(p->size_start.h , p->size_end.h, lifespan_ratio);
 
     eden_draw_asset_sprite(g_eden, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, p->pos, size, color);
-    eden_advance_depth(g_eden);
+    //eden_advance_depth(g_eden);
   }
 }
 
@@ -1769,7 +1769,7 @@ lit_game_render_sensors(lit_game_t* g) {
   {
     lit_game_sensor_t* sensor = g->sensors + sensor_index;
     eden_draw_asset_sprite(g_eden,  ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, sensor->pos, size, rgba_hex(sensor->target_color));
-    eden_advance_depth(g_eden);
+    //eden_advance_depth(g_eden);
   }
 }
 
@@ -3423,14 +3423,14 @@ lit_game_update()
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->stage_fade_timer);
     eden_draw_asset_sprite(g_eden, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    eden_advance_depth(g_eden);
+    //eden_advance_depth(g_eden);
   }
 
   // Overlay for exit fade
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->exit_fade);
     eden_draw_asset_sprite(g_eden, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    eden_advance_depth(g_eden);
+    //eden_advance_depth(g_eden);
   }
 
   // Draw the overlay for white flash
@@ -3438,7 +3438,7 @@ lit_game_update()
     f32_t alpha = g->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
     rgba_t color = rgba_set(1.f, 1.f, 1.f, alpha);
     eden_draw_asset_sprite(g_eden, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    eden_advance_depth(g_eden);
+    //eden_advance_depth(g_eden);
   }
 
 
@@ -3462,7 +3462,7 @@ lit_game_update()
         v2f_set(title_x, LIT_HEIGHT/2), 
         128.,
         v2f_set(0.5f, 0.5f));
-    eden_advance_depth(g_eden);
+    //eden_advance_depth(g_eden);
 
   }
   lit_profile_end(rendering);
@@ -3679,7 +3679,7 @@ static void lit_cool_transition_render(lit_cool_transition_t* t) {
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(t->r, t->g, t->b, 0.5f));
   eden_set_blend_preset(g_eden, old_preset);
-  eden_advance_depth(g_eden);
+  //eden_advance_depth(g_eden);
 }
 
 #endif
@@ -3701,7 +3701,7 @@ static void lit_sandbox_update() {
       v2f_set(0.5f, 0.5f)
       );
 
-  eden_advance_depth(g_eden);
+  //eden_advance_depth(g_eden);
 }
 
 
