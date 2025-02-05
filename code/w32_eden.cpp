@@ -798,8 +798,8 @@ WinMain(HINSTANCE instance,
   if(!w32_gfx_load(
       eden,
       window, 
-      config.render_command_size, 
       config.texture_queue_size,
+      config.max_commands,
       config.max_textures,
       config.max_texture_payloads,
       config.max_elements))

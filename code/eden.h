@@ -264,8 +264,8 @@ struct eden_config_t
   u32_t profiler_max_snapshots_per_entry;
 
   usz_t texture_queue_size;
-  usz_t render_command_size;
   u32_t max_textures;
+  u32_t max_commands;
   usz_t max_texture_payloads; 
   usz_t max_elements;
 

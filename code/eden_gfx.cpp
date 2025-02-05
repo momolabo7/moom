@@ -122,16 +122,16 @@ eden_gfx_init(
     eden_gfx_t* g, 
     arena_t* arena,
     usz_t texture_queue_size, 
-    usz_t command_queue_size,
+    usz_t max_commands,
     usz_t max_textures,
     usz_t max_payloads)
 {
 
   // commands
   {
-    g->commands = arena_push_arr(eden_gfx_command_t, arena, 2048); // @todo settings
-    g->command_cap = 2048;
+    g->command_cap = max_commands;
     g->command_count = 0;
+    g->commands = arena_push_arr(eden_gfx_command_t, arena, max_commands);
   }
 
   // textures

@@ -264,8 +264,8 @@ eden_opengl_batch_init(eden_opengl_t* ogl, arena_t* arena, usz_t element_count)
 static b32_t
 eden_opengl_init(
     eden_t* eden,
-    usz_t command_queue_size, 
     usz_t texture_queue_size,
+    usz_t max_commands,
     usz_t max_textures,
     usz_t max_payloads,
     usz_t max_elements)
@@ -276,8 +276,8 @@ eden_opengl_init(
   if (!eden_gfx_init(
         gfx, 
         &ogl->arena,
-        command_queue_size,
         texture_queue_size,
+        max_commands,
         max_textures,
         max_payloads)) 
     return false;

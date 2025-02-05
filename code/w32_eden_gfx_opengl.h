@@ -252,8 +252,8 @@ if (!opengl->name) { return false; }
   
   if (!eden_opengl_init(
         eden,
-        command_queue_size,
         texture_queue_size,
+        max_commands,
         max_textures,
         max_payloads,
         max_elements)) 

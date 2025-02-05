@@ -3859,7 +3859,7 @@ eden_get_config_sig(eden_get_config)
   ret.profiler_max_snapshots_per_entry = 120;
 
   ret.texture_queue_size = megabytes(5);
-  ret.render_command_size = megabytes(100);
+  ret.max_commands = 2048;
   ret.max_textures = 1;
   ret.max_texture_payloads = 1;
   ret.max_elements = 4096;
