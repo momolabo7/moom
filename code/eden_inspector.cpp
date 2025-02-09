@@ -12,10 +12,11 @@ eden_inspector_init(eden_inspector_t* in, arena_t* arena, u32_t max_entries)
 }
 
 static eden_inspector_entry_t*
-eden_inspector_push_entry(eden_inspector_t* in, eden_inspector_entry_type_t type)
+eden_inspector_push_entry(eden_inspector_t* in, buf_t name, eden_inspector_entry_type_t type)
 {
   assert(in->entry_count < in->entry_cap);
   eden_inspector_entry_t* entry = in->entries + in->entry_count++;
+  entry->name = name;
   entry->type = type;
   return entry;
 }
@@ -28,16 +29,24 @@ eden_inspector_clear(eden_inspector_t* in)
 
 
 static void
-eden_inspect_f32(eden_t* eden, f32_t item)
+eden_inspect_f32(eden_t* eden, buf_t name, f32_t item)
 {
-  eden_inspector_entry_t* entry = eden_inspector_push_entry(&eden->inspector, EDEN_INSPECTOR_ENTRY_TYPE_F32);
+  eden_inspector_entry_t* entry = eden_inspector_push_entry(&eden->inspector, name, EDEN_INSPECTOR_ENTRY_TYPE_F32);
   entry->value_f32 = item;
 }
 
 static void
-eden_inspect_u32(eden_t* eden, u32_t item)
+eden_inspect_u32(eden_t* eden, buf_t name, u32_t item)
 {
-  eden_inspector_entry_t* entry = eden_inspector_push_entry(&eden->inspector, EDEN_INSPECTOR_ENTRY_TYPE_U32);
+  eden_inspector_entry_t* entry = eden_inspector_push_entry(&eden->inspector, name, EDEN_INSPECTOR_ENTRY_TYPE_U32);
   entry->value_u32 = item;
+}
+
+static void
+eden_inspect_arena(eden_t* eden, buf_t name, arena_t arena)
+
+{
+  eden_inspector_entry_t* entry = eden_inspector_push_entry(&eden->inspector, name, EDEN_INSPECTOR_ENTRY_TYPE_ARENA);
+  entry->value_arena = arena;
 }
 

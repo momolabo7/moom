@@ -238,6 +238,7 @@ atlas_sprite_count	code/pass.h	/^  u32_t atlas_sprite_count;$/;"	m	language:C++	
 audio_format	code/momo.h	/^  u16_t audio_format;$/;"	m	language:C++	struct:wav_fmt_chunk_t	typeref:typename:u16_t
 average	code/app_lit.cpp	/^  f64_t average;$/;"	m	language:C++	struct:lit_profiler_stat_t	typeref:typename:f64_t	file:
 average	code/eden_profiler.h	/^  f64_t average;$/;"	m	language:C++	struct:eden_profiler_stat_t	typeref:typename:f64_t
+b	code/app_lit.cpp	/^  f32_t r, g, b;$/;"	m	language:C++	struct:lit_cool_transition_t	typeref:typename:f32_t	file:
 b	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon1db7a63d130a::__anon1db7a63d1408	typeref:typename:f32_t
 b	code/momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
 b	code/momo.h	/^  union { u32_t v; u8_t b[4]; } combine;$/;"	m	language:C++	union:bufio_push_hex_u32::__anon1db7a63d290a	typeref:typename:u8_t[4]
@@ -572,7 +573,7 @@ crc8_init_table	code/momo.h	/^static void  crc8_init_table(crc8_table_t* table, 
 crc8_slow	code/momo.h	/^crc8_slow(u8_t* data, u32_t data_size, u16_t start_register, u16_t polynomial) {$/;"	f	language:C++	typeref:typename:u32_t
 crc8_slow	code/momo.h	/^static u32_t crc8_slow(u8_t* data, u32_t data_size, u16_t start_register, u16_t polynomial);$/;"	p	language:C++	typeref:typename:u32_t
 crc8_table_t	code/momo.h	/^struct crc8_table_t $/;"	s	language:C++
-credits	code/app_lit.cpp	/^    lit_credits_t credits;$/;"	m	language:C++	union:lit_t::__anon1b0212a9020a	typeref:typename:lit_credits_t	file:
+credits	code/app_lit.cpp	/^    lit_credits_t credits;$/;"	m	language:C++	union:lit_t::__anon1b0212a9040a	typeref:typename:lit_credits_t	file:
 cstr_clear	code/momo.h	/^cstr_clear(c8_t* dest) {$/;"	f	language:C++	typeref:typename:void
 cstr_clear	code/momo.h	/^static void  cstr_clear(c8_t* dest); $/;"	p	language:C++	typeref:typename:void
 cstr_compare	code/momo.h	/^cstr_compare(const c8_t* lhs, const c8_t* rhs) {$/;"	f	language:C++	typeref:typename:b32_t
@@ -668,7 +669,7 @@ e	code/momo.h	/^  u8_t* e;$/;"	m	language:C++	struct:buf_t	typeref:typename:u8_t
 e	code/momo.h	/^  _ttf_edge_t** e;$/;"	m	language:C++	struct:_ttf_edge_list_t	typeref:typename:_ttf_edge_t **
 e1	code/app_lit.cpp	/^  lit_game_edge_t* e1;$/;"	m	language:C++	struct:lit_game_double_edge_t	typeref:typename:lit_game_edge_t *	file:
 e2	code/app_lit.cpp	/^  lit_game_edge_t* e2;$/;"	m	language:C++	struct:lit_game_double_edge_t	typeref:typename:lit_game_edge_t *	file:
-eden	code/app_lit.cpp	/^    lit_game_t eden;$/;"	m	language:C++	union:lit_t::__anon1b0212a9020a	typeref:typename:lit_game_t	file:
+eden	code/app_lit.cpp	/^    lit_game_t eden;$/;"	m	language:C++	union:lit_t::__anon1b0212a9040a	typeref:typename:lit_game_t	file:
 eden_add_task	code/eden.h	/^#define eden_add_task(/;"	d	language:C++
 eden_add_task_sig	code/eden.h	/^#define eden_add_task_sig(/;"	d	language:C++
 eden_add_task_sig	code/eden.h	/^typedef eden_add_task_sig(eden_add_task_f);$/;"	t	language:C++
@@ -802,7 +803,6 @@ eden_function_names	code/eden.h	/^static const char* eden_function_names[] {$/;"
 eden_get_blend_preset	code/eden_rendering.cpp	/^eden_get_blend_preset(eden_t* eden) {$/;"	f	language:C++	typeref:typename:eden_blend_preset_type_t	file:
 eden_get_config_sig	code/app_alu.cpp	/^eden_get_config_sig(eden_get_config) $/;"	f	language:C++	typeref:typename:exported
 eden_get_config_sig	code/app_gbg.cpp	/^eden_get_config_sig(eden_get_config) $/;"	f	language:C++	typeref:typename:exported
-eden_get_config_sig	code/app_lit.cpp	/^eden_get_config_sig(eden_get_config) $/;"	f	language:C++	typeref:typename:exported
 eden_get_config_sig	code/app_sandbox.cpp	/^eden_get_config_sig(eden_get_config) $/;"	f	language:C++	typeref:typename:exported
 eden_get_config_sig	code/app_tbp.cpp	/^eden_get_config_sig(eden_get_config) $/;"	f	language:C++	typeref:typename:exported
 eden_get_config_sig	code/app_vigil.cpp	/^eden_get_config_sig(eden_get_config) $/;"	f	language:C++	typeref:typename:exported
@@ -904,12 +904,14 @@ eden_input_characters_t	code/eden_input.h	/^struct eden_input_characters_t {$/;"
 eden_input_t	code/eden_input.h	/^struct eden_input_t {$/;"	s	language:C++
 eden_inspector_clear	code/eden_inspector.cpp	/^eden_inspector_clear(eden_inspector_t* in) $/;"	f	language:C++	typeref:typename:void	file:
 eden_inspector_entry_t	code/eden_inspector.h	/^struct eden_inspector_entry_t {$/;"	s	language:C++
+EDEN_INSPECTOR_ENTRY_TYPE_ARENA	code/eden_inspector.h	/^  EDEN_INSPECTOR_ENTRY_TYPE_ARENA,$/;"	e	language:C++	enum:eden_inspector_entry_type_t
 EDEN_INSPECTOR_ENTRY_TYPE_F32	code/eden_inspector.h	/^  EDEN_INSPECTOR_ENTRY_TYPE_F32,$/;"	e	language:C++	enum:eden_inspector_entry_type_t
 eden_inspector_entry_type_t	code/eden_inspector.h	/^enum eden_inspector_entry_type_t {$/;"	g	language:C++
 EDEN_INSPECTOR_ENTRY_TYPE_U32	code/eden_inspector.h	/^  EDEN_INSPECTOR_ENTRY_TYPE_U32,$/;"	e	language:C++	enum:eden_inspector_entry_type_t
 eden_inspector_init	code/eden_inspector.cpp	/^eden_inspector_init(eden_inspector_t* in, arena_t* arena, u32_t max_entries) $/;"	f	language:C++	typeref:typename:b32_t	file:
 eden_inspector_push_entry	code/eden_inspector.cpp	/^eden_inspector_push_entry(eden_inspector_t* in, eden_inspector_entry_type_t type)$/;"	f	language:C++	typeref:typename:eden_inspector_entry_t *	file:
 eden_inspector_t	code/eden_inspector.h	/^struct eden_inspector_t {$/;"	s	language:C++
+eden_inspect_arena	code/eden_inspector.cpp	/^eden_inspect_arena(eden_t* eden, arena_t arena)$/;"	f	language:C++	typeref:typename:void	file:
 eden_inspect_f32	code/eden_inspector.cpp	/^eden_inspect_f32(eden_t* eden, f32_t item)$/;"	f	language:C++	typeref:typename:void	file:
 eden_inspect_u32	code/eden_inspector.cpp	/^eden_inspect_u32(eden_t* eden, u32_t item)$/;"	f	language:C++	typeref:typename:void	file:
 eden_is_button_down	code/eden_input.cpp	/^eden_is_button_down(eden_t* eden, eden_button_code_t code){$/;"	f	language:C++	typeref:typename:b32_t	file:
@@ -1014,7 +1016,7 @@ eden_profiler_update_entries	code/eden_profiler.cpp	/^eden_profiler_update_entri
 eden_profile_begin	code/eden_profiler.h	/^#define eden_profile_begin(/;"	d	language:C++
 eden_profile_block	code/eden_profiler.h	/^#define eden_profile_block(/;"	d	language:C++
 eden_profile_end	code/eden_profiler.h	/^#define eden_profile_end(/;"	d	language:C++
-eden_profile_update_and_render	code/eden_profiler.cpp	/^eden_profile_update_and_render($/;"	f	language:C++	typeref:typename:void	file:
+eden_profile_update_and_render	code/eden_rendering.cpp	/^eden_profile_update_and_render($/;"	f	language:C++	typeref:typename:void	file:
 eden_set_blend_preset	code/eden_rendering.cpp	/^eden_set_blend_preset(eden_t* eden, eden_blend_preset_type_t type) {$/;"	f	language:C++	typeref:typename:void	file:
 eden_set_design_dimensions	code/eden.h	/^#define eden_set_design_dimensions(/;"	d	language:C++
 eden_set_design_dimensions_sig	code/eden.h	/^#define eden_set_design_dimensions_sig(/;"	d	language:C++
@@ -1456,6 +1458,7 @@ function_count	code/ship_app_lit.cpp	/^  u32_t function_count;$/;"	m	language:C+
 function_count	code/w32_eden.cpp	/^  u32_t function_count;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:u32_t	file:
 function_names	code/ship_app_lit.cpp	/^  const char** function_names;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char **	file:
 function_names	code/w32_eden.cpp	/^  const char** function_names;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:const char **	file:
+g	code/app_lit.cpp	/^  f32_t r, g, b;$/;"	m	language:C++	struct:lit_cool_transition_t	typeref:typename:f32_t	file:
 g	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon1db7a63d130a::__anon1db7a63d1408	typeref:typename:f32_t
 g	code/momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
 GAME_ASSET_BITMAP_ID_MAX	code/eden_assets.h	/^enum eden_asset_bitmap_id_t : u32_t {GAME_ASSET_BITMAP_ID_MAX};$/;"	e	language:C++	enum:eden_asset_bitmap_id_t
@@ -1885,6 +1888,10 @@ list	code/aoc22.cpp	/^    aoc22_d13_node_t* list; \/\/ represents a list$/;"	m	l
 LIT_ANIMATOR_TYPE_PATROL_POINT	code/app_lit.cpp	/^  LIT_ANIMATOR_TYPE_PATROL_POINT,$/;"	e	language:C++	enum:lit_game_animator_type_t	file:
 LIT_ANIMATOR_TYPE_ROTATE_POINT	code/app_lit.cpp	/^  LIT_ANIMATOR_TYPE_ROTATE_POINT,$/;"	e	language:C++	enum:lit_game_animator_type_t	file:
 LIT_ASSET_FILE	code/eden_asset_id_lit.h	/^#define LIT_ASSET_FILE /;"	d	language:C++
+lit_cool_transition_init	code/app_lit.cpp	/^static void lit_cool_transition_init(lit_cool_transition_t* t) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_cool_transition_render	code/app_lit.cpp	/^static void lit_cool_transition_render(lit_cool_transition_t* t) {$/;"	f	language:C++	typeref:typename:void	file:
+lit_cool_transition_t	code/app_lit.cpp	/^struct lit_cool_transition_t { $/;"	s	language:C++	file:
+lit_cool_transition_update_positive	code/app_lit.cpp	/^static void lit_cool_transition_update_positive(lit_cool_transition_t* t) {$/;"	f	language:C++	typeref:typename:void	file:
 lit_credits_init	code/app_lit.cpp	/^lit_credits_init() {$/;"	f	language:C++	typeref:typename:void	file:
 lit_credits_push_subtitle_and_name	code/app_lit.cpp	/^lit_credits_push_subtitle_and_name($/;"	f	language:C++	typeref:typename:f32_t	file:
 LIT_CREDITS_SCROLL_SPEED	code/app_lit.cpp	/^#define LIT_CREDITS_SCROLL_SPEED /;"	d	language:C++	file:
@@ -2001,6 +2008,7 @@ lit_level_9	code/app_lit.cpp	/^lit_level_9() {$/;"	f	language:C++	typeref:typena
 lit_level_exit_with	code/app_lit.cpp	/^#define lit_level_exit_with(/;"	d	language:C++	file:
 lit_level_menu	code/app_lit.cpp	/^lit_level_menu() {$/;"	f	language:C++	typeref:typename:void	file:
 lit_level_menu	code/app_lit.cpp	/^static void lit_level_menu();$/;"	p	language:C++	typeref:typename:void	file:
+lit_level_test	code/app_lit.cpp	/^lit_level_test(lit_game_t* m) {$/;"	f	language:C++	typeref:typename:void	file:
 LIT_LIGHT_EMITTER_ANIME_SPEED	code/app_lit.cpp	/^#define LIT_LIGHT_EMITTER_ANIME_SPEED /;"	d	language:C++	file:
 LIT_LIGHT_EMITTER_COLOR	code/app_lit.cpp	/^#define LIT_LIGHT_EMITTER_COLOR /;"	d	language:C++	file:
 LIT_LIGHT_EMITTER_GLOW_COLOR	code/app_lit.cpp	/^#define LIT_LIGHT_EMITTER_GLOW_COLOR /;"	d	language:C++	file:
@@ -2061,6 +2069,7 @@ lit_splash_update	code/app_lit.cpp	/^lit_splash_update() {$/;"	f	language:C++	ty
 lit_t	code/app_lit.cpp	/^struct lit_t {$/;"	s	language:C++	file:
 lit_title_wps	code/app_lit.cpp	/^static lit_game_title_waypoint_t lit_title_wps[] = {$/;"	v	language:C++	typeref:typename:lit_game_title_waypoint_t[]	file:
 lit_unlock_next_level	code/app_lit.cpp	/^lit_unlock_next_level(u32_t current_level_id) {$/;"	f	language:C++	typeref:typename:b32_t	file:
+lit_update_and_render_console	code/app_lit.cpp	/^lit_update_and_render_console() $/;"	f	language:C++	typeref:typename:void	file:
 LIT_WIDTH	code/app_lit.cpp	/^#define LIT_WIDTH /;"	d	language:C++	file:
 loca	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 loca_format	code/momo.h	/^  u16_t loca_format;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u16_t
@@ -2204,7 +2213,7 @@ MOMO_FOOLISH	code/aoc23.cpp	/^#define MOMO_FOOLISH /;"	d	language:C++	file:
 MOMO_H	code/momo.h	/^#define MOMO_H$/;"	d	language:C++
 mouse_pos	code/eden_input.h	/^  v2f_t mouse_pos;$/;"	m	language:C++	struct:eden_input_t	typeref:typename:v2f_t
 mouse_scroll_delta	code/eden_input.h	/^  s32_t mouse_scroll_delta;$/;"	m	language:C++	struct:eden_input_t	typeref:typename:s32_t
-move_point	code/app_lit.cpp	/^    lit_game_animator_patrol_point_t move_point;$/;"	m	language:C++	union:lit_game_animator_t::__anon1b0212a9010a	typeref:typename:lit_game_animator_patrol_point_t	file:
+move_point	code/app_lit.cpp	/^    lit_game_animator_patrol_point_t move_point;$/;"	m	language:C++	union:lit_game_animator_t::__anon1b0212a9030a	typeref:typename:lit_game_animator_patrol_point_t	file:
 msg1	learn/x64_1_conditionals.s	/^  msg1: db "a >= b", 10, 0 $/;"	d	language:Asm
 msg1len	learn/x64_1_conditionals.s	/^  msg1len: equ $ - msg1 $/;"	d	language:Asm
 msg2	learn/x64_1_conditionals.s	/^  msg2: db "a < b", 10, 0 $/;"	d	language:Asm
@@ -2424,6 +2433,7 @@ program_counter	code/w32_chip8.cpp	/^  u16_t program_counter;$/;"	m	language:C++
 pt	code/app_lit.cpp	/^  v2f_t pt;$/;"	m	language:C++	struct:lit_light_intersection_t	typeref:typename:v2f_t	file:
 ptr_to_umi	code/momo.h	/^ptr_to_umi(void* p) { $/;"	f	language:C++	typeref:typename:umi_t
 ptr_to_umi	code/momo.h	/^static umi_t ptr_to_umi(void* p);$/;"	p	language:C++	typeref:typename:umi_t
+r	code/app_lit.cpp	/^  f32_t r, g, b;$/;"	m	language:C++	struct:lit_cool_transition_t	typeref:typename:f32_t	file:
 r	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon1db7a63d130a::__anon1db7a63d1408	typeref:typename:f32_t
 r	code/momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
 rbg_to_hsl	code/momo.h	/^rbg_to_hsl(rgb_t c) {$/;"	f	language:C++	typeref:typename:hsl_t
@@ -2483,7 +2493,7 @@ rng_unit_circle	code/momo.h	/^static v2f_t rng_unit_circle(rng_t* r);$/;"	p	lang
 root	code/momo.h	/^  json_object_t root;$/;"	m	language:C++	struct:json_t	typeref:typename:json_object_t
 root_dir	bin/build.bat	/^set root_dir=%me%..$/;"	v	language:DosBatch
 rot	code/eden_gfx.h	/^  f32_t rot;$/;"	m	language:C++	struct:eden_gfx_command_rect_t	typeref:typename:f32_t
-rotate_point	code/app_lit.cpp	/^    lit_game_animator_rotate_point_t rotate_point;$/;"	m	language:C++	union:lit_game_animator_t::__anon1b0212a9010a	typeref:typename:lit_game_animator_rotate_point_t	file:
+rotate_point	code/app_lit.cpp	/^    lit_game_animator_rotate_point_t rotate_point;$/;"	m	language:C++	union:lit_game_animator_t::__anon1b0212a9030a	typeref:typename:lit_game_animator_rotate_point_t	file:
 rp_pack	code/momo.h	/^rp_pack(rp_rect_t* rects, $/;"	f	language:C++	typeref:typename:b32_t
 rp_pack	code/momo.h	/^static b32_t rp_pack($/;"	p	language:C++	typeref:typename:b32_t
 rp_rect_t	code/momo.h	/^struct rp_rect_t$/;"	s	language:C++
@@ -2649,7 +2659,7 @@ speaker_max_sounds	code/eden.h	/^  u32_t speaker_max_sounds;$/;"	m	language:C++	
 speaker_samples_per_second	code/eden.h	/^  u32_t speaker_samples_per_second;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 speed	code/app_lit.cpp	/^  f32_t speed;$/;"	m	language:C++	struct:lit_game_animator_rotate_point_t	typeref:typename:f32_t	file:
 speed_multiplier	code/app_lit.cpp	/^  f32_t speed_multiplier;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:f32_t	file:
-splash	code/app_lit.cpp	/^    lit_splash_t splash;$/;"	m	language:C++	union:lit_t::__anon1b0212a9020a	typeref:typename:lit_splash_t	file:
+splash	code/app_lit.cpp	/^    lit_splash_t splash;$/;"	m	language:C++	union:lit_t::__anon1b0212a9040a	typeref:typename:lit_splash_t	file:
 sprite	code/eden_gfx.h	/^    eden_gfx_command_sprite_t sprite;$/;"	m	language:C++	union:eden_gfx_command_t::__anon8328d6a5010a	typeref:typename:eden_gfx_command_sprite_t
 sprite	code/pass.h	/^    struct pass_pack_atlas_sprite_t* sprite;$/;"	m	language:C++	union:pass_pack_atlas_context_t::__anon23bd245c010a	typeref:struct:pass_pack_atlas_sprite_t *
 sprites	code/eden_assets.h	/^  eden_asset_sprite_t* sprites;$/;"	m	language:C++	struct:eden_assets_t	typeref:typename:eden_asset_sprite_t *
@@ -2728,6 +2738,7 @@ TBP_TILE_SIZE	code/app_tbp.cpp	/^#define TBP_TILE_SIZE /;"	d	language:C++	file:
 TBP_TILE_SIZE_HALF	code/app_tbp.cpp	/^#define TBP_TILE_SIZE_HALF /;"	d	language:C++	file:
 tbp_tile_t	code/app_tbp.cpp	/^struct tbp_tile_t {$/;"	s	language:C++	file:
 tbp_update_and_render_grid_stuff	code/app_tbp.cpp	/^tbp_update_and_render_grid_stuff(eden_t* eden, tbp_t* tbp)$/;"	f	language:C++	typeref:typename:void	file:
+test	code/app_lit.cpp	/^lit_cool_transition_t test = {};$/;"	v	language:C++	typeref:typename:lit_cool_transition_t
 test_arena_performance	code/test_arena.cpp	/^test_arena_performance() $/;"	f	language:C++	typeref:typename:void	file:
 test_sine_wave	code/ship_app_lit.cpp	/^static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t t/;"	f	language:C++	typeref:typename:void	file:
 test_sine_wave	code/w32_eden_audio_wasapi.h	/^static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t t/;"	f	language:C++	typeref:typename:void
@@ -2780,6 +2791,7 @@ tile	code/app_tbp.cpp	/^  tbp_tile_t tile;$/;"	m	language:C++	struct:tbp_t	typer
 tiles	code/app_gbg.cpp	/^  gbg_tile_t tiles[GBG_GRID_HEIGHT][GBG_GRID_WIDTH];$/;"	m	language:C++	struct:gbg_t	typeref:typename:gbg_tile_t[][]	file:
 tile_type	code/app_gbg.cpp	/^  gbg_tile_type_t tile_type;$/;"	m	language:C++	struct:gbg_tile_t	typeref:typename:gbg_tile_type_t	file:
 timer	code/app_gbg.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:gbg_player_t	typeref:typename:f32_t	file:
+timer	code/app_lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_cool_transition_t	typeref:typename:f32_t	file:
 timer	code/app_lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_credits_t	typeref:typename:f32_t	file:
 timer	code/app_lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:f32_t	file:
 timer	code/app_lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_splash_t	typeref:typename:f32_t	file:
@@ -2991,6 +3003,7 @@ value	code/gist_linked_list.cpp	/^  int value;$/;"	m	language:C++	struct:gist_cd
 value	code/momo.h	/^  json_value_t value;$/;"	m	language:C++	struct:json_array_node_t	typeref:typename:json_value_t
 value	code/momo.h	/^  json_value_t value;$/;"	m	language:C++	struct:_json_entry_t	typeref:typename:json_value_t
 values	code/gist_ring_buffer.cpp	/^  int values[4];$/;"	m	language:C++	struct:gist_rb	typeref:typename:int[4]	file:
+value_arena	code/eden_inspector.h	/^    arena_t value_arena;$/;"	m	language:C++	union:eden_inspector_entry_t::__anone34502b7010a	typeref:typename:arena_t
 value_f32	code/eden_inspector.h	/^    f32_t value_f32;$/;"	m	language:C++	union:eden_inspector_entry_t::__anone34502b7010a	typeref:typename:f32_t
 value_u32	code/eden_inspector.h	/^    u32_t value_u32;$/;"	m	language:C++	union:eden_inspector_entry_t::__anone34502b7010a	typeref:typename:u32_t
 vao	code/eden_gfx_opengl.h	/^  GLuint vao; $/;"	m	language:C++	struct:eden_opengl_sprite_batch_t	typeref:typename:GLuint
@@ -3395,8 +3408,8 @@ __anon173d2e890203	code/eden_gfx_opengl.h	/^enum {$/;"	g	language:C++
 __anon173d2e890303	code/eden_gfx_opengl.h	/^enum { $/;"	g	language:C++
 __anon173d2e890403	code/eden_gfx_opengl.h	/^enum {$/;"	g	language:C++
 __anon173d2e890503	code/eden_gfx_opengl.h	/^enum {$/;"	g	language:C++
-__anon1b0212a9010a	code/app_lit.cpp	/^  union {$/;"	u	language:C++	struct:lit_game_animator_t	file:
-__anon1b0212a9020a	code/app_lit.cpp	/^  union {$/;"	u	language:C++	struct:lit_t	file:
+__anon1b0212a9030a	code/app_lit.cpp	/^  union {$/;"	u	language:C++	struct:lit_game_animator_t	file:
+__anon1b0212a9040a	code/app_lit.cpp	/^  union {$/;"	u	language:C++	struct:lit_t	file:
 __anon1db7a63d0108	code/momo.h	/^  struct { u32_t x, y; };$/;"	s	language:C++	union:v2u_t
 __anon1db7a63d0208	code/momo.h	/^  struct { u32_t w, h; };$/;"	s	language:C++	union:v2u_t
 __anon1db7a63d0308	code/momo.h	/^  struct { s32_t x, y; };$/;"	s	language:C++	union:v2s_t

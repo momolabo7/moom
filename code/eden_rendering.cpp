@@ -316,7 +316,7 @@ eden_draw_text(
 static void 
 eden_draw_inspector(
     eden_t* eden,
-    f32_t font_size,
+    f32_t font_height,
     f32_t width,
     f32_t height,
     eden_asset_sprite_id_t blank_sprite,
@@ -334,6 +334,7 @@ eden_draw_inspector(
       v2f_set(width, height),
       rgba_set(0.f, 0.f, 0.f, 0.5f));
   
+  u32_t line_num = 0;
   for(u32_t entry_index = 0; 
       entry_index < inspector->entry_count; 
       ++entry_index)
@@ -342,17 +343,59 @@ eden_draw_inspector(
     auto* entry = inspector->entries + entry_index;
     switch(entry->type){
       case EDEN_INSPECTOR_ENTRY_TYPE_U32: {
-        bufio_push_fmt(&sb, buf_from_lit("[%10S] %7u"),
+        bufio_push_fmt(&sb, buf_from_lit("[%15S] %7u"),
             entry->name, entry->value_u32);
       } break;
       case EDEN_INSPECTOR_ENTRY_TYPE_F32: {
-        bufio_push_fmt(&sb, buf_from_lit("[%10S] %7f"),
+        bufio_push_fmt(&sb, buf_from_lit("[%15S] %7f"),
             entry->name, entry->value_f32);
       } break;
+      case EDEN_INSPECTOR_ENTRY_TYPE_ARENA: {
+
+        const char* denoms[] = { " B", "KB", "MB", "GB", "TB" };
+
+        // @todo: should indicate MB/GB/KB etc
+        arena_t* arena = &entry->value_arena;
+        f32_t pos_mb = (f32_t)arena->pos;
+        u32_t pos_denom = 0;
+        while(pos_mb > 1000 && pos_denom < array_count(denoms)) 
+        {
+          pos_mb/=1000.f;
+          pos_denom++;
+        }
+
+        f32_t commit_mb = (f32_t)arena->commit_pos; 
+        u32_t commit_denom = 0;
+        while(commit_mb > 1000 && commit_denom < array_count(denoms)) 
+        {
+          commit_mb/=1000.f;
+          commit_denom++;
+        }
+
+        f32_t reserve_mb = (f32_t)arena->cap;
+        u32_t reserve_denom = 0;
+        while(reserve_mb > 1000 && reserve_denom < array_count(denoms)) 
+        {
+          reserve_mb/=1000.f;
+          reserve_denom++;
+        }
+        bufio_push_fmt(&sb, buf_from_lit("[%15S] %6.2f%s, %6.2f%s, %6.2f%s"), 
+            entry->name, 
+            pos_mb, denoms[pos_denom],
+            commit_mb, denoms[commit_denom],
+            reserve_mb, denoms[reserve_denom]);
+      };
     }
 
-    f32_t y = height - font_size * (entry_index+1);
-    eden_draw_text(eden, font, sb.str, rgba_hex(0xFFFFFFFF), v2f_set(0.f, y), font_size, v2f_set(0.f, 0.f));
+    eden_draw_text(
+        eden, 
+        font, 
+        sb.str, 
+        rgba_hex(0xFFFFFFFF), 
+        v2f_set(0.f, font_height * line_num),
+        font_height, 
+        v2f_set(0.f, 0.f));
+    ++line_num;
   }
 }
 
@@ -366,7 +409,6 @@ eden_profile_update_and_render(
     eden_asset_font_id_t font,
     arena_t* frame_arena)
 {
-  const f32_t render_height = 0;
 
   // Overlay
   eden_draw_asset_sprite(
@@ -425,7 +467,7 @@ eden_profile_update_and_render(
         font, 
         sb.str,
         rgba_hex(0xFFFFFFFF),
-        v2f_set(0.f, render_height + font_height * (line_num)), 
+        v2f_set(0.f, font_height * (line_num)), 
         font_height,
         v2f_zero());
     

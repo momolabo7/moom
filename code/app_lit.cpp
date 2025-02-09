@@ -3807,6 +3807,13 @@ eden_update_and_render_sig(eden_update_and_render)
 
   }
 
+
+  eden_inspect_arena(g_eden, buf_from_lit("main arena"), g_lit->main_arena);
+  eden_inspect_arena(g_eden, buf_from_lit("ass arena"), g_lit->asset_arena);
+  eden_inspect_arena(g_eden, buf_from_lit("dbg arena"), g_lit->debug_arena);
+  eden_inspect_arena(g_eden, buf_from_lit("frame arena"), g_lit->frame_arena);
+  eden_inspect_arena(g_eden, buf_from_lit("mode arena"), g_lit->mode_arena);
+
   switch (g_lit->show_debug_type) {
 #if 0
     case LIT_SHOW_DEBUG_CONSOLE: {

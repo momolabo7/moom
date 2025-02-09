@@ -6371,6 +6371,19 @@ _bufio_push_fmt_list(bufio_t* b, buf_t format, va_list args)
         width = (width * 10) + digit;
         ++at;
       }
+      
+      // Precision
+      u32_t precision = 0;
+      if (format.e[at] == '.')
+      {
+        ++at;
+        while (format.e[at] >= '0' && format.e[at] <= '9') {
+          u32_t digit = ascii_to_digit(format.e[at]);
+          precision = (precision * 10) + digit;
+          ++at;
+        }
+      }
+
 
       u8_t tmp_buffer[64];
       bufio_t tb = bufio_set({ tmp_buffer, sizeof(tmp_buffer) });
@@ -6395,11 +6408,11 @@ _bufio_push_fmt_list(bufio_t* b, buf_t format, va_list args)
         } break;
         case 'f': {
           f64_t value = va_arg(args, f64_t);
-          bufio_push_f32(&tb, (f32_t)value, 5);
+          bufio_push_f32(&tb, (f32_t)value, precision);
         } break;
         case 'F': {
           f64_t value = va_arg(args, f64_t);
-          bufio_push_f64(&tb, (f64_t)value, 5);
+          bufio_push_f64(&tb, (f64_t)value, precision);
         } break;
         case 'x':
         case 'X': {
@@ -8660,6 +8673,8 @@ arena_push_size(arena_t* a, usz_t size, usz_t align) {
     u8_t* commit_ptr = a->memory + a->pos;
     usz_t commit_size = adjusted_pos - a->pos + size;
     memory_commit(buf_set(commit_ptr, commit_size));
+    a->commit_pos = new_pos;
+
   }
 
   u8_t* ret = umi_to_ptr(imem + adjusted_pos);
