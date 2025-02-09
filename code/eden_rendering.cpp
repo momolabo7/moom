@@ -63,14 +63,6 @@ eden_draw_tri(eden_t* eden, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t colors)
   eden_gfx_push_triangle_command(&eden->gfx, p0, p1, p2, colors);
 }
 
-#if 0
-static void
-eden_advance_depth(eden_t* eden) 
-{
-  eden_gfx_push_advance_depth_command(&eden->gfx);
-}
-#endif
-
 
 static void
 eden_gfx_test(eden_t* eden) 
@@ -319,4 +311,145 @@ eden_draw_text(
                     color);
   }
   
+}
+
+static void 
+eden_draw_inspector(
+    eden_t* eden,
+    f32_t font_size,
+    f32_t width,
+    f32_t height,
+    eden_asset_sprite_id_t blank_sprite,
+    eden_asset_font_id_t font,
+    arena_t* frame_arena) 
+{
+  arena_set_revert_point(frame_arena);
+  bufio_t sb = bufio_set(arena_push_buffer(frame_arena, 256));
+
+  auto* inspector = &eden->inspector;
+  eden_draw_asset_sprite(
+      eden, 
+      blank_sprite, 
+      v2f_set(width/2, height/2), 
+      v2f_set(width, height),
+      rgba_set(0.f, 0.f, 0.f, 0.5f));
+  
+  for(u32_t entry_index = 0; 
+      entry_index < inspector->entry_count; 
+      ++entry_index)
+  {
+    bufio_clear(&sb);
+    auto* entry = inspector->entries + entry_index;
+    switch(entry->type){
+      case EDEN_INSPECTOR_ENTRY_TYPE_U32: {
+        bufio_push_fmt(&sb, buf_from_lit("[%10S] %7u"),
+            entry->name, entry->value_u32);
+      } break;
+      case EDEN_INSPECTOR_ENTRY_TYPE_F32: {
+        bufio_push_fmt(&sb, buf_from_lit("[%10S] %7f"),
+            entry->name, entry->value_f32);
+      } break;
+    }
+
+    f32_t y = height - font_size * (entry_index+1);
+    eden_draw_text(eden, font, sb.str, rgba_hex(0xFFFFFFFF), v2f_set(0.f, y), font_size, v2f_set(0.f, 0.f));
+  }
+}
+
+static void 
+eden_profile_update_and_render(
+    eden_t* eden,
+    f32_t font_height,
+    f32_t width,
+    f32_t height,
+    eden_asset_sprite_id_t blank_sprite,
+    eden_asset_font_id_t font,
+    arena_t* frame_arena)
+{
+  const f32_t render_height = 0;
+
+  // Overlay
+  eden_draw_asset_sprite(
+      eden, blank_sprite, 
+      v2f_set(width/2, height/2), 
+      v2f_set(width, height),
+      rgba_set(0.f, 0.f, 0.f, 0.5f));
+  //eden_advance_depth(eden);
+  
+  u32_t line_num = 0;
+  
+  for(u32_t entry_id = 0; entry_id < eden->profiler.entry_count; ++entry_id)
+  {
+    arena_set_revert_point(frame_arena);
+    eden_profiler_entry_t* entry = eden->profiler.entries + entry_id;
+
+    eden_profiler_stat_t cycles;
+    eden_profiler_stat_t hits;
+    eden_profiler_stat_t cycles_per_hit;
+    
+    eden_profiler_begin_stat(&cycles);
+    eden_profiler_begin_stat(&hits);
+    eden_profiler_begin_stat(&cycles_per_hit);
+    
+    for (u32_t snapshot_index = 0;
+         snapshot_index < eden->profiler.entry_snapshot_count;
+         ++snapshot_index)
+    {
+      
+      eden_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
+      
+      eden_profiler_accumulate_stat(&cycles, (f64_t)snapshot->cycles);
+      eden_profiler_accumulate_stat(&hits, (f64_t)snapshot->hits);
+      
+      f64_t cph = 0.0;
+      if (snapshot->hits) {
+        cph = (f64_t)snapshot->cycles/(f64_t)snapshot->hits;
+      }
+      eden_profiler_accumulate_stat(&cycles_per_hit, cph);
+    }
+    eden_profiler_end_stat(&cycles);
+    eden_profiler_end_stat(&hits);
+    eden_profiler_end_stat(&cycles_per_hit);
+   
+    bufio_t sb = bufio_set(arena_push_buffer(frame_arena, 256));
+
+    bufio_push_fmt(&sb, 
+                 buf_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
+                 entry->block_name,
+                 (u32_t)cycles.average,
+                 (u32_t)hits.average,
+                 (u32_t)cycles_per_hit.average);
+    
+    eden_draw_text(
+        eden, 
+        font, 
+        sb.str,
+        rgba_hex(0xFFFFFFFF),
+        v2f_set(0.f, render_height + font_height * (line_num)), 
+        font_height,
+        v2f_zero());
+    
+#if 0
+    // Draw graph
+    for (u32_t snapshot_index = 0;
+         snapshot_index < eden->profiler.entry_snapshot_count;
+         ++snapshot_index)
+    {
+      eden_profiler_snapshot_t * snapshot = entry->snapshots + snapshot_index;
+      
+      const f32_t snapshot_bar_width = 1.5f;
+      f32_t height_scale = 1.0f / (f32_t)cycles.max;
+      f32_t snapshot_bar_height = 
+        height_scale * font_height * (f32_t)snapshot->cycles * 0.95f;
+     
+      v2f_t pos = v2f_set(
+        560.f + snapshot_bar_width * (snapshot_index), 
+        render_height - font_height * (line_num) + font_height/4);
+
+      v2f_t size = v2f_set(snapshot_bar_width, snapshot_bar_height);
+      eden_draw_asset_sprite(eden, blank_sprite, pos, size, rgba_hex(0x00FF00FF));
+    }
+#endif
+    ++line_num;
+  }
 }

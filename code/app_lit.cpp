@@ -1757,7 +1757,7 @@ lit_game_update_sensors(lit_game_t* g, f32_t dt)
     }
   }
 
-  eden_debug_u32(g_eden, "total_triangles", total_triangles);
+  //eden_debug_u32(g_eden, "total_triangles", total_triangles);
 }
 
 
@@ -3824,7 +3824,7 @@ eden_update_and_render_sig(eden_update_and_render)
           &g_lit->frame_arena);
     }break;
     case LIT_SHOW_DEBUG_INSPECTOR: {
-      eden_inspector_update_and_render(
+      eden_draw_inspector(
           g_eden, 
           20.f, 
           LIT_WIDTH, 

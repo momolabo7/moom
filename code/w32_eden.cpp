@@ -889,8 +889,9 @@ WinMain(HINSTANCE instance,
     w32_gfx_begin_frame(&eden->gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
        
     //Process messages and input
+    eden_profile_begin(eden, input);
     w32_update_input(&eden->input, window, target_secs_per_frame, rr);
-    
+    eden_profile_end(eden, input);
     
     eden_functions.update_and_render(eden);
 
@@ -905,7 +906,8 @@ WinMain(HINSTANCE instance,
 
 
     if (config.inspector_enabled) 
-      eden_inspect_clear(eden);
+      eden_inspector_clear(&eden->inspector);
+
     w32_gfx_end_frame(&eden->gfx);
     
     
