@@ -3403,5 +3403,6 @@ int main(int argv, char** argc) {
   aoc22_route(13,2);
   aoc22_route(14,1);
   aoc22_route(14,2);
+#undef aoc22_route
 
 }

@@ -6358,6 +6358,9 @@ bufio_push_hex_u32(bufio_t* b, u32_t value) {
 static void
 _bufio_push_fmt_list(bufio_t* b, buf_t format, va_list args) 
 {
+  // @note: this is the reckless kind of implementation which
+  // assumes that the user's format is correct.
+  // By right, we should terminate when 'at' is bad.
   usz_t at = 0;
   while(at < format.size) {
 
