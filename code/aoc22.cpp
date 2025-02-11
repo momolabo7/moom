@@ -68,7 +68,7 @@ static void aoc22_d1p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -128,7 +128,7 @@ static void aoc22_d1p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -171,7 +171,7 @@ static void aoc22_d2p1(const char* filename, arena_t* arena)
   arena_set_revert_point(arena);
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, false); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
 
   make(stream_t, s);
@@ -222,7 +222,7 @@ static void aoc22_d2p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -286,7 +286,7 @@ static void aoc22_d3p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -328,7 +328,7 @@ static void aoc22_d3p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -374,7 +374,7 @@ static void aoc22_d4p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -418,7 +418,7 @@ static void aoc22_d4p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -506,7 +506,7 @@ static void aoc22_d5p1(const char* filename, arena_t* arena) {
 
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -624,7 +624,7 @@ static void aoc22_d5p2(const char* filename, arena_t* arena) {
 
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -742,7 +742,7 @@ aoc22_d6p1(const char* filename, arena_t* arena)
   const u32_t window_size = 4;
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -788,7 +788,7 @@ aoc22_d6p2(const char* filename, arena_t* arena)
   const u32_t window_size = 14;
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -1022,7 +1022,7 @@ aoc22_d7p1(const char* filename, arena_t* arena)
   arena_set_revert_point(arena);
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -1123,7 +1123,7 @@ aoc22_d7p2(const char* filename, arena_t* arena)
   arena_set_revert_point(arena);
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -1231,7 +1231,7 @@ aoc22_d8p1(const char* filename, arena_t* arena)
   arena_set_revert_point(arena);
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   aoc22_grid_t grid;
   aoc22_grid_init(&grid, file_buffer);
@@ -1300,7 +1300,7 @@ aoc22_d8p2(const char* filename, arena_t* arena)
   arena_set_revert_point(arena);
 
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   aoc22_grid_t grid;
   aoc22_grid_init(&grid, file_buffer);
@@ -1375,7 +1375,7 @@ aoc22_d9p1(const char* filename, arena_t* arena)
 
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -1482,7 +1482,7 @@ aoc22_d9p2(const char* filename, arena_t* arena)
 
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -1610,7 +1610,7 @@ aoc22_d10p1(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -1665,7 +1665,7 @@ aoc22_d10p2(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -1747,7 +1747,7 @@ aoc22_d11p1(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -1976,7 +1976,7 @@ aoc22_d11p2(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   make(stream_t, s);
   stream_init(s, file_buffer);
@@ -2347,7 +2347,7 @@ aoc22_d12p1(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   aoc22_d12p1_grid_t grid;
   aoc22_d12p1_grid_init(&grid, file_buffer, arena); 
@@ -2592,7 +2592,7 @@ aoc22_d12p2(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   aoc22_d12p2_grid_t grid;
   aoc22_d12p2_grid_init(&grid, file_buffer, arena); 
@@ -2812,7 +2812,7 @@ aoc22_d13p1(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   stream_t s;
   stream_init(&s, file_buffer);
@@ -2884,7 +2884,7 @@ aoc22_d13p2(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   stream_t s;
   stream_init(&s, file_buffer);
@@ -2968,7 +2968,7 @@ aoc22_d14p1(const char* filename, arena_t* arena)
   cll_init(&point_list);
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   stream_t s;
   stream_init(&s, file_buffer);
@@ -3153,7 +3153,7 @@ aoc22_d14p2(const char* filename, arena_t* arena)
   cll_init(&point_list);
   arena_set_revert_point(arena);
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
-  if (!file_buffer) return;
+  if (!buf_valid(file_buffer)) return;
 
   stream_t s;
   stream_init(&s, file_buffer);
@@ -3350,6 +3350,126 @@ abyss:
   printf("%u\n", count);
 }
 
+struct aoc22_sensor_t
+{
+  v2s_t pos;
+  v2s_t closest_beacon;
+  s32_t range;
+};
+
+static void
+aoc22_d15p1(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+  buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!buf_valid(file_buffer)) return;
+
+  stream_t s;
+  stream_init(&s, file_buffer);
+
+  u32_t sensor_count = 0;
+  while(!stream_is_eos(&s)) 
+  {
+    stream_consume_line(&s);  
+    sensor_count++;
+  }
+
+  printf("number of lines: %d\n", sensor_count);
+  aoc22_sensor_t* sensors = arena_push_arr(aoc22_sensor_t, arena, sensor_count);
+  
+  stream_reset(&s);
+  u32_t sensor_index = 0;
+  s32_t min_x = S32_MAX, min_y = S32_MAX, max_x = S32_MIN, max_y = S32_MIN;
+  while(!stream_is_eos(&s)) 
+  {
+    buf_t line = stream_consume_line(&s);  
+    aoc22_sensor_t* current_sensor = sensors + sensor_index;
+    buf_to_vars(
+        line,
+        buf_from_lit("Sensor at x=%d, y=%d: closest beacon is at x=%d, y=%d"),
+        &current_sensor->pos.x,
+        &current_sensor->pos.y,
+        &current_sensor->closest_beacon.x,
+        &current_sensor->closest_beacon.y);
+    current_sensor->range = s32_abs(current_sensor->pos.x - current_sensor->closest_beacon.x) + s32_abs(current_sensor->pos.y - current_sensor->closest_beacon.y);
+
+    min_x = min_of(min_x, current_sensor->pos.x - current_sensor->range);
+    min_y = min_of(min_y, current_sensor->pos.y - current_sensor->range);
+    max_x = max_of(max_x, current_sensor->pos.x + current_sensor->range);
+    max_y = max_of(max_y, current_sensor->pos.y + current_sensor->range);
+
+    ++sensor_index;
+  }
+
+  u32_t grid_w = max_x - min_x + 1;
+  u32_t grid_h = max_y - min_y + 1;
+  u8_t* grid = arena_push_arr_zero(u8_t, arena, grid_w * grid_h);
+  printf("%d %d %d %d\n", min_x, min_y, grid_w, grid_h);
+
+
+  for(u32_t sensor_index = 0; 
+      sensor_index < sensor_count; 
+      ++sensor_index)
+  {
+    aoc22_sensor_t* current_sensor = sensors + sensor_index;
+
+    // @note: adjust sensor's and beacon's position to be relative to the grid
+    current_sensor->pos.x -= min_x;
+    current_sensor->pos.y -= min_y;
+    current_sensor->closest_beacon.x -= min_x;
+    current_sensor->closest_beacon.y -= min_y;
+    
+    grid[current_sensor->pos.x + current_sensor->pos.y * grid_w] = 2;
+    grid[current_sensor->closest_beacon.x + current_sensor->closest_beacon.y * grid_w] = 3;
+
+    // aoe
+    for(s32_t y = current_sensor->pos.y - current_sensor->range;
+        y <= current_sensor->pos.y + current_sensor->range;
+        ++y)
+    {
+      s32_t remaining_range = current_sensor->range - s32_abs(current_sensor->pos.y - y);
+      for(s32_t x = current_sensor->pos.x - remaining_range;
+          x <= current_sensor->pos.x + remaining_range;
+          ++x)
+      {
+        if (x < 0 || y < 0 || x >= grid_w || y >= grid_h) 
+        {
+          continue;
+        }
+        else
+        {
+          if (grid[x + y * grid_w] == 0)
+            grid[x + y * grid_w] = 1;
+        }
+      }
+    }
+
+    
+  }
+
+  for (s32_t y = 0; y < grid_h; ++y)
+  {
+    for (s32_t x = 0; x < grid_w; ++x)
+    {
+      printf("%d", grid[x + y * grid_w]);
+    }
+    printf("\n");
+  }
+
+  s32_t target_y = 10;
+  target_y -= min_y;
+  
+  u32_t count = 0;
+  for (u32_t x = 0; x < grid_w; ++x)
+  {
+    if (grid[x + target_y * grid_w] == 1)
+      ++count;
+    
+  }
+  printf("%u\n", count);
+
+ 
+}
 int main(int argv, char** argc) {
   if (argv < 2) {
     printf("Usage: aoc22 <day> <part> <filename>\nExample: aoc22 1 1 input.txt\n");
@@ -3403,6 +3523,7 @@ int main(int argv, char** argc) {
   aoc22_route(13,2);
   aoc22_route(14,1);
   aoc22_route(14,2);
+  aoc22_route(15,1);
 #undef aoc22_route
 
 }
