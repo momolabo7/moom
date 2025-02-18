@@ -3608,8 +3608,8 @@ aoc22_d15p2(const char* filename, arena_t* arena)
   printf("nope\n");
 
 found:
-  //printf("found: %d %d\n", solution.x, solution.y);
-  printf("found: %llu\n", solution.x * 4000000 + solution.y);
+  printf("found: %d %d\n", solution.x, solution.y);
+  printf("found: %llu\n", (u64_t)solution.x * 4000000 + solution.y);
 
  
 }
