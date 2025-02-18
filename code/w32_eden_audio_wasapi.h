@@ -187,7 +187,6 @@ static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t
 }
 
 
-// @todo: we should remove all the asserts tbh
 static 
 w32_speaker_begin_frame_sig(w32_speaker_begin_frame) 
 {

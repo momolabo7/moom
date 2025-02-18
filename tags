@@ -49,6 +49,9 @@ aoc22_d14p1	code/aoc22.cpp	/^aoc22_d14p1(const char* filename, arena_t* arena) $
 aoc22_d14p2	code/aoc22.cpp	/^aoc22_d14p2(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d14_node_t	code/aoc22.cpp	/^struct aoc22_d14_node_t$/;"	s	language:C++	file:
 aoc22_d15p1	code/aoc22.cpp	/^aoc22_d15p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d15p2	code/aoc22.cpp	/^aoc22_d15p2(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
+aoc22_d15p2_outside_sensors	code/aoc22.cpp	/^aoc22_d15p2_outside_sensors(aoc22_sensor_t* sensors, u32_t sensor_count, v2s_t coord)$/;"	f	language:C++	typeref:typename:b32_t	file:
+aoc22_d15p2_within_search_area	code/aoc22.cpp	/^aoc22_d15p2_within_search_area(v2s_t pt)$/;"	f	language:C++	typeref:typename:b32_t	file:
 aoc22_d1p1	code/aoc22.cpp	/^static void aoc22_d1p1(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d1p2	code/aoc22.cpp	/^static void aoc22_d1p2(const char* filename, arena_t* arena) {$/;"	f	language:C++	typeref:typename:void	file:
 aoc22_d2p1	code/aoc22.cpp	/^static void aoc22_d2p1(const char* filename, arena_t* arena) $/;"	f	language:C++	typeref:typename:void	file:
@@ -2435,6 +2438,7 @@ ptr_to_umi	code/momo.h	/^ptr_to_umi(void* p) { $/;"	f	language:C++	typeref:typen
 ptr_to_umi	code/momo.h	/^static umi_t ptr_to_umi(void* p);$/;"	p	language:C++	typeref:typename:umi_t
 r	code/momo.h	/^    struct { f32_t r, g, b; };  $/;"	m	language:C++	struct:rgba_t::__anon1db7a63d130a::__anon1db7a63d1408	typeref:typename:f32_t
 r	code/momo.h	/^  f32_t r, g, b;   $/;"	m	language:C++	struct:rgb_t	typeref:typename:f32_t
+range	code/aoc22.cpp	/^  s32_t range;$/;"	m	language:C++	struct:aoc22_sensor_t	typeref:typename:s32_t	file:
 rbg_to_hsl	code/momo.h	/^rbg_to_hsl(rgb_t c) {$/;"	f	language:C++	typeref:typename:hsl_t
 rbg_to_hsl	code/momo.h	/^static hsl_t  rbg_to_hsl(rgb_t c);$/;"	p	language:C++	typeref:typename:hsl_t
 rear	code/gist_ring_buffer.cpp	/^  u32_t rear;$/;"	m	language:C++	struct:gist_rb	typeref:typename:u32_t	file:

@@ -354,7 +354,6 @@ eden_draw_inspector(
 
         const char* denoms[] = { " B", "KB", "MB", "GB", "TB" };
 
-        // @todo: should indicate MB/GB/KB etc
         arena_t* arena = &entry->value_arena;
         f32_t pos_mb = (f32_t)arena->pos;
         u32_t pos_denom = 0;

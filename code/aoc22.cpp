@@ -3374,12 +3374,11 @@ aoc22_d15p1(const char* filename, arena_t* arena)
     sensor_count++;
   }
 
-  printf("number of lines: %d\n", sensor_count);
   aoc22_sensor_t* sensors = arena_push_arr(aoc22_sensor_t, arena, sensor_count);
+  s32_t min_x = S32_MAX, min_y = S32_MAX, max_x = S32_MIN, max_y = S32_MIN;
   
   stream_reset(&s);
   u32_t sensor_index = 0;
-  s32_t min_x = S32_MAX, min_y = S32_MAX, max_x = S32_MIN, max_y = S32_MIN;
   while(!stream_is_eos(&s)) 
   {
     buf_t line = stream_consume_line(&s);  
@@ -3402,71 +3401,215 @@ aoc22_d15p1(const char* filename, arena_t* arena)
   }
 
   u32_t grid_w = max_x - min_x + 1;
-  u32_t grid_h = max_y - min_y + 1;
-  u8_t* grid = arena_push_arr_zero(u8_t, arena, grid_w * grid_h);
-  printf("%d %d %d %d\n", min_x, min_y, grid_w, grid_h);
+  u32_t interested_y = 2000000 - min_y;
+  u8_t* interested_row = arena_push_arr_zero(u8_t, arena, grid_w);
 
 
+  // idea: check how far 
   for(u32_t sensor_index = 0; 
       sensor_index < sensor_count; 
       ++sensor_index)
   {
     aoc22_sensor_t* current_sensor = sensors + sensor_index;
-
     // @note: adjust sensor's and beacon's position to be relative to the grid
     current_sensor->pos.x -= min_x;
     current_sensor->pos.y -= min_y;
     current_sensor->closest_beacon.x -= min_x;
     current_sensor->closest_beacon.y -= min_y;
-    
-    grid[current_sensor->pos.x + current_sensor->pos.y * grid_w] = 2;
-    grid[current_sensor->closest_beacon.x + current_sensor->closest_beacon.y * grid_w] = 3;
+    if (current_sensor->pos.y == interested_y)
+      interested_row[current_sensor->pos.x] = 2;
+    if (current_sensor->closest_beacon.y == interested_y)
+      interested_row[current_sensor->closest_beacon.x] = 3;
 
-    // aoe
-    for(s32_t y = current_sensor->pos.y - current_sensor->range;
-        y <= current_sensor->pos.y + current_sensor->range;
-        ++y)
+
+    s32_t remaining_range = current_sensor->range - s32_abs(current_sensor->pos.y - interested_y);
+    if (remaining_range >= 0) 
     {
-      s32_t remaining_range = current_sensor->range - s32_abs(current_sensor->pos.y - y);
+      // collision with interested row
       for(s32_t x = current_sensor->pos.x - remaining_range;
           x <= current_sensor->pos.x + remaining_range;
           ++x)
       {
-        if (x < 0 || y < 0 || x >= grid_w || y >= grid_h) 
+        if (x < 0 || x >= grid_w ) 
         {
           continue;
         }
         else
         {
-          if (grid[x + y * grid_w] == 0)
-            grid[x + y * grid_w] = 1;
+          if (interested_row[x] == 0)
+            interested_row[x] = 1;
         }
       }
     }
-
-    
   }
 
-  for (s32_t y = 0; y < grid_h; ++y)
-  {
-    for (s32_t x = 0; x < grid_w; ++x)
-    {
-      printf("%d", grid[x + y * grid_w]);
-    }
-    printf("\n");
-  }
 
-  s32_t target_y = 10;
-  target_y -= min_y;
+
   
   u32_t count = 0;
   for (u32_t x = 0; x < grid_w; ++x)
   {
-    if (grid[x + target_y * grid_w] == 1)
+    if (interested_row[x] == 1)
       ++count;
     
   }
   printf("%u\n", count);
+ 
+}
+
+static b32_t
+aoc22_d15p2_within_search_area(v2s_t pt)
+{
+  //const s32_t bounds = 20;
+  const s32_t bounds = 4000000;
+  return pt.x >= 0 && pt.y >= 0 && pt.x <= bounds && pt.y <= bounds;
+}
+
+static b32_t
+aoc22_d15p2_outside_sensors(aoc22_sensor_t* sensors, u32_t sensor_count, v2s_t coord)
+{
+  // check if within sensor range
+  for (u32_t j = 0; 
+      j < sensor_count;
+      ++j)
+  {
+    aoc22_sensor_t* compare_sensor = sensors + j;
+    s32_t dist = s32_abs(coord.x - compare_sensor->pos.x) + s32_abs(coord.y - compare_sensor->pos.y);
+    if (dist <= compare_sensor->range)
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+static void
+aoc22_d15p2(const char* filename, arena_t* arena) 
+{
+  arena_set_revert_point(arena);
+  buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
+  if (!buf_valid(file_buffer)) return;
+
+  stream_t s;
+  stream_init(&s, file_buffer);
+
+  u32_t sensor_count = 0;
+  while(!stream_is_eos(&s)) 
+  {
+    stream_consume_line(&s);  
+    sensor_count++;
+  }
+
+  aoc22_sensor_t* sensors = arena_push_arr(aoc22_sensor_t, arena, sensor_count);
+  
+  stream_reset(&s);
+  u32_t sensor_index = 0;
+  while(!stream_is_eos(&s)) 
+  {
+    buf_t line = stream_consume_line(&s);  
+    aoc22_sensor_t* current_sensor = sensors + sensor_index;
+    buf_to_vars(
+        line,
+        buf_from_lit("Sensor at x=%d, y=%d: closest beacon is at x=%d, y=%d"),
+        &current_sensor->pos.x,
+        &current_sensor->pos.y,
+        &current_sensor->closest_beacon.x,
+        &current_sensor->closest_beacon.y);
+    current_sensor->range = s32_abs(current_sensor->pos.x - current_sensor->closest_beacon.x) + s32_abs(current_sensor->pos.y - current_sensor->closest_beacon.y);
+    ++sensor_index;
+  }
+  
+  v2s_t solution;
+  // walk the perimeter of the diamond
+  for (u32_t i = 0;
+      i < sensor_count;
+      ++i)
+  {
+    aoc22_sensor_t* current_sensor = sensors + i;
+
+    // top to right
+    {
+      v2s_t start = current_sensor->pos;
+      start.y -= (current_sensor->range + 1);
+      v2s_t end = current_sensor->pos;
+      end.x += (current_sensor->range + 1);
+      while(start.x != end.x && start.y != end.y)
+      {
+        if (aoc22_d15p2_outside_sensors(sensors, sensor_count, start) && 
+            aoc22_d15p2_within_search_area(start))
+        {
+          solution = start;
+          goto found;
+        }
+        ++start.x;
+        ++start.y;
+      }
+    }
+
+    // right to down
+    {
+      v2s_t start = current_sensor->pos;
+      start.x += (current_sensor->range + 1);
+      v2s_t end = current_sensor->pos;
+      end.y += (current_sensor->range + 1);
+      while(start.x != end.x && start.y != end.y)
+      {
+        if (aoc22_d15p2_outside_sensors(sensors, sensor_count, start) && 
+            aoc22_d15p2_within_search_area(start))
+        {
+          solution = start;
+          goto found;
+        }
+        --start.x;
+        ++start.y;
+      }
+    }
+
+    // down to left
+    {
+      v2s_t start = current_sensor->pos;
+      start.y += (current_sensor->range + 1);
+      v2s_t end = current_sensor->pos;
+      end.x -= (current_sensor->range + 1);
+      while(start.x != end.x && start.y != end.y)
+      {
+        if (aoc22_d15p2_outside_sensors(sensors, sensor_count, start) && 
+            aoc22_d15p2_within_search_area(start))
+        {
+          solution = start;
+          goto found;
+        }
+        --start.x;
+        --start.y;
+      }
+    }
+
+    // left to top
+    {
+      v2s_t start = current_sensor->pos;
+      start.x -= (current_sensor->range + 1);
+      v2s_t end = current_sensor->pos;
+      end.y -= (current_sensor->range + 1);
+      while(start.x != end.x && start.y != end.y)
+      {
+        if (aoc22_d15p2_outside_sensors(sensors, sensor_count, start) && 
+            aoc22_d15p2_within_search_area(start))
+        {
+          solution = start;
+          goto found;
+        }
+        ++start.x;
+        --start.y;
+      }
+    }
+  }
+
+  printf("nope\n");
+
+found:
+  //printf("found: %d %d\n", solution.x, solution.y);
+  printf("found: %llu\n", solution.x * 4000000 + solution.y);
 
  
 }
@@ -3491,7 +3634,7 @@ int main(int argv, char** argc) {
   }
 
   make(arena_t, arena);
-  arena_alloc(arena, gigabytes(1)); 
+  arena_alloc(arena, gigabytes(32)); 
   defer { arena_free(arena); }; 
 
 #define aoc22_route(dd, pp) if (day == dd && part == pp) aoc22_d ## dd ## p ## pp(filename, arena);
@@ -3524,6 +3667,7 @@ int main(int argv, char** argc) {
   aoc22_route(14,1);
   aoc22_route(14,2);
   aoc22_route(15,1);
+  aoc22_route(15,2);
 #undef aoc22_route
 
 }

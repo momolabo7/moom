@@ -720,9 +720,9 @@ struct file_t;  // @note: Implementation is different depending on OS
 // because I don't want these to return or take in to a specific strict type.
 // Returning a strict type almost always end up requiring an explicit
 // conversion on the user side.
-#define kilobytes(n) ((1U<<10) * n)
-#define megabytes(n) ((1U<<20) * n)
-#define gigabytes(n) ((1U<<30) * n)
+#define kilobytes(n) ((1ULL<<10) * n)
+#define megabytes(n) ((1ULL<<20) * n)
+#define gigabytes(n) ((1ULL<<30) * n)
 #define hundreds(x) ((x) * 100) 
 #define thousands(x) ((x) * 1000)
 #define ms_from_mins(mins) ((mins) * 1000 * 60)
