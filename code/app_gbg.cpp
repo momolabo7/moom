@@ -31,15 +31,18 @@ eden_get_config_sig(eden_get_config)
   ret.max_workers = 256;
   ret.max_files = 32;
 
+  ret.inspector_enabled = true;
   ret.inspector_max_entries = 8;
+
+  ret.profiler_enabled = true;
   ret.profiler_max_entries = 8;
   ret.profiler_max_snapshots_per_entry = 120;
 
   ret.texture_queue_size = megabytes(5);
-  ret.render_command_size = megabytes(100);
   ret.max_textures = 1;
   ret.max_texture_payloads = 1;
   ret.max_elements = 4096;
+  ret.max_commands = 4096;
 
   ret.speaker_enabled = false;
   ret.speaker_samples_per_second = 48000;
@@ -159,6 +162,14 @@ gbg_render_grid(eden_t* eden, gbg_t* gbg)
             0.f, 
             v2f_set(GBG_TILE_SIZE*0.9f, GBG_TILE_SIZE*0.9f),
             rgba_set(0.0f, 0.0f, 0.2f, 1.f));
+        eden_draw_text(
+            eden, 
+            ASSET_FONT_ID_DEFAULT, 
+            buf_from_lit("0"), 
+            RGBA_WHITE, 
+            v2f_set(current_x, current_y),
+            36.f, 
+            v2f_set(0.55f,0.5f));
       }
       current_x += GBG_TILE_SIZE;
     }
@@ -324,7 +335,6 @@ eden_update_and_render_sig(eden_update_and_render)
   eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
 
   gbg_render_grid(eden, gbg);
-  eden_advance_depth(eden);
 
 
   {
@@ -342,7 +352,6 @@ eden_update_and_render_sig(eden_update_and_render)
           0.f, 
           size,
           RGBA_RED);
-      eden_advance_depth(eden);
 
       bufio_push_u32(&sb, enemy->pp);
 
@@ -354,10 +363,8 @@ eden_update_and_render_sig(eden_update_and_render)
             enemy->world_pos + size*0.4f,
             36.f, 
             v2f_set(1.f,1.f));
-      eden_advance_depth(eden);
     }
   }
-  eden_advance_depth(eden);
   // draw player
   eden_draw_rect(
       eden, 
