@@ -35,7 +35,7 @@ int main() {
   {
     pass_pack_sound(p, ASSET_SOUND_ID_TEST, sandbox_res_dir("bgm.wav"));
 
-    pass_pack_atlas_begin(p, ASSET_BITMAP_ID_ATLAS, 1024, 1024, 1, 1); 
+    pass_pack_atlas_begin(p, ASSET_BITMAP_ID_ATLAS, 1024, 1024, 1, 2); 
     {
       pass_pack_atlas_sprite(p, ASSET_SPRITE_ID_BLANK, sandbox_res_dir("blank.png"));
 
@@ -44,6 +44,12 @@ int main() {
       {
         pass_pack_atlas_font_codepoint(p, i);
       }
+      pass_pack_atlas_font_end(p);
+      pass_pack_atlas_font_begin(p, ASSET_FONT_ID_DEBUG, sandbox_res_dir("liberation-mono.ttf"), 72.f);
+      for (u32_t i = start_cp; i < ope_cp; ++i) 
+      {
+        pass_pack_atlas_font_codepoint(p, i);
+      } 
       pass_pack_atlas_font_end(p);
     }
     pass_pack_atlas_end(p, "test.png"); 

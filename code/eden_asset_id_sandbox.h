@@ -17,6 +17,7 @@ enum eden_asset_sprite_id_t : u32_t {
 
 enum eden_asset_font_id_t : u32_t {
   ASSET_FONT_ID_DEFAULT,
+  ASSET_FONT_ID_DEBUG,
   ASSET_FONT_ID_MAX
 };
 

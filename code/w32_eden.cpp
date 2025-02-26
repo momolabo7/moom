@@ -690,6 +690,7 @@ WinMain(HINSTANCE instance,
 #else  // HOT_RELOAD 
   eden_functions.get_config = eden_get_config;
   eden_functions.update_and_render = eden_update_and_render;
+  eden_functions.debug_update_and_render = eden_debug_update_and_render;
 #endif // HOT_RELOAD
   
   eden_config_t config = eden_functions.get_config();
@@ -704,6 +705,7 @@ WinMain(HINSTANCE instance,
   eden->add_task = w32_add_task;
   eden->complete_all_tasks = w32_complete_all_tasks;
   eden->set_design_dimensions = w32_set_eden_dims;
+
 
 
   //
@@ -889,11 +891,15 @@ WinMain(HINSTANCE instance,
     w32_gfx_begin_frame(&eden->gfx, client_wh, rr.left, rr.bottom, rr.right, rr.top);
        
     //Process messages and input
+    eden_profile_start_test(eden, "input");
     eden_profile_begin(eden, input);
     w32_update_input(&eden->input, window, target_secs_per_frame, rr);
     eden_profile_end(eden, input);
+    eden_profile_end_test(eden);
     
+    eden_profile_start_test(eden, "game");
     eden_functions.update_and_render(eden);
+    eden_profile_end_test(eden);
 
 
     // End frame
@@ -907,6 +913,9 @@ WinMain(HINSTANCE instance,
 
     if (config.inspector_enabled) 
       eden_inspector_clear(&eden->inspector);
+
+
+    eden_functions.debug_update_and_render(eden);
 
     w32_gfx_end_frame(&eden->gfx);
     
@@ -978,6 +987,7 @@ WinMain(HINSTANCE instance,
             secs_this_frame);
 #endif
     //w32_gfx_swap_buffer(gfx);
+    eden_debug_frame_marker(eden);
     last_frame_count = end_frame_count;
   }
 
