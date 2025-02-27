@@ -27,120 +27,7 @@
 # include "eden_gfx_opengl.h"
 #endif // EDEN_USE_OPENGL
   
-
-enum eden_debug_event_type_t : u8_t
-{
-  EDEN_DEBUG_EVENT_PROFILE_BEGIN,
-  EDEN_DEBUG_EVENT_PROFILE_END,
-
-  EDEN_DEBUG_EVENT_FRAME_MARKER,
-};
-
-struct eden_debug_event_t
-{
-  const char* name;
-  const char* guid;
-  u64_t clock;
-  eden_debug_event_type_t type;
-};
-
-struct eden_debug_profile_t 
-{
-  b32_t is_occupied; // @todo: remove
-
-  const char* guid; // stuff from debug_event_t
-  const char* name; // stuff from debug_event_t
-
-  u64_t duration; // in cycles
-  u32_t hits;                
-
-  eden_debug_profile_t* next;
-  eden_debug_profile_t* prev;
-};
-
-struct eden_debug_frame_t 
-{
-  u64_t begin_clock;
-  u64_t end_clock;
-};
-
-struct eden_debug_t 
-{
-  arena_t arena;
-
-  eden_debug_profile_t profile_sentinel;
-  eden_debug_profile_t* profile_hashes[1024];
-
-  eden_debug_frame_t frame;
-
-  u32_t event_count;
-  eden_debug_event_t events[65536];
-};
-
-static eden_debug_profile_t* 
-eden_debug_get_profile_by_guid(eden_debug_t* debug, char* guid)
-{  
-  u32_t index = hash_djb2(guid) % array_count(debug->profile_hashes);
-  if (debug->profile_hashes[index] == nullptr)
-  {
-    debug->
-
-  }
-
-}
-
-
-
-
-#define __eden_get_debug_event_guid(a,b,c) a "(" #b ")." #c
-#define _eden_get_debug_event_guid(a,b,c) __eden_get_debug_event_guid(a,b,c)
-#define eden_get_debug_event_guid() _eden_get_debug_event_guid(__FILE__, __LINE__, __COUNTER__)
-
-#define eden_push_debug_event(eden, event_type, block_name) { \
-  eden_debug_t * debug = &eden->debug; \
-  assert(debug->event_count < array_count(debug->events)); \
-  eden_debug_event_t* event = debug->events + debug->event_count++; \
-  event->type = event_type; \
-  event->clock = clock_time(); \
-  event->guid = eden_get_debug_event_guid(); \
-  event->name = block_name; \
-}
-
-#define eden_profile_start_test(eden, block_name)  \
-{ \
-  eden_push_debug_event(eden, EDEN_DEBUG_EVENT_PROFILE_BEGIN, block_name); \
-}
-
-#define eden_profile_end_test(eden) \
-{ \
-  eden_push_debug_event(eden, EDEN_DEBUG_EVENT_PROFILE_END, "End Profile Block");\
-} 
-
-#define eden_debug_frame_marker(eden) { \
-  eden_push_debug_event(eden, EDEN_DEBUG_EVENT_FRAME_MARKER, "Frame Marker");\
-} 
-
-
-
-struct eden_console_command_t {
-  buf_t key;
-  void* ctx;
-  void (*func)(void*);
-};
-
-struct eden_console_t {
-  u32_t command_cap;
-  u32_t command_count;
-  eden_console_command_t* commands;
-  
-  bufio_t* info_lines; 
-  u32_t info_line_count;
-
-  bufio_t input_line;
-
-};
-
-
+#include "eden_console.h"
 #include "eden_profiler.h"
 #include "eden_inspector.h"
 
@@ -211,7 +98,6 @@ struct eden_t
   eden_profiler_t profiler;
   eden_inspector_t inspector;
   eden_assets_t assets;
-  eden_debug_t debug;
           
   b32_t is_dll_reloaded;
   b32_t is_running;
@@ -221,96 +107,21 @@ struct eden_t
 
 };
 
-static void
-eden_debug_init(eden_debug_t* debug)
-{
-  arena_alloc(&debug->arena, gigabytes(1));
-}
-
-static void
-eden_debug_flush_events(eden_debug_t* debug)
-{
-  eden_debug_event_t* open_event = 0;
-
-  cll_init(&debug->profile_sentinel);
-
-  // @note: we ignore the first 'frame'. 
-  // This is because we technically do not know what's going on
-  // until we see the first frame marker.
-  
-  for (u32_t event_index = 0;
-      event_index < debug->event_count;
-      ++event_index)
-  {
-    eden_debug_event_t* event = debug->events + event_index;
-    if (event->type == EDEN_DEBUG_EVENT_FRAME_MARKER)
-    {
-      // @note: This event signifies the end of a frame.
-      // Wrap things up and create a new frame.
-      //
-      //debug->frame->begin_clock = event->clock; 
-      //debug->frame->end_clock = event->clock; 
-
-    }
-    else if (event->type == EDEN_DEBUG_EVENT_PROFILE_BEGIN)
-    {
-      open_event = event;
-    }
-    else if (event->type == EDEN_DEBUG_EVENT_PROFILE_END)
-    {
-      u32_t index = hash_djb2(open_event->guid) % array_count(debug->profiles);
-
-      eden_debug_profile_t* profile = debug->profiles + index;
-      profile->duration = event->clock - open_event->clock;
-      profile->is_occupied = true;
-      profile->name = open_event->name; 
-      profile->guid = open_event->guid; 
-      // @todo: hits? Need to retrieve existing profiles
-      //profile->hit = ???
-      cll_push_back(&debug->profile_sentinel, profile);
-
-      open_event = nullptr;
-    }
-
-  }
-
-  debug->event_count = 0;
-  memory_zero_array(debug->profile_hashes);
-
-  arena_clear(&debug->arena);
-}
-
-
 
 #include "eden_gfx.cpp"
+#if EDEN_USE_OPENGL
+# include "eden_gfx_opengl.cpp"
+#endif // EDEN_USE_OPENGL
+       
 #include "eden_input.cpp"
 #include "eden_assets.cpp"
+#include "eden_rendering.cpp"
+
 #include "eden_inspector.cpp"
 #include "eden_profiler.cpp"
 #include "eden_audio.cpp"
 
-#if EDEN_USE_OPENGL
-# include "eden_gfx_opengl.cpp"
-#endif // EDEN_USE_OPENGL
 
-#include "eden_rendering.cpp"
-
-static void
-eden_draw_debug_profiles(eden_t* eden, eden_asset_font_id_t font_id, arena_t* arena)
-{
-  arena_set_revert_point(arena);
-  eden_debug_t * debug = &eden->debug;
-  f32_t y = 0; 
-  bufio_t bio = bufio_set(arena_push_buffer(arena, 1024, 16));
-
-  cll_foreach(profile, &debug->profile_sentinel)
-  {
-    bufio_clear(&bio);
-    bufio_push_fmt(&bio, buf_from_lit("[%10s] %8Ucy"), profile->name, profile->duration );
-    eden_draw_text(eden, font_id, bio.str, RGBA_WHITE, v2f_set(0,y), 24.f, v2f_set(0.f, 0.f));
-    y += 24.f;
-  }
-}
 
 struct eden_config_t 
 {
@@ -361,13 +172,11 @@ typedef eden_debug_update_and_render_sig(eden_debug_update_and_render_f);
 struct eden_functions_t {
   eden_get_config_f* get_config;
   eden_update_and_render_f* update_and_render;
-  eden_debug_update_and_render_f* debug_update_and_render;
 };
 
 static const char* eden_function_names[] {
   "eden_get_config",
   "eden_update_and_render",
-  "eden_debug_update_and_render",
 };
 
 static void 
@@ -467,6 +276,25 @@ eden_update_and_render_console(eden_console_t*)
 
 //
 // JOURNAL
+// = 2025-02-28=
+//   Okay I wanted to do something like what HMH has but it was really
+//   difficult to follow even though I figured out a few things. 
+//   I realized that I was being really stupid; Casey had a strong vision
+//   for what he wants his debugging system to have. I don't.
+//   I should've just looked at what Casey have and see what features I
+//   want, then implement it from use-case down. 
+//
+//   Anyway, I remembered the main reason why I wanted to redo the pipeline.
+//   I was getting a bit annoyed that I can't completely remove the profiling
+//   code from my codebase when I want to have 0 profiling. I mean, I COULD
+//   but that means I need to litter 'if (profiler.enabled)' everywhere.
+//   I don't even want any for speakers (we should totally look into that).
+//
+//   I will probably consider a compile time flag. OR maybe we can consider
+//   some kind of a zero buffer...?
+//
+//   I might also consider using a hashmap for the profiler.
+//
 // = 2025-02-26=
 //   We are starting to refactor the debugging pipeline.
 //

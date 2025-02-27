@@ -159,12 +159,12 @@ eden_assets_init_from_file(
     }
 
     eden_asset_bitmap_t* b = assets->bitmaps + bitmap_index;
-    b->renderer_texture_handle = eden_gfx_get_next_texture_handle(&eden->gfx);
+    b->renderer_texture_handle = 0;
     b->width = file_bitmap.width;
     b->height = file_bitmap.height;
 
     u32_t bitmap_size = b->width * b->height * 4;
-    eden_gfx_texture_payload_t* payload = eden_begin_texture_transfer(&eden->gfx, bitmap_size);
+    eden_gfx_texture_payload_t* payload = eden_add_texture_begin(eden, bitmap_size);
     if (!payload) return false;
     payload->texture_index = b->renderer_texture_handle;
     payload->texture_width = file_bitmap.width;
@@ -175,10 +175,11 @@ eden_assets_init_from_file(
         bitmap_size, 
         file_bitmap.offset_to_data))
     {
+      eden_add_texture_cancel(eden, payload);
       return false;
     }
 
-    eden_complete_texture_transfer(payload);
+    b->renderer_texture_handle = eden_add_texture_end(eden, payload);
   }
 
   for(u32_t font_index = 0;

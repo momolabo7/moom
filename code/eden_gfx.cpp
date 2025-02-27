@@ -157,14 +157,16 @@ eden_gfx_init(
 
 static u32_t
 eden_gfx_get_next_texture_handle(eden_gfx_t* eden_gfx) {
-  static u32_t id = 0;
+  static u32_t id = 0; 
   return id++ % eden_gfx->max_textures;
 }
 
 
 static eden_gfx_texture_payload_t*
-eden_begin_texture_transfer(eden_gfx_t* g, u32_t required_space) {
-  eden_gfx_texture_queue_t* q = &g->texture_queue;
+eden_gfx_begin_texture_transfer(
+    eden_gfx_texture_queue_t* q, 
+    u32_t required_space) 
+{
   eden_gfx_texture_payload_t* ret = 0;
   
   if (q->payload_count < q->payload_cap) {
@@ -224,12 +226,33 @@ eden_begin_texture_transfer(eden_gfx_t* g, u32_t required_space) {
 }
 
 static void
-eden_complete_texture_transfer(eden_gfx_texture_payload_t* entry) {
+eden_gfx_complete_texture_transfer(eden_gfx_texture_payload_t* entry) {
   entry->state = EDEN_GFX_TEXTURE_PAYLOAD_STATE_READY;
 }
 
 static void
-eden_cancel_texture_transfer(eden_gfx_texture_payload_t* entry) {
+eden_gfx_cancel_texture_transfer(eden_gfx_texture_payload_t* entry) {
   entry->state = EDEN_GFX_TEXTURE_PAYLOAD_STATE_EMPTY;
 }
 
+//
+// Interface
+//
+static u32_t
+eden_add_texture_end(eden_t* eden, eden_gfx_texture_payload_t* payload)
+{
+  eden_gfx_complete_texture_transfer(payload);
+  return eden_gfx_get_next_texture_handle(&eden->gfx);
+}
+
+static void
+eden_add_texture_cancel(eden_t* eden, eden_gfx_texture_payload_t* payload)
+{
+  eden_gfx_cancel_texture_transfer(payload);
+}
+
+static eden_gfx_texture_payload_t*
+eden_add_texture_begin(eden_t* eden, u32_t required_size)
+{
+  return eden_gfx_begin_texture_transfer(&eden->gfx.texture_queue, required_size);
+}
