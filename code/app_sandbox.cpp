@@ -128,6 +128,6 @@ eden_debug_update_and_render_sig(eden_debug_update_and_render)
 {
   auto* sandbox = (sandbox_t*)(eden->user_data);
 
-  eden_debug_update(eden);
-  eden_draw_debug_profiles(eden,  ASSET_FONT_ID_DEBUG, &sandbox->arena);
+  eden_debug_flush_events(&eden->debug);
+  eden_draw_debug_profiles(&eden->debug,  ASSET_FONT_ID_DEBUG, &sandbox->arena);
 }

@@ -69,13 +69,25 @@ struct eden_debug_t
   arena_t arena;
 
   eden_debug_profile_t profile_sentinel;
-  eden_debug_profile_t profiles[1024];
+  eden_debug_profile_t* profile_hashes[1024];
 
   eden_debug_frame_t frame;
 
   u32_t event_count;
   eden_debug_event_t events[65536];
 };
+
+static eden_debug_profile_t* 
+eden_debug_get_profile_by_guid(eden_debug_t* debug, char* guid)
+{  
+  u32_t index = hash_djb2(guid) % array_count(debug->profile_hashes);
+  if (debug->profile_hashes[index] == nullptr)
+  {
+    debug->
+
+  }
+
+}
 
 
 
@@ -209,11 +221,15 @@ struct eden_t
 
 };
 
+static void
+eden_debug_init(eden_debug_t* debug)
+{
+  arena_alloc(&debug->arena, gigabytes(1));
+}
 
 static void
-eden_debug_update(eden_t* eden)
+eden_debug_flush_events(eden_debug_t* debug)
 {
-  eden_debug_t * debug = &eden->debug;
   eden_debug_event_t* open_event = 0;
 
   cll_init(&debug->profile_sentinel);
@@ -259,6 +275,9 @@ eden_debug_update(eden_t* eden)
   }
 
   debug->event_count = 0;
+  memory_zero_array(debug->profile_hashes);
+
+  arena_clear(&debug->arena);
 }
 
 

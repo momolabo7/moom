@@ -196,6 +196,7 @@ ASSET_FILE_SIGNATURE	code/eden_asset_file.h	/^#define ASSET_FILE_SIGNATURE /;"	d
 asset_file_sound_t	code/eden_asset_file.h	/^struct asset_file_sound_t {$/;"	s	language:C++
 asset_file_sprite_t	code/eden_asset_file.h	/^struct asset_file_sprite_t {$/;"	s	language:C++
 ASSET_FONT_ID_DEBUG	code/eden_asset_id_lit.h	/^  ASSET_FONT_ID_DEBUG,$/;"	e	language:C++	enum:eden_asset_font_id_t
+ASSET_FONT_ID_DEBUG	code/eden_asset_id_sandbox.h	/^  ASSET_FONT_ID_DEBUG,$/;"	e	language:C++	enum:eden_asset_font_id_t
 ASSET_FONT_ID_DEFAULT	code/eden_asset_id_lit.h	/^  ASSET_FONT_ID_DEFAULT,$/;"	e	language:C++	enum:eden_asset_font_id_t
 ASSET_FONT_ID_DEFAULT	code/eden_asset_id_sandbox.h	/^  ASSET_FONT_ID_DEFAULT,$/;"	e	language:C++	enum:eden_asset_font_id_t
 ASSET_FONT_ID_MAX	code/eden_asset_id_lit.h	/^  ASSET_FONT_ID_MAX$/;"	e	language:C++	enum:eden_asset_font_id_t
@@ -801,8 +802,10 @@ EDEN_DEBUG_EVENT_PROFILE_BEGIN	code/eden.h	/^  EDEN_DEBUG_EVENT_PROFILE_BEGIN,$/
 EDEN_DEBUG_EVENT_PROFILE_END	code/eden.h	/^  EDEN_DEBUG_EVENT_PROFILE_END,$/;"	e	language:C++	enum:eden_debug_event_type_t
 eden_debug_event_t	code/eden.h	/^struct eden_debug_event_t$/;"	s	language:C++
 eden_debug_event_type_t	code/eden.h	/^enum eden_debug_event_type_t : u8_t$/;"	g	language:C++	typeref:typename:u8_t
+eden_debug_flush_events	code/eden.h	/^eden_debug_flush_events(eden_t* eden)$/;"	f	language:C++	typeref:typename:void
 eden_debug_frame_marker	code/eden.h	/^#define eden_debug_frame_marker(/;"	d	language:C++
 eden_debug_frame_t	code/eden.h	/^struct eden_debug_frame_t $/;"	s	language:C++
+eden_debug_get_profile_by_guid	code/eden.h	/^eden_debug_get_profile_by_guid(char* guid)$/;"	f	language:C++	typeref:typename:eden_profile_t *
 eden_debug_log	code/eden.h	/^#define eden_debug_log(/;"	d	language:C++
 eden_debug_log_sig	code/eden.h	/^#define eden_debug_log_sig(/;"	d	language:C++
 eden_debug_log_sig	code/eden.h	/^typedef eden_debug_log_sig(eden_debug_log_f);$/;"	t	language:C++
@@ -810,7 +813,6 @@ eden_debug_log_sig	code/ship_app_lit.cpp	/^eden_debug_log_sig(w32_log_proc) $/;"
 eden_debug_log_sig	code/w32_eden.cpp	/^eden_debug_log_sig(w32_log_proc) $/;"	f	language:C++	file:
 eden_debug_profile_t	code/eden.h	/^struct eden_debug_profile_t $/;"	s	language:C++
 eden_debug_t	code/eden.h	/^struct eden_debug_t $/;"	s	language:C++
-eden_debug_update	code/eden.h	/^eden_debug_update(eden_t* eden)$/;"	f	language:C++	typeref:typename:void
 eden_debug_update_and_render_sig	code/app_sandbox.cpp	/^eden_debug_update_and_render_sig(eden_debug_update_and_render)$/;"	f	language:C++	typeref:typename:exported
 eden_debug_update_and_render_sig	code/eden.h	/^#define eden_debug_update_and_render_sig(/;"	d	language:C++
 eden_debug_update_and_render_sig	code/eden.h	/^typedef eden_debug_update_and_render_sig(eden_debug_update_and_render_f);$/;"	t	language:C++
@@ -2468,7 +2470,7 @@ profiler	code/eden.h	/^  eden_profiler_t profiler;$/;"	m	language:C++	struct:ede
 profiler_enabled	code/eden.h	/^  b32_t profiler_enabled;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:b32_t
 profiler_max_entries	code/eden.h	/^  u32_t profiler_max_entries;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 profiler_max_snapshots_per_entry	code/eden.h	/^  u32_t profiler_max_snapshots_per_entry;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
-profiles	code/eden.h	/^  eden_debug_profile_t profiles[1024];$/;"	m	language:C++	struct:eden_debug_t	typeref:typename:eden_debug_profile_t[1024]
+profile_hashes	code/eden.h	/^  eden_debug_profile_t* profile_hashes[1024];$/;"	m	language:C++	struct:eden_debug_t	typeref:typename:eden_debug_profile_t * [1024]
 profile_sentinel	code/eden.h	/^  eden_debug_profile_t profile_sentinel;$/;"	m	language:C++	struct:eden_debug_t	typeref:typename:eden_debug_profile_t
 program_counter	code/w32_chip8.cpp	/^  u16_t program_counter;$/;"	m	language:C++	struct:chip8_t	typeref:typename:u16_t	file:
 pt	code/app_lit.cpp	/^  v2f_t pt;$/;"	m	language:C++	struct:lit_light_intersection_t	typeref:typename:v2f_t	file:

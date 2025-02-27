@@ -853,6 +853,7 @@ WinMain(HINSTANCE instance,
       return 1;
     }
   }
+  arena_alloc(&eden->debug.arena, gigabytes(1));
 
 
   //
