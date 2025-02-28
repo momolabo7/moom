@@ -75,7 +75,6 @@ IF "%~1"=="-app" (
   set app=1
   GOTO label_parse_next
 )
-
 IF "%~1"=="-ship" (  
   set build=1
   set ship=1

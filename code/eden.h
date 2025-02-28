@@ -26,8 +26,14 @@
 #if EDEN_USE_OPENGL
 # include "eden_gfx_opengl.h"
 #endif // EDEN_USE_OPENGL
-  
+
+
 #include "eden_console.h"
+//
+// Debug API
+//
+// @note: uses EDEN_DEBUG flag to enable/disable
+//
 #include "eden_profiler.h"
 #include "eden_inspector.h"
 
@@ -95,8 +101,11 @@ struct eden_t
   eden_gfx_t gfx;
   eden_speaker_t speaker; 
 
+#if EDEN_DEBUG
   eden_profiler_t profiler;
   eden_inspector_t inspector;
+#endif //EDEN_DEBUG
+       
   eden_assets_t assets;
           
   b32_t is_dll_reloaded;
@@ -206,13 +215,13 @@ eden_console_init(
   console->info_lines = arena_push_arr(bufio_t, allocator, max_lines);
 
   u32_t line_size = characters_per_line;
-  console->input_line = bufio_set(arena_push_buffer(allocator, line_size));
+  bufio_init(&console->input_line,arena_push_buffer(allocator, line_size));
   
   for (u32_t info_line_index = 0;
        info_line_index < console->info_line_count;
        ++info_line_index) 
   {    
-    console->info_lines[info_line_index] = bufio_set(arena_push_buffer(allocator, line_size));
+    bufio_init(&console->info_lines[info_line_index],arena_push_buffer(allocator, line_size));
   }
 }
 

@@ -1,8 +1,5 @@
+#if EDEN_DEBUG
 
-
-//
-// @mark: profile
-//
 static eden_profiler_entry_t*
 _eden_profiler_init_block(
     eden_profiler_t* p,
@@ -175,7 +172,8 @@ eden_profile_update_and_render(
     eden_profiler_end_stat(&hits);
     eden_profiler_end_stat(&cycles_per_hit);
    
-    bufio_t sb = bufio_set(arena_push_buffer(frame_arena, 256));
+    bufio_t sb;
+    bufio_init(&sb, arena_push_buffer(frame_arena, 256));
 
     bufio_push_fmt(&sb, 
                  buf_from_lit("[%20s] %8ucy %4uh %8ucy/h"),
@@ -217,3 +215,5 @@ eden_profile_update_and_render(
     ++line_num;
   }
 }
+
+#endif

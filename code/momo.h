@@ -6316,14 +6316,12 @@ buf_to_vars(buf_t stream, buf_t fmt, ...)
   return true;
 }
 
-static bufio_t 
-bufio_set(buf_t str) 
+static void
+bufio_init(bufio_t* b, buf_t str) 
 {
-  bufio_t ret = {};
-  ret.e = str.e;
-  ret.size = 0;
-  ret.cap = str.size;
-  return ret;
+  b->e = str.e;
+  b->size = 0;
+  b->cap = str.size;
 }
 
 static usz_t
@@ -6496,7 +6494,8 @@ _bufio_push_fmt_list(bufio_t* b, buf_t format, va_list args)
 
 
       u8_t tmp_buffer[64];
-      bufio_t tb = bufio_set({ tmp_buffer, sizeof(tmp_buffer) });
+      bufio_t tb;
+      bufio_init(&tb, { tmp_buffer, sizeof(tmp_buffer) });
 
       switch(format.e[at]) 
       {

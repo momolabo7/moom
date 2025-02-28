@@ -1,40 +1,44 @@
-
 @echo off
 
-setlocal EnableDelayedExpansion
+set app_name=%~1
 
-set app_name=%1
-set option=%2
-
-IF %option%==-ship (
-  echo "ship!"
+:label_parse_next
+shift
+IF "%~1"=="" (
+  GOTO label_parse_end
 )
-
-IF %option%==-build (
-  build pass_%app_name% -bun
-  build app_%app_name% -app
-  build w32_eden -w32 
+IF "%~1"=="-r" (
+  CALL build w32_eden -run 
+  GOTO label_parse_next
 )
-
-IF %option%==-hot (
-  build app_%app_name% -app
+IF "%~1"=="-a" (
+  CALL build app_%app_name% -app
+  GOTO label_parse_next
 )
-
-IF %option%==-bun (
-  build pass_%app_name% -bun
-  build app_%app_name% -app
-  build w32_eden -w32 
-  build w32_eden -run
+IF "%~1"=="-ao" (
+  CALL build app_%app_name% -app -o
+  GOTO label_parse_next
 )
-
-IF %option%==-run (
-  build w32_eden -run
+IF "%~1"=="-p" (
+  CALL build pass_%app_name%
+  GOTO label_parse_next
 )
-
-IF %option%==-pass (
-  build pass_%app_name% -bun
-  goto end
+IF "%~1"=="-pr" (
+  CALL build pass_%app_name% -bun
+  GOTO label_parse_next
 )
+IF "%~1"=="-w" (  
+  CALL build w32_eden -w32 
+  GOTO label_parse_next
+)
+IF "%~1"=="-all" (  
+  CALL build pass_%app_name% -bun
+  CALL build app_%app_name% -app
+  CALL build w32_eden -w32 
+  GOTO label_parse_next
+)
+GOTO label_parse_next
 
+:label_parse_end
 
 

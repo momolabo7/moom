@@ -1,4 +1,4 @@
-
+#if EDEN_DEBUG
 struct eden_profiler_snapshot_t 
 {
   u32_t hits;
@@ -53,3 +53,11 @@ struct eden_profiler_t {
 #define eden_profile_block(eden, name) \
   eden_profile_begin(eden, name); \
   defer {eden_profile_end(eden, name);} 
+
+#else
+
+#define eden_profile_begin(eden, name) { #name; }
+#define eden_profile_end(eden, name)
+#define eden_profile_block(eden, name)
+
+#endif // EDEN_DEBUG

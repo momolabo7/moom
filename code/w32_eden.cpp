@@ -640,8 +640,6 @@ eden_complete_all_tasks_sig(w32_complete_all_tasks)
 }
 
 
-
-
 //
 // Entry Point
 //
@@ -831,28 +829,24 @@ WinMain(HINSTANCE instance,
   //
   // Init debug stuff
   //
-  if (config.profiler_enabled) 
+#if EDEN_DEBUG
+  if (!eden_profiler_init(
+        &eden->profiler, 
+        platform_arena, 
+        config.profiler_max_entries, 
+        config.profiler_max_snapshots_per_entry))
   {
-    if (!eden_profiler_init(
-          &eden->profiler, 
-          platform_arena, 
-          config.profiler_max_entries, 
-          config.profiler_max_snapshots_per_entry))
-    {
-      return 1;
-    }
+    return 1;
   }
 
-  if (config.inspector_enabled) 
+  if (!eden_inspector_init(
+        &eden->inspector, 
+        platform_arena, 
+        config.inspector_max_entries))
   {
-    if (!eden_inspector_init(
-          &eden->inspector, 
-          platform_arena, 
-          config.inspector_max_entries))
-    {
-      return 1;
-    }
+    return 1;
   }
+#endif // EDEN_DEBUG
 
 
   //
@@ -871,11 +865,15 @@ WinMain(HINSTANCE instance,
 #if HOT_RELOAD
     // Hot reload eden->dll functions
     eden->is_dll_reloaded = w32_reload_code_if_outdated(&eden_code);
+#if EDEN_DEBUG
     if (eden->is_dll_reloaded) {
       eden_profiler_reset(&eden->profiler);
     }
+#endif // EDEN_DEBUG
 #else  // HOT_RELOAD
+#if EDEN_DEBUG
     eden_profiler_reset(&eden->profiler);
+#endif  // EDEN_DEBUG
 #endif // HOT_RELOAD
 
     // Begin frame
@@ -902,11 +900,13 @@ WinMain(HINSTANCE instance,
     if (config.speaker_enabled) 
       eden_speaker_update(eden);
     
+#if EDEN_DEBUG
     if (config.profiler_enabled)
       eden_profiler_update_entries(&eden->profiler);
 
     if (config.inspector_enabled) 
       eden_inspector_clear(&eden->inspector);
+#endif // EDEN_DEBUG
 
 
     w32_gfx_end_frame(&eden->gfx);

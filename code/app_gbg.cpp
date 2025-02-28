@@ -339,7 +339,8 @@ eden_update_and_render_sig(eden_update_and_render)
 
   {
     arena_set_revert_point(&gbg->arena);
-    bufio_t sb = bufio_set(arena_push_buffer(&gbg->arena, 32));
+    bufio_t sb;
+    bufio_init(&sb, arena_push_buffer(&gbg->arena, 32));
 
     // draw enemies
     for(u32_t i = 0; i < gbg->enemy_count; ++i)

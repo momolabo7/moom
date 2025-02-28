@@ -67,10 +67,17 @@
 #define LIT_LEARNT_BASICS_LEVEL_ID (3)
 #define LIT_LEARNT_POINT_LIGHT_LEVEL_ID (7)
 
-#define lit_log(...) eden_debug_log(g_eden, __VA_ARGS__)
-#define lit_profile_block(name) eden_profile_block(g_eden, name)
-#define lit_profile_begin(name) eden_profile_begin(g_eden, name)
-#define lit_profile_end(name) eden_profile_end(g_eden, name)
+#if EDEN_DEBUG 
+# define lit_log(...) eden_debug_log(g_eden, __VA_ARGS__)
+# define lit_profile_block(name) eden_profile_block(g_eden, name)
+# define lit_profile_begin(name) eden_profile_begin(g_eden, name)
+# define lit_profile_end(name) eden_profile_end(g_eden, name)
+#else 
+# define lit_log(...) 
+# define lit_profile_block(name) 
+# define lit_profile_begin(name) 
+# define lit_profile_end(name) 
+#endif
 
 
 
@@ -3808,18 +3815,14 @@ eden_update_and_render_sig(eden_update_and_render)
   }
 
 
-  eden_inspect_arena(g_eden, buf_from_lit("main arena"), g_lit->main_arena);
-  eden_inspect_arena(g_eden, buf_from_lit("ass arena"), g_lit->asset_arena);
-  eden_inspect_arena(g_eden, buf_from_lit("dbg arena"), g_lit->debug_arena);
-  eden_inspect_arena(g_eden, buf_from_lit("frame arena"), g_lit->frame_arena);
-  eden_inspect_arena(g_eden, buf_from_lit("mode arena"), g_lit->mode_arena);
+  eden_inspect_arena(g_eden, main_arena, g_lit->main_arena);
+  eden_inspect_arena(g_eden, ass_arena, g_lit->asset_arena);
+  eden_inspect_arena(g_eden, dbg_arena, g_lit->debug_arena);
+  eden_inspect_arena(g_eden, frame_arena, g_lit->frame_arena);
+  eden_inspect_arena(g_eden, mode_arena, g_lit->mode_arena);
 
+#if EDEN_DEBUG
   switch (g_lit->show_debug_type) {
-#if 0
-    case LIT_SHOW_DEBUG_CONSOLE: {
-      lit_update_and_render_console(); 
-    }break;
-#endif
     case LIT_SHOW_DEBUG_PROFILER: {
       eden_profile_update_and_render(
           g_eden, 
@@ -3842,6 +3845,7 @@ eden_update_and_render_sig(eden_update_and_render)
     }break;
     default: {}
   }
+#endif // EDEN_DEBUG
 }
 
 //
