@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #define BUILD_COMPILER_DEFAULT "clang++ -std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -Wno-deprecated-declarations -Wno-missing-braces -Wno-format"
-#define BUILD_CODE_PATH "../code/"
+#define BUILD_CODE_PATH "../code"
 
 
 struct build_t {
@@ -25,11 +25,18 @@ build_app_build(build_t* b, const char* target)
 {
 
   printf("Building app_%s\n", target);
+#if 0
   bufio_push_cstr(&b->sb, BUILD_COMPILER_DEFAULT " " BUILD_CODE_PATH "app_");
   bufio_push_cstr(&b->sb, target);
   bufio_push_cstr(&b->sb, ".cpp -shared -o eden.dll");
   bufio_push_null_terminate(&b->sb);
-
+#endif
+  bufio_push_fmt(&b->sb, 
+      buf_from_lit("%s %s/app_%s.cpp -shared -o -eden.dll"),
+      BUILD_COMPILER_DEFAULT,
+      BUILD_CODE_PATH,
+      target);
+  bufio_push_null_terminate(&b->sb);
   //printf((const char*)b->sb.str.e);
   system((char*)b->sb.str.e);
   bufio_clear(&b->sb);
@@ -39,11 +46,12 @@ static void
 build_pass_build(build_t* b, const char* target)
 {
   printf("Building pass_%s\n", target);
-  bufio_push_cstr(&b->sb, BUILD_COMPILER_DEFAULT " " BUILD_CODE_PATH "pass_");
-  bufio_push_cstr(&b->sb, target);
-  bufio_push_cstr(&b->sb, ".cpp -o pass_");
-  bufio_push_cstr(&b->sb, target);
-  bufio_push_cstr(&b->sb, ".exe");
+  bufio_push_fmt(&b->sb, 
+      buf_from_lit("%s %s/pass_%s.cpp -o -pass_%s.exe"),
+      BUILD_COMPILER_DEFAULT,
+      BUILD_CODE_PATH,
+      target,
+      target);
   bufio_push_null_terminate(&b->sb);
 
   //printf((const char*)b->sb.str.e);
@@ -56,9 +64,9 @@ static void
 build_pass_run(build_t* b, const char* target)
 {
   printf("Running pass_%s\n", target);
-  bufio_push_cstr(&b->sb, "pass_");
-  bufio_push_cstr(&b->sb, target);
-  bufio_push_cstr(&b->sb, ".exe");
+  bufio_push_fmt(&b->sb, 
+      buf_from_lit("pass_%s.exe"),
+      target);
   bufio_push_null_terminate(&b->sb);
 
   //printf((const char*)b->sb.str.e);

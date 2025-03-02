@@ -6462,6 +6462,21 @@ bufio_push_hex_u32(bufio_t* b, u32_t value) {
 }
 
 static void
+_bufio_push_fmt_push_buffer_based_on_width(bufio_t* b, u32_t width, buf_t buffer)
+{
+  if (width > 0 && buffer.size < width) {
+    usz_t spaces_to_pad = width - buffer.size;
+    while(spaces_to_pad--) {
+      bufio_push_c8(b, ' ');
+    }
+    bufio_push_buffer(b, buffer);
+  }
+  else {
+    bufio_push_buffer(b, buffer);
+  }
+}
+
+static void
 _bufio_push_fmt_list(bufio_t* b, buf_t format, va_list args) 
 {
   // @note: this is the reckless kind of implementation which
@@ -6503,45 +6518,48 @@ _bufio_push_fmt_list(bufio_t* b, buf_t format, va_list args)
         case 'i': {
           s32_t value = va_arg(args, s32_t);
           bufio_push_s32(&tb, value);
+          _bufio_push_fmt_push_buffer_based_on_width(b, width, tb.str);
         } break;
         case 'I': {
           s64_t value = va_arg(args, s64_t);
           bufio_push_s64(&tb, value);
+          _bufio_push_fmt_push_buffer_based_on_width(b, width, tb.str);
         } break;
         case 'U': {
           u64_t value = va_arg(args, u64_t);
           bufio_push_u64(&tb, value);
+          _bufio_push_fmt_push_buffer_based_on_width(b, width, tb.str);
         } break;
         case 'u': {
           u32_t value = va_arg(args, u32_t);
           bufio_push_u32(&tb, value);
+          _bufio_push_fmt_push_buffer_based_on_width(b, width, tb.str);
         } break;
         case 'f': {
           f64_t value = va_arg(args, f64_t);
           bufio_push_f32(&tb, (f32_t)value, precision);
+          _bufio_push_fmt_push_buffer_based_on_width(b, width, tb.str);
         } break;
         case 'F': {
           f64_t value = va_arg(args, f64_t);
           bufio_push_f64(&tb, (f64_t)value, precision);
+          _bufio_push_fmt_push_buffer_based_on_width(b, width, tb.str);
         } break;
         case 'x':
         case 'X': {
           u32_t value = va_arg(args, u32_t);
           bufio_push_hex_u32(&tb, value);
+          _bufio_push_fmt_push_buffer_based_on_width(b, width, tb.str);
         } break;
         case 's': {
           // c-string
           const char* cstr = va_arg(args, const char*);
-          while(cstr[0] != 0) {
-            bufio_push_c8(&tb, (u8_t)cstr[0]);
-            ++cstr;
-          }
+          _bufio_push_fmt_push_buffer_based_on_width(b, width, buf_set((u8_t*)cstr, cstr_len(cstr)));
         } break;
-
         case 'S': {
           // buf_t, or 'text'.
           buf_t str = va_arg(args, buf_t);
-          bufio_push_buffer(&tb, str);
+          _bufio_push_fmt_push_buffer_based_on_width(b, width, str);
         } break;
 
         default: {
@@ -6549,18 +6567,12 @@ _bufio_push_fmt_list(bufio_t* b, buf_t format, va_list args)
           assert(false);
         } break;
       }
+
+
+
+
       ++at;
 
-      if (width > 0 && tb.str.size < width) {
-        usz_t spaces_to_pad = width - tb.str.size;
-        while(spaces_to_pad--) {
-          bufio_push_c8(b, ' ');
-        }
-        bufio_push_buffer(b, tb.str);
-      }
-      else {
-        bufio_push_buffer(b, tb.str);
-      }
 
     }
     else 
