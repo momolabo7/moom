@@ -1122,6 +1122,7 @@ static void     bufio_push_s32(bufio_t* b, s32_t num);
 static void     bufio_push_s64(bufio_t* b, s64_t num);
 static void     bufio_push_buffer(bufio_t* b, buf_t str);
 static void     bufio_push_cstr(bufio_t* b, const c8_t* cstr);
+static void     bufio_push_null_terminate(bufio_t* b);
 static void     bufio_push_hex_u8(bufio_t* b, u8_t num);
 static void     bufio_push_hex_u32(bufio_t* b, u32_t num);
 static void     bufio_push_fmt(bufio_t* b, buf_t fmt, ...);
@@ -6594,6 +6595,11 @@ bufio_push_cstr(bufio_t* b, const c8_t* src) {
     b->e[b->size++] = dref(src);
     ++src;
   }
+}
+
+static void     
+bufio_push_null_terminate(bufio_t* b) {
+  b->e[b->size++] = 0;
 }
 
 
