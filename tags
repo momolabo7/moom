@@ -98,6 +98,8 @@ aoc23_d3p2	code/aoc23.cpp	/^static void aoc23_d3p2(const char* filename, arena_t
 aoc23_route	code/aoc23.cpp	/^#define aoc23_route(/;"	d	language:C++	file:
 app	bin/build.bat	/^  set app=1$/;"	v	language:DosBatch
 app	bin/build.bat	/^set app=0$/;"	v	language:DosBatch
+app	bin/buildo.bat	/^  set app=1$/;"	v	language:DosBatch
+app	bin/buildo.bat	/^set app=0$/;"	v	language:DosBatch
 app_name	bin/garden.bat	/^set app_name=%~1$/;"	v	language:DosBatch
 ARCH_ARM	code/momo.h	/^#  define ARCH_ARM /;"	d	language:C++
 ARCH_ARM	code/momo.h	/^#  define ARCH_ARM /;"	d	language:C++
@@ -162,6 +164,8 @@ arena_set_revert_point	code/momo.h	/^# define arena_set_revert_point(/;"	d	langu
 arena_t	code/momo.h	/^struct arena_t $/;"	s	language:C++
 args	bin/build.bat	/^  set args=%args% %~1$/;"	v	language:DosBatch
 args	bin/build.bat	/^  set args=%~1$/;"	v	language:DosBatch
+args	bin/buildo.bat	/^  set args=%args% %~1$/;"	v	language:DosBatch
+args	bin/buildo.bat	/^  set args=%~1$/;"	v	language:DosBatch
 arr	code/test_bigint.cpp	/^  u8_t* arr;$/;"	m	language:C++	struct:bigint_t	typeref:typename:u8_t *	file:
 array	code/momo.h	/^    json_array_t array;$/;"	m	language:C++	union:json_value_t::__anon1db7a63d1e0a	typeref:typename:json_array_t
 array_count	code/momo.h	/^#define array_count(/;"	d	language:C++
@@ -394,10 +398,23 @@ build	bin/build.bat	/^  set build=1$/;"	v	language:DosBatch
 build	bin/build.bat	/^  set build=1$/;"	v	language:DosBatch
 build	bin/build.bat	/^  set build=1$/;"	v	language:DosBatch
 build	bin/build.bat	/^set build=1$/;"	v	language:DosBatch
+build	bin/buildo.bat	/^  set build=0$/;"	v	language:DosBatch
+build	bin/buildo.bat	/^  set build=1$/;"	v	language:DosBatch
+build	bin/buildo.bat	/^  set build=1$/;"	v	language:DosBatch
+build	bin/buildo.bat	/^  set build=1$/;"	v	language:DosBatch
+build	bin/buildo.bat	/^  set build=1$/;"	v	language:DosBatch
+build	bin/buildo.bat	/^set build=1$/;"	v	language:DosBatch
+build_app_build	code/build.cpp	/^build_app_build(build_t* b, const char* target)$/;"	f	language:C++	typeref:typename:void	file:
 BUILD_CODE_PATH	code/build.cpp	/^#define BUILD_CODE_PATH /;"	d	language:C++	file:
 BUILD_COMPILER_DEFAULT	code/build.cpp	/^#define BUILD_COMPILER_DEFAULT /;"	d	language:C++	file:
 build_dir	bin/build.bat	/^set build_dir=%root_dir%\\build$/;"	v	language:DosBatch
+build_dir	bin/buildo.bat	/^set build_dir=%root_dir%\\build$/;"	v	language:DosBatch
+build_eden_build	code/build.cpp	/^build_eden_build(build_t* b)$/;"	f	language:C++	typeref:typename:void	file:
+build_eden_run	code/build.cpp	/^build_eden_run(build_t* b)$/;"	f	language:C++	typeref:typename:void	file:
 build_init	code/build.cpp	/^build_init(build_t* b) $/;"	f	language:C++	typeref:typename:void	file:
+build_normal_build	code/build.cpp	/^build_normal_build(build_t* b, const char* target)$/;"	f	language:C++	typeref:typename:void	file:
+build_normal_run	code/build.cpp	/^build_normal_run(build_t* b, const char* target, char** args, u32_t arg_count)$/;"	f	language:C++	typeref:typename:void	file:
+BUILD_OUT_PATH	code/build.cpp	/^#define BUILD_OUT_PATH /;"	d	language:C++	file:
 build_pass_build	code/build.cpp	/^build_pass_build(build_t* b, const char* target)$/;"	f	language:C++	typeref:typename:void	file:
 build_pass_run	code/build.cpp	/^build_pass_run(build_t* b, const char* target)$/;"	f	language:C++	typeref:typename:void	file:
 build_t	code/build.cpp	/^struct build_t {$/;"	s	language:C++	file:
@@ -515,6 +532,7 @@ codepoint	code/pass.h	/^  u32_t codepoint;$/;"	m	language:C++	struct:pass_pack_a
 codepoint	code/pass.h	/^  u32_t codepoint;$/;"	m	language:C++	struct:pass_pack_font_glyph_ext_t	typeref:typename:u32_t
 codepoint_map	code/eden_assets.h	/^  u16_t* codepoint_map;$/;"	m	language:C++	struct:eden_asset_font_t	typeref:typename:u16_t *
 code_dir	bin/build.bat	/^set code_dir=%root_dir%\\code$/;"	v	language:DosBatch
+code_dir	bin/buildo.bat	/^set code_dir=%root_dir%\\code$/;"	v	language:DosBatch
 color	code/app_lit.cpp	/^  u32_t color;$/;"	m	language:C++	struct:lit_game_light_t	typeref:typename:u32_t	file:
 colors	code/eden_gfx.h	/^  rgba_t colors;$/;"	m	language:C++	struct:eden_gfx_command_clear_t	typeref:typename:rgba_t
 colors	code/eden_gfx.h	/^  rgba_t colors;$/;"	m	language:C++	struct:eden_gfx_command_rect_t	typeref:typename:rgba_t
@@ -541,6 +559,13 @@ compiler_flags	bin/build.bat	/^    set compiler_flags=-DASSERTIVE=1 -DFOOLISH=1 
 compiler_flags	bin/build.bat	/^    set compiler_flags=-O2 -DASSERTIVE=0 -DFOOLISH=0 !compiler_flags!$/;"	v	language:DosBatch
 compiler_flags	bin/build.bat	/^rem set compiler_flags=-MT -WX -W4 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa/;"	v	language:DosBatch
 compiler_flags	bin/build.bat	/^set compiler_flags=-std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -/;"	v	language:DosBatch
+compiler_flags	bin/buildo.bat	/^    set compiler_flags=!compiler_flags! -DHOT_RELOAD=0 $/;"	v	language:DosBatch
+compiler_flags	bin/buildo.bat	/^    set compiler_flags=!compiler_flags! -g -gcodeview$/;"	v	language:DosBatch
+compiler_flags	bin/buildo.bat	/^    set compiler_flags=!compiler_flags! -LD$/;"	v	language:DosBatch
+compiler_flags	bin/buildo.bat	/^    set compiler_flags=-DASSERTIVE=1 -DFOOLISH=1 !compiler_flags!$/;"	v	language:DosBatch
+compiler_flags	bin/buildo.bat	/^    set compiler_flags=-O2 -DASSERTIVE=0 -DFOOLISH=0 !compiler_flags!$/;"	v	language:DosBatch
+compiler_flags	bin/buildo.bat	/^rem set compiler_flags=-MT -WX -W4 -wd4189 -wd4702 -wd4201 -wd4505 -wd4996 -wd4100 -Zi  -GR -EHa/;"	v	language:DosBatch
+compiler_flags	bin/buildo.bat	/^set compiler_flags=-std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -/;"	v	language:DosBatch
 COMPILER_GCC	code/momo.h	/^# define COMPILER_GCC /;"	d	language:C++
 COMPILER_GCC	code/momo.h	/^# define COMPILER_GCC /;"	d	language:C++
 COMPILER_MSVC	code/momo.h	/^# define COMPILER_MSVC /;"	d	language:C++
@@ -1095,6 +1120,7 @@ element_count	code/eden_gfx_opengl.h	/^  usz_t element_count;$/;"	m	language:C++
 end	code/app_lit.cpp	/^  v2f_t end;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:v2f_t	file:
 endline_padding	code/aoc22.cpp	/^  u32_t endline_padding; \/\/ 1 if \\n, 2 if \\n\\r$/;"	m	language:C++	struct:aoc22_grid_t	typeref:typename:u32_t	file:
 end_build_type	bin/build.bat	/^:end_build_type$/;"	l	language:DosBatch
+end_build_type	bin/buildo.bat	/^:end_build_type$/;"	l	language:DosBatch
 end_point_indices	code/momo.h	/^  u16_t* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u16_t *
 end_pt	code/app_lit.cpp	/^  v2f_t end_pt;$/;"	m	language:C++	struct:lit_game_edge_t	typeref:typename:v2f_t	file:
 enemy	code/app_gbg.cpp	/^  gbg_enemy_t* enemy;$/;"	m	language:C++	struct:gbg_tile_t	typeref:typename:gbg_enemy_t *	file:
@@ -1402,6 +1428,7 @@ f64_weight	code/momo.h	/^static f64_t f64_weight(f64_t v, f64_t min, f64_t max) 
 far	code/momo.h	/^# define far$/;"	d	language:C++
 file	code/aoc22.cpp	/^    aoc22_d7_file_t* file;$/;"	m	language:C++	union:aoc22_d7_node_t::__anonabc34737010a	typeref:typename:aoc22_d7_file_t *	file:
 filename	bin/build.bat	/^set filename=%~1$/;"	v	language:DosBatch
+filename	bin/buildo.bat	/^set filename=%~1$/;"	v	language:DosBatch
 filename	code/eden_profiler.h	/^  const char* filename;$/;"	m	language:C++	struct:eden_profiler_entry_t	typeref:typename:const char *
 filename	code/pass.h	/^  const char* filename;$/;"	m	language:C++	struct:pass_pack_atlas_sprite_t	typeref:typename:const char *
 filename	code/pass.h	/^  const char* filename;$/;"	m	language:C++	struct:pass_pack_font_ext_t	typeref:typename:const char *
@@ -1895,8 +1922,10 @@ kilobytes	code/momo.h	/^#define kilobytes(/;"	d	language:C++
 l	code/momo.h	/^    struct { f32_t h,s,l; };  $/;"	m	language:C++	struct:hsla_t::__anon1db7a63d110a::__anon1db7a63d1208	typeref:typename:f32_t
 l	code/momo.h	/^  f32_t h, s, l;  $/;"	m	language:C++	struct:hsl_t	typeref:typename:f32_t
 label_parse_end	bin/build.bat	/^:label_parse_end$/;"	l	language:DosBatch
+label_parse_end	bin/buildo.bat	/^:label_parse_end$/;"	l	language:DosBatch
 label_parse_end	bin/garden.bat	/^:label_parse_end$/;"	l	language:DosBatch
 label_parse_next	bin/build.bat	/^:label_parse_next$/;"	l	language:DosBatch
+label_parse_next	bin/buildo.bat	/^:label_parse_next$/;"	l	language:DosBatch
 label_parse_next	bin/garden.bat	/^:label_parse_next$/;"	l	language:DosBatch
 last_drawn_instance_index	code/eden_gfx_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:eden_opengl_sprite_batch_t	typeref:typename:GLsizei
 last_drawn_instance_index	code/eden_gfx_opengl.h	/^  GLsizei last_drawn_instance_index;$/;"	m	language:C++	struct:eden_opengl_triangle_batch_t	typeref:typename:GLsizei
@@ -1917,6 +1946,8 @@ line_gap	code/eden_assets.h	/^  f32_t line_gap;$/;"	m	language:C++	struct:eden_a
 line_gap	code/eden_asset_file.h	/^  f32_t line_gap;$/;"	m	language:C++	struct:asset_file_font_t	typeref:typename:f32_t
 linker_flags	bin/build.bat	/^    set linker_flags=-shared $/;"	v	language:DosBatch
 linker_flags	bin/build.bat	/^set linker_flags=$/;"	v	language:DosBatch
+linker_flags	bin/buildo.bat	/^    set linker_flags=-shared $/;"	v	language:DosBatch
+linker_flags	bin/buildo.bat	/^set linker_flags=$/;"	v	language:DosBatch
 list	code/aoc22.cpp	/^    aoc22_d13_node_t* list; \/\/ represents a list$/;"	m	language:C++	union:aoc22_d13_node_t::__anonabc34737020a	typeref:typename:aoc22_d13_node_t *	file:
 LIT_ANIMATOR_TYPE_PATROL_POINT	code/app_lit.cpp	/^  LIT_ANIMATOR_TYPE_PATROL_POINT,$/;"	e	language:C++	enum:lit_game_animator_type_t	file:
 LIT_ANIMATOR_TYPE_ROTATE_POINT	code/app_lit.cpp	/^  LIT_ANIMATOR_TYPE_ROTATE_POINT,$/;"	e	language:C++	enum:lit_game_animator_type_t	file:
@@ -2133,7 +2164,7 @@ m44f_transpose	code/momo.h	/^m44f_transpose(m44f_t m) {$/;"	f	language:C++	typer
 m44f_transpose	code/momo.h	/^static m44f_t m44f_transpose(m44f_t m);$/;"	p	language:C++	typeref:typename:m44f_t
 main	code/aoc22.cpp	/^int main(int argv, char** argc) {$/;"	f	language:C++	typeref:typename:int
 main	code/aoc23.cpp	/^int main(int argv, char** argc) {$/;"	f	language:C++	typeref:typename:int
-main	code/build.cpp	/^int main(int argc, char* argv[])$/;"	f	language:C++	typeref:typename:int
+main	code/build.cpp	/^int main(int argc, char** argv)$/;"	f	language:C++	typeref:typename:int
 main	code/euler.cpp	/^main() {$/;"	f	language:C++	typeref:typename:int
 main	code/gist_hashmap.cpp	/^int main()$/;"	f	language:C++	typeref:typename:int
 main	code/gist_linked_list.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
@@ -2177,6 +2208,7 @@ max_workers	code/eden.h	/^  u32_t max_workers; $/;"	m	language:C++	struct:eden_c
 max_x	code/eden_gfx.h	/^  f32_t min_x, max_x;$/;"	m	language:C++	struct:eden_gfx_command_view_t	typeref:typename:f32_t
 max_y	code/eden_gfx.h	/^  f32_t min_y, max_y;$/;"	m	language:C++	struct:eden_gfx_command_view_t	typeref:typename:f32_t
 me	bin/build.bat	/^set me=%~dp0$/;"	v	language:DosBatch
+me	bin/buildo.bat	/^set me=%~dp0$/;"	v	language:DosBatch
 megabytes	code/momo.h	/^#define megabytes(/;"	d	language:C++
 memory	code/momo.h	/^      u8_t* memory;$/;"	m	language:C++	struct:arena_t::__anon1db7a63d150a::__anon1db7a63d1608	typeref:typename:u8_t *
 memory	code/momo.h	/^  u8_t* memory;$/;"	m	language:C++	struct:garena_t	typeref:typename:u8_t *
@@ -2345,6 +2377,8 @@ operator ==	code/momo.h	/^static b32_t  operator==(v3f_t lhs, v3f_t rhs) { retur
 operator ==	code/momo.h	/^static b32_t  operator==(v3f_t lhs, v3f_t rhs); $/;"	p	language:C++	typeref:typename:b32_t
 optimize	bin/build.bat	/^  set optimize=1$/;"	v	language:DosBatch
 optimize	bin/build.bat	/^set optimize=0 $/;"	v	language:DosBatch
+optimize	bin/buildo.bat	/^  set optimize=1$/;"	v	language:DosBatch
+optimize	bin/buildo.bat	/^set optimize=0 $/;"	v	language:DosBatch
 OS_LINUX	code/momo.h	/^# define OS_LINUX /;"	d	language:C++
 OS_LINUX	code/momo.h	/^# define OS_LINUX /;"	d	language:C++
 OS_MAC	code/momo.h	/^# define OS_MAC /;"	d	language:C++
@@ -2353,6 +2387,8 @@ OS_WINDOWS	code/momo.h	/^# define OS_WINDOWS /;"	d	language:C++
 OS_WINDOWS	code/momo.h	/^# define OS_WINDOWS /;"	d	language:C++
 output_name	bin/build.bat	/^    set output_name=eden.dll$/;"	v	language:DosBatch
 output_name	bin/build.bat	/^set output_name=%filename%.exe$/;"	v	language:DosBatch
+output_name	bin/buildo.bat	/^    set output_name=eden.dll$/;"	v	language:DosBatch
+output_name	bin/buildo.bat	/^set output_name=%filename%.exe$/;"	v	language:DosBatch
 output_test_sine_wave_f32	code/w32_sandbox_wasapi.cpp	/^static void output_test_sine_wave_f32(s32_t samples_per_second, s32_t sample_count, f32_t *sampl/;"	f	language:C++	typeref:typename:void	file:
 p0	code/app_lit.cpp	/^  v2f_t p0, p1, p2;$/;"	m	language:C++	struct:lit_game_light_triangle_t	typeref:typename:v2f_t	file:
 p0	code/eden_gfx.h	/^  v2f_t p0, p1, p2;$/;"	m	language:C++	struct:eden_gfx_command_triangle_t	typeref:typename:v2f_t
@@ -2525,6 +2561,7 @@ rng_unit_circle	code/momo.h	/^rng_unit_circle(rng_t* r) {$/;"	f	language:C++	typ
 rng_unit_circle	code/momo.h	/^static v2f_t rng_unit_circle(rng_t* r);$/;"	p	language:C++	typeref:typename:v2f_t
 root	code/momo.h	/^  json_object_t root;$/;"	m	language:C++	struct:json_t	typeref:typename:json_object_t
 root_dir	bin/build.bat	/^set root_dir=%me%..$/;"	v	language:DosBatch
+root_dir	bin/buildo.bat	/^set root_dir=%me%..$/;"	v	language:DosBatch
 rot	code/eden_gfx.h	/^  f32_t rot;$/;"	m	language:C++	struct:eden_gfx_command_rect_t	typeref:typename:f32_t
 rotate_point	code/app_lit.cpp	/^    lit_game_animator_rotate_point_t rotate_point;$/;"	m	language:C++	union:lit_game_animator_t::__anon1b0212a9010a	typeref:typename:lit_game_animator_rotate_point_t	file:
 rp_pack	code/momo.h	/^rp_pack(rp_rect_t* rects, $/;"	f	language:C++	typeref:typename:b32_t
@@ -2540,6 +2577,9 @@ RP_SORT_TYPE_WIDTH	code/momo.h	/^  RP_SORT_TYPE_WIDTH,$/;"	e	language:C++	enum:r
 run	bin/build.bat	/^  set run=1$/;"	v	language:DosBatch
 run	bin/build.bat	/^  set run=1$/;"	v	language:DosBatch
 run	bin/build.bat	/^set run=0$/;"	v	language:DosBatch
+run	bin/buildo.bat	/^  set run=1$/;"	v	language:DosBatch
+run	bin/buildo.bat	/^  set run=1$/;"	v	language:DosBatch
+run	bin/buildo.bat	/^set run=0$/;"	v	language:DosBatch
 s	code/momo.h	/^    struct { f32_t h,s,l; };  $/;"	m	language:C++	struct:hsla_t::__anon1db7a63d110a::__anon1db7a63d1208	typeref:typename:f32_t
 s	code/momo.h	/^  f32_t h, s, l;  $/;"	m	language:C++	struct:hsl_t	typeref:typename:f32_t
 s16_abs	code/momo.h	/^s16_abs(s16_t x) {$/;"	f	language:C++	typeref:typename:s16_t
@@ -2608,8 +2648,12 @@ shader_count	code/pass.h	/^  u32_t shader_count;$/;"	m	language:C++	struct:pass_
 shader_exts	code/pass.h	/^  pass_pack_shader_ext_t* shader_exts;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:pass_pack_shader_ext_t *
 ship	bin/build.bat	/^  set ship=1$/;"	v	language:DosBatch
 ship	bin/build.bat	/^set ship=0$/;"	v	language:DosBatch
+ship	bin/buildo.bat	/^  set ship=1$/;"	v	language:DosBatch
+ship	bin/buildo.bat	/^set ship=0$/;"	v	language:DosBatch
 ship_file	bin/build.bat	/^    set ship_file=%code_dir%\\ship_%filename%.cpp $/;"	v	language:DosBatch
 ship_file	bin/build.bat	/^set ship_file="" $/;"	v	language:DosBatch
+ship_file	bin/buildo.bat	/^    set ship_file=%code_dir%\\ship_%filename%.cpp $/;"	v	language:DosBatch
+ship_file	bin/buildo.bat	/^set ship_file="" $/;"	v	language:DosBatch
 show_cursor	code/eden.h	/^  eden_show_cursor_f* show_cursor;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_show_cursor_f *
 show_debug_type	code/app_lit.cpp	/^  lit_show_debug_type_t show_debug_type;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_show_debug_type_t	file:
 signature	code/eden_asset_file.h	/^  u32_t signature;$/;"	m	language:C++	struct:asset_file_header_t	typeref:typename:u32_t
@@ -3074,6 +3118,8 @@ w	code/momo.h	/^  u32_t x, y, w, h;$/;"	m	language:C++	struct:rp_rect_t	typeref:
 w	code/momo.h	/^  u32_t x, y, w, h;$/;"	m	language:C++	struct:_rp_node	typeref:typename:u32_t
 w32	bin/build.bat	/^  set w32=1$/;"	v	language:DosBatch
 w32	bin/build.bat	/^set w32=0$/;"	v	language:DosBatch
+w32	bin/buildo.bat	/^  set w32=1$/;"	v	language:DosBatch
+w32	bin/buildo.bat	/^set w32=0$/;"	v	language:DosBatch
 w32_add_task_entry	code/ship_app_lit.cpp	/^w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_add_task_entry	code/w32_eden.cpp	/^w32_add_task_entry(w32_work_queue_t* wq, void (*callback)(void* ctx), void *data) {$/;"	f	language:C++	typeref:typename:void	file:
 w32_calc_render_region	code/ship_app_lit.cpp	/^w32_calc_render_region(u32_t window_w, $/;"	f	language:C++	typeref:typename:RECT	file:
@@ -3314,6 +3360,7 @@ _bonk_tri2_pt2_barycentric	code/momo.h	/^_bonk_tri2_pt2_barycentric(v2f_t tp0, v
 _bonk_tri2_pt2_dot_product	code/momo.h	/^_bonk_tri2_pt2_dot_product(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {$/;"	f	language:C++	typeref:typename:b32_t
 _bonk_tri2_pt2_parametric	code/momo.h	/^_bonk_tri2_pt2_parametric(v2f_t tp0, v2f_t tp1, v2f_t tp2, v2f_t pt) {$/;"	f	language:C++	typeref:typename:b32_t
 _bufio_push_fmt_list	code/momo.h	/^_bufio_push_fmt_list(bufio_t* b, buf_t format, va_list args) $/;"	f	language:C++	typeref:typename:void
+_bufio_push_fmt_push_buffer_based_on_width	code/momo.h	/^_bufio_push_fmt_push_buffer_based_on_width(bufio_t* b, u32_t width, buf_t buffer)$/;"	f	language:C++	typeref:typename:void
 _clex_compare_token_with_string	code/momo.h	/^_clex_compare_token_with_string(clex_tokenizer_t* t, clex_token_t token, buf_t str) {$/;"	f	language:C++	typeref:typename:b32_t
 _clex_eat_ignorables	code/momo.h	/^_clex_eat_ignorables(clex_tokenizer_t* t) {$/;"	f	language:C++	typeref:typename:void
 _clex_is_accepted_character_for_number	code/momo.h	/^_clex_is_accepted_character_for_number(char c) {$/;"	f	language:C++	typeref:typename:b32_t
