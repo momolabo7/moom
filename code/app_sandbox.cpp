@@ -40,15 +40,47 @@ eden_get_config_sig(eden_get_config)
   return ret;
 }
 
+enum sandbox_mode_type_t
+{
+  SANDBOX_MODE_TYPE_DRAWS,
+  SANDBOX_MODE_TYPE_FONT_ALIGNMENT,
+
+  SANDBOX_MODE_TYPE_MAX,
+};
+
+struct sandbox_mode_draw_t
+{
+  f32_t square_rot;
+};
+
 struct sandbox_t 
 {
   arena_t arena;
+  sandbox_mode_type_t mode_type;
+  union {
+    sandbox_mode_draw_t draw_mode;
+  };
 };
 
 static void
-sandbox_update_and_render_font_alignment_test(eden_t* eden)
+sandbox_update_and_render_draws(eden_t* eden, sandbox_t* sandbox)
 {
-  auto* sandbox = (sandbox_t*)(eden->user_data);
+  sandbox_mode_draw_t* draw_mode = &sandbox->draw_mode;
+  
+  eden_set_design_dimensions(eden, 1600, 900);
+  eden_set_view(eden, 0.f, 1600.f, 0.f, 900.f, 0.f, 0.f);
+  eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
+  eden_clear_canvas(eden, rgba_set(0.25f, 0.25f, 0.25f, 0.0f));
+
+  eden_draw_rect(eden, v2f_set(100, 100),  draw_mode->square_rot, v2f_set(100, 100), RGBA_WHITE);
+  draw_mode->square_rot += eden->input.delta_time;
+
+
+}
+
+static void
+sandbox_update_and_render_font_alignment(eden_t* eden, sandbox_t* sandbox)
+{
   eden_set_design_dimensions(eden, 1600, 900);
   eden_set_view(eden, 0.f, 1600.f, 0.f, 900.f, 0.f, 0.f);
   eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
@@ -98,11 +130,24 @@ eden_update_and_render_sig(eden_update_and_render) {
   }
 
   auto* sandbox = (sandbox_t*)(eden->user_data);
-  eden_clear_canvas(eden, rgba_set(0.25f, 0.25f, 0.25f, 1.0f));
-  eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
+  if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_LEFT))
+  {
+    sandbox->mode_type = (sandbox_mode_type_t)(((sandbox->mode_type-1) + SANDBOX_MODE_TYPE_MAX) % SANDBOX_MODE_TYPE_MAX);
+  }
+  else if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_RIGHT))
+  {
+    sandbox->mode_type = (sandbox_mode_type_t)(((sandbox->mode_type+1)) % SANDBOX_MODE_TYPE_MAX);
+  }
+
+  if (sandbox->mode_type == SANDBOX_MODE_TYPE_FONT_ALIGNMENT)
+  {
+    sandbox_update_and_render_font_alignment(eden, sandbox);
+  }
+  else if (sandbox->mode_type == SANDBOX_MODE_TYPE_DRAWS)
+  {
+    sandbox_update_and_render_draws(eden, sandbox);
+  }
   //sandbox_update_and_render_font_alignment_test(eden);
-
-
 #if 0
   eden_draw_tri(eden, {500.f, 500.f}, {100.f, 100.f}, {200.f, 100.f}, RGBA_GREEN);
   eden_draw_tri(eden, {400.f, 400.f}, {300.f, 100.f}, {200.f, 100.f}, RGBA_RED);

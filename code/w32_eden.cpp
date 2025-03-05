@@ -432,6 +432,10 @@ w32_vkeys_to_eden_button_code(u32_t code) {
   else {
     switch(code) {
       case VK_SPACE: return EDEN_BUTTON_CODE_SPACE;
+      case VK_LEFT:  return EDEN_BUTTON_CODE_LEFT;
+      case VK_RIGHT:  return EDEN_BUTTON_CODE_RIGHT;
+      case VK_UP:  return EDEN_BUTTON_CODE_UP;
+      case VK_DOWN:  return EDEN_BUTTON_CODE_DOWN;
     }
 
   }

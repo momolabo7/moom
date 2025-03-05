@@ -791,7 +791,7 @@ static f32_t f32_mod(f32_t lhs, f32_t rhs);
 static f32_t f32_weight(f32_t v, f32_t min, f32_t max);
 static f32_t f32_deg_to_rad(f32_t degrees);
 static f32_t f32_rad_to_deg(f32_t radians);
-static f32_t f32_turns_to_radians(f32_t turns);
+static f32_t f32_turn_to_rad(f32_t turns);
 static f32_t f32_factorial(f32_t x);
 static f32_t f32_bpm_to_spb(f32_t bpm);
 static b32_t f32_is_close(f32_t lhs, f32_t rhs); 
@@ -845,7 +845,7 @@ static f64_t f64_mod(f64_t lhs, f64_t rhs);
 static f64_t f64_weight(f64_t v, f64_t min, f64_t max) ;
 static f64_t f64_deg_to_rad(f64_t degrees);
 static f64_t f64_rad_to_deg(f64_t radians);
-static f64_t f64_turns_to_radians(f64_t turns);
+static f64_t f64_turn_to_rad(f64_t turns);
 static f64_t f64_factorial(f64_t x);
 static f64_t f64_bpm_to_spb(f64_t bpm);
 static b32_t f64_is_close(f64_t lhs, f64_t rhs); 
@@ -1052,6 +1052,7 @@ static rgb_t  hsl_to_rgb(hsl_t c);
 
 #define RGBA_WHITE rgba_set(1.f, 1.f, 1.f, 1.f)
 #define RGBA_GREEN rgba_set(0.f, 1.f, 0.f, 1.f)
+#define RGBA_BLUE rgba_set(0.f, 0.f, 1.f, 1.f)
 #define RGBA_RED   rgba_set(1.f, 0.f, 0.f, 1.f)
 #define RGBA_BLACK rgba_set(0.f, 0.f, 0.f, 1.f)
 
@@ -3132,7 +3133,7 @@ f32_rad_to_deg(f32_t radians) {
 }
 
 static f32_t 
-f32_turns_to_radians(f32_t turns) {
+f32_turn_to_rad(f32_t turns) {
   return turns * TAU_32;
 }
 
@@ -3148,7 +3149,7 @@ f64_rad_to_deg(f64_t radians) {
 
 
 static f64_t 
-f64_turns_to_radians(f64_t turns) {
+f64_turn_to_rad(f64_t turns) {
   return turns * TAU_64;
 }
 

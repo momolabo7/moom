@@ -285,7 +285,12 @@ eden_update_and_render_console(eden_console_t*)
 
 //
 // JOURNAL
-// = 2025-02-28=
+// = 2025-03-05 = 
+//   Started writing some sandbox code as a 'unit test' for my engine.
+//   I just realized that for some reason I'm not using 'turns' for my draw rect??
+//   Am I passing radians...?
+//
+// = 2025-02-28 =
 //   Okay I wanted to do something like what HMH has but it was really
 //   difficult to follow even though I figured out a few things. 
 //   I realized that I was being really stupid; Casey had a strong vision
