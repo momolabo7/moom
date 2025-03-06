@@ -14,7 +14,7 @@
 # define BUILD_PATH_SEPERATOR "/"
 #endif 
 
-#define BUILD_COMPILER_DEFAULT "clang++ -std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -Wno-deprecated-declarations -Wno-missing-braces -Wno-format"
+#define BUILD_COMPILER_DEFAULT "clang++ -mavx2 -std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -Wno-deprecated-declarations -Wno-missing-braces -Wno-format"
 #define BUILD_CODE_PATH "code" BUILD_PATH_SEPERATOR
 #define BUILD_OUT_PATH "build" BUILD_PATH_SEPERATOR
 
@@ -59,7 +59,6 @@ build_normal_run(build_t* b, const char* target, char** args, u32_t arg_count)
   }
 
   bufio_push_null_terminate(&b->sb);
-  printf((const char*)b->sb.str.e);
   system((char*)b->sb.str.e);
   bufio_clear(&b->sb);
 }

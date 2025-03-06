@@ -1312,6 +1312,7 @@ f32_round	code/momo.h	/^static f32_t f32_round(f32_t value) {$/;"	f	language:C++
 f32_round	code/momo.h	/^static f32_t f32_round(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
 f32_sin	code/momo.h	/^f32_sin(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
 f32_sin	code/momo.h	/^static f32_t f32_sin(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
+f32_sin_test	code/test_math.cpp	/^f32_t f32_sin_test(f32_t rads)$/;"	f	language:C++	typeref:typename:f32_t	file:
 f32_sqrt	code/momo.h	/^f32_sqrt(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
 f32_sqrt	code/momo.h	/^static f32_t f32_sqrt(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
 f32_t	code/momo.h	/^typedef float    f32_t;$/;"	t	language:C++	typeref:typename:float
@@ -2191,6 +2192,7 @@ main	code/test_fileio_api.cpp	/^int main() $/;"	f	language:C++	typeref:typename:
 main	code/test_http.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_json.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/test_list.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
+main	code/test_math.cpp	/^int main()$/;"	f	language:C++	typeref:typename:int
 main	code/test_radix_sort.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_scanf.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/test_utf8.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
@@ -2674,6 +2676,7 @@ show_cursor	code/eden.h	/^  eden_show_cursor_f* show_cursor;$/;"	m	language:C++	
 show_debug_type	code/app_lit.cpp	/^  lit_show_debug_type_t show_debug_type;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_show_debug_type_t	file:
 signature	code/eden_asset_file.h	/^  u32_t signature;$/;"	m	language:C++	struct:asset_file_header_t	typeref:typename:u32_t
 signature	code/momo.h	/^  u8_t signature[8];$/;"	m	language:C++	struct:_png_chunk_t	typeref:typename:u8_t[8]
+sin256_ps	code/test_math.cpp	/^__m256 sin256_ps(__m256 x) { \/\/ any x$/;"	f	language:C++	typeref:typename:__m256
 size	code/aoc22.cpp	/^  u32_t size;$/;"	m	language:C++	struct:aoc22_d7_file_t	typeref:typename:u32_t	file:
 size	code/eden_gfx.h	/^  v2f_t size;$/;"	m	language:C++	struct:eden_gfx_command_rect_t	typeref:typename:v2f_t
 size	code/eden_gfx.h	/^  v2f_t size;$/;"	m	language:C++	struct:eden_gfx_command_sprite_t	typeref:typename:v2f_t
@@ -2834,6 +2837,8 @@ TBP_TILE_SIZE_HALF	code/app_tbp.cpp	/^#define TBP_TILE_SIZE_HALF /;"	d	language:
 tbp_tile_t	code/app_tbp.cpp	/^struct tbp_tile_t {$/;"	s	language:C++	file:
 tbp_update_and_render_grid_stuff	code/app_tbp.cpp	/^tbp_update_and_render_grid_stuff(eden_t* eden, tbp_t* tbp)$/;"	f	language:C++	typeref:typename:void	file:
 test_arena_performance	code/test_arena.cpp	/^test_arena_performance() $/;"	f	language:C++	typeref:typename:void	file:
+TEST_CONST	code/test_math.cpp	/^#define TEST_CONST(/;"	d	language:C++	file:
+TEST_CONST_PI	code/test_math.cpp	/^#define TEST_CONST_PI(/;"	d	language:C++	file:
 test_sine_wave	code/ship_app_lit.cpp	/^static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t t/;"	f	language:C++	typeref:typename:void	file:
 test_sine_wave	code/w32_eden_audio_wasapi.h	/^static void test_sine_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t t/;"	f	language:C++	typeref:typename:void
 test_square_wave	code/ship_app_lit.cpp	/^static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t/;"	f	language:C++	typeref:typename:void	file:
