@@ -1,6 +1,7 @@
 // TODO:
-// - remove system() and use OS_specific calls
-// - code should run based on executable's path, not where it's executed i think.
+// - remove system() and use OS_specific calls (add system calls to momo.h)
+// - seperation between debug and optimized modes
+// - shipping mode
 //
 
 
@@ -14,7 +15,9 @@
 # define BUILD_PATH_SEPERATOR "/"
 #endif 
 
-#define BUILD_COMPILER_DEFAULT "clang++ -mavx2 -std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -Wno-deprecated-declarations -Wno-missing-braces -Wno-format"
+
+// @todo: -g and -gcodeview should only be in internal modes
+#define BUILD_COMPILER_DEFAULT "clang++ -mavx2 -std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -Wno-deprecated-declarations -Wno-missing-braces -Wno-format -g -gcodeview"
 #define BUILD_CODE_PATH "code" BUILD_PATH_SEPERATOR
 #define BUILD_OUT_PATH "build" BUILD_PATH_SEPERATOR
 

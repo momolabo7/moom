@@ -50,13 +50,19 @@ enum sandbox_mode_type_t
 
 struct sandbox_mode_draw_t
 {
-  f32_t square_rot;
+  v2f_t spin_square_start;
+  v2f_t spin_square_end;
+  f32_t spin_square_rot;
+  f32_t spin_square_move_timer;
+  f32_t spin_square_color_timer;
 };
 
 struct sandbox_t 
 {
   arena_t arena;
   sandbox_mode_type_t mode_type;
+  b32_t is_mode_init;
+
   union {
     sandbox_mode_draw_t draw_mode;
   };
@@ -66,14 +72,35 @@ static void
 sandbox_update_and_render_draws(eden_t* eden, sandbox_t* sandbox)
 {
   sandbox_mode_draw_t* draw_mode = &sandbox->draw_mode;
+  if (!sandbox->is_mode_init)
+  {
+    draw_mode->spin_square_start = v2f_set(100.f, 100.f);
+    draw_mode->spin_square_end = v2f_set(1500.f, 100.f);
+    sandbox->is_mode_init = true;
+  }
   
   eden_set_design_dimensions(eden, 1600, 900);
   eden_set_view(eden, 0.f, 1600.f, 0.f, 900.f, 0.f, 0.f);
   eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
   eden_clear_canvas(eden, rgba_set(0.25f, 0.25f, 0.25f, 0.0f));
 
-  eden_draw_rect(eden, v2f_set(100, 100),  draw_mode->square_rot, v2f_set(100, 100), RGBA_WHITE);
-  draw_mode->square_rot += eden->input.delta_time;
+  {
+    draw_mode->spin_square_move_timer += eden->input.delta_time;
+    draw_mode->spin_square_rot += eden->input.delta_time * 10.f;
+    if (draw_mode->spin_square_move_timer >= 3.f)
+    {
+      draw_mode->spin_square_move_timer = 0.f;
+      swap(draw_mode->spin_square_start, draw_mode->spin_square_end);
+    }
+
+    hsla_t hsla = hsla_set(f32_lerp(0.f, 1.f, draw_mode->spin_square_color_timer/3.f), 1.f, 1.f, 1.f);
+    draw_mode->spin_square_color_timer += eden->input.delta_time;
+
+    v2f_t p = v2f_lerp(draw_mode->spin_square_start, draw_mode->spin_square_end, draw_mode->spin_square_move_timer/3.f);
+    eden_draw_rect(eden, p, draw_mode->spin_square_rot, v2f_set(100, 100), hsla_to_rgba(hsla));
+  }
+  
+
 
 
 }
@@ -124,19 +151,23 @@ eden_update_and_render_sig(eden_update_and_render) {
 
     auto* sandbox = (sandbox_t*)(eden->user_data);
     eden_assets_init_from_file(eden, SANDBOX_ASSET_FILE, &sandbox->arena);
+
     
     eden_set_design_dimensions(eden, 1600, 900);
     eden_set_view(eden, 0.f, 1600.f, 0.f, 900.f, 0.f, 0.f);
+
   }
 
   auto* sandbox = (sandbox_t*)(eden->user_data);
   if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_LEFT))
   {
     sandbox->mode_type = (sandbox_mode_type_t)(((sandbox->mode_type-1) + SANDBOX_MODE_TYPE_MAX) % SANDBOX_MODE_TYPE_MAX);
+    sandbox->is_mode_init = true;
   }
   else if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_RIGHT))
   {
     sandbox->mode_type = (sandbox_mode_type_t)(((sandbox->mode_type+1)) % SANDBOX_MODE_TYPE_MAX);
+    sandbox->is_mode_init = true;
   }
 
   if (sandbox->mode_type == SANDBOX_MODE_TYPE_FONT_ALIGNMENT)
