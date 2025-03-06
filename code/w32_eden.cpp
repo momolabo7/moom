@@ -90,12 +90,13 @@ struct w32_file_t {
 struct w32_state_t {
   b32_t is_running;
 
+  f32_t eden_width;
+  f32_t eden_height;
+
   // cursor locking system
   b32_t is_cursor_locked;
   POINT cursor_pt_to_lock_to;
   
-  f32_t eden_width;
-  f32_t eden_height;
   
   w32_work_queue_t work_queue;
   
@@ -664,7 +665,6 @@ WinMain(HINSTANCE instance,
   w32_state = arena_alloc_bootstrap(w32_state_t, arena, gigabytes(1));
   {
     w32_state->is_running = true;
-
     w32_state->eden_width = 1.f;
     w32_state->eden_height = 1.f;  
 

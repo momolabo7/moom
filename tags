@@ -1300,6 +1300,8 @@ f32_is_nan	code/momo.h	/^f32_is_nan(f32_t f) {$/;"	f	language:C++	typeref:typena
 f32_is_nan	code/momo.h	/^static b32_t f32_is_nan(f32_t f); $/;"	p	language:C++	typeref:typename:b32_t
 f32_lerp	code/momo.h	/^f32_lerp(f32_t s, f32_t e, f32_t f) { $/;"	f	language:C++	typeref:typename:f32_t
 f32_lerp	code/momo.h	/^static f32_t f32_lerp(f32_t s, f32_t e, f32_t f);$/;"	p	language:C++	typeref:typename:f32_t
+f32_lerp_clamped	code/momo.h	/^f32_lerp_clamped(f32_t s, f32_t e, f32_t f) { $/;"	f	language:C++	typeref:typename:f32_t
+f32_lerp_clamped	code/momo.h	/^static f32_t f32_lerp_clamped(f32_t s, f32_t e, f32_t f);$/;"	p	language:C++	typeref:typename:f32_t
 f32_mod	code/momo.h	/^f32_mod(f32_t lhs, f32_t rhs) $/;"	f	language:C++	typeref:typename:f32_t
 f32_mod	code/momo.h	/^static f32_t f32_mod(f32_t lhs, f32_t rhs);$/;"	p	language:C++	typeref:typename:f32_t
 F32_NAN	code/momo.h	/^#define F32_NAN /;"	d	language:C++
@@ -1312,7 +1314,7 @@ f32_round	code/momo.h	/^static f32_t f32_round(f32_t value) {$/;"	f	language:C++
 f32_round	code/momo.h	/^static f32_t f32_round(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
 f32_sin	code/momo.h	/^f32_sin(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
 f32_sin	code/momo.h	/^static f32_t f32_sin(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-f32_sin_test	code/test_math.cpp	/^f32_t f32_sin_test(f32_t rads)$/;"	f	language:C++	typeref:typename:f32_t	file:
+f32_sin_test	code/test_math.cpp	/^f32_sin_test(f32_t rads)$/;"	f	language:C++	typeref:typename:void	file:
 f32_sqrt	code/momo.h	/^f32_sqrt(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
 f32_sqrt	code/momo.h	/^static f32_t f32_sqrt(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
 f32_t	code/momo.h	/^typedef float    f32_t;$/;"	t	language:C++	typeref:typename:float
@@ -1864,6 +1866,7 @@ is_dll_reloaded	code/eden.h	/^  b32_t is_dll_reloaded;$/;"	m	language:C++	struct
 is_holding_light	code/app_lit.cpp	/^  b32_t is_holding_light;$/;"	m	language:C++	struct:lit_game_player_t	typeref:typename:b32_t	file:
 is_inverted	code/momo.h	/^  b32_t is_inverted;$/;"	m	language:C++	struct:_ttf_edge_t	typeref:typename:b32_t
 is_loop	code/eden_audio.h	/^  b32_t is_loop;$/;"	m	language:C++	struct:eden_speaker_sound_t	typeref:typename:b32_t
+is_mode_init	code/app_sandbox.cpp	/^  b32_t is_mode_init;$/;"	m	language:C++	struct:sandbox_t	typeref:typename:b32_t	file:
 is_moving	code/app_gbg.cpp	/^  b32_t is_moving;$/;"	m	language:C++	struct:gbg_player_t	typeref:typename:b32_t	file:
 is_moving	code/app_vigil.cpp	/^  b32_t is_moving;$/;"	m	language:C++	struct:vigil_player_t	typeref:typename:b32_t	file:
 is_multiple_of_pow2	code/momo.h	/^#define is_multiple_of_pow2(/;"	d	language:C++
@@ -2676,7 +2679,7 @@ show_cursor	code/eden.h	/^  eden_show_cursor_f* show_cursor;$/;"	m	language:C++	
 show_debug_type	code/app_lit.cpp	/^  lit_show_debug_type_t show_debug_type;$/;"	m	language:C++	struct:lit_t	typeref:typename:lit_show_debug_type_t	file:
 signature	code/eden_asset_file.h	/^  u32_t signature;$/;"	m	language:C++	struct:asset_file_header_t	typeref:typename:u32_t
 signature	code/momo.h	/^  u8_t signature[8];$/;"	m	language:C++	struct:_png_chunk_t	typeref:typename:u8_t[8]
-sin256_ps	code/test_math.cpp	/^__m256 sin256_ps(__m256 x) { \/\/ any x$/;"	f	language:C++	typeref:typename:__m256
+sin256_ps	code/test_math.cpp	/^sin256_ps(__m256 x) $/;"	f	language:C++	typeref:typename:__m256	file:
 size	code/aoc22.cpp	/^  u32_t size;$/;"	m	language:C++	struct:aoc22_d7_file_t	typeref:typename:u32_t	file:
 size	code/eden_gfx.h	/^  v2f_t size;$/;"	m	language:C++	struct:eden_gfx_command_rect_t	typeref:typename:v2f_t
 size	code/eden_gfx.h	/^  v2f_t size;$/;"	m	language:C++	struct:eden_gfx_command_sprite_t	typeref:typename:v2f_t
@@ -2766,7 +2769,12 @@ sprite_count	code/eden_asset_file.h	/^  u32_t sprite_count;$/;"	m	language:C++	s
 sprite_count	code/pass.h	/^  u32_t sprite_count;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:u32_t
 sprite_id	code/app_lit.cpp	/^  eden_asset_sprite_id_t sprite_id;$/;"	m	language:C++	struct:lit_particle_t	typeref:typename:eden_asset_sprite_id_t	file:
 sprite_id	code/pass.h	/^  eden_asset_sprite_id_t sprite_id;$/;"	m	language:C++	struct:pass_pack_atlas_sprite_t	typeref:typename:eden_asset_sprite_id_t
+square_end	code/app_sandbox.cpp	/^  v2f_t square_end;$/;"	m	language:C++	struct:sandbox_mode_draw_t	typeref:typename:v2f_t	file:
+square_hue_end	code/app_sandbox.cpp	/^  f32_t square_hue_end;$/;"	m	language:C++	struct:sandbox_mode_draw_t	typeref:typename:f32_t	file:
+square_hue_start	code/app_sandbox.cpp	/^  f32_t square_hue_start;$/;"	m	language:C++	struct:sandbox_mode_draw_t	typeref:typename:f32_t	file:
 square_rot	code/app_sandbox.cpp	/^  f32_t square_rot;$/;"	m	language:C++	struct:sandbox_mode_draw_t	typeref:typename:f32_t	file:
+square_start	code/app_sandbox.cpp	/^  v2f_t square_start;$/;"	m	language:C++	struct:sandbox_mode_draw_t	typeref:typename:v2f_t	file:
+square_timer	code/app_sandbox.cpp	/^  f32_t square_timer;$/;"	m	language:C++	struct:sandbox_mode_draw_t	typeref:typename:f32_t	file:
 src	code/eden_gfx.h	/^  eden_gfx_blend_type_t src;$/;"	m	language:C++	struct:eden_gfx_command_blend_t	typeref:typename:eden_gfx_blend_type_t
 src_pos	code/app_gbg.cpp	/^  v2f_t src_pos;$/;"	m	language:C++	struct:gbg_player_t	typeref:typename:v2f_t	file:
 src_pos	code/app_vigil.cpp	/^  v2f_t src_pos;$/;"	m	language:C++	struct:vigil_player_t	typeref:typename:v2f_t	file:

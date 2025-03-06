@@ -8,33 +8,33 @@ IF "%~1"=="" (
   GOTO label_parse_end
 )
 IF "%~1"=="-r" (
-  CALL build w32_eden -run 
+  CALL buildo w32_eden -run 
   GOTO label_parse_next
 )
 IF "%~1"=="-a" (
-  CALL build app_%app_name% -app
+  CALL buildo app_%app_name% -app
   GOTO label_parse_next
 )
 IF "%~1"=="-ao" (
-  CALL build app_%app_name% -app -o
+  CALL buildo app_%app_name% -app -o
   GOTO label_parse_next
 )
 IF "%~1"=="-p" (
-  CALL build pass_%app_name%
+  CALL buildo pass_%app_name%
   GOTO label_parse_next
 )
 IF "%~1"=="-pr" (
-  CALL build pass_%app_name% -bun
+  CALL buildo pass_%app_name% -bun
   GOTO label_parse_next
 )
 IF "%~1"=="-w" (  
-  CALL build w32_eden -w32 
+  CALL buildo w32_eden -w32 
   GOTO label_parse_next
 )
 IF "%~1"=="-all" (  
-  CALL build pass_%app_name% -bun
-  CALL build app_%app_name% -app
-  CALL build w32_eden -w32 
+  CALL buildo pass_%app_name% -bun
+  CALL buildo app_%app_name% -app
+  CALL buildo w32_eden -w32 
   GOTO label_parse_next
 )
 GOTO label_parse_next

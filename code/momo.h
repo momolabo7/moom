@@ -3108,6 +3108,7 @@ f32_lerp(f32_t s, f32_t e, f32_t f) {
   return (f32_t)(s + (e-s) * f); 
 }
 
+
 static f64_t 
 f64_lerp(f64_t s, f64_t e, f64_t f) { 
   return (f64_t)(s + (e-s) * f); 

@@ -50,11 +50,13 @@ enum sandbox_mode_type_t
 
 struct sandbox_mode_draw_t
 {
-  v2f_t spin_square_start;
-  v2f_t spin_square_end;
-  f32_t spin_square_rot;
-  f32_t spin_square_move_timer;
-  f32_t spin_square_color_timer;
+  v2f_t square_start;
+  v2f_t square_end;
+  f32_t square_hue_start;
+  f32_t square_hue_end;
+  f32_t square_rot;
+  f32_t square_timer;
+
 };
 
 struct sandbox_t 
@@ -71,11 +73,14 @@ struct sandbox_t
 static void
 sandbox_update_and_render_draws(eden_t* eden, sandbox_t* sandbox)
 {
-  sandbox_mode_draw_t* draw_mode = &sandbox->draw_mode;
+  sandbox_mode_draw_t* d = &sandbox->draw_mode;
   if (!sandbox->is_mode_init)
   {
-    draw_mode->spin_square_start = v2f_set(100.f, 100.f);
-    draw_mode->spin_square_end = v2f_set(1500.f, 100.f);
+    d->square_timer = 0.f;
+    d->square_start = v2f_set(100.f, 100.f);
+    d->square_end = v2f_set(1500.f, 100.f);
+    d->square_hue_start = 0.f; 
+    d->square_hue_end = 1.f; 
     sandbox->is_mode_init = true;
   }
   
@@ -84,25 +89,23 @@ sandbox_update_and_render_draws(eden_t* eden, sandbox_t* sandbox)
   eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
   eden_clear_canvas(eden, rgba_set(0.25f, 0.25f, 0.25f, 0.0f));
 
+  // Square
   {
-    draw_mode->spin_square_move_timer += eden->input.delta_time;
-    draw_mode->spin_square_rot += eden->input.delta_time * 10.f;
-    if (draw_mode->spin_square_move_timer >= 3.f)
+    d->square_timer += eden->input.delta_time;
+    d->square_rot += eden->input.delta_time * 10.f;
+    if (d->square_timer >= 3.f)
     {
-      draw_mode->spin_square_move_timer = 0.f;
-      swap(draw_mode->spin_square_start, draw_mode->spin_square_end);
+      d->square_timer = 0.f;
+      swap(d->square_start, d->square_end);
+      swap(d->square_hue_start, d->square_hue_end);
     }
 
-    hsla_t hsla = hsla_set(f32_lerp(0.f, 1.f, draw_mode->spin_square_color_timer/3.f), 1.f, 1.f, 1.f);
-    draw_mode->spin_square_color_timer += eden->input.delta_time;
-
-    v2f_t p = v2f_lerp(draw_mode->spin_square_start, draw_mode->spin_square_end, draw_mode->spin_square_move_timer/3.f);
-    eden_draw_rect(eden, p, draw_mode->spin_square_rot, v2f_set(100, 100), hsla_to_rgba(hsla));
+    f32_t hue = f32_lerp(d->square_hue_start, d->square_hue_end, d->square_timer/3.f);
+    hsla_t hsla = hsla_set(hue, 1.f, 0.5f, 1.f);
+    rgba_t rgba = hsla_to_rgba(hsla);
+    v2f_t p = v2f_lerp(d->square_start, d->square_end, d->square_timer/3.f);
+    eden_draw_rect(eden, p, d->square_rot, v2f_set(100, 100), rgba);
   }
-  
-
-
-
 }
 
 static void

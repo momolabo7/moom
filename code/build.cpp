@@ -17,7 +17,7 @@
 
 
 // @todo: -g and -gcodeview should only be in internal modes
-#define BUILD_COMPILER_DEFAULT "clang++ -mavx2 -std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -Wno-deprecated-declarations -Wno-missing-braces -Wno-format -g -gcodeview"
+#define BUILD_COMPILER_DEFAULT "clang++ -DASSERTIVE=1 -FOOLISH=1 -mavx2 -std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -Wno-deprecated-declarations -Wno-missing-braces -Wno-format -g -gcodeview"
 #define BUILD_CODE_PATH "code" BUILD_PATH_SEPERATOR
 #define BUILD_OUT_PATH "build" BUILD_PATH_SEPERATOR
 
@@ -83,6 +83,7 @@ static void
 build_eden_build(build_t* b)
 {
   printf("Building w32_eden\n");
+  //printf(BUILD_COMPILER_DEFAULT " " BUILD_CODE_PATH "w32_eden.cpp -o " BUILD_OUT_PATH "w32_eden.exe");
   system(BUILD_COMPILER_DEFAULT " " BUILD_CODE_PATH "w32_eden.cpp -o " BUILD_OUT_PATH "w32_eden.exe");
 }
 
@@ -132,6 +133,7 @@ build_pass_run(build_t* b, const char* target)
 
 int main(int argc, char** argv)
 {
+  //printf("Version 3\n");
   if (argc < 3) {
     // @todo: error message
     printf("Error\n");
