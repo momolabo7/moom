@@ -17,7 +17,7 @@
 
 
 // @todo: -g and -gcodeview should only be in internal modes
-#define BUILD_COMPILER_DEFAULT "clang++ -std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -Wno-deprecated-declarations -Wno-missing-braces -Wno-format -g -gcodeview"
+#define BUILD_COMPILER_DEFAULT "clang++ -std=c++17 -Wall -Wno-unused-function -Wno-parentheses -Wno-macro-redefined -Wno-deprecated-declarations -Wno-missing-braces -Wno-format -g -gcodeview -march=native"
 #define BUILD_CODE_PATH "code" BUILD_PATH_SEPERATOR
 #define BUILD_OUT_PATH "build" BUILD_PATH_SEPERATOR
 
