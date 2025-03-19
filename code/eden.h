@@ -135,8 +135,6 @@ struct eden_t
 struct eden_config_t 
 {
   u32_t target_frame_rate;
-
-  u32_t max_files;
   u32_t max_workers; 
 
   b32_t inspector_enabled;

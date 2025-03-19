@@ -141,7 +141,7 @@ eden_draw_inspector(
 #define eden_inspect_u32(eden, name, item) \
   eden_inspect_u32_(eden, buf_from_lit(#name), item);
 
-#define eden_inspect_arena(eden, name, arena) \ 
+#define eden_inspect_arena(eden, name, arena) \
   eden_inspect_arena_(eden, buf_from_lit(#name), arena); 
 
 #else 

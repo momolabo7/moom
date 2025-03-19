@@ -271,8 +271,11 @@ eden_draw_text(
     pos.x += eden_get_text_length(eden, font_id, str, size) * -origin.x;
   }
 
-  const f32_t vertical_height = (font->ascent - font->descent) * size;
-  pos.y += vertical_height - (vertical_height * origin.y);
+  
+  // We are rendering from the baseline up by default 
+  // So to emulate anchoring, we simply shift down by the ascent (don't include the descent!)
+  const f32_t ascent = font->ascent * size;
+  pos.y += ascent * (1.f - origin.y);
 
 
   for(u32_t char_index = 0; 

@@ -998,7 +998,7 @@ lit_game_push_light(lit_game_t* m, f32_t pos_x, f32_t pos_y, u32_t color, f32_t 
   light->pos.y = pos_y;
   light->color = color;
 
-  f32_t rad = f32_turns_to_radians(turn);
+  f32_t rad = f32_turn_to_rad(turn);
   light->dir.x = f32_cos(rad);
   light->dir.y = f32_sin(rad);
   light->half_angle = f32_deg_to_rad(angle/2.f);

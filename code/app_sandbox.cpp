@@ -13,7 +13,6 @@ eden_get_config_sig(eden_get_config)
 
   ret.target_frame_rate = 60;
   ret.max_workers = 256;
-  ret.max_files = 32;
 
   ret.inspector_enabled = true;
   ret.inspector_max_entries = 8;
@@ -115,34 +114,38 @@ sandbox_update_and_render_font_alignment(eden_t* eden, sandbox_t* sandbox)
   eden_set_view(eden, 0.f, 1600.f, 0.f, 900.f, 0.f, 0.f);
   eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
   eden_clear_canvas(eden, rgba_set(0.25f, 0.25f, 0.25f, 0.0f));
+  
+  buf_t text = buf_from_lit("Hel0 Qqjip");
 
   // Bottom left
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(0,900), 72.f, v2f_set(0,1));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, text, RGBA_WHITE, v2f_set(0,900), 72.f, v2f_set(0,1));
 
   // Bottom center
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600/2,900), 72.f, v2f_set(0.5f,1));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, text, RGBA_WHITE, v2f_set(1600/2,900), 72.f, v2f_set(0.5f,1));
 
   // Bottom right
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600,900), 72.f, v2f_set(1,1));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, text, RGBA_WHITE, v2f_set(1600,900), 72.f, v2f_set(1,1));
 
   // Top left
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(0,0), 72.f, v2f_set(0,0));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, text, RGBA_WHITE, v2f_set(0,0), 72.f, v2f_set(0,0));
 
   // Top center
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600/2,0), 72.f, v2f_set(0.5f,0));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, text, RGBA_WHITE, v2f_set(1600.f/2,0), 72.f, v2f_set(0.5f,0));
 
   // Top right
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600,0), 72.f, v2f_set(1,0));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, text, RGBA_WHITE, v2f_set(1600,0), 72.f, v2f_set(1,0));
 
   // Center left
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(0,900/2), 72.f, v2f_set(0,0.5f));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, text, RGBA_WHITE, v2f_set(0,900.f/2), 72.f, v2f_set(0,0.5f));
 
   // Center
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600/2,900.f/2), 72.f, v2f_set(0.5f,0.5f));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, text, RGBA_WHITE, v2f_set(1600.f/2,900.f/2), 72.f, v2f_set(0.5f,0.5f));
 
   // Center right
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, buf_from_lit("Hello World"), RGBA_WHITE, v2f_set(1600,900/2), 72.f, v2f_set(1,0.5f));
+  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, text, RGBA_WHITE, v2f_set(1600,900/2), 72.f, v2f_set(1,0.5f));
 
+  // draw a rect at center of the screen
+  eden_draw_rect(eden, v2f_set(1600/2, 900/2), 0, v2f_set(10,10), RGBA_RED);
 
 }
 

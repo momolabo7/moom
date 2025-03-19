@@ -667,10 +667,6 @@ WinMain(HINSTANCE instance,
     w32_state->is_running = true;
     w32_state->eden_width = 1.f;
     w32_state->eden_height = 1.f;  
-
-    if (!w32_init_work_queue(&w32_state->work_queue, 8)) {
-      return 1;
-    }
   }
   arena_t* platform_arena = &w32_state->arena;
   
@@ -708,7 +704,10 @@ WinMain(HINSTANCE instance,
   eden->complete_all_tasks = w32_complete_all_tasks;
   eden->set_design_dimensions = w32_set_eden_dims;
 
-
+  if (!w32_init_work_queue(&w32_state->work_queue, config.max_workers)) {
+    w32_log("Cannot create worker queue");
+    return 1;
+  }
 
   //
   // Create window in the middle of the screen
@@ -776,6 +775,7 @@ WinMain(HINSTANCE instance,
                              0);
     
     if (!window) {
+      w32_log("Cannot create window");
       return 1;
     }
     
@@ -807,7 +807,10 @@ WinMain(HINSTANCE instance,
       config.max_textures,
       config.max_texture_payloads,
       config.max_elements))
+  {
+    w32_log("Cannot load gfx");
     return 1;
+  }
  
   // Init Audio
   if (config.speaker_enabled) {
@@ -822,6 +825,7 @@ WinMain(HINSTANCE instance,
           config.speaker_max_sounds, 
           platform_arena)) 
     {
+      w32_log("Cannot load speakers");
       return 1;
     }
 
@@ -840,6 +844,7 @@ WinMain(HINSTANCE instance,
         config.profiler_max_entries, 
         config.profiler_max_snapshots_per_entry))
   {
+    w32_log("Cannot init profiler");
     return 1;
   }
 
@@ -848,6 +853,7 @@ WinMain(HINSTANCE instance,
         platform_arena, 
         config.inspector_max_entries))
   {
+    w32_log("Cannot init inspector");
     return 1;
   }
 #endif // EDEN_DEBUG

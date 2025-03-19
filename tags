@@ -147,13 +147,13 @@ arena_push_arr_zero_align	code/momo.h	/^#define arena_push_arr_zero_align(/;"	d	
 arena_push_buffer	code/momo.h	/^arena_push_buffer(arena_t* a, usz_t size, usz_t align) $/;"	f	language:C++	typeref:typename:buf_t
 arena_push_buffer	code/momo.h	/^static buf_t    arena_push_buffer(arena_t* a, usz_t size, usz_t align = 16);$/;"	p	language:C++	typeref:typename:buf_t
 arena_push_partition	code/momo.h	/^arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align) $/;"	f	language:C++	typeref:typename:b32_t
-arena_push_partition	code/momo.h	/^static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align);$/;"	p	language:C++	typeref:typename:b32_t
+arena_push_partition	code/momo.h	/^static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align = 1/;"	p	language:C++	typeref:typename:b32_t
 arena_push_partition_with_remaining	code/momo.h	/^arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)$/;"	f	language:C++	typeref:typename:b32_t
-arena_push_partition_with_remaining	code/momo.h	/^static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)/;"	p	language:C++	typeref:typename:b32_t
+arena_push_partition_with_remaining	code/momo.h	/^static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align /;"	p	language:C++	typeref:typename:b32_t
 arena_push_size	code/momo.h	/^arena_push_size(arena_t* a, usz_t size, usz_t align) {$/;"	f	language:C++	typeref:typename:void *
-arena_push_size	code/momo.h	/^static void*    arena_push_size(arena_t* a, usz_t size, usz_t align);$/;"	p	language:C++	typeref:typename:void *
+arena_push_size	code/momo.h	/^static void*    arena_push_size(arena_t* a, usz_t size, usz_t align = 16);$/;"	p	language:C++	typeref:typename:void *
 arena_push_size_zero	code/momo.h	/^arena_push_size_zero(arena_t* a, usz_t size, usz_t align) $/;"	f	language:C++	typeref:typename:void *
-arena_push_size_zero	code/momo.h	/^static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align); $/;"	p	language:C++	typeref:typename:void *
+arena_push_size_zero	code/momo.h	/^static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align = 16); $/;"	p	language:C++	typeref:typename:void *
 arena_push_zero	code/momo.h	/^#define arena_push_zero(/;"	d	language:C++
 arena_push_zero_align	code/momo.h	/^#define arena_push_zero_align(/;"	d	language:C++
 arena_remaining	code/momo.h	/^arena_remaining(arena_t* a) {$/;"	f	language:C++	typeref:typename:usz_t
@@ -404,15 +404,24 @@ build	bin/buildo.bat	/^  set build=1$/;"	v	language:DosBatch
 build	bin/buildo.bat	/^  set build=1$/;"	v	language:DosBatch
 build	bin/buildo.bat	/^  set build=1$/;"	v	language:DosBatch
 build	bin/buildo.bat	/^set build=1$/;"	v	language:DosBatch
-build_app_build	code/build.cpp	/^build_app_build(build_t* b, const char* target)$/;"	f	language:C++	typeref:typename:void	file:
+build_app_build	code/build.cpp	/^build_app_build(build_t* b, const char* target, b32_t optimized)$/;"	f	language:C++	typeref:typename:void	file:
 BUILD_CODE_PATH	code/build.cpp	/^#define BUILD_CODE_PATH /;"	d	language:C++	file:
-BUILD_COMPILER_DEFAULT	code/build.cpp	/^#define BUILD_COMPILER_DEFAULT /;"	d	language:C++	file:
+BUILD_COMPILE	code/build.cpp	/^#define BUILD_COMPILE /;"	d	language:C++	file:
+BUILD_COMPILE_APP	code/build.cpp	/^#define BUILD_COMPILE_APP /;"	d	language:C++	file:
+BUILD_COMPILE_APP_DEBUG	code/build.cpp	/^#define BUILD_COMPILE_APP_DEBUG /;"	d	language:C++	file:
+BUILD_COMPILE_APP_OPTIMIZED	code/build.cpp	/^#define BUILD_COMPILE_APP_OPTIMIZED /;"	d	language:C++	file:
+BUILD_COMPILE_EDEN	code/build.cpp	/^#define BUILD_COMPILE_EDEN /;"	d	language:C++	file:
+BUILD_COMPILE_EDEN_DEBUG	code/build.cpp	/^#define BUILD_COMPILE_EDEN_DEBUG /;"	d	language:C++	file:
+BUILD_COMPILE_EDEN_OPTIMIZED	code/build.cpp	/^#define BUILD_COMPILE_EDEN_OPTIMIZED /;"	d	language:C++	file:
+BUILD_COMPILE_NORMAL	code/build.cpp	/^#define BUILD_COMPILE_NORMAL /;"	d	language:C++	file:
+BUILD_COMPILE_NORMAL_DEBUG	code/build.cpp	/^#define BUILD_COMPILE_NORMAL_DEBUG /;"	d	language:C++	file:
+BUILD_COMPILE_NORMAL_OPTIMIZED	code/build.cpp	/^#define BUILD_COMPILE_NORMAL_OPTIMIZED /;"	d	language:C++	file:
 build_dir	bin/build.bat	/^set build_dir=%root_dir%\\build$/;"	v	language:DosBatch
 build_dir	bin/buildo.bat	/^set build_dir=%root_dir%\\build$/;"	v	language:DosBatch
-build_eden_build	code/build.cpp	/^build_eden_build(build_t* b)$/;"	f	language:C++	typeref:typename:void	file:
+build_eden_build	code/build.cpp	/^build_eden_build(build_t* b, b32_t optimized)$/;"	f	language:C++	typeref:typename:void	file:
 build_eden_run	code/build.cpp	/^build_eden_run(build_t* b)$/;"	f	language:C++	typeref:typename:void	file:
 build_init	code/build.cpp	/^build_init(build_t* b) $/;"	f	language:C++	typeref:typename:void	file:
-build_normal_build	code/build.cpp	/^build_normal_build(build_t* b, const char* target)$/;"	f	language:C++	typeref:typename:void	file:
+build_normal_build	code/build.cpp	/^build_normal_build(build_t* b, const char* target, b32_t optimized)$/;"	f	language:C++	typeref:typename:void	file:
 build_normal_run	code/build.cpp	/^build_normal_run(build_t* b, const char* target, char** args, u32_t arg_count)$/;"	f	language:C++	typeref:typename:void	file:
 BUILD_OUT_PATH	code/build.cpp	/^#define BUILD_OUT_PATH /;"	d	language:C++	file:
 build_pass_build	code/build.cpp	/^build_pass_build(build_t* b, const char* target)$/;"	f	language:C++	typeref:typename:void	file:
@@ -1108,7 +1117,7 @@ eden_unlock_cursor_sig	code/ship_app_lit.cpp	/^eden_unlock_cursor_sig(w32_unlock
 eden_unlock_cursor_sig	code/w32_eden.cpp	/^eden_unlock_cursor_sig(w32_unlock_cursor) {$/;"	f	language:C++	file:
 eden_update_and_render_console	code/eden.h	/^eden_update_and_render_console(eden_console_t*)$/;"	f	language:C++	typeref:typename:void
 eden_update_and_render_sig	code/app_alu.cpp	/^eden_update_and_render_sig(eden_update_and_render) $/;"	f	language:C++	typeref:typename:exported
-eden_update_and_render_sig	code/app_gbg.cpp	/^eden_update_and_render_sig(eden_update_and_render) $/;"	f	language:C++	typeref:typename:exported
+eden_update_and_render_sig	code/app_gbg.cpp	/^eden_update_and_render_sig(eden_update_and_render) $/;"	f	language:C++	typeref:typename:void exported	file:
 eden_update_and_render_sig	code/app_lit.cpp	/^eden_update_and_render_sig(eden_update_and_render) $/;"	f	language:C++	typeref:typename:exported
 eden_update_and_render_sig	code/app_sandbox.cpp	/^eden_update_and_render_sig(eden_update_and_render) { $/;"	f	language:C++	typeref:typename:exported
 eden_update_and_render_sig	code/app_tbp.cpp	/^eden_update_and_render_sig(eden_update_and_render) $/;"	f	language:C++	typeref:typename:exported
@@ -1222,7 +1231,7 @@ f32_bpm_to_spb	code/momo.h	/^f32_bpm_to_spb(f32_t bpm) {$/;"	f	language:C++	type
 f32_bpm_to_spb	code/momo.h	/^static f32_t f32_bpm_to_spb(f32_t bpm);$/;"	p	language:C++	typeref:typename:f32_t
 f32_ceil	code/momo.h	/^static f32_t f32_ceil(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
 f32_ceil	code/momo.h	/^static f32_t f32_ceil(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
-f32_cos	code/momo.h	/^f32_cos(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_cos	code/momo.h	/^f32_cos(f32_t xx)$/;"	f	language:C++	typeref:typename:f32_t
 f32_cos	code/momo.h	/^static f32_t f32_cos(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
 f32_deg_to_rad	code/momo.h	/^f32_deg_to_rad(f32_t degrees) {$/;"	f	language:C++	typeref:typename:f32_t
 f32_deg_to_rad	code/momo.h	/^static f32_t f32_deg_to_rad(f32_t degrees);$/;"	p	language:C++	typeref:typename:f32_t
@@ -1300,8 +1309,6 @@ f32_is_nan	code/momo.h	/^f32_is_nan(f32_t f) {$/;"	f	language:C++	typeref:typena
 f32_is_nan	code/momo.h	/^static b32_t f32_is_nan(f32_t f); $/;"	p	language:C++	typeref:typename:b32_t
 f32_lerp	code/momo.h	/^f32_lerp(f32_t s, f32_t e, f32_t f) { $/;"	f	language:C++	typeref:typename:f32_t
 f32_lerp	code/momo.h	/^static f32_t f32_lerp(f32_t s, f32_t e, f32_t f);$/;"	p	language:C++	typeref:typename:f32_t
-f32_lerp_clamped	code/momo.h	/^f32_lerp_clamped(f32_t s, f32_t e, f32_t f) { $/;"	f	language:C++	typeref:typename:f32_t
-f32_lerp_clamped	code/momo.h	/^static f32_t f32_lerp_clamped(f32_t s, f32_t e, f32_t f);$/;"	p	language:C++	typeref:typename:f32_t
 f32_mod	code/momo.h	/^f32_mod(f32_t lhs, f32_t rhs) $/;"	f	language:C++	typeref:typename:f32_t
 f32_mod	code/momo.h	/^static f32_t f32_mod(f32_t lhs, f32_t rhs);$/;"	p	language:C++	typeref:typename:f32_t
 F32_NAN	code/momo.h	/^#define F32_NAN /;"	d	language:C++
@@ -1310,11 +1317,13 @@ f32_pow	code/momo.h	/^f32_pow(f32_t b, f32_t e){$/;"	f	language:C++	typeref:type
 f32_pow	code/momo.h	/^static f32_t f32_pow(f32_t v, f32_t e);$/;"	p	language:C++	typeref:typename:f32_t
 f32_rad_to_deg	code/momo.h	/^f32_rad_to_deg(f32_t radians) {$/;"	f	language:C++	typeref:typename:f32_t
 f32_rad_to_deg	code/momo.h	/^static f32_t f32_rad_to_deg(f32_t radians);$/;"	p	language:C++	typeref:typename:f32_t
+f32_rad_to_turn	code/momo.h	/^f32_rad_to_turn(f32_t rad) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_rad_to_turn	code/momo.h	/^static f32_t f32_rad_to_turn(f32_t rads);$/;"	p	language:C++	typeref:typename:f32_t
 f32_round	code/momo.h	/^static f32_t f32_round(f32_t value) {$/;"	f	language:C++	typeref:typename:f32_t
 f32_round	code/momo.h	/^static f32_t f32_round(f32_t value);$/;"	p	language:C++	typeref:typename:f32_t
-f32_sin	code/momo.h	/^f32_sin(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
+f32_sin	code/momo.h	/^f32_sin(f32_t xx) $/;"	f	language:C++	typeref:typename:f32_t
 f32_sin	code/momo.h	/^static f32_t f32_sin(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
-f32_sin_test	code/test_math.cpp	/^f32_sin_test(f32_t rads)$/;"	f	language:C++	typeref:typename:void	file:
+f32_sin_test	code/test_math.cpp	/^f32_sin_test(f32_t rads)$/;"	f	language:C++	typeref:typename:f32_t	file:
 f32_sqrt	code/momo.h	/^f32_sqrt(f32_t x) {$/;"	f	language:C++	typeref:typename:f32_t
 f32_sqrt	code/momo.h	/^static f32_t f32_sqrt(f32_t x);$/;"	p	language:C++	typeref:typename:f32_t
 f32_t	code/momo.h	/^typedef float    f32_t;$/;"	t	language:C++	typeref:typename:float

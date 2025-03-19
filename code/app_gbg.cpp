@@ -29,7 +29,6 @@ eden_get_config_sig(eden_get_config)
 
   ret.target_frame_rate = 60;
   ret.max_workers = 256;
-  ret.max_files = 32;
 
   ret.inspector_enabled = true;
   ret.inspector_max_entries = 8;
@@ -57,6 +56,10 @@ eden_get_config_sig(eden_get_config)
 }
 
 struct gbg_player_t {
+  // stats
+  s32_t pp;
+
+  // positionals
   v2f_t world_pos;
   v2u_t grid_pos;
 
@@ -233,18 +236,6 @@ gbg_player_move(gbg_t* gbg, s32_t x, s32_t y)
 }
 
 
-
-
-# if 0
-static void 
-gbg_player_move_end(gbg_t* gbg)
-{
-  gbg_player_t* player = &gbg->player;
-  player->world_pos = player->dest_pos;
-  player->is_moving = false;
-}
-#endif
-
 static gbg_enemy_t*
 gbg_enemy_spawn(gbg_t* gbg, v2u_t grid_pos, u32_t pp)
 {
@@ -268,6 +259,7 @@ gbg_enemy_spawn(gbg_t* gbg, v2u_t grid_pos, u32_t pp)
 
   return ret;
 }
+
 
 
 exported 
@@ -336,17 +328,17 @@ eden_update_and_render_sig(eden_update_and_render)
 
   gbg_render_grid(eden, gbg);
 
-
+  // draw enemies
   {
     arena_set_revert_point(&gbg->arena);
     bufio_t sb;
     bufio_init(&sb, arena_push_buffer(&gbg->arena, 32));
+    const v2f_t size = v2f_set(GBG_TILE_SIZE, GBG_TILE_SIZE) * 0.8f;
 
-    // draw enemies
+#if 0
     for(u32_t i = 0; i < gbg->enemy_count; ++i)
     {
       gbg_enemy_t* enemy = gbg->enemy_list + i;
-      const v2f_t size = v2f_set(GBG_TILE_SIZE, GBG_TILE_SIZE) * 0.8f;
       eden_draw_rect(
           eden, 
           enemy->world_pos,
@@ -355,7 +347,6 @@ eden_update_and_render_sig(eden_update_and_render)
           RGBA_RED);
 
       bufio_push_u32(&sb, enemy->pp);
-
       eden_draw_text(
             eden, 
             ASSET_FONT_ID_DEFAULT, 
@@ -365,20 +356,35 @@ eden_update_and_render_sig(eden_update_and_render)
             36.f, 
             v2f_set(1.f,1.f));
     }
+#endif
+
+    // draw player
+    eden_draw_rect(
+        eden, 
+        gbg->player.world_pos,
+        0.f, 
+        v2f_set(GBG_TILE_SIZE, GBG_TILE_SIZE) * 0.8f,
+        RGBA_GREEN);
+    bufio_push_u32(&sb, gbg->player.pp);
+    eden_draw_text(
+        eden, 
+        ASSET_FONT_ID_DEFAULT, 
+        buf_from_lit("0"), 
+        RGBA_BLACK, 
+        v2f_set(0,0),
+        36.f, 
+        v2f_set(0.5f,0.5f));
   }
-  // draw player
-  eden_draw_rect(
-      eden, 
-      gbg->player.world_pos,
-      0.f, 
-      v2f_set(GBG_TILE_SIZE, GBG_TILE_SIZE) * 0.8f,
-      RGBA_GREEN);
+
 
 }
 
 
 //
 // @journal
+//
+// 2025-03-18
+//   Disabled enemy. I'm wondering if tiles having effects are good enough.
 //
 // 2024-12-21
 //   Added simple animation for player.

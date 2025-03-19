@@ -792,6 +792,7 @@ static f32_t f32_weight(f32_t v, f32_t min, f32_t max);
 static f32_t f32_deg_to_rad(f32_t degrees);
 static f32_t f32_rad_to_deg(f32_t radians);
 static f32_t f32_turn_to_rad(f32_t turns);
+static f32_t f32_rad_to_turn(f32_t rads);
 static f32_t f32_factorial(f32_t x);
 static f32_t f32_bpm_to_spb(f32_t bpm);
 static b32_t f32_is_close(f32_t lhs, f32_t rhs); 
@@ -1152,10 +1153,10 @@ static b32_t    arena_init(arena_t* a, buf_t buffer);
 static b32_t    arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit = false);
 static void*    arena_alloc_bootstrap_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size);
 static void     arena_clear(arena_t* a);
-static void*    arena_push_size(arena_t* a, usz_t size, usz_t align);
-static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align); 
-static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align);
-static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align);
+static void*    arena_push_size(arena_t* a, usz_t size, usz_t align = 16);
+static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align = 16); 
+static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align = 16);
+static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align = 16);
 static buf_t    arena_push_buffer(arena_t* a, usz_t size, usz_t align = 16);
 static usz_t    arena_remaining(arena_t* a);
 static b32_t    arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size);
@@ -1788,7 +1789,7 @@ file_read_into_buffer(const char* filename, arena_t* arena, b32_t null_terminate
 
   u64_t file_size = file_get_size(&file);
 
-  buf_t ret = arena_push_buffer(arena, file_size + null_terminate, 16);
+  buf_t ret = arena_push_buffer(arena, file_size + null_terminate);
   if (!buf_valid(ret)) 
   {
     return buf_bad();
@@ -3138,6 +3139,11 @@ f32_turn_to_rad(f32_t turns) {
   return turns * TAU_32;
 }
 
+static f32_t 
+f32_rad_to_turn(f32_t rad) {
+  return rad / TAU_32;
+}
+
 static f64_t
 f64_deg_to_rad(f64_t degrees) {
   return degrees * PI_32 / 180.0;
@@ -4235,13 +4241,157 @@ u64_atomic_add(u64_t volatile* value, u64_t to_add) {
 #endif
 
 static f32_t 
-f32_sin(f32_t x) {
-  return sinf(x);
+f32_sin(f32_t xx) 
+{
+
+  f32_t x, y, z;
+  u32_t j;
+  s32_t sign;
+
+  sign = 1;
+  x = xx;
+  if( xx < 0 )
+  {
+    sign = -1;
+    x = -xx;
+  }
+  if( x > 16777215.f )
+  {
+    return (0.0f);
+  }
+  j = 1.27323954473516f * x; // integer part of x/(PI/4) 
+  //  ^^^^^^^^^^^^^^^^^ this is 4/pi
+  
+  y = j;
+  // map zeros to origin 
+  if( j & 1 )
+  {
+    j += 1;
+    y += 1.0;
+  }
+  j &= 7; // octant modulo 360 degrees 
+  // reflect in x axis 
+  if( j > 3)
+  {
+    sign = -sign;
+    j -= 4;
+  }
+
+  if( x > 8192.f )
+  {
+    x = x - y * 0.7853981633974483096f;
+    //          ^^^^^^^^^^^^^^^^^^^^^^ pi/4
+  }
+  else
+  {
+    /* Extended precision modular arithmetic */
+    x = ((x - y * 0.78515625f) - y * 2.4187564849853515625e-4f) - y * 3.77489497744594108e-8f;
+  }
+  /*einits();*/
+  z = x * x;
+  if( (j==1) || (j==2) )
+  {
+    // note: strange numbers are cosine coefficients.
+    // apparently a way to approximate sin using "Horner's" method?
+
+    /* measured relative error in +/- pi/4 is 7.8e-8 */
+    y = ((  2.443315711809948E-005 * z
+          - 1.388731625493765E-003) * z
+        + 4.166664568298827E-002) * z * z;
+    y -= 0.5 * z;
+    y += 1.0;
+  }
+  else
+  {
+    // note: strange numbers are sine coefficients.
+    // apparently a way to approximate cosine using "Horner's" method?
+    
+    /* Theoretical relative error = 3.8e-9 in [-pi/4, +pi/4] */
+    y = (((-1.9515295891E-4 * z
+          + 8.3321608736E-3) * z
+        - 1.6666654611E-1) * z * x) + x;
+  }
+  if(sign < 0)
+    y = -y;
+  return (y);
 }
 
 static f32_t 
-f32_cos(f32_t x) {
-  return cosf(x);
+f32_cos(f32_t xx)
+{
+  f32_t x, y, z;
+  s32_t j, sign;
+
+  // make argument positive
+  sign = 1;
+  x = xx;
+  if( x < 0 )
+    x = -x;
+
+  if( x > 16777215.f)
+  {
+    return(0.0);
+  }
+
+  j = 1.27323954473516f * x; 
+  //  ^^^^^^^^^^^^^^^^^ this is 4/pi
+  //  basically this is doing x/pi/4
+
+  y = j;
+  // integer and fractional part modulo one octant 
+  if( j & 1 )	// map zeros to origin 
+  {
+    j += 1;
+    y += 1.0;
+  }
+  j &= 7;
+  if(j > 3)
+  {
+    j -= 4;
+    sign = -sign;
+  }
+
+  if( j > 1 )
+    sign = -sign;
+
+  if( x > 8192.f)
+  {
+    x = x - y * 0.7853981633974483096f; 
+    //          ^^^^^^^^^^^^^^^^^^^^^^ pi/4
+  }
+  else
+  {
+    // Extended precision modular arithmetic
+    //
+    // note: apparently used to retain accuracy? 
+    // the strange numbers add up to pi/4
+    x = ((x - y * 0.78515625f) - y * 2.4187564849853515625e-4f) - y * 3.77489497744594108e-8f;
+  }
+
+  z = x * x;
+
+  if( (j==1) || (j==2) )
+  {
+    // note: strange numbers are sine coefficients.
+    // apparently a way to approximate sin using "Horner's" method?
+    y = (((-1.9515295891E-4 * z
+            + 8.3321608736E-3) * z
+          - 1.6666654611E-1) * z * x)
+      + x;
+  }
+  else
+  {
+    // note: strange numbers are cosine coefficients.
+    // apparently a way to approximate cosine using "Horner's" method?
+    y = ((  2.443315711809948E-005 * z
+          - 1.388731625493765E-003) * z
+        + 4.166664568298827E-002) * z * z;
+    y -= 0.5 * z;
+    y += 1.0;
+  }
+  if(sign < 0)
+    y = -y;
+  return( y );
 }
 
 static f32_t
@@ -6594,6 +6744,7 @@ bufio_push_fmt(bufio_t* b, buf_t fmt, ...) {
   va_end(args);
 }
 
+
 static void     
 bufio_push_buffer(bufio_t* b, buf_t src) {
   assert(b->size + src.size <= b->cap);
@@ -8403,7 +8554,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   ctx.bit_depth = png->bit_depth;
 
   u32_t image_size = png->width * png->height * _PNG_CHANNELS;
-  buf_t image_buffer =  arena_push_buffer(arena, image_size, 16);
+  buf_t image_buffer =  arena_push_buffer(arena, image_size, 32);
   if (!buf_valid(image_buffer)) return nullptr;
   stream_init(&ctx.image_stream, image_buffer);
 
@@ -8411,7 +8562,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   arena_set_revert_point(arena);
 
   u32_t unfiltered_size = png->width * png->height * _PNG_CHANNELS + png->height;
-  buf_t unfiltered_image_buffer = arena_push_buffer(arena, unfiltered_size, 16);
+  buf_t unfiltered_image_buffer = arena_push_buffer(arena, unfiltered_size);
   if (!buf_valid(unfiltered_image_buffer)) return nullptr;
   stream_init(&ctx.unfiltered_image_stream, unfiltered_image_buffer);
 
@@ -8436,7 +8587,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
     }
   }
 
-  buf_t zlib_data = arena_push_buffer(arena, zlib_size, 16);
+  buf_t zlib_data = arena_push_buffer(arena, zlib_size);
   if (!buf_valid(zlib_data)) return nullptr;
 
   stream_init(zlib_stream, zlib_data);
@@ -8774,7 +8925,7 @@ arena_alloc_bootstrap_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size
 {
   arena_t arena = {};
   arena_alloc(&arena, virtual_size);
-  void* ret = arena_push_size(&arena, size, 16); // alignment shouldn't matter here
+  void* ret = arena_push_size(&arena, size); // alignment shouldn't matter here
 
 
   auto* arena_ptr = (arena_t*)((u8_t*)ret + offset_to_arena);
