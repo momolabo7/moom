@@ -144,8 +144,6 @@ sandbox_update_and_render_font_alignment(eden_t* eden, sandbox_t* sandbox)
   // Center right
   eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, text, RGBA_WHITE, v2f_set(1600,900/2), 72.f, v2f_set(1,0.5f));
 
-  // draw a rect at center of the screen
-  eden_draw_rect(eden, v2f_set(1600/2, 900/2), 0, v2f_set(10,10), RGBA_RED);
 
 }
 
