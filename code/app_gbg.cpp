@@ -18,6 +18,7 @@
 #define GBG_GRID_START_Y (GBG_TILE_SIZE/2)
 #define GBG_GRID_ROWS (9)
 #define GBG_GRID_COLS (9)
+#define GBG_PP_FONT_HEIGHT (36.f)
 
 //
 // Game functions
@@ -79,31 +80,48 @@ struct gbg_enemy_t
   u32_t pp;
 };
 
-enum gbg_tile_type_t
+enum gbg_type_t
 {
   GBG_TILE_TYPE_NOTHING,
   GBG_TILE_TYPE_OBSTACLE,
   GBG_TILE_TYPE_EXIT,
 };
 
+
+
 struct gbg_tile_t
 {
-  gbg_tile_type_t tile_type;
+  gbg_type_t type;
+  
+  union {
+    u8_t effects[2];
+    struct {
+      u8_t pp_operator;
+      u8_t pp_operand;
+    };
+  };
+
+
+
+#if 0
   gbg_enemy_t* enemy;
   gbg_player_t* player;
+#endif
 };
 
 struct gbg_t {
   arena_t arena;
+  arena_t frame_arena;
 
-  b32_t is_waiting_for_player;
+  rng_t rng;
+
   gbg_player_t player;
+
+
 
   gbg_tile_t tiles[GBG_GRID_HEIGHT][GBG_GRID_WIDTH];
   
-  gbg_enemy_t enemy_list[GBG_GRID_WIDTH*GBG_GRID_HEIGHT];
-  u32_t enemy_count;
-};
+} *gbg;
 
 static v2f_t
 gbg_grid_to_world_pos(v2u_t grid_pos)
@@ -115,7 +133,7 @@ gbg_grid_to_world_pos(v2u_t grid_pos)
 }
 
 static void 
-gbg_render_grid(eden_t* eden, gbg_t* gbg)
+gbg_render_grid(eden_t* eden)
 {
   //
   // Draw grid
@@ -139,7 +157,7 @@ gbg_render_grid(eden_t* eden, gbg_t* gbg)
   {
     for (u32_t col = 0; col < GBG_GRID_COLS; ++col) // col
     {
-      if(gbg->tiles[row][col].tile_type == GBG_TILE_TYPE_NOTHING) 
+      if(gbg->tiles[row][col].type == GBG_TILE_TYPE_NOTHING) 
       {
         eden_draw_rect(
             eden, 
@@ -147,8 +165,10 @@ gbg_render_grid(eden_t* eden, gbg_t* gbg)
             0.f, 
             v2f_set(GBG_TILE_SIZE*0.9f, GBG_TILE_SIZE*0.9f),
             rgba_set(0.2f, 0.2f, 0.2f, 1.f));
+
+
       }
-      else if (gbg->tiles[row][col].tile_type == GBG_TILE_TYPE_OBSTACLE)
+      else if (gbg->tiles[row][col].type == GBG_TILE_TYPE_OBSTACLE)
       {
         eden_draw_rect(
             eden, 
@@ -157,7 +177,7 @@ gbg_render_grid(eden_t* eden, gbg_t* gbg)
             v2f_set(GBG_TILE_SIZE*0.9f, GBG_TILE_SIZE*0.9f),
             rgba_set(0.1f, 0.1f, 0.1f, 1.f));
       }
-      else if (gbg->tiles[row][col].tile_type == GBG_TILE_TYPE_EXIT)
+      else if (gbg->tiles[row][col].type == GBG_TILE_TYPE_EXIT)
       {
         eden_draw_rect(
             eden, 
@@ -171,9 +191,32 @@ gbg_render_grid(eden_t* eden, gbg_t* gbg)
             buf_from_lit("0"), 
             RGBA_WHITE, 
             v2f_set(current_x, current_y),
-            36.f, 
+            GBG_PP_FONT_HEIGHT, 
             v2f_set(0.55f,0.5f));
       }
+      current_x += GBG_TILE_SIZE;
+    }
+    current_y += GBG_TILE_SIZE;
+    current_x = GBG_GRID_START_X;
+  }
+}
+static void 
+gbg_render_grid_effects(eden_t* eden)
+{
+  f32_t current_x = GBG_GRID_START_X;
+  f32_t current_y = GBG_GRID_START_Y;
+
+  for(u32_t row = 0; row < GBG_GRID_ROWS; ++row) // row
+  {
+    for (u32_t col = 0; col < GBG_GRID_COLS; ++col) // col
+    {
+      eden_draw_text(
+          eden, ASSET_FONT_ID_DEBUG,
+          buf_set(gbg->tiles[row][col].effects, 2),
+          RGBA_WHITE,
+          v2f_set(current_x, current_y),
+          GBG_PP_FONT_HEIGHT,
+          v2f_set(0.5f, 0.5f));
       current_x += GBG_TILE_SIZE;
     }
     current_y += GBG_TILE_SIZE;
@@ -192,7 +235,7 @@ gbg_is_within_grid(v2u_t pos)
 }
 
 static gbg_tile_t*
-gbg_get_tile(gbg_t* gbg, v2u_t pos)
+gbg_get_tile(v2u_t pos)
 {
   assert(pos.x < GBG_GRID_COLS);
   assert(pos.y < GBG_GRID_ROWS);
@@ -200,7 +243,7 @@ gbg_get_tile(gbg_t* gbg, v2u_t pos)
 }
 
 static void
-gbg_player_move(gbg_t* gbg, s32_t x, s32_t y)
+gbg_player_move(s32_t x, s32_t y)
 {
   gbg_player_t* player = &gbg->player;
 
@@ -214,19 +257,21 @@ gbg_player_move(gbg_t* gbg, s32_t x, s32_t y)
     return;
   }
 
-  gbg_tile_t* dest_tile = gbg_get_tile(gbg, new_grid_pos);
+  gbg_tile_t* dest_tile = gbg_get_tile(new_grid_pos);
 
   // obstacle
-  if (dest_tile->tile_type == GBG_TILE_TYPE_OBSTACLE) 
+  if (dest_tile->type == GBG_TILE_TYPE_OBSTACLE) 
   {
     // do nothing
   }
 
+#if 0
   else if (dest_tile->enemy)
   {
     // @todo: test attack enemy
     // do nothing
   }
+#endif
 
   else 
   {
@@ -236,6 +281,7 @@ gbg_player_move(gbg_t* gbg, s32_t x, s32_t y)
 }
 
 
+#if 0
 static gbg_enemy_t*
 gbg_enemy_spawn(gbg_t* gbg, v2u_t grid_pos, u32_t pp)
 {
@@ -260,64 +306,113 @@ gbg_enemy_spawn(gbg_t* gbg, v2u_t grid_pos, u32_t pp)
   return ret;
 }
 
+#endif
+
+static gbg_tile_t*
+gbg_get_player_tile()
+{
+  return &gbg->tiles[gbg->player.grid_pos.y][gbg->player.grid_pos.x];
+}
+
+static void
+gbg_player_act()
+{
+  gbg_player_t* player = &gbg->player;
+  gbg_tile_t* current_cell = gbg_get_player_tile();
+
+  player->pp++;
+}
+
+static void 
+gbg_render_player(eden_t* eden)
+{
+  eden_draw_rect(
+      eden, 
+      gbg->player.world_pos,
+      0.f, 
+      v2f_set(GBG_TILE_SIZE, GBG_TILE_SIZE) * 0.8f,
+      RGBA_GREEN);
+}
+
+static void 
+gbg_render_player_pp(eden_t* eden)
+{
+  arena_set_revert_point(&gbg->arena);
+  bufio_t bufio;
+  bufio_init(&bufio, arena_push_buffer(&gbg->arena, 32));
+  bufio_push_s32(&bufio, gbg->player.pp);
+
+
+  eden_draw_text(
+      eden, 
+      ASSET_FONT_ID_DEBUG, 
+      bufio.str,
+      RGBA_BLACK, 
+      gbg->player.world_pos,
+      GBG_PP_FONT_HEIGHT, 
+      v2f_set(0.5f,0.5f));
+}
 
 
 exported 
 eden_update_and_render_sig(eden_update_and_render) 
 {
-  if (eden->user_data == nullptr || eden_is_button_poked(eden, EDEN_BUTTON_CODE_F1))
+  if (eden->user_data == nullptr)
   {
-    eden->user_data = arena_alloc_bootstrap(gbg_t, arena, megabytes(32)); 
-    auto* gbg = (gbg_t*)(eden->user_data);
+    eden->user_data = arena_alloc_bootstrap(gbg_t, arena, megabytes(256)); 
+    gbg = (gbg_t*)(eden->user_data);
     eden_assets_init_from_file(eden, SANDBOX_ASSET_FILE, &gbg->arena);
     
-    gbg->is_waiting_for_player = true;
+    rng_init(&gbg->rng, 1337);
     gbg->player.grid_pos = v2u_set(0,0);
     gbg->player.world_pos = gbg_grid_to_world_pos(gbg->player.grid_pos); 
     gbg->player.is_moving = false;
 
     // @todo, randomize tile values
     memory_zero_array(gbg->tiles);
-    gbg->tiles[4][4].tile_type = GBG_TILE_TYPE_OBSTACLE;
-    gbg->tiles[6][6].tile_type = GBG_TILE_TYPE_EXIT;
+    
+    const static u8_t ops[] = {'+', '-', '*', '/', '%'};
+    for(u32_t row = 0; row < GBG_GRID_ROWS; ++row) // row
+    {
+      for (u32_t col = 0; col < GBG_GRID_COLS; ++col) // col
+      {
+        gbg->tiles[row][col].type = GBG_TILE_TYPE_NOTHING;
+        gbg->tiles[row][col].pp_operator = ops[rng_range_u8(&gbg->rng, 0, array_count(ops))];
+        gbg->tiles[row][col].pp_operand = rng_range_u8(&gbg->rng, '0', '9');
+      }
+    }
 
-    gbg_enemy_spawn(gbg, v2u_set(1,1), 10);
-    gbg_enemy_spawn(gbg, v2u_set(2,2), 11);
+    //gbg_enemy_spawn(gbg, v2u_set(1,1), 10);
+    //gbg_enemy_spawn(gbg, v2u_set(2,2), 11);
   }
-
+  gbg = (gbg_t*)(eden->user_data);
   f32_t dt = eden_get_dt(eden);
-  auto* gbg = (gbg_t*)(eden->user_data);
 
   eden_set_design_dimensions(eden, GBG_DESIGN_WIDTH, GBG_DESIGN_HEIGHT);
 
   //
   // Input Phase
   //
-  if (gbg->is_waiting_for_player)
+  if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_D)) 
   {
-    if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_D)) 
-    {
-      gbg_player_move(gbg, 1, 0);
-    }
-    else if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_A)) 
-    {
-      gbg_player_move(gbg, -1, 0);
-    }
-    else if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_W)) 
-    {
-      gbg_player_move(gbg, 0, -1);
-    }
-    else if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_S)) 
-    {
-      gbg_player_move(gbg, 0, 1);
-    }
+    gbg_player_move(1, 0);
   }
-
-  else
+  else if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_A)) 
   {
-    // Do calculations and animations
+    gbg_player_move(-1, 0);
   }
-
+  else if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_W)) 
+  {
+    gbg_player_move(0, -1);
+  }
+  else if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_S)) 
+  {
+    gbg_player_move(0, 1);
+  }
+  else if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_SPACE))
+  {
+    gbg_player_act();
+  }
 
   //
   // RENDERING
@@ -326,56 +421,18 @@ eden_update_and_render_sig(eden_update_and_render)
   eden_set_view(eden, 0.f, GBG_DESIGN_WIDTH, 0.f, GBG_DESIGN_HEIGHT, 0.f, 0.f);
   eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
 
-  gbg_render_grid(eden, gbg);
+  gbg_render_grid(eden);
+  gbg_render_player(eden);
 
-  // draw enemies
-  {
-    arena_set_revert_point(&gbg->arena);
-    bufio_t sb;
-    bufio_init(&sb, arena_push_buffer(&gbg->arena, 32));
-    const v2f_t size = v2f_set(GBG_TILE_SIZE, GBG_TILE_SIZE) * 0.8f;
+  //bufio_push_u32(&sb, gbg->player.pp);
 
-#if 0
-    for(u32_t i = 0; i < gbg->enemy_count; ++i)
-    {
-      gbg_enemy_t* enemy = gbg->enemy_list + i;
-      eden_draw_rect(
-          eden, 
-          enemy->world_pos,
-          0.f, 
-          size,
-          RGBA_RED);
+  gbg_render_grid_effects(eden);
+  gbg_render_player_pp(eden);
 
-      bufio_push_u32(&sb, enemy->pp);
-      eden_draw_text(
-            eden, 
-            ASSET_FONT_ID_DEFAULT, 
-            buf_from_lit("0"), 
-            RGBA_WHITE, 
-            enemy->world_pos + size*0.4f,
-            36.f, 
-            v2f_set(1.f,1.f));
-    }
-#endif
 
-    // draw player
-    eden_draw_rect(
-        eden, 
-        gbg->player.world_pos,
-        0.f, 
-        v2f_set(GBG_TILE_SIZE, GBG_TILE_SIZE) * 0.8f,
-        RGBA_GREEN);
-    bufio_push_u32(&sb, gbg->player.pp);
-    eden_draw_text(
-        eden, 
-        ASSET_FONT_ID_DEFAULT, 
-        buf_from_lit("0"), 
-        RGBA_BLACK, 
-        v2f_set(0,0),
-        36.f, 
-        v2f_set(0.5f,0.5f));
-  }
 
+
+    
 
 }
 

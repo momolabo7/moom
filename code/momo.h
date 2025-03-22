@@ -1153,11 +1153,11 @@ static b32_t    arena_init(arena_t* a, buf_t buffer);
 static b32_t    arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit = false);
 static void*    arena_alloc_bootstrap_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size);
 static void     arena_clear(arena_t* a);
-static void*    arena_push_size(arena_t* a, usz_t size, usz_t align = 16);
-static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align = 16); 
-static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align = 16);
-static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align = 16);
-static buf_t    arena_push_buffer(arena_t* a, usz_t size, usz_t align = 16);
+static void*    arena_push_size(arena_t* a, usz_t size, usz_t align = 32);
+static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align = 32); 
+static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align = 32);
+static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align = 32);
+static buf_t    arena_push_buffer(arena_t* a, usz_t size, usz_t align = 32);
 static usz_t    arena_remaining(arena_t* a);
 static b32_t    arena_grow_size(arena_t* a, void* ptr, usz_t old_size, usz_t new_size);
 static b32_t    arena_grow_buffer(arena_t* a, buf_t* str, usz_t new_size);
@@ -5928,6 +5928,7 @@ rng_bilateral(rng_t* r)
   return(result);
 }
 
+// Get number within [min, max]
 static f32_t 
 rng_range_f32(rng_t* r, f32_t min, f32_t max)
 {
@@ -5935,17 +5936,27 @@ rng_range_f32(rng_t* r, f32_t min, f32_t max)
   return(result);
 }
 
+// Get number within [min, max)
 static s32_t 
 rng_range_s32(rng_t* r, s32_t min, s32_t max)
 {
-  s32_t result = min + (s32_t)(rng_next(r)%((max + 1) - min));
+  s32_t result = min + (s32_t)(rng_next(r)%(max  - min));
   return(result);
 }
 
+// Get number within [min, max)
 static u32_t
 rng_range_u32(rng_t* r, u32_t min, u32_t max)
 {
-  u32_t result = min + (u32_t)(rng_next(r)%((max + 1) - min));
+  u32_t result = min + (u32_t)(rng_next(r)%(max - min));
+  return(result);
+}
+
+// Get number within [min, max)
+static u8_t
+rng_range_u8(rng_t* r, u8_t min, u8_t max)
+{
+  u8_t result = min + (u8_t)(rng_next(r)%(max - min));
   return(result);
 }
 
@@ -6538,11 +6549,6 @@ bufio_push_s64(bufio_t* b, s64_t num) {
 
   b32_t negate = num < 0;
   num = s64_abs(num);
-
-  for(; num != 0; num /= 10) {
-    u8_t digit_to_convert = (u8_t)(num % 10);
-    bufio_push_c8(b, digit_to_ascii(digit_to_convert));
-  }
 
   if (negate) {
     bufio_push_c8(b, '-');

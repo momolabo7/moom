@@ -145,15 +145,15 @@ arena_push_arr_align	code/momo.h	/^#define arena_push_arr_align(/;"	d	language:C
 arena_push_arr_zero	code/momo.h	/^#define arena_push_arr_zero(/;"	d	language:C++
 arena_push_arr_zero_align	code/momo.h	/^#define arena_push_arr_zero_align(/;"	d	language:C++
 arena_push_buffer	code/momo.h	/^arena_push_buffer(arena_t* a, usz_t size, usz_t align) $/;"	f	language:C++	typeref:typename:buf_t
-arena_push_buffer	code/momo.h	/^static buf_t    arena_push_buffer(arena_t* a, usz_t size, usz_t align = 16);$/;"	p	language:C++	typeref:typename:buf_t
+arena_push_buffer	code/momo.h	/^static buf_t    arena_push_buffer(arena_t* a, usz_t size, usz_t align = 32);$/;"	p	language:C++	typeref:typename:buf_t
 arena_push_partition	code/momo.h	/^arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align) $/;"	f	language:C++	typeref:typename:b32_t
-arena_push_partition	code/momo.h	/^static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align = 1/;"	p	language:C++	typeref:typename:b32_t
+arena_push_partition	code/momo.h	/^static b32_t    arena_push_partition(arena_t* a, arena_t* partition, usz_t size, usz_t align = 3/;"	p	language:C++	typeref:typename:b32_t
 arena_push_partition_with_remaining	code/momo.h	/^arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align)$/;"	f	language:C++	typeref:typename:b32_t
 arena_push_partition_with_remaining	code/momo.h	/^static b32_t    arena_push_partition_with_remaining(arena_t* a, arena_t* partition, usz_t align /;"	p	language:C++	typeref:typename:b32_t
 arena_push_size	code/momo.h	/^arena_push_size(arena_t* a, usz_t size, usz_t align) {$/;"	f	language:C++	typeref:typename:void *
-arena_push_size	code/momo.h	/^static void*    arena_push_size(arena_t* a, usz_t size, usz_t align = 16);$/;"	p	language:C++	typeref:typename:void *
+arena_push_size	code/momo.h	/^static void*    arena_push_size(arena_t* a, usz_t size, usz_t align = 32);$/;"	p	language:C++	typeref:typename:void *
 arena_push_size_zero	code/momo.h	/^arena_push_size_zero(arena_t* a, usz_t size, usz_t align) $/;"	f	language:C++	typeref:typename:void *
-arena_push_size_zero	code/momo.h	/^static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align = 16); $/;"	p	language:C++	typeref:typename:void *
+arena_push_size_zero	code/momo.h	/^static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align = 32); $/;"	p	language:C++	typeref:typename:void *
 arena_push_zero	code/momo.h	/^#define arena_push_zero(/;"	d	language:C++
 arena_push_zero_align	code/momo.h	/^#define arena_push_zero_align(/;"	d	language:C++
 arena_remaining	code/momo.h	/^arena_remaining(arena_t* a) {$/;"	f	language:C++	typeref:typename:usz_t
@@ -416,6 +416,7 @@ BUILD_COMPILE_EDEN_OPTIMIZED	code/build.cpp	/^#define BUILD_COMPILE_EDEN_OPTIMIZ
 BUILD_COMPILE_NORMAL	code/build.cpp	/^#define BUILD_COMPILE_NORMAL /;"	d	language:C++	file:
 BUILD_COMPILE_NORMAL_DEBUG	code/build.cpp	/^#define BUILD_COMPILE_NORMAL_DEBUG /;"	d	language:C++	file:
 BUILD_COMPILE_NORMAL_OPTIMIZED	code/build.cpp	/^#define BUILD_COMPILE_NORMAL_OPTIMIZED /;"	d	language:C++	file:
+BUILD_COMPILE_PASS	code/build.cpp	/^#define BUILD_COMPILE_PASS /;"	d	language:C++	file:
 build_dir	bin/build.bat	/^set build_dir=%root_dir%\\build$/;"	v	language:DosBatch
 build_dir	bin/buildo.bat	/^set build_dir=%root_dir%\\build$/;"	v	language:DosBatch
 build_eden_build	code/build.cpp	/^build_eden_build(build_t* b, b32_t optimized)$/;"	f	language:C++	typeref:typename:void	file:
@@ -1117,7 +1118,7 @@ eden_unlock_cursor_sig	code/ship_app_lit.cpp	/^eden_unlock_cursor_sig(w32_unlock
 eden_unlock_cursor_sig	code/w32_eden.cpp	/^eden_unlock_cursor_sig(w32_unlock_cursor) {$/;"	f	language:C++	file:
 eden_update_and_render_console	code/eden.h	/^eden_update_and_render_console(eden_console_t*)$/;"	f	language:C++	typeref:typename:void
 eden_update_and_render_sig	code/app_alu.cpp	/^eden_update_and_render_sig(eden_update_and_render) $/;"	f	language:C++	typeref:typename:exported
-eden_update_and_render_sig	code/app_gbg.cpp	/^eden_update_and_render_sig(eden_update_and_render) $/;"	f	language:C++	typeref:typename:void exported	file:
+eden_update_and_render_sig	code/app_gbg.cpp	/^eden_update_and_render_sig(eden_update_and_render) $/;"	f	language:C++	typeref:typename:exported
 eden_update_and_render_sig	code/app_lit.cpp	/^eden_update_and_render_sig(eden_update_and_render) $/;"	f	language:C++	typeref:typename:exported
 eden_update_and_render_sig	code/app_sandbox.cpp	/^eden_update_and_render_sig(eden_update_and_render) { $/;"	f	language:C++	typeref:typename:exported
 eden_update_and_render_sig	code/app_tbp.cpp	/^eden_update_and_render_sig(eden_update_and_render) $/;"	f	language:C++	typeref:typename:exported
@@ -1131,6 +1132,9 @@ eden_width	code/ship_app_lit.cpp	/^  f32_t eden_width;$/;"	m	language:C++	struct
 eden_width	code/w32_eden.cpp	/^  f32_t eden_width;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:f32_t	file:
 edges	code/app_lit.cpp	/^  lit_game_edge_t edges[256];$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_edge_t[256]	file:
 edge_count	code/app_lit.cpp	/^  u32_t edge_count;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:u32_t	file:
+effects	code/app_gbg.cpp	/^    u8_t effects[2];$/;"	m	language:C++	union:gbg_tile_t::__anon88df87f0010a	typeref:typename:u8_t[2]	file:
+effect_op	code/app_gbg.cpp	/^      u8_t effect_op;$/;"	m	language:C++	struct:gbg_tile_t::__anon88df87f0010a::__anon88df87f00208	typeref:typename:u8_t	file:
+effect_value	code/app_gbg.cpp	/^      u8_t effect_value;$/;"	m	language:C++	struct:gbg_tile_t::__anon88df87f0010a::__anon88df87f00208	typeref:typename:u8_t	file:
 element	code/momo.h	/^    json_element_t element;$/;"	m	language:C++	union:json_value_t::__anon1db7a63d1e0a	typeref:typename:json_element_t
 element_count	code/eden_gfx_opengl.h	/^  usz_t element_count;$/;"	m	language:C++	struct:eden_opengl_batch_t	typeref:typename:usz_t
 end	code/app_lit.cpp	/^  v2f_t end;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:v2f_t	file:
@@ -1139,9 +1143,6 @@ end_build_type	bin/build.bat	/^:end_build_type$/;"	l	language:DosBatch
 end_build_type	bin/buildo.bat	/^:end_build_type$/;"	l	language:DosBatch
 end_point_indices	code/momo.h	/^  u16_t* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u16_t *
 end_pt	code/app_lit.cpp	/^  v2f_t end_pt;$/;"	m	language:C++	struct:lit_game_edge_t	typeref:typename:v2f_t	file:
-enemy	code/app_gbg.cpp	/^  gbg_enemy_t* enemy;$/;"	m	language:C++	struct:gbg_tile_t	typeref:typename:gbg_enemy_t *	file:
-enemy_count	code/app_gbg.cpp	/^  u32_t enemy_count;$/;"	m	language:C++	struct:gbg_t	typeref:typename:u32_t	file:
-enemy_list	code/app_gbg.cpp	/^  gbg_enemy_t enemy_list[GBG_GRID_WIDTH*GBG_GRID_HEIGHT];$/;"	m	language:C++	struct:gbg_t	typeref:typename:gbg_enemy_t[]	file:
 entries	code/eden_inspector.h	/^  eden_inspector_entry_t* entries;$/;"	m	language:C++	struct:eden_inspector_t	typeref:typename:eden_inspector_entry_t *
 entries	code/eden_profiler.h	/^  eden_profiler_entry_t* entries;$/;"	m	language:C++	struct:eden_profiler_t	typeref:typename:eden_profiler_entry_t *
 entries	code/gist_hashmap.cpp	/^  gist_hm_entry_t entries[256] = {};$/;"	m	language:C++	struct:gist_hm_t	typeref:typename:gist_hm_entry_t[256]	file:
@@ -1521,6 +1522,7 @@ format	code/momo.h	/^  u32_t format; \/\/ big endian$/;"	m	language:C++	struct:w
 for_arr	code/momo.h	/^#define for_arr(/;"	d	language:C++
 for_arr_reverse	code/momo.h	/^#define for_arr_reverse(/;"	d	language:C++
 frame_arena	code/app_alu.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:alu_t	typeref:typename:arena_t	file:
+frame_arena	code/app_gbg.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:gbg_t	typeref:typename:arena_t	file:
 frame_arena	code/app_lit.cpp	/^  arena_t frame_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
 frame_rate	code/ship_app_lit.cpp	/^  u32_t frame_rate;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t	file:
 frame_rate	code/w32_eden_audio_wasapi.h	/^  u32_t frame_rate;$/;"	m	language:C++	struct:w32_wasapi_t	typeref:typename:u32_t
@@ -1558,11 +1560,12 @@ garena_push_arr	code/momo.h	/^#define garena_push_arr(/;"	d	language:C++
 garena_push_size	code/momo.h	/^garena_push_size(garena_t* ga, usz_t size) {$/;"	f	language:C++	typeref:typename:void *
 garena_push_size	code/momo.h	/^static void* garena_push_size(garena_t* ga, usz_t size);$/;"	p	language:C++	typeref:typename:void *
 garena_t	code/momo.h	/^struct garena_t $/;"	s	language:C++
+gbg	code/app_gbg.cpp	/^} *gbg;$/;"	v	language:C++	typeref:struct:gbg_t *
 GBG_DESIGN_HEIGHT	code/app_gbg.cpp	/^#define GBG_DESIGN_HEIGHT /;"	d	language:C++	file:
 GBG_DESIGN_WIDTH	code/app_gbg.cpp	/^#define GBG_DESIGN_WIDTH /;"	d	language:C++	file:
-gbg_enemy_spawn	code/app_gbg.cpp	/^gbg_enemy_spawn(gbg_t* gbg, v2u_t grid_pos, u32_t pp)$/;"	f	language:C++	typeref:typename:gbg_enemy_t *	file:
 gbg_enemy_t	code/app_gbg.cpp	/^struct gbg_enemy_t $/;"	s	language:C++	file:
-gbg_get_tile	code/app_gbg.cpp	/^gbg_get_tile(gbg_t* gbg, v2u_t pos)$/;"	f	language:C++	typeref:typename:gbg_tile_t *	file:
+gbg_get_player_tile	code/app_gbg.cpp	/^gbg_get_player_tile()$/;"	f	language:C++	typeref:typename:gbg_tile_t *	file:
+gbg_get_tile	code/app_gbg.cpp	/^gbg_get_tile(v2u_t pos)$/;"	f	language:C++	typeref:typename:gbg_tile_t *	file:
 GBG_GRID_COLS	code/app_gbg.cpp	/^#define GBG_GRID_COLS /;"	d	language:C++	file:
 GBG_GRID_HEIGHT	code/app_gbg.cpp	/^#define GBG_GRID_HEIGHT /;"	d	language:C++	file:
 GBG_GRID_ROWS	code/app_gbg.cpp	/^#define GBG_GRID_ROWS /;"	d	language:C++	file:
@@ -1571,17 +1574,21 @@ GBG_GRID_START_Y	code/app_gbg.cpp	/^#define GBG_GRID_START_Y /;"	d	language:C++	
 gbg_grid_to_world_pos	code/app_gbg.cpp	/^gbg_grid_to_world_pos(v2u_t grid_pos)$/;"	f	language:C++	typeref:typename:v2f_t	file:
 GBG_GRID_WIDTH	code/app_gbg.cpp	/^#define GBG_GRID_WIDTH /;"	d	language:C++	file:
 gbg_is_within_grid	code/app_gbg.cpp	/^gbg_is_within_grid(v2u_t pos)$/;"	f	language:C++	typeref:typename:b32_t	file:
-gbg_player_move	code/app_gbg.cpp	/^gbg_player_move(gbg_t* gbg, s32_t x, s32_t y)$/;"	f	language:C++	typeref:typename:void	file:
+gbg_player_act	code/app_gbg.cpp	/^gbg_player_act()$/;"	f	language:C++	typeref:typename:void	file:
+gbg_player_move	code/app_gbg.cpp	/^gbg_player_move(s32_t x, s32_t y)$/;"	f	language:C++	typeref:typename:void	file:
 GBG_PLAYER_MOVE_DURATION	code/app_gbg.cpp	/^#define GBG_PLAYER_MOVE_DURATION /;"	d	language:C++	file:
 gbg_player_t	code/app_gbg.cpp	/^struct gbg_player_t {$/;"	s	language:C++	file:
-gbg_render_grid	code/app_gbg.cpp	/^gbg_render_grid(eden_t* eden, gbg_t* gbg)$/;"	f	language:C++	typeref:typename:void	file:
+gbg_render_grid	code/app_gbg.cpp	/^gbg_render_grid(eden_t* eden)$/;"	f	language:C++	typeref:typename:void	file:
+gbg_render_grid_effects	code/app_gbg.cpp	/^gbg_render_grid_effects(eden_t* eden)$/;"	f	language:C++	typeref:typename:void	file:
+gbg_render_player	code/app_gbg.cpp	/^gbg_render_player(eden_t* eden)$/;"	f	language:C++	typeref:typename:void	file:
+gbg_render_player_pp	code/app_gbg.cpp	/^gbg_render_player_pp(eden_t* eden)$/;"	f	language:C++	typeref:typename:void	file:
 gbg_t	code/app_gbg.cpp	/^struct gbg_t {$/;"	s	language:C++	file:
 GBG_TILE_SIZE	code/app_gbg.cpp	/^#define GBG_TILE_SIZE /;"	d	language:C++	file:
 gbg_tile_t	code/app_gbg.cpp	/^struct gbg_tile_t$/;"	s	language:C++	file:
-GBG_TILE_TYPE_EXIT	code/app_gbg.cpp	/^  GBG_TILE_TYPE_EXIT,$/;"	e	language:C++	enum:gbg_tile_type_t	file:
-GBG_TILE_TYPE_NOTHING	code/app_gbg.cpp	/^  GBG_TILE_TYPE_NOTHING,$/;"	e	language:C++	enum:gbg_tile_type_t	file:
-GBG_TILE_TYPE_OBSTACLE	code/app_gbg.cpp	/^  GBG_TILE_TYPE_OBSTACLE,$/;"	e	language:C++	enum:gbg_tile_type_t	file:
-gbg_tile_type_t	code/app_gbg.cpp	/^enum gbg_tile_type_t$/;"	g	language:C++	file:
+GBG_TILE_TYPE_EXIT	code/app_gbg.cpp	/^  GBG_TILE_TYPE_EXIT,$/;"	e	language:C++	enum:gbg_type_t	file:
+GBG_TILE_TYPE_NOTHING	code/app_gbg.cpp	/^  GBG_TILE_TYPE_NOTHING,$/;"	e	language:C++	enum:gbg_type_t	file:
+GBG_TILE_TYPE_OBSTACLE	code/app_gbg.cpp	/^  GBG_TILE_TYPE_OBSTACLE,$/;"	e	language:C++	enum:gbg_type_t	file:
+gbg_type_t	code/app_gbg.cpp	/^enum gbg_type_t$/;"	g	language:C++	file:
 get_config	code/eden.h	/^  eden_get_config_f* get_config;$/;"	m	language:C++	struct:eden_functions_t	typeref:typename:eden_get_config_f *
 gfx	code/eden.h	/^  eden_gfx_t gfx;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_gfx_t
 gigabytes	code/momo.h	/^#define gigabytes(/;"	d	language:C++
@@ -1889,7 +1896,6 @@ is_sleep_granular	code/w32_chip8.cpp	/^  b32_t is_sleep_granular = timeBeginPeri
 is_valid	code/momo.h	/^  b32_t is_valid; \/\/ Probably should be some error code?$/;"	m	language:C++	struct:socket_t	typeref:typename:b32_t
 is_valid	code/ship_app_lit.cpp	/^  b32_t is_valid;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:b32_t	file:
 is_valid	code/w32_eden.cpp	/^  b32_t is_valid;$/;"	m	language:C++	struct:w32_loaded_code_t	typeref:typename:b32_t	file:
-is_waiting_for_player	code/app_gbg.cpp	/^  b32_t is_waiting_for_player;$/;"	m	language:C++	struct:gbg_t	typeref:typename:b32_t	file:
 item_sentinel	code/aoc22.cpp	/^  aoc22_d11_item_node_t item_sentinel;$/;"	m	language:C++	struct:aoc22_d11_monkey_t	typeref:typename:aoc22_d11_item_node_t	file:
 json_array_node_t	code/momo.h	/^struct json_array_node_t $/;"	s	language:C++
 json_array_t	code/momo.h	/^struct json_array_t $/;"	s	language:C++
@@ -2218,7 +2224,6 @@ max	code/eden_profiler.h	/^  f64_t max;$/;"	m	language:C++	struct:eden_profiler_
 maxp	code/momo.h	/^  u32_t loca, head, glyf, maxp, cmap, hhea, hmtx, kern, gpos;$/;"	m	language:C++	struct:ttf_t	typeref:typename:u32_t
 max_commands	code/eden.h	/^  u32_t max_commands;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 max_elements	code/eden.h	/^  usz_t max_elements;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:usz_t
-max_files	code/eden.h	/^  u32_t max_files;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 max_of	code/momo.h	/^#define max_of(/;"	d	language:C++
 max_sprites	code/eden_gfx_opengl.h	/^  usz_t max_sprites;$/;"	m	language:C++	struct:eden_opengl_t	typeref:typename:usz_t
 max_textures	code/eden.h	/^  u32_t max_textures;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
@@ -2476,7 +2481,6 @@ platform_data	code/eden_audio.h	/^  void* platform_data;$/;"	m	language:C++	stru
 platform_data	code/eden_gfx.h	/^  void* platform_data;$/;"	m	language:C++	struct:eden_gfx_t	typeref:typename:void *
 platform_data	code/eden_gfx_opengl.h	/^  void* platform_data;$/;"	m	language:C++	struct:eden_opengl_t	typeref:typename:void *
 player	code/app_gbg.cpp	/^  gbg_player_t player;$/;"	m	language:C++	struct:gbg_t	typeref:typename:gbg_player_t	file:
-player	code/app_gbg.cpp	/^  gbg_player_t* player;$/;"	m	language:C++	struct:gbg_tile_t	typeref:typename:gbg_player_t *	file:
 player	code/app_lit.cpp	/^  lit_game_player_t player;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:lit_game_player_t	file:
 player	code/app_tbp.cpp	/^  tbp_player_t player;$/;"	m	language:C++	struct:tbp_t	typeref:typename:tbp_player_t	file:
 player	code/app_vigil.cpp	/^  vigil_player_t player;$/;"	m	language:C++	struct:vigil_t	typeref:typename:vigil_player_t	file:
@@ -2507,6 +2511,7 @@ pos	code/momo.h	/^  usz_t pos;$/;"	m	language:C++	struct:arena_t	typeref:typenam
 pos	code/momo.h	/^  usz_t pos;$/;"	m	language:C++	struct:stream_t	typeref:typename:usz_t
 pos_x	code/eden_gfx.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:eden_gfx_command_view_t	typeref:typename:f32_t
 pos_y	code/eden_gfx.h	/^  f32_t pos_x, pos_y;$/;"	m	language:C++	struct:eden_gfx_command_view_t	typeref:typename:f32_t
+pp	code/app_gbg.cpp	/^  s32_t pp;$/;"	m	language:C++	struct:gbg_player_t	typeref:typename:s32_t	file:
 pp	code/app_gbg.cpp	/^  u32_t pp;$/;"	m	language:C++	struct:gbg_enemy_t	typeref:typename:u32_t	file:
 prev	code/aoc22.cpp	/^  aoc22_d11_item_node_t* prev;$/;"	m	language:C++	struct:aoc22_d11_item_node_t	typeref:typename:aoc22_d11_item_node_t *	file:
 prev	code/aoc22.cpp	/^  aoc22_d12p1_vertex_t* prev;$/;"	m	language:C++	struct:aoc22_d12p1_vertex_t	typeref:typename:aoc22_d12p1_vertex_t *	file:
@@ -2563,6 +2568,7 @@ RGBA_WHITE	code/momo.h	/^#define RGBA_WHITE /;"	d	language:C++
 rgb_t	code/momo.h	/^struct rgb_t $/;"	s	language:C++
 riff_chunk	code/momo.h	/^  wav_riff_chunk_t riff_chunk;$/;"	m	language:C++	struct:wav_t	typeref:typename:wav_riff_chunk_t
 right	code/momo.h	/^  _json_entry_t* right;$/;"	m	language:C++	struct:_json_entry_t	typeref:typename:_json_entry_t *
+rng	code/app_gbg.cpp	/^  rng_t rng;$/;"	m	language:C++	struct:gbg_t	typeref:typename:rng_t	file:
 rng	code/app_lit.cpp	/^  rng_t rng;$/;"	m	language:C++	struct:lit_game_t	typeref:typename:rng_t	file:
 rng_bilateral	code/momo.h	/^rng_bilateral(rng_t* r)$/;"	f	language:C++	typeref:typename:f32_t
 rng_bilateral	code/momo.h	/^static f32_t rng_bilateral(rng_t* r);$/;"	p	language:C++	typeref:typename:f32_t
@@ -2578,6 +2584,7 @@ rng_range_s32	code/momo.h	/^rng_range_s32(rng_t* r, s32_t min, s32_t max)$/;"	f	
 rng_range_s32	code/momo.h	/^static s32_t rng_range_s32(rng_t* r, s32_t min, s32_t max);$/;"	p	language:C++	typeref:typename:s32_t
 rng_range_u32	code/momo.h	/^rng_range_u32(rng_t* r, u32_t min, u32_t max)$/;"	f	language:C++	typeref:typename:u32_t
 rng_range_u32	code/momo.h	/^static u32_t rng_range_u32(rng_t* r, u32_t min, u32_t max);$/;"	p	language:C++	typeref:typename:u32_t
+rng_range_u8	code/momo.h	/^rng_range_u8(rng_t* r, u8_t min, u8_t max)$/;"	f	language:C++	typeref:typename:u8_t
 rng_t	code/momo.h	/^struct rng_t $/;"	s	language:C++
 rng_unilateral	code/momo.h	/^rng_unilateral(rng_t* r)$/;"	f	language:C++	typeref:typename:f32_t
 rng_unilateral	code/momo.h	/^static f32_t rng_unilateral(rng_t* r);$/;"	p	language:C++	typeref:typename:f32_t
@@ -2905,7 +2912,6 @@ throw_to_index_if_false	code/aoc22.cpp	/^  u32_t throw_to_index_if_false;$/;"	m	
 throw_to_index_if_true	code/aoc22.cpp	/^  u32_t throw_to_index_if_true;$/;"	m	language:C++	struct:aoc22_d11_monkey_t	typeref:typename:u32_t	file:
 tile	code/app_tbp.cpp	/^  tbp_tile_t tile;$/;"	m	language:C++	struct:tbp_t	typeref:typename:tbp_tile_t	file:
 tiles	code/app_gbg.cpp	/^  gbg_tile_t tiles[GBG_GRID_HEIGHT][GBG_GRID_WIDTH];$/;"	m	language:C++	struct:gbg_t	typeref:typename:gbg_tile_t[][]	file:
-tile_type	code/app_gbg.cpp	/^  gbg_tile_type_t tile_type;$/;"	m	language:C++	struct:gbg_tile_t	typeref:typename:gbg_tile_type_t	file:
 timer	code/app_gbg.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:gbg_player_t	typeref:typename:f32_t	file:
 timer	code/app_lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_credits_t	typeref:typename:f32_t	file:
 timer	code/app_lit.cpp	/^  f32_t timer;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:f32_t	file:
@@ -2952,6 +2958,7 @@ tuple_t	code/gist_tuple.cpp	/^struct tuple_t<H, T...>$/;"	s	language:C++	file:
 tuple_t	code/gist_tuple.cpp	/^struct tuple_t{};$/;"	s	language:C++	file:
 type	code/aoc22.cpp	/^  aoc22_d13_node_type_t type;$/;"	m	language:C++	struct:aoc22_d13_node_t	typeref:typename:aoc22_d13_node_type_t	file:
 type	code/aoc22.cpp	/^  aoc22_d7_node_type_t type;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:aoc22_d7_node_type_t	file:
+type	code/app_gbg.cpp	/^  gbg_type_t type;$/;"	m	language:C++	struct:gbg_tile_t	typeref:typename:gbg_type_t	file:
 type	code/app_lit.cpp	/^  lit_game_animator_type_t type;$/;"	m	language:C++	struct:lit_game_animator_t	typeref:typename:lit_game_animator_type_t	file:
 type	code/eden_gfx.h	/^  eden_gfx_command_type_t type; $/;"	m	language:C++	struct:eden_gfx_command_t	typeref:typename:eden_gfx_command_type_t
 type	code/eden_inspector.h	/^  eden_inspector_entry_type_t type;$/;"	m	language:C++	struct:eden_inspector_entry_t	typeref:typename:eden_inspector_entry_type_t
@@ -3575,6 +3582,8 @@ __anon1db7a63d2c0a	code/momo.h	/^  union {$/;"	u	language:C++	struct:_png_chunk_
 __anon23bd245c010a	code/pass.h	/^  union {$/;"	u	language:C++	struct:pass_pack_atlas_context_t
 __anon6f36386f010a	code/app_sandbox.cpp	/^  union {$/;"	u	language:C++	struct:sandbox_t	file:
 __anon8328d6a5010a	code/eden_gfx.h	/^  {$/;"	u	language:C++	struct:eden_gfx_command_t
+__anon88df87f0010a	code/app_gbg.cpp	/^  union {$/;"	u	language:C++	struct:gbg_tile_t	file:
+__anon88df87f00208	code/app_gbg.cpp	/^    struct {$/;"	s	language:C++	union:gbg_tile_t::__anon88df87f0010a	file:
 __anonabc34737010a	code/aoc22.cpp	/^  union {$/;"	u	language:C++	struct:aoc22_d7_node_t	file:
 __anonabc34737020a	code/aoc22.cpp	/^  {$/;"	u	language:C++	struct:aoc22_d13_node_t	file:
 __anonabd55fb80102	code/aoc23.cpp	/^  auto get_index = [](buf_t grid, u32_t x, u32_t y, u32_t w) {$/;"	f	language:C++	function:aoc23_d3p1	file:
