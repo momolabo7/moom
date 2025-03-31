@@ -167,10 +167,10 @@ struct eden_config_t
 #define eden_get_config_sig(name) eden_config_t name(void)
 typedef eden_get_config_sig(eden_get_config_f);
 
-#define eden_update_and_render_sig(name) void name(eden_t* eden)
+#define eden_update_and_render_sig(name) void name(eden_t* e)
 typedef eden_update_and_render_sig(eden_update_and_render_f);
 
-#define eden_debug_update_and_render_sig(name) void name(eden_t* eden)
+#define eden_debug_update_and_render_sig(name) void name(eden_t* e)
 typedef eden_debug_update_and_render_sig(eden_debug_update_and_render_f);
 
 // To be called by platform

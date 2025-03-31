@@ -27,7 +27,6 @@ eden_get_config_sig(eden_get_config)
 
   ret.target_frame_rate = 60;
   ret.max_workers = 256;
-  ret.max_files = 32;
 
   ret.inspector_max_entries = 8;
   ret.profiler_max_entries = 8;

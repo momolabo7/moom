@@ -1278,6 +1278,7 @@ static void doze(u32_t ms_to_doze);
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "winhttp.lib")
+#pragma comment(lib, "Msimg32.lib")
 //#pragma comment(lib, "shell32.lib")
 
 struct file_t {
@@ -1536,7 +1537,7 @@ memory_allocate(usz_t size) {
         0, 
         size,
         MEM_RESERVE | MEM_COMMIT, 
-        PAGE_READWRITE), 
+PAGE_READWRITE), 
       size);
 
 }
@@ -6694,7 +6695,7 @@ _bufio_push_fmt_list(bufio_t* b, buf_t format, va_list args)
           _bufio_push_fmt_push_buffer_based_on_width(b, width, tb.str);
         } break;
         case 'f': {
-          f64_t value = va_arg(args, f64_t);
+            f64_t value = va_arg(args, f64_t);
           bufio_push_f32(&tb, (f32_t)value, precision);
           _bufio_push_fmt_push_buffer_based_on_width(b, width, tb.str);
         } break;
