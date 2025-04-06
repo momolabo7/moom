@@ -15,17 +15,13 @@
 #define GETUNA_SS_BUTTON_W          (200)
 #define GETUNA_SS_BUTTON_H          (30)
 
-struct getuna_bitmap_t
-{
-  HBITMAP hbitmap;
-  u32_t width, height;
-};
 
 struct getuna_ss_t
 {
   HWND window;
   HBITMAP bmp;
   
+
   // @todo: maybe store pixels too?
   u32_t pixels;
 };
@@ -36,13 +32,22 @@ struct getuna_t
   HWND main_window;
   HINSTANCE instance;
   b32_t is_running;
+  
+  // for overlay drawing
+  b32_t is_dragging;
+
+  //@note: this is for reference; the original screenshot of the whole desktop
+  w32_dib_t selection_screenshot; 
+  
+  // @note: this is used to present to the screen as a complete frame
+  w32_dib_t selection_frame; 
+  POINT drag_start;
+  POINT drag_end;
+  POINT drag_end_prev; // previous frame's drag_end
+
+
 
   HBITMAP debug_bitmap;
-//  HBITMAP selection_screenshot;
-
-  getuna_bitmap_t selection_screenshot;
-  getuna_bitmap_t selection_overlay;
-
 
 
   u32_t ss_count;
@@ -59,13 +64,13 @@ static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }
 
 
 static void
-getuna_spawn_ss_window()
+getuna_spawn_ss_window(LONG x, LONG y, LONG w, LONG h)
 {
   HDC screen_dc = GetDC(0);
   HDC temp_dc = CreateCompatibleDC(screen_dc);
-  HBITMAP bmp = CreateCompatibleBitmap(screen_dc, 300,200);
+  HBITMAP bmp = CreateCompatibleBitmap(screen_dc, w, h);
   HBITMAP old_bmp = (HBITMAP)SelectObject(temp_dc, bmp);
-  BitBlt(temp_dc, 0, 0, 300, 200, screen_dc, 100, 100, SRCCOPY);
+  BitBlt(temp_dc, 0, 0, w, h, screen_dc, x, y, SRCCOPY);
   bmp = (HBITMAP)SelectObject(temp_dc, old_bmp);
   DeleteDC(temp_dc);
   ReleaseDC(0, screen_dc);
@@ -78,8 +83,8 @@ getuna_spawn_ss_window()
       "Screenshot",                   // Class name
       0,
       WS_POPUP | WS_VISIBLE | WS_BORDER,     // Styles
-      50, 100,                   // x, y position
-      300, 200,                   // width, height
+      x, y,                   // x, y position
+      w, h,                   // width, height
       getuna->main_window,                      // Parent window
       NULL,                      // No menu or control ID needed
       getuna->instance,
@@ -107,30 +112,23 @@ getuna_spawn_selection_window()
   int y = GetSystemMetrics(SM_YVIRTUALSCREEN);
   int w = GetSystemMetrics(SM_CXVIRTUALSCREEN);
   int h = GetSystemMetrics(SM_CYVIRTUALSCREEN);
-#if 0
 
+  w32_dib_t* ss_dib = &getuna->selection_screenshot;
+  w32_dib_t* frame_dib = &getuna->selection_frame;
+  w32_dib_init(ss_dib, w, h);
+  w32_dib_init(frame_dib, w, h);
 
   HDC screen_dc = GetDC(0);
-  HDC temp_dc = CreateCompatibleDC(screen_dc);
-  HBITMAP bmp = CreateCompatibleBitmap(screen_dc, w, h);
-  HBITMAP old_bmp = (HBITMAP)SelectObject(temp_dc, bmp);
-  BitBlt(temp_dc, 0, 0, w, h, screen_dc, 0, 0, SRCCOPY);
-  bmp = (HBITMAP)SelectObject(temp_dc, old_bmp);
-  DeleteDC(temp_dc);
-  ReleaseDC(0, screen_dc);
-#endif
-  HDC screen_dc = GetDC(0);
-  HDC temp_dc = CreateCompatibleDC(screen_dc);
-  HBITMAP bmp = CreateCompatibleBitmap(screen_dc, w,h);
-  HBITMAP old_bmp = (HBITMAP)SelectObject(temp_dc, bmp);
-  BitBlt(temp_dc, 0, 0, w, h, screen_dc, x, y, SRCCOPY);
-  bmp = (HBITMAP)SelectObject(temp_dc, old_bmp);
-  DeleteDC(temp_dc);
+  w32_dib_blit_from_dc(ss_dib, screen_dc, x, y);
+  w32_dib_blit_from_dc(frame_dib, screen_dc, x, y);
   ReleaseDC(0, screen_dc);
 
-  getuna->selection_screenshot.hbitmap = bmp;
-  getuna->selection_screenshot.width = w;
-  getuna->selection_screenshot.height = h;
+  getuna->drag_start = getuna->drag_end = getuna->drag_end_prev = {0};
+
+  for (int i = 0; i < w * h; ++i) {
+    u32_t* pixel = w32_dib_pixel_index(frame_dib, i); 
+    pixel[0] = (pixel[0] & 0xFF000000) | ((pixel[0] & 0x00FEFEFE) >> 1);
+  }
 
   HWND window = CreateWindowEx(
       WS_EX_TOPMOST | WS_EX_TOOLWINDOW,
@@ -203,14 +201,19 @@ w32_getuna_ss_window_callback(
   return result;
 }
 
+static u32_t
+w32_getuna_darken_pixel(u32_t pixel)
+{
+  return (pixel & 0xFF000000) | ((pixel & 0x00FEFEFE) >> 1);
+}
+
 LRESULT CALLBACK
-w32_getuna_overlay_window_callback(
+w32_getuna_selection_window_callback(
     HWND window, 
     UINT message, 
     WPARAM w_param,
     LPARAM l_param) 
 {
-
   LRESULT result = 0;
   switch(message) 
   {
@@ -219,17 +222,41 @@ w32_getuna_overlay_window_callback(
     } break;
     case WM_LBUTTONDOWN:
     {
+      getuna->is_dragging = true;
+      GetCursorPos(&getuna->drag_start);
+      ScreenToClient(window, &getuna->drag_start);
+    } break;
+    case WM_LBUTTONUP:
+    {
+      getuna->is_dragging = false;
+      PostMessage(window, WM_CLOSE, 0, 0);
+      getuna_spawn_ss_window();
+    } break;
+    case WM_MOUSEMOVE:
+    {
+      if (getuna->is_dragging)
+      {
+        getuna->drag_end_prev = getuna->drag_end;
+
+        GetCursorPos(&getuna->drag_end);
+        ScreenToClient(window, &getuna->drag_end);
+        InvalidateRect(window, NULL, TRUE);
+      }
     } break;
     case WM_CLOSE:  
     case WM_QUIT:
     case WM_DESTROY: 
     {
-      PostQuitMessage(0);
+      w32_dib_free(&getuna->selection_frame);
+      w32_dib_free(&getuna->selection_screenshot);
+      DestroyWindow(window);
+      ShowWindow(getuna->main_window, SW_SHOW);
     } break;
     case WM_KEYDOWN:
     {
-      if (w_param == VK_ESCAPE) {
-        PostQuitMessage(0);
+      if (w_param == VK_ESCAPE) 
+      {
+        PostMessage(window, WM_CLOSE, 0, 0);
       }
     } break;
     case WM_PAINT: 
@@ -237,49 +264,62 @@ w32_getuna_overlay_window_callback(
       PAINTSTRUCT ps;
       HDC hdc = BeginPaint(window, &ps);
 
+      w32_dib_t* frame_dib = &getuna->selection_frame;
+      w32_dib_t* ss_dib = &getuna->selection_screenshot;
 
-      getuna_bitmap_t* bmp = &getuna->selection_screenshot;
+
+      // Restore border
       {
-        HDC temp_dc = CreateCompatibleDC(hdc);
-        HBITMAP old_bmp = (HBITMAP)SelectObject(temp_dc, bmp->hbitmap);
-        BitBlt(hdc, 0, 0, bmp->width, bmp->height, temp_dc, 0, 0, SRCCOPY);
-        SelectObject(temp_dc, old_bmp);
-        DeleteDC(temp_dc);
+        LONG min_x, max_x, min_y, max_y;
+        minmax_of(getuna->drag_start.x, getuna->drag_end_prev.x, min_x, max_x); 
+        minmax_of(getuna->drag_start.y, getuna->drag_end_prev.y, min_y, max_y); 
+
+        for (LONG y = min_y; y <= max_y; ++y)
+        {
+          dref(w32_dib_pixel_xy(frame_dib, min_x, y)) = w32_getuna_darken_pixel(dref(w32_dib_pixel_xy(ss_dib, min_x, y)));
+          dref(w32_dib_pixel_xy(frame_dib, max_x, y)) = w32_getuna_darken_pixel(dref(w32_dib_pixel_xy(ss_dib, max_x, y)));
+        }
+        for (LONG x = min_x; x <= max_x; ++x)
+        {
+          dref(w32_dib_pixel_xy(frame_dib, x, min_y)) = w32_getuna_darken_pixel(dref(w32_dib_pixel_xy(ss_dib, x, min_y)));
+          dref(w32_dib_pixel_xy(frame_dib, x, max_y)) = w32_getuna_darken_pixel(dref(w32_dib_pixel_xy(ss_dib, x, max_y)));
+        }
       }
 
-
-      // dimming starts here
+      // Draw border
       {
-        BITMAPINFO bi = { 0 };
-        bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-        bi.bmiHeader.biWidth = bmp->width;
-        bi.bmiHeader.biHeight = -bmp->height; // Negative = top-down
-        bi.bmiHeader.biPlanes = 1;
-        bi.bmiHeader.biBitCount = 32; // <-- Important!
-        bi.bmiHeader.biCompression = BI_RGB;
+        LONG min_x, max_x, min_y, max_y;
+        minmax_of(getuna->drag_start.x, getuna->drag_end.x, min_x, max_x); 
+        minmax_of(getuna->drag_start.y, getuna->drag_end.y, min_y, max_y); 
 
-        void* bits = 0;
-        HDC temp_dc = CreateCompatibleDC(hdc);
-        HBITMAP dim_bmp = CreateDIBSection(hdc, &bi, DIB_RGB_COLORS,&bits, 0, 0);
-        HBITMAP old_bmp = (HBITMAP)SelectObject(temp_dc, dim_bmp);
-
-        DWORD* pixels = (DWORD*)bits;
-        for (int i = 0; i < bmp->width * bmp->height; ++i) {
-          pixels[i] = 0x77000000; // AARRGGBB: semi-transparent black (0x77 alpha)
+        u32_t fill_color = 0xffff0000;
+        for (LONG y = min_y; y <= max_y; ++y)
+        {
+            dref(w32_dib_pixel_xy(frame_dib, min_x, y)) = fill_color;
+            dref(w32_dib_pixel_xy(frame_dib, max_x, y)) = fill_color;
+        }
+        for (LONG x = min_x; x <= max_x; ++x)
+        {
+            dref(w32_dib_pixel_xy(frame_dib, x, min_y)) = fill_color;
+            dref(w32_dib_pixel_xy(frame_dib, x, max_y)) = fill_color;
         }
 
-        // Blend onto the screen
-        BLENDFUNCTION blend = { AC_SRC_OVER, 0, 120, 0 }; // 120/255 alpha
-        AlphaBlend(hdc, 0, 0, bmp->width, bmp->height, temp_dc, 0, 0, bmp->width, bmp->height, blend);
-        //BitBlt(hdc, 0, 0, 300, 300, temp_dc, 0, 0, SRCCOPY);
-
-        SelectObject(temp_dc, old_bmp);
-        DeleteObject(dim_bmp);
-        DeleteDC(temp_dc);
+#if 0
+        // "whiten" area within border
+        for (LONG y = min_y+1; y <= max_y-1; ++y)
+        {
+          for (LONG x = min_x+1; x <= max_x-1; ++x)
+          {
+            dref(w32_dib_pixel_xy(frame_dib, x, y)) = dref(w32_dib_pixel_xy(ss_dib, x, y));
+          }
+        }
+#endif
       }
 
 
-      // TODO: draw the rect box
+      w32_dib_blit_to_dc(frame_dib, hdc);
+
+
       EndPaint(window, &ps);
 
     } break;
@@ -315,8 +355,9 @@ w32_getuna_main_window_callback(
     {
       if (LOWORD(w_param) == GETUNA_SS_BUTTON_COMMAND_ID )
       {
-        //getuna_spawn_ss_window();
+        ShowWindow(getuna->main_window, SW_HIDE);
         getuna_spawn_selection_window();
+
       }
     } break;
     default: {
@@ -334,7 +375,7 @@ WinMain(
     int argc) 
 {
   SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-  getuna = arena_alloc_bootstrap(getuna_t, arena, gigabytes(1)); 
+  getuna = arena_alloc_bootstrap_zero(getuna_t, arena, gigabytes(1)); 
   getuna->instance = instance;
 
   // create window
@@ -375,9 +416,10 @@ WinMain(
     // for overlay window
     WNDCLASS selection_class = {};
     //w32_class.style = CS_HREDRAW | CS_VREDRAW;
-    selection_class.lpfnWndProc = w32_getuna_overlay_window_callback;
+    selection_class.lpfnWndProc = w32_getuna_selection_window_callback;
     selection_class.hInstance = instance;
     selection_class.lpszClassName = "Selection";
+    selection_class.hCursor = LoadCursor(NULL, IDC_CROSS);
     
     if(!RegisterClass(&selection_class)) {
       return 1;

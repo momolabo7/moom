@@ -729,6 +729,16 @@ struct file_t;  // @note: Implementation is different depending on OS
 #define ms_from_secs(secs) ((secs) * 1000)
 #define min_of(l,r) ((l) < (r) ? (l) : (r))
 #define max_of(l,r) ((l) > (r) ? (l) : (r))
+#define minmax_of(a,b,omin,omax) \
+  do { \
+    if ((a) < (b)) { \
+      (omin) = (a); \
+      (omax) = (b); \
+    } else {\
+      (omin) = (b); \
+      (omax) = (a); \
+    } \
+  } while(0)
 #define clamp_of(x,b,t) (max_of(min_of(x,t),b))
 #define swap(l,r) { auto tmp = (l); (l) = (r); (r) = tmp; } 
 
@@ -1172,6 +1182,7 @@ static b32_t    arena_grow_buffer(arena_t* a, buf_t* str, usz_t new_size);
 #define arena_push_zero_align(t,b,a)       (t*)arena_push_size_zero(b, sizeof(t), a)
 #define arena_push_zero(t,b)               (t*)arena_push_size_zero(b, sizeof(t), alignof(t))
 #define arena_alloc_bootstrap(t,m,s)        (t*)arena_alloc_bootstrap_size(sizeof(t), offsetof(t,m), s)
+#define arena_alloc_bootstrap_zero(t,m,s)   (t*)arena_alloc_bootstrap_size_zero(sizeof(t), offsetof(t,m), s)
 
 static arena_marker_t arena_mark(arena_t* a);
 static void arena_revert(arena_marker_t marker);
@@ -1561,6 +1572,113 @@ clock_resolution() {
   QueryPerformanceFrequency(&freq);
   u64_t ret = (u64_t)freq.QuadPart;
   return ret;
+}
+
+// @note: this is basicall a bitmap
+struct w32_dib_t 
+{
+  HBITMAP bitmap;
+
+  u32_t width, height;
+  u32_t buffer_size;
+
+  u32_t* pixels;
+};
+
+static void
+w32_dib_free(w32_dib_t* dib)
+{
+  DeleteObject(dib->bitmap);
+}
+
+static void 
+w32_dib_blit_to_dc(w32_dib_t* dib, HDC dest_dc) 
+{
+  HDC temp_dc = CreateCompatibleDC(0);
+  HGDIOBJ old_bitmap = SelectObject(temp_dc, dib->bitmap);
+  BitBlt(
+      dest_dc, 
+      0, 0, 
+      dib->width, 
+      dib->height,
+      temp_dc,
+      0, 0,
+      SRCCOPY);
+  SelectObject(temp_dc, old_bitmap);
+  DeleteDC(temp_dc);
+}
+
+static void 
+w32_dib_blit_from_dc(
+    w32_dib_t* dib, 
+    HDC src_dc, 
+    s32_t src_x, 
+    s32_t src_y) 
+{
+  HDC temp_dc = CreateCompatibleDC(0);
+  HGDIOBJ old_bitmap = SelectObject(temp_dc, dib->bitmap);
+  BitBlt(
+      temp_dc, 
+      0, 0, 
+      dib->width, 
+      dib->height,
+      src_dc,
+      src_x, 
+      src_y,
+      SRCCOPY);
+  SelectObject(temp_dc, old_bitmap);
+  DeleteDC(temp_dc);
+}
+
+
+static u32_t* 
+w32_dib_pixel_xy(w32_dib_t* dib, u32_t x, u32_t y) 
+{
+  assert(x < dib->width);
+  assert(y < dib->height);
+  return &dib->pixels[x + y * dib->width];
+}
+
+static u32_t* 
+w32_dib_pixel_index(w32_dib_t* dib, u32_t index) 
+{
+  assert(index < dib->width * dib->height);
+  return &dib->pixels[index];
+}
+
+static b32_t
+w32_dib_init(w32_dib_t* dib, u32_t width, u32_t height) 
+{
+  assert(width);
+  assert(height);
+  BITMAPINFO bitmap_info;
+  bitmap_info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+  bitmap_info.bmiHeader.biPlanes = 1;
+  bitmap_info.bmiHeader.biBitCount = 32;
+  bitmap_info.bmiHeader.biCompression = BI_RGB;
+  bitmap_info.bmiHeader.biSizeImage = 0;
+  bitmap_info.bmiHeader.biClrUsed = 0;
+  bitmap_info.bmiHeader.biClrImportant = 0;
+  bitmap_info.bmiHeader.biWidth = width;
+  bitmap_info.bmiHeader.biHeight = -height;
+
+  dib->width = width;
+  dib->height = height;
+
+
+  HDC hdc = GetDC(0);
+  defer { ReleaseDC(0, hdc); };
+  dib->bitmap = CreateDIBSection(
+      hdc, 
+      &bitmap_info, 
+      DIB_RGB_COLORS, 
+      (void**)&dib->pixels,
+      0,
+      0);
+  if (!dib->bitmap)
+    return false;
+
+  return true;
 }
 
 #elif OS_LINUX 
@@ -8933,8 +9051,17 @@ arena_alloc_bootstrap_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size
   arena_t arena = {};
   arena_alloc(&arena, virtual_size);
   void* ret = arena_push_size(&arena, size); // alignment shouldn't matter here
+  auto* arena_ptr = (arena_t*)((u8_t*)ret + offset_to_arena);
+  dref(arena_ptr) = arena;
+  return ret;
+}
 
-
+static void*   
+arena_alloc_bootstrap_size_zero(usz_t size, usz_t offset_to_arena, usz_t virtual_size)
+{
+  arena_t arena = {};
+  arena_alloc(&arena, virtual_size);
+  void* ret = arena_push_size_zero(&arena, size); // alignment shouldn't matter here
   auto* arena_ptr = (arena_t*)((u8_t*)ret + offset_to_arena);
   dref(arena_ptr) = arena;
   return ret;

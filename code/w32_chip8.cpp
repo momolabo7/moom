@@ -215,17 +215,6 @@ chip8_exit(chip8_t* chip8)
 
 
 
-// @note: this is basicall a bitmap
-struct w32_dib_t 
-{
-  BITMAPINFO bitmap_info;
-  HBITMAP bitmap;
-
-  u32_t width, height;
-  u32_t buffer_size;
-
-  u32_t* pixel_buffer;
-};
 
 struct w32_frc_t
 {
@@ -294,79 +283,6 @@ w32_dib_t g_frame_dib;
 static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }
 static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }
 
-static void
-w32_dib_free(w32_dib_t* dib)
-{
-  if (dib->bitmap)
-  {
-    DeleteObject(dib->bitmap);
-  }
-}
-
-static void 
-w32_dib_blit_to_dc(w32_dib_t* dib, HDC dc) 
-{
-  if (dib->bitmap)
-  {
-    HDC temp_dc = CreateCompatibleDC(0);
-    HGDIOBJ old_bitmap = SelectObject(temp_dc, dib->bitmap);
-    BitBlt(
-        dc, 
-        0, 0, 
-        dib->width, 
-        dib->height,
-        temp_dc,
-        0, 0,
-        SRCCOPY);
-    SelectObject(temp_dc, old_bitmap);
-    DeleteDC(temp_dc);
-  }
-}
-
-static void
-w32_dib_set_pixel(w32_dib_t* dib, u32_t x, u32_t y, u32_t a, u32_t r, u32_t g, u32_t b) 
-{
-  assert(x < dib->width);
-  assert(y < dib->height);
-  u32_t color = (a << 24) + (r << 16) + (g << 8) + (b << 0);
-  dib->pixel_buffer[x + y * dib->width] = color;
-}
-
-static b32_t
-w32_dib_init(w32_dib_t* dib, u32_t width, u32_t height, HWND window) 
-{
-  assert(width);
-  assert(height);
-  assert(window);
-
-  dib->bitmap_info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-  dib->bitmap_info.bmiHeader.biPlanes = 1;
-  dib->bitmap_info.bmiHeader.biBitCount = 32;
-  dib->bitmap_info.bmiHeader.biCompression = BI_RGB;
-  dib->bitmap_info.bmiHeader.biSizeImage = 0;
-  dib->bitmap_info.bmiHeader.biClrUsed = 0;
-  dib->bitmap_info.bmiHeader.biClrImportant = 0;
-  dib->bitmap_info.bmiHeader.biWidth = width;
-  dib->bitmap_info.bmiHeader.biHeight = -height;
-
-  dib->width = width;
-  dib->height = height;
-
-
-  HDC hdc = GetDC(window);
-  defer { ReleaseDC(0, hdc); };
-  dib->bitmap = CreateDIBSection(
-      hdc, 
-      &dib->bitmap_info, 
-      DIB_RGB_COLORS, 
-      (void**)&dib->pixel_buffer,
-      0,
-      0);
-  if (!dib->bitmap)
-    return false;
-
-  return true;
-}
 
 
 LRESULT CALLBACK
@@ -488,7 +404,7 @@ WinMain(HINSTANCE instance,
   arena_alloc(&arena, gigabytes(1), false); 
   defer { arena_free(&arena); };
 
-  w32_dib_init(&g_frame_dib, CHIP8_WINDOW_WIDTH, CHIP8_WINDOW_HEIGHT, window);
+  w32_dib_init(&g_frame_dib, CHIP8_WINDOW_WIDTH, CHIP8_WINDOW_HEIGHT);
   defer { w32_dib_free(&g_frame_dib); };  
 
   chip8_t* chip8 = arena_push(chip8_t, &arena);
@@ -519,32 +435,28 @@ WinMain(HINSTANCE instance,
     chip8_update(chip8);
 
     // rendering
+    for(s32_t y = 0; y < CHIP8_DISPLAY_HEIGHT; ++y)
     {
-
-      
-      for(s32_t y = 0; y < CHIP8_DISPLAY_HEIGHT; ++y)
+      for (s32_t x = 0; x < CHIP8_DISPLAY_WIDTH; ++x) 
       {
-        for (s32_t x = 0; x < CHIP8_DISPLAY_WIDTH; ++x) 
-        {
-          u8_t pixel = chip8->display[y * CHIP8_DISPLAY_WIDTH + x];
+        u8_t pixel = chip8->display[y * CHIP8_DISPLAY_WIDTH + x];
 
-          s32_t start_x = x * CHIP8_WINDOW_SCALE;
-          s32_t start_y = y * CHIP8_WINDOW_SCALE;
-          s32_t end_x = start_x + CHIP8_WINDOW_SCALE;
-          s32_t end_y = start_y + CHIP8_WINDOW_SCALE;
-          
-          for (s32_t dy = start_y; dy < end_y; ++dy)
+        s32_t start_x = x * CHIP8_WINDOW_SCALE;
+        s32_t start_y = y * CHIP8_WINDOW_SCALE;
+        s32_t end_x = start_x + CHIP8_WINDOW_SCALE;
+        s32_t end_y = start_y + CHIP8_WINDOW_SCALE;
+
+        for (s32_t dy = start_y; dy < end_y; ++dy)
+        {
+          for (s32_t dx = start_x; dx < end_x; ++dx)
           {
-            for (s32_t dx = start_x; dx < end_x; ++dx)
+            if (pixel)
             {
-              if (pixel)
-              {
-                w32_dib_set_pixel(&g_frame_dib, dx, dy, 255, 255, 255, 255);
-              }
-              else
-              {
-                w32_dib_set_pixel(&g_frame_dib, dx, dy, 0,0,0,0);
-              }
+              w32_dib_pixel_xy(&g_frame_dib, dx, dy)[0] = 0xffffffff;
+            }
+            else
+            {
+              w32_dib_pixel_xy(&g_frame_dib, dx, dy)[0] = 0;
             }
           }
         }
