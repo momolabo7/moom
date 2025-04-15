@@ -681,7 +681,7 @@ data_chunk	code/momo.h	/^  wav_data_chunk_t data_chunk;$/;"	m	language:C++	struc
 data_size	code/eden_assets.h	/^  u32_t data_size;$/;"	m	language:C++	struct:eden_asset_sound_t	typeref:typename:u32_t
 data_size	code/eden_asset_file.h	/^  u32_t data_size;$/;"	m	language:C++	struct:asset_file_sound_t	typeref:typename:u32_t
 debug_arena	code/app_lit.cpp	/^  arena_t debug_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
-debug_bitmap	code/w32_getuna.cpp	/^  HBITMAP debug_bitmap;$/;"	m	language:C++	struct:getuna_t	typeref:typename:HBITMAP	file:
+debug_bitmap	code/w32_getuna.cpp	/^  HBITMAP debug_bitmap; \/\/ @todo: remove$/;"	m	language:C++	struct:getuna_t	typeref:typename:HBITMAP	file:
 debug_log	code/eden.h	/^  eden_debug_log_f* debug_log;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_debug_log_f *
 defer	code/momo.h	/^#define defer /;"	d	language:C++
 delay_timer	code/w32_chip8.cpp	/^  u8_t delay_timer;$/;"	m	language:C++	struct:chip8_t	typeref:typename:u8_t	file:
@@ -710,7 +710,9 @@ doze	code/momo.h	/^doze(u32_t ms_to_doze) {$/;"	f	language:C++	typeref:typename:
 doze	code/momo.h	/^static void doze(u32_t ms_to_doze);$/;"	p	language:C++	typeref:typename:void
 drag_end	code/w32_getuna.cpp	/^  POINT drag_end;$/;"	m	language:C++	struct:getuna_t	typeref:typename:POINT	file:
 drag_end_prev	code/w32_getuna.cpp	/^  POINT drag_end_prev; \/\/ previous frame's drag_end$/;"	m	language:C++	struct:getuna_t	typeref:typename:POINT	file:
+drag_end_raw	code/w32_getuna.cpp	/^  POINT drag_end_raw;$/;"	m	language:C++	struct:getuna_t	typeref:typename:POINT	file:
 drag_start	code/w32_getuna.cpp	/^  POINT drag_start;$/;"	m	language:C++	struct:getuna_t	typeref:typename:POINT	file:
+drag_start_raw	code/w32_getuna.cpp	/^  POINT drag_start_raw;$/;"	m	language:C++	struct:getuna_t	typeref:typename:POINT	file:
 draw_mode	code/app_sandbox.cpp	/^    sandbox_mode_draw_t draw_mode;$/;"	m	language:C++	union:sandbox_t::__anon6f36386f010a	typeref:typename:sandbox_mode_draw_t	file:
 draw_mode	code/eden_gfx_opengl.h	/^  eden_opengl_draw_mode_t draw_mode; $/;"	m	language:C++	struct:eden_opengl_batch_t	typeref:typename:eden_opengl_draw_mode_t
 dref	code/momo.h	/^#define dref(/;"	d	language:C++
@@ -1610,10 +1612,15 @@ GETUNA_SS_BUTTON_TEXT	code/w32_getuna.cpp	/^#define GETUNA_SS_BUTTON_TEXT /;"	d	
 GETUNA_SS_BUTTON_W	code/w32_getuna.cpp	/^#define GETUNA_SS_BUTTON_W /;"	d	language:C++	file:
 GETUNA_SS_BUTTON_X	code/w32_getuna.cpp	/^#define GETUNA_SS_BUTTON_X /;"	d	language:C++	file:
 GETUNA_SS_BUTTON_Y	code/w32_getuna.cpp	/^#define GETUNA_SS_BUTTON_Y /;"	d	language:C++	file:
+GETUNA_SS_CONTEXT_ALPHA_100	code/w32_getuna.cpp	/^  GETUNA_SS_CONTEXT_ALPHA_100,$/;"	e	language:C++	enum:__anon3ca3a2df0103	file:
+GETUNA_SS_CONTEXT_ALPHA_50	code/w32_getuna.cpp	/^  GETUNA_SS_CONTEXT_ALPHA_50,$/;"	e	language:C++	enum:__anon3ca3a2df0103	file:
+GETUNA_SS_CONTEXT_ALPHA_75	code/w32_getuna.cpp	/^  GETUNA_SS_CONTEXT_ALPHA_75,$/;"	e	language:C++	enum:__anon3ca3a2df0103	file:
+GETUNA_SS_CONTEXT_EXIT	code/w32_getuna.cpp	/^  GETUNA_SS_CONTEXT_EXIT,$/;"	e	language:C++	enum:__anon3ca3a2df0103	file:
 getuna_ss_t	code/w32_getuna.cpp	/^struct getuna_ss_t$/;"	s	language:C++	file:
 getuna_t	code/w32_getuna.cpp	/^struct getuna_t$/;"	s	language:C++	file:
 GETUNA_WINDOW_HEIGHT	code/w32_getuna.cpp	/^#define GETUNA_WINDOW_HEIGHT /;"	d	language:C++	file:
 GETUNA_WINDOW_WIDTH	code/w32_getuna.cpp	/^#define GETUNA_WINDOW_WIDTH /;"	d	language:C++	file:
+GETUNA_WM_SS	code/w32_getuna.cpp	/^#define GETUNA_WM_SS /;"	d	language:C++	file:
 get_config	code/eden.h	/^  eden_get_config_f* get_config;$/;"	m	language:C++	struct:eden_functions_t	typeref:typename:eden_get_config_f *
 gfx	code/eden.h	/^  eden_gfx_t gfx;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_gfx_t
 gigabytes	code/momo.h	/^#define gigabytes(/;"	d	language:C++
@@ -3414,7 +3421,6 @@ WinMain	code/w32_chip8.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typ
 WinMain	code/w32_eden.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 WinMain	code/w32_getuna.cpp	/^WinMain($/;"	f	language:C++	typeref:typename:int APIENTRY CALLBACK
 WinMain	code/w32_sandbox_wasapi.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int APIENTRY CALLBACK
-WM_SS	code/w32_getuna.cpp	/^#define WM_SS /;"	d	language:C++	file:
 work_queue	code/ship_app_lit.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_work_queue_t	file:
 work_queue	code/w32_eden.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_work_queue_t	file:
 world_pos	code/app_gbg.cpp	/^  v2f_t world_pos;$/;"	m	language:C++	struct:gbg_enemy_t	typeref:typename:v2f_t	file:
@@ -3628,6 +3634,7 @@ __anon1db7a63d2a03	code/momo.h	/^enum {$/;"	g	language:C++
 __anon1db7a63d2b03	code/momo.h	/^enum {$/;"	g	language:C++
 __anon1db7a63d2c0a	code/momo.h	/^  union {$/;"	u	language:C++	struct:_png_chunk_header_t
 __anon23bd245c010a	code/pass.h	/^  union {$/;"	u	language:C++	struct:pass_pack_atlas_context_t
+__anon3ca3a2df0103	code/w32_getuna.cpp	/^enum {$/;"	g	language:C++	file:
 __anon6f36386f010a	code/app_sandbox.cpp	/^  union {$/;"	u	language:C++	struct:sandbox_t	file:
 __anon8328d6a5010a	code/eden_gfx.h	/^  {$/;"	u	language:C++	struct:eden_gfx_command_t
 __anon88df87f0010a	code/app_gbg.cpp	/^  union {$/;"	u	language:C++	struct:gbg_tile_t	file:

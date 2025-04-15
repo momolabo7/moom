@@ -1278,6 +1278,7 @@ static void doze(u32_t ms_to_doze);
 # include <ws2tcpip.h>
 # include <winhttp.h>
 # include <windows.h> // @note: must be in front of <winsock2.h> :(
+# include <windowsx.h> // @note: must be in front of <winsock2.h> :(
 # include <iphlpapi.h>
 # undef near
 # undef far

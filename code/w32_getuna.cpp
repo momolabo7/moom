@@ -15,16 +15,15 @@
 #define GETUNA_SS_BUTTON_W          (200)
 #define GETUNA_SS_BUTTON_H          (30)
 
-#define WM_SS (WM_USER+1)
+#define GETUNA_WM_SS (WM_USER+1)
 
-struct getuna_ss_t
-{
-  HWND window;
-  HBITMAP bmp;
-  
-  // @todo: maybe store pixels too?
-  u32_t pixels;
+enum {
+  GETUNA_SS_CONTEXT_EXIT,
+  GETUNA_SS_CONTEXT_ALPHA_100,
+  GETUNA_SS_CONTEXT_ALPHA_75,
+  GETUNA_SS_CONTEXT_ALPHA_50,
 };
+
 
 struct getuna_t
 {
@@ -53,11 +52,6 @@ struct getuna_t
   // @note: this is used to present to the screen as a complete frame
   w32_dib_t selection_frame; 
 
-  HBITMAP debug_bitmap; // @todo: remove
-
-  u32_t ss_count;
-  getuna_ss_t sss[32];
-  
 
 };
 static getuna_t* getuna;
@@ -78,10 +72,10 @@ getuna_spawn_ss_window(LONG x, LONG y, LONG w, LONG h)
   ReleaseDC(0, screen_dc);
 
   // @todo: temporary code
-  getuna->debug_bitmap = bmp;
+  // getuna->debug_bitmap = bmp;
 
   HWND window = CreateWindowEx(
-      WS_EX_TOOLWINDOW,
+      WS_EX_TOOLWINDOW | WS_EX_LAYERED,
       "Screenshot",                   // Class name
       0,
       WS_POPUP | WS_VISIBLE | WS_BORDER,     // Styles
@@ -93,11 +87,19 @@ getuna_spawn_ss_window(LONG x, LONG y, LONG w, LONG h)
       NULL
       );
 
+  //
+  // @note: bro is storing the whole HBITMAP into the window user data pointer thingy.
+  // Ideally we want allocate a struct and have the long ptr point to that struct but
+  // atm I'm too lazy to deal with memory allocation implications and here :)
+  //
+  SetWindowLongPtr(window, GWLP_USERDATA, (LONG_PTR)bmp);
   if (!window)
   {
     // @todo: error handling
   }
 
+  //ShowWindow(window);
+  SetLayeredWindowAttributes(window, 0, 255, LWA_ALPHA);
 #if 0
   getuna_ss_t* ss = getuna->sss + getuna->ss_count;
   ss->window = window;
@@ -151,8 +153,6 @@ getuna_spawn_selection_window()
   }
 
   return true;
-
-
 }
 
 LRESULT CALLBACK
@@ -162,7 +162,6 @@ w32_getuna_ss_window_callback(
     WPARAM w_param,
     LPARAM l_param) 
 {
-
   LRESULT result = 0;
   switch(message) 
   {
@@ -173,6 +172,50 @@ w32_getuna_ss_window_callback(
     {
       // tricks windows into thinking that the user clicked the title bar
       SendMessage(window, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+    } break;
+    case WM_CONTEXTMENU:
+    {
+      HMENU menu = CreatePopupMenu();
+      int x = GET_X_LPARAM(l_param);
+      int y = GET_Y_LPARAM(l_param);
+      if (menu)
+      {
+        AppendMenu(menu, MF_STRING, GETUNA_SS_CONTEXT_ALPHA_100, TEXT("100%"));
+        AppendMenu(menu, MF_STRING, GETUNA_SS_CONTEXT_ALPHA_75, TEXT("75%"));
+        AppendMenu(menu, MF_STRING, GETUNA_SS_CONTEXT_ALPHA_50, TEXT("50%"));
+        AppendMenu(menu, MF_STRING, GETUNA_SS_CONTEXT_EXIT, TEXT("Exit"));
+
+        // @note: this is a blocking call
+        TrackPopupMenuEx(
+            menu,
+            TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RIGHTBUTTON,
+            x, y, window, NULL);
+
+        DestroyMenu(menu);
+      }
+    } break;
+    case WM_COMMAND:
+    {
+      int id = LOWORD(w_param);
+      if (id == GETUNA_SS_CONTEXT_EXIT) 
+      {
+        // @todo: free bitmap resources
+        HBITMAP ss_bitmap = (HBITMAP)GetWindowLongPtr(window, GWLP_USERDATA);
+        DeleteObject(ss_bitmap);
+        DestroyWindow(window); 
+      }
+      else if (id == GETUNA_SS_CONTEXT_ALPHA_100)
+      {
+        SetLayeredWindowAttributes(window, 0, 255, LWA_ALPHA);
+      }
+      else if (id == GETUNA_SS_CONTEXT_ALPHA_75)
+      {
+        SetLayeredWindowAttributes(window, 0, 255/4*3, LWA_ALPHA);
+      }
+      else if (id == GETUNA_SS_CONTEXT_ALPHA_50)
+      {
+        SetLayeredWindowAttributes(window, 0, 255 >> 1, LWA_ALPHA);
+      }
     } break;
     case WM_CLOSE:  
     case WM_QUIT:
@@ -186,14 +229,14 @@ w32_getuna_ss_window_callback(
       HDC hdc = BeginPaint(window, &ps);
 
       // Draw the bitmap
+      HBITMAP ss_bitmap = (HBITMAP)GetWindowLongPtr(window, GWLP_USERDATA);
       HDC temp_dc = CreateCompatibleDC(hdc);
-      HBITMAP old_bmp = (HBITMAP)SelectObject(temp_dc, getuna->debug_bitmap);
+      HBITMAP old_bmp = (HBITMAP)SelectObject(temp_dc, ss_bitmap);
       BITMAP bmp;
-      GetObject(getuna->debug_bitmap, sizeof(BITMAP), &bmp);
+      GetObject(ss_bitmap, sizeof(BITMAP), &bmp);
       BitBlt(hdc, 0, 0, bmp.bmWidth, bmp.bmHeight, temp_dc, 0, 0, SRCCOPY);
       SelectObject(temp_dc, old_bmp);
       DeleteDC(temp_dc);
-
       EndPaint(window, &ps);
     } break;
     default: {
@@ -233,7 +276,7 @@ w32_getuna_selection_window_callback(
     {
       getuna->is_dragging = false;
       PostMessage(window, WM_CLOSE, 0, 0);
-      PostMessage(getuna->main_window, WM_SS, 0, 0);
+      PostMessage(getuna->main_window, GETUNA_WM_SS, 0, 0);
     } break;
     case WM_MOUSEMOVE:
     {
@@ -270,7 +313,6 @@ w32_getuna_selection_window_callback(
       w32_dib_t* frame_dib = &getuna->selection_frame;
       w32_dib_t* ss_dib = &getuna->selection_screenshot;
 
-
       // Restore border
       {
         LONG min_x, max_x, min_y, max_y;
@@ -282,6 +324,7 @@ w32_getuna_selection_window_callback(
           dref(w32_dib_pixel_xy(frame_dib, min_x, y)) = w32_getuna_darken_pixel(dref(w32_dib_pixel_xy(ss_dib, min_x, y)));
           dref(w32_dib_pixel_xy(frame_dib, max_x, y)) = w32_getuna_darken_pixel(dref(w32_dib_pixel_xy(ss_dib, max_x, y)));
         }
+
         for (LONG x = min_x; x <= max_x; ++x)
         {
           dref(w32_dib_pixel_xy(frame_dib, x, min_y)) = w32_getuna_darken_pixel(dref(w32_dib_pixel_xy(ss_dib, x, min_y)));
@@ -306,7 +349,6 @@ w32_getuna_selection_window_callback(
             dref(w32_dib_pixel_xy(frame_dib, x, min_y)) = fill_color;
             dref(w32_dib_pixel_xy(frame_dib, x, max_y)) = fill_color;
         }
-
 #if 0
         // "whiten" area within border
         for (LONG y = min_y+1; y <= max_y-1; ++y)
@@ -318,11 +360,7 @@ w32_getuna_selection_window_callback(
         }
 #endif
       }
-
-
       w32_dib_blit_to_dc(frame_dib, hdc);
-
-
       EndPaint(window, &ps);
 
     } break;
@@ -363,7 +401,7 @@ w32_getuna_main_window_callback(
 
       }
     } break;
-    case WM_SS:
+    case GETUNA_WM_SS:
     {
       LONG x0, y0, x1, y1;
       minmax_of(getuna->drag_start_raw.x, getuna->drag_end_raw.x, x0, x1);
