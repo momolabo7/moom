@@ -15,13 +15,13 @@
 #define GETUNA_SS_BUTTON_W          (200)
 #define GETUNA_SS_BUTTON_H          (30)
 
+#define WM_SS (WM_USER+1)
 
 struct getuna_ss_t
 {
   HWND window;
   HBITMAP bmp;
   
-
   // @todo: maybe store pixels too?
   u32_t pixels;
 };
@@ -57,11 +57,8 @@ struct getuna_t
 };
 static getuna_t* getuna;
 
-
 static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }
 static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }
-
-
 
 static void
 getuna_spawn_ss_window(LONG x, LONG y, LONG w, LONG h)
@@ -93,7 +90,7 @@ getuna_spawn_ss_window(LONG x, LONG y, LONG w, LONG h)
 
   if (!window)
   {
-    // @todo: error |handling
+    // @todo: error handling
   }
 
 #if 0
@@ -230,7 +227,7 @@ w32_getuna_selection_window_callback(
     {
       getuna->is_dragging = false;
       PostMessage(window, WM_CLOSE, 0, 0);
-      getuna_spawn_ss_window();
+      PostMessage(getuna->main_window, WM_SS, 0, 0);
     } break;
     case WM_MOUSEMOVE:
     {
@@ -250,7 +247,6 @@ w32_getuna_selection_window_callback(
       w32_dib_free(&getuna->selection_frame);
       w32_dib_free(&getuna->selection_screenshot);
       DestroyWindow(window);
-      ShowWindow(getuna->main_window, SW_SHOW);
     } break;
     case WM_KEYDOWN:
     {
@@ -359,6 +355,15 @@ w32_getuna_main_window_callback(
         getuna_spawn_selection_window();
 
       }
+    } break;
+    case WM_SS:
+    {
+      getuna_spawn_ss_window(
+          getuna->drag_start.x,
+          getuna->drag_start.y,
+          getuna->drag_end.x - getuna->drag_start.x,
+          getuna->drag_end.y - getuna->drag_start.y);
+      ShowWindow(getuna->main_window, SW_SHOW);
     } break;
     default: {
       result = DefWindowProcA(window, message, w_param, l_param);
