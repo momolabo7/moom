@@ -414,12 +414,12 @@ WinMain(HINSTANCE instance,
   }
 
 
-  make(w32_frc_t, frc);
-  w32_frc_init(frc, CHIP8_FRAME_RATE);
+  w32_frc_t frc;
+  w32_frc_init(&frc, CHIP8_FRAME_RATE);
 
   while(g_is_running)
   {
-    w32_frc_begin(frc);
+    w32_frc_begin(&frc);
 
     MSG msg;
     while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -471,7 +471,7 @@ WinMain(HINSTANCE instance,
     }
 
 
-    w32_frc_end(frc);
+    w32_frc_end(&frc);
     
 
   }

@@ -40,13 +40,13 @@ momolabot_print_str(buf_t str)
 static b32_t 
 momolabot_connect(momolabot_t* m, buf_t password, buf_t channel, buf_t nick, arena_t* arena) 
 {
-  make(socket_t, s);
-  if (!socket_begin(s, "irc.chat.twitch.tv", 6667))
+  socket_t s;
+  if (!socket_begin(&s, "irc.chat.twitch.tv", 6667))
   {
     return false;
   }
 
-  socket_set_receive_timeout(s, ms_from_secs(1));
+  socket_set_receive_timeout(&s, ms_from_secs(1));
 
   // @note: this is more of initialization then 
   // 'connecting' but whatever i guess
@@ -57,17 +57,17 @@ momolabot_connect(momolabot_t* m, buf_t password, buf_t channel, buf_t nick, are
   // @note: we will be abusing and reusing this buffer
 
   // Tell twitch what kind of information we want
-  socket_send(s, buf_from_lit("CAP REQ :twitch.tv/membership twitch.tv/tags twitch.tv/commands\r\n"));
+  socket_send(&s, buf_from_lit("CAP REQ :twitch.tv/membership twitch.tv/tags twitch.tv/commands\r\n"));
 
   // Send the password
-  socket_send(s, password);
+  socket_send(&s, password);
 
   // Inform twitch our nickname
   {
     bufio_push_fmt(sender, buf_from_lit("NICK %S\r\n"), nick); 
-    socket_send(s, sender->str);
+    socket_send(&s, sender->str);
     bufio_clear(sender);
-    buf_t r = socket_receive(s, m->receiver);
+    buf_t r = socket_receive(&s, m->receiver);
     momolabot_print_str(r);
   }
   //printf("%s\n", buffer.e);
@@ -76,13 +76,13 @@ momolabot_connect(momolabot_t* m, buf_t password, buf_t channel, buf_t nick, are
   // Tell twitch which channel to join.
   {
     bufio_push_fmt(sender, buf_from_lit("JOIN #%S\r\n"), channel); 
-    socket_send(s, sender->str);
+    socket_send(&s, sender->str);
     bufio_clear(sender);
-    buf_t r = socket_receive(s, m->receiver);
+    buf_t r = socket_receive(&s, m->receiver);
     momolabot_print_str(r);
   }
 
-  m->socket = dref(s);
+  m->socket = s;
   return true;
 }
 
@@ -230,12 +230,12 @@ int main()
   SetThreadPriority(handle, THREAD_PRIORITY_TIME_CRITICAL);
   WaitForSingleObject(handle, INFINITE);
 
-  make(arena_t, arena);
-  arena_alloc(arena, gigabytes(1), false);
-  defer { arena_free(arena); };
+  arena_t arena;
+  arena_alloc(&arena, gigabytes(1), false);
+  defer { arena_free(&arena); };
 
-  momolabot_t* m = arena_push(momolabot_t, arena);
-  buf_t pw = file_read_into_buffer("momolabot_pass", arena);
+  momolabot_t* m = arena_push(momolabot_t, &arena);
+  buf_t pw = file_read_into_buffer("momolabot_pass", &arena);
   if(!buf_valid(pw))
   {
     printf("Cannot read momolabot_pass\n");
@@ -254,7 +254,7 @@ int main()
         pw, 
         buf_from_lit("momolabo7"), 
         buf_from_lit("momolabot"),
-        arena))
+        &arena))
   {
     printf("Cannot create socket\n");
     return 1;
@@ -269,7 +269,7 @@ int main()
 
   while(1)
   {
-    momolabot_update(m, arena);
+    momolabot_update(m, &arena);
   }
 
   return 0;

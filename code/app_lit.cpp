@@ -421,14 +421,14 @@ static b32_t
 lit_unlock_next_level(u32_t current_level_id) {
 
   if (current_level_id >= lit->save_data.unlocked_levels) {
-    make(file_t, file); 
+    file_t file; 
 
     lit->save_data.unlocked_levels = current_level_id + 1;
 
-    if (file_open(file, LIT_SAVE_FILE, FILE_ACCESS_CREATE)) 
+    if (file_open(&file, LIT_SAVE_FILE, FILE_ACCESS_CREATE)) 
     {
-      file_write(file, &lit->save_data, sizeof(lit->save_data), 0);
-      file_close(file);
+      file_write(&file, &lit->save_data, sizeof(lit->save_data), 0);
+      file_close(&file);
       return true;
     }
     else {
@@ -444,14 +444,14 @@ static b32_t
 lit_init_save_data() {
   lit->save_data.unlocked_levels = 0;
 
-  make(file_t, file);
+  file_t file;
 
   // save data actually found
-  if (file_open(file, LIT_SAVE_FILE, FILE_ACCESS_READ)) 
+  if (file_open(&file, LIT_SAVE_FILE, FILE_ACCESS_READ)) 
   {
-    if(file_read(file, &lit->save_data, sizeof(lit_save_data_t), 0)) 
+    if(file_read(&file, &lit->save_data, sizeof(lit_save_data_t), 0)) 
     {
-      file_close(file);
+      file_close(&file);
       return true;
     }
     else // data is somehow corrupted?

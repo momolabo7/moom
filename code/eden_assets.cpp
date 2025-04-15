@@ -51,20 +51,20 @@ eden_assets_init_from_file(
     arena_t* arena) 
 {
   eden_assets_t* assets = &eden->assets;
-  make(file_t, file);
+  file_t file;
   if(!file_open(
-        file,
+        &file,
         filename,
         FILE_ACCESS_READ))
   {
     return false;
   }
-  defer { file_close(file); };
+  defer { file_close(&file); };
 
 
   // Read header
   asset_file_header_t asset_file_header = {};
-  file_read(file, &asset_file_header, sizeof(asset_file_header_t), 0);
+  file_read(&file, &asset_file_header, sizeof(asset_file_header_t), 0);
   if (asset_file_header.signature != ASSET_FILE_SIGNATURE) 
   {
     return false;
@@ -92,7 +92,7 @@ eden_assets_init_from_file(
   {
     umi_t offset_to_sound = asset_file_header.offset_to_sounds + sizeof(asset_file_sound_t) * sound_index; 
     asset_file_sound_t file_sound = {};
-    if (!file_read(file, &file_sound, sizeof(asset_file_sound_t), offset_to_sound)) 
+    if (!file_read(&file, &file_sound, sizeof(asset_file_sound_t), offset_to_sound)) 
       return false;
 
     eden_asset_sound_t* s = assets->sounds + sound_index;
@@ -101,7 +101,7 @@ eden_assets_init_from_file(
     if (!s->data) 
       return false;
 
-    if (!file_read(file, s->data, s->data_size, file_sound.offset_to_data))
+    if (!file_read(&file, s->data, s->data_size, file_sound.offset_to_data))
       return false;
   }
 
@@ -114,7 +114,7 @@ eden_assets_init_from_file(
   {
     umi_t offset_to_shader = asset_file_header.offset_to_shaders + sizeof(asset_file_shader_t) * shader_index; 
     asset_file_shader_t file_shader = {};
-    if (!file_read(file, &file_shader, sizeof(asset_file_shader_t), offset_to_shader)) 
+    if (!file_read(&file, &file_shader, sizeof(asset_file_shader_t), offset_to_shader)) 
       return false;
 
     eden_asset_shader_t* s = assets->shaders + shader_index;
@@ -122,7 +122,7 @@ eden_assets_init_from_file(
     if (!buf_valid(s->code)) 
       return false;
 
-    if (!file_read(file, s->code.e, s->code.size, file_shader.offset_to_data))
+    if (!file_read(&file, s->code.e, s->code.size, file_shader.offset_to_data))
       return false;
   }
   // 
@@ -134,7 +134,7 @@ eden_assets_init_from_file(
   {
     umi_t offset_to_sprite = asset_file_header.offset_to_sprites + sizeof(asset_file_sprite_t) * sprite_index; 
     asset_file_sprite_t file_sprite = {};
-    if (!file_read(file, &file_sprite, sizeof(asset_file_sprite_t), offset_to_sprite))
+    if (!file_read(&file, &file_sprite, sizeof(asset_file_sprite_t), offset_to_sprite))
       return false;
     eden_asset_sprite_t* s = assets->sprites + sprite_index;
 
@@ -154,7 +154,7 @@ eden_assets_init_from_file(
   {
     umi_t offset_to_bitmap = asset_file_header.offset_to_bitmaps + sizeof(asset_file_bitmap_t) * bitmap_index; 
     asset_file_bitmap_t file_bitmap = {};
-    if (!file_read(file, &file_bitmap, sizeof(asset_file_bitmap_t), offset_to_bitmap)) {
+    if (!file_read(&file, &file_bitmap, sizeof(asset_file_bitmap_t), offset_to_bitmap)) {
       return false;
     }
 
@@ -170,7 +170,7 @@ eden_assets_init_from_file(
     payload->texture_width = file_bitmap.width;
     payload->texture_height = file_bitmap.height;
     if (!file_read(
-        file, 
+        &file, 
         payload->texture_data,
         bitmap_size, 
         file_bitmap.offset_to_data))
@@ -188,7 +188,7 @@ eden_assets_init_from_file(
   {
     umi_t offset_to_fonts = asset_file_header.offset_to_fonts + sizeof(asset_file_font_t) * font_index; 
     asset_file_font_t file_font = {};
-    if (!file_read(file, &file_font, sizeof(asset_file_font_t), offset_to_fonts)) 
+    if (!file_read(&file, &file_font, sizeof(asset_file_font_t), offset_to_fonts)) 
       return false;
 
     eden_asset_font_t* f = assets->fonts + font_index;
@@ -221,7 +221,7 @@ eden_assets_init_from_file(
 
       asset_file_font_glyph_t file_glyph = {};
       if (!file_read(
-          file, 
+          &file, 
           &file_glyph,
           sizeof(asset_file_font_glyph_t), 
           glyph_data_offset)) 
@@ -252,7 +252,7 @@ eden_assets_init_from_file(
         sizeof(asset_file_font_glyph_t)*glyph_count;
 
       file_read(
-          file, 
+          &file, 
           kernings,
           sizeof(f32_t)*glyph_count*glyph_count, 
           kernings_data_offset);

@@ -33,22 +33,27 @@ struct getuna_t
   HINSTANCE instance;
   b32_t is_running;
   
-  // for overlay drawing
+  //
+  // Selection Overlay Drawing 
+  // 
   b32_t is_dragging;
+
+  // @note: In client coordinates
+  POINT drag_start;
+  POINT drag_end;
+  POINT drag_end_prev; // previous frame's drag_end
+
+  // @note: In virtual monitor coordinates
+  POINT drag_start_raw;
+  POINT drag_end_raw;
 
   //@note: this is for reference; the original screenshot of the whole desktop
   w32_dib_t selection_screenshot; 
   
   // @note: this is used to present to the screen as a complete frame
   w32_dib_t selection_frame; 
-  POINT drag_start;
-  POINT drag_end;
-  POINT drag_end_prev; // previous frame's drag_end
 
-
-
-  HBITMAP debug_bitmap;
-
+  HBITMAP debug_bitmap; // @todo: remove
 
   u32_t ss_count;
   getuna_ss_t sss[32];
@@ -220,7 +225,8 @@ w32_getuna_selection_window_callback(
     case WM_LBUTTONDOWN:
     {
       getuna->is_dragging = true;
-      GetCursorPos(&getuna->drag_start);
+      GetCursorPos(&getuna->drag_start_raw);
+      getuna->drag_start = getuna->drag_start_raw;
       ScreenToClient(window, &getuna->drag_start);
     } break;
     case WM_LBUTTONUP:
@@ -235,7 +241,8 @@ w32_getuna_selection_window_callback(
       {
         getuna->drag_end_prev = getuna->drag_end;
 
-        GetCursorPos(&getuna->drag_end);
+        GetCursorPos(&getuna->drag_end_raw);
+        getuna->drag_end = getuna->drag_end_raw;
         ScreenToClient(window, &getuna->drag_end);
         InvalidateRect(window, NULL, TRUE);
       }
@@ -358,11 +365,11 @@ w32_getuna_main_window_callback(
     } break;
     case WM_SS:
     {
-      getuna_spawn_ss_window(
-          getuna->drag_start.x,
-          getuna->drag_start.y,
-          getuna->drag_end.x - getuna->drag_start.x,
-          getuna->drag_end.y - getuna->drag_start.y);
+      LONG x0, y0, x1, y1;
+      minmax_of(getuna->drag_start_raw.x, getuna->drag_end_raw.x, x0, x1);
+      minmax_of(getuna->drag_start_raw.y, getuna->drag_end_raw.y, y0, y1);
+
+      getuna_spawn_ss_window(x0, y0, x1-x0, y1-y0);
       ShowWindow(getuna->main_window, SW_SHOW);
     } break;
     default: {

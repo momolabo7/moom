@@ -7,16 +7,16 @@ static void aoc23_d1p1(const char* filename, arena_t* arena)
 {
   arena_set_revert_point(arena);
 
-  buf_t file_buffer = file_read_into_str(filename, arena, false); 
-  if (!file_buffer) return;
+  buf_t file_buffer = file_read_into_buffer(filename, arena, false); 
+  if (!buf_valid(file_buffer)) return;
 
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   u32_t sum = 0;
-  while(!stream_is_eos(s)) {
-    buf_t line = stream_consume_line(s);  
+  while(!stream_is_eos(&s)) {
+    buf_t line = stream_consume_line(&s);  
     u32_t number = 0;
     
     // count from the front
@@ -44,11 +44,11 @@ static void aoc23_d1p1(const char* filename, arena_t* arena)
 static void aoc23_d1p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  buf_t file_buffer = file_read_into_str(filename, arena, false); 
-  if (!file_buffer) return;
+  buf_t file_buffer = file_read_into_buffer(filename, arena, false); 
+  if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   buf_t buf_table[] = { 
     buf_from_lit("1"), 
@@ -73,8 +73,8 @@ static void aoc23_d1p2(const char* filename, arena_t* arena) {
   u32_t num_table[] = { 1,2,3,4,5,6,7,8,9,1,2,3,4,5,6,7,8,9 };
 
   u32_t sum = 0;
-  while(!stream_is_eos(s)) {
-    buf_t line = stream_consume_line(s);  
+  while(!stream_is_eos(&s)) {
+    buf_t line = stream_consume_line(&s);  
     u32_t number = 0;
 
     // count from the front
@@ -127,15 +127,15 @@ static void aoc23_d1p2(const char* filename, arena_t* arena) {
 static void aoc23_d2p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  buf_t file_buffer = file_read_into_str(filename, arena, false); 
-  if (!file_buffer) return;
+  buf_t file_buffer = file_read_into_buffer(filename, arena, false); 
+  if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
   u32_t game_id = 0;
   u32_t sum = 0;
-  while(!stream_is_eos(s)) {
-    buf_t line = stream_consume_line(s);  
+  while(!stream_is_eos(&s)) {
+    buf_t line = stream_consume_line(&s);  
     ++game_id;
     if (line.size == 0) {
       break;
@@ -220,15 +220,15 @@ static void aoc23_d2p1(const char* filename, arena_t* arena) {
 static void aoc23_d2p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  buf_t file_buffer = file_read_into_str(filename, arena, false); 
-  if (!file_buffer) return;
+  buf_t file_buffer = file_read_into_buffer(filename, arena, false); 
+  if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
   u32_t game_id = 0;
   u32_t sum = 0;
-  while(!stream_is_eos(s)) {
-    buf_t line = stream_consume_line(s);  
+  while(!stream_is_eos(&s)) {
+    buf_t line = stream_consume_line(&s);  
     ++game_id;
     if (line.size == 0) {
       break;
@@ -313,8 +313,8 @@ static void aoc23_d2p2(const char* filename, arena_t* arena) {
 static void aoc23_d3p1(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  buf_t file_buffer = file_read_into_str(filename, arena, false); 
-  if (!file_buffer) return;
+  buf_t file_buffer = file_read_into_buffer(filename, arena, false); 
+  if (!buf_valid(file_buffer)) return;
 
 
   // Get with width and height
@@ -322,25 +322,26 @@ static void aoc23_d3p1(const char* filename, arena_t* arena) {
   u32_t height = 0;
   buf_t grid;
   {  
-    make(stream_t, s);
-    stream_init(s, file_buffer);
-    while(!stream_is_eos(s)) {
-      buf_t line = stream_consume_line(s);  
+    stream_t s;
+    stream_init(&s, file_buffer);
+    while(!stream_is_eos(&s)) {
+      buf_t line = stream_consume_line(&s);  
       ++height;
       width = line.size;
     }
-    grid = arena_push_str(arena, width * height, 0);
-    if (!grid) {
+    grid = arena_push_buffer(arena, width * height, 0);
+    if (!buf_valid(grid)) {
       printf("Cannot allocate memory\n");
       return;
     }
 
-    stream_reset(s);
+    stream_reset(&s);
     // fill the grid
     u32_t grid_i = 0;
-    while(!stream_is_eos(s)) {
-      buf_t line = stream_consume_line(s);  
-      for_cnt(i, line.size) {
+    while(!stream_is_eos(&s)) {
+      buf_t line = stream_consume_line(&s);  
+      for(u32_t i = 0; i < line.size; ++i) 
+      {
         if (u8_is_digit(line.e[i]) )
           grid.e[grid_i++] = ascii_to_digit(line.e[i]);
         else if (line.e[i] == '.')
@@ -371,9 +372,9 @@ static void aoc23_d3p1(const char* filename, arena_t* arena) {
   b32_t is_part = false; 
   b32_t is_num = false;
   u32_t sum = 0;
-  for_cnt(y, height) 
+  for(u32_t y = 0; y < height; ++y) 
   {
-    for_cnt(x, width) 
+    for(u32_t x = 0; x < width; ++x) 
     {
       u8_t c = get_index(grid, x, y, width);
       if(c >= 0 && c < 10) {
@@ -425,8 +426,8 @@ static void aoc23_d3p1(const char* filename, arena_t* arena) {
 static void aoc23_d3p2(const char* filename, arena_t* arena) {
   arena_set_revert_point(arena);
 
-  buf_t file_buffer = file_read_into_str(filename, arena, false); 
-  if (!file_buffer) return;
+  buf_t file_buffer = file_read_into_buffer(filename, arena, false); 
+  if (!buf_valid(file_buffer)) return;
 
 
   // Initialize the grid data
@@ -434,25 +435,27 @@ static void aoc23_d3p2(const char* filename, arena_t* arena) {
   u32_t height = 0;
   buf_t grid;
   {  
-    make(stream_t, s);
-    stream_init(s, file_buffer);
-    while(!stream_is_eos(s)) {
-      buf_t line = stream_consume_line(s);  
+    stream_t s;
+    stream_init(&s, file_buffer);
+    while(!stream_is_eos(&s)) {
+      buf_t line = stream_consume_line(&s);  
       ++height;
       width = line.size;
     }
-    grid = arena_push_str(arena, width * height, 0);
-    if (!grid) {
+    grid = arena_push_buffer(arena, width * height, 0);
+    if (!buf_valid(grid)) 
+    {
       printf("Cannot allocate memory\n");
       return;
     }
 
-    stream_reset(s);
+    stream_reset(&s);
     // fill the grid
     u32_t grid_i = 0;
-    while(!stream_is_eos(s)) {
-      buf_t line = stream_consume_line(s);  
-      for_cnt(i, line.size) {
+    while(!stream_is_eos(&s)) {
+      buf_t line = stream_consume_line(&s);  
+      for(u32_t i = 0; i < line.size; ++i) 
+      {
         if (u8_is_digit(line.e[i]) )
           grid.e[grid_i++] = ascii_to_digit(line.e[i]);
         else if (line.e[i] == '.')
@@ -476,9 +479,9 @@ static void aoc23_d3p2(const char* filename, arena_t* arena) {
   //
   u32_t sum = 0;
 
-  for_cnt(y, height) 
+  for(u32_t y = 0; y < height; ++y) 
   {
-    for_cnt(x, width) 
+    for(u32_t x = 0; x < width; ++x) 
     {
       auto val = get_cell(grid, x, y, width);
       if (val == 12) // '*' value found
@@ -590,11 +593,11 @@ int main(int argv, char** argc) {
     return 1;
   }
 
-  make(arena_t, arena);
-  arena_alloc(arena, gigabytes(1)); 
-  defer { arena_free(arena); }; 
+  arena_t arena;
+  arena_alloc(&arena, gigabytes(1)); 
+  defer { arena_free(&arena); }; 
 
-#define aoc23_route(dd, pp) if (day == dd && part == pp) aoc23_d ## dd ## p ## pp(filename, arena);
+#define aoc23_route(dd, pp) if (day == dd && part == pp) aoc23_d ## dd ## p ## pp(filename, &arena);
   aoc23_route(1,1);
   aoc23_route(1,2);
   aoc23_route(2,1);

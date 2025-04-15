@@ -1070,10 +1070,11 @@ euler_q21() {
 }
 
 static u32_t 
-euler_q22_get_score(str_t str) 
+euler_q22_get_score(buf_t str) 
 {
   u32_t score = 0;
-  for_cnt(i, str.size) {
+  for(u32_t i = 0; i < str.size; ++i) 
+  {
     u32_t place = str.e[i] - 'A' + 1;
     score += place;
   }
@@ -1085,10 +1086,10 @@ euler_q22_get_score(str_t str)
 
 static
 sort_quick_generic_predicate_sig(euler_q22_cmp) {
-  str_t l = dref((str_t*)(lhs));
-  str_t r = dref((str_t*)(rhs));
+  buf_t l = dref((buf_t*)(lhs));
+  buf_t r = dref((buf_t*)(rhs));
 
-  return str_compare_lexographically(l, r) < 0;
+  return buf_compare_lexographically(l, r) < 0;
 }
 
 
@@ -1677,7 +1678,7 @@ euler_q22() {
 #endif
   };
 
-  auto* entries = (str_t*)malloc(sizeof(str_t)* array_count(names));
+  auto* entries = (buf_t*)malloc(sizeof(buf_t)* array_count(names));
   if (!entries) {
     printf("Ded\n");
     return;
@@ -1686,14 +1687,14 @@ euler_q22() {
 
   // Fill the sort entries
   for(u32_t i = 0; i < array_count(names); ++i) {
-    entries[i] = str_from_cstr(names[i]); 
+    entries[i] = buf_from_cstr(names[i]); 
   }
   
   sort_quick_generic(entries, array_count(names), euler_q22_cmp);
   u32_t sum = 0;
   for(u32_t i = 0; i < array_count(names); ++i) {
 
-    str_t name = entries[i];
+    buf_t name = entries[i];
     sum += (i+1) * euler_q22_get_score(name);
 #if 0
     for_cnt(j, name.count) {
@@ -1757,10 +1758,10 @@ euler_q23()
 
   for (u32_t k = 1; k <= 28123; ++k) 
   {
-    for_cnt(i, lookup_count) 
+    for(u32_t i = 0; i < lookup_count; ++i) 
     {
       if (i > k) continue;
-      for_cnt(j, lookup_count) 
+      for(u32_t j = 0; j < lookup_count; ++j) 
       {
         if (j > k) continue; 
         u32_t lookup_sum = lookup[i] + lookup[j];
@@ -1789,7 +1790,7 @@ sort_quick_generic_predicate_sig(euler_q24_cmp) {
 
 
 static void
-euler_q24_print_permutations_lexographically(str_t str) 
+euler_q24_print_permutations_lexographically(buf_t str) 
 {
   sort_quick_generic(str.e, str.size, euler_q24_cmp);
 
@@ -1798,7 +1799,8 @@ euler_q24_print_permutations_lexographically(str_t str)
   {
     ++i;
     if (i == 1000000) {
-      for_cnt(i, str.size) printf("%c", str.e[i]);
+      for(u32_t i  = 0; i < str.size; ++i) 
+        printf("%c", str.e[i]);
       printf("\n");
       break;
     }
@@ -1855,20 +1857,20 @@ static void
 euler_q24()
 {
   u8_t in[] = "0123456789";
-  str_t input =  str_set(in, array_count(in)-1);
+  buf_t input =  buf_set(in, array_count(in)-1);
   euler_q24_print_permutations_lexographically(input);
 }
 
 static void 
 euler_q25()
 {
-  make(arena_t, arena);
-  arena_alloc(arena, gigabytes(1)); 
-  defer { arena_free(arena); }; 
+  arena_t arena;
+  arena_alloc(&arena, gigabytes(1)); 
+  defer { arena_free(&arena); }; 
 
-  bigint_t b0; bigint_init(&b0, arena, 10000);
-  bigint_t b1; bigint_init(&b1, arena, 10000);
-  bigint_t b2; bigint_init(&b2, arena, 10000);
+  bigint_t b0; bigint_alloc(&b0, &arena, 10000);
+  bigint_t b1; bigint_alloc(&b1, &arena, 10000);
+  bigint_t b2; bigint_alloc(&b2, &arena, 10000);
 
   bigint_set_u32(&b0, 1);
   bigint_set_u32(&b1, 1);
@@ -1887,10 +1889,6 @@ euler_q25()
     ++index;
   }
 
-#if 0
-  for_cnt_reverse(i, b2.count) printf("%d", b2->e[i]);
-  printf("\n");
-#endif
   printf("%d\n", index);
 
 }

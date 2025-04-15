@@ -70,14 +70,14 @@ static void aoc22_d1p2(const char* filename, arena_t* arena) {
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   u32_t maxs[3] = {};
   u32_t sum = 0;
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t line = stream_consume_line(s);  
+    buf_t line = stream_consume_line(&s);  
     if (line.size == 0) 
     {
       for_arr(i, maxs) 
@@ -130,14 +130,14 @@ static void aoc22_d1p1(const char* filename, arena_t* arena) {
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   u32_t max = 0;
   u32_t sum = 0;
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t line = stream_consume_line(s);  
+    buf_t line = stream_consume_line(&s);  
     if (line.size == 0) 
     {
       if (sum > max) 
@@ -174,8 +174,8 @@ static void aoc22_d2p1(const char* filename, arena_t* arena)
   if (!buf_valid(file_buffer)) return;
 
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   // rock is 1
   // paper is 2
@@ -189,9 +189,9 @@ static void aoc22_d2p1(const char* filename, arena_t* arena)
   // This means we can read each line and just look at indices 0 and 2
 
   u32_t sum = 0;
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t line = stream_consume_line(s);  
+    buf_t line = stream_consume_line(&s);  
     s32_t lhs = line.e[0] - 'A';
     s32_t rhs = line.e[2] - 'X';
     
@@ -224,8 +224,8 @@ static void aoc22_d2p2(const char* filename, arena_t* arena) {
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   // 
   // rock is 0
@@ -254,9 +254,9 @@ static void aoc22_d2p2(const char* filename, arena_t* arena) {
   // Format of each line is always "X Y"
   // This means we can read each line and just look at indices 0 and 2
   u32_t sum = 0;
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t line = stream_consume_line(s);  
+    buf_t line = stream_consume_line(&s);  
     s32_t lhs = line.e[0] - 'A';
     s32_t rhs = line.e[2] - 'X';
     
@@ -288,12 +288,12 @@ static void aoc22_d3p1(const char* filename, arena_t* arena) {
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
   u32_t sum = 0;
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t line = stream_consume_line(s);  
+    buf_t line = stream_consume_line(&s);  
     buf_t lhs = buf_set(line.e, line.size/2);
     buf_t rhs = buf_set(line.e + line.size/2, line.size/2);
     
@@ -330,14 +330,14 @@ static void aoc22_d3p2(const char* filename, arena_t* arena) {
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
   u32_t sum = 0;
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t line0 = stream_consume_line(s);  
-    buf_t line1 = stream_consume_line(s);  
-    buf_t line2 = stream_consume_line(s);  
+    buf_t line0 = stream_consume_line(&s);  
+    buf_t line1 = stream_consume_line(&s);  
+    buf_t line2 = stream_consume_line(&s);  
 
     // Find common item between line0 and line1
     for(u32_t i = 0; i < line0.size; ++i)
@@ -376,14 +376,14 @@ static void aoc22_d4p1(const char* filename, arena_t* arena) {
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
   u32_t sum = 0;
 
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
     arena_set_revert_point(arena);
-    buf_t str8 = stream_consume_line(s);  
+    buf_t str8 = stream_consume_line(&s);  
     u32_t nums[4] = {};
     
     buf_arr_t arr0 = buf_split(str8, ',', arena);
@@ -420,14 +420,14 @@ static void aoc22_d4p2(const char* filename, arena_t* arena) {
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
   u32_t sum = 0;
 
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
     arena_set_revert_point(arena);
-    buf_t str8 = stream_consume_line(s);  
+    buf_t str8 = stream_consume_line(&s);  
     u32_t nums[4] = {};
     
     buf_arr_t arr0 = buf_split(str8, ',', arena);
@@ -508,20 +508,20 @@ static void aoc22_d5p1(const char* filename, arena_t* arena) {
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
   //u32_t sum = 0;
 
   aoc22_d5_node_t stacks[9] = {};
   for_arr(i, stacks) cll_init(stacks + i);
 
   b32_t is_setup = true;
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t str8 = stream_consume_line(s);  
+    buf_t str8 = stream_consume_line(&s);  
     if (str8.e[1] == '1') {
       is_setup = false;
-      stream_consume_line(s); // there is one more line of whitespace
+      stream_consume_line(&s); // there is one more line of whitespace
       
 #if 0
       for_arr(i, stacks) 
@@ -626,20 +626,20 @@ static void aoc22_d5p2(const char* filename, arena_t* arena) {
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
   //u32_t sum = 0;
 
   aoc22_d5_node_t stacks[9] = {};
   for_arr(i, stacks) cll_init(stacks + i);
 
   b32_t is_setup = true;
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t str8 = stream_consume_line(s);  
+    buf_t str8 = stream_consume_line(&s);  
     if (str8.e[1] == '1') {
       is_setup = false;
-      stream_consume_line(s); // there is one more line of whitespace
+      stream_consume_line(&s); // there is one more line of whitespace
       
 #if 0
       for_arr(i, stacks) 
@@ -744,14 +744,14 @@ aoc22_d6p1(const char* filename, arena_t* arena)
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   u32_t solulu = 0;
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
     // 012345, size = 6
-    buf_t str8 = stream_consume_line(s);  
+    buf_t str8 = stream_consume_line(&s);  
     for(u32_t buf_index = 0; buf_index < str8.size - window_size - 1; ++buf_index)
     {
       //printf("%c", str8.e[buf_index]);
@@ -790,14 +790,14 @@ aoc22_d6p2(const char* filename, arena_t* arena)
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   u32_t solulu = 0;
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
     // 012345, size = 6
-    buf_t str8 = stream_consume_line(s);  
+    buf_t str8 = stream_consume_line(&s);  
     for(u32_t buf_index = 0; buf_index < str8.size - window_size - 1; ++buf_index)
     {
       //printf("%c", str8.e[buf_index]);
@@ -1024,8 +1024,8 @@ aoc22_d7p1(const char* filename, arena_t* arena)
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   // Initialize root first
   aoc22_d7_node_t* root = aoc22_d7_push_dir(nullptr, buf_from_lit("/"), arena);
@@ -1034,9 +1034,9 @@ aoc22_d7p1(const char* filename, arena_t* arena)
   // @note: We are pretty much assume ignore 'ls' command because
   // it doesn't really do anything. We just need to handle lines
   // that represent 'cd' commands, files and directories
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t str8 = stream_consume_line(s);  
+    buf_t str8 = stream_consume_line(&s);  
     if (str8.e[0] == '$') 
     {
       if (str8.e[2] == 'c') //cd
@@ -1125,8 +1125,8 @@ aoc22_d7p2(const char* filename, arena_t* arena)
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   // Initialize root first
   aoc22_d7_node_t* root = aoc22_d7_push_dir(nullptr, buf_from_lit("/"), arena);
@@ -1135,9 +1135,9 @@ aoc22_d7p2(const char* filename, arena_t* arena)
   // @note: We are pretty much assume ignore 'ls' command because
   // it doesn't really do anything. We just need to handle lines
   // that represent 'cd' commands, files and directories
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t str8 = stream_consume_line(s);  
+    buf_t str8 = stream_consume_line(&s);  
     if (str8.e[0] == '$') 
     {
       if (str8.e[2] == 'c') //cd
@@ -1377,8 +1377,8 @@ aoc22_d9p1(const char* filename, arena_t* arena)
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   // @note: x goes right and y goes down
   s32_t head_x = 0;
@@ -1392,9 +1392,9 @@ aoc22_d9p1(const char* filename, arena_t* arena)
   positions[position_count++] = v2s_t { tail_x, tail_y };
 
   // Initialize root first
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t line = stream_consume_line(s);  
+    buf_t line = stream_consume_line(&s);  
     u8_t command = line.e[0];
     u32_t amount = 0;
     buf_t amount_str = buf_set(line.e + 2, line.size - 2);
@@ -1484,8 +1484,8 @@ aoc22_d9p2(const char* filename, arena_t* arena)
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   // @note: x goes right and y goes down
   v2s_t rope_nodes[10] = {};
@@ -1495,9 +1495,9 @@ aoc22_d9p2(const char* filename, arena_t* arena)
   positions[position_count++] = v2s_t { 0, 0 };
 
   // Initialize root first
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t line = stream_consume_line(s);  
+    buf_t line = stream_consume_line(&s);  
     u8_t command = line.e[0];
     u32_t amount = 0;
     buf_t amount_str = buf_set(line.e + 2, line.size - 2);
@@ -1612,8 +1612,8 @@ aoc22_d10p1(const char* filename, arena_t* arena)
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   u32_t x = 1;
   s32_t x_to_add = 0;
@@ -1622,11 +1622,11 @@ aoc22_d10p1(const char* filename, arena_t* arena)
   u32_t sum = 0;
 
   // Initialize root first
-  for(;!stream_is_eos(s); ++cycles) 
+  for(;!stream_is_eos(&s); ++cycles) 
   {
     if (delay == 0) 
     {
-      buf_t line = stream_consume_line(s);  
+      buf_t line = stream_consume_line(&s);  
       buf_t command = buf_set(line.e, 4);
       x += x_to_add;
       x_to_add = 0;
@@ -1667,8 +1667,8 @@ aoc22_d10p2(const char* filename, arena_t* arena)
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   u32_t x = 1;
   s32_t x_to_add = 0;
@@ -1676,11 +1676,11 @@ aoc22_d10p2(const char* filename, arena_t* arena)
   u32_t delay = 0;
 
   // Initialize root first
-  for(;!stream_is_eos(s); ++cycles) 
+  for(;!stream_is_eos(&s); ++cycles) 
   {
     if (delay == 0) 
     {
-      buf_t line = stream_consume_line(s);  
+      buf_t line = stream_consume_line(&s);  
       buf_t command = buf_set(line.e, 4);
       x += x_to_add;
       x_to_add = 0;
@@ -1749,16 +1749,16 @@ aoc22_d11p1(const char* filename, arena_t* arena)
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   u32_t item_count = 0;
   u32_t monkey_count = 0;
 
   // One pass to find out how many monkeys and items there are
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t line = stream_consume_line(s);
+    buf_t line = stream_consume_line(&s);
     if (line.e[0] == 'M') 
     {
       ++monkey_count;
@@ -1780,12 +1780,12 @@ aoc22_d11p1(const char* filename, arena_t* arena)
   for(u32_t i = 0; i < monkey_count; ++i)
     cll_init(&monkeys[i].item_sentinel);
 
-  stream_reset(s);
+  stream_reset(&s);
   u32_t monkey_index = 0;
   u32_t item_index = 0;
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t line = stream_consume_line(s);
+    buf_t line = stream_consume_line(&s);
     if (line.e[2] == 'S') // "Starting items"
     {
       u32_t start = 18;
@@ -1978,17 +1978,17 @@ aoc22_d11p2(const char* filename, arena_t* arena)
   buf_t file_buffer = file_read_into_buffer(filename, arena, true); 
   if (!buf_valid(file_buffer)) return;
 
-  make(stream_t, s);
-  stream_init(s, file_buffer);
+  stream_t s;
+  stream_init(&s, file_buffer);
 
   u32_t item_count = 0;
   u32_t monkey_count = 0;
   u32_t supermodulo = 1;
 
   // One pass to find out how many monkeys and items there are
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t line = stream_consume_line(s);
+    buf_t line = stream_consume_line(&s);
     if (line.e[0] == 'M') 
     {
       ++monkey_count;
@@ -2010,12 +2010,12 @@ aoc22_d11p2(const char* filename, arena_t* arena)
   for(u32_t i = 0; i < monkey_count; ++i)
     cll_init(&monkeys[i].item_sentinel);
 
-  stream_reset(s);
+  stream_reset(&s);
   u32_t monkey_index = 0;
   u32_t item_index = 0;
-  while(!stream_is_eos(s)) 
+  while(!stream_is_eos(&s)) 
   {
-    buf_t line = stream_consume_line(s);
+    buf_t line = stream_consume_line(&s);
     if (line.e[2] == 'S') // "Starting items"
     {
       u32_t start = 18;
@@ -3633,11 +3633,11 @@ int main(int argv, char** argc) {
     return 1;
   }
 
-  make(arena_t, arena);
-  arena_alloc(arena, gigabytes(32)); 
-  defer { arena_free(arena); }; 
+  arena_t arena;
+  arena_alloc(&arena, gigabytes(32)); 
+  defer { arena_free(&arena); }; 
 
-#define aoc22_route(dd, pp) if (day == dd && part == pp) aoc22_d ## dd ## p ## pp(filename, arena);
+#define aoc22_route(dd, pp) if (day == dd && part == pp) aoc22_d ## dd ## p ## pp(filename, &arena);
   aoc22_route(1,1);
   aoc22_route(1,2);
   aoc22_route(2,1);

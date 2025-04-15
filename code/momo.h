@@ -204,10 +204,6 @@ typedef size_t    usz_t; // Can contain up to the highest indexable value
 #define stmt(s) do { s } while(0)
 #define array_count(A) (sizeof(A)/sizeof(*A))
 #define offset_of(type, member) (umi_t)&(((type*)0)->member)
-#define make(t, name) \
-  t glue(name##_,__LINE__) = {}; \
-t* name = &(glue(name##_,__LINE__))
-
 #define ns_begin(name) namespace name {
 #define ns_end(name) }
 
@@ -1250,7 +1246,7 @@ static clex_token_t clex_next_token(clex_tokenizer_t* t);
 
 // @todo: change const char* to str?
 static buf_t  file_read_into_buffer(const char* filename, arena_t* arena, b32_t null_terminate = false); 
-static b32_t  file_write_from_str(const char* filename, buf_t buffer);
+static b32_t  file_write_from_buffer(const char* filename, buf_t buffer);
 static void   file_close(file_t* fp); 
 static b32_t  file_open(file_t* fp, const char* filename, file_access_t access_type);
 static b32_t  file_read(file_t* fp, void* dest, usz_t size, usz_t offset);
@@ -1481,6 +1477,7 @@ static b32_t
 file_read(file_t* fp, void* dest, usz_t size, usz_t offset) 
 {
   // Reading the file
+  assert(fp->handle != GetStdHandle(STD_OUTPUT_HANDLE));
   OVERLAPPED overledened = {};
   overledened.Offset = (u32_t)((offset >> 0) & 0xFFFFFFFF);
   overledened.OffsetHigh = (u32_t)((offset >> 32) & 0xFFFFFFFF);
@@ -1811,6 +1808,7 @@ file_open(
 
 static b32_t
 file_read(file_t* fp, void* dest, usz_t size, usz_t offset) {
+  assert(fp->handle != 1);
   if (lseek(fp->handle, offset, SEEK_SET) == -1) {
     return false;
   }
@@ -7026,11 +7024,11 @@ wav_read(wav_t* w, buf_t contents)
   const static u32_t fmt_id_signature = u32_endian_swap(0x666d7420);
   const static u32_t data_id_signature = u32_endian_swap(0x64617461);
 
-  make(stream_t, stream);
-  stream_init(stream, contents);
+  stream_t stream;
+  stream_init(&stream, contents);
 
   // @note: Load Riff Chunk
-  wav_riff_chunk_t* riff_chunk = stream_consume(wav_riff_chunk_t, stream);
+  wav_riff_chunk_t* riff_chunk = stream_consume(wav_riff_chunk_t, &stream);
   if (!riff_chunk) {
     return 0;
   }
@@ -7042,7 +7040,7 @@ wav_read(wav_t* w, buf_t contents)
   }
 
   // @note: Load fmt Chunk
-  auto* fmt_chunk = stream_consume(wav_fmt_chunk_t, stream);
+  auto* fmt_chunk = stream_consume(wav_fmt_chunk_t, &stream);
   if (!fmt_chunk) {
     return 0;
   }
@@ -7070,13 +7068,13 @@ wav_read(wav_t* w, buf_t contents)
 
   // Search until we find the 'data' chunk
   while(true) {
-    head = stream_peek(_wav_head_t, stream);
+    head = stream_peek(_wav_head_t, &stream);
     if (head == nullptr) {
       return 0;
     }
 
     if (head->id != data_id_signature) {
-      stream_consume_block(stream, sizeof(_wav_head_t) + head->size);
+      stream_consume_block(&stream, sizeof(_wav_head_t) + head->size);
     }
     else{
       break;
@@ -7086,7 +7084,7 @@ wav_read(wav_t* w, buf_t contents)
 
 
   // Load data Chunk
-  auto* data_chunk = stream_consume(wav_data_chunk_t, stream);
+  auto* data_chunk = stream_consume(wav_data_chunk_t, &stream);
   if (!data_chunk) {
     return 0;
   }
@@ -7098,7 +7096,7 @@ wav_read(wav_t* w, buf_t contents)
     return 0;
   }
 
-  void* data = stream_consume_block(stream, data_chunk->size);
+  void* data = stream_consume_block(&stream, data_chunk->size);
   if (!data) {
     return 0;
   }
@@ -7472,7 +7470,8 @@ _ttf_tessellate_bezier(v2f_t* vertices,
 }
 
 static b32_t 
-_ttf_get_paths_from_glyph_outline(_ttf_glyph_outline_t* outline,
+_ttf_get_paths_from_glyph_outline(
+    _ttf_glyph_outline_t* outline,
     _ttf_glyph_paths_t* paths,
     arena_t* allocator) 
 {
@@ -7776,8 +7775,8 @@ static u32_t*
 ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out_w, u32_t* out_h, arena_t* allocator) 
 {
   u32_t* pixels = 0;
-  make(_ttf_glyph_outline_t, outline);
-  make(_ttf_glyph_paths_t, paths);
+  _ttf_glyph_outline_t outline;
+  _ttf_glyph_paths_t paths;
 
   s32_t x0, y0, x1, y1;
   ttf_get_glyph_bitmap_box(ttf, glyph_index, scale, &x0, &y0, &x1, &y1);
@@ -7800,35 +7799,35 @@ ttf_rasterize_glyph(const ttf_t* ttf, u32_t glyph_index, f32_t scale, u32_t* out
 
   arena_set_revert_point(allocator);
 
-  if(!_ttf_get_glyph_outline(ttf, outline, glyph_index, allocator)) {
+  if(!_ttf_get_glyph_outline(ttf, &outline, glyph_index, allocator)) {
     //ttf_log("[ttf] Unable to get glyph outline\n");
     return nullptr;
   }
-  if (!_ttf_get_paths_from_glyph_outline(outline, paths, allocator)) {
+  if (!_ttf_get_paths_from_glyph_outline(&outline, &paths, allocator)) {
     //ttf_log("[ttf] Unable glyph paths\n");
     return nullptr;
   }
 
   // generate scaled edges based on points
-  _ttf_edge_t* edges = arena_push_arr(_ttf_edge_t, allocator, paths->vertex_count);
+  _ttf_edge_t* edges = arena_push_arr(_ttf_edge_t, allocator, paths.vertex_count);
   if (!edges) {
     //ttf_log("[ttf] Unable to push edges\n");
     return nullptr;
   }
-  memory_zero_range(edges, paths->vertex_count);
+  memory_zero_range(edges, paths.vertex_count);
 
   u32_t edge_count = 0;
   {
     u32_t vertex_index = 0;
     for (u32_t path_index = 0; 
-        path_index < paths->path_count; 
+        path_index < paths.path_count; 
         ++path_index)
     {
-      u32_t path_length = paths->path_lengths[path_index];
+      u32_t path_length = paths.path_lengths[path_index];
       for (u32_t i = 0; i < path_length; ++i) {
         _ttf_edge_t edge = {};
-        v2f_t v0 = paths->vertices[vertex_index];
-        v2f_t v1 = (i == path_length-1) ? paths->vertices[vertex_index-i] : paths->vertices[vertex_index+1];
+        v2f_t v0 = paths.vertices[vertex_index];
+        v2f_t v1 = (i == path_length-1) ? paths.vertices[vertex_index-i] : paths.vertices[vertex_index+1];
         ++vertex_index;
 
         // Skip if edge is going to be completely horizontal
@@ -8669,7 +8668,7 @@ _png_decompress_zlib(_png_context_t* c, stream_t* zlib_stream) {
 static u32_t* 
 png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena) 
 {
-  make(stream_t, zlib_stream);
+  stream_t zlib_stream;
 
   _png_context_t ctx = {0};
   ctx.arena = arena;
@@ -8715,7 +8714,7 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
   buf_t zlib_data = arena_push_buffer(arena, zlib_size);
   if (!buf_valid(zlib_data)) return nullptr;
 
-  stream_init(zlib_stream, zlib_data);
+  stream_init(&zlib_stream, zlib_data);
 
   // Second pass to push memory
   while(!stream_is_eos(&ctx.stream)) {
@@ -8724,16 +8723,16 @@ png_rasterize(png_t* png, u32_t* out_w, u32_t* out_h, arena_t* arena)
     u32_t chunk_length = u32_endian_swap(chunk_header->length);
     u32_t chunk_type = u32_endian_swap(chunk_header->type_U32);
     if (chunk_type == 'IDAT') {
-      stream_write_block(zlib_stream, 
+      stream_write_block(&zlib_stream, 
           ctx.stream.contents.e + ctx.stream.pos,
           chunk_length);
     }
     stream_consume_block(&ctx.stream, chunk_length);
     stream_consume(_png_chunk_footer_t, &ctx.stream);
   }
-  stream_reset(zlib_stream);
+  stream_reset(&zlib_stream);
 
-  if (!_png_decompress_zlib(&ctx, zlib_stream)) {
+  if (!_png_decompress_zlib(&ctx, &zlib_stream)) {
     return nullptr;
   }
 
@@ -8781,9 +8780,9 @@ static const u8_t signature[] = {
   buf_t stream_memory = arena_push_buffer(arena, expected_memory_required);
   if (!buf_valid(stream_memory)) return buf_bad();
 
-  make(stream_t, stream);
-  stream_init(stream, stream_memory);
-  stream_write_block(stream, (void*)signature, sizeof(signature));
+  stream_t stream;
+  stream_init(&stream, stream_memory);
+  stream_write_block(&stream, (void*)signature, sizeof(signature));
 
 
   // @note: write IHDR
@@ -8794,8 +8793,8 @@ static const u8_t signature[] = {
     header.type_U32 = u32_endian_swap('IHDR');
     header.length = sizeof(_png_ihdr_t);
     header.length = u32_endian_swap(header.length);
-    stream_write(stream, header);
-    crc_start = stream->contents.e + stream->pos - sizeof(header.type_U32);
+    stream_write(&stream, header);
+    crc_start = stream.contents.e + stream.pos - sizeof(header.type_U32);
 
     _png_ihdr_t IHDR = {};
     IHDR.width = u32_endian_swap(width);
@@ -8805,13 +8804,13 @@ static const u8_t signature[] = {
     IHDR.compression_method = 0;
     IHDR.filter_method = 0;
     IHDR.interlace_method = 0;
-    stream_write(stream, IHDR);
+    stream_write(&stream, IHDR);
 
     _png_chunk_footer_t footer = {};
-    u32_t crc_size = (u32_t)(stream->contents.e + stream->pos - crc_start);
+    u32_t crc_size = (u32_t)(stream.contents.e + stream.pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
     footer.crc = u32_endian_swap(footer.crc);
-    stream_write(stream, footer);
+    stream_write(&stream, footer);
 
   }
 
@@ -8827,8 +8826,8 @@ static const u8_t signature[] = {
     header.type_U32 = u32_endian_swap('IDAT');
     header.length = sizeof(_png_idat_header_t) + (chunk_overhead*chunk_count) + data_size; 
     header.length = u32_endian_swap(header.length);    
-    stream_write(stream, header);
-    crc_start = stream->contents.e + stream->pos - sizeof(header.type_U32);
+    stream_write(&stream, header);
+    crc_start = stream.contents.e + stream.pos - sizeof(header.type_U32);
 
     // @note: Hardcoded IDAT chunk header header that fits our use-case
     //
@@ -8840,7 +8839,7 @@ static const u8_t signature[] = {
     _png_idat_header_t IDAT;
     IDAT.compression_flags = 8;
     IDAT.additional_flags = 29;
-    stream_write(stream, IDAT);
+    stream_write(&stream, IDAT);
 
 
     // @note: Deflate chunk header
@@ -8856,21 +8855,21 @@ static const u8_t signature[] = {
       lines_remaining -= lines_to_write;
 
       u8_t BFINAL = ((chunk_index + 1) == chunk_count) ? 1 : 0;
-      stream_write(stream, BFINAL);
+      stream_write(&stream, BFINAL);
 
       u16_t LEN = (u16_t)(lines_to_write * data_bpl); // number of data bytes in the block
       u16_t NLEN = ~LEN; // one's complement of LEN
-      stream_write(stream, LEN);
-      stream_write(stream, NLEN);
+      stream_write(&stream, LEN);
+      stream_write(&stream, NLEN);
 
       // @note: Output data here
       // We have to do it row by row to add the filter byte at the front
       for (u32_t line_index = 0; line_index < lines_to_write; ++line_index) 
       {
         u8_t no_filter = 0;
-        stream_write(stream, no_filter); // Filter type: None
+        stream_write(&stream, no_filter); // Filter type: None
 
-        stream_write_block(stream,
+        stream_write_block(&stream,
             (u8_t*)pixels + (current_line * image_bpl),
             image_bpl);
 
@@ -8883,10 +8882,10 @@ static const u8_t signature[] = {
 
 
     _png_chunk_footer_t footer = {};
-    u32_t crc_size = (u32_t)(stream->contents.e + stream->pos - crc_start);
+    u32_t crc_size = (u32_t)(stream.contents.e + stream.pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
     footer.crc = u32_endian_swap(footer.crc);
-    stream_write(stream, footer);
+    stream_write(&stream, footer);
   }
 
   // @note: stream_write IEND
@@ -8896,42 +8895,42 @@ static const u8_t signature[] = {
     _png_chunk_header_t header = {};
     header.type_U32 = u32_endian_swap('IEND');
     header.length = 0;
-    stream_write(stream, header);
-    crc_start = stream->contents.e + stream->pos - sizeof(header.type_U32);
+    stream_write(&stream, header);
+    crc_start = stream.contents.e + stream.pos - sizeof(header.type_U32);
 
 
     _png_chunk_footer_t footer = {};
-    u32_t crc_size = (u32_t)(stream->contents.e + stream->pos - crc_start);
+    u32_t crc_size = (u32_t)(stream.contents.e + stream.pos - crc_start);
     footer.crc = _png_calculate_crc32(crc_start, crc_size); 
     footer.crc = u32_endian_swap(footer.crc);
-    stream_write(stream, footer);
+    stream_write(&stream, footer);
   }
 
 
 
-  return buf_set(stream->contents.e, stream->pos);
+  return buf_set(stream.contents.e, stream.pos);
 }
 
 
 static b32_t     
 png_read(png_t* png, buf_t png_contents)
 {
-  make(stream_t, stream);
-  stream_init(stream, png_contents);
+  stream_t stream;
+  stream_init(&stream, png_contents);
 
   // Read Signature
-  _png_chunk_t* png_header = stream_consume(_png_chunk_t, stream);  
+  _png_chunk_t* png_header = stream_consume(_png_chunk_t, &stream);  
   if (!_png_is_signature_valid(png_header->signature)) return false; 
 
   // Read Chunk Header
-  _png_chunk_header_t* chunk_header = stream_consume(_png_chunk_header_t, stream);
+  _png_chunk_header_t* chunk_header = stream_consume(_png_chunk_header_t, &stream);
   //u32_t chunk_length = u32_endian_swap(chunk_header->length);
   u32_t chunk_type = u32_endian_swap(chunk_header->type_U32);
 
 
   if(chunk_type != 'IHDR') { return false; }
 
-  _png_ihdr_t* IHDR = stream_consume(_png_ihdr_t, stream);
+  _png_ihdr_t* IHDR = stream_consume(_png_ihdr_t, &stream);
 
   // @note: Width and height is in Big Endian
   // We assume that we are currently in a Little Endian system

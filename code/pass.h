@@ -366,17 +366,17 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
     buf_t file_data = file_read_into_buffer(s->filename, p->arena);
     assert(buf_valid(file_data));
 
-    make(png_t, png);
-    b32_t ok = png_read(png, file_data);
-    assert(ok && png->width && png->height);
+    png_t png;
+    b32_t ok = png_read(&png, file_data);
+    assert(ok && png.width && png.height);
 
     pass_pack_atlas_context_t* context = contexts + context_index++;
     context->sprite = s;
     context->type = PASS_PACK_ATLAS_CONTEXT_TYPE_SPRITE;
 
     rp_rect_t* rect = rects + rect_index++;
-    rect->w = png->width;
-    rect->h = png->height;
+    rect->w = png.width;
+    rect->h = png.height;
     rect->user_data = context;
     
     s->rect = rect;
@@ -393,11 +393,11 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
     asset_file_font_t* ff = p->fonts + af->font_id;
     pass_pack_font_ext_t* ffe = p->font_exts + atlas_font_id;
 
-    make(ttf_t, ttf);
-    b32_t ok = pass_read_font_from_file(ttf, ffe->filename, p->arena); 
+    ttf_t ttf;
+    b32_t ok = pass_read_font_from_file(&ttf, ffe->filename, p->arena); 
     assert(ok);
 
-    f32_t scale = ttf_get_scale_for_pixel_height(ttf, af->font_height);
+    f32_t scale = ttf_get_scale_for_pixel_height(&ttf, af->font_height);
 
     // Grab the slice of rp_rect_t that belongs to this font
     af->glyph_rects = rects + rect_index;
@@ -409,10 +409,10 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
         ++glyph_index)
     {
       asset_file_font_glyph_t* fg = ffe->glyphs + glyph_index;
-      u32_t ttf_glyph_index = ttf_get_glyph_index(ttf, fg->codepoint);
+      u32_t ttf_glyph_index = ttf_get_glyph_index(&ttf, fg->codepoint);
 
       s32_t x0, y0, x1, y1;
-      ttf_get_glyph_bitmap_box(ttf, ttf_glyph_index, scale, &x0, &y0, &x1, &y1);
+      ttf_get_glyph_bitmap_box(&ttf, ttf_glyph_index, scale, &x0, &y0, &x1, &y1);
 
       pass_pack_atlas_context_t* context = contexts + context_index++;
       context->font_glyph.codepoint = fg->codepoint;
@@ -453,11 +453,11 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
        
         buf_t file_data = file_read_into_buffer(related_entry->filename, p->arena);
         
-        make(png_t, png);
-        b32_t ok = png_read(png, file_data);
+        png_t png;
+        b32_t ok = png_read(&png, file_data);
         assert(ok);
         
-        u32_t* pixels = png_rasterize(png, nullptr, nullptr, p->arena);
+        u32_t* pixels = png_rasterize(&png, nullptr, nullptr, p->arena);
         for (usz_t y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
           for (usz_t x = rect->x; x < rect->x + rect->w; ++x) {
             usz_t index = (x + y * fb->width);
@@ -472,14 +472,14 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
         pass_pack_atlas_font_glyph_context_t* related_context = &context->font_glyph;
         pass_pack_font_ext_t* ffe = p->font_exts + related_entry->font_id;
         
-        make(ttf_t, ttf);
-        b32_t ok = pass_read_font_from_file(ttf, ffe->filename, p->arena); 
+        ttf_t ttf;
+        b32_t ok = pass_read_font_from_file(&ttf, ffe->filename, p->arena); 
         assert(ok);
 
-        f32_t s = ttf_get_scale_for_pixel_height(ttf, related_entry->font_height);
-        u32_t glyph_index = ttf_get_glyph_index(ttf, related_context->codepoint);
+        f32_t s = ttf_get_scale_for_pixel_height(&ttf, related_entry->font_height);
+        u32_t glyph_index = ttf_get_glyph_index(&ttf, related_context->codepoint);
        
-        u32_t* pixels = ttf_rasterize_glyph(ttf, glyph_index, s, nullptr, nullptr, p->arena);
+        u32_t* pixels = ttf_rasterize_glyph(&ttf, glyph_index, s, nullptr, nullptr, p->arena);
         if (!pixels) continue;
         
         for (usz_t y = rect->y, j = 0; y < rect->y + rect->h; ++y) {
@@ -507,7 +507,6 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
                 p->arena);
     file_write_from_buffer(opt_png_output, png_to_write_mem);
   }
-
 
   //
   // Here, we insert everything into the pack
@@ -540,17 +539,17 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
 
     // @todo: We already read the TTF earlier. Is there
     // a way to not do this multiple times?
-    make(ttf_t, ttf);
-    b32_t ok = pass_read_font_from_file(ttf, ffe->filename, p->arena); 
+    ttf_t ttf;
+    b32_t ok = pass_read_font_from_file(&ttf, ffe->filename, p->arena); 
     assert(ok);
-    f32_t scale = ttf_get_scale_for_pixel_height(ttf, 1.f);
+    f32_t scale = ttf_get_scale_for_pixel_height(&ttf, 1.f);
 
     // Vertical Advance
     {
       s16_t ascent = 0;
       s16_t descent = 0;
       s16_t line_gap = 0;
-      ttf_get_vertical_metrics(ttf, 
+      ttf_get_vertical_metrics(&ttf, 
           &ascent, &descent, &line_gap);
       ff->ascent = (f32_t)ascent * scale;
       ff->descent = (f32_t)descent * scale;
@@ -567,7 +566,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
 
       // @note: codepoint is should already be set!
 
-      u32_t ttf_glyph_index = ttf_get_glyph_index(ttf, fg->codepoint);
+      u32_t ttf_glyph_index = ttf_get_glyph_index(&ttf, fg->codepoint);
 
       // Texel UV
       fg->texel_x0 = rect->x;
@@ -577,7 +576,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
 
       // Glyph box
       s32_t x0, y0, x1, y1;
-      if (ttf_get_glyph_box(ttf, ttf_glyph_index, &x0, &y0, &x1, &y1)){
+      if (ttf_get_glyph_box(&ttf, ttf_glyph_index, &x0, &y0, &x1, &y1)){
         fg->box_x0 = (f32_t)x0 * scale;
         fg->box_y0 = (f32_t)y0 * scale;
         fg->box_x1 = (f32_t)x1 * scale;
@@ -587,7 +586,7 @@ pass_pack_atlas_end(pass_pack_t* p, const char* opt_png_output = 0)
       // Horizontal dvance
       s16_t advance_width = 0;
       ttf_get_glyph_horizontal_metrics(
-          ttf, ttf_glyph_index, 
+          &ttf, ttf_glyph_index, 
           &advance_width, nullptr);
       fg->horizontal_advance = (f32_t)advance_width * scale;
     }
@@ -718,10 +717,10 @@ pass_pack_end(pass_pack_t* p, const char* filename)
     //
     // @todo: Again we are reading ttf here. Maybe we can avoid this? 
     //
-    make(ttf_t, ttf);
-    b32_t ok = pass_read_font_from_file(ttf, ffe->filename, p->arena); 
+    ttf_t ttf;
+    b32_t ok = pass_read_font_from_file(&ttf, ffe->filename, p->arena); 
     assert(ok);
-    f32_t pixel_scale = ttf_get_scale_for_pixel_height(ttf, 1.f);
+    f32_t pixel_scale = ttf_get_scale_for_pixel_height(&ttf, 1.f);
     for(u32_t g1 = 0;
         g1 < ff->glyph_count;
         ++g1)
@@ -733,9 +732,9 @@ pass_pack_end(pass_pack_t* p, const char* filename)
         u32_t cp1 = ffe->glyphs[g1].codepoint;
         u32_t cp2 = ffe->glyphs[g2].codepoint;
 
-        u32_t gi1 = ttf_get_glyph_index(ttf, cp1);
-        u32_t gi2 = ttf_get_glyph_index(ttf, cp2);
-        s32_t raw_kern = ttf_get_glyph_kerning(ttf, gi1, gi2);
+        u32_t gi1 = ttf_get_glyph_index(&ttf, cp1);
+        u32_t gi2 = ttf_get_glyph_index(&ttf, cp2);
+        s32_t raw_kern = ttf_get_glyph_kerning(&ttf, gi1, gi2);
 
         f32_t kerning = (f32_t)raw_kern * pixel_scale;
         fwrite(&kerning, sizeof(kerning), 1, file);
@@ -769,13 +768,13 @@ pass_pack_end(pass_pack_t* p, const char* filename)
     pass_pack_sound_ext_t* fse = p->sound_exts + sound_index; 
     fs->offset_to_data = offset_to_data;
 
-    make(wav_t, wav);
-    b32_t ok = pass_read_wav_from_file(wav, fse->filename, p->arena); 
+    wav_t wav;
+    b32_t ok = pass_read_wav_from_file(&wav, fse->filename, p->arena); 
     assert(ok);
 
-    fs->data_size = wav->data_chunk.size;
+    fs->data_size = wav.data_chunk.size;
 
-    fwrite(wav->data, wav->data_chunk.size, 1, file); 
+    fwrite(wav.data, wav.data_chunk.size, 1, file); 
     offset_to_data = ftell(file);
   }
 

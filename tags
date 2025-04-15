@@ -1193,12 +1193,12 @@ euler_q20	code/euler.cpp	/^euler_q20() {$/;"	f	language:C++	typeref:typename:voi
 euler_q21	code/euler.cpp	/^euler_q21() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q21_d	code/euler.cpp	/^euler_q21_d(u32_t n) {$/;"	f	language:C++	typeref:typename:u32_t	file:
 euler_q22	code/euler.cpp	/^euler_q22() {$/;"	f	language:C++	typeref:typename:void	file:
-euler_q22_get_score	code/euler.cpp	/^euler_q22_get_score(str_t str) $/;"	f	language:C++	typeref:typename:u32_t	file:
+euler_q22_get_score	code/euler.cpp	/^euler_q22_get_score(buf_t str) $/;"	f	language:C++	typeref:typename:u32_t	file:
 euler_q23	code/euler.cpp	/^euler_q23()$/;"	f	language:C++	typeref:typename:void	file:
 euler_q23_get_sum_of_divisors	code/euler.cpp	/^euler_q23_get_sum_of_divisors(u32_t num)$/;"	f	language:C++	typeref:typename:u32_t	file:
 euler_q23_is_abundant	code/euler.cpp	/^euler_q23_is_abundant(u32_t num) {$/;"	f	language:C++	typeref:typename:b32_t	file:
 euler_q24	code/euler.cpp	/^euler_q24()$/;"	f	language:C++	typeref:typename:void	file:
-euler_q24_print_permutations_lexographically	code/euler.cpp	/^euler_q24_print_permutations_lexographically(str_t str) $/;"	f	language:C++	typeref:typename:void	file:
+euler_q24_print_permutations_lexographically	code/euler.cpp	/^euler_q24_print_permutations_lexographically(buf_t str) $/;"	f	language:C++	typeref:typename:void	file:
 euler_q25	code/euler.cpp	/^euler_q25()$/;"	f	language:C++	typeref:typename:void	file:
 euler_q3	code/euler.cpp	/^euler_q3() {$/;"	f	language:C++	typeref:typename:void	file:
 euler_q4	code/euler.cpp	/^euler_q4() {$/;"	f	language:C++	typeref:typename:void	file:
@@ -1489,7 +1489,7 @@ file_write	code/momo.h	/^file_write(file_t* fp, const void* src, usz_t size, usz
 file_write	code/momo.h	/^file_write(file_t* fp, const void* src, usz_t size, usz_t offset) $/;"	f	language:C++	typeref:typename:b32_t
 file_write	code/momo.h	/^static b32_t  file_write(file_t* fp, const void* src, usz_t size, usz_t offset);$/;"	p	language:C++	typeref:typename:b32_t
 file_write_from_buffer	code/momo.h	/^file_write_from_buffer(const char* filename, buf_t buffer) {$/;"	f	language:C++	typeref:typename:b32_t
-file_write_from_str	code/momo.h	/^static b32_t  file_write_from_str(const char* filename, buf_t buffer);$/;"	p	language:C++	typeref:typename:b32_t
+file_write_from_buffer	code/momo.h	/^static b32_t  file_write_from_buffer(const char* filename, buf_t buffer);$/;"	p	language:C++	typeref:typename:b32_t
 filter_method	code/momo.h	/^  u8_t filter_method;$/;"	m	language:C++	struct:png_t	typeref:typename:u8_t
 filter_method	code/momo.h	/^  u8_t filter_method;$/;"	m	language:C++	struct:_png_ihdr_t	typeref:typename:u8_t
 first_payload_index	code/eden_gfx.h	/^  usz_t first_payload_index;$/;"	m	language:C++	struct:eden_gfx_texture_queue_t	typeref:typename:usz_t
@@ -1603,7 +1603,7 @@ GBG_TILE_TYPE_OBSTACLE	code/app_gbg.cpp	/^  GBG_TILE_TYPE_OBSTACLE,$/;"	e	langua
 gbg_type_t	code/app_gbg.cpp	/^enum gbg_type_t$/;"	g	language:C++	file:
 getuna	code/w32_getuna.cpp	/^static getuna_t* getuna;$/;"	v	language:C++	typeref:typename:getuna_t *	file:
 getuna_spawn_selection_window	code/w32_getuna.cpp	/^getuna_spawn_selection_window()$/;"	f	language:C++	typeref:typename:b32_t	file:
-getuna_spawn_ss_window	code/w32_getuna.cpp	/^getuna_spawn_ss_window()$/;"	f	language:C++	typeref:typename:void	file:
+getuna_spawn_ss_window	code/w32_getuna.cpp	/^getuna_spawn_ss_window(LONG x, LONG y, LONG w, LONG h)$/;"	f	language:C++	typeref:typename:void	file:
 GETUNA_SS_BUTTON_COMMAND_ID	code/w32_getuna.cpp	/^#define GETUNA_SS_BUTTON_COMMAND_ID /;"	d	language:C++	file:
 GETUNA_SS_BUTTON_H	code/w32_getuna.cpp	/^#define GETUNA_SS_BUTTON_H /;"	d	language:C++	file:
 GETUNA_SS_BUTTON_TEXT	code/w32_getuna.cpp	/^#define GETUNA_SS_BUTTON_TEXT /;"	d	language:C++	file:
@@ -2224,6 +2224,7 @@ main	code/gist_linked_list.cpp	/^int main() {$/;"	f	language:C++	typeref:typenam
 main	code/gist_list.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/gist_ring_buffer.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main	code/gist_tuple.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
+main	code/make.cpp	/^int main(int argc, char** argv)$/;"	f	language:C++	typeref:typename:int
 main	code/meta.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/pass_gbg.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
 main	code/pass_lit.cpp	/^int main() {$/;"	f	language:C++	typeref:typename:int
@@ -2245,7 +2246,6 @@ main	code/tool_seat_randomizer.cpp	/^int main () $/;"	f	language:C++	typeref:typ
 main	code/twitch_bot.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main_arena	code/app_lit.cpp	/^  arena_t main_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
 main_window	code/w32_getuna.cpp	/^  HWND main_window;$/;"	m	language:C++	struct:getuna_t	typeref:typename:HWND	file:
-make	code/momo.h	/^#define make(/;"	d	language:C++
 max	code/app_lit.cpp	/^  f64_t max;$/;"	m	language:C++	struct:lit_profiler_stat_t	typeref:typename:f64_t	file:
 max	code/eden_gfx_opengl.h	/^  v2f_t min, max;$/;"	m	language:C++	struct:eden_opengl_uv_t	typeref:typename:v2f_t
 max	code/eden_profiler.h	/^  f64_t max;$/;"	m	language:C++	struct:eden_profiler_stat_t	typeref:typename:f64_t
@@ -2905,6 +2905,7 @@ test_square_wave	code/ship_app_lit.cpp	/^static void test_square_wave(s32_t samp
 test_square_wave	code/w32_eden_audio_wasapi.h	/^static void test_square_wave(s32_t samples_per_second, s32_t sample_count, f32_t *samples, f32_t/;"	f	language:C++	typeref:typename:void
 test_t	code/test_list.cpp	/^  using test_t = list_t<u32_t, 1024>;$/;"	t	language:C++	function:main	typeref:typename:list_t<u32_t,1024>	file:
 test_value	code/aoc22.cpp	/^  u32_t test_value;$/;"	m	language:C++	struct:aoc22_d11_monkey_t	typeref:typename:u32_t	file:
+test__rebuild_self_if_needed	code/make.cpp	/^test__rebuild_self_if_needed(int argc, char** argv, const char* src)$/;"	f	language:C++	typeref:typename:void	file:
 texel_x0	code/eden_assets.h	/^  u32_t texel_x0, texel_y0;$/;"	m	language:C++	struct:eden_asset_font_glyph_t	typeref:typename:u32_t
 texel_x0	code/eden_assets.h	/^  u32_t texel_x0;$/;"	m	language:C++	struct:eden_asset_sprite_t	typeref:typename:u32_t
 texel_x0	code/eden_asset_file.h	/^  u32_t texel_x0;$/;"	m	language:C++	struct:asset_file_font_glyph_t	typeref:typename:u32_t
@@ -3413,6 +3414,7 @@ WinMain	code/w32_chip8.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typ
 WinMain	code/w32_eden.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 WinMain	code/w32_getuna.cpp	/^WinMain($/;"	f	language:C++	typeref:typename:int APIENTRY CALLBACK
 WinMain	code/w32_sandbox_wasapi.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int APIENTRY CALLBACK
+WM_SS	code/w32_getuna.cpp	/^#define WM_SS /;"	d	language:C++	file:
 work_queue	code/ship_app_lit.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_work_queue_t	file:
 work_queue	code/w32_eden.cpp	/^  w32_work_queue_t work_queue;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:w32_work_queue_t	file:
 world_pos	code/app_gbg.cpp	/^  v2f_t world_pos;$/;"	m	language:C++	struct:gbg_enemy_t	typeref:typename:v2f_t	file:
@@ -3557,7 +3559,7 @@ _ttf_edge_t	code/momo.h	/^struct _ttf_edge_t{$/;"	s	language:C++
 _ttf_get_glyph_outline	code/momo.h	/^_ttf_get_glyph_outline(const ttf_t* ttf, $/;"	f	language:C++	typeref:typename:b32_t
 _ttf_get_kern_advance	code/momo.h	/^_ttf_get_kern_advance(const ttf_t* ttf, s32_t g1, s32_t g2) $/;"	f	language:C++	typeref:typename:s32_t
 _ttf_get_offset_to_glyph	code/momo.h	/^_ttf_get_offset_to_glyph(const ttf_t* ttf, u32_t glyph_index) {$/;"	f	language:C++	typeref:typename:u32_t
-_ttf_get_paths_from_glyph_outline	code/momo.h	/^_ttf_get_paths_from_glyph_outline(_ttf_glyph_outline_t* outline,$/;"	f	language:C++	typeref:typename:b32_t
+_ttf_get_paths_from_glyph_outline	code/momo.h	/^_ttf_get_paths_from_glyph_outline($/;"	f	language:C++	typeref:typename:b32_t
 _ttf_glyph_outline_t	code/momo.h	/^struct _ttf_glyph_outline_t{$/;"	s	language:C++
 _ttf_glyph_paths_t	code/momo.h	/^struct _ttf_glyph_paths_t{$/;"	s	language:C++
 _ttf_glyph_point_t	code/momo.h	/^struct _ttf_glyph_point_t{$/;"	s	language:C++
