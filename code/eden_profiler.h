@@ -40,24 +40,24 @@ struct eden_profiler_t {
   u32_t snapshot_index;
 };
 
-#define eden_profile_begin(eden, name) \
+#define eden_profile_begin(name) \
   static eden_profiler_entry_t* _profiler_block_##name = 0; \
   if (_profiler_block_##name == 0 || _profiler_block_##name->flag_for_reset) {\
     _profiler_block_##name = _eden_profiler_init_block(&eden->profiler, __FILE__, __LINE__, __FUNCTION__, #name);  \
   }\
   _eden_profiler_begin_block(&eden->profiler, _profiler_block_##name)\
 
-#define eden_profile_end(eden, name) \
+#define eden_profile_end(name) \
   _eden_profiler_end_block(&eden->profiler, _profiler_block_##name) 
 
-#define eden_profile_block(eden, name) \
-  eden_profile_begin(eden, name); \
-  defer {eden_profile_end(eden, name);} 
+#define eden_profile_block(name) \
+  eden_profile_begin(name); \
+  defer {eden_profile_end(name);} 
 
 #else
 
-#define eden_profile_begin(eden, name) { #name; }
-#define eden_profile_end(eden, name)
-#define eden_profile_block(eden, name)
+#define eden_profile_begin(name) { #name; }
+#define eden_profile_end(name)
+#define eden_profile_block(name)
 
 #endif // EDEN_DEBUG

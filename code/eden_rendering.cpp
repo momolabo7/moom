@@ -1,13 +1,12 @@
 
 static void
-eden_clear_canvas(eden_t* eden, rgba_t colors) 
+eden_clear_canvas(rgba_t colors) 
 {
   eden_gfx_push_clear_command(&eden->gfx, colors);
 }
 
 static void 
 eden_set_view(
-    eden_t* eden, 
     f32_t min_x, 
     f32_t max_x, 
     f32_t min_y, 
@@ -27,7 +26,6 @@ eden_set_view(
 
 static void 
 eden_draw_sprite(
-    eden_t* eden,
     v2f_t pos, 
     v2f_t size, 
     v2f_t anchor, 
@@ -52,26 +50,26 @@ eden_draw_sprite(
 }
 
 static void
-eden_draw_rect(eden_t* eden, v2f_t pos, f32_t rot, v2f_t scale, rgba_t colors) 
+eden_draw_rect(v2f_t pos, f32_t rot, v2f_t scale, rgba_t colors) 
 {
   eden_gfx_push_rect_command(&eden->gfx, pos, rot, scale, colors);
 }
 
 static void
-eden_draw_tri(eden_t* eden, v2f_t p0, v2f_t p1, v2f_t p2, rgba_t colors)
+eden_draw_tri(v2f_t p0, v2f_t p1, v2f_t p2, rgba_t colors)
 {
   eden_gfx_push_triangle_command(&eden->gfx, p0, p1, p2, colors);
 }
 
 
 static void
-eden_gfx_test(eden_t* eden) 
+eden_gfx_test() 
 {
   eden_gfx_push_test_command(&eden->gfx);
 }
 
 static void
-eden_set_blend_preset(eden_t* eden, eden_blend_preset_type_t type) {
+eden_set_blend_preset(eden_blend_preset_type_t type) {
   eden_gfx_t* g = &eden->gfx;
   switch(type) {
     case EDEN_BLEND_PRESET_TYPE_ADD:
@@ -93,14 +91,14 @@ eden_set_blend_preset(eden_t* eden, eden_blend_preset_type_t type) {
 }
 
 static eden_blend_preset_type_t
-eden_get_blend_preset(eden_t* eden) {
+eden_get_blend_preset() {
   eden_gfx_t* g = &eden->gfx;
   return g->current_blend_preset;
 }
 
 
 static void
-eden_draw_line(eden_t* eden, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {
+eden_draw_line(v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {
   // @note: Min.Y needs to be lower than Max.y
   if (p0.y > p1.y) {
     swap(p0.x, p1.x);
@@ -122,7 +120,7 @@ eden_draw_line(eden_t* eden, v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors)
 }
 
 static void
-eden_draw_circle(eden_t* eden, v2f_t center, f32_t radius, u32_t sections, rgba_t color) {
+eden_draw_circle(v2f_t center, f32_t radius, u32_t sections, rgba_t color) {
   // We must have at least 3 sections
   // which would form a triangle
   if (sections < 3) {
@@ -150,7 +148,6 @@ eden_draw_circle(eden_t* eden, v2f_t center, f32_t radius, u32_t sections, rgba_
 
 static void
 eden_draw_circ_outline(
-    eden_t* eden, 
     v2f_t center, 
     f32_t radius, 
     f32_t thickness, 
@@ -170,7 +167,7 @@ eden_draw_circ_outline(
   for (u32_t i = 0; i < line_count; ++i) {
     v2f_t p0 = v2f_add(pt1, center);
     v2f_t p1 = v2f_add(pt2, center);
-    eden_draw_line(eden, p0, p1, thickness, color);
+    eden_draw_line(p0, p1, thickness, color);
     
     pt1 = pt2;
     pt2 = v2f_rotate(pt1, angle_increment);
@@ -180,7 +177,6 @@ eden_draw_circ_outline(
 
 static void
 eden_draw_asset_sprite(
-    eden_t* eden, 
     eden_asset_sprite_id_t sprite_id, 
     v2f_t pos, 
     v2f_t size, 
@@ -193,7 +189,6 @@ eden_draw_asset_sprite(
   v2f_t anchor = v2f_set(0.5f, 0.5f); 
   
   eden_draw_sprite(
-      eden, 
       pos, size, anchor,
       bitmap->renderer_texture_handle, 
       sprite->texel_x0,
@@ -206,7 +201,6 @@ eden_draw_asset_sprite(
 
 static f32_t
 eden_get_text_length(
-    eden_t* eden,
     eden_asset_font_id_t font_id, 
     buf_t str, 
     f32_t font_height)
@@ -245,7 +239,6 @@ eden_get_text_length(
 
 static void
 eden_draw_text(
-    eden_t* eden, 
     eden_asset_font_id_t font_id, 
     buf_t str, 
     rgba_t color, 
@@ -302,8 +295,7 @@ eden_draw_text(
     v2f_t glyph_size = v2f_set(width, height);
 
     v2f_t anchor = v2f_set(0.f, 1.f); // bottom left
-    eden_draw_sprite(eden, 
-                    glyph_pos, 
+    eden_draw_sprite(glyph_pos, 
                     glyph_size, 
                     anchor,
                     bitmap->renderer_texture_handle, 

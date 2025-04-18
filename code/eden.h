@@ -42,26 +42,26 @@
 // 
 #define eden_debug_log_sig(name) void name(const char* fmt, ...)
 typedef eden_debug_log_sig(eden_debug_log_f);
-#define eden_debug_log(eden, ...) (eden->debug_log(__VA_ARGS__))
+#define eden_debug_log(...) (eden->debug_log(__VA_ARGS__))
 
 //
 // App Cursor API
 //
 #define eden_show_cursor_sig(name) void name()
 typedef eden_show_cursor_sig(eden_show_cursor_f);
-#define eden_show_cursor(eden, ...) (eden->show_cursor(__VA_ARGS__))
+#define eden_show_cursor(...) (eden->show_cursor(__VA_ARGS__))
 
 #define eden_hide_cursor_sig(name) void name()
 typedef eden_hide_cursor_sig(eden_hide_cursor_f);
-#define eden_hide_cursor(eden, ...) (eden->hide_cursor(__VA_ARGS__))
+#define eden_hide_cursor(...) (eden->hide_cursor(__VA_ARGS__))
 
 #define eden_lock_cursor_sig(name) void name()
 typedef eden_lock_cursor_sig(eden_lock_cursor_f);
-#define eden_lock_cursor(eden, ...) (eden->lock_cursor(__VA_ARGS__))
+#define eden_lock_cursor(...) (eden->lock_cursor(__VA_ARGS__))
 
 #define eden_unlock_cursor_sig(name) void name()
 typedef eden_unlock_cursor_sig(eden_unlock_cursor_f);
-#define eden_unlock_cursor(eden, ...) (eden->unlock_cursor(__VA_ARGS__))
+#define eden_unlock_cursor(...) (eden->unlock_cursor(__VA_ARGS__))
 
 //
 // Multithreaded work API
@@ -70,18 +70,18 @@ typedef void eden_task_callback_f(void* data);
 
 #define eden_add_task_sig(name) void name(eden_task_callback_f callback, void* data)
 typedef eden_add_task_sig(eden_add_task_f);
-#define eden_add_task(eden, ...) (eden->add_task(__VA_ARGS__))
+#define eden_add_task(...) (eden->add_task(__VA_ARGS__))
 
 #define eden_complete_all_tasks_sig(name) void name(void)
 typedef eden_complete_all_tasks_sig(eden_complete_all_tasks_f);
-#define eden_complete_all_tasks(eden, ...) (eden->complete_all_tasks(__VA_ARGS__))
+#define eden_complete_all_tasks(...) (eden->complete_all_tasks(__VA_ARGS__))
 
 // 
 // Window/Graphics related
 //
 #define eden_set_design_dimensions_sig(name) void name(f32_t width, f32_t height)
 typedef eden_set_design_dimensions_sig(eden_set_design_dimensions_f);
-#define eden_set_design_dimensions(eden, ...) (eden->set_design_dimensions(__VA_ARGS__))
+#define eden_set_design_dimensions(...) (eden->set_design_dimensions(__VA_ARGS__))
 
 
 
@@ -113,8 +113,10 @@ struct eden_t
 
 
   void* user_data;
-
 };
+
+static eden_t* eden;
+static void eden_globalize(eden_t* e) { eden = e; } 
 
 
 #include "eden_gfx.cpp"
@@ -191,8 +193,6 @@ eden_exit_next_frame(eden_t* eden)
 {
   eden->is_running = false;
 }
-
-
 
 
 //

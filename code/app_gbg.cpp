@@ -162,7 +162,7 @@ gbg_render_grid()
     if(tile->type == GBG_TILE_TYPE_NOTHING) 
     {
       eden_draw_rect(
-          eden, 
+          
           pos,
           0.f, 
           v2f_set(GBG_TILE_SIZE*0.9f, GBG_TILE_SIZE*0.9f),
@@ -171,7 +171,7 @@ gbg_render_grid()
     else if (tile->type == GBG_TILE_TYPE_OBSTACLE)
     {
       eden_draw_rect(
-          eden, 
+          
           pos,
           0.f, 
           v2f_set(GBG_TILE_SIZE*0.9f, GBG_TILE_SIZE*0.9f),
@@ -180,13 +180,13 @@ gbg_render_grid()
     else if (tile->type == GBG_TILE_TYPE_EXIT)
     {
       eden_draw_rect(
-          eden, 
+          
           pos,
           0.f, 
           v2f_set(GBG_TILE_SIZE*0.9f, GBG_TILE_SIZE*0.9f),
           rgba_set(0.0f, 0.0f, 0.2f, 1.f));
       eden_draw_text(
-          eden, 
+          
           ASSET_FONT_ID_DEFAULT, 
           buf_from_lit("0"), 
           RGBA_WHITE, 
@@ -205,7 +205,7 @@ gbg_render_grid_effects()
     gbg_tile_t* tile = gbg->tiles + tile_index;
     v2f_t pos = gbg_tile_index_to_world_pos(tile_index);
       eden_draw_text(
-          eden, ASSET_FONT_ID_DEBUG,
+          ASSET_FONT_ID_DEBUG,
           buf_set(tile->effects, 2),
           RGBA_WHITE,
           pos,
@@ -337,7 +337,6 @@ static void
 gbg_render_player()
 {
   eden_draw_rect(
-      eden, 
       gbg->player.world_pos,
       0.f, 
       v2f_set(GBG_TILE_SIZE, GBG_TILE_SIZE) * 0.8f,
@@ -354,7 +353,6 @@ gbg_render_player_pp()
 
 
   eden_draw_text(
-      eden, 
       ASSET_FONT_ID_DEBUG, 
       bufio.str,
       RGBA_BLACK, 
@@ -379,7 +377,7 @@ eden_update_and_render_sig(eden_update_and_render)
   {
     eden->user_data = arena_alloc_bootstrap(gbg_t, arena, megabytes(256)); 
     gbg = (gbg_t*)(eden->user_data);
-    eden_assets_init_from_file(eden, SANDBOX_ASSET_FILE, &gbg->arena);
+    eden_assets_init_from_file(SANDBOX_ASSET_FILE, &gbg->arena);
     
     rng_init(&gbg->rng, 1337);
     gbg->player.grid_pos = v2u_set(0,0);
@@ -397,28 +395,28 @@ eden_update_and_render_sig(eden_update_and_render)
   {
     gbg_randomize_level();
   }
-  eden_set_design_dimensions(eden, GBG_DESIGN_WIDTH, GBG_DESIGN_HEIGHT);
+  eden_set_design_dimensions(GBG_DESIGN_WIDTH, GBG_DESIGN_HEIGHT);
 
   //
   // Input Phase
   //
-  if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_D)) 
+  if (eden_is_button_poked(EDEN_BUTTON_CODE_D)) 
   {
     gbg_player_move(1, 0);
   }
-  else if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_A)) 
+  else if (eden_is_button_poked(EDEN_BUTTON_CODE_A)) 
   {
     gbg_player_move(-1, 0);
   }
-  else if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_W)) 
+  else if (eden_is_button_poked(EDEN_BUTTON_CODE_W)) 
   {
     gbg_player_move(0, -1);
   }
-  else if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_S)) 
+  else if (eden_is_button_poked(EDEN_BUTTON_CODE_S)) 
   {
     gbg_player_move(0, 1);
   }
-  else if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_SPACE))
+  else if (eden_is_button_poked(EDEN_BUTTON_CODE_SPACE))
   {
     gbg_player_act();
   }
@@ -426,9 +424,9 @@ eden_update_and_render_sig(eden_update_and_render)
   //
   // RENDERING
   //
-  eden_clear_canvas(eden, rgba_set(0.1f, 0.1f, 0.1f, 1.0f));
-  eden_set_view(eden, 0.f, GBG_DESIGN_WIDTH, 0.f, GBG_DESIGN_HEIGHT, 0.f, 0.f);
-  eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
+  eden_clear_canvas(rgba_set(0.1f, 0.1f, 0.1f, 1.0f));
+  eden_set_view(0.f, GBG_DESIGN_WIDTH, 0.f, GBG_DESIGN_HEIGHT, 0.f, 0.f);
+  eden_set_blend_preset(EDEN_BLEND_PRESET_TYPE_ALPHA);
 
   gbg_render_grid();
   gbg_render_player();

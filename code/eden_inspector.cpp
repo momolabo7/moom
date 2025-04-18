@@ -29,21 +29,21 @@ eden_inspector_clear(eden_inspector_t* in)
 
 
 static void
-eden_inspect_f32_(eden_t* eden, buf_t name, f32_t item)
+_eden_inspect_f32(buf_t name, f32_t item)
 {
   eden_inspector_entry_t* entry = eden_inspector_push_entry(&eden->inspector, name, EDEN_INSPECTOR_ENTRY_TYPE_F32);
   entry->value_f32 = item;
 }
 
 static void
-eden_inspect_u32_(eden_t* eden, buf_t name, u32_t item)
+_eden_inspect_u32(buf_t name, u32_t item)
 {
   eden_inspector_entry_t* entry = eden_inspector_push_entry(&eden->inspector, name, EDEN_INSPECTOR_ENTRY_TYPE_U32);
   entry->value_u32 = item;
 }
 
 static void
-eden_inspect_arena_(eden_t* eden, buf_t name, arena_t arena)
+_eden_inspect_arena(buf_t name, arena_t arena)
 {
   eden_inspector_entry_t* entry = eden_inspector_push_entry(&eden->inspector, name, EDEN_INSPECTOR_ENTRY_TYPE_ARENA);
   entry->value_arena = arena;
@@ -51,7 +51,6 @@ eden_inspect_arena_(eden_t* eden, buf_t name, arena_t arena)
 
 static void 
 eden_draw_inspector(
-    eden_t* eden,
     f32_t font_height,
     f32_t width,
     f32_t height,
@@ -124,7 +123,6 @@ eden_draw_inspector(
     }
 
     eden_draw_text(
-        eden, 
         font, 
         sb.str, 
         rgba_hex(0xFFFFFFFF), 
@@ -135,14 +133,14 @@ eden_draw_inspector(
   }
 }
 
-#define eden_inspect_f32(eden, name, item) \
-  eden_inspect_f32_(eden, buf_from_lit(#name), item); 
+#define eden_inspect_f32(name, item) \
+  _eden_inspect_f32_(buf_from_lit(#name), item); 
 
-#define eden_inspect_u32(eden, name, item) \
-  eden_inspect_u32_(eden, buf_from_lit(#name), item);
+#define eden_inspect_u32(name, item) \
+  _eden_inspect_u32_(buf_from_lit(#name), item);
 
 #define eden_inspect_arena(eden, name, arena) \
-  eden_inspect_arena_(eden, buf_from_lit(#name), arena); 
+  _eden_inspect_arena_(buf_from_lit(#name), arena); 
 
 #else 
 

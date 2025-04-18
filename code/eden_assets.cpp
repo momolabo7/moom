@@ -1,7 +1,6 @@
 
 static b32_t
 eden_assets_init(
-    eden_t* eden, 
     u32_t bitmap_count,
     u32_t sprite_count,
     u32_t font_count,
@@ -46,7 +45,6 @@ eden_assets_init(
 
 static b32_t 
 eden_assets_init_from_file(
-    eden_t* eden, 
     const char* filename, 
     arena_t* arena) 
 {
@@ -71,7 +69,6 @@ eden_assets_init_from_file(
   }
 
   if(!eden_assets_init(
-        eden, 
         asset_file_header.bitmap_count, 
         asset_file_header.sprite_count,
         asset_file_header.font_count,

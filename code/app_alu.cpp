@@ -64,15 +64,15 @@ eden_update_and_render_sig(eden_update_and_render)
     if (!arena_push_partition(&alu->main_arena, &alu->asset_arena, megabytes(20), 16)) lit_exit();
     if (!arena_push_partition(&alu->main_arena, &alu->asset_arena, megabytes(1), 16)) lit_exit();
 
-    eden_assets_init_from_file(eden, SANDBOX_ASSET_FILE, &alu->arena);
-    eden_set_design_dimensions(eden, 800, 800);
-    eden_set_view(eden, 0.f, 800.f, 0.f, 800.f, 0.f, 0.f);
-    eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
+    eden_assets_init_from_file(SANDBOX_ASSET_FILE, &alu->arena);
+    eden_set_design_dimensions(800, 800);
+    eden_set_view(0.f, 800.f, 0.f, 800.f, 0.f, 0.f);
+    eden_set_blend_preset(EDEN_BLEND_PRESET_TYPE_ALPHA);
   }
 
   f32_t dt = eden_get_dt(eden);
   auto* alu = (alu_t*)(eden->user_data);
-  eden_clear_canvas(eden, rgba_set(0.25f, 0.25f, 0.25f, 1.0f));
+  eden_clear_canvas(rgba_set(0.25f, 0.25f, 0.25f, 1.0f));
 
   buf_t buffer = arena_push_buffer(&alu->frame_arena, 100);
   bufio_t test;
@@ -81,7 +81,7 @@ eden_update_and_render_sig(eden_update_and_render)
 
 
   str_reverse(&test->str);
-  eden_draw_text(eden, ASSET_FONT_ID_DEFAULT, test->str, RGBA_WHITE, 300, 300, 72);
+  eden_draw_text(ASSET_FONT_ID_DEFAULT, test->str, RGBA_WHITE, 300, 300, 72);
 }
 
 

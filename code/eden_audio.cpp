@@ -36,7 +36,6 @@ eden_speaker_init(
 
 static eden_speaker_sound_t*
 eden_speaker_play(
-    eden_t* eden,
     eden_asset_sound_id_t sound_id,
     b32_t loop,
     f32_t volume) 
@@ -59,9 +58,7 @@ eden_speaker_play(
 }
 
 static void
-eden_speaker_stop(
-    eden_t* eden,
-    eden_speaker_sound_t* instance)
+eden_speaker_stop(eden_speaker_sound_t* instance)
 {
   eden_speaker_t* speaker = &eden->speaker;
   instance->is_playing = false;

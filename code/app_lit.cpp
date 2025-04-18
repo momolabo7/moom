@@ -68,10 +68,10 @@
 #define LIT_LEARNT_POINT_LIGHT_LEVEL_ID (7)
 
 #if EDEN_DEBUG 
-# define lit_log(...) eden_debug_log(eden, __VA_ARGS__)
-# define lit_profile_block(name) eden_profile_block(eden, name)
-# define lit_profile_begin(name) eden_profile_begin(eden, name)
-# define lit_profile_end(name) eden_profile_end(eden, name)
+# define lit_log(...) eden_debug_log(__VA_ARGS__)
+# define lit_profile_block(name) eden_profile_block(name)
+# define lit_profile_begin(name) eden_profile_begin(name)
+# define lit_profile_end(name) eden_profile_end(name)
 #else 
 # define lit_log(...) 
 # define lit_profile_block(name) 
@@ -399,7 +399,6 @@ struct lit_t {
 //
 // Globals
 // 
-static eden_t* eden; 
 static lit_t* lit;
 static lit_game_title_waypoint_t lit_title_wps[] = {
   { -800.0f,  0.0f },
@@ -490,7 +489,7 @@ lit_update_and_render_console()
 {
   eden_console_t* console = &lit->console;
   eden_assets_t* assets = &lit->assets;
-  eden_input_characters_t characters = eden_get_input_characters(eden);
+  eden_input_characters_t characters = eden_get_input_characters();
 
   for (u32_t char_index = 0; 
        char_index < characters.count;
@@ -528,17 +527,17 @@ lit_update_and_render_console()
   v2f_t input_area_pos = v2f_set(console_width/2, line_height/2);
   
   eden_draw_asset_sprite(
-      eden, assets, 
+      assets, 
       ASSET_SPRITE_ID_BLANK_SPRITE,
       v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(0.f, 0.f, 0.f, 0.8f));
-  //eden_advance_depth(eden);
+  //eden_advance_depth();
   
-  eden_draw_asset_sprite(eden, assets, ASSET_SPRITE_ID_BLANK_SPRITE, console_pos, console_size, rgba_hex(0x787878FF));
-  //eden_advance_depth(eden);
-  eden_draw_asset_sprite(eden, assets, ASSET_SPRITE_ID_BLANK_SPRITE, input_area_pos, input_area_size, rgba_hex(0x505050FF));
-  //eden_advance_depth(eden);
+  eden_draw_asset_sprite(assets, ASSET_SPRITE_ID_BLANK_SPRITE, console_pos, console_size, rgba_hex(0x787878FF));
+  //eden_advance_depth();
+  eden_draw_asset_sprite(assets, ASSET_SPRITE_ID_BLANK_SPRITE, input_area_pos, input_area_size, rgba_hex(0x505050FF));
+  //eden_advance_depth();
   
   
   // Draw info text
@@ -549,7 +548,7 @@ lit_update_and_render_console()
     bufio_t* line = console->info_lines + line_index;
 
     eden_draw_text(
-        eden, assets, 
+        assets, 
         ASSET_FONT_ID_DEBUG,
         line->str,
         rgba_hex(0xFFFFFFFF),
@@ -559,15 +558,15 @@ lit_update_and_render_console()
     
   }
 
-  //eden_advance_depth(eden);
-  eden_draw_text(eden, assets, 
+  //eden_advance_depth();
+  eden_draw_text(assets, 
       ASSET_FONT_ID_DEBUG,
       console->input_line.str,
       rgba_hex(0xFFFFFFFF),
       left_pad, 
       font_bottom_pad,
       font_height);
-  //eden_advance_depth(eden);
+  //eden_advance_depth();
 }
 #endif
 
@@ -597,9 +596,9 @@ lit_play_correct_bgm() {
   {
     if (lit->bgm) 
     {
-      eden_speaker_stop(eden, lit->bgm);
+      eden_speaker_stop(lit->bgm);
     }
-    lit->bgm = eden_speaker_play(eden, bgm_id, true, 0.5f);
+    lit->bgm = eden_speaker_play(bgm_id, true, 0.5f);
     lit->bgm_id = bgm_id;
   }
 }
@@ -622,10 +621,10 @@ lit_splash_update() {
   lit_splash_t* splash = &lit->splash;
   eden_asset_font_id_t font = ASSET_FONT_ID_DEFAULT;
 
-  splash->timer -= eden_get_dt(eden);
-  splash->scroll_in_timer -= eden_get_dt(eden);
+  splash->timer -= eden_get_dt();
+  splash->scroll_in_timer -= eden_get_dt();
 
-  if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_LMB)) {
+  if (eden_is_button_poked(EDEN_BUTTON_CODE_LMB)) {
     if (splash->scroll_in_timer > 0.f)  {
       splash->scroll_in_timer = 0.f;
     }
@@ -637,7 +636,7 @@ lit_splash_update() {
   f32_t y = LIT_HEIGHT/2 - 200.f;
 
   eden_draw_text(
-      eden, 
+      
       font, 
       buf_from_lit("-----"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -646,7 +645,7 @@ lit_splash_update() {
       v2f_set(0.5f, 0.5f));
   y += 70;
   eden_draw_text(
-      eden, 
+      
       font,
       buf_from_lit("LIT"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -656,7 +655,7 @@ lit_splash_update() {
 
   y += 70;
   eden_draw_text(
-      eden, 
+      
       font,
       buf_from_lit("-----"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -679,7 +678,7 @@ lit_splash_update() {
   f32_t scroll_y = (alpha)*LIT_SPLASH_SCROLL_POS_Y_END + (1.f-alpha)*LIT_SPLASH_SCROLL_POS_Y_START; 
   rgba_t grey = rgba_set(0.7f, 0.7f, 0.7f, 1.f); 
   eden_draw_text(
-      eden, 
+      
       font,
       buf_from_lit("a silly game by"), 
       grey,
@@ -689,14 +688,14 @@ lit_splash_update() {
 
   scroll_y += 45.f;
   eden_draw_text(
-      eden, 
+      
       font,
       buf_from_lit("momolabo7"), 
       rgba_hex(0xF8C8DCFF),
       v2f_set(LIT_WIDTH/2, scroll_y),
       72.f,
       v2f_set(0.5f, 0.5f));
-  //eden_advance_depth(eden);
+  //eden_advance_depth();
 
 
   if (splash->timer <= 0.f) {
@@ -1268,23 +1267,23 @@ lit_game_render_lights(lit_game_t* g) {
   {
     lit_game_light_t* light = g->lights + light_index;
     eden_draw_asset_sprite(
-        eden, 
+        
         ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE,
         light->pos,
         v2f_set(emitter_scale, emitter_scale),
         LIT_LIGHT_EMITTER_COLOR);
-    //eden_advance_depth(eden);
+    //eden_advance_depth();
 
     eden_draw_asset_sprite(
-        eden, 
+        
         ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE,
         light->pos,
         v2f_set(glow_scale, glow_scale),
         LIT_LIGHT_EMITTER_GLOW_COLOR);
-    //eden_advance_depth(eden);
+    //eden_advance_depth();
   }
 
-  eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ADD);
+  eden_set_blend_preset(EDEN_BLEND_PRESET_TYPE_ADD);
   //
   // Lights
   //
@@ -1295,16 +1294,16 @@ lit_game_render_lights(lit_game_t* g) {
     {
       lit_game_light_triangle_t* lt = l->triangles + tri_index;
       eden_draw_tri(
-          eden, 
+          
           lt->p0,
           lt->p1,
           lt->p2, 
           rgba_hex(l->color));
 
     } 
-    //eden_advance_depth(eden);
+    //eden_advance_depth();
   }
-  eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
+  eden_set_blend_preset(EDEN_BLEND_PRESET_TYPE_ALPHA);
 }
 
 
@@ -1321,12 +1320,12 @@ lit_draw_light_rays(lit_game_t* g) {
         ++intersection_index)
     {
       lit_light_intersection_t* intersection = light->intersections + intersection_index;
-      eden_draw_line(eden, light->pos, intersection->pt, 2.f, rgba_hex(0xFF0000FF));
+      eden_draw_line(light->pos, intersection->pt, 2.f, rgba_hex(0xFF0000FF));
 
     }
 
   }
-  //eden_advance_depth(eden);
+  //eden_advance_depth();
 }
 
 static void
@@ -1335,9 +1334,9 @@ lit_draw_edges(lit_game_t* g) {
   for(u32_t edge_index = 0; edge_index < g->edge_count; ++edge_index) 
   {
     lit_game_edge_t* edge = g->edges + edge_index;
-    eden_draw_line(eden, edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
+    eden_draw_line(edge->start_pt, edge->end_pt, 3.f, rgba_hex(0x888888FF));
   }
-  //eden_advance_depth(eden);
+  //eden_advance_depth();
 }
 
 //
@@ -1356,12 +1355,12 @@ static void
 lit_game_player_release_light(lit_game_t* g) {
   lit_game_player_t* player = &g->player;
   if (player->held_light) {
-    eden_speaker_play(eden, ASSET_SOUND_PUTDOWN, false, 0.5f);
+    eden_speaker_play(ASSET_SOUND_PUTDOWN, false, 0.5f);
   }
 
   player->held_light = nullptr;
   player->light_hold_mode = LIT_PLAYER_LIGHT_HOLD_MODE_NONE;
-  eden_show_cursor(eden);
+  eden_show_cursor();
 }
 
 static void
@@ -1394,8 +1393,8 @@ lit_game_player_hold_nearest_light_if_empty_handed(
       player->old_light_pos = player->nearest_light->pos;
       player->light_retrival_time = 0.f;
       player->light_hold_mode = light_hold_mode;
-      eden_hide_cursor(eden);
-      eden_speaker_play(eden, ASSET_SOUND_PICKUP, false, 0.5f);
+      eden_hide_cursor();
+      eden_speaker_play(ASSET_SOUND_PICKUP, false, 0.5f);
     }
   }
 }
@@ -1413,11 +1412,11 @@ lit_game_update_player(lit_game_t* g, f32_t dt)
   //
   // Move light logic
   //
-  if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_LMB)) {
+  if (eden_is_button_poked(EDEN_BUTTON_CODE_LMB)) {
     lit_game_player_hold_nearest_light_if_empty_handed(g, LIT_PLAYER_LIGHT_HOLD_MODE_MOVE);
   }
 
-  else if (eden_is_button_released(eden, EDEN_BUTTON_CODE_LMB))
+  else if (eden_is_button_released(EDEN_BUTTON_CODE_LMB))
   {
     lit_game_player_release_light(g);
   }
@@ -1425,17 +1424,17 @@ lit_game_update_player(lit_game_t* g, f32_t dt)
   //
   // Rotate light logic
   //
-  if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_RMB))
+  if (eden_is_button_poked(EDEN_BUTTON_CODE_RMB))
   {
     lit_game_player_hold_nearest_light_if_empty_handed(g, LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE);
-    eden_lock_cursor(eden);
+    eden_lock_cursor();
     player->locked_pos_x = player->pos.x;
 
   }
-  else if (eden_is_button_released(eden, EDEN_BUTTON_CODE_RMB)) 
+  else if (eden_is_button_released(EDEN_BUTTON_CODE_RMB)) 
   {
     lit_game_player_release_light(g);
-    eden_unlock_cursor(eden);
+    eden_unlock_cursor();
   }
 
   // Restrict movement
@@ -1494,23 +1493,23 @@ lit_game_render_player(lit_game_t* g){
           ASSET_SPRITE_ID_CIRCLE_SPRITE,
           player->nearest_light->pos, 
           v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-      //eden_advance_depth(eden);
+      //eden_advance_depth();
     }
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_ROTATE) {
-    eden_draw_asset_sprite(eden, 
+    eden_draw_asset_sprite(
         ASSET_SPRITE_ID_ROTATE_SPRITE,
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-    //eden_advance_depth(eden);
+    //eden_advance_depth();
 
   }
   else if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_MOVE) {
-    eden_draw_asset_sprite(eden, 
+    eden_draw_asset_sprite(
         ASSET_SPRITE_ID_MOVE_SPRITE,
         player->held_light->pos, 
         v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));
-    //eden_advance_depth(eden);
+    //eden_advance_depth();
   }
 }
 
@@ -1584,8 +1583,8 @@ lit_game_render_particles(lit_game_t* g) {
     size.w = f32_lerp(p->size_start.w , p->size_end.w, lifespan_ratio);
     size.h = f32_lerp(p->size_start.h , p->size_end.h, lifespan_ratio);
 
-    eden_draw_asset_sprite(eden, ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, p->pos, size, color);
-    //eden_advance_depth(eden);
+    eden_draw_asset_sprite(ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, p->pos, size, color);
+    //eden_advance_depth();
   }
 }
 
@@ -1686,8 +1685,6 @@ lit_game_update_sensors(lit_game_t* g, f32_t dt)
   // This is an array of activated sensors per sensor_group
   u32_t* activated = arena_push_arr_zero(u32_t, &lit->frame_arena, g->sensor_group_count);
 
-  u32_t total_triangles = 0;
-
   // Go through each sensor and update what lights are on it
   for(u32_t sensor_index = 0; sensor_index < g->sensor_count; ++sensor_index)
   {
@@ -1711,7 +1708,6 @@ lit_game_update_sensors(lit_game_t* g, f32_t dt)
       }
       lit_profile_end(sensor_light_overlap);
 
-      total_triangles += light->triangle_count;
     }
 
     // Sensor color check
@@ -1764,7 +1760,7 @@ lit_game_update_sensors(lit_game_t* g, f32_t dt)
     }
   }
 
-  //eden_debug_u32(eden, "total_triangles", total_triangles);
+  //eden_debug_u32("total_triangles", total_triangles);
 }
 
 
@@ -1775,8 +1771,8 @@ lit_game_render_sensors(lit_game_t* g) {
   for(u32_t sensor_index = 0; sensor_index < g->sensor_count; ++sensor_index)
   {
     lit_game_sensor_t* sensor = g->sensors + sensor_index;
-    eden_draw_asset_sprite(eden,  ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, sensor->pos, size, rgba_hex(sensor->target_color));
-    //eden_advance_depth(eden);
+    eden_draw_asset_sprite( ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE, sensor->pos, size, rgba_hex(sensor->target_color));
+    //eden_advance_depth();
   }
 }
 
@@ -1795,7 +1791,7 @@ lit_game_generate_light(lit_game_t* g) {
     {
       v2f_t p0 = light->pos;
       v2f_t p1 = light->intersections[intersection_index].pt;
-      eden_draw_line(eden, p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
+      eden_draw_line(p0, p1, 1.f, rgba_hex(0xFFFFFFFF));
     }
 #endif
   }
@@ -3253,19 +3249,19 @@ lit_game_update()
 {
   lit_game_t* g = &lit->eden;
 #if LIT_DEBUG_FREEZE
-  if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_Z)) {
+  if (eden_is_button_poked(EDEN_BUTTON_CODE_Z)) {
     g->freeze = !g->freeze;
   }
 #endif
   
-  if (eden_is_button_held(eden, EDEN_BUTTON_CODE_SPACE)) {
-    g->speed_multiplier = max_of(LIT_SPEED_MULTIPLER_MIN, g->speed_multiplier - eden_get_dt(eden) * LIT_SPEED_MULTIPLER_DECREMENT_RATE);
+  if (eden_is_button_held(EDEN_BUTTON_CODE_SPACE)) {
+    g->speed_multiplier = max_of(LIT_SPEED_MULTIPLER_MIN, g->speed_multiplier - eden_get_dt() * LIT_SPEED_MULTIPLER_DECREMENT_RATE);
   }
   else {
-    g->speed_multiplier = min_of(1.f, g->speed_multiplier + eden_get_dt(eden) * LIT_SPEED_MULTIPLER_DECREMENT_RATE);
+    g->speed_multiplier = min_of(1.f, g->speed_multiplier + eden_get_dt() * LIT_SPEED_MULTIPLER_DECREMENT_RATE);
   }
   
-  f32_t dt = eden_get_dt(eden);
+  f32_t dt = eden_get_dt();
   
   //
   // Transition Logic
@@ -3275,7 +3271,7 @@ lit_game_update()
   {
 
     // Title 
-    if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_LMB)) 
+    if (eden_is_button_poked(EDEN_BUTTON_CODE_LMB)) 
     {
       g->stage_fade_timer = 0.f;
       g->state = LIT_GAME_STATE_TYPE_NORMAL;
@@ -3315,7 +3311,7 @@ lit_game_update()
     if (g->stage_flash_timer >= LIT_EXIT_FLASH_DURATION) {
       g->stage_flash_timer = LIT_EXIT_FLASH_DURATION;
       g->state = LIT_GAME_STATE_TYPE_SOLVED_OUT;
-      eden_speaker_play(eden, ASSET_SOUND_DONE, false, 0.5f);
+      eden_speaker_play(ASSET_SOUND_DONE, false, 0.5f);
     }
   }
 
@@ -3393,8 +3389,8 @@ lit_game_update()
     //
     if (g->exit_callback != nullptr) 
     {
-      eden_show_cursor(eden);
-      eden_unlock_cursor(eden);
+      eden_show_cursor();
+      eden_unlock_cursor();
       g->state = LIT_GAME_STATE_TYPE_SOLVED_IN;
     }
   }
@@ -3405,7 +3401,7 @@ lit_game_update()
   //
 
   // This is the default and hedenier blend mode
-  eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
+  eden_set_blend_preset(EDEN_BLEND_PRESET_TYPE_ALPHA);
 
 
   lit_profile_begin(rendering);
@@ -3419,7 +3415,7 @@ lit_game_update()
   }
   lit_game_render_lights(g);
 
-  eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
+  eden_set_blend_preset(EDEN_BLEND_PRESET_TYPE_ALPHA);
 
   if (!lit_game_is_exiting(g)) {
     lit_game_render_sensors(g); 
@@ -3429,23 +3425,23 @@ lit_game_update()
   // Draw the overlay for fade in/out
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->stage_fade_timer);
-    eden_draw_asset_sprite(eden, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    //eden_advance_depth(eden);
+    eden_draw_asset_sprite(ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    //eden_advance_depth();
   }
 
   // Overlay for exit fade
   {
     rgba_t color = rgba_set(0.f, 0.f, 0.f, g->exit_fade);
-    eden_draw_asset_sprite(eden, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    //eden_advance_depth(eden);
+    eden_draw_asset_sprite(ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    //eden_advance_depth();
   }
 
   // Draw the overlay for white flash
   {
     f32_t alpha = g->stage_flash_timer/LIT_EXIT_FLASH_DURATION * LIT_EXIT_FLASH_BRIGHTNESS;
     rgba_t color = rgba_set(1.f, 1.f, 1.f, alpha);
-    eden_draw_asset_sprite(eden, ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
-    //eden_advance_depth(eden);
+    eden_draw_asset_sprite(ASSET_SPRITE_ID_BLANK_SPRITE, v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), v2f_set(LIT_WIDTH, LIT_HEIGHT), color);
+    //eden_advance_depth();
   }
 
 
@@ -3462,14 +3458,14 @@ lit_game_update()
     rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
 
     eden_draw_text(
-        eden, 
+        
         ASSET_FONT_ID_DEFAULT, 
         g->title, 
         color, 
         v2f_set(title_x, LIT_HEIGHT/2), 
         128.,
         v2f_set(0.5f, 0.5f));
-    //eden_advance_depth(eden);
+    //eden_advance_depth();
 
   }
   lit_profile_end(rendering);
@@ -3515,7 +3511,7 @@ lit_credits_push_subtitle_and_name(
     f32_t y, buf_t subtitle, buf_t name)
 {
   eden_draw_text(
-      eden, 
+      
       ASSET_FONT_ID_DEFAULT,
       subtitle,
       rgba_set(0.5f, 0.5f, 0.5f, 1.f),
@@ -3524,7 +3520,7 @@ lit_credits_push_subtitle_and_name(
       v2f_set(0.5f, 0.5f));
   y += 50.f;
   eden_draw_text(
-      eden, 
+      
       ASSET_FONT_ID_DEFAULT,
       name,
       rgba_hex(0xF8C8DCFF),
@@ -3540,11 +3536,11 @@ lit_credits_update() {
   lit_credits_t* credits = &lit->credits;
 
   f32_t scroll_multipler = 1.f;
-  if (eden_is_button_down(eden, EDEN_BUTTON_CODE_LMB)) {
+  if (eden_is_button_down(EDEN_BUTTON_CODE_LMB)) {
     scroll_multipler = LIT_CREDITS_SCROLL_SPEED_MULTIPLIER;
   }
 
-  credits->timer += eden_get_dt(eden) * scroll_multipler;
+  credits->timer += eden_get_dt() * scroll_multipler;
   
   f32_t y = LIT_HEIGHT/2 + 96.f;
 
@@ -3560,7 +3556,6 @@ lit_credits_update() {
   
   // Title
   eden_draw_text(
-      eden, 
       ASSET_FONT_ID_DEFAULT,
       buf_from_lit("THANKS"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -3569,7 +3564,6 @@ lit_credits_update() {
       v2f_set(0.5f, 0.5f));
   y += 96.f;
   eden_draw_text(
-      eden, 
       ASSET_FONT_ID_DEFAULT,
       buf_from_lit("FOR"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -3578,7 +3572,6 @@ lit_credits_update() {
       v2f_set(0.5f, 0.5f));
   y+=96.f;
   eden_draw_text(
-      eden, 
       ASSET_FONT_ID_DEFAULT,
       buf_from_lit("PLAYING!"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -3589,7 +3582,6 @@ lit_credits_update() {
 
 
   eden_draw_text(
-      eden, 
       ASSET_FONT_ID_DEFAULT,
       buf_from_lit("-----"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -3599,7 +3591,6 @@ lit_credits_update() {
 
   y += 70;
   eden_draw_text(
-      eden, 
       ASSET_FONT_ID_DEFAULT,
       buf_from_lit("LIT"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -3609,7 +3600,6 @@ lit_credits_update() {
 
   y += 70;
   eden_draw_text(
-      eden, 
       ASSET_FONT_ID_DEFAULT,
       buf_from_lit("-----"), 
       rgba_set(1.f, 1.f, 1.f, 1.f),
@@ -3652,7 +3642,7 @@ static void lit_cool_transition_init(lit_cool_transition_t* t) {
 }
 
 static void lit_cool_transition_update_positive(lit_cool_transition_t* t) {
-  const f32_t dt = eden_get_dt(eden);
+  const f32_t dt = eden_get_dt();
   const f32_t duration = 10.f;
   const f32_t duration_per_color = duration/3.f;
 
@@ -3676,17 +3666,17 @@ static void lit_cool_transition_update_positive(lit_cool_transition_t* t) {
 
 
 static void lit_cool_transition_render(lit_cool_transition_t* t) {
-  auto old_preset = eden_get_blend_preset(eden);
-  eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_MULTIPLY);
+  auto old_preset = eden_get_blend_preset();
+  eden_set_blend_preset(EDEN_BLEND_PRESET_TYPE_MULTIPLY);
   eden_draw_asset_sprite(
-      eden, 
+      
       
       ASSET_SPRITE_ID_BLANK_SPRITE,
       v2f_set(LIT_WIDTH/2, LIT_HEIGHT/2), 
       v2f_set(LIT_WIDTH, LIT_HEIGHT),
       rgba_set(t->r, t->g, t->b, 0.5f));
-  eden_set_blend_preset(eden, old_preset);
-  //eden_advance_depth(eden);
+  eden_set_blend_preset(old_preset);
+  //eden_advance_depth();
 }
 
 #endif
@@ -3696,10 +3686,9 @@ static void lit_sandbox_init() {
 
 static void lit_sandbox_update() {
   
-  eden_set_blend_preset(eden, EDEN_BLEND_PRESET_TYPE_ALPHA);
+  eden_set_blend_preset(EDEN_BLEND_PRESET_TYPE_ALPHA);
   rgba_t color = rgba_set(1.f, 1.f, 1.f, 1.f);
   eden_draw_text(
-      eden, 
       ASSET_FONT_ID_DEFAULT, 
       buf_from_lit("A"), 
       color,
@@ -3708,7 +3697,7 @@ static void lit_sandbox_update() {
       v2f_set(0.5f, 0.5f)
       );
 
-  //eden_advance_depth(eden);
+  //eden_advance_depth();
 }
 
 
@@ -3720,11 +3709,10 @@ static void lit_sandbox_update() {
 exported 
 eden_update_and_render_sig(eden_update_and_render) 
 { 
+  eden_globalize(e);
 #define lit_exit() { eden->is_running = false; return; } 
-
-  eden = e;
-  if(eden->user_data == nullptr) {
-
+  if(eden->user_data == nullptr) 
+  {
     // @todo: partition from platform arena?
     eden->user_data = arena_alloc_bootstrap(lit_t, main_arena, megabytes(32));
 
@@ -3734,7 +3722,7 @@ eden_update_and_render_sig(eden_update_and_render)
     lit->mode = LIT_MODE_NONE;
     
 
-    //arena_init(&lit->asset_arena, eden_allocate_memory(eden, megabytes(20)));
+    //arena_init(&lit->asset_arena, eden_allocate_memory(megabytes(20)));
     if (!arena_push_partition(&lit->main_arena, &lit->asset_arena, megabytes(20), 16)) lit_exit();
     if (!arena_push_partition(&lit->main_arena, &lit->debug_arena, megabytes(1), 16)) lit_exit();
     if (!arena_push_partition(&lit->main_arena, &lit->frame_arena, megabytes(1), 16)) lit_exit();
@@ -3744,14 +3732,14 @@ eden_update_and_render_sig(eden_update_and_render)
     // Initialize assets
     // @todo: shift this to config? I'm not sure if we care about 
     // the app caring about the asset's arena though...
-    if (!eden_assets_init_from_file(eden, LIT_ASSET_FILE, &lit->asset_arena))
+    if (!eden_assets_init_from_file(LIT_ASSET_FILE, &lit->asset_arena))
     {
       lit_exit();
     }
 
       
-    eden_set_design_dimensions(eden, LIT_WIDTH, LIT_HEIGHT);
-    eden_set_view(eden, 0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
+    eden_set_design_dimensions(LIT_WIDTH, LIT_HEIGHT);
+    eden_set_view(0.f, LIT_WIDTH, 0.f, LIT_HEIGHT, 0.f, 0.f);
 
     //
     // Check save data
@@ -3768,7 +3756,7 @@ eden_update_and_render_sig(eden_update_and_render)
 
   arena_clear(&lit->frame_arena);
 
-  if (lit->next_mode != lit->mode || eden_is_dll_reloaded(eden)) 
+  if (lit->next_mode != lit->mode || eden_is_dll_reloaded()) 
   {
     lit->mode = lit->next_mode;
     
@@ -3808,24 +3796,23 @@ eden_update_and_render_sig(eden_update_and_render)
   }
 
   // Debug
-  if (eden_is_button_poked(eden, EDEN_BUTTON_CODE_F1)) {
+  if (eden_is_button_poked(EDEN_BUTTON_CODE_F1)) {
     lit->show_debug_type = 
       (lit_show_debug_type_t)((lit->show_debug_type + 1)%LIT_SHOW_DEBUG_MAX);
 
   }
 
 
-  eden_inspect_arena(eden, main_arena, lit->main_arena);
-  eden_inspect_arena(eden, ass_arena, lit->asset_arena);
-  eden_inspect_arena(eden, dbg_arena, lit->debug_arena);
-  eden_inspect_arena(eden, frame_arena, lit->frame_arena);
-  eden_inspect_arena(eden, mode_arena, lit->mode_arena);
+  eden_inspect_arena(main_arena, lit->main_arena);
+  eden_inspect_arena(ass_arena, lit->asset_arena);
+  eden_inspect_arena(dbg_arena, lit->debug_arena);
+  eden_inspect_arena(frame_arena, lit->frame_arena);
+  eden_inspect_arena(mode_arena, lit->mode_arena);
 
 #if EDEN_DEBUG
   switch (lit->show_debug_type) {
     case LIT_SHOW_DEBUG_PROFILER: {
       eden_profile_update_and_render(
-          eden, 
           20.f, 
           LIT_WIDTH, 
           LIT_HEIGHT, 
@@ -3835,7 +3822,6 @@ eden_update_and_render_sig(eden_update_and_render)
     }break;
     case LIT_SHOW_DEBUG_INSPECTOR: {
       eden_draw_inspector(
-          eden, 
           20.f, 
           LIT_WIDTH, 
           LIT_HEIGHT, 
