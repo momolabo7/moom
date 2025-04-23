@@ -7,12 +7,6 @@
 #include "eden_asset_id_sandbox.h"
 #include "eden.h"
 
-static eden_t* eden;
-static void eden_globalize(eden_t* e)
-{
-  eden = e;
-}
-
 
 #define GBG_DESIGN_WIDTH (900)
 #define GBG_DESIGN_HEIGHT (900)
@@ -88,7 +82,7 @@ struct gbg_enemy_t
   u32_t pp;
 };
 
-enum gbg_type_t
+enum gbg_tile_type_t
 {
   GBG_TILE_TYPE_NOTHING,
   GBG_TILE_TYPE_MODIFIER,
@@ -100,16 +94,16 @@ enum gbg_type_t
 
 struct gbg_tile_t
 {
-  gbg_type_t type;
+  gbg_tile_type_t type;
   
-  union {
+  union 
+  {
     u8_t effects[2];
     struct {
       u8_t pp_operator;
       u8_t pp_operand;
     };
   };
-
 };
 
 
@@ -120,6 +114,7 @@ struct gbg_t {
   gbg_tile_t tiles[GBG_GRID_HEIGHT*GBG_GRID_WIDTH];
 };
 static gbg_t* gbg;
+
 
 static v2f_t
 gbg_grid_to_world_pos(v2u_t grid_pos)
@@ -198,19 +193,19 @@ gbg_render_grid()
 }
 
 static void 
-gbg_render_grid_effects()
+gbg_render_grid_pp_ops()
 {
   for(u32_t tile_index = 0; tile_index < GBG_GRID_SIZE; ++tile_index) 
   {
     gbg_tile_t* tile = gbg->tiles + tile_index;
     v2f_t pos = gbg_tile_index_to_world_pos(tile_index);
-      eden_draw_text(
-          ASSET_FONT_ID_DEBUG,
-          buf_set(tile->effects, 2),
-          RGBA_WHITE,
-          pos,
-          GBG_PP_FONT_HEIGHT,
-          v2f_set(0.5f, 0.5f));
+    eden_draw_text(
+        ASSET_FONT_ID_DEBUG,
+        buf_set(tile->effects, 2),
+        RGBA_WHITE,
+        pos,
+        GBG_PP_FONT_HEIGHT,
+        v2f_set(0.5f, 0.5f));
   }
 }
 
@@ -230,6 +225,13 @@ gbg_get_tile(v2u_t pos)
   assert(pos.x < GBG_GRID_COLS);
   assert(pos.y < GBG_GRID_ROWS);
   return &gbg->tiles[pos.x + pos.y * GBG_GRID_COLS];
+}
+
+static gbg_tile_t*
+gbg_get_tile_by_index(u32_t index)
+{
+  assert(index < array_count(gbg->tiles));
+  return &gbg->tiles[index];
 }
 
 static void
@@ -270,6 +272,35 @@ gbg_player_move(s32_t x, s32_t y)
   }
 }
 
+static void
+gbg_tile_set_pp_ops(gbg_tile_t* tile, u8_t pp_operator, u8_t pp_operand) 
+{
+  assert(pp_operator == '+' || 
+         pp_operator == '-' ||
+         pp_operator == '*' ||
+         pp_operator == '/' ||
+         pp_operator == '%');
+  assert(pp_operand >= '1' && pp_operand <= '9');
+  tile->pp_operand = pp_operand;
+  tile->pp_operator = pp_operator;
+}
+
+static void
+gbg_tile_clear_pp_ops(gbg_tile_t* tile) 
+{
+  tile->pp_operand = 0;
+  tile->pp_operator = 0;
+}
+
+static void
+gbg_clear_all_pp_ops()
+{
+  for(u32_t i = 0; i < array_count(gbg->tiles); ++i)
+  {
+    gbg_tile_clear_pp_ops(gbg->tiles + i);
+  }
+}
+
 
 #if 0
 static gbg_enemy_t*
@@ -303,34 +334,36 @@ static void
 gbg_player_act()
 {
   gbg_player_t* player = &gbg->player;
-  gbg_tile_t* current_cell = gbg_get_tile(player->grid_pos);
+  gbg_tile_t* current_tile = gbg_get_tile(player->grid_pos);
 
-  u32_t operand = ascii_to_digit(current_cell->pp_operand);
+  u32_t operand = ascii_to_digit(current_tile->pp_operand);
 
-  if (current_cell->pp_operator == '+')
+  if (current_tile->pp_operator == '+')
   {
     player->pp += operand;
   }
   else 
-  if (current_cell->pp_operator == '-')
+  if (current_tile->pp_operator == '-')
   {
     player->pp -= operand;
   }
   else 
-  if (current_cell->pp_operator == '*')
+  if (current_tile->pp_operator == '*')
   {
     player->pp *= operand;
   }
   else 
-  if (current_cell->pp_operator == '/')
+  if (current_tile->pp_operator == '/')
   {
     player->pp /= operand;
   }
   else 
-  if (current_cell->pp_operator == '%')
+  if (current_tile->pp_operator == '%')
   {
     player->pp %= operand;
   }
+
+  player->pp = clamp_of(player->pp, -99, 99);
 }
 
 static void 
@@ -365,7 +398,9 @@ gbg_render_player_pp()
 static void
 gbg_randomize_level()
 {
+  gbg_clear_all_pp_ops();
   const u32_t amount_of_ops = 4;
+  gbg_tile_set_pp_ops(gbg_get_tile({1,1}), '+', '2');
 }
 
 
@@ -389,7 +424,6 @@ eden_update_and_render_sig(eden_update_and_render)
     //gbg_enemy_spawn(gbg, v2u_set(2,2), 11);
   }
   gbg = (gbg_t*)(eden->user_data);
-  f32_t dt = eden_get_dt(eden);
 
   if (eden->is_dll_reloaded)
   {
@@ -433,7 +467,7 @@ eden_update_and_render_sig(eden_update_and_render)
 
   //bufio_push_u32(&sb, gbg->player.pp);
 
-  gbg_render_grid_effects();
+  gbg_render_grid_pp_ops();
   gbg_render_player_pp();
 
 }

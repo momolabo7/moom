@@ -64,7 +64,6 @@ eden_draw_inspector(
 
   auto* inspector = &eden->inspector;
   eden_draw_asset_sprite(
-      eden, 
       blank_sprite, 
       v2f_set(width/2, height/2), 
       v2f_set(width, height),
@@ -134,19 +133,19 @@ eden_draw_inspector(
 }
 
 #define eden_inspect_f32(name, item) \
-  _eden_inspect_f32_(buf_from_lit(#name), item); 
+  _eden_inspect_f32(buf_from_lit(#name), item); 
 
 #define eden_inspect_u32(name, item) \
-  _eden_inspect_u32_(buf_from_lit(#name), item);
+  _eden_inspect_u32(buf_from_lit(#name), item);
 
-#define eden_inspect_arena(eden, name, arena) \
-  _eden_inspect_arena_(buf_from_lit(#name), arena); 
+#define eden_inspect_arena(name, arena) \
+  _eden_inspect_arena(buf_from_lit(#name), arena); 
 
 #else 
 
-#define eden_inspect_f32(eden, name, item)
-#define eden_inspect_u32(eden, name, item)
-#define eden_inspect_arena(eden, name, arena)
+#define eden_inspect_f32(name, item)
+#define eden_inspect_u32(name, item)
+#define eden_inspect_arena(name, arena)
 
 #endif
 

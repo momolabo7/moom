@@ -1267,7 +1267,6 @@ lit_game_render_lights(lit_game_t* g) {
   {
     lit_game_light_t* light = g->lights + light_index;
     eden_draw_asset_sprite(
-        
         ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE,
         light->pos,
         v2f_set(emitter_scale, emitter_scale),
@@ -1275,7 +1274,6 @@ lit_game_render_lights(lit_game_t* g) {
     //eden_advance_depth();
 
     eden_draw_asset_sprite(
-        
         ASSET_SPRITE_ID_FILLED_CIRCLE_SPRITE,
         light->pos,
         v2f_set(glow_scale, glow_scale),
@@ -1489,7 +1487,7 @@ lit_game_render_player(lit_game_t* g){
 
   if (player->light_hold_mode == LIT_PLAYER_LIGHT_HOLD_MODE_NONE) { 
     if (player->nearest_light) {
-      eden_draw_asset_sprite(eden,
+      eden_draw_asset_sprite(
           ASSET_SPRITE_ID_CIRCLE_SPRITE,
           player->nearest_light->pos, 
           v2f_set(LIT_PLAYER_RADIUS*2, LIT_PLAYER_RADIUS*2));

@@ -120,7 +120,6 @@ eden_profiler_update_entries(eden_profiler_t* p) {
 
 static void 
 eden_profile_update_and_render(
-    eden_t* eden,
     f32_t font_height,
     f32_t width,
     f32_t height,
@@ -131,7 +130,7 @@ eden_profile_update_and_render(
 
   // Overlay
   eden_draw_asset_sprite(
-      eden, blank_sprite, 
+      blank_sprite, 
       v2f_set(width/2, height/2), 
       v2f_set(width, height),
       rgba_set(0.f, 0.f, 0.f, 0.5f));
@@ -183,7 +182,6 @@ eden_profile_update_and_render(
                  (u32_t)cycles_per_hit.average);
     
     eden_draw_text(
-        eden, 
         font, 
         sb.str,
         rgba_hex(0xFFFFFFFF),

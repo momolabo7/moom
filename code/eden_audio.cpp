@@ -108,7 +108,7 @@ eden_speaker_update(eden_t* eden)
             sound->current_offset = 0;
           }
           else {
-            eden_speaker_stop(eden, sound);
+            eden_speaker_stop(sound);
           }
         }
       }

@@ -112,7 +112,6 @@ eden_draw_line(v2f_t p0, v2f_t p1, f32_t thickness, rgba_t colors) {
   f32_t angle = v2f_angle(line_vector, x_axis);
   
   eden_draw_rect(
-      eden, 
       {line_mid.x, line_mid.y},
       angle, 
       {line_length, thickness},
@@ -141,7 +140,7 @@ eden_draw_circle(v2f_t center, f32_t radius, u32_t sections, rgba_t color) {
     v2f_t p1 = p0 + v2f_set(f32_cos(current_angle), f32_sin(current_angle)) * radius;
     v2f_t p2 = p0 + v2f_set(f32_cos(next_angle), f32_sin(next_angle)) * radius; 
 
-    eden_draw_tri(eden, p0, p1, p2, color); 
+    eden_draw_tri(p0, p1, p2, color); 
     current_angle += section_angle;
   }
 }
@@ -261,7 +260,7 @@ eden_draw_text(
   if (origin.x != 0)
   {
     // @note: if origin.x is 1, then we adjust x position by -length
-    pos.x += eden_get_text_length(eden, font_id, str, size) * -origin.x;
+    pos.x += eden_get_text_length(font_id, str, size) * -origin.x;
   }
 
   
