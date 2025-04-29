@@ -383,8 +383,6 @@ gbg_render_player_pp()
   bufio_t bufio;
   bufio_init(&bufio, arena_push_buffer(&gbg->arena, 32));
   bufio_push_s32(&bufio, gbg->player.pp);
-
-
   eden_draw_text(
       ASSET_FONT_ID_DEBUG, 
       bufio.str,

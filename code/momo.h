@@ -1287,6 +1287,8 @@ static void doze(u32_t ms_to_doze);
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "winhttp.lib")
 #pragma comment(lib, "Msimg32.lib")
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "gdi32.lib")
 //#pragma comment(lib, "shell32.lib")
 
 struct file_t {
@@ -1572,7 +1574,9 @@ clock_resolution() {
   return ret;
 }
 
-// @note: this is basicall a bitmap
+//
+// win32-only dib api
+//
 struct w32_dib_t 
 {
   HBITMAP bitmap;
@@ -1678,6 +1682,12 @@ w32_dib_init(w32_dib_t* dib, u32_t width, u32_t height)
 
   return true;
 }
+
+// 
+// win32-only common functions
+//
+static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }
+static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }
 
 #elif OS_LINUX 
 

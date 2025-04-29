@@ -1,8 +1,4 @@
 #include "momo.h"
-
-#pragma comment(lib, "user32.lib")
-#pragma comment(lib, "gdi32.lib")
-
 #include <stdio.h>
 
 #define GETUNA_WINDOW_WIDTH (200)
@@ -55,9 +51,6 @@ struct getuna_t
 
 };
 static getuna_t* getuna;
-
-static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }
-static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }
 
 static void
 getuna_spawn_ss_window(LONG x, LONG y, LONG w, LONG h)
