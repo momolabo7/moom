@@ -36,6 +36,7 @@
 //
 #include "eden_profiler.h"
 #include "eden_inspector.h"
+#include "eden_debug.h"
 
 //
 // App Logging API
@@ -104,6 +105,7 @@ struct eden_t
 #if EDEN_DEBUG
   eden_profiler_t profiler;
   eden_inspector_t inspector;
+  eden_debug_t debug;
 #endif //EDEN_DEBUG
        
   eden_assets_t assets;
@@ -128,8 +130,10 @@ static void eden_globalize(eden_t* e) { eden = e; }
 #include "eden_assets.cpp"
 #include "eden_rendering.cpp"
 
+
 #include "eden_inspector.cpp"
 #include "eden_profiler.cpp"
+#include "eden_debug.cpp"
 #include "eden_audio.cpp"
 
 

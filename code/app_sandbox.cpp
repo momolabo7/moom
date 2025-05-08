@@ -107,6 +107,7 @@ sandbox_update_and_render_draws()
     v2f_t p = v2f_lerp(d->square_start, d->square_end, d->square_timer/3.f);
     eden_draw_rect(p, d->square_rot, v2f_set(100, 100), rgba);
   }
+
 }
 
 static void

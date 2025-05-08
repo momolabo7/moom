@@ -798,7 +798,6 @@ WinMain(HINSTANCE instance,
   f32_t target_secs_per_frame = 1.f/(f32_t)config.target_frame_rate;
   w32_log("Target Frame Rate: %d Hz\n", config.target_frame_rate);
   
-
   if(!w32_gfx_load(
       eden,
       window, 

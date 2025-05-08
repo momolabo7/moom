@@ -225,12 +225,14 @@ arena	code/app_gbg.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:gbg_t	typere
 arena	code/app_sandbox.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:sandbox_t	typeref:typename:arena_t	file:
 arena	code/app_tbp.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:tbp_t	typeref:typename:arena_t	file:
 arena	code/app_vigil.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:vigil_t	typeref:typename:arena_t	file:
+arena	code/eden_debug.h	/^  arena_t* arena; $/;"	m	language:C++	struct:eden_debug_t	typeref:typename:arena_t *
 arena	code/eden_gfx_opengl.h	/^  arena_t arena;$/;"	m	language:C++	struct:eden_opengl_t	typeref:typename:arena_t
 arena	code/momo.h	/^  arena_t* arena; $/;"	m	language:C++	struct:_png_context_t	typeref:typename:arena_t *
 arena	code/momo.h	/^  arena_t* arena;$/;"	m	language:C++	struct:arena_marker_t	typeref:typename:arena_t *
 arena	code/pass.h	/^  arena_t* arena;$/;"	m	language:C++	struct:pass_pack_t	typeref:typename:arena_t *
 arena	code/w32_eden.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:arena_t	file:
 arena	code/w32_getuna.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:getuna_t	typeref:typename:arena_t	file:
+arena	code/w32_stable.cpp	/^  arena_t arena;$/;"	m	language:C++	struct:stable_t	typeref:typename:arena_t	file:
 arena	eden_gfx_opengl.h	/^  arena_t arena;$/;"	m	language:C++	struct:eden_opengl_t	typeref:typename:arena_t
 arena	momo.h	/^  arena_t* arena; $/;"	m	language:C++	struct:_png_context_t	typeref:typename:arena_t *
 arena	momo.h	/^  arena_t* arena;$/;"	m	language:C++	struct:arena_marker_t	typeref:typename:arena_t *
@@ -1318,6 +1320,7 @@ data_size	code/eden_assets.h	/^  u32_t data_size;$/;"	m	language:C++	struct:eden
 data_size	code/eden_asset_file.h	/^  u32_t data_size;$/;"	m	language:C++	struct:asset_file_sound_t	typeref:typename:u32_t
 data_size	eden_assets.h	/^  u32_t data_size;$/;"	m	language:C++	struct:eden_asset_sound_t	typeref:typename:u32_t
 data_size	eden_asset_file.h	/^  u32_t data_size;$/;"	m	language:C++	struct:asset_file_sound_t	typeref:typename:u32_t
+debug	code/eden.h	/^  eden_debug_t debug;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_debug_t
 debug_arena	app_lit.cpp	/^  arena_t debug_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
 debug_arena	code/app_lit.cpp	/^  arena_t debug_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
 debug_log	code/eden.h	/^  eden_debug_log_f* debug_log;$/;"	m	language:C++	struct:eden_t	typeref:typename:eden_debug_log_f *
@@ -1659,6 +1662,16 @@ eden_console_push_info	code/eden.h	/^eden_console_push_info(eden_console_t* cons
 eden_console_push_info	eden.h	/^eden_console_push_info(eden_console_t* console, buf_t str) {$/;"	f	language:C++	typeref:typename:void
 eden_console_t	code/eden_console.h	/^struct eden_console_t {$/;"	s	language:C++
 eden_console_t	eden_console.h	/^struct eden_console_t {$/;"	s	language:C++
+eden_debug_element_t	code/eden_debug.h	/^struct eden_debug_element_t$/;"	s	language:C++
+EDEN_DEBUG_ELEMENT_TYPE_INSPECT_U32	code/eden_debug.h	/^  EDEN_DEBUG_ELEMENT_TYPE_INSPECT_U32,$/;"	e	language:C++	enum:eden_debug_element_type_t
+eden_debug_element_type_t	code/eden_debug.h	/^enum eden_debug_element_type_t$/;"	g	language:C++
+eden_debug_entry_t	code/eden_debug.h	/^struct eden_debug_entry_t$/;"	s	language:C++
+EDEN_DEBUG_ENTRY_TYPE_INSPECT_ARENA	code/eden_debug.h	/^  EDEN_DEBUG_ENTRY_TYPE_INSPECT_ARENA,$/;"	e	language:C++	enum:eden_debug_entry_type_t
+EDEN_DEBUG_ENTRY_TYPE_INSPECT_F32	code/eden_debug.h	/^  EDEN_DEBUG_ENTRY_TYPE_INSPECT_F32,$/;"	e	language:C++	enum:eden_debug_entry_type_t
+EDEN_DEBUG_ENTRY_TYPE_INSPECT_S32	code/eden_debug.h	/^  EDEN_DEBUG_ENTRY_TYPE_INSPECT_S32,$/;"	e	language:C++	enum:eden_debug_entry_type_t
+EDEN_DEBUG_ENTRY_TYPE_INSPECT_U32	code/eden_debug.h	/^  EDEN_DEBUG_ENTRY_TYPE_INSPECT_U32,$/;"	e	language:C++	enum:eden_debug_entry_type_t
+EDEN_DEBUG_ENTRY_TYPE_INSPECT_V2F	code/eden_debug.h	/^  EDEN_DEBUG_ENTRY_TYPE_INSPECT_V2F,$/;"	e	language:C++	enum:eden_debug_entry_type_t
+eden_debug_entry_type_t	code/eden_debug.h	/^enum eden_debug_entry_type_t$/;"	g	language:C++
 eden_debug_log	code/eden.h	/^#define eden_debug_log(/;"	d	language:C++
 eden_debug_log	eden.h	/^#define eden_debug_log(/;"	d	language:C++
 eden_debug_log_sig	code/eden.h	/^#define eden_debug_log_sig(/;"	d	language:C++
@@ -1669,6 +1682,8 @@ eden_debug_log_sig	eden.h	/^#define eden_debug_log_sig(/;"	d	language:C++
 eden_debug_log_sig	eden.h	/^typedef eden_debug_log_sig(eden_debug_log_f);$/;"	t	language:C++
 eden_debug_log_sig	ship_app_lit.cpp	/^eden_debug_log_sig(w32_log_proc) $/;"	f	language:C++	file:
 eden_debug_log_sig	w32_eden.cpp	/^eden_debug_log_sig(w32_log_proc) $/;"	f	language:C++	file:
+eden_debug_t	code/eden_debug.h	/^struct eden_debug_t $/;"	s	language:C++
+eden_debug_update_and_render	code/eden_debug.cpp	/^eden_debug_update_and_render($/;"	f	language:C++	typeref:typename:void	file:
 eden_debug_update_and_render_sig	code/eden.h	/^#define eden_debug_update_and_render_sig(/;"	d	language:C++
 eden_debug_update_and_render_sig	code/eden.h	/^typedef eden_debug_update_and_render_sig(eden_debug_update_and_render_f);$/;"	t	language:C++
 eden_debug_update_and_render_sig	eden.h	/^#define eden_debug_update_and_render_sig(/;"	d	language:C++
@@ -1910,6 +1925,10 @@ eden_input_characters_t	code/eden_input.h	/^struct eden_input_characters_t {$/;"
 eden_input_characters_t	eden_input.h	/^struct eden_input_characters_t {$/;"	s	language:C++
 eden_input_t	code/eden_input.h	/^struct eden_input_t {$/;"	s	language:C++
 eden_input_t	eden_input.h	/^struct eden_input_t {$/;"	s	language:C++
+eden_inspect	code/eden_debug.cpp	/^eden_inspect(f32_t f32)$/;"	f	language:C++	typeref:typename:void	file:
+eden_inspect	code/eden_debug.cpp	/^eden_inspect(s32_t s32)$/;"	f	language:C++	typeref:typename:void	file:
+eden_inspect	code/eden_debug.cpp	/^eden_inspect(u32_t u32)$/;"	f	language:C++	typeref:typename:void	file:
+eden_inspect	code/eden_debug.cpp	/^eden_inspect(v2f_t v2f)$/;"	f	language:C++	typeref:typename:void	file:
 eden_inspector_clear	code/eden_inspector.cpp	/^eden_inspector_clear(eden_inspector_t* in) $/;"	f	language:C++	typeref:typename:void	file:
 eden_inspector_clear	eden_inspector.cpp	/^eden_inspector_clear(eden_inspector_t* in) $/;"	f	language:C++	typeref:typename:void	file:
 eden_inspector_entry_t	code/eden_inspector.h	/^struct eden_inspector_entry_t {$/;"	s	language:C++
@@ -2237,6 +2256,8 @@ effects	app_gbg.cpp	/^    u8_t effects[2];$/;"	m	language:C++	union:gbg_tile_t::
 effects	code/app_gbg.cpp	/^    u8_t effects[2];$/;"	m	language:C++	union:gbg_tile_t::__anon88df87f0010a	typeref:typename:u8_t[2]	file:
 element	code/momo.h	/^    json_element_t element;$/;"	m	language:C++	union:json_value_t::__anon1db7a63d1e0a	typeref:typename:json_element_t
 element	momo.h	/^    json_element_t element;$/;"	m	language:C++	union:json_value_t::__anon0e3795131e0a	typeref:typename:json_element_t
+elements	code/eden_debug.h	/^  eden_debug_element_t elements[1024];$/;"	m	language:C++	struct:eden_debug_t	typeref:typename:eden_debug_element_t[1024]
+element_count	code/eden_debug.h	/^  u32_t element_count;$/;"	m	language:C++	struct:eden_debug_t	typeref:typename:u32_t
 element_count	code/eden_gfx_opengl.h	/^  usz_t element_count;$/;"	m	language:C++	struct:eden_opengl_batch_t	typeref:typename:usz_t
 element_count	eden_gfx_opengl.h	/^  usz_t element_count;$/;"	m	language:C++	struct:eden_opengl_batch_t	typeref:typename:usz_t
 end	app_lit.cpp	/^  v2f_t end;$/;"	m	language:C++	struct:lit_game_animator_patrol_point_t	typeref:typename:v2f_t	file:
@@ -2249,6 +2270,7 @@ end_point_indices	code/momo.h	/^  u16_t* end_point_indices; \/\/ as many as cont
 end_point_indices	momo.h	/^  u16_t* end_point_indices; \/\/ as many as contour_counts$/;"	m	language:C++	struct:_ttf_glyph_outline_t	typeref:typename:u16_t *
 end_pt	app_lit.cpp	/^  v2f_t end_pt;$/;"	m	language:C++	struct:lit_game_edge_t	typeref:typename:v2f_t	file:
 end_pt	code/app_lit.cpp	/^  v2f_t end_pt;$/;"	m	language:C++	struct:lit_game_edge_t	typeref:typename:v2f_t	file:
+entries	code/eden_debug.h	/^  eden_debug_entry_t entries[1024];$/;"	m	language:C++	struct:eden_debug_t	typeref:typename:eden_debug_entry_t[1024]
 entries	code/eden_inspector.h	/^  eden_inspector_entry_t* entries;$/;"	m	language:C++	struct:eden_inspector_t	typeref:typename:eden_inspector_entry_t *
 entries	code/eden_profiler.h	/^  eden_profiler_entry_t* entries;$/;"	m	language:C++	struct:eden_profiler_t	typeref:typename:eden_profiler_entry_t *
 entries	code/gist_hashmap.cpp	/^  gist_hm_entry_t entries[256] = {};$/;"	m	language:C++	struct:gist_hm_t	typeref:typename:gist_hm_entry_t[256]	file:
@@ -2267,6 +2289,7 @@ entry_cap	eden_inspector.h	/^  u32_t entry_cap;$/;"	m	language:C++	struct:eden_i
 entry_cap	eden_profiler.h	/^  u32_t entry_cap;$/;"	m	language:C++	struct:eden_profiler_t	typeref:typename:u32_t
 entry_cap	ship_app_lit.cpp	/^  u32_t entry_cap;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t	file:
 entry_cap	w32_eden.cpp	/^  u32_t entry_cap;$/;"	m	language:C++	struct:w32_work_queue_t	typeref:typename:u32_t	file:
+entry_count	code/eden_debug.h	/^  u32_t entry_count;$/;"	m	language:C++	struct:eden_debug_t	typeref:typename:u32_t
 entry_count	code/eden_inspector.h	/^  u32_t entry_count;$/;"	m	language:C++	struct:eden_inspector_t	typeref:typename:u32_t
 entry_count	code/eden_profiler.h	/^  u32_t entry_count;$/;"	m	language:C++	struct:eden_profiler_t	typeref:typename:u32_t
 entry_count	eden_inspector.h	/^  u32_t entry_count;$/;"	m	language:C++	struct:eden_inspector_t	typeref:typename:u32_t
@@ -3075,7 +3098,7 @@ garena_t	momo.h	/^struct garena_t $/;"	s	language:C++
 gbg	app_gbg.cpp	/^static gbg_t* gbg;$/;"	v	language:C++	typeref:typename:gbg_t *	file:
 gbg	code/app_gbg.cpp	/^static gbg_t* gbg;$/;"	v	language:C++	typeref:typename:gbg_t *	file:
 gbg_clear_all_pp_ops	app_gbg.cpp	/^gbg_clear_all_pp_ops()$/;"	f	language:C++	typeref:typename:void	file:
-gbg_clear_all_pp_ops	code/app_gbg.cpp	/^gbg_clear_all_pp_ops(v2u_t pos)$/;"	f	language:C++	typeref:typename:void	file:
+gbg_clear_all_pp_ops	code/app_gbg.cpp	/^gbg_clear_all_pp_ops()$/;"	f	language:C++	typeref:typename:void	file:
 GBG_DESIGN_HEIGHT	app_gbg.cpp	/^#define GBG_DESIGN_HEIGHT /;"	d	language:C++	file:
 GBG_DESIGN_HEIGHT	code/app_gbg.cpp	/^#define GBG_DESIGN_HEIGHT /;"	d	language:C++	file:
 GBG_DESIGN_WIDTH	app_gbg.cpp	/^#define GBG_DESIGN_WIDTH /;"	d	language:C++	file:
@@ -3118,8 +3141,8 @@ gbg_randomize_level	app_gbg.cpp	/^gbg_randomize_level()$/;"	f	language:C++	typer
 gbg_randomize_level	code/app_gbg.cpp	/^gbg_randomize_level()$/;"	f	language:C++	typeref:typename:void	file:
 gbg_render_grid	app_gbg.cpp	/^gbg_render_grid()$/;"	f	language:C++	typeref:typename:void	file:
 gbg_render_grid	code/app_gbg.cpp	/^gbg_render_grid()$/;"	f	language:C++	typeref:typename:void	file:
-gbg_render_grid_effects	code/app_gbg.cpp	/^gbg_render_grid_effects()$/;"	f	language:C++	typeref:typename:void	file:
 gbg_render_grid_pp_ops	app_gbg.cpp	/^gbg_render_grid_pp_ops()$/;"	f	language:C++	typeref:typename:void	file:
+gbg_render_grid_pp_ops	code/app_gbg.cpp	/^gbg_render_grid_pp_ops()$/;"	f	language:C++	typeref:typename:void	file:
 gbg_render_player	app_gbg.cpp	/^gbg_render_player()$/;"	f	language:C++	typeref:typename:void	file:
 gbg_render_player	code/app_gbg.cpp	/^gbg_render_player()$/;"	f	language:C++	typeref:typename:void	file:
 gbg_render_player_pp	app_gbg.cpp	/^gbg_render_player_pp()$/;"	f	language:C++	typeref:typename:void	file:
@@ -3711,9 +3734,15 @@ inspector_enabled	code/eden.h	/^  b32_t inspector_enabled;$/;"	m	language:C++	st
 inspector_enabled	eden.h	/^  b32_t inspector_enabled;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:b32_t
 inspector_max_entries	code/eden.h	/^  u32_t inspector_max_entries;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
 inspector_max_entries	eden.h	/^  u32_t inspector_max_entries;$/;"	m	language:C++	struct:eden_config_t	typeref:typename:u32_t
+inspect_arena	code/eden_debug.h	/^    arena_t inspect_arena;$/;"	m	language:C++	union:eden_debug_entry_t::__anon060e0ae7010a	typeref:typename:arena_t
 inspect_count	aoc22.cpp	/^  u64_t inspect_count;$/;"	m	language:C++	struct:aoc22_d11_monkey_t	typeref:typename:u64_t	file:
 inspect_count	code/aoc22.cpp	/^  u64_t inspect_count;$/;"	m	language:C++	struct:aoc22_d11_monkey_t	typeref:typename:u64_t	file:
+inspect_f32	code/eden_debug.h	/^    f32_t inspect_f32;$/;"	m	language:C++	union:eden_debug_entry_t::__anon060e0ae7010a	typeref:typename:f32_t
+inspect_s32	code/eden_debug.h	/^    s32_t inspect_s32;$/;"	m	language:C++	union:eden_debug_entry_t::__anon060e0ae7010a	typeref:typename:s32_t
+inspect_u32	code/eden_debug.h	/^    u32_t inspect_u32;$/;"	m	language:C++	union:eden_debug_entry_t::__anon060e0ae7010a	typeref:typename:u32_t
+inspect_v2f	code/eden_debug.h	/^    v2f_t inspect_v2f;$/;"	m	language:C++	union:eden_debug_entry_t::__anon060e0ae7010a	typeref:typename:v2f_t
 instance	code/w32_getuna.cpp	/^  HINSTANCE instance;$/;"	m	language:C++	struct:getuna_t	typeref:typename:HINSTANCE	file:
+instance	code/w32_stable.cpp	/^  HINSTANCE instance;$/;"	m	language:C++	struct:stable_t	typeref:typename:HINSTANCE	file:
 instance	w32_getuna.cpp	/^  HINSTANCE instance;$/;"	m	language:C++	struct:getuna_t	typeref:typename:HINSTANCE	file:
 instances_to_draw	code/eden_gfx_opengl.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:eden_opengl_sprite_batch_t	typeref:typename:GLsizei
 instances_to_draw	code/eden_gfx_opengl.h	/^  GLsizei instances_to_draw;$/;"	m	language:C++	struct:eden_opengl_triangle_batch_t	typeref:typename:GLsizei
@@ -3782,6 +3811,7 @@ is_running	code/eden.h	/^  b32_t is_running;$/;"	m	language:C++	struct:eden_t	ty
 is_running	code/ship_app_lit.cpp	/^  b32_t is_running;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:b32_t	file:
 is_running	code/w32_eden.cpp	/^  b32_t is_running;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:b32_t	file:
 is_running	code/w32_getuna.cpp	/^  b32_t is_running;$/;"	m	language:C++	struct:getuna_t	typeref:typename:b32_t	file:
+is_running	code/w32_stable.cpp	/^  b32_t is_running;$/;"	m	language:C++	struct:stable_t	typeref:typename:b32_t	file:
 is_running	eden.h	/^  b32_t is_running;$/;"	m	language:C++	struct:eden_t	typeref:typename:b32_t
 is_running	ship_app_lit.cpp	/^  b32_t is_running;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:b32_t	file:
 is_running	w32_eden.cpp	/^  b32_t is_running;$/;"	m	language:C++	struct:w32_state_t	typeref:typename:b32_t	file:
@@ -4430,6 +4460,7 @@ main	twitch_bot.cpp	/^int main() $/;"	f	language:C++	typeref:typename:int
 main_arena	app_lit.cpp	/^  arena_t main_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
 main_arena	code/app_lit.cpp	/^  arena_t main_arena;$/;"	m	language:C++	struct:lit_t	typeref:typename:arena_t	file:
 main_window	code/w32_getuna.cpp	/^  HWND main_window;$/;"	m	language:C++	struct:getuna_t	typeref:typename:HWND	file:
+main_window	code/w32_stable.cpp	/^  HWND main_window;$/;"	m	language:C++	struct:stable_t	typeref:typename:HWND	file:
 main_window	w32_getuna.cpp	/^  HWND main_window;$/;"	m	language:C++	struct:getuna_t	typeref:typename:HWND	file:
 max	app_lit.cpp	/^  f64_t max;$/;"	m	language:C++	struct:lit_profiler_stat_t	typeref:typename:f64_t	file:
 max	code/app_lit.cpp	/^  f64_t max;$/;"	m	language:C++	struct:lit_profiler_stat_t	typeref:typename:f64_t	file:
@@ -4617,6 +4648,7 @@ ms_from_secs	code/momo.h	/^#define ms_from_secs(/;"	d	language:C++
 ms_from_secs	momo.h	/^#define ms_from_secs(/;"	d	language:C++
 name	aoc22.cpp	/^  buf_t name;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:buf_t	file:
 name	code/aoc22.cpp	/^  buf_t name;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:buf_t	file:
+name	code/eden_debug.h	/^  buf_t name;$/;"	m	language:C++	struct:eden_debug_entry_t	typeref:typename:buf_t
 name	code/eden_inspector.h	/^  buf_t name;$/;"	m	language:C++	struct:eden_inspector_entry_t	typeref:typename:buf_t
 name	eden_inspector.h	/^  buf_t name;$/;"	m	language:C++	struct:eden_inspector_entry_t	typeref:typename:buf_t
 near	code/momo.h	/^# define near$/;"	d	language:C++
@@ -5563,7 +5595,9 @@ src	eden_gfx.h	/^  eden_gfx_blend_type_t src;$/;"	m	language:C++	struct:eden_gfx
 src_pos	app_gbg.cpp	/^  v2f_t src_pos;$/;"	m	language:C++	struct:gbg_player_t	typeref:typename:v2f_t	file:
 src_pos	code/app_gbg.cpp	/^  v2f_t src_pos;$/;"	m	language:C++	struct:gbg_player_t	typeref:typename:v2f_t	file:
 src_pos	code/app_vigil.cpp	/^  v2f_t src_pos;$/;"	m	language:C++	struct:vigil_player_t	typeref:typename:v2f_t	file:
+stable	code/w32_stable.cpp	/^static stable_t* stable;$/;"	v	language:C++	typeref:typename:stable_t *	file:
 stable	w32_stable.cpp	/^static stable_t* stable;$/;"	v	language:C++	typeref:typename:stable_t *	file:
+stable_spawn_overlay_window	code/w32_stable.cpp	/^stable_spawn_overlay_window()$/;"	f	language:C++	typeref:typename:b32_t	file:
 stable_spawn_overlay_window	w32_stable.cpp	/^stable_spawn_overlay_window()$/;"	f	language:C++	typeref:typename:b32_t	file:
 stable_spawn_ss_window	w32_stable.cpp	/^stable_spawn_ss_window(LONG x, LONG y, LONG w, LONG h)$/;"	f	language:C++	typeref:typename:void	file:
 STABLE_SS_BUTTON_COMMAND_ID	w32_stable.cpp	/^#define STABLE_SS_BUTTON_COMMAND_ID /;"	d	language:C++	file:
@@ -5572,8 +5606,11 @@ STABLE_SS_BUTTON_TEXT	w32_stable.cpp	/^#define STABLE_SS_BUTTON_TEXT /;"	d	langu
 STABLE_SS_BUTTON_W	w32_stable.cpp	/^#define STABLE_SS_BUTTON_W /;"	d	language:C++	file:
 STABLE_SS_BUTTON_X	w32_stable.cpp	/^#define STABLE_SS_BUTTON_X /;"	d	language:C++	file:
 STABLE_SS_BUTTON_Y	w32_stable.cpp	/^#define STABLE_SS_BUTTON_Y /;"	d	language:C++	file:
+stable_t	code/w32_stable.cpp	/^struct stable_t$/;"	s	language:C++	file:
 stable_t	w32_stable.cpp	/^struct stable_t$/;"	s	language:C++	file:
+STABLE_WINDOW_HEIGHT	code/w32_stable.cpp	/^#define STABLE_WINDOW_HEIGHT /;"	d	language:C++	file:
 STABLE_WINDOW_HEIGHT	w32_stable.cpp	/^#define STABLE_WINDOW_HEIGHT /;"	d	language:C++	file:
+STABLE_WINDOW_WIDTH	code/w32_stable.cpp	/^#define STABLE_WINDOW_WIDTH /;"	d	language:C++	file:
 STABLE_WINDOW_WIDTH	w32_stable.cpp	/^#define STABLE_WINDOW_WIDTH /;"	d	language:C++	file:
 STABLE_WM_SS	w32_stable.cpp	/^#define STABLE_WM_SS /;"	d	language:C++	file:
 stack	code/w32_chip8.cpp	/^  u16_t stack[256];$/;"	m	language:C++	struct:chip8_t	typeref:typename:u16_t[256]	file:
@@ -5907,6 +5944,7 @@ type	code/aoc22.cpp	/^  aoc22_d13_node_type_t type;$/;"	m	language:C++	struct:ao
 type	code/aoc22.cpp	/^  aoc22_d7_node_type_t type;$/;"	m	language:C++	struct:aoc22_d7_node_t	typeref:typename:aoc22_d7_node_type_t	file:
 type	code/app_gbg.cpp	/^  gbg_tile_type_t type;$/;"	m	language:C++	struct:gbg_tile_t	typeref:typename:gbg_tile_type_t	file:
 type	code/app_lit.cpp	/^  lit_game_animator_type_t type;$/;"	m	language:C++	struct:lit_game_animator_t	typeref:typename:lit_game_animator_type_t	file:
+type	code/eden_debug.h	/^  eden_debug_entry_type_t type;$/;"	m	language:C++	struct:eden_debug_entry_t	typeref:typename:eden_debug_entry_type_t
 type	code/eden_gfx.h	/^  eden_gfx_command_type_t type; $/;"	m	language:C++	struct:eden_gfx_command_t	typeref:typename:eden_gfx_command_type_t
 type	code/eden_inspector.h	/^  eden_inspector_entry_type_t type;$/;"	m	language:C++	struct:eden_inspector_entry_t	typeref:typename:eden_inspector_entry_type_t
 type	code/momo.h	/^    u8_t type[4];$/;"	m	language:C++	union:_png_chunk_header_t::__anon1db7a63d2c0a	typeref:typename:u8_t[4]
@@ -6451,18 +6489,18 @@ w32_profile_block	code/ship_app_lit.cpp	/^#define w32_profile_block(/;"	d	langua
 w32_profile_block	code/w32_eden.cpp	/^#define w32_profile_block(/;"	d	language:C++	file:
 w32_profile_block	ship_app_lit.cpp	/^#define w32_profile_block(/;"	d	language:C++	file:
 w32_profile_block	w32_eden.cpp	/^#define w32_profile_block(/;"	d	language:C++	file:
+w32_rect_height	code/momo.h	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG
 w32_rect_height	code/ship_app_lit.cpp	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG	file:
 w32_rect_height	code/w32_chip8.cpp	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG	file:
 w32_rect_height	code/w32_eden.cpp	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG	file:
-w32_rect_height	code/w32_getuna.cpp	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG	file:
 w32_rect_height	momo.h	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG
 w32_rect_height	ship_app_lit.cpp	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG	file:
 w32_rect_height	w32_chip8.cpp	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG	file:
 w32_rect_height	w32_eden.cpp	/^static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }$/;"	f	language:C++	typeref:typename:LONG	file:
+w32_rect_width	code/momo.h	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG
 w32_rect_width	code/ship_app_lit.cpp	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG	file:
 w32_rect_width	code/w32_chip8.cpp	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG	file:
 w32_rect_width	code/w32_eden.cpp	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG	file:
-w32_rect_width	code/w32_getuna.cpp	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG	file:
 w32_rect_width	momo.h	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG
 w32_rect_width	ship_app_lit.cpp	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG	file:
 w32_rect_width	w32_chip8.cpp	/^static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }$/;"	f	language:C++	typeref:typename:LONG	file:
@@ -6529,7 +6567,9 @@ w32_speaker_unload_sig	ship_app_lit.cpp	/^w32_speaker_unload_sig(w32_speaker_unl
 w32_speaker_unload_sig	w32_eden_audio.h	/^#define w32_speaker_unload_sig(/;"	d	language:C++
 w32_speaker_unload_sig	w32_eden_audio.h	/^static w32_speaker_unload_sig(w32_speaker_unload);$/;"	p	language:C++
 w32_speaker_unload_sig	w32_eden_audio_wasapi.h	/^w32_speaker_unload_sig(w32_speaker_unload) {$/;"	f	language:C++
+w32_stable_main_window_callback	code/w32_stable.cpp	/^w32_stable_main_window_callback($/;"	f	language:C++	typeref:typename:LRESULT CALLBACK
 w32_stable_main_window_callback	w32_stable.cpp	/^w32_stable_main_window_callback($/;"	f	language:C++	typeref:typename:LRESULT CALLBACK
+w32_stable_overlay_window_callback	code/w32_stable.cpp	/^w32_stable_overlay_window_callback($/;"	f	language:C++	typeref:typename:LRESULT CALLBACK
 w32_stable_overlay_window_callback	w32_stable.cpp	/^w32_stable_overlay_window_callback($/;"	f	language:C++	typeref:typename:LRESULT CALLBACK
 w32_state	code/ship_app_lit.cpp	/^static w32_state_t w32_state;$/;"	v	language:C++	typeref:typename:w32_state_t	file:
 w32_state	code/w32_eden.cpp	/^static w32_state_t* w32_state;$/;"	v	language:C++	typeref:typename:w32_state_t *	file:
@@ -6728,6 +6768,7 @@ WinMain	code/w32_chip8.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typ
 WinMain	code/w32_eden.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 WinMain	code/w32_getuna.cpp	/^WinMain($/;"	f	language:C++	typeref:typename:int APIENTRY CALLBACK
 WinMain	code/w32_sandbox_wasapi.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int APIENTRY CALLBACK
+WinMain	code/w32_stable.cpp	/^WinMain($/;"	f	language:C++	typeref:typename:int APIENTRY CALLBACK
 WinMain	ship_app_lit.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
 WinMain	w32_chip8.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int APIENTRY CALLBACK
 WinMain	w32_eden.cpp	/^WinMain(HINSTANCE instance, $/;"	f	language:C++	typeref:typename:int CALLBACK
@@ -6827,6 +6868,7 @@ _defer_dummy	code/momo.h	/^struct _defer_dummy {};$/;"	s	language:C++
 _defer_dummy	momo.h	/^struct _defer_dummy {};$/;"	s	language:C++
 _defer_scope_guard	code/momo.h	/^struct _defer_scope_guard {$/;"	s	language:C++
 _defer_scope_guard	momo.h	/^struct _defer_scope_guard {$/;"	s	language:C++
+_eden_debug_add_entry	code/eden_debug.cpp	/^_eden_debug_add_entry(eden_debug_entry_type_t type)$/;"	f	language:C++	typeref:typename:eden_debug_entry_t *	file:
 _eden_inspect_arena	code/eden_inspector.cpp	/^_eden_inspect_arena(buf_t name, arena_t arena)$/;"	f	language:C++	typeref:typename:void	file:
 _eden_inspect_arena	eden_inspector.cpp	/^_eden_inspect_arena(buf_t name, arena_t arena)$/;"	f	language:C++	typeref:typename:void	file:
 _eden_inspect_f32	code/eden_inspector.cpp	/^_eden_inspect_f32(buf_t name, f32_t item)$/;"	f	language:C++	typeref:typename:void	file:
@@ -7060,6 +7102,7 @@ _w32_wasapi_init_default_speaker_output_device	ship_app_lit.cpp	/^_w32_wasapi_in
 _w32_wasapi_init_default_speaker_output_device	w32_eden_audio_wasapi.h	/^_w32_wasapi_init_default_speaker_output_device(w32_wasapi_t* wasapi) {$/;"	f	language:C++	typeref:typename:b32_t
 _wav_head_t	code/momo.h	/^struct _wav_head_t { $/;"	s	language:C++
 _wav_head_t	momo.h	/^struct _wav_head_t { $/;"	s	language:C++
+__anon060e0ae7010a	code/eden_debug.h	/^  union {$/;"	u	language:C++	struct:eden_debug_entry_t
 __anon0e3795130108	momo.h	/^  struct { u32_t x, y; };$/;"	s	language:C++	union:v2u_t
 __anon0e3795130208	momo.h	/^  struct { u32_t w, h; };$/;"	s	language:C++	union:v2u_t
 __anon0e3795130308	momo.h	/^  struct { s32_t x, y; };$/;"	s	language:C++	union:v2s_t
