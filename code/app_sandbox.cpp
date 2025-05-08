@@ -62,6 +62,7 @@ struct sandbox_mode_draw_t
 struct sandbox_t 
 {
   arena_t arena;
+  arena_t frame_arena;
   sandbox_mode_type_t mode_type;
   b32_t is_mode_init;
 
@@ -160,6 +161,7 @@ eden_update_and_render_sig(eden_update_and_render) {
     sandbox = (sandbox_t*)(eden->user_data);
     eden_assets_init_from_file(SANDBOX_ASSET_FILE, &sandbox->arena);
 
+    arena_push_partition_with_remaining(&sandbox->arena, &sandbox->frame_arena);
     
     eden_set_design_dimensions(1600, 900);
     eden_set_view(0.f, 1600.f, 0.f, 900.f, 0.f, 0.f);
@@ -190,6 +192,14 @@ eden_update_and_render_sig(eden_update_and_render) {
     sandbox_update_and_render_draws();
   }
   //sandbox_update_and_render_font_alignment_test(eden);
+
+  eden_debug_update_and_render(
+      20.f, 
+      1600, 
+      900, 
+      ASSET_SPRITE_ID_BLANK, 
+      ASSET_FONT_ID_DEBUG,
+      &sandbox->frame_arena);
 #if 0
   eden_draw_tri({500.f, 500.f}, {100.f, 100.f}, {200.f, 100.f}, RGBA_GREEN);
   eden_draw_tri({400.f, 400.f}, {300.f, 100.f}, {200.f, 100.f}, RGBA_RED);
