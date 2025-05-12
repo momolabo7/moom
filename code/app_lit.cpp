@@ -3712,7 +3712,7 @@ eden_update_and_render_sig(eden_update_and_render)
   if(eden->user_data == nullptr) 
   {
     // @todo: partition from platform arena?
-    eden->user_data = arena_alloc_bootstrap(lit_t, main_arena, megabytes(32));
+    eden->user_data = arena_alloc_bootstrap(lit_t, main_arena);
 
     lit = (lit_t*)(eden->user_data);
     lit->next_mode = LIT_MODE_SPLASH;
@@ -3721,10 +3721,10 @@ eden_update_and_render_sig(eden_update_and_render)
     
 
     //arena_init(&lit->asset_arena, eden_allocate_memory(megabytes(20)));
-    if (!arena_push_partition(&lit->main_arena, &lit->asset_arena, megabytes(20), 16)) lit_exit();
-    if (!arena_push_partition(&lit->main_arena, &lit->debug_arena, megabytes(1), 16)) lit_exit();
-    if (!arena_push_partition(&lit->main_arena, &lit->frame_arena, megabytes(1), 16)) lit_exit();
-    if (!arena_push_partition(&lit->main_arena, &lit->mode_arena, megabytes(1), 16)) lit_exit();
+    if (!arena_push_partition(&lit->main_arena, &lit->asset_arena, megabytes(20))) lit_exit();
+    if (!arena_push_partition(&lit->main_arena, &lit->debug_arena, megabytes(1))) lit_exit();
+    if (!arena_push_partition(&lit->main_arena, &lit->frame_arena, megabytes(1))) lit_exit();
+    if (!arena_push_partition(&lit->main_arena, &lit->mode_arena, megabytes(1))) lit_exit();
 
 
     // Initialize assets

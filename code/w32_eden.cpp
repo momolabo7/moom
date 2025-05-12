@@ -123,8 +123,6 @@ eden_debug_log_sig(w32_log_proc)
 
 #define w32_profile_block(...) profiler_block(profiler, __VA_ARGS__)
 
-static inline LONG w32_rect_width(RECT r) { return r.right - r.left; }
-static inline LONG w32_rect_height(RECT r) { return r.bottom - r.top; }
 
 static inline v2u_t
 w32_get_window_dims(HWND window) {

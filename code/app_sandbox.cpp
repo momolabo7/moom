@@ -156,9 +156,10 @@ eden_update_and_render_sig(eden_update_and_render) {
   eden_globalize(e);
   if (eden->user_data == nullptr)
   {
-    eden->user_data = arena_alloc_bootstrap(sandbox_t, arena, megabytes(32)); 
-
+    eden->user_data = arena_alloc_bootstrap(sandbox_t, arena); 
     sandbox = (sandbox_t*)(eden->user_data);
+    arena_alloc(&sandbox->frame_arena);
+
     eden_assets_init_from_file(SANDBOX_ASSET_FILE, &sandbox->arena);
 
     arena_push_partition_with_remaining(&sandbox->arena, &sandbox->frame_arena);
@@ -193,6 +194,8 @@ eden_update_and_render_sig(eden_update_and_render) {
   }
   //sandbox_update_and_render_font_alignment_test(eden);
 
+  u32_t a = 10;
+  eden_inspect(a);
   eden_debug_update_and_render(
       20.f, 
       1600, 

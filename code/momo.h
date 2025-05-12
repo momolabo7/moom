@@ -1156,8 +1156,8 @@ static buf_t    stream_consume_line(stream_t* s);
 // @mark:(Arena)
 //
 static b32_t    arena_init(arena_t* a, buf_t buffer);
-static b32_t    arena_alloc(arena_t* a, usz_t reserve_amount, b32_t commit = false);
-static void*    arena_alloc_bootstrap_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size);
+static b32_t    arena_alloc(arena_t* a, usz_t reserve_amount = gigabytes(1), b32_t commit = false);
+static void*    arena_alloc_bootstrap_size(usz_t size, usz_t offset_to_arena, usz_t virtual_size = gigabytes(1));
 static void     arena_clear(arena_t* a);
 static void*    arena_push_size(arena_t* a, usz_t size, usz_t align = 32);
 static void*    arena_push_size_zero(arena_t* a, usz_t size, usz_t align = 32); 
@@ -1177,8 +1177,8 @@ static b32_t    arena_grow_buffer(arena_t* a, buf_t* str, usz_t new_size);
 #define arena_push_arr_zero(t,b,n)         (t*)arena_push_size_zero(b, sizeof(t)*(n),alignof(t))
 #define arena_push_zero_align(t,b,a)       (t*)arena_push_size_zero(b, sizeof(t), a)
 #define arena_push_zero(t,b)               (t*)arena_push_size_zero(b, sizeof(t), alignof(t))
-#define arena_alloc_bootstrap(t,m,s)        (t*)arena_alloc_bootstrap_size(sizeof(t), offsetof(t,m), s)
-#define arena_alloc_bootstrap_zero(t,m,s)   (t*)arena_alloc_bootstrap_size_zero(sizeof(t), offsetof(t,m), s)
+#define arena_alloc_bootstrap(t,m,...)        (t*)arena_alloc_bootstrap_size(sizeof(t), offsetof(t,m), __VA_ARGS__)
+#define arena_alloc_bootstrap_zero(t,m,...)   (t*)arena_alloc_bootstrap_size_zero(sizeof(t), offsetof(t,m), __VA_ARGS__)
 
 static arena_marker_t arena_mark(arena_t* a);
 static void arena_revert(arena_marker_t marker);

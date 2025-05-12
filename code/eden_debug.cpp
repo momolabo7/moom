@@ -1,38 +1,42 @@
 
-static eden_debug_entry_t*
-_eden_debug_add_entry(eden_debug_entry_type_t type)
+static eden_debug_record_t*
+_eden_debug_add_record(eden_debug_record_type_t type)
 {
   eden_debug_t* d = &eden->debug;
-  eden_debug_entry_t* ret = d->entries + d->entry_count++;
+  eden_debug_record_t* ret = d->records + d->record_count++;
   return ret;
 }
 
 static void
 eden_inspect(u32_t u32)
 {
-  eden_debug_entry_t* entry = _eden_debug_add_entry(EDEN_DEBUG_ENTRY_TYPE_INSPECT_U32); 
-  entry->inspect_u32 = u32;
+  eden_debug_record_t* record = _eden_debug_add_record(EDEN_DEBUG_RECORD_TYPE_INSPECT_U32); 
+  record->inspect_u32 = u32;
+  record->name = "test";
 }
 
 static void
 eden_inspect(f32_t f32)
 {
-  eden_debug_entry_t* entry = _eden_debug_add_entry(EDEN_DEBUG_ENTRY_TYPE_INSPECT_F32); 
-  entry->inspect_f32 = f32;
+  eden_debug_record_t* record = _eden_debug_add_record(EDEN_DEBUG_RECORD_TYPE_INSPECT_F32); 
+  record->inspect_f32 = f32;
+  record->name = "test";
 }
 
 static void
 eden_inspect(s32_t s32)
 {
-  eden_debug_entry_t* entry = _eden_debug_add_entry(EDEN_DEBUG_ENTRY_TYPE_INSPECT_S32); 
-  entry->inspect_s32 = s32;
+  eden_debug_record_t* record = _eden_debug_add_record(EDEN_DEBUG_RECORD_TYPE_INSPECT_S32); 
+  record->inspect_s32 = s32;
+  record->name = "test";
 }
 
 static void
 eden_inspect(v2f_t v2f)
 {
-  eden_debug_entry_t* entry = _eden_debug_add_entry(EDEN_DEBUG_ENTRY_TYPE_INSPECT_V2F); 
-  entry->inspect_v2f = v2f;
+  eden_debug_record_t* record = _eden_debug_add_record(EDEN_DEBUG_RECORD_TYPE_INSPECT_V2F); 
+  record->inspect_v2f = v2f;
+  record->name = "test";
 }
 
 static void
@@ -57,26 +61,31 @@ eden_debug_update_and_render(
       rgba_set(0.f, 0.f, 0.f, 0.5f));
   
   u32_t line_num = 0;
-  for(u32_t entry_index = 0; 
-      entry_index < debug->entry_count; 
-      ++entry_index)
+  for(u32_t record_index = 0; 
+      record_index < debug->record_count; 
+      ++record_index)
   {
     bufio_clear(&sb);
-    auto* entry = debug->entries + entry_index;
-    switch(entry->type){
-      case EDEN_DEBUG_ENTRY_TYPE_INSPECT_U32: {
-        bufio_push_fmt(&sb, buf_from_lit("[%15S] %7u"),
-            entry->name, entry->inspect_u32);
+    auto* record = debug->records + record_index;
+
+    switch(record->type)
+    {
+      case EDEN_DEBUG_RECORD_TYPE_INSPECT_U32: 
+      {
+        hash_djb2
+
+        bufio_push_fmt(&sb, buf_from_lit("[%15s] %7u"),
+            record->name, record->inspect_u32);
       } break;
-      case EDEN_DEBUG_ENTRY_TYPE_INSPECT_F32: {
-        bufio_push_fmt(&sb, buf_from_lit("[%15S] %7f"),
-            entry->name, entry->inspect_f32);
+      case EDEN_DEBUG_RECORD_TYPE_INSPECT_F32: {
+        bufio_push_fmt(&sb, buf_from_lit("[%15s] %7f"),
+            record->name, record->inspect_f32);
       } break;
-      case EDEN_DEBUG_ENTRY_TYPE_INSPECT_ARENA: {
+      case EDEN_DEBUG_RECORD_TYPE_INSPECT_ARENA: {
 
         const char* denoms[] = { " B", "KB", "MB", "GB", "TB" };
 
-        arena_t* arena = &entry->inspect_arena;
+        arena_t* arena = &record->inspect_arena;
         f32_t pos_mb = (f32_t)arena->pos;
         u32_t pos_denom = 0;
         while(pos_mb > 1000 && pos_denom < array_count(denoms)) 
@@ -101,7 +110,7 @@ eden_debug_update_and_render(
           reserve_denom++;
         }
         bufio_push_fmt(&sb, buf_from_lit("[%15S] %6.2f%s, %6.2f%s, %6.2f%s"), 
-            entry->name, 
+            record->name, 
             pos_mb, denoms[pos_denom],
             commit_mb, denoms[commit_denom],
             reserve_mb, denoms[reserve_denom]);
@@ -117,4 +126,9 @@ eden_debug_update_and_render(
         v2f_set(0.f, 0.f));
     ++line_num;
   }
+  
+  //@todo: for now, we clear the records
+  //but if we are doing hashmaps, we might not need to.
+  debug->record_count = 0;
+
 }
