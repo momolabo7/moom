@@ -18,7 +18,9 @@ enum eden_debug_record_type_t
 
 struct eden_debug_record_t
 {
+  const char* guid;
   const char* name;
+
   eden_debug_record_type_t type;
   union {
     u32_t inspect_u32;
@@ -45,6 +47,8 @@ enum eden_debug_element_type_t
 //
 struct eden_debug_element_t
 {
+  // @note: assumed to be a string literal
+  const char* guid; 
   eden_debug_element_t* next_in_hash;
   eden_debug_record_t stored_record; //@todo: should be a collection of sorts so that we can collate dataikkk.
 };

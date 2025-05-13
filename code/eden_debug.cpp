@@ -1,4 +1,37 @@
 
+static eden_debug_element_t*
+_eden_debug_get_element_from_record(eden_debug_t* d, eden_debug_record_t* record)
+{
+  // @note: 
+  //
+  // GUID assumed to be a constant string literal!
+  // If this is too 'undefined', we can just change to a normal ass hash.
+  
+  u32_t hash_value = (u32_t)(ptr_to_umi(record->guid) >> 2);
+  u32_t index = hash_value % array_count(d->hashed_elements);
+  eden_debug_element_t* ret = nullptr;
+  for(eden_debug_element_t* itr = d->hashed_elements[index];
+      itr;
+      itr = itr->next;
+  {
+    if (itr->guid == record->guid)
+    {
+      return ret;
+    }
+
+  }
+
+  // case where element is not found; need to insert
+  // note that if there's collision, we do a push front to the linked list.
+  ret = arena_push(eden_debug_element_t, &d->arena);
+  ret->guid = record->guid;
+  ret->next_in_hash = d->hashed_elements[index];
+  d->hashed_elements[index] = ret;
+
+  return ret;
+}
+
+
 static eden_debug_record_t*
 _eden_debug_add_record(eden_debug_record_type_t type)
 {
@@ -12,7 +45,7 @@ eden_inspect(u32_t u32)
 {
   eden_debug_record_t* record = _eden_debug_add_record(EDEN_DEBUG_RECORD_TYPE_INSPECT_U32); 
   record->inspect_u32 = u32;
-  record->name = "test";
+  record->guid = "test";
 }
 
 static void
@@ -20,7 +53,7 @@ eden_inspect(f32_t f32)
 {
   eden_debug_record_t* record = _eden_debug_add_record(EDEN_DEBUG_RECORD_TYPE_INSPECT_F32); 
   record->inspect_f32 = f32;
-  record->name = "test";
+  record->guid = "test";
 }
 
 static void
@@ -28,7 +61,7 @@ eden_inspect(s32_t s32)
 {
   eden_debug_record_t* record = _eden_debug_add_record(EDEN_DEBUG_RECORD_TYPE_INSPECT_S32); 
   record->inspect_s32 = s32;
-  record->name = "test";
+  record->guid = "test";
 }
 
 static void
@@ -36,8 +69,9 @@ eden_inspect(v2f_t v2f)
 {
   eden_debug_record_t* record = _eden_debug_add_record(EDEN_DEBUG_RECORD_TYPE_INSPECT_V2F); 
   record->inspect_v2f = v2f;
-  record->name = "test";
+  record->guid = "test";
 }
+
 
 static void
 eden_debug_update_and_render(
@@ -68,18 +102,19 @@ eden_debug_update_and_render(
     bufio_clear(&sb);
     auto* record = debug->records + record_index;
 
+    u32_t element_hash = hash_djb2(record->guid);
+
+
     switch(record->type)
     {
       case EDEN_DEBUG_RECORD_TYPE_INSPECT_U32: 
       {
-        hash_djb2
-
         bufio_push_fmt(&sb, buf_from_lit("[%15s] %7u"),
-            record->name, record->inspect_u32);
+            record->guid, record->inspect_u32);
       } break;
       case EDEN_DEBUG_RECORD_TYPE_INSPECT_F32: {
         bufio_push_fmt(&sb, buf_from_lit("[%15s] %7f"),
-            record->name, record->inspect_f32);
+            record->guid, record->inspect_f32);
       } break;
       case EDEN_DEBUG_RECORD_TYPE_INSPECT_ARENA: {
 
@@ -110,7 +145,7 @@ eden_debug_update_and_render(
           reserve_denom++;
         }
         bufio_push_fmt(&sb, buf_from_lit("[%15S] %6.2f%s, %6.2f%s, %6.2f%s"), 
-            record->name, 
+            record->guid, 
             pos_mb, denoms[pos_denom],
             commit_mb, denoms[commit_denom],
             reserve_mb, denoms[reserve_denom]);
