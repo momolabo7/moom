@@ -776,23 +776,9 @@ WinMain(HINSTANCE instance,
       w32_log("Cannot create window");
       return 1;
     }
-    
-    
   }
   w32_state->window = window;
   
-#if 0
-  u32_t monitor_frame_rate = 60;
-  {
-    HDC dc = GetDC(window);
-    int w32_frame_rate = GetDeviceCaps(dc, VREFRESH);
-    ReleaseDC(window, dc);
-    if (w32_frame_rate > 1) {
-      monitor_frame_rate = (u32_t)w32_frame_rate;
-    }
-  }
-#endif
-
   f32_t target_secs_per_frame = 1.f/(f32_t)config.target_frame_rate;
   w32_log("Target Frame Rate: %d Hz\n", config.target_frame_rate);
   
@@ -835,6 +821,14 @@ WinMain(HINSTANCE instance,
   // Init debug stuff
   //
 #if EDEN_DEBUG
+
+  if (!eden_debug_init(&eden->debug))
+  {
+    w32_log("Cannot init debugger");
+    return 1;
+  }
+
+
   if (!eden_profiler_init(
         &eden->profiler, 
         platform_arena, 

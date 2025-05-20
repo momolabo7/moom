@@ -50,18 +50,21 @@ struct eden_debug_element_t
   // @note: assumed to be a string literal
   const char* guid; 
   eden_debug_element_t* next_in_hash;
+  eden_debug_element_t* next_in_link;
+
   eden_debug_record_t stored_record; //@todo: should be a collection of sorts so that we can collate dataikkk.
 };
 
 
 struct eden_debug_t 
 {
-  arena_t* arena; 
+  arena_t arena; 
 
   u32_t record_count;
   eden_debug_record_t records[1024];
 
   eden_debug_element_t* hashed_elements[1024];
+  eden_debug_element_t* linked_elements; // for iteration
 };
 
 

@@ -166,7 +166,6 @@ eden_update_and_render_sig(eden_update_and_render) {
     
     eden_set_design_dimensions(1600, 900);
     eden_set_view(0.f, 1600.f, 0.f, 900.f, 0.f, 0.f);
-
   }
 
   sandbox = (sandbox_t*)(eden->user_data);
@@ -195,7 +194,7 @@ eden_update_and_render_sig(eden_update_and_render) {
   //sandbox_update_and_render_font_alignment_test(eden);
 
   u32_t a = 10;
-  eden_inspect(a);
+  eden_inspect("a", a);
   eden_debug_update_and_render(
       20.f, 
       1600, 

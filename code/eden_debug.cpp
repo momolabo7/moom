@@ -2,74 +2,71 @@
 static eden_debug_element_t*
 _eden_debug_get_element_from_record(eden_debug_t* d, eden_debug_record_t* record)
 {
-  // @note: 
-  //
-  // GUID assumed to be a constant string literal!
-  // If this is too 'undefined', we can just change to a normal ass hash.
-  
-  u32_t hash_value = (u32_t)(ptr_to_umi(record->guid) >> 2);
+  u32_t hash_value = hash_djb2(record->guid);
   u32_t index = hash_value % array_count(d->hashed_elements);
   eden_debug_element_t* ret = nullptr;
   for(eden_debug_element_t* itr = d->hashed_elements[index];
       itr;
-      itr = itr->next;
+      itr = itr->next_in_link)
   {
     if (itr->guid == record->guid)
     {
       return ret;
     }
-
   }
 
   // case where element is not found; need to insert
   // note that if there's collision, we do a push front to the linked list.
   ret = arena_push(eden_debug_element_t, &d->arena);
+  assert(ret);
   ret->guid = record->guid;
+
+  // bookkeeping
   ret->next_in_hash = d->hashed_elements[index];
   d->hashed_elements[index] = ret;
+  ret->next_in_link = d->linked_elements;
+  d->linked_elements = ret->next_in_link;
 
   return ret;
 }
 
 
 static eden_debug_record_t*
-_eden_debug_add_record(eden_debug_record_type_t type)
+_eden_debug_add_record(const char* name, eden_debug_record_type_t type)
 {
   eden_debug_t* d = &eden->debug;
   eden_debug_record_t* ret = d->records + d->record_count++;
+  ret->name = name;
+  ret->guid = name;
   return ret;
 }
 
 static void
-eden_inspect(u32_t u32)
+eden_inspect(const char* name, u32_t u32)
 {
-  eden_debug_record_t* record = _eden_debug_add_record(EDEN_DEBUG_RECORD_TYPE_INSPECT_U32); 
+  eden_debug_record_t* record = _eden_debug_add_record(name, EDEN_DEBUG_RECORD_TYPE_INSPECT_U32); 
   record->inspect_u32 = u32;
-  record->guid = "test";
 }
 
 static void
-eden_inspect(f32_t f32)
+eden_inspect(const char* name, f32_t f32)
 {
-  eden_debug_record_t* record = _eden_debug_add_record(EDEN_DEBUG_RECORD_TYPE_INSPECT_F32); 
+  eden_debug_record_t* record = _eden_debug_add_record(name, EDEN_DEBUG_RECORD_TYPE_INSPECT_F32); 
   record->inspect_f32 = f32;
-  record->guid = "test";
 }
 
 static void
-eden_inspect(s32_t s32)
+eden_inspect(const char* name, s32_t s32)
 {
-  eden_debug_record_t* record = _eden_debug_add_record(EDEN_DEBUG_RECORD_TYPE_INSPECT_S32); 
+  eden_debug_record_t* record = _eden_debug_add_record(name, EDEN_DEBUG_RECORD_TYPE_INSPECT_S32); 
   record->inspect_s32 = s32;
-  record->guid = "test";
 }
 
 static void
-eden_inspect(v2f_t v2f)
+eden_inspect(const char* name, v2f_t v2f)
 {
-  eden_debug_record_t* record = _eden_debug_add_record(EDEN_DEBUG_RECORD_TYPE_INSPECT_V2F); 
+  eden_debug_record_t* record = _eden_debug_add_record(name, EDEN_DEBUG_RECORD_TYPE_INSPECT_V2F); 
   record->inspect_v2f = v2f;
-  record->guid = "test";
 }
 
 
@@ -84,27 +81,41 @@ eden_debug_update_and_render(
 {
   auto* debug = &eden->debug;
 
+
+  // For each record, get the element and add the record to the element
+  for(u32_t record_index = 0; 
+      record_index < debug->record_count; 
+      ++record_index)
+  {
+    eden_debug_record_t* record = debug->records + record_index;
+    eden_debug_element_t* element = _eden_debug_get_element_from_record(debug, record);
+    element->stored_record = dref(record);
+  }
+
+
+  //
+  // Rendering
+  //
+
   arena_set_revert_point(frame_arena);
   bufio_t sb;
   bufio_init(&sb, arena_push_buffer(frame_arena, 256));
-
   eden_draw_asset_sprite(
       blank_sprite, 
       v2f_set(width/2, height/2), 
       v2f_set(width, height),
       rgba_set(0.f, 0.f, 0.f, 0.5f));
-  
+
   u32_t line_num = 0;
-  for(u32_t record_index = 0; 
-      record_index < debug->record_count; 
-      ++record_index)
+  for (eden_debug_element_t* itr = debug->linked_elements;
+       itr;
+       itr = itr->next_in_link)
   {
     bufio_clear(&sb);
-    auto* record = debug->records + record_index;
 
-    u32_t element_hash = hash_djb2(record->guid);
-
-
+    // @note: for now, we base the record's type 
+    // @todo: maybe we should store a type into element?
+    eden_debug_record_t* record = &itr->stored_record;
     switch(record->type)
     {
       case EDEN_DEBUG_RECORD_TYPE_INSPECT_U32: 
@@ -151,7 +162,6 @@ eden_debug_update_and_render(
             reserve_mb, denoms[reserve_denom]);
       };
     }
-
     eden_draw_text(
         font, 
         sb.str, 
@@ -161,9 +171,8 @@ eden_debug_update_and_render(
         v2f_set(0.f, 0.f));
     ++line_num;
   }
-  
-  //@todo: for now, we clear the records
-  //but if we are doing hashmaps, we might not need to.
+
+  // always clear records
   debug->record_count = 0;
 
 }

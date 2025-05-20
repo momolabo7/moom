@@ -1,2 +1,5 @@
+- change arena to push zero by default
+- look into w32_eden to initialize debug system
+
 - frame buffer post processing nonsense!
 - remove shader file asset
