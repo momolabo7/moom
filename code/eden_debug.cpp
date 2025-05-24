@@ -2,6 +2,8 @@
 static eden_debug_element_t*
 _eden_debug_get_element_from_record(eden_debug_t* d, eden_debug_record_t* record)
 {
+  // @todo: we can seriously think about not using a string hash
+  // I think we can expect the guid to the compile time string.
   u32_t hash_value = hash_djb2(record->guid);
   u32_t index = hash_value % array_count(d->hashed_elements);
   eden_debug_element_t* ret = nullptr;
@@ -11,7 +13,7 @@ _eden_debug_get_element_from_record(eden_debug_t* d, eden_debug_record_t* record
   {
     if (itr->guid == record->guid)
     {
-      return ret;
+      return itr;
     }
   }
 
@@ -175,4 +177,14 @@ eden_debug_update_and_render(
   // always clear records
   debug->record_count = 0;
 
+}
+
+static b32_t 
+eden_debug_init(eden_debug_t* debug)
+{
+  if (!arena_alloc(&debug->arena, gigabytes(1)))
+    return false;
+  debug->record_count = 0;
+  debug->linked_elements = nullptr;
+  return true;
 }

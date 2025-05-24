@@ -7773,8 +7773,9 @@ static s32_t
 ttf_get_glyph_kerning(const ttf_t* ttf, u32_t glyph_index_1, u32_t glyph_index_2) {
 
   if (ttf->gpos) {
-    assert(false);
+    //assert(false);
     //return _ttf_get_gpos_advance(ttf, glyph_index_1, glyph_index_2);
+    return 0;
   }
   else if (ttf->kern) {
     return _ttf_get_kern_advance(ttf, glyph_index_1, glyph_index_2);

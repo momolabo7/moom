@@ -691,7 +691,7 @@ WinMain(HINSTANCE instance,
   
   eden_config_t config = eden_functions.get_config();
 
-  eden_t* eden = arena_push(eden_t, &w32_state->arena);
+  eden_t* eden = arena_push_zero(eden_t, &w32_state->arena);
   eden->is_running = true;
   eden->show_cursor = w32_show_cursor;
   eden->lock_cursor = w32_lock_cursor;
