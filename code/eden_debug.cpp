@@ -26,8 +26,9 @@ _eden_debug_get_element_from_record(eden_debug_t* d, eden_debug_record_t* record
   // bookkeeping
   ret->next_in_hash = d->hashed_elements[index];
   d->hashed_elements[index] = ret;
+
   ret->next_in_link = d->linked_elements;
-  d->linked_elements = ret->next_in_link;
+  d->linked_elements = ret;
 
   return ret;
 }
