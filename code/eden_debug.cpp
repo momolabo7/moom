@@ -2,8 +2,6 @@
 static eden_debug_element_t*
 _eden_debug_get_element_from_record(eden_debug_t* d, eden_debug_record_t* record)
 {
-  // @todo: we can seriously think about not using a string hash
-  // I think we can expect the guid to the compile time string.
   u32_t hash_value = hash_djb2(record->guid);
   u32_t index = hash_value % array_count(d->hashed_elements);
   eden_debug_element_t* ret = nullptr;
@@ -35,7 +33,7 @@ _eden_debug_get_element_from_record(eden_debug_t* d, eden_debug_record_t* record
 
 
 static eden_debug_record_t*
-_eden_debug_add_record(const char* name, eden_debug_record_type_t type)
+_eden_debug_add_record(const char* name, eden_debug_type_t type)
 {
   eden_debug_t* d = &eden->debug;
   eden_debug_record_t* ret = d->records + d->record_count++;
@@ -47,28 +45,28 @@ _eden_debug_add_record(const char* name, eden_debug_record_type_t type)
 static void
 eden_inspect(const char* name, u32_t u32)
 {
-  eden_debug_record_t* record = _eden_debug_add_record(name, EDEN_DEBUG_RECORD_TYPE_INSPECT_U32); 
+  eden_debug_record_t* record = _eden_debug_add_record(name, EDEN_DEBUG_TYPE_U32); 
   record->inspect_u32 = u32;
 }
 
 static void
 eden_inspect(const char* name, f32_t f32)
 {
-  eden_debug_record_t* record = _eden_debug_add_record(name, EDEN_DEBUG_RECORD_TYPE_INSPECT_F32); 
+  eden_debug_record_t* record = _eden_debug_add_record(name, EDEN_DEBUG_TYPE_F32); 
   record->inspect_f32 = f32;
 }
 
 static void
 eden_inspect(const char* name, s32_t s32)
 {
-  eden_debug_record_t* record = _eden_debug_add_record(name, EDEN_DEBUG_RECORD_TYPE_INSPECT_S32); 
+  eden_debug_record_t* record = _eden_debug_add_record(name, EDEN_DEBUG_TYPE_S32); 
   record->inspect_s32 = s32;
 }
 
 static void
 eden_inspect(const char* name, v2f_t v2f)
 {
-  eden_debug_record_t* record = _eden_debug_add_record(name, EDEN_DEBUG_RECORD_TYPE_INSPECT_V2F); 
+  eden_debug_record_t* record = _eden_debug_add_record(name, EDEN_DEBUG_TYPE_V2F); 
   record->inspect_v2f = v2f;
 }
 
@@ -121,16 +119,16 @@ eden_debug_update_and_render(
     eden_debug_record_t* record = &itr->stored_record;
     switch(record->type)
     {
-      case EDEN_DEBUG_RECORD_TYPE_INSPECT_U32: 
+      case EDEN_DEBUG_TYPE_U32: 
       {
         bufio_push_fmt(&sb, buf_from_lit("[%15s] %7u"),
             record->guid, record->inspect_u32);
       } break;
-      case EDEN_DEBUG_RECORD_TYPE_INSPECT_F32: {
+      case EDEN_DEBUG_TYPE_F32: {
         bufio_push_fmt(&sb, buf_from_lit("[%15s] %7f"),
             record->guid, record->inspect_f32);
       } break;
-      case EDEN_DEBUG_RECORD_TYPE_INSPECT_ARENA: {
+      case EDEN_DEBUG_TYPE_ARENA: {
 
         const char* denoms[] = { " B", "KB", "MB", "GB", "TB" };
 
