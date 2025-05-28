@@ -8,6 +8,10 @@
 //
 enum eden_debug_type_t
 {
+  // profiler
+  EDEN_DEBUG_TYPE_PROFILE,
+  
+
   // variable inspection
   EDEN_DEBUG_TYPE_U32,
   EDEN_DEBUG_TYPE_F32,
@@ -23,11 +27,15 @@ struct eden_debug_record_t
 
   eden_debug_type_t type;
   union {
+    // variable inspection
     u32_t inspect_u32;
     f32_t inspect_f32;
     s32_t inspect_s32;
     v2f_t inspect_v2f;
     arena_t inspect_arena;
+
+    // profiler
+    u64_t timestamp;
   };
 };
 

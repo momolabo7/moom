@@ -1,17 +1,16 @@
-# The MOMO (name pending) game engine
+# MOMOREPO 
 
-This is my personal hobby project, which is a game engine written in C/C++.
-It is a 2D game engine with the following idea, directions and features:
+## What this?
 
-* Hot reloading of code
-* Scalable resolution
-* Preprocessed assets for faster loading
+This is the monorepo of all my minimal C/C++ projects written from scratch with the help of as little libraries as possible. The code here contains: 
 
-Features that I want:
+* Momo Library: my personal C/C++ library.
+* Eden: my personal C/C++ game engine.
+* Getuna: a screenshot tool.
+* LIT: a game about lighting.
+* Advent of Code solutions.
+* Assembly practice snippets
 
-* Input recording + replay
-* Asset hot reloading
-* Animation asset
 
 
 
